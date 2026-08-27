@@ -950,7 +950,7 @@ export const LivestockPen2D: React.FC<LivestockPen2DProps> = ({
           aria-hidden="true"
           draggable={false}
           data-livestock-pen-sprite="base"
-          className="pointer-events-none absolute inset-0 z-[3] h-full w-full object-fill"
+          className="pointer-events-none absolute inset-0 z-[3] h-full w-full object-contain object-center"
         />
         <EggNest eggCount={eggCount} onOpenEggStorage={onOpenEggStorage} />
 
