@@ -5,10 +5,10 @@ export const questionsPart0d: QuestionItem[] = [
     "id": "q1501",
     "question": "Glucose có vai trò cơ bản nào đối với nhiều tế bào cơ thể?",
     "answers": [
-      "Là một loại xương",
-      "Là sắc tố da",
+      "Là hormone chính điều hòa đường huyết",
+      "Là thành phần khoáng chính tạo độ cứng cho xương",
       "Là một nguồn năng lượng quan trọng",
-      "Là chất làm men răng cứng"
+      "Là nguyên liệu cấu trúc chính tạo kháng thể"
     ],
     "correctAnswerIndex": 2,
     "category": "health"
@@ -17,9 +17,9 @@ export const questionsPart0d: QuestionItem[] = [
     "id": "q1502",
     "question": "Điều gì có thể xảy ra nếu mức hormone trong cơ thể quá cao hoặc quá thấp?",
     "answers": [
-      "Luôn làm mọi cơ quan khỏe hơn",
-      "Không bao giờ ảnh hưởng cơ thể",
-      "Chỉ làm thay đổi màu tóc",
+      "Chỉ làm thay đổi nhịp tim mà không ảnh hưởng cơ quan khác",
+      "Luôn gây cùng một triệu chứng bất kể loại hormone nào",
+      "Không gây ảnh hưởng đáng kể nếu chế độ ăn vẫn đầy đủ",
       "Có thể xuất hiện rối loạn nội tiết"
     ],
     "correctAnswerIndex": 3,

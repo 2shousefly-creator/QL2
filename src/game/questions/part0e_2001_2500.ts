@@ -5,10 +5,10 @@ export const questionsPart0e: QuestionItem[] = [
     "id": "q2001",
     "question": "Trong mô hình khí động học đơn giản của một quả bóng đang xoáy, độ lớn lực Magnus phụ thuộc đáng kể vào nhóm yếu tố nào?",
     "answers": [
-      "Chỉ màu sơn của bóng",
-      "Chỉ nhiệt độ tay người ném",
+      "Chỉ khối lượng bóng và gia tốc trọng trường",
+      "Chỉ độ nhám bề mặt và áp suất tĩnh của không khí",
       "Bán kính bóng, tốc độ xoáy, tốc độ chuyển động và mật độ không khí",
-      "Chỉ độ cao của khán đài"
+      "Chỉ tốc độ chuyển động tịnh tiến, không phụ thuộc tốc độ xoáy"
     ],
     "correctAnswerIndex": 2,
     "category": "physics"
@@ -17,9 +17,9 @@ export const questionsPart0e: QuestionItem[] = [
     "id": "q2002",
     "question": "Nếu giữ tốc độ xoáy gần như không đổi nhưng quả bóng bay nhanh hơn nhiều, độ cong tương đối của quỹ đạo trong mô hình đơn giản thường có xu hướng thế nào?",
     "answers": [
-      "Cong vô hạn ngay lập tức",
-      "Đứng yên giữa không trung",
-      "Luôn quay ngược về phía người ném",
+      "Cong hơn vì tốc độ lớn luôn làm độ lệch ngang tăng mạnh hơn quãng đường tiến",
+      "Gần như không đổi vì tốc độ tịnh tiến không ảnh hưởng quỹ đạo",
+      "Đổi cong sang phía ngược lại vì lực Magnus tự đảo chiều khi bóng bay nhanh",
       "Thẳng hơn vì bóng có ít thời gian bị lực ngang làm lệch"
     ],
     "correctAnswerIndex": 3,

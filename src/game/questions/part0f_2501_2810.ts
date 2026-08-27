@@ -17,9 +17,9 @@ export const questionsPart0f: QuestionItem[] = [
     "id": "q2502",
     "question": "Quả gì có năm múi nổi thành năm cạnh như ngôi sao khi cắt ngang?",
     "answers": [
-      "Quả nhãn",
-      "Cà rốt",
-      "Quả gấc",
+      "Quả ổi",
+      "Quả thanh long",
+      "Quả na",
       "Quả khế"
     ],
     "correctAnswerIndex": 3,
@@ -30,9 +30,9 @@ export const questionsPart0f: QuestionItem[] = [
     "question": "Quả gì mọc thành chùm, mỗi quả nhỏ tròn, có thể xanh, đỏ hoặc tím?",
     "answers": [
       "Quả nho",
-      "Giá đỗ",
-      "Hoa mai",
-      "Đu đủ"
+      "Quả nhãn",
+      "Quả sim",
+      "Quả vải"
     ],
     "correctAnswerIndex": 0,
     "category": "vietnam_culture"
@@ -41,10 +41,10 @@ export const questionsPart0f: QuestionItem[] = [
     "id": "q2504",
     "question": "Quả gì mọc thành nải, cong cong, khi chín vỏ vàng và ruột mềm?",
     "answers": [
-      "Quả mít",
+      "Quả đu đủ",
       "Quả chuối",
-      "Củ hành",
-      "Thanh long"
+      "Quả xoài",
+      "Quả khế"
     ],
     "correctAnswerIndex": 1,
     "category": "vietnam_culture"

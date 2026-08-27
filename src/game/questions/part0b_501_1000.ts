@@ -6,9 +6,9 @@ export const questionsPart0b: QuestionItem[] = [
     "question": "Một hệ thống LiDAR đo khoảng cách đến vật thể chủ yếu bằng cách phát xung laser rồi đo đại lượng nào?",
     "answers": [
       "Thời gian xung phản xạ quay trở lại",
-      "Màu của dây cáp mạng",
-      "Nhiệt độ pin",
-      "Tần số âm thanh của động cơ"
+      "Cường độ danh định của xung laser khi vừa phát",
+      "Góc quét của cảm biến tại thời điểm phát xung",
+      "Bước sóng danh định của nguồn laser"
     ],
     "correctAnswerIndex": 0,
     "category": "technology"
@@ -18,9 +18,9 @@ export const questionsPart0b: QuestionItem[] = [
     "question": "Passkey theo chuẩn FIDO thay mật khẩu bằng cơ chế mật mã nào?",
     "answers": [
       "Cặp khóa mật mã theo cơ chế khóa công khai/khóa riêng",
-      "Một mã PIN văn bản thuần lưu trên máy chủ",
-      "Một mật khẩu chung dùng cho mọi website",
-      "Nén ảnh"
+      "Mã OTP dùng một lần gửi qua SMS",
+      "Mật khẩu băm được lưu và so khớp trên máy chủ",
+      "Một khóa đối xứng dùng chung giữa website và thiết bị"
     ],
     "correctAnswerIndex": 0,
     "category": "technology"
@@ -30,9 +30,9 @@ export const questionsPart0b: QuestionItem[] = [
     "question": "Vì sao màn hình E Ink có thể giữ nguyên một trang chữ mà gần như không cần điện liên tục?",
     "answers": [
       "Vì tính lưỡng ổn định (bistability) giữ trạng thái hình ảnh; điện chủ yếu cần khi cập nhật",
-      "Vì màn hình luôn bật đèn nền vô hình",
-      "Vì mỗi điểm ảnh là pin mặt trời",
-      "Vì ảnh được in nhiệt thành giấy thật"
+      "Vì điểm ảnh phải được làm tươi liên tục nhưng ở tần số rất thấp",
+      "Vì đèn nền luôn duy trì trạng thái hiển thị bằng dòng điện nhỏ",
+      "Vì bộ nhớ hình ảnh phải cấp điện liên tục cho từng điểm ảnh"
     ],
     "correctAnswerIndex": 0,
     "category": "technology"

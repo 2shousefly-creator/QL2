@@ -5,10 +5,10 @@ export const questionsPart0c: QuestionItem[] = [
     "id": "q1001",
     "question": "Một số sên biển như lettuce sea slug có thể giữ lục lạp lấy từ tảo trong cơ thể. Lợi ích của hiện tượng “đánh cắp lục lạp” này là gì?",
     "answers": [
-      "Lục lạp biến thành xương của sên",
-      "Lục lạp giúp sên thở bằng phổi",
+      "Lục lạp chủ yếu tạo màu xanh để sên ngụy trang",
+      "Lục lạp thay thế hoàn toàn nhu cầu ăn thức ăn của sên",
       "Lục lạp còn hoạt động có thể quang hợp và cung cấp thêm năng lượng cho sên biển",
-      "Lục lạp biến nước biển thành kim loại"
+      "Lục lạp giúp sên dự trữ oxy để lặn lâu hơn"
     ],
     "correctAnswerIndex": 2,
     "category": "biology"
@@ -17,9 +17,9 @@ export const questionsPart0c: QuestionItem[] = [
     "id": "q1002",
     "question": "Voi có thể tạo và cảm nhận các rung động tần số thấp truyền qua mặt đất. Cơ chế này có thể hỗ trợ điều gì?",
     "answers": [
-      "Bay bằng cách làm rung đất",
-      "Đổi màu da theo mùa",
-      "Tạo ánh sáng sinh học",
+      "Xác định nhiệt độ đất để tìm nơi trú ẩn",
+      "Định vị con mồi bằng tiếng vọng truyền trong đất",
+      "Tăng lực đẩy của chân khi chạy đường dài",
       "Liên lạc và phát hiện tín hiệu từ những con voi khác ở khoảng cách xa"
     ],
     "correctAnswerIndex": 3,
