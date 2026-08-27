@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { ArrowLeft, Award, ShieldCheck, Sparkles } from "lucide-react";
+import { ArrowLeft, ShieldCheck, Sparkles } from "lucide-react";
 import { getPlayerFamily, getPlayerRank } from "../../game/selectors";
 import { soundManager } from "../../game/audio";
 import type { GameState } from "../../game/types";
@@ -47,7 +47,7 @@ export const UniformScreen: React.FC<UniformScreenProps> = ({ state, onBack }) =
   const artConfig = getUniformArtConfig(selectedFamily.id);
   const filledSegments = getUniformFilledSegments(selectedFamily, currentRank, isCurrentFamily);
   const achievedAt = getUniformFamilyAchievedAt(state, selectedFamily.id);
-  const selectedMedalIds = (state.medals?.selectedMedalIds ?? []).slice(0, 6);
+  const unlockedMedalIds = state.medals?.unlockedMedalIds ?? [];
 
   const handleSelectFamily = (familyId: string) => {
     soundManager.playClick();
@@ -116,26 +116,9 @@ export const UniformScreen: React.FC<UniformScreenProps> = ({ state, onBack }) =
         family={selectedFamily}
         filledSegments={filledSegments}
         isCurrent={isCurrentFamily}
-        selectedMedalIds={selectedMedalIds}
+        unlockedMedalIds={unlockedMedalIds}
         onSelectMedal={setInspectingMedal}
       />
-
-      <div className="grid grid-cols-2 gap-2 text-[11px]">
-        <div className="rounded-xl border border-slate-700/70 bg-slate-900/65 p-2.5 text-slate-400">
-          <span className="mb-1 flex items-center gap-1.5 font-bold text-slate-200">
-            <ShieldCheck className="h-3.5 w-3.5 text-amber-400" /> Huy Hiệu
-          </span>
-          Cầu vai và Huy Hiệu đồng bộ theo quân hàm đang xem.
-        </div>
-        <div className="rounded-xl border border-slate-700/70 bg-slate-900/65 p-2.5 text-slate-400">
-          <span className="mb-1 flex items-center gap-1.5 font-bold text-slate-200">
-            <Award className="h-3.5 w-3.5 text-amber-400" /> Huân Chương
-          </span>
-          {selectedMedalIds.length > 0
-            ? `${selectedMedalIds.length} Huân Chương đang trưng bày.`
-            : "Chưa chọn Huân Chương trưng bày."}
-        </div>
-      </div>
 
       <UniformRankSelector
         families={unlockedFamilies}
