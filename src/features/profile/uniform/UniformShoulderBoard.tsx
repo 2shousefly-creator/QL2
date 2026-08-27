@@ -3,7 +3,7 @@ import type { UniformArtConfig } from "./uniformArtCatalog";
 
 type UniformShoulderBoardProps = {
   config: UniformArtConfig;
-  side: "left" | "right";
+  side: "wearer-left" | "wearer-right";
 };
 
 const getStarPoints = (cx: number, cy: number, outerRadius: number, innerRadius: number): string => {
@@ -17,32 +17,41 @@ const getStarPoints = (cx: number, cy: number, outerRadius: number, innerRadius:
 export const UniformShoulderBoard: React.FC<UniformShoulderBoardProps> = ({ config, side }) => {
   const uid = useId().replace(/:/g, "_");
   const gradientId = `shoulder_${uid}`;
-  const shineId = `shoulder_shine_${uid}`;
+  const insetId = `shoulder_inset_${uid}`;
   const count = Math.max(0, Math.min(4, config.shoulderMarkCount));
+  const outerEdgeIsRight = side === "wearer-left";
 
   const renderMark = () => {
     if (config.shoulderMarkType === "none") return null;
 
-    if (config.shoulderMarkType === "bar") {
-      const gap = 9;
-      const startY = 28 - ((count - 1) * gap) / 2;
+    if (config.shoulderMarkType === "vertical_bar") {
+      const outerX = outerEdgeIsRight ? 105 : 23;
+      const direction = outerEdgeIsRight ? -1 : 1;
       return (
         <g fill={config.shoulderPalette.mark}>
-          {Array.from({ length: count }, (_, index) => (
-            <rect key={index} x="40" y={startY + index * gap - 2.5} width="40" height="5" rx="2.5" />
-          ))}
+          {Array.from({ length: count }, (_, index) => {
+            const x = outerX + direction * index * 10;
+            return <rect key={index} x={x - 2.5} y="13" width="5" height="22" rx="2" />;
+          })}
         </g>
       );
     }
 
     if (config.shoulderMarkType === "chevron") {
-      const gap = 10;
-      const startY = 18 - ((count - 1) * gap) / 2;
+      const outerTipX = outerEdgeIsRight ? 107 : 21;
+      const direction = outerEdgeIsRight ? -1 : 1;
       return (
-        <g fill="none" stroke={config.shoulderPalette.mark} strokeWidth="4.5" strokeLinecap="round" strokeLinejoin="round">
+        <g
+          fill="none"
+          stroke={config.shoulderPalette.mark}
+          strokeWidth="4"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
           {Array.from({ length: count }, (_, index) => {
-            const y = startY + index * gap;
-            return <path key={index} d={`M 43 ${y} L 60 ${y + 9} L 77 ${y}`} />;
+            const tipX = outerTipX + direction * index * 10;
+            const armX = tipX + direction * 11;
+            return <path key={index} d={`M ${armX} 13 L ${tipX} 24 L ${armX} 35`} />;
           })}
         </g>
       );
@@ -51,61 +60,72 @@ export const UniformShoulderBoard: React.FC<UniformShoulderBoardProps> = ({ conf
     if (config.shoulderMarkType === "supreme_star") {
       return (
         <g>
-          <circle cx="60" cy="28" r="16" fill="none" stroke={config.shoulderPalette.mark} strokeWidth="1.5" opacity="0.7" />
-          <circle cx="60" cy="28" r="12.5" fill={config.shoulderPalette.backgroundDeep} stroke={config.shoulderPalette.highlight} strokeWidth="1" />
-          <polygon points={getStarPoints(60, 28, 11, 4.8)} fill={config.shoulderPalette.mark} />
-          <circle cx="60" cy="28" r="2.4" fill="#fff7cc" />
+          <circle cx="64" cy="24" r="15" fill={config.shoulderPalette.backgroundDeep} stroke={config.shoulderPalette.mark} strokeWidth="1.5" opacity="0.96" />
+          <circle cx="64" cy="24" r="12.5" fill="none" stroke={config.shoulderPalette.highlight} strokeWidth="1" opacity="0.75" />
+          <polygon points={getStarPoints(64, 24, 11, 4.7)} fill={config.shoulderPalette.mark} />
+          <circle cx="64" cy="24" r="2.2" fill="#fff7cc" />
         </g>
       );
     }
 
     const gap = count === 4 ? 18 : 21;
-    const startX = 60 - ((count - 1) * gap) / 2;
+    const startX = 64 - ((count - 1) * gap) / 2;
     return (
       <g fill={config.shoulderPalette.mark}>
         {Array.from({ length: count }, (_, index) => (
-          <polygon key={index} points={getStarPoints(startX + index * gap, 28, 8, 3.5)} />
+          <polygon key={index} points={getStarPoints(startX + index * gap, 24, 7.4, 3.2)} />
         ))}
       </g>
     );
   };
 
+  const innerFastenerX = outerEdgeIsRight ? 18 : 110;
+
   return (
     <div
-      className="w-full drop-shadow-[0_5px_8px_rgba(0,0,0,0.65)]"
-      style={{ transform: `rotate(${side === "left" ? -7 : 7}deg)` }}
+      className="w-full drop-shadow-[0_3px_3px_rgba(0,0,0,0.38)]"
+      style={{ transform: `rotate(${outerEdgeIsRight ? 8 : -8}deg)` }}
       role="img"
-      aria-label={`Cầu vai ${config.shoulderMarkType === "none" ? "không ký hiệu" : `có ${count} ký hiệu`}`}
+      aria-label={`Cầu vai ${side === "wearer-left" ? "trái" : "phải"} của người mặc, ${
+        config.shoulderMarkType === "none" ? "không ký hiệu" : `${count} ký hiệu`
+      }`}
     >
-      <svg viewBox="0 0 120 56" className="block h-auto w-full" xmlns="http://www.w3.org/2000/svg">
+      <svg viewBox="0 0 128 48" className="block h-auto w-full" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <linearGradient id={gradientId} x1="0" y1="0" x2="1" y2="1">
             <stop offset="0%" stopColor={config.shoulderPalette.highlight} />
-            <stop offset="38%" stopColor={config.shoulderPalette.background} />
+            <stop offset="40%" stopColor={config.shoulderPalette.background} />
             <stop offset="100%" stopColor={config.shoulderPalette.backgroundDeep} />
           </linearGradient>
-          <linearGradient id={shineId} x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stopColor="#ffffff" stopOpacity="0" />
-            <stop offset="50%" stopColor="#ffffff" stopOpacity="0.24" />
-            <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
+          <linearGradient id={insetId} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor={config.shoulderPalette.highlight} stopOpacity="0.24" />
+            <stop offset="100%" stopColor={config.shoulderPalette.backgroundDeep} stopOpacity="0.1" />
           </linearGradient>
         </defs>
+
         <path
-          d="M 8 9 Q 12 5 18 5 L 103 11 Q 111 12 112 20 L 109 40 Q 108 47 101 48 L 18 51 Q 10 51 9 44 L 5 17 Q 4 12 8 9 Z"
+          d="M 8 17 Q 9 10 18 9 L 110 13 Q 119 14 120 22 L 118 32 Q 117 39 109 40 L 18 43 Q 10 43 9 36 Z"
           fill={`url(#${gradientId})`}
           stroke={config.shoulderPalette.border}
-          strokeWidth={config.visualGroup === "supreme" ? 3 : 2.2}
+          strokeWidth={config.visualGroup === "supreme" ? 2.4 : 1.6}
+          strokeLinejoin="round"
         />
         <path
-          d="M 14 13 L 102 17 Q 106 17 106 21 L 104 39 L 17 45 Z"
-          fill="none"
-          stroke={`url(#${shineId})`}
-          strokeWidth="2"
-          opacity="0.9"
+          d="M 15 19 L 109 18 Q 113 18 113 22 L 111 34 L 17 38 Z"
+          fill={`url(#${insetId})`}
+          stroke={config.shoulderPalette.highlight}
+          strokeWidth="0.7"
+          strokeOpacity="0.24"
         />
-        {config.trimLevel >= 3 && (
-          <path d="M 16 47 L 102 44" stroke={config.shoulderPalette.mark} strokeWidth="1.4" opacity="0.75" />
-        )}
+        <circle
+          cx={innerFastenerX}
+          cy="25"
+          r="3.1"
+          fill={config.shoulderPalette.backgroundDeep}
+          stroke={config.shoulderPalette.border}
+          strokeWidth="1"
+          opacity="0.85"
+        />
         {renderMark()}
       </svg>
     </div>

@@ -1,7 +1,7 @@
 import React from "react";
 import { RankBadge } from "../../../components/RankBadge";
+import { RankTierProgress } from "../../../components/RankTierProgress";
 import type { RankFamily } from "../../../game/types";
-import { UniformProgressBar } from "./UniformProgressBar";
 
 type UniformRankClusterProps = {
   family: RankFamily;
@@ -14,20 +14,29 @@ export const UniformRankCluster: React.FC<UniformRankClusterProps> = ({
   filledSegments,
   isCurrent,
 }) => {
+  const badgeSize = 96;
+
   return (
-    <div className="flex w-24 flex-col items-center" aria-label={`Cụm Huy Hiệu ${family.name}`}>
+    <div
+      className="flex flex-col items-center"
+      style={{ width: `${badgeSize}px` }}
+      aria-label={`Cụm Huy Hiệu ${family.name}`}
+    >
       <RankBadge
         badge={family.badge}
-        size={76}
+        size={badgeSize}
         isCurrent={isCurrent}
         ariaLabel={`Huy Hiệu cấp bậc ${family.name}`}
         className="drop-shadow-[0_5px_7px_rgba(0,0,0,0.65)]"
       />
-      <div className="-mt-1.5 w-full rounded-md border border-black/50 bg-slate-950/65 p-1 shadow-lg backdrop-blur-sm">
-        <UniformProgressBar
-          totalSegments={family.tierCount}
-          filledSegments={filledSegments}
-          accentColor={family.badge.symbolPalette === "goldPlatinum" ? "#fff7cc" : family.badge.symbolPalette}
+      <div className="mt-1 flex w-full justify-center">
+        <RankTierProgress
+          currentTier={filledSegments}
+          tierCount={family.tierCount}
+          badgeSize={badgeSize}
+          size="hero"
+          showSingleTier={true}
+          className="!my-0"
         />
       </div>
     </div>

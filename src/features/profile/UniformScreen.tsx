@@ -3,6 +3,8 @@ import { ArrowLeft, Award, ShieldCheck, Sparkles } from "lucide-react";
 import { getPlayerFamily, getPlayerRank } from "../../game/selectors";
 import { soundManager } from "../../game/audio";
 import type { GameState } from "../../game/types";
+import type { MedalDefinition } from "../../game/medals/medalCatalog";
+import { MedalInspectModal } from "../../components/MedalInspectModal";
 import { getUniformArtConfig } from "./uniform/uniformArtCatalog";
 import { UniformPortrait } from "./uniform/UniformPortrait";
 import { UniformRankSelector } from "./uniform/UniformRankSelector";
@@ -33,6 +35,7 @@ export const UniformScreen: React.FC<UniformScreenProps> = ({ state, onBack }) =
     [state.progression.currentRankIndex, state.progression.promotionHistory]
   );
   const [selectedFamilyId, setSelectedFamilyId] = useState(currentFamily.id);
+  const [inspectingMedal, setInspectingMedal] = useState<MedalDefinition | null>(null);
 
   useEffect(() => {
     setSelectedFamilyId(currentFamily.id);
@@ -114,6 +117,7 @@ export const UniformScreen: React.FC<UniformScreenProps> = ({ state, onBack }) =
         filledSegments={filledSegments}
         isCurrent={isCurrentFamily}
         selectedMedalIds={selectedMedalIds}
+        onSelectMedal={setInspectingMedal}
       />
 
       <div className="grid grid-cols-2 gap-2 text-[11px]">
@@ -139,6 +143,8 @@ export const UniformScreen: React.FC<UniformScreenProps> = ({ state, onBack }) =
         currentFamilyId={currentFamily.id}
         onSelectFamily={handleSelectFamily}
       />
+
+      <MedalInspectModal medal={inspectingMedal} onClose={() => setInspectingMedal(null)} />
     </div>
   );
 };

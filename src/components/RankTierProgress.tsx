@@ -7,6 +7,7 @@ type RankTierProgressProps = {
   badgeSize?: number;
   size?: "hero" | "list" | "ceremony" | "sm" | "md";
   animateNewTier?: boolean;
+  showSingleTier?: boolean;
   className?: string;
 };
 
@@ -16,10 +17,12 @@ export const RankTierProgress: React.FC<RankTierProgressProps> = ({
   badgeSize,
   size = "hero",
   animateNewTier = false,
+  showSingleTier = false,
   className = "",
 }) => {
-  // Only display for multi-tier families
-  if (tierCount <= 1) {
+  // Home keeps its existing multi-tier behavior; Uniform can opt into the
+  // required single completed segment for Học Viên and Tổng Tư Lệnh.
+  if (tierCount <= 1 && !showSingleTier) {
     return null;
   }
 

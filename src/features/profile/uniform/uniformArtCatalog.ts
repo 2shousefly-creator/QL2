@@ -11,7 +11,7 @@ export type UniformVisualGroup =
   | "endgame"
   | "supreme";
 
-export type ShoulderMarkType = "none" | "bar" | "chevron" | "star" | "supreme_star";
+export type ShoulderMarkType = "none" | "vertical_bar" | "chevron" | "star" | "supreme_star";
 export type UniformCollarStyle = "simple" | "service" | "officer" | "ceremonial" | "supreme";
 export type UniformLapelStyle = "none" | "narrow" | "wide" | "ceremonial";
 
@@ -36,6 +36,7 @@ export type UniformPalette = {
 
 export type UniformArtConfig = {
   familyId: string;
+  isGoldenReference: boolean;
   visualGroup: UniformVisualGroup;
   groupLabel: string;
   variantLevel: number;
@@ -51,6 +52,8 @@ export type UniformArtConfig = {
   ornamentLevel: number;
   buttonCount: number;
 };
+
+export const UNIFORM_GOLDEN_REFERENCE_FAMILY_ID = "junior_2";
 
 type UniformGroupSpec = {
   id: UniformVisualGroup;
@@ -292,10 +295,18 @@ export function deriveShoulderPalette(badge: BadgeDefinition): ShoulderPalette {
     glow: "rgba(148, 163, 184, 0.32)",
   };
 
+  const symbolColor = resolveSymbolColor(badge.symbolPalette);
+  const normalizedFrame = badge.framePalette.toLowerCase();
+  const normalizedSymbol = symbolColor.toLowerCase();
+  const frameIsBright = ["#ffffff", "#fff", "#f8fafc", "#e2e8f0", "#cbd5e1"].includes(normalizedFrame);
+  const symbolIsBright = ["#ffffff", "#fff", "#f8fafc", "#e2e8f0", "#cbd5e1"].includes(normalizedSymbol);
+
   return {
     ...source,
-    border: badge.framePalette,
-    mark: resolveSymbolColor(badge.symbolPalette),
+    // Bright badge frames read as floating cards on cloth. Keep the source
+    // badge palette, but use its symbol/highlight tone for an integrated seam.
+    border: frameIsBright ? (symbolIsBright ? source.highlight : symbolColor) : badge.framePalette,
+    mark: symbolColor,
   };
 }
 
@@ -307,7 +318,7 @@ function getShoulderMark(family: RankFamily): Pick<UniformArtConfig, "shoulderMa
     return { shoulderMarkType: "supreme_star", shoulderMarkCount: 1 };
   }
   if (family.badge.symbol === "horizontalBars") {
-    return { shoulderMarkType: "bar", shoulderMarkCount: family.badge.symbolCount };
+    return { shoulderMarkType: "vertical_bar", shoulderMarkCount: family.badge.symbolCount };
   }
   if (family.badge.symbol === "chevrons") {
     return { shoulderMarkType: "chevron", shoulderMarkCount: family.badge.symbolCount };
@@ -322,6 +333,7 @@ function createUniformConfig(family: RankFamily): UniformArtConfig {
 
   return {
     familyId: family.id,
+    isGoldenReference: family.id === UNIFORM_GOLDEN_REFERENCE_FAMILY_ID,
     visualGroup: group.id,
     groupLabel: group.label,
     variantLevel,

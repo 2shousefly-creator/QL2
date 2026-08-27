@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Zap, Play, Award, Sparkles, Star, Compass, X } from "lucide-react";
+import { Zap, Play, Award, Sparkles, Star, Compass } from "lucide-react";
 import { RankPresentation } from "../../components/RankPresentation";
 import { RankDetailSheet } from "../../components/RankDetailSheet";
 import { HomeXpJourney } from "../../components/HomeXpJourney";
 import { EarningStatus } from "../../components/EarningStatus";
 import { HomeJourneyBackdrop } from "../../components/HomeJourneyBackdrop";
 import { RankActivityTicker } from "../../components/RankActivityTicker";
+import { DisplayedMedalColumn } from "../../components/DisplayedMedal";
+import { MedalInspectModal } from "../../components/MedalInspectModal";
 import { getEtaDetailsToFullBar } from "../../game/xpEngine";
 import { ensureEnergyState, getEnergyMultiplier, isEnergyActive } from "../../game/energyEngine";
 import { getPlayerRank, getXpProgressDetails } from "../../game/selectors";
@@ -15,7 +17,7 @@ import { getRankRole } from "../../game/rankRoles";
 import { soundManager } from "../../game/audio";
 import { GameState } from "../../game/types";
 import { RANK_STEPS } from "../../game/rankBuilder";
-import { getMedalById, MedalDefinition, MEDAL_TIER_STYLES } from "../../game/medals/medalCatalog";
+import type { MedalDefinition } from "../../game/medals/medalCatalog";
 
 type HomeScreenProps = {
   state: GameState;
@@ -74,72 +76,6 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   const isOnline = state.time.currentEarningMode === "direct_online";
   const energyState = ensureEnergyState(state, nowMs);
   const etaDetails = getEtaDetailsToFullBar(state, nowMs);
-
-  const formatMedalName = (name: string): { line1: string; line2?: string } => {
-    const words = name.trim().split(/\s+/);
-    if (words.length <= 2) {
-      return { line1: name };
-    }
-    const mid = Math.ceil(words.length / 2);
-    return {
-      line1: words.slice(0, mid).join(" "),
-      line2: words.slice(mid).join(" "),
-    };
-  };
-
-  const renderMedalColumn = (ids: string[], badgeSize = 224) => {
-    if (ids.length === 0) return null;
-
-    const columnHeight = badgeSize;
-    const itemHeight = columnHeight / 3;
-
-    return (
-      <div
-        className="w-20 sm:w-22 flex flex-col items-center justify-start z-20"
-        style={{ height: `${columnHeight}px` }}
-      >
-        {ids.map((id) => {
-          const medal = getMedalById(id);
-          if (!medal) return null;
-
-          const formatted = formatMedalName(medal.name);
-          const tierStyle = MEDAL_TIER_STYLES[medal.tier];
-
-          return (
-            <button
-              key={id}
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                soundManager.playClick();
-                setInspectingMedal(medal);
-              }}
-              className="w-full flex flex-col items-center justify-center transition-transform hover:scale-110 active:scale-95 cursor-pointer focus:outline-none group shrink-0"
-              style={{ height: `${itemHeight}px` }}
-              title={medal.name}
-            >
-              {/* Name Tag / Ribbon above medal with fixed height for 1 or 2 lines */}
-              <div className={`${tierStyle.ribbonBg} border ${tierStyle.ribbonBorder} rounded-xs px-1.5 h-6 sm:h-7 min-w-[44px] max-w-full w-auto inline-flex flex-col items-center justify-center shadow-md shadow-black/50`}>
-                <span className="block text-[8px] sm:text-[9px] font-bold text-white text-center leading-[1.1] truncate max-w-[70px] sm:max-w-[76px] select-none tracking-tight drop-shadow-sm">
-                  {formatted.line1}
-                </span>
-                {formatted.line2 && (
-                  <span className="block text-[8px] sm:text-[9px] font-bold text-white text-center leading-[1.1] truncate max-w-[70px] sm:max-w-[76px] select-none tracking-tight drop-shadow-sm">
-                    {formatted.line2}
-                  </span>
-                )}
-              </div>
-
-              {/* Medal Icon Symbol */}
-              <span className="text-[32px] sm:text-[38px] leading-none filter drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)] -mt-0.5 select-none">
-                {medal.iconSymbol}
-              </span>
-            </button>
-          );
-        })}
-      </div>
-    );
-  };
 
   return (
     <div className="relative w-full h-[calc(100vh-135px)] max-h-[calc(100vh-135px)] overflow-y-auto touch-pan-y select-none pb-20">
@@ -220,8 +156,18 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                 showTierLabel={false}
                 showName={true}
                 animateNewTier={isLevelingUp}
-                leftMedalsNode={renderMedalColumn(leftMedalIds)}
-                rightMedalsNode={renderMedalColumn(rightMedalIds)}
+                leftMedalsNode={leftMedalIds.length > 0 ? (
+                  <DisplayedMedalColumn
+                    medalIds={leftMedalIds}
+                    onSelectMedal={setInspectingMedal}
+                  />
+                ) : null}
+                rightMedalsNode={rightMedalIds.length > 0 ? (
+                  <DisplayedMedalColumn
+                    medalIds={rightMedalIds}
+                    onSelectMedal={setInspectingMedal}
+                  />
+                ) : null}
               />
             </div>
 
@@ -350,50 +296,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         ) : null}
       </div>
 
-      {/* Medal Inspect Popover Modal */}
-      {inspectingMedal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
-          <div
-            className={`relative w-full max-w-xs rounded-3xl border p-5 text-center shadow-2xl bg-gradient-to-b ${inspectingMedal.bgGradient} ${inspectingMedal.borderColor}`}
-            style={{ boxShadow: `0 0 25px ${inspectingMedal.glowColor}` }}
-          >
-            <button
-              type="button"
-              onClick={() => setInspectingMedal(null)}
-              className="absolute top-3 right-3 w-8 h-8 rounded-full bg-slate-900/80 text-slate-400 hover:text-white flex items-center justify-center"
-            >
-              <X className="w-4 h-4" />
-            </button>
-
-            <div className="flex justify-center my-3">
-              <div
-                className={`w-16 h-16 rounded-2xl flex items-center justify-center border text-3xl shadow-lg bg-slate-900/90 ${inspectingMedal.borderColor}`}
-              >
-                <span>{inspectingMedal.iconSymbol}</span>
-              </div>
-            </div>
-
-            <h4 className={`text-base font-black ${inspectingMedal.textColor}`}>
-              {inspectingMedal.name}
-            </h4>
-            <p className="text-xs text-amber-300 font-bold mt-0.5">
-              {inspectingMedal.categoryName}
-            </p>
-
-            <p className="text-xs text-slate-300 mt-2 font-medium bg-slate-950/60 p-2.5 rounded-xl border border-slate-800">
-              {inspectingMedal.description}
-            </p>
-
-            <button
-              type="button"
-              onClick={() => setInspectingMedal(null)}
-              className="w-full mt-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs transition-colors"
-            >
-              Đóng
-            </button>
-          </div>
-        </div>
-      )}
+      <MedalInspectModal medal={inspectingMedal} onClose={() => setInspectingMedal(null)} />
 
       {/* Rank Detail Modal Sheet */}
       {selectedRankIndexForDetail !== null && (
