@@ -155,7 +155,8 @@ export type TabType =
   | "medals"
   | "mastery"
   | "idCard"
-  | "journal";
+  | "journal"
+  | "uniform";
 
 export type TrainingGameId =
   | "march_rhythm"

@@ -17,6 +17,7 @@ import {
   Crown,
   Contact,
   ScrollText,
+  Shirt,
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { TabType, GameState } from "../game/types";
@@ -92,7 +93,8 @@ export const HubNavigation: React.FC<HubNavigationProps> = ({
     activeTab === "medals" ||
     activeTab === "mastery" ||
     activeTab === "idCard" ||
-    activeTab === "journal";
+    activeTab === "journal" ||
+    activeTab === "uniform";
 
   const mainTabs = [
     {
@@ -200,6 +202,19 @@ export const HubNavigation: React.FC<HubNavigationProps> = ({
       activeRing: "ring-2 ring-emerald-400 border-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.3)]",
       iconBox: "bg-gradient-to-br from-emerald-500/30 to-emerald-700/20 text-emerald-300 border-emerald-400/50 shadow-[0_0_12px_rgba(16,185,129,0.25)]",
       badgeClass: "bg-emerald-500/20 text-emerald-300 border-emerald-500/40",
+    },
+    {
+      id: "uniform" as TabType,
+      title: "Quân Phục",
+      fullName: "Quân Phục Binh Nghiệp",
+      subtitle: "Lễ phục theo quân hàm đã đạt",
+      badge: "24 Quân hàm",
+      icon: Shirt,
+      bgGradient: "from-cyan-500/20 via-blue-600/10 to-slate-900/90",
+      borderColor: "border-cyan-500/40 hover:border-cyan-400",
+      activeRing: "ring-2 ring-cyan-400 border-cyan-400 shadow-[0_0_15px_rgba(34,211,238,0.3)]",
+      iconBox: "bg-gradient-to-br from-cyan-500/30 to-blue-700/20 text-cyan-300 border-cyan-400/50 shadow-[0_0_12px_rgba(34,211,238,0.25)]",
+      badgeClass: "bg-cyan-500/20 text-cyan-300 border-cyan-500/40",
     },
     {
       id: "medals" as TabType,
@@ -352,7 +367,8 @@ export const HubNavigation: React.FC<HubNavigationProps> = ({
                 {profileMenuItems.map((item, index) => {
                   const ItemIcon = item.icon;
                   const isCurrentActive = activeTab === item.id;
-                  const isSpanningFullWidth = index === profileMenuItems.length - 1;
+                  const isSpanningFullWidth =
+                    profileMenuItems.length % 2 === 1 && index === profileMenuItems.length - 1;
 
                   return (
                     <button

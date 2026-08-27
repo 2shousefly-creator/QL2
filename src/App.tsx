@@ -8,6 +8,7 @@ import { MedalsScreen } from "./features/profile/MedalsScreen";
 import { MasteryScreen } from "./features/profile/MasteryScreen";
 import { IdCardScreen } from "./features/profile/IdCardScreen";
 import { JournalScreen } from "./features/profile/JournalScreen";
+import { UniformScreen } from "./features/profile/UniformScreen";
 import { MedalUnlockModal } from "./components/MedalUnlockModal";
 import { TangGiaScreen } from "./features/tang_gia/TangGiaScreen";
 import { EntertainmentHubScreen } from "./features/entertainment/EntertainmentHubScreen";
@@ -643,6 +644,12 @@ export default function App() {
             <JournalScreen
               state={gameState}
               onNavigateTab={(tab) => setActiveTab(tab)}
+            />
+          )}
+          {activeTab === "uniform" && (
+            <UniformScreen
+              state={gameState}
+              onBack={() => setActiveTab("profile")}
             />
           )}
           {activeTab === "entertainment" && (
