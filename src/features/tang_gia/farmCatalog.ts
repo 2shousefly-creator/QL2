@@ -12,7 +12,7 @@ export const CROP_CATALOG: CropDefinition[] = [
     id: "carrot",
     name: "Cà Rốt",
     seedCostGold: 0,
-    harvestGold: 5,
+    harvestGold: 10,
     growthMs: 5 * 60 * 60 * 1000, // 05h00m
     harvestXp: 5,
     requiredRank: { familyId: "hoc_vien", tier: null },
@@ -21,7 +21,7 @@ export const CROP_CATALOG: CropDefinition[] = [
     id: "cabbage",
     name: "Cải Bắp",
     seedCostGold: 5,
-    harvestGold: 7,
+    harvestGold: 14,
     growthMs: 7 * 60 * 60 * 1000, // 07h00m
     harvestXp: 8,
     requiredRank: { familyId: "binh_bet", tier: 1 },
@@ -30,7 +30,7 @@ export const CROP_CATALOG: CropDefinition[] = [
     id: "potato",
     name: "Khoai Tây",
     seedCostGold: 8,
-    harvestGold: 15,
+    harvestGold: 30,
     growthMs: 9 * 60 * 60 * 1000, // 09h00m
     harvestXp: 15,
     requiredRank: { familyId: "binh_nhi", tier: 1 },
@@ -39,7 +39,7 @@ export const CROP_CATALOG: CropDefinition[] = [
     id: "tomato",
     name: "Cà Chua",
     seedCostGold: 11,
-    harvestGold: 20,
+    harvestGold: 40,
     growthMs: 11 * 60 * 60 * 1000, // 11h00m
     harvestXp: 20,
     requiredRank: { familyId: "binh_nhat", tier: 1 },
@@ -48,7 +48,7 @@ export const CROP_CATALOG: CropDefinition[] = [
     id: "strawberry",
     name: "Dâu Tây",
     seedCostGold: 15,
-    harvestGold: 25,
+    harvestGold: 50,
     growthMs: 13 * 60 * 60 * 1000, // 13h00m
     harvestXp: 27,
     requiredRank: { familyId: "ha_si", tier: 1 },
@@ -57,7 +57,7 @@ export const CROP_CATALOG: CropDefinition[] = [
     id: "corn",
     name: "Ngô",
     seedCostGold: 20,
-    harvestGold: 35,
+    harvestGold: 70,
     growthMs: 15 * 60 * 60 * 1000, // 15h00m
     harvestXp: 37,
     requiredRank: { familyId: "trung_si", tier: 1 },
@@ -66,7 +66,7 @@ export const CROP_CATALOG: CropDefinition[] = [
     id: "pumpkin",
     name: "Bí Đỏ",
     seedCostGold: 30,
-    harvestGold: 50,
+    harvestGold: 100,
     growthMs: 18 * 60 * 60 * 1000, // 18h00m
     harvestXp: 48,
     requiredRank: { familyId: "thuong_si", tier: 1 },
@@ -75,7 +75,7 @@ export const CROP_CATALOG: CropDefinition[] = [
     id: "watermelon",
     name: "Dưa Hấu",
     seedCostGold: 40,
-    harvestGold: 70,
+    harvestGold: 140,
     growthMs: 21 * 60 * 60 * 1000, // 21h00m
     harvestXp: 60,
     requiredRank: { familyId: "thieu_uy", tier: 1 },
@@ -84,7 +84,7 @@ export const CROP_CATALOG: CropDefinition[] = [
     id: "pineapple",
     name: "Dứa",
     seedCostGold: 55,
-    harvestGold: 95,
+    harvestGold: 190,
     growthMs: 24 * 60 * 60 * 1000, // 24h00m
     harvestXp: 75,
     requiredRank: { familyId: "trung_uy", tier: 1 },
@@ -93,7 +93,7 @@ export const CROP_CATALOG: CropDefinition[] = [
     id: "banana",
     name: "Chuối",
     seedCostGold: 80,
-    harvestGold: 120,
+    harvestGold: 240,
     growthMs: 28 * 60 * 60 * 1000, // 28h00m
     harvestXp: 94,
     requiredRank: { familyId: "thuong_uy", tier: 1 },
@@ -102,7 +102,7 @@ export const CROP_CATALOG: CropDefinition[] = [
     id: "orange",
     name: "Cam",
     seedCostGold: 100,
-    harvestGold: 145,
+    harvestGold: 290,
     growthMs: 32 * 60 * 60 * 1000, // 32h00m
     harvestXp: 107,
     requiredRank: { familyId: "dai_uy", tier: 1 },
@@ -110,8 +110,8 @@ export const CROP_CATALOG: CropDefinition[] = [
   {
     id: "mango",
     name: "Xoài",
-    seedCostGold: 145,
-    harvestGold: 195,
+    seedCostGold: 125,
+    harvestGold: 340,
     growthMs: 36 * 60 * 60 * 1000, // 36h00m
     harvestXp: 121,
     requiredRank: { familyId: "thieu_ta", tier: 1 },
@@ -119,8 +119,8 @@ export const CROP_CATALOG: CropDefinition[] = [
   {
     id: "apple",
     name: "Táo",
-    seedCostGold: 178,
-    harvestGold: 232,
+    seedCostGold: 148,
+    harvestGold: 390,
     growthMs: 40 * 60 * 60 * 1000, // 40h00m
     harvestXp: 142,
     requiredRank: { familyId: "trung_ta", tier: 1 },
@@ -128,8 +128,8 @@ export const CROP_CATALOG: CropDefinition[] = [
   {
     id: "pear",
     name: "Lê",
-    seedCostGold: 200,
-    harvestGold: 264,
+    seedCostGold: 170,
+    harvestGold: 440,
     growthMs: 44 * 60 * 60 * 1000, // 44h00m
     harvestXp: 167,
     requiredRank: { familyId: "thuong_ta", tier: 1 },
@@ -137,8 +137,8 @@ export const CROP_CATALOG: CropDefinition[] = [
   {
     id: "grape",
     name: "Nho",
-    seedCostGold: 243,
-    harvestGold: 300,
+    seedCostGold: 203,
+    harvestGold: 500,
     growthMs: 48 * 60 * 60 * 1000, // 48h00m
     harvestXp: 198,
     requiredRank: { familyId: "dai_ta", tier: 1 },
@@ -146,8 +146,8 @@ export const CROP_CATALOG: CropDefinition[] = [
   {
     id: "dragon_fruit",
     name: "Lúa",
-    seedCostGold: 270,
-    harvestGold: 360,
+    seedCostGold: 230,
+    harvestGold: 560,
     growthMs: 54 * 60 * 60 * 1000, // 54h00m
     harvestXp: 227,
     requiredRank: { familyId: "thieu_tuong", tier: 1 },
@@ -155,8 +155,8 @@ export const CROP_CATALOG: CropDefinition[] = [
   {
     id: "avocado",
     name: "Bơ",
-    seedCostGold: 320,
-    harvestGold: 433,
+    seedCostGold: 260,
+    harvestGold: 620,
     growthMs: 60 * 60 * 60 * 1000, // 60h00m
     harvestXp: 264,
     requiredRank: { familyId: "trung_tuong", tier: 1 },
@@ -164,8 +164,8 @@ export const CROP_CATALOG: CropDefinition[] = [
   {
     id: "durian",
     name: "Sầu Riêng",
-    seedCostGold: 390,
-    harvestGold: 520,
+    seedCostGold: 290,
+    harvestGold: 690,
     growthMs: 72 * 60 * 60 * 1000, // 72h00m
     harvestXp: 310,
     requiredRank: { familyId: "thuong_tuong", tier: 1 },
@@ -173,8 +173,8 @@ export const CROP_CATALOG: CropDefinition[] = [
   {
     id: "mangosteen",
     name: "Măng Cụt",
-    seedCostGold: 500,
-    harvestGold: 700,
+    seedCostGold: 330,
+    harvestGold: 760,
     growthMs: 84 * 60 * 60 * 1000, // 84h00m
     harvestXp: 380,
     requiredRank: { familyId: "dai_tuong", tier: 1 },
@@ -189,7 +189,7 @@ export const ANIMAL_CATALOG: AnimalDefinition[] = [
     eggIntervalMs: 5 * 60 * 60 * 1000, // 05h00m
     lifespanMs: 200 * 60 * 60 * 1000,
     eggTypeId: "chicken_egg",
-    eggSellGold: 6,
+    eggSellGold: 9,
     eggSellXp: 3,
     requiredRank: { familyId: "hoc_vien", tier: null },
   },
@@ -200,7 +200,7 @@ export const ANIMAL_CATALOG: AnimalDefinition[] = [
     eggIntervalMs: 6 * 60 * 60 * 1000, // 06h00m
     lifespanMs: 212 * 60 * 60 * 1000,
     eggTypeId: "duck_egg",
-    eggSellGold: 10,
+    eggSellGold: 15,
     eggSellXp: 5,
     requiredRank: { familyId: "binh_nhi", tier: 1 },
   },
@@ -211,7 +211,7 @@ export const ANIMAL_CATALOG: AnimalDefinition[] = [
     eggIntervalMs: 7.5 * 60 * 60 * 1000, // 07h30m
     lifespanMs: 224 * 60 * 60 * 1000,
     eggTypeId: "quail_egg",
-    eggSellGold: 14,
+    eggSellGold: 21,
     eggSellXp: 7,
     requiredRank: { familyId: "ha_si", tier: 1 },
   },
@@ -222,7 +222,7 @@ export const ANIMAL_CATALOG: AnimalDefinition[] = [
     eggIntervalMs: 9 * 60 * 60 * 1000, // 09h00m
     lifespanMs: 236 * 60 * 60 * 1000,
     eggTypeId: "goose_egg",
-    eggSellGold: 30,
+    eggSellGold: 45,
     eggSellXp: 15,
     requiredRank: { familyId: "thuong_si", tier: 1 },
   },
@@ -233,7 +233,7 @@ export const ANIMAL_CATALOG: AnimalDefinition[] = [
     eggIntervalMs: 10.5 * 60 * 60 * 1000, // 10h30m
     lifespanMs: 248 * 60 * 60 * 1000,
     eggTypeId: "muscovy_duck_egg",
-    eggSellGold: 42,
+    eggSellGold: 63,
     eggSellXp: 21,
     requiredRank: { familyId: "trung_uy", tier: 1 },
   },
@@ -244,7 +244,7 @@ export const ANIMAL_CATALOG: AnimalDefinition[] = [
     eggIntervalMs: 12 * 60 * 60 * 1000, // 12h00m
     lifespanMs: 260 * 60 * 60 * 1000,
     eggTypeId: "turkey_egg",
-    eggSellGold: 58,
+    eggSellGold: 87,
     eggSellXp: 29,
     requiredRank: { familyId: "dai_uy", tier: 1 },
   },
@@ -255,7 +255,7 @@ export const ANIMAL_CATALOG: AnimalDefinition[] = [
     eggIntervalMs: 14 * 60 * 60 * 1000, // 14h00m
     lifespanMs: 272 * 60 * 60 * 1000,
     eggTypeId: "guinea_fowl_egg",
-    eggSellGold: 72,
+    eggSellGold: 108,
     eggSellXp: 36,
     requiredRank: { familyId: "trung_ta", tier: 1 },
   },
@@ -266,7 +266,7 @@ export const ANIMAL_CATALOG: AnimalDefinition[] = [
     eggIntervalMs: 16.5 * 60 * 60 * 1000, // 16h30m
     lifespanMs: 284 * 60 * 60 * 1000,
     eggTypeId: "pheasant_egg",
-    eggSellGold: 86,
+    eggSellGold: 129,
     eggSellXp: 43,
     requiredRank: { familyId: "dai_ta", tier: 1 },
   },
@@ -277,7 +277,7 @@ export const ANIMAL_CATALOG: AnimalDefinition[] = [
     eggIntervalMs: 18 * 60 * 60 * 1000, // 18h00m
     lifespanMs: 296 * 60 * 60 * 1000,
     eggTypeId: "peafowl_egg",
-    eggSellGold: 110,
+    eggSellGold: 165,
     eggSellXp: 55,
     requiredRank: { familyId: "trung_tuong", tier: 1 },
   },
@@ -288,7 +288,7 @@ export const ANIMAL_CATALOG: AnimalDefinition[] = [
     eggIntervalMs: 21 * 60 * 60 * 1000, // 21h00m
     lifespanMs: 308 * 60 * 60 * 1000,
     eggTypeId: "ostrich_egg",
-    eggSellGold: 126,
+    eggSellGold: 189,
     eggSellXp: 63,
     requiredRank: { familyId: "dai_tuong", tier: 1 },
   },
@@ -407,8 +407,8 @@ export const FERTILIZER_CATALOG: FertilizerDefinition[] = [
     name: "Phân Cao Cấp Loại 3",
     category: "premium",
     purchaseGold: 75,
-    xpBonusPct: 0.13,
-    growthTimeReductionPct: 0.13,
+    xpBonusPct: 0.15,
+    growthTimeReductionPct: 0.15,
     requiredRank: { familyId: "dai_ta", tier: 1 },
     icon: "✨",
   },
@@ -417,8 +417,8 @@ export const FERTILIZER_CATALOG: FertilizerDefinition[] = [
     name: "Phân Cao Cấp Loại 2",
     category: "premium",
     purchaseGold: 100,
-    xpBonusPct: 0.17,
-    growthTimeReductionPct: 0.17,
+    xpBonusPct: 0.2,
+    growthTimeReductionPct: 0.2,
     requiredRank: { familyId: "trung_tuong", tier: 1 },
     icon: "✨",
   },
@@ -427,8 +427,8 @@ export const FERTILIZER_CATALOG: FertilizerDefinition[] = [
     name: "Phân Cao Cấp Loại 1",
     category: "premium",
     purchaseGold: 130,
-    xpBonusPct: 0.22,
-    growthTimeReductionPct: 0.22,
+    xpBonusPct: 0.25,
+    growthTimeReductionPct: 0.25,
     requiredRank: { familyId: "dai_tuong", tier: 1 },
     icon: "✨",
   },
