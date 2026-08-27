@@ -1,0 +1,49 @@
+name: Import QuanLo1 into QL2
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout QL2
+        uses: actions/checkout@v4
+        with:
+          path: destination
+
+      - name: Checkout latest QuanLo1 main
+        uses: actions/checkout@v4
+        with:
+          repository: 2shousefly-creator/QuanLo1
+          ref: main
+          token: ${{ secrets.SOURCE_REPO_TOKEN }}
+          fetch-depth: 1
+          path: source
+
+      - name: Copy QuanLo1 into QL2
+        run: |
+          rsync -av --delete \
+            --exclude='.git/' \
+            --exclude='.github/workflows/import-quanlo1.yml' \
+            source/ destination/
+
+      - name: Commit and push
+        working-directory: destination
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add -A
+
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+
+          git commit -m "Sync latest QuanLo1 main into QL2"
+          git push origin main
