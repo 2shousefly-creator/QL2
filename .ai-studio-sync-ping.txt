@@ -1,5 +1,7 @@
 AI Studio sync ping
 Repository: 2shousefly-creator/QL2
 Branch: main
-Purpose: force Google AI Studio to detect a fresh HEAD after the Tang Gia asset/UI merge.
+Purpose: force Google AI Studio to detect a fresh HEAD after the Vite filesystem-watcher fix was merged.
 Date: 2026-08-27
+Ping: 2
+Expected file to refresh: vite.config.ts
