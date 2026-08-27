@@ -25,12 +25,12 @@ jobs:
           fetch-depth: 1
           path: source
 
-      - name: Copy QuanLo1 into QL2
-        run: |
-          rsync -av --delete \
-            --exclude='.git/' \
-            --exclude='.github/workflows/import-quanlo1.yml' \
-            source/ destination/
+- name: Copy QuanLo1 into QL2
+  run: |
+    rsync -av --delete \
+      --exclude='.git/' \
+      --exclude='.github/workflows/' \
+      source/ destination/
 
       - name: Commit and push
         working-directory: destination
