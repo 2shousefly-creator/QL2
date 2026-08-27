@@ -1,0 +1,372 @@
+name: Complete Phase 6 Source on PR
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  complete:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: codex/chien-tuyen-phase-6
+          fetch-depth: 0
+      - name: Complete Phase 6 source patch
+        shell: bash
+        run: |
+          if test -f src/features/entertainment/chien_tuyen/phase6Update.test.ts; then
+            echo 'Phase 6 continuation already applied.'
+            exit 0
+          fi
+          python - <<'PY'
+          from pathlib import Path
+
+          def read(path): return Path(path).read_text(encoding='utf-8')
+          def write(path, text):
+              p = Path(path); p.parent.mkdir(parents=True, exist_ok=True); p.write_text(text, encoding='utf-8')
+          def replace(path, old, new, count=1):
+              text = read(path)
+              actual = text.count(old)
+              if actual < count:
+                  raise SystemExit(f'{path}: expected {count}, found {actual}: {old[:120]!r}')
+              write(path, text.replace(old, new, count))
+
+          # Finish Barracks training button layout/count/accessibility.
+          path = 'src/features/entertainment/chien_tuyen/components/BarracksView.tsx'
+          old = '''                <button
+                  type="button"
+                  disabled={trainingFull || gold < trainingCost}
+                  onClick={() => onTrain(troop.id)}
+                  className="ct-v2-train-button"
+                  data-action={`train-${troop.id}`}
+                >
+                  <Users className="h-4 w-4" /> Đào tạo · {trainingCost} <Coins className="h-3.5 w-3.5" /> · {formatChienTuyenDurationMs(getTrainingDurationMs(troop.id, level))}
+                </button>'''
+          new = '''                <button
+                  type="button"
+                  disabled={trainingFull || gold < trainingCost}
+                  onClick={() => onTrain(troop.id)}
+                  className="ct-v2-train-button ct-v2-train-button--phase6"
+                  data-action={`train-${troop.id}`}
+                  data-training-count={trainingCount}
+                  aria-label={`Đào tạo ${troop.name}, giá ${trainingCost} Vàng, thời gian ${formatChienTuyenDurationForAriaMs(trainingDurationMs)}, hiện có ${trainingCount} ${troop.name} đang đào tạo.`}
+                >
+                  <span className="ct-v2-train-button-main">
+                    <Users className="h-4 w-4" aria-hidden="true" />
+                    <span>ĐÀO TẠO</span>
+                    {trainingCount > 0 && <span className="ct-v2-train-count-badge" aria-hidden="true">×{trainingCount}</span>}
+                  </span>
+                  <span className="ct-v2-train-button-meta">
+                    <span className="ct-v2-train-meta-group ct-v2-train-cost" data-training-cost={trainingCost}>
+                      <Coins className="h-3.5 w-3.5" aria-hidden="true" /><span>{trainingCost} Vàng</span>
+                    </span>
+                    <span className="ct-v2-train-meta-group ct-v2-train-time" data-training-time={formatChienTuyenDurationMs(trainingDurationMs)}>
+                      <Timer className="h-3.5 w-3.5" aria-hidden="true" /><span>{formatChienTuyenDurationMs(trainingDurationMs)}</span>
+                    </span>
+                  </span>
+                </button>'''
+          replace(path, old, new)
+
+          # Upgrade modal uses shared duration formatter.
+          path = 'src/features/entertainment/chien_tuyen/components/TroopUpgradeModal.tsx'
+          replace(path, 'import { getTroopStats, TROOP_BY_TYPE } from "../troopCatalog";',
+                        'import { getTroopStats, TROOP_BY_TYPE } from "../troopCatalog";\nimport { formatChienTuyenDurationMs } from "../durationFormat";')
+          old_func = '''function formatDuration(durationMs: number): string {
+  const seconds = Math.max(0, Math.ceil(durationMs / 1000));
+  const minutes = Math.floor(seconds / 60);
+  return `${minutes}:${String(seconds % 60).padStart(2, "0")}`;
+}
+
+'''
+          replace(path, old_func, '')
+          replace(path, '{formatDuration(duration)}', '{formatChienTuyenDurationMs(duration)}')
+
+          # Air Force compact battle stack and full detail based on shared 4% config.
+          path = 'src/features/entertainment/chien_tuyen/ChienTuyenGame.tsx'
+          replace(path,
+              'import { BATTLE_SPEEDS, DEPLOYMENT_SECONDS, MAX_FORMATION_UNITS, MAX_SAME_TROOP_TYPE, getBattlePressureMultiplier, getFormationSlotsForSide } from "./config";',
+              'import { BATTLE_SPEEDS, COMBAT_CONFIG, DEPLOYMENT_SECONDS, MAX_FORMATION_UNITS, MAX_SAME_TROOP_TYPE, getBattlePressureMultiplier, getFormationSlotsForSide } from "./config";')
+          replace(path,
+              '{unit.passiveId === "air_force_attack_growth" && unit.passiveStacks > 0 && <span className="ct-v2-stack"><Sparkles className="h-2.5 w-2.5" />THỐNG TRỊ ×{unit.passiveStacks}</span>}',
+              '{unit.passiveId === "air_force_attack_growth" && unit.passiveStacks > 0 && <span className="ct-v2-stack" aria-label={`Thống Trị Bầu Trời ${unit.passiveStacks} cộng dồn`}>✨x{unit.passiveStacks}</span>}')
+          replace(path,
+              'unit.passiveId === "air_force_attack_growth" ? `Thống Trị Bầu Trời: ${unit.passiveStacks}/10 cộng dồn · +${Math.round(unit.passiveStacks * 5)}% ATK` : null,',
+              'unit.passiveId === "air_force_attack_growth" ? `Thống Trị Bầu Trời: ${unit.passiveStacks}/${COMBAT_CONFIG.passives.maxGrowthStacks} cộng dồn · +${Math.round(unit.passiveStacks * COMBAT_CONFIG.passives.airForceAttackPerStack * 100)}% ATK` : null,')
+
+          # Presentation styling; stays compact in two-column cards.
+          path = 'src/features/entertainment/chien_tuyen/chienTuyen.css'
+          css = read(path) + '''
+
+/* Phase 6: compact per-troop training controls and Air Force stack badge. */
+.ct-v2-train-button--phase6 {
+  flex-direction: column;
+  align-items: stretch;
+  gap: .35rem;
+  padding: .55rem .6rem;
+}
+.ct-v2-train-button-main {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: center;
+  gap: .35rem;
+  font-weight: 900;
+}
+.ct-v2-train-count-badge {
+  display: inline-flex;
+  min-width: 1.45rem;
+  height: 1.15rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, .14);
+  padding: 0 .35rem;
+  font-size: .62rem;
+  line-height: 1;
+  font-weight: 900;
+}
+.ct-v2-train-button-meta {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: .3rem;
+}
+.ct-v2-train-meta-group {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: center;
+  gap: .2rem;
+  border-radius: .65rem;
+  padding: .24rem .3rem;
+  font-size: .6rem;
+  font-weight: 900;
+  white-space: nowrap;
+}
+.ct-v2-train-cost { background: rgba(251, 191, 36, .2); color: #92400e; }
+.ct-v2-train-time { background: rgba(34, 211, 238, .18); color: #075985; }
+.ct-v2-train-button:disabled .ct-v2-train-meta-group { opacity: .58; }
+.ct-v2-stack {
+  max-width: max-content;
+  padding: 2px 5px;
+  font-size: 9px;
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+'''
+          write(path, css)
+
+          # Update legacy fixtures for new caps/balance.
+          path = 'src/features/entertainment/chien_tuyen/domainEngine.test.ts'
+          replace(path, '  const maxStats = getTroopStats(troopType, 24);', '  const maxStats = getTroopStats(troopType, 54);')
+          replace(path, 'definition.growth.maxHp * 23', 'definition.growth.maxHp * 53')
+          replace(path, 'definition.growth.attack * 23', 'definition.growth.attack * 53')
+          replace(path, 'definition.growth.defense * 23', 'definition.growth.defense * 53')
+          replace(path, 'equal(getRequiredRankIndexForBarracksLevel(2), 9, "barracks level two requires the tenth rank step");',
+                        'equal(getRequiredRankIndexForBarracksLevel(2), 4, "barracks level two requires the fifth rank step");')
+          replace(path, 'equal(getRequiredRankIndexForBarracksLevel(24), 207, "barracks level twenty-four has a bounded rank requirement");',
+                        'equal(getRequiredRankIndexForBarracksLevel(54), 212, "barracks level fifty-four starts at rank index 212");')
+          replace(path,
+              'equal(getMaxBarracksLevel(9), 1, "journey level 9 still unlocks Barracks 1");\nequal(getMaxBarracksLevel(10), 2, "journey level 10 unlocks Barracks 2");\nequal(getMaxBarracksLevel(216), 24, "journey level 216 unlocks Barracks 24");\nequal(getMaxBarracksLevelFromRankIndex(215), 24, "zero-based currentRankIndex maps to one-based journey level");',
+              'equal(getMaxBarracksLevel(4), 1, "journey level 4 still unlocks Barracks 1");\nequal(getMaxBarracksLevel(5), 2, "journey level 5 unlocks Barracks 2");\nequal(getMaxBarracksLevel(216), 54, "journey level 216 unlocks Barracks 54");\nequal(getMaxBarracksLevelFromRankIndex(215), 54, "zero-based final rank index maps to Barracks 54");')
+          replace(path, 'equal(getTrainingSlotCount(24), 12, "training slots cap at twelve");',
+                        'equal(getTrainingSlotCount(54), 12, "training slots cap at twelve through Barracks 54");')
+
+          path = 'src/features/entertainment/chien_tuyen/engine.test.ts'
+          replace(path, 'test("created troop levels use the same 1-24 clamp as their stats", () => {',
+                        'test("created troop levels use the same 1-54 clamp as their stats", () => {')
+          replace(path, '  assert.equal(aboveRange.level, 24);', '  assert.equal(aboveRange.level, 54);')
+
+          path = 'src/features/entertainment/chien_tuyen/profileEngine.test.ts'
+          replace(path,
+              'assert(!startBarracksUpgrade(starter, 9, 70_000).ok, "journey level 9 cannot start Barracks 2");\nconst barracksUpgrade = startBarracksUpgrade(starter, 10, 70_000, { jobId: "barracks-two" });\nassert(barracksUpgrade.ok && barracksUpgrade.value, "journey level 10 unlocks Barracks 2 upgrade");',
+              'assert(!startBarracksUpgrade(starter, 4, 70_000).ok, "journey level 4 cannot start Barracks 2");\nconst barracksUpgrade = startBarracksUpgrade(starter, 5, 70_000, { jobId: "barracks-two" });\nassert(barracksUpgrade.ok && barracksUpgrade.value, "journey level 5 unlocks Barracks 2 upgrade");')
+
+          path = 'src/features/entertainment/chien_tuyen/combatEngine.test.ts'
+          replace(path, 'test("Thống Trị Bầu Trời grants non-compounding five-percent ATK stacks capped at ten", () => {',
+                        'test("Thống Trị Bầu Trời grants non-compounding four-percent ATK stacks capped at ten", () => {')
+          replace(path, '  close(findUnit(state, air.instanceId).attack, 105, "one Air stack");', '  close(findUnit(state, air.instanceId).attack, 104, "one Air stack");')
+          replace(path, '  close(findUnit(state, air.instanceId).attack, 150, "ten Air stacks");', '  close(findUnit(state, air.instanceId).attack, 140, "ten Air stacks");')
+          replace(path, '  close(findUnit(state, air.instanceId).attack, 150, "Air remains capped without compounding");', '  close(findUnit(state, air.instanceId).attack, 140, "Air remains capped without compounding");')
+          replace(path, '  assert.equal(protection?.expiresAfterRound, 1);', '  assert.equal(protection?.expiresAfterRound, 2);')
+          replace(path, 'test("Quyết Tâm Bất Diệt clamps repeated lethal damage at its HP floor and expires after one round", () => {',
+                        'test("Quyết Tâm Bất Diệt protects the HP floor for exactly two rounds", () => {')
+          replace(path,
+              '''  state.round = 1;
+  state = resolveEndOfRound(state);
+  const expired = findUnit(state, infantry.instanceId);
+  assert.equal(expired.statuses.some((status) => status.type === "infantry_death_refusal"), false);
+  applyShieldAndHpDamage(expired, 1_000);
+  assert.equal(expired.hp, 0);''',
+              '''  state.round = 1;
+  state = resolveEndOfRound(state);
+  const stillProtected = findUnit(state, infantry.instanceId);
+  assert.equal(stillProtected.statuses.some((status) => status.type === "infantry_death_refusal"), true);
+  applyShieldAndHpDamage(stillProtected, 1_000);
+  assert.equal(stillProtected.hp, 100);
+  state.round = 2;
+  state = resolveEndOfRound(state);
+  const expired = findUnit(state, infantry.instanceId);
+  assert.equal(expired.statuses.some((status) => status.type === "infantry_death_refusal"), false);
+  applyShieldAndHpDamage(expired, 1_000);
+  assert.equal(expired.hp, 0);''')
+          replace(path, 'test("Artillery Ultimate fires up to three 40 percent volleys and skips targets killed earlier", () => {',
+                        'test("Artillery Ultimate fires up to three 45 percent volleys and skips targets killed earlier", () => {')
+          # Artillery test fixtures can use exactly the new threshold.
+          text = read(path)
+          start = text.index('test("Artillery Ultimate fires up to three 45 percent volleys')
+          end = text.index('test("Armor Thế Thủ', start)
+          block = text[start:end].replace('rage: 70', 'rage: 50')
+          block = block.replace('findUnit(resolved, durable.instanceId).hp, 880', 'findUnit(resolved, durable.instanceId).hp, 865')
+          write(path, text[:start] + block + text[end:])
+          text = read(path).replace('findUnit(state, armor.instanceId).defense, 160', 'findUnit(state, armor.instanceId).defense, 200')
+          text = text.replace('findUnit(state, armor.instanceId).armorUltimateDefenseBonus, 80', 'findUnit(state, armor.instanceId).armorUltimateDefenseBonus, 120')
+          text = text.replace('findUnit(state, armor.instanceId).defense, 196', 'findUnit(state, armor.instanceId).defense, 246')
+          text = text.replace('test("Armor Thế Thủ doubles current DEF for three rounds and removes only its own snapshot bonus"', 'test("Armor Thế Thủ adds 150 percent reference DEF for three rounds and removes only its own snapshot bonus"')
+          text = text.replace('test("Engineer Lỳ Đòn heals 30 percent missing HP and applies one refreshable Toughness status"', 'test("Engineer Lỳ Đòn heals 22 percent missing HP and applies one refreshable Toughness status"')
+          text = text.replace('findUnit(state, engineer.instanceId).hp, 580', 'findUnit(state, engineer.instanceId).hp, 532')
+          text = text.replace('findUnit(state, engineer.instanceId).hp, 650', 'findUnit(state, engineer.instanceId).hp, 610')
+          write(path, text)
+
+          path = 'src/features/entertainment/chien_tuyen/phase5Combat.test.ts'
+          text = read(path)
+          for old, new in [
+            ('assert.match(guard.description ?? "", /18%/);', 'assert.match(guard.description ?? "", /12%/);'),
+            ('assert.equal(GUARD_ULTIMATE_SHIELD_MAX_HP_RATIO, 0.18);', 'assert.equal(GUARD_ULTIMATE_SHIELD_MAX_HP_RATIO, 0.12);'),
+            ('assert.match(pioneer.description ?? "", /200%/);', 'assert.match(pioneer.description ?? "", /135%/);'),
+            ('assert.equal(PIONEER_ULTIMATE_ATTACK_RATIO, 2);', 'assert.equal(PIONEER_ULTIMATE_ATTACK_RATIO, 1.35);'),
+            ('assert.equal(ultimateShield.amount, 360);', 'assert.equal(ultimateShield.amount, 240);'),
+            ('assert.equal(guardStats?.shieldCreated, 1_440);', 'assert.equal(guardStats?.shieldCreated, 960);'),
+            ('assert.equal(totalShield(findUnit(cast, ally.instanceId)), 480);', 'assert.equal(totalShield(findUnit(cast, ally.instanceId)), 360);'),
+            ('assert.equal(hit?.amount, 200);', 'assert.equal(hit?.amount, 135);'),
+            ('assert.equal(hit?.hpDamage, 150);', 'assert.equal(hit?.hpDamage, 85);'),
+            ('assert.equal(findUnit(resolved, target.instanceId).hp, 850);', 'assert.equal(findUnit(resolved, target.instanceId).hp, 915);'),
+          ]:
+              if old not in text: raise SystemExit(f'phase5 fixture missing: {old}')
+              text = text.replace(old, new)
+          write(path, text)
+
+          # Dedicated Phase 6 regression suite.
+          write('src/features/entertainment/chien_tuyen/phase6Update.test.ts', r'''import assert from "node:assert/strict";
+import React from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+import { COMBAT_CONFIG, MAX_BARRACKS_LEVEL, getBarracksUpgradeDurationMs, getLevelUpgradeCost, getMaxBarracksLevel, getMaxBarracksLevelFromRankIndex, getQuickFinishCost, getRequiredRankIndexForBarracksLevel, getTrainingDurationMs, getTroopUpgradeDurationMs } from "./config";
+import { applyShieldAndHpDamage, resolveEndOfRound, resolveGrowthPassives, resolveUltimateAction } from "./combatEngine";
+import { formatChienTuyenDurationForAriaMs, formatChienTuyenDurationSeconds } from "./durationFormat";
+import { buildBattleUnitStatistics, createBattleFromUnits, createTroopBattleUnit } from "./engine";
+import { createDefaultChienTuyenProfile, getTrainingCountForTroop, sanitizeChienTuyenProfile, startBarracksUpgrade, startTroopUpgrade } from "./profileEngine";
+import { BarracksView } from "./components/BarracksView";
+import { ARMOR_ULTIMATE_DEFENSE_BONUS_RATIO, ARMOR_ULTIMATE_ROUNDS, ARTILLERY_ULTIMATE_WAVE_ATTACK_RATIO, ENGINEER_ULTIMATE_HEAL_MISSING_HP_RATIO, GUARD_ULTIMATE_SHIELD_MAX_HP_RATIO, INFANTRY_ULTIMATE_HEAL_MISSING_HP_RATIO, INFANTRY_ULTIMATE_PROTECTION_ROUNDS, PIONEER_ULTIMATE_ATTACK_RATIO, PIONEER_ULTIMATE_STUN_CHANCE, getUltimateConfig } from "./ultimateConfig";
+import type { BattleSide, BattleState, BattleUnit, FormationSlotId, TroopType } from "./types";
+
+let sequence = 0;
+function test(name: string, run: () => void): void { run(); console.log(`PASS: ${name}`); }
+function makeUnit(instanceId: string, side: BattleSide, troopType: TroopType, slotId: FormationSlotId, overrides: Partial<BattleUnit> = {}): BattleUnit {
+  const base = createTroopBattleUnit({ instanceId, side, troopType, slotId, level: 1 });
+  return { ...base, ...overrides, statuses: (overrides.statuses ?? base.statuses).map((status) => ({ ...status })), shields: (overrides.shields ?? base.shields).map((shield) => ({ ...shield })) };
+}
+function makeState(units: readonly BattleUnit[]): BattleState { sequence += 1; return createBattleFromUnits({ battleId: `phase6-${sequence}`, matchSeed: `phase6-${sequence}`, units }); }
+function findUnit(state: BattleState, id: string): BattleUnit { const unit = state.units.find((candidate) => candidate.instanceId === id); assert.ok(unit, `Missing ${id}`); return unit; }
+
+console.log("=== CHIEN TUYEN PHASE 6 UPDATE TESTS ===");
+
+test("Phase 6 balance constants are canonical", () => {
+  assert.equal(GUARD_ULTIMATE_SHIELD_MAX_HP_RATIO, 0.12); assert.equal(PIONEER_ULTIMATE_ATTACK_RATIO, 1.35); assert.equal(PIONEER_ULTIMATE_STUN_CHANCE, 0.8);
+  assert.equal(getUltimateConfig("artillery").ultimateRageRequired, 50); assert.equal(ARTILLERY_ULTIMATE_WAVE_ATTACK_RATIO, 0.45); assert.equal(COMBAT_CONFIG.passives.airForceAttackPerStack, 0.04);
+  assert.equal(ARMOR_ULTIMATE_DEFENSE_BONUS_RATIO, 1.5); assert.equal(ARMOR_ULTIMATE_ROUNDS, 3); assert.equal(INFANTRY_ULTIMATE_HEAL_MISSING_HP_RATIO, 0.15); assert.equal(INFANTRY_ULTIMATE_PROTECTION_ROUNDS, 2); assert.equal(ENGINEER_ULTIMATE_HEAL_MISSING_HP_RATIO, 0.22);
+});
+
+test("Guard 2000 MaxHP gives exactly 240 Shield for two rounds", () => {
+  const guard = makeUnit("p6-guard", "player", "guard", "front_left", { maxHp: 2000, hp: 2000, rage: 60 }); const ally = makeUnit("p6-guard-ally", "player", "infantry", "front_center"); const enemy = makeUnit("p6-guard-enemy", "enemy", "infantry", "front_left");
+  const resolved = resolveUltimateAction(makeState([guard, ally, enemy]), guard.instanceId);
+  for (const id of [guard.instanceId, ally.instanceId]) { const shield = findUnit(resolved, id).shields.find((entry) => entry.kind === "guard_ultimate"); assert.equal(shield?.amount, 240); assert.equal(shield?.expiresAfterRound, resolved.round + 1); }
+});
+
+test("Pioneer raw Ultimate is 135 percent current ATK", () => {
+  const pioneer = makeUnit("p6-pioneer", "player", "pioneer", "front_left", { attack: 100, battleBaseAttack: 100, critChance: 0, rage: 30 }); const target = makeUnit("p6-pioneer-target", "enemy", "infantry", "front_left", { hp: 1000, maxHp: 1000, defense: 0 });
+  const resolved = resolveUltimateAction(makeState([pioneer, target]), pioneer.instanceId); assert.equal(getUltimateConfig("pioneer").ultimateRageRequired, 30); assert.equal(resolved.events.find((event) => event.type === "ultimate_hit")?.amount, 135); assert.equal(PIONEER_ULTIMATE_STUN_CHANCE, 0.8);
+});
+
+test("Artillery needs 50 Rage and deals 45 raw damage per wave at ATK100", () => {
+  const target = makeUnit("p6-art-target", "enemy", "infantry", "front_left", { hp: 5000, maxHp: 5000, defense: 0 }); const short = makeUnit("p6-art-short", "player", "artillery", "back_left", { attack: 100, battleBaseAttack: 100, critChance: 0, rage: 49 });
+  assert.equal(resolveUltimateAction(makeState([short, target]), short.instanceId).events.some((event) => event.type === "ultimate_started"), false);
+  const ready = makeUnit("p6-art-ready", "player", "artillery", "back_left", { attack: 100, battleBaseAttack: 100, critChance: 0, rage: 50 }); const cast = resolveUltimateAction(makeState([ready, target]), ready.instanceId);
+  assert.deepEqual(cast.events.filter((event) => event.type === "ultimate_hit").map((event) => event.amount), [45, 45, 45]);
+});
+
+test("Air Force stack values are 4/20/28/40 percent and non-compounding", () => {
+  const air = makeUnit("p6-air", "player", "air_force", "back_left", { attack: 100, battleBaseAttack: 100, critChance: 0 }); const enemy = makeUnit("p6-air-enemy", "enemy", "infantry", "front_left", { hp: 10000, maxHp: 10000, defense: 0 }); let state = makeState([air, enemy]);
+  const expected = new Map([[1, 104], [5, 120], [7, 128], [10, 140]]); for (let stack = 1; stack <= 11; stack += 1) { state = resolveGrowthPassives(state); const current = findUnit(state, air.instanceId); if (expected.has(Math.min(stack, 10))) assert.equal(current.attack, expected.get(Math.min(stack, 10))); }
+  const grown = findUnit(state, air.instanceId); assert.equal(grown.passiveStacks, 10); assert.equal(grown.attack, 140); grown.rage = 40; grown.lastDamagedEnemyId = enemy.instanceId;
+  assert.equal(resolveUltimateAction(state, air.instanceId).events.filter((event) => event.type === "ultimate_hit").at(-1)?.amount, 315, "Ultimate retains +10% ratio per stack");
+});
+
+test("Armor base DEF100 becomes 250 for three rounds", () => {
+  const armor = makeUnit("p6-armor", "player", "armor", "front_left", { defense: 100, battleBaseDefense: 100, rage: 40 }); const enemy = makeUnit("p6-armor-enemy", "enemy", "infantry", "front_left"); const cast = resolveUltimateAction(makeState([armor, enemy]), armor.instanceId);
+  assert.equal(findUnit(cast, armor.instanceId).defense, 250); assert.equal(findUnit(cast, armor.instanceId).armorUltimateDefenseBonus, 150); assert.equal(findUnit(cast, armor.instanceId).armorUltimateExpiresAfterRound, cast.round + 2);
+});
+
+test("Infantry floor stays fixed for exactly two rounds", () => {
+  const infantry = makeUnit("p6-infantry", "player", "infantry", "front_left", { hp: 500, maxHp: 1000, rage: 60 }); const enemy = makeUnit("p6-infantry-enemy", "enemy", "infantry", "front_left"); let state = resolveUltimateAction(makeState([infantry, enemy]), infantry.instanceId); const unit = findUnit(state, infantry.instanceId);
+  assert.equal(unit.hp, 575); assert.equal(unit.statuses.find((status) => status.type === "infantry_death_refusal")?.amount, 100); assert.equal(unit.statuses.find((status) => status.type === "infantry_death_refusal")?.expiresAfterRound, 2); applyShieldAndHpDamage(unit, 9999); assert.equal(unit.hp, 100);
+  state.round = 1; state = resolveEndOfRound(state); assert.equal(findUnit(state, infantry.instanceId).statuses.some((status) => status.type === "infantry_death_refusal"), true); applyShieldAndHpDamage(findUnit(state, infantry.instanceId), 9999); assert.equal(findUnit(state, infantry.instanceId).hp, 100);
+  state.round = 2; state = resolveEndOfRound(state); assert.equal(findUnit(state, infantry.instanceId).statuses.some((status) => status.type === "infantry_death_refusal"), false);
+});
+
+test("Engineer missing500 heals110 and statistics count actual heal", () => {
+  const engineer = makeUnit("p6-engineer", "player", "engineer", "front_left", { hp: 500, maxHp: 1000, rage: 50 }); const enemy = makeUnit("p6-engineer-enemy", "enemy", "infantry", "front_left"); const cast = resolveUltimateAction(makeState([engineer, enemy]), engineer.instanceId);
+  assert.equal(findUnit(cast, engineer.instanceId).hp, 610); assert.equal(buildBattleUnitStatistics(cast).find((entry) => entry.instanceId === engineer.instanceId)?.healingDone, 110);
+});
+
+test("Barracks progression is every four journey levels and final rank is Lv54", () => {
+  assert.equal(MAX_BARRACKS_LEVEL, 54); assert.equal(getMaxBarracksLevel(1), 1); assert.equal(getMaxBarracksLevel(4), 1); assert.equal(getMaxBarracksLevel(5), 2); assert.equal(getMaxBarracksLevel(216), 54); assert.equal(getMaxBarracksLevel(999), 54);
+  assert.equal(getMaxBarracksLevelFromRankIndex(0), 1); assert.equal(getMaxBarracksLevelFromRankIndex(3), 1); assert.equal(getMaxBarracksLevelFromRankIndex(4), 2); assert.equal(getMaxBarracksLevelFromRankIndex(215), 54); assert.equal(getRequiredRankIndexForBarracksLevel(54), 212);
+});
+
+test("Troop cap follows Barracks and old Lv24 save/jobs survive migration", () => {
+  const old = createDefaultChienTuyenProfile(0); old.barracksLevel = 24; old.troopLevels.infantry = 24; old.trainingJobs = [{ id: "legacy-job", troopType: "infantry", startedAt: 1, completeAt: 999999, costGold: 10, emergency: false }]; const oldLoaded = sanitizeChienTuyenProfile(old, 2);
+  assert.equal(oldLoaded.barracksLevel, 24); assert.equal(oldLoaded.troopLevels.infantry, 24); assert.equal(oldLoaded.trainingJobs.length, 1);
+  for (const level of [1, 24, 25, 40, 54]) { const profile = createDefaultChienTuyenProfile(0); profile.barracksLevel = level; profile.troopLevels.infantry = level; assert.equal(sanitizeChienTuyenProfile(profile, 0).troopLevels.infantry, level); }
+  const invalid = createDefaultChienTuyenProfile(0); invalid.barracksLevel = 99; invalid.troopLevels.infantry = 99; const clamped = sanitizeChienTuyenProfile(invalid, 0); assert.equal(clamped.barracksLevel, 54); assert.equal(clamped.troopLevels.infantry, 54);
+  const b25 = createDefaultChienTuyenProfile(0); b25.barracksLevel = 25; b25.troopLevels.infantry = 24; assert.equal(startTroopUpgrade(b25, "infantry", 10).value?.targetLevel, 25);
+  const b54 = createDefaultChienTuyenProfile(0); b54.barracksLevel = 54; b54.troopLevels.infantry = 54; assert.equal(startTroopUpgrade(b54, "infantry", 10).error, "max_level");
+});
+
+test("Barracks 24→25 and 53→54 use correct journey boundaries", () => {
+  const p24 = createDefaultChienTuyenProfile(0); p24.barracksLevel = 24; assert.equal(startBarracksUpgrade(p24, 97, 1).value?.targetLevel, 25);
+  const p53 = createDefaultChienTuyenProfile(0); p53.barracksLevel = 53; assert.equal(startBarracksUpgrade(p53, 213, 1).value?.targetLevel, 54);
+});
+
+test("Lv25 to Lv54 cost and durations stay finite", () => {
+  for (const target of [25, 31, 54]) { const values = [getLevelUpgradeCost(target), getBarracksUpgradeDurationMs(target), getTroopUpgradeDurationMs("infantry", target), getTrainingDurationMs("infantry", target), getQuickFinishCost(getBarracksUpgradeDurationMs(target))]; assert.equal(values.every((value) => Number.isFinite(value) && value >= 0), true); }
+});
+
+test("Duration formatter follows seconds, MM:SS and HH:MM:SS", () => {
+  for (const [seconds, expected] of [[0,"0 giây"],[5,"5 giây"],[59,"59 giây"],[60,"01:00"],[61,"01:01"],[3599,"59:59"],[3600,"01:00:00"],[3661,"01:01:01"],[7200,"02:00:00"]] as const) assert.equal(formatChienTuyenDurationSeconds(seconds), expected);
+  assert.equal(formatChienTuyenDurationSeconds(-5), "0 giây"); assert.equal(formatChienTuyenDurationSeconds(360000), "100:00:00"); assert.equal(formatChienTuyenDurationForAriaMs(150000), "2 phút 30 giây");
+});
+
+test("Training count is per troop and Gold/Time are separate semantic groups", () => {
+  const profile = createDefaultChienTuyenProfile(0); profile.trainingJobs = [{ id:"ui-i1", troopType:"infantry", startedAt:0, completeAt:999999, costGold:10, emergency:false },{ id:"ui-i2", troopType:"infantry", startedAt:0, completeAt:999999, costGold:10, emergency:false },{ id:"ui-a1", troopType:"artillery", startedAt:0, completeAt:999999, costGold:10, emergency:false }];
+  assert.equal(getTrainingCountForTroop(profile,"infantry"),2); assert.equal(getTrainingCountForTroop(profile,"artillery"),1); assert.equal(getTrainingCountForTroop(profile,"guard"),0);
+  const markup = renderToStaticMarkup(React.createElement(BarracksView,{ profile, gold:99999, maxBarracksLevel:54, now:0, onTrain:()=>undefined, onQuickFinishTraining:()=>undefined, onUpgradeTroop:()=>undefined, onUpgradeBarracks:()=>undefined, onClaimEmergency:()=>undefined }));
+  assert.match(markup,/data-action="train-infantry"[^>]*data-training-count="2"/); assert.match(markup,/data-action="train-artillery"[^>]*data-training-count="1"/); assert.match(markup,/data-action="train-guard"[^>]*data-training-count="0"/); assert.match(markup,/×2/); assert.match(markup,/data-training-cost="10"/); assert.match(markup,/data-training-time=/);
+});
+
+console.log("CHIEN TUYEN PHASE 6 UPDATE TESTS PASSED");
+''')
+
+          path = 'package.json'
+          replace(path, 'tsx src/features/entertainment/chien_tuyen/phase5Combat.test.ts && tsx src/features/entertainment/chien_tuyen/engine.test.ts',
+                        'tsx src/features/entertainment/chien_tuyen/phase5Combat.test.ts && tsx src/features/entertainment/chien_tuyen/phase6Update.test.ts && tsx src/features/entertainment/chien_tuyen/engine.test.ts')
+          print('Phase 6 continuation applied.')
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/features/entertainment/chien_tuyen package.json
+          git commit -m "Complete Chiến Tuyến Phase 6 UI and regression coverage"
+          git push origin HEAD:codex/chien-tuyen-phase-6
