@@ -31,7 +31,12 @@ import {
   Sparkles,
   Wheat,
 } from "lucide-react";
-import { TANG_GIA_ASSETS } from "../tangGiaAssetManifest";
+import {
+  TANG_GIA_ASSETS,
+  getFeedAsset,
+  getFertilizerAsset,
+} from "../tangGiaAssetManifest";
+import { FARM_UI_SPRITE_VARS } from "../farmUiTheme";
 
 export type KhoTabType = "crop" | "fertilizer" | "animal" | "feed" | "egg";
 
@@ -170,10 +175,11 @@ export const KhoModal: React.FC<KhoModalProps> = ({
       >
         <div
           onClick={(e) => e.stopPropagation()}
-          className="bg-slate-900 border border-slate-800/70 rounded-3xl w-full max-w-lg overflow-hidden shadow-2xl flex flex-col max-h-[85vh] cursor-default relative"
+          className="farm-ui-shell bg-slate-900 border border-slate-800/70 rounded-3xl w-full max-w-lg overflow-hidden shadow-2xl flex flex-col max-h-[85vh] cursor-default relative"
+          style={FARM_UI_SPRITE_VARS}
         >
           {/* Modal Header */}
-        <div className="p-4 bg-slate-850/90 border-b border-slate-800/70 flex items-center justify-between">
+        <div className="farm-ui-header p-4 bg-slate-850/90 border-b border-slate-800/70 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <div className="w-10 h-10 rounded-2xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-amber-400">
               <Package className="w-5 h-5" />
@@ -197,10 +203,11 @@ export const KhoModal: React.FC<KhoModalProps> = ({
         </div>
 
         {/* 5 Tabs in exact required order: Cây Trồng | Phân Bón | Vật Nuôi | Thức Ăn | Trứng */}
-        <div className="grid grid-cols-5 gap-1 p-2 bg-slate-900/95 border-b border-slate-800/60 text-[10px] sm:text-xs">
+        <div className="farm-ui-tabs grid grid-cols-5 gap-1 p-2 bg-slate-900/95 border-b border-slate-800/60 text-[10px] sm:text-xs">
           <button
             onClick={() => setActiveTab("crop")}
-            className={`py-2 px-1 rounded-xl font-bold transition-all flex flex-col sm:flex-row items-center justify-center gap-1 ${
+            data-active={activeTab === "crop"}
+            className={`farm-ui-tab py-2 px-1 rounded-xl font-bold transition-all flex flex-col sm:flex-row items-center justify-center gap-1 ${
               activeTab === "crop"
                 ? "bg-amber-500 text-slate-950 shadow-md font-extrabold"
                 : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/60"
@@ -212,7 +219,8 @@ export const KhoModal: React.FC<KhoModalProps> = ({
 
           <button
             onClick={() => setActiveTab("fertilizer")}
-            className={`py-2 px-1 rounded-xl font-bold transition-all flex flex-col sm:flex-row items-center justify-center gap-1 ${
+            data-active={activeTab === "fertilizer"}
+            className={`farm-ui-tab py-2 px-1 rounded-xl font-bold transition-all flex flex-col sm:flex-row items-center justify-center gap-1 ${
               activeTab === "fertilizer"
                 ? "bg-amber-500 text-slate-950 shadow-md font-extrabold"
                 : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/60"
@@ -224,7 +232,8 @@ export const KhoModal: React.FC<KhoModalProps> = ({
 
           <button
             onClick={() => setActiveTab("animal")}
-            className={`py-2 px-1 rounded-xl font-bold transition-all flex flex-col sm:flex-row items-center justify-center gap-1 ${
+            data-active={activeTab === "animal"}
+            className={`farm-ui-tab py-2 px-1 rounded-xl font-bold transition-all flex flex-col sm:flex-row items-center justify-center gap-1 ${
               activeTab === "animal"
                 ? "bg-amber-500 text-slate-950 shadow-md font-extrabold"
                 : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/60"
@@ -236,7 +245,8 @@ export const KhoModal: React.FC<KhoModalProps> = ({
 
           <button
             onClick={() => setActiveTab("feed")}
-            className={`py-2 px-1 rounded-xl font-bold transition-all flex flex-col sm:flex-row items-center justify-center gap-1 ${
+            data-active={activeTab === "feed"}
+            className={`farm-ui-tab py-2 px-1 rounded-xl font-bold transition-all flex flex-col sm:flex-row items-center justify-center gap-1 ${
               activeTab === "feed"
                 ? "bg-amber-500 text-slate-950 shadow-md font-extrabold"
                 : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/60"
@@ -248,7 +258,8 @@ export const KhoModal: React.FC<KhoModalProps> = ({
 
           <button
             onClick={() => setActiveTab("egg")}
-            className={`py-2 px-1 rounded-xl font-bold transition-all flex flex-col sm:flex-row items-center justify-center gap-1 relative ${
+            data-active={activeTab === "egg"}
+            className={`farm-ui-tab py-2 px-1 rounded-xl font-bold transition-all flex flex-col sm:flex-row items-center justify-center gap-1 relative ${
               activeTab === "egg"
                 ? "bg-amber-500 text-slate-950 shadow-md font-extrabold"
                 : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/60"
@@ -271,7 +282,7 @@ export const KhoModal: React.FC<KhoModalProps> = ({
         </div>
 
         {/* Tab Content Body */}
-        <div className="p-3.5 overflow-y-auto space-y-2.5 flex-1 max-h-[60vh]">
+        <div className="farm-ui-content p-3.5 overflow-y-auto space-y-2.5 flex-1 max-h-[60vh]">
           {/* TAB 1: CÂY TRỒNG (Seeds) */}
           {activeTab === "crop" && (
             <>
@@ -309,10 +320,10 @@ export const KhoModal: React.FC<KhoModalProps> = ({
                   return (
                     <div
                       key={crop.id}
-                      className="p-3 rounded-2xl bg-slate-850/70 border border-slate-800/60 flex items-center justify-between gap-3 shadow-sm hover:border-slate-750 transition-all"
+                      className="farm-ui-card p-3 rounded-2xl bg-slate-850/70 border border-slate-800/60 flex items-center justify-between gap-3 shadow-sm hover:border-slate-750 transition-all"
                     >
                       <div className="flex items-center gap-3 min-w-0">
-                        <div className="w-12 h-12 rounded-2xl bg-slate-800/60 border border-slate-800/80 flex items-center justify-center shrink-0">
+                        <div className="farm-ui-icon-slot w-12 h-12 rounded-2xl bg-slate-800/60 border border-slate-800/80 flex items-center justify-center shrink-0">
                           <img
                             src={TANG_GIA_ASSETS.sharedSeed}
                             alt=""
@@ -411,11 +422,16 @@ export const KhoModal: React.FC<KhoModalProps> = ({
                   return (
                     <div
                       key={fert.id}
-                      className="p-3 rounded-2xl bg-slate-850/70 border border-slate-800/60 flex items-center justify-between gap-3 shadow-sm hover:border-slate-750 transition-all"
+                      className="farm-ui-card p-3 rounded-2xl bg-slate-850/70 border border-slate-800/60 flex items-center justify-between gap-3 shadow-sm hover:border-slate-750 transition-all"
                     >
                       <div className="flex items-center gap-3 min-w-0">
-                        <div className="w-12 h-12 rounded-2xl bg-slate-800/60 border border-slate-800/80 flex items-center justify-center text-2xl shrink-0">
-                          {fert.icon}
+                        <div className="farm-ui-icon-slot w-12 h-12 rounded-2xl bg-slate-800/60 border border-slate-800/80 flex items-center justify-center text-2xl shrink-0">
+                          <img
+                            src={getFertilizerAsset(fert.id)}
+                            alt=""
+                            aria-hidden="true"
+                            className="h-11 w-11 object-contain"
+                          />
                         </div>
                         <div className="min-w-0 space-y-0.5">
                           <div className="flex items-center gap-2">
@@ -449,7 +465,14 @@ export const KhoModal: React.FC<KhoModalProps> = ({
                             category: "fertilizer",
                             itemId: fert.id,
                             name: fert.name,
-                            icon: fert.icon,
+                            icon: (
+                              <img
+                                src={getFertilizerAsset(fert.id)}
+                                alt=""
+                                aria-hidden="true"
+                                className="h-9 w-9 object-contain"
+                              />
+                            ),
                             ownedCount: count,
                             unitSellGold: sellGold,
                           })
@@ -502,10 +525,10 @@ export const KhoModal: React.FC<KhoModalProps> = ({
                   return (
                     <div
                       key={animal.id}
-                      className="p-3 rounded-2xl bg-slate-850/70 border border-slate-800/60 flex items-center justify-between gap-3 shadow-sm hover:border-slate-750 transition-all"
+                      className="farm-ui-card p-3 rounded-2xl bg-slate-850/70 border border-slate-800/60 flex items-center justify-between gap-3 shadow-sm hover:border-slate-750 transition-all"
                     >
                       <div className="flex items-center gap-3 min-w-0">
-                        <div className="w-12 h-12 rounded-2xl bg-slate-800/60 border border-slate-800/80 flex items-center justify-center text-2xl shrink-0">
+                        <div className="farm-ui-icon-slot w-12 h-12 rounded-2xl bg-slate-800/60 border border-slate-800/80 flex items-center justify-center text-2xl shrink-0">
                           {getAnimalEmoji(animal.id)}
                         </div>
                         <div className="min-w-0 space-y-0.5">
@@ -592,11 +615,16 @@ export const KhoModal: React.FC<KhoModalProps> = ({
                   return (
                     <div
                       key={feed.id}
-                      className="p-3 rounded-2xl bg-slate-850/70 border border-slate-800/60 flex items-center justify-between gap-3 shadow-sm hover:border-slate-750 transition-all"
+                      className="farm-ui-card p-3 rounded-2xl bg-slate-850/70 border border-slate-800/60 flex items-center justify-between gap-3 shadow-sm hover:border-slate-750 transition-all"
                     >
                       <div className="flex items-center gap-3 min-w-0">
-                        <div className="w-12 h-12 rounded-2xl bg-slate-800/60 border border-slate-800/80 flex items-center justify-center text-2xl shrink-0">
-                          🌾
+                        <div className="farm-ui-icon-slot w-12 h-12 rounded-2xl bg-slate-800/60 border border-slate-800/80 flex items-center justify-center text-2xl shrink-0">
+                          <img
+                            src={getFeedAsset(feed.id)}
+                            alt=""
+                            aria-hidden="true"
+                            className="h-11 w-11 object-contain"
+                          />
                         </div>
                         <div className="min-w-0 space-y-0.5">
                           <div className="flex items-center gap-2">
@@ -628,7 +656,14 @@ export const KhoModal: React.FC<KhoModalProps> = ({
                             category: "feed",
                             itemId: feed.id,
                             name: feed.name,
-                            icon: "🌾",
+                            icon: (
+                              <img
+                                src={getFeedAsset(feed.id)}
+                                alt=""
+                                aria-hidden="true"
+                                className="h-9 w-9 object-contain"
+                              />
+                            ),
                             ownedCount: count,
                             unitSellGold: sellGold,
                           })
@@ -716,11 +751,11 @@ export const KhoModal: React.FC<KhoModalProps> = ({
                     return (
                       <div
                         key={typeId}
-                        className="p-3 rounded-2xl bg-slate-850/70 border border-slate-800/60 space-y-2.5 shadow-sm hover:border-slate-750 transition-all"
+                        className="farm-ui-card p-3 rounded-2xl bg-slate-850/70 border border-slate-800/60 space-y-2.5 shadow-sm hover:border-slate-750 transition-all"
                       >
                         <div className="flex items-center justify-between gap-3">
                           <div className="flex items-center gap-3 min-w-0">
-                            <div className="w-12 h-12 rounded-2xl bg-slate-800/60 border border-slate-800/80 flex items-center justify-center text-2xl shrink-0">
+                            <div className="farm-ui-icon-slot w-12 h-12 rounded-2xl bg-slate-800/60 border border-slate-800/80 flex items-center justify-center text-2xl shrink-0">
                               🥚
                             </div>
                             <div className="min-w-0 space-y-0.5">
@@ -786,12 +821,12 @@ export const KhoModal: React.FC<KhoModalProps> = ({
 
         {/* Modal Footer - Single primary "Bán Tất Cả Trứng" button at bottom */}
         {activeTab === "egg" && totalEggs > 0 && (
-          <div className="p-3 bg-slate-850/90 border-t border-slate-800/60">
+          <div className="farm-ui-footer p-3 bg-slate-850/90 border-t border-slate-800/60">
             <button
               onClick={() => {
                 onSellAllEggs();
               }}
-              className="w-full py-2.5 px-4 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs sm:text-sm shadow-lg shadow-amber-500/20 active:scale-98 transition-all flex items-center justify-center gap-2 cursor-pointer"
+              className="farm-ui-primary-button w-full py-2.5 px-4 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs sm:text-sm shadow-lg shadow-amber-500/20 active:scale-98 transition-all flex items-center justify-center gap-2 cursor-pointer"
             >
               <Coins className="w-4 h-4" />
               <span>Bán Tất Cả Trứng ({totalEggs} quả)</span>
@@ -812,12 +847,13 @@ export const KhoModal: React.FC<KhoModalProps> = ({
       >
         <div
           onClick={(e) => e.stopPropagation()}
-          className="w-full max-w-sm my-auto bg-slate-900 border border-slate-800/80 rounded-3xl p-4 sm:p-5 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto cursor-default relative"
+          className="farm-ui-shell farm-ui-dialog w-full max-w-sm my-auto bg-slate-900 border border-slate-800/80 rounded-3xl p-4 sm:p-5 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto cursor-default relative"
+          style={FARM_UI_SPRITE_VARS}
         >
           {/* Popup Title */}
           <div className="flex items-center justify-between border-b border-slate-800/70 pb-3">
             <div className="flex items-center gap-2.5">
-              <div className="w-10 h-10 rounded-2xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-2xl shrink-0">
+              <div className="farm-ui-icon-slot w-10 h-10 rounded-2xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-2xl shrink-0">
                 {sellModalData.icon}
               </div>
               <div>
@@ -851,7 +887,7 @@ export const KhoModal: React.FC<KhoModalProps> = ({
                 onClick={() => setSellQuantity((prev) => Math.max(1, prev - 1))}
                 disabled={sellQuantity <= 1}
                 aria-label="Giảm số lượng bán 1"
-                className="w-10 h-10 rounded-xl bg-slate-800/80 hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed text-slate-200 font-bold flex items-center justify-center border border-slate-750 transition-all active:scale-95 cursor-pointer"
+                className="farm-ui-secondary-button w-10 h-10 rounded-xl bg-slate-800/80 hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed text-slate-200 font-bold flex items-center justify-center border border-slate-750 transition-all active:scale-95 cursor-pointer"
               >
                 <Minus className="w-4 h-4" />
               </button>
@@ -871,7 +907,7 @@ export const KhoModal: React.FC<KhoModalProps> = ({
                     setSellQuantity(adjustIntegerQuantity(val, 0, 1, sellModalData.ownedCount));
                   }
                 }}
-                className="w-24 text-center py-2 bg-slate-950 border border-slate-750 rounded-xl text-amber-300 font-black text-lg font-mono focus:outline-none focus:border-amber-400"
+                className="farm-ui-input w-24 text-center py-2 bg-slate-950 border border-slate-750 rounded-xl text-amber-300 font-black text-lg font-mono focus:outline-none focus:border-amber-400"
               />
 
               <button
@@ -883,7 +919,7 @@ export const KhoModal: React.FC<KhoModalProps> = ({
                 }
                 disabled={sellQuantity >= sellModalData.ownedCount}
                 aria-label="Tăng số lượng bán 1"
-                className="w-10 h-10 rounded-xl bg-slate-800/80 hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed text-slate-200 font-bold flex items-center justify-center border border-slate-750 transition-all active:scale-95 cursor-pointer"
+                className="farm-ui-secondary-button w-10 h-10 rounded-xl bg-slate-800/80 hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed text-slate-200 font-bold flex items-center justify-center border border-slate-750 transition-all active:scale-95 cursor-pointer"
               >
                 <Plus className="w-4 h-4" />
               </button>
@@ -902,7 +938,7 @@ export const KhoModal: React.FC<KhoModalProps> = ({
                     )
                   }
                   aria-label={`${delta < 0 ? "Giảm" : "Tăng"} số lượng bán ${Math.abs(delta)}`}
-                  className="min-h-10 rounded-xl border border-slate-750 bg-slate-800/80 px-2 text-xs font-bold text-slate-300 transition-all hover:bg-slate-750 active:scale-95 disabled:cursor-not-allowed disabled:opacity-35"
+                  className="farm-ui-secondary-button min-h-10 rounded-xl border border-slate-750 bg-slate-800/80 px-2 text-xs font-bold text-slate-300 transition-all hover:bg-slate-750 active:scale-95 disabled:cursor-not-allowed disabled:opacity-35"
                 >
                   {delta > 0 ? "+" : ""}{delta}
                 </button>
@@ -920,7 +956,7 @@ export const KhoModal: React.FC<KhoModalProps> = ({
           </div>
 
           {/* Earnings Calculation Box */}
-          <div className="bg-slate-950/80 border border-slate-800/70 rounded-2xl p-3 space-y-1.5 text-xs text-slate-300">
+          <div className="farm-ui-summary bg-slate-950/80 border border-slate-800/70 rounded-2xl p-3 space-y-1.5 text-xs text-slate-300">
             <div className="flex items-center justify-between">
               <span className="text-slate-400">Đơn giá bán:</span>
               <span className="font-bold text-amber-400">
@@ -955,14 +991,14 @@ export const KhoModal: React.FC<KhoModalProps> = ({
             <button
               type="button"
               onClick={() => setSellModalData(null)}
-              className="flex-1 py-2.5 rounded-xl bg-slate-800/80 text-slate-300 font-bold text-xs hover:bg-slate-700 transition-colors cursor-pointer"
+              className="farm-ui-secondary-button flex-1 py-2.5 rounded-xl bg-slate-800/80 text-slate-300 font-bold text-xs hover:bg-slate-700 transition-colors cursor-pointer"
             >
               Hủy Bỏ
             </button>
             <button
               type="button"
               onClick={handleConfirmSell}
-              className="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs shadow-md transition-all active:scale-95 cursor-pointer"
+              className="farm-ui-primary-button flex-1 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs shadow-md transition-all active:scale-95 cursor-pointer"
             >
               Xác Nhận Bán ({sellQuantity})
             </button>

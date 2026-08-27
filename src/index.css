@@ -408,4 +408,204 @@
   touch-action: none;
 }
 
+/* Sprite-backed, mobile-first farm presentation shared by Cửa Hàng and Kho. */
+.farm-ui-shell {
+  background-color: #f6e8bd !important;
+  background-image: var(--farm-ui-panel-image) !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  background-size: 100% 100% !important;
+  border-color: #c78735 !important;
+  box-shadow:
+    0 22px 55px rgba(50, 31, 13, 0.42),
+    inset 0 0 0 1px rgba(255, 247, 211, 0.72) !important;
+  color: #4d351f;
+  gap: 0.25rem;
+  padding: clamp(0.55rem, 2vw, 0.85rem);
+}
+
+.farm-ui-header {
+  background-color: #174f32 !important;
+  background-image:
+    linear-gradient(rgba(9, 55, 31, 0.12), rgba(9, 55, 31, 0.12)),
+    var(--farm-ui-header-image) !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  background-size: 100% 100% !important;
+  border: 0 !important;
+  border-radius: 1rem;
+  min-height: 3.6rem;
+  padding-inline: clamp(0.85rem, 3vw, 1.3rem) !important;
+  text-shadow: 0 1px 2px rgba(18, 35, 20, 0.7);
+}
+
+.farm-ui-tabs {
+  background: rgba(255, 248, 222, 0.9) !important;
+  border: 1px solid rgba(166, 112, 45, 0.5) !important;
+  border-radius: 0.9rem;
+  box-shadow: inset 0 1px 5px rgba(112, 73, 29, 0.12);
+}
+
+.farm-ui-tab {
+  background-color: transparent !important;
+  background-image: var(--farm-ui-tab-idle-image) !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  background-size: 100% 100% !important;
+  border: 0 !important;
+  color: #5b442b !important;
+  min-height: 2.45rem;
+  text-shadow: 0 1px 0 rgba(255, 252, 230, 0.85);
+}
+
+.farm-ui-tab[data-active="true"] {
+  background-image: var(--farm-ui-tab-active-image) !important;
+  color: #fffbe7 !important;
+  filter: saturate(1.03) drop-shadow(0 2px 2px rgba(70, 45, 16, 0.2));
+  text-shadow: 0 1px 2px rgba(25, 67, 31, 0.88);
+}
+
+.farm-ui-content {
+  background: rgba(255, 249, 227, 0.82) !important;
+  border: 1px solid rgba(174, 120, 53, 0.35);
+  border-radius: 1rem;
+  scrollbar-color: #b97c31 rgba(255, 246, 215, 0.75);
+}
+
+.farm-ui-card {
+  background-color: #fff4d5 !important;
+  background-image:
+    linear-gradient(rgba(255, 250, 228, 0.05), rgba(255, 250, 228, 0.05)),
+    var(--farm-ui-card-image) !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  background-size: 100% 100% !important;
+  border-color: #d4a04f !important;
+  box-shadow: 0 3px 8px rgba(99, 63, 24, 0.14) !important;
+}
+
+.farm-ui-card:hover {
+  border-color: #a96d27 !important;
+  filter: brightness(1.02);
+}
+
+.farm-ui-icon-slot {
+  background: radial-gradient(circle at 42% 36%, #fffdf1 0%, #f4dca5 100%) !important;
+  border: 2px solid #d2a15a !important;
+  box-shadow:
+    inset 0 1px 3px rgba(255, 255, 255, 0.9),
+    0 2px 4px rgba(80, 49, 20, 0.16) !important;
+  overflow: hidden;
+}
+
+.farm-ui-icon-slot img {
+  filter: drop-shadow(0 2px 2px rgba(73, 45, 17, 0.2));
+}
+
+.farm-ui-primary-button,
+.farm-ui-card > button:not(.farm-ui-secondary-button) {
+  background-color: #397d43 !important;
+  background-image: var(--farm-ui-tab-active-image) !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  background-size: 100% 100% !important;
+  border-color: transparent !important;
+  color: #fff9df !important;
+  text-shadow: 0 1px 2px rgba(28, 66, 30, 0.78);
+}
+
+.farm-ui-secondary-button {
+  background-color: #f4e4b7 !important;
+  background-image: var(--farm-ui-tab-idle-image) !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  background-size: 100% 100% !important;
+  border-color: transparent !important;
+  color: #5c4025 !important;
+  text-shadow: 0 1px 0 rgba(255, 251, 224, 0.9);
+}
+
+.farm-ui-input {
+  background: #fff9e7 !important;
+  border-color: #bc8440 !important;
+  color: #744611 !important;
+  box-shadow: inset 0 1px 4px rgba(91, 56, 19, 0.14);
+}
+
+.farm-ui-summary,
+.farm-ui-footer {
+  background: rgba(255, 249, 226, 0.92) !important;
+  border-color: rgba(174, 116, 47, 0.45) !important;
+}
+
+.farm-ui-dialog {
+  background-size: 100% 100% !important;
+}
+
+.farm-ui-shell .text-slate-100,
+.farm-ui-shell .text-slate-200 {
+  color: #3f2c1c !important;
+}
+
+.farm-ui-shell .text-slate-300 {
+  color: #5d4936 !important;
+}
+
+.farm-ui-shell .text-slate-400,
+.farm-ui-shell .text-slate-500 {
+  color: #76624d !important;
+}
+
+.farm-ui-shell .text-amber-300,
+.farm-ui-shell .text-amber-400 {
+  color: #95580d !important;
+}
+
+.farm-ui-shell .text-emerald-300,
+.farm-ui-shell .text-emerald-400 {
+  color: #23703d !important;
+}
+
+.farm-ui-shell .text-sky-300 {
+  color: #27748a !important;
+}
+
+.farm-ui-header .text-slate-100,
+.farm-ui-header .text-slate-200,
+.farm-ui-header .text-slate-300,
+.farm-ui-header .text-slate-400 {
+  color: #fff7dc !important;
+}
+
+.farm-ui-shell button:focus-visible,
+.farm-ui-shell input:focus-visible {
+  outline: 3px solid rgba(31, 121, 66, 0.55);
+  outline-offset: 2px;
+}
+
+@media (max-width: 480px) {
+  .farm-ui-shell {
+    gap: 0.15rem;
+    padding: 0.45rem;
+  }
+
+  .farm-ui-header {
+    border-radius: 0.8rem;
+    min-height: 3.25rem;
+    padding-inline: 0.7rem !important;
+  }
+
+  .farm-ui-tabs {
+    padding: 0.3rem !important;
+  }
+
+  .farm-ui-tab {
+    min-height: 2.35rem;
+  }
+
+  .farm-ui-content {
+    padding: 0.45rem !important;
+  }
+}
+
 

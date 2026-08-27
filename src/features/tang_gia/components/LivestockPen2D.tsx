@@ -25,7 +25,6 @@ import {
   FARM_VISUAL_LAYERS,
   getAnimalVisualLayer,
   getDisplayedNestEggCount,
-  getFarmVisualTheme,
 } from "../farmVisualTheme";
 import { TANG_GIA_ASSETS } from "../tangGiaAssetManifest";
 
@@ -517,12 +516,15 @@ const EggNest: React.FC<{
           : "Tổ trứng đang trống"
       }
       title={displayedEggCount > 0 ? "Mở Kho Trứng" : undefined}
-      className={`absolute right-2.5 top-8 h-[31px] w-[40px] border-0 bg-transparent p-0 transition-transform ${
+      className={`absolute top-8 h-[31px] w-[40px] border-0 bg-transparent p-0 transition-transform ${
         displayedEggCount > 0
           ? "cursor-pointer hover:scale-105 active:scale-95"
           : "cursor-default"
       }`}
-      style={{ zIndex: FARM_VISUAL_LAYERS.eggNest }}
+      style={{
+        right: "calc(10% + 0.625rem)",
+        zIndex: FARM_VISUAL_LAYERS.eggNest,
+      }}
     >
       <svg viewBox="0 0 80 62" className="h-full w-full overflow-visible drop-shadow-lg" aria-hidden="true">
         {/* Layered straw ring and a darker recessed center. */}
@@ -751,12 +753,11 @@ export const LivestockPen2D: React.FC<LivestockPen2DProps> = ({
 
   const isNight = currentWeatherSlot?.phase === "night";
   const weatherType = currentWeatherSlot?.weather || "sunny";
-  const visualTheme = getFarmVisualTheme(currentWeatherSlot);
 
   const getPenArenaBgStyle = (): React.CSSProperties => {
     return {
-      background: visualTheme.penBackground,
-      borderColor: visualTheme.penBorder,
+      background: "transparent",
+      borderColor: "transparent",
     };
   };
 
