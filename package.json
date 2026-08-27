@@ -15,6 +15,7 @@
     "test:quality": "tsx src/features/tang_gia/qualityReward.test.ts",
     "test:farm": "tsx src/features/tang_gia/farmEngine.test.ts && tsx src/features/tang_gia/animalLifecycle.test.ts && tsx src/features/tang_gia/farmVisualTheme.test.ts && tsx src/features/tang_gia/farmUiPolish.test.ts && npm run test:quality",
     "test:medals": "tsx src/game/medals/farmMedals.test.ts",
+    "test:uniform": "tsx src/features/profile/uniform/uniformRound2.test.tsx",
     "test:quantity": "tsx src/utils/quantityInput.test.ts && tsx src/features/entertainment/betAmountInput.test.ts && tsx src/utils/quantityControlsSource.test.ts",
     "test:save": "tsx src/storage/migrations.test.ts && tsx src/game/xpEngine.test.ts",
     "test:questions": "tsx src/game/questionCatalog.test.ts",

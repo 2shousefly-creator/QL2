@@ -1,8 +1,8 @@
 import React, { useId } from "react";
-import { DisplayedMedalColumn } from "../../../components/DisplayedMedal";
 import type { MedalDefinition } from "../../../game/medals/medalCatalog";
 import type { RankFamily } from "../../../game/types";
 import type { UniformArtConfig } from "./uniformArtCatalog";
+import { UniformMedalRack } from "./UniformMedalRack";
 import { UniformRankCluster } from "./UniformRankCluster";
 import { UniformShoulderBoard } from "./UniformShoulderBoard";
 
@@ -11,7 +11,7 @@ type UniformPortraitProps = {
   family: RankFamily;
   filledSegments: number;
   isCurrent: boolean;
-  selectedMedalIds: string[];
+  unlockedMedalIds: string[];
   onSelectMedal: (medal: MedalDefinition) => void;
 };
 
@@ -20,7 +20,7 @@ export const UniformPortrait: React.FC<UniformPortraitProps> = ({
   family,
   filledSegments,
   isCurrent,
-  selectedMedalIds,
+  unlockedMedalIds,
   onSelectMedal,
 }) => {
   const uid = useId().replace(/:/g, "_");
@@ -34,8 +34,6 @@ export const UniformPortrait: React.FC<UniformPortraitProps> = ({
   const trimWidth = Math.min(2.6, 0.85 + config.trimLevel * 0.38);
   const buttonGap = config.buttonCount > 6 ? 45 : 50;
   const buttonStartY = 190;
-  const leftMedalIds = selectedMedalIds.slice(0, 3);
-  const rightMedalIds = selectedMedalIds.slice(3, 6);
 
   return (
     <div className="relative mx-auto aspect-[3/4] min-h-[430px] w-full max-w-[420px] overflow-hidden rounded-[2rem] border border-white/10 bg-gradient-to-b from-slate-900/95 via-slate-950/90 to-black shadow-[0_25px_70px_rgba(0,0,0,0.55)]">
@@ -220,20 +218,17 @@ export const UniformPortrait: React.FC<UniformPortraitProps> = ({
         <UniformShoulderBoard config={config} side="wearer-left" />
       </div>
 
-      {/* Wearer's right chest appears on the viewer's left: exact Home medal rendering, two columns of three. */}
-      <div className="absolute left-[2%] top-[31%] flex items-start gap-0">
-        <DisplayedMedalColumn
-          medalIds={leftMedalIds}
-          onSelectMedal={onSelectMedal}
-        />
-        <DisplayedMedalColumn
-          medalIds={rightMedalIds}
-          onSelectMedal={onSelectMedal}
-        />
+      {/* Wearer's right chest appears on the viewer's left. */}
+      <div className="absolute left-[2%] top-[30%]">
+        <UniformMedalRack medalIds={unlockedMedalIds} onSelectMedal={onSelectMedal} />
       </div>
 
-      {/* Wearer's left chest appears on the viewer's right. */}
-      <div className="absolute right-[2%] top-[31%]">
+      {/* Scale the existing badge/progress cluster as one unit so its internal visual language stays unchanged. */}
+      <div
+        className="absolute right-[13%] top-[31%] origin-top-right"
+        style={{ transform: "scale(0.8)" }}
+        data-uniform-rank-scale="0.8"
+      >
         <UniformRankCluster family={family} filledSegments={filledSegments} isCurrent={isCurrent} />
       </div>
     </div>
