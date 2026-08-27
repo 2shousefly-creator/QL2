@@ -1,0 +1,51 @@
+{
+  "name": "react-example",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx server.ts",
+    "build": "vite build && esbuild server.ts --bundle --platform=node --format=cjs --packages=external --sourcemap --outfile=dist/server.cjs",
+    "start": "node dist/server.cjs",
+    "clean": "rm -rf dist server.js",
+    "lint": "tsc --noEmit",
+    "test:air-combat": "tsx src/features/entertainment/khong_kich/airCombatEngine.test.ts && tsx src/features/entertainment/khong_kich/airCombatRuntime.test.ts && tsx src/features/entertainment/khong_kich/airCombatStorage.test.ts",
+    "test:chien-tuyen": "tsx src/features/entertainment/chien_tuyen/domainEngine.test.ts && tsx src/features/entertainment/chien_tuyen/profileEngine.test.ts && tsx src/features/entertainment/chien_tuyen/towerFloorCatalog.test.ts && tsx src/features/entertainment/chien_tuyen/combatEngine.test.ts && tsx src/features/entertainment/chien_tuyen/phase5Combat.test.ts && tsx src/features/entertainment/chien_tuyen/phase6Update.test.ts && tsx src/features/entertainment/chien_tuyen/engine.test.ts && tsx src/features/entertainment/chien_tuyen/immediateUltimate.test.ts && tsx src/features/entertainment/chien_tuyen/fixed2xActionTurn.test.ts && tsx src/features/entertainment/chien_tuyen/medicCasualtyCare.test.ts && tsx src/features/entertainment/chien_tuyen/gameStateIntegration.test.ts && tsx src/features/entertainment/chien_tuyen/uxPolish.test.ts && tsx src/features/entertainment/chien_tuyen/balanceSimulation.test.ts && tsx src/features/entertainment/chien_tuyen/superExpansion.test.ts",
+    "test:tank-battle": "tsx src/features/entertainment/tank_battle/tankBattleEngine.test.ts && tsx src/features/entertainment/tank_battle/tankBattleRuntime.test.ts && tsx src/features/entertainment/tank_battle/tankBattleStorage.test.ts && tsx src/features/entertainment/tank_battle/tankBattleV2Engine.test.ts",
+    "test:quality": "tsx src/features/tang_gia/qualityReward.test.ts",
+    "test:farm": "tsx src/features/tang_gia/farmEngine.test.ts && tsx src/features/tang_gia/animalLifecycle.test.ts && tsx src/features/tang_gia/farmVisualTheme.test.ts && tsx src/features/tang_gia/farmUiPolish.test.ts && npm run test:quality",
+    "test:medals": "tsx src/game/medals/farmMedals.test.ts",
+    "test:quantity": "tsx src/utils/quantityInput.test.ts && tsx src/features/entertainment/betAmountInput.test.ts && tsx src/utils/quantityControlsSource.test.ts",
+    "test:save": "tsx src/storage/migrations.test.ts && tsx src/game/xpEngine.test.ts",
+    "test:questions": "tsx src/game/questionCatalog.test.ts",
+    "questions:import": "tsx scripts/import-question-pool.ts"
+  },
+  "dependencies": {
+    "@google-cloud/firestore": "^9.0.0",
+    "@google-cloud/tasks": "^7.0.0",
+    "@google/genai": "^2.4.0",
+    "@tailwindcss/vite": "^4.1.14",
+    "@vitejs/plugin-react": "^5.0.4",
+    "chess.js": "^1.4.0",
+    "dotenv": "^17.2.3",
+    "express": "^4.21.2",
+    "google-auth-library": "^11.0.2",
+    "lucide-react": "^0.546.0",
+    "motion": "^12.23.24",
+    "react": "^19.0.1",
+    "react-dom": "^19.0.1",
+    "vite": "^6.2.3",
+    "web-push": "^3.6.7"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^22.14.0",
+    "@types/web-push": "^3.6.4",
+    "autoprefixer": "^10.4.21",
+    "esbuild": "^0.25.0",
+    "tailwindcss": "^4.1.14",
+    "tsx": "^4.21.0",
+    "typescript": "~5.8.2",
+    "vite": "^6.2.3"
+  }
+}

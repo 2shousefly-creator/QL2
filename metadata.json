@@ -1,0 +1,6 @@
+{
+  "name": "Quân Lộ – Hành Trình Thăng Cấp",
+  "description": "Trò chơi mô phỏng rảnh tay về hành trình thăng cấp quân hàm với 24 nhóm cấp, 216 cấp bậc, thử thách thăng cấp và câu chuyện phong phú.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,7 @@
+failure
+SystemExit("src/features/entertainment/chien_tuyen/config.ts: expected at least 1 occurrence(s), found 0: 'export const MAX_BARRACKS_LEVEL = 24;'")
+Traceback (most recent call last):
+  File "<stdin>", line 10, in <module>
+  File "phase6-embedded-patch.py", line 23, in <module>
+  File "phase6-embedded-patch.py", line 17, in replace
+SystemExit: src/features/entertainment/chien_tuyen/config.ts: expected at least 1 occurrence(s), found 0: 'export const MAX_BARRACKS_LEVEL = 24;'

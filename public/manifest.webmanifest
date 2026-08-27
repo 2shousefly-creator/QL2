@@ -1,0 +1,16 @@
+{
+  "name": "Quân Lộ – Hành Trình Thăng Cấp",
+  "short_name": "Quân Lộ",
+  "description": "Trò chơi mô phỏng rảnh tay về hành trình thăng cấp quân hàm với 24 nhóm cấp, 216 cấp bậc.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0b1320",
+  "theme_color": "#0b1320",
+  "icons": [
+    {
+      "src": "/icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}

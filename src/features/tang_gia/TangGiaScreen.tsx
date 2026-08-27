@@ -1,0 +1,1369 @@
+import React, { useState, useEffect, useRef } from "react";
+import { GameState } from "../../game/types";
+import { getCurrentRank } from "../../game/xpEngine";
+import { applyFarmXpReward } from "./farmXpReward";
+import {
+  ANIMAL_CATALOG,
+  CROP_CATALOG,
+  EGG_INFO_MAP,
+  FARM_PLOT_UNLOCKS,
+  FEED_CATALOG,
+  FERTILIZER_CATALOG,
+} from "./farmCatalog";
+import {
+  addAnimalToPen,
+  applyWaterBuff,
+  buyFertilizer,
+  canWaterPlotNow,
+  clearPlot,
+  createDefaultFarmState,
+  consumePendingAnimalDeathNotification,
+  dismissAnimal,
+  feedPenBuff,
+  getAnimalCapacity,
+  getItemOriginalPrice,
+  getItemSellPrice,
+  getPendingWateringCount,
+  getRankNameForDisplay,
+  harvestAllReadyCrops,
+  harvestPlot,
+  plantSeedWithFertilizer,
+  rankAtLeast,
+  sellAllEggs,
+  sellEggs,
+  sellInventoryItem,
+  settleFarmState,
+  waterAllPlots,
+  waterSinglePlot,
+} from "./farmEngine";
+import { isAnimalDead } from "./animalLifecycle";
+import {
+  AnimalTypeId,
+  CropId,
+  EggTypeId,
+  FeedTypeId,
+  FertilizerTypeId,
+  FarmSaveState,
+  AnimalDeathNotificationSummary,
+} from "./farmTypes";
+import {
+  getCanonicalWeatherSlot,
+} from "./weatherEngine";
+import {
+  recordCropHarvestForMedals,
+  recordWatering,
+  recordWaterAll9Plots,
+  recordFertilizerUsed,
+  recordEggSale,
+  recordFeedBagsUsed,
+  recordFarmGoldEarned,
+  recordPerfectFarmItemSale,
+  recordPenCapacity,
+  evaluateMedalUnlocks,
+} from "../../game/medals/medalEngine";
+import { TangGiaCanvas2D } from "./components/TangGiaCanvas2D";
+import { FarmXpProgressBar } from "./components/FarmXpProgressBar";
+import { FarmStoreModal } from "./components/FarmStoreModal";
+import { KhoModal, KhoTabType } from "./components/KhoModal";
+import { PlantSeedModal } from "./components/PlantSeedModal";
+import { EnterPenModal } from "./components/EnterPenModal";
+import { FeedModal } from "./components/FeedModal";
+import { TroughInfoModal } from "./components/TroughInfoModal";
+import { WeatherHUD } from "./components/WeatherHUD";
+import { WeatherModal } from "./components/WeatherModal";
+import { PlotDetailPanel } from "./components/PlotDetailPanel";
+import {
+  RewardSummaryModal,
+  RewardSummaryData,
+} from "./components/RewardSummaryModal";
+import {
+  HARVEST_ALL_CROP_GLOW_DURATION_MS,
+  HARVEST_REWARD_FLOAT_DURATION_MS,
+  getFarmHarvestAllActionMode,
+  getFarmPresentationState,
+  getFarmWaterActionLabel,
+  getFarmWaterActionMode,
+  type PlotHarvestPresentation,
+} from "./farmPresentation";
+import {
+  Coins,
+  Store,
+  Sprout,
+  Droplets,
+  Trash2,
+  Egg,
+  Wheat,
+  X,
+  Sparkles,
+  Lock,
+  UserX,
+  CheckCircle2,
+  Package,
+} from "lucide-react";
+
+interface TangGiaScreenProps {
+  gameState: GameState;
+  onUpdateGameState: (
+    updater: ((draft: GameState) => void) | GameState
+  ) => void;
+  onTroughInfoToggle?: (isOpen: boolean) => void;
+}
+
+function getAnimalDeathNotificationCopy(
+  summary: AnimalDeathNotificationSummary,
+  offline: boolean
+): string {
+  const prefix = summary.total === 1
+    ? `Có 1 Vật Nuôi đã chết${offline ? " trong lúc bạn vắng mặt" : ""}.`
+    : `Có ${summary.total} Vật Nuôi đã chết${offline ? " trong lúc bạn vắng mặt" : ""}.`;
+  const breakdown = [
+    summary.oldAge > 0 ? `${summary.oldAge} do tuổi già` : null,
+    summary.starvation > 0 ? `${summary.starvation} do thiếu thức ăn` : null,
+  ].filter(Boolean).join(" · ");
+  return breakdown ? `${prefix} ${breakdown}.` : prefix;
+}
+
+export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
+  gameState,
+  onUpdateGameState,
+  onTroughInfoToggle,
+}) => {
+  const currentRank = getCurrentRank(gameState.progression.currentRankIndex);
+
+  // Active timestamp
+  const [now, setNow] = useState(Date.now());
+
+  // Farm save state fallback
+  const farmState: FarmSaveState = gameState.farm
+    ? { ...gameState.farm }
+    : createDefaultFarmState();
+
+  // Selection states & context mode
+  const [contextMode, setContextMode] = useState<"none" | "garden" | "pen">(
+    "none"
+  );
+  const [selectedPlotIndex, setSelectedPlotIndex] = useState<number | null>(null);
+  const [selectedAnimalId, setSelectedAnimalId] = useState<string | null>(null);
+
+  // Cleanup selection on screen unmount
+  useEffect(() => {
+    return () => {
+      setContextMode("none");
+      setSelectedPlotIndex(null);
+      setSelectedAnimalId(null);
+    };
+  }, []);
+
+  // Modals visibility
+  const [isStoreOpen, setIsStoreOpen] = useState(false);
+  const [storeInitialTab, setStoreInitialTab] = useState<
+    "crop" | "fertilizer" | "animal" | "feed"
+  >("crop");
+  const [isKhoOpen, setIsKhoOpen] = useState(false);
+  const [khoInitialTab, setKhoInitialTab] = useState<KhoTabType>("crop");
+  const [isPlantModalOpen, setIsPlantModalOpen] = useState(false);
+  const [isEnterPenModalOpen, setIsEnterPenModalOpen] = useState(false);
+  const [isFeedModalOpen, setIsFeedModalOpen] = useState(false);
+  const [isTroughInfoOpen, setIsTroughInfoOpen] = useState(false);
+  const [isWeatherModalOpen, setIsWeatherModalOpen] = useState(false);
+
+  const currentWeatherSlot = getCanonicalWeatherSlot(
+    now,
+    farmState.weatherSeed ?? 133742
+  );
+  const presentationState = getFarmPresentationState(farmState, now);
+
+  const handleOpenTroughInfo = () => {
+    setIsTroughInfoOpen(true);
+    onTroughInfoToggle?.(true);
+  };
+
+  const handleCloseTroughInfo = () => {
+    setIsTroughInfoOpen(false);
+    onTroughInfoToggle?.(false);
+  };
+
+  useEffect(() => {
+    return () => {
+      onTroughInfoToggle?.(false);
+    };
+  }, [onTroughInfoToggle]);
+
+  // Reward summary modal state
+  const [rewardSummary, setRewardSummary] = useState<RewardSummaryData | null>(null);
+  const [isRewardSummaryOpen, setIsRewardSummaryOpen] = useState(false);
+  const [harvestPresentations, setHarvestPresentations] = useState<
+    PlotHarvestPresentation[]
+  >([]);
+  const [isHarvestingAll, setIsHarvestingAll] = useState(false);
+  const harvestAllLockRef = useRef(false);
+  const harvestPresentationTimersRef = useRef<number[]>([]);
+
+  const showRewardSummary = (summary: RewardSummaryData) => {
+    setRewardSummary(summary);
+    setIsRewardSummaryOpen(true);
+  };
+
+  const queueHarvestPresentations = (
+    entries: readonly PlotHarvestPresentation[]
+  ) => {
+    if (entries.length === 0) return;
+    const ids = new Set(entries.map((entry) => entry.id));
+    setHarvestPresentations((current) => [
+      ...current.filter((entry) => !ids.has(entry.id)),
+      ...entries,
+    ]);
+    const timer = window.setTimeout(() => {
+      setHarvestPresentations((current) =>
+        current.filter((entry) => !ids.has(entry.id))
+      );
+    }, HARVEST_REWARD_FLOAT_DURATION_MS);
+    harvestPresentationTimersRef.current.push(timer);
+  };
+
+  useEffect(() => {
+    return () => {
+      harvestPresentationTimersRef.current.forEach((timer) =>
+        window.clearTimeout(timer)
+      );
+      harvestPresentationTimersRef.current = [];
+      harvestAllLockRef.current = false;
+    };
+  }, []);
+
+  // Toast notification
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  // Dialog modal state
+  const [dialogConfig, setDialogConfig] = useState<{
+    isOpen: boolean;
+    title: string;
+    message: string;
+    confirmLabel?: string;
+    onConfirm?: () => void;
+  }>({ isOpen: false, title: "", message: "" });
+
+  const totalEggCount = Object.values(farmState.inventory.eggs || {}).reduce(
+    (acc, val) => acc + (val || 0),
+    0
+  );
+  const harvestableCropCount = presentationState.plots.filter(
+    (plot) => plot.status === "ready"
+  ).length;
+  const harvestAllActionMode = getFarmHarvestAllActionMode(
+    harvestableCropCount
+  );
+  const needsWaterCount = presentationState.plots.filter(
+    (plot) =>
+      plot.status === "growing" && getPendingWateringCount(plot, now) > 0
+  ).length;
+  const waterActionMode = getFarmWaterActionMode(needsWaterCount);
+  const waterActionLabel = getFarmWaterActionLabel(waterActionMode);
+
+  // The 1-second ticker is presentation-only. Persistence happens at boundaries.
+  useEffect(() => {
+    const settleAtBoundary = (currentNow: number) => {
+      onUpdateGameState((draft) => {
+        if (!draft.farm) {
+          draft.farm = createDefaultFarmState(currentNow);
+        }
+        const settlement = settleFarmState(draft.farm, currentNow);
+        const pendingOfflineDeaths = consumePendingAnimalDeathNotification(
+          draft.farm
+        );
+        if (pendingOfflineDeaths) {
+          const message = getAnimalDeathNotificationCopy(
+            pendingOfflineDeaths,
+            true
+          );
+          setTimeout(() => showToast(message), 0);
+        } else if (settlement.newDeaths.total > 0) {
+          const message = getAnimalDeathNotificationCopy(
+            settlement.newDeaths,
+            false
+          );
+          setTimeout(() => showToast(message), 0);
+        }
+      });
+    };
+
+    settleAtBoundary(Date.now());
+    const timer = setInterval(() => {
+      setNow(Date.now());
+    }, 1000);
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState !== "visible") return;
+      const currentNow = Date.now();
+      setNow(currentNow);
+      settleAtBoundary(currentNow);
+    };
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      clearInterval(timer);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, []);
+
+  // Helper to safely mutate farm state & settle offline/wallclock
+  const updateFarm = (
+    mutator: (farm: FarmSaveState, draft: GameState) => {
+      goldEarned?: number;
+      xpEarned?: number;
+      message?: string;
+      summaryData?: RewardSummaryData;
+      plotRewards?: PlotHarvestPresentation[];
+    } | void,
+    transactionNow: number = Date.now()
+  ) => {
+    onUpdateGameState((draft) => {
+      if (!draft.farm) {
+        draft.farm = createDefaultFarmState(transactionNow);
+      }
+      const settlement = settleFarmState(draft.farm, transactionNow);
+      const pendingOfflineDeaths = consumePendingAnimalDeathNotification(
+        draft.farm
+      );
+      const res = mutator(draft.farm, draft);
+
+      if (pendingOfflineDeaths) {
+        const message = getAnimalDeathNotificationCopy(
+          pendingOfflineDeaths,
+          true
+        );
+        setTimeout(() => showToast(message), 0);
+      } else if (settlement.newDeaths.total > 0) {
+        const message = getAnimalDeathNotificationCopy(
+          settlement.newDeaths,
+          false
+        );
+        setTimeout(() => showToast(message), 0);
+      }
+
+      if (res) {
+        let displayedXp = res.summaryData?.xpEarned ?? 0;
+        if (res.xpEarned && res.xpEarned > 0) {
+          displayedXp = applyFarmXpReward(draft, res.xpEarned).displayedXp;
+        }
+        if (res.goldEarned && res.goldEarned > 0) {
+          recordFarmGoldEarned(draft, res.goldEarned);
+        }
+        if (res.message) {
+          const msg = res.message;
+          setTimeout(() => showToast(msg), 0);
+        }
+        if (res.summaryData) {
+          const summary = {
+            ...res.summaryData,
+            xpEarned: displayedXp,
+          };
+          setTimeout(() => showRewardSummary(summary), 0);
+        }
+        if (res.plotRewards?.length) {
+          const rewards = res.plotRewards;
+          setTimeout(() => queueHarvestPresentations(rewards), 0);
+        }
+      }
+    });
+  };
+
+  const showToast = (msg: string) => {
+    setTimeout(() => {
+      setToastMessage(msg);
+      setTimeout(() => setToastMessage(null), 3000);
+    }, 0);
+  };
+
+  const openStore = (tab?: "crop" | "fertilizer" | "animal" | "feed") => {
+    if (tab) {
+      setStoreInitialTab(tab);
+    } else if (contextMode === "pen") {
+      setStoreInitialTab("animal");
+    } else {
+      setStoreInitialTab("crop");
+    }
+    setIsStoreOpen(true);
+  };
+
+  const openKho = (tab?: KhoTabType) => {
+    if (tab) {
+      setKhoInitialTab(tab);
+    } else if (contextMode === "pen") {
+      setKhoInitialTab("animal");
+    } else {
+      setKhoInitialTab("crop");
+    }
+    setIsKhoOpen(true);
+  };
+
+  // --- STORE ACTIONS (Support multi-quantity) ---
+  const handleBuyCrop = (cropId: CropId, quantity: number = 1) => {
+    const crop = CROP_CATALOG.find((c) => c.id === cropId);
+    if (!crop) return;
+
+    if (!rankAtLeast(currentRank, crop.requiredRank)) {
+      showToast(
+        `Chưa đủ quân hàm yêu cầu (${getRankNameForDisplay(crop.requiredRank)})!`
+      );
+      return;
+    }
+
+    const buyCount = Math.max(1, quantity);
+    const totalCost = crop.seedCostGold * buyCount;
+
+    if (farmState.gold < totalCost) {
+      showToast("Không đủ Vàng để mua!");
+      return;
+    }
+
+    updateFarm((farm) => {
+      farm.gold -= totalCost;
+      farm.inventory.seeds[cropId] = (farm.inventory.seeds[cropId] || 0) + buyCount;
+    });
+
+    showToast(`Đã mua ${buyCount} Hạt giống ${crop.name} (-${totalCost.toLocaleString("vi-VN")} Vàng)!`);
+  };
+
+  const handleBuyFertilizer = (fertilizerId: FertilizerTypeId, quantity: number = 1) => {
+    const fert = FERTILIZER_CATALOG.find((f) => f.id === fertilizerId);
+    if (!fert) return;
+
+    if (!rankAtLeast(currentRank, fert.requiredRank)) {
+      showToast(
+        `Chưa đủ quân hàm yêu cầu (${getRankNameForDisplay(fert.requiredRank)})!`
+      );
+      return;
+    }
+
+    const buyCount = Math.max(1, quantity);
+    const totalCost = fert.purchaseGold * buyCount;
+
+    if (farmState.gold < totalCost) {
+      showToast("Không đủ Vàng để mua!");
+      return;
+    }
+
+    updateFarm((farm) => {
+      farm.gold -= totalCost;
+      if (!farm.inventory.fertilizer) {
+        farm.inventory.fertilizer = createDefaultFarmState().inventory.fertilizer;
+      }
+      farm.inventory.fertilizer[fertilizerId] =
+        (farm.inventory.fertilizer[fertilizerId] || 0) + buyCount;
+    });
+
+    showToast(`Đã mua ${buyCount} ${fert.name} (-${totalCost.toLocaleString("vi-VN")} Vàng)!`);
+  };
+
+  const handleBuyAnimal = (animalId: AnimalTypeId, quantity: number = 1) => {
+    const animal = ANIMAL_CATALOG.find((a) => a.id === animalId);
+    if (!animal) return;
+
+    if (!rankAtLeast(currentRank, animal.requiredRank)) {
+      showToast(
+        `Chưa đủ quân hàm yêu cầu (${getRankNameForDisplay(animal.requiredRank)})!`
+      );
+      return;
+    }
+
+    const buyCount = Math.max(1, quantity);
+    const totalCost = animal.purchaseGold * buyCount;
+
+    if (farmState.gold < totalCost) {
+      showToast("Không đủ Vàng để mua!");
+      return;
+    }
+
+    updateFarm((farm) => {
+      farm.gold -= totalCost;
+      farm.inventory.animals[animalId] =
+        (farm.inventory.animals[animalId] || 0) + buyCount;
+    });
+
+    showToast(`Đã mua ${buyCount} ${animal.name}! Đã thêm vào Kho / Vật Nuôi.`);
+  };
+
+  const handleBuyFeed = (feedId: FeedTypeId, quantity: number = 1) => {
+    const feedDef = FEED_CATALOG.find((f) => f.id === feedId);
+    if (!feedDef) return;
+
+    if (!rankAtLeast(currentRank, feedDef.requiredRank)) {
+      showToast(
+        `Chưa đủ quân hàm yêu cầu (${getRankNameForDisplay(feedDef.requiredRank)})!`
+      );
+      return;
+    }
+
+    const buyCount = Math.max(1, quantity);
+    const totalCost = feedDef.costGold * buyCount;
+
+    if (farmState.gold < totalCost) {
+      showToast("Không đủ Vàng để mua!");
+      return;
+    }
+
+    updateFarm((farm) => {
+      farm.gold -= totalCost;
+      farm.inventory.feed[feedId] = (farm.inventory.feed[feedId] || 0) + buyCount;
+      return { message: `Đã mua ${buyCount} ${feedDef.name} (-${totalCost.toLocaleString("vi-VN")} Vàng)!` };
+    });
+  };
+
+  // --- KHO SELLING ACTIONS ---
+  const handleSellItem = (
+    category: "seeds" | "fertilizer" | "animals" | "feed",
+    itemId: string,
+    count: number
+  ) => {
+    updateFarm((farm) => {
+      const res = sellInventoryItem(farm, category, itemId, count);
+      return { message: res.message };
+    });
+  };
+
+  // --- GARDEN ACTIONS ---
+  const handleHarvestSinglePlotForIndex = (plotIndex: number) => {
+    const currentNow = Date.now();
+    updateFarm((farm, draft) => {
+      const readyPlot = farm.plots[plotIndex];
+      if (!readyPlot || readyPlot.status !== "ready") {
+        return { message: "Ô đất chưa sẵn sàng thu hoạch!" };
+      }
+      const cropId = readyPlot.cropId;
+      const res = harvestPlot(farm, plotIndex, currentNow);
+      if (res) {
+        recordCropHarvestForMedals(
+          draft,
+          res.effectiveWaterings,
+          res.hasFertilizer
+        );
+        recordPerfectFarmItemSale(draft, res.quality === "hoan_my" ? 1 : 0);
+        return {
+          goldEarned: res.goldEarned,
+          xpEarned: res.xpEarned,
+          plotRewards: [
+            {
+              id: `harvest-${plotIndex}-${currentNow}`,
+              plotIndex,
+              cropId,
+              quality: res.quality,
+              goldAwarded: res.goldEarned,
+              xpAwarded: res.xpEarned,
+              startedAt: currentNow,
+              glowUntil: currentNow,
+            },
+          ],
+        };
+      } else {
+        return { message: "Ô đất chưa sẵn sàng thu hoạch!" };
+      }
+    }, currentNow);
+  };
+
+  const handleGardenTap = () => {
+    if (selectedAnimalId !== null) {
+      setContextMode("none");
+      setSelectedPlotIndex(null);
+      setSelectedAnimalId(null);
+      return;
+    }
+    setContextMode("garden");
+    setSelectedAnimalId(null);
+    if (selectedPlotIndex === null) {
+      setSelectedPlotIndex(0);
+    }
+  };
+
+  const handlePlotTap = (index: number) => {
+    setContextMode("garden");
+    setSelectedPlotIndex(index);
+    setSelectedAnimalId(null);
+  };
+
+  const handlePlantSeedWithFertilizer = (
+    cropId: CropId,
+    fertilizerId: FertilizerTypeId | null
+  ) => {
+    if (selectedPlotIndex === null) {
+      showToast("Vui lòng chọn ô đất trước khi gieo hạt!");
+      return;
+    }
+
+    const currentNow = Date.now();
+
+    updateFarm((farm, draft) => {
+      const res = plantSeedWithFertilizer(
+        farm,
+        selectedPlotIndex,
+        cropId,
+        fertilizerId,
+        currentNow
+      );
+      if (res.success && fertilizerId) {
+        recordFertilizerUsed(draft, fertilizerId);
+      }
+      if (res.message) {
+        return { message: res.message };
+      }
+    }, currentNow);
+  };
+
+  const handleWaterPlot = () => {
+    if (waterActionMode === "disabled") return;
+    const currentNow = Date.now();
+    updateFarm((farm, draft) => {
+      if (waterActionMode === "single") {
+        const eligiblePlotIndex = farm.plots.findIndex(
+          (plot) =>
+            plot.status === "growing" && canWaterPlotNow(plot, currentNow)
+        );
+        if (eligiblePlotIndex >= 0) {
+          const singleRes = waterSinglePlot(
+            farm,
+            eligiblePlotIndex,
+            currentNow
+          );
+          if (singleRes.success) {
+            recordWatering(draft, 1);
+            return { message: singleRes.message };
+          }
+        }
+        return { message: "Hiện chưa có cây nào ở mốc tưới nước hợp lệ!" };
+      }
+
+      if (waterActionMode === "all") {
+        const res = waterAllPlots(farm, currentNow);
+        if (res.wateredPlotCount > 0) {
+          recordWatering(draft, res.wateredPlotCount);
+          if (res.wateredPlotCount >= 9) {
+            recordWaterAll9Plots(draft);
+          }
+        }
+        return { message: res.message };
+      }
+
+      return { message: "Hiện chưa có cây nào ở mốc tưới nước hợp lệ!" };
+    }, currentNow);
+  };
+
+  const handleHarvestSinglePlot = () => {
+    if (selectedPlotIndex === null) return;
+    handleHarvestSinglePlotForIndex(selectedPlotIndex);
+  };
+
+  const handleHarvestAll = () => {
+    if (
+      harvestAllActionMode !== "harvest_all" ||
+      harvestAllLockRef.current
+    ) {
+      return;
+    }
+    harvestAllLockRef.current = true;
+    setIsHarvestingAll(true);
+    const currentNow = Date.now();
+
+    updateFarm((farm, draft) => {
+      const res = harvestAllReadyCrops(farm, currentNow);
+      if (res.harvestedCount > 0) {
+        for (const detail of res.details) {
+          recordCropHarvestForMedals(
+            draft,
+            detail.effectiveWaterings,
+            detail.hasFertilizer
+          );
+        }
+        recordPerfectFarmItemSale(
+          draft,
+          res.details.filter((detail) => detail.quality === "hoan_my").length,
+        );
+        return {
+          goldEarned: res.totalGold,
+          xpEarned: res.totalXp,
+          plotRewards: res.details.map((detail) => ({
+            id: `harvest-all-${detail.plotIndex}-${currentNow}`,
+            plotIndex: detail.plotIndex,
+            cropId: detail.cropId,
+            quality: detail.quality,
+            goldAwarded: detail.goldAwarded,
+            xpAwarded: detail.xpAwarded,
+            startedAt: currentNow,
+            glowUntil: currentNow + HARVEST_ALL_CROP_GLOW_DURATION_MS,
+          })),
+        };
+      } else {
+        return { message: "Không có cây nào sẵn sàng thu hoạch!" };
+      }
+    }, currentNow);
+
+    const unlockTimer = window.setTimeout(() => {
+      harvestAllLockRef.current = false;
+      setIsHarvestingAll(false);
+    }, HARVEST_ALL_CROP_GLOW_DURATION_MS);
+    harvestPresentationTimersRef.current.push(unlockTimer);
+  };
+
+  const handleClearPlot = () => {
+    if (selectedPlotIndex === null) return;
+    const plot = farmState.plots[selectedPlotIndex];
+    if (!plot || plot.status === "locked" || plot.status === "empty") {
+      showToast("Ô đất đang trống!");
+      return;
+    }
+
+    setDialogConfig({
+      isOpen: true,
+      title: "Xúc Đất Dọn Cây",
+      message: `Bạn có chắc muốn xúc đất dọn bỏ cây ở Ô đất #${
+        selectedPlotIndex + 1
+      }? Cây sẽ bị xóa để lấy đất gieo hạt mới.`,
+      confirmLabel: "Dọn Đất",
+      onConfirm: () => {
+        updateFarm((farm) => {
+          clearPlot(farm, selectedPlotIndex);
+        });
+        showToast(`Đã xúc đất dọn sạch Ô đất #${selectedPlotIndex + 1}!`);
+        setDialogConfig((prev) => ({ ...prev, isOpen: false }));
+      },
+    });
+  };
+
+  const handleUnlockPlot = (plotIndex: number) => {
+    setContextMode("garden");
+    setSelectedPlotIndex(plotIndex);
+    setSelectedAnimalId(null);
+
+    const config = FARM_PLOT_UNLOCKS.find((u) => u.plotIndex === plotIndex);
+    if (!config) return;
+
+    if (!rankAtLeast(currentRank, config.requiredRank)) {
+      showToast(
+        `Chưa đủ quân hàm mở khóa (${getRankNameForDisplay(
+          config.requiredRank
+        )})!`
+      );
+      return;
+    }
+
+    if (farmState.gold < config.gold) {
+      showToast(`Cần ${config.gold} Vàng để mở khóa ô đất này!`);
+      return;
+    }
+
+    setDialogConfig({
+      isOpen: true,
+      title: "Mở Khóa Ô Đất Mới",
+      message: `Mở khóa Ô đất #${plotIndex + 1} với chi phí ${
+        config.gold
+      } Vàng?`,
+      confirmLabel: "Mở Khóa",
+      onConfirm: () => {
+        updateFarm((farm) => {
+          farm.gold -= config.gold;
+          farm.unlockedPlotCount = Math.max(
+            farm.unlockedPlotCount || 0,
+            plotIndex + 1
+          );
+          farm.plots[plotIndex] = { status: "empty" };
+        });
+        showToast(`Đã mở khóa thành công Ô đất #${plotIndex + 1}!`);
+        setDialogConfig((prev) => ({ ...prev, isOpen: false }));
+      },
+    });
+  };
+
+  // --- PEN ACTIONS ---
+  const handlePenTap = () => {
+    if (selectedAnimalId !== null) {
+      setContextMode("none");
+      setSelectedPlotIndex(null);
+      setSelectedAnimalId(null);
+      return;
+    }
+    setContextMode("pen");
+    setSelectedPlotIndex(null);
+  };
+
+  const handleAnimalTap = (instanceId: string) => {
+    setContextMode("pen");
+    setSelectedPlotIndex(null);
+    setSelectedAnimalId(instanceId);
+  };
+
+  const handleEnterPen = (animalId: AnimalTypeId) => {
+    const currentNow = Date.now();
+    updateFarm((farm, draft) => {
+      const res = addAnimalToPen(farm, animalId, currentNow, currentRank);
+      if (res.success) {
+        evaluateMedalUnlocks(draft);
+      }
+      return { message: res.message };
+    }, currentNow);
+  };
+
+  const handleFeedPen = (feedId: FeedTypeId, quantity: number = 1) => {
+    const currentNow = Date.now();
+    updateFarm((farm, draft) => {
+      const res = feedPenBuff(farm, feedId, quantity, currentNow);
+      if (res.success && res.quantityFed) {
+        recordFeedBagsUsed(draft, res.quantityFed);
+      }
+      return { message: res.message };
+    }, currentNow);
+  };
+
+  const handleSellEggsSingle = (eggTypeId: EggTypeId, count: number) => {
+    updateFarm((farm, draft) => {
+      const res = sellEggs(farm, eggTypeId, count);
+      if (res.soldCount > 0) {
+        recordEggSale(draft, res.soldCount);
+        recordPerfectFarmItemSale(draft, res.soldByQuality.hoan_my);
+        const eggInfo = EGG_INFO_MAP[eggTypeId];
+        return {
+          goldEarned: res.goldEarned,
+          xpEarned: res.xpEarned,
+          summaryData: {
+            title: "Tổng Kết Bán Trứng",
+            iconType: "egg_sale",
+            itemsSummary: [
+              { name: eggInfo?.name || "Trứng", count: res.soldCount, icon: "🥚" },
+            ],
+            goldEarned: res.goldEarned,
+            xpEarned: res.xpEarned,
+            soldByQuality: res.soldByQuality,
+            qualityBreakdown: res.qualityBreakdown,
+            rainBonusGold: res.totalRainBonusGold,
+            message: `Giao dịch thành công ${res.soldCount} ${eggInfo?.name || "trứng"}!`,
+          },
+        };
+      }
+    });
+  };
+
+  const handleSellAllEggsQuick = () => {
+    if (totalEggCount <= 0) {
+      showToast("Kho trứng hiện đang trống!");
+      return;
+    }
+
+    updateFarm((farm, draft) => {
+      const res = sellAllEggs(farm);
+      if (res.totalCount > 0) {
+        recordEggSale(draft, res.totalCount);
+        recordPerfectFarmItemSale(draft, res.soldByQuality.hoan_my);
+        return {
+          goldEarned: res.totalGold,
+          xpEarned: res.totalXp,
+          summaryData: {
+            title: "Tổng Kết Bán Tất Cả Trứng",
+            iconType: "egg_sale",
+            itemsSummary: [
+              { name: "Tổng số trứng đã bán", count: res.totalCount, icon: "🥚" },
+            ],
+            goldEarned: res.totalGold,
+            xpEarned: res.totalXp,
+            soldByQuality: res.soldByQuality,
+            qualityBreakdown: res.qualityBreakdown,
+            rainBonusGold: res.totalRainBonusGold,
+            message: `Đã bán toàn bộ ${res.totalCount} quả trứng trong kho!`,
+          },
+        };
+      }
+    });
+  };
+
+  const handleDismissAnimal = () => {
+    if (!selectedAnimalId) {
+      showToast("Vui lòng chạm chọn 1 con thú trong chuồng để đuổi!");
+      return;
+    }
+
+    const animal = farmState.penAnimals.find(
+      (a) => a.instanceId === selectedAnimalId
+    );
+    const animalDef = ANIMAL_CATALOG.find(
+      (a) => a.id === animal?.animalTypeId
+    );
+    const dead = Boolean(animal && isAnimalDead(animal));
+
+    setDialogConfig({
+      isOpen: true,
+      title: dead ? "Dọn Vật Nuôi" : "Đuổi Vật Nuôi",
+      message: dead
+        ? `Dọn ${animalDef?.name || "vật nuôi"} đã chết để giải phóng ô chuồng? Hành động này không hoàn Trứng, Vàng hoặc XP.`
+        : `Bạn có chắc muốn đuổi con ${
+            animalDef?.name || "vật nuôi"
+          } này khỏi chuồng để nhường chỗ cho thú mới?`,
+      confirmLabel: dead ? "Dọn" : "Đuổi Thú",
+      onConfirm: () => {
+        updateFarm((farm) => {
+          dismissAnimal(farm, selectedAnimalId);
+        });
+        setSelectedAnimalId(null);
+        setContextMode("none");
+        showToast(dead ? "Đã dọn vật nuôi chết và giải phóng ô chuồng!" : "Đã đuổi vật nuôi khỏi chuồng!");
+        setDialogConfig((prev) => ({ ...prev, isOpen: false }));
+      },
+    });
+  };
+
+  // Selected plot information
+  const currentSelectedPlot =
+    selectedPlotIndex !== null
+      ? presentationState.plots[selectedPlotIndex]
+      : null;
+  const currentSelectedAnimal = selectedAnimalId
+    ? presentationState.penAnimals.find(
+        (animal) => animal.instanceId === selectedAnimalId
+      ) ?? null
+    : null;
+  const currentSelectedAnimalIsDead = Boolean(
+    currentSelectedAnimal && isAnimalDead(currentSelectedAnimal)
+  );
+
+  const handleClearSelection = () => {
+    setContextMode("none");
+    setSelectedPlotIndex(null);
+    setSelectedAnimalId(null);
+  };
+
+  return (
+    <div
+      onClick={handleClearSelection}
+      className="w-full max-w-5xl mx-auto p-2 sm:p-4 space-y-3 font-sans pb-36 relative"
+    >
+      {/* --- HUD HEADER (STICKY) --- */}
+      {!isTroughInfoOpen && (
+        <div
+          onClick={(e) => {
+            e.stopPropagation();
+            handleClearSelection();
+          }}
+          className="sticky top-0 z-50 w-full bg-slate-900/95 border border-slate-800 rounded-2xl p-2.5 sm:p-3 flex items-center justify-between gap-2 shadow-xl backdrop-blur-md animate-in fade-in duration-150"
+        >
+          <div className="flex items-center gap-2.5 sm:gap-3">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-gradient-to-br from-amber-500 to-amber-600 flex items-center justify-center text-slate-950 font-black text-base sm:text-lg shadow-md shrink-0">
+              🪙
+            </div>
+            <div>
+              <div className="text-[9px] sm:text-[10px] uppercase tracking-wider font-extrabold text-slate-400">
+                Ví Vàng
+              </div>
+              <div className="text-base sm:text-lg font-black text-amber-300 font-mono leading-none">
+                {farmState.gold.toLocaleString()}{" "}
+                <span className="text-[10px] sm:text-xs text-amber-400">Vàng</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Center Weather HUD */}
+          <WeatherHUD
+            currentSlot={currentWeatherSlot}
+            onOpenWeatherModal={() => setIsWeatherModalOpen(true)}
+          />
+
+          {/* Action Buttons Header */}
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+            {/* Kho Button with Badge */}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                handleClearSelection();
+                openKho();
+              }}
+              className="relative px-2.5 sm:px-3 py-2 bg-slate-800 hover:bg-slate-750 border border-slate-700 text-amber-300 font-extrabold text-xs rounded-xl flex items-center gap-1.5 shadow-md active:scale-95 transition-all cursor-pointer"
+            >
+              <Package className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-400" />
+              <span className="hidden sm:inline">Kho</span>
+              {totalEggCount > 0 && (
+                <span className="absolute -top-1.5 -right-1.5 px-1.5 py-0.5 rounded-full bg-red-500 text-white font-black text-[10px] shadow-md animate-bounce">
+                  {totalEggCount}
+                </span>
+              )}
+            </button>
+
+            {/* Store Button */}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                handleClearSelection();
+                openStore();
+              }}
+              className="px-2.5 sm:px-3.5 py-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs rounded-xl flex items-center gap-1.5 shadow-md active:scale-95 transition-all cursor-pointer"
+            >
+              <Store className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+              <span className="hidden sm:inline">Cửa Hàng</span>
+            </button>
+          </div>
+        </div>
+      )}
+
+      <FarmXpProgressBar gameState={gameState} />
+
+      {/* --- MAIN 2D TOP-DOWN SCENE (SINGLE SCREEN) --- */}
+      <TangGiaCanvas2D
+        plots={presentationState.plots}
+        penAnimals={presentationState.penAnimals}
+        eggCount={totalEggCount}
+        penFeedBuffValue={presentationState.penFeedBuffValue}
+        activeFeedSpeedBonus={presentationState.activeFeedSpeedBonus}
+        penStarvationStartedAt={presentationState.penStarvationStartedAt}
+        selectedPlotIndex={selectedPlotIndex}
+        selectedAnimalId={selectedAnimalId}
+        contextMode={contextMode}
+        gold={farmState.gold}
+        currentRank={currentRank}
+        currentWeatherSlot={currentWeatherSlot}
+        harvestPresentations={harvestPresentations}
+        onGardenTap={handleGardenTap}
+        onPlotTap={(index) => {
+          const plot = farmState.plots[index];
+          if (plot && plot.status === "locked") {
+            handleUnlockPlot(index);
+          } else {
+            handlePlotTap(index);
+          }
+        }}
+        onPenTap={handlePenTap}
+        onAnimalTap={handleAnimalTap}
+        onOpenEggStorage={() => {
+          handleClearSelection();
+          openKho("egg");
+        }}
+        onOpenFeedModal={() => setIsFeedModalOpen(true)}
+        isTroughInfoOpen={isTroughInfoOpen}
+        onOpenTroughInfo={handleOpenTroughInfo}
+        onCloseTroughInfo={handleCloseTroughInfo}
+        now={now}
+      />
+
+      {/* --- CONTEXTUAL BOTTOM TOOLBAR --- */}
+      {contextMode !== "none" && !isTroughInfoOpen && (
+        <div
+          onClick={(e) => e.stopPropagation()}
+          className="fixed bottom-[calc(3.5rem+env(safe-area-inset-bottom,0px)+0.5rem)] left-1/2 -translate-x-1/2 z-30 w-full max-w-xl px-3 animate-in fade-in slide-in-from-bottom-2 duration-200"
+        >
+          {contextMode === "garden" &&
+            selectedPlotIndex !== null &&
+            currentSelectedPlot && (
+              <PlotDetailPanel
+                farm={farmState}
+                plot={currentSelectedPlot}
+                plotIndex={selectedPlotIndex}
+                currentRank={currentRank}
+                currentWeatherSlot={currentWeatherSlot}
+                now={now}
+              />
+            )}
+          <div className="bg-slate-900/95 border-2 border-amber-500/80 rounded-2xl p-2.5 shadow-2xl backdrop-blur-md flex items-center justify-around gap-1.5">
+            {/* TOOLBAR FOR GARDEN MODE */}
+            {contextMode === "garden" && (
+              <>
+                {/* Store */}
+                <button
+                  onClick={() => openStore("crop")}
+                  className="h-14 flex-1 rounded-xl border border-slate-700/80 bg-slate-800 hover:bg-slate-700 text-slate-200 flex flex-col items-center justify-center gap-1 shadow-sm active:scale-95 transition-all"
+                >
+                  <Store className="w-4 h-4 text-amber-400 shrink-0" />
+                  <span className="text-[10px] font-extrabold leading-none">Cửa Hàng</span>
+                </button>
+
+                {/* Plant Seed */}
+                <button
+                  disabled={
+                    !currentSelectedPlot || currentSelectedPlot.status !== "empty"
+                  }
+                  onClick={() => setIsPlantModalOpen(true)}
+                  className={`h-14 flex-1 rounded-xl border flex flex-col items-center justify-center gap-1 shadow-sm transition-all ${
+                    currentSelectedPlot?.status === "empty"
+                      ? "border-slate-700/80 bg-slate-800 hover:bg-slate-700 text-slate-200 active:scale-95"
+                      : "border-slate-800/80 bg-slate-900/60 text-slate-600 cursor-not-allowed opacity-60"
+                  }`}
+                >
+                  <Sprout
+                    className={`w-4 h-4 shrink-0 ${
+                      currentSelectedPlot?.status === "empty" ? "text-emerald-400" : ""
+                    }`}
+                  />
+                  <span className="text-[10px] font-extrabold leading-none">Trồng Cây</span>
+                </button>
+
+                {/* Water Buff */}
+                <button
+                  disabled={waterActionMode === "disabled"}
+                  onClick={handleWaterPlot}
+                  data-water-action={waterActionMode}
+                  className={`h-14 flex-1 rounded-xl border flex flex-col items-center justify-center gap-1 shadow-sm transition-all ${
+                    waterActionMode !== "disabled"
+                      ? "border-sky-400 bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-slate-950 font-black shadow-sky-500/20 active:scale-95 animate-pulse"
+                      : "border-slate-800/80 bg-slate-900/60 text-slate-600 cursor-not-allowed opacity-60"
+                  }`}
+                >
+                  <Droplets
+                    className={`w-4 h-4 shrink-0 ${
+                      waterActionMode !== "disabled" ? "text-slate-950" : "text-slate-600"
+                    }`}
+                  />
+                  <span className="text-[10px] font-extrabold leading-none">{waterActionLabel}</span>
+                </button>
+
+                {/* Single harvest is scoped to the selected ready plot. */}
+                <button
+                  disabled={currentSelectedPlot?.status !== "ready"}
+                  onClick={handleHarvestSinglePlot}
+                  data-harvest-action="single"
+                  className={`h-14 flex-1 rounded-xl border flex flex-col items-center justify-center gap-1 shadow-sm transition-all ${
+                    currentSelectedPlot?.status === "ready"
+                      ? "border-amber-400 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black shadow-amber-500/20 active:scale-95 animate-pulse"
+                      : "border-slate-800/80 bg-slate-900/60 text-slate-600 cursor-not-allowed opacity-60"
+                  }`}
+                >
+                  <Sparkles
+                    className={`w-4 h-4 shrink-0 ${
+                      currentSelectedPlot?.status === "ready" ? "text-slate-950" : "text-slate-600"
+                    }`}
+                  />
+                  <span className="text-[10px] font-extrabold leading-none">Thu Hoạch</span>
+                </button>
+
+                {harvestAllActionMode === "harvest_all" ? (
+                  <button
+                    disabled={isHarvestingAll}
+                    onClick={handleHarvestAll}
+                    data-harvest-action="all"
+                    className="h-14 flex-1 rounded-xl border border-orange-300 bg-gradient-to-r from-orange-500 to-amber-500 text-slate-950 shadow-sm shadow-orange-500/25 transition-all hover:from-orange-400 hover:to-amber-400 active:scale-95 disabled:cursor-not-allowed disabled:opacity-60"
+                  >
+                    <Sparkles className="mx-auto h-4 w-4" />
+                    <span className="mt-1 block text-[9px] font-black leading-none">
+                      Thu Hoạch Tất Cả
+                    </span>
+                  </button>
+                ) : (
+                  <button
+                    disabled={
+                      !currentSelectedPlot ||
+                      currentSelectedPlot.status === "empty" ||
+                      currentSelectedPlot.status === "locked"
+                    }
+                    onClick={handleClearPlot}
+                    data-harvest-action="clear-plot"
+                    className={`h-14 flex-1 rounded-xl border flex flex-col items-center justify-center gap-1 shadow-sm transition-all ${
+                      currentSelectedPlot &&
+                      currentSelectedPlot.status !== "empty" &&
+                      currentSelectedPlot.status !== "locked"
+                        ? "border-slate-700/80 bg-slate-800 hover:bg-red-950/80 hover:border-red-700/80 text-slate-200 hover:text-red-300 active:scale-95"
+                        : "border-slate-800/80 bg-slate-900/60 text-slate-600 cursor-not-allowed opacity-60"
+                    }`}
+                  >
+                    <Trash2
+                      className={`w-4 h-4 shrink-0 ${
+                        currentSelectedPlot &&
+                        currentSelectedPlot.status !== "empty" &&
+                        currentSelectedPlot.status !== "locked"
+                          ? "text-red-400"
+                          : ""
+                      }`}
+                    />
+                    <span className="text-[10px] font-extrabold leading-none">Xúc Đất</span>
+                  </button>
+                )}
+              </>
+            )}
+
+            {/* TOOLBAR FOR PEN MODE */}
+            {contextMode === "pen" && (
+              <>
+                {/* Store */}
+                <button
+                  onClick={() => openStore("animal")}
+                  className="h-14 flex-1 rounded-xl border border-slate-700/80 bg-slate-800 hover:bg-slate-700 text-slate-200 flex flex-col items-center justify-center gap-1 shadow-sm active:scale-95 transition-all"
+                >
+                  <Store className="w-4 h-4 text-amber-400 shrink-0" />
+                  <span className="text-[10px] font-extrabold leading-none">Cửa Hàng</span>
+                </button>
+
+                {/* Enter Pen */}
+                <button
+                  onClick={() => setIsEnterPenModalOpen(true)}
+                  className="h-14 flex-1 rounded-xl border border-slate-700/80 bg-slate-800 hover:bg-slate-700 text-slate-200 flex flex-col items-center justify-center gap-1 shadow-sm active:scale-95 transition-all"
+                >
+                  <span className="text-base leading-none shrink-0">🐓</span>
+                  <span className="text-[10px] font-extrabold leading-none">Thả Nuôi</span>
+                </button>
+
+                {/* Feed Pen */}
+                <button
+                  onClick={() => setIsFeedModalOpen(true)}
+                  className="h-14 flex-1 rounded-xl border border-slate-700/80 bg-slate-800 hover:bg-slate-700 text-slate-200 flex flex-col items-center justify-center gap-1 shadow-sm active:scale-95 transition-all"
+                >
+                  <Wheat className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <span className="text-[10px] font-extrabold leading-none">Cho Ăn</span>
+                </button>
+
+                {/* Sell Eggs */}
+                <button
+                  onClick={handleSellAllEggsQuick}
+                  className={`h-14 flex-1 rounded-xl border flex flex-col items-center justify-center gap-1 shadow-sm transition-all ${
+                    totalEggCount > 0
+                      ? "border-amber-400 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black shadow-amber-500/20 active:scale-95 animate-pulse"
+                      : "border-slate-700/80 bg-slate-800 hover:bg-slate-700 text-slate-200 active:scale-95"
+                  }`}
+                >
+                  <Egg
+                    className={`w-4 h-4 shrink-0 ${
+                      totalEggCount > 0 ? "text-slate-950" : "text-amber-400"
+                    }`}
+                  />
+                  <span className="text-[10px] font-extrabold leading-none">Bán Trứng</span>
+                </button>
+
+                {/* Dismiss Animal */}
+                <button
+                  disabled={!selectedAnimalId}
+                  onClick={handleDismissAnimal}
+                  className={`h-14 flex-1 rounded-xl border flex flex-col items-center justify-center gap-1 shadow-sm transition-all ${
+                    selectedAnimalId
+                      ? "border-slate-700/80 bg-slate-800 hover:bg-red-950/80 hover:border-red-700/80 text-slate-200 hover:text-red-300 active:scale-95"
+                      : "border-slate-800/80 bg-slate-900/60 text-slate-600 cursor-not-allowed opacity-60"
+                  }`}
+                >
+                  {currentSelectedAnimalIsDead ? <Trash2
+                    className={`w-4 h-4 shrink-0 ${
+                      selectedAnimalId ? "text-red-400" : ""
+                    }`}
+                  /> : <UserX
+                    className={`w-4 h-4 shrink-0 ${
+                      selectedAnimalId ? "text-red-400" : ""
+                    }`}
+                  />}
+                  <span className="text-[10px] font-extrabold leading-none">
+                    {currentSelectedAnimalIsDead ? "Dọn" : "Đuổi"}
+                  </span>
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* --- TOAST POPUP --- */}
+      {toastMessage && (
+        <div className="fixed top-16 left-1/2 -translate-x-1/2 z-50 px-4 py-2.5 rounded-2xl bg-slate-900/95 border border-amber-500/80 text-amber-200 text-xs font-black shadow-2xl backdrop-blur-md flex items-center gap-2 animate-in fade-in slide-in-from-top-2 duration-200">
+          <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0" />
+          <span>{toastMessage}</span>
+        </div>
+      )}
+
+      {/* --- CONFIRMATION DIALOG MODAL --- */}
+      {dialogConfig.isOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-200">
+          <div className="bg-slate-900 border border-slate-700 rounded-3xl p-5 max-w-sm w-full space-y-4 shadow-2xl text-center">
+            <h3 className="font-extrabold text-base text-slate-100">
+              {dialogConfig.title}
+            </h3>
+            <p className="text-xs text-slate-300 leading-relaxed">
+              {dialogConfig.message}
+            </p>
+            <div className="flex items-center gap-2 pt-2">
+              <button
+                onClick={() =>
+                  setDialogConfig((prev) => ({ ...prev, isOpen: false }))
+                }
+                className="flex-1 py-2.5 rounded-xl bg-slate-800 text-slate-300 font-extrabold text-xs hover:bg-slate-750 transition-colors"
+              >
+                Hủy Bỏ
+              </button>
+              <button
+                onClick={() => {
+                  if (dialogConfig.onConfirm) dialogConfig.onConfirm();
+                }}
+                className="flex-1 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs shadow-md transition-all active:scale-95"
+              >
+                {dialogConfig.confirmLabel || "Xác Nhận"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* --- ALL GAME MODALS --- */}
+      <FarmStoreModal
+        isOpen={isStoreOpen}
+        onClose={() => setIsStoreOpen(false)}
+        gold={farmState.gold}
+        currentRank={currentRank}
+        inventory={farmState.inventory}
+        initialTab={storeInitialTab}
+        onBuyCrop={handleBuyCrop}
+        onBuyAnimal={handleBuyAnimal}
+        onBuyFeed={handleBuyFeed}
+        onBuyFertilizer={handleBuyFertilizer}
+      />
+
+      <KhoModal
+        isOpen={isKhoOpen}
+        onClose={() => setIsKhoOpen(false)}
+        inventory={farmState.inventory}
+        eggQualityInventory={farmState.eggQualityInventory}
+        initialTab={khoInitialTab}
+        onSellItem={handleSellItem}
+        onSellEggs={handleSellEggsSingle}
+        onSellAllEggs={handleSellAllEggsQuick}
+        onOpenStore={(tab) => {
+          setIsKhoOpen(false);
+          openStore(tab);
+        }}
+      />
+
+      <PlantSeedModal
+        isOpen={isPlantModalOpen}
+        onClose={() => setIsPlantModalOpen(false)}
+        inventory={farmState.inventory}
+        onSelectSeedWithFertilizer={handlePlantSeedWithFertilizer}
+        onOpenStore={() => openStore("crop")}
+      />
+
+      <EnterPenModal
+        isOpen={isEnterPenModalOpen}
+        onClose={() => setIsEnterPenModalOpen(false)}
+        inventory={farmState.inventory}
+        penAnimals={farmState.penAnimals}
+        currentRank={currentRank}
+        onEnterPen={handleEnterPen}
+        onOpenStore={() => openStore("animal")}
+      />
+
+      <FeedModal
+        isOpen={isFeedModalOpen}
+        onClose={() => setIsFeedModalOpen(false)}
+        inventory={farmState.inventory}
+        penFeedBuffValue={farmState.penFeedBuffValue || 0}
+        activeFeedSpeedBonus={farmState.activeFeedSpeedBonus || 0}
+        onSelectFeed={handleFeedPen}
+        onOpenStore={() => openStore("feed")}
+      />
+
+      <RewardSummaryModal
+        isOpen={isRewardSummaryOpen}
+        onClose={() => setIsRewardSummaryOpen(false)}
+        data={rewardSummary}
+      />
+
+      <TroughInfoModal
+        isOpen={isTroughInfoOpen}
+        onClose={handleCloseTroughInfo}
+        penAnimals={presentationState.penAnimals}
+        penFeedBuffValue={presentationState.penFeedBuffValue}
+        activeFeedSpeedBonus={presentationState.activeFeedSpeedBonus}
+        penStarvationStartedAt={presentationState.penStarvationStartedAt}
+        now={now}
+      />
+
+      <WeatherModal
+        isOpen={isWeatherModalOpen}
+        onClose={() => setIsWeatherModalOpen(false)}
+        currentSlot={currentWeatherSlot}
+      />
+    </div>
+  );
+};
