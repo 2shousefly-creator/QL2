@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { RankStep } from "../../../game/types";
 import {
   ANIMAL_CATALOG,
@@ -96,6 +96,7 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
   const [activeTab, setActiveTab] = useState<"crop" | "fertilizer" | "animal" | "feed">(initialTab);
   const [buyModalData, setBuyModalData] = useState<PendingBuyState | null>(null);
   const [buyQuantity, setBuyQuantity] = useState<number>(1);
+  const buyQuantityPristineRef = useRef(true);
   const maxAffordable = buyModalData
     ? buyModalData.unitCostGold > 0
       ? Math.max(1, Math.min(999, Math.floor(gold / buyModalData.unitCostGold)))
@@ -107,6 +108,7 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
       setActiveTab(initialTab);
       setBuyModalData(null);
       setBuyQuantity(1);
+      buyQuantityPristineRef.current = true;
     }
   }, [isOpen, initialTab]);
 
@@ -120,6 +122,20 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
   const openBuyDialog = (item: PendingBuyState) => {
     setBuyModalData(item);
     setBuyQuantity(1);
+    buyQuantityPristineRef.current = true;
+  };
+
+  const handleBuyQuantityQuickAdjust = (delta: number) => {
+    const wasPristine = buyQuantityPristineRef.current;
+    buyQuantityPristineRef.current = false;
+    setBuyQuantity((current) =>
+      adjustIntegerQuantity(
+        wasPristine && delta > 0 ? 0 : current,
+        delta,
+        1,
+        maxAffordable
+      )
+    );
   };
 
   const handleConfirmBuy = () => {
@@ -677,7 +693,10 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
               <div className="flex items-center justify-center gap-2 sm:gap-3">
                 <button
                   type="button"
-                  onClick={() => setBuyQuantity((prev) => Math.max(1, prev - 1))}
+                  onClick={() => {
+                    buyQuantityPristineRef.current = false;
+                    setBuyQuantity((prev) => Math.max(1, prev - 1));
+                  }}
                   disabled={buyQuantity <= 1}
                   aria-label="Giảm số lượng mua 1"
                   className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-800 hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed text-slate-200 font-bold flex items-center justify-center border border-slate-700 transition-all active:scale-95 cursor-pointer"
@@ -693,6 +712,7 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
                   max={maxAffordable}
                   value={buyQuantity}
                   onChange={(e) => {
+                    buyQuantityPristineRef.current = false;
                     const val = parseInt(e.target.value, 10);
                     if (isNaN(val)) {
                       setBuyQuantity(1);
@@ -705,9 +725,10 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
 
                 <button
                   type="button"
-                  onClick={() =>
-                    setBuyQuantity((prev) => Math.min(maxAffordable, prev + 1))
-                  }
+                  onClick={() => {
+                    buyQuantityPristineRef.current = false;
+                    setBuyQuantity((prev) => Math.min(maxAffordable, prev + 1));
+                  }}
                   disabled={buyQuantity >= maxAffordable}
                   aria-label="Tăng số lượng mua 1"
                   className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-800 hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed text-slate-200 font-bold flex items-center justify-center border border-slate-700 transition-all active:scale-95 cursor-pointer"
@@ -716,18 +737,14 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
                 </button>
               </div>
 
-              {/* Relative quick adjustment buttons */}
+              {/* Quick adjustment buttons */}
               <div className="grid grid-cols-4 gap-1.5 pt-1">
                 {[-10, -5, 5, 10].map((delta) => (
                   <button
                     key={delta}
                     type="button"
                     disabled={delta < 0 ? buyQuantity <= 1 : buyQuantity >= maxAffordable}
-                    onClick={() =>
-                      setBuyQuantity((current) =>
-                        adjustIntegerQuantity(current, delta, 1, maxAffordable)
-                      )
-                    }
+                    onClick={() => handleBuyQuantityQuickAdjust(delta)}
                     aria-label={`${delta < 0 ? "Giảm" : "Tăng"} số lượng mua ${Math.abs(delta)}`}
                     className="min-h-10 rounded-xl border border-slate-700 bg-slate-800 px-1.5 text-[11px] font-bold text-slate-300 transition-all hover:bg-slate-700 active:scale-95 disabled:cursor-not-allowed disabled:opacity-35 sm:text-xs"
                   >
@@ -738,7 +755,10 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
               <button
                 type="button"
                 disabled={buyQuantity >= maxAffordable}
-                onClick={() => setBuyQuantity(maxAffordable)}
+                onClick={() => {
+                  buyQuantityPristineRef.current = false;
+                  setBuyQuantity(maxAffordable);
+                }}
                 aria-label={`Chọn số lượng mua tối đa ${maxAffordable}`}
                 className="min-h-10 w-full rounded-xl border border-amber-500/40 bg-amber-500/20 px-2 text-[11px] font-bold text-amber-300 transition-all hover:bg-amber-500/30 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50 sm:text-xs"
               >

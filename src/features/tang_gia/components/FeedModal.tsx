@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { FEED_CATALOG } from "../farmCatalog";
 import { FeedTypeId, FarmInventory, FeedDefinition } from "../farmTypes";
 import { Wheat, X, Plus, Minus, Zap, Utensils, ChevronLeft, ArrowRight } from "lucide-react";
@@ -26,6 +26,7 @@ export const FeedModal: React.FC<FeedModalProps> = ({
   const [selectedFeed, setSelectedFeed] = useState<FeedDefinition | null>(null);
   const [quantity, setQuantity] = useState<number>(1);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const quantityPristineRef = useRef(true);
 
   // Reset local state whenever modal opens or closes
   useEffect(() => {
@@ -33,6 +34,7 @@ export const FeedModal: React.FC<FeedModalProps> = ({
       setSelectedFeed(null);
       setQuantity(1);
       setIsSubmitting(false);
+      quantityPristineRef.current = true;
     }
   }, [isOpen]);
 
@@ -64,6 +66,20 @@ export const FeedModal: React.FC<FeedModalProps> = ({
     if (maxQty <= 0) return;
     setSelectedFeed(feed);
     setQuantity(1);
+    quantityPristineRef.current = true;
+  };
+
+  const handleQuantityQuickAdjust = (delta: number, maxQty: number) => {
+    const wasPristine = quantityPristineRef.current;
+    quantityPristineRef.current = false;
+    setQuantity((current) =>
+      adjustIntegerQuantity(
+        wasPristine && delta > 0 ? 0 : current,
+        delta,
+        1,
+        maxQty
+      )
+    );
   };
 
   const handleConfirmFeed = () => {
@@ -266,7 +282,10 @@ export const FeedModal: React.FC<FeedModalProps> = ({
                     <div className="flex items-center justify-between gap-3">
                       <button
                         type="button"
-                        onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+                        onClick={() => {
+                          quantityPristineRef.current = false;
+                          setQuantity((q) => Math.max(1, q - 1));
+                        }}
                         disabled={quantity <= 1}
                         aria-label="Giảm 1 bao thức ăn"
                         className="w-11 h-11 rounded-xl bg-slate-800 hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed text-slate-200 font-bold flex items-center justify-center border border-slate-700 transition-all active:scale-95 cursor-pointer shrink-0"
@@ -281,6 +300,7 @@ export const FeedModal: React.FC<FeedModalProps> = ({
                           max={maxQty}
                           value={quantity}
                           onChange={(e) => {
+                            quantityPristineRef.current = false;
                             const val = parseInt(e.target.value, 10);
                             if (isNaN(val)) {
                               setQuantity(1);
@@ -295,7 +315,10 @@ export const FeedModal: React.FC<FeedModalProps> = ({
 
                       <button
                         type="button"
-                        onClick={() => setQuantity((q) => Math.min(maxQty, q + 1))}
+                        onClick={() => {
+                          quantityPristineRef.current = false;
+                          setQuantity((q) => Math.min(maxQty, q + 1));
+                        }}
                         disabled={quantity >= maxQty}
                         aria-label="Tăng 1 bao thức ăn"
                         className="w-11 h-11 rounded-xl bg-slate-800 hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed text-slate-200 font-bold flex items-center justify-center border border-slate-700 transition-all active:scale-95 cursor-pointer shrink-0"
@@ -304,18 +327,14 @@ export const FeedModal: React.FC<FeedModalProps> = ({
                       </button>
                     </div>
 
-                    {/* Relative quick adjustment buttons */}
+                    {/* Quick adjustment buttons */}
                     <div className="grid grid-cols-4 gap-1.5 pt-1">
                       {[-10, -5, 5, 10].map((delta) => (
                         <button
                           key={delta}
                           type="button"
                           disabled={delta < 0 ? quantity <= 1 : quantity >= maxQty}
-                          onClick={() =>
-                            setQuantity((current) =>
-                              adjustIntegerQuantity(current, delta, 1, maxQty)
-                            )
-                          }
+                          onClick={() => handleQuantityQuickAdjust(delta, maxQty)}
                           aria-label={`${delta < 0 ? "Giảm" : "Tăng"} ${Math.abs(delta)} bao thức ăn`}
                           className="min-h-10 rounded-xl border border-slate-700 bg-slate-800 px-2 text-xs font-bold text-slate-300 transition-all hover:bg-slate-750 active:scale-95 disabled:cursor-not-allowed disabled:opacity-35"
                         >
@@ -326,7 +345,10 @@ export const FeedModal: React.FC<FeedModalProps> = ({
                     <button
                       type="button"
                       disabled={maxQty <= 0 || quantity >= maxQty}
-                      onClick={() => setQuantity(maxQty)}
+                      onClick={() => {
+                        quantityPristineRef.current = false;
+                        setQuantity(maxQty);
+                      }}
                       aria-label={`Chọn tối đa ${maxQty} bao thức ăn`}
                       className="min-h-10 w-full rounded-xl border border-amber-500/40 bg-amber-500/20 px-2 text-xs font-bold text-amber-300 transition-all hover:bg-amber-500/30 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50"
                     >

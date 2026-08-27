@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   ANIMAL_CATALOG,
   CROP_CATALOG,
@@ -110,12 +110,14 @@ export const KhoModal: React.FC<KhoModalProps> = ({
   const [activeTab, setActiveTab] = useState<KhoTabType>(initialTab);
   const [sellModalData, setSellModalData] = useState<PendingSellState | null>(null);
   const [sellQuantity, setSellQuantity] = useState<number>(1);
+  const sellQuantityPristineRef = useRef(true);
 
   useEffect(() => {
     if (isOpen) {
       setActiveTab(initialTab);
       setSellModalData(null);
       setSellQuantity(1);
+      sellQuantityPristineRef.current = true;
     }
   }, [isOpen, initialTab]);
 
@@ -149,6 +151,20 @@ export const KhoModal: React.FC<KhoModalProps> = ({
   const openSellModal = (item: PendingSellState) => {
     setSellModalData(item);
     setSellQuantity(1);
+    sellQuantityPristineRef.current = true;
+  };
+
+  const handleSellQuantityQuickAdjust = (delta: number) => {
+    const wasPristine = sellQuantityPristineRef.current;
+    sellQuantityPristineRef.current = false;
+    setSellQuantity((current) =>
+      adjustIntegerQuantity(
+        wasPristine && delta > 0 ? 0 : current,
+        delta,
+        1,
+        sellModalData?.ownedCount ?? 1
+      )
+    );
   };
 
   const handleConfirmSell = () => {
@@ -876,7 +892,10 @@ export const KhoModal: React.FC<KhoModalProps> = ({
             <div className="flex items-center justify-center gap-2 sm:gap-3">
               <button
                 type="button"
-                onClick={() => setSellQuantity((prev) => Math.max(1, prev - 1))}
+                onClick={() => {
+                  sellQuantityPristineRef.current = false;
+                  setSellQuantity((prev) => Math.max(1, prev - 1));
+                }}
                 disabled={sellQuantity <= 1}
                 aria-label="Giảm số lượng bán 1"
                 className="w-10 h-10 rounded-xl bg-slate-800/80 hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed text-slate-200 font-bold flex items-center justify-center border border-slate-750 transition-all active:scale-95 cursor-pointer"
@@ -892,6 +911,7 @@ export const KhoModal: React.FC<KhoModalProps> = ({
                 max={sellModalData.ownedCount}
                 value={sellQuantity}
                 onChange={(e) => {
+                  sellQuantityPristineRef.current = false;
                   const val = parseInt(e.target.value, 10);
                   if (isNaN(val)) {
                     setSellQuantity(1);
@@ -904,11 +924,12 @@ export const KhoModal: React.FC<KhoModalProps> = ({
 
               <button
                 type="button"
-                onClick={() =>
+                onClick={() => {
+                  sellQuantityPristineRef.current = false;
                   setSellQuantity((prev) =>
                     Math.min(sellModalData.ownedCount, prev + 1)
-                  )
-                }
+                  );
+                }}
                 disabled={sellQuantity >= sellModalData.ownedCount}
                 aria-label="Tăng số lượng bán 1"
                 className="w-10 h-10 rounded-xl bg-slate-800/80 hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed text-slate-200 font-bold flex items-center justify-center border border-slate-750 transition-all active:scale-95 cursor-pointer"
@@ -917,18 +938,14 @@ export const KhoModal: React.FC<KhoModalProps> = ({
               </button>
             </div>
 
-            {/* Relative quick adjustment buttons */}
+            {/* Quick adjustment buttons */}
             <div className="grid grid-cols-4 gap-1.5 pt-1">
               {[-10, -5, 5, 10].map((delta) => (
                 <button
                   key={delta}
                   type="button"
                   disabled={delta < 0 ? sellQuantity <= 1 : sellQuantity >= sellModalData.ownedCount}
-                  onClick={() =>
-                    setSellQuantity((current) =>
-                      adjustIntegerQuantity(current, delta, 1, sellModalData.ownedCount)
-                    )
-                  }
+                  onClick={() => handleSellQuantityQuickAdjust(delta)}
                   aria-label={`${delta < 0 ? "Giảm" : "Tăng"} số lượng bán ${Math.abs(delta)}`}
                   className="min-h-10 rounded-xl border border-slate-750 bg-slate-800/80 px-2 text-xs font-bold text-slate-300 transition-all hover:bg-slate-750 active:scale-95 disabled:cursor-not-allowed disabled:opacity-35"
                 >
@@ -939,7 +956,10 @@ export const KhoModal: React.FC<KhoModalProps> = ({
             <button
               type="button"
               disabled={sellQuantity >= sellModalData.ownedCount}
-              onClick={() => setSellQuantity(sellModalData.ownedCount)}
+              onClick={() => {
+                sellQuantityPristineRef.current = false;
+                setSellQuantity(sellModalData.ownedCount);
+              }}
               aria-label={`Chọn số lượng bán tối đa ${sellModalData.ownedCount}`}
               className="min-h-10 w-full rounded-xl border border-amber-500/30 bg-amber-500/20 px-2 text-xs font-bold text-amber-300 transition-all hover:bg-amber-500/30 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50"
             >

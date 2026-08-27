@@ -18,14 +18,19 @@ assert(
 );
 assert(!betControl.includes("20 Vàng"), "BetAmountControl no longer exposes ±20 shortcuts");
 
-for (const relativeUrl of [
-  "../features/tang_gia/components/FarmStoreModal.tsx",
-  "../features/tang_gia/components/FeedModal.tsx",
-  "../features/tang_gia/components/KhoModal.tsx",
+for (const [relativeUrl, quickHandler, pristineRef] of [
+  ["../features/tang_gia/components/FarmStoreModal.tsx", "handleBuyQuantityQuickAdjust", "buyQuantityPristineRef"],
+  ["../features/tang_gia/components/FeedModal.tsx", "handleQuantityQuickAdjust", "quantityPristineRef"],
+  ["../features/tang_gia/components/KhoModal.tsx", "handleSellQuantityQuickAdjust", "sellQuantityPristineRef"],
 ]) {
   const componentSource = source(relativeUrl);
   assert(componentSource.includes("[-10, -5, 5, 10]"), `${relativeUrl} renders all canonical deltas`);
-  assert(componentSource.includes("adjustIntegerQuantity(current, delta"), `${relativeUrl} applies deltas to the current draft`);
+  assert(componentSource.includes(`const ${quickHandler}`), `${relativeUrl} handles quick deltas explicitly`);
+  assert(componentSource.includes(`${pristineRef}.current = false`), `${relativeUrl} records the first user adjustment`);
+  assert(
+    componentSource.includes("wasPristine && delta > 0 ? 0 : current"),
+    `${relativeUrl} ignores the untouched starter value for the first positive quick delta`,
+  );
   assert(componentSource.includes("Tối đa ("), `${relativeUrl} retains an explicit absolute maximum shortcut`);
   assert(!componentSource.includes("[1, 5, 10].map"), `${relativeUrl} removes the old absolute 1/5/10 presets`);
   assert(!componentSource.includes("[1, 2, 5].map"), `${relativeUrl} removes the old absolute 1/2/5 presets`);
