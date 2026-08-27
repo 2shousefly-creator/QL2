@@ -19,7 +19,12 @@ import {
 } from "../farmTypes";
 import { X, Lock, ShoppingBag, Minus, Plus } from "lucide-react";
 import { adjustIntegerQuantity } from "../../../utils/quantityInput";
-import { TANG_GIA_ASSETS } from "../tangGiaAssetManifest";
+import {
+  getCropAsset,
+  getFeedAsset,
+  getFertilizerAsset,
+} from "../tangGiaAssetManifest";
+import { FARM_UI_SPRITE_VARS } from "../farmUiTheme";
 
 interface FarmStoreModalProps {
   isOpen: boolean;
@@ -164,7 +169,7 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
       return (
         <button
           disabled
-          className="h-8 sm:h-9 px-2 sm:px-2.5 rounded-xl font-bold text-[11px] sm:text-xs shrink-0 bg-slate-800/70 text-slate-500 border border-slate-700/50 cursor-not-allowed flex items-center justify-center gap-1 min-w-[62px] sm:min-w-[68px]"
+          className="farm-ui-secondary-button h-8 sm:h-9 px-2 sm:px-2.5 rounded-xl font-bold text-[11px] sm:text-xs shrink-0 bg-slate-800/70 text-slate-500 border border-slate-700/50 cursor-not-allowed flex items-center justify-center gap-1 min-w-[62px] sm:min-w-[68px]"
         >
           <Lock className="w-3 h-3 text-amber-400/80 shrink-0" />
           <span>Khóa</span>
@@ -176,7 +181,7 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
       return (
         <button
           onClick={onOpenBuy}
-          className="h-8 sm:h-9 px-2.5 sm:px-3.5 rounded-xl font-black text-[11px] sm:text-xs shrink-0 transition-all flex items-center justify-center gap-1 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 active:scale-95 shadow-sm shadow-amber-500/20 cursor-pointer border border-amber-300/80 min-w-[62px] sm:min-w-[68px]"
+          className="farm-ui-primary-button h-8 sm:h-9 px-2.5 sm:px-3.5 rounded-xl font-black text-[11px] sm:text-xs shrink-0 transition-all flex items-center justify-center gap-1 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 active:scale-95 shadow-sm shadow-amber-500/20 cursor-pointer border border-amber-300/80 min-w-[62px] sm:min-w-[68px]"
         >
           <ShoppingBag className="w-3 h-3 shrink-0" />
           <span>Mua</span>
@@ -187,7 +192,7 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
     return (
       <button
         disabled
-        className="h-8 sm:h-9 px-2 sm:px-2.5 rounded-xl font-bold text-[10px] sm:text-[11px] shrink-0 bg-slate-800/60 text-slate-500 border border-slate-700/40 cursor-not-allowed flex items-center justify-center min-w-[62px] sm:min-w-[68px]"
+        className="farm-ui-secondary-button h-8 sm:h-9 px-2 sm:px-2.5 rounded-xl font-bold text-[10px] sm:text-[11px] shrink-0 bg-slate-800/60 text-slate-500 border border-slate-700/40 cursor-not-allowed flex items-center justify-center min-w-[62px] sm:min-w-[68px]"
       >
         <span>Thiếu Vàng</span>
       </button>
@@ -210,10 +215,11 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
       >
         <div
           onClick={(e) => e.stopPropagation()}
-          className="bg-slate-900 border border-slate-800 rounded-3xl w-full max-w-lg overflow-hidden shadow-2xl flex flex-col max-h-[85vh] cursor-default relative"
+          className="farm-ui-shell bg-slate-900 border border-slate-800 rounded-3xl w-full max-w-lg overflow-hidden shadow-2xl flex flex-col max-h-[85vh] cursor-default relative"
+          style={FARM_UI_SPRITE_VARS}
         >
           {/* Modal Header (Sticky / Fixed at top of modal) */}
-          <div className="px-3.5 py-2.5 sm:px-4 sm:py-3 bg-slate-800/80 border-b border-slate-800 flex items-center justify-between shrink-0">
+          <div className="farm-ui-header px-3.5 py-2.5 sm:px-4 sm:py-3 bg-slate-800/80 border-b border-slate-800 flex items-center justify-between shrink-0">
             <div className="flex items-center gap-2.5">
               <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-base sm:text-lg shrink-0">
                 🪙
@@ -241,10 +247,11 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
           </div>
 
           {/* 4 Tabs (Sticky under Header, horizontal scroll on narrow mobile) */}
-          <div className="flex sm:grid sm:grid-cols-4 gap-1 p-1.5 bg-slate-900 border-b border-slate-800 text-[11px] overflow-x-auto no-scrollbar whitespace-nowrap shrink-0">
+          <div className="farm-ui-tabs flex sm:grid sm:grid-cols-4 gap-1 p-1.5 bg-slate-900 border-b border-slate-800 text-[11px] overflow-x-auto no-scrollbar whitespace-nowrap shrink-0">
             <button
               onClick={() => setActiveTab("crop")}
-              className={`flex-1 sm:flex-initial py-1.5 px-2.5 sm:px-2 rounded-xl font-bold transition-all flex items-center justify-center gap-1 shrink-0 ${
+              data-active={activeTab === "crop"}
+              className={`farm-ui-tab flex-1 sm:flex-initial py-1.5 px-2.5 sm:px-2 rounded-xl font-bold transition-all flex items-center justify-center gap-1 shrink-0 ${
                 activeTab === "crop"
                   ? "bg-amber-500 text-slate-950 shadow-sm"
                   : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
@@ -255,7 +262,8 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
 
             <button
               onClick={() => setActiveTab("fertilizer")}
-              className={`flex-1 sm:flex-initial py-1.5 px-2.5 sm:px-2 rounded-xl font-bold transition-all flex items-center justify-center gap-1 shrink-0 ${
+              data-active={activeTab === "fertilizer"}
+              className={`farm-ui-tab flex-1 sm:flex-initial py-1.5 px-2.5 sm:px-2 rounded-xl font-bold transition-all flex items-center justify-center gap-1 shrink-0 ${
                 activeTab === "fertilizer"
                   ? "bg-amber-500 text-slate-950 shadow-sm"
                   : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
@@ -266,7 +274,8 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
 
             <button
               onClick={() => setActiveTab("animal")}
-              className={`flex-1 sm:flex-initial py-1.5 px-2.5 sm:px-2 rounded-xl font-bold transition-all flex items-center justify-center gap-1 shrink-0 ${
+              data-active={activeTab === "animal"}
+              className={`farm-ui-tab flex-1 sm:flex-initial py-1.5 px-2.5 sm:px-2 rounded-xl font-bold transition-all flex items-center justify-center gap-1 shrink-0 ${
                 activeTab === "animal"
                   ? "bg-amber-500 text-slate-950 shadow-sm"
                   : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
@@ -277,7 +286,8 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
 
             <button
               onClick={() => setActiveTab("feed")}
-              className={`flex-1 sm:flex-initial py-1.5 px-2.5 sm:px-2 rounded-xl font-bold transition-all flex items-center justify-center gap-1 shrink-0 ${
+              data-active={activeTab === "feed"}
+              className={`farm-ui-tab flex-1 sm:flex-initial py-1.5 px-2.5 sm:px-2 rounded-xl font-bold transition-all flex items-center justify-center gap-1 shrink-0 ${
                 activeTab === "feed"
                   ? "bg-amber-500 text-slate-950 shadow-sm"
                   : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
@@ -288,7 +298,7 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
           </div>
 
           {/* Tab Content List (Scrollable Area) */}
-          <div className="p-2 sm:p-3 overflow-y-auto space-y-2 flex-1 overscroll-contain">
+          <div className="farm-ui-content p-2 sm:p-3 overflow-y-auto space-y-2 flex-1 overscroll-contain">
             {/* TAB 1: CROPS */}
             {activeTab === "crop" &&
               CROP_CATALOG.map((crop) => {
@@ -301,16 +311,16 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
                 return (
                   <div
                     key={crop.id}
-                    className={`p-2 sm:p-2.5 rounded-2xl border flex items-center justify-between gap-2.5 relative overflow-hidden transition-all ${
+                    className={`farm-ui-card p-2 sm:p-2.5 rounded-2xl border flex items-center justify-between gap-2.5 relative overflow-hidden transition-all ${
                       hasRank
                         ? "bg-slate-800/40 hover:bg-slate-800/70 border-slate-800"
                         : "bg-slate-900/60 border-slate-800/60 opacity-75"
                     }`}
                   >
                     <div className="flex items-center gap-2.5 flex-1 min-w-0">
-                      <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-slate-800/90 border border-slate-700/60 flex items-center justify-center shrink-0">
+                      <div className="farm-ui-icon-slot w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-slate-800/90 border border-slate-700/60 flex items-center justify-center shrink-0">
                         <img
-                          src={TANG_GIA_ASSETS.sharedSeed}
+                          src={getCropAsset(crop.id, "mature")}
                           alt=""
                           aria-hidden="true"
                           className="h-8 w-8 sm:h-9 sm:w-9 object-contain"
@@ -360,7 +370,7 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
                           name: `Hạt giống ${crop.name}`,
                           icon: (
                             <img
-                              src={TANG_GIA_ASSETS.sharedSeed}
+                              src={getCropAsset(crop.id, "mature")}
                               alt=""
                               aria-hidden="true"
                               className="h-8 w-8 object-contain"
@@ -387,15 +397,20 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
                 return (
                   <div
                     key={fert.id}
-                    className={`p-2 sm:p-2.5 rounded-2xl border flex items-center justify-between gap-2.5 relative overflow-hidden transition-all ${
+                    className={`farm-ui-card p-2 sm:p-2.5 rounded-2xl border flex items-center justify-between gap-2.5 relative overflow-hidden transition-all ${
                       hasRank
                         ? "bg-slate-800/40 hover:bg-slate-800/70 border-slate-800"
                         : "bg-slate-900/60 border-slate-800/60 opacity-75"
                     }`}
                   >
                     <div className="flex items-center gap-2.5 flex-1 min-w-0">
-                      <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-slate-800/90 border border-slate-700/60 flex items-center justify-center text-xl sm:text-2xl shrink-0">
-                        {fert.icon}
+                      <div className="farm-ui-icon-slot w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-slate-800/90 border border-slate-700/60 flex items-center justify-center text-xl sm:text-2xl shrink-0">
+                        <img
+                          src={getFertilizerAsset(fert.id)}
+                          alt=""
+                          aria-hidden="true"
+                          className="h-9 w-9 sm:h-10 sm:w-10 object-contain"
+                        />
                       </div>
 
                       <div className="flex-1 min-w-0 space-y-0.5 text-xs">
@@ -435,7 +450,14 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
                           category: "fertilizer",
                           itemId: fert.id,
                           name: fert.name,
-                          icon: fert.icon,
+                          icon: (
+                            <img
+                              src={getFertilizerAsset(fert.id)}
+                              alt=""
+                              aria-hidden="true"
+                              className="h-8 w-8 object-contain"
+                            />
+                          ),
                           unitCostGold: fert.purchaseGold,
                           ownedCount,
                           requiredRankName: rankName,
@@ -457,14 +479,14 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
                 return (
                   <div
                     key={animal.id}
-                    className={`p-2 sm:p-2.5 rounded-2xl border flex items-center justify-between gap-2.5 relative overflow-hidden transition-all ${
+                    className={`farm-ui-card p-2 sm:p-2.5 rounded-2xl border flex items-center justify-between gap-2.5 relative overflow-hidden transition-all ${
                       hasRank
                         ? "bg-slate-800/40 hover:bg-slate-800/70 border-slate-800"
                         : "bg-slate-900/60 border-slate-800/60 opacity-75"
                     }`}
                   >
                     <div className="flex items-center gap-2.5 flex-1 min-w-0">
-                      <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-slate-800/90 border border-slate-700/60 flex items-center justify-center text-xl sm:text-2xl shrink-0">
+                      <div className="farm-ui-icon-slot w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-slate-800/90 border border-slate-700/60 flex items-center justify-center text-xl sm:text-2xl shrink-0">
                         {getAnimalEmoji(animal.id)}
                       </div>
 
@@ -540,15 +562,20 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
                 return (
                   <div
                     key={feed.id}
-                    className={`p-2 sm:p-2.5 rounded-2xl border flex items-center justify-between gap-2.5 relative overflow-hidden transition-all ${
+                    className={`farm-ui-card p-2 sm:p-2.5 rounded-2xl border flex items-center justify-between gap-2.5 relative overflow-hidden transition-all ${
                       hasRank
                         ? "bg-slate-800/40 hover:bg-slate-800/70 border-slate-800"
                         : "bg-slate-900/60 border-slate-800/60 opacity-75"
                     }`}
                   >
                     <div className="flex items-center gap-2.5 flex-1 min-w-0">
-                      <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-slate-800/90 border border-slate-700/60 flex items-center justify-center text-xl sm:text-2xl shrink-0">
-                        🌾
+                      <div className="farm-ui-icon-slot w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-slate-800/90 border border-slate-700/60 flex items-center justify-center text-xl sm:text-2xl shrink-0">
+                        <img
+                          src={getFeedAsset(feed.id)}
+                          alt=""
+                          aria-hidden="true"
+                          className="h-9 w-9 sm:h-10 sm:w-10 object-contain"
+                        />
                       </div>
 
                       <div className="flex-1 min-w-0 space-y-0.5 text-xs">
@@ -589,7 +616,14 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
                           category: "feed",
                           itemId: feed.id,
                           name: feed.name,
-                          icon: "🌾",
+                          icon: (
+                            <img
+                              src={getFeedAsset(feed.id)}
+                              alt=""
+                              aria-hidden="true"
+                              className="h-8 w-8 object-contain"
+                            />
+                          ),
                           unitCostGold: feed.costGold,
                           ownedCount,
                           requiredRankName: rankName,
@@ -613,12 +647,13 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="w-full max-w-sm my-auto bg-slate-900 border border-amber-500/40 rounded-3xl p-4 sm:p-5 shadow-2xl space-y-3.5 max-h-[90vh] overflow-y-auto cursor-default relative animate-in zoom-in-95 duration-150"
+            className="farm-ui-shell farm-ui-dialog w-full max-w-sm my-auto bg-slate-900 border border-amber-500/40 rounded-3xl p-4 sm:p-5 shadow-2xl space-y-3.5 max-h-[90vh] overflow-y-auto cursor-default relative animate-in zoom-in-95 duration-150"
+            style={FARM_UI_SPRITE_VARS}
           >
             {/* Header */}
             <div className="flex items-center justify-between border-b border-slate-800 pb-3">
               <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-xl sm:text-2xl shrink-0">
+                <div className="farm-ui-icon-slot w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-xl sm:text-2xl shrink-0">
                   {buyModalData.icon}
                 </div>
                 <div>
@@ -652,7 +687,7 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
                   onClick={() => setBuyQuantity((prev) => Math.max(1, prev - 1))}
                   disabled={buyQuantity <= 1}
                   aria-label="Giảm số lượng mua 1"
-                  className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-800 hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed text-slate-200 font-bold flex items-center justify-center border border-slate-700 transition-all active:scale-95 cursor-pointer"
+                  className="farm-ui-secondary-button w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-800 hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed text-slate-200 font-bold flex items-center justify-center border border-slate-700 transition-all active:scale-95 cursor-pointer"
                 >
                   <Minus className="w-4 h-4" />
                 </button>
@@ -672,7 +707,7 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
                       setBuyQuantity(adjustIntegerQuantity(val, 0, 1, maxAffordable));
                     }
                   }}
-                  className="w-20 sm:w-24 text-center py-1.5 sm:py-2 bg-slate-950 border border-slate-700 rounded-xl text-amber-300 font-black text-base sm:text-lg font-mono focus:outline-none focus:border-amber-400"
+                  className="farm-ui-input w-20 sm:w-24 text-center py-1.5 sm:py-2 bg-slate-950 border border-slate-700 rounded-xl text-amber-300 font-black text-base sm:text-lg font-mono focus:outline-none focus:border-amber-400"
                 />
 
                 <button
@@ -682,7 +717,7 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
                   }
                   disabled={buyQuantity >= maxAffordable}
                   aria-label="Tăng số lượng mua 1"
-                  className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-800 hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed text-slate-200 font-bold flex items-center justify-center border border-slate-700 transition-all active:scale-95 cursor-pointer"
+                  className="farm-ui-secondary-button w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-800 hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed text-slate-200 font-bold flex items-center justify-center border border-slate-700 transition-all active:scale-95 cursor-pointer"
                 >
                   <Plus className="w-4 h-4" />
                 </button>
@@ -701,7 +736,7 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
                       )
                     }
                     aria-label={`${delta < 0 ? "Giảm" : "Tăng"} số lượng mua ${Math.abs(delta)}`}
-                    className="min-h-10 rounded-xl border border-slate-700 bg-slate-800 px-1.5 text-[11px] font-bold text-slate-300 transition-all hover:bg-slate-700 active:scale-95 disabled:cursor-not-allowed disabled:opacity-35 sm:text-xs"
+                    className="farm-ui-secondary-button min-h-10 rounded-xl border border-slate-700 bg-slate-800 px-1.5 text-[11px] font-bold text-slate-300 transition-all hover:bg-slate-700 active:scale-95 disabled:cursor-not-allowed disabled:opacity-35 sm:text-xs"
                   >
                     {delta > 0 ? "+" : ""}{delta}
                   </button>
@@ -719,7 +754,7 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
             </div>
 
             {/* Cost Calculation Box */}
-            <div className="bg-slate-950/80 border border-slate-800 rounded-2xl p-2.5 sm:p-3 space-y-1 text-xs text-slate-300">
+            <div className="farm-ui-summary bg-slate-950/80 border border-slate-800 rounded-2xl p-2.5 sm:p-3 space-y-1 text-xs text-slate-300">
               <div className="flex items-center justify-between">
                 <span className="text-slate-400 text-[11px]">Đơn giá:</span>
                 <span className="font-bold text-amber-400">
@@ -749,7 +784,7 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
               <button
                 type="button"
                 onClick={() => setBuyModalData(null)}
-                className="flex-1 py-2 rounded-xl bg-slate-800 text-slate-300 font-bold text-xs hover:bg-slate-700 transition-colors cursor-pointer"
+                className="farm-ui-secondary-button flex-1 py-2 rounded-xl bg-slate-800 text-slate-300 font-bold text-xs hover:bg-slate-700 transition-colors cursor-pointer"
               >
                 Hủy Bỏ
               </button>
@@ -757,7 +792,7 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
                 type="button"
                 disabled={!canAffordBuy || buyQuantity <= 0}
                 onClick={handleConfirmBuy}
-                className="flex-1 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 disabled:opacity-40 disabled:cursor-not-allowed text-slate-950 font-black text-xs shadow-md transition-all active:scale-95 cursor-pointer"
+                className="farm-ui-primary-button flex-1 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 disabled:opacity-40 disabled:cursor-not-allowed text-slate-950 font-black text-xs shadow-md transition-all active:scale-95 cursor-pointer"
               >
                 Mua ({buyQuantity})
               </button>

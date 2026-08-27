@@ -34,6 +34,7 @@ import {
 import type { PlotHarvestPresentation } from "../farmPresentation";
 import {
   TANG_GIA_ASSETS,
+  getFarmBackgroundAsset,
   getCropAsset,
   getSoilAsset,
   type SoilAssetState,
@@ -202,14 +203,15 @@ export const TangGiaCanvas2D: React.FC<TangGiaCanvas2DProps> = ({
   const isNight = currentWeatherSlot?.phase === "night";
   const weatherType = currentWeatherSlot?.weather || "sunny";
   const visualTheme = getFarmVisualTheme(currentWeatherSlot);
+  const sceneBackgroundAsset = getFarmBackgroundAsset(currentWeatherSlot);
 
   const getPlotBgStyle = (
-    isUnlocked: boolean,
+    _isUnlocked: boolean,
     isSelected: boolean,
     isReady: boolean,
   ): React.CSSProperties => {
     return {
-      background: isUnlocked ? "transparent" : visualTheme.plotBackground,
+      background: "transparent",
       borderColor: isSelected
         ? "#fcd34d"
         : isReady
@@ -240,7 +242,7 @@ export const TangGiaCanvas2D: React.FC<TangGiaCanvas2DProps> = ({
       className="w-full relative min-h-[500px] sm:min-h-[540px] rounded-3xl border-2 border-emerald-700/60 p-3 sm:p-4 overflow-hidden shadow-2xl flex flex-col justify-between select-none transition-colors duration-1000"
       style={{
         backgroundColor: "#74b96f",
-        backgroundImage: `url(${TANG_GIA_ASSETS.background})`,
+        backgroundImage: `url(${sceneBackgroundAsset})`,
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
@@ -364,7 +366,7 @@ export const TangGiaCanvas2D: React.FC<TangGiaCanvas2DProps> = ({
                 contextMode === "garden" && selectedPlotIndex === plotIndex;
               const wateringInfo = getPlotWateringInfo(plot, now);
               const cropStage = getCropVisualStage(progress);
-              const soilState: SoilAssetState = plot.status === "empty"
+              const soilState: SoilAssetState = !isUnlocked || plot.status === "empty"
                 ? "empty"
                 : plot.status === "growing" && wateringInfo.canWaterNow
                   ? "need_water"
@@ -390,16 +392,17 @@ export const TangGiaCanvas2D: React.FC<TangGiaCanvas2DProps> = ({
                     zIndex: isSelected ? 30 : cropStage === "young" || cropStage === "mature" ? 10 : 1,
                   }}
                 >
-                  {isUnlocked && (
-                    <img
-                      src={getSoilAsset(soilState)}
-                      alt=""
-                      aria-hidden="true"
-                      draggable={false}
-                      data-soil-state={soilState}
-                      className="pointer-events-none absolute inset-0 h-full w-full object-contain transition-[filter] duration-500"
-                    />
-                  )}
+                  <img
+                    src={getSoilAsset(soilState)}
+                    alt=""
+                    aria-hidden="true"
+                    draggable={false}
+                    data-soil-state={soilState}
+                    data-locked-soil={!isUnlocked || undefined}
+                    className={`pointer-events-none absolute inset-0 h-full w-full object-contain transition-[filter] duration-500 ${
+                      isUnlocked ? "" : "brightness-75 saturate-75"
+                    }`}
+                  />
                   {harvestPresentation &&
                     harvestPresentation.glowUntil > harvestPresentation.startedAt && (
                       <div
