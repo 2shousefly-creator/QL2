@@ -1,0 +1,5 @@
+AI Studio sync ping
+Repository: 2shousefly-creator/QL2
+Branch: main
+Purpose: force Google AI Studio to detect a fresh HEAD after the Tang Gia asset/UI merge.
+Date: 2026-08-27
