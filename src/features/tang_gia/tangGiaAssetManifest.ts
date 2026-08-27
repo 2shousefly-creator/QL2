@@ -72,13 +72,6 @@ export const TANG_GIA_ASSETS = {
     feed_good: `${ASSET_ROOT}/items/feed/feed_good.png`,
     feed_super: `${ASSET_ROOT}/items/feed/feed_super.png`,
   } satisfies Record<FeedTypeId, string>,
-  ui: {
-    modalPanel: `${ASSET_ROOT}/ui/farm_modal_panel.png`,
-    modalHeader: `${ASSET_ROOT}/ui/farm_modal_header.png`,
-    itemCard: `${ASSET_ROOT}/ui/farm_item_card.png`,
-    tabActive: `${ASSET_ROOT}/ui/farm_tab_active.png`,
-    tabIdle: `${ASSET_ROOT}/ui/farm_tab_idle.png`,
-  },
 } as const;
 
 export function getCropAsset(cropId: CropId, stage: CropAssetStage): string {
