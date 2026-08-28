@@ -33,8 +33,8 @@ export const PromotionChallenge: React.FC<PromotionChallengeProps> = ({
   const isCrossFamily = currentRank.familyId !== nextRank.familyId;
   const totalQuestions = isCrossFamily ? 10 : 5;
   const durationSeconds = isCrossFamily ? 90 : 45;
-  const passRequirement = isCrossFamily ? 9 : 4;
-  const earlyFailThreshold = isCrossFamily ? 2 : 2; // Fail if wrongCount >= earlyFailThreshold (allowed wrong: 1)
+  const passRequirement = isCrossFamily ? 8 : 4;
+  const earlyFailThreshold = isCrossFamily ? 3 : 2; // Allowed wrong answers: 2 for major, 1 for minor.
 
   // Questions state
   const [questions, setQuestions] = useState<ShuffledExamQuestion[]>([]);
