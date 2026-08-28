@@ -41,10 +41,10 @@ export const questionsPart0b: QuestionItem[] = [
     "id": "q504",
     "question": "Một số loài cá heo có thể ngủ theo kiểu đặc biệt nào để vẫn duy trì hô hấp và cảnh giác khi ở dưới nước?",
     "answers": [
-      "Cả hai bán cầu não ngủ sâu đồng thời",
+      "Hai bán cầu não luân phiên ngủ nhưng đều tỉnh lại để hô hấp theo chu kỳ",
       "Một bán cầu não ngủ trong khi bán cầu kia vẫn thức",
-      "Không bao giờ ngủ",
-      "Chỉ ngủ khi lên bờ"
+      "Cả hai bán cầu cùng giảm hoạt động nhưng não vẫn duy trì phản xạ hô hấp",
+      "Cá heo chỉ ngủ rất nông và liên tục thức dậy để kiểm tra môi trường"
     ],
     "correctAnswerIndex": 1,
     "category": "biology"
@@ -54,9 +54,9 @@ export const questionsPart0b: QuestionItem[] = [
     "question": "Khi ăn trai hoặc sò, sao biển có thể thực hiện hành vi tiêu hóa đặc biệt nào?",
     "answers": [
       "Đẩy dạ dày ra ngoài cơ thể qua miệng để tiêu hóa con mồi rồi kéo trở lại",
-      "Tiêm nọc bằng gai ở tay",
-      "Nhai bằng răng",
-      "Lọc thức ăn bằng mang"
+      "Tiết enzyme qua miệng vào khe vỏ rồi hút phần mô đã được phân giải trở lại",
+      "Dùng chân ống nghiền trực tiếp phần mềm của con mồi trước khi đưa vào miệng",
+      "Mở vỏ con mồi rồi đưa toàn bộ con mồi vào khoang tiêu hóa để xử lý bên trong"
     ],
     "correctAnswerIndex": 0,
     "category": "biology"
@@ -66,9 +66,9 @@ export const questionsPart0b: QuestionItem[] = [
     "question": "Điều gì đặc biệt có thể xảy ra với nhịp tim của một số động vật hải tiêu (tunicate)?",
     "answers": [
       "Tim định kỳ đảo chiều bơm, làm hướng dòng máu đổi ngược",
-      "Tim dừng vĩnh viễn mỗi phút",
-      "Tim tách thành hai quả tim",
-      "Tim chuyển từ bên này sang bên kia cơ thể"
+      "Tim có thể tạm giảm nhịp rất mạnh rồi trở lại chu kỳ bơm theo cùng một hướng",
+      "Tim có thể chuyển luân phiên giữa nhịp nhanh và nhịp chậm theo chu kỳ cơ thể",
+      "Tim có thể co từ hai đầu nhưng vẫn duy trì hướng lưu thông máu không đổi"
     ],
     "correctAnswerIndex": 0,
     "category": "biology"
@@ -78,9 +78,9 @@ export const questionsPart0b: QuestionItem[] = [
     "question": "Đặc điểm nào sau đây mô tả đúng sự kết hợp rất hiếm gặp ở thú mỏ vịt?",
     "answers": [
       "Là thú đẻ trứng và con đực có cựa liên quan đến tuyến nọc độc",
-      "Là chim đẻ con",
-      "Là bò sát tiết sữa",
-      "Là cá chỉ hô hấp bằng phổi"
+      "Là thú đẻ trứng và con đực có tuyến mùi phát triển mạnh ở chân sau",
+      "Là thú đẻ con nhưng con non tiếp tục phát triển trong túi da như thú có túi",
+      "Là thú đẻ trứng nhưng con non được nuôi bằng sữa tiết ra qua núm vú rõ rệt"
     ],
     "correctAnswerIndex": 0,
     "category": "biology"
@@ -102,9 +102,9 @@ export const questionsPart0b: QuestionItem[] = [
     "question": "Khả năng nào khiến axolotl trở thành động vật mẫu nổi tiếng trong nghiên cứu y học tái tạo?",
     "answers": [
       "Có thể tái tạo chi bị mất và nhiều mô, cơ quan, kể cả một số cấu trúc thần kinh như tủy sống",
-      "Có thể bay lượn",
-      "Quang hợp như cây",
-      "Sống không cần DNA"
+      "Có thể tái tạo phần đuôi nhưng gần như không tái tạo được mô thần kinh trung ương",
+      "Có thể liền vết thương rất nhanh nhưng phần chi đã mất chỉ tạo mô sẹo thay thế",
+      "Có thể thay mới da và mang ngoài nhưng không phục hồi được cấu trúc xương của chi"
     ],
     "correctAnswerIndex": 0,
     "category": "biology"
@@ -114,9 +114,9 @@ export const questionsPart0b: QuestionItem[] = [
     "question": "Khi bị mất nước mạnh, tardigrade (gấu nước) có thể bước vào trạng thái “tun”. Điểm nổi bật của trạng thái này là gì?",
     "answers": [
       "Chuyển sang trạng thái trao đổi chất đình trệ mạnh để chịu điều kiện khắc nghiệt",
-      "Biến thành đá vĩnh viễn",
-      "Quang hợp tạo oxy",
-      "Tăng gấp đôi nhiệt độ cơ thể"
+      "Giảm mạnh hoạt động trao đổi chất nhưng vẫn duy trì vận động chậm để tìm môi trường ẩm",
+      "Tăng dự trữ nước trong mô và duy trì trao đổi chất ở mức cao để chống mất nước",
+      "Chuyển sang trạng thái ngủ thông thường với nhịp chuyển hóa chỉ giảm nhẹ trong thời gian ngắn"
     ],
     "correctAnswerIndex": 0,
     "category": "biology"
@@ -450,9 +450,9 @@ export const questionsPart0b: QuestionItem[] = [
     "question": "Khi thả kẽm vào dung dịch copper(II) sulfate màu xanh, hiện tượng nào cho thấy kẽm đã đẩy đồng ra khỏi dung dịch?",
     "answers": [
       "Đồng kim loại màu đỏ nâu bám lên kẽm và màu xanh của dung dịch nhạt dần",
-      "Dung dịch lập tức chuyển thành khí",
-      "Kẽm phát sáng xanh mà không đổi chất",
-      "Xuất hiện tinh thể muối ăn"
+      "Kẽm tan dần nhưng không có đồng bám và màu xanh của dung dịch giữ nguyên",
+      "Đồng kim loại tan khỏi bề mặt kẽm làm dung dịch chuyển sang xanh đậm hơn",
+      "Một lớp kết tủa trắng của zinc sulfate phủ kín kẽm và dung dịch mất màu ngay"
     ],
     "correctAnswerIndex": 0,
     "category": "chemistry"
@@ -534,9 +534,9 @@ export const questionsPart0b: QuestionItem[] = [
     "question": "Tai thường “ù” hoặc “bật” khi máy bay cất cánh hay hạ cánh chủ yếu vì điều gì?",
     "answers": [
       "Chênh lệch áp suất không khí hai phía màng nhĩ đang được cân bằng",
-      "Tốc độ âm thanh biến mất",
-      "Trọng lực tắt",
-      "Từ trường máy bay làm rung tai"
+      "Rung động của động cơ truyền cơ học trực tiếp tới tai giữa trong suốt chuyến bay",
+      "Tiếng ồn trong cabin làm các tế bào lông ở tai co lại rồi bật ra",
+      "Không khí khô trong cabin làm màng nhĩ co lại theo từng giai đoạn bay"
     ],
     "correctAnswerIndex": 0,
     "category": "physics"
@@ -1782,9 +1782,9 @@ export const questionsPart0b: QuestionItem[] = [
     "question": "Vì sao cầu, đường ray hoặc các kết cấu dài thường cần khe/co giãn hoặc giải pháp cho phép dịch chuyển theo nhiệt độ?",
     "answers": [
       "Vật liệu có thể nở ra khi nóng và co lại khi lạnh; khe co giãn giúp giảm ứng suất do thay đổi kích thước",
-      "Vì kim loại luôn tan chảy vào ban ngày",
-      "Vì mọi vật liệu đều ngắn lại khi nóng",
-      "Vì khe hở làm trọng lực biến mất"
+      "Vật liệu nở ra khi lạnh và co lại khi nóng nên khe giữ chiều dài không đổi",
+      "Khe co giãn chỉ dùng thoát nước và không liên quan thay đổi kích thước vật liệu",
+      "Nhiệt độ không làm kết cấu đổi chiều dài; khe chỉ giảm rung do phương tiện"
     ],
     "correctAnswerIndex": 0,
     "category": "physics"
@@ -3521,10 +3521,10 @@ export const questionsPart0b: QuestionItem[] = [
     "id": "q794",
     "question": "Vì sao áp suất khí quyển nhìn chung giảm khi lên cao?",
     "answers": [
-      "Vì trọng lực biến mất hoàn toàn ở trên núi",
-      "Vì oxy chuyển hết thành hydro",
+      "Vì nhiệt độ thấp làm từng phân tử không khí ngừng tạo áp suất",
+      "Vì lượng không khí phía trên giữ nguyên nhưng các phân tử trở nên nhẹ hơn",
       "Vì phía trên có ít phân tử không khí hơn và mật độ không khí giảm",
-      "Vì Mặt Trời hút không khí ra khỏi núi"
+      "Vì bề mặt núi hấp thụ phần lớn khí quyển ngay khi không khí đi lên cao"
     ],
     "correctAnswerIndex": 2,
     "category": "physics"
@@ -5813,10 +5813,10 @@ export const questionsPart0b: QuestionItem[] = [
     "id": "q985",
     "question": "Khinh khí cầu khí nóng bay lên chủ yếu vì sao?",
     "answers": [
-      "Không khí nóng luôn không có khối lượng",
-      "Trọng lực biến mất bên trong bóng",
+      "Không khí nóng có mật độ lớn hơn nên đẩy lớp không khí lạnh xuống dưới",
+      "Luồng khí từ đầu đốt tạo lực đẩy như động cơ tên lửa và nâng cả bóng",
       "Không khí được nung nóng trong bóng có mật độ nhỏ hơn không khí lạnh xung quanh",
-      "Vải của khí cầu bị nam châm Trái Đất kéo lên"
+      "Vải khí cầu giảm khối lượng mạnh khi nóng nên tự kéo giỏ bay lên"
     ],
     "correctAnswerIndex": 2,
     "category": "physics"
@@ -5873,9 +5873,9 @@ export const questionsPart0b: QuestionItem[] = [
     "id": "q990",
     "question": "Một vật rơi trong không khí có thể đạt “vận tốc giới hạn” khi nào?",
     "answers": [
-      "Khi trọng lực biến mất hoàn toàn",
-      "Khi vật chạm tốc độ ánh sáng",
-      "Khi không khí ngừng tồn tại",
+      "Khi lực cản không khí và trọng lực cùng hướng xuống dưới với độ lớn bằng nhau",
+      "Khi lực cản giữ nguyên nhỏ hơn trọng lực nhưng tốc độ của vật tạm thời không đổi",
+      "Khi vật ngừng tăng tốc dù hợp lực tác dụng theo phương rơi vẫn khác không",
       "Khi lực cản không khí cân bằng trọng lực, làm hợp lực và gia tốc theo phương rơi bằng không"
     ],
     "correctAnswerIndex": 3,

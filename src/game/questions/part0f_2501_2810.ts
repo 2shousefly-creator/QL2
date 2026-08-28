@@ -65,9 +65,9 @@ export const questionsPart0f: QuestionItem[] = [
     "id": "q2506",
     "question": "Quả gì vỏ ngoài tua tủa lông mềm, bóc ra có cùi trắng trong?",
     "answers": [
-      "Khoai lang",
-      "Quả cam",
-      "Quả bưởi",
+      "Quả vải",
+      "Quả nhãn",
+      "Quả dâu da",
       "Chôm chôm"
     ],
     "correctAnswerIndex": 3,
@@ -89,10 +89,10 @@ export const questionsPart0f: QuestionItem[] = [
     "id": "q2508",
     "question": "Hoa gì thường nở về đêm, cánh trắng lớn và nhanh tàn?",
     "answers": [
-      "Quả sim",
+      "Hoa nhài",
       "Hoa quỳnh",
-      "Quả bưởi",
-      "Quả vải"
+      "Hoa bạch ngọc",
+      "Hoa dạ hương"
     ],
     "correctAnswerIndex": 1,
     "category": "vietnam_culture"
@@ -101,10 +101,10 @@ export const questionsPart0f: QuestionItem[] = [
     "id": "q2509",
     "question": "Hoa dại nào thường tím hồng trên đồi, có tên trùng với động từ 'mua' nhưng thêm dấu?",
     "answers": [
-      "Chôm chôm",
-      "Quả hồng",
+      "Hoa sim",
+      "Hoa ban",
       "Hoa mua",
-      "Quả khế"
+      "Hoa tím bằng lăng"
     ],
     "correctAnswerIndex": 2,
     "category": "vietnam_culture"
@@ -113,9 +113,9 @@ export const questionsPart0f: QuestionItem[] = [
     "id": "q2510",
     "question": "Hoa gì có nhiều màu, tên nghe như làm bằng giấy và thường được trồng làm cảnh trước cổng hoặc hàng rào?",
     "answers": [
-      "Quả dừa",
-      "Quả vải",
-      "Quả nho",
+      "Hoa lụa",
+      "Hoa xác pháo",
+      "Hoa mào gà",
       "Hoa giấy"
     ],
     "correctAnswerIndex": 3,
@@ -126,9 +126,9 @@ export const questionsPart0f: QuestionItem[] = [
     "question": "Thứ gì mua về màu đen, dùng thì đỏ rực, bỏ đi lại thành xám?",
     "answers": [
       "Than",
-      "Nhà băng",
-      "Chữ A",
-      "Vết chân chim"
+      "Củi",
+      "Trấu ép",
+      "Viên nén gỗ"
     ],
     "correctAnswerIndex": 0,
     "category": "vietnam_culture"
@@ -137,10 +137,10 @@ export const questionsPart0f: QuestionItem[] = [
     "id": "q2512",
     "question": "Từ nào trong tiếng Việt dù viết đúng chính tả vẫn có nghĩa là không đúng?",
     "answers": [
-      "Bánh tét",
+      "Từ “nhầm”",
       "Từ 'sai'",
-      "Lời cảm ơn",
-      "Sông La"
+      "Từ “lỗi”",
+      "Từ “trật”"
     ],
     "correctAnswerIndex": 1,
     "category": "vietnam_culture"
@@ -149,10 +149,10 @@ export const questionsPart0f: QuestionItem[] = [
     "id": "q2513",
     "question": "Loại bánh nào nghe tên như đang 'khoái' một điều gì đó?",
     "answers": [
-      "Sữa lắc",
-      "Ngày mai",
+      "Bánh vui",
+      "Bánh thích",
       "Bánh khoái",
-      "Ống hút"
+      "Bánh mê"
     ],
     "correctAnswerIndex": 2,
     "category": "vietnam_culture"
@@ -161,9 +161,9 @@ export const questionsPart0f: QuestionItem[] = [
     "id": "q2514",
     "question": "Loại 'xe' nào không có bánh cao su mà chạy bằng hai dải xích?",
     "answers": [
-      "Quần đảo",
-      "Mở mắt",
-      "Trái tim",
+      "Xe ủi",
+      "Xe xúc",
+      "Xe kéo xích",
       "Xe tăng"
     ],
     "correctAnswerIndex": 3,
@@ -174,9 +174,9 @@ export const questionsPart0f: QuestionItem[] = [
     "question": "Ở đâu một 'con voi' có thể ăn được một 'chiếc xe' mà không cần nhai?",
     "answers": [
       "Trong bàn cờ tướng",
-      "Lịch sử",
-      "Một ngày sinh",
-      "Quan tài"
+      "Trong bàn cờ vua",
+      "Trong trò chơi cờ thú",
+      "Trong một trò chơi chiến thuật mô phỏng"
     ],
     "correctAnswerIndex": 0,
     "category": "vietnam_culture"
@@ -185,10 +185,10 @@ export const questionsPart0f: QuestionItem[] = [
     "id": "q2516",
     "question": "Môn gì hai bên cùng kéo, nhưng bên thắng lại là bên kéo đối thủ về phía mình?",
     "answers": [
-      "Thảm họa",
+      "Kéo dây đồng đội",
       "Kéo co",
-      "Hồ ly tinh",
-      "Bánh tiêu"
+      "Đấu vật đồng đội",
+      "Đua thuyền đối kháng"
     ],
     "correctAnswerIndex": 1,
     "category": "vietnam_culture"
@@ -197,10 +197,10 @@ export const questionsPart0f: QuestionItem[] = [
     "id": "q2517",
     "question": "Thứ gì là của bạn nhưng người khác thường gọi nó nhiều hơn chính bạn?",
     "answers": [
-      "Chữ A",
-      "Vết chân chim",
+      "Biệt danh của bạn",
+      "Số điện thoại của bạn",
       "Tên của bạn",
-      "Bánh xe"
+      "Địa chỉ nhà của bạn"
     ],
     "correctAnswerIndex": 2,
     "category": "vietnam_culture"
@@ -209,9 +209,9 @@ export const questionsPart0f: QuestionItem[] = [
     "id": "q2518",
     "question": "Nhà gì không phải để ở mà người ta đến gửi và rút tiền?",
     "answers": [
-      "Lời cảm ơn",
-      "Sông La",
-      "Tương lai",
+      "Nhà tín dụng",
+      "Nhà tài chính",
+      "Nhà tiết kiệm",
       "Nhà băng"
     ],
     "correctAnswerIndex": 3,

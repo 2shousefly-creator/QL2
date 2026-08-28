@@ -30,9 +30,9 @@ export const questionsPart0c: QuestionItem[] = [
     "question": "Trong hiện tượng ký sinh nuôi con (brood parasitism) ở chim, loài ký sinh thường làm gì?",
     "answers": [
       "Đẻ trứng vào tổ của loài khác để chim chủ ấp và nuôi con non",
-      "Xây tổ chung dưới nước với cá",
-      "Chỉ ăn trứng của chính mình",
-      "Nuôi con của mọi loài khác mà không đẻ trứng"
+      "Chiếm một tổ có sẵn rồi tự ấp trứng và tự nuôi con trong tổ của loài khác",
+      "Đẻ trứng cạnh tổ chim khác để con non sau khi nở tự tìm vào tổ nhận thức ăn",
+      "Đẻ trứng trong tổ chung nhưng vẫn quay lại trực tiếp nuôi con cùng chim chủ"
     ],
     "correctAnswerIndex": 0,
     "category": "biology"
@@ -41,10 +41,10 @@ export const questionsPart0c: QuestionItem[] = [
     "id": "q1004",
     "question": "Cua trang trí (decorator crab) thường gắn tảo, bọt biển hoặc sinh vật khác lên cơ thể. Lợi ích chính là gì?",
     "answers": [
-      "Tăng số chân từ 10 lên 20",
+      "Thu hút con mồi đến gần nhờ màu sắc và mùi từ các sinh vật bám trên mai",
       "Ngụy trang và đôi khi tăng khả năng phòng vệ",
-      "Thay thế hoàn toàn lớp vỏ kitin",
-      "Tạo cánh để bay khỏi mặt nước"
+      "Giảm lực cản nước khi di chuyển bằng cách làm bề mặt cơ thể trơn hơn",
+      "Giữ ổn định nhiệt độ cơ thể khi cua di chuyển giữa vùng nước nông và sâu"
     ],
     "correctAnswerIndex": 1,
     "category": "biology"
@@ -53,10 +53,10 @@ export const questionsPart0c: QuestionItem[] = [
     "id": "q1005",
     "question": "Ở một số động vật có vú, “embryonic diapause” là hiện tượng nào?",
     "answers": [
-      "Con non sinh ra rồi ngủ đông ngay",
-      "Trứng đổi màu để ngụy trang",
+      "Phôi phát triển rất chậm nhưng vẫn tiếp tục làm tổ ngay sau khi thụ tinh",
+      "Trứng đã thụ tinh được giữ trong đường sinh sản rồi phát triển liên tục tới khi sinh",
       "Phôi tạm dừng hoặc trì hoãn phát triển/làm tổ trong một khoảng thời gian",
-      "Cơ thể trưởng thành ngừng hô hấp vĩnh viễn"
+      "Phôi làm tổ bình thường nhưng tạm ngừng tăng kích thước ở giai đoạn cuối thai kỳ"
     ],
     "correctAnswerIndex": 2,
     "category": "biology"
@@ -65,9 +65,9 @@ export const questionsPart0c: QuestionItem[] = [
     "id": "q1006",
     "question": "Ếch rêu Việt Nam (Vietnamese mossy frog) có bề ngoài xanh nâu sần sùi giống rêu. Đặc điểm này có lợi chủ yếu cho việc gì?",
     "answers": [
-      "Tạo điện để săn mồi",
-      "Làm cơ thể phát sáng ban đêm",
-      "Cho phép sống hoàn toàn trong nước biển",
+      "Thu hút côn trùng đến gần vì bề mặt cơ thể giống các mảng rêu có thức ăn",
+      "Giảm mất nước bằng cách giữ một lớp ẩm dày trên da khi ở môi trường khô",
+      "Điều chỉnh nhiệt độ cơ thể nhờ các mảng màu hấp thụ lượng ánh sáng khác nhau",
       "Ngụy trang trên đá và thảm thực vật ẩm, giúp khó bị phát hiện"
     ],
     "correctAnswerIndex": 3,
@@ -78,9 +78,9 @@ export const questionsPart0c: QuestionItem[] = [
     "question": "Tảo Sargassum nổi trên mặt biển nhờ có các túi nhỏ chứa khí gọi là pneumatocyst. Vai trò của chúng là gì?",
     "answers": [
       "Tạo lực nổi giúp các nhánh tảo ở gần bề mặt và tiếp cận ánh sáng",
-      "Nghiền thức ăn như răng",
-      "Phát ra sóng siêu âm",
-      "Bơm máu thay cho tim"
+      "Dự trữ khí phục vụ trực tiếp cho hô hấp của tảo khi chìm xuống vùng thiếu sáng",
+      "Điều chỉnh lượng muối trong mô để tảo chịu được thay đổi độ mặn của nước biển",
+      "Tích trữ chất dinh dưỡng hòa tan để các nhánh tảo sử dụng khi dòng nước nghèo chất"
     ],
     "correctAnswerIndex": 0,
     "category": "biology"
@@ -89,10 +89,10 @@ export const questionsPart0c: QuestionItem[] = [
     "id": "q1008",
     "question": "Khi bị đe dọa, vampire squid có thể phóng ra chất nhầy phát sáng. Tác dụng hợp lý nhất của “đám mây” này là gì?",
     "answers": [
-      "Dùng làm thức ăn chính cho bản thân",
+      "Thu hút con mồi nhỏ về phía cơ thể để mực có thể bắt chúng trong vùng nước tối",
       "Làm rối hoặc đánh lạc hướng kẻ săn mồi để tăng cơ hội thoát thân",
-      "Làm nước biển đóng băng",
-      "Biến kẻ săn mồi thành loài khác"
+      "Chiếu sáng khu vực phía trước để mực nhận biết địa hình và chướng ngại vật",
+      "Tạo tín hiệu liên lạc ổn định với đồng loại trong quá trình tìm kiếm bạn tình"
     ],
     "correctAnswerIndex": 1,
     "category": "biology"
@@ -101,10 +101,10 @@ export const questionsPart0c: QuestionItem[] = [
     "id": "q1009",
     "question": "Ở biển sâu, nhiều động vật có màu đỏ nhưng trông gần như đen. Vì sao màu đỏ có thể giúp ngụy trang ở độ sâu lớn?",
     "answers": [
-      "Nước biển biến sắc tố đỏ thành kim loại",
-      "Màu đỏ tự phát tia X",
+      "Sắc tố đỏ hấp thụ phần lớn ánh sáng xanh nên cơ thể không phản xạ ánh sáng về mắt kẻ săn mồi",
+      "Màu đỏ làm giảm phát quang sinh học tự nhiên của cơ thể khi ở dưới áp suất nước lớn",
       "Ánh sáng đỏ bị nước hấp thụ mạnh, nên rất ít ánh sáng đỏ còn lại để phản xạ từ cơ thể",
-      "Mọi loài săn mồi ở biển sâu đều mù hoàn toàn"
+      "Sắc tố đỏ thay đổi theo áp suất và chuyển thành màu tối khi động vật xuống vùng nước sâu"
     ],
     "correctAnswerIndex": 2,
     "category": "biology"
@@ -113,9 +113,9 @@ export const questionsPart0c: QuestionItem[] = [
     "id": "q1010",
     "question": "Mực bobtail Hawaii nuôi vi khuẩn phát sáng Vibrio fischeri trong cơ quan ánh sáng. Ánh sáng này giúp mực chủ yếu bằng cách nào?",
     "answers": [
-      "Đun nóng nước để bơi nhanh hơn",
-      "Tạo oxy đủ cho toàn bộ đại dương",
-      "Làm cứng xúc tu thành vỏ đá",
+      "Tạo ánh sáng mạnh hướng xuống đáy để làm kẻ săn mồi mất khả năng nhận biết phương hướng",
+      "Thu hút các sinh vật phù du phát sáng đến gần để mực dễ xác định khu vực có nhiều thức ăn",
+      "Tạo tín hiệu sáng theo nhịp để đồng loại nhận biết vị trí của mực trong vùng nước tối",
       "Giảm bóng tối của cơ thể nhìn từ dưới lên, hỗ trợ ngụy trang bằng phản chiếu sáng (counterillumination)"
     ],
     "correctAnswerIndex": 3,
@@ -245,10 +245,10 @@ export const questionsPart0c: QuestionItem[] = [
     "id": "q1021",
     "question": "Vì sao Mặt Trời quay quanh trục với tốc độ khác nhau ở xích đạo và gần hai cực?",
     "answers": [
-      "Vì Mặt Trời có hình lập phương",
-      "Vì chỉ phần lõi của Mặt Trời có trọng lực",
+      "Vì plasma ở các vĩ độ chuyển động với tốc độ góc khác nhau",
+      "Vì lực hấp dẫn hành tinh chỉ làm vùng xích đạo quay nhanh hơn",
       "Vì Mặt Trời không phải một vật thể rắn",
-      "Vì hai cực không quay quanh tâm Ngân Hà"
+      "Vì trục từ trường lệch làm riêng các vùng cực quay chậm hơn"
     ],
     "correctAnswerIndex": 2,
     "category": "science"
@@ -449,9 +449,9 @@ export const questionsPart0c: QuestionItem[] = [
     "id": "q1038",
     "question": "Vì sao magma loãng, chảy dễ thường tạo phun trào ít nổ hơn magma đặc và dính?",
     "answers": [
-      "Vì magma loãng không hề có nhiệt",
-      "Vì magma loãng luôn nằm dưới biển",
-      "Vì trọng lực biến mất quanh magma loãng",
+      "Magma loãng giữ khí hòa tan hiệu quả hơn nên áp suất không thể tích tụ",
+      "Mức độ nổ chỉ phụ thuộc nhiệt độ, không liên quan độ nhớt hay khả năng thoát khí",
+      "Độ nhớt thấp loại bỏ toàn bộ chất khí trước khi magma bắt đầu đi lên",
       "Khí hòa tan có thể thoát ra dễ hơn nên ít tích tụ áp suất"
     ],
     "correctAnswerIndex": 3,

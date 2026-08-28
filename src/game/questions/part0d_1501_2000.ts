@@ -30,9 +30,9 @@ export const questionsPart0d: QuestionItem[] = [
     "question": "Hệ nội tiết và hệ thần kinh có quan hệ thế nào?",
     "answers": [
       "Phối hợp chặt chẽ để điều hòa nhiều chức năng của cơ thể",
-      "Hoàn toàn không liên quan",
-      "Chỉ gặp nhau ở xương",
-      "Chỉ hoạt động khi ngủ"
+      "Hoạt động độc lập nhưng cùng điều khiển những cơ quan giống nhau theo hai cơ chế riêng",
+      "Hệ thần kinh chỉ tiếp nhận tín hiệu còn hệ nội tiết trực tiếp điều khiển mọi phản ứng của cơ thể",
+      "Hệ nội tiết chỉ hoạt động khi hệ thần kinh ngừng truyền tín hiệu đến các cơ quan đích"
     ],
     "correctAnswerIndex": 0,
     "category": "health"
@@ -41,10 +41,10 @@ export const questionsPart0d: QuestionItem[] = [
     "id": "q1504",
     "question": "Hormone TSH do tuyến nào sản xuất để điều hòa tuyến giáp?",
     "answers": [
-      "Tuyến lệ",
+      "Tuyến giáp",
       "Tuyến yên",
-      "Tuyến mồ hôi",
-      "Tuyến nước bọt"
+      "Vùng dưới đồi",
+      "Tuyến thượng thận"
     ],
     "correctAnswerIndex": 1,
     "category": "health"
@@ -53,10 +53,10 @@ export const questionsPart0d: QuestionItem[] = [
     "id": "q1505",
     "question": "Metabolism (chuyển hóa) trong bối cảnh nội tiết nói chung liên quan tới điều gì?",
     "answers": [
-      "Chỉ cách tai nhận âm thanh",
-      "Chỉ cách da tạo sắc tố",
+      "Cách cơ thể vận chuyển hormone từ tuyến nội tiết đến đúng cơ quan đích",
+      "Cách tế bào tiếp nhận tín hiệu hormone rồi thay đổi hoạt động của thụ thể",
       "Cách cơ thể biến và sử dụng năng lượng cùng vật chất",
-      "Chỉ cách xương nối với nhau"
+      "Cách các tuyến nội tiết điều chỉnh lượng hormone được giải phóng vào tuần hoàn"
     ],
     "correctAnswerIndex": 2,
     "category": "health"
@@ -65,9 +65,9 @@ export const questionsPart0d: QuestionItem[] = [
     "id": "q1506",
     "question": "Một nhóm chức năng chịu ảnh hưởng của hormone là gì?",
     "answers": [
-      "Số lượng ngón tay bẩm sinh thay đổi mỗi ngày",
-      "Độ dài xương tăng ngay sau một bữa ăn",
-      "Màu của hồng cầu",
+      "Dẫn truyền xung điện trong neuron vận động",
+      "Khuếch tán oxy qua màng phế nang",
+      "Co cơ xương theo xung thần kinh",
       "Tăng trưởng và phát triển"
     ],
     "correctAnswerIndex": 3,
@@ -78,9 +78,9 @@ export const questionsPart0d: QuestionItem[] = [
     "question": "Hormone cũng góp phần điều hòa chức năng nào sau đây?",
     "answers": [
       "Chức năng sinh sản và tình dục",
-      "Hình dạng của bàn phím",
-      "Độ cứng của đá",
-      "Tốc độ ánh sáng"
+      "Dẫn truyền xung thần kinh",
+      "Khuếch tán oxy ở phổi",
+      "Lọc máu tại cầu thận"
     ],
     "correctAnswerIndex": 0,
     "category": "health"
@@ -89,10 +89,10 @@ export const questionsPart0d: QuestionItem[] = [
     "id": "q1508",
     "question": "Hệ nội tiết có thể ảnh hưởng tới khía cạnh nào của trạng thái tinh thần?",
     "answers": [
-      "Kích thước màn hình",
+      "Khả năng nhận biết màu sắc do tế bào nón của võng mạc đảm nhiệm",
       "Tâm trạng",
-      "Hướng từ trường Trái Đất",
-      "Màu của không khí"
+      "Khả năng định hướng âm thanh dựa vào chênh lệch tín hiệu giữa hai tai",
+      "Khả năng tạo phản xạ gân xương thông qua các cung phản xạ ở tủy sống"
     ],
     "correctAnswerIndex": 1,
     "category": "health"
@@ -101,10 +101,10 @@ export const questionsPart0d: QuestionItem[] = [
     "id": "q1509",
     "question": "Các đảo tụy (pancreatic islets) là những cụm tế bào nằm ở đâu?",
     "answers": [
-      "Trong phổi",
-      "Trong da",
+      "Trong tuyến yên",
+      "Trong tuyến giáp",
       "Trong tuyến tụy",
-      "Trong xương đùi"
+      "Trong tuyến thượng thận"
     ],
     "correctAnswerIndex": 2,
     "category": "health"
@@ -113,9 +113,9 @@ export const questionsPart0d: QuestionItem[] = [
     "id": "q1510",
     "question": "Nếu cơ thể không đáp ứng đúng với hormone dù hormone vẫn có mặt, điều gì có thể xảy ra?",
     "answers": [
-      "Hormone tự biến thành xương",
-      "Mọi tuyến nội tiết biến mất ngay",
-      "Không thể có bất kỳ ảnh hưởng sức khỏe nào",
+      "Cơ thể có thể tăng tiết hormone bù trừ nhưng mọi mô vẫn đáp ứng hoàn toàn bình thường",
+      "Nồng độ hormone luôn giảm về bằng không vì hormone không thể tồn tại khi thụ thể kém đáp ứng",
+      "Chỉ tuyến sản xuất hormone bị ảnh hưởng còn cơ quan đích không thay đổi hoạt động",
       "Có thể hình thành rối loạn nội tiết do giảm đáp ứng hormone"
     ],
     "correctAnswerIndex": 3,
@@ -126,9 +126,9 @@ export const questionsPart0d: QuestionItem[] = [
     "question": "Chức năng tổng quát của hệ miễn dịch là gì?",
     "answers": [
       "Ngăn chặn hoặc giới hạn nhiễm trùng và nhận diện các mối đe dọa",
-      "Bơm máu thay tim",
-      "Tiêu hóa thức ăn thay ruột",
-      "Tạo chuyển động xương"
+      "Duy trì huyết áp và phân phối máu giàu oxy tới toàn bộ các mô trong cơ thể",
+      "Điều hòa tốc độ chuyển hóa cơ bản thông qua các hormone do tuyến giáp tiết ra",
+      "Tiêu hóa và hấp thu phần lớn chất dinh dưỡng từ thức ăn ở đường tiêu hóa"
     ],
     "correctAnswerIndex": 0,
     "category": "health"
@@ -149,10 +149,10 @@ export const questionsPart0d: QuestionItem[] = [
     "id": "q1513",
     "question": "Miễn dịch bẩm sinh (innate immunity) nổi bật ở đặc điểm nào?",
     "answers": [
-      "Chỉ hình thành sau nhiều năm học",
-      "Chỉ có ở da",
+      "Tạo đáp ứng đặc hiệu rất cao ngay lần đầu nhờ tế bào nhớ đã tồn tại sẵn",
+      "Chỉ khởi động sau khi kháng thể đặc hiệu được tế bào B tạo ra với số lượng lớn",
       "Phản ứng nhanh như tuyến phòng thủ ban đầu",
-      "Không phản ứng với vi sinh vật"
+      "Phản ứng chậm hơn miễn dịch thích ứng nhưng duy trì trí nhớ lâu dài sau nhiễm"
     ],
     "correctAnswerIndex": 2,
     "category": "health"
@@ -161,9 +161,9 @@ export const questionsPart0d: QuestionItem[] = [
     "id": "q1514",
     "question": "Miễn dịch thích ứng (adaptive immunity) có ưu điểm nổi bật nào sau khi từng gặp một tác nhân?",
     "answers": [
-      "Luôn quên hoàn toàn tác nhân",
-      "Không có tế bào chuyên biệt",
-      "Chỉ hoạt động trong xương",
+      "Phản ứng giống hệt lần đầu vì các tế bào miễn dịch không lưu thông tin về tác nhân",
+      "Chỉ tăng hoạt động của hàng rào da và niêm mạc mà không thay đổi đáp ứng đặc hiệu",
+      "Loại bỏ nhu cầu hoạt động của tế bào T và tế bào B trong những lần tiếp xúc sau",
       "Có thể tạo trí nhớ miễn dịch và đáp ứng đặc hiệu hơn khi gặp lại"
     ],
     "correctAnswerIndex": 3,
@@ -174,9 +174,9 @@ export const questionsPart0d: QuestionItem[] = [
     "question": "Tế bào T trưởng thành chủ yếu ở cơ quan nào?",
     "answers": [
       "Tuyến ức (thymus)",
-      "Dạ dày",
-      "Tuyến lệ",
-      "Túi mật"
+      "Tủy xương",
+      "Hạch bạch huyết",
+      "Lách"
     ],
     "correctAnswerIndex": 0,
     "category": "health"
@@ -185,10 +185,10 @@ export const questionsPart0d: QuestionItem[] = [
     "id": "q1516",
     "question": "Hạch bạch huyết có vai trò nào trong hệ miễn dịch?",
     "answers": [
-      "Là nơi sản xuất mật",
+      "Là nơi hồng cầu trưởng thành và tích trữ hemoglobin trước khi đi vào tuần hoàn",
       "Là nơi nhiều tế bào miễn dịch gặp nhau, nhận thông tin và được hoạt hóa",
-      "Là nơi trao đổi khí chính",
-      "Là nơi chứa nước tiểu"
+      "Là nơi lọc trực tiếp toàn bộ huyết tương để loại nước và tạo nước tiểu sơ cấp",
+      "Là nơi tổng hợp phần lớn protein huyết tương và chuyển hóa các chất độc trong máu"
     ],
     "correctAnswerIndex": 1,
     "category": "health"
@@ -197,10 +197,10 @@ export const questionsPart0d: QuestionItem[] = [
     "id": "q1517",
     "question": "Lách (spleen) đặc biệt hữu ích cho miễn dịch vì xử lý thông tin từ đâu?",
     "answers": [
-      "Không khí trong phế nang",
-      "Thức ăn trong miệng",
+      "Dịch bạch huyết từ các mô ngoại vi trước khi dịch trở lại hệ tuần hoàn",
+      "Không khí đi qua đường hô hấp trên trước khi tới các phế nang trao đổi khí",
       "Dòng máu và các tác nhân lưu hành trong máu",
-      "Ánh sáng vào mắt"
+      "Thức ăn sau tiêu hóa khi các chất dinh dưỡng được hấp thu qua thành ruột non"
     ],
     "correctAnswerIndex": 2,
     "category": "health"
@@ -209,9 +209,9 @@ export const questionsPart0d: QuestionItem[] = [
     "id": "q1518",
     "question": "Vì sao niêm mạc đường hô hấp và đường ruột có nhiều mô miễn dịch?",
     "answers": [
-      "Vì chúng không bao giờ tiếp xúc môi trường",
-      "Vì chỉ có ở xương",
-      "Vì không có mạch máu",
+      "Vì đây là các mô gần như không tiếp xúc vi sinh vật nên cần dự trữ tế bào miễn dịch",
+      "Vì các niêm mạc này là nơi duy nhất tế bào T và tế bào B được tạo ra trong cơ thể",
+      "Vì tất cả kháng thể trong máu phải đi qua hai niêm mạc này trước khi hoạt động ở mô khác",
       "Đó là các cửa ngõ thường xuyên tiếp xúc với tác nhân từ môi trường"
     ],
     "correctAnswerIndex": 3,
@@ -222,9 +222,9 @@ export const questionsPart0d: QuestionItem[] = [
     "question": "Kháng thể (antibody) có đặc điểm nào?",
     "answers": [
       "Là protein nhận diện mục tiêu kháng nguyên tương đối đặc hiệu",
-      "Là một loại xương dài",
-      "Là hormone tuyến giáp",
-      "Là khí trong phổi"
+      "Là tế bào miễn dịch có khả năng thực bào trực tiếp vi khuẩn và mảnh vụn tế bào",
+      "Là phân tử lipid trên màng tế bào có chức năng tiêu diệt mọi tác nhân không đặc hiệu",
+      "Là hormone do tuyến ức tiết ra để kích hoạt toàn bộ hệ miễn dịch cùng một lúc"
     ],
     "correctAnswerIndex": 0,
     "category": "health"
@@ -233,10 +233,10 @@ export const questionsPart0d: QuestionItem[] = [
     "id": "q1520",
     "question": "Vaccine giúp hệ miễn dịch học cách phòng bệnh chủ yếu bằng cách nào?",
     "answers": [
-      "Làm mất toàn bộ tế bào miễn dịch",
+      "Cung cấp sẵn lượng lớn kháng thể tồn tại vĩnh viễn để cơ thể không cần tự tạo đáp ứng",
       "Mô phỏng một nhiễm trùng hoặc trình bày kháng nguyên mà không gây đầy đủ nguy cơ của bệnh thật",
-      "Thay thế mọi kháng thể bằng nước",
-      "Ngăn cơ thể tạo trí nhớ miễn dịch"
+      "Ức chế tạm thời miễn dịch bẩm sinh để tế bào nhớ có thể phát triển mà không bị cạnh tranh",
+      "Loại bỏ hoàn toàn tác nhân gây bệnh khỏi môi trường nên hệ miễn dịch không cần tiếp xúc kháng nguyên"
     ],
     "correctAnswerIndex": 1,
     "category": "health"
@@ -245,10 +245,10 @@ export const questionsPart0d: QuestionItem[] = [
     "id": "q1521",
     "question": "Trong vaccine, antigen (kháng nguyên) là gì?",
     "answers": [
-      "Một loại xương",
-      "Một chất bôi trơn khớp",
+      "Kháng thể đã hoàn chỉnh được đưa vào cơ thể để trung hòa ngay tác nhân gây bệnh",
+      "Tế bào miễn dịch trưởng thành được truyền trực tiếp để tạo miễn dịch chủ động lâu dài",
       "Thành phần kích thích hệ miễn dịch tạo đáp ứng chống lại mục tiêu",
-      "Một loại hormone tiêu hóa"
+      "Chất ức chế miễn dịch được thêm vào để ngăn hệ miễn dịch phản ứng quá mạnh với vaccine"
     ],
     "correctAnswerIndex": 2,
     "category": "health"
@@ -257,9 +257,9 @@ export const questionsPart0d: QuestionItem[] = [
     "id": "q1522",
     "question": "Miễn dịch thụ động (passive immunity) có đặc điểm nào?",
     "answers": [
-      "Mất nhiều năm mới bắt đầu",
-      "Luôn kéo dài suốt đời",
-      "Không liên quan kháng thể",
+      "Bảo vệ khởi phát chậm nhưng thường duy trì lâu nhờ hình thành nhiều tế bào nhớ",
+      "Bảo vệ chỉ xuất hiện sau khi cơ thể tự tạo đủ kháng thể đặc hiệu với kháng nguyên",
+      "Bảo vệ lâu dài vì kháng thể được nhận từ bên ngoài kích hoạt trí nhớ miễn dịch bền vững",
       "Bảo vệ ngay nhưng thường chỉ kéo dài một thời gian vì nhận sẵn kháng thể"
     ],
     "correctAnswerIndex": 3,
@@ -270,9 +270,9 @@ export const questionsPart0d: QuestionItem[] = [
     "question": "So với miễn dịch thụ động, miễn dịch chủ động thường có đặc điểm gì?",
     "answers": [
       "Mất thời gian hơn để phát triển nhưng thường kéo dài lâu hơn",
-      "Luôn biến mất trong vài phút",
-      "Không tạo trí nhớ miễn dịch",
-      "Chỉ nhận sẵn kháng thể từ người khác"
+      "Xuất hiện ngay sau khi nhận kháng thể từ bên ngoài nhưng thường mất nhanh hơn",
+      "Không cần hoạt hóa tế bào lympho và không tạo được trí nhớ miễn dịch sau phơi nhiễm",
+      "Chỉ tồn tại khi kháng thể truyền từ mẹ hoặc huyết thanh vẫn còn trong tuần hoàn"
     ],
     "correctAnswerIndex": 0,
     "category": "health"
@@ -281,10 +281,10 @@ export const questionsPart0d: QuestionItem[] = [
     "id": "q1524",
     "question": "Kháng thể mẹ truyền qua nhau thai cho em bé là ví dụ của loại miễn dịch nào?",
     "answers": [
-      "Miễn dịch chủ động do tập thể dục",
+      "Miễn dịch chủ động tự nhiên",
       "Miễn dịch thụ động",
-      "Miễn dịch do xương",
-      "Miễn dịch do ánh sáng"
+      "Miễn dịch chủ động nhân tạo",
+      "Miễn dịch bẩm sinh không đặc hiệu"
     ],
     "correctAnswerIndex": 1,
     "category": "health"
@@ -293,10 +293,10 @@ export const questionsPart0d: QuestionItem[] = [
     "id": "q1525",
     "question": "Tế bào B trong miễn dịch thích ứng có vai trò nổi bật nào?",
     "answers": [
-      "Bơm máu",
-      "Co cơ hoành",
+      "Tiêu diệt tế bào nhiễm bằng độc tính tế bào trực tiếp",
+      "Trình diện kháng nguyên như chức năng duy nhất và không tạo tương bào",
       "Tạo kháng thể",
-      "Lọc nước tiểu"
+      "Điều khiển phản xạ viêm bằng dẫn truyền xung thần kinh tới mô nhiễm"
     ],
     "correctAnswerIndex": 2,
     "category": "health"
@@ -3329,9 +3329,9 @@ export const questionsPart0d: QuestionItem[] = [
     "id": "q1778",
     "question": "Trong hệ thống kênh đào Panama, các âu tàu (locks) hoạt động gần giống “thang máy nước” để làm gì?",
     "answers": [
-      "Kéo tàu lên núi bằng cáp treo",
-      "Làm nước biển đóng băng quanh tàu",
-      "Tăng tốc tàu bằng dòng khí nén",
+      "Nâng tàu trực tiếp từ mực biển lên hồ Gatun bằng một cổng khóa duy nhất",
+      "Giữ tàu ở nguyên một mực nước rồi dẫn toàn bộ nước chảy vòng quanh thân tàu",
+      "Dùng dòng nước trong âu để đẩy tàu đi nhanh hơn mà không thay đổi cao độ",
       "Nâng tàu lên mực hồ Gatun rồi hạ xuống phía đại dương bên kia"
     ],
     "correctAnswerIndex": 3,
@@ -3822,9 +3822,9 @@ export const questionsPart0d: QuestionItem[] = [
     "question": "Vì sao giông có luồng khí đi lên bền vững có thể tạo mưa đá lớn hơn?",
     "answers": [
       "Hạt đá được nâng lặp lại vào vùng lạnh và có thêm thời gian tích các lớp băng",
-      "Luồng khí đi lên làm băng nhẹ dần thành khí heli",
-      "Mưa đá chỉ lớn khi chạm đất nhiều lần",
-      "Updraft làm trọng lực biến mất"
+      "Luồng khí đi lên chỉ nâng hạt băng một lần rồi đẩy ngay ra khỏi đám mây",
+      "Mưa đá lớn dần chủ yếu do va chạm với mặt đất nhiều lần trong cơn giông",
+      "Updraft làm vùng lạnh ấm lên nên mỗi hạt băng tan rồi đông lại ở mặt đất"
     ],
     "correctAnswerIndex": 0,
     "category": "physics"
@@ -4062,9 +4062,9 @@ export const questionsPart0d: QuestionItem[] = [
     "question": "Gió thường làm quần áo ướt khô nhanh hơn vì sao?",
     "answers": [
       "Gió cuốn lớp không khí ẩm sát bề mặt đi và thay bằng không khí khô hơn, thúc đẩy bay hơi",
-      "Gió làm nhiệt độ nước luôn tăng tới 100°C",
-      "Gió biến nước thành oxy",
-      "Gió làm trọng lực biến mất"
+      "Gió làm nước trong vải đạt nhiệt độ sôi nên hóa hơi ngay lập tức",
+      "Gió ép hơi ẩm trở lại sâu trong sợi vải và nhờ đó bề mặt khô trước",
+      "Gió luôn làm bề mặt lạnh dưới điểm sương nên nước ngừng bay hơi nhưng vẫn biến mất"
     ],
     "correctAnswerIndex": 0,
     "category": "physics"
@@ -4361,10 +4361,10 @@ export const questionsPart0d: QuestionItem[] = [
     "id": "q1864",
     "question": "Vật liệu cách nhiệt dạng xốp thường hoạt động tốt một phần vì điều gì?",
     "answers": [
-      "Tạo thêm nguồn nhiệt bên trong",
+      "Các lỗ xốp làm không khí lưu thông mạnh hơn và tăng truyền nhiệt đối lưu",
       "Giữ các túi không khí nhỏ, làm chậm truyền nhiệt",
-      "Làm trọng lực biến mất",
-      "Phát tia gamma để đẩy nhiệt"
+      "Vật liệu xốp dẫn nhiệt nhanh vì toàn bộ lỗ rỗng hoạt động như ống dẫn nhiệt",
+      "Màu của lớp xốp chặn hoàn toàn mọi hình thức truyền nhiệt qua vật liệu"
     ],
     "correctAnswerIndex": 1,
     "category": "physics"
@@ -4830,9 +4830,9 @@ export const questionsPart0d: QuestionItem[] = [
     "question": "Một con dốc dài thoải so với nâng thẳng một thùng hàng lên cùng độ cao thường cần lực tức thời như thế nào?",
     "answers": [
       "Nhỏ hơn nhưng phải tác dụng trên quãng đường dài hơn",
-      "Lớn hơn và đi quãng đường ngắn hơn bắt buộc",
-      "Bằng 0 hoàn toàn",
-      "Không có lực nào vì trọng lực tắt"
+      "Lớn hơn nhưng chỉ phải tác dụng trên quãng đường ngắn hơn",
+      "Bằng với lực nâng thẳng và cũng tác dụng trên đúng quãng đường đó",
+      "Nhỏ hơn dù quãng đường tác dụng vẫn giữ nguyên như khi nâng thẳng"
     ],
     "correctAnswerIndex": 0,
     "category": "physics"
@@ -5897,10 +5897,10 @@ export const questionsPart0d: QuestionItem[] = [
     "id": "q1992",
     "question": "Thổi nhanh qua phía trên một dải giấy có thể làm giấy nâng lên. Cách giải thích Bernoulli đơn giản là gì?",
     "answers": [
-      "Không khí nhanh làm giấy nặng hơn",
+      "Không khí chuyển động nhanh phía trên có áp suất tĩnh cao hơn và ép giấy đi lên",
       "Không khí nhanh phía trên có áp suất tĩnh thấp hơn, tạo chênh áp nâng giấy",
-      "Hơi thở biến giấy thành nam châm",
-      "Trọng lực biến mất phía trên giấy"
+      "Luồng thổi chủ yếu va vào mặt dưới của giấy dù miệng đặt phía trên dải giấy",
+      "Không khí nhanh làm giấy mất khối lượng nên trọng lực tác dụng giảm tức thời"
     ],
     "correctAnswerIndex": 1,
     "category": "physics"

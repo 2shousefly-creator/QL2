@@ -30,9 +30,9 @@ export const questionsPart0e: QuestionItem[] = [
     "question": "Áp suất động của một dòng khí được tính theo công thức nào?",
     "answers": [
       "Một nửa mật độ nhân bình phương tốc độ dòng khí",
-      "Mật độ cộng tốc độ",
-      "Tốc độ chia cho mật độ",
-      "Áp suất tĩnh trừ nhiệt độ"
+      "Một nửa bình phương mật độ nhân tốc độ của dòng khí",
+      "Mật độ nhân tốc độ dòng khí rồi chia cho hai",
+      "Một nửa mật độ chia cho bình phương tốc độ dòng khí"
     ],
     "correctAnswerIndex": 0,
     "category": "physics"
@@ -53,10 +53,10 @@ export const questionsPart0e: QuestionItem[] = [
     "id": "q2005",
     "question": "Nếu tốc độ dòng khí không đổi nhưng mật độ không khí giảm, áp suất động sẽ thay đổi thế nào?",
     "answers": [
-      "Tăng vô hạn",
-      "Không đổi tuyệt đối",
+      "Tăng theo tỉ lệ nghịch với mật độ không khí",
+      "Giữ gần như không đổi vì chỉ phụ thuộc tốc độ dòng khí",
       "Giảm theo mật độ",
-      "Đảo dấu thành áp suất âm bắt buộc"
+      "Giảm theo bình phương của mật độ không khí"
     ],
     "correctAnswerIndex": 2,
     "category": "physics"
@@ -65,9 +65,9 @@ export const questionsPart0e: QuestionItem[] = [
     "id": "q2006",
     "question": "Trong dạng Bernoulli đơn giản cho dòng chảy ổn định ở cùng độ cao, tổng của áp suất tĩnh và áp suất động có xu hướng thế nào dọc theo một dòng chảy?",
     "answers": [
-      "Luôn bằng 0",
-      "Tăng gấp đôi ở mọi điểm",
-      "Chỉ phụ thuộc màu của ống dẫn",
+      "Tăng dần theo hướng dòng chảy ngay cả khi không có nguồn năng lượng bổ sung",
+      "Giảm dần theo hướng dòng chảy dù bỏ qua hoàn toàn ma sát và tổn thất",
+      "Chỉ giữ không đổi khi tốc độ ở mọi điểm trong dòng chảy bằng nhau tuyệt đối",
       "Giữ gần như không đổi khi các giả thiết của mô hình được thỏa mãn"
     ],
     "correctAnswerIndex": 3,
@@ -78,9 +78,9 @@ export const questionsPart0e: QuestionItem[] = [
     "question": "Vệt trắng kéo dài sau một số máy bay phản lực ở độ cao lớn, gọi là contrail, hình thành chủ yếu từ gì?",
     "answers": [
       "Hơi nước trong khí thải ngưng tụ rồi đóng băng thành các tinh thể băng nhỏ trong không khí lạnh",
-      "Khói than đặc từ động cơ hơi nước",
-      "Muối biển bị hút lên từ mặt đất",
-      "Ánh sáng Mặt Trời bị đông cứng"
+      "Hơi nước tự nhiên quanh máy bay ngưng tụ thành giọt lỏng nhưng không liên quan khí thải động cơ",
+      "Các hạt nhiên liệu chưa cháy đông đặc thành tinh thể trắng khi tiếp xúc không khí nhiệt độ thấp",
+      "Không khí bị nén ở đầu cánh hóa lỏng rồi đóng băng thành dải tinh thể kéo dài phía sau máy bay"
     ],
     "correctAnswerIndex": 0,
     "category": "physics"
@@ -89,10 +89,10 @@ export const questionsPart0e: QuestionItem[] = [
     "id": "q2008",
     "question": "Vì sao một số contrail biến mất nhanh còn một số tồn tại lâu và lan rộng?",
     "answers": [
-      "Màu sơn máy bay quyết định hoàn toàn",
+      "Loại động cơ quyết định hoàn toàn thời gian tồn tại của vệt, gần như không phụ thuộc khí quyển",
       "Độ ẩm và nhiệt độ của không khí xung quanh ảnh hưởng việc tinh thể băng thăng hoa hay tiếp tục tồn tại",
-      "Máy bay càng lớn thì vệt luôn tồn tại vĩnh viễn",
-      "Chỉ tốc độ quay của Trái Đất quyết định"
+      "Độ cao bay quyết định hoàn toàn thời gian tồn tại, còn độ ẩm môi trường không có ảnh hưởng đáng kể",
+      "Tốc độ máy bay là yếu tố duy nhất quyết định tinh thể băng tan nhanh hay lan rộng"
     ],
     "correctAnswerIndex": 1,
     "category": "physics"
@@ -101,10 +101,10 @@ export const questionsPart0e: QuestionItem[] = [
     "id": "q2009",
     "question": "Hiện tượng 'hole-punch cloud' hoặc cavum có thể xuất hiện khi máy bay đi qua lớp mây chứa giọt nước siêu lạnh. Cơ chế hợp lý nhất là gì?",
     "answers": [
-      "Máy bay hút toàn bộ mây vào động cơ",
-      "Cánh máy bay làm bốc hơi toàn bộ bầu trời",
+      "Dòng khí từ máy bay làm các giọt mây bốc hơi tức thời rồi ngưng tụ trở lại ở mép vùng trống",
+      "Nhiệt khí thải làm tan toàn bộ tinh thể băng trong một vùng rồi phần hơi nước bị gió cuốn đi",
       "Sự xáo trộn có thể kích hoạt một phần giọt nước siêu lạnh đóng băng, tinh thể rơi xuống và để lại vùng trống trong mây",
-      "Từ trường máy bay đẩy mây ra xa"
+      "Sóng áp suất từ máy bay đẩy các giọt mây sang hai bên mà không làm thay đổi pha của nước"
     ],
     "correctAnswerIndex": 2,
     "category": "physics"
@@ -113,9 +113,9 @@ export const questionsPart0e: QuestionItem[] = [
     "id": "q2010",
     "question": "Trong mô hình lực Magnus, nếu đảo chiều quay của quả bóng nhưng giữ hướng bay tương tự, lực làm cong quỹ đạo có xu hướng thế nào?",
     "answers": [
-      "Giữ nguyên hướng tuyệt đối",
-      "Biến mất trong mọi trường hợp",
-      "Luôn hướng thẳng xuống đất",
+      "Giữ hướng cũ nhưng độ lớn giảm còn khoảng một nửa",
+      "Giảm về gần bằng không nhưng không đổi phía tác dụng",
+      "Đổi độ lớn nhưng vẫn làm quỹ đạo lệch về cùng một phía",
       "Đổi hướng sang phía đối diện"
     ],
     "correctAnswerIndex": 3,
@@ -209,9 +209,9 @@ export const questionsPart0e: QuestionItem[] = [
     "id": "q2018",
     "question": "Theo mô tả của UNESCO, tín ngưỡng thờ Mẫu Tam phủ góp phần đề cao vai trò của nhóm nào trong xã hội?",
     "answers": [
-      "Chỉ quan lại",
-      "Chỉ thương nhân",
-      "Chỉ binh lính",
+      "Những người thực hành nghi lễ chuyên nghiệp",
+      "Cộng đồng cư dân nông nghiệp địa phương",
+      "Các dòng họ có truyền thống trông coi đền phủ",
       "Phụ nữ"
     ],
     "correctAnswerIndex": 3,
@@ -245,10 +245,10 @@ export const questionsPart0e: QuestionItem[] = [
     "id": "q2021",
     "question": "Tín ngưỡng thờ cúng Hùng Vương trước hết thể hiện lòng tưởng nhớ đối với ai?",
     "answers": [
-      "Các thương nhân nước ngoài",
-      "Các nhà khoa học hiện đại",
+      "Các anh hùng chống ngoại xâm",
+      "Các thần bảo hộ mùa màng",
       "Tổ tiên và các Vua Hùng",
-      "Các vận động viên"
+      "Những người có công lập làng"
     ],
     "correctAnswerIndex": 2,
     "category": "vietnam_culture"
