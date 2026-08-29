@@ -32,7 +32,7 @@ import {
   Wheat,
 } from "lucide-react";
 import {
-  TANG_GIA_ASSETS,
+  getCropAsset,
   getFeedAsset,
   getFertilizerAsset,
 } from "../tangGiaAssetManifest";
@@ -334,7 +334,7 @@ export const KhoModal: React.FC<KhoModalProps> = ({
                       <div className="flex items-center gap-3 min-w-0">
                         <div className="w-12 h-12 rounded-2xl bg-slate-800/60 border border-slate-800/80 flex items-center justify-center shrink-0">
                           <img
-                            src={TANG_GIA_ASSETS.sharedSeed}
+                            src={getCropAsset(crop.id, "seed")}
                             alt=""
                             aria-hidden="true"
                             className="h-10 w-10 object-contain"
@@ -373,7 +373,7 @@ export const KhoModal: React.FC<KhoModalProps> = ({
                             name: `Hạt giống ${crop.name}`,
                             icon: (
                               <img
-                                src={TANG_GIA_ASSETS.sharedSeed}
+                                src={getCropAsset(crop.id, "seed")}
                                 alt=""
                                 aria-hidden="true"
                                 className="h-8 w-8 object-contain"

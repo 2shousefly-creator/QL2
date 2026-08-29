@@ -5,7 +5,7 @@ import type {
 } from "./farmTypes";
 import type { CanonicalWeatherSlot } from "./weatherEngine";
 
-export type CropAssetStage = "sprout" | "young" | "mature";
+export type CropAssetStage = "seed" | "sprout" | "young" | "mature";
 export type SoilAssetState = "empty" | "planted" | "need_water";
 export type FarmBackgroundVariant = "day" | "cool" | "night";
 
@@ -14,6 +14,7 @@ const ASSET_ROOT = "/assets/tanggia";
 function cropStageAssets(cropId: CropId): Record<CropAssetStage, string> {
   const cropRoot = `${ASSET_ROOT}/crops/${cropId}`;
   return {
+    seed: `${cropRoot}/${cropId}_seed.png`,
     sprout: `${cropRoot}/${cropId}_sprout.png`,
     young: `${cropRoot}/${cropId}_young.png`,
     mature: `${cropRoot}/${cropId}_mature.png`,
@@ -26,7 +27,6 @@ export const TANG_GIA_ASSETS = {
     cool: `${ASSET_ROOT}/background/tanggia_background_cool.png`,
     night: `${ASSET_ROOT}/background/tanggia_background_night.png`,
   } satisfies Record<FarmBackgroundVariant, string>,
-  sharedSeed: `${ASSET_ROOT}/crops/shared/shared_seed.png`,
   livestockPen: `${ASSET_ROOT}/buildings/livestock/livestock_pen_transparent.png`,
   soil: {
     empty: `${ASSET_ROOT}/soil/soil_empty.png`,

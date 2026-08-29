@@ -28,6 +28,7 @@ import {
   CROP_NAME_FONT_SIZE_PX,
   CropVisualStage,
   HARVEST_CROP_QUALITY_COLORS,
+  getCropVisualMetrics,
   getCropVisualScale,
   getCropVisualStage,
   getFarmVisualTheme,
@@ -38,7 +39,6 @@ import {
   getSoilMoisturePresentation,
 } from "../soilMoistureEngine";
 import {
-  TANG_GIA_ASSETS,
   getFarmBackgroundAsset,
   getCropAsset,
   getSoilAsset,
@@ -79,18 +79,14 @@ const CropGrowthVisual: React.FC<{
   cropName?: string;
 }> = ({ stage, progress, cropId = null, cropName }) => {
   const [failedAsset, setFailedAsset] = React.useState<string | null>(null);
-  const asset =
-    stage === "seed"
-      ? TANG_GIA_ASSETS.sharedSeed
-      : cropId
-        ? getCropAsset(cropId, stage)
-        : null;
+  const asset = cropId ? getCropAsset(cropId, stage) : null;
   const label = stage === "seed"
-    ? "Hạt giống"
+    ? `Hạt giống ${cropName || "cây trồng"}`
     : `${cropName || "Cây trồng"} - ${
         stage === "sprout" ? "mầm cây" : stage === "young" ? "cây non" : "cây trưởng thành"
       }`;
   const visualScale = getCropVisualScale(progress);
+  const visualMetrics = getCropVisualMetrics(stage);
   const fallback = stage === "seed" ? "🌰" : stage === "sprout" ? "🌱" : "🪴";
 
   return (
@@ -107,7 +103,7 @@ const CropGrowthVisual: React.FC<{
           className="absolute inset-0 h-full w-full"
           style={{
             transform: `scale(${visualScale})`,
-            transformOrigin: "50% 65%",
+            transformOrigin: `${visualMetrics.rootAnchorXPercent}% ${visualMetrics.rootAnchorYPercent}%`,
             transition: "transform 1000ms linear",
           }}
         >
@@ -392,6 +388,8 @@ export const TangGiaCanvas2D: React.FC<TangGiaCanvas2DProps> = ({
               const isSelected =
                 contextMode === "garden" && selectedPlotIndex === plotIndex;
               const cropStage = getCropVisualStage(progress);
+              const cropVisualMetrics = getCropVisualMetrics(cropStage);
+              const cropVisualScale = getCropVisualScale(progress);
               const soilState: SoilAssetState = !isUnlocked || plot.status === "empty"
                 ? "empty"
                 : plot.soilMoisture < 20
@@ -528,7 +526,7 @@ export const TangGiaCanvas2D: React.FC<TangGiaCanvas2DProps> = ({
                                   : "font-mono text-amber-300"
                               }`}
                               style={{
-                                bottom: `calc(35% + ${getCropVisualScale(progress) * 31}px)`,
+                                bottom: `${cropVisualMetrics.countdownLiftPx * cropVisualScale}px`,
                               }}
                               data-growth-countdown="crop-anchored"
                               data-crop-countdown-anchor="crop-top"

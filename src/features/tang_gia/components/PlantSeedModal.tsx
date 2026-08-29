@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { CROP_CATALOG, FERTILIZER_CATALOG } from "../farmCatalog";
 import { CropId, FertilizerTypeId, FarmInventory } from "../farmTypes";
 import { Sprout, X, Store, ShoppingBag, ArrowLeft, Sparkles, Check } from "lucide-react";
-import { TANG_GIA_ASSETS } from "../tangGiaAssetManifest";
+import { getCropAsset } from "../tangGiaAssetManifest";
 
 interface PlantSeedModalProps {
   isOpen: boolean;
@@ -161,7 +161,7 @@ export const PlantSeedModal: React.FC<PlantSeedModalProps> = ({
                         <div className="flex items-center gap-3 min-w-0">
                           <div className="w-11 h-11 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
                             <img
-                              src={TANG_GIA_ASSETS.sharedSeed}
+                              src={getCropAsset(crop.id, "seed")}
                               alt=""
                               aria-hidden="true"
                               className="h-9 w-9 object-contain"
@@ -203,7 +203,7 @@ export const PlantSeedModal: React.FC<PlantSeedModalProps> = ({
             <div className="p-3 bg-slate-850 border border-slate-750 rounded-2xl flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <img
-                  src={TANG_GIA_ASSETS.sharedSeed}
+                  src={getCropAsset(selectedCrop.id, "seed")}
                   alt=""
                   aria-hidden="true"
                   className="h-10 w-10 object-contain"
@@ -234,7 +234,7 @@ export const PlantSeedModal: React.FC<PlantSeedModalProps> = ({
               >
                 <div className="flex items-center gap-2.5">
                   <img
-                    src={TANG_GIA_ASSETS.sharedSeed}
+                    src={getCropAsset(selectedCrop.id, "seed")}
                     alt=""
                     aria-hidden="true"
                     className="h-7 w-7 object-contain"

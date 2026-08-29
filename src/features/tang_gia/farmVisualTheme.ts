@@ -3,6 +3,22 @@ import type { ItemQuality } from "./farmTypes";
 
 export type CropVisualStage = "seed" | "sprout" | "young" | "mature";
 
+export interface CropVisualMetrics {
+  rootAnchorXPercent: number;
+  rootAnchorYPercent: number;
+  countdownLiftPx: number;
+}
+
+const CROP_VISUAL_METRICS: Record<CropVisualStage, CropVisualMetrics> = {
+  // Every crop PNG is normalized to the same transparent canvas and soil
+  // baseline. Stage lifts follow the tallest visible sprite in each stage so
+  // the countdown remains above the crop tip without per-crop magic offsets.
+  seed: { rootAnchorXPercent: 50, rootAnchorYPercent: 95, countdownLiftPx: 16 },
+  sprout: { rootAnchorXPercent: 50, rootAnchorYPercent: 95, countdownLiftPx: 27 },
+  young: { rootAnchorXPercent: 50, rootAnchorYPercent: 95, countdownLiftPx: 43 },
+  mature: { rootAnchorXPercent: 50, rootAnchorYPercent: 95, countdownLiftPx: 48 },
+};
+
 export const FARM_VISUAL_LAYERS = {
   rearFence: 6,
   eggNest: 9,
@@ -129,6 +145,10 @@ export function getCropVisualScale(progress: number): number {
   // stages, so runtime scaling stays restrained and only adds a gentle sense
   // of continuous growth between stage transitions.
   return 0.9 + safeProgress * 0.1;
+}
+
+export function getCropVisualMetrics(stage: CropVisualStage): CropVisualMetrics {
+  return CROP_VISUAL_METRICS[stage];
 }
 
 /** Crop names stay readable at one fixed size while only the plant visual grows. */
