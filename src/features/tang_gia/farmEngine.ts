@@ -586,6 +586,12 @@ export function consumePendingAnimalDeathNotification(
 
 const HOUR_MS = 60 * 60 * 1000;
 const SETTLEMENT_EPSILON = 1e-7;
+// Growth work is stored as floating-point milliseconds. At large wall-clock
+// timestamps, sub-millisecond residuals can become smaller than the next
+// representable timestamp delta and otherwise leave a crop stuck at "0s".
+// Treat <= 1 ms of remaining work as complete; this is negligible for gameplay
+// timing and makes the Growing -> Ready transition numerically stable.
+const GROWTH_COMPLETION_TOLERANCE_MS = 1;
 const MAX_PLOT_SETTLEMENT_SEGMENTS = 20_000;
 
 function escalateMoisturePenalty(
@@ -711,12 +717,27 @@ export function settlePlotState(
     );
   }
 
+  // Recovery path for saves/presentation states already carrying a tiny
+  // floating-point remainder: materialize Ready even when cursor === now and
+  // the event loop below would not execute.
+  if (
+    plot.status === "growing" &&
+    plot.growthWorkRemainingMs <= GROWTH_COMPLETION_TOLERANCE_MS
+  ) {
+    plot.growthWorkRemainingMs = 0;
+    plot = completeGrowingPlot(plot, cursor);
+  }
+
   for (
     let guard = 0;
     cursor < now && guard < MAX_PLOT_SETTLEMENT_SEGMENTS;
     guard += 1
   ) {
-    if (plot.status === "growing" && plot.growthWorkRemainingMs <= SETTLEMENT_EPSILON) {
+    if (
+      plot.status === "growing" &&
+      plot.growthWorkRemainingMs <= GROWTH_COMPLETION_TOLERANCE_MS
+    ) {
+      plot.growthWorkRemainingMs = 0;
       plot = completeGrowingPlot(plot, cursor);
       continue;
     }
@@ -844,9 +865,23 @@ export function settlePlotState(
     }
 
     cursor = segmentEnd;
-    if (plot.status === "growing" && plot.growthWorkRemainingMs <= SETTLEMENT_EPSILON) {
+    if (
+      plot.status === "growing" &&
+      plot.growthWorkRemainingMs <= GROWTH_COMPLETION_TOLERANCE_MS
+    ) {
+      plot.growthWorkRemainingMs = 0;
       plot = completeGrowingPlot(plot, cursor);
     }
+  }
+
+  // Last-resort numerical recovery in case the loop ended exactly on `now`
+  // with only a sub-millisecond floating-point remainder.
+  if (
+    plot.status === "growing" &&
+    plot.growthWorkRemainingMs <= GROWTH_COMPLETION_TOLERANCE_MS
+  ) {
+    plot.growthWorkRemainingMs = 0;
+    plot = completeGrowingPlot(plot, cursor);
   }
 
   plot.soilMoistureUpdatedAt = now;
