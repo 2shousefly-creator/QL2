@@ -291,7 +291,8 @@ export const QUALITY_CONFIG: Record<
 
 export function getQualityProbabilities(
   coolExposure: number = 0,
-  penalty: CropQualityPenalty = "none"
+  penalty: CropQualityPenalty = "none",
+  excludePerfect: boolean = false
 ): Record<ItemQuality, number> {
   if (penalty === "common_only") {
     return { thuong: 1, tot: 0, hiem: 0, hoan_my: 0 };
@@ -306,23 +307,35 @@ export function getQualityProbabilities(
     hoan_my: hoanMy,
   };
 
-  if (penalty === "no_rare_perfect") {
-    return {
+  const afterMoisturePenalty = penalty === "no_rare_perfect"
+    ? {
       thuong: base.thuong + base.hiem + base.hoan_my,
       tot: base.tot,
       hiem: 0,
       hoan_my: 0,
+    }
+    : base;
+  if (excludePerfect && afterMoisturePenalty.hoan_my > 0) {
+    return {
+      ...afterMoisturePenalty,
+      thuong: afterMoisturePenalty.thuong + afterMoisturePenalty.hoan_my,
+      hoan_my: 0,
     };
   }
-  return base;
+  return afterMoisturePenalty;
 }
 
 export function rollQualityWithExposure(
   coolExposure: number,
   deterministicRand: number,
-  penalty: CropQualityPenalty = "none"
+  penalty: CropQualityPenalty = "none",
+  excludePerfect: boolean = false
 ): ItemQuality {
-  const probabilities = getQualityProbabilities(coolExposure, penalty);
+  const probabilities = getQualityProbabilities(
+    coolExposure,
+    penalty,
+    excludePerfect
+  );
   const random = Number.isFinite(deterministicRand)
     ? Math.max(0, Math.min(1 - Number.EPSILON, deterministicRand))
     : 0;

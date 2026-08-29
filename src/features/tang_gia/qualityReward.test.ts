@@ -135,6 +135,10 @@ cropFarm.plots[0] = {
   qualityRoll: 0.5,
   rolledQuality: "tot",
   weatherExposure: { sunny: 1, calm: 0, rain: 0, cool: 0 },
+  pestPressure: 0,
+  pestUpdatedAt: cropFarm.lastSettledAt,
+  pestOutbreakAt: null,
+  pestDamageLevel: "none",
 };
 const cropHarvest = harvestPlot(cropFarm, 0, cropFarm.lastSettledAt);
 

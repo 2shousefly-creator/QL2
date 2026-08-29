@@ -132,6 +132,17 @@ import {
   MANUAL_WATER_AMOUNT,
   MIN_PLANTING_SOIL_MOISTURE,
 } from "./soilMoistureEngine";
+import {
+  canTreatPest,
+  clampPestPressure,
+  escalatePestDamage,
+  getNextPestDamageBoundaryAt,
+  getPestGoldMultiplier,
+  getPestGrowthRate,
+  getPestRatePerHour,
+  PEST_OUTBREAK_THRESHOLD,
+  PEST_TREAT_RESET_PRESSURE,
+} from "./pestEngine";
 
 /**
  * Calculates the exact completion time for an egg cycle (or remaining work),
@@ -603,11 +614,18 @@ export function resolveCropQuality(
   plot: Extract<FarmPlotState, { status: "growing" | "ready" }>
 ): ItemQuality {
   if (plot.qualityPenalty === "common_only") return "thuong";
-  if (plot.qualityPenalty === "none" && plot.rolledQuality) return plot.rolledQuality;
+  if (
+    plot.qualityPenalty === "none" &&
+    plot.pestDamageLevel === "none" &&
+    plot.rolledQuality
+  ) {
+    return plot.rolledQuality;
+  }
   return rollQualityWithExposure(
     getCropCoolExposure(plot),
     plot.qualityRoll,
-    plot.qualityPenalty
+    plot.qualityPenalty,
+    plot.pestDamageLevel !== "none"
   );
 }
 
@@ -639,6 +657,10 @@ function completeGrowingPlot(
     rainGoldBonusPct: 0.05 * weatherExposure.rain,
     qualityPenalty: plot.qualityPenalty,
     qualityRoll: plot.qualityRoll,
+    pestPressure: plot.pestPressure,
+    pestUpdatedAt: plot.pestUpdatedAt,
+    pestOutbreakAt: plot.pestOutbreakAt,
+    pestDamageLevel: plot.pestDamageLevel,
   };
   readyPlot.rolledQuality = resolveCropQuality(readyPlot);
   return readyPlot;
@@ -646,8 +668,9 @@ function completeGrowingPlot(
 
 /**
  * Pure event-segment settlement for one unlocked plot. Boundaries are weather
- * slots, moisture bands and growth completion; no per-second/per-minute loop is
- * used. Empty and Ready plots share the same moisture timeline as Growing plots.
+ * slots, moisture bands, Pest outbreak/damage and growth completion; no
+ * per-second/per-minute loop is used. Empty plots only settle soil moisture,
+ * while Growing and Ready crops share the complete Pest timeline.
  */
 export function settlePlotState(
   sourcePlot: FarmPlotState,
@@ -668,6 +691,20 @@ export function settlePlotState(
   plot.soilMoistureUpdatedAt = cursor;
   if (plot.status === "growing") plot.growthLastUpdatedAt = cursor;
   if (plot.status === "growing" || plot.status === "ready") {
+    plot.pestPressure = clampPestPressure(plot.pestPressure);
+    if (plot.pestPressure < PEST_OUTBREAK_THRESHOLD) {
+      plot.pestOutbreakAt = null;
+    } else if (plot.pestOutbreakAt === null && cursor >= plot.pestUpdatedAt) {
+      plot.pestOutbreakAt = Math.min(cursor, plot.pestUpdatedAt);
+    }
+    if (cursor >= plot.pestUpdatedAt) {
+      plot.pestDamageLevel = escalatePestDamage(
+        plot.pestDamageLevel,
+        plot.pestPressure,
+        plot.pestOutbreakAt,
+        cursor
+      );
+    }
     plot.qualityPenalty = escalateMoisturePenalty(
       plot.qualityPenalty,
       plot.soilMoisture
@@ -690,11 +727,37 @@ export function settlePlotState(
       slot.phase,
       slot.weather
     );
+    const cropPlot = plot.status === "growing" || plot.status === "ready"
+      ? plot
+      : null;
+    const pestIsActive = cropPlot !== null && cursor >= cropPlot.pestUpdatedAt;
+    if (cropPlot && pestIsActive) {
+      if (
+        cropPlot.pestPressure >= PEST_OUTBREAK_THRESHOLD &&
+        cropPlot.pestOutbreakAt === null
+      ) {
+        cropPlot.pestPressure = PEST_OUTBREAK_THRESHOLD;
+        cropPlot.pestOutbreakAt = cursor;
+      }
+      cropPlot.pestDamageLevel = escalatePestDamage(
+        cropPlot.pestDamageLevel,
+        cropPlot.pestPressure,
+        cropPlot.pestOutbreakAt,
+        cursor
+      );
+    }
     const directionalMoisture = clampSoilMoisture(
       plot.soilMoisture + Math.sign(moistureRatePerHour) * SETTLEMENT_EPSILON
     );
     const growthRate = plot.status === "growing"
-      ? getMoistureGrowthRate(directionalMoisture) * getWeatherGrowthRate(slot.weather)
+      ? getMoistureGrowthRate(directionalMoisture) *
+        getWeatherGrowthRate(slot.weather) *
+        (pestIsActive ? getPestGrowthRate(plot, cursor) : 1)
+      : 0;
+    const pestRatePerHour = cropPlot &&
+      pestIsActive &&
+      cropPlot.pestPressure < PEST_OUTBREAK_THRESHOLD
+      ? getPestRatePerHour(slot.season, slot.weather)
       : 0;
     const nextThreshold = getNextSoilMoistureThreshold(
       plot.soilMoisture,
@@ -706,7 +769,29 @@ export function settlePlotState(
     const growthCompletesAt = plot.status === "growing" && growthRate > 0
       ? cursor + plot.growthWorkRemainingMs / growthRate
       : Number.POSITIVE_INFINITY;
-    const segmentEnd = Math.min(now, slot.endMs, thresholdAt, growthCompletesAt);
+    const pestStartsAt = cropPlot && cursor < cropPlot.pestUpdatedAt
+      ? cropPlot.pestUpdatedAt
+      : Number.POSITIVE_INFINITY;
+    const pestReachesOutbreakAt = cropPlot && pestRatePerHour > 0
+      ? cursor +
+        ((PEST_OUTBREAK_THRESHOLD - cropPlot.pestPressure) / pestRatePerHour) * HOUR_MS
+      : Number.POSITIVE_INFINITY;
+    const pestDamageBoundaryAt = cropPlot && pestIsActive
+      ? getNextPestDamageBoundaryAt(
+          cropPlot.pestPressure,
+          cropPlot.pestOutbreakAt,
+          cursor
+        )
+      : Number.POSITIVE_INFINITY;
+    const segmentEnd = Math.min(
+      now,
+      slot.endMs,
+      thresholdAt,
+      pestStartsAt,
+      pestReachesOutbreakAt,
+      pestDamageBoundaryAt,
+      growthCompletesAt
+    );
     if (segmentEnd <= cursor + 1e-6) {
       cursor = Math.min(now, cursor + 1);
       continue;
@@ -727,6 +812,27 @@ export function settlePlotState(
     );
     plot.soilMoistureUpdatedAt = segmentEnd;
 
+    if (cropPlot && pestIsActive) {
+      const startingPressure = cropPlot.pestPressure;
+      cropPlot.pestPressure = clampPestPressure(
+        startingPressure + (durationMs / HOUR_MS) * pestRatePerHour
+      );
+      cropPlot.pestUpdatedAt = segmentEnd;
+      if (
+        startingPressure < PEST_OUTBREAK_THRESHOLD &&
+        cropPlot.pestPressure >= PEST_OUTBREAK_THRESHOLD - SETTLEMENT_EPSILON
+      ) {
+        cropPlot.pestPressure = PEST_OUTBREAK_THRESHOLD;
+        cropPlot.pestOutbreakAt = segmentEnd;
+      }
+      cropPlot.pestDamageLevel = escalatePestDamage(
+        cropPlot.pestDamageLevel,
+        cropPlot.pestPressure,
+        cropPlot.pestOutbreakAt,
+        segmentEnd
+      );
+    }
+
     if (plot.status === "growing" || plot.status === "ready") {
       const driestMoisture = moistureRatePerHour < 0
         ? plot.soilMoisture
@@ -745,7 +851,26 @@ export function settlePlotState(
 
   plot.soilMoistureUpdatedAt = now;
   if (plot.status === "growing") plot.growthLastUpdatedAt = now;
-  if (plot.status === "ready") plot.rolledQuality = resolveCropQuality(plot);
+  if (plot.status === "growing" || plot.status === "ready") {
+    if (now >= plot.pestUpdatedAt) {
+      plot.pestPressure = clampPestPressure(plot.pestPressure);
+      if (
+        plot.pestPressure >= PEST_OUTBREAK_THRESHOLD &&
+        plot.pestOutbreakAt === null
+      ) {
+        plot.pestPressure = PEST_OUTBREAK_THRESHOLD;
+        plot.pestOutbreakAt = plot.pestUpdatedAt;
+      }
+      plot.pestDamageLevel = escalatePestDamage(
+        plot.pestDamageLevel,
+        plot.pestPressure,
+        plot.pestOutbreakAt,
+        now
+      );
+      plot.pestUpdatedAt = now;
+    }
+    if (plot.status === "ready") plot.rolledQuality = resolveCropQuality(plot);
+  }
   return plot;
 }
 
@@ -769,7 +894,9 @@ export function getCurrentCropRemainingDurationMs(
   const directionalMoisture = clampSoilMoisture(
     plot.soilMoisture + Math.sign(moistureRate) * SETTLEMENT_EPSILON
   );
-  const rate = getMoistureGrowthRate(directionalMoisture) * getWeatherGrowthRate(slot.weather);
+  const rate = getMoistureGrowthRate(directionalMoisture) *
+    getWeatherGrowthRate(slot.weather) *
+    getPestGrowthRate(plot, now);
   return rate > 0 ? plot.growthWorkRemainingMs / rate : Number.POSITIVE_INFINITY;
 }
 
@@ -850,6 +977,40 @@ export function waterSelectedPlot(
     moistureAdded,
     message: `Đã tưới Ô đất #${plotIndex + 1}: +${Math.round(moistureAdded)}% độ ẩm.`,
   };
+}
+
+/** Settles first, then treats only a selected crop whose pressure is actionable. */
+export function treatPestOnSelectedPlot(
+  farm: FarmSaveState,
+  plotIndex: number,
+  now: number
+): { success: boolean; message: string } {
+  const sourcePlot = farm.plots[plotIndex];
+  if (!sourcePlot) {
+    return { success: false, message: "Ô đất không hợp lệ!" };
+  }
+
+  const settledPlot = settlePlotState(
+    sourcePlot,
+    plotIndex,
+    now,
+    farm.weatherSeed ?? DEFAULT_FARM_WEATHER_SEED
+  );
+  farm.plots[plotIndex] = settledPlot;
+  if (
+    (settledPlot.status !== "growing" && settledPlot.status !== "ready") ||
+    !canTreatPest(settledPlot)
+  ) {
+    return { success: false, message: "Ô cây chưa cần diệt sâu!" };
+  }
+
+  settledPlot.pestPressure = PEST_TREAT_RESET_PRESSURE;
+  settledPlot.pestUpdatedAt = now;
+  settledPlot.pestOutbreakAt = null;
+  if (settledPlot.status === "ready") {
+    settledPlot.rolledQuality = resolveCropQuality(settledPlot);
+  }
+  return { success: true, message: "Đã diệt sâu cho cây trồng!" };
 }
 
 /**
@@ -935,6 +1096,10 @@ export function plantSeedWithFertilizer(
       cropId,
       now
     ),
+    pestPressure: 0,
+    pestUpdatedAt: now,
+    pestOutbreakAt: null,
+    pestDamageLevel: "none",
   };
 
   return {
@@ -1135,6 +1300,7 @@ export interface CropHarvestPreview {
   fertilizerBonusXp: number;
   rainBonusGold: number;
   droughtPenaltyGold: number;
+  pestPenaltyGold: number;
   quality: ItemQuality;
   qualityMultiplier: number;
   hasFertilizer: boolean;
@@ -1168,10 +1334,13 @@ function calculateCropHarvestReward(
     preQualityGold,
     qualityMultiplier
   );
-  // Drought-zero is the final Gold-only modifier and is applied exactly once.
-  const goldEarned = qualityPenalty === "common_only"
-    ? Math.round(goldBeforeDroughtPenalty * 0.8)
-    : goldBeforeDroughtPenalty;
+  // Drought and historical Pest damage are independent Gold-only modifiers.
+  const droughtGoldMultiplier = qualityPenalty === "common_only" ? 0.8 : 1;
+  const goldAfterDroughtPenalty =
+    goldBeforeDroughtPenalty * droughtGoldMultiplier;
+  const pestGoldMultiplier = getPestGoldMultiplier(plot.pestDamageLevel);
+  const goldEarned = Math.round(goldAfterDroughtPenalty * pestGoldMultiplier);
+  const roundedGoldAfterDroughtPenalty = Math.round(goldAfterDroughtPenalty);
 
   return {
     cropName: cropDefinition.name,
@@ -1181,7 +1350,9 @@ function calculateCropHarvestReward(
     xpEarned: applyQualityMultiplier(preQualityXp, qualityMultiplier),
     fertilizerBonusXp,
     rainBonusGold,
-    droughtPenaltyGold: goldBeforeDroughtPenalty - goldEarned,
+    droughtPenaltyGold:
+      goldBeforeDroughtPenalty - roundedGoldAfterDroughtPenalty,
+    pestPenaltyGold: roundedGoldAfterDroughtPenalty - goldEarned,
     quality,
     qualityMultiplier,
     hasFertilizer: hasCropFertilizer(plot),
@@ -1206,7 +1377,7 @@ export function getCropHarvestPreview(
 export function harvestPlot(
   farm: FarmSaveState,
   plotIndex: number,
-  _now: number
+  now: number
 ): {
   goldEarned: number;
   xpEarned: number;
@@ -1216,13 +1387,22 @@ export function harvestPlot(
   fertilizerBonusXp: number;
   rainBonusGold: number;
   droughtPenaltyGold: number;
+  pestPenaltyGold: number;
   quality: ItemQuality;
   qualityMultiplier: number;
   weatherExposure?: WeatherExposureData;
   hasFertilizer: boolean;
   qualityBreakdown: QualityBreakdown;
 } | null {
-  const plot = farm.plots[plotIndex];
+  const sourcePlot = farm.plots[plotIndex];
+  if (!sourcePlot) return null;
+  const plot = settlePlotState(
+    sourcePlot,
+    plotIndex,
+    now,
+    farm.weatherSeed ?? DEFAULT_FARM_WEATHER_SEED
+  );
+  farm.plots[plotIndex] = plot;
   if (!plot || plot.status !== "ready") return null;
 
   const reward = calculateCropHarvestReward(plot);
@@ -1259,6 +1439,7 @@ export function harvestPlot(
     fertilizerBonusXp: reward.fertilizerBonusXp,
     rainBonusGold: reward.rainBonusGold,
     droughtPenaltyGold: reward.droughtPenaltyGold,
+    pestPenaltyGold: reward.pestPenaltyGold,
     quality: reward.quality,
     qualityMultiplier: reward.qualityMultiplier,
     weatherExposure,
@@ -1272,7 +1453,7 @@ export function harvestPlot(
  */
 export function harvestAllReadyCrops(
   farm: FarmSaveState,
-  _now: number
+  now: number
 ): {
   totalGold: number;
   totalXp: number;
@@ -1281,6 +1462,7 @@ export function harvestAllReadyCrops(
   fertilizerBonusXp: number;
   rainBonusGold: number;
   droughtPenaltyGold: number;
+  pestPenaltyGold: number;
   harvestedCount: number;
   details: Array<{
     plotIndex: number;
@@ -1291,6 +1473,7 @@ export function harvestAllReadyCrops(
     hasFertilizer: boolean;
     rainBonusGold: number;
     droughtPenaltyGold: number;
+    pestPenaltyGold: number;
     quality: ItemQuality;
     qualityMultiplier: number;
     weatherExposure?: WeatherExposureData;
@@ -1304,6 +1487,7 @@ export function harvestAllReadyCrops(
   let fertilizerBonusXp = 0;
   let rainBonusGold = 0;
   let droughtPenaltyGold = 0;
+  let pestPenaltyGold = 0;
   let harvestedCount = 0;
   const qualityBreakdown = createEmptyQualityBreakdown();
   const details: Array<{
@@ -1315,13 +1499,20 @@ export function harvestAllReadyCrops(
     hasFertilizer: boolean;
     rainBonusGold: number;
     droughtPenaltyGold: number;
+    pestPenaltyGold: number;
     quality: ItemQuality;
     qualityMultiplier: number;
     weatherExposure?: WeatherExposureData;
   }> = [];
 
   for (let i = 0; i < farm.plots.length; i++) {
-    const plot = farm.plots[i];
+    const plot = settlePlotState(
+      farm.plots[i],
+      i,
+      now,
+      farm.weatherSeed ?? DEFAULT_FARM_WEATHER_SEED
+    );
+    farm.plots[i] = plot;
     if (plot.status === "ready") {
       const reward = calculateCropHarvestReward(plot);
       if (reward) {
@@ -1335,6 +1526,7 @@ export function harvestAllReadyCrops(
         fertilizerBonusXp += reward.fertilizerBonusXp;
         rainBonusGold += reward.rainBonusGold;
         droughtPenaltyGold += reward.droughtPenaltyGold;
+        pestPenaltyGold += reward.pestPenaltyGold;
 
         harvestedCount++;
         qualityBreakdown[reward.quality].quantity += 1;
@@ -1354,6 +1546,7 @@ export function harvestAllReadyCrops(
           hasFertilizer: reward.hasFertilizer,
           rainBonusGold: reward.rainBonusGold,
           droughtPenaltyGold: reward.droughtPenaltyGold,
+          pestPenaltyGold: reward.pestPenaltyGold,
           quality: reward.quality,
           qualityMultiplier: reward.qualityMultiplier,
           weatherExposure: plot.weatherExposure,
@@ -1379,6 +1572,7 @@ export function harvestAllReadyCrops(
     fertilizerBonusXp,
     rainBonusGold,
     droughtPenaltyGold,
+    pestPenaltyGold,
     harvestedCount,
     details,
     qualityBreakdown,

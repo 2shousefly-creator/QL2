@@ -480,6 +480,10 @@ function runHarvestAllTests() {
     qualityRoll: 0.5,
     rolledQuality: "tot",
     weatherExposure: { sunny: 1, calm: 0, rain: 0, cool: 0 },
+    pestPressure: 0,
+    pestUpdatedAt: now,
+    pestOutbreakAt: null,
+    pestDamageLevel: "none",
   };
   batchFarm.plots[1] = {
     status: "ready",
@@ -492,6 +496,10 @@ function runHarvestAllTests() {
     qualityRoll: 0.5,
     rolledQuality: "hiem",
     weatherExposure: { sunny: 1, calm: 0, rain: 0, cool: 0 },
+    pestPressure: 0,
+    pestUpdatedAt: now,
+    pestOutbreakAt: null,
+    pestDamageLevel: "none",
   };
   const singleFarm = JSON.parse(JSON.stringify(batchFarm)) as ReturnType<
     typeof createDefaultFarmState

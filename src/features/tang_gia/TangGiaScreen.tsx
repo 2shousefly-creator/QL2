@@ -32,6 +32,7 @@ import {
   sellEggs,
   sellInventoryItem,
   settleFarmState,
+  treatPestOnSelectedPlot,
   waterSelectedPlot,
 } from "./farmEngine";
 import { isAnimalDead } from "./animalLifecycle";
@@ -95,6 +96,7 @@ import {
   Package,
 } from "lucide-react";
 import { MIN_PLANTING_SOIL_MOISTURE } from "./soilMoistureEngine";
+import { canTreatPest } from "./pestEngine";
 
 interface TangGiaScreenProps {
   gameState: GameState;
@@ -644,6 +646,19 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
     }, currentNow);
   };
 
+  const handleTreatPest = () => {
+    if (selectedPlotIndex === null) return;
+    const currentNow = Date.now();
+    updateFarm((farm) => {
+      const result = treatPestOnSelectedPlot(
+        farm,
+        selectedPlotIndex,
+        currentNow
+      );
+      return { message: result.message };
+    }, currentNow);
+  };
+
   const handleApplyFertilizer = (fertilizerId: FertilizerTypeId) => {
     if (selectedPlotIndex === null) return;
     const currentNow = Date.now();
@@ -932,6 +947,7 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
   const canWaterSelectedPlot = currentSelectedPlot
     ? canWaterPlot(currentSelectedPlot)
     : false;
+  const canTreatSelectedPlot = canTreatPest(currentSelectedPlot);
   const canApplyFertilizer =
     currentSelectedPlot?.status === "growing" &&
     !hasCropFertilizer(currentSelectedPlot);
@@ -1080,25 +1096,25 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
                   <span className="text-[10px] font-extrabold leading-none">Cửa Hàng</span>
                 </button>
 
-                {/* Plant Seed */}
-                <button
-                  disabled={
-                    !currentSelectedPlot || currentSelectedPlot.status !== "empty"
-                  }
-                  onClick={handleOpenPlantModal}
-                  className={`h-14 flex-1 rounded-xl border flex flex-col items-center justify-center gap-1 shadow-sm transition-all ${
-                    currentSelectedPlot?.status === "empty"
-                      ? "border-slate-700/80 bg-slate-800 hover:bg-slate-700 text-slate-200 active:scale-95"
-                      : "border-slate-800/80 bg-slate-900/60 text-slate-600 cursor-not-allowed opacity-60"
-                  }`}
-                >
-                  <Sprout
-                    className={`w-4 h-4 shrink-0 ${
-                      currentSelectedPlot?.status === "empty" ? "text-emerald-400" : ""
-                    }`}
-                  />
-                  <span className="text-[10px] font-extrabold leading-none">Trồng Cây</span>
-                </button>
+                {/* Context-sensitive crop slot: plant only on Empty, treat at Pest warning+. */}
+                {currentSelectedPlot?.status === "empty" ? (
+                  <button
+                    onClick={handleOpenPlantModal}
+                    className="h-14 flex-1 rounded-xl border border-slate-700/80 bg-slate-800 text-slate-200 shadow-sm transition-all hover:bg-slate-700 active:scale-95 flex flex-col items-center justify-center gap-1"
+                  >
+                    <Sprout className="w-4 h-4 shrink-0 text-emerald-400" />
+                    <span className="text-[10px] font-extrabold leading-none">Trồng Cây</span>
+                  </button>
+                ) : canTreatSelectedPlot ? (
+                  <button
+                    onClick={handleTreatPest}
+                    data-pest-action="selected-plot"
+                    className="h-14 flex-1 rounded-xl border border-lime-400/80 bg-gradient-to-r from-lime-500 to-emerald-600 text-slate-950 font-black shadow-sm shadow-lime-500/20 transition-all hover:from-lime-400 hover:to-emerald-500 active:scale-95 flex flex-col items-center justify-center gap-1"
+                  >
+                    <span className="text-base leading-none" aria-hidden="true">🐛</span>
+                    <span className="text-[10px] font-extrabold leading-none">Diệt Sâu</span>
+                  </button>
+                ) : null}
 
                 {/* Water selected plot */}
                 <button

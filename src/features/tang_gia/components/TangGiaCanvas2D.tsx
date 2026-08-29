@@ -44,6 +44,7 @@ import {
   getSoilAsset,
   type SoilAssetState,
 } from "../tangGiaAssetManifest";
+import { getPestPresentation } from "../pestEngine";
 
 interface TangGiaCanvas2DProps {
   plots: FarmPlotState[];
@@ -131,23 +132,23 @@ const SoilMoistureBlock: React.FC<{ moisture: number }> = ({ moisture }) => {
   const value = Math.max(0, Math.min(100, moisture));
   const presentation = getSoilMoisturePresentation(value);
   return (
-    <div className="pointer-events-none flex w-full flex-col items-center gap-0.5">
+    <div className="pointer-events-none flex w-full flex-col items-center gap-px">
       <div
-        className="relative mx-auto h-2.5 w-[46px] sm:w-[54px]"
+        className="relative mx-auto h-[7px] w-[32px] sm:w-[38px]"
         data-moisture-anchor="bar"
       >
-        <span className="absolute right-full mr-1 top-1/2 -translate-y-1/2 text-[9px]">💧</span>
+        <span className="absolute right-full mr-0.5 top-1/2 -translate-y-1/2 text-[7px]">💧</span>
         <div className="h-full w-full overflow-hidden rounded-full border border-slate-300/50 bg-slate-950/80 shadow-inner">
           <div
             className={`h-full rounded-full transition-[width] duration-1000 ${presentation.barClass}`}
             style={{ width: `${value}%` }}
           />
         </div>
-        <span className="absolute left-full ml-1 top-1/2 -translate-y-1/2 whitespace-nowrap text-[8px] font-black text-slate-100">
+        <span className="absolute left-full ml-0.5 top-1/2 -translate-y-1/2 whitespace-nowrap text-[6px] font-black text-slate-100">
           {Math.round(value)}%
         </span>
       </div>
-      <span className={`whitespace-nowrap text-[7px] sm:text-[8px] font-black leading-tight ${presentation.textClass}`}>
+      <span className={`whitespace-nowrap text-[5px] sm:text-[6px] font-black leading-tight ${presentation.textClass}`}>
         {presentation.icon} {presentation.label}
       </span>
     </div>
@@ -398,6 +399,7 @@ export const TangGiaCanvas2D: React.FC<TangGiaCanvas2DProps> = ({
               const harvestPresentation = harvestPresentations.find(
                 (entry) => entry.plotIndex === plotIndex
               );
+              const pestPresentation = getPestPresentation(plot, now);
 
               return (
                 <div
@@ -573,6 +575,23 @@ export const TangGiaCanvas2D: React.FC<TangGiaCanvas2DProps> = ({
                       <div className="relative z-10 mt-0.5 w-full">
                         <SoilMoistureBlock moisture={plot.soilMoisture} />
                       </div>
+
+                      {pestPresentation && (
+                        <div
+                          className={`relative z-10 mt-px w-full whitespace-nowrap text-center text-[6px] font-black leading-tight sm:text-[7px] ${
+                            pestPresentation.status === "warning"
+                              ? "text-amber-200"
+                              : pestPresentation.status === "outbreak"
+                                ? "text-lime-200"
+                                : pestPresentation.status === "damaging"
+                                  ? "text-orange-300"
+                                  : "text-red-300"
+                          }`}
+                          data-pest-status={pestPresentation.status}
+                        >
+                          {pestPresentation.label}
+                        </div>
+                      )}
 
                       {isReady && (
                         <div

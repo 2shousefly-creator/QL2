@@ -19,6 +19,7 @@ import type {
   FeedTypeId,
   FertilizerTypeId,
   ItemQuality,
+  PestDamageLevel,
   PenAnimalState,
   WeatherExposureData,
   WeatherExposureMs,
@@ -29,8 +30,9 @@ import {
   clampSoilMoisture,
   DEFAULT_SOIL_MOISTURE,
 } from "./soilMoistureEngine";
+import { clampPestPressure, PEST_OUTBREAK_THRESHOLD } from "./pestEngine";
 
-export const CURRENT_FARM_SCHEMA_VERSION = 6;
+export const CURRENT_FARM_SCHEMA_VERSION = 7;
 export const DEFAULT_FARM_WEATHER_SEED = 133742;
 
 type MutableFarmRecord = Record<string, any>;
@@ -227,6 +229,26 @@ function migrateV5ToV6(farm: MutableFarmRecord): MutableFarmRecord {
   return farm;
 }
 
+function migrateV6ToV7(
+  farm: MutableFarmRecord,
+  migrationNow: number
+): MutableFarmRecord {
+  farm.plots = Array.isArray(farm.plots) ? farm.plots : [];
+  for (const plot of farm.plots) {
+    if (!isRecord(plot) || (plot.status !== "growing" && plot.status !== "ready")) {
+      continue;
+    }
+    // Pest did not exist before v7. Start every existing crop at migration time
+    // so no pre-feature offline interval can create retroactive damage.
+    plot.pestPressure = 0;
+    plot.pestUpdatedAt = migrationNow;
+    plot.pestOutbreakAt = null;
+    plot.pestDamageLevel = "none";
+  }
+  farm.schemaVersion = 7;
+  return farm;
+}
+
 function normalizeWeatherExposure(raw: unknown): WeatherExposureData | undefined {
   if (!isRecord(raw)) return undefined;
   return {
@@ -249,6 +271,11 @@ function normalizeWeatherExposureMs(raw: unknown): WeatherExposureMs | undefined
 
 function normalizeQualityPenalty(raw: unknown): CropQualityPenalty {
   if (raw === "common_only" || raw === "no_rare_perfect") return raw;
+  return "none";
+}
+
+function normalizePestDamageLevel(raw: unknown): PestDamageLevel {
+  if (raw === "damaged" || raw === "severe") return raw;
   return "none";
 }
 
@@ -309,6 +336,16 @@ function normalizePlot(
     const growthTimeReductionPct = isFiniteNumber(raw.growthTimeReductionPct)
       ? Math.max(0, Math.min(0.95, raw.growthTimeReductionPct))
       : 0;
+    const pestPressure = clampPestPressure(Number(raw.pestPressure));
+    const pestUpdatedAt = isFiniteNumber(raw.pestUpdatedAt)
+      ? raw.pestUpdatedAt
+      : now;
+    const pestOutbreakAt = pestPressure >= PEST_OUTBREAK_THRESHOLD
+      ? isFiniteNumber(raw.pestOutbreakAt)
+        ? raw.pestOutbreakAt
+        : pestUpdatedAt
+      : null;
+    const pestDamageLevel = normalizePestDamageLevel(raw.pestDamageLevel);
 
     if (raw.status === "ready") {
       const growthCompletedAt = isFiniteNumber(raw.growthCompletedAt)
@@ -316,12 +353,15 @@ function normalizePlot(
         : isFiniteNumber(raw.growthEndsAt)
           ? raw.growthEndsAt
           : now;
-      const rolledQuality = qualityPenalty === "none" && QUALITY_TIERS.includes(raw.rolledQuality)
+      const rolledQuality = qualityPenalty === "none" &&
+        pestDamageLevel === "none" &&
+        QUALITY_TIERS.includes(raw.rolledQuality)
         ? raw.rolledQuality as ItemQuality
         : rollQualityWithExposure(
             weatherExposure?.cool || 0,
             qualityRoll,
-            qualityPenalty
+            qualityPenalty,
+            pestDamageLevel !== "none"
           );
       return {
         status: "ready",
@@ -340,6 +380,10 @@ function normalizePlot(
         qualityPenalty,
         qualityRoll,
         rolledQuality,
+        pestPressure,
+        pestUpdatedAt,
+        pestOutbreakAt,
+        pestDamageLevel,
       };
     }
 
@@ -384,6 +428,10 @@ function normalizePlot(
       weatherExposureMs,
       qualityPenalty,
       qualityRoll,
+      pestPressure,
+      pestUpdatedAt,
+      pestOutbreakAt,
+      pestDamageLevel,
       ...(QUALITY_TIERS.includes(raw.rolledQuality)
         ? { rolledQuality: raw.rolledQuality as ItemQuality }
         : {}),
@@ -493,6 +541,7 @@ export function migrateFarmState(
     else if (version === 3) migrateV3ToV4(farm, migrationNow);
     else if (version === 4) migrateV4ToV5(farm);
     else if (version === 5) migrateV5ToV6(farm);
+    else if (version === 6) migrateV6ToV7(farm, migrationNow);
     version = normalizeCount(farm.schemaVersion);
   }
 

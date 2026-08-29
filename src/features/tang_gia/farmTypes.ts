@@ -120,6 +120,7 @@ export type CropQualityPenalty =
   | "none"
   | "no_rare_perfect"
   | "common_only";
+export type PestDamageLevel = "none" | "damaged" | "severe";
 
 export type ItemQuality = "thuong" | "tot" | "hiem" | "hoan_my";
 
@@ -178,6 +179,10 @@ export type FarmPlotState =
       qualityPenalty: CropQualityPenalty;
       qualityRoll: number;
       rolledQuality?: ItemQuality;
+      pestPressure: number;
+      pestUpdatedAt: number;
+      pestOutbreakAt: number | null;
+      pestDamageLevel: PestDamageLevel;
     }
   | {
       status: "ready";
@@ -194,6 +199,10 @@ export type FarmPlotState =
       qualityPenalty: CropQualityPenalty;
       qualityRoll: number;
       rolledQuality?: ItemQuality;
+      pestPressure: number;
+      pestUpdatedAt: number;
+      pestOutbreakAt: number | null;
+      pestDamageLevel: PestDamageLevel;
     };
 
 export type AnimalDeathCause = "old_age" | "starvation";
