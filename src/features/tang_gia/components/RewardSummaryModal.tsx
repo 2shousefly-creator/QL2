@@ -16,10 +16,9 @@ export interface RewardSummaryData {
   itemsSummary?: RewardSummaryItem[];
   goldEarned: number;
   xpEarned: number;
-  wateredBonusGold?: number;
-  wateredBonusXp?: number;
   fertilizerBonusXp?: number;
   rainBonusGold?: number;
+  droughtPenaltyGold?: number;
   soldByQuality?: Record<ItemQuality, number>;
   qualityBreakdown?: QualityBreakdown;
   message?: string;
@@ -41,13 +40,10 @@ export const RewardSummaryModal: React.FC<RewardSummaryModalProps> = ({
   if (!isOpen || !data) return null;
 
   const isHarvest = data.iconType === "harvest";
-  const hasWateringBonus =
-    ((data.wateredBonusGold ?? 0) > 0) ||
-    ((data.wateredBonusXp ?? 0) > 0);
   const hasFertilizerBonus = (data.fertilizerBonusXp ?? 0) > 0;
   const hasRainBonus = (data.rainBonusGold ?? 0) > 0;
-  const totalXpBonus =
-    (data.wateredBonusXp || 0) + (data.fertilizerBonusXp || 0);
+  const hasDroughtPenalty = (data.droughtPenaltyGold ?? 0) > 0;
+  const totalXpBonus = data.fertilizerBonusXp || 0;
 
   const activeQualityTiers = QUALITY_ORDER.filter(
     (q) => (data.qualityBreakdown?.[q]?.quantity ?? 0) > 0
@@ -195,9 +191,9 @@ export const RewardSummaryModal: React.FC<RewardSummaryModalProps> = ({
             <span className="font-black text-xl text-amber-300">
               +{data.goldEarned.toLocaleString()}
             </span>
-            {((data.wateredBonusGold ?? 0) > 0 || (data.rainBonusGold ?? 0) > 0) && (
+            {(data.rainBonusGold ?? 0) > 0 && (
               <span className="text-[10px] font-extrabold text-sky-400 mt-0.5">
-                (💧 Buff +{((data.wateredBonusGold || 0) + (data.rainBonusGold || 0)).toLocaleString()})
+                (🌧 Buff +{(data.rainBonusGold || 0).toLocaleString()})
               </span>
             )}
           </div>
@@ -220,19 +216,11 @@ export const RewardSummaryModal: React.FC<RewardSummaryModalProps> = ({
         </div>
 
         {/* Detailed Buff Breakdown if present */}
-        {(hasWateringBonus || hasFertilizerBonus || hasRainBonus) && (
+        {(hasFertilizerBonus || hasRainBonus || hasDroughtPenalty) && (
           <div className="w-full bg-slate-850 border border-slate-750/80 rounded-2xl p-3 mb-4 text-left space-y-1.5">
             <span className="text-[11px] font-extrabold uppercase tracking-wider text-amber-400 block flex items-center gap-1">
               <Sparkles className="w-3.5 h-3.5" /> Chi Tiết Thưởng Buff:
             </span>
-            {hasWateringBonus && (
-              <div className="text-xs font-bold text-sky-300 flex items-center gap-1.5">
-                <span>💧</span>
-                <span>
-                  Tưới Nước: +{data.wateredBonusGold || 0} 🪙 Vàng & +{data.wateredBonusXp || 0} XP
-                </span>
-              </div>
-            )}
             {hasRainBonus && (
               <div className="text-xs font-bold text-sky-300 flex items-center gap-1.5">
                 <span>🌧</span>
@@ -245,6 +233,12 @@ export const RewardSummaryModal: React.FC<RewardSummaryModalProps> = ({
               <div className="text-xs font-bold text-amber-300 flex items-center gap-1.5">
                 <span>✨</span>
                 <span>Phân Bón: +{data.fertilizerBonusXp} XP</span>
+              </div>
+            )}
+            {hasDroughtPenalty && (
+              <div className="flex items-center gap-1.5 text-xs font-bold text-red-300">
+                <span>🔴</span>
+                <span>Khô cằn: -{data.droughtPenaltyGold} 🪙 Vàng</span>
               </div>
             )}
           </div>

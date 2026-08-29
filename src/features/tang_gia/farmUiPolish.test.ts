@@ -1,9 +1,5 @@
 import { readFileSync } from "node:fs";
-import {
-  getFarmHarvestAllActionMode,
-  getFarmWaterActionLabel,
-  getFarmWaterActionMode,
-} from "./farmPresentation";
+import { getFarmHarvestAllActionMode } from "./farmPresentation";
 
 function assert(condition: unknown, message: string): asserts condition {
   if (!condition) throw new Error(`FAILED: ${message}`);
@@ -62,19 +58,17 @@ assert(!screenSource.includes("Tổng Kết Thu Hoạch"), "single and batch har
 assert(screenSource.includes("plotRewards: ["), "single harvest presents the exact engine reward at its plot");
 assert(screenSource.includes("plotRewards: res.details.map"), "Harvest All presents each canonical per-plot engine reward");
 assert(screenSource.includes('data-harvest-action="all"'), "Harvest All replaces the clear-plot slot at two or more ready crops");
-assert(screenSource.includes('data-water-action={waterActionMode}'), "watering button exposes its disabled, single, or all mode");
-assert(screenSource.includes("<PlotDetailPanel"), "selected garden plots render the compact detail panel");
+assert(screenSource.includes('data-water-action="selected-plot"'), "watering button targets only the selected plot");
+assert(screenSource.includes('data-fertilizer-action="selected-plot"'), "growing plots expose the late-fertilizer toolbar action");
 assert(screenSource.includes("setNow(Date.now())"), "the one-second ticker updates presentation time");
 assert(!screenSource.includes("handleHarvestSinglePlotForIndex(index);"), "tapping a Ready plot never auto-harvests it");
-
-const plotDetailSource = readFileSync(new URL("./components/PlotDetailPanel.tsx", import.meta.url), "utf8");
-assert(plotDetailSource.includes("Tỷ lệ phẩm chất"), "growing details show a quality forecast without revealing the roll");
-assert(plotDetailSource.includes("getCropHarvestPreview"), "Ready details use the canonical reward preview");
 
 const canvasSource = readFileSync(new URL("./components/TangGiaCanvas2D.tsx", import.meta.url), "utf8");
 assert(canvasSource.includes('data-floating-harvest-reward="true"'), "plot canvas renders the non-blocking floating Gold and XP reward");
 assert(canvasSource.includes("HARVEST_CROP_QUALITY_COLORS"), "floating reward consumes the engine quality semantic color map");
 assert(canvasSource.includes('data-harvest-glow="true"'), "Harvest All keeps a one-second per-crop glow presentation");
+assert(canvasSource.includes('data-moisture-anchor="bar"'), "the moisture bar is the centered plot anchor");
+assert(canvasSource.includes('data-crop-countdown-anchor="crop-top"'), "crop countdown follows the visual crop top");
 
 const xpBarSource = readFileSync(new URL("./components/FarmXpProgressBar.tsx", import.meta.url), "utf8");
 assert(xpBarSource.includes("getRequiredXpTicksForTransition"), "farm XP bar reuses the global rank XP curve helper");
@@ -85,10 +79,6 @@ const storeSource = readFileSync(new URL("./components/FarmStoreModal.tsx", impo
 assert(storeSource.includes('data-animal-store-stats="compact-two-column"'), "animal store uses a compact two-column stat grid");
 assert(storeSource.includes('data-animal-lifespan="hours"'), "each animal store card displays its catalog lifespan in hours");
 
-assert(getFarmWaterActionMode(0) === "disabled", "zero eligible crops dims Tưới Nước");
-assert(getFarmWaterActionMode(1) === "single", "one eligible crop uses single Tưới Nước");
-assert(getFarmWaterActionMode(2) === "all", "two eligible crops use Tưới Tất Cả");
-assert(getFarmWaterActionLabel("all") === "Tưới Tất Cả", "Water All label is canonical");
 assert(getFarmHarvestAllActionMode(1) === "clear_plot", "Harvest All stays hidden below two ready crops");
 assert(getFarmHarvestAllActionMode(2) === "harvest_all", "Harvest All replaces Xúc Đất at two ready crops");
 

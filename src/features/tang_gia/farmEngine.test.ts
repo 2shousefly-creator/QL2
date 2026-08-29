@@ -2,10 +2,6 @@ import {
   createDefaultFarmState,
   feedPenBuff,
   calculateMaxFeedQuantity,
-  waterSinglePlot,
-  waterAllPlots,
-  getPlotWateringInfo,
-  canWaterPlotNow,
   settleFarmState,
   addAnimalToPen,
   plantSeedWithFertilizer,
@@ -14,13 +10,11 @@ import {
   sellEggs,
   sellAllEggs,
 } from "./farmEngine";
-import { FeedTypeId, FarmPlotState } from "./farmTypes";
+import { FeedTypeId } from "./farmTypes";
 import {
   getDayNightPhase,
   getWeatherForSlot,
   getCanonicalWeatherSlot,
-  calculateCropGrowthSchedule,
-  checkRainInTimeRange,
 } from "./weatherEngine";
 import { migrateFarmState } from "./farmMigration";
 
@@ -207,88 +201,6 @@ function runFarmFeedTests() {
   console.log("\nALL FARM FEED TESTS PASSED PERFECTLY! 🌾✨");
 }
 
-function runWateringTests() {
-  console.log("\n=== RUNNING 3-STAGE WATERING ENGINE TEST SUITE ===\n");
-
-  const totalGrowthMs = 100_000;
-  const plantedAt = 1_000_000;
-  const growthEndsAt = plantedAt + totalGrowthMs;
-
-  const makeGrowingPlot = (): FarmPlotState => ({
-    status: "growing",
-    cropId: "carrot",
-    plantedAt,
-    growthEndsAt,
-    wateredStages: [false, false, false],
-    wateringCount: 0,
-    weatherExposure: { sunny: 1, calm: 0, rain: 0, cool: 0 },
-    stageEndTimes: [plantedAt + 50_000, plantedAt + 80_000, growthEndsAt],
-  });
-
-  // Stage 1 Window: 20% - 30% => 1_020_000 to 1_030_000
-  // Stage 2 Window: 50% - 60% => 1_050_000 to 1_060_000
-  // Stage 3 Window: 80% - 90% => 1_080_000 to 1_090_000
-
-  console.log("--- Test W1: Early stage before 20% ---");
-  const plotEarly = makeGrowingPlot();
-  const infoEarly = getPlotWateringInfo(plotEarly, plantedAt + 10_000); // 10%
-  assert(infoEarly.canWaterNow === false, "Test W1: Cannot water at 10% progress");
-  assert(infoEarly.stageStatuses[0] === "upcoming", "Test W1: Stage 1 is upcoming");
-
-  console.log("--- Test W1b: Water within Stage 1 (25% progress) ---");
-  const plotS1 = makeGrowingPlot();
-  const t25 = plantedAt + 25_000;
-  const infoS1 = getPlotWateringInfo(plotS1, t25);
-  assert(infoS1.canWaterNow === true, "Test W1b: Can water at 25% progress");
-  assert(infoS1.currentEligibleStageIndex === 0, "Test W1b: Eligible stage is Stage 1 (index 0)");
-  assert(infoS1.stageStatuses[0] === "ready", "Test W1b: Stage 1 status is ready");
-
-  const farmW = createDefaultFarmState();
-  farmW.lastSettledAt = plantedAt;
-  farmW.plots[0] = plotS1;
-  const waterRes1 = waterSinglePlot(farmW, 0, t25);
-  assert(waterRes1.success === true, "Test W1b: Watering plot 0 succeeds");
-  const p0 = farmW.plots[0];
-  assert(p0.status === "growing" && p0.wateredStages?.[0] === true, "Test W1b: Stage 1 is marked watered");
-  assert(p0.status === "growing" && p0.wateringCount === 1, "Test W1b: wateringCount is 1");
-
-  // Try watering again in the same window (should fail)
-  const waterResRepeat = waterSinglePlot(farmW, 0, t25 + 1000);
-  assert(waterResRepeat.success === false, "Test W1b: Repeat watering in same stage must fail");
-
-  console.log("--- Test W2: Miss Stage 1 (now at 55% progress) ---");
-  const plotMiss1 = makeGrowingPlot();
-  const t55 = plantedAt + 55_000; // 55% (past Stage 0 window of 20%-50%, inside Stage 1 window of 50%-80%)
-  const infoMiss1 = getPlotWateringInfo(plotMiss1, t55);
-  assert(infoMiss1.canWaterNow === true, "Test W2: Can water Stage 2 at 55%");
-  assert(infoMiss1.currentEligibleStageIndex === 1, "Test W2: Current eligible stage is index 1");
-  assert(infoMiss1.stageStatuses[0] === "missed", "Test W2: Stage 1 (index 0) is permanently missed");
-  assert(infoMiss1.stageStatuses[1] === "ready", "Test W2: Stage 2 (index 1) is ready");
-  assert(infoMiss1.stageStatuses[2] === "upcoming", "Test W2: Stage 3 (index 2) is upcoming");
-
-  console.log("--- Test W3: Water Stage 2 at 55% after missing Stage 1 ---");
-  farmW.lastSettledAt = plantedAt;
-  farmW.plots[0] = plotMiss1;
-  const waterRes2Real = waterSinglePlot(farmW, 0, t55);
-  assert(waterRes2Real.success === true, "Test W3: Watering Stage 2 succeeds");
-  const p0After = farmW.plots[0];
-  assert(p0After.status === "growing" && p0After.wateredStages?.[0] === false, "Test W3: Stage 1 is still false (no catch-up)");
-  assert(p0After.status === "growing" && p0After.wateredStages?.[1] === true, "Test W3: Stage 2 is true");
-  assert(p0After.status === "growing" && p0After.wateringCount === 1, "Test W3: Total watering count is 1");
-
-  console.log("--- Test W4: Water all plots simultaneous batch ---");
-  const farmBatch = createDefaultFarmState();
-  farmBatch.lastSettledAt = plantedAt;
-  farmBatch.plots[0] = makeGrowingPlot();
-  farmBatch.plots[1] = makeGrowingPlot();
-  farmBatch.plots[2] = { status: "empty" };
-  const allRes = waterAllPlots(farmBatch, t25);
-  assert(allRes.wateredPlotCount === 2, "Test W4: Watered 2 eligible growing plots");
-  assert(allRes.success === true, "Test W4: Batch water success is true");
-
-  console.log("\nALL 3-STAGE WATERING TESTS PASSED PERFECTLY! 💧✨");
-}
-
 function runOfflineSettlementTests() {
   console.log("\n=== RUNNING OFFLINE SETTLEMENT & 48H CAP TEST SUITE ===\n");
 
@@ -377,15 +289,18 @@ function runWeatherAndDayNightTests() {
     }
   }
 
-  console.log("\n--- Test WE3: Deterministic Weather Exposure & Speedup for Crops ---");
-  const baseGrowthMs = 3600 * 1000; // 1 hour
-  const sched = calculateCropGrowthSchedule(baseMidnightUtc, baseGrowthMs, 133742);
-  assert(sched.growthEndsAt <= baseMidnightUtc + baseGrowthMs, "Growth is either accelerated or equal to base duration");
-  assert(sched.weatherExposure.sunny + sched.weatherExposure.calm + sched.weatherExposure.rain + sched.weatherExposure.cool >= 0.999, "Weather exposure sums to ~100%");
+  console.log("\n--- Test WE3: Deterministic season-aware weather ---");
+  const currentSlot = getCanonicalWeatherSlot(baseMidnightUtc, 133742);
+  assert(
+    currentSlot.weather === getWeatherForSlot(
+      currentSlot.slotIndex,
+      133742,
+      currentSlot.season
+    ),
+    "Canonical slot weather is stable for its season and seed"
+  );
 
-  console.log("\n--- Test WE4: Auto-watering during Rain ---");
-  // Construct a scenario where a stage window overlaps with a rain slot
-  // Find a rain slot
+  console.log("\n--- Test WE4: Rain restores persistent soil moisture ---");
   let rainSlotIndex = -1;
   for (let s = 0; s < 50; s++) {
     if (getWeatherForSlot(s, 133742) === "rain") {
@@ -396,30 +311,20 @@ function runWeatherAndDayNightTests() {
   assert(rainSlotIndex !== -1, "Found at least one rain slot in 50 slots");
 
   const rainStartMs = rainSlotIndex * 6 * 3600 * 1000 - 7 * 3600 * 1000;
-  const rainEndMs = rainStartMs + 6 * 3600 * 1000;
-  assert(checkRainInTimeRange(rainStartMs, rainEndMs, 133742) === true, "checkRainInTimeRange detects rain slot");
-
-  // Plant a crop that experiences rain during Stage 0 (20% - 50%)
   const farmRain = createDefaultFarmState();
   farmRain.weatherSeed = 133742;
-  farmRain.inventory.seeds.carrot = 5;
   farmRain.lastSettledAt = rainStartMs;
-
-  const plantRes = plantSeedWithFertilizer(farmRain, 0, "carrot", null, rainStartMs);
-  assert(plantRes.success === true, "Planting succeeds");
-
-  // Settle at 60% growth (past stage 0 and 1, under rain)
-  const plot = farmRain.plots[0];
-  if (plot.status === "growing") {
-    const checkTime = plot.plantedAt + Math.round((plot.growthEndsAt - plot.plantedAt) * 0.6);
-    settleFarmState(farmRain, checkTime);
-    const settledPlot = farmRain.plots[0];
-    if (settledPlot.status === "growing") {
-      assert(settledPlot.wateredStages?.[0] === true, "Stage 0 was auto-watered by rain");
-      assert(settledPlot.wateredStages?.[1] === true, "Stage 1 was auto-watered by rain");
-      assert((settledPlot.wateringCount || 0) >= 2, "Watering count updated by rain");
-    }
-  }
+  farmRain.plots[0] = {
+    status: "empty",
+    soilMoisture: 25,
+    soilMoistureUpdatedAt: rainStartMs,
+  };
+  settleFarmState(farmRain, rainStartMs + 60 * 60 * 1000);
+  const rainSettledPlot = farmRain.plots[0];
+  assert(
+    rainSettledPlot.status === "empty" && rainSettledPlot.soilMoisture > 25,
+    "Rain raises soil moisture on an empty unlocked plot"
+  );
 
   console.log("\n--- Test WE5: Rain gold bonus (+5% max based on rain exposure) on harvest ---");
   const farmHarvest = createDefaultFarmState();
@@ -430,7 +335,7 @@ function runWeatherAndDayNightTests() {
   plantSeedWithFertilizer(farmHarvest, 0, "carrot", null, rainStartMs);
   const growingP = farmHarvest.plots[0];
   if (growingP.status === "growing") {
-    const harvestTime = growingP.growthEndsAt + 1000;
+    const harvestTime = rainStartMs + 12 * 60 * 60 * 1000;
     settleFarmState(farmHarvest, harvestTime);
     const readyPlot = farmHarvest.plots[0];
     assert(readyPlot.status === "ready", "Plot is ready for harvest");
@@ -471,7 +376,7 @@ function runQualityAndLivestockTests() {
   plantSeedWithFertilizer(farmCrop, 0, "cabbage", null, plantTime);
   const p0 = farmCrop.plots[0];
   if (p0.status === "growing") {
-    const readyTime = p0.growthEndsAt + 1000;
+    const readyTime = plantTime + 12 * 60 * 60 * 1000;
     settleFarmState(farmCrop, readyTime);
     const readyP = farmCrop.plots[0];
     assert(readyP.status === "ready", "Plot became ready");
@@ -566,21 +471,27 @@ function runHarvestAllTests() {
   batchFarm.lastSettledAt = now;
   batchFarm.plots[0] = {
     status: "ready",
+    soilMoisture: 100,
+    soilMoistureUpdatedAt: now,
     cropId: "carrot",
     plantedAt: now - 10_000,
-    growthEndsAt: now,
-    wateringCount: 0,
-    wateredStages: [false, false, false],
+    growthCompletedAt: now,
+    qualityPenalty: "none",
+    qualityRoll: 0.5,
     rolledQuality: "tot",
+    weatherExposure: { sunny: 1, calm: 0, rain: 0, cool: 0 },
   };
   batchFarm.plots[1] = {
     status: "ready",
+    soilMoisture: 100,
+    soilMoistureUpdatedAt: now,
     cropId: "corn",
     plantedAt: now - 10_000,
-    growthEndsAt: now,
-    wateringCount: 1,
-    wateredStages: [true, false, false],
+    growthCompletedAt: now,
+    qualityPenalty: "none",
+    qualityRoll: 0.5,
     rolledQuality: "hiem",
+    weatherExposure: { sunny: 1, calm: 0, rain: 0, cool: 0 },
   };
   const singleFarm = JSON.parse(JSON.stringify(batchFarm)) as ReturnType<
     typeof createDefaultFarmState
@@ -616,9 +527,7 @@ function runHarvestAllTests() {
 }
 
 runFarmFeedTests();
-runWateringTests();
 runOfflineSettlementTests();
 runWeatherAndDayNightTests();
 runQualityAndLivestockTests();
 runHarvestAllTests();
-

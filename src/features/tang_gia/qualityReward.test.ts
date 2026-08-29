@@ -126,11 +126,15 @@ assert(
 const cropFarm = createDefaultFarmState();
 cropFarm.plots[0] = {
   status: "ready",
+  soilMoisture: 100,
+  soilMoistureUpdatedAt: cropFarm.lastSettledAt,
   cropId: "carrot",
   plantedAt: 1,
-  wateringCount: 0,
-  wateredStages: [false, false, false],
+  growthCompletedAt: cropFarm.lastSettledAt,
+  qualityPenalty: "none",
+  qualityRoll: 0.5,
   rolledQuality: "tot",
+  weatherExposure: { sunny: 1, calm: 0, rain: 0, cool: 0 },
 };
 const cropHarvest = harvestPlot(cropFarm, 0, cropFarm.lastSettledAt);
 

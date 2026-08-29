@@ -574,8 +574,8 @@ export const MEDAL_CATALOG: MedalDefinition[] = [
     categoryName: "Tăng Gia",
     name: "Bàn Tay Chăm Sóc",
     iconSymbol: "🎖️",
-    description: "Thu hoạch 1 nông sản đã được tưới nước đầy đủ cả 3 đợt trong chu kỳ",
-    conditionHint: "Thu hoạch cây trồng tưới đủ 3 lần đợt tưới",
+    description: "Thực hiện lần tưới nước đầu tiên cho một ô đất trong khu tăng gia",
+    conditionHint: "Tưới nước cho 1 ô đất",
     bgGradient: MEDAL_TIER_STYLES[1].bgGradient,
     borderColor: MEDAL_TIER_STYLES[1].borderColor,
     glowColor: MEDAL_TIER_STYLES[1].glowColor,
@@ -583,10 +583,7 @@ export const MEDAL_CATALOG: MedalDefinition[] = [
     targetValue: 1,
     tier: 1,
     getProgress: (state) => {
-      const current = Math.max(
-        state.globalStats?.fullyWateredCropHarvests || 0,
-        state.globalStats?.perfectCropHarvests || 0
-      );
+      const current = state.globalStats?.totalWateringCount || 0;
       return { current, target: 1, isUnlocked: current >= 1 };
     },
   },
@@ -596,8 +593,8 @@ export const MEDAL_CATALOG: MedalDefinition[] = [
     categoryName: "Tăng Gia",
     name: "Vụ Mùa Hoàn Hảo",
     iconSymbol: "🎖️",
-    description: "Thu hoạch 1 nông sản đạt đủ 3 đợt tưới nước VÀ bón phân hoàn hảo",
-    conditionHint: "Thu hoạch cây trồng tưới 3 đợt + có phân bón",
+    description: "Thu hoạch 1 nông sản đã được bón phân trong vòng đời cây",
+    conditionHint: "Thu hoạch cây trồng có sử dụng phân bón",
     bgGradient: MEDAL_TIER_STYLES[1].bgGradient,
     borderColor: MEDAL_TIER_STYLES[1].borderColor,
     glowColor: MEDAL_TIER_STYLES[1].glowColor,
@@ -605,16 +602,7 @@ export const MEDAL_CATALOG: MedalDefinition[] = [
     targetValue: 1,
     tier: 1,
     getProgress: (state) => {
-      let current = state.globalStats?.perfectCropHarvests || 0;
-      if (current === 0 && state.farm?.plots) {
-        const hasReadyPerfect = state.farm.plots.some(
-          (p) =>
-            p.status === "ready" &&
-            (p.wateringCount !== undefined ? p.wateringCount : (p.wateredBoostApplied ? 1 : 0)) >= 3 &&
-            (!!p.fertilizerId || (p.fertilizerXpBonusPct || 0) > 0)
-        );
-        if (hasReadyPerfect) current = 1;
-      }
+      const current = state.globalStats?.fertilizerCropHarvests || 0;
       return { current: Math.min(current, 1), target: 1, isUnlocked: current >= 1 };
     },
   },
@@ -622,19 +610,19 @@ export const MEDAL_CATALOG: MedalDefinition[] = [
     id: "mua_tren_ca_khu_vuon",
     category: "farm",
     categoryName: "Tăng Gia",
-    name: "Mưa Cả Khu Vườn",
+    name: "Chăm Đều Khu Vườn",
     iconSymbol: "🎖️",
-    description: "Thực hiện hành động 'Tưới tất cả' tưới cùng lúc cho cả 9 ô đất",
-    conditionHint: "Tưới nước cho 9 ô đất trong 1 lượt",
+    description: "Tích lũy 9 lần tưới nước cho các ô đất trong khu vườn",
+    conditionHint: "Thực hiện tổng cộng 9 lần tưới nước",
     bgGradient: MEDAL_TIER_STYLES[3].bgGradient,
     borderColor: MEDAL_TIER_STYLES[3].borderColor,
     glowColor: MEDAL_TIER_STYLES[3].glowColor,
     textColor: MEDAL_TIER_STYLES[3].textColor,
-    targetValue: 1,
+    targetValue: 9,
     tier: 3,
     getProgress: (state) => {
-      const current = state.globalStats?.waterAll9PlotsCount || 0;
-      return { current, target: 1, isUnlocked: current >= 1 };
+      const current = state.globalStats?.totalWateringCount || 0;
+      return { current: Math.min(current, 9), target: 9, isUnlocked: current >= 9 };
     },
   },
   {

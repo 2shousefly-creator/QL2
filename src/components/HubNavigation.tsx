@@ -23,6 +23,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { TabType, GameState } from "../game/types";
 import { soundManager } from "../game/audio";
 import { MEDAL_CATALOG } from "../game/medals/medalCatalog";
+import { getFarmPresentationState } from "../features/tang_gia/farmPresentation";
 
 type HubNavigationProps = {
   activeTab: TabType;
@@ -73,11 +74,9 @@ export const HubNavigation: React.FC<HubNavigationProps> = ({
 
     // 3. Cây có thể thu hoạch
     if (farm.plots && farm.plots.length > 0) {
-      const hasReadyCrop = farm.plots.some((p) => {
-        if (p.status === "ready") return true;
-        if (p.status === "growing" && p.growthEndsAt && now >= p.growthEndsAt) return true;
-        return false;
-      });
+      const hasReadyCrop = getFarmPresentationState(farm, now).plots.some(
+        (plot) => plot.status === "ready"
+      );
       if (hasReadyCrop) return true;
     }
 

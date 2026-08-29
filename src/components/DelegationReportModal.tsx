@@ -45,7 +45,7 @@ export const DelegationReportModal: React.FC<DelegationReportModalProps> = ({
   if (report.topPriority === "xp_full") {
     priorityLabel = "Thực hiện thử thách thăng cấp";
   } else if (report.topPriority === "watering") {
-    priorityLabel = `${report.pendingWateringCount} ô cây đang chờ tưới`;
+    priorityLabel = `${report.pendingWateringCount} ô đất đang thiếu nước`;
   } else if (report.topPriority === "harvest") {
     priorityLabel = `${report.readyCropCount} cây đã sẵn sàng thu hoạch`;
   } else if (report.topPriority === "animal_egg") {
@@ -146,7 +146,7 @@ export const DelegationReportModal: React.FC<DelegationReportModalProps> = ({
                 {report.pendingWateringCount > 0 && (
                   <div className="text-sky-300 font-semibold flex items-center gap-1.5">
                     <Droplets className="w-3.5 h-3.5 text-sky-400 shrink-0" />
-                    {report.pendingWateringCount} ô đang chờ Tưới
+                    {report.pendingWateringCount} ô đất đang thiếu nước
                   </div>
                 )}
                 {report.growingCropCount > 0 &&
@@ -242,7 +242,7 @@ export const DelegationReportModal: React.FC<DelegationReportModalProps> = ({
               className="w-full py-3 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-extrabold text-sm tracking-wide shadow-lg shadow-sky-600/30 flex items-center justify-center gap-2 transition-all active:scale-[0.99]"
             >
               <Droplets className="w-4 h-4" />
-              <span>💧 Tưới Tất Cả</span>
+              <span>Đến Vườn Cây</span>
             </button>
           )}
 

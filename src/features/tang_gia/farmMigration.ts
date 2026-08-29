@@ -10,6 +10,7 @@ import type {
   AnimalDeathNotificationSummary,
   AnimalTypeId,
   CropId,
+  CropQualityPenalty,
   EggQualityInventory,
   EggTypeId,
   FarmInventory,
@@ -20,11 +21,16 @@ import type {
   ItemQuality,
   PenAnimalState,
   WeatherExposureData,
+  WeatherExposureMs,
 } from "./farmTypes";
-import { getCropQualityRandom } from "./deterministicRandom";
+import { deterministicRandom } from "./deterministicRandom";
 import { rollQualityWithExposure } from "./weatherEngine";
+import {
+  clampSoilMoisture,
+  DEFAULT_SOIL_MOISTURE,
+} from "./soilMoistureEngine";
 
-export const CURRENT_FARM_SCHEMA_VERSION = 5;
+export const CURRENT_FARM_SCHEMA_VERSION = 6;
 export const DEFAULT_FARM_WEATHER_SEED = 133742;
 
 type MutableFarmRecord = Record<string, any>;
@@ -107,7 +113,13 @@ export function createDefaultFarmState(now: number = Date.now()): FarmSaveState 
     inventory: createDefaultInventory(),
     unlockedPlotCount: 2,
     plots: Array.from({ length: 9 }, (_, index): FarmPlotState =>
-      index < 2 ? { status: "empty" } : { status: "locked" }
+      index < 2
+        ? {
+            status: "empty",
+            soilMoisture: DEFAULT_SOIL_MOISTURE,
+            soilMoistureUpdatedAt: now,
+          }
+        : { status: "locked" }
     ),
     penAnimals: [],
     penFeedBuffValue: 0,
@@ -208,6 +220,13 @@ function migrateV4ToV5(farm: MutableFarmRecord): MutableFarmRecord {
   return farm;
 }
 
+function migrateV5ToV6(farm: MutableFarmRecord): MutableFarmRecord {
+  // Plot fields are converted by normalizePlot below so migration stays
+  // idempotent and never reconstructs inventory, animals or farm economy.
+  farm.schemaVersion = 6;
+  return farm;
+}
+
 function normalizeWeatherExposure(raw: unknown): WeatherExposureData | undefined {
   if (!isRecord(raw)) return undefined;
   return {
@@ -218,9 +237,27 @@ function normalizeWeatherExposure(raw: unknown): WeatherExposureData | undefined
   };
 }
 
-function normalizeBooleanTriple(raw: unknown): [boolean, boolean, boolean] | undefined {
-  if (!Array.isArray(raw)) return undefined;
-  return [Boolean(raw[0]), Boolean(raw[1]), Boolean(raw[2])];
+function normalizeWeatherExposureMs(raw: unknown): WeatherExposureMs | undefined {
+  if (!isRecord(raw)) return undefined;
+  return {
+    sunny: Math.max(0, Number(raw.sunny) || 0),
+    calm: Math.max(0, Number(raw.calm) || 0),
+    rain: Math.max(0, Number(raw.rain) || 0),
+    cool: Math.max(0, Number(raw.cool) || 0),
+  };
+}
+
+function normalizeQualityPenalty(raw: unknown): CropQualityPenalty {
+  if (raw === "common_only" || raw === "no_rare_perfect") return raw;
+  return "none";
+}
+
+function createEmptyPlot(now: number): FarmPlotState {
+  return {
+    status: "empty",
+    soilMoisture: DEFAULT_SOIL_MOISTURE,
+    soilMoistureUpdatedAt: now,
+  };
 }
 
 function normalizePlot(
@@ -231,75 +268,129 @@ function normalizePlot(
   now: number
 ): FarmPlotState {
   if (!isRecord(raw)) {
-    return plotIndex < unlockedPlotCount ? { status: "empty" } : { status: "locked" };
+    return plotIndex < unlockedPlotCount ? createEmptyPlot(now) : { status: "locked" };
   }
   if (raw.status === "locked") return { status: "locked" };
-  if (raw.status === "empty") return { status: "empty" };
+  const soilMoisture = isFiniteNumber(raw.soilMoisture)
+    ? clampSoilMoisture(raw.soilMoisture)
+    : DEFAULT_SOIL_MOISTURE;
+  const soilMoistureUpdatedAt = isFiniteNumber(raw.soilMoistureUpdatedAt)
+    ? raw.soilMoistureUpdatedAt
+    : now;
+  if (raw.status === "empty") {
+    return { status: "empty", soilMoisture, soilMoistureUpdatedAt };
+  }
 
   if (raw.status === "growing" || raw.status === "ready") {
     const crop = CROP_CATALOG.find((entry) => entry.id === raw.cropId);
     if (!crop) {
-      return plotIndex < unlockedPlotCount ? { status: "empty" } : { status: "locked" };
+      return plotIndex < unlockedPlotCount ? createEmptyPlot(now) : { status: "locked" };
     }
 
     const plantedAt = isFiniteNumber(raw.plantedAt) ? raw.plantedAt : now;
-    const growthEndsAt = isFiniteNumber(raw.growthEndsAt)
-      ? raw.growthEndsAt
-      : plantedAt + crop.growthMs;
     const weatherExposure = normalizeWeatherExposure(raw.weatherExposure);
-    const wateringCount = Math.min(3, normalizeCount(raw.wateringCount));
-    const wateredStages = normalizeBooleanTriple(raw.wateredStages);
-    const quality = QUALITY_TIERS.includes(raw.rolledQuality)
-      ? raw.rolledQuality as ItemQuality
-      : raw.status === "ready"
-        ? rollQualityWithExposure(
-            weatherExposure?.cool || 0,
-            getCropQualityRandom(weatherSeed, plotIndex, plantedAt, growthEndsAt)
-          )
+    const persistedPenalty = normalizeQualityPenalty(raw.qualityPenalty);
+    const qualityPenalty: CropQualityPenalty = soilMoisture <= 0
+      ? "common_only"
+      : soilMoisture < 20 && persistedPenalty === "none"
+        ? "no_rare_perfect"
+        : persistedPenalty;
+    const qualityRoll = isFiniteNumber(raw.qualityRoll)
+      ? Math.max(0, Math.min(1 - Number.EPSILON, raw.qualityRoll))
+      : deterministicRandom(weatherSeed, "crop", plotIndex, crop.id, plantedAt);
+    const fertilizerId = FERTILIZER_CATALOG.some((entry) => entry.id === raw.fertilizerId)
+      ? raw.fertilizerId as FertilizerTypeId
+      : raw.fertilizerId === null
+        ? null
         : undefined;
+    const fertilizerXpBonusPct = isFiniteNumber(raw.fertilizerXpBonusPct)
+      ? raw.fertilizerXpBonusPct
+      : undefined;
+    const growthTimeReductionPct = isFiniteNumber(raw.growthTimeReductionPct)
+      ? Math.max(0, Math.min(0.95, raw.growthTimeReductionPct))
+      : 0;
+
+    if (raw.status === "ready") {
+      const growthCompletedAt = isFiniteNumber(raw.growthCompletedAt)
+        ? raw.growthCompletedAt
+        : isFiniteNumber(raw.growthEndsAt)
+          ? raw.growthEndsAt
+          : now;
+      const rolledQuality = qualityPenalty === "none" && QUALITY_TIERS.includes(raw.rolledQuality)
+        ? raw.rolledQuality as ItemQuality
+        : rollQualityWithExposure(
+            weatherExposure?.cool || 0,
+            qualityRoll,
+            qualityPenalty
+          );
+      return {
+        status: "ready",
+        soilMoisture,
+        soilMoistureUpdatedAt,
+        cropId: crop.id,
+        plantedAt,
+        growthCompletedAt,
+        ...(fertilizerId !== undefined ? { fertilizerId } : {}),
+        ...(fertilizerXpBonusPct !== undefined ? { fertilizerXpBonusPct } : {}),
+        ...(growthTimeReductionPct > 0 ? { growthTimeReductionPct } : {}),
+        ...(weatherExposure ? { weatherExposure } : {}),
+        ...(isFiniteNumber(raw.rainGoldBonusPct)
+          ? { rainGoldBonusPct: raw.rainGoldBonusPct }
+          : {}),
+        qualityPenalty,
+        qualityRoll,
+        rolledQuality,
+      };
+    }
+
+    const growthWorkTotalMs = isFiniteNumber(raw.growthWorkTotalMs) && raw.growthWorkTotalMs > 0
+      ? raw.growthWorkTotalMs
+      : Math.max(1, Math.round(crop.growthMs * (1 - growthTimeReductionPct)));
+    const legacyGrowthEndsAt = isFiniteNumber(raw.growthEndsAt)
+      ? raw.growthEndsAt
+      : plantedAt + growthWorkTotalMs;
+    const legacyDuration = Math.max(1, legacyGrowthEndsAt - plantedAt);
+    const legacyProgress = Math.max(0, Math.min(1, (now - plantedAt) / legacyDuration));
+    const growthWorkRemainingMs = isFiniteNumber(raw.growthWorkRemainingMs)
+      ? Math.max(0, Math.min(growthWorkTotalMs, raw.growthWorkRemainingMs))
+      : growthWorkTotalMs * (1 - legacyProgress);
+    const growthLastUpdatedAt = isFiniteNumber(raw.growthLastUpdatedAt)
+      ? raw.growthLastUpdatedAt
+      : now;
+    const elapsedLegacyMs = Math.max(0, Math.min(now, legacyGrowthEndsAt) - plantedAt);
+    const weatherExposureMs = normalizeWeatherExposureMs(raw.weatherExposureMs) ?? {
+      sunny: (weatherExposure?.sunny || 0) * elapsedLegacyMs,
+      calm: (weatherExposure?.calm || 0) * elapsedLegacyMs,
+      rain: (weatherExposure?.rain || 0) * elapsedLegacyMs,
+      cool: (weatherExposure?.cool || 0) * elapsedLegacyMs,
+    };
 
     return {
-      status: raw.status,
+      status: "growing",
+      soilMoisture,
+      soilMoistureUpdatedAt,
       cropId: crop.id,
       plantedAt,
-      growthEndsAt,
-      ...(Array.isArray(raw.stageEndTimes) && raw.stageEndTimes.length >= 3
-        ? {
-            stageEndTimes: [
-              Number(raw.stageEndTimes[0]),
-              Number(raw.stageEndTimes[1]),
-              Number(raw.stageEndTimes[2]),
-            ] as [number, number, number],
-          }
-        : {}),
+      growthWorkTotalMs,
+      growthWorkRemainingMs,
+      growthLastUpdatedAt,
       ...(FERTILIZER_CATALOG.some((entry) => entry.id === raw.fertilizerId)
         ? { fertilizerId: raw.fertilizerId as FertilizerTypeId }
         : raw.fertilizerId === null
           ? { fertilizerId: null }
           : {}),
-      ...(isFiniteNumber(raw.fertilizerXpBonusPct)
-        ? { fertilizerXpBonusPct: raw.fertilizerXpBonusPct }
+      ...(fertilizerXpBonusPct !== undefined ? { fertilizerXpBonusPct } : {}),
+      ...(growthTimeReductionPct > 0 ? { growthTimeReductionPct } : {}),
+      weatherExposureMs,
+      qualityPenalty,
+      qualityRoll,
+      ...(QUALITY_TIERS.includes(raw.rolledQuality)
+        ? { rolledQuality: raw.rolledQuality as ItemQuality }
         : {}),
-      ...(isFiniteNumber(raw.growthTimeReductionPct)
-        ? { growthTimeReductionPct: raw.growthTimeReductionPct }
-        : {}),
-      wateringCount,
-      ...(wateredStages ? { wateredStages } : {}),
-      ...(raw.wateredBoostApplied !== undefined
-        ? { wateredBoostApplied: Boolean(raw.wateredBoostApplied) }
-        : {}),
-      ...(raw.wateredBonusType === "speed" || raw.wateredBonusType === "yield"
-        ? { wateredBonusType: raw.wateredBonusType }
-        : {}),
-      ...(weatherExposure ? { weatherExposure } : {}),
-      ...(isFiniteNumber(raw.rainGoldBonusPct)
-        ? { rainGoldBonusPct: raw.rainGoldBonusPct }
-        : {}),
-      ...(quality ? { rolledQuality: quality } : {}),
-    } as FarmPlotState;
+    };
   }
 
-  return plotIndex < unlockedPlotCount ? { status: "empty" } : { status: "locked" };
+  return plotIndex < unlockedPlotCount ? createEmptyPlot(now) : { status: "locked" };
 }
 
 function normalizeAnimal(raw: unknown, now: number, index: number): PenAnimalState | null {
@@ -401,6 +492,7 @@ export function migrateFarmState(
     else if (version === 2) migrateV2ToV3(farm);
     else if (version === 3) migrateV3ToV4(farm, migrationNow);
     else if (version === 4) migrateV4ToV5(farm);
+    else if (version === 5) migrateV5ToV6(farm);
     version = normalizeCount(farm.schemaVersion);
   }
 

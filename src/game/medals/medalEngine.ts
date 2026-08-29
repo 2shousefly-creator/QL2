@@ -100,17 +100,6 @@ export function ensureMedalAndMasteryState(draft: GameState): void {
           draft.globalStats.fertilizerTypesUsed.push(plot.fertilizerId);
         }
       }
-      if (plot.status === "ready") {
-        const waterCount = plot.wateringCount !== undefined
-          ? plot.wateringCount
-          : (plot.wateredBoostApplied ? 1 : 0);
-        if (waterCount >= 3) {
-          draft.globalStats.fullyWateredCropHarvests = Math.max(draft.globalStats.fullyWateredCropHarvests || 0, 1);
-          if (plot.fertilizerId || (plot.fertilizerXpBonusPct || 0) > 0) {
-            draft.globalStats.perfectCropHarvests = Math.max(draft.globalStats.perfectCropHarvests || 0, 1);
-          }
-        }
-      }
     }
   }
 
@@ -310,7 +299,6 @@ export function recordTrainingRunForMasteryAndMedals(
 
 export function recordCropHarvestForMedals(
   draft: GameState,
-  effectiveWaterings: number,
   hasFertilizer: boolean
 ): void {
   ensureMedalAndMasteryState(draft);
@@ -319,14 +307,8 @@ export function recordCropHarvestForMedals(
   global.totalCropHarvests = (global.totalCropHarvests || 0) + 1;
   global.totalCropHarvestsPlusEggSales = (global.totalCropHarvestsPlusEggSales || 0) + 1;
 
-  if (effectiveWaterings >= 3) {
-    global.fullyWateredCropHarvests = (global.fullyWateredCropHarvests || 0) + 1;
-  }
   if (hasFertilizer) {
     global.fertilizerCropHarvests = (global.fertilizerCropHarvests || 0) + 1;
-  }
-  if (effectiveWaterings >= 3 && hasFertilizer) {
-    global.perfectCropHarvests = (global.perfectCropHarvests || 0) + 1;
   }
 
   evaluateMedalUnlocks(draft);
@@ -335,12 +317,6 @@ export function recordCropHarvestForMedals(
 export function recordWatering(draft: GameState, count: number = 1): void {
   ensureMedalAndMasteryState(draft);
   draft.globalStats!.totalWateringCount = (draft.globalStats!.totalWateringCount || 0) + count;
-  evaluateMedalUnlocks(draft);
-}
-
-export function recordWaterAll9Plots(draft: GameState): void {
-  ensureMedalAndMasteryState(draft);
-  draft.globalStats!.waterAll9PlotsCount = (draft.globalStats!.waterAll9PlotsCount || 0) + 1;
   evaluateMedalUnlocks(draft);
 }
 

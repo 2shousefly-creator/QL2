@@ -297,13 +297,13 @@ export function backfillJournalEvents(draft: GameState): void {
     });
   }
 
-  if (global?.waterAll9PlotsCount && global.waterAll9PlotsCount > 0) {
+  if ((global?.totalWateringCount || 0) >= 9) {
     addJournalEvent(draft, {
       key: "farm:water_all_9",
       type: "farm_milestone",
       category: "farm",
-      title: "🌧️ Tưới Đầy Đủ 9 Ô Đất",
-      description: "Thực hiện tưới nước đồng loạt cho cả 9 ô đất trong vườn",
+      title: "🌧️ Chăm Đều Khu Vườn",
+      description: "Tích lũy đủ 9 lần tưới nước cho các ô đất trong vườn",
       iconSymbol: "🌧️",
       occurredAt: null,
       dateUnknown: true,

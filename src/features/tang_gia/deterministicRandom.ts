@@ -20,21 +20,6 @@ export function deterministicRandom(...parts: Array<string | number>): number {
   return (hash >>> 0) / 4294967296;
 }
 
-export function getCropQualityRandom(
-  weatherSeed: number,
-  plotIndex: number,
-  plantedAt: number,
-  growthEndsAt: number
-): number {
-  return deterministicRandom(
-    weatherSeed,
-    "crop",
-    plotIndex,
-    plantedAt,
-    growthEndsAt
-  );
-}
-
 export function getEggQualityRandom(
   weatherSeed: number,
   animalInstanceId: string,

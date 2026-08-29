@@ -9,7 +9,7 @@ import {
   settleEnergyAndXp,
 } from "./energyEngine";
 import { recordRecentEarningActivity } from "./recentActivity";
-import { settleFarmState, getPendingWateringCount } from "../features/tang_gia/farmEngine";
+import { settleFarmState } from "../features/tang_gia/farmEngine";
 import { MEDAL_CATALOG } from "./medals/medalCatalog";
 import { evaluateMedalUnlocks } from "./medals/medalEngine";
 
@@ -237,7 +237,9 @@ export function settleEarning(
     ? farm.plots.filter((p) => p.status === "ready").length
     : 0;
   const pendingWateringCount = farm && farm.plots
-    ? farm.plots.reduce((sum, p) => sum + getPendingWateringCount(p, nowEpochMs), 0)
+    ? farm.plots.filter(
+        (plot) => plot.status !== "locked" && plot.soilMoisture < 20
+      ).length
     : 0;
   const growingCropCount = farm && farm.plots
     ? farm.plots.filter((p) => p.status === "growing").length

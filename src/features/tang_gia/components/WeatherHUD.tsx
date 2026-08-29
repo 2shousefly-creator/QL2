@@ -1,9 +1,10 @@
 import React from "react";
 import {
   CanonicalWeatherSlot,
-  WEATHER_METADATA,
+  getWeatherMoistureDescription,
+  getWeatherPresentation,
+  SEASON_METADATA,
 } from "../weatherEngine";
-import { Info, Clock } from "lucide-react";
 
 interface WeatherHUDProps {
   currentSlot: CanonicalWeatherSlot;
@@ -15,14 +16,8 @@ export const WeatherHUD: React.FC<WeatherHUDProps> = ({
   onOpenWeatherModal,
 }) => {
   const isDay = currentSlot.phase === "day";
-  const meta = WEATHER_METADATA[currentSlot.weather];
-
-  const formatCountdown = (ms: number): string => {
-    const totalSec = Math.floor(ms / 1000);
-    const hours = Math.floor(totalSec / 3600);
-    const mins = Math.floor((totalSec % 3600) / 60);
-    return `${hours}h ${mins.toString().padStart(2, "0")}m`;
-  };
+  const weather = getWeatherPresentation(currentSlot.weather, currentSlot.season);
+  const season = SEASON_METADATA[currentSlot.season];
 
   return (
     <div
@@ -30,35 +25,29 @@ export const WeatherHUD: React.FC<WeatherHUDProps> = ({
         e.stopPropagation();
         onOpenWeatherModal();
       }}
-      className={`px-2.5 py-1.5 rounded-xl border flex items-center gap-2 cursor-pointer transition-all active:scale-95 shadow-sm hover:brightness-110 ${
+      className={`min-w-[126px] px-2.5 py-1.5 rounded-xl border flex flex-col items-start cursor-pointer transition-all active:scale-95 shadow-sm hover:brightness-110 ${
         isDay
           ? "bg-slate-850/90 border-amber-500/40 text-amber-200"
           : "bg-slate-850/90 border-indigo-500/40 text-indigo-200"
       }`}
-      title="Nhấn để xem chi tiết Thời Tiết & Chu kỳ Ngày/Đêm"
+      title="Nhấn để xem chi tiết Mùa và Thời Tiết"
     >
-      <span className="text-base select-none">{meta.icon}</span>
-
-      <div className="flex flex-col text-left">
-        <div className="flex items-center gap-1 leading-none">
-          <span className="text-[11px] font-black text-slate-100">
-            {meta.name}
-          </span>
-          <span className="text-[9px] text-slate-400 font-bold">
-            ({isDay ? "Ngày" : "Đêm"})
-          </span>
-        </div>
-        <div className="flex items-center gap-1 text-[9px] font-medium text-slate-400 mt-0.5 leading-none">
-          <Clock className="w-2.5 h-2.5 text-amber-400/80" />
-          <span className="font-mono text-amber-300/90 font-bold">
-            {formatCountdown(currentSlot.remainingMs)}
-          </span>
-        </div>
-      </div>
-
-      <div className="w-4 h-4 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 ml-0.5">
-        <Info className="w-2.5 h-2.5" />
-      </div>
+      <span className="text-[10px] font-black leading-tight text-slate-100">
+        {season.icon} {season.name}
+      </span>
+      <span className="text-[9px] font-bold leading-tight text-slate-200">
+        {isDay ? "☀️ Ban ngày" : "🌙 Ban đêm"}
+      </span>
+      <span className="text-[9px] font-bold leading-tight text-slate-200">
+        {weather.icon} {weather.name}
+      </span>
+      <span className="max-w-[150px] text-[8px] font-semibold leading-tight text-slate-400">
+        {getWeatherMoistureDescription(
+          currentSlot.season,
+          currentSlot.phase,
+          currentSlot.weather
+        )}
+      </span>
     </div>
   );
 };

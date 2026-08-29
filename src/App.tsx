@@ -12,8 +12,6 @@ import { UniformScreen } from "./features/profile/UniformScreen";
 import { MedalUnlockModal } from "./components/MedalUnlockModal";
 import { TangGiaScreen } from "./features/tang_gia/TangGiaScreen";
 import { EntertainmentHubScreen } from "./features/entertainment/EntertainmentHubScreen";
-import { waterAllPlots } from "./features/tang_gia/farmEngine";
-import { recordWatering, recordWaterAll9Plots } from "./game/medals/medalEngine";
 import { PromotionChallenge } from "./components/PromotionChallenge";
 import { PromotionCeremony } from "./components/PromotionCeremony";
 import { DelegationReportModal } from "./components/DelegationReportModal";
@@ -454,16 +452,6 @@ export default function App() {
       if (!prev) return prev;
       const draft = JSON.parse(JSON.stringify(prev)) as GameState;
       draft.ui.lastSeenDelegationReportAt = reportId;
-
-      if (action === "watering" && draft.farm) {
-        const res = waterAllPlots(draft.farm, Date.now());
-        if (res.wateredPlotCount > 0) {
-          recordWatering(draft, res.wateredPlotCount);
-          if (res.wateredPlotCount >= 9) {
-            recordWaterAll9Plots(draft);
-          }
-        }
-      }
 
       localGameRepository.save(draft);
       return draft;

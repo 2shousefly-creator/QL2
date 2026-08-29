@@ -12,15 +12,16 @@ import {
 } from "../farmCatalog";
 import {
   getAnimalCapacity,
+  getCropGrowthProgress,
+  getCurrentCropRemainingDurationMs,
+  hasCropFertilizer,
   getRankBadgeDefinition,
   rankAtLeast,
-  getPendingWateringCount,
-  getPlotWateringInfo,
 } from "../farmEngine";
 import { CanonicalWeatherSlot } from "../weatherEngine";
 import { RankStep } from "../../../game/types";
 import { RankBadge } from "../../../components/RankBadge";
-import { Lock, Sparkles, Droplets, Utensils, CheckCircle2, Coins, Zap, Plus, CloudRain, Sun, Wind, Moon } from "lucide-react";
+import { Lock, Sparkles } from "lucide-react";
 import { LivestockPen2D } from "./LivestockPen2D";
 import { RainOverlay } from "./RainOverlay";
 import {
@@ -32,6 +33,10 @@ import {
   getFarmVisualTheme,
 } from "../farmVisualTheme";
 import type { PlotHarvestPresentation } from "../farmPresentation";
+import {
+  getSoilMoistureBand,
+  getSoilMoisturePresentation,
+} from "../soilMoistureEngine";
 import {
   TANG_GIA_ASSETS,
   getFarmBackgroundAsset,
@@ -53,6 +58,7 @@ interface TangGiaCanvas2DProps {
   gold?: number;
   currentRank?: RankStep;
   currentWeatherSlot?: CanonicalWeatherSlot;
+  weatherSeed?: number;
   harvestPresentations?: readonly PlotHarvestPresentation[];
   onGardenTap: () => void;
   onPlotTap: (index: number) => void;
@@ -125,6 +131,33 @@ const CropGrowthVisual: React.FC<{
   );
 };
 
+const SoilMoistureBlock: React.FC<{ moisture: number }> = ({ moisture }) => {
+  const value = Math.max(0, Math.min(100, moisture));
+  const presentation = getSoilMoisturePresentation(value);
+  return (
+    <div className="pointer-events-none flex w-full flex-col items-center gap-0.5">
+      <div
+        className="relative mx-auto h-2.5 w-[46px] sm:w-[54px]"
+        data-moisture-anchor="bar"
+      >
+        <span className="absolute right-full mr-1 top-1/2 -translate-y-1/2 text-[9px]">💧</span>
+        <div className="h-full w-full overflow-hidden rounded-full border border-slate-300/50 bg-slate-950/80 shadow-inner">
+          <div
+            className={`h-full rounded-full transition-[width] duration-1000 ${presentation.barClass}`}
+            style={{ width: `${value}%` }}
+          />
+        </div>
+        <span className="absolute left-full ml-1 top-1/2 -translate-y-1/2 whitespace-nowrap text-[8px] font-black text-slate-100">
+          {Math.round(value)}%
+        </span>
+      </div>
+      <span className={`whitespace-nowrap text-[7px] sm:text-[8px] font-black leading-tight ${presentation.textClass}`}>
+        {presentation.icon} {presentation.label}
+      </span>
+    </div>
+  );
+};
+
 export const TangGiaCanvas2D: React.FC<TangGiaCanvas2DProps> = ({
   plots,
   penAnimals,
@@ -138,6 +171,7 @@ export const TangGiaCanvas2D: React.FC<TangGiaCanvas2DProps> = ({
   gold = 0,
   currentRank,
   currentWeatherSlot,
+  weatherSeed = 133742,
   harvestPresentations = [],
   onGardenTap,
   onPlotTap,
@@ -344,19 +378,12 @@ export const TangGiaCanvas2D: React.FC<TangGiaCanvas2DProps> = ({
               let isReady = plot.status === "ready";
 
               if (plot.status === "growing" && cropDef) {
-                remainingMs = Math.max(0, plot.growthEndsAt - now);
-                const totalMs = Math.max(
-                  1,
-                  plot.plantedAt && plot.growthEndsAt > plot.plantedAt
-                    ? plot.growthEndsAt - plot.plantedAt
-                    : cropDef.growthMs
+                remainingMs = getCurrentCropRemainingDurationMs(
+                  plot,
+                  now,
+                  weatherSeed
                 );
-                const elapsedMs = Math.max(0, totalMs - remainingMs);
-                progress = Math.min(1.0, Math.max(0.0, elapsedMs / totalMs));
-                if (remainingMs <= 0) {
-                  isReady = true;
-                  progress = 1.0;
-                }
+                progress = getCropGrowthProgress(plot);
               } else if (plot.status === "ready") {
                 progress = 1.0;
                 isReady = true;
@@ -364,11 +391,10 @@ export const TangGiaCanvas2D: React.FC<TangGiaCanvas2DProps> = ({
 
               const isSelected =
                 contextMode === "garden" && selectedPlotIndex === plotIndex;
-              const wateringInfo = getPlotWateringInfo(plot, now);
               const cropStage = getCropVisualStage(progress);
               const soilState: SoilAssetState = !isUnlocked || plot.status === "empty"
                 ? "empty"
-                : plot.status === "growing" && wateringInfo.canWaterNow
+                : plot.soilMoisture < 20
                   ? "need_water"
                   : "planted";
               const harvestPresentation = harvestPresentations.find(
@@ -436,19 +462,6 @@ export const TangGiaCanvas2D: React.FC<TangGiaCanvas2DProps> = ({
                       <span>⚡ {harvestPresentation.xpAwarded.toLocaleString("vi-VN")}</span>
                     </div>
                   )}
-                  {/* Top Plot Badge / Countdown Timer */}
-                  <div className="relative z-30 flex items-center justify-center w-full min-h-[16px] -mt-0.5 overflow-visible">
-                    {isUnlocked && cropId && (
-                      <div className="text-[10px] font-black drop-shadow flex items-center justify-center">
-                        {!isReady && (
-                          <span className="font-mono text-amber-300 font-black text-[9px] sm:text-[10px]">
-                            {formatCountdown(remainingMs)}
-                          </span>
-                        )}
-                      </div>
-                    )}
-                  </div>
-
                   {/* Center Content */}
                   {!isUnlocked ? (
                     (() => {
@@ -500,120 +513,79 @@ export const TangGiaCanvas2D: React.FC<TangGiaCanvas2DProps> = ({
                       );
                     })()
                   ) : plot.status === "empty" ? (
-                    /* Empty Unlocked Plot: friendly centered "+" badge */
-                    <div className="relative z-10 my-auto flex flex-col items-center justify-center gap-1 select-none pointer-events-none">
-                      <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-amber-950/50 border border-amber-500/30 flex items-center justify-center text-amber-300/80 shadow-inner">
-                        <Plus className="w-4 h-4 sm:w-4.5 sm:h-4.5 stroke-[2.5]" />
-                      </div>
-                      <span className="text-[9px] sm:text-[10px] font-extrabold text-amber-200/70 tracking-tight leading-none">
-                        Trồng cây
-                      </span>
+                    <div className="relative z-10 my-auto flex w-full items-center justify-center">
+                      <SoilMoistureBlock moisture={plot.soilMoisture} />
                     </div>
                   ) : (
                     <div className="relative z-10 my-auto flex flex-col items-center justify-center text-center w-full">
-                      {/* Shared seed followed by crop-specific sprout, young and mature sprites. */}
-                      <div className="relative flex items-center justify-center min-h-[40px] sm:min-h-[44px]">
+                      <div className="relative flex min-h-[40px] items-center justify-center overflow-visible sm:min-h-[44px]">
                         <div className="relative inline-block">
+                          {plot.status === "growing" && (
+                            <span
+                              className={`absolute left-1/2 z-30 -translate-x-1/2 translate-y-0 whitespace-nowrap rounded-md bg-slate-950/85 px-1 py-0.5 text-[8px] font-black leading-none shadow-md ${
+                                getSoilMoistureBand(plot.soilMoisture) === "barren"
+                                  ? "text-red-300"
+                                  : "font-mono text-amber-300"
+                              }`}
+                              style={{
+                                bottom: `calc(35% + ${getCropVisualScale(progress) * 31}px)`,
+                              }}
+                              data-growth-countdown="crop-anchored"
+                              data-crop-countdown-anchor="crop-top"
+                            >
+                              {getSoilMoistureBand(plot.soilMoisture) === "barren"
+                                ? "Ngừng sinh trưởng"
+                                : formatCountdown(remainingMs)}
+                            </span>
+                          )}
                           <CropGrowthVisual
                             stage={cropStage}
                             progress={progress}
                             cropId={cropId}
                             cropName={cropDef?.name}
                           />
-
-                          {/* Water drop icon indicator floating next to crop when watering is available */}
-                          {plot.status === "growing" && wateringInfo.canWaterNow && (
-                            <div className="absolute -top-1 -right-2 z-20 flex items-center justify-center bg-sky-500 text-white p-1 rounded-full shadow-lg border border-sky-200 animate-bounce">
-                              <Droplets className="w-3.5 h-3.5 fill-current text-white" />
-                            </div>
-                          )}
                         </div>
                       </div>
 
-                      {/* Plant Name (when growing) */}
-                      {!isReady && (
+                      <div className="relative z-10 mt-0.5 w-full text-center">
                         <span
                           data-crop-name="true"
-                          className="relative z-10 max-w-full font-black leading-tight text-slate-100 mt-0.5 line-clamp-1"
-                          style={{ fontSize: `${CROP_NAME_FONT_SIZE_PX}px` }}
+                          data-quality={isReady ? plot.rolledQuality || "thuong" : undefined}
+                          className="relative inline-block max-w-full truncate font-black leading-tight drop-shadow-md"
+                          style={{
+                            fontSize: `${CROP_NAME_FONT_SIZE_PX}px`,
+                            color: isReady
+                              ? HARVEST_CROP_QUALITY_COLORS[plot.rolledQuality || "thuong"]
+                              : "#f1f5f9",
+                          }}
                         >
-                          {cropDef?.name || "Cây"}
-                        </span>
-                      )}
-
-                      {/* Tag Boost / Fertilizer / 3-Stage Water Indicators (when growing) */}
-                      {!isReady && (
-                        <div className="relative z-10 mt-0.5 flex items-center justify-center gap-1 whitespace-nowrap overflow-hidden min-h-[16px]">
-                          {/* 3-Stage Watering Indicators */}
-                          <div
-                            className="flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-slate-950/90 border border-slate-700/80 shadow-sm shrink-0"
-                            title={`Tưới nước: ${wateringInfo.wateredCount}/3 mốc (${wateringInfo.stageStatuses
-                              .map(
-                                (s, idx) =>
-                                  `Mốc ${idx + 1}: ${
-                                    s === "watered"
-                                      ? "Đã tưới (+2%)"
-                                      : s === "ready"
-                                      ? "Đang mở"
-                                      : s === "missed"
-                                      ? "Bỏ lỡ"
-                                      : "Sắp tới"
-                                  }`
-                              )
-                              .join(", ")})`}
-                          >
-                            <Droplets className="w-2.5 h-2.5 text-sky-400 shrink-0" />
-                            <div className="flex items-center gap-0.5">
-                              {wateringInfo.stageStatuses.map((st, idx) => (
-                                <span
-                                  key={idx}
-                                  className={`w-1.5 h-1.5 rounded-full inline-block ${
-                                    st === "watered"
-                                      ? "bg-sky-400 shadow-sm shadow-sky-400"
-                                      : st === "ready"
-                                      ? "bg-amber-400 animate-pulse ring-1 ring-amber-300"
-                                      : st === "missed"
-                                      ? "bg-rose-500/60"
-                                      : "bg-slate-600"
-                                  }`}
-                                />
-                              ))}
-                            </div>
-                          </div>
-
-                          {plot.fertilizerId && (
+                          {hasCropFertilizer(plot) && (
                             <span
-                              className="text-[9px] font-black px-1 py-0.5 rounded-md bg-amber-950/90 text-amber-300 border border-amber-700/80 flex items-center gap-0.5 shadow-sm shrink-0"
+                              className="absolute right-full mr-1 text-amber-300"
                               title="Đã bón phân"
+                              aria-label="Đã bón phân"
                             >
-                              <Sparkles className="w-2.5 h-2.5 text-amber-400 shrink-0" />
+                              ✨
                             </span>
                           )}
-                        </div>
-                      )}
+                          {cropDef?.name || "Cây trồng"}
+                        </span>
+                      </div>
 
-                      {/* Crop name inherits the harvested quality color above the CTA. */}
+                      <div className="relative z-10 mt-0.5 w-full">
+                        <SoilMoistureBlock moisture={plot.soilMoisture} />
+                      </div>
+
                       {isReady && (
-                        <div className="relative z-10 mt-0.5 flex flex-col items-center justify-center w-full gap-0.5">
-                          <div
-                            data-crop-name="true"
-                            data-harvest-crop-name="true"
-                            data-quality={plot.rolledQuality || "thuong"}
-                            className="max-w-full truncate font-black leading-tight drop-shadow-md"
-                            style={{
-                              fontSize: `${CROP_NAME_FONT_SIZE_PX}px`,
-                              color:
-                                HARVEST_CROP_QUALITY_COLORS[
-                                  plot.rolledQuality || "thuong"
-                                ],
-                            }}
-                          >
-                            {cropDef?.name || "Cây trồng"}
-                          </div>
-                          <div className="px-2 py-0.5 rounded-lg bg-gradient-to-r from-amber-400 via-amber-300 to-amber-400 text-slate-950 font-black text-[9px] sm:text-[10px] shadow-md border border-amber-200 flex items-center justify-center gap-1 active:scale-95 transition-transform animate-pulse w-full max-w-[84px]">
+                        <div
+                          className={`relative z-10 mt-0.5 flex w-full max-w-[84px] items-center justify-center gap-1 rounded-lg border px-2 py-0.5 text-[9px] font-black shadow-md sm:text-[10px] ${
+                            plot.qualityPenalty === "common_only"
+                              ? "border-red-300 bg-gradient-to-r from-red-600 to-rose-600 text-white"
+                              : "border-amber-200 bg-gradient-to-r from-amber-400 via-amber-300 to-amber-400 text-slate-950"
+                          }`}
+                        >
                             <Sparkles className="w-2.5 h-2.5 text-slate-950 fill-current shrink-0" />
                             <span className="leading-none whitespace-nowrap">Thu hoạch</span>
-                          </div>
                         </div>
                       )}
                     </div>

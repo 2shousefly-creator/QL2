@@ -109,6 +109,17 @@ export type FertilizerDefinition = {
 
 export type DayNightPhase = "day" | "night";
 export type WeatherType = "sunny" | "rain" | "cool" | "calm";
+export type SeasonType = "spring" | "summer" | "autumn" | "winter";
+export type SoilMoistureBand =
+  | "sufficient"
+  | "normal"
+  | "drying"
+  | "thirsty"
+  | "barren";
+export type CropQualityPenalty =
+  | "none"
+  | "no_rare_perfect"
+  | "common_only";
 
 export type ItemQuality = "thuong" | "tot" | "hiem" | "hoan_my";
 
@@ -142,52 +153,48 @@ export type WeatherExposureData = {
   cool: number; // 0..1
 };
 
+export type WeatherExposureMs = Record<WeatherType, number>;
+
 export type FarmPlotState =
   | { status: "locked" }
-  | { status: "empty" }
+  | {
+      status: "empty";
+      soilMoisture: number;
+      soilMoistureUpdatedAt: number;
+    }
   | {
       status: "growing";
+      soilMoisture: number;
+      soilMoistureUpdatedAt: number;
       cropId: CropId;
       plantedAt: number;
-      growthEndsAt: number;
-      stageEndTimes?: [number, number, number];
+      growthWorkTotalMs: number;
+      growthWorkRemainingMs: number;
+      growthLastUpdatedAt: number;
       fertilizerId?: FertilizerTypeId | null;
       fertilizerXpBonusPct?: number;
       growthTimeReductionPct?: number;
-      wateringCount?: number; // 0..3
-      wateredStages?: [boolean, boolean, boolean]; // Stage 0 (20%), Stage 1 (50%), Stage 2 (80%)
-      wateredBoostApplied?: boolean; // legacy
-      wateredBonusType?: "speed" | "yield"; // legacy
-      weatherExposure?: WeatherExposureData;
-      rainGoldBonusPct?: number;
+      weatherExposureMs: WeatherExposureMs;
+      qualityPenalty: CropQualityPenalty;
+      qualityRoll: number;
       rolledQuality?: ItemQuality;
     }
   | {
       status: "ready";
+      soilMoisture: number;
+      soilMoistureUpdatedAt: number;
       cropId: CropId;
       plantedAt: number;
-      growthEndsAt?: number;
+      growthCompletedAt: number;
       fertilizerId?: FertilizerTypeId | null;
       fertilizerXpBonusPct?: number;
       growthTimeReductionPct?: number;
-      wateringCount?: number; // 0..3
-      wateredStages?: [boolean, boolean, boolean]; // Stage 0 (20%), Stage 1 (50%), Stage 2 (80%)
-      wateredBoostApplied?: boolean; // legacy
-      wateredBonusType?: "speed" | "yield"; // legacy
       weatherExposure?: WeatherExposureData;
       rainGoldBonusPct?: number;
+      qualityPenalty: CropQualityPenalty;
+      qualityRoll: number;
       rolledQuality?: ItemQuality;
     };
-
-export type WateringStageStatus = "upcoming" | "ready" | "watered" | "missed";
-
-export interface PlotWateringInfo {
-  stageStatuses: [WateringStageStatus, WateringStageStatus, WateringStageStatus];
-  currentEligibleStageIndex: number | null; // 0, 1, 2 or null if cannot water right now
-  canWaterNow: boolean;
-  wateredCount: number;
-  missedCount: number;
-}
 
 export type AnimalDeathCause = "old_age" | "starvation";
 

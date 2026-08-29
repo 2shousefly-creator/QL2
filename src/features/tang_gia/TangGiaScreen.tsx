@@ -12,9 +12,8 @@ import {
 } from "./farmCatalog";
 import {
   addAnimalToPen,
-  applyWaterBuff,
-  buyFertilizer,
-  canWaterPlotNow,
+  applyFertilizerToGrowingCrop,
+  canWaterPlot,
   clearPlot,
   createDefaultFarmState,
   consumePendingAnimalDeathNotification,
@@ -23,7 +22,7 @@ import {
   getAnimalCapacity,
   getItemOriginalPrice,
   getItemSellPrice,
-  getPendingWateringCount,
+  hasCropFertilizer,
   getRankNameForDisplay,
   harvestAllReadyCrops,
   harvestPlot,
@@ -33,8 +32,7 @@ import {
   sellEggs,
   sellInventoryItem,
   settleFarmState,
-  waterAllPlots,
-  waterSinglePlot,
+  waterSelectedPlot,
 } from "./farmEngine";
 import { isAnimalDead } from "./animalLifecycle";
 import {
@@ -52,7 +50,6 @@ import {
 import {
   recordCropHarvestForMedals,
   recordWatering,
-  recordWaterAll9Plots,
   recordFertilizerUsed,
   recordEggSale,
   recordFeedBagsUsed,
@@ -71,7 +68,7 @@ import { FeedModal } from "./components/FeedModal";
 import { TroughInfoModal } from "./components/TroughInfoModal";
 import { WeatherHUD } from "./components/WeatherHUD";
 import { WeatherModal } from "./components/WeatherModal";
-import { PlotDetailPanel } from "./components/PlotDetailPanel";
+import { ApplyFertilizerModal } from "./components/ApplyFertilizerModal";
 import {
   RewardSummaryModal,
   RewardSummaryData,
@@ -81,8 +78,6 @@ import {
   HARVEST_REWARD_FLOAT_DURATION_MS,
   getFarmHarvestAllActionMode,
   getFarmPresentationState,
-  getFarmWaterActionLabel,
-  getFarmWaterActionMode,
   type PlotHarvestPresentation,
 } from "./farmPresentation";
 import {
@@ -95,11 +90,11 @@ import {
   Wheat,
   X,
   Sparkles,
-  Lock,
   UserX,
   CheckCircle2,
   Package,
 } from "lucide-react";
+import { MIN_PLANTING_SOIL_MOISTURE } from "./soilMoistureEngine";
 
 interface TangGiaScreenProps {
   gameState: GameState;
@@ -162,6 +157,7 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
   const [isKhoOpen, setIsKhoOpen] = useState(false);
   const [khoInitialTab, setKhoInitialTab] = useState<KhoTabType>("crop");
   const [isPlantModalOpen, setIsPlantModalOpen] = useState(false);
+  const [isApplyFertilizerModalOpen, setIsApplyFertilizerModalOpen] = useState(false);
   const [isEnterPenModalOpen, setIsEnterPenModalOpen] = useState(false);
   const [isFeedModalOpen, setIsFeedModalOpen] = useState(false);
   const [isTroughInfoOpen, setIsTroughInfoOpen] = useState(false);
@@ -253,13 +249,6 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
   const harvestAllActionMode = getFarmHarvestAllActionMode(
     harvestableCropCount
   );
-  const needsWaterCount = presentationState.plots.filter(
-    (plot) =>
-      plot.status === "growing" && getPendingWateringCount(plot, now) > 0
-  ).length;
-  const waterActionMode = getFarmWaterActionMode(needsWaterCount);
-  const waterActionLabel = getFarmWaterActionLabel(waterActionMode);
-
   // The 1-second ticker is presentation-only. Persistence happens at boundaries.
   useEffect(() => {
     const settleAtBoundary = (currentNow: number) => {
@@ -373,6 +362,17 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
       setToastMessage(msg);
       setTimeout(() => setToastMessage(null), 3000);
     }, 0);
+  };
+
+  const showLowMoistureDialog = () => {
+    setDialogConfig({
+      isOpen: true,
+      title: "Đất Thiếu Nước",
+      message: "Đất đang thiếu nước trầm trọng, hãy tưới nước trước rồi trồng cây sau",
+      confirmLabel: "Đã Hiểu",
+      onConfirm: () =>
+        setDialogConfig((previous) => ({ ...previous, isOpen: false })),
+    });
   };
 
   const openStore = (tab?: "crop" | "fertilizer" | "animal" | "feed") => {
@@ -535,7 +535,6 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
       if (res) {
         recordCropHarvestForMedals(
           draft,
-          res.effectiveWaterings,
           res.hasFertilizer
         );
         recordPerfectFarmItemSale(draft, res.quality === "hoan_my" ? 1 : 0);
@@ -581,6 +580,21 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
     setSelectedAnimalId(null);
   };
 
+  const handleOpenPlantModal = () => {
+    const selectedPlot = selectedPlotIndex === null
+      ? null
+      : presentationState.plots[selectedPlotIndex];
+    if (
+      !selectedPlot ||
+      selectedPlot.status !== "empty"
+    ) return;
+    if (selectedPlot.soilMoisture < MIN_PLANTING_SOIL_MOISTURE) {
+      showLowMoistureDialog();
+      return;
+    }
+    setIsPlantModalOpen(true);
+  };
+
   const handlePlantSeedWithFertilizer = (
     cropId: CropId,
     fertilizerId: FertilizerTypeId | null
@@ -603,6 +617,13 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
       if (res.success && fertilizerId) {
         recordFertilizerUsed(draft, fertilizerId);
       }
+      if (
+        !res.success &&
+        res.message === "Đất đang thiếu nước trầm trọng, hãy tưới nước trước rồi trồng cây sau"
+      ) {
+        setTimeout(showLowMoistureDialog, 0);
+        return;
+      }
       if (res.message) {
         return { message: res.message };
       }
@@ -610,41 +631,33 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
   };
 
   const handleWaterPlot = () => {
-    if (waterActionMode === "disabled") return;
+    if (selectedPlotIndex === null) return;
     const currentNow = Date.now();
     updateFarm((farm, draft) => {
-      if (waterActionMode === "single") {
-        const eligiblePlotIndex = farm.plots.findIndex(
-          (plot) =>
-            plot.status === "growing" && canWaterPlotNow(plot, currentNow)
-        );
-        if (eligiblePlotIndex >= 0) {
-          const singleRes = waterSinglePlot(
-            farm,
-            eligiblePlotIndex,
-            currentNow
-          );
-          if (singleRes.success) {
-            recordWatering(draft, 1);
-            return { message: singleRes.message };
-          }
-        }
-        return { message: "Hiện chưa có cây nào ở mốc tưới nước hợp lệ!" };
-      }
-
-      if (waterActionMode === "all") {
-        const res = waterAllPlots(farm, currentNow);
-        if (res.wateredPlotCount > 0) {
-          recordWatering(draft, res.wateredPlotCount);
-          if (res.wateredPlotCount >= 9) {
-            recordWaterAll9Plots(draft);
-          }
-        }
-        return { message: res.message };
-      }
-
-      return { message: "Hiện chưa có cây nào ở mốc tưới nước hợp lệ!" };
+      const result = waterSelectedPlot(
+        farm,
+        selectedPlotIndex,
+        currentNow
+      );
+      if (result.success) recordWatering(draft, 1);
+      return { message: result.message };
     }, currentNow);
+  };
+
+  const handleApplyFertilizer = (fertilizerId: FertilizerTypeId) => {
+    if (selectedPlotIndex === null) return;
+    const currentNow = Date.now();
+    updateFarm((farm, draft) => {
+      const result = applyFertilizerToGrowingCrop(
+        farm,
+        selectedPlotIndex,
+        fertilizerId,
+        currentNow
+      );
+      if (result.success) recordFertilizerUsed(draft, fertilizerId);
+      return { message: result.message };
+    }, currentNow);
+    setIsApplyFertilizerModalOpen(false);
   };
 
   const handleHarvestSinglePlot = () => {
@@ -669,7 +682,6 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
         for (const detail of res.details) {
           recordCropHarvestForMedals(
             draft,
-            detail.effectiveWaterings,
             detail.hasFertilizer
           );
         }
@@ -758,14 +770,19 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
       } Vàng?`,
       confirmLabel: "Mở Khóa",
       onConfirm: () => {
+        const unlockedAt = Date.now();
         updateFarm((farm) => {
           farm.gold -= config.gold;
           farm.unlockedPlotCount = Math.max(
             farm.unlockedPlotCount || 0,
             plotIndex + 1
           );
-          farm.plots[plotIndex] = { status: "empty" };
-        });
+          farm.plots[plotIndex] = {
+            status: "empty",
+            soilMoisture: 100,
+            soilMoistureUpdatedAt: unlockedAt,
+          };
+        }, unlockedAt);
         showToast(`Đã mở khóa thành công Ô đất #${plotIndex + 1}!`);
         setDialogConfig((prev) => ({ ...prev, isOpen: false }));
       },
@@ -912,6 +929,12 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
     selectedPlotIndex !== null
       ? presentationState.plots[selectedPlotIndex]
       : null;
+  const canWaterSelectedPlot = currentSelectedPlot
+    ? canWaterPlot(currentSelectedPlot)
+    : false;
+  const canApplyFertilizer =
+    currentSelectedPlot?.status === "growing" &&
+    !hasCropFertilizer(currentSelectedPlot);
   const currentSelectedAnimal = selectedAnimalId
     ? presentationState.penAnimals.find(
         (animal) => animal.instanceId === selectedAnimalId
@@ -1014,6 +1037,7 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
         gold={farmState.gold}
         currentRank={currentRank}
         currentWeatherSlot={currentWeatherSlot}
+        weatherSeed={farmState.weatherSeed ?? 133742}
         harvestPresentations={harvestPresentations}
         onGardenTap={handleGardenTap}
         onPlotTap={(index) => {
@@ -1043,18 +1067,6 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
           onClick={(e) => e.stopPropagation()}
           className="fixed bottom-[calc(3.5rem+env(safe-area-inset-bottom,0px)+0.5rem)] left-1/2 -translate-x-1/2 z-30 w-full max-w-xl px-3 animate-in fade-in slide-in-from-bottom-2 duration-200"
         >
-          {contextMode === "garden" &&
-            selectedPlotIndex !== null &&
-            currentSelectedPlot && (
-              <PlotDetailPanel
-                farm={farmState}
-                plot={currentSelectedPlot}
-                plotIndex={selectedPlotIndex}
-                currentRank={currentRank}
-                currentWeatherSlot={currentWeatherSlot}
-                now={now}
-              />
-            )}
           <div className="bg-slate-900/95 border-2 border-amber-500/80 rounded-2xl p-2.5 shadow-2xl backdrop-blur-md flex items-center justify-around gap-1.5">
             {/* TOOLBAR FOR GARDEN MODE */}
             {contextMode === "garden" && (
@@ -1073,7 +1085,7 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
                   disabled={
                     !currentSelectedPlot || currentSelectedPlot.status !== "empty"
                   }
-                  onClick={() => setIsPlantModalOpen(true)}
+                  onClick={handleOpenPlantModal}
                   className={`h-14 flex-1 rounded-xl border flex flex-col items-center justify-center gap-1 shadow-sm transition-all ${
                     currentSelectedPlot?.status === "empty"
                       ? "border-slate-700/80 bg-slate-800 hover:bg-slate-700 text-slate-200 active:scale-95"
@@ -1088,23 +1100,37 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
                   <span className="text-[10px] font-extrabold leading-none">Trồng Cây</span>
                 </button>
 
-                {/* Water Buff */}
+                {/* Water selected plot */}
                 <button
-                  disabled={waterActionMode === "disabled"}
+                  disabled={!canWaterSelectedPlot}
                   onClick={handleWaterPlot}
-                  data-water-action={waterActionMode}
+                  data-water-action="selected-plot"
                   className={`h-14 flex-1 rounded-xl border flex flex-col items-center justify-center gap-1 shadow-sm transition-all ${
-                    waterActionMode !== "disabled"
+                    canWaterSelectedPlot
                       ? "border-sky-400 bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-slate-950 font-black shadow-sky-500/20 active:scale-95 animate-pulse"
                       : "border-slate-800/80 bg-slate-900/60 text-slate-600 cursor-not-allowed opacity-60"
                   }`}
                 >
                   <Droplets
                     className={`w-4 h-4 shrink-0 ${
-                      waterActionMode !== "disabled" ? "text-slate-950" : "text-slate-600"
+                      canWaterSelectedPlot ? "text-slate-950" : "text-slate-600"
                     }`}
                   />
-                  <span className="text-[10px] font-extrabold leading-none">{waterActionLabel}</span>
+                  <span className="text-[10px] font-extrabold leading-none">Tưới Nước</span>
+                </button>
+
+                <button
+                  disabled={!canApplyFertilizer}
+                  onClick={() => setIsApplyFertilizerModalOpen(true)}
+                  data-fertilizer-action="selected-plot"
+                  className={`h-14 flex-1 rounded-xl border flex flex-col items-center justify-center gap-1 shadow-sm transition-all ${
+                    canApplyFertilizer
+                      ? "border-amber-500/70 bg-slate-800 text-amber-200 hover:bg-slate-700 active:scale-95"
+                      : "border-slate-800/80 bg-slate-900/60 text-slate-600 cursor-not-allowed opacity-60"
+                  }`}
+                >
+                  <Sparkles className={`h-4 w-4 ${canApplyFertilizer ? "text-amber-400" : "text-slate-600"}`} />
+                  <span className="text-[10px] font-extrabold leading-none">Bón Phân</span>
                 </button>
 
                 {/* Single harvest is scoped to the selected ready plot. */}
@@ -1114,7 +1140,9 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
                   data-harvest-action="single"
                   className={`h-14 flex-1 rounded-xl border flex flex-col items-center justify-center gap-1 shadow-sm transition-all ${
                     currentSelectedPlot?.status === "ready"
-                      ? "border-amber-400 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black shadow-amber-500/20 active:scale-95 animate-pulse"
+                      ? currentSelectedPlot.qualityPenalty === "common_only"
+                        ? "border-red-300 bg-gradient-to-r from-red-600 to-rose-600 text-white font-black shadow-red-500/20 active:scale-95 animate-pulse"
+                        : "border-amber-400 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black shadow-amber-500/20 active:scale-95 animate-pulse"
                       : "border-slate-800/80 bg-slate-900/60 text-slate-600 cursor-not-allowed opacity-60"
                   }`}
                 >
@@ -1321,6 +1349,17 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
         inventory={farmState.inventory}
         onSelectSeedWithFertilizer={handlePlantSeedWithFertilizer}
         onOpenStore={() => openStore("crop")}
+      />
+
+      <ApplyFertilizerModal
+        isOpen={isApplyFertilizerModalOpen}
+        onClose={() => setIsApplyFertilizerModalOpen(false)}
+        inventory={farmState.inventory}
+        onConfirm={handleApplyFertilizer}
+        onOpenStore={() => {
+          setIsApplyFertilizerModalOpen(false);
+          openStore("fertilizer");
+        }}
       />
 
       <EnterPenModal

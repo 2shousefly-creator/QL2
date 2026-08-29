@@ -1,54 +1,81 @@
 /**
- * Weather and Day/Night Engine for Tăng Gia (Farm)
- * Timezone canonical: Asia/Ho_Chi_Minh (UTC+7)
- * 12-hour full cycle: 6h Day, 6h Night
- * Fixed 6-hour slot boundaries:
- *   - 00:00 to <06:00: BAN ĐÊM (Night)
- *   - 06:00 to <12:00: BAN NGÀY (Day)
- *   - 12:00 to <18:00: BAN ĐÊM (Night)
- *   - 18:00 to <24:00: BAN NGÀY (Day)
+ * Deterministic Season, Weather and Day/Night engine for Tăng Gia.
+ * Canonical timezone: Asia/Ho_Chi_Minh (fixed UTC+7 for gameplay math).
  */
 
-import { ItemQuality, WeatherExposureData } from "./farmTypes";
+import type {
+  CropQualityPenalty,
+  DayNightPhase,
+  ItemQuality,
+  SeasonType,
+  WeatherExposureData,
+  WeatherType,
+} from "./farmTypes";
 
-export type DayNightPhase = "day" | "night";
+export type { DayNightPhase, SeasonType, WeatherType } from "./farmTypes";
 
-export type WeatherType = "sunny" | "rain" | "cool" | "calm";
+export const UTC7_OFFSET_MS = 7 * 60 * 60 * 1000;
+export const WEATHER_SLOT_DURATION_MS = 6 * 60 * 60 * 1000;
+export const SEASON_DURATION_MS = 7 * 24 * 60 * 60 * 1000;
+export const BASE_SOIL_MOISTURE_LOSS_PER_HOUR = 2;
+
+/**
+ * Fixed global epoch: 2024-01-01 00:00:00 in UTC+7 starts Mùa Xuân.
+ * It is intentionally independent from account creation and save data.
+ */
+export const SEASON_EPOCH_MS = Date.UTC(2023, 11, 31, 17, 0, 0, 0);
+
+const SEASON_ORDER: SeasonType[] = ["spring", "summer", "autumn", "winter"];
+
+export const SEASON_METADATA: Record<
+  SeasonType,
+  { name: string; icon: string }
+> = {
+  spring: { name: "MÙA XUÂN", icon: "🌸" },
+  summer: { name: "MÙA HẠ", icon: "☀️" },
+  autumn: { name: "MÙA THU", icon: "🍂" },
+  winter: { name: "MÙA ĐÔNG", icon: "❄️" },
+};
 
 export interface CanonicalWeatherSlot {
   slotIndex: number;
   startMs: number;
   endMs: number;
   phase: DayNightPhase;
+  season: SeasonType;
   weather: WeatherType;
   remainingMs: number;
 }
+type DayWeatherProbabilities = Record<"sunny" | "rain" | "cool", number>;
+type NightWeatherProbabilities = Record<"calm" | "rain", number>;
 
-export interface CropExposure {
-  sunny: number; // 0..1
-  calm: number; // 0..1
-  rain: number; // 0..1
-  cool: number; // 0..1
-}
-
-export interface CropGrowthSchedule {
-  growthEndsAt: number;
-  totalLifecycleMs: number;
-  stageWindows: [
-    [number, number], // Stage 0 (20% - 50%)
-    [number, number], // Stage 1 (50% - 80%)
-    [number, number]  // Stage 2 (80% - 100%)
-  ];
-  weatherExposure: CropExposure;
-  rainGoldBonusPct: number; // e.g. 0.05 * rainExposure
-}
+export const SEASON_WEATHER_PROBABILITIES: Record<
+  SeasonType,
+  { day: DayWeatherProbabilities; night: NightWeatherProbabilities }
+> = {
+  spring: {
+    day: { sunny: 0.3, rain: 0.2, cool: 0.5 },
+    night: { calm: 0.75, rain: 0.25 },
+  },
+  summer: {
+    day: { sunny: 0.9, rain: 0.02, cool: 0.08 },
+    night: { calm: 0.95, rain: 0.05 },
+  },
+  autumn: {
+    day: { sunny: 0.35, rain: 0.3, cool: 0.35 },
+    night: { calm: 0.65, rain: 0.35 },
+  },
+  winter: {
+    day: { sunny: 0.15, rain: 0.6, cool: 0.25 },
+    night: { calm: 0.2, rain: 0.8 },
+  },
+};
 
 export const WEATHER_METADATA: Record<
   WeatherType,
   {
     name: string;
     icon: string;
-    shortDesc: string;
     fullDesc: string;
     tagClass: string;
     bgClass: string;
@@ -56,122 +83,110 @@ export const WEATHER_METADATA: Record<
 > = {
   sunny: {
     name: "Nắng",
-    icon: "☀️",
-    shortDesc: "Cây lớn nhanh hơn",
-    fullDesc: "Thời tiết nắng ráo giúp đẩy nhanh quang hợp, rút ngắn tối đa 2% thời gian sinh trưởng của cây trồng.",
+    icon: "🌤️",
+    fullDesc: "Nắng giúp cây phát triển nhanh hơn 2% nhưng làm đất mất ẩm theo mùa.",
     tagClass: "bg-amber-500/20 text-amber-300 border-amber-500/40",
     bgClass: "from-amber-500/10 to-orange-500/5",
   },
   rain: {
     name: "Mưa",
-    icon: "🌧",
-    shortDesc: "Tăng Vàng & Tự động tưới nước",
-    fullDesc: "Mưa tưới mát ruộng đồng, tự động tưới nước khi cây bước vào mốc chăm sóc và tăng tối đa 5% Vàng khi thu hoạch.",
+    icon: "🌧️",
+    fullDesc: "Mưa tăng độ ẩm đất 50 điểm mỗi giờ và vẫn duy trì thưởng Vàng theo mức tiếp xúc.",
     tagClass: "bg-sky-500/20 text-sky-300 border-sky-500/40",
     bgClass: "from-sky-500/10 to-blue-500/5",
   },
   cool: {
     name: "Mát",
-    icon: "🍃",
-    shortDesc: "Tiết trời mát mẻ",
-    fullDesc: "Khí hậu ôn hòa mát dịu, nuôi dưỡng nông sản tươi tốt (sẽ mở rộng cơ chế Phẩm Chất ở giai đoạn tiếp theo).",
+    icon: "☁️",
+    fullDesc: "Thời tiết mát làm tăng cơ hội Phẩm Chất Hoàn Mỹ theo mức tiếp xúc.",
     tagClass: "bg-emerald-500/20 text-emerald-300 border-emerald-500/40",
     bgClass: "from-emerald-500/10 to-teal-500/5",
   },
   calm: {
     name: "Yên Ắng",
     icon: "🌙",
-    shortDesc: "Cây lớn nhanh hơn",
-    fullDesc: "Đêm quân ngũ tĩnh lặng, cây trồng hấp thụ sương đêm rút ngắn tối đa 2% thời gian sinh trưởng.",
+    fullDesc: "Đêm yên ắng giúp cây phát triển nhanh hơn 2% và làm đất mất ẩm theo mùa.",
     tagClass: "bg-indigo-500/20 text-indigo-300 border-indigo-500/40",
     bgClass: "from-indigo-500/10 to-purple-500/5",
   },
 };
 
-const UTC7_OFFSET_MS = 7 * 3600 * 1000;
-const SLOT_DURATION_MS = 6 * 3600 * 1000; // 6 hours
+export function getSeasonAt(timestamp: number): SeasonType {
+  const seasonIndex = Math.floor((timestamp - SEASON_EPOCH_MS) / SEASON_DURATION_MS);
+  return SEASON_ORDER[((seasonIndex % SEASON_ORDER.length) + SEASON_ORDER.length) % SEASON_ORDER.length];
+}
 
-/**
- * Returns Day or Night phase for a given timestamp in Asia/Ho_Chi_Minh (UTC+7).
- * Absolute slots:
- * - 00:00 to <06:00: BAN ĐÊM (Night)
- * - 06:00 to <12:00: BAN NGÀY (Day)
- * - 12:00 to <18:00: BAN ĐÊM (Night)
- * - 18:00 to <24:00: BAN NGÀY (Day)
- */
 export function getDayNightPhase(timestamp: number): DayNightPhase {
-  const localMs = timestamp + UTC7_OFFSET_MS;
-  const slotIndex = Math.floor(localMs / SLOT_DURATION_MS);
+  const slotIndex = Math.floor((timestamp + UTC7_OFFSET_MS) / WEATHER_SLOT_DURATION_MS);
   const slotMod = ((slotIndex % 4) + 4) % 4;
   return slotMod === 1 || slotMod === 3 ? "day" : "night";
 }
 
-/**
- * Deterministic pseudo-random number generator for a specific slot and seed.
- * Returns float in range [0, 1).
- */
+export function getSeasonWeatherProbabilities(
+  season: SeasonType,
+  phase: "day"
+): DayWeatherProbabilities;
+export function getSeasonWeatherProbabilities(
+  season: SeasonType,
+  phase: "night"
+): NightWeatherProbabilities;
+export function getSeasonWeatherProbabilities(
+  season: SeasonType,
+  phase: DayNightPhase
+): DayWeatherProbabilities | NightWeatherProbabilities {
+  return SEASON_WEATHER_PROBABILITIES[season][phase];
+}
+
 export function getSlotRandom(seed: number, slotIndex: number): number {
-  let h = (seed ^ (slotIndex * 2654435761)) >>> 0;
-  h = Math.imul(h ^ (h >>> 16), 2246822507);
-  h = Math.imul(h ^ (h >>> 13), 3266489909);
-  return ((h ^ (h >>> 16)) >>> 0) / 4294967296;
+  let hash = (seed ^ (slotIndex * 2654435761)) >>> 0;
+  hash = Math.imul(hash ^ (hash >>> 16), 2246822507);
+  hash = Math.imul(hash ^ (hash >>> 13), 3266489909);
+  return ((hash ^ (hash >>> 16)) >>> 0) / 4294967296;
 }
 
-/**
- * Returns deterministic weather for a specific 6-hour slotIndex.
- * BAN NGÀY:
- * - Nắng: 60% (0.00 to <0.60)
- * - Mưa: 20% (0.60 to <0.80)
- * - Mát: 20% (0.80 to <1.00)
- *
- * BAN ĐÊM:
- * - Yên Ắng: 80% (0.00 to <0.80)
- * - Mưa: 20% (0.80 to <1.00)
- */
-export function getWeatherForSlot(slotIndex: number, seed: number = 133742): WeatherType {
+export function getWeatherForSlot(
+  slotIndex: number,
+  seed: number = 133742,
+  explicitSeason?: SeasonType
+): WeatherType {
+  const slotStart = slotIndex * WEATHER_SLOT_DURATION_MS - UTC7_OFFSET_MS;
+  const season = explicitSeason ?? getSeasonAt(slotStart);
   const slotMod = ((slotIndex % 4) + 4) % 4;
-  const isDay = slotMod === 1 || slotMod === 3;
-  const rand = getSlotRandom(seed, slotIndex);
+  const phase: DayNightPhase = slotMod === 1 || slotMod === 3 ? "day" : "night";
+  const random = getSlotRandom(seed, slotIndex);
 
-  if (isDay) {
-    if (rand < 0.6) return "sunny";
-    if (rand < 0.8) return "rain";
+  if (phase === "day") {
+    const probabilities = getSeasonWeatherProbabilities(season, "day");
+    if (random < probabilities.sunny) return "sunny";
+    if (random < probabilities.sunny + probabilities.rain) return "rain";
     return "cool";
-  } else {
-    if (rand < 0.8) return "calm";
-    return "rain";
   }
+
+  const probabilities = getSeasonWeatherProbabilities(season, "night");
+  return random < probabilities.calm ? "calm" : "rain";
 }
 
-/**
- * Returns canonical weather slot details at timestamp.
- */
 export function getCanonicalWeatherSlot(
   timestamp: number,
   seed: number = 133742
 ): CanonicalWeatherSlot {
-  const localMs = timestamp + UTC7_OFFSET_MS;
-  const slotIndex = Math.floor(localMs / SLOT_DURATION_MS);
-  const startMs = slotIndex * SLOT_DURATION_MS - UTC7_OFFSET_MS;
-  const endMs = startMs + SLOT_DURATION_MS;
-  const slotMod = ((slotIndex % 4) + 4) % 4;
-  const phase: DayNightPhase = slotMod === 1 || slotMod === 3 ? "day" : "night";
-  const weather = getWeatherForSlot(slotIndex, seed);
-  const remainingMs = Math.max(0, endMs - timestamp);
+  const slotIndex = Math.floor((timestamp + UTC7_OFFSET_MS) / WEATHER_SLOT_DURATION_MS);
+  const startMs = slotIndex * WEATHER_SLOT_DURATION_MS - UTC7_OFFSET_MS;
+  const endMs = startMs + WEATHER_SLOT_DURATION_MS;
+  const phase = getDayNightPhase(timestamp);
+  const season = getSeasonAt(startMs);
 
   return {
     slotIndex,
     startMs,
     endMs,
     phase,
-    weather,
-    remainingMs,
+    season,
+    weather: getWeatherForSlot(slotIndex, seed, season),
+    remainingMs: Math.max(0, endMs - timestamp),
   };
 }
 
-/**
- * Alias helper for getting weather state at timestamp.
- */
 export function getWeatherAt(
   timestamp: number,
   seed: number = 133742
@@ -179,143 +194,49 @@ export function getWeatherAt(
   return getCanonicalWeatherSlot(timestamp, seed);
 }
 
-/**
- * Checks if any Rain slot overlaps the time range [startMs, endMs].
- */
-export function checkRainInTimeRange(
-  startMs: number,
-  endMs: number,
-  seed: number = 133742
-): boolean {
-  if (endMs <= startMs) return false;
-
-  const startSlot = Math.floor((startMs + UTC7_OFFSET_MS) / SLOT_DURATION_MS);
-  const endSlot = Math.floor(((endMs - 1) + UTC7_OFFSET_MS) / SLOT_DURATION_MS);
-
-  for (let slot = startSlot; slot <= endSlot; slot++) {
-    if (getWeatherForSlot(slot, seed) === "rain") {
-      return true;
-    }
+export function getWeatherPresentation(weather: WeatherType, season: SeasonType) {
+  if (weather === "sunny" && season === "summer") {
+    return { ...WEATHER_METADATA.sunny, name: "Nắng Nóng", icon: "☀️" };
   }
-
-  return false;
+  return WEATHER_METADATA[weather];
 }
 
-/**
- * Calculates deterministic crop growth schedule and weather exposure.
- * - Nắng: max -2% growth duration (by exposure).
- * - Yên Ắng: max -2% growth duration (by exposure).
- * - Nắng + Yên Ắng accumulate speedup.
- * - Mưa: max +5% Gold on harvest (by exposure).
- * - Mát: records cool exposure.
- */
-export function calculateCropGrowthSchedule(
-  plantedAt: number,
-  baseGrowthMs: number,
-  seed: number = 133742
-): CropGrowthSchedule {
-  if (baseGrowthMs <= 0) {
-    return {
-      growthEndsAt: plantedAt,
-      totalLifecycleMs: 0,
-      stageWindows: [
-        [plantedAt, plantedAt],
-        [plantedAt, plantedAt],
-        [plantedAt, plantedAt],
-      ],
-      weatherExposure: { sunny: 0, calm: 0, rain: 0, cool: 0 },
-      rainGoldBonusPct: 0,
-    };
-  }
+const DRY_WEATHER_MOISTURE_MULTIPLIERS: Record<
+  SeasonType,
+  Partial<Record<WeatherType, number>>
+> = {
+  spring: { sunny: 1.3, cool: 1, calm: 0.8 },
+  summer: { sunny: 2, cool: 1.3, calm: 1.2 },
+  autumn: { sunny: 1.3, cool: 1, calm: 0.8 },
+  winter: { sunny: 1.1, cool: 0.7, calm: 0.5 },
+};
 
-  // Determine exact growth milestones using progress accumulation
-  // Speed multiplier in sunny or calm: 1 / 0.98 (~1.0204x)
-  const targets = [0.2, 0.5, 0.8, 1.0];
-  const milestoneTimes: number[] = [];
-  let targetIdx = 0;
+export function getSoilMoistureRatePerHour(
+  season: SeasonType,
+  _phase: DayNightPhase,
+  weather: WeatherType
+): number {
+  if (weather === "rain") return 50;
+  const multiplier = DRY_WEATHER_MOISTURE_MULTIPLIERS[season][weather] ?? 1;
+  return -BASE_SOIL_MOISTURE_LOSS_PER_HOUR * multiplier;
+}
 
-  let currentT = plantedAt;
-  let accumulatedProgress = 0;
+export function getWeatherMoistureDescription(
+  season: SeasonType,
+  phase: DayNightPhase,
+  weather: WeatherType
+): string {
+  if (weather === "rain") return "Độ ẩm đất +50/giờ";
+  const rate = getSoilMoistureRatePerHour(season, phase, weather);
+  const changePct = Math.round((Math.abs(rate) / BASE_SOIL_MOISTURE_LOSS_PER_HOUR - 1) * 100);
+  if (changePct === 0) return "Độ ẩm giảm ở tốc độ bình thường";
+  return changePct > 0
+    ? `Đất khô nhanh hơn ${changePct}%`
+    : `Đất khô chậm hơn ${Math.abs(changePct)}%`;
+}
 
-  let loopLimit = 0;
-  while (targetIdx < targets.length && loopLimit < 500) {
-    loopLimit++;
-    const slot = getCanonicalWeatherSlot(currentT, seed);
-    const weather = slot.weather;
-    const speed = weather === "sunny" || weather === "calm" ? 1 / 0.98 : 1.0;
-
-    const slotRemainingMs = slot.endMs - currentT;
-    const maxSegmentProgress = (slotRemainingMs / baseGrowthMs) * speed;
-
-    while (
-      targetIdx < targets.length &&
-      accumulatedProgress + maxSegmentProgress >= targets[targetIdx] - 1e-12
-    ) {
-      const neededProgress = targets[targetIdx] - accumulatedProgress;
-      const timeNeededMs = Math.round((neededProgress / speed) * baseGrowthMs);
-      milestoneTimes[targetIdx] = currentT + timeNeededMs;
-      targetIdx++;
-    }
-
-    accumulatedProgress += maxSegmentProgress;
-    currentT = slot.endMs;
-  }
-
-  const t20 = milestoneTimes[0] || plantedAt + Math.round(baseGrowthMs * 0.2);
-  const t50 = milestoneTimes[1] || plantedAt + Math.round(baseGrowthMs * 0.5);
-  const t80 = milestoneTimes[2] || plantedAt + Math.round(baseGrowthMs * 0.8);
-  const growthEndsAt = milestoneTimes[3] || plantedAt + baseGrowthMs;
-
-  const totalLifecycleMs = Math.max(1, growthEndsAt - plantedAt);
-
-  // Compute exact exposure to each weather between plantedAt and growthEndsAt
-  const weatherMs: Record<WeatherType, number> = {
-    sunny: 0,
-    calm: 0,
-    rain: 0,
-    cool: 0,
-  };
-
-  const startSlot = Math.floor((plantedAt + UTC7_OFFSET_MS) / SLOT_DURATION_MS);
-  const endSlot = Math.floor(
-    ((growthEndsAt - 1) + UTC7_OFFSET_MS) / SLOT_DURATION_MS
-  );
-
-  for (let slot = startSlot; slot <= endSlot; slot++) {
-    const slotStart = slot * SLOT_DURATION_MS - UTC7_OFFSET_MS;
-    const slotEnd = slotStart + SLOT_DURATION_MS;
-    const weather = getWeatherForSlot(slot, seed);
-
-    const overlapStart = Math.max(plantedAt, slotStart);
-    const overlapEnd = Math.min(growthEndsAt, slotEnd);
-    const overlapDuration = Math.max(0, overlapEnd - overlapStart);
-
-    weatherMs[weather] += overlapDuration;
-  }
-
-  const sunnyExposure = weatherMs.sunny / totalLifecycleMs;
-  const calmExposure = weatherMs.calm / totalLifecycleMs;
-  const rainExposure = weatherMs.rain / totalLifecycleMs;
-  const coolExposure = weatherMs.cool / totalLifecycleMs;
-
-  const rainGoldBonusPct = 0.05 * rainExposure;
-
-  return {
-    growthEndsAt,
-    totalLifecycleMs,
-    stageWindows: [
-      [t20, t50], // Stage 0 (20% - 50%)
-      [t50, t80], // Stage 1 (50% - 80%)
-      [t80, growthEndsAt], // Stage 2 (80% - 100%)
-    ],
-    weatherExposure: {
-      sunny: sunnyExposure,
-      calm: calmExposure,
-      rain: rainExposure,
-      cool: coolExposure,
-    },
-    rainGoldBonusPct,
-  };
+export function getWeatherGrowthRate(weather: WeatherType): number {
+  return weather === "sunny" || weather === "calm" ? 1 / 0.98 : 1;
 }
 
 export const QUALITY_CONFIG: Record<
@@ -332,7 +253,7 @@ export const QUALITY_CONFIG: Record<
 > = {
   thuong: {
     name: "Thường",
-    multiplier: 1.0,
+    multiplier: 1,
     icon: "⚪",
     badgeClass: "bg-white/10 text-slate-50 border-white/70",
     color: "#f8fafc",
@@ -359,7 +280,7 @@ export const QUALITY_CONFIG: Record<
   },
   hoan_my: {
     name: "Hoàn Mỹ",
-    multiplier: 2.0,
+    multiplier: 2,
     icon: "🟠",
     badgeClass: "bg-orange-500/15 text-orange-300 border-orange-400/70",
     color: "#fb923c",
@@ -368,9 +289,50 @@ export const QUALITY_CONFIG: Record<
   },
 };
 
-/**
- * Calculates exposure percentages for weather types in any time range [startMs, endMs].
- */
+export function getQualityProbabilities(
+  coolExposure: number = 0,
+  penalty: CropQualityPenalty = "none"
+): Record<ItemQuality, number> {
+  if (penalty === "common_only") {
+    return { thuong: 1, tot: 0, hiem: 0, hoan_my: 0 };
+  }
+
+  const clampedCool = Math.max(0, Math.min(1, coolExposure));
+  const hoanMy = Math.round((0.01 + 0.03 * clampedCool) * 10_000) / 10_000;
+  const base = {
+    thuong: Math.round((1 - hoanMy - 0.3 - 0.09) * 10_000) / 10_000,
+    tot: 0.3,
+    hiem: 0.09,
+    hoan_my: hoanMy,
+  };
+
+  if (penalty === "no_rare_perfect") {
+    return {
+      thuong: base.thuong + base.hiem + base.hoan_my,
+      tot: base.tot,
+      hiem: 0,
+      hoan_my: 0,
+    };
+  }
+  return base;
+}
+
+export function rollQualityWithExposure(
+  coolExposure: number,
+  deterministicRand: number,
+  penalty: CropQualityPenalty = "none"
+): ItemQuality {
+  const probabilities = getQualityProbabilities(coolExposure, penalty);
+  const random = Number.isFinite(deterministicRand)
+    ? Math.max(0, Math.min(1 - Number.EPSILON, deterministicRand))
+    : 0;
+
+  if (random < probabilities.hoan_my) return "hoan_my";
+  if (random < probabilities.hoan_my + probabilities.hiem) return "hiem";
+  if (random < probabilities.hoan_my + probabilities.hiem + probabilities.tot) return "tot";
+  return "thuong";
+}
+
 export function calculateWeatherExposure(
   startMs: number,
   endMs: number,
@@ -383,20 +345,18 @@ export function calculateWeatherExposure(
     rain: 0,
     cool: 0,
   };
+  if (endMs <= startMs) return weatherMs;
 
-  const startSlot = Math.floor((startMs + UTC7_OFFSET_MS) / SLOT_DURATION_MS);
-  const endSlot = Math.floor(((endMs - 1) + UTC7_OFFSET_MS) / SLOT_DURATION_MS);
-
-  for (let slot = startSlot; slot <= endSlot; slot++) {
-    const slotStart = slot * SLOT_DURATION_MS - UTC7_OFFSET_MS;
-    const slotEnd = slotStart + SLOT_DURATION_MS;
-    const weather = getWeatherForSlot(slot, seed);
-
+  const startSlot = Math.floor((startMs + UTC7_OFFSET_MS) / WEATHER_SLOT_DURATION_MS);
+  const endSlot = Math.floor(((endMs - 1) + UTC7_OFFSET_MS) / WEATHER_SLOT_DURATION_MS);
+  for (let slotIndex = startSlot; slotIndex <= endSlot; slotIndex += 1) {
+    const slotStart = slotIndex * WEATHER_SLOT_DURATION_MS - UTC7_OFFSET_MS;
+    const slotEnd = slotStart + WEATHER_SLOT_DURATION_MS;
     const overlapStart = Math.max(startMs, slotStart);
     const overlapEnd = Math.min(endMs, slotEnd);
-    const overlapDuration = Math.max(0, overlapEnd - overlapStart);
-
-    weatherMs[weather] += overlapDuration;
+    if (overlapEnd > overlapStart) {
+      weatherMs[getWeatherForSlot(slotIndex, seed)] += overlapEnd - overlapStart;
+    }
   }
 
   return {
@@ -407,81 +367,21 @@ export function calculateWeatherExposure(
   };
 }
 
-/**
- * Returns Quality probabilities given coolExposure (0..1).
- * Base: Thường 60%, Tốt 30%, Hiếm 9%, Hoàn Mỹ 1%.
- * Bonus from cool weather: coolPerfectBonus = 3% * coolExposure.
- * Hoàn Mỹ = 1% + coolPerfectBonus.
- * Thường = 60% - coolPerfectBonus.
- * Tốt = 30% (constant).
- * Hiếm = 9% (constant).
- * Total is always strictly 100%.
- */
-export function getQualityProbabilities(
-  coolExposure: number = 0
-): Record<ItemQuality, number> {
-  const clampedCool = Math.max(0, Math.min(1, coolExposure));
-  const coolPerfectBonus = 0.03 * clampedCool;
-
-  // Round floating math safely to avoid tiny IEEE-754 precision artifacts
-  const hoan_my = Math.round((0.01 + coolPerfectBonus) * 10000) / 10000;
-  const tot = 0.30;
-  const hiem = 0.09;
-  const thuong = Math.round((1.0 - hoan_my - tot - hiem) * 10000) / 10000;
-
-  return {
-    thuong,
-    tot,
-    hiem,
-    hoan_my,
-  };
-}
-
-/**
- * Rolls an ItemQuality given coolExposure.
- */
-export function rollQualityWithExposure(
-  coolExposure: number,
-  deterministicRand: number
-): ItemQuality {
-  const probs = getQualityProbabilities(coolExposure);
-  const rand = Number.isFinite(deterministicRand)
-    ? Math.max(0, Math.min(1 - Number.EPSILON, deterministicRand))
-    : 0;
-
-  if (rand < probs.hoan_my) {
-    return "hoan_my";
-  }
-  if (rand < probs.hoan_my + probs.hiem) {
-    return "hiem";
-  }
-  if (rand < probs.hoan_my + probs.hiem + probs.tot) {
-    return "tot";
-  }
-  return "thuong";
-}
-
-/**
- * Calculates next egg completion cycle with feed speed multiplier.
- */
 export function calculateNextEggCycle(
   startMs: number,
   baseIntervalMs: number,
-  speedMultiplier: number = 1.0,
+  speedMultiplier: number = 1,
   seed: number = 133742
 ): {
   completionTime: number;
   durationMs: number;
   exposure: WeatherExposureData;
 } {
-  const mult = Math.max(0.1, speedMultiplier);
-  const durationMs = Math.round(baseIntervalMs / mult);
+  const durationMs = Math.round(baseIntervalMs / Math.max(0.1, speedMultiplier));
   const completionTime = startMs + durationMs;
-  const exposure = calculateWeatherExposure(startMs, completionTime, seed);
-
   return {
     completionTime,
     durationMs,
-    exposure,
+    exposure: calculateWeatherExposure(startMs, completionTime, seed),
   };
 }

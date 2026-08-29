@@ -12,13 +12,8 @@ import {
   getStarvationDeadlineAt,
   isAnimalDead,
 } from "./animalLifecycle";
-import {
-  checkRainInTimeRange,
-  rollQualityWithExposure,
-} from "./weatherEngine";
-import { getCropQualityRandom } from "./deterministicRandom";
 import { DEFAULT_FARM_WEATHER_SEED } from "./farmMigration";
-import { computeEggCompletionTime } from "./farmEngine";
+import { computeEggCompletionTime, settlePlotState } from "./farmEngine";
 
 export const HARVEST_REWARD_FLOAT_DURATION_MS = 2_000;
 export const HARVEST_ALL_CROP_GLOW_DURATION_MS = 1_000;
@@ -34,7 +29,6 @@ export interface PlotHarvestPresentation {
   glowUntil: number;
 }
 
-export type FarmWaterActionMode = "disabled" | "single" | "all";
 export type FarmHarvestAllActionMode = "clear_plot" | "harvest_all";
 
 export interface FarmPresentationState {
@@ -51,73 +45,7 @@ function derivePlotPresentation(
   weatherSeed: number,
   now: number
 ): FarmPlotState {
-  if (plot.status !== "growing") return plot;
-
-  const totalGrowthMs = Math.max(1, plot.growthEndsAt - plot.plantedAt);
-  const stageWindows: Array<[number, number]> = [
-    [
-      plot.plantedAt + Math.round(totalGrowthMs * 0.2),
-      plot.plantedAt + Math.round(totalGrowthMs * 0.5),
-    ],
-    [
-      plot.plantedAt + Math.round(totalGrowthMs * 0.5),
-      plot.plantedAt + Math.round(totalGrowthMs * 0.8),
-    ],
-    [
-      plot.plantedAt + Math.round(totalGrowthMs * 0.8),
-      plot.growthEndsAt,
-    ],
-  ];
-  const wateredStages: [boolean, boolean, boolean] = plot.wateredStages
-    ? [...plot.wateredStages]
-    : [
-        (plot.wateringCount || 0) >= 1 || Boolean(plot.wateredBoostApplied),
-        (plot.wateringCount || 0) >= 2,
-        (plot.wateringCount || 0) >= 3,
-      ];
-
-  for (let stageIndex = 0; stageIndex < stageWindows.length; stageIndex += 1) {
-    if (wateredStages[stageIndex]) continue;
-    const [windowStart, windowEnd] = stageWindows[stageIndex];
-    if (
-      now >= windowStart &&
-      checkRainInTimeRange(
-        windowStart,
-        Math.min(now, windowEnd),
-        weatherSeed
-      )
-    ) {
-      wateredStages[stageIndex] = true;
-    }
-  }
-
-  const wateringCount = wateredStages.filter(Boolean).length;
-  const projectedGrowingPlot: Extract<
-    FarmPlotState,
-    { status: "growing" }
-  > = {
-    ...plot,
-    wateredStages,
-    wateringCount,
-    wateredBoostApplied: Boolean(plot.wateredBoostApplied) || wateringCount > 0,
-  };
-  if (now < plot.growthEndsAt) return projectedGrowingPlot;
-
-  return {
-    ...projectedGrowingPlot,
-    status: "ready",
-    rolledQuality:
-      plot.rolledQuality ||
-      rollQualityWithExposure(
-        plot.weatherExposure?.cool || 0,
-        getCropQualityRandom(
-          weatherSeed,
-          plotIndex,
-          plot.plantedAt,
-          plot.growthEndsAt
-        )
-      ),
-  };
+  return settlePlotState(plot, plotIndex, now, weatherSeed);
 }
 
 function getFeedPresentation(
@@ -237,22 +165,6 @@ export function getFarmPresentationState(
     activeFeedSpeedBonus: feed.speedBonus,
     penStarvationStartedAt: feed.starvationStartedAt,
   };
-}
-
-export function getFarmWaterActionMode(
-  needsWaterCount: number
-): FarmWaterActionMode {
-  const count = Math.max(
-    0,
-    Math.floor(Number.isFinite(needsWaterCount) ? needsWaterCount : 0)
-  );
-  if (count >= 2) return "all";
-  if (count === 1) return "single";
-  return "disabled";
-}
-
-export function getFarmWaterActionLabel(mode: FarmWaterActionMode): string {
-  return mode === "all" ? "Tưới Tất Cả" : "Tưới Nước";
 }
 
 export function getFarmHarvestAllActionMode(

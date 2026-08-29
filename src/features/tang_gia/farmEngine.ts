@@ -19,10 +19,6 @@ import {
   FarmSaveState,
   PenAnimalState,
   RankIdentity,
-  WateringStageStatus,
-  PlotWateringInfo,
-  WeatherType,
-  DayNightPhase,
   WeatherExposureData,
   ItemQuality,
   QualityBreakdown,
@@ -39,13 +35,13 @@ import {
 } from "./animalLifecycle";
 import {
   createDefaultEggQualityInventory,
+  createDefaultFarmState as createMigratedDefaultFarmState,
   DEFAULT_FARM_WEATHER_SEED,
 } from "./farmMigration";
 
 export { createDefaultEggQualityInventory } from "./farmMigration";
 import {
   deterministicRandom,
-  getCropQualityRandom,
   getEggQualityRandom,
 } from "./deterministicRandom";
 
@@ -116,10 +112,10 @@ export function applyQualityMultiplier(
 }
 
 import {
-  calculateCropGrowthSchedule,
-  checkRainInTimeRange,
   getCanonicalWeatherSlot,
   getDayNightPhase,
+  getSoilMoistureRatePerHour,
+  getWeatherGrowthRate,
   getWeatherAt,
   getWeatherForSlot,
   WEATHER_METADATA,
@@ -129,6 +125,13 @@ import {
   calculateWeatherExposure,
   calculateNextEggCycle,
 } from "./weatherEngine";
+import {
+  clampSoilMoisture,
+  getMoistureGrowthRate,
+  getNextSoilMoistureThreshold,
+  MANUAL_WATER_AMOUNT,
+  MIN_PLANTING_SOIL_MOISTURE,
+} from "./soilMoistureEngine";
 
 /**
  * Calculates the exact completion time for an egg cycle (or remaining work),
@@ -200,8 +203,6 @@ export function computeBaseWorkDone(
 }
 
 export {
-  calculateCropGrowthSchedule,
-  checkRainInTimeRange,
   getCanonicalWeatherSlot,
   getDayNightPhase,
   getWeatherAt,
@@ -357,99 +358,8 @@ export function ensureEggQualityInventory(farm: FarmSaveState): EggQualityInvent
   return farm.eggQualityInventory;
 }
 
-/**
- * Creates default initial farm save state for Tăng Gia 2.0.
- */
 export function createDefaultFarmState(now: number = Date.now()): FarmSaveState {
-  return {
-    schemaVersion: 5,
-    gold: 30,
-    inventory: {
-      seeds: {
-        carrot: 0,
-        cabbage: 0,
-        potato: 0,
-        tomato: 0,
-        strawberry: 0,
-        corn: 0,
-        pumpkin: 0,
-        watermelon: 0,
-        pineapple: 0,
-        banana: 0,
-        orange: 0,
-        mango: 0,
-        apple: 0,
-        pear: 0,
-        grape: 0,
-        dragon_fruit: 0,
-        avocado: 0,
-        durian: 0,
-        mangosteen: 0,
-      },
-      animals: {
-        chicken: 0,
-        duck: 0,
-        quail: 0,
-        goose: 0,
-        muscovy_duck: 0,
-        turkey: 0,
-        guinea_fowl: 0,
-        pheasant: 0,
-        peafowl: 0,
-        ostrich: 0,
-      },
-      feed: {
-        feed_normal: 0,
-        feed_good: 0,
-        feed_super: 0,
-      },
-      fertilizer: {
-        fertilizer_nutrition_normal: 0,
-        fertilizer_growth_normal: 0,
-        fertilizer_nutrition_medium: 0,
-        fertilizer_growth_medium: 0,
-        fertilizer_nutrition_good: 0,
-        fertilizer_growth_good: 0,
-        fertilizer_nutrition_super: 0,
-        fertilizer_growth_super: 0,
-        fertilizer_premium_3: 0,
-        fertilizer_premium_2: 0,
-        fertilizer_premium_1: 0,
-      },
-      eggs: {
-        chicken_egg: 0,
-        duck_egg: 0,
-        quail_egg: 0,
-        goose_egg: 0,
-        muscovy_duck_egg: 0,
-        turkey_egg: 0,
-        guinea_fowl_egg: 0,
-        pheasant_egg: 0,
-        peafowl_egg: 0,
-        ostrich_egg: 0,
-      },
-    },
-    unlockedPlotCount: 2, // Plots 1 and 2 unlocked by default
-    plots: [
-      { status: "empty" },
-      { status: "empty" },
-      { status: "locked" },
-      { status: "locked" },
-      { status: "locked" },
-      { status: "locked" },
-      { status: "locked" },
-      { status: "locked" },
-      { status: "locked" },
-    ],
-    penAnimals: [],
-    penFeedBuffValue: 0,
-    penFeedBuffUpdatedAt: now,
-    penStarvationStartedAt: null,
-    pendingAnimalDeathNotification: null,
-    lastSettledAt: now,
-    weatherSeed: 133742,
-    eggQualityInventory: createDefaultEggQualityInventory(),
-  };
+  return createMigratedDefaultFarmState(now);
 }
 
 export interface FarmSettlementResult {
@@ -663,123 +573,222 @@ export function consumePendingAnimalDeathNotification(
   return pending && pending.total > 0 ? pending : null;
 }
 
-/**
- * Settles farm state based on current time `now` (wall-clock timestamp).
- */
-export function settleFarmState(farm: FarmSaveState, now: number): FarmSettlementResult {
-  const currentNow = Math.max(farm.lastSettledAt || 0, now);
+const HOUR_MS = 60 * 60 * 1000;
+const SETTLEMENT_EPSILON = 1e-7;
+const MAX_PLOT_SETTLEMENT_SEGMENTS = 20_000;
 
-  if (!Number.isFinite(farm.weatherSeed)) {
-    farm.weatherSeed = DEFAULT_FARM_WEATHER_SEED;
+function escalateMoisturePenalty(
+  current: "none" | "no_rare_perfect" | "common_only",
+  moisture: number
+): "none" | "no_rare_perfect" | "common_only" {
+  if (current === "common_only" || moisture <= SETTLEMENT_EPSILON) {
+    return "common_only";
   }
-  const weatherSeed = farm.weatherSeed ?? DEFAULT_FARM_WEATHER_SEED;
+  if (current === "no_rare_perfect" || moisture < 20) {
+    return "no_rare_perfect";
+  }
+  return "none";
+}
 
-  // 1. Settle Crops (Growth timeline, Weather Exposure, Auto-Watering under Rain, Quality pre-roll)
-  for (let i = 0; i < farm.plots.length; i++) {
-    const plot = farm.plots[i];
+function getCropCoolExposure(plot: Extract<FarmPlotState, { status: "growing" | "ready" }>): number {
+  if (plot.status === "ready") return plot.weatherExposure?.cool || 0;
+  const totalExposureMs = Object.values(plot.weatherExposureMs).reduce(
+    (sum, duration) => sum + duration,
+    0
+  );
+  return totalExposureMs > 0 ? plot.weatherExposureMs.cool / totalExposureMs : 0;
+}
 
+export function resolveCropQuality(
+  plot: Extract<FarmPlotState, { status: "growing" | "ready" }>
+): ItemQuality {
+  if (plot.qualityPenalty === "common_only") return "thuong";
+  if (plot.qualityPenalty === "none" && plot.rolledQuality) return plot.rolledQuality;
+  return rollQualityWithExposure(
+    getCropCoolExposure(plot),
+    plot.qualityRoll,
+    plot.qualityPenalty
+  );
+}
+
+function completeGrowingPlot(
+  plot: Extract<FarmPlotState, { status: "growing" }>,
+  completedAt: number
+): Extract<FarmPlotState, { status: "ready" }> {
+  const totalExposureMs = Math.max(
+    1,
+    Object.values(plot.weatherExposureMs).reduce((sum, duration) => sum + duration, 0)
+  );
+  const weatherExposure: WeatherExposureData = {
+    sunny: plot.weatherExposureMs.sunny / totalExposureMs,
+    calm: plot.weatherExposureMs.calm / totalExposureMs,
+    rain: plot.weatherExposureMs.rain / totalExposureMs,
+    cool: plot.weatherExposureMs.cool / totalExposureMs,
+  };
+  const readyPlot: Extract<FarmPlotState, { status: "ready" }> = {
+    status: "ready",
+    soilMoisture: plot.soilMoisture,
+    soilMoistureUpdatedAt: completedAt,
+    cropId: plot.cropId,
+    plantedAt: plot.plantedAt,
+    growthCompletedAt: completedAt,
+    fertilizerId: plot.fertilizerId,
+    fertilizerXpBonusPct: plot.fertilizerXpBonusPct,
+    growthTimeReductionPct: plot.growthTimeReductionPct,
+    weatherExposure,
+    rainGoldBonusPct: 0.05 * weatherExposure.rain,
+    qualityPenalty: plot.qualityPenalty,
+    qualityRoll: plot.qualityRoll,
+  };
+  readyPlot.rolledQuality = resolveCropQuality(readyPlot);
+  return readyPlot;
+}
+
+/**
+ * Pure event-segment settlement for one unlocked plot. Boundaries are weather
+ * slots, moisture bands and growth completion; no per-second/per-minute loop is
+ * used. Empty and Ready plots share the same moisture timeline as Growing plots.
+ */
+export function settlePlotState(
+  sourcePlot: FarmPlotState,
+  _plotIndex: number,
+  now: number,
+  weatherSeed: number = DEFAULT_FARM_WEATHER_SEED
+): FarmPlotState {
+  if (sourcePlot.status === "locked") return sourcePlot;
+
+  let plot: FarmPlotState = sourcePlot.status === "growing"
+    ? { ...sourcePlot, weatherExposureMs: { ...sourcePlot.weatherExposureMs } }
+    : { ...sourcePlot };
+  const latestStateAt = plot.status === "growing"
+    ? Math.max(plot.soilMoistureUpdatedAt, plot.growthLastUpdatedAt)
+    : plot.soilMoistureUpdatedAt;
+  let cursor = Math.min(now, latestStateAt);
+  plot.soilMoisture = clampSoilMoisture(plot.soilMoisture);
+  plot.soilMoistureUpdatedAt = cursor;
+  if (plot.status === "growing") plot.growthLastUpdatedAt = cursor;
+  if (plot.status === "growing" || plot.status === "ready") {
+    plot.qualityPenalty = escalateMoisturePenalty(
+      plot.qualityPenalty,
+      plot.soilMoisture
+    );
+  }
+
+  for (
+    let guard = 0;
+    cursor < now && guard < MAX_PLOT_SETTLEMENT_SEGMENTS;
+    guard += 1
+  ) {
+    if (plot.status === "growing" && plot.growthWorkRemainingMs <= SETTLEMENT_EPSILON) {
+      plot = completeGrowingPlot(plot, cursor);
+      continue;
+    }
+
+    const slot = getCanonicalWeatherSlot(cursor, weatherSeed);
+    const moistureRatePerHour = getSoilMoistureRatePerHour(
+      slot.season,
+      slot.phase,
+      slot.weather
+    );
+    const directionalMoisture = clampSoilMoisture(
+      plot.soilMoisture + Math.sign(moistureRatePerHour) * SETTLEMENT_EPSILON
+    );
+    const growthRate = plot.status === "growing"
+      ? getMoistureGrowthRate(directionalMoisture) * getWeatherGrowthRate(slot.weather)
+      : 0;
+    const nextThreshold = getNextSoilMoistureThreshold(
+      plot.soilMoisture,
+      moistureRatePerHour
+    );
+    const thresholdAt = nextThreshold === null || moistureRatePerHour === 0
+      ? Number.POSITIVE_INFINITY
+      : cursor + Math.abs((nextThreshold - plot.soilMoisture) / moistureRatePerHour) * HOUR_MS;
+    const growthCompletesAt = plot.status === "growing" && growthRate > 0
+      ? cursor + plot.growthWorkRemainingMs / growthRate
+      : Number.POSITIVE_INFINITY;
+    const segmentEnd = Math.min(now, slot.endMs, thresholdAt, growthCompletesAt);
+    if (segmentEnd <= cursor + 1e-6) {
+      cursor = Math.min(now, cursor + 1);
+      continue;
+    }
+
+    const durationMs = segmentEnd - cursor;
+    const startingMoisture = plot.soilMoisture;
     if (plot.status === "growing") {
-      const cropDef = CROP_CATALOG.find((c) => c.id === plot.cropId);
-      const fertTimeRedPct = plot.growthTimeReductionPct || 0;
-      const baseGrowthMs = cropDef
-        ? Math.round(cropDef.growthMs * (1 - fertTimeRedPct))
-        : Math.max(1, plot.growthEndsAt - plot.plantedAt);
+      plot.weatherExposureMs[slot.weather] += durationMs;
+      plot.growthWorkRemainingMs = Math.max(
+        0,
+        plot.growthWorkRemainingMs - durationMs * growthRate
+      );
+      plot.growthLastUpdatedAt = segmentEnd;
+    }
+    plot.soilMoisture = clampSoilMoisture(
+      startingMoisture + (durationMs / HOUR_MS) * moistureRatePerHour
+    );
+    plot.soilMoistureUpdatedAt = segmentEnd;
 
-      // Recalculate schedule & exposure if not set
-      if (!plot.weatherExposure) {
-        const sched = calculateCropGrowthSchedule(
-          plot.plantedAt,
-          baseGrowthMs,
-          weatherSeed
-        );
-        plot.growthEndsAt = sched.growthEndsAt;
-        plot.weatherExposure = sched.weatherExposure;
-        plot.rainGoldBonusPct = sched.rainGoldBonusPct;
-        plot.stageEndTimes = [
-          sched.stageWindows[0][1],
-          sched.stageWindows[1][1],
-          sched.stageWindows[2][0],
-        ];
-      }
+    if (plot.status === "growing" || plot.status === "ready") {
+      const driestMoisture = moistureRatePerHour < 0
+        ? plot.soilMoisture
+        : startingMoisture;
+      plot.qualityPenalty = escalateMoisturePenalty(
+        plot.qualityPenalty,
+        driestMoisture
+      );
+    }
 
-      const totalGrowthMs = Math.max(1, plot.growthEndsAt - plot.plantedAt);
-      const stageWindows: [number, number][] = [
-        [
-          plot.plantedAt + Math.round(totalGrowthMs * 0.2),
-          plot.plantedAt + Math.round(totalGrowthMs * 0.5),
-        ],
-        [
-          plot.plantedAt + Math.round(totalGrowthMs * 0.5),
-          plot.plantedAt + Math.round(totalGrowthMs * 0.8),
-        ],
-        [
-          plot.plantedAt + Math.round(totalGrowthMs * 0.8),
-          plot.growthEndsAt,
-        ],
-      ];
-
-      const wateredStages: [boolean, boolean, boolean] = plot.wateredStages || [
-        (plot.wateringCount || 0) >= 1 || !!plot.wateredBoostApplied,
-        (plot.wateringCount || 0) >= 2,
-        (plot.wateringCount || 0) >= 3,
-      ];
-
-      // Auto-water check for eligible stages during Rain
-      for (let sIdx = 0; sIdx < 3; sIdx++) {
-        if (!wateredStages[sIdx]) {
-          const [wStart, wEnd] = stageWindows[sIdx];
-          if (currentNow >= wStart) {
-            const hasRain = checkRainInTimeRange(
-              wStart,
-              Math.min(currentNow, wEnd),
-              weatherSeed
-            );
-            if (hasRain) {
-              wateredStages[sIdx] = true;
-              plot.wateredBoostApplied = true;
-            }
-          }
-        }
-      }
-
-      plot.wateredStages = wateredStages;
-      plot.wateringCount = wateredStages.filter(Boolean).length;
-
-      if (currentNow >= plot.growthEndsAt) {
-        const wateringCount = plot.wateringCount;
-        const rolledQuality =
-          plot.rolledQuality ||
-          rollQualityWithExposure(
-            plot.weatherExposure?.cool || 0,
-            getCropQualityRandom(
-              weatherSeed,
-              i,
-              plot.plantedAt,
-              plot.growthEndsAt
-            )
-          );
-
-        farm.plots[i] = {
-          status: "ready",
-          cropId: plot.cropId,
-          plantedAt: plot.plantedAt,
-          growthEndsAt: plot.growthEndsAt,
-          fertilizerId: plot.fertilizerId,
-          fertilizerXpBonusPct: plot.fertilizerXpBonusPct,
-          growthTimeReductionPct: plot.growthTimeReductionPct,
-          wateringCount,
-          wateredStages,
-          wateredBoostApplied: plot.wateredBoostApplied || wateringCount > 0,
-          wateredBonusType: plot.wateredBonusType,
-          weatherExposure: plot.weatherExposure,
-          rainGoldBonusPct: plot.rainGoldBonusPct,
-          rolledQuality,
-        };
-      }
+    cursor = segmentEnd;
+    if (plot.status === "growing" && plot.growthWorkRemainingMs <= SETTLEMENT_EPSILON) {
+      plot = completeGrowingPlot(plot, cursor);
     }
   }
 
-  // 2. Settle livestock lifecycle, Feed/Danger and eggs along one timestamp timeline.
+  plot.soilMoistureUpdatedAt = now;
+  if (plot.status === "growing") plot.growthLastUpdatedAt = now;
+  if (plot.status === "ready") plot.rolledQuality = resolveCropQuality(plot);
+  return plot;
+}
+
+export function getCropGrowthProgress(plot: FarmPlotState): number {
+  if (plot.status === "ready") return 1;
+  if (plot.status !== "growing") return 0;
+  return Math.max(
+    0,
+    Math.min(1, 1 - plot.growthWorkRemainingMs / Math.max(1, plot.growthWorkTotalMs))
+  );
+}
+
+export function getCurrentCropRemainingDurationMs(
+  plot: FarmPlotState,
+  now: number,
+  weatherSeed: number = DEFAULT_FARM_WEATHER_SEED
+): number {
+  if (plot.status !== "growing") return 0;
+  const slot = getCanonicalWeatherSlot(now, weatherSeed);
+  const moistureRate = getSoilMoistureRatePerHour(slot.season, slot.phase, slot.weather);
+  const directionalMoisture = clampSoilMoisture(
+    plot.soilMoisture + Math.sign(moistureRate) * SETTLEMENT_EPSILON
+  );
+  const rate = getMoistureGrowthRate(directionalMoisture) * getWeatherGrowthRate(slot.weather);
+  return rate > 0 ? plot.growthWorkRemainingMs / rate : Number.POSITIVE_INFINITY;
+}
+
+/** Settles the whole Farm to wall-clock `now`. */
+export function settleFarmState(farm: FarmSaveState, now: number): FarmSettlementResult {
+  const currentNow = Math.max(farm.lastSettledAt || 0, now);
+  if (!Number.isFinite(farm.weatherSeed)) farm.weatherSeed = DEFAULT_FARM_WEATHER_SEED;
+  const weatherSeed = farm.weatherSeed ?? DEFAULT_FARM_WEATHER_SEED;
+
+  for (let plotIndex = 0; plotIndex < farm.plots.length; plotIndex += 1) {
+    farm.plots[plotIndex] = settlePlotState(
+      farm.plots[plotIndex],
+      plotIndex,
+      currentNow,
+      weatherSeed
+    );
+  }
+
+  // Settle livestock lifecycle, Feed/Danger and eggs along one timestamp timeline.
   const startT = farm.lastSettledAt || currentNow;
   const endT = currentNow;
   const newDeaths = settlePenAnimals(farm, startT, endT, weatherSeed);
@@ -796,207 +805,50 @@ export function settleFarmState(farm: FarmSaveState, now: number): FarmSettlemen
   return { newDeaths, queuedOfflineDeathNotification };
 }
 
-/**
- * 3-Stage Watering Configuration:
- * Stage 0: 20% to <50% progress
- * Stage 1: 50% to <80% progress
- * Stage 2: 80% to <100% progress
- */
-export const WATERING_STAGE_WINDOWS = [
-  { index: 0, label: "Mốc 1 (20% - 50%)", startPct: 0.20, endPct: 0.50 },
-  { index: 1, label: "Mốc 2 (50% - 80%)", startPct: 0.50, endPct: 0.80 },
-  { index: 2, label: "Mốc 3 (80% - 100%)", startPct: 0.80, endPct: 1.00 },
-] as const;
-
-/**
- * Computes detailed watering stage status for a plot at time `now`.
- * Strict rule: No catch-up / tưới bù. If a window is passed without watering, it is marked missed permanently.
- */
-export function getPlotWateringInfo(plot: FarmPlotState, now: number): PlotWateringInfo {
-  if (plot.status !== "growing" && plot.status !== "ready") {
-    return {
-      stageStatuses: ["upcoming", "upcoming", "upcoming"],
-      currentEligibleStageIndex: null,
-      canWaterNow: false,
-      wateredCount: 0,
-      missedCount: 0,
-    };
-  }
-
-  const plantedAt = plot.plantedAt || now;
-  const growthEndsAt =
-    plot.status === "growing" ? plot.growthEndsAt : plantedAt + 1;
-  const totalGrowthMs = Math.max(1, growthEndsAt - plantedAt);
-  const elapsedMs = Math.max(0, now - plantedAt);
-  const progress = plot.status === "ready" ? 1.0 : Math.min(1.0, Math.max(0.0, elapsedMs / totalGrowthMs));
-
-  const wateredStages: [boolean, boolean, boolean] = plot.wateredStages || [
-    (plot.wateringCount || 0) >= 1 || !!plot.wateredBoostApplied,
-    (plot.wateringCount || 0) >= 2,
-    (plot.wateringCount || 0) >= 3,
-  ];
-
-  const stageStatuses: [WateringStageStatus, WateringStageStatus, WateringStageStatus] = [
-    "upcoming",
-    "upcoming",
-    "upcoming",
-  ];
-
-  for (let i = 0; i < 3; i++) {
-    const win = WATERING_STAGE_WINDOWS[i];
-    if (wateredStages[i]) {
-      stageStatuses[i] = "watered";
-    } else {
-      if (progress < win.startPct) {
-        stageStatuses[i] = "upcoming";
-      } else if (progress >= win.startPct && progress < win.endPct) {
-        stageStatuses[i] = "ready";
-      } else {
-        // progress >= win.endPct and not watered -> permanently missed!
-        stageStatuses[i] = "missed";
-      }
-    }
-  }
-
-  let currentEligibleStageIndex: number | null = null;
-  if (plot.status === "growing") {
-    for (let i = 0; i < 3; i++) {
-      if (stageStatuses[i] === "ready") {
-        currentEligibleStageIndex = i;
-        break;
-      }
-    }
-  }
-
-  const canWaterNow = currentEligibleStageIndex !== null;
-  const wateredCount = wateredStages.filter(Boolean).length;
-  const missedCount = stageStatuses.filter((s) => s === "missed").length;
-
-  return {
-    stageStatuses,
-    currentEligibleStageIndex,
-    canWaterNow,
-    wateredCount,
-    missedCount,
-  };
+export function canWaterPlot(plot: FarmPlotState): boolean {
+  return plot.status !== "locked" && plot.soilMoisture < 100 - SETTLEMENT_EPSILON;
 }
 
-/**
- * Checks whether a plot can be watered right now at its current valid stage.
- */
-export function canWaterPlotNow(plot: FarmPlotState, now: number): boolean {
-  return getPlotWateringInfo(plot, now).canWaterNow;
+export function hasCropFertilizer(plot: FarmPlotState): boolean {
+  return (
+    (plot.status === "growing" || plot.status === "ready") &&
+    Boolean(
+      plot.fertilizerId ||
+        (plot.fertilizerXpBonusPct || 0) > 0 ||
+        (plot.growthTimeReductionPct || 0) > 0
+    )
+  );
 }
 
-/**
- * Gets count of pending waterings available for a plot (0 or 1, since each plot can only water its current valid window).
- */
-export function getPendingWateringCount(plot: FarmPlotState, now: number): number {
-  return canWaterPlotNow(plot, now) ? 1 : 0;
-}
-
-/**
- * Waters a single plot at its currently valid stage.
- * Strictly does NOT allow catch-up for past missed stages.
- */
-export function waterSinglePlot(
+/** Manual toolbar action for exactly one selected unlocked plot. */
+export function waterSelectedPlot(
   farm: FarmSaveState,
   plotIndex: number,
   now: number
-): { success: boolean; stageIndex?: number; wateredCount?: number; message: string } {
-  if (plotIndex < 0 || plotIndex >= farm.plots.length) {
-    return { success: false, message: "Ô đất không hợp lệ!" };
-  }
-
+): { success: boolean; moistureAdded: number; message: string } {
   const plot = farm.plots[plotIndex];
-  if (!plot || plot.status !== "growing") {
-    return { success: false, message: "Ô đất không có cây đang phát triển!" };
+  if (!plot || plot.status === "locked") {
+    return { success: false, moistureAdded: 0, message: "Ô đất không hợp lệ!" };
   }
-
-  const info = getPlotWateringInfo(plot, now);
-  if (!info.canWaterNow || info.currentEligibleStageIndex === null) {
-    return { success: false, message: "Cây chưa đến mốc tưới hoặc mốc tưới đã trôi qua!" };
+  const before = clampSoilMoisture(plot.soilMoisture);
+  if (plot.status === "growing" || plot.status === "ready") {
+    plot.qualityPenalty = escalateMoisturePenalty(
+      plot.qualityPenalty,
+      before
+    );
   }
-
-  const stageIdx = info.currentEligibleStageIndex;
-  const currentStages: [boolean, boolean, boolean] = plot.wateredStages || [
-    (plot.wateringCount || 0) >= 1 || !!plot.wateredBoostApplied,
-    (plot.wateringCount || 0) >= 2,
-    (plot.wateringCount || 0) >= 3,
-  ];
-
-  currentStages[stageIdx] = true;
-  plot.wateredStages = currentStages;
-  plot.wateringCount = currentStages.filter(Boolean).length;
-  plot.wateredBoostApplied = true;
-
-  const stageLabel = WATERING_STAGE_WINDOWS[stageIdx]?.label || `Mốc ${stageIdx + 1}`;
-
+  if (before >= 100 - SETTLEMENT_EPSILON) {
+    return { success: false, moistureAdded: 0, message: "Đất đã đủ ẩm 100%!" };
+  }
+  plot.soilMoisture = clampSoilMoisture(before + MANUAL_WATER_AMOUNT);
+  plot.soilMoistureUpdatedAt = now;
+  if (plot.status === "growing") plot.growthLastUpdatedAt = now;
+  if (plot.status === "ready") plot.rolledQuality = resolveCropQuality(plot);
+  const moistureAdded = plot.soilMoisture - before;
   return {
     success: true,
-    stageIndex: stageIdx,
-    wateredCount: plot.wateringCount,
-    message: `Đã tưới nước ${stageLabel} cho cây! (+2% Vàng & XP khi thu hoạch)`,
-  };
-}
-
-/**
- * Waters all eligible plots that have a currently active valid watering window ("💧 Tưới tất cả").
- * Strictly does NOT allow catch-up for past missed stages.
- */
-export function waterAllPlots(
-  farm: FarmSaveState,
-  now: number
-): { success: boolean; wateredPlotCount: number; message: string } {
-  let wateredPlotCount = 0;
-
-  for (let i = 0; i < farm.plots.length; i++) {
-    const plot = farm.plots[i];
-    if (plot.status === "growing") {
-      const info = getPlotWateringInfo(plot, now);
-      if (info.canWaterNow && info.currentEligibleStageIndex !== null) {
-        const stageIdx = info.currentEligibleStageIndex;
-        const currentStages: [boolean, boolean, boolean] = plot.wateredStages || [
-          (plot.wateringCount || 0) >= 1 || !!plot.wateredBoostApplied,
-          (plot.wateringCount || 0) >= 2,
-          (plot.wateringCount || 0) >= 3,
-        ];
-        currentStages[stageIdx] = true;
-        plot.wateredStages = currentStages;
-        plot.wateringCount = currentStages.filter(Boolean).length;
-        plot.wateredBoostApplied = true;
-        wateredPlotCount++;
-      }
-    }
-  }
-
-  if (wateredPlotCount === 0) {
-    return {
-      success: false,
-      wateredPlotCount: 0,
-      message: "Hiện chưa có cây nào ở mốc tưới nước hợp lệ!",
-    };
-  }
-
-  return {
-    success: true,
-    wateredPlotCount,
-    message: `Đã tưới nước cho ${wateredPlotCount} ô cây! (+2% Vàng & XP / mốc chăm sóc)`,
-  };
-}
-
-/**
- * Single plot watering compatibility function.
- */
-export function applyWaterBuff(
-  farm: FarmSaveState,
-  plotIndex: number,
-  now: number
-): { success: boolean; bonusType?: "speed" | "yield"; message: string } {
-  const result = waterSinglePlot(farm, plotIndex, now);
-  return {
-    success: result.success,
-    message: result.message,
+    moistureAdded,
+    message: `Đã tưới Ô đất #${plotIndex + 1}: +${Math.round(moistureAdded)}% độ ẩm.`,
   };
 }
 
@@ -1018,6 +870,12 @@ export function plantSeedWithFertilizer(
   if (!plot || plot.status !== "empty") {
     return { success: false, message: "Ô đất không trống!" };
   }
+  if (plot.soilMoisture < MIN_PLANTING_SOIL_MOISTURE) {
+    return {
+      success: false,
+      message: "Đất đang thiếu nước trầm trọng, hãy tưới nước trước rồi trồng cây sau",
+    };
+  }
 
   const seedCount = farm.inventory.seeds[cropId] || 0;
   if (seedCount <= 0) {
@@ -1027,8 +885,12 @@ export function plantSeedWithFertilizer(
   const cropDef = CROP_CATALOG.find((c) => c.id === cropId);
   if (!cropDef) return { success: false, message: "Loại cây trồng không tồn tại!" };
 
-  let xpBonusPct = 0;
-  let timeReductionPct = 0;
+  const fertilizerDefinition = fertilizerId
+    ? FERTILIZER_CATALOG.find((fertilizer) => fertilizer.id === fertilizerId)
+    : null;
+  if (fertilizerId && !fertilizerDefinition) {
+    return { success: false, message: "Loại phân bón không hợp lệ!" };
+  }
 
   if (fertilizerId) {
     if (!farm.inventory.fertilizer) {
@@ -1038,39 +900,41 @@ export function plantSeedWithFertilizer(
     if (fertCount <= 0) {
       return { success: false, message: "Bạn đã hết loại phân bón này!" };
     }
-    const fertDef = FERTILIZER_CATALOG.find((f) => f.id === fertilizerId);
-    if (fertDef) {
-      xpBonusPct = fertDef.xpBonusPct;
-      timeReductionPct = fertDef.growthTimeReductionPct;
-      farm.inventory.fertilizer[fertilizerId] = fertCount - 1;
-    }
+    farm.inventory.fertilizer[fertilizerId] = fertCount - 1;
   }
 
-  // Deduct 1 seed
   farm.inventory.seeds[cropId] = seedCount - 1;
-
-  const effectiveGrowthMs = Math.round(cropDef.growthMs * (1 - timeReductionPct));
+  const xpBonusPct = fertilizerDefinition?.xpBonusPct || 0;
+  const timeReductionPct = fertilizerDefinition?.growthTimeReductionPct || 0;
+  // Fertilizer reduces workload first; dynamic moisture/weather rates are
+  // multiplied over that effective workload during settlement.
+  const effectiveGrowthMs = Math.max(
+    1,
+    Math.round(cropDef.growthMs * (1 - timeReductionPct))
+  );
   const weatherSeed = farm.weatherSeed ?? DEFAULT_FARM_WEATHER_SEED;
-  const sched = calculateCropGrowthSchedule(now, effectiveGrowthMs, weatherSeed);
 
   farm.plots[plotIndex] = {
     status: "growing",
+    soilMoisture: plot.soilMoisture,
+    soilMoistureUpdatedAt: now,
     cropId,
     plantedAt: now,
-    growthEndsAt: sched.growthEndsAt,
+    growthWorkTotalMs: effectiveGrowthMs,
+    growthWorkRemainingMs: effectiveGrowthMs,
+    growthLastUpdatedAt: now,
     fertilizerId,
     fertilizerXpBonusPct: xpBonusPct,
     growthTimeReductionPct: timeReductionPct,
-    wateringCount: 0,
-    wateredStages: [false, false, false],
-    wateredBoostApplied: false,
-    weatherExposure: sched.weatherExposure,
-    rainGoldBonusPct: sched.rainGoldBonusPct,
-    stageEndTimes: [
-      sched.stageWindows[0][1],
-      sched.stageWindows[1][1],
-      sched.stageWindows[2][0],
-    ],
+    weatherExposureMs: { sunny: 0, calm: 0, rain: 0, cool: 0 },
+    qualityPenalty: "none",
+    qualityRoll: deterministicRandom(
+      weatherSeed,
+      "crop",
+      plotIndex,
+      cropId,
+      now
+    ),
   };
 
   return {
@@ -1079,6 +943,46 @@ export function plantSeedWithFertilizer(
       ? `Đã gieo ${cropDef.name} cùng phân bón!`
       : `Đã gieo ${cropDef.name}!`,
   };
+}
+
+/** Applies one owned fertilizer to only the remaining workload of a crop. */
+export function applyFertilizerToGrowingCrop(
+  farm: FarmSaveState,
+  plotIndex: number,
+  fertilizerId: FertilizerTypeId,
+  now: number
+): { success: boolean; message: string } {
+  const plot = farm.plots[plotIndex];
+  if (!plot || plot.status !== "growing") {
+    return { success: false, message: "Chỉ có thể bón phân khi cây đang phát triển!" };
+  }
+  if (hasCropFertilizer(plot)) {
+    return { success: false, message: "Cây này đã được bón phân và không thể bón lần hai!" };
+  }
+  const fertilizer = FERTILIZER_CATALOG.find((entry) => entry.id === fertilizerId);
+  if (!fertilizer) return { success: false, message: "Loại phân bón không hợp lệ!" };
+  const ownedCount = farm.inventory.fertilizer?.[fertilizerId] || 0;
+  if (ownedCount <= 0) {
+    return { success: false, message: "Bạn đã hết loại phân bón này!" };
+  }
+
+  farm.inventory.fertilizer[fertilizerId] = ownedCount - 1;
+  const completedWork = Math.max(
+    0,
+    plot.growthWorkTotalMs - plot.growthWorkRemainingMs
+  );
+  const reducedRemainingWork = Math.max(
+    0,
+    plot.growthWorkRemainingMs * (1 - fertilizer.growthTimeReductionPct)
+  );
+  plot.growthWorkRemainingMs = reducedRemainingWork;
+  plot.growthWorkTotalMs = completedWork + reducedRemainingWork;
+  plot.growthLastUpdatedAt = now;
+  plot.fertilizerId = fertilizerId;
+  plot.fertilizerXpBonusPct = fertilizer.xpBonusPct;
+  plot.growthTimeReductionPct = fertilizer.growthTimeReductionPct;
+
+  return { success: true, message: `Đã bón ${fertilizer.name} cho cây!` };
 }
 
 /**
@@ -1228,14 +1132,60 @@ export interface CropHarvestPreview {
   baseXp: number;
   goldEarned: number;
   xpEarned: number;
-  wateredBonusGold: number;
-  wateredBonusXp: number;
   fertilizerBonusXp: number;
   rainBonusGold: number;
+  droughtPenaltyGold: number;
   quality: ItemQuality;
   qualityMultiplier: number;
-  effectiveWaterings: number;
   hasFertilizer: boolean;
+}
+
+function calculateCropHarvestReward(
+  plot: Extract<FarmPlotState, { status: "ready" }>
+): CropHarvestPreview | null {
+  const cropDefinition = CROP_CATALOG.find((crop) => crop.id === plot.cropId);
+  if (!cropDefinition) return null;
+  const qualityPenalty = escalateMoisturePenalty(
+    plot.qualityPenalty,
+    plot.soilMoisture
+  );
+  const rewardPlot = qualityPenalty === plot.qualityPenalty
+    ? plot
+    : { ...plot, qualityPenalty };
+
+  const fertilizerBonusXp = Math.round(
+    cropDefinition.harvestXp * (plot.fertilizerXpBonusPct || 0)
+  );
+  const rainBonusGold = Math.round(
+    cropDefinition.harvestGold *
+      (plot.rainGoldBonusPct || 0.05 * (plot.weatherExposure?.rain || 0))
+  );
+  const quality = resolveCropQuality(rewardPlot);
+  const qualityMultiplier = QUALITY_CONFIG[quality].multiplier;
+  const preQualityGold = cropDefinition.harvestGold + rainBonusGold;
+  const preQualityXp = cropDefinition.harvestXp + fertilizerBonusXp;
+  const goldBeforeDroughtPenalty = applyQualityMultiplier(
+    preQualityGold,
+    qualityMultiplier
+  );
+  // Drought-zero is the final Gold-only modifier and is applied exactly once.
+  const goldEarned = qualityPenalty === "common_only"
+    ? Math.round(goldBeforeDroughtPenalty * 0.8)
+    : goldBeforeDroughtPenalty;
+
+  return {
+    cropName: cropDefinition.name,
+    baseGold: cropDefinition.harvestGold,
+    baseXp: cropDefinition.harvestXp,
+    goldEarned,
+    xpEarned: applyQualityMultiplier(preQualityXp, qualityMultiplier),
+    fertilizerBonusXp,
+    rainBonusGold,
+    droughtPenaltyGold: goldBeforeDroughtPenalty - goldEarned,
+    quality,
+    qualityMultiplier,
+    hasFertilizer: hasCropFertilizer(plot),
+  };
 }
 
 /** Pure reward selector used by both the Ready panel and harvest previews. */
@@ -1247,61 +1197,7 @@ export function getCropHarvestPreview(
   const plot = plotOverride ?? farm.plots[plotIndex];
   if (!plot || plot.status !== "ready") return null;
 
-  const cropDef = CROP_CATALOG.find((crop) => crop.id === plot.cropId);
-  if (!cropDef) return null;
-
-  const effectiveWaterings = Math.min(
-    3,
-    plot.wateringCount !== undefined
-      ? plot.wateringCount
-      : plot.wateredBoostApplied
-        ? 1
-        : 0
-  );
-  const wateredBonusGold = Math.round(
-    cropDef.harvestGold * effectiveWaterings * 0.02
-  );
-  const wateredBonusXp = Math.round(
-    cropDef.harvestXp * effectiveWaterings * 0.02
-  );
-  const fertilizerBonusXp = Math.round(
-    cropDef.harvestXp * (plot.fertilizerXpBonusPct || 0)
-  );
-  const rainBonusGold = Math.round(
-    cropDef.harvestGold *
-      (plot.rainGoldBonusPct || 0.05 * (plot.weatherExposure?.rain || 0))
-  );
-  const quality =
-    plot.rolledQuality ||
-    rollQualityWithExposure(
-      plot.weatherExposure?.cool || 0,
-      getCropQualityRandom(
-        farm.weatherSeed ?? DEFAULT_FARM_WEATHER_SEED,
-        plotIndex,
-        plot.plantedAt,
-        plot.growthEndsAt ?? plot.plantedAt
-      )
-    );
-  const qualityMultiplier = QUALITY_CONFIG[quality].multiplier;
-  const preQualityGold = cropDef.harvestGold + wateredBonusGold + rainBonusGold;
-  const preQualityXp = cropDef.harvestXp + wateredBonusXp + fertilizerBonusXp;
-
-  return {
-    cropName: cropDef.name,
-    baseGold: cropDef.harvestGold,
-    baseXp: cropDef.harvestXp,
-    goldEarned: applyQualityMultiplier(preQualityGold, qualityMultiplier),
-    xpEarned: applyQualityMultiplier(preQualityXp, qualityMultiplier),
-    wateredBonusGold,
-    wateredBonusXp,
-    fertilizerBonusXp,
-    rainBonusGold,
-    quality,
-    qualityMultiplier,
-    effectiveWaterings,
-    hasFertilizer:
-      Boolean(plot.fertilizerId) || (plot.fertilizerXpBonusPct || 0) > 0,
-  };
+  return calculateCropHarvestReward(plot);
 }
 
 /**
@@ -1317,100 +1213,56 @@ export function harvestPlot(
   cropName: string;
   bonusGold: number;
   bonusXp: number;
-  wateredBonusGold: number;
-  wateredBonusXp: number;
   fertilizerBonusXp: number;
   rainBonusGold: number;
+  droughtPenaltyGold: number;
   quality: ItemQuality;
   qualityMultiplier: number;
   weatherExposure?: WeatherExposureData;
-  effectiveWaterings: number;
   hasFertilizer: boolean;
   qualityBreakdown: QualityBreakdown;
 } | null {
   const plot = farm.plots[plotIndex];
   if (!plot || plot.status !== "ready") return null;
 
-  const cropDef = CROP_CATALOG.find((c) => c.id === plot.cropId);
-  if (!cropDef) return null;
-
-  const wateringCount = Math.min(
-    3,
-    plot.wateringCount !== undefined
-      ? plot.wateringCount
-      : plot.wateredBoostApplied
-      ? 1
-      : 0
-  );
-  const wateringXpBonusPct = wateringCount * 0.02;
-  const wateringGoldBonusPct = wateringCount * 0.02;
-  const fertXpBonusPct = plot.fertilizerXpBonusPct || 0;
-  const hasFertilizer = !!plot.fertilizerId || fertXpBonusPct > 0;
-
-  const baseGold = cropDef.harvestGold;
-  const baseXp = cropDef.harvestXp;
-
-  const wateredBonusGold = Math.round(baseGold * wateringGoldBonusPct);
-  const wateredBonusXp = Math.round(baseXp * wateringXpBonusPct);
-  const fertilizerBonusXp = Math.round(baseXp * fertXpBonusPct);
-  const rainGoldBonusPct =
-    plot.rainGoldBonusPct || 0.05 * (plot.weatherExposure?.rain || 0);
-  const rainBonusGold = Math.round(baseGold * rainGoldBonusPct);
-
-  // Quality calculation
-  const quality: ItemQuality =
-    plot.rolledQuality ||
-    rollQualityWithExposure(
-      plot.weatherExposure?.cool || 0,
-      getCropQualityRandom(
-        farm.weatherSeed ?? DEFAULT_FARM_WEATHER_SEED,
-        plotIndex,
-        plot.plantedAt,
-        plot.growthEndsAt ?? plot.plantedAt
-      )
-    );
-  const qualityMultiplier = QUALITY_CONFIG[quality].multiplier;
-
-  const preQualityGold = baseGold + wateredBonusGold + rainBonusGold;
-  const preQualityXp = baseXp + wateredBonusXp + fertilizerBonusXp;
-
-  const goldEarned = applyQualityMultiplier(preQualityGold, qualityMultiplier);
-  const xpEarned = applyQualityMultiplier(preQualityXp, qualityMultiplier);
-
-  const bonusGold = goldEarned - baseGold;
-  const bonusXp = xpEarned - baseXp;
+  const reward = calculateCropHarvestReward(plot);
+  if (!reward) return null;
+  const preQualityGold = reward.baseGold + reward.rainBonusGold;
+  const preQualityXp = reward.baseXp + reward.fertilizerBonusXp;
 
   const weatherExposure = plot.weatherExposure;
 
   const qualityBreakdown = createEmptyQualityBreakdown();
-  qualityBreakdown[quality] = {
+  qualityBreakdown[reward.quality] = {
     quantity: 1,
     baseGold: preQualityGold,
-    qualityBonusGold: goldEarned - preQualityGold,
-    gold: goldEarned,
+    qualityBonusGold: reward.goldEarned - preQualityGold,
+    gold: reward.goldEarned,
     baseXp: preQualityXp,
-    qualityBonusXp: xpEarned - preQualityXp,
-    xp: xpEarned,
+    qualityBonusXp: reward.xpEarned - preQualityXp,
+    xp: reward.xpEarned,
   };
 
-  farm.plots[plotIndex] = { status: "empty" };
-  farm.gold += goldEarned;
+  farm.plots[plotIndex] = {
+    status: "empty",
+    soilMoisture: plot.soilMoisture,
+    soilMoistureUpdatedAt: plot.soilMoistureUpdatedAt,
+  };
+  farm.gold += reward.goldEarned;
 
   return {
-    goldEarned,
-    xpEarned,
-    cropName: cropDef.name,
-    bonusGold,
-    bonusXp,
-    wateredBonusGold,
-    wateredBonusXp,
-    fertilizerBonusXp,
-    rainBonusGold,
-    quality,
-    qualityMultiplier,
+    goldEarned: reward.goldEarned,
+    xpEarned: reward.xpEarned,
+    cropName: reward.cropName,
+    bonusGold: reward.goldEarned - reward.baseGold,
+    bonusXp: reward.xpEarned - reward.baseXp,
+    fertilizerBonusXp: reward.fertilizerBonusXp,
+    rainBonusGold: reward.rainBonusGold,
+    droughtPenaltyGold: reward.droughtPenaltyGold,
+    quality: reward.quality,
+    qualityMultiplier: reward.qualityMultiplier,
     weatherExposure,
-    effectiveWaterings: wateringCount,
-    hasFertilizer,
+    hasFertilizer: reward.hasFertilizer,
     qualityBreakdown,
   };
 }
@@ -1426,10 +1278,9 @@ export function harvestAllReadyCrops(
   totalXp: number;
   bonusGold: number;
   bonusXp: number;
-  wateredBonusGold: number;
-  wateredBonusXp: number;
   fertilizerBonusXp: number;
   rainBonusGold: number;
+  droughtPenaltyGold: number;
   harvestedCount: number;
   details: Array<{
     plotIndex: number;
@@ -1437,9 +1288,9 @@ export function harvestAllReadyCrops(
     cropName: string;
     goldAwarded: number;
     xpAwarded: number;
-    effectiveWaterings: number;
     hasFertilizer: boolean;
     rainBonusGold: number;
+    droughtPenaltyGold: number;
     quality: ItemQuality;
     qualityMultiplier: number;
     weatherExposure?: WeatherExposureData;
@@ -1450,10 +1301,9 @@ export function harvestAllReadyCrops(
   let totalXp = 0;
   let bonusGold = 0;
   let bonusXp = 0;
-  let wateredBonusGold = 0;
-  let wateredBonusXp = 0;
   let fertilizerBonusXp = 0;
   let rainBonusGold = 0;
+  let droughtPenaltyGold = 0;
   let harvestedCount = 0;
   const qualityBreakdown = createEmptyQualityBreakdown();
   const details: Array<{
@@ -1462,9 +1312,9 @@ export function harvestAllReadyCrops(
     cropName: string;
     goldAwarded: number;
     xpAwarded: number;
-    effectiveWaterings: number;
     hasFertilizer: boolean;
     rainBonusGold: number;
+    droughtPenaltyGold: number;
     quality: ItemQuality;
     qualityMultiplier: number;
     weatherExposure?: WeatherExposureData;
@@ -1473,82 +1323,46 @@ export function harvestAllReadyCrops(
   for (let i = 0; i < farm.plots.length; i++) {
     const plot = farm.plots[i];
     if (plot.status === "ready") {
-      const cropDef = CROP_CATALOG.find((c) => c.id === plot.cropId);
-      if (cropDef) {
-        const wateringCount = Math.min(
-          3,
-          plot.wateringCount !== undefined
-            ? plot.wateringCount
-            : plot.wateredBoostApplied
-            ? 1
-            : 0
-        );
-        const wateringXpBonusPct = wateringCount * 0.02;
-        const wateringGoldBonusPct = wateringCount * 0.02;
-        const fertXpBonusPct = plot.fertilizerXpBonusPct || 0;
-        const hasFertilizer = !!plot.fertilizerId || fertXpBonusPct > 0;
+      const reward = calculateCropHarvestReward(plot);
+      if (reward) {
+        const preQualityGold = reward.baseGold + reward.rainBonusGold;
+        const preQualityXp = reward.baseXp + reward.fertilizerBonusXp;
 
-        const baseG = cropDef.harvestGold;
-        const baseX = cropDef.harvestXp;
-
-        const wG = Math.round(baseG * wateringGoldBonusPct);
-        const wX = Math.round(baseX * wateringXpBonusPct);
-        const fX = Math.round(baseX * fertXpBonusPct);
-        const rGoldPct =
-          plot.rainGoldBonusPct || 0.05 * (plot.weatherExposure?.rain || 0);
-        const rG = Math.round(baseG * rGoldPct);
-
-        const quality: ItemQuality =
-          plot.rolledQuality ||
-          rollQualityWithExposure(
-            plot.weatherExposure?.cool || 0,
-            getCropQualityRandom(
-              farm.weatherSeed ?? DEFAULT_FARM_WEATHER_SEED,
-              i,
-              plot.plantedAt,
-              plot.growthEndsAt ?? plot.plantedAt
-            )
-          );
-        const qualityMultiplier = QUALITY_CONFIG[quality].multiplier;
-
-        const preQualityGold = baseG + wG + rG;
-        const preQualityXp = baseX + wX + fX;
-
-        const earnG = applyQualityMultiplier(preQualityGold, qualityMultiplier);
-        const earnX = applyQualityMultiplier(preQualityXp, qualityMultiplier);
-
-        totalGold += earnG;
-        totalXp += earnX;
-        bonusGold += earnG - baseG;
-        bonusXp += earnX - baseX;
-        wateredBonusGold += wG;
-        wateredBonusXp += wX;
-        fertilizerBonusXp += fX;
-        rainBonusGold += rG;
+        totalGold += reward.goldEarned;
+        totalXp += reward.xpEarned;
+        bonusGold += reward.goldEarned - reward.baseGold;
+        bonusXp += reward.xpEarned - reward.baseXp;
+        fertilizerBonusXp += reward.fertilizerBonusXp;
+        rainBonusGold += reward.rainBonusGold;
+        droughtPenaltyGold += reward.droughtPenaltyGold;
 
         harvestedCount++;
-        qualityBreakdown[quality].quantity += 1;
-        qualityBreakdown[quality].baseGold += preQualityGold;
-        qualityBreakdown[quality].qualityBonusGold += earnG - preQualityGold;
-        qualityBreakdown[quality].gold += earnG;
-        qualityBreakdown[quality].baseXp += preQualityXp;
-        qualityBreakdown[quality].qualityBonusXp += earnX - preQualityXp;
-        qualityBreakdown[quality].xp += earnX;
+        qualityBreakdown[reward.quality].quantity += 1;
+        qualityBreakdown[reward.quality].baseGold += preQualityGold;
+        qualityBreakdown[reward.quality].qualityBonusGold += reward.goldEarned - preQualityGold;
+        qualityBreakdown[reward.quality].gold += reward.goldEarned;
+        qualityBreakdown[reward.quality].baseXp += preQualityXp;
+        qualityBreakdown[reward.quality].qualityBonusXp += reward.xpEarned - preQualityXp;
+        qualityBreakdown[reward.quality].xp += reward.xpEarned;
 
         details.push({
           plotIndex: i,
           cropId: plot.cropId,
-          cropName: cropDef.name,
-          goldAwarded: earnG,
-          xpAwarded: earnX,
-          effectiveWaterings: wateringCount,
-          hasFertilizer,
-          rainBonusGold: rG,
-          quality,
-          qualityMultiplier,
+          cropName: reward.cropName,
+          goldAwarded: reward.goldEarned,
+          xpAwarded: reward.xpEarned,
+          hasFertilizer: reward.hasFertilizer,
+          rainBonusGold: reward.rainBonusGold,
+          droughtPenaltyGold: reward.droughtPenaltyGold,
+          quality: reward.quality,
+          qualityMultiplier: reward.qualityMultiplier,
           weatherExposure: plot.weatherExposure,
         });
-        farm.plots[i] = { status: "empty" };
+        farm.plots[i] = {
+          status: "empty",
+          soilMoisture: plot.soilMoisture,
+          soilMoistureUpdatedAt: plot.soilMoistureUpdatedAt,
+        };
       }
     }
   }
@@ -1562,10 +1376,9 @@ export function harvestAllReadyCrops(
     totalXp,
     bonusGold,
     bonusXp,
-    wateredBonusGold,
-    wateredBonusXp,
     fertilizerBonusXp,
     rainBonusGold,
+    droughtPenaltyGold,
     harvestedCount,
     details,
     qualityBreakdown,
@@ -1887,7 +1700,11 @@ export function clearPlot(farm: FarmSaveState, plotIndex: number): boolean {
   const plot = farm.plots[plotIndex];
   if (plot.status === "locked") return false;
 
-  farm.plots[plotIndex] = { status: "empty" };
+  farm.plots[plotIndex] = {
+    status: "empty",
+    soilMoisture: plot.soilMoisture,
+    soilMoistureUpdatedAt: plot.soilMoistureUpdatedAt,
+  };
   return true;
 }
 

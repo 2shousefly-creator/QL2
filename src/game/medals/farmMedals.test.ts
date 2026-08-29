@@ -24,7 +24,7 @@ assert(luckyMedal?.tier === 4 && luckyMedal.targetValue === 1, "May Mắn Đổi
 assert(feedMedal?.tier === 3 && feedMedal.targetValue === 2000, "Ăn No Ngủ Kỹ is a Bậc 3 medal");
 
 const harvestedOnly = createInitialGameState("Harvest only");
-recordCropHarvestForMedals(harvestedOnly, 3, true);
+recordCropHarvestForMedals(harvestedOnly, true);
 assert(!unlocked(harvestedOnly, "may_man_doi_doi"), "harvest tracking alone never unlocks the Perfect-sale medal");
 
 const perfectCropSale = createInitialGameState("Perfect crop sale");
