@@ -20,6 +20,7 @@ const questionFiles = [
   "part10_7811_8310.ts",
   "part11_8311_8810.ts",
   "part12_8811_9310.ts",
+  "part13_9311_9810.ts",
 ];
 
 function parseQuestionArray(source, fileName) {
@@ -56,16 +57,16 @@ for (const question of questions) {
   }
 }
 
-for (let numericId = 1; numericId <= 9310; numericId += 1) {
+for (let numericId = 1; numericId <= 9810; numericId += 1) {
   if (!seenIds.has(`q${numericId}`)) errors.push(`q${numericId}: missing ID`);
 }
-if (questions.length !== 9310) {
-  errors.push(`expected 9310 questions, received ${questions.length}`);
+if (questions.length !== 9810) {
+  errors.push(`expected 9810 questions, received ${questions.length}`);
 }
 
 if (errors.length > 0) {
   console.error(errors.join("\n"));
   process.exitCode = 1;
 } else {
-  console.log("Question structure OK: 9310 unique sequential IDs, four unique answers each, valid correct indexes.");
+  console.log("Question structure OK: 9810 unique sequential IDs, four unique answers each, valid correct indexes.");
 }
