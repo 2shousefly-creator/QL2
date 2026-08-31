@@ -223,7 +223,7 @@ export const RANK_ROLES: RankRoleInfo[] = [
     21,
     "Trung Đội Phó",
     null,
-    "Thiên Minh",
+    "Vân Long",
     "Trung Đội 1",
     "Hỗ trợ trung đội trưởng quản lý 3 tiểu đội, phụ trách kỷ luật nội vụ và hậu cần cơ sở."
   ),
@@ -231,7 +231,7 @@ export const RANK_ROLES: RankRoleInfo[] = [
     22,
     "Trung Đội Phó",
     "Điều Phối Hậu Cần & Vũ Khí",
-    "Thiên Minh",
+    "Vân Long",
     "Trung Đội 1",
     "Bảo đảm dự trữ đạn dược, vật tư kỹ thuật và trang bị sẵn sàng chiến đấu cho trung đội."
   ),
@@ -239,7 +239,7 @@ export const RANK_ROLES: RankRoleInfo[] = [
     23,
     "Trung Đội Phó",
     "Phụ Trách Huấn Luyện Hiệp Đồng",
-    "Thiên Minh",
+    "Vân Long",
     "Trung Đội 1",
     "Tổ chức huấn luyện phối hợp giữa các tiểu đội bộ binh và phân đội hỏa lực tăng cường."
   ),
@@ -247,7 +247,7 @@ export const RANK_ROLES: RankRoleInfo[] = [
     24,
     "Trung Đội Phó",
     "Giám Sát Hệ Thống Phòng Tuyến",
-    "Thiên Minh",
+    "Vân Long",
     "Trung Đội 1",
     "Kiểm tra hệ thống hầm hào, công sự chiến đấu và phương án xử lý sự cố bất ngờ."
   ),
@@ -255,7 +255,7 @@ export const RANK_ROLES: RankRoleInfo[] = [
     25,
     "Phó Trung Đội Trưởng Thường Trực",
     null,
-    "Thiên Minh",
+    "Vân Long",
     "Trung Đội 1",
     "Trực tiếp chỉ huy kíp trực tác chiến trung đội, tham mưu phương án cơ động cho trung đội trưởng."
   ),
@@ -263,7 +263,7 @@ export const RANK_ROLES: RankRoleInfo[] = [
     26,
     "Phó Trung Đội Trưởng Thường Trực",
     "Chỉ Huy Bộ Phận Dự Bị",
-    "Thiên Minh",
+    "Vân Long",
     "Trung Đội 1",
     "Nắm giữ lực lượng dự bị của trung đội, sẵn sàng chi viện và hoàn tất chuyển tiếp sang Sĩ quan."
   ),
@@ -273,7 +273,7 @@ export const RANK_ROLES: RankRoleInfo[] = [
     27,
     "Trung Đội Trưởng",
     null,
-    "Thiên Minh",
+    "Vân Long",
     "Trung Đội 1",
     "Chỉ huy toàn diện trung đội 35 quân nhân, biến ý định cấp trên thành phương án tác chiến chi tiết."
   ),
@@ -281,7 +281,7 @@ export const RANK_ROLES: RankRoleInfo[] = [
     28,
     "Trung Đội Trưởng",
     "Xây Dựng Phương Án Tác Chiến",
-    "Thiên Minh",
+    "Vân Long",
     "Trung Đội 1",
     "Lập kế hoạch phân công nhiệm vụ cho từng tiểu đội, chịu trách nhiệm pháp lý trước đại đội."
   ),
@@ -289,7 +289,7 @@ export const RANK_ROLES: RankRoleInfo[] = [
     29,
     "Trung Đội Trưởng",
     "Quản Lý Nguồn Lực Đơn Vị",
-    "Thiên Minh",
+    "Vân Long",
     "Trung Đội 1",
     "Tối ưu hóa phân bổ khí tài, bảo đảm quân số sẵn sàng chiến đấu và duy trì kỷ cương nghiêm ngặt."
   ),
@@ -297,7 +297,7 @@ export const RANK_ROLES: RankRoleInfo[] = [
     30,
     "Trung Đội Trưởng",
     "Chỉ Huy Diễn Tập Hiệp Đồng",
-    "Thiên Minh",
+    "Vân Long",
     "Trung Đội 1",
     "Điều hành trung đội tham gia diễn tập thực binh cấp đại đội đạt kết quả xuất sắc."
   ),
@@ -305,7 +305,7 @@ export const RANK_ROLES: RankRoleInfo[] = [
     31,
     "Trung Đội Trưởng",
     "Phụ Trách Phòng Tuyến Trọng Điểm",
-    "Thiên Minh",
+    "Vân Long",
     "Trung Đội 1",
     "Được giao chốt giữ vị trí chiến thuật quan trọng, duy trì khả năng tự chủ tác chiến độc lập."
   ),
@@ -313,7 +313,7 @@ export const RANK_ROLES: RankRoleInfo[] = [
     32,
     "Trung Đội Trưởng",
     "Chỉ Huy Cơ Động Phản Ứng Nhanh",
-    "Thiên Minh",
+    "Vân Long",
     "Trung Đội 1",
     "Rèn luyện kỹ năng điều động lực lượng tốc độ cao trong các tình huống giả định khẩn cấp."
   ),
@@ -321,7 +321,7 @@ export const RANK_ROLES: RankRoleInfo[] = [
     33,
     "Trung Đội Trưởng Chủ Công",
     null,
-    "Thiên Minh",
+    "Vân Long",
     "Trung Đội 1",
     "Dẫn dắt trung đội chủ lực của đại đội, đảm nhận các mũi đột kích then chốt."
   ),
@@ -329,7 +329,7 @@ export const RANK_ROLES: RankRoleInfo[] = [
     34,
     "Trung Đội Trưởng Chủ Công",
     "Kiêm Sĩ Quan Tham Mưu Dự Bị",
-    "Thiên Minh",
+    "Vân Long",
     "Trung Đội 1",
     "Hoàn thiện năng lực quản trị chỉ huy phân đội, sẵn sàng tiếp nhận vai trò chỉ huy cấp đại đội."
   ),
@@ -471,7 +471,7 @@ export const RANK_ROLES: RankRoleInfo[] = [
     51,
     "Phó Ban Tác Chiến Tiểu Đoàn",
     null,
-    "Thiên Minh",
+    "Xích Phong",
     "Tiểu Đoàn",
     "Tổng hợp tình báo trinh sát, lập bản đồ tác chiến và phân tích phương án điều động hỏa lực."
   ),
@@ -479,7 +479,7 @@ export const RANK_ROLES: RankRoleInfo[] = [
     52,
     "Phó Ban Tác Chiến Tiểu Đoàn",
     "Phụ Trách Kế Hoạch Động Viên",
-    "Thiên Minh",
+    "Xích Phong",
     "Tiểu Đoàn",
     "Xây dựng phương án động viên quân số và bảo đảm nhu cầu kỹ thuật cho toàn tiểu đoàn."
   ),
@@ -487,7 +487,7 @@ export const RANK_ROLES: RankRoleInfo[] = [
     53,
     "Phó Ban Tác Chiến Tiểu Đoàn",
     "Điều Phối Thông Tin Chỉ Huy",
-    "Thiên Minh",
+    "Xích Phong",
     "Tiểu Đoàn",
     "Vận hành mạng thông tin sở chỉ huy tiểu đoàn, kết nối thông suốt xuống các đại đội."
   ),
@@ -495,7 +495,7 @@ export const RANK_ROLES: RankRoleInfo[] = [
     54,
     "Trợ Lý Tham Mưu Trưởng Tiểu Đoàn",
     null,
-    "Thiên Minh",
+    "Xích Phong",
     "Tiểu Đoàn",
     "Soạn thảo mệnh lệnh hành quân, phương án chuyển cấp sẵn sàng chiến đấu cho tiểu đoàn."
   ),
@@ -503,7 +503,7 @@ export const RANK_ROLES: RankRoleInfo[] = [
     55,
     "Trợ Lý Tham Mưu Trưởng Tiểu Đoàn",
     "Quản Trị Rủi Ro Chiến Thuật",
-    "Thiên Minh",
+    "Xích Phong",
     "Tiểu Đoàn",
     "Dự báo rủi ro hậu cần, phân tích các điểm nghẽn tác chiến và đề xuất biện pháp phòng ngừa."
   ),
@@ -511,7 +511,7 @@ export const RANK_ROLES: RankRoleInfo[] = [
     56,
     "Trợ Lý Tham Mưu Trưởng Tiểu Đoàn",
     "Tổ Chức Diễn Tập Chỉ Huy - Tham Mưu",
-    "Thiên Minh",
+    "Xích Phong",
     "Tiểu Đoàn",
     "Thiết kế kịch bản diễn tập trên bản đồ cho đội ngũ sĩ quan chỉ huy các phân đội."
   ),
@@ -519,7 +519,7 @@ export const RANK_ROLES: RankRoleInfo[] = [
     57,
     "Quyền Trưởng Ban Tác Chiến Tiểu Đoàn",
     null,
-    "Thiên Minh",
+    "Xích Phong",
     "Tiểu Đoàn",
     "Trực tiếp chủ trì ban tác chiến, tổng hợp báo cáo tình hình chiến dịch lên Ban Chỉ huy Trung đoàn."
   ),
@@ -527,7 +527,7 @@ export const RANK_ROLES: RankRoleInfo[] = [
     58,
     "Quyền Trưởng Ban Tác Chiến Tiểu Đoàn",
     "Chỉ Đạo Phương Án Trung Hạn",
-    "Thiên Minh",
+    "Xích Phong",
     "Tiểu Đoàn",
     "Hoàn thiện năng lực tham mưu hệ thống, sẵn sàng bước vào hàng ngũ Sĩ quan Cấp Tá."
   ),
@@ -537,7 +537,7 @@ export const RANK_ROLES: RankRoleInfo[] = [
     59,
     "Tham Mưu Trưởng Tiểu Đoàn",
     "Tiểu Đoàn Phó",
-    "Thiên Minh",
+    "Xích Phong",
     "Tiểu Đoàn",
     "Điều hành cơ quan tham mưu tiểu đoàn 500 quân, tổ chức quy trình điều phối đa đại đội."
   ),
@@ -545,7 +545,7 @@ export const RANK_ROLES: RankRoleInfo[] = [
     60,
     "Tham Mưu Trưởng Tiểu Đoàn",
     "Hoạch Định Kế Hoạch Tác Chiến Trung Hạn",
-    "Thiên Minh",
+    "Xích Phong",
     "Tiểu Đoàn",
     "Xây dựng kế hoạch tác chiến trung hạn, sử dụng dữ liệu báo cáo để tối ưu hóa quyết định chỉ huy."
   ),
@@ -553,7 +553,7 @@ export const RANK_ROLES: RankRoleInfo[] = [
     61,
     "Tham Mưu Trưởng Tiểu Đoàn",
     "Điều Phối Hỏa Lực & Hậu Cần Liên Hoàn",
-    "Thiên Minh",
+    "Xích Phong",
     "Tiểu Đoàn",
     "Phối hợp các nguồn lực hỏa lực cối, chống tăng và vận tải tiếp tế bảo đảm chiến dịch thông suốt."
   ),
@@ -561,7 +561,7 @@ export const RANK_ROLES: RankRoleInfo[] = [
     62,
     "Tham Mưu Trưởng Tiểu Đoàn",
     "Quản Trị Rủi Ro & An Toàn Hệ Thống",
-    "Thiên Minh",
+    "Xích Phong",
     "Tiểu Đoàn",
     "Nhận diện nguy cơ bất thường từ sớm, xây dựng kịch bản dự phòng cho các đại đội tiền duyên."
   ),
@@ -569,7 +569,7 @@ export const RANK_ROLES: RankRoleInfo[] = [
     63,
     "Tham Mưu Trưởng Tiểu Đoàn",
     "Tổ Chức Quy Trình Tác Chiến Tiêu Chuẩn",
-    "Thiên Minh",
+    "Xích Phong",
     "Tiểu Đoàn",
     "Chuẩn hóa quy trình bàn giao mệnh lệnh và xử lý báo cáo chiến trường đa kênh."
   ),
@@ -577,7 +577,7 @@ export const RANK_ROLES: RankRoleInfo[] = [
     64,
     "Quyền Tiểu Đoàn Trưởng",
     null,
-    "Thiên Minh",
+    "Xích Phong",
     "Tiểu Đoàn",
     "Chỉ huy toàn diện tiểu đoàn bộ binh độc lập trong đội hình trung đoàn chiến đấu."
   ),
@@ -585,7 +585,7 @@ export const RANK_ROLES: RankRoleInfo[] = [
     65,
     "Quyền Tiểu Đoàn Trưởng",
     "Chỉ Huy Diễn Tập Thực Binh",
-    "Thiên Minh",
+    "Xích Phong",
     "Tiểu Đoàn",
     "Điều hành cuộc diễn tập bắn đạn thật quy mô 500 quân nhân với nhiều binh chủng phối thuộc."
   ),
@@ -593,7 +593,7 @@ export const RANK_ROLES: RankRoleInfo[] = [
     66,
     "Quyền Tiểu Đoàn Trưởng",
     "Đào Tạo Cán Bộ Chỉ Huy Cơ Sở",
-    "Thiên Minh",
+    "Xích Phong",
     "Tiểu Đoàn",
     "Phát triển năng lực tự chủ cho đội ngũ đại đội trưởng và sĩ quan tham mưu trẻ."
   ),
@@ -601,7 +601,7 @@ export const RANK_ROLES: RankRoleInfo[] = [
     67,
     "Quyền Tiểu Đoàn Trưởng",
     "Điều Phối Cụm Điểm Tựa Tiểu Đoàn",
-    "Thiên Minh",
+    "Xích Phong",
     "Tiểu Đoàn",
     "Tổ chức thế trận phòng thủ vững chắc trên hướng chiến thuật trọng điểm của trung đoàn."
   ),
@@ -609,7 +609,7 @@ export const RANK_ROLES: RankRoleInfo[] = [
     68,
     "Quyền Tiểu Đoàn Trưởng",
     "Chỉ Huy Phản Ứng Cơ Động",
-    "Thiên Minh",
+    "Xích Phong",
     "Tiểu Đoàn",
     "Hoàn thành xuất sắc nhiệm vụ cơ động thọc sâu, sẵn sàng nhận quyết định Tiểu đoàn trưởng chính thức."
   ),
@@ -619,7 +619,7 @@ export const RANK_ROLES: RankRoleInfo[] = [
     69,
     "Tiểu Đoàn Trưởng",
     null,
-    "Thiên Minh",
+    "Xích Phong",
     "Tiểu Đoàn",
     "Chỉ huy toàn diện tiểu đoàn chiến thuật độc lập, chịu trách nhiệm pháp lý và quân sự trước cấp trên."
   ),
@@ -627,7 +627,7 @@ export const RANK_ROLES: RankRoleInfo[] = [
     70,
     "Tiểu Đoàn Trưởng",
     "Xác Lập Ý Đồ Chiến Thuật Tiểu Đoàn",
-    "Thiên Minh",
+    "Xích Phong",
     "Tiểu Đoàn",
     "Định hướng mục tiêu chiến đấu rõ ràng, ủy quyền hợp lý cho các ban chuyên môn và đại đội."
   ),
@@ -635,7 +635,7 @@ export const RANK_ROLES: RankRoleInfo[] = [
     71,
     "Tiểu Đoàn Trưởng",
     "Xây Dựng Tiểu Đoàn Vững Mạnh Toàn Diện",
-    "Thiên Minh",
+    "Xích Phong",
     "Tiểu Đoàn",
     "Duy trì kỷ luật nghiêm minh, nâng cao chất lượng huấn luyện và đời sống cán bộ chiến sĩ."
   ),
@@ -643,7 +643,7 @@ export const RANK_ROLES: RankRoleInfo[] = [
     72,
     "Tiểu Đoàn Trưởng",
     "Chỉ Huy Cụm Tác Chiến Độc Lập",
-    "Thiên Minh",
+    "Xích Phong",
     "Tiểu Đoàn",
     "Lãnh đạo tiểu đoàn thực hiện nhiệm vụ phòng thủ bờ biển hoặc vùng đệm biên giới biệt lập."
   ),
