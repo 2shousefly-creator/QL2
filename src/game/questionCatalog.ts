@@ -19,6 +19,7 @@ import { questionsPart11 } from "./questions/part11_8311_8810";
 import { questionsPart12 } from "./questions/part12_8811_9310";
 import { questionsPart13 } from "./questions/part13_9311_9810";
 import { questionsPart14 } from "./questions/part14_9811_10310";
+import { questionsPart15 } from "./questions/part15_10311_10810";
 
 export type { QuestionItem } from "./questions/types";
 
@@ -61,6 +62,7 @@ export const QUESTION_POOL: QuestionItem[] = mergeQuestionParts([
   questionsPart12,
   questionsPart13,
   questionsPart14,
+  questionsPart15,
 ]);
 
 export type ShuffledExamQuestion = {
