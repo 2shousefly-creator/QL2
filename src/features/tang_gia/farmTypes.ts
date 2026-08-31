@@ -156,17 +156,19 @@ export type WeatherExposureData = {
 
 export type WeatherExposureMs = Record<WeatherType, number>;
 
+type UnlockedFarmPlotBase = {
+  soilMoisture: number;
+  soilMoistureUpdatedAt: number;
+  lastFertilizerId?: FertilizerTypeId | null;
+};
+
 export type FarmPlotState =
   | { status: "locked" }
-  | {
+  | (UnlockedFarmPlotBase & {
       status: "empty";
-      soilMoisture: number;
-      soilMoistureUpdatedAt: number;
-    }
-  | {
+    })
+  | (UnlockedFarmPlotBase & {
       status: "growing";
-      soilMoisture: number;
-      soilMoistureUpdatedAt: number;
       cropId: CropId;
       plantedAt: number;
       growthWorkTotalMs: number;
@@ -183,11 +185,9 @@ export type FarmPlotState =
       pestUpdatedAt: number;
       pestOutbreakAt: number | null;
       pestDamageLevel: PestDamageLevel;
-    }
-  | {
+    })
+  | (UnlockedFarmPlotBase & {
       status: "ready";
-      soilMoisture: number;
-      soilMoistureUpdatedAt: number;
       cropId: CropId;
       plantedAt: number;
       growthCompletedAt: number;
@@ -203,7 +203,7 @@ export type FarmPlotState =
       pestUpdatedAt: number;
       pestOutbreakAt: number | null;
       pestDamageLevel: PestDamageLevel;
-    };
+    });
 
 export type AnimalDeathCause = "old_age" | "starvation";
 

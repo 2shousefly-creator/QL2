@@ -32,7 +32,7 @@ import {
 } from "./soilMoistureEngine";
 import { clampPestPressure, PEST_OUTBREAK_THRESHOLD } from "./pestEngine";
 
-export const CURRENT_FARM_SCHEMA_VERSION = 7;
+export const CURRENT_FARM_SCHEMA_VERSION = 8;
 export const DEFAULT_FARM_WEATHER_SEED = 133742;
 
 type MutableFarmRecord = Record<string, any>;
@@ -249,6 +249,44 @@ function migrateV6ToV7(
   return farm;
 }
 
+function normalizeFertilizerId(
+  raw: unknown
+): FertilizerTypeId | null | undefined {
+  if (raw === null) return null;
+  return FERTILIZER_CATALOG.some((entry) => entry.id === raw)
+    ? raw as FertilizerTypeId
+    : undefined;
+}
+
+function migrateV7ToV8(farm: MutableFarmRecord): MutableFarmRecord {
+  farm.plots = Array.isArray(farm.plots) ? farm.plots : [];
+  for (const plot of farm.plots) {
+    if (!isRecord(plot)) {
+      continue;
+    }
+    if (plot.status === "empty") {
+      // V7 did not retain fertilizer history once a plot became empty.
+      // Leave it unknown instead of guessing from unrelated farm state.
+      delete plot.lastFertilizerId;
+      continue;
+    }
+    if (plot.status !== "growing" && plot.status !== "ready") {
+      continue;
+    }
+
+    const lastFertilizerId = normalizeFertilizerId(plot.fertilizerId);
+    // An existing crop is the only V7 state that can reveal the plot's most
+    // recent fertilizer choice, including an explicit no-fertilizer choice.
+    if (lastFertilizerId === undefined) {
+      delete plot.lastFertilizerId;
+    } else {
+      plot.lastFertilizerId = lastFertilizerId;
+    }
+  }
+  farm.schemaVersion = 8;
+  return farm;
+}
+
 function normalizeWeatherExposure(raw: unknown): WeatherExposureData | undefined {
   if (!isRecord(raw)) return undefined;
   return {
@@ -279,11 +317,15 @@ function normalizePestDamageLevel(raw: unknown): PestDamageLevel {
   return "none";
 }
 
-function createEmptyPlot(now: number): FarmPlotState {
+function createEmptyPlot(
+  now: number,
+  lastFertilizerId?: FertilizerTypeId | null
+): FarmPlotState {
   return {
     status: "empty",
     soilMoisture: DEFAULT_SOIL_MOISTURE,
     soilMoistureUpdatedAt: now,
+    ...(lastFertilizerId !== undefined ? { lastFertilizerId } : {}),
   };
 }
 
@@ -298,6 +340,7 @@ function normalizePlot(
     return plotIndex < unlockedPlotCount ? createEmptyPlot(now) : { status: "locked" };
   }
   if (raw.status === "locked") return { status: "locked" };
+  const lastFertilizerId = normalizeFertilizerId(raw.lastFertilizerId);
   const soilMoisture = isFiniteNumber(raw.soilMoisture)
     ? clampSoilMoisture(raw.soilMoisture)
     : DEFAULT_SOIL_MOISTURE;
@@ -305,13 +348,20 @@ function normalizePlot(
     ? raw.soilMoistureUpdatedAt
     : now;
   if (raw.status === "empty") {
-    return { status: "empty", soilMoisture, soilMoistureUpdatedAt };
+    return {
+      status: "empty",
+      soilMoisture,
+      soilMoistureUpdatedAt,
+      ...(lastFertilizerId !== undefined ? { lastFertilizerId } : {}),
+    };
   }
 
   if (raw.status === "growing" || raw.status === "ready") {
     const crop = CROP_CATALOG.find((entry) => entry.id === raw.cropId);
     if (!crop) {
-      return plotIndex < unlockedPlotCount ? createEmptyPlot(now) : { status: "locked" };
+      return plotIndex < unlockedPlotCount
+        ? createEmptyPlot(now, lastFertilizerId)
+        : { status: "locked" };
     }
 
     const plantedAt = isFiniteNumber(raw.plantedAt) ? raw.plantedAt : now;
@@ -367,6 +417,7 @@ function normalizePlot(
         status: "ready",
         soilMoisture,
         soilMoistureUpdatedAt,
+        ...(lastFertilizerId !== undefined ? { lastFertilizerId } : {}),
         cropId: crop.id,
         plantedAt,
         growthCompletedAt,
@@ -413,6 +464,7 @@ function normalizePlot(
       status: "growing",
       soilMoisture,
       soilMoistureUpdatedAt,
+      ...(lastFertilizerId !== undefined ? { lastFertilizerId } : {}),
       cropId: crop.id,
       plantedAt,
       growthWorkTotalMs,
@@ -542,6 +594,7 @@ export function migrateFarmState(
     else if (version === 4) migrateV4ToV5(farm);
     else if (version === 5) migrateV5ToV6(farm);
     else if (version === 6) migrateV6ToV7(farm, migrationNow);
+    else if (version === 7) migrateV7ToV8(farm);
     version = normalizeCount(farm.schemaVersion);
   }
 

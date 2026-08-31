@@ -653,6 +653,7 @@ function completeGrowingPlot(
     status: "ready",
     soilMoisture: plot.soilMoisture,
     soilMoistureUpdatedAt: completedAt,
+    lastFertilizerId: plot.lastFertilizerId,
     cropId: plot.cropId,
     plantedAt: plot.plantedAt,
     growthCompletedAt: completedAt,
@@ -1114,6 +1115,7 @@ export function plantSeedWithFertilizer(
     status: "growing",
     soilMoisture: plot.soilMoisture,
     soilMoistureUpdatedAt: now,
+    lastFertilizerId: fertilizerId,
     cropId,
     plantedAt: now,
     growthWorkTotalMs: effectiveGrowthMs,
@@ -1179,6 +1181,7 @@ export function applyFertilizerToGrowingCrop(
   plot.growthWorkTotalMs = completedWork + reducedRemainingWork;
   plot.growthLastUpdatedAt = now;
   plot.fertilizerId = fertilizerId;
+  plot.lastFertilizerId = fertilizerId;
   plot.fertilizerXpBonusPct = fertilizer.xpBonusPct;
   plot.growthTimeReductionPct = fertilizer.growthTimeReductionPct;
 
@@ -1462,6 +1465,7 @@ export function harvestPlot(
     status: "empty",
     soilMoisture: plot.soilMoisture,
     soilMoistureUpdatedAt: plot.soilMoistureUpdatedAt,
+    lastFertilizerId: plot.lastFertilizerId,
   };
   farm.gold += reward.goldEarned;
 
@@ -1590,6 +1594,7 @@ export function harvestAllReadyCrops(
           status: "empty",
           soilMoisture: plot.soilMoisture,
           soilMoistureUpdatedAt: plot.soilMoistureUpdatedAt,
+          lastFertilizerId: plot.lastFertilizerId,
         };
       }
     }
@@ -1929,10 +1934,17 @@ export function clearPlot(farm: FarmSaveState, plotIndex: number): boolean {
   const plot = farm.plots[plotIndex];
   if (plot.status === "locked") return false;
 
+  const lastFertilizerId = plot.lastFertilizerId !== undefined
+    ? plot.lastFertilizerId
+    : plot.status === "growing" || plot.status === "ready"
+      ? plot.fertilizerId
+      : undefined;
+
   farm.plots[plotIndex] = {
     status: "empty",
     soilMoisture: plot.soilMoisture,
     soilMoistureUpdatedAt: plot.soilMoistureUpdatedAt,
+    ...(lastFertilizerId !== undefined ? { lastFertilizerId } : {}),
   };
   return true;
 }

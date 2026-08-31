@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { CROP_CATALOG, FERTILIZER_CATALOG } from "../farmCatalog";
 import { CropId, FertilizerTypeId, FarmInventory } from "../farmTypes";
 import { Sprout, X, Store, ShoppingBag, ArrowLeft, Sparkles, Check } from "lucide-react";
@@ -8,6 +8,7 @@ interface PlantSeedModalProps {
   isOpen: boolean;
   onClose: () => void;
   inventory: FarmInventory;
+  initialFertilizerId?: FertilizerTypeId | null;
   onSelectSeedWithFertilizer: (cropId: CropId, fertilizerId: FertilizerTypeId | null) => void;
   onOpenStore?: () => void;
 }
@@ -16,11 +17,25 @@ export const PlantSeedModal: React.FC<PlantSeedModalProps> = ({
   isOpen,
   onClose,
   inventory,
+  initialFertilizerId,
   onSelectSeedWithFertilizer,
   onOpenStore,
 }) => {
   const [selectedCropId, setSelectedCropId] = useState<CropId | null>(null);
   const [selectedFertilizerId, setSelectedFertilizerId] = useState<FertilizerTypeId | null>(null);
+  const initialFertilizerCount = initialFertilizerId
+    ? inventory.fertilizer?.[initialFertilizerId] || 0
+    : 0;
+
+  useEffect(() => {
+    if (!isOpen) return;
+    setSelectedCropId(null);
+    setSelectedFertilizerId(
+      initialFertilizerId && initialFertilizerCount > 0
+        ? initialFertilizerId
+        : null
+    );
+  }, [isOpen, initialFertilizerId, initialFertilizerCount]);
 
   if (!isOpen) return null;
 
