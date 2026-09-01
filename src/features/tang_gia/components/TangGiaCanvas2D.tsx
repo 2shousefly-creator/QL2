@@ -182,7 +182,10 @@ export const TangGiaCanvas2D: React.FC<TangGiaCanvas2DProps> = ({
   now,
 }) => {
   // Helper to format countdown timer
-  const formatCountdown = (ms: number): string => {
+  const formatCountdown = (ms: number | null | undefined): string => {
+    if (ms === null || ms === undefined || !Number.isFinite(ms)) {
+      return "Đang tính...";
+    }
     if (ms <= 0) return "0s";
     const totalSec = Math.floor(ms / 1000);
     const hours = Math.floor(totalSec / 3600);
@@ -370,7 +373,7 @@ export const TangGiaCanvas2D: React.FC<TangGiaCanvas2DProps> = ({
                 ? CROP_CATALOG.find((c) => c.id === cropId)
                 : null;
 
-              let remainingMs = 0;
+              let remainingMs: number | null = 0;
               let progress = 0;
               let isReady = plot.status === "ready";
 
