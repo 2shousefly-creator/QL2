@@ -31,8 +31,9 @@ import {
   DEFAULT_SOIL_MOISTURE,
 } from "./soilMoistureEngine";
 import { clampPestPressure, PEST_OUTBREAK_THRESHOLD } from "./pestEngine";
+import { getNormalTroughDurationMs } from "./animalLifecycle";
 
-export const CURRENT_FARM_SCHEMA_VERSION = 8;
+export const CURRENT_FARM_SCHEMA_VERSION = 9;
 export const DEFAULT_FARM_WEATHER_SEED = 133742;
 
 type MutableFarmRecord = Record<string, any>;
@@ -295,6 +296,13 @@ function migrateV7ToV8(farm: MutableFarmRecord): MutableFarmRecord {
   return farm;
 }
 
+function migrateV8ToV9(farm: MutableFarmRecord): MutableFarmRecord {
+  // Egg workload and hardened livestock timestamps are materialized by the
+  // canonical normalizer below so this migration remains idempotent.
+  farm.schemaVersion = 9;
+  return farm;
+}
+
 function normalizeWeatherExposure(raw: unknown): WeatherExposureData | undefined {
   if (!isRecord(raw)) return undefined;
   return {
@@ -501,30 +509,69 @@ function normalizePlot(
   return plotIndex < unlockedPlotCount ? createEmptyPlot(now) : { status: "locked" };
 }
 
-function normalizeAnimal(raw: unknown, now: number, index: number): PenAnimalState | null {
+function normalizeAnimal(
+  raw: unknown,
+  stateAt: number,
+  index: number
+): PenAnimalState | null {
   if (!isRecord(raw) || typeof raw.animalTypeId !== "string") return null;
 
   const definition = ANIMAL_CATALOG.find((entry) => entry.id === raw.animalTypeId);
-  const fallbackDefinition = definition ?? ANIMAL_CATALOG[0];
-  const addedAt = isFiniteNumber(raw.addedAt) ? raw.addedAt : now;
-  const lifeStartedAt = isFiniteNumber(raw.lifeStartedAt)
+  // Unknown catalog IDs used to survive as invisible, capacity-consuming
+  // entities. Dropping only that invalid entry keeps the remainder of the save.
+  if (!definition) return null;
+
+  const rawAddedAt = isFiniteNumber(raw.addedAt) ? raw.addedAt : stateAt;
+  const addedAt = Math.min(rawAddedAt, stateAt);
+  const rawLifeStartedAt = isFiniteNumber(raw.lifeStartedAt)
     ? raw.lifeStartedAt
-    : addedAt;
-  const lifeEndsAt = isFiniteNumber(raw.lifeEndsAt)
-    ? raw.lifeEndsAt
-    : lifeStartedAt + fallbackDefinition.lifespanMs;
-  const deathAt = isFiniteNumber(raw.deathAt) ? raw.deathAt : null;
+    : rawAddedAt;
+  const lifeStartedAt = Math.min(rawLifeStartedAt, stateAt);
+  const canonicalLifeEndsAt = lifeStartedAt + definition.lifespanMs;
+  const hasCanonicalSavedLifespan =
+    isFiniteNumber(raw.lifeEndsAt) &&
+    isFiniteNumber(raw.lifeStartedAt) &&
+    raw.lifeStartedAt <= stateAt &&
+    Math.abs((raw.lifeEndsAt - raw.lifeStartedAt) - definition.lifespanMs) <= 1_000;
+  // lifeEndsAt is a scheduled future event and may legitimately be in the
+  // future. Rebuild it only when its canonical source timestamp was skewed or
+  // the saved duration no longer matches the catalog lifespan.
+  const lifeEndsAt = Math.max(
+    lifeStartedAt,
+    hasCanonicalSavedLifespan ? raw.lifeEndsAt : canonicalLifeEndsAt
+  );
+  // deathAt is materialized state, never a scheduled future timestamp.
+  const deathAt = isFiniteNumber(raw.deathAt) && raw.deathAt <= stateAt
+    ? Math.max(lifeStartedAt, raw.deathAt)
+    : null;
   const deathCause: AnimalDeathCause | null = deathAt === null
     ? null
     : raw.deathCause === "starvation"
       ? "starvation"
       : "old_age";
-  const cycleStartedAt = isFiniteNumber(raw.cycleStartedAt)
-    ? raw.cycleStartedAt
-    : addedAt;
-  const nextEggAt = isFiniteNumber(raw.nextEggAt)
+  const cycleStartedAt = Math.max(
+    addedAt,
+    isFiniteNumber(raw.cycleStartedAt)
+      ? Math.min(raw.cycleStartedAt, stateAt)
+      : addedAt
+  );
+  const legacyNextEggAt = isFiniteNumber(raw.nextEggAt)
     ? raw.nextEggAt
-    : cycleStartedAt + fallbackDefinition.eggIntervalMs;
+    : cycleStartedAt + definition.eggIntervalMs;
+  // A valid derived ETA cannot be more than one unbuffed cycle beyond the
+  // persisted state timestamp. Rebuild extreme future values caused by clock
+  // skew so egg production cannot be delayed indefinitely.
+  const nextEggAt = legacyNextEggAt >= cycleStartedAt &&
+    legacyNextEggAt <= stateAt + definition.eggIntervalMs
+    ? legacyNextEggAt
+    : stateAt + definition.eggIntervalMs;
+  const eggWorkTotalMs = definition.eggIntervalMs;
+  const eggWorkRemainingMs = isFiniteNumber(raw.eggWorkRemainingMs)
+    ? Math.min(eggWorkTotalMs, Math.max(0, raw.eggWorkRemainingMs))
+    : undefined;
+  const eggLastUpdatedAt = isFiniteNumber(raw.eggLastUpdatedAt)
+    ? Math.min(raw.eggLastUpdatedAt, stateAt)
+    : stateAt;
 
   return {
     instanceId:
@@ -534,6 +581,9 @@ function normalizeAnimal(raw: unknown, now: number, index: number): PenAnimalSta
     animalTypeId: raw.animalTypeId as AnimalTypeId,
     addedAt,
     nextEggAt,
+    eggWorkTotalMs,
+    ...(eggWorkRemainingMs !== undefined ? { eggWorkRemainingMs } : {}),
+    eggLastUpdatedAt,
     lifeStartedAt,
     lifeEndsAt,
     deathAt,
@@ -603,6 +653,7 @@ export function migrateFarmState(
     else if (version === 5) migrateV5ToV6(farm);
     else if (version === 6) migrateV6ToV7(farm, migrationNow);
     else if (version === 7) migrateV7ToV8(farm);
+    else if (version === 8) migrateV8ToV9(farm);
     version = normalizeCount(farm.schemaVersion);
   }
 
@@ -655,19 +706,53 @@ export function migrateFarmState(
   const plots = Array.from({ length: plotCount }, (_, index) =>
     normalizePlot(rawPlots[index], index, unlockedPlotCount, weatherSeed, migrationNow)
   );
-  const penAnimals = (Array.isArray(farm.penAnimals) ? farm.penAnimals : [])
-    .map((animal, index) => normalizeAnimal(animal, migrationNow, index))
-    .filter((animal): animal is PenAnimalState => animal !== null);
-
   const lastSettledAt = normalizePastTimestamp(
     farm.lastSettledAt,
     migrationNow
   );
+  const penAnimals = (Array.isArray(farm.penAnimals) ? farm.penAnimals : [])
+    .map((animal, index) => normalizeAnimal(animal, lastSettledAt, index))
+    .filter((animal): animal is PenAnimalState => animal !== null);
   const penFeedBuffUpdatedAt = normalizePastTimestamp(
     farm.penFeedBuffUpdatedAt,
-    migrationNow,
+    lastSettledAt,
     lastSettledAt
   );
+  const penFeedBuffValue = isFiniteNumber(farm.penFeedBuffValue)
+    ? Math.max(0, Math.min(100, farm.penFeedBuffValue))
+    : 0;
+  const activeFeedSpeedBonus = isFiniteNumber(farm.activeFeedSpeedBonus)
+    ? Math.max(0, farm.activeFeedSpeedBonus)
+    : 0;
+  const livingAnimalCount = penAnimals.reduce(
+    (count, animal) => count + (animal.deathAt === null ? 1 : 0),
+    0
+  );
+  const troughDurationMs = getNormalTroughDurationMs(livingAnimalCount);
+  const feedEmptyAt = penFeedBuffValue > 0 && troughDurationMs > 0
+    ? lastSettledAt + (penFeedBuffValue / 100) * troughDurationMs
+    : lastSettledAt;
+  const eggRate = penFeedBuffValue > 0 && activeFeedSpeedBonus > 0
+    ? 1 + activeFeedSpeedBonus / 100
+    : 1;
+  for (const animal of penAnimals) {
+    if (Number.isFinite(animal.eggWorkRemainingMs)) continue;
+    const total = animal.eggWorkTotalMs || 1;
+    const legacyEndAt = Math.max(lastSettledAt, animal.nextEggAt);
+    const buffDurationMs = Math.max(
+      0,
+      Math.min(legacyEndAt, feedEmptyAt) - lastSettledAt
+    );
+    const normalDurationMs = Math.max(
+      0,
+      legacyEndAt - Math.max(lastSettledAt, feedEmptyAt)
+    );
+    animal.eggWorkRemainingMs = Math.min(
+      total,
+      buffDurationMs * eggRate + normalDurationMs
+    );
+    animal.eggLastUpdatedAt = lastSettledAt;
+  }
 
   const normalized: FarmSaveState = {
     schemaVersion: CURRENT_FARM_SCHEMA_VERSION,
@@ -676,10 +761,11 @@ export function migrateFarmState(
     unlockedPlotCount,
     plots,
     penAnimals,
-    penFeedBuffValue: Math.max(0, Math.min(100, Number(farm.penFeedBuffValue) || 0)),
-    activeFeedSpeedBonus: Math.max(0, Number(farm.activeFeedSpeedBonus) || 0),
+    penFeedBuffValue,
+    activeFeedSpeedBonus,
     penFeedBuffUpdatedAt,
-    penStarvationStartedAt: isFiniteNumber(farm.penStarvationStartedAt)
+    penStarvationStartedAt: isFiniteNumber(farm.penStarvationStartedAt) &&
+      farm.penStarvationStartedAt <= lastSettledAt
       ? farm.penStarvationStartedAt
       : null,
     pendingAnimalDeathNotification: normalizeDeathNotification(

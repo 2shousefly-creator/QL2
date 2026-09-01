@@ -51,6 +51,7 @@ interface TangGiaCanvas2DProps {
   penAnimals: PenAnimalState[];
   eggCount: number;
   penFeedBuffValue: number;
+  penFeedEmptyAt?: number | null;
   activeFeedSpeedBonus?: number;
   penStarvationStartedAt?: number | null;
   selectedPlotIndex: number | null;
@@ -160,6 +161,7 @@ export const TangGiaCanvas2D: React.FC<TangGiaCanvas2DProps> = ({
   penAnimals,
   eggCount,
   penFeedBuffValue,
+  penFeedEmptyAt = null,
   activeFeedSpeedBonus = 0,
   penStarvationStartedAt = null,
   selectedPlotIndex,
@@ -621,6 +623,7 @@ export const TangGiaCanvas2D: React.FC<TangGiaCanvas2DProps> = ({
           penAnimals={penAnimals}
           eggCount={eggCount}
           penFeedBuffValue={penFeedBuffValue}
+          penFeedEmptyAt={penFeedEmptyAt}
           activeFeedSpeedBonus={activeFeedSpeedBonus}
           penStarvationStartedAt={penStarvationStartedAt}
           selectedAnimalId={selectedAnimalId}

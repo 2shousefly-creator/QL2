@@ -3,7 +3,6 @@ import { FEED_CATALOG } from "../farmCatalog";
 import { PenAnimalState } from "../farmTypes";
 import {
   getLivingAnimalCount,
-  getNormalTroughDurationMs,
   getPenDangerRatio,
   getStarvationDeadlineAt,
 } from "../animalLifecycle";
@@ -14,6 +13,7 @@ interface TroughInfoModalProps {
   onClose: () => void;
   penAnimals: PenAnimalState[];
   penFeedBuffValue: number;
+  penFeedEmptyAt?: number | null;
   activeFeedSpeedBonus?: number;
   penStarvationStartedAt?: number | null;
   now?: number;
@@ -24,6 +24,7 @@ export const TroughInfoModal: React.FC<TroughInfoModalProps> = ({
   onClose,
   penAnimals,
   penFeedBuffValue = 0,
+  penFeedEmptyAt = null,
   activeFeedSpeedBonus = 0,
   penStarvationStartedAt = null,
   now = Date.now(),
@@ -35,10 +36,9 @@ export const TroughInfoModal: React.FC<TroughInfoModalProps> = ({
   const deadAnimalCount = penAnimals.length - livingAnimalCount;
   const animalCount = Math.min(5, Math.max(1, livingAnimalCount));
   // 1 animal -> 12h, 2 -> 11h, 3 -> 10h, 4 -> 9h, 5 -> 8h
-  const totalDurationMs = getNormalTroughDurationMs(livingAnimalCount);
   const remainingFeedMs =
-    livingAnimalCount > 0 && currentBuff > 0
-      ? (currentBuff / 100) * totalDurationMs
+    livingAnimalCount > 0 && currentBuff > 0 && Number.isFinite(penFeedEmptyAt)
+      ? Math.max(0, penFeedEmptyAt! - now)
       : 0;
   const starvationDeadlineAt = getStarvationDeadlineAt(penStarvationStartedAt);
   const dangerRatio = getPenDangerRatio(penStarvationStartedAt, now);
@@ -171,7 +171,9 @@ export const TroughInfoModal: React.FC<TroughInfoModalProps> = ({
                     ? isDangerMode
                       ? formatRemainingHours(dangerRemainingMs)
                       : currentBuff > 0
-                      ? formatRemainingHours(remainingFeedMs)
+                      ? Number.isFinite(penFeedEmptyAt)
+                        ? formatRemainingHours(remainingFeedMs)
+                        : "Được bảo lưu sau khi vật nuôi chết"
                       : "0 phút (Hết thức ăn)"
                     : "Chưa có vật nuôi sống"}
                 </span>

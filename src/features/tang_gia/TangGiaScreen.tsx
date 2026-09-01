@@ -170,6 +170,12 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
     farmState.weatherSeed ?? 133742
   );
   const presentationState = getFarmPresentationState(farmState, now);
+  const selectedFarmPlot = selectedPlotIndex === null
+    ? null
+    : farmState.plots[selectedPlotIndex];
+  const selectedPlotLastFertilizerId = selectedFarmPlot?.status === "empty"
+    ? selectedFarmPlot.lastFertilizerId
+    : undefined;
 
   const handleOpenTroughInfo = () => {
     setIsTroughInfoOpen(true);
@@ -1045,6 +1051,7 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
         penAnimals={presentationState.penAnimals}
         eggCount={totalEggCount}
         penFeedBuffValue={presentationState.penFeedBuffValue}
+        penFeedEmptyAt={presentationState.penFeedEmptyAt}
         activeFeedSpeedBonus={presentationState.activeFeedSpeedBonus}
         penStarvationStartedAt={presentationState.penStarvationStartedAt}
         selectedPlotIndex={selectedPlotIndex}
@@ -1363,6 +1370,7 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
         isOpen={isPlantModalOpen}
         onClose={() => setIsPlantModalOpen(false)}
         inventory={farmState.inventory}
+        initialFertilizerId={selectedPlotLastFertilizerId}
         onSelectSeedWithFertilizer={handlePlantSeedWithFertilizer}
         onOpenStore={() => openStore("crop")}
       />
@@ -1392,8 +1400,8 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
         isOpen={isFeedModalOpen}
         onClose={() => setIsFeedModalOpen(false)}
         inventory={farmState.inventory}
-        penFeedBuffValue={farmState.penFeedBuffValue || 0}
-        activeFeedSpeedBonus={farmState.activeFeedSpeedBonus || 0}
+        penFeedBuffValue={presentationState.penFeedBuffValue}
+        activeFeedSpeedBonus={presentationState.activeFeedSpeedBonus}
         onSelectFeed={handleFeedPen}
         onOpenStore={() => openStore("feed")}
       />
@@ -1409,6 +1417,7 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
         onClose={handleCloseTroughInfo}
         penAnimals={presentationState.penAnimals}
         penFeedBuffValue={presentationState.penFeedBuffValue}
+        penFeedEmptyAt={presentationState.penFeedEmptyAt}
         activeFeedSpeedBonus={presentationState.activeFeedSpeedBonus}
         penStarvationStartedAt={presentationState.penStarvationStartedAt}
         now={now}

@@ -8,6 +8,7 @@ interface PlantSeedModalProps {
   isOpen: boolean;
   onClose: () => void;
   inventory: FarmInventory;
+  initialFertilizerId?: FertilizerTypeId | null;
   onSelectSeedWithFertilizer: (cropId: CropId, fertilizerId: FertilizerTypeId | null) => void;
   onOpenStore?: () => void;
 }
@@ -16,17 +17,30 @@ export const PlantSeedModal: React.FC<PlantSeedModalProps> = ({
   isOpen,
   onClose,
   inventory,
+  initialFertilizerId,
   onSelectSeedWithFertilizer,
   onOpenStore,
 }) => {
   const [selectedCropId, setSelectedCropId] = useState<CropId | null>(null);
   const [selectedFertilizerId, setSelectedFertilizerId] = useState<FertilizerTypeId | null>(null);
+  const rememberedFertilizer = initialFertilizerId
+    ? FERTILIZER_CATALOG.find((fertilizer) => fertilizer.id === initialFertilizerId)
+    : null;
+  const rememberedFertilizerCount = rememberedFertilizer
+    ? inventory.fertilizer?.[rememberedFertilizer.id] || 0
+    : 0;
 
   useEffect(() => {
     if (!isOpen) return;
     setSelectedCropId(null);
-    setSelectedFertilizerId(null);
-  }, [isOpen]);
+    // An unavailable remembered item remains a preference on the plot, but
+    // this planting safely falls back to the explicit no-fertilizer option.
+    setSelectedFertilizerId(
+      rememberedFertilizer && rememberedFertilizerCount > 0
+        ? rememberedFertilizer.id
+        : null
+    );
+  }, [isOpen, rememberedFertilizer?.id, rememberedFertilizerCount]);
 
   if (!isOpen) return null;
 
@@ -35,13 +49,19 @@ export const PlantSeedModal: React.FC<PlantSeedModalProps> = ({
     (crop) => (inventory.seeds[crop.id] || 0) > 0
   );
 
-  // Owned fertilizers
-  const ownedFertilizers = FERTILIZER_CATALOG.filter(
-    (fert) => (inventory.fertilizer?.[fert.id] || 0) > 0
+  // Show owned fertilizers plus an unavailable remembered preference so the
+  // fallback is transparent and never silently replaces the saved choice.
+  const visibleFertilizers = FERTILIZER_CATALOG.filter(
+    (fert) =>
+      (inventory.fertilizer?.[fert.id] || 0) > 0 ||
+      fert.id === rememberedFertilizer?.id
   );
 
   const selectedCrop = selectedCropId
     ? CROP_CATALOG.find((c) => c.id === selectedCropId)
+    : null;
+  const selectedFertilizer = selectedFertilizerId
+    ? FERTILIZER_CATALOG.find((fertilizer) => fertilizer.id === selectedFertilizerId)
     : null;
 
   const handleConfirmPlanting = () => {
@@ -229,6 +249,32 @@ export const PlantSeedModal: React.FC<PlantSeedModalProps> = ({
                 <span>Chọn Phân Bón Kèm Theo (Tùy Chọn)</span>
               </label>
 
+              <div className="rounded-2xl border border-emerald-500/40 bg-emerald-500/10 p-3 text-xs">
+                <div className="font-black text-emerald-300">
+                  {selectedFertilizer
+                    ? `Đang chọn: ${selectedFertilizer.name}`
+                    : "Đang chọn: Không dùng phân bón"}
+                </div>
+                <div className="mt-1 text-[10px] font-semibold text-slate-300">
+                  {selectedFertilizer
+                    ? [
+                        selectedFertilizer.growthTimeReductionPct > 0
+                          ? `Giảm ${Math.round(selectedFertilizer.growthTimeReductionPct * 100)}% thời gian sinh trưởng`
+                          : null,
+                        selectedFertilizer.xpBonusPct > 0
+                          ? `Thưởng +${Math.round(selectedFertilizer.xpBonusPct * 100)}% XP`
+                          : null,
+                      ].filter(Boolean).join(" · ")
+                    : "Cây sẽ dùng thời gian sinh trưởng và XP tiêu chuẩn."}
+                </div>
+              </div>
+
+              {rememberedFertilizer && rememberedFertilizerCount <= 0 && (
+                <div className="rounded-xl border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-[10px] font-semibold text-amber-200">
+                  Đã ghi nhớ {rememberedFertilizer.name}, nhưng hiện đã hết. Lần gieo này đang dùng “Không dùng phân bón”; lựa chọn đã ghi nhớ vẫn được giữ cho lần sau.
+                </div>
+              )}
+
               {/* No fertilizer option */}
               <button
                 onClick={() => setSelectedFertilizerId(null)}
@@ -253,18 +299,22 @@ export const PlantSeedModal: React.FC<PlantSeedModalProps> = ({
                 {selectedFertilizerId === null && <Check className="w-4 h-4 text-amber-400" />}
               </button>
 
-              {/* Owned fertilizers */}
-              {ownedFertilizers.map((fert) => {
+              {/* Owned fertilizers and an unavailable remembered preference */}
+              {visibleFertilizers.map((fert) => {
                 const isSelected = selectedFertilizerId === fert.id;
                 const count = inventory.fertilizer[fert.id] || 0;
+                const isOutOfStock = count <= 0;
 
                 return (
                   <button
                     key={fert.id}
-                    onClick={() => setSelectedFertilizerId(fert.id)}
+                    disabled={isOutOfStock}
+                    onClick={() => !isOutOfStock && setSelectedFertilizerId(fert.id)}
                     className={`w-full p-3 rounded-2xl border text-left flex items-center justify-between transition-all ${
                       isSelected
                         ? "bg-amber-500/10 border-amber-400 text-amber-200"
+                        : isOutOfStock
+                        ? "bg-slate-900 border-slate-800 text-slate-500 cursor-not-allowed opacity-75"
                         : "bg-slate-850 border-slate-750 text-slate-300 hover:bg-slate-800"
                     }`}
                   >
@@ -282,7 +332,7 @@ export const PlantSeedModal: React.FC<PlantSeedModalProps> = ({
 
                     <div className="flex items-center gap-2 shrink-0">
                       <span className="px-2 py-0.5 rounded-lg bg-slate-800 text-[10px] font-bold text-slate-300">
-                        x{count}
+                        {isOutOfStock ? "Hết" : `x${count}`}
                       </span>
                       {isSelected && <Check className="w-4 h-4 text-amber-400" />}
                     </div>
