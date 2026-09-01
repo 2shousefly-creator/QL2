@@ -22,11 +22,39 @@ export function getSoilMoistureBand(moisture: number): SoilMoistureBand {
 }
 
 /**
- * The sufficient-moisture effect means 5% less duration, so its exact work
- * rate is 1 / 0.95. It is continuous and never applied as a threshold event.
+ * Returns the band that applies to the open interval immediately after a
+ * moisture boundary. The exact boundary itself always keeps the canonical
+ * band returned by getSoilMoistureBand (for example, 60 is "sufficient").
+ *
+ * This avoids changing the gameplay state with an epsilon while still letting
+ * the event timeline select the correct rate for the next segment as moisture
+ * moves away from an exact threshold.
  */
-export function getMoistureGrowthRate(moisture: number): number {
-  switch (getSoilMoistureBand(moisture)) {
+export function getNextSoilMoistureSegmentBand(
+  moisture: number,
+  ratePerHour: number
+): SoilMoistureBand {
+  const value = clampSoilMoisture(moisture);
+  if (ratePerHour === 0) return getSoilMoistureBand(value);
+
+  const boundaryIndex = SOIL_MOISTURE_THRESHOLDS.findIndex(
+    (threshold) => threshold === value
+  );
+  if (boundaryIndex < 0) return getSoilMoistureBand(value);
+
+  const adjacentIndex = ratePerHour > 0
+    ? Math.min(boundaryIndex + 1, SOIL_MOISTURE_THRESHOLDS.length - 1)
+    : Math.max(boundaryIndex - 1, 0);
+  const adjacentThreshold = SOIL_MOISTURE_THRESHOLDS[adjacentIndex];
+  return getSoilMoistureBand((value + adjacentThreshold) / 2);
+}
+
+/**
+ * The sufficient-moisture effect means 5% less duration, so its exact work
+ * rate is 1 / 0.95.
+ */
+function getGrowthRateForMoistureBand(band: SoilMoistureBand): number {
+  switch (band) {
     case "sufficient":
       return 1 / 0.95;
     case "normal":
@@ -37,6 +65,19 @@ export function getMoistureGrowthRate(moisture: number): number {
     case "barren":
       return 0;
   }
+}
+
+export function getMoistureGrowthRate(moisture: number): number {
+  return getGrowthRateForMoistureBand(getSoilMoistureBand(moisture));
+}
+
+export function getNextMoistureSegmentGrowthRate(
+  moisture: number,
+  ratePerHour: number
+): number {
+  return getGrowthRateForMoistureBand(
+    getNextSoilMoistureSegmentBand(moisture, ratePerHour)
+  );
 }
 
 export function getNextSoilMoistureThreshold(
