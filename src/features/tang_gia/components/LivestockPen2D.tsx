@@ -13,7 +13,6 @@ import {
   getAnimalShadowTopOffset,
   getAnimalVisualScale,
   getLivingAnimalCount,
-  getNormalTroughDurationMs,
   getPenDangerRatio,
   getStarvationDeadlineAt,
   isAnimalDead,
@@ -32,6 +31,7 @@ interface LivestockPen2DProps {
   penAnimals: PenAnimalState[];
   eggCount: number;
   penFeedBuffValue: number;
+  penFeedEmptyAt?: number | null;
   activeFeedSpeedBonus?: number;
   penStarvationStartedAt?: number | null;
   selectedAnimalId: string | null;
@@ -562,6 +562,7 @@ export const LivestockPen2D: React.FC<LivestockPen2DProps> = ({
   penAnimals,
   eggCount,
   penFeedBuffValue,
+  penFeedEmptyAt = null,
   activeFeedSpeedBonus = 0,
   penStarvationStartedAt = null,
   selectedAnimalId,
@@ -802,10 +803,9 @@ export const LivestockPen2D: React.FC<LivestockPen2DProps> = ({
       {/* Pen Food Trough Meter */}
       {(() => {
         const livingAnimalCount = getLivingAnimalCount(penAnimals);
-        const totalDurationMs = getNormalTroughDurationMs(livingAnimalCount);
         const remainingFeedMs =
-          livingAnimalCount > 0 && penFeedBuffValue > 0
-            ? (penFeedBuffValue / 100) * totalDurationMs
+          livingAnimalCount > 0 && penFeedBuffValue > 0 && Number.isFinite(penFeedEmptyAt)
+            ? Math.max(0, penFeedEmptyAt! - now)
             : 0;
         const starvationDeadlineAt = getStarvationDeadlineAt(penStarvationStartedAt);
         const dangerRatio = getPenDangerRatio(penStarvationStartedAt, now);
@@ -921,7 +921,9 @@ export const LivestockPen2D: React.FC<LivestockPen2DProps> = ({
                   <span className="text-amber-300 font-bold">
                     ⏳ Dự kiến hết thức ăn:{" "}
                     {livingAnimalCount > 0
-                      ? formatEggCountdown(remainingFeedMs)
+                      ? Number.isFinite(penFeedEmptyAt)
+                        ? formatEggCountdown(remainingFeedMs)
+                        : "Được bảo lưu khi không còn vật nuôi"
                       : "Chưa có vật nuôi sống"}
                   </span>
                 ) : (

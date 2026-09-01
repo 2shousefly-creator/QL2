@@ -211,7 +211,14 @@ export type PenAnimalState = {
   instanceId: string;
   animalTypeId: AnimalTypeId;
   addedAt: number;
+  /** Compatibility/presentation timestamp derived from the canonical workload. */
   nextEggAt: number;
+  /** Canonical base workload for the current egg cycle. */
+  eggWorkTotalMs?: number;
+  /** Canonical remaining base workload; feed changes only the processing rate. */
+  eggWorkRemainingMs?: number;
+  /** Last wall-clock timestamp already reflected in eggWorkRemainingMs. */
+  eggLastUpdatedAt?: number;
   lifeStartedAt: number;
   lifeEndsAt: number;
   deathAt: number | null;
