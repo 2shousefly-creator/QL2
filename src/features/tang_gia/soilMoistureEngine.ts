@@ -6,10 +6,25 @@ export const MIN_PLANTING_SOIL_MOISTURE = 20;
 export const SUFFICIENT_SOIL_MOISTURE = 60;
 
 const SOIL_MOISTURE_THRESHOLDS = [0, 20, 35, 60, 100] as const;
+const SOIL_MOISTURE_BOUNDARY_TOLERANCE = 1e-8;
 
-export function clampSoilMoisture(value: number): number {
+function clampSoilMoistureRange(value: number): number {
   if (!Number.isFinite(value)) return DEFAULT_SOIL_MOISTURE;
   return Math.max(0, Math.min(100, value));
+}
+
+/** Snaps only floating-point residue near a canonical gameplay threshold. */
+export function snapSoilMoistureToThreshold(value: number): number {
+  const clamped = clampSoilMoistureRange(value);
+  const threshold = SOIL_MOISTURE_THRESHOLDS.find(
+    (candidate) =>
+      Math.abs(candidate - clamped) <= SOIL_MOISTURE_BOUNDARY_TOLERANCE
+  );
+  return threshold ?? clamped;
+}
+
+export function clampSoilMoisture(value: number): number {
+  return snapSoilMoistureToThreshold(value);
 }
 
 export function getSoilMoistureBand(moisture: number): SoilMoistureBand {
