@@ -170,12 +170,6 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
     farmState.weatherSeed ?? 133742
   );
   const presentationState = getFarmPresentationState(farmState, now);
-  const selectedFarmPlot = selectedPlotIndex === null
-    ? null
-    : farmState.plots[selectedPlotIndex];
-  const selectedPlotLastFertilizerId = selectedFarmPlot?.status === "empty"
-    ? selectedFarmPlot.lastFertilizerId
-    : undefined;
 
   const handleOpenTroughInfo = () => {
     setIsTroughInfoOpen(true);
@@ -1369,7 +1363,6 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
         isOpen={isPlantModalOpen}
         onClose={() => setIsPlantModalOpen(false)}
         inventory={farmState.inventory}
-        initialFertilizerId={selectedPlotLastFertilizerId}
         onSelectSeedWithFertilizer={handlePlantSeedWithFertilizer}
         onOpenStore={() => openStore("crop")}
       />

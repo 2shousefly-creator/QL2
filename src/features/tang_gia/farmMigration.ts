@@ -47,6 +47,14 @@ function isFiniteNumber(value: unknown): value is number {
   return typeof value === "number" && Number.isFinite(value);
 }
 
+function normalizePastTimestamp(
+  value: unknown,
+  now: number,
+  fallback: number = now
+): number {
+  return isFiniteNumber(value) ? Math.min(value, now) : fallback;
+}
+
 function normalizeCount(value: unknown): number {
   return isFiniteNumber(value) && value >= 0 ? Math.floor(value) : 0;
 }
@@ -344,9 +352,10 @@ function normalizePlot(
   const soilMoisture = isFiniteNumber(raw.soilMoisture)
     ? clampSoilMoisture(raw.soilMoisture)
     : DEFAULT_SOIL_MOISTURE;
-  const soilMoistureUpdatedAt = isFiniteNumber(raw.soilMoistureUpdatedAt)
-    ? raw.soilMoistureUpdatedAt
-    : now;
+  const soilMoistureUpdatedAt = normalizePastTimestamp(
+    raw.soilMoistureUpdatedAt,
+    now
+  );
   if (raw.status === "empty") {
     return {
       status: "empty",
@@ -364,7 +373,7 @@ function normalizePlot(
         : { status: "locked" };
     }
 
-    const plantedAt = isFiniteNumber(raw.plantedAt) ? raw.plantedAt : now;
+    const plantedAt = normalizePastTimestamp(raw.plantedAt, now);
     const weatherExposure = normalizeWeatherExposure(raw.weatherExposure);
     const persistedPenalty = normalizeQualityPenalty(raw.qualityPenalty);
     const qualityPenalty: CropQualityPenalty = soilMoisture <= 0
@@ -387,21 +396,19 @@ function normalizePlot(
       ? Math.max(0, Math.min(0.95, raw.growthTimeReductionPct))
       : 0;
     const pestPressure = clampPestPressure(Number(raw.pestPressure));
-    const pestUpdatedAt = isFiniteNumber(raw.pestUpdatedAt)
-      ? raw.pestUpdatedAt
-      : now;
+    const pestUpdatedAt = normalizePastTimestamp(raw.pestUpdatedAt, now);
     const pestOutbreakAt = pestPressure >= PEST_OUTBREAK_THRESHOLD
       ? isFiniteNumber(raw.pestOutbreakAt)
-        ? raw.pestOutbreakAt
+        ? Math.min(raw.pestOutbreakAt, now)
         : pestUpdatedAt
       : null;
     const pestDamageLevel = normalizePestDamageLevel(raw.pestDamageLevel);
 
     if (raw.status === "ready") {
       const growthCompletedAt = isFiniteNumber(raw.growthCompletedAt)
-        ? raw.growthCompletedAt
+        ? Math.min(raw.growthCompletedAt, now)
         : isFiniteNumber(raw.growthEndsAt)
-          ? raw.growthEndsAt
+          ? Math.min(raw.growthEndsAt, now)
           : now;
       const rolledQuality = qualityPenalty === "none" &&
         pestDamageLevel === "none" &&
@@ -449,9 +456,10 @@ function normalizePlot(
     const growthWorkRemainingMs = isFiniteNumber(raw.growthWorkRemainingMs)
       ? Math.max(0, Math.min(growthWorkTotalMs, raw.growthWorkRemainingMs))
       : growthWorkTotalMs * (1 - legacyProgress);
-    const growthLastUpdatedAt = isFiniteNumber(raw.growthLastUpdatedAt)
-      ? raw.growthLastUpdatedAt
-      : now;
+    const growthLastUpdatedAt = normalizePastTimestamp(
+      raw.growthLastUpdatedAt,
+      now
+    );
     const elapsedLegacyMs = Math.max(0, Math.min(now, legacyGrowthEndsAt) - plantedAt);
     const weatherExposureMs = normalizeWeatherExposureMs(raw.weatherExposureMs) ?? {
       sunny: (weatherExposure?.sunny || 0) * elapsedLegacyMs,
@@ -651,12 +659,15 @@ export function migrateFarmState(
     .map((animal, index) => normalizeAnimal(animal, migrationNow, index))
     .filter((animal): animal is PenAnimalState => animal !== null);
 
-  const lastSettledAt = isFiniteNumber(farm.lastSettledAt)
-    ? farm.lastSettledAt
-    : migrationNow;
-  const penFeedBuffUpdatedAt = isFiniteNumber(farm.penFeedBuffUpdatedAt)
-    ? farm.penFeedBuffUpdatedAt
-    : lastSettledAt;
+  const lastSettledAt = normalizePastTimestamp(
+    farm.lastSettledAt,
+    migrationNow
+  );
+  const penFeedBuffUpdatedAt = normalizePastTimestamp(
+    farm.penFeedBuffUpdatedAt,
+    migrationNow,
+    lastSettledAt
+  );
 
   const normalized: FarmSaveState = {
     schemaVersion: CURRENT_FARM_SCHEMA_VERSION,

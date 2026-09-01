@@ -127,7 +127,7 @@ import {
 } from "./weatherEngine";
 import {
   clampSoilMoisture,
-  getMoistureGrowthRate,
+  getNextMoistureSegmentGrowthRate,
   getNextSoilMoistureThreshold,
   MANUAL_WATER_AMOUNT,
   MIN_PLANTING_SOIL_MOISTURE,
@@ -593,6 +593,7 @@ const SETTLEMENT_EPSILON = 1e-7;
 // timing and makes the Growing -> Ready transition numerically stable.
 const GROWTH_COMPLETION_TOLERANCE_MS = 1;
 const MAX_PLOT_SETTLEMENT_SEGMENTS = 20_000;
+const TIMELINE_BOUNDARY_TOLERANCE_MS = 1e-6;
 
 function escalateMoisturePenalty(
   current: "none" | "no_rare_perfect" | "common_only",
@@ -673,17 +674,12 @@ function completeGrowingPlot(
   return readyPlot;
 }
 
-/**
- * Pure event-segment settlement for one unlocked plot. Boundaries are weather
- * slots, moisture bands, Pest outbreak/damage and growth completion; no
- * per-second/per-minute loop is used. Empty plots only settle soil moisture,
- * while Growing and Ready crops share the complete Pest timeline.
- */
-export function settlePlotState(
+/** Shared event-segment core for persisted settlement and pure ETA projection. */
+function advancePlotTimeline(
   sourcePlot: FarmPlotState,
-  _plotIndex: number,
-  now: number,
-  weatherSeed: number = DEFAULT_FARM_WEATHER_SEED
+  timelineEnd: number,
+  weatherSeed: number,
+  stopAtGrowthCompletion: boolean
 ): FarmPlotState {
   if (sourcePlot.status === "locked") return sourcePlot;
 
@@ -693,7 +689,7 @@ export function settlePlotState(
   const latestStateAt = plot.status === "growing"
     ? Math.max(plot.soilMoistureUpdatedAt, plot.growthLastUpdatedAt)
     : plot.soilMoistureUpdatedAt;
-  let cursor = Math.min(now, latestStateAt);
+  let cursor = Math.min(timelineEnd, latestStateAt);
   plot.soilMoisture = clampSoilMoisture(plot.soilMoisture);
   plot.soilMoistureUpdatedAt = cursor;
   if (plot.status === "growing") plot.growthLastUpdatedAt = cursor;
@@ -731,7 +727,7 @@ export function settlePlotState(
 
   for (
     let guard = 0;
-    cursor < now && guard < MAX_PLOT_SETTLEMENT_SEGMENTS;
+    cursor < timelineEnd && guard < MAX_PLOT_SETTLEMENT_SEGMENTS;
     guard += 1
   ) {
     if (
@@ -740,6 +736,7 @@ export function settlePlotState(
     ) {
       plot.growthWorkRemainingMs = 0;
       plot = completeGrowingPlot(plot, cursor);
+      if (stopAtGrowthCompletion) break;
       continue;
     }
 
@@ -768,11 +765,11 @@ export function settlePlotState(
         cursor
       );
     }
-    const directionalMoisture = clampSoilMoisture(
-      plot.soilMoisture + Math.sign(moistureRatePerHour) * SETTLEMENT_EPSILON
-    );
     const growthRate = plot.status === "growing"
-      ? getMoistureGrowthRate(directionalMoisture) *
+      ? getNextMoistureSegmentGrowthRate(
+          plot.soilMoisture,
+          moistureRatePerHour
+        ) *
         getWeatherGrowthRate(slot.weather) *
         (pestIsActive ? getPestGrowthRate(plot, cursor) : 1)
       : 0;
@@ -806,7 +803,7 @@ export function settlePlotState(
         )
       : Number.POSITIVE_INFINITY;
     const segmentEnd = Math.min(
-      now,
+      timelineEnd,
       slot.endMs,
       thresholdAt,
       pestStartsAt,
@@ -815,7 +812,7 @@ export function settlePlotState(
       growthCompletesAt
     );
     if (segmentEnd <= cursor + 1e-6) {
-      cursor = Math.min(now, cursor + 1);
+      cursor = Math.min(timelineEnd, cursor + 1);
       continue;
     }
 
@@ -829,9 +826,13 @@ export function settlePlotState(
       );
       plot.growthLastUpdatedAt = segmentEnd;
     }
-    plot.soilMoisture = clampSoilMoisture(
-      startingMoisture + (durationMs / HOUR_MS) * moistureRatePerHour
-    );
+    const reachedMoistureThreshold = nextThreshold !== null &&
+      Math.abs(segmentEnd - thresholdAt) <= TIMELINE_BOUNDARY_TOLERANCE_MS;
+    plot.soilMoisture = reachedMoistureThreshold
+      ? nextThreshold!
+      : clampSoilMoisture(
+          startingMoisture + (durationMs / HOUR_MS) * moistureRatePerHour
+        );
     plot.soilMoistureUpdatedAt = segmentEnd;
 
     if (cropPlot && pestIsActive) {
@@ -872,6 +873,7 @@ export function settlePlotState(
     ) {
       plot.growthWorkRemainingMs = 0;
       plot = completeGrowingPlot(plot, cursor);
+      if (stopAtGrowthCompletion) break;
     }
   }
 
@@ -885,10 +887,11 @@ export function settlePlotState(
     plot = completeGrowingPlot(plot, cursor);
   }
 
-  plot.soilMoistureUpdatedAt = now;
-  if (plot.status === "growing") plot.growthLastUpdatedAt = now;
+  const finalizedAt = Number.isFinite(timelineEnd) ? timelineEnd : cursor;
+  plot.soilMoistureUpdatedAt = finalizedAt;
+  if (plot.status === "growing") plot.growthLastUpdatedAt = finalizedAt;
   if (plot.status === "growing" || plot.status === "ready") {
-    if (now >= plot.pestUpdatedAt) {
+    if (finalizedAt >= plot.pestUpdatedAt) {
       plot.pestPressure = clampPestPressure(plot.pestPressure);
       if (
         plot.pestPressure >= PEST_OUTBREAK_THRESHOLD &&
@@ -901,13 +904,65 @@ export function settlePlotState(
         plot.pestDamageLevel,
         plot.pestPressure,
         plot.pestOutbreakAt,
-        now
+        finalizedAt
       );
-      plot.pestUpdatedAt = now;
+      plot.pestUpdatedAt = finalizedAt;
     }
     if (plot.status === "ready") plot.rolledQuality = resolveCropQuality(plot);
   }
   return plot;
+}
+
+function clampFuturePlotTimestamps(
+  sourcePlot: FarmPlotState,
+  now: number
+): FarmPlotState {
+  if (sourcePlot.status === "locked") return sourcePlot;
+
+  const plot: FarmPlotState = sourcePlot.status === "growing"
+    ? { ...sourcePlot, weatherExposureMs: { ...sourcePlot.weatherExposureMs } }
+    : { ...sourcePlot };
+  const clampTimestamp = (value: number): number =>
+    Number.isFinite(value) ? Math.min(value, now) : now;
+  plot.soilMoistureUpdatedAt = clampTimestamp(plot.soilMoistureUpdatedAt);
+
+  if (plot.status === "growing") {
+    plot.growthLastUpdatedAt = clampTimestamp(plot.growthLastUpdatedAt);
+  }
+  if (plot.status === "growing" || plot.status === "ready") {
+    plot.plantedAt = clampTimestamp(plot.plantedAt);
+    plot.pestUpdatedAt = clampTimestamp(plot.pestUpdatedAt);
+    if (plot.pestOutbreakAt !== null) {
+      plot.pestOutbreakAt = Number.isFinite(plot.pestOutbreakAt)
+        ? Math.min(plot.pestOutbreakAt, now)
+        : null;
+    }
+    if (plot.status === "ready") {
+      plot.growthCompletedAt = clampTimestamp(plot.growthCompletedAt);
+    }
+  }
+  return plot;
+}
+
+/**
+ * Pure event-segment settlement for one unlocked plot. Boundaries are weather
+ * slots, moisture bands, Pest outbreak/damage and growth completion; no
+ * per-second/per-minute loop is used. Empty plots only settle soil moisture,
+ * while Growing and Ready crops share the complete Pest timeline.
+ */
+export function settlePlotState(
+  sourcePlot: FarmPlotState,
+  _plotIndex: number,
+  now: number,
+  weatherSeed: number = DEFAULT_FARM_WEATHER_SEED
+): FarmPlotState {
+  const transactionNow = Number.isFinite(now) ? now : Date.now();
+  return advancePlotTimeline(
+    clampFuturePlotTimestamps(sourcePlot, transactionNow),
+    transactionNow,
+    weatherSeed,
+    false
+  );
 }
 
 export function getCropGrowthProgress(plot: FarmPlotState): number {
@@ -924,21 +979,52 @@ export function getCurrentCropRemainingDurationMs(
   now: number,
   weatherSeed: number = DEFAULT_FARM_WEATHER_SEED
 ): number {
-  if (plot.status !== "growing") return 0;
-  const slot = getCanonicalWeatherSlot(now, weatherSeed);
-  const moistureRate = getSoilMoistureRatePerHour(slot.season, slot.phase, slot.weather);
-  const directionalMoisture = clampSoilMoisture(
-    plot.soilMoisture + Math.sign(moistureRate) * SETTLEMENT_EPSILON
+  const transactionNow = Number.isFinite(now) ? now : Date.now();
+  const completionAt = getProjectedCropCompletionAt(
+    plot,
+    transactionNow,
+    weatherSeed
   );
-  const rate = getMoistureGrowthRate(directionalMoisture) *
-    getWeatherGrowthRate(slot.weather) *
-    getPestGrowthRate(plot, now);
-  return rate > 0 ? plot.growthWorkRemainingMs / rate : Number.POSITIVE_INFINITY;
+  return completionAt === null
+    ? 0
+    : Math.max(0, completionAt - transactionNow);
+}
+
+/**
+ * Forecasts crop completion without mutating the source plot. The projection
+ * runs the same weather/moisture/Pest event segments used by settlement.
+ */
+export function getProjectedCropCompletionAt(
+  plot: FarmPlotState,
+  now: number,
+  weatherSeed: number = DEFAULT_FARM_WEATHER_SEED
+): number | null {
+  const transactionNow = Number.isFinite(now) ? now : Date.now();
+  if (plot.status === "ready") {
+    return Math.min(plot.growthCompletedAt, transactionNow);
+  }
+  if (plot.status !== "growing") return null;
+  const currentPlot = settlePlotState(plot, 0, transactionNow, weatherSeed);
+  if (currentPlot.status === "ready") return currentPlot.growthCompletedAt;
+  if (currentPlot.status !== "growing") return null;
+
+  const projectedPlot = advancePlotTimeline(
+    currentPlot,
+    Number.POSITIVE_INFINITY,
+    weatherSeed,
+    true
+  );
+  return projectedPlot.status === "ready"
+    ? projectedPlot.growthCompletedAt
+    : Number.POSITIVE_INFINITY;
 }
 
 /** Settles the whole Farm to wall-clock `now`. */
 export function settleFarmState(farm: FarmSaveState, now: number): FarmSettlementResult {
-  const currentNow = Math.max(farm.lastSettledAt || 0, now);
+  const currentNow = Number.isFinite(now) ? now : Date.now();
+  const previousSettledAt = Number.isFinite(farm.lastSettledAt)
+    ? Math.min(farm.lastSettledAt, currentNow)
+    : currentNow;
   if (!Number.isFinite(farm.weatherSeed)) farm.weatherSeed = DEFAULT_FARM_WEATHER_SEED;
   const weatherSeed = farm.weatherSeed ?? DEFAULT_FARM_WEATHER_SEED;
 
@@ -952,7 +1038,7 @@ export function settleFarmState(farm: FarmSaveState, now: number): FarmSettlemen
   }
 
   // Settle livestock lifecycle, Feed/Danger and eggs along one timestamp timeline.
-  const startT = farm.lastSettledAt || currentNow;
+  const startT = previousSettledAt;
   const endT = currentNow;
   const newDeaths = settlePenAnimals(farm, startT, endT, weatherSeed);
   const queuedOfflineDeathNotification =
