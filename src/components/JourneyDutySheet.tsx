@@ -75,9 +75,9 @@ export const JourneyDutySheet: React.FC<JourneyDutySheetProps> = ({
         }
       }}
     >
-      <div className="w-full max-w-lg bg-slate-900 border-t sm:border border-slate-700 rounded-t-3xl sm:rounded-3xl p-4 sm:p-6 shadow-2xl text-slate-100 flex flex-col max-h-[88vh] sm:max-h-[85vh] overflow-hidden">
+      <div className="theme-card-accent w-full max-w-lg bg-slate-900 border-t sm:border rounded-t-3xl sm:rounded-3xl p-4 sm:p-6 shadow-2xl text-slate-100 flex flex-col max-h-[88vh] sm:max-h-[85vh] overflow-hidden">
         {/* Header & Close */}
-        <div className="shrink-0 flex items-center justify-between border-b border-slate-800 pb-3">
+        <div className="theme-divider shrink-0 flex items-center justify-between border-b pb-3">
           <div className="flex items-center gap-2 flex-wrap">
             {isFullyAchieved && (
               <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
@@ -85,7 +85,7 @@ export const JourneyDutySheet: React.FC<JourneyDutySheetProps> = ({
               </span>
             )}
             {isCurrentFamily && (
-              <span className="inline-flex items-center gap-1 text-xs font-bold px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 animate-pulse">
+              <span className={`theme-badge inline-flex items-center gap-1 text-xs font-bold px-2.5 py-0.5 rounded-full border ${gameState.settings.reducedMotion ? "" : "animate-pulse"}`}>
                 Quân hàm hiện tại
               </span>
             )}
@@ -105,7 +105,7 @@ export const JourneyDutySheet: React.FC<JourneyDutySheetProps> = ({
               soundManager.playClick();
               onClose();
             }}
-            className="p-2 rounded-full bg-slate-800/80 text-slate-300 hover:text-white transition-colors cursor-pointer shrink-0"
+            className="theme-focus p-2 rounded-full bg-slate-800/80 text-slate-300 hover:text-white transition-colors cursor-pointer shrink-0 focus:outline-none"
             aria-label="Đóng"
           >
             <X className="w-5 h-5" />
@@ -123,8 +123,8 @@ export const JourneyDutySheet: React.FC<JourneyDutySheetProps> = ({
             />
           </div>
 
-          <h2 className="mt-2 text-xl font-black text-amber-400 tracking-wide flex items-center gap-1.5">
-            <Crown className="w-5 h-5 text-amber-400" />
+          <h2 className="theme-text-accent mt-2 text-xl font-black tracking-wide flex items-center gap-1.5">
+            <Crown className="theme-icon-accent w-5 h-5" />
             <span>{duty.rankName}</span>
           </h2>
           <p className="text-xs text-slate-300 mt-0.5 font-medium max-w-sm">
@@ -135,10 +135,10 @@ export const JourneyDutySheet: React.FC<JourneyDutySheetProps> = ({
         {/* Scrollable Duty & Authority Content */}
         <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain touch-pan-y space-y-3.5 pr-1 pb-2">
           {/* Card 0: Chức Danh & Đơn Vị Đảm Nhận */}
-          <div className="bg-slate-950/75 rounded-2xl p-3.5 border border-amber-500/40 space-y-2">
-            <div className="flex items-center gap-2 border-b border-amber-500/20 pb-2">
-              <Briefcase className="w-4 h-4 text-amber-400" />
-              <h3 className="text-xs sm:text-sm font-bold text-amber-300 uppercase tracking-wider">
+          <div className="theme-card-accent bg-slate-950/75 rounded-2xl p-3.5 border space-y-2">
+            <div className="theme-divider flex items-center gap-2 border-b pb-2">
+              <Briefcase className="theme-icon-accent w-4 h-4" />
+              <h3 className="theme-text-accent text-xs sm:text-sm font-bold uppercase tracking-wider">
                 Chức Danh & Đơn Vị Đảm Nhận
               </h3>
             </div>
@@ -146,7 +146,7 @@ export const JourneyDutySheet: React.FC<JourneyDutySheetProps> = ({
             <div className="space-y-2">
               <div className="flex flex-col items-start gap-1.5 bg-slate-900/80 p-2.5 rounded-xl border border-slate-800/80">
                 <div className="flex items-center justify-between gap-2 w-full flex-wrap">
-                  <div className="inline-block px-2.5 py-1 rounded-lg bg-amber-500/15 border border-amber-400/40 font-extrabold text-amber-300 text-sm tracking-wide shadow-inner">
+                  <div className="theme-badge inline-block px-2.5 py-1 rounded-lg border font-extrabold text-sm tracking-wide shadow-inner">
                     {role.primaryTitle}
                   </div>
                   {role.unitDisplayName && (
@@ -156,7 +156,7 @@ export const JourneyDutySheet: React.FC<JourneyDutySheetProps> = ({
                   )}
                 </div>
                 {role.secondaryTitle && (
-                  <div className="text-xs font-semibold text-amber-200/90 pl-0.5 tracking-normal">
+                  <div className="theme-text-accent text-xs font-semibold opacity-90 pl-0.5 tracking-normal">
                     {role.secondaryTitle}
                   </div>
                 )}
@@ -180,7 +180,7 @@ export const JourneyDutySheet: React.FC<JourneyDutySheetProps> = ({
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
               <div className="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800/60">
                 <div className="flex items-center gap-1.5 text-slate-400 mb-1 font-semibold">
-                  <Users className="w-3.5 h-3.5 text-amber-400" />
+                  <Users className="theme-icon-accent w-3.5 h-3.5" />
                   <span>Quy mô hoạt động:</span>
                 </div>
                 <p className="text-slate-100 font-bold leading-snug">
@@ -216,17 +216,17 @@ export const JourneyDutySheet: React.FC<JourneyDutySheetProps> = ({
           </div>
 
           {/* Card 2: Trọng trách & Quyền lực Gia Tăng so với quân hàm trước */}
-          <div className="bg-slate-950/75 rounded-2xl p-3.5 border border-amber-500/30 space-y-2.5">
-            <div className="flex items-center gap-2 border-b border-amber-500/20 pb-2">
-              <TrendingUp className="w-4 h-4 text-amber-400" />
-              <h3 className="text-xs sm:text-sm font-bold text-amber-300 uppercase tracking-wider">
+          <div className="theme-card-accent bg-slate-950/75 rounded-2xl p-3.5 border space-y-2.5">
+            <div className="theme-divider flex items-center gap-2 border-b pb-2">
+              <TrendingUp className="theme-icon-accent w-4 h-4" />
+              <h3 className="theme-text-accent text-xs sm:text-sm font-bold uppercase tracking-wider">
                 Gia Tăng Trọng Trách & Quyền Lực
               </h3>
             </div>
 
             <div className="space-y-2 text-xs">
-              <div className="bg-amber-500/10 border border-amber-500/20 rounded-xl p-2.5">
-                <span className="text-amber-300 font-bold block mb-0.5">
+              <div className="theme-surface border rounded-xl p-2.5">
+                <span className="theme-text-accent font-bold block mb-0.5">
                   ★ Vai trò mới đảm nhận:
                 </span>
                 <p className="text-slate-200 leading-relaxed font-medium">

@@ -29,12 +29,12 @@ export const RanksScreen: React.FC<RanksScreenProps> = ({ state, onDetailSheetTo
   return (
     <div className="w-full max-w-lg mx-auto p-4 select-none pb-24 space-y-4">
       {/* Header Progress Banner */}
-      <div className="bg-slate-900 border border-slate-800 p-4 rounded-2xl flex items-center justify-between shadow-lg">
+      <div className="theme-card-accent bg-slate-900 border p-4 rounded-2xl flex items-center justify-between shadow-lg">
         <div>
           <h2 className="font-bold text-slate-100 text-base">Hệ Thống Cấp Bậc</h2>
           <p className="text-xs text-slate-400">{RANK_FAMILIES.length} Nhóm Quân Hàm · {RANK_STEPS.length} Cấp Bậc</p>
         </div>
-        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 font-bold text-xs">
+        <div className="theme-badge flex items-center gap-1.5 px-3 py-1.5 rounded-full border font-bold text-xs">
           <Award className="w-4 h-4" />
           <span>{currentRankIndex + 1} / {RANK_STEPS.length} Cấp</span>
         </div>
@@ -53,7 +53,7 @@ export const RanksScreen: React.FC<RanksScreenProps> = ({ state, onDetailSheetTo
               key={family.id}
               className={`rounded-2xl border transition-all overflow-hidden ${
                 containsCurrent
-                  ? "bg-slate-900/90 border-amber-500/50 shadow-[0_0_15px_rgba(245,158,11,0.15)]"
+                  ? "theme-selected-card bg-slate-900/90"
                   : "bg-slate-900/60 border-slate-800/80"
               }`}
             >
@@ -61,7 +61,7 @@ export const RanksScreen: React.FC<RanksScreenProps> = ({ state, onDetailSheetTo
               <button
                 type="button"
                 onClick={() => toggleFamily(family.id)}
-                className="w-full p-3.5 flex items-center justify-between text-left hover:bg-slate-800/40 transition-colors"
+                className="theme-focus w-full p-3.5 flex items-center justify-between text-left hover:bg-slate-800/40 transition-colors focus:outline-none"
               >
                 <div className="flex items-center gap-3.5">
                   <RankBadge badge={family.badge} size={56} />
@@ -71,7 +71,7 @@ export const RanksScreen: React.FC<RanksScreenProps> = ({ state, onDetailSheetTo
                         {family.name}
                       </h3>
                       {containsCurrent && (
-                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                        <span className="theme-badge text-[10px] font-bold px-2 py-0.5 rounded-full border">
                           Đang ở nhóm này
                         </span>
                       )}
@@ -108,15 +108,15 @@ export const RanksScreen: React.FC<RanksScreenProps> = ({ state, onDetailSheetTo
                           soundManager.playClick();
                           setSelectedStep(step);
                         }}
-                        className={`w-full p-3 px-4 flex items-center justify-between hover:bg-slate-800/40 transition-colors text-left ${
-                          isCurrent ? "bg-amber-500/10" : ""
+                        className={`theme-focus w-full p-3 px-4 flex items-center justify-between hover:bg-slate-800/40 transition-colors text-left focus:outline-none ${
+                          isCurrent ? "theme-selected-row" : ""
                         }`}
                       >
                         <div className="flex items-center gap-3">
                           {isAchieved ? (
                             <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
                           ) : isCurrent ? (
-                            <div className="w-5 h-5 rounded-full bg-amber-400 shrink-0 flex items-center justify-center text-slate-950 font-bold text-xs shadow-[0_0_8px_#facc15]">
+                            <div className="theme-current-rank-dot w-5 h-5 rounded-full shrink-0 flex items-center justify-center font-bold text-xs">
                               ★
                             </div>
                           ) : (
@@ -147,7 +147,7 @@ export const RanksScreen: React.FC<RanksScreenProps> = ({ state, onDetailSheetTo
                             <span
                               className={`font-semibold text-sm ${
                                 isCurrent
-                                  ? "text-amber-300 font-bold"
+                                  ? "theme-text-accent font-bold"
                                   : isAchieved
                                   ? "text-slate-200"
                                   : "text-slate-400"

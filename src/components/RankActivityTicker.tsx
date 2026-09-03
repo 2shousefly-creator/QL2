@@ -64,7 +64,7 @@ function renderHighlightedText(text: string): React.ReactNode {
     const isKeyword = sortedKeywords.some((k) => k.toLowerCase() === part.toLowerCase());
     if (isKeyword) {
       return (
-        <span key={index} className="font-extrabold text-amber-300">
+        <span key={index} className="theme-text-accent font-extrabold">
           {part}
         </span>
       );
@@ -171,7 +171,7 @@ export const RankActivityTicker: React.FC<RankActivityTickerProps> = ({
       <div className={`w-full flex items-center justify-center ${getTransitionStyle()}`}>
         {/* Row layer: items-start so dot stays aligned with line 1 of text */}
         <div className="inline-flex items-start justify-center gap-2 max-w-full text-center text-[12.3px] sm:text-[13.6px] font-bold tracking-wide leading-snug drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]">
-          <span className="w-2 h-2 rounded-full bg-amber-400 shrink-0 animate-pulse mt-[0.38em]" />
+          <span className={`theme-active-dot w-2 h-2 rounded-full shrink-0 mt-[0.38em] ${reducedMotion ? "" : "animate-pulse"}`} />
 
           {/* Grid Container for overlapping Base Text + Shimmer Overlay */}
           <div className="grid grid-cols-1 grid-rows-1 max-w-full min-w-0">
@@ -181,13 +181,15 @@ export const RankActivityTicker: React.FC<RankActivityTickerProps> = ({
             </span>
 
             {/* 2. Shimmer Overlay Layer: Gold sweep beam on top */}
-            <span
-              key={activeText}
-              className="col-start-1 row-start-1 rank-activity-shimmer-overlay break-words text-center max-w-full pointer-events-none select-none block"
-              aria-hidden="true"
-            >
-              {activeText}
-            </span>
+            {!reducedMotion && (
+              <span
+                key={activeText}
+                className="col-start-1 row-start-1 rank-activity-shimmer-overlay break-words text-center max-w-full pointer-events-none select-none block"
+                aria-hidden="true"
+              >
+                {activeText}
+              </span>
+            )}
           </div>
         </div>
       </div>

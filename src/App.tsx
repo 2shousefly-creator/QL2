@@ -27,6 +27,8 @@ import { registerServiceWorker, sendRankUpReadyNotification } from "./game/notif
 import { ensurePushRegistration, syncXpFullPushSchedule } from "./game/pushManager";
 import { canStartPromotionChallenge, completePromotionChallenge, dismissPromotionCeremony } from "./game/promotionEngine";
 import { getPlayerNextRank, getPlayerRank, getXpProgressDetails } from "./game/selectors";
+import { getJourneyChapterForRank } from "./game/etaEngine";
+import { getStageTheme, getStageThemeCssVariables } from "./game/stageThemes";
 import { gameConfig } from "./game/config";
 import { soundManager } from "./game/audio";
 import { DelegationReportData, EarningMode, GameState, TabType } from "./game/types";
@@ -486,6 +488,9 @@ export default function App() {
   }
 
   const currentRank = getPlayerRank(gameState);
+  const currentChapter = getJourneyChapterForRank(gameState.progression.currentRankIndex);
+  const currentStageTheme = getStageTheme(currentChapter.themeId);
+  const chapterThemeStyle = getStageThemeCssVariables(currentStageTheme) as React.CSSProperties;
   const xpDetails = getXpProgressDetails(gameState);
   const pendingCeremony = gameState.ui.pendingPromotionCeremony;
   const promotedRank = pendingCeremony
@@ -496,18 +501,17 @@ export default function App() {
     : currentRank;
 
   return (
-    <div className="h-screen h-[100dvh] bg-slate-950 text-white font-sans overflow-hidden relative flex flex-col">
+    <div
+      className="chapter-theme-root h-screen h-[100dvh] bg-slate-950 text-white font-sans overflow-hidden relative flex flex-col"
+      data-stage-theme={currentStageTheme.id}
+      style={chapterThemeStyle}
+    >
       {/* Game World Ambient Glow Backgrounds */}
-      <div className="fixed inset-0 z-0 pointer-events-none opacity-40">
-        <div className="absolute inset-0 bg-gradient-to-b from-indigo-950 via-purple-950 to-slate-950" />
-        <div className="absolute bottom-0 w-full h-1/2 bg-emerald-950/20 blur-3xl" />
-        <div className="absolute top-10 left-10 w-72 h-72 bg-amber-500/10 rounded-full blur-[120px]" />
-        <div className="absolute top-1/2 right-10 w-80 h-80 bg-cyan-500/10 rounded-full blur-[130px]" />
-      </div>
+      <div className="theme-world-ambient fixed inset-0 z-0 pointer-events-none opacity-50" />
 
       {/* Top Gaming HUD Header (Auto-hidden when in Minigames, Challenge, or Trough Info Modal) */}
       {!isTrainingGameActive && !isChallengeActive && !isTroughInfoActive && (
-        <header className="relative z-10 bg-slate-900/70 backdrop-blur-md border-b border-white/10 px-4 py-3">
+        <header className="theme-header-shell relative z-10 bg-slate-900/70 backdrop-blur-md border-b px-4 py-3">
           <div className="max-w-lg mx-auto flex items-center justify-between">
             <div className="flex items-center gap-3">
               <button
@@ -516,7 +520,7 @@ export default function App() {
                   soundManager.playClick();
                   setActiveTab("profile");
                 }}
-                className="relative focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 rounded-full"
+                className="theme-focus relative focus:outline-none rounded-full"
                 title="Mở Hồ Sơ & Cài Đặt"
               >
                 <Avatar seed={gameState.player.avatarSeed} size={48} />
@@ -524,7 +528,7 @@ export default function App() {
 
               <div>
                 <div className="flex items-center gap-2">
-                  <span className="text-xs font-bold uppercase tracking-wider text-amber-400">
+                  <span className="theme-text-accent text-xs font-bold uppercase tracking-wider">
                     {gameState.player.displayName}
                   </span>
                 </div>

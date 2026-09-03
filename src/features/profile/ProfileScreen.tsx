@@ -306,9 +306,9 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
   return (
     <div className="w-full max-w-lg mx-auto p-4 select-none pb-28 space-y-5">
       {/* Profile HUD Card */}
-      <div className="relative rounded-2xl bg-gradient-to-b from-slate-900/90 via-slate-900/60 to-slate-950/80 border border-slate-700/80 p-5 shadow-2xl backdrop-blur-md overflow-hidden">
+      <div className="theme-card-accent relative rounded-2xl bg-gradient-to-b from-slate-900/90 via-slate-900/60 to-slate-950/80 border p-5 shadow-2xl backdrop-blur-md overflow-hidden">
         {/* Glow corner */}
-        <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/10 rounded-full blur-2xl pointer-events-none" />
+        <div className="theme-corner-glow absolute top-0 right-0 w-32 h-32 rounded-full blur-2xl pointer-events-none" />
 
         <div className="flex items-center gap-4 relative z-10">
           {/* Avatar button */}
@@ -318,11 +318,11 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
               soundManager.playClick();
               setShowAvatarModal(true);
             }}
-            className="relative group transition-transform hover:scale-105"
+            className="theme-focus relative group transition-transform hover:scale-105 rounded-full focus:outline-none"
             title="Đổi ảnh đại diện"
           >
             <Avatar seed={state.player.avatarSeed} size={72} />
-            <div className="absolute inset-0 rounded-full bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity text-xs font-bold text-amber-300">
+            <div className="theme-text-accent absolute inset-0 rounded-full bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity text-xs font-bold">
               Sửa
             </div>
           </button>
@@ -335,13 +335,13 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
                   type="text"
                   value={nameInput}
                   onChange={(e) => setNameInput(e.target.value)}
-                  className="bg-slate-950 border border-amber-500/50 rounded-lg px-2.5 py-1 text-sm text-slate-100 font-bold focus:outline-none focus:ring-1 focus:ring-amber-400"
+                  className="theme-input bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1 text-sm text-slate-100 font-bold focus:outline-none"
                   maxLength={20}
                 />
                 <button
                   type="button"
                   onClick={handleSaveName}
-                  className="p-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs"
+                  className="theme-button-primary theme-focus p-1.5 rounded-lg font-bold text-xs focus:outline-none"
                 >
                   <Check className="w-4 h-4" />
                 </button>
@@ -354,7 +354,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
                 <button
                   type="button"
                   onClick={() => setIsEditingName(true)}
-                  className="text-xs text-amber-400 hover:text-amber-300 font-semibold underline"
+                  className="theme-text-accent theme-focus text-xs font-semibold underline rounded focus:outline-none"
                 >
                   Sửa
                 </button>
@@ -362,7 +362,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
             )}
 
             <div className="flex items-center gap-2 mt-1">
-              <span className="text-xs text-amber-300 font-semibold px-2 py-0.5 rounded-full bg-amber-500/20 border border-amber-500/30">
+              <span className="theme-badge text-xs font-semibold px-2 py-0.5 rounded-full border">
                 {currentRank.displayName}
               </span>
             </div>
@@ -430,9 +430,9 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
         <div className="bg-slate-900/60 border border-slate-800 p-3.5 rounded-2xl flex flex-col justify-between shadow-lg">
           <div className="flex items-center justify-between text-slate-400 text-xs mb-1">
             <span>Tổng XP Tích Lũy</span>
-            <Zap className="w-4 h-4 text-amber-400" />
+            <Zap className="theme-icon-accent w-4 h-4" />
           </div>
-          <span className="text-lg font-extrabold text-amber-300">
+          <span className="theme-text-accent text-lg font-extrabold">
             {formatXp(state.progression.totalXpEarnedTicks)}
           </span>
         </div>
@@ -469,10 +469,10 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
       </div>
 
       {/* Coupon / Gift Code Section */}
-      <div className="bg-gradient-to-b from-slate-900/80 to-slate-950/90 border border-amber-500/30 p-4 rounded-2xl space-y-3 shadow-xl backdrop-blur-md">
-        <div className="flex items-center justify-between border-b border-slate-800 pb-2">
+      <div className="theme-card-accent bg-gradient-to-b from-slate-900/80 to-slate-950/90 border p-4 rounded-2xl space-y-3 shadow-xl backdrop-blur-md">
+        <div className="theme-divider flex items-center justify-between border-b pb-2">
           <h3 className="font-bold text-sm text-slate-100 flex items-center gap-2">
-            <Gift className="w-4 h-4 text-amber-400" />
+            <Gift className="theme-icon-accent w-4 h-4" />
             <span>Mã Ưu Đãi (Coupon)</span>
           </h3>
           <span className="text-[10px] font-semibold text-amber-400/80 uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/20">
@@ -488,16 +488,16 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
               soundManager.playClick();
               setShowCouponModal(true);
             }}
-            className="w-full flex items-center justify-between gap-3 bg-slate-950/90 hover:bg-slate-900/90 border border-slate-700/80 hover:border-amber-500/60 rounded-xl px-3.5 py-2.5 transition-all group active:scale-[0.99] text-left shadow-inner"
+            className="theme-focus theme-hover-border w-full flex items-center justify-between gap-3 bg-slate-950/90 hover:bg-slate-900/90 border border-slate-700/80 rounded-xl px-3.5 py-2.5 transition-all group active:scale-[0.99] text-left shadow-inner focus:outline-none"
           >
             <div className="flex items-center gap-2.5 min-w-0">
-              <Tag className="w-4 h-4 text-amber-400/80 group-hover:text-amber-400 shrink-0" />
+              <Tag className="theme-icon-accent w-4 h-4 shrink-0" />
               <span className="text-xs font-bold text-slate-400 group-hover:text-slate-200 tracking-wider truncate uppercase">
                 BẤM ĐỂ NHẬP MÃ
               </span>
             </div>
-            <div className="flex items-center gap-1.5 shrink-0 bg-gradient-to-r from-amber-500 to-amber-600 group-hover:from-amber-400 group-hover:to-amber-500 text-slate-950 px-3 py-1.5 rounded-lg text-xs font-black shadow transition-all">
-              <Coins className="w-3.5 h-3.5 text-slate-950" />
+            <div className="theme-button-primary flex items-center gap-1.5 shrink-0 px-3 py-1.5 rounded-lg text-xs font-black shadow transition-all">
+              <Coins className="w-3.5 h-3.5" />
               <span>Nhập Mã</span>
             </div>
           </button>
@@ -523,8 +523,8 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
 
       {/* Settings Section */}
       <div className="bg-slate-900/60 border border-slate-800 p-4 rounded-2xl space-y-4 shadow-lg">
-        <h3 className="font-bold text-sm text-slate-100 flex items-center gap-2 border-b border-slate-800 pb-2">
-          <Sparkles className="w-4 h-4 text-sky-400" />
+        <h3 className="theme-divider font-bold text-sm text-slate-100 flex items-center gap-2 border-b pb-2">
+          <Sparkles className="theme-icon-accent w-4 h-4" />
           <span>Cài Đặt Ứng Dụng</span>
         </h3>
 
@@ -534,9 +534,9 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
           <button
             type="button"
             onClick={handleToggleSound}
-            className={`p-2 rounded-xl border transition-all flex items-center gap-2 ${
+            className={`theme-focus p-2 rounded-xl border transition-all flex items-center gap-2 focus:outline-none ${
               state.settings.soundEnabled
-                ? "bg-amber-500/20 border-amber-500/50 text-amber-300"
+                ? "theme-badge"
                 : "bg-slate-800 border-slate-700 text-slate-400"
             }`}
           >
@@ -560,9 +560,9 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
           <button
             type="button"
             onClick={handleToggleReducedMotion}
-            className={`p-2 rounded-xl border transition-all flex items-center gap-2 ${
+            className={`theme-focus p-2 rounded-xl border transition-all flex items-center gap-2 focus:outline-none ${
               state.settings.reducedMotion
-                ? "bg-amber-500/20 border-amber-500/50 text-amber-300"
+                ? "theme-badge"
                 : "bg-slate-800 border-slate-700 text-slate-400"
             }`}
           >
@@ -581,9 +581,9 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
             <button
               type="button"
               onClick={handleToggleNotifications}
-              className={`p-2 rounded-xl border transition-all flex items-center gap-2 ${
+              className={`theme-focus p-2 rounded-xl border transition-all flex items-center gap-2 focus:outline-none ${
                 state.settings.notificationsEnabled
-                  ? "bg-amber-500/20 border-amber-500/50 text-amber-300"
+                  ? "theme-badge"
                   : "bg-slate-800 border-slate-700 text-slate-400"
               }`}
             >
@@ -607,7 +607,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
                 type="button"
                 disabled={isTestingPush}
                 onClick={handleTestBackgroundPush}
-                className="flex-1 py-1.5 px-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-amber-300 text-xs font-semibold transition-colors flex items-center justify-center gap-1.5"
+                className="theme-button-secondary theme-focus flex-1 py-1.5 px-2.5 rounded-lg text-xs font-semibold transition-colors flex items-center justify-center gap-1.5 focus:outline-none"
                 title="Kiểm tra gửi thông báo nền qua Web Push server"
               >
                 <Zap className="w-3.5 h-3.5" />
@@ -647,7 +647,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
                 <button
                   type="button"
                   onClick={loadPushDiagnostics}
-                  className="text-[10px] text-amber-400 hover:underline flex items-center gap-1"
+                  className="theme-text-accent theme-focus text-[10px] hover:underline flex items-center gap-1 rounded focus:outline-none"
                 >
                   <RefreshCw className="w-3 h-3" /> Làm mới
                 </button>
@@ -726,7 +726,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
           <div className="bg-slate-950/80 p-3 rounded-xl border border-slate-800 space-y-2 text-xs text-slate-300">
             <div className="flex items-center justify-between">
               <span className="text-slate-400">Runtime build:</span>
-              <span className="font-mono text-[11px] text-amber-300 font-bold px-2 py-0.5 rounded bg-slate-900 border border-slate-800">
+              <span className="theme-text-accent font-mono text-[11px] font-bold px-2 py-0.5 rounded bg-slate-900 border border-slate-800">
                 {getShortBuildId(APP_BUILD_ID)}
               </span>
             </div>
@@ -753,14 +753,14 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
             type="button"
             disabled={isUpdatingApp}
             onClick={handleManualUpdate}
-            className="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-amber-500/20 via-amber-500/15 to-yellow-500/20 hover:from-amber-500/30 hover:to-yellow-500/30 border border-amber-500/50 text-amber-300 font-bold text-xs flex items-center justify-center gap-2 transition-all active:scale-98 shadow-sm"
+            className="theme-button-secondary theme-focus w-full py-2.5 px-3 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all active:scale-98 shadow-sm focus:outline-none"
           >
-            <RefreshCw className={`w-4 h-4 ${isUpdatingApp ? "animate-spin text-amber-300" : "text-amber-300"}`} />
+            <RefreshCw className={`theme-icon-accent w-4 h-4 ${isUpdatingApp ? "animate-spin" : ""}`} />
             <span>{isUpdatingApp ? "Đang Xoá Cache & Cập Nhật..." : "Cập Nhật Thủ Công Phiên Bản Mới"}</span>
           </button>
 
           {updateNotice && (
-            <p className="text-xs text-amber-300 text-center font-medium animate-pulse">
+            <p className="theme-text-accent text-xs text-center font-medium animate-pulse">
               {updateNotice}
             </p>
           )}
@@ -799,7 +799,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
                 value={importJson}
                 onChange={(e) => setImportJson(e.target.value)}
                 placeholder="Dán mã JSON dữ liệu trò chơi vào đây..."
-                className="w-full h-20 bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-slate-200 font-mono focus:outline-none focus:ring-1 focus:ring-amber-400"
+                className="theme-input w-full h-20 bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-slate-200 font-mono focus:outline-none"
               />
               <button
                 type="button"
@@ -848,9 +848,9 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
                 soundManager.playClick();
                 fileInputRef.current?.click();
               }}
-              className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-extrabold text-xs flex items-center justify-center gap-2 shadow-lg transition-all active:scale-95"
+              className="theme-button-primary theme-focus w-full py-2.5 px-4 rounded-xl font-extrabold text-xs flex items-center justify-center gap-2 shadow-lg transition-all active:scale-95 focus:outline-none"
             >
-              <Upload className="w-4 h-4 text-slate-950" />
+              <Upload className="w-4 h-4" />
               <span>Tải Ảnh Từ Thư Viện Về/Máy</span>
             </button>
 
@@ -869,7 +869,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
                   type="button"
                   onClick={() => handleSelectAvatar(seed)}
                   className={`p-1 rounded-full flex items-center justify-center transition-transform hover:scale-110 ${
-                    state.player.avatarSeed === seed ? "ring-2 ring-amber-400" : ""
+                    state.player.avatarSeed === seed ? "theme-avatar-selected" : ""
                   }`}
                 >
                   <Avatar seed={seed} size={54} />
@@ -895,13 +895,13 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
           onClick={() => setShowCouponModal(false)}
         >
           <div
-            className="w-full max-w-sm bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950 border-2 border-amber-500/40 rounded-3xl p-5 shadow-2xl space-y-4 animate-in zoom-in-95 duration-200"
+            className="theme-card-accent w-full max-w-sm bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950 border-2 rounded-3xl p-5 shadow-2xl space-y-4 animate-in zoom-in-95 duration-200"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Modal Header */}
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div className="theme-divider flex items-center justify-between border-b pb-3">
               <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400">
+                <div className="theme-badge w-8 h-8 rounded-xl border flex items-center justify-center">
                   <Gift className="w-4 h-4" />
                 </div>
                 <div>
@@ -916,7 +916,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
               <button
                 type="button"
                 onClick={() => setShowCouponModal(false)}
-                className="w-8 h-8 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-400 hover:text-slate-200 flex items-center justify-center transition-all active:scale-95"
+                className="theme-focus w-8 h-8 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-400 hover:text-slate-200 flex items-center justify-center transition-all active:scale-95 focus:outline-none"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -942,7 +942,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
                     }
                   }}
                   placeholder="BẤM ĐỂ NHẬP MÃ"
-                  className="w-full bg-slate-950 border-2 border-slate-700/80 focus:border-amber-500 rounded-2xl px-4 py-3 text-base font-mono font-black text-amber-300 uppercase tracking-widest placeholder:text-slate-500 placeholder:font-sans placeholder:text-xs placeholder:tracking-normal focus:outline-none focus:ring-2 focus:ring-amber-500/30 transition-all text-center"
+                  className="theme-input theme-text-accent w-full bg-slate-950 border-2 border-slate-700/80 rounded-2xl px-4 py-3 text-base font-mono font-black uppercase tracking-widest placeholder:text-slate-500 placeholder:font-sans placeholder:text-xs placeholder:tracking-normal focus:outline-none transition-all text-center"
                   maxLength={30}
                   autoCapitalize="characters"
                   autoCorrect="off"
@@ -971,16 +971,16 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
                 <button
                   type="button"
                   onClick={() => setShowCouponModal(false)}
-                  className="flex-1 py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs transition-all active:scale-95"
+                  className="theme-focus flex-1 py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs transition-all active:scale-95 focus:outline-none"
                 >
                   Đóng
                 </button>
                 <button
                   type="button"
                   onClick={() => handleRedeemCoupon()}
-                  className="flex-[2] py-2.5 px-4 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20 transition-all active:scale-95"
+                  className="theme-button-primary theme-focus flex-[2] py-2.5 px-4 rounded-xl font-black text-xs flex items-center justify-center gap-2 shadow-lg transition-all active:scale-95 focus:outline-none"
                 >
-                  <Coins className="w-4 h-4 text-slate-950" />
+                  <Coins className="w-4 h-4" />
                   <span>XÁC NHẬN</span>
                 </button>
               </div>

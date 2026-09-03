@@ -7,11 +7,8 @@ import {
   User,
   Compass,
   Shield,
-  BookOpen,
   UserCheck,
   X,
-  ChevronRight,
-  Sparkles,
   Hammer,
   Award,
   Crown,
@@ -41,6 +38,7 @@ export const HubNavigation: React.FC<HubNavigationProps> = ({
   const [isProfileHubOpen, setIsProfileHubOpen] = useState(false);
   const [isTangGiaOpen, setIsTangGiaOpen] = useState(false);
   const [now, setNow] = useState<number>(() => Date.now());
+  const reducedMotion = gameState?.settings.reducedMotion ?? false;
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -157,11 +155,6 @@ export const HubNavigation: React.FC<HubNavigationProps> = ({
       subtitle: "Hồ sơ thành tích & huy hiệu",
       badge: "Hồ sơ",
       icon: Contact,
-      bgGradient: "from-amber-500/20 via-amber-600/10 to-slate-900/90",
-      borderColor: "border-amber-500/40 hover:border-amber-400",
-      activeRing: "ring-2 ring-amber-400 border-amber-400 shadow-[0_0_15px_rgba(245,158,11,0.3)]",
-      iconBox: "bg-gradient-to-br from-amber-500/30 to-amber-700/20 text-amber-300 border-amber-400/50 shadow-[0_0_12px_rgba(245,158,11,0.25)]",
-      badgeClass: "bg-amber-500/20 text-amber-300 border-amber-500/40",
     },
     {
       id: "journal" as TabType,
@@ -170,11 +163,6 @@ export const HubNavigation: React.FC<HubNavigationProps> = ({
       subtitle: "Lịch sử dấu mốc đáng nhớ",
       badge: "Nhật ký",
       icon: ScrollText,
-      bgGradient: "from-rose-500/20 via-pink-600/10 to-slate-900/90",
-      borderColor: "border-rose-500/40 hover:border-rose-400",
-      activeRing: "ring-2 ring-rose-400 border-rose-400 shadow-[0_0_15px_rgba(244,63,94,0.3)]",
-      iconBox: "bg-gradient-to-br from-rose-500/30 to-rose-700/20 text-rose-300 border-rose-400/50 shadow-[0_0_12px_rgba(244,63,94,0.25)]",
-      badgeClass: "bg-rose-500/20 text-rose-300 border-rose-500/40",
     },
     {
       id: "journey" as TabType,
@@ -183,11 +171,6 @@ export const HubNavigation: React.FC<HubNavigationProps> = ({
       subtitle: "216 Cấp bậc & 8 chương",
       badge: "216 Bậc",
       icon: Compass,
-      bgGradient: "from-sky-500/20 via-sky-600/10 to-slate-900/90",
-      borderColor: "border-sky-500/40 hover:border-sky-400",
-      activeRing: "ring-2 ring-sky-400 border-sky-400 shadow-[0_0_15px_rgba(56,189,248,0.3)]",
-      iconBox: "bg-gradient-to-br from-sky-500/30 to-sky-700/20 text-sky-300 border-sky-400/50 shadow-[0_0_12px_rgba(56,189,248,0.25)]",
-      badgeClass: "bg-sky-500/20 text-sky-300 border-sky-500/40",
     },
     {
       id: "ranks" as TabType,
@@ -196,11 +179,6 @@ export const HubNavigation: React.FC<HubNavigationProps> = ({
       subtitle: "Tra cứu hình dáng & nhiệm vụ",
       badge: "Tra cứu",
       icon: Shield,
-      bgGradient: "from-emerald-500/20 via-emerald-600/10 to-slate-900/90",
-      borderColor: "border-emerald-500/40 hover:border-emerald-400",
-      activeRing: "ring-2 ring-emerald-400 border-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.3)]",
-      iconBox: "bg-gradient-to-br from-emerald-500/30 to-emerald-700/20 text-emerald-300 border-emerald-400/50 shadow-[0_0_12px_rgba(16,185,129,0.25)]",
-      badgeClass: "bg-emerald-500/20 text-emerald-300 border-emerald-500/40",
     },
     {
       id: "uniform" as TabType,
@@ -209,11 +187,6 @@ export const HubNavigation: React.FC<HubNavigationProps> = ({
       subtitle: "Lễ phục theo quân hàm đã đạt",
       badge: "24 Quân hàm",
       icon: Shirt,
-      bgGradient: "from-cyan-500/20 via-blue-600/10 to-slate-900/90",
-      borderColor: "border-cyan-500/40 hover:border-cyan-400",
-      activeRing: "ring-2 ring-cyan-400 border-cyan-400 shadow-[0_0_15px_rgba(34,211,238,0.3)]",
-      iconBox: "bg-gradient-to-br from-cyan-500/30 to-blue-700/20 text-cyan-300 border-cyan-400/50 shadow-[0_0_12px_rgba(34,211,238,0.25)]",
-      badgeClass: "bg-cyan-500/20 text-cyan-300 border-cyan-500/40",
     },
     {
       id: "medals" as TabType,
@@ -222,11 +195,6 @@ export const HubNavigation: React.FC<HubNavigationProps> = ({
       subtitle: "Những dấu mốc đáng nhớ",
       badge: `${MEDAL_CATALOG.length} Huân chương`,
       icon: Award,
-      bgGradient: "from-yellow-500/20 via-amber-600/10 to-slate-900/90",
-      borderColor: "border-yellow-500/40 hover:border-yellow-400",
-      activeRing: "ring-2 ring-yellow-400 border-yellow-400 shadow-[0_0_15px_rgba(234,179,8,0.3)]",
-      iconBox: "bg-gradient-to-br from-yellow-500/30 to-yellow-700/20 text-yellow-300 border-yellow-400/50 shadow-[0_0_12px_rgba(234,179,8,0.25)]",
-      badgeClass: "bg-yellow-500/20 text-yellow-300 border-yellow-500/40",
     },
     {
       id: "mastery" as TabType,
@@ -235,11 +203,6 @@ export const HubNavigation: React.FC<HubNavigationProps> = ({
       subtitle: "Tiến trình tinh thông Huấn Luyện",
       badge: "6 Môn",
       icon: Crown,
-      bgGradient: "from-indigo-500/20 via-blue-600/10 to-slate-900/90",
-      borderColor: "border-indigo-500/40 hover:border-indigo-400",
-      activeRing: "ring-2 ring-indigo-400 border-indigo-400 shadow-[0_0_15px_rgba(99,102,241,0.3)]",
-      iconBox: "bg-gradient-to-br from-indigo-500/30 to-indigo-700/20 text-indigo-300 border-indigo-400/50 shadow-[0_0_12px_rgba(99,102,241,0.25)]",
-      badgeClass: "bg-indigo-500/20 text-indigo-300 border-indigo-500/40",
     },
     {
       id: "profile" as TabType,
@@ -248,11 +211,6 @@ export const HubNavigation: React.FC<HubNavigationProps> = ({
       subtitle: "Avatar, sao lưu & âm thanh",
       badge: "Hồ sơ chính",
       icon: UserCheck,
-      bgGradient: "from-slate-700/20 via-slate-800/10 to-slate-900/90",
-      borderColor: "border-slate-600/40 hover:border-slate-500",
-      activeRing: "ring-2 ring-slate-400 border-slate-400 shadow-[0_0_15px_rgba(148,163,184,0.3)]",
-      iconBox: "bg-gradient-to-br from-slate-600/30 to-slate-800/20 text-slate-300 border-slate-500/50 shadow-[0_0_12px_rgba(148,163,184,0.25)]",
-      badgeClass: "bg-slate-600/20 text-slate-300 border-slate-600/40",
     },
   ];
 
@@ -267,7 +225,7 @@ export const HubNavigation: React.FC<HubNavigationProps> = ({
       {/* Bottom Main Navigation Bar */}
       <nav
         aria-label="Điều hướng chính"
-        className="fixed bottom-0 inset-x-0 z-40 bg-slate-950/95 border-t border-slate-800/80 backdrop-blur-md pb-[env(safe-area-inset-bottom)] shadow-2xl select-none"
+        className="theme-nav-shell fixed bottom-0 inset-x-0 z-40 bg-slate-950/95 border-t backdrop-blur-md pb-[env(safe-area-inset-bottom)] shadow-2xl select-none"
       >
         <div className="max-w-lg mx-auto flex items-center justify-around h-14 px-2">
           {mainTabs.map((tab) => {
@@ -279,9 +237,9 @@ export const HubNavigation: React.FC<HubNavigationProps> = ({
                 key={tab.id}
                 type="button"
                 onClick={tab.onClick}
-                className={`flex-1 flex flex-col items-center justify-center h-full py-1 px-1 relative transition-all duration-150 focus:outline-none focus-visible:ring-1 focus-visible:ring-amber-400 ${
+                className={`theme-focus flex-1 flex flex-col items-center justify-center h-full py-1 px-1 relative transition-all duration-150 focus:outline-none ${
                   isActive
-                    ? "text-amber-400 font-bold"
+                    ? "theme-nav-active font-bold"
                     : "text-slate-400 hover:text-slate-200"
                 }`}
               >
@@ -289,15 +247,15 @@ export const HubNavigation: React.FC<HubNavigationProps> = ({
                 {isActive && (
                   <motion.span
                     layoutId="activeTabIndicator"
-                    className="absolute top-0 inset-x-3 h-0.5 bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 rounded-full shadow-[0_0_10px_rgba(245,158,11,0.9)]"
-                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                    className="theme-active-marker absolute top-0 inset-x-3 h-0.5 rounded-full"
+                    transition={reducedMotion ? { duration: 0 } : { type: "spring", stiffness: 380, damping: 30 }}
                   />
                 )}
 
                 <div className="relative">
                   <Icon
                     className={`w-5 h-5 transition-transform duration-200 ${
-                      isActive ? "scale-110 text-amber-400" : ""
+                      isActive ? "scale-110" : ""
                     }`}
                   />
                   {tab.hasBadge && (
@@ -323,7 +281,7 @@ export const HubNavigation: React.FC<HubNavigationProps> = ({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
+              transition={{ duration: reducedMotion ? 0 : 0.2 }}
               onClick={() => setIsProfileHubOpen(false)}
               className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm"
             />
@@ -333,13 +291,13 @@ export const HubNavigation: React.FC<HubNavigationProps> = ({
               initial={{ y: "100%", opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: "100%", opacity: 0 }}
-              transition={{ type: "spring", damping: 28, stiffness: 320 }}
-              className="fixed bottom-0 inset-x-0 z-50 max-w-lg mx-auto bg-slate-900 border-t border-amber-500/40 rounded-t-3xl p-3.5 sm:p-5 pb-8 shadow-2xl max-h-[88vh] overflow-y-auto space-y-3 select-none"
+              transition={reducedMotion ? { duration: 0 } : { type: "spring", damping: 28, stiffness: 320 }}
+              className="theme-card-accent fixed bottom-0 inset-x-0 z-50 max-w-lg mx-auto bg-slate-900 border-t rounded-t-3xl p-3.5 sm:p-5 pb-8 shadow-2xl max-h-[88vh] overflow-y-auto space-y-3 select-none"
             >
               {/* Header */}
-              <div className="flex items-center justify-between pb-2 border-b border-slate-800">
+              <div className="theme-divider flex items-center justify-between pb-2 border-b">
                 <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-lg bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400">
+                  <div className="theme-badge w-8 h-8 rounded-lg border flex items-center justify-center">
                     <User className="w-4 h-4" />
                   </div>
                   <div>
@@ -355,7 +313,7 @@ export const HubNavigation: React.FC<HubNavigationProps> = ({
                 <button
                   type="button"
                   onClick={() => setIsProfileHubOpen(false)}
-                  className="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center transition-colors"
+                  className="theme-focus w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center transition-colors focus:outline-none"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -378,18 +336,16 @@ export const HubNavigation: React.FC<HubNavigationProps> = ({
                         isSpanningFullWidth
                           ? "col-span-2 flex-row items-center justify-start gap-3 p-3 text-left"
                           : "flex-col items-center justify-center p-3 text-center"
-                      } rounded-2xl border transition-all duration-200 group bg-gradient-to-b ${
-                        item.bgGradient
-                      } ${
+                      } theme-menu-card theme-focus rounded-2xl border transition-all duration-200 group focus:outline-none ${
                         isCurrentActive
-                          ? item.activeRing + " bg-slate-900 shadow-xl scale-[1.02]"
-                          : item.borderColor + " bg-slate-900/80 hover:bg-slate-850 active:scale-95"
+                          ? "theme-menu-card--active shadow-xl scale-[1.02]"
+                          : "active:scale-95"
                       }`}
                     >
                       {/* Active Status Dot */}
                       {isCurrentActive && (
                         <div className="absolute top-2.5 right-2.5 flex items-center gap-1">
-                          <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse shadow-[0_0_8px_rgba(245,158,11,1)]" />
+                          <span className={`theme-active-dot w-2 h-2 rounded-full ${reducedMotion ? "" : "animate-pulse"}`} />
                         </div>
                       )}
 
@@ -397,14 +353,14 @@ export const HubNavigation: React.FC<HubNavigationProps> = ({
                       <div
                         className={`w-11 h-11 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center border transition-all duration-300 group-hover:scale-105 ${
                           isSpanningFullWidth ? "shrink-0" : "mb-2"
-                        } ${item.iconBox}`}
+                        } theme-menu-card__icon`}
                       >
                         <ItemIcon className="w-5 h-5 sm:w-6 sm:h-6 shrink-0" />
                       </div>
 
                       {/* Title & Subtitle */}
                       <div className={isSpanningFullWidth ? "flex-1 min-w-0" : "w-full"}>
-                        <h4 className="font-extrabold text-xs sm:text-sm text-slate-100 group-hover:text-amber-300 transition-colors tracking-tight leading-tight truncate w-full">
+                        <h4 className="theme-menu-card__title font-extrabold text-xs sm:text-sm text-slate-100 transition-colors tracking-tight leading-tight truncate w-full">
                           {isSpanningFullWidth ? item.fullName : item.title}
                         </h4>
 

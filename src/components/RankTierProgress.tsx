@@ -69,7 +69,7 @@ export const RankTierProgress: React.FC<RankTierProgressProps> = ({
                   y={0}
                   width={100}
                   height={100}
-                  fill={isLit ? "#fbbf24" : "rgba(30, 41, 59, 0.85)"}
+                  fill={isLit ? "var(--theme-progress, #fbbf24)" : "rgba(30, 41, 59, 0.85)"}
                 />
                 {/* Specular top highlight on lit nodes */}
                 {isLit && (

@@ -510,7 +510,7 @@ export const TrainingScreen: React.FC<TrainingScreenProps> = ({
       {/* Top Header */}
       <div className="flex items-center justify-between border-b border-slate-800/80 pb-3">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-amber-500/20 to-cyan-500/20 border border-amber-500/30 flex items-center justify-center text-amber-400 shadow-md">
+          <div className="theme-badge w-10 h-10 rounded-2xl border flex items-center justify-center shadow-md">
             <Target className="w-5 h-5" />
           </div>
           <div>
@@ -527,10 +527,10 @@ export const TrainingScreen: React.FC<TrainingScreenProps> = ({
                 soundManager.playClick();
                 setShowShootingTutorial(true);
               }}
-              className="p-2.5 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-xl border border-slate-800 flex items-center gap-1.5 text-xs font-semibold shadow-sm cursor-pointer"
+              className="theme-focus p-2.5 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-xl border border-slate-800 flex items-center gap-1.5 text-xs font-semibold shadow-sm cursor-pointer focus:outline-none"
               title="Hướng dẫn chơi Bắn Súng"
             >
-              <HelpCircle className="w-4 h-4 text-amber-400" />
+              <HelpCircle className="theme-icon-accent w-4 h-4" />
               <span className="hidden sm:inline">Hướng Dẫn</span>
             </button>
           )}
@@ -542,7 +542,7 @@ export const TrainingScreen: React.FC<TrainingScreenProps> = ({
                 soundManager.playClick();
                 setShowRadarTutorial(true);
               }}
-              className="p-2.5 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-xl border border-slate-800 flex items-center gap-1.5 text-xs font-semibold shadow-sm"
+              className="theme-focus p-2.5 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-xl border border-slate-800 flex items-center gap-1.5 text-xs font-semibold shadow-sm focus:outline-none"
               title="Hướng dẫn chơi Mắt Thần Radar"
             >
               <HelpCircle className="w-4 h-4 text-emerald-400" />
@@ -557,10 +557,10 @@ export const TrainingScreen: React.FC<TrainingScreenProps> = ({
                 soundManager.playClick();
                 setShowGomokuTutorial(true);
               }}
-              className="p-2.5 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-xl border border-slate-800 flex items-center gap-1.5 text-xs font-semibold shadow-sm"
+              className="theme-focus p-2.5 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-xl border border-slate-800 flex items-center gap-1.5 text-xs font-semibold shadow-sm focus:outline-none"
               title="Hướng dẫn chơi Cờ Caro"
             >
-              <HelpCircle className="w-4 h-4 text-amber-400" />
+              <HelpCircle className="theme-icon-accent w-4 h-4" />
               <span className="hidden sm:inline">Hướng Dẫn</span>
             </button>
           )}
@@ -572,7 +572,7 @@ export const TrainingScreen: React.FC<TrainingScreenProps> = ({
                 soundManager.playClick();
                 setShowFormationTutorial(true);
               }}
-              className="p-2.5 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-xl border border-slate-800 flex items-center gap-1.5 text-xs font-semibold shadow-sm"
+              className="theme-focus p-2.5 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-xl border border-slate-800 flex items-center gap-1.5 text-xs font-semibold shadow-sm focus:outline-none"
               title="Hướng dẫn chơi Xếp Đội Hình"
             >
               <HelpCircle className="w-4 h-4 text-purple-400" />
@@ -587,7 +587,7 @@ export const TrainingScreen: React.FC<TrainingScreenProps> = ({
                 soundManager.playClick();
                 setShowSignalTutorial(true);
               }}
-              className="p-2.5 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-xl border border-slate-800 flex items-center gap-1.5 text-xs font-semibold shadow-sm"
+              className="theme-focus p-2.5 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-xl border border-slate-800 flex items-center gap-1.5 text-xs font-semibold shadow-sm focus:outline-none"
               title="Hướng dẫn chơi Mật Lệnh Tín Hiệu"
             >
               <HelpCircle className="w-4 h-4 text-cyan-400" />
@@ -602,10 +602,10 @@ export const TrainingScreen: React.FC<TrainingScreenProps> = ({
                 soundManager.playClick();
                 setShowCalibrationModal(true);
               }}
-              className="p-2.5 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-xl border border-slate-800 flex items-center gap-1.5 text-xs font-semibold shadow-sm"
+              className="theme-focus p-2.5 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-xl border border-slate-800 flex items-center gap-1.5 text-xs font-semibold shadow-sm focus:outline-none"
               title="Hiệu chỉnh độ lệch nhịp (Timing Offset)"
             >
-              <Sliders className="w-4 h-4 text-amber-400" />
+              <Sliders className="theme-icon-accent w-4 h-4" />
               <span className="hidden sm:inline">Hiệu Chỉnh</span>
             </button>
           )}
@@ -627,18 +627,18 @@ export const TrainingScreen: React.FC<TrainingScreenProps> = ({
           <button
             type="button"
             onClick={() => handleSelectGame("march_rhythm")}
-            className={`p-2.5 rounded-2xl border transition-all flex flex-col items-start gap-1 text-left ${
+            className={`theme-focus p-2.5 rounded-2xl border transition-all flex flex-col items-start gap-1 text-left focus:outline-none ${
               selectedGameId === "march_rhythm"
-                ? "bg-slate-900 border-amber-500/60 ring-2 ring-amber-500/20 shadow-lg shadow-amber-500/10"
+                ? "theme-selected-card bg-slate-900"
                 : "bg-slate-950/80 border-slate-800 hover:border-slate-700 opacity-80 hover:opacity-100"
             }`}
           >
             <div className="flex items-center justify-between w-full">
-              <div className="w-6 h-6 rounded-lg bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-amber-400">
+              <div className="theme-badge w-6 h-6 rounded-lg border flex items-center justify-center">
                 <Activity className="w-3.5 h-3.5" />
               </div>
               <span className={`text-[9px] font-extrabold px-1.5 py-0.5 rounded-full ${
-                selectedGameId === "march_rhythm" ? "bg-amber-500/20 text-amber-300 border border-amber-500/30" : "bg-slate-800 text-slate-400"
+                selectedGameId === "march_rhythm" ? "theme-badge border" : "bg-slate-800 text-slate-400"
               }`}>
                 Phản xạ
               </span>
@@ -656,9 +656,9 @@ export const TrainingScreen: React.FC<TrainingScreenProps> = ({
           <button
             type="button"
             onClick={() => handleSelectGame("signal_command")}
-            className={`p-2.5 rounded-2xl border transition-all flex flex-col items-start gap-1 text-left ${
+            className={`theme-focus p-2.5 rounded-2xl border transition-all flex flex-col items-start gap-1 text-left focus:outline-none ${
               selectedGameId === "signal_command"
-                ? "bg-slate-900 border-cyan-500/60 ring-2 ring-cyan-500/20 shadow-lg shadow-cyan-500/10"
+                ? "theme-selected-card bg-slate-900"
                 : "bg-slate-950/80 border-slate-800 hover:border-slate-700 opacity-80 hover:opacity-100"
             }`}
           >
@@ -667,7 +667,7 @@ export const TrainingScreen: React.FC<TrainingScreenProps> = ({
                 <BrainCircuit className="w-3.5 h-3.5" />
               </div>
               <span className={`text-[9px] font-extrabold px-1.5 py-0.5 rounded-full ${
-                selectedGameId === "signal_command" ? "bg-cyan-500/20 text-cyan-300 border border-cyan-500/30" : "bg-slate-800 text-slate-400"
+                selectedGameId === "signal_command" ? "theme-badge border" : "bg-slate-800 text-slate-400"
               }`}>
                 Ghi nhớ
               </span>
@@ -685,9 +685,9 @@ export const TrainingScreen: React.FC<TrainingScreenProps> = ({
           <button
             type="button"
             onClick={() => handleSelectGame("formation_assembly")}
-            className={`p-2.5 rounded-2xl border transition-all flex flex-col items-start gap-1 text-left ${
+            className={`theme-focus p-2.5 rounded-2xl border transition-all flex flex-col items-start gap-1 text-left focus:outline-none ${
               selectedGameId === "formation_assembly"
-                ? "bg-slate-900 border-purple-500/60 ring-2 ring-purple-500/20 shadow-lg shadow-purple-500/10"
+                ? "theme-selected-card bg-slate-900"
                 : "bg-slate-950/80 border-slate-800 hover:border-slate-700 opacity-80 hover:opacity-100"
             }`}
           >
@@ -696,7 +696,7 @@ export const TrainingScreen: React.FC<TrainingScreenProps> = ({
                 <Grid3X3 className="w-3.5 h-3.5" />
               </div>
               <span className={`text-[9px] font-extrabold px-1.5 py-0.5 rounded-full ${
-                selectedGameId === "formation_assembly" ? "bg-purple-500/20 text-purple-300 border border-purple-500/30" : "bg-slate-800 text-slate-400"
+                selectedGameId === "formation_assembly" ? "theme-badge border" : "bg-slate-800 text-slate-400"
               }`}>
                 Thị giác
               </span>
@@ -714,9 +714,9 @@ export const TrainingScreen: React.FC<TrainingScreenProps> = ({
           <button
             type="button"
             onClick={() => handleSelectGame("radar_tracking")}
-            className={`p-2.5 rounded-2xl border transition-all flex flex-col items-start gap-1 text-left ${
+            className={`theme-focus p-2.5 rounded-2xl border transition-all flex flex-col items-start gap-1 text-left focus:outline-none ${
               selectedGameId === "radar_tracking"
-                ? "bg-slate-900 border-emerald-500/60 ring-2 ring-emerald-500/20 shadow-lg shadow-emerald-500/10"
+                ? "theme-selected-card bg-slate-900"
                 : "bg-slate-950/80 border-slate-800 hover:border-slate-700 opacity-80 hover:opacity-100"
             }`}
           >
@@ -725,7 +725,7 @@ export const TrainingScreen: React.FC<TrainingScreenProps> = ({
                 <Eye className="w-3.5 h-3.5" />
               </div>
               <span className={`text-[9px] font-extrabold px-1.5 py-0.5 rounded-full ${
-                selectedGameId === "radar_tracking" ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30" : "bg-slate-800 text-slate-400"
+                selectedGameId === "radar_tracking" ? "theme-badge border" : "bg-slate-800 text-slate-400"
               }`}>
                 Tập trung
               </span>
@@ -743,18 +743,18 @@ export const TrainingScreen: React.FC<TrainingScreenProps> = ({
           <button
             type="button"
             onClick={() => handleSelectGame("gomoku_infinite")}
-            className={`p-2.5 rounded-2xl border transition-all flex flex-col items-start gap-1 text-left ${
+            className={`theme-focus p-2.5 rounded-2xl border transition-all flex flex-col items-start gap-1 text-left focus:outline-none ${
               selectedGameId === "gomoku_infinite"
-                ? "bg-slate-900 border-amber-500/60 ring-2 ring-amber-500/20 shadow-lg shadow-amber-500/10"
+                ? "theme-selected-card bg-slate-900"
                 : "bg-slate-950/80 border-slate-800 hover:border-slate-700 opacity-80 hover:opacity-100"
             }`}
           >
             <div className="flex items-center justify-between w-full">
-              <div className="w-6 h-6 rounded-lg bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-amber-400">
+              <div className="theme-badge w-6 h-6 rounded-lg border flex items-center justify-center">
                 <Swords className="w-3.5 h-3.5" />
               </div>
               <span className={`text-[9px] font-extrabold px-1.5 py-0.5 rounded-full ${
-                selectedGameId === "gomoku_infinite" ? "bg-amber-500/20 text-amber-300 border border-amber-500/30" : "bg-slate-800 text-slate-400"
+                selectedGameId === "gomoku_infinite" ? "theme-badge border" : "bg-slate-800 text-slate-400"
               }`}>
                 Đối đầu
               </span>
@@ -772,18 +772,18 @@ export const TrainingScreen: React.FC<TrainingScreenProps> = ({
           <button
             type="button"
             onClick={() => handleSelectGame("shooting_range")}
-            className={`p-2.5 rounded-2xl border transition-all flex flex-col items-start gap-1 text-left cursor-pointer ${
+            className={`theme-focus p-2.5 rounded-2xl border transition-all flex flex-col items-start gap-1 text-left cursor-pointer focus:outline-none ${
               selectedGameId === "shooting_range"
-                ? "bg-slate-900 border-amber-500/60 ring-2 ring-amber-500/20 shadow-lg shadow-amber-500/10"
+                ? "theme-selected-card bg-slate-900"
                 : "bg-slate-950/80 border-slate-800 hover:border-slate-700 opacity-80 hover:opacity-100"
             }`}
           >
             <div className="flex items-center justify-between w-full">
-              <div className="w-6 h-6 rounded-lg bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-amber-400">
+              <div className="theme-badge w-6 h-6 rounded-lg border flex items-center justify-center">
                 <Target className="w-3.5 h-3.5" />
               </div>
               <span className={`text-[9px] font-extrabold px-1.5 py-0.5 rounded-full ${
-                selectedGameId === "shooting_range" ? "bg-amber-500/20 text-amber-300 border border-amber-500/30" : "bg-slate-800 text-slate-400"
+                selectedGameId === "shooting_range" ? "theme-badge border" : "bg-slate-800 text-slate-400"
               }`}>
                 Ngắm bắn
               </span>
@@ -803,7 +803,7 @@ export const TrainingScreen: React.FC<TrainingScreenProps> = ({
       <div ref={gameDetailRef} className="scroll-mt-4 pt-1">
         {selectedGameId === null ? (
           <div className="bg-slate-900/60 border border-slate-800/80 rounded-3xl p-6 text-center flex flex-col items-center gap-3">
-            <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400">
+            <div className="theme-badge w-12 h-12 rounded-2xl border flex items-center justify-center">
               <Target className="w-6 h-6" />
             </div>
             <div>

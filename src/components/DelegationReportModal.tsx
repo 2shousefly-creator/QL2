@@ -66,10 +66,10 @@ export const DelegationReportModal: React.FC<DelegationReportModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4 select-none animate-fadeIn overflow-y-auto">
-      <div className="w-full max-w-md bg-slate-900/95 border border-amber-500/30 rounded-2xl p-5 sm:p-6 shadow-2xl shadow-amber-500/10 text-slate-100 flex flex-col space-y-4 my-auto">
+      <div className="theme-card-accent w-full max-w-md bg-slate-900/95 border rounded-2xl p-5 sm:p-6 shadow-2xl text-slate-100 flex flex-col space-y-4 my-auto">
         {/* Header */}
-        <div className="flex items-start gap-3 border-b border-slate-800 pb-3.5">
-          <div className="p-2.5 rounded-xl bg-amber-500/20 text-amber-400 border border-amber-500/30 shrink-0 mt-0.5">
+        <div className="theme-divider flex items-start gap-3 border-b pb-3.5">
+          <div className="theme-badge p-2.5 rounded-xl border shrink-0 mt-0.5">
             <Clock className="w-6 h-6" />
           </div>
           <div className="flex-1">
@@ -78,7 +78,7 @@ export const DelegationReportModal: React.FC<DelegationReportModalProps> = ({
                 <span>📨</span> BÁO CÁO TRỞ LẠI
               </h3>
             </div>
-            <p className="text-xs font-semibold text-amber-400 mt-0.5">
+            <p className="theme-text-accent text-xs font-semibold mt-0.5">
               Vắng mặt: {formatDurationVi(report.elapsedMs)}
             </p>
             <p className="text-xs text-slate-300 mt-1.5 italic">
@@ -118,7 +118,7 @@ export const DelegationReportModal: React.FC<DelegationReportModalProps> = ({
                 </span>
                 <span className="text-xs text-slate-400">{report.currentRankName}</span>
               </div>
-              <div className="text-xl font-extrabold text-amber-400 flex items-center gap-1.5">
+              <div className="theme-text-accent text-xl font-extrabold flex items-center gap-1.5">
                 +{report.earnedXp} XP
               </div>
               <div className="text-xs text-slate-400">
@@ -212,9 +212,9 @@ export const DelegationReportModal: React.FC<DelegationReportModalProps> = ({
           )}
 
           {/* CARD 5: Ưu tiên tiếp theo */}
-          <div className="bg-amber-950/20 border border-amber-500/30 p-3 rounded-xl flex items-center justify-between gap-2">
+          <div className="theme-surface border p-3 rounded-xl flex items-center justify-between gap-2">
             <div className="flex items-center gap-2 text-xs">
-              <span className="font-bold text-amber-400 shrink-0">⭐ Ưu tiên:</span>
+              <span className="theme-text-accent font-bold shrink-0">⭐ Ưu tiên:</span>
               <span className="font-semibold text-slate-200 line-clamp-1">{priorityLabel}</span>
             </div>
           </div>
@@ -227,7 +227,7 @@ export const DelegationReportModal: React.FC<DelegationReportModalProps> = ({
             <button
               type="button"
               onClick={handlePrimaryClick}
-              className="w-full py-3 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-slate-950 font-black text-sm tracking-wide shadow-lg shadow-amber-500/20 flex items-center justify-center gap-2 transition-all active:scale-[0.99]"
+              className="theme-button-primary theme-focus w-full py-3 rounded-xl font-black text-sm tracking-wide shadow-lg flex items-center justify-center gap-2 transition-all active:scale-[0.99] focus:outline-none"
             >
               <Sparkles className="w-4 h-4" />
               <span>Thăng Cấp Ngay</span>
@@ -239,7 +239,7 @@ export const DelegationReportModal: React.FC<DelegationReportModalProps> = ({
             <button
               type="button"
               onClick={handlePrimaryClick}
-              className="w-full py-3 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-extrabold text-sm tracking-wide shadow-lg shadow-sky-600/30 flex items-center justify-center gap-2 transition-all active:scale-[0.99]"
+              className="theme-focus w-full py-3 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-extrabold text-sm tracking-wide shadow-lg shadow-sky-600/30 flex items-center justify-center gap-2 transition-all active:scale-[0.99] focus:outline-none"
             >
               <Droplets className="w-4 h-4" />
               <span>Đến Vườn Cây</span>
@@ -250,7 +250,7 @@ export const DelegationReportModal: React.FC<DelegationReportModalProps> = ({
             <button
               type="button"
               onClick={handlePrimaryClick}
-              className="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-sm tracking-wide shadow-lg shadow-emerald-600/30 flex items-center justify-center gap-2 transition-all active:scale-[0.99]"
+              className="theme-focus w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-sm tracking-wide shadow-lg shadow-emerald-600/30 flex items-center justify-center gap-2 transition-all active:scale-[0.99] focus:outline-none"
             >
               <Sprout className="w-4 h-4" />
               <span>Đến Vườn Cây</span>
@@ -261,7 +261,7 @@ export const DelegationReportModal: React.FC<DelegationReportModalProps> = ({
             <button
               type="button"
               onClick={handlePrimaryClick}
-              className="w-full py-3 rounded-xl bg-amber-600 hover:bg-amber-500 text-white font-extrabold text-sm tracking-wide shadow-lg shadow-amber-600/30 flex items-center justify-center gap-2 transition-all active:scale-[0.99]"
+              className="theme-focus w-full py-3 rounded-xl bg-amber-600 hover:bg-amber-500 text-white font-extrabold text-sm tracking-wide shadow-lg shadow-amber-600/30 flex items-center justify-center gap-2 transition-all active:scale-[0.99] focus:outline-none"
             >
               <Egg className="w-4 h-4" />
               <span>Đến Chuồng Nuôi</span>
@@ -272,7 +272,7 @@ export const DelegationReportModal: React.FC<DelegationReportModalProps> = ({
             <button
               type="button"
               onClick={handlePrimaryClick}
-              className="w-full py-3 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-extrabold text-sm tracking-wide shadow-lg shadow-purple-600/30 flex items-center justify-center gap-2 transition-all active:scale-[0.99]"
+              className="theme-focus w-full py-3 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-extrabold text-sm tracking-wide shadow-lg shadow-purple-600/30 flex items-center justify-center gap-2 transition-all active:scale-[0.99] focus:outline-none"
             >
               <Award className="w-4 h-4" />
               <span>Xem Huân Chương</span>
@@ -283,7 +283,7 @@ export const DelegationReportModal: React.FC<DelegationReportModalProps> = ({
             <button
               type="button"
               onClick={handleSecondaryClick}
-              className="w-full py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-100 font-bold text-sm tracking-wide flex items-center justify-center gap-2 transition-all active:scale-[0.99]"
+              className="theme-focus w-full py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-100 font-bold text-sm tracking-wide flex items-center justify-center gap-2 transition-all active:scale-[0.99] focus:outline-none"
             >
               <ShieldCheck className="w-4 h-4" />
               <span>Tiếp Tục Chơi</span>
@@ -295,7 +295,7 @@ export const DelegationReportModal: React.FC<DelegationReportModalProps> = ({
             <button
               type="button"
               onClick={handleSecondaryClick}
-              className="w-full py-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 text-slate-300 font-semibold text-xs tracking-wide transition-colors"
+              className="theme-focus w-full py-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 text-slate-300 font-semibold text-xs tracking-wide transition-colors focus:outline-none"
             >
               Tiếp Tục
             </button>

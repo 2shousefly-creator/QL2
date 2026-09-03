@@ -104,9 +104,9 @@ export const EntertainmentHubScreen: React.FC<EntertainmentHubScreenProps> = ({
   return (
     <div className="w-full max-w-lg mx-auto flex-1 flex flex-col min-h-0 px-3.5 sm:px-4 py-3.5 space-y-4 select-none">
       {/* Hub Top Bar */}
-      <div className="flex items-center justify-between bg-slate-900/80 border border-slate-800 rounded-2xl p-3.5 shadow-lg backdrop-blur-md">
+      <div className="theme-card-accent flex items-center justify-between bg-slate-900/80 border rounded-2xl p-3.5 shadow-lg backdrop-blur-md">
         <div className="flex items-center gap-2.5">
-          <div className="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 shadow-inner">
+          <div className="theme-badge w-10 h-10 rounded-xl border flex items-center justify-center shadow-inner">
             <Dices className="w-5 h-5" />
           </div>
           <div>
@@ -151,23 +151,23 @@ export const EntertainmentHubScreen: React.FC<EntertainmentHubScreenProps> = ({
             <div
               key={game.id}
               data-entertainment-game={game.id}
-              className="bg-gradient-to-br from-slate-900 via-slate-900/90 to-slate-950 border border-slate-800 hover:border-amber-500/40 rounded-2xl p-4 shadow-xl transition-all group relative overflow-hidden"
+              className="theme-hover-border bg-gradient-to-br from-slate-900 via-slate-900/90 to-slate-950 border border-slate-800 rounded-2xl p-4 shadow-xl transition-all group relative overflow-hidden"
             >
               {/* Card Accent Glow */}
-              <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 rounded-full blur-2xl pointer-events-none" />
+              <div className="theme-corner-glow absolute top-0 right-0 w-32 h-32 rounded-full blur-2xl pointer-events-none" />
 
               <div className="flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-500/20 via-slate-800 to-slate-900 border border-amber-500/30 flex items-center justify-center text-2xl shadow-md group-hover:scale-105 transition-transform select-none shrink-0">
+                  <div className="theme-badge w-12 h-12 rounded-2xl border flex items-center justify-center text-2xl shadow-md group-hover:scale-105 transition-transform select-none shrink-0">
                     {game.icon || "🎲"}
                   </div>
                   <div className="min-w-0">
                     <div className="flex items-center gap-2">
-                      <h4 className="text-base font-extrabold text-slate-100 group-hover:text-amber-300 transition-colors">
+                      <h4 className="theme-card-title text-base font-extrabold text-slate-100 transition-colors">
                         {game.title}
                       </h4>
                       {game.badge && (
-                        <span className="px-2 py-0.5 text-[9px] font-extrabold rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                        <span className="theme-badge px-2 py-0.5 text-[9px] font-extrabold rounded-full border">
                           {game.badge}
                         </span>
                       )}
@@ -183,7 +183,7 @@ export const EntertainmentHubScreen: React.FC<EntertainmentHubScreenProps> = ({
                     soundManager.playClick();
                     setActiveGame(game.id);
                   }}
-                  className="min-h-[42px] px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 active:scale-95 text-slate-950 text-xs font-extrabold flex items-center gap-1.5 shadow-lg shadow-amber-500/20 transition-all shrink-0"
+                  className="theme-button-primary theme-focus min-h-[42px] px-4 py-2 rounded-xl active:scale-95 text-xs font-extrabold flex items-center gap-1.5 shadow-lg transition-all shrink-0 focus:outline-none"
                 >
                   <Play className="w-3.5 h-3.5 fill-current" />
                   <span>Chơi</span>

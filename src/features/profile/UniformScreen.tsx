@@ -64,7 +64,7 @@ export const UniformScreen: React.FC<UniformScreenProps> = ({ state, onBack }) =
               soundManager.playClick();
               onBack();
             }}
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-slate-700 bg-slate-900/80 text-slate-300 transition hover:border-amber-400 hover:text-amber-300"
+            className="theme-focus theme-hover-border theme-hover-accent flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-slate-700 bg-slate-900/80 text-slate-300 transition focus:outline-none"
             aria-label="Quay lại Hồ Sơ"
           >
             <ArrowLeft className="h-5 w-5" />
@@ -74,7 +74,7 @@ export const UniformScreen: React.FC<UniformScreenProps> = ({ state, onBack }) =
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
             <h1 className="text-lg font-black uppercase tracking-[0.14em] text-slate-100">Quân Phục</h1>
-            <Sparkles className="h-4 w-4 text-amber-400" />
+            <Sparkles className="theme-icon-accent h-4 w-4" />
           </div>
           <p className="text-xs text-slate-400">Quân phục binh nghiệp theo cấp bậc đã đạt</p>
         </div>
@@ -94,7 +94,7 @@ export const UniformScreen: React.FC<UniformScreenProps> = ({ state, onBack }) =
           <span
             className={`shrink-0 rounded-full border px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-wider ${
               isCurrentFamily
-                ? "border-emerald-400/50 bg-emerald-500/15 text-emerald-300"
+                ? "theme-badge"
                 : "border-sky-400/50 bg-sky-500/15 text-sky-300"
             }`}
           >
@@ -104,7 +104,7 @@ export const UniformScreen: React.FC<UniformScreenProps> = ({ state, onBack }) =
 
         <div className="relative mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 border-t border-slate-800 pt-3 text-[11px] text-slate-400">
           <span className="flex items-center gap-1.5">
-            <ShieldCheck className="h-3.5 w-3.5 text-amber-400" />
+            <ShieldCheck className="theme-icon-accent h-3.5 w-3.5" />
             {isCurrentFamily ? currentRank.displayName : selectedFamily.name}
           </span>
           {achievedAt && <span>Đạt ngày {formatAchievedDate(achievedAt)}</span>}

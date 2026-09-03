@@ -78,7 +78,7 @@ export const RankPresentation: React.FC<RankPresentationProps> = ({
           />
 
           {showTierLabel && (
-            <span className="text-[11px] font-semibold tracking-wider text-amber-300/90 uppercase mt-0.5">
+            <span className="theme-text-accent text-[11px] font-semibold tracking-wider opacity-90 uppercase mt-0.5">
               Bậc {rankStep.tier}/{rankStep.tierCount}
             </span>
           )}

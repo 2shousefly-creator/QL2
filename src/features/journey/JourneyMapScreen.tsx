@@ -53,13 +53,13 @@ export const JourneyMapScreen: React.FC<JourneyMapScreenProps> = ({
   return (
     <div className="w-full max-w-lg mx-auto pb-24 px-4 pt-4 text-slate-100 animate-fadeIn">
       {/* Header Banner */}
-      <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 mb-6 shadow-xl backdrop-blur-md flex items-center justify-between gap-3">
+      <div className="theme-card-accent bg-slate-900/90 border rounded-2xl p-4 mb-6 shadow-xl backdrop-blur-md flex items-center justify-between gap-3">
         <div className="flex items-center gap-3">
-          <div className="p-2.5 bg-amber-500/10 border border-amber-500/30 rounded-xl text-amber-400">
-            <Compass className="w-6 h-6 animate-spin-slow" />
+          <div className="theme-badge p-2.5 border rounded-xl">
+            <Compass className={`w-6 h-6 ${gameState.settings.reducedMotion ? "" : "animate-spin-slow"}`} />
           </div>
           <div>
-            <h1 className="text-lg font-bold text-amber-400 leading-tight">
+            <h1 className="theme-text-accent text-lg font-bold leading-tight">
               Bản Đồ Hành Trình
             </h1>
             <p className="text-xs text-slate-400 mt-0.5">
@@ -74,10 +74,10 @@ export const JourneyMapScreen: React.FC<JourneyMapScreenProps> = ({
             soundManager.playClick();
             setShowEtaInfoModal(true);
           }}
-          className="p-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 rounded-xl text-xs flex items-center gap-1 transition-colors"
+          className="theme-focus p-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 rounded-xl text-xs flex items-center gap-1 transition-colors focus:outline-none"
           title="Giải thích cách tính ETA"
         >
-          <Info className="w-4 h-4 text-amber-400" />
+          <Info className="theme-icon-accent w-4 h-4" />
           <span className="hidden sm:inline">Tính ETA</span>
         </button>
       </div>
@@ -85,7 +85,7 @@ export const JourneyMapScreen: React.FC<JourneyMapScreenProps> = ({
       {/* Chapters Vertical Roadmap */}
       <div className="relative space-y-6">
         {/* Connecting Vertical Spine Line */}
-        <div className="absolute left-6 sm:left-8 top-8 bottom-8 w-0.5 bg-gradient-to-b from-amber-500/80 via-sky-500/50 to-slate-800 -z-0" />
+        <div className="theme-journey-spine absolute left-6 sm:left-8 top-8 bottom-8 w-0.5 -z-0" />
 
         {vm.chapters.map((chapter) => {
           const isCurrent = chapter.status === "current";
@@ -103,7 +103,7 @@ export const JourneyMapScreen: React.FC<JourneyMapScreenProps> = ({
               <div
                 className={`absolute left-6 sm:left-8 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full flex items-center justify-center font-bold shadow-lg border transition-all z-10 ${
                   isCurrent
-                    ? "w-8 h-8 bg-amber-500 text-slate-950 border-amber-300 ring-4 ring-amber-500/30 shadow-amber-500/20 scale-110"
+                    ? "theme-node-current w-8 h-8 scale-110"
                     : isCompleted
                     ? "w-7 h-7 bg-emerald-500 text-slate-950 border-emerald-400"
                     : "w-7 h-7 bg-slate-800 text-slate-400 border-slate-700"
@@ -122,7 +122,7 @@ export const JourneyMapScreen: React.FC<JourneyMapScreenProps> = ({
               <div
                 className={`rounded-2xl p-4 sm:p-5 border transition-all ${
                   isCurrent
-                    ? "bg-gradient-to-b from-slate-900 via-slate-900/95 to-slate-950 border-amber-500/50 shadow-2xl shadow-amber-500/10 ring-1 ring-amber-500/20"
+                    ? "theme-selected-card bg-gradient-to-b from-slate-900 via-slate-900/95 to-slate-950 shadow-2xl"
                     : isCompleted
                     ? "bg-slate-900/80 border-emerald-500/30 opacity-90"
                     : "bg-slate-950/60 border-slate-800/80 opacity-75"
@@ -144,7 +144,7 @@ export const JourneyMapScreen: React.FC<JourneyMapScreenProps> = ({
                   {/* Status Pill */}
                   <div>
                     {isCurrent && (
-                      <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 animate-pulse">
+                      <span className={`theme-badge inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-0.5 rounded-full border ${gameState.settings.reducedMotion ? "" : "animate-pulse"}`}>
                         <MapPin className="w-3 h-3" /> Vị trí hiện tại
                       </span>
                     )}
@@ -165,14 +165,14 @@ export const JourneyMapScreen: React.FC<JourneyMapScreenProps> = ({
                 <div className="mb-4">
                   <div className="flex justify-between text-xs mb-1">
                     <span className="text-slate-400 font-medium">Tiến độ chương:</span>
-                    <span className="font-bold text-amber-400">{chapter.progressPercent}%</span>
+                    <span className={isCompleted ? "font-bold text-emerald-400" : "theme-text-accent font-bold"}>{chapter.progressPercent}%</span>
                   </div>
-                  <div className="w-full h-2 bg-slate-950 rounded-full overflow-hidden border border-slate-800 p-0.5">
+                  <div className="theme-progress-track w-full h-2 rounded-full overflow-hidden border p-0.5">
                     <div
                       className={`h-full rounded-full transition-all duration-500 ${
                         isCompleted
                           ? "bg-emerald-400"
-                          : "bg-gradient-to-r from-amber-500 to-yellow-400"
+                          : "theme-progress-fill"
                       }`}
                       style={{ width: `${chapter.progressPercent}%` }}
                     />
@@ -181,18 +181,18 @@ export const JourneyMapScreen: React.FC<JourneyMapScreenProps> = ({
 
                 {/* Milestone Info for Current Chapter */}
                 {isCurrent && chapter.milestoneStatusLabel && (
-                  <div className="mb-4 p-3 bg-slate-950/90 border border-amber-500/30 rounded-xl text-xs flex items-start gap-2.5 shadow-inner">
-                    <Zap className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+                  <div className="theme-surface mb-4 p-3 bg-slate-950/90 border rounded-xl text-xs flex items-start gap-2.5 shadow-inner">
+                    <Zap className="theme-icon-accent w-4 h-4 shrink-0 mt-0.5" />
                     <div className="leading-relaxed font-medium text-slate-100">
                       {chapter.nextFamilyName ? (
                         <>
                           <span>Quân hàm tiếp theo: </span>
-                          <strong className="text-amber-400 font-bold">{chapter.nextFamilyName}</strong>
+                          <strong className="theme-text-accent font-bold">{chapter.nextFamilyName}</strong>
                           {chapter.tierLabel && <span> · {chapter.tierLabel}</span>}
                           {chapter.etaLabel && (
                             <>
                               <span> · Dự kiến khoảng </span>
-                              <span className="text-amber-300 font-bold">{chapter.etaLabel}</span>
+                              <span className="theme-text-accent font-bold">{chapter.etaLabel}</span>
                             </>
                           )}
                         </>
@@ -213,11 +213,11 @@ export const JourneyMapScreen: React.FC<JourneyMapScreenProps> = ({
                         onClick={() => handleSelectFamilyNode(node.family)}
                         className={`flex flex-col items-center justify-center p-2.5 rounded-xl border transition-all text-center relative group ${
                           node.isCurrent
-                            ? "bg-amber-500/10 border-amber-500/60 shadow-lg ring-1 ring-amber-500/30 scale-102"
+                            ? "theme-selected-card shadow-lg scale-102"
                             : node.isCompleted
                             ? "bg-slate-900/90 border-slate-700/80 hover:border-slate-500 opacity-90"
                             : "bg-slate-950/80 border-slate-800/60 opacity-60 hover:opacity-80"
-                        }`}
+                        } theme-focus focus:outline-none`}
                       >
                         {/* Node Badge Icon */}
                         <div className="relative my-1">
@@ -280,7 +280,7 @@ export const JourneyMapScreen: React.FC<JourneyMapScreenProps> = ({
         <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="w-full max-w-md bg-slate-900 border border-slate-700 rounded-2xl p-5 shadow-2xl text-slate-100 space-y-4 animate-fadeIn">
             <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-              <h3 className="font-bold text-base text-amber-400 flex items-center gap-2">
+              <h3 className="theme-text-accent font-bold text-base flex items-center gap-2">
                 <Info className="w-5 h-5" />
                 Cơ Chế Dự Kiến Thời Gian (ETA)
               </h3>
@@ -311,7 +311,7 @@ export const JourneyMapScreen: React.FC<JourneyMapScreenProps> = ({
             <button
               type="button"
               onClick={() => setShowEtaInfoModal(false)}
-              className="w-full py-2.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-xl text-xs transition-colors"
+              className="theme-button-primary theme-focus w-full py-2.5 font-bold rounded-xl text-xs transition-all focus:outline-none"
             >
               Đã hiểu
             </button>

@@ -1,12 +1,11 @@
 import React from "react";
-import { Award, Crown, Shield, Zap, Edit3, UserCheck, Star, Sparkles } from "lucide-react";
+import { Award, Crown, Zap, Edit3, UserCheck, Star, Sparkles } from "lucide-react";
 import { GameState, TabType } from "../../game/types";
 import { Avatar } from "../../components/Avatar";
 import { RankBadge } from "../../components/RankBadge";
 import { getPlayerRank, getPlayerFamily } from "../../game/selectors";
 import { formatXp } from "../../game/xpEngine";
-import { MEDAL_CATALOG, getLifetimeXp, MEDAL_TIER_STYLES } from "../../game/medals/medalCatalog";
-import { MASTERY_CONFIGS } from "../../game/mastery/masteryConfig";
+import { MEDAL_CATALOG, MEDAL_TIER_STYLES } from "../../game/medals/medalCatalog";
 import { soundManager } from "../../game/audio";
 
 type IdCardScreenProps = {
@@ -29,8 +28,6 @@ const formatMedalName = (name: string): { line1: string; line2?: string } => {
 export const IdCardScreen: React.FC<IdCardScreenProps> = ({ state, onNavigateTab }) => {
   const currentRank = getPlayerRank(state);
   const currentFamily = getPlayerFamily(state);
-  const lifetimeXp = getLifetimeXp(state);
-
   // Unlocked medals for automatic display on ID card
   const unlockedMedalIds = state.medals?.unlockedMedalIds || [];
   const unlockedMedalDefs = unlockedMedalIds
@@ -50,8 +47,8 @@ export const IdCardScreen: React.FC<IdCardScreenProps> = ({ state, onNavigateTab
       {/* Title Bar */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-black text-amber-300 tracking-wider flex items-center gap-2">
-            <UserCheck className="w-5 h-5 text-amber-400" />
+          <h2 className="theme-text-accent text-xl font-black tracking-wider flex items-center gap-2">
+            <UserCheck className="theme-icon-accent w-5 h-5" />
             <span>THẺ BINH NGHIỆP</span>
           </h2>
           <p className="text-xs text-slate-400 font-mono tracking-widest uppercase">
@@ -64,7 +61,7 @@ export const IdCardScreen: React.FC<IdCardScreenProps> = ({ state, onNavigateTab
             soundManager.playClick();
             onNavigateTab("medals");
           }}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-300 text-xs font-bold transition-all active:scale-95 shadow-sm"
+          className="theme-button-secondary theme-focus flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all active:scale-95 shadow-sm focus:outline-none"
         >
           <Edit3 className="w-3.5 h-3.5" />
           <span>Sửa Huân Chương Trang Chủ</span>
@@ -72,20 +69,20 @@ export const IdCardScreen: React.FC<IdCardScreenProps> = ({ state, onNavigateTab
       </div>
 
       {/* Main Identity Card Container */}
-      <div className="relative rounded-2xl bg-slate-950 border-2 border-amber-500/40 p-5 shadow-2xl overflow-hidden backdrop-blur-md">
+      <div className="theme-card-accent relative rounded-2xl bg-slate-950 border-2 p-5 shadow-2xl overflow-hidden backdrop-blur-md">
         {/* Subtle Military Card Background Patterns */}
-        <div className="absolute inset-0 bg-gradient-to-br from-amber-500/10 via-slate-900 to-slate-950 pointer-events-none" />
-        <div className="absolute -top-12 -right-12 w-48 h-48 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-sky-500/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="theme-surface absolute inset-0 pointer-events-none" />
+        <div className="theme-corner-glow absolute -top-12 -right-12 w-48 h-48 rounded-full blur-3xl pointer-events-none" />
+        <div className="theme-corner-glow absolute -bottom-10 -left-10 w-40 h-40 rounded-full blur-3xl pointer-events-none" />
 
         {/* Card Header Stamp */}
-        <div className="relative z-10 flex items-center justify-between border-b border-amber-500/20 pb-3 mb-4">
+        <div className="theme-divider relative z-10 flex items-center justify-between border-b pb-3 mb-4">
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-300 font-black text-xs">
+            <div className="theme-badge w-7 h-7 rounded-lg border flex items-center justify-center font-black text-xs">
               🎖️
             </div>
             <div>
-              <div className="text-[10px] font-mono text-amber-400/80 uppercase tracking-widest">
+              <div className="theme-text-accent text-[10px] font-mono opacity-80 uppercase tracking-widest">
                 QUÂN ĐỘI NHÂN DÂN VIỆT NAM
               </div>
               <div className="text-xs font-bold text-slate-200 tracking-wide">
@@ -98,7 +95,7 @@ export const IdCardScreen: React.FC<IdCardScreenProps> = ({ state, onNavigateTab
         {/* Card Body: Avatar & Rank Details */}
         <div className="relative z-10 flex items-center gap-4 mb-4">
           {/* Avatar with Metallic Frame */}
-          <div className="relative p-1 rounded-2xl bg-gradient-to-b from-amber-400/40 via-amber-600/20 to-slate-900 border border-amber-500/50 shadow-lg">
+          <div className="theme-surface theme-border-strong relative p-1 rounded-2xl border shadow-lg">
             <Avatar seed={state.player.avatarSeed} size={76} />
             <div className="absolute -bottom-2 -right-2 bg-amber-500 text-slate-950 rounded-full p-1 shadow-md border border-amber-300">
               <Star className="w-3 h-3 fill-slate-950" />
@@ -113,11 +110,11 @@ export const IdCardScreen: React.FC<IdCardScreenProps> = ({ state, onNavigateTab
 
             {/* Rank Badge & Name */}
             <div className="flex items-center gap-2.5 pt-0.5">
-              <div className="relative drop-shadow-[0_0_12px_rgba(245,158,11,0.5)]">
+              <div className="theme-rank-glow relative">
                 <RankBadge badge={currentFamily.badge} size={48} />
               </div>
               <div>
-                <div className="text-xs font-black text-amber-300 leading-tight">
+                <div className="theme-text-accent text-xs font-black leading-tight">
                   {currentRank.displayName}
                 </div>
                 <div className="text-[10px] text-slate-400 font-medium">
@@ -129,13 +126,13 @@ export const IdCardScreen: React.FC<IdCardScreenProps> = ({ state, onNavigateTab
         </div>
 
         {/* Key Stats Bar */}
-        <div className="relative z-10 grid grid-cols-3 gap-2 p-2.5 rounded-xl bg-slate-900/80 border border-amber-500/20 mb-4 text-center">
+        <div className="theme-border relative z-10 grid grid-cols-3 gap-2 p-2.5 rounded-xl bg-slate-900/80 border mb-4 text-center">
           <div className="space-y-0.5">
             <div className="text-[10px] text-slate-400 flex items-center justify-center gap-1 font-semibold">
-              <Zap className="w-3 h-3 text-amber-400" />
+              <Zap className="theme-icon-accent w-3 h-3" />
               <span>Tổng XP</span>
             </div>
-            <div className="text-xs font-black text-amber-300">
+            <div className="theme-text-accent text-xs font-black">
               {formatXp(state.progression.totalXpEarnedTicks, true)}
             </div>
           </div>

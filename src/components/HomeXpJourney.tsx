@@ -1,14 +1,12 @@
 import React from "react";
-import { Sparkles, Flame, Award, Crown, CheckCircle2, Zap } from "lucide-react";
+import { Crown, Zap } from "lucide-react";
 import { GameState, RankStep } from "../game/types";
 import { RANK_FAMILIES } from "../game/rankFamilies";
 import {
   getCurrentRank,
   getNextRank,
   getRequiredXpTicksForTransition,
-  getFinalJourneyXpTarget,
   getFinalJourneyXpTargetTicks,
-  formatXp,
   isXpBarFull,
 } from "../game/xpEngine";
 import { ensureEnergyState, getEnergyMultiplier, isEnergyActive } from "../game/energyEngine";
@@ -79,7 +77,7 @@ export const HomeXpJourney: React.FC<HomeXpJourneyProps> = ({
     <div className={`w-full relative select-none ${className}`}>
       {/* Centered % Progress Label above the Bar (No "Kinh nghiệm (XP)" text) */}
       <div className="flex items-center justify-center gap-1.5 text-xs sm:text-sm font-bold mb-1 text-center">
-        <span className={isFull ? "text-amber-300 font-extrabold" : "text-amber-400 font-extrabold"}>
+        <span className={isFull ? "text-amber-300 font-extrabold" : "theme-text-accent font-extrabold"}>
           {isJourneyCompleted ? "MAX" : `${targetPercentage.toFixed(1)}%`}
         </span>
       </div>
@@ -92,14 +90,14 @@ export const HomeXpJourney: React.FC<HomeXpJourneyProps> = ({
           <button
             type="button"
             onClick={() => onOpenRankDetail?.(currentRank.rankIndex)}
-            className="flex flex-col items-center justify-center focus:outline-none cursor-pointer"
+            className="theme-focus theme-border flex flex-col items-center justify-center border focus:outline-none cursor-pointer rounded-xl"
             title={`Xem chi tiết cấp ${currentRank.displayName}`}
           >
             <RankBadge
               badge={currentFamily.badge}
               size={50}
               isCurrent={true}
-              className="drop-shadow-[0_2px_8px_rgba(245,158,11,0.3)]"
+              className="theme-rank-glow"
             />
           </button>
 
@@ -126,7 +124,7 @@ export const HomeXpJourney: React.FC<HomeXpJourneyProps> = ({
                 ? "border-amber-400 ring-2 ring-amber-400/50 shadow-[0_0_20px_rgba(250,204,21,0.5)]"
                 : hasEnergyBoost
                 ? "border-amber-300 ring-2 ring-amber-400/70 shadow-[0_0_25px_rgba(251,191,36,0.7)]"
-                : "border-slate-800"
+                : "theme-progress-track"
             } p-1 overflow-hidden transition-all duration-300 shadow-inner flex items-center`}
             role="progressbar"
             aria-valuemin={0}
@@ -139,7 +137,7 @@ export const HomeXpJourney: React.FC<HomeXpJourneyProps> = ({
               className={`absolute inset-0 pointer-events-none z-0 ${
                 hasEnergyBoost
                   ? "bg-gradient-to-r from-amber-500/15 via-yellow-400/20 to-amber-500/15 animate-pulse"
-                  : "bg-gradient-to-r from-slate-900 via-slate-800/50 to-slate-900"
+                  : "theme-bg-soft"
               }`}
             />
 
@@ -159,7 +157,7 @@ export const HomeXpJourney: React.FC<HomeXpJourneyProps> = ({
                   ? "bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-300 shadow-[0_0_15px_rgba(251,191,36,0.6)]"
                   : hasEnergyBoost
                   ? "bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-200 shadow-[0_0_22px_rgba(251,191,36,0.9)] brightness-110"
-                  : "bg-gradient-to-r from-amber-600 via-amber-500 to-yellow-400 shadow-[0_0_10px_rgba(245,158,11,0.4)]"
+                  : "theme-progress-fill"
               }`}
               style={{ width: `${targetPercentage}%` }}
             >
@@ -206,14 +204,14 @@ export const HomeXpJourney: React.FC<HomeXpJourneyProps> = ({
               <button
                 type="button"
                 onClick={() => onOpenRankDetail?.(nextRank.rankIndex)}
-                className="flex flex-col items-center justify-center focus:outline-none cursor-pointer"
+                className="theme-focus theme-border flex flex-col items-center justify-center border focus:outline-none cursor-pointer rounded-xl"
                 title={`Xem chi tiết cấp kế tiếp ${nextRank.displayName}`}
               >
                 <RankBadge
                   badge={nextFamily.badge}
                   size={50}
                   isLocked={false}
-                  className="drop-shadow-[0_2px_8px_rgba(245,158,11,0.2)]"
+                  className="theme-rank-glow"
                 />
               </button>
 

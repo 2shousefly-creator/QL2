@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Zap, Play, Award, Sparkles, Star, Compass } from "lucide-react";
+import { Award, Sparkles, Star, Compass } from "lucide-react";
 import { RankPresentation } from "../../components/RankPresentation";
 import { RankDetailSheet } from "../../components/RankDetailSheet";
 import { HomeXpJourney } from "../../components/HomeXpJourney";
-import { EarningStatus } from "../../components/EarningStatus";
 import { HomeJourneyBackdrop } from "../../components/HomeJourneyBackdrop";
 import { RankActivityTicker } from "../../components/RankActivityTicker";
 import { DisplayedMedalColumn } from "../../components/DisplayedMedal";
@@ -12,7 +11,6 @@ import { getEtaDetailsToFullBar } from "../../game/xpEngine";
 import { ensureEnergyState, getEnergyMultiplier, isEnergyActive } from "../../game/energyEngine";
 import { getPlayerRank, getXpProgressDetails } from "../../game/selectors";
 import { getJourneyChapterForRank } from "../../game/etaEngine";
-import { STAGE_THEMES } from "../../game/stageThemes";
 import { getRankRole } from "../../game/rankRoles";
 import { soundManager } from "../../game/audio";
 import { GameState } from "../../game/types";
@@ -39,7 +37,6 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   const roleInfo = getRankRole(currentRank.rankIndex);
 
   const currentChapter = getJourneyChapterForRank(currentRank.rankIndex);
-  const chapterTheme = STAGE_THEMES[currentChapter.themeId] || STAGE_THEMES.training_dawn;
 
   const [isLevelingUp, setIsLevelingUp] = useState(false);
   const [levelUpKey, setLevelUpKey] = useState(0);
@@ -95,11 +92,11 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               soundManager.playClick();
               onNavigateToJourney?.();
             }}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-xs transition-all hover:scale-105 active:scale-95 shadow-md ${chapterTheme.tagBgCss} ${chapterTheme.tagTextCss}`}
+            className="theme-badge theme-focus flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-xs font-semibold transition-all hover:scale-105 active:scale-95 shadow-md focus:outline-none"
             title="Mở bản đồ hành trình"
           >
-            <Compass className="w-3.5 h-3.5 animate-spin-slow" />
-            <span className="font-semibold">{currentChapter.shortTitle}</span>
+            <Compass className={`w-3.5 h-3.5 ${state.settings.reducedMotion ? "" : "animate-spin-slow"}`} />
+            <span>{currentChapter.shortTitle}</span>
             <span className="text-[10px] opacity-75 hidden sm:inline">· Xem hành trình</span>
           </button>
         </div>
@@ -144,7 +141,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                   setSelectedRankIndexForDetail(currentRank.rankIndex);
                 }
               }}
-              className={`w-full flex flex-col items-center justify-center cursor-pointer group hover:scale-[1.03] active:scale-95 transition-all focus:outline-none relative z-10 ${
+              className={`theme-focus w-full flex flex-col items-center justify-center cursor-pointer group hover:scale-[1.03] active:scale-95 transition-all focus:outline-none rounded-3xl relative z-10 ${
                 isLevelingUp ? "animate-level-up-pop" : ""
               }`}
               aria-label="Xem chi tiết và mô tả cấp bậc"
@@ -173,19 +170,19 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
 
             {/* Current Position / Role Block (Hidden when XP is full to give clear focus to Promotion CTA) */}
             {!xpDetails.isFull && (
-              <div className="w-full max-w-sm mx-auto mt-2.5 px-3.5 py-2 rounded-2xl bg-slate-900/70 border border-slate-800/80 backdrop-blur-xs text-center transition-all animate-fadeIn">
+              <div className="theme-card-accent w-full max-w-sm mx-auto mt-2.5 px-3.5 py-2 rounded-2xl bg-slate-900/70 border backdrop-blur-xs text-center transition-all animate-fadeIn">
                 <div className="flex flex-col items-center justify-center gap-1">
-                  <div className="inline-block px-3 py-1 rounded-xl bg-amber-500/15 border border-amber-400/40 font-extrabold text-amber-300 text-sm sm:text-base tracking-wide shadow-inner">
+                  <div className="theme-badge inline-block px-3 py-1 rounded-xl border font-extrabold text-sm sm:text-base tracking-wide shadow-inner">
                     {roleInfo.primaryTitle}
                   </div>
                   {roleInfo.secondaryTitle && (
-                    <div className="text-xs font-semibold text-amber-200/90 tracking-normal">
+                    <div className="theme-text-accent text-xs font-semibold opacity-90 tracking-normal">
                       {roleInfo.secondaryTitle}
                     </div>
                   )}
                 </div>
                 {roleInfo.unitDisplayName && (
-                  <div className="text-[11px] text-sky-400 font-medium mt-1 tracking-tight">
+                  <div className="theme-text-accent text-[11px] font-medium mt-1 tracking-tight">
                     {roleInfo.unitDisplayName}
                   </div>
                 )}
@@ -287,9 +284,11 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                 soundManager.playClick();
                 onStartChallenge();
               }}
-              className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 hover:from-amber-400 hover:to-yellow-300 text-slate-950 font-black text-base uppercase tracking-wider shadow-xl shadow-amber-500/30 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 animate-pulse cursor-pointer"
+              className={`theme-button-primary theme-focus w-full py-4 px-6 rounded-2xl font-black text-base uppercase tracking-wider shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer focus:outline-none ${
+                state.settings.reducedMotion ? "" : "animate-pulse"
+              }`}
             >
-              <Award className="w-5 h-5 text-slate-950" />
+              <Award className="w-5 h-5" />
               <span>Sát Hạch Thăng Cấp</span>
             </button>
           </div>

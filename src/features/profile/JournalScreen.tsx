@@ -170,8 +170,8 @@ export const JournalScreen: React.FC<JournalScreenProps> = ({ state }) => {
       {/* Title */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-black text-amber-300 tracking-wider flex items-center gap-2">
-            <ScrollText className="w-5 h-5 text-amber-400" />
+          <h2 className="theme-text-accent text-xl font-black tracking-wider flex items-center gap-2">
+            <ScrollText className="theme-icon-accent w-5 h-5" />
             <span>NHẬT KÝ BINH NGHIỆP</span>
           </h2>
           <p className="text-xs text-slate-400">
@@ -193,9 +193,9 @@ export const JournalScreen: React.FC<JournalScreenProps> = ({ state }) => {
                 soundManager.playClick();
                 setSelectedFilter(filter.id);
               }}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap active:scale-95 ${
+              className={`theme-focus flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap active:scale-95 focus:outline-none ${
                 isActive
-                  ? "bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20"
+                  ? "theme-button-primary shadow-md"
                   : "bg-slate-900 border border-slate-800 text-slate-400 hover:text-slate-200"
               }`}
             >
@@ -213,10 +213,10 @@ export const JournalScreen: React.FC<JournalScreenProps> = ({ state }) => {
           <div className="space-y-5">
             {Object.entries(groupedTimedEvents).map(([dateLabel, groupList]) => (
               <div key={dateLabel} className="space-y-2.5">
-                <div className="flex items-center gap-2 text-xs font-bold text-amber-400 tracking-wider">
+                <div className="theme-text-accent flex items-center gap-2 text-xs font-bold tracking-wider">
                   <Calendar className="w-3.5 h-3.5" />
                   <span>{dateLabel}</span>
-                  <div className="flex-1 h-px bg-amber-500/20" />
+                  <div className="theme-active-marker flex-1 h-px" />
                 </div>
 
                 <div className="relative pl-4 space-y-3 border-l-2 border-slate-800">
@@ -238,7 +238,7 @@ export const JournalScreen: React.FC<JournalScreenProps> = ({ state }) => {
           <div className="space-y-3 pt-2">
             <div className="flex items-center gap-2 text-xs font-bold text-slate-400 tracking-wider border-t border-slate-800 pt-4">
               <span>DẤU MỐC TRƯỚC BẢN CẬP NHẬT</span>
-              <span className="text-[10px] text-amber-400/80 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20 font-medium">
+              <span className="theme-badge text-[10px] px-2 py-0.5 rounded-full border font-medium">
                 Phiên chơi trước
               </span>
               <div className="flex-1 h-px bg-slate-800" />
@@ -320,12 +320,12 @@ const JournalEntryCard: React.FC<JournalEntryCardProps> = ({ item, isHistorical,
   return (
     <div className="relative group">
       {/* Timeline Node Bullet - Centered Vertically */}
-      <div className="absolute -left-[21px] top-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full bg-amber-500 ring-4 ring-slate-950 transition-all group-hover:scale-125" />
+      <div className="theme-active-dot absolute -left-[21px] top-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full ring-4 ring-slate-950 transition-all group-hover:scale-125" />
 
       {/* Event Card */}
       <div 
         onClick={() => onSelect(item)}
-        className="p-3.5 rounded-xl bg-slate-900/90 border border-slate-800 shadow-md transition-all hover:border-amber-500/40 cursor-pointer active:scale-[0.99] hover:bg-slate-800/60"
+        className="theme-hover-border p-3.5 rounded-xl bg-slate-900/90 border border-slate-800 shadow-md transition-all cursor-pointer active:scale-[0.99] hover:bg-slate-800/60"
       >
         <div className="flex items-start justify-between gap-2">
           <div className="flex items-center gap-2.5">
@@ -347,7 +347,7 @@ const JournalEntryCard: React.FC<JournalEntryCardProps> = ({ item, isHistorical,
             <div>
               <span className="font-bold text-sm text-slate-100">{cleanTitleText}</span>
               {isRankEvent && family && (
-                <div className="text-[10px] text-amber-400 font-semibold">{family.name}</div>
+                <div className="theme-text-accent text-[10px] font-semibold">{family.name}</div>
               )}
             </div>
           </div>
@@ -412,14 +412,14 @@ const JournalDetailModal: React.FC<{
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 15 }}
           transition={{ duration: 0.25, ease: "easeOut" }}
-          className="relative bg-slate-900 border border-slate-800 rounded-3xl w-full max-w-lg overflow-hidden shadow-2xl flex flex-col max-h-[85vh] z-10"
+          className="theme-card-accent relative bg-slate-900 border rounded-3xl w-full max-w-lg overflow-hidden shadow-2xl flex flex-col max-h-[85vh] z-10"
         >
           {/* Header Graphic Background */}
           <div className={`h-24 bg-gradient-to-b ${catDetails.bgColor} relative shrink-0 border-b border-slate-800/60`}>
             {/* Close button */}
             <button
               onClick={onClose}
-              className="absolute top-4 right-4 p-2 rounded-full bg-slate-950/60 border border-slate-800 text-slate-400 hover:text-slate-100 transition-colors active:scale-90"
+              className="theme-focus absolute top-4 right-4 p-2 rounded-full bg-slate-950/60 border border-slate-800 text-slate-400 hover:text-slate-100 transition-colors active:scale-90 focus:outline-none"
             >
               <X className="w-4 h-4" />
             </button>
@@ -428,7 +428,7 @@ const JournalDetailModal: React.FC<{
             <div className="absolute -bottom-10 left-6">
               {isRankEvent && family ? (
                 <div className="flex items-end gap-3">
-                  <div className="bg-slate-950 border-2 border-amber-500/50 rounded-2xl p-2 shadow-xl shrink-0 flex flex-col items-center">
+                  <div className="theme-card-accent bg-slate-950 border-2 rounded-2xl p-2 shadow-xl shrink-0 flex flex-col items-center">
                     <RankBadge badge={family.badge} size={56} />
                     {rankStep && rankStep.tierCount > 1 && rankStep.tier !== null && (
                       <div className="mt-1 w-full">
@@ -459,7 +459,7 @@ const JournalDetailModal: React.FC<{
                   {catDetails.label}
                 </span>
                 {isRankEvent && family && (
-                  <span className="text-[10px] text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2.5 py-1 rounded-full font-bold">
+                  <span className="theme-badge text-[10px] border px-2.5 py-1 rounded-full font-bold">
                     {family.name}
                   </span>
                 )}
@@ -548,8 +548,8 @@ const JournalDetailModal: React.FC<{
 
             {/* Memoir / Story Section */}
             {isRankEvent && story && (
-              <div className="space-y-2.5 border-t border-slate-800/60 pt-4">
-                <div className="text-xs font-bold text-amber-400 tracking-wider uppercase flex items-center gap-1.5">
+              <div className="theme-divider space-y-2.5 border-t pt-4">
+                <div className="theme-text-accent text-xs font-bold tracking-wider uppercase flex items-center gap-1.5">
                   <BookOpen className="w-3.5 h-3.5" />
                   <span>Binh nghiệp ký sự</span>
                 </div>
@@ -570,10 +570,10 @@ const JournalDetailModal: React.FC<{
           </div>
 
           {/* Footer Action */}
-          <div className="p-4 bg-slate-950 border-t border-slate-800/60 flex justify-end shrink-0">
+          <div className="theme-divider p-4 bg-slate-950 border-t flex justify-end shrink-0">
             <button
               onClick={onClose}
-              className="px-5 py-2 rounded-xl bg-slate-900 border border-slate-700 hover:border-slate-500 text-slate-200 text-xs font-bold transition-all active:scale-95"
+              className="theme-focus theme-hover-border px-5 py-2 rounded-xl bg-slate-900 border border-slate-700 text-slate-200 text-xs font-bold transition-all active:scale-95 focus:outline-none"
             >
               Đóng
             </button>

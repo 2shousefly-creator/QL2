@@ -69,9 +69,9 @@ export const RankDetailSheet: React.FC<RankDetailSheetProps> = ({
         }
       }}
     >
-      <div className="w-full max-w-lg bg-slate-900 border-t sm:border border-slate-700 rounded-t-3xl sm:rounded-3xl p-4 sm:p-6 shadow-2xl text-slate-100 flex flex-col max-h-[85vh] sm:max-h-[85vh] overflow-hidden">
+      <div className="theme-card-accent w-full max-w-lg bg-slate-900 border-t sm:border rounded-t-3xl sm:rounded-3xl p-4 sm:p-6 shadow-2xl text-slate-100 flex flex-col max-h-[85vh] sm:max-h-[85vh] overflow-hidden">
         {/* Header & Close */}
-        <div className="shrink-0 flex items-center justify-between border-b border-slate-800 pb-3">
+        <div className="theme-divider shrink-0 flex items-center justify-between border-b pb-3">
           <div className="flex items-center gap-2">
             {isAchieved && (
               <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
@@ -79,7 +79,7 @@ export const RankDetailSheet: React.FC<RankDetailSheetProps> = ({
               </span>
             )}
             {isCurrent && (
-              <span className="inline-flex items-center gap-1 text-xs font-bold px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 animate-pulse">
+              <span className="theme-badge inline-flex items-center gap-1 text-xs font-bold px-2.5 py-0.5 rounded-full border animate-pulse">
                 Hiện tại
               </span>
             )}
@@ -99,7 +99,7 @@ export const RankDetailSheet: React.FC<RankDetailSheetProps> = ({
               soundManager.playClick();
               onClose();
             }}
-            className="p-2 rounded-full bg-slate-800/80 text-slate-300 hover:text-white transition-colors cursor-pointer"
+            className="theme-focus p-2 rounded-full bg-slate-800/80 text-slate-300 hover:text-white transition-colors cursor-pointer focus:outline-none"
             aria-label="Đóng"
           >
             <X className="w-5 h-5" />
@@ -122,14 +122,14 @@ export const RankDetailSheet: React.FC<RankDetailSheetProps> = ({
         {/* XP Requirement for next rank if current */}
         {isCurrent && requiredXp > 0 && (
           <div className="shrink-0 p-2.5 bg-slate-950/80 border border-slate-800 rounded-xl text-center text-xs text-slate-300 mb-2">
-            Yêu cầu để thăng cấp tiếp theo: <span className="font-bold text-amber-400">{requiredXp.toLocaleString("vi-VN")} XP</span>
+            Yêu cầu để thăng cấp tiếp theo: <span className="theme-text-accent font-bold">{requiredXp.toLocaleString("vi-VN")} XP</span>
           </div>
         )}
 
         {/* Story Section */}
         <div className="flex-1 min-h-0 flex flex-col my-1 overflow-hidden">
-          <h4 className="shrink-0 font-bold text-sm text-amber-400 flex items-center gap-2 mb-2 px-1">
-            <BookOpen className="w-4 h-4 text-amber-400" />
+          <h4 className="theme-text-accent shrink-0 font-bold text-sm flex items-center gap-2 mb-2 px-1">
+            <BookOpen className="theme-icon-accent w-4 h-4" />
             <span>Câu Chuyện Cấp Bậc</span>
           </h4>
 
@@ -137,8 +137,8 @@ export const RankDetailSheet: React.FC<RankDetailSheetProps> = ({
             {story ? (
               <>
                 {/* Story Title & Subtitle */}
-                <div className="bg-gradient-to-r from-amber-500/15 via-amber-500/5 to-transparent border-l-4 border-amber-400 p-3 rounded-r-xl">
-                  <h5 className="font-bold text-amber-300 text-sm sm:text-base leading-snug">
+                <div className="theme-story-accent border-l-4 p-3 rounded-r-xl">
+                  <h5 className="theme-text-accent font-bold text-sm sm:text-base leading-snug">
                     {story.title}
                   </h5>
                   {story.subtitle && (
