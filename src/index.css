@@ -15,6 +15,7 @@
   --theme-progress: #f59e0b;
   --theme-progress-soft: rgba(245, 158, 11, 0.18);
   --theme-on-primary: #fff7ed;
+  --hub-navigation-height: 3.5rem;
 }
 
 /* Global chapter-theme primitives. Functional status palettes (Energy,
@@ -188,8 +189,43 @@
 }
 
 .theme-header-shell {
+  padding-top: calc(0.75rem + env(safe-area-inset-top, 0px));
   border-color: var(--theme-border);
   box-shadow: 0 12px 28px -28px var(--theme-glow);
+}
+
+.app-main-with-hub-navigation {
+  padding-bottom: calc(var(--hub-navigation-height) + env(safe-area-inset-bottom, 0px));
+}
+
+.hub-navigation-bar {
+  height: var(--hub-navigation-height);
+}
+
+/* Keep the Home hero prominent while allowing short mobile viewports to scroll
+   only as much as their content requires. The shared variables keep the badge,
+   tier bar and displayed-medal columns in the same responsive scale. */
+.home-rank-presentation {
+  --rank-badge-size: 196px;
+  --rank-tier-width: 162px;
+  --rank-medal-item-height: 65.333px;
+}
+
+@media (max-height: 720px) {
+  .home-rank-presentation {
+    --rank-badge-size: 184px;
+    --rank-tier-width: 152px;
+    --rank-medal-item-height: 61.333px;
+  }
+}
+
+@media (min-width: 640px) and (min-height: 721px),
+  (min-width: 390px) and (min-height: 850px) {
+  .home-rank-presentation {
+    --rank-badge-size: 224px;
+    --rank-tier-width: 186px;
+    --rank-medal-item-height: 74.667px;
+  }
 }
 
 .theme-world-ambient {
@@ -1044,5 +1080,4 @@
   user-select: none;
   touch-action: none;
 }
-
 

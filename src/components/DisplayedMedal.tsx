@@ -64,7 +64,7 @@ export const DisplayedMedal: React.FC<DisplayedMedalProps> = ({
     return (
       <div
         className={sharedClassName}
-        style={{ height: `${itemHeight}px` }}
+        style={{ height: `var(--rank-medal-item-height, ${itemHeight}px)` }}
         title={medal.name}
         aria-label={medal.name}
       >
@@ -82,7 +82,7 @@ export const DisplayedMedal: React.FC<DisplayedMedalProps> = ({
         onSelectMedal(medal);
       }}
       className={`${sharedClassName} cursor-pointer`}
-      style={{ height: `${itemHeight}px` }}
+      style={{ height: `var(--rank-medal-item-height, ${itemHeight}px)` }}
       title={medal.name}
     >
       {content}
@@ -106,8 +106,8 @@ export const DisplayedMedalColumn: React.FC<DisplayedMedalColumnProps> = ({
 
   return (
     <div
-      className={`w-20 sm:w-22 flex flex-col items-center justify-start z-20 shrink-0 ${className}`}
-      style={{ height: `${badgeSize}px` }}
+      className={`w-16 sm:w-22 flex flex-col items-center justify-start z-20 shrink-0 ${className}`}
+      style={{ height: `var(--rank-badge-size, ${badgeSize}px)` }}
     >
       {medals.map((medal) => (
         <DisplayedMedal

@@ -75,14 +75,15 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   const etaDetails = getEtaDetailsToFullBar(state, nowMs);
 
   return (
-    <div className="relative w-full h-[calc(100vh-135px)] max-h-[calc(100vh-135px)] overflow-y-auto touch-pan-y select-none pb-20">
+    <div className="relative h-full min-h-0 w-full overflow-hidden touch-pan-y select-none">
       {/* Dynamic Chapter Backdrop */}
       <HomeJourneyBackdrop
         chapterId={currentChapter.id}
         reducedMotion={state.settings.reducedMotion}
       />
 
-      <div className="relative z-10 flex flex-col items-center justify-between h-full p-3 sm:p-4 max-w-md mx-auto">
+      <div className="relative z-10 h-full min-h-0 overflow-y-auto overscroll-y-contain touch-pan-y">
+        <div className="mx-auto flex min-h-full w-full max-w-md flex-col items-center px-3 pb-3 pt-2 sm:p-4">
         {/* Top Status & Chapter Tag Bar */}
         <div className="w-full shrink-0 flex items-center justify-end gap-2 mb-1">
           {/* Chapter Badge Tag & Link */}
@@ -102,7 +103,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         </div>
 
         {/* Main Central Container: Hero Badge & XP Group */}
-        <div className="flex-1 w-full flex flex-col items-center justify-center my-auto py-1">
+        <div className="w-full flex flex-col items-center py-1">
           {/* Main Hero Badge Stack */}
           <div className="relative w-full flex flex-col items-center justify-center">
             {/* Background Ambient Radial Glow Rays when leveling up */}
@@ -149,6 +150,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               <RankPresentation
                 rankStep={currentRank}
                 badgeSize={224}
+                className="home-rank-presentation"
                 isCurrent={true}
                 showTierLabel={false}
                 showName={true}
@@ -293,6 +295,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             </button>
           </div>
         ) : null}
+        </div>
       </div>
 
       <MedalInspectModal medal={inspectingMedal} onClose={() => setInspectingMedal(null)} />
@@ -309,4 +312,3 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
     </div>
   );
 };
-
