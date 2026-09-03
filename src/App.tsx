@@ -511,7 +511,7 @@ export default function App() {
 
       {/* Top Gaming HUD Header (Auto-hidden when in Minigames, Challenge, or Trough Info Modal) */}
       {!isTrainingGameActive && !isChallengeActive && !isTroughInfoActive && (
-        <header className="theme-header-shell relative z-10 bg-slate-900/70 backdrop-blur-md border-b px-4 py-3">
+        <header className="theme-header-shell relative z-10 shrink-0 bg-slate-900/70 backdrop-blur-md border-b px-4 pb-3">
           <div className="max-w-lg mx-auto flex items-center justify-between">
             <div className="flex items-center gap-3">
               <button
@@ -575,7 +575,7 @@ export default function App() {
       )}
 
       {/* Main Interactive Body Area */}
-      <main className={`relative z-10 flex-1 min-h-0 flex flex-col ${activeTab === "home" ? "overflow-hidden" : isTrainingGameActive ? "overflow-y-auto" : "overflow-y-auto pb-28"}`}>
+      <main className={`relative z-10 flex-1 min-h-0 flex flex-col ${activeTab === "home" ? "app-main-with-hub-navigation overflow-hidden" : isTrainingGameActive ? "overflow-y-auto" : "overflow-y-auto pb-28"}`}>
         <div
           key={activeTab}
           className="w-full h-full flex-1 min-h-0 flex flex-col animate-in fade-in slide-in-from-bottom-2 duration-200"

@@ -36,7 +36,7 @@ export const RankTierProgress: React.FC<RankTierProgressProps> = ({
   // Calculate width = outer border line of badge = (106 / 128) of badgeSize if provided
   // Round to nearest integer pixel to avoid subpixel container truncation on the last segment
   const widthStyle: React.CSSProperties | undefined = badgeSize
-    ? { width: `${Math.round((badgeSize * 106) / 128)}px` }
+    ? { width: `var(--rank-tier-width, ${Math.round((badgeSize * 106) / 128)}px)` }
     : undefined;
 
   return (
@@ -115,4 +115,3 @@ export const RankTierProgress: React.FC<RankTierProgressProps> = ({
     </div>
   );
 };
-

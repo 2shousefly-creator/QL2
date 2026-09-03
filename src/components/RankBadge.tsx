@@ -488,7 +488,10 @@ export const RankBadge: React.FC<RankBadgeProps> = ({
       className={`relative z-0 inline-flex items-center justify-center select-none ${
         isCurrent && !isLocked ? "theme-rank-glow" : ""
       } ${className}`}
-      style={{ width: size, height: size }}
+      style={{
+        width: `var(--rank-badge-size, ${size}px)`,
+        height: `var(--rank-badge-size, ${size}px)`,
+      }}
       role="img"
       aria-label={ariaLabel || `Huy hiệu ${badge.id}`}
     >

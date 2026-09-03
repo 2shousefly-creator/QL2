@@ -227,7 +227,7 @@ export const HubNavigation: React.FC<HubNavigationProps> = ({
         aria-label="Điều hướng chính"
         className="theme-nav-shell fixed bottom-0 inset-x-0 z-40 bg-slate-950/95 border-t backdrop-blur-md pb-[env(safe-area-inset-bottom)] shadow-2xl select-none"
       >
-        <div className="max-w-lg mx-auto flex items-center justify-around h-14 px-2">
+        <div className="hub-navigation-bar max-w-lg mx-auto flex items-center justify-around px-2">
           {mainTabs.map((tab) => {
             const Icon = tab.icon;
             const isActive = tab.isActive;
