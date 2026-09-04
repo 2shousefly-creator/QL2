@@ -60,29 +60,43 @@ function resolveThemeId(chapterId: JourneyChapterId): JourneyStageThemeId {
   return getStageTheme(chapter?.themeId).id;
 }
 
+// The shared landscape canvas deliberately keeps every chapter-defining shape
+// inside the central portrait-safe band; edge silhouettes are supplemental.
 function SceneArtwork({ themeId }: { themeId: JourneyStageThemeId }) {
   if (themeId === "training_dawn") {
     return (
       <svg className="home-scene-art" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <linearGradient id="training-ground" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stopColor="#1b211f" />
+            <stop offset="1" stopColor="#05080a" />
+          </linearGradient>
+        </defs>
         <g data-layer="background-environment">
-          <circle cx="600" cy="575" r="118" fill="var(--theme-primary-soft)" opacity="0.7" />
-          <path d="M0 566 H1200" stroke="var(--theme-border)" strokeWidth="2" opacity="0.45" />
+          <circle cx="600" cy="145" r="92" fill="var(--theme-primary-soft)" opacity="0.58" />
+          <path d="M390 0l96 242M810 0l-96 242M510 0l40 218M690 0l-40 218" stroke="var(--theme-border)" strokeWidth="2" opacity="0.2" />
+          <path d="M0 352Q180 292 352 338t318-8 294 10 236-28" fill="none" stroke="var(--theme-border)" strokeWidth="2" opacity="0.38" />
+          <path d="M352 84h496M394 108h412" stroke="var(--theme-accent)" strokeWidth="4" opacity="0.2" />
         </g>
-        <g data-layer="midground-scene" fill="#111827" stroke="var(--theme-border)" strokeWidth="2" opacity="0.78">
-          <path d="M32 575h235v-72l-36-30H87l-55 43z" />
-          <path d="M917 575h250v-60l-42-28H969l-52 40z" />
-          <path d="M76 514h128M984 525h132" opacity="0.6" />
-          <path d="M188 474v-145" />
-          <path d="M190 337l72 20-72 25z" fill="var(--theme-primary-soft)" />
-          <path d="M0 610h352M848 610h352" strokeDasharray="14 12" opacity="0.55" />
-          <path d="M333 575v-54h34v54m466 0v-50h34v50" />
-          <path d="M377 550h94m-47-48v73M729 550h94m-47-48v73" opacity="0.65" />
+        <g data-layer="midground-scene" fill="#111817" stroke="var(--theme-border)" strokeWidth="2" opacity="0.8">
+          <path d="M315 486h178V374l-31-28H350l-35 34zm392 0h178V374l-31-28H742l-35 34z" />
+          <path d="M338 401h132m268 0h124M366 430h38v32h-38zm430 0h38v32h-38z" fill="var(--theme-primary-muted)" />
+          <path d="M420 365V176m360 189V176" />
+          <path d="M422 184l78 24-78 34zm356 0l-78 24 78 34z" fill="var(--theme-primary-soft)" />
+          <path d="M474 470v-92h38v92m176 0v-92h38v92M510 405h180" fill="none" />
+          <path d="M538 432h124m-62-55v93" opacity="0.62" />
+          <path d="M334 510h532" strokeDasharray="12 10" opacity="0.5" />
         </g>
-        <g data-layer="foreground-silhouette" fill="#020617" opacity="0.9">
-          <path d="M0 676l94-38 122 18 96-25 87 35 90-18 103 32 108-33 108 20 105-37 107 28 80-22v164H0z" />
-          <circle cx="76" cy="614" r="10" /><path d="M66 624h20l9 54H57z" />
-          <circle cx="1120" cy="605" r="9" /><path d="M1111 614h18l12 52h-42z" />
-          <path d="M0 628h118l28 34H0zm1200 0h-125l-30 34h155z" opacity="0.95" />
+        <g data-layer="foreground-silhouette">
+          <path d="M0 566L600 486l600 80v234H0z" fill="url(#training-ground)" opacity="0.94" />
+          <path d="M600 492L448 800m152-308L752 800M600 492v308" fill="none" stroke="var(--theme-border)" strokeWidth="2" opacity="0.48" />
+          <path d="M310 610h146l-28 50H284zm434 0h146l26 50H772z" fill="#070d0e" stroke="var(--theme-border)" strokeWidth="2" opacity="0.9" />
+          <path d="M342 628h76m364 0h76M260 706h184m312 0h184" stroke="var(--theme-accent)" strokeWidth="3" opacity="0.3" />
+          <g fill="#020617" opacity="0.9">
+            <circle cx="450" cy="558" r="9" /><path d="M441 568h18l11 50h-40z" />
+            <circle cx="750" cy="558" r="9" /><path d="M741 568h18l11 50h-40z" />
+            <path d="M0 598l212-46 82 24-88 224H0zm1200 0l-212-46-82 24 88 224h206z" />
+          </g>
         </g>
       </svg>
     );
@@ -91,23 +105,34 @@ function SceneArtwork({ themeId }: { themeId: JourneyStageThemeId }) {
   if (themeId === "simple_barracks") {
     return (
       <svg className="home-scene-art" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
-        <g data-layer="background-environment" opacity="0.55">
-          <circle cx="1030" cy="142" r="54" fill="var(--theme-primary-soft)" />
-          <path d="M0 535 Q220 470 420 532 T840 528 T1200 522V650H0z" fill="#101711" />
+        <defs>
+          <linearGradient id="barracks-road" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stopColor="#17201b" />
+            <stop offset="1" stopColor="#030706" />
+          </linearGradient>
+        </defs>
+        <g data-layer="background-environment" opacity="0.68">
+          <circle cx="746" cy="112" r="52" fill="var(--theme-primary-soft)" />
+          <path d="M330 0v258m540-258v258M330 76l540 64M330 138l540-32" fill="none" stroke="var(--theme-border)" strokeWidth="2" opacity="0.34" />
+          <path d="M0 410Q196 348 352 398t284-14 292 12 272-22" fill="none" stroke="var(--theme-border)" strokeWidth="2" opacity="0.28" />
+          <path d="M375 344V155h82v189m-98-189h114l-20-40h-74z" fill="#0a100d" stroke="var(--theme-border)" strokeWidth="2" />
+          <path d="M416 114V65m-22 0h44" stroke="var(--theme-accent)" strokeWidth="3" opacity="0.55" />
         </g>
         <g data-layer="midground-scene" stroke="var(--theme-border)" strokeWidth="2" opacity="0.75">
-          <path d="M26 575h262v-98H72l-46 44zM900 575h275v-104H956l-56 46z" fill="#141c19" />
-          <path d="M72 477l82-48 134 48m668-6l86-52 133 52" fill="#0b1110" />
-          <path d="M126 514h36v28h-36zm80 0h36v28h-36zm786-4h38v29h-38zm84 0h38v29h-38z" fill="var(--theme-primary-soft)" stroke="none" />
-          <path d="M330 557V350h82v207m-96-207h112l-18-38h-76z" fill="#0b1110" />
-          <path d="M371 311V263m-19 0h38" />
-          <path d="M0 606h432M768 606h432" strokeDasharray="7 10" opacity="0.7" />
-          <path d="M476 566v-96m247 96v-96M476 487h247" opacity="0.35" />
+          <path d="M302 510h254V386H346l-44 48zm342 0h254V386H688l-44 48z" fill="#121b17" />
+          <path d="M346 386l86-56 124 56m132 0l84-56 126 56" fill="#0a100e" />
+          <path d="M348 420h54v42h-54zm94 0h54v42h-54zm262 0h54v42h-54zm94 0h54v42h-54z" fill="var(--theme-primary-muted)" stroke="none" />
+          <path d="M292 522h616M322 542h556" strokeDasharray="8 9" opacity="0.52" />
+          <path d="M518 500v-118m164 118V382M518 402h164" opacity="0.5" />
+          <path d="M544 430h112M544 457h78" stroke="var(--theme-accent)" opacity="0.34" />
         </g>
-        <g data-layer="foreground-silhouette" fill="#020605" opacity="0.92">
-          <path d="M0 672l132-42 125 20 112-18 100 43 124-24 118 21 111-34 124 18 127-37 127 44v137H0z" />
-          <path d="M18 610h116v54H18zm1008 5h152v53h-152z" />
-          <path d="M58 594h38v16H58zm1012 4h46v17h-46z" fill="var(--theme-primary-muted)" />
+        <g data-layer="foreground-silhouette">
+          <path d="M0 590L600 505l600 85v210H0z" fill="url(#barracks-road)" opacity="0.96" />
+          <path d="M600 510L480 800m120-290L720 800M600 510v290" fill="none" stroke="var(--theme-border)" strokeWidth="2" opacity="0.38" />
+          <path d="M555 582h90l18 44H537zm-36 96h162l32 77H487z" fill="var(--theme-primary-muted)" stroke="var(--theme-border)" strokeWidth="2" opacity="0.7" />
+          <path d="M390 608h96v70h-96zm324 0h96v70h-96z" fill="#050907" stroke="var(--theme-border)" strokeWidth="2" />
+          <path d="M408 588h60v20h-60zm324 0h60v20h-60z" fill="var(--theme-primary-soft)" />
+          <path d="M0 620l250-68 74 38-76 210H0zm1200 0l-250-68-74 38 76 210h248z" fill="#020605" opacity="0.92" />
         </g>
       </svg>
     );
@@ -120,26 +145,39 @@ function SceneArtwork({ themeId }: { themeId: JourneyStageThemeId }) {
           <pattern id="assembly-grid" width="52" height="52" patternUnits="userSpaceOnUse">
             <path d="M52 0H0v52" fill="none" stroke="var(--theme-border)" strokeWidth="1" opacity="0.28" />
           </pattern>
+          <linearGradient id="assembly-deck" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stopColor="#102233" />
+            <stop offset="1" stopColor="#030b12" />
+          </linearGradient>
         </defs>
         <g data-layer="background-environment">
-          <rect width="1200" height="650" fill="url(#assembly-grid)" opacity="0.5" />
-          <path d="M0 535H1200" stroke="var(--theme-border)" strokeWidth="2" opacity="0.5" />
+          <rect width="1200" height="800" fill="url(#assembly-grid)" opacity="0.42" />
+          <path d="M300 76h600M340 112h520M354 76v144m492-144v144" stroke="var(--theme-border)" strokeWidth="3" opacity="0.48" />
+          <path d="M390 104v92m420-92v92" stroke="var(--theme-accent)" strokeWidth="5" opacity="0.36" />
+          <path d="M394 188l58 18-58 27zm412 0l-58 18 58 27z" fill="var(--theme-primary-soft)" stroke="var(--theme-border)" />
+          <circle cx="600" cy="102" r="9" fill="var(--theme-accent)" opacity="0.58" />
         </g>
         <g data-layer="midground-scene" stroke="var(--theme-border)" strokeWidth="2" opacity="0.72">
-          <path d="M28 500h260v94H28zm884-18h260v112H912z" fill="#0b1724" />
-          <path d="M42 521h232m-232 29h232m884-39H928m216 32H928" opacity="0.5" />
-          <path d="M321 590h162v-70H321zm396 0h177v-76H717z" fill="#0a1520" />
-          <path d="M332 532h140m256-5h154" opacity="0.5" />
-          <path d="M172 478v-153m0 0l65 18-65 24M1014 482V342m0 0l-62 18 62 22" fill="var(--theme-primary-soft)" />
-          <path d="M510 560h180m-90-58v88" strokeDasharray="6 7" opacity="0.42" />
-        </g>
-        <g data-layer="foreground-silhouette" fill="#030b12" opacity="0.92">
-          <path d="M0 674h1200v126H0z" />
-          <path d="M0 635h218l52 39H0zm1200 0H970l-45 39h275z" />
-          <path d="M810 617h150l42 40H768zM75 617h112l28 31H43z" />
-          {[330, 365, 400, 800, 835, 870].map((x) => (
-            <g key={x}><circle cx={x} cy="620" r="7" /><path d={`M${x - 7} 628h14l6 34h-26z`} /></g>
+          <path d="M302 492h196V350H302zm400 0h196V350H702z" fill="#0b1724" />
+          <path d="M320 378h160m-160 36h160m-160 36h160m240-72h160m-160 36h160m-160 36h160" opacity="0.5" />
+          <path d="M508 475h184v-92H508z" fill="#0a1520" />
+          <path d="M530 404h140m-140 31h112" stroke="var(--theme-accent)" opacity="0.42" />
+          <path d="M364 338V236m472 102V236" />
+          <path d="M364 244l58 18-58 25zm472 0l-58 18 58 25z" fill="var(--theme-primary-soft)" />
+          {[410, 450, 490, 710, 750, 790].map((x) => (
+            <g key={x} fill="#07111a">
+              <circle cx={x} cy="516" r="7" />
+              <path d={`M${x - 7} 524h14l7 34h-28z`} />
+            </g>
           ))}
+        </g>
+        <g data-layer="foreground-silhouette">
+          <path d="M0 590L600 520l600 70v210H0z" fill="url(#assembly-deck)" opacity="0.94" />
+          <path d="M600 526L414 800m186-274L786 800M600 526v274" fill="none" stroke="var(--theme-border)" strokeWidth="2" opacity="0.46" />
+          <path d="M362 618h158l-34 66H330zm318 0h158l32 66H714z" fill="#06111b" stroke="var(--theme-border)" strokeWidth="2" />
+          <path d="M392 641h88m240 0h88" stroke="var(--theme-accent)" strokeWidth="4" opacity="0.42" />
+          <path d="M548 594h104l15 39H533zm-40 120h184l25 66H483z" fill="var(--theme-primary-muted)" stroke="var(--theme-border)" opacity="0.82" />
+          <path d="M0 624l262-64 76 30-90 210H0zm1200 0l-262-64-76 30 90 210h248z" fill="#030b12" opacity="0.88" />
         </g>
       </svg>
     );
@@ -149,27 +187,39 @@ function SceneArtwork({ themeId }: { themeId: JourneyStageThemeId }) {
     return (
       <svg className="home-scene-art" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
         <defs>
-          <pattern id="map-contours" width="140" height="110" patternUnits="userSpaceOnUse">
-            <path d="M-10 65Q30 18 78 57t76 0M-8 92q62-42 150 0" fill="none" stroke="var(--theme-border)" strokeWidth="1.5" opacity="0.55" />
+          <pattern id="map-contours" width="96" height="82" patternUnits="userSpaceOnUse">
+            <path d="M-8 46Q24 12 58 42t54 0M-6 68q42-31 104 0" fill="none" stroke="var(--theme-border)" strokeWidth="1.5" opacity="0.52" />
           </pattern>
+          <linearGradient id="map-console" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stopColor="#0b211c" />
+            <stop offset="1" stopColor="#020706" />
+          </linearGradient>
         </defs>
         <g data-layer="background-environment">
-          <rect x="252" y="92" width="696" height="472" rx="14" fill="#061713" stroke="var(--theme-border)" strokeWidth="3" opacity="0.82" />
-          <rect x="275" y="116" width="650" height="424" rx="8" fill="url(#map-contours)" opacity="0.72" />
-          <path d="M330 428C430 320 520 390 608 274s168-70 258-142" fill="none" stroke="var(--theme-accent)" strokeWidth="2" strokeDasharray="10 12" opacity="0.32" />
-          <circle cx="332" cy="427" r="7" fill="var(--theme-accent)" opacity="0.45" />
-          <circle cx="607" cy="275" r="7" fill="var(--theme-accent)" opacity="0.45" />
+          <path d="M286 0h628l-62 92H348z" fill="#07110f" stroke="var(--theme-border)" strokeWidth="2" opacity="0.9" />
+          <path d="M370 35h460M406 62h388" stroke="var(--theme-accent)" strokeWidth="5" opacity="0.35" />
+          <path d="M320 92v454m560-454v454M344 118h512" stroke="var(--theme-border)" strokeWidth="2" opacity="0.45" />
+          <rect x="386" y="142" width="428" height="386" rx="12" fill="#061713" stroke="var(--theme-border)" strokeWidth="3" opacity="0.9" />
+          <rect x="407" y="164" width="386" height="342" rx="7" fill="url(#map-contours)" opacity="0.74" />
+          <path d="M430 445c64-86 120-36 164-132s102-58 174-126" fill="none" stroke="var(--theme-accent)" strokeWidth="3" strokeDasharray="10 11" opacity="0.42" />
+          <circle cx="432" cy="443" r="7" fill="var(--theme-accent)" opacity="0.62" />
+          <circle cx="594" cy="314" r="7" fill="var(--theme-accent)" opacity="0.62" />
+          <circle cx="766" cy="188" r="7" fill="var(--theme-accent)" opacity="0.62" />
         </g>
         <g data-layer="midground-scene" opacity="0.82">
-          <path d="M22 174h190v352H22zm966 0h190v352H988z" fill="#06110f" stroke="var(--theme-border)" strokeWidth="2" />
-          <path d="M47 209h140v74H47zm0 98h140v74H47zm0 98h140v74H47zm966-196h140v74h-140zm0 98h140v74h-140zm0 98h140v74h-140z" fill="var(--theme-primary-muted)" stroke="var(--theme-border)" />
-          <path d="M68 231h95m-95 24h66m900-23h96m-96 24h70M67 329h84m883 0h82M67 427h71m896 0h92" stroke="var(--theme-accent)" strokeWidth="2" opacity="0.4" />
+          <path d="M414 156h72v338h-72zm300 0h72v338h-72z" fill="#06110f" stroke="var(--theme-border)" strokeWidth="2" />
+          <path d="M428 181h44v76h-44zm0 98h44v76h-44zm0 98h44v76h-44zm300-196h44v76h-44zm0 98h44v76h-44zm0 98h44v76h-44z" fill="var(--theme-primary-muted)" stroke="var(--theme-border)" />
+          <path d="M436 201h28m-28 18h20m-20 80h28m-28 18h18m-18 80h28m272-196h28m-28 18h20m-20 80h28m-28 18h18m-18 80h28" stroke="var(--theme-accent)" strokeWidth="2" opacity="0.48" />
+          <path d="M420 112h360M454 126h292" stroke="var(--theme-border-strong)" strokeWidth="2" opacity="0.46" />
         </g>
-        <g data-layer="foreground-silhouette" fill="#020706" opacity="0.94">
-          <path d="M0 682h1200v118H0z" />
-          <path d="M260 800l82-202h516l90 202z" />
-          <path d="M354 616h492l-26 64H380z" fill="#06110f" stroke="var(--theme-border)" strokeWidth="2" />
-          <path d="M0 618h158l55 64H0zm1200 0h-163l-54 64h217z" />
+        <g data-layer="foreground-silhouette">
+          <path d="M244 800l142-280h428l142 280z" fill="url(#map-console)" opacity="0.97" />
+          <path d="M382 558h436l-30 92H412z" fill="#071612" stroke="var(--theme-border)" strokeWidth="3" />
+          <path d="M422 579h170v43H422zm188 0h168v43H610z" fill="var(--theme-primary-muted)" stroke="var(--theme-border)" />
+          <path d="M444 598h98m90 0h104" stroke="var(--theme-accent)" strokeWidth="3" opacity="0.56" />
+          <path d="M412 650L350 800m438-150 62 150M600 650v150" fill="none" stroke="var(--theme-border)" strokeWidth="2" opacity="0.46" />
+          <path d="M0 610l286-90 100 28-142 252H0zm1200 0l-286-90-100 28 142 252h244z" fill="#020706" opacity="0.88" />
+          <path d="M300 706h86m428 0h86M342 750h82m352 0h82" stroke="var(--theme-accent)" strokeWidth="4" opacity="0.28" />
         </g>
       </svg>
     );
@@ -178,23 +228,36 @@ function SceneArtwork({ themeId }: { themeId: JourneyStageThemeId }) {
   if (themeId === "command_room") {
     return (
       <svg className="home-scene-art" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <linearGradient id="command-floor" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stopColor="#10152c" />
+            <stop offset="1" stopColor="#02040b" />
+          </linearGradient>
+        </defs>
         <g data-layer="background-environment">
-          <path d="M0 86h1200v478H0z" fill="#080c1d" opacity="0.72" />
-          <rect x="326" y="92" width="548" height="300" rx="12" fill="#080d24" stroke="var(--theme-border)" strokeWidth="3" />
-          <path d="M361 135h478M361 176h478M361 217h478M361 258h478M361 299h478M361 340h478" stroke="var(--theme-border)" opacity="0.15" />
-          <path d="M600 112v260M463 112v260M737 112v260" stroke="var(--theme-border)" opacity="0.18" />
+          <path d="M276 0h648l-70 92H346z" fill="#080c1d" stroke="var(--theme-border)" strokeWidth="2" opacity="0.9" />
+          <path d="M350 42h500M405 70h390" stroke="var(--theme-accent)" strokeWidth="5" opacity="0.3" />
+          <path d="M318 94v438m564-438v438M342 118h516" stroke="var(--theme-border)" strokeWidth="2" opacity="0.42" />
+          <rect x="370" y="118" width="460" height="302" rx="12" fill="#080d24" stroke="var(--theme-border)" strokeWidth="3" />
+          <path d="M398 154h404M398 196h404M398 238h404M398 280h404M398 322h404M398 364h404" stroke="var(--theme-border)" opacity="0.16" />
+          <path d="M600 138v262M484 138v262M716 138v262" stroke="var(--theme-border)" opacity="0.2" />
+          <path d="M420 334l78-72 72 38 91-106 116 76" fill="none" stroke="var(--theme-accent)" strokeWidth="3" opacity="0.38" />
         </g>
         <g data-layer="midground-scene" opacity="0.8">
-          <path d="M22 148h258v355H22zm898 0h258v355H920z" fill="#080d1d" stroke="var(--theme-border)" strokeWidth="2" />
-          <path d="M48 182h206v124H48zm0 150h206v136H48zm898-150h206v124H946zm0 150h206v136H946z" fill="var(--theme-primary-muted)" stroke="var(--theme-border)" />
-          <path d="M70 209h90l42 52h31m-163 99h153m-153 34h112m786-185h96l38 52h28m-162 99h151m-151 34h111" fill="none" stroke="var(--theme-accent)" strokeWidth="2" opacity="0.38" />
-          <circle cx="214" cy="438" r="5" fill="var(--theme-accent)" /><circle cx="1092" cy="438" r="5" fill="var(--theme-accent)" />
+          <path d="M414 164h72v330h-72zm300 0h72v330h-72z" fill="#080d1d" stroke="var(--theme-border)" strokeWidth="2" />
+          <path d="M428 188h44v116h-44zm0 139h44v132h-44zm300-139h44v116h-44zm0 139h44v132h-44z" fill="var(--theme-primary-muted)" stroke="var(--theme-border)" />
+          <path d="M438 213h24l-12 54h12m-24 89h24m-24 28h20m280-171h24l-12 54h12m-24 89h24m-24 28h20" fill="none" stroke="var(--theme-accent)" strokeWidth="2" opacity="0.46" />
+          <path d="M410 458h380l48 92H362z" fill="#080d1d" stroke="var(--theme-border)" strokeWidth="2" />
+          <path d="M438 478h132v44H438zm192 0h132v44H630z" fill="var(--theme-primary-muted)" stroke="var(--theme-border)" />
+          <circle cx="468" cy="536" r="5" fill="var(--theme-accent)" /><circle cx="732" cy="536" r="5" fill="var(--theme-accent)" />
         </g>
-        <g data-layer="foreground-silhouette" fill="#02040b" opacity="0.95">
-          <path d="M0 678h1200v122H0z" />
-          <path d="M0 564h310l90 114H0zm1200 0H890l-90 114h400z" />
-          <path d="M332 800l74-215h388l74 215z" />
-          <path d="M429 600h342l-20 69H449z" fill="#080d1d" stroke="var(--theme-border)" strokeWidth="2" />
+        <g data-layer="foreground-silhouette">
+          <path d="M0 594L600 530l600 64v206H0z" fill="url(#command-floor)" opacity="0.96" />
+          <path d="M600 536L438 800m162-264L762 800M600 536v264" fill="none" stroke="var(--theme-border)" strokeWidth="2" opacity="0.44" />
+          <path d="M382 590h178l-36 82H340zm258 0h178l42 82H676z" fill="#070b19" stroke="var(--theme-border)" strokeWidth="2" />
+          <path d="M412 614h108m160 0h108" stroke="var(--theme-accent)" strokeWidth="4" opacity="0.48" />
+          <path d="M514 692h172l28 66H486z" fill="var(--theme-primary-muted)" stroke="var(--theme-border)" opacity="0.76" />
+          <path d="M0 622l280-70 82 38-94 210H0zm1200 0l-280-70-82 38 94 210h268z" fill="#02040b" opacity="0.9" />
         </g>
       </svg>
     );
@@ -203,24 +266,35 @@ function SceneArtwork({ themeId }: { themeId: JourneyStageThemeId }) {
   if (themeId === "ceremonial_abstract") {
     return (
       <svg className="home-scene-art" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
-        <g data-layer="background-environment" opacity="0.7">
-          <path d="M151 565V118h120v447m658 0V118h120v447" fill="#160911" stroke="var(--theme-border)" strokeWidth="3" />
-          <path d="M118 118h186V82H118zm778 0h186V82H896z" fill="#240b16" />
-          <path d="M267 565V208h64v357m538 0V208h64v357" fill="#10070d" stroke="var(--theme-border)" strokeWidth="2" />
-          <path d="M300 106Q600-75 900 106" fill="none" stroke="var(--theme-border)" strokeWidth="4" opacity="0.5" />
-          <path d="M600 122l44 44-44 44-44-44z" fill="var(--theme-primary-soft)" stroke="var(--theme-border-strong)" strokeWidth="2" />
+        <defs>
+          <linearGradient id="ceremonial-floor" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stopColor="#210c18" />
+            <stop offset="1" stopColor="#060205" />
+          </linearGradient>
+        </defs>
+        <g data-layer="background-environment" opacity="0.76">
+          <path d="M292 136Q600-112 908 136M332 158Q600-54 868 158" fill="none" stroke="var(--theme-border)" strokeWidth="4" opacity="0.62" />
+          <path d="M346 546V126h82v420m344 0V126h82v420" fill="#160911" stroke="var(--theme-border)" strokeWidth="3" />
+          <path d="M320 126h134V88H320zm426 0h134V88H746z" fill="#240b16" stroke="var(--theme-border)" />
+          <path d="M408 546V216h52v330m280 0V216h52v330" fill="#10070d" stroke="var(--theme-border)" strokeWidth="2" />
+          <path d="M600 92l42 42-42 42-42-42z" fill="var(--theme-primary-soft)" stroke="var(--theme-border-strong)" strokeWidth="2" />
+          <path d="M600 136v378" stroke="var(--theme-accent)" strokeWidth="2" opacity="0.22" />
         </g>
         <g data-layer="midground-scene" opacity="0.62">
-          <path d="M355 565V274h490v291" fill="#130810" stroke="var(--theme-border)" strokeWidth="2" />
-          <path d="M396 315h408M396 364h408M396 413h408" stroke="var(--theme-border)" opacity="0.28" />
-          <circle cx="600" cy="388" r="96" fill="none" stroke="var(--theme-border)" strokeWidth="2" />
-          <circle cx="600" cy="388" r="66" fill="none" stroke="var(--theme-border)" strokeWidth="1" opacity="0.5" />
+          <path d="M442 546V246h316v300" fill="#130810" stroke="var(--theme-border)" strokeWidth="2" />
+          <path d="M470 284h260M470 330h260M470 376h260M470 422h260" stroke="var(--theme-border)" opacity="0.34" />
+          <circle cx="600" cy="354" r="104" fill="none" stroke="var(--theme-border)" strokeWidth="3" />
+          <circle cx="600" cy="354" r="72" fill="none" stroke="var(--theme-border)" strokeWidth="1.5" opacity="0.58" />
+          <path d="M600 292l62 62-62 62-62-62z" fill="var(--theme-primary-muted)" stroke="var(--theme-border-strong)" strokeWidth="2" />
+          <path d="M360 476h84m312 0h84" stroke="var(--theme-accent)" strokeWidth="3" opacity="0.34" />
         </g>
-        <g data-layer="foreground-silhouette" fill="#060205" opacity="0.94">
-          <path d="M0 650h1200v150H0z" />
-          <path d="M0 574h256l70 76H0zm1200 0H944l-70 76h326z" />
-          <path d="M368 650h464l-44-42H412zm76-42h312l-38-39H482z" />
-          <path d="M44 800V315h74v485m964 0V315h74v485" />
+        <g data-layer="foreground-silhouette">
+          <path d="M0 594L600 522l600 72v206H0z" fill="url(#ceremonial-floor)" opacity="0.95" />
+          <path d="M600 528L430 800m170-272L770 800M600 528v272" fill="none" stroke="var(--theme-border)" strokeWidth="2" opacity="0.46" />
+          <path d="M406 586h388l-42-46H448zm34 64h320l-38-46H478zm50 70h220l-30-46H520z" fill="#090307" stroke="var(--theme-border)" strokeWidth="2" />
+          <path d="M458 618h284m-246 68h208m-144 72h80" stroke="var(--theme-accent)" strokeWidth="3" opacity="0.35" />
+          <path d="M0 626l280-76 82 42-98 208H0zm1200 0l-280-76-82 42 98 208h264z" fill="#060205" opacity="0.88" />
+          <path d="M326 800V418h42v382m464 0V418h42v382" fill="#060205" stroke="var(--theme-border)" opacity="0.86" />
         </g>
       </svg>
     );
@@ -229,31 +303,41 @@ function SceneArtwork({ themeId }: { themeId: JourneyStageThemeId }) {
   if (themeId === "supreme_obsidian") {
     return (
       <svg className="home-scene-art" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <linearGradient id="obsidian-floor" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stopColor="#11100d" />
+            <stop offset="1" stopColor="#010101" />
+          </linearGradient>
+        </defs>
         <g data-layer="background-environment">
-          <path d="M0 0h1200v584H0z" fill="#020203" opacity="0.5" />
-          <path d="M182 565V78h132v487m572 0V78h132v487" fill="#08090b" stroke="var(--theme-border)" strokeWidth="3" />
-          <path d="M134 79h228L320 31H176zm704 0h228l-42-48H880z" fill="#0d0d0f" stroke="var(--theme-border)" />
-          <circle cx="600" cy="296" r="172" fill="none" stroke="var(--theme-border)" strokeWidth="2" opacity="0.4" />
-          <circle cx="600" cy="296" r="130" fill="none" stroke="var(--theme-border)" strokeWidth="1" opacity="0.34" />
+          <path d="M302 0h596l-70 92H372z" fill="#08090b" stroke="var(--theme-border)" strokeWidth="2" />
+          <path d="M344 552V82h90v470m332 0V82h90v470" fill="#08090b" stroke="var(--theme-border)" strokeWidth="3" />
+          <path d="M318 82h142l-28-48h-86zm422 0h142l-28-48h-86z" fill="#0d0d0f" stroke="var(--theme-border)" />
+          <path d="M390 116h420M430 144h340" stroke="var(--theme-accent)" strokeWidth="3" opacity="0.3" />
+          <circle cx="600" cy="292" r="158" fill="none" stroke="var(--theme-border)" strokeWidth="2" opacity="0.44" />
+          <circle cx="600" cy="292" r="118" fill="none" stroke="var(--theme-border)" strokeWidth="1.5" opacity="0.38" />
         </g>
         <g data-layer="midground-scene" opacity="0.78">
           {[
-            [110, 222], [110, 420], [1090, 222], [1090, 420],
+            [438, 218], [438, 414], [762, 218], [762, 414],
           ].map(([x, y]) => (
             <g key={`${x}-${y}`} transform={`translate(${x} ${y})`}>
               <path d="M0-24 24 0 0 24-24 0z" fill="var(--theme-primary-soft)" stroke="var(--theme-border-strong)" strokeWidth="2" />
               <circle r="8" fill="var(--theme-accent)" opacity="0.42" />
             </g>
           ))}
-          <path d="M316 152h122m324 0h122M314 490h126m320 0h126" stroke="var(--theme-border)" strokeWidth="2" />
-          <path d="M356 565V208h94v357m300 0V208h94v357" fill="#070708" stroke="var(--theme-border)" />
-          <path d="M470 524h260l48 41H422z" fill="#0b0a08" stroke="var(--theme-border)" strokeWidth="2" />
+          <path d="M462 218h62m152 0h62M462 414h62m152 0h62" stroke="var(--theme-border)" strokeWidth="2" />
+          <path d="M430 552V188h72v364m196 0V188h72v364" fill="#070708" stroke="var(--theme-border)" />
+          <path d="M500 514h200l52 38H448z" fill="#0b0a08" stroke="var(--theme-border)" strokeWidth="2" />
+          <path d="M534 474h132l30 40H504z" fill="var(--theme-primary-muted)" stroke="var(--theme-border)" />
+          <path d="M600 178l38 38-38 38-38-38z" fill="var(--theme-primary-soft)" stroke="var(--theme-accent)" strokeWidth="2" />
         </g>
-        <g data-layer="foreground-silhouette" fill="#010101" opacity="0.96">
-          <path d="M0 648h1200v152H0z" />
-          <path d="M0 518h174l104 130H0zm1200 0h-174L922 648h278z" />
-          <path d="M350 800l78-200h344l78 200z" />
-          <path d="M429 618h342l-18 62H447z" fill="#090807" stroke="var(--theme-border)" />
+        <g data-layer="foreground-silhouette">
+          <path d="M0 598L600 526l600 72v202H0z" fill="url(#obsidian-floor)" opacity="0.98" />
+          <path d="M600 532L424 800m176-268L776 800M600 532v268" fill="none" stroke="var(--theme-border)" strokeWidth="2" opacity="0.52" />
+          <path d="M420 604h360l-34-58H454zm42 74h276l-28-52H490zm56 72h164l-20-44H538z" fill="#090807" stroke="var(--theme-border)" strokeWidth="2" />
+          <path d="M460 642h280m-236 73h192m-128 50h64" stroke="var(--theme-accent)" strokeWidth="3" opacity="0.42" />
+          <path d="M0 630l282-80 88 44-102 206H0zm1200 0l-282-80-88 44 102 206h268z" fill="#010101" opacity="0.92" />
         </g>
       </svg>
     );
@@ -261,28 +345,36 @@ function SceneArtwork({ themeId }: { themeId: JourneyStageThemeId }) {
 
   return (
     <svg className="home-scene-art" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
+      <defs>
+        <linearGradient id="sovereign-floor" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#240607" />
+          <stop offset="1" stopColor="#020000" />
+        </linearGradient>
+      </defs>
       <g data-layer="background-environment">
-        <path d="M0 0h1200v590H0z" fill="#070101" opacity="0.58" />
-        <path d="M128 578V90h164v488m616 0V90h164v488" fill="#130405" stroke="var(--theme-border)" strokeWidth="3" />
-        <path d="M70 92h280l-58-58H128zm780 0h280l-58-58H908z" fill="#1d0507" stroke="var(--theme-border)" />
-        <path d="M292 122L600 30l308 92" fill="none" stroke="var(--theme-border-strong)" strokeWidth="3" opacity="0.48" />
-        <path d="M600 30v165" stroke="var(--theme-border)" strokeWidth="2" opacity="0.55" />
-        <circle cx="600" cy="244" r="142" fill="none" stroke="var(--theme-border)" strokeWidth="2" opacity="0.33" />
+        <path d="M286 0h628l-76 104H362z" fill="#130405" stroke="var(--theme-border)" strokeWidth="2" />
+        <path d="M332 566V92h104v474m328 0V92h104v474" fill="#130405" stroke="var(--theme-border)" strokeWidth="3" />
+        <path d="M300 92h168l-34-54H334zm432 0h168l-34-54H766z" fill="#1d0507" stroke="var(--theme-border)" />
+        <path d="M362 122L600 34l238 88M408 146h384" fill="none" stroke="var(--theme-border-strong)" strokeWidth="3" opacity="0.54" />
+        <path d="M600 34v166" stroke="var(--theme-border)" strokeWidth="2" opacity="0.62" />
+        <circle cx="600" cy="262" r="146" fill="none" stroke="var(--theme-border)" strokeWidth="2" opacity="0.4" />
+        <circle cx="600" cy="262" r="108" fill="none" stroke="var(--theme-border)" strokeWidth="1" opacity="0.32" />
       </g>
       <g data-layer="midground-scene" opacity="0.82">
-        <path d="M292 578V190h126v388m364 0V190h126v388" fill="#0d0304" stroke="var(--theme-border)" strokeWidth="2" />
-        <path d="M318 225h74v112h-74zm490 0h74v112h-74z" fill="var(--theme-primary-muted)" stroke="var(--theme-border)" />
-        <path d="M446 540V218h308v322" fill="#110305" stroke="var(--theme-border)" strokeWidth="2" />
-        <path d="M476 256h248M476 304h248M476 352h248" stroke="var(--theme-border)" opacity="0.28" />
-        <path d="M85 418h152m726 0h152M82 466h112m812 0h112" stroke="var(--theme-border-strong)" strokeWidth="2" opacity="0.44" />
-        <path d="M600 160l34 34-34 34-34-34z" fill="var(--theme-primary-soft)" stroke="var(--theme-accent)" strokeWidth="2" opacity="0.72" />
+        <path d="M404 566V190h90v376m212 0V190h90v376" fill="#0d0304" stroke="var(--theme-border)" strokeWidth="2" />
+        <path d="M422 226h54v112h-54zm302 0h54v112h-54z" fill="var(--theme-primary-muted)" stroke="var(--theme-border)" />
+        <path d="M488 530V236h224v294" fill="#110305" stroke="var(--theme-border)" strokeWidth="2" />
+        <path d="M514 274h172M514 320h172M514 366h172M514 412h172" stroke="var(--theme-border)" opacity="0.32" />
+        <path d="M360 430h44m392 0h44M360 476h44m392 0h44" stroke="var(--theme-border-strong)" strokeWidth="3" opacity="0.5" />
+        <path d="M600 164l38 38-38 38-38-38z" fill="var(--theme-primary-soft)" stroke="var(--theme-accent)" strokeWidth="2" opacity="0.82" />
+        <path d="M526 494h148l38 36H488z" fill="var(--theme-primary-muted)" stroke="var(--theme-border)" />
       </g>
-      <g data-layer="foreground-silhouette" fill="#020000" opacity="0.97">
-        <path d="M0 648h1200v152H0z" />
-        <path d="M0 506h124l150 142H0zm1200 0h-124L926 648h274z" />
-        <path d="M286 800l116-224h396l116 224z" />
-        <path d="M419 595h362l-32 70H451z" fill="#120304" stroke="var(--theme-border-strong)" strokeWidth="2" />
-        <path d="M485 575h230l28 20H457z" fill="var(--theme-primary-muted)" />
+      <g data-layer="foreground-silhouette">
+        <path d="M0 600L600 526l600 74v200H0z" fill="url(#sovereign-floor)" opacity="0.98" />
+        <path d="M600 532L404 800m196-268L796 800M600 532v268" fill="none" stroke="var(--theme-border-strong)" strokeWidth="2" opacity="0.5" />
+        <path d="M398 604h404l-42-58H440zm48 76h308l-34-54H480zm58 74h192l-24-48H528z" fill="#120304" stroke="var(--theme-border-strong)" strokeWidth="2" />
+        <path d="M444 646h312m-264 72h216m-144 50h72" stroke="var(--theme-accent)" strokeWidth="4" opacity="0.44" />
+        <path d="M0 630l278-82 92 46-106 206H0zm1200 0l-278-82-92 46 106 206h264z" fill="#020000" opacity="0.92" />
       </g>
     </svg>
   );
@@ -312,8 +404,8 @@ function AmbientEventLayer({ event }: { event: AmbientEvent | null }) {
   if (event.kind === "route") {
     return (
       <div key={event.id} className="home-ambient-event home-ambient-route">
-        <svg viewBox="0 0 1200 800" preserveAspectRatio="none">
-          <path d="M58 536C176 402 286 500 372 382S560 298 650 360s188 14 258-86 166-40 236-146" />
+        <svg viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
+          <path d="M350 540c66-104 116-34 168-142s116-68 168-8 92-6 164-154" />
         </svg>
       </div>
     );

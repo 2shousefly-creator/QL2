@@ -75,17 +75,17 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   const etaDetails = getEtaDetailsToFullBar(state, nowMs);
 
   return (
-    <div className="relative h-full min-h-0 w-full overflow-hidden touch-pan-y select-none">
+    <div className="home-screen relative h-full min-h-0 w-full overflow-hidden touch-pan-y select-none">
       {/* Dynamic Chapter Backdrop */}
       <HomeJourneyBackdrop
         chapterId={currentChapter.id}
         reducedMotion={state.settings.reducedMotion}
       />
 
-      <div className="relative z-10 h-full min-h-0 overflow-y-auto overscroll-y-contain touch-pan-y">
-        <div className="mx-auto flex min-h-full w-full max-w-md flex-col items-center px-3 pb-3 pt-2 sm:p-4">
+      <div className="home-scroll-viewport relative z-10 h-full min-h-0 overflow-y-auto overscroll-y-contain touch-pan-y">
+        <div className="home-content-shell mx-auto min-h-full w-full max-w-md">
         {/* Top Status & Chapter Tag Bar */}
-        <div className="w-full shrink-0 flex items-center justify-end gap-2 mb-1">
+        <div className="home-top-zone w-full shrink-0 flex items-center justify-end gap-2">
           {/* Chapter Badge Tag & Link */}
           <button
             type="button"
@@ -103,9 +103,9 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         </div>
 
         {/* Main Central Container: Hero Badge & XP Group */}
-        <div className="w-full flex flex-col items-center py-1">
+        <div className="home-content-body">
           {/* Main Hero Badge Stack */}
-          <div className="relative w-full flex flex-col items-center justify-center">
+          <div className="home-hero-zone relative w-full flex flex-col items-center justify-center">
             {/* Background Ambient Radial Glow Rays when leveling up */}
             {isLevelingUp && (
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
@@ -196,7 +196,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           </div>
 
           {/* Home XP Journey (with comfortable breathing room below rank display) */}
-          <div className="w-full space-y-1 mt-3 sm:mt-4">
+          <div className="home-progression-zone w-full space-y-1">
             {(() => {
               const active = isEnergyActive(state, state.time.currentEarningMode);
               const currentMult = isOnline ? getEnergyMultiplier(energyState.percent, active) : 1;
@@ -268,33 +268,35 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           </div>
         </div>
 
-        {/* Primary Action Section */}
-        {xpDetails.isMaxRank ? (
-          xpDetails.isFull ? (
-            <div className="w-full pt-1">
-              <div className="w-full py-4 px-6 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-300 font-bold text-center flex items-center justify-center gap-2 shadow-lg">
-                <Award className="w-5 h-5 text-amber-400" />
-                <span>Đã Hoàn Tất Toàn Bộ Hành Trình</span>
+        <div className="home-action-zone w-full shrink-0">
+          {/* Primary Action Section */}
+          {xpDetails.isMaxRank ? (
+            xpDetails.isFull ? (
+              <div className="w-full pt-1">
+                <div className="w-full py-4 px-6 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-300 font-bold text-center flex items-center justify-center gap-2 shadow-lg">
+                  <Award className="w-5 h-5 text-amber-400" />
+                  <span>Đã Hoàn Tất Toàn Bộ Hành Trình</span>
+                </div>
               </div>
+            ) : null
+          ) : xpDetails.isFull ? (
+            <div className="w-full pt-1">
+              <button
+                type="button"
+                onClick={() => {
+                  soundManager.playClick();
+                  onStartChallenge();
+                }}
+                className={`theme-button-primary theme-focus w-full py-4 px-6 rounded-2xl font-black text-base uppercase tracking-wider shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer focus:outline-none ${
+                  state.settings.reducedMotion ? "" : "animate-pulse"
+                }`}
+              >
+                <Award className="w-5 h-5" />
+                <span>Sát Hạch Thăng Cấp</span>
+              </button>
             </div>
-          ) : null
-        ) : xpDetails.isFull ? (
-          <div className="w-full pt-1">
-            <button
-              type="button"
-              onClick={() => {
-                soundManager.playClick();
-                onStartChallenge();
-              }}
-              className={`theme-button-primary theme-focus w-full py-4 px-6 rounded-2xl font-black text-base uppercase tracking-wider shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer focus:outline-none ${
-                state.settings.reducedMotion ? "" : "animate-pulse"
-              }`}
-            >
-              <Award className="w-5 h-5" />
-              <span>Sát Hạch Thăng Cấp</span>
-            </button>
-          </div>
-        ) : null}
+          ) : null}
+        </div>
         </div>
       </div>
 

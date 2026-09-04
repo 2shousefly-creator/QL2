@@ -202,30 +202,49 @@
   height: var(--hub-navigation-height);
 }
 
-/* Keep the Home hero prominent while allowing short mobile viewports to scroll
-   only as much as their content requires. The shared variables keep the badge,
-   tier bar and displayed-medal columns in the same responsive scale. */
+/* Home owns a single scroll viewport inside App's already-reserved navigation
+   space. Surplus height is shared by semantic zones instead of collecting as a
+   blank block below the primary action. */
+.home-content-shell {
+  --home-inline-padding: clamp(0.75rem, 3.2vw, 1rem);
+  --home-edge-padding: clamp(0.5rem, 1.35dvh, 0.9rem);
+  --home-zone-gap: clamp(0.55rem, 1.5dvh, 1rem);
+  display: flex;
+  flex-direction: column;
+  padding: var(--home-edge-padding) var(--home-inline-padding);
+}
+
+.home-top-zone,
+.home-action-zone {
+  flex: 0 0 auto;
+}
+
+.home-content-body {
+  display: grid;
+  flex: 1 0 auto;
+  width: 100%;
+  min-width: 0;
+  align-content: center;
+  justify-items: center;
+  gap: var(--home-zone-gap);
+  padding-block: clamp(0.4rem, 1.6dvh, 1rem);
+}
+
+.home-hero-zone,
+.home-progression-zone {
+  min-width: 0;
+}
+
+.home-action-zone:not(:empty) {
+  padding-top: clamp(0.4rem, 1.25dvh, 0.8rem);
+}
+
+/* Width and viewport height jointly scale the badge. Shared variables keep the
+   tier bar and displayed-medal columns locked to the same proportion. */
 .home-rank-presentation {
-  --rank-badge-size: 196px;
-  --rank-tier-width: 162px;
-  --rank-medal-item-height: 65.333px;
-}
-
-@media (max-height: 720px) {
-  .home-rank-presentation {
-    --rank-badge-size: 184px;
-    --rank-tier-width: 152px;
-    --rank-medal-item-height: 61.333px;
-  }
-}
-
-@media (min-width: 640px) and (min-height: 721px),
-  (min-width: 390px) and (min-height: 850px) {
-  .home-rank-presentation {
-    --rank-badge-size: 224px;
-    --rank-tier-width: 186px;
-    --rank-medal-item-height: 74.667px;
-  }
+  --rank-badge-size: clamp(176px, min(56vw, 27dvh), 224px);
+  --rank-tier-width: clamp(146px, min(46.5vw, 22.4dvh), 186px);
+  --rank-medal-item-height: clamp(58.667px, min(18.667vw, 9dvh), 74.667px);
 }
 
 .theme-world-ambient {
@@ -280,8 +299,8 @@
   box-shadow: 0 0 0 2px var(--theme-accent), 0 0 16px var(--theme-glow);
 }
 
-/* Living Home backdrop: every scene keeps a dark central readability zone,
-   while environment detail remains strongest at the viewport edges. */
+/* Living Home backdrop: scene structure runs continuously from ceiling/sky to
+   floor, with only a local readability veil behind the interactive hero. */
 .home-backdrop-layer {
   position: absolute;
   inset: 0;
@@ -301,9 +320,10 @@
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(circle at 50% 72%, var(--theme-primary-soft), transparent 32%),
-    radial-gradient(circle at 12% 35%, var(--theme-primary-muted), transparent 28%),
-    radial-gradient(circle at 88% 32%, var(--theme-primary-muted), transparent 28%);
+    radial-gradient(ellipse at 50% 4%, var(--theme-primary-soft), transparent 34%),
+    radial-gradient(ellipse at 50% 96%, var(--theme-primary-muted), transparent 38%),
+    radial-gradient(circle at 8% 42%, var(--theme-primary-muted), transparent 30%),
+    radial-gradient(circle at 92% 40%, var(--theme-primary-muted), transparent 30%);
 }
 
 .home-scene-art {
@@ -317,16 +337,20 @@
 .home-backdrop-safe-zone {
   position: absolute;
   inset: 0;
-  background:
-    radial-gradient(ellipse at 50% 47%, rgba(2, 6, 23, 0.76) 0%, rgba(2, 6, 23, 0.58) 28%, rgba(2, 6, 23, 0.12) 58%, transparent 76%),
-    linear-gradient(90deg, rgba(2, 6, 23, 0.06), transparent 22%, transparent 78%, rgba(2, 6, 23, 0.06));
+  background: radial-gradient(
+    ellipse 46% 43% at 50% 46%,
+    rgba(2, 6, 23, 0.68) 0%,
+    rgba(2, 6, 23, 0.52) 36%,
+    rgba(2, 6, 23, 0.16) 68%,
+    transparent 84%
+  );
 }
 
 .home-backdrop-vignette {
   position: absolute;
   inset: 0;
-  box-shadow: inset 0 0 90px 24px rgba(2, 6, 23, 0.64);
-  background: linear-gradient(180deg, rgba(2, 6, 23, 0.08), transparent 28%, transparent 72%, rgba(2, 6, 23, 0.4));
+  box-shadow: inset 0 0 68px 8px rgba(2, 6, 23, 0.42);
+  background: radial-gradient(ellipse at center, transparent 58%, rgba(2, 6, 23, 0.24) 100%);
 }
 
 .home-ambient-event {
@@ -558,6 +582,78 @@
   stroke-width: 1;
   transform-origin: left center;
   animation: homeFlagWave 6s ease-in-out both;
+}
+
+@media (max-aspect-ratio: 4 / 5) {
+  .home-backdrop-safe-zone {
+    background: radial-gradient(
+      ellipse 62% 42% at 50% 45%,
+      rgba(2, 6, 23, 0.68) 0%,
+      rgba(2, 6, 23, 0.5) 38%,
+      rgba(2, 6, 23, 0.14) 70%,
+      transparent 86%
+    );
+  }
+
+  .home-ambient-searchlight::before {
+    left: -12%;
+    bottom: 27%;
+    width: 88%;
+    height: 25%;
+  }
+
+  .home-ambient-patrol {
+    left: -26%;
+    bottom: 8%;
+    width: 24%;
+  }
+
+  .home-ambient-vehicle {
+    right: -36%;
+    bottom: 10%;
+    width: 34%;
+  }
+
+  .home-ambient-smoke {
+    right: 8%;
+    bottom: 17%;
+  }
+
+  .home-ambient-signal {
+    top: 23%;
+    right: 10%;
+  }
+
+  .home-ambient-radar {
+    top: 18%;
+    left: 8%;
+    width: min(42vw, 180px);
+  }
+
+  .home-ambient-scanline {
+    top: 25%;
+    left: 9%;
+    width: 25%;
+    height: 27%;
+  }
+
+  .home-ambient-ring {
+    top: 19%;
+    width: min(72vw, 330px);
+  }
+
+  .home-ambient-motifs {
+    padding: 18% 13% 22%;
+  }
+
+  .home-ambient-ceremonial {
+    width: 68%;
+  }
+
+  .home-ambient-flag {
+    bottom: 31%;
+    left: 9%;
+  }
 }
 
 @keyframes homeBackdropFadeIn {
