@@ -730,28 +730,41 @@ export function migrateFarmState(
   );
   const troughDurationMs = getNormalTroughDurationMs(livingAnimalCount);
   const feedEmptyAt = penFeedBuffValue > 0 && troughDurationMs > 0
-    ? lastSettledAt + (penFeedBuffValue / 100) * troughDurationMs
-    : lastSettledAt;
+    ? penFeedBuffUpdatedAt + (penFeedBuffValue / 100) * troughDurationMs
+    : penFeedBuffUpdatedAt;
   const eggRate = penFeedBuffValue > 0 && activeFeedSpeedBonus > 0
     ? 1 + activeFeedSpeedBonus / 100
     : 1;
+  // Convert timestamp-only legacy cycles once at their own workload anchor.
+  // The current Feed amount begins at penFeedBuffUpdatedAt, never lastSettledAt.
   for (const animal of penAnimals) {
     if (Number.isFinite(animal.eggWorkRemainingMs)) continue;
     const total = animal.eggWorkTotalMs || 1;
-    const legacyEndAt = Math.max(lastSettledAt, animal.nextEggAt);
+    const workUpdatedAt = Number.isFinite(animal.eggLastUpdatedAt)
+      ? animal.eggLastUpdatedAt!
+      : lastSettledAt;
+    const legacyEndAt = Math.max(workUpdatedAt, animal.nextEggAt);
+    const normalBeforeFeedSnapshotMs = Math.max(
+      0,
+      Math.min(legacyEndAt, penFeedBuffUpdatedAt) - workUpdatedAt
+    );
+    const feedSegmentStartAt = Math.max(
+      workUpdatedAt,
+      penFeedBuffUpdatedAt
+    );
     const buffDurationMs = Math.max(
       0,
-      Math.min(legacyEndAt, feedEmptyAt) - lastSettledAt
+      Math.min(legacyEndAt, feedEmptyAt) - feedSegmentStartAt
     );
     const normalDurationMs = Math.max(
       0,
-      legacyEndAt - Math.max(lastSettledAt, feedEmptyAt)
+      legacyEndAt - Math.max(feedSegmentStartAt, feedEmptyAt)
     );
     animal.eggWorkRemainingMs = Math.min(
       total,
-      buffDurationMs * eggRate + normalDurationMs
+      normalBeforeFeedSnapshotMs + buffDurationMs * eggRate + normalDurationMs
     );
-    animal.eggLastUpdatedAt = lastSettledAt;
+    animal.eggLastUpdatedAt = workUpdatedAt;
   }
 
   const normalized: FarmSaveState = {

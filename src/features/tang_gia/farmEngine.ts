@@ -419,7 +419,7 @@ const MAX_PEN_TIMELINE_EVENTS = 20_000;
 
 interface PenTimelineOptions {
   collectEggs: boolean;
-  eggProgressEndAt: number;
+  maxEggProgressMs: number;
   stopAfterAnimalEggId?: string;
 }
 
@@ -436,31 +436,49 @@ function getSafeEggWorkTotal(animal: PenAnimalState): number {
   return Math.max(1, definition?.eggIntervalMs || animal.eggWorkTotalMs || 1);
 }
 
-/** Backfills legacy timestamp-only animals at the persisted state boundary. */
+/**
+ * Backfills legacy timestamp-only animals without moving an existing workload
+ * anchor. eggWorkRemainingMs always belongs to eggLastUpdatedAt; callers must
+ * advance the value before advancing that timestamp.
+ */
 function ensureAnimalEggWork(
   farm: FarmSaveState,
   animal: PenAnimalState,
-  stateAt: number
+  fallbackUpdatedAt: number,
+  upperBoundAt: number = fallbackUpdatedAt
 ): void {
   const total = getSafeEggWorkTotal(animal);
   animal.eggWorkTotalMs = total;
+  const workUpdatedAt = Number.isFinite(animal.eggLastUpdatedAt)
+    ? Math.min(animal.eggLastUpdatedAt!, upperBoundAt)
+    : fallbackUpdatedAt;
 
   if (!Number.isFinite(animal.eggWorkRemainingMs)) {
     const livingCount = getLivingAnimalCount(farm.penAnimals);
     const troughDurationMs = getNormalTroughDurationMs(livingCount);
     const feedValue = Math.max(0, Math.min(100, farm.penFeedBuffValue || 0));
+    const feedUpdatedAt = Number.isFinite(farm.penFeedBuffUpdatedAt)
+      ? Math.min(farm.penFeedBuffUpdatedAt, upperBoundAt)
+      : workUpdatedAt;
     const feedEmptyAt = feedValue > 0 && troughDurationMs > 0
-      ? stateAt + (feedValue / 100) * troughDurationMs
-      : stateAt;
+      ? feedUpdatedAt + (feedValue / 100) * troughDurationMs
+      : feedUpdatedAt;
     const legacyNextEggAt = Number.isFinite(animal.nextEggAt)
-      ? Math.max(stateAt, animal.nextEggAt)
-      : stateAt + total;
-    animal.eggWorkRemainingMs = computeBaseWorkDone(
-      stateAt,
+      ? Math.max(workUpdatedAt, animal.nextEggAt)
+      : workUpdatedAt + total;
+    const workBeforeFeedSnapshot = Math.max(
+      0,
+      Math.min(legacyNextEggAt, feedUpdatedAt) - workUpdatedAt
+    );
+    const workFromFeedSnapshot = computeBaseWorkDone(
+      Math.max(workUpdatedAt, feedUpdatedAt),
       legacyNextEggAt,
       feedEmptyAt,
-      feedValue > 0 ? Math.max(0, farm.activeFeedSpeedBonus || 0) : 0,
-      total
+      feedValue > 0 ? Math.max(0, farm.activeFeedSpeedBonus || 0) : 0
+    );
+    animal.eggWorkRemainingMs = Math.min(
+      total,
+      workBeforeFeedSnapshot + workFromFeedSnapshot
     );
   }
 
@@ -468,11 +486,11 @@ function ensureAnimalEggWork(
     total,
     Math.max(0, animal.eggWorkRemainingMs || 0)
   );
-  animal.eggLastUpdatedAt = stateAt;
+  animal.eggLastUpdatedAt = workUpdatedAt;
   const cycleStartedAt = Number.isFinite(animal.cycleStartedAt)
     ? animal.cycleStartedAt!
     : animal.addedAt;
-  animal.cycleStartedAt = Math.min(stateAt, cycleStartedAt);
+  animal.cycleStartedAt = Math.min(workUpdatedAt, cycleStartedAt);
 }
 
 function cloneFarmForPenProjection(farm: FarmSaveState): FarmSaveState {
@@ -521,8 +539,10 @@ function recordProducedEgg(
 
 /**
  * Canonical event timeline for feed consumption, egg workload, old age and
- * starvation. It mutates only the supplied farm, so presentation runs it on a
- * clone while settlement runs it on the persisted draft.
+ * starvation. Feed and each egg workload enter the timeline at their own
+ * authoritative updatedAt; current values are never treated as if they
+ * belonged to farm.lastSettledAt. Presentation runs this on a clone while
+ * settlement runs it on the persisted draft.
  */
 function runPenTimeline(
   farm: FarmSaveState,
@@ -535,39 +555,73 @@ function runPenTimeline(
   const firstEggAtByAnimal: Record<string, number> = {};
   const safeStartT = Number.isFinite(startT) ? startT : endT;
   const safeEndT = Math.max(safeStartT, Number.isFinite(endT) ? endT : safeStartT);
-  const eggProgressEndAt = Math.max(
-    safeStartT,
-    Math.min(safeEndT, options.eggProgressEndAt)
-  );
   let feedValue = Number.isFinite(farm.penFeedBuffValue)
     ? Math.min(100, Math.max(0, farm.penFeedBuffValue || 0))
     : 0;
   const activeBonus = Number.isFinite(farm.activeFeedSpeedBonus)
     ? Math.max(0, farm.activeFeedSpeedBonus || 0)
     : 0;
+  const feedUpdatedAt = Number.isFinite(farm.penFeedBuffUpdatedAt)
+    ? Math.min(farm.penFeedBuffUpdatedAt, safeEndT)
+    : safeStartT;
   let feedDepletedAt: number | null = feedValue <= EGG_WORK_TOLERANCE_MS
     ? Number.isFinite(farm.penStarvationStartedAt)
       ? farm.penStarvationStartedAt!
-      : safeStartT
+      : feedUpdatedAt
     : null;
-  let cursor = safeStartT;
 
   for (const animal of farm.penAnimals) {
-    ensureAnimalEggWork(farm, animal, safeStartT);
+    ensureAnimalEggWork(farm, animal, safeStartT, safeEndT);
   }
 
-  if (feedValue > 0) farm.penStarvationStartedAt = null;
-  if (feedValue <= 0 && getLivingAnimalCount(farm.penAnimals) > 0 && !Number.isFinite(farm.penStarvationStartedAt)) {
-    farm.penStarvationStartedAt = safeStartT;
+  const eggProgressBudgetMs = Number.isFinite(options.maxEggProgressMs)
+    ? Math.max(0, options.maxEggProgressMs)
+    : Number.POSITIVE_INFINITY;
+  const eggProgressEndAtByAnimal = new Map<string, number>();
+  for (const animal of farm.penAnimals) {
+    const eggUpdatedAt = Number.isFinite(animal.eggLastUpdatedAt)
+      ? Math.min(animal.eggLastUpdatedAt!, safeEndT)
+      : safeStartT;
+    animal.eggLastUpdatedAt = eggUpdatedAt;
+    eggProgressEndAtByAnimal.set(
+      animal.instanceId,
+      Number.isFinite(eggProgressBudgetMs)
+        ? Math.min(safeEndT, eggUpdatedAt + eggProgressBudgetMs)
+        : safeEndT
+    );
   }
+
+  const eggAnchors = farm.penAnimals
+    .filter((animal) => !isAnimalDead(animal))
+    .map((animal) => animal.eggLastUpdatedAt!)
+    .filter(Number.isFinite);
+  const starvationAnchor = Number.isFinite(farm.penStarvationStartedAt)
+    ? Math.min(farm.penStarvationStartedAt!, safeEndT)
+    : safeEndT;
+  let cursor = Math.min(
+    safeStartT,
+    feedUpdatedAt,
+    starvationAnchor,
+    ...(eggAnchors.length > 0 ? eggAnchors : [safeEndT])
+  );
 
   let guard = 0;
   while (guard < MAX_PEN_TIMELINE_EVENTS) {
     guard += 1;
-    let living = farm.penAnimals.filter((animal) => !isAnimalDead(animal));
+    let living = farm.penAnimals.filter(
+      (animal) => !isAnimalDead(animal) && animal.addedAt <= cursor
+    );
     if (living.length === 0) {
-      farm.penStarvationStartedAt = null;
-      break;
+      if (cursor >= feedUpdatedAt) farm.penStarvationStartedAt = null;
+      if (cursor >= safeEndT) break;
+      const nextAnimalAddedAt = Math.min(
+        ...farm.penAnimals
+          .filter((animal) => !isAnimalDead(animal) && animal.addedAt > cursor)
+          .map((animal) => animal.addedAt)
+      );
+      if (!Number.isFinite(nextAnimalAddedAt)) break;
+      cursor = Math.min(safeEndT, nextAnimalAddedAt);
+      continue;
     }
 
     // Old age wins an exact timestamp tie with starvation.
@@ -576,22 +630,26 @@ function runPenTimeline(
       dueOldAge.forEach((animal) =>
         materializeAnimalDeath(animal, animal.lifeEndsAt, "old_age", newDeaths)
       );
-      living = farm.penAnimals.filter((animal) => !isAnimalDead(animal));
-      if (living.length === 0) {
+      living = farm.penAnimals.filter(
+        (animal) => !isAnimalDead(animal) && animal.addedAt <= cursor
+      );
+      if (living.length === 0) continue;
+    }
+
+    const feedClockActive = cursor >= feedUpdatedAt;
+    if (feedClockActive) {
+      if (feedValue <= EGG_WORK_TOLERANCE_MS) {
+        feedValue = 0;
+        feedDepletedAt ??= cursor;
+        if (!Number.isFinite(farm.penStarvationStartedAt)) {
+          farm.penStarvationStartedAt = cursor;
+        }
+      } else {
         farm.penStarvationStartedAt = null;
-        break;
       }
     }
 
-    if (feedValue <= EGG_WORK_TOLERANCE_MS) {
-      feedValue = 0;
-      feedDepletedAt ??= cursor;
-      if (!Number.isFinite(farm.penStarvationStartedAt)) {
-        farm.penStarvationStartedAt = cursor;
-      }
-    }
-
-    const starvationDeadlineAt = feedValue <= 0
+    const starvationDeadlineAt = feedClockActive && feedValue <= 0
       ? getStarvationDeadlineAt(farm.penStarvationStartedAt)
       : null;
     if (starvationDeadlineAt !== null && starvationDeadlineAt <= cursor) {
@@ -611,64 +669,92 @@ function runPenTimeline(
 
     // Egg completion is processed only after same-timestamp deaths, matching
     // the existing rule that an egg must complete strictly before death.
-    if (cursor <= eggProgressEndAt) {
-      living
-        .filter(
-          (animal) =>
-            !isAnimalDead(animal) &&
-            (animal.eggWorkRemainingMs || 0) <= EGG_WORK_TOLERANCE_MS
-        )
-        .forEach((animal) => {
-          firstEggAtByAnimal[animal.instanceId] ??= cursor;
-          if (options.collectEggs) {
-            recordProducedEgg(farm, animal, cursor, weatherSeed);
-          }
-          const total = getSafeEggWorkTotal(animal);
-          animal.cycleStartedAt = cursor;
-          animal.eggWorkTotalMs = total;
-          animal.eggWorkRemainingMs = total;
-          animal.eggLastUpdatedAt = cursor;
-        });
+    living
+      .filter((animal) => {
+        const eggProgressEndAt =
+          eggProgressEndAtByAnimal.get(animal.instanceId) ?? safeEndT;
+        return (
+          animal.eggLastUpdatedAt! <= cursor &&
+          cursor <= eggProgressEndAt &&
+          (animal.eggWorkRemainingMs || 0) <= EGG_WORK_TOLERANCE_MS
+        );
+      })
+      .forEach((animal) => {
+        firstEggAtByAnimal[animal.instanceId] ??= cursor;
+        if (options.collectEggs) {
+          recordProducedEgg(farm, animal, cursor, weatherSeed);
+        }
+        const total = getSafeEggWorkTotal(animal);
+        animal.cycleStartedAt = cursor;
+        animal.eggWorkTotalMs = total;
+        animal.eggWorkRemainingMs = total;
+        animal.eggLastUpdatedAt = cursor;
+      });
 
-      const targetId = options.stopAfterAnimalEggId;
-      if (targetId && firstEggAtByAnimal[targetId] !== undefined) {
-        break;
-      }
+    const targetId = options.stopAfterAnimalEggId;
+    if (targetId && firstEggAtByAnimal[targetId] !== undefined) {
+      break;
     }
 
     if (cursor >= safeEndT) break;
 
-    living = farm.penAnimals.filter((animal) => !isAnimalDead(animal));
-    const troughDurationMs = feedValue > 0
+    living = farm.penAnimals.filter(
+      (animal) => !isAnimalDead(animal) && animal.addedAt <= cursor
+    );
+    const troughDurationMs = feedClockActive && feedValue > 0
       ? getNormalTroughDurationMs(living.length)
       : 0;
-    const feedEmptyAt = feedValue > 0 && troughDurationMs > 0
+    const feedEmptyAt = feedClockActive && feedValue > 0 && troughDurationMs > 0
       ? cursor + (feedValue / 100) * troughDurationMs
       : Number.POSITIVE_INFINITY;
     const nextNaturalDeathAt = Math.min(
       ...living.map((animal) => animal.lifeEndsAt)
     );
-    const nextStarvationAt = feedValue <= 0
+    const nextStarvationAt = feedClockActive && feedValue <= 0
       ? getStarvationDeadlineAt(farm.penStarvationStartedAt) ?? Number.POSITIVE_INFINITY
       : Number.POSITIVE_INFINITY;
-    const eggRate = feedValue > 0 && activeBonus > 0
+    const eggRate = feedClockActive && feedValue > 0 && activeBonus > 0
       ? 1 + activeBonus / 100
       : 1;
-    const nextEggAt = cursor < eggProgressEndAt
-      ? Math.min(
-          ...living.map(
-            (animal) =>
-              cursor + Math.max(0, animal.eggWorkRemainingMs || 0) / eggRate
-          )
-        )
+    const activeEggAnimals = living.filter((animal) => {
+      const eggProgressEndAt =
+        eggProgressEndAtByAnimal.get(animal.instanceId) ?? safeEndT;
+      return animal.eggLastUpdatedAt! <= cursor && cursor < eggProgressEndAt;
+    });
+    const nextEggAt = Math.min(
+      ...activeEggAnimals.map(
+        (animal) =>
+          cursor + Math.max(0, animal.eggWorkRemainingMs || 0) / eggRate
+      )
+    );
+    const nextEggAnchorAt = Math.min(
+      ...living
+        .filter((animal) => animal.eggLastUpdatedAt! > cursor)
+        .map((animal) => animal.eggLastUpdatedAt!)
+    );
+    const nextEggProgressEndAt = Math.min(
+      ...activeEggAnimals.map(
+        (animal) => eggProgressEndAtByAnimal.get(animal.instanceId) ?? safeEndT
+      )
+    );
+    const nextFeedAnchorAt = feedUpdatedAt > cursor
+      ? feedUpdatedAt
       : Number.POSITIVE_INFINITY;
+    const nextAnimalAddedAt = Math.min(
+      ...farm.penAnimals
+        .filter((animal) => !isAnimalDead(animal) && animal.addedAt > cursor)
+        .map((animal) => animal.addedAt)
+    );
     const nextEventAt = Math.min(
       safeEndT,
       nextNaturalDeathAt,
       feedEmptyAt,
       nextStarvationAt,
       nextEggAt,
-      cursor < eggProgressEndAt ? eggProgressEndAt : Number.POSITIVE_INFINITY
+      nextEggAnchorAt,
+      nextEggProgressEndAt,
+      nextFeedAnchorAt,
+      nextAnimalAddedAt
     );
 
     if (!Number.isFinite(nextEventAt) || nextEventAt <= cursor) break;
@@ -679,19 +765,21 @@ function runPenTimeline(
         feedValue - (elapsedMs / troughDurationMs) * 100
       );
     }
-    const eggElapsedMs = Math.max(
-      0,
-      Math.min(nextEventAt, eggProgressEndAt) - cursor
-    );
-    if (eggElapsedMs > 0) {
-      for (const animal of living) {
+    for (const animal of activeEggAnimals) {
+      const eggProgressEndAt =
+        eggProgressEndAtByAnimal.get(animal.instanceId) ?? safeEndT;
+      const eggElapsedMs = Math.max(
+        0,
+        Math.min(nextEventAt, eggProgressEndAt) - cursor
+      );
+      if (eggElapsedMs > 0) {
         animal.eggWorkRemainingMs = Math.max(
           0,
           (animal.eggWorkRemainingMs || 0) - eggElapsedMs * eggRate
         );
+        animal.eggLastUpdatedAt = Math.min(nextEventAt, eggProgressEndAt);
       }
     }
-    for (const animal of living) animal.eggLastUpdatedAt = nextEventAt;
     cursor = nextEventAt;
   }
 
@@ -705,10 +793,14 @@ function runPenTimeline(
     }
   }
 
+  // Time beyond the intentional 48-hour production window is a zero-rate
+  // segment: workload is preserved while its authoritative timestamp advances.
   for (const animal of farm.penAnimals) {
     if (!isAnimalDead(animal)) animal.eggLastUpdatedAt = safeEndT;
   }
-  feedValue = Math.max(0, Math.round(feedValue * 10_000) / 10_000);
+  // Keep full precision in the canonical value. Rounding here would make the
+  // projected empty timestamp drift a few milliseconds on every render.
+  feedValue = Math.max(0, feedValue);
   farm.penFeedBuffValue = feedValue;
   farm.penFeedBuffUpdatedAt = safeEndT;
   if (feedValue <= 0) {
@@ -739,7 +831,7 @@ function projectAnimalNextEggAt(
   const projected = cloneFarmForPenProjection(farm);
   const result = runPenTimeline(projected, now, horizon, weatherSeed, {
     collectEggs: false,
-    eggProgressEndAt: horizon,
+    maxEggProgressMs: Number.POSITIVE_INFINITY,
     stopAfterAnimalEggId: animalId,
   });
   const completedAt = result.firstEggAtByAnimal[animalId];
@@ -771,7 +863,7 @@ function projectFeedEmptyAt(
     now,
     latestLifeEndsAt + 1,
     weatherSeed,
-    { collectEggs: false, eggProgressEndAt: now }
+    { collectEggs: false, maxEggProgressMs: 0 }
   );
   return Number.isFinite(result.feedDepletedAt) ? result.feedDepletedAt : null;
 }
@@ -789,6 +881,8 @@ function refreshPenDerivedState(
       !isAnimalDead(animal) &&
       farm.penFeedBuffValue > 0 &&
       (farm.activeFeedSpeedBonus || 0) > 0;
+    // nextEggAt is derived compatibility state. The remaining workload and
+    // eggLastUpdatedAt above remain the authoritative cycle snapshot.
     animal.nextEggAt = projectAnimalNextEggAt(
       farm,
       animal.instanceId,
@@ -799,17 +893,59 @@ function refreshPenDerivedState(
   return projectFeedEmptyAt(farm, now, weatherSeed);
 }
 
+function getPenTransactionTimestamp(
+  farm: FarmSaveState,
+  requestedAt: number
+): number {
+  let transactionAt = Number.isFinite(requestedAt)
+    ? requestedAt
+    : Number.isFinite(farm.lastSettledAt)
+      ? farm.lastSettledAt
+      : Date.now();
+  if (Number.isFinite(farm.lastSettledAt)) {
+    transactionAt = Math.max(transactionAt, farm.lastSettledAt);
+  }
+  if (Number.isFinite(farm.penFeedBuffUpdatedAt)) {
+    transactionAt = Math.max(transactionAt, farm.penFeedBuffUpdatedAt);
+  }
+  for (const animal of farm.penAnimals) {
+    if (Number.isFinite(animal.eggLastUpdatedAt)) {
+      transactionAt = Math.max(transactionAt, animal.eggLastUpdatedAt!);
+    }
+  }
+  return transactionAt;
+}
+
+function penTimelineNeedsSettlement(
+  farm: FarmSaveState,
+  transactionAt: number
+): boolean {
+  if (!Number.isFinite(farm.lastSettledAt) || farm.lastSettledAt < transactionAt) {
+    return true;
+  }
+  if (
+    !Number.isFinite(farm.penFeedBuffUpdatedAt) ||
+    farm.penFeedBuffUpdatedAt < transactionAt
+  ) {
+    return true;
+  }
+  return farm.penAnimals.some(
+    (animal) =>
+      !isAnimalDead(animal) &&
+      (!Number.isFinite(animal.eggLastUpdatedAt) ||
+        animal.eggLastUpdatedAt! < transactionAt)
+  );
+}
+
 function settlePenAnimals(
   farm: FarmSaveState,
   startT: number,
   endT: number,
   weatherSeed: number
 ): AnimalDeathNotificationSummary {
-  const elapsedTotalMs = Math.max(0, endT - startT);
   const result = runPenTimeline(farm, startT, endT, weatherSeed, {
     collectEggs: true,
-    eggProgressEndAt:
-      startT + Math.min(elapsedTotalMs, MAX_OFFLINE_EGG_PRODUCTION_MS),
+    maxEggProgressMs: MAX_OFFLINE_EGG_PRODUCTION_MS,
   });
   refreshPenDerivedState(farm, endT, weatherSeed);
   return result.newDeaths;
@@ -836,8 +972,7 @@ export function projectPenState(
   const weatherSeed = farm.weatherSeed ?? DEFAULT_FARM_WEATHER_SEED;
   runPenTimeline(projected, startT, currentNow, weatherSeed, {
     collectEggs: false,
-    eggProgressEndAt:
-      startT + Math.min(currentNow - startT, MAX_OFFLINE_EGG_PRODUCTION_MS),
+    maxEggProgressMs: MAX_OFFLINE_EGG_PRODUCTION_MS,
   });
   const penFeedEmptyAt = refreshPenDerivedState(
     projected,
@@ -2095,11 +2230,12 @@ export function feedPenBuff(
     return { success: false, message: "Số lượng thức ăn phải là số nguyên dương!" };
   }
 
-  // Settle remaining egg work to the transaction timestamp using the old
-  // feed state. UI callers already do this; the guard also protects direct
-  // engine calls without ever rescaling an absolute ETA.
-  if (Number.isFinite(now) && now > farm.lastSettledAt) {
-    settleFarmState(farm, now);
+  // Materialize every independently anchored pen value with the old Feed and
+  // old animal count before changing amount or speed. UI callers normally
+  // arrive already settled, while direct calls and repaired v9 saves are safe.
+  const transactionAt = getPenTransactionTimestamp(farm, now);
+  if (penTimelineNeedsSettlement(farm, transactionAt)) {
+    settleFarmState(farm, transactionAt);
   }
 
   if (!farm.inventory) {
@@ -2156,13 +2292,13 @@ export function feedPenBuff(
   const addedBuff = feedDef.buffAmount * quantity;
   farm.penFeedBuffValue = Math.min(100, Math.round((currentBuff + addedBuff) * 10000) / 10000);
   farm.activeFeedSpeedBonus = newBonus;
-  farm.penFeedBuffUpdatedAt = now;
+  farm.penFeedBuffUpdatedAt = transactionAt;
   farm.penStarvationStartedAt = null;
   // A stronger feed and a same-bonus refill both change the future rate
   // segments. Remaining workload stays untouched; only the derived ETA moves.
   refreshPenDerivedState(
     farm,
-    now,
+    transactionAt,
     farm.weatherSeed ?? DEFAULT_FARM_WEATHER_SEED
   );
 
@@ -2341,8 +2477,9 @@ export function dismissAnimal(
   instanceId: string,
   now: number = farm.lastSettledAt
 ): boolean {
-  if (Number.isFinite(now) && now > farm.lastSettledAt) {
-    settleFarmState(farm, now);
+  const transactionAt = getPenTransactionTimestamp(farm, now);
+  if (penTimelineNeedsSettlement(farm, transactionAt)) {
+    settleFarmState(farm, transactionAt);
   }
   const index = farm.penAnimals.findIndex((a) => a.instanceId === instanceId);
   if (index === -1) return false;
@@ -2351,10 +2488,10 @@ export function dismissAnimal(
   if (getLivingAnimalCount(farm.penAnimals) === 0) {
     farm.penStarvationStartedAt = null;
   }
-  farm.penFeedBuffUpdatedAt = now;
+  farm.penFeedBuffUpdatedAt = transactionAt;
   refreshPenDerivedState(
     farm,
-    now,
+    transactionAt,
     farm.weatherSeed ?? DEFAULT_FARM_WEATHER_SEED
   );
   return true;
@@ -2393,8 +2530,9 @@ export function addAnimalToPen(
   now: number,
   currentRank?: RankStep | null
 ): { success: boolean; message: string } {
-  if (Number.isFinite(now) && now > farm.lastSettledAt) {
-    settleFarmState(farm, now);
+  const transactionAt = getPenTransactionTimestamp(farm, now);
+  if (penTimelineNeedsSettlement(farm, transactionAt)) {
+    settleFarmState(farm, transactionAt);
   }
   const capacity = currentRank ? getAnimalCapacity(currentRank) : 2;
   if (farm.penAnimals.length >= capacity) {
@@ -2424,40 +2562,42 @@ export function addAnimalToPen(
   const activeBonus = hasBuff ? (farm.activeFeedSpeedBonus || 0) : 0;
 
   const newAnimal: PenAnimalState = {
-    instanceId: `animal_${now}_${Math.floor(
+    instanceId: `animal_${transactionAt}_${Math.floor(
       deterministicRandom(
         farm.weatherSeed ?? DEFAULT_FARM_WEATHER_SEED,
         "animal-instance",
         animalId,
-        now,
+        transactionAt,
         farm.penAnimals.length
       ) * 36 ** 5
     )
       .toString(36)
       .padStart(5, "0")}`,
     animalTypeId: animalId,
-    addedAt: now,
-    cycleStartedAt: now,
-    nextEggAt: now + animalDef.eggIntervalMs,
+    addedAt: transactionAt,
+    cycleStartedAt: transactionAt,
+    nextEggAt: transactionAt + animalDef.eggIntervalMs,
     eggWorkTotalMs: animalDef.eggIntervalMs,
     eggWorkRemainingMs: animalDef.eggIntervalMs,
-    eggLastUpdatedAt: now,
-    lifeStartedAt: now,
-    lifeEndsAt: now + animalDef.lifespanMs,
+    eggLastUpdatedAt: transactionAt,
+    lifeStartedAt: transactionAt,
+    lifeEndsAt: transactionAt + animalDef.lifespanMs,
     deathAt: null,
     deathCause: null,
     isBuffed: hasBuff && activeBonus > 0,
   };
 
   farm.penAnimals.push(newAnimal);
-  farm.penFeedBuffUpdatedAt = now;
+  farm.penFeedBuffUpdatedAt = transactionAt;
   if (hasBuff) farm.penStarvationStartedAt = null;
-  else if (!Number.isFinite(farm.penStarvationStartedAt)) farm.penStarvationStartedAt = now;
+  else if (!Number.isFinite(farm.penStarvationStartedAt)) {
+    farm.penStarvationStartedAt = transactionAt;
+  }
   // Feed consumption changes from this exact count-change event. Existing
   // animals retain workload while all compatibility ETAs are re-derived.
   refreshPenDerivedState(
     farm,
-    now,
+    transactionAt,
     farm.weatherSeed ?? DEFAULT_FARM_WEATHER_SEED
   );
 

@@ -91,8 +91,8 @@ export type FeedDefinition = {
   id: FeedTypeId;
   name: string;
   costGold: number;
-  buffAmount: number; // trough fill % increase (20, 25, 30)
-  speedBonusPercent: number; // 15, 25, 40
+  buffAmount: number; // trough fill % increase (currently 20)
+  speedBonusPercent: number; // 10, 16, 25
   requiredRank: RankIdentity;
 };
 
@@ -251,8 +251,10 @@ export type FarmSaveState = {
   unlockedPlotCount: number;
   plots: FarmPlotState[];
   penAnimals: PenAnimalState[];
-  penFeedBuffValue: number; // 0 to 100
-  activeFeedSpeedBonus?: number; // 0, 15, 25, 40
+  /** Canonical trough amount (0..100) materialized at penFeedBuffUpdatedAt. */
+  penFeedBuffValue: number;
+  activeFeedSpeedBonus?: number; // current catalog: 0, 10, 16, 25
+  /** Last wall-clock timestamp already reflected in penFeedBuffValue. */
   penFeedBuffUpdatedAt: number;
   penStarvationStartedAt?: number | null;
   pendingAnimalDeathNotification?: AnimalDeathNotificationSummary | null;
