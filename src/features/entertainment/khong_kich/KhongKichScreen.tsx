@@ -204,7 +204,7 @@ export const KhongKichScreen: React.FC<KhongKichScreenProps> = ({
   if (phase === "playing" && selectedAircraft) {
     return (
       <div
-        className="air-combat-surface fixed inset-0 z-[100] flex select-none touch-none items-center justify-center overflow-hidden bg-slate-950 px-1.5 py-1.5"
+        className="tactical-battle-screen air-combat-surface fixed inset-0 z-[100] flex select-none touch-none items-center justify-center overflow-hidden bg-slate-950 px-1.5 py-1.5"
         style={{
           WebkitTouchCallout: "none",
           WebkitUserSelect: "none",
@@ -245,11 +245,11 @@ export const KhongKichScreen: React.FC<KhongKichScreenProps> = ({
 
   return (
     <div
-      className="mx-auto w-full max-w-lg flex flex-col justify-between flex-1 min-h-0 px-2.5 sm:px-4 py-[clamp(6px,1.4dvh,16px)] select-none"
+      className="command-screen tactical-battle-screen mx-auto w-full max-w-lg flex flex-col justify-between flex-1 min-h-0 px-2.5 sm:px-4 py-[clamp(6px,1.4dvh,16px)] select-none"
       data-khong-kich-phase="select"
     >
       {/* Compact Top Navigation Bar */}
-      <div className="mb-[clamp(4px,1dvh,10px)] flex items-center justify-between gap-2">
+      <div className="tactical-battle-header mb-[clamp(4px,1dvh,10px)] flex items-center justify-between gap-2 border-b border-slate-700/80 pb-2">
         <button
           type="button"
           onClick={onBack}
@@ -261,7 +261,7 @@ export const KhongKichScreen: React.FC<KhongKichScreenProps> = ({
 
         <div className="flex items-center gap-1 text-[clamp(10.5px,1.4dvh,13px)] font-black uppercase tracking-wider text-sky-300">
           <Crosshair className="h-[clamp(12px,1.6dvh,15px)] w-[clamp(12px,1.6dvh,15px)] text-sky-400" />
-          <span>Không Kích</span>
+          <span><small className="technical-label text-center">TACTICAL AIR OPS</small>Không Kích</span>
         </div>
 
         <div className="flex items-center gap-2 text-right">
@@ -298,7 +298,7 @@ export const KhongKichScreen: React.FC<KhongKichScreenProps> = ({
               onContextMenu={(event) => event.preventDefault()}
               data-aircraft-option={aircraftId}
               aria-pressed={selected}
-              className={`relative w-full touch-pan-y select-none overflow-hidden rounded-xl border p-[clamp(7px,1.3dvh,14px)] text-left transition-all active:scale-[.99] ${
+              className={`tactical-card relative w-full touch-pan-y select-none overflow-hidden rounded-xl border p-[clamp(7px,1.3dvh,14px)] text-left transition-all active:scale-[.99] ${
                 selected
                   ? "border-sky-300/80 bg-sky-400/10 shadow-md shadow-sky-950/40"
                   : "border-slate-800 bg-slate-900/80 hover:bg-slate-900"
@@ -316,7 +316,7 @@ export const KhongKichScreen: React.FC<KhongKichScreenProps> = ({
                     className="h-[clamp(46px,6.8dvh,64px)] w-[clamp(46px,6.8dvh,64px)]"
                   />
                   <span
-                    className="rounded-full border px-[clamp(5px,0.8vw,8px)] py-[clamp(1px,0.2dvh,2.5px)] text-[clamp(7px,1dvh,8.5px)] font-black leading-tight mt-[clamp(2px,0.4dvh,4px)]"
+                    className="status-tag rounded-full border px-[clamp(5px,0.8vw,8px)] py-[clamp(1px,0.2dvh,2.5px)] text-[clamp(7px,1dvh,8.5px)] font-black leading-tight mt-[clamp(2px,0.4dvh,4px)]"
                     style={{
                       color: config.color,
                       borderColor: `${config.color}55`,
@@ -419,7 +419,7 @@ export const KhongKichScreen: React.FC<KhongKichScreenProps> = ({
             role="dialog"
             aria-modal="true"
             aria-label={`Kỹ năng ${previewConfig.name}`}
-            className="w-full max-w-md rounded-[22px] border border-sky-300/40 bg-slate-950 p-3.5 shadow-2xl shadow-black/70"
+            className="military-modal w-full max-w-md rounded-[22px] border border-sky-300/40 bg-slate-950 p-3.5 shadow-2xl shadow-black/70"
           >
             <div className="flex items-start justify-between gap-3">
               <div>

@@ -283,7 +283,7 @@ export const BauCuaScreen: React.FC<BauCuaScreenProps> = ({
   };
 
   return (
-    <div className="w-full max-w-lg mx-auto flex-1 flex flex-col min-h-0 px-3 sm:px-4 py-2 sm:py-2.5 space-y-2 sm:space-y-2.5 select-none pb-6 sm:pb-8">
+    <div className="command-screen recreation-game-screen w-full max-w-lg mx-auto flex-1 flex flex-col min-h-0 px-3 sm:px-4 py-2 sm:py-2.5 space-y-2 sm:space-y-2.5 select-none pb-6 sm:pb-8">
       {/* Header */}
       <div className="flex items-center justify-between bg-slate-900/80 border border-slate-800 rounded-2xl p-2.5 sm:p-3 shadow-lg">
         <div className="flex items-center gap-2">

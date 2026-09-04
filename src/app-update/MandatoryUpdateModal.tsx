@@ -77,7 +77,7 @@ export const MandatoryUpdateModal: React.FC<MandatoryUpdateModalProps> = ({
         }
       }}
     >
-      <div className="relative w-full max-w-sm rounded-2xl bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950 border border-amber-500/40 p-6 text-center shadow-2xl overflow-hidden">
+      <div className="military-modal relative w-full max-w-sm rounded-2xl bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950 border border-amber-500/40 p-6 text-center shadow-2xl overflow-hidden">
         {/* Decorative corner glow */}
         <div className="absolute -top-10 -right-10 w-36 h-36 bg-amber-500/15 rounded-full blur-2xl pointer-events-none" />
         <div className="absolute -bottom-10 -left-10 w-36 h-36 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none" />

@@ -409,6 +409,8 @@ export const TangGiaCanvas2D: React.FC<TangGiaCanvas2DProps> = ({
               return (
                 <div
                   key={`plot-${plotIndex}`}
+                  data-farm-plot={plotIndex + 1}
+                  data-selected={isSelected ? "true" : undefined}
                   onClick={(e) => {
                     e.stopPropagation();
                     onPlotTap(plotIndex);

@@ -60,7 +60,7 @@ export const AirCombatResult: React.FC<AirCombatResultProps> = ({
   const isNewRecord = summary.score > previousHighScore;
 
   return (
-    <div className="mx-auto flex w-full max-w-md flex-col gap-3 px-3 pb-5 pt-3" data-air-combat-result="true" data-run-rank={summary.rank}>
+    <div className="command-screen battle-result-screen mx-auto flex w-full max-w-md flex-col gap-3 px-3 pb-5 pt-3" data-air-combat-result="true" data-run-rank={summary.rank}>
       <section className="relative overflow-hidden rounded-[28px] border border-sky-400/25 bg-gradient-to-b from-slate-900 via-slate-950 to-slate-950 p-5 text-center shadow-2xl shadow-sky-950/40">
         <div className="pointer-events-none absolute -left-12 top-2 h-36 w-36 rounded-full bg-sky-500/10 blur-3xl" />
         <div className="pointer-events-none absolute -right-10 top-16 h-32 w-32 rounded-full bg-amber-400/10 blur-3xl" />

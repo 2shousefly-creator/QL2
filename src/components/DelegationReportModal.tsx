@@ -66,7 +66,7 @@ export const DelegationReportModal: React.FC<DelegationReportModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4 select-none animate-fadeIn overflow-y-auto">
-      <div className="theme-card-accent w-full max-w-md bg-slate-900/95 border rounded-2xl p-5 sm:p-6 shadow-2xl text-slate-100 flex flex-col space-y-4 my-auto">
+      <div className="military-modal theme-card-accent w-full max-w-md bg-slate-900/95 border rounded-2xl p-5 sm:p-6 shadow-2xl text-slate-100 flex flex-col space-y-4 my-auto">
         {/* Header */}
         <div className="theme-divider flex items-start gap-3 border-b pb-3.5">
           <div className="theme-badge p-2.5 rounded-xl border shrink-0 mt-0.5">

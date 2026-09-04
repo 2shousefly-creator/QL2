@@ -7,6 +7,7 @@ import { getPlayerRank, getPlayerFamily } from "../../game/selectors";
 import { formatXp } from "../../game/xpEngine";
 import { MEDAL_CATALOG, MEDAL_TIER_STYLES } from "../../game/medals/medalCatalog";
 import { soundManager } from "../../game/audio";
+import { CommandHeader } from "../../components/military/MilitaryUI";
 
 type IdCardScreenProps = {
   state: GameState;
@@ -43,33 +44,31 @@ export const IdCardScreen: React.FC<IdCardScreenProps> = ({ state, onNavigateTab
   ).length;
 
   return (
-    <div className="w-full max-w-lg mx-auto p-4 select-none pb-28 space-y-4">
+    <div className="command-screen identity-command-screen w-full max-w-lg mx-auto p-4 select-none pb-28 space-y-4">
       {/* Title Bar */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="theme-text-accent text-xl font-black tracking-wider flex items-center gap-2">
-            <UserCheck className="theme-icon-accent w-5 h-5" />
-            <span>THẺ BINH NGHIỆP</span>
-          </h2>
-          <p className="text-xs text-slate-400 font-mono tracking-widest uppercase">
-            MILITARY IDENTITY CARD
-          </p>
-        </div>
-        <button
-          type="button"
-          onClick={() => {
-            soundManager.playClick();
-            onNavigateTab("medals");
-          }}
-          className="theme-button-secondary theme-focus flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all active:scale-95 shadow-sm focus:outline-none"
-        >
-          <Edit3 className="w-3.5 h-3.5" />
-          <span>Sửa Huân Chương Trang Chủ</span>
-        </button>
-      </div>
+      <CommandHeader
+        code="PERSONNEL / MILITARY ID"
+        title="Thẻ Binh Nghiệp"
+        subtitle="Căn cước sĩ quan · Quân hàm · Thành tích phục vụ"
+        icon={<UserCheck />}
+        action={(
+          <button
+            type="button"
+            onClick={() => {
+              soundManager.playClick();
+              onNavigateTab("medals");
+            }}
+            className="military-button military-button--icon theme-focus focus:outline-none"
+            title="Sửa Huân Chương Trang Chủ"
+            aria-label="Sửa Huân Chương Trang Chủ"
+          >
+            <Edit3 className="w-4 h-4" />
+          </button>
+        )}
+      />
 
       {/* Main Identity Card Container */}
-      <div className="theme-card-accent relative rounded-2xl bg-slate-950 border-2 p-5 shadow-2xl overflow-hidden backdrop-blur-md">
+      <div className="command-panel identity-credential theme-card-accent relative rounded-2xl bg-slate-950 border-2 p-5 shadow-2xl overflow-hidden backdrop-blur-md">
         {/* Subtle Military Card Background Patterns */}
         <div className="theme-surface absolute inset-0 pointer-events-none" />
         <div className="theme-corner-glow absolute -top-12 -right-12 w-48 h-48 rounded-full blur-3xl pointer-events-none" />

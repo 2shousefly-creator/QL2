@@ -23,6 +23,7 @@ import {
 import { performAppUpdate } from "../../app-update/appUpdateService";
 import { APP_BUILD_ID, getShortBuildId } from "../../app-update/buildInfo";
 import { getInstalledBuildVersion, fetchLatestVersion } from "../../app-update/versionService";
+import { CommandHeader } from "../../components/military/MilitaryUI";
 
 type ProfileScreenProps = {
   state: GameState;
@@ -304,12 +305,20 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
   };
 
   return (
-    <div className="w-full max-w-lg mx-auto p-4 select-none pb-28 space-y-5">
+    <div className="command-screen personnel-command-screen w-full max-w-lg mx-auto p-4 select-none pb-28 space-y-5">
+      <CommandHeader
+        code="PERSONNEL / DOSSIER"
+        title="Hồ Sơ Quân Vụ"
+        subtitle="Thông tin cá nhân · Thiết lập · Quản trị dữ liệu"
+        icon={<User />}
+      />
+
       {/* Profile HUD Card */}
-      <div className="theme-card-accent relative rounded-2xl bg-gradient-to-b from-slate-900/90 via-slate-900/60 to-slate-950/80 border p-5 shadow-2xl backdrop-blur-md overflow-hidden">
+      <div className="command-panel personnel-record theme-card-accent relative rounded-2xl bg-gradient-to-b from-slate-900/90 via-slate-900/60 to-slate-950/80 border p-5 shadow-2xl backdrop-blur-md overflow-hidden">
         {/* Glow corner */}
         <div className="theme-corner-glow absolute top-0 right-0 w-32 h-32 rounded-full blur-2xl pointer-events-none" />
 
+        <span className="command-kicker relative z-10 mb-3">Service record / Active personnel</span>
         <div className="flex items-center gap-4 relative z-10">
           {/* Avatar button */}
           <button
@@ -375,7 +384,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
       </div>
 
       {/* Năng Lượng Card (HUB UI cá nhân) */}
-      <div className="relative rounded-2xl bg-gradient-to-b from-slate-900/90 via-slate-900/70 to-slate-950/90 border border-slate-700/80 p-4 shadow-xl backdrop-blur-md overflow-hidden">
+      <div className="command-panel relative rounded-2xl bg-gradient-to-b from-slate-900/90 via-slate-900/70 to-slate-950/90 border border-slate-700/80 p-4 shadow-xl backdrop-blur-md overflow-hidden">
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-2">
             <Zap className={`w-4 h-4 ${energyVisuals.textColor} animate-pulse`} />
@@ -427,7 +436,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
 
       {/* Stats Bento Grid */}
       <div className="grid grid-cols-2 gap-3">
-        <div className="bg-slate-900/60 border border-slate-800 p-3.5 rounded-2xl flex flex-col justify-between shadow-lg">
+        <div className="tactical-card bg-slate-900/60 border border-slate-800 p-3.5 rounded-2xl flex flex-col justify-between shadow-lg">
           <div className="flex items-center justify-between text-slate-400 text-xs mb-1">
             <span>Tổng XP Tích Lũy</span>
             <Zap className="theme-icon-accent w-4 h-4" />
@@ -437,7 +446,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
           </span>
         </div>
 
-        <div className="bg-slate-900/60 border border-slate-800 p-3.5 rounded-2xl flex flex-col justify-between shadow-lg">
+        <div className="tactical-card bg-slate-900/60 border border-slate-800 p-3.5 rounded-2xl flex flex-col justify-between shadow-lg">
           <div className="flex items-center justify-between text-slate-400 text-xs mb-1">
             <span>Quân Hàm Đã Qua</span>
             <Shield className="w-4 h-4 text-sky-400" />
@@ -447,7 +456,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
           </span>
         </div>
 
-        <div className="bg-slate-900/60 border border-slate-800 p-3.5 rounded-2xl flex flex-col justify-between shadow-lg">
+        <div className="tactical-card bg-slate-900/60 border border-slate-800 p-3.5 rounded-2xl flex flex-col justify-between shadow-lg">
           <div className="flex items-center justify-between text-slate-400 text-xs mb-1">
             <span>Thời Gian Online</span>
             <Clock className="w-4 h-4 text-emerald-400" />
@@ -457,7 +466,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
           </span>
         </div>
 
-        <div className="bg-slate-900/60 border border-slate-800 p-3.5 rounded-2xl flex flex-col justify-between shadow-lg">
+        <div className="tactical-card bg-slate-900/60 border border-slate-800 p-3.5 rounded-2xl flex flex-col justify-between shadow-lg">
           <div className="flex items-center justify-between text-slate-400 text-xs mb-1">
             <span>Thời Gian Ủy Thác</span>
             <Clock className="w-4 h-4 text-indigo-400" />
@@ -469,11 +478,11 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
       </div>
 
       {/* Coupon / Gift Code Section */}
-      <div className="theme-card-accent bg-gradient-to-b from-slate-900/80 to-slate-950/90 border p-4 rounded-2xl space-y-3 shadow-xl backdrop-blur-md">
+      <div className="command-panel theme-card-accent bg-gradient-to-b from-slate-900/80 to-slate-950/90 border p-4 rounded-2xl space-y-3 shadow-xl backdrop-blur-md">
         <div className="theme-divider flex items-center justify-between border-b pb-2">
           <h3 className="font-bold text-sm text-slate-100 flex items-center gap-2">
             <Gift className="theme-icon-accent w-4 h-4" />
-            <span>Mã Ưu Đãi (Coupon)</span>
+            <span><span className="technical-label">COUPON</span>Mã Ưu Đãi</span>
           </h3>
           <span className="text-[10px] font-semibold text-amber-400/80 uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/20">
             Quà Tặng
@@ -522,11 +531,13 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
       </div>
 
       {/* Settings Section */}
-      <div className="bg-slate-900/60 border border-slate-800 p-4 rounded-2xl space-y-4 shadow-lg">
+      <div className="command-panel bg-slate-900/60 border border-slate-800 p-4 rounded-2xl space-y-4 shadow-lg">
         <h3 className="theme-divider font-bold text-sm text-slate-100 flex items-center gap-2 border-b pb-2">
           <Sparkles className="theme-icon-accent w-4 h-4" />
           <span>Cài Đặt Ứng Dụng</span>
         </h3>
+
+        <span className="technical-label">AUDIO / DISPLAY</span>
 
         {/* Audio Toggle */}
         <div className="flex items-center justify-between text-xs sm:text-sm">
@@ -570,6 +581,9 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
             <span>{state.settings.reducedMotion ? "Bật" : "Tắt"}</span>
           </button>
         </div>
+
+        <div className="tactical-divider" aria-hidden="true" />
+        <span className="technical-label">NOTIFICATIONS</span>
 
         {/* Device Notifications Toggle & Testing */}
         <div className="space-y-2">
@@ -720,6 +734,8 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
           )}
         </div>
 
+        <span className="technical-label">DATA / SYSTEM</span>
+
         {/* Export / Import, Manual Update & Reset */}
         <div className="pt-2 border-t border-slate-800 space-y-2.5">
           {/* Detailed Version Debug Info */}
@@ -818,7 +834,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
                 onResetGame();
               }
             }}
-            className="w-full py-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-300 font-semibold text-xs flex items-center justify-center gap-1.5 transition-colors mt-3"
+            className="danger-zone w-full py-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-300 font-semibold text-xs flex items-center justify-center gap-1.5 transition-colors mt-3"
           >
             <RotateCcw className="w-3.5 h-3.5" />
             <span>Đặt Lại Tiến Trình Trò Chơi</span>
@@ -829,7 +845,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
       {/* Avatar Selection Modal */}
       {showAvatarModal && (
         <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="w-full max-w-sm bg-slate-900 border border-slate-700 rounded-2xl p-5 shadow-2xl text-slate-100 space-y-4">
+          <div className="military-modal w-full max-w-sm bg-slate-900 border border-slate-700 rounded-2xl p-5 shadow-2xl text-slate-100 space-y-4">
             <h3 className="font-bold text-base text-center">Chọn Ảnh Đại Diện</h3>
 
             {/* Hidden File Input */}
@@ -895,7 +911,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
           onClick={() => setShowCouponModal(false)}
         >
           <div
-            className="theme-card-accent w-full max-w-sm bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950 border-2 rounded-3xl p-5 shadow-2xl space-y-4 animate-in zoom-in-95 duration-200"
+            className="military-modal theme-card-accent w-full max-w-sm bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950 border-2 rounded-3xl p-5 shadow-2xl space-y-4 animate-in zoom-in-95 duration-200"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Modal Header */}

@@ -975,7 +975,7 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
   return (
     <div
       onClick={handleClearSelection}
-      className="w-full max-w-5xl mx-auto p-2 sm:p-4 space-y-3 font-sans pb-36 relative"
+      className="command-screen logistics-command-screen w-full max-w-5xl mx-auto p-2 sm:p-4 space-y-3 font-sans pb-36 relative"
     >
       {/* --- HUD HEADER (STICKY) --- */}
       {!isTroughInfoOpen && (
@@ -984,7 +984,7 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
             e.stopPropagation();
             handleClearSelection();
           }}
-          className="sticky top-0 z-50 w-full bg-slate-900/95 border border-slate-800 rounded-2xl p-2.5 sm:p-3 flex items-center justify-between gap-2 shadow-xl backdrop-blur-md animate-in fade-in duration-150"
+          className="logistics-hud command-panel sticky top-0 z-50 w-full bg-slate-900/95 border border-slate-800 rounded-2xl p-2.5 sm:p-3 flex items-center justify-between gap-2 shadow-xl backdrop-blur-md animate-in fade-in duration-150"
         >
           <div className="flex items-center gap-2.5 sm:gap-3">
             <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-gradient-to-br from-amber-500 to-amber-600 flex items-center justify-center text-slate-950 font-black text-base sm:text-lg shadow-md shrink-0">
@@ -1090,7 +1090,7 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
           onClick={(e) => e.stopPropagation()}
           className="fixed bottom-[calc(3.5rem+env(safe-area-inset-bottom,0px)+0.5rem)] left-1/2 -translate-x-1/2 z-30 w-full max-w-xl px-3 animate-in fade-in slide-in-from-bottom-2 duration-200"
         >
-          <div className="bg-slate-900/95 border-2 border-amber-500/80 rounded-2xl p-2.5 shadow-2xl backdrop-blur-md flex items-center justify-around gap-1.5">
+          <div className="logistics-action-toolbar bg-slate-900/95 border-2 border-amber-500/80 rounded-2xl p-2.5 shadow-2xl backdrop-blur-md flex items-center justify-around gap-1.5">
             {/* TOOLBAR FOR GARDEN MODE */}
             {contextMode === "garden" && (
               <>
@@ -1308,7 +1308,7 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
       {/* --- CONFIRMATION DIALOG MODAL --- */}
       {dialogConfig.isOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-3 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-200">
-          <div className="bg-slate-900 border border-slate-700 rounded-3xl p-5 max-w-sm w-full space-y-4 shadow-2xl text-center">
+          <div className="military-modal bg-slate-900 border border-slate-700 rounded-3xl p-5 max-w-sm w-full space-y-4 shadow-2xl text-center">
             <h3 className="font-extrabold text-base text-slate-100">
               {dialogConfig.title}
             </h3>

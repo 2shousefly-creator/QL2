@@ -10,6 +10,7 @@ import { createDefaultFarmState } from "../tang_gia/farmEngine";
 import { KhongKichScreen } from "./khong_kich/KhongKichScreen";
 import { TankBattleScreen } from "./tank_battle/TankBattleScreen";
 import { ChienTuyenScreen } from "./chien_tuyen/ChienTuyenScreen";
+import { CommandHeader } from "../../components/military/MilitaryUI";
 
 interface EntertainmentHubScreenProps {
   gameState: GameState;
@@ -102,30 +103,21 @@ export const EntertainmentHubScreen: React.FC<EntertainmentHubScreenProps> = ({
 
   // Otherwise render Entertainment Hub
   return (
-    <div className="w-full max-w-lg mx-auto flex-1 flex flex-col min-h-0 px-3.5 sm:px-4 py-3.5 space-y-4 select-none">
+    <div className="command-screen entertainment-command-screen w-full max-w-lg mx-auto flex-1 flex flex-col min-h-0 px-3.5 sm:px-4 py-3.5 space-y-4 select-none">
       {/* Hub Top Bar */}
-      <div className="theme-card-accent flex items-center justify-between bg-slate-900/80 border rounded-2xl p-3.5 shadow-lg backdrop-blur-md">
-        <div className="flex items-center gap-2.5">
-          <div className="theme-badge w-10 h-10 rounded-xl border flex items-center justify-center shadow-inner">
-            <Dices className="w-5 h-5" />
+      <CommandHeader
+        code="BARRACKS RECREATION / SIMULATION"
+        title="Khu Giải Trí Doanh Trại"
+        subtitle="Mô phỏng chiến thuật · Trò chơi kỹ năng · Giải trí dân gian"
+        icon={<Dices />}
+        action={(
+          <div className="data-readout flex items-center gap-1.5 px-2.5 py-2 border border-amber-500/30 text-amber-400 bg-slate-950/80">
+            <Coins className="w-4 h-4 shrink-0" />
+            <span>{currentGold.toLocaleString("vi-VN")}</span>
+            <small className="text-[10px]">Vàng</small>
           </div>
-          <div>
-            <h2 className="text-base font-extrabold text-slate-100 flex items-center gap-1.5">
-              Khu Giải Trí
-            </h2>
-            <p className="text-xs text-slate-400">
-              Cờ bạc là bác thằng đần, chơi vui thôi chứ nghiện là dở rồi!!
-            </p>
-          </div>
-        </div>
-
-        {/* Current Gold Badge (Shared with Tăng Gia) */}
-        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-950/80 border border-amber-500/30 text-amber-400 text-xs font-extrabold shadow-inner">
-          <Coins className="w-4 h-4 text-amber-400 shrink-0" />
-          <span>{currentGold.toLocaleString("vi-VN")}</span>
-          <span className="text-[10px] text-amber-500/80">Vàng</span>
-        </div>
-      </div>
+        )}
+      />
 
       {/* Notice info banner */}
       <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-3 flex items-start gap-2.5 text-xs text-slate-300">
@@ -148,48 +140,53 @@ export const EntertainmentHubScreen: React.FC<EntertainmentHubScreenProps> = ({
 
         {ENTERTAINMENT_GAMES.map((game) => {
           return (
-            <div
-              key={game.id}
-              data-entertainment-game={game.id}
-              className="theme-hover-border bg-gradient-to-br from-slate-900 via-slate-900/90 to-slate-950 border border-slate-800 rounded-2xl p-4 shadow-xl transition-all group relative overflow-hidden"
-            >
-              {/* Card Accent Glow */}
-              <div className="theme-corner-glow absolute top-0 right-0 w-32 h-32 rounded-full blur-2xl pointer-events-none" />
+            <React.Fragment key={game.id}>
+              {game.id === "chien_tuyen" && (
+                <div className="entertainment-section-label">A / Chiến thuật & mô phỏng</div>
+              )}
+              {game.id === "bau_cua" && (
+                <div className="entertainment-section-label">B / Giải trí doanh trại</div>
+              )}
+              <div
+                data-entertainment-game={game.id}
+                className="tactical-card entertainment-program-card theme-hover-border bg-gradient-to-br from-slate-900 via-slate-900/90 to-slate-950 border border-slate-800 rounded-2xl p-4 shadow-xl transition-all group relative overflow-hidden"
+              >
 
-              <div className="flex items-center justify-between gap-3">
-                <div className="flex items-center gap-3">
-                  <div className="theme-badge w-12 h-12 rounded-2xl border flex items-center justify-center text-2xl shadow-md group-hover:scale-105 transition-transform select-none shrink-0">
-                    {game.icon || "🎲"}
-                  </div>
-                  <div className="min-w-0">
-                    <div className="flex items-center gap-2">
-                      <h4 className="theme-card-title text-base font-extrabold text-slate-100 transition-colors">
-                        {game.title}
-                      </h4>
-                      {game.badge && (
-                        <span className="theme-badge px-2 py-0.5 text-[9px] font-extrabold rounded-full border">
-                          {game.badge}
-                        </span>
-                      )}
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-3">
+                    <div className="theme-badge w-12 h-12 rounded-2xl border flex items-center justify-center text-2xl shadow-md transition-transform select-none shrink-0">
+                      {game.icon || "🎲"}
                     </div>
-                    <p className="mt-0.5 line-clamp-2 text-[10px] leading-relaxed text-slate-500">{game.description}</p>
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2">
+                        <h4 className="theme-card-title text-base font-extrabold text-slate-100 transition-colors">
+                          {game.title}
+                        </h4>
+                        {game.badge && (
+                          <span className="status-tag theme-badge px-2 py-0.5 text-[9px] font-extrabold rounded-full border">
+                            {game.badge}
+                          </span>
+                        )}
+                      </div>
+                      <p className="mt-0.5 line-clamp-2 text-[10px] leading-relaxed text-slate-500">{game.description}</p>
+                    </div>
                   </div>
-                </div>
 
-                <button
-                  type="button"
-                  aria-label={`Chơi ${game.title}`}
-                  onClick={() => {
-                    soundManager.playClick();
-                    setActiveGame(game.id);
-                  }}
-                  className="theme-button-primary theme-focus min-h-[42px] px-4 py-2 rounded-xl active:scale-95 text-xs font-extrabold flex items-center gap-1.5 shadow-lg transition-all shrink-0 focus:outline-none"
-                >
-                  <Play className="w-3.5 h-3.5 fill-current" />
-                  <span>Chơi</span>
-                </button>
+                  <button
+                    type="button"
+                    aria-label={`Chơi ${game.title}`}
+                    onClick={() => {
+                      soundManager.playClick();
+                      setActiveGame(game.id);
+                    }}
+                    className="military-button military-button--primary theme-button-primary theme-focus shrink-0 focus:outline-none"
+                  >
+                    <Play className="w-3.5 h-3.5 fill-current" />
+                    <span>Chơi</span>
+                  </button>
+                </div>
               </div>
-            </div>
+            </React.Fragment>
           );
         })}
       </div>

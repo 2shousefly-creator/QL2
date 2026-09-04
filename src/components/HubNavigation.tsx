@@ -198,7 +198,7 @@ export const HubNavigation: React.FC<HubNavigationProps> = ({
       {/* Bottom Main Navigation Bar */}
       <nav
         aria-label="Điều hướng chính"
-        className="theme-nav-shell fixed bottom-0 inset-x-0 z-40 bg-slate-950/95 border-t backdrop-blur-md pb-[env(safe-area-inset-bottom)] shadow-2xl select-none"
+        className="theme-nav-shell command-dock fixed bottom-0 inset-x-0 z-40 bg-slate-950/95 border-t backdrop-blur-md pb-[env(safe-area-inset-bottom)] shadow-2xl select-none"
       >
         <div className="hub-navigation-bar max-w-lg mx-auto flex items-center justify-around px-2">
           {mainTabs.map((tab) => {
@@ -221,7 +221,7 @@ export const HubNavigation: React.FC<HubNavigationProps> = ({
                   <motion.span
                     layoutId="activeTabIndicator"
                     className="theme-active-marker absolute top-0 inset-x-3 h-0.5 rounded-full"
-                    transition={reducedMotion ? { duration: 0 } : { type: "spring", stiffness: 380, damping: 30 }}
+                    transition={reducedMotion ? { duration: 0 } : { duration: 0.18, ease: "easeOut" }}
                   />
                 )}
 
@@ -264,8 +264,8 @@ export const HubNavigation: React.FC<HubNavigationProps> = ({
               initial={{ y: "100%", opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: "100%", opacity: 0 }}
-              transition={reducedMotion ? { duration: 0 } : { type: "spring", damping: 28, stiffness: 320 }}
-              className="theme-card-accent fixed bottom-0 inset-x-0 z-50 max-w-lg mx-auto bg-slate-900 border-t rounded-t-3xl p-3.5 sm:p-5 pb-8 shadow-2xl max-h-[88vh] overflow-y-auto space-y-3 select-none"
+              transition={reducedMotion ? { duration: 0 } : { duration: 0.24, ease: "easeOut" }}
+              className="theme-card-accent military-sheet profile-dossier-sheet fixed bottom-0 inset-x-0 z-50 max-w-lg mx-auto bg-slate-900 border-t rounded-t-3xl p-3.5 sm:p-5 pb-8 shadow-2xl max-h-[88vh] overflow-y-auto space-y-3 select-none"
             >
               {/* Header */}
               <div className="theme-divider flex items-center justify-between pb-2 border-b">
@@ -274,6 +274,7 @@ export const HubNavigation: React.FC<HubNavigationProps> = ({
                     <User className="w-4 h-4" />
                   </div>
                   <div>
+                    <span className="command-kicker">Personnel dossier / Hồ sơ quân vụ</span>
                     <h3 className="text-sm font-extrabold text-slate-100 flex items-center gap-1.5">
                       Danh Mục Hồ Sơ Binh Nghiệp
                     </h3>
@@ -309,7 +310,7 @@ export const HubNavigation: React.FC<HubNavigationProps> = ({
                         isSpanningFullWidth
                           ? "col-span-2 flex-row items-center justify-start gap-3 p-3 text-left"
                           : "flex-col items-center justify-center p-3 text-center"
-                      } theme-menu-card theme-focus rounded-2xl border transition-all duration-200 group focus:outline-none ${
+                      } tactical-card profile-dossier-card theme-menu-card theme-focus rounded-2xl border transition-all duration-200 group focus:outline-none ${
                         isCurrentActive
                           ? "theme-menu-card--active shadow-xl scale-[1.02]"
                           : "active:scale-95"
@@ -321,6 +322,10 @@ export const HubNavigation: React.FC<HubNavigationProps> = ({
                           <span className={`theme-active-dot w-2 h-2 rounded-full ${reducedMotion ? "" : "animate-pulse"}`} />
                         </div>
                       )}
+
+                      <span className="profile-dossier-card__code">
+                        DOSSIER {String(index + 1).padStart(2, "0")}
+                      </span>
 
                       {/* Icon Container */}
                       <div
@@ -339,6 +344,9 @@ export const HubNavigation: React.FC<HubNavigationProps> = ({
 
                         <span className="text-[10px] text-slate-400 font-medium truncate block w-full mt-0.5">
                           {item.subtitle}
+                        </span>
+                        <span className="mt-1 block text-[10px] font-extrabold uppercase tracking-wider theme-text-accent">
+                          {item.badge}
                         </span>
                       </div>
                     </button>
@@ -369,8 +377,8 @@ export const HubNavigation: React.FC<HubNavigationProps> = ({
               initial={{ scale: 0.9, opacity: 0, y: 20 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.9, opacity: 0, y: 20 }}
-              transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-11/12 max-w-sm bg-slate-900 border border-emerald-500/50 rounded-3xl p-5 shadow-2xl text-center space-y-4 select-none"
+              transition={reducedMotion ? { duration: 0 } : { duration: 0.22, ease: "easeOut" }}
+              className="military-modal fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-11/12 max-w-sm bg-slate-900 border border-emerald-500/50 rounded-3xl p-5 shadow-2xl text-center space-y-4 select-none"
             >
               <div className="relative mx-auto w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500/30 to-teal-600/20 border border-emerald-400/50 flex items-center justify-center text-emerald-400 shadow-[0_0_20px_rgba(16,185,129,0.3)]">
                 <Sprout className="w-9 h-9 animate-pulse" />

@@ -233,7 +233,7 @@ export const BigSmallScreen: React.FC<BigSmallScreenProps> = ({
     .reduce((sum, val) => sum + val, 0);
 
   return (
-    <div className="w-full max-w-lg mx-auto flex flex-col px-3 sm:px-3.5 py-2 space-y-3 select-none pb-12">
+    <div className="command-screen recreation-game-screen w-full max-w-lg mx-auto flex flex-col px-3 sm:px-3.5 py-2 space-y-3 select-none pb-12">
       {/* 1. Header Navigation */}
       <div className="flex items-center justify-between bg-slate-900/90 border border-slate-800/90 rounded-2xl p-2.5 sm:p-3 shadow-lg shrink-0">
         <div className="flex items-center gap-2">

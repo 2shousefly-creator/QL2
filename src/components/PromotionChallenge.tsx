@@ -200,7 +200,7 @@ export const PromotionChallenge: React.FC<PromotionChallengeProps> = ({
   const optionLabels = ["A", "B", "C", "D"];
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-md text-slate-100 flex flex-col justify-between p-4 sm:p-6 overflow-y-auto select-none">
+    <div className="command-screen promotion-command-screen fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-md text-slate-100 flex flex-col justify-between p-4 sm:p-6 overflow-y-auto select-none">
       {/* Top Bar Header */}
       <div className="flex items-center justify-between w-full max-w-xl mx-auto">
         <div className="flex items-center gap-2 text-xs font-bold text-amber-300 bg-amber-950/80 border border-amber-800/80 px-3 py-1.5 rounded-full shadow-md">
@@ -226,7 +226,7 @@ export const PromotionChallenge: React.FC<PromotionChallengeProps> = ({
       </div>
 
       {/* Ranks Transition Header Row */}
-      <div className="w-full max-w-xl mx-auto my-3 bg-slate-900/90 border border-slate-800 p-3.5 rounded-2xl flex items-center justify-around gap-2 shadow-xl">
+      <div className="command-panel w-full max-w-xl mx-auto my-3 bg-slate-900/90 border border-slate-800 p-3.5 rounded-2xl flex items-center justify-around gap-2 shadow-xl">
         <div className="flex flex-col items-center">
           <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1">
             Hiện Tại
@@ -277,7 +277,7 @@ export const PromotionChallenge: React.FC<PromotionChallengeProps> = ({
       {/* Question Card Container */}
       {currentQ && outcome === null && (
         <div className="w-full max-w-xl mx-auto my-auto py-2">
-          <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-5 shadow-2xl space-y-4">
+          <div className="command-panel bg-slate-900/90 border border-slate-800 rounded-2xl p-5 shadow-2xl space-y-4">
             {/* Question Category & Header */}
             <div className="flex items-center justify-between text-xs">
               <span className="px-2.5 py-0.5 rounded-full bg-slate-800 border border-slate-700 text-slate-300 font-medium">
@@ -350,7 +350,7 @@ export const PromotionChallenge: React.FC<PromotionChallengeProps> = ({
       {/* Exit Warning Confirmation Modal */}
       {showExitConfirm && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md animate-fade-in">
-          <div className="w-full max-w-sm bg-slate-900 border border-amber-500/40 rounded-3xl p-6 text-center shadow-2xl space-y-5 relative">
+          <div className="military-modal w-full max-w-sm bg-slate-900 border border-amber-500/40 rounded-3xl p-6 text-center shadow-2xl space-y-5 relative">
             {/* Warning Icon */}
             <div className="flex justify-center">
               <div className="w-16 h-16 rounded-full bg-amber-500/20 border-2 border-amber-400 flex items-center justify-center shadow-[0_0_20px_rgba(245,158,11,0.3)]">
@@ -390,7 +390,7 @@ export const PromotionChallenge: React.FC<PromotionChallengeProps> = ({
       {/* Outcome Result Modal Popup */}
       {outcome !== null && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/90 backdrop-blur-md animate-fade-in">
-          <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl p-6 text-center shadow-2xl space-y-5 relative">
+          <div className="military-modal w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl p-6 text-center shadow-2xl space-y-5 relative">
             {/* Status Icon */}
             <div className="flex justify-center">
               {outcome === "pass" ? (

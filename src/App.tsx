@@ -476,10 +476,10 @@ export default function App() {
 
   if (!gameState) {
     return (
-      <div className="min-h-screen bg-slate-950 text-slate-100 flex items-center justify-center">
+      <div className="military-ui min-h-screen bg-slate-950 text-slate-100 flex items-center justify-center">
         <div className="flex flex-col items-center gap-3">
           <div className="w-10 h-10 border-4 border-amber-400 border-t-transparent rounded-full animate-spin" />
-          <span className="text-sm font-bold text-amber-300 tracking-wider uppercase">
+          <span className="text-sm font-extrabold text-amber-300 tracking-wider uppercase">
             Đang tải dữ liệu quân hàm...
           </span>
         </div>
@@ -502,8 +502,9 @@ export default function App() {
 
   return (
     <div
-      className="chapter-theme-root h-screen h-[100dvh] bg-slate-950 text-white font-sans overflow-hidden relative flex flex-col"
+      className="military-ui chapter-theme-root h-screen h-[100dvh] bg-slate-950 text-white font-sans overflow-hidden relative flex flex-col"
       data-stage-theme={currentStageTheme.id}
+      data-reduced-motion={gameState.settings.reducedMotion ? "true" : "false"}
       style={chapterThemeStyle}
     >
       {/* Game World Ambient Glow Backgrounds */}
@@ -511,7 +512,7 @@ export default function App() {
 
       {/* Top Gaming HUD Header (Auto-hidden when in Minigames, Challenge, or Trough Info Modal) */}
       {!isTrainingGameActive && !isChallengeActive && !isTroughInfoActive && (
-        <header className="theme-header-shell relative z-10 shrink-0 bg-slate-900/70 backdrop-blur-md border-b px-4 pb-3">
+        <header className="theme-header-shell command-status-hud relative z-10 shrink-0 bg-slate-900/70 backdrop-blur-md border-b px-4 pb-3">
           <div className="max-w-lg mx-auto flex items-center justify-between">
             <div className="flex items-center gap-3">
               <button
@@ -526,15 +527,16 @@ export default function App() {
                 <Avatar seed={gameState.player.avatarSeed} size={48} />
               </button>
 
-              <div>
+              <div className="command-status-hud__identity">
+                <span className="command-kicker mb-0.5">Personnel status / Active duty</span>
                 <div className="flex items-center gap-2">
-                  <span className="theme-text-accent text-xs font-bold uppercase tracking-wider">
+                  <span className="command-status-hud__name line-clamp-1">
                     {gameState.player.displayName}
                   </span>
                 </div>
-                <h1 className="text-sm font-extrabold text-slate-100 line-clamp-1">
+                <div className="command-status-hud__rank line-clamp-1">
                   {currentRank.displayName}
-                </h1>
+                </div>
               </div>
             </div>
 
@@ -548,21 +550,22 @@ export default function App() {
                 const energyVisuals = getEnergyVisuals(energyPercent, active);
 
                 return (
-                  <div className="flex flex-col items-end gap-0.5">
-                    <div className="flex items-center gap-1 text-xs font-extrabold">
+                  <div className="command-status-hud__energy flex flex-col items-end gap-1" aria-label={`Năng lượng ${Math.round(energyPercent)} phần trăm`}>
+                    <div className="flex items-center gap-1.5 text-xs font-extrabold">
+                      <span className="technical-label hidden sm:inline">Energy</span>
                       <Zap className={`w-3.5 h-3.5 ${energyVisuals.textColor} ${active && energyMult > 1 ? "fill-current animate-pulse" : "opacity-80"}`} />
-                      <span className={`font-extrabold ${energyVisuals.textColor}`}>
+                      <span className={`data-readout ${energyVisuals.textColor}`}>
                         {Math.round(energyPercent)}%
                       </span>
-                      <span className={`text-[9px] px-1.5 py-0.2 rounded font-black border ${energyVisuals.borderColor} ${energyVisuals.textColor} bg-slate-950/80`}>
+                      <span className={`status-tag max-w-[74px] truncate ${energyVisuals.borderColor} ${energyVisuals.textColor} bg-slate-950/80`} title={active ? `${energyMult},0x` : "Boost tạm dừng"}>
                         {active ? `${energyMult},0x` : "Boost tạm dừng"}
                       </span>
                     </div>
 
                     {/* Energy Progress Bar */}
-                    <div className="w-20 sm:w-24 h-2.5 rounded-full bg-slate-950 border border-slate-700/80 overflow-hidden shadow-inner">
+                    <div className="command-energy-track w-20 sm:w-24">
                       <div
-                        className={`h-full rounded-full transition-all duration-300 ${energyVisuals.bgColor} ${energyVisuals.glowColor}`}
+                        className={`h-full transition-all duration-300 ${energyVisuals.bgColor}`}
                         style={{ width: `${Math.max(2, energyPercent)}%` }}
                       />
                     </div>
@@ -722,7 +725,7 @@ export default function App() {
 
       {/* Manual Update Success Toast */}
       {showUpdateToast && (
-        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 max-w-sm w-11/12 bg-emerald-950/95 border border-emerald-500/80 text-emerald-200 px-4 py-3 rounded-2xl shadow-2xl backdrop-blur-md flex items-center justify-between gap-3 text-xs font-semibold animate-bounce">
+        <div className="command-toast fixed top-4 left-1/2 -translate-x-1/2 z-50 max-w-sm w-11/12 bg-emerald-950/95 border border-emerald-500/80 text-emerald-200 px-4 py-3 rounded-2xl shadow-2xl backdrop-blur-md flex items-center justify-between gap-3 text-xs font-semibold">
           <div className="flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-emerald-400 shrink-0" />
             <span>Đã cập nhật lên phiên bản mới nhất! Tiến trình chơi được bảo toàn.</span>

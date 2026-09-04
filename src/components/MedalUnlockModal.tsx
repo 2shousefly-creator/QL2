@@ -31,7 +31,7 @@ export const MedalUnlockModal: React.FC<MedalUnlockModalProps> = ({ gameState, o
           initial={{ scale: 0.85, opacity: 0, y: 20 }}
           animate={{ scale: 1, opacity: 1, y: 0 }}
           exit={{ scale: 0.85, opacity: 0, y: 20 }}
-          className={`relative w-full max-w-sm rounded-3xl border p-6 text-center shadow-2xl bg-gradient-to-b ${medal.bgGradient} ${medal.borderColor}`}
+          className={`military-modal relative w-full max-w-sm rounded-3xl border p-6 text-center shadow-2xl bg-gradient-to-b ${medal.bgGradient} ${medal.borderColor}`}
           style={{ boxShadow: `0 0 30px ${medal.glowColor}` }}
         >
           {/* Top Sparkles / Crown */}

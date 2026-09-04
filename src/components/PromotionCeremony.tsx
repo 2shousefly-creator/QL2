@@ -45,7 +45,7 @@ export const PromotionCeremony: React.FC<PromotionCeremonyProps> = ({
   const isSecondaryChanged = prevSec !== promotedSec;
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-lg text-slate-100 flex flex-col justify-between p-4 sm:p-6 overflow-y-auto select-none animate-fadeIn">
+    <div className="command-screen promotion-ceremony-screen fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-lg text-slate-100 flex flex-col justify-between p-4 sm:p-6 overflow-y-auto select-none animate-fadeIn">
       {/* Background ambient glow */}
       <div className="fixed inset-0 pointer-events-none bg-[radial-gradient(circle_at_center,rgba(250,204,21,0.15)_0%,transparent_70%)]" />
 
@@ -77,7 +77,7 @@ export const PromotionCeremony: React.FC<PromotionCeremonyProps> = ({
 
       {/* Role Promotion Card (Only shown if there is a role change/promotion) */}
       {rolePromoted && (
-        <div className="w-full max-w-xl mx-auto bg-gradient-to-b from-amber-500/15 via-slate-900/90 to-slate-900/90 border border-amber-500/40 p-4 sm:p-5 rounded-2xl my-2 shadow-2xl z-10 text-center space-y-3">
+        <div className="command-panel w-full max-w-xl mx-auto bg-gradient-to-b from-amber-500/15 via-slate-900/90 to-slate-900/90 border border-amber-500/40 p-4 sm:p-5 rounded-2xl my-2 shadow-2xl z-10 text-center space-y-3">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-400/40 text-xs font-bold uppercase tracking-wider">
             <Award className="w-3.5 h-3.5" />
             <span>Bổ Nhiệm Chức Danh Mới</span>
@@ -147,7 +147,7 @@ export const PromotionCeremony: React.FC<PromotionCeremonyProps> = ({
 
       {/* Rewards Section */}
       {rewards.length > 0 && (
-        <div className="w-full max-w-xl mx-auto bg-slate-900/90 border border-emerald-500/30 p-4 sm:p-5 rounded-2xl my-2 shadow-2xl z-10 text-center">
+        <div className="command-panel w-full max-w-xl mx-auto bg-slate-900/90 border border-emerald-500/30 p-4 sm:p-5 rounded-2xl my-2 shadow-2xl z-10 text-center">
           <h3 className="text-xs sm:text-sm font-bold text-emerald-400 uppercase tracking-widest mb-3 flex items-center justify-center gap-2">
             ✨ PHẦN THƯỞNG TĂNG GIA QUÂN NGŨ ✨
           </h3>
@@ -167,7 +167,7 @@ export const PromotionCeremony: React.FC<PromotionCeremonyProps> = ({
       )}
 
       {/* Stories Section */}
-      <div className="w-full max-w-xl mx-auto bg-slate-900/90 border border-amber-500/30 p-4 sm:p-5 rounded-2xl my-2 shadow-2xl z-10 space-y-4">
+      <div className="command-panel w-full max-w-xl mx-auto bg-slate-900/90 border border-amber-500/30 p-4 sm:p-5 rounded-2xl my-2 shadow-2xl z-10 space-y-4">
         {/* Major Transition Story if available */}
         {promotionKind === "major" && transitionStory && (
           <div className="border-b border-slate-800 pb-4">

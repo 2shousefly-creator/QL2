@@ -60,7 +60,7 @@ export const XpProgressBar: React.FC<XpProgressBarProps> = ({
 
       {/* Main Track */}
       <div
-        className={`relative h-9 rounded-xl bg-slate-950 border ${
+        className={`xp-command-track relative h-9 rounded-xl bg-slate-950 border ${
           isFull
             ? "border-amber-400 ring-2 ring-amber-400/50 shadow-[0_0_20px_rgba(250,204,21,0.5)]"
             : "border-slate-800"

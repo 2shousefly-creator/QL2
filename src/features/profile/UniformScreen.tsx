@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { ArrowLeft, ShieldCheck, Sparkles } from "lucide-react";
+import { ArrowLeft, ShieldCheck } from "lucide-react";
 import { getPlayerFamily, getPlayerRank } from "../../game/selectors";
 import { soundManager } from "../../game/audio";
 import type { GameState } from "../../game/types";
@@ -13,6 +13,7 @@ import {
   getUniformFamilyAchievedAt,
   getUniformFilledSegments,
 } from "./uniform/uniformSelectors";
+import { CommandHeader } from "../../components/military/MilitaryUI";
 
 type UniformScreenProps = {
   state: GameState;
@@ -55,36 +56,28 @@ export const UniformScreen: React.FC<UniformScreenProps> = ({ state, onBack }) =
   };
 
   return (
-    <div className="mx-auto w-full max-w-lg space-y-4 px-4 pb-10 pt-4 select-none">
-      <header className="flex items-center gap-3">
-        {onBack && (
+    <div className="command-screen uniform-archive-screen mx-auto w-full max-w-lg space-y-4 px-4 pb-10 pt-4 select-none">
+      <CommandHeader
+        code="UNIFORM ARCHIVE / PERSONNEL"
+        title="Hồ Sơ Quân Phục"
+        subtitle="Lễ phục theo quân hàm đã đạt"
+        icon={<ShieldCheck />}
+        action={onBack ? (
           <button
             type="button"
             onClick={() => {
               soundManager.playClick();
               onBack();
             }}
-            className="theme-focus theme-hover-border theme-hover-accent flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-slate-700 bg-slate-900/80 text-slate-300 transition focus:outline-none"
+            className="military-button military-button--icon theme-focus focus:outline-none"
             aria-label="Quay lại Hồ Sơ"
           >
             <ArrowLeft className="h-5 w-5" />
           </button>
-        )}
+        ) : undefined}
+      />
 
-        <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-2">
-            <h1 className="text-lg font-black uppercase tracking-[0.14em] text-slate-100">Quân Phục</h1>
-            <Sparkles className="theme-icon-accent h-4 w-4" />
-          </div>
-          <p className="text-xs text-slate-400">Quân phục binh nghiệp theo cấp bậc đã đạt</p>
-        </div>
-      </header>
-
-      <section className="relative overflow-hidden rounded-2xl border border-slate-700/80 bg-gradient-to-br from-slate-900/90 via-slate-900/70 to-slate-950/95 p-4 shadow-xl">
-        <div
-          className="pointer-events-none absolute -right-10 -top-10 h-28 w-28 rounded-full blur-3xl"
-          style={{ backgroundColor: artConfig.shoulderPalette.glow }}
-        />
+      <section className="command-panel relative overflow-hidden rounded-2xl border border-slate-700/80 bg-gradient-to-br from-slate-900/90 via-slate-900/70 to-slate-950/95 p-4 shadow-xl">
         <div className="relative flex items-start justify-between gap-3">
           <div className="min-w-0">
             <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500">Đang xem</p>

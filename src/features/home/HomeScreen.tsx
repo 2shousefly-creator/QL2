@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Award, Sparkles, Star, Compass } from "lucide-react";
+import { Award, Sparkles, Compass } from "lucide-react";
 import { RankPresentation } from "../../components/RankPresentation";
 import { RankDetailSheet } from "../../components/RankDetailSheet";
 import { HomeXpJourney } from "../../components/HomeXpJourney";
@@ -85,7 +85,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       <div className="home-scroll-viewport relative z-10 h-full min-h-0 overflow-y-auto overscroll-y-contain touch-pan-y">
         <div className="home-content-shell mx-auto min-h-full w-full max-w-md">
         {/* Top Status & Chapter Tag Bar */}
-        <div className="home-top-zone w-full shrink-0 flex items-center justify-end gap-2">
+        <div className="home-top-zone w-full shrink-0 flex items-center justify-between gap-2">
+          <span className="command-kicker">Career command / Binh nghiệp</span>
           {/* Chapter Badge Tag & Link */}
           <button
             type="button"
@@ -93,7 +94,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               soundManager.playClick();
               onNavigateToJourney?.();
             }}
-            className="theme-badge theme-focus flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-xs font-semibold transition-all hover:scale-105 active:scale-95 shadow-md focus:outline-none"
+            className="status-tag theme-badge theme-focus flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-xs font-semibold transition-all active:scale-[0.98] shadow-md focus:outline-none"
             title="Mở bản đồ hành trình"
           >
             <Compass className={`w-3.5 h-3.5 ${state.settings.reducedMotion ? "" : "animate-spin-slow"}`} />
@@ -109,21 +110,17 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             {/* Background Ambient Radial Glow Rays when leveling up */}
             {isLevelingUp && (
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
-                <div className="w-64 h-64 rounded-full bg-amber-400/20 blur-2xl animate-level-up-aura" />
-                <div className="absolute w-48 h-48 rounded-full bg-yellow-300/30 blur-xl animate-pulse" />
-                <Sparkles className="absolute -top-4 -left-2 w-6 h-6 text-amber-300 animate-sparkle" />
-                <Sparkles className="absolute -top-2 -right-2 w-5 h-5 text-yellow-200 animate-sparkle" />
-                <Star className="absolute bottom-6 left-2 w-5 h-5 text-amber-400 fill-amber-400 animate-bounce" />
-                <Star className="absolute bottom-8 right-2 w-4 h-4 text-yellow-300 fill-yellow-300 animate-pulse" />
+                <div className="w-64 h-64 rounded-full bg-amber-400/15 blur-2xl animate-level-up-aura" />
+                <div className="absolute inset-x-6 top-1/2 h-px bg-amber-300/70 animate-level-up-banner" />
+                <Sparkles className="absolute -top-3 left-1/2 -translate-x-1/2 w-5 h-5 text-amber-300 animate-sparkle" />
               </div>
             )}
 
             {/* Level Up Banner Tag */}
             {isLevelingUp && (
-              <div className="z-20 mb-1 px-4 py-1 rounded-full bg-gradient-to-r from-amber-500 via-yellow-300 to-amber-500 text-slate-950 font-black text-xs uppercase tracking-wider shadow-lg shadow-amber-500/40 animate-level-up-banner flex items-center gap-1.5 border border-amber-200">
-                <Sparkles className="w-4 h-4 text-slate-950 animate-spin" />
+              <div className="status-tag z-20 mb-1 px-4 py-1 bg-amber-400 text-slate-950 font-black text-xs uppercase tracking-wider animate-level-up-banner flex items-center gap-1.5 border border-amber-200">
+                <Sparkles className="w-4 h-4 text-slate-950" />
                 <span>Thăng Cấp Thành Công!</span>
-                <Sparkles className="w-4 h-4 text-slate-950 animate-spin" />
               </div>
             )}
 
@@ -142,7 +139,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                   setSelectedRankIndexForDetail(currentRank.rankIndex);
                 }
               }}
-              className={`theme-focus w-full flex flex-col items-center justify-center cursor-pointer group hover:scale-[1.03] active:scale-95 transition-all focus:outline-none rounded-3xl relative z-10 ${
+              className={`home-rank-hero theme-focus w-full flex flex-col items-center justify-center cursor-pointer group hover:scale-[1.01] active:scale-[0.98] transition-all focus:outline-none rounded-3xl relative z-10 ${
                 isLevelingUp ? "animate-level-up-pop" : ""
               }`}
               aria-label="Xem chi tiết và mô tả cấp bậc"
@@ -172,7 +169,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
 
             {/* Current Position / Role Block (Hidden when XP is full to give clear focus to Promotion CTA) */}
             {!xpDetails.isFull && (
-              <div className="theme-card-accent w-full max-w-sm mx-auto mt-2.5 px-3.5 py-2 rounded-2xl bg-slate-900/70 border backdrop-blur-xs text-center transition-all animate-fadeIn">
+              <div className="home-personnel-plate theme-card-accent w-full max-w-sm mx-auto mt-2.5 px-3.5 py-2 rounded-2xl bg-slate-900/70 border backdrop-blur-xs text-center transition-all animate-fadeIn">
                 <div className="flex flex-col items-center justify-center gap-1">
                   <div className="theme-badge inline-block px-3 py-1 rounded-xl border font-extrabold text-sm sm:text-base tracking-wide shadow-inner">
                     {roleInfo.primaryTitle}
@@ -273,7 +270,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           {xpDetails.isMaxRank ? (
             xpDetails.isFull ? (
               <div className="w-full pt-1">
-                <div className="w-full py-4 px-6 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-300 font-bold text-center flex items-center justify-center gap-2 shadow-lg">
+                <div className="command-panel w-full py-4 px-6 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-300 font-bold text-center flex items-center justify-center gap-2 shadow-lg">
                   <Award className="w-5 h-5 text-amber-400" />
                   <span>Đã Hoàn Tất Toàn Bộ Hành Trình</span>
                 </div>
@@ -287,9 +284,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                   soundManager.playClick();
                   onStartChallenge();
                 }}
-                className={`theme-button-primary theme-focus w-full py-4 px-6 rounded-2xl font-black text-base uppercase tracking-wider shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer focus:outline-none ${
-                  state.settings.reducedMotion ? "" : "animate-pulse"
-                }`}
+                className="promotion-command-button theme-button-primary theme-focus w-full py-4 px-6 rounded-2xl font-black text-base uppercase tracking-wider shadow-xl active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer focus:outline-none"
               >
                 <Award className="w-5 h-5" />
                 <span>Sát Hạch Thăng Cấp</span>

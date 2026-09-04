@@ -506,20 +506,19 @@ export const TrainingScreen: React.FC<TrainingScreenProps> = ({
   };
 
   return (
-    <div className="w-full max-w-lg mx-auto pb-24 pt-4 px-4 flex flex-col gap-5 animate-fadeIn">
+    <div className="command-screen training-command-screen w-full max-w-lg mx-auto pb-24 pt-4 px-4 flex flex-col gap-5 animate-fadeIn">
       {/* Top Header */}
-      <div className="flex items-center justify-between border-b border-slate-800/80 pb-3">
-        <div className="flex items-center gap-3">
-          <div className="theme-badge w-10 h-10 rounded-2xl border flex items-center justify-center shadow-md">
-            <Target className="w-5 h-5" />
-          </div>
-          <div>
-            <h1 className="font-extrabold text-lg text-slate-100 leading-snug">Khu Huấn Luyện</h1>
-            <p className="text-xs text-slate-400">Thưởng XP hằng ngày & luyện tập</p>
-          </div>
+      <div className="command-header">
+        <div className="command-header__icon">
+          <Target />
+        </div>
+        <div className="command-header__copy">
+          <span className="command-header__code">TRAINING COMMAND / TR-00</span>
+          <h1 className="command-header__title">Trung Tâm Huấn Luyện</h1>
+          <p className="command-header__subtitle">Mệnh lệnh ngày · XP thưởng · Rèn luyện chuyên môn</p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="command-header__action flex items-center gap-2">
           {selectedGameId === "shooting_range" && (
             <button
               type="button"
@@ -618,16 +617,17 @@ export const TrainingScreen: React.FC<TrainingScreenProps> = ({
       {/* Mini-Game Catalog Selector */}
       <div className="flex flex-col gap-2">
         <div className="flex items-center justify-between text-xs font-bold text-slate-300 px-1">
-          <span>Danh Mục Mini-Game</span>
-          <span className="text-[11px] text-slate-400">6 Môn</span>
+          <span className="technical-label">Training programs</span>
+          <span className="status-tag text-[11px] text-slate-400">6 Môn</span>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
+        <div className="training-program-grid grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
           {/* Game 1: Nhịp Hành Quân */}
           <button
             type="button"
             onClick={() => handleSelectGame("march_rhythm")}
-            className={`theme-focus p-2.5 rounded-2xl border transition-all flex flex-col items-start gap-1 text-left focus:outline-none ${
+            data-training-code="TR-01"
+            className={`training-program-card theme-focus p-2.5 rounded-2xl border transition-all flex flex-col items-start gap-1 text-left focus:outline-none ${
               selectedGameId === "march_rhythm"
                 ? "theme-selected-card bg-slate-900"
                 : "bg-slate-950/80 border-slate-800 hover:border-slate-700 opacity-80 hover:opacity-100"
@@ -656,7 +656,8 @@ export const TrainingScreen: React.FC<TrainingScreenProps> = ({
           <button
             type="button"
             onClick={() => handleSelectGame("signal_command")}
-            className={`theme-focus p-2.5 rounded-2xl border transition-all flex flex-col items-start gap-1 text-left focus:outline-none ${
+            data-training-code="TR-02"
+            className={`training-program-card theme-focus p-2.5 rounded-2xl border transition-all flex flex-col items-start gap-1 text-left focus:outline-none ${
               selectedGameId === "signal_command"
                 ? "theme-selected-card bg-slate-900"
                 : "bg-slate-950/80 border-slate-800 hover:border-slate-700 opacity-80 hover:opacity-100"
@@ -685,7 +686,8 @@ export const TrainingScreen: React.FC<TrainingScreenProps> = ({
           <button
             type="button"
             onClick={() => handleSelectGame("formation_assembly")}
-            className={`theme-focus p-2.5 rounded-2xl border transition-all flex flex-col items-start gap-1 text-left focus:outline-none ${
+            data-training-code="TR-03"
+            className={`training-program-card theme-focus p-2.5 rounded-2xl border transition-all flex flex-col items-start gap-1 text-left focus:outline-none ${
               selectedGameId === "formation_assembly"
                 ? "theme-selected-card bg-slate-900"
                 : "bg-slate-950/80 border-slate-800 hover:border-slate-700 opacity-80 hover:opacity-100"
@@ -714,7 +716,8 @@ export const TrainingScreen: React.FC<TrainingScreenProps> = ({
           <button
             type="button"
             onClick={() => handleSelectGame("radar_tracking")}
-            className={`theme-focus p-2.5 rounded-2xl border transition-all flex flex-col items-start gap-1 text-left focus:outline-none ${
+            data-training-code="TR-04"
+            className={`training-program-card theme-focus p-2.5 rounded-2xl border transition-all flex flex-col items-start gap-1 text-left focus:outline-none ${
               selectedGameId === "radar_tracking"
                 ? "theme-selected-card bg-slate-900"
                 : "bg-slate-950/80 border-slate-800 hover:border-slate-700 opacity-80 hover:opacity-100"
@@ -743,7 +746,8 @@ export const TrainingScreen: React.FC<TrainingScreenProps> = ({
           <button
             type="button"
             onClick={() => handleSelectGame("gomoku_infinite")}
-            className={`theme-focus p-2.5 rounded-2xl border transition-all flex flex-col items-start gap-1 text-left focus:outline-none ${
+            data-training-code="TR-05"
+            className={`training-program-card theme-focus p-2.5 rounded-2xl border transition-all flex flex-col items-start gap-1 text-left focus:outline-none ${
               selectedGameId === "gomoku_infinite"
                 ? "theme-selected-card bg-slate-900"
                 : "bg-slate-950/80 border-slate-800 hover:border-slate-700 opacity-80 hover:opacity-100"
@@ -772,7 +776,8 @@ export const TrainingScreen: React.FC<TrainingScreenProps> = ({
           <button
             type="button"
             onClick={() => handleSelectGame("shooting_range")}
-            className={`theme-focus p-2.5 rounded-2xl border transition-all flex flex-col items-start gap-1 text-left cursor-pointer focus:outline-none ${
+            data-training-code="TR-06"
+            className={`training-program-card theme-focus p-2.5 rounded-2xl border transition-all flex flex-col items-start gap-1 text-left cursor-pointer focus:outline-none ${
               selectedGameId === "shooting_range"
                 ? "theme-selected-card bg-slate-900"
                 : "bg-slate-950/80 border-slate-800 hover:border-slate-700 opacity-80 hover:opacity-100"
@@ -802,7 +807,7 @@ export const TrainingScreen: React.FC<TrainingScreenProps> = ({
       {/* Game Card for Selected Game or Selection Prompt */}
       <div ref={gameDetailRef} className="scroll-mt-4 pt-1">
         {selectedGameId === null ? (
-          <div className="bg-slate-900/60 border border-slate-800/80 rounded-3xl p-6 text-center flex flex-col items-center gap-3">
+          <div className="command-panel bg-slate-900/60 border border-slate-800/80 rounded-3xl p-6 text-center flex flex-col items-center gap-3">
             <div className="theme-badge w-12 h-12 rounded-2xl border flex items-center justify-center">
               <Target className="w-6 h-6" />
             </div>

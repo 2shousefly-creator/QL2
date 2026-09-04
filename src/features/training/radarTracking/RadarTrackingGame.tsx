@@ -313,7 +313,7 @@ export const RadarTrackingGame: React.FC<Props> = ({
       ctx.fillStyle = "rgba(2, 6, 23, 0.85)";
       ctx.fillRect(0, 0, width, height);
       ctx.fillStyle = "#94a3b8";
-      ctx.font = "bold 14px sans-serif";
+      ctx.font = "800 14px Nunito, sans-serif";
       ctx.textAlign = "center";
       ctx.fillText("TẠM DỪNG HOẠT ĐỘNG RADAR", centerX, centerY);
     }

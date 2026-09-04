@@ -7,6 +7,7 @@ import { RankTierProgress } from "../../components/RankTierProgress";
 import { RankDetailSheet } from "../../components/RankDetailSheet";
 import { soundManager } from "../../game/audio";
 import { GameState, RankStep } from "../../game/types";
+import { CommandHeader } from "../../components/military/MilitaryUI";
 
 type RanksScreenProps = {
   state: GameState;
@@ -27,18 +28,19 @@ export const RanksScreen: React.FC<RanksScreenProps> = ({ state, onDetailSheetTo
   };
 
   return (
-    <div className="w-full max-w-lg mx-auto p-4 select-none pb-24 space-y-4">
+    <div className="command-screen rank-archive-screen w-full max-w-lg mx-auto p-4 select-none pb-24 space-y-4">
       {/* Header Progress Banner */}
-      <div className="theme-card-accent bg-slate-900 border p-4 rounded-2xl flex items-center justify-between shadow-lg">
-        <div>
-          <h2 className="font-bold text-slate-100 text-base">Hệ Thống Cấp Bậc</h2>
-          <p className="text-xs text-slate-400">{RANK_FAMILIES.length} Nhóm Quân Hàm · {RANK_STEPS.length} Cấp Bậc</p>
-        </div>
-        <div className="theme-badge flex items-center gap-1.5 px-3 py-1.5 rounded-full border font-bold text-xs">
-          <Award className="w-4 h-4" />
-          <span>{currentRankIndex + 1} / {RANK_STEPS.length} Cấp</span>
-        </div>
-      </div>
+      <CommandHeader
+        code="INSIGNIA ARCHIVE / RANK SYSTEM"
+        title="Thư Viện Cấp Bậc"
+        subtitle={`${RANK_FAMILIES.length} nhóm quân hàm · ${RANK_STEPS.length} cấp bậc`}
+        icon={<Award />}
+        action={(
+          <span className="status-tag">
+            {currentRankIndex + 1} / {RANK_STEPS.length}
+          </span>
+        )}
+      />
 
       {/* Accordion Grouped by RankFamilies */}
       <div className="space-y-3">
@@ -51,7 +53,7 @@ export const RanksScreen: React.FC<RanksScreenProps> = ({ state, onDetailSheetTo
           return (
             <div
               key={family.id}
-              className={`rounded-2xl border transition-all overflow-hidden ${
+              className={`rank-archive-card tactical-card rounded-2xl border transition-all overflow-hidden ${
                 containsCurrent
                   ? "theme-selected-card bg-slate-900/90"
                   : "bg-slate-900/60 border-slate-800/80"

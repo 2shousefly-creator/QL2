@@ -3,6 +3,7 @@ import { Target, Activity, BrainCircuit, Grid3X3, Eye, Swords, ChevronLeft, Awar
 import { GameState, TrainingGameId, MinigameMasteryState } from "../../game/types";
 import { MASTERY_CONFIGS, getMasteryTitleForMinigame } from "../../game/mastery/masteryConfig";
 import { soundManager } from "../../game/audio";
+import { CommandHeader } from "../../components/military/MilitaryUI";
 
 type MasteryScreenProps = {
   state: GameState;
@@ -36,42 +37,27 @@ export const MasteryScreen: React.FC<MasteryScreenProps> = ({ state, onBack }) =
   ];
 
   return (
-    <div className="w-full max-w-lg mx-auto p-4 select-none pb-28 space-y-4">
+    <div className="command-screen mastery-command-screen w-full max-w-lg mx-auto p-4 select-none pb-28 space-y-4">
       {/* Header Banner */}
-      <div className="relative rounded-2xl bg-gradient-to-r from-indigo-950/80 via-slate-900 to-slate-950 border border-indigo-500/40 p-4 shadow-xl overflow-hidden flex items-center justify-between">
-        <div className="flex items-center gap-3 relative z-10">
-          {onBack && (
+      <CommandHeader
+        code="TRAINING QUALIFICATION / MASTERY"
+        title="Hồ Sơ Tinh Thông"
+        subtitle={`Đã tinh thông ${masterVCount} / 6 môn · Cấp tối đa Mastery V`}
+        icon={<Crown />}
+        action={onBack ? (
             <button
               type="button"
               onClick={() => {
                 soundManager.playClick();
                 onBack();
               }}
-              className="p-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-200 transition-colors"
+              className="military-button military-button--icon theme-focus focus:outline-none"
+              aria-label="Quay lại Hồ Sơ"
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
-          )}
-
-          <div className="w-11 h-11 rounded-xl bg-indigo-500/20 border border-indigo-400/50 flex items-center justify-center text-indigo-300 shadow-[0_0_15px_rgba(99,102,241,0.3)]">
-            <Crown className="w-6 h-6" />
-          </div>
-
-          <div>
-            <h2 className="text-base sm:text-lg font-black text-slate-100 flex items-center gap-1.5">
-              Mastery Huấn Luyện
-            </h2>
-            <p className="text-xs text-indigo-300 font-bold">
-              Đã tinh thông: <span className="text-amber-300 font-black">{masterVCount}</span> / 6 Môn
-            </p>
-          </div>
-        </div>
-
-        <div className="text-right relative z-10">
-          <div className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">Cấp tối đa</div>
-          <div className="text-xs font-black text-amber-400">Mastery V</div>
-        </div>
-      </div>
+          ) : undefined}
+      />
 
       {/* Cards List for 6 Minigames */}
       <div className="space-y-3.5">
@@ -96,7 +82,7 @@ export const MasteryScreen: React.FC<MasteryScreenProps> = ({ state, onBack }) =
           return (
             <div
               key={gameId}
-              className={`relative rounded-2xl border p-4 transition-all bg-gradient-to-br ${
+              className={`tactical-card mastery-qualification-card relative rounded-2xl border p-4 transition-all bg-gradient-to-br ${
                 isMax
                   ? "from-amber-950/40 via-slate-900 to-slate-950 border-amber-500/50 shadow-xl"
                   : level > 0

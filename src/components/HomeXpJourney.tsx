@@ -119,7 +119,7 @@ export const HomeXpJourney: React.FC<HomeXpJourneyProps> = ({
         <div className="flex items-center justify-center w-full min-w-0">
           {/* XP Track Container - Increased thickness by 25% (h-[45px] sm:h-[52px]) */}
           <div
-            className={`relative w-full h-[45px] sm:h-[52px] rounded-none bg-slate-950 border ${
+            className={`home-xp-command-track relative w-full h-[45px] sm:h-[52px] rounded-none bg-slate-950 border ${
               isFull
                 ? "border-amber-400 ring-2 ring-amber-400/50 shadow-[0_0_20px_rgba(250,204,21,0.5)]"
                 : hasEnergyBoost

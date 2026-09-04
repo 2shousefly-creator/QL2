@@ -56,7 +56,7 @@ export const TankBattleResult: React.FC<TankBattleResultProps> = ({
   const accent = summary.victory ? "emerald" : "red";
 
   return (
-    <div className="mx-auto w-full max-w-lg space-y-3 px-3 pb-6 pt-3" data-tank-battle-phase="result">
+    <div className="command-screen battle-result-screen mx-auto w-full max-w-lg space-y-3 px-3 pb-6 pt-3" data-tank-battle-phase="result">
       <section className={`relative overflow-hidden rounded-3xl border p-5 text-center shadow-2xl ${summary.victory ? "border-emerald-400/35 bg-gradient-to-br from-emerald-950/80 via-slate-900 to-slate-950" : "border-red-400/30 bg-gradient-to-br from-red-950/70 via-slate-900 to-slate-950"}`}>
         <div className={`absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-transparent ${summary.victory ? "via-emerald-300" : "via-red-300"} to-transparent`} />
         <Trophy className={`mx-auto h-9 w-9 ${summary.victory ? "text-amber-300" : "text-slate-500"}`} />

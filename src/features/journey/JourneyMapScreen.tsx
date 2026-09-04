@@ -5,6 +5,7 @@ import { buildJourneyMapViewModel } from "../../game/journeySelectors";
 import { RankBadge } from "../../components/RankBadge";
 import { RankTierProgress } from "../../components/RankTierProgress";
 import { JourneyDutySheet } from "../../components/JourneyDutySheet";
+import { CommandHeader } from "../../components/military/MilitaryUI";
 import { soundManager } from "../../game/audio";
 
 type JourneyMapScreenProps = {
@@ -51,39 +52,32 @@ export const JourneyMapScreen: React.FC<JourneyMapScreenProps> = ({
   };
 
   return (
-    <div className="w-full max-w-lg mx-auto pb-24 px-4 pt-4 text-slate-100 animate-fadeIn">
+    <div className="command-screen journey-command-screen w-full max-w-lg mx-auto pb-24 px-4 pt-4 text-slate-100 animate-fadeIn">
       {/* Header Banner */}
-      <div className="theme-card-accent bg-slate-900/90 border rounded-2xl p-4 mb-6 shadow-xl backdrop-blur-md flex items-center justify-between gap-3">
-        <div className="flex items-center gap-3">
-          <div className="theme-badge p-2.5 border rounded-xl">
-            <Compass className={`w-6 h-6 ${gameState.settings.reducedMotion ? "" : "animate-spin-slow"}`} />
-          </div>
-          <div>
-            <h1 className="theme-text-accent text-lg font-bold leading-tight">
-              Bản Đồ Hành Trình
-            </h1>
-            <p className="text-xs text-slate-400 mt-0.5">
-              Vị trí hiện tại: <span className="text-slate-200 font-semibold">{vm.currentRankName}</span>
-            </p>
-          </div>
-        </div>
-
-        <button
-          type="button"
-          onClick={() => {
-            soundManager.playClick();
-            setShowEtaInfoModal(true);
-          }}
-          className="theme-focus p-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 rounded-xl text-xs flex items-center gap-1 transition-colors focus:outline-none"
-          title="Giải thích cách tính ETA"
-        >
-          <Info className="theme-icon-accent w-4 h-4" />
-          <span className="hidden sm:inline">Tính ETA</span>
-        </button>
-      </div>
+      <CommandHeader
+        className="mb-6"
+        code="OPS / CAREER MAP"
+        title="Bản Đồ Binh Nghiệp"
+        subtitle={<>Vị trí hiện tại: <strong className="text-slate-200">{vm.currentRankName}</strong></>}
+        icon={<Compass />}
+        action={(
+          <button
+            type="button"
+            onClick={() => {
+              soundManager.playClick();
+              setShowEtaInfoModal(true);
+            }}
+            className="military-button military-button--icon theme-focus focus:outline-none"
+            title="Giải thích cách tính ETA"
+            aria-label="Giải thích cách tính ETA"
+          >
+            <Info className="w-4 h-4" />
+          </button>
+        )}
+      />
 
       {/* Chapters Vertical Roadmap */}
-      <div className="relative space-y-6">
+      <div className="journey-route relative space-y-6">
         {/* Connecting Vertical Spine Line */}
         <div className="theme-journey-spine absolute left-6 sm:left-8 top-8 bottom-8 w-0.5 -z-0" />
 
@@ -95,7 +89,7 @@ export const JourneyMapScreen: React.FC<JourneyMapScreenProps> = ({
             <div
               key={chapter.id}
               ref={isCurrent ? currentChapterRef : null}
-              className={`relative pl-12 sm:pl-16 transition-all duration-200 ${
+              className={`journey-sector relative pl-12 sm:pl-16 transition-all duration-200 ${
                 isCurrent ? "scale-[1.01]" : ""
               }`}
             >
@@ -120,7 +114,7 @@ export const JourneyMapScreen: React.FC<JourneyMapScreenProps> = ({
 
               {/* Chapter Card */}
               <div
-                className={`rounded-2xl p-4 sm:p-5 border transition-all ${
+                className={`journey-sector__panel tactical-card rounded-2xl p-4 sm:p-5 border transition-all ${
                   isCurrent
                     ? "theme-selected-card bg-gradient-to-b from-slate-900 via-slate-900/95 to-slate-950 shadow-2xl"
                     : isCompleted
@@ -144,17 +138,17 @@ export const JourneyMapScreen: React.FC<JourneyMapScreenProps> = ({
                   {/* Status Pill */}
                   <div>
                     {isCurrent && (
-                      <span className={`theme-badge inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-0.5 rounded-full border ${gameState.settings.reducedMotion ? "" : "animate-pulse"}`}>
+                      <span className={`status-tag theme-badge inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-0.5 rounded-full border ${gameState.settings.reducedMotion ? "" : "animate-pulse"}`}>
                         <MapPin className="w-3 h-3" /> Vị trí hiện tại
                       </span>
                     )}
                     {isCompleted && (
-                      <span className="inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                      <span className="status-tag inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
                         Đã hoàn thành
                       </span>
                     )}
                     {!isCurrent && !isCompleted && (
-                      <span className="text-[11px] text-slate-400 px-2 py-0.5 rounded-full bg-slate-800/60">
+                      <span className="status-tag text-[11px] text-slate-400 px-2 py-0.5 rounded-full bg-slate-800/60">
                         Sắp tới
                       </span>
                     )}
@@ -211,7 +205,7 @@ export const JourneyMapScreen: React.FC<JourneyMapScreenProps> = ({
                         key={node.family.id}
                         type="button"
                         onClick={() => handleSelectFamilyNode(node.family)}
-                        className={`flex flex-col items-center justify-center p-2.5 rounded-xl border transition-all text-center relative group ${
+                        className={`tactical-card flex flex-col items-center justify-center p-2.5 rounded-xl border transition-all text-center relative group ${
                           node.isCurrent
                             ? "theme-selected-card shadow-lg scale-102"
                             : node.isCompleted
@@ -278,7 +272,7 @@ export const JourneyMapScreen: React.FC<JourneyMapScreenProps> = ({
       {/* ETA Info Explanation Modal */}
       {showEtaInfoModal && (
         <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="w-full max-w-md bg-slate-900 border border-slate-700 rounded-2xl p-5 shadow-2xl text-slate-100 space-y-4 animate-fadeIn">
+          <div className="military-modal w-full max-w-md bg-slate-900 border border-slate-700 rounded-2xl p-5 shadow-2xl text-slate-100 space-y-4 animate-fadeIn">
             <div className="flex items-center justify-between border-b border-slate-800 pb-3">
               <h3 className="theme-text-accent font-bold text-base flex items-center gap-2">
                 <Info className="w-5 h-5" />

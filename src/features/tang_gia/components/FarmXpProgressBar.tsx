@@ -45,7 +45,7 @@ export const FarmXpProgressBar: React.FC<FarmXpProgressBarProps> = ({
   return (
     <section
       data-farm-player-xp="global"
-      className="rounded-2xl border border-amber-500/40 bg-slate-900/95 px-3 py-2 shadow-lg"
+      className="command-panel rounded-2xl border border-amber-500/40 bg-slate-900/95 px-3 py-2 shadow-lg"
       aria-label="Tiến độ XP người chơi"
     >
       <div className="flex items-center gap-2">
@@ -53,7 +53,7 @@ export const FarmXpProgressBar: React.FC<FarmXpProgressBarProps> = ({
           XP Người Chơi
         </span>
         <div
-          className="relative h-3 flex-1 overflow-hidden rounded-full border border-amber-300/40 bg-slate-950 shadow-inner"
+          className="xp-command-track relative h-3 flex-1 overflow-hidden rounded-full border border-amber-300/40 bg-slate-950 shadow-inner"
           role="progressbar"
           aria-valuemin={0}
           aria-valuemax={100}
@@ -68,7 +68,7 @@ export const FarmXpProgressBar: React.FC<FarmXpProgressBarProps> = ({
         </div>
         <span
           data-farm-xp-percent="one-decimal"
-          className={`w-12 shrink-0 text-right font-mono text-xs font-black ${
+          className={`data-readout w-12 shrink-0 text-right font-mono text-xs font-black ${
             isFull ? "text-yellow-200" : "text-amber-300"
           }`}
         >

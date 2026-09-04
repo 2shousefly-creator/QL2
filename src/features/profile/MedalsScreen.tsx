@@ -3,6 +3,7 @@ import { Award, CheckCircle2, Lock, Star, ChevronLeft, Sparkles, AlertCircle } f
 import { GameState } from "../../game/types";
 import { MEDAL_CATALOG, MedalCategory, MedalDefinition } from "../../game/medals/medalCatalog";
 import { soundManager } from "../../game/audio";
+import { CommandHeader } from "../../components/military/MilitaryUI";
 
 type MedalsScreenProps = {
   state: GameState;
@@ -82,52 +83,35 @@ export const MedalsScreen: React.FC<MedalsScreenProps> = ({ state, onUpdateState
   });
 
   return (
-    <div className="w-full max-w-lg mx-auto p-4 select-none pb-28 space-y-4">
+    <div className="command-screen medal-cabinet-screen w-full max-w-lg mx-auto p-4 select-none pb-28 space-y-4">
       {/* Toast Alert */}
       {toastMessage && (
-        <div className="fixed top-16 left-1/2 -translate-x-1/2 z-50 bg-amber-500 text-slate-950 font-extrabold px-4 py-2 rounded-xl shadow-2xl border border-amber-300 flex items-center gap-2 text-xs sm:text-sm animate-in fade-in slide-in-from-top-2">
+        <div className="command-toast fixed top-16 left-1/2 -translate-x-1/2 z-50 bg-amber-500 text-slate-950 font-extrabold px-4 py-2 rounded-xl shadow-2xl border border-amber-300 flex items-center gap-2 text-xs sm:text-sm animate-in fade-in slide-in-from-top-2">
           <AlertCircle className="w-4 h-4 shrink-0" />
           <span>{toastMessage}</span>
         </div>
       )}
 
       {/* Header Banner */}
-      <div className="relative rounded-2xl bg-gradient-to-r from-amber-950/80 via-slate-900 to-slate-950 border border-amber-500/40 p-4 shadow-xl overflow-hidden flex items-center justify-between">
-        <div className="flex items-center gap-3 relative z-10">
-          {onBack && (
+      <CommandHeader
+        code="MEDAL CABINET / SERVICE HONOURS"
+        title="Hồ Sơ Huân Chương"
+        subtitle={`Đã đạt ${totalUnlocked} / ${MEDAL_CATALOG.length} · Trưng bày ${selectedIds.length} / 6`}
+        icon={<Award />}
+        action={onBack ? (
             <button
               type="button"
               onClick={() => {
                 soundManager.playClick();
                 onBack();
               }}
-              className="p-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-200 transition-colors"
+              className="military-button military-button--icon theme-focus focus:outline-none"
+              aria-label="Quay lại Hồ Sơ"
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
-          )}
-
-          <div className="w-11 h-11 rounded-xl bg-amber-500/20 border border-amber-400/50 flex items-center justify-center text-amber-300 shadow-[0_0_15px_rgba(245,158,11,0.3)]">
-            <Award className="w-6 h-6" />
-          </div>
-
-          <div>
-            <h2 className="text-base sm:text-lg font-black text-slate-100 flex items-center gap-1.5">
-              Huân Chương
-            </h2>
-            <p className="text-xs text-amber-300 font-bold">
-              Đã đạt: <span className="text-amber-200">{totalUnlocked}</span> / {MEDAL_CATALOG.length} Huân Chương
-            </p>
-          </div>
-        </div>
-
-        <div className="text-right relative z-10">
-          <div className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">Trưng bày</div>
-          <div className="text-xs font-black text-amber-400">
-            {selectedIds.length} / 6 chọn
-          </div>
-        </div>
-      </div>
+          ) : undefined}
+      />
 
       {/* Category Tabs */}
       <div className="grid grid-cols-4 gap-1.5 p-1 bg-slate-900/90 rounded-xl border border-slate-800 text-xs">
@@ -166,7 +150,7 @@ export const MedalsScreen: React.FC<MedalsScreenProps> = ({ state, onUpdateState
           return (
             <div
               key={medal.id}
-              className={`relative rounded-2xl border p-3.5 transition-all duration-200 bg-gradient-to-br ${
+              className={`tactical-card medal-cabinet-item relative rounded-2xl border p-3.5 transition-all duration-200 bg-gradient-to-br ${
                 isUnlocked
                   ? medal.bgGradient + " " + medal.borderColor + " shadow-lg"
                   : "from-slate-900/60 to-slate-950/80 border-slate-800/80 opacity-75"
@@ -181,7 +165,7 @@ export const MedalsScreen: React.FC<MedalsScreenProps> = ({ state, onUpdateState
                       : "border-slate-800 bg-slate-950/90 grayscale"
                   }`}
                   style={{
-                    boxShadow: isUnlocked ? `0 0 15px ${medal.glowColor}` : undefined,
+                    boxShadow: isUnlocked ? `0 5px 12px -8px ${medal.glowColor}` : undefined,
                   }}
                 >
                   <span className="text-2xl sm:text-3xl select-none">{medal.iconSymbol}</span>

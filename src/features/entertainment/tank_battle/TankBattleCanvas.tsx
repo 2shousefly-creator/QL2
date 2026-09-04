@@ -228,7 +228,7 @@ function draw(ctx: CanvasRenderingContext2D, world: TankBattleV2World, reducedMo
     for (const text of world.floatingTexts) {
       ctx.globalAlpha = Math.min(1, text.lifeRemaining);
       ctx.fillStyle = text.color;
-      ctx.font = "900 11px sans-serif";
+      ctx.font = "900 11px Nunito, sans-serif";
       ctx.textAlign = "center";
       ctx.fillText(text.text, text.x, text.y);
     }

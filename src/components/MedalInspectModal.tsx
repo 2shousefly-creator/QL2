@@ -13,7 +13,7 @@ export const MedalInspectModal: React.FC<MedalInspectModalProps> = ({ medal, onC
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
       <div
-        className={`relative w-full max-w-xs rounded-3xl border p-5 text-center shadow-2xl bg-gradient-to-b ${medal.bgGradient} ${medal.borderColor}`}
+        className={`military-modal relative w-full max-w-xs rounded-3xl border p-5 text-center shadow-2xl bg-gradient-to-b ${medal.bgGradient} ${medal.borderColor}`}
         style={{ boxShadow: `0 0 25px ${medal.glowColor}` }}
       >
         <button

@@ -27,7 +27,7 @@ export const EarningStatus: React.FC<EarningStatusProps> = ({
 
   if (isFull) {
     return (
-      <div className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/20 border border-amber-400 text-amber-200 text-xs sm:text-sm font-bold shadow-md animate-pulse ${className}`}>
+      <div className={`status-tag inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/20 border border-amber-400 text-amber-200 text-xs sm:text-sm font-bold shadow-md animate-pulse ${className}`}>
         <span className="w-2.5 h-2.5 rounded-full bg-amber-400 shadow-[0_0_8px_#facc15]" />
         Đã dừng tích lũy · Sẵn sàng xét thăng cấp
       </div>

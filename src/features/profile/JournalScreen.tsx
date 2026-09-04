@@ -22,6 +22,7 @@ import { RankTierProgress } from "../../components/RankTierProgress";
 import { RANK_STEPS } from "../../game/rankBuilder";
 import { RANK_FAMILIES } from "../../game/rankFamilies";
 import { RANK_STEP_STORIES } from "../../game/rankStories";
+import { CommandHeader } from "../../components/military/MilitaryUI";
 
 type JournalScreenProps = {
   state: GameState;
@@ -166,19 +167,14 @@ export const JournalScreen: React.FC<JournalScreenProps> = ({ state }) => {
   };
 
   return (
-    <div className="w-full max-w-lg mx-auto p-4 select-none pb-28 space-y-4">
+    <div className="command-screen journal-command-screen w-full max-w-lg mx-auto p-4 select-none pb-28 space-y-4">
       {/* Title */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="theme-text-accent text-xl font-black tracking-wider flex items-center gap-2">
-            <ScrollText className="theme-icon-accent w-5 h-5" />
-            <span>NHẬT KÝ BINH NGHIỆP</span>
-          </h2>
-          <p className="text-xs text-slate-400">
-            Lưu giữ các dấu mốc & chiến công đáng nhớ
-          </p>
-        </div>
-      </div>
+      <CommandHeader
+        code="FIELD JOURNAL / SERVICE LOG"
+        title="Nhật Ký Binh Nghiệp"
+        subtitle="Báo cáo hiện trường · Dấu mốc · Chiến công"
+        icon={<ScrollText />}
+      />
 
       {/* Filter Category Chips */}
       <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
@@ -193,7 +189,7 @@ export const JournalScreen: React.FC<JournalScreenProps> = ({ state }) => {
                 soundManager.playClick();
                 setSelectedFilter(filter.id);
               }}
-              className={`theme-focus flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap active:scale-95 focus:outline-none ${
+              className={`journal-filter-control theme-focus flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap active:scale-[0.98] focus:outline-none ${
                 isActive
                   ? "theme-button-primary shadow-md"
                   : "bg-slate-900 border border-slate-800 text-slate-400 hover:text-slate-200"
@@ -325,7 +321,7 @@ const JournalEntryCard: React.FC<JournalEntryCardProps> = ({ item, isHistorical,
       {/* Event Card */}
       <div 
         onClick={() => onSelect(item)}
-        className="theme-hover-border p-3.5 rounded-xl bg-slate-900/90 border border-slate-800 shadow-md transition-all cursor-pointer active:scale-[0.99] hover:bg-slate-800/60"
+        className="journal-field-report theme-hover-border p-3.5 rounded-xl bg-slate-900/90 border border-slate-800 shadow-md transition-all cursor-pointer active:scale-[0.99] hover:bg-slate-800/60"
       >
         <div className="flex items-start justify-between gap-2">
           <div className="flex items-center gap-2.5">
@@ -412,7 +408,7 @@ const JournalDetailModal: React.FC<{
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 15 }}
           transition={{ duration: 0.25, ease: "easeOut" }}
-          className="theme-card-accent relative bg-slate-900 border rounded-3xl w-full max-w-lg overflow-hidden shadow-2xl flex flex-col max-h-[85vh] z-10"
+          className="military-modal theme-card-accent relative bg-slate-900 border rounded-3xl w-full max-w-lg overflow-hidden shadow-2xl flex flex-col max-h-[85vh] z-10"
         >
           {/* Header Graphic Background */}
           <div className={`h-24 bg-gradient-to-b ${catDetails.bgColor} relative shrink-0 border-b border-slate-800/60`}>
@@ -474,7 +470,7 @@ const JournalDetailModal: React.FC<{
             </div>
 
             {/* Event Description Card */}
-            <div className="p-4 rounded-2xl bg-slate-950/60 border border-slate-800/80">
+            <div className="journal-field-report p-4 rounded-2xl bg-slate-950/60 border border-slate-800/80">
               <p className="text-sm text-slate-300 leading-relaxed font-medium">
                 {event.description}
               </p>

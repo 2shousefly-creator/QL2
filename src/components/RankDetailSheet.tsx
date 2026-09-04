@@ -69,7 +69,7 @@ export const RankDetailSheet: React.FC<RankDetailSheetProps> = ({
         }
       }}
     >
-      <div className="theme-card-accent w-full max-w-lg bg-slate-900 border-t sm:border rounded-t-3xl sm:rounded-3xl p-4 sm:p-6 shadow-2xl text-slate-100 flex flex-col max-h-[85vh] sm:max-h-[85vh] overflow-hidden">
+      <div className="military-sheet theme-card-accent w-full max-w-lg bg-slate-900 border-t sm:border rounded-t-3xl sm:rounded-3xl p-4 sm:p-6 shadow-2xl text-slate-100 flex flex-col max-h-[85vh] sm:max-h-[85vh] overflow-hidden">
         {/* Header & Close */}
         <div className="theme-divider shrink-0 flex items-center justify-between border-b pb-3">
           <div className="flex items-center gap-2">

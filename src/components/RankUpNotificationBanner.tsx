@@ -20,7 +20,7 @@ export const RankUpNotificationBanner: React.FC<RankUpNotificationBannerProps> =
 
   return (
     <div className="fixed top-3 left-1/2 -translate-x-1/2 z-50 w-[92%] max-w-lg animate-in slide-in-from-top-6 duration-300 pointer-events-auto">
-      <div className="relative overflow-hidden rounded-2xl bg-slate-900/95 border-2 border-amber-400/80 shadow-[0_10px_30px_rgba(245,158,11,0.3)] backdrop-blur-xl p-3.5 sm:p-4 text-slate-100 flex items-center gap-3.5">
+      <div className="command-toast relative overflow-hidden rounded-2xl bg-slate-900/95 border-2 border-amber-400/80 shadow-[0_10px_30px_rgba(245,158,11,0.3)] backdrop-blur-xl p-3.5 sm:p-4 text-slate-100 flex items-center gap-3.5">
         {/* Glow ambient background effect */}
         <div className="absolute -left-10 -top-10 w-28 h-28 bg-amber-500/20 rounded-full blur-xl pointer-events-none" />
         <div className="absolute -right-10 -bottom-10 w-28 h-28 bg-emerald-500/20 rounded-full blur-xl pointer-events-none" />

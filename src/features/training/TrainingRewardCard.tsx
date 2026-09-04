@@ -46,9 +46,8 @@ export const TrainingRewardCard: React.FC<TrainingRewardCardProps> = ({ gameStat
   }
 
   return (
-    <div className="w-full bg-slate-900/90 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-xl relative overflow-hidden">
-      {/* Background Glow */}
-      <div className="absolute -top-12 -right-12 w-32 h-32 bg-amber-500/10 rounded-full blur-2xl pointer-events-none" />
+    <div className="command-panel w-full bg-slate-900/90 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-xl relative overflow-hidden">
+      <span className="command-kicker mb-2">Daily training order / Lệnh huấn luyện ngày</span>
 
       {/* State A: Claimed Today */}
       {isClaimedToday ? (
