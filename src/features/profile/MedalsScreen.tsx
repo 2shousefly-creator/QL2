@@ -94,8 +94,7 @@ export const MedalsScreen: React.FC<MedalsScreenProps> = ({ state, onUpdateState
 
       {/* Header Banner */}
       <CommandHeader
-        code="MEDAL CABINET / SERVICE HONOURS"
-        title="Hồ Sơ Huân Chương"
+        title="Huân Chương"
         subtitle={`Đã đạt ${totalUnlocked} / ${MEDAL_CATALOG.length} · Trưng bày ${selectedIds.length} / 6`}
         icon={<Award />}
         action={onBack ? (
@@ -222,9 +221,9 @@ export const MedalsScreen: React.FC<MedalsScreenProps> = ({ state, onUpdateState
                           {current.toLocaleString("vi-VN")} / {target.toLocaleString("vi-VN")}
                         </span>
                       </div>
-                      <div className="w-full h-1.5 rounded-full bg-slate-950 border border-slate-800 overflow-hidden">
+                      <div className="continuous-progress-track w-full h-1.5 rounded-full bg-slate-950 border border-slate-800 overflow-hidden">
                         <div
-                          className="h-full bg-gradient-to-r from-amber-500 to-yellow-400 transition-all duration-300"
+                          className="continuous-progress-fill h-full bg-gradient-to-r from-amber-500 to-yellow-400 transition-[width] duration-300 ease-out"
                           style={{ width: `${percent}%` }}
                         />
                       </div>

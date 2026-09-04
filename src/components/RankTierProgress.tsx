@@ -57,7 +57,7 @@ export const RankTierProgress: React.FC<RankTierProgressProps> = ({
           viewBox={`0 0 ${tierCount * 100} 100`}
           style={{ overflow: "visible" }}
         >
-          {/* Segment Blocks */}
+          {/* Discrete markers represent rank tiers rather than XP fill segments. */}
           {segments.map((tierNum, idx) => {
             const isLit = tierNum <= currentTier;
             const isNewlyLit = isLit && tierNum === currentTier && animateNewTier;

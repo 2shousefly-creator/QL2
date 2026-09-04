@@ -19,7 +19,6 @@ import {
 import { motion, AnimatePresence } from "motion/react";
 import { TabType, GameState } from "../game/types";
 import { soundManager } from "../game/audio";
-import { MEDAL_CATALOG } from "../game/medals/medalCatalog";
 import { getFarmAttentionState } from "../features/tang_gia/farmPresentation";
 
 type HubNavigationProps = {
@@ -126,7 +125,6 @@ export const HubNavigation: React.FC<HubNavigationProps> = ({
       title: "Thẻ Binh Nghiệp",
       fullName: "Thẻ Binh Nghiệp",
       subtitle: "Hồ sơ thành tích & huy hiệu",
-      badge: "Hồ sơ",
       icon: Contact,
     },
     {
@@ -134,7 +132,6 @@ export const HubNavigation: React.FC<HubNavigationProps> = ({
       title: "Nhật Ký",
       fullName: "Nhật Ký Binh Nghiệp",
       subtitle: "Lịch sử dấu mốc đáng nhớ",
-      badge: "Nhật ký",
       icon: ScrollText,
     },
     {
@@ -142,7 +139,6 @@ export const HubNavigation: React.FC<HubNavigationProps> = ({
       title: "Hành Trình",
       fullName: "Hành Trình Binh Nghiệp",
       subtitle: "216 Cấp bậc & 8 chương",
-      badge: "216 Bậc",
       icon: Compass,
     },
     {
@@ -150,7 +146,6 @@ export const HubNavigation: React.FC<HubNavigationProps> = ({
       title: "Cấp Bậc",
       fullName: "Thư Viện Cấp Bậc",
       subtitle: "Tra cứu hình dáng & nhiệm vụ",
-      badge: "Tra cứu",
       icon: Shield,
     },
     {
@@ -158,7 +153,6 @@ export const HubNavigation: React.FC<HubNavigationProps> = ({
       title: "Quân Phục",
       fullName: "Quân Phục Binh Nghiệp",
       subtitle: "Lễ phục theo quân hàm đã đạt",
-      badge: "24 Quân hàm",
       icon: Shirt,
     },
     {
@@ -166,7 +160,6 @@ export const HubNavigation: React.FC<HubNavigationProps> = ({
       title: "Huân Chương",
       fullName: "Huân Chương Binh Nghiệp",
       subtitle: "Những dấu mốc đáng nhớ",
-      badge: `${MEDAL_CATALOG.length} Huân chương`,
       icon: Award,
     },
     {
@@ -174,7 +167,6 @@ export const HubNavigation: React.FC<HubNavigationProps> = ({
       title: "Mastery",
       fullName: "Mastery Huấn Luyện",
       subtitle: "Tiến trình tinh thông Huấn Luyện",
-      badge: "6 Môn",
       icon: Crown,
     },
     {
@@ -182,7 +174,6 @@ export const HubNavigation: React.FC<HubNavigationProps> = ({
       title: "Cá Nhân",
       fullName: "Cá Nhân & Cài Đặt",
       subtitle: "Avatar, sao lưu & âm thanh",
-      badge: "Hồ sơ chính",
       icon: UserCheck,
     },
   ];
@@ -265,7 +256,7 @@ export const HubNavigation: React.FC<HubNavigationProps> = ({
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: "100%", opacity: 0 }}
               transition={reducedMotion ? { duration: 0 } : { duration: 0.24, ease: "easeOut" }}
-              className="theme-card-accent military-sheet profile-dossier-sheet fixed bottom-0 inset-x-0 z-50 max-w-lg mx-auto bg-slate-900 border-t rounded-t-3xl p-3.5 sm:p-5 pb-8 shadow-2xl max-h-[88vh] overflow-y-auto space-y-3 select-none"
+              className="theme-card-accent military-sheet profile-dossier-sheet fixed bottom-0 inset-x-0 z-50 max-w-lg mx-auto bg-slate-900 border-t rounded-t-3xl p-3 sm:p-4 pb-7 shadow-2xl max-h-[88vh] overflow-y-auto space-y-2.5 select-none"
             >
               {/* Header */}
               <div className="theme-divider flex items-center justify-between pb-2 border-b">
@@ -274,12 +265,11 @@ export const HubNavigation: React.FC<HubNavigationProps> = ({
                     <User className="w-4 h-4" />
                   </div>
                   <div>
-                    <span className="command-kicker">Personnel dossier / Hồ sơ quân vụ</span>
                     <h3 className="text-sm font-extrabold text-slate-100 flex items-center gap-1.5">
-                      Danh Mục Hồ Sơ Binh Nghiệp
+                      Hồ Sơ Quân Vụ
                     </h3>
                     <p className="text-[11px] text-slate-400">
-                      Chọn mục bạn muốn xem và quản lý:
+                      Chọn nội dung cần xem hoặc quản lý
                     </p>
                   </div>
                 </div>
@@ -309,7 +299,7 @@ export const HubNavigation: React.FC<HubNavigationProps> = ({
                       className={`relative flex ${
                         isSpanningFullWidth
                           ? "col-span-2 flex-row items-center justify-start gap-3 p-3 text-left"
-                          : "flex-col items-center justify-center p-3 text-center"
+                          : "flex-col items-center justify-center p-2.5 text-center"
                       } tactical-card profile-dossier-card theme-menu-card theme-focus rounded-2xl border transition-all duration-200 group focus:outline-none ${
                         isCurrentActive
                           ? "theme-menu-card--active shadow-xl scale-[1.02]"
@@ -322,10 +312,6 @@ export const HubNavigation: React.FC<HubNavigationProps> = ({
                           <span className={`theme-active-dot w-2 h-2 rounded-full ${reducedMotion ? "" : "animate-pulse"}`} />
                         </div>
                       )}
-
-                      <span className="profile-dossier-card__code">
-                        DOSSIER {String(index + 1).padStart(2, "0")}
-                      </span>
 
                       {/* Icon Container */}
                       <div
@@ -344,9 +330,6 @@ export const HubNavigation: React.FC<HubNavigationProps> = ({
 
                         <span className="text-[10px] text-slate-400 font-medium truncate block w-full mt-0.5">
                           {item.subtitle}
-                        </span>
-                        <span className="mt-1 block text-[10px] font-extrabold uppercase tracking-wider theme-text-accent">
-                          {item.badge}
                         </span>
                       </div>
                     </button>

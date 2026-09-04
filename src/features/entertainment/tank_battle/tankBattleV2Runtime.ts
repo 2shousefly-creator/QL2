@@ -162,7 +162,7 @@ export function createTankBattleV2World(random: () => number = Math.random): Tan
     coreChoice: null,
     nextEntityId: 1000,
     nextFxId: 1,
-    latestMessage: "WAVE 1 · TRIỂN KHAI 3 LANE",
+    latestMessage: "ĐỢT 1 · TRIỂN KHAI 3 LÀN",
     latestMessageRemaining: 2.5,
     metrics: {
       enemiesDefeated: 0,
@@ -231,7 +231,7 @@ export function spawnWave(world: TankBattleV2World): void {
       for (let slot = 0; slot < TANK_V2_AI.unitsPerLanePerWave; slot += 1) spawnUnit(world, faction, lane, slot);
     }
   }
-  world.latestMessage = `WAVE ${world.waveIndex} · 9 ĐƠN VỊ MỖI PHE`;
+  world.latestMessage = `ĐỢT ${world.waveIndex} · 9 ĐƠN VỊ MỖI PHE`;
   world.latestMessageRemaining = 2;
 }
 
@@ -321,7 +321,7 @@ function damagePlayer(world: TankBattleV2World, rawDamage: number): void {
     player.reactiveArmorUsedThisLife = true;
     player.temporaryShield += player.coreRuntime.reactiveArmorShield;
     player.temporaryShieldRemaining = Math.max(player.temporaryShieldRemaining, 3);
-    addFloatingText(world, player, `+${player.coreRuntime.reactiveArmorShield} SHIELD`, "#67e8f9");
+    addFloatingText(world, player, `+${player.coreRuntime.reactiveArmorShield} KHIÊN`, "#67e8f9");
   }
   if (player.hp > 0) return;
   player.alive = false;
@@ -344,7 +344,7 @@ function grantKillSustain(world: TankBattleV2World): void {
     addFloatingText(world, player, `+${Math.round(healed)} HP`, "#86efac");
   } else if (player.coreRuntime.regenerationShieldCap > 0) {
     player.shield = Math.min(player.coreRuntime.regenerationShieldCap, player.shield + player.coreRuntime.killHeal);
-    addFloatingText(world, player, `+${player.coreRuntime.killHeal} SHIELD`, "#67e8f9");
+    addFloatingText(world, player, `+${player.coreRuntime.killHeal} KHIÊN`, "#67e8f9");
   }
 }
 
@@ -353,7 +353,7 @@ function grantCombatXp(world: TankBattleV2World, amount: number, point: Point): 
   addFloatingText(world, point, `+${amount} XP`, "#fde047");
   for (const level of levels) {
     world.pendingCoreSelections += 1;
-    world.latestMessage = `LEVEL UP · LV.${level}${(TANK_V2_XP.coreLevels as readonly number[]).includes(level) ? " · CORE READY" : ""}`;
+    world.latestMessage = `LÊN CẤP · CẤP ${level}${(TANK_V2_XP.coreLevels as readonly number[]).includes(level) ? " · LÕI SẴN SÀNG" : ""}`;
     world.latestMessageRemaining = 2;
   }
 }
@@ -390,15 +390,16 @@ function destroyStructure(world: TankBattleV2World, structure: StructureState): 
     if (structure.faction === "enemy" && world.elapsedSeconds - structure.lastPlayerDamageAt <= TANK_V2_XP.assistWindowSeconds) {
       grantCombatXp(world, TANK_V2_XP.tower, structure);
     }
-    world.latestMessage = `${structure.faction === "enemy" ? "ENEMY" : "ALLY"} ${String(structure.lane).toUpperCase()} T${structure.tier} DESTROYED`;
+    const laneLabel = structure.lane === "top" ? "TRÊN" : structure.lane === "mid" ? "GIỮA" : "DƯỚI";
+    world.latestMessage = `${structure.faction === "enemy" ? "ĐỊCH" : "ĐỒNG MINH"} · LÀN ${laneLabel} · T${structure.tier} ĐÃ BỊ PHÁ`;
     world.latestMessageRemaining = 2.2;
   } else if (structure.faction === "enemy") {
     world.phase = "victory";
-    world.latestMessage = "ENEMY HQ DESTROYED · VICTORY";
+    world.latestMessage = "SỞ CHỈ HUY ĐỊCH ĐÃ BỊ PHÁ · CHIẾN THẮNG";
     world.latestMessageRemaining = 99;
   } else {
     world.phase = "defeat";
-    world.latestMessage = "PLAYER HQ DESTROYED · DEFEAT";
+    world.latestMessage = "SỞ CHỈ HUY PHE TA ĐÃ BỊ PHÁ · THẤT BẠI";
     world.latestMessageRemaining = 99;
   }
   updateStructureImmunity(world.structures);
@@ -407,7 +408,7 @@ function destroyStructure(world: TankBattleV2World, structure: StructureState): 
 function damageStructure(world: TankBattleV2World, structure: StructureState, rawDamage: number, fromPlayer: boolean): void {
   if (!structure.alive) return;
   if (structure.immune) {
-    if (fromPlayer) addFloatingText(world, structure, "IMMUNE", "#67e8f9");
+    if (fromPlayer) addFloatingText(world, structure, "MIỄN NHIỄM", "#67e8f9");
     return;
   }
   const bonus = structureDamageMultiplier(world.elapsedSeconds);
@@ -424,7 +425,7 @@ function damageStructure(world: TankBattleV2World, structure: StructureState, ra
   }
   if (structure.faction === "ally" && structure.kind === "hq") {
     world.metrics.hqDamageTaken += damage;
-    world.latestMessage = "HQ UNDER ATTACK";
+    world.latestMessage = "SỞ CHỈ HUY ĐANG BỊ TẤN CÔNG";
     world.latestMessageRemaining = 1.2;
   }
   if (structure.hp <= 0) destroyStructure(world, structure);
@@ -536,7 +537,7 @@ function updatePlayer(world: TankBattleV2World, delta: number): void {
       player.reactiveArmorUsedThisLife = false;
       player.boostCharges = player.coreRuntime.overdriveCharges;
       player.boostRechargeQueue = [];
-      world.latestMessage = "RESPAWN · 2 GIÂY BẢO HỘ";
+      world.latestMessage = "HỒI SINH · 2 GIÂY BẢO HỘ";
       world.latestMessageRemaining = 1.8;
     }
     return;
@@ -832,7 +833,7 @@ export function chooseTankV2Core(world: TankBattleV2World, core: CoreDefinition)
   world.pendingCoreSelections = Math.max(0, world.pendingCoreSelections - 1);
   world.coreChoice = null;
   world.phase = "playing";
-  world.latestMessage = `${core.name.toUpperCase()} · CORE ACQUIRED`;
+  world.latestMessage = `${core.name.toUpperCase()} · ĐÃ NHẬN LÕI`;
   world.latestMessageRemaining = 1.8;
   maybeOpenCoreSelection(world);
   return true;
@@ -845,11 +846,11 @@ export function updateTankBattleV2World(world: TankBattleV2World, deltaSeconds: 
   if (world.elapsedSeconds >= 720) world.siegeTier = 2;
   else if (world.elapsedSeconds >= 600) world.siegeTier = 1;
   if (world.siegeTier === 1 && world.elapsedSeconds - delta < 600) {
-    world.latestMessage = "SIEGE PHASE · +20% STRUCTURE DAMAGE";
+    world.latestMessage = "GIAI ĐOẠN CÔNG THÀNH · +20% SÁT THƯƠNG CÔNG TRÌNH";
     world.latestMessageRemaining = 3;
   }
   if (world.siegeTier === 2 && world.elapsedSeconds - delta < 720) {
-    world.latestMessage = "FINAL SIEGE · +40% STRUCTURE DAMAGE";
+    world.latestMessage = "CÔNG THÀNH CUỐI · +40% SÁT THƯƠNG CÔNG TRÌNH";
     world.latestMessageRemaining = 3;
   }
   if (world.elapsedSeconds >= world.nextWaveAt) {

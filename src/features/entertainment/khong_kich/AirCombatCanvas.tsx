@@ -922,10 +922,10 @@ export const AirCombatCanvas: React.FC<AirCombatCanvasProps> = ({
     const message = hud.latestMessage;
     if (!message || message === announcementRef.current) return;
     announcementRef.current = message;
-    if (/RADAR|BOSS|PHASE|PHÁO ĐÀI/.test(message)) {
+    if (/RADAR|TRÙM|GIAI ĐOẠN|PHÁO ĐÀI/.test(message)) {
       soundManager.playSignalTone(8, 9);
       soundManager.triggerHaptic("heavy");
-    } else if (/COMBAT LEVEL/.test(message)) {
+    } else if (/CẤP CHIẾN ĐẤU/.test(message)) {
       soundManager.playBubblePop();
       soundManager.triggerHaptic("medium");
     }
@@ -990,7 +990,7 @@ export const AirCombatCanvas: React.FC<AirCombatCanvasProps> = ({
             <div className="truncate text-[9px] font-black uppercase tracking-wider" style={{ color: aircraft.color }}>
               {aircraft.code} · {aircraft.name}
             </div>
-            <div className="mt-1 text-[8px] font-bold text-slate-400">Lv.{worldRef.current.aircraft.level} · {hud.waveLabel} · {formatTime(hud.elapsedSeconds)}</div>
+            <div className="mt-1 text-[8px] font-bold text-slate-400">Cấp {worldRef.current.aircraft.level} · {hud.waveLabel} · {formatTime(hud.elapsedSeconds)}</div>
           </div>
           <div className="rounded-lg border border-amber-300/25 bg-amber-400/10 px-2 py-1 text-center leading-none">
             <div className="text-[6px] font-black uppercase text-amber-200/70">Điểm</div>
@@ -1012,7 +1012,7 @@ export const AirCombatCanvas: React.FC<AirCombatCanvasProps> = ({
           <div className="h-1.5 overflow-hidden rounded-full bg-black"><div className={`h-full ${hud.stats.resourceKind === "mana" ? "bg-gradient-to-r from-blue-600 to-cyan-300" : "bg-gradient-to-r from-indigo-600 to-fuchsia-300"}`} style={{ width: `${resourceRatio * 100}%` }} /></div>
           <span className="text-right text-slate-400">{Math.floor(hud.stats.currentResource)}/{Math.round(hud.stats.maxResource)}</span>
           <span className="text-lime-300">XP</span>
-          <div className="h-1 overflow-hidden rounded-full bg-black"><div className="h-full bg-gradient-to-r from-emerald-400 to-lime-300" style={{ width: `${xpRatio * 100}%` }} /></div>
+          <div className="continuous-progress-track h-1 overflow-hidden rounded-full bg-black"><div className="continuous-progress-fill h-full bg-gradient-to-r from-emerald-400 to-lime-300" style={{ width: `${xpRatio * 100}%` }} /></div>
           <span className="text-right text-slate-500">{Math.floor(worldRef.current.aircraft.combatXp)}/{hud.combatXpRequired}</span>
         </div>
         <div className="mt-0.5 flex items-center justify-center gap-3 text-[7px] font-black tabular-nums" data-hud-combat-stats="true">
@@ -1057,7 +1057,7 @@ export const AirCombatCanvas: React.FC<AirCombatCanvasProps> = ({
               {skillId === "escort_drone" && active && <span className="absolute right-1 top-1 z-20 text-[6px] font-black text-violet-200">-{values.upkeepPerSecond}/s</span>}
               <span className="relative z-10 text-lg leading-none">{skill.icon}</span>
               <span className="relative z-10 mt-0.5 max-w-[52px] truncate text-[7px] font-black uppercase">{skill.shortName}</span>
-              <span className={`relative z-10 text-[7px] font-black tabular-nums ${active ? "text-emerald-200" : unavailable ? "text-slate-500" : "text-cyan-200"}`}>{cooldown > 0 ? cooldown.toFixed(1) : active && skillId === "escort_drone" ? "ACTIVE" : unavailable ? "LOCK" : "READY"}</span>
+              <span className={`relative z-10 text-[7px] font-black tabular-nums ${active ? "text-emerald-200" : unavailable ? "text-slate-500" : "text-cyan-200"}`}>{cooldown > 0 ? cooldown.toFixed(1) : active && skillId === "escort_drone" ? "ĐANG BẬT" : unavailable ? "KHÓA" : "SẴN SÀNG"}</span>
             </button>
           );
         })}
@@ -1089,7 +1089,7 @@ export const AirCombatCanvas: React.FC<AirCombatCanvasProps> = ({
       {coreChoices && (
         <div className="absolute inset-0 z-40 flex flex-col bg-black/94 px-2 py-[5%] backdrop-blur-md" data-core-selection="open">
           <div className="flex h-[18%] shrink-0 flex-col items-center justify-center text-center">
-            <div className="text-[9px] font-black uppercase tracking-[0.22em] text-cyan-300">Combat Lv.{worldRef.current.aircraft.level}</div>
+            <div className="text-[9px] font-black uppercase tracking-[0.22em] text-cyan-300">Cấp chiến đấu {worldRef.current.aircraft.level}</div>
             <h2 className="mt-0.5 text-xl font-black text-white">Chọn Core nâng cấp</h2>
             <div className="mt-1 flex items-center gap-2">
               <span className="rounded-full border border-cyan-300/40 bg-cyan-400/10 px-2.5 py-1 text-[9px] font-black uppercase text-cyan-100">{coreTierLabel(coreChoices[0].tier)}</span>

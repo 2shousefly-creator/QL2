@@ -18,7 +18,7 @@
   --motion-fast: 140ms;
   --motion-normal: 220ms;
   --motion-command: 360ms;
-  --hud-height: 4.65rem;
+  --hud-height: 4.35rem;
   --section-gap: 1rem;
   --content-padding: clamp(0.75rem, 3.5vw, 1rem);
 }
@@ -146,8 +146,8 @@ button {
   grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
   gap: 0.75rem;
-  min-height: 74px;
-  padding: 0.8rem 0.9rem;
+  min-height: 64px;
+  padding: 0.68rem 0.82rem;
   overflow: hidden;
   border: 1px solid var(--theme-border);
   border-radius: var(--military-radius-md);
@@ -176,8 +176,8 @@ button {
 
 .command-header__icon {
   display: grid;
-  width: 42px;
-  height: 42px;
+  width: 38px;
+  height: 38px;
   place-items: center;
   border: 1px solid var(--theme-border-strong);
   border-radius: var(--military-radius-sm);
@@ -196,7 +196,6 @@ button {
   min-width: 0;
 }
 
-.command-header__code,
 .command-kicker,
 .technical-label {
   display: block;
@@ -209,7 +208,7 @@ button {
 }
 
 .command-header__title {
-  margin: 0.16rem 0 0;
+  margin: 0;
   color: #f8fafc;
   font-size: clamp(1.05rem, 4.5vw, 1.3rem);
   font-weight: 900;
@@ -512,17 +511,8 @@ button {
 }
 
 .profile-dossier-card {
-  min-height: 108px;
+  min-height: 96px;
   border-radius: var(--military-radius-sm) !important;
-}
-
-.profile-dossier-card__code {
-  align-self: flex-start;
-  color: var(--theme-text-accent);
-  font-size: 0.58rem;
-  font-weight: 800;
-  line-height: 1;
-  letter-spacing: 0.11em;
 }
 
 /* Home keeps its artwork, while controls become personnel plates. */
@@ -534,15 +524,15 @@ button {
 
 .home-personnel-plate {
   position: relative;
-  padding-top: 1.7rem !important;
+  padding-top: 1.48rem !important;
   background: rgba(7, 14, 27, 0.9) !important;
 }
 
 .home-personnel-plate::before {
   position: absolute;
-  top: 0.48rem;
+  top: 0.38rem;
   left: 0.75rem;
-  content: "CURRENT ASSIGNMENT / NHIỆM VỤ HIỆN TẠI";
+  content: "CHỨC VỤ HIỆN TẠI";
   color: var(--theme-text-accent);
   font-size: 0.56rem;
   font-weight: 800;
@@ -561,20 +551,28 @@ button {
   box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.72) !important;
 }
 
-.xp-command-track::after,
-.home-xp-command-track::after {
-  position: absolute;
-  inset: 0;
-  z-index: 20;
-  pointer-events: none;
-  content: "";
-  opacity: 0.34;
-  background: repeating-linear-gradient(90deg, transparent 0 11%, rgba(2, 6, 23, 0.9) 11% calc(11% + 1px));
-}
-
 .xp-command-track > div,
 .home-xp-command-track > div {
   box-shadow: none !important;
+}
+
+.continuous-progress-track {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-radius: 2px !important;
+  background: rgba(2, 6, 23, 0.92);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.72);
+}
+
+.continuous-progress-fill {
+  height: 100%;
+  min-width: 0;
+  border-radius: 0 !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  transition-property: width !important;
+  transition-duration: 360ms !important;
+  transition-timing-function: ease-out !important;
 }
 
 /* Journey becomes an operational route. */
@@ -587,30 +585,9 @@ button {
   background-size: 120px 82px, 28px 28px, 28px 28px;
 }
 
-.journey-route {
-  counter-reset: operational-sector;
-}
-
-.journey-sector {
-  counter-increment: operational-sector;
-}
-
 .journey-sector__panel {
+  border-left-width: 2px !important;
   border-radius: var(--military-radius-sm) !important;
-}
-
-.journey-sector__panel::before {
-  position: static;
-  display: block;
-  width: auto;
-  height: auto;
-  margin-bottom: 0.55rem;
-  color: var(--theme-text-accent);
-  background: none;
-  content: "CHAPTER " counter(operational-sector, decimal-leading-zero) " / OPERATIONAL SECTOR";
-  font-size: 0.58rem;
-  font-weight: 800;
-  letter-spacing: 0.12em;
 }
 
 .journey-sector .theme-badge,
@@ -636,8 +613,8 @@ button {
 
 .training-program-card {
   position: relative;
-  min-height: 112px;
-  padding-top: 1.8rem !important;
+  min-height: 100px;
+  padding-top: 1.55rem !important;
   border-radius: var(--military-radius-sm) !important;
   background: rgba(7, 14, 27, 0.9) !important;
 }
@@ -700,24 +677,6 @@ button {
   border-color: rgba(245, 158, 11, 0.34) !important;
 }
 
-.logistics-hud::before {
-  position: absolute;
-  top: 0.4rem;
-  left: 0.65rem;
-  width: auto;
-  height: auto;
-  content: "LOGISTICS / HẬU CẦN";
-  color: #fbbf24;
-  background: none;
-  font-size: 0.56rem;
-  font-weight: 900;
-  letter-spacing: 0.11em;
-}
-
-.logistics-hud > :first-child {
-  padding-top: 0.72rem;
-}
-
 .logistics-action-toolbar {
   position: relative;
   justify-content: flex-start !important;
@@ -750,7 +709,7 @@ button {
   border: 1px solid rgba(251, 191, 36, 0.72);
   color: #fef3c7;
   background: rgba(2, 6, 23, 0.86);
-  content: "PLOT " attr(data-farm-plot) " / SELECTED";
+  content: "Ô " attr(data-farm-plot) " · ĐANG CHỌN";
   font-size: 0.5rem;
   font-weight: 900;
   line-height: 1;
@@ -805,14 +764,11 @@ button {
 
 .battle-result-screen::before {
   display: block;
-  padding: 0.35rem 0.55rem;
-  border-left: 3px solid var(--theme-accent);
-  color: var(--theme-text-accent);
-  background: rgba(8, 15, 28, 0.92);
-  content: "AFTER ACTION REPORT / KẾT QUẢ TÁC CHIẾN";
-  font-size: 0.62rem;
-  font-weight: 900;
-  letter-spacing: 0.1em;
+  width: min(34%, 9rem);
+  height: 2px;
+  margin-bottom: 0.45rem;
+  content: "";
+  background: var(--theme-accent);
 }
 
 .recreation-game-screen > :first-child {
@@ -1072,14 +1028,14 @@ button {
 
 @media (max-width: 390px) {
   :root {
-    --hud-height: 4.35rem;
+    --hud-height: 4.15rem;
     --content-padding: 0.7rem;
   }
 
   .command-header {
     gap: 0.6rem;
-    min-height: 68px;
-    padding: 0.7rem;
+    min-height: 60px;
+    padding: 0.62rem 0.68rem;
   }
 
   .command-header__icon {

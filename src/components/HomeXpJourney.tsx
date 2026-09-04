@@ -78,7 +78,7 @@ export const HomeXpJourney: React.FC<HomeXpJourneyProps> = ({
       {/* Centered % Progress Label above the Bar (No "Kinh nghiệm (XP)" text) */}
       <div className="flex items-center justify-center gap-1.5 text-xs sm:text-sm font-bold mb-1 text-center">
         <span className={isFull ? "text-amber-300 font-extrabold" : "theme-text-accent font-extrabold"}>
-          {isJourneyCompleted ? "MAX" : `${targetPercentage.toFixed(1)}%`}
+          {isJourneyCompleted ? "TỐI ĐA" : `${targetPercentage.toFixed(1)}%`}
         </span>
       </div>
 
@@ -101,7 +101,7 @@ export const HomeXpJourney: React.FC<HomeXpJourneyProps> = ({
             />
           </button>
 
-          {/* Segmented Tier Bar ONLY - Placed sát under badge */}
+          {/* Discrete rank-tier markers; this is not an XP/progression fill. */}
           {currentFamily.tierCount > 1 && (
             <div className="-mt-0.5">
               <RankTierProgress
@@ -119,7 +119,7 @@ export const HomeXpJourney: React.FC<HomeXpJourneyProps> = ({
         <div className="flex items-center justify-center w-full min-w-0">
           {/* XP Track Container - Increased thickness by 25% (h-[45px] sm:h-[52px]) */}
           <div
-            className={`home-xp-command-track relative w-full h-[45px] sm:h-[52px] rounded-none bg-slate-950 border ${
+            className={`home-xp-command-track continuous-progress-track relative w-full h-[45px] sm:h-[52px] rounded-none bg-slate-950 border ${
               isFull
                 ? "border-amber-400 ring-2 ring-amber-400/50 shadow-[0_0_20px_rgba(250,204,21,0.5)]"
                 : hasEnergyBoost
@@ -152,7 +152,7 @@ export const HomeXpJourney: React.FC<HomeXpJourneyProps> = ({
 
             {/* Fill Bar */}
             <div
-              className={`h-full rounded-none relative overflow-hidden z-10 transition-[width] duration-1000 linear ${
+              className={`continuous-progress-fill h-full rounded-none relative overflow-hidden z-10 transition-[width] duration-300 ease-out ${
                 isFull
                   ? "bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-300 shadow-[0_0_15px_rgba(251,191,36,0.6)]"
                   : hasEnergyBoost
@@ -215,7 +215,7 @@ export const HomeXpJourney: React.FC<HomeXpJourneyProps> = ({
                 />
               </button>
 
-              {/* Segmented Tier Bar ONLY - Placed sát under badge */}
+              {/* Discrete rank-tier markers; this is not an XP/progression fill. */}
               {nextFamily.tierCount > 1 && (
                 <div className="-mt-0.5">
                   <RankTierProgress

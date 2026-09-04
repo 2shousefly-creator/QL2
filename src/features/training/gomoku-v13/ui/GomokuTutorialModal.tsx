@@ -44,7 +44,7 @@ export const GomokuTutorialModal: React.FC<GomokuTutorialModalProps> = ({ onClos
           <div className="flex items-start gap-2.5">
             <Move className="w-4 h-4 text-cyan-400 shrink-0 mt-0.5" />
             <p>
-              <strong>Nút Điều Hướng Fast-Control:</strong> Nút <strong>Trung Tâm</strong> di chuyển bàn cờ về vùng giao tranh; Nút <strong>Nước Mới Nhất</strong> đưa góc nhìn tới nước vừa đánh.
+              <strong>Điều Hướng Nhanh:</strong> Nút <strong>Trung Tâm</strong> di chuyển bàn cờ về vùng giao tranh; Nút <strong>Nước Mới Nhất</strong> đưa góc nhìn tới nước vừa đánh.
             </p>
           </div>
 

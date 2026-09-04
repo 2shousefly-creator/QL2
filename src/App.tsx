@@ -512,7 +512,7 @@ export default function App() {
 
       {/* Top Gaming HUD Header (Auto-hidden when in Minigames, Challenge, or Trough Info Modal) */}
       {!isTrainingGameActive && !isChallengeActive && !isTroughInfoActive && (
-        <header className="theme-header-shell command-status-hud relative z-10 shrink-0 bg-slate-900/70 backdrop-blur-md border-b px-4 pb-3">
+        <header className="theme-header-shell command-status-hud relative z-10 shrink-0 bg-slate-900/70 backdrop-blur-md border-b px-4 pb-2">
           <div className="max-w-lg mx-auto flex items-center justify-between">
             <div className="flex items-center gap-3">
               <button
@@ -524,11 +524,10 @@ export default function App() {
                 className="theme-focus relative focus:outline-none rounded-full"
                 title="Mở Hồ Sơ & Cài Đặt"
               >
-                <Avatar seed={gameState.player.avatarSeed} size={48} />
+                <Avatar seed={gameState.player.avatarSeed} size={44} />
               </button>
 
               <div className="command-status-hud__identity">
-                <span className="command-kicker mb-0.5">Personnel status / Active duty</span>
                 <div className="flex items-center gap-2">
                   <span className="command-status-hud__name line-clamp-1">
                     {gameState.player.displayName}
@@ -552,13 +551,13 @@ export default function App() {
                 return (
                   <div className="command-status-hud__energy flex flex-col items-end gap-1" aria-label={`Năng lượng ${Math.round(energyPercent)} phần trăm`}>
                     <div className="flex items-center gap-1.5 text-xs font-extrabold">
-                      <span className="technical-label hidden sm:inline">Energy</span>
+                      <span className="technical-label hidden sm:inline">Năng lượng</span>
                       <Zap className={`w-3.5 h-3.5 ${energyVisuals.textColor} ${active && energyMult > 1 ? "fill-current animate-pulse" : "opacity-80"}`} />
                       <span className={`data-readout ${energyVisuals.textColor}`}>
                         {Math.round(energyPercent)}%
                       </span>
-                      <span className={`status-tag max-w-[74px] truncate ${energyVisuals.borderColor} ${energyVisuals.textColor} bg-slate-950/80`} title={active ? `${energyMult},0x` : "Boost tạm dừng"}>
-                        {active ? `${energyMult},0x` : "Boost tạm dừng"}
+                      <span className={`status-tag max-w-[74px] truncate ${energyVisuals.borderColor} ${energyVisuals.textColor} bg-slate-950/80`} title={active ? `Hệ số XP x${energyMult.toFixed(1).replace(".", ",")}` : "Hệ số XP tạm dừng"}>
+                        {active ? `x${energyMult.toFixed(1).replace(".", ",")}` : "Tạm dừng"}
                       </span>
                     </div>
 

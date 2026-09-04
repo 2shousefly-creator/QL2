@@ -170,9 +170,8 @@ export const JournalScreen: React.FC<JournalScreenProps> = ({ state }) => {
     <div className="command-screen journal-command-screen w-full max-w-lg mx-auto p-4 select-none pb-28 space-y-4">
       {/* Title */}
       <CommandHeader
-        code="FIELD JOURNAL / SERVICE LOG"
         title="Nhật Ký Binh Nghiệp"
-        subtitle="Báo cáo hiện trường · Dấu mốc · Chiến công"
+        subtitle="Dấu mốc và chiến công đã đạt"
         icon={<ScrollText />}
       />
 

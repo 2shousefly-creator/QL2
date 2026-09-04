@@ -513,9 +513,8 @@ export const TrainingScreen: React.FC<TrainingScreenProps> = ({
           <Target />
         </div>
         <div className="command-header__copy">
-          <span className="command-header__code">TRAINING COMMAND / TR-00</span>
-          <h1 className="command-header__title">Trung Tâm Huấn Luyện</h1>
-          <p className="command-header__subtitle">Mệnh lệnh ngày · XP thưởng · Rèn luyện chuyên môn</p>
+          <h1 className="command-header__title">Khu Huấn Luyện</h1>
+          <p className="command-header__subtitle">Thưởng XP hằng ngày & luyện tập</p>
         </div>
 
         <div className="command-header__action flex items-center gap-2">
@@ -602,7 +601,7 @@ export const TrainingScreen: React.FC<TrainingScreenProps> = ({
                 setShowCalibrationModal(true);
               }}
               className="theme-focus p-2.5 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-xl border border-slate-800 flex items-center gap-1.5 text-xs font-semibold shadow-sm focus:outline-none"
-              title="Hiệu chỉnh độ lệch nhịp (Timing Offset)"
+              title="Hiệu chỉnh độ lệch nhịp"
             >
               <Sliders className="theme-icon-accent w-4 h-4" />
               <span className="hidden sm:inline">Hiệu Chỉnh</span>
@@ -617,7 +616,7 @@ export const TrainingScreen: React.FC<TrainingScreenProps> = ({
       {/* Mini-Game Catalog Selector */}
       <div className="flex flex-col gap-2">
         <div className="flex items-center justify-between text-xs font-bold text-slate-300 px-1">
-          <span className="technical-label">Training programs</span>
+          <span className="technical-label">Môn luyện tập</span>
           <span className="status-tag text-[11px] text-slate-400">6 Môn</span>
         </div>
 

@@ -40,7 +40,7 @@ export const MarchRhythmTutorialModal: React.FC<MarchRhythmTutorialModalProps> =
                 Lối Chơi & Tốc Độ
               </strong>
               <p className="text-slate-300 leading-relaxed">
-                Tất cả ký hiệu là <span className="text-amber-300 font-semibold">Chạm đơn (Tap)</span>. Ở mức <span className="text-orange-400 font-semibold">Vừa</span> và <span className="text-rose-400 font-semibold">Khó</span>, tốc độ rơi sẽ tăng vọt đáng kể cùng tần suất nốt dồn dập, đòi hỏi phản xạ cực kỳ nhanh nhạy.
+                Tất cả ký hiệu đều dùng thao tác <span className="text-amber-300 font-semibold">chạm đơn</span>. Ở mức <span className="text-orange-400 font-semibold">Vừa</span> và <span className="text-rose-400 font-semibold">Khó</span>, tốc độ rơi tăng cùng tần suất nốt, đòi hỏi phản xạ nhanh hơn.
               </p>
             </div>
           </div>
@@ -52,7 +52,7 @@ export const MarchRhythmTutorialModal: React.FC<MarchRhythmTutorialModalProps> =
                 <Zap className="w-3.5 h-3.5 text-amber-400" />
                 Chỉ Số & Combo
               </strong>
-              Căn thời gian càng chính xác sẽ nhận đánh giá Perfect/Great và duy trì chuỗi Combo để đạt điểm tối đa.
+              Căn thời gian càng chính xác sẽ nhận đánh giá cao và duy trì chuỗi Combo để đạt điểm tối đa.
             </div>
           </div>
 
@@ -65,17 +65,17 @@ export const MarchRhythmTutorialModal: React.FC<MarchRhythmTutorialModalProps> =
               <div className="bg-slate-900 p-2 rounded-xl border border-slate-800">
                 <span className="font-extrabold text-slate-200 block">Dễ</span>
                 <span className="text-amber-400 font-bold">Chính xác ≥70%</span>
-                <span className="text-slate-400 block text-[9px]">Miss ≤ 6</span>
+                <span className="text-slate-400 block text-[9px]">Trượt ≤ 6</span>
               </div>
               <div className="bg-slate-900 p-2 rounded-xl border border-slate-800">
                 <span className="font-extrabold text-slate-200 block">Vừa</span>
                 <span className="text-amber-400 font-bold">Chính xác ≥80%</span>
-                <span className="text-slate-400 block text-[9px]">Miss ≤ 7</span>
+                <span className="text-slate-400 block text-[9px]">Trượt ≤ 7</span>
               </div>
               <div className="bg-slate-900 p-2 rounded-xl border border-slate-800">
                 <span className="font-extrabold text-slate-200 block">Khó</span>
                 <span className="text-amber-400 font-bold">Chính xác ≥88%</span>
-                <span className="text-slate-400 block text-[9px]">Miss ≤ 5</span>
+                <span className="text-slate-400 block text-[9px]">Trượt ≤ 5</span>
               </div>
             </div>
           </div>

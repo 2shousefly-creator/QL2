@@ -97,7 +97,7 @@ export const DelegationReportModal: React.FC<DelegationReportModalProps> = ({
                   <Sparkles className="w-3.5 h-3.5 text-amber-300" />
                   ⭐ XP ĐÃ ĐẦY
                 </span>
-                <span className="text-xs font-bold text-amber-300/80">100% Bar</span>
+                <span className="text-xs font-bold text-amber-300/80">Đã đầy 100%</span>
               </div>
               <div className="text-2xl font-black text-amber-300">
                 +{report.earnedXp} XP

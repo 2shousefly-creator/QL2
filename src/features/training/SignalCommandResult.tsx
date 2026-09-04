@@ -97,7 +97,7 @@ export const SignalCommandResultModal: React.FC<SignalCommandResultProps> = ({
         {/* Score & Key Stats Grid */}
         <div className="bg-slate-950/80 p-4 rounded-2xl border border-slate-800/80 flex flex-col gap-3">
           <div className="flex items-center justify-between border-b border-slate-800/80 pb-2.5">
-            <span className="text-xs text-slate-400 font-semibold">Điểm Đánh Giá Run</span>
+            <span className="text-xs text-slate-400 font-semibold">Điểm lượt chơi</span>
             <span className="text-lg font-black text-cyan-400 font-mono">{result.score} / 1000</span>
           </div>
 
@@ -152,7 +152,7 @@ export const SignalCommandResultModal: React.FC<SignalCommandResultProps> = ({
           {result.perfectWin && (
             <div className="bg-amber-500/10 border border-amber-500/30 p-2 rounded-xl text-center text-amber-300 font-bold text-xs flex items-center justify-center gap-1.5">
               <ShieldCheck className="w-4 h-4 text-amber-400" />
-              <span>PERFECT RUN — Không một sai sót!</span>
+              <span>LƯỢT HOÀN HẢO — Không một sai sót!</span>
             </div>
           )}
         </div>

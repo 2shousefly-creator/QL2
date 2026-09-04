@@ -85,8 +85,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       <div className="home-scroll-viewport relative z-10 h-full min-h-0 overflow-y-auto overscroll-y-contain touch-pan-y">
         <div className="home-content-shell mx-auto min-h-full w-full max-w-md">
         {/* Top Status & Chapter Tag Bar */}
-        <div className="home-top-zone w-full shrink-0 flex items-center justify-between gap-2">
-          <span className="command-kicker">Career command / Binh nghiệp</span>
+        <div className="home-top-zone w-full shrink-0 flex items-center justify-end gap-2">
           {/* Chapter Badge Tag & Link */}
           <button
             type="button"

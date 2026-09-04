@@ -262,7 +262,7 @@ export function createCombatWorld(
     pendingCoreSelections: 0,
     coreSelectionCount: 0,
     currentCoreChoices: null,
-    latestMessage: "WAVE 1",
+    latestMessage: "ĐỢT 1",
     messageUntil: 1.5,
     ended: false,
     pools: { enemies: [], projectiles: [], particles: [] },
@@ -438,7 +438,7 @@ function spawnBoss(world: CombatWorld): void {
     boss.baseX = boss.x;
     boss.y = GAMEPLAY_SAFE_RECT.top + boss.radius + 10;
   }
-  setMessage(world, "BOSS · PHÁO ĐÀI BAY", 3);
+  setMessage(world, "TRÙM · PHÁO ĐÀI BAY", 3);
 }
 
 function spawnBossGuards(world: CombatWorld): void {
@@ -451,7 +451,7 @@ function spawnBossGuards(world: CombatWorld): void {
     guard.baseX = guard.x;
     guard.y = GAMEPLAY_SAFE_RECT.top + 110 + (index % 2) * 24;
   }
-  setMessage(world, "PHASE 2 · DRONE HỘ VỆ", 2.2);
+  setMessage(world, "GIAI ĐOẠN 2 · DRONE HỘ VỆ", 2.2);
 }
 
 function addProjectile(
@@ -949,7 +949,7 @@ function updateBossPhase(world: CombatWorld): void {
   if (nextPhase === world.bossPhase) return;
   world.bossPhase = nextPhase;
   if (nextPhase === 2) spawnBossGuards(world);
-  if (nextPhase === 3) setMessage(world, "PHASE 3 · KHÔNG KÍCH", 2.5);
+  if (nextPhase === 3) setMessage(world, "GIAI ĐOẠN 3 · KHÔNG KÍCH", 2.5);
 }
 
 function updateEnemies(world: CombatWorld, dt: number): void {
@@ -1082,7 +1082,7 @@ function destroyEnemy(world: CombatWorld, enemyIndex: number): void {
     world.enemiesDefeated += 1;
     if (enemy.type === "elite") world.elitesDefeated += 1;
     const level = gainCombatXp(world.aircraft, config.combatXp);
-    if (level.levelsGained > 0) setMessage(world, `COMBAT LEVEL ${world.aircraft.level}`, 1.5);
+    if (level.levelsGained > 0) setMessage(world, `CẤP CHIẾN ĐẤU ${world.aircraft.level}`, 1.5);
     world.pendingCoreSelections += level.coreSelectionsDue;
   }
   recycleEnemy(world, enemyIndex);

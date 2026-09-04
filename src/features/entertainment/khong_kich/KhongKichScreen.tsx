@@ -261,7 +261,7 @@ export const KhongKichScreen: React.FC<KhongKichScreenProps> = ({
 
         <div className="flex items-center gap-1 text-[clamp(10.5px,1.4dvh,13px)] font-black uppercase tracking-wider text-sky-300">
           <Crosshair className="h-[clamp(12px,1.6dvh,15px)] w-[clamp(12px,1.6dvh,15px)] text-sky-400" />
-          <span><small className="technical-label text-center">TACTICAL AIR OPS</small>Không Kích</span>
+          <span>Không Kích</span>
         </div>
 
         <div className="flex items-center gap-2 text-right">

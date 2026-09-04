@@ -71,9 +71,9 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
         if (!reg) {
           setSwState("Chưa đăng ký");
         } else if (reg.waiting) {
-          setSwState("Đang chờ kích hoạt (Waiting)");
+          setSwState("Đang chờ kích hoạt");
         } else if (reg.active) {
-          setSwState("Hoạt động (Active)");
+          setSwState("Đang hoạt động");
         } else {
           setSwState("Đang cài đặt");
         }
@@ -305,20 +305,18 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
   };
 
   return (
-    <div className="command-screen personnel-command-screen w-full max-w-lg mx-auto p-4 select-none pb-28 space-y-5">
+    <div className="command-screen personnel-command-screen w-full max-w-lg mx-auto p-4 select-none pb-28 space-y-4">
       <CommandHeader
-        code="PERSONNEL / DOSSIER"
         title="Hồ Sơ Quân Vụ"
         subtitle="Thông tin cá nhân · Thiết lập · Quản trị dữ liệu"
         icon={<User />}
       />
 
       {/* Profile HUD Card */}
-      <div className="command-panel personnel-record theme-card-accent relative rounded-2xl bg-gradient-to-b from-slate-900/90 via-slate-900/60 to-slate-950/80 border p-5 shadow-2xl backdrop-blur-md overflow-hidden">
+      <div className="command-panel personnel-record theme-card-accent relative rounded-2xl bg-gradient-to-b from-slate-900/90 via-slate-900/60 to-slate-950/80 border p-4 shadow-2xl backdrop-blur-md overflow-hidden">
         {/* Glow corner */}
         <div className="theme-corner-glow absolute top-0 right-0 w-32 h-32 rounded-full blur-2xl pointer-events-none" />
 
-        <span className="command-kicker relative z-10 mb-3">Service record / Active personnel</span>
         <div className="flex items-center gap-4 relative z-10">
           {/* Avatar button */}
           <button
@@ -482,7 +480,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
         <div className="theme-divider flex items-center justify-between border-b pb-2">
           <h3 className="font-bold text-sm text-slate-100 flex items-center gap-2">
             <Gift className="theme-icon-accent w-4 h-4" />
-            <span><span className="technical-label">COUPON</span>Mã Ưu Đãi</span>
+            <span>Mã Ưu Đãi</span>
           </h3>
           <span className="text-[10px] font-semibold text-amber-400/80 uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/20">
             Quà Tặng
@@ -537,7 +535,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
           <span>Cài Đặt Ứng Dụng</span>
         </h3>
 
-        <span className="technical-label">AUDIO / DISPLAY</span>
+        <span className="technical-label">Âm thanh & hiển thị</span>
 
         {/* Audio Toggle */}
         <div className="flex items-center justify-between text-xs sm:text-sm">
@@ -583,7 +581,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
         </div>
 
         <div className="tactical-divider" aria-hidden="true" />
-        <span className="technical-label">NOTIFICATIONS</span>
+        <span className="technical-label">Thông báo</span>
 
         {/* Device Notifications Toggle & Testing */}
         <div className="space-y-2">
@@ -668,8 +666,8 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
               </div>
 
               <div className="flex justify-between">
-                <span className="text-slate-400">Device ID:</span>
-                <span className="text-slate-200">{getDevicePushId() ? `${getDevicePushId().slice(0, 8)}...` : "None"}</span>
+                <span className="text-slate-400">Mã thiết bị:</span>
+                <span className="text-slate-200">{getDevicePushId() ? `${getDevicePushId().slice(0, 8)}...` : "Chưa có"}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-slate-400">Push API hỗ trợ:</span>
@@ -678,9 +676,15 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-400">Trình duyệt Permission:</span>
+                <span className="text-slate-400">Quyền trình duyệt:</span>
                 <span className={typeof Notification !== "undefined" && Notification.permission === "granted" ? "text-emerald-400" : "text-amber-400"}>
-                  {typeof Notification !== "undefined" ? Notification.permission : "N/A"}
+                  {typeof Notification === "undefined"
+                    ? "Không hỗ trợ"
+                    : Notification.permission === "granted"
+                      ? "Đã cho phép"
+                      : Notification.permission === "denied"
+                        ? "Đã từ chối"
+                        : "Chưa quyết định"}
                 </span>
               </div>
               <div className="flex justify-between">
@@ -697,18 +701,18 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
                     <span className="text-amber-300 font-bold">{pushStatusData.schedule.status}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-slate-400">Thời điểm hẹn (dueAt):</span>
+                    <span className="text-slate-400">Thời điểm hẹn:</span>
                     <span className="text-slate-200">
-                      {pushStatusData.schedule.dueAt ? new Date(pushStatusData.schedule.dueAt).toLocaleTimeString("vi-VN") : "N/A"}
+                      {pushStatusData.schedule.dueAt ? new Date(pushStatusData.schedule.dueAt).toLocaleTimeString("vi-VN") : "Không có"}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-slate-400">Task kind:</span>
+                    <span className="text-slate-400">Loại tác vụ:</span>
                     <span className="text-slate-200">{pushStatusData.schedule.taskKind || "final"}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-slate-400">Generation:</span>
-                    <span className="text-slate-400">{pushStatusData.schedule.generation || "N/A"}</span>
+                    <span className="text-slate-400">Mã lịch:</span>
+                    <span className="text-slate-400">{pushStatusData.schedule.generation || "Không có"}</span>
                   </div>
                 </>
               )}
@@ -734,32 +738,32 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
           )}
         </div>
 
-        <span className="technical-label">DATA / SYSTEM</span>
+        <span className="technical-label">Dữ liệu & hệ thống</span>
 
         {/* Export / Import, Manual Update & Reset */}
         <div className="pt-2 border-t border-slate-800 space-y-2.5">
           {/* Detailed Version Debug Info */}
           <div className="bg-slate-950/80 p-3 rounded-xl border border-slate-800 space-y-2 text-xs text-slate-300">
             <div className="flex items-center justify-between">
-              <span className="text-slate-400">Runtime build:</span>
+              <span className="text-slate-400">Bản dựng đang chạy:</span>
               <span className="theme-text-accent font-mono text-[11px] font-bold px-2 py-0.5 rounded bg-slate-900 border border-slate-800">
                 {getShortBuildId(APP_BUILD_ID)}
               </span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-slate-400">Installed build:</span>
+              <span className="text-slate-400">Bản dựng đã cài:</span>
               <span className="font-mono text-[11px] text-emerald-400 font-bold px-2 py-0.5 rounded bg-slate-900 border border-slate-800">
                 {getShortBuildId(installedBuildId)}
               </span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-slate-400">Server latest:</span>
+              <span className="text-slate-400">Bản mới trên máy chủ:</span>
               <span className="font-mono text-[11px] text-sky-300 font-bold px-2 py-0.5 rounded bg-slate-900 border border-slate-800">
                 {latestServerBuildId ? getShortBuildId(latestServerBuildId) : "Đang kiểm tra..."}
               </span>
             </div>
             <div className="flex items-center justify-between text-[11px]">
-              <span className="text-slate-400">Service Worker:</span>
+              <span className="text-slate-400">Bộ cập nhật nền:</span>
               <span className="font-semibold text-slate-200">{swState}</span>
             </div>
           </div>

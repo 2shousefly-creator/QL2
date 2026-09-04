@@ -111,7 +111,7 @@ export const MarchRhythmResult: React.FC<MarchRhythmResultProps> = ({
             <div className="text-base font-bold font-mono text-emerald-400">{result.accuracy}%</div>
           </div>
           <div className="bg-slate-950/80 p-2.5 rounded-xl border border-slate-800">
-            <span className="text-[10px] text-slate-400">Max Combo</span>
+            <span className="text-[10px] text-slate-400">Combo cao nhất</span>
             <div className="text-base font-bold font-mono text-cyan-400">{result.maxCombo}</div>
           </div>
         </div>
@@ -122,19 +122,19 @@ export const MarchRhythmResult: React.FC<MarchRhythmResultProps> = ({
 
           <div className="grid grid-cols-2 gap-2 text-[11px] font-mono">
             <div className="flex justify-between p-1.5 bg-slate-900/80 rounded-lg">
-              <span className="text-amber-400 font-bold">Perfect:</span>
+              <span className="text-amber-400 font-bold">Hoàn hảo:</span>
               <span>{result.perfectCount}</span>
             </div>
             <div className="flex justify-between p-1.5 bg-slate-900/80 rounded-lg">
-              <span className="text-emerald-400 font-bold">Good:</span>
+              <span className="text-emerald-400 font-bold">Tốt:</span>
               <span>{result.goodCount}</span>
             </div>
             <div className="flex justify-between p-1.5 bg-slate-900/80 rounded-lg">
-              <span className="text-rose-400 font-bold">Miss:</span>
+              <span className="text-rose-400 font-bold">Trượt:</span>
               <span>{result.missCount}</span>
             </div>
             <div className="flex justify-between p-1.5 bg-slate-900/80 rounded-lg">
-              <span className="text-slate-400 font-bold">Stray Taps:</span>
+              <span className="text-slate-400 font-bold">Chạm nhầm:</span>
               <span>{result.strayInputCount}</span>
             </div>
           </div>
@@ -142,10 +142,10 @@ export const MarchRhythmResult: React.FC<MarchRhythmResultProps> = ({
           {(result.holdsAttempted > 0 || result.chordsAttempted > 0) && (
             <div className="pt-1 border-t border-slate-800/80 flex justify-around text-[11px] text-slate-300">
               {result.holdsAttempted > 0 && (
-                <span>Hold: <strong className="text-amber-400">{result.holdCompletionRate}%</strong> ({result.holdsCompleted}/{result.holdsAttempted})</span>
+                <span>Giữ: <strong className="text-amber-400">{result.holdCompletionRate}%</strong> ({result.holdsCompleted}/{result.holdsAttempted})</span>
               )}
               {result.chordsAttempted > 0 && (
-                <span>Chord: <strong className="text-amber-400">{result.chordCompletionRate}%</strong> ({result.chordsCompleted}/{result.chordsAttempted})</span>
+                <span>Chạm đồng thời: <strong className="text-amber-400">{result.chordCompletionRate}%</strong> ({result.chordsCompleted}/{result.chordsAttempted})</span>
               )}
             </div>
           )}

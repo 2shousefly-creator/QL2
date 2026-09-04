@@ -47,7 +47,6 @@ export const IdCardScreen: React.FC<IdCardScreenProps> = ({ state, onNavigateTab
     <div className="command-screen identity-command-screen w-full max-w-lg mx-auto p-4 select-none pb-28 space-y-4">
       {/* Title Bar */}
       <CommandHeader
-        code="PERSONNEL / MILITARY ID"
         title="Thẻ Binh Nghiệp"
         subtitle="Căn cước sĩ quan · Quân hàm · Thành tích phục vụ"
         icon={<UserCheck />}

@@ -377,14 +377,14 @@ export const ENEMY_ARCHETYPES: EnemyType[] = [
 ];
 
 export const WAVE_TIMELINE = [
-  { startsAt: 0, label: "Wave 1" },
-  { startsAt: 35, label: "Wave 2" },
-  { startsAt: 70, label: "Elite 1" },
-  { startsAt: 90, label: "Wave 3" },
-  { startsAt: 130, label: "Wave 4" },
-  { startsAt: 170, label: "Elite 2" },
-  { startsAt: 195, label: "Wave 5" },
-  { startsAt: 225, label: "BOSS" },
+  { startsAt: 0, label: "Đợt 1" },
+  { startsAt: 35, label: "Đợt 2" },
+  { startsAt: 70, label: "Tinh nhuệ 1" },
+  { startsAt: 90, label: "Đợt 3" },
+  { startsAt: 130, label: "Đợt 4" },
+  { startsAt: 170, label: "Tinh nhuệ 2" },
+  { startsAt: 195, label: "Đợt 5" },
+  { startsAt: 225, label: "TRÙM" },
 ] as const;
 
 export const CORE_TIER_CHANCES: Record<CoreTier, number> = {

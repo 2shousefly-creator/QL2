@@ -40,8 +40,7 @@ export const MasteryScreen: React.FC<MasteryScreenProps> = ({ state, onBack }) =
     <div className="command-screen mastery-command-screen w-full max-w-lg mx-auto p-4 select-none pb-28 space-y-4">
       {/* Header Banner */}
       <CommandHeader
-        code="TRAINING QUALIFICATION / MASTERY"
-        title="Hồ Sơ Tinh Thông"
+        title="Tinh Thông"
         subtitle={`Đã tinh thông ${masterVCount} / 6 môn · Cấp tối đa Mastery V`}
         icon={<Crown />}
         action={onBack ? (
@@ -143,9 +142,9 @@ export const MasteryScreen: React.FC<MasteryScreenProps> = ({ state, onBack }) =
                               {mState.stageSuccessfulCount || 0} / {stageCfg.targetSuccessfulCount}
                             </span>
                           </div>
-                          <div className="w-full h-1.5 rounded-full bg-slate-950 border border-slate-800 overflow-hidden">
+                          <div className="continuous-progress-track w-full h-1.5 rounded-full bg-slate-950 border border-slate-800 overflow-hidden">
                             <div
-                              className="h-full bg-indigo-500 rounded-full transition-all"
+                              className="continuous-progress-fill h-full bg-indigo-500 rounded-full transition-[width] duration-300 ease-out"
                               style={{
                                 width: `${Math.min(
                                   100,
@@ -166,9 +165,9 @@ export const MasteryScreen: React.FC<MasteryScreenProps> = ({ state, onBack }) =
                               {mState.stageMediumOrHigherCount || 0} / {stageCfg.targetMediumOrHigherCount}
                             </span>
                           </div>
-                          <div className="w-full h-1.5 rounded-full bg-slate-950 border border-slate-800 overflow-hidden">
+                          <div className="continuous-progress-track w-full h-1.5 rounded-full bg-slate-950 border border-slate-800 overflow-hidden">
                             <div
-                              className="h-full bg-cyan-500 rounded-full transition-all"
+                              className="continuous-progress-fill h-full bg-cyan-500 rounded-full transition-[width] duration-300 ease-out"
                               style={{
                                 width: `${Math.min(
                                   100,
@@ -189,9 +188,9 @@ export const MasteryScreen: React.FC<MasteryScreenProps> = ({ state, onBack }) =
                               {mState.stageHardCount || 0} / {stageCfg.targetHardCount}
                             </span>
                           </div>
-                          <div className="w-full h-1.5 rounded-full bg-slate-950 border border-slate-800 overflow-hidden">
+                          <div className="continuous-progress-track w-full h-1.5 rounded-full bg-slate-950 border border-slate-800 overflow-hidden">
                             <div
-                              className="h-full bg-rose-500 rounded-full transition-all"
+                              className="continuous-progress-fill h-full bg-rose-500 rounded-full transition-[width] duration-300 ease-out"
                               style={{
                                 width: `${Math.min(
                                   100,
@@ -217,9 +216,9 @@ export const MasteryScreen: React.FC<MasteryScreenProps> = ({ state, onBack }) =
                                 : `${mState.currentHardWinStreak || 0} / ${stageCfg.targetHardWinStreak}`}
                             </span>
                           </div>
-                          <div className="w-full h-1.5 rounded-full bg-slate-950 border border-slate-800 overflow-hidden">
+                          <div className="continuous-progress-track w-full h-1.5 rounded-full bg-slate-950 border border-slate-800 overflow-hidden">
                             <div
-                              className="h-full bg-amber-400 rounded-full transition-all"
+                              className="continuous-progress-fill h-full bg-amber-400 rounded-full transition-[width] duration-300 ease-out"
                               style={{
                                 width: `${Math.min(
                                   100,

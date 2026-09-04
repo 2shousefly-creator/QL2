@@ -79,7 +79,7 @@ export const TankBattleResult: React.FC<TankBattleResultProps> = ({
       <section className="rounded-2xl border border-slate-800 bg-slate-900/85 p-3.5">
         <div className="mb-2 text-[10px] font-black uppercase tracking-wider text-slate-400">Báo cáo chiến trường</div>
         <div className="grid grid-cols-2 gap-2">
-          <Metric icon={<Target className="h-3 w-3" />} label="Địch / Elite" value={`${summary.enemiesDefeated} / ${summary.elitesDefeated}`} />
+          <Metric icon={<Target className="h-3 w-3" />} label="Địch / Tinh nhuệ" value={`${summary.enemiesDefeated} / ${summary.elitesDefeated}`} />
           <Metric icon={<Crosshair className="h-3 w-3" />} label="Pháo trúng" value={`${summary.cannonHits}/${summary.cannonShots} · ${Math.round(summary.cannonAccuracy * 100)}%`} />
           <Metric icon={<Bomb className="h-3 w-3" />} label="Hạ bằng mìn" value={summary.mineKills.toLocaleString("vi-VN")} />
           <Metric icon={<Activity className="h-3 w-3" />} label="Gây / nhận" value={`${Math.round(summary.damageDealt)} / ${Math.round(summary.damageTaken)}`} />

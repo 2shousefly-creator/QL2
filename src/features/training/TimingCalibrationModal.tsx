@@ -28,7 +28,7 @@ export const TimingCalibrationModal: React.FC<TimingCalibrationModalProps> = ({
         <div className="flex items-center justify-between border-b border-slate-800 pb-3">
           <div className="flex items-center gap-2.5">
             <Sliders className="w-5 h-5 text-amber-400" />
-            <h3 className="font-bold text-base text-amber-300">Hiệu Chỉnh Nhịp (Timing Offset)</h3>
+            <h3 className="font-bold text-base text-amber-300">Hiệu Chỉnh Độ Lệch Nhịp</h3>
           </div>
           <button
             onClick={() => {
@@ -42,13 +42,13 @@ export const TimingCalibrationModal: React.FC<TimingCalibrationModalProps> = ({
         </div>
 
         <p className="text-xs text-slate-300 leading-relaxed">
-          Nếu bạn cảm thấy nốt rơi bị lệch âm thanh hoặc độ trễ thiết bị, hãy điều chỉnh độ lệch thời gian (Offset) dưới đây:
+          Nếu nốt rơi lệch âm thanh hoặc thiết bị có độ trễ, hãy điều chỉnh thời gian dưới đây:
         </p>
 
         {/* Offset Slider */}
         <div className="bg-slate-950/80 p-4 rounded-2xl border border-slate-800 flex flex-col gap-3">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-slate-300">Độ lệch (Offset)</span>
+            <span className="text-xs font-semibold text-slate-300">Độ lệch nhịp</span>
             <span className="text-sm font-mono font-bold text-amber-400">
               {offsetMs > 0 ? `+${offsetMs}` : offsetMs} ms
             </span>

@@ -46,8 +46,8 @@ export const TrainingRewardCard: React.FC<TrainingRewardCardProps> = ({ gameStat
   }
 
   return (
-    <div className="command-panel w-full bg-slate-900/90 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-xl relative overflow-hidden">
-      <span className="command-kicker mb-2">Daily training order / Lệnh huấn luyện ngày</span>
+    <div className="command-panel w-full bg-slate-900/90 border border-slate-800 rounded-2xl p-3.5 sm:p-4 shadow-xl relative overflow-hidden">
+      <span className="command-kicker mb-2">Lệnh huấn luyện ngày</span>
 
       {/* State A: Claimed Today */}
       {isClaimedToday ? (
@@ -87,7 +87,7 @@ export const TrainingRewardCard: React.FC<TrainingRewardCardProps> = ({ gameStat
             </div>
             <span className="text-[10px] font-mono text-slate-400 bg-slate-950 px-2 py-0.5 rounded-full border border-slate-800 flex items-center gap-1">
               <Clock className="w-3 h-3 text-amber-400" />
-              Reset 00:00
+              Đặt lại 00:00
             </span>
           </div>
 

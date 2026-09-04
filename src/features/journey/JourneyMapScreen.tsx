@@ -56,8 +56,7 @@ export const JourneyMapScreen: React.FC<JourneyMapScreenProps> = ({
       {/* Header Banner */}
       <CommandHeader
         className="mb-6"
-        code="OPS / CAREER MAP"
-        title="Bản Đồ Binh Nghiệp"
+        title="Bản Đồ Hành Trình"
         subtitle={<>Vị trí hiện tại: <strong className="text-slate-200">{vm.currentRankName}</strong></>}
         icon={<Compass />}
         action={(
@@ -161,9 +160,16 @@ export const JourneyMapScreen: React.FC<JourneyMapScreenProps> = ({
                     <span className="text-slate-400 font-medium">Tiến độ chương:</span>
                     <span className={isCompleted ? "font-bold text-emerald-400" : "theme-text-accent font-bold"}>{chapter.progressPercent}%</span>
                   </div>
-                  <div className="theme-progress-track w-full h-2 rounded-full overflow-hidden border p-0.5">
+                  <div
+                    className="continuous-progress-track theme-progress-track w-full h-2 rounded-full overflow-hidden border p-0.5"
+                    role="progressbar"
+                    aria-valuemin={0}
+                    aria-valuemax={100}
+                    aria-valuenow={chapter.progressPercent}
+                    aria-label={`Tiến độ ${chapter.title}: ${chapter.progressPercent}%`}
+                  >
                     <div
-                      className={`h-full rounded-full transition-all duration-500 ${
+                      className={`continuous-progress-fill h-full rounded-full transition-[width] duration-300 ease-out ${
                         isCompleted
                           ? "bg-emerald-400"
                           : "theme-progress-fill"

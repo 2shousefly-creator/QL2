@@ -8,7 +8,6 @@ const joinClasses = (...classes: Array<string | false | null | undefined>) =>
   classes.filter(Boolean).join(" ");
 
 type CommandHeaderProps = HTMLAttributes<HTMLElement> & {
-  code: string;
   title: ReactNode;
   subtitle?: ReactNode;
   icon?: ReactNode;
@@ -16,7 +15,6 @@ type CommandHeaderProps = HTMLAttributes<HTMLElement> & {
 };
 
 export function CommandHeader({
-  code,
   title,
   subtitle,
   icon,
@@ -28,7 +26,6 @@ export function CommandHeader({
     <header className={joinClasses("command-header", className)} {...props}>
       {icon ? <div className="command-header__icon">{icon}</div> : null}
       <div className="command-header__copy">
-        <span className="command-header__code">{code}</span>
         <h1 className="command-header__title">{title}</h1>
         {subtitle ? <p className="command-header__subtitle">{subtitle}</p> : null}
       </div>

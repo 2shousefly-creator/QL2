@@ -58,8 +58,7 @@ export const UniformScreen: React.FC<UniformScreenProps> = ({ state, onBack }) =
   return (
     <div className="command-screen uniform-archive-screen mx-auto w-full max-w-lg space-y-4 px-4 pb-10 pt-4 select-none">
       <CommandHeader
-        code="UNIFORM ARCHIVE / PERSONNEL"
-        title="Hồ Sơ Quân Phục"
+        title="Quân Phục"
         subtitle="Lễ phục theo quân hàm đã đạt"
         icon={<ShieldCheck />}
         action={onBack ? (

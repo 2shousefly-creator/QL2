@@ -51,9 +51,16 @@ export const MinigameMasteryProgress: React.FC<MinigameMasteryProgressProps> = (
 
       {/* Thanh tiến trình Mastery kế tiếp */}
       {!isMax && nextStageCfg ? (
-        <div className="w-full bg-slate-900 h-2 rounded-full overflow-hidden border border-slate-800">
+        <div
+          className="continuous-progress-track w-full bg-slate-900 h-2 rounded-full overflow-hidden border border-slate-800"
+          role="progressbar"
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-valuenow={progressPct}
+          aria-label={`Tiến độ ${masteryTitle}: ${progressPct}%`}
+        >
           <div
-            className="bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-300 h-full rounded-full transition-all duration-300"
+            className="continuous-progress-fill bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-300 h-full rounded-full transition-[width] duration-300 ease-out"
             style={{ width: `${progressPct}%` }}
           />
         </div>

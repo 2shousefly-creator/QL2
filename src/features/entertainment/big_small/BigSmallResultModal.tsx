@@ -257,7 +257,7 @@ export const BigSmallResultModal: React.FC<BigSmallResultModalProps> = ({
             </div>
 
             <div className="flex justify-between items-center pt-2 border-t border-slate-800">
-              <span className="font-bold text-slate-200">Kết quả ròng (Net):</span>
+              <span className="font-bold text-slate-200">Kết quả ròng:</span>
               <span
                 className={`px-2.5 py-0.5 rounded-full text-xs font-black border ${config.netBadgeBg}`}
               >

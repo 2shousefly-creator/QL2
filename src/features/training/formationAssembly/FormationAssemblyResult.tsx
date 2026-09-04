@@ -137,7 +137,7 @@ export const FormationAssemblyResultModal: React.FC<FormationAssemblyResultProps
           <div className="flex items-center justify-between border-b border-slate-800/60 pb-1.5">
             <div className="flex items-center gap-1.5 text-slate-400">
               <RefreshCw className="w-3.5 h-3.5" />
-              <span>Số Lần Đổi Chỗ (Swap)</span>
+              <span>Số Lần Đổi Chỗ</span>
             </div>
             <span className="font-bold text-slate-100">{result.swapsPerformed}</span>
           </div>
@@ -164,7 +164,7 @@ export const FormationAssemblyResultModal: React.FC<FormationAssemblyResultProps
         {result.perfectWin && (
           <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-2xl p-2.5 flex items-center justify-center gap-2 text-emerald-300 font-extrabold text-xs">
             <CheckCircle2 className="w-4 h-4" />
-            <span>PERFECT WIN — Hoàn Hảo Không Lỗi!</span>
+            <span>CHIẾN THẮNG HOÀN HẢO — Không lỗi!</span>
           </div>
         )}
 

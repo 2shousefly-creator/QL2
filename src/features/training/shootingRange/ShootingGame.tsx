@@ -249,7 +249,7 @@ export const ShootingGame: React.FC<ShootingGameProps> = ({
           id: popId,
           x: hitTarget.x,
           y: hitTarget.y,
-          text: `+${hitResult.scoreRing}${hitResult.scoreRing === 10 ? " BULLSEYE!" : ""}`,
+          text: `+${hitResult.scoreRing}${hitResult.scoreRing === 10 ? " HỒNG TÂM!" : ""}`,
           color: hitResult.scoreRing >= 9 ? "#f59e0b" : hitResult.scoreRing >= 6 ? "#06b6d4" : "#10b981",
           createdAtPerfMs: nowPerf,
         },

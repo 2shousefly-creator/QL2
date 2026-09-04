@@ -31,8 +31,7 @@ export const RanksScreen: React.FC<RanksScreenProps> = ({ state, onDetailSheetTo
     <div className="command-screen rank-archive-screen w-full max-w-lg mx-auto p-4 select-none pb-24 space-y-4">
       {/* Header Progress Banner */}
       <CommandHeader
-        code="INSIGNIA ARCHIVE / RANK SYSTEM"
-        title="Thư Viện Cấp Bậc"
+        title="Cấp Bậc"
         subtitle={`${RANK_FAMILIES.length} nhóm quân hàm · ${RANK_STEPS.length} cấp bậc`}
         icon={<Award />}
         action={(

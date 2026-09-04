@@ -60,7 +60,7 @@ export const XpProgressBar: React.FC<XpProgressBarProps> = ({
 
       {/* Main Track */}
       <div
-        className={`xp-command-track relative h-9 rounded-xl bg-slate-950 border ${
+        className={`xp-command-track continuous-progress-track relative h-9 rounded-xl bg-slate-950 border ${
           isFull
             ? "border-amber-400 ring-2 ring-amber-400/50 shadow-[0_0_20px_rgba(250,204,21,0.5)]"
             : "border-slate-800"
@@ -72,7 +72,7 @@ export const XpProgressBar: React.FC<XpProgressBarProps> = ({
       >
         {/* Fill Bar */}
         <div
-          className={`h-full rounded-lg transition-all duration-300 relative overflow-hidden ${
+          className={`continuous-progress-fill h-full rounded-lg transition-[width] duration-300 ease-out relative overflow-hidden ${
             isFull
               ? "bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-300"
               : "bg-gradient-to-r from-emerald-600 via-teal-500 to-cyan-400"

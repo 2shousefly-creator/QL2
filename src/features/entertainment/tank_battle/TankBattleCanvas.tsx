@@ -51,6 +51,12 @@ const RARITY: Record<CoreRarity, string> = {
   diamond: "border-cyan-200 bg-gradient-to-br from-cyan-500/50 via-indigo-950 to-slate-950",
 };
 
+const RARITY_LABEL: Record<CoreRarity, string> = {
+  silver: "BẠC",
+  gold: "VÀNG",
+  diamond: "KIM CƯƠNG",
+};
+
 const angle = (direction: CardinalDirection) =>
   direction === "right" ? 0 : direction === "down" ? Math.PI / 2 : direction === "left" ? Math.PI : -Math.PI / 2;
 
@@ -478,8 +484,8 @@ export const TankBattleCanvas: React.FC<Props> = ({ reducedMotion, onComplete, o
           <div className="h-1.5 rounded bg-slate-800"><div className="h-full bg-emerald-400" style={{ width: `${hp * 100}%` }} /></div>
           <span className="text-right">{Math.ceil(hud.playerHp)}</span>
           <span className="text-amber-300">XP</span>
-          <div className="h-1.5 rounded bg-slate-800"><div className="h-full bg-amber-300" style={{ width: `${xp * 100}%` }} /></div>
-          <span className="text-right">{hud.xpRequired ? `${hud.xp}/${hud.xpRequired}` : "MAX"}</span>
+          <div className="continuous-progress-track h-1.5 rounded bg-slate-800"><div className="continuous-progress-fill h-full bg-amber-300" style={{ width: `${xp * 100}%` }} /></div>
+          <span className="text-right">{hud.xpRequired ? `${hud.xp}/${hud.xpRequired}` : "TỐI ĐA"}</span>
         </div>
         <div className="mt-1 grid grid-cols-2 gap-2 text-[7px]">
           <div className="h-1 rounded bg-slate-800"><div className="h-full bg-sky-400" style={{ width: `${allyHq * 100}%` }} /></div>
@@ -543,9 +549,9 @@ export const TankBattleCanvas: React.FC<Props> = ({ reducedMotion, onComplete, o
       {!worldRef.current.player.alive && (
         <div className="absolute inset-x-0 top-[43%] z-30 text-center">
           <div className="mx-auto w-fit rounded-2xl bg-slate-950/90 px-5 py-3">
-            <div className="text-[9px] font-black text-rose-300">RESPAWN</div>
+            <div className="text-[9px] font-black text-rose-300">HỒI SINH</div>
             <div className="text-3xl font-black text-white">{Math.ceil(hud.respawnRemaining)}</div>
-            <div className="text-[8px] text-slate-400">Giữ Level · XP · Core</div>
+            <div className="text-[8px] text-slate-400">Giữ Cấp · XP · Lõi</div>
           </div>
         </div>
       )}
@@ -554,9 +560,9 @@ export const TankBattleCanvas: React.FC<Props> = ({ reducedMotion, onComplete, o
         <div className="absolute inset-0 z-50 flex items-center bg-slate-950/95 px-3">
           <div className="w-full">
             <div className="text-center">
-              <div className="text-[9px] font-black tracking-widest text-amber-300">CORE READY · LV.{worldRef.current.player.level}</div>
-              <h2 className="text-xl font-black text-white">Chọn 1 Core {worldRef.current.coreChoice.rarity.toUpperCase()}</h2>
-              <p className="text-[9px] text-slate-400">3 lựa chọn luôn cùng phẩm chất · gameplay đang pause</p>
+              <div className="text-[9px] font-black tracking-widest text-amber-300">LÕI SẴN SÀNG · CẤP {worldRef.current.player.level}</div>
+              <h2 className="text-xl font-black text-white">Chọn 1 lõi {RARITY_LABEL[worldRef.current.coreChoice.rarity]}</h2>
+              <p className="text-[9px] text-slate-400">3 lựa chọn luôn cùng phẩm chất · trận đấu đang tạm dừng</p>
             </div>
             <div className="mt-4 space-y-2">
               {worldRef.current.coreChoice.choices.map((core) => (
@@ -579,7 +585,7 @@ export const TankBattleCanvas: React.FC<Props> = ({ reducedMotion, onComplete, o
       {exit && (
         <div className="absolute inset-0 z-[60] grid place-items-center bg-slate-950/90 px-6">
           <div className="w-full rounded-3xl bg-slate-900 p-5 text-center">
-            <h2 className="font-black text-white">Rời trận Tank Battle V2?</h2>
+            <h2 className="font-black text-white">Rời trận Bắn Xe Tăng V2?</h2>
             <div className="mt-4 grid grid-cols-2 gap-2">
               <button onClick={() => { setExit(false); setPaused(false); }} className="min-h-11 rounded-xl border border-slate-700 text-slate-200">Ở lại</button>
               <button onClick={onExit} className="min-h-11 rounded-xl bg-rose-500 font-black text-white">Rời trận</button>

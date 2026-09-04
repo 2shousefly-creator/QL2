@@ -73,7 +73,7 @@ export const AirCombatResult: React.FC<AirCombatResultProps> = ({
         <h2 className="mt-1 text-2xl font-black text-white">
           {summary.bossDefeated ? "Pháo Đài Đã Bị Hạ" : summary.destroyed ? "Chiến Cơ Bị Hạ" : "Hết Thời Gian Xuất Kích"}
         </h2>
-        <p className="mt-1 text-xs text-slate-400">{aircraft.code} · {aircraft.name} · Combat Lv.{summary.combatLevel}</p>
+        <p className="mt-1 text-xs text-slate-400">{aircraft.code} · {aircraft.name} · Cấp chiến đấu {summary.combatLevel}</p>
 
         <div className="mt-4 rounded-2xl border border-amber-400/25 bg-amber-400/5 px-4 py-3">
           <div className="flex items-center justify-center gap-1.5 text-[10px] font-extrabold uppercase text-amber-300"><Trophy className="h-3.5 w-3.5" /> Tổng điểm</div>
@@ -83,7 +83,7 @@ export const AirCombatResult: React.FC<AirCombatResultProps> = ({
 
         <div className="mt-3 grid grid-cols-2 gap-2">
           <ResultStat icon={<Crosshair className="h-3 w-3" />} label="Tiêu diệt" value={summary.enemiesDefeated} />
-          <ResultStat icon={<ShieldAlert className="h-3 w-3" />} label="Elite" value={summary.elitesDefeated} />
+          <ResultStat icon={<ShieldAlert className="h-3 w-3" />} label="Tinh nhuệ" value={summary.elitesDefeated} />
           <ResultStat icon={<Flame className="h-3 w-3" />} label="Combo cao nhất" value={summary.maxCombo} />
           <ResultStat icon={<Timer className="h-3 w-3" />} label="Sinh tồn" value={formatTime(summary.survivalSeconds)} />
           <ResultStat icon={<Gauge className="h-3 w-3" />} label="Sát thương gây" value={Math.round(summary.damageDealt).toLocaleString("vi-VN")} />

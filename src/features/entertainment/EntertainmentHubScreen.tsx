@@ -106,8 +106,7 @@ export const EntertainmentHubScreen: React.FC<EntertainmentHubScreenProps> = ({
     <div className="command-screen entertainment-command-screen w-full max-w-lg mx-auto flex-1 flex flex-col min-h-0 px-3.5 sm:px-4 py-3.5 space-y-4 select-none">
       {/* Hub Top Bar */}
       <CommandHeader
-        code="BARRACKS RECREATION / SIMULATION"
-        title="Khu Giải Trí Doanh Trại"
+        title="Khu Giải Trí"
         subtitle="Mô phỏng chiến thuật · Trò chơi kỹ năng · Giải trí dân gian"
         icon={<Dices />}
         action={(
@@ -142,10 +141,10 @@ export const EntertainmentHubScreen: React.FC<EntertainmentHubScreenProps> = ({
           return (
             <React.Fragment key={game.id}>
               {game.id === "chien_tuyen" && (
-                <div className="entertainment-section-label">A / Chiến thuật & mô phỏng</div>
+                <div className="entertainment-section-label">Chiến thuật & mô phỏng</div>
               )}
               {game.id === "bau_cua" && (
-                <div className="entertainment-section-label">B / Giải trí doanh trại</div>
+                <div className="entertainment-section-label">Giải trí doanh trại</div>
               )}
               <div
                 data-entertainment-game={game.id}

@@ -53,7 +53,7 @@ export const FarmXpProgressBar: React.FC<FarmXpProgressBarProps> = ({
           XP Người Chơi
         </span>
         <div
-          className="xp-command-track relative h-3 flex-1 overflow-hidden rounded-full border border-amber-300/40 bg-slate-950 shadow-inner"
+          className="xp-command-track continuous-progress-track relative h-3 flex-1 overflow-hidden rounded-full border border-amber-300/40 bg-slate-950 shadow-inner"
           role="progressbar"
           aria-valuemin={0}
           aria-valuemax={100}
@@ -62,7 +62,7 @@ export const FarmXpProgressBar: React.FC<FarmXpProgressBarProps> = ({
           <div
             data-farm-xp-fill="yellow"
             data-xp-transition="global-state-target"
-            className="h-full rounded-full bg-gradient-to-r from-amber-500 via-yellow-400 to-yellow-300 transition-[width] duration-[600ms] ease-out motion-reduce:transition-none"
+            className="continuous-progress-fill h-full rounded-full bg-gradient-to-r from-amber-500 via-yellow-400 to-yellow-300 transition-[width] duration-300 ease-out motion-reduce:transition-none"
             style={{ width: `${percentage}%` }}
           />
         </div>
