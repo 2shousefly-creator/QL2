@@ -18,6 +18,7 @@ import {
   isAnimalDead,
   isAnimalEggCycleFeedBuffed,
 } from "../animalLifecycle";
+import { formatFeedPercentage } from "../farmPresentation";
 import { CanonicalWeatherSlot } from "../weatherEngine";
 import { Utensils, Sparkles, HelpCircle, Wheat } from "lucide-react";
 import {
@@ -816,6 +817,13 @@ export const LivestockPen2D: React.FC<LivestockPen2DProps> = ({
           penFeedBuffValue <= 0 &&
           livingAnimalCount > 0 &&
           starvationDeadlineAt !== null;
+        const feedProgressPercent = Math.max(
+          0,
+          Math.min(100, penFeedBuffValue)
+        );
+        const troughProgressPercent = isDangerMode
+          ? dangerRatio * 100
+          : feedProgressPercent;
 
         const isTroughFull = penFeedBuffValue >= 100;
 
@@ -888,7 +896,9 @@ export const LivestockPen2D: React.FC<LivestockPen2DProps> = ({
                         : "text-amber-500"
                     }`}
                   >
-                    {Math.round((isDangerMode ? dangerRatio : penFeedBuffValue / 100) * 100)}%
+                    {isDangerMode
+                      ? `${Math.round(dangerRatio * 100)}%`
+                      : formatFeedPercentage(feedProgressPercent)}
                   </span>
                 </div>
               </div>
@@ -903,11 +913,7 @@ export const LivestockPen2D: React.FC<LivestockPen2DProps> = ({
                       ? "bg-gradient-to-r from-amber-500 to-emerald-400"
                       : "bg-slate-700"
                   }`}
-                  style={{
-                    width: `${Math.round(
-                      (isDangerMode ? dangerRatio : penFeedBuffValue / 100) * 100
-                    )}%`,
-                  }}
+                  style={{ width: `${troughProgressPercent}%` }}
                 />
               </div>
 

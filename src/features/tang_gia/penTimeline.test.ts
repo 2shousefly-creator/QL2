@@ -1,6 +1,7 @@
 import {
   dismissAnimal,
   feedPenBuff,
+  projectAnimalNextEggAt,
   projectPenState,
   settleFarmState,
 } from "./farmEngine";
@@ -9,13 +10,21 @@ import {
   createDefaultFarmState,
   migrateFarmState,
 } from "./farmMigration";
-import { ANIMAL_CATALOG, FEED_CATALOG } from "./farmCatalog";
+import { ANIMAL_CATALOG, CROP_CATALOG, FEED_CATALOG } from "./farmCatalog";
 import type {
   AnimalTypeId,
   FarmSaveState,
   PenAnimalState,
 } from "./farmTypes";
-import { PEN_STARVATION_DURATION_MS } from "./animalLifecycle";
+import {
+  formatAnimalEggCountdown,
+  PEN_STARVATION_DURATION_MS,
+} from "./animalLifecycle";
+import {
+  formatFeedPercentage,
+  getFarmAttentionState,
+  getFarmPresentationState,
+} from "./farmPresentation";
 import { createInitialGameState } from "../../storage/GameRepository";
 import { sanitizeAndMigrateState } from "../../storage/migrations";
 
@@ -618,6 +627,267 @@ assert(
 assert(
   futureSkewFarm.penAnimals[0].eggWorkRemainingMs === futureSkewWork,
   "Case K: future-skew repair preserves workload instead of inventing progress"
+);
+
+const repeatedFeedFarm = createPenFarm(base, 4);
+let feedAfterMinute = 0;
+let feedAfterFiveMinutes = 0;
+let feedHorizonAfterFirstTick = 0;
+for (let second = 1; second <= 60 * 60; second += 1) {
+  settleFarmState(repeatedFeedFarm, base + second * 1_000);
+  if (second === 1) {
+    feedHorizonAfterFirstTick =
+      projectPenState(repeatedFeedFarm, base + 1_000).penFeedEmptyAt ?? 0;
+  }
+  if (second === 60) feedAfterMinute = repeatedFeedFarm.penFeedBuffValue;
+  if (second === 5 * 60) {
+    feedAfterFiveMinutes = repeatedFeedFarm.penFeedBuffValue;
+  }
+}
+assert(
+  almostEqual(feedAfterMinute, 99.8148, 0.0002) &&
+    almostEqual(feedAfterFiveMinutes, 99.0741, 0.0002) &&
+    almostEqual(repeatedFeedFarm.penFeedBuffValue, 88.8889, 0.0002),
+  "Case L1: repeated one-second canonical settlement consumes Feed at 1m, 5m and 1h"
+);
+assert(
+  repeatedFeedFarm.penFeedBuffUpdatedAt === base + HOUR &&
+    projectPenState(repeatedFeedFarm, base + HOUR).penFeedEmptyAt ===
+      feedHorizonAfterFirstTick,
+  "Case L1: each Feed value owns its tick anchor while the depletion ETA stays fixed"
+);
+
+const muscovy = getAnimalDefinition("muscovy_duck");
+const exactRolloverFarm = createPenFarm(base, 1);
+exactRolloverFarm.penAnimals = [
+  makeAnimal("exact-rollover", "muscovy_duck", base, 5_000),
+];
+const exactEggCountBefore =
+  exactRolloverFarm.inventory.eggs[muscovy.eggTypeId] || 0;
+settleFarmState(exactRolloverFarm, base + 1_000);
+assert(
+  almostEqual(
+    exactRolloverFarm.penAnimals[0].eggWorkRemainingMs!,
+    3_750,
+    0.001
+  ) &&
+    (exactRolloverFarm.inventory.eggs[muscovy.eggTypeId] || 0) ===
+      exactEggCountBefore,
+  "Case L2: short egg work advances for one second without producing early"
+);
+settleFarmState(exactRolloverFarm, base + 3_000);
+assert(
+  almostEqual(
+    exactRolloverFarm.penAnimals[0].eggWorkRemainingMs!,
+    1_250,
+    0.001
+  ) &&
+    (exactRolloverFarm.inventory.eggs[muscovy.eggTypeId] || 0) ===
+      exactEggCountBefore,
+  "Case L2: the third one-second tick remains duplicate-free just before completion"
+);
+
+const exactCompletionAt = base + 4_000;
+settleFarmState(exactRolloverFarm, exactCompletionAt);
+const exactRolloverAnimal = exactRolloverFarm.penAnimals[0];
+const secondEggAt = exactRolloverAnimal.nextEggAt;
+assert(
+  (exactRolloverFarm.inventory.eggs[muscovy.eggTypeId] || 0) ===
+    exactEggCountBefore + 1 &&
+    exactRolloverAnimal.cycleStartedAt === exactCompletionAt &&
+    exactRolloverAnimal.eggLastUpdatedAt === exactCompletionAt &&
+    almostEqual(
+      exactRolloverAnimal.eggWorkRemainingMs!,
+      muscovy.eggIntervalMs,
+      0.001
+    ),
+  "Case L2: exact completion records one egg and atomically resets the full new cycle"
+);
+assert(
+  secondEggAt > exactCompletionAt + 8 * HOUR &&
+    projectAnimalNextEggAt(
+      exactRolloverFarm,
+      exactRolloverAnimal.instanceId,
+      exactCompletionAt,
+      exactRolloverFarm.weatherSeed || 0
+    ) === secondEggAt,
+  "Case L2: direct next-egg projection returns the second egg many hours ahead"
+);
+
+const postCompletionPresentation = getFarmPresentationState(
+  exactRolloverFarm,
+  exactCompletionAt + 1_000
+);
+assert(
+  almostEqual(
+    postCompletionPresentation.penAnimals[0].eggWorkRemainingMs!,
+    muscovy.eggIntervalMs - 1_250,
+    0.001
+  ) &&
+    postCompletionPresentation.penAnimals[0].nextEggAt === secondEggAt &&
+    postCompletionPresentation.penAnimals[0].nextEggAt -
+      (exactCompletionAt + 1_000) >
+      8 * HOUR,
+  "Case L3: UI projection advances the new cycle instead of reviving the old seconds"
+);
+
+settleFarmState(exactRolloverFarm, exactCompletionAt + 1_000);
+assert(
+  (exactRolloverFarm.inventory.eggs[muscovy.eggTypeId] || 0) ===
+    exactEggCountBefore + 1 &&
+    almostEqual(
+      exactRolloverFarm.penAnimals[0].eggWorkRemainingMs!,
+      muscovy.eggIntervalMs - 1_250,
+      0.001
+    ) &&
+    exactRolloverFarm.penAnimals[0].nextEggAt === secondEggAt,
+  "Case L3: the tick after rollover advances new work once without duplicating the egg"
+);
+
+const loadedAfterRollover = loadFarmThroughSavePipeline(
+  exactRolloverFarm,
+  exactCompletionAt + 1_000
+);
+const loadedWork = loadedAfterRollover.penAnimals[0].eggWorkRemainingMs!;
+settleFarmState(loadedAfterRollover, exactCompletionAt + 2_000);
+assert(
+  loadedAfterRollover.schemaVersion === CURRENT_FARM_SCHEMA_VERSION &&
+    (loadedAfterRollover.inventory.eggs[muscovy.eggTypeId] || 0) ===
+      exactEggCountBefore + 1 &&
+    almostEqual(
+      loadedWork - loadedAfterRollover.penAnimals[0].eggWorkRemainingMs!,
+      1_250,
+      0.001
+    ) &&
+    loadedAfterRollover.penAnimals[0].nextEggAt === secondEggAt,
+  "Case L4: schema-10 save/load preserves rollover and resumes the new cycle"
+);
+
+const precisionRolloverFarm = createPenFarm(base, 1);
+precisionRolloverFarm.penAnimals = [
+  makeAnimal("precision-rollover", "muscovy_duck", base, 5_000.0001),
+];
+const precisionCountdowns: string[] = [];
+for (let second = 1; second <= 10; second += 1) {
+  const tickAt = base + second * 1_000;
+  settleFarmState(precisionRolloverFarm, tickAt);
+  precisionCountdowns.push(
+    formatAnimalEggCountdown(
+      precisionRolloverFarm.penAnimals[0].nextEggAt - tickAt
+    )
+  );
+}
+assert(
+  precisionCountdowns.slice(0, 4).join("|") ===
+    "00:03|00:02|00:01|08:24:00" &&
+    (precisionRolloverFarm.inventory.eggs[muscovy.eggTypeId] || 0) === 1,
+  "Case L5: one-second ticks cross a precision residual into one new full-cycle ETA"
+);
+assert(
+  precisionRolloverFarm.penAnimals[0].eggWorkRemainingMs! > 8 * HOUR &&
+    precisionRolloverFarm.penAnimals[0].eggLastUpdatedAt === base + 10_000 &&
+    precisionRolloverFarm.penFeedBuffUpdatedAt === base + 10_000 &&
+    precisionRolloverFarm.penFeedBuffValue < 99.98,
+  "Case L5: post-rollover egg and Feed anchors keep advancing with their values"
+);
+
+const dangerRolloverFarm = createPenFarm(base, 1, 0, 0);
+dangerRolloverFarm.penAnimals = [
+  makeAnimal("danger-rollover", "muscovy_duck", base, 5_000),
+];
+dangerRolloverFarm.inventory.feed.feed_super = 1;
+settleFarmState(dangerRolloverFarm, base + 2_000);
+const dangerWorkBeforeRefill =
+  dangerRolloverFarm.penAnimals[0].eggWorkRemainingMs!;
+const dangerRolloverRefill = feedPenBuff(
+  dangerRolloverFarm,
+  "feed_super",
+  1,
+  base + 2_000
+);
+assert(
+  dangerRolloverRefill.success &&
+    dangerRolloverFarm.penAnimals[0].eggWorkRemainingMs ===
+      dangerWorkBeforeRefill,
+  "Case L6: Danger refill preserves the in-flight egg workload"
+);
+settleFarmState(dangerRolloverFarm, base + 4_400);
+settleFarmState(dangerRolloverFarm, base + 5_400);
+assert(
+  (dangerRolloverFarm.inventory.eggs[muscovy.eggTypeId] || 0) === 1 &&
+    almostEqual(
+      dangerRolloverFarm.penAnimals[0].eggWorkRemainingMs!,
+      muscovy.eggIntervalMs - 1_250,
+      0.001
+    ) &&
+    dangerRolloverFarm.penAnimals[0].nextEggAt > base + 8 * HOUR,
+  "Case L6: a rescued cycle rolls over once and the new cycle continues"
+);
+
+const attentionFarm = createPenFarm(base, 1);
+attentionFarm.inventory.eggs[muscovy.eggTypeId] = 9;
+attentionFarm.penAnimals[0].nextEggAt = base - 1;
+const ignoredLegacyAttention = getFarmAttentionState(attentionFarm, base);
+assert(
+  !ignoredLegacyAttention.shouldShowNavigationBadge &&
+    !ignoredLegacyAttention.hasReadyCrop &&
+    !ignoredLegacyAttention.hasDanger &&
+    !ignoredLegacyAttention.hasPendingAnimalAlert,
+  "Case M: stored eggs and a stale raw nextEggAt do not create nav attention"
+);
+
+const readyCrop = CROP_CATALOG[0];
+attentionFarm.plots[0] = {
+  status: "ready",
+  cropId: readyCrop.id,
+  soilMoisture: 100,
+  soilMoistureUpdatedAt: base,
+  plantedAt: base - HOUR,
+  growthCompletedAt: base,
+  qualityPenalty: "none",
+  qualityRoll: 0.5,
+  pestPressure: 0,
+  pestUpdatedAt: base,
+  pestOutbreakAt: null,
+  pestDamageLevel: "none",
+};
+const readyAttention = getFarmAttentionState(attentionFarm, base);
+assert(
+  readyAttention.hasReadyCrop && readyAttention.shouldShowNavigationBadge,
+  "Case M: a projected ready crop creates actionable nav attention"
+);
+
+const dangerAttentionFarm = createPenFarm(base, 1, 0, 0);
+const dangerAttention = getFarmAttentionState(dangerAttentionFarm, base);
+assert(
+  dangerAttention.hasDanger && dangerAttention.shouldShowNavigationBadge,
+  "Case M: an active empty-trough Danger creates actionable nav attention"
+);
+const pendingAttentionFarm = createPenFarm(base, 0);
+pendingAttentionFarm.pendingAnimalDeathNotification = {
+  total: 1,
+  oldAge: 1,
+  starvation: 0,
+};
+const pendingAttention = getFarmAttentionState(pendingAttentionFarm, base);
+assert(
+  pendingAttention.hasPendingAnimalAlert &&
+    pendingAttention.shouldShowNavigationBadge &&
+    JSON.stringify(getFarmAttentionState(pendingAttentionFarm, base)) ===
+      JSON.stringify(pendingAttention),
+  "Case M: pending death attention is deterministic across navigation refreshes"
+);
+
+assert(
+  formatFeedPercentage(100) === "100%" &&
+    formatFeedPercentage(99.98) === "99.9%" &&
+    formatFeedPercentage(99.8148) === "99.8%" &&
+    formatFeedPercentage(0) === "0%",
+  "Case N: Feed display exposes real sub-100% movement without rounding upward"
+);
+assert(
+  formatAnimalEggCountdown(4_000) === "00:04",
+  "Case N: sub-minute egg countdown uses MM:SS as a secondary presentation fix"
 );
 
 const atFiveHours = projectPenState(fullTrough, base + 5 * HOUR);

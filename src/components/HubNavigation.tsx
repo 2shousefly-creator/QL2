@@ -20,7 +20,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { TabType, GameState } from "../game/types";
 import { soundManager } from "../game/audio";
 import { MEDAL_CATALOG } from "../game/medals/medalCatalog";
-import { getFarmPresentationState } from "../features/tang_gia/farmPresentation";
+import { getFarmAttentionState } from "../features/tang_gia/farmPresentation";
 
 type HubNavigationProps = {
   activeTab: TabType;
@@ -51,34 +51,7 @@ export const HubNavigation: React.FC<HubNavigationProps> = ({
 
   const hasTangGiaNotification = React.useMemo(() => {
     if (!farm) return false;
-
-    // 1. Trứng trong kho (Egg inventory > 0)
-    const eggsObj = farm.inventory?.eggs;
-    if (eggsObj) {
-      const eggCount = Object.keys(eggsObj).reduce((sum: number, key) => {
-        const count = (eggsObj as Record<string, number>)[key] || 0;
-        return sum + count;
-      }, 0);
-      if (eggCount > 0) return true;
-    }
-
-    // 2. Gia súc / gia cầm trong chuồng có trứng sẵn sàng thu hoạch
-    if (farm.penAnimals && farm.penAnimals.length > 0) {
-      const hasPenEggReady = farm.penAnimals.some(
-        (animal) => animal.nextEggAt && now >= animal.nextEggAt
-      );
-      if (hasPenEggReady) return true;
-    }
-
-    // 3. Cây có thể thu hoạch
-    if (farm.plots && farm.plots.length > 0) {
-      const hasReadyCrop = getFarmPresentationState(farm, now).plots.some(
-        (plot) => plot.status === "ready"
-      );
-      if (hasReadyCrop) return true;
-    }
-
-    return false;
+    return getFarmAttentionState(farm, now).shouldShowNavigationBadge;
   }, [farm, now]);
 
   if (isHidden) return null;

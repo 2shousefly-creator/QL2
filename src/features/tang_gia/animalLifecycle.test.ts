@@ -199,9 +199,9 @@ assert(formatAnimalEggCountdown(3_661_000) === "01:01:01", "egg countdown uses H
 assert(formatAnimalEggCountdown(3_600_000) === "01:00:00", "egg countdown formats the exact 60-minute boundary as 01:00:00");
 assert(formatAnimalEggCountdown(3_599_000) === "59:59", "egg countdown formats 59:59 below the hour boundary");
 assert(formatAnimalEggCountdown(65_000) === "01:05", "egg countdown formats 1:05 as 01:05");
-assert(formatAnimalEggCountdown(59_000) === "59", "egg countdown uses SS below one minute");
-assert(formatAnimalEggCountdown(9_000) === "09", "egg countdown zero-pads a single-digit second");
-assert(formatAnimalEggCountdown(-1) === "00", "egg countdown never becomes negative");
+assert(formatAnimalEggCountdown(59_000) === "00:59", "egg countdown uses MM:SS below one minute");
+assert(formatAnimalEggCountdown(9_000) === "00:09", "egg countdown zero-pads a single-digit second");
+assert(formatAnimalEggCountdown(-1) === "00:00", "egg countdown never becomes negative");
 
 const addAt = 2_000_000;
 const addedFarm = createFarmAt(addAt);

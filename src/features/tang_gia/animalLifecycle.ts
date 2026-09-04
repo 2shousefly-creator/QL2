@@ -230,11 +230,7 @@ export function formatAnimalEggCountdown(remainingMs: number): string {
     return `${pad2(hours)}:${pad2(minutes)}:${pad2(seconds)}`;
   }
 
-  if (totalSeconds >= 60) {
-    const minutes = Math.floor(totalSeconds / 60);
-    const seconds = totalSeconds % 60;
-    return `${pad2(minutes)}:${pad2(seconds)}`;
-  }
-
-  return pad2(totalSeconds);
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  return `${pad2(minutes)}:${pad2(seconds)}`;
 }

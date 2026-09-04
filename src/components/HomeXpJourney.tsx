@@ -90,7 +90,7 @@ export const HomeXpJourney: React.FC<HomeXpJourneyProps> = ({
           <button
             type="button"
             onClick={() => onOpenRankDetail?.(currentRank.rankIndex)}
-            className="theme-focus theme-border flex flex-col items-center justify-center border focus:outline-none cursor-pointer rounded-xl"
+            className="theme-focus flex flex-col items-center justify-center rounded-full focus:outline-none cursor-pointer"
             title={`Xem chi tiết cấp ${currentRank.displayName}`}
           >
             <RankBadge
@@ -204,7 +204,7 @@ export const HomeXpJourney: React.FC<HomeXpJourneyProps> = ({
               <button
                 type="button"
                 onClick={() => onOpenRankDetail?.(nextRank.rankIndex)}
-                className="theme-focus theme-border flex flex-col items-center justify-center border focus:outline-none cursor-pointer rounded-xl"
+                className="theme-focus flex flex-col items-center justify-center rounded-full focus:outline-none cursor-pointer"
                 title={`Xem chi tiết cấp kế tiếp ${nextRank.displayName}`}
               >
                 <RankBadge

@@ -3,6 +3,7 @@ import { FEED_CATALOG } from "../farmCatalog";
 import { FeedTypeId, FarmInventory, FeedDefinition } from "../farmTypes";
 import { Wheat, X, Plus, Minus, Zap, Utensils, ChevronLeft, ArrowRight } from "lucide-react";
 import { adjustIntegerQuantity } from "../../../utils/quantityInput";
+import { formatFeedPercentage } from "../farmPresentation";
 
 interface FeedModalProps {
   isOpen: boolean;
@@ -163,7 +164,7 @@ export const FeedModal: React.FC<FeedModalProps> = ({
                   currentBuff > 0 ? "text-emerald-400" : "text-amber-500"
                 }`}
               >
-                {Math.round(currentBuff)}% / 100%
+                {formatFeedPercentage(currentBuff)} / 100%
               </span>
             </div>
           </div>
@@ -175,7 +176,7 @@ export const FeedModal: React.FC<FeedModalProps> = ({
                   ? "bg-gradient-to-r from-amber-500 to-emerald-400"
                   : "bg-slate-700"
               }`}
-              style={{ width: `${Math.round(currentBuff)}%` }}
+              style={{ width: `${currentBuff}%` }}
             />
           </div>
         </div>
@@ -263,7 +264,10 @@ export const FeedModal: React.FC<FeedModalProps> = ({
             {(() => {
               const maxQty = getMaxQuantity(selectedFeed);
               const addedFill = selectedFeed.buffAmount * quantity;
-              const nextBuff = Math.min(100, Math.round(currentBuff + addedFill));
+              const nextBuff = Math.min(
+                100,
+                Math.round((currentBuff + addedFill) * 10_000) / 10_000
+              );
               const willUpgradeSpeed = selectedFeed.speedBonusPercent > activeSpeed;
 
               return (
@@ -361,7 +365,8 @@ export const FeedModal: React.FC<FeedModalProps> = ({
                     <div className="flex items-center justify-between text-slate-300">
                       <span className="text-slate-400">Máng Ăn sau nạp:</span>
                       <span className="font-bold font-mono text-emerald-400">
-                        {Math.round(currentBuff)}% ➔ {nextBuff}% (+{addedFill}%)
+                        {formatFeedPercentage(currentBuff)} ➔{" "}
+                        {formatFeedPercentage(nextBuff)} (+{addedFill}%)
                       </span>
                     </div>
 

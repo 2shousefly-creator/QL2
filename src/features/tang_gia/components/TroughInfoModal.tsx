@@ -6,6 +6,7 @@ import {
   getPenDangerRatio,
   getStarvationDeadlineAt,
 } from "../animalLifecycle";
+import { formatFeedPercentage } from "../farmPresentation";
 import { AlertTriangle, HeartPulse, Info, X, Zap, Utensils, Clock, ShieldCheck, Sparkles } from "lucide-react";
 
 interface TroughInfoModalProps {
@@ -47,6 +48,9 @@ export const TroughInfoModal: React.FC<TroughInfoModalProps> = ({
     : Math.max(0, starvationDeadlineAt - now);
   const isDangerMode =
     currentBuff <= 0 && livingAnimalCount > 0 && starvationDeadlineAt !== null;
+  const troughProgressPercent = isDangerMode
+    ? dangerRatio * 100
+    : currentBuff;
 
   const formatRemainingHours = (ms: number) => {
     if (ms <= 0) return "0 phút";
@@ -120,7 +124,9 @@ export const TroughInfoModal: React.FC<TroughInfoModalProps> = ({
                     : "text-amber-500"
                 }`}
               >
-                {Math.round((isDangerMode ? dangerRatio : currentBuff / 100) * 100)}% / 100%
+                {isDangerMode
+                  ? `${Math.round(dangerRatio * 100)}%`
+                  : formatFeedPercentage(currentBuff)} / 100%
               </span>
             </div>
 
@@ -134,11 +140,7 @@ export const TroughInfoModal: React.FC<TroughInfoModalProps> = ({
                     ? "bg-gradient-to-r from-amber-500 to-emerald-400"
                     : "bg-slate-700"
                 }`}
-                style={{
-                  width: `${Math.round(
-                    (isDangerMode ? dangerRatio : currentBuff / 100) * 100
-                  )}%`,
-                }}
+                style={{ width: `${troughProgressPercent}%` }}
               />
             </div>
 

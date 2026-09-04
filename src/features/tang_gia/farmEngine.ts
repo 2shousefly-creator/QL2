@@ -414,7 +414,13 @@ function materializeAnimalDeath(
   else summary.starvation += 1;
 }
 
-const EGG_WORK_TOLERANCE_MS = 1e-6;
+// Egg work is stored as floating-point milliseconds. Around real epoch-sized
+// timestamps, a sub-millisecond completion delta can round back to the current
+// cursor. Treating <= 1 ms of work as complete keeps rollover monotonic without
+// affecting any player-visible balance duration.
+const EGG_WORK_TOLERANCE_MS = 1;
+// Feed is a percentage, so it must not share the millisecond tolerance above.
+const FEED_VALUE_TOLERANCE = 1e-6;
 const MAX_PEN_TIMELINE_EVENTS = 20_000;
 
 interface PenTimelineOptions {
@@ -564,7 +570,7 @@ function runPenTimeline(
   const feedUpdatedAt = Number.isFinite(farm.penFeedBuffUpdatedAt)
     ? Math.min(farm.penFeedBuffUpdatedAt, safeEndT)
     : safeStartT;
-  let feedDepletedAt: number | null = feedValue <= EGG_WORK_TOLERANCE_MS
+  let feedDepletedAt: number | null = feedValue <= FEED_VALUE_TOLERANCE
     ? Number.isFinite(farm.penStarvationStartedAt)
       ? farm.penStarvationStartedAt!
       : feedUpdatedAt
@@ -619,7 +625,12 @@ function runPenTimeline(
           .filter((animal) => !isAnimalDead(animal) && animal.addedAt > cursor)
           .map((animal) => animal.addedAt)
       );
-      if (!Number.isFinite(nextAnimalAddedAt)) break;
+      if (!Number.isFinite(nextAnimalAddedAt)) {
+        // With no living or future livestock, both Feed and egg work are in an
+        // intentional zero-rate segment through the requested end timestamp.
+        cursor = safeEndT;
+        break;
+      }
       cursor = Math.min(safeEndT, nextAnimalAddedAt);
       continue;
     }
@@ -638,7 +649,7 @@ function runPenTimeline(
 
     const feedClockActive = cursor >= feedUpdatedAt;
     if (feedClockActive) {
-      if (feedValue <= EGG_WORK_TOLERANCE_MS) {
+      if (feedValue <= FEED_VALUE_TOLERANCE) {
         feedValue = 0;
         feedDepletedAt ??= cursor;
         if (!Number.isFinite(farm.penStarvationStartedAt)) {
@@ -664,7 +675,9 @@ function runPenTimeline(
           )
         );
       farm.penStarvationStartedAt = null;
-      break;
+      // Continue so a future animal (or the no-living zero-rate segment) is
+      // handled explicitly instead of relying on a blanket final rebase.
+      continue;
     }
 
     // Egg completion is processed only after same-timestamp deaths, matching
@@ -757,7 +770,30 @@ function runPenTimeline(
       nextAnimalAddedAt
     );
 
-    if (!Number.isFinite(nextEventAt) || nextEventAt <= cursor) break;
+    if (!Number.isFinite(nextEventAt) || nextEventAt <= cursor) {
+      // A tiny positive work remainder can produce `cursor + delta === cursor`
+      // at epoch-sized timestamps. Materialize that due-now completion on the
+      // next loop pass; never escape and then move its anchor without its work.
+      const dueNowEggs = activeEggAnimals.filter((animal) => {
+        const remainingWork = Math.max(0, animal.eggWorkRemainingMs || 0);
+        const completionDelayMs = remainingWork / eggRate;
+        return (
+          completionDelayMs <= EGG_WORK_TOLERANCE_MS ||
+          cursor + completionDelayMs <= cursor
+        );
+      });
+      if (dueNowEggs.length > 0) {
+        for (const animal of dueNowEggs) {
+          animal.eggWorkRemainingMs = 0;
+          animal.eggLastUpdatedAt = cursor;
+        }
+        continue;
+      }
+
+      // Preserve the last actually processed cursor on unexpected no-progress.
+      // The next settlement can safely resume from the independent anchors.
+      break;
+    }
     const elapsedMs = nextEventAt - cursor;
     if (feedValue > 0 && troughDurationMs > 0) {
       feedValue = Math.max(
@@ -783,26 +819,32 @@ function runPenTimeline(
     cursor = nextEventAt;
   }
 
-  // The event guard is unreachable under the 48-hour production cap in
-  // normal gameplay. If corrupted input reaches it, pause (do not erase) the
-  // remaining workload and still leave every persisted timestamp finite.
-  if (guard >= MAX_PEN_TIMELINE_EVENTS && cursor < safeEndT) {
-    cursor = safeEndT;
-    for (const animal of farm.penAnimals) {
-      if (!isAnimalDead(animal)) animal.eggLastUpdatedAt = safeEndT;
-    }
-  }
+  const timelineReachedEnd = cursor >= safeEndT;
 
-  // Time beyond the intentional 48-hour production window is a zero-rate
-  // segment: workload is preserved while its authoritative timestamp advances.
-  for (const animal of farm.penAnimals) {
-    if (!isAnimalDead(animal)) animal.eggLastUpdatedAt = safeEndT;
+  // Only livestock that actually reached the intentional production cap may
+  // cross the remaining zero-rate segment with unchanged work. Normal, dead,
+  // target-projection, stalled and guard-stopped animals keep their own anchor.
+  if (timelineReachedEnd) {
+    for (const animal of farm.penAnimals) {
+      if (isAnimalDead(animal)) continue;
+      const eggProgressEndAt =
+        eggProgressEndAtByAnimal.get(animal.instanceId) ?? safeEndT;
+      const reachedProductionCap =
+        eggProgressEndAt < safeEndT &&
+        (animal.eggLastUpdatedAt || 0) >=
+          eggProgressEndAt - EGG_WORK_TOLERANCE_MS;
+      if (reachedProductionCap) animal.eggLastUpdatedAt = safeEndT;
+    }
   }
   // Keep full precision in the canonical value. Rounding here would make the
   // projected empty timestamp drift a few milliseconds on every render.
   feedValue = Math.max(0, feedValue);
   farm.penFeedBuffValue = feedValue;
-  farm.penFeedBuffUpdatedAt = safeEndT;
+  // Feed value and timestamp stay paired. A target projection or an unexpected
+  // stall must not claim consumption through time the loop never processed.
+  farm.penFeedBuffUpdatedAt = timelineReachedEnd
+    ? safeEndT
+    : Math.max(feedUpdatedAt, Math.min(cursor, safeEndT));
   if (feedValue <= 0) {
     farm.penFeedBuffValue = 0;
     farm.activeFeedSpeedBonus = 0;
@@ -814,7 +856,7 @@ function runPenTimeline(
   return { newDeaths, feedDepletedAt, firstEggAtByAnimal };
 }
 
-function projectAnimalNextEggAt(
+export function projectAnimalNextEggAt(
   farm: FarmSaveState,
   animalId: string,
   now: number,
