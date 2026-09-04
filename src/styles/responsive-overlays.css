@@ -1,0 +1,197 @@
+/*
+ * Responsive overlay contract
+ * ---------------------------
+ * Keep every dialog/sheet inside the *visual* mobile viewport instead of the
+ * legacy layout viewport. This file is loaded after Tailwind/index.css and the
+ * military skin so these rules can normalize older modals without duplicating
+ * safe-area calculations in every feature.
+ */
+
+:root {
+  --overlay-gutter: 0.75rem;
+  --overlay-safe-top: max(var(--overlay-gutter), env(safe-area-inset-top, 0px));
+  --overlay-safe-right: max(var(--overlay-gutter), env(safe-area-inset-right, 0px));
+  --overlay-safe-bottom: max(var(--overlay-gutter), env(safe-area-inset-bottom, 0px));
+  --overlay-safe-left: max(var(--overlay-gutter), env(safe-area-inset-left, 0px));
+  --overlay-panel-max-height: calc(
+    100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 1.5rem
+  );
+  --overlay-panel-max-width: calc(
+    100vw - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px) - 1.5rem
+  );
+  --overlay-layer: 1200;
+  --promotion-layer: 2200;
+}
+
+/* Centered dialogs: always sit above the app HUD/navigation and stay inside
+   the iPhone safe area. The overlay itself owns scrolling when the viewport is
+   unusually short, so the panel can never push its close affordance offscreen. */
+.military-ui .fixed.inset-0.flex.items-center.justify-center:not(.promotion-command-screen) {
+  z-index: var(--overlay-layer) !important;
+  box-sizing: border-box;
+  min-height: 100dvh;
+  max-height: 100dvh;
+  padding-top: var(--overlay-safe-top) !important;
+  padding-right: var(--overlay-safe-right) !important;
+  padding-bottom: var(--overlay-safe-bottom) !important;
+  padding-left: var(--overlay-safe-left) !important;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+}
+
+/* Bottom sheets keep their bottom-edge behavior but may never extend under the
+   Dynamic Island/status area. Their own military-sheet padding owns the home
+   indicator safe area, preventing the inset from being counted twice. */
+.military-ui .fixed.inset-0.flex.items-end.justify-center:not(.promotion-command-screen) {
+  z-index: var(--overlay-layer) !important;
+  box-sizing: border-box;
+  min-height: 100dvh;
+  max-height: 100dvh;
+  padding-top: var(--overlay-safe-top) !important;
+  padding-right: max(0px, env(safe-area-inset-right, 0px)) !important;
+  padding-bottom: 0 !important;
+  padding-left: max(0px, env(safe-area-inset-left, 0px)) !important;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+}
+
+/* Cap the first panel inside legacy full-screen overlays. Existing flex-column
+   modals (Store, Feed, Kho, etc.) keep their own inner scrolling; this only
+   prevents their outer box from exceeding the safe viewport. */
+.military-ui .fixed.inset-0.flex.justify-center:not(.promotion-command-screen) > :first-child {
+  box-sizing: border-box;
+  max-width: var(--overlay-panel-max-width) !important;
+  max-height: var(--overlay-panel-max-height) !important;
+  min-height: 0;
+}
+
+/* Shared military dialog surfaces which are positioned directly (rather than
+   through a flex backdrop) also receive the same viewport contract. */
+.military-ui .military-modal {
+  box-sizing: border-box;
+  max-width: var(--overlay-panel-max-width);
+  max-height: var(--overlay-panel-max-height) !important;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.military-ui .military-modal.fixed {
+  z-index: var(--overlay-layer) !important;
+}
+
+.military-ui .military-sheet {
+  box-sizing: border-box;
+  max-width: min(100%, var(--overlay-panel-max-width));
+  max-height: calc(100dvh - env(safe-area-inset-top, 0px) - 0.5rem) !important;
+  min-height: 0;
+  padding-bottom: max(1rem, env(safe-area-inset-bottom, 0px));
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.military-ui .military-sheet.fixed {
+  z-index: var(--overlay-layer) !important;
+}
+
+/* Keep close controls above scrollable modal bodies. This does not change their
+   layout; it only prevents content/shadows from painting over the tap target. */
+.military-ui :is(.military-modal, .military-sheet) button:is([aria-label="Đóng"], [aria-label*="Thoát"], [title*="Đóng"]) {
+  position: relative;
+  z-index: 30;
+  flex-shrink: 0;
+}
+
+/* Promotion Challenge is a true application-level screen, not another z-50
+   modal. Giving it an opaque, isolated top layer eliminates stacking conflicts
+   with Home sheets while retaining the current challenge component/state. */
+.military-ui .promotion-command-screen {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: var(--promotion-layer) !important;
+  box-sizing: border-box;
+  width: 100vw;
+  height: 100dvh;
+  min-height: 100dvh;
+  max-height: 100dvh;
+  padding-top: var(--overlay-safe-top) !important;
+  padding-right: var(--overlay-safe-right) !important;
+  padding-bottom: var(--overlay-safe-bottom) !important;
+  padding-left: var(--overlay-safe-left) !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+  background: #020617 !important;
+  isolation: isolate;
+}
+
+/* App already hides HUD/navigation while the challenge flag is active. Hiding
+   the still-mounted main world as well removes both visual bleed-through and
+   accidental pointer/focus interaction with Home beneath the challenge. */
+body:has(.promotion-command-screen) .military-ui > main {
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+body:has(.promotion-command-screen) .military-ui > nav.command-dock,
+body:has(.promotion-command-screen) .military-ui > .command-status-hud {
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+/* The challenge's own confirmation/result dialogs remain inside the promotion
+   stacking context, while the generic centered-overlay contract keeps them
+   inside the safe viewport. */
+.military-ui .promotion-command-screen > .fixed.inset-0 {
+  z-index: 10 !important;
+}
+
+@media (max-width: 767px) {
+  /* Mobile challenge content should flow naturally and scroll when required;
+     justify-between/my-auto previously amplified short-height overflow. */
+  .military-ui .promotion-command-screen {
+    justify-content: flex-start !important;
+    gap: clamp(0.45rem, 1.2dvh, 0.8rem);
+  }
+
+  .military-ui .promotion-command-screen > :first-child {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    padding-block: 0.2rem;
+    background: linear-gradient(180deg, #020617 70%, rgba(2, 6, 23, 0));
+  }
+
+  .military-ui .promotion-command-screen > .command-panel,
+  .military-ui .promotion-command-screen > div {
+    min-width: 0;
+  }
+
+  /* Sheets may use their full mobile width, but never exceed safe viewport
+     height. The top inset keeps the close button below the Dynamic Island. */
+  .military-ui .military-sheet {
+    max-width: 100%;
+    max-height: calc(100dvh - env(safe-area-inset-top, 0px) - 0.5rem) !important;
+  }
+}
+
+@supports not (height: 100dvh) {
+  :root {
+    --overlay-panel-max-height: calc(100vh - 1.5rem);
+  }
+
+  .military-ui .promotion-command-screen,
+  .military-ui .fixed.inset-0.flex.justify-center:not(.promotion-command-screen) {
+    min-height: 100vh;
+    max-height: 100vh;
+  }
+}
