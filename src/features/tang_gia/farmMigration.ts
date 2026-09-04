@@ -33,7 +33,7 @@ import {
 import { clampPestPressure, PEST_OUTBREAK_THRESHOLD } from "./pestEngine";
 import { getNormalTroughDurationMs } from "./animalLifecycle";
 
-export const CURRENT_FARM_SCHEMA_VERSION = 9;
+export const CURRENT_FARM_SCHEMA_VERSION = 10;
 export const DEFAULT_FARM_WEATHER_SEED = 133742;
 
 type MutableFarmRecord = Record<string, any>;
@@ -300,6 +300,78 @@ function migrateV8ToV9(farm: MutableFarmRecord): MutableFarmRecord {
   // Egg workload and hardened livestock timestamps are materialized by the
   // canonical normalizer below so this migration remains idempotent.
   farm.schemaVersion = 9;
+  return farm;
+}
+
+/**
+ * V9 shipped both before and after the independent pen-clock fix. The older
+ * runtime could persist an unchanged Feed amount / egg workload while moving
+ * its updatedAt to lastSettledAt. An equal anchor is therefore ambiguous: it
+ * may describe a clean materialized snapshot, or it may be a rebase-only
+ * snapshot whose real history is no longer recoverable.
+ *
+ * Preserve strictly older anchors because they still prove where their value
+ * belongs. Re-anchor ambiguous snapshots once at migration time, preserving
+ * the amount/workload instead of inventing elapsed time or starvation deaths.
+ * Schema 10 itself is the repair marker, so later loads never repeat this.
+ */
+function migrateV9ToV10(
+  farm: MutableFarmRecord,
+  migrationNow: number
+): MutableFarmRecord {
+  const repairAt = isFiniteNumber(migrationNow) ? migrationNow : Date.now();
+  const previousSettledAt = normalizePastTimestamp(
+    farm.lastSettledAt,
+    repairAt
+  );
+  const rawAnimals = Array.isArray(farm.penAnimals) ? farm.penAnimals : [];
+  const livingAnimals = rawAnimals.filter(
+    (animal: unknown) => isRecord(animal) && !isFiniteNumber(animal.deathAt)
+  );
+  const feedValue = isFiniteNumber(farm.penFeedBuffValue)
+    ? Math.max(0, Math.min(100, farm.penFeedBuffValue))
+    : 0;
+  const feedAnchorIsHistorical =
+    isFiniteNumber(farm.penFeedBuffUpdatedAt) &&
+    farm.penFeedBuffUpdatedAt < previousSettledAt;
+  let repairedAmbiguousClock = false;
+
+  if (!feedAnchorIsHistorical) {
+    farm.penFeedBuffUpdatedAt = repairAt;
+    repairedAmbiguousClock = true;
+
+    if (feedValue > 0 || livingAnimals.length === 0) {
+      farm.penStarvationStartedAt = null;
+    } else {
+      const starvationAnchorIsHistorical =
+        isFiniteNumber(farm.penStarvationStartedAt) &&
+        farm.penStarvationStartedAt < previousSettledAt;
+      if (!starvationAnchorIsHistorical) {
+        farm.penStarvationStartedAt = repairAt;
+      }
+    }
+  }
+
+  for (const animal of livingAnimals) {
+    // Schema 9 already materialized workload. Only repair a rebase-only clock
+    // when that canonical value is present; timestamp-only legacy cycles are
+    // still reconstructed by the normalizer below from their own evidence.
+    if (!isFiniteNumber(animal.eggWorkRemainingMs)) continue;
+    const eggAnchorIsHistorical =
+      isFiniteNumber(animal.eggLastUpdatedAt) &&
+      animal.eggLastUpdatedAt < previousSettledAt;
+    if (eggAnchorIsHistorical) continue;
+
+    animal.eggLastUpdatedAt = repairAt;
+    repairedAmbiguousClock = true;
+  }
+
+  if (repairedAmbiguousClock) {
+    farm.lastSettledAt = repairAt;
+  } else {
+    farm.lastSettledAt = previousSettledAt;
+  }
+  farm.schemaVersion = 10;
   return farm;
 }
 
@@ -654,6 +726,7 @@ export function migrateFarmState(
     else if (version === 6) migrateV6ToV7(farm, migrationNow);
     else if (version === 7) migrateV7ToV8(farm);
     else if (version === 8) migrateV8ToV9(farm);
+    else if (version === 9) migrateV9ToV10(farm, migrationNow);
     version = normalizeCount(farm.schemaVersion);
   }
 

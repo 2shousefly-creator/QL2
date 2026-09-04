@@ -228,7 +228,6 @@ function SceneArtwork({ themeId }: { themeId: JourneyStageThemeId }) {
         <g data-layer="foreground-silhouette">
           <path d="M0 594L600 536l600 58v206H0z" fill="url(#map-console)" opacity="0.96" />
           <path d="M600 540L476 800m124-260L724 800" fill="none" stroke="var(--theme-border)" strokeWidth="2" opacity="0.14" />
-          <path d="M380 592h440" stroke="var(--theme-accent)" strokeWidth="2" opacity="0.17" />
           <path d="M0 626l286-78 94 40-102 212H0zm1200 0l-286-78-94 40 102 212h278z" fill="#020706" opacity="0.76" />
         </g>
       </svg>

@@ -16,6 +16,8 @@ import type {
   PenAnimalState,
 } from "./farmTypes";
 import { PEN_STARVATION_DURATION_MS } from "./animalLifecycle";
+import { createInitialGameState } from "../../storage/GameRepository";
+import { sanitizeAndMigrateState } from "../../storage/migrations";
 
 const MINUTE = 60 * 1000;
 const HOUR = 60 * MINUTE;
@@ -86,6 +88,48 @@ function createPenFarm(
     makeAnimal(`animal-${index}`, animalTypeId, stateAt)
   );
   return farm;
+}
+
+/**
+ * Reproduces the rebase-only snapshot that f0b72c4 could persist when
+ * farm.lastSettledAt had already reached rebaseAt: the old runPenTimeline had
+ * a zero-length interval, then still wrote penFeedBuffUpdatedAt = safeEndT;
+ * ensureAnimalEggWork likewise wrote eggLastUpdatedAt = stateAt without first
+ * reducing an already-materialized workload.
+ */
+function persistLegacyRebaseOnlySnapshot(
+  farm: FarmSaveState,
+  rebaseAt: number,
+  clocks: { feed: boolean; eggs: boolean }
+): FarmSaveState {
+  farm.schemaVersion = 9;
+  farm.lastSettledAt = rebaseAt;
+  if (clocks.feed) farm.penFeedBuffUpdatedAt = rebaseAt;
+  if (clocks.eggs) {
+    for (const animal of farm.penAnimals) {
+      if (animal.deathAt !== null) continue;
+      animal.eggLastUpdatedAt = rebaseAt;
+      const projection = projectPenState(farm, rebaseAt).penAnimals.find(
+        (candidate) => candidate.instanceId === animal.instanceId
+      );
+      if (projection) animal.nextEggAt = projection.nextEggAt;
+    }
+  }
+  return farm;
+}
+
+function loadFarmThroughSavePipeline(
+  farm: FarmSaveState,
+  migrationNow: number
+): FarmSaveState {
+  const state = createInitialGameState("Pen timeline test");
+  state.farm = farm;
+  const loaded = sanitizeAndMigrateState(
+    JSON.parse(JSON.stringify(state)),
+    migrationNow
+  );
+  if (!loaded.farm) throw new Error("Farm disappeared during save/load");
+  return loaded.farm;
 }
 
 console.log("=== TĂNG GIA FEED + EGG TIMELINE REGRESSION TESTS ===\n");
@@ -271,20 +315,26 @@ const frozenPlotStatuses = frozenV9.plots.map((plot) => plot.status).join("|");
 const migratedFrozenV9 = migrateFarmState(frozenV9, base + 10 * HOUR);
 const migratedFrozenAgain = migrateFarmState(
   migratedFrozenV9,
-  base + 10 * HOUR
+  base + 11 * HOUR
 );
 assert(
-  CURRENT_FARM_SCHEMA_VERSION === 9,
-  "Case G: repair reuses the existing v9 authoritative timestamps without a schema reset"
+  CURRENT_FARM_SCHEMA_VERSION === 10 && migratedFrozenV9.schemaVersion === 10,
+  "Case G: v9 saves receive the one-time schema-10 pen-clock repair marker"
 );
 assert(
   JSON.stringify(migratedFrozenAgain) === JSON.stringify(migratedFrozenV9),
-  "Case G: v9 normalization remains idempotent"
+  "Case G: schema-10 migration is idempotent even at a later load timestamp"
 );
 assert(
   migratedFrozenV9.penFeedBuffUpdatedAt === base &&
     migratedFrozenV9.penFeedBuffValue === 100,
-  "Case G: migration preserves the old Feed amount and its historical anchor"
+  "Case G: a strictly historical Feed anchor remains authoritative"
+);
+assert(
+  migratedFrozenV9.penAnimals.every(
+    (animal) => animal.eggLastUpdatedAt === base
+  ),
+  "Case G: strictly historical egg-work anchors remain authoritative"
 );
 settleFarmState(migratedFrozenV9, base + 10 * HOUR);
 assert(
@@ -338,37 +388,236 @@ assert(
   "Case G: timestamp-only legacy egg work is reconstructed once at its own anchor"
 );
 
-const eggRepairFarm = createPenFarm(base, 1, 0, 0);
-eggRepairFarm.lastSettledAt = base + 2 * HOUR;
-eggRepairFarm.penFeedBuffUpdatedAt = base;
-eggRepairFarm.penStarvationStartedAt = base;
-eggRepairFarm.penAnimals[0] = makeAnimal(
-  "egg-repair",
-  "muscovy_duck",
-  base,
-  5 * HOUR,
-  base
+const legacyRebaseAt = base + 4 * HOUR;
+const repairAt = base + 5 * HOUR;
+
+const staleFeedV9 = persistLegacyRebaseOnlySnapshot(
+  createPenFarm(base, 4),
+  legacyRebaseAt,
+  { feed: true, eggs: false }
 );
-eggRepairFarm.inventory.feed.feed_super = 1;
-const eggRefillAt = base + 3 * HOUR;
-const eggRefillResult = feedPenBuff(
-  eggRepairFarm,
-  "feed_super",
-  1,
-  eggRefillAt
+const repairedStaleFeed = migrateFarmState(staleFeedV9, repairAt);
+const repairedFeedAtStart = projectPenState(repairedStaleFeed, repairAt);
+const repairedFeedAfterHour = projectPenState(
+  repairedStaleFeed,
+  repairAt + HOUR
 );
-assert(eggRefillResult.success, "Case H: refilling the independently anchored egg save succeeds");
 assert(
-  almostEqual(eggRepairFarm.penAnimals[0].eggWorkRemainingMs!, 2 * HOUR, 1),
-  "Case H: refill advances old egg work before changing the rate"
+  repairedStaleFeed.penFeedBuffValue === 100 &&
+    repairedStaleFeed.penFeedBuffUpdatedAt === repairAt &&
+    repairedStaleFeed.lastSettledAt === repairAt,
+  "Case H1: stale Feed plus a rebased v9 anchor is preserved and re-anchored once"
+);
+assert(
+  repairedFeedAtStart.penFeedEmptyAt === repairAt + 9 * HOUR &&
+    repairedFeedAfterHour.penFeedEmptyAt === repairAt + 9 * HOUR &&
+    almostEqual(repairedFeedAfterHour.penFeedBuffValue, 88.8889, 0.0002),
+  "Case H1: repaired Feed immediately resumes consumption with a fixed ETA"
+);
+
+const staleEggV9 = persistLegacyRebaseOnlySnapshot(
+  createPenFarm(base, 4),
+  legacyRebaseAt,
+  { feed: false, eggs: true }
+);
+const staleEggWork = staleEggV9.penAnimals[0].eggWorkRemainingMs!;
+const repairedStaleEgg = migrateFarmState(staleEggV9, repairAt);
+const repairedEggAfterMinute = projectPenState(
+  repairedStaleEgg,
+  repairAt + MINUTE
+);
+assert(
+  repairedStaleEgg.penAnimals[0].eggWorkRemainingMs === staleEggWork &&
+    repairedStaleEgg.penAnimals[0].eggLastUpdatedAt === repairAt,
+  "Case H2: stale egg workload plus a rebased v9 anchor is preserved and re-anchored once"
 );
 assert(
   almostEqual(
-    eggRepairFarm.penAnimals[0].nextEggAt,
-    eggRefillAt + (2 * HOUR) / 1.25,
+    staleEggWork - repairedEggAfterMinute.penAnimals[0].eggWorkRemainingMs!,
+    1.25 * MINUTE,
     1
   ),
-  "Case H: refill derives ETA from remaining work instead of resetting the cycle"
+  "Case H2: repaired egg workload resumes at the active +25% rate"
+);
+
+const bothCorruptV9 = persistLegacyRebaseOnlySnapshot(
+  createPenFarm(base, 4),
+  legacyRebaseAt,
+  { feed: true, eggs: true }
+);
+bothCorruptV9.gold = 4_321;
+bothCorruptV9.inventory.feed.feed_good = 7;
+bothCorruptV9.inventory.eggs.duck_egg = 3;
+const bothCorruptData = JSON.stringify({
+  gold: bothCorruptV9.gold,
+  inventory: bothCorruptV9.inventory,
+  plots: bothCorruptV9.plots,
+  animals: bothCorruptV9.penAnimals.map((animal) => ({
+    instanceId: animal.instanceId,
+    animalTypeId: animal.animalTypeId,
+    deathAt: animal.deathAt,
+  })),
+});
+const repairedBoth = loadFarmThroughSavePipeline(bothCorruptV9, repairAt);
+const repairedBothAgain = migrateFarmState(repairedBoth, repairAt + HOUR);
+assert(
+  repairedBoth.penFeedBuffUpdatedAt === repairAt &&
+    repairedBoth.penAnimals.every(
+      (animal) => animal.eggLastUpdatedAt === repairAt
+    ),
+  "Case H3: a combined corrupt v9 snapshot repairs Feed and every living egg clock"
+);
+assert(
+  JSON.stringify(repairedBothAgain) === JSON.stringify(repairedBoth),
+  "Case H3: the combined repair is never repeated on schema 10"
+);
+assert(
+  JSON.stringify({
+    gold: repairedBoth.gold,
+    inventory: repairedBoth.inventory,
+    plots: repairedBoth.plots,
+    animals: repairedBoth.penAnimals.map((animal) => ({
+      instanceId: animal.instanceId,
+      animalTypeId: animal.animalTypeId,
+      deathAt: animal.deathAt,
+    })),
+  }) === bothCorruptData,
+  "Case H3: repair preserves Gold, inventory, plots, livestock and existing eggs"
+);
+
+const dangerStartedAt = base + 9 * HOUR;
+const dangerRebaseAt = base + 10 * HOUR;
+const dangerRepairAt = base + 10.5 * HOUR;
+const dangerCorruptV9 = createPenFarm(base, 4, 0, 0);
+dangerCorruptV9.penStarvationStartedAt = dangerStartedAt;
+for (const animal of dangerCorruptV9.penAnimals) {
+  animal.eggWorkRemainingMs = 6 * HOUR;
+}
+persistLegacyRebaseOnlySnapshot(dangerCorruptV9, dangerRebaseAt, {
+  feed: true,
+  eggs: true,
+});
+dangerCorruptV9.inventory.feed.feed_super = 1;
+const repairedDanger = migrateFarmState(dangerCorruptV9, dangerRepairAt);
+const dangerWorkAtRepair = repairedDanger.penAnimals[0].eggWorkRemainingMs!;
+const dangerRefillAt = base + 11 * HOUR;
+const dangerRefill = feedPenBuff(
+  repairedDanger,
+  "feed_super",
+  1,
+  dangerRefillAt
+);
+assert(
+  dangerRefill.success &&
+    repairedDanger.penStarvationStartedAt === null &&
+    repairedDanger.penAnimals.every((animal) => animal.deathAt === null),
+  "Case H4: refill before the trusted Danger deadline rescues a corrupt save"
+);
+assert(
+  almostEqual(
+    repairedDanger.penAnimals[0].eggWorkRemainingMs!,
+    dangerWorkAtRepair - 0.5 * HOUR,
+    1
+  ),
+  "Case H4: pre-refill egg progress is kept without resetting the cycle"
+);
+const dangerMinuteLater = projectPenState(
+  repairedDanger,
+  dangerRefillAt + MINUTE
+);
+assert(
+  almostEqual(
+    repairedDanger.penAnimals[0].eggWorkRemainingMs! -
+      dangerMinuteLater.penAnimals[0].eggWorkRemainingMs!,
+    1.25 * MINUTE,
+    1
+  ),
+  "Case H4: the new +25% bonus starts only after the refill"
+);
+
+const roundTripFarm = createPenFarm(base, 4, 40, 16);
+settleFarmState(roundTripFarm, base + HOUR);
+const firstLoad = loadFarmThroughSavePipeline(roundTripFarm, base + 2 * HOUR);
+const firstProjection = projectPenState(firstLoad, base + 2 * HOUR);
+const secondLoad = loadFarmThroughSavePipeline(
+  firstLoad,
+  base + 3 * HOUR
+);
+const secondProjection = projectPenState(secondLoad, base + 2 * HOUR);
+assert(
+  firstLoad.penFeedBuffUpdatedAt === roundTripFarm.penFeedBuffUpdatedAt &&
+    firstLoad.penAnimals[0].eggLastUpdatedAt ===
+      roundTripFarm.penAnimals[0].eggLastUpdatedAt &&
+    secondLoad.penFeedBuffUpdatedAt === firstLoad.penFeedBuffUpdatedAt &&
+    secondLoad.penAnimals[0].eggLastUpdatedAt ===
+      firstLoad.penAnimals[0].eggLastUpdatedAt,
+  "Case I: JSON save/load does not rebase canonical Feed or egg anchors"
+);
+assert(
+  firstProjection.penFeedEmptyAt === secondProjection.penFeedEmptyAt &&
+    firstProjection.penAnimals[0].nextEggAt ===
+      secondProjection.penAnimals[0].nextEggAt,
+  "Case I: Feed and egg ETAs survive repeated save/load projection"
+);
+
+const actionRoundTrip = createPenFarm(base, 4, 40, 16);
+actionRoundTrip.inventory.feed.feed_super = 1;
+settleFarmState(actionRoundTrip, base + HOUR);
+const actionWorkBeforeFeed = actionRoundTrip.penAnimals[0].eggWorkRemainingMs!;
+const actionFeed = feedPenBuff(
+  actionRoundTrip,
+  "feed_super",
+  1,
+  base + HOUR
+);
+const actionLoaded = loadFarmThroughSavePipeline(
+  actionRoundTrip,
+  base + HOUR
+);
+const actionMinuteLater = projectPenState(actionLoaded, base + HOUR + MINUTE);
+assert(
+  actionFeed.success &&
+    actionLoaded.penAnimals[0].eggWorkRemainingMs === actionWorkBeforeFeed,
+  "Case J: settle -> feed -> save -> reload keeps the materialized egg workload"
+);
+assert(
+  almostEqual(
+    actionLoaded.penAnimals[0].eggWorkRemainingMs! -
+      actionMinuteLater.penAnimals[0].eggWorkRemainingMs!,
+    1.25 * MINUTE,
+    1
+  ) && actionMinuteLater.penFeedBuffValue < actionLoaded.penFeedBuffValue,
+  "Case J: both clocks continue one minute after the action round-trip"
+);
+
+const futureSkewFarm = createPenFarm(base, 4, 40, 16);
+const futureAnchor = base + 10 * HOUR;
+futureSkewFarm.lastSettledAt = futureAnchor;
+futureSkewFarm.penFeedBuffUpdatedAt = futureAnchor;
+for (const animal of futureSkewFarm.penAnimals) {
+  animal.eggLastUpdatedAt = futureAnchor;
+}
+futureSkewFarm.inventory.feed.feed_normal = 1;
+const futureSkewWork = futureSkewFarm.penAnimals[0].eggWorkRemainingMs!;
+const trustedActionAt = base + HOUR;
+const futureSkewFeed = feedPenBuff(
+  futureSkewFarm,
+  "feed_normal",
+  1,
+  trustedActionAt
+);
+assert(
+  futureSkewFeed.success &&
+    futureSkewFarm.lastSettledAt === trustedActionAt &&
+    futureSkewFarm.penFeedBuffUpdatedAt === trustedActionAt &&
+    futureSkewFarm.penAnimals.every(
+      (animal) => animal.eggLastUpdatedAt === trustedActionAt
+    ),
+  "Case K: future-skewed anchors cannot push an action past its trusted wall-clock"
+);
+assert(
+  futureSkewFarm.penAnimals[0].eggWorkRemainingMs === futureSkewWork,
+  "Case K: future-skew repair preserves workload instead of inventing progress"
 );
 
 const atFiveHours = projectPenState(fullTrough, base + 5 * HOUR);

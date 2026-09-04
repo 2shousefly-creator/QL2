@@ -893,26 +893,49 @@ function refreshPenDerivedState(
   return projectFeedEmptyAt(farm, now, weatherSeed);
 }
 
+/**
+ * A canonical amount/workload must never be pulled into an untrusted future.
+ * Preserve the value and move only impossible future anchors back to the
+ * caller's trusted wall-clock before settlement or a pen transaction.
+ */
+function repairPenFutureClockSkew(
+  farm: FarmSaveState,
+  trustedAt: number
+): void {
+  if (Number.isFinite(farm.lastSettledAt) && farm.lastSettledAt > trustedAt) {
+    farm.lastSettledAt = trustedAt;
+  }
+  if (
+    Number.isFinite(farm.penFeedBuffUpdatedAt) &&
+    farm.penFeedBuffUpdatedAt > trustedAt
+  ) {
+    farm.penFeedBuffUpdatedAt = trustedAt;
+  }
+  if (
+    Number.isFinite(farm.penStarvationStartedAt) &&
+    farm.penStarvationStartedAt! > trustedAt
+  ) {
+    farm.penStarvationStartedAt = trustedAt;
+  }
+  for (const animal of farm.penAnimals) {
+    if (
+      !isAnimalDead(animal) &&
+      Number.isFinite(animal.eggLastUpdatedAt) &&
+      animal.eggLastUpdatedAt! > trustedAt
+    ) {
+      animal.eggLastUpdatedAt = trustedAt;
+    }
+  }
+}
+
 function getPenTransactionTimestamp(
   farm: FarmSaveState,
   requestedAt: number
 ): number {
-  let transactionAt = Number.isFinite(requestedAt)
+  const transactionAt = Number.isFinite(requestedAt)
     ? requestedAt
-    : Number.isFinite(farm.lastSettledAt)
-      ? farm.lastSettledAt
-      : Date.now();
-  if (Number.isFinite(farm.lastSettledAt)) {
-    transactionAt = Math.max(transactionAt, farm.lastSettledAt);
-  }
-  if (Number.isFinite(farm.penFeedBuffUpdatedAt)) {
-    transactionAt = Math.max(transactionAt, farm.penFeedBuffUpdatedAt);
-  }
-  for (const animal of farm.penAnimals) {
-    if (Number.isFinite(animal.eggLastUpdatedAt)) {
-      transactionAt = Math.max(transactionAt, animal.eggLastUpdatedAt!);
-    }
-  }
+    : Date.now();
+  repairPenFutureClockSkew(farm, transactionAt);
   return transactionAt;
 }
 
@@ -1504,6 +1527,7 @@ export function getProjectedCropCompletionAt(
 /** Settles the whole Farm to wall-clock `now`. */
 export function settleFarmState(farm: FarmSaveState, now: number): FarmSettlementResult {
   const currentNow = Number.isFinite(now) ? now : Date.now();
+  repairPenFutureClockSkew(farm, currentNow);
   const previousSettledAt = Number.isFinite(farm.lastSettledAt)
     ? Math.min(farm.lastSettledAt, currentNow)
     : currentNow;
@@ -2221,7 +2245,7 @@ export function feedPenBuff(
   farm: FarmSaveState,
   feedTypeId: FeedTypeId,
   quantity: number = 1,
-  now: number = farm.lastSettledAt
+  now: number = Date.now()
 ): { success: boolean; message: string; quantityFed?: number } {
   const feedDef = FEED_CATALOG.find((f) => f.id === feedTypeId);
   if (!feedDef) return { success: false, message: "Loại thức ăn không hợp lệ!" };
@@ -2475,7 +2499,7 @@ export function sellAllEggs(
 export function dismissAnimal(
   farm: FarmSaveState,
   instanceId: string,
-  now: number = farm.lastSettledAt
+  now: number = Date.now()
 ): boolean {
   const transactionAt = getPenTransactionTimestamp(farm, now);
   if (penTimelineNeedsSettlement(farm, transactionAt)) {
