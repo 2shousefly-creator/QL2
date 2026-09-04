@@ -43,7 +43,7 @@ const AMBIENT_EVENT_KINDS: Record<JourneyStageThemeId, readonly AmbientEventKind
   training_dawn: ["flag", "horizon", "patrol"],
   simple_barracks: ["searchlight", "patrol", "smoke"],
   organized_assembly: ["signal", "vehicle", "flag"],
-  map_room: ["radar", "route", "signal"],
+  map_room: ["radar", "route"],
   command_room: ["scanline", "radar", "signal"],
   ceremonial_abstract: ["ceremonial", "dust", "ring"],
   supreme_obsidian: ["dust", "ring", "motifs"],
@@ -187,39 +187,49 @@ function SceneArtwork({ themeId }: { themeId: JourneyStageThemeId }) {
     return (
       <svg className="home-scene-art" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
         <defs>
-          <pattern id="map-contours" width="96" height="82" patternUnits="userSpaceOnUse">
-            <path d="M-8 46Q24 12 58 42t54 0M-6 68q42-31 104 0" fill="none" stroke="var(--theme-border)" strokeWidth="1.5" opacity="0.52" />
-          </pattern>
           <linearGradient id="map-console" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0" stopColor="#0b211c" />
             <stop offset="1" stopColor="#020706" />
           </linearGradient>
+          <radialGradient id="map-focus-halo">
+            <stop offset="0" stopColor="var(--theme-primary-soft)" stopOpacity="0.9" />
+            <stop offset="0.58" stopColor="var(--theme-primary-muted)" stopOpacity="0.42" />
+            <stop offset="1" stopColor="#020706" stopOpacity="0" />
+          </radialGradient>
         </defs>
-        <g data-layer="background-environment">
-          <path d="M286 0h628l-62 92H348z" fill="#07110f" stroke="var(--theme-border)" strokeWidth="2" opacity="0.9" />
-          <path d="M370 35h460M406 62h388" stroke="var(--theme-accent)" strokeWidth="5" opacity="0.35" />
-          <path d="M320 92v454m560-454v454M344 118h512" stroke="var(--theme-border)" strokeWidth="2" opacity="0.45" />
-          <rect x="386" y="142" width="428" height="386" rx="12" fill="#061713" stroke="var(--theme-border)" strokeWidth="3" opacity="0.9" />
-          <rect x="407" y="164" width="386" height="342" rx="7" fill="url(#map-contours)" opacity="0.74" />
-          <path d="M430 445c64-86 120-36 164-132s102-58 174-126" fill="none" stroke="var(--theme-accent)" strokeWidth="3" strokeDasharray="10 11" opacity="0.42" />
-          <circle cx="432" cy="443" r="7" fill="var(--theme-accent)" opacity="0.62" />
-          <circle cx="594" cy="314" r="7" fill="var(--theme-accent)" opacity="0.62" />
-          <circle cx="766" cy="188" r="7" fill="var(--theme-accent)" opacity="0.62" />
+        <g data-layer="background-environment" data-density="quiet">
+          <ellipse cx="600" cy="326" rx="292" ry="286" fill="url(#map-focus-halo)" opacity="0.74" />
+          <path d="M304 0h592l-54 78H358z" fill="#06110f" opacity="0.78" />
+          <path d="M424 48h352" stroke="var(--theme-accent)" strokeWidth="3" opacity="0.2" />
+          <rect x="350" y="104" width="500" height="410" rx="30" fill="#061713" opacity="0.34" />
+          <path
+            d="M372 176c68-55 126-48 178-5s111 36 166-8 92-42 126-22M382 454c72-61 144-53 202-8s128 45 220-22"
+            fill="none"
+            stroke="var(--theme-border)"
+            strokeWidth="2"
+            opacity="0.16"
+          />
+          <path
+            d="M414 430c56-78 105-39 151-111s97-62 139-105 68-36 92-50"
+            fill="none"
+            stroke="var(--theme-accent)"
+            strokeWidth="2"
+            strokeDasharray="14 16"
+            opacity="0.2"
+          />
+          <circle cx="414" cy="430" r="4" fill="var(--theme-accent)" opacity="0.3" />
+          <circle cx="796" cy="164" r="4" fill="var(--theme-accent)" opacity="0.3" />
         </g>
-        <g data-layer="midground-scene" opacity="0.82">
-          <path d="M414 156h72v338h-72zm300 0h72v338h-72z" fill="#06110f" stroke="var(--theme-border)" strokeWidth="2" />
-          <path d="M428 181h44v76h-44zm0 98h44v76h-44zm0 98h44v76h-44zm300-196h44v76h-44zm0 98h44v76h-44zm0 98h44v76h-44z" fill="var(--theme-primary-muted)" stroke="var(--theme-border)" />
-          <path d="M436 201h28m-28 18h20m-20 80h28m-28 18h18m-18 80h28m272-196h28m-28 18h20m-20 80h28m-28 18h18m-18 80h28" stroke="var(--theme-accent)" strokeWidth="2" opacity="0.48" />
-          <path d="M420 112h360M454 126h292" stroke="var(--theme-border-strong)" strokeWidth="2" opacity="0.46" />
+        <g data-layer="midground-scene" opacity="0.5">
+          <path d="M388 150h66v344h-66zm358 0h66v344h-66z" fill="#06110f" stroke="var(--theme-border)" strokeWidth="2" />
+          <path d="M408 198h26v232h-26zm358 0h26v232h-26z" fill="var(--theme-primary-muted)" />
+          <path d="M420 220v188m360-188v188" stroke="var(--theme-accent)" strokeWidth="2" opacity="0.26" />
         </g>
         <g data-layer="foreground-silhouette">
-          <path d="M244 800l142-280h428l142 280z" fill="url(#map-console)" opacity="0.97" />
-          <path d="M382 558h436l-30 92H412z" fill="#071612" stroke="var(--theme-border)" strokeWidth="3" />
-          <path d="M422 579h170v43H422zm188 0h168v43H610z" fill="var(--theme-primary-muted)" stroke="var(--theme-border)" />
-          <path d="M444 598h98m90 0h104" stroke="var(--theme-accent)" strokeWidth="3" opacity="0.56" />
-          <path d="M412 650L350 800m438-150 62 150M600 650v150" fill="none" stroke="var(--theme-border)" strokeWidth="2" opacity="0.46" />
-          <path d="M0 610l286-90 100 28-142 252H0zm1200 0l-286-90-100 28 142 252h244z" fill="#020706" opacity="0.88" />
-          <path d="M300 706h86m428 0h86M342 750h82m352 0h82" stroke="var(--theme-accent)" strokeWidth="4" opacity="0.28" />
+          <path d="M0 594L600 536l600 58v206H0z" fill="url(#map-console)" opacity="0.96" />
+          <path d="M600 540L476 800m124-260L724 800" fill="none" stroke="var(--theme-border)" strokeWidth="2" opacity="0.14" />
+          <path d="M380 592h440" stroke="var(--theme-accent)" strokeWidth="2" opacity="0.17" />
+          <path d="M0 626l286-78 94 40-102 212H0zm1200 0l-286-78-94 40 102 212h278z" fill="#020706" opacity="0.76" />
         </g>
       </svg>
     );
@@ -577,12 +587,13 @@ export const HomeJourneyBackdrop: React.FC<HomeJourneyBackdropProps> = ({
       {previousTheme && (
         <SceneLayer theme={previousTheme} transition="exit" ambientEvent={null} />
       )}
-      <SceneLayer
-        key={`${activeTheme.id}-${sceneState.revision}`}
-        theme={activeTheme}
-        transition={isTransitioning ? "enter" : "steady"}
-        ambientEvent={reducedMotion || !isDocumentVisible ? null : ambientEvent}
-      />
+      <React.Fragment key={`${activeTheme.id}-${sceneState.revision}`}>
+        <SceneLayer
+          theme={activeTheme}
+          transition={isTransitioning ? "enter" : "steady"}
+          ambientEvent={reducedMotion || !isDocumentVisible ? null : ambientEvent}
+        />
+      </React.Fragment>
     </div>
   );
 };
