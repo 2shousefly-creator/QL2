@@ -33,11 +33,21 @@ export function OverlayHost() {
 }
 
 export function OverlayPortal({ children }: OverlayPortalProps) {
-  const [target, setTarget] = useState<HTMLElement | null>(null);
+  // Most overlays open after App has mounted its host. Resolve that existing
+  // host during render so portal children participate in the same commit and
+  // parent effects can safely read refs inside the portal (canvas/game surfaces
+  // depend on this). Keep the layout-effect fallback for the very first app
+  // commit where the host may not exist yet.
+  const [target, setTarget] = useState<HTMLElement | null>(() =>
+    typeof document === "undefined"
+      ? null
+      : document.getElementById("app-overlay-root")
+  );
 
   useClientLayoutEffect(() => {
+    if (target) return;
     setTarget(document.getElementById("app-overlay-root") ?? document.body);
-  }, []);
+  }, [target]);
 
   if (typeof document === "undefined") return <>{children}</>;
   return target ? createPortal(children, target) : null;
