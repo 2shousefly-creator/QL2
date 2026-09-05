@@ -8,6 +8,7 @@ import {
 } from "../../../game/training/shootingRange/shootingTypes";
 import { SHOOTING_DIFFICULTY_CONFIGS } from "../../../game/training/shootingRange/shootingConfig";
 import { soundManager } from "../../../game/audio";
+import { AppModal, ExclusiveFullscreenOverlay, OverlayBody, OverlayFooter, OverlayHeader } from "../../../components/overlay/AppOverlay";
 
 type ShootingGameProps = {
   difficulty: TrainingDifficulty;
@@ -513,12 +514,14 @@ export const ShootingGame: React.FC<ShootingGameProps> = ({
   const gunAngleDeg = (aimPos.x - 50) * 0.45;
 
   return (
-    <div
+    <ExclusiveFullscreenOverlay
+      ariaLabel="Bắn Súng"
+      onEscape={() => setShowExitConfirm(true)}
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
       onTouchCancel={handleTouchEnd}
-      className="fixed inset-0 z-50 bg-slate-950 flex flex-col select-none overflow-hidden animate-fadeIn touch-none"
+      className="bg-slate-950 flex flex-col select-none overflow-hidden animate-fadeIn touch-none"
     >
       {/* Top HUD Header */}
       <div className="shrink-0 w-full bg-slate-900 border-b border-slate-800 p-2.5 px-3 sm:px-5 flex items-center justify-between gap-2 text-slate-100 z-30 shadow-md">
@@ -833,20 +836,28 @@ export const ShootingGame: React.FC<ShootingGameProps> = ({
 
       {/* Exit Confirmation Modal */}
       {showExitConfirm && (
-        <div className="fixed inset-0 z-[1000] bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4 animate-fadeIn">
-          <div className="w-full max-w-sm bg-slate-900 border border-slate-800 rounded-3xl p-5 shadow-2xl flex flex-col items-center text-center space-y-4">
+        <AppModal
+          onClose={() => setShowExitConfirm(false)}
+          layer="exclusive-dialog"
+          layout="viewport-safe"
+          labelledBy="shooting-exit-title"
+          panelClassName="max-w-sm border-slate-800 bg-slate-900 text-center text-slate-100"
+        >
+          <OverlayHeader className="flex flex-col items-center gap-3 border-slate-800 text-center">
             <div className="w-12 h-12 rounded-2xl bg-rose-500/20 text-rose-400 border border-rose-500/40 flex items-center justify-center">
               <Crosshair className="w-6 h-6" />
             </div>
 
-            <div className="space-y-1">
-              <h3 className="text-base font-black text-slate-100">Thoát Lượt Chơi?</h3>
-              <p className="text-xs text-slate-400">
-                Bạn có chắc chắn muốn thoát khỏi lượt chơi Tập Bắn Súng hiện tại không?
-              </p>
-            </div>
+            <h3 id="shooting-exit-title" className="text-base font-black text-slate-100">Thoát Lượt Chơi?</h3>
+          </OverlayHeader>
 
-            <div className="grid grid-cols-2 gap-2 w-full pt-2">
+          <OverlayBody>
+            <p className="text-center text-xs text-slate-400">
+              Bạn có chắc chắn muốn thoát khỏi lượt chơi Tập Bắn Súng hiện tại không?
+            </p>
+          </OverlayBody>
+
+          <OverlayFooter className="grid grid-cols-2 gap-2 border-slate-800 bg-slate-900">
               <button
                 type="button"
                 onClick={() => setShowExitConfirm(false)}
@@ -861,10 +872,9 @@ export const ShootingGame: React.FC<ShootingGameProps> = ({
               >
                 Xác Nhận Thoát
               </button>
-            </div>
-          </div>
-        </div>
+          </OverlayFooter>
+        </AppModal>
       )}
-    </div>
+    </ExclusiveFullscreenOverlay>
   );
 };

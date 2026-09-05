@@ -5,6 +5,7 @@ import { MarchRhythmGameResult } from "../../game/training/marchRhythmJudgement"
 import { TRAINING_DIFFICULTIES } from "../../game/training/trainingConfig";
 import { DailyTrainingClaimResult } from "../../game/training/dailyTrainingReward";
 import { soundManager } from "../../game/audio";
+import { AppModal, OverlayBody, OverlayFooter, OverlayHeader } from "../../components/overlay/AppOverlay";
 
 type MarchRhythmResultProps = {
   difficulty: TrainingDifficulty;
@@ -57,10 +58,15 @@ export const MarchRhythmResult: React.FC<MarchRhythmResultProps> = ({
   }
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto animate-fadeIn select-none">
-      <div className="w-full max-w-md bg-slate-900 border border-slate-700 rounded-3xl p-5 sm:p-6 shadow-2xl text-slate-100 flex flex-col gap-4">
+    <AppModal
+      onClose={onExit}
+      layer="exclusive-dialog"
+      layout="viewport-safe"
+      labelledBy="march-rhythm-result-title"
+      panelClassName="max-w-md select-none border-slate-700 bg-slate-900 text-slate-100"
+    >
         {/* Banner Header */}
-        <div className="flex flex-col items-center text-center gap-2">
+        <OverlayHeader className="flex flex-col items-center gap-2 border-slate-800 text-center">
           {isVictory ? (
             <div className="w-16 h-16 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 shadow-lg shadow-emerald-500/10">
               <CheckCircle2 className="w-10 h-10" />
@@ -71,7 +77,7 @@ export const MarchRhythmResult: React.FC<MarchRhythmResultProps> = ({
             </div>
           )}
 
-          <h2 className="text-xl font-extrabold tracking-tight">
+          <h2 id="march-rhythm-result-title" className="text-xl font-extrabold tracking-tight">
             {isVictory ? (
               <span className="text-emerald-400">Hoàn Thành Nhiệm Vụ</span>
             ) : (
@@ -81,8 +87,9 @@ export const MarchRhythmResult: React.FC<MarchRhythmResultProps> = ({
           <span className="text-xs text-slate-400">
             Mức độ: <strong className="text-amber-400">{diffConfig.label}</strong>
           </span>
-        </div>
+        </OverlayHeader>
 
+        <OverlayBody className="flex flex-col gap-4">
         {/* XP Reward Status Box */}
         <div className={`p-3 rounded-2xl border flex items-center justify-between gap-3 ${
           isVictory && claimResult?.status === "claimed"
@@ -150,9 +157,10 @@ export const MarchRhythmResult: React.FC<MarchRhythmResultProps> = ({
             </div>
           )}
         </div>
+        </OverlayBody>
 
         {/* Action Buttons */}
-        <div className="flex flex-col gap-2 pt-1">
+        <OverlayFooter className="flex flex-col gap-2 border-slate-800 bg-slate-900">
           <button
             type="button"
             onClick={() => {
@@ -189,8 +197,7 @@ export const MarchRhythmResult: React.FC<MarchRhythmResultProps> = ({
               Về Khu Huấn Luyện
             </button>
           </div>
-        </div>
-      </div>
-    </div>
+        </OverlayFooter>
+    </AppModal>
   );
 };

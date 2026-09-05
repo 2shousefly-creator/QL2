@@ -37,6 +37,7 @@ import {
 import { AirCombatCanvas } from "./AirCombatCanvas";
 import { AirCombatResult } from "./AirCombatResult";
 import { AircraftGlyph } from "./AircraftGlyph";
+import { AppModal, ExclusiveFullscreenOverlay, OverlayBody, OverlayHeader } from "../../../components/overlay/AppOverlay";
 
 interface KhongKichScreenProps {
   gameState: GameState;
@@ -203,8 +204,9 @@ export const KhongKichScreen: React.FC<KhongKichScreenProps> = ({
 
   if (phase === "playing" && selectedAircraft) {
     return (
-      <div
-        className="tactical-battle-screen air-combat-surface fixed inset-0 z-[100] flex select-none touch-none items-center justify-center overflow-hidden bg-slate-950 px-1.5 py-1.5"
+      <ExclusiveFullscreenOverlay
+        ariaLabel="Không Kích"
+        className="tactical-battle-screen air-combat-surface flex select-none touch-none items-center justify-center overflow-hidden bg-slate-950 px-1.5 py-1.5"
         style={{
           WebkitTouchCallout: "none",
           WebkitUserSelect: "none",
@@ -227,7 +229,7 @@ export const KhongKichScreen: React.FC<KhongKichScreenProps> = ({
             setPhase("select");
           }}
         />
-      </div>
+      </ExclusiveFullscreenOverlay>
     );
   }
 
@@ -235,11 +237,16 @@ export const KhongKichScreen: React.FC<KhongKichScreenProps> = ({
 
   if (phase === "result" && completedRun) {
     return (
-      <AirCombatResult
-        {...completedRun}
-        onReplay={startRun}
-        onBack={onBack}
-      />
+      <ExclusiveFullscreenOverlay
+        ariaLabel="Kết quả Không Kích"
+        className="overflow-y-auto bg-slate-950"
+      >
+        <AirCombatResult
+          {...completedRun}
+          onReplay={startRun}
+          onBack={onBack}
+        />
+      </ExclusiveFullscreenOverlay>
     );
   }
 
@@ -411,36 +418,33 @@ export const KhongKichScreen: React.FC<KhongKichScreenProps> = ({
 
       {/* Skill Preview Modal */}
       {previewConfig && (
-        <div
-          className="fixed inset-0 z-[120] flex items-end justify-center bg-slate-950/75 p-3 backdrop-blur-sm sm:items-center"
-          data-aircraft-preview={previewConfig.id}
+        <AppModal
+          onClose={() => setPreviewAircraft(null)}
+          labelledBy="aircraft-preview-title"
+          panelClassName="max-w-md border-sky-300/40 bg-slate-950 text-slate-100 shadow-black/70"
+          panelProps={{ "data-aircraft-preview": previewConfig.id } as React.HTMLAttributes<HTMLElement>}
         >
-          <section
-            role="dialog"
-            aria-modal="true"
-            aria-label={`Kỹ năng ${previewConfig.name}`}
-            className="military-modal w-full max-w-md rounded-[22px] border border-sky-300/40 bg-slate-950 p-3.5 shadow-2xl shadow-black/70"
-          >
-            <div className="flex items-start justify-between gap-3">
+            <OverlayHeader className="flex items-start justify-between gap-3 border-slate-800">
               <div>
                 <div className="text-[9px] font-black uppercase tracking-[0.18em] text-sky-300">
                   Xem trước kỹ năng · {previewConfig.code}
                 </div>
-                <h3 className="mt-0.5 text-lg font-black text-white">{previewConfig.name}</h3>
-                <p className="mt-0.5 text-[10px] leading-relaxed text-slate-400">
-                  {previewConfig.description}
-                </p>
+                <h3 id="aircraft-preview-title" className="mt-0.5 text-lg font-black text-white">{previewConfig.name}</h3>
               </div>
               <button
                 type="button"
                 aria-label="Đóng xem trước kỹ năng"
                 onClick={() => setPreviewAircraft(null)}
-                className="grid h-8 w-8 shrink-0 place-items-center rounded-lg border border-slate-700 bg-slate-900 text-slate-300"
+                className="app-overlay__close grid h-8 w-8 shrink-0 place-items-center rounded-lg border border-slate-700 bg-slate-900 text-slate-300"
               >
                 <X className="h-4 w-4" />
               </button>
-            </div>
-            <div className="mt-2.5 space-y-1.5">
+            </OverlayHeader>
+            <OverlayBody className="space-y-2.5">
+              <p className="text-[10px] leading-relaxed text-slate-400">
+                {previewConfig.description}
+              </p>
+            <div className="space-y-1.5">
               {previewConfig.skillIds.map((skillId, index) => {
                 const skill = SKILL_CONFIGS[skillId];
                 return (
@@ -471,8 +475,8 @@ export const KhongKichScreen: React.FC<KhongKichScreenProps> = ({
                 );
               })}
             </div>
-          </section>
-        </div>
+            </OverlayBody>
+        </AppModal>
       )}
 
       {/* Action Button: XUẤT KÍCH */}

@@ -1,197 +1,256 @@
 /*
- * Responsive overlay contract
- * ---------------------------
- * Keep every dialog/sheet inside the *visual* mobile viewport instead of the
- * legacy layout viewport. This file is loaded after Tailwind/index.css and the
- * military skin so these rules can normalize older modals without duplicating
- * safe-area calculations in every feature.
+ * Application overlay contract
+ * ----------------------------
+ * React portals remove dialogs from feature stacking contexts. App-safe
+ * overlays use measured HUD/navigation edges; exclusive screens use the
+ * visual viewport and OS safe areas only.
  */
 
 :root {
-  --overlay-gutter: 0.75rem;
-  --overlay-safe-top: max(var(--overlay-gutter), env(safe-area-inset-top, 0px));
-  --overlay-safe-right: max(var(--overlay-gutter), env(safe-area-inset-right, 0px));
-  --overlay-safe-bottom: max(var(--overlay-gutter), env(safe-area-inset-bottom, 0px));
-  --overlay-safe-left: max(var(--overlay-gutter), env(safe-area-inset-left, 0px));
-  --overlay-panel-max-height: calc(
-    100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 1.5rem
+  --app-visual-viewport-offset-top: 0px;
+  --app-visual-viewport-height: 100dvh;
+  --app-overlay-inline-gutter: clamp(0.65rem, 3vw, 1rem);
+  --app-overlay-block-gutter: clamp(0.5rem, 1.5dvh, 0.85rem);
+  --app-overlay-measured-top: 0px;
+  --app-overlay-measured-bottom: 0px;
+  --app-overlay-top: max(
+    calc(env(safe-area-inset-top, 0px) + var(--app-overlay-block-gutter)),
+    calc(var(--app-overlay-measured-top) + var(--app-overlay-block-gutter))
   );
-  --overlay-panel-max-width: calc(
-    100vw - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px) - 1.5rem
+  --app-overlay-bottom: max(
+    calc(env(safe-area-inset-bottom, 0px) + var(--app-overlay-block-gutter)),
+    calc(var(--app-overlay-measured-bottom) + var(--app-overlay-block-gutter))
   );
-  --overlay-layer: 1200;
-  --promotion-layer: 2200;
+  --app-overlay-available-height: calc(
+    var(--app-visual-viewport-height) - var(--app-overlay-top) - var(--app-overlay-bottom)
+  );
+  --z-app-chrome: 40;
+  --z-overlay-root: 1200;
+  --z-overlay-normal: 10;
+  --z-overlay-nested: 20;
+  --z-overlay-exclusive: 30;
+  --z-overlay-exclusive-dialog: 40;
+  --z-overlay-system: 50;
 }
 
-/* Centered dialogs: always sit above the app HUD/navigation and stay inside
-   the iPhone safe area. The overlay itself owns scrolling when the viewport is
-   unusually short, so the panel can never push its close affordance offscreen. */
-.military-ui .fixed.inset-0.flex.items-center.justify-center:not(.promotion-command-screen) {
-  z-index: var(--overlay-layer) !important;
+.app-overlay-portal-root {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-overlay-root);
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+  isolation: isolate;
+}
+
+.app-overlay,
+.app-exclusive-overlay {
+  position: fixed;
+  top: var(--app-visual-viewport-offset-top);
+  right: 0;
+  left: 0;
   box-sizing: border-box;
-  min-height: 100dvh;
-  max-height: 100dvh;
-  padding-top: var(--overlay-safe-top) !important;
-  padding-right: var(--overlay-safe-right) !important;
-  padding-bottom: var(--overlay-safe-bottom) !important;
-  padding-left: var(--overlay-safe-left) !important;
-  overflow-x: hidden;
-  overflow-y: auto;
+  width: 100%;
+  height: var(--app-visual-viewport-height);
+  min-width: 0;
+  pointer-events: auto;
+}
+
+.app-overlay {
+  display: flex;
+  justify-content: center;
+  padding-top: var(--app-overlay-top);
+  padding-right: max(var(--app-overlay-inline-gutter), env(safe-area-inset-right, 0px));
+  padding-bottom: var(--app-overlay-bottom);
+  padding-left: max(var(--app-overlay-inline-gutter), env(safe-area-inset-left, 0px));
+  overflow: hidden;
+  background: var(--app-overlay-backdrop, rgba(2, 6, 23, 0.84));
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
   overscroll-behavior: contain;
-  -webkit-overflow-scrolling: touch;
   touch-action: pan-y;
 }
 
-/* Bottom sheets keep their bottom-edge behavior but may never extend under the
-   Dynamic Island/status area. Their own military-sheet padding owns the home
-   indicator safe area, preventing the inset from being counted twice. */
-.military-ui .fixed.inset-0.flex.items-end.justify-center:not(.promotion-command-screen) {
-  z-index: var(--overlay-layer) !important;
-  box-sizing: border-box;
-  min-height: 100dvh;
-  max-height: 100dvh;
-  padding-top: var(--overlay-safe-top) !important;
-  padding-right: max(0px, env(safe-area-inset-right, 0px)) !important;
-  padding-bottom: 0 !important;
-  padding-left: max(0px, env(safe-area-inset-left, 0px)) !important;
-  overflow-x: hidden;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  -webkit-overflow-scrolling: touch;
-  touch-action: pan-y;
+.app-overlay[data-overlay-layout="viewport-safe"] {
+  padding-top: max(var(--app-overlay-block-gutter), env(safe-area-inset-top, 0px));
+  padding-bottom: max(var(--app-overlay-block-gutter), env(safe-area-inset-bottom, 0px));
 }
 
-/* Cap the first panel inside legacy full-screen overlays. Existing flex-column
-   modals (Store, Feed, Kho, etc.) keep their own inner scrolling; this only
-   prevents their outer box from exceeding the safe viewport. */
-.military-ui .fixed.inset-0.flex.justify-center:not(.promotion-command-screen) > :first-child {
-  box-sizing: border-box;
-  max-width: var(--overlay-panel-max-width) !important;
-  max-height: var(--overlay-panel-max-height) !important;
-  min-height: 0;
+.app-overlay--modal {
+  align-items: center;
 }
 
-/* Shared military dialog surfaces which are positioned directly (rather than
-   through a flex backdrop) also receive the same viewport contract. */
-.military-ui .military-modal {
-  box-sizing: border-box;
-  max-width: var(--overlay-panel-max-width);
-  max-height: var(--overlay-panel-max-height) !important;
-  overflow-x: hidden;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  -webkit-overflow-scrolling: touch;
+.app-overlay--sheet {
+  align-items: flex-end;
 }
 
-.military-ui .military-modal.fixed {
-  z-index: var(--overlay-layer) !important;
+.app-overlay[data-overlay-layer="normal"] {
+  z-index: var(--z-overlay-normal);
 }
 
-.military-ui .military-sheet {
-  box-sizing: border-box;
-  max-width: min(100%, var(--overlay-panel-max-width));
-  max-height: calc(100dvh - env(safe-area-inset-top, 0px) - 0.5rem) !important;
-  min-height: 0;
-  padding-bottom: max(1rem, env(safe-area-inset-bottom, 0px));
-  overscroll-behavior: contain;
-  -webkit-overflow-scrolling: touch;
+.app-overlay[data-overlay-layer="nested"] {
+  z-index: var(--z-overlay-nested);
 }
 
-.military-ui .military-sheet.fixed {
-  z-index: var(--overlay-layer) !important;
+.app-overlay[data-overlay-layer="exclusive-dialog"] {
+  z-index: var(--z-overlay-exclusive-dialog);
 }
 
-/* Keep close controls above scrollable modal bodies. This does not change their
-   layout; it only prevents content/shadows from painting over the tap target. */
-.military-ui :is(.military-modal, .military-sheet) button:is([aria-label="Đóng"], [aria-label*="Thoát"], [title*="Đóng"]) {
+.app-overlay[data-overlay-layer="system"] {
+  z-index: var(--z-overlay-system);
+  --app-overlay-backdrop: rgba(2, 6, 23, 0.94);
+}
+
+.app-overlay__panel {
   position: relative;
-  z-index: 30;
-  flex-shrink: 0;
+  display: flex;
+  width: 100%;
+  max-width: min(32rem, calc(100vw - (2 * var(--app-overlay-inline-gutter))));
+  max-height: 100%;
+  min-width: 0;
+  min-height: 0;
+  flex-direction: column;
+  overflow: hidden;
+  color: #f8fafc;
+  background: var(--military-panel-bg-strong, rgba(5, 11, 22, 0.98));
+  overscroll-behavior: contain;
 }
 
-/* Promotion Challenge is a true application-level screen, not another z-50
-   modal. Giving it an opaque, isolated top layer eliminates stacking conflicts
-   with Home sheets while retaining the current challenge component/state. */
-.military-ui .promotion-command-screen {
-  position: fixed !important;
-  inset: 0 !important;
-  z-index: var(--promotion-layer) !important;
+.app-overlay--sheet .app-overlay__panel {
+  max-width: min(32rem, 100%);
+  border-radius: 1.5rem 1.5rem var(--military-radius-md, 0.5rem) var(--military-radius-md, 0.5rem);
+}
+
+.app-overlay__header,
+.app-overlay__footer {
+  position: relative;
+  z-index: 2;
+  flex: 0 0 auto;
+  min-width: 0;
+  background: inherit;
+}
+
+.app-overlay__body {
+  min-width: 0;
+  min-height: 0;
+  flex: 1 1 auto;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+}
+
+.app-overlay__panel button:is(
+  [aria-label="Đóng"],
+  [aria-label*="Đóng"],
+  [aria-label*="Thoát"],
+  [title*="Đóng"],
+  [data-overlay-close]
+) {
+  position: relative;
+  z-index: 4;
+  min-width: 44px;
+  min-height: 44px;
+  flex: 0 0 auto;
+}
+
+.app-overlay__panel :is(h1, h2, h3, h4) {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.app-overlay__panel button {
+  min-height: 44px;
+}
+
+.app-overlay__panel :is(input, select, textarea) {
+  min-height: 44px;
+  font-size: 16px;
+}
+
+.app-exclusive-overlay {
+  z-index: var(--z-overlay-exclusive);
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-right: env(safe-area-inset-right, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  padding-left: env(safe-area-inset-left, 0px);
+  overflow: hidden;
+  background: #020617;
+  isolation: isolate;
+}
+
+.app-exclusive-overlay[data-overlay-layer="system"] {
+  z-index: var(--z-overlay-system);
+}
+
+.app-exclusive-overlay__content {
+  position: relative;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  flex-direction: column;
+  overflow: hidden;
+  outline: none;
+  isolation: isolate;
+}
+
+.app-overlay-toast {
+  position: fixed;
+  top: var(--app-overlay-top);
+  left: 50%;
+  z-index: var(--z-overlay-nested);
   box-sizing: border-box;
-  width: 100vw;
-  height: 100dvh;
-  min-height: 100dvh;
-  max-height: 100dvh;
-  padding-top: var(--overlay-safe-top) !important;
-  padding-right: var(--overlay-safe-right) !important;
-  padding-bottom: var(--overlay-safe-bottom) !important;
-  padding-left: var(--overlay-safe-left) !important;
+  width: min(92vw, 28rem);
+  max-width: calc(100vw - (2 * var(--app-overlay-inline-gutter)));
+  pointer-events: none;
+  transform: translateX(-50%);
+}
+
+.app-overlay-toast[data-interactive="true"] {
+  pointer-events: auto;
+}
+
+.app-overlay-toast[data-overlay-layer="exclusive-dialog"] {
+  z-index: var(--z-overlay-exclusive-dialog);
+}
+
+.app-overlay-toast[data-overlay-layer="system"] {
+  z-index: var(--z-overlay-system);
+}
+
+.app-overlay__panel:focus,
+.app-exclusive-overlay__content:focus {
+  outline: none;
+}
+
+/* Explicit compatibility marker for low-risk legacy content while it is
+   wrapped by a shared portal primitive. It never owns viewport positioning. */
+.app-overlay__legacy-scroll-body {
+  min-height: 0 !important;
+  max-height: none !important;
   overflow-x: hidden !important;
   overflow-y: auto !important;
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
-  touch-action: pan-y;
-  background: #020617 !important;
-  isolation: isolate;
 }
 
-/* App already hides HUD/navigation while the challenge flag is active. Hiding
-   the still-mounted main world as well removes both visual bleed-through and
-   accidental pointer/focus interaction with Home beneath the challenge. */
-body:has(.promotion-command-screen) .military-ui > main {
-  visibility: hidden !important;
-  pointer-events: none !important;
-}
-
-body:has(.promotion-command-screen) .military-ui > nav.command-dock,
-body:has(.promotion-command-screen) .military-ui > .command-status-hud {
-  visibility: hidden !important;
-  pointer-events: none !important;
-}
-
-/* The challenge's own confirmation/result dialogs remain inside the promotion
-   stacking context, while the generic centered-overlay contract keeps them
-   inside the safe viewport. */
-.military-ui .promotion-command-screen > .fixed.inset-0 {
-  z-index: 10 !important;
-}
-
-@media (max-width: 767px) {
-  /* Mobile challenge content should flow naturally and scroll when required;
-     justify-between/my-auto previously amplified short-height overflow. */
-  .military-ui .promotion-command-screen {
-    justify-content: flex-start !important;
-    gap: clamp(0.45rem, 1.2dvh, 0.8rem);
-  }
-
-  .military-ui .promotion-command-screen > :first-child {
-    position: sticky;
-    top: 0;
-    z-index: 20;
-    padding-block: 0.2rem;
-    background: linear-gradient(180deg, #020617 70%, rgba(2, 6, 23, 0));
-  }
-
-  .military-ui .promotion-command-screen > .command-panel,
-  .military-ui .promotion-command-screen > div {
-    min-width: 0;
-  }
-
-  /* Sheets may use their full mobile width, but never exceed safe viewport
-     height. The top inset keeps the close button below the Dynamic Island. */
-  .military-ui .military-sheet {
+@media (max-width: 479px) {
+  .app-overlay__panel {
     max-width: 100%;
-    max-height: calc(100dvh - env(safe-area-inset-top, 0px) - 0.5rem) !important;
+  }
+
+  .app-overlay__footer[data-stack-actions="true"] {
+    display: flex;
+    flex-direction: column;
   }
 }
 
 @supports not (height: 100dvh) {
   :root {
-    --overlay-panel-max-height: calc(100vh - 1.5rem);
-  }
-
-  .military-ui .promotion-command-screen,
-  .military-ui .fixed.inset-0.flex.justify-center:not(.promotion-command-screen) {
-    min-height: 100vh;
-    max-height: 100vh;
+    --app-visual-viewport-height: 100vh;
   }
 }

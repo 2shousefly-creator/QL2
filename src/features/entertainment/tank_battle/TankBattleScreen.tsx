@@ -10,6 +10,7 @@ import { getTankBattleRewardDateKey, loadTankBattleProfile, saveTankBattleProfil
 import type { TankBattleProfile, TankBattleReward, TankBattleRunSummary } from "./tankBattleTypes";
 import { TankBattleCanvas } from "./TankBattleCanvas";
 import { TankBattleResult } from "./TankBattleResult";
+import { ExclusiveFullscreenOverlay } from "../../../components/overlay/AppOverlay";
 
 interface TankBattleScreenProps { gameState: GameState; onUpdateGameState: (updater: ((draft: GameState) => void) | GameState) => void; onBack: () => void; }
 type ScreenPhase = "briefing" | "playing" | "result";
@@ -22,8 +23,24 @@ export const TankBattleScreen: React.FC<TankBattleScreenProps> = ({ gameState, o
   useEffect(() => { document.querySelector("main")?.scrollTo({ top: 0, behavior: "auto" }); }, [phase]);
   const startRun = () => { if (!profile.tutorialSeen) { const nextProfile = { ...profile, tutorialSeen: true }; setProfile(nextProfile); saveTankBattleProfile(nextProfile); } soundManager.playChallengeStart(); soundManager.triggerHaptic("medium"); setCompletedRun(null); setPhase("playing"); };
   const finishRun = (summary: TankBattleRunSummary) => { const previousHighScore = profile.highScore; const { reward, nextProfile } = calculateTankBattleReward(summary, profile, getTankBattleRewardDateKey()); saveTankBattleProfile(nextProfile); setProfile(nextProfile); setCompletedRun({ summary, reward, previousHighScore }); onUpdateGameState((draft) => { if (!draft.farm) draft.farm = createDefaultFarmState(); draft.farm.gold = Math.max(0, draft.farm.gold || 0) + reward.gold; if (reward.xp > 0) applyEarnedXpCapped(draft, reward.xp * gameConfig.xpTicksPerXp); }); setPhase("result"); };
-  if (phase === "playing") return <div className="tactical-battle-screen fixed inset-0 z-[100] flex items-center justify-center overflow-hidden bg-slate-950 px-1.5 py-1.5" style={{ paddingTop: "max(6px, env(safe-area-inset-top))", paddingRight: "max(6px, env(safe-area-inset-right))", paddingBottom: "max(6px, env(safe-area-inset-bottom))", paddingLeft: "max(6px, env(safe-area-inset-left))" }} data-tank-battle-screen="playing"><TankBattleCanvas reducedMotion={gameState.settings.reducedMotion} aimAssistEnabled={profile.aimAssistEnabled} onComplete={finishRun} onExit={() => setPhase("briefing")} /></div>;
-  if (phase === "result" && completedRun) return <TankBattleResult {...completedRun} onReplay={startRun} onBack={onBack} />;
+  if (phase === "playing") return (
+    <ExclusiveFullscreenOverlay
+      ariaLabel="Bắn Xe Tăng"
+      className="tactical-battle-screen flex items-center justify-center overflow-hidden bg-slate-950 px-1.5 py-1.5"
+      style={{ paddingTop: "max(6px, env(safe-area-inset-top))", paddingRight: "max(6px, env(safe-area-inset-right))", paddingBottom: "max(6px, env(safe-area-inset-bottom))", paddingLeft: "max(6px, env(safe-area-inset-left))" }}
+      data-tank-battle-screen="playing"
+    >
+      <TankBattleCanvas reducedMotion={gameState.settings.reducedMotion} aimAssistEnabled={profile.aimAssistEnabled} onComplete={finishRun} onExit={() => setPhase("briefing")} />
+    </ExclusiveFullscreenOverlay>
+  );
+  if (phase === "result" && completedRun) return (
+    <ExclusiveFullscreenOverlay
+      ariaLabel="Kết quả Bắn Xe Tăng"
+      className="overflow-y-auto bg-slate-950"
+    >
+      <TankBattleResult {...completedRun} onReplay={startRun} onBack={onBack} />
+    </ExclusiveFullscreenOverlay>
+  );
   return <div className="command-screen tactical-battle-screen mx-auto w-full max-w-lg space-y-3 px-3 pb-6 pt-3" data-tank-battle-screen="briefing-v2">
     <div className="flex items-center justify-between"><button type="button" onClick={onBack} className="flex min-h-10 items-center gap-2 rounded-xl border border-slate-800 bg-slate-900 px-3 text-xs font-black text-slate-300"><ArrowLeft className="h-4 w-4" /> Giải Trí</button><span className="rounded-full border border-cyan-400/25 bg-cyan-400/10 px-3 py-1 text-[9px] font-black uppercase tracking-wider text-cyan-300">Bắn Xe Tăng V2 · 3 Làn</span></div>
     <section className="tactical-card relative overflow-hidden rounded-3xl border border-emerald-400/30 bg-gradient-to-br from-emerald-950/90 via-slate-900 to-slate-950 p-5 shadow-2xl"><div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-cyan-400/10 blur-3xl" /><div className="relative"><div className="text-[10px] font-black uppercase tracking-[.2em] text-amber-300">M-07 Báo Thép · Xe tăng chủ lực</div><h2 className="mt-1 text-2xl font-black leading-tight text-white">Chiến trường MOBA 3 làn</h2><p className="mt-2 text-[11px] leading-relaxed text-slate-400">Hai sở chỉ huy tự triển khai quân, 18 tháp phòng thủ khóa theo lớp và ba tuyến tự giao chiến. Chọn một làn để can thiệp, lên cấp 18, trang bị 6 lõi rồi phá sở chỉ huy đối phương.</p></div></section>

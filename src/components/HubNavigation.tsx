@@ -16,10 +16,11 @@ import {
   ScrollText,
   Shirt,
 } from "lucide-react";
-import { motion, AnimatePresence } from "motion/react";
+import { motion } from "motion/react";
 import { TabType, GameState } from "../game/types";
 import { soundManager } from "../game/audio";
 import { getFarmAttentionState } from "../features/tang_gia/farmPresentation";
+import { AppBottomSheet, AppModal, OverlayBody, OverlayFooter, OverlayHeader } from "./overlay/AppOverlay";
 
 type HubNavigationProps = {
   activeTab: TabType;
@@ -188,6 +189,7 @@ export const HubNavigation: React.FC<HubNavigationProps> = ({
     <>
       {/* Bottom Main Navigation Bar */}
       <nav
+        data-app-navigation
         aria-label="Điều hướng chính"
         className="theme-nav-shell command-dock fixed bottom-0 inset-x-0 z-40 bg-slate-950/95 border-t backdrop-blur-md pb-[env(safe-area-inset-bottom)] shadow-2xl select-none"
       >
@@ -237,35 +239,21 @@ export const HubNavigation: React.FC<HubNavigationProps> = ({
       </nav>
 
       {/* Hồ Sơ Hub Popup Sheet */}
-      <AnimatePresence>
-        {isProfileHubOpen && (
-          <>
-            {/* Backdrop Overlay */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: reducedMotion ? 0 : 0.2 }}
-              onClick={() => setIsProfileHubOpen(false)}
-              className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm"
-            />
-
-            {/* Popup Sheet Container */}
-            <motion.div
-              initial={{ y: "100%", opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: "100%", opacity: 0 }}
-              transition={reducedMotion ? { duration: 0 } : { duration: 0.24, ease: "easeOut" }}
-              className="theme-card-accent military-sheet profile-dossier-sheet fixed bottom-0 inset-x-0 z-50 max-w-lg mx-auto bg-slate-900 border-t rounded-t-3xl p-3 sm:p-4 pb-7 shadow-2xl max-h-[88vh] overflow-y-auto space-y-2.5 select-none"
-            >
+      {isProfileHubOpen && (
+        <AppBottomSheet
+          onClose={() => setIsProfileHubOpen(false)}
+          closeOnBackdrop
+          labelledBy="profile-hub-title"
+          panelClassName={`theme-card-accent profile-dossier-sheet max-w-lg bg-slate-900 border-t rounded-t-3xl p-3 sm:p-4 shadow-2xl gap-2.5 select-none ${reducedMotion ? "" : "animate-in slide-in-from-bottom-4 duration-200"}`}
+        >
               {/* Header */}
-              <div className="theme-divider flex items-center justify-between pb-2 border-b">
+              <OverlayHeader className="theme-divider flex items-center justify-between gap-2 pb-2 border-b">
                 <div className="flex items-center gap-2">
                   <div className="theme-badge w-8 h-8 rounded-lg border flex items-center justify-center">
                     <User className="w-4 h-4" />
                   </div>
                   <div>
-                    <h3 className="text-sm font-extrabold text-slate-100 flex items-center gap-1.5">
+                    <h3 id="profile-hub-title" className="text-sm font-extrabold text-slate-100 flex items-center gap-1.5">
                       Hồ Sơ Quân Vụ
                     </h3>
                     <p className="text-[11px] text-slate-400">
@@ -278,13 +266,14 @@ export const HubNavigation: React.FC<HubNavigationProps> = ({
                   type="button"
                   onClick={() => setIsProfileHubOpen(false)}
                   className="theme-focus w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center transition-colors focus:outline-none"
+                  aria-label="Đóng Hồ Sơ Quân Vụ"
                 >
                   <X className="w-4 h-4" />
                 </button>
-              </div>
+              </OverlayHeader>
 
               {/* Sub-item Grid / 7 Cards */}
-              <div className="grid grid-cols-2 gap-2 sm:gap-2.5 p-0.5">
+              <OverlayBody className="grid grid-cols-2 gap-2 sm:gap-2.5 p-0.5">
                 {profileMenuItems.map((item, index) => {
                   const ItemIcon = item.icon;
                   const isCurrentActive = activeTab === item.id;
@@ -335,34 +324,28 @@ export const HubNavigation: React.FC<HubNavigationProps> = ({
                     </button>
                   );
                 })}
-              </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
+              </OverlayBody>
+        </AppBottomSheet>
+      )}
 
       {/* Tăng Gia (In Development) Modal */}
-      <AnimatePresence>
-        {isTangGiaOpen && (
-          <>
-            {/* Backdrop */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              onClick={() => setIsTangGiaOpen(false)}
-              className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm"
-            />
-
-            {/* Modal */}
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0, y: 20 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.9, opacity: 0, y: 20 }}
-              transition={reducedMotion ? { duration: 0 } : { duration: 0.22, ease: "easeOut" }}
-              className="military-modal fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-11/12 max-w-sm bg-slate-900 border border-emerald-500/50 rounded-3xl p-5 shadow-2xl text-center space-y-4 select-none"
-            >
+      {isTangGiaOpen && (
+        <AppModal
+          onClose={() => setIsTangGiaOpen(false)}
+          closeOnBackdrop
+          labelledBy="tang-gia-coming-soon-title"
+          panelClassName={`w-full max-w-sm bg-slate-900 border border-emerald-500/50 rounded-3xl shadow-2xl text-center select-none ${reducedMotion ? "" : "animate-in zoom-in-95 duration-200"}`}
+        >
+          <OverlayHeader className="flex flex-col items-center gap-3 px-5 pt-5">
+              <button
+                type="button"
+                onClick={() => setIsTangGiaOpen(false)}
+                className="app-overlay__close absolute right-3 top-3 rounded-xl bg-slate-800 text-slate-300 hover:bg-slate-700"
+                aria-label="Đóng thông báo Tăng Gia"
+                data-overlay-close
+              >
+                <X className="mx-auto h-4 w-4" />
+              </button>
               <div className="relative mx-auto w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500/30 to-teal-600/20 border border-emerald-400/50 flex items-center justify-center text-emerald-400 shadow-[0_0_20px_rgba(16,185,129,0.3)]">
                 <Sprout className="w-9 h-9 animate-pulse" />
                 <Hammer className="w-4 h-4 text-amber-400 absolute -bottom-1 -right-1 bg-slate-900 rounded-full p-0.5 border border-amber-400" />
@@ -372,17 +355,21 @@ export const HubNavigation: React.FC<HubNavigationProps> = ({
                 <span className="inline-block px-2.5 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-[10px] font-bold uppercase tracking-wider">
                   Đang Phát Triển
                 </span>
-                <h3 className="text-base font-extrabold text-slate-100">
+                <h3 id="tang-gia-coming-soon-title" className="text-base font-extrabold text-slate-100">
                   Khu Vực Tăng Gia Sản Xuất
                 </h3>
               </div>
+          </OverlayHeader>
 
+          <OverlayBody className="px-5 py-4">
               <p className="text-xs text-slate-300 leading-relaxed bg-slate-950/60 p-3 rounded-2xl border border-slate-800/80 text-left">
                 Tính năng <strong className="text-emerald-400">Trồng Cây & Chăn Nuôi Tăng Gia Sản Xuất</strong> đang được Bộ Chỉ Huy nghiên cứu, hoàn thiện kỹ thuật.
                 <br /><br />
                 Vui lòng quay lại trong các phiên bản cập nhật tiếp theo để trải nghiệm hoạt động tăng gia thực phẩm cho đơn vị và nhận thưởng XP!
               </p>
+          </OverlayBody>
 
+          <OverlayFooter className="px-5 pb-5">
               <button
                 type="button"
                 onClick={() => setIsTangGiaOpen(false)}
@@ -390,10 +377,9 @@ export const HubNavigation: React.FC<HubNavigationProps> = ({
               >
                 Đã Hiểu, Quay Lại
               </button>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
+          </OverlayFooter>
+        </AppModal>
+      )}
     </>
   );
 };

@@ -4,6 +4,7 @@ import { RankStep } from "../game/types";
 import { RankPresentation } from "./RankPresentation";
 import { generateExamQuestions, formatCategoryName, ShuffledExamQuestion } from "../game/questionCatalog";
 import { soundManager } from "../game/audio";
+import { AppModal, ExclusiveFullscreenOverlay, OverlayBody, OverlayFooter, OverlayHeader } from "./overlay/AppOverlay";
 
 type PromotionChallengeProps = {
   currentRank: RankStep;
@@ -200,9 +201,12 @@ export const PromotionChallenge: React.FC<PromotionChallengeProps> = ({
   const optionLabels = ["A", "B", "C", "D"];
 
   return (
-    <div className="command-screen promotion-command-screen fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-md text-slate-100 flex flex-col justify-between p-4 sm:p-6 overflow-y-auto select-none">
+    <ExclusiveFullscreenOverlay
+      ariaLabel={isCrossFamily ? "Sát hạch thăng quân hàm" : "Sát hạch thăng bậc"}
+      className="command-screen promotion-command-screen bg-slate-950 text-slate-100 justify-between gap-3 p-4 sm:p-6 overflow-y-auto select-none"
+    >
       {/* Top Bar Header */}
-      <div className="flex items-center justify-between w-full max-w-xl mx-auto">
+      <div className="sticky top-0 z-20 flex items-center justify-between w-full max-w-xl mx-auto bg-slate-950/95 py-1">
         <div className="flex items-center gap-2 text-xs font-bold text-amber-300 bg-amber-950/80 border border-amber-800/80 px-3 py-1.5 rounded-full shadow-md">
           <Award className="w-4 h-4 text-amber-400" />
           <span>{isCrossFamily ? "SÁT HẠCH THĂNG QUÂN HÀM" : "SÁT HẠCH THĂNG BẬC"}</span>
@@ -218,7 +222,7 @@ export const PromotionChallenge: React.FC<PromotionChallengeProps> = ({
               handleConfirmResult();
             }
           }}
-          className="p-2 rounded-full bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors"
+          className="min-h-11 min-w-11 p-2 rounded-full bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors flex items-center justify-center"
           aria-label="Thoát sát hạch"
         >
           <X className="w-5 h-5" />
@@ -349,22 +353,30 @@ export const PromotionChallenge: React.FC<PromotionChallengeProps> = ({
 
       {/* Exit Warning Confirmation Modal */}
       {showExitConfirm && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md animate-fade-in">
-          <div className="military-modal w-full max-w-sm bg-slate-900 border border-amber-500/40 rounded-3xl p-6 text-center shadow-2xl space-y-5 relative">
+        <AppModal
+          layer="exclusive-dialog"
+          layout="viewport-safe"
+          onClose={() => setShowExitConfirm(false)}
+          closeOnEscape
+          ariaLabel="Xác nhận rời sát hạch"
+          panelClassName="w-full max-w-sm bg-slate-900 border border-amber-500/40 rounded-3xl text-center shadow-2xl"
+        >
+          <OverlayHeader className="flex justify-center p-6 pb-3">
             {/* Warning Icon */}
-            <div className="flex justify-center">
-              <div className="w-16 h-16 rounded-full bg-amber-500/20 border-2 border-amber-400 flex items-center justify-center shadow-[0_0_20px_rgba(245,158,11,0.3)]">
-                <AlertTriangle className="w-8 h-8 text-amber-400" />
-              </div>
+            <div className="w-16 h-16 rounded-full bg-amber-500/20 border-2 border-amber-400 flex items-center justify-center shadow-[0_0_20px_rgba(245,158,11,0.3)]">
+              <AlertTriangle className="w-8 h-8 text-amber-400" />
             </div>
+          </OverlayHeader>
 
+          <OverlayBody className="px-6 py-3">
             {/* Exact Required Spec Prompt Message */}
             <p className="text-sm text-slate-100 font-semibold bg-slate-950/80 p-4 rounded-2xl border border-slate-800 leading-relaxed">
               Nếu bạn thoát ra lúc này thì sẽ bị đánh Rớt Sát Hạch
             </p>
+          </OverlayBody>
 
-            {/* Action Buttons */}
-            <div className="grid grid-cols-2 gap-3 pt-1">
+          {/* Action Buttons */}
+          <OverlayFooter data-stack-actions="true" className="grid grid-cols-2 gap-3 p-6 pt-3">
               <button
                 type="button"
                 onClick={handleConfirmExit}
@@ -382,15 +394,20 @@ export const PromotionChallenge: React.FC<PromotionChallengeProps> = ({
               >
                 Tiếp tục thi
               </button>
-            </div>
-          </div>
-        </div>
+          </OverlayFooter>
+        </AppModal>
       )}
 
       {/* Outcome Result Modal Popup */}
       {outcome !== null && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/90 backdrop-blur-md animate-fade-in">
-          <div className="military-modal w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl p-6 text-center shadow-2xl space-y-5 relative">
+        <AppModal
+          layer="exclusive-dialog"
+          layout="viewport-safe"
+          closeOnEscape={false}
+          labelledBy="promotion-result-title"
+          panelClassName="w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl text-center shadow-2xl"
+        >
+          <OverlayHeader className="flex flex-col items-center gap-4 p-6 pb-3">
             {/* Status Icon */}
             <div className="flex justify-center">
               {outcome === "pass" ? (
@@ -406,13 +423,16 @@ export const PromotionChallenge: React.FC<PromotionChallengeProps> = ({
 
             {/* Modal Title */}
             <h3
+              id="promotion-result-title"
               className={`text-lg sm:text-xl font-black uppercase tracking-wider ${
                 outcome === "pass" ? "text-emerald-400" : "text-rose-400"
               }`}
             >
               {outcome === "pass" ? "VƯỢT QUA SÁT HẠCH" : "RỚT SÁT HẠCH"}
             </h3>
+          </OverlayHeader>
 
+          <OverlayBody className="space-y-4 px-6 py-3">
             {/* Exact Required Spec Message */}
             <p className="text-xs sm:text-sm text-slate-200 font-medium bg-slate-950/80 p-4 rounded-2xl border border-slate-800 leading-relaxed">
               {outcome === "pass"
@@ -440,8 +460,10 @@ export const PromotionChallenge: React.FC<PromotionChallengeProps> = ({
                 </span>
               </div>
             </div>
+          </OverlayBody>
 
-            {/* Confirm Button */}
+          {/* Confirm Button */}
+          <OverlayFooter className="p-6 pt-3">
             <button
               type="button"
               onClick={handleConfirmResult}
@@ -453,14 +475,14 @@ export const PromotionChallenge: React.FC<PromotionChallengeProps> = ({
             >
               Xác Nhận
             </button>
-          </div>
-        </div>
+          </OverlayFooter>
+        </AppModal>
       )}
 
       {/* Footer Instructions */}
       <div className="w-full max-w-xl mx-auto text-center text-[11px] text-slate-400 bg-slate-900/60 border border-slate-800 p-2.5 rounded-xl">
         <span>Trả lời chính xác các câu hỏi trắc nghiệm để hoàn thành sát hạch.</span>
       </div>
-    </div>
+    </ExclusiveFullscreenOverlay>
   );
 };

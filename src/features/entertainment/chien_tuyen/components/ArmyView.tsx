@@ -55,9 +55,9 @@ export const ArmyView: React.FC<ArmyViewProps> = ({ profile }) => {
                 aria-label={`Xem ${troop.name}, cấp ${level}, ${count} quân sẵn sàng`}
               >
                 <div className="flex items-start gap-2">
-                  <TroopIcon troopType={troop.id} size="medium" />
+                  <TroopIcon troopType={troop.id} size="medium" state="ally" />
                   <div className="min-w-0 flex-1 text-left">
-                    <strong className="block truncate text-xs text-slate-800">{troop.name}</strong>
+                    <strong className="block truncate text-xs text-slate-100">{troop.name}</strong>
                     <span className="text-[10px] font-black" style={{ color: troop.color }}>Lv{level} · Sẵn sàng ×{count}</span>
                   </div>
                 </div>

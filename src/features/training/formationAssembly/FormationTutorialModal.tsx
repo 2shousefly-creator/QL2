@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Eye, MousePointerClick, RotateCw, ShieldAlert, Sparkles, ShieldCheck, ArrowRight, Check } from "lucide-react";
 import { soundManager } from "../../../game/audio";
+import { AppModal, OverlayBody, OverlayFooter, OverlayHeader } from "../../../components/overlay/AppOverlay";
 
 type FormationTutorialModalProps = {
   onClose: () => void;
@@ -70,12 +71,15 @@ export const FormationTutorialModal: React.FC<FormationTutorialModalProps> = ({ 
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md flex items-center justify-center p-4 animate-fadeIn">
-      <div className="w-full max-w-sm bg-slate-900 border border-slate-800 rounded-3xl p-5 flex flex-col gap-5 shadow-2xl">
+    <AppModal
+      onClose={onClose}
+      labelledBy="formation-tutorial-title"
+      panelClassName="max-w-sm border-slate-800 bg-slate-900 text-slate-100"
+    >
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+        <OverlayHeader className="flex items-center justify-between border-slate-800">
           <div className="flex items-center gap-2">
-            <span className="text-xs font-black text-slate-100 uppercase tracking-wider">
+            <span id="formation-tutorial-title" className="text-xs font-black text-slate-100 uppercase tracking-wider">
               Hướng Dẫn Huấn Luyện
             </span>
             <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30">
@@ -85,9 +89,10 @@ export const FormationTutorialModal: React.FC<FormationTutorialModalProps> = ({ 
           <span className="text-xs font-extrabold text-slate-400">
             {step + 1} / {steps.length}
           </span>
-        </div>
+        </OverlayHeader>
 
         {/* Step Body */}
+        <OverlayBody className="flex flex-col gap-4">
         <div className="flex flex-col items-center text-center gap-3 my-2">
           <div
             className={`w-16 h-16 rounded-2xl ${currentStep.bgColor} border ${currentStep.borderColor} flex items-center justify-center ${currentStep.color} shadow-lg`}
@@ -119,9 +124,10 @@ export const FormationTutorialModal: React.FC<FormationTutorialModalProps> = ({ 
             />
           ))}
         </div>
+        </OverlayBody>
 
         {/* Buttons */}
-        <div className="flex items-center justify-between gap-2 pt-1">
+        <OverlayFooter className="flex items-center justify-between gap-2 border-slate-800 bg-slate-900">
           {step > 0 ? (
             <button
               type="button"
@@ -160,8 +166,7 @@ export const FormationTutorialModal: React.FC<FormationTutorialModalProps> = ({ 
               </>
             )}
           </button>
-        </div>
-      </div>
-    </div>
+        </OverlayFooter>
+    </AppModal>
   );
 };

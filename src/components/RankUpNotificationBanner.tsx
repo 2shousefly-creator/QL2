@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { Award, ChevronRight, X, BellRing } from "lucide-react";
 import { soundManager } from "../game/audio";
+import { OverlayPortal } from "./overlay/AppOverlay";
 
 type RankUpNotificationBannerProps = {
   rankName: string;
@@ -19,8 +20,9 @@ export const RankUpNotificationBanner: React.FC<RankUpNotificationBannerProps> =
   }, []);
 
   return (
-    <div className="fixed top-3 left-1/2 -translate-x-1/2 z-50 w-[92%] max-w-lg animate-in slide-in-from-top-6 duration-300 pointer-events-auto">
-      <div className="command-toast relative overflow-hidden rounded-2xl bg-slate-900/95 border-2 border-amber-400/80 shadow-[0_10px_30px_rgba(245,158,11,0.3)] backdrop-blur-xl p-3.5 sm:p-4 text-slate-100 flex items-center gap-3.5">
+    <OverlayPortal>
+    <div className="app-overlay-toast max-w-lg animate-in slide-in-from-top-6 duration-300" data-interactive="true" role="status">
+      <div className="command-toast relative flex flex-wrap items-center gap-3 overflow-hidden rounded-2xl border-2 border-amber-400/80 bg-slate-900/95 p-3.5 text-slate-100 shadow-[0_10px_30px_rgba(245,158,11,0.3)] backdrop-blur-xl sm:flex-nowrap sm:gap-3.5 sm:p-4">
         {/* Glow ambient background effect */}
         <div className="absolute -left-10 -top-10 w-28 h-28 bg-amber-500/20 rounded-full blur-xl pointer-events-none" />
         <div className="absolute -right-10 -bottom-10 w-28 h-28 bg-emerald-500/20 rounded-full blur-xl pointer-events-none" />
@@ -32,7 +34,7 @@ export const RankUpNotificationBanner: React.FC<RankUpNotificationBannerProps> =
         </div>
 
         {/* Content */}
-        <div className="flex-1 min-w-0 pr-1">
+        <div className="min-w-0 flex-1 pr-1">
           <div className="flex items-center gap-1.5 text-xs font-bold text-amber-300 uppercase tracking-wider">
             <BellRing className="w-3.5 h-3.5 text-amber-400 animate-pulse" />
             <span>Thanh XP Đã Đầy 100%!</span>
@@ -46,13 +48,13 @@ export const RankUpNotificationBanner: React.FC<RankUpNotificationBannerProps> =
         </div>
 
         {/* Actions */}
-        <div className="flex items-center gap-1.5 shrink-0">
+        <div className="flex w-full shrink-0 items-center justify-end gap-1.5 sm:w-auto">
           <button
             onClick={() => {
               soundManager.playClick();
               onOpenJourney();
             }}
-            className="px-3 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold text-xs flex items-center gap-1 shadow-md transition-all active:scale-95 cursor-pointer whitespace-nowrap"
+            className="flex min-h-11 items-center gap-1 whitespace-nowrap rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 px-3 py-2 text-xs font-bold text-slate-950 shadow-md transition-all hover:from-amber-400 hover:to-amber-500 active:scale-95 cursor-pointer"
           >
             <span>Thử Thách</span>
             <ChevronRight className="w-3.5 h-3.5" />
@@ -63,7 +65,7 @@ export const RankUpNotificationBanner: React.FC<RankUpNotificationBannerProps> =
               soundManager.playClick();
               onDismiss();
             }}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+            className="flex h-11 w-11 items-center justify-center rounded-xl text-slate-400 transition-colors hover:bg-slate-800 hover:text-white"
             aria-label="Đóng thông báo"
           >
             <X className="w-4 h-4" />
@@ -71,5 +73,6 @@ export const RankUpNotificationBanner: React.FC<RankUpNotificationBannerProps> =
         </div>
       </div>
     </div>
+    </OverlayPortal>
   );
 };

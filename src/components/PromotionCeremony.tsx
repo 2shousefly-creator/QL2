@@ -9,6 +9,7 @@ import { RANK_FAMILIES } from "../game/rankFamilies";
 import { RANK_STEPS } from "../game/rankBuilder";
 import { getPromotionRewards } from "../game/promotionRewards";
 import { getRankRole, isRolePromotion } from "../game/rankRoles";
+import { ExclusiveFullscreenOverlay } from "./overlay/AppOverlay";
 
 type PromotionCeremonyProps = {
   promotedRank: RankStep;
@@ -45,9 +46,12 @@ export const PromotionCeremony: React.FC<PromotionCeremonyProps> = ({
   const isSecondaryChanged = prevSec !== promotedSec;
 
   return (
-    <div className="command-screen promotion-ceremony-screen fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-lg text-slate-100 flex flex-col justify-between p-4 sm:p-6 overflow-y-auto select-none animate-fadeIn">
+    <ExclusiveFullscreenOverlay
+      ariaLabel="Lễ thăng quân hàm"
+      className="command-screen promotion-ceremony-screen bg-slate-950 text-slate-100 justify-between p-4 sm:p-6 overflow-y-auto select-none animate-fadeIn"
+    >
       {/* Background ambient glow */}
-      <div className="fixed inset-0 pointer-events-none bg-[radial-gradient(circle_at_center,rgba(250,204,21,0.15)_0%,transparent_70%)]" />
+      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_center,rgba(250,204,21,0.15)_0%,transparent_70%)]" />
 
       {/* Header Badge */}
       <div className="w-full max-w-xl mx-auto text-center mt-2 z-10">
@@ -213,6 +217,6 @@ export const PromotionCeremony: React.FC<PromotionCeremonyProps> = ({
           <span>Tiếp Tục Hành Trình</span>
         </button>
       </div>
-    </div>
+    </ExclusiveFullscreenOverlay>
   );
 };

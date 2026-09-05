@@ -3,6 +3,7 @@ import { CROP_CATALOG, FERTILIZER_CATALOG } from "../farmCatalog";
 import { CropId, FertilizerTypeId, FarmInventory } from "../farmTypes";
 import { Sprout, X, Store, ShoppingBag, ArrowLeft, Sparkles, Check } from "lucide-react";
 import { getCropAsset } from "../tangGiaAssetManifest";
+import { AppModal, OverlayBody, OverlayFooter, OverlayHeader } from "../../../components/overlay/AppOverlay";
 
 interface PlantSeedModalProps {
   isOpen: boolean;
@@ -72,27 +73,27 @@ export const PlantSeedModal: React.FC<PlantSeedModalProps> = ({
     onClose();
   };
 
+  const requestClose = () => {
+    setSelectedCropId(null);
+    setSelectedFertilizerId(null);
+    onClose();
+  };
+
   return (
-    <div
-      onClick={(e) => {
-        e.stopPropagation();
-        setSelectedCropId(null);
-        setSelectedFertilizerId(null);
-        onClose();
-      }}
-      className="fixed inset-0 z-50 flex items-center justify-center p-3 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-200 cursor-pointer"
+    <AppModal
+      onClose={requestClose}
+      closeOnBackdrop
+      labelledBy="plant-seed-title"
+      panelClassName="w-full max-w-md bg-slate-900 border border-slate-700/80 rounded-3xl shadow-2xl animate-in fade-in duration-200"
     >
-      <div
-        onClick={(e) => e.stopPropagation()}
-        className="bg-slate-900 border border-slate-700/80 rounded-3xl w-full max-w-md overflow-hidden shadow-2xl flex flex-col max-h-[85vh] cursor-default"
-      >
         {/* Header */}
-        <div className="p-4 bg-slate-850 border-b border-slate-750 flex items-center justify-between shrink-0">
+        <OverlayHeader className="p-4 bg-slate-850 border-b border-slate-750 flex items-center justify-between gap-2">
           <div className="flex items-center gap-2.5">
             {selectedCrop ? (
               <button
                 onClick={() => setSelectedCropId(null)}
                 className="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center shrink-0 transition-colors"
+                aria-label="Quay lại chọn hạt giống"
               >
                 <ArrowLeft className="w-4 h-4" />
               </button>
@@ -102,7 +103,7 @@ export const PlantSeedModal: React.FC<PlantSeedModalProps> = ({
               </div>
             )}
             <div>
-              <h3 className="font-extrabold text-base text-slate-100">
+              <h3 id="plant-seed-title" className="font-extrabold text-base text-slate-100">
                 {selectedCrop ? `Bón Phân Bón (${selectedCrop.name})` : "Hạt Giống Đã Mua"}
               </h3>
               <p className="text-xs text-slate-400">
@@ -113,15 +114,14 @@ export const PlantSeedModal: React.FC<PlantSeedModalProps> = ({
 
           <button
             onClick={() => {
-              setSelectedCropId(null);
-              setSelectedFertilizerId(null);
-              onClose();
+              requestClose();
             }}
             className="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition-colors shrink-0"
+            aria-label="Đóng chọn hạt giống"
           >
             <X className="w-4 h-4" />
           </button>
-        </div>
+        </OverlayHeader>
 
         {/* STEP 1: Select Crop */}
         {!selectedCrop ? (
@@ -146,7 +146,7 @@ export const PlantSeedModal: React.FC<PlantSeedModalProps> = ({
             )}
 
             {/* Content List */}
-            <div className="p-3.5 overflow-y-auto space-y-2.5 flex-1 max-h-[60vh]">
+            <OverlayBody className="p-3.5 space-y-2.5">
               {ownedCrops.length === 0 ? (
                 <div className="py-8 px-4 text-center space-y-3 flex flex-col items-center justify-center">
                   <div className="w-16 h-16 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-3xl">
@@ -221,11 +221,12 @@ export const PlantSeedModal: React.FC<PlantSeedModalProps> = ({
                   })}
                 </div>
               )}
-            </div>
+            </OverlayBody>
           </>
         ) : (
           /* STEP 2: Fertilizer Selection */
-          <div className="p-4 space-y-4 flex-1 overflow-y-auto max-h-[60vh]">
+          <>
+          <OverlayBody className="p-4 space-y-4">
             <div className="p-3 bg-slate-850 border border-slate-750 rounded-2xl flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <img
@@ -341,15 +342,17 @@ export const PlantSeedModal: React.FC<PlantSeedModalProps> = ({
               })}
             </div>
 
+          </OverlayBody>
+          <OverlayFooter className="border-t border-slate-800 p-4">
             <button
               onClick={handleConfirmPlanting}
-              className="w-full py-3 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-slate-950 font-black text-xs shadow-lg active:scale-95 transition-all mt-2"
+              className="w-full py-3 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-slate-950 font-black text-xs shadow-lg active:scale-95 transition-all"
             >
               🚀 Trồng Cây Ngay
             </button>
-          </div>
+          </OverlayFooter>
+          </>
         )}
-      </div>
-    </div>
+    </AppModal>
   );
 };

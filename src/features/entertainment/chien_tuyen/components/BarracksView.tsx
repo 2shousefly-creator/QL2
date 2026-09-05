@@ -169,7 +169,7 @@ export const BarracksView: React.FC<BarracksViewProps> = ({
             const progress = isComplete ? 100 : Math.max(0, Math.min(100, ((now - job.startedAt) / durationMs) * 100));
             return (
               <div key={job.id} className={`ct-v2-training-job ${isComplete ? "is-complete" : ""}`} data-training-job={job.id}>
-                <TroopIcon troopType={job.troopType} size="medium" className="ct-v2-training-job-icon" />
+                <TroopIcon troopType={job.troopType} size="medium" state="active" className="ct-v2-training-job-icon" />
                 <div className="min-w-0 flex-1"><strong>{troop.shortName}</strong><span>{isComplete ? "HOÀN TẤT" : `${job.emergency ? "Tiếp viện · " : "Còn "}${formatChienTuyenDurationMs(remainingMs)}`}</span><i className="ct-v2-training-progress" aria-label={`Tiến độ ${Math.round(progress)} phần trăm`}><b style={{ width: `${progress}%` }} /></i></div>
                 <button
                   type="button"
@@ -215,8 +215,8 @@ export const BarracksView: React.FC<BarracksViewProps> = ({
             return (
               <article key={troop.id} className="ct-v2-barracks-card" data-troop-type={troop.id}>
                 <button type="button" onClick={() => setDetail(troop.id)} className="ct-v2-barracks-card-head" aria-haspopup="dialog" aria-label={`Xem chi tiết ${troop.name}`}>
-                  <TroopIcon troopType={troop.id} size="medium" />
-                  <span className="min-w-0"><strong className="block truncate text-xs text-slate-800">{troop.name}</strong><small className="block text-[10px] font-black" style={{ color: troop.color }}>Lv{level} · Sẵn sàng ×{count}</small></span>
+                  <TroopIcon troopType={troop.id} size="medium" state="ally" />
+                  <span className="min-w-0"><strong className="block truncate text-xs text-slate-100">{troop.name}</strong><small className="block text-[10px] font-black" style={{ color: troop.color }}>Lv{level} · Sẵn sàng ×{count}</small></span>
                 </button>
                 <div className="ct-v2-barracks-card-meta">
                   <span className="ct-v2-role-chip"><b aria-hidden="true">{primaryRole.icon}</b>{primaryRole.label}</span>
@@ -234,10 +234,10 @@ export const BarracksView: React.FC<BarracksViewProps> = ({
                 {upgradeJob ? (
                   <div className="ct-v2-upgrade-progress" onClick={() => setUpgradeSelection(troop.id)} style={{ cursor: "pointer" }}>
                     <div className="flex items-center justify-between w-full px-1">
-                      <span className="flex items-center gap-1 font-bold text-[8px] text-amber-900">
-                        <Timer className="h-3 w-3 text-amber-600 animate-pulse" /> Lv{upgradeJob.targetLevel} · {isUpgradeComplete ? "HOÀN TẤT" : `Còn ${formatChienTuyenDurationMs(upgradeRemainingMs)}`}
+                      <span className="flex items-center gap-1 font-bold text-[8px] text-amber-100">
+                        <Timer className="h-3 w-3 text-amber-300 animate-pulse" /> Lv{upgradeJob.targetLevel} · {isUpgradeComplete ? "HOÀN TẤT" : `Còn ${formatChienTuyenDurationMs(upgradeRemainingMs)}`}
                       </span>
-                      <span className="text-[7px] font-black text-amber-800">{Math.round(upgradeProgress)}%</span>
+                      <span className="text-[7px] font-black text-amber-200">{Math.round(upgradeProgress)}%</span>
                     </div>
                     <i className="ct-v2-upgrade-progress-bar" aria-label={`Tiến độ ${Math.round(upgradeProgress)} phần trăm`}>
                       <b style={{ width: `${upgradeProgress}%` }} />

@@ -2,6 +2,7 @@ import React from "react";
 import { EGG_INFO_MAP } from "../farmCatalog";
 import { EggTypeId, FarmInventory } from "../farmTypes";
 import { Egg, X, Coins, Zap } from "lucide-react";
+import { AppModal, OverlayBody, OverlayFooter, OverlayHeader } from "../../../components/overlay/AppOverlay";
 
 interface EggStorageModalProps {
   isOpen: boolean;
@@ -39,25 +40,20 @@ export const EggStorageModal: React.FC<EggStorageModalProps> = ({
   );
 
   return (
-    <div
-      onClick={(e) => {
-        e.stopPropagation();
-        onClose();
-      }}
-      className="fixed inset-0 z-50 flex items-center justify-center p-3 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-200 cursor-pointer"
+    <AppModal
+      onClose={onClose}
+      closeOnBackdrop
+      labelledBy="egg-storage-title"
+      panelClassName="w-full max-w-lg bg-slate-900 border border-slate-800/70 rounded-3xl shadow-2xl animate-in fade-in duration-200"
     >
-      <div
-        onClick={(e) => e.stopPropagation()}
-        className="bg-slate-900 border border-slate-800/70 rounded-3xl w-full max-w-lg overflow-hidden shadow-2xl flex flex-col cursor-default"
-      >
         {/* Modal Header */}
-        <div className="p-4 bg-slate-850/90 border-b border-slate-800/70 flex items-center justify-between">
+        <OverlayHeader className="p-4 bg-slate-850/90 border-b border-slate-800/70 flex items-center justify-between gap-2">
           <div className="flex items-center gap-2.5">
             <div className="w-10 h-10 rounded-2xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-amber-400">
               <Egg className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="font-extrabold text-base text-slate-100">
+              <h3 id="egg-storage-title" className="font-extrabold text-base text-slate-100">
                 Kho Trứng Trại
               </h3>
               <p className="text-xs text-slate-400">
@@ -70,13 +66,14 @@ export const EggStorageModal: React.FC<EggStorageModalProps> = ({
           <button
             onClick={onClose}
             className="w-8 h-8 rounded-full bg-slate-800/80 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition-colors"
+            aria-label="Đóng kho trứng"
           >
             <X className="w-4 h-4" />
           </button>
-        </div>
+        </OverlayHeader>
 
         {/* Eggs List - Information Only, No per-row action buttons */}
-        <div className="p-4 space-y-3 max-h-[60vh] overflow-y-auto divide-y divide-slate-800/60">
+        <OverlayBody className="p-4 space-y-3 divide-y divide-slate-800/60">
           {eggTypes.filter(typeId => (inventory.eggs[typeId] || 0) > 0).length === 0 ? (
             <div className="flex flex-col items-center justify-center py-12 text-center text-slate-400 space-y-2">
               <Egg className="w-12 h-12 text-slate-600 animate-pulse" />
@@ -127,11 +124,11 @@ export const EggStorageModal: React.FC<EggStorageModalProps> = ({
                 );
               })
           )}
-        </div>
+        </OverlayBody>
 
         {/* Modal Footer - Single primary "Bán tất cả trứng" button */}
         {onSellAllEggs && totalEggs > 0 && (
-          <div className="p-4 bg-slate-850/90 border-t border-slate-800/60">
+          <OverlayFooter className="p-4 bg-slate-850/90 border-t border-slate-800/60">
             <button
               onClick={() => {
                 onSellAllEggs();
@@ -141,9 +138,8 @@ export const EggStorageModal: React.FC<EggStorageModalProps> = ({
               <Coins className="w-4 h-4" />
               <span>Bán Tất Cả Trứng ({totalEggs} quả)</span>
             </button>
-          </div>
+          </OverlayFooter>
         )}
-      </div>
-    </div>
+    </AppModal>
   );
 };

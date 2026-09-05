@@ -24,6 +24,7 @@ import {
   getFeedAsset,
   getFertilizerAsset,
 } from "../tangGiaAssetManifest";
+import { AppModal, OverlayBody, OverlayFooter, OverlayHeader } from "../../../components/overlay/AppOverlay";
 
 interface FarmStoreModalProps {
   isOpen: boolean;
@@ -221,25 +222,20 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
 
   return (
     <>
-      <div
-        onClick={(e) => {
-          e.stopPropagation();
-          onClose();
-        }}
-        className="fixed inset-0 z-50 flex items-center justify-center p-2.5 sm:p-4 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-200 cursor-pointer"
+      <AppModal
+        onClose={onClose}
+        closeOnBackdrop
+        labelledBy="farm-store-title"
+        panelClassName="w-full max-w-lg bg-slate-900 border border-slate-800 rounded-3xl shadow-2xl animate-in fade-in duration-200"
       >
-        <div
-          onClick={(e) => e.stopPropagation()}
-          className="bg-slate-900 border border-slate-800 rounded-3xl w-full max-w-lg overflow-hidden shadow-2xl flex flex-col max-h-[85vh] cursor-default relative"
-        >
           {/* Modal Header (Sticky / Fixed at top of modal) */}
-          <div className="px-3.5 py-2.5 sm:px-4 sm:py-3 bg-slate-800/80 border-b border-slate-800 flex items-center justify-between shrink-0">
+          <OverlayHeader className="px-3.5 py-2.5 sm:px-4 sm:py-3 bg-slate-800/80 border-b border-slate-800 flex items-center justify-between gap-2">
             <div className="flex items-center gap-2.5">
               <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-base sm:text-lg shrink-0">
                 🪙
               </div>
               <div>
-                <h3 className="font-extrabold text-sm sm:text-base text-slate-100 leading-tight">
+                <h3 id="farm-store-title" className="font-extrabold text-sm sm:text-base text-slate-100 leading-tight">
                   Cửa Hàng Tăng Gia
                 </h3>
                 <p className="text-[11px] sm:text-xs text-slate-400 flex items-center gap-1 mt-0.5">
@@ -255,10 +251,11 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
               onClick={onClose}
               className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
               title="Đóng cửa hàng"
+              aria-label="Đóng cửa hàng"
             >
               <X className="w-4 h-4" />
             </button>
-          </div>
+          </OverlayHeader>
 
           {/* 4 Tabs (Sticky under Header, horizontal scroll on narrow mobile) */}
           <div className="flex sm:grid sm:grid-cols-4 gap-1 p-1.5 bg-slate-900 border-b border-slate-800 text-[11px] overflow-x-auto no-scrollbar whitespace-nowrap shrink-0">
@@ -308,7 +305,7 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
           </div>
 
           {/* Tab Content List (Scrollable Area) */}
-          <div className="p-2 sm:p-3 overflow-y-auto space-y-2 flex-1 overscroll-contain">
+          <OverlayBody className="p-2 sm:p-3 space-y-2">
             {/* TAB 1: CROPS */}
             {activeTab === "crop" &&
               CROP_CATALOG.map((crop) => {
@@ -642,25 +639,20 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
                   </div>
                 );
               })}
-          </div>
-        </div>
-      </div>
+          </OverlayBody>
+      </AppModal>
 
       {/* QUANTITY BUY POPUP DIALOG (Independent Fullscreen Overlay) */}
       {buyModalData && (
-        <div
-          onClick={(e) => {
-            e.stopPropagation();
-            setBuyModalData(null);
-          }}
-          className="fixed inset-0 z-[70] bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 overflow-y-auto cursor-pointer animate-in fade-in duration-150"
+        <AppModal
+          layer="nested"
+          onClose={() => setBuyModalData(null)}
+          closeOnBackdrop
+          ariaLabel={`Mua ${buyModalData.name}`}
+          panelClassName="w-full max-w-sm bg-slate-900 border border-amber-500/40 rounded-3xl p-4 sm:p-5 shadow-2xl gap-3.5 animate-in zoom-in-95 duration-150"
         >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            className="w-full max-w-sm my-auto bg-slate-900 border border-amber-500/40 rounded-3xl p-4 sm:p-5 shadow-2xl space-y-3.5 max-h-[90vh] overflow-y-auto cursor-default relative animate-in zoom-in-95 duration-150"
-          >
             {/* Header */}
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+            <OverlayHeader className="flex items-center justify-between gap-2 border-b border-slate-800 pb-3">
               <div className="flex items-center gap-2.5">
                 <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-xl sm:text-2xl shrink-0">
                   {buyModalData.icon}
@@ -678,10 +670,13 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
               <button
                 onClick={() => setBuyModalData(null)}
                 className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
+                aria-label="Đóng chọn số lượng mua"
               >
                 <X className="w-4 h-4" />
               </button>
-            </div>
+            </OverlayHeader>
+
+            <OverlayBody className="space-y-3.5 pr-1">
 
             {/* Quantity Selector */}
             <div className="space-y-2">
@@ -791,9 +786,10 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
                 </span>
               </div>
             </div>
+            </OverlayBody>
 
             {/* Action Buttons */}
-            <div className="flex items-center gap-2 pt-1">
+            <OverlayFooter className="flex items-center gap-2 pt-1" data-stack-actions="true">
               <button
                 type="button"
                 onClick={() => setBuyModalData(null)}
@@ -809,9 +805,8 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
               >
                 Mua ({buyQuantity})
               </button>
-            </div>
-          </div>
-        </div>
+            </OverlayFooter>
+        </AppModal>
       )}
     </>
   );

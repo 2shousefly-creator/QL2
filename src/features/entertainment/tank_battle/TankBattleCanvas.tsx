@@ -30,6 +30,7 @@ import type {
   TankBattleRunSummary,
   TankBattleV2World,
 } from "./tankBattleV2Types";
+import { AppModal, OverlayBody, OverlayFooter, OverlayHeader } from "../../../components/overlay/AppOverlay";
 
 interface Props {
   reducedMotion: boolean;
@@ -471,10 +472,10 @@ export const TankBattleCanvas: React.FC<Props> = ({ reducedMotion, onComplete, o
             <div className="text-[8px] text-slate-400">Wave {hud.waveIndex} · {time(hud.elapsedSeconds)}{hud.siegeTier ? ` · SIEGE ${hud.siegeTier}` : ""}</div>
           </div>
           <div className="pointer-events-auto flex gap-1">
-            <button onClick={() => setPaused((value) => !value)} className="grid h-8 w-8 place-items-center rounded-lg border border-slate-700 bg-slate-900">
+            <button type="button" aria-label={paused ? "Tiếp tục" : "Tạm dừng"} onClick={() => setPaused((value) => !value)} className="grid h-11 w-11 place-items-center rounded-lg border border-slate-700 bg-slate-900">
               {paused ? <Play className="h-4 w-4" /> : <Pause className="h-4 w-4" />}
             </button>
-            <button onClick={() => { setExit(true); setPaused(true); }} className="grid h-8 w-8 place-items-center rounded-lg border border-rose-500/30 bg-rose-950/50 text-rose-300">
+            <button type="button" aria-label="Thoát trận" onClick={() => { setExit(true); setPaused(true); }} className="grid h-11 w-11 place-items-center rounded-lg border border-rose-500/30 bg-rose-950/50 text-rose-300">
               <ArrowLeft className="h-4 w-4" />
             </button>
           </div>
@@ -557,41 +558,58 @@ export const TankBattleCanvas: React.FC<Props> = ({ reducedMotion, onComplete, o
       )}
 
       {worldRef.current.phase === "core" && worldRef.current.coreChoice && (
-        <div className="absolute inset-0 z-50 flex items-center bg-slate-950/95 px-3">
-          <div className="w-full">
-            <div className="text-center">
+        <AppModal
+          layer="exclusive-dialog"
+          layout="viewport-safe"
+          closeOnEscape={false}
+          labelledBy="tank-core-choice-title"
+          panelClassName="max-w-sm border border-amber-300/30 bg-slate-950"
+        >
+          <OverlayHeader className="p-5 pb-3 text-center">
               <div className="text-[9px] font-black tracking-widest text-amber-300">LÕI SẴN SÀNG · CẤP {worldRef.current.player.level}</div>
-              <h2 className="text-xl font-black text-white">Chọn 1 lõi {RARITY_LABEL[worldRef.current.coreChoice.rarity]}</h2>
+              <h2 id="tank-core-choice-title" className="text-xl font-black text-white">Chọn 1 lõi {RARITY_LABEL[worldRef.current.coreChoice.rarity]}</h2>
               <p className="text-[9px] text-slate-400">3 lựa chọn luôn cùng phẩm chất · trận đấu đang tạm dừng</p>
-            </div>
-            <div className="mt-4 space-y-2">
+          </OverlayHeader>
+          <OverlayBody className="space-y-2 px-5 py-3" data-core-selection="open">
               {worldRef.current.coreChoice.choices.map((core) => (
                 <button key={core.id} onClick={() => choose(core)} className={`grid min-h-[108px] w-full grid-cols-[58px_1fr] items-center gap-3 rounded-2xl border p-3 text-left text-white ${RARITY[core.rarity]}`}>
                   <span className="text-center text-3xl">{core.icon}</span>
                   <span><b className="block text-sm">{core.name}</b><span className="text-[10px] opacity-80">{core.description}</span></span>
                 </button>
               ))}
-            </div>
-          </div>
-        </div>
+          </OverlayBody>
+        </AppModal>
       )}
 
       {paused && !exit && worldRef.current.phase === "playing" && (
-        <div className="absolute inset-0 z-40 grid place-items-center bg-slate-950/80">
-          <button onClick={() => setPaused(false)} className="rounded-2xl bg-emerald-300 px-8 py-4 font-black text-slate-950">Tiếp tục</button>
-        </div>
+        <AppModal
+          layer="exclusive-dialog"
+          layout="viewport-safe"
+          onClose={() => setPaused(false)}
+          labelledBy="tank-paused-title"
+          panelClassName="max-w-xs border border-emerald-300/30 bg-slate-950 text-center"
+        >
+          <OverlayHeader className="p-5 pb-2"><h2 id="tank-paused-title" className="text-xl font-black text-white">Đã tạm dừng</h2></OverlayHeader>
+          <OverlayBody className="px-5 py-2" data-pause-overlay="user"><p className="text-xs text-slate-300">Trận đấu và toàn bộ thời gian hồi đang đứng yên.</p></OverlayBody>
+          <OverlayFooter className="p-5 pt-2"><button onClick={() => setPaused(false)} className="w-full rounded-2xl bg-emerald-300 px-8 py-4 font-black text-slate-950">Tiếp tục</button></OverlayFooter>
+        </AppModal>
       )}
 
       {exit && (
-        <div className="absolute inset-0 z-[60] grid place-items-center bg-slate-950/90 px-6">
-          <div className="w-full rounded-3xl bg-slate-900 p-5 text-center">
-            <h2 className="font-black text-white">Rời trận Bắn Xe Tăng V2?</h2>
-            <div className="mt-4 grid grid-cols-2 gap-2">
+        <AppModal
+          layer="exclusive-dialog"
+          layout="viewport-safe"
+          onClose={() => { setExit(false); setPaused(false); }}
+          labelledBy="tank-exit-title"
+          panelClassName="max-w-sm rounded-3xl border border-rose-400/30 bg-slate-900 text-center"
+        >
+            <OverlayHeader className="p-5 pb-2"><h2 id="tank-exit-title" className="font-black text-white">Rời trận Bắn Xe Tăng V2?</h2></OverlayHeader>
+            <OverlayBody className="px-5 py-2"><p className="text-xs text-slate-300">Lượt hiện tại sẽ kết thúc và không nhận thưởng.</p></OverlayBody>
+            <OverlayFooter data-stack-actions="true" className="grid grid-cols-2 gap-2 p-5 pt-2">
               <button onClick={() => { setExit(false); setPaused(false); }} className="min-h-11 rounded-xl border border-slate-700 text-slate-200">Ở lại</button>
               <button onClick={onExit} className="min-h-11 rounded-xl bg-rose-500 font-black text-white">Rời trận</button>
-            </div>
-          </div>
-        </div>
+            </OverlayFooter>
+        </AppModal>
       )}
     </div>
   );

@@ -106,7 +106,7 @@ export const TowerView: React.FC<TowerViewProps> = ({ profile, onSelectFloor, on
               return <button type="button" key={entry.slotId} className="is-boss" title={`${boss.name}: ${boss.role}`} onClick={() => setInspectedEnemy(`${boss.name} · ${boss.role} · Lv${entry.level}`)}><b aria-hidden="true">{boss.icon}</b><small>{boss.name}</small></button>;
             }
             const troop = TROOP_BY_TYPE[entry.troopType!];
-            return <button type="button" key={entry.slotId} title={`${troop.name}, ${troop.role}`} onClick={() => setInspectedEnemy(`${troop.name} · ${troop.role} · Lv${entry.level}`)}><TroopIcon troopType={entry.troopType!} size="small" /><small>{troop.shortName}</small></button>;
+            return <button type="button" key={entry.slotId} title={`${troop.name}, ${troop.role}`} onClick={() => setInspectedEnemy(`${troop.name} · ${troop.role} · Lv${entry.level}`)}><TroopIcon troopType={entry.troopType!} size="small" state="enemy" /><small>{troop.shortName}</small></button>;
           })}
         </div>
         {inspectedEnemy && <p className="ct-v2-enemy-inspect" role="status">{inspectedEnemy}</p>}

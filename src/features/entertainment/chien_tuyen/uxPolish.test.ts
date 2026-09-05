@@ -162,9 +162,12 @@ test("Battle source keeps the Unified Timeline and removes legacy footer copy", 
 test("Progression and statistics presentation keep modal accessibility contracts", () => {
   const screenSource = readFileSync(new URL("./ChienTuyenScreen.tsx", import.meta.url), "utf8");
   const resultSource = readFileSync(new URL("./components/CampaignResult.tsx", import.meta.url), "utf8");
+  const overlaySource = readFileSync(new URL("../../../components/overlay/AppOverlay.tsx", import.meta.url), "utf8");
   assert.match(screenSource, /aria-describedby="ct-progression-subtitle"/);
-  assert.match(screenSource, /closeRef\.current\?\.focus\(\)/);
-  assert.match(screenSource, /event\.key === "Escape"/);
+  assert.match(screenSource, /initialFocusRef=\{closeRef\}/);
+  assert.match(overlaySource, /initialFocusRef\?\.current/);
+  assert.match(overlaySource, /event\.key === "Escape"/);
+  assert.match(overlaySource, /createPortal/);
   assert.match(resultSource, /label: "Hiệu ứng xấu"/);
 });
 

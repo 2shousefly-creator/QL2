@@ -37,6 +37,14 @@ import {
   type QuickFinishConfirmation,
 } from "./components/QuickFinishConfirmModal";
 import { ChienTuyenGame } from "./ChienTuyenGame";
+import {
+  AppModal,
+  ExclusiveFullscreenOverlay,
+  OverlayBody,
+  OverlayFooter,
+  OverlayHeader,
+  OverlayPortal,
+} from "../../../components/overlay/AppOverlay";
 import "./chienTuyen.css";
 import "./chienTuyenUxPolish.css";
 
@@ -71,58 +79,35 @@ interface ProgressionNotice {
 }
 
 function ProgressionPopup({ notice, onClose }: { notice: ProgressionNotice; onClose: () => void }) {
-  const panelRef = useRef<HTMLElement | null>(null);
   const closeRef = useRef<HTMLButtonElement | null>(null);
-  const onCloseRef = useRef(onClose);
-
-  useEffect(() => { onCloseRef.current = onClose; }, [onClose]);
-
-  useEffect(() => {
-    const previousOverflow = document.body.style.overflow;
-    const previouslyFocused = document.activeElement instanceof HTMLElement ? document.activeElement : null;
-    document.body.style.overflow = "hidden";
-    closeRef.current?.focus();
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        event.preventDefault();
-        onCloseRef.current();
-        return;
-      }
-      if (event.key !== "Tab" || !panelRef.current) return;
-      const focusable = Array.from(panelRef.current.querySelectorAll<HTMLElement>('button:not([disabled]), [href], [tabindex]:not([tabindex="-1"])')) as HTMLElement[];
-      if (focusable.length === 0) return;
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
-      if (event.shiftKey && document.activeElement === first) {
-        event.preventDefault();
-        last.focus();
-      } else if (!event.shiftKey && document.activeElement === last) {
-        event.preventDefault();
-        first.focus();
-      }
-    };
-    document.addEventListener("keydown", onKeyDown);
-    return () => {
-      document.removeEventListener("keydown", onKeyDown);
-      document.body.style.overflow = previousOverflow;
-      previouslyFocused?.focus();
-    };
-  }, []);
 
   return (
-    <div className="fixed inset-0 z-[250] flex items-center justify-center bg-slate-950/60 p-3 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="ct-progression-title" aria-describedby="ct-progression-subtitle" onClick={(event) => { if (event.target === event.currentTarget) onClose(); }}>
-      <section ref={panelRef} tabIndex={-1} className="ct-v2-pop-in max-h-[calc(100dvh-1.5rem)] w-[min(90vw,360px)] overflow-y-auto rounded-[2rem] border-4 border-white bg-[#fffaf0] p-5 text-slate-800 shadow-2xl">
+    <AppModal
+      onClose={onClose}
+      closeOnBackdrop
+      layer="exclusive-dialog"
+      layout="viewport-safe"
+      labelledBy="ct-progression-title"
+      describedBy="ct-progression-subtitle"
+      panelClassName="ct-v2-modal max-w-sm"
+      initialFocusRef={closeRef}
+    >
+      <OverlayHeader className="ct-v2-modal-header flex-col items-center text-center">
         <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-3xl border-4 border-white bg-gradient-to-br from-amber-300 to-orange-500 text-white shadow-[0_7px_0_#c55a16]">
           {notice.kind === "barracks" ? <Shield className="h-8 w-8" /> : notice.kind === "troop" ? <Swords className="h-8 w-8" /> : <Sparkles className="h-8 w-8" />}
         </div>
-        <h2 id="ct-progression-title" className="mt-4 text-center text-xl font-black">{notice.title}</h2>
-        <p id="ct-progression-subtitle" className="mt-1 text-center text-sm font-black text-emerald-700">{notice.subtitle}</p>
-        <div className="mt-4 grid gap-2">
-          {notice.rows.map((row) => <div key={`${row.label}-${row.value}`} className="ct-v2-progression-row flex items-center justify-between rounded-2xl border-2 border-slate-100 bg-white px-4 py-3"><span className="text-[10px] font-black text-slate-500">{row.label}</span><strong className="text-xs text-slate-800">{row.value}</strong></div>)}
+        <div>
+          <h2 id="ct-progression-title" className="mt-3 text-xl font-black text-white">{notice.title}</h2>
+          <p id="ct-progression-subtitle" className="mt-1 text-sm font-black text-emerald-300">{notice.subtitle}</p>
         </div>
-        <button ref={closeRef} type="button" onClick={onClose} className="ct-v2-primary-button mt-4 w-full">TUYỆT!</button>
-      </section>
-    </div>
+      </OverlayHeader>
+      <OverlayBody className="grid gap-2">
+        {notice.rows.map((row) => <div key={`${row.label}-${row.value}`} className="ct-v2-progression-row flex items-center justify-between rounded-2xl border px-4 py-3"><span>{row.label}</span><strong>{row.value}</strong></div>)}
+      </OverlayBody>
+      <OverlayFooter className="ct-v2-modal-footer">
+        <button ref={closeRef} type="button" onClick={onClose} className="ct-v2-primary-button w-full">TUYỆT!</button>
+      </OverlayFooter>
+    </AppModal>
   );
 }
 
@@ -132,14 +117,25 @@ function TutorialOverlay({ onComplete }: { onComplete: () => void }) {
   const [step, setStep] = useState(0);
   const item = TUTORIAL_STEPS[step];
   return (
-    <div className="fixed inset-0 z-[280] flex items-end justify-center bg-slate-950/65 p-3 backdrop-blur-sm sm:items-center" role="dialog" aria-modal="true" aria-label="Hướng dẫn Chiến Tuyến">
-      <section className="ct-v2-pop-in max-h-[calc(100dvh-1.5rem)] w-full max-w-sm overflow-y-auto rounded-[2rem] border-4 border-white bg-[#fffaf0] p-5 text-slate-800 shadow-2xl">
-        <div className="flex items-center justify-between"><span className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-emerald-700"><BookOpen className="h-4 w-4" /> Huấn luyện chỉ huy</span><button type="button" onClick={onComplete} aria-label="Bỏ qua hướng dẫn" className="ct-v2-icon-button"><X className="h-5 w-5" /></button></div>
-        <div className="py-5 text-center"><div className="mx-auto flex h-16 w-16 items-center justify-center rounded-3xl border-4 border-white bg-gradient-to-br from-amber-300 to-orange-400 text-2xl font-black text-white shadow-[0_7px_0_#c55a16]">{step + 1}</div><h2 className="mt-4 text-xl font-black">{item.title}</h2><p className="mt-2 text-[12px] font-semibold leading-relaxed text-slate-600">{item.text}</p></div>
-        <div className="flex gap-1.5">{TUTORIAL_STEPS.map((_, index) => <span key={index} className={`h-2 flex-1 rounded-full ${index <= step ? "bg-emerald-500" : "bg-slate-200"}`} />)}</div>
-        <button type="button" onClick={() => step === TUTORIAL_STEPS.length - 1 ? onComplete() : setStep((current) => current + 1)} className="ct-v2-primary-button mt-4 w-full">{step === TUTORIAL_STEPS.length - 1 ? <><Check className="h-5 w-5" /> Sẵn sàng</> : <>Tiếp theo <ChevronRight className="h-5 w-5" /></>}</button>
-      </section>
-    </div>
+    <AppModal
+      onClose={onComplete}
+      layer="exclusive-dialog"
+      layout="viewport-safe"
+      labelledBy="ct-tutorial-title"
+      panelClassName="ct-v2-modal max-w-sm"
+    >
+      <OverlayHeader className="ct-v2-modal-header flex items-center justify-between">
+        <span className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-emerald-300"><BookOpen className="h-4 w-4" /> Huấn luyện chỉ huy</span>
+        <button type="button" onClick={onComplete} aria-label="Bỏ qua hướng dẫn" className="ct-v2-icon-button app-overlay__close"><X className="h-5 w-5" /></button>
+      </OverlayHeader>
+      <OverlayBody className="space-y-4">
+        <div className="text-center"><div className="mx-auto flex h-16 w-16 items-center justify-center rounded-3xl border-2 border-amber-300/70 bg-gradient-to-br from-amber-300 to-orange-400 text-2xl font-black text-slate-950 shadow-lg shadow-orange-950/40">{step + 1}</div><h2 id="ct-tutorial-title" className="mt-4 text-xl font-black text-white">{item.title}</h2><p className="mt-2 text-[12px] font-semibold leading-relaxed text-slate-300">{item.text}</p></div>
+        <div className="flex gap-1.5">{TUTORIAL_STEPS.map((_, index) => <span key={index} className={`h-2 flex-1 rounded-full ${index <= step ? "bg-emerald-400" : "bg-slate-700"}`} />)}</div>
+      </OverlayBody>
+      <OverlayFooter className="ct-v2-modal-footer">
+        <button type="button" onClick={() => step === TUTORIAL_STEPS.length - 1 ? onComplete() : setStep((current) => current + 1)} className="ct-v2-primary-button w-full">{step === TUTORIAL_STEPS.length - 1 ? <><Check className="h-5 w-5" /> Sẵn sàng</> : <>Tiếp theo <ChevronRight className="h-5 w-5" /></>}</button>
+      </OverlayFooter>
+    </AppModal>
   );
 }
 
@@ -572,18 +568,21 @@ export const ChienTuyenScreen: React.FC<ChienTuyenScreenProps> = ({ gameState, o
 
   if (phase === "game" && activeFloor) {
     return (
+      <ExclusiveFullscreenOverlay ariaLabel="Trận Chiến Tuyến" className="ct-v2-exclusive-stage">
       <div className="ct-v2-battle-theme-host" data-battle-chapter={activeFloor.chapter}>
         <ChienTuyenGame floor={activeFloor} profile={profile} reducedMotion={gameState.settings.reducedMotion} onStartBattle={startBattle} onRecordCasualties={recordCasualties} onFinish={finishBattle} onAbandon={abandonBattle} onCancelDeployment={() => { setPhase("campaign"); setActiveFloor(null); }} />
       </div>
+      </ExclusiveFullscreenOverlay>
     );
   }
 
   if (phase === "result" && completed) {
-    return <CampaignResult result={completed.result} rewardGold={completed.rewardGold} firstClear={completed.firstClear} nextFloor={completed.nextFloor} onContinue={() => { const floor = getTowerFloor(completed.nextFloor); if (floor) { selectFloor(floor.floorNumber); beginDeployment(floor); } }} onRetry={() => { const floor = getTowerFloor(completed.result.floorNumber); if (floor) beginDeployment(floor); }} onBarracks={() => { setPhase("campaign"); setSection("barracks"); }} onTower={() => { setPhase("campaign"); setSection("tower"); }} />;
+    return <ExclusiveFullscreenOverlay ariaLabel="Kết quả Chiến Tuyến" className="ct-v2-exclusive-stage"><CampaignResult result={completed.result} rewardGold={completed.rewardGold} firstClear={completed.firstClear} nextFloor={completed.nextFloor} onContinue={() => { const floor = getTowerFloor(completed.nextFloor); if (floor) { selectFloor(floor.floorNumber); beginDeployment(floor); } }} onRetry={() => { const floor = getTowerFloor(completed.result.floorNumber); if (floor) beginDeployment(floor); }} onBarracks={() => { setPhase("campaign"); setSection("barracks"); }} onTower={() => { setPhase("campaign"); setSection("tower"); }} /></ExclusiveFullscreenOverlay>;
   }
 
   const maxBarracksLevel = getMaxBarracksLevelFromRankIndex(gameState.progression.currentRankIndex);
   return (
+    <ExclusiveFullscreenOverlay ariaLabel="Chiến Tuyến" onEscape={onBack} className="ct-v2-exclusive-stage">
     <div className="ct-v2-campaign-shell" data-chien-tuyen-screen="campaign">
       <CampaignTopBar gold={gold} barracksLevel={profile.barracksLevel} highestFloor={profile.highestUnlockedFloor} onBack={onBack} />
       <main className="ct-v2-campaign-scroll">
@@ -610,7 +609,7 @@ export const ChienTuyenScreen: React.FC<ChienTuyenScreenProps> = ({ gameState, o
       </main>
       <CampaignBottomNav section={section} onChange={(next) => { soundManager.playClick(); setSection(next); }} />
       <button type="button" onClick={() => setShowTutorial(true)} className="ct-v2-help-button" aria-label="Mở hướng dẫn"><BookOpen className="h-4 w-4" /></button>
-      {notice && <div className="ct-v2-toast" role="status"><Shield className="h-4 w-4" />{notice}</div>}
+      {notice && <OverlayPortal><div className="app-overlay-toast ct-v2-toast" data-overlay-layer="exclusive-dialog" role="status"><Shield className="h-4 w-4" />{notice}</div></OverlayPortal>}
       {progressionQueue[0] && <ProgressionPopup notice={progressionQueue[0]} onClose={() => setProgressionQueue((current) => current.slice(1))} />}
       {quickFinishConfirmation && (
         <QuickFinishConfirmModal
@@ -620,5 +619,6 @@ export const ChienTuyenScreen: React.FC<ChienTuyenScreenProps> = ({ gameState, o
       )}
       {showTutorial && <TutorialOverlay onComplete={completeTutorial} />}
     </div>
+    </ExclusiveFullscreenOverlay>
   );
 };

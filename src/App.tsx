@@ -38,6 +38,7 @@ import { MandatoryUpdateModal } from "./app-update/MandatoryUpdateModal";
 import { checkForAppUpdate } from "./app-update/versionService";
 import { recoverPendingAppUpdate } from "./app-update/updateBackupService";
 import { StartupGate } from "./app-update/updateTypes";
+import { OverlayHost, OverlayPortal, useAppChromeMetrics } from "./components/overlay/AppOverlay";
 
 function isUserActiveOnline(): boolean {
   if (typeof document === "undefined") return true;
@@ -65,6 +66,10 @@ export default function App() {
 
   const gameStateRef = useRef<GameState | null>(null);
   gameStateRef.current = gameState;
+
+  useAppChromeMetrics(
+    `${Boolean(gameState)}:${isChallengeActive}:${Boolean(gameState?.ui.pendingPromotionCeremony)}:${isTrainingGameActive}:${isTroughInfoActive}:${activeTab}`,
+  );
 
   // Reset trough info active status when tab changes
   useEffect(() => {
@@ -499,6 +504,7 @@ export default function App() {
   const previousRank = pendingCeremony && pendingCeremony.promotedRankIndex > 0
     ? RANK_STEPS[pendingCeremony.promotedRankIndex - 1]
     : currentRank;
+  const isExclusivePromotionFlow = isChallengeActive || Boolean(pendingCeremony && promotedRank);
 
   return (
     <div
@@ -510,9 +516,12 @@ export default function App() {
       {/* Game World Ambient Glow Backgrounds */}
       <div className="theme-world-ambient fixed inset-0 z-0 pointer-events-none opacity-50" />
 
+      {/* Single portal target for every shared overlay. */}
+      <OverlayHost />
+
       {/* Top Gaming HUD Header (Auto-hidden when in Minigames, Challenge, or Trough Info Modal) */}
-      {!isTrainingGameActive && !isChallengeActive && !isTroughInfoActive && (
-        <header className="theme-header-shell command-status-hud relative z-10 shrink-0 bg-slate-900/70 backdrop-blur-md border-b px-4 pb-2">
+      {!isTrainingGameActive && !isExclusivePromotionFlow && !isTroughInfoActive && (
+        <header data-app-hud className="theme-header-shell command-status-hud relative z-10 shrink-0 bg-slate-900/70 backdrop-blur-md border-b px-4 pb-2">
           <div className="max-w-lg mx-auto flex items-center justify-between">
             <div className="flex items-center gap-3">
               <button
@@ -577,7 +586,7 @@ export default function App() {
       )}
 
       {/* Main Interactive Body Area */}
-      <main className={`relative z-10 flex-1 min-h-0 flex flex-col ${activeTab === "home" ? "app-main-with-hub-navigation overflow-hidden" : isTrainingGameActive ? "overflow-y-auto" : "overflow-y-auto pb-28"}`}>
+      {!isExclusivePromotionFlow && <main className={`relative z-10 flex-1 min-h-0 flex flex-col ${activeTab === "home" ? "app-main-with-hub-navigation overflow-hidden" : isTrainingGameActive ? "overflow-y-auto" : "overflow-y-auto pb-28"}`}>
         <div
           key={activeTab}
           className="w-full h-full flex-1 min-h-0 flex flex-col animate-in fade-in slide-in-from-bottom-2 duration-200"
@@ -662,15 +671,17 @@ export default function App() {
             />
           )}
         </div>
-      </main>
+      </main>}
 
       {/* Hub Bottom Navigation */}
-      <HubNavigation
-        activeTab={activeTab}
-        onSelectTab={setActiveTab}
-        isHidden={isRankDetailOpen || isChallengeActive || isTrainingGameActive}
-        gameState={gameState}
-      />
+      {!isExclusivePromotionFlow && (
+        <HubNavigation
+          activeTab={activeTab}
+          onSelectTab={setActiveTab}
+          isHidden={isRankDetailOpen || isTrainingGameActive}
+          gameState={gameState}
+        />
+      )}
 
       {/* Active Promotion Challenge Screen */}
       {isChallengeActive && (
@@ -688,7 +699,7 @@ export default function App() {
       )}
 
       {/* Pending Promotion Ceremony Screen */}
-      {pendingCeremony && promotedRank && (
+      {!isChallengeActive && pendingCeremony && promotedRank && (
         <PromotionCeremony
           promotedRank={promotedRank}
           previousRank={previousRank}
@@ -706,7 +717,7 @@ export default function App() {
       )}
 
       {/* Offline Delegation Report Modal (Only rendered after normal startup gate) */}
-      {startupGate === "normal-startup" && delegationReport && (
+      {!isExclusivePromotionFlow && startupGate === "normal-startup" && delegationReport && (
         <DelegationReportModal
           report={delegationReport}
           onAction={handleReportAction}
@@ -715,7 +726,7 @@ export default function App() {
       )}
 
       {/* Medal Unlock Congratulatory Modal */}
-      {startupGate === "normal-startup" && (
+      {!isExclusivePromotionFlow && startupGate === "normal-startup" && (
         <MedalUnlockModal
           gameState={gameState}
           onUpdateState={handleUpdateState}
@@ -723,19 +734,23 @@ export default function App() {
       )}
 
       {/* Manual Update Success Toast */}
-      {showUpdateToast && (
-        <div className="command-toast fixed top-4 left-1/2 -translate-x-1/2 z-50 max-w-sm w-11/12 bg-emerald-950/95 border border-emerald-500/80 text-emerald-200 px-4 py-3 rounded-2xl shadow-2xl backdrop-blur-md flex items-center justify-between gap-3 text-xs font-semibold">
-          <div className="flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-emerald-400 shrink-0" />
-            <span>Đã cập nhật lên phiên bản mới nhất! Tiến trình chơi được bảo toàn.</span>
+      {!isExclusivePromotionFlow && showUpdateToast && (
+        <OverlayPortal>
+          <div className="app-overlay-toast command-toast max-w-sm w-11/12 bg-emerald-950/95 border border-emerald-500/80 text-emerald-200 px-4 py-3 rounded-2xl shadow-2xl backdrop-blur-md flex items-center justify-between gap-3 text-xs font-semibold" role="status" data-interactive="true">
+            <div className="flex min-w-0 items-center gap-2">
+              <Sparkles className="w-4 h-4 text-emerald-400 shrink-0" />
+              <span>Đã cập nhật lên phiên bản mới nhất! Tiến trình chơi được bảo toàn.</span>
+            </div>
+            <button
+              type="button"
+              onClick={() => setShowUpdateToast(false)}
+              className="app-overlay__close flex min-h-11 min-w-11 shrink-0 items-center justify-center rounded-xl text-emerald-400 hover:bg-emerald-900/80 hover:text-emerald-100 font-bold"
+              aria-label="Đóng thông báo cập nhật"
+            >
+              ✕
+            </button>
           </div>
-          <button
-            onClick={() => setShowUpdateToast(false)}
-            className="text-emerald-400 hover:text-emerald-100 font-bold px-1"
-          >
-            ✕
-          </button>
-        </div>
+        </OverlayPortal>
       )}
     </div>
   );

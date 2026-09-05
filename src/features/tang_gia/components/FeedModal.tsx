@@ -4,6 +4,7 @@ import { FeedTypeId, FarmInventory, FeedDefinition } from "../farmTypes";
 import { Wheat, X, Plus, Minus, Zap, Utensils, ChevronLeft, ArrowRight } from "lucide-react";
 import { adjustIntegerQuantity } from "../../../utils/quantityInput";
 import { formatFeedPercentage } from "../farmPresentation";
+import { AppModal, OverlayBody, OverlayHeader } from "../../../components/overlay/AppOverlay";
 
 interface FeedModalProps {
   isOpen: boolean;
@@ -108,25 +109,21 @@ export const FeedModal: React.FC<FeedModalProps> = ({
   const activeSpeed = currentBuff > 0 ? activeFeedSpeedBonus : 0;
 
   return (
-    <div
-      onClick={(e) => {
-        e.stopPropagation();
-        onClose();
-      }}
-      className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-4 bg-slate-950/85 backdrop-blur-sm animate-in fade-in duration-200 cursor-pointer"
+    <AppModal
+      onClose={onClose}
+      closeOnBackdrop
+      layer="nested"
+      labelledBy="feed-modal-title"
+      panelClassName="w-full max-w-md bg-slate-900 border border-slate-700/90 rounded-3xl shadow-2xl animate-in fade-in duration-200"
     >
-      <div
-        onClick={(e) => e.stopPropagation()}
-        className="bg-slate-900 border border-slate-700/90 rounded-3xl w-full max-w-md max-h-[82vh] sm:max-h-[85vh] overflow-hidden shadow-2xl flex flex-col cursor-default my-auto"
-      >
         {/* Modal Header (Fixed) */}
-        <div className="p-3.5 sm:p-4 bg-slate-850 border-b border-slate-750 flex items-center justify-between shrink-0">
+        <OverlayHeader className="p-3.5 sm:p-4 bg-slate-850 border-b border-slate-750 flex items-center justify-between gap-2">
           <div className="flex items-center gap-2.5">
             <div className="w-10 h-10 rounded-2xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 shrink-0">
               <Wheat className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="font-extrabold text-base text-slate-100 leading-tight">
+              <h3 id="feed-modal-title" className="font-extrabold text-base text-slate-100 leading-tight">
                 {selectedFeed ? `Nạp ${selectedFeed.name}` : "Nạp Thức Ăn Vào Máng Ăn"}
               </h3>
               <p className="text-xs text-slate-400 mt-0.5">
@@ -141,10 +138,11 @@ export const FeedModal: React.FC<FeedModalProps> = ({
             type="button"
             onClick={onClose}
             className="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition-colors cursor-pointer shrink-0"
+            aria-label="Đóng nạp thức ăn"
           >
             <X className="w-4 h-4" />
           </button>
-        </div>
+        </OverlayHeader>
 
         {/* Current Trough Status Bar (Fixed) */}
         <div className="px-4 py-2.5 bg-slate-950/70 border-b border-slate-800 flex flex-col gap-1.5 shrink-0">
@@ -184,7 +182,7 @@ export const FeedModal: React.FC<FeedModalProps> = ({
         {/* Modal Body with smooth vertical scroll */}
         {!selectedFeed ? (
           /* View 1: Feed Selection List */
-          <div className="p-3.5 sm:p-4 space-y-2.5 flex-1 min-h-0 overflow-y-auto overscroll-contain">
+          <OverlayBody className="p-3.5 sm:p-4 space-y-2.5">
             {totalOwnedFeed === 0 && (
               <div className="p-4 bg-amber-500/10 border border-amber-500/30 rounded-2xl text-center space-y-2.5 my-auto">
                 <p className="text-xs text-amber-300 font-extrabold">
@@ -256,10 +254,10 @@ export const FeedModal: React.FC<FeedModalProps> = ({
                 </div>
               );
             })}
-          </div>
+          </OverlayBody>
         ) : (
           /* View 2: Quantity Configuration View */
-          <div className="p-3.5 sm:p-4 space-y-3.5 flex-1 min-h-0 overflow-y-auto overscroll-contain">
+          <OverlayBody className="p-3.5 sm:p-4 space-y-3.5">
             {/* Stepper & Quantity Picker */}
             {(() => {
               const maxQty = getMaxQuantity(selectedFeed);
@@ -420,9 +418,8 @@ export const FeedModal: React.FC<FeedModalProps> = ({
                 </div>
               );
             })()}
-          </div>
+          </OverlayBody>
         )}
-      </div>
-    </div>
+    </AppModal>
   );
 };

@@ -63,7 +63,6 @@
   }
 }
 
-
 /* Battle card readability update */
 .ct-v2-battle-unit { grid-template-rows: auto auto minmax(20px, .8fr) auto auto auto auto; }
 .ct-v2-unit-name { grid-column:1 / -1; max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; text-align:center; font-size:clamp(6.5px, 1.8vw, 9px); }
@@ -766,4 +765,43 @@
   .ct-v2-battle-unit.is-ultimate-prep .ct-v2-rage-track > i {
     transition-duration: var(--ct-ultimate-prep-ms, 1000ms) !important;
   }
+}
+
+/* The final card pass only adjusts presentation. Engine-owned HP, Shield,
+   Rage and timing values are rendered unchanged. */
+.ct-v2-battle-unit > .ct-v2-unit-name { color: var(--ct-text); }
+.ct-v2-battle-unit > .ct-v2-unit-level { color: var(--ct-text-subtle); }
+.ct-v2-battle-unit > .ct-v2-unit-stats i { color: var(--ct-text-muted); }
+.ct-v2-battle-unit > .ct-v2-unit-stats b { color: var(--ct-text-subtle); }
+
+.ct-v2-battle-unit > .ct-v2-unit-icon {
+  display: grid;
+  min-width: 40px;
+  min-height: 40px;
+  place-items: center;
+  border: 1px solid rgba(148, 163, 184, .46);
+  border-radius: 12px;
+  background: radial-gradient(circle at 38% 28%, rgba(255, 255, 255, .14), rgba(15, 23, 42, .82));
+  padding: 4px;
+  box-shadow: inset 0 0 0 2px rgba(2, 6, 23, .68), 0 4px 10px rgba(0, 0, 0, .32);
+}
+
+.ct-v2-battle-unit.is-player > .ct-v2-unit-icon { border-style: solid; border-color: rgba(34, 197, 94, .78); }
+.ct-v2-battle-unit.is-enemy > .ct-v2-unit-icon { border-style: dashed; border-color: rgba(251, 113, 133, .82); }
+.ct-v2-battle-unit.is-targeted > .ct-v2-unit-icon { outline: 3px double var(--ct-warning); outline-offset: 2px; }
+.ct-v2-battle-unit.is-dead > .ct-v2-unit-icon { filter: grayscale(1); opacity: .52; }
+.ct-v2-battle-unit.is-timeline-highlighted > .ct-v2-unit-icon { box-shadow: 0 0 0 3px #38bdf8, 0 0 16px rgba(56, 189, 248, .72); }
+
+.ct-v2-battle-unit > .ct-v2-rage-track { background: rgba(49, 46, 129, .72); }
+.ct-v2-rage-track > i { background: linear-gradient(90deg, #4f46e5, var(--ct-rage)); }
+.ct-v2-battle-unit > .ct-v2-health-track { background: rgba(127, 29, 29, .64); }
+.ct-v2-health-fill { background: linear-gradient(90deg, #dc2626, var(--ct-hp)); }
+.ct-v2-health-shield { background: linear-gradient(90deg, #0284c7, var(--ct-shield)); }
+.ct-v2-health-shield-overflow { background: repeating-linear-gradient(135deg, rgba(224, 242, 254, .92) 0 3px, rgba(14, 165, 233, .95) 3px 7px); }
+
+.ct-v2-battle-meta,
+.ct-v2-battle-status-strip,
+.ct-v2-battle-unit,
+.ct-v2-timeline-token {
+  font-variant-numeric: tabular-nums;
 }

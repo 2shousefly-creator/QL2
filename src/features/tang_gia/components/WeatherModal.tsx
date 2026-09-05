@@ -7,6 +7,7 @@ import {
   getWeatherPresentation,
   SEASON_METADATA,
 } from "../weatherEngine";
+import { AppModal, OverlayBody, OverlayHeader } from "../../../components/overlay/AppOverlay";
 
 interface WeatherModalProps {
   isOpen: boolean;
@@ -31,26 +32,27 @@ export const WeatherModal: React.FC<WeatherModalProps> = ({
   );
 
   return (
-    <div
-      onClick={onClose}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 p-4 backdrop-blur-md"
+    <AppModal
+      onClose={onClose}
+      closeOnBackdrop
+      labelledBy="weather-modal-title"
+      panelClassName="w-full max-w-sm rounded-3xl border border-slate-700 bg-slate-900 p-5 text-slate-200 shadow-2xl gap-4"
     >
-      <div
-        onClick={(event) => event.stopPropagation()}
-        className="w-full max-w-sm space-y-4 rounded-3xl border border-slate-700 bg-slate-900 p-5 text-slate-200 shadow-2xl"
-      >
-        <div className="flex items-start justify-between gap-3">
+        <OverlayHeader className="flex items-start justify-between gap-3">
           <div>
-            <h2 className="text-base font-black text-slate-100">Mùa & Thời Tiết</h2>
+            <h2 id="weather-modal-title" className="text-base font-black text-slate-100">Mùa & Thời Tiết</h2>
             <p className="text-xs text-slate-400">Chu kỳ chung theo UTC+7</p>
           </div>
           <button
             onClick={onClose}
             className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-800 text-slate-400 hover:text-white"
+            aria-label="Đóng thông tin thời tiết"
           >
             <X className="h-4 w-4" />
           </button>
-        </div>
+        </OverlayHeader>
+
+        <OverlayBody className="space-y-4 pr-1">
 
         <div className={`space-y-2 rounded-2xl border border-slate-700 bg-gradient-to-br ${weather.bgClass} p-4`}>
           <div className="text-sm font-black">{season.icon} {season.name}</div>
@@ -85,7 +87,7 @@ export const WeatherModal: React.FC<WeatherModalProps> = ({
           <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-amber-400" />
           <span>Mỗi mùa dài 7 ngày thực. Weather đổi theo slot 6 giờ và tiếp tục chạy khi offline.</span>
         </div>
-      </div>
-    </div>
+        </OverlayBody>
+    </AppModal>
   );
 };

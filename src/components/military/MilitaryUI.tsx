@@ -4,6 +4,21 @@ import type {
   ReactNode,
 } from "react";
 
+export {
+  AppBottomSheet,
+  AppModal,
+  ExclusiveFullscreenOverlay,
+  OverlayBody,
+  OverlayFooter,
+  OverlayHeader,
+  OverlayHost,
+  OverlayPanel,
+  OverlayPortal,
+  useAppChromeMetrics,
+  useBodyScrollLock,
+} from "../overlay/AppOverlay";
+export type { OverlayLayer } from "../overlay/AppOverlay";
+
 const joinClasses = (...classes: Array<string | false | null | undefined>) =>
   classes.filter(Boolean).join(" ");
 

@@ -4,6 +4,7 @@ import { GameState } from "../../game/types";
 import { MEDAL_CATALOG, MedalCategory, MedalDefinition } from "../../game/medals/medalCatalog";
 import { soundManager } from "../../game/audio";
 import { CommandHeader } from "../../components/military/MilitaryUI";
+import { OverlayPortal } from "../../components/overlay/AppOverlay";
 
 type MedalsScreenProps = {
   state: GameState;
@@ -86,10 +87,12 @@ export const MedalsScreen: React.FC<MedalsScreenProps> = ({ state, onUpdateState
     <div className="command-screen medal-cabinet-screen w-full max-w-lg mx-auto p-4 select-none pb-28 space-y-4">
       {/* Toast Alert */}
       {toastMessage && (
-        <div className="command-toast fixed top-16 left-1/2 -translate-x-1/2 z-50 bg-amber-500 text-slate-950 font-extrabold px-4 py-2 rounded-xl shadow-2xl border border-amber-300 flex items-center gap-2 text-xs sm:text-sm animate-in fade-in slide-in-from-top-2">
+        <OverlayPortal>
+        <div className="app-overlay-toast command-toast bg-amber-500 text-slate-950 font-extrabold px-4 py-2 rounded-xl shadow-2xl border border-amber-300 flex items-center gap-2 text-xs sm:text-sm animate-in fade-in slide-in-from-top-2" role="status">
           <AlertCircle className="w-4 h-4 shrink-0" />
           <span>{toastMessage}</span>
         </div>
+        </OverlayPortal>
       )}
 
       {/* Header Banner */}

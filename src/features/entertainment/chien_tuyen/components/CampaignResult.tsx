@@ -1,7 +1,8 @@
-import React, { useEffect, useId, useMemo, useRef, useState } from "react";
+import React, { useId, useMemo, useState } from "react";
 import { ArrowRight, BarChart3, Castle, Coins, RotateCcw, Shield, Skull, Sparkles, Trophy, Users, X } from "lucide-react";
 import { MAX_TOWER_FLOOR } from "../config";
 import type { BattleResult, BattleSide, BattleUnitStatistics } from "../types";
+import { AppModal, OverlayBody, OverlayHeader } from "../../../../components/overlay/AppOverlay";
 
 interface CampaignResultProps {
   result: BattleResult;
@@ -36,8 +37,6 @@ const UTILITY_METRICS: ReadonlyArray<{ key: UtilityMetric; label: string; icon: 
 function StatisticsPanel({ result, onClose }: { result: BattleResult; onClose: () => void }) {
   const [tab, setTab] = useState<BattleSide>("player");
   const titleId = useId();
-  const panelRef = useRef<HTMLElement | null>(null);
-  const closeRef = useRef<HTMLButtonElement | null>(null);
   const statistics = useMemo(
     () => Array.isArray(result.unitStatistics) ? result.unitStatistics : [],
     [result.unitStatistics]
@@ -47,34 +46,20 @@ function StatisticsPanel({ result, onClose }: { result: BattleResult; onClose: (
   ) as Record<Metric, number>, [statistics]);
   const units = useMemo(() => statistics.filter((unit) => unit.side === tab), [statistics, tab]);
 
-  useEffect(() => {
-    const previouslyFocused = document.activeElement instanceof HTMLElement ? document.activeElement : null;
-    closeRef.current?.focus();
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        event.preventDefault();
-        onClose();
-        return;
-      }
-      if (event.key !== "Tab" || !panelRef.current) return;
-      const focusable = Array.from(panelRef.current.querySelectorAll<HTMLElement>('button:not([disabled]), [href], [tabindex]:not([tabindex="-1"])')) as HTMLElement[];
-      if (focusable.length === 0) return;
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
-      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
-      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
-    };
-    document.addEventListener("keydown", onKeyDown);
-    return () => { document.removeEventListener("keydown", onKeyDown); previouslyFocused?.focus(); };
-  }, [onClose]);
-
   return (
-    <div className="ct-v2-statistics-backdrop" role="dialog" aria-modal="true" aria-labelledby={titleId} onClick={(event) => { if (event.target === event.currentTarget) onClose(); }}>
-      <section ref={panelRef} tabIndex={-1} className="ct-v2-statistics-panel">
-        <header>
+    <AppModal
+      onClose={onClose}
+      closeOnBackdrop
+      layer="exclusive-dialog"
+      layout="viewport-safe"
+      labelledBy={titleId}
+      panelClassName="ct-v2-modal ct-v2-statistics-panel max-w-lg"
+    >
+        <OverlayHeader className="ct-v2-modal-header">
           <div><div className="ct-v2-eyebrow">BÁO CÁO CHIẾN ĐẤU</div><h3 id={titleId}>THỐNG KÊ</h3></div>
-          <button ref={closeRef} type="button" className="ct-v2-icon-button" onClick={onClose} aria-label="Đóng thống kê"><X className="h-5 w-5" /></button>
-        </header>
+          <button type="button" className="ct-v2-icon-button app-overlay__close" onClick={onClose} aria-label="Đóng thống kê"><X className="h-5 w-5" /></button>
+        </OverlayHeader>
+        <OverlayBody className="space-y-3">
         <div className="ct-v2-stat-tabs" role="tablist" aria-label="Phe thống kê">
           <button id="ct-stat-tab-player" type="button" role="tab" aria-selected={tab === "player"} aria-controls="ct-stat-panel" tabIndex={tab === "player" ? 0 : -1} onClick={() => setTab("player")}>QUÂN TA</button>
           <button id="ct-stat-tab-enemy" type="button" role="tab" aria-selected={tab === "enemy"} aria-controls="ct-stat-panel" tabIndex={tab === "enemy" ? 0 : -1} onClick={() => setTab("enemy")}>KẺ ĐỊCH</button>
@@ -102,8 +87,8 @@ function StatisticsPanel({ result, onClose }: { result: BattleResult; onClose: (
             </article>
           ))}
         </div>
-      </section>
-    </div>
+        </OverlayBody>
+    </AppModal>
   );
 }
 
