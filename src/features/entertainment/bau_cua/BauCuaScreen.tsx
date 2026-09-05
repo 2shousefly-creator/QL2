@@ -53,8 +53,9 @@ export const BauCuaScreen: React.FC<BauCuaScreenProps> = ({
   const [previousRoundBets, setPreviousRoundBets] = useState<BauCuaBets>(createEmptyBets);
 
   // Modal editing state
-  const [editingDoor, setEditingDoor] = useState<BauCuaSymbol | null>(null);
-  const [modalResultRound, setModalResultRound] = useState<BauCuaRound | null>(null);
+  const [modal, setModal] = useState<{ type: "bet"; door: BauCuaSymbol } | { type: "result"; round: BauCuaRound } | null>(null);
+  const editingDoor = modal?.type === "bet" ? modal.door : null;
+  const modalResultRound = modal?.type === "result" ? modal.round : null;
 
   // Round animation & settlement state
   // Stage: 'idle' | 'shaking' | 'ready_to_open' | 'revealing'
@@ -110,7 +111,7 @@ export const BauCuaScreen: React.FC<BauCuaScreenProps> = ({
   const handleOpenBetModal = (door: BauCuaSymbol) => {
     if (isBusy) return;
     soundManager.playClick();
-    setEditingDoor(door);
+    setModal({ type: "bet", door });
   };
 
   const handleConfirmBet = (door: BauCuaSymbol, amount: number) => {
@@ -128,7 +129,7 @@ export const BauCuaScreen: React.FC<BauCuaScreenProps> = ({
   };
 
   const handleCloseResultModal = () => {
-    setModalResultRound(null);
+    setModal(null);
     setLastSettledRound(null);
     setRevealedDiceCount(3);
   };
@@ -153,7 +154,7 @@ export const BauCuaScreen: React.FC<BauCuaScreenProps> = ({
 
     const newRoundId = Date.now();
     setRoundId(newRoundId);
-    setModalResultRound(null);
+    setModal(null);
     setLastSettledRound(null);
     setRevealedDiceCount(0);
     setRoundStage("shaking");
@@ -273,7 +274,7 @@ export const BauCuaScreen: React.FC<BauCuaScreenProps> = ({
       // 3. Display summary popup modal & keep settledRound for highlights until modal closed
       setDisplayedDice(settledRound.result);
       setLastSettledRound(settledRound);
-      setModalResultRound(settledRound);
+      setModal({ type: "result", round: settledRound });
       setPendingRound(null);
       setDraftBets(createEmptyBets());
       setRoundStage("idle");
@@ -709,7 +710,7 @@ export const BauCuaScreen: React.FC<BauCuaScreenProps> = ({
         previousRoundBet={editingDoor ? previousRoundBets[editingDoor] : 0}
         onConfirmBet={handleConfirmBet}
         onClearBet={handleClearBet}
-        onClose={() => setEditingDoor(null)}
+        onClose={() => setModal(null)}
       />
 
       {/* Result Announcement Popup */}

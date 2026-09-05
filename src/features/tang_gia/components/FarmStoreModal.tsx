@@ -185,7 +185,7 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
       return (
         <button
           disabled
-          className="h-8 sm:h-9 px-2 sm:px-2.5 rounded-xl font-bold text-[11px] sm:text-xs shrink-0 bg-slate-800/70 text-slate-500 border border-slate-700/50 cursor-not-allowed flex items-center justify-center gap-1 min-w-[62px] sm:min-w-[68px]"
+          className="app-overlay-button h-8 sm:h-9 px-2 sm:px-2.5 rounded-xl font-bold text-[11px] sm:text-xs shrink-0 bg-slate-800/70 text-slate-500 border border-slate-700/50 cursor-not-allowed flex items-center justify-center gap-1 min-w-[62px] sm:min-w-[68px]"
         >
           <Lock className="w-3 h-3 text-amber-400/80 shrink-0" />
           <span>Khóa</span>
@@ -197,7 +197,7 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
       return (
         <button
           onClick={onOpenBuy}
-          className="h-8 sm:h-9 px-2.5 sm:px-3.5 rounded-xl font-black text-[11px] sm:text-xs shrink-0 transition-all flex items-center justify-center gap-1 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 active:scale-95 shadow-sm shadow-amber-500/20 cursor-pointer border border-amber-300/80 min-w-[62px] sm:min-w-[68px]"
+          className="app-overlay-button h-8 sm:h-9 px-2.5 sm:px-3.5 rounded-xl font-black text-[11px] sm:text-xs shrink-0 transition-all flex items-center justify-center gap-1 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 active:scale-95 shadow-sm shadow-amber-500/20 cursor-pointer border border-amber-300/80 min-w-[62px] sm:min-w-[68px]"
         >
           <ShoppingBag className="w-3 h-3 shrink-0" />
           <span>Mua</span>
@@ -208,7 +208,7 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
     return (
       <button
         disabled
-        className="h-8 sm:h-9 px-2 sm:px-2.5 rounded-xl font-bold text-[10px] sm:text-[11px] shrink-0 bg-slate-800/60 text-slate-500 border border-slate-700/40 cursor-not-allowed flex items-center justify-center min-w-[62px] sm:min-w-[68px]"
+        className="app-overlay-button h-8 sm:h-9 px-2 sm:px-2.5 rounded-xl font-bold text-[10px] sm:text-[11px] shrink-0 bg-slate-800/60 text-slate-500 border border-slate-700/40 cursor-not-allowed flex items-center justify-center min-w-[62px] sm:min-w-[68px]"
       >
         <span>Thiếu Vàng</span>
       </button>
@@ -226,10 +226,10 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
         onClose={onClose}
         closeOnBackdrop
         labelledBy="farm-store-title"
-        panelClassName="w-full max-w-lg bg-slate-900 border border-slate-800 rounded-3xl shadow-2xl animate-in fade-in duration-200"
+        panelClassName="app-overlay--spaced w-full max-w-lg bg-slate-900 border border-slate-800 rounded-3xl shadow-2xl animate-in fade-in duration-200"
       >
           {/* Modal Header (Sticky / Fixed at top of modal) */}
-          <OverlayHeader className="px-3.5 py-2.5 sm:px-4 sm:py-3 bg-slate-800/80 border-b border-slate-800 flex items-center justify-between gap-2">
+          <OverlayHeader className="bg-slate-800/80 border-b border-slate-800 flex items-center justify-between gap-2">
             <div className="flex items-center gap-2.5">
               <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-base sm:text-lg shrink-0">
                 🪙
@@ -249,7 +249,7 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
 
             <button
               onClick={onClose}
-              className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
+              className="app-overlay-button app-overlay-button--icon w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
               title="Đóng cửa hàng"
               aria-label="Đóng cửa hàng"
             >
@@ -261,7 +261,7 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
           <div className="flex sm:grid sm:grid-cols-4 gap-1 p-1.5 bg-slate-900 border-b border-slate-800 text-[11px] overflow-x-auto no-scrollbar whitespace-nowrap shrink-0">
             <button
               onClick={() => setActiveTab("crop")}
-              className={`flex-1 sm:flex-initial py-1.5 px-2.5 sm:px-2 rounded-xl font-bold transition-all flex items-center justify-center gap-1 shrink-0 ${
+              className={`app-overlay-button flex-1 sm:flex-initial py-1.5 px-2.5 sm:px-2 rounded-xl font-bold transition-all flex items-center justify-center gap-1 shrink-0 ${
                 activeTab === "crop"
                   ? "bg-amber-500 text-slate-950 shadow-sm"
                   : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
@@ -272,7 +272,7 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
 
             <button
               onClick={() => setActiveTab("fertilizer")}
-              className={`flex-1 sm:flex-initial py-1.5 px-2.5 sm:px-2 rounded-xl font-bold transition-all flex items-center justify-center gap-1 shrink-0 ${
+              className={`app-overlay-button flex-1 sm:flex-initial py-1.5 px-2.5 sm:px-2 rounded-xl font-bold transition-all flex items-center justify-center gap-1 shrink-0 ${
                 activeTab === "fertilizer"
                   ? "bg-amber-500 text-slate-950 shadow-sm"
                   : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
@@ -283,7 +283,7 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
 
             <button
               onClick={() => setActiveTab("animal")}
-              className={`flex-1 sm:flex-initial py-1.5 px-2.5 sm:px-2 rounded-xl font-bold transition-all flex items-center justify-center gap-1 shrink-0 ${
+              className={`app-overlay-button flex-1 sm:flex-initial py-1.5 px-2.5 sm:px-2 rounded-xl font-bold transition-all flex items-center justify-center gap-1 shrink-0 ${
                 activeTab === "animal"
                   ? "bg-amber-500 text-slate-950 shadow-sm"
                   : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
@@ -294,7 +294,7 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
 
             <button
               onClick={() => setActiveTab("feed")}
-              className={`flex-1 sm:flex-initial py-1.5 px-2.5 sm:px-2 rounded-xl font-bold transition-all flex items-center justify-center gap-1 shrink-0 ${
+              className={`app-overlay-button flex-1 sm:flex-initial py-1.5 px-2.5 sm:px-2 rounded-xl font-bold transition-all flex items-center justify-center gap-1 shrink-0 ${
                 activeTab === "feed"
                   ? "bg-amber-500 text-slate-950 shadow-sm"
                   : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
@@ -305,7 +305,7 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
           </div>
 
           {/* Tab Content List (Scrollable Area) */}
-          <OverlayBody className="p-2 sm:p-3 space-y-2">
+          <OverlayBody className="space-y-2">
             {/* TAB 1: CROPS */}
             {activeTab === "crop" &&
               CROP_CATALOG.map((crop) => {
@@ -642,17 +642,17 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
           </OverlayBody>
       </AppModal>
 
-      {/* QUANTITY BUY POPUP DIALOG (Independent Fullscreen Overlay) */}
+      {/* QUANTITY BUY CONFIRMATION (owned by Store) */}
       {buyModalData && (
         <AppModal
           layer="nested"
           onClose={() => setBuyModalData(null)}
           closeOnBackdrop
           ariaLabel={`Mua ${buyModalData.name}`}
-          panelClassName="w-full max-w-sm bg-slate-900 border border-amber-500/40 rounded-3xl p-4 sm:p-5 shadow-2xl gap-3.5 animate-in zoom-in-95 duration-150"
+          panelClassName="app-overlay--spaced w-full max-w-sm bg-slate-900 border border-amber-500/40 rounded-3xl shadow-2xl animate-in zoom-in-95 duration-150"
         >
             {/* Header */}
-            <OverlayHeader className="flex items-center justify-between gap-2 border-b border-slate-800 pb-3">
+            <OverlayHeader className="flex items-center justify-between gap-2 border-b border-slate-800">
               <div className="flex items-center gap-2.5">
                 <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-xl sm:text-2xl shrink-0">
                   {buyModalData.icon}
@@ -669,14 +669,14 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
 
               <button
                 onClick={() => setBuyModalData(null)}
-                className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
+                className="app-overlay-button app-overlay-button--icon w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
                 aria-label="Đóng chọn số lượng mua"
               >
                 <X className="w-4 h-4" />
               </button>
             </OverlayHeader>
 
-            <OverlayBody className="space-y-3.5 pr-1">
+            <OverlayBody className="space-y-3.5">
 
             {/* Quantity Selector */}
             <div className="space-y-2">
@@ -694,7 +694,7 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
                   }}
                   disabled={buyQuantity <= 1}
                   aria-label="Giảm số lượng mua 1"
-                  className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-800 hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed text-slate-200 font-bold flex items-center justify-center border border-slate-700 transition-all active:scale-95 cursor-pointer"
+                  className="app-overlay-button app-overlay-button--icon w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-800 hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed text-slate-200 font-bold flex items-center justify-center border border-slate-700 transition-all active:scale-95 cursor-pointer"
                 >
                   <Minus className="w-4 h-4" />
                 </button>
@@ -726,7 +726,7 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
                   }}
                   disabled={buyQuantity >= maxAffordable}
                   aria-label="Tăng số lượng mua 1"
-                  className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-800 hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed text-slate-200 font-bold flex items-center justify-center border border-slate-700 transition-all active:scale-95 cursor-pointer"
+                  className="app-overlay-button app-overlay-button--icon w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-800 hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed text-slate-200 font-bold flex items-center justify-center border border-slate-700 transition-all active:scale-95 cursor-pointer"
                 >
                   <Plus className="w-4 h-4" />
                 </button>
@@ -741,7 +741,7 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
                     disabled={delta < 0 ? buyQuantity <= 1 : buyQuantity >= maxAffordable}
                     onClick={() => handleBuyQuantityQuickAdjust(delta)}
                     aria-label={`${delta < 0 ? "Giảm" : "Tăng"} số lượng mua ${Math.abs(delta)}`}
-                    className="min-h-10 rounded-xl border border-slate-700 bg-slate-800 px-1.5 text-[11px] font-bold text-slate-300 transition-all hover:bg-slate-700 active:scale-95 disabled:cursor-not-allowed disabled:opacity-35 sm:text-xs"
+                    className="app-overlay-button min-h-10 rounded-xl border border-slate-700 bg-slate-800 px-1.5 text-[11px] font-bold text-slate-300 transition-all hover:bg-slate-700 active:scale-95 disabled:cursor-not-allowed disabled:opacity-35 sm:text-xs"
                   >
                     {delta > 0 ? "+" : ""}{delta}
                   </button>
@@ -755,7 +755,7 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
                   setBuyQuantity(maxAffordable);
                 }}
                 aria-label={`Chọn số lượng mua tối đa ${maxAffordable}`}
-                className="min-h-10 w-full rounded-xl border border-amber-500/40 bg-amber-500/20 px-2 text-[11px] font-bold text-amber-300 transition-all hover:bg-amber-500/30 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50 sm:text-xs"
+                className="app-overlay-button min-h-10 w-full rounded-xl border border-amber-500/40 bg-amber-500/20 px-2 text-[11px] font-bold text-amber-300 transition-all hover:bg-amber-500/30 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50 sm:text-xs"
               >
                 Tối đa ({maxAffordable})
               </button>
@@ -789,11 +789,11 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
             </OverlayBody>
 
             {/* Action Buttons */}
-            <OverlayFooter className="flex items-center gap-2 pt-1" data-stack-actions="true">
+            <OverlayFooter className="flex items-center gap-2" data-stack-actions="true">
               <button
                 type="button"
                 onClick={() => setBuyModalData(null)}
-                className="flex-1 py-2 rounded-xl bg-slate-800 text-slate-300 font-bold text-xs hover:bg-slate-700 transition-colors cursor-pointer"
+                className="app-overlay-button flex-1 py-2 rounded-xl bg-slate-800 text-slate-300 font-bold text-xs hover:bg-slate-700 transition-colors cursor-pointer"
               >
                 Hủy Bỏ
               </button>
@@ -801,7 +801,7 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
                 type="button"
                 disabled={!canAffordBuy || buyQuantity <= 0}
                 onClick={handleConfirmBuy}
-                className="flex-1 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 disabled:opacity-40 disabled:cursor-not-allowed text-slate-950 font-black text-xs shadow-md transition-all active:scale-95 cursor-pointer"
+                className="app-overlay-button flex-1 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 disabled:opacity-40 disabled:cursor-not-allowed text-slate-950 font-black text-xs shadow-md transition-all active:scale-95 cursor-pointer"
               >
                 Mua ({buyQuantity})
               </button>

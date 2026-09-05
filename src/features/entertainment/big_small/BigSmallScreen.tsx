@@ -71,9 +71,10 @@ export const BigSmallScreen: React.FC<BigSmallScreenProps> = ({
   } | null>(null);
   const [revealedDiceCount, setRevealedDiceCount] = useState<number>(3);
 
-  const [activeModalDoor, setActiveModalDoor] = useState<BigSmallBetId | null>(null);
-  const [isRulesOpen, setIsRulesOpen] = useState<boolean>(false);
-  const [isResultOpen, setIsResultOpen] = useState<boolean>(false);
+  const [modal, setModal] = useState<{ type: "bet"; door: BigSmallBetId } | { type: "rules" | "result" } | null>(null);
+  const activeModalDoor = modal?.type === "bet" ? modal.door : null;
+  const isRulesOpen = modal?.type === "rules";
+  const isResultOpen = modal?.type === "result";
 
   const timersRef = useRef<NodeJS.Timeout[]>([]);
 
@@ -98,7 +99,7 @@ export const BigSmallScreen: React.FC<BigSmallScreenProps> = ({
   // Close Result Modal & Clear previous winning door highlights
   const handleCloseResultModal = () => {
     soundManager.playClick();
-    setIsResultOpen(false);
+    setModal(null);
     setWinningHighlightDoor(null);
     setRevealedDiceCount(3);
   };
@@ -107,7 +108,7 @@ export const BigSmallScreen: React.FC<BigSmallScreenProps> = ({
   const handleOpenBetModal = (door: BigSmallBetId) => {
     if (roundPhase !== "idle") return;
     soundManager.playClick();
-    setActiveModalDoor(door);
+    setModal({ type: "bet", door });
   };
 
   const handleConfirmBet = (door: BigSmallBetId, amount: number) => {
@@ -142,7 +143,7 @@ export const BigSmallScreen: React.FC<BigSmallScreenProps> = ({
 
     const newRoundId = Date.now();
     setRoundId(newRoundId);
-    setIsResultOpen(false);
+    setModal(null);
     setLastRound(null);
     setWinningHighlightDoor(null);
     setRevealedDiceCount(0);
@@ -217,7 +218,7 @@ export const BigSmallScreen: React.FC<BigSmallScreenProps> = ({
       }
       onUpdateGold?.(settlement.postRoundGold);
 
-      setIsResultOpen(true);
+      setModal({ type: "result" });
       setRoundPhase("idle");
       setBets(createEmptyBigSmallBets());
       setPendingSettlement(null);
@@ -269,7 +270,7 @@ export const BigSmallScreen: React.FC<BigSmallScreenProps> = ({
             type="button"
             onClick={() => {
               soundManager.playClick();
-              setIsRulesOpen(true);
+              setModal({ type: "rules" });
             }}
             className="w-8 h-8 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 flex items-center justify-center transition-colors active:scale-95"
             title="Xem Luật Chơi"
@@ -705,12 +706,12 @@ export const BigSmallScreen: React.FC<BigSmallScreenProps> = ({
         previousRoundBet={activeModalDoor ? previousRoundBets[activeModalDoor] : 0}
         onConfirmBet={handleConfirmBet}
         onClearBet={handleClearDoorBet}
-        onClose={() => setActiveModalDoor(null)}
+        onClose={() => setModal(null)}
       />
 
       <BigSmallRulesModal
         isOpen={isRulesOpen}
-        onClose={() => setIsRulesOpen(false)}
+        onClose={() => setModal(null)}
       />
 
       <BigSmallResultModal

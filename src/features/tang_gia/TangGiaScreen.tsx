@@ -107,6 +107,22 @@ interface TangGiaScreenProps {
   onTroughInfoToggle?: (isOpen: boolean) => void;
 }
 
+type FarmDialog = {
+  title: string;
+  message: string;
+  confirmLabel?: string;
+  onConfirm?: () => void;
+};
+type StoreTab = "crop" | "fertilizer" | "animal" | "feed";
+type FarmPrimaryModal =
+  | { type: "store"; tab: StoreTab }
+  | { type: "inventory"; tab: KhoTabType }
+  | { type: "plant"; plotIndex: number }
+  | { type: "apply-fertilizer"; plotIndex: number }
+  | { type: "enter-pen" | "feed" | "trough" | "weather" }
+  | { type: "reward"; summary: RewardSummaryData }
+  | { type: "dialog"; dialog: FarmDialog };
+
 function getAnimalDeathNotificationCopy(
   summary: AnimalDeathNotificationSummary,
   offline: boolean
@@ -143,60 +159,37 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
   const [selectedPlotIndex, setSelectedPlotIndex] = useState<number | null>(null);
   const [selectedAnimalId, setSelectedAnimalId] = useState<string | null>(null);
 
-  // Cleanup selection on screen unmount
-  useEffect(() => {
-    return () => {
-      setContextMode("none");
-      setSelectedPlotIndex(null);
-      setSelectedAnimalId(null);
-    };
-  }, []);
-
-  // Modals visibility
-  const [isStoreOpen, setIsStoreOpen] = useState(false);
-  const [storeInitialTab, setStoreInitialTab] = useState<
-    "crop" | "fertilizer" | "animal" | "feed"
-  >("crop");
-  const [isKhoOpen, setIsKhoOpen] = useState(false);
-  const [khoInitialTab, setKhoInitialTab] = useState<KhoTabType>("crop");
-  const [isPlantModalOpen, setIsPlantModalOpen] = useState(false);
-  const [isApplyFertilizerModalOpen, setIsApplyFertilizerModalOpen] = useState(false);
-  const [isEnterPenModalOpen, setIsEnterPenModalOpen] = useState(false);
-  const [isFeedModalOpen, setIsFeedModalOpen] = useState(false);
-  const [isTroughInfoOpen, setIsTroughInfoOpen] = useState(false);
-  const [isWeatherModalOpen, setIsWeatherModalOpen] = useState(false);
+  // Replacing this union atomically unmounts the previous owner and its children.
+  const [farmModal, setFarmModal] = useState<FarmPrimaryModal | null>(null);
+  const farmModalRef = useRef<FarmPrimaryModal | null>(null);
+  const openFarmModal = (modal: FarmPrimaryModal) => {
+    farmModalRef.current = modal;
+    setFarmModal(modal);
+  };
+  const closeFarmModal = () => {
+    farmModalRef.current = null;
+    setFarmModal(null);
+  };
+  const openFarmDialog = (dialog: FarmDialog) => openFarmModal({ type: "dialog", dialog });
+  const dialogConfig = farmModal?.type === "dialog" ? farmModal.dialog : null;
 
   const currentWeatherSlot = getCanonicalWeatherSlot(
     now,
     farmState.weatherSeed ?? 133742
   );
   const presentationState = getFarmPresentationState(farmState, now);
-  const selectedFarmPlot = selectedPlotIndex === null
-    ? null
-    : farmState.plots[selectedPlotIndex];
-  const selectedPlotLastFertilizerId = selectedFarmPlot?.status === "empty"
-    ? selectedFarmPlot.lastFertilizerId
+  const plantingPlot = farmModal?.type === "plant"
+    ? farmState.plots[farmModal.plotIndex]
+    : null;
+  const selectedPlotLastFertilizerId = plantingPlot?.status === "empty"
+    ? plantingPlot.lastFertilizerId
     : undefined;
 
-  const handleOpenTroughInfo = () => {
-    setIsTroughInfoOpen(true);
-    onTroughInfoToggle?.(true);
-  };
-
-  const handleCloseTroughInfo = () => {
-    setIsTroughInfoOpen(false);
-    onTroughInfoToggle?.(false);
-  };
-
   useEffect(() => {
-    return () => {
-      onTroughInfoToggle?.(false);
-    };
-  }, [onTroughInfoToggle]);
+    onTroughInfoToggle?.(farmModal?.type === "trough");
+    return () => onTroughInfoToggle?.(false);
+  }, [farmModal?.type, onTroughInfoToggle]);
 
-  // Reward summary modal state
-  const [rewardSummary, setRewardSummary] = useState<RewardSummaryData | null>(null);
-  const [isRewardSummaryOpen, setIsRewardSummaryOpen] = useState(false);
   const [harvestPresentations, setHarvestPresentations] = useState<
     PlotHarvestPresentation[]
   >([]);
@@ -205,8 +198,7 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
   const harvestPresentationTimersRef = useRef<number[]>([]);
 
   const showRewardSummary = (summary: RewardSummaryData) => {
-    setRewardSummary(summary);
-    setIsRewardSummaryOpen(true);
+    openFarmModal({ type: "reward", summary });
   };
 
   const queueHarvestPresentations = (
@@ -238,15 +230,6 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
 
   // Toast notification
   const [toastMessage, setToastMessage] = useState<string | null>(null);
-
-  // Dialog modal state
-  const [dialogConfig, setDialogConfig] = useState<{
-    isOpen: boolean;
-    title: string;
-    message: string;
-    confirmLabel?: string;
-    onConfirm?: () => void;
-  }>({ isOpen: false, title: "", message: "" });
 
   const totalEggCount = Object.values(farmState.inventory.eggs || {}).reduce(
     (acc, val) => acc + (val || 0),
@@ -374,37 +357,20 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
   };
 
   const showLowMoistureDialog = () => {
-    setDialogConfig({
-      isOpen: true,
+    openFarmDialog({
       title: "Đất Thiếu Nước",
       message: "Đất đang thiếu nước trầm trọng, hãy tưới nước trước rồi trồng cây sau",
       confirmLabel: "Đã Hiểu",
       onConfirm: () =>
-        setDialogConfig((previous) => ({ ...previous, isOpen: false })),
+        closeFarmModal(),
     });
   };
 
-  const openStore = (tab?: "crop" | "fertilizer" | "animal" | "feed") => {
-    if (tab) {
-      setStoreInitialTab(tab);
-    } else if (contextMode === "pen") {
-      setStoreInitialTab("animal");
-    } else {
-      setStoreInitialTab("crop");
-    }
-    setIsStoreOpen(true);
-  };
+  const openStore = (tab?: StoreTab) =>
+    openFarmModal({ type: "store", tab: tab ?? (contextMode === "pen" ? "animal" : "crop") });
 
-  const openKho = (tab?: KhoTabType) => {
-    if (tab) {
-      setKhoInitialTab(tab);
-    } else if (contextMode === "pen") {
-      setKhoInitialTab("animal");
-    } else {
-      setKhoInitialTab("crop");
-    }
-    setIsKhoOpen(true);
-  };
+  const openKho = (tab?: KhoTabType) =>
+    openFarmModal({ type: "inventory", tab: tab ?? (contextMode === "pen" ? "animal" : "crop") });
 
   // --- STORE ACTIONS (Support multi-quantity) ---
   const handleBuyCrop = (cropId: CropId, quantity: number = 1) => {
@@ -601,24 +567,24 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
       showLowMoistureDialog();
       return;
     }
-    setIsPlantModalOpen(true);
+    if (selectedPlotIndex !== null) openFarmModal({ type: "plant", plotIndex: selectedPlotIndex });
   };
 
   const handlePlantSeedWithFertilizer = (
     cropId: CropId,
     fertilizerId: FertilizerTypeId | null
   ) => {
-    if (selectedPlotIndex === null) {
-      showToast("Vui lòng chọn ô đất trước khi gieo hạt!");
-      return;
-    }
+    const modal = farmModalRef.current;
+    if (modal?.type !== "plant") return;
+    const plotIndex = modal.plotIndex;
+    closeFarmModal();
 
     const currentNow = Date.now();
 
     updateFarm((farm, draft) => {
       const res = plantSeedWithFertilizer(
         farm,
-        selectedPlotIndex,
+        plotIndex,
         cropId,
         fertilizerId,
         currentNow
@@ -630,6 +596,7 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
         !res.success &&
         res.message === "Đất đang thiếu nước trầm trọng, hãy tưới nước trước rồi trồng cây sau"
       ) {
+        // This is a transaction result; modal replacement itself is synchronous.
         setTimeout(showLowMoistureDialog, 0);
         return;
       }
@@ -667,19 +634,21 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
   };
 
   const handleApplyFertilizer = (fertilizerId: FertilizerTypeId) => {
-    if (selectedPlotIndex === null) return;
+    const modal = farmModalRef.current;
+    if (modal?.type !== "apply-fertilizer") return;
+    const plotIndex = modal.plotIndex;
+    closeFarmModal();
     const currentNow = Date.now();
     updateFarm((farm, draft) => {
       const result = applyFertilizerToGrowingCrop(
         farm,
-        selectedPlotIndex,
+        plotIndex,
         fertilizerId,
         currentNow
       );
       if (result.success) recordFertilizerUsed(draft, fertilizerId);
       return { message: result.message };
     }, currentNow);
-    setIsApplyFertilizerModalOpen(false);
   };
 
   const handleHarvestSinglePlot = () => {
@@ -745,8 +714,7 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
       return;
     }
 
-    setDialogConfig({
-      isOpen: true,
+    openFarmDialog({
       title: "Xúc Đất Dọn Cây",
       message: `Bạn có chắc muốn xúc đất dọn bỏ cây ở Ô đất #${
         selectedPlotIndex + 1
@@ -757,7 +725,7 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
           clearPlot(farm, selectedPlotIndex);
         });
         showToast(`Đã xúc đất dọn sạch Ô đất #${selectedPlotIndex + 1}!`);
-        setDialogConfig((prev) => ({ ...prev, isOpen: false }));
+        closeFarmModal();
       },
     });
   };
@@ -784,8 +752,7 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
       return;
     }
 
-    setDialogConfig({
-      isOpen: true,
+    openFarmDialog({
       title: "Mở Khóa Ô Đất Mới",
       message: `Mở khóa Ô đất #${plotIndex + 1} với chi phí ${
         config.gold
@@ -806,7 +773,7 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
           };
         }, unlockedAt);
         showToast(`Đã mở khóa thành công Ô đất #${plotIndex + 1}!`);
-        setDialogConfig((prev) => ({ ...prev, isOpen: false }));
+        closeFarmModal();
       },
     });
   };
@@ -925,8 +892,7 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
     );
     const dead = Boolean(animal && isAnimalDead(animal));
 
-    setDialogConfig({
-      isOpen: true,
+    openFarmDialog({
       title: dead ? "Dọn Vật Nuôi" : "Đuổi Vật Nuôi",
       message: dead
         ? `Dọn ${animalDef?.name || "vật nuôi"} đã chết để giải phóng ô chuồng? Hành động này không hoàn Trứng, Vàng hoặc XP.`
@@ -941,7 +907,7 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
         setSelectedAnimalId(null);
         setContextMode("none");
         showToast(dead ? "Đã dọn vật nuôi chết và giải phóng ô chuồng!" : "Đã đuổi vật nuôi khỏi chuồng!");
-        setDialogConfig((prev) => ({ ...prev, isOpen: false }));
+        closeFarmModal();
       },
     });
   };
@@ -979,7 +945,7 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
       className="command-screen logistics-command-screen w-full max-w-5xl mx-auto p-2 sm:p-4 space-y-3 font-sans pb-36 relative"
     >
       {/* --- HUD HEADER (STICKY) --- */}
-      {!isTroughInfoOpen && (
+      {farmModal?.type !== "trough" && (
         <div
           onClick={(e) => {
             e.stopPropagation();
@@ -1005,7 +971,7 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
           {/* Center Weather HUD */}
           <WeatherHUD
             currentSlot={currentWeatherSlot}
-            onOpenWeatherModal={() => setIsWeatherModalOpen(true)}
+            onOpenWeatherModal={() => openFarmModal({ type: "weather" })}
           />
 
           {/* Action Buttons Header */}
@@ -1078,15 +1044,15 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
           handleClearSelection();
           openKho("egg");
         }}
-        onOpenFeedModal={() => setIsFeedModalOpen(true)}
-        isTroughInfoOpen={isTroughInfoOpen}
-        onOpenTroughInfo={handleOpenTroughInfo}
-        onCloseTroughInfo={handleCloseTroughInfo}
+        onOpenFeedModal={() => openFarmModal({ type: "feed" })}
+        isTroughInfoOpen={farmModal?.type === "trough"}
+        onOpenTroughInfo={() => openFarmModal({ type: "trough" })}
+        onCloseTroughInfo={closeFarmModal}
         now={now}
       />
 
       {/* --- CONTEXTUAL BOTTOM TOOLBAR --- */}
-      {contextMode !== "none" && !isTroughInfoOpen && (
+      {contextMode !== "none" && farmModal?.type !== "trough" && (
         <div
           onClick={(e) => e.stopPropagation()}
           className="fixed bottom-[calc(3.5rem+env(safe-area-inset-bottom,0px)+0.5rem)] left-1/2 -translate-x-1/2 z-30 w-full max-w-xl px-3 animate-in fade-in slide-in-from-bottom-2 duration-200"
@@ -1145,7 +1111,7 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
 
                 <button
                   disabled={!canApplyFertilizer}
-                  onClick={() => setIsApplyFertilizerModalOpen(true)}
+                  onClick={() => selectedPlotIndex !== null && openFarmModal({ type: "apply-fertilizer", plotIndex: selectedPlotIndex })}
                   data-fertilizer-action="selected-plot"
                   className={`h-14 flex-1 rounded-xl border flex flex-col items-center justify-center gap-1 shadow-sm transition-all ${
                     canApplyFertilizer
@@ -1236,7 +1202,7 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
 
                 {/* Enter Pen */}
                 <button
-                  onClick={() => setIsEnterPenModalOpen(true)}
+                  onClick={() => openFarmModal({ type: "enter-pen" })}
                   className="h-14 flex-1 rounded-xl border border-slate-700/80 bg-slate-800 hover:bg-slate-700 text-slate-200 flex flex-col items-center justify-center gap-1 shadow-sm active:scale-95 transition-all"
                 >
                   <span className="text-base leading-none shrink-0">🐓</span>
@@ -1245,7 +1211,7 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
 
                 {/* Feed Pen */}
                 <button
-                  onClick={() => setIsFeedModalOpen(true)}
+                  onClick={() => openFarmModal({ type: "feed" })}
                   className="h-14 flex-1 rounded-xl border border-slate-700/80 bg-slate-800 hover:bg-slate-700 text-slate-200 flex flex-col items-center justify-center gap-1 shadow-sm active:scale-95 transition-all"
                 >
                   <Wheat className="w-4 h-4 text-emerald-400 shrink-0" />
@@ -1309,29 +1275,28 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
       )}
 
       {/* --- CONFIRMATION DIALOG MODAL --- */}
-      {dialogConfig.isOpen && (
+      {dialogConfig && (
         <AppModal
-          layer="nested"
-          onClose={() => setDialogConfig((prev) => ({ ...prev, isOpen: false }))}
+          onClose={() => closeFarmModal()}
           labelledBy="farm-confirmation-title"
-          panelClassName="bg-slate-900 border border-slate-700 rounded-3xl max-w-sm w-full shadow-2xl text-center animate-in fade-in duration-200"
+          panelClassName="app-overlay--spaced bg-slate-900 border border-slate-700 rounded-3xl max-w-sm w-full shadow-2xl text-center animate-in fade-in duration-200"
         >
-            <OverlayHeader className="p-5 pb-2">
+            <OverlayHeader className="">
             <h3 id="farm-confirmation-title" className="font-extrabold text-base text-slate-100">
               {dialogConfig.title}
             </h3>
             </OverlayHeader>
-            <OverlayBody className="px-5 py-2">
+            <OverlayBody className="">
             <p className="text-xs text-slate-300 leading-relaxed">
               {dialogConfig.message}
             </p>
             </OverlayBody>
-            <OverlayFooter className="flex items-center gap-2 p-5 pt-2" data-stack-actions="true">
+            <OverlayFooter className="flex items-center gap-2" data-stack-actions="true">
               <button
                 onClick={() =>
-                  setDialogConfig((prev) => ({ ...prev, isOpen: false }))
+                  closeFarmModal()
                 }
-                className="flex-1 py-2.5 rounded-xl bg-slate-800 text-slate-300 font-extrabold text-xs hover:bg-slate-750 transition-colors"
+                className="app-overlay-button flex-1 py-2.5 rounded-xl bg-slate-800 text-slate-300 font-extrabold text-xs hover:bg-slate-750 transition-colors"
               >
                 Hủy Bỏ
               </button>
@@ -1339,7 +1304,7 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
                 onClick={() => {
                   if (dialogConfig.onConfirm) dialogConfig.onConfirm();
                 }}
-                className="flex-1 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs shadow-md transition-all active:scale-95"
+                className="app-overlay-button flex-1 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs shadow-md transition-all active:scale-95"
               >
                 {dialogConfig.confirmLabel || "Xác Nhận"}
               </button>
@@ -1348,96 +1313,110 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
       )}
 
       {/* --- ALL GAME MODALS --- */}
-      <FarmStoreModal
-        isOpen={isStoreOpen}
-        onClose={() => setIsStoreOpen(false)}
-        gold={farmState.gold}
-        currentRank={currentRank}
-        inventory={farmState.inventory}
-        initialTab={storeInitialTab}
-        onBuyCrop={handleBuyCrop}
-        onBuyAnimal={handleBuyAnimal}
-        onBuyFeed={handleBuyFeed}
-        onBuyFertilizer={handleBuyFertilizer}
-      />
+      {farmModal?.type === "store" && (
+        <FarmStoreModal
+          isOpen={true}
+          onClose={closeFarmModal}
+          gold={farmState.gold}
+          currentRank={currentRank}
+          inventory={farmState.inventory}
+          initialTab={farmModal.tab}
+          onBuyCrop={handleBuyCrop}
+          onBuyAnimal={handleBuyAnimal}
+          onBuyFeed={handleBuyFeed}
+          onBuyFertilizer={handleBuyFertilizer}
+        />
+      )}
 
-      <KhoModal
-        isOpen={isKhoOpen}
-        onClose={() => setIsKhoOpen(false)}
-        inventory={farmState.inventory}
-        eggQualityInventory={farmState.eggQualityInventory}
-        initialTab={khoInitialTab}
-        onSellItem={handleSellItem}
-        onSellEggs={handleSellEggsSingle}
-        onSellAllEggs={handleSellAllEggsQuick}
-        onOpenStore={(tab) => {
-          setIsKhoOpen(false);
-          openStore(tab);
-        }}
-      />
+      {farmModal?.type === "inventory" && (
+        <KhoModal
+          isOpen={true}
+          onClose={closeFarmModal}
+          inventory={farmState.inventory}
+          eggQualityInventory={farmState.eggQualityInventory}
+          initialTab={farmModal.tab}
+          onSellItem={handleSellItem}
+          onSellEggs={handleSellEggsSingle}
+          onSellAllEggs={handleSellAllEggsQuick}
+          onOpenStore={openStore}
+        />
+      )}
 
-      <PlantSeedModal
-        isOpen={isPlantModalOpen}
-        onClose={() => setIsPlantModalOpen(false)}
-        inventory={farmState.inventory}
-        initialFertilizerId={selectedPlotLastFertilizerId}
-        onSelectSeedWithFertilizer={handlePlantSeedWithFertilizer}
-        onOpenStore={() => openStore("crop")}
-      />
+      {farmModal?.type === "plant" && (
+        <PlantSeedModal
+          key={farmModal.plotIndex}
+          isOpen={true}
+          onClose={closeFarmModal}
+          inventory={farmState.inventory}
+          initialFertilizerId={selectedPlotLastFertilizerId}
+          onSelectSeedWithFertilizer={handlePlantSeedWithFertilizer}
+          onOpenStore={() => openStore("crop")}
+        />
+      )}
 
-      <ApplyFertilizerModal
-        isOpen={isApplyFertilizerModalOpen}
-        onClose={() => setIsApplyFertilizerModalOpen(false)}
-        inventory={farmState.inventory}
-        onConfirm={handleApplyFertilizer}
-        onOpenStore={() => {
-          setIsApplyFertilizerModalOpen(false);
-          openStore("fertilizer");
-        }}
-      />
+      {farmModal?.type === "apply-fertilizer" && (
+        <ApplyFertilizerModal
+          key={farmModal.plotIndex}
+          isOpen={true}
+          onClose={closeFarmModal}
+          inventory={farmState.inventory}
+          onConfirm={handleApplyFertilizer}
+          onOpenStore={() => openStore("fertilizer")}
+        />
+      )}
 
-      <EnterPenModal
-        isOpen={isEnterPenModalOpen}
-        onClose={() => setIsEnterPenModalOpen(false)}
-        inventory={farmState.inventory}
-        penAnimals={farmState.penAnimals}
-        currentRank={currentRank}
-        onEnterPen={handleEnterPen}
-        onOpenStore={() => openStore("animal")}
-      />
+      {farmModal?.type === "enter-pen" && (
+        <EnterPenModal
+          isOpen={true}
+          onClose={closeFarmModal}
+          inventory={farmState.inventory}
+          penAnimals={farmState.penAnimals}
+          currentRank={currentRank}
+          onEnterPen={handleEnterPen}
+          onOpenStore={() => openStore("animal")}
+        />
+      )}
 
-      <FeedModal
-        isOpen={isFeedModalOpen}
-        onClose={() => setIsFeedModalOpen(false)}
-        inventory={farmState.inventory}
-        penFeedBuffValue={presentationState.penFeedBuffValue}
-        activeFeedSpeedBonus={presentationState.activeFeedSpeedBonus}
-        onSelectFeed={handleFeedPen}
-        onOpenStore={() => openStore("feed")}
-      />
+      {farmModal?.type === "feed" && (
+        <FeedModal
+          isOpen={true}
+          onClose={closeFarmModal}
+          inventory={farmState.inventory}
+          penFeedBuffValue={presentationState.penFeedBuffValue}
+          activeFeedSpeedBonus={presentationState.activeFeedSpeedBonus}
+          onSelectFeed={handleFeedPen}
+          onOpenStore={() => openStore("feed")}
+        />
+      )}
 
-      <RewardSummaryModal
-        isOpen={isRewardSummaryOpen}
-        onClose={() => setIsRewardSummaryOpen(false)}
-        data={rewardSummary}
-      />
+      {farmModal?.type === "reward" && (
+        <RewardSummaryModal
+          isOpen={true}
+          onClose={closeFarmModal}
+          data={farmModal.summary}
+        />
+      )}
 
-      <TroughInfoModal
-        isOpen={isTroughInfoOpen}
-        onClose={handleCloseTroughInfo}
-        penAnimals={presentationState.penAnimals}
-        penFeedBuffValue={presentationState.penFeedBuffValue}
-        penFeedEmptyAt={presentationState.penFeedEmptyAt}
-        activeFeedSpeedBonus={presentationState.activeFeedSpeedBonus}
-        penStarvationStartedAt={presentationState.penStarvationStartedAt}
-        now={now}
-      />
+      {farmModal?.type === "trough" && (
+        <TroughInfoModal
+          isOpen={true}
+          onClose={closeFarmModal}
+          penAnimals={presentationState.penAnimals}
+          penFeedBuffValue={presentationState.penFeedBuffValue}
+          penFeedEmptyAt={presentationState.penFeedEmptyAt}
+          activeFeedSpeedBonus={presentationState.activeFeedSpeedBonus}
+          penStarvationStartedAt={presentationState.penStarvationStartedAt}
+          now={now}
+        />
+      )}
 
-      <WeatherModal
-        isOpen={isWeatherModalOpen}
-        onClose={() => setIsWeatherModalOpen(false)}
-        currentSlot={currentWeatherSlot}
-      />
+      {farmModal?.type === "weather" && (
+        <WeatherModal
+          isOpen={true}
+          onClose={closeFarmModal}
+          currentSlot={currentWeatherSlot}
+        />
+      )}
     </div>
   );
 };

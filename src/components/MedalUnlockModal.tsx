@@ -26,6 +26,7 @@ export const MedalUnlockModal: React.FC<MedalUnlockModalProps> = ({ gameState, o
 
   return (
     <AppModal
+      notification
       onClose={handleClose}
       labelledBy="medal-unlock-title"
       panelClassName={`w-full max-w-sm rounded-3xl border text-center shadow-2xl bg-gradient-to-b ${medal.bgGradient} ${medal.borderColor} animate-in zoom-in-95 duration-200`}

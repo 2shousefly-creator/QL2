@@ -50,12 +50,11 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isEditingName, setIsEditingName] = useState(false);
   const [nameInput, setNameInput] = useState(state.player.displayName);
-  const [showAvatarModal, setShowAvatarModal] = useState(false);
+  const [profileModal, setProfileModal] = useState<"avatar" | "coupon" | null>(null);
   const [importJson, setImportJson] = useState("");
   const [showImportBox, setShowImportBox] = useState(false);
   const [exportNotice, setExportNotice] = useState<string | null>(null);
   const [couponInput, setCouponInput] = useState("");
-  const [showCouponModal, setShowCouponModal] = useState(false);
   const [couponNotice, setCouponNotice] = useState<{ message: string; type: "success" | "error" } | null>(null);
   const [isUpdatingApp, setIsUpdatingApp] = useState(false);
   const [updateNotice, setUpdateNotice] = useState<string | null>(null);
@@ -115,7 +114,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
             draft.player.avatarSeed = dataUrl;
           });
           soundManager.playClick();
-          setShowAvatarModal(false);
+          setProfileModal(null);
         }
       };
       img.src = event.target?.result as string;
@@ -138,7 +137,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
       draft.player.avatarSeed = seed;
     });
     soundManager.playClick();
-    setShowAvatarModal(false);
+    setProfileModal(null);
   };
 
   const handleToggleSound = () => {
@@ -324,7 +323,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
             type="button"
             onClick={() => {
               soundManager.playClick();
-              setShowAvatarModal(true);
+              setProfileModal("avatar");
             }}
             className="theme-focus relative group transition-transform hover:scale-105 rounded-full focus:outline-none"
             title="Đổi ảnh đại diện"
@@ -494,7 +493,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
             type="button"
             onClick={() => {
               soundManager.playClick();
-              setShowCouponModal(true);
+              setProfileModal("coupon");
             }}
             className="theme-focus theme-hover-border w-full flex items-center justify-between gap-3 bg-slate-950/90 hover:bg-slate-900/90 border border-slate-700/80 rounded-xl px-3.5 py-2.5 transition-all group active:scale-[0.99] text-left shadow-inner focus:outline-none"
           >
@@ -848,9 +847,9 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
       </div>
 
       {/* Avatar Selection Modal */}
-      {showAvatarModal && (
+      {profileModal === "avatar" && (
         <AppModal
-          onClose={() => setShowAvatarModal(false)}
+          onClose={() => setProfileModal(null)}
           labelledBy="avatar-picker-title"
           panelClassName="w-full max-w-sm bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl text-slate-100"
         >
@@ -858,7 +857,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
             <h3 id="avatar-picker-title" className="min-w-0 font-bold text-base">Chọn Ảnh Đại Diện</h3>
             <button
               type="button"
-              onClick={() => setShowAvatarModal(false)}
+              onClick={() => setProfileModal(null)}
               className="app-overlay__close rounded-xl bg-slate-800 text-slate-300 hover:bg-slate-700"
               aria-label="Đóng chọn ảnh đại diện"
               data-overlay-close
@@ -917,7 +916,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
           <OverlayFooter className="px-5 pb-5">
             <button
               type="button"
-              onClick={() => setShowAvatarModal(false)}
+              onClick={() => setProfileModal(null)}
               className="w-full py-2 rounded-xl bg-slate-800 text-slate-300 font-semibold text-xs hover:bg-slate-700"
             >
               Hủy
@@ -927,9 +926,9 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
       )}
 
       {/* Coupon / Gift Code Popup Modal */}
-      {showCouponModal && (
+      {profileModal === "coupon" && (
         <AppModal
-          onClose={() => setShowCouponModal(false)}
+          onClose={() => setProfileModal(null)}
           closeOnBackdrop
           labelledBy="coupon-modal-title"
           panelClassName="theme-card-accent w-full max-w-sm bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950 border-2 rounded-3xl p-5 shadow-2xl gap-4 animate-in zoom-in-95 duration-200"
@@ -951,7 +950,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
               </div>
               <button
                 type="button"
-                onClick={() => setShowCouponModal(false)}
+                onClick={() => setProfileModal(null)}
                 className="theme-focus w-8 h-8 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-400 hover:text-slate-200 flex items-center justify-center transition-all active:scale-95 focus:outline-none"
                 aria-label="Đóng nhập mã ưu đãi"
               >
@@ -1008,7 +1007,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
               <div className="flex items-center gap-2 pt-1">
                 <button
                   type="button"
-                  onClick={() => setShowCouponModal(false)}
+                  onClick={() => setProfileModal(null)}
                   className="theme-focus flex-1 py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs transition-all active:scale-95 focus:outline-none"
                 >
                   Đóng

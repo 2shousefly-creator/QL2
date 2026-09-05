@@ -8,6 +8,7 @@ import {
   useLayoutEffect,
   useRef,
   useState,
+  useSyncExternalStore,
 } from "react";
 import { createPortal } from "react-dom";
 
@@ -87,6 +88,7 @@ export function useBodyScrollLock(enabled = true) {
 type DialogStackEntry = {
   token: symbol;
   priority: number;
+  notification: boolean;
 };
 
 const FOCUS_LAYER_PRIORITY: Record<OverlayLayer, number> = {
@@ -98,6 +100,22 @@ const FOCUS_LAYER_PRIORITY: Record<OverlayLayer, number> = {
 };
 
 const dialogStack: DialogStackEntry[] = [];
+const overlayListeners = new Set<() => void>();
+const publishOverlayStack = () => overlayListeners.forEach((listener) => listener());
+const subscribeOverlayStack = (listener: () => void) => {
+  overlayListeners.add(listener);
+  return () => { overlayListeners.delete(listener); };
+};
+
+/** Pending notifications wait for owned dialogs; they never displace an action. */
+export function useOverlayBusy(includeFullscreen = true) {
+  return useSyncExternalStore(
+    subscribeOverlayStack,
+    () => dialogStack.some((entry) => !entry.notification &&
+      (includeFullscreen || entry.priority !== FOCUS_LAYER_PRIORITY.exclusive)),
+    () => false,
+  );
+}
 
 function isTopDialog(token: symbol) {
   const topEntry = dialogStack.reduce<DialogStackEntry | null>(
@@ -130,16 +148,18 @@ function useDialogFocus(
   closeOnEscape: boolean,
   initialFocusRef?: RefObject<HTMLElement | null>,
   priority = FOCUS_LAYER_PRIORITY.normal,
+  notification = false,
 ) {
   const onCloseRef = useRef(onClose);
   onCloseRef.current = onClose;
 
-  useEffect(() => {
+  useClientLayoutEffect(() => {
     const token = Symbol("app-dialog");
     const previousFocus = document.activeElement instanceof HTMLElement
       ? document.activeElement
       : null;
-    dialogStack.push({ token, priority });
+    dialogStack.push({ token, priority, notification });
+    publishOverlayStack();
 
     const focusFrame = window.requestAnimationFrame(() => {
       if (!isTopDialog(token)) return;
@@ -188,9 +208,10 @@ function useDialogFocus(
       const wasTopDialog = isTopDialog(token);
       const stackIndex = dialogStack.findIndex((entry) => entry.token === token);
       if (stackIndex >= 0) dialogStack.splice(stackIndex, 1);
+      publishOverlayStack();
       if (wasTopDialog && previousFocus?.isConnected) previousFocus.focus({ preventScroll: true });
     };
-  }, [closeOnEscape, initialFocusRef, panelRef, priority]);
+  }, [closeOnEscape, initialFocusRef, panelRef, priority, notification]);
 }
 
 /**
@@ -281,6 +302,7 @@ export function OverlayFooter({ className, ...props }: HTMLAttributes<HTMLElemen
 
 type AppDialogProps = {
   children: ReactNode;
+  notification?: boolean;
   onClose?: () => void;
   closeOnBackdrop?: boolean;
   closeOnEscape?: boolean;
@@ -297,6 +319,7 @@ type AppDialogProps = {
 
 function AppDialog({
   children,
+  notification = false,
   onClose,
   closeOnBackdrop = false,
   closeOnEscape = true,
@@ -313,7 +336,7 @@ function AppDialog({
 }: AppDialogProps & { sheet: boolean }) {
   const panelRef = useRef<HTMLElement>(null);
   useBodyScrollLock(true);
-  useDialogFocus(panelRef, onClose, closeOnEscape, initialFocusRef, FOCUS_LAYER_PRIORITY[layer]);
+  useDialogFocus(panelRef, onClose, closeOnEscape, initialFocusRef, FOCUS_LAYER_PRIORITY[layer], notification);
 
   return (
     <OverlayPortal>
@@ -325,9 +348,12 @@ function AppDialog({
         )}
         data-overlay-layer={layer}
         data-overlay-layout={layout}
-        onMouseDown={(event) => {
+        onClick={(event) => {
+          event.stopPropagation();
           if (closeOnBackdrop && event.target === event.currentTarget) onClose?.();
         }}
+        onPointerDown={(event) => event.stopPropagation()}
+        onMouseDown={(event) => event.stopPropagation()}
       >
         <OverlayPanel
           ref={panelRef as Ref<HTMLElement>}

@@ -71,10 +71,10 @@ export const TroughInfoModal: React.FC<TroughInfoModalProps> = ({
       onClose={onClose}
       closeOnBackdrop
       labelledBy="trough-info-title"
-      panelClassName="w-full max-w-md bg-slate-900 border border-slate-700/90 rounded-3xl shadow-2xl animate-in zoom-in-95 duration-200"
+      panelClassName="app-overlay--spaced w-full max-w-md bg-slate-900 border border-slate-700/90 rounded-3xl shadow-2xl animate-in zoom-in-95 duration-200"
     >
         {/* Header */}
-        <OverlayHeader className="p-3.5 sm:p-4 bg-slate-800/80 border-b border-slate-800 flex items-center justify-between gap-2">
+        <OverlayHeader className="bg-slate-800/80 border-b border-slate-800 flex items-center justify-between gap-2">
           <div className="flex items-center gap-2.5">
             <div className="w-10 h-10 rounded-2xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 shrink-0">
               <Info className="w-5 h-5" />
@@ -92,7 +92,7 @@ export const TroughInfoModal: React.FC<TroughInfoModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition-colors cursor-pointer shrink-0"
+            className="app-overlay-button app-overlay-button--icon w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition-colors cursor-pointer shrink-0"
             aria-label="Đóng thông tin máng ăn"
           >
             <X className="w-4 h-4" />
@@ -100,7 +100,7 @@ export const TroughInfoModal: React.FC<TroughInfoModalProps> = ({
         </OverlayHeader>
 
         {/* Scrollable Content Body with smooth vertical scroll */}
-        <OverlayBody className="p-3.5 sm:p-4 space-y-3.5">
+        <OverlayBody className="space-y-3.5">
           {/* SECTION 1: TRẠNG THÁI HIỆN TẠI */}
           <div className={`rounded-2xl border p-3.5 space-y-2.5 ${
             isDangerMode
@@ -295,11 +295,11 @@ export const TroughInfoModal: React.FC<TroughInfoModalProps> = ({
         </OverlayBody>
 
         {/* Footer (Fixed) */}
-        <OverlayFooter className="p-3 sm:p-3.5 bg-slate-800/80 border-t border-slate-800 flex items-center justify-end">
+        <OverlayFooter className="bg-slate-800/80 border-t border-slate-800 flex items-center justify-end">
           <button
             type="button"
             onClick={onClose}
-            className="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-98 text-slate-200 font-bold text-xs transition-all cursor-pointer"
+            className="app-overlay-button w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-98 text-slate-200 font-bold text-xs transition-all cursor-pointer"
           >
             Đã Hiểu
           </button>

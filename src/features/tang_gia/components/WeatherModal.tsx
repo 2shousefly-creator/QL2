@@ -36,7 +36,7 @@ export const WeatherModal: React.FC<WeatherModalProps> = ({
       onClose={onClose}
       closeOnBackdrop
       labelledBy="weather-modal-title"
-      panelClassName="w-full max-w-sm rounded-3xl border border-slate-700 bg-slate-900 p-5 text-slate-200 shadow-2xl gap-4"
+      panelClassName="app-overlay--spaced w-full max-w-sm rounded-3xl border border-slate-700 bg-slate-900 text-slate-200 shadow-2xl"
     >
         <OverlayHeader className="flex items-start justify-between gap-3">
           <div>
@@ -45,14 +45,14 @@ export const WeatherModal: React.FC<WeatherModalProps> = ({
           </div>
           <button
             onClick={onClose}
-            className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-800 text-slate-400 hover:text-white"
+            className="app-overlay-button app-overlay-button--icon flex h-8 w-8 items-center justify-center rounded-full bg-slate-800 text-slate-400 hover:text-white"
             aria-label="Đóng thông tin thời tiết"
           >
             <X className="h-4 w-4" />
           </button>
         </OverlayHeader>
 
-        <OverlayBody className="space-y-4 pr-1">
+        <OverlayBody className="space-y-4">
 
         <div className={`space-y-2 rounded-2xl border border-slate-700 bg-gradient-to-br ${weather.bgClass} p-4`}>
           <div className="text-sm font-black">{season.icon} {season.name}</div>

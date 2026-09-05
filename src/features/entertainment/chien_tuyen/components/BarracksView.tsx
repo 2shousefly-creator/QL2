@@ -51,8 +51,9 @@ export const BarracksView: React.FC<BarracksViewProps> = ({
   onUpgradeBarracks,
   onClaimEmergency,
 }) => {
-  const [detail, setDetail] = useState<TroopType | null>(null);
-  const [upgradeSelection, setUpgradeSelection] = useState<TroopType | null>(null);
+  const [modal, setModal] = useState<{ type: "detail" | "upgrade"; troop: TroopType } | null>(null);
+  const detail = modal?.type === "detail" ? modal.troop : null;
+  const upgradeSelection = modal?.type === "upgrade" ? modal.troop : null;
   const trainingSlots = getTrainingSlotCount(profile.barracksLevel);
   const trainingFull = profile.trainingJobs.length >= trainingSlots;
   const canEmergency = canUseEmergencyTraining(profile, gold);
@@ -214,7 +215,7 @@ export const BarracksView: React.FC<BarracksViewProps> = ({
 
             return (
               <article key={troop.id} className="ct-v2-barracks-card" data-troop-type={troop.id}>
-                <button type="button" onClick={() => setDetail(troop.id)} className="ct-v2-barracks-card-head" aria-haspopup="dialog" aria-label={`Xem chi tiết ${troop.name}`}>
+                <button type="button" onClick={() => setModal({ type: "detail", troop: troop.id })} className="ct-v2-barracks-card-head" aria-haspopup="dialog" aria-label={`Xem chi tiết ${troop.name}`}>
                   <TroopIcon troopType={troop.id} size="medium" state="ally" />
                   <span className="min-w-0"><strong className="block truncate text-xs text-slate-100">{troop.name}</strong><small className="block text-[10px] font-black" style={{ color: troop.color }}>Lv{level} · Sẵn sàng ×{count}</small></span>
                 </button>
@@ -232,7 +233,7 @@ export const BarracksView: React.FC<BarracksViewProps> = ({
                   </span>
                 </div>
                 {upgradeJob ? (
-                  <div className="ct-v2-upgrade-progress" onClick={() => setUpgradeSelection(troop.id)} style={{ cursor: "pointer" }}>
+                  <div className="ct-v2-upgrade-progress" onClick={() => setModal({ type: "upgrade", troop: troop.id })} style={{ cursor: "pointer" }}>
                     <div className="flex items-center justify-between w-full px-1">
                       <span className="flex items-center gap-1 font-bold text-[8px] text-amber-100">
                         <Timer className="h-3 w-3 text-amber-300 animate-pulse" /> Lv{upgradeJob.targetLevel} · {isUpgradeComplete ? "HOÀN TẤT" : `Còn ${formatChienTuyenDurationMs(upgradeRemainingMs)}`}
@@ -261,7 +262,7 @@ export const BarracksView: React.FC<BarracksViewProps> = ({
                     <button
                       type="button"
                       disabled={!canUpgrade}
-                      onClick={() => setUpgradeSelection(troop.id)}
+                      onClick={() => setModal({ type: "upgrade", troop: troop.id })}
                       className="ct-v2-barracks-upgrade-button"
                       data-action={`preview-upgrade-${troop.id}`}
                       data-action-kind="upgrade-secondary"
@@ -297,7 +298,7 @@ export const BarracksView: React.FC<BarracksViewProps> = ({
           troopType={detail}
           level={profile.troopLevels[detail]}
           readyCount={profile.readyCounts[detail]}
-          onClose={() => setDetail(null)}
+          onClose={() => setModal(null)}
         />
       )}
       {upgradeSelection && (
@@ -309,8 +310,11 @@ export const BarracksView: React.FC<BarracksViewProps> = ({
           upgradeJob={profile.troopUpgradeJobs[upgradeSelection]}
           now={now}
           onConfirm={() => onUpgradeTroop(upgradeSelection)}
-          onQuickFinish={() => onQuickFinishTroopUpgrade(upgradeSelection)}
-          onClose={() => setUpgradeSelection(null)}
+          onQuickFinish={() => {
+            setModal(null);
+            onQuickFinishTroopUpgrade(upgradeSelection);
+          }}
+          onClose={() => setModal(null)}
         />
       )}
     </div>

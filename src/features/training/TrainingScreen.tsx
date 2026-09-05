@@ -53,14 +53,8 @@ export const TrainingScreen: React.FC<TrainingScreenProps> = ({
   const [selectedDifficulty, setSelectedDifficulty] = useState<TrainingDifficulty>("easy");
   const [selectedGomokuMark, setSelectedGomokuMark] = useState<GomokuMark>("X");
 
+  const [trainingModal, setTrainingModal] = useState<"calibration" | "march" | "signal" | "formation" | "gomoku" | "radar" | "shooting" | null>(null);
   const [isPlayingGame, setIsPlayingGame] = useState<boolean>(false);
-  const [showCalibrationModal, setShowCalibrationModal] = useState<boolean>(false);
-  const [showMarchTutorial, setShowMarchTutorial] = useState<boolean>(false);
-  const [showSignalTutorial, setShowSignalTutorial] = useState<boolean>(false);
-  const [showFormationTutorial, setShowFormationTutorial] = useState<boolean>(false);
-  const [showGomokuTutorial, setShowGomokuTutorial] = useState<boolean>(false);
-  const [showRadarTutorial, setShowRadarTutorial] = useState<boolean>(false);
-  const [showShootingTutorial, setShowShootingTutorial] = useState<boolean>(false);
 
   const pendingAutoStartRef = useRef<boolean>(false);
   const gameDetailRef = useRef<HTMLDivElement>(null);
@@ -121,7 +115,7 @@ export const TrainingScreen: React.FC<TrainingScreenProps> = ({
 
       if (totalPlays === 0) {
         pendingAutoStartRef.current = true;
-        setShowMarchTutorial(true);
+        setTrainingModal("march");
         return;
       }
     }
@@ -135,7 +129,7 @@ export const TrainingScreen: React.FC<TrainingScreenProps> = ({
 
       if (totalStarted === 0) {
         pendingAutoStartRef.current = true;
-        setShowSignalTutorial(true);
+        setTrainingModal("signal");
         return;
       }
     }
@@ -149,7 +143,7 @@ export const TrainingScreen: React.FC<TrainingScreenProps> = ({
 
       if (totalFinished === 0) {
         pendingAutoStartRef.current = true;
-        setShowFormationTutorial(true);
+        setTrainingModal("formation");
         return;
       }
     }
@@ -163,7 +157,7 @@ export const TrainingScreen: React.FC<TrainingScreenProps> = ({
 
       if (totalStarted === 0) {
         pendingAutoStartRef.current = true;
-        setShowGomokuTutorial(true);
+        setTrainingModal("gomoku");
         return;
       }
     }
@@ -177,7 +171,7 @@ export const TrainingScreen: React.FC<TrainingScreenProps> = ({
 
       if (totalStarted === 0) {
         pendingAutoStartRef.current = true;
-        setShowRadarTutorial(true);
+        setTrainingModal("radar");
         return;
       }
     }
@@ -191,7 +185,7 @@ export const TrainingScreen: React.FC<TrainingScreenProps> = ({
 
       if (totalStarted === 0) {
         pendingAutoStartRef.current = true;
-        setShowShootingTutorial(true);
+        setTrainingModal("shooting");
         return;
       }
     }
@@ -201,7 +195,7 @@ export const TrainingScreen: React.FC<TrainingScreenProps> = ({
   };
 
   const handleCloseRadarTutorial = () => {
-    setShowRadarTutorial(false);
+    setTrainingModal(null);
     if (pendingAutoStartRef.current) {
       pendingAutoStartRef.current = false;
       setIsPlayingGame(true);
@@ -210,7 +204,7 @@ export const TrainingScreen: React.FC<TrainingScreenProps> = ({
   };
 
   const handleCloseShootingTutorial = () => {
-    setShowShootingTutorial(false);
+    setTrainingModal(null);
     if (pendingAutoStartRef.current) {
       pendingAutoStartRef.current = false;
       setIsPlayingGame(true);
@@ -219,7 +213,7 @@ export const TrainingScreen: React.FC<TrainingScreenProps> = ({
   };
 
   const handleCloseMarchTutorial = () => {
-    setShowMarchTutorial(false);
+    setTrainingModal(null);
     if (pendingAutoStartRef.current) {
       pendingAutoStartRef.current = false;
       setIsPlayingGame(true);
@@ -228,7 +222,7 @@ export const TrainingScreen: React.FC<TrainingScreenProps> = ({
   };
 
   const handleCloseSignalTutorial = () => {
-    setShowSignalTutorial(false);
+    setTrainingModal(null);
     if (pendingAutoStartRef.current) {
       pendingAutoStartRef.current = false;
       setIsPlayingGame(true);
@@ -237,7 +231,7 @@ export const TrainingScreen: React.FC<TrainingScreenProps> = ({
   };
 
   const handleCloseFormationTutorial = () => {
-    setShowFormationTutorial(false);
+    setTrainingModal(null);
     if (pendingAutoStartRef.current) {
       pendingAutoStartRef.current = false;
       setIsPlayingGame(true);
@@ -246,7 +240,7 @@ export const TrainingScreen: React.FC<TrainingScreenProps> = ({
   };
 
   const handleCloseGomokuTutorial = () => {
-    setShowGomokuTutorial(false);
+    setTrainingModal(null);
     if (pendingAutoStartRef.current) {
       pendingAutoStartRef.current = false;
       setIsPlayingGame(true);
@@ -256,12 +250,12 @@ export const TrainingScreen: React.FC<TrainingScreenProps> = ({
 
   const handleOpenTutorialManual = (gameId: TrainingGameId) => {
     pendingAutoStartRef.current = false;
-    if (gameId === "march_rhythm") setShowMarchTutorial(true);
-    if (gameId === "signal_command") setShowSignalTutorial(true);
-    if (gameId === "formation_assembly") setShowFormationTutorial(true);
-    if (gameId === "gomoku_infinite") setShowGomokuTutorial(true);
-    if (gameId === "radar_tracking") setShowRadarTutorial(true);
-    if (gameId === "shooting_range") setShowShootingTutorial(true);
+    if (gameId === "march_rhythm") setTrainingModal("march");
+    if (gameId === "signal_command") setTrainingModal("signal");
+    if (gameId === "formation_assembly") setTrainingModal("formation");
+    if (gameId === "gomoku_infinite") setTrainingModal("gomoku");
+    if (gameId === "radar_tracking") setTrainingModal("radar");
+    if (gameId === "shooting_range") setTrainingModal("shooting");
   };
 
   const handleFinishShootingRun = (run: ShootingRunState, result: ShootingRunResult) => {
@@ -523,7 +517,7 @@ export const TrainingScreen: React.FC<TrainingScreenProps> = ({
               type="button"
               onClick={() => {
                 soundManager.playClick();
-                setShowShootingTutorial(true);
+                setTrainingModal("shooting");
               }}
               className="theme-focus p-2.5 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-xl border border-slate-800 flex items-center gap-1.5 text-xs font-semibold shadow-sm cursor-pointer focus:outline-none"
               title="Hướng dẫn chơi Bắn Súng"
@@ -538,7 +532,7 @@ export const TrainingScreen: React.FC<TrainingScreenProps> = ({
               type="button"
               onClick={() => {
                 soundManager.playClick();
-                setShowRadarTutorial(true);
+                setTrainingModal("radar");
               }}
               className="theme-focus p-2.5 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-xl border border-slate-800 flex items-center gap-1.5 text-xs font-semibold shadow-sm focus:outline-none"
               title="Hướng dẫn chơi Mắt Thần Radar"
@@ -553,7 +547,7 @@ export const TrainingScreen: React.FC<TrainingScreenProps> = ({
               type="button"
               onClick={() => {
                 soundManager.playClick();
-                setShowGomokuTutorial(true);
+                setTrainingModal("gomoku");
               }}
               className="theme-focus p-2.5 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-xl border border-slate-800 flex items-center gap-1.5 text-xs font-semibold shadow-sm focus:outline-none"
               title="Hướng dẫn chơi Cờ Caro"
@@ -568,7 +562,7 @@ export const TrainingScreen: React.FC<TrainingScreenProps> = ({
               type="button"
               onClick={() => {
                 soundManager.playClick();
-                setShowFormationTutorial(true);
+                setTrainingModal("formation");
               }}
               className="theme-focus p-2.5 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-xl border border-slate-800 flex items-center gap-1.5 text-xs font-semibold shadow-sm focus:outline-none"
               title="Hướng dẫn chơi Xếp Đội Hình"
@@ -583,7 +577,7 @@ export const TrainingScreen: React.FC<TrainingScreenProps> = ({
               type="button"
               onClick={() => {
                 soundManager.playClick();
-                setShowSignalTutorial(true);
+                setTrainingModal("signal");
               }}
               className="theme-focus p-2.5 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-xl border border-slate-800 flex items-center gap-1.5 text-xs font-semibold shadow-sm focus:outline-none"
               title="Hướng dẫn chơi Mật Lệnh Tín Hiệu"
@@ -598,7 +592,7 @@ export const TrainingScreen: React.FC<TrainingScreenProps> = ({
               type="button"
               onClick={() => {
                 soundManager.playClick();
-                setShowCalibrationModal(true);
+                setTrainingModal("calibration");
               }}
               className="theme-focus p-2.5 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-xl border border-slate-800 flex items-center gap-1.5 text-xs font-semibold shadow-sm focus:outline-none"
               title="Hiệu chỉnh độ lệch nhịp"
@@ -982,48 +976,48 @@ export const TrainingScreen: React.FC<TrainingScreenProps> = ({
       )}
 
       {/* Tutorial Modals */}
-      {showMarchTutorial && (
+      {(trainingModal === "march") && (
         <MarchRhythmTutorialModal
           onClose={handleCloseMarchTutorial}
         />
       )}
 
-      {showSignalTutorial && (
+      {(trainingModal === "signal") && (
         <SignalCommandTutorialModal
           onClose={handleCloseSignalTutorial}
         />
       )}
 
-      {showFormationTutorial && (
+      {(trainingModal === "formation") && (
         <FormationTutorialModal
           onClose={handleCloseFormationTutorial}
         />
       )}
 
-      {showRadarTutorial && (
+      {(trainingModal === "radar") && (
         <RadarTrackingTutorialModal
           onClose={handleCloseRadarTutorial}
         />
       )}
 
-      {showGomokuTutorial && (
+      {(trainingModal === "gomoku") && (
         <GomokuTutorialModal
           onClose={handleCloseGomokuTutorial}
         />
       )}
 
-      {showShootingTutorial && (
+      {(trainingModal === "shooting") && (
         <ShootingTutorialModal
           onClose={handleCloseShootingTutorial}
         />
       )}
 
       {/* Calibration Modal */}
-      {showCalibrationModal && (
+      {(trainingModal === "calibration") && (
         <TimingCalibrationModal
           currentOffsetMs={gameState.training?.trainingTimingOffsetMs || 0}
           onSave={handleSaveTimingOffset}
-          onClose={() => setShowCalibrationModal(false)}
+          onClose={() => setTrainingModal(null)}
         />
       )}
     </div>

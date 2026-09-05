@@ -195,12 +195,12 @@
 .ct-v2-floor-lock-copy { margin-top: .5rem !important; border: 1px dashed rgba(251, 113, 133, .5); border-radius: 10px; background: rgba(127, 29, 29, .24); padding: .4rem; color: #fecdd3 !important; font-size: 9px !important; text-align: center; }
 
 /* Deployment keeps composition stable and makes roles/last formation visible. */
-.ct-v2-deployment-main { grid-template-rows: minmax(136px, .78fr) minmax(188px, 1.12fr) 138px; }
+
 .ct-v2-deployment-roster-section {
   display: grid;
   min-width: 0;
   min-height: 0;
-  grid-template-rows: 32px minmax(0, 1fr);
+  grid-template-rows: 44px minmax(110px, 1fr);
   overflow: hidden;
   border: 3px solid var(--ct-border);
   border-radius: 18px;
@@ -268,7 +268,7 @@
 .ct-v2-battle-unit.is-timeline-highlighted { z-index: 35; box-shadow: 0 0 0 3px #38bdf8, 0 4px 0 #147a9f, 0 0 16px rgba(56,189,248,.7); }
 .ct-v2-battle-unit.is-ultimate-ready:not(.is-dead):not(.is-attacking):not(.is-targeted):not(.is-origin-ghost):not(.is-ultimate-casting) { animation: ct-v2-ultimate-ready-pulse 1.35s ease-in-out infinite alternate; }
 
-.ct-v2-status-rail { position: absolute; z-index: 48; top: 20%; right: -8px; display: grid; gap: 2px; pointer-events: none; }
+.ct-v2-status-rail { grid-area: 6 / 1 / auto / -1; display: flex; min-width: 0; flex-wrap: wrap; justify-content: center; gap: 2px; pointer-events: none; }
 .ct-v2-status-rail > i { display: grid; min-width: 20px; height: 20px; place-items: center; border: 1.5px solid #cbd5e1; border-radius: 7px; background: #334155; color: #fff; box-shadow: 0 2px 4px rgba(0,0,0,.42); padding: 0 2px; font-size: 9px; font-style: normal; font-weight: 1000; line-height: 1; }
 .ct-v2-status-rail > i.is-danger { background: #7c3aed; color: #fff; }
 .ct-v2-status-rail > i.is-warning { background: #f97316; color: #fff; }
@@ -349,7 +349,7 @@
   .ct-v2-battle-meta .ct-v2-pressure-chip { min-width: 61px; }
   .ct-v2-battle-meta .ct-v2-pressure-chip .is-short { display: none; }
   .ct-v2-timeline-heading strong { letter-spacing: 0; }
-  .ct-v2-status-rail { right: -6px; }
+
   .ct-v2-status-rail > i { min-width: 18px; height: 18px; font-size: 8px; }
   .ct-v2-strength-grid { grid-template-columns: 1fr; }
   .ct-v2-barracks-card-actions { grid-template-columns: 1fr; }
@@ -361,11 +361,9 @@
   .ct-v2-action-timeline { padding-block: 3px 4px; }
   .ct-v2-timeline-heading { height: 12px; }
   .ct-v2-timeline-token { min-height: 44px; height: 44px; }
-  .ct-v2-battle-main { grid-template-rows: minmax(0, 1fr) clamp(46px, 10dvh, 66px) minmax(0, 1fr); }
+
   .ct-v2-team-label { min-height: 20px; }
-  .ct-v2-battle-grid { width: min(78%, 320px); gap: .25rem .42rem; }
-  .ct-v2-status-rail { top: 16%; }
-  .ct-v2-deployment-main { grid-template-rows: minmax(116px, .7fr) minmax(162px, 1fr) 122px; }
+
   .ct-v2-last-formation { min-height: 44px; }
 }
 

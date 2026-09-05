@@ -112,12 +112,11 @@ export const FeedModal: React.FC<FeedModalProps> = ({
     <AppModal
       onClose={onClose}
       closeOnBackdrop
-      layer="nested"
       labelledBy="feed-modal-title"
-      panelClassName="w-full max-w-md bg-slate-900 border border-slate-700/90 rounded-3xl shadow-2xl animate-in fade-in duration-200"
+      panelClassName="app-overlay--spaced w-full max-w-md bg-slate-900 border border-slate-700/90 rounded-3xl shadow-2xl animate-in fade-in duration-200"
     >
         {/* Modal Header (Fixed) */}
-        <OverlayHeader className="p-3.5 sm:p-4 bg-slate-850 border-b border-slate-750 flex items-center justify-between gap-2">
+        <OverlayHeader className="bg-slate-850 border-b border-slate-750 flex items-center justify-between gap-2">
           <div className="flex items-center gap-2.5">
             <div className="w-10 h-10 rounded-2xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 shrink-0">
               <Wheat className="w-5 h-5" />
@@ -137,7 +136,7 @@ export const FeedModal: React.FC<FeedModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition-colors cursor-pointer shrink-0"
+            className="app-overlay-button app-overlay-button--icon w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition-colors cursor-pointer shrink-0"
             aria-label="Đóng nạp thức ăn"
           >
             <X className="w-4 h-4" />
@@ -182,7 +181,7 @@ export const FeedModal: React.FC<FeedModalProps> = ({
         {/* Modal Body with smooth vertical scroll */}
         {!selectedFeed ? (
           /* View 1: Feed Selection List */
-          <OverlayBody className="p-3.5 sm:p-4 space-y-2.5">
+          <OverlayBody className="space-y-2.5">
             {totalOwnedFeed === 0 && (
               <div className="p-4 bg-amber-500/10 border border-amber-500/30 rounded-2xl text-center space-y-2.5 my-auto">
                 <p className="text-xs text-amber-300 font-extrabold">
@@ -191,10 +190,9 @@ export const FeedModal: React.FC<FeedModalProps> = ({
                 {onOpenStore && (
                   <button
                     onClick={() => {
-                      onClose();
                       onOpenStore();
                     }}
-                    className="px-4 py-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs rounded-xl shadow-md active:scale-95 transition-all cursor-pointer"
+                    className="app-overlay-button px-4 py-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs rounded-xl shadow-md active:scale-95 transition-all cursor-pointer"
                   >
                     Mua Thức Ăn Tại Cửa Hàng
                   </button>
@@ -257,7 +255,7 @@ export const FeedModal: React.FC<FeedModalProps> = ({
           </OverlayBody>
         ) : (
           /* View 2: Quantity Configuration View */
-          <OverlayBody className="p-3.5 sm:p-4 space-y-3.5">
+          <OverlayBody className="space-y-3.5">
             {/* Stepper & Quantity Picker */}
             {(() => {
               const maxQty = getMaxQuantity(selectedFeed);
@@ -290,7 +288,7 @@ export const FeedModal: React.FC<FeedModalProps> = ({
                         }}
                         disabled={quantity <= 1}
                         aria-label="Giảm 1 bao thức ăn"
-                        className="w-11 h-11 rounded-xl bg-slate-800 hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed text-slate-200 font-bold flex items-center justify-center border border-slate-700 transition-all active:scale-95 cursor-pointer shrink-0"
+                        className="app-overlay-button app-overlay-button--icon w-11 h-11 rounded-xl bg-slate-800 hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed text-slate-200 font-bold flex items-center justify-center border border-slate-700 transition-all active:scale-95 cursor-pointer shrink-0"
                       >
                         <Minus className="w-4 h-4" />
                       </button>
@@ -323,7 +321,7 @@ export const FeedModal: React.FC<FeedModalProps> = ({
                         }}
                         disabled={quantity >= maxQty}
                         aria-label="Tăng 1 bao thức ăn"
-                        className="w-11 h-11 rounded-xl bg-slate-800 hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed text-slate-200 font-bold flex items-center justify-center border border-slate-700 transition-all active:scale-95 cursor-pointer shrink-0"
+                        className="app-overlay-button app-overlay-button--icon w-11 h-11 rounded-xl bg-slate-800 hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed text-slate-200 font-bold flex items-center justify-center border border-slate-700 transition-all active:scale-95 cursor-pointer shrink-0"
                       >
                         <Plus className="w-4 h-4" />
                       </button>
@@ -338,7 +336,7 @@ export const FeedModal: React.FC<FeedModalProps> = ({
                           disabled={delta < 0 ? quantity <= 1 : quantity >= maxQty}
                           onClick={() => handleQuantityQuickAdjust(delta, maxQty)}
                           aria-label={`${delta < 0 ? "Giảm" : "Tăng"} ${Math.abs(delta)} bao thức ăn`}
-                          className="min-h-10 rounded-xl border border-slate-700 bg-slate-800 px-2 text-xs font-bold text-slate-300 transition-all hover:bg-slate-750 active:scale-95 disabled:cursor-not-allowed disabled:opacity-35"
+                          className="app-overlay-button min-h-10 rounded-xl border border-slate-700 bg-slate-800 px-2 text-xs font-bold text-slate-300 transition-all hover:bg-slate-750 active:scale-95 disabled:cursor-not-allowed disabled:opacity-35"
                         >
                           {delta > 0 ? "+" : ""}{delta}
                         </button>
@@ -352,7 +350,7 @@ export const FeedModal: React.FC<FeedModalProps> = ({
                         setQuantity(maxQty);
                       }}
                       aria-label={`Chọn tối đa ${maxQty} bao thức ăn`}
-                      className="min-h-10 w-full rounded-xl border border-amber-500/40 bg-amber-500/20 px-2 text-xs font-bold text-amber-300 transition-all hover:bg-amber-500/30 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50"
+                      className="app-overlay-button min-h-10 w-full rounded-xl border border-amber-500/40 bg-amber-500/20 px-2 text-xs font-bold text-amber-300 transition-all hover:bg-amber-500/30 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50"
                     >
                       Tối đa ({maxQty})
                     </button>
@@ -398,7 +396,7 @@ export const FeedModal: React.FC<FeedModalProps> = ({
                       type="button"
                       disabled={isSubmitting}
                       onClick={() => setSelectedFeed(null)}
-                      className="flex-1 py-2.5 rounded-xl bg-slate-800 text-slate-300 font-bold text-xs hover:bg-slate-700 transition-colors cursor-pointer flex items-center justify-center gap-1"
+                      className="app-overlay-button flex-1 py-2.5 rounded-xl bg-slate-800 text-slate-300 font-bold text-xs hover:bg-slate-700 transition-colors cursor-pointer flex items-center justify-center gap-1"
                     >
                       <ChevronLeft className="w-3.5 h-3.5" />
                       <span>Chọn lại</span>
@@ -407,7 +405,7 @@ export const FeedModal: React.FC<FeedModalProps> = ({
                       type="button"
                       disabled={quantity <= 0 || quantity > maxQty || isSubmitting}
                       onClick={handleConfirmFeed}
-                      className="flex-[2] py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-400 hover:to-emerald-500 disabled:opacity-40 disabled:cursor-not-allowed text-slate-950 font-black text-xs shadow-md transition-all active:scale-95 cursor-pointer flex items-center justify-center gap-1.5"
+                      className="app-overlay-button flex-[2] py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-400 hover:to-emerald-500 disabled:opacity-40 disabled:cursor-not-allowed text-slate-950 font-black text-xs shadow-md transition-all active:scale-95 cursor-pointer flex items-center justify-center gap-1.5"
                     >
                       <Wheat className="w-4 h-4" />
                       <span>

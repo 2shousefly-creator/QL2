@@ -1,3 +1,4 @@
+import { useOverlayBusy } from "./components/overlay/AppOverlay";
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import { HomeScreen } from "./features/home/HomeScreen";
 import { JourneyMapScreen } from "./features/journey/JourneyMapScreen";
@@ -54,6 +55,7 @@ function isUserActiveOnline(): boolean {
 
 export default function App() {
   const [gameState, setGameState] = useState<GameState | null>(null);
+  const overlayBusy = useOverlayBusy();
   const [activeTab, setActiveTab] = useState<TabType>("home");
   const [isChallengeActive, setIsChallengeActive] = useState(false);
   const [isRankDetailOpen, setIsRankDetailOpen] = useState(false);
@@ -726,7 +728,7 @@ export default function App() {
       )}
 
       {/* Medal Unlock Congratulatory Modal */}
-      {!isExclusivePromotionFlow && startupGate === "normal-startup" && (
+      {!isExclusivePromotionFlow && startupGate === "normal-startup" && !delegationReport && !overlayBusy && (
         <MedalUnlockModal
           gameState={gameState}
           onUpdateState={handleUpdateState}
