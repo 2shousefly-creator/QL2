@@ -4,6 +4,7 @@ import { TrainingDifficulty } from "../../../game/types";
 import { DailyTrainingClaimResult } from "../../../game/training/dailyTrainingReward";
 import { RadarRunResult } from "../../../game/training/radarTracking/radarTypes";
 import { soundManager } from "../../../game/audio";
+import { AppModal, OverlayBody, OverlayFooter, OverlayHeader } from "../../../components/overlay/AppOverlay";
 
 type Props = {
   difficulty: TrainingDifficulty;
@@ -25,10 +26,15 @@ export const RadarTrackingResultModal: React.FC<Props> = ({
   const diffLabel = difficulty === "easy" ? "Dễ" : difficulty === "medium" ? "Vừa" : "Khó";
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md animate-fadeIn">
-      <div className="w-full max-w-sm bg-slate-900 border border-emerald-500/40 rounded-3xl p-5 shadow-2xl flex flex-col gap-4 text-slate-100 text-center">
+    <AppModal
+      onClose={onExit}
+      layer="exclusive-dialog"
+      layout="viewport-safe"
+      labelledBy="radar-result-title"
+      panelClassName="max-w-sm border-emerald-500/40 bg-slate-900 text-center text-slate-100"
+    >
         {/* Banner header */}
-        <div className="flex flex-col items-center gap-2 pt-2">
+        <OverlayHeader className="flex flex-col items-center gap-2 border-slate-800 text-center">
           {result.victory ? (
             <div className="w-16 h-16 rounded-full bg-emerald-500/20 border-2 border-emerald-400 flex items-center justify-center text-emerald-400 shadow-lg shadow-emerald-500/30 animate-bounce">
               <Trophy className="w-8 h-8" />
@@ -39,14 +45,15 @@ export const RadarTrackingResultModal: React.FC<Props> = ({
             </div>
           )}
 
-          <h2 className="font-black text-xl text-slate-100 mt-1">
+          <h2 id="radar-result-title" className="font-black text-xl text-slate-100 mt-1">
             {result.victory ? "Hoàn Thành Thử Thách!" : "Thất Bại Lượt Theo Dõi"}
           </h2>
           <p className="text-xs text-slate-400">
             Độ khó: <span className="font-bold text-emerald-300">{diffLabel}</span>
           </p>
-        </div>
+        </OverlayHeader>
 
+        <OverlayBody className="flex flex-col gap-4">
         {/* Claim Reward Banner */}
         {claimResult && claimResult.status === "claimed" && (
           <div className="bg-gradient-to-r from-amber-500/20 to-emerald-500/20 border border-amber-500/40 rounded-2xl p-3 flex items-center gap-3 text-left">
@@ -92,9 +99,10 @@ export const RadarTrackingResultModal: React.FC<Props> = ({
             </span>
           </div>
         </div>
+        </OverlayBody>
 
         {/* Actions */}
-        <div className="flex flex-col gap-2 pt-2">
+        <OverlayFooter className="flex flex-col gap-2 border-slate-800 bg-slate-900">
           <button
             type="button"
             onClick={() => {
@@ -131,8 +139,7 @@ export const RadarTrackingResultModal: React.FC<Props> = ({
               <span>Thoát</span>
             </button>
           </div>
-        </div>
-      </div>
-    </div>
+        </OverlayFooter>
+    </AppModal>
   );
 };

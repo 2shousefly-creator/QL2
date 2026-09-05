@@ -9,6 +9,7 @@ interface TroopIconProps {
   className?: string;
   /** Omit for a decorative icon when surrounding UI already names the troop. */
   accessibleLabel?: string;
+  state?: "normal" | "selected" | "active" | "targetable" | "disabled" | "defeated" | "ally" | "enemy";
 }
 
 const SIZE_CLASS = {
@@ -23,24 +24,31 @@ export const TroopIcon: React.FC<TroopIconProps> = ({
   showLabel = false,
   className = "",
   accessibleLabel,
+  state = "normal",
 }) => {
   const troop = TROOP_BY_TYPE[troopType];
   const decorative = !showLabel && !accessibleLabel;
   return (
     <span
-      className={`inline-flex min-w-0 items-center gap-2 ${className}`}
+      className={`ct-v2-troop-icon-wrap inline-flex min-w-0 items-center gap-2 ${className}`}
+      data-troop-icon-state={state}
       aria-hidden={decorative ? "true" : undefined}
       aria-label={accessibleLabel}
       role={accessibleLabel ? "img" : undefined}
     >
       <span
-        className={`relative inline-flex shrink-0 items-center justify-center border-2 border-white/70 bg-white shadow-[0_5px_0_rgba(15,23,42,.18)] ${SIZE_CLASS[size]}`}
-        style={{ boxShadow: `0 5px 0 color-mix(in srgb, ${troop.color} 45%, #0f172a 25%)`, background: `color-mix(in srgb, ${troop.color} 18%, white)` }}
+        className={`ct-v2-troop-icon relative inline-flex shrink-0 items-center justify-center border-2 ${SIZE_CLASS[size]}`}
+        style={{ "--ct-troop-color": troop.color } as React.CSSProperties}
         aria-hidden="true"
       >
-        {troop.icon}
+        <span className="ct-v2-troop-icon__glyph">{troop.icon}</span>
+        {state !== "normal" && (
+          <span className="ct-v2-troop-icon__state">
+            {state === "selected" ? "✓" : state === "active" ? "!" : state === "targetable" ? "◎" : state === "disabled" ? "×" : state === "defeated" ? "☠" : state === "ally" ? "A" : "Đ"}
+          </span>
+        )}
       </span>
-      {showLabel && <span className="truncate text-xs font-black text-slate-800">{troop.shortName}</span>}
+      {showLabel && <span className="truncate text-xs font-black text-slate-100">{troop.shortName}</span>}
     </span>
   );
 };

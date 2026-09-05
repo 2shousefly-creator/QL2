@@ -4,6 +4,7 @@ import { soundManager } from "../game/audio";
 import { performAppUpdate } from "./appUpdateService";
 import { AppUpdateState } from "./updateTypes";
 import { GameState } from "../game/types";
+import { AppModal, OverlayBody, OverlayFooter, OverlayHeader } from "../components/overlay/AppOverlay";
 
 interface MandatoryUpdateModalProps {
   latestBuildId: string;
@@ -62,62 +63,48 @@ export const MandatoryUpdateModal: React.FC<MandatoryUpdateModalProps> = ({
   };
 
   return (
-    <div
-      role="alertdialog"
-      aria-modal="true"
-      aria-labelledby="mandatory-update-title"
-      aria-describedby="mandatory-update-desc"
-      tabIndex={-1}
-      className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-slate-950/90 backdrop-blur-md select-none animate-fade-in"
-      onKeyDown={(e) => {
-        // Prevent dismissal with Escape
-        if (e.key === "Escape") {
-          e.preventDefault();
-          e.stopPropagation();
-        }
-      }}
+    <AppModal
+      layer="system"
+      layout="viewport-safe"
+      closeOnEscape={false}
+      labelledBy="mandatory-update-title"
+      describedBy="mandatory-update-desc"
+      panelClassName="relative w-full max-w-sm rounded-2xl bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950 border border-amber-500/40 text-center shadow-2xl select-none animate-fade-in"
+      panelProps={{ role: "alertdialog" }}
     >
-      <div className="military-modal relative w-full max-w-sm rounded-2xl bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950 border border-amber-500/40 p-6 text-center shadow-2xl overflow-hidden">
         {/* Decorative corner glow */}
         <div className="absolute -top-10 -right-10 w-36 h-36 bg-amber-500/15 rounded-full blur-2xl pointer-events-none" />
         <div className="absolute -bottom-10 -left-10 w-36 h-36 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none" />
 
-        {/* Top Icon Badge */}
-        <div className="relative z-10 mx-auto w-16 h-16 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center mb-4 text-amber-400 shadow-inner">
-          {isProcessing ? (
-            <RefreshCw className="w-8 h-8 animate-spin text-amber-400" />
-          ) : isError ? (
-            <AlertCircle className="w-8 h-8 text-rose-400" />
-          ) : (
-            <Download className="w-8 h-8 text-amber-400" />
-          )}
-        </div>
+        <OverlayHeader className="relative z-10 flex flex-col items-center p-6 pb-3">
+          {/* Top Icon Badge */}
+          <div className="w-16 h-16 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center mb-4 text-amber-400 shadow-inner">
+            {isProcessing ? (
+              <RefreshCw className="w-8 h-8 animate-spin text-amber-400" />
+            ) : isError ? (
+              <AlertCircle className="w-8 h-8 text-rose-400" />
+            ) : (
+              <Download className="w-8 h-8 text-amber-400" />
+            )}
+          </div>
+          <h2 id="mandatory-update-title" className="text-xl font-black text-slate-100 tracking-wide">
+            Đã có phiên bản mới
+          </h2>
+        </OverlayHeader>
 
-        {/* Title */}
-        <h2
-          id="mandatory-update-title"
-          className="relative z-10 text-xl font-black text-slate-100 tracking-wide mb-2"
-        >
-          Đã có phiên bản mới
-        </h2>
+        <OverlayBody className="relative z-10 space-y-4 px-6 py-3">
+          <p id="mandatory-update-desc" className="text-sm font-medium text-slate-300 leading-relaxed">
+            {isError && "message" in updateState
+              ? updateState.message
+              : "Bạn cần cập nhật lên phiên bản mới để trò chơi được ổn định và có thêm các tính năng mới thú vị hơn."}
+          </p>
+          <div className="flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-950/40 border border-emerald-800/50 text-emerald-300 text-xs font-semibold">
+            <ShieldCheck className="w-4 h-4 shrink-0 text-emerald-400" />
+            <span>Tiến trình game được sao lưu tự động an toàn</span>
+          </div>
+        </OverlayBody>
 
-        {/* Body Text */}
-        <p
-          id="mandatory-update-desc"
-          className="relative z-10 text-sm font-medium text-slate-300 leading-relaxed mb-6"
-        >
-          {isError && "message" in updateState
-            ? updateState.message
-            : "Bạn cần cập nhật lên phiên bản mới để trò chơi được ổn định và có thêm các tính năng mới thú vị hơn."}
-        </p>
-
-        {/* Progress guarantee notice */}
-        <div className="relative z-10 mb-6 flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-950/40 border border-emerald-800/50 text-emerald-300 text-xs font-semibold">
-          <ShieldCheck className="w-4 h-4 shrink-0 text-emerald-400" />
-          <span>Tiến trình game được sao lưu tự động an toàn</span>
-        </div>
-
-        {/* Update Button */}
+        <OverlayFooter className="relative z-10 p-6 pt-3">
         <button
           type="button"
           onClick={handleUpdateClick}
@@ -133,7 +120,7 @@ export const MandatoryUpdateModal: React.FC<MandatoryUpdateModalProps> = ({
           {isProcessing && <RefreshCw className="w-4 h-4 animate-spin shrink-0" />}
           <span>{getButtonText()}</span>
         </button>
-      </div>
-    </div>
+        </OverlayFooter>
+    </AppModal>
   );
 };

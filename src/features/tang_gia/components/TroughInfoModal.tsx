@@ -8,6 +8,7 @@ import {
 } from "../animalLifecycle";
 import { formatFeedPercentage } from "../farmPresentation";
 import { AlertTriangle, HeartPulse, Info, X, Zap, Utensils, Clock, ShieldCheck, Sparkles } from "lucide-react";
+import { AppModal, OverlayBody, OverlayFooter, OverlayHeader } from "../../../components/overlay/AppOverlay";
 
 interface TroughInfoModalProps {
   isOpen: boolean;
@@ -66,25 +67,20 @@ export const TroughInfoModal: React.FC<TroughInfoModalProps> = ({
   const activeSpeed = currentBuff > 0 ? activeFeedSpeedBonus : 0;
 
   return (
-    <div
-      onClick={(e) => {
-        e.stopPropagation();
-        onClose();
-      }}
-      className="fixed inset-0 z-[80] flex flex-col items-center justify-center p-3 sm:p-4 pb-[calc(4.5rem+env(safe-area-inset-bottom,0px)+0.5rem)] bg-slate-950/85 backdrop-blur-md animate-in fade-in duration-200 cursor-pointer overflow-hidden"
+    <AppModal
+      onClose={onClose}
+      closeOnBackdrop
+      labelledBy="trough-info-title"
+      panelClassName="w-full max-w-md bg-slate-900 border border-slate-700/90 rounded-3xl shadow-2xl animate-in zoom-in-95 duration-200"
     >
-      <div
-        onClick={(e) => e.stopPropagation()}
-        className="bg-slate-900 border border-slate-700/90 rounded-3xl w-full max-w-md max-h-[85vh] sm:max-h-[88vh] shadow-2xl flex flex-col cursor-default overflow-hidden animate-in zoom-in-95 duration-200 my-auto"
-      >
         {/* Header */}
-        <div className="p-3.5 sm:p-4 bg-slate-800/80 border-b border-slate-800 flex items-center justify-between shrink-0">
+        <OverlayHeader className="p-3.5 sm:p-4 bg-slate-800/80 border-b border-slate-800 flex items-center justify-between gap-2">
           <div className="flex items-center gap-2.5">
             <div className="w-10 h-10 rounded-2xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 shrink-0">
               <Info className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="font-extrabold text-base text-slate-100 leading-tight">
+              <h3 id="trough-info-title" className="font-extrabold text-base text-slate-100 leading-tight">
                 Thông Tin Máng Ăn
               </h3>
               <p className="text-xs text-slate-400 mt-0.5">
@@ -97,13 +93,14 @@ export const TroughInfoModal: React.FC<TroughInfoModalProps> = ({
             type="button"
             onClick={onClose}
             className="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition-colors cursor-pointer shrink-0"
+            aria-label="Đóng thông tin máng ăn"
           >
             <X className="w-4 h-4" />
           </button>
-        </div>
+        </OverlayHeader>
 
         {/* Scrollable Content Body with smooth vertical scroll */}
-        <div className="p-3.5 sm:p-4 space-y-3.5 flex-1 min-h-0 overflow-y-auto overscroll-contain">
+        <OverlayBody className="p-3.5 sm:p-4 space-y-3.5">
           {/* SECTION 1: TRẠNG THÁI HIỆN TẠI */}
           <div className={`rounded-2xl border p-3.5 space-y-2.5 ${
             isDangerMode
@@ -295,10 +292,10 @@ export const TroughInfoModal: React.FC<TroughInfoModalProps> = ({
               </li>
             </ul>
           </div>
-        </div>
+        </OverlayBody>
 
         {/* Footer (Fixed) */}
-        <div className="p-3 sm:p-3.5 bg-slate-800/80 border-t border-slate-800 flex items-center justify-end shrink-0">
+        <OverlayFooter className="p-3 sm:p-3.5 bg-slate-800/80 border-t border-slate-800 flex items-center justify-end">
           <button
             type="button"
             onClick={onClose}
@@ -306,8 +303,7 @@ export const TroughInfoModal: React.FC<TroughInfoModalProps> = ({
           >
             Đã Hiểu
           </button>
-        </div>
-      </div>
-    </div>
+        </OverlayFooter>
+    </AppModal>
   );
 };

@@ -14,6 +14,7 @@ import {
 import { DelegationReportData } from "../game/types";
 import { formatDurationVi } from "../game/xpEngine";
 import { soundManager } from "../game/audio";
+import { AppModal, OverlayBody, OverlayFooter, OverlayHeader } from "./overlay/AppOverlay";
 
 type DelegationReportModalProps = {
   report: DelegationReportData;
@@ -65,16 +66,19 @@ export const DelegationReportModal: React.FC<DelegationReportModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4 select-none animate-fadeIn overflow-y-auto">
-      <div className="military-modal theme-card-accent w-full max-w-md bg-slate-900/95 border rounded-2xl p-5 sm:p-6 shadow-2xl text-slate-100 flex flex-col space-y-4 my-auto">
+    <AppModal
+      onClose={handleSecondaryClick}
+      labelledBy="delegation-report-title"
+      panelClassName="theme-card-accent w-full max-w-md bg-slate-900/95 border rounded-2xl p-5 sm:p-6 shadow-2xl text-slate-100 gap-4 select-none animate-fadeIn"
+    >
         {/* Header */}
-        <div className="theme-divider flex items-start gap-3 border-b pb-3.5">
+        <OverlayHeader className="theme-divider flex items-start gap-3 border-b pb-3.5">
           <div className="theme-badge p-2.5 rounded-xl border shrink-0 mt-0.5">
             <Clock className="w-6 h-6" />
           </div>
           <div className="flex-1">
             <div className="flex items-center justify-between">
-              <h3 className="font-extrabold text-base sm:text-lg text-slate-100 tracking-wide uppercase flex items-center gap-2">
+              <h3 id="delegation-report-title" className="font-extrabold text-base sm:text-lg text-slate-100 tracking-wide uppercase flex items-center gap-2">
                 <span>📨</span> BÁO CÁO TRỞ LẠI
               </h3>
             </div>
@@ -85,10 +89,10 @@ export const DelegationReportModal: React.FC<DelegationReportModalProps> = ({
               “{contextSentence}”
             </p>
           </div>
-        </div>
+        </OverlayHeader>
 
         {/* Content Body Cards */}
-        <div className="space-y-3">
+        <OverlayBody className="space-y-3 pr-1">
           {/* CARD 1: XP / Ủy Thác */}
           {report.isFullNow || report.wasFullBefore ? (
             <div className="bg-amber-950/40 border border-amber-500/50 p-4 rounded-xl space-y-1.5">
@@ -218,10 +222,10 @@ export const DelegationReportModal: React.FC<DelegationReportModalProps> = ({
               <span className="font-semibold text-slate-200 line-clamp-1">{priorityLabel}</span>
             </div>
           </div>
-        </div>
+        </OverlayBody>
 
         {/* Buttons */}
-        <div className="space-y-2 pt-1">
+        <OverlayFooter className="space-y-2 pt-1">
           {/* Primary CTA */}
           {report.topPriority === "xp_full" && (
             <button
@@ -300,8 +304,7 @@ export const DelegationReportModal: React.FC<DelegationReportModalProps> = ({
               Tiếp Tục
             </button>
           )}
-        </div>
-      </div>
-    </div>
+        </OverlayFooter>
+    </AppModal>
   );
 };

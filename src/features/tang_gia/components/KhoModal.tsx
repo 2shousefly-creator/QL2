@@ -36,6 +36,7 @@ import {
   getFeedAsset,
   getFertilizerAsset,
 } from "../tangGiaAssetManifest";
+import { AppModal, OverlayBody, OverlayFooter, OverlayHeader } from "../../../components/overlay/AppOverlay";
 
 export type KhoTabType = "crop" | "fertilizer" | "animal" | "feed" | "egg";
 
@@ -181,25 +182,20 @@ export const KhoModal: React.FC<KhoModalProps> = ({
 
   return (
     <>
-      <div
-        onClick={(e) => {
-          e.stopPropagation();
-          onClose();
-        }}
-        className="fixed inset-0 z-50 flex items-center justify-center p-3 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-200 cursor-pointer"
+      <AppModal
+        onClose={onClose}
+        closeOnBackdrop
+        labelledBy="farm-inventory-title"
+        panelClassName="w-full max-w-lg bg-slate-900 border border-slate-800/70 rounded-3xl shadow-2xl animate-in fade-in duration-200"
       >
-        <div
-          onClick={(e) => e.stopPropagation()}
-          className="bg-slate-900 border border-slate-800/70 rounded-3xl w-full max-w-lg overflow-hidden shadow-2xl flex flex-col max-h-[85vh] cursor-default relative"
-        >
           {/* Modal Header */}
-        <div className="p-4 bg-slate-850/90 border-b border-slate-800/70 flex items-center justify-between">
+        <OverlayHeader className="p-4 bg-slate-850/90 border-b border-slate-800/70 flex items-center justify-between gap-2">
           <div className="flex items-center gap-2.5">
             <div className="w-10 h-10 rounded-2xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-amber-400">
               <Package className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="font-extrabold text-base text-slate-100">
+              <h3 id="farm-inventory-title" className="font-extrabold text-base text-slate-100">
                 Kho Tăng Gia
               </h3>
               <p className="text-xs text-slate-400">
@@ -211,10 +207,11 @@ export const KhoModal: React.FC<KhoModalProps> = ({
           <button
             onClick={onClose}
             className="w-8 h-8 rounded-full bg-slate-800/80 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition-colors"
+            aria-label="Đóng kho tăng gia"
           >
             <X className="w-4 h-4" />
           </button>
-        </div>
+        </OverlayHeader>
 
         {/* 5 Tabs in exact required order: Cây Trồng | Phân Bón | Vật Nuôi | Thức Ăn | Trứng */}
         <div className="grid grid-cols-5 gap-1 p-2 bg-slate-900/95 border-b border-slate-800/60 text-[10px] sm:text-xs">
@@ -291,7 +288,7 @@ export const KhoModal: React.FC<KhoModalProps> = ({
         </div>
 
         {/* Tab Content Body */}
-        <div className="p-3.5 overflow-y-auto space-y-2.5 flex-1 max-h-[60vh]">
+        <OverlayBody className="p-3.5 space-y-2.5">
           {/* TAB 1: CÂY TRỒNG (Seeds) */}
           {activeTab === "crop" && (
             <>
@@ -826,11 +823,11 @@ export const KhoModal: React.FC<KhoModalProps> = ({
               )}
             </>
           )}
-        </div>
+        </OverlayBody>
 
         {/* Modal Footer - Single primary "Bán Tất Cả Trứng" button at bottom */}
         {activeTab === "egg" && totalEggs > 0 && (
-          <div className="p-3 bg-slate-850/90 border-t border-slate-800/60">
+          <OverlayFooter className="p-3 bg-slate-850/90 border-t border-slate-800/60">
             <button
               onClick={() => {
                 onSellAllEggs();
@@ -840,26 +837,21 @@ export const KhoModal: React.FC<KhoModalProps> = ({
               <Coins className="w-4 h-4" />
               <span>Bán Tất Cả Trứng ({totalEggs} quả)</span>
             </button>
-          </div>
+          </OverlayFooter>
         )}
-      </div>
-    </div>
+      </AppModal>
 
     {/* QUANTITY SELL POPUP DIALOG (Independent Fullscreen Overlay) */}
     {sellModalData && (
-      <div
-        onClick={(e) => {
-          e.stopPropagation();
-          setSellModalData(null);
-        }}
-        className="fixed inset-0 z-[70] bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 overflow-y-auto cursor-pointer animate-in fade-in duration-150"
+      <AppModal
+        layer="nested"
+        onClose={() => setSellModalData(null)}
+        closeOnBackdrop
+        ariaLabel={`Bán ${sellModalData.name}`}
+        panelClassName="w-full max-w-sm bg-slate-900 border border-slate-800/80 rounded-3xl p-4 sm:p-5 shadow-2xl gap-4 animate-in zoom-in-95 duration-150"
       >
-        <div
-          onClick={(e) => e.stopPropagation()}
-          className="w-full max-w-sm my-auto bg-slate-900 border border-slate-800/80 rounded-3xl p-4 sm:p-5 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto cursor-default relative"
-        >
           {/* Popup Title */}
-          <div className="flex items-center justify-between border-b border-slate-800/70 pb-3">
+          <OverlayHeader className="flex items-center justify-between gap-2 border-b border-slate-800/70 pb-3">
             <div className="flex items-center gap-2.5">
               <div className="w-10 h-10 rounded-2xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-2xl shrink-0">
                 {sellModalData.icon}
@@ -877,10 +869,13 @@ export const KhoModal: React.FC<KhoModalProps> = ({
             <button
               onClick={() => setSellModalData(null)}
               className="w-8 h-8 rounded-full bg-slate-800/80 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition-colors"
+              aria-label="Đóng chọn số lượng bán"
             >
               <X className="w-4 h-4" />
             </button>
-          </div>
+          </OverlayHeader>
+
+          <OverlayBody className="space-y-4 pr-1">
 
           {/* Quantity Selector */}
           <div className="space-y-2.5">
@@ -997,9 +992,10 @@ export const KhoModal: React.FC<KhoModalProps> = ({
               </div>
             </div>
           </div>
+          </OverlayBody>
 
           {/* Action Buttons */}
-          <div className="flex items-center gap-2 pt-1">
+          <OverlayFooter className="flex items-center gap-2 pt-1" data-stack-actions="true">
             <button
               type="button"
               onClick={() => setSellModalData(null)}
@@ -1014,9 +1010,8 @@ export const KhoModal: React.FC<KhoModalProps> = ({
             >
               Xác Nhận Bán ({sellQuantity})
             </button>
-          </div>
-        </div>
-      </div>
+          </OverlayFooter>
+      </AppModal>
     )}
   </>
 );

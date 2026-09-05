@@ -5,6 +5,7 @@ import { SignalCommandResult } from "../../game/training/signalCommand/signalCom
 import { DailyTrainingClaimResult } from "../../game/training/dailyTrainingReward";
 import { getSignalCommandConfig } from "../../game/training/signalCommand/signalCommandConfig";
 import { soundManager } from "../../game/audio";
+import { AppModal, OverlayBody, OverlayFooter, OverlayHeader } from "../../components/overlay/AppOverlay";
 
 type SignalCommandResultProps = {
   difficulty: TrainingDifficulty;
@@ -30,10 +31,15 @@ export const SignalCommandResultModal: React.FC<SignalCommandResultProps> = ({
   const accuracyPct = Math.round(result.accuracy * 100);
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md flex items-center justify-center p-4 animate-fadeIn overflow-y-auto">
-      <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl p-5 sm:p-6 shadow-2xl flex flex-col gap-5 my-auto">
+    <AppModal
+      onClose={onExit}
+      layer="exclusive-dialog"
+      layout="viewport-safe"
+      labelledBy="signal-command-result-title"
+      panelClassName="max-w-md border-slate-800 bg-slate-900 text-slate-100"
+    >
         {/* Banner Header */}
-        <div className="flex flex-col items-center text-center gap-2">
+        <OverlayHeader className="flex flex-col items-center gap-2 border-slate-800 text-center">
           {isVictory ? (
             <div className="w-16 h-16 rounded-3xl bg-gradient-to-br from-emerald-500/20 to-teal-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 shadow-xl shadow-emerald-500/10">
               <Trophy className="w-8 h-8" />
@@ -45,15 +51,16 @@ export const SignalCommandResultModal: React.FC<SignalCommandResultProps> = ({
           )}
 
           <div>
-            <h2 className="text-xl font-extrabold text-slate-100">
+            <h2 id="signal-command-result-title" className="text-xl font-extrabold text-slate-100">
               {isVictory ? "Mật Lệnh Hoàn Thành!" : "Mật Lệnh Chưa Hoàn Thành"}
             </h2>
             <p className="text-xs text-slate-400 mt-0.5">
               Mật Lệnh Tín Hiệu · <span className="text-cyan-400 font-bold">{config.label}</span>
             </p>
           </div>
-        </div>
+        </OverlayHeader>
 
+        <OverlayBody className="flex flex-col gap-5">
         {/* Claim Result Banner */}
         {isVictory && (
           <div className="w-full">
@@ -156,9 +163,10 @@ export const SignalCommandResultModal: React.FC<SignalCommandResultProps> = ({
             </div>
           )}
         </div>
+        </OverlayBody>
 
         {/* Buttons */}
-        <div className="flex flex-col gap-2">
+        <OverlayFooter className="flex flex-col gap-2 border-slate-800 bg-slate-900">
           <button
             type="button"
             onClick={() => {
@@ -194,8 +202,7 @@ export const SignalCommandResultModal: React.FC<SignalCommandResultProps> = ({
               Về Khu Huấn Luyện
             </button>
           </div>
-        </div>
-      </div>
-    </div>
+        </OverlayFooter>
+    </AppModal>
   );
 };

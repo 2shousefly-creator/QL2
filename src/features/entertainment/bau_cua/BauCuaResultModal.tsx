@@ -11,7 +11,6 @@ import {
   Sprout,
   X,
 } from "lucide-react";
-import { motion, AnimatePresence } from "motion/react";
 import { BauCuaRound, BauCuaSymbol, BauCuaWinType } from "../types";
 import {
   BAU_CUA_BOARD_LAYOUT,
@@ -21,6 +20,7 @@ import {
 } from "./bauCuaEngine";
 import { soundManager } from "../../../game/audio";
 import { TabType } from "../../../game/types";
+import { AppModal, OverlayBody, OverlayFooter, OverlayHeader } from "../../../components/overlay/AppOverlay";
 
 interface BauCuaResultModalProps {
   round: BauCuaRound | null;
@@ -162,26 +162,13 @@ export const BauCuaResultModal: React.FC<BauCuaResultModalProps> = ({
   const IconComponent = config.icon;
 
   return (
-    <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4">
-        {/* Backdrop */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.15 }}
-          onClick={onClose}
-          className="fixed inset-0 bg-slate-950/85 backdrop-blur-md"
-        />
-
-        {/* Modal Container */}
-        <motion.div
-          initial={{ scale: 0.85, opacity: 0, y: 15 }}
-          animate={{ scale: 1, opacity: 1, y: 0 }}
-          exit={{ scale: 0.85, opacity: 0, y: 15 }}
-          transition={{ type: "spring", damping: 24, stiffness: 320 }}
-          className={`relative z-10 w-full max-w-sm sm:max-w-md bg-slate-900 border rounded-3xl p-4 sm:p-5 shadow-2xl space-y-3 sm:space-y-4 max-h-[88vh] overflow-y-auto ${config.modalBorder}`}
-        >
+    <AppModal
+      onClose={onClose}
+      closeOnBackdrop
+      labelledBy="bau-cua-result-title"
+      panelClassName={`max-w-sm border bg-slate-900 text-slate-100 sm:max-w-md ${config.modalBorder}`}
+    >
+          <OverlayHeader className="relative flex-col items-center overflow-hidden border-slate-800 text-center">
           {/* Top Atmospheric Glow */}
           <div
             className={`absolute top-0 inset-x-0 h-32 bg-gradient-to-b ${config.glowGradient} pointer-events-none`}
@@ -191,7 +178,8 @@ export const BauCuaResultModal: React.FC<BauCuaResultModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="absolute top-4 right-4 z-20 w-8 h-8 rounded-full bg-slate-800/80 hover:bg-slate-700 text-slate-400 hover:text-slate-200 flex items-center justify-center transition-colors border border-slate-700"
+            className="app-overlay__close absolute right-3 top-3 z-20 w-8 h-8 rounded-full bg-slate-800/80 hover:bg-slate-700 text-slate-400 hover:text-slate-200 flex items-center justify-center transition-colors border border-slate-700"
+            aria-label="Đóng kết quả Bầu Cua"
           >
             <X className="w-4 h-4" />
           </button>
@@ -205,12 +193,14 @@ export const BauCuaResultModal: React.FC<BauCuaResultModalProps> = ({
             </div>
 
             <div>
-              <h3 className="text-xl font-black text-slate-100 tracking-wide uppercase">
+              <h3 id="bau-cua-result-title" className="text-xl font-black text-slate-100 tracking-wide uppercase">
                 {config.title}
               </h3>
             </div>
           </div>
+          </OverlayHeader>
 
+          <OverlayBody className="space-y-3 sm:space-y-4">
           {/* 3 Result Dice Showcase */}
           <div className="bg-slate-950/80 border border-slate-800 rounded-2xl p-3.5">
             <div className="grid grid-cols-3 gap-2">
@@ -249,7 +239,7 @@ export const BauCuaResultModal: React.FC<BauCuaResultModalProps> = ({
                 </span>
               </div>
 
-              <div className="space-y-1.5 max-h-[140px] overflow-y-auto pr-0.5">
+              <div className="space-y-1.5">
                 {placedBets.map((item) => (
                   <div
                     key={item.sym}
@@ -337,9 +327,10 @@ export const BauCuaResultModal: React.FC<BauCuaResultModalProps> = ({
               </span>
             </div>
           </div>
+          </OverlayBody>
 
           {/* Action CTAs */}
-          <div className="pt-1 flex items-center gap-2">
+          <OverlayFooter className="flex items-center gap-2 border-slate-800 bg-slate-900">
             {round.postGold === 0 ? (
               <>
                 <button
@@ -378,9 +369,7 @@ export const BauCuaResultModal: React.FC<BauCuaResultModalProps> = ({
                 <ArrowRight className="w-4 h-4" />
               </button>
             )}
-          </div>
-        </motion.div>
-      </div>
-    </AnimatePresence>
+          </OverlayFooter>
+    </AppModal>
   );
 };

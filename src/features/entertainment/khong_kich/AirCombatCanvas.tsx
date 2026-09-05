@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import { ArrowLeft, Pause, Play, X } from "lucide-react";
 import { soundManager } from "../../../game/audio";
+import { AppModal, OverlayBody, OverlayFooter, OverlayHeader } from "../../../components/overlay/AppOverlay";
 import {
   AIR_COMBAT_WORLD,
   AIRCRAFT_CONFIGS,
@@ -985,7 +986,7 @@ export const AirCombatCanvas: React.FC<AirCombatCanvasProps> = ({
         onContextMenu={(e) => e.preventDefault()}
         data-hud-region="fixed"
       >
-        <div className="flex h-7 items-center justify-between gap-1.5">
+        <div className="flex h-11 items-center justify-between gap-1.5">
           <div className="min-w-0 leading-none">
             <div className="truncate text-[9px] font-black uppercase tracking-wider" style={{ color: aircraft.color }}>
               {aircraft.code} · {aircraft.name}
@@ -997,10 +998,10 @@ export const AirCombatCanvas: React.FC<AirCombatCanvasProps> = ({
             <div className="mt-0.5 text-sm font-black tabular-nums text-amber-300" data-hud-score={hud.score}>{hud.score.toLocaleString("vi-VN")}</div>
           </div>
           <div className="flex gap-1">
-            <button type="button" aria-label={pauseReasonsRef.current.has("user") ? "Tiếp tục" : "Tạm dừng"} onClick={() => setPauseReason("user", !pauseReasonsRef.current.has("user"))} className="grid h-7 w-7 place-items-center rounded-lg border border-cyan-700/60 bg-slate-950/90 text-cyan-200">
+            <button type="button" aria-label={pauseReasonsRef.current.has("user") ? "Tiếp tục" : "Tạm dừng"} onClick={() => setPauseReason("user", !pauseReasonsRef.current.has("user"))} className="grid h-11 w-11 place-items-center rounded-lg border border-cyan-700/60 bg-slate-950/90 text-cyan-200">
               {pauseReasonsRef.current.has("user") ? <Play className="h-3.5 w-3.5" /> : <Pause className="h-3.5 w-3.5" />}
             </button>
-            <button type="button" aria-label="Thoát trận" onClick={openExit} className="grid h-7 w-7 place-items-center rounded-lg border border-rose-500/50 bg-rose-950/50 text-rose-300"><X className="h-3.5 w-3.5" /></button>
+            <button type="button" aria-label="Thoát trận" onClick={openExit} className="grid h-11 w-11 place-items-center rounded-lg border border-rose-500/50 bg-rose-950/50 text-rose-300"><X className="h-3.5 w-3.5" /></button>
           </div>
         </div>
 
@@ -1087,17 +1088,23 @@ export const AirCombatCanvas: React.FC<AirCombatCanvasProps> = ({
       )}
 
       {coreChoices && (
-        <div className="absolute inset-0 z-40 flex flex-col bg-black/94 px-2 py-[5%] backdrop-blur-md" data-core-selection="open">
-          <div className="flex h-[18%] shrink-0 flex-col items-center justify-center text-center">
+        <AppModal
+          layer="exclusive-dialog"
+          layout="viewport-safe"
+          closeOnEscape={false}
+          labelledBy="air-core-choice-title"
+          panelClassName="max-w-md border border-cyan-300/30 bg-slate-950"
+        >
+          <OverlayHeader className="flex shrink-0 flex-col items-center justify-center p-5 pb-3 text-center">
             <div className="text-[9px] font-black uppercase tracking-[0.22em] text-cyan-300">Cấp chiến đấu {worldRef.current.aircraft.level}</div>
-            <h2 className="mt-0.5 text-xl font-black text-white">Chọn Core nâng cấp</h2>
+            <h2 id="air-core-choice-title" className="mt-0.5 text-xl font-black text-white">Chọn Core nâng cấp</h2>
             <div className="mt-1 flex items-center gap-2">
               <span className="rounded-full border border-cyan-300/40 bg-cyan-400/10 px-2.5 py-1 text-[9px] font-black uppercase text-cyan-100">{coreTierLabel(coreChoices[0].tier)}</span>
               <span className="text-[8px] font-bold text-slate-400">Trận đấu đang tạm dừng</span>
             </div>
-          </div>
+          </OverlayHeader>
 
-          <div className="grid h-[70%] min-h-0 w-full grid-rows-3 gap-2" data-core-card-area="70-percent">
+          <OverlayBody className="grid w-full gap-2 px-4 py-3" data-core-selection="open">
             {coreChoices.map((card) => {
               const definition = getCoreDefinition(card.id);
               const special = card.category === "weapon" || card.category === "skill";
@@ -1110,7 +1117,7 @@ export const AirCombatCanvas: React.FC<AirCombatCanvasProps> = ({
                   data-core-category={card.category}
                   data-core-special={special ? "true" : "false"}
                   onClick={() => chooseCore(card)}
-                  className={`relative grid h-full w-full grid-cols-[68px_1fr] items-center gap-3 overflow-hidden rounded-2xl border p-3 text-left shadow-xl transition-transform active:scale-[.985] ${TIER_STYLE[card.tier]} ${special ? "ring-1 ring-white/20" : ""}`}
+                  className={`relative grid min-h-[108px] w-full grid-cols-[68px_1fr] items-center gap-3 overflow-hidden rounded-2xl border p-3 text-left shadow-xl transition-transform active:scale-[.985] ${TIER_STYLE[card.tier]} ${special ? "ring-1 ring-white/20" : ""}`}
                 >
                   <span className={`absolute inset-x-0 top-0 h-1 border-b ${CATEGORY_STYLE[card.category]}`} />
                   <span className={`grid h-16 w-16 place-items-center rounded-2xl border text-3xl shadow-inner ${CATEGORY_STYLE[card.category]} ${special ? "shadow-lg shadow-current/10" : ""}`}>{card.icon}</span>
@@ -1132,22 +1139,26 @@ export const AirCombatCanvas: React.FC<AirCombatCanvasProps> = ({
                 </button>
               );
             })}
-          </div>
+          </OverlayBody>
 
-          <div className="flex h-[12%] items-center justify-center text-center text-[8px] font-bold text-slate-500">Chạm một Core để trang bị ngay · lựa chọn không thể hoàn tác trong lượt này</div>
-        </div>
+          <OverlayFooter className="flex items-center justify-center px-5 pb-5 pt-3 text-center text-[8px] font-bold text-slate-400">Chạm một Core để trang bị ngay · lựa chọn không thể hoàn tác trong lượt này</OverlayFooter>
+        </AppModal>
       )}
 
       {pauseReasonsRef.current.has("user") && !coreChoices && !showExitConfirm && (
-        <div className="absolute inset-0 z-40 grid place-items-center bg-black/80 px-6 backdrop-blur-sm" data-pause-overlay="user">
-          <div className="w-full rounded-3xl border border-cyan-300/35 bg-gradient-to-br from-slate-900 to-slate-950 p-5 text-center shadow-2xl"><Pause className="mx-auto h-8 w-8 text-cyan-300" /><h2 className="mt-2 text-xl font-black text-white">Đã tạm dừng</h2><p className="mt-1 text-[10px] text-slate-400">Hồi tài nguyên, hồi chiêu và thời gian trận đều đứng yên.</p><button type="button" onClick={() => setPauseReason("user", false)} className="mt-4 flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-cyan-300 text-sm font-black text-slate-950"><Play className="h-4 w-4" /> Tiếp tục</button></div>
-        </div>
+        <AppModal layer="exclusive-dialog" layout="viewport-safe" onClose={() => setPauseReason("user", false)} labelledBy="air-paused-title" panelClassName="max-w-sm border border-cyan-300/35 bg-gradient-to-br from-slate-900 to-slate-950 text-center shadow-2xl">
+          <OverlayHeader className="p-5 pb-2"><Pause className="mx-auto h-8 w-8 text-cyan-300" /><h2 id="air-paused-title" className="mt-2 text-xl font-black text-white">Đã tạm dừng</h2></OverlayHeader>
+          <OverlayBody className="px-5 py-2" data-pause-overlay="user"><p className="text-[10px] text-slate-300">Hồi tài nguyên, hồi chiêu và thời gian trận đều đứng yên.</p></OverlayBody>
+          <OverlayFooter className="p-5 pt-2"><button type="button" onClick={() => setPauseReason("user", false)} className="flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-cyan-300 text-sm font-black text-slate-950"><Play className="h-4 w-4" /> Tiếp tục</button></OverlayFooter>
+        </AppModal>
       )}
 
       {showExitConfirm && (
-        <div className="absolute inset-0 z-50 grid place-items-center bg-black/88 px-6 backdrop-blur" data-exit-confirm="open">
-          <div className="w-full rounded-3xl border border-rose-400/35 bg-gradient-to-br from-slate-900 to-rose-950/40 p-5 text-center shadow-2xl"><ArrowLeft className="mx-auto h-8 w-8 text-rose-300" /><h2 className="mt-2 text-lg font-black text-white">Rời lượt xuất kích?</h2><p className="mt-1 text-[10px] leading-relaxed text-slate-400">Lượt hiện tại sẽ kết thúc và không nhận thưởng.</p><div className="mt-4 grid grid-cols-2 gap-2"><button type="button" onClick={closeExit} className="min-h-11 rounded-xl border border-slate-700 bg-black text-xs font-black text-slate-200">Ở lại</button><button type="button" onClick={onExit} className="min-h-11 rounded-xl bg-rose-500 text-xs font-black text-white">Rời trận</button></div></div>
-        </div>
+        <AppModal layer="exclusive-dialog" layout="viewport-safe" onClose={closeExit} labelledBy="air-exit-title" panelClassName="max-w-sm border border-rose-400/35 bg-gradient-to-br from-slate-900 to-rose-950/40 text-center shadow-2xl">
+          <OverlayHeader className="p-5 pb-2"><ArrowLeft className="mx-auto h-8 w-8 text-rose-300" /><h2 id="air-exit-title" className="mt-2 text-lg font-black text-white">Rời lượt xuất kích?</h2></OverlayHeader>
+          <OverlayBody className="px-5 py-2" data-exit-confirm="open"><p className="text-[10px] leading-relaxed text-slate-300">Lượt hiện tại sẽ kết thúc và không nhận thưởng.</p></OverlayBody>
+          <OverlayFooter data-stack-actions="true" className="grid grid-cols-2 gap-2 p-5 pt-2"><button type="button" onClick={closeExit} className="min-h-11 rounded-xl border border-slate-700 bg-black text-xs font-black text-slate-200">Ở lại</button><button type="button" onClick={onExit} className="min-h-11 rounded-xl bg-rose-500 text-xs font-black text-white">Rời trận</button></OverlayFooter>
+        </AppModal>
       )}
 
       {pauseState.paused && pauseState.label && pauseReasonsRef.current.has("hidden") && (

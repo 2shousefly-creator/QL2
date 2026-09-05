@@ -7,6 +7,7 @@ import { getRequiredXpForTransition } from "../game/xpEngine";
 import { RANK_STEPS } from "../game/rankBuilder";
 import { soundManager } from "../game/audio";
 import { RankStep } from "../game/types";
+import { AppBottomSheet, OverlayBody, OverlayFooter, OverlayHeader } from "./overlay/AppOverlay";
 
 const CATEGORY_NAMES: Record<string, string> = {
   academy: "Khối Đào Tạo & Nhập Ngũ",
@@ -41,14 +42,15 @@ export const RankDetailSheet: React.FC<RankDetailSheetProps> = ({
 
   useEffect(() => {
     onOpenChange?.(true);
-    const originalStyle = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-
     return () => {
-      document.body.style.overflow = originalStyle;
       onOpenChange?.(false);
     };
   }, [onOpenChange]);
+
+  const requestClose = () => {
+    soundManager.playClick();
+    onClose();
+  };
 
   const isAchieved = step.rankIndex < currentRankIndex;
   const isCurrent = step.rankIndex === currentRankIndex;
@@ -60,18 +62,14 @@ export const RankDetailSheet: React.FC<RankDetailSheetProps> = ({
   const requiredXp = getRequiredXpForTransition(step.rankIndex);
 
   return (
-    <div
-      className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4 select-none animate-fadeIn overscroll-none touch-none"
-      onClick={(e) => {
-        if (e.target === e.currentTarget) {
-          soundManager.playClick();
-          onClose();
-        }
-      }}
+    <AppBottomSheet
+      onClose={requestClose}
+      closeOnBackdrop
+      ariaLabel={`Chi tiết cấp bậc ${step.displayName}`}
+      panelClassName="theme-card-accent w-full max-w-lg bg-slate-900 border-t sm:border rounded-t-3xl sm:rounded-3xl p-4 sm:p-6 shadow-2xl text-slate-100 gap-2 select-none animate-fadeIn"
     >
-      <div className="military-sheet theme-card-accent w-full max-w-lg bg-slate-900 border-t sm:border rounded-t-3xl sm:rounded-3xl p-4 sm:p-6 shadow-2xl text-slate-100 flex flex-col max-h-[85vh] sm:max-h-[85vh] overflow-hidden">
         {/* Header & Close */}
-        <div className="theme-divider shrink-0 flex items-center justify-between border-b pb-3">
+        <OverlayHeader className="theme-divider flex items-center justify-between gap-2 border-b pb-3">
           <div className="flex items-center gap-2">
             {isAchieved && (
               <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
@@ -96,15 +94,16 @@ export const RankDetailSheet: React.FC<RankDetailSheetProps> = ({
           <button
             type="button"
             onClick={() => {
-              soundManager.playClick();
-              onClose();
+              requestClose();
             }}
             className="theme-focus p-2 rounded-full bg-slate-800/80 text-slate-300 hover:text-white transition-colors cursor-pointer focus:outline-none"
             aria-label="Đóng"
           >
             <X className="w-5 h-5" />
           </button>
-        </div>
+        </OverlayHeader>
+
+        <OverlayBody className="space-y-2 pr-1">
 
         {/* Hero Presentation with tier progress bar */}
         <div className="shrink-0 my-3 flex flex-col items-center">
@@ -127,13 +126,13 @@ export const RankDetailSheet: React.FC<RankDetailSheetProps> = ({
         )}
 
         {/* Story Section */}
-        <div className="flex-1 min-h-0 flex flex-col my-1 overflow-hidden">
+        <div className="flex flex-col my-1">
           <h4 className="theme-text-accent shrink-0 font-bold text-sm flex items-center gap-2 mb-2 px-1">
             <BookOpen className="theme-icon-accent w-4 h-4" />
             <span>Câu Chuyện Cấp Bậc</span>
           </h4>
 
-          <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain touch-pan-y p-3.5 sm:p-4 bg-slate-950/70 rounded-xl border border-slate-800/80 space-y-3">
+          <div className="p-3.5 sm:p-4 bg-slate-950/70 rounded-xl border border-slate-800/80 space-y-3">
             {story ? (
               <>
                 {/* Story Title & Subtitle */}
@@ -167,12 +166,12 @@ export const RankDetailSheet: React.FC<RankDetailSheetProps> = ({
             )}
           </div>
         </div>
+        </OverlayBody>
 
         {/* Fictional Disclaimer */}
-        <p className="shrink-0 text-[11px] text-slate-400 italic text-center mt-2 pt-2 border-t border-slate-800">
+        <OverlayFooter className="text-[11px] text-slate-400 italic text-center mt-2 pt-2 border-t border-slate-800">
           Đây là trò chơi mô phỏng hư cấu, không đại diện và không có liên hệ chính thức với bất kỳ cơ quan hoặc tổ chức quân sự nào.
-        </p>
-      </div>
-    </div>
+        </OverlayFooter>
+    </AppBottomSheet>
   );
 };

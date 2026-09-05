@@ -17,6 +17,7 @@ import { FormationResult } from "../../../game/training/formationAssembly/format
 import { DailyTrainingClaimResult } from "../../../game/training/dailyTrainingReward";
 import { FORMATION_CONFIGS } from "../../../game/training/formationAssembly/formationConfig";
 import { soundManager } from "../../../game/audio";
+import { AppModal, OverlayBody, OverlayFooter, OverlayHeader } from "../../../components/overlay/AppOverlay";
 
 type FormationAssemblyResultProps = {
   difficulty: TrainingDifficulty;
@@ -45,10 +46,15 @@ export const FormationAssemblyResultModal: React.FC<FormationAssemblyResultProps
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md flex items-center justify-center p-4 animate-fadeIn">
-      <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl p-5 flex flex-col gap-5 shadow-2xl overflow-y-auto max-h-[90vh]">
+    <AppModal
+      onClose={onExit}
+      layer="exclusive-dialog"
+      layout="viewport-safe"
+      labelledBy="formation-result-title"
+      panelClassName="max-w-md border-slate-800 bg-slate-900 text-slate-100"
+    >
         {/* Banner Status */}
-        <div className="flex flex-col items-center text-center gap-2">
+        <OverlayHeader className="flex flex-col items-center gap-2 border-slate-800 text-center">
           {result.victory ? (
             <div className="w-16 h-16 rounded-full bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 shadow-lg shadow-emerald-500/20 animate-bounce">
               <Trophy className="w-8 h-8" />
@@ -60,15 +66,16 @@ export const FormationAssemblyResultModal: React.FC<FormationAssemblyResultProps
           )}
 
           <div>
-            <h2 className="font-black text-xl text-slate-100">
+            <h2 id="formation-result-title" className="font-black text-xl text-slate-100">
               {result.victory ? "CHIẾN THẮNG HUẤN LUYỆN!" : "ĐỘI HÌNH CHƯA HOÀN THÀNH"}
             </h2>
             <p className="text-xs text-slate-400 mt-0.5">
               Xếp Đội Hình · Mức độ <strong>{config.label}</strong>
             </p>
           </div>
-        </div>
+        </OverlayHeader>
 
+        <OverlayBody className="flex flex-col gap-5">
         {/* Daily Reward Claim Card */}
         {result.victory && (
           <div className="bg-slate-950/80 border border-amber-500/30 rounded-2xl p-3.5 flex flex-col gap-2">
@@ -167,9 +174,10 @@ export const FormationAssemblyResultModal: React.FC<FormationAssemblyResultProps
             <span>CHIẾN THẮNG HOÀN HẢO — Không lỗi!</span>
           </div>
         )}
+        </OverlayBody>
 
         {/* Action Buttons */}
-        <div className="flex flex-col gap-2 pt-1">
+        <OverlayFooter className="flex flex-col gap-2 border-slate-800 bg-slate-900">
           <button
             type="button"
             onClick={() => {
@@ -207,8 +215,7 @@ export const FormationAssemblyResultModal: React.FC<FormationAssemblyResultProps
               <span>Về Sảnh</span>
             </button>
           </div>
-        </div>
-      </div>
-    </div>
+        </OverlayFooter>
+    </AppModal>
   );
 };

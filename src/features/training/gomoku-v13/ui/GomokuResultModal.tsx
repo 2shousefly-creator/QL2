@@ -2,6 +2,7 @@ import React from "react";
 import { Trophy, RefreshCw, XCircle, ArrowLeft, Sparkles, CheckCircle2 } from "lucide-react";
 import { GomokuResult } from "../domain/gomokuTypes";
 import { soundManager } from "../../../../game/audio";
+import { AppModal, OverlayBody, OverlayFooter, OverlayHeader } from "../../../../components/overlay/AppOverlay";
 
 interface GomokuResultModalProps {
   result: GomokuResult;
@@ -20,12 +21,16 @@ export const GomokuResultModal: React.FC<GomokuResultModalProps> = ({
   const isResigned = result.outcome === "resigned";
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-fade-in">
-      <div className="w-full max-w-sm bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl text-center space-y-5 relative overflow-hidden">
+    <AppModal
+      onClose={onExit}
+      layer="exclusive-dialog"
+      layout="viewport-safe"
+      labelledBy="gomoku-result-title"
+      panelClassName="max-w-sm border-slate-800 bg-slate-900 text-center text-slate-100"
+    >
         {/* Glow Header */}
-        <div className="absolute -top-12 left-1/2 -translate-x-1/2 w-40 h-40 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
-
-        <div className="flex flex-col items-center gap-2">
+        <OverlayHeader className="relative flex flex-col items-center gap-2 overflow-hidden border-slate-800 text-center">
+          <div className="absolute -top-12 left-1/2 -translate-x-1/2 w-40 h-40 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
           {isPlayerWon ? (
             <div className="w-16 h-16 rounded-2xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 shadow-lg shadow-amber-500/20 animate-bounce">
               <Trophy className="w-8 h-8" />
@@ -40,7 +45,7 @@ export const GomokuResultModal: React.FC<GomokuResultModalProps> = ({
             </div>
           )}
 
-          <h2 className="text-xl font-black text-slate-100">
+          <h2 id="gomoku-result-title" className="relative text-xl font-black text-slate-100">
             {isPlayerWon
               ? "Chiến Thắng!"
               : isResigned
@@ -54,8 +59,9 @@ export const GomokuResultModal: React.FC<GomokuResultModalProps> = ({
               ? "Trận đấu dừng do bạn đầu hàng"
               : "Máy đã tạo chuỗi 5 quân thắng trước"}
           </p>
-        </div>
+        </OverlayHeader>
 
+        <OverlayBody className="space-y-5">
         {/* Stats Summary */}
         <div className="bg-slate-950/80 p-3.5 rounded-2xl border border-slate-800 space-y-2 text-xs">
           <div className="flex justify-between text-slate-300">
@@ -78,9 +84,10 @@ export const GomokuResultModal: React.FC<GomokuResultModalProps> = ({
             </div>
           )}
         </div>
+        </OverlayBody>
 
         {/* Action Buttons */}
-        <div className="space-y-2">
+        <OverlayFooter className="flex-col space-y-2 border-slate-800 bg-slate-900">
           <button
             type="button"
             onClick={() => {
@@ -104,8 +111,7 @@ export const GomokuResultModal: React.FC<GomokuResultModalProps> = ({
             <ArrowLeft className="w-4 h-4" />
             Về Sảnh Huấn Luyện
           </button>
-        </div>
-      </div>
-    </div>
+        </OverlayFooter>
+    </AppModal>
   );
 };

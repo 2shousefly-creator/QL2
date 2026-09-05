@@ -21,6 +21,7 @@ import {
 } from "../../game/training/signalCommand/signalCommandEngine";
 import { SignalCommandResult } from "../../game/training/signalCommand/signalCommandTypes";
 import { soundManager } from "../../game/audio";
+import { AppModal, ExclusiveFullscreenOverlay, OverlayBody, OverlayFooter, OverlayHeader } from "../../components/overlay/AppOverlay";
 
 type SignalCommandGameProps = {
   gameState: GameState;
@@ -312,7 +313,11 @@ export const SignalCommandGame: React.FC<SignalCommandGameProps> = ({
       : "grid-cols-3";
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-950 text-slate-100 flex flex-col justify-between p-3 sm:p-5 select-none animate-fadeIn overflow-hidden">
+    <ExclusiveFullscreenOverlay
+      ariaLabel="Mật Lệnh Tín Hiệu"
+      onEscape={() => setShowExitConfirm(true)}
+      className="bg-slate-950 text-slate-100 flex flex-col justify-between p-3 sm:p-5 select-none animate-fadeIn overflow-hidden"
+    >
       {/* Top Header Bar */}
       <div className="w-full max-w-md mx-auto flex items-center justify-between border-b border-slate-800/80 pb-3 shrink-0 z-30">
         <div className="flex items-center gap-2.5">
@@ -506,20 +511,30 @@ export const SignalCommandGame: React.FC<SignalCommandGameProps> = ({
 
       {/* Exit Confirmation Modal */}
       {showExitConfirm && (
-        <div className="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4 animate-fadeIn">
-          <div className="w-full max-w-sm bg-slate-900 border border-slate-800 rounded-3xl p-5 shadow-2xl flex flex-col items-center text-center space-y-4">
+        <AppModal
+          onClose={() => setShowExitConfirm(false)}
+          layer="exclusive-dialog"
+          layout="viewport-safe"
+          labelledBy="signal-command-exit-title"
+          panelClassName="max-w-sm border-slate-800 bg-slate-900 text-center text-slate-100"
+        >
+          <OverlayHeader className="flex flex-col items-center gap-3 border-slate-800 text-center">
             <div className="w-12 h-12 rounded-2xl bg-rose-500/20 text-rose-400 border border-rose-500/40 flex items-center justify-center">
               <BrainCircuit className="w-6 h-6" />
             </div>
 
             <div className="space-y-1">
-              <h3 className="text-base font-black text-slate-100">Thoát Lượt Chơi?</h3>
-              <p className="text-xs text-slate-400">
-                Bạn có chắc chắn muốn thoát khỏi lượt chơi Mật Lệnh Tín Hiệu hiện tại không?
-              </p>
+              <h3 id="signal-command-exit-title" className="text-base font-black text-slate-100">Thoát Lượt Chơi?</h3>
             </div>
+          </OverlayHeader>
 
-            <div className="grid grid-cols-2 gap-2 w-full pt-2">
+          <OverlayBody>
+            <p className="text-center text-xs text-slate-400">
+              Bạn có chắc chắn muốn thoát khỏi lượt chơi Mật Lệnh Tín Hiệu hiện tại không?
+            </p>
+          </OverlayBody>
+
+          <OverlayFooter className="grid grid-cols-2 gap-2 border-slate-800 bg-slate-900">
               <button
                 type="button"
                 onClick={() => setShowExitConfirm(false)}
@@ -534,10 +549,9 @@ export const SignalCommandGame: React.FC<SignalCommandGameProps> = ({
               >
                 Xác Nhận Thoát
               </button>
-            </div>
-          </div>
-        </div>
+          </OverlayFooter>
+        </AppModal>
       )}
-    </div>
+    </ExclusiveFullscreenOverlay>
   );
 };

@@ -21,10 +21,10 @@ export const CampaignTopBar: React.FC<CampaignTopBarProps> = ({
   <header className={`ct-v2-topbar ${compact ? "ct-v2-topbar--compact" : ""}`}>
     <button type="button" onClick={onBack} aria-label="Trở về Khu Giải Trí" className="ct-v2-icon-button"><ArrowLeft className="h-5 w-5" aria-hidden="true" /></button>
     <div className="min-w-0 flex-1">
-      <div className="truncate text-[10px] font-black uppercase tracking-[.16em] text-emerald-700">Chiến Tuyến</div>
-      <div className="flex items-center gap-2 text-[11px] font-black text-slate-700">
+      <div className="truncate text-[10px] font-black uppercase tracking-[.16em] text-emerald-300">Chiến Tuyến</div>
+      <div className="flex items-center gap-2 text-[11px] font-black text-slate-200">
         <span className="truncate">Tầng {Math.max(1, highestFloor)}</span>
-        <span className="text-slate-300">•</span>
+        <span className="text-slate-500">•</span>
         <span className="truncate">Doanh Trại Lv{barracksLevel}</span>
       </div>
     </div>

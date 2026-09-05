@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { X, Trash2, Coins, AlertCircle } from "lucide-react";
-import { motion, AnimatePresence } from "motion/react";
+import { motion } from "motion/react";
 import { BigSmallBetId, BigSmallBets } from "../types";
 import {
   BIG_SMALL_DOOR_INFO,
@@ -11,6 +11,7 @@ import {
 import { soundManager } from "../../../game/audio";
 import { BetAmountControl } from "../BetAmountControl";
 import { adjustBetInput, clampBetInput, getInitialBetInput } from "../betAmountInput";
+import { AppModal, OverlayBody, OverlayFooter, OverlayHeader } from "../../../components/overlay/AppOverlay";
 
 interface BigSmallBetModalProps {
   isOpen: boolean;
@@ -101,30 +102,16 @@ export const BigSmallBetModal: React.FC<BigSmallBetModalProps> = ({
   };
 
   return (
-    <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4">
-        {/* Backdrop */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.15 }}
-          onClick={onClose}
-          className="fixed inset-0 bg-slate-950/85 backdrop-blur-sm"
-        />
-
-        {/* Modal Dialog */}
-        <motion.div
-          initial={{ scale: 0.9, opacity: 0, y: 10 }}
-          animate={{ scale: 1, opacity: 1, y: 0 }}
-          exit={{ scale: 0.9, opacity: 0, y: 10 }}
-          transition={{ type: "spring", damping: 26, stiffness: 340 }}
-          className="relative z-10 w-full max-w-sm bg-slate-900 border border-slate-700/90 rounded-2xl p-4 sm:p-4.5 shadow-2xl space-y-3 max-h-[88vh] overflow-y-auto"
-        >
+    <AppModal
+      onClose={onClose}
+      closeOnBackdrop
+      labelledBy="big-small-bet-title"
+      panelClassName="max-w-sm border-slate-700/90 bg-slate-900 text-slate-100"
+    >
           {/* Header */}
-          <div className="flex items-center justify-between border-b border-slate-800 pb-2.5">
+          <OverlayHeader className="flex items-center justify-between border-slate-800">
             <div>
-              <h3 className="text-base sm:text-lg font-black text-slate-100 uppercase tracking-wide">
+              <h3 id="big-small-bet-title" className="text-base sm:text-lg font-black text-slate-100 uppercase tracking-wide">
                 {doorInfo.name}
               </h3>
             </div>
@@ -132,12 +119,14 @@ export const BigSmallBetModal: React.FC<BigSmallBetModalProps> = ({
             <button
               type="button"
               onClick={onClose}
-              className="w-7 h-7 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-slate-200 flex items-center justify-center transition-colors"
+              className="app-overlay__close w-7 h-7 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-slate-200 flex items-center justify-center transition-colors"
+              aria-label="Đóng đặt cược Số Lớn Số Nhỏ"
             >
               <X className="w-3.5 h-3.5" />
             </button>
-          </div>
+          </OverlayHeader>
 
+          <OverlayBody className="space-y-3">
           {/* Breakdown Stats */}
           <div className="bg-slate-950/70 border border-slate-800 rounded-xl p-2.5 space-y-1.5 text-xs">
             <div className="flex justify-between items-center text-slate-300">
@@ -205,12 +194,13 @@ export const BigSmallBetModal: React.FC<BigSmallBetModalProps> = ({
               </button>
             </div>
           )}
+          </OverlayBody>
 
           {/* Action Buttons */}
-          <div
+          <OverlayFooter
             className={`pt-1.5 grid ${
               currentDoorBet > 0 ? "grid-cols-4" : "grid-cols-2"
-            } gap-2`}
+            } gap-2 border-slate-800 bg-slate-900`}
           >
             <button
               type="button"
@@ -241,9 +231,7 @@ export const BigSmallBetModal: React.FC<BigSmallBetModalProps> = ({
             >
               Xác nhận
             </button>
-          </div>
-        </motion.div>
-      </div>
-    </AnimatePresence>
+          </OverlayFooter>
+    </AppModal>
   );
 };

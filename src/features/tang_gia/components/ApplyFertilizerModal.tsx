@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Check, Sparkles, Store, X } from "lucide-react";
 import { FERTILIZER_CATALOG } from "../farmCatalog";
 import type { FarmInventory, FertilizerTypeId } from "../farmTypes";
+import { AppModal, OverlayBody, OverlayFooter, OverlayHeader } from "../../../components/overlay/AppOverlay";
 
 interface ApplyFertilizerModalProps {
   isOpen: boolean;
@@ -30,31 +31,26 @@ export const ApplyFertilizerModal: React.FC<ApplyFertilizerModalProps> = ({
   );
 
   return (
-    <div
-      onClick={(event) => {
-        event.stopPropagation();
-        onClose();
-      }}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 p-3 backdrop-blur-md"
+    <AppModal
+      onClose={onClose}
+      closeOnBackdrop
+      labelledBy="apply-fertilizer-title"
+      panelClassName="w-full max-w-md rounded-3xl border border-slate-700 bg-slate-900 shadow-2xl"
     >
-      <div
-        onClick={(event) => event.stopPropagation()}
-        className="flex max-h-[85vh] w-full max-w-md flex-col overflow-hidden rounded-3xl border border-slate-700 bg-slate-900 shadow-2xl"
-      >
-        <div className="flex items-center justify-between border-b border-slate-800 p-4">
+        <OverlayHeader className="flex items-center justify-between gap-2 border-b border-slate-800 p-4">
           <div className="flex items-center gap-2">
             <Sparkles className="h-5 w-5 text-amber-400" />
             <div>
-              <h3 className="text-sm font-black text-slate-100">Bón Phân</h3>
+              <h3 id="apply-fertilizer-title" className="text-sm font-black text-slate-100">Bón Phân</h3>
               <p className="text-xs text-slate-400">Chọn 1 loại phân đang sở hữu</p>
             </div>
           </div>
-          <button onClick={onClose} className="rounded-full bg-slate-800 p-2 text-slate-400">
+          <button onClick={onClose} className="rounded-full bg-slate-800 p-2 text-slate-400" aria-label="Đóng bón phân">
             <X className="h-4 w-4" />
           </button>
-        </div>
+        </OverlayHeader>
 
-        <div className="flex-1 space-y-2 overflow-y-auto p-4">
+        <OverlayBody className="space-y-2 p-4">
           {ownedFertilizers.length === 0 ? (
             <div className="space-y-3 py-8 text-center">
               <p className="text-sm font-bold text-slate-300">Kho chưa có phân bón</p>
@@ -99,9 +95,9 @@ export const ApplyFertilizerModal: React.FC<ApplyFertilizerModalProps> = ({
               );
             })
           )}
-        </div>
+        </OverlayBody>
 
-        <div className="border-t border-slate-800 p-4">
+        <OverlayFooter className="border-t border-slate-800 p-4">
           <button
             disabled={!selectedId}
             onClick={() => selectedId && onConfirm(selectedId)}
@@ -109,8 +105,7 @@ export const ApplyFertilizerModal: React.FC<ApplyFertilizerModalProps> = ({
           >
             Xác Nhận Bón Phân
           </button>
-        </div>
-      </div>
-    </div>
+        </OverlayFooter>
+    </AppModal>
   );
 };

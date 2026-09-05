@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
   X,
   CheckCircle,
@@ -19,6 +19,7 @@ import { getRankRole } from "../game/rankRoles";
 import { RANK_STEPS } from "../game/rankBuilder";
 import { soundManager } from "../game/audio";
 import { GameState, RankFamily } from "../game/types";
+import { AppBottomSheet, OverlayBody, OverlayFooter, OverlayHeader } from "./overlay/AppOverlay";
 
 const CATEGORY_NAMES: Record<string, string> = {
   academy: "Khối Đào Tạo & Nhập Ngũ",
@@ -57,27 +58,20 @@ export const JourneyDutySheet: React.FC<JourneyDutySheetProps> = ({
   const role = getRankRole(representativeRankIndex);
   const categoryLabel = CATEGORY_NAMES[family.category] || "Khối Binh Nghiệp";
 
-  useEffect(() => {
-    const originalStyle = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = originalStyle;
-    };
-  }, []);
+  const requestClose = () => {
+    soundManager.playClick();
+    onClose();
+  };
 
   return (
-    <div
-      className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4 select-none animate-fadeIn overscroll-none touch-none"
-      onClick={(e) => {
-        if (e.target === e.currentTarget) {
-          soundManager.playClick();
-          onClose();
-        }
-      }}
+    <AppBottomSheet
+      onClose={requestClose}
+      closeOnBackdrop
+      ariaLabel={`Nhiệm vụ ${duty.rankName}`}
+      panelClassName="theme-card-accent w-full max-w-lg bg-slate-900 border-t sm:border rounded-t-3xl sm:rounded-3xl p-4 sm:p-6 shadow-2xl text-slate-100 gap-3 select-none animate-fadeIn"
     >
-      <div className="military-sheet theme-card-accent w-full max-w-lg bg-slate-900 border-t sm:border rounded-t-3xl sm:rounded-3xl p-4 sm:p-6 shadow-2xl text-slate-100 flex flex-col max-h-[88vh] sm:max-h-[85vh] overflow-hidden">
         {/* Header & Close */}
-        <div className="theme-divider shrink-0 flex items-center justify-between border-b pb-3">
+        <OverlayHeader className="theme-divider flex items-center justify-between gap-2 border-b pb-3">
           <div className="flex items-center gap-2 flex-wrap">
             {isFullyAchieved && (
               <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
@@ -102,15 +96,14 @@ export const JourneyDutySheet: React.FC<JourneyDutySheetProps> = ({
           <button
             type="button"
             onClick={() => {
-              soundManager.playClick();
-              onClose();
+              requestClose();
             }}
             className="theme-focus p-2 rounded-full bg-slate-800/80 text-slate-300 hover:text-white transition-colors cursor-pointer shrink-0 focus:outline-none"
             aria-label="Đóng"
           >
             <X className="w-5 h-5" />
           </button>
-        </div>
+        </OverlayHeader>
 
         {/* Hero Rank Identity */}
         <div className="shrink-0 my-3 flex flex-col items-center text-center">
@@ -133,7 +126,7 @@ export const JourneyDutySheet: React.FC<JourneyDutySheetProps> = ({
         </div>
 
         {/* Scrollable Duty & Authority Content */}
-        <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain touch-pan-y space-y-3.5 pr-1 pb-2">
+        <OverlayBody className="space-y-3.5 pr-1 pb-2">
           {/* Card 0: Chức Danh & Đơn Vị Đảm Nhận */}
           <div className="theme-card-accent bg-slate-950/75 rounded-2xl p-3.5 border space-y-2">
             <div className="theme-divider flex items-center gap-2 border-b pb-2">
@@ -275,13 +268,12 @@ export const JourneyDutySheet: React.FC<JourneyDutySheetProps> = ({
               ))}
             </ul>
           </div>
-        </div>
+        </OverlayBody>
 
         {/* Fictional Disclaimer */}
-        <p className="shrink-0 text-[11px] text-slate-400 italic text-center mt-2 pt-2 border-t border-slate-800">
+        <OverlayFooter className="text-[11px] text-slate-400 italic text-center pt-2 border-t border-slate-800">
           Đây là mô phỏng hư cấu chức trách quân sự phục vụ trải nghiệm trò chơi.
-        </p>
-      </div>
-    </div>
+        </OverlayFooter>
+    </AppBottomSheet>
   );
 };

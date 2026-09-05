@@ -13,6 +13,7 @@ import {
 } from "../../game/training/marchRhythmEngine";
 import { MarchRhythmGameResult } from "../../game/training/marchRhythmJudgement";
 import { soundManager } from "../../game/audio";
+import { AppModal, ExclusiveFullscreenOverlay, OverlayBody, OverlayFooter, OverlayHeader } from "../../components/overlay/AppOverlay";
 
 type MarchRhythmGameProps = {
   gameState: GameState;
@@ -234,8 +235,10 @@ export const MarchRhythmGame: React.FC<MarchRhythmGameProps> = ({
   const targetYPercent = 80; // Hit line is at 80% from top of playfield
 
   return (
-    <div
-      className="fixed inset-0 z-50 bg-slate-950 text-slate-100 flex flex-col select-none overflow-hidden touch-none font-sans"
+    <ExclusiveFullscreenOverlay
+      ariaLabel="Nhịp Hành Quân"
+      onEscape={() => setShowExitConfirm(true)}
+      className="bg-slate-950 text-slate-100 flex flex-col select-none overflow-hidden touch-none font-sans"
       onPointerUp={(e) => handlePointerUp(e.pointerId)}
       onPointerCancel={(e) => handlePointerUp(e.pointerId)}
     >
@@ -438,16 +441,23 @@ export const MarchRhythmGame: React.FC<MarchRhythmGameProps> = ({
 
       {/* Exit Confirmation Modal */}
       {showExitConfirm && (
-        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="w-full max-w-xs bg-slate-900 border border-slate-700 rounded-2xl p-5 shadow-2xl text-slate-100 flex flex-col gap-4">
-            <div className="flex items-center gap-2.5 text-amber-400 font-bold text-sm">
+        <AppModal
+          onClose={() => setShowExitConfirm(false)}
+          layer="exclusive-dialog"
+          layout="viewport-safe"
+          labelledBy="march-rhythm-exit-title"
+          panelClassName="max-w-xs border-slate-700 bg-slate-900 text-slate-100"
+        >
+            <OverlayHeader className="flex items-center gap-2.5 border-slate-800 text-sm font-bold text-amber-400">
               <AlertTriangle className="w-5 h-5 shrink-0" />
-              <span>Xác Nhận Thoát?</span>
-            </div>
+              <span id="march-rhythm-exit-title">Xác Nhận Thoát?</span>
+            </OverlayHeader>
+            <OverlayBody>
             <p className="text-xs text-slate-300 leading-relaxed">
               Tiến trình lượt chơi hiện tại sẽ bị hủy. Quyền thưởng hôm nay của bạn vẫn được giữ nguyên.
             </p>
-            <div className="flex items-center gap-2 pt-1">
+            </OverlayBody>
+            <OverlayFooter className="flex items-center gap-2 border-slate-800 bg-slate-900">
               <button
                 type="button"
                 onClick={() => setShowExitConfirm(false)}
@@ -465,10 +475,9 @@ export const MarchRhythmGame: React.FC<MarchRhythmGameProps> = ({
               >
                 Thoát
               </button>
-            </div>
-          </div>
-        </div>
+            </OverlayFooter>
+        </AppModal>
       )}
-    </div>
+    </ExclusiveFullscreenOverlay>
   );
 };

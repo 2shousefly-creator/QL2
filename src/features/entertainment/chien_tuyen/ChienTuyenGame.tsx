@@ -60,6 +60,7 @@ import type {
 import { FormationGrid, type FormationDragPayload } from "./components/FormationGrid";
 import { TroopDetailModal } from "./components/TroopDetailModal";
 import { TroopIcon } from "./components/TroopIcon";
+import { AppModal, OverlayBody, OverlayFooter, OverlayHeader } from "../../../components/overlay/AppOverlay";
 import "./chienTuyen.css";
 import "./chienTuyenBattlePolish.css";
 
@@ -448,9 +449,7 @@ function ActionTimeline({
 
 function UnitDetailOverlay({ unit, round, timelinePosition, onClose }: { unit: BattleUnit; round: number; timelinePosition: number | null; onClose: () => void }) {
   const titleId = useId();
-  const dialogRef = useRef<HTMLElement | null>(null);
   const closeRef = useRef<HTMLButtonElement | null>(null);
-  const onCloseRef = useRef(onClose);
   const statRows: Array<{ label: string; key: DisplayStatKey; value: number; color: string }> = [
     { label: "HP", key: "maxHp", value: unit.maxHp, color: "#ef4760" },
     { label: "ATK", key: "attack", value: unit.attack, color: "#f97316" },
@@ -509,27 +508,20 @@ function UnitDetailOverlay({ unit, round, timelinePosition, onClose }: { unit: B
   const ultimateName = martialArtistStance ? getMartialArtistUltimateName(martialArtistStance) : ultimate?.name;
   const ultimateDescription = martialArtistStance ? getMartialArtistUltimateDescription(martialArtistStance) : ultimate?.description;
 
-  useEffect(() => { onCloseRef.current = onClose; }, [onClose]);
-  useEffect(() => {
-    const previouslyFocused = document.activeElement instanceof HTMLElement ? document.activeElement : null;
-    closeRef.current?.focus();
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") { event.preventDefault(); onCloseRef.current(); return; }
-      if (event.key !== "Tab" || !dialogRef.current) return;
-      const focusable = Array.from(dialogRef.current.querySelectorAll<HTMLElement>('button:not([disabled]), [href], [tabindex]:not([tabindex="-1"])')) as HTMLElement[];
-      if (focusable.length === 0) return;
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
-      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
-      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
-    };
-    document.addEventListener("keydown", onKeyDown);
-    return () => { document.removeEventListener("keydown", onKeyDown); previouslyFocused?.focus(); };
-  }, []);
   return (
-    <div className="fixed inset-0 z-[260] flex items-end justify-center bg-slate-950/60 p-3 backdrop-blur-sm sm:items-center" role="dialog" aria-modal="true" aria-labelledby={titleId} onClick={(event) => { if (event.target === event.currentTarget) onClose(); }}>
-      <section ref={dialogRef} tabIndex={-1} className="ct-v2-pop-in max-h-[92dvh] w-full max-w-sm overflow-y-auto rounded-[2rem] border-4 border-white bg-[#fffaf0] p-4 text-slate-800 shadow-2xl">
-        <div className="flex items-start gap-3"><div className="ct-v2-detail-unit-icon">{unit.icon}</div><div className="min-w-0 flex-1"><div className="ct-v2-eyebrow">{unit.isBoss ? "BOSS" : "CHI TIẾT ĐƠN VỊ"}</div><h3 id={titleId} className="text-xl font-black">{unit.name}</h3><p className="text-[10px] font-bold text-slate-500">Lv{unit.level} · {unit.side === "player" ? "Phe Ta" : "Phe Địch"} · {unit.targetPriority === "back_first" ? "Ưu tiên hàng sau" : "Ưu tiên hàng trước"}</p></div><button ref={closeRef} type="button" onClick={onClose} aria-label="Đóng chi tiết đơn vị" className="ct-v2-icon-button"><X className="h-5 w-5" /></button></div>
+    <AppModal
+      onClose={onClose}
+      closeOnBackdrop
+      layer="exclusive-dialog"
+      layout="viewport-safe"
+      labelledBy={titleId}
+      panelClassName="ct-v2-modal max-w-sm"
+      initialFocusRef={closeRef}
+    >
+      <OverlayHeader className="ct-v2-modal-header flex items-start gap-3">
+        <div className={`ct-v2-detail-unit-icon ${unit.side === "player" ? "is-ally" : "is-enemy"}`}>{unit.icon}</div><div className="min-w-0 flex-1"><div className="ct-v2-eyebrow">{unit.isBoss ? "BOSS" : "CHI TIẾT ĐƠN VỊ"}</div><h3 id={titleId} className="text-xl font-black text-white">{unit.name}</h3><p className="text-[10px] font-bold text-slate-300">Lv{unit.level} · {unit.side === "player" ? "Phe Ta" : "Phe Địch"} · {unit.targetPriority === "back_first" ? "Ưu tiên hàng sau" : "Ưu tiên hàng trước"}</p></div><button ref={closeRef} type="button" onClick={onClose} aria-label="Đóng chi tiết đơn vị" className="ct-v2-icon-button app-overlay__close"><X className="h-5 w-5" /></button>
+      </OverlayHeader>
+      <OverlayBody className="space-y-3">
         <div className="ct-v2-battle-detail-summary"><span>HP <strong>{Math.ceil(unit.hp)}/{unit.maxHp}</strong></span><span>KHIÊN <strong>{Math.round(shieldTotal(unit))}</strong></span><span>NỘ <strong>{Math.round(unit.rage)}/{unit.ultimateRageRequired}</strong></span><span>HĐ <strong>{unit.actionTurnCount}</strong></span></div>
         <div className="ct-v2-live-stat-list">
           {statRows.map((row) => {
@@ -543,9 +535,9 @@ function UnitDetailOverlay({ unit, round, timelinePosition, onClose }: { unit: B
         {timelinePosition && <p className="ct-v2-timeline-insight">▶ Dự kiến quay lại: <strong>#{timelinePosition}</strong> trên Thanh Thứ Tự</p>}
         {passive && <div className="ct-v2-battle-detail-skill"><strong>NỘI TẠI — {passive.name}</strong><p>{passive.description}</p></div>}
         {ultimate?.implemented && <div className="ct-v2-battle-detail-skill is-ultimate"><strong>ULTIMATE · {ultimateName} · NỘ {ultimate.ultimateRageRequired}</strong><p>{ultimateDescription}</p></div>}
-        <div className="mt-3 rounded-2xl bg-amber-50 p-3 text-[10px] font-semibold text-slate-600">{unit.damageMultiplier > 1 ? <>Sát thương hiện tại <strong>×{unit.damageMultiplier.toFixed(2)}</strong></> : <span>Trạng thái đang hoạt động</span>}{statuses.length > 0 ? <div className="mt-2 flex flex-wrap gap-1">{statuses.map((status) => <span key={status} className="ct-v2-status-chip">{status}</span>)}</div> : <p className="mt-1 text-slate-400">Không có hiệu ứng đặc biệt.</p>}</div>
-      </section>
-    </div>
+        <div className="rounded-2xl border border-amber-300/30 bg-amber-300/10 p-3 text-[10px] font-semibold text-slate-300">{unit.damageMultiplier > 1 ? <>Sát thương hiện tại <strong>×{unit.damageMultiplier.toFixed(2)}</strong></> : <span>Trạng thái đang hoạt động</span>}{statuses.length > 0 ? <div className="mt-2 flex flex-wrap gap-1">{statuses.map((status) => <span key={status} className="ct-v2-status-chip">{status}</span>)}</div> : <p className="mt-1 text-slate-400">Không có hiệu ứng đặc biệt.</p>}</div>
+      </OverlayBody>
+    </AppModal>
   );
 }
 
@@ -603,10 +595,6 @@ export const ChienTuyenGame: React.FC<ChienTuyenGameProps> = ({
   formationRef.current = formation;
 
   useEffect(() => {
-    const bodyOverflow = document.body.style.overflow;
-    const htmlOverflow = document.documentElement.style.overflow;
-    document.body.style.overflow = "hidden";
-    document.documentElement.style.overflow = "hidden";
     let wakeLock: { release: () => Promise<void> } | null = null;
     const requestWakeLock = async () => {
       try {
@@ -618,8 +606,6 @@ export const ChienTuyenGame: React.FC<ChienTuyenGameProps> = ({
     const onVisibility = () => { if (document.visibilityState === "visible" && !wakeLock) void requestWakeLock(); };
     document.addEventListener("visibilitychange", onVisibility);
     return () => {
-      document.body.style.overflow = bodyOverflow;
-      document.documentElement.style.overflow = htmlOverflow;
       document.removeEventListener("visibilitychange", onVisibility);
       if (wakeLock) void wakeLock.release();
       timersRef.current.forEach((timer) => window.clearTimeout(timer));
@@ -1304,7 +1290,11 @@ export const ChienTuyenGame: React.FC<ChienTuyenGameProps> = ({
                   className={`ct-v2-roster-tile ${selectedTroop === troopType ? "is-selected" : ""}`}
                   title={troop.name}
                 >
-                  <TroopIcon troopType={troopType} size="medium" />
+                  <TroopIcon
+                    troopType={troopType}
+                    size="medium"
+                    state={available <= 0 || isStarting ? "disabled" : selectedTroop === troopType ? "selected" : "ally"}
+                  />
                   <strong>{troop.shortName}</strong><span>Lv{profile.troopLevels[troopType]} · ×{available}</span>
                   <em title={role.label} aria-label={role.label}>{role.icon}</em>
                   <i onClick={(event) => { event.stopPropagation(); setDetailTroop({ troopType, level: profile.troopLevels[troopType], readyCount: profile.readyCounts[troopType] }); }}><Info className="h-3 w-3" /></i>
@@ -1330,6 +1320,13 @@ export const ChienTuyenGame: React.FC<ChienTuyenGameProps> = ({
   const displayedPresentationSpeed = getBattlePresentationSpeed(displayBattle.round);
   const playerAlive = displayBattle.units.filter((unit) => unit.side === "player" && unit.alive).length;
   const enemyAlive = displayBattle.units.filter((unit) => unit.side === "enemy" && unit.alive).length;
+  const actingUnit = displayBattle.units.find((unit) => unit.instanceId === (animation?.sourceUnitId ?? timelineActingUnitId)) ?? null;
+  const targetUnit = animation
+    ? (displayBattle.units.find((unit) => unit.instanceId === animation.targetUnitId) ?? null)
+    : null;
+  const actionStatus = animation
+    ? (animation.kind === "ultimate" ? "ULTIMATE" : "TẤN CÔNG")
+    : (actingUnit ? "CHUẨN BỊ" : "ĐANG XẾP LƯỢT");
   const inspectTimelinePosition = inspectUnit
     ? (getUpcomingActionPreview(displayBattle, 8).find((entry) => entry.unitId === inspectUnit.instanceId)?.position ?? null)
     : null;
@@ -1346,6 +1343,24 @@ export const ChienTuyenGame: React.FC<ChienTuyenGameProps> = ({
           {pressureBonus > 0 && <span className="ct-v2-pressure-chip" role="status" title="Áp Lực Chiến Trường tăng sát thương của cả hai đội."><Sparkles className="h-3.5 w-3.5" /><small className="is-full">ÁP LỰC</small><strong>+{Math.round(pressureBonus * 100)}%</strong></span>}
         </div>
       </header>
+
+      <section className="ct-v2-battle-status-strip" aria-live="polite" aria-label="Trạng thái hành động hiện tại">
+        <span className="ct-v2-battle-status-unit" data-side={actingUnit?.side ?? "neutral"}>
+          <small>ĐANG HÀNH ĐỘNG</small>
+          <strong>{actingUnit ? `${actingUnit.icon} ${actingUnit.name}` : "Đang xác định"}</strong>
+        </span>
+        <span className="ct-v2-battle-status-action">
+          <small>HÀNH ĐỘNG</small>
+          <strong>{actionStatus}</strong>
+        </span>
+        <span className="ct-v2-battle-status-target" data-side={targetUnit?.side ?? "neutral"}>
+          <small>MỤC TIÊU</small>
+          <strong>{targetUnit ? `${targetUnit.icon} ${targetUnit.name}` : "Chưa khóa"}</strong>
+        </span>
+        <span className="ct-v2-battle-status-counts" aria-label={`Phe ta còn ${playerAlive}; phe địch còn ${enemyAlive}`}>
+          <b>TA {playerAlive}</b><i aria-hidden="true">/</i><b>ĐỊCH {enemyAlive}</b>
+        </span>
+      </section>
 
       <ActionTimeline
         state={displayBattle}
@@ -1424,17 +1439,23 @@ export const ChienTuyenGame: React.FC<ChienTuyenGameProps> = ({
       )}
       {inspectUnit && <UnitDetailOverlay unit={inspectUnit} round={displayBattle.round} timelinePosition={inspectTimelinePosition} onClose={() => setInspectUnit(null)} />}
       {showExitConfirm && (
-        <div className="fixed inset-0 z-[270] flex items-end justify-center bg-slate-950/65 p-3 backdrop-blur-sm sm:items-center" role="dialog" aria-modal="true" aria-label="Xác nhận rời trận">
-          <section className="ct-v2-pop-in w-full max-w-sm rounded-[2rem] border-4 border-white bg-[#fffaf0] p-5 text-center text-slate-800 shadow-2xl">
-            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-rose-100 text-rose-600"><ShieldAlert className="h-7 w-7" /></div>
-            <h2 className="mt-3 text-xl font-black">RỜI TRẬN?</h2>
-            <p className="mt-2 text-[11px] font-semibold leading-relaxed text-slate-600">Quân đã hy sinh vẫn bị mất. Trận không được tính chiến thắng.</p>
-            <div className="mt-4 grid gap-2">
+        <AppModal
+          onClose={() => setShowExitConfirm(false)}
+          layer="exclusive-dialog"
+          layout="viewport-safe"
+          labelledBy="ct-exit-battle-title"
+          panelClassName="ct-v2-modal max-w-sm text-center"
+        >
+            <OverlayHeader className="ct-v2-modal-header flex-col items-center text-center">
+              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl border border-rose-400/40 bg-rose-400/10 text-rose-300"><ShieldAlert className="h-7 w-7" /></div>
+              <h2 id="ct-exit-battle-title" className="mt-3 text-xl font-black text-white">RỜI TRẬN?</h2>
+            </OverlayHeader>
+            <OverlayBody><p className="text-center text-[11px] font-semibold leading-relaxed text-slate-300">Quân đã hy sinh vẫn bị mất. Trận không được tính chiến thắng.</p></OverlayBody>
+            <OverlayFooter className="ct-v2-modal-footer grid gap-2">
               <button type="button" onClick={() => setShowExitConfirm(false)} className="ct-v2-primary-button">TIẾP TỤC</button>
-              <button type="button" onClick={onAbandon} className="ct-v2-ghost-button !text-rose-600">RỜI TRẬN</button>
-            </div>
-          </section>
-        </div>
+              <button type="button" onClick={onAbandon} className="ct-v2-ghost-button !text-rose-300">RỜI TRẬN</button>
+            </OverlayFooter>
+        </AppModal>
       )}
     </div>
   );

@@ -2,6 +2,7 @@ import React from "react";
 import { X, Target, Crosshair, Hand, ShieldCheck } from "lucide-react";
 import { soundManager } from "../../../game/audio";
 import { SHOOTING_DIFFICULTY_CONFIGS } from "../../../game/training/shootingRange/shootingConfig";
+import { AppModal, OverlayBody, OverlayFooter, OverlayHeader } from "../../../components/overlay/AppOverlay";
 
 type ShootingTutorialModalProps = {
   onClose: () => void;
@@ -9,16 +10,19 @@ type ShootingTutorialModalProps = {
 
 export const ShootingTutorialModal: React.FC<ShootingTutorialModalProps> = ({ onClose }) => {
   return (
-    <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 animate-fadeIn">
-      <div className="bg-slate-900 border border-amber-500/30 rounded-3xl max-w-sm w-full flex flex-col shadow-2xl overflow-hidden">
+    <AppModal
+      onClose={onClose}
+      labelledBy="shooting-tutorial-title"
+      panelClassName="max-w-sm border-amber-500/30 bg-slate-900 text-slate-100"
+    >
         {/* Header */}
-        <div className="p-4 border-b border-slate-800 flex items-center justify-between bg-slate-950/60">
+        <OverlayHeader className="flex items-center justify-between border-slate-800 bg-slate-950/60">
           <div className="flex items-center gap-2.5">
             <div className="w-9 h-9 rounded-xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-amber-400">
               <Target className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="font-extrabold text-slate-100 text-sm">Hướng Dẫn Bắn Súng</h3>
+              <h3 id="shooting-tutorial-title" className="font-extrabold text-slate-100 text-sm">Hướng Dẫn Bắn Súng</h3>
               <p className="text-[11px] text-slate-400">Thao trường ngắm bắn bia di động</p>
             </div>
           </div>
@@ -30,13 +34,14 @@ export const ShootingTutorialModal: React.FC<ShootingTutorialModalProps> = ({ on
               onClose();
             }}
             className="p-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors cursor-pointer"
+            aria-label="Đóng hướng dẫn bắn súng"
           >
             <X className="w-4 h-4" />
           </button>
-        </div>
+        </OverlayHeader>
 
         {/* Streamlined Content */}
-        <div className="p-4 flex flex-col gap-3 text-xs text-slate-300 leading-relaxed">
+        <OverlayBody className="flex flex-col gap-3 text-xs text-slate-300 leading-relaxed">
           {/* Controls */}
           <div className="bg-slate-950/70 p-3 rounded-2xl border border-slate-800 flex flex-col gap-1.5">
             <div className="flex items-center gap-2 font-extrabold text-amber-400">
@@ -91,10 +96,10 @@ export const ShootingTutorialModal: React.FC<ShootingTutorialModalProps> = ({ on
               </div>
             </div>
           </div>
-        </div>
+        </OverlayBody>
 
         {/* Footer */}
-        <div className="p-3 border-t border-slate-800 bg-slate-950/80">
+        <OverlayFooter className="border-slate-800 bg-slate-950/80">
           <button
             type="button"
             onClick={() => {
@@ -105,9 +110,8 @@ export const ShootingTutorialModal: React.FC<ShootingTutorialModalProps> = ({ on
           >
             ĐÃ HIỂU, BẮT ĐẦU
           </button>
-        </div>
-      </div>
-    </div>
+        </OverlayFooter>
+    </AppModal>
   );
 };
 

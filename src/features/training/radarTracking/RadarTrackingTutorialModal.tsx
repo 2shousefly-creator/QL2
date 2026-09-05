@@ -1,6 +1,7 @@
 import React from "react";
 import { X, Eye, CheckCircle2, Lightbulb } from "lucide-react";
 import { soundManager } from "../../../game/audio";
+import { AppModal, OverlayBody, OverlayFooter, OverlayHeader } from "../../../components/overlay/AppOverlay";
 
 type Props = {
   onClose: () => void;
@@ -8,16 +9,19 @@ type Props = {
 
 export const RadarTrackingTutorialModal: React.FC<Props> = ({ onClose }) => {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/80 backdrop-blur-md animate-fadeIn">
-      <div className="w-full max-w-sm bg-slate-900 border border-emerald-500/30 rounded-2xl p-4 shadow-2xl flex flex-col gap-3 text-slate-100 max-h-[90vh] overflow-y-auto">
+    <AppModal
+      onClose={onClose}
+      labelledBy="radar-tutorial-title"
+      panelClassName="max-w-sm border-emerald-500/30 bg-slate-900 text-slate-100"
+    >
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-slate-800 pb-2.5">
+        <OverlayHeader className="flex items-center justify-between border-slate-800">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400">
               <Eye className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="font-extrabold text-sm text-emerald-300">
+              <h3 id="radar-tutorial-title" className="font-extrabold text-sm text-emerald-300">
                 Mắt Thần Radar
               </h3>
               <p className="text-[10px] text-slate-400">Hướng dẫn nhanh kỹ năng theo dõi</p>
@@ -30,11 +34,13 @@ export const RadarTrackingTutorialModal: React.FC<Props> = ({ onClose }) => {
               onClose();
             }}
             className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition-colors"
+            aria-label="Đóng hướng dẫn radar"
           >
             <X className="w-4 h-4" />
           </button>
-        </div>
+        </OverlayHeader>
 
+        <OverlayBody className="flex flex-col gap-3">
         {/* Streamlined Steps */}
         <div className="flex flex-col gap-2">
           {/* Step 1 */}
@@ -98,8 +104,10 @@ export const RadarTrackingTutorialModal: React.FC<Props> = ({ onClose }) => {
           <Lightbulb className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
           <span>Mẹo: Quan sát bao quát cả nhóm thay vì nhìn một điểm. Mức <strong>Khó</strong> có thêm vùng nhiễu che khuất.</span>
         </div>
+        </OverlayBody>
 
         {/* Submit Button */}
+        <OverlayFooter className="border-slate-800 bg-slate-900">
         <button
           type="button"
           onClick={() => {
@@ -111,7 +119,7 @@ export const RadarTrackingTutorialModal: React.FC<Props> = ({ onClose }) => {
           <CheckCircle2 className="w-4 h-4" />
           <span>Đã Hiểu - Sẵn Sàng</span>
         </button>
-      </div>
-    </div>
+        </OverlayFooter>
+    </AppModal>
   );
 };

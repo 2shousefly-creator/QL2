@@ -74,6 +74,7 @@ import {
   RewardSummaryModal,
   RewardSummaryData,
 } from "./components/RewardSummaryModal";
+import { AppModal, OverlayBody, OverlayFooter, OverlayHeader, OverlayPortal } from "../../components/overlay/AppOverlay";
 import {
   HARVEST_ALL_CROP_GLOW_DURATION_MS,
   HARVEST_REWARD_FLOAT_DURATION_MS,
@@ -1299,23 +1300,33 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
 
       {/* --- TOAST POPUP --- */}
       {toastMessage && (
-        <div className="fixed top-16 left-1/2 -translate-x-1/2 z-50 px-4 py-2.5 rounded-2xl bg-slate-900/95 border border-amber-500/80 text-amber-200 text-xs font-black shadow-2xl backdrop-blur-md flex items-center gap-2 animate-in fade-in slide-in-from-top-2 duration-200">
-          <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0" />
-          <span>{toastMessage}</span>
-        </div>
+        <OverlayPortal>
+          <div className="app-overlay-toast px-4 py-2.5 rounded-2xl bg-slate-900/95 border border-amber-500/80 text-amber-200 text-xs font-black shadow-2xl backdrop-blur-md flex items-center gap-2 animate-in fade-in slide-in-from-top-2 duration-200" role="status">
+            <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0" />
+            <span>{toastMessage}</span>
+          </div>
+        </OverlayPortal>
       )}
 
       {/* --- CONFIRMATION DIALOG MODAL --- */}
       {dialogConfig.isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-200">
-          <div className="military-modal bg-slate-900 border border-slate-700 rounded-3xl p-5 max-w-sm w-full space-y-4 shadow-2xl text-center">
-            <h3 className="font-extrabold text-base text-slate-100">
+        <AppModal
+          layer="nested"
+          onClose={() => setDialogConfig((prev) => ({ ...prev, isOpen: false }))}
+          labelledBy="farm-confirmation-title"
+          panelClassName="bg-slate-900 border border-slate-700 rounded-3xl max-w-sm w-full shadow-2xl text-center animate-in fade-in duration-200"
+        >
+            <OverlayHeader className="p-5 pb-2">
+            <h3 id="farm-confirmation-title" className="font-extrabold text-base text-slate-100">
               {dialogConfig.title}
             </h3>
+            </OverlayHeader>
+            <OverlayBody className="px-5 py-2">
             <p className="text-xs text-slate-300 leading-relaxed">
               {dialogConfig.message}
             </p>
-            <div className="flex items-center gap-2 pt-2">
+            </OverlayBody>
+            <OverlayFooter className="flex items-center gap-2 p-5 pt-2" data-stack-actions="true">
               <button
                 onClick={() =>
                   setDialogConfig((prev) => ({ ...prev, isOpen: false }))
@@ -1332,9 +1343,8 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
               >
                 {dialogConfig.confirmLabel || "Xác Nhận"}
               </button>
-            </div>
-          </div>
-        </div>
+            </OverlayFooter>
+        </AppModal>
       )}
 
       {/* --- ALL GAME MODALS --- */}

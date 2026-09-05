@@ -14,7 +14,6 @@ import {
   AlertTriangle, 
   BookOpen 
 } from "lucide-react";
-import { motion, AnimatePresence } from "motion/react";
 import { GameState, JournalCategory, JournalEvent, TabType } from "../../game/types";
 import { soundManager } from "../../game/audio";
 import { RankBadge } from "../../components/RankBadge";
@@ -23,6 +22,7 @@ import { RANK_STEPS } from "../../game/rankBuilder";
 import { RANK_FAMILIES } from "../../game/rankFamilies";
 import { RANK_STEP_STORIES } from "../../game/rankStories";
 import { CommandHeader } from "../../components/military/MilitaryUI";
+import { AppModal, OverlayBody, OverlayFooter, OverlayHeader } from "../../components/overlay/AppOverlay";
 
 type JournalScreenProps = {
   state: GameState;
@@ -397,24 +397,19 @@ const JournalDetailModal: React.FC<{
   const retries = event.metadata?.retries;
 
   return (
-    <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md">
-        {/* Overlay backdrop click */}
-        <div className="absolute inset-0 cursor-pointer" onClick={onClose} />
-
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95, y: 15 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.95, y: 15 }}
-          transition={{ duration: 0.25, ease: "easeOut" }}
-          className="military-modal theme-card-accent relative bg-slate-900 border rounded-3xl w-full max-w-lg overflow-hidden shadow-2xl flex flex-col max-h-[85vh] z-10"
-        >
+    <AppModal
+      onClose={onClose}
+      closeOnBackdrop
+      labelledBy="journal-detail-title"
+      panelClassName="theme-card-accent bg-slate-900 border rounded-3xl w-full max-w-lg shadow-2xl animate-in zoom-in-95 duration-200"
+    >
           {/* Header Graphic Background */}
-          <div className={`h-24 bg-gradient-to-b ${catDetails.bgColor} relative shrink-0 border-b border-slate-800/60`}>
+          <OverlayHeader className={`h-24 bg-gradient-to-b ${catDetails.bgColor} relative border-b border-slate-800/60`}>
             {/* Close button */}
             <button
               onClick={onClose}
               className="theme-focus absolute top-4 right-4 p-2 rounded-full bg-slate-950/60 border border-slate-800 text-slate-400 hover:text-slate-100 transition-colors active:scale-90 focus:outline-none"
+              aria-label="Đóng chi tiết nhật ký"
             >
               <X className="w-4 h-4" />
             </button>
@@ -443,10 +438,10 @@ const JournalDetailModal: React.FC<{
                 </div>
               )}
             </div>
-          </div>
+          </OverlayHeader>
 
           {/* Content Area */}
-          <div className="pt-12 pb-6 px-6 overflow-y-auto space-y-5 flex-1">
+          <OverlayBody className="pt-12 pb-6 px-6 space-y-5">
             {/* Title & Metadata Header */}
             <div>
               <div className="flex items-center gap-2">
@@ -459,7 +454,7 @@ const JournalDetailModal: React.FC<{
                   </span>
                 )}
               </div>
-              <h3 className="text-xl font-black text-slate-100 mt-2.5 leading-tight">
+              <h3 id="journal-detail-title" className="text-xl font-black text-slate-100 mt-2.5 leading-tight">
                 {cleanTitleText}
               </h3>
               <div className="flex items-center gap-1.5 text-slate-400 text-xs mt-1.5 font-mono">
@@ -562,19 +557,17 @@ const JournalDetailModal: React.FC<{
                 </div>
               </div>
             )}
-          </div>
+          </OverlayBody>
 
           {/* Footer Action */}
-          <div className="theme-divider p-4 bg-slate-950 border-t flex justify-end shrink-0">
+          <OverlayFooter className="theme-divider p-4 bg-slate-950 border-t flex justify-end">
             <button
               onClick={onClose}
               className="theme-focus theme-hover-border px-5 py-2 rounded-xl bg-slate-900 border border-slate-700 text-slate-200 text-xs font-bold transition-all active:scale-95 focus:outline-none"
             >
               Đóng
             </button>
-          </div>
-        </motion.div>
-      </div>
-    </AnimatePresence>
+          </OverlayFooter>
+    </AppModal>
   );
 };

@@ -1,7 +1,7 @@
 import React from "react";
 import { X, BookOpen, AlertTriangle, Sparkles, ShieldCheck, CheckCircle2 } from "lucide-react";
-import { motion, AnimatePresence } from "motion/react";
 import { soundManager } from "../../../game/audio";
+import { AppModal, OverlayBody, OverlayFooter, OverlayHeader } from "../../../components/overlay/AppOverlay";
 
 interface BigSmallRulesModalProps {
   isOpen: boolean;
@@ -15,34 +15,20 @@ export const BigSmallRulesModal: React.FC<BigSmallRulesModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4">
-        {/* Backdrop */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.15 }}
-          onClick={onClose}
-          className="fixed inset-0 bg-slate-950/85 backdrop-blur-sm"
-        />
-
-        {/* Modal Content */}
-        <motion.div
-          initial={{ scale: 0.9, opacity: 0, y: 10 }}
-          animate={{ scale: 1, opacity: 1, y: 0 }}
-          exit={{ scale: 0.9, opacity: 0, y: 10 }}
-          transition={{ type: "spring", damping: 26, stiffness: 340 }}
-          className="relative z-10 w-full max-w-lg bg-slate-900 border border-slate-700/90 rounded-2xl p-4 sm:p-5 shadow-2xl space-y-4 max-h-[88vh] overflow-y-auto"
-        >
+    <AppModal
+      onClose={onClose}
+      closeOnBackdrop
+      labelledBy="big-small-rules-title"
+      panelClassName="max-w-lg border-slate-700/90 bg-slate-900 text-slate-100"
+    >
           {/* Header */}
-          <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+          <OverlayHeader className="flex items-center justify-between border-slate-800">
             <div className="flex items-center gap-2.5">
               <div className="w-8 h-8 rounded-xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-amber-400">
                 <BookOpen className="w-4 h-4" />
               </div>
               <div>
-                <h3 className="text-base font-extrabold text-slate-100 uppercase tracking-wide">
+                <h3 id="big-small-rules-title" className="text-base font-extrabold text-slate-100 uppercase tracking-wide">
                   LUẬT CHƠI SỐ LỚN SỐ NHỎ
                 </h3>
                 <p className="text-xs text-slate-400">
@@ -54,14 +40,15 @@ export const BigSmallRulesModal: React.FC<BigSmallRulesModalProps> = ({
             <button
               type="button"
               onClick={onClose}
-              className="w-7 h-7 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-slate-200 flex items-center justify-center transition-colors"
+              className="app-overlay__close w-7 h-7 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-slate-200 flex items-center justify-center transition-colors"
+              aria-label="Đóng luật chơi Số Lớn Số Nhỏ"
             >
               <X className="w-3.5 h-3.5" />
             </button>
-          </div>
+          </OverlayHeader>
 
           {/* Body Content */}
-          <div className="space-y-3.5 text-xs text-slate-300">
+          <OverlayBody className="space-y-3.5 text-xs text-slate-300">
             {/* Intro */}
             <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-3 space-y-1">
               <p className="leading-relaxed">
@@ -121,10 +108,10 @@ export const BigSmallRulesModal: React.FC<BigSmallRulesModalProps> = ({
                 Toàn bộ xúc xắc được sinh ngẫu nhiên độc lập bằng bộ tạo số ngẫu nhiên an toàn (RNG), đảm bảo hoàn toàn công bằng và minh bạch.
               </span>
             </div>
-          </div>
+          </OverlayBody>
 
           {/* Footer CTA */}
-          <div className="pt-1">
+          <OverlayFooter className="border-slate-800 bg-slate-900">
             <button
               type="button"
               onClick={() => {
@@ -135,9 +122,7 @@ export const BigSmallRulesModal: React.FC<BigSmallRulesModalProps> = ({
             >
               Đã hiểu
             </button>
-          </div>
-        </motion.div>
-      </div>
-    </AnimatePresence>
+          </OverlayFooter>
+    </AppModal>
   );
 };

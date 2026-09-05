@@ -130,9 +130,9 @@ export const FormationGrid: React.FC<FormationGridProps> = ({
                     >
                       {assignment ? (
                         <>
-                          <TroopIcon troopType={assignment.troopType} size={compact && !interactive ? "small" : "medium"} />
-                          <strong className="mt-0.5 max-w-full truncate text-[9px] font-black text-slate-800">{troop?.shortName}</strong>
-                          <span className="text-[8px] font-black text-slate-500">Lv{levels[assignment.troopType]}</span>
+                          <TroopIcon troopType={assignment.troopType} size={compact && !interactive ? "small" : "medium"} state={selected ? "selected" : side === "enemy" ? "enemy" : "ally"} />
+                          <strong className="mt-0.5 max-w-full truncate text-[9px] font-black text-slate-100">{troop?.shortName}</strong>
+                          <span className="text-[8px] font-black text-slate-400">Lv{levels[assignment.troopType]}</span>
                           {side === "enemy" && role && <em className="ct-v2-formation-role" aria-label={role.label} title={role.label}>{role.icon}</em>}
                         </>
                       ) : (
@@ -147,7 +147,7 @@ export const FormationGrid: React.FC<FormationGridProps> = ({
                         type="button"
                         onClick={(event) => { event.stopPropagation(); onInspect(assignment.troopType); }}
                         aria-label={`Xem chỉ số ${troop?.name}`}
-                        className={`absolute top-0.5 flex h-8 w-8 items-center justify-center rounded-full border border-white bg-white/90 text-slate-500 shadow-sm ${interactive && onRemove ? "left-0.5" : "right-0.5"}`}
+                        className={`absolute top-0.5 flex h-11 w-11 items-center justify-center rounded-full border border-slate-500 bg-slate-800/95 text-slate-100 shadow-sm ${interactive && onRemove ? "left-0.5" : "right-0.5"}`}
                       >
                         <Info className="h-3.5 w-3.5" aria-hidden="true" />
                       </button>
@@ -157,7 +157,7 @@ export const FormationGrid: React.FC<FormationGridProps> = ({
                         type="button"
                         onClick={(event) => { event.stopPropagation(); onRemove(slot.id); }}
                         aria-label={`Bỏ ${troop?.name} khỏi đội hình`}
-                        className="absolute -right-1 -top-1 flex h-8 w-8 items-center justify-center rounded-full border-2 border-white bg-rose-500 text-white shadow"
+                        className="absolute -right-1 -top-1 flex h-11 w-11 items-center justify-center rounded-full border-2 border-slate-950 bg-rose-600 text-white shadow"
                       >
                         <X className="h-3.5 w-3.5" aria-hidden="true" />
                       </button>
