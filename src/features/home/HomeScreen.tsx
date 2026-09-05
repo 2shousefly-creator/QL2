@@ -30,7 +30,15 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   onDetailSheetToggle,
   onNavigateToJourney,
 }) => {
-  const [selectedRankIndexForDetail, setSelectedRankIndexForDetail] = useState<number | null>(null);
+  const [homeModal, setHomeModal] = useState<
+    { type: "rank"; rankIndex: number } | { type: "medal"; medal: MedalDefinition } | null
+  >(null);
+  const selectedRankIndexForDetail = homeModal?.type === "rank" ? homeModal.rankIndex : null;
+  const inspectingMedal = homeModal?.type === "medal" ? homeModal.medal : null;
+  const setSelectedRankIndexForDetail = (rankIndex: number | null) =>
+    setHomeModal(rankIndex === null ? null : { type: "rank", rankIndex });
+  const setInspectingMedal = (medal: MedalDefinition | null) =>
+    setHomeModal(medal === null ? null : { type: "medal", medal });
   const [nowMs, setNowMs] = useState(Date.now());
   const currentRank = getPlayerRank(state);
   const xpDetails = getXpProgressDetails(state);
@@ -65,7 +73,6 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
     prevRankIndexRef.current = currentRank.rankIndex;
   }, [currentRank.rankIndex]);
 
-  const [inspectingMedal, setInspectingMedal] = useState<MedalDefinition | null>(null);
 
   const selectedMedalIds = state.medals?.selectedMedalIds || [];
   const leftMedalIds = selectedMedalIds.slice(0, 3);

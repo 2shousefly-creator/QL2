@@ -55,7 +55,7 @@ export const RewardSummaryModal: React.FC<RewardSummaryModalProps> = ({
       onClose={onClose}
       closeOnBackdrop
       labelledBy="reward-summary-title"
-      panelClassName="w-full max-w-sm bg-slate-900 border border-slate-700/80 rounded-3xl shadow-2xl p-5 text-center gap-3 animate-in fade-in duration-200"
+      panelClassName="app-overlay--spaced w-full max-w-sm bg-slate-900 border border-slate-700/80 rounded-3xl shadow-2xl text-center animate-in fade-in duration-200"
     >
         <OverlayHeader className="flex flex-col items-center text-center">
         {/* Background glow */}
@@ -68,7 +68,7 @@ export const RewardSummaryModal: React.FC<RewardSummaryModalProps> = ({
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition-colors"
+          className="app-overlay-button app-overlay-button--icon absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition-colors"
           aria-label="Đóng tổng kết phần thưởng"
         >
           <X className="w-4 h-4" />
@@ -94,7 +94,7 @@ export const RewardSummaryModal: React.FC<RewardSummaryModalProps> = ({
         </p>
         </OverlayHeader>
 
-        <OverlayBody className="w-full space-y-3 pr-1">
+        <OverlayBody className="w-full space-y-3">
 
         {/* Items list */}
         {data.itemsSummary && data.itemsSummary.length > 0 && (
@@ -250,7 +250,7 @@ export const RewardSummaryModal: React.FC<RewardSummaryModalProps> = ({
         <OverlayFooter>
           <button
             onClick={onClose}
-            className="w-full py-3 px-4 rounded-2xl font-black text-sm bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-slate-950 shadow-lg shadow-emerald-500/20 active:scale-98 transition-all flex items-center justify-center gap-2 cursor-pointer"
+            className="app-overlay-button w-full py-3 px-4 rounded-2xl font-black text-sm bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-slate-950 shadow-lg shadow-emerald-500/20 active:scale-98 transition-all flex items-center justify-center gap-2 cursor-pointer"
           >
             <Check className="w-4 h-4" />
             <span>Xác Nhận & Nhận Quà</span>

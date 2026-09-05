@@ -291,7 +291,7 @@ function BattleUnitTile({
     >
       <strong className="ct-v2-unit-name">{unit.isBoss ? `BOSS · ${unit.name}` : unit.name}</strong>
       <span className="ct-v2-unit-level">Lv{unit.level}</span>
-      <span className="ct-v2-unit-icon" aria-hidden="true">{unit.icon}</span>
+      <span className="ct-v2-unit-visual"><span className="ct-v2-unit-icon" aria-hidden="true">{unit.icon}</span></span>
       {isUltimateCasting && <span className="ct-v2-ultimate-name">{castingUltimateName}</span>}
       {silenced && <span className="ct-v2-silence-badge" role="img" aria-label="Câm Lặng, không thể dùng Ultimate trong các Lượt Hành Động còn lại." title="Không thể dùng Ultimate trong các Lượt Hành Động còn lại của hiệu ứng. Vẫn có thể đánh thường và Nội tại vẫn hoạt động.">…</span>}
       {unit.passiveId === "marksman_focus" && unit.focusStacks > 0 && <span className="ct-v2-focus-badge" title="Ngắm Chuẩn" aria-label={`Ngắm Chuẩn, ${unit.focusStacks} cộng dồn`}>🎯{unit.focusStacks}</span>}
@@ -563,7 +563,10 @@ export const ChienTuyenGame: React.FC<ChienTuyenGameProps> = ({
   const [selectedSlot, setSelectedSlot] = useState<FormationSlotId | null>(null);
   const [detailTroop, setDetailTroop] = useState<DeploymentTroopDetail | null>(null);
   const [bossThreatOpen, setBossThreatOpen] = useState(false);
-  const [inspectUnit, setInspectUnit] = useState<BattleUnit | null>(null);
+  const [battleDialog, setBattleDialog] = useState<{ type: "unit"; unit: BattleUnit } | { type: "exit" } | null>(null);
+  const inspectUnit = battleDialog?.type === "unit" ? battleDialog.unit : null;
+  const showExitConfirm = battleDialog?.type === "exit";
+  const setInspectUnit = (unit: BattleUnit | null) => setBattleDialog(unit ? { type: "unit", unit } : null);
   const [feedback, setFeedback] = useState(hasValidLastFormation ? "Đã dùng đội hình gần nhất. Bạn có thể chỉnh sửa trước khi xuất chiến." : "Chạm binh chủng rồi chọn ô, hoặc kéo thả để bố trí.");
   const [secondsLeft, setSecondsLeft] = useState(DEPLOYMENT_SECONDS);
   const [isStarting, setIsStarting] = useState(false);
@@ -580,7 +583,6 @@ export const ChienTuyenGame: React.FC<ChienTuyenGameProps> = ({
   const [timelineAdvancedUnitIds, setTimelineAdvancedUnitIds] = useState<string[]>([]);
   const [timelineSelectedUnitId, setTimelineSelectedUnitId] = useState<string | null>(null);
   const [timelinePresentationSpeed, setTimelinePresentationSpeed] = useState<BattlePresentationSpeed>(3);
-  const [showExitConfirm, setShowExitConfirm] = useState(false);
   const unitRefs = useRef<Map<string, HTMLButtonElement>>(new Map());
   const timersRef = useRef<number[]>([]);
   const pulseBatchSequenceRef = useRef(0);
@@ -648,6 +650,7 @@ export const ChienTuyenGame: React.FC<ChienTuyenGameProps> = ({
     battleRef.current = battle;
     setDisplayBattle(battle);
     setTimelinePresentationSpeed(getBattlePresentationSpeed(battle.round));
+    setDetailTroop(null);
     setPhase("battle");
   }, [formation, onStartBattle, profile.lastFormation, profile.readyCounts]);
   startRef.current = start;
@@ -1333,7 +1336,7 @@ export const ChienTuyenGame: React.FC<ChienTuyenGameProps> = ({
   return (
     <div className={`ct-v2-match-shell ct-v2-active-battle ${reducedMotion ? "is-reduced-motion" : ""}`} data-chien-tuyen-phase="battle">
       <header className="ct-v2-battle-header">
-        <button type="button" onClick={() => setShowExitConfirm(true)} className="ct-v2-icon-button" aria-label="Rời trận"><ArrowLeft className="h-5 w-5" /></button>
+        <button type="button" onClick={() => setBattleDialog({ type: "exit" })} className="ct-v2-icon-button" aria-label="Rời trận"><ArrowLeft className="h-5 w-5" /></button>
         <div className="ct-v2-battle-meta" aria-label={`Lượt Trận: ${displayBattle.round}; Tầng: ${floor.floorNumber}; Tốc độ trình diễn: ${displayedPresentationSpeed}×`}>
           <span className="is-round"><small className="is-full">Lượt Trận:</small><small className="is-short">Trận:</small><strong>{displayBattle.round}</strong></span>
           <span><small className="is-full">Tầng:</small><small className="is-short">T:</small><strong>{floor.floorNumber}</strong></span>
@@ -1440,7 +1443,7 @@ export const ChienTuyenGame: React.FC<ChienTuyenGameProps> = ({
       {inspectUnit && <UnitDetailOverlay unit={inspectUnit} round={displayBattle.round} timelinePosition={inspectTimelinePosition} onClose={() => setInspectUnit(null)} />}
       {showExitConfirm && (
         <AppModal
-          onClose={() => setShowExitConfirm(false)}
+          onClose={() => setBattleDialog(null)}
           layer="exclusive-dialog"
           layout="viewport-safe"
           labelledBy="ct-exit-battle-title"
@@ -1452,7 +1455,7 @@ export const ChienTuyenGame: React.FC<ChienTuyenGameProps> = ({
             </OverlayHeader>
             <OverlayBody><p className="text-center text-[11px] font-semibold leading-relaxed text-slate-300">Quân đã hy sinh vẫn bị mất. Trận không được tính chiến thắng.</p></OverlayBody>
             <OverlayFooter className="ct-v2-modal-footer grid gap-2">
-              <button type="button" onClick={() => setShowExitConfirm(false)} className="ct-v2-primary-button">TIẾP TỤC</button>
+              <button type="button" onClick={() => setBattleDialog(null)} className="ct-v2-primary-button">TIẾP TỤC</button>
               <button type="button" onClick={onAbandon} className="ct-v2-ghost-button !text-rose-300">RỜI TRẬN</button>
             </OverlayFooter>
         </AppModal>

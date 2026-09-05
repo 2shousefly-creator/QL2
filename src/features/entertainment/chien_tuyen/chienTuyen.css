@@ -340,10 +340,29 @@
 .ct-v2-card-stat-bars.is-compact i { height: 4px; }
 .ct-v2-card-stat-bars.is-compact span, .ct-v2-card-stat-bars.is-compact strong { font-size: 6px; }
 
-.ct-v2-formation-grid { display: grid; width: 100%; max-width: 340px; margin: 0 auto; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: repeat(2, minmax(0, 1fr)); gap: .42rem; }
+.ct-v2-formation-grid { display: grid; width: 100%; max-width: 340px; margin: 0 auto; min-width: 0; grid-template-columns: minmax(0, 1fr); gap: .38rem; }
 .ct-v2-formation-grid--compact { max-width: 290px; gap: .3rem; }
-.ct-v2-formation-slot { position: relative; min-width: 0; min-height: 78px; border: 3px solid #fff; border-radius: 18px; background: rgba(255,255,255,.5); box-shadow: 0 4px 0 rgba(34,84,61,.15); }
-.ct-v2-formation-grid--compact .ct-v2-formation-slot { min-height: 60px; border-radius: 15px; }
+
+/* Canonical formation geometry: controls have a 26px visual and 40px hit area. */
+.ct-v2-formation-slot { position: relative; min-width: 0; min-height: 140px; border: 3px solid rgba(148, 163, 184, .38); border-radius: 17px; background: rgba(15, 23, 42, .72); box-shadow: inset 0 0 0 1px rgba(255,255,255,.03); }
+.ct-v2-formation-grid--compact .ct-v2-formation-slot--enemy { min-height: 116px; }
+.ct-v2-formation-content { display: flex; width: 100%; height: 100%; min-width: 0; flex-direction: column; align-items: center; justify-content: center; gap: 3px; padding: 38px 4px 7px; text-align: center; border-radius: inherit; }
+.ct-v2-formation-content:disabled { cursor: default; }
+.ct-v2-formation-name { max-width: 100%; font-size: 11px; font-weight: 900; line-height: 1.25; color: var(--ct-text); overflow-wrap: anywhere; }
+.ct-v2-formation-level { font-size: 10px; font-weight: 800; line-height: 1.2; color: var(--ct-text-muted); }
+.ct-v2-formation-slot--player .ct-v2-formation-troop .ct-v2-troop-icon { width: 54px; height: 54px; font-size: 27px; }
+.ct-v2-formation-control { position: absolute; top: 0; display: grid; width: 40px; height: 40px; min-height: 40px; place-items: center; padding: 0; background: transparent; color: #f8fafc; isolation: isolate; }
+.ct-v2-formation-control::before { content: ""; position: absolute; z-index: -1; width: 26px; height: 26px; border: 1px solid #64748b; border-radius: 50%; background: #1e293b; }
+.ct-v2-formation-control--remove::before { border-color: #fda4af; background: #be123c; }
+.ct-v2-formation-control.is-left { left: -3px; }
+.ct-v2-formation-control.is-right { right: -3px; }
+.ct-v2-formation-control > svg { width: 14px; height: 14px; }
+.ct-v2-roster-tile { position: relative; display: flex; width: 92px; min-width: 92px; min-height: 110px; flex: 0 0 92px; flex-direction: column; align-items: center; justify-content: center; gap: 3px; border: 2px solid #dce7ec; border-radius: 15px; padding: 28px .4rem .4rem; scroll-snap-align: start; }
+.ct-v2-roster-tile strong { display: block; max-width: 100%; margin-top: 2px; font-size: 11px; line-height: 1.25; }
+.ct-v2-roster-tile > span { font-size: 10px; font-weight: 900; }
+.ct-v2-roster-tile .ct-v2-troop-icon { width: 40px; height: 40px; font-size: 22px; }
+.ct-v2-deployment-main { min-width: 0; min-height: 0; display: grid; grid-template-rows: minmax(272px, .8fr) minmax(362px, 1fr) 176px; gap: .5rem; overflow-y: auto; overflow-x: hidden; overscroll-behavior: contain; }
+
 .ct-v2-formation-slot--player { outline: 2px dashed rgba(33,163,102,.42); outline-offset: -5px; }
 .ct-v2-formation-slot--enemy { outline: 2px solid rgba(239,91,104,.2); outline-offset: -5px; background: rgba(255,241,241,.82); }
 .ct-v2-formation-slot--selected { border-color: #ffd04f; background: #fff8cf; box-shadow: 0 5px 0 #e0aa28, 0 0 0 4px rgba(255,208,79,.25); }
@@ -358,7 +377,7 @@
 .ct-v2-countdown strong { font-size: 16px; }
 .ct-v2-countdown span { font-size: 7px; font-weight: 900; text-transform: uppercase; }
 .ct-v2-countdown.is-urgent { border-color: rgba(251, 113, 133, .72); background: rgba(127, 29, 29, .48); color: #fecdd3; animation: ct-v2-urgent .7s ease-in-out infinite alternate; }
-.ct-v2-deployment-main { min-height: 0; display: grid; grid-template-rows: minmax(174px, 1fr) minmax(174px, 1fr) 84px; gap: .35rem; overflow: hidden; }
+
 .ct-v2-enemy-preview,
 .ct-v2-player-deployment,
 .ct-v2-roster { min-height: 0; overflow: hidden; border: 3px solid #fff; border-radius: 18px; background: rgba(255,255,255,.77); padding: .35rem; box-shadow: 0 4px 0 rgba(59,87,105,.12); }
@@ -372,9 +391,7 @@
 .ct-v2-roster { display: flex; align-items: stretch; gap: .35rem; overflow-x: auto; overflow-y: hidden; overscroll-behavior-inline: contain; scroll-snap-type: x proximity; scrollbar-width: thin; scrollbar-color: #9fd7bf transparent; -webkit-overflow-scrolling: touch; }
 .ct-v2-roster::-webkit-scrollbar { height: 4px; }
 .ct-v2-roster::-webkit-scrollbar-thumb { border-radius: 999px; background: #9fd7bf; }
-.ct-v2-roster-tile { position: relative; display: flex; width: 66px; min-width: 66px; min-height: 0; flex: 0 0 66px; flex-direction: column; align-items: center; justify-content: center; border: 2px solid #dce7ec; border-radius: 13px; background: #fff; padding: .18rem; color: #304c62; box-shadow: 0 3px 0 #d4dfe5; scroll-snap-align: start; }
-.ct-v2-roster-tile strong { display: block; max-width: 100%; overflow: hidden; margin-top: 2px; font-size: 7px; text-overflow: ellipsis; white-space: nowrap; }
-.ct-v2-roster-tile > span { font-size: 6px; font-weight: 900; color: #758997; }
+
 .ct-v2-roster-tile > i { position: absolute; top: 2px; right: 2px; display: flex; width: 16px; height: 16px; align-items: center; justify-content: center; border-radius: 50%; background: #eef3f6; color: #668093; font-style: normal; }
 .ct-v2-roster-tile.is-selected { border-color: #f2bf36; background: #fff8d8; box-shadow: 0 4px 0 #daa329, 0 0 0 3px rgba(244,194,50,.23); transform: translateY(-1px); }
 .ct-v2-roster-tile:disabled { filter: grayscale(.85); opacity: .35; }
@@ -411,24 +428,41 @@
 .ct-v2-timeline-token.is-reinserted { animation-duration: var(--ct-timeline-ms, 160ms); }
 .ct-v2-pressure { display: flex; min-height: 25px; align-items: center; justify-content: center; gap: .25rem; border: 2px solid #fff; border-radius: 12px; background: #fff0c7; color: #a35400; box-shadow: 0 3px 0 #e9b63e; font-size: 7px; font-weight: 950; }
 .ct-v2-pressure.is-hidden { min-height: 0; height: 0; overflow: hidden; border: 0; padding: 0; box-shadow: none; visibility: hidden; }
-.ct-v2-battle-main { display: grid; min-height: 0; grid-template-rows: minmax(0, 1fr) clamp(54px, 14dvh, 118px) minmax(0, 1fr); overflow: hidden; }
-.ct-v2-team-side { position: relative; z-index: 10; display: grid; min-height: 0; grid-template-rows: 24px minmax(0, 1fr); overflow: visible; }
-.ct-v2-team-side--player { grid-template-rows: minmax(0, 1fr) 24px; }
+
+/* Portrait cards reserve their full contents. Short screens scroll the arena,
+   while the timeline/header and deployment/battle footer stay outside it. */
+.ct-v2-battle-main { display: grid; min-width: 0; min-height: 0; grid-template-rows: minmax(min-content, 1fr) 44px minmax(min-content, 1fr); overflow-y: auto; overflow-x: hidden; overscroll-behavior: contain; }
+.ct-v2-battle-grid { display: grid; width: min(96%, 390px); min-height: 326px; height: 100%; margin: auto; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: repeat(2, minmax(min-content, 1fr)); gap: 10px 8px; perspective: 800px; }
+.ct-v2-battle-unit {
+  --ct-health-bar-height: 16px;
+  --ct-rage-bar-height: 12px;
+  position: relative; z-index: 20; display: grid; width: 100%; height: 100%; min-width: 0; min-height: 158px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-rows: auto minmax(44px, 1fr) auto var(--ct-rage-bar-height) var(--ct-health-bar-height) minmax(20px, auto);
+  align-items: center; gap: 3px 2px; border: 2px solid #fff; border-radius: 13px; padding: 4px;
+  color: var(--ct-text); background: var(--ct-panel); transform-origin: center; will-change: transform, filter;
+}
+.ct-v2-unit-name { grid-area: 1 / 1; min-width: 0; font-size: clamp(9px, 2.5vw, 11px); font-weight: 900; line-height: 1.2; text-align: left; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ct-v2-unit-level { grid-area: 1 / 2; font-size: 9px; font-weight: 900; line-height: 1.2; }
+.ct-v2-unit-visual { grid-area: 2 / 1 / auto / -1; display: grid; min-height: 44px; place-items: center; padding: 2px 0; }
+.ct-v2-unit-icon { display: grid; width: 40px; height: 40px; place-items: center; border: 1px solid rgba(148,163,184,.46); border-radius: 12px; background: radial-gradient(circle at 38% 28%, rgba(255,255,255,.14), rgba(15,23,42,.82)); font-size: clamp(26px, 7vw, 32px); line-height: 1; box-shadow: inset 0 0 0 2px rgba(2,6,23,.68), 0 4px 10px rgba(0,0,0,.32); }
+.ct-v2-unit-stats { grid-area: 3 / 1 / auto / -1; display: grid; min-width: 0; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px 3px; margin: 0; font-variant-numeric: tabular-nums; }
+.ct-v2-unit-stats i { display: flex; min-width: 0; align-items: center; gap: 2px; font-size: clamp(9px, 2.5vw, 11px); font-style: normal; font-weight: 900; line-height: 1.2; }
+.ct-v2-unit-stats b { flex: 0 0 auto; font-size: 1em; line-height: 1; }
+.ct-v2-unit-stats em { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-style: normal; }
+
+.ct-v2-team-side { position: relative; z-index: 10; display: grid; min-height: 350px; grid-template-rows: 24px minmax(min-content, 1fr); overflow: visible; }
+.ct-v2-team-side--player { grid-template-rows: minmax(min-content, 1fr) 24px; }
 .ct-v2-team-label { display: flex; align-items: center; justify-content: center; gap: .5rem; color: #973d48; font-size: 8px; font-weight: 950; }
 .ct-v2-team-side--player .ct-v2-team-label { color: #147249; }
 .ct-v2-team-label b,
 .ct-v2-team-label small { border-radius: 999px; background: rgba(255,255,255,.75); padding: .15rem .4rem; font-size: 7px; }
-.ct-v2-battle-grid { display: grid; width: min(82%, 344px); height: min(100%, 230px); min-height: 0; margin: auto; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: repeat(2, minmax(0, 1fr)); gap: clamp(.38rem, 2vw, .7rem); perspective: 800px; }
+
 .ct-v2-battle-slot { position: relative; z-index: 10; min-height: 0; overflow: visible; border: 2px dashed rgba(104,126,140,.22); border-radius: 14px; background: rgba(255,255,255,.36); }
-.ct-v2-battle-unit { position: relative; z-index: 20; display: grid; width: 100%; height: 100%; min-width: 0; min-height: 0; grid-template-columns: 1fr auto; grid-template-rows: minmax(18px, 1fr) auto auto auto auto; align-items: center; border: 2px solid #fff; border-radius: 13px; background: linear-gradient(150deg, #fff, #f1fbf6); padding: .18rem; color: #23445a; box-shadow: 0 3px 0 #85c7a2, 0 6px 10px rgba(43,92,65,.12); transform-origin: center; will-change: transform, filter; }
+
 .ct-v2-battle-unit.is-enemy { background: linear-gradient(150deg, #fff, #fff0f0); box-shadow: 0 4px 0 #e59ba2, 0 8px 13px rgba(130,48,55,.12); }
 .ct-v2-battle-unit.is-boss { border-color: #ffdf78; background: linear-gradient(145deg, #fff9d8, #ffd684); box-shadow: 0 5px 0 #d69624, 0 0 18px rgba(255,198,64,.4); }
-.ct-v2-unit-icon { grid-row: 1; grid-column: 1 / -1; align-self: center; font-size: clamp(16px, 5.2vw, 28px); line-height: 1; filter: drop-shadow(0 3px 1px rgba(20,38,50,.18)); }
-.ct-v2-battle-unit > strong { grid-column: 1; overflow: hidden; font-size: clamp(8px, 2.2vw, 10px); text-overflow: ellipsis; white-space: nowrap; }
-.ct-v2-unit-level { grid-column: 2; font-size: 7px; font-weight: 950; color: #647b8b; }
-.ct-v2-unit-stats { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 1px 4px; margin: 1px 0; }
-.ct-v2-unit-stats i { display: flex; min-width: 0; justify-content: space-between; color: #263f52; font-size: clamp(6.5px, 1.8vw, 8px); font-style: normal; font-weight: 950; line-height: 1.1; }
-.ct-v2-unit-stats b { margin-right: 2px; color: #8293a0; font-size: .88em; }
+
 .ct-v2-hp-track,
 .ct-v2-shield-track { grid-column: 1 / -1; display: block; height: 6px; overflow: hidden; border: 1px solid rgba(25,51,67,.18); border-radius: 999px; background: #d8e1e5; }
 .ct-v2-hp-track i { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #e94658, #ff7a75); transition: width .25s ease; }
@@ -567,28 +601,23 @@
   .ct-v2-deployment { gap: .22rem; padding: .25rem; }
   .ct-v2-match-header { min-height: 44px; }
   .ct-v2-match-header .ct-v2-icon-button { width: 44px; height: 44px; }
-  .ct-v2-deployment-main { grid-template-rows: minmax(140px, 1fr) minmax(140px, 1fr) 72px; gap: .22rem; }
+
   .ct-v2-enemy-preview,
   .ct-v2-player-deployment,
   .ct-v2-roster { padding: .22rem; border-width: 2px; }
-  .ct-v2-formation-grid--compact .ct-v2-formation-slot { min-height: 50px; }
-  .ct-v2-roster-tile .h-8 { width: 27px; height: 27px; }
-  .ct-v2-roster-tile { width: 60px; min-width: 60px; flex-basis: 60px; }
+
   .ct-v2-deployment-footer p { min-height: 42px; }
   .ct-v2-deployment-footer .ct-v2-primary-button { min-height: 44px; }
-  .ct-v2-unit-icon { font-size: clamp(18px, 6vw, 27px); }
-  .ct-v2-battle-unit { padding: .15rem; }
+
   .ct-v2-action-timeline { padding-bottom: 3px; }
   .ct-v2-timeline-token { height: 44px; }
-  .ct-v2-battle-main { grid-template-rows: minmax(0, 1fr) clamp(48px, 12dvh, 76px) minmax(0, 1fr); }
-  .ct-v2-battle-grid { width: min(78%, 320px); gap: .28rem .48rem; }
-  .ct-v2-unit-stats i { font-size: 6.5px; }
+
 }
 
 @media (orientation: landscape) and (max-height: 650px) {
   .ct-v2-deployment { grid-template-columns: minmax(0, 1fr) minmax(200px, 34vw); grid-template-rows: auto minmax(0, 1fr); }
   .ct-v2-match-header { grid-column: 1 / -1; }
-  .ct-v2-deployment-main { grid-column: 1; grid-row: 2; grid-template-columns: 1fr 1fr; grid-template-rows: minmax(0, 1fr) minmax(84px, .7fr); }
+  .ct-v2-deployment-main { grid-column: 1; grid-row: 2; grid-template-columns: 1fr 1fr; grid-template-rows: minmax(362px, 1fr) 176px; }
   .ct-v2-enemy-preview { grid-column: 1; grid-row: 1; }
   .ct-v2-player-deployment { grid-column: 2; grid-row: 1; }
   .ct-v2-roster { grid-column: 1 / -1; grid-row: 2; }
@@ -597,15 +626,14 @@
   .ct-v2-deployment-footer .ct-v2-primary-button { width: 100%; }
   .ct-v2-active-battle { grid-template-columns: 1fr; }
   .ct-v2-battle-main { grid-template-columns: minmax(0, 1fr) 24px minmax(0, 1fr); grid-template-rows: minmax(0, 1fr); }
-  .ct-v2-team-side { grid-template-rows: 22px minmax(0, 1fr); }
-  .ct-v2-team-side--player { grid-template-rows: 22px minmax(0, 1fr); }
+  .ct-v2-team-side { grid-template-rows: 22px minmax(min-content, 1fr); }
+  .ct-v2-team-side--player { grid-template-rows: 22px minmax(min-content, 1fr); }
   .ct-v2-team-side--player .ct-v2-team-label { grid-row: 1; }
   .ct-v2-team-side--player .ct-v2-battle-grid { grid-row: 2; }
   .ct-v2-versus-line { grid-column: 2; }
   .ct-v2-versus-line::before,
   .ct-v2-versus-line::after { width: 2px; height: 28%; }
-  .ct-v2-battle-grid { height: 100%; }
-  .ct-v2-unit-icon { font-size: clamp(18px, 4vw, 30px); }
+
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -629,9 +657,8 @@
 @keyframes ct-v2-reduced-attack { 0%,100% { transform: scale(1); } 50% { transform: scale(1.08); filter: brightness(1.25); } }
 @keyframes ct-v2-reduced-target { 0%,100% { filter: brightness(1); } 50% { filter: brightness(1.6); } }
 
-
 /* Chiến Tuyến 4-unit / Pioneer update */
-.ct-v2-formation-grid { display: flex; flex-direction: column; gap: .38rem; min-width: 0; }
+
 .ct-v2-formation-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: .38rem; min-width: 0; }
 .ct-v2-formation-row-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .35rem; min-width: 0; }
 .ct-v2-row-bonus { width: 3.45rem; min-width: 3.45rem; display: grid; place-items: center; align-content: center; padding: .3rem .2rem; border-radius: .75rem; background: rgba(255,255,255,.88); box-shadow: 0 2px 8px rgba(15,23,42,.1); font-size: .68rem; line-height: 1; }
@@ -666,7 +693,6 @@
 .ct-v2-corrosion-stack { position:absolute; left:.2rem; top:.2rem; z-index:4; border-radius:999px; padding:.12rem .28rem; background:#7c2d12; color:#fff; font-size:.46rem; font-weight:1000; }
 .ct-v2-status-chip { border-radius:999px; padding:.16rem .35rem; background:rgba(124,45,18,.52); border:1px solid rgba(251,146,60,.5); color:#ffedd5; font-weight:900; }
 @media (max-width: 380px) { .ct-v2-row-bonus { width:2.8rem; min-width:2.8rem; } .ct-v2-formation-row { gap:.22rem; } .ct-v2-formation-row-grid { gap:.22rem; } }
-
 
 /* Deployment / result / training UX follow-up */
 .ct-v2-result-actions {
@@ -703,10 +729,7 @@
 .ct-v2-deployment {
   padding-bottom: max(.7rem, env(safe-area-inset-bottom));
 }
-.ct-v2-deployment-main {
-  grid-template-rows: minmax(136px, .78fr) minmax(188px, 1.12fr) 108px;
-  gap: .3rem;
-}
+
 .ct-v2-enemy-preview,
 .ct-v2-player-deployment,
 .ct-v2-roster {
@@ -714,7 +737,7 @@
 }
 .ct-v2-player-deployment {
   display: grid;
-  grid-template-rows: 22px minmax(0, 1fr);
+  grid-template-rows: 22px minmax(min-content, 1fr);
 }
 .ct-v2-player-deployment .ct-v2-formation-grid--compact {
   width: 100%;
@@ -725,34 +748,21 @@
 .ct-v2-player-deployment .ct-v2-formation-row-grid {
   gap: .45rem;
 }
-.ct-v2-player-deployment .ct-v2-formation-grid--compact .ct-v2-formation-slot {
-  min-height: 76px;
-  border-radius: 17px;
-}
+
 .ct-v2-player-deployment .ct-v2-row-bonus {
-  width: 3.1rem;
-  min-width: 3.1rem;
+  width: 2rem;
+  min-width: 2rem;
 }
 .ct-v2-enemy-preview .ct-v2-formation-grid--compact {
   max-width: 320px;
 }
-.ct-v2-enemy-preview .ct-v2-formation-grid--compact .ct-v2-formation-slot {
-  min-height: 54px;
-}
+
 .ct-v2-roster {
   gap: .45rem;
   margin-bottom: .1rem;
   padding: .45rem;
 }
-.ct-v2-roster-tile {
-  width: 78px;
-  min-width: 78px;
-  flex-basis: 78px;
-  border-radius: 15px;
-  padding: .28rem;
-}
-.ct-v2-roster-tile strong { font-size: 8px; }
-.ct-v2-roster-tile > span { font-size: 6.5px; }
+
 .ct-v2-deployment-footer {
   grid-template-columns: minmax(0, 1fr) minmax(138px, .48fr);
   padding-bottom: .25rem;
@@ -784,8 +794,8 @@
 
 @media (max-width: 380px) {
   .ct-v2-player-deployment .ct-v2-row-bonus {
-    width: 2.7rem;
-    min-width: 2.7rem;
+    width: 2rem;
+    min-width: 2rem;
   }
   .ct-v2-player-deployment .ct-v2-formation-row,
   .ct-v2-player-deployment .ct-v2-formation-row-grid {
@@ -794,18 +804,7 @@
 }
 
 @media (max-height: 700px) and (orientation: portrait) {
-  .ct-v2-deployment-main {
-    grid-template-rows: minmax(122px, .72fr) minmax(158px, 1fr) 94px;
-  }
-  .ct-v2-player-deployment .ct-v2-formation-grid--compact .ct-v2-formation-slot {
-    min-height: 60px;
-  }
-  .ct-v2-roster-tile {
-    width: 70px;
-    min-width: 70px;
-    flex-basis: 70px;
-    padding: .18rem;
-  }
+
   .ct-v2-deployment-footer {
     padding-bottom: .12rem;
   }
@@ -817,21 +816,13 @@
 @media (orientation: landscape) and (max-height: 650px) {
   .ct-v2-deployment-main {
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: minmax(0, 1fr) minmax(96px, .72fr);
+    grid-template-rows: minmax(362px, 1fr) 176px;
   }
-  .ct-v2-player-deployment .ct-v2-formation-grid--compact .ct-v2-formation-slot {
-    min-height: 56px;
-  }
-  .ct-v2-roster-tile {
-    width: 72px;
-    min-width: 72px;
-    flex-basis: 72px;
-  }
+
   .ct-v2-deployment-footer {
     padding-bottom: .1rem;
   }
 }
-
 
 /* Phase 6: compact per-troop training controls and Air Force stack badge. */
 .ct-v2-train-button--phase6 { flex-direction: column; align-items: stretch; gap: .35rem; padding: .55rem .6rem; }
@@ -1067,12 +1058,6 @@
 .ct-v2-job-row span,
 .ct-v2-training-job span { color: var(--ct-text-muted); }
 
-.ct-v2-formation-slot {
-  border-color: rgba(148, 163, 184, .38);
-  background: rgba(15, 23, 42, .72);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .03);
-}
-
 .ct-v2-formation-slot--player { outline-color: rgba(34, 197, 94, .55); }
 .ct-v2-formation-slot--enemy { outline-color: rgba(251, 113, 133, .5); background: rgba(127, 29, 29, .22); }
 .ct-v2-formation-slot--selected { border-color: var(--ct-accent-text); background: var(--ct-accent-soft); box-shadow: 0 0 0 3px var(--ct-border), 0 0 18px var(--ct-glow); }
@@ -1105,7 +1090,6 @@
 }
 
 .ct-v2-roster-tile {
-  min-height: 64px;
   border-color: rgba(148, 163, 184, .34);
   background: var(--ct-panel-muted);
   color: var(--ct-text);
@@ -1199,7 +1183,6 @@
 .ct-v2-unit-stats b { color: var(--ct-text-subtle); }
 .ct-v2-unit-stats i { color: var(--ct-text-muted); }
 
-.ct-v2-unit-icon,
 .ct-v2-detail-unit-icon {
   border: 1px solid rgba(148, 163, 184, .44);
   border-radius: 12px;

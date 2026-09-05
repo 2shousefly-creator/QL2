@@ -39,6 +39,7 @@ import {
 import { ChienTuyenGame } from "./ChienTuyenGame";
 import {
   AppModal,
+  useOverlayBusy,
   ExclusiveFullscreenOverlay,
   OverlayBody,
   OverlayFooter,
@@ -83,6 +84,7 @@ function ProgressionPopup({ notice, onClose }: { notice: ProgressionNotice; onCl
 
   return (
     <AppModal
+      notification
       onClose={onClose}
       closeOnBackdrop
       layer="exclusive-dialog"
@@ -161,6 +163,7 @@ export const ChienTuyenScreen: React.FC<ChienTuyenScreenProps> = ({ gameState, o
     [gameState.chienTuyen]
   );
   const gold = getSharedGold(gameState);
+  const campaignDialogBusy = useOverlayBusy(false);
   const [phase, setPhase] = useState<ScreenPhase>("campaign");
   const [section, setSection] = useState<CampaignSection>("tower");
   const [activeFloor, setActiveFloor] = useState<TowerFloorDefinition | null>(null);
@@ -610,7 +613,7 @@ export const ChienTuyenScreen: React.FC<ChienTuyenScreenProps> = ({ gameState, o
       <CampaignBottomNav section={section} onChange={(next) => { soundManager.playClick(); setSection(next); }} />
       <button type="button" onClick={() => setShowTutorial(true)} className="ct-v2-help-button" aria-label="Mở hướng dẫn"><BookOpen className="h-4 w-4" /></button>
       {notice && <OverlayPortal><div className="app-overlay-toast ct-v2-toast" data-overlay-layer="exclusive-dialog" role="status"><Shield className="h-4 w-4" />{notice}</div></OverlayPortal>}
-      {progressionQueue[0] && <ProgressionPopup notice={progressionQueue[0]} onClose={() => setProgressionQueue((current) => current.slice(1))} />}
+      {!campaignDialogBusy && !showTutorial && !quickFinishConfirmation && progressionQueue[0] && <ProgressionPopup notice={progressionQueue[0]} onClose={() => setProgressionQueue((current) => current.slice(1))} />}
       {quickFinishConfirmation && (
         <QuickFinishConfirmModal
           confirmation={quickFinishConfirmation}

@@ -1,19 +1,3 @@
-.ct-v2-battle-unit {
-  grid-template-rows: minmax(18px, 1fr) auto auto auto auto auto;
-}
-
-.ct-v2-hp-value {
-  grid-column: 1 / -1;
-  display: block;
-  margin-bottom: -1px;
-  color: #b42337;
-  font-size: clamp(6.5px, 1.8vw, 8.5px);
-  font-weight: 1000;
-  line-height: 1;
-  text-align: center;
-  white-space: nowrap;
-}
-
 .ct-v2-battle-unit.is-attacking {
   animation-name: ct-v2-dash-stable;
 }
@@ -63,151 +47,6 @@
   }
 }
 
-/* Battle card readability update */
-.ct-v2-battle-unit { grid-template-rows: auto auto minmax(20px, .8fr) auto auto auto auto; }
-.ct-v2-unit-name { grid-column:1 / -1; max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; text-align:center; font-size:clamp(6.5px, 1.8vw, 9px); }
-.ct-v2-unit-icon { align-self:start; justify-self:center; }
-.ct-v2-unit-stats { align-self:center; row-gap: .24rem !important; font-size: 1.3em; text-align:left; }
-.ct-v2-unit-stats i { justify-content:flex-start; gap:.2rem; }
-.ct-v2-hp-value { margin: .18rem 0 .22rem; font-size: clamp(8px, 2.1vw, 11px); line-height:1.1; }
-.ct-v2-hp-track { height:12px !important; min-height:12px; }
-.ct-v2-shield-track { margin-top:2px; }
-.ct-v2-effect-pop { animation-duration: 1s !important; }
-.ct-v2-stack { max-width:82%; white-space:nowrap; }
-
-
-/* Follow-up battle card layout */
-.ct-v2-battle-unit {
-  grid-template-columns: minmax(0, 1fr) auto;
-  grid-template-rows: auto minmax(26px, .9fr) auto auto 12px 5px;
-  align-content: stretch;
-  row-gap: 2px;
-  padding: .22rem .2rem .24rem;
-}
-
-.ct-v2-battle-unit > .ct-v2-unit-name {
-  grid-row: 1;
-  grid-column: 1;
-  align-self: start;
-  min-width: 0;
-  overflow: hidden;
-  color: #23445a;
-  font-size: clamp(8px, 2.25vw, 10.5px);
-  font-weight: 1000;
-  line-height: 1.05;
-  text-align: left;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.ct-v2-battle-unit > .ct-v2-unit-level {
-  grid-row: 1;
-  grid-column: 2;
-  align-self: start;
-  margin-left: 3px;
-  font-size: clamp(6.5px, 1.8vw, 8.5px);
-  line-height: 1.05;
-}
-
-.ct-v2-battle-unit > .ct-v2-unit-icon {
-  grid-row: 2;
-  grid-column: 1 / -1;
-  align-self: start;
-  justify-self: center;
-  margin-top: 2px;
-  font-size: clamp(20px, 6vw, 32px);
-  line-height: 1;
-}
-
-.ct-v2-battle-unit > .ct-v2-unit-stats {
-  grid-row: 3;
-  grid-column: 1 / -1;
-  align-self: center;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  row-gap: .24rem;
-  column-gap: .45rem;
-  margin: 0;
-  text-align: left;
-}
-
-.ct-v2-battle-unit > .ct-v2-unit-stats i {
-  display: flex;
-  min-width: 0;
-  align-items: center;
-  justify-content: flex-start;
-  gap: .1rem;
-  font-size: clamp(8.5px, 2.25vw, 10.5px);
-  line-height: 1.2;
-}
-
-.ct-v2-battle-unit > .ct-v2-unit-stats b {
-  flex: 0 0 auto;
-  min-width: 1.15em;
-  margin: 0;
-  font-size: 1em;
-  line-height: 1;
-  text-align: center;
-}
-
-.ct-v2-battle-unit > .ct-v2-unit-stats em {
-  min-width: 0;
-  overflow: hidden;
-  font-style: normal;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.ct-v2-battle-unit > .ct-v2-hp-value {
-  grid-row: 4;
-  grid-column: 1 / -1;
-  display: block;
-  margin: .22rem 0 .16rem;
-  color: #b42337;
-  font-size: clamp(9px, 2.45vw, 12px);
-  font-weight: 1000;
-  line-height: 1.1;
-  text-align: center;
-  white-space: nowrap;
-}
-
-.ct-v2-battle-unit > .ct-v2-hp-track {
-  grid-row: 5;
-  grid-column: 1 / -1;
-  height: 12px !important;
-  min-height: 12px;
-  margin: 0;
-}
-
-.ct-v2-battle-unit > .ct-v2-shield-track {
-  grid-row: 6;
-  grid-column: 1 / -1;
-  height: 5px;
-  min-height: 5px;
-  margin-top: 1px;
-}
-
-.ct-v2-battle-unit > .ct-v2-stack {
-  top: -17px;
-  left: 2px;
-  z-index: 85;
-  max-width: 72%;
-  padding: 2px 5px;
-  font-size: clamp(5px, 1.45vw, 6.5px);
-  white-space: nowrap;
-}
-
-.ct-v2-battle-unit > .ct-v2-corrosion-stack {
-  top: -17px;
-  right: 2px;
-  left: auto;
-  z-index: 86;
-  max-width: 72%;
-  padding: 2px 5px;
-  font-size: clamp(5px, 1.45vw, 6.5px);
-  white-space: nowrap;
-}
-
 .ct-v2-effect-pop {
   animation-duration: 1s !important;
 }
@@ -223,27 +62,7 @@
 .ct-v2-effect-pop.is-block { background: #7c2d12; box-shadow: 0 0 0 2px #fff7ed, 0 0 18px rgba(251,146,60,.9); }
 .ct-v2-effect-pop.is-dispel { background: #be123c; box-shadow: 0 0 0 2px #ffe4e6, 0 0 18px rgba(244,63,94,.82); }
 
-@media (max-width: 360px), (max-height: 650px) {
-  .ct-v2-battle-unit {
-    grid-template-rows: auto minmax(22px, .75fr) auto auto 10px 4px;
-    row-gap: 1px;
-    padding: .16rem;
-  }
-  .ct-v2-battle-unit > .ct-v2-unit-name { font-size: clamp(7px, 2vw, 8.5px); }
-  .ct-v2-battle-unit > .ct-v2-unit-icon { font-size: clamp(18px, 5vw, 26px); }
-  .ct-v2-battle-unit > .ct-v2-unit-stats { row-gap: .16rem; column-gap: .25rem; }
-  .ct-v2-battle-unit > .ct-v2-unit-stats i { font-size: clamp(7.2px, 2vw, 9px); }
-  .ct-v2-battle-unit > .ct-v2-hp-value { font-size: clamp(8px, 2.15vw, 10px); margin: .12rem 0; }
-  .ct-v2-battle-unit > .ct-v2-hp-track { height: 10px !important; min-height: 10px; }
-}
-
-
 /* Ultimate Phase 1: Rage + unified HP/Shield HUD */
-.ct-v2-battle-unit {
-  --ct-health-bar-height: 15.6px;
-  --ct-rage-bar-height: calc(var(--ct-health-bar-height) * .6);
-  grid-template-rows: auto minmax(26px, .9fr) auto var(--ct-rage-bar-height) var(--ct-health-bar-height);
-}
 
 .ct-v2-battle-unit > .ct-v2-rage-track,
 .ct-v2-battle-unit > .ct-v2-health-track {
@@ -286,7 +105,7 @@
   text-shadow: 0 1px 2px rgba(0, 0, 0, .75);
   pointer-events: none;
 }
-.ct-v2-rage-track > strong { font-size: clamp(5px, 1.45vw, 7px); }
+.ct-v2-rage-track > strong { font-size: 8px; }
 .ct-v2-rage-track.is-ready {
   border-color: #bfdbfe;
   box-shadow: 0 0 0 1px rgba(96, 165, 250, .35), 0 0 8px rgba(59, 130, 246, .5);
@@ -321,7 +140,7 @@
   background: repeating-linear-gradient(135deg, rgba(255,255,255,.34) 0 3px, rgba(250,204,21,.92) 3px 7px);
   border-left: 1px solid rgba(255,255,255,.75);
 }
-.ct-v2-health-track > strong { font-size: clamp(7px, 2vw, 9px); }
+.ct-v2-health-track > strong { font-size: 10px; }
 
 .ct-v2-effect-pop.is-ultimate {
   background: linear-gradient(135deg, #1d4ed8, #7c3aed);
@@ -337,16 +156,6 @@
   72% { filter: brightness(1.12); box-shadow: 0 3px 0 #85c7a2, 0 0 0 2px rgba(96,165,250,.28), 0 0 13px rgba(99,102,241,.45); }
   100% { filter: brightness(1); }
 }
-
-@media (max-width: 360px), (max-height: 650px) {
-  .ct-v2-battle-unit {
-    --ct-health-bar-height: 13px;
-    grid-template-rows: auto minmax(22px, .75fr) auto var(--ct-rage-bar-height) var(--ct-health-bar-height);
-  }
-  .ct-v2-rage-track > strong { font-size: clamp(4.8px, 1.35vw, 6px); }
-  .ct-v2-health-track > strong { font-size: clamp(6px, 1.8vw, 8px); }
-}
-
 
 /* Ultimate Phase 2: post-return stationary cast + per-skill VFX */
 .ct-v2-battle-unit.is-ultimate-casting:not(.is-flight-proxy) {
@@ -498,7 +307,6 @@
   .ct-v2-ultimate-projectile, .ct-v2-ultimate-slash, .ct-v2-ultimate-impact, .ct-v2-ultimate-dragon { animation-duration: 90ms !important; }
 }
 
-
 /* Fixed wall-clock Ultimate prep glow cadence. */
 .ct-v2-battle-unit.has-ultimate-vfx { animation-duration: .5s; }
 
@@ -612,7 +420,6 @@
   72% { opacity: .95; transform: translateY(-14px) scale(1); }
   100% { opacity: 0; transform: translateY(-28px) scale(.88); }
 }
-
 
 /* Ultimate Phase 4: Infantry death refusal + Air Force guided missile */
 .ct-v2-death-refusal-indicator {
@@ -774,23 +581,11 @@
 .ct-v2-battle-unit > .ct-v2-unit-stats i { color: var(--ct-text-muted); }
 .ct-v2-battle-unit > .ct-v2-unit-stats b { color: var(--ct-text-subtle); }
 
-.ct-v2-battle-unit > .ct-v2-unit-icon {
-  display: grid;
-  min-width: 40px;
-  min-height: 40px;
-  place-items: center;
-  border: 1px solid rgba(148, 163, 184, .46);
-  border-radius: 12px;
-  background: radial-gradient(circle at 38% 28%, rgba(255, 255, 255, .14), rgba(15, 23, 42, .82));
-  padding: 4px;
-  box-shadow: inset 0 0 0 2px rgba(2, 6, 23, .68), 0 4px 10px rgba(0, 0, 0, .32);
-}
-
-.ct-v2-battle-unit.is-player > .ct-v2-unit-icon { border-style: solid; border-color: rgba(34, 197, 94, .78); }
-.ct-v2-battle-unit.is-enemy > .ct-v2-unit-icon { border-style: dashed; border-color: rgba(251, 113, 133, .82); }
-.ct-v2-battle-unit.is-targeted > .ct-v2-unit-icon { outline: 3px double var(--ct-warning); outline-offset: 2px; }
-.ct-v2-battle-unit.is-dead > .ct-v2-unit-icon { filter: grayscale(1); opacity: .52; }
-.ct-v2-battle-unit.is-timeline-highlighted > .ct-v2-unit-icon { box-shadow: 0 0 0 3px #38bdf8, 0 0 16px rgba(56, 189, 248, .72); }
+.ct-v2-battle-unit.is-player .ct-v2-unit-icon { border-style: solid; border-color: rgba(34, 197, 94, .78); }
+.ct-v2-battle-unit.is-enemy .ct-v2-unit-icon { border-style: dashed; border-color: rgba(251, 113, 133, .82); }
+.ct-v2-battle-unit.is-targeted .ct-v2-unit-icon { outline: 3px double var(--ct-warning); outline-offset: 2px; }
+.ct-v2-battle-unit.is-dead .ct-v2-unit-icon { filter: grayscale(1); opacity: .52; }
+.ct-v2-battle-unit.is-timeline-highlighted .ct-v2-unit-icon { box-shadow: 0 0 0 3px #38bdf8, 0 0 16px rgba(56, 189, 248, .72); }
 
 .ct-v2-battle-unit > .ct-v2-rage-track { background: rgba(49, 46, 129, .72); }
 .ct-v2-rage-track > i { background: linear-gradient(90deg, #4f46e5, var(--ct-rage)); }

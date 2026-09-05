@@ -35,9 +35,9 @@ export const ApplyFertilizerModal: React.FC<ApplyFertilizerModalProps> = ({
       onClose={onClose}
       closeOnBackdrop
       labelledBy="apply-fertilizer-title"
-      panelClassName="w-full max-w-md rounded-3xl border border-slate-700 bg-slate-900 shadow-2xl"
+      panelClassName="app-overlay--spaced w-full max-w-md rounded-3xl border border-slate-700 bg-slate-900 shadow-2xl"
     >
-        <OverlayHeader className="flex items-center justify-between gap-2 border-b border-slate-800 p-4">
+        <OverlayHeader className="flex items-center justify-between gap-2 border-b border-slate-800">
           <div className="flex items-center gap-2">
             <Sparkles className="h-5 w-5 text-amber-400" />
             <div>
@@ -45,19 +45,19 @@ export const ApplyFertilizerModal: React.FC<ApplyFertilizerModalProps> = ({
               <p className="text-xs text-slate-400">Chọn 1 loại phân đang sở hữu</p>
             </div>
           </div>
-          <button onClick={onClose} className="rounded-full bg-slate-800 p-2 text-slate-400" aria-label="Đóng bón phân">
+          <button onClick={onClose} className="app-overlay-button app-overlay-button--icon rounded-full bg-slate-800 p-2 text-slate-400" aria-label="Đóng bón phân">
             <X className="h-4 w-4" />
           </button>
         </OverlayHeader>
 
-        <OverlayBody className="space-y-2 p-4">
+        <OverlayBody className="space-y-2">
           {ownedFertilizers.length === 0 ? (
             <div className="space-y-3 py-8 text-center">
               <p className="text-sm font-bold text-slate-300">Kho chưa có phân bón</p>
               {onOpenStore && (
                 <button
                   onClick={onOpenStore}
-                  className="mx-auto flex items-center gap-2 rounded-xl bg-amber-500 px-4 py-2 text-xs font-black text-slate-950"
+                  className="app-overlay-button mx-auto flex items-center gap-2 rounded-xl bg-amber-500 px-4 py-2 text-xs font-black text-slate-950"
                 >
                   <Store className="h-4 w-4" /> Đến Cửa Hàng
                 </button>
@@ -70,7 +70,7 @@ export const ApplyFertilizerModal: React.FC<ApplyFertilizerModalProps> = ({
                 <button
                   key={fertilizer.id}
                   onClick={() => setSelectedId(fertilizer.id)}
-                  className={`flex w-full items-center justify-between gap-3 rounded-2xl border p-3 text-left ${
+                  className={`app-overlay-button flex w-full items-center justify-between gap-3 rounded-2xl border p-3 text-left ${
                     selected
                       ? "border-amber-400 bg-amber-500/10"
                       : "border-slate-700 bg-slate-800/70"
@@ -97,11 +97,11 @@ export const ApplyFertilizerModal: React.FC<ApplyFertilizerModalProps> = ({
           )}
         </OverlayBody>
 
-        <OverlayFooter className="border-t border-slate-800 p-4">
+        <OverlayFooter className="border-t border-slate-800">
           <button
             disabled={!selectedId}
             onClick={() => selectedId && onConfirm(selectedId)}
-            className="w-full rounded-2xl bg-amber-500 py-3 text-xs font-black text-slate-950 disabled:cursor-not-allowed disabled:opacity-40"
+            className="app-overlay-button w-full rounded-2xl bg-amber-500 py-3 text-xs font-black text-slate-950 disabled:cursor-not-allowed disabled:opacity-40"
           >
             Xác Nhận Bón Phân
           </button>

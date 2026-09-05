@@ -186,10 +186,10 @@ export const KhoModal: React.FC<KhoModalProps> = ({
         onClose={onClose}
         closeOnBackdrop
         labelledBy="farm-inventory-title"
-        panelClassName="w-full max-w-lg bg-slate-900 border border-slate-800/70 rounded-3xl shadow-2xl animate-in fade-in duration-200"
+        panelClassName="app-overlay--spaced w-full max-w-lg bg-slate-900 border border-slate-800/70 rounded-3xl shadow-2xl animate-in fade-in duration-200"
       >
           {/* Modal Header */}
-        <OverlayHeader className="p-4 bg-slate-850/90 border-b border-slate-800/70 flex items-center justify-between gap-2">
+        <OverlayHeader className="bg-slate-850/90 border-b border-slate-800/70 flex items-center justify-between gap-2">
           <div className="flex items-center gap-2.5">
             <div className="w-10 h-10 rounded-2xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-amber-400">
               <Package className="w-5 h-5" />
@@ -206,7 +206,7 @@ export const KhoModal: React.FC<KhoModalProps> = ({
 
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-full bg-slate-800/80 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition-colors"
+            className="app-overlay-button app-overlay-button--icon w-8 h-8 rounded-full bg-slate-800/80 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition-colors"
             aria-label="Đóng kho tăng gia"
           >
             <X className="w-4 h-4" />
@@ -217,7 +217,7 @@ export const KhoModal: React.FC<KhoModalProps> = ({
         <div className="grid grid-cols-5 gap-1 p-2 bg-slate-900/95 border-b border-slate-800/60 text-[10px] sm:text-xs">
           <button
             onClick={() => setActiveTab("crop")}
-            className={`py-2 px-1 rounded-xl font-bold transition-all flex flex-col sm:flex-row items-center justify-center gap-1 ${
+            className={`app-overlay-button py-2 px-1 rounded-xl font-bold transition-all flex flex-col sm:flex-row items-center justify-center gap-1 ${
               activeTab === "crop"
                 ? "bg-amber-500 text-slate-950 shadow-md font-extrabold"
                 : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/60"
@@ -229,7 +229,7 @@ export const KhoModal: React.FC<KhoModalProps> = ({
 
           <button
             onClick={() => setActiveTab("fertilizer")}
-            className={`py-2 px-1 rounded-xl font-bold transition-all flex flex-col sm:flex-row items-center justify-center gap-1 ${
+            className={`app-overlay-button py-2 px-1 rounded-xl font-bold transition-all flex flex-col sm:flex-row items-center justify-center gap-1 ${
               activeTab === "fertilizer"
                 ? "bg-amber-500 text-slate-950 shadow-md font-extrabold"
                 : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/60"
@@ -241,7 +241,7 @@ export const KhoModal: React.FC<KhoModalProps> = ({
 
           <button
             onClick={() => setActiveTab("animal")}
-            className={`py-2 px-1 rounded-xl font-bold transition-all flex flex-col sm:flex-row items-center justify-center gap-1 ${
+            className={`app-overlay-button py-2 px-1 rounded-xl font-bold transition-all flex flex-col sm:flex-row items-center justify-center gap-1 ${
               activeTab === "animal"
                 ? "bg-amber-500 text-slate-950 shadow-md font-extrabold"
                 : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/60"
@@ -253,7 +253,7 @@ export const KhoModal: React.FC<KhoModalProps> = ({
 
           <button
             onClick={() => setActiveTab("feed")}
-            className={`py-2 px-1 rounded-xl font-bold transition-all flex flex-col sm:flex-row items-center justify-center gap-1 ${
+            className={`app-overlay-button py-2 px-1 rounded-xl font-bold transition-all flex flex-col sm:flex-row items-center justify-center gap-1 ${
               activeTab === "feed"
                 ? "bg-amber-500 text-slate-950 shadow-md font-extrabold"
                 : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/60"
@@ -265,7 +265,7 @@ export const KhoModal: React.FC<KhoModalProps> = ({
 
           <button
             onClick={() => setActiveTab("egg")}
-            className={`py-2 px-1 rounded-xl font-bold transition-all flex flex-col sm:flex-row items-center justify-center gap-1 relative ${
+            className={`app-overlay-button py-2 px-1 rounded-xl font-bold transition-all flex flex-col sm:flex-row items-center justify-center gap-1 relative ${
               activeTab === "egg"
                 ? "bg-amber-500 text-slate-950 shadow-md font-extrabold"
                 : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/60"
@@ -288,7 +288,7 @@ export const KhoModal: React.FC<KhoModalProps> = ({
         </div>
 
         {/* Tab Content Body */}
-        <OverlayBody className="p-3.5 space-y-2.5">
+        <OverlayBody className="space-y-2.5">
           {/* TAB 1: CÂY TRỒNG (Seeds) */}
           {activeTab === "crop" && (
             <>
@@ -308,10 +308,9 @@ export const KhoModal: React.FC<KhoModalProps> = ({
                   {onOpenStore && (
                     <button
                       onClick={() => {
-                        onClose();
                         onOpenStore("crop");
                       }}
-                      className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-xs shadow-md transition-all active:scale-95 flex items-center gap-1.5 cursor-pointer"
+                      className="app-overlay-button px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-xs shadow-md transition-all active:scale-95 flex items-center gap-1.5 cursor-pointer"
                     >
                       <ShoppingBag className="w-4 h-4" />
                       <span>Đến Cửa Hàng Hạt Giống</span>
@@ -373,7 +372,7 @@ export const KhoModal: React.FC<KhoModalProps> = ({
                                 src={getCropAsset(crop.id, "seed")}
                                 alt=""
                                 aria-hidden="true"
-                                className="h-8 w-8 object-contain"
+                                className="app-overlay-button h-8 w-8 object-contain"
                               />
                             ),
                             ownedCount: count,
@@ -410,10 +409,9 @@ export const KhoModal: React.FC<KhoModalProps> = ({
                   {onOpenStore && (
                     <button
                       onClick={() => {
-                        onClose();
                         onOpenStore("fertilizer");
                       }}
-                      className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-xs shadow-md transition-all active:scale-95 flex items-center gap-1.5 cursor-pointer"
+                      className="app-overlay-button px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-xs shadow-md transition-all active:scale-95 flex items-center gap-1.5 cursor-pointer"
                     >
                       <ShoppingBag className="w-4 h-4" />
                       <span>Đến Cửa Hàng Phân Bón</span>
@@ -476,7 +474,7 @@ export const KhoModal: React.FC<KhoModalProps> = ({
                                 src={getFertilizerAsset(fert.id)}
                                 alt=""
                                 aria-hidden="true"
-                                className="h-9 w-9 object-contain"
+                                className="app-overlay-button h-9 w-9 object-contain"
                               />
                             ),
                             ownedCount: count,
@@ -513,10 +511,9 @@ export const KhoModal: React.FC<KhoModalProps> = ({
                   {onOpenStore && (
                     <button
                       onClick={() => {
-                        onClose();
                         onOpenStore("animal");
                       }}
-                      className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-xs shadow-md transition-all active:scale-95 flex items-center gap-1.5 cursor-pointer"
+                      className="app-overlay-button px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-xs shadow-md transition-all active:scale-95 flex items-center gap-1.5 cursor-pointer"
                     >
                       <ShoppingBag className="w-4 h-4" />
                       <span>Đến Cửa Hàng Vật Nuôi</span>
@@ -573,7 +570,7 @@ export const KhoModal: React.FC<KhoModalProps> = ({
                             unitSellGold: sellGold,
                           })
                         }
-                        className="px-3.5 py-2 rounded-xl bg-slate-800/80 hover:bg-amber-500/20 border border-slate-750 hover:border-amber-500/40 text-amber-300 font-extrabold text-xs shadow-sm active:scale-95 transition-all cursor-pointer shrink-0"
+                        className="app-overlay-button px-3.5 py-2 rounded-xl bg-slate-800/80 hover:bg-amber-500/20 border border-slate-750 hover:border-amber-500/40 text-amber-300 font-extrabold text-xs shadow-sm active:scale-95 transition-all cursor-pointer shrink-0"
                       >
                         Bán
                       </button>
@@ -603,10 +600,9 @@ export const KhoModal: React.FC<KhoModalProps> = ({
                   {onOpenStore && (
                     <button
                       onClick={() => {
-                        onClose();
                         onOpenStore("feed");
                       }}
-                      className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-xs shadow-md transition-all active:scale-95 flex items-center gap-1.5 cursor-pointer"
+                      className="app-overlay-button px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-xs shadow-md transition-all active:scale-95 flex items-center gap-1.5 cursor-pointer"
                     >
                       <ShoppingBag className="w-4 h-4" />
                       <span>Đến Cửa Hàng Thức Ăn</span>
@@ -667,7 +663,7 @@ export const KhoModal: React.FC<KhoModalProps> = ({
                                 src={getFeedAsset(feed.id)}
                                 alt=""
                                 aria-hidden="true"
-                                className="h-9 w-9 object-contain"
+                                className="app-overlay-button h-9 w-9 object-contain"
                               />
                             ),
                             ownedCount: count,
@@ -827,12 +823,12 @@ export const KhoModal: React.FC<KhoModalProps> = ({
 
         {/* Modal Footer - Single primary "Bán Tất Cả Trứng" button at bottom */}
         {activeTab === "egg" && totalEggs > 0 && (
-          <OverlayFooter className="p-3 bg-slate-850/90 border-t border-slate-800/60">
+          <OverlayFooter className="bg-slate-850/90 border-t border-slate-800/60">
             <button
               onClick={() => {
                 onSellAllEggs();
               }}
-              className="w-full py-2.5 px-4 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs sm:text-sm shadow-lg shadow-amber-500/20 active:scale-98 transition-all flex items-center justify-center gap-2 cursor-pointer"
+              className="app-overlay-button w-full py-2.5 px-4 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs sm:text-sm shadow-lg shadow-amber-500/20 active:scale-98 transition-all flex items-center justify-center gap-2 cursor-pointer"
             >
               <Coins className="w-4 h-4" />
               <span>Bán Tất Cả Trứng ({totalEggs} quả)</span>
@@ -841,17 +837,17 @@ export const KhoModal: React.FC<KhoModalProps> = ({
         )}
       </AppModal>
 
-    {/* QUANTITY SELL POPUP DIALOG (Independent Fullscreen Overlay) */}
+    {/* QUANTITY SELL CONFIRMATION (owned by Inventory) */}
     {sellModalData && (
       <AppModal
         layer="nested"
         onClose={() => setSellModalData(null)}
         closeOnBackdrop
         ariaLabel={`Bán ${sellModalData.name}`}
-        panelClassName="w-full max-w-sm bg-slate-900 border border-slate-800/80 rounded-3xl p-4 sm:p-5 shadow-2xl gap-4 animate-in zoom-in-95 duration-150"
+        panelClassName="app-overlay--spaced w-full max-w-sm bg-slate-900 border border-slate-800/80 rounded-3xl shadow-2xl animate-in zoom-in-95 duration-150"
       >
           {/* Popup Title */}
-          <OverlayHeader className="flex items-center justify-between gap-2 border-b border-slate-800/70 pb-3">
+          <OverlayHeader className="flex items-center justify-between gap-2 border-b border-slate-800/70">
             <div className="flex items-center gap-2.5">
               <div className="w-10 h-10 rounded-2xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-2xl shrink-0">
                 {sellModalData.icon}
@@ -868,14 +864,14 @@ export const KhoModal: React.FC<KhoModalProps> = ({
 
             <button
               onClick={() => setSellModalData(null)}
-              className="w-8 h-8 rounded-full bg-slate-800/80 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition-colors"
+              className="app-overlay-button app-overlay-button--icon w-8 h-8 rounded-full bg-slate-800/80 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition-colors"
               aria-label="Đóng chọn số lượng bán"
             >
               <X className="w-4 h-4" />
             </button>
           </OverlayHeader>
 
-          <OverlayBody className="space-y-4 pr-1">
+          <OverlayBody className="space-y-4">
 
           {/* Quantity Selector */}
           <div className="space-y-2.5">
@@ -893,7 +889,7 @@ export const KhoModal: React.FC<KhoModalProps> = ({
                 }}
                 disabled={sellQuantity <= 1}
                 aria-label="Giảm số lượng bán 1"
-                className="w-10 h-10 rounded-xl bg-slate-800/80 hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed text-slate-200 font-bold flex items-center justify-center border border-slate-750 transition-all active:scale-95 cursor-pointer"
+                className="app-overlay-button app-overlay-button--icon w-10 h-10 rounded-xl bg-slate-800/80 hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed text-slate-200 font-bold flex items-center justify-center border border-slate-750 transition-all active:scale-95 cursor-pointer"
               >
                 <Minus className="w-4 h-4" />
               </button>
@@ -927,7 +923,7 @@ export const KhoModal: React.FC<KhoModalProps> = ({
                 }}
                 disabled={sellQuantity >= sellModalData.ownedCount}
                 aria-label="Tăng số lượng bán 1"
-                className="w-10 h-10 rounded-xl bg-slate-800/80 hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed text-slate-200 font-bold flex items-center justify-center border border-slate-750 transition-all active:scale-95 cursor-pointer"
+                className="app-overlay-button app-overlay-button--icon w-10 h-10 rounded-xl bg-slate-800/80 hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed text-slate-200 font-bold flex items-center justify-center border border-slate-750 transition-all active:scale-95 cursor-pointer"
               >
                 <Plus className="w-4 h-4" />
               </button>
@@ -942,7 +938,7 @@ export const KhoModal: React.FC<KhoModalProps> = ({
                   disabled={delta < 0 ? sellQuantity <= 1 : sellQuantity >= sellModalData.ownedCount}
                   onClick={() => handleSellQuantityQuickAdjust(delta)}
                   aria-label={`${delta < 0 ? "Giảm" : "Tăng"} số lượng bán ${Math.abs(delta)}`}
-                  className="min-h-10 rounded-xl border border-slate-750 bg-slate-800/80 px-2 text-xs font-bold text-slate-300 transition-all hover:bg-slate-750 active:scale-95 disabled:cursor-not-allowed disabled:opacity-35"
+                  className="app-overlay-button min-h-10 rounded-xl border border-slate-750 bg-slate-800/80 px-2 text-xs font-bold text-slate-300 transition-all hover:bg-slate-750 active:scale-95 disabled:cursor-not-allowed disabled:opacity-35"
                 >
                   {delta > 0 ? "+" : ""}{delta}
                 </button>
@@ -956,7 +952,7 @@ export const KhoModal: React.FC<KhoModalProps> = ({
                 setSellQuantity(sellModalData.ownedCount);
               }}
               aria-label={`Chọn số lượng bán tối đa ${sellModalData.ownedCount}`}
-              className="min-h-10 w-full rounded-xl border border-amber-500/30 bg-amber-500/20 px-2 text-xs font-bold text-amber-300 transition-all hover:bg-amber-500/30 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50"
+              className="app-overlay-button min-h-10 w-full rounded-xl border border-amber-500/30 bg-amber-500/20 px-2 text-xs font-bold text-amber-300 transition-all hover:bg-amber-500/30 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50"
             >
               Tối đa ({sellModalData.ownedCount})
             </button>
@@ -995,18 +991,18 @@ export const KhoModal: React.FC<KhoModalProps> = ({
           </OverlayBody>
 
           {/* Action Buttons */}
-          <OverlayFooter className="flex items-center gap-2 pt-1" data-stack-actions="true">
+          <OverlayFooter className="flex items-center gap-2" data-stack-actions="true">
             <button
               type="button"
               onClick={() => setSellModalData(null)}
-              className="flex-1 py-2.5 rounded-xl bg-slate-800/80 text-slate-300 font-bold text-xs hover:bg-slate-700 transition-colors cursor-pointer"
+              className="app-overlay-button flex-1 py-2.5 rounded-xl bg-slate-800/80 text-slate-300 font-bold text-xs hover:bg-slate-700 transition-colors cursor-pointer"
             >
               Hủy Bỏ
             </button>
             <button
               type="button"
               onClick={handleConfirmSell}
-              className="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs shadow-md transition-all active:scale-95 cursor-pointer"
+              className="app-overlay-button flex-1 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs shadow-md transition-all active:scale-95 cursor-pointer"
             >
               Xác Nhận Bán ({sellQuantity})
             </button>
