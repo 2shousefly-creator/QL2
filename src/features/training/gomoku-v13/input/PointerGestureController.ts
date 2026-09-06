@@ -3,7 +3,6 @@ import { ViewportController } from "../world/ViewportController";
 import { cssPointToWorld } from "../world/CoordinateConversion";
 
 const TAP_MOVE_THRESHOLD_PX = 8;
-const PLACEMENT_TOLERANCE_WORLD = 0.45; // Max distance from integer grid point in world units
 
 type PointerRecord = {
   id: number;
@@ -152,13 +151,11 @@ export class PointerGestureController {
         this.viewportController.getSnapshot().worldToCss
       );
 
-      const targetX = Math.round(world.x);
-      const targetY = Math.round(world.y);
-
-      const dist = Math.hypot(world.x - targetX, world.y - targetY);
-      if (dist <= PLACEMENT_TOLERANCE_WORLD) {
-        this.onTapPlace({ x: targetX, y: targetY });
-      }
+      // Integer coordinates are cell centers. Include the whole square, with
+      // exact boundaries consistently choosing the cell to the right/bottom.
+      const targetX = Math.floor(world.x + 0.5);
+      const targetY = Math.floor(world.y + 0.5);
+      this.onTapPlace({ x: targetX, y: targetY });
     }
 
     if (this.activePointers.size === 0) {

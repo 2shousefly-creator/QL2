@@ -12,6 +12,11 @@ export type GomokuFrameSnapshot = Readonly<{
   lastMove: Stone | null;
   cursor: BoardPoint | null;
   winningLine: readonly BoardPoint[] | null;
+  stoneDraws?: ReadonlyMap<number, number>;
+  winningHighlight?: Readonly<{
+    points: readonly BoardPoint[];
+    pulse: number;
+  }>;
   phase: MatchPhase;
   isAiThinking?: boolean;
 }>;

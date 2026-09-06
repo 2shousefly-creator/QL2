@@ -14,8 +14,17 @@ export class GomokuSceneRenderer {
 
     // 1. Reset backing transform & clear background
     ctx.setTransform(1, 0, 0, 1, 0, 0);
-    ctx.fillStyle = "#090d16"; // Dark slate tactical desk background
+    ctx.fillStyle = "#f5efdf"; // Warm paper
     ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // A deterministic, inexpensive paper wash; no per-frame random particles.
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const wash = ctx.createLinearGradient(0, 0, cssWidth, cssHeight);
+    wash.addColorStop(0, "rgba(255, 252, 242, 0.35)");
+    wash.addColorStop(0.5, "rgba(231, 220, 198, 0)");
+    wash.addColorStop(1, "rgba(190, 166, 125, 0.12)");
+    ctx.fillStyle = wash;
+    ctx.fillRect(0, 0, cssWidth, cssHeight);
 
     const m = worldToCss;
     const scale = m.a; // CSS pixels per world unit
@@ -60,45 +69,39 @@ export class GomokuSceneRenderer {
     // 4. Draw Grid Lines in World Space
     const gridLineWidthCss = 1;
     ctx.lineWidth = gridLineWidthCss / scale;
-    ctx.strokeStyle = "#1e293b"; // Muted grid line color
+    ctx.strokeStyle = "rgba(141, 127, 105, 0.42)";
     ctx.beginPath();
 
     for (let x = startX; x <= endX; x++) {
-      ctx.moveTo(x, startY);
-      ctx.lineTo(x, endY);
+      ctx.moveTo(x + 0.5, startY);
+      ctx.lineTo(x + 0.5, endY);
     }
     for (let y = startY; y <= endY; y++) {
-      ctx.moveTo(startX, y);
-      ctx.lineTo(endX, y);
+      ctx.moveTo(startX, y + 0.5);
+      ctx.lineTo(endX, y + 0.5);
     }
     ctx.stroke();
 
-    // 5. Draw Star Points (Hoshi) at key coordinates (0,0), (-4,-4), (4,4), etc.
-    const starPoints = [
-      { x: 0, y: 0 },
-      { x: -4, y: -4 },
-      { x: 4, y: -4 },
-      { x: -4, y: 4 },
-      { x: 4, y: 4 },
-      { x: -8, y: -8 },
-      { x: 8, y: -8 },
-      { x: -8, y: 8 },
-      { x: 8, y: 8 },
-    ];
-    ctx.fillStyle = "#38bdf8"; // Cyan star point dot
-    const starRadiusWorld = 3 / scale;
-    for (const sp of starPoints) {
-      if (sp.x >= startX && sp.x <= endX && sp.y >= startY && sp.y <= endY) {
-        ctx.beginPath();
-        ctx.arc(sp.x, sp.y, starRadiusWorld, 0, Math.PI * 2);
-        ctx.fill();
+    // 5. Winning cell underglow, below the ink so both marks stay legible.
+    const highlight = snapshot.winningHighlight;
+    if (highlight) {
+      for (const point of highlight.points) {
+        const halo = ctx.createRadialGradient(point.x, point.y, 0.1, point.x, point.y, 0.65);
+        halo.addColorStop(0, `rgba(215, 170, 52, ${0.16 + highlight.pulse * 0.12})`);
+        halo.addColorStop(1, "rgba(215, 170, 52, 0)");
+        ctx.fillStyle = halo;
+        ctx.fillRect(point.x - 0.65, point.y - 0.65, 1.3, 1.3);
+        ctx.fillStyle = `rgba(234, 195, 85, ${0.12 + highlight.pulse * 0.12})`;
+        ctx.fillRect(point.x - 0.46, point.y - 0.46, 0.92, 0.92);
       }
     }
 
     // 6. Draw Stones (X and O) in World Space
-    const stoneRadius = 0.36; // World units
+    const stoneRadius = 0.33; // Inset from the cell boundaries at +/-0.5
     const strokeWidthWorld = 3.5 / scale;
 
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
     for (const stone of snapshot.stones) {
       if (
         stone.x < startX - 1 ||
@@ -111,62 +114,58 @@ export class GomokuSceneRenderer {
 
       ctx.lineWidth = strokeWidthWorld;
 
+      const progress = snapshot.stoneDraws?.get(stone.ply) ?? 1;
+      const r = stoneRadius;
       if (stone.mark === "X") {
-        // Draw X
-        ctx.strokeStyle = "#06b6d4"; // Vibrant cyan
-        const r = stoneRadius * 0.85;
+        ctx.strokeStyle = "#245aa8";
+        const first = Math.min(1, progress * 2);
+        const second = Math.max(0, progress * 2 - 1);
         ctx.beginPath();
-        ctx.moveTo(stone.x - r, stone.y - r);
-        ctx.lineTo(stone.x + r, stone.y + r);
-        ctx.moveTo(stone.x + r, stone.y - r);
-        ctx.lineTo(stone.x - r, stone.y + r);
+        if (first > 0) {
+          ctx.moveTo(stone.x - r, stone.y - r);
+          ctx.lineTo(stone.x - r + 2 * r * first, stone.y - r + 2 * r * first);
+        }
+        if (second > 0) {
+          ctx.moveTo(stone.x + r, stone.y - r);
+          ctx.lineTo(stone.x + r - 2 * r * second, stone.y - r + 2 * r * second);
+        }
         ctx.stroke();
-      } else {
-        // Draw O
-        ctx.strokeStyle = "#f43f5e"; // Crimson red
+      } else if (progress > 0) {
+        ctx.strokeStyle = "#c94a4a";
         ctx.beginPath();
-        ctx.arc(stone.x, stone.y, stoneRadius * 0.85, 0, Math.PI * 2);
+        ctx.arc(stone.x, stone.y, r, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * progress);
         ctx.stroke();
       }
     }
 
-    // 7. Draw Last Move Highlight
-    if (snapshot.lastMove) {
+    // Fine cell outlines emphasize exactly five cells without crossing the ink.
+    if (highlight) {
+      ctx.lineWidth = 1.5 / scale;
+      ctx.strokeStyle = `rgba(153, 112, 26, ${0.55 + highlight.pulse * 0.3})`;
+      for (const point of highlight.points) {
+        ctx.strokeRect(point.x - 0.45, point.y - 0.45, 0.9, 0.9);
+      }
+    }
+
+    // 7. A small ochre corner bracket leaves the pen strokes unobstructed.
+    if (snapshot.lastMove && !highlight) {
       const lm = snapshot.lastMove;
-      ctx.lineWidth = 2.5 / scale;
-      ctx.strokeStyle = "#f59e0b"; // Gold ring
+      ctx.lineWidth = 1.5 / scale;
+      ctx.strokeStyle = "#a77a29";
       ctx.beginPath();
-      ctx.arc(lm.x, lm.y, stoneRadius * 1.15, 0, Math.PI * 2);
+      ctx.moveTo(lm.x + 0.24, lm.y - 0.43);
+      ctx.lineTo(lm.x + 0.43, lm.y - 0.43);
+      ctx.lineTo(lm.x + 0.43, lm.y - 0.24);
       ctx.stroke();
-
-      // Small center dot
-      ctx.fillStyle = "#fbbf24";
-      ctx.beginPath();
-      ctx.arc(lm.x, lm.y, 2.5 / scale, 0, Math.PI * 2);
-      ctx.fill();
     }
 
-    // 8. Draw Keyboard Cursor
-    if (snapshot.cursor) {
+    // 8. Keyboard selection follows the cell, not the grid intersection.
+    if (snapshot.cursor && (snapshot.phase === "player_turn" || snapshot.phase === "ai_turn")) {
       const c = snapshot.cursor;
-      ctx.lineWidth = 2 / scale;
-      ctx.strokeStyle = "#38bdf8";
-      const s = 0.45;
-      ctx.strokeRect(c.x - s, c.y - s, s * 2, s * 2);
-    }
-
-    // 9. Draw Winning Line
-    if (snapshot.winningLine && snapshot.winningLine.length >= 2) {
-      const first = snapshot.winningLine[0];
-      const last = snapshot.winningLine[snapshot.winningLine.length - 1];
-
-      ctx.lineWidth = 6 / scale;
-      ctx.strokeStyle = "#10b981"; // Emerald green
-      ctx.lineCap = "round";
-      ctx.beginPath();
-      ctx.moveTo(first.x, first.y);
-      ctx.lineTo(last.x, last.y);
-      ctx.stroke();
+      ctx.lineWidth = 1.5 / scale;
+      ctx.strokeStyle = "rgba(36, 90, 168, 0.6)";
+      const halfSize = 0.43;
+      ctx.strokeRect(c.x - halfSize, c.y - halfSize, halfSize * 2, halfSize * 2);
     }
 
     // 10. Restore transform

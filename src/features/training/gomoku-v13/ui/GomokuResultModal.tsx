@@ -1,5 +1,6 @@
 import React from "react";
-import { Trophy, RefreshCw, XCircle, ArrowLeft, Sparkles, CheckCircle2 } from "lucide-react";
+import "./gomokuPaper.css";
+import { Trophy, RefreshCw, XCircle, ArrowLeft, Sparkles } from "lucide-react";
 import { GomokuResult } from "../domain/gomokuTypes";
 import { soundManager } from "../../../../game/audio";
 import { AppModal, OverlayBody, OverlayFooter, OverlayHeader } from "../../../../components/overlay/AppOverlay";
@@ -7,6 +8,7 @@ import { AppModal, OverlayBody, OverlayFooter, OverlayHeader } from "../../../..
 interface GomokuResultModalProps {
   result: GomokuResult;
   earnedXp: number;
+  reducedMotion?: boolean;
   onRestart: () => void;
   onExit: () => void;
 }
@@ -14,6 +16,7 @@ interface GomokuResultModalProps {
 export const GomokuResultModal: React.FC<GomokuResultModalProps> = ({
   result,
   earnedXp,
+  reducedMotion = false,
   onRestart,
   onExit,
 }) => {
@@ -26,33 +29,34 @@ export const GomokuResultModal: React.FC<GomokuResultModalProps> = ({
       layer="exclusive-dialog"
       layout="viewport-safe"
       labelledBy="gomoku-result-title"
-      panelClassName="max-w-sm border-slate-800 bg-slate-900 text-center text-slate-100"
+      overlayClassName={`gomoku-result-overlay${reducedMotion ? " is-reduced-motion" : ""}`}
+      panelClassName="gomoku-paper-dialog gomoku-result-panel max-w-sm border-[#d8cbb3] bg-[#faf5e9] text-center text-[#2f2922]"
     >
         {/* Glow Header */}
-        <OverlayHeader className="relative flex flex-col items-center gap-2 overflow-hidden border-slate-800 text-center">
-          <div className="absolute -top-12 left-1/2 -translate-x-1/2 w-40 h-40 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+        <OverlayHeader className="relative flex flex-col items-center gap-2 overflow-hidden border-[#d8cbb3] text-center">
+          <div className="absolute -top-12 left-1/2 -translate-x-1/2 w-40 h-40 bg-[#ebd8a9]/40 rounded-full blur-3xl pointer-events-none" />
           {isPlayerWon ? (
-            <div className="w-16 h-16 rounded-2xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 shadow-lg shadow-amber-500/20 animate-bounce">
+            <div className="w-16 h-16 rounded-2xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-[#946b22] shadow-lg shadow-amber-500/20">
               <Trophy className="w-8 h-8" />
             </div>
           ) : isResigned ? (
-            <div className="w-16 h-16 rounded-2xl bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-400">
+            <div className="w-16 h-16 rounded-2xl bg-[#eee4d1] border border-[#d8cbb3] flex items-center justify-center text-[#746653]">
               <XCircle className="w-8 h-8" />
             </div>
           ) : (
-            <div className="w-16 h-16 rounded-2xl bg-rose-500/20 border border-rose-500/40 flex items-center justify-center text-rose-400">
+            <div className="w-16 h-16 rounded-2xl bg-rose-500/20 border border-rose-500/40 flex items-center justify-center text-[#b33e3e]">
               <XCircle className="w-8 h-8" />
             </div>
           )}
 
-          <h2 id="gomoku-result-title" className="relative text-xl font-black text-slate-100">
+          <h2 id="gomoku-result-title" className="relative text-xl font-black text-[#2f2922]">
             {isPlayerWon
               ? "Chiến Thắng!"
               : isResigned
               ? "Đã Đầu Hàng"
               : "Thất Bại"}
           </h2>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-[#746653]">
             {isPlayerWon
               ? "Bạn đã hoàn thành chuỗi 5 quân thắng máy"
               : isResigned
@@ -63,20 +67,20 @@ export const GomokuResultModal: React.FC<GomokuResultModalProps> = ({
 
         <OverlayBody className="space-y-5">
         {/* Stats Summary */}
-        <div className="bg-slate-950/80 p-3.5 rounded-2xl border border-slate-800 space-y-2 text-xs">
-          <div className="flex justify-between text-slate-300">
+        <div className="bg-[#eee4d1]/60 p-3.5 rounded-2xl border border-[#d8cbb3] space-y-2 text-xs">
+          <div className="flex justify-between text-[#574c3c]">
             <span>Tổng số nước đi:</span>
-            <span className="font-bold text-slate-100">{result.totalMoves} nước</span>
+            <span className="font-bold text-[#2f2922]">{result.totalMoves} nước</span>
           </div>
-          <div className="flex justify-between text-slate-300">
+          <div className="flex justify-between text-[#574c3c]">
             <span>Độ khó:</span>
-            <span className="font-bold uppercase text-amber-400">
+            <span className="font-bold uppercase text-[#946b22]">
               {result.difficulty === "easy" ? "Dễ" : result.difficulty === "medium" ? "Vừa" : "Khó"}
             </span>
           </div>
 
           {earnedXp > 0 && (
-            <div className="pt-2 border-t border-slate-800 flex justify-between items-center text-emerald-400 font-extrabold text-sm">
+            <div className="pt-2 border-t border-[#d8cbb3] flex justify-between items-center text-[#387448] font-extrabold text-sm">
               <span className="flex items-center gap-1">
                 <Sparkles className="w-4 h-4" /> Thưởng Thắng:
               </span>
@@ -87,14 +91,14 @@ export const GomokuResultModal: React.FC<GomokuResultModalProps> = ({
         </OverlayBody>
 
         {/* Action Buttons */}
-        <OverlayFooter className="flex-col space-y-2 border-slate-800 bg-slate-900">
+        <OverlayFooter className="flex-col space-y-2 border-[#d8cbb3] bg-[#faf5e9]">
           <button
             type="button"
             onClick={() => {
               soundManager.playClick();
               onRestart();
             }}
-            className="w-full py-3 rounded-2xl bg-amber-500 text-slate-950 font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20 hover:bg-amber-400 active:scale-[0.99] transition-all"
+            className="w-full py-3 rounded-2xl bg-amber-500 text-[#2f2922] font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20 hover:bg-amber-400 active:scale-[0.99] transition-all"
           >
             <RefreshCw className="w-4 h-4" />
             Thách Đấu Trận Mới
@@ -106,7 +110,7 @@ export const GomokuResultModal: React.FC<GomokuResultModalProps> = ({
               soundManager.playClick();
               onExit();
             }}
-            className="w-full py-3 rounded-2xl bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all"
+            className="w-full py-3 rounded-2xl bg-[#eee4d1] text-[#574c3c] hover:text-[#2f2922] hover:bg-[#e4d6bc] font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all"
           >
             <ArrowLeft className="w-4 h-4" />
             Về Sảnh Huấn Luyện
