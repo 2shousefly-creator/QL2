@@ -1,8 +1,8 @@
 import React from "react";
-import { Coins, Sparkles, X, Check, Sprout, Egg } from "lucide-react";
+import { Check, Egg, Sparkles, Sprout, X } from "lucide-react";
 import { ItemQuality, QualityBreakdown } from "../farmTypes";
 import { QUALITY_CONFIG } from "../weatherEngine";
-import { AppModal, OverlayBody, OverlayFooter, OverlayHeader } from "../../../components/overlay/AppOverlay";
+import { GameResultModal, ModalActions, ModalButton, OverlayBody, ResultHero } from "../../../components/overlay/AppOverlay";
 
 export interface RewardSummaryItem {
   name?: string;
@@ -51,55 +51,46 @@ export const RewardSummaryModal: React.FC<RewardSummaryModalProps> = ({
   );
 
   return (
-    <AppModal
+    <GameResultModal status={"reward"} theme="farm"
       onClose={onClose}
       closeOnBackdrop
       labelledBy="reward-summary-title"
-      panelClassName="app-overlay--spaced w-full max-w-sm bg-slate-900 border border-slate-700/80 rounded-3xl shadow-2xl text-center animate-in fade-in duration-200"
+      panelClassName="text-center"
     >
-        <OverlayHeader className="flex flex-col items-center text-center">
+        <ResultHero className="flex flex-col items-center text-center">
         {/* Background glow */}
-        <div
-          className={`absolute -top-12 left-1/2 -translate-x-1/2 w-48 h-48 rounded-full blur-3xl pointer-events-none opacity-20 ${
-            isHarvest ? "bg-emerald-500" : "bg-amber-500"
-          }`}
-        />
 
         {/* Close Button */}
-        <button
+        <ModalButton variant="icon"
           onClick={onClose}
-          className="app-overlay-button app-overlay-button--icon absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition-colors"
+          className="absolute right-3 top-3"
           aria-label="Đóng tổng kết phần thưởng"
         >
           <X className="w-4 h-4" />
-        </button>
+        </ModalButton>
 
         {/* Main Header Icon */}
         <div
-          className={`w-16 h-16 rounded-3xl border flex items-center justify-center text-3xl mb-3 shadow-lg ${
-            isHarvest
-              ? "bg-emerald-500/20 border-emerald-500/40 text-emerald-400"
-              : "bg-amber-500/20 border-amber-500/40 text-amber-400"
-          }`}
+          className="modal-status-icon"
         >
-          {isHarvest ? <Sprout className="w-8 h-8 text-emerald-400" /> : <Egg className="w-8 h-8 text-amber-400" />}
+          {isHarvest ? <Sprout className="w-8 h-8 text-[var(--modal-success)]" /> : <Egg className="w-8 h-8 text-[var(--modal-reward)]" />}
         </div>
 
         {/* Title */}
-        <h3 id="reward-summary-title" className="font-black text-lg text-slate-100 uppercase tracking-wide">
+        <h3 id="reward-summary-title" className="modal-title">
           {data.title}
         </h3>
-        <p className="text-xs text-slate-400 mt-0.5 mb-4">
+        <p className="modal-copy">
           {data.message || (isHarvest ? "Thu hoạch nông sản thành công!" : "Giao dịch bán trứng thành công!")}
         </p>
-        </OverlayHeader>
+        </ResultHero>
 
-        <OverlayBody className="w-full space-y-3">
+        <OverlayBody className="w-full">
 
         {/* Items list */}
         {data.itemsSummary && data.itemsSummary.length > 0 && (
-          <div className="w-full bg-slate-850 border border-slate-750/80 rounded-2xl p-3 space-y-1.5 text-left">
-            <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-400 block mb-1">
+          <div className="w-full modal-section space-y-1.5 text-left">
+            <span className="text-xs font-semibold uppercase tracking-wider text-[var(--modal-muted)] block mb-1">
               Chi tiết vật phẩm:
             </span>
             {data.itemsSummary.map((item, idx) => {
@@ -108,12 +99,12 @@ export const RewardSummaryModal: React.FC<RewardSummaryModalProps> = ({
                 : null;
 
               return (
-                <div key={idx} className="flex items-center justify-between gap-2 text-xs font-bold text-slate-200">
+                <div key={idx} className="flex items-center justify-between gap-2 text-xs font-bold text-[var(--modal-text)]">
                   <span className="flex items-center gap-1.5 min-w-0">
                     {item.icon && <span>{item.icon}</span>}
                     <span className="truncate">{item.name}</span>
                     {qualityConfig && (
-                      <span className={`inline-flex items-center gap-1 rounded-lg border px-1.5 py-0.5 text-[10px] font-extrabold shrink-0 ${qualityConfig.badgeClass}`}>
+                      <span className={`inline-flex items-center gap-1 rounded-lg border px-1.5 py-0.5 text-xs font-semibold shrink-0 ${qualityConfig.badgeClass}`}>
                         <span>{qualityConfig.icon}</span>
                         <span>{qualityConfig.name}</span>
                         <span>×{qualityConfig.multiplier}</span>
@@ -121,7 +112,7 @@ export const RewardSummaryModal: React.FC<RewardSummaryModalProps> = ({
                     )}
                   </span>
                   {item.count !== undefined && item.count > 0 && (
-                    <span className="text-emerald-400 font-black shrink-0">x{item.count}</span>
+                    <span className="text-[var(--modal-success)] font-semibold shrink-0">x{item.count}</span>
                   )}
                 </div>
               );
@@ -131,8 +122,8 @@ export const RewardSummaryModal: React.FC<RewardSummaryModalProps> = ({
 
         {/* Quality Breakdown if present */}
         {activeQualityTiers.length > 0 && (
-          <div className="w-full bg-slate-850 border border-slate-750/80 rounded-2xl p-3 text-left space-y-2">
-            <span className="text-[11px] font-extrabold uppercase tracking-wider text-amber-400 block flex items-center gap-1">
+          <div className="w-full modal-section text-left space-y-2">
+            <span className="text-xs font-semibold uppercase tracking-wider text-[var(--modal-reward)] block flex items-center gap-1">
               <span>✨</span>
               <span>Chi Tiết Theo Phẩm Chất:</span>
             </span>
@@ -151,17 +142,17 @@ export const RewardSummaryModal: React.FC<RewardSummaryModalProps> = ({
                     }}
                   >
                     <div className="flex items-center gap-2">
-                      <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-lg border text-[11px] font-extrabold ${config.badgeClass}`}>
+                      <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-lg border text-xs font-semibold ${config.badgeClass}`}>
                         <span>{config.icon}</span>
                         <span>{config.name}</span>
                         <span>×{config.multiplier}</span>
                       </span>
-                      <span className="text-slate-300 font-extrabold text-xs">
+                      <span className="text-[var(--modal-text)] font-semibold text-xs">
                         x{tierData.quantity}
                       </span>
                     </div>
-                    <div className="flex flex-wrap justify-end gap-x-2.5 gap-y-0.5 text-[11px] font-extrabold text-right">
-                      <span className="text-amber-300">
+                    <div className="flex flex-wrap justify-end gap-x-2.5 gap-y-0.5 text-xs font-semibold text-right">
+                      <span className="text-[var(--modal-reward)]">
                         +{tierData.baseGold.toLocaleString()} 🪙{" "}
                         <strong style={{ color: config.color }}>
                           (+{tierData.qualityBonusGold.toLocaleString()})
@@ -184,32 +175,32 @@ export const RewardSummaryModal: React.FC<RewardSummaryModalProps> = ({
         {/* Reward Stats Badge (Tổng Gold và Tổng XP) */}
         <div className="grid grid-cols-2 gap-3 w-full">
           {/* Gold Badge */}
-          <div className="bg-gradient-to-br from-amber-500/15 to-amber-600/5 border border-amber-500/30 rounded-2xl p-3 flex flex-col items-center justify-center">
-            <div className="flex items-center gap-1.5 text-amber-400 text-xs font-bold mb-0.5">
+          <div className="modal-section flex flex-col items-center justify-center">
+            <div className="flex items-center gap-1.5 text-[var(--modal-reward)] text-xs font-bold mb-0.5">
               <span>🪙</span>
               <span>Tổng Vàng</span>
             </div>
-            <span className="font-black text-xl text-amber-300">
+            <span className="font-semibold text-xl text-[var(--modal-reward)]">
               +{data.goldEarned.toLocaleString()}
             </span>
             {(data.rainBonusGold ?? 0) > 0 && (
-              <span className="text-[10px] font-extrabold text-sky-400 mt-0.5">
+              <span className="text-xs font-semibold text-[var(--modal-info)] mt-0.5">
                 (🌧 Buff +{(data.rainBonusGold || 0).toLocaleString()})
               </span>
             )}
           </div>
 
           {/* XP Badge */}
-          <div className="bg-gradient-to-br from-purple-500/15 to-purple-600/5 border border-purple-500/30 rounded-2xl p-3 flex flex-col items-center justify-center">
+          <div className="modal-section flex flex-col items-center justify-center">
             <div className="flex items-center gap-1.5 text-purple-400 text-xs font-bold mb-0.5">
               <Sparkles className="w-4 h-4" />
               <span>Tổng XP</span>
             </div>
-            <span className="font-black text-xl text-purple-300">
+            <span className="font-semibold text-xl text-purple-300">
               +{data.xpEarned.toLocaleString()}
             </span>
             {totalXpBonus > 0 && (
-              <span className="text-[10px] font-extrabold text-purple-300 mt-0.5">
+              <span className="text-xs font-semibold text-purple-300 mt-0.5">
                 (⚡ Buff +{totalXpBonus})
               </span>
             )}
@@ -218,12 +209,12 @@ export const RewardSummaryModal: React.FC<RewardSummaryModalProps> = ({
 
         {/* Detailed Buff Breakdown if present */}
         {(hasFertilizerBonus || hasRainBonus || hasDroughtPenalty) && (
-          <div className="w-full bg-slate-850 border border-slate-750/80 rounded-2xl p-3 text-left space-y-1.5">
-            <span className="text-[11px] font-extrabold uppercase tracking-wider text-amber-400 block flex items-center gap-1">
+          <div className="w-full modal-section text-left space-y-1.5">
+            <span className="text-xs font-semibold uppercase tracking-wider text-[var(--modal-reward)] block flex items-center gap-1">
               <Sparkles className="w-3.5 h-3.5" /> Chi Tiết Thưởng Buff:
             </span>
             {hasRainBonus && (
-              <div className="text-xs font-bold text-sky-300 flex items-center gap-1.5">
+              <div className="text-xs font-bold text-[var(--modal-info)] flex items-center gap-1.5">
                 <span>🌧</span>
                 <span>
                   Mưa Tăng Vàng: +{data.rainBonusGold || 0} 🪙 Vàng
@@ -231,13 +222,13 @@ export const RewardSummaryModal: React.FC<RewardSummaryModalProps> = ({
               </div>
             )}
             {hasFertilizerBonus && (
-              <div className="text-xs font-bold text-amber-300 flex items-center gap-1.5">
+              <div className="text-xs font-bold text-[var(--modal-reward)] flex items-center gap-1.5">
                 <span>✨</span>
                 <span>Phân Bón: +{data.fertilizerBonusXp} XP</span>
               </div>
             )}
             {hasDroughtPenalty && (
-              <div className="flex items-center gap-1.5 text-xs font-bold text-red-300">
+              <div className="flex items-center gap-1.5 text-xs font-bold text-[var(--modal-danger)]">
                 <span>🔴</span>
                 <span>Khô cằn: -{data.droughtPenaltyGold} 🪙 Vàng</span>
               </div>
@@ -247,15 +238,15 @@ export const RewardSummaryModal: React.FC<RewardSummaryModalProps> = ({
         </OverlayBody>
 
         {/* Action Button */}
-        <OverlayFooter>
-          <button
+        <ModalActions>
+          <ModalButton variant="primary"
             onClick={onClose}
-            className="app-overlay-button w-full py-3 px-4 rounded-2xl font-black text-sm bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-slate-950 shadow-lg shadow-emerald-500/20 active:scale-98 transition-all flex items-center justify-center gap-2 cursor-pointer"
+            className="w-full"
           >
             <Check className="w-4 h-4" />
             <span>Xác Nhận & Nhận Quà</span>
-          </button>
-        </OverlayFooter>
-    </AppModal>
+          </ModalButton>
+        </ModalActions>
+    </GameResultModal>
   );
 };

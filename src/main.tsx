@@ -4,6 +4,7 @@ import App from './App.tsx';
 import './index.css';
 import './styles/military-ui.css';
 import './styles/responsive-overlays.css';
+import './styles/modal-design-system.css';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

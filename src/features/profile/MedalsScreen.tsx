@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { Award, CheckCircle2, Lock, Star, ChevronLeft, Sparkles, AlertCircle } from "lucide-react";
+import { AlertCircle, Award, ChevronLeft, Lock, Star } from "lucide-react";
 import { GameState } from "../../game/types";
-import { MEDAL_CATALOG, MedalCategory, MedalDefinition } from "../../game/medals/medalCatalog";
+import { MEDAL_CATALOG, MedalCategory } from "../../game/medals/medalCatalog";
 import { soundManager } from "../../game/audio";
 import { CommandHeader } from "../../components/military/MilitaryUI";
 import { OverlayPortal } from "../../components/overlay/AppOverlay";
@@ -88,7 +88,7 @@ export const MedalsScreen: React.FC<MedalsScreenProps> = ({ state, onUpdateState
       {/* Toast Alert */}
       {toastMessage && (
         <OverlayPortal>
-        <div className="app-overlay-toast command-toast bg-amber-500 text-slate-950 font-extrabold px-4 py-2 rounded-xl shadow-2xl border border-amber-300 flex items-center gap-2 text-xs sm:text-sm animate-in fade-in slide-in-from-top-2" role="status">
+        <div className="app-overlay-toast modal-design modal-toast flex items-center gap-2" data-modal-archetype="info" role="status">
           <AlertCircle className="w-4 h-4 shrink-0" />
           <span>{toastMessage}</span>
         </div>

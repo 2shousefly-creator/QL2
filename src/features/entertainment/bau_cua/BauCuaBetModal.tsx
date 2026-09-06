@@ -11,7 +11,7 @@ import {
 import { soundManager } from "../../../game/audio";
 import { BetAmountControl } from "../BetAmountControl";
 import { adjustBetInput, clampBetInput, getInitialBetInput } from "../betAmountInput";
-import { AppModal, OverlayBody, OverlayFooter, OverlayHeader } from "../../../components/overlay/AppOverlay";
+import { AppModal, ModalButton, OverlayBody, OverlayFooter, OverlayHeader } from "../../../components/overlay/AppOverlay";
 
 interface BauCuaBetModalProps {
   isOpen: boolean;
@@ -101,59 +101,57 @@ export const BauCuaBetModal: React.FC<BauCuaBetModalProps> = ({
   };
 
   return (
-    <AppModal
+    <AppModal size="compact" archetype="transaction"
       onClose={onClose}
       closeOnBackdrop
       labelledBy="bau-cua-bet-title"
-      panelClassName="max-w-sm border-slate-700/90 bg-slate-900 text-slate-100"
     >
           {/* Header */}
-          <OverlayHeader className="flex items-center justify-between border-slate-800">
+          <OverlayHeader className="flex items-center justify-between">
             <div className="flex items-center gap-2.5">
               <div className="w-9 h-9 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center text-2xl shadow-inner">
                 {doorInfo.emoji}
               </div>
               <div>
-                <h3 id="bau-cua-bet-title" className="text-sm sm:text-base font-extrabold text-slate-100 uppercase tracking-wide">
+                <h3 id="bau-cua-bet-title" className="modal-title">
                   ĐẶT CƯỢC — {doorInfo.name}
                 </h3>
-                <p className="text-[11px] text-slate-400">
+                <p className="modal-copy">
                   Nhập số Vàng muốn cược cho cửa này
                 </p>
               </div>
             </div>
 
-            <button
+            <ModalButton variant="icon"
               type="button"
               onClick={onClose}
-              className="app-overlay__close w-7 h-7 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-slate-200 flex items-center justify-center transition-colors"
               aria-label="Đóng đặt cược Bầu Cua"
             >
               <X className="w-3.5 h-3.5" />
-            </button>
+            </ModalButton>
           </OverlayHeader>
 
-          <OverlayBody className="space-y-3">
+          <OverlayBody>
           {/* Breakdown Stats */}
-          <div className="bg-slate-950/70 border border-slate-800 rounded-xl p-2.5 space-y-1.5 text-xs">
-            <div className="flex justify-between items-center text-slate-300">
+          <div className="modal-section space-y-1.5 text-xs">
+            <div className="flex justify-between items-center text-[var(--modal-text)]">
               <span>Vàng hiện có:</span>
-              <span className="font-bold text-amber-400 flex items-center gap-1">
-                <Coins className="w-3.5 h-3.5 text-amber-400" />
+              <span className="font-bold text-[var(--modal-reward)] flex items-center gap-1">
+                <Coins className="w-3.5 h-3.5 text-[var(--modal-reward)]" />
                 {currentGold.toLocaleString("vi-VN")} Vàng
               </span>
             </div>
 
-            <div className="flex justify-between items-center text-slate-400 text-[11px]">
+            <div className="flex justify-between items-center text-[var(--modal-muted)] text-xs">
               <span>Đang cược cửa khác:</span>
-              <span className="font-semibold text-slate-200">
+              <span className="font-semibold text-[var(--modal-text)]">
                 {otherDoorsBet.toLocaleString("vi-VN")} Vàng
               </span>
             </div>
 
-            <div className="flex justify-between items-center text-slate-200 pt-1 border-t border-slate-800/80 font-bold">
+            <div className="flex justify-between items-center text-[var(--modal-text)] pt-1 border-t border-slate-800/80 font-bold">
               <span>Có thể cược tối đa:</span>
-              <span className="text-emerald-400">
+              <span className="text-[var(--modal-success)]">
                 {maxBet.toLocaleString("vi-VN")} Vàng
               </span>
             </div>
@@ -161,7 +159,7 @@ export const BauCuaBetModal: React.FC<BauCuaBetModalProps> = ({
 
           {/* Input Box */}
           <div className="space-y-1">
-            <label className="text-[11px] font-semibold text-slate-300 block">
+            <label className="text-xs font-semibold text-[var(--modal-text)] block">
               Số Vàng cược:
             </label>
             <BetAmountControl
@@ -177,7 +175,7 @@ export const BauCuaBetModal: React.FC<BauCuaBetModalProps> = ({
               <motion.div
                 initial={{ opacity: 0, y: -4 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="flex items-center gap-1.5 text-xs text-rose-400 font-medium pt-0.5"
+                className="flex items-center gap-1.5 text-xs text-[var(--modal-danger)] font-medium pt-0.5"
               >
                 <AlertCircle className="w-3.5 h-3.5 shrink-0" />
                 <span>{errorMessage}</span>
@@ -195,7 +193,7 @@ export const BauCuaBetModal: React.FC<BauCuaBetModalProps> = ({
                   setInputValue(String(maxBet));
                   setErrorMessage(null);
                 }}
-                className="text-[11px] font-semibold text-amber-400 hover:text-amber-300 underline underline-offset-2 transition-colors py-0.5"
+                className="modal-control text-xs font-semibold text-[var(--modal-reward)] hover:text-[var(--modal-reward)] underline underline-offset-2 transition-colors py-0.5"
               >
                 Cược tối đa ({maxBet.toLocaleString("vi-VN")})
               </button>
@@ -205,39 +203,34 @@ export const BauCuaBetModal: React.FC<BauCuaBetModalProps> = ({
 
           {/* Action Buttons */}
           <OverlayFooter
-            className={`pt-1.5 grid ${
-              currentDoorBet > 0 ? "grid-cols-4" : "grid-cols-2"
-            } gap-2 border-slate-800 bg-slate-900`}
+            className={` ${
+              currentDoorBet > 0 ? "grid-cols-4" : ""
+            } `}
           >
-            <button
+            <ModalButton variant="ghost"
               type="button"
               onClick={onClose}
-              className="col-span-1 min-h-[40px] px-2 py-2 rounded-xl border border-slate-700 bg-slate-800/80 hover:bg-slate-700 active:scale-95 text-slate-300 text-xs sm:text-sm font-bold transition-all flex items-center justify-center text-center"
             >
               Hủy
-            </button>
+            </ModalButton>
 
             {currentDoorBet > 0 && (
-              <button
+              <ModalButton variant="primary"
                 type="button"
                 onClick={handleClear}
-                className="col-span-1 min-h-[40px] px-2 py-2 rounded-xl border border-slate-700 bg-slate-800/80 hover:bg-slate-700 active:scale-95 text-slate-300 text-xs sm:text-sm font-bold flex items-center justify-center gap-1 transition-all text-center"
                 title="Xóa cược cửa này"
               >
                 <Trash2 className="w-3.5 h-3.5 shrink-0" />
                 <span>Xóa</span>
-              </button>
+              </ModalButton>
             )}
 
-            <button
+            <ModalButton variant="primary"
               type="button"
               onClick={handleConfirm}
-              className={`${
-                currentDoorBet > 0 ? "col-span-2" : "col-span-1"
-              } min-h-[40px] px-3 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 active:scale-95 text-slate-950 text-xs sm:text-sm font-extrabold shadow-lg shadow-amber-500/20 transition-all flex items-center justify-center text-center`}
             >
               Xác nhận
-            </button>
+            </ModalButton>
           </OverlayFooter>
     </AppModal>
   );

@@ -24,7 +24,7 @@ import {
   getFeedAsset,
   getFertilizerAsset,
 } from "../tangGiaAssetManifest";
-import { AppModal, OverlayBody, OverlayFooter, OverlayHeader } from "../../../components/overlay/AppOverlay";
+import { AppModal, ModalButton, OverlayBody, OverlayFooter, OverlayHeader } from "../../../components/overlay/AppOverlay";
 
 interface FarmStoreModalProps {
   isOpen: boolean;
@@ -163,10 +163,10 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
     const isOwned = ownedCount > 0;
     return (
       <span
-        className={`text-[10px] px-1.5 py-0.5 rounded-md shrink-0 border transition-all ${
+        className={`text-xs shrink-0 ${
           isOwned
-            ? "bg-amber-400 text-slate-950 font-extrabold border-amber-300 shadow-xs"
-            : "font-medium text-slate-400 bg-slate-800/80 border-slate-700/50"
+            ? "text-[var(--modal-reward)] font-semibold"
+            : "text-[var(--modal-muted)]"
         }`}
       >
         Sở hữu: {ownedCount}
@@ -183,35 +183,35 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
   ) => {
     if (!hasRank) {
       return (
-        <button
+        <ModalButton
           disabled
-          className="app-overlay-button h-8 sm:h-9 px-2 sm:px-2.5 rounded-xl font-bold text-[11px] sm:text-xs shrink-0 bg-slate-800/70 text-slate-500 border border-slate-700/50 cursor-not-allowed flex items-center justify-center gap-1 min-w-[62px] sm:min-w-[68px]"
+          className="shrink-0"
         >
           <Lock className="w-3 h-3 text-amber-400/80 shrink-0" />
           <span>Khóa</span>
-        </button>
+        </ModalButton>
       );
     }
 
     if (canBuy) {
       return (
-        <button
+        <ModalButton variant="primary"
           onClick={onOpenBuy}
-          className="app-overlay-button h-8 sm:h-9 px-2.5 sm:px-3.5 rounded-xl font-black text-[11px] sm:text-xs shrink-0 transition-all flex items-center justify-center gap-1 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 active:scale-95 shadow-sm shadow-amber-500/20 cursor-pointer border border-amber-300/80 min-w-[62px] sm:min-w-[68px]"
+          className="shrink-0"
         >
           <ShoppingBag className="w-3 h-3 shrink-0" />
           <span>Mua</span>
-        </button>
+        </ModalButton>
       );
     }
 
     return (
-      <button
+      <ModalButton
         disabled
-        className="app-overlay-button h-8 sm:h-9 px-2 sm:px-2.5 rounded-xl font-bold text-[10px] sm:text-[11px] shrink-0 bg-slate-800/60 text-slate-500 border border-slate-700/40 cursor-not-allowed flex items-center justify-center min-w-[62px] sm:min-w-[68px]"
+        className="shrink-0"
       >
         <span>Thiếu Vàng</span>
-      </button>
+      </ModalButton>
     );
   };
 
@@ -222,49 +222,47 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
 
   return (
     <>
-      <AppModal
+      <AppModal theme="farm" archetype="transaction"
         onClose={onClose}
         closeOnBackdrop
         labelledBy="farm-store-title"
-        panelClassName="app-overlay--spaced w-full max-w-lg bg-slate-900 border border-slate-800 rounded-3xl shadow-2xl animate-in fade-in duration-200"
       >
           {/* Modal Header (Sticky / Fixed at top of modal) */}
-          <OverlayHeader className="bg-slate-800/80 border-b border-slate-800 flex items-center justify-between gap-2">
+          <OverlayHeader className="flex items-center justify-between">
             <div className="flex items-center gap-2.5">
               <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-base sm:text-lg shrink-0">
                 🪙
               </div>
               <div>
-                <h3 id="farm-store-title" className="font-extrabold text-sm sm:text-base text-slate-100 leading-tight">
+                <h3 id="farm-store-title" className="modal-title">
                   Cửa Hàng Tăng Gia
                 </h3>
-                <p className="text-[11px] sm:text-xs text-slate-400 flex items-center gap-1 mt-0.5">
+                <p className="modal-copy flex items-center gap-1 mt-0.5">
                   Ví Vàng:{" "}
-                  <span className="font-bold text-amber-400 font-mono">
+                  <span className="font-bold text-[var(--modal-reward)] font-mono">
                     🪙{gold.toLocaleString("vi-VN")}
                   </span>
                 </p>
               </div>
             </div>
 
-            <button
+            <ModalButton variant="icon"
               onClick={onClose}
-              className="app-overlay-button app-overlay-button--icon w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
               title="Đóng cửa hàng"
               aria-label="Đóng cửa hàng"
             >
               <X className="w-4 h-4" />
-            </button>
+            </ModalButton>
           </OverlayHeader>
 
           {/* 4 Tabs (Sticky under Header, horizontal scroll on narrow mobile) */}
-          <div className="flex sm:grid sm:grid-cols-4 gap-1 p-1.5 bg-slate-900 border-b border-slate-800 text-[11px] overflow-x-auto no-scrollbar whitespace-nowrap shrink-0">
+          <div className="flex sm:grid sm:grid-cols-4 gap-1 p-1.5 bg-slate-900 border-b border-slate-800 text-xs overflow-x-auto no-scrollbar whitespace-nowrap shrink-0">
             <button
               onClick={() => setActiveTab("crop")}
-              className={`app-overlay-button flex-1 sm:flex-initial py-1.5 px-2.5 sm:px-2 rounded-xl font-bold transition-all flex items-center justify-center gap-1 shrink-0 ${
+              className={`modal-control app-overlay-button flex-1 sm:flex-initial py-1.5 px-2.5 sm:px-2 rounded-xl font-bold transition-all flex items-center justify-center gap-1 shrink-0 ${
                 activeTab === "crop"
-                  ? "bg-amber-500 text-slate-950 shadow-sm"
-                  : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+                  ? "modal-control bg-amber-500 text-slate-950 shadow-sm"
+                  : "modal-control text-[var(--modal-muted)] hover:text-[var(--modal-text)] hover:bg-slate-800"
               }`}
             >
               <span>🌱 Cây Trồng</span>
@@ -272,10 +270,10 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
 
             <button
               onClick={() => setActiveTab("fertilizer")}
-              className={`app-overlay-button flex-1 sm:flex-initial py-1.5 px-2.5 sm:px-2 rounded-xl font-bold transition-all flex items-center justify-center gap-1 shrink-0 ${
+              className={`modal-control app-overlay-button flex-1 sm:flex-initial py-1.5 px-2.5 sm:px-2 rounded-xl font-bold transition-all flex items-center justify-center gap-1 shrink-0 ${
                 activeTab === "fertilizer"
-                  ? "bg-amber-500 text-slate-950 shadow-sm"
-                  : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+                  ? "modal-control bg-amber-500 text-slate-950 shadow-sm"
+                  : "modal-control text-[var(--modal-muted)] hover:text-[var(--modal-text)] hover:bg-slate-800"
               }`}
             >
               <span>✨ Phân Bón</span>
@@ -283,10 +281,10 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
 
             <button
               onClick={() => setActiveTab("animal")}
-              className={`app-overlay-button flex-1 sm:flex-initial py-1.5 px-2.5 sm:px-2 rounded-xl font-bold transition-all flex items-center justify-center gap-1 shrink-0 ${
+              className={`modal-control app-overlay-button flex-1 sm:flex-initial py-1.5 px-2.5 sm:px-2 rounded-xl font-bold transition-all flex items-center justify-center gap-1 shrink-0 ${
                 activeTab === "animal"
-                  ? "bg-amber-500 text-slate-950 shadow-sm"
-                  : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+                  ? "modal-control bg-amber-500 text-slate-950 shadow-sm"
+                  : "modal-control text-[var(--modal-muted)] hover:text-[var(--modal-text)] hover:bg-slate-800"
               }`}
             >
               <span>🐥 Vật Nuôi</span>
@@ -294,10 +292,10 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
 
             <button
               onClick={() => setActiveTab("feed")}
-              className={`app-overlay-button flex-1 sm:flex-initial py-1.5 px-2.5 sm:px-2 rounded-xl font-bold transition-all flex items-center justify-center gap-1 shrink-0 ${
+              className={`modal-control app-overlay-button flex-1 sm:flex-initial py-1.5 px-2.5 sm:px-2 rounded-xl font-bold transition-all flex items-center justify-center gap-1 shrink-0 ${
                 activeTab === "feed"
-                  ? "bg-amber-500 text-slate-950 shadow-sm"
-                  : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+                  ? "modal-control bg-amber-500 text-slate-950 shadow-sm"
+                  : "modal-control text-[var(--modal-muted)] hover:text-[var(--modal-text)] hover:bg-slate-800"
               }`}
             >
               <span>🌾 Thức Ăn</span>
@@ -305,7 +303,7 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
           </div>
 
           {/* Tab Content List (Scrollable Area) */}
-          <OverlayBody className="space-y-2">
+          <OverlayBody>
             {/* TAB 1: CROPS */}
             {activeTab === "crop" &&
               CROP_CATALOG.map((crop) => {
@@ -321,7 +319,7 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
                     className={`p-2 sm:p-2.5 rounded-2xl border flex items-center justify-between gap-2.5 relative overflow-hidden transition-all ${
                       hasRank
                         ? "bg-slate-800/40 hover:bg-slate-800/70 border-slate-800"
-                        : "bg-slate-900/60 border-slate-800/60 opacity-75"
+                        : "modal-section opacity-75"
                     }`}
                   >
                     <div className="flex items-center gap-2.5 flex-1 min-w-0">
@@ -336,30 +334,30 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
 
                       <div className="flex-1 min-w-0 space-y-0.5 text-xs">
                         <div className="flex items-center gap-1.5 flex-wrap">
-                          <h4 className="font-extrabold text-xs sm:text-sm text-slate-100 truncate">
+                          <h4 className="font-semibold text-xs sm:text-sm text-[var(--modal-text)] truncate">
                             {crop.name}
                           </h4>
                           {renderOwnedBadge(ownedCount)}
                         </div>
 
-                        <div className="grid grid-cols-2 gap-x-2 gap-y-0.5 text-[11px] text-slate-300">
+                        <div className="grid grid-cols-2 gap-x-2 gap-y-0.5 text-xs text-[var(--modal-text)]">
                           <div className="truncate">
-                            Giá: <span className="font-bold text-amber-400">{formatPrice(crop.seedCostGold)}</span>
+                            Giá: <span className="font-bold text-[var(--modal-reward)]">{formatPrice(crop.seedCostGold)}</span>
                           </div>
                           <div className="truncate">
-                            Thu: <span className="font-semibold text-emerald-400">🪙{crop.harvestGold.toLocaleString("vi-VN")}</span>
+                            Thu: <span className="font-semibold text-[var(--modal-success)]">🪙{crop.harvestGold.toLocaleString("vi-VN")}</span>
                           </div>
                           <div className="truncate">
-                            TG: <span className="font-mono font-medium text-sky-300">{formatTimeVN(crop.growthMs)}</span>
+                            TG: <span className="font-mono font-medium text-[var(--modal-info)]">{formatTimeVN(crop.growthMs)}</span>
                           </div>
                           <div className="truncate">
-                            XP: <span className="font-semibold text-amber-300">⚡+{crop.harvestXp}</span>
+                            XP: <span className="font-semibold text-[var(--modal-reward)]">⚡+{crop.harvestXp}</span>
                           </div>
                         </div>
 
                         {!hasRank && (
-                          <div className="text-[10px] text-amber-400 font-semibold pt-0.5 truncate">
-                            Yêu cầu: <span className="text-amber-300">{rankName}</span>
+                          <div className="text-xs text-[var(--modal-reward)] font-semibold pt-0.5 truncate">
+                            Yêu cầu: <span className="text-[var(--modal-reward)]">{rankName}</span>
                           </div>
                         )}
                       </div>
@@ -407,7 +405,7 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
                     className={`p-2 sm:p-2.5 rounded-2xl border flex items-center justify-between gap-2.5 relative overflow-hidden transition-all ${
                       hasRank
                         ? "bg-slate-800/40 hover:bg-slate-800/70 border-slate-800"
-                        : "bg-slate-900/60 border-slate-800/60 opacity-75"
+                        : "modal-section opacity-75"
                     }`}
                   >
                     <div className="flex items-center gap-2.5 flex-1 min-w-0">
@@ -422,17 +420,17 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
 
                       <div className="flex-1 min-w-0 space-y-0.5 text-xs">
                         <div className="flex items-center gap-1.5 flex-wrap">
-                          <h4 className="font-extrabold text-xs sm:text-sm text-slate-100 truncate">
+                          <h4 className="font-semibold text-xs sm:text-sm text-[var(--modal-text)] truncate">
                             {fert.name}
                           </h4>
                           {renderOwnedBadge(ownedCount)}
                         </div>
 
-                        <div className="grid grid-cols-2 gap-x-2 gap-y-0.5 text-[11px] text-slate-300">
+                        <div className="grid grid-cols-2 gap-x-2 gap-y-0.5 text-xs text-[var(--modal-text)]">
                           <div className="truncate">
-                            Giá: <span className="font-bold text-amber-400">{formatPrice(fert.purchaseGold)}</span>
+                            Giá: <span className="font-bold text-[var(--modal-reward)]">{formatPrice(fert.purchaseGold)}</span>
                           </div>
-                          <div className="truncate text-emerald-400 font-semibold col-span-1">
+                          <div className="truncate text-[var(--modal-success)] font-semibold col-span-1">
                             {fert.category === "nutrition" && `⚡ +${Math.round(fert.xpBonusPct * 100)}% XP`}
                             {fert.category === "growth" && `⏱️ -${Math.round(fert.growthTimeReductionPct * 100)}% TG`}
                             {fert.category === "premium" && `✨ +${Math.round(fert.xpBonusPct * 100)}% XP & -${Math.round(fert.growthTimeReductionPct * 100)}% TG`}
@@ -440,8 +438,8 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
                         </div>
 
                         {!hasRank && (
-                          <div className="text-[10px] text-amber-400 font-semibold pt-0.5 truncate">
-                            Yêu cầu: <span className="text-amber-300">{rankName}</span>
+                          <div className="text-xs text-[var(--modal-reward)] font-semibold pt-0.5 truncate">
+                            Yêu cầu: <span className="text-[var(--modal-reward)]">{rankName}</span>
                           </div>
                         )}
                       </div>
@@ -489,7 +487,7 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
                     className={`p-2 sm:p-2.5 rounded-2xl border flex items-center justify-between gap-2.5 relative overflow-hidden transition-all ${
                       hasRank
                         ? "bg-slate-800/40 hover:bg-slate-800/70 border-slate-800"
-                        : "bg-slate-900/60 border-slate-800/60 opacity-75"
+                        : "modal-section opacity-75"
                     }`}
                   >
                     <div className="flex items-center gap-2.5 flex-1 min-w-0">
@@ -499,7 +497,7 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
 
                       <div className="flex-1 min-w-0 space-y-0.5 text-xs">
                         <div className="flex items-center gap-1.5 flex-wrap">
-                          <h4 className="font-extrabold text-xs sm:text-sm text-slate-100 truncate">
+                          <h4 className="font-semibold text-xs sm:text-sm text-[var(--modal-text)] truncate">
                             {animal.name}
                           </h4>
                           {renderOwnedBadge(ownedCount)}
@@ -507,31 +505,31 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
 
                         <div
                           data-animal-store-stats="compact-two-column"
-                          className="grid grid-cols-2 gap-x-2 gap-y-0.5 text-[11px] text-slate-300"
+                          className="grid grid-cols-2 gap-x-2 gap-y-0.5 text-xs text-[var(--modal-text)]"
                         >
                           <div className="truncate">
                             Mở: <span className="font-semibold text-violet-300">{rankName}</span>
                           </div>
                           <div className="truncate">
-                            Giá: <span className="font-bold text-amber-400">{formatPrice(animal.purchaseGold)}</span>
+                            Giá: <span className="font-bold text-[var(--modal-reward)]">{formatPrice(animal.purchaseGold)}</span>
                           </div>
                           <div className="truncate">
-                            Đẻ trứng: <span className="font-mono font-medium text-sky-300">{formatTimeVN(animal.eggIntervalMs)}</span>
+                            Đẻ trứng: <span className="font-mono font-medium text-[var(--modal-info)]">{formatTimeVN(animal.eggIntervalMs)}</span>
                           </div>
                           <div data-animal-lifespan="hours" className="truncate">
-                            Tuổi thọ: <span className="font-semibold text-rose-200">{formatLifespanHours(animal.lifespanMs)}</span>
+                            Tuổi thọ: <span className="font-semibold text-[var(--modal-danger)]">{formatLifespanHours(animal.lifespanMs)}</span>
                           </div>
                           <div className="truncate">
-                            Giá trứng: <span className="font-semibold text-emerald-400">🪙{animal.eggSellGold.toLocaleString("vi-VN")}</span>
+                            Giá trứng: <span className="font-semibold text-[var(--modal-success)]">🪙{animal.eggSellGold.toLocaleString("vi-VN")}</span>
                           </div>
                           <div className="truncate">
-                            XP: <span className="font-semibold text-amber-300">⚡+{animal.eggSellXp}</span>
+                            XP: <span className="font-semibold text-[var(--modal-reward)]">⚡+{animal.eggSellXp}</span>
                           </div>
                         </div>
 
                         {!hasRank && (
-                          <div className="text-[10px] text-amber-400 font-semibold pt-0.5 truncate">
-                            Yêu cầu: <span className="text-amber-300">{rankName}</span>
+                          <div className="text-xs text-[var(--modal-reward)] font-semibold pt-0.5 truncate">
+                            Yêu cầu: <span className="text-[var(--modal-reward)]">{rankName}</span>
                           </div>
                         )}
                       </div>
@@ -572,7 +570,7 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
                     className={`p-2 sm:p-2.5 rounded-2xl border flex items-center justify-between gap-2.5 relative overflow-hidden transition-all ${
                       hasRank
                         ? "bg-slate-800/40 hover:bg-slate-800/70 border-slate-800"
-                        : "bg-slate-900/60 border-slate-800/60 opacity-75"
+                        : "modal-section opacity-75"
                     }`}
                   >
                     <div className="flex items-center gap-2.5 flex-1 min-w-0">
@@ -587,27 +585,27 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
 
                       <div className="flex-1 min-w-0 space-y-0.5 text-xs">
                         <div className="flex items-center gap-1.5 flex-wrap">
-                          <h4 className="font-extrabold text-xs sm:text-sm text-slate-100 truncate">
+                          <h4 className="font-semibold text-xs sm:text-sm text-[var(--modal-text)] truncate">
                             {feed.name}
                           </h4>
                           {renderOwnedBadge(ownedCount)}
                         </div>
 
-                        <div className="grid grid-cols-2 gap-x-2 gap-y-0.5 text-[11px] text-slate-300">
+                        <div className="grid grid-cols-2 gap-x-2 gap-y-0.5 text-xs text-[var(--modal-text)]">
                           <div className="truncate">
-                            Giá: <span className="font-bold text-amber-400">{formatPrice(feed.costGold)}</span>
+                            Giá: <span className="font-bold text-[var(--modal-reward)]">{formatPrice(feed.costGold)}</span>
                           </div>
                           <div className="truncate">
-                            Máng: <span className="font-semibold text-sky-300">🥣 +{feed.buffAmount}%</span>
+                            Máng: <span className="font-semibold text-[var(--modal-info)]">🥣 +{feed.buffAmount}%</span>
                           </div>
                           <div className="truncate col-span-2">
-                            Tốc độ đẻ trứng: <span className="font-semibold text-emerald-400">⚡ +{feed.speedBonusPercent}%</span>
+                            Tốc độ đẻ trứng: <span className="font-semibold text-[var(--modal-success)]">⚡ +{feed.speedBonusPercent}%</span>
                           </div>
                         </div>
 
                         {!hasRank && (
-                          <div className="text-[10px] text-amber-400 font-semibold pt-0.5 truncate">
-                            Yêu cầu: <span className="text-amber-300">{rankName}</span>
+                          <div className="text-xs text-[var(--modal-reward)] font-semibold pt-0.5 truncate">
+                            Yêu cầu: <span className="text-[var(--modal-reward)]">{rankName}</span>
                           </div>
                         )}
                       </div>
@@ -644,43 +642,41 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
 
       {/* QUANTITY BUY CONFIRMATION (owned by Store) */}
       {buyModalData && (
-        <AppModal
+        <AppModal size="compact" theme="farm" archetype="transaction"
           layer="nested"
           onClose={() => setBuyModalData(null)}
           closeOnBackdrop
           ariaLabel={`Mua ${buyModalData.name}`}
-          panelClassName="app-overlay--spaced w-full max-w-sm bg-slate-900 border border-amber-500/40 rounded-3xl shadow-2xl animate-in zoom-in-95 duration-150"
         >
             {/* Header */}
-            <OverlayHeader className="flex items-center justify-between gap-2 border-b border-slate-800">
+            <OverlayHeader className="flex items-center justify-between">
               <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-xl sm:text-2xl shrink-0">
+                <div className="modal-status-icon">
                   {buyModalData.icon}
                 </div>
                 <div>
-                  <h4 className="font-extrabold text-sm text-slate-100 leading-tight">
+                  <h4 className="modal-title">
                     Mua {buyModalData.name}
                   </h4>
-                  <p className="text-[11px] text-slate-400 mt-0.5">
-                    Đang sở hữu: <span className="font-bold text-emerald-400">{buyModalData.ownedCount}</span>
+                  <p className="modal-copy mt-0.5">
+                    Đang sở hữu: <span className="font-bold text-[var(--modal-success)]">{buyModalData.ownedCount}</span>
                   </p>
                 </div>
               </div>
 
-              <button
+              <ModalButton variant="icon"
                 onClick={() => setBuyModalData(null)}
-                className="app-overlay-button app-overlay-button--icon w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
                 aria-label="Đóng chọn số lượng mua"
               >
                 <X className="w-4 h-4" />
-              </button>
+              </ModalButton>
             </OverlayHeader>
 
-            <OverlayBody className="space-y-3.5">
+            <OverlayBody>
 
             {/* Quantity Selector */}
             <div className="space-y-2">
-              <label className="text-xs font-bold text-slate-300 block text-center">
+              <label className="text-xs font-bold text-[var(--modal-text)] block text-center">
                 Chọn số lượng muốn mua:
               </label>
 
@@ -694,7 +690,7 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
                   }}
                   disabled={buyQuantity <= 1}
                   aria-label="Giảm số lượng mua 1"
-                  className="app-overlay-button app-overlay-button--icon w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-800 hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed text-slate-200 font-bold flex items-center justify-center border border-slate-700 transition-all active:scale-95 cursor-pointer"
+                  className="modal-control app-overlay-button app-overlay-button--icon w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-800 hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed text-[var(--modal-text)] font-bold flex items-center justify-center border border-slate-700 transition-all active:scale-95 cursor-pointer"
                 >
                   <Minus className="w-4 h-4" />
                 </button>
@@ -715,7 +711,7 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
                       setBuyQuantity(adjustIntegerQuantity(val, 0, 1, maxAffordable));
                     }
                   }}
-                  className="w-20 sm:w-24 text-center py-1.5 sm:py-2 bg-slate-950 border border-slate-700 rounded-xl text-amber-300 font-black text-base sm:text-lg font-mono focus:outline-none focus:border-amber-400"
+                  className="w-20 sm:w-24 text-center py-1.5 sm:py-2 bg-slate-950 border border-slate-700 rounded-xl text-[var(--modal-reward)] font-semibold text-base sm:text-lg font-mono focus:outline-none focus:border-amber-400"
                 />
 
                 <button
@@ -726,7 +722,7 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
                   }}
                   disabled={buyQuantity >= maxAffordable}
                   aria-label="Tăng số lượng mua 1"
-                  className="app-overlay-button app-overlay-button--icon w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-800 hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed text-slate-200 font-bold flex items-center justify-center border border-slate-700 transition-all active:scale-95 cursor-pointer"
+                  className="modal-control app-overlay-button app-overlay-button--icon w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-800 hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed text-[var(--modal-text)] font-bold flex items-center justify-center border border-slate-700 transition-all active:scale-95 cursor-pointer"
                 >
                   <Plus className="w-4 h-4" />
                 </button>
@@ -741,7 +737,7 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
                     disabled={delta < 0 ? buyQuantity <= 1 : buyQuantity >= maxAffordable}
                     onClick={() => handleBuyQuantityQuickAdjust(delta)}
                     aria-label={`${delta < 0 ? "Giảm" : "Tăng"} số lượng mua ${Math.abs(delta)}`}
-                    className="app-overlay-button min-h-10 rounded-xl border border-slate-700 bg-slate-800 px-1.5 text-[11px] font-bold text-slate-300 transition-all hover:bg-slate-700 active:scale-95 disabled:cursor-not-allowed disabled:opacity-35 sm:text-xs"
+                    className="modal-control app-overlay-button min-h-10 rounded-xl border border-slate-700 bg-slate-800 px-1.5 text-xs font-bold text-[var(--modal-text)] transition-all hover:bg-slate-700 active:scale-95 disabled:cursor-not-allowed disabled:opacity-35 sm:text-xs"
                   >
                     {delta > 0 ? "+" : ""}{delta}
                   </button>
@@ -755,31 +751,31 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
                   setBuyQuantity(maxAffordable);
                 }}
                 aria-label={`Chọn số lượng mua tối đa ${maxAffordable}`}
-                className="app-overlay-button min-h-10 w-full rounded-xl border border-amber-500/40 bg-amber-500/20 px-2 text-[11px] font-bold text-amber-300 transition-all hover:bg-amber-500/30 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50 sm:text-xs"
+                className="modal-control app-overlay-button min-h-10 w-full rounded-xl border border-amber-500/40 bg-amber-500/20 px-2 text-xs font-bold text-[var(--modal-reward)] transition-all hover:bg-amber-500/30 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50 sm:text-xs"
               >
                 Tối đa ({maxAffordable})
               </button>
             </div>
 
             {/* Cost Calculation Box */}
-            <div className="bg-slate-950/80 border border-slate-800 rounded-2xl p-2.5 sm:p-3 space-y-1 text-xs text-slate-300">
+            <div className="modal-section space-y-1 text-xs text-[var(--modal-text)]">
               <div className="flex items-center justify-between">
-                <span className="text-slate-400 text-[11px]">Đơn giá:</span>
-                <span className="font-bold text-amber-400">
+                <span className="text-[var(--modal-muted)] text-xs">Đơn giá:</span>
+                <span className="font-bold text-[var(--modal-reward)]">
                   {formatPrice(buyModalData.unitCostGold)}
                 </span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-slate-400 text-[11px]">Ví Vàng hiện có:</span>
-                <span className="font-bold text-slate-200 font-mono">
+                <span className="text-[var(--modal-muted)] text-xs">Ví Vàng hiện có:</span>
+                <span className="font-bold text-[var(--modal-text)] font-mono">
                   🪙{gold.toLocaleString("vi-VN")}
                 </span>
               </div>
-              <div className="border-t border-slate-800 pt-1 flex items-center justify-between font-extrabold text-xs sm:text-sm">
-                <span className="text-slate-200">Tổng thanh toán:</span>
+              <div className="border-t border-slate-800 pt-1 flex items-center justify-between font-semibold text-xs sm:text-sm">
+                <span className="text-[var(--modal-text)]">Tổng thanh toán:</span>
                 <span
                   className={`font-mono ${
-                    canAffordBuy ? "text-amber-300" : "text-rose-400"
+                    canAffordBuy ? "text-[var(--modal-reward)]" : "text-[var(--modal-danger)]"
                   }`}
                 >
                   {formatPrice(totalBuyCost)}
@@ -789,22 +785,22 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
             </OverlayBody>
 
             {/* Action Buttons */}
-            <OverlayFooter className="flex items-center gap-2" data-stack-actions="true">
-              <button
+            <OverlayFooter className="flex items-center" data-stack-actions="true">
+              <ModalButton variant="ghost"
                 type="button"
                 onClick={() => setBuyModalData(null)}
-                className="app-overlay-button flex-1 py-2 rounded-xl bg-slate-800 text-slate-300 font-bold text-xs hover:bg-slate-700 transition-colors cursor-pointer"
+                className="flex-1"
               >
                 Hủy Bỏ
-              </button>
-              <button
+              </ModalButton>
+              <ModalButton variant="primary"
                 type="button"
                 disabled={!canAffordBuy || buyQuantity <= 0}
                 onClick={handleConfirmBuy}
-                className="app-overlay-button flex-1 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 disabled:opacity-40 disabled:cursor-not-allowed text-slate-950 font-black text-xs shadow-md transition-all active:scale-95 cursor-pointer"
+                className="flex-1"
               >
                 Mua ({buyQuantity})
-              </button>
+              </ModalButton>
             </OverlayFooter>
         </AppModal>
       )}

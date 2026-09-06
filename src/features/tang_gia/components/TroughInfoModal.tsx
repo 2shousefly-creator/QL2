@@ -8,7 +8,7 @@ import {
 } from "../animalLifecycle";
 import { formatFeedPercentage } from "../farmPresentation";
 import { AlertTriangle, HeartPulse, Info, X, Zap, Utensils, Clock, ShieldCheck, Sparkles } from "lucide-react";
-import { AppModal, OverlayBody, OverlayFooter, OverlayHeader } from "../../../components/overlay/AppOverlay";
+import { AppModal, ModalButton, OverlayBody, OverlayFooter, OverlayHeader } from "../../../components/overlay/AppOverlay";
 
 interface TroughInfoModalProps {
   isOpen: boolean;
@@ -67,57 +67,55 @@ export const TroughInfoModal: React.FC<TroughInfoModalProps> = ({
   const activeSpeed = currentBuff > 0 ? activeFeedSpeedBonus : 0;
 
   return (
-    <AppModal
+    <AppModal theme="farm" archetype="info"
       onClose={onClose}
       closeOnBackdrop
       labelledBy="trough-info-title"
-      panelClassName="app-overlay--spaced w-full max-w-md bg-slate-900 border border-slate-700/90 rounded-3xl shadow-2xl animate-in zoom-in-95 duration-200"
     >
         {/* Header */}
-        <OverlayHeader className="bg-slate-800/80 border-b border-slate-800 flex items-center justify-between gap-2">
+        <OverlayHeader className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-10 h-10 rounded-2xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 shrink-0">
+            <div className="modal-status-icon">
               <Info className="w-5 h-5" />
             </div>
             <div>
-              <h3 id="trough-info-title" className="font-extrabold text-base text-slate-100 leading-tight">
+              <h3 id="trough-info-title" className="modal-title">
                 Thông Tin Máng Ăn
               </h3>
-              <p className="text-xs text-slate-400 mt-0.5">
+              <p className="modal-copy mt-0.5">
                 Trạng thái hoạt động và cơ chế vận hành của Máng Ăn gia cầm.
               </p>
             </div>
           </div>
 
-          <button
+          <ModalButton variant="icon"
             type="button"
             onClick={onClose}
-            className="app-overlay-button app-overlay-button--icon w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition-colors cursor-pointer shrink-0"
             aria-label="Đóng thông tin máng ăn"
           >
             <X className="w-4 h-4" />
-          </button>
+          </ModalButton>
         </OverlayHeader>
 
         {/* Scrollable Content Body with smooth vertical scroll */}
-        <OverlayBody className="space-y-3.5">
+        <OverlayBody>
           {/* SECTION 1: TRẠNG THÁI HIỆN TẠI */}
           <div className={`rounded-2xl border p-3.5 space-y-2.5 ${
             isDangerMode
               ? "border-red-800/80 bg-red-950/25 shadow-[0_0_16px_rgba(239,68,68,0.18)]"
-              : "border-slate-800 bg-slate-950/80"
+              : "modal-section "
           }`}>
             <div className="flex items-center justify-between text-xs font-bold border-b border-slate-800/80 pb-2">
-              <span className="text-amber-400 flex items-center gap-1.5">
+              <span className="text-[var(--modal-reward)] flex items-center gap-1.5">
                 <Utensils className="w-4 h-4" />
                 <span>{isDangerMode ? "Nguy Hiểm Còn Lại" : "Trạng Thái Máng Ăn Hiện Tại"}</span>
               </span>
               <span
-                className={`font-mono font-black ${
+                className={`font-mono font-semibold ${
                   isDangerMode
-                    ? "text-red-400"
+                    ? "text-[var(--modal-danger)]"
                     : currentBuff > 0
-                    ? "text-emerald-400"
+                    ? "text-[var(--modal-success)]"
                     : "text-amber-500"
                 }`}
               >
@@ -142,30 +140,30 @@ export const TroughInfoModal: React.FC<TroughInfoModalProps> = ({
             </div>
 
             <div className="grid grid-cols-2 gap-2 pt-1 text-xs">
-              <div className="bg-slate-900/90 border border-slate-800 rounded-xl p-2.5">
-                <div className="text-[10px] text-slate-400">Vật nuôi trong chuồng</div>
-                <div className="font-bold text-slate-200 mt-0.5">
+              <div className="modal-section">
+                <div className="text-xs text-[var(--modal-muted)]">Vật nuôi trong chuồng</div>
+                <div className="font-bold text-[var(--modal-text)] mt-0.5">
                   🐓 {livingAnimalCount} sống{deadAnimalCount > 0 ? ` · ${deadAnimalCount} chết` : ""}
                 </div>
               </div>
 
-              <div className="bg-slate-900/90 border border-slate-800 rounded-xl p-2.5">
-                <div className="text-[10px] text-slate-400">Tốc độ đẻ trứng</div>
-                <div className="font-bold text-emerald-400 mt-0.5 flex items-center gap-1">
-                  <Zap className="w-3 h-3 text-amber-400" />
+              <div className="modal-section">
+                <div className="text-xs text-[var(--modal-muted)]">Tốc độ đẻ trứng</div>
+                <div className="font-bold text-[var(--modal-success)] mt-0.5 flex items-center gap-1">
+                  <Zap className="w-3 h-3 text-[var(--modal-reward)]" />
                   {activeSpeed > 0 ? `+${activeSpeed}% tốc độ` : "Chưa có buff"}
                 </div>
               </div>
             </div>
 
             {/* Remaining Food Duration */}
-            <div className="p-2.5 bg-slate-900/90 border border-slate-800 rounded-xl text-xs space-y-1">
+            <div className="modal-section text-xs space-y-1">
               <div className="flex items-center justify-between">
-                <span className="text-slate-400 flex items-center gap-1">
-                  <Clock className="w-3.5 h-3.5 text-amber-400" />
+                <span className="text-[var(--modal-muted)] flex items-center gap-1">
+                  <Clock className="w-3.5 h-3.5 text-[var(--modal-reward)]" />
                   {isDangerMode ? "Thời gian nguy hiểm còn lại:" : "Thời gian thức ăn còn lại:"}
                 </span>
-                <span className="font-bold text-amber-300 font-mono">
+                <span className="font-bold text-[var(--modal-reward)] font-mono">
                   {livingAnimalCount > 0
                     ? isDangerMode
                       ? formatRemainingHours(dangerRemainingMs)
@@ -179,7 +177,7 @@ export const TroughInfoModal: React.FC<TroughInfoModalProps> = ({
               </div>
 
               {livingAnimalCount === 0 && (
-                <p className="text-[10.5px] text-amber-300/90 italic pt-0.5">
+                <p className="text-[10.5px] text-[var(--modal-reward)] italic pt-0.5">
                   ℹ️ Chuồng chưa có vật nuôi: Thức ăn trong Máng Ăn sẽ được bảo lưu và chưa bị tiêu hao cho đến khi bạn thả vật nuôi vào chuồng.
                 </p>
               )}
@@ -187,12 +185,12 @@ export const TroughInfoModal: React.FC<TroughInfoModalProps> = ({
           </div>
 
           {/* SECTION 2: CƠ CHẾ TIÊU HAO THEO SỐ VẬT NUÔI */}
-          <div className="bg-slate-950/80 border border-slate-800 rounded-2xl p-3.5 space-y-2">
-            <h4 className="text-xs font-bold text-slate-200 flex items-center gap-1.5">
-              <Clock className="w-3.5 h-3.5 text-amber-400" />
+          <div className="modal-section space-y-2">
+            <h4 className="text-xs font-bold text-[var(--modal-text)] flex items-center gap-1.5">
+              <Clock className="w-3.5 h-3.5 text-[var(--modal-reward)]" />
               <span>Cơ Chế Tiêu Hao Theo Số Lượng Vật Nuôi</span>
             </h4>
-            <p className="text-[11px] text-slate-400 leading-relaxed">
+            <p className="text-xs text-[var(--modal-muted)] leading-relaxed">
               Dung tích tối đa của Máng Ăn là <strong>100%</strong>. Càng nuôi nhiều vật nuôi trong chuồng, Máng Ăn tiêu hao càng nhanh:
             </p>
             <div className="grid grid-cols-5 gap-1 pt-1 text-center">
@@ -205,26 +203,26 @@ export const TroughInfoModal: React.FC<TroughInfoModalProps> = ({
               ].map((item) => (
                 <div
                   key={item.count}
-                  className={`p-1.5 rounded-xl border text-[10px] ${
+                  className={`p-1.5 rounded-xl border text-xs ${
                     livingAnimalCount === item.count
-                      ? "bg-amber-500/20 border-amber-500/50 text-amber-300 font-bold"
-                      : "bg-slate-900/60 border-slate-800 text-slate-400"
+                      ? "bg-amber-500/20 border-amber-500/50 text-[var(--modal-reward)] font-bold"
+                      : "modal-section text-[var(--modal-muted)]"
                   }`}
                 >
                   <div className="font-semibold">{item.count} con</div>
-                  <div className="text-[9px] font-mono text-slate-300">{item.hours}h</div>
+                  <div className="text-xs font-mono text-[var(--modal-text)]">{item.hours}h</div>
                 </div>
               ))}
             </div>
             {livingAnimalCount > 0 && (
-              <p className="text-[10.5px] text-emerald-400 pt-1">
+              <p className="text-[10.5px] text-[var(--modal-success)] pt-1">
                 👉 Hiện chuồng có <strong>{livingAnimalCount} con còn sống</strong>: 100% thức ăn sẽ tiêu hao hết trong <strong>{13 - animalCount} giờ</strong>. Vật Nuôi chết vẫn chiếm ô nhưng không tiêu hao thức ăn.
               </p>
             )}
           </div>
 
-          <div className="space-y-2 rounded-2xl border border-red-800/80 bg-red-950/35 p-3.5 text-[11px] leading-relaxed text-red-100">
-            <h4 className="flex items-center gap-1.5 text-xs font-black text-red-300">
+          <div className="space-y-2 rounded-2xl border border-red-800/80 bg-red-950/35 p-3.5 text-xs leading-relaxed text-[var(--modal-danger)]">
+            <h4 className="flex items-center gap-1.5 text-xs font-semibold text-[var(--modal-danger)]">
               <AlertTriangle className="h-4 w-4" />
               NGUY HIỂM KHI HẾT THỨC ĂN
             </h4>
@@ -233,8 +231,8 @@ export const TroughInfoModal: React.FC<TroughInfoModalProps> = ({
             </p>
           </div>
 
-          <div className="space-y-2 rounded-2xl border border-emerald-800/80 bg-emerald-950/30 p-3.5 text-[11px] leading-relaxed text-emerald-100">
-            <h4 className="flex items-center gap-1.5 text-xs font-black text-emerald-300">
+          <div className="space-y-2 rounded-2xl border border-emerald-800/80 bg-emerald-950/30 p-3.5 text-xs leading-relaxed text-[var(--modal-success)]">
+            <h4 className="flex items-center gap-1.5 text-xs font-semibold text-[var(--modal-success)]">
               <HeartPulse className="h-4 w-4" />
               TUỔI THỌ VẬT NUÔI
             </h4>
@@ -244,9 +242,9 @@ export const TroughInfoModal: React.FC<TroughInfoModalProps> = ({
           </div>
 
           {/* SECTION 3: CÁC LOẠI THỨC ĂN TRONG CATALOG */}
-          <div className="bg-slate-950/80 border border-slate-800 rounded-2xl p-3.5 space-y-2.5">
-            <h4 className="text-xs font-bold text-slate-200 flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+          <div className="modal-section space-y-2.5">
+            <h4 className="text-xs font-bold text-[var(--modal-text)] flex items-center gap-1.5">
+              <Sparkles className="w-3.5 h-3.5 text-[var(--modal-reward)]" />
               <span>Các Loại Thức Ăn & Tỷ Lệ Tăng Tốc</span>
             </h4>
 
@@ -254,19 +252,19 @@ export const TroughInfoModal: React.FC<TroughInfoModalProps> = ({
               {FEED_CATALOG.map((feed) => (
                 <div
                   key={feed.id}
-                  className="p-2.5 bg-slate-900 border border-slate-800 rounded-xl flex items-center justify-between text-xs"
+                  className="modal-section flex items-center justify-between text-xs"
                 >
                   <div className="flex items-center gap-2.5">
                     <span className="text-xl">🌾</span>
                     <div>
-                      <div className="font-bold text-slate-100">{feed.name}</div>
-                      <div className="text-[10px] text-emerald-400 font-medium mt-0.5">
+                      <div className="font-bold text-[var(--modal-text)]">{feed.name}</div>
+                      <div className="text-xs text-[var(--modal-success)] font-medium mt-0.5">
                         +{feed.buffAmount}% dung tích máng / bao
                       </div>
                     </div>
                   </div>
 
-                  <span className="text-xs font-bold px-2 py-1 rounded-lg bg-emerald-950 text-emerald-300 border border-emerald-700 font-mono">
+                  <span className="text-xs font-bold px-2 py-1 rounded-lg bg-emerald-950 text-[var(--modal-success)] border border-emerald-700 font-mono">
                     ⚡ +{feed.speedBonusPercent}%
                   </span>
                 </div>
@@ -275,12 +273,12 @@ export const TroughInfoModal: React.FC<TroughInfoModalProps> = ({
           </div>
 
           {/* SECTION 4: NGUYÊN TẮC NÂNG CẤP & BẢO TOÀN BUFF */}
-          <div className="bg-slate-950/80 border border-slate-800 rounded-2xl p-3.5 space-y-2 text-[11px] text-slate-300 leading-relaxed">
-            <h4 className="text-xs font-bold text-slate-200 flex items-center gap-1.5">
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+          <div className="modal-section space-y-2 text-xs text-[var(--modal-text)] leading-relaxed">
+            <h4 className="text-xs font-bold text-[var(--modal-text)] flex items-center gap-1.5">
+              <ShieldCheck className="w-3.5 h-3.5 text-[var(--modal-success)]" />
               <span>Nguyên Tắc Nâng Cấp & Bảo Toàn Buff</span>
             </h4>
-            <ul className="space-y-1.5 list-disc list-inside text-slate-300">
+            <ul className="space-y-1.5 list-disc list-inside text-[var(--modal-text)]">
               <li>
                 <strong>Nâng cấp tốc độ:</strong> Nếu nạp loại thức ăn có buff cao hơn buff hiện tại (vd: đang +10% nạp loại +25%), buff sẽ được <strong>nâng cấp ngay lập tức</strong> lên mức cao hơn.
               </li>
@@ -295,14 +293,14 @@ export const TroughInfoModal: React.FC<TroughInfoModalProps> = ({
         </OverlayBody>
 
         {/* Footer (Fixed) */}
-        <OverlayFooter className="bg-slate-800/80 border-t border-slate-800 flex items-center justify-end">
-          <button
+        <OverlayFooter className="flex items-center justify-end">
+          <ModalButton variant="ghost"
             type="button"
             onClick={onClose}
-            className="app-overlay-button w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-98 text-slate-200 font-bold text-xs transition-all cursor-pointer"
+            className="w-full"
           >
             Đã Hiểu
-          </button>
+          </ModalButton>
         </OverlayFooter>
     </AppModal>
   );

@@ -1,28 +1,8 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
-import {
-  X,
-  Volume2,
-  VolumeX,
-  Clock,
-  RotateCw,
-  ShieldCheck,
-  CheckCircle,
-  HelpCircle,
-  Sparkles,
-  Lock,
-  ArrowUp,
-  Inbox,
-  AlertTriangle,
-} from "lucide-react";
+import { AlertTriangle, CheckCircle, Clock, Inbox, Lock, RotateCw, ShieldCheck, Sparkles, Volume2, VolumeX, X } from "lucide-react";
 import { GameState, TrainingDifficulty } from "../../../game/types";
-import {
-  FormationCell,
-  FormationPieceDefinition,
-  FormationPlacement,
-  FormationResult,
-  FormationRun,
-} from "../../../game/training/formationAssembly/formationTypes";
-import { FORMATION_CONFIGS, FORMATION_SHAPES } from "../../../game/training/formationAssembly/formationConfig";
+import { FormationCell, FormationResult, FormationRun } from "../../../game/training/formationAssembly/formationTypes";
+import { FORMATION_CONFIGS } from "../../../game/training/formationAssembly/formationConfig";
 import {
   applyFormationRecoveryOrFail,
   calculateFormationResult,
@@ -39,7 +19,7 @@ import {
 } from "../../../game/training/formationAssembly/formationTransforms";
 import { FormationPieceView } from "./FormationPieceView";
 import { soundManager } from "../../../game/audio";
-import { AppModal, ExclusiveFullscreenOverlay, OverlayBody, OverlayFooter, OverlayHeader } from "../../../components/overlay/AppOverlay";
+import { ConfirmationDialog, ExclusiveFullscreenOverlay, GameResultModal, ModalActions, ModalButton, OverlayBody, OverlayFooter, OverlayHeader, ResultHero } from "../../../components/overlay/AppOverlay";
 
 type FormationAssemblyGameProps = {
   gameState: GameState;
@@ -605,20 +585,16 @@ export const FormationAssemblyGame: React.FC<FormationAssemblyGameProps> = ({
 
       {/* Confirmation Feedback Modal */}
       {evalFeedback?.show && (
-        <AppModal
+        <GameResultModal status={evalFeedback.correct ? "success" : "danger"}
           layer="exclusive-dialog"
           layout="viewport-safe"
           closeOnEscape={false}
           labelledBy="formation-feedback-title"
-          panelClassName="max-w-sm animate-scaleUp border-slate-800 bg-slate-900 text-center text-slate-100"
+          panelClassName="text-center"
         >
-          <OverlayHeader className="flex flex-col items-center gap-3 border-slate-800 text-center">
+          <ResultHero className="flex flex-col items-center text-center">
             <div
-              className={`w-16 h-16 rounded-3xl flex items-center justify-center border shadow-lg ${
-                evalFeedback.correct
-                  ? "bg-emerald-500/20 text-emerald-400 border-emerald-500/40"
-                  : "bg-rose-500/20 text-rose-400 border-rose-500/40"
-              }`}
+              className="modal-status-icon"
             >
               {evalFeedback.correct ? (
                 <CheckCircle className="w-10 h-10" />
@@ -628,76 +604,70 @@ export const FormationAssemblyGame: React.FC<FormationAssemblyGameProps> = ({
             </div>
 
             <div className="space-y-1">
-              <h3 id="formation-feedback-title" className="text-lg font-black text-slate-100">
+              <h3 id="formation-feedback-title" className="modal-title">
                 {evalFeedback.correct ? "CHÍNH XÁC!" : "CHƯA CHÍNH XÁC!"}
               </h3>
             </div>
-          </OverlayHeader>
+          </ResultHero>
 
           <OverlayBody>
-            <p className="text-center text-xs text-slate-300">
+            <p className="text-center text-xs text-[var(--modal-text)]">
               {evalFeedback.correct
                 ? "Đội hình đã ghép hoàn toàn đúng vị trí và hướng quân!"
                 : `Đội hình chưa đúng hoàn toàn vị trí hoặc hướng xoay (${evalFeedback.scorePct}% chính xác).`}
             </p>
           </OverlayBody>
 
-          <OverlayFooter className="border-slate-800 bg-slate-900">
-            <button
+          <ModalActions>
+            <ModalButton variant="primary"
               type="button"
               onClick={evalFeedback.onProceed}
-              className={`w-full py-3 rounded-2xl font-black text-sm shadow-lg transition-all active:scale-98 ${
-                evalFeedback.correct
-                  ? "bg-emerald-500 hover:bg-emerald-400 text-slate-950"
-                  : "bg-rose-600 hover:bg-rose-500 text-white"
-              }`}
+              className="w-full"
             >
               Tiếp Tục
-            </button>
-          </OverlayFooter>
-        </AppModal>
+            </ModalButton>
+          </ModalActions>
+        </GameResultModal>
       )}
 
       {/* Exit Confirmation Modal */}
       {showExitConfirm && (
-        <AppModal
+        <ConfirmationDialog status="warning"
           onClose={() => setShowExitConfirm(false)}
           layer="exclusive-dialog"
           layout="viewport-safe"
           labelledBy="formation-exit-title"
-          panelClassName="max-w-sm border-slate-800 bg-slate-900 text-center text-slate-100"
+          panelClassName="text-center"
         >
-          <OverlayHeader className="flex flex-col items-center gap-3 border-slate-800 text-center">
-            <div className="w-12 h-12 rounded-2xl bg-rose-500/20 text-rose-400 border border-rose-500/40 flex items-center justify-center">
+          <OverlayHeader className="flex flex-col items-center text-center">
+            <div className="modal-status-icon">
               <AlertTriangle className="w-6 h-6" />
             </div>
 
-            <h3 id="formation-exit-title" className="text-base font-black text-slate-100">Thoát Lượt Chơi?</h3>
+            <h3 id="formation-exit-title" className="modal-title">Thoát Lượt Chơi?</h3>
           </OverlayHeader>
 
           <OverlayBody>
-            <p className="text-center text-xs text-slate-400">
+            <p className="text-center text-xs text-[var(--modal-muted)]">
               Bạn có chắc chắn muốn thoát khỏi lượt chơi Xếp Đội Hình hiện tại không?
             </p>
           </OverlayBody>
 
-          <OverlayFooter className="grid grid-cols-2 gap-2 border-slate-800 bg-slate-900">
-              <button
+          <OverlayFooter>
+              <ModalButton variant="ghost"
                 type="button"
                 onClick={() => setShowExitConfirm(false)}
-                className="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs"
               >
                 Tiếp Tục Chơi
-              </button>
-              <button
+              </ModalButton>
+              <ModalButton variant="danger"
                 type="button"
                 onClick={onExitRun}
-                className="py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs shadow-md shadow-rose-600/20"
               >
                 Xác Nhận Thoát
-              </button>
+              </ModalButton>
           </OverlayFooter>
-        </AppModal>
+        </ConfirmationDialog>
       )}
     </ExclusiveFullscreenOverlay>
   );

@@ -19,7 +19,7 @@ import { getRankRole } from "../game/rankRoles";
 import { RANK_STEPS } from "../game/rankBuilder";
 import { soundManager } from "../game/audio";
 import { GameState, RankFamily } from "../game/types";
-import { AppBottomSheet, OverlayBody, OverlayFooter, OverlayHeader } from "./overlay/AppOverlay";
+import { AppBottomSheet, ModalButton, OverlayBody, OverlayFooter, OverlayHeader } from "./overlay/AppOverlay";
 
 const CATEGORY_NAMES: Record<string, string> = {
   academy: "Khối Đào Tạo & Nhập Ngũ",
@@ -64,71 +64,69 @@ export const JourneyDutySheet: React.FC<JourneyDutySheetProps> = ({
   };
 
   return (
-    <AppBottomSheet
+    <AppBottomSheet archetype="info"
       onClose={requestClose}
       closeOnBackdrop
       ariaLabel={`Nhiệm vụ ${duty.rankName}`}
-      panelClassName="theme-card-accent w-full max-w-lg bg-slate-900 border-t sm:border rounded-t-3xl sm:rounded-3xl p-4 sm:p-6 shadow-2xl text-slate-100 gap-3 select-none animate-fadeIn"
     >
         {/* Header & Close */}
-        <OverlayHeader className="theme-divider flex items-center justify-between gap-2 border-b pb-3">
+        <OverlayHeader className="theme-divider flex items-center justify-between">
           <div className="flex items-center gap-2 flex-wrap">
             {isFullyAchieved && (
-              <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+              <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-[var(--modal-success)] border border-emerald-500/30">
                 <CheckCircle className="w-3.5 h-3.5" /> Đã hoàn thành
               </span>
             )}
             {isCurrentFamily && (
-              <span className={`theme-badge inline-flex items-center gap-1 text-xs font-bold px-2.5 py-0.5 rounded-full border ${gameState.settings.reducedMotion ? "" : "animate-pulse"}`}>
+              <span className={`theme-badge inline-flex items-center gap-1 text-xs font-bold px-2.5 py-0.5 rounded-full border ${gameState.settings.reducedMotion ? "" : ""}`}>
                 Quân hàm hiện tại
               </span>
             )}
             {isLocked && (
-              <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-400 border border-slate-700">
+              <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-0.5 rounded-full bg-slate-800 text-[var(--modal-muted)] border border-slate-700">
                 <Lock className="w-3.5 h-3.5" /> Chưa mở khóa
               </span>
             )}
-            <span className="text-xs text-sky-400 font-medium px-2 py-0.5 rounded-full bg-sky-950/50 border border-sky-800/60">
+            <span className="text-xs text-[var(--modal-info)] font-medium px-2 py-0.5 rounded-full bg-sky-950/50 border border-sky-800/60">
               {categoryLabel}
             </span>
           </div>
 
-          <button
+          <ModalButton variant="icon"
             type="button"
             onClick={() => {
               requestClose();
             }}
-            className="theme-focus p-2 rounded-full bg-slate-800/80 text-slate-300 hover:text-white transition-colors cursor-pointer shrink-0 focus:outline-none"
             aria-label="Đóng"
           >
             <X className="w-5 h-5" />
-          </button>
+          </ModalButton>
         </OverlayHeader>
 
+        <OverlayBody>
         {/* Hero Rank Identity */}
         <div className="shrink-0 my-3 flex flex-col items-center text-center">
           <div className="relative flex flex-col items-center">
             <RankBadge
               badge={family.badge}
-              size={84}
+              size={64}
               isCurrent={isCurrentFamily}
               isLocked={false}
             />
           </div>
 
-          <h2 className="theme-text-accent mt-2 text-xl font-black tracking-wide flex items-center gap-1.5">
+          <h2 className="theme-text-accent mt-2 text-xl font-semibold tracking-wide flex items-center gap-1.5">
             <Crown className="theme-icon-accent w-5 h-5" />
             <span>{duty.rankName}</span>
           </h2>
-          <p className="text-xs text-slate-300 mt-0.5 font-medium max-w-sm">
+          <p className="text-xs text-[var(--modal-text)] mt-0.5 font-medium max-w-sm">
             {duty.summary}
           </p>
         </div>
 
-        {/* Scrollable Duty & Authority Content */}
-        <OverlayBody className="space-y-3.5 pr-1 pb-2">
+        {/* Duty & Authority Content */}
           {/* Card 0: Chức Danh & Đơn Vị Đảm Nhận */}
-          <div className="theme-card-accent bg-slate-950/75 rounded-2xl p-3.5 border space-y-2">
+          <div className="modal-section space-y-2">
             <div className="theme-divider flex items-center gap-2 border-b pb-2">
               <Briefcase className="theme-icon-accent w-4 h-4" />
               <h3 className="theme-text-accent text-xs sm:text-sm font-bold uppercase tracking-wider">
@@ -137,13 +135,13 @@ export const JourneyDutySheet: React.FC<JourneyDutySheetProps> = ({
             </div>
 
             <div className="space-y-2">
-              <div className="flex flex-col items-start gap-1.5 bg-slate-900/80 p-2.5 rounded-xl border border-slate-800/80">
+              <div className="modal-section flex flex-col items-start gap-1.5">
                 <div className="flex items-center justify-between gap-2 w-full flex-wrap">
-                  <div className="theme-badge inline-block px-2.5 py-1 rounded-lg border font-extrabold text-sm tracking-wide shadow-inner">
+                  <div className="theme-badge inline-block px-2.5 py-1 rounded-lg border font-semibold text-sm tracking-wide shadow-inner">
                     {role.primaryTitle}
                   </div>
                   {role.unitDisplayName && (
-                    <span className="text-xs text-sky-400 font-medium">
+                    <span className="text-xs text-[var(--modal-info)] font-medium">
                       {role.unitDisplayName}
                     </span>
                   )}
@@ -155,61 +153,61 @@ export const JourneyDutySheet: React.FC<JourneyDutySheetProps> = ({
                 )}
               </div>
 
-              <p className="text-xs text-slate-300 leading-relaxed bg-slate-900/50 p-2.5 rounded-xl border border-slate-800/40">
+              <p className="modal-section text-xs text-[var(--modal-text)] leading-relaxed">
                 {role.shortDescription}
               </p>
             </div>
           </div>
 
           {/* Card 1: Quy mô & Tuyến Báo Cáo / Chỉ Huy */}
-          <div className="bg-slate-950/75 rounded-2xl p-3.5 border border-slate-800 space-y-2.5">
+          <div className="modal-section space-y-2.5">
             <div className="flex items-center gap-2 border-b border-slate-800/80 pb-2">
-              <Shield className="w-4 h-4 text-sky-400" />
-              <h3 className="text-xs sm:text-sm font-bold text-sky-300 uppercase tracking-wider">
+              <Shield className="w-4 h-4 text-[var(--modal-info)]" />
+              <h3 className="text-xs sm:text-sm font-bold text-[var(--modal-info)] uppercase tracking-wider">
                 Quy Mô Hoạt Động & Tuyến Chỉ Huy
               </h3>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
-              <div className="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800/60">
-                <div className="flex items-center gap-1.5 text-slate-400 mb-1 font-semibold">
+              <div className="modal-section">
+                <div className="flex items-center gap-1.5 text-[var(--modal-muted)] mb-1 font-semibold">
                   <Users className="theme-icon-accent w-3.5 h-3.5" />
                   <span>Quy mô hoạt động:</span>
                 </div>
-                <p className="text-slate-100 font-bold leading-snug">
+                <p className="text-[var(--modal-text)] font-bold leading-snug">
                   {duty.operationalScale}
                 </p>
               </div>
 
-              <div className="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800/60">
-                <div className="flex items-center gap-1.5 text-slate-400 mb-1 font-semibold">
-                  <GitPullRequest className="w-3.5 h-3.5 text-sky-400" />
+              <div className="modal-section">
+                <div className="flex items-center gap-1.5 text-[var(--modal-muted)] mb-1 font-semibold">
+                  <GitPullRequest className="w-3.5 h-3.5 text-[var(--modal-info)]" />
                   <span>Báo cáo cho ai:</span>
                 </div>
-                <p className="text-slate-100 font-bold leading-snug">
+                <p className="text-[var(--modal-text)] font-bold leading-snug">
                   {duty.directSuperior}
                 </p>
               </div>
             </div>
 
-            <div className="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800/60 text-xs">
-              <div className="flex items-center gap-1.5 text-slate-400 mb-1 font-semibold">
-                <Scale className="w-3.5 h-3.5 text-emerald-400" />
+            <div className="modal-section text-xs">
+              <div className="flex items-center gap-1.5 text-[var(--modal-muted)] mb-1 font-semibold">
+                <Scale className="w-3.5 h-3.5 text-[var(--modal-success)]" />
                 <span>Quyền lực & Thẩm quyền chỉ huy:</span>
               </div>
-              <p className="text-slate-200 leading-relaxed">
+              <p className="text-[var(--modal-text)] leading-relaxed">
                 {duty.authorityScope}
               </p>
             </div>
 
-            <div className="bg-slate-900/50 p-2 rounded-xl text-[11px] text-slate-400 border border-slate-800/40 flex items-start gap-1.5">
-              <span className="text-slate-400 font-semibold shrink-0">Tuyến chỉ đạo:</span>
-              <span className="text-slate-300">{duty.subordinates}</span>
+            <div className="modal-section text-xs text-[var(--modal-muted)] flex items-start gap-1.5">
+              <span className="text-[var(--modal-muted)] font-semibold shrink-0">Tuyến chỉ đạo:</span>
+              <span className="text-[var(--modal-text)]">{duty.subordinates}</span>
             </div>
           </div>
 
           {/* Card 2: Trọng trách & Quyền lực Gia Tăng so với quân hàm trước */}
-          <div className="theme-card-accent bg-slate-950/75 rounded-2xl p-3.5 border space-y-2.5">
+          <div className="modal-section space-y-2.5">
             <div className="theme-divider flex items-center gap-2 border-b pb-2">
               <TrendingUp className="theme-icon-accent w-4 h-4" />
               <h3 className="theme-text-accent text-xs sm:text-sm font-bold uppercase tracking-wider">
@@ -222,25 +220,25 @@ export const JourneyDutySheet: React.FC<JourneyDutySheetProps> = ({
                 <span className="theme-text-accent font-bold block mb-0.5">
                   ★ Vai trò mới đảm nhận:
                 </span>
-                <p className="text-slate-200 leading-relaxed font-medium">
+                <p className="text-[var(--modal-text)] leading-relaxed font-medium">
                   {duty.promotionImpact.addedRole}
                 </p>
               </div>
 
-              <div className="bg-slate-900/80 border border-slate-800/80 rounded-xl p-2.5">
-                <span className="text-sky-300 font-bold block mb-0.5">
+              <div className="modal-section">
+                <span className="text-[var(--modal-info)] font-bold block mb-0.5">
                   📈 Trách nhiệm gia tăng so với cấp trước:
                 </span>
-                <p className="text-slate-300 leading-relaxed">
+                <p className="text-[var(--modal-text)] leading-relaxed">
                   {duty.promotionImpact.responsibilityGrowth}
                 </p>
               </div>
 
-              <div className="bg-slate-900/80 border border-slate-800/80 rounded-xl p-2.5">
-                <span className="text-emerald-300 font-bold block mb-0.5">
+              <div className="modal-section">
+                <span className="text-[var(--modal-success)] font-bold block mb-0.5">
                   ⚡ Quyền lực & Thẩm quyền mở rộng:
                 </span>
-                <p className="text-slate-300 leading-relaxed">
+                <p className="text-[var(--modal-text)] leading-relaxed">
                   {duty.promotionImpact.authorityGrowth}
                 </p>
               </div>
@@ -248,22 +246,22 @@ export const JourneyDutySheet: React.FC<JourneyDutySheetProps> = ({
           </div>
 
           {/* Card 3: Danh sách Mô Tả Trọng Trách & Nhiệm Vụ */}
-          <div className="bg-slate-950/75 rounded-2xl p-3.5 border border-slate-800 space-y-2.5">
+          <div className="modal-section space-y-2.5">
             <div className="flex items-center gap-2 border-b border-slate-800/80 pb-2">
-              <Award className="w-4 h-4 text-emerald-400" />
-              <h3 className="text-xs sm:text-sm font-bold text-emerald-300 uppercase tracking-wider">
+              <Award className="w-4 h-4 text-[var(--modal-success)]" />
+              <h3 className="text-xs sm:text-sm font-bold text-[var(--modal-success)] uppercase tracking-wider">
                 Danh Sách Trọng Trách Cốt Lõi
               </h3>
             </div>
 
-            <ul className="space-y-2 text-xs text-slate-200">
+            <ul className="space-y-2 text-xs text-[var(--modal-text)]">
               {duty.responsibilities.map((resp, idx) => (
                 <li
                   key={idx}
                   className="flex items-start gap-2 bg-slate-900/70 p-2.5 rounded-xl border border-slate-800/60 leading-relaxed"
                 >
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-                  <span className="text-slate-200">{resp}</span>
+                  <CheckCircle2 className="w-4 h-4 text-[var(--modal-success)] shrink-0 mt-0.5" />
+                  <span className="text-[var(--modal-text)]">{resp}</span>
                 </li>
               ))}
             </ul>
@@ -271,7 +269,7 @@ export const JourneyDutySheet: React.FC<JourneyDutySheetProps> = ({
         </OverlayBody>
 
         {/* Fictional Disclaimer */}
-        <OverlayFooter className="text-[11px] text-slate-400 italic text-center pt-2 border-t border-slate-800">
+        <OverlayFooter className="text-xs text-[var(--modal-muted)] italic text-center">
           Đây là mô phỏng hư cấu chức trách quân sự phục vụ trải nghiệm trò chơi.
         </OverlayFooter>
     </AppBottomSheet>

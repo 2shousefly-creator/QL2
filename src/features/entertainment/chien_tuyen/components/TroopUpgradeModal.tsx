@@ -7,7 +7,7 @@ import { formatChienTuyenDurationMs } from "../durationFormat";
 import type { TroopType, TroopUpgradeJob } from "../types";
 import { getTroopUpgradeLockCopy } from "../uxPresentation";
 import { TroopIcon } from "./TroopIcon";
-import { AppModal, OverlayBody, OverlayFooter, OverlayHeader } from "../../../../components/overlay/AppOverlay";
+import { AppModal, ModalButton, OverlayBody, OverlayFooter, OverlayHeader } from "../../../../components/overlay/AppOverlay";
 
 interface TroopUpgradeModalProps {
   troopType: TroopType;
@@ -57,33 +57,32 @@ export const TroopUpgradeModal: React.FC<TroopUpgradeModalProps> = ({
   const progress = upgradeJob ? (isComplete ? 100 : Math.max(0, Math.min(100, ((now - upgradeJob.startedAt) / durationMs) * 100))) : 0;
 
   return (
-    <AppModal
+    <AppModal archetype="transaction"
       onClose={onClose}
       closeOnBackdrop
       layer="exclusive-dialog"
       layout="viewport-safe"
       labelledBy={titleId}
-      panelClassName="ct-v2-modal max-w-md"
       initialFocusRef={closeButtonRef}
     >
-      <OverlayHeader className="ct-v2-modal-header flex items-start gap-3">
+      <OverlayHeader className="flex items-start">
           <TroopIcon troopType={troopType} size="large" state="selected" />
           <div className="min-w-0 flex-1">
             <div className="ct-v2-eyebrow">NÂNG CẤP BINH CHỦNG</div>
-            <h3 id={titleId} className="truncate text-xl font-black text-white">{troop.name}</h3>
-            <span className="mt-1 inline-flex rounded-full bg-slate-900 px-2.5 py-1 text-[10px] font-black text-white">
+            <h3 id={titleId} className="modal-title">{troop.name}</h3>
+            <span className="mt-1 inline-flex rounded-full bg-slate-900 px-2.5 py-1 text-xs font-semibold text-[var(--modal-text)]">
               Lv{level}{targetLevel > level ? ` → Lv${targetLevel}` : ""}
             </span>
           </div>
-          <button ref={closeButtonRef} type="button" onClick={onClose} aria-label="Đóng bảng nâng cấp" className="ct-v2-icon-button app-overlay__close"><X className="h-5 w-5" /></button>
+          <ModalButton variant="icon" ref={closeButtonRef} type="button" onClick={onClose} aria-label="Đóng bảng nâng cấp"><X className="h-5 w-5" /></ModalButton>
       </OverlayHeader>
 
-      <OverlayBody className="space-y-3">
+      <OverlayBody>
         {isUpgrading ? (
           <>
             <div className="mt-4 space-y-2 rounded-2xl border-2 border-amber-400/30 bg-amber-400/10 p-3 shadow-sm">
-              <div className="flex items-center justify-between text-xs font-black text-amber-100">
-                <span className="flex items-center gap-1.5"><Timer className="h-4 w-4 text-amber-300 animate-pulse" /> Đang nâng cấp lên Lv{targetLevel}</span>
+              <div className="flex items-center justify-between text-xs font-semibold text-[var(--modal-reward)]">
+                <span className="flex items-center gap-1.5"><Timer className="h-4 w-4 text-[var(--modal-reward)] animate-pulse" /> Đang nâng cấp lên Lv{targetLevel}</span>
                 <span>{isComplete ? "Hoàn tất" : `Còn ${formatChienTuyenDurationMs(remainingMs)}`}</span>
               </div>
               <div className="h-2.5 w-full overflow-hidden rounded-full bg-slate-800">
@@ -91,8 +90,8 @@ export const TroopUpgradeModal: React.FC<TroopUpgradeModalProps> = ({
               </div>
             </div>
 
-            <div className="mt-3 overflow-hidden rounded-2xl border-2 border-slate-700 bg-slate-950/55 p-3 shadow-sm">
-              <div className="mb-2 grid grid-cols-[62px_1fr_18px_1fr] items-center gap-2 px-1 text-center text-[8px] font-black uppercase tracking-wider text-slate-400">
+            <div className="modal-section mt-3 overflow-hidden">
+              <div className="mb-2 grid grid-cols-[62px_1fr_18px_1fr] items-center gap-2 px-1 text-center text-xs font-semibold uppercase tracking-wider text-[var(--modal-muted)]">
                 <span>Chỉ số</span><span>Trước</span><span /><span>Sau</span>
               </div>
               <div className="grid gap-1.5">
@@ -100,39 +99,39 @@ export const TroopUpgradeModal: React.FC<TroopUpgradeModalProps> = ({
                   const Icon = row.icon;
                   const { beforeStr, afterStr, diffStr } = formatUpgradeStat(row.before, row.after);
                   return <div key={row.label} className="grid grid-cols-[62px_1fr_18px_1fr] items-center gap-2 rounded-xl bg-slate-800/80 px-2 py-2">
-                    <span className="flex items-center gap-1.5 text-[9px] font-black text-slate-300"><Icon className={`h-3.5 w-3.5 ${row.color}`} />{row.label}</span>
-                    <strong className="text-center text-[11px] text-slate-100">{beforeStr}</strong>
-                    <ArrowRight className="h-3.5 w-3.5 text-slate-500" />
-                    <strong className="text-center text-[11px] text-emerald-300">{afterStr} <small className="block text-[8px]">{diffStr}</small></strong>
+                    <span className="flex items-center gap-1.5 text-xs font-semibold text-[var(--modal-text)]"><Icon className={`h-3.5 w-3.5 ${row.color}`} />{row.label}</span>
+                    <strong className="text-center text-xs text-[var(--modal-text)]">{beforeStr}</strong>
+                    <ArrowRight className="h-3.5 w-3.5 text-[var(--modal-muted)]" />
+                    <strong className="text-center text-xs text-[var(--modal-success)]">{afterStr} <small className="block text-xs">{diffStr}</small></strong>
                   </div>;
                 })}
               </div>
             </div>
 
-            <div className="mt-3 flex items-center justify-between rounded-2xl border-2 border-amber-400/30 bg-amber-400/10 p-3 text-amber-100">
+            <div className="mt-3 flex items-center justify-between rounded-2xl border-2 border-amber-400/30 bg-amber-400/10 p-3 text-[var(--modal-reward)]">
               <div className="flex items-center gap-2">
-                <Coins className="h-5 w-5 text-amber-300" />
+                <Coins className="h-5 w-5 text-[var(--modal-reward)]" />
                 <div>
-                  <span className="block text-[8px] font-black uppercase text-amber-300">Chi phí hoàn thành nhanh</span>
+                  <span className="block text-xs font-semibold uppercase text-[var(--modal-reward)]">Chi phí hoàn thành nhanh</span>
                   <strong className="text-sm">{quickCost} Vàng</strong>
                 </div>
               </div>
-              <span className="text-[11px] font-bold text-slate-300">Số dư: {gold} Vàng</span>
+              <span className="text-xs font-bold text-[var(--modal-text)]">Số dư: {gold} Vàng</span>
             </div>
 
-            {gold < quickCost && <p className="mt-2 text-center text-[10px] font-black text-rose-300">Chưa đủ Vàng để hoàn thành nhanh.</p>}
+            {gold < quickCost && <p className="mt-2 text-center text-xs font-semibold text-[var(--modal-danger)]">Chưa đủ Vàng để hoàn thành nhanh.</p>}
 
           </>
         ) : !canUpgrade ? (
-          <div className="mt-4 rounded-2xl border-2 border-slate-700 bg-slate-900/80 p-4 text-center shadow-sm">
-            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-800 text-slate-300"><Shield className="h-7 w-7" /></div>
-            <h4 className="mt-3 text-sm font-black">{lockCopy.title}</h4>
-            <p className="mt-2 text-[11px] font-semibold leading-relaxed text-slate-300">{lockCopy.description}</p>
+          <div className="modal-section mt-4 text-center">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-800 text-[var(--modal-text)]"><Shield className="h-7 w-7" /></div>
+            <h4 className="mt-3 text-sm font-semibold">{lockCopy.title}</h4>
+            <p className="mt-2 text-xs font-semibold leading-relaxed text-[var(--modal-text)]">{lockCopy.description}</p>
           </div>
         ) : (
           <>
-            <div className="mt-4 overflow-hidden rounded-2xl border-2 border-slate-700 bg-slate-950/55 p-3 shadow-sm">
-              <div className="mb-2 grid grid-cols-[62px_1fr_18px_1fr] items-center gap-2 px-1 text-center text-[8px] font-black uppercase tracking-wider text-slate-400">
+            <div className="modal-section mt-4 overflow-hidden">
+              <div className="mb-2 grid grid-cols-[62px_1fr_18px_1fr] items-center gap-2 px-1 text-center text-xs font-semibold uppercase tracking-wider text-[var(--modal-muted)]">
                 <span>Chỉ số</span><span>Trước</span><span /><span>Sau</span>
               </div>
               <div className="grid gap-1.5">
@@ -140,10 +139,10 @@ export const TroopUpgradeModal: React.FC<TroopUpgradeModalProps> = ({
                   const Icon = row.icon;
                   const { beforeStr, afterStr, diffStr } = formatUpgradeStat(row.before, row.after);
                   return <div key={row.label} className="grid grid-cols-[62px_1fr_18px_1fr] items-center gap-2 rounded-xl bg-slate-800/80 px-2 py-2">
-                    <span className="flex items-center gap-1.5 text-[9px] font-black text-slate-300"><Icon className={`h-3.5 w-3.5 ${row.color}`} />{row.label}</span>
-                    <strong className="text-center text-[11px] text-slate-100">{beforeStr}</strong>
-                    <ArrowRight className="h-3.5 w-3.5 text-slate-500" />
-                    <strong className="text-center text-[11px] text-emerald-300">{afterStr} <small className="block text-[8px]">{diffStr}</small></strong>
+                    <span className="flex items-center gap-1.5 text-xs font-semibold text-[var(--modal-text)]"><Icon className={`h-3.5 w-3.5 ${row.color}`} />{row.label}</span>
+                    <strong className="text-center text-xs text-[var(--modal-text)]">{beforeStr}</strong>
+                    <ArrowRight className="h-3.5 w-3.5 text-[var(--modal-muted)]" />
+                    <strong className="text-center text-xs text-[var(--modal-success)]">{afterStr} <small className="block text-xs">{diffStr}</small></strong>
                   </div>;
                 })}
               </div>
@@ -152,33 +151,33 @@ export const TroopUpgradeModal: React.FC<TroopUpgradeModalProps> = ({
             <p className="ct-v2-fixed-stats">Chỉ số cố định · CRIT {Math.round(current.critChance * 100)}% · SPEED {current.speed}</p>
 
             <div className="mt-3 grid grid-cols-2 gap-2">
-              <div className="flex items-center gap-2 rounded-2xl border-2 border-amber-400/30 bg-amber-400/10 p-3 text-amber-100"><Coins className="h-5 w-5 text-amber-300" /><div><span className="block text-[8px] font-black uppercase text-amber-300">Chi phí</span><strong className="text-sm">{cost} Vàng</strong></div></div>
-              <div className="flex items-center gap-2 rounded-2xl border-2 border-sky-400/30 bg-sky-400/10 p-3 text-sky-100"><Timer className="h-5 w-5 text-sky-300" /><div><span className="block text-[8px] font-black uppercase text-sky-300">Thời gian</span><strong className="text-sm">{formatChienTuyenDurationMs(duration)}</strong></div></div>
+              <div className="flex items-center gap-2 rounded-2xl border-2 border-amber-400/30 bg-amber-400/10 p-3 text-[var(--modal-reward)]"><Coins className="h-5 w-5 text-[var(--modal-reward)]" /><div><span className="block text-xs font-semibold uppercase text-[var(--modal-reward)]">Chi phí</span><strong className="text-sm">{cost} Vàng</strong></div></div>
+              <div className="flex items-center gap-2 rounded-2xl border-2 border-sky-400/30 bg-sky-400/10 p-3 text-[var(--modal-info)]"><Timer className="h-5 w-5 text-[var(--modal-info)]" /><div><span className="block text-xs font-semibold uppercase text-[var(--modal-info)]">Thời gian</span><strong className="text-sm">{formatChienTuyenDurationMs(duration)}</strong></div></div>
             </div>
 
-            {gold < cost && <p className="mt-3 text-center text-[10px] font-black text-rose-600">Chưa đủ Vàng để nâng cấp.</p>}
+            {gold < cost && <p className="mt-3 text-center text-xs font-semibold text-rose-600">Chưa đủ Vàng để nâng cấp.</p>}
           </>
         )}
       </OverlayBody>
 
-      <OverlayFooter className="ct-v2-modal-footer">
+      <OverlayFooter>
         {isUpgrading ? (
-          <button
+          <ModalButton variant="primary"
             type="button"
             disabled={gold < quickCost}
             onClick={() => {
               onQuickFinish?.();
               onClose();
             }}
-            className="ct-v2-primary-button w-full"
+            className="w-full"
             aria-label={isComplete ? "Hoàn tất nâng cấp miễn phí" : `Hoàn thành nhanh nâng cấp với ${quickCost} Vàng`}
           >
             {isComplete ? <><Timer className="h-4 w-4" /><span>HOÀN TẤT NGAY (MIỄN PHÍ)</span></> : <><FastForward className="h-4 w-4" aria-hidden="true" /><strong>{quickCost}</strong></>}
-          </button>
+          </ModalButton>
         ) : !canUpgrade ? (
-          <button type="button" onClick={onClose} className="ct-v2-secondary-button w-full">ĐÃ HIỂU</button>
+          <ModalButton variant="ghost" type="button" onClick={onClose} className="w-full">ĐÃ HIỂU</ModalButton>
         ) : (
-          <button type="button" disabled={gold < cost} onClick={() => { onConfirm(); onClose(); }} className="ct-v2-primary-button w-full"><ArrowUp className="h-4 w-4" /> XÁC NHẬN NÂNG CẤP · {cost} <Coins className="h-4 w-4" /></button>
+          <ModalButton variant="primary" type="button" disabled={gold < cost} onClick={() => { onConfirm(); onClose(); }} className="w-full"><ArrowUp className="h-4 w-4" /> XÁC NHẬN NÂNG CẤP · {cost} <Coins className="h-4 w-4" /></ModalButton>
         )}
       </OverlayFooter>
     </AppModal>

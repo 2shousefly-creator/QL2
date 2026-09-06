@@ -1,8 +1,8 @@
 import React from "react";
 import { EGG_INFO_MAP } from "../farmCatalog";
 import { EggTypeId, FarmInventory } from "../farmTypes";
-import { Egg, X, Coins, Zap } from "lucide-react";
-import { AppModal, OverlayBody, OverlayFooter, OverlayHeader } from "../../../components/overlay/AppOverlay";
+import { Coins, Egg, X } from "lucide-react";
+import { AppModal, ModalButton, OverlayBody, OverlayFooter, OverlayHeader } from "../../../components/overlay/AppOverlay";
 
 interface EggStorageModalProps {
   isOpen: boolean;
@@ -40,43 +40,41 @@ export const EggStorageModal: React.FC<EggStorageModalProps> = ({
   );
 
   return (
-    <AppModal
+    <AppModal theme="farm" archetype="transaction"
       onClose={onClose}
       closeOnBackdrop
       labelledBy="egg-storage-title"
-      panelClassName="app-overlay--spaced w-full max-w-lg bg-slate-900 border border-slate-800/70 rounded-3xl shadow-2xl animate-in fade-in duration-200"
     >
         {/* Modal Header */}
-        <OverlayHeader className="bg-slate-850/90 border-b border-slate-800/70 flex items-center justify-between gap-2">
+        <OverlayHeader className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-10 h-10 rounded-2xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-amber-400">
+            <div className="modal-status-icon">
               <Egg className="w-5 h-5" />
             </div>
             <div>
-              <h3 id="egg-storage-title" className="font-extrabold text-base text-slate-100">
+              <h3 id="egg-storage-title" className="modal-title">
                 Kho Trứng Trại
               </h3>
-              <p className="text-xs text-slate-400">
+              <p className="modal-copy">
                 Tổng số trứng trong kho:{" "}
-                <span className="font-bold text-amber-300">{totalEggs} quả</span>
+                <span className="font-bold text-[var(--modal-reward)]">{totalEggs} quả</span>
               </p>
             </div>
           </div>
 
-          <button
+          <ModalButton variant="icon"
             onClick={onClose}
-            className="app-overlay-button app-overlay-button--icon w-8 h-8 rounded-full bg-slate-800/80 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition-colors"
             aria-label="Đóng kho trứng"
           >
             <X className="w-4 h-4" />
-          </button>
+          </ModalButton>
         </OverlayHeader>
 
         {/* Eggs List - Information Only, No per-row action buttons */}
-        <OverlayBody className="space-y-3 divide-y divide-slate-800/60">
+        <OverlayBody className="divide-y divide-slate-800/60">
           {eggTypes.filter(typeId => (inventory.eggs[typeId] || 0) > 0).length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-12 text-center text-slate-400 space-y-2">
-              <Egg className="w-12 h-12 text-slate-600 animate-pulse" />
+            <div className="flex flex-col items-center justify-center py-12 text-center text-[var(--modal-muted)] space-y-2">
+              <Egg className="w-12 h-12 text-[var(--modal-muted)] animate-pulse" />
               <p className="text-sm font-medium">Kho trứng hiện đang trống</p>
             </div>
           ) : (
@@ -97,12 +95,12 @@ export const EggStorageModal: React.FC<EggStorageModalProps> = ({
                       </div>
 
                       <div className="min-w-0 space-y-0.5">
-                        <h4 className="truncate font-extrabold text-sm text-slate-100">
+                        <h4 className="truncate font-semibold text-sm text-[var(--modal-text)]">
                           {info.name}
                         </h4>
 
-                        <div className="flex items-center gap-3 text-xs font-bold text-slate-300">
-                          <span className="text-amber-400 flex items-center gap-1">
+                        <div className="flex items-center gap-3 text-xs font-bold text-[var(--modal-text)]">
+                          <span className="text-[var(--modal-reward)] flex items-center gap-1">
                             🪙 {info.sellGold} Vàng/quả
                           </span>
                           <span className="text-purple-400 flex items-center gap-1">
@@ -113,10 +111,10 @@ export const EggStorageModal: React.FC<EggStorageModalProps> = ({
                     </div>
 
                     <div className="ml-auto min-w-[74px] shrink-0 rounded-2xl border border-amber-500/25 bg-amber-500/10 px-3 py-1.5 text-right shadow-inner">
-                      <div className="text-xl font-black leading-none text-amber-300">
+                      <div className="text-xl font-semibold leading-none text-[var(--modal-reward)]">
                         {count.toLocaleString("vi-VN")}
                       </div>
-                      <div className="mt-1 text-[9px] font-extrabold uppercase tracking-widest text-amber-200/70">
+                      <div className="mt-1 text-xs font-semibold uppercase tracking-widest text-[var(--modal-reward)]">
                         quả trứng
                       </div>
                     </div>
@@ -128,16 +126,16 @@ export const EggStorageModal: React.FC<EggStorageModalProps> = ({
 
         {/* Modal Footer - Single primary "Bán tất cả trứng" button */}
         {onSellAllEggs && totalEggs > 0 && (
-          <OverlayFooter className="bg-slate-850/90 border-t border-slate-800/60">
-            <button
+          <OverlayFooter>
+            <ModalButton variant="primary"
               onClick={() => {
                 onSellAllEggs();
               }}
-              className="app-overlay-button w-full py-2.5 px-4 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-sm shadow-lg shadow-amber-500/20 active:scale-98 transition-all flex items-center justify-center gap-2 cursor-pointer"
+              className="w-full"
             >
               <Coins className="w-4 h-4" />
               <span>Bán Tất Cả Trứng ({totalEggs} quả)</span>
-            </button>
+            </ModalButton>
           </OverlayFooter>
         )}
     </AppModal>

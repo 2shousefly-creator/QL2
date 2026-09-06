@@ -1,13 +1,7 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import { Pause, Play, RefreshCw, CheckCircle2, ShieldAlert, Eye, Volume2, VolumeX, X } from "lucide-react";
 import { GameState, TrainingDifficulty } from "../../../game/types";
-import {
-  findClosestObjectAtTap,
-  generateRoundData,
-  getRadarRoundConfig,
-  updateRadarPhysics,
-  createRadarRunResult,
-} from "../../../game/training/radarTracking/radarEngine";
+import { createRadarRunResult, generateRoundData, getRadarRoundConfig, updateRadarPhysics } from "../../../game/training/radarTracking/radarEngine";
 import {
   OcclusionZone,
   RadarObject,
@@ -18,7 +12,7 @@ import {
   ScheduledDirectionChange,
 } from "../../../game/training/radarTracking/radarTypes";
 import { soundManager } from "../../../game/audio";
-import { AppModal, ExclusiveFullscreenOverlay, OverlayBody, OverlayFooter, OverlayHeader } from "../../../components/overlay/AppOverlay";
+import { ConfirmationDialog, ExclusiveFullscreenOverlay, GameResultModal, ModalActions, ModalButton, OverlayBody, OverlayFooter, OverlayHeader, ResultHero } from "../../../components/overlay/AppOverlay";
 
 type Props = {
   gameState: GameState;
@@ -738,101 +732,93 @@ export const RadarTrackingGame: React.FC<Props> = ({
 
       {/* Pause Modal */}
       {showPauseModal && (
-        <AppModal
+        <ConfirmationDialog status="warning"
           onClose={handleResume}
           layer="exclusive-dialog"
           layout="viewport-safe"
           labelledBy="radar-pause-title"
-          panelClassName="max-w-xs border-slate-800 bg-slate-900 text-center text-slate-100"
+          panelClassName="text-center"
         >
-          <OverlayHeader className="justify-center border-slate-800 text-center">
-            <h3 id="radar-pause-title" className="font-extrabold text-base text-slate-100">Đã Tạm Dừng</h3>
+          <OverlayHeader className="justify-center text-center">
+            <h3 id="radar-pause-title" className="modal-title">Đã Tạm Dừng</h3>
           </OverlayHeader>
           <OverlayBody>
-            <p className="text-xs text-slate-400">Tín hiệu radar tạm thời che khuất để đảm bảo tính công bằng.</p>
+            <p className="text-xs text-[var(--modal-muted)]">Tín hiệu radar tạm thời che khuất để đảm bảo tính công bằng.</p>
           </OverlayBody>
-          <OverlayFooter className="flex flex-col gap-2 border-slate-800 bg-slate-900">
-              <button
+          <OverlayFooter className="flex flex-col">
+              <ModalButton variant="primary"
                 type="button"
                 onClick={handleResume}
-                className="py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs rounded-2xl flex items-center justify-center gap-2"
               >
                 <Play className="w-4 h-4 fill-white" />
                 <span>Tiếp Tục</span>
-              </button>
-              <button
+              </ModalButton>
+              <ModalButton variant="primary"
                 type="button"
                 onClick={() => {
                   soundManager.playClick();
                   onExitRun();
                 }}
-                className="py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs rounded-2xl"
               >
                 Thoát Lượt Chơi
-              </button>
+              </ModalButton>
           </OverlayFooter>
-        </AppModal>
+        </ConfirmationDialog>
       )}
 
       {/* Recovery Offer Modal */}
       {showRecoveryModal && (
-        <AppModal
+        <ConfirmationDialog status="warning"
           layer="exclusive-dialog"
           layout="viewport-safe"
           closeOnEscape={false}
           labelledBy="radar-recovery-title"
-          panelClassName="max-w-sm border-amber-500/40 bg-slate-900 text-center text-slate-100"
+          panelClassName="text-center"
         >
-          <OverlayHeader className="flex flex-col items-center gap-3 border-slate-800 text-center">
-            <div className="w-12 h-12 rounded-full bg-amber-500/20 border border-amber-400/40 text-amber-400 flex items-center justify-center mx-auto">
+          <OverlayHeader className="flex flex-col items-center text-center">
+            <div className="modal-status-icon">
               <ShieldAlert className="w-6 h-6" />
             </div>
-            <h3 id="radar-recovery-title" className="font-extrabold text-base text-amber-300">Mất Dấu Mục Tiêu!</h3>
+            <h3 id="radar-recovery-title" className="modal-title">Mất Dấu Mục Tiêu!</h3>
           </OverlayHeader>
 
           <OverlayBody>
-            <p className="text-center text-xs text-slate-300">
-              Bạn còn <span className="font-black text-amber-400">{recoveryChargesLeft}</span> lượt cứu sinh.
+            <p className="text-center text-xs text-[var(--modal-text)]">
+              Bạn còn <span className="font-semibold text-[var(--modal-reward)]">{recoveryChargesLeft}</span> lượt cứu sinh.
               Bạn có muốn dùng 1 lượt để thử lại vòng chơi này với bố cục mới?
             </p>
           </OverlayBody>
 
-          <OverlayFooter className="grid grid-cols-2 gap-2 border-slate-800 bg-slate-900">
-              <button
+          <OverlayFooter>
+              <ModalButton variant="primary"
                 type="button"
                 onClick={handleUseRecovery}
-                className="py-3 bg-gradient-to-r from-amber-600 to-emerald-600 text-white font-extrabold text-xs rounded-2xl flex items-center justify-center gap-1.5 shadow-lg shadow-amber-500/20"
               >
                 <RefreshCw className="w-3.5 h-3.5" />
                 <span>Dùng Cứu Sinh</span>
-              </button>
-              <button
+              </ModalButton>
+              <ModalButton variant="primary"
                 type="button"
                 onClick={handleDeclineRecovery}
-                className="py-3 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs rounded-2xl"
               >
                 Chấp Nhận Thua
-              </button>
+              </ModalButton>
           </OverlayFooter>
-        </AppModal>
+        </ConfirmationDialog>
       )}
 
       {/* Confirmation Feedback Modal */}
       {radarFeedbackModal?.show && (
-        <AppModal
+        <GameResultModal status={radarFeedbackModal.correct ? "success" : "danger"}
           layer="exclusive-dialog"
           layout="viewport-safe"
           closeOnEscape={false}
           labelledBy="radar-feedback-title"
-          panelClassName="max-w-sm border-slate-800 bg-slate-900 text-center text-slate-100"
+          panelClassName="text-center"
         >
-          <OverlayHeader className="flex flex-col items-center gap-3 border-slate-800 text-center">
+          <ResultHero className="flex flex-col items-center text-center">
             <div
-              className={`w-16 h-16 rounded-3xl flex items-center justify-center border shadow-lg ${
-                radarFeedbackModal.correct
-                  ? "bg-emerald-500/20 text-emerald-400 border-emerald-500/40"
-                  : "bg-rose-500/20 text-rose-400 border-rose-500/40"
-              }`}
+              className="modal-status-icon"
             >
               {radarFeedbackModal.correct ? (
                 <CheckCircle2 className="w-10 h-10" />
@@ -842,76 +828,70 @@ export const RadarTrackingGame: React.FC<Props> = ({
             </div>
 
             <div className="space-y-1">
-              <h3 id="radar-feedback-title" className="text-lg font-black text-slate-100">
+              <h3 id="radar-feedback-title" className="modal-title">
                 {radarFeedbackModal.correct ? "CHÍNH XÁC!" : "CHƯA CHÍNH XÁC!"}
               </h3>
             </div>
-          </OverlayHeader>
+          </ResultHero>
 
           <OverlayBody>
-            <p className="text-center text-xs text-slate-300">
+            <p className="text-center text-xs text-[var(--modal-text)]">
               {radarFeedbackModal.correct
                 ? `Đã khoanh vùng chính xác toàn bộ ${radarFeedbackModal.targetCount} mục tiêu radar!`
                 : `Bạn chỉ khoanh vùng đúng ${radarFeedbackModal.correctCount}/${radarFeedbackModal.targetCount} mục tiêu.`}
             </p>
           </OverlayBody>
 
-          <OverlayFooter className="border-slate-800 bg-slate-900">
-            <button
+          <ModalActions>
+            <ModalButton variant="primary"
               type="button"
               onClick={radarFeedbackModal.onProceed}
-              className={`w-full py-3 rounded-2xl font-black text-sm shadow-lg transition-all active:scale-98 ${
-                radarFeedbackModal.correct
-                  ? "bg-emerald-500 hover:bg-emerald-400 text-slate-950"
-                  : "bg-rose-600 hover:bg-rose-500 text-white"
-              }`}
+              className="w-full"
             >
               Tiếp Tục
-            </button>
-          </OverlayFooter>
-        </AppModal>
+            </ModalButton>
+          </ModalActions>
+        </GameResultModal>
       )}
 
       {/* Exit Confirmation Modal */}
       {showExitConfirmModal && (
-        <AppModal
+        <ConfirmationDialog status="warning"
           onClose={() => setShowExitConfirmModal(false)}
           layer="exclusive-dialog"
           layout="viewport-safe"
           labelledBy="radar-exit-title"
-          panelClassName="max-w-sm border-slate-800 bg-slate-900 text-center text-slate-100"
+          panelClassName="text-center"
         >
-          <OverlayHeader className="flex flex-col items-center gap-3 border-slate-800 text-center">
-            <div className="w-12 h-12 rounded-2xl bg-rose-500/20 text-rose-400 border border-rose-500/40 flex items-center justify-center">
+          <OverlayHeader className="flex flex-col items-center text-center">
+            <div className="modal-status-icon">
               <ShieldAlert className="w-6 h-6" />
             </div>
 
-            <h3 id="radar-exit-title" className="text-base font-black text-slate-100">Thoát Lượt Chơi?</h3>
+            <h3 id="radar-exit-title" className="modal-title">Thoát Lượt Chơi?</h3>
           </OverlayHeader>
 
           <OverlayBody>
-            <p className="text-center text-xs text-slate-400">
+            <p className="text-center text-xs text-[var(--modal-muted)]">
               Bạn có chắc chắn muốn thoát khỏi lượt chơi Mắt Thần Radar hiện tại không?
             </p>
           </OverlayBody>
 
-          <OverlayFooter className="grid grid-cols-2 gap-2 border-slate-800 bg-slate-900">
-              <button
+          <OverlayFooter>
+              <ModalButton variant="ghost"
                 type="button"
                 onClick={() => setShowExitConfirmModal(false)}
-                className="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs"
               >
                 Tiếp Tục Chơi
-              </button>
-              <button
+              </ModalButton>
+              <ModalButton variant="danger"
                 type="button"
                 onClick={onExitRun}
-                className="py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs shadow-md shadow-rose-600/20"
               >
                 Xác Nhận Thoát
-              </button>
+              </ModalButton>
           </OverlayFooter>
-        </AppModal>
+        </ConfirmationDialog>
       )}
     </ExclusiveFullscreenOverlay>
   );

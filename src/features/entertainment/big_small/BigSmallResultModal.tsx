@@ -1,15 +1,5 @@
 import React from "react";
-import {
-  Coins,
-  Sparkles,
-  Trophy,
-  Star,
-  Scale,
-  Frown,
-  ArrowRight,
-  Sprout,
-  X,
-} from "lucide-react";
+import { ArrowRight, Coins, Frown, Scale, Sprout, Star, Trophy, X } from "lucide-react";
 import { BigSmallBetId, BigSmallRound, BigSmallWinType } from "../types";
 import {
   BIG_SMALL_DOOR_INFO,
@@ -20,7 +10,7 @@ import {
 import { DiceFace } from "./DiceFace";
 import { soundManager } from "../../../game/audio";
 import { TabType } from "../../../game/types";
-import { AppModal, OverlayBody, OverlayFooter, OverlayHeader } from "../../../components/overlay/AppOverlay";
+import { GameResultModal, ModalActions, ModalButton, OverlayBody, ResultHero } from "../../../components/overlay/AppOverlay";
 
 interface BigSmallResultModalProps {
   isOpen: boolean;
@@ -119,47 +109,43 @@ export const BigSmallResultModal: React.FC<BigSmallResultModalProps> = ({
   const IconComponent = config.icon;
 
   return (
-    <AppModal
+    <GameResultModal status={round.net > 0 ? "success" : round.net < 0 ? "danger" : "warning"}
       onClose={onClose}
       closeOnBackdrop
       labelledBy="big-small-result-title"
-      panelClassName={`max-w-sm border bg-slate-900 text-slate-100 sm:max-w-md ${config.modalBorder}`}
     >
-          <OverlayHeader className="relative flex-col items-center overflow-hidden border-slate-800 text-center">
+          <ResultHero className="relative flex-col items-center overflow-hidden text-center">
           {/* Top Atmospheric Glow */}
-          <div
-            className={`absolute top-0 inset-x-0 h-32 bg-gradient-to-b ${config.glowGradient} pointer-events-none`}
-          />
 
           {/* Close button */}
-          <button
+          <ModalButton variant="icon"
             type="button"
             onClick={onClose}
-            className="app-overlay__close absolute right-3 top-3 z-20 w-8 h-8 rounded-full bg-slate-800/80 hover:bg-slate-700 text-slate-400 hover:text-slate-200 flex items-center justify-center transition-colors border border-slate-700"
+            className="absolute right-3 top-3"
             aria-label="Đóng kết quả Số Lớn Số Nhỏ"
           >
             <X className="w-4 h-4" />
-          </button>
+          </ModalButton>
 
           {/* Header Icon & Title */}
           <div className="relative flex flex-col items-center text-center space-y-2 pt-1">
             <div
-              className={`w-14 h-14 rounded-2xl border flex items-center justify-center text-2xl ${config.iconBg}`}
+              className="modal-status-icon"
             >
               <IconComponent className={`w-7 h-7 ${config.iconColor}`} />
             </div>
 
             <div>
-              <h3 id="big-small-result-title" className="text-xl font-black text-slate-100 tracking-wide uppercase">
+              <h3 id="big-small-result-title" className="modal-title">
                 {config.title}
               </h3>
             </div>
           </div>
-          </OverlayHeader>
+          </ResultHero>
 
-          <OverlayBody className="space-y-3 sm:space-y-4">
+          <OverlayBody>
           {/* 3 Result Dice Showcase */}
-          <div className="bg-slate-950/80 border border-slate-800 rounded-2xl p-3.5">
+          <div className="modal-section">
             <div className="flex items-center justify-center gap-3.5 sm:gap-4 py-1">
               {round.dice.map((val, idx) => (
                 <DiceFace
@@ -174,10 +160,10 @@ export const BigSmallResultModal: React.FC<BigSmallResultModalProps> = ({
 
           {/* Placed Bets Comparison Section */}
           {placedBets.length > 0 && (
-            <div className="bg-slate-950/80 border border-slate-800 rounded-2xl p-3 space-y-2">
-              <div className="flex items-center justify-between text-[11px] font-bold text-slate-400 px-0.5">
+            <div className="modal-section space-y-2">
+              <div className="flex items-center justify-between text-xs font-bold text-[var(--modal-muted)] px-0.5">
                 <span>CỬA BẠN ĐÃ ĐẶT:</span>
-                <span className="text-[10px] text-slate-500 font-normal">
+                <span className="text-xs text-[var(--modal-muted)] font-normal">
                   {placedBets.length} cửa đã cược
                 </span>
               </div>
@@ -188,38 +174,38 @@ export const BigSmallResultModal: React.FC<BigSmallResultModalProps> = ({
                     key={item.id}
                     className={`flex items-center justify-between p-2 rounded-xl border text-xs transition-colors ${
                       item.won
-                        ? "bg-emerald-950/40 border-emerald-500/40 text-slate-100"
-                        : "bg-slate-900/60 border-slate-800 text-slate-400"
+                        ? "bg-emerald-950/40 border-emerald-500/40 text-[var(--modal-text)]"
+                        : "modal-section text-[var(--modal-muted)]"
                     }`}
                   >
                     <div>
-                      <div className="font-bold text-slate-200 flex items-center gap-1.5 leading-tight">
+                      <div className="font-bold text-[var(--modal-text)] flex items-center gap-1.5 leading-tight">
                         <span>{item.info.name}</span>
                         {item.won ? (
-                          <span className="px-1.5 py-0.2 rounded-md text-[9px] font-extrabold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 uppercase">
+                          <span className="px-1.5 py-0.2 rounded-md text-xs font-semibold bg-emerald-500/20 text-[var(--modal-success)] border border-emerald-500/30 uppercase">
                             Trúng
                           </span>
                         ) : (
-                          <span className="px-1.5 py-0.2 rounded-md text-[9px] font-semibold bg-slate-800 text-slate-400 border border-slate-700/60">
+                          <span className="px-1.5 py-0.2 rounded-md text-xs font-semibold bg-slate-800 text-[var(--modal-muted)] border border-slate-700/60">
                             Không trúng
                           </span>
                         )}
                       </div>
-                      <span className="text-[10px] text-slate-400">
+                      <span className="text-xs text-[var(--modal-muted)]">
                         Cược:{" "}
-                        <strong className="text-amber-400">
+                        <strong className="text-[var(--modal-reward)]">
                           {item.bet.toLocaleString("vi-VN")} Vàng
                         </strong>
                       </span>
                     </div>
 
-                    <div className="text-right font-extrabold">
+                    <div className="text-right font-semibold">
                       {item.won ? (
-                        <div className="text-emerald-400 text-xs">
+                        <div className="text-[var(--modal-success)] text-xs">
                           +{item.winPayout.toLocaleString("vi-VN")} V
                         </div>
                       ) : (
-                        <div className="text-rose-400/90 text-xs">
+                        <div className="text-[var(--modal-danger)] text-xs">
                           -{item.bet.toLocaleString("vi-VN")} V
                         </div>
                       )}
@@ -231,37 +217,37 @@ export const BigSmallResultModal: React.FC<BigSmallResultModalProps> = ({
           )}
 
           {/* Ledger Financial Breakdown */}
-          <div className="bg-slate-950/80 border border-slate-800 rounded-2xl p-3.5 space-y-2 text-xs">
-            <div className="flex justify-between items-center text-slate-400">
+          <div className="modal-section space-y-2 text-xs">
+            <div className="flex justify-between items-center text-[var(--modal-muted)]">
               <span>Tổng tiền đã cược:</span>
-              <span className="font-semibold text-slate-200">
+              <span className="font-semibold text-[var(--modal-text)]">
                 {round.totalBet.toLocaleString("vi-VN")} Vàng
               </span>
             </div>
 
-            <div className="flex justify-between items-center text-slate-400">
+            <div className="flex justify-between items-center text-[var(--modal-muted)]">
               <span>Tổng tiền thu về:</span>
-              <span className="font-semibold text-slate-200">
+              <span className="font-semibold text-[var(--modal-text)]">
                 {round.totalReturn.toLocaleString("vi-VN")} Vàng
               </span>
             </div>
 
             <div className="flex justify-between items-center pt-2 border-t border-slate-800">
-              <span className="font-bold text-slate-200">Kết quả ròng:</span>
+              <span className="font-bold text-[var(--modal-text)]">Kết quả ròng:</span>
               <span
-                className={`px-2.5 py-0.5 rounded-full text-xs font-black border ${config.netBadgeBg}`}
+                className={`px-2.5 py-0.5 rounded-full text-xs font-semibold border ${config.netBadgeBg}`}
               >
                 {round.net > 0 ? `+${round.net.toLocaleString("vi-VN")}` : round.net.toLocaleString("vi-VN")}{" "}
                 Vàng
               </span>
             </div>
 
-            <div className="flex justify-between items-center pt-2 border-t border-slate-800/80 text-slate-300">
+            <div className="flex justify-between items-center pt-2 border-t border-slate-800/80 text-[var(--modal-text)]">
               <span className="flex items-center gap-1 font-semibold">
-                <Coins className="w-3.5 h-3.5 text-amber-400" />
+                <Coins className="w-3.5 h-3.5 text-[var(--modal-reward)]" />
                 Số dư hiện tại:
               </span>
-              <span className="font-black text-amber-400">
+              <span className="font-semibold text-[var(--modal-reward)]">
                 {round.postGold.toLocaleString("vi-VN")} Vàng
               </span>
             </div>
@@ -269,46 +255,45 @@ export const BigSmallResultModal: React.FC<BigSmallResultModalProps> = ({
           </OverlayBody>
 
           {/* Action CTAs */}
-          <OverlayFooter className="flex items-center gap-2 border-slate-800 bg-slate-900">
+          <ModalActions className="flex items-center">
             {round.postGold === 0 ? (
               <>
-                <button
+                <ModalButton variant="ghost"
                   type="button"
                   onClick={() => {
                     soundManager.playClick();
                     onClose();
                   }}
-                  className="flex-1 min-h-[44px] px-3 py-2.5 rounded-xl border border-slate-700 bg-slate-800/80 hover:bg-slate-700 text-slate-300 text-xs font-bold transition-all text-center"
+                  className="flex-1"
                 >
                   Đóng
-                </button>
-                <button
+                </ModalButton>
+                <ModalButton variant="primary"
                   type="button"
                   onClick={() => {
                     soundManager.playClick();
                     onClose();
                     onNavigateTab("tang_gia");
                   }}
-                  className="flex-2 min-h-[44px] px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 active:scale-95 text-slate-950 text-xs font-extrabold flex items-center justify-center gap-1.5 shadow-lg shadow-emerald-500/20 transition-all text-center"
                 >
                   <Sprout className="w-4 h-4" />
                   <span>Đến Tăng Gia Kiếm Vàng</span>
-                </button>
+                </ModalButton>
               </>
             ) : (
-              <button
+              <ModalButton variant="primary"
                 type="button"
                 onClick={() => {
                   soundManager.playClick();
                   onClose();
                 }}
-                className={`w-full min-h-[44px] px-4 py-3 rounded-2xl font-black text-sm uppercase tracking-wide active:scale-95 transition-all shadow-lg flex items-center justify-center gap-2 ${config.buttonGradient}`}
+                className="w-full"
               >
                 <span>TIẾP TỤC CHƠI</span>
                 <ArrowRight className="w-4 h-4" />
-              </button>
+              </ModalButton>
             )}
-          </OverlayFooter>
-    </AppModal>
+          </ModalActions>
+    </GameResultModal>
   );
 };

@@ -37,7 +37,7 @@ import {
 import { AirCombatCanvas } from "./AirCombatCanvas";
 import { AirCombatResult } from "./AirCombatResult";
 import { AircraftGlyph } from "./AircraftGlyph";
-import { AppModal, ExclusiveFullscreenOverlay, OverlayBody, OverlayHeader } from "../../../components/overlay/AppOverlay";
+import { AppModal, ExclusiveFullscreenOverlay, ModalButton, OverlayBody, OverlayHeader } from "../../../components/overlay/AppOverlay";
 
 interface KhongKichScreenProps {
   gameState: GameState;
@@ -239,7 +239,7 @@ export const KhongKichScreen: React.FC<KhongKichScreenProps> = ({
     return (
       <ExclusiveFullscreenOverlay
         ariaLabel="Kết quả Không Kích"
-        className="overflow-y-auto bg-slate-950"
+        className="bg-slate-950"
       >
         <AirCombatResult
           {...completedRun}
@@ -418,30 +418,28 @@ export const KhongKichScreen: React.FC<KhongKichScreenProps> = ({
 
       {/* Skill Preview Modal */}
       {previewConfig && (
-        <AppModal
+        <AppModal archetype="info"
           onClose={() => setPreviewAircraft(null)}
           labelledBy="aircraft-preview-title"
-          panelClassName="max-w-md border-sky-300/40 bg-slate-950 text-slate-100 shadow-black/70"
           panelProps={{ "data-aircraft-preview": previewConfig.id } as React.HTMLAttributes<HTMLElement>}
         >
-            <OverlayHeader className="flex items-start justify-between gap-3 border-slate-800">
+            <OverlayHeader className="flex items-start justify-between">
               <div>
-                <div className="text-[9px] font-black uppercase tracking-[0.18em] text-sky-300">
+                <div className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--modal-info)]">
                   Xem trước kỹ năng · {previewConfig.code}
                 </div>
-                <h3 id="aircraft-preview-title" className="mt-0.5 text-lg font-black text-white">{previewConfig.name}</h3>
+                <h3 id="aircraft-preview-title" className="modal-title">{previewConfig.name}</h3>
               </div>
-              <button
+              <ModalButton variant="icon"
                 type="button"
                 aria-label="Đóng xem trước kỹ năng"
                 onClick={() => setPreviewAircraft(null)}
-                className="app-overlay__close grid h-8 w-8 shrink-0 place-items-center rounded-lg border border-slate-700 bg-slate-900 text-slate-300"
               >
                 <X className="h-4 w-4" />
-              </button>
+              </ModalButton>
             </OverlayHeader>
-            <OverlayBody className="space-y-2.5">
-              <p className="text-[10px] leading-relaxed text-slate-400">
+            <OverlayBody>
+              <p className="text-xs leading-relaxed text-[var(--modal-muted)]">
                 {previewConfig.description}
               </p>
             <div className="space-y-1.5">
@@ -458,17 +456,17 @@ export const KhongKichScreen: React.FC<KhongKichScreenProps> = ({
                         {skill.icon}
                       </span>
                       <div className="min-w-0">
-                        <div className="text-[8px] font-black uppercase text-sky-400">
+                        <div className="text-xs font-semibold uppercase text-[var(--modal-info)]">
                           Skill {index + 1}
                         </div>
-                        <div className="font-black text-xs text-slate-100">{skill.name}</div>
+                        <div className="font-semibold text-xs text-[var(--modal-text)]">{skill.name}</div>
                       </div>
-                      <div className="ml-auto text-right text-[8px] font-bold text-slate-400">
+                      <div className="ml-auto text-right text-xs font-bold text-[var(--modal-muted)]">
                         <div>{skill.cost} tài nguyên</div>
                         <div>{skill.cooldown}s hồi chiêu</div>
                       </div>
                     </div>
-                    <p className="mt-1 text-[9.5px] leading-relaxed text-slate-300">
+                    <p className="mt-1 text-[9.5px] leading-relaxed text-[var(--modal-text)]">
                       {skill.description}
                     </p>
                   </article>

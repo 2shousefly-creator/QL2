@@ -5,17 +5,17 @@ import type {
 } from "react";
 
 export {
-  AppBottomSheet,
-  AppModal,
-  ExclusiveFullscreenOverlay,
-  OverlayBody,
-  OverlayFooter,
-  OverlayHeader,
-  OverlayHost,
-  OverlayPanel,
-  OverlayPortal,
-  useAppChromeMetrics,
-  useBodyScrollLock,
+AppBottomSheet,
+AppModal,
+ExclusiveFullscreenOverlay,
+OverlayBody,
+OverlayFooter,
+OverlayHeader,
+OverlayHost,
+OverlayPanel,
+OverlayPortal,
+useAppChromeMetrics,
+useBodyScrollLock
 } from "../overlay/AppOverlay";
 export type { OverlayLayer } from "../overlay/AppOverlay";
 
@@ -86,12 +86,4 @@ export function DataReadout({ className, ...props }: HTMLAttributes<HTMLDivEleme
 
 export function TacticalDivider({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
   return <div className={joinClasses("tactical-divider", className)} aria-hidden="true" {...props} />;
-}
-
-export function MilitaryModal({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
-  return <div className={joinClasses("military-modal", className)} {...props} />;
-}
-
-export function MilitarySheet({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
-  return <div className={joinClasses("military-sheet", className)} {...props} />;
 }

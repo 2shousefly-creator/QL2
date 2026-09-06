@@ -11,6 +11,8 @@ import {
   useSyncExternalStore,
 } from "react";
 import { createPortal } from "react-dom";
+import type { ModalArchetype, ModalStatus, ModalTheme } from "./ModalContent";
+export { GameResultScreen, ModalActions, ModalButton, ResultHero, ResultStat, ResultStats } from "./ModalContent";
 
 const joinClasses = (...classes: Array<string | false | null | undefined>) =>
   classes.filter(Boolean).join(" ");
@@ -292,7 +294,7 @@ export const OverlayPanel = forwardRef<HTMLElement, OverlayPanelProps>(function 
   ref,
 ) {
   return (
-    <section ref={ref} tabIndex={-1} className={joinClasses("military-modal app-overlay__panel", className)} {...props}>
+    <section ref={ref} tabIndex={-1} className={joinClasses("app-overlay__panel", className)} {...props}>
       {children}
     </section>
   );
@@ -310,7 +312,12 @@ export function OverlayFooter({ className, ...props }: HTMLAttributes<HTMLElemen
   return <footer className={joinClasses("app-overlay__footer", className)} {...props} />;
 }
 
-type AppDialogProps = {
+export type AppDialogProps = {
+  archetype: ModalArchetype;
+  theme?: ModalTheme;
+  status?: ModalStatus;
+  size?: "compact" | "standard" | "wide";
+  reducedMotion?: boolean;
   children: ReactNode;
   notification?: boolean;
   onClose?: () => void;
@@ -329,6 +336,11 @@ type AppDialogProps = {
 
 function AppDialog({
   children,
+  archetype,
+  theme = "default",
+  status = "neutral",
+  size = "standard",
+  reducedMotion = false,
   notification = false,
   onClose,
   closeOnBackdrop = false,
@@ -352,12 +364,17 @@ function AppDialog({
     <OverlayPortal>
       <div
         className={joinClasses(
-          "app-overlay",
+          "app-overlay modal-design",
           sheet ? "app-overlay--sheet" : "app-overlay--modal",
           overlayClassName,
         )}
         data-overlay-layer={layer}
         data-overlay-layout={layout}
+        data-modal-archetype={archetype}
+        data-modal-theme={theme}
+        data-modal-status={status}
+        data-modal-size={size}
+        data-reduced-motion={reducedMotion ? "true" : undefined}
         onClick={(event) => {
           event.stopPropagation();
           if (closeOnBackdrop && event.target === event.currentTarget) onClose?.();
@@ -372,7 +389,7 @@ function AppDialog({
           aria-label={ariaLabel}
           aria-labelledby={labelledBy}
           aria-describedby={describedBy}
-          className={joinClasses(sheet && "military-sheet", panelClassName)}
+          className={panelClassName}
           {...panelProps}
         >
           {children}
@@ -390,7 +407,16 @@ export function AppBottomSheet(props: AppDialogProps) {
   return <AppDialog {...props} sheet />;
 }
 
+export function GameResultModal(props: Omit<AppDialogProps, "archetype">) {
+  return <AppModal {...props} archetype="result" />;
+}
+
+export function ConfirmationDialog(props: Omit<AppDialogProps, "archetype">) {
+  return <AppModal {...props} archetype="confirm" />;
+}
+
 type ExclusiveFullscreenOverlayProps = HTMLAttributes<HTMLDivElement> & {
+  archetype?: "ceremony";
   children: ReactNode;
   layer?: "exclusive" | "system";
   ariaLabel?: string;
@@ -398,6 +424,7 @@ type ExclusiveFullscreenOverlayProps = HTMLAttributes<HTMLDivElement> & {
 };
 
 export function ExclusiveFullscreenOverlay({
+  archetype,
   children,
   layer = "exclusive",
   ariaLabel,
@@ -417,7 +444,7 @@ export function ExclusiveFullscreenOverlay({
         role="application"
         aria-label={ariaLabel}
       >
-        <div ref={contentRef} tabIndex={-1} className={joinClasses("app-exclusive-overlay__content", className)} {...props}>
+        <div ref={contentRef} tabIndex={-1} data-modal-archetype={archetype} className={joinClasses("app-exclusive-overlay__content", archetype && "modal-design", className)} {...props}>
           {children}
         </div>
       </div>

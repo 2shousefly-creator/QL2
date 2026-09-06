@@ -10,31 +10,7 @@ import {
   FEED_CATALOG,
   FERTILIZER_CATALOG,
 } from "./farmCatalog";
-import {
-  addAnimalToPen,
-  applyFertilizerToGrowingCrop,
-  canWaterPlot,
-  clearPlot,
-  createDefaultFarmState,
-  consumePendingAnimalDeathNotification,
-  dismissAnimal,
-  feedPenBuff,
-  getAnimalCapacity,
-  getItemOriginalPrice,
-  getItemSellPrice,
-  hasCropFertilizer,
-  getRankNameForDisplay,
-  harvestAllReadyCrops,
-  harvestPlot,
-  plantSeedWithFertilizer,
-  rankAtLeast,
-  sellAllEggs,
-  sellEggs,
-  sellInventoryItem,
-  settleFarmState,
-  treatPestOnSelectedPlot,
-  waterSelectedPlot,
-} from "./farmEngine";
+import { addAnimalToPen, applyFertilizerToGrowingCrop, canWaterPlot, clearPlot, consumePendingAnimalDeathNotification, createDefaultFarmState, dismissAnimal, feedPenBuff, getRankNameForDisplay, harvestAllReadyCrops, harvestPlot, hasCropFertilizer, plantSeedWithFertilizer, rankAtLeast, sellAllEggs, sellEggs, sellInventoryItem, settleFarmState, treatPestOnSelectedPlot, waterSelectedPlot } from "./farmEngine";
 import { isAnimalDead } from "./animalLifecycle";
 import {
   AnimalTypeId,
@@ -48,17 +24,7 @@ import {
 import {
   getCanonicalWeatherSlot,
 } from "./weatherEngine";
-import {
-  recordCropHarvestForMedals,
-  recordWatering,
-  recordFertilizerUsed,
-  recordEggSale,
-  recordFeedBagsUsed,
-  recordFarmGoldEarned,
-  recordPerfectFarmItemSale,
-  recordPenCapacity,
-  evaluateMedalUnlocks,
-} from "../../game/medals/medalEngine";
+import { evaluateMedalUnlocks, recordCropHarvestForMedals, recordEggSale, recordFarmGoldEarned, recordFeedBagsUsed, recordFertilizerUsed, recordPerfectFarmItemSale, recordWatering } from "../../game/medals/medalEngine";
 import { TangGiaCanvas2D } from "./components/TangGiaCanvas2D";
 import { FarmXpProgressBar } from "./components/FarmXpProgressBar";
 import { FarmStoreModal } from "./components/FarmStoreModal";
@@ -74,7 +40,7 @@ import {
   RewardSummaryModal,
   RewardSummaryData,
 } from "./components/RewardSummaryModal";
-import { AppModal, OverlayBody, OverlayFooter, OverlayHeader, OverlayPortal } from "../../components/overlay/AppOverlay";
+import { ConfirmationDialog, ModalButton, OverlayBody, OverlayFooter, OverlayHeader, OverlayPortal } from "../../components/overlay/AppOverlay";
 import {
   HARVEST_ALL_CROP_GLOW_DURATION_MS,
   HARVEST_REWARD_FLOAT_DURATION_MS,
@@ -82,20 +48,7 @@ import {
   getFarmPresentationState,
   type PlotHarvestPresentation,
 } from "./farmPresentation";
-import {
-  Coins,
-  Store,
-  Sprout,
-  Droplets,
-  Trash2,
-  Egg,
-  Wheat,
-  X,
-  Sparkles,
-  UserX,
-  CheckCircle2,
-  Package,
-} from "lucide-react";
+import { CheckCircle2, Droplets, Egg, Package, Sparkles, Sprout, Store, Trash2, UserX, Wheat } from "lucide-react";
 import { MIN_PLANTING_SOIL_MOISTURE } from "./soilMoistureEngine";
 import { canTreatPest } from "./pestEngine";
 
@@ -1267,7 +1220,7 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
       {/* --- TOAST POPUP --- */}
       {toastMessage && (
         <OverlayPortal>
-          <div className="app-overlay-toast px-4 py-2.5 rounded-2xl bg-slate-900/95 border border-amber-500/80 text-amber-200 text-xs font-black shadow-2xl backdrop-blur-md flex items-center gap-2 animate-in fade-in slide-in-from-top-2 duration-200" role="status">
+          <div className="app-overlay-toast modal-design modal-toast flex items-center gap-2" data-modal-archetype="info" role="status">
             <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0" />
             <span>{toastMessage}</span>
           </div>
@@ -1276,40 +1229,40 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
 
       {/* --- CONFIRMATION DIALOG MODAL --- */}
       {dialogConfig && (
-        <AppModal
+        <ConfirmationDialog status="warning" theme="farm"
           onClose={() => closeFarmModal()}
           labelledBy="farm-confirmation-title"
-          panelClassName="app-overlay--spaced bg-slate-900 border border-slate-700 rounded-3xl max-w-sm w-full shadow-2xl text-center animate-in fade-in duration-200"
+          panelClassName="text-center"
         >
-            <OverlayHeader className="">
-            <h3 id="farm-confirmation-title" className="font-extrabold text-base text-slate-100">
+            <OverlayHeader>
+            <h3 id="farm-confirmation-title" className="modal-title">
               {dialogConfig.title}
             </h3>
             </OverlayHeader>
-            <OverlayBody className="">
-            <p className="text-xs text-slate-300 leading-relaxed">
+            <OverlayBody>
+            <p className="text-xs text-[var(--modal-text)] leading-relaxed">
               {dialogConfig.message}
             </p>
             </OverlayBody>
-            <OverlayFooter className="flex items-center gap-2" data-stack-actions="true">
-              <button
+            <OverlayFooter className="flex items-center" data-stack-actions="true">
+              <ModalButton variant="ghost"
                 onClick={() =>
                   closeFarmModal()
                 }
-                className="app-overlay-button flex-1 py-2.5 rounded-xl bg-slate-800 text-slate-300 font-extrabold text-xs hover:bg-slate-750 transition-colors"
+                className="flex-1"
               >
                 Hủy Bỏ
-              </button>
-              <button
+              </ModalButton>
+              <ModalButton variant="primary"
                 onClick={() => {
                   if (dialogConfig.onConfirm) dialogConfig.onConfirm();
                 }}
-                className="app-overlay-button flex-1 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs shadow-md transition-all active:scale-95"
+                className="flex-1"
               >
                 {dialogConfig.confirmLabel || "Xác Nhận"}
-              </button>
+              </ModalButton>
             </OverlayFooter>
-        </AppModal>
+        </ConfirmationDialog>
       )}
 
       {/* --- ALL GAME MODALS --- */}
