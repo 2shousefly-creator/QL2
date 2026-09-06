@@ -42,7 +42,7 @@ export const GomokuTutorialModal: React.FC<GomokuTutorialModalProps> = ({ onClos
           <div className="flex items-start gap-2.5">
             <Hand className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
             <p>
-              <strong>Thao Tác Bàn Cờ:</strong> Vuốt 1 ngón để di chuyển (Pan), chụm 2 ngón để Phóng to / Thu nhỏ (Pinch Zoom). Chạm vào giao điểm trống để đặt quân.
+              <strong>Thao Tác Bàn Cờ:</strong> Vuốt 1 ngón để di chuyển (Pan), chụm 2 ngón để Phóng to / Thu nhỏ (Pinch Zoom). Chạm vào ô trống để vẽ quân vào giữa ô.
             </p>
           </div>
 

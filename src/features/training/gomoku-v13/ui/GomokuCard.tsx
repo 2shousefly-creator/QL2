@@ -108,12 +108,12 @@ export const GomokuCard: React.FC<GomokuCardProps> = ({
             }}
             className={`py-2 px-3 rounded-xl border flex items-center justify-center gap-2 transition-all ${
               selectedMark === "X"
-                ? "bg-cyan-500/20 border-cyan-500/60 text-cyan-300 font-extrabold shadow-lg shadow-cyan-500/10"
+                ? "bg-blue-500/20 border-blue-500/60 text-blue-300 font-extrabold shadow-lg shadow-blue-500/10"
                 : "bg-slate-950/60 border-slate-800 text-slate-400 hover:border-slate-700"
             }`}
           >
             <span className="text-base font-black">X</span>
-            <span className="text-xs">Quân Cyan</span>
+            <span className="text-xs">Quân Xanh Mực</span>
           </button>
 
           <button

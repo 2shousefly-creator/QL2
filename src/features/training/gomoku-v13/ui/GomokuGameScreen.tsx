@@ -14,6 +14,7 @@ import { ViewportController } from "../world/ViewportController";
 import { CanvasSurface } from "../render/CanvasSurface";
 import { GomokuSceneRenderer } from "../render/GomokuSceneRenderer";
 import { RenderScheduler } from "../render/RenderScheduler";
+import { selectWinningFive, StoneDrawAnimations, WIN_CELEBRATION_MS, WinCelebration } from "../render/GomokuPresentation";
 import { PointerGestureController } from "../input/PointerGestureController";
 import { KeyboardController } from "../input/KeyboardController";
 import { AiWorkerClient } from "../ai/AiWorkerClient";
@@ -53,6 +54,19 @@ export const GomokuGameScreen: React.FC<GomokuGameScreenProps> = ({
   const [showResultModal, setShowResultModal] = useState<boolean>(false);
   const [showExitConfirm, setShowExitConfirm] = useState<boolean>(false);
   const [starterText, setStarterText] = useState<string>("");
+  const [systemReducedMotion, setSystemReducedMotion] = useState(() =>
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  );
+  const reducedMotion = gameState.settings.reducedMotion || systemReducedMotion;
+  const reducedMotionRef = useRef(reducedMotion);
+  reducedMotionRef.current = reducedMotion;
+  const stoneAnimationsRef = useRef(new StoneDrawAnimations());
+  const celebrationRef = useRef<WinCelebration | null>(null);
+  const celebrationTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const committedMatchRef = useRef<string | null>(null);
+  const completedAtRef = useRef<number | null>(null);
+  const modalOpenRef = useRef(false);
+  modalOpenRef.current = showResultModal || showExitConfirm;
 
   // Canvas & Engine Refs
   const containerRef = useRef<HTMLDivElement>(null);
@@ -65,6 +79,7 @@ export const GomokuGameScreen: React.FC<GomokuGameScreenProps> = ({
   const gestureControllerRef = useRef<PointerGestureController | null>(null);
   const keyboardControllerRef = useRef<KeyboardController | null>(null);
   const aiClientRef = useRef<AiWorkerClient>(new AiWorkerClient());
+  const pendingAiStartRef = useRef<(() => void) | null>(null);
 
   const matchStateRef = useRef<GomokuMatchState>(matchState);
   matchStateRef.current = matchState;
@@ -76,10 +91,19 @@ export const GomokuGameScreen: React.FC<GomokuGameScreenProps> = ({
     }
   }, []);
 
+  useEffect(() => {
+    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const update = () => setSystemReducedMotion(media.matches);
+    media.addEventListener("change", update);
+    return () => media.removeEventListener("change", update);
+  }, []);
+
+  useEffect(() => requestRender(), [reducedMotion, requestRender]);
+
   // 2. Handle Player Move
   const handlePlayerPlace = useCallback((point: BoardPoint) => {
     const current = matchStateRef.current;
-    if (current.phase !== "player_turn") return;
+    if (current.phase !== "player_turn" || modalOpenRef.current) return;
 
     soundManager.playClick();
     setMatchState((prev) => matchReducer(prev, { type: "PLAYER_PLACE", point }));
@@ -108,6 +132,14 @@ export const GomokuGameScreen: React.FC<GomokuGameScreenProps> = ({
 
       const ms = matchStateRef.current;
       const vp = viewportControllerRef.current.getSnapshot();
+      const now = performance.now();
+      const stoneDraws = stoneAnimationsRef.current.snapshot(ms.matchId, ms.stones, now, reducedMotionRef.current);
+      const celebration = celebrationRef.current;
+      const celebrating = celebration?.matchId === ms.matchId && now - celebration.startedAtMs < WIN_CELEBRATION_MS;
+      const winningHighlight = celebrating ? {
+        points: celebration.points,
+        pulse: reducedMotionRef.current ? 0.5 : (1 - Math.cos((now - celebration.startedAtMs) / WIN_CELEBRATION_MS * Math.PI * 4)) / 2,
+      } : undefined;
 
       frameCount++;
       rendererRef.current.render({
@@ -122,9 +154,20 @@ export const GomokuGameScreen: React.FC<GomokuGameScreenProps> = ({
         lastMove: ms.lastMove,
         cursor: keyboardControllerRef.current?.getCursor() || null,
         winningLine: ms.winningLine,
+        stoneDraws,
+        winningHighlight,
         phase: ms.phase,
         isAiThinking: ms.phase === "ai_turn",
       });
+      // Reuse the coalescing scheduler only while a stroke or pulse is active.
+      if (stoneDraws.size > 0 || (celebrating && !reducedMotionRef.current)) {
+        schedulerRef.current?.request();
+      }
+      if (stoneDraws.size === 0 && ms.phase === "ai_turn" && pendingAiStartRef.current) {
+        const startAi = pendingAiStartRef.current;
+        pendingAiStartRef.current = null;
+        startAi();
+      }
     };
 
     const scheduler = new RenderScheduler(drawFrame);
@@ -186,6 +229,7 @@ export const GomokuGameScreen: React.FC<GomokuGameScreenProps> = ({
     resizeObserver.observe(container);
 
     const handleKeyDown = (e: KeyboardEvent) => {
+      if (modalOpenRef.current || (e.target instanceof HTMLElement && e.target.closest("button, input, textarea, select, [contenteditable=true]"))) return;
       if (keyboardControllerRef.current?.handleKeyDown(e)) {
         e.preventDefault();
       }
@@ -197,6 +241,7 @@ export const GomokuGameScreen: React.FC<GomokuGameScreenProps> = ({
       resizeObserver.disconnect();
       gestureController.detach();
       scheduler.cancel();
+      schedulerRef.current = null;
       aiClientRef.current.cancelActiveRequest();
     };
   }, [handlePlayerPlace, requestRender]);
@@ -229,7 +274,7 @@ export const GomokuGameScreen: React.FC<GomokuGameScreenProps> = ({
     if (matchState.phase === "ai_turn") {
       const requestId = `req_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`;
 
-      aiClientRef.current
+      const startAi = () => aiClientRef.current
         .computeMove(
           matchState.matchId,
           matchState.stones,
@@ -239,7 +284,7 @@ export const GomokuGameScreen: React.FC<GomokuGameScreenProps> = ({
           requestId
         )
         .then(({ requestId: resReqId, move }) => {
-          if (matchStateRef.current.phase === "ai_turn") {
+          if (matchStateRef.current.matchId === matchState.matchId && matchStateRef.current.phase === "ai_turn") {
             soundManager.playClick();
             setMatchState((prev) =>
               matchReducer(prev, {
@@ -250,8 +295,20 @@ export const GomokuGameScreen: React.FC<GomokuGameScreenProps> = ({
             );
           }
         });
+      // Search currently runs on the main thread. Let the player's ink finish
+      // before starting that work; the search algorithm and budgets stay intact.
+      if (matchState.stones.length > 0) {
+        pendingAiStartRef.current = startAi;
+        requestRender();
+      } else {
+        startAi();
+      }
+      return () => {
+        pendingAiStartRef.current = null;
+        aiClientRef.current.cancelActiveRequest();
+      };
     }
-  }, [matchState.phase, matchState.matchId, matchState.stones, matchState.aiMark, matchState.playerMark, matchState.difficulty]);
+  }, [matchState.phase, matchState.matchId, matchState.stones, matchState.aiMark, matchState.playerMark, matchState.difficulty, requestRender]);
 
   // 6. Handle Game Finish (Result & Reward)
   useEffect(() => {
@@ -259,13 +316,13 @@ export const GomokuGameScreen: React.FC<GomokuGameScreenProps> = ({
       (matchState.phase === "player_won" ||
         matchState.phase === "ai_won" ||
         matchState.phase === "resigned") &&
-      !matchState.resultCommitted
+      !matchState.resultCommitted && committedMatchRef.current !== matchState.matchId
     ) {
+      committedMatchRef.current = matchState.matchId;
+      completedAtRef.current = Date.now();
       setMatchState((prev) => ({ ...prev, resultCommitted: true }));
 
       const isVictory = matchState.phase === "player_won";
-      let rewardCreditedXp = 0;
-
       onUpdateGameState((draft) => {
         const claimRes = processGomokuResultReward(
           draft,
@@ -274,21 +331,58 @@ export const GomokuGameScreen: React.FC<GomokuGameScreenProps> = ({
           isVictory
         );
 
-        if (claimRes.status === "claimed") {
-          rewardCreditedXp = claimRes.nominalRewardXp;
-        }
-
         recordTrainingRunForMasteryAndMedals(draft, "gomoku_infinite", matchState.difficulty, isVictory);
+        // The host applies this updater asynchronously. Read XP after the claim,
+        // outside the host's render, and never carry it into a restarted match.
+        const creditedXp = claimRes.status === "claimed" ? claimRes.nominalRewardXp : 0;
+        queueMicrotask(() => {
+          if (schedulerRef.current && matchStateRef.current.matchId === matchState.matchId) {
+            setEarnedXp(creditedXp);
+          }
+        });
       });
 
       if (isVictory) {
         soundManager.playPromotionFanfare();
       }
-
-      setEarnedXp(rewardCreditedXp);
-      setShowResultModal(true);
     }
   }, [matchState.phase, matchState.resultCommitted, matchState.matchId, matchState.difficulty, onUpdateGameState]);
+
+  // Reward persistence above happens immediately. Only the result presentation waits.
+  useEffect(() => {
+    const { phase, matchId, winningLine, lastMove } = matchStateRef.current;
+    if (phase === "resigned") {
+      celebrationRef.current = null;
+      setShowExitConfirm(false);
+      setShowResultModal(true);
+      return;
+    }
+    if (phase !== "player_won" && phase !== "ai_won") return;
+
+    setShowExitConfirm(false);
+    setShowResultModal(false);
+    if (celebrationRef.current?.matchId !== matchId) {
+      celebrationRef.current = {
+        matchId,
+        startedAtMs: performance.now(),
+        points: selectWinningFive(winningLine, lastMove),
+      };
+    }
+    const celebration = celebrationRef.current;
+    requestRender();
+    const timer = setTimeout(() => {
+      if (matchStateRef.current.matchId !== matchId || celebrationRef.current !== celebration) return;
+      celebrationRef.current = null;
+      celebrationTimerRef.current = null;
+      setShowResultModal(true);
+      requestRender();
+    }, Math.max(0, WIN_CELEBRATION_MS - (performance.now() - celebration.startedAtMs)));
+    celebrationTimerRef.current = timer;
+    return () => {
+      clearTimeout(timer);
+      if (celebrationTimerRef.current === timer) celebrationTimerRef.current = null;
+    };
+  }, [matchState.phase, matchState.matchId, requestRender]);
 
   // Camera toolbar helpers
   const handleZoomIn = () => {
@@ -343,8 +437,23 @@ export const GomokuGameScreen: React.FC<GomokuGameScreenProps> = ({
   };
 
   const handleRestart = () => {
-    setMatchState(createInitialMatchState(difficulty, playerMark));
+    if (celebrationTimerRef.current !== null) clearTimeout(celebrationTimerRef.current);
+    celebrationTimerRef.current = null;
+    celebrationRef.current = null;
+    completedAtRef.current = null;
+    aiClientRef.current.cancelActiveRequest();
+    schedulerRef.current?.cancel();
+    const nextMatch = createInitialMatchState(difficulty, playerMark);
+    matchStateRef.current = nextMatch;
+    setMatchState(nextMatch);
+    setEarnedXp(0);
+    setShowExitConfirm(false);
     setShowResultModal(false);
+  };
+
+  const isCelebrating = (matchState.phase === "player_won" || matchState.phase === "ai_won") && !showResultModal;
+  const handleRequestExit = () => {
+    if (!isCelebrating) setShowExitConfirm(true);
   };
 
   const currentResult: GomokuResult = {
@@ -364,50 +473,53 @@ export const GomokuGameScreen: React.FC<GomokuGameScreenProps> = ({
     playerMoves: matchState.stones.filter((s) => s.actor === "player").length,
     aiMoves: matchState.stones.filter((s) => s.actor === "ai").length,
     winningLine: matchState.winningLine,
-    completedAtEpochMs: Date.now(),
-    activeDurationMs: Date.now() - matchState.startedAtEpochMs,
+    completedAtEpochMs: completedAtRef.current ?? Date.now(),
+    activeDurationMs: (completedAtRef.current ?? Date.now()) - matchState.startedAtEpochMs,
   };
 
   return (
     <ExclusiveFullscreenOverlay
       ariaLabel="Cờ Caro V13"
-      onEscape={() => setShowExitConfirm(true)}
-      className="bg-slate-950 flex flex-col select-none touch-none overflow-hidden"
+      onEscape={handleRequestExit}
+      data-reduced-motion={reducedMotion ? "true" : "false"}
+      className="gomoku-paper-screen bg-[#f5efdf] flex flex-col select-none touch-none overflow-hidden"
     >
       {/* Top Header HUD */}
-      <div className="shrink-0 w-full flex items-center justify-between p-2.5 sm:p-3 bg-slate-900 border-b border-slate-800 z-30">
+      <div className="shrink-0 w-full flex items-center justify-between gap-2 p-2 sm:p-3 bg-[#faf5e9] border-b border-[#d8cbb3] z-30">
         <button
           type="button"
           onClick={() => {
             soundManager.playClick();
-            setShowExitConfirm(true);
+            handleRequestExit();
           }}
-          className="p-2 rounded-xl bg-slate-800 text-slate-300 hover:text-white"
+          disabled={isCelebrating}
+          aria-label="Thoát ván cờ"
+          className="shrink-0 p-2 rounded-xl bg-[#eee4d1] text-[#574c3c] hover:text-[#2f2922] disabled:opacity-40"
         >
           <ArrowLeft className="w-5 h-5" />
         </button>
 
         {/* Turn Status Badge */}
-        <div className="flex items-center gap-2">
+        <div className="min-w-0 flex-1 flex flex-wrap justify-center items-center gap-1.5" aria-live="polite">
           {matchState.phase === "starter_reveal" ? (
-            <span className="text-xs font-bold text-amber-400 bg-amber-500/10 border border-amber-500/20 px-3 py-1 rounded-full animate-pulse">
+            <span className="text-xs font-bold text-[#946b22] bg-[#ebd8a9]/40 border border-[#c7a45f]/40 px-2 sm:px-3 py-1 rounded-full text-center motion-safe:animate-pulse">
               {starterText}
             </span>
           ) : matchState.phase === "ai_turn" ? (
-            <span className="text-xs font-bold text-rose-400 bg-rose-500/10 border border-rose-500/20 px-3 py-1 rounded-full flex items-center gap-1.5">
-              <Loader2 className="w-3.5 h-3.5 animate-spin" /> Máy Đang Tính...
+            <span className="text-xs font-bold text-[#b33e3e] bg-[#c94a4a]/10 border border-[#c94a4a]/25 px-2 sm:px-3 py-1 rounded-full text-center flex items-center gap-1.5">
+              <Loader2 className="w-3.5 h-3.5 motion-safe:animate-spin" /> Máy Đang Tính...
             </span>
           ) : matchState.phase === "player_turn" ? (
-            <span className="text-xs font-bold text-cyan-400 bg-cyan-500/10 border border-cyan-500/20 px-3 py-1 rounded-full">
+            <span className="text-xs font-bold text-[#245aa8] bg-[#245aa8]/10 border border-[#245aa8]/25 px-2 sm:px-3 py-1 rounded-full text-center">
               Lượt Bạn ({matchState.playerMark})
             </span>
           ) : (
-            <span className="text-xs font-bold text-slate-300 bg-slate-800 px-3 py-1 rounded-full">
-              Trận Đấu Kết Thúc
+            <span className="text-xs font-bold text-[#574c3c] bg-[#eee4d1] px-2 sm:px-3 py-1 rounded-full text-center">
+              {isCelebrating ? "Chuỗi 5 quân chiến thắng" : "Trận Đấu Kết Thúc"}
             </span>
           )}
 
-          <span className="text-[11px] font-mono text-slate-400 bg-slate-950 px-2.5 py-1 rounded-full border border-slate-800">
+          <span className="text-[11px] font-mono text-[#746653] bg-[#f5efdf] px-2.5 py-1 rounded-full border border-[#d8cbb3]">
             Nước: {matchState.stones.length}
           </span>
         </div>
@@ -416,7 +528,7 @@ export const GomokuGameScreen: React.FC<GomokuGameScreenProps> = ({
           type="button"
           onClick={handleResign}
           disabled={matchState.phase === "player_won" || matchState.phase === "ai_won" || matchState.phase === "resigned"}
-          className="p-2 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 hover:bg-rose-500/20 disabled:opacity-40"
+          className="p-2 rounded-xl bg-[#c94a4a]/10 border border-[#c94a4a]/25 text-[#b33e3e] hover:bg-[#c94a4a]/15 disabled:opacity-40"
           title="Đầu hàng"
         >
           <Flag className="w-4 h-4" />
@@ -424,15 +536,15 @@ export const GomokuGameScreen: React.FC<GomokuGameScreenProps> = ({
       </div>
 
       {/* Main Interactive Canvas Area */}
-      <div ref={containerRef} className="relative flex-1 w-full min-h-0 bg-slate-950 overflow-hidden">
-        <canvas ref={canvasRef} className="block w-full h-full cursor-crosshair" />
+      <div ref={containerRef} className="relative flex-1 w-full min-h-0 bg-[#f5efdf] overflow-hidden shadow-inner shadow-[#806744]/10">
+        <canvas ref={canvasRef} className="block w-full h-full cursor-crosshair" aria-label="Bàn cờ Caro: chạm ô trống để đặt quân, kéo để di chuyển" />
 
         {/* Floating Camera Controls */}
-        <div className="absolute bottom-6 right-4 z-30 flex flex-col gap-2">
+        <div className="absolute bottom-3 right-2 sm:bottom-6 sm:right-4 z-30 flex flex-col gap-1.5 sm:gap-2">
           <button
             type="button"
             onClick={handleZoomIn}
-            className="p-3 rounded-2xl bg-slate-900/90 border border-slate-800 text-slate-200 shadow-xl hover:bg-slate-800 active:scale-95 transition-all"
+            className="p-2.5 sm:p-3 rounded-2xl bg-[#fffaf0]/95 border border-[#d8cbb3] text-[#494033] shadow-md shadow-[#806744]/10 hover:bg-[#eee4d1] active:scale-95 transition-all"
             title="Phóng to"
           >
             <ZoomIn className="w-5 h-5" />
@@ -440,7 +552,7 @@ export const GomokuGameScreen: React.FC<GomokuGameScreenProps> = ({
           <button
             type="button"
             onClick={handleZoomOut}
-            className="p-3 rounded-2xl bg-slate-900/90 border border-slate-800 text-slate-200 shadow-xl hover:bg-slate-800 active:scale-95 transition-all"
+            className="p-2.5 sm:p-3 rounded-2xl bg-[#fffaf0]/95 border border-[#d8cbb3] text-[#494033] shadow-md shadow-[#806744]/10 hover:bg-[#eee4d1] active:scale-95 transition-all"
             title="Thu nhỏ"
           >
             <ZoomOut className="w-5 h-5" />
@@ -448,7 +560,7 @@ export const GomokuGameScreen: React.FC<GomokuGameScreenProps> = ({
           <button
             type="button"
             onClick={handleCenter}
-            className="p-3 rounded-2xl bg-slate-900/90 border border-slate-800 text-amber-400 shadow-xl hover:bg-slate-800 active:scale-95 transition-all"
+            className="p-2.5 sm:p-3 rounded-2xl bg-[#fffaf0]/95 border border-[#d8cbb3] text-[#946b22] shadow-md shadow-[#806744]/10 hover:bg-[#eee4d1] active:scale-95 transition-all"
             title="Về trung tâm bàn cờ"
           >
             <Focus className="w-5 h-5" />
@@ -457,7 +569,7 @@ export const GomokuGameScreen: React.FC<GomokuGameScreenProps> = ({
             <button
               type="button"
               onClick={handleLatestMove}
-              className="p-3 rounded-2xl bg-slate-900/90 border border-slate-800 text-cyan-400 shadow-xl hover:bg-slate-800 active:scale-95 transition-all"
+              className="p-2.5 sm:p-3 rounded-2xl bg-[#fffaf0]/95 border border-[#d8cbb3] text-[#245aa8] shadow-md shadow-[#806744]/10 hover:bg-[#eee4d1] active:scale-95 transition-all"
               title="Tới nước mới nhất"
             >
               <Target className="w-5 h-5" />
@@ -471,6 +583,7 @@ export const GomokuGameScreen: React.FC<GomokuGameScreenProps> = ({
         <GomokuResultModal
           result={currentResult}
           earnedXp={earnedXp}
+          reducedMotion={reducedMotion}
           onRestart={handleRestart}
           onExit={handleExitAction}
         />
@@ -483,27 +596,27 @@ export const GomokuGameScreen: React.FC<GomokuGameScreenProps> = ({
           layer="exclusive-dialog"
           layout="viewport-safe"
           labelledBy="gomoku-exit-title"
-          panelClassName="max-w-sm border-slate-800 bg-slate-900 text-center text-slate-100"
+          panelClassName="gomoku-paper-dialog max-w-sm border-[#d8cbb3] bg-[#faf5e9] text-center text-[#2f2922]"
         >
-          <OverlayHeader className="flex flex-col items-center gap-3 border-slate-800 text-center">
-            <div className="w-12 h-12 rounded-2xl bg-rose-500/20 text-rose-400 border border-rose-500/40 flex items-center justify-center">
+          <OverlayHeader className="flex flex-col items-center gap-3 border-[#d8cbb3] text-center">
+            <div className="w-12 h-12 rounded-2xl bg-rose-500/20 text-[#b33e3e] border border-rose-500/40 flex items-center justify-center">
               <Sparkles className="w-6 h-6" />
             </div>
 
-            <h3 id="gomoku-exit-title" className="text-base font-black text-slate-100">Thoát Lượt Chơi?</h3>
+            <h3 id="gomoku-exit-title" className="text-base font-black text-[#2f2922]">Thoát Lượt Chơi?</h3>
           </OverlayHeader>
 
           <OverlayBody>
-            <p className="text-center text-xs text-slate-400">
+            <p className="text-center text-xs text-[#746653]">
               Bạn có chắc chắn muốn thoát khỏi ván cờ Gomoku hiện tại không?
             </p>
           </OverlayBody>
 
-          <OverlayFooter className="grid grid-cols-2 gap-2 border-slate-800 bg-slate-900">
+          <OverlayFooter className="grid grid-cols-2 gap-2 border-[#d8cbb3] bg-[#faf5e9]">
               <button
                 type="button"
                 onClick={() => setShowExitConfirm(false)}
-                className="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs"
+                className="py-2.5 rounded-xl bg-[#eee4d1] hover:bg-[#e4d6bc] text-[#574c3c] font-bold text-xs"
               >
                 Tiếp Tục Chơi
               </button>
