@@ -17,7 +17,7 @@ import { FormationResult } from "../../../game/training/formationAssembly/format
 import { DailyTrainingClaimResult } from "../../../game/training/dailyTrainingReward";
 import { FORMATION_CONFIGS } from "../../../game/training/formationAssembly/formationConfig";
 import { soundManager } from "../../../game/audio";
-import { AppModal, OverlayBody, OverlayFooter, OverlayHeader } from "../../../components/overlay/AppOverlay";
+import { GameResultModal, ModalActions, ModalButton, OverlayBody, ResultHero } from "../../../components/overlay/AppOverlay";
 
 type FormationAssemblyResultProps = {
   difficulty: TrainingDifficulty;
@@ -46,68 +46,67 @@ export const FormationAssemblyResultModal: React.FC<FormationAssemblyResultProps
   };
 
   return (
-    <AppModal
+    <GameResultModal status={result.victory ? "success" : "danger"}
       onClose={onExit}
       layer="exclusive-dialog"
       layout="viewport-safe"
       labelledBy="formation-result-title"
-      panelClassName="max-w-md border-slate-800 bg-slate-900 text-slate-100"
     >
         {/* Banner Status */}
-        <OverlayHeader className="flex flex-col items-center gap-2 border-slate-800 text-center">
+        <ResultHero className="flex flex-col items-center text-center">
           {result.victory ? (
-            <div className="w-16 h-16 rounded-full bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 shadow-lg shadow-emerald-500/20 animate-bounce">
+            <div className="modal-status-icon">
               <Trophy className="w-8 h-8" />
             </div>
           ) : (
-            <div className="w-16 h-16 rounded-full bg-rose-500/20 border border-rose-500/40 flex items-center justify-center text-rose-400 shadow-lg shadow-rose-500/20">
+            <div className="modal-status-icon">
               <XCircle className="w-8 h-8" />
             </div>
           )}
 
           <div>
-            <h2 id="formation-result-title" className="font-black text-xl text-slate-100">
+            <h2 id="formation-result-title" className="modal-title">
               {result.victory ? "CHIẾN THẮNG HUẤN LUYỆN!" : "ĐỘI HÌNH CHƯA HOÀN THÀNH"}
             </h2>
-            <p className="text-xs text-slate-400 mt-0.5">
+            <p className="modal-copy mt-0.5">
               Xếp Đội Hình · Mức độ <strong>{config.label}</strong>
             </p>
           </div>
-        </OverlayHeader>
+        </ResultHero>
 
-        <OverlayBody className="flex flex-col gap-5">
+        <OverlayBody className="flex flex-col">
         {/* Daily Reward Claim Card */}
         {result.victory && (
-          <div className="bg-slate-950/80 border border-amber-500/30 rounded-2xl p-3.5 flex flex-col gap-2">
+          <div className="modal-section flex flex-col gap-2">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-amber-400" />
-                <span className="font-extrabold text-xs text-amber-300">
+                <Sparkles className="w-4 h-4 text-[var(--modal-reward)]" />
+                <span className="font-semibold text-xs text-[var(--modal-reward)]">
                   Phần Thưởng Huấn Luyện
                 </span>
               </div>
-              <span className="text-[10px] text-slate-400">1 lần / ngày</span>
+              <span className="text-xs text-[var(--modal-muted)]">1 lần / ngày</span>
             </div>
 
             {claimResult?.status === "claimed" ? (
               <div className="flex items-center justify-between bg-amber-500/10 border border-amber-500/20 rounded-xl p-2.5">
-                <span className="text-xs font-bold text-slate-200">
+                <span className="text-xs font-bold text-[var(--modal-text)]">
                   Thắng đầu tiên hôm nay!
                 </span>
-                <span className="font-black text-sm text-amber-400">
+                <span className="font-semibold text-sm text-[var(--modal-reward)]">
                   +{claimResult.nominalRewardXp} XP
                 </span>
               </div>
             ) : claimResult?.status === "already_claimed" ? (
-              <p className="text-xs text-slate-400 italic">
+              <p className="text-xs text-[var(--modal-muted)] italic">
                 Bạn đã nhận phần thưởng huấn luyện hôm nay. Lượt thắng này ghi nhận thành tích (0 XP).
               </p>
             ) : claimResult?.status === "xp_bar_full_not_consumed" ? (
-              <p className="text-xs text-amber-400/90 italic">
+              <p className="text-xs text-[var(--modal-reward)] italic">
                 Thanh XP đang đầy nên chưa thể nhận thưởng. Quyền thưởng vẫn còn sau khi thăng cấp!
               </p>
             ) : (
-              <p className="text-xs text-slate-400 italic">
+              <p className="text-xs text-[var(--modal-muted)] italic">
                 Lượt này hoàn thành nhiệm vụ luyện tập.
               </p>
             )}
@@ -116,60 +115,60 @@ export const FormationAssemblyResultModal: React.FC<FormationAssemblyResultProps
 
         {/* Stats Summary */}
         <div className="grid grid-cols-2 gap-2.5">
-          <div className="bg-slate-950/60 border border-slate-800 rounded-2xl p-3 flex flex-col items-center">
-            <span className="text-[11px] text-slate-400">Điểm Số</span>
-            <span className="font-black text-xl text-amber-400 mt-0.5">
+          <div className="modal-section flex flex-col items-center">
+            <span className="text-xs text-[var(--modal-muted)]">Điểm Số</span>
+            <span className="font-semibold text-xl text-[var(--modal-reward)] mt-0.5">
               {result.score}
             </span>
           </div>
 
-          <div className="bg-slate-950/60 border border-slate-800 rounded-2xl p-3 flex flex-col items-center">
-            <span className="text-[11px] text-slate-400">Vòng Hoàn Thành</span>
-            <span className="font-black text-xl text-cyan-400 mt-0.5">
+          <div className="modal-section flex flex-col items-center">
+            <span className="text-xs text-[var(--modal-muted)]">Vòng Hoàn Thành</span>
+            <span className="font-semibold text-xl text-[var(--modal-info)] mt-0.5">
               {result.completedRounds} / {result.totalRounds}
             </span>
           </div>
         </div>
 
         {/* Detailed Metrics */}
-        <div className="bg-slate-950/40 border border-slate-800/80 rounded-2xl p-3 flex flex-col gap-2 text-xs text-slate-300">
+        <div className="modal-section flex flex-col gap-2 text-xs text-[var(--modal-text)]">
           <div className="flex items-center justify-between border-b border-slate-800/60 pb-1.5">
-            <div className="flex items-center gap-1.5 text-slate-400">
+            <div className="flex items-center gap-1.5 text-[var(--modal-muted)]">
               <Clock className="w-3.5 h-3.5" />
               <span>Thời Gian Trận</span>
             </div>
-            <span className="font-bold text-slate-100">{formatTime(result.elapsedRealMs)}</span>
+            <span className="font-bold text-[var(--modal-text)]">{formatTime(result.elapsedRealMs)}</span>
           </div>
 
           <div className="flex items-center justify-between border-b border-slate-800/60 pb-1.5">
-            <div className="flex items-center gap-1.5 text-slate-400">
+            <div className="flex items-center gap-1.5 text-[var(--modal-muted)]">
               <RefreshCw className="w-3.5 h-3.5" />
               <span>Số Lần Đổi Chỗ</span>
             </div>
-            <span className="font-bold text-slate-100">{result.swapsPerformed}</span>
+            <span className="font-bold text-[var(--modal-text)]">{result.swapsPerformed}</span>
           </div>
 
           <div className="flex items-center justify-between border-b border-slate-800/60 pb-1.5">
-            <div className="flex items-center gap-1.5 text-slate-400">
+            <div className="flex items-center gap-1.5 text-[var(--modal-muted)]">
               <RotateCw className="w-3.5 h-3.5" />
               <span>Số Lần Xoay Quân</span>
             </div>
-            <span className="font-bold text-slate-100">{result.rotationsPerformed}</span>
+            <span className="font-bold text-[var(--modal-text)]">{result.rotationsPerformed}</span>
           </div>
 
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-1.5 text-slate-400">
+            <div className="flex items-center gap-1.5 text-[var(--modal-muted)]">
               <Award className="w-3.5 h-3.5" />
               <span>Lượt Sửa Đã Dùng</span>
             </div>
-            <span className="font-bold text-slate-100">
+            <span className="font-bold text-[var(--modal-text)]">
               {result.recoveriesUsed} / {config.recoveryCharges}
             </span>
           </div>
         </div>
 
         {result.perfectWin && (
-          <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-2xl p-2.5 flex items-center justify-center gap-2 text-emerald-300 font-extrabold text-xs">
+          <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-2xl p-2.5 flex items-center justify-center gap-2 text-[var(--modal-success)] font-semibold text-xs">
             <CheckCircle2 className="w-4 h-4" />
             <span>CHIẾN THẮNG HOÀN HẢO — Không lỗi!</span>
           </div>
@@ -177,45 +176,43 @@ export const FormationAssemblyResultModal: React.FC<FormationAssemblyResultProps
         </OverlayBody>
 
         {/* Action Buttons */}
-        <OverlayFooter className="flex flex-col gap-2 border-slate-800 bg-slate-900">
-          <button
+        <ModalActions className="flex flex-col">
+          <ModalButton variant="primary"
             type="button"
             onClick={() => {
               soundManager.playClick();
               onReplay();
             }}
-            className="w-full py-3 rounded-2xl bg-purple-600 hover:bg-purple-500 text-white font-extrabold text-xs shadow-lg flex items-center justify-center gap-2 transition-all active:scale-[0.98]"
+            className="w-full"
           >
             <RotateCcw className="w-4 h-4" />
             <span>CHƠI LẠI ({config.label})</span>
-          </button>
+          </ModalButton>
 
-          <div className="grid grid-cols-2 gap-2">
-            <button
+          <div className="modal-action-row">
+            <ModalButton variant="ghost"
               type="button"
               onClick={() => {
                 soundManager.playClick();
                 onChangeDifficulty();
               }}
-              className="py-2.5 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs flex items-center justify-center gap-1.5 transition-all"
             >
               <Sliders className="w-3.5 h-3.5" />
               <span>Đổi Độ Khó</span>
-            </button>
+            </ModalButton>
 
-            <button
+            <ModalButton variant="ghost"
               type="button"
               onClick={() => {
                 soundManager.playClick();
                 onExit();
               }}
-              className="py-2.5 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs flex items-center justify-center gap-1.5 transition-all"
             >
               <LogOut className="w-3.5 h-3.5" />
               <span>Về Sảnh</span>
-            </button>
+            </ModalButton>
           </div>
-        </OverlayFooter>
-    </AppModal>
+        </ModalActions>
+    </GameResultModal>
   );
 };

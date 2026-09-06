@@ -13,7 +13,7 @@ import {
 } from "../../game/training/marchRhythmEngine";
 import { MarchRhythmGameResult } from "../../game/training/marchRhythmJudgement";
 import { soundManager } from "../../game/audio";
-import { AppModal, ExclusiveFullscreenOverlay, OverlayBody, OverlayFooter, OverlayHeader } from "../../components/overlay/AppOverlay";
+import { ConfirmationDialog, ExclusiveFullscreenOverlay, ModalButton, OverlayBody, OverlayFooter, OverlayHeader } from "../../components/overlay/AppOverlay";
 
 type MarchRhythmGameProps = {
   gameState: GameState;
@@ -441,42 +441,41 @@ export const MarchRhythmGame: React.FC<MarchRhythmGameProps> = ({
 
       {/* Exit Confirmation Modal */}
       {showExitConfirm && (
-        <AppModal
+        <ConfirmationDialog status="warning"
           onClose={() => setShowExitConfirm(false)}
           layer="exclusive-dialog"
           layout="viewport-safe"
           labelledBy="march-rhythm-exit-title"
-          panelClassName="max-w-xs border-slate-700 bg-slate-900 text-slate-100"
         >
-            <OverlayHeader className="flex items-center gap-2.5 border-slate-800 text-sm font-bold text-amber-400">
+            <OverlayHeader className="flex items-center text-sm font-bold text-[var(--modal-reward)]">
               <AlertTriangle className="w-5 h-5 shrink-0" />
               <span id="march-rhythm-exit-title">Xác Nhận Thoát?</span>
             </OverlayHeader>
             <OverlayBody>
-            <p className="text-xs text-slate-300 leading-relaxed">
+            <p className="text-xs text-[var(--modal-text)] leading-relaxed">
               Tiến trình lượt chơi hiện tại sẽ bị hủy. Quyền thưởng hôm nay của bạn vẫn được giữ nguyên.
             </p>
             </OverlayBody>
-            <OverlayFooter className="flex items-center gap-2 border-slate-800 bg-slate-900">
-              <button
+            <OverlayFooter className="flex items-center">
+              <ModalButton variant="ghost"
                 type="button"
                 onClick={() => setShowExitConfirm(false)}
-                className="flex-1 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold rounded-xl"
+                className="flex-1"
               >
                 Tiếp Tục Chơi
-              </button>
-              <button
+              </ModalButton>
+              <ModalButton variant="primary"
                 type="button"
                 onClick={() => {
                   soundManager.playClick();
                   onExitRun();
                 }}
-                className="flex-1 py-2 bg-rose-600 hover:bg-rose-500 text-slate-100 text-xs font-bold rounded-xl"
+                className="flex-1"
               >
                 Thoát
-              </button>
+              </ModalButton>
             </OverlayFooter>
-        </AppModal>
+        </ConfirmationDialog>
       )}
     </ExclusiveFullscreenOverlay>
   );

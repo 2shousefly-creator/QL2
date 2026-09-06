@@ -7,7 +7,7 @@ import { getRequiredXpForTransition } from "../game/xpEngine";
 import { RANK_STEPS } from "../game/rankBuilder";
 import { soundManager } from "../game/audio";
 import { RankStep } from "../game/types";
-import { AppBottomSheet, OverlayBody, OverlayFooter, OverlayHeader } from "./overlay/AppOverlay";
+import { AppBottomSheet, ModalButton, OverlayBody, OverlayFooter, OverlayHeader } from "./overlay/AppOverlay";
 
 const CATEGORY_NAMES: Record<string, string> = {
   academy: "Khối Đào Tạo & Nhập Ngũ",
@@ -62,48 +62,46 @@ export const RankDetailSheet: React.FC<RankDetailSheetProps> = ({
   const requiredXp = getRequiredXpForTransition(step.rankIndex);
 
   return (
-    <AppBottomSheet
+    <AppBottomSheet archetype="info"
       onClose={requestClose}
       closeOnBackdrop
       ariaLabel={`Chi tiết cấp bậc ${step.displayName}`}
-      panelClassName="theme-card-accent w-full max-w-lg bg-slate-900 border-t sm:border rounded-t-3xl sm:rounded-3xl p-4 sm:p-6 shadow-2xl text-slate-100 gap-2 select-none animate-fadeIn"
     >
         {/* Header & Close */}
-        <OverlayHeader className="theme-divider flex items-center justify-between gap-2 border-b pb-3">
+        <OverlayHeader className="theme-divider flex items-center justify-between">
           <div className="flex items-center gap-2">
             {isAchieved && (
-              <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+              <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-[var(--modal-success)] border border-emerald-500/30">
                 <CheckCircle className="w-3.5 h-3.5" /> Đã đạt
               </span>
             )}
             {isCurrent && (
-              <span className="theme-badge inline-flex items-center gap-1 text-xs font-bold px-2.5 py-0.5 rounded-full border animate-pulse">
+              <span className="theme-badge inline-flex items-center gap-1 text-xs font-bold px-2.5 py-0.5 rounded-full border">
                 Hiện tại
               </span>
             )}
             {isLocked && (
-              <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-400 border border-slate-700">
+              <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-0.5 rounded-full bg-slate-800 text-[var(--modal-muted)] border border-slate-700">
                 <Lock className="w-3.5 h-3.5" /> Khóa
               </span>
             )}
-            <span className="text-xs text-sky-400 font-medium px-2 py-0.5 rounded-full bg-sky-950/50 border border-sky-800/60">
+            <span className="text-xs text-[var(--modal-info)] font-medium px-2 py-0.5 rounded-full bg-sky-950/50 border border-sky-800/60">
               {categoryName}
             </span>
           </div>
 
-          <button
+          <ModalButton variant="icon"
             type="button"
             onClick={() => {
               requestClose();
             }}
-            className="theme-focus p-2 rounded-full bg-slate-800/80 text-slate-300 hover:text-white transition-colors cursor-pointer focus:outline-none"
             aria-label="Đóng"
           >
             <X className="w-5 h-5" />
-          </button>
+          </ModalButton>
         </OverlayHeader>
 
-        <OverlayBody className="space-y-2 pr-1">
+        <OverlayBody>
 
         {/* Hero Presentation with tier progress bar */}
         <div className="shrink-0 my-3 flex flex-col items-center">
@@ -120,7 +118,7 @@ export const RankDetailSheet: React.FC<RankDetailSheetProps> = ({
 
         {/* XP Requirement for next rank if current */}
         {isCurrent && requiredXp > 0 && (
-          <div className="shrink-0 p-2.5 bg-slate-950/80 border border-slate-800 rounded-xl text-center text-xs text-slate-300 mb-2">
+          <div className="modal-section shrink-0 text-center text-xs text-[var(--modal-text)] mb-2">
             Yêu cầu để thăng cấp tiếp theo: <span className="theme-text-accent font-bold">{requiredXp.toLocaleString("vi-VN")} XP</span>
           </div>
         )}
@@ -132,7 +130,7 @@ export const RankDetailSheet: React.FC<RankDetailSheetProps> = ({
             <span>Câu Chuyện Cấp Bậc</span>
           </h4>
 
-          <div className="p-3.5 sm:p-4 bg-slate-950/70 rounded-xl border border-slate-800/80 space-y-3">
+          <div className="modal-section space-y-3">
             {story ? (
               <>
                 {/* Story Title & Subtitle */}
@@ -141,18 +139,18 @@ export const RankDetailSheet: React.FC<RankDetailSheetProps> = ({
                     {story.title}
                   </h5>
                   {story.subtitle && (
-                    <p className="text-xs text-slate-400 mt-1 italic">
+                    <p className="text-xs text-[var(--modal-muted)] mt-1 italic">
                       {story.subtitle}
                     </p>
                   )}
                 </div>
 
                 {/* Story Paragraphs */}
-                <div className="space-y-2.5 text-xs sm:text-sm text-slate-200 leading-relaxed">
+                <div className="space-y-2.5 text-xs sm:text-sm text-[var(--modal-text)] leading-relaxed">
                   {story.paragraphs.map((para, idx) => (
                     <p
                       key={idx}
-                      className="text-justify indent-4 leading-relaxed text-slate-300 bg-slate-900/60 p-3 rounded-lg border border-slate-800/60"
+                      className="modal-section text-justify indent-4 leading-relaxed text-[var(--modal-text)]"
                     >
                       {para}
                     </p>
@@ -160,7 +158,7 @@ export const RankDetailSheet: React.FC<RankDetailSheetProps> = ({
                 </div>
               </>
             ) : (
-              <div className="text-xs text-slate-400 text-center py-6">
+              <div className="text-xs text-[var(--modal-muted)] text-center py-6">
                 Chưa có dữ liệu câu chuyện cho cấp bậc này.
               </div>
             )}
@@ -169,7 +167,7 @@ export const RankDetailSheet: React.FC<RankDetailSheetProps> = ({
         </OverlayBody>
 
         {/* Fictional Disclaimer */}
-        <OverlayFooter className="text-[11px] text-slate-400 italic text-center mt-2 pt-2 border-t border-slate-800">
+        <OverlayFooter className="text-xs text-[var(--modal-muted)] italic text-center mt-2">
           Đây là trò chơi mô phỏng hư cấu, không đại diện và không có liên hệ chính thức với bất kỳ cơ quan hoặc tổ chức quân sự nào.
         </OverlayFooter>
     </AppBottomSheet>

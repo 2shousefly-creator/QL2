@@ -94,20 +94,10 @@
   gap: .55rem;
 }
 
-.ct-v2-strength-grid section {
-  display: grid;
-  align-content: start;
-  gap: .25rem;
-  border: 2px solid rgba(34, 197, 94, .4);
-  border-radius: 15px;
-  background: rgba(20, 83, 45, .24);
-  padding: .65rem;
-}
-
-.ct-v2-strength-grid section:last-child { border-color: rgba(251, 113, 133, .42); background: rgba(127, 29, 29, .24); }
-.ct-v2-strength-grid strong { color: #86efac; font-size: 9px; font-weight: 1000; }
-.ct-v2-strength-grid section:last-child strong { color: #fda4af; }
-.ct-v2-strength-grid span { color: var(--ct-text-muted); font-size: 10px; font-weight: 750; line-height: 1.35; }
+.ct-v2-strength-grid section { display: grid; align-content: start; gap: 6px; padding-block: 10px; border-bottom: 1px solid var(--modal-divider); }
+.ct-v2-strength-grid strong { color: var(--modal-success); font-size: var(--modal-meta-size); font-weight: 600; }
+.ct-v2-strength-grid section:last-child strong { color: var(--modal-danger); }
+.ct-v2-strength-grid span { color: var(--modal-muted); font-size: var(--modal-body-size); line-height: 1.55; }
 
 /* Barracks cards emphasize production and keep encyclopedic stats in detail. */
 .ct-v2-barracks-unlocks {
@@ -289,16 +279,15 @@
 .ct-v2-deployment-archetype { display: block; max-width: 52vw; overflow: hidden; color: var(--ct-text-muted); font-size: 8px; font-weight: 800; text-overflow: ellipsis; white-space: nowrap; }
 .ct-v2-effect-pop { max-width: 92%; pointer-events: none; }
 
-.ct-v2-battle-detail-summary { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .4rem; margin-top: .75rem; }
-.ct-v2-battle-detail-summary span { border-radius: 12px; background: rgba(148, 163, 184, .12); padding: .45rem .25rem; color: var(--ct-text-muted); font-size: 8px; font-weight: 900; text-align: center; }
-.ct-v2-battle-detail-summary strong { display: block; margin-top: .1rem; color: var(--ct-text); font-size: 10px; }
-.ct-v2-live-stat-list strong.is-buffed { color: #0a9a5b; text-shadow: 0 0 8px rgba(16,185,129,.35); }
-.ct-v2-timeline-insight { margin-top: .45rem; border-radius: 11px; background: rgba(56, 189, 248, .12); padding: .45rem .6rem; color: #bae6fd; font-size: 9px; font-weight: 800; }
-.ct-v2-battle-detail-skill { margin-top: .55rem; border: 2px solid rgba(251, 191, 36, .42); border-radius: 14px; background: rgba(120, 53, 15, .26); padding: .55rem; }
-.ct-v2-battle-detail-skill.is-ultimate { border-color: rgba(129, 140, 248, .5); background: rgba(49, 46, 129, .28); }
-.ct-v2-battle-detail-skill strong { color: #fde68a; font-size: 9px; font-weight: 1000; }
-.ct-v2-battle-detail-skill.is-ultimate strong { color: #c7d2fe; }
-.ct-v2-battle-detail-skill p { margin-top: .2rem; color: var(--ct-text-muted); font-size: 9px; font-weight: 700; line-height: 1.35; }
+.ct-v2-battle-detail-summary { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.ct-v2-battle-detail-summary span { padding-block: 8px; border-bottom: 1px solid var(--modal-divider); color: var(--modal-muted); font-size: var(--modal-meta-size); }
+.ct-v2-battle-detail-summary strong { display: block; color: var(--modal-text); font-size: var(--modal-body-size); font-weight: 600; }
+.ct-v2-live-stat-list strong.is-buffed { color: var(--modal-success); }
+
+.ct-v2-battle-detail-skill { padding-block: 10px; border-bottom: 1px solid var(--modal-divider); }
+.ct-v2-battle-detail-skill strong { color: var(--modal-reward); font-size: var(--modal-meta-size); font-weight: 600; }
+.ct-v2-battle-detail-skill.is-ultimate strong { color: var(--modal-info); }
+.ct-v2-battle-detail-skill p { margin-top: 6px; color: var(--modal-muted); font-size: var(--modal-body-size); line-height: 1.55; }
 
 /* Result keeps outcome concise and gives support/control units visible credit. */
 .ct-v2-utility-metrics { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .3rem; margin-top: .55rem; }
@@ -306,7 +295,6 @@
 .ct-v2-utility-metrics b { font-size: 10px; }
 .ct-v2-utility-metrics small { overflow: hidden; font-size: 7px; font-weight: 850; text-overflow: ellipsis; white-space: nowrap; }
 .ct-v2-utility-metrics strong { font-size: 9px; }
-.ct-v2-statistics-panel .ct-v2-icon-button { min-width: 44px; }
 
 .ct-v2-progression-row { animation: ct-v2-progression-row .45s ease-out both; }
 

@@ -100,9 +100,7 @@ button {
 }
 
 .command-panel,
-.tactical-card,
-.military-modal,
-.military-sheet {
+.tactical-card {
   position: relative;
   border: 1px solid var(--military-panel-border);
   border-radius: var(--military-radius-md);
@@ -111,9 +109,7 @@ button {
 }
 
 .command-panel::before,
-.tactical-card::before,
-.military-modal::before,
-.military-sheet::before {
+.tactical-card::before {
   position: absolute;
   top: -1px;
   left: 12px;
@@ -125,9 +121,7 @@ button {
   opacity: 0.78;
 }
 
-.command-panel::after,
-.military-modal::after,
-.military-sheet::after {
+.command-panel::after {
   position: absolute;
   top: -1px;
   right: -1px;
@@ -331,16 +325,6 @@ button {
   background: var(--theme-accent);
 }
 
-.military-modal,
-.military-sheet {
-  background: var(--military-panel-bg-strong) !important;
-}
-
-.military-sheet {
-  border-radius: var(--military-radius-md) var(--military-radius-md) 0 0 !important;
-  padding-bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
-}
-
 /* Existing theme primitives inherit the V2 geometry without changing state colours. */
 .military-ui .theme-world-ambient {
   background:
@@ -503,11 +487,6 @@ button {
   border-radius: 0;
   background: var(--theme-accent);
   box-shadow: none;
-}
-
-.profile-dossier-sheet {
-  background: var(--military-panel-bg-strong) !important;
-  border-color: var(--theme-border) !important;
 }
 
 .profile-dossier-card {
@@ -745,30 +724,17 @@ button {
 }
 
 /* Combat and result screens share tactical framing without changing engines or hitboxes. */
-.tactical-battle-screen,
-.battle-result-screen {
+.tactical-battle-screen {
   font-family: var(--font-ui);
 }
 
 .tactical-battle-screen [class*="rounded-3xl"],
-.tactical-battle-screen [class*="rounded-2xl"],
-.battle-result-screen [class*="rounded-3xl"],
-.battle-result-screen [class*="rounded-2xl"] {
+.tactical-battle-screen [class*="rounded-2xl"] {
   border-radius: var(--military-radius-md) !important;
 }
 
-.tactical-battle-screen [class*="shadow-2xl"],
-.battle-result-screen [class*="shadow-2xl"] {
+.tactical-battle-screen [class*="shadow-2xl"] {
   box-shadow: 0 14px 32px -24px rgba(0, 0, 0, 0.96) !important;
-}
-
-.battle-result-screen::before {
-  display: block;
-  width: min(34%, 9rem);
-  height: 2px;
-  margin-bottom: 0.45rem;
-  content: "";
-  background: var(--theme-accent);
 }
 
 .recreation-game-screen > :first-child {
@@ -780,8 +746,7 @@ button {
 /* Chiến Tuyến keeps its illustrated units and chapter colours while its shell
    adopts the same command hierarchy, panel geometry and typography. */
 .military-ui .ct-v2-campaign-shell,
-.military-ui .ct-v2-match-shell,
-.military-ui .ct-v2-result-shell {
+.military-ui .ct-v2-match-shell {
   --ct-ink: #e5edf6;
   --ct-muted: #9aa9bc;
   font-family: var(--font-ui) !important;
@@ -880,7 +845,6 @@ button {
 .military-ui .ct-v2-panel,
 .military-ui .ct-v2-chapter-card,
 .military-ui .ct-v2-floor-preview,
-.military-ui .ct-v2-result-report,
 .military-ui .ct-v2-summary-tile,
 .military-ui .ct-v2-army-card,
 .military-ui .ct-v2-barracks-card,

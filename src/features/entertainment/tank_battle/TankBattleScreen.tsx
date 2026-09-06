@@ -36,7 +36,7 @@ export const TankBattleScreen: React.FC<TankBattleScreenProps> = ({ gameState, o
   if (phase === "result" && completedRun) return (
     <ExclusiveFullscreenOverlay
       ariaLabel="Kết quả Bắn Xe Tăng"
-      className="overflow-y-auto bg-slate-950"
+      className="bg-slate-950"
     >
       <TankBattleResult {...completedRun} onReplay={startRun} onBack={onBack} />
     </ExclusiveFullscreenOverlay>

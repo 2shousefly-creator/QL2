@@ -1,4 +1,5 @@
 import { useOverlayBusy } from "./components/overlay/AppOverlay";
+import { ModalButton, OverlayHost, OverlayPortal, useAppChromeMetrics } from "./components/overlay/AppOverlay";
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import { HomeScreen } from "./features/home/HomeScreen";
 import { JourneyMapScreen } from "./features/journey/JourneyMapScreen";
@@ -22,7 +23,7 @@ import {
   createInitialGameState,
 } from "./storage/GameRepository";
 import { localGameRepository } from "./storage/LocalGameRepository";
-import { settleEarning, getRequiredXpTicksForTransition } from "./game/xpEngine";
+import { settleEarning } from "./game/xpEngine";
 import { ensureEnergyState, getEnergyMultiplier, getEnergyVisuals, isEnergyActive } from "./game/energyEngine";
 import { registerServiceWorker, sendRankUpReadyNotification } from "./game/notifications";
 import { ensurePushRegistration, syncXpFullPushSchedule } from "./game/pushManager";
@@ -30,7 +31,6 @@ import { canStartPromotionChallenge, completePromotionChallenge, dismissPromotio
 import { getPlayerNextRank, getPlayerRank, getXpProgressDetails } from "./game/selectors";
 import { getJourneyChapterForRank } from "./game/etaEngine";
 import { getStageTheme, getStageThemeCssVariables } from "./game/stageThemes";
-import { gameConfig } from "./game/config";
 import { soundManager } from "./game/audio";
 import { DelegationReportData, EarningMode, GameState, TabType } from "./game/types";
 import { RANK_STEPS } from "./game/rankBuilder";
@@ -39,7 +39,6 @@ import { MandatoryUpdateModal } from "./app-update/MandatoryUpdateModal";
 import { checkForAppUpdate } from "./app-update/versionService";
 import { recoverPendingAppUpdate } from "./app-update/updateBackupService";
 import { StartupGate } from "./app-update/updateTypes";
-import { OverlayHost, OverlayPortal, useAppChromeMetrics } from "./components/overlay/AppOverlay";
 
 function isUserActiveOnline(): boolean {
   if (typeof document === "undefined") return true;
@@ -738,19 +737,18 @@ export default function App() {
       {/* Manual Update Success Toast */}
       {!isExclusivePromotionFlow && showUpdateToast && (
         <OverlayPortal>
-          <div className="app-overlay-toast command-toast max-w-sm w-11/12 bg-emerald-950/95 border border-emerald-500/80 text-emerald-200 px-4 py-3 rounded-2xl shadow-2xl backdrop-blur-md flex items-center justify-between gap-3 text-xs font-semibold" role="status" data-interactive="true">
+          <div className="app-overlay-toast modal-design modal-toast flex items-center justify-between gap-3" data-modal-archetype="info" role="status" data-interactive="true">
             <div className="flex min-w-0 items-center gap-2">
               <Sparkles className="w-4 h-4 text-emerald-400 shrink-0" />
               <span>Đã cập nhật lên phiên bản mới nhất! Tiến trình chơi được bảo toàn.</span>
             </div>
-            <button
+            <ModalButton variant="icon"
               type="button"
               onClick={() => setShowUpdateToast(false)}
-              className="app-overlay__close flex min-h-11 min-w-11 shrink-0 items-center justify-center rounded-xl text-emerald-400 hover:bg-emerald-900/80 hover:text-emerald-100 font-bold"
               aria-label="Đóng thông báo cập nhật"
             >
               ✕
-            </button>
+            </ModalButton>
           </div>
         </OverlayPortal>
       )}

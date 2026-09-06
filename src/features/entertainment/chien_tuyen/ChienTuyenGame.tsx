@@ -60,7 +60,7 @@ import type {
 import { FormationGrid, type FormationDragPayload } from "./components/FormationGrid";
 import { TroopDetailModal } from "./components/TroopDetailModal";
 import { TroopIcon } from "./components/TroopIcon";
-import { AppModal, OverlayBody, OverlayFooter, OverlayHeader } from "../../../components/overlay/AppOverlay";
+import { AppModal, ConfirmationDialog, ModalButton, OverlayBody, OverlayFooter, OverlayHeader } from "../../../components/overlay/AppOverlay";
 import "./chienTuyen.css";
 import "./chienTuyenBattlePolish.css";
 
@@ -509,19 +509,18 @@ function UnitDetailOverlay({ unit, round, timelinePosition, onClose }: { unit: B
   const ultimateDescription = martialArtistStance ? getMartialArtistUltimateDescription(martialArtistStance) : ultimate?.description;
 
   return (
-    <AppModal
+    <AppModal archetype="info"
       onClose={onClose}
       closeOnBackdrop
       layer="exclusive-dialog"
       layout="viewport-safe"
       labelledBy={titleId}
-      panelClassName="ct-v2-modal max-w-sm"
       initialFocusRef={closeRef}
     >
-      <OverlayHeader className="ct-v2-modal-header flex items-start gap-3">
-        <div className={`ct-v2-detail-unit-icon ${unit.side === "player" ? "is-ally" : "is-enemy"}`}>{unit.icon}</div><div className="min-w-0 flex-1"><div className="ct-v2-eyebrow">{unit.isBoss ? "BOSS" : "CHI TIẾT ĐƠN VỊ"}</div><h3 id={titleId} className="text-xl font-black text-white">{unit.name}</h3><p className="text-[10px] font-bold text-slate-300">Lv{unit.level} · {unit.side === "player" ? "Phe Ta" : "Phe Địch"} · {unit.targetPriority === "back_first" ? "Ưu tiên hàng sau" : "Ưu tiên hàng trước"}</p></div><button ref={closeRef} type="button" onClick={onClose} aria-label="Đóng chi tiết đơn vị" className="ct-v2-icon-button app-overlay__close"><X className="h-5 w-5" /></button>
+      <OverlayHeader className="flex items-start">
+        <div className={`ct-v2-detail-unit-icon ${unit.side === "player" ? "is-ally" : "is-enemy"}`}>{unit.icon}</div><div className="min-w-0 flex-1"><div className="ct-v2-eyebrow">{unit.isBoss ? "BOSS" : "CHI TIẾT ĐƠN VỊ"}</div><h3 id={titleId} className="modal-title">{unit.name}</h3><p className="modal-copy font-bold text-[var(--modal-text)]">Lv{unit.level} · {unit.side === "player" ? "Phe Ta" : "Phe Địch"} · {unit.targetPriority === "back_first" ? "Ưu tiên hàng sau" : "Ưu tiên hàng trước"}</p></div><ModalButton variant="icon" ref={closeRef} type="button" onClick={onClose} aria-label="Đóng chi tiết đơn vị"><X className="h-5 w-5" /></ModalButton>
       </OverlayHeader>
-      <OverlayBody className="space-y-3">
+      <OverlayBody>
         <div className="ct-v2-battle-detail-summary"><span>HP <strong>{Math.ceil(unit.hp)}/{unit.maxHp}</strong></span><span>KHIÊN <strong>{Math.round(shieldTotal(unit))}</strong></span><span>NỘ <strong>{Math.round(unit.rage)}/{unit.ultimateRageRequired}</strong></span><span>HĐ <strong>{unit.actionTurnCount}</strong></span></div>
         <div className="ct-v2-live-stat-list">
           {statRows.map((row) => {
@@ -535,7 +534,7 @@ function UnitDetailOverlay({ unit, round, timelinePosition, onClose }: { unit: B
         {timelinePosition && <p className="ct-v2-timeline-insight">▶ Dự kiến quay lại: <strong>#{timelinePosition}</strong> trên Thanh Thứ Tự</p>}
         {passive && <div className="ct-v2-battle-detail-skill"><strong>NỘI TẠI — {passive.name}</strong><p>{passive.description}</p></div>}
         {ultimate?.implemented && <div className="ct-v2-battle-detail-skill is-ultimate"><strong>ULTIMATE · {ultimateName} · NỘ {ultimate.ultimateRageRequired}</strong><p>{ultimateDescription}</p></div>}
-        <div className="rounded-2xl border border-amber-300/30 bg-amber-300/10 p-3 text-[10px] font-semibold text-slate-300">{unit.damageMultiplier > 1 ? <>Sát thương hiện tại <strong>×{unit.damageMultiplier.toFixed(2)}</strong></> : <span>Trạng thái đang hoạt động</span>}{statuses.length > 0 ? <div className="mt-2 flex flex-wrap gap-1">{statuses.map((status) => <span key={status} className="ct-v2-status-chip">{status}</span>)}</div> : <p className="mt-1 text-slate-400">Không có hiệu ứng đặc biệt.</p>}</div>
+        <div className="rounded-2xl border border-amber-300/30 bg-amber-300/10 p-3 text-xs font-semibold text-[var(--modal-text)]">{unit.damageMultiplier > 1 ? <>Sát thương hiện tại <strong>×{unit.damageMultiplier.toFixed(2)}</strong></> : <span>Trạng thái đang hoạt động</span>}{statuses.length > 0 ? <div className="mt-2 flex flex-wrap gap-1">{statuses.map((status) => <span key={status} className="ct-v2-status-chip">{status}</span>)}</div> : <p className="mt-1 text-[var(--modal-muted)]">Không có hiệu ứng đặc biệt.</p>}</div>
       </OverlayBody>
     </AppModal>
   );
@@ -1442,23 +1441,23 @@ export const ChienTuyenGame: React.FC<ChienTuyenGameProps> = ({
       )}
       {inspectUnit && <UnitDetailOverlay unit={inspectUnit} round={displayBattle.round} timelinePosition={inspectTimelinePosition} onClose={() => setInspectUnit(null)} />}
       {showExitConfirm && (
-        <AppModal
+        <ConfirmationDialog status="warning"
           onClose={() => setBattleDialog(null)}
           layer="exclusive-dialog"
           layout="viewport-safe"
           labelledBy="ct-exit-battle-title"
-          panelClassName="ct-v2-modal max-w-sm text-center"
+          panelClassName="text-center"
         >
-            <OverlayHeader className="ct-v2-modal-header flex-col items-center text-center">
-              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl border border-rose-400/40 bg-rose-400/10 text-rose-300"><ShieldAlert className="h-7 w-7" /></div>
-              <h2 id="ct-exit-battle-title" className="mt-3 text-xl font-black text-white">RỜI TRẬN?</h2>
+            <OverlayHeader className="flex-col items-center text-center">
+              <div className="modal-status-icon"><ShieldAlert className="h-7 w-7" /></div>
+              <h2 id="ct-exit-battle-title" className="modal-title">RỜI TRẬN?</h2>
             </OverlayHeader>
-            <OverlayBody><p className="text-center text-[11px] font-semibold leading-relaxed text-slate-300">Quân đã hy sinh vẫn bị mất. Trận không được tính chiến thắng.</p></OverlayBody>
-            <OverlayFooter className="ct-v2-modal-footer grid gap-2">
-              <button type="button" onClick={() => setBattleDialog(null)} className="ct-v2-primary-button">TIẾP TỤC</button>
-              <button type="button" onClick={onAbandon} className="ct-v2-ghost-button !text-rose-300">RỜI TRẬN</button>
+            <OverlayBody><p className="text-center text-xs font-semibold leading-relaxed text-[var(--modal-text)]">Quân đã hy sinh vẫn bị mất. Trận không được tính chiến thắng.</p></OverlayBody>
+            <OverlayFooter>
+              <ModalButton variant="ghost" type="button" onClick={() => setBattleDialog(null)}>TIẾP TỤC</ModalButton>
+              <ModalButton variant="ghost" type="button" onClick={onAbandon}>RỜI TRẬN</ModalButton>
             </OverlayFooter>
-        </AppModal>
+        </ConfirmationDialog>
       )}
     </div>
   );

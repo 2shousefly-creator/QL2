@@ -22,7 +22,7 @@ import { processGomokuResultReward } from "../integration/gomokuRewardAdapter";
 import { recordTrainingRunForMasteryAndMedals } from "../../../../game/medals/medalEngine";
 import { GomokuResultModal } from "./GomokuResultModal";
 import { soundManager } from "../../../../game/audio";
-import { AppModal, ExclusiveFullscreenOverlay, OverlayBody, OverlayFooter, OverlayHeader } from "../../../../components/overlay/AppOverlay";
+import { ConfirmationDialog, ExclusiveFullscreenOverlay, ModalButton, OverlayBody, OverlayFooter, OverlayHeader } from "../../../../components/overlay/AppOverlay";
 
 interface GomokuGameScreenProps {
   gameState: GameState;
@@ -591,44 +591,42 @@ export const GomokuGameScreen: React.FC<GomokuGameScreenProps> = ({
 
       {/* Exit Confirmation Modal */}
       {showExitConfirm && (
-        <AppModal
+        <ConfirmationDialog status="warning" theme="paper"
           onClose={() => setShowExitConfirm(false)}
           layer="exclusive-dialog"
           layout="viewport-safe"
           labelledBy="gomoku-exit-title"
-          panelClassName="gomoku-paper-dialog max-w-sm border-[#d8cbb3] bg-[#faf5e9] text-center text-[#2f2922]"
+          panelClassName="text-center"
         >
-          <OverlayHeader className="flex flex-col items-center gap-3 border-[#d8cbb3] text-center">
-            <div className="w-12 h-12 rounded-2xl bg-rose-500/20 text-[#b33e3e] border border-rose-500/40 flex items-center justify-center">
+          <OverlayHeader className="flex flex-col items-center text-center">
+            <div className="modal-status-icon">
               <Sparkles className="w-6 h-6" />
             </div>
 
-            <h3 id="gomoku-exit-title" className="text-base font-black text-[#2f2922]">Thoát Lượt Chơi?</h3>
+            <h3 id="gomoku-exit-title" className="modal-title">Thoát Lượt Chơi?</h3>
           </OverlayHeader>
 
           <OverlayBody>
-            <p className="text-center text-xs text-[#746653]">
+            <p className="text-center text-xs text-[var(--modal-muted)]">
               Bạn có chắc chắn muốn thoát khỏi ván cờ Gomoku hiện tại không?
             </p>
           </OverlayBody>
 
-          <OverlayFooter className="grid grid-cols-2 gap-2 border-[#d8cbb3] bg-[#faf5e9]">
-              <button
+          <OverlayFooter>
+              <ModalButton variant="ghost"
                 type="button"
                 onClick={() => setShowExitConfirm(false)}
-                className="py-2.5 rounded-xl bg-[#eee4d1] hover:bg-[#e4d6bc] text-[#574c3c] font-bold text-xs"
               >
                 Tiếp Tục Chơi
-              </button>
-              <button
+              </ModalButton>
+              <ModalButton variant="danger"
                 type="button"
                 onClick={handleExitAction}
-                className="py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs shadow-md shadow-rose-600/20"
               >
                 Xác Nhận Thoát
-              </button>
+              </ModalButton>
           </OverlayFooter>
-        </AppModal>
+        </ConfirmationDialog>
       )}
     </ExclusiveFullscreenOverlay>
   );

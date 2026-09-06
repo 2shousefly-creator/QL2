@@ -7,7 +7,7 @@ import { RankTierProgress } from "../../components/RankTierProgress";
 import { JourneyDutySheet } from "../../components/JourneyDutySheet";
 import { CommandHeader } from "../../components/military/MilitaryUI";
 import { soundManager } from "../../game/audio";
-import { AppModal, OverlayBody, OverlayFooter, OverlayHeader } from "../../components/overlay/AppOverlay";
+import { AppModal, ModalButton, OverlayBody, OverlayFooter, OverlayHeader } from "../../components/overlay/AppOverlay";
 
 type JourneyMapScreenProps = {
   gameState: GameState;
@@ -278,28 +278,26 @@ export const JourneyMapScreen: React.FC<JourneyMapScreenProps> = ({
 
       {/* ETA Info Explanation Modal */}
       {showEtaInfoModal && (
-        <AppModal
+        <AppModal archetype="info"
           onClose={() => setShowEtaInfoModal(false)}
           closeOnBackdrop
           labelledBy="eta-info-title"
-          panelClassName="w-full max-w-md bg-slate-900 border border-slate-700 rounded-2xl p-5 shadow-2xl text-slate-100 gap-4 animate-fadeIn"
         >
-            <OverlayHeader className="flex items-center justify-between gap-2 border-b border-slate-800 pb-3">
-              <h3 id="eta-info-title" className="theme-text-accent font-bold text-base flex items-center gap-2">
+            <OverlayHeader className="flex items-center justify-between">
+              <h3 id="eta-info-title" className="modal-title flex items-center gap-2">
                 <Info className="w-5 h-5" />
                 Cơ Chế Dự Kiến Thời Gian (ETA)
               </h3>
-              <button
+              <ModalButton variant="icon"
                 type="button"
                 onClick={() => setShowEtaInfoModal(false)}
-                className="text-slate-400 hover:text-slate-100 p-1"
                 aria-label="Đóng giải thích ETA"
               >
                 ✕
-              </button>
+              </ModalButton>
             </OverlayHeader>
 
-            <OverlayBody className="space-y-2.5 text-xs sm:text-sm text-slate-300 leading-relaxed pr-1">
+            <OverlayBody className="text-xs sm:text-sm text-[var(--modal-text)] leading-relaxed">
               <p>
                 • <strong>Tốc độ kiếm XP:</strong> Tính toán dựa trên tốc độ cơ bản (1,0 XP/phút) kết hợp với hệ số tăng tốc từ Năng Lượng (lên đến x4 XP) khi chơi trực tiếp.
               </p>
@@ -315,13 +313,13 @@ export const JourneyMapScreen: React.FC<JourneyMapScreenProps> = ({
             </OverlayBody>
 
             <OverlayFooter>
-              <button
+              <ModalButton variant="ghost"
                 type="button"
                 onClick={() => setShowEtaInfoModal(false)}
-                className="theme-button-primary theme-focus w-full py-2.5 font-bold rounded-xl text-xs transition-all focus:outline-none"
+                className="w-full"
               >
                 Đã hiểu
-              </button>
+              </ModalButton>
             </OverlayFooter>
         </AppModal>
       )}

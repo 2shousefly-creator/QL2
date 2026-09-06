@@ -7,36 +7,16 @@ import {
   FERTILIZER_CATALOG,
 } from "../farmCatalog";
 import { applyQualityMultiplier, getItemSellPrice } from "../farmEngine";
-import {
-  AnimalTypeId,
-  EggQualityInventory,
-  EggTypeId,
-  FeedTypeId,
-  FertilizerTypeId,
-  FarmInventory,
-  ItemQuality,
-} from "../farmTypes";
+import { AnimalTypeId, EggQualityInventory, EggTypeId, FarmInventory, ItemQuality } from "../farmTypes";
 import { QUALITY_CONFIG } from "../weatherEngine";
 import { adjustIntegerQuantity } from "../../../utils/quantityInput";
-import {
-  Package,
-  X,
-  Coins,
-  Zap,
-  ShoppingBag,
-  Minus,
-  Plus,
-  Egg,
-  Sprout,
-  Sparkles,
-  Wheat,
-} from "lucide-react";
+import { Coins, Minus, Package, Plus, ShoppingBag, X } from "lucide-react";
 import {
   getCropAsset,
   getFeedAsset,
   getFertilizerAsset,
 } from "../tangGiaAssetManifest";
-import { AppModal, OverlayBody, OverlayFooter, OverlayHeader } from "../../../components/overlay/AppOverlay";
+import { AppModal, ModalButton, OverlayBody, OverlayFooter, OverlayHeader } from "../../../components/overlay/AppOverlay";
 
 export type KhoTabType = "crop" | "fertilizer" | "animal" | "feed" | "egg";
 
@@ -182,45 +162,43 @@ export const KhoModal: React.FC<KhoModalProps> = ({
 
   return (
     <>
-      <AppModal
+      <AppModal theme="farm" archetype="transaction"
         onClose={onClose}
         closeOnBackdrop
         labelledBy="farm-inventory-title"
-        panelClassName="app-overlay--spaced w-full max-w-lg bg-slate-900 border border-slate-800/70 rounded-3xl shadow-2xl animate-in fade-in duration-200"
       >
           {/* Modal Header */}
-        <OverlayHeader className="bg-slate-850/90 border-b border-slate-800/70 flex items-center justify-between gap-2">
+        <OverlayHeader className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-10 h-10 rounded-2xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-amber-400">
+            <div className="modal-status-icon">
               <Package className="w-5 h-5" />
             </div>
             <div>
-              <h3 id="farm-inventory-title" className="font-extrabold text-base text-slate-100">
+              <h3 id="farm-inventory-title" className="modal-title">
                 Kho Tăng Gia
               </h3>
-              <p className="text-xs text-slate-400">
+              <p className="modal-copy">
                 Quản lý vật phẩm nông trại & bán thu hồi Vàng
               </p>
             </div>
           </div>
 
-          <button
+          <ModalButton variant="icon"
             onClick={onClose}
-            className="app-overlay-button app-overlay-button--icon w-8 h-8 rounded-full bg-slate-800/80 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition-colors"
             aria-label="Đóng kho tăng gia"
           >
             <X className="w-4 h-4" />
-          </button>
+          </ModalButton>
         </OverlayHeader>
 
         {/* 5 Tabs in exact required order: Cây Trồng | Phân Bón | Vật Nuôi | Thức Ăn | Trứng */}
-        <div className="grid grid-cols-5 gap-1 p-2 bg-slate-900/95 border-b border-slate-800/60 text-[10px] sm:text-xs">
+        <div className="grid grid-cols-5 gap-1 p-2 bg-slate-900/95 border-b border-slate-800/60 text-xs sm:text-xs">
           <button
             onClick={() => setActiveTab("crop")}
-            className={`app-overlay-button py-2 px-1 rounded-xl font-bold transition-all flex flex-col sm:flex-row items-center justify-center gap-1 ${
+            className={`modal-control app-overlay-button py-2 px-1 rounded-xl font-bold transition-all flex flex-col sm:flex-row items-center justify-center gap-1 ${
               activeTab === "crop"
-                ? "bg-amber-500 text-slate-950 shadow-md font-extrabold"
-                : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/60"
+                ? "modal-control bg-amber-500 text-slate-950 shadow-md font-semibold"
+                : "modal-control text-[var(--modal-muted)] hover:text-[var(--modal-text)] hover:bg-slate-800/60"
             }`}
           >
             <span>🌱</span>
@@ -229,10 +207,10 @@ export const KhoModal: React.FC<KhoModalProps> = ({
 
           <button
             onClick={() => setActiveTab("fertilizer")}
-            className={`app-overlay-button py-2 px-1 rounded-xl font-bold transition-all flex flex-col sm:flex-row items-center justify-center gap-1 ${
+            className={`modal-control app-overlay-button py-2 px-1 rounded-xl font-bold transition-all flex flex-col sm:flex-row items-center justify-center gap-1 ${
               activeTab === "fertilizer"
-                ? "bg-amber-500 text-slate-950 shadow-md font-extrabold"
-                : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/60"
+                ? "modal-control bg-amber-500 text-slate-950 shadow-md font-semibold"
+                : "modal-control text-[var(--modal-muted)] hover:text-[var(--modal-text)] hover:bg-slate-800/60"
             }`}
           >
             <span>✨</span>
@@ -241,10 +219,10 @@ export const KhoModal: React.FC<KhoModalProps> = ({
 
           <button
             onClick={() => setActiveTab("animal")}
-            className={`app-overlay-button py-2 px-1 rounded-xl font-bold transition-all flex flex-col sm:flex-row items-center justify-center gap-1 ${
+            className={`modal-control app-overlay-button py-2 px-1 rounded-xl font-bold transition-all flex flex-col sm:flex-row items-center justify-center gap-1 ${
               activeTab === "animal"
-                ? "bg-amber-500 text-slate-950 shadow-md font-extrabold"
-                : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/60"
+                ? "modal-control bg-amber-500 text-slate-950 shadow-md font-semibold"
+                : "modal-control text-[var(--modal-muted)] hover:text-[var(--modal-text)] hover:bg-slate-800/60"
             }`}
           >
             <span>🐥</span>
@@ -253,10 +231,10 @@ export const KhoModal: React.FC<KhoModalProps> = ({
 
           <button
             onClick={() => setActiveTab("feed")}
-            className={`app-overlay-button py-2 px-1 rounded-xl font-bold transition-all flex flex-col sm:flex-row items-center justify-center gap-1 ${
+            className={`modal-control app-overlay-button py-2 px-1 rounded-xl font-bold transition-all flex flex-col sm:flex-row items-center justify-center gap-1 ${
               activeTab === "feed"
-                ? "bg-amber-500 text-slate-950 shadow-md font-extrabold"
-                : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/60"
+                ? "modal-control bg-amber-500 text-slate-950 shadow-md font-semibold"
+                : "modal-control text-[var(--modal-muted)] hover:text-[var(--modal-text)] hover:bg-slate-800/60"
             }`}
           >
             <span>🌾</span>
@@ -265,20 +243,20 @@ export const KhoModal: React.FC<KhoModalProps> = ({
 
           <button
             onClick={() => setActiveTab("egg")}
-            className={`app-overlay-button py-2 px-1 rounded-xl font-bold transition-all flex flex-col sm:flex-row items-center justify-center gap-1 relative ${
+            className={`modal-control app-overlay-button py-2 px-1 rounded-xl font-bold transition-all flex flex-col sm:flex-row items-center justify-center gap-1 relative ${
               activeTab === "egg"
-                ? "bg-amber-500 text-slate-950 shadow-md font-extrabold"
-                : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/60"
+                ? "modal-control bg-amber-500 text-slate-950 shadow-md font-semibold"
+                : "modal-control text-[var(--modal-muted)] hover:text-[var(--modal-text)] hover:bg-slate-800/60"
             }`}
           >
             <span>🥚</span>
             <span className="truncate">Trứng</span>
             {totalEggs > 0 && (
               <span
-                className={`ml-0.5 px-1 py-0.2 rounded-full text-[9px] font-black ${
+                className={`ml-0.5 px-1 py-0.2 rounded-full text-xs font-semibold ${
                   activeTab === "egg"
-                    ? "bg-slate-950 text-amber-400"
-                    : "bg-rose-500 text-white animate-pulse"
+                    ? "bg-slate-950 text-[var(--modal-reward)]"
+                    : "bg-rose-500 text-[var(--modal-text)] animate-pulse"
                 }`}
               >
                 {totalEggs}
@@ -288,7 +266,7 @@ export const KhoModal: React.FC<KhoModalProps> = ({
         </div>
 
         {/* Tab Content Body */}
-        <OverlayBody className="space-y-2.5">
+        <OverlayBody>
           {/* TAB 1: CÂY TRỒNG (Seeds) */}
           {activeTab === "crop" && (
             <>
@@ -298,10 +276,10 @@ export const KhoModal: React.FC<KhoModalProps> = ({
                     🌱
                   </div>
                   <div className="space-y-1">
-                    <p className="text-sm font-bold text-slate-300">
+                    <p className="text-sm font-bold text-[var(--modal-text)]">
                       Kho chưa có hạt giống nào
                     </p>
-                    <p className="text-xs text-slate-400 max-w-xs">
+                    <p className="text-xs text-[var(--modal-muted)] max-w-xs">
                       Hãy ghé Cửa Hàng để mua hạt giống hoặc nhận thưởng khi thăng quân hàm!
                     </p>
                   </div>
@@ -310,7 +288,7 @@ export const KhoModal: React.FC<KhoModalProps> = ({
                       onClick={() => {
                         onOpenStore("crop");
                       }}
-                      className="app-overlay-button px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-xs shadow-md transition-all active:scale-95 flex items-center gap-1.5 cursor-pointer"
+                      className="modal-control app-overlay-button px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-semibold text-xs shadow-md transition-all active:scale-95 flex items-center gap-1.5 cursor-pointer"
                     >
                       <ShoppingBag className="w-4 h-4" />
                       <span>Đến Cửa Hàng Hạt Giống</span>
@@ -338,24 +316,24 @@ export const KhoModal: React.FC<KhoModalProps> = ({
                         </div>
                         <div className="min-w-0 space-y-0.5">
                           <div className="flex items-center gap-2">
-                            <h4 className="font-extrabold text-sm text-slate-100 truncate">
+                            <h4 className="font-semibold text-sm text-[var(--modal-text)] truncate">
                               {crop.name}
                             </h4>
-                            <span className="text-[10px] font-black text-emerald-300 bg-emerald-500/15 border border-emerald-500/20 px-1.5 py-0.5 rounded-md shrink-0">
+                            <span className="text-xs font-semibold text-[var(--modal-success)] bg-emerald-500/15 border border-emerald-500/20 px-1.5 py-0.5 rounded-md shrink-0">
                               Sở hữu: {count}
                             </span>
                           </div>
-                          <div className="text-[11px] text-slate-300 space-y-0.5">
+                          <div className="text-xs text-[var(--modal-text)] space-y-0.5">
                             <div>
                               Giá bán lại:{" "}
-                              <span className="font-bold text-amber-400">
+                              <span className="font-bold text-[var(--modal-reward)]">
                                 🪙{sellGold.toLocaleString("vi-VN")} Vàng/hạt
                               </span>{" "}
-                              <span className="text-[10px] text-slate-400">(70% giá gốc)</span>
+                              <span className="text-xs text-[var(--modal-muted)]">(70% giá gốc)</span>
                             </div>
-                            <div className="text-[10px] text-slate-400">
-                              Thu hoạch: <span className="text-emerald-400 font-bold">🪙{crop.harvestGold}</span> |{" "}
-                              <span className="text-amber-300 font-bold">⚡{crop.harvestXp} XP</span>
+                            <div className="text-xs text-[var(--modal-muted)]">
+                              Thu hoạch: <span className="text-[var(--modal-success)] font-bold">🪙{crop.harvestGold}</span> |{" "}
+                              <span className="text-[var(--modal-reward)] font-bold">⚡{crop.harvestXp} XP</span>
                             </div>
                           </div>
                         </div>
@@ -379,7 +357,7 @@ export const KhoModal: React.FC<KhoModalProps> = ({
                             unitSellGold: sellGold,
                           })
                         }
-                        className="px-3.5 py-2 rounded-xl bg-slate-800/80 hover:bg-amber-500/20 border border-slate-750 hover:border-amber-500/40 text-amber-300 font-extrabold text-xs shadow-sm active:scale-95 transition-all cursor-pointer shrink-0"
+                        className="modal-control px-3.5 py-2 rounded-xl bg-slate-800/80 hover:bg-amber-500/20 border border-slate-750 hover:border-amber-500/40 text-[var(--modal-reward)] font-semibold text-xs shadow-sm active:scale-95 transition-all cursor-pointer shrink-0"
                       >
                         Bán
                       </button>
@@ -399,10 +377,10 @@ export const KhoModal: React.FC<KhoModalProps> = ({
                     ✨
                   </div>
                   <div className="space-y-1">
-                    <p className="text-sm font-bold text-slate-300">
+                    <p className="text-sm font-bold text-[var(--modal-text)]">
                       Kho chưa có phân bón nào
                     </p>
-                    <p className="text-xs text-slate-400 max-w-xs">
+                    <p className="text-xs text-[var(--modal-muted)] max-w-xs">
                       Ghé Cửa Hàng để mua phân bón tăng trưởng và dinh dưỡng tăng năng suất vụ mùa!
                     </p>
                   </div>
@@ -411,7 +389,7 @@ export const KhoModal: React.FC<KhoModalProps> = ({
                       onClick={() => {
                         onOpenStore("fertilizer");
                       }}
-                      className="app-overlay-button px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-xs shadow-md transition-all active:scale-95 flex items-center gap-1.5 cursor-pointer"
+                      className="modal-control app-overlay-button px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-semibold text-xs shadow-md transition-all active:scale-95 flex items-center gap-1.5 cursor-pointer"
                     >
                       <ShoppingBag className="w-4 h-4" />
                       <span>Đến Cửa Hàng Phân Bón</span>
@@ -439,22 +417,22 @@ export const KhoModal: React.FC<KhoModalProps> = ({
                         </div>
                         <div className="min-w-0 space-y-0.5">
                           <div className="flex items-center gap-2">
-                            <h4 className="font-extrabold text-sm text-slate-100 truncate">
+                            <h4 className="font-semibold text-sm text-[var(--modal-text)] truncate">
                               {fert.name}
                             </h4>
-                            <span className="text-[10px] font-black text-emerald-300 bg-emerald-500/15 border border-emerald-500/20 px-1.5 py-0.5 rounded-md shrink-0">
+                            <span className="text-xs font-semibold text-[var(--modal-success)] bg-emerald-500/15 border border-emerald-500/20 px-1.5 py-0.5 rounded-md shrink-0">
                               Sở hữu: {count}
                             </span>
                           </div>
-                          <div className="text-[11px] text-slate-300 space-y-0.5">
+                          <div className="text-xs text-[var(--modal-text)] space-y-0.5">
                             <div>
                               Giá bán lại:{" "}
-                              <span className="font-bold text-amber-400">
+                              <span className="font-bold text-[var(--modal-reward)]">
                                 🪙{sellGold.toLocaleString("vi-VN")} Vàng/bao
                               </span>{" "}
-                              <span className="text-[10px] text-slate-400">(70% giá gốc)</span>
+                              <span className="text-xs text-[var(--modal-muted)]">(70% giá gốc)</span>
                             </div>
-                            <div className="text-[10px] text-emerald-400 font-medium truncate">
+                            <div className="text-xs text-[var(--modal-success)] font-medium truncate">
                               {fert.category === "nutrition" && `+${Math.round(fert.xpBonusPct * 100)}% XP`}
                               {fert.category === "growth" && `-${Math.round(fert.growthTimeReductionPct * 100)}% thời gian`}
                               {fert.category === "premium" && `+${Math.round(fert.xpBonusPct * 100)}% XP & -${Math.round(fert.growthTimeReductionPct * 100)}% TG`}
@@ -481,7 +459,7 @@ export const KhoModal: React.FC<KhoModalProps> = ({
                             unitSellGold: sellGold,
                           })
                         }
-                        className="px-3.5 py-2 rounded-xl bg-slate-800/80 hover:bg-amber-500/20 border border-slate-750 hover:border-amber-500/40 text-amber-300 font-extrabold text-xs shadow-sm active:scale-95 transition-all cursor-pointer shrink-0"
+                        className="modal-control px-3.5 py-2 rounded-xl bg-slate-800/80 hover:bg-amber-500/20 border border-slate-750 hover:border-amber-500/40 text-[var(--modal-reward)] font-semibold text-xs shadow-sm active:scale-95 transition-all cursor-pointer shrink-0"
                       >
                         Bán
                       </button>
@@ -501,10 +479,10 @@ export const KhoModal: React.FC<KhoModalProps> = ({
                     🐥
                   </div>
                   <div className="space-y-1">
-                    <p className="text-sm font-bold text-slate-300">
+                    <p className="text-sm font-bold text-[var(--modal-text)]">
                       Kho chưa có con giống nào
                     </p>
-                    <p className="text-xs text-slate-400 max-w-xs">
+                    <p className="text-xs text-[var(--modal-muted)] max-w-xs">
                       Mua con giống tại Cửa Hàng để thả vào chuồng đẻ trứng hoặc bán kiếm lời!
                     </p>
                   </div>
@@ -513,7 +491,7 @@ export const KhoModal: React.FC<KhoModalProps> = ({
                       onClick={() => {
                         onOpenStore("animal");
                       }}
-                      className="app-overlay-button px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-xs shadow-md transition-all active:scale-95 flex items-center gap-1.5 cursor-pointer"
+                      className="modal-control app-overlay-button px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-semibold text-xs shadow-md transition-all active:scale-95 flex items-center gap-1.5 cursor-pointer"
                     >
                       <ShoppingBag className="w-4 h-4" />
                       <span>Đến Cửa Hàng Vật Nuôi</span>
@@ -536,23 +514,23 @@ export const KhoModal: React.FC<KhoModalProps> = ({
                         </div>
                         <div className="min-w-0 space-y-0.5">
                           <div className="flex items-center gap-2">
-                            <h4 className="font-extrabold text-sm text-slate-100 truncate">
+                            <h4 className="font-semibold text-sm text-[var(--modal-text)] truncate">
                               {animal.name}
                             </h4>
-                            <span className="text-[10px] font-black text-amber-300 bg-amber-500/15 border border-amber-500/20 px-1.5 py-0.5 rounded-md shrink-0">
+                            <span className="text-xs font-semibold text-[var(--modal-reward)] bg-amber-500/15 border border-amber-500/20 px-1.5 py-0.5 rounded-md shrink-0">
                               Sở hữu: {count} con
                             </span>
                           </div>
-                          <div className="text-[11px] text-slate-300 space-y-0.5">
+                          <div className="text-xs text-[var(--modal-text)] space-y-0.5">
                             <div>
                               Giá bán lại:{" "}
-                              <span className="font-bold text-amber-400">
+                              <span className="font-bold text-[var(--modal-reward)]">
                                 🪙{sellGold.toLocaleString("vi-VN")} Vàng/con
                               </span>{" "}
-                              <span className="text-[10px] text-slate-400">(70% giá gốc)</span>
+                              <span className="text-xs text-[var(--modal-muted)]">(70% giá gốc)</span>
                             </div>
-                            <div className="text-[10px] text-slate-400">
-                              Trứng: <span className="text-emerald-400 font-bold">🪙{animal.eggSellGold}</span> |{" "}
+                            <div className="text-xs text-[var(--modal-muted)]">
+                              Trứng: <span className="text-[var(--modal-success)] font-bold">🪙{animal.eggSellGold}</span> |{" "}
                               <span className="text-purple-300 font-bold">⚡{animal.eggSellXp} XP</span>
                             </div>
                           </div>
@@ -570,7 +548,7 @@ export const KhoModal: React.FC<KhoModalProps> = ({
                             unitSellGold: sellGold,
                           })
                         }
-                        className="app-overlay-button px-3.5 py-2 rounded-xl bg-slate-800/80 hover:bg-amber-500/20 border border-slate-750 hover:border-amber-500/40 text-amber-300 font-extrabold text-xs shadow-sm active:scale-95 transition-all cursor-pointer shrink-0"
+                        className="modal-control app-overlay-button px-3.5 py-2 rounded-xl bg-slate-800/80 hover:bg-amber-500/20 border border-slate-750 hover:border-amber-500/40 text-[var(--modal-reward)] font-semibold text-xs shadow-sm active:scale-95 transition-all cursor-pointer shrink-0"
                       >
                         Bán
                       </button>
@@ -590,10 +568,10 @@ export const KhoModal: React.FC<KhoModalProps> = ({
                     🌾
                   </div>
                   <div className="space-y-1">
-                    <p className="text-sm font-bold text-slate-300">
+                    <p className="text-sm font-bold text-[var(--modal-text)]">
                       Kho chưa có thức ăn nào
                     </p>
-                    <p className="text-xs text-slate-400 max-w-xs">
+                    <p className="text-xs text-[var(--modal-muted)] max-w-xs">
                       Mua thức ăn để tăng tốc độ đẻ trứng cho đàn vật nuôi trong chuồng!
                     </p>
                   </div>
@@ -602,7 +580,7 @@ export const KhoModal: React.FC<KhoModalProps> = ({
                       onClick={() => {
                         onOpenStore("feed");
                       }}
-                      className="app-overlay-button px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-xs shadow-md transition-all active:scale-95 flex items-center gap-1.5 cursor-pointer"
+                      className="modal-control app-overlay-button px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-semibold text-xs shadow-md transition-all active:scale-95 flex items-center gap-1.5 cursor-pointer"
                     >
                       <ShoppingBag className="w-4 h-4" />
                       <span>Đến Cửa Hàng Thức Ăn</span>
@@ -630,22 +608,22 @@ export const KhoModal: React.FC<KhoModalProps> = ({
                         </div>
                         <div className="min-w-0 space-y-0.5">
                           <div className="flex items-center gap-2">
-                            <h4 className="font-extrabold text-sm text-slate-100 truncate">
+                            <h4 className="font-semibold text-sm text-[var(--modal-text)] truncate">
                               {feed.name}
                             </h4>
-                            <span className="text-[10px] font-black text-emerald-300 bg-emerald-500/15 border border-emerald-500/20 px-1.5 py-0.5 rounded-md shrink-0">
+                            <span className="text-xs font-semibold text-[var(--modal-success)] bg-emerald-500/15 border border-emerald-500/20 px-1.5 py-0.5 rounded-md shrink-0">
                               Sở hữu: {count}
                             </span>
                           </div>
-                          <div className="text-[11px] text-slate-300 space-y-0.5">
+                          <div className="text-xs text-[var(--modal-text)] space-y-0.5">
                             <div>
                               Giá bán lại:{" "}
-                              <span className="font-bold text-amber-400">
+                              <span className="font-bold text-[var(--modal-reward)]">
                                 🪙{sellGold.toLocaleString("vi-VN")} Vàng/bao
                               </span>{" "}
-                              <span className="text-[10px] text-slate-400">(70% giá gốc)</span>
+                              <span className="text-xs text-[var(--modal-muted)]">(70% giá gốc)</span>
                             </div>
-                            <div className="text-[10px] text-emerald-400 font-medium">
+                            <div className="text-xs text-[var(--modal-success)] font-medium">
                               Tăng tốc: +{feed.speedBonusPercent}% | Máng ăn: +{feed.buffAmount}%
                             </div>
                           </div>
@@ -670,7 +648,7 @@ export const KhoModal: React.FC<KhoModalProps> = ({
                             unitSellGold: sellGold,
                           })
                         }
-                        className="px-3.5 py-2 rounded-xl bg-slate-800/80 hover:bg-amber-500/20 border border-slate-750 hover:border-amber-500/40 text-amber-300 font-extrabold text-xs shadow-sm active:scale-95 transition-all cursor-pointer shrink-0"
+                        className="modal-control px-3.5 py-2 rounded-xl bg-slate-800/80 hover:bg-amber-500/20 border border-slate-750 hover:border-amber-500/40 text-[var(--modal-reward)] font-semibold text-xs shadow-sm active:scale-95 transition-all cursor-pointer shrink-0"
                       >
                         Bán
                       </button>
@@ -690,10 +668,10 @@ export const KhoModal: React.FC<KhoModalProps> = ({
                     🥚
                   </div>
                   <div className="space-y-1">
-                    <p className="text-sm font-bold text-slate-300">
+                    <p className="text-sm font-bold text-[var(--modal-text)]">
                       Kho trứng hiện đang trống
                     </p>
-                    <p className="text-xs text-slate-400 max-w-xs">
+                    <p className="text-xs text-[var(--modal-muted)] max-w-xs">
                       Nuôi và cho gia cầm ăn tại chuồng để thu hoạch trứng tươi ngon!
                     </p>
                   </div>
@@ -703,10 +681,10 @@ export const KhoModal: React.FC<KhoModalProps> = ({
                   {/* Quick summary header - without redundant sell button */}
                   <div className="p-3 bg-slate-850/80 border border-slate-800/60 rounded-2xl flex items-center justify-between">
                     <div>
-                      <div className="text-[11px] text-slate-400 font-medium">
+                      <div className="text-xs text-[var(--modal-muted)] font-medium">
                         Tổng sản lượng trứng lưu kho:
                       </div>
-                      <div className="text-sm font-extrabold text-amber-300">
+                      <div className="text-sm font-semibold text-[var(--modal-reward)]">
                         {totalEggs} quả trứng
                       </div>
                     </div>
@@ -762,15 +740,15 @@ export const KhoModal: React.FC<KhoModalProps> = ({
                             </div>
                             <div className="min-w-0 space-y-0.5">
                               <div className="flex items-center gap-2">
-                                <h4 className="font-extrabold text-sm text-slate-100 truncate">
+                                <h4 className="font-semibold text-sm text-[var(--modal-text)] truncate">
                                   {info.name}
                                 </h4>
-                                <span className="text-[10px] font-black text-amber-300 bg-amber-500/15 border border-amber-500/20 px-1.5 py-0.5 rounded-md shrink-0">
+                                <span className="text-xs font-semibold text-[var(--modal-reward)] bg-amber-500/15 border border-amber-500/20 px-1.5 py-0.5 rounded-md shrink-0">
                                   {count} quả
                                 </span>
                               </div>
-                              <div className="flex items-center gap-3 text-[11px] font-bold text-slate-300">
-                                <span className="text-amber-400 flex items-center gap-1">
+                              <div className="flex items-center gap-3 text-xs font-bold text-[var(--modal-text)]">
+                                <span className="text-[var(--modal-reward)] flex items-center gap-1">
                                   🪙 {info.sellGold} Vàng/quả
                                 </span>
                                 <span className="text-purple-400 flex items-center gap-1">
@@ -785,18 +763,18 @@ export const KhoModal: React.FC<KhoModalProps> = ({
                           {qualityRows.map((row) => (
                             <div
                               key={row.quality}
-                              className="flex items-center justify-between gap-2 rounded-xl bg-slate-900/70 px-2.5 py-1.5 text-[11px]"
+                              className="flex items-center justify-between gap-2 rounded-xl bg-slate-900/70 px-2.5 py-1.5 text-xs"
                             >
                               <div className="flex items-center gap-2 min-w-0">
-                                <span className={`inline-flex items-center gap-1 rounded-lg border px-2 py-0.5 font-extrabold ${row.config.badgeClass}`}>
+                                <span className={`inline-flex items-center gap-1 rounded-lg border px-2 py-0.5 font-semibold ${row.config.badgeClass}`}>
                                   <span>{row.config.icon}</span>
                                   <span>{row.config.name}</span>
                                   <span>×{row.config.multiplier}</span>
                                 </span>
-                                <span className="font-black text-slate-300">x{row.count}</span>
+                                <span className="font-semibold text-[var(--modal-text)]">x{row.count}</span>
                               </div>
-                              <div className="flex flex-wrap justify-end gap-x-2 gap-y-0.5 text-right font-extrabold whitespace-nowrap">
-                                <span className="text-amber-300">
+                              <div className="flex flex-wrap justify-end gap-x-2 gap-y-0.5 text-right font-semibold whitespace-nowrap">
+                                <span className="text-[var(--modal-reward)]">
                                   +{row.baseGold.toLocaleString("vi-VN")} 🪙{" "}
                                   <strong style={{ color: row.config.color }}>
                                     (+{row.qualityBonusGold.toLocaleString("vi-VN")})
@@ -823,59 +801,57 @@ export const KhoModal: React.FC<KhoModalProps> = ({
 
         {/* Modal Footer - Single primary "Bán Tất Cả Trứng" button at bottom */}
         {activeTab === "egg" && totalEggs > 0 && (
-          <OverlayFooter className="bg-slate-850/90 border-t border-slate-800/60">
-            <button
+          <OverlayFooter>
+            <ModalButton variant="primary"
               onClick={() => {
                 onSellAllEggs();
               }}
-              className="app-overlay-button w-full py-2.5 px-4 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs sm:text-sm shadow-lg shadow-amber-500/20 active:scale-98 transition-all flex items-center justify-center gap-2 cursor-pointer"
+              className="w-full"
             >
               <Coins className="w-4 h-4" />
               <span>Bán Tất Cả Trứng ({totalEggs} quả)</span>
-            </button>
+            </ModalButton>
           </OverlayFooter>
         )}
       </AppModal>
 
     {/* QUANTITY SELL CONFIRMATION (owned by Inventory) */}
     {sellModalData && (
-      <AppModal
+      <AppModal size="compact" theme="farm" archetype="transaction"
         layer="nested"
         onClose={() => setSellModalData(null)}
         closeOnBackdrop
         ariaLabel={`Bán ${sellModalData.name}`}
-        panelClassName="app-overlay--spaced w-full max-w-sm bg-slate-900 border border-slate-800/80 rounded-3xl shadow-2xl animate-in zoom-in-95 duration-150"
       >
           {/* Popup Title */}
-          <OverlayHeader className="flex items-center justify-between gap-2 border-b border-slate-800/70">
+          <OverlayHeader className="flex items-center justify-between">
             <div className="flex items-center gap-2.5">
-              <div className="w-10 h-10 rounded-2xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-2xl shrink-0">
+              <div className="modal-status-icon">
                 {sellModalData.icon}
               </div>
               <div>
-                <h4 className="font-extrabold text-sm text-slate-100">
+                <h4 className="modal-title">
                   Bán {sellModalData.name}
                 </h4>
-                <p className="text-[11px] text-slate-400">
-                  Đang có: <span className="font-bold text-amber-300">{sellModalData.ownedCount}</span>
+                <p className="modal-copy">
+                  Đang có: <span className="font-bold text-[var(--modal-reward)]">{sellModalData.ownedCount}</span>
                 </p>
               </div>
             </div>
 
-            <button
+            <ModalButton variant="icon"
               onClick={() => setSellModalData(null)}
-              className="app-overlay-button app-overlay-button--icon w-8 h-8 rounded-full bg-slate-800/80 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition-colors"
               aria-label="Đóng chọn số lượng bán"
             >
               <X className="w-4 h-4" />
-            </button>
+            </ModalButton>
           </OverlayHeader>
 
-          <OverlayBody className="space-y-4">
+          <OverlayBody>
 
           {/* Quantity Selector */}
           <div className="space-y-2.5">
-            <label className="text-xs font-bold text-slate-300 block text-center">
+            <label className="text-xs font-bold text-[var(--modal-text)] block text-center">
               Chọn số lượng muốn bán:
             </label>
 
@@ -889,7 +865,7 @@ export const KhoModal: React.FC<KhoModalProps> = ({
                 }}
                 disabled={sellQuantity <= 1}
                 aria-label="Giảm số lượng bán 1"
-                className="app-overlay-button app-overlay-button--icon w-10 h-10 rounded-xl bg-slate-800/80 hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed text-slate-200 font-bold flex items-center justify-center border border-slate-750 transition-all active:scale-95 cursor-pointer"
+                className="modal-control app-overlay-button app-overlay-button--icon w-10 h-10 rounded-xl bg-slate-800/80 hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed text-[var(--modal-text)] font-bold flex items-center justify-center border border-slate-750 transition-all active:scale-95 cursor-pointer"
               >
                 <Minus className="w-4 h-4" />
               </button>
@@ -910,7 +886,7 @@ export const KhoModal: React.FC<KhoModalProps> = ({
                     setSellQuantity(adjustIntegerQuantity(val, 0, 1, sellModalData.ownedCount));
                   }
                 }}
-                className="w-24 text-center py-2 bg-slate-950 border border-slate-750 rounded-xl text-amber-300 font-black text-lg font-mono focus:outline-none focus:border-amber-400"
+                className="w-24 text-center py-2 bg-slate-950 border border-slate-750 rounded-xl text-[var(--modal-reward)] font-semibold text-lg font-mono focus:outline-none focus:border-amber-400"
               />
 
               <button
@@ -923,7 +899,7 @@ export const KhoModal: React.FC<KhoModalProps> = ({
                 }}
                 disabled={sellQuantity >= sellModalData.ownedCount}
                 aria-label="Tăng số lượng bán 1"
-                className="app-overlay-button app-overlay-button--icon w-10 h-10 rounded-xl bg-slate-800/80 hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed text-slate-200 font-bold flex items-center justify-center border border-slate-750 transition-all active:scale-95 cursor-pointer"
+                className="modal-control app-overlay-button app-overlay-button--icon w-10 h-10 rounded-xl bg-slate-800/80 hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed text-[var(--modal-text)] font-bold flex items-center justify-center border border-slate-750 transition-all active:scale-95 cursor-pointer"
               >
                 <Plus className="w-4 h-4" />
               </button>
@@ -938,7 +914,7 @@ export const KhoModal: React.FC<KhoModalProps> = ({
                   disabled={delta < 0 ? sellQuantity <= 1 : sellQuantity >= sellModalData.ownedCount}
                   onClick={() => handleSellQuantityQuickAdjust(delta)}
                   aria-label={`${delta < 0 ? "Giảm" : "Tăng"} số lượng bán ${Math.abs(delta)}`}
-                  className="app-overlay-button min-h-10 rounded-xl border border-slate-750 bg-slate-800/80 px-2 text-xs font-bold text-slate-300 transition-all hover:bg-slate-750 active:scale-95 disabled:cursor-not-allowed disabled:opacity-35"
+                  className="modal-control app-overlay-button min-h-10 rounded-xl border border-slate-750 bg-slate-800/80 px-2 text-xs font-bold text-[var(--modal-text)] transition-all hover:bg-slate-750 active:scale-95 disabled:cursor-not-allowed disabled:opacity-35"
                 >
                   {delta > 0 ? "+" : ""}{delta}
                 </button>
@@ -952,32 +928,32 @@ export const KhoModal: React.FC<KhoModalProps> = ({
                 setSellQuantity(sellModalData.ownedCount);
               }}
               aria-label={`Chọn số lượng bán tối đa ${sellModalData.ownedCount}`}
-              className="app-overlay-button min-h-10 w-full rounded-xl border border-amber-500/30 bg-amber-500/20 px-2 text-xs font-bold text-amber-300 transition-all hover:bg-amber-500/30 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50"
+              className="modal-control app-overlay-button min-h-10 w-full rounded-xl border border-amber-500/30 bg-amber-500/20 px-2 text-xs font-bold text-[var(--modal-reward)] transition-all hover:bg-amber-500/30 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50"
             >
               Tối đa ({sellModalData.ownedCount})
             </button>
           </div>
 
           {/* Earnings Calculation Box */}
-          <div className="bg-slate-950/80 border border-slate-800/70 rounded-2xl p-3 space-y-1.5 text-xs text-slate-300">
+          <div className="modal-section space-y-1.5 text-xs text-[var(--modal-text)]">
             <div className="flex items-center justify-between">
-              <span className="text-slate-400">Đơn giá bán:</span>
-              <span className="font-bold text-amber-400">
+              <span className="text-[var(--modal-muted)]">Đơn giá bán:</span>
+              <span className="font-bold text-[var(--modal-reward)]">
                 🪙{sellModalData.unitSellGold.toLocaleString("vi-VN")} Vàng
               </span>
             </div>
             {sellModalData.unitSellXp !== undefined && (
               <div className="flex items-center justify-between">
-                <span className="text-slate-400">XP mỗi quả:</span>
+                <span className="text-[var(--modal-muted)]">XP mỗi quả:</span>
                 <span className="font-bold text-purple-300">
                   ⚡{sellModalData.unitSellXp.toLocaleString("vi-VN")} XP
                 </span>
               </div>
             )}
-            <div className="border-t border-slate-800/70 pt-1.5 flex items-center justify-between font-extrabold text-sm">
-              <span className="text-slate-200">Tổng thu về:</span>
+            <div className="border-t border-slate-800/70 pt-1.5 flex items-center justify-between font-semibold text-sm">
+              <span className="text-[var(--modal-text)]">Tổng thu về:</span>
               <div className="flex items-center gap-2">
-                <span className="text-amber-300 font-mono">
+                <span className="text-[var(--modal-reward)] font-mono">
                   🪙{(sellQuantity * sellModalData.unitSellGold).toLocaleString("vi-VN")} Vàng
                 </span>
                 {sellModalData.unitSellXp !== undefined && (
@@ -991,21 +967,21 @@ export const KhoModal: React.FC<KhoModalProps> = ({
           </OverlayBody>
 
           {/* Action Buttons */}
-          <OverlayFooter className="flex items-center gap-2" data-stack-actions="true">
-            <button
+          <OverlayFooter className="flex items-center" data-stack-actions="true">
+            <ModalButton variant="ghost"
               type="button"
               onClick={() => setSellModalData(null)}
-              className="app-overlay-button flex-1 py-2.5 rounded-xl bg-slate-800/80 text-slate-300 font-bold text-xs hover:bg-slate-700 transition-colors cursor-pointer"
+              className="flex-1"
             >
               Hủy Bỏ
-            </button>
-            <button
+            </ModalButton>
+            <ModalButton variant="primary"
               type="button"
               onClick={handleConfirmSell}
-              className="app-overlay-button flex-1 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs shadow-md transition-all active:scale-95 cursor-pointer"
+              className="flex-1"
             >
               Xác Nhận Bán ({sellQuantity})
-            </button>
+            </ModalButton>
           </OverlayFooter>
       </AppModal>
     )}

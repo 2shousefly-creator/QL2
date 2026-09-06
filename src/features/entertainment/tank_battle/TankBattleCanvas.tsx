@@ -30,7 +30,7 @@ import type {
   TankBattleRunSummary,
   TankBattleV2World,
 } from "./tankBattleV2Types";
-import { AppModal, OverlayBody, OverlayFooter, OverlayHeader } from "../../../components/overlay/AppOverlay";
+import { AppModal, ConfirmationDialog, ModalButton, OverlayBody, OverlayFooter, OverlayHeader } from "../../../components/overlay/AppOverlay";
 
 interface Props {
   reducedMotion: boolean;
@@ -558,23 +558,22 @@ export const TankBattleCanvas: React.FC<Props> = ({ reducedMotion, onComplete, o
       )}
 
       {worldRef.current.phase === "core" && worldRef.current.coreChoice && (
-        <AppModal
+        <AppModal archetype="transaction"
           layer="exclusive-dialog"
           layout="viewport-safe"
           closeOnEscape={false}
           labelledBy="tank-core-choice-title"
-          panelClassName="max-w-sm border border-amber-300/30 bg-slate-950"
         >
-          <OverlayHeader className="p-5 pb-3 text-center">
-              <div className="text-[9px] font-black tracking-widest text-amber-300">LÕI SẴN SÀNG · CẤP {worldRef.current.player.level}</div>
-              <h2 id="tank-core-choice-title" className="text-xl font-black text-white">Chọn 1 lõi {RARITY_LABEL[worldRef.current.coreChoice.rarity]}</h2>
-              <p className="text-[9px] text-slate-400">3 lựa chọn luôn cùng phẩm chất · trận đấu đang tạm dừng</p>
+          <OverlayHeader className="text-center">
+              <div className="text-xs font-semibold tracking-widest text-[var(--modal-reward)]">LÕI SẴN SÀNG · CẤP {worldRef.current.player.level}</div>
+              <h2 id="tank-core-choice-title" className="modal-title">Chọn 1 lõi {RARITY_LABEL[worldRef.current.coreChoice.rarity]}</h2>
+              <p className="modal-copy">3 lựa chọn luôn cùng phẩm chất · trận đấu đang tạm dừng</p>
           </OverlayHeader>
-          <OverlayBody className="space-y-2 px-5 py-3" data-core-selection="open">
+          <OverlayBody data-core-selection="open">
               {worldRef.current.coreChoice.choices.map((core) => (
-                <button key={core.id} onClick={() => choose(core)} className={`grid min-h-[108px] w-full grid-cols-[58px_1fr] items-center gap-3 rounded-2xl border p-3 text-left text-white ${RARITY[core.rarity]}`}>
+                <button key={core.id} onClick={() => choose(core)} className={`modal-control grid min-h-[108px] w-full grid-cols-[58px_1fr] items-center gap-3 rounded-2xl border p-3 text-left text-[var(--modal-text)] ${RARITY[core.rarity]}`}>
                   <span className="text-center text-3xl">{core.icon}</span>
-                  <span><b className="block text-sm">{core.name}</b><span className="text-[10px] opacity-80">{core.description}</span></span>
+                  <span><b className="block text-sm">{core.name}</b><span className="text-xs opacity-80">{core.description}</span></span>
                 </button>
               ))}
           </OverlayBody>
@@ -582,34 +581,34 @@ export const TankBattleCanvas: React.FC<Props> = ({ reducedMotion, onComplete, o
       )}
 
       {paused && !exit && worldRef.current.phase === "playing" && (
-        <AppModal
+        <ConfirmationDialog status="warning"
           layer="exclusive-dialog"
           layout="viewport-safe"
           onClose={() => setPaused(false)}
           labelledBy="tank-paused-title"
-          panelClassName="max-w-xs border border-emerald-300/30 bg-slate-950 text-center"
+          panelClassName="text-center"
         >
-          <OverlayHeader className="p-5 pb-2"><h2 id="tank-paused-title" className="text-xl font-black text-white">Đã tạm dừng</h2></OverlayHeader>
-          <OverlayBody className="px-5 py-2" data-pause-overlay="user"><p className="text-xs text-slate-300">Trận đấu và toàn bộ thời gian hồi đang đứng yên.</p></OverlayBody>
-          <OverlayFooter className="p-5 pt-2"><button onClick={() => setPaused(false)} className="w-full rounded-2xl bg-emerald-300 px-8 py-4 font-black text-slate-950">Tiếp tục</button></OverlayFooter>
-        </AppModal>
+          <OverlayHeader><h2 id="tank-paused-title" className="modal-title">Đã tạm dừng</h2></OverlayHeader>
+          <OverlayBody data-pause-overlay="user"><p className="text-xs text-[var(--modal-text)]">Trận đấu và toàn bộ thời gian hồi đang đứng yên.</p></OverlayBody>
+          <OverlayFooter><ModalButton variant="primary" onClick={() => setPaused(false)} className="w-full">Tiếp tục</ModalButton></OverlayFooter>
+        </ConfirmationDialog>
       )}
 
       {exit && (
-        <AppModal
+        <ConfirmationDialog status="warning"
           layer="exclusive-dialog"
           layout="viewport-safe"
           onClose={() => { setExit(false); setPaused(false); }}
           labelledBy="tank-exit-title"
-          panelClassName="max-w-sm rounded-3xl border border-rose-400/30 bg-slate-900 text-center"
+          panelClassName="text-center"
         >
-            <OverlayHeader className="p-5 pb-2"><h2 id="tank-exit-title" className="font-black text-white">Rời trận Bắn Xe Tăng V2?</h2></OverlayHeader>
-            <OverlayBody className="px-5 py-2"><p className="text-xs text-slate-300">Lượt hiện tại sẽ kết thúc và không nhận thưởng.</p></OverlayBody>
-            <OverlayFooter data-stack-actions="true" className="grid grid-cols-2 gap-2 p-5 pt-2">
-              <button onClick={() => { setExit(false); setPaused(false); }} className="min-h-11 rounded-xl border border-slate-700 text-slate-200">Ở lại</button>
-              <button onClick={onExit} className="min-h-11 rounded-xl bg-rose-500 font-black text-white">Rời trận</button>
+            <OverlayHeader><h2 id="tank-exit-title" className="modal-title">Rời trận Bắn Xe Tăng V2?</h2></OverlayHeader>
+            <OverlayBody><p className="text-xs text-[var(--modal-text)]">Lượt hiện tại sẽ kết thúc và không nhận thưởng.</p></OverlayBody>
+            <OverlayFooter data-stack-actions="true">
+              <ModalButton variant="ghost" onClick={() => { setExit(false); setPaused(false); }}>Ở lại</ModalButton>
+              <ModalButton variant="danger" onClick={onExit}>Rời trận</ModalButton>
             </OverlayFooter>
-        </AppModal>
+        </ConfirmationDialog>
       )}
     </div>
   );

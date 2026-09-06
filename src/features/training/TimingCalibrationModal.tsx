@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Sliders, Check, X, Volume2 } from "lucide-react";
 import { soundManager } from "../../game/audio";
-import { AppModal, OverlayBody, OverlayFooter, OverlayHeader } from "../../components/overlay/AppOverlay";
+import { AppModal, ModalButton, OverlayBody, OverlayFooter, OverlayHeader } from "../../components/overlay/AppOverlay";
 
 type TimingCalibrationModalProps = {
   currentOffsetMs: number;
@@ -24,38 +24,36 @@ export const TimingCalibrationModal: React.FC<TimingCalibrationModalProps> = ({
   };
 
   return (
-    <AppModal
+    <AppModal size="compact" archetype="info"
       onClose={onClose}
       labelledBy="timing-calibration-title"
-      panelClassName="max-w-md border-slate-700 bg-slate-900 text-slate-100"
     >
-        <OverlayHeader className="flex items-center justify-between border-slate-800">
+        <OverlayHeader className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <Sliders className="w-5 h-5 text-amber-400" />
-            <h3 id="timing-calibration-title" className="font-bold text-base text-amber-300">Hiệu Chỉnh Độ Lệch Nhịp</h3>
+            <Sliders className="w-5 h-5 text-[var(--modal-reward)]" />
+            <h3 id="timing-calibration-title" className="modal-title">Hiệu Chỉnh Độ Lệch Nhịp</h3>
           </div>
-          <button
+          <ModalButton variant="icon"
             onClick={() => {
               soundManager.playClick();
               onClose();
             }}
-            className="p-1 text-slate-400 hover:text-slate-100 rounded-lg"
             aria-label="Đóng hiệu chỉnh nhịp"
           >
             <X className="w-5 h-5" />
-          </button>
+          </ModalButton>
         </OverlayHeader>
 
-        <OverlayBody className="flex flex-col gap-5">
-        <p className="text-xs text-slate-300 leading-relaxed">
+        <OverlayBody className="flex flex-col">
+        <p className="text-xs text-[var(--modal-text)] leading-relaxed">
           Nếu nốt rơi lệch âm thanh hoặc thiết bị có độ trễ, hãy điều chỉnh thời gian dưới đây:
         </p>
 
         {/* Offset Slider */}
-        <div className="bg-slate-950/80 p-4 rounded-2xl border border-slate-800 flex flex-col gap-3">
+        <div className="modal-section flex flex-col gap-3">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-slate-300">Độ lệch nhịp</span>
-            <span className="text-sm font-mono font-bold text-amber-400">
+            <span className="text-xs font-semibold text-[var(--modal-text)]">Độ lệch nhịp</span>
+            <span className="text-sm font-mono font-bold text-[var(--modal-reward)]">
               {offsetMs > 0 ? `+${offsetMs}` : offsetMs} ms
             </span>
           </div>
@@ -68,7 +66,7 @@ export const TimingCalibrationModal: React.FC<TimingCalibrationModalProps> = ({
             onChange={(e) => setOffsetMs(Number(e.target.value))}
             className="w-full accent-amber-500 cursor-pointer"
           />
-          <div className="flex justify-between text-[10px] font-mono text-slate-500">
+          <div className="flex justify-between text-xs font-mono text-[var(--modal-muted)]">
             <span>-150 ms (Chậm)</span>
             <span>0 ms (Mặc định)</span>
             <span>+150 ms (Nhanh)</span>
@@ -80,13 +78,13 @@ export const TimingCalibrationModal: React.FC<TimingCalibrationModalProps> = ({
           <button
             type="button"
             onClick={handleTestTap}
-            className="w-full py-3 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded-2xl flex items-center justify-center gap-2 text-xs font-bold text-amber-300 active:scale-98 transition-all"
+            className="modal-control w-full py-3 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded-2xl flex items-center justify-center gap-2 text-xs font-bold text-[var(--modal-reward)] active:scale-98 transition-all"
           >
-            <Volume2 className="w-4 h-4 text-amber-400" />
+            <Volume2 className="w-4 h-4 text-[var(--modal-reward)]" />
             Chạm Thử Âm Nhịp
           </button>
           {testTaps.length > 0 && (
-            <span className="text-[11px] text-slate-400">
+            <span className="text-xs text-[var(--modal-muted)]">
               Đã ghi nhận {testTaps.length} nhịp thử nghiệm.
             </span>
           )}
@@ -94,29 +92,29 @@ export const TimingCalibrationModal: React.FC<TimingCalibrationModalProps> = ({
         </OverlayBody>
 
         {/* Action Buttons */}
-        <OverlayFooter className="flex items-center gap-3 border-slate-800 bg-slate-900">
-          <button
+        <OverlayFooter className="flex items-center">
+          <ModalButton variant="ghost"
             type="button"
             onClick={() => {
               soundManager.playClick();
               onClose();
             }}
-            className="flex-1 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold rounded-xl"
+            className="flex-1"
           >
             Hủy
-          </button>
-          <button
+          </ModalButton>
+          <ModalButton variant="primary"
             type="button"
             onClick={() => {
               soundManager.playClick();
               onSave(offsetMs);
               onClose();
             }}
-            className="flex-1 py-2.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs rounded-xl flex items-center justify-center gap-1.5 shadow-lg shadow-amber-500/20"
+            className="flex-1"
           >
             <Check className="w-4 h-4" />
             Lưu
-          </button>
+          </ModalButton>
         </OverlayFooter>
     </AppModal>
   );

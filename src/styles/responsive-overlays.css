@@ -9,11 +9,8 @@
 :root {
   --app-visual-viewport-offset-top: 0px;
   --app-visual-viewport-height: 100dvh;
-  --app-overlay-inline-gutter: clamp(0.65rem, 3vw, 1rem);
+  --app-overlay-inline-gutter: clamp(1rem, 4vw, 1.5rem);
   --app-overlay-block-gutter: clamp(0.5rem, 1.5dvh, 0.85rem);
-  --overlay-pad-x: clamp(1rem, 4vw, 1.25rem);
-  --overlay-pad-y: clamp(.9rem, 3vw, 1.15rem);
-  --overlay-section-gap: .75rem;
   --app-overlay-measured-top: 0px;
   --app-overlay-measured-bottom: 0px;
   --app-overlay-top: max(
@@ -68,9 +65,6 @@
   padding-bottom: var(--app-overlay-bottom);
   padding-left: max(var(--app-overlay-inline-gutter), env(safe-area-inset-left, 0px));
   overflow: hidden;
-  background: var(--app-overlay-backdrop, rgba(2, 6, 23, 0.84));
-  -webkit-backdrop-filter: blur(5px);
-  backdrop-filter: blur(5px);
   overscroll-behavior: contain;
   touch-action: pan-y;
 }
@@ -102,7 +96,6 @@
 
 .app-overlay[data-overlay-layer="system"] {
   z-index: var(--z-overlay-system);
-  --app-overlay-backdrop: rgba(2, 6, 23, 0.94);
 }
 
 .app-overlay__panel {
@@ -115,14 +108,7 @@
   min-height: 0;
   flex-direction: column;
   overflow: hidden;
-  color: #f8fafc;
-  background: var(--military-panel-bg-strong, rgba(5, 11, 22, 0.98));
   overscroll-behavior: contain;
-}
-
-.app-overlay--sheet .app-overlay__panel {
-  max-width: min(32rem, 100%);
-  border-radius: 1.5rem 1.5rem var(--military-radius-md, 0.5rem) var(--military-radius-md, 0.5rem);
 }
 
 .app-overlay__header,
@@ -145,76 +131,17 @@
   touch-action: pan-y;
 }
 
-/* Opt-in section spacing replaces local panel padding, including nested dialogs. */
-.app-overlay--spaced > :is(.app-overlay__header, .app-overlay__body, .app-overlay__footer) {
-  padding: var(--overlay-pad-y) var(--overlay-pad-x);
-}
-.app-overlay--spaced > .app-overlay__header { gap: var(--overlay-section-gap); }
-.app-overlay--spaced > .app-overlay__body { line-height: 1.5; }
-.app-overlay__footer { gap: var(--overlay-section-gap); }
-
 .app-overlay__toolbar {
   display: flex;
   flex: 0 0 auto;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: var(--overlay-section-gap);
-  padding: .75rem var(--overlay-pad-x);
-}
-
-.app-overlay__panel .app-overlay-button {
-  min-width: 44px;
-  min-height: 44px;
-  padding-inline: 12px;
-  font-size: max(.75rem, 12px);
-  line-height: 1.35;
-}
-.app-overlay__panel .app-overlay__footer button,
-.app-overlay__panel .app-overlay-button--primary,
-.app-overlay__panel .app-overlay-button--secondary {
-  min-height: 48px;
-  padding: 12px 16px;
-  font-size: .75rem;
-}
-.app-overlay__panel .app-overlay-button--compact { padding-inline: 10px; }
-.app-overlay__panel .app-overlay-button--icon {
-  display: inline-flex;
-  width: 44px;
-  height: 44px;
-  flex: 0 0 44px;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-}
-.app-overlay-button--icon > svg { width: 18px; height: 18px; }
-
-.app-overlay__panel button:is(
-  [aria-label="Đóng"],
-  [aria-label*="Đóng"],
-  [aria-label*="Thoát"],
-  [title*="Đóng"],
-  [data-overlay-close]
-) {
-  position: relative;
-  z-index: 4;
-  min-width: 44px;
-  min-height: 44px;
-  flex: 0 0 auto;
 }
 
 .app-overlay__panel :is(h1, h2, h3, h4) {
   min-width: 0;
   overflow-wrap: anywhere;
-}
-
-.app-overlay__panel button {
-  min-height: 44px;
-}
-
-.app-overlay__panel :is(input, select, textarea) {
-  min-height: 44px;
-  font-size: 16px;
 }
 
 .app-exclusive-overlay {
@@ -342,22 +269,7 @@
   outline: none;
 }
 
-/* Explicit compatibility marker for low-risk legacy content while it is
-   wrapped by a shared portal primitive. It never owns viewport positioning. */
-.app-overlay__legacy-scroll-body {
-  min-height: 0 !important;
-  max-height: none !important;
-  overflow-x: hidden !important;
-  overflow-y: auto !important;
-  overscroll-behavior: contain;
-  -webkit-overflow-scrolling: touch;
-}
-
 @media (max-width: 479px) {
-  .app-overlay__panel {
-    max-width: 100%;
-  }
-
   .app-overlay__footer[data-stack-actions="true"] {
     display: flex;
     flex-direction: column;

@@ -4,41 +4,7 @@
   color: #2f2922;
 }
 
-/* Use the shared modal's theme variables while retaining its safe-area layout. */
-.app-overlay__panel.gomoku-paper-dialog {
-  --military-panel-bg-strong: #faf5e9;
-  --military-panel-bg: #faf5e9;
-  color: #2f2922;
-  border-color: #d8cbb3;
-  box-shadow: 0 18px 60px rgba(74, 54, 25, 0.2);
-}
-
-.gomoku-paper-dialog::before,
-.gomoku-paper-dialog::after {
-  display: none;
-}
-
-.app-overlay.gomoku-result-overlay {
-  --app-overlay-backdrop: rgba(47, 41, 34, 0.32);
-  backdrop-filter: blur(2px);
-  -webkit-backdrop-filter: blur(2px);
-}
-
-.gomoku-result-panel {
-  animation: gomoku-result-enter 220ms ease-out both;
-}
-
-@keyframes gomoku-result-enter {
-  from { opacity: 0; transform: scale(0.97) translateY(6px); }
-  to { opacity: 1; transform: scale(1) translateY(0); }
-}
-
-.gomoku-paper-screen[data-reduced-motion="true"] *,
-.gomoku-result-overlay.is-reduced-motion * {
+.gomoku-paper-screen[data-reduced-motion="true"] * {
   animation: none !important;
   transition: none !important;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .gomoku-result-panel { animation: none; }
 }

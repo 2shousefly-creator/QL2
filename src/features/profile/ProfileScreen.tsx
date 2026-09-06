@@ -1,7 +1,6 @@
 import React, { useState, useRef } from "react";
-import { User, Volume2, VolumeX, Eye, Sparkles, History, RotateCcw, Download, Upload, Shield, Clock, Zap, Check, Image as ImageIcon, Camera, Bell, BellOff, RefreshCw, Gift, Coins, Tag, X } from "lucide-react";
+import { Bell, BellOff, Check, Clock, Coins, Download, Eye, Gift, RefreshCw, RotateCcw, Shield, Sparkles, Tag, Upload, User, Volume2, VolumeX, X, Zap } from "lucide-react";
 import { Avatar, AVATAR_SEEDS } from "../../components/Avatar";
-import { RankBadge } from "../../components/RankBadge";
 import { formatXp, formatDuration } from "../../game/xpEngine";
 import { ensureEnergyState, getEnergyVisuals, isEnergyActive } from "../../game/energyEngine";
 import { getPlayerRank, getXpProgressDetails } from "../../game/selectors";
@@ -24,7 +23,7 @@ import { performAppUpdate } from "../../app-update/appUpdateService";
 import { APP_BUILD_ID, getShortBuildId } from "../../app-update/buildInfo";
 import { getInstalledBuildVersion, fetchLatestVersion } from "../../app-update/versionService";
 import { CommandHeader } from "../../components/military/MilitaryUI";
-import { AppModal, OverlayBody, OverlayFooter, OverlayHeader } from "../../components/overlay/AppOverlay";
+import { AppModal, ModalButton, OverlayBody, OverlayFooter, OverlayHeader } from "../../components/overlay/AppOverlay";
 
 type ProfileScreenProps = {
   state: GameState;
@@ -848,25 +847,23 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
 
       {/* Avatar Selection Modal */}
       {profileModal === "avatar" && (
-        <AppModal
+        <AppModal size="compact" archetype="transaction"
           onClose={() => setProfileModal(null)}
           labelledBy="avatar-picker-title"
-          panelClassName="w-full max-w-sm bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl text-slate-100"
         >
-          <OverlayHeader className="flex items-center justify-between gap-3 border-b border-slate-800 px-5 py-3">
-            <h3 id="avatar-picker-title" className="min-w-0 font-bold text-base">Chọn Ảnh Đại Diện</h3>
-            <button
+          <OverlayHeader className="flex items-center justify-between">
+            <h3 id="avatar-picker-title" className="modal-title min-w-0">Chọn Ảnh Đại Diện</h3>
+            <ModalButton variant="icon"
               type="button"
               onClick={() => setProfileModal(null)}
-              className="app-overlay__close rounded-xl bg-slate-800 text-slate-300 hover:bg-slate-700"
               aria-label="Đóng chọn ảnh đại diện"
               data-overlay-close
             >
               <X className="mx-auto h-4 w-4" />
-            </button>
+            </ModalButton>
           </OverlayHeader>
 
-          <OverlayBody className="space-y-4 px-5 py-4">
+          <OverlayBody>
             {/* Hidden File Input */}
             <input
               type="file"
@@ -883,7 +880,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
                 soundManager.playClick();
                 fileInputRef.current?.click();
               }}
-              className="theme-button-primary theme-focus w-full py-2.5 px-4 rounded-xl font-extrabold text-xs flex items-center justify-center gap-2 shadow-lg transition-all active:scale-95 focus:outline-none"
+              className="modal-control theme-button-primary theme-focus w-full py-2.5 px-4 rounded-xl font-semibold text-xs flex items-center justify-center gap-2 shadow-lg transition-all active:scale-95 focus:outline-none"
             >
               <Upload className="w-4 h-4" />
               <span>Tải Ảnh Từ Thư Viện Về/Máy</span>
@@ -891,7 +888,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
 
             <div className="relative flex items-center justify-center">
               <div className="border-t border-slate-800 w-full" />
-              <span className="bg-slate-900 px-2 text-[10px] text-slate-400 font-semibold uppercase tracking-wider absolute">
+              <span className="bg-slate-900 px-2 text-xs text-[var(--modal-muted)] font-semibold uppercase tracking-wider absolute">
                 Hoặc Chọn Mẫu Mặc Định
               </span>
             </div>
@@ -903,8 +900,8 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
                   key={seed}
                   type="button"
                   onClick={() => handleSelectAvatar(seed)}
-                  className={`p-1 rounded-full flex items-center justify-center transition-transform hover:scale-110 ${
-                    state.player.avatarSeed === seed ? "theme-avatar-selected" : ""
+                  className={`modal-control p-1 rounded-full flex items-center justify-center transition-transform hover:scale-110 ${
+                    state.player.avatarSeed === seed ? "modal-control theme-avatar-selected" : "modal-control "
                   }`}
                 >
                   <Avatar seed={seed} size={54} />
@@ -913,55 +910,53 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
             </div>
           </OverlayBody>
 
-          <OverlayFooter className="px-5 pb-5">
-            <button
+          <OverlayFooter>
+            <ModalButton variant="ghost"
               type="button"
               onClick={() => setProfileModal(null)}
-              className="w-full py-2 rounded-xl bg-slate-800 text-slate-300 font-semibold text-xs hover:bg-slate-700"
+              className="w-full"
             >
               Hủy
-            </button>
+            </ModalButton>
           </OverlayFooter>
         </AppModal>
       )}
 
       {/* Coupon / Gift Code Popup Modal */}
       {profileModal === "coupon" && (
-        <AppModal
+        <AppModal size="compact" archetype="transaction"
           onClose={() => setProfileModal(null)}
           closeOnBackdrop
           labelledBy="coupon-modal-title"
-          panelClassName="theme-card-accent w-full max-w-sm bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950 border-2 rounded-3xl p-5 shadow-2xl gap-4 animate-in zoom-in-95 duration-200"
         >
             {/* Modal Header */}
-            <OverlayHeader className="theme-divider flex items-center justify-between gap-2 border-b pb-3">
+            <OverlayHeader className="theme-divider flex items-center justify-between">
               <div className="flex items-center gap-2.5">
                 <div className="theme-badge w-8 h-8 rounded-xl border flex items-center justify-center">
                   <Gift className="w-4 h-4" />
                 </div>
                 <div>
-                  <h3 id="coupon-modal-title" className="font-extrabold text-sm text-slate-100 uppercase tracking-wide">
+                  <h3 id="coupon-modal-title" className="modal-title">
                     Nhập Mã Ưu Đãi
                   </h3>
-                  <p className="text-[11px] text-slate-400">
+                  <p className="modal-copy">
                     Nhận Vàng quà tặng từ mã sự kiện
                   </p>
                 </div>
               </div>
-              <button
+              <ModalButton variant="icon"
                 type="button"
                 onClick={() => setProfileModal(null)}
-                className="theme-focus w-8 h-8 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-400 hover:text-slate-200 flex items-center justify-center transition-all active:scale-95 focus:outline-none"
                 aria-label="Đóng nhập mã ưu đãi"
               >
                 <X className="w-4 h-4" />
-              </button>
+              </ModalButton>
             </OverlayHeader>
 
             {/* Input & Form */}
-            <OverlayBody className="space-y-3 pr-1">
+            <OverlayBody>
               <div>
-                <label className="block text-[11px] font-bold uppercase text-slate-400 mb-1.5 tracking-wider">
+                <label className="block text-xs font-bold uppercase text-[var(--modal-muted)] mb-1.5 tracking-wider">
                   Mã Quà Tặng
                 </label>
                 <input
@@ -979,7 +974,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
                     }
                   }}
                   placeholder="BẤM ĐỂ NHẬP MÃ"
-                  className="theme-input theme-text-accent w-full bg-slate-950 border-2 border-slate-700/80 rounded-2xl px-4 py-3 text-base font-mono font-black uppercase tracking-widest placeholder:text-slate-500 placeholder:font-sans placeholder:text-xs placeholder:tracking-normal focus:outline-none transition-all text-center"
+                  className="theme-input theme-text-accent w-full bg-slate-950 border-2 border-slate-700/80 rounded-2xl px-4 py-3 text-base font-mono font-semibold uppercase tracking-widest placeholder:text-[var(--modal-muted)] placeholder:font-sans placeholder:text-xs placeholder:tracking-normal focus:outline-none transition-all text-center"
                   maxLength={30}
                   autoCapitalize="characters"
                   autoCorrect="off"
@@ -991,14 +986,14 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
                 <div
                   className={`p-3 rounded-2xl border text-xs font-semibold flex items-center gap-2.5 transition-all ${
                     couponNotice.type === "success"
-                      ? "bg-emerald-950/70 border-emerald-500/50 text-emerald-300"
-                      : "bg-rose-950/70 border-rose-500/50 text-rose-300"
+                      ? "bg-emerald-950/70 border-emerald-500/50 text-[var(--modal-success)]"
+                      : "bg-rose-950/70 border-rose-500/50 text-[var(--modal-danger)]"
                   }`}
                 >
                   {couponNotice.type === "success" ? (
-                    <Check className="w-4 h-4 text-emerald-400 shrink-0" />
+                    <Check className="w-4 h-4 text-[var(--modal-success)] shrink-0" />
                   ) : (
-                    <Shield className="w-4 h-4 text-rose-400 shrink-0" />
+                    <Shield className="w-4 h-4 text-[var(--modal-danger)] shrink-0" />
                   )}
                   <span className="leading-snug">{couponNotice.message}</span>
                 </div>
@@ -1008,14 +1003,14 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
                 <button
                   type="button"
                   onClick={() => setProfileModal(null)}
-                  className="theme-focus flex-1 py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs transition-all active:scale-95 focus:outline-none"
+                  className="modal-control theme-focus flex-1 py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-[var(--modal-text)] font-bold text-xs transition-all active:scale-95 focus:outline-none"
                 >
                   Đóng
                 </button>
                 <button
                   type="button"
                   onClick={() => handleRedeemCoupon()}
-                  className="theme-button-primary theme-focus flex-[2] py-2.5 px-4 rounded-xl font-black text-xs flex items-center justify-center gap-2 shadow-lg transition-all active:scale-95 focus:outline-none"
+                  className="modal-control theme-button-primary theme-focus flex-[2] py-2.5 px-4 rounded-xl font-semibold text-xs flex items-center justify-center gap-2 shadow-lg transition-all active:scale-95 focus:outline-none"
                 >
                   <Coins className="w-4 h-4" />
                   <span>XÁC NHẬN</span>

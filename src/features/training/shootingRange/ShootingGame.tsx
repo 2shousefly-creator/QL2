@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { X, ArrowLeft, Crosshair, Clock, Trophy, Percent, Flame, SlidersHorizontal } from "lucide-react";
+import { ArrowLeft, Clock, Crosshair, Flame, Percent, SlidersHorizontal, Trophy } from "lucide-react";
 import { TrainingDifficulty } from "../../../game/types";
 import {
   ShootingTarget,
@@ -8,7 +8,7 @@ import {
 } from "../../../game/training/shootingRange/shootingTypes";
 import { SHOOTING_DIFFICULTY_CONFIGS } from "../../../game/training/shootingRange/shootingConfig";
 import { soundManager } from "../../../game/audio";
-import { AppModal, ExclusiveFullscreenOverlay, OverlayBody, OverlayFooter, OverlayHeader } from "../../../components/overlay/AppOverlay";
+import { ConfirmationDialog, ExclusiveFullscreenOverlay, ModalButton, OverlayBody, OverlayFooter, OverlayHeader } from "../../../components/overlay/AppOverlay";
 
 type ShootingGameProps = {
   difficulty: TrainingDifficulty;
@@ -836,44 +836,42 @@ export const ShootingGame: React.FC<ShootingGameProps> = ({
 
       {/* Exit Confirmation Modal */}
       {showExitConfirm && (
-        <AppModal
+        <ConfirmationDialog status="warning"
           onClose={() => setShowExitConfirm(false)}
           layer="exclusive-dialog"
           layout="viewport-safe"
           labelledBy="shooting-exit-title"
-          panelClassName="max-w-sm border-slate-800 bg-slate-900 text-center text-slate-100"
+          panelClassName="text-center"
         >
-          <OverlayHeader className="flex flex-col items-center gap-3 border-slate-800 text-center">
-            <div className="w-12 h-12 rounded-2xl bg-rose-500/20 text-rose-400 border border-rose-500/40 flex items-center justify-center">
+          <OverlayHeader className="flex flex-col items-center text-center">
+            <div className="modal-status-icon">
               <Crosshair className="w-6 h-6" />
             </div>
 
-            <h3 id="shooting-exit-title" className="text-base font-black text-slate-100">Thoát Lượt Chơi?</h3>
+            <h3 id="shooting-exit-title" className="modal-title">Thoát Lượt Chơi?</h3>
           </OverlayHeader>
 
           <OverlayBody>
-            <p className="text-center text-xs text-slate-400">
+            <p className="text-center text-xs text-[var(--modal-muted)]">
               Bạn có chắc chắn muốn thoát khỏi lượt chơi Tập Bắn Súng hiện tại không?
             </p>
           </OverlayBody>
 
-          <OverlayFooter className="grid grid-cols-2 gap-2 border-slate-800 bg-slate-900">
-              <button
+          <OverlayFooter>
+              <ModalButton variant="ghost"
                 type="button"
                 onClick={() => setShowExitConfirm(false)}
-                className="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs"
               >
                 Tiếp Tục Chơi
-              </button>
-              <button
+              </ModalButton>
+              <ModalButton variant="danger"
                 type="button"
                 onClick={onExitRun}
-                className="py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs shadow-md shadow-rose-600/20"
               >
                 Xác Nhận Thoát
-              </button>
+              </ModalButton>
           </OverlayFooter>
-        </AppModal>
+        </ConfirmationDialog>
       )}
     </ExclusiveFullscreenOverlay>
   );

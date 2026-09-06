@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Award, ChevronRight, X, BellRing } from "lucide-react";
 import { soundManager } from "../game/audio";
-import { OverlayPortal } from "./overlay/AppOverlay";
+import { ModalButton, OverlayPortal } from "./overlay/AppOverlay";
 
 type RankUpNotificationBannerProps = {
   rankName: string;
@@ -21,55 +21,47 @@ export const RankUpNotificationBanner: React.FC<RankUpNotificationBannerProps> =
 
   return (
     <OverlayPortal>
-    <div className="app-overlay-toast max-w-lg animate-in slide-in-from-top-6 duration-300" data-interactive="true" role="status">
-      <div className="command-toast relative flex flex-wrap items-center gap-3 overflow-hidden rounded-2xl border-2 border-amber-400/80 bg-slate-900/95 p-3.5 text-slate-100 shadow-[0_10px_30px_rgba(245,158,11,0.3)] backdrop-blur-xl sm:flex-nowrap sm:gap-3.5 sm:p-4">
-        {/* Glow ambient background effect */}
-        <div className="absolute -left-10 -top-10 w-28 h-28 bg-amber-500/20 rounded-full blur-xl pointer-events-none" />
-        <div className="absolute -right-10 -bottom-10 w-28 h-28 bg-emerald-500/20 rounded-full blur-xl pointer-events-none" />
-
-        {/* Animated Icon Badge */}
-        <div className="relative shrink-0 w-12 h-12 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-slate-950 shadow-md animate-bounce">
-          <Award className="w-7 h-7" />
-          <span className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-emerald-400 border-2 border-slate-900 animate-ping" />
-        </div>
+    <div className="app-overlay-toast modal-design" data-modal-archetype="ceremony" data-modal-status="reward" data-interactive="true" role="status">
+      <div className="modal-toast relative flex flex-wrap items-center gap-3 sm:flex-nowrap">
+        <div className="modal-status-icon"><Award /></div>
 
         {/* Content */}
         <div className="min-w-0 flex-1 pr-1">
-          <div className="flex items-center gap-1.5 text-xs font-bold text-amber-300 uppercase tracking-wider">
-            <BellRing className="w-3.5 h-3.5 text-amber-400 animate-pulse" />
+          <div className="flex items-center gap-1.5 text-xs font-semibold text-amber-300 uppercase tracking-wider">
+            <BellRing className="w-3.5 h-3.5 text-amber-400" />
             <span>Thanh XP Đã Đầy 100%!</span>
           </div>
-          <p className="text-xs sm:text-sm text-slate-200 font-semibold truncate mt-0.5">
-            Sẵn sàng thăng cấp bậc <span className="text-amber-300 font-bold">{rankName}</span>
+          <p className="text-xs sm:text-sm text-slate-200 font-semibold mt-0.5">
+            Sẵn sàng thăng cấp bậc <span className="text-amber-300 font-semibold">{rankName}</span>
           </p>
-          <p className="text-[11px] text-slate-300/90 leading-tight line-clamp-1 mt-0.5">
+          <p className="modal-meta leading-tight mt-0.5">
             Nhấn vào đây để tiến hành làm thử thách xét duyệt thăng cấp mới.
           </p>
         </div>
 
         {/* Actions */}
         <div className="flex w-full shrink-0 items-center justify-end gap-1.5 sm:w-auto">
-          <button
+          <ModalButton
             onClick={() => {
               soundManager.playClick();
               onOpenJourney();
             }}
-            className="flex min-h-11 items-center gap-1 whitespace-nowrap rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 px-3 py-2 text-xs font-bold text-slate-950 shadow-md transition-all hover:from-amber-400 hover:to-amber-500 active:scale-95 cursor-pointer"
+            variant="primary"
           >
             <span>Thử Thách</span>
             <ChevronRight className="w-3.5 h-3.5" />
-          </button>
+          </ModalButton>
 
-          <button
+          <ModalButton
             onClick={() => {
               soundManager.playClick();
               onDismiss();
             }}
-            className="flex h-11 w-11 items-center justify-center rounded-xl text-slate-400 transition-colors hover:bg-slate-800 hover:text-white"
+            variant="icon"
             aria-label="Đóng thông báo"
           >
             <X className="w-4 h-4" />
-          </button>
+          </ModalButton>
         </div>
       </div>
     </div>

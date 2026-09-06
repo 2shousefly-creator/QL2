@@ -1,8 +1,8 @@
 import React, { useId, useMemo, useState } from "react";
-import { ArrowRight, BarChart3, Castle, Coins, RotateCcw, Shield, Skull, Sparkles, Trophy, Users, X } from "lucide-react";
+import { ArrowRight, BarChart3, Castle, RotateCcw, Shield, Skull, Trophy, X } from "lucide-react";
 import { MAX_TOWER_FLOOR } from "../config";
 import type { BattleResult, BattleSide, BattleUnitStatistics } from "../types";
-import { AppModal, OverlayBody, OverlayHeader } from "../../../../components/overlay/AppOverlay";
+import { AppModal, GameResultScreen, ModalActions, ModalButton, OverlayBody, OverlayHeader, ResultHero, ResultStat, ResultStats } from "../../../../components/overlay/AppOverlay";
 
 interface CampaignResultProps {
   result: BattleResult;
@@ -47,22 +47,21 @@ function StatisticsPanel({ result, onClose }: { result: BattleResult; onClose: (
   const units = useMemo(() => statistics.filter((unit) => unit.side === tab), [statistics, tab]);
 
   return (
-    <AppModal
+    <AppModal archetype="info"
       onClose={onClose}
       closeOnBackdrop
       layer="exclusive-dialog"
       layout="viewport-safe"
       labelledBy={titleId}
-      panelClassName="ct-v2-modal ct-v2-statistics-panel max-w-lg"
     >
-        <OverlayHeader className="ct-v2-modal-header">
-          <div><div className="ct-v2-eyebrow">BÁO CÁO CHIẾN ĐẤU</div><h3 id={titleId}>THỐNG KÊ</h3></div>
-          <button type="button" className="ct-v2-icon-button app-overlay__close" onClick={onClose} aria-label="Đóng thống kê"><X className="h-5 w-5" /></button>
+        <OverlayHeader>
+          <div><div className="ct-v2-eyebrow">BÁO CÁO CHIẾN ĐẤU</div><h3 className="modal-title" id={titleId}>THỐNG KÊ</h3></div>
+          <ModalButton variant="icon" type="button" onClick={onClose} aria-label="Đóng thống kê"><X className="h-5 w-5" /></ModalButton>
         </OverlayHeader>
-        <OverlayBody className="space-y-3">
+        <OverlayBody>
         <div className="ct-v2-stat-tabs" role="tablist" aria-label="Phe thống kê">
-          <button id="ct-stat-tab-player" type="button" role="tab" aria-selected={tab === "player"} aria-controls="ct-stat-panel" tabIndex={tab === "player" ? 0 : -1} onClick={() => setTab("player")}>QUÂN TA</button>
-          <button id="ct-stat-tab-enemy" type="button" role="tab" aria-selected={tab === "enemy"} aria-controls="ct-stat-panel" tabIndex={tab === "enemy" ? 0 : -1} onClick={() => setTab("enemy")}>KẺ ĐỊCH</button>
+          <button className="modal-control" id="ct-stat-tab-player" type="button" role="tab" aria-selected={tab === "player"} aria-controls="ct-stat-panel" tabIndex={tab === "player" ? 0 : -1} onClick={() => setTab("player")}>QUÂN TA</button>
+          <button className="modal-control" id="ct-stat-tab-enemy" type="button" role="tab" aria-selected={tab === "enemy"} aria-controls="ct-stat-panel" tabIndex={tab === "enemy" ? 0 : -1} onClick={() => setTab("enemy")}>KẺ ĐỊCH</button>
         </div>
         <div id="ct-stat-panel" className="ct-v2-stat-unit-list" role="tabpanel" aria-labelledby={tab === "player" ? "ct-stat-tab-player" : "ct-stat-tab-enemy"}>
           {units.map((unit: BattleUnitStatistics) => (
@@ -104,41 +103,35 @@ export const CampaignResult: React.FC<CampaignResultProps> = ({
   const [showStatistics, setShowStatistics] = useState(false);
   const victory = result.outcome === "player_victory";
   return (
-    <div className={`ct-v2-result-shell ${victory ? "is-victory" : "is-defeat"}`} data-chien-tuyen-phase="result">
-      <div className="ct-v2-result-scroll">
-        <section className="ct-v2-result-hero">
-          <div className="ct-v2-result-emblem">{victory ? <Trophy className="h-12 w-12" /> : <Skull className="h-12 w-12" />}</div>
-          <div className="ct-v2-eyebrow">CHIẾN TUYẾN · TẦNG {result.floorNumber}</div>
-          <h2>{victory ? "CHIẾN THẮNG" : result.outcome === "draw" ? "BẤT PHÂN THẮNG BẠI" : "THẤT BẠI"}</h2>
-          <p>{victory ? "Tuyến phòng thủ đã bị phá vỡ. Tầng tiếp theo đang chờ bạn." : "Hãy bổ sung quân số, nâng cấp binh chủng và thử một đội hình khác."}</p>
+    <GameResultScreen status={victory ? "success" : result.outcome === "draw" ? "warning" : "danger"} data-chien-tuyen-phase="result">
+      <OverlayBody>
+        <ResultHero>
+          <div className="modal-status-icon">{victory ? <Trophy /> : <Skull />}</div>
+          <div className="modal-meta">CHIẾN TUYẾN · TẦNG {result.floorNumber}</div>
+          <h2 className="modal-title">{victory ? "CHIẾN THẮNG" : result.outcome === "draw" ? "BẤT PHÂN THẮNG BẠI" : "THẤT BẠI"}</h2>
+          <p className="modal-copy">{victory ? "Tuyến phòng thủ đã bị phá vỡ. Tầng tiếp theo đang chờ bạn." : "Hãy bổ sung quân số, nâng cấp binh chủng và thử một đội hình khác."}</p>
+        </ResultHero>
+        <ResultStats>
+          <ResultStat label="Số Lượt Trận" value={result.rounds} />
+          <ResultStat label="Sống sót" value={result.survivorInstanceIds.length} />
+          <ResultStat label="Tử trận" value={result.casualtyInstanceIds.length} />
+        </ResultStats>
+        <section className="modal-section">
+          <h3 className="flex items-center gap-2 font-semibold"><Shield className="h-5 w-5" /> Báo cáo sau trận</h3>
+          <p className="modal-copy">Đơn vị sống sót đã trở về kho quân với đầy đủ quân số. Đơn vị tử trận đã bị trừ vĩnh viễn.</p>
+          {victory && <ResultStats><ResultStat status="reward" label={firstClear ? "THƯỞNG VƯỢT LẦN ĐẦU" : "TẦNG ĐÃ NHẬN THƯỞNG"} value={firstClear ? `+${rewardGold} Vàng` : "Không nhận thêm Vàng"} /></ResultStats>}
         </section>
-
-        <section className="ct-v2-result-stats">
-          <div><Sparkles className="h-5 w-5" /><span>Số Lượt Trận</span><strong>{result.rounds}</strong></div>
-          <div><Users className="h-5 w-5" /><span>Sống sót</span><strong>{result.survivorInstanceIds.length}</strong></div>
-          <div><Skull className="h-5 w-5" /><span>Tử trận</span><strong>{result.casualtyInstanceIds.length}</strong></div>
-        </section>
-
-        <section className="ct-v2-result-report">
-          <h3><Shield className="h-5 w-5" /> Báo cáo sau trận</h3>
-          <p>Đơn vị sống sót đã trở về kho quân với đầy đủ quân số. Đơn vị tử trận đã bị trừ vĩnh viễn.</p>
-          {victory && (
-            <div className={`ct-v2-reward-box ${firstClear ? "is-first-clear" : ""}`}>
-              <Coins className="h-6 w-6" />
-              <div><span>{firstClear ? "THƯỞNG VƯỢT LẦN ĐẦU" : "TẦNG ĐÃ NHẬN THƯỞNG"}</span><strong>{firstClear ? `+${rewardGold} Vàng` : "Không nhận thêm Vàng"}</strong></div>
-            </div>
-          )}
-        </section>
-
-        <div className="ct-v2-result-actions">
-          {victory && result.floorNumber < MAX_TOWER_FLOOR && <button type="button" onClick={onContinue} className="ct-v2-primary-button"><Castle className="h-5 w-5" /> Tầng tiếp theo <ArrowRight className="h-5 w-5" /></button>}
-          {!victory && <button type="button" onClick={onRetry} className="ct-v2-primary-button"><RotateCcw className="h-5 w-5" /> Thử lại</button>}
-          <button type="button" onClick={() => setShowStatistics(true)} className="ct-v2-secondary-button"><BarChart3 className="h-5 w-5" /> Thống kê</button>
-          <button type="button" onClick={onBarracks} className="ct-v2-secondary-button"><Shield className="h-5 w-5" /> Doanh Trại</button>
-          <button type="button" onClick={onTower} className="ct-v2-ghost-button"><Castle className="h-5 w-5" /> Về Tháp</button>
+      </OverlayBody>
+      <ModalActions>
+        {victory && result.floorNumber < MAX_TOWER_FLOOR && <ModalButton onClick={onContinue} variant="primary"><Castle className="h-5 w-5" /> Tầng tiếp theo <ArrowRight className="h-5 w-5" /></ModalButton>}
+        {!victory && <ModalButton onClick={onRetry} variant="primary"><RotateCcw className="h-5 w-5" /> Thử lại</ModalButton>}
+        <div className="modal-action-row">
+          <ModalButton onClick={() => setShowStatistics(true)} variant="ghost"><BarChart3 className="h-5 w-5" /> Thống kê</ModalButton>
+          <ModalButton onClick={onBarracks} variant="ghost"><Shield className="h-5 w-5" /> Doanh Trại</ModalButton>
+          <ModalButton onClick={onTower} variant={victory && result.floorNumber >= MAX_TOWER_FLOOR ? "primary" : "ghost"}><Castle className="h-5 w-5" /> Về Tháp</ModalButton>
         </div>
-      </div>
+      </ModalActions>
       {showStatistics && <StatisticsPanel result={result} onClose={() => setShowStatistics(false)} />}
-    </div>
+    </GameResultScreen>
   );
 };

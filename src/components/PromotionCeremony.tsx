@@ -9,7 +9,7 @@ import { RANK_FAMILIES } from "../game/rankFamilies";
 import { RANK_STEPS } from "../game/rankBuilder";
 import { getPromotionRewards } from "../game/promotionRewards";
 import { getRankRole, isRolePromotion } from "../game/rankRoles";
-import { ExclusiveFullscreenOverlay } from "./overlay/AppOverlay";
+import { ExclusiveFullscreenOverlay, ModalButton } from "./overlay/AppOverlay";
 
 type PromotionCeremonyProps = {
   promotedRank: RankStep;
@@ -54,9 +54,9 @@ export const PromotionCeremony: React.FC<PromotionCeremonyProps> = ({
   const isSecondaryChanged = prevSec !== promotedSec;
 
   return (
-    <ExclusiveFullscreenOverlay
+    <ExclusiveFullscreenOverlay archetype="ceremony"
       ariaLabel="Lễ thăng quân hàm"
-      className="command-screen promotion-ceremony-screen bg-slate-950 text-slate-100 select-none animate-fadeIn motion-reduce:animate-none"
+      className="command-screen promotion-ceremony-screen bg-slate-950 text-slate-100 select-none"
     >
       {/* Background ambient glow */}
       <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_center,rgba(250,204,21,0.15)_0%,transparent_70%)]" />
@@ -90,7 +90,7 @@ export const PromotionCeremony: React.FC<PromotionCeremonyProps> = ({
             <div className="w-full max-w-xl mx-auto flex flex-col items-center justify-center z-10">
               <RankPresentation
                 rankStep={promotedRank}
-                badgeSize={140}
+                badgeSize={112}
                 animateNewTier={true}
                 showName={false}
               />
@@ -224,14 +224,14 @@ export const PromotionCeremony: React.FC<PromotionCeremonyProps> = ({
 
         {/* The action stays outside the scrolling story/reward content. */}
         <footer className="promotion-ceremony-footer">
-          <button
+          <ModalButton variant="primary"
             type="button"
             onClick={handleContinue}
-            className="promotion-ceremony-continue rounded-xl bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 hover:from-amber-400 hover:to-yellow-300 text-slate-950 font-black text-sm sm:text-base uppercase tracking-wide shadow-lg shadow-amber-500/30 transition-colors motion-reduce:transition-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-200"
+            className="promotion-ceremony-continue"
           >
             <CheckCircle2 className="w-5 h-5 shrink-0" />
             <span>Tiếp Tục Hành Trình</span>
-          </button>
+          </ModalButton>
         </footer>
       </div>
     </ExclusiveFullscreenOverlay>

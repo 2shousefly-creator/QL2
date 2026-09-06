@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { Eye, MousePointerClick, RotateCw, ShieldAlert, Sparkles, ShieldCheck, ArrowRight, Check } from "lucide-react";
+import { ArrowRight, Check, Eye, MousePointerClick, RotateCw, ShieldAlert, ShieldCheck } from "lucide-react";
 import { soundManager } from "../../../game/audio";
-import { AppModal, OverlayBody, OverlayFooter, OverlayHeader } from "../../../components/overlay/AppOverlay";
+import { AppModal, ModalButton, OverlayBody, OverlayFooter, OverlayHeader } from "../../../components/overlay/AppOverlay";
 
 type FormationTutorialModalProps = {
   onClose: () => void;
@@ -71,28 +71,27 @@ export const FormationTutorialModal: React.FC<FormationTutorialModalProps> = ({ 
   };
 
   return (
-    <AppModal
+    <AppModal archetype="info"
       onClose={onClose}
       labelledBy="formation-tutorial-title"
-      panelClassName="max-w-sm border-slate-800 bg-slate-900 text-slate-100"
     >
         {/* Header */}
-        <OverlayHeader className="flex items-center justify-between border-slate-800">
+        <OverlayHeader className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span id="formation-tutorial-title" className="text-xs font-black text-slate-100 uppercase tracking-wider">
+            <span id="formation-tutorial-title" className="text-xs font-semibold text-[var(--modal-text)] uppercase tracking-wider">
               Hướng Dẫn Huấn Luyện
             </span>
-            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30">
+            <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30">
               Xếp Đội Hình
             </span>
           </div>
-          <span className="text-xs font-extrabold text-slate-400">
+          <span className="text-xs font-semibold text-[var(--modal-muted)]">
             {step + 1} / {steps.length}
           </span>
         </OverlayHeader>
 
         {/* Step Body */}
-        <OverlayBody className="flex flex-col gap-4">
+        <OverlayBody className="flex flex-col">
         <div className="flex flex-col items-center text-center gap-3 my-2">
           <div
             className={`w-16 h-16 rounded-2xl ${currentStep.bgColor} border ${currentStep.borderColor} flex items-center justify-center ${currentStep.color} shadow-lg`}
@@ -100,11 +99,11 @@ export const FormationTutorialModal: React.FC<FormationTutorialModalProps> = ({ 
             <IconComponent className="w-8 h-8" />
           </div>
 
-          <h3 className="font-extrabold text-base text-slate-100">
+          <h3 className="font-semibold text-base text-[var(--modal-text)]">
             {currentStep.title}
           </h3>
 
-          <p className="text-xs text-slate-300 leading-relaxed font-medium">
+          <p className="text-xs text-[var(--modal-text)] leading-relaxed font-medium">
             {currentStep.description}
           </p>
         </div>
@@ -127,32 +126,30 @@ export const FormationTutorialModal: React.FC<FormationTutorialModalProps> = ({ 
         </OverlayBody>
 
         {/* Buttons */}
-        <OverlayFooter className="flex items-center justify-between gap-2 border-slate-800 bg-slate-900">
+        <OverlayFooter className="flex items-center justify-between">
           {step > 0 ? (
-            <button
+            <ModalButton variant="primary"
               type="button"
               onClick={() => {
                 soundManager.playClick();
                 setStep(step - 1);
               }}
-              className="py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs"
             >
               Quay lại
-            </button>
+            </ModalButton>
           ) : (
-            <button
+            <ModalButton variant="primary"
               type="button"
               onClick={onClose}
-              className="py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 font-bold text-xs"
             >
               Bỏ qua
-            </button>
+            </ModalButton>
           )}
 
-          <button
+          <ModalButton variant="primary"
             type="button"
             onClick={handleNext}
-            className="flex-1 py-2.5 px-4 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-extrabold text-xs shadow-lg flex items-center justify-center gap-1.5"
+            className="flex-1"
           >
             {step < steps.length - 1 ? (
               <>
@@ -165,7 +162,7 @@ export const FormationTutorialModal: React.FC<FormationTutorialModalProps> = ({ 
                 <Check className="w-3.5 h-3.5" />
               </>
             )}
-          </button>
+          </ModalButton>
         </OverlayFooter>
     </AppModal>
   );

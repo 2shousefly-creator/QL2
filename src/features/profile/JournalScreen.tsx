@@ -22,7 +22,7 @@ import { RANK_STEPS } from "../../game/rankBuilder";
 import { RANK_FAMILIES } from "../../game/rankFamilies";
 import { RANK_STEP_STORIES } from "../../game/rankStories";
 import { CommandHeader } from "../../components/military/MilitaryUI";
-import { AppModal, OverlayBody, OverlayFooter, OverlayHeader } from "../../components/overlay/AppOverlay";
+import { AppModal, ModalButton, OverlayBody, OverlayFooter, OverlayHeader } from "../../components/overlay/AppOverlay";
 
 type JournalScreenProps = {
   state: GameState;
@@ -397,25 +397,24 @@ const JournalDetailModal: React.FC<{
   const retries = event.metadata?.retries;
 
   return (
-    <AppModal
+    <AppModal archetype="info"
       onClose={onClose}
       closeOnBackdrop
       labelledBy="journal-detail-title"
-      panelClassName="theme-card-accent bg-slate-900 border rounded-3xl w-full max-w-lg shadow-2xl animate-in zoom-in-95 duration-200"
     >
           {/* Header Graphic Background */}
-          <OverlayHeader className={`h-24 bg-gradient-to-b ${catDetails.bgColor} relative border-b border-slate-800/60`}>
+          <OverlayHeader className="relative">
             {/* Close button */}
-            <button
+            <ModalButton variant="icon"
               onClick={onClose}
-              className="theme-focus absolute top-4 right-4 p-2 rounded-full bg-slate-950/60 border border-slate-800 text-slate-400 hover:text-slate-100 transition-colors active:scale-90 focus:outline-none"
+              className="absolute right-3 top-3"
               aria-label="Đóng chi tiết nhật ký"
             >
               <X className="w-4 h-4" />
-            </button>
+            </ModalButton>
 
             {/* Floating Category Icon or Badge */}
-            <div className="absolute -bottom-10 left-6">
+            <div className="flex items-center gap-3 pr-10">
               {isRankEvent && family ? (
                 <div className="flex items-end gap-3">
                   <div className="theme-card-accent bg-slate-950 border-2 rounded-2xl p-2 shadow-xl shrink-0 flex flex-col items-center">
@@ -433,7 +432,7 @@ const JournalDetailModal: React.FC<{
                   </div>
                 </div>
               ) : (
-                <div className="w-14 h-14 rounded-2xl bg-slate-950 border border-slate-800 flex items-center justify-center shadow-xl shrink-0">
+                <div className="modal-status-icon">
                   <IconComponent className={`w-7 h-7 ${catDetails.iconColor}`} />
                 </div>
               )}
@@ -441,74 +440,74 @@ const JournalDetailModal: React.FC<{
           </OverlayHeader>
 
           {/* Content Area */}
-          <OverlayBody className="pt-12 pb-6 px-6 space-y-5">
+          <OverlayBody>
             {/* Title & Metadata Header */}
             <div>
               <div className="flex items-center gap-2">
-                <span className={`text-[10px] font-extrabold uppercase tracking-widest px-2.5 py-1 rounded-full border ${catDetails.colorClass}`}>
+                <span className={`text-xs font-semibold uppercase tracking-widest px-2.5 py-1 rounded-full border ${catDetails.colorClass}`}>
                   {catDetails.label}
                 </span>
                 {isRankEvent && family && (
-                  <span className="theme-badge text-[10px] border px-2.5 py-1 rounded-full font-bold">
+                  <span className="theme-badge text-xs border px-2.5 py-1 rounded-full font-bold">
                     {family.name}
                   </span>
                 )}
               </div>
-              <h3 id="journal-detail-title" className="text-xl font-black text-slate-100 mt-2.5 leading-tight">
+              <h3 id="journal-detail-title" className="text-xl font-semibold text-[var(--modal-text)] mt-2.5 leading-tight">
                 {cleanTitleText}
               </h3>
-              <div className="flex items-center gap-1.5 text-slate-400 text-xs mt-1.5 font-mono">
-                <Clock className="w-3.5 h-3.5 text-slate-500" />
+              <div className="flex items-center gap-1.5 text-[var(--modal-muted)] text-xs mt-1.5 font-mono">
+                <Clock className="w-3.5 h-3.5 text-[var(--modal-muted)]" />
                 <span>{formatFullDateTime(event.occurredAt)}</span>
               </div>
             </div>
 
             {/* Event Description Card */}
-            <div className="journal-field-report p-4 rounded-2xl bg-slate-950/60 border border-slate-800/80">
-              <p className="text-sm text-slate-300 leading-relaxed font-medium">
+            <div className="modal-section journal-field-report">
+              <p className="text-sm text-[var(--modal-text)] leading-relaxed font-medium">
                 {event.description}
               </p>
             </div>
 
             {/* Special Section: Promotion Exam Score & Retries */}
             {isRankEvent && correctCount !== undefined && totalQuestions !== undefined && (
-              <div className="p-4 rounded-2xl bg-slate-950/40 border border-slate-800 space-y-3.5">
-                <div className="text-xs font-bold text-slate-400 tracking-wider uppercase">
+              <div className="modal-section space-y-3.5">
+                <div className="text-xs font-bold text-[var(--modal-muted)] tracking-wider uppercase">
                   Báo cáo sát hạch quân ngũ
                 </div>
                 <div className="grid grid-cols-2 gap-3">
-                  <div className="p-3.5 rounded-xl bg-slate-900 border border-slate-800/80 flex flex-col items-center justify-center text-center space-y-1">
-                    <div className="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">
+                  <div className="modal-section flex flex-col items-center justify-center text-center space-y-1">
+                    <div className="text-xs font-semibold text-[var(--modal-muted)] uppercase tracking-wider">
                       Kết quả thi
                     </div>
-                    <div className="text-2xl font-black text-amber-400">
+                    <div className="text-2xl font-semibold text-[var(--modal-reward)]">
                       {correctCount}/{totalQuestions}
                     </div>
-                    <div className="text-[10px] font-bold text-slate-300 bg-amber-500/15 border border-amber-500/30 px-2 py-0.5 rounded-full">
+                    <div className="text-xs font-bold text-[var(--modal-text)] bg-amber-500/15 border border-amber-500/30 px-2 py-0.5 rounded-full">
                       {correctCount === totalQuestions ? "Thủ Khoa" : "Đạt Sát Hạch"}
                     </div>
                   </div>
 
-                  <div className="p-3.5 rounded-xl bg-slate-900 border border-slate-800/80 flex flex-col items-center justify-center text-center space-y-1">
-                    <div className="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">
+                  <div className="modal-section flex flex-col items-center justify-center text-center space-y-1">
+                    <div className="text-xs font-semibold text-[var(--modal-muted)] uppercase tracking-wider">
                       Số lần thi lại
                     </div>
                     {retries && retries > 0 ? (
                       <>
-                        <div className="text-2xl font-black text-red-400">
+                        <div className="text-2xl font-semibold text-[var(--modal-danger)]">
                           {retries} lần
                         </div>
-                        <div className="text-[10px] font-bold text-red-300 bg-red-500/10 border border-red-500/20 px-2 py-0.5 rounded-full flex items-center gap-1">
+                        <div className="text-xs font-bold text-[var(--modal-danger)] bg-red-500/10 border border-red-500/20 px-2 py-0.5 rounded-full flex items-center gap-1">
                           <AlertTriangle className="w-3 h-3 shrink-0" />
                           <span>Cần ôn luyện thêm</span>
                         </div>
                       </>
                     ) : (
                       <>
-                        <div className="text-2xl font-black text-emerald-400">
+                        <div className="text-2xl font-semibold text-[var(--modal-success)]">
                           0 lần
                         </div>
-                        <div className="text-[10px] font-bold text-emerald-300 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full flex items-center gap-1">
+                        <div className="text-xs font-bold text-[var(--modal-success)] bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full flex items-center gap-1">
                           <CheckCircle className="w-3 h-3 shrink-0" />
                           <span>Xuất Sắc</span>
                         </div>
@@ -544,13 +543,13 @@ const JournalDetailModal: React.FC<{
                   <span>Binh nghiệp ký sự</span>
                 </div>
                 {story.subtitle && (
-                  <div className="text-xs italic text-slate-400 font-medium">
+                  <div className="text-xs italic text-[var(--modal-muted)] font-medium">
                     "{story.subtitle}"
                   </div>
                 )}
                 <div className="space-y-3">
                   {story.paragraphs.map((p, index) => (
-                    <p key={index} className="text-xs text-slate-300 leading-relaxed text-justify indent-4">
+                    <p key={index} className="text-xs text-[var(--modal-text)] leading-relaxed text-justify indent-4">
                       {p}
                     </p>
                   ))}
@@ -560,13 +559,12 @@ const JournalDetailModal: React.FC<{
           </OverlayBody>
 
           {/* Footer Action */}
-          <OverlayFooter className="theme-divider p-4 bg-slate-950 border-t flex justify-end">
-            <button
+          <OverlayFooter className="theme-divider flex justify-end">
+            <ModalButton variant="ghost"
               onClick={onClose}
-              className="theme-focus theme-hover-border px-5 py-2 rounded-xl bg-slate-900 border border-slate-700 text-slate-200 text-xs font-bold transition-all active:scale-95 focus:outline-none"
             >
               Đóng
-            </button>
+            </ModalButton>
           </OverlayFooter>
     </AppModal>
   );

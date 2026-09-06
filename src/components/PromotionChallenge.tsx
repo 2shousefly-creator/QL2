@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
-import { ArrowRight, Clock, ShieldAlert, ShieldCheck, X, CheckCircle2, XCircle, Award, AlertTriangle } from "lucide-react";
+import { AlertTriangle, ArrowRight, Award, CheckCircle2, Clock, X, XCircle } from "lucide-react";
 import { RankStep } from "../game/types";
 import { RankPresentation } from "./RankPresentation";
 import { generateExamQuestions, formatCategoryName, ShuffledExamQuestion } from "../game/questionCatalog";
 import { soundManager } from "../game/audio";
-import { AppModal, ExclusiveFullscreenOverlay, OverlayBody, OverlayFooter, OverlayHeader } from "./overlay/AppOverlay";
+import { AppModal, ConfirmationDialog, ExclusiveFullscreenOverlay, ModalActions, ModalButton, OverlayBody, OverlayFooter, OverlayHeader, ResultHero } from "./overlay/AppOverlay";
 
 type PromotionChallengeProps = {
   currentRank: RankStep;
@@ -353,70 +353,69 @@ export const PromotionChallenge: React.FC<PromotionChallengeProps> = ({
 
       {/* Exit Warning Confirmation Modal */}
       {showExitConfirm && (
-        <AppModal
+        <ConfirmationDialog status="warning"
           layer="exclusive-dialog"
           layout="viewport-safe"
           onClose={() => setShowExitConfirm(false)}
           closeOnEscape
-          ariaLabel="Xác nhận rời sát hạch"
-          panelClassName="w-full max-w-sm bg-slate-900 border border-amber-500/40 rounded-3xl text-center shadow-2xl"
+          labelledBy="promotion-exit-title"
+          panelClassName="text-center"
         >
-          <OverlayHeader className="flex justify-center p-6 pb-3">
+          <OverlayHeader className="flex justify-center">
             {/* Warning Icon */}
-            <div className="w-16 h-16 rounded-full bg-amber-500/20 border-2 border-amber-400 flex items-center justify-center shadow-[0_0_20px_rgba(245,158,11,0.3)]">
-              <AlertTriangle className="w-8 h-8 text-amber-400" />
+            <div className="modal-status-icon">
+              <AlertTriangle className="w-8 h-8 text-[var(--modal-reward)]" />
             </div>
+            <h3 id="promotion-exit-title" className="modal-title">Rời sát hạch?</h3>
           </OverlayHeader>
 
-          <OverlayBody className="px-6 py-3">
+          <OverlayBody>
             {/* Exact Required Spec Prompt Message */}
-            <p className="text-sm text-slate-100 font-semibold bg-slate-950/80 p-4 rounded-2xl border border-slate-800 leading-relaxed">
+            <p className="modal-section text-sm text-[var(--modal-text)] font-semibold leading-relaxed">
               Nếu bạn thoát ra lúc này thì sẽ bị đánh Rớt Sát Hạch
             </p>
           </OverlayBody>
 
           {/* Action Buttons */}
-          <OverlayFooter data-stack-actions="true" className="grid grid-cols-2 gap-3 p-6 pt-3">
-              <button
+          <OverlayFooter data-stack-actions="true">
+              <ModalButton variant="danger"
                 type="button"
                 onClick={handleConfirmExit}
-                className="py-3 px-3 rounded-2xl font-bold text-xs sm:text-sm bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/40 transition-all active:scale-95"
               >
                 Rời khỏi
-              </button>
-              <button
+              </ModalButton>
+              <ModalButton variant="secondary"
                 type="button"
                 onClick={() => {
                   soundManager.playClick();
                   setShowExitConfirm(false);
                 }}
-                className="py-3 px-3 rounded-2xl font-black text-xs sm:text-sm bg-gradient-to-r from-amber-500 to-yellow-400 hover:from-amber-400 hover:to-yellow-300 text-slate-950 shadow-md shadow-amber-500/20 transition-all active:scale-95"
               >
                 Tiếp tục thi
-              </button>
+              </ModalButton>
           </OverlayFooter>
-        </AppModal>
+        </ConfirmationDialog>
       )}
 
       {/* Outcome Result Modal Popup */}
       {outcome !== null && (
-        <AppModal
+        <AppModal status={outcome === "pass" ? "success" : "danger"} archetype="ceremony"
           layer="exclusive-dialog"
           layout="viewport-safe"
           closeOnEscape={false}
           labelledBy="promotion-result-title"
-          panelClassName="w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl text-center shadow-2xl"
+          panelClassName="text-center"
         >
-          <OverlayHeader className="flex flex-col items-center gap-4 p-6 pb-3">
+          <ResultHero className="flex flex-col items-center">
             {/* Status Icon */}
             <div className="flex justify-center">
               {outcome === "pass" ? (
-                <div className="w-20 h-20 rounded-full bg-emerald-500/20 border-2 border-emerald-400 flex items-center justify-center shadow-[0_0_25px_rgba(16,185,129,0.5)]">
-                  <CheckCircle2 className="w-12 h-12 text-emerald-400 animate-bounce" />
+                <div className="modal-status-icon">
+                  <CheckCircle2 className="w-12 h-12 text-[var(--modal-success)]" />
                 </div>
               ) : (
-                <div className="w-20 h-20 rounded-full bg-rose-500/20 border-2 border-rose-400 flex items-center justify-center shadow-[0_0_25px_rgba(244,63,94,0.5)]">
-                  <XCircle className="w-12 h-12 text-rose-400" />
+                <div className="modal-status-icon">
+                  <XCircle className="w-12 h-12 text-[var(--modal-danger)]" />
                 </div>
               )}
             </div>
@@ -424,29 +423,27 @@ export const PromotionChallenge: React.FC<PromotionChallengeProps> = ({
             {/* Modal Title */}
             <h3
               id="promotion-result-title"
-              className={`text-lg sm:text-xl font-black uppercase tracking-wider ${
-                outcome === "pass" ? "text-emerald-400" : "text-rose-400"
-              }`}
+              className="modal-title"
             >
               {outcome === "pass" ? "VƯỢT QUA SÁT HẠCH" : "RỚT SÁT HẠCH"}
             </h3>
-          </OverlayHeader>
+          </ResultHero>
 
-          <OverlayBody className="space-y-4 px-6 py-3">
+          <OverlayBody>
             {/* Exact Required Spec Message */}
-            <p className="text-xs sm:text-sm text-slate-200 font-medium bg-slate-950/80 p-4 rounded-2xl border border-slate-800 leading-relaxed">
+            <p className="modal-section text-xs sm:text-sm text-[var(--modal-text)] font-medium leading-relaxed">
               {outcome === "pass"
                 ? "TUYỆT VỜI, CHÚC MỪNG ĐỒNG CHÍ ĐÃ VƯỢT QUA BÀI SÁT HẠCH VÀ ĐƯỢC THĂNG CẤP BẬC"
                 : "RẤT TIẾC, BẠN ĐÃ RỚT SÁT HẠCH. HÃY THỬ LẠI BÀI SÁT HẠCH MỚI ĐỂ VƯỢT QUA THỬ THÁCH NÀY."}
             </p>
 
             {/* Stats Summary */}
-            <div className="flex items-center justify-around bg-slate-950/50 p-3 rounded-xl border border-slate-800/80 text-xs">
+            <div className="modal-section flex items-center justify-around text-xs">
               <div>
-                <span className="text-slate-400 block">Số câu đúng</span>
+                <span className="text-[var(--modal-muted)] block">Số câu đúng</span>
                 <span
-                  className={`font-black text-sm ${
-                    correctCount >= passRequirement ? "text-emerald-400" : "text-rose-400"
+                  className={`font-semibold text-sm ${
+                    correctCount >= passRequirement ? "text-[var(--modal-success)]" : "text-[var(--modal-danger)]"
                   }`}
                 >
                   {correctCount} / {totalQuestions}
@@ -454,8 +451,8 @@ export const PromotionChallenge: React.FC<PromotionChallengeProps> = ({
               </div>
               <div className="h-8 w-px bg-slate-800" />
               <div>
-                <span className="text-slate-400 block">Yêu cầu tối thiểu</span>
-                <span className="font-bold text-amber-300 text-sm">
+                <span className="text-[var(--modal-muted)] block">Yêu cầu tối thiểu</span>
+                <span className="font-bold text-[var(--modal-reward)] text-sm">
                   {passRequirement} / {totalQuestions}
                 </span>
               </div>
@@ -463,19 +460,15 @@ export const PromotionChallenge: React.FC<PromotionChallengeProps> = ({
           </OverlayBody>
 
           {/* Confirm Button */}
-          <OverlayFooter className="p-6 pt-3">
-            <button
+          <ModalActions>
+            <ModalButton variant="primary"
               type="button"
               onClick={handleConfirmResult}
-              className={`w-full py-3.5 px-6 rounded-2xl font-black text-sm uppercase tracking-wider shadow-lg transition-all active:scale-95 ${
-                outcome === "pass"
-                  ? "bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 hover:to-teal-300 text-slate-950 shadow-emerald-500/30"
-                  : "bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 hover:from-amber-400 hover:to-yellow-300 text-slate-950 shadow-amber-500/30"
-              }`}
+              className="w-full"
             >
               Xác Nhận
-            </button>
-          </OverlayFooter>
+            </ModalButton>
+          </ModalActions>
         </AppModal>
       )}
 

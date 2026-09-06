@@ -1,11 +1,11 @@
 import React from "react";
-import { Award, RotateCcw, ArrowLeft, CheckCircle2, XCircle, Zap, Activity } from "lucide-react";
+import { Activity, ArrowLeft, CheckCircle2, RotateCcw, XCircle, Zap } from "lucide-react";
 import { TrainingDifficulty } from "../../game/types";
 import { MarchRhythmGameResult } from "../../game/training/marchRhythmJudgement";
 import { TRAINING_DIFFICULTIES } from "../../game/training/trainingConfig";
 import { DailyTrainingClaimResult } from "../../game/training/dailyTrainingReward";
 import { soundManager } from "../../game/audio";
-import { AppModal, OverlayBody, OverlayFooter, OverlayHeader } from "../../components/overlay/AppOverlay";
+import { GameResultModal, ModalActions, ModalButton, OverlayBody, ResultHero } from "../../components/overlay/AppOverlay";
 
 type MarchRhythmResultProps = {
   difficulty: TrainingDifficulty;
@@ -58,50 +58,49 @@ export const MarchRhythmResult: React.FC<MarchRhythmResultProps> = ({
   }
 
   return (
-    <AppModal
+    <GameResultModal status={result.victory ? "success" : "danger"}
       onClose={onExit}
       layer="exclusive-dialog"
       layout="viewport-safe"
       labelledBy="march-rhythm-result-title"
-      panelClassName="max-w-md select-none border-slate-700 bg-slate-900 text-slate-100"
     >
         {/* Banner Header */}
-        <OverlayHeader className="flex flex-col items-center gap-2 border-slate-800 text-center">
+        <ResultHero className="flex flex-col items-center text-center">
           {isVictory ? (
-            <div className="w-16 h-16 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 shadow-lg shadow-emerald-500/10">
+            <div className="modal-status-icon">
               <CheckCircle2 className="w-10 h-10" />
             </div>
           ) : (
-            <div className="w-16 h-16 rounded-2xl bg-rose-500/20 border border-rose-500/40 flex items-center justify-center text-rose-400 shadow-lg shadow-rose-500/10">
+            <div className="modal-status-icon">
               <XCircle className="w-10 h-10" />
             </div>
           )}
 
-          <h2 id="march-rhythm-result-title" className="text-xl font-extrabold tracking-tight">
+          <h2 id="march-rhythm-result-title" className="modal-title">
             {isVictory ? (
-              <span className="text-emerald-400">Hoàn Thành Nhiệm Vụ</span>
+              <span className="text-[var(--modal-success)]">Hoàn Thành Nhiệm Vụ</span>
             ) : (
-              <span className="text-rose-400">Chưa Đạt Yêu Cầu</span>
+              <span className="text-[var(--modal-danger)]">Chưa Đạt Yêu Cầu</span>
             )}
           </h2>
-          <span className="text-xs text-slate-400">
-            Mức độ: <strong className="text-amber-400">{diffConfig.label}</strong>
+          <span className="text-xs text-[var(--modal-muted)]">
+            Mức độ: <strong className="text-[var(--modal-reward)]">{diffConfig.label}</strong>
           </span>
-        </OverlayHeader>
+        </ResultHero>
 
-        <OverlayBody className="flex flex-col gap-4">
+        <OverlayBody className="flex flex-col">
         {/* XP Reward Status Box */}
         <div className={`p-3 rounded-2xl border flex items-center justify-between gap-3 ${
           isVictory && claimResult?.status === "claimed"
-            ? "bg-amber-500/10 border-amber-500/40 text-amber-200"
-            : "bg-slate-950/80 border-slate-800 text-slate-300"
+            ? "bg-amber-500/10 border-amber-500/40 text-[var(--modal-reward)]"
+            : "modal-section text-[var(--modal-text)]"
         }`}>
           <div className="flex items-center gap-2 text-xs">
-            <Zap className="w-4 h-4 text-amber-400 shrink-0" />
+            <Zap className="w-4 h-4 text-[var(--modal-reward)] shrink-0" />
             <span className="leading-tight">{rewardMessage}</span>
           </div>
           {rewardBadge && (
-            <span className="text-xs font-extrabold font-mono text-amber-400 bg-slate-900 px-2.5 py-1 rounded-full border border-amber-500/30 shrink-0">
+            <span className="text-xs font-semibold font-mono text-[var(--modal-reward)] bg-slate-900 px-2.5 py-1 rounded-full border border-amber-500/30 shrink-0">
               {rewardBadge}
             </span>
           )}
@@ -109,50 +108,50 @@ export const MarchRhythmResult: React.FC<MarchRhythmResultProps> = ({
 
         {/* Key Stats Overview */}
         <div className="grid grid-cols-3 gap-2 text-center">
-          <div className="bg-slate-950/80 p-2.5 rounded-xl border border-slate-800">
-            <span className="text-[10px] text-slate-400">Điểm số</span>
-            <div className="text-base font-bold font-mono text-amber-400">{result.score}</div>
+          <div className="modal-section">
+            <span className="text-xs text-[var(--modal-muted)]">Điểm số</span>
+            <div className="text-base font-bold font-mono text-[var(--modal-reward)]">{result.score}</div>
           </div>
-          <div className="bg-slate-950/80 p-2.5 rounded-xl border border-slate-800">
-            <span className="text-[10px] text-slate-400">Chính xác</span>
-            <div className="text-base font-bold font-mono text-emerald-400">{result.accuracy}%</div>
+          <div className="modal-section">
+            <span className="text-xs text-[var(--modal-muted)]">Chính xác</span>
+            <div className="text-base font-bold font-mono text-[var(--modal-success)]">{result.accuracy}%</div>
           </div>
-          <div className="bg-slate-950/80 p-2.5 rounded-xl border border-slate-800">
-            <span className="text-[10px] text-slate-400">Combo cao nhất</span>
-            <div className="text-base font-bold font-mono text-cyan-400">{result.maxCombo}</div>
+          <div className="modal-section">
+            <span className="text-xs text-[var(--modal-muted)]">Combo cao nhất</span>
+            <div className="text-base font-bold font-mono text-[var(--modal-info)]">{result.maxCombo}</div>
           </div>
         </div>
 
         {/* Detailed Judgement Breakdown */}
-        <div className="bg-slate-950/70 p-3 rounded-xl border border-slate-800 flex flex-col gap-2 text-xs">
-          <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Chi tiết lượt đánh</span>
+        <div className="modal-section flex flex-col gap-2 text-xs">
+          <span className="text-xs font-bold text-[var(--modal-muted)] uppercase tracking-wider">Chi tiết lượt đánh</span>
 
-          <div className="grid grid-cols-2 gap-2 text-[11px] font-mono">
+          <div className="grid grid-cols-2 gap-2 text-xs font-mono">
             <div className="flex justify-between p-1.5 bg-slate-900/80 rounded-lg">
-              <span className="text-amber-400 font-bold">Hoàn hảo:</span>
+              <span className="text-[var(--modal-reward)] font-bold">Hoàn hảo:</span>
               <span>{result.perfectCount}</span>
             </div>
             <div className="flex justify-between p-1.5 bg-slate-900/80 rounded-lg">
-              <span className="text-emerald-400 font-bold">Tốt:</span>
+              <span className="text-[var(--modal-success)] font-bold">Tốt:</span>
               <span>{result.goodCount}</span>
             </div>
             <div className="flex justify-between p-1.5 bg-slate-900/80 rounded-lg">
-              <span className="text-rose-400 font-bold">Trượt:</span>
+              <span className="text-[var(--modal-danger)] font-bold">Trượt:</span>
               <span>{result.missCount}</span>
             </div>
             <div className="flex justify-between p-1.5 bg-slate-900/80 rounded-lg">
-              <span className="text-slate-400 font-bold">Chạm nhầm:</span>
+              <span className="text-[var(--modal-muted)] font-bold">Chạm nhầm:</span>
               <span>{result.strayInputCount}</span>
             </div>
           </div>
 
           {(result.holdsAttempted > 0 || result.chordsAttempted > 0) && (
-            <div className="pt-1 border-t border-slate-800/80 flex justify-around text-[11px] text-slate-300">
+            <div className="pt-1 border-t border-slate-800/80 flex justify-around text-xs text-[var(--modal-text)]">
               {result.holdsAttempted > 0 && (
-                <span>Giữ: <strong className="text-amber-400">{result.holdCompletionRate}%</strong> ({result.holdsCompleted}/{result.holdsAttempted})</span>
+                <span>Giữ: <strong className="text-[var(--modal-reward)]">{result.holdCompletionRate}%</strong> ({result.holdsCompleted}/{result.holdsAttempted})</span>
               )}
               {result.chordsAttempted > 0 && (
-                <span>Chạm đồng thời: <strong className="text-amber-400">{result.chordCompletionRate}%</strong> ({result.chordsCompleted}/{result.chordsAttempted})</span>
+                <span>Chạm đồng thời: <strong className="text-[var(--modal-reward)]">{result.chordCompletionRate}%</strong> ({result.chordsCompleted}/{result.chordsAttempted})</span>
               )}
             </div>
           )}
@@ -160,44 +159,42 @@ export const MarchRhythmResult: React.FC<MarchRhythmResultProps> = ({
         </OverlayBody>
 
         {/* Action Buttons */}
-        <OverlayFooter className="flex flex-col gap-2 border-slate-800 bg-slate-900">
-          <button
+        <ModalActions className="flex flex-col">
+          <ModalButton variant="primary"
             type="button"
             onClick={() => {
               soundManager.playClick();
               onReplay();
             }}
-            className="w-full py-3 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20 active:scale-98 transition-all"
+            className="w-full"
           >
             <RotateCcw className="w-4 h-4" />
             Chơi Lại ({diffConfig.label})
-          </button>
+          </ModalButton>
 
-          <div className="grid grid-cols-2 gap-2">
-            <button
+          <div className="modal-action-row">
+            <ModalButton variant="ghost"
               type="button"
               onClick={() => {
                 soundManager.playClick();
                 onChangeDifficulty();
               }}
-              className="py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-xl flex items-center justify-center gap-1.5"
             >
-              <Activity className="w-3.5 h-3.5 text-amber-400" />
+              <Activity className="w-3.5 h-3.5 text-[var(--modal-reward)]" />
               Đổi Độ Khó
-            </button>
-            <button
+            </ModalButton>
+            <ModalButton variant="ghost"
               type="button"
               onClick={() => {
                 soundManager.playClick();
                 onExit();
               }}
-              className="py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-xl flex items-center justify-center gap-1.5"
             >
-              <ArrowLeft className="w-3.5 h-3.5 text-slate-400" />
+              <ArrowLeft className="w-3.5 h-3.5 text-[var(--modal-muted)]" />
               Về Khu Huấn Luyện
-            </button>
+            </ModalButton>
           </div>
-        </OverlayFooter>
-    </AppModal>
+        </ModalActions>
+    </GameResultModal>
   );
 };

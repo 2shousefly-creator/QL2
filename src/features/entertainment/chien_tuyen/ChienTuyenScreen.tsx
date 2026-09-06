@@ -37,15 +37,7 @@ import {
   type QuickFinishConfirmation,
 } from "./components/QuickFinishConfirmModal";
 import { ChienTuyenGame } from "./ChienTuyenGame";
-import {
-  AppModal,
-  useOverlayBusy,
-  ExclusiveFullscreenOverlay,
-  OverlayBody,
-  OverlayFooter,
-  OverlayHeader,
-  OverlayPortal,
-} from "../../../components/overlay/AppOverlay";
+import { AppModal, ExclusiveFullscreenOverlay, ModalActions, ModalButton, OverlayBody, OverlayFooter, OverlayHeader, OverlayPortal, ResultHero, useOverlayBusy } from "../../../components/overlay/AppOverlay";
 import "./chienTuyen.css";
 import "./chienTuyenUxPolish.css";
 
@@ -83,7 +75,7 @@ function ProgressionPopup({ notice, onClose }: { notice: ProgressionNotice; onCl
   const closeRef = useRef<HTMLButtonElement | null>(null);
 
   return (
-    <AppModal
+    <AppModal status={"reward"} archetype="ceremony"
       notification
       onClose={onClose}
       closeOnBackdrop
@@ -91,24 +83,23 @@ function ProgressionPopup({ notice, onClose }: { notice: ProgressionNotice; onCl
       layout="viewport-safe"
       labelledBy="ct-progression-title"
       describedBy="ct-progression-subtitle"
-      panelClassName="ct-v2-modal max-w-sm"
       initialFocusRef={closeRef}
     >
-      <OverlayHeader className="ct-v2-modal-header flex-col items-center text-center">
-        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-3xl border-4 border-white bg-gradient-to-br from-amber-300 to-orange-500 text-white shadow-[0_7px_0_#c55a16]">
+      <ResultHero className="flex-col items-center text-center">
+        <div className="modal-status-icon">
           {notice.kind === "barracks" ? <Shield className="h-8 w-8" /> : notice.kind === "troop" ? <Swords className="h-8 w-8" /> : <Sparkles className="h-8 w-8" />}
         </div>
         <div>
-          <h2 id="ct-progression-title" className="mt-3 text-xl font-black text-white">{notice.title}</h2>
-          <p id="ct-progression-subtitle" className="mt-1 text-sm font-black text-emerald-300">{notice.subtitle}</p>
+          <h2 id="ct-progression-title" className="modal-title">{notice.title}</h2>
+          <p id="ct-progression-subtitle" className="modal-copy mt-1 font-semibold text-[var(--modal-success)]">{notice.subtitle}</p>
         </div>
-      </OverlayHeader>
-      <OverlayBody className="grid gap-2">
+      </ResultHero>
+      <OverlayBody className="grid">
         {notice.rows.map((row) => <div key={`${row.label}-${row.value}`} className="ct-v2-progression-row flex items-center justify-between rounded-2xl border px-4 py-3"><span>{row.label}</span><strong>{row.value}</strong></div>)}
       </OverlayBody>
-      <OverlayFooter className="ct-v2-modal-footer">
-        <button ref={closeRef} type="button" onClick={onClose} className="ct-v2-primary-button w-full">TUYỆT!</button>
-      </OverlayFooter>
+      <ModalActions>
+        <ModalButton variant="primary" ref={closeRef} type="button" onClick={onClose} className="w-full">TUYỆT!</ModalButton>
+      </ModalActions>
     </AppModal>
   );
 }
@@ -119,23 +110,22 @@ function TutorialOverlay({ onComplete }: { onComplete: () => void }) {
   const [step, setStep] = useState(0);
   const item = TUTORIAL_STEPS[step];
   return (
-    <AppModal
+    <AppModal archetype="info"
       onClose={onComplete}
       layer="exclusive-dialog"
       layout="viewport-safe"
       labelledBy="ct-tutorial-title"
-      panelClassName="ct-v2-modal max-w-sm"
     >
-      <OverlayHeader className="ct-v2-modal-header flex items-center justify-between">
-        <span className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-emerald-300"><BookOpen className="h-4 w-4" /> Huấn luyện chỉ huy</span>
-        <button type="button" onClick={onComplete} aria-label="Bỏ qua hướng dẫn" className="ct-v2-icon-button app-overlay__close"><X className="h-5 w-5" /></button>
+      <OverlayHeader className="flex items-center justify-between">
+        <span className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-[var(--modal-success)]"><BookOpen className="h-4 w-4" /> Huấn luyện chỉ huy</span>
+        <ModalButton variant="icon" type="button" onClick={onComplete} aria-label="Bỏ qua hướng dẫn"><X className="h-5 w-5" /></ModalButton>
       </OverlayHeader>
-      <OverlayBody className="space-y-4">
-        <div className="text-center"><div className="mx-auto flex h-16 w-16 items-center justify-center rounded-3xl border-2 border-amber-300/70 bg-gradient-to-br from-amber-300 to-orange-400 text-2xl font-black text-slate-950 shadow-lg shadow-orange-950/40">{step + 1}</div><h2 id="ct-tutorial-title" className="mt-4 text-xl font-black text-white">{item.title}</h2><p className="mt-2 text-[12px] font-semibold leading-relaxed text-slate-300">{item.text}</p></div>
+      <OverlayBody>
+        <div className="text-center"><div className="mx-auto flex h-16 w-16 items-center justify-center rounded-3xl border-2 border-amber-300/70 bg-gradient-to-br from-amber-300 to-orange-400 text-2xl font-semibold text-slate-950 shadow-lg shadow-orange-950/40">{step + 1}</div><h2 id="ct-tutorial-title" className="mt-4 text-xl font-semibold text-[var(--modal-text)]">{item.title}</h2><p className="mt-2 text-[12px] font-semibold leading-relaxed text-[var(--modal-text)]">{item.text}</p></div>
         <div className="flex gap-1.5">{TUTORIAL_STEPS.map((_, index) => <span key={index} className={`h-2 flex-1 rounded-full ${index <= step ? "bg-emerald-400" : "bg-slate-700"}`} />)}</div>
       </OverlayBody>
-      <OverlayFooter className="ct-v2-modal-footer">
-        <button type="button" onClick={() => step === TUTORIAL_STEPS.length - 1 ? onComplete() : setStep((current) => current + 1)} className="ct-v2-primary-button w-full">{step === TUTORIAL_STEPS.length - 1 ? <><Check className="h-5 w-5" /> Sẵn sàng</> : <>Tiếp theo <ChevronRight className="h-5 w-5" /></>}</button>
+      <OverlayFooter>
+        <ModalButton variant="primary" type="button" onClick={() => step === TUTORIAL_STEPS.length - 1 ? onComplete() : setStep((current) => current + 1)} className="w-full">{step === TUTORIAL_STEPS.length - 1 ? <><Check className="h-5 w-5" /> Sẵn sàng</> : <>Tiếp theo <ChevronRight className="h-5 w-5" /></>}</ModalButton>
       </OverlayFooter>
     </AppModal>
   );
@@ -612,7 +602,7 @@ export const ChienTuyenScreen: React.FC<ChienTuyenScreenProps> = ({ gameState, o
       </main>
       <CampaignBottomNav section={section} onChange={(next) => { soundManager.playClick(); setSection(next); }} />
       <button type="button" onClick={() => setShowTutorial(true)} className="ct-v2-help-button" aria-label="Mở hướng dẫn"><BookOpen className="h-4 w-4" /></button>
-      {notice && <OverlayPortal><div className="app-overlay-toast ct-v2-toast" data-overlay-layer="exclusive-dialog" role="status"><Shield className="h-4 w-4" />{notice}</div></OverlayPortal>}
+      {notice && <OverlayPortal><div className="app-overlay-toast modal-design modal-toast flex items-center gap-2" data-modal-archetype="info" data-overlay-layer="exclusive-dialog" role="status"><Shield className="h-4 w-4" />{notice}</div></OverlayPortal>}
       {!campaignDialogBusy && !showTutorial && !quickFinishConfirmation && progressionQueue[0] && <ProgressionPopup notice={progressionQueue[0]} onClose={() => setProgressionQueue((current) => current.slice(1))} />}
       {quickFinishConfirmation && (
         <QuickFinishConfirmModal

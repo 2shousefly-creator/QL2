@@ -1,10 +1,10 @@
 import React from "react";
-import { Trophy, RefreshCw, LogOut, CheckCircle2, XCircle, Award, Sparkles, ShieldCheck } from "lucide-react";
+import { LogOut, RefreshCw, Sparkles, Trophy, XCircle } from "lucide-react";
 import { TrainingDifficulty } from "../../../game/types";
 import { DailyTrainingClaimResult } from "../../../game/training/dailyTrainingReward";
 import { RadarRunResult } from "../../../game/training/radarTracking/radarTypes";
 import { soundManager } from "../../../game/audio";
-import { AppModal, OverlayBody, OverlayFooter, OverlayHeader } from "../../../components/overlay/AppOverlay";
+import { GameResultModal, ModalActions, ModalButton, OverlayBody, ResultHero } from "../../../components/overlay/AppOverlay";
 
 type Props = {
   difficulty: TrainingDifficulty;
@@ -26,43 +26,43 @@ export const RadarTrackingResultModal: React.FC<Props> = ({
   const diffLabel = difficulty === "easy" ? "Dễ" : difficulty === "medium" ? "Vừa" : "Khó";
 
   return (
-    <AppModal
+    <GameResultModal status={result.victory ? "success" : "danger"}
       onClose={onExit}
       layer="exclusive-dialog"
       layout="viewport-safe"
       labelledBy="radar-result-title"
-      panelClassName="max-w-sm border-emerald-500/40 bg-slate-900 text-center text-slate-100"
+      panelClassName="text-center"
     >
         {/* Banner header */}
-        <OverlayHeader className="flex flex-col items-center gap-2 border-slate-800 text-center">
+        <ResultHero className="flex flex-col items-center text-center">
           {result.victory ? (
-            <div className="w-16 h-16 rounded-full bg-emerald-500/20 border-2 border-emerald-400 flex items-center justify-center text-emerald-400 shadow-lg shadow-emerald-500/30 animate-bounce">
+            <div className="modal-status-icon">
               <Trophy className="w-8 h-8" />
             </div>
           ) : (
-            <div className="w-16 h-16 rounded-full bg-rose-500/20 border-2 border-rose-400 flex items-center justify-center text-rose-400 shadow-lg shadow-rose-500/30">
+            <div className="modal-status-icon">
               <XCircle className="w-8 h-8" />
             </div>
           )}
 
-          <h2 id="radar-result-title" className="font-black text-xl text-slate-100 mt-1">
+          <h2 id="radar-result-title" className="modal-title">
             {result.victory ? "Hoàn Thành Thử Thách!" : "Thất Bại Lượt Theo Dõi"}
           </h2>
-          <p className="text-xs text-slate-400">
-            Độ khó: <span className="font-bold text-emerald-300">{diffLabel}</span>
+          <p className="modal-copy">
+            Độ khó: <span className="font-bold text-[var(--modal-success)]">{diffLabel}</span>
           </p>
-        </OverlayHeader>
+        </ResultHero>
 
-        <OverlayBody className="flex flex-col gap-4">
+        <OverlayBody className="flex flex-col">
         {/* Claim Reward Banner */}
         {claimResult && claimResult.status === "claimed" && (
           <div className="bg-gradient-to-r from-amber-500/20 to-emerald-500/20 border border-amber-500/40 rounded-2xl p-3 flex items-center gap-3 text-left">
-            <Sparkles className="w-6 h-6 text-amber-400 shrink-0" />
+            <Sparkles className="w-6 h-6 text-[var(--modal-reward)] shrink-0" />
             <div className="text-xs">
-              <span className="font-extrabold text-amber-300 block">
+              <span className="font-semibold text-[var(--modal-reward)] block">
                 Thưởng Hằng Ngày +{claimResult.nominalRewardXp} XP
               </span>
-              <span className="text-[11px] text-slate-300">
+              <span className="text-xs text-[var(--modal-text)]">
                 Đã ghi nhận phần thưởng huấn luyện hôm nay!
               </span>
             </div>
@@ -70,31 +70,31 @@ export const RadarTrackingResultModal: React.FC<Props> = ({
         )}
 
         {/* Stats Summary Table */}
-        <div className="grid grid-cols-2 gap-2.5 bg-slate-950/70 p-3.5 rounded-2xl border border-slate-800 text-xs">
+        <div className="modal-section grid grid-cols-2 gap-2.5 text-xs">
           <div className="flex flex-col items-center">
-            <span className="text-slate-400 font-semibold">Tổng Điểm</span>
-            <span className="font-black text-lg text-amber-400 mt-0.5">
+            <span className="text-[var(--modal-muted)] font-semibold">Tổng Điểm</span>
+            <span className="font-semibold text-lg text-[var(--modal-reward)] mt-0.5">
               {result.score}
             </span>
           </div>
 
           <div className="flex flex-col items-center">
-            <span className="text-slate-400 font-semibold">Tỷ Lệ Chính Xác</span>
-            <span className="font-black text-lg text-cyan-400 mt-0.5">
+            <span className="text-[var(--modal-muted)] font-semibold">Tỷ Lệ Chính Xác</span>
+            <span className="font-semibold text-lg text-[var(--modal-info)] mt-0.5">
               {result.accuracy}%
             </span>
           </div>
 
           <div className="flex flex-col items-center pt-2 border-t border-slate-800">
-            <span className="text-slate-400 font-semibold">Vòng Hoàn Thành</span>
-            <span className="font-extrabold text-slate-200 mt-0.5">
+            <span className="text-[var(--modal-muted)] font-semibold">Vòng Hoàn Thành</span>
+            <span className="font-semibold text-[var(--modal-text)] mt-0.5">
               {result.completedRounds} / {result.totalRounds}
             </span>
           </div>
 
           <div className="flex flex-col items-center pt-2 border-t border-slate-800">
-            <span className="text-slate-400 font-semibold">Cứu Sinh Đã Dùng</span>
-            <span className="font-extrabold text-slate-200 mt-0.5">
+            <span className="text-[var(--modal-muted)] font-semibold">Cứu Sinh Đã Dùng</span>
+            <span className="font-semibold text-[var(--modal-text)] mt-0.5">
               {result.recoveriesUsed} lần
             </span>
           </div>
@@ -102,44 +102,42 @@ export const RadarTrackingResultModal: React.FC<Props> = ({
         </OverlayBody>
 
         {/* Actions */}
-        <OverlayFooter className="flex flex-col gap-2 border-slate-800 bg-slate-900">
-          <button
+        <ModalActions className="flex flex-col">
+          <ModalButton variant="primary"
             type="button"
             onClick={() => {
               soundManager.playClick();
               onReplay();
             }}
-            className="w-full py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-extrabold text-xs rounded-2xl shadow-lg shadow-emerald-500/20 border border-emerald-400/30 transition-all flex items-center justify-center gap-2"
+            className="w-full"
           >
             <RefreshCw className="w-4 h-4" />
             <span>Thử Lại Độ Khó Này</span>
-          </button>
+          </ModalButton>
 
-          <div className="grid grid-cols-2 gap-2">
-            <button
+          <div className="modal-action-row">
+            <ModalButton variant="ghost"
               type="button"
               onClick={() => {
                 soundManager.playClick();
                 onChangeDifficulty();
               }}
-              className="py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs rounded-2xl border border-slate-700 transition-all"
             >
               Đổi Độ Khó
-            </button>
+            </ModalButton>
 
-            <button
+            <ModalButton variant="primary"
               type="button"
               onClick={() => {
                 soundManager.playClick();
                 onExit();
               }}
-              className="py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs rounded-2xl border border-slate-700 transition-all flex items-center justify-center gap-1.5"
             >
               <LogOut className="w-3.5 h-3.5" />
               <span>Thoát</span>
-            </button>
+            </ModalButton>
           </div>
-        </OverlayFooter>
-    </AppModal>
+        </ModalActions>
+    </GameResultModal>
   );
 };
