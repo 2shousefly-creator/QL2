@@ -122,57 +122,91 @@ function leaf(bx,by,tx,ty,width,fill,vein=false) {
   return curve(d,fill)+(vein?curve(`M${f(bx)} ${f(by)} L${f(bx+dx*.8)} ${f(by+dy*.8)}`,'none','stroke="#fff0a1" stroke-width=".35" opacity=".55"'):'');
 }
 
+// One shared alignment grid for all four badges in each officer family.
+// Both polygon bounding boxes and the 224px canvas have their center at 112,112.
+const BADGE_CENTER = LOGICAL_SIZE / 2;
+const OFFICER_RING_RADIUS = { junior: 59, field: 57 };
+const polar = (radius, degrees) => {
+  const angle=degrees*Math.PI/180;
+  return [BADGE_CENTER+radius*Math.cos(angle), BADGE_CENTER+radius*Math.sin(angle)];
+};
+
+function laurelArc({radius,start,end,angles,length,spread,width,fill,stemWidth,vein=false}) {
+  const first=polar(radius,start),last=polar(radius,end);
+  let art=curve(`M${points([first])} A${radius} ${radius} 0 0 1 ${points([last])}`,
+    'none',`stroke="${fill}" stroke-width="${stemWidth}" stroke-linecap="round"`);
+  // Every paired leaf grows from the actual circular stem. Broad almond leaves
+  // alternate inward/outward instead of forming long parallel grain-like blades.
+  for(const degrees of angles) {
+    const angle=degrees*Math.PI/180;
+    const [bx,by]=polar(radius,degrees);
+    const tangent=[-Math.sin(angle),Math.cos(angle)];
+    const normal=[Math.cos(angle),Math.sin(angle)];
+    for(const side of [-1,1]) {
+      art+=leaf(bx,by,bx+tangent[0]*length+normal[0]*side*spread,
+        by+tangent[1]*length+normal[1]*side*spread,width,fill,vein);
+    }
+  }
+  return art;
+}
+
+function officerRing(group) {
+  return circle(BADGE_CENTER,BADGE_CENTER,OFFICER_RING_RADIUS[group],'none',
+    `data-officer-ring="${group}" stroke="${group==='junior'?'#f7f8ed':'#f5f8fc'}" stroke-width="3.3"`);
+}
+
 function sprouts() {
-  const left=curve('M67 192 Q53 180 52 166','none','stroke="#f5f6e9" stroke-width="1.5" stroke-linecap="round"')+
-    leaf(61,185,47,180,4,'#f5f6e9')+leaf(59,182,62,170,3.8,'#f5f6e9')+
-    leaf(55,175,45,167,3.7,'#f5f6e9')+leaf(53,171,56,159,3.3,'#f5f6e9');
-  return mirror(left);
+  const left=laurelArc({radius:78,start:119,end:157,angles:[123,135,147],
+    length:7,spread:3.5,width:4.2,fill:'#f5f6e9',stemWidth:1.6});
+  return `<g data-laurel="mini">${mirror(left)}</g>`;
 }
 
 function lowerLaurel() {
-  const left=curve('M119 186 C83 185 59 161 55 137','none','stroke="#f5f6ed" stroke-width="1.5" stroke-linecap="round"')+
-    [[107,183,89,171,4],[96,179,75,171,4],[85,174,63,167,4],
-     [76,168,70,150,4],[67,159,50,150,4],[62,151,62,134,3.8],[58,143,50,128,3.3]]
-      .map(([bx,by,tx,ty,w])=>leaf(bx,by,tx,ty,w*1.45,'#f6f8f4')).join('');
-  return mirror(left);
+  const fill='#f6f8f4';
+  const left=laurelArc({radius:73,start:94,end:169,angles:[99,115,131,147],
+    length:12,spread:7,width:5.7,fill,stemWidth:1.7});
+  // Short crossed stems close the pair under the circle without a bulky knot.
+  const joint=curve(`M${points([polar(73,94)])} L119 188`,'none',
+    `stroke="${fill}" stroke-width="1.7" stroke-linecap="round"`);
+  return `<g data-laurel="lower">${mirror(left+joint)}</g>`;
 }
 
 function wreath(ceremonial=false) {
   const fill=ceremonial?'url(#gold)':'#edca57';
-  // Paired leaves follow a clean ellipse, with mirrored left/right branches.
-  const cx=112,cy=110,rx=62,ry=71;
-  let left=curve('M120 187 C79 174 50 151 50 110 C50 69 70 40 108 35',
-    'none',`stroke="${fill}" stroke-width="1.7" stroke-linecap="round"`);
-  for(let i=0;i<10;i++) {
-    const angle=(105+i*17)*Math.PI/180;
-    const bx=cx+rx*Math.cos(angle),by=cy+ry*Math.sin(angle);
-    const tx=-rx*Math.sin(angle),ty=ry*Math.cos(angle),norm=Math.hypot(tx,ty);
-    const tangent=[tx/norm,ty/norm];
-    const outward=[Math.cos(angle),Math.sin(angle)];
-    const length=i===9?11:15;
-    for(const direction of [-1,1]) {
-      left+=leaf(bx,by,bx+tangent[0]*length+outward[0]*direction*8,
-        by+tangent[1]*length+outward[1]*direction*8,5.3,fill,ceremonial);
-    }
-  }
-  return mirror(left);
+  const radius=65;
+  const left=laurelArc({radius,start:94,end:267,
+    angles:[99,117,135,153,171,189,207,225,243,259],
+    length:ceremonial?12:11,spread:ceremonial?7:6.5,
+    width:ceremonial?6.5:5.7,fill,stemWidth:ceremonial?2:1.6,vein:ceremonial});
+  // A single radius drives x and y, stem and leaf placement: no ellipse scaling.
+  const joint=curve(`M${points([polar(radius,94)])} L119 181`,'none',
+    `stroke="${fill}" stroke-width="${ceremonial?2:1.6}" stroke-linecap="round"`);
+  return `<g data-laurel="${ceremonial?'guardian':'general'}" data-circle-radius="${radius}">${mirror(left+joint)}</g>`;
 }
 
 function supremeWreath() {
-  // Five mirrored laurel fans give the wreath both rotational and vertical
-  // symmetry. Broad lower leaves link the five rays without touching the star.
-  let branch=curve('M112 62 L112 31','none',
+  // Each of five branches runs from a shared valley up to one star ray and down
+  // to the next shared valley. Adjacent rotated branches meet at the same point.
+  const valley=polar(52,-126);
+  let half=curve(`M${points([valley])} Q91 51 112 30`,'none',
     'stroke="url(#supremeGold)" stroke-width="1.6" stroke-linecap="round"');
-  const halfLeaves=[
-    [112,62,74,59,8.5],
-    [112,57,83,44,8],
-    [112,49,95,35,7],
-    [112,41,105,31,4.5],
+  const control=[91,51],tip=[112,30];
+  const leafPairs=[
+    [.25,[-15,-9,6.5],[11,-5,5.8]],
+    [.5,[-11,-13,6],[11,-6,5.4]],
+    [.75,[-3,-10,4.8],[9,-6,4]],
   ];
-  const half=halfLeaves.map(([bx,by,tx,ty,w])=>leaf(bx,by,tx,ty,w,'url(#supremeGold)',true)).join('');
-  branch+=mirror(half)+leaf(112,37,112,29,3.2,'url(#supremeGold)',true);
-  branch+=circle(112,62,1.6,'#fbe7a0');
-  return Array.from({length:5},(_,i)=>`<g data-laurel-branch="${i+1}" transform="rotate(${i*72} 112 112)">${branch}</g>`).join('');
+  for(const [t,...leaves] of leafPairs) {
+    // Quadratic evaluation places each base exactly on the authored stem.
+    const bx=(1-t)**2*valley[0]+2*(1-t)*t*control[0]+t*t*tip[0];
+    const by=(1-t)**2*valley[1]+2*(1-t)*t*control[1]+t*t*tip[1];
+    for(const [dx,dy,width] of leaves) {
+      half+=leaf(bx,by,bx+dx,by+dy,width,'url(#supremeGold)',true);
+    }
+  }
+  const branch=mirror(half)+leaf(112,35,112,27,3.1,'url(#supremeGold)',true);
+  // A tiny bead belongs to each shared valley, never an extra sixth leaf group.
+  return Array.from({length:5},(_,i)=>`<g data-laurel-branch="${i+1}" transform="rotate(${i*72} 112 112)">${branch}${circle(f(valley[0]),f(valley[1]),1.5,'#fbe7a0')}</g>`).join('');
 }
 
 function academy() {
@@ -242,10 +276,10 @@ function drawBadge(group,count) {
     case 'academy': return academy();
     case 'enlisted': return squareMarks(count,false);
     case 'nco': return squareMarks(count,true);
-    case 'junior': return frame(PENTAGON,'army')+circle(112,110,59,'none','stroke="#f7f8ed" stroke-width="3.3"')+sprouts()+starCluster(count,108);
-    case 'field': return frame(HEXAGON,'sapphire')+circle(112,102,57,'none','stroke="#f5f8fc" stroke-width="3.3"')+lowerLaurel()+starCluster(count,101);
-    case 'general': return frame(OCTAGON,'ruby')+wreath()+starCluster(count,108);
-    case 'guardian': return frame(OCTAGON,'obsidian',true)+wreath(true)+starCluster(count,108,'ceremonial');
+    case 'junior': return frame(PENTAGON,'army')+officerRing('junior')+sprouts()+starCluster(count,BADGE_CENTER);
+    case 'field': return frame(HEXAGON,'sapphire')+officerRing('field')+lowerLaurel()+starCluster(count,BADGE_CENTER);
+    case 'general': return frame(OCTAGON,'ruby')+wreath()+starCluster(count,BADGE_CENTER);
+    case 'guardian': return frame(OCTAGON,'obsidian',true)+wreath(true)+starCluster(count,BADGE_CENTER,'ceremonial');
     case 'supreme': return frame(DECAGON,'crimson',true,true)+supremeWreath()+`<g data-star-count="1" data-star-radius="${SUPREME_STAR_RADIUS}">${star(112,112,SUPREME_STAR_RADIUS,'supreme')}</g>`;
     default: throw new Error(`Unknown group ${group}`);
   }
