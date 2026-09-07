@@ -3,6 +3,7 @@ import type { BadgeDefinition } from "../game/types";
 import { RANK_FAMILIES } from "../game/rankFamilies";
 import {
   DEFAULT_RANK_BADGE_OUTER_WIDTH_RATIO,
+  RANK_BADGE_SOURCE_SIZE,
   getRankBadgeAsset,
 } from "../game/rankBadgeAssets";
 
@@ -45,8 +46,8 @@ export const RankBadge: React.FC<RankBadgeProps> = ({
       {hasImage ? (
         <img
           src={asset.src}
-          width={224}
-          height={224}
+          width={RANK_BADGE_SOURCE_SIZE}
+          height={RANK_BADGE_SOURCE_SIZE}
           alt=""
           aria-hidden="true"
           draggable={false}
