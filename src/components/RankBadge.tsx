@@ -5,8 +5,10 @@ import {
   getFiveBranchStarWreathGeometry,
   getFivePointStarPoints,
   getLeafPath,
+  getLowerLaurelGeometry,
   getRankBadgeGeometry,
   getStarCluster,
+  LAUREL_VARIANTS,
   type LaurelGeometry,
   type RankBadgeVisualFamily,
 } from "./rankBadgeGeometry";
@@ -35,18 +37,9 @@ const SMALL_SPROUT_GEOMETRY: LaurelGeometry = {
   ],
 };
 
-const MATURE_LOWER_LAUREL_GEOMETRY: LaurelGeometry = {
-  stemPath: "M 49,96 C 41.5,93.5 34.5,85.5 31.5,73.5",
-  leafPaths: [
-    getLeafPath({ x: 45.3, y: 93.8 }, { x: -0.95, y: -0.35 }, 7.2, 1.8),
-    getLeafPath({ x: 40.5, y: 90.3 }, { x: -0.65, y: -0.76 }, 6.8, 1.7),
-    getLeafPath({ x: 36.8, y: 85.3 }, { x: -0.85, y: -0.55 }, 6.1, 1.55),
-    getLeafPath({ x: 34, y: 79.5 }, { x: -0.7, y: -0.7 }, 5.1, 1.3),
-    getLeafPath({ x: 32.4, y: 75.2 }, { x: -0.65, y: -0.75 }, 4.1, 1.05),
-  ],
-};
-
-const CLOSED_WREATH_GEOMETRY = getClosedWreathGeometry();
+const MATURE_LOWER_LAUREL_GEOMETRY = getLowerLaurelGeometry();
+const CLOSED_WREATH_GEOMETRY = getClosedWreathGeometry("general");
+const GUARDIAN_WREATH_GEOMETRY = getClosedWreathGeometry("endgame");
 const FIVE_BRANCH_STAR_WREATH_GEOMETRY = getFiveBranchStarWreathGeometry();
 const MIRROR_AROUND_CENTER = "translate(128 0) scale(-1 1)";
 
@@ -202,18 +195,20 @@ export const RankBadge: React.FC<RankBadgeProps> = ({
             <MirroredLaurel
               geometry={MATURE_LOWER_LAUREL_GEOMETRY}
               color="#f8fafc"
-              stemWidth={1.45}
+              stemWidth={LAUREL_VARIANTS.field.stemWidth}
             />
           </g>
         );
-      case "closed_wreath":
+      case "closed_wreath": {
+        const variant = geometry.visualFamily === "guardian" ? "endgame" : "general";
         return (
           <MirroredLaurel
-            geometry={CLOSED_WREATH_GEOMETRY}
+            geometry={variant === "endgame" ? GUARDIAN_WREATH_GEOMETRY : CLOSED_WREATH_GEOMETRY}
             color={goldFill}
-            stemWidth={1.45}
+            stemWidth={LAUREL_VARIANTS[variant].stemWidth}
           />
         );
+      }
       case "five_branch_star_wreath":
         return (
           <g>

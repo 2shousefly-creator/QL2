@@ -48,6 +48,23 @@ export type LaurelGeometry = {
   end?: Point;
 };
 
+type LaurelVariant = "field" | "general" | "endgame";
+
+type LaurelVariantConfig = {
+  leafCount: number;
+  leafLength: number;
+  leafWidth: number;
+  stemWidth: number;
+  radius: number;
+  taper: number;
+};
+
+export const LAUREL_VARIANTS: Record<LaurelVariant, LaurelVariantConfig> = {
+  field: { leafCount: 5, leafLength: 8.8, leafWidth: 3.8, stemWidth: 1.8, radius: 34.5, taper: 0.22 },
+  general: { leafCount: 8, leafLength: 10.5, leafWidth: 4.8, stemWidth: 1.9, radius: 32, taper: 0.22 },
+  endgame: { leafCount: 8, leafLength: 10.8, leafWidth: 5.1, stemWidth: 2, radius: 32, taper: 0.22 },
+};
+
 export type StarWreathBranchGeometry = {
   stemPath: string;
   leafPaths: string[];
@@ -332,33 +349,101 @@ export const getLeafPath = (
   ].join(" ");
 };
 
-export const getClosedWreathGeometry = (): LaurelGeometry => {
-  const angles = [106, 128, 150, 172, 194, 216, 238, 258];
-  const leafPaths = angles.map((degrees, index) => {
+// Unlike the legacy quadratic primitive above, width is explicitly the full
+// silhouette width. Cubic controls at 2/3 width yield two 1/2-width bellies at
+// t=0.5, with pointed ends. Keep the legacy sprouts/supreme wreath unchanged.
+export const getLaurelLeafPath = (
+  base: Point,
+  direction: Point,
+  length: number,
+  width: number
+): string => {
+  const unit = normalize(direction);
+  const normal = { x: -unit.y, y: unit.x };
+  const point = (along: number, across: number): Point => ({
+    x: base.x + unit.x * length * along + normal.x * across,
+    y: base.y + unit.y * length * along + normal.y * across,
+  });
+  const controlWidth = (width * 2) / 3;
+
+  return [
+    `M ${formatPoint(base)}`,
+    `C ${formatPoint(point(0.25, controlWidth))} ${formatPoint(point(0.7, controlWidth))} ${formatPoint(point(1, 0))}`,
+    `C ${formatPoint(point(0.7, -controlWidth))} ${formatPoint(point(0.25, -controlWidth))} ${formatPoint(base)}`,
+    "Z",
+  ].join(" ");
+};
+
+const pointOnLaurel = (degrees: number, radius: number): Point => ({
+  x: RANK_BADGE_CENTER.x + Math.cos((degrees * Math.PI) / 180) * radius,
+  y: RANK_BADGE_CENTER.y + Math.sin((degrees * Math.PI) / 180) * radius,
+});
+
+const buildLaurelLeaves = (
+  config: LaurelVariantConfig,
+  count: number,
+  startAngle: number,
+  endAngle: number,
+  alternating: boolean
+): string[] =>
+  Array.from({ length: count }, (_, index) => {
+    const progress = index / (count - 1);
+    const degrees = startAngle + (endAngle - startAngle) * progress;
     const angle = (degrees * Math.PI) / 180;
     const radial = { x: Math.cos(angle), y: Math.sin(angle) };
     const tangent = { x: -Math.sin(angle), y: Math.cos(angle) };
-    const side = index % 2 === 0 ? 1 : -1;
+    const lean = alternating ? (index % 2 === 0 ? 0.65 : -0.65) : 0.4;
     const direction = {
-      x: tangent.x + radial.x * side * 0.52,
-      y: tangent.y + radial.y * side * 0.52,
+      x: tangent.x + radial.x * lean,
+      y: tangent.y + radial.y * lean,
     };
-    const taper = index / (angles.length - 1);
-    const length = 7.1 - taper * 3.7;
-    const width = 1.85 - taper * 0.85;
-    const base = {
-      x: RANK_BADGE_CENTER.x + radial.x * 32,
-      y: RANK_BADGE_CENTER.y + radial.y * 32,
-    };
+    const scale = 1 - progress * config.taper;
 
-    return getLeafPath(base, direction, length, width);
+    return getLaurelLeafPath(
+      pointOnLaurel(degrees, config.radius),
+      direction,
+      config.leafLength * scale,
+      config.leafWidth * scale
+    );
   });
 
+export const getLowerLaurelGeometry = (): LaurelGeometry => {
+  const config = LAUREL_VARIANTS.field;
+  // The short lead-in lightly joins the lower circle; the leaves sit outside it.
+  const start = pointOnLaurel(113, 31.6);
+  const arcStart = pointOnLaurel(116, config.radius);
+  const end = pointOnLaurel(175, config.radius);
+
   return {
-    stemPath: "M 64,96 A 32,32 0 0 1 64,32",
+    stemPath: `M ${formatPoint(start)} L ${formatPoint(arcStart)} A ${config.radius},${config.radius} 0 0 1 ${formatPoint(end)}`,
+    leafPaths: buildLaurelLeaves(config, config.leafCount, 116, 164, false),
+    start,
+    end,
+  };
+};
+
+export const getClosedWreathGeometry = (
+  variant: "general" | "endgame" = "general"
+): LaurelGeometry => {
+  const config = LAUREL_VARIANTS[variant];
+  const start = pointOnLaurel(90, config.radius);
+  const tipBase = pointOnLaurel(252, config.radius);
+  const end = { x: RANK_BADGE_CENTER.x, y: RANK_BADGE_CENTER.y - config.radius };
+  const leafPaths = buildLaurelLeaves(config, config.leafCount - 1, 102, 232, true);
+  // Both mirrored terminal leaves end at exactly the same sharp point. Stop
+  // the stroked stem at their bases so round linecaps cannot bulk up the crown.
+  leafPaths.push(getLaurelLeafPath(
+    tipBase,
+    { x: end.x - tipBase.x, y: end.y - tipBase.y },
+    Math.hypot(end.x - tipBase.x, end.y - tipBase.y),
+    config.leafWidth * 0.64
+  ));
+
+  return {
+    stemPath: `M ${formatPoint(start)} A ${config.radius},${config.radius} 0 0 1 ${formatPoint(tipBase)}`,
     leafPaths,
-    start: { x: 64, y: 96 },
-    end: { x: 64, y: 32 },
+    start,
+    end,
   };
 };
 
