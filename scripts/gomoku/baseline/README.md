@@ -1,0 +1,1 @@
+Snapshot of QL2 main 2a6f4a3, before the AI rebuild. Only domain import paths were relocated. Used exclusively by benchmark scripts, never imported by production. Original random choices are seeded by the benchmark harness for reproducibility.

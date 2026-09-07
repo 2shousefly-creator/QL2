@@ -1,5 +1,8 @@
 import { BoardPoint, GomokuMark, Stone } from "./gomokuTypes";
-import { SparseGomokuBoard } from "./SparseBoard";
+import { isValidCoord } from "./CoordKey";
+
+export const GOMOKU_RULE_ID = "ql2-infinite-freestyle-v1" as const;
+export type RuleBoard = { get(point: BoardPoint): Pick<Stone, "mark"> | undefined };
 
 export const DIRECTIONS = [
   [1, 0],  // Horizontal
@@ -9,10 +12,11 @@ export const DIRECTIONS = [
 ] as const;
 
 export function checkWinAt(
-  board: SparseGomokuBoard,
+  board: RuleBoard,
   lastPoint: BoardPoint,
   mark: GomokuMark
 ): BoardPoint[] | null {
+  if (!isValidCoord(lastPoint.x, lastPoint.y) || board.get(lastPoint)?.mark !== mark) return null;
   for (const [dx, dy] of DIRECTIONS) {
     const line: BoardPoint[] = [{ x: lastPoint.x, y: lastPoint.y }];
 
@@ -20,6 +24,7 @@ export function checkWinAt(
     let step = 1;
     while (true) {
       const p = { x: lastPoint.x + dx * step, y: lastPoint.y + dy * step };
+      if (!isValidCoord(p.x, p.y)) break;
       const stone = board.get(p);
       if (stone && stone.mark === mark) {
         line.push(p);
@@ -33,6 +38,7 @@ export function checkWinAt(
     step = 1;
     while (true) {
       const p = { x: lastPoint.x - dx * step, y: lastPoint.y - dy * step };
+      if (!isValidCoord(p.x, p.y)) break;
       const stone = board.get(p);
       if (stone && stone.mark === mark) {
         line.unshift(p);

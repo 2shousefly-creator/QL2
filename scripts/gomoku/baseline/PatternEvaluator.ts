@@ -1,6 +1,6 @@
-import { GomokuMark, Stone } from "../domain/gomokuTypes";
-import { coordKey } from "../domain/CoordKey";
-import { DIRECTIONS } from "../domain/GomokuRules";
+import { GomokuMark, Stone } from "../../../src/features/training/gomoku-v13/domain/gomokuTypes";
+import { coordKey } from "../../../src/features/training/gomoku-v13/domain/CoordKey";
+import { DIRECTIONS } from "../../../src/features/training/gomoku-v13/domain/GomokuRules";
 
 export const SCORES = {
   WIN_FIVE: 10000000,

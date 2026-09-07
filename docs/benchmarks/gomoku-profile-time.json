@@ -1,0 +1,2404 @@
+{
+  "date": "2026-09-07T07:44:53.640Z",
+  "mode": "tournament",
+  "ruleId": "ql2-infinite-freestyle-v1",
+  "platform": "win32",
+  "cpu": "Intel(R) Core(TM) i5-10400 CPU @ 2.90GHz",
+  "node": "v24.19.0",
+  "capMs": "profile defaults",
+  "profiles": {
+    "easy": {
+      "version": 1,
+      "timeMs": 200,
+      "nodes": 1200,
+      "maxDepth": 2,
+      "beam": 6,
+      "quiescence": 0,
+      "ttEntries": 2000,
+      "solverFraction": 0,
+      "solverNodes": 0,
+      "solverPlies": 0,
+      "vct": false,
+      "variety": 0.2
+    },
+    "medium": {
+      "version": 1,
+      "timeMs": 800,
+      "nodes": 12000,
+      "maxDepth": 4,
+      "beam": 10,
+      "quiescence": 2,
+      "ttEntries": 12000,
+      "solverFraction": 0.2,
+      "solverNodes": 2000,
+      "solverPlies": 9,
+      "vct": false,
+      "variety": 0.04
+    },
+    "hard": {
+      "version": 1,
+      "timeMs": 2800,
+      "nodes": 60000,
+      "maxDepth": 10,
+      "beam": 16,
+      "quiescence": 4,
+      "ttEntries": 40000,
+      "solverFraction": 0.4,
+      "solverNodes": 10000,
+      "solverPlies": 25,
+      "vct": true,
+      "variety": 0
+    }
+  },
+  "pairs": 2,
+  "maxPlies": 60,
+  "notes": [
+    "Fixtures are small independent oracle/certificate regressions, NOT expert-rated puzzles. Holdout frozen before benchmark tuning.",
+    "Unknown alternative moves are not automatically wrong; solved counts are lower bounds when acceptable set is incomplete.",
+    "Move-cap outcomes are unresolved, never game-rule draws. Opening pairs are swapped, not externally balance-certified.",
+    "Old engine lacks telemetry and a strict deadline; its timing is measured, not assumed. Heap is sampled process-wide, not isolated engine peak memory.",
+    "depthZeroUnknownMoves includes mandatory blocks returned immediately and is not the Worker fallback count. This direct engine harness does not exercise the Worker watchdog."
+  ],
+  "summary": [
+    {
+      "engine": "old-hard",
+      "moves": 69,
+      "meanMs": 67.38521594202948,
+      "p95Ms": 153.5606000000007,
+      "maxMs": 1676.9480999999942,
+      "nodes": 0,
+      "maxDepth": 0,
+      "proofs": 0,
+      "timeouts": 0,
+      "maxTTEntries": 0,
+      "maxProcessHeapMiB": 104.35492706298828,
+      "depthZeroUnknownMoves": 0
+    },
+    {
+      "engine": "easy",
+      "moves": 63,
+      "meanMs": 5.547492063495271,
+      "p95Ms": 18.61139999999432,
+      "maxMs": 24.708800000022165,
+      "nodes": 4850,
+      "maxDepth": 2,
+      "proofs": 0,
+      "timeouts": 0,
+      "maxTTEntries": 20,
+      "maxProcessHeapMiB": 118.31767272949219,
+      "depthZeroUnknownMoves": 13
+    },
+    {
+      "engine": "medium",
+      "moves": 116,
+      "meanMs": 497.6458267241364,
+      "p95Ms": 800.2011999999813,
+      "maxMs": 801.2344999999914,
+      "nodes": 233404,
+      "maxDepth": 4,
+      "proofs": 16,
+      "timeouts": 67,
+      "maxTTEntries": 245,
+      "maxProcessHeapMiB": 117.0771255493164,
+      "depthZeroUnknownMoves": 22
+    },
+    {
+      "engine": "hard",
+      "moves": 122,
+      "meanMs": 1861.482080327869,
+      "p95Ms": 2800.3107999999775,
+      "maxMs": 2800.856700000004,
+      "nodes": 658604,
+      "maxDepth": 5,
+      "proofs": 26,
+      "timeouts": 74,
+      "maxTTEntries": 844,
+      "maxProcessHeapMiB": 108.41779327392578,
+      "depthZeroUnknownMoves": 10
+    }
+  ],
+  "rows": [
+    {
+      "a": "hard",
+      "b": "old-hard",
+      "pair": 0,
+      "swap": 0,
+      "assigned": [
+        "hard",
+        "old-hard"
+      ],
+      "starter": "X",
+      "winner": "hard",
+      "result": "win",
+      "moves": 25,
+      "stones": [
+        {
+          "x": 0,
+          "y": 0,
+          "mark": "X"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "mark": "X"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "mark": "O"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "mark": "O"
+        },
+        {
+          "x": 1,
+          "y": -1,
+          "mark": "X"
+        },
+        {
+          "x": -1,
+          "y": -1,
+          "mark": "O"
+        },
+        {
+          "x": 3,
+          "y": -3,
+          "mark": "X"
+        },
+        {
+          "x": 2,
+          "y": -2,
+          "mark": "O"
+        },
+        {
+          "x": 3,
+          "y": -2,
+          "mark": "X"
+        },
+        {
+          "x": 3,
+          "y": -1,
+          "mark": "O"
+        },
+        {
+          "x": 1,
+          "y": -3,
+          "mark": "X"
+        },
+        {
+          "x": 4,
+          "y": -3,
+          "mark": "O"
+        },
+        {
+          "x": 1,
+          "y": -5,
+          "mark": "X"
+        },
+        {
+          "x": 1,
+          "y": -4,
+          "mark": "O"
+        },
+        {
+          "x": -1,
+          "y": -3,
+          "mark": "X"
+        },
+        {
+          "x": 0,
+          "y": -3,
+          "mark": "O"
+        },
+        {
+          "x": 0,
+          "y": -4,
+          "mark": "X"
+        },
+        {
+          "x": -2,
+          "y": -2,
+          "mark": "O"
+        },
+        {
+          "x": 2,
+          "y": -4,
+          "mark": "X"
+        },
+        {
+          "x": 4,
+          "y": -2,
+          "mark": "O"
+        },
+        {
+          "x": 2,
+          "y": -5,
+          "mark": "X"
+        },
+        {
+          "x": 2,
+          "y": -6,
+          "mark": "O"
+        },
+        {
+          "x": -1,
+          "y": -7,
+          "mark": "X"
+        },
+        {
+          "x": 0,
+          "y": -6,
+          "mark": "O"
+        },
+        {
+          "x": 3,
+          "y": -5,
+          "mark": "X"
+        },
+        {
+          "x": 4,
+          "y": -5,
+          "mark": "O"
+        },
+        {
+          "x": 4,
+          "y": -6,
+          "mark": "X"
+        },
+        {
+          "x": 0,
+          "y": -2,
+          "mark": "O"
+        },
+        {
+          "x": 5,
+          "y": -7,
+          "mark": "X"
+        }
+      ]
+    },
+    {
+      "a": "hard",
+      "b": "old-hard",
+      "pair": 0,
+      "swap": 1,
+      "assigned": [
+        "old-hard",
+        "hard"
+      ],
+      "starter": "X",
+      "winner": "hard",
+      "result": "win",
+      "moves": 32,
+      "stones": [
+        {
+          "x": 0,
+          "y": 0,
+          "mark": "X"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "mark": "X"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "mark": "O"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "mark": "O"
+        },
+        {
+          "x": -1,
+          "y": 2,
+          "mark": "X"
+        },
+        {
+          "x": -1,
+          "y": -1,
+          "mark": "O"
+        },
+        {
+          "x": 3,
+          "y": 3,
+          "mark": "X"
+        },
+        {
+          "x": 3,
+          "y": 2,
+          "mark": "O"
+        },
+        {
+          "x": 0,
+          "y": -1,
+          "mark": "X"
+        },
+        {
+          "x": 4,
+          "y": 3,
+          "mark": "O"
+        },
+        {
+          "x": 5,
+          "y": 4,
+          "mark": "X"
+        },
+        {
+          "x": 4,
+          "y": 2,
+          "mark": "O"
+        },
+        {
+          "x": 4,
+          "y": 4,
+          "mark": "X"
+        },
+        {
+          "x": 2,
+          "y": 2,
+          "mark": "O"
+        },
+        {
+          "x": 5,
+          "y": 2,
+          "mark": "X"
+        },
+        {
+          "x": 1,
+          "y": 2,
+          "mark": "O"
+        },
+        {
+          "x": 0,
+          "y": 2,
+          "mark": "X"
+        },
+        {
+          "x": 2,
+          "y": 3,
+          "mark": "O"
+        },
+        {
+          "x": 3,
+          "y": 4,
+          "mark": "X"
+        },
+        {
+          "x": 2,
+          "y": 4,
+          "mark": "O"
+        },
+        {
+          "x": 2,
+          "y": 1,
+          "mark": "X"
+        },
+        {
+          "x": 4,
+          "y": 1,
+          "mark": "O"
+        },
+        {
+          "x": 5,
+          "y": 0,
+          "mark": "X"
+        },
+        {
+          "x": -1,
+          "y": 0,
+          "mark": "O"
+        },
+        {
+          "x": -2,
+          "y": -1,
+          "mark": "X"
+        },
+        {
+          "x": 3,
+          "y": 5,
+          "mark": "O"
+        },
+        {
+          "x": 5,
+          "y": 3,
+          "mark": "X"
+        },
+        {
+          "x": 5,
+          "y": 1,
+          "mark": "O"
+        },
+        {
+          "x": 4,
+          "y": 0,
+          "mark": "X"
+        },
+        {
+          "x": 0,
+          "y": 5,
+          "mark": "O"
+        },
+        {
+          "x": 1,
+          "y": 4,
+          "mark": "X"
+        },
+        {
+          "x": 2,
+          "y": 5,
+          "mark": "O"
+        },
+        {
+          "x": 2,
+          "y": 6,
+          "mark": "X"
+        },
+        {
+          "x": 1,
+          "y": 5,
+          "mark": "O"
+        },
+        {
+          "x": 4,
+          "y": 5,
+          "mark": "X"
+        },
+        {
+          "x": -1,
+          "y": 5,
+          "mark": "O"
+        }
+      ]
+    },
+    {
+      "a": "hard",
+      "b": "old-hard",
+      "pair": 1,
+      "swap": 0,
+      "assigned": [
+        "hard",
+        "old-hard"
+      ],
+      "starter": "O",
+      "winner": null,
+      "result": "unresolved_move_cap",
+      "moves": 60,
+      "stones": [
+        {
+          "x": 0,
+          "y": 0,
+          "mark": "O"
+        },
+        {
+          "x": 2,
+          "y": 1,
+          "mark": "O"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "mark": "X"
+        },
+        {
+          "x": 1,
+          "y": 2,
+          "mark": "X"
+        },
+        {
+          "x": 1,
+          "y": -1,
+          "mark": "O"
+        },
+        {
+          "x": 2,
+          "y": -2,
+          "mark": "X"
+        },
+        {
+          "x": -2,
+          "y": 2,
+          "mark": "O"
+        },
+        {
+          "x": 1,
+          "y": 4,
+          "mark": "X"
+        },
+        {
+          "x": 1,
+          "y": 3,
+          "mark": "O"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "mark": "X"
+        },
+        {
+          "x": 2,
+          "y": 3,
+          "mark": "O"
+        },
+        {
+          "x": 3,
+          "y": -2,
+          "mark": "X"
+        },
+        {
+          "x": 2,
+          "y": -1,
+          "mark": "O"
+        },
+        {
+          "x": 2,
+          "y": 2,
+          "mark": "X"
+        },
+        {
+          "x": 1,
+          "y": -2,
+          "mark": "O"
+        },
+        {
+          "x": 3,
+          "y": 2,
+          "mark": "X"
+        },
+        {
+          "x": 4,
+          "y": 2,
+          "mark": "O"
+        },
+        {
+          "x": -1,
+          "y": 2,
+          "mark": "X"
+        },
+        {
+          "x": 0,
+          "y": 2,
+          "mark": "O"
+        },
+        {
+          "x": -2,
+          "y": 3,
+          "mark": "X"
+        },
+        {
+          "x": -3,
+          "y": 4,
+          "mark": "O"
+        },
+        {
+          "x": -1,
+          "y": 1,
+          "mark": "X"
+        },
+        {
+          "x": -2,
+          "y": 1,
+          "mark": "O"
+        },
+        {
+          "x": -1,
+          "y": 4,
+          "mark": "X"
+        },
+        {
+          "x": -1,
+          "y": 0,
+          "mark": "O"
+        },
+        {
+          "x": 0,
+          "y": -1,
+          "mark": "X"
+        },
+        {
+          "x": 3,
+          "y": 1,
+          "mark": "O"
+        },
+        {
+          "x": 0,
+          "y": -2,
+          "mark": "X"
+        },
+        {
+          "x": -1,
+          "y": 3,
+          "mark": "O"
+        },
+        {
+          "x": 5,
+          "y": 3,
+          "mark": "X"
+        },
+        {
+          "x": 0,
+          "y": 4,
+          "mark": "O"
+        },
+        {
+          "x": 1,
+          "y": 5,
+          "mark": "X"
+        },
+        {
+          "x": 0,
+          "y": 5,
+          "mark": "O"
+        },
+        {
+          "x": 0,
+          "y": 3,
+          "mark": "X"
+        },
+        {
+          "x": -2,
+          "y": 5,
+          "mark": "O"
+        },
+        {
+          "x": 3,
+          "y": 6,
+          "mark": "X"
+        },
+        {
+          "x": 2,
+          "y": 5,
+          "mark": "O"
+        },
+        {
+          "x": 0,
+          "y": -3,
+          "mark": "X"
+        },
+        {
+          "x": 0,
+          "y": -4,
+          "mark": "O"
+        },
+        {
+          "x": 3,
+          "y": -1,
+          "mark": "X"
+        },
+        {
+          "x": 5,
+          "y": 1,
+          "mark": "O"
+        },
+        {
+          "x": 4,
+          "y": 1,
+          "mark": "X"
+        },
+        {
+          "x": 3,
+          "y": -3,
+          "mark": "O"
+        },
+        {
+          "x": -3,
+          "y": 2,
+          "mark": "X"
+        },
+        {
+          "x": -4,
+          "y": 1,
+          "mark": "O"
+        },
+        {
+          "x": -3,
+          "y": 1,
+          "mark": "X"
+        },
+        {
+          "x": -2,
+          "y": 0,
+          "mark": "O"
+        },
+        {
+          "x": -3,
+          "y": 0,
+          "mark": "X"
+        },
+        {
+          "x": -3,
+          "y": -1,
+          "mark": "O"
+        },
+        {
+          "x": -2,
+          "y": -1,
+          "mark": "X"
+        },
+        {
+          "x": 1,
+          "y": -4,
+          "mark": "O"
+        },
+        {
+          "x": 1,
+          "y": -5,
+          "mark": "X"
+        },
+        {
+          "x": 0,
+          "y": 7,
+          "mark": "O"
+        },
+        {
+          "x": -1,
+          "y": 6,
+          "mark": "X"
+        },
+        {
+          "x": 0,
+          "y": 6,
+          "mark": "O"
+        },
+        {
+          "x": 0,
+          "y": 8,
+          "mark": "X"
+        },
+        {
+          "x": -3,
+          "y": 5,
+          "mark": "O"
+        },
+        {
+          "x": -2,
+          "y": 4,
+          "mark": "X"
+        },
+        {
+          "x": 3,
+          "y": 5,
+          "mark": "O"
+        },
+        {
+          "x": -1,
+          "y": 5,
+          "mark": "X"
+        },
+        {
+          "x": -1,
+          "y": 8,
+          "mark": "O"
+        },
+        {
+          "x": 1,
+          "y": 6,
+          "mark": "X"
+        },
+        {
+          "x": 1,
+          "y": 8,
+          "mark": "O"
+        },
+        {
+          "x": 4,
+          "y": 6,
+          "mark": "X"
+        }
+      ]
+    },
+    {
+      "a": "hard",
+      "b": "old-hard",
+      "pair": 1,
+      "swap": 1,
+      "assigned": [
+        "old-hard",
+        "hard"
+      ],
+      "starter": "O",
+      "winner": "hard",
+      "result": "win",
+      "moves": 23,
+      "stones": [
+        {
+          "x": 0,
+          "y": 0,
+          "mark": "O"
+        },
+        {
+          "x": 2,
+          "y": 1,
+          "mark": "O"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "mark": "X"
+        },
+        {
+          "x": 1,
+          "y": 2,
+          "mark": "X"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "mark": "O"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "mark": "X"
+        },
+        {
+          "x": 2,
+          "y": 2,
+          "mark": "O"
+        },
+        {
+          "x": -1,
+          "y": -1,
+          "mark": "X"
+        },
+        {
+          "x": 2,
+          "y": 3,
+          "mark": "O"
+        },
+        {
+          "x": 2,
+          "y": 0,
+          "mark": "X"
+        },
+        {
+          "x": 2,
+          "y": 4,
+          "mark": "O"
+        },
+        {
+          "x": 2,
+          "y": 5,
+          "mark": "X"
+        },
+        {
+          "x": 3,
+          "y": 3,
+          "mark": "O"
+        },
+        {
+          "x": 4,
+          "y": 4,
+          "mark": "X"
+        },
+        {
+          "x": 1,
+          "y": 3,
+          "mark": "O"
+        },
+        {
+          "x": 4,
+          "y": 3,
+          "mark": "X"
+        },
+        {
+          "x": 3,
+          "y": 1,
+          "mark": "O"
+        },
+        {
+          "x": 4,
+          "y": 0,
+          "mark": "X"
+        },
+        {
+          "x": -1,
+          "y": 3,
+          "mark": "O"
+        },
+        {
+          "x": 0,
+          "y": 3,
+          "mark": "X"
+        },
+        {
+          "x": -1,
+          "y": 5,
+          "mark": "O"
+        },
+        {
+          "x": 0,
+          "y": 4,
+          "mark": "X"
+        },
+        {
+          "x": 5,
+          "y": 1,
+          "mark": "O"
+        },
+        {
+          "x": 4,
+          "y": 1,
+          "mark": "X"
+        },
+        {
+          "x": 4,
+          "y": 2,
+          "mark": "O"
+        },
+        {
+          "x": 6,
+          "y": 0,
+          "mark": "X"
+        },
+        {
+          "x": 1,
+          "y": 5,
+          "mark": "O"
+        }
+      ]
+    },
+    {
+      "a": "hard",
+      "b": "medium",
+      "pair": 0,
+      "swap": 0,
+      "assigned": [
+        "hard",
+        "medium"
+      ],
+      "starter": "X",
+      "winner": "hard",
+      "result": "win",
+      "moves": 41,
+      "stones": [
+        {
+          "x": 0,
+          "y": 0,
+          "mark": "X"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "mark": "X"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "mark": "O"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "mark": "O"
+        },
+        {
+          "x": 1,
+          "y": -1,
+          "mark": "X"
+        },
+        {
+          "x": -1,
+          "y": 2,
+          "mark": "O"
+        },
+        {
+          "x": -2,
+          "y": 3,
+          "mark": "X"
+        },
+        {
+          "x": -2,
+          "y": 2,
+          "mark": "O"
+        },
+        {
+          "x": 2,
+          "y": 2,
+          "mark": "X"
+        },
+        {
+          "x": -1,
+          "y": -1,
+          "mark": "O"
+        },
+        {
+          "x": 2,
+          "y": -2,
+          "mark": "X"
+        },
+        {
+          "x": -1,
+          "y": 1,
+          "mark": "O"
+        },
+        {
+          "x": -1,
+          "y": 0,
+          "mark": "X"
+        },
+        {
+          "x": -1,
+          "y": 3,
+          "mark": "O"
+        },
+        {
+          "x": -3,
+          "y": 1,
+          "mark": "X"
+        },
+        {
+          "x": -3,
+          "y": 2,
+          "mark": "O"
+        },
+        {
+          "x": 0,
+          "y": 2,
+          "mark": "X"
+        },
+        {
+          "x": -4,
+          "y": 2,
+          "mark": "O"
+        },
+        {
+          "x": -5,
+          "y": 2,
+          "mark": "X"
+        },
+        {
+          "x": 2,
+          "y": 1,
+          "mark": "O"
+        },
+        {
+          "x": 3,
+          "y": -3,
+          "mark": "X"
+        },
+        {
+          "x": 4,
+          "y": -4,
+          "mark": "O"
+        },
+        {
+          "x": 3,
+          "y": 3,
+          "mark": "X"
+        },
+        {
+          "x": 4,
+          "y": 4,
+          "mark": "O"
+        },
+        {
+          "x": 3,
+          "y": 2,
+          "mark": "X"
+        },
+        {
+          "x": -1,
+          "y": 5,
+          "mark": "O"
+        },
+        {
+          "x": -1,
+          "y": 4,
+          "mark": "X"
+        },
+        {
+          "x": 3,
+          "y": -2,
+          "mark": "O"
+        },
+        {
+          "x": 2,
+          "y": -1,
+          "mark": "X"
+        },
+        {
+          "x": 4,
+          "y": 2,
+          "mark": "O"
+        },
+        {
+          "x": 3,
+          "y": -1,
+          "mark": "X"
+        },
+        {
+          "x": 4,
+          "y": -1,
+          "mark": "O"
+        },
+        {
+          "x": 2,
+          "y": 0,
+          "mark": "X"
+        },
+        {
+          "x": 4,
+          "y": -2,
+          "mark": "O"
+        },
+        {
+          "x": 2,
+          "y": -3,
+          "mark": "X"
+        },
+        {
+          "x": 2,
+          "y": -4,
+          "mark": "O"
+        },
+        {
+          "x": 3,
+          "y": 1,
+          "mark": "X"
+        },
+        {
+          "x": 3,
+          "y": 0,
+          "mark": "O"
+        },
+        {
+          "x": -1,
+          "y": -3,
+          "mark": "X"
+        },
+        {
+          "x": 0,
+          "y": -2,
+          "mark": "O"
+        },
+        {
+          "x": 1,
+          "y": -3,
+          "mark": "X"
+        },
+        {
+          "x": 0,
+          "y": -3,
+          "mark": "O"
+        },
+        {
+          "x": 0,
+          "y": -4,
+          "mark": "X"
+        },
+        {
+          "x": -1,
+          "y": -5,
+          "mark": "O"
+        },
+        {
+          "x": 4,
+          "y": 0,
+          "mark": "X"
+        }
+      ]
+    },
+    {
+      "a": "hard",
+      "b": "medium",
+      "pair": 0,
+      "swap": 1,
+      "assigned": [
+        "medium",
+        "hard"
+      ],
+      "starter": "X",
+      "winner": "medium",
+      "result": "win",
+      "moves": 13,
+      "stones": [
+        {
+          "x": 0,
+          "y": 0,
+          "mark": "X"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "mark": "X"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "mark": "O"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "mark": "O"
+        },
+        {
+          "x": -2,
+          "y": 3,
+          "mark": "X"
+        },
+        {
+          "x": -1,
+          "y": -1,
+          "mark": "O"
+        },
+        {
+          "x": -1,
+          "y": 3,
+          "mark": "X"
+        },
+        {
+          "x": 2,
+          "y": 3,
+          "mark": "O"
+        },
+        {
+          "x": -2,
+          "y": 4,
+          "mark": "X"
+        },
+        {
+          "x": 0,
+          "y": 2,
+          "mark": "O"
+        },
+        {
+          "x": -2,
+          "y": 2,
+          "mark": "X"
+        },
+        {
+          "x": -2,
+          "y": 1,
+          "mark": "O"
+        },
+        {
+          "x": -3,
+          "y": 3,
+          "mark": "X"
+        },
+        {
+          "x": -1,
+          "y": 1,
+          "mark": "O"
+        },
+        {
+          "x": -4,
+          "y": 3,
+          "mark": "X"
+        },
+        {
+          "x": -5,
+          "y": 3,
+          "mark": "O"
+        },
+        {
+          "x": 0,
+          "y": 3,
+          "mark": "X"
+        }
+      ]
+    },
+    {
+      "a": "hard",
+      "b": "medium",
+      "pair": 1,
+      "swap": 0,
+      "assigned": [
+        "hard",
+        "medium"
+      ],
+      "starter": "O",
+      "winner": "medium",
+      "result": "win",
+      "moves": 31,
+      "stones": [
+        {
+          "x": 0,
+          "y": 0,
+          "mark": "O"
+        },
+        {
+          "x": 2,
+          "y": 1,
+          "mark": "O"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "mark": "X"
+        },
+        {
+          "x": 1,
+          "y": 2,
+          "mark": "X"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "mark": "O"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "mark": "X"
+        },
+        {
+          "x": 2,
+          "y": 2,
+          "mark": "O"
+        },
+        {
+          "x": 3,
+          "y": 3,
+          "mark": "X"
+        },
+        {
+          "x": 2,
+          "y": 3,
+          "mark": "O"
+        },
+        {
+          "x": 2,
+          "y": 4,
+          "mark": "X"
+        },
+        {
+          "x": 2,
+          "y": -1,
+          "mark": "O"
+        },
+        {
+          "x": 2,
+          "y": 0,
+          "mark": "X"
+        },
+        {
+          "x": 4,
+          "y": 2,
+          "mark": "O"
+        },
+        {
+          "x": 4,
+          "y": 1,
+          "mark": "X"
+        },
+        {
+          "x": 4,
+          "y": 0,
+          "mark": "O"
+        },
+        {
+          "x": 1,
+          "y": 3,
+          "mark": "X"
+        },
+        {
+          "x": 6,
+          "y": 2,
+          "mark": "O"
+        },
+        {
+          "x": 0,
+          "y": 2,
+          "mark": "X"
+        },
+        {
+          "x": -1,
+          "y": 1,
+          "mark": "O"
+        },
+        {
+          "x": 3,
+          "y": 5,
+          "mark": "X"
+        },
+        {
+          "x": 4,
+          "y": 6,
+          "mark": "O"
+        },
+        {
+          "x": 1,
+          "y": 5,
+          "mark": "X"
+        },
+        {
+          "x": -1,
+          "y": -1,
+          "mark": "O"
+        },
+        {
+          "x": -2,
+          "y": -2,
+          "mark": "X"
+        },
+        {
+          "x": 3,
+          "y": 2,
+          "mark": "O"
+        },
+        {
+          "x": 5,
+          "y": 2,
+          "mark": "X"
+        },
+        {
+          "x": 1,
+          "y": -1,
+          "mark": "O"
+        },
+        {
+          "x": 1,
+          "y": 4,
+          "mark": "X"
+        },
+        {
+          "x": 1,
+          "y": 6,
+          "mark": "O"
+        },
+        {
+          "x": 0,
+          "y": 6,
+          "mark": "X"
+        },
+        {
+          "x": -1,
+          "y": 7,
+          "mark": "O"
+        },
+        {
+          "x": 0,
+          "y": 4,
+          "mark": "X"
+        },
+        {
+          "x": -2,
+          "y": 2,
+          "mark": "O"
+        },
+        {
+          "x": -3,
+          "y": 3,
+          "mark": "X"
+        },
+        {
+          "x": 2,
+          "y": -2,
+          "mark": "O"
+        }
+      ]
+    },
+    {
+      "a": "hard",
+      "b": "medium",
+      "pair": 1,
+      "swap": 1,
+      "assigned": [
+        "medium",
+        "hard"
+      ],
+      "starter": "O",
+      "winner": "hard",
+      "result": "win",
+      "moves": 17,
+      "stones": [
+        {
+          "x": 0,
+          "y": 0,
+          "mark": "O"
+        },
+        {
+          "x": 2,
+          "y": 1,
+          "mark": "O"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "mark": "X"
+        },
+        {
+          "x": 1,
+          "y": 2,
+          "mark": "X"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "mark": "O"
+        },
+        {
+          "x": 2,
+          "y": 2,
+          "mark": "X"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "mark": "O"
+        },
+        {
+          "x": 3,
+          "y": 1,
+          "mark": "X"
+        },
+        {
+          "x": 0,
+          "y": 2,
+          "mark": "O"
+        },
+        {
+          "x": 0,
+          "y": 3,
+          "mark": "X"
+        },
+        {
+          "x": 3,
+          "y": -1,
+          "mark": "O"
+        },
+        {
+          "x": 2,
+          "y": 0,
+          "mark": "X"
+        },
+        {
+          "x": 1,
+          "y": -1,
+          "mark": "O"
+        },
+        {
+          "x": 4,
+          "y": 0,
+          "mark": "X"
+        },
+        {
+          "x": -2,
+          "y": 1,
+          "mark": "O"
+        },
+        {
+          "x": -1,
+          "y": 1,
+          "mark": "X"
+        },
+        {
+          "x": 0,
+          "y": -1,
+          "mark": "O"
+        },
+        {
+          "x": 0,
+          "y": -2,
+          "mark": "X"
+        },
+        {
+          "x": 2,
+          "y": -1,
+          "mark": "O"
+        },
+        {
+          "x": -1,
+          "y": -1,
+          "mark": "X"
+        },
+        {
+          "x": 4,
+          "y": -1,
+          "mark": "O"
+        }
+      ]
+    },
+    {
+      "a": "medium",
+      "b": "easy",
+      "pair": 0,
+      "swap": 0,
+      "assigned": [
+        "medium",
+        "easy"
+      ],
+      "starter": "X",
+      "winner": "medium",
+      "result": "win",
+      "moves": 15,
+      "stones": [
+        {
+          "x": 0,
+          "y": 0,
+          "mark": "X"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "mark": "X"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "mark": "O"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "mark": "O"
+        },
+        {
+          "x": -2,
+          "y": 3,
+          "mark": "X"
+        },
+        {
+          "x": 3,
+          "y": -2,
+          "mark": "O"
+        },
+        {
+          "x": 2,
+          "y": -1,
+          "mark": "X"
+        },
+        {
+          "x": 2,
+          "y": 2,
+          "mark": "O"
+        },
+        {
+          "x": -2,
+          "y": 2,
+          "mark": "X"
+        },
+        {
+          "x": -2,
+          "y": -1,
+          "mark": "O"
+        },
+        {
+          "x": -3,
+          "y": 3,
+          "mark": "X"
+        },
+        {
+          "x": -1,
+          "y": 1,
+          "mark": "O"
+        },
+        {
+          "x": -1,
+          "y": 3,
+          "mark": "X"
+        },
+        {
+          "x": -4,
+          "y": 3,
+          "mark": "O"
+        },
+        {
+          "x": -2,
+          "y": 4,
+          "mark": "X"
+        },
+        {
+          "x": -2,
+          "y": 1,
+          "mark": "O"
+        },
+        {
+          "x": 0,
+          "y": 2,
+          "mark": "X"
+        },
+        {
+          "x": -3,
+          "y": 5,
+          "mark": "O"
+        },
+        {
+          "x": 2,
+          "y": 0,
+          "mark": "X"
+        }
+      ]
+    },
+    {
+      "a": "medium",
+      "b": "easy",
+      "pair": 0,
+      "swap": 1,
+      "assigned": [
+        "easy",
+        "medium"
+      ],
+      "starter": "X",
+      "winner": "medium",
+      "result": "win",
+      "moves": 58,
+      "stones": [
+        {
+          "x": 0,
+          "y": 0,
+          "mark": "X"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "mark": "X"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "mark": "O"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "mark": "O"
+        },
+        {
+          "x": 2,
+          "y": 2,
+          "mark": "X"
+        },
+        {
+          "x": -1,
+          "y": -1,
+          "mark": "O"
+        },
+        {
+          "x": 2,
+          "y": -1,
+          "mark": "X"
+        },
+        {
+          "x": 2,
+          "y": 1,
+          "mark": "O"
+        },
+        {
+          "x": 0,
+          "y": -1,
+          "mark": "X"
+        },
+        {
+          "x": 4,
+          "y": 4,
+          "mark": "O"
+        },
+        {
+          "x": 1,
+          "y": -1,
+          "mark": "X"
+        },
+        {
+          "x": -1,
+          "y": 1,
+          "mark": "O"
+        },
+        {
+          "x": -1,
+          "y": 0,
+          "mark": "X"
+        },
+        {
+          "x": -2,
+          "y": 1,
+          "mark": "O"
+        },
+        {
+          "x": 0,
+          "y": -2,
+          "mark": "X"
+        },
+        {
+          "x": -3,
+          "y": 1,
+          "mark": "O"
+        },
+        {
+          "x": -4,
+          "y": 1,
+          "mark": "X"
+        },
+        {
+          "x": 4,
+          "y": -1,
+          "mark": "O"
+        },
+        {
+          "x": 1,
+          "y": -2,
+          "mark": "X"
+        },
+        {
+          "x": 3,
+          "y": 0,
+          "mark": "O"
+        },
+        {
+          "x": 1,
+          "y": 2,
+          "mark": "X"
+        },
+        {
+          "x": 5,
+          "y": -2,
+          "mark": "O"
+        },
+        {
+          "x": 6,
+          "y": -3,
+          "mark": "X"
+        },
+        {
+          "x": 2,
+          "y": -3,
+          "mark": "O"
+        },
+        {
+          "x": 0,
+          "y": -3,
+          "mark": "X"
+        },
+        {
+          "x": 0,
+          "y": -4,
+          "mark": "O"
+        },
+        {
+          "x": -1,
+          "y": -2,
+          "mark": "X"
+        },
+        {
+          "x": -2,
+          "y": -2,
+          "mark": "O"
+        },
+        {
+          "x": -2,
+          "y": -1,
+          "mark": "X"
+        },
+        {
+          "x": -3,
+          "y": 0,
+          "mark": "O"
+        },
+        {
+          "x": 1,
+          "y": -4,
+          "mark": "X"
+        },
+        {
+          "x": 2,
+          "y": -5,
+          "mark": "O"
+        },
+        {
+          "x": 1,
+          "y": -5,
+          "mark": "X"
+        },
+        {
+          "x": 1,
+          "y": -3,
+          "mark": "O"
+        },
+        {
+          "x": -2,
+          "y": -5,
+          "mark": "X"
+        },
+        {
+          "x": -1,
+          "y": -4,
+          "mark": "O"
+        },
+        {
+          "x": 2,
+          "y": -2,
+          "mark": "X"
+        },
+        {
+          "x": 3,
+          "y": -2,
+          "mark": "O"
+        },
+        {
+          "x": 3,
+          "y": -3,
+          "mark": "X"
+        },
+        {
+          "x": 4,
+          "y": -4,
+          "mark": "O"
+        },
+        {
+          "x": 4,
+          "y": -2,
+          "mark": "X"
+        },
+        {
+          "x": 5,
+          "y": 0,
+          "mark": "O"
+        },
+        {
+          "x": 6,
+          "y": 1,
+          "mark": "X"
+        },
+        {
+          "x": 2,
+          "y": 0,
+          "mark": "O"
+        },
+        {
+          "x": 4,
+          "y": 0,
+          "mark": "X"
+        },
+        {
+          "x": 5,
+          "y": -1,
+          "mark": "O"
+        },
+        {
+          "x": 5,
+          "y": -3,
+          "mark": "X"
+        },
+        {
+          "x": -1,
+          "y": 2,
+          "mark": "O"
+        },
+        {
+          "x": 2,
+          "y": -4,
+          "mark": "X"
+        },
+        {
+          "x": 0,
+          "y": -6,
+          "mark": "O"
+        },
+        {
+          "x": 0,
+          "y": 3,
+          "mark": "X"
+        },
+        {
+          "x": -4,
+          "y": -1,
+          "mark": "O"
+        },
+        {
+          "x": -5,
+          "y": -2,
+          "mark": "X"
+        },
+        {
+          "x": -3,
+          "y": 4,
+          "mark": "O"
+        },
+        {
+          "x": -2,
+          "y": 3,
+          "mark": "X"
+        },
+        {
+          "x": -3,
+          "y": 2,
+          "mark": "O"
+        },
+        {
+          "x": -3,
+          "y": 3,
+          "mark": "X"
+        },
+        {
+          "x": -3,
+          "y": -2,
+          "mark": "O"
+        },
+        {
+          "x": -3,
+          "y": -1,
+          "mark": "X"
+        },
+        {
+          "x": -2,
+          "y": -3,
+          "mark": "O"
+        },
+        {
+          "x": -5,
+          "y": 0,
+          "mark": "X"
+        },
+        {
+          "x": 0,
+          "y": -5,
+          "mark": "O"
+        }
+      ]
+    },
+    {
+      "a": "medium",
+      "b": "easy",
+      "pair": 1,
+      "swap": 0,
+      "assigned": [
+        "medium",
+        "easy"
+      ],
+      "starter": "O",
+      "winner": "medium",
+      "result": "win",
+      "moves": 44,
+      "stones": [
+        {
+          "x": 0,
+          "y": 0,
+          "mark": "O"
+        },
+        {
+          "x": 2,
+          "y": 1,
+          "mark": "O"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "mark": "X"
+        },
+        {
+          "x": 1,
+          "y": 2,
+          "mark": "X"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "mark": "O"
+        },
+        {
+          "x": 2,
+          "y": 2,
+          "mark": "X"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "mark": "O"
+        },
+        {
+          "x": 3,
+          "y": 1,
+          "mark": "X"
+        },
+        {
+          "x": 0,
+          "y": 2,
+          "mark": "O"
+        },
+        {
+          "x": 0,
+          "y": 3,
+          "mark": "X"
+        },
+        {
+          "x": 2,
+          "y": 0,
+          "mark": "O"
+        },
+        {
+          "x": -1,
+          "y": 3,
+          "mark": "X"
+        },
+        {
+          "x": 1,
+          "y": 3,
+          "mark": "O"
+        },
+        {
+          "x": -1,
+          "y": 1,
+          "mark": "X"
+        },
+        {
+          "x": -1,
+          "y": 4,
+          "mark": "O"
+        },
+        {
+          "x": 3,
+          "y": -1,
+          "mark": "X"
+        },
+        {
+          "x": 3,
+          "y": 2,
+          "mark": "O"
+        },
+        {
+          "x": 0,
+          "y": -1,
+          "mark": "X"
+        },
+        {
+          "x": -1,
+          "y": -1,
+          "mark": "O"
+        },
+        {
+          "x": 2,
+          "y": -3,
+          "mark": "X"
+        },
+        {
+          "x": -2,
+          "y": -2,
+          "mark": "O"
+        },
+        {
+          "x": -3,
+          "y": -3,
+          "mark": "X"
+        },
+        {
+          "x": 3,
+          "y": -3,
+          "mark": "O"
+        },
+        {
+          "x": 1,
+          "y": -1,
+          "mark": "X"
+        },
+        {
+          "x": 1,
+          "y": -2,
+          "mark": "O"
+        },
+        {
+          "x": 4,
+          "y": 0,
+          "mark": "X"
+        },
+        {
+          "x": 2,
+          "y": -2,
+          "mark": "O"
+        },
+        {
+          "x": 4,
+          "y": -1,
+          "mark": "X"
+        },
+        {
+          "x": 2,
+          "y": -1,
+          "mark": "O"
+        },
+        {
+          "x": 4,
+          "y": 1,
+          "mark": "X"
+        },
+        {
+          "x": 4,
+          "y": 2,
+          "mark": "O"
+        },
+        {
+          "x": 3,
+          "y": -2,
+          "mark": "X"
+        },
+        {
+          "x": 1,
+          "y": -4,
+          "mark": "O"
+        },
+        {
+          "x": 5,
+          "y": -1,
+          "mark": "X"
+        },
+        {
+          "x": 6,
+          "y": -2,
+          "mark": "O"
+        },
+        {
+          "x": 6,
+          "y": -1,
+          "mark": "X"
+        },
+        {
+          "x": 7,
+          "y": -1,
+          "mark": "O"
+        },
+        {
+          "x": 5,
+          "y": 0,
+          "mark": "X"
+        },
+        {
+          "x": 6,
+          "y": 1,
+          "mark": "O"
+        },
+        {
+          "x": 4,
+          "y": -3,
+          "mark": "X"
+        },
+        {
+          "x": 4,
+          "y": -2,
+          "mark": "O"
+        },
+        {
+          "x": 5,
+          "y": -2,
+          "mark": "X"
+        },
+        {
+          "x": -1,
+          "y": -2,
+          "mark": "O"
+        },
+        {
+          "x": 0,
+          "y": -2,
+          "mark": "X"
+        },
+        {
+          "x": 5,
+          "y": -3,
+          "mark": "O"
+        },
+        {
+          "x": 3,
+          "y": -4,
+          "mark": "X"
+        },
+        {
+          "x": 2,
+          "y": -5,
+          "mark": "O"
+        },
+        {
+          "x": 7,
+          "y": 0,
+          "mark": "X"
+        }
+      ]
+    },
+    {
+      "a": "medium",
+      "b": "easy",
+      "pair": 1,
+      "swap": 1,
+      "assigned": [
+        "easy",
+        "medium"
+      ],
+      "starter": "O",
+      "winner": "medium",
+      "result": "win",
+      "moves": 11,
+      "stones": [
+        {
+          "x": 0,
+          "y": 0,
+          "mark": "O"
+        },
+        {
+          "x": 2,
+          "y": 1,
+          "mark": "O"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "mark": "X"
+        },
+        {
+          "x": 1,
+          "y": 2,
+          "mark": "X"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "mark": "O"
+        },
+        {
+          "x": -2,
+          "y": 1,
+          "mark": "X"
+        },
+        {
+          "x": 0,
+          "y": 2,
+          "mark": "O"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "mark": "X"
+        },
+        {
+          "x": 2,
+          "y": 2,
+          "mark": "O"
+        },
+        {
+          "x": 3,
+          "y": 3,
+          "mark": "X"
+        },
+        {
+          "x": 2,
+          "y": 0,
+          "mark": "O"
+        },
+        {
+          "x": 2,
+          "y": 3,
+          "mark": "X"
+        },
+        {
+          "x": -1,
+          "y": 3,
+          "mark": "O"
+        },
+        {
+          "x": -2,
+          "y": 4,
+          "mark": "X"
+        },
+        {
+          "x": 3,
+          "y": -1,
+          "mark": "O"
+        }
+      ]
+    }
+  ]
+}

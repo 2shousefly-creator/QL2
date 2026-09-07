@@ -1,0 +1,45 @@
+{
+  "date": "2026-09-07T07:44:04.416Z",
+  "note": "Scattered-board workload on current desktop; not a low-end-device test. Initial mandatory scan can exceed search budget; host watchdog remains independent.",
+  "rows": [
+    {
+      "stones": 64,
+      "elapsedMs": 121.7019,
+      "searchElapsedMs": 120.11699999999999,
+      "status": "timeout",
+      "depth": 1,
+      "nodes": 21,
+      "move": {
+        "x": -100001,
+        "y": 19999
+      },
+      "heapMiB": 12.51141357421875
+    },
+    {
+      "stones": 512,
+      "elapsedMs": 126.8236,
+      "searchElapsedMs": 120.93720000000002,
+      "status": "timeout",
+      "depth": 0,
+      "nodes": 0,
+      "move": {
+        "x": -100001,
+        "y": 19999
+      },
+      "heapMiB": 19.707962036132812
+    },
+    {
+      "stones": 2048,
+      "elapsedMs": 151.33630000000005,
+      "searchElapsedMs": 120.18529999999998,
+      "status": "timeout",
+      "depth": 0,
+      "nodes": 0,
+      "move": {
+        "x": -100001,
+        "y": 19999
+      },
+      "heapMiB": 32.970664978027344
+    }
+  ]
+}
