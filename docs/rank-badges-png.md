@@ -1,49 +1,51 @@
-# Huy hiệu quân hàm PNG 224×224
+# Bộ huy hiệu vẽ lại sắc nét
 
-Bộ asset gồm **24 PNG RGBA**, một ảnh cho mỗi ID huy hiệu hiện có, được tách trực tiếp từ 12 ảnh tham chiếu `REF_01` đến `REF_12` do người dùng cung cấp ngày 07/09/2026. Không tạo lại artwork bằng AI, SVG hoặc CSS.
+Cập nhật theo yêu cầu redraw ngày 07/09/2026: **24 PNG RGBA 896×896**, dựng mới bằng hình học vector. Ảnh tham chiếu chỉ dùng để quan sát thiết kế. Quy trình render không mở ảnh tham chiếu hay PNG cũ, không crop, trace pixel, upscale hoặc nhúng bitmap vào vector.
 
-## Asset và cách xuất lại
+![Bộ 24 huy hiệu mới](rank-badges-redraw.webp)
 
-- Thư mục: `public/assets/rank-badges/`.
-- Registry: `src/game/rankBadgeAssets.ts`, ánh xạ Badge ID sang `src` và `outerWidthRatio` đo từ alpha của ảnh cuối cùng. Có ánh xạ riêng cho `badge_endgame_grand_marshal`.
-- Mỗi canvas có kích thước 224×224, phần artwork vừa trong vùng 208×208 và được căn giữa, giữ tỷ lệ nguồn. Lề trong suốt tối thiểu 8px.
-- Ảnh Học Viên giữ alpha nguồn. Các ảnh vuông giữ đường viền tối ngoài cùng. Các bảng được chia thành cửa sổ không chứa chữ/đường kẻ; mask lấy đường bao lồi từ pixel viền thật, giữ nguyên toàn bộ RGB bên trong. Không áp số cạnh hay hình học renderer cũ vào mask.
-- Resize bằng Lanczos. Metadata chiều rộng dùng vùng alpha ≥128 để thanh bậc bám theo phần artwork thay vì chiều rộng SVG cũ.
+## Quy chuẩn thiết kế
 
-Xuất lại bằng Python có Pillow và NumPy, truyền thư mục chứa đủ 12 ảnh nguồn gốc:
+- Học Viên: khung bạc dập nổi, các góc lõm và mặt cười đội mũ lính được dựng lại bằng đường vector, gradient kim loại sạch.
+- Binh Bét/Nhì/Nhất: 1/2/3 thanh vàng có chung chiều rộng, độ dày và khoảng cách.
+- Hạ/Trung/Thượng Sĩ: 1/2/3 chữ V trắng có chung hình học, độ dày và bước dọc.
+- Úy/Tá/Tướng: chung một silhouette sao năm cánh phẳng, màu `#f8ce42`, bán kính **20 đơn vị** trên canvas logic 224. Từng sao giữ cùng kích thước ở mọi cấp 1–4 sao và cả ba nhóm. Bố cục lần lượt giữa tâm, hàng ngang, tam giác hướng lên, lưới 2×2.
+- Tứ Tinh Thủ Hộ: cùng silhouette và bán kính 20; sao ceremonial có các mặt sáng tối vàng nhẹ, đồng nhất cho cả bốn cấp. Nền obsidian, viền và vòng nguyệt quế vàng.
+- Tổng Tư Lệnh: sao ceremonial riêng có tương phản kim loại mạnh hơn, bán kính **45 đơn vị**, lớn gấp 2,25 lần bán kính sao các cấp còn lại. Nền đỏ sâu, khung mười cạnh vàng và đúng năm cụm nguyệt quế đối xứng quanh tâm.
+- Khung ngũ giác, lục giác, bát giác và mười cạnh được dựng đối xứng; chồi lá/nhánh lá dùng các đường cong sạch. Không dùng noise, blur, bóng mờ ngoài huy hiệu, text hoặc nhãn trong asset.
+
+## Kích thước và hiển thị
+
+- PNG dùng trong game: `public/assets/rank-badges/`, giữ 24 tên file ổn định.
+- Vector master: `art/rank-badges/`, 24 SVG độc lập, không chứa ảnh nhúng. Nguồn chuẩn để chỉnh sửa và xuất lại là script dựng hình.
+- Canvas logic 224×224, safe padding 8 đơn vị; xuất trực tiếp thành PNG 896×896 từ vector, không phóng PNG 224 cũ. Lề alpha thực tế tối thiểu 32 pixel.
+- Nguồn 896 hỗ trợ huy hiệu Home ở 224 CSS px trên màn hình DPR đến 4. File lớn không tăng diện tích layout: wrapper tiếp tục dùng caller `size` / `--rank-badge-size`, ảnh `object-contain`, intrinsic width/height lấy từ `RANK_BADGE_SOURCE_SIZE`.
+- Tổng dung lượng 24 PNG: **2.021.316 byte**. SVG và ảnh tổng quan nằm ngoài `public`, không được tải vào UI game.
+
+## Registry và phạm vi code
+
+- `src/game/rankBadgeAssets.ts`: đủ 24 Badge ID hiện có, gồm Đại Thống Soái; ánh xạ URL và chiều rộng artwork đo từ alpha ≥128. Khai báo chung source size, logical size và safe padding. URL có hash nội dung để cache phân biệt ảnh mới.
+- `src/components/RankBadge.tsx`: intrinsic dimensions đổi sang hằng số 896; giữ nguyên props, nhãn truy cập, fallback, glow, khóa, current state và CSS scale.
+- `RankTierProgress` tiếp tục dùng `outerWidthRatio` từ registry, nên tự nhận tỷ lệ của artwork mới mà không cần thay logic thanh bậc.
+- `scripts/assets/render_rank_badges.cjs`: thay cho script cắt ảnh cũ đã xóa, dựng toàn bộ artwork bằng vector và xuất PNG/registry.
+- `docs/rank-badges-redraw.webp`: ảnh tổng quan để xem nhanh, không phải asset dùng trong game.
+
+Mọi nơi dùng component chung nhận artwork mới: Home và hai endpoint XP 50px, danh sách/chi tiết quân hàm, hành trình, nhiệm vụ hành trình, thử thách/lễ thăng cấp, hồ sơ, nhật ký, bộ chọn/huy hiệu trước ngực quân phục và điều kiện quân hàm trong Tăng Gia. Không đổi XP, ID/tên/thứ tự quân hàm, tierCount, save/migration, phần thưởng hoặc các tương tác.
+
+## Xuất lại
+
+Script cần Node.js và Sharp (lần xuất này dùng Sharp **0.35.4**, librsvg 2.62.91). Đây là công cụ authoring, không phải dependency runtime của game. Trỏ `NODE_PATH` đến bộ công cụ đã cài Sharp:
 
 ```sh
-python3 scripts/assets/extract_rank_badges.py /path/to/QL2_HuyHieu_AnhThamChieu
+NODE_PATH=/path/to/node_modules node scripts/assets/render_rank_badges.cjs
 ```
 
-Script cập nhật cả 24 PNG và registry. Nguồn lớn vẫn được giữ trong thư mục tham chiếu của người dùng; không cần đưa hơn 20MB ảnh bảng vào bundle game.
+Không truyền thư mục ảnh tham chiếu: renderer không nhận đầu vào raster. Khi chỉnh artwork, sửa script rồi xuất lại cả SVG master, PNG và registry. Hash/outer ratio được tính lại từ PNG mới.
 
-## File source thay đổi
+## Rà soát đã thực hiện
 
-- `src/components/RankBadge.tsx`: dùng `img`, giữ các props cũ, CSS variable `--rank-badge-size`, role/nhãn truy cập, trạng thái khóa và glow. Class glow được khử trùng lặp. ID lạ hoặc ảnh tải lỗi dùng placeholder trung tính, không mượn huy hiệu khác.
-- `src/game/rankBadgeAssets.ts`: registry tập trung cho 24 ID cũ và kích thước hiển thị đo từ PNG.
-- `src/components/RankTierProgress.tsx`: lấy chiều rộng artwork từ registry; giữ nguyên số đoạn, cách tô đoạn và animation bậc mới.
-- `src/components/RankPresentation.tsx`: sửa chú thích renderer sang PNG.
-- `scripts/assets/extract_rank_badges.py`: quy trình trích xuất có thể tái lập từ nguồn.
-- Xóa `src/components/rankBadgeGeometry.ts`, `scripts/audit-rank-badge-geometry.ts` và lệnh `audit:rank-badges` trong `package.json` vì chỉ còn phục vụ renderer SVG đã thay thế.
-
-## UI nhận cập nhật qua component chung
-
-- Trang chủ: huy hiệu chính, hai đầu thanh XP vẫn dùng `size={50}`.
-- Danh sách quân hàm, chi tiết quân hàm và thanh bậc.
-- Bản đồ hành trình và bảng nhiệm vụ hành trình.
-- Thử thách thăng cấp và lễ thăng cấp.
-- Thẻ hồ sơ và nhật ký quân hàm.
-- Bộ chọn quân hàm và huy hiệu trước ngực quân phục.
-- Điều kiện quân hàm trong Tăng Gia.
-
-Tên từ `RANK_FAMILIES` vẫn là nguồn chuẩn cho nhãn. Các bậc nhỏ trong cùng family dùng chung PNG. Button, click handler, focus, tooltip, phần XP và kích thước caller giữ nguyên. Metadata màu dùng cho quân phục/cầu vai cũng giữ nguyên.
-
-## Rà soát trong phạm vi cập nhật
-
-- Đối chiếu tĩnh: đủ 24 ID trong catalog, 24 đường dẫn khác nhau và 24 nội dung PNG khác nhau; không thiếu Đại Thống Soái.
-- Đọc metadata toàn bộ file: PNG RGBA 224×224, lề ngoài alpha trong suốt tối thiểu 8px, tỷ lệ chiều rộng registry khớp alpha. Tổng dung lượng PNG: 1.247.489 byte.
-- Xem trực tiếp asset trên nền sáng/tối: giữ đủ 1/2/3 vạch, 1/2/3 chữ V, các cụm 1/2/3/4 sao; không còn nhãn hoặc lưới bảng, không cắt viền hay xóa nền đen nội tại.
-- Rà mã nguồn: ảnh dùng `object-contain`, không mask/clip-path theo SVG cũ; tìm kiếm không còn tham chiếu helper hình học đã xóa.
-- `git diff --check` đạt. Không thay đổi dữ liệu quân hàm, tierCount, XP, save/migration, phần thưởng, huy chương hoặc logic quân phục.
-- Theo yêu cầu, không chạy test, QA giao diện, mô phỏng game hay build. Hành vi mobile/desktop được rà từ source và ràng buộc kích thước; không tuyên bố đã kiểm chứng bằng trình duyệt.
+- Đọc metadata: 24 ID khớp catalog, 24 PNG mới có nội dung khác nhau, đúng RGBA 896×896, alpha từ 0 đến 255, safe padding tối thiểu 32px. Tất cả nội dung khác PNG trước đó; hash URL và outer ratio khớp file.
+- Rà SVG: không nhúng bitmap, không text, không bộ lọc blur. Có tổng 30 sao flat, 10 sao ceremonial cho Thủ Hộ, một sao supreme; bán kính lần lượt 20/20/45; đúng năm cụm lá Tổng Tư Lệnh.
+- Xem trực tiếp asset trên nền sáng/tối và các cỡ 24/50/96/224px trong quá trình dựng hình. Đây là xem file artwork, không chạy game.
+- `git diff --check` đạt; mã XP, catalog/families, lưu trữ, các màn hình, HomeXpJourney và RankTierProgress không thay đổi.
+- Theo yêu cầu, không chạy test, QA giao diện, mô phỏng game hoặc build. Chưa kiểm chứng hành vi runtime bằng trình duyệt.
