@@ -137,6 +137,7 @@ export const RanksScreen: React.FC<RanksScreenProps> = ({ state, onDetailSheetTo
                                 <RankTierProgress
                                   currentTier={step.tier}
                                   tierCount={step.tierCount}
+                                  badge={family.badge}
                                   badgeSize={38}
                                   size="list"
                                 />

@@ -33,6 +33,7 @@ export const UniformRankCluster: React.FC<UniformRankClusterProps> = ({
         <RankTierProgress
           currentTier={filledSegments}
           tierCount={family.tierCount}
+          badge={family.badge}
           badgeSize={badgeSize}
           size="hero"
           showSingleTier={true}

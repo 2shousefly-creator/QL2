@@ -239,11 +239,10 @@
   padding-top: clamp(0.4rem, 1.25dvh, 0.8rem);
 }
 
-/* Width and viewport height jointly scale the badge. Shared variables keep the
-   tier bar and displayed-medal columns locked to the same proportion. */
+/* Width and viewport height jointly scale the badge. RankTierProgress derives
+   its exact width from this one rendered-size source plus badge geometry. */
 .home-rank-presentation {
   --rank-badge-size: clamp(176px, min(56vw, 27dvh), 224px);
-  --rank-tier-width: clamp(146px, min(46.5vw, 22.4dvh), 186px);
   --rank-medal-item-height: clamp(58.667px, min(18.667vw, 9dvh), 74.667px);
 }
 

@@ -242,6 +242,7 @@ export const JourneyMapScreen: React.FC<JourneyMapScreenProps> = ({
                             <RankTierProgress
                               currentTier={node.currentTier}
                               tierCount={node.family.tierCount}
+                              badge={node.family.badge}
                               badgeSize={56}
                               size="sm"
                             />

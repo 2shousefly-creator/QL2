@@ -95,7 +95,7 @@ export const BADGE_CATALOG: Record<string, BadgeDefinition> = {
   // 8. Thiếu Úy
   junior_1: {
     id: "badge_junior_1",
-    shape: "burst5",
+    shape: "pentagon",
     symbol: "stars",
     symbolCount: 1,
     starLayout: "center",
@@ -109,7 +109,7 @@ export const BADGE_CATALOG: Record<string, BadgeDefinition> = {
   // 9. Trung Úy
   junior_2: {
     id: "badge_junior_2",
-    shape: "burst5",
+    shape: "pentagon",
     symbol: "stars",
     symbolCount: 2,
     starLayout: "horizontal2",
@@ -123,7 +123,7 @@ export const BADGE_CATALOG: Record<string, BadgeDefinition> = {
   // 10. Thượng Úy
   junior_3: {
     id: "badge_junior_3",
-    shape: "burst5",
+    shape: "pentagon",
     symbol: "stars",
     symbolCount: 3,
     starLayout: "triangle3",
@@ -137,7 +137,7 @@ export const BADGE_CATALOG: Record<string, BadgeDefinition> = {
   // 11. Đại Úy
   junior_4: {
     id: "badge_junior_4",
-    shape: "burst5",
+    shape: "pentagon",
     symbol: "stars",
     symbolCount: 4,
     starLayout: "grid4",
@@ -151,7 +151,7 @@ export const BADGE_CATALOG: Record<string, BadgeDefinition> = {
   // 12. Thiếu Tá
   field_1: {
     id: "badge_field_1",
-    shape: "burst6",
+    shape: "hexagon",
     symbol: "stars",
     symbolCount: 1,
     starLayout: "center",
@@ -165,7 +165,7 @@ export const BADGE_CATALOG: Record<string, BadgeDefinition> = {
   // 13. Trung Tá
   field_2: {
     id: "badge_field_2",
-    shape: "burst6",
+    shape: "hexagon",
     symbol: "stars",
     symbolCount: 2,
     starLayout: "horizontal2",
@@ -179,7 +179,7 @@ export const BADGE_CATALOG: Record<string, BadgeDefinition> = {
   // 14. Thượng Tá
   field_3: {
     id: "badge_field_3",
-    shape: "burst6",
+    shape: "hexagon",
     symbol: "stars",
     symbolCount: 3,
     starLayout: "triangle3",
@@ -193,7 +193,7 @@ export const BADGE_CATALOG: Record<string, BadgeDefinition> = {
   // 15. Đại Tá
   field_4: {
     id: "badge_field_4",
-    shape: "burst6",
+    shape: "hexagon",
     symbol: "stars",
     symbolCount: 4,
     starLayout: "grid4",
@@ -207,7 +207,7 @@ export const BADGE_CATALOG: Record<string, BadgeDefinition> = {
   // 16. Thiếu Tướng
   general_1: {
     id: "badge_general_1",
-    shape: "burst7",
+    shape: "heptagon",
     symbol: "stars",
     symbolCount: 1,
     starLayout: "center",
@@ -221,7 +221,7 @@ export const BADGE_CATALOG: Record<string, BadgeDefinition> = {
   // 17. Trung Tướng
   general_2: {
     id: "badge_general_2",
-    shape: "burst7",
+    shape: "heptagon",
     symbol: "stars",
     symbolCount: 2,
     starLayout: "horizontal2",
@@ -235,7 +235,7 @@ export const BADGE_CATALOG: Record<string, BadgeDefinition> = {
   // 18. Thượng Tướng
   general_3: {
     id: "badge_general_3",
-    shape: "burst7",
+    shape: "heptagon",
     symbol: "stars",
     symbolCount: 3,
     starLayout: "triangle3",
@@ -249,7 +249,7 @@ export const BADGE_CATALOG: Record<string, BadgeDefinition> = {
   // 19. Đại Tướng
   general_4: {
     id: "badge_general_4",
-    shape: "burst7",
+    shape: "heptagon",
     symbol: "stars",
     symbolCount: 4,
     starLayout: "grid4",
@@ -263,13 +263,12 @@ export const BADGE_CATALOG: Record<string, BadgeDefinition> = {
   // 20. Thống Soái
   endgame_1: {
     id: "badge_endgame_1",
-    shape: "burst8",
-    innerLayer: "decagon10",
+    shape: "octagon",
     symbol: "stars",
     symbolCount: 1,
     starLayout: "center",
     basePalette: "obsidian",
-    framePalette: "#ffffff",
+    framePalette: "#f6c945",
     symbolPalette: "#facc15",
     glossLevel: 3,
     embossDepth: 3,
@@ -278,13 +277,12 @@ export const BADGE_CATALOG: Record<string, BadgeDefinition> = {
   // 21. Đại Thống Soái
   endgame_grand_marshal: {
     id: "badge_endgame_grand_marshal",
-    shape: "burst8",
-    innerLayer: "decagon10",
+    shape: "octagon",
     symbol: "stars",
     symbolCount: 2,
     starLayout: "horizontal2",
     basePalette: "obsidian",
-    framePalette: "#ffffff",
+    framePalette: "#f6c945",
     symbolPalette: "#facc15",
     glossLevel: 3,
     embossDepth: 3,
@@ -293,13 +291,12 @@ export const BADGE_CATALOG: Record<string, BadgeDefinition> = {
   // 22. Nguyên Soái
   endgame_2: {
     id: "badge_endgame_2",
-    shape: "burst8",
-    innerLayer: "decagon10",
+    shape: "octagon",
     symbol: "stars",
     symbolCount: 3,
     starLayout: "triangle3",
     basePalette: "obsidian",
-    framePalette: "#ffffff",
+    framePalette: "#f6c945",
     symbolPalette: "#facc15",
     glossLevel: 3,
     embossDepth: 3,
@@ -308,13 +305,12 @@ export const BADGE_CATALOG: Record<string, BadgeDefinition> = {
   // 23. Đại Nguyên Soái
   endgame_3: {
     id: "badge_endgame_3",
-    shape: "burst8",
-    innerLayer: "decagon10",
+    shape: "octagon",
     symbol: "stars",
     symbolCount: 4,
     starLayout: "grid4",
     basePalette: "obsidian",
-    framePalette: "#ffffff",
+    framePalette: "#f6c945",
     symbolPalette: "#facc15",
     glossLevel: 3,
     embossDepth: 3,
@@ -323,8 +319,7 @@ export const BADGE_CATALOG: Record<string, BadgeDefinition> = {
   // 24. Tổng Tư Lệnh
   endgame_4: {
     id: "badge_endgame_4",
-    shape: "burst9",
-    innerLayer: "star5",
+    shape: "nonagon",
     symbol: "stars",
     symbolCount: 1,
     starLayout: "center",
