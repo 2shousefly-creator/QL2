@@ -9,7 +9,6 @@
     "start": "node dist/server.cjs",
     "clean": "rm -rf dist server.js",
     "lint": "tsc --noEmit",
-    "audit:rank-badges": "tsx scripts/audit-rank-badge-geometry.ts",
     "test:gomoku": "tsx --test scripts/gomoku/core.test.ts scripts/gomoku/runtime.test.ts",
     "bench:gomoku": "tsx scripts/gomoku/benchmark.ts",
     "test:air-combat": "tsx src/features/entertainment/khong_kich/airCombatEngine.test.ts && tsx src/features/entertainment/khong_kich/airCombatRuntime.test.ts && tsx src/features/entertainment/khong_kich/airCombatStorage.test.ts",

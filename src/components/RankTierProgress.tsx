@@ -2,8 +2,8 @@ import React from "react";
 import type { BadgeDefinition, TierCount } from "../game/types";
 import {
   DEFAULT_RANK_BADGE_OUTER_WIDTH_RATIO,
-  getRankBadgeOuterWidthRatio,
-} from "./rankBadgeGeometry";
+  getRankBadgeAsset,
+} from "../game/rankBadgeAssets";
 
 type RankTierProgressProps = {
   currentTier: number;
@@ -39,12 +39,11 @@ export const RankTierProgress: React.FC<RankTierProgressProps> = ({
 
   const segments = Array.from({ length: tierCount }, (_, i) => i + 1);
 
-  // The discrete tier bar shares the badge's exact visible outer-border metric.
+  // Match the visible PNG artwork width, including its transparent safe margin.
   // Both siblings read the same responsive badge-size variable, so caller CSS
   // cannot resize one without the other.
-  const outerWidthRatio = badge
-    ? getRankBadgeOuterWidthRatio(badge)
-    : DEFAULT_RANK_BADGE_OUTER_WIDTH_RATIO;
+  const outerWidthRatio =
+    getRankBadgeAsset(badge?.id)?.outerWidthRatio ?? DEFAULT_RANK_BADGE_OUTER_WIDTH_RATIO;
   const widthStyle: React.CSSProperties | undefined = badgeSize
     ? {
         width: `calc(var(--rank-badge-size, ${badgeSize}px) * ${outerWidthRatio})`,

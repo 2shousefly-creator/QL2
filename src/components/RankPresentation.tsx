@@ -38,7 +38,7 @@ export const RankPresentation: React.FC<RankPresentationProps> = ({
 
   return (
     <div className={`flex flex-col items-center text-center select-none ${className}`}>
-      {/* 1. SVG Badge with Medals */}
+      {/* 1. PNG Badge with Medals */}
       <div className="relative flex items-center justify-center">
         {leftMedalsNode && (
           <div
