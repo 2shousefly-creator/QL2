@@ -1,0 +1,1002 @@
+{
+  "date": "2026-09-07T07:41:59.484Z",
+  "mode": "fixtures",
+  "ruleId": "ql2-infinite-freestyle-v1",
+  "platform": "win32",
+  "cpu": "Intel(R) Core(TM) i5-10400 CPU @ 2.90GHz",
+  "node": "v24.19.0",
+  "capMs": "profile defaults",
+  "profiles": {
+    "easy": {
+      "version": 1,
+      "timeMs": 200,
+      "nodes": 1200,
+      "maxDepth": 2,
+      "beam": 6,
+      "quiescence": 0,
+      "ttEntries": 2000,
+      "solverFraction": 0,
+      "solverNodes": 0,
+      "solverPlies": 0,
+      "vct": false,
+      "variety": 0.2
+    },
+    "medium": {
+      "version": 1,
+      "timeMs": 800,
+      "nodes": 12000,
+      "maxDepth": 4,
+      "beam": 10,
+      "quiescence": 2,
+      "ttEntries": 12000,
+      "solverFraction": 0.2,
+      "solverNodes": 2000,
+      "solverPlies": 9,
+      "vct": false,
+      "variety": 0.04
+    },
+    "hard": {
+      "version": 1,
+      "timeMs": 2800,
+      "nodes": 60000,
+      "maxDepth": 10,
+      "beam": 16,
+      "quiescence": 4,
+      "ttEntries": 40000,
+      "solverFraction": 0.4,
+      "solverNodes": 10000,
+      "solverPlies": 25,
+      "vct": true,
+      "variety": 0
+    }
+  },
+  "pairs": 2,
+  "maxPlies": 80,
+  "notes": [
+    "Fixtures are small independent oracle/certificate regressions, NOT expert-rated puzzles. Holdout frozen before benchmark tuning.",
+    "Unknown alternative moves are not automatically wrong; solved counts are lower bounds when acceptable set is incomplete.",
+    "Move-cap outcomes are unresolved, never game-rule draws. Opening pairs are swapped, not externally balance-certified.",
+    "Old engine lacks telemetry and a strict deadline; its timing is measured, not assumed. Heap is sampled process-wide, not isolated engine peak memory.",
+    "depthZeroUnknownMoves includes mandatory blocks returned immediately and is not the Worker fallback count. This direct engine harness does not exercise the Worker watchdog."
+  ],
+  "summary": [
+    {
+      "engine": "old-hard",
+      "moves": 11,
+      "meanMs": 34.61953636363634,
+      "p95Ms": 221.90560000000005,
+      "maxMs": 221.90560000000005,
+      "nodes": 0,
+      "maxDepth": 0,
+      "proofs": 0,
+      "timeouts": 0,
+      "maxTTEntries": 0,
+      "maxProcessHeapMiB": 18.031768798828125,
+      "depthZeroUnknownMoves": 0
+    },
+    {
+      "engine": "easy",
+      "moves": 11,
+      "meanMs": 2.3594545454545877,
+      "p95Ms": 14.486699999999985,
+      "maxMs": 14.486699999999985,
+      "nodes": 176,
+      "maxDepth": 2,
+      "proofs": 5,
+      "timeouts": 0,
+      "maxTTEntries": 6,
+      "maxProcessHeapMiB": 18.17839813232422,
+      "depthZeroUnknownMoves": 2
+    },
+    {
+      "engine": "medium",
+      "moves": 11,
+      "meanMs": 17.250754545454487,
+      "p95Ms": 136.25349999999997,
+      "maxMs": 136.25349999999997,
+      "nodes": 538,
+      "maxDepth": 2,
+      "proofs": 8,
+      "timeouts": 0,
+      "maxTTEntries": 10,
+      "maxProcessHeapMiB": 18.051963806152344,
+      "depthZeroUnknownMoves": 2
+    },
+    {
+      "engine": "hard",
+      "moves": 11,
+      "meanMs": 86.24970909090909,
+      "p95Ms": 895.4715000000001,
+      "maxMs": 895.4715000000001,
+      "nodes": 459,
+      "maxDepth": 1,
+      "proofs": 9,
+      "timeouts": 0,
+      "maxTTEntries": 0,
+      "maxProcessHeapMiB": 17.849929809570312,
+      "depthZeroUnknownMoves": 2
+    }
+  ],
+  "rows": [
+    {
+      "fixture": "broken-four",
+      "split": "development",
+      "engine": "old-hard",
+      "move": {
+        "x": 2,
+        "y": 0
+      },
+      "accepted": true,
+      "verifiedProof": false,
+      "solved": true,
+      "ms": 0.7207000000000079,
+      "nodes": null,
+      "depth": null,
+      "proof": false,
+      "timeout": false,
+      "fallback": false,
+      "ttEntries": null,
+      "heap": 10505448
+    },
+    {
+      "fixture": "broken-four",
+      "split": "development",
+      "engine": "easy",
+      "move": {
+        "x": 2,
+        "y": 0
+      },
+      "accepted": true,
+      "verifiedProof": true,
+      "solved": true,
+      "ms": 1.4801000000000073,
+      "nodes": 0,
+      "depth": 0,
+      "proof": true,
+      "timeout": false,
+      "fallback": false,
+      "ttEntries": 0,
+      "heap": 8798000
+    },
+    {
+      "fixture": "broken-four",
+      "split": "development",
+      "engine": "medium",
+      "move": {
+        "x": 2,
+        "y": 0
+      },
+      "accepted": true,
+      "verifiedProof": true,
+      "solved": true,
+      "ms": 0.15640000000000498,
+      "nodes": 0,
+      "depth": 0,
+      "proof": true,
+      "timeout": false,
+      "fallback": false,
+      "ttEntries": 0,
+      "heap": 9061152
+    },
+    {
+      "fixture": "broken-four",
+      "split": "development",
+      "engine": "hard",
+      "move": {
+        "x": 2,
+        "y": 0
+      },
+      "accepted": true,
+      "verifiedProof": true,
+      "solved": true,
+      "ms": 0.14620000000000744,
+      "nodes": 0,
+      "depth": 0,
+      "proof": true,
+      "timeout": false,
+      "fallback": false,
+      "ttEntries": 0,
+      "heap": 9340792
+    },
+    {
+      "fixture": "open-four",
+      "split": "development",
+      "engine": "old-hard",
+      "move": {
+        "x": -1,
+        "y": 0
+      },
+      "accepted": true,
+      "verifiedProof": false,
+      "solved": true,
+      "ms": 0.2483000000000004,
+      "nodes": null,
+      "depth": null,
+      "proof": false,
+      "timeout": false,
+      "fallback": false,
+      "ttEntries": null,
+      "heap": 9623712
+    },
+    {
+      "fixture": "open-four",
+      "split": "development",
+      "engine": "easy",
+      "move": {
+        "x": -1,
+        "y": 0
+      },
+      "accepted": true,
+      "verifiedProof": true,
+      "solved": true,
+      "ms": 0.10009999999999764,
+      "nodes": 0,
+      "depth": 0,
+      "proof": true,
+      "timeout": false,
+      "fallback": false,
+      "ttEntries": 0,
+      "heap": 9861136
+    },
+    {
+      "fixture": "open-four",
+      "split": "development",
+      "engine": "medium",
+      "move": {
+        "x": -1,
+        "y": 0
+      },
+      "accepted": true,
+      "verifiedProof": true,
+      "solved": true,
+      "ms": 0.10970000000000368,
+      "nodes": 0,
+      "depth": 0,
+      "proof": true,
+      "timeout": false,
+      "fallback": false,
+      "ttEntries": 0,
+      "heap": 10132872
+    },
+    {
+      "fixture": "open-four",
+      "split": "development",
+      "engine": "hard",
+      "move": {
+        "x": -1,
+        "y": 0
+      },
+      "accepted": true,
+      "verifiedProof": true,
+      "solved": true,
+      "ms": 0.12220000000000653,
+      "nodes": 0,
+      "depth": 0,
+      "proof": true,
+      "timeout": false,
+      "fallback": false,
+      "ttEntries": 0,
+      "heap": 10402656
+    },
+    {
+      "fixture": "block-far-cluster",
+      "split": "development",
+      "engine": "old-hard",
+      "move": {
+        "x": 1002,
+        "y": -500
+      },
+      "accepted": true,
+      "verifiedProof": false,
+      "solved": true,
+      "ms": 2.5498000000000047,
+      "nodes": null,
+      "depth": null,
+      "proof": false,
+      "timeout": false,
+      "fallback": false,
+      "ttEntries": null,
+      "heap": 11407504
+    },
+    {
+      "fixture": "block-far-cluster",
+      "split": "development",
+      "engine": "easy",
+      "move": {
+        "x": 1002,
+        "y": -500
+      },
+      "accepted": true,
+      "verifiedProof": false,
+      "solved": true,
+      "ms": 0.3101999999999947,
+      "nodes": 0,
+      "depth": 0,
+      "proof": false,
+      "timeout": false,
+      "fallback": true,
+      "ttEntries": 0,
+      "heap": 11919592
+    },
+    {
+      "fixture": "block-far-cluster",
+      "split": "development",
+      "engine": "medium",
+      "move": {
+        "x": 1002,
+        "y": -500
+      },
+      "accepted": true,
+      "verifiedProof": false,
+      "solved": true,
+      "ms": 0.18640000000000612,
+      "nodes": 0,
+      "depth": 0,
+      "proof": false,
+      "timeout": false,
+      "fallback": true,
+      "ttEntries": 0,
+      "heap": 12400776
+    },
+    {
+      "fixture": "block-far-cluster",
+      "split": "development",
+      "engine": "hard",
+      "move": {
+        "x": 1002,
+        "y": -500
+      },
+      "accepted": true,
+      "verifiedProof": false,
+      "solved": true,
+      "ms": 0.5117000000000047,
+      "nodes": 0,
+      "depth": 0,
+      "proof": false,
+      "timeout": false,
+      "fallback": true,
+      "ttEntries": 0,
+      "heap": 9088016
+    },
+    {
+      "fixture": "cross-three",
+      "split": "development",
+      "engine": "old-hard",
+      "move": {
+        "x": -2,
+        "y": -1
+      },
+      "accepted": false,
+      "verifiedProof": false,
+      "solved": false,
+      "ms": 152.7926,
+      "nodes": null,
+      "depth": null,
+      "proof": false,
+      "timeout": false,
+      "fallback": false,
+      "ttEntries": null,
+      "heap": 11078488
+    },
+    {
+      "fixture": "cross-three",
+      "split": "development",
+      "engine": "easy",
+      "move": {
+        "x": 0,
+        "y": 0
+      },
+      "accepted": true,
+      "verifiedProof": false,
+      "solved": true,
+      "ms": 14.486699999999985,
+      "nodes": 50,
+      "depth": 2,
+      "proof": false,
+      "timeout": false,
+      "fallback": false,
+      "ttEntries": 6,
+      "heap": 11065296
+    },
+    {
+      "fixture": "cross-three",
+      "split": "development",
+      "engine": "medium",
+      "move": {
+        "x": 0,
+        "y": 0
+      },
+      "accepted": true,
+      "verifiedProof": false,
+      "solved": true,
+      "ms": 136.25349999999997,
+      "nodes": 476,
+      "depth": 2,
+      "proof": false,
+      "timeout": false,
+      "fallback": false,
+      "ttEntries": 10,
+      "heap": 13813056
+    },
+    {
+      "fixture": "cross-three",
+      "split": "development",
+      "engine": "hard",
+      "move": {
+        "x": 0,
+        "y": 0
+      },
+      "accepted": true,
+      "verifiedProof": true,
+      "solved": true,
+      "ms": 895.4715000000001,
+      "nodes": 379,
+      "depth": 1,
+      "proof": true,
+      "timeout": false,
+      "fallback": false,
+      "ttEntries": 0,
+      "heap": 17171736
+    },
+    {
+      "fixture": "seven-ply-ladder",
+      "split": "development",
+      "engine": "old-hard",
+      "move": {
+        "x": 2,
+        "y": 3
+      },
+      "accepted": false,
+      "verifiedProof": false,
+      "solved": false,
+      "ms": 221.90560000000005,
+      "nodes": null,
+      "depth": null,
+      "proof": false,
+      "timeout": false,
+      "fallback": false,
+      "ttEntries": null,
+      "heap": 18907680
+    },
+    {
+      "fixture": "seven-ply-ladder",
+      "split": "development",
+      "engine": "easy",
+      "move": {
+        "x": 3,
+        "y": 3
+      },
+      "accepted": false,
+      "verifiedProof": false,
+      "solved": false,
+      "ms": 2.4288000000001375,
+      "nodes": 42,
+      "depth": 2,
+      "proof": false,
+      "timeout": false,
+      "fallback": false,
+      "ttEntries": 6,
+      "heap": 12619064
+    },
+    {
+      "fixture": "seven-ply-ladder",
+      "split": "development",
+      "engine": "medium",
+      "move": {
+        "x": 0,
+        "y": -1
+      },
+      "accepted": false,
+      "verifiedProof": true,
+      "solved": true,
+      "ms": 31.696100000000115,
+      "nodes": 29,
+      "depth": 1,
+      "proof": true,
+      "timeout": false,
+      "fallback": false,
+      "ttEntries": 0,
+      "heap": 14512512
+    },
+    {
+      "fixture": "seven-ply-ladder",
+      "split": "development",
+      "engine": "hard",
+      "move": {
+        "x": 0,
+        "y": -1
+      },
+      "accepted": false,
+      "verifiedProof": true,
+      "solved": true,
+      "ms": 31.421600000000126,
+      "nodes": 35,
+      "depth": 1,
+      "proof": true,
+      "timeout": false,
+      "fallback": false,
+      "ttEntries": 0,
+      "heap": 12925472
+    },
+    {
+      "fixture": "holdout-two-gap-completion",
+      "split": "holdout",
+      "engine": "old-hard",
+      "move": {
+        "x": -6,
+        "y": 6
+      },
+      "accepted": true,
+      "verifiedProof": false,
+      "solved": true,
+      "ms": 0.07029999999986103,
+      "nodes": null,
+      "depth": null,
+      "proof": false,
+      "timeout": false,
+      "fallback": false,
+      "ttEntries": null,
+      "heap": 17874360
+    },
+    {
+      "fixture": "holdout-two-gap-completion",
+      "split": "holdout",
+      "engine": "easy",
+      "move": {
+        "x": -6,
+        "y": 6
+      },
+      "accepted": true,
+      "verifiedProof": true,
+      "solved": true,
+      "ms": 0.07319999999981519,
+      "nodes": 0,
+      "depth": 0,
+      "proof": true,
+      "timeout": false,
+      "fallback": false,
+      "ttEntries": 0,
+      "heap": 17987928
+    },
+    {
+      "fixture": "holdout-two-gap-completion",
+      "split": "holdout",
+      "engine": "medium",
+      "move": {
+        "x": -6,
+        "y": 6
+      },
+      "accepted": true,
+      "verifiedProof": true,
+      "solved": true,
+      "ms": 0.052299999999831925,
+      "nodes": 0,
+      "depth": 0,
+      "proof": true,
+      "timeout": false,
+      "fallback": false,
+      "ttEntries": 0,
+      "heap": 18111056
+    },
+    {
+      "fixture": "holdout-two-gap-completion",
+      "split": "holdout",
+      "engine": "hard",
+      "move": {
+        "x": -6,
+        "y": 6
+      },
+      "accepted": true,
+      "verifiedProof": true,
+      "solved": true,
+      "ms": 0.047000000000025466,
+      "nodes": 0,
+      "depth": 0,
+      "proof": true,
+      "timeout": false,
+      "fallback": false,
+      "ttEntries": 0,
+      "heap": 18235392
+    },
+    {
+      "fixture": "holdout-six-connection",
+      "split": "holdout",
+      "engine": "old-hard",
+      "move": {
+        "x": 24,
+        "y": -9
+      },
+      "accepted": true,
+      "verifiedProof": false,
+      "solved": true,
+      "ms": 0.056599999999889405,
+      "nodes": null,
+      "depth": null,
+      "proof": false,
+      "timeout": false,
+      "fallback": false,
+      "ttEntries": null,
+      "heap": 18355096
+    },
+    {
+      "fixture": "holdout-six-connection",
+      "split": "holdout",
+      "engine": "easy",
+      "move": {
+        "x": 24,
+        "y": -9
+      },
+      "accepted": true,
+      "verifiedProof": true,
+      "solved": true,
+      "ms": 0.05040000000008149,
+      "nodes": 0,
+      "depth": 0,
+      "proof": true,
+      "timeout": false,
+      "fallback": false,
+      "ttEntries": 0,
+      "heap": 18469584
+    },
+    {
+      "fixture": "holdout-six-connection",
+      "split": "holdout",
+      "engine": "medium",
+      "move": {
+        "x": 24,
+        "y": -9
+      },
+      "accepted": true,
+      "verifiedProof": true,
+      "solved": true,
+      "ms": 0.04839999999967404,
+      "nodes": 0,
+      "depth": 0,
+      "proof": true,
+      "timeout": false,
+      "fallback": false,
+      "ttEntries": 0,
+      "heap": 18593272
+    },
+    {
+      "fixture": "holdout-six-connection",
+      "split": "holdout",
+      "engine": "hard",
+      "move": {
+        "x": 24,
+        "y": -9
+      },
+      "accepted": true,
+      "verifiedProof": true,
+      "solved": true,
+      "ms": 0.04849999999987631,
+      "nodes": 0,
+      "depth": 0,
+      "proof": true,
+      "timeout": false,
+      "fallback": false,
+      "ttEntries": 0,
+      "heap": 18717008
+    },
+    {
+      "fixture": "holdout-counter-kill",
+      "split": "holdout",
+      "engine": "old-hard",
+      "move": {
+        "x": 8,
+        "y": 0
+      },
+      "accepted": true,
+      "verifiedProof": false,
+      "solved": true,
+      "ms": 0.11540000000013606,
+      "nodes": null,
+      "depth": null,
+      "proof": false,
+      "timeout": false,
+      "fallback": false,
+      "ttEntries": null,
+      "heap": 18892968
+    },
+    {
+      "fixture": "holdout-counter-kill",
+      "split": "holdout",
+      "engine": "easy",
+      "move": {
+        "x": 8,
+        "y": 0
+      },
+      "accepted": true,
+      "verifiedProof": true,
+      "solved": true,
+      "ms": 0.06919999999990978,
+      "nodes": 0,
+      "depth": 0,
+      "proof": true,
+      "timeout": false,
+      "fallback": false,
+      "ttEntries": 0,
+      "heap": 19061432
+    },
+    {
+      "fixture": "holdout-counter-kill",
+      "split": "holdout",
+      "engine": "medium",
+      "move": {
+        "x": 8,
+        "y": 0
+      },
+      "accepted": true,
+      "verifiedProof": true,
+      "solved": true,
+      "ms": 0.3022000000000844,
+      "nodes": 0,
+      "depth": 0,
+      "proof": true,
+      "timeout": false,
+      "fallback": false,
+      "ttEntries": 0,
+      "heap": 10939536
+    },
+    {
+      "fixture": "holdout-counter-kill",
+      "split": "holdout",
+      "engine": "hard",
+      "move": {
+        "x": 8,
+        "y": 0
+      },
+      "accepted": true,
+      "verifiedProof": true,
+      "solved": true,
+      "ms": 0.06870000000026266,
+      "nodes": 0,
+      "depth": 0,
+      "proof": true,
+      "timeout": false,
+      "fallback": false,
+      "ttEntries": 0,
+      "heap": 11123584
+    },
+    {
+      "fixture": "holdout-four-three",
+      "split": "holdout",
+      "engine": "old-hard",
+      "move": {
+        "x": 9,
+        "y": 7
+      },
+      "accepted": false,
+      "verifiedProof": false,
+      "solved": false,
+      "ms": 0.9768999999996595,
+      "nodes": null,
+      "depth": null,
+      "proof": false,
+      "timeout": false,
+      "fallback": false,
+      "ttEntries": null,
+      "heap": 12075112
+    },
+    {
+      "fixture": "holdout-four-three",
+      "split": "holdout",
+      "engine": "easy",
+      "move": {
+        "x": -1,
+        "y": -1
+      },
+      "accepted": false,
+      "verifiedProof": false,
+      "solved": false,
+      "ms": 3.7470000000002983,
+      "nodes": 44,
+      "depth": 2,
+      "proof": false,
+      "timeout": false,
+      "fallback": false,
+      "ttEntries": 6,
+      "heap": 15516704
+    },
+    {
+      "fixture": "holdout-four-three",
+      "split": "holdout",
+      "engine": "medium",
+      "move": {
+        "x": 0,
+        "y": 0
+      },
+      "accepted": true,
+      "verifiedProof": true,
+      "solved": true,
+      "ms": 13.628099999999904,
+      "nodes": 18,
+      "depth": 1,
+      "proof": true,
+      "timeout": false,
+      "fallback": false,
+      "ttEntries": 0,
+      "heap": 18928856
+    },
+    {
+      "fixture": "holdout-four-three",
+      "split": "holdout",
+      "engine": "hard",
+      "move": {
+        "x": 0,
+        "y": 0
+      },
+      "accepted": true,
+      "verifiedProof": true,
+      "solved": true,
+      "ms": 13.779099999999744,
+      "nodes": 24,
+      "depth": 1,
+      "proof": true,
+      "timeout": false,
+      "fallback": false,
+      "ttEntries": 0,
+      "heap": 16761824
+    },
+    {
+      "fixture": "holdout-cross-cost",
+      "split": "holdout",
+      "engine": "old-hard",
+      "move": {
+        "x": -3,
+        "y": -1
+      },
+      "accepted": false,
+      "verifiedProof": false,
+      "solved": false,
+      "ms": 0.8551000000002205,
+      "nodes": null,
+      "depth": null,
+      "proof": false,
+      "timeout": false,
+      "fallback": false,
+      "ttEntries": null,
+      "heap": 11972664
+    },
+    {
+      "fixture": "holdout-cross-cost",
+      "split": "holdout",
+      "engine": "easy",
+      "move": {
+        "x": 0,
+        "y": 0
+      },
+      "accepted": true,
+      "verifiedProof": false,
+      "solved": true,
+      "ms": 3.1278000000002066,
+      "nodes": 40,
+      "depth": 2,
+      "proof": false,
+      "timeout": false,
+      "fallback": false,
+      "ttEntries": 5,
+      "heap": 14752024
+    },
+    {
+      "fixture": "holdout-cross-cost",
+      "split": "holdout",
+      "engine": "medium",
+      "move": {
+        "x": 0,
+        "y": 0
+      },
+      "accepted": true,
+      "verifiedProof": true,
+      "solved": true,
+      "ms": 7.259900000000016,
+      "nodes": 15,
+      "depth": 1,
+      "proof": true,
+      "timeout": false,
+      "fallback": false,
+      "ttEntries": 0,
+      "heap": 15290600
+    },
+    {
+      "fixture": "holdout-cross-cost",
+      "split": "holdout",
+      "engine": "hard",
+      "move": {
+        "x": 0,
+        "y": 0
+      },
+      "accepted": true,
+      "verifiedProof": true,
+      "solved": true,
+      "ms": 7.067000000000007,
+      "nodes": 21,
+      "depth": 1,
+      "proof": true,
+      "timeout": false,
+      "fallback": false,
+      "ttEntries": 0,
+      "heap": 18448640
+    },
+    {
+      "fixture": "holdout-remote-defense",
+      "split": "holdout",
+      "engine": "old-hard",
+      "move": {
+        "x": 8000,
+        "y": 9003
+      },
+      "accepted": true,
+      "verifiedProof": false,
+      "solved": true,
+      "ms": 0.5235999999999876,
+      "nodes": null,
+      "depth": null,
+      "proof": false,
+      "timeout": false,
+      "fallback": false,
+      "ttEntries": null,
+      "heap": 16013608
+    },
+    {
+      "fixture": "holdout-remote-defense",
+      "split": "holdout",
+      "engine": "easy",
+      "move": {
+        "x": 8000,
+        "y": 9003
+      },
+      "accepted": true,
+      "verifiedProof": false,
+      "solved": true,
+      "ms": 0.0805000000000291,
+      "nodes": 0,
+      "depth": 0,
+      "proof": false,
+      "timeout": false,
+      "fallback": true,
+      "ttEntries": 0,
+      "heap": 16179272
+    },
+    {
+      "fixture": "holdout-remote-defense",
+      "split": "holdout",
+      "engine": "medium",
+      "move": {
+        "x": 8000,
+        "y": 9003
+      },
+      "accepted": true,
+      "verifiedProof": false,
+      "solved": true,
+      "ms": 0.06529999999975189,
+      "nodes": 0,
+      "depth": 0,
+      "proof": false,
+      "timeout": false,
+      "fallback": true,
+      "ttEntries": 0,
+      "heap": 16344688
+    },
+    {
+      "fixture": "holdout-remote-defense",
+      "split": "holdout",
+      "engine": "hard",
+      "move": {
+        "x": 8000,
+        "y": 9003
+      },
+      "accepted": true,
+      "verifiedProof": false,
+      "solved": true,
+      "ms": 0.06329999999979918,
+      "nodes": 0,
+      "depth": 0,
+      "proof": false,
+      "timeout": false,
+      "fallback": true,
+      "ttEntries": 0,
+      "heap": 16509944
+    }
+  ]
+}

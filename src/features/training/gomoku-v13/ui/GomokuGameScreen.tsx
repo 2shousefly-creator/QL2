@@ -18,6 +18,8 @@ import { selectWinningFive, StoneDrawAnimations, WIN_CELEBRATION_MS, WinCelebrat
 import { PointerGestureController } from "../input/PointerGestureController";
 import { KeyboardController } from "../input/KeyboardController";
 import { AiWorkerClient } from "../ai/AiWorkerClient";
+import { AI_PROTOCOL_VERSION, identityOf, type AiRequest } from "../ai/aiTypes";
+import { GOMOKU_RULE_ID } from "../domain/GomokuRules";
 import { processGomokuResultReward } from "../integration/gomokuRewardAdapter";
 import { recordTrainingRunForMasteryAndMedals } from "../../../../game/medals/medalEngine";
 import { GomokuResultModal } from "./GomokuResultModal";
@@ -78,7 +80,8 @@ export const GomokuGameScreen: React.FC<GomokuGameScreenProps> = ({
   const schedulerRef = useRef<RenderScheduler | null>(null);
   const gestureControllerRef = useRef<PointerGestureController | null>(null);
   const keyboardControllerRef = useRef<KeyboardController | null>(null);
-  const aiClientRef = useRef<AiWorkerClient>(new AiWorkerClient());
+  const [aiClient] = useState(() => new AiWorkerClient());
+  const aiClientRef = useRef(aiClient);
   const pendingAiStartRef = useRef<(() => void) | null>(null);
 
   const matchStateRef = useRef<GomokuMatchState>(matchState);
@@ -242,7 +245,7 @@ export const GomokuGameScreen: React.FC<GomokuGameScreenProps> = ({
       gestureController.detach();
       scheduler.cancel();
       schedulerRef.current = null;
-      aiClientRef.current.cancelActiveRequest();
+      aiClientRef.current.dispose();
     };
   }, [handlePlayerPlace, requestRender]);
 
@@ -273,30 +276,28 @@ export const GomokuGameScreen: React.FC<GomokuGameScreenProps> = ({
   useEffect(() => {
     if (matchState.phase === "ai_turn") {
       const requestId = `req_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`;
-
+      let active = true;
+      const request: AiRequest = {
+        protocolVersion: AI_PROTOCOL_VERSION, ruleId: GOMOKU_RULE_ID,
+        matchId: matchState.matchId, requestId, boardRevision: matchState.stones.length,
+        sideToMove: matchState.aiMark, aiMark: matchState.aiMark, playerMark: matchState.playerMark,
+        difficulty: matchState.difficulty, stones: matchState.stones, seed: matchState.seed,
+      };
+      setMatchState(prev => matchReducer(prev, { type: "AI_BEGIN", identity: identityOf(request) }));
       const startAi = () => aiClientRef.current
-        .computeMove(
-          matchState.matchId,
-          matchState.stones,
-          matchState.aiMark,
-          matchState.playerMark,
-          matchState.difficulty,
-          requestId
-        )
-        .then(({ requestId: resReqId, move }) => {
-          if (matchStateRef.current.matchId === matchState.matchId && matchStateRef.current.phase === "ai_turn") {
-            soundManager.playClick();
-            setMatchState((prev) =>
-              matchReducer(prev, {
-                type: "AI_PLACE",
-                point: move,
-                requestId: resReqId,
-              })
-            );
-          }
+        .computeMove(request)
+        .then(response => {
+          if (!active || response.status === "cancelled") return;
+          if (response.move) {
+            setMatchState(prev => matchReducer(prev, {
+              type: "AI_PLACE", point: response.move!, identity: identityOf(response),
+            }));
+            if (matchStateRef.current.matchId === request.matchId && matchStateRef.current.phase === "ai_turn") soundManager.playClick();
+          } else setMatchState(prev => matchReducer(prev, { type: "AI_FAILED", identity: identityOf(request) }));
+        }).catch(() => {
+          if (active) setMatchState(prev => matchReducer(prev, { type: "AI_FAILED", identity: identityOf(request) }));
         });
-      // Search currently runs on the main thread. Let the player's ink finish
-      // before starting that work; the search algorithm and budgets stay intact.
+      // Preserve the ink timing; all AI computation then runs in a real Worker.
       if (matchState.stones.length > 0) {
         pendingAiStartRef.current = startAi;
         requestRender();
@@ -304,11 +305,12 @@ export const GomokuGameScreen: React.FC<GomokuGameScreenProps> = ({
         startAi();
       }
       return () => {
+        active = false;
         pendingAiStartRef.current = null;
         aiClientRef.current.cancelActiveRequest();
       };
     }
-  }, [matchState.phase, matchState.matchId, matchState.stones, matchState.aiMark, matchState.playerMark, matchState.difficulty, requestRender]);
+  }, [matchState.phase, matchState.matchId, matchState.stones, matchState.aiMark, matchState.playerMark, matchState.difficulty, matchState.seed, requestRender]);
 
   // 6. Handle Game Finish (Result & Reward)
   useEffect(() => {
@@ -513,6 +515,13 @@ export const GomokuGameScreen: React.FC<GomokuGameScreenProps> = ({
             <span className="text-xs font-bold text-[#245aa8] bg-[#245aa8]/10 border border-[#245aa8]/25 px-2 sm:px-3 py-1 rounded-full text-center">
               Lượt Bạn ({matchState.playerMark})
             </span>
+          ) : matchState.phase === "error" ? (
+            <div role="alert" className="text-xs text-[#b33e3e] text-center">
+              <span>Máy chưa thể hoàn tất nước đi. Ván cờ được giữ nguyên.</span>
+              {matchState.aiRetries < 2 && <button type="button"
+                className="ml-2 underline font-bold p-2"
+                onClick={() => setMatchState(prev => matchReducer(prev, { type: "AI_RETRY" }))}>Thử lại</button>}
+            </div>
           ) : (
             <span className="text-xs font-bold text-[#574c3c] bg-[#eee4d1] px-2 sm:px-3 py-1 rounded-full text-center">
               {isCelebrating ? "Chuỗi 5 quân chiến thắng" : "Trận Đấu Kết Thúc"}
@@ -527,7 +536,7 @@ export const GomokuGameScreen: React.FC<GomokuGameScreenProps> = ({
         <button
           type="button"
           onClick={handleResign}
-          disabled={matchState.phase === "player_won" || matchState.phase === "ai_won" || matchState.phase === "resigned"}
+          disabled={matchState.phase === "player_won" || matchState.phase === "ai_won" || matchState.phase === "resigned" || matchState.phase === "error"}
           className="p-2 rounded-xl bg-[#c94a4a]/10 border border-[#c94a4a]/25 text-[#b33e3e] hover:bg-[#c94a4a]/15 disabled:opacity-40"
           title="Đầu hàng"
         >

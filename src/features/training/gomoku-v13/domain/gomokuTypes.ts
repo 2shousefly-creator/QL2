@@ -1,3 +1,5 @@
+import type { AiIdentity } from "../ai/aiTypes";
+
 export type GomokuDifficulty = "easy" | "medium" | "hard";
 export type GomokuMark = "X" | "O";
 export type GomokuActor = "player" | "ai";
@@ -48,6 +50,8 @@ export type GomokuMatchState = Readonly<{
   lastMove: Stone | null;
   winningLine: readonly BoardPoint[] | null;
   aiRequestId: string | null;
+  aiRequest: AiIdentity | null;
+  aiRetries: number;
   resultCommitted: boolean;
   startedAtEpochMs: number;
 }>;
@@ -56,7 +60,10 @@ export type GomokuCommand =
   | { type: "START_MATCH"; difficulty: GomokuDifficulty; playerMark: GomokuMark }
   | { type: "FINISH_STARTER_REVEAL" }
   | { type: "PLAYER_PLACE"; point: BoardPoint }
-  | { type: "AI_PLACE"; point: BoardPoint; requestId: string }
+  | { type: "AI_BEGIN"; identity: AiIdentity }
+  | { type: "AI_PLACE"; point: BoardPoint; identity: AiIdentity }
+  | { type: "AI_FAILED"; identity: AiIdentity }
+  | { type: "AI_RETRY" }
   | { type: "PAUSE" }
   | { type: "RESUME" }
   | { type: "RESIGN" }
