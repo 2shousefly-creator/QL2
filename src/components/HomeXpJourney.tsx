@@ -107,6 +107,7 @@ export const HomeXpJourney: React.FC<HomeXpJourneyProps> = ({
               <RankTierProgress
                 currentTier={currentRank.tier || 1}
                 tierCount={currentFamily.tierCount}
+                badge={currentFamily.badge}
                 badgeSize={50}
                 size="list"
                 className="!my-0"
@@ -221,6 +222,7 @@ export const HomeXpJourney: React.FC<HomeXpJourneyProps> = ({
                   <RankTierProgress
                     currentTier={nextRank.tier || 1}
                     tierCount={nextFamily.tierCount}
+                    badge={nextFamily.badge}
                     badgeSize={50}
                     size="list"
                     className="!my-0"

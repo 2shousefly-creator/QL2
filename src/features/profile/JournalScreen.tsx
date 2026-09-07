@@ -332,6 +332,7 @@ const JournalEntryCard: React.FC<JournalEntryCardProps> = ({ item, isHistorical,
                     <RankTierProgress
                       currentTier={rankStep.tier}
                       tierCount={rankStep.tierCount}
+                      badge={family.badge}
                       badgeSize={36}
                       size="list"
                     />
@@ -424,6 +425,7 @@ const JournalDetailModal: React.FC<{
                         <RankTierProgress
                           currentTier={rankStep.tier}
                           tierCount={rankStep.tierCount}
+                          badge={family.badge}
                           badgeSize={56}
                           size="list"
                         />

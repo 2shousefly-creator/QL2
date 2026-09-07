@@ -72,6 +72,7 @@ export const RankPresentation: React.FC<RankPresentationProps> = ({
           <RankTierProgress
             currentTier={rankStep.tier!}
             tierCount={rankStep.tierCount}
+            badge={family.badge}
             badgeSize={badgeSize}
             animateNewTier={animateNewTier}
             size={badgeSize >= 120 ? "hero" : "list"}
