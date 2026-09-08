@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowLeft, ShieldCheck } from "lucide-react";
 import { getPlayerFamily, getPlayerRank } from "../../game/selectors";
 import { soundManager } from "../../game/audio";
@@ -6,6 +6,7 @@ import type { GameState } from "../../game/types";
 import type { MedalDefinition } from "../../game/medals/medalCatalog";
 import { MedalInspectModal } from "../../components/MedalInspectModal";
 import { getUniformArtConfig } from "./uniform/uniformArtCatalog";
+import { loadUniformSprites } from "./uniform/loadUniformSprites";
 import { UniformPortrait } from "./uniform/UniformPortrait";
 import { UniformRankSelector } from "./uniform/UniformRankSelector";
 import {
@@ -36,11 +37,24 @@ export const UniformScreen: React.FC<UniformScreenProps> = ({ state, onBack }) =
     [state.progression.currentRankIndex, state.progression.promotionHistory]
   );
   const [selectedFamilyId, setSelectedFamilyId] = useState(currentFamily.id);
+  const [previewStatus, setPreviewStatus] = useState("");
+  const previewRequest = useRef(0);
   const [inspectingMedal, setInspectingMedal] = useState<MedalDefinition | null>(null);
 
   useEffect(() => {
+    previewRequest.current += 1;
     setSelectedFamilyId(currentFamily.id);
+    setPreviewStatus("");
+    return () => { previewRequest.current += 1; };
   }, [currentFamily.id]);
+
+  useEffect(() => {
+    const index = unlockedFamilies.findIndex((family) => family.id === selectedFamilyId);
+    // Warm only adjacent choices; avoid downloading all 24 uniforms on mobile.
+    for (const family of unlockedFamilies.slice(Math.max(0, index - 1), index + 2)) {
+      void loadUniformSprites(family.id).catch(() => undefined);
+    }
+  }, [selectedFamilyId, unlockedFamilies]);
 
   const selectedFamily =
     unlockedFamilies.find((family) => family.id === selectedFamilyId) ?? currentFamily;
@@ -50,9 +64,20 @@ export const UniformScreen: React.FC<UniformScreenProps> = ({ state, onBack }) =
   const achievedAt = getUniformFamilyAchievedAt(state, selectedFamily.id);
   const unlockedMedalIds = state.medals?.unlockedMedalIds ?? [];
 
-  const handleSelectFamily = (familyId: string) => {
+  const handleSelectFamily = async (familyId: string) => {
     soundManager.playClick();
-    setSelectedFamilyId(familyId);
+    const request = ++previewRequest.current;
+    setPreviewStatus("Đang tải quân phục…");
+    try {
+      await loadUniformSprites(familyId);
+      if (request !== previewRequest.current) return;
+      setSelectedFamilyId(familyId);
+      setPreviewStatus("");
+    } catch {
+      if (request === previewRequest.current) {
+        setPreviewStatus("Chưa tải được quân phục. Vui lòng chọn lại để thử lại.");
+      }
+    }
   };
 
   return (
@@ -118,6 +143,10 @@ export const UniformScreen: React.FC<UniformScreenProps> = ({ state, onBack }) =
         currentFamilyId={currentFamily.id}
         onSelectFamily={handleSelectFamily}
       />
+
+      <p role="status" className={previewStatus ? "text-center text-xs text-slate-400" : "sr-only"}>
+        {previewStatus}
+      </p>
 
       <MedalInspectModal medal={inspectingMedal} onClose={() => setInspectingMedal(null)} />
     </div>

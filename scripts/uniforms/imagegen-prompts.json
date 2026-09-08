@@ -1,0 +1,246 @@
+{
+  "tool": "built-in imagegen",
+  "notes": "Each garment and shoulder board generated separately. Background extraction pass removes painted checkerboards to real alpha; final PNGs preserve that alpha. Garments exported to an upper-torso crop. Shoulder boards are mirrored by the renderer; no rank insignia is drawn at runtime.",
+  "prompts": [
+    {
+      "key": "academy",
+      "kind": "uniform",
+      "prompt": "Single academy upper military garment, silver-white simple cloth, no head or skin, clean minimalist game illustration, transparent background."
+    },
+    {
+      "key": "academy",
+      "kind": "board",
+      "prompt": "Use case: stylized-concept. One single isolated military shoulder-board game sprite, exact flat front view, horizontal elongated clipped-corner plaque, width to height ratio 8:3. Outer end on LEFT has clipped corners, inner end on RIGHT is squared. White-silver academy cloth with subtle woven shading, restrained silver edge stitch. Absolutely EMPTY unmarked interior: no button, no star, no bar, no emblem, no text, no garment, no pair. Clean dignified minimalist military UI art, crisp edges, not photorealistic. Center the plaque on a genuinely transparent PNG alpha canvas with small equal margins. Entire object visible. No painted checkerboard or colored background."
+    },
+    {
+      "key": "enlisted_1",
+      "kind": "uniform",
+      "prompt": "Use case: precise-object-edit. Create rank Binh Bét upper military uniform sprite using this garment as silhouette/alignment reference. Change cloth and construction: basic dark charcoal gray service cloth, simple folded collar, matte gunmetal buttons, simple single stitched chest seams, no trim. Preserve exact symmetric straight front-view silhouette and composition, collar and shoulders and sleeves in same places. Dignified minimalist illustrated military game art, restrained smooth fabric shading, crisp clean seams. No head, skin, hands, pants, medals, epaulettes, rank marks, emblems, text or watermark. Output a genuinely transparent PNG alpha background, NEVER draw a checkerboard. This garment will be cropped at lower chest by the game. Keep the broad upper chest unobstructed for UI. Make this a distinct rank garment, not just recoloring."
+    },
+    {
+      "key": "enlisted_1",
+      "kind": "board",
+      "prompt": "Use case: precise-object-edit. Edit this single military shoulder-board PNG into rank enlisted_1. Preserve exact outline, front view, orientation, size and position: clipped outer end LEFT, square inner end RIGHT, horizontal elongated plaque. Replace artwork with: dark charcoal-gray cloth, subdued charcoal edge stitching, EXACTLY 1 straight vertical GOLD rectangular bars near the far LEFT end, each bar upright and parallel, no stars, no horizontal stripe. Clean minimalist military game UI style with restrained fabric shading and crisp readable geometric marks. No button, garment, pair, lettering, watermark, backdrop, shadow or glow. Real transparent PNG ALPHA outside plaque, no painted checkerboard. One single isolated shoulder board only."
+    },
+    {
+      "key": "enlisted_2",
+      "kind": "uniform",
+      "prompt": "Use case: precise-object-edit. Create rank Binh Nhì upper military uniform sprite using this garment as silhouette/alignment reference. Change cloth and construction: dark charcoal service cloth, simple folded collar, gunmetal buttons, discreet stitched pocket flaps at lower chest, double shoulder seams. Preserve exact symmetric straight front-view silhouette and composition, collar and shoulders and sleeves in same places. Dignified minimalist illustrated military game art, restrained smooth fabric shading, crisp clean seams. No head, skin, hands, pants, medals, epaulettes, rank marks, emblems, text or watermark. Output a genuinely transparent PNG alpha background, NEVER draw a checkerboard. This garment will be cropped at lower chest by the game. Keep the broad upper chest unobstructed for UI. Make this a distinct rank garment, not just recoloring."
+    },
+    {
+      "key": "enlisted_2",
+      "kind": "board",
+      "prompt": "Use case: precise-object-edit. Edit this single military shoulder-board PNG into rank enlisted_2. Preserve exact outline, front view, orientation, size and position: clipped outer end LEFT, square inner end RIGHT, horizontal elongated plaque. Replace artwork with: dark charcoal-gray cloth, subdued charcoal edge stitching, EXACTLY 2 straight vertical GOLD rectangular bars near the far LEFT end, each bar upright and parallel, no stars, no horizontal stripe. Clean minimalist military game UI style with restrained fabric shading and crisp readable geometric marks. No button, garment, pair, lettering, watermark, backdrop, shadow or glow. Real transparent PNG ALPHA outside plaque, no painted checkerboard. One single isolated shoulder board only."
+    },
+    {
+      "key": "enlisted_3",
+      "kind": "uniform",
+      "prompt": "Use case: precise-object-edit. Create rank Binh Nhất upper military uniform sprite using this garment as silhouette/alignment reference. Change cloth and construction: dark charcoal service cloth, neat folded collar, gunmetal buttons, structured pocket flaps at lower chest, defined front placket and reinforced upper sleeve seams. Preserve exact symmetric straight front-view silhouette and composition, collar and shoulders and sleeves in same places. Dignified minimalist illustrated military game art, restrained smooth fabric shading, crisp clean seams. No head, skin, hands, pants, medals, epaulettes, rank marks, emblems, text or watermark. Output a genuinely transparent PNG alpha background, NEVER draw a checkerboard. This garment will be cropped at lower chest by the game. Keep the broad upper chest unobstructed for UI. Make this a distinct rank garment, not just recoloring."
+    },
+    {
+      "key": "enlisted_3",
+      "kind": "board",
+      "prompt": "Use case: precise-object-edit. Edit this single military shoulder-board PNG into rank enlisted_3. Preserve exact outline, front view, orientation, size and position: clipped outer end LEFT, square inner end RIGHT, horizontal elongated plaque. Replace artwork with: dark charcoal-gray cloth, subdued charcoal edge stitching, EXACTLY 3 straight vertical GOLD rectangular bars near the far LEFT end, each bar upright and parallel, no stars, no horizontal stripe. Clean minimalist military game UI style with restrained fabric shading and crisp readable geometric marks. No button, garment, pair, lettering, watermark, backdrop, shadow or glow. Real transparent PNG ALPHA outside plaque, no painted checkerboard. One single isolated shoulder board only."
+    },
+    {
+      "key": "nco_1",
+      "kind": "uniform",
+      "prompt": "Use case: precise-object-edit. Create rank Hạ Sĩ upper military uniform sprite using this garment as silhouette/alignment reference. Change cloth and construction: slate charcoal service cloth, firm folded collar, brushed brass buttons, structured lower-chest pocket flaps, restrained light collar stitching. Preserve exact symmetric straight front-view silhouette and composition, collar and shoulders and sleeves in same places. Dignified minimalist illustrated military game art, restrained smooth fabric shading, crisp clean seams. No head, skin, hands, pants, medals, epaulettes, rank marks, emblems, text or watermark. Output a genuinely transparent PNG alpha background, NEVER draw a checkerboard. This garment will be cropped at lower chest by the game. Keep the broad upper chest unobstructed for UI. Make this a distinct rank garment, not just recoloring."
+    },
+    {
+      "key": "nco_1",
+      "kind": "board",
+      "prompt": "Use case: precise-object-edit. Edit this single military shoulder-board PNG into rank nco_1. Preserve exact outline, front view, orientation, size and position: clipped outer end LEFT, square inner end RIGHT, horizontal elongated plaque. Replace artwork with: dark charcoal-gray cloth, subdued charcoal edge stitching, EXACTLY 1 gold right-pointing sideways chevrons (the > symbol), each tip points RIGHT toward the INNER end, grouped close to LEFT outer edge, no stars, no horizontal stripe. Clean minimalist military game UI style with restrained fabric shading and crisp readable geometric marks. No button, garment, pair, lettering, watermark, backdrop, shadow or glow. Real transparent PNG ALPHA outside plaque, no painted checkerboard. One single isolated shoulder board only."
+    },
+    {
+      "key": "nco_2",
+      "kind": "uniform",
+      "prompt": "Use case: precise-object-edit. Create rank Trung Sĩ military uniform sprite using this garment as silhouette/alignment reference. Change cloth and construction: charcoal slate cloth, firm standing collar with double silver stitching, brushed brass buttons, crisp lower chest flap pockets, reinforced shoulder and sleeve panels. Preserve exact symmetric straight front-view silhouette and composition, collar and shoulders and sleeves in same places. Dignified minimalist painted military game art, restrained smooth fabric shading, crisp clean seams. No head, skin, hands, pants, medals, epaulettes, shoulder boards, rank marks, emblems on chest, text or watermark. Output a genuinely transparent PNG alpha background, NEVER draw a checkerboard. The game will crop at lower chest. Keep broad upper chest uncluttered for UI. Make this a distinct rank garment, not just recoloring."
+    },
+    {
+      "key": "nco_2",
+      "kind": "board",
+      "prompt": "Use case: precise-object-edit. Edit this single military shoulder-board PNG into rank nco_2. Preserve exact outline, front view, orientation, size and position: clipped outer end LEFT, square inner end RIGHT, horizontal elongated plaque. Replace artwork with: dark charcoal-gray cloth, subdued charcoal edge stitching, EXACTLY 2 gold right-pointing sideways chevrons (the > symbol), each tip points RIGHT toward the INNER end, grouped close to LEFT outer edge, no stars, no horizontal stripe. Clean minimalist military game UI style with restrained fabric shading and crisp readable geometric marks. No button, garment, pair, lettering, watermark, backdrop, shadow or glow. Real transparent PNG ALPHA outside plaque, no painted checkerboard. One single isolated shoulder board only."
+    },
+    {
+      "key": "nco_3",
+      "kind": "uniform",
+      "prompt": "Use case: precise-object-edit. Create rank Thượng Sĩ military uniform sprite using this garment as silhouette/alignment reference. Change cloth and construction: charcoal slate cloth, raised standing collar with narrow brass piping, brushed brass buttons, sculpted lower chest pocket flaps, tailored placket and twin upper-sleeve seams. Preserve exact symmetric straight front-view silhouette and composition, collar and shoulders and sleeves in same places. Dignified minimalist painted military game art, restrained smooth fabric shading, crisp clean seams. No head, skin, hands, pants, medals, epaulettes, shoulder boards, rank marks, emblems on chest, text or watermark. Output a genuinely transparent PNG alpha background, NEVER draw a checkerboard. The game will crop at lower chest. Keep broad upper chest uncluttered for UI. Make this a distinct rank garment, not just recoloring."
+    },
+    {
+      "key": "nco_3",
+      "kind": "board",
+      "prompt": "Use case: precise-object-edit. Edit this single military shoulder-board PNG into rank nco_3. Preserve exact outline, front view, orientation, size and position: clipped outer end LEFT, square inner end RIGHT, horizontal elongated plaque. Replace artwork with: dark charcoal-gray cloth, subdued charcoal edge stitching, EXACTLY 3 gold right-pointing sideways chevrons (the > symbol), each tip points RIGHT toward the INNER end, grouped close to LEFT outer edge, no stars, no horizontal stripe. Clean minimalist military game UI style with restrained fabric shading and crisp readable geometric marks. No button, garment, pair, lettering, watermark, backdrop, shadow or glow. Real transparent PNG ALPHA outside plaque, no painted checkerboard. One single isolated shoulder board only."
+    },
+    {
+      "key": "junior_1",
+      "kind": "uniform",
+      "prompt": "Use case: precise-object-edit. Create rank Thiếu Úy military uniform sprite using this garment as silhouette/alignment reference. Change cloth and construction: military forest green #245238 cloth, formal officer collar, restrained gold buttons, single subtle gold collar seam and plain chest seams. Preserve exact symmetric straight front-view silhouette and composition, collar and shoulders and sleeves in same places. Dignified minimalist painted military game art, restrained smooth fabric shading, crisp clean seams. No head, skin, hands, pants, medals, epaulettes, shoulder boards, rank marks, emblems on chest, text or watermark. Output a genuinely transparent PNG alpha background, NEVER draw a checkerboard. The game will crop at lower chest. Keep broad upper chest uncluttered for UI. Make this a distinct rank garment, not just recoloring."
+    },
+    {
+      "key": "junior_1",
+      "kind": "board",
+      "prompt": "Use case: precise-object-edit. Edit this single military shoulder-board PNG into rank junior_1. Preserve exact outline, front view, orientation, size and position: clipped outer end LEFT, square inner end RIGHT, horizontal elongated plaque. Replace artwork with: military forest green #166534 cloth, narrow restrained edge stitching. EXACTLY 1 straight thin WHITE horizontal parallel stripe running continuously from LEFT end to RIGHT end, in the central band. EXACTLY 1 identical large crisp golden FIVE-point star, evenly spaced in ONE horizontal row centered on the plaque. Stars are drawn ON TOP of and obscure the white stripe, not placed above the stripe band. Each star outer diameter is 44% of plaque height. No extra marks. Clean minimalist military game UI style with restrained fabric shading and crisp readable geometric marks. No button, garment, pair, lettering, watermark, backdrop, shadow or glow. Real transparent PNG ALPHA outside plaque, no painted checkerboard. One single isolated shoulder board only."
+    },
+    {
+      "key": "junior_2",
+      "kind": "uniform",
+      "prompt": "Use case: precise-object-edit. Create rank Trung Úy military uniform sprite using this garment as silhouette/alignment reference. Change cloth and construction: military forest green #245238 cloth, formal officer collar, restrained gold buttons, double collar seam and angular lower chest pocket flaps. Preserve exact symmetric straight front-view silhouette and composition, collar and shoulders and sleeves in same places. Dignified minimalist painted military game art, restrained smooth fabric shading, crisp clean seams. No head, skin, hands, pants, medals, epaulettes, shoulder boards, rank marks, emblems on chest, text or watermark. Output a genuinely transparent PNG alpha background, NEVER draw a checkerboard. The game will crop at lower chest. Keep broad upper chest uncluttered for UI. Make this a distinct rank garment, not just recoloring."
+    },
+    {
+      "key": "junior_2",
+      "kind": "board",
+      "prompt": "Use case: precise-object-edit. Edit this single military shoulder-board PNG into rank junior_2. Preserve exact outline, front view, orientation, size and position: clipped outer end LEFT, square inner end RIGHT, horizontal elongated plaque. Replace artwork with: military forest green #166534 cloth, narrow restrained edge stitching. EXACTLY 1 straight thin WHITE horizontal parallel stripe running continuously from LEFT end to RIGHT end, in the central band. EXACTLY 2 identical large crisp golden FIVE-point stars, evenly spaced in ONE horizontal row centered on the plaque. Stars are drawn ON TOP of and obscure the white stripe, not placed above the stripe band. Each star outer diameter is 44% of plaque height. No extra marks. Clean minimalist military game UI style with restrained fabric shading and crisp readable geometric marks. No button, garment, pair, lettering, watermark, backdrop, shadow or glow. Real transparent PNG ALPHA outside plaque, no painted checkerboard. One single isolated shoulder board only."
+    },
+    {
+      "key": "junior_3",
+      "kind": "uniform",
+      "prompt": "Use case: precise-object-edit. Create rank Thượng Úy military uniform sprite using this garment as silhouette/alignment reference. Change cloth and construction: military forest green #245238 cloth, formal officer collar, restrained gold buttons, fine gold collar piping and outlined lower chest pocket flaps, tailored placket. Preserve exact symmetric straight front-view silhouette and composition, collar and shoulders and sleeves in same places. Dignified minimalist painted military game art, restrained smooth fabric shading, crisp clean seams. No head, skin, hands, pants, medals, epaulettes, shoulder boards, rank marks, emblems on chest, text or watermark. Output a genuinely transparent PNG alpha background, NEVER draw a checkerboard. The game will crop at lower chest. Keep broad upper chest uncluttered for UI. Make this a distinct rank garment, not just recoloring."
+    },
+    {
+      "key": "junior_3",
+      "kind": "board",
+      "prompt": "Use case: precise-object-edit. Edit this single military shoulder-board PNG into rank junior_3. Preserve exact outline, front view, orientation, size and position: clipped outer end LEFT, square inner end RIGHT, horizontal elongated plaque. Replace artwork with: military forest green #166534 cloth, narrow restrained edge stitching. EXACTLY 1 straight thin WHITE horizontal parallel stripe running continuously from LEFT end to RIGHT end, in the central band. EXACTLY 3 identical large crisp golden FIVE-point stars, evenly spaced in ONE horizontal row centered on the plaque. Stars are drawn ON TOP of and obscure the white stripe, not placed above the stripe band. Each star outer diameter is 44% of plaque height. No extra marks. Clean minimalist military game UI style with restrained fabric shading and crisp readable geometric marks. No button, garment, pair, lettering, watermark, backdrop, shadow or glow. Real transparent PNG ALPHA outside plaque, no painted checkerboard. One single isolated shoulder board only."
+    },
+    {
+      "key": "junior_4",
+      "kind": "uniform",
+      "prompt": "Use case: precise-object-edit. Create rank Đại Úy military uniform sprite using this garment as silhouette/alignment reference. Change cloth and construction: military forest green #245238 cloth, formal officer collar, restrained gold buttons, double gold collar piping, elegant lower chest pocket flaps and fine sleeve seam piping. Preserve exact symmetric straight front-view silhouette and composition, collar and shoulders and sleeves in same places. Dignified minimalist painted military game art, restrained smooth fabric shading, crisp clean seams. No head, skin, hands, pants, medals, epaulettes, shoulder boards, rank marks, emblems on chest, text or watermark. Output a genuinely transparent PNG alpha background, NEVER draw a checkerboard. The game will crop at lower chest. Keep broad upper chest uncluttered for UI. Make this a distinct rank garment, not just recoloring."
+    },
+    {
+      "key": "junior_4",
+      "kind": "board",
+      "prompt": "Use case: precise-object-edit. Edit this single military shoulder-board PNG into rank junior_4. Preserve exact outline, front view, orientation, size and position: clipped outer end LEFT, square inner end RIGHT, horizontal elongated plaque. Replace artwork with: military forest green #166534 cloth, narrow restrained edge stitching. EXACTLY 1 straight thin WHITE horizontal parallel stripe running continuously from LEFT end to RIGHT end, in the central band. EXACTLY 4 identical large crisp golden FIVE-point stars, evenly spaced in ONE horizontal row centered on the plaque. Stars are drawn ON TOP of and obscure the white stripe, not placed above the stripe band. Each star outer diameter is 44% of plaque height. No extra marks. Clean minimalist military game UI style with restrained fabric shading and crisp readable geometric marks. No button, garment, pair, lettering, watermark, backdrop, shadow or glow. Real transparent PNG ALPHA outside plaque, no painted checkerboard. One single isolated shoulder board only."
+    },
+    {
+      "key": "field_1",
+      "kind": "uniform",
+      "prompt": "Use case: precise-object-edit. Create rank Thiếu Tá military uniform sprite using this garment as silhouette/alignment reference. Change cloth and construction: deep dignified navy blue #182d4c cloth, structured standing officer collar, gold buttons, fine gold collar edge and simple lower chest pockets. Preserve exact symmetric straight front-view silhouette and composition, collar and shoulders and sleeves in same places. Dignified minimalist painted military game art, restrained smooth fabric shading, crisp clean seams. No head, skin, hands, pants, medals, epaulettes, shoulder boards, rank marks, emblems on chest, text or watermark. Output a genuinely transparent PNG alpha background, NEVER draw a checkerboard. The game will crop at lower chest. Keep broad upper chest uncluttered for UI. Make this a distinct rank garment, not just recoloring."
+    },
+    {
+      "key": "field_1",
+      "kind": "board",
+      "prompt": "Use case: precise-object-edit. Edit this single military shoulder-board PNG into rank field_1. Preserve exact outline, front view, orientation, size and position: clipped outer end LEFT, square inner end RIGHT, horizontal elongated plaque. Replace artwork with: deep navy blue #182d4c cloth, narrow restrained edge stitching. EXACTLY 2 straight thin WHITE horizontal parallel stripes running continuously from LEFT end to RIGHT end, in the central band. EXACTLY 1 identical large crisp golden FIVE-point star, evenly spaced in ONE horizontal row centered on the plaque. Stars are drawn ON TOP of and obscure the white stripes, not placed above the stripe band. Each star outer diameter is 44% of plaque height. No extra marks. Clean minimalist military game UI style with restrained fabric shading and crisp readable geometric marks. No button, garment, pair, lettering, watermark, backdrop, shadow or glow. Real transparent PNG ALPHA outside plaque, no painted checkerboard. One single isolated shoulder board only."
+    },
+    {
+      "key": "field_2",
+      "kind": "uniform",
+      "prompt": "Use case: precise-object-edit. Create rank Trung Tá military uniform sprite using this garment as silhouette/alignment reference. Change cloth and construction: deep dignified navy blue #182d4c cloth, structured standing officer collar, gold buttons, double gold collar edge and sculpted pocket flaps. Preserve exact symmetric straight front-view silhouette and composition, collar and shoulders and sleeves in same places. Dignified minimalist painted military game art, restrained smooth fabric shading, crisp clean seams. No head, skin, hands, pants, medals, epaulettes, shoulder boards, rank marks, emblems on chest, text or watermark. Output a genuinely transparent PNG alpha background, NEVER draw a checkerboard. The game will crop at lower chest. Keep broad upper chest uncluttered for UI. Make this a distinct rank garment, not just recoloring."
+    },
+    {
+      "key": "field_2",
+      "kind": "board",
+      "prompt": "Use case: precise-object-edit. Edit this single military shoulder-board PNG into rank field_2. Preserve exact outline, front view, orientation, size and position: clipped outer end LEFT, square inner end RIGHT, horizontal elongated plaque. Replace artwork with: deep navy blue #182d4c cloth, narrow restrained edge stitching. EXACTLY 2 straight thin WHITE horizontal parallel stripes running continuously from LEFT end to RIGHT end, in the central band. EXACTLY 2 identical large crisp golden FIVE-point stars, evenly spaced in ONE horizontal row centered on the plaque. Stars are drawn ON TOP of and obscure the white stripes, not placed above the stripe band. Each star outer diameter is 44% of plaque height. No extra marks. Clean minimalist military game UI style with restrained fabric shading and crisp readable geometric marks. No button, garment, pair, lettering, watermark, backdrop, shadow or glow. Real transparent PNG ALPHA outside plaque, no painted checkerboard. One single isolated shoulder board only."
+    },
+    {
+      "key": "field_3",
+      "kind": "uniform",
+      "prompt": "Use case: precise-object-edit. Create rank Thượng Tá military uniform sprite using this garment as silhouette/alignment reference. Change cloth and construction: deep dignified navy blue #182d4c cloth, structured standing officer collar, gold buttons, gold collar edge with small leaf details on collar tips, sculpted pocket flaps. Preserve exact symmetric straight front-view silhouette and composition, collar and shoulders and sleeves in same places. Dignified minimalist painted military game art, restrained smooth fabric shading, crisp clean seams. No head, skin, hands, pants, medals, epaulettes, shoulder boards, rank marks, emblems on chest, text or watermark. Output a genuinely transparent PNG alpha background, NEVER draw a checkerboard. The game will crop at lower chest. Keep broad upper chest uncluttered for UI. Make this a distinct rank garment, not just recoloring."
+    },
+    {
+      "key": "field_3",
+      "kind": "board",
+      "prompt": "Use case: precise-object-edit. Edit this single military shoulder-board PNG into rank field_3. Preserve exact outline, front view, orientation, size and position: clipped outer end LEFT, square inner end RIGHT, horizontal elongated plaque. Replace artwork with: deep navy blue #182d4c cloth, narrow restrained edge stitching. EXACTLY 2 straight thin WHITE horizontal parallel stripes running continuously from LEFT end to RIGHT end, in the central band. EXACTLY 3 identical large crisp golden FIVE-point stars, evenly spaced in ONE horizontal row centered on the plaque. Stars are drawn ON TOP of and obscure the white stripes, not placed above the stripe band. Each star outer diameter is 44% of plaque height. No extra marks. Clean minimalist military game UI style with restrained fabric shading and crisp readable geometric marks. No button, garment, pair, lettering, watermark, backdrop, shadow or glow. Real transparent PNG ALPHA outside plaque, no painted checkerboard. One single isolated shoulder board only."
+    },
+    {
+      "key": "field_4",
+      "kind": "uniform",
+      "prompt": "Use case: precise-object-edit. Create rank Đại Tá military uniform sprite using this garment as silhouette/alignment reference. Change cloth and construction: deep dignified navy blue #182d4c cloth, structured standing officer collar, gold buttons, double gold collar edge with restrained paired leaf embroidery at collar tips, refined gold upper-sleeve seam accents. Preserve exact symmetric straight front-view silhouette and composition, collar and shoulders and sleeves in same places. Dignified minimalist painted military game art, restrained smooth fabric shading, crisp clean seams. No head, skin, hands, pants, medals, epaulettes, shoulder boards, rank marks, emblems on chest, text or watermark. Output a genuinely transparent PNG alpha background, NEVER draw a checkerboard. The game will crop at lower chest. Keep broad upper chest uncluttered for UI. Make this a distinct rank garment, not just recoloring."
+    },
+    {
+      "key": "field_4",
+      "kind": "board",
+      "prompt": "Use case: precise-object-edit. Edit this single military shoulder-board PNG into rank field_4. Preserve exact outline, front view, orientation, size and position: clipped outer end LEFT, square inner end RIGHT, horizontal elongated plaque. Replace artwork with: deep navy blue #182d4c cloth, narrow restrained edge stitching. EXACTLY 2 straight thin WHITE horizontal parallel stripes running continuously from LEFT end to RIGHT end, in the central band. EXACTLY 4 identical large crisp golden FIVE-point stars, evenly spaced in ONE horizontal row centered on the plaque. Stars are drawn ON TOP of and obscure the white stripes, not placed above the stripe band. Each star outer diameter is 44% of plaque height. No extra marks. Clean minimalist military game UI style with restrained fabric shading and crisp readable geometric marks. No button, garment, pair, lettering, watermark, backdrop, shadow or glow. Real transparent PNG ALPHA outside plaque, no painted checkerboard. One single isolated shoulder board only."
+    },
+    {
+      "key": "general_1",
+      "kind": "uniform",
+      "prompt": "Use case: precise-object-edit. Create rank Thiếu Tướng military uniform sprite using this garment as silhouette/alignment reference. Change cloth and construction: ceremonial deep military red #862832 cloth, formal standing collar, polished gold buttons, slim gold collar edge, formal lower chest flap pockets. Preserve exact symmetric straight front-view silhouette and composition, collar and shoulders and sleeves in same places. Dignified minimalist painted military game art, restrained smooth fabric shading, crisp clean seams. No head, skin, hands, pants, medals, epaulettes, shoulder boards, rank marks, emblems on chest, text or watermark. Output a genuinely transparent PNG alpha background, NEVER draw a checkerboard. The game will crop at lower chest. Keep broad upper chest uncluttered for UI. Make this a distinct rank garment, not just recoloring."
+    },
+    {
+      "key": "general_1",
+      "kind": "board",
+      "prompt": "Use case: precise-object-edit. Edit this single military shoulder-board PNG into rank general_1. Preserve exact outline, front view, orientation, size and position: clipped outer end LEFT, square inner end RIGHT, horizontal elongated plaque. Replace artwork with: dignified military ruby-red #922b3b cloth, narrow restrained edge stitching. EXACTLY 3 straight thin WHITE horizontal parallel stripes running continuously from LEFT end to RIGHT end, in the central band. EXACTLY 1 identical large crisp golden FIVE-point star, evenly spaced in ONE horizontal row centered on the plaque. Stars are drawn ON TOP of and obscure the white stripes, not placed above the stripe band. Each star outer diameter is 44% of plaque height. No extra marks. Clean minimalist military game UI style with restrained fabric shading and crisp readable geometric marks. No button, garment, pair, lettering, watermark, backdrop, shadow or glow. Real transparent PNG ALPHA outside plaque, no painted checkerboard. One single isolated shoulder board only."
+    },
+    {
+      "key": "general_2",
+      "kind": "uniform",
+      "prompt": "Use case: precise-object-edit. Create rank Trung Tướng military uniform sprite using this garment as silhouette/alignment reference. Change cloth and construction: ceremonial deep military red #862832 cloth, formal standing collar, polished gold buttons, double gold collar edge with two small laurel leaves, fine gold placket. Preserve exact symmetric straight front-view silhouette and composition, collar and shoulders and sleeves in same places. Dignified minimalist painted military game art, restrained smooth fabric shading, crisp clean seams. No head, skin, hands, pants, medals, epaulettes, shoulder boards, rank marks, emblems on chest, text or watermark. Output a genuinely transparent PNG alpha background, NEVER draw a checkerboard. The game will crop at lower chest. Keep broad upper chest uncluttered for UI. Make this a distinct rank garment, not just recoloring."
+    },
+    {
+      "key": "general_2",
+      "kind": "board",
+      "prompt": "Use case: precise-object-edit. Edit this single military shoulder-board PNG into rank general_2. Preserve exact outline, front view, orientation, size and position: clipped outer end LEFT, square inner end RIGHT, horizontal elongated plaque. Replace artwork with: dignified military ruby-red #922b3b cloth, narrow restrained edge stitching. EXACTLY 3 straight thin WHITE horizontal parallel stripes running continuously from LEFT end to RIGHT end, in the central band. EXACTLY 2 identical large crisp golden FIVE-point stars, evenly spaced in ONE horizontal row centered on the plaque. Stars are drawn ON TOP of and obscure the white stripes, not placed above the stripe band. Each star outer diameter is 44% of plaque height. No extra marks. Clean minimalist military game UI style with restrained fabric shading and crisp readable geometric marks. No button, garment, pair, lettering, watermark, backdrop, shadow or glow. Real transparent PNG ALPHA outside plaque, no painted checkerboard. One single isolated shoulder board only."
+    },
+    {
+      "key": "general_3",
+      "kind": "uniform",
+      "prompt": "Use case: precise-object-edit. Create rank Thượng Tướng military uniform sprite using this garment as silhouette/alignment reference. Change cloth and construction: ceremonial deep military red #862832 cloth, formal standing collar, polished gold buttons, refined small gold laurel collar tips, double seam gold placket and structured pocket flaps. Preserve exact symmetric straight front-view silhouette and composition, collar and shoulders and sleeves in same places. Dignified minimalist painted military game art, restrained smooth fabric shading, crisp clean seams. No head, skin, hands, pants, medals, epaulettes, shoulder boards, rank marks, emblems on chest, text or watermark. Output a genuinely transparent PNG alpha background, NEVER draw a checkerboard. The game will crop at lower chest. Keep broad upper chest uncluttered for UI. Make this a distinct rank garment, not just recoloring."
+    },
+    {
+      "key": "general_3",
+      "kind": "board",
+      "prompt": "Use case: precise-object-edit. Edit this single military shoulder-board PNG into rank general_3. Preserve exact outline, front view, orientation, size and position: clipped outer end LEFT, square inner end RIGHT, horizontal elongated plaque. Replace artwork with: dignified military ruby-red #922b3b cloth, narrow restrained edge stitching. EXACTLY 3 straight thin WHITE horizontal parallel stripes running continuously from LEFT end to RIGHT end, in the central band. EXACTLY 3 identical large crisp golden FIVE-point stars, evenly spaced in ONE horizontal row centered on the plaque. Stars are drawn ON TOP of and obscure the white stripes, not placed above the stripe band. Each star outer diameter is 44% of plaque height. No extra marks. Clean minimalist military game UI style with restrained fabric shading and crisp readable geometric marks. No button, garment, pair, lettering, watermark, backdrop, shadow or glow. Real transparent PNG ALPHA outside plaque, no painted checkerboard. One single isolated shoulder board only."
+    },
+    {
+      "key": "general_4",
+      "kind": "uniform",
+      "prompt": "Use case: precise-object-edit. Create rank Đại Tướng military uniform sprite using this garment as silhouette/alignment reference. Change cloth and construction: ceremonial deep military red #862832 cloth, formal standing collar, polished gold buttons, balanced restrained gold laurel collar embroidery, double gold placket, elegant upper-sleeve seam piping. Preserve exact symmetric straight front-view silhouette and composition, collar and shoulders and sleeves in same places. Dignified minimalist painted military game art, restrained smooth fabric shading, crisp clean seams. No head, skin, hands, pants, medals, epaulettes, shoulder boards, rank marks, emblems on chest, text or watermark. Output a genuinely transparent PNG alpha background, NEVER draw a checkerboard. The game will crop at lower chest. Keep broad upper chest uncluttered for UI. Make this a distinct rank garment, not just recoloring."
+    },
+    {
+      "key": "general_4",
+      "kind": "board",
+      "prompt": "Use case: precise-object-edit. Edit this single military shoulder-board PNG into rank general_4. Preserve exact outline, front view, orientation, size and position: clipped outer end LEFT, square inner end RIGHT, horizontal elongated plaque. Replace artwork with: dignified military ruby-red #922b3b cloth, narrow restrained edge stitching. EXACTLY 3 straight thin WHITE horizontal parallel stripes running continuously from LEFT end to RIGHT end, in the central band. EXACTLY 4 identical large crisp golden FIVE-point stars, evenly spaced in ONE horizontal row centered on the plaque. Stars are drawn ON TOP of and obscure the white stripes, not placed above the stripe band. Each star outer diameter is 44% of plaque height. No extra marks. Clean minimalist military game UI style with restrained fabric shading and crisp readable geometric marks. No button, garment, pair, lettering, watermark, backdrop, shadow or glow. Real transparent PNG ALPHA outside plaque, no painted checkerboard. One single isolated shoulder board only."
+    },
+    {
+      "key": "endgame_1",
+      "kind": "uniform",
+      "prompt": "Use case: precise-object-edit. Create rank Thống Soái military uniform sprite using this garment as silhouette/alignment reference. Change cloth and construction: mysterious dignified near-black #12151b premium cloth with controlled gold trim, standing ceremonial collar, gold buttons, single gold collar border and two small collar leaves. Preserve exact symmetric straight front-view silhouette and composition, collar and shoulders and sleeves in same places. Dignified minimalist painted military game art, restrained smooth fabric shading, crisp clean seams. No head, skin, hands, pants, medals, epaulettes, shoulder boards, rank marks, emblems on chest, text or watermark. Output a genuinely transparent PNG alpha background, NEVER draw a checkerboard. The game will crop at lower chest. Keep broad upper chest uncluttered for UI. Make this a distinct rank garment, not just recoloring."
+    },
+    {
+      "key": "endgame_1",
+      "kind": "board",
+      "prompt": "Use case: precise-object-edit. Edit this single military shoulder-board PNG into rank endgame_1. Preserve exact outline, front view, orientation, size and position: clipped outer end LEFT, square inner end RIGHT, horizontal elongated plaque. Replace artwork with: dignified mysterious BLACK cloth, refined GOLD outer border. No white stripes. EXACTLY 1 identical crisp golden FIVE-point stars evenly spaced in ONE horizontal row centered on the plaque. Each star outer diameter is 44% of plaque height. No extra marks. Clean minimalist military game UI style with restrained fabric shading and crisp readable geometric marks. No button, garment, pair, lettering, watermark, backdrop, shadow or glow. Real transparent PNG ALPHA outside plaque, no painted checkerboard. One single isolated shoulder board only."
+    },
+    {
+      "key": "endgame_grand_marshal",
+      "kind": "uniform",
+      "prompt": "Use case: precise-object-edit. Create rank Đại Thống Soái military uniform sprite using this garment as silhouette/alignment reference. Change cloth and construction: mysterious dignified near-black #12151b premium cloth with controlled gold trim, standing ceremonial collar, gold buttons, double gold collar border with discrete collar leaves and gold pocket outlines. Preserve exact symmetric straight front-view silhouette and composition, collar and shoulders and sleeves in same places. Dignified minimalist painted military game art, restrained smooth fabric shading, crisp clean seams. No head, skin, hands, pants, medals, epaulettes, shoulder boards, rank marks, emblems on chest, text or watermark. Output a genuinely transparent PNG alpha background, NEVER draw a checkerboard. The game will crop at lower chest. Keep broad upper chest uncluttered for UI. Make this a distinct rank garment, not just recoloring."
+    },
+    {
+      "key": "endgame_grand_marshal",
+      "kind": "board",
+      "prompt": "Use case: precise-object-edit. Edit this single military shoulder-board PNG into rank endgame_grand_marshal. Preserve exact outline, front view, orientation, size and position: clipped outer end LEFT, square inner end RIGHT, horizontal elongated plaque. Replace artwork with: dignified mysterious BLACK cloth, refined GOLD outer border. No white stripes. EXACTLY 2 identical crisp golden FIVE-point stars evenly spaced in ONE horizontal row centered on the plaque. Each star outer diameter is 44% of plaque height. No extra marks. Clean minimalist military game UI style with restrained fabric shading and crisp readable geometric marks. No button, garment, pair, lettering, watermark, backdrop, shadow or glow. Real transparent PNG ALPHA outside plaque, no painted checkerboard. One single isolated shoulder board only."
+    },
+    {
+      "key": "endgame_2",
+      "kind": "uniform",
+      "prompt": "Use case: precise-object-edit. Create rank Nguyên Soái military uniform sprite using this garment as silhouette/alignment reference. Change cloth and construction: mysterious dignified near-black #12151b premium cloth with controlled gold trim, standing ceremonial collar, gold buttons, refined gold laurel collar tips, double gold placket and tailored sleeve seams. Preserve exact symmetric straight front-view silhouette and composition, collar and shoulders and sleeves in same places. Dignified minimalist painted military game art, restrained smooth fabric shading, crisp clean seams. No head, skin, hands, pants, medals, epaulettes, shoulder boards, rank marks, emblems on chest, text or watermark. Output a genuinely transparent PNG alpha background, NEVER draw a checkerboard. The game will crop at lower chest. Keep broad upper chest uncluttered for UI. Make this a distinct rank garment, not just recoloring."
+    },
+    {
+      "key": "endgame_2",
+      "kind": "board",
+      "prompt": "Use case: precise-object-edit. Edit this single military shoulder-board PNG into rank endgame_2. Preserve exact outline, front view, orientation, size and position: clipped outer end LEFT, square inner end RIGHT, horizontal elongated plaque. Replace artwork with: dignified mysterious BLACK cloth, refined GOLD outer border. No white stripes. EXACTLY 3 identical crisp golden FIVE-point stars evenly spaced in ONE horizontal row centered on the plaque. Each star outer diameter is 44% of plaque height. No extra marks. Clean minimalist military game UI style with restrained fabric shading and crisp readable geometric marks. No button, garment, pair, lettering, watermark, backdrop, shadow or glow. Real transparent PNG ALPHA outside plaque, no painted checkerboard. One single isolated shoulder board only."
+    },
+    {
+      "key": "endgame_3",
+      "kind": "uniform",
+      "prompt": "Use case: precise-object-edit. Create rank Đại Nguyên Soái military uniform sprite using this garment as silhouette/alignment reference. Change cloth and construction: mysterious dignified near-black #12151b premium cloth with controlled gold trim, standing ceremonial collar, gold buttons, restrained gold laurel collar panels, double gold placket, refined gold upper-sleeve piping and sculpted pocket flaps. Preserve exact symmetric straight front-view silhouette and composition, collar and shoulders and sleeves in same places. Dignified minimalist painted military game art, restrained smooth fabric shading, crisp clean seams. No head, skin, hands, pants, medals, epaulettes, shoulder boards, rank marks, emblems on chest, text or watermark. Output a genuinely transparent PNG alpha background, NEVER draw a checkerboard. The game will crop at lower chest. Keep broad upper chest uncluttered for UI. Make this a distinct rank garment, not just recoloring."
+    },
+    {
+      "key": "endgame_3",
+      "kind": "board",
+      "prompt": "Use case: precise-object-edit. Edit this single military shoulder-board PNG into rank endgame_3. Preserve exact outline, front view, orientation, size and position: clipped outer end LEFT, square inner end RIGHT, horizontal elongated plaque. Replace artwork with: dignified mysterious BLACK cloth, refined GOLD outer border. No white stripes. EXACTLY 4 identical crisp golden FIVE-point stars evenly spaced in ONE horizontal row centered on the plaque. Each star outer diameter is 44% of plaque height. No extra marks. Clean minimalist military game UI style with restrained fabric shading and crisp readable geometric marks. No button, garment, pair, lettering, watermark, backdrop, shadow or glow. Real transparent PNG ALPHA outside plaque, no painted checkerboard. One single isolated shoulder board only."
+    },
+    {
+      "key": "endgame_4",
+      "kind": "uniform",
+      "prompt": "Use case: precise-object-edit. Create rank Tổng Tư Lệnh military uniform sprite using this garment as silhouette/alignment reference. Change cloth and construction: supreme military vermilion red-orange #a83d20 premium cloth, black standing collar with restrained symmetric gold laurel embroidery and double gold borders, refined double gold placket, polished gold buttons, gold upper sleeve seam piping, formal lower chest pocket flaps, most prestigious yet minimalist. Preserve exact symmetric straight front-view silhouette and composition, collar and shoulders and sleeves in same places. Dignified minimalist painted military game art, restrained smooth fabric shading, crisp clean seams. No head, skin, hands, pants, medals, epaulettes, shoulder boards, rank marks, emblems on chest, text or watermark. Output a genuinely transparent PNG alpha background, NEVER draw a checkerboard. The game will crop at lower chest. Keep broad upper chest uncluttered for UI. Make this a distinct rank garment, not just recoloring."
+    },
+    {
+      "key": "endgame_4",
+      "kind": "board",
+      "prompt": "Use case: precise-object-edit. Edit this single military shoulder-board PNG into rank endgame_4. Preserve exact outline, front view, orientation, size and position: clipped outer end LEFT, square inner end RIGHT, horizontal elongated plaque. Replace artwork with: supreme military RED-ORANGE #a83d20 cloth with refined GOLD outer border, no white stripes, EXACTLY ONE large crisp golden FIVE-point star at plaque center. The star outer diameter is 66% of plaque height (1.5 times ordinary ranks' 44%). No extra marks. Clean minimalist military game UI style with restrained fabric shading and crisp readable geometric marks. No button, garment, pair, lettering, watermark, backdrop, shadow or glow. Real transparent PNG ALPHA outside plaque, no painted checkerboard. One single isolated shoulder board only."
+    }
+  ]
+}

@@ -19,14 +19,12 @@ function test(name: string, run: () => void): void {
 
 console.log("=== UNIFORM ROUND 2 TESTS ===");
 
-test("shoulder palettes use the darker badge-aligned officer colors", () => {
+test("uniform catalog resolves separate PNG layers for the selected family", () => {
   const lieutenant = getUniformArtConfig("junior_2");
-  assert.equal(lieutenant.shoulderPalette.background, "#166534");
-  assert.equal(lieutenant.shoulderPalette.backgroundDeep, "#052e16");
-  assert.equal(lieutenant.shoulderPalette.highlight, "#15803d");
-  assert.equal(lieutenant.shoulderPalette.mark, "#facc15");
+  assert.equal(lieutenant.uniformSrc, "/assets/uniforms/uniforms/junior_2.png");
+  assert.equal(lieutenant.shoulderSrc, "/assets/uniforms/shoulder-boards/junior_2.png");
+  assert.equal(getUniformArtConfig("unknown").familyId, "academy");
 });
-
 test("uniform medal layout stays at four per row and half scale", () => {
   assert.equal(UNIFORM_MEDALS_PER_ROW, 4);
   assert.equal(UNIFORM_MEDAL_SCALE, 0.5);
