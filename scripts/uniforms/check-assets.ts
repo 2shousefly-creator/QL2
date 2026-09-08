@@ -9,6 +9,15 @@ const familyIds = RANK_FAMILIES.map((family) => family.id).sort();
 assert.equal(familyIds.length, 24);
 assert.deepEqual(Object.keys(UNIFORM_ART_CATALOG).sort(), familyIds);
 
+// Static authoring inventory: the export spec must keep the runtime rank mapping.
+const boardSpec = JSON.parse(readFileSync(resolve("scripts/uniforms/shoulder-board-spec.json"), "utf8"));
+const boardIds = boardSpec.groups.flatMap((group: { ids: string[] }) => group.ids);
+assert.deepEqual(boardIds.sort(), familyIds);
+assert.deepEqual(boardSpec.geometry.canvas, { width: 512, height: 192 });
+assert.equal(boardSpec.geometry.body.border, boardSpec.geometry.body.previousSupremeBorder);
+assert.deepEqual(boardSpec.groups.find((group: { id: string }) => group.id === "endgame").ids,
+  ["endgame_1", "endgame_grand_marshal", "endgame_2", "endgame_3"]);
+
 for (const [directory, srcKey, width, height] of [
   ["uniforms", "uniformSrc", 840, 1120],
   ["shoulder-boards", "shoulderSrc", 512, 192],

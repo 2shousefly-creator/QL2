@@ -1,6 +1,6 @@
 {
-  "tool": "built-in imagegen",
-  "notes": "Each garment and shoulder board generated separately. Background extraction pass removes painted checkerboards to real alpha; final PNGs preserve that alpha. Garments exported to an upper-torso crop. Shoulder boards are mirrored by the renderer; no rank insignia is drawn at runtime.",
+  "tool": "built-in imagegen for garments and shoulder cloth material; shared offline geometry for shoulder PNG export",
+  "notes": "Garment sources and export remain unchanged. Shoulder boards use one ImageGen cloth source plus scripts/uniforms/shoulder-board-spec.json and render-shoulder-boards.cjs for exact shared geometry. Board prompts below document the final design; export the common source instead of generating each rank independently. Runtime mirrors the existing PNGs.",
   "prompts": [
     {
       "key": "academy",
@@ -10,7 +10,7 @@
     {
       "key": "academy",
       "kind": "board",
-      "prompt": "Use case: stylized-concept. One single isolated military shoulder-board game sprite, exact flat front view, horizontal elongated clipped-corner plaque, width to height ratio 8:3. Outer end on LEFT has clipped corners, inner end on RIGHT is squared. White-silver academy cloth with subtle woven shading, restrained silver edge stitch. Absolutely EMPTY unmarked interior: no button, no star, no bar, no emblem, no text, no garment, no pair. Clean dignified minimalist military UI art, crisp edges, not photorealistic. Center the plaque on a genuinely transparent PNG alpha canvas with small equal margins. Entire object visible. No painted checkerboard or colored background."
+      "prompt": "Shared production spec for academy: one horizontal shoulder board on a transparent RGBA 512 x 192 canvas. Body bounds (24,36)-(488,156), same 36 px clipped outer left corners and 3 px corner rounding; inner right end squared. silver white fine twill cloth. No rank insignia. All ordinary borders 8 px. Star row visible bounds centered at (246,96). Every board has the SAME restrained round gold metal attachment button at (452,96), radius 12, on the INNER RIGHT end. Keep all marks clear of border and button. No garment, pair, text, glow, backdrop or stray alpha pixels. Use the shared material/spec exporter for exact consistency."
     },
     {
       "key": "enlisted_1",
@@ -20,7 +20,7 @@
     {
       "key": "enlisted_1",
       "kind": "board",
-      "prompt": "Use case: precise-object-edit. Edit this single military shoulder-board PNG into rank enlisted_1. Preserve exact outline, front view, orientation, size and position: clipped outer end LEFT, square inner end RIGHT, horizontal elongated plaque. Replace artwork with: dark charcoal-gray cloth, subdued charcoal edge stitching, EXACTLY 1 straight vertical GOLD rectangular bars near the far LEFT end, each bar upright and parallel, no stars, no horizontal stripe. Clean minimalist military game UI style with restrained fabric shading and crisp readable geometric marks. No button, garment, pair, lettering, watermark, backdrop, shadow or glow. Real transparent PNG ALPHA outside plaque, no painted checkerboard. One single isolated shoulder board only."
+      "prompt": "Shared production spec for enlisted_1: one horizontal shoulder board on a transparent RGBA 512 x 192 canvas. Body bounds (24,36)-(488,156), same 36 px clipped outer left corners and 3 px corner rounding; inner right end squared. charcoal gray fine twill cloth. Exactly 1 vertical gold bars, 14 x 68 px, starting at (76,62), center spacing 28 px. All ordinary borders 8 px. Star row visible bounds centered at (246,96). Every board has the SAME restrained round gold metal attachment button at (452,96), radius 12, on the INNER RIGHT end. Keep all marks clear of border and button. No garment, pair, text, glow, backdrop or stray alpha pixels. Use the shared material/spec exporter for exact consistency."
     },
     {
       "key": "enlisted_2",
@@ -30,7 +30,7 @@
     {
       "key": "enlisted_2",
       "kind": "board",
-      "prompt": "Use case: precise-object-edit. Edit this single military shoulder-board PNG into rank enlisted_2. Preserve exact outline, front view, orientation, size and position: clipped outer end LEFT, square inner end RIGHT, horizontal elongated plaque. Replace artwork with: dark charcoal-gray cloth, subdued charcoal edge stitching, EXACTLY 2 straight vertical GOLD rectangular bars near the far LEFT end, each bar upright and parallel, no stars, no horizontal stripe. Clean minimalist military game UI style with restrained fabric shading and crisp readable geometric marks. No button, garment, pair, lettering, watermark, backdrop, shadow or glow. Real transparent PNG ALPHA outside plaque, no painted checkerboard. One single isolated shoulder board only."
+      "prompt": "Shared production spec for enlisted_2: one horizontal shoulder board on a transparent RGBA 512 x 192 canvas. Body bounds (24,36)-(488,156), same 36 px clipped outer left corners and 3 px corner rounding; inner right end squared. charcoal gray fine twill cloth. Exactly 2 vertical gold bars, 14 x 68 px, starting at (76,62), center spacing 28 px. All ordinary borders 8 px. Star row visible bounds centered at (246,96). Every board has the SAME restrained round gold metal attachment button at (452,96), radius 12, on the INNER RIGHT end. Keep all marks clear of border and button. No garment, pair, text, glow, backdrop or stray alpha pixels. Use the shared material/spec exporter for exact consistency."
     },
     {
       "key": "enlisted_3",
@@ -40,7 +40,7 @@
     {
       "key": "enlisted_3",
       "kind": "board",
-      "prompt": "Use case: precise-object-edit. Edit this single military shoulder-board PNG into rank enlisted_3. Preserve exact outline, front view, orientation, size and position: clipped outer end LEFT, square inner end RIGHT, horizontal elongated plaque. Replace artwork with: dark charcoal-gray cloth, subdued charcoal edge stitching, EXACTLY 3 straight vertical GOLD rectangular bars near the far LEFT end, each bar upright and parallel, no stars, no horizontal stripe. Clean minimalist military game UI style with restrained fabric shading and crisp readable geometric marks. No button, garment, pair, lettering, watermark, backdrop, shadow or glow. Real transparent PNG ALPHA outside plaque, no painted checkerboard. One single isolated shoulder board only."
+      "prompt": "Shared production spec for enlisted_3: one horizontal shoulder board on a transparent RGBA 512 x 192 canvas. Body bounds (24,36)-(488,156), same 36 px clipped outer left corners and 3 px corner rounding; inner right end squared. charcoal gray fine twill cloth. Exactly 3 vertical gold bars, 14 x 68 px, starting at (76,62), center spacing 28 px. All ordinary borders 8 px. Star row visible bounds centered at (246,96). Every board has the SAME restrained round gold metal attachment button at (452,96), radius 12, on the INNER RIGHT end. Keep all marks clear of border and button. No garment, pair, text, glow, backdrop or stray alpha pixels. Use the shared material/spec exporter for exact consistency."
     },
     {
       "key": "nco_1",
@@ -50,7 +50,7 @@
     {
       "key": "nco_1",
       "kind": "board",
-      "prompt": "Use case: precise-object-edit. Edit this single military shoulder-board PNG into rank nco_1. Preserve exact outline, front view, orientation, size and position: clipped outer end LEFT, square inner end RIGHT, horizontal elongated plaque. Replace artwork with: dark charcoal-gray cloth, subdued charcoal edge stitching, EXACTLY 1 gold right-pointing sideways chevrons (the > symbol), each tip points RIGHT toward the INNER end, grouped close to LEFT outer edge, no stars, no horizontal stripe. Clean minimalist military game UI style with restrained fabric shading and crisp readable geometric marks. No button, garment, pair, lettering, watermark, backdrop, shadow or glow. Real transparent PNG ALPHA outside plaque, no painted checkerboard. One single isolated shoulder board only."
+      "prompt": "Shared production spec for nco_1: one horizontal shoulder board on a transparent RGBA 512 x 192 canvas. Body bounds (24,36)-(488,156), same 36 px clipped outer left corners and 3 px corner rounding; inner right end squared. charcoal gray fine twill cloth. Exactly 1 right-pointing gold chevrons toward the inner end, 62 px high, 30 px deep, 11 px stroke, center spacing 37 px, first starts at (74,65). All ordinary borders 8 px. Star row visible bounds centered at (246,96). Every board has the SAME restrained round gold metal attachment button at (452,96), radius 12, on the INNER RIGHT end. Keep all marks clear of border and button. No garment, pair, text, glow, backdrop or stray alpha pixels. Use the shared material/spec exporter for exact consistency."
     },
     {
       "key": "nco_2",
@@ -60,7 +60,7 @@
     {
       "key": "nco_2",
       "kind": "board",
-      "prompt": "Use case: precise-object-edit. Edit this single military shoulder-board PNG into rank nco_2. Preserve exact outline, front view, orientation, size and position: clipped outer end LEFT, square inner end RIGHT, horizontal elongated plaque. Replace artwork with: dark charcoal-gray cloth, subdued charcoal edge stitching, EXACTLY 2 gold right-pointing sideways chevrons (the > symbol), each tip points RIGHT toward the INNER end, grouped close to LEFT outer edge, no stars, no horizontal stripe. Clean minimalist military game UI style with restrained fabric shading and crisp readable geometric marks. No button, garment, pair, lettering, watermark, backdrop, shadow or glow. Real transparent PNG ALPHA outside plaque, no painted checkerboard. One single isolated shoulder board only."
+      "prompt": "Shared production spec for nco_2: one horizontal shoulder board on a transparent RGBA 512 x 192 canvas. Body bounds (24,36)-(488,156), same 36 px clipped outer left corners and 3 px corner rounding; inner right end squared. charcoal gray fine twill cloth. Exactly 2 right-pointing gold chevrons toward the inner end, 62 px high, 30 px deep, 11 px stroke, center spacing 37 px, first starts at (74,65). All ordinary borders 8 px. Star row visible bounds centered at (246,96). Every board has the SAME restrained round gold metal attachment button at (452,96), radius 12, on the INNER RIGHT end. Keep all marks clear of border and button. No garment, pair, text, glow, backdrop or stray alpha pixels. Use the shared material/spec exporter for exact consistency."
     },
     {
       "key": "nco_3",
@@ -70,7 +70,7 @@
     {
       "key": "nco_3",
       "kind": "board",
-      "prompt": "Use case: precise-object-edit. Edit this single military shoulder-board PNG into rank nco_3. Preserve exact outline, front view, orientation, size and position: clipped outer end LEFT, square inner end RIGHT, horizontal elongated plaque. Replace artwork with: dark charcoal-gray cloth, subdued charcoal edge stitching, EXACTLY 3 gold right-pointing sideways chevrons (the > symbol), each tip points RIGHT toward the INNER end, grouped close to LEFT outer edge, no stars, no horizontal stripe. Clean minimalist military game UI style with restrained fabric shading and crisp readable geometric marks. No button, garment, pair, lettering, watermark, backdrop, shadow or glow. Real transparent PNG ALPHA outside plaque, no painted checkerboard. One single isolated shoulder board only."
+      "prompt": "Shared production spec for nco_3: one horizontal shoulder board on a transparent RGBA 512 x 192 canvas. Body bounds (24,36)-(488,156), same 36 px clipped outer left corners and 3 px corner rounding; inner right end squared. charcoal gray fine twill cloth. Exactly 3 right-pointing gold chevrons toward the inner end, 62 px high, 30 px deep, 11 px stroke, center spacing 37 px, first starts at (74,65). All ordinary borders 8 px. Star row visible bounds centered at (246,96). Every board has the SAME restrained round gold metal attachment button at (452,96), radius 12, on the INNER RIGHT end. Keep all marks clear of border and button. No garment, pair, text, glow, backdrop or stray alpha pixels. Use the shared material/spec exporter for exact consistency."
     },
     {
       "key": "junior_1",
@@ -80,7 +80,7 @@
     {
       "key": "junior_1",
       "kind": "board",
-      "prompt": "Use case: precise-object-edit. Edit this single military shoulder-board PNG into rank junior_1. Preserve exact outline, front view, orientation, size and position: clipped outer end LEFT, square inner end RIGHT, horizontal elongated plaque. Replace artwork with: military forest green #166534 cloth, narrow restrained edge stitching. EXACTLY 1 straight thin WHITE horizontal parallel stripe running continuously from LEFT end to RIGHT end, in the central band. EXACTLY 1 identical large crisp golden FIVE-point star, evenly spaced in ONE horizontal row centered on the plaque. Stars are drawn ON TOP of and obscure the white stripe, not placed above the stripe band. Each star outer diameter is 44% of plaque height. No extra marks. Clean minimalist military game UI style with restrained fabric shading and crisp readable geometric marks. No button, garment, pair, lettering, watermark, backdrop, shadow or glow. Real transparent PNG ALPHA outside plaque, no painted checkerboard. One single isolated shoulder board only."
+      "prompt": "Shared production spec for junior_1: one horizontal shoulder board on a transparent RGBA 512 x 192 canvas. Body bounds (24,36)-(488,156), same 36 px clipped outer left corners and 3 px corner rounding; inner right end squared. army green fine twill cloth. Exactly 1 identical gold five-point stars, radius 34, inner-radius ratio 0.44, center spacing 80 px. 1 continuous white horizontal stripes beneath the stars, 6 px thick, 14 px center spacing. All ordinary borders 8 px. Star row visible bounds centered at (246,96). Every board has the SAME restrained round gold metal attachment button at (452,96), radius 12, on the INNER RIGHT end. Keep all marks clear of border and button. No garment, pair, text, glow, backdrop or stray alpha pixels. Use the shared material/spec exporter for exact consistency."
     },
     {
       "key": "junior_2",
@@ -90,7 +90,7 @@
     {
       "key": "junior_2",
       "kind": "board",
-      "prompt": "Use case: precise-object-edit. Edit this single military shoulder-board PNG into rank junior_2. Preserve exact outline, front view, orientation, size and position: clipped outer end LEFT, square inner end RIGHT, horizontal elongated plaque. Replace artwork with: military forest green #166534 cloth, narrow restrained edge stitching. EXACTLY 1 straight thin WHITE horizontal parallel stripe running continuously from LEFT end to RIGHT end, in the central band. EXACTLY 2 identical large crisp golden FIVE-point stars, evenly spaced in ONE horizontal row centered on the plaque. Stars are drawn ON TOP of and obscure the white stripe, not placed above the stripe band. Each star outer diameter is 44% of plaque height. No extra marks. Clean minimalist military game UI style with restrained fabric shading and crisp readable geometric marks. No button, garment, pair, lettering, watermark, backdrop, shadow or glow. Real transparent PNG ALPHA outside plaque, no painted checkerboard. One single isolated shoulder board only."
+      "prompt": "Shared production spec for junior_2: one horizontal shoulder board on a transparent RGBA 512 x 192 canvas. Body bounds (24,36)-(488,156), same 36 px clipped outer left corners and 3 px corner rounding; inner right end squared. army green fine twill cloth. Exactly 2 identical gold five-point stars, radius 34, inner-radius ratio 0.44, center spacing 80 px. 1 continuous white horizontal stripes beneath the stars, 6 px thick, 14 px center spacing. All ordinary borders 8 px. Star row visible bounds centered at (246,96). Every board has the SAME restrained round gold metal attachment button at (452,96), radius 12, on the INNER RIGHT end. Keep all marks clear of border and button. No garment, pair, text, glow, backdrop or stray alpha pixels. Use the shared material/spec exporter for exact consistency."
     },
     {
       "key": "junior_3",
@@ -100,7 +100,7 @@
     {
       "key": "junior_3",
       "kind": "board",
-      "prompt": "Use case: precise-object-edit. Edit this single military shoulder-board PNG into rank junior_3. Preserve exact outline, front view, orientation, size and position: clipped outer end LEFT, square inner end RIGHT, horizontal elongated plaque. Replace artwork with: military forest green #166534 cloth, narrow restrained edge stitching. EXACTLY 1 straight thin WHITE horizontal parallel stripe running continuously from LEFT end to RIGHT end, in the central band. EXACTLY 3 identical large crisp golden FIVE-point stars, evenly spaced in ONE horizontal row centered on the plaque. Stars are drawn ON TOP of and obscure the white stripe, not placed above the stripe band. Each star outer diameter is 44% of plaque height. No extra marks. Clean minimalist military game UI style with restrained fabric shading and crisp readable geometric marks. No button, garment, pair, lettering, watermark, backdrop, shadow or glow. Real transparent PNG ALPHA outside plaque, no painted checkerboard. One single isolated shoulder board only."
+      "prompt": "Shared production spec for junior_3: one horizontal shoulder board on a transparent RGBA 512 x 192 canvas. Body bounds (24,36)-(488,156), same 36 px clipped outer left corners and 3 px corner rounding; inner right end squared. army green fine twill cloth. Exactly 3 identical gold five-point stars, radius 34, inner-radius ratio 0.44, center spacing 80 px. 1 continuous white horizontal stripes beneath the stars, 6 px thick, 14 px center spacing. All ordinary borders 8 px. Star row visible bounds centered at (246,96). Every board has the SAME restrained round gold metal attachment button at (452,96), radius 12, on the INNER RIGHT end. Keep all marks clear of border and button. No garment, pair, text, glow, backdrop or stray alpha pixels. Use the shared material/spec exporter for exact consistency."
     },
     {
       "key": "junior_4",
@@ -110,7 +110,7 @@
     {
       "key": "junior_4",
       "kind": "board",
-      "prompt": "Use case: precise-object-edit. Edit this single military shoulder-board PNG into rank junior_4. Preserve exact outline, front view, orientation, size and position: clipped outer end LEFT, square inner end RIGHT, horizontal elongated plaque. Replace artwork with: military forest green #166534 cloth, narrow restrained edge stitching. EXACTLY 1 straight thin WHITE horizontal parallel stripe running continuously from LEFT end to RIGHT end, in the central band. EXACTLY 4 identical large crisp golden FIVE-point stars, evenly spaced in ONE horizontal row centered on the plaque. Stars are drawn ON TOP of and obscure the white stripe, not placed above the stripe band. Each star outer diameter is 44% of plaque height. No extra marks. Clean minimalist military game UI style with restrained fabric shading and crisp readable geometric marks. No button, garment, pair, lettering, watermark, backdrop, shadow or glow. Real transparent PNG ALPHA outside plaque, no painted checkerboard. One single isolated shoulder board only."
+      "prompt": "Shared production spec for junior_4: one horizontal shoulder board on a transparent RGBA 512 x 192 canvas. Body bounds (24,36)-(488,156), same 36 px clipped outer left corners and 3 px corner rounding; inner right end squared. army green fine twill cloth. Exactly 4 identical gold five-point stars, radius 34, inner-radius ratio 0.44, center spacing 80 px. 1 continuous white horizontal stripes beneath the stars, 6 px thick, 14 px center spacing. All ordinary borders 8 px. Star row visible bounds centered at (246,96). Every board has the SAME restrained round gold metal attachment button at (452,96), radius 12, on the INNER RIGHT end. Keep all marks clear of border and button. No garment, pair, text, glow, backdrop or stray alpha pixels. Use the shared material/spec exporter for exact consistency."
     },
     {
       "key": "field_1",
@@ -120,7 +120,7 @@
     {
       "key": "field_1",
       "kind": "board",
-      "prompt": "Use case: precise-object-edit. Edit this single military shoulder-board PNG into rank field_1. Preserve exact outline, front view, orientation, size and position: clipped outer end LEFT, square inner end RIGHT, horizontal elongated plaque. Replace artwork with: deep navy blue #182d4c cloth, narrow restrained edge stitching. EXACTLY 2 straight thin WHITE horizontal parallel stripes running continuously from LEFT end to RIGHT end, in the central band. EXACTLY 1 identical large crisp golden FIVE-point star, evenly spaced in ONE horizontal row centered on the plaque. Stars are drawn ON TOP of and obscure the white stripes, not placed above the stripe band. Each star outer diameter is 44% of plaque height. No extra marks. Clean minimalist military game UI style with restrained fabric shading and crisp readable geometric marks. No button, garment, pair, lettering, watermark, backdrop, shadow or glow. Real transparent PNG ALPHA outside plaque, no painted checkerboard. One single isolated shoulder board only."
+      "prompt": "Shared production spec for field_1: one horizontal shoulder board on a transparent RGBA 512 x 192 canvas. Body bounds (24,36)-(488,156), same 36 px clipped outer left corners and 3 px corner rounding; inner right end squared. navy blue fine twill cloth. Exactly 1 identical gold five-point stars, radius 34, inner-radius ratio 0.44, center spacing 80 px. 2 continuous white horizontal stripes beneath the stars, 6 px thick, 14 px center spacing. All ordinary borders 8 px. Star row visible bounds centered at (246,96). Every board has the SAME restrained round gold metal attachment button at (452,96), radius 12, on the INNER RIGHT end. Keep all marks clear of border and button. No garment, pair, text, glow, backdrop or stray alpha pixels. Use the shared material/spec exporter for exact consistency."
     },
     {
       "key": "field_2",
@@ -130,7 +130,7 @@
     {
       "key": "field_2",
       "kind": "board",
-      "prompt": "Use case: precise-object-edit. Edit this single military shoulder-board PNG into rank field_2. Preserve exact outline, front view, orientation, size and position: clipped outer end LEFT, square inner end RIGHT, horizontal elongated plaque. Replace artwork with: deep navy blue #182d4c cloth, narrow restrained edge stitching. EXACTLY 2 straight thin WHITE horizontal parallel stripes running continuously from LEFT end to RIGHT end, in the central band. EXACTLY 2 identical large crisp golden FIVE-point stars, evenly spaced in ONE horizontal row centered on the plaque. Stars are drawn ON TOP of and obscure the white stripes, not placed above the stripe band. Each star outer diameter is 44% of plaque height. No extra marks. Clean minimalist military game UI style with restrained fabric shading and crisp readable geometric marks. No button, garment, pair, lettering, watermark, backdrop, shadow or glow. Real transparent PNG ALPHA outside plaque, no painted checkerboard. One single isolated shoulder board only."
+      "prompt": "Shared production spec for field_2: one horizontal shoulder board on a transparent RGBA 512 x 192 canvas. Body bounds (24,36)-(488,156), same 36 px clipped outer left corners and 3 px corner rounding; inner right end squared. navy blue fine twill cloth. Exactly 2 identical gold five-point stars, radius 34, inner-radius ratio 0.44, center spacing 80 px. 2 continuous white horizontal stripes beneath the stars, 6 px thick, 14 px center spacing. All ordinary borders 8 px. Star row visible bounds centered at (246,96). Every board has the SAME restrained round gold metal attachment button at (452,96), radius 12, on the INNER RIGHT end. Keep all marks clear of border and button. No garment, pair, text, glow, backdrop or stray alpha pixels. Use the shared material/spec exporter for exact consistency."
     },
     {
       "key": "field_3",
@@ -140,7 +140,7 @@
     {
       "key": "field_3",
       "kind": "board",
-      "prompt": "Use case: precise-object-edit. Edit this single military shoulder-board PNG into rank field_3. Preserve exact outline, front view, orientation, size and position: clipped outer end LEFT, square inner end RIGHT, horizontal elongated plaque. Replace artwork with: deep navy blue #182d4c cloth, narrow restrained edge stitching. EXACTLY 2 straight thin WHITE horizontal parallel stripes running continuously from LEFT end to RIGHT end, in the central band. EXACTLY 3 identical large crisp golden FIVE-point stars, evenly spaced in ONE horizontal row centered on the plaque. Stars are drawn ON TOP of and obscure the white stripes, not placed above the stripe band. Each star outer diameter is 44% of plaque height. No extra marks. Clean minimalist military game UI style with restrained fabric shading and crisp readable geometric marks. No button, garment, pair, lettering, watermark, backdrop, shadow or glow. Real transparent PNG ALPHA outside plaque, no painted checkerboard. One single isolated shoulder board only."
+      "prompt": "Shared production spec for field_3: one horizontal shoulder board on a transparent RGBA 512 x 192 canvas. Body bounds (24,36)-(488,156), same 36 px clipped outer left corners and 3 px corner rounding; inner right end squared. navy blue fine twill cloth. Exactly 3 identical gold five-point stars, radius 34, inner-radius ratio 0.44, center spacing 80 px. 2 continuous white horizontal stripes beneath the stars, 6 px thick, 14 px center spacing. All ordinary borders 8 px. Star row visible bounds centered at (246,96). Every board has the SAME restrained round gold metal attachment button at (452,96), radius 12, on the INNER RIGHT end. Keep all marks clear of border and button. No garment, pair, text, glow, backdrop or stray alpha pixels. Use the shared material/spec exporter for exact consistency."
     },
     {
       "key": "field_4",
@@ -150,7 +150,7 @@
     {
       "key": "field_4",
       "kind": "board",
-      "prompt": "Use case: precise-object-edit. Edit this single military shoulder-board PNG into rank field_4. Preserve exact outline, front view, orientation, size and position: clipped outer end LEFT, square inner end RIGHT, horizontal elongated plaque. Replace artwork with: deep navy blue #182d4c cloth, narrow restrained edge stitching. EXACTLY 2 straight thin WHITE horizontal parallel stripes running continuously from LEFT end to RIGHT end, in the central band. EXACTLY 4 identical large crisp golden FIVE-point stars, evenly spaced in ONE horizontal row centered on the plaque. Stars are drawn ON TOP of and obscure the white stripes, not placed above the stripe band. Each star outer diameter is 44% of plaque height. No extra marks. Clean minimalist military game UI style with restrained fabric shading and crisp readable geometric marks. No button, garment, pair, lettering, watermark, backdrop, shadow or glow. Real transparent PNG ALPHA outside plaque, no painted checkerboard. One single isolated shoulder board only."
+      "prompt": "Shared production spec for field_4: one horizontal shoulder board on a transparent RGBA 512 x 192 canvas. Body bounds (24,36)-(488,156), same 36 px clipped outer left corners and 3 px corner rounding; inner right end squared. navy blue fine twill cloth. Exactly 4 identical gold five-point stars, radius 34, inner-radius ratio 0.44, center spacing 80 px. 2 continuous white horizontal stripes beneath the stars, 6 px thick, 14 px center spacing. All ordinary borders 8 px. Star row visible bounds centered at (246,96). Every board has the SAME restrained round gold metal attachment button at (452,96), radius 12, on the INNER RIGHT end. Keep all marks clear of border and button. No garment, pair, text, glow, backdrop or stray alpha pixels. Use the shared material/spec exporter for exact consistency."
     },
     {
       "key": "general_1",
@@ -160,7 +160,7 @@
     {
       "key": "general_1",
       "kind": "board",
-      "prompt": "Use case: precise-object-edit. Edit this single military shoulder-board PNG into rank general_1. Preserve exact outline, front view, orientation, size and position: clipped outer end LEFT, square inner end RIGHT, horizontal elongated plaque. Replace artwork with: dignified military ruby-red #922b3b cloth, narrow restrained edge stitching. EXACTLY 3 straight thin WHITE horizontal parallel stripes running continuously from LEFT end to RIGHT end, in the central band. EXACTLY 1 identical large crisp golden FIVE-point star, evenly spaced in ONE horizontal row centered on the plaque. Stars are drawn ON TOP of and obscure the white stripes, not placed above the stripe band. Each star outer diameter is 44% of plaque height. No extra marks. Clean minimalist military game UI style with restrained fabric shading and crisp readable geometric marks. No button, garment, pair, lettering, watermark, backdrop, shadow or glow. Real transparent PNG ALPHA outside plaque, no painted checkerboard. One single isolated shoulder board only."
+      "prompt": "Shared production spec for general_1: one horizontal shoulder board on a transparent RGBA 512 x 192 canvas. Body bounds (24,36)-(488,156), same 36 px clipped outer left corners and 3 px corner rounding; inner right end squared. ceremonial red fine twill cloth. Exactly 1 identical gold five-point stars, radius 34, inner-radius ratio 0.44, center spacing 80 px. 3 continuous white horizontal stripes beneath the stars, 6 px thick, 14 px center spacing. All ordinary borders 8 px. Star row visible bounds centered at (246,96). Every board has the SAME restrained round gold metal attachment button at (452,96), radius 12, on the INNER RIGHT end. Keep all marks clear of border and button. No garment, pair, text, glow, backdrop or stray alpha pixels. Use the shared material/spec exporter for exact consistency."
     },
     {
       "key": "general_2",
@@ -170,7 +170,7 @@
     {
       "key": "general_2",
       "kind": "board",
-      "prompt": "Use case: precise-object-edit. Edit this single military shoulder-board PNG into rank general_2. Preserve exact outline, front view, orientation, size and position: clipped outer end LEFT, square inner end RIGHT, horizontal elongated plaque. Replace artwork with: dignified military ruby-red #922b3b cloth, narrow restrained edge stitching. EXACTLY 3 straight thin WHITE horizontal parallel stripes running continuously from LEFT end to RIGHT end, in the central band. EXACTLY 2 identical large crisp golden FIVE-point stars, evenly spaced in ONE horizontal row centered on the plaque. Stars are drawn ON TOP of and obscure the white stripes, not placed above the stripe band. Each star outer diameter is 44% of plaque height. No extra marks. Clean minimalist military game UI style with restrained fabric shading and crisp readable geometric marks. No button, garment, pair, lettering, watermark, backdrop, shadow or glow. Real transparent PNG ALPHA outside plaque, no painted checkerboard. One single isolated shoulder board only."
+      "prompt": "Shared production spec for general_2: one horizontal shoulder board on a transparent RGBA 512 x 192 canvas. Body bounds (24,36)-(488,156), same 36 px clipped outer left corners and 3 px corner rounding; inner right end squared. ceremonial red fine twill cloth. Exactly 2 identical gold five-point stars, radius 34, inner-radius ratio 0.44, center spacing 80 px. 3 continuous white horizontal stripes beneath the stars, 6 px thick, 14 px center spacing. All ordinary borders 8 px. Star row visible bounds centered at (246,96). Every board has the SAME restrained round gold metal attachment button at (452,96), radius 12, on the INNER RIGHT end. Keep all marks clear of border and button. No garment, pair, text, glow, backdrop or stray alpha pixels. Use the shared material/spec exporter for exact consistency."
     },
     {
       "key": "general_3",
@@ -180,7 +180,7 @@
     {
       "key": "general_3",
       "kind": "board",
-      "prompt": "Use case: precise-object-edit. Edit this single military shoulder-board PNG into rank general_3. Preserve exact outline, front view, orientation, size and position: clipped outer end LEFT, square inner end RIGHT, horizontal elongated plaque. Replace artwork with: dignified military ruby-red #922b3b cloth, narrow restrained edge stitching. EXACTLY 3 straight thin WHITE horizontal parallel stripes running continuously from LEFT end to RIGHT end, in the central band. EXACTLY 3 identical large crisp golden FIVE-point stars, evenly spaced in ONE horizontal row centered on the plaque. Stars are drawn ON TOP of and obscure the white stripes, not placed above the stripe band. Each star outer diameter is 44% of plaque height. No extra marks. Clean minimalist military game UI style with restrained fabric shading and crisp readable geometric marks. No button, garment, pair, lettering, watermark, backdrop, shadow or glow. Real transparent PNG ALPHA outside plaque, no painted checkerboard. One single isolated shoulder board only."
+      "prompt": "Shared production spec for general_3: one horizontal shoulder board on a transparent RGBA 512 x 192 canvas. Body bounds (24,36)-(488,156), same 36 px clipped outer left corners and 3 px corner rounding; inner right end squared. ceremonial red fine twill cloth. Exactly 3 identical gold five-point stars, radius 34, inner-radius ratio 0.44, center spacing 80 px. 3 continuous white horizontal stripes beneath the stars, 6 px thick, 14 px center spacing. All ordinary borders 8 px. Star row visible bounds centered at (246,96). Every board has the SAME restrained round gold metal attachment button at (452,96), radius 12, on the INNER RIGHT end. Keep all marks clear of border and button. No garment, pair, text, glow, backdrop or stray alpha pixels. Use the shared material/spec exporter for exact consistency."
     },
     {
       "key": "general_4",
@@ -190,7 +190,7 @@
     {
       "key": "general_4",
       "kind": "board",
-      "prompt": "Use case: precise-object-edit. Edit this single military shoulder-board PNG into rank general_4. Preserve exact outline, front view, orientation, size and position: clipped outer end LEFT, square inner end RIGHT, horizontal elongated plaque. Replace artwork with: dignified military ruby-red #922b3b cloth, narrow restrained edge stitching. EXACTLY 3 straight thin WHITE horizontal parallel stripes running continuously from LEFT end to RIGHT end, in the central band. EXACTLY 4 identical large crisp golden FIVE-point stars, evenly spaced in ONE horizontal row centered on the plaque. Stars are drawn ON TOP of and obscure the white stripes, not placed above the stripe band. Each star outer diameter is 44% of plaque height. No extra marks. Clean minimalist military game UI style with restrained fabric shading and crisp readable geometric marks. No button, garment, pair, lettering, watermark, backdrop, shadow or glow. Real transparent PNG ALPHA outside plaque, no painted checkerboard. One single isolated shoulder board only."
+      "prompt": "Shared production spec for general_4: one horizontal shoulder board on a transparent RGBA 512 x 192 canvas. Body bounds (24,36)-(488,156), same 36 px clipped outer left corners and 3 px corner rounding; inner right end squared. ceremonial red fine twill cloth. Exactly 4 identical gold five-point stars, radius 34, inner-radius ratio 0.44, center spacing 80 px. 3 continuous white horizontal stripes beneath the stars, 6 px thick, 14 px center spacing. All ordinary borders 8 px. Star row visible bounds centered at (246,96). Every board has the SAME restrained round gold metal attachment button at (452,96), radius 12, on the INNER RIGHT end. Keep all marks clear of border and button. No garment, pair, text, glow, backdrop or stray alpha pixels. Use the shared material/spec exporter for exact consistency."
     },
     {
       "key": "endgame_1",
@@ -200,7 +200,7 @@
     {
       "key": "endgame_1",
       "kind": "board",
-      "prompt": "Use case: precise-object-edit. Edit this single military shoulder-board PNG into rank endgame_1. Preserve exact outline, front view, orientation, size and position: clipped outer end LEFT, square inner end RIGHT, horizontal elongated plaque. Replace artwork with: dignified mysterious BLACK cloth, refined GOLD outer border. No white stripes. EXACTLY 1 identical crisp golden FIVE-point stars evenly spaced in ONE horizontal row centered on the plaque. Each star outer diameter is 44% of plaque height. No extra marks. Clean minimalist military game UI style with restrained fabric shading and crisp readable geometric marks. No button, garment, pair, lettering, watermark, backdrop, shadow or glow. Real transparent PNG ALPHA outside plaque, no painted checkerboard. One single isolated shoulder board only."
+      "prompt": "Shared production spec for endgame_1: one horizontal shoulder board on a transparent RGBA 512 x 192 canvas. Body bounds (24,36)-(488,156), same 36 px clipped outer left corners and 3 px corner rounding; inner right end squared. near black fine twill cloth. Exactly 1 identical gold five-point stars, radius 34, inner-radius ratio 0.44, center spacing 80 px. No white stripe; formal gold border. All ordinary borders 8 px. Star row visible bounds centered at (246,96). Every board has the SAME restrained round gold metal attachment button at (452,96), radius 12, on the INNER RIGHT end. Keep all marks clear of border and button. No garment, pair, text, glow, backdrop or stray alpha pixels. Use the shared material/spec exporter for exact consistency."
     },
     {
       "key": "endgame_grand_marshal",
@@ -210,7 +210,7 @@
     {
       "key": "endgame_grand_marshal",
       "kind": "board",
-      "prompt": "Use case: precise-object-edit. Edit this single military shoulder-board PNG into rank endgame_grand_marshal. Preserve exact outline, front view, orientation, size and position: clipped outer end LEFT, square inner end RIGHT, horizontal elongated plaque. Replace artwork with: dignified mysterious BLACK cloth, refined GOLD outer border. No white stripes. EXACTLY 2 identical crisp golden FIVE-point stars evenly spaced in ONE horizontal row centered on the plaque. Each star outer diameter is 44% of plaque height. No extra marks. Clean minimalist military game UI style with restrained fabric shading and crisp readable geometric marks. No button, garment, pair, lettering, watermark, backdrop, shadow or glow. Real transparent PNG ALPHA outside plaque, no painted checkerboard. One single isolated shoulder board only."
+      "prompt": "Shared production spec for endgame_grand_marshal: one horizontal shoulder board on a transparent RGBA 512 x 192 canvas. Body bounds (24,36)-(488,156), same 36 px clipped outer left corners and 3 px corner rounding; inner right end squared. near black fine twill cloth. Exactly 2 identical gold five-point stars, radius 34, inner-radius ratio 0.44, center spacing 80 px. No white stripe; formal gold border. All ordinary borders 8 px. Star row visible bounds centered at (246,96). Every board has the SAME restrained round gold metal attachment button at (452,96), radius 12, on the INNER RIGHT end. Keep all marks clear of border and button. No garment, pair, text, glow, backdrop or stray alpha pixels. Use the shared material/spec exporter for exact consistency."
     },
     {
       "key": "endgame_2",
@@ -220,7 +220,7 @@
     {
       "key": "endgame_2",
       "kind": "board",
-      "prompt": "Use case: precise-object-edit. Edit this single military shoulder-board PNG into rank endgame_2. Preserve exact outline, front view, orientation, size and position: clipped outer end LEFT, square inner end RIGHT, horizontal elongated plaque. Replace artwork with: dignified mysterious BLACK cloth, refined GOLD outer border. No white stripes. EXACTLY 3 identical crisp golden FIVE-point stars evenly spaced in ONE horizontal row centered on the plaque. Each star outer diameter is 44% of plaque height. No extra marks. Clean minimalist military game UI style with restrained fabric shading and crisp readable geometric marks. No button, garment, pair, lettering, watermark, backdrop, shadow or glow. Real transparent PNG ALPHA outside plaque, no painted checkerboard. One single isolated shoulder board only."
+      "prompt": "Shared production spec for endgame_2: one horizontal shoulder board on a transparent RGBA 512 x 192 canvas. Body bounds (24,36)-(488,156), same 36 px clipped outer left corners and 3 px corner rounding; inner right end squared. near black fine twill cloth. Exactly 3 identical gold five-point stars, radius 34, inner-radius ratio 0.44, center spacing 80 px. No white stripe; formal gold border. All ordinary borders 8 px. Star row visible bounds centered at (246,96). Every board has the SAME restrained round gold metal attachment button at (452,96), radius 12, on the INNER RIGHT end. Keep all marks clear of border and button. No garment, pair, text, glow, backdrop or stray alpha pixels. Use the shared material/spec exporter for exact consistency."
     },
     {
       "key": "endgame_3",
@@ -230,7 +230,7 @@
     {
       "key": "endgame_3",
       "kind": "board",
-      "prompt": "Use case: precise-object-edit. Edit this single military shoulder-board PNG into rank endgame_3. Preserve exact outline, front view, orientation, size and position: clipped outer end LEFT, square inner end RIGHT, horizontal elongated plaque. Replace artwork with: dignified mysterious BLACK cloth, refined GOLD outer border. No white stripes. EXACTLY 4 identical crisp golden FIVE-point stars evenly spaced in ONE horizontal row centered on the plaque. Each star outer diameter is 44% of plaque height. No extra marks. Clean minimalist military game UI style with restrained fabric shading and crisp readable geometric marks. No button, garment, pair, lettering, watermark, backdrop, shadow or glow. Real transparent PNG ALPHA outside plaque, no painted checkerboard. One single isolated shoulder board only."
+      "prompt": "Shared production spec for endgame_3: one horizontal shoulder board on a transparent RGBA 512 x 192 canvas. Body bounds (24,36)-(488,156), same 36 px clipped outer left corners and 3 px corner rounding; inner right end squared. near black fine twill cloth. Exactly 4 identical gold five-point stars, radius 34, inner-radius ratio 0.44, center spacing 80 px. No white stripe; formal gold border. All ordinary borders 8 px. Star row visible bounds centered at (246,96). Every board has the SAME restrained round gold metal attachment button at (452,96), radius 12, on the INNER RIGHT end. Keep all marks clear of border and button. No garment, pair, text, glow, backdrop or stray alpha pixels. Use the shared material/spec exporter for exact consistency."
     },
     {
       "key": "endgame_4",
@@ -240,7 +240,12 @@
     {
       "key": "endgame_4",
       "kind": "board",
-      "prompt": "Use case: precise-object-edit. Edit this single military shoulder-board PNG into rank endgame_4. Preserve exact outline, front view, orientation, size and position: clipped outer end LEFT, square inner end RIGHT, horizontal elongated plaque. Replace artwork with: supreme military RED-ORANGE #a83d20 cloth with refined GOLD outer border, no white stripes, EXACTLY ONE large crisp golden FIVE-point star at plaque center. The star outer diameter is 66% of plaque height (1.5 times ordinary ranks' 44%). No extra marks. Clean minimalist military game UI style with restrained fabric shading and crisp readable geometric marks. No button, garment, pair, lettering, watermark, backdrop, shadow or glow. Real transparent PNG ALPHA outside plaque, no painted checkerboard. One single isolated shoulder board only."
+      "prompt": "Shared production spec for endgame_4: one horizontal shoulder board on a transparent RGBA 512 x 192 canvas. Body bounds (24,36)-(488,156), same 36 px clipped outer left corners and 3 px corner rounding; inner right end squared. military red orange fine twill cloth. Exactly ONE premium embossed gold star, radius 42, with raised metallic ridges. Gold outer border 16 px, twice the previous approximately 8 px width. No white stripe. All ordinary borders 8 px. Star row visible bounds centered at (246,96). Every board has the SAME restrained round gold metal attachment button at (452,96), radius 12, on the INNER RIGHT end. Keep all marks clear of border and button. No garment, pair, text, glow, backdrop or stray alpha pixels. Use the shared material/spec exporter for exact consistency."
     }
-  ]
+  ],
+  "shoulderBoardMaterial": {
+    "tool": "built-in imagegen",
+    "source": "art/uniforms/shoulder-twill.png",
+    "prompt": "Use case: stylized-concept. Asset type: production military shoulder board fabric material source for a game. Create ONE seamless square swatch of finely woven military uniform twill fabric, charcoal neutral gray, monochrome, orthographic flat front view. Extremely fine close packed diagonal twill fibers, elegant restrained cloth finish. Uniform even neutral lighting across whole image; medium gray overall, no gradients in lighting, no wrinkles, no seams, no border, no insignia, no button, no objects, no text, no watermark. Fill entire 1024 by 1024 square image edge to edge with fabric. This material will be tinted and clipped by a deterministic sprite exporter; it must be subtle and regular, not coarse rope, glitter or visible large weave. Crisp tasteful game illustration material, near-realistic fine woven texture."
+  }
 }

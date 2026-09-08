@@ -26,7 +26,7 @@ function describeShoulder(mark: typeof GROUPS[number]["mark"], count: number, st
   if (mark === "none") return "nền trắng bạc, không ký hiệu";
   if (mark === "bar") return `${count} vạch vàng dọc gần đầu ngoài`;
   if (mark === "chevron") return `${count} vạch chữ V vàng hướng vào trong`;
-  if (mark === "supreme") return "một sao vàng lớn gấp 1,5 lần, nền đỏ cam viền vàng";
+  if (mark === "supreme") return "một sao vàng dập nổi cao cấp, nền đỏ cam viền vàng kép dày";
   return `${count} sao vàng${stripes ? ` chèn trên ${stripes} vạch trắng ngang` : ", nền đen viền vàng"}`;
 }
 
@@ -38,7 +38,7 @@ export const UNIFORM_ART_CATALOG = Object.fromEntries(
       groupLabel: group.label,
       uniformSrc: `/assets/uniforms/uniforms/${familyId}.png`,
       shoulderSrc: `/assets/uniforms/shoulder-boards/${familyId}.png`,
-      shoulderDescription: describeShoulder(group.mark, index + 1, group.stripes),
+      shoulderDescription: `${describeShoulder(group.mark, index + 1, group.stripes)}, có nút đính`,
       glow: group.glow,
     },
   ])),
