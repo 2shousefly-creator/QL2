@@ -297,19 +297,6 @@ export function backfillJournalEvents(draft: GameState): void {
     });
   }
 
-  if ((global?.totalWateringCount || 0) >= 9) {
-    addJournalEvent(draft, {
-      key: "farm:water_all_9",
-      type: "farm_milestone",
-      category: "farm",
-      title: "🌧️ Chăm Đều Khu Vườn",
-      description: "Tích lũy đủ 9 lần tưới nước cho các ô đất trong vườn",
-      iconSymbol: "🌧️",
-      occurredAt: null,
-      dateUnknown: true,
-    });
-  }
-
   if (global?.fertilizerTypesUsed && global.fertilizerTypesUsed.length > 0) {
     addJournalEvent(draft, {
       key: "farm:fertilizer_used",

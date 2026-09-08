@@ -1,10 +1,13 @@
 import { createInitialGameState } from "../../storage/GameRepository";
+import { sanitizeAndMigrateState } from "../../storage/migrations";
+import { addJournalEvent, backfillJournalEvents, recordJournalMedalUnlocked } from "../journal/journalEngine";
 import { MEDAL_CATALOG } from "./medalCatalog";
 import {
   ensureMedalAndMasteryState,
   recordCropHarvestForMedals,
   recordFeedBagsUsed,
   recordPerfectFarmItemSale,
+  recordWatering,
 } from "./medalEngine";
 
 function assert(condition: unknown, message: string): asserts condition {
@@ -52,5 +55,43 @@ assert(
   feedProgress.medals?.unlockedMedalIds.filter((id) => id === "an_no_ngu_ky").length === 1,
   "the feed medal is unlocked exactly once",
 );
+
+const retiredId = "mua_tren_ca_khu_vuon";
+assert(!MEDAL_CATALOG.some((medal) => medal.id === retiredId), "the retired garden medal is absent from the catalog");
+const watering = createInitialGameState("Watering without retired medal");
+recordWatering(watering, 9);
+assert(!unlocked(watering, retiredId), "nine waterings no longer unlock the retired garden medal");
+assert(unlocked(watering, "ban_tay_cham_soc"), "the first-watering medal still unlocks");
+assert(watering.globalStats?.totalWateringCount === 9, "watering statistics remain cumulative");
+
+const legacyGarden = createInitialGameState("Retired garden medal save");
+recordWatering(legacyGarden, 12);
+legacyGarden.medals!.unlockedMedalIds.push(retiredId);
+legacyGarden.medals!.selectedMedalIds.push(retiredId);
+legacyGarden.medals!.unlockedAtMap[retiredId] = 123;
+legacyGarden.ui.pendingMedalUnlockPopup = retiredId;
+recordJournalMedalUnlocked(legacyGarden, retiredId, 123);
+addJournalEvent(legacyGarden, {
+  key: "farm:water_all_9", type: "farm_milestone", category: "farm",
+  title: "Retired garden milestone", description: "Legacy watering milestone", occurredAt: 123,
+});
+const remainingHistory = legacyGarden.journal!.events.filter(
+  (event) => event.relatedId !== retiredId && event.key !== "farm:water_all_9"
+);
+const keptUnlockTime = legacyGarden.medals!.unlockedAtMap.ban_tay_cham_soc;
+const savedGarden = JSON.parse(JSON.stringify(legacyGarden));
+ensureMedalAndMasteryState(legacyGarden);
+assert(legacyGarden.ui.pendingMedalUnlockPopup === null, "a pending retired-medal popup is cleared");
+const migratedGarden = sanitizeAndMigrateState(savedGarden);
+assert(!unlocked(migratedGarden, retiredId), "save load removes the retired unlocked medal");
+assert(!migratedGarden.medals!.selectedMedalIds.includes(retiredId), "save load frees the retired display slot");
+assert(!(retiredId in migratedGarden.medals!.unlockedAtMap), "the retired unlock timestamp is removed");
+assert(migratedGarden.medals!.unlockedAtMap.ban_tay_cham_soc === keptUnlockTime, "other medal timestamps are preserved");
+assert(JSON.stringify(migratedGarden.journal!.events) === JSON.stringify(remainingHistory), "only retired garden history is removed");
+assert(migratedGarden.globalStats!.totalWateringCount === 12, "save migration preserves watering statistics");
+recordWatering(migratedGarden, 9);
+backfillJournalEvents(migratedGarden);
+assert(!unlocked(migratedGarden, retiredId), "later watering never awards the retired medal again");
+assert(!migratedGarden.journal!.events.some((event) => event.key === "farm:water_all_9" || event.relatedId === retiredId), "journal backfill never recreates retired garden events");
 
 console.log("\nALL FARM MEDAL TESTS PASSED");

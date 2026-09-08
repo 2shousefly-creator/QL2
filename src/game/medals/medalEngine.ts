@@ -3,6 +3,8 @@ import { MEDAL_CATALOG, getLifetimeXp, getUniqueSuccessfulMinigames, getUniqueHa
 import { MASTERY_CONFIGS } from "../mastery/masteryConfig";
 import { recordJournalMedalUnlocked, recordJournalMasteryReached, addJournalEvent } from "../journal/journalEngine";
 
+const RETIRED_GARDEN_MEDAL_ID = "mua_tren_ca_khu_vuon";
+
 export function reconcileAllMedals(draft: GameState): void {
   if (!draft.medals) return;
   const medalsState = draft.medals;
@@ -15,6 +17,22 @@ export function reconcileAllMedals(draft: GameState): void {
   if (Array.isArray(medalsState.selectedMedalIds)) {
     medalsState.selectedMedalIds = medalsState.selectedMedalIds.filter(
       (id) => validIds.has(id) && medalsState.unlockedMedalIds.includes(id)
+    );
+  }
+
+  // Retire this award from old saves without resetting watering statistics or
+  // unrelated medals/history. This also runs when loading/importing a save.
+  if (medalsState.unlockedAtMap) {
+    delete medalsState.unlockedAtMap[RETIRED_GARDEN_MEDAL_ID];
+  }
+  if (draft.ui.pendingMedalUnlockPopup === RETIRED_GARDEN_MEDAL_ID) {
+    draft.ui.pendingMedalUnlockPopup = null;
+  }
+  if (Array.isArray(draft.journal?.events)) {
+    draft.journal.events = draft.journal.events.filter(
+      (event) => event.relatedId !== RETIRED_GARDEN_MEDAL_ID
+        && event.key !== `medal:${RETIRED_GARDEN_MEDAL_ID}`
+        && event.key !== "farm:water_all_9"
     );
   }
 }

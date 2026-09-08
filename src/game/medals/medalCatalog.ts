@@ -607,25 +607,6 @@ export const MEDAL_CATALOG: MedalDefinition[] = [
     },
   },
   {
-    id: "mua_tren_ca_khu_vuon",
-    category: "farm",
-    categoryName: "Tăng Gia",
-    name: "Chăm Đều Khu Vườn",
-    iconSymbol: "🎖️",
-    description: "Tích lũy 9 lần tưới nước cho các ô đất trong khu vườn",
-    conditionHint: "Thực hiện tổng cộng 9 lần tưới nước",
-    bgGradient: MEDAL_TIER_STYLES[3].bgGradient,
-    borderColor: MEDAL_TIER_STYLES[3].borderColor,
-    glowColor: MEDAL_TIER_STYLES[3].glowColor,
-    textColor: MEDAL_TIER_STYLES[3].textColor,
-    targetValue: 9,
-    tier: 3,
-    getProgress: (state) => {
-      const current = state.globalStats?.totalWateringCount || 0;
-      return { current: Math.min(current, 9), target: 9, isUnlocked: current >= 9 };
-    },
-  },
-  {
     id: "bac_thay_canh_tac",
     category: "farm",
     categoryName: "Tăng Gia",
