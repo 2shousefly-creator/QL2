@@ -1,0 +1,36 @@
+name: Uniform recovery source export
+on:
+  push:
+    branches:
+      - codex/uniform-recovery-20260908
+    paths:
+      - .github/workflows/uniform-recovery-export.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Package original uniform assets and relevant source
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile, ZIP_DEFLATED
+          import hashlib, json
+          paths = [Path('public/assets/uniforms'), Path('src/features/profile/uniform'), Path('src/features/profile/UniformScreen.tsx'), Path('src/features/profile/ProfileScreen.tsx'), Path('src/game/rankFamilies.ts'), Path('src/game/types.ts'), Path('src/components/RankBadge.tsx'), Path('src/components/RankTierProgress.tsx'), Path('src/components/DisplayedMedal.tsx'), Path('src/components/MedalInspectModal.tsx'), Path('src/game/medals/medalCatalog.ts'), Path('package.json'), Path('tsconfig.json'), Path('vite.config.ts')]
+          files = sorted({f for p in paths for f in (p.rglob('*') if p.is_dir() else [p]) if f.is_file()})
+          manifest = {str(p): hashlib.sha256(p.read_bytes()).hexdigest() for p in files}
+          with ZipFile('uniform-recovery-source.zip', 'w', ZIP_DEFLATED) as z:
+            for p in files: z.write(p, str(p))
+            z.writestr('recovery-manifest.json', json.dumps(manifest, indent=2))
+          print('Packaged', len(files), 'files')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: uniform-recovery-source
+          path: uniform-recovery-source.zip
+          retention-days: 1
+          if-no-files-found: error
