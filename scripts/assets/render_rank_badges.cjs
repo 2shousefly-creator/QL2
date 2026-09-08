@@ -25,7 +25,7 @@ const polygon = (p, fill, rest = '') => `<polygon points="${points(p)}" fill="${
 const curve = (d, fill, rest = '') => `<path d="${d}" fill="${fill}" ${rest}/>`;
 const circle = (x, y, r, fill, rest = '') => `<circle cx="${x}" cy="${y}" r="${r}" fill="${fill}" ${rest}/>`;
 const mirror = (markup) => `<g>${markup}</g><g transform="translate(224 0) scale(-1 1)">${markup}</g>`;
-const scalePoints = (p, factor) => p.map(([x, y]) => [112 + (x-112)*factor, 112 + (y-112)*factor]);
+const scalePoints = (p, factor, [cx,cy] = [112,112]) => p.map(([x, y]) => [cx + (x-cx)*factor, cy + (y-cy)*factor]);
 
 const DEFS = `<defs>
   <linearGradient id="steel" x1="0" y1="0" x2="1" y2="1" gradientUnits="objectBoundingBox">
@@ -67,21 +67,44 @@ const DEFS = `<defs>
 </defs>`;
 
 const SQUARE = [[8,8],[216,8],[216,216],[8,216]];
-const PENTAGON = [[112,12],[216,87],[177,212],[47,212],[8,87]];
-const HEXAGON = [[112,8],[203,60],[203,164],[112,216],[21,164],[21,60]];
-const OCTAGON = [[112,8],[186,38],[216,112],[186,186],[112,216],[38,186],[8,112],[38,38]];
-const DECAGON = Array.from({length:10}, (_, i) => {
-  const a = (-90+i*36)*Math.PI/180;
-  return [112+104*Math.cos(a),112+104*Math.sin(a)];
-});
+
+function regularPolygon(sides) {
+  const unit = Array.from({length:sides}, (_,i) => {
+    const angle = -Math.PI/2 + i*2*Math.PI/sides;
+    return [Math.cos(angle),Math.sin(angle)];
+  });
+  const xs=unit.map(([x])=>x),ys=unit.map(([,y])=>y);
+  const minX=Math.min(...xs),maxX=Math.max(...xs),minY=Math.min(...ys),maxY=Math.max(...ys);
+  // Fit with ONE scale, never stretch x/y independently. Center the visible
+  // bounds in the image; an odd polygon's circumcenter is not its box center.
+  const radius=(LOGICAL_SIZE-2*PADDING)/Math.max(maxX-minX,maxY-minY);
+  const cx=LOGICAL_SIZE/2-(minX+maxX)*radius/2;
+  const cy=LOGICAL_SIZE/2-(minY+maxY)*radius/2;
+  return unit.map(([x,y])=>[cx+x*radius,cy+y*radius]);
+}
+
+const PENTAGON = regularPolygon(5);
+const HEXAGON = regularPolygon(6);
+const HEPTAGON = regularPolygon(7);
+const OCTAGON = regularPolygon(8);
+const NONAGON = regularPolygon(9);
 
 function frame(outline, base, ceremonial = false, supreme = false) {
   const rim = ceremonial ? 'url(#gold)' : '#f5f7fa';
-  return polygon(outline, ceremonial ? '#9b6a22' : '#a6b0b8') +
-    polygon(scalePoints(outline, .988), supreme ? 'url(#supremeGold)' : rim) +
-    polygon(scalePoints(outline, ceremonial ? .903 : .933), ceremonial ? '#fff0a6' : '#ffffff') +
-    polygon(scalePoints(outline, ceremonial ? .885 : .925), `url(#${base})`) +
-    (supreme ? polygon(scalePoints(outline,.85),'none','stroke="#e2b349" stroke-width="1.2"') : '');
+  const center=outline.reduce(([cx,cy],[x,y])=>[cx+x/outline.length,cy+y/outline.length],[0,0]);
+  // All layers share the actual circumcenter, including odd-sided frames.
+  // Keep six decimals for frames without altering any existing ornament paths.
+  const draw=(factor,fill,rest='')=>{
+    const p=scalePoints(outline,factor,center);
+    if(outline===SQUARE) return polygon(p,fill,rest);
+    const coordinates=p.map(([x,y])=>`${Number(x.toFixed(6))},${Number(y.toFixed(6))}`).join(' ');
+    return `<polygon points="${coordinates}" fill="${fill}" ${rest}/>`;
+  };
+  return draw(1, ceremonial ? '#9b6a22' : '#a6b0b8') +
+    draw(.988, supreme ? 'url(#supremeGold)' : rim) +
+    draw(ceremonial ? .903 : .933, ceremonial ? '#fff0a6' : '#ffffff') +
+    draw(ceremonial ? .885 : .925, `url(#${base})`) +
+    (supreme ? draw(.85,'none','stroke="#e2b349" stroke-width="1.2"') : '');
 }
 
 function starPoints(cx,cy,r) {
@@ -126,7 +149,7 @@ function leaf(bx,by,tx,ty,width,fill,vein=false) {
 }
 
 // One shared alignment grid for all four badges in each officer family.
-// Both polygon bounding boxes and the 224px canvas have their center at 112,112.
+// Polygon visible bounding boxes and the canvas have their center at 112,112.
 const BADGE_CENTER = LOGICAL_SIZE / 2;
 const OFFICER_RING_RADIUS = { junior: 59, field: 57 };
 // The pentagon's broad lower body needs an optical offset relative to its box.
@@ -307,9 +330,9 @@ function drawBadge(group,count) {
     case 'nco': return squareMarks(count,true);
     case 'junior': return juniorOfficerBase()+`<g data-junior-stars="centered" transform="translate(0 ${JUNIOR_OPTICAL_OFFSET_Y})">${starCluster(count,BADGE_CENTER)}</g>`;
     case 'field': return frame(HEXAGON,'sapphire')+officerRing('field')+lowerLaurel()+starCluster(count,BADGE_CENTER);
-    case 'general': return frame(OCTAGON,'ruby')+wreath()+starCluster(count,BADGE_CENTER);
+    case 'general': return frame(HEPTAGON,'ruby')+wreath()+starCluster(count,BADGE_CENTER);
     case 'guardian': return frame(OCTAGON,'obsidian',true)+wreath(true)+starCluster(count,BADGE_CENTER,'ceremonial');
-    case 'supreme': return frame(DECAGON,'crimson',true,true)+supremeWreath()+`<g data-star-count="1" data-star-radius="${SUPREME_STAR_RADIUS}">${star(112,112,SUPREME_STAR_RADIUS,'supreme')}</g>`;
+    case 'supreme': return frame(NONAGON,'crimson',true,true)+supremeWreath()+`<g data-star-count="1" data-star-radius="${SUPREME_STAR_RADIUS}">${star(112,112,SUPREME_STAR_RADIUS,'supreme')}</g>`;
     default: throw new Error(`Unknown group ${group}`);
   }
 }
