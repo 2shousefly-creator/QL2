@@ -27,6 +27,11 @@ const circle = (x, y, r, fill, rest = '') => `<circle cx="${x}" cy="${y}" r="${r
 const mirror = (markup) => `<g>${markup}</g><g transform="translate(224 0) scale(-1 1)">${markup}</g>`;
 const scalePoints = (p, factor, [cx,cy] = [112,112]) => p.map(([x, y]) => [cx + (x-cx)*factor, cy + (y-cy)*factor]);
 
+// Background lighting is shared across every family and isolated from the
+// metal gradients used by rims, the academy character and ceremonial stars.
+const backgroundGradient = (id, light, middle, shade) =>
+  `<linearGradient id="${id}" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="224" y2="224"><stop offset="0" stop-color="${light}"/><stop offset=".48" stop-color="${middle}"/><stop offset="1" stop-color="${shade}"/></linearGradient>`;
+
 const DEFS = `<defs>
   <linearGradient id="steel" x1="0" y1="0" x2="1" y2="1" gradientUnits="objectBoundingBox">
     <stop offset="0" stop-color="#fafcfd"/><stop offset=".28" stop-color="#b3bdc6"/>
@@ -38,24 +43,14 @@ const DEFS = `<defs>
   <linearGradient id="silverDark" x1="0" y1="0" x2="1" y2="1">
     <stop stop-color="#26313b"/><stop offset=".5" stop-color="#7e8a96"/><stop offset="1" stop-color="#1c252d"/>
   </linearGradient>
-  <linearGradient id="charcoal" x1="0" y1="0" x2="0" y2="1">
-    <stop stop-color="#20252b"/><stop offset="1" stop-color="#0c1015"/>
-  </linearGradient>
-  <linearGradient id="army" x1="0" y1="0" x2="0" y2="1">
-    <stop stop-color="#355537"/><stop offset="1" stop-color="#1c3526"/>
-  </linearGradient>
-  <linearGradient id="sapphire" x1="0" y1="0" x2="0" y2="1">
-    <stop stop-color="#123b61"/><stop offset="1" stop-color="#081f39"/>
-  </linearGradient>
-  <linearGradient id="ruby" x1="0" y1="0" x2="0" y2="1">
-    <stop stop-color="#a72436"/><stop offset="1" stop-color="#700d21"/>
-  </linearGradient>
-  <linearGradient id="obsidian" x1="0" y1="0" x2="0" y2="1">
-    <stop stop-color="#1e2225"/><stop offset="1" stop-color="#070b0e"/>
-  </linearGradient>
-  <linearGradient id="crimson" x1="0" y1="0" x2="0" y2="1">
-    <stop stop-color="#aa1830"/><stop offset="1" stop-color="#5c091b"/>
-  </linearGradient>
+  ${backgroundGradient('academyBackground','#eef3f6','#dce4eb','#aebbc8')}
+  ${backgroundGradient('charcoal','#25323c','#182128','#0c131b')}
+  ${backgroundGradient('navy','#263442','#172431','#0d1722')}
+  ${backgroundGradient('army','#3f6041','#294a32','#182e22')}
+  ${backgroundGradient('sapphire','#20476b','#103451','#091e34')}
+  ${backgroundGradient('ruby','#af3042','#8a1b30','#620f22')}
+  ${backgroundGradient('obsidian','#2d3439','#191f24','#080d12')}
+  ${backgroundGradient('crimson','#b62b3e','#8b172c','#580e21')}
   <linearGradient id="gold" x1="0" y1="0" x2=".8" y2="1">
     <stop stop-color="#fff0a7"/><stop offset=".35" stop-color="#f5d66d"/>
     <stop offset=".7" stop-color="#dfaf3e"/><stop offset="1" stop-color="#b88124"/>
@@ -127,7 +122,7 @@ function star(cx,cy,r,style) {
     polygon(p,'none',`stroke="${style==='supreme'?'#ffedb0':'#fae394'}" stroke-width="${style==='supreme'?'.55':'.25'}" stroke-linejoin="miter"`) + '</g>';
 }
 
-function starCluster(count,cy=108,style='flat') {
+function starCluster(count,cy=108,style='ceremonial') {
   // Each individual star keeps the same radius for 1, 2, 3 and 4 stars.
   const centers={
     1:[[112,cy]],
@@ -270,7 +265,7 @@ function academy() {
     polygon([[13,13],[211,13],[211,211],[13,211]],'url(#silverDark)')+
     polygon([[17,17],[207,17],[207,207],[17,207]],'url(#silverFace)');
   const inner=[[51,25],[173,25],[186,38],[199,38],[199,61],[207,69],[207,155],[199,163],[199,187],[186,187],[173,199],[51,199],[38,187],[25,187],[25,163],[17,155],[17,69],[25,61],[25,38],[38,38]];
-  art+=polygon(inner,'url(#silverDark)')+polygon(scalePoints(inner,.964),'url(#steel)')+polygon(scalePoints(inner,.936),'url(#silverFace)');
+  art+=polygon(inner,'url(#silverDark)')+polygon(scalePoints(inner,.964),'url(#steel)')+polygon(scalePoints(inner,.936),'url(#academyBackground)');
   const corner=polygon([[13,13],[57,13],[40,30],[29,30]],'#303b45')+
     curve('M14 14 L29 29 L39 29 L54 14','none','stroke="#fbfdff" stroke-width="1.3"');
   art+=Array.from({length:4},(_,i)=>`<g transform="rotate(${i*90} 112 112)">${corner}</g>`).join('');
@@ -301,7 +296,7 @@ function academy() {
 }
 
 function squareMarks(count,chevron) {
-  let art=frame(SQUARE,'charcoal');
+  let art=frame(SQUARE,chevron?'navy':'charcoal');
   if(!chevron) {
     const thickness=19,gap=13,total=count*thickness+(count-1)*gap;
     for(let i=0;i<count;i++) art+=`<rect x="40" y="${112-total/2+i*(thickness+gap)}" width="144" height="${thickness}" fill="#f8d52b"/>`;

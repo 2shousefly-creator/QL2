@@ -1,4 +1,4 @@
-/** Render the densest badge in each polygon family at actual UI sizes.
+/** Render a representative badge in each visual family at actual UI sizes.
  * Requires the same authoring Sharp installation as render_rank_badges.cjs.
  * The line under each badge uses the registry's measured tier-width contract.
  */
@@ -8,13 +8,15 @@ const sharp = require('sharp');
 const root = path.resolve(__dirname, '../..');
 const registry = fs.readFileSync(path.join(root, 'src/game/rankBadgeAssets.ts'), 'utf8');
 const rows = [
+  ['hoc-vien', 'Học Viên · bạc'], ['binh-nhat', 'Binh Sĩ · charcoal'],
+  ['thuong-si', 'Hạ Sĩ Quan · navy'],
   ['dai-uy', 'Úy · 5 cạnh'], ['dai-ta', 'Tá · 6 cạnh'],
   ['dai-tuong', 'Tướng · 7 cạnh'], ['dai-nguyen-soai', 'Tứ Tinh Thủ Hộ · 8 cạnh'],
   ['tong-tu-lenh', 'Tổng Tư Lệnh · 9 cạnh'],
 ];
 const sizes = [14, 24, 36, 50, 56, 96, 128];
 const widths = [60, 65, 70, 80, 90, 130, 170];
-const width = 1400, height = 924;
+const width = 1400, height = 44 + rows.length * 176;
 
 async function main() {
   const tiles = [];
@@ -43,6 +45,6 @@ async function main() {
   }
   await sharp({ create: { width, height, channels: 4, background: '#0e1826' } }).composite(tiles)
     .webp({ quality: 95 }).toFile(path.join(root, 'docs/rank-badges-scales.webp'));
-  console.log('Rendered five polygon families at 14/24/36/50/56/96/128px on light/dark backgrounds.');
+  console.log('Rendered eight visual families at 14/24/36/50/56/96/128px on light/dark backgrounds.');
 }
 main().catch(error => { console.error(error); process.exitCode = 1; });

@@ -1,6 +1,6 @@
 /** Audit the exported geometry and PNGs, independently of the renderer.
- * NODE_PATH=/path/to/node_modules node scripts/assets/audit_rank_badge_polygons.cjs [baseline] [general]
- * A baseline verifies 17 changed frames, or just the four general layouts in general mode.
+ * NODE_PATH=/path/to/node_modules node scripts/assets/audit_rank_badge_polygons.cjs [baseline] [general|visual]
+ * Baseline modes: polygon frames (default), general translation, or stars/backgrounds.
  */
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
@@ -11,8 +11,9 @@ const sharp = require('sharp');
 const root = path.resolve(__dirname, '../..');
 const baseline = process.argv[2];
 const generalOnly = process.argv[3] === 'general';
-assert(!process.argv[3] || generalOnly, 'Unknown audit mode');
-assert(!generalOnly || baseline, 'General layout audit needs its Git baseline');
+const visualOnly = process.argv[3] === 'visual';
+assert(!process.argv[3] || generalOnly || visualOnly, 'Unknown audit mode');
+assert(!(generalOnly || visualOnly) || baseline, 'Scoped audit needs its Git baseline');
 const read = file => fs.readFileSync(path.join(root, file));
 const previous = file => execFileSync('git', ['-C', root, 'show', `${baseline}:${file}`], { maxBuffer: 8e6 });
 const normalize = text => text.replace(/\r\n/g, '\n');
@@ -57,13 +58,53 @@ function geometry(markup, sides, label) {
   return { p, center, radius: radii[0] };
 }
 
+function auditVisual(svg, oldSvg, group, name) {
+  const backgrounds = { academy: 'academyBackground', enlisted: 'charcoal', nco: 'navy', junior: 'army', field: 'sapphire', general: 'ruby', guardian: 'obsidian', supreme: 'crimson' };
+  const gradientId = backgrounds[group];
+  const gradient = svg.match(new RegExp(`<linearGradient id="${gradientId}"[^>]*>[\\s\\S]*?</linearGradient>`))?.[0];
+  assert(gradient?.includes('gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="224" y2="224"'), `${name}: shared light direction`);
+  const colors = [...gradient.matchAll(/stop-color="(#[a-f0-9]{6})"/g)].map(match => match[1]);
+  assert.equal(new Set(colors).size, 3, `${name}: three distinct, smooth gradient stops`);
+  assert(gradient.includes('offset="0"') && gradient.includes('offset=".48"') && gradient.includes('offset="1"'));
+  const defsEnd = svg.indexOf('</defs>') + 7, oldDefsEnd = oldSvg.indexOf('</defs>') + 7;
+  const stripBackgrounds = defs => defs.replace(/<linearGradient id="(academyBackground|charcoal|navy|army|sapphire|ruby|obsidian|crimson)"[^>]*>[\s\S]*?<\/linearGradient>/g, '').replace(/\s+/g, '');
+  assert.equal(stripBackgrounds(svg.slice(0, defsEnd)), stripBackgrounds(oldSvg.slice(0, oldDefsEnd)), `${name}: preserve metal/star gradients`);
+  let art = svg.slice(defsEnd), oldArt = oldSvg.slice(oldDefsEnd);
+  const polygons = [...art.matchAll(/<polygon[^>]+\/>/g)];
+  // Academy's inset background is its seventh polygon; every other badge's
+  // fourth polygon is the colored face. No rim or icon gets the new lighting.
+  const backgroundFace = polygons[group === 'academy' ? 6 : 3][0];
+  assert(backgroundFace.includes(`fill="url(#${gradientId})"`), `${name}: background gradient is actually used`);
+  if (group === 'academy') art = art.replace('url(#academyBackground)', 'url(#silverFace)');
+  if (group === 'nco') art = art.replace('url(#navy)', 'url(#charcoal)');
+  if (['junior', 'field', 'general'].includes(group)) {
+    const oldStars = [...oldArt.matchAll(/<polygon points="([^"]+)" fill="#f8ce42" data-star-style="flat"\/>/g)];
+    const newStars = [...art.matchAll(/<g data-star-style="ceremonial">(?:<polygon[^>]+\/>)+<\/g>/g)];
+    assert.equal(newStars.length, oldStars.length, `${name}: preserve number of stars`);
+    assert(newStars.length >= 1 && newStars.length <= 4);
+    for (let i = 0; i < newStars.length; i++) {
+      const faces = [...newStars[i][0].matchAll(/<polygon points="([^"]+)"[^>]*\/>/g)];
+      assert.equal(faces.length, 12, `${name}: clean ceremonial facets and outline`);
+      assert.equal(faces[0][1], oldStars[i][1], `${name}: preserve star silhouette, center and scale`);
+      assert.equal(faces[11][1], oldStars[i][1], `${name}: preserve outline`);
+      // Match the exact guardian rendering for the same 1/2/3/4-star layout.
+      const guardianName = ['thong-soai', 'dai-thong-soai', 'nguyen-soai', 'dai-nguyen-soai'][newStars.length - 1];
+      const guardianSvg = read(`art/rank-badges/${guardianName}.svg`).toString();
+      const guardianStars = [...guardianSvg.matchAll(/<g data-star-style="ceremonial">(?:<polygon[^>]+\/>)+<\/g>/g)];
+      assert.equal(newStars[i][0], guardianStars[i][0], `${name}: use unchanged guardian star visual`);
+      art = art.replace(newStars[i][0], oldStars[i][0]);
+    }
+  }
+  assert.equal(art, oldArt, `${name}: only background fills and officer star visuals may change`);
+}
+
 async function main() {
   if (baseline) {
     const strip = text => normalize(text).replace(/\?v=[a-f0-9]+/g, '').replace(/outerWidthRatio: \d+/g, 'outerWidthRatio: measured');
     assert.equal(strip(registry), strip(previous(registryFile).toString()), 'IDs, paths and registry contract must be preserved');
-    if (generalOnly) {
+    if (generalOnly || visualOnly) {
       const stripHash = text => normalize(text).replace(/\?v=[a-f0-9]+/g, '');
-      assert.equal(stripHash(registry), stripHash(previous(registryFile).toString()), 'General polish may only change URL hashes');
+      assert.equal(stripHash(registry), stripHash(previous(registryFile).toString()), 'Visual polish may only change URL hashes');
     }
     assert.equal(normalize(catalog), normalize(previous('src/game/badgeCatalog.ts').toString()));
   }
@@ -95,16 +136,17 @@ async function main() {
     near((minX + maxX) / 2, 447.5, `${name}: raster horizontal center`, 0.51);
     near((minY + maxY) / 2, 447.5, `${name}: raster vertical center`, 0.51);
     if (baseline) {
-      const shouldChange = generalOnly ? group === 'general' : !!spec;
+      const shouldChange = visualOnly || (generalOnly ? group === 'general' : !!spec);
       const oldPng = previous(file);
       assert.equal(!png.equals(oldPng), shouldChange, `${name}: changed asset scope`);
       if (shouldChange) changed++;
       else assert.equal(svg, normalize(previous(svgFile).toString()).trim(), `${name}: untouched artwork`);
-      if (generalOnly) {
+      if (generalOnly || visualOnly) {
         const alpha = await sharp(png).extractChannel('alpha').raw().toBuffer();
         const oldAlpha = await sharp(oldPng).extractChannel('alpha').raw().toBuffer();
         assert(alpha.equals(oldAlpha), `${name}: preserve exact alpha bounds`);
       }
+      if (visualOnly) auditVisual(svg, normalize(previous(svgFile).toString()).trim(), group, name);
     }
     if (!spec) continue;
     polygons++;
@@ -122,7 +164,7 @@ async function main() {
       near(layer.center[1], outer.center[1], `${name}: concentric y`);
       near(layer.radius, outer.radius * scales[index], `${name}: uniform layer scale`);
     }
-    if (baseline) {
+    if (baseline && !visualOnly) {
       const old = frameParts(normalize(previous(svgFile).toString()).trim(), scales.length);
       assert.equal(parts.defs, old.defs, `${name}: preserve palette`);
       if (generalOnly) assert.equal(parts.frame, old.frame, `${name}: preserve all frame layers`);
@@ -132,7 +174,7 @@ async function main() {
     }
     const count = Number(definition.match(/symbolCount: (\d+)/)[1]);
     assert(parts.ornament.includes(`data-star-count="${count}"`), `${name}: star count`);
-    const style = group === 'supreme' ? 'supreme' : group === 'guardian' ? 'ceremonial' : 'flat';
+    const style = group === 'supreme' ? 'supreme' : 'ceremonial';
     assert.equal((parts.ornament.match(new RegExp(`data-star-style="${style}"`, 'g')) || []).length, count);
     // Rasterize the unchanged ornaments alone, then measure their distance to
     // each INNER background edge. A positive minimum proves no leaf hits a rim.
@@ -166,9 +208,10 @@ async function main() {
     }
   }
   assert.equal(polygons, 17);
-  if (baseline) assert.equal(changed, generalOnly ? 4 : 17);
+  if (baseline) assert.equal(changed, visualOnly ? 24 : generalOnly ? 4 : 17);
   for (const [group, item] of report) console.log(`${group}: ${item.sides} equal sides; visible width ${item.width}/896; inner rim clearance >= ${item.clearance.toFixed(2)} logical px`);
-  const scope = !baseline ? '' : generalOnly
+  const scope = !baseline ? '' : visualOnly
+    ? '24 backgrounds updated; 12 officer badges use exact guardian stars; all geometry, other ornament artwork and alpha preserved.' : generalOnly
     ? 'Only four general layouts moved down 5px; identical frames, alpha, ornament artwork and 20 other badges.'
     : '17 frames changed; all ornaments and 7 square badges preserved.';
   console.log(`PASS: 17 regular, concentric polygon frames; 24 matching 896px RGBA PNGs, valid cache hashes and measured widths. ${scope} PNG total: ${bytes} bytes.`);
