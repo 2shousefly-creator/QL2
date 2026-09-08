@@ -129,6 +129,10 @@ function leaf(bx,by,tx,ty,width,fill,vein=false) {
 // Both polygon bounding boxes and the 224px canvas have their center at 112,112.
 const BADGE_CENTER = LOGICAL_SIZE / 2;
 const OFFICER_RING_RADIUS = { junior: 59, field: 57 };
+// The pentagon's broad lower body needs an optical offset relative to its box.
+// Ring, star cluster and mini laurel share this offset across all four ranks.
+const JUNIOR_OPTICAL_OFFSET_Y = 8;
+const JUNIOR_RING_STROKE = 3.8;
 const polar = (radius, degrees) => {
   const angle=degrees*Math.PI/180;
   return [BADGE_CENTER+radius*Math.cos(angle), BADGE_CENTER+radius*Math.sin(angle)];
@@ -165,14 +169,23 @@ function branchRoot(base,tip,width,fill) {
 }
 
 function officerRing(group) {
-  return circle(BADGE_CENTER,BADGE_CENTER,OFFICER_RING_RADIUS[group],'none',
-    `data-officer-ring="${group}" stroke="${group==='junior'?'#f7f8ed':'#f5f8fc'}" stroke-width="3.3"`);
+  const junior=group==='junior';
+  return circle(BADGE_CENTER,BADGE_CENTER+(junior?JUNIOR_OPTICAL_OFFSET_Y:0),OFFICER_RING_RADIUS[group],'none',
+    `data-officer-ring="${group}" stroke="${junior?'#f7f8ed':'#f5f8fc'}" stroke-width="${junior?JUNIOR_RING_STROKE:3.3}"`);
 }
 
-function sprouts() {
-  const left=laurelArc({radius:78,start:119,end:157,angles:[125,134,143,152],
-    length:7.4,spread:4,width:4.8,fill:'#f5f6e9',stemWidth:1.8});
-  return `<g data-laurel="mini">${mirror(left)}</g>`;
+function juniorLaurel() {
+  // Both circular stems start at the SAME bottom point (112,185), then rise
+  // left/right. Their 55-degree arcs are shorter than the field officer's 74.
+  const left=laurelArc({radius:73,start:90,end:145,angles:[100,110,120,130,140],
+    length:7.4,spread:4.2,width:5.2,fill:'#f5f6e9',stemWidth:1.9});
+  return `<g data-laurel="mini" data-shared-root="112,193" transform="translate(0 ${JUNIOR_OPTICAL_OFFSET_Y})">${mirror(left)}</g>`;
+}
+
+function juniorOfficerBase() {
+  // A complete, undashed SVG circle is drawn last over the shared base artwork.
+  // No masks, clips or leaf paths can remove a section of the ring.
+  return frame(PENTAGON,'army')+juniorLaurel()+officerRing('junior');
 }
 
 function lowerLaurel() {
@@ -292,7 +305,7 @@ function drawBadge(group,count) {
     case 'academy': return academy();
     case 'enlisted': return squareMarks(count,false);
     case 'nco': return squareMarks(count,true);
-    case 'junior': return frame(PENTAGON,'army')+officerRing('junior')+sprouts()+starCluster(count,BADGE_CENTER);
+    case 'junior': return juniorOfficerBase()+`<g data-junior-stars="centered" transform="translate(0 ${JUNIOR_OPTICAL_OFFSET_Y})">${starCluster(count,BADGE_CENTER)}</g>`;
     case 'field': return frame(HEXAGON,'sapphire')+officerRing('field')+lowerLaurel()+starCluster(count,BADGE_CENTER);
     case 'general': return frame(OCTAGON,'ruby')+wreath()+starCluster(count,BADGE_CENTER);
     case 'guardian': return frame(OCTAGON,'obsidian',true)+wreath(true)+starCluster(count,BADGE_CENTER,'ceremonial');
