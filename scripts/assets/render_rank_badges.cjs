@@ -118,7 +118,10 @@ function starCluster(count,cy=108,style='flat') {
 
 function leaf(bx,by,tx,ty,width,fill,vein=false) {
   const dx=tx-bx,dy=ty-by,len=Math.hypot(dx,dy),nx=-dy/len,ny=dx/len;
-  const d=`M${f(bx)} ${f(by)} Q${f(bx+dx*.35+nx*width)} ${f(by+dy*.35+ny*width)} ${f(tx)} ${f(ty)} Q${f(bx+dx*.6-nx*width*.7)} ${f(by+dy*.6-ny*width*.7)} ${f(bx)} ${f(by)}Z`;
+  // Full shoulders and a rounded apex, with both sides returning to the stem.
+  // The shared tangent across the apex avoids a sharp grain / thorn silhouette.
+  const p=(along,across)=>`${f(bx+dx*along+nx*width*across)} ${f(by+dy*along+ny*width*across)}`;
+  const d=`M${p(0,0)} C${p(.28,.65)} ${p(.72,.55)} ${p(.96,.08)} Q${p(1.02,0)} ${p(.96,-.08)} C${p(.72,-.55)} ${p(.28,-.65)} ${p(0,0)}Z`;
   return curve(d,fill)+(vein?curve(`M${f(bx)} ${f(by)} L${f(bx+dx*.8)} ${f(by+dy*.8)}`,'none','stroke="#fff0a1" stroke-width=".35" opacity=".55"'):'');
 }
 
@@ -135,6 +138,9 @@ function laurelArc({radius,start,end,angles,length,spread,width,fill,stemWidth,v
   const first=polar(radius,start),last=polar(radius,end);
   let art=curve(`M${points([first])} A${radius} ${radius} 0 0 1 ${points([last])}`,
     'none',`stroke="${fill}" stroke-width="${stemWidth}" stroke-linecap="round"`);
+  // A tapered root precedes the first leaf pair; the continuous stem remains
+  // visible between the regularly spaced nodes all the way to the terminal leaf.
+  art+=branchRoot(first,polar(radius,start+9),stemWidth*1.9,fill);
   // Every paired leaf grows from the actual circular stem. Broad almond leaves
   // alternate inward/outward instead of forming long parallel grain-like blades.
   for(const degrees of angles) {
@@ -147,7 +153,15 @@ function laurelArc({radius,start,end,angles,length,spread,width,fill,stemWidth,v
         by+tangent[1]*length+normal[1]*side*spread,width,fill,vein);
     }
   }
+  const [bx,by]=polar(radius,end-4),[tx,ty]=polar(radius,end+2);
+  art+=leaf(bx,by,tx,ty,width*.65,fill,vein);
   return art;
+}
+
+function branchRoot(base,tip,width,fill) {
+  const dx=tip[0]-base[0],dy=tip[1]-base[1],len=Math.hypot(dx,dy);
+  const nx=-dy/len*width/2,ny=dx/len*width/2;
+  return curve(`M${points([[base[0]+nx,base[1]+ny]])} Q${points([[base[0]+dx*.6+nx*.5,base[1]+dy*.6+ny*.5]])} ${points([tip])} Q${points([[base[0]+dx*.6-nx*.5,base[1]+dy*.6-ny*.5]])} ${points([[base[0]-nx,base[1]-ny]])} Q${points([[base[0]-dx*.12,base[1]-dy*.12]])} ${points([[base[0]+nx,base[1]+ny]])}Z`,fill,'data-branch-root="tapered"');
 }
 
 function officerRing(group) {
@@ -156,18 +170,18 @@ function officerRing(group) {
 }
 
 function sprouts() {
-  const left=laurelArc({radius:78,start:119,end:157,angles:[123,135,147],
-    length:7,spread:3.5,width:4.2,fill:'#f5f6e9',stemWidth:1.6});
+  const left=laurelArc({radius:78,start:119,end:157,angles:[125,134,143,152],
+    length:7.4,spread:4,width:4.8,fill:'#f5f6e9',stemWidth:1.8});
   return `<g data-laurel="mini">${mirror(left)}</g>`;
 }
 
 function lowerLaurel() {
   const fill='#f6f8f4';
-  const left=laurelArc({radius:73,start:94,end:169,angles:[99,115,131,147],
-    length:12,spread:7,width:5.7,fill,stemWidth:1.7});
+  const left=laurelArc({radius:73,start:94,end:168,angles:[101,113,125,137,149,161],
+    length:10.5,spread:6.7,width:6.7,fill,stemWidth:2.1});
   // Short crossed stems close the pair under the circle without a bulky knot.
   const joint=curve(`M${points([polar(73,94)])} L119 188`,'none',
-    `stroke="${fill}" stroke-width="1.7" stroke-linecap="round"`);
+    `stroke="${fill}" stroke-width="2.4" stroke-linecap="round"`);
   return `<g data-laurel="lower">${mirror(left+joint)}</g>`;
 }
 
@@ -175,12 +189,12 @@ function wreath(ceremonial=false) {
   const fill=ceremonial?'url(#gold)':'#edca57';
   const radius=65;
   const left=laurelArc({radius,start:94,end:267,
-    angles:[99,117,135,153,171,189,207,225,243,259],
-    length:ceremonial?12:11,spread:ceremonial?7:6.5,
-    width:ceremonial?6.5:5.7,fill,stemWidth:ceremonial?2:1.6,vein:ceremonial});
+    angles:[101,115,129,143,157,171,185,199,213,227,241,255],
+    length:ceremonial?11.5:10.5,spread:ceremonial?7.2:6.7,
+    width:ceremonial?7.5:6.8,fill,stemWidth:ceremonial?2.5:2.1,vein:ceremonial});
   // A single radius drives x and y, stem and leaf placement: no ellipse scaling.
   const joint=curve(`M${points([polar(radius,94)])} L119 181`,'none',
-    `stroke="${fill}" stroke-width="${ceremonial?2:1.6}" stroke-linecap="round"`);
+    `stroke="${fill}" stroke-width="${ceremonial?2.9:2.5}" stroke-linecap="round"`);
   return `<g data-laurel="${ceremonial?'guardian':'general'}" data-circle-radius="${radius}">${mirror(left+joint)}</g>`;
 }
 
@@ -189,19 +203,21 @@ function supremeWreath() {
   // to the next shared valley. Adjacent rotated branches meet at the same point.
   const valley=polar(52,-126);
   let half=curve(`M${points([valley])} Q91 51 112 30`,'none',
-    'stroke="url(#supremeGold)" stroke-width="1.6" stroke-linecap="round"');
+    'stroke="url(#supremeGold)" stroke-width="2" stroke-linecap="round"');
   const control=[91,51],tip=[112,30];
-  const leafPairs=[
-    [.25,[-15,-9,6.5],[11,-5,5.8]],
-    [.5,[-11,-13,6],[11,-6,5.4]],
-    [.75,[-3,-10,4.8],[9,-6,4]],
-  ];
-  for(const [t,...leaves] of leafPairs) {
+  half+=branchRoot(valley,[valley[0]+(control[0]-valley[0])*.28,valley[1]+(control[1]-valley[1])*.28],3.8,'url(#supremeGold)');
+  for(const t of [.22,.46,.7]) {
     // Quadratic evaluation places each base exactly on the authored stem.
     const bx=(1-t)**2*valley[0]+2*(1-t)*t*control[0]+t*t*tip[0];
     const by=(1-t)**2*valley[1]+2*(1-t)*t*control[1]+t*t*tip[1];
-    for(const [dx,dy,width] of leaves) {
-      half+=leaf(bx,by,bx+dx,by+dy,width,'url(#supremeGold)',true);
+    // Identical tangent-relative angles at each node, mirrored and rotated as
+    // one unit: no independently aimed leaves or random protrusions.
+    const dx=2*((1-t)*(control[0]-valley[0])+t*(tip[0]-control[0]));
+    const dy=2*((1-t)*(control[1]-valley[1])+t*(tip[1]-control[1]));
+    const len=Math.hypot(dx,dy),ux=dx/len,uy=dy/len;
+    const length=9-t*3,spread=6-t*2,width=5.8-t*1.6;
+    for(const side of [-1,1]) {
+      half+=leaf(bx,by,bx+ux*length-uy*spread*side,by+uy*length+ux*spread*side,width,'url(#supremeGold)',true);
     }
   }
   const branch=mirror(half)+leaf(112,35,112,27,3.1,'url(#supremeGold)',true);
@@ -320,6 +336,15 @@ export const getRankBadgeAsset = (badgeId: string | undefined) =>
     ? RANK_BADGE_ASSETS[badgeId as RankBadgeAssetId]
     : undefined;
 `);
+  const tiles=[];
+  for(const [index,[,name]] of BADGES.entries()) {
+    const left=(index%6)*240,top=Math.floor(index/6)*260;
+    tiles.push({input:await sharp(path.join(OUTPUT,`${name}.png`)).resize(224,224).toBuffer(),left:left+8,top:top+8});
+    const label=`<svg width="224" height="20"><text x="0" y="13" font-family="Arial" font-size="10" fill="#f5f7fa">${name}</text></svg>`;
+    tiles.push({input:Buffer.from(label),left:left+8,top:top+232});
+  }
+  await sharp({create:{width:1440,height:1040,channels:4,background:'#0e1826'}})
+    .composite(tiles).webp({quality:90}).toFile(path.join(ROOT,'docs/rank-badges-redraw.webp'));
   console.log(`Rendered ${BADGES.length} original SVG masters and ${PIXEL_SIZE}px PNGs; registry updated.`);
 }
 main().catch((error)=>{console.error(error);process.exitCode=1;});
