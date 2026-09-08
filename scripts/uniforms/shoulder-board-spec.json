@@ -1,0 +1,21 @@
+{
+  "geometry": {
+    "canvas": { "width": 512, "height": 192 },
+    "body": { "left": 24, "right": 488, "top": 36, "bottom": 156, "centerY": 96, "cut": 36, "cornerRadius": 3, "border": 8, "previousSupremeBorder": 8 },
+    "button": { "x": 452, "y": 96, "radius": 12 },
+    "star": { "centerX": 246, "radius": 34, "supremeRadius": 42, "innerRatio": 0.44, "pitch": 80 },
+    "stripes": { "height": 6, "pitch": 14 },
+    "bar": { "x": 76, "y": 62, "width": 14, "height": 68, "pitch": 28 },
+    "chevron": { "x": 74, "y": 65, "height": 62, "depth": 30, "stroke": 11, "pitch": 37 }
+  },
+  "groups": [
+    { "id": "academy", "ids": ["academy"], "mark": "none", "stripes": 0, "palette": ["#f6f5ef", "#dfe4e7", "#b4c0c9", "#c1ccd4", "#6d7d89"] },
+    { "id": "enlisted", "ids": ["enlisted_1", "enlisted_2", "enlisted_3"], "mark": "bar", "stripes": 0, "palette": ["#343b3f", "#242a2d", "#151a1e", "#687173", "#343c3e"] },
+    { "id": "nco", "ids": ["nco_1", "nco_2", "nco_3"], "mark": "chevron", "stripes": 0, "palette": ["#343b3f", "#242a2d", "#151a1e", "#687173", "#343c3e"] },
+    { "id": "junior", "ids": ["junior_1", "junior_2", "junior_3", "junior_4"], "mark": "star", "stripes": 1, "palette": ["#365b39", "#23412d", "#142b20", "#758565", "#3b5136"] },
+    { "id": "field", "ids": ["field_1", "field_2", "field_3", "field_4"], "mark": "star", "stripes": 2, "palette": ["#264567", "#172e4a", "#0b1c31", "#6b8299", "#2e465f"] },
+    { "id": "general", "ids": ["general_1", "general_2", "general_3", "general_4"], "mark": "star", "stripes": 3, "palette": ["#ab3040", "#891f2f", "#57101f", "#d16d72", "#8a2c37"] },
+    { "id": "endgame", "ids": ["endgame_1", "endgame_grand_marshal", "endgame_2", "endgame_3"], "mark": "star", "stripes": 0, "palette": ["#272b30", "#11161b", "#070b10", "#e1c472", "#8e682a"] },
+    { "id": "supreme", "ids": ["endgame_4"], "mark": "supreme", "stripes": 0, "palette": ["#c74d26", "#a73219", "#722113", "#e1c472", "#8e682a"] }
+  ]
+}
