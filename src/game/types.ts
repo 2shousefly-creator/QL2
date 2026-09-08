@@ -1,5 +1,6 @@
 import type { FarmSaveState } from "../features/tang_gia/farmTypes";
 import type { ChienTuyenProfileV2 } from "../features/entertainment/chien_tuyen/types";
+import type { ArmyProfile } from "../features/entertainment/mobi_army3/types";
 
 export type TierCount = 1 | 2 | 4 | 6 | 8 | 10 | 12 | 14 | 16 | 18 | 20;
 
@@ -529,6 +530,7 @@ export type GameState = {
   };
   farm?: FarmSaveState;
   chienTuyen?: ChienTuyenProfileV2;
+  mobiArmy3?: ArmyProfile;
   coupons?: CouponState;
 };
 

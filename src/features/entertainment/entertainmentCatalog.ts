@@ -1,9 +1,18 @@
 import { EntertainmentGameMeta } from "./types";
+import { ARMY_TITLE } from "./mobi_army3/config";
 
 // Temporary feature flag: keep Tank Battle source/routing intact while hiding it from the Entertainment Hub.
 export const TANK_BATTLE_ENABLED = false;
 
 const ALL_ENTERTAINMENT_GAMES: readonly EntertainmentGameMeta[] = [
+  {
+    id: "mobi_army3",
+    title: ARMY_TITLE,
+    subtitle: "Pháo chiến PVE theo lượt",
+    description: "Ngắm góc, lấy lực, tính gió và phá địa hình qua 15 nhiệm vụ cùng các Boss chiến thuật. Chơi màn hình ngang.",
+    status: "available",
+    badge: "PVE mới",
+  },
   {
     id: "chien_tuyen",
     title: "Chiến Tuyến",

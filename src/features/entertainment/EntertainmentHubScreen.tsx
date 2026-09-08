@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Dices, Coins, Play, Sparkles } from "lucide-react";
+import React, { lazy, Suspense, useEffect, useState } from "react";
+import { Dices, Coins, Play, Sparkles, Crosshair } from "lucide-react";
 import { GameState, TabType } from "../../game/types";
 import { soundManager } from "../../game/audio";
 import { ENTERTAINMENT_GAMES } from "./entertainmentCatalog";
@@ -11,6 +11,9 @@ import { KhongKichScreen } from "./khong_kich/KhongKichScreen";
 import { TankBattleScreen } from "./tank_battle/TankBattleScreen";
 import { ChienTuyenScreen } from "./chien_tuyen/ChienTuyenScreen";
 import { CommandHeader } from "../../components/military/MilitaryUI";
+import { ArmyLoadBoundary } from "./mobi_army3/LoadBoundary";
+
+const MobiArmy3Screen = lazy(() => import("./mobi_army3/MobiArmy3Screen"));
 
 interface EntertainmentHubScreenProps {
   gameState: GameState;
@@ -31,7 +34,7 @@ export const EntertainmentHubScreen: React.FC<EntertainmentHubScreenProps> = ({
   const [activeGame, setActiveGame] = useState<EntertainmentGameId | null>(null);
 
   useEffect(() => {
-    onGameActiveChange?.(activeGame === "khong_kich" || activeGame === "tank_battle" || activeGame === "chien_tuyen");
+    onGameActiveChange?.(activeGame === "khong_kich" || activeGame === "tank_battle" || activeGame === "chien_tuyen" || activeGame === "mobi_army3");
     return () => onGameActiveChange?.(false);
   }, [activeGame, onGameActiveChange]);
 
@@ -47,6 +50,11 @@ export const EntertainmentHubScreen: React.FC<EntertainmentHubScreenProps> = ({
   };
 
   // If a specific minigame is active, render that minigame's screen
+  if (activeGame === "mobi_army3") {
+    return <ArmyLoadBoundary onBack={() => setActiveGame(null)}><Suspense fallback={<div className="p-6 text-slate-200" role="status">Đang tải Pháo Chiến… <button onClick={() => setActiveGame(null)}>Quay lại</button></div>}>
+      <MobiArmy3Screen gameState={gameState} onUpdateGameState={onUpdateGameState} onBack={() => setActiveGame(null)} />
+    </Suspense></ArmyLoadBoundary>;
+  }
   if (activeGame === "khong_kich") {
     return (
       <KhongKichScreen
@@ -154,7 +162,7 @@ export const EntertainmentHubScreen: React.FC<EntertainmentHubScreenProps> = ({
                 <div className="flex items-center justify-between gap-3">
                   <div className="flex items-center gap-3">
                     <div className="theme-badge w-12 h-12 rounded-2xl border flex items-center justify-center text-2xl shadow-md transition-transform select-none shrink-0">
-                      {game.icon || "🎲"}
+                      {game.id === "mobi_army3" ? <Crosshair aria-hidden="true" /> : game.icon || "🎲"}
                     </div>
                     <div className="min-w-0">
                       <div className="flex items-center gap-2">

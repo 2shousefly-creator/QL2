@@ -12,6 +12,7 @@ import { ensureMedalAndMasteryState, evaluateMedalUnlocks } from "../game/medals
 import { backfillJournalEvents } from "../game/journal/journalEngine";
 import { sanitizeCouponState } from "../game/coupons/couponEngine";
 import { sanitizePersistedEnergyState } from "./energyPersistence";
+import { sanitizeArmyProfile } from "../features/entertainment/mobi_army3/profile/profileEngine";
 
 function isRecord(value: unknown): value is Record<string, any> {
   return Boolean(value) && typeof value === "object" && !Array.isArray(value);
@@ -970,6 +971,7 @@ export function sanitizeAndMigrateState(rawObj: unknown, migrationNow: number = 
       ? migrateFarmState(obj.farm, now)
       : createDefaultFarmState(now),
     chienTuyen: sanitizeChienTuyenProfile(obj.chienTuyen, now),
+    mobiArmy3: sanitizeArmyProfile(obj.mobiArmy3),
     medals: obj.medals ? obj.medals : { unlockedMedalIds: [], unlockedAtMap: {}, selectedMedalIds: [] },
     mastery: obj.mastery ? obj.mastery : {},
     globalStats: obj.globalStats ? obj.globalStats : undefined,
