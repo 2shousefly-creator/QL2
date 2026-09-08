@@ -1,6 +1,6 @@
 /** Audit the exported geometry and PNGs, independently of the renderer.
- * NODE_PATH=/path/to/node_modules node scripts/assets/audit_rank_badge_polygons.cjs [baseline]
- * A baseline additionally verifies that only the 17 frames changed.
+ * NODE_PATH=/path/to/node_modules node scripts/assets/audit_rank_badge_polygons.cjs [baseline] [general]
+ * A baseline verifies 17 changed frames, or just the four general layouts in general mode.
  */
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
@@ -10,6 +10,9 @@ const { execFileSync } = require('node:child_process');
 const sharp = require('sharp');
 const root = path.resolve(__dirname, '../..');
 const baseline = process.argv[2];
+const generalOnly = process.argv[3] === 'general';
+assert(!process.argv[3] || generalOnly, 'Unknown audit mode');
+assert(!generalOnly || baseline, 'General layout audit needs its Git baseline');
 const read = file => fs.readFileSync(path.join(root, file));
 const previous = file => execFileSync('git', ['-C', root, 'show', `${baseline}:${file}`], { maxBuffer: 8e6 });
 const normalize = text => text.replace(/\r\n/g, '\n');
@@ -58,6 +61,10 @@ async function main() {
   if (baseline) {
     const strip = text => normalize(text).replace(/\?v=[a-f0-9]+/g, '').replace(/outerWidthRatio: \d+/g, 'outerWidthRatio: measured');
     assert.equal(strip(registry), strip(previous(registryFile).toString()), 'IDs, paths and registry contract must be preserved');
+    if (generalOnly) {
+      const stripHash = text => normalize(text).replace(/\?v=[a-f0-9]+/g, '');
+      assert.equal(stripHash(registry), stripHash(previous(registryFile).toString()), 'General polish may only change URL hashes');
+    }
     assert.equal(normalize(catalog), normalize(previous('src/game/badgeCatalog.ts').toString()));
   }
   let changed = 0, polygons = 0, bytes = 0;
@@ -88,9 +95,16 @@ async function main() {
     near((minX + maxX) / 2, 447.5, `${name}: raster horizontal center`, 0.51);
     near((minY + maxY) / 2, 447.5, `${name}: raster vertical center`, 0.51);
     if (baseline) {
-      assert.equal(!png.equals(previous(file)), !!spec, `${name}: changed asset scope`);
-      if (spec) changed++;
-      else assert.equal(svg, normalize(previous(svgFile).toString()).trim(), `${name}: untouched square artwork`);
+      const shouldChange = generalOnly ? group === 'general' : !!spec;
+      const oldPng = previous(file);
+      assert.equal(!png.equals(oldPng), shouldChange, `${name}: changed asset scope`);
+      if (shouldChange) changed++;
+      else assert.equal(svg, normalize(previous(svgFile).toString()).trim(), `${name}: untouched artwork`);
+      if (generalOnly) {
+        const alpha = await sharp(png).extractChannel('alpha').raw().toBuffer();
+        const oldAlpha = await sharp(oldPng).extractChannel('alpha').raw().toBuffer();
+        assert(alpha.equals(oldAlpha), `${name}: preserve exact alpha bounds`);
+      }
     }
     if (!spec) continue;
     polygons++;
@@ -111,7 +125,10 @@ async function main() {
     if (baseline) {
       const old = frameParts(normalize(previous(svgFile).toString()).trim(), scales.length);
       assert.equal(parts.defs, old.defs, `${name}: preserve palette`);
-      assert.equal(parts.ornament, old.ornament, `${name}: preserve every star, circle, leaf and placement`);
+      if (generalOnly) assert.equal(parts.frame, old.frame, `${name}: preserve all frame layers`);
+      const expected = generalOnly && group === 'general'
+        ? `<g data-general-layout="optical" transform="translate(0 5)">${old.ornament}</g>` : old.ornament;
+      assert.equal(parts.ornament, expected, `${name}: preserve ornaments; only the shared general translation is allowed`);
     }
     const count = Number(definition.match(/symbolCount: (\d+)/)[1]);
     assert(parts.ornament.includes(`data-star-count="${count}"`), `${name}: star count`);
@@ -149,8 +166,11 @@ async function main() {
     }
   }
   assert.equal(polygons, 17);
-  if (baseline) assert.equal(changed, 17);
+  if (baseline) assert.equal(changed, generalOnly ? 4 : 17);
   for (const [group, item] of report) console.log(`${group}: ${item.sides} equal sides; visible width ${item.width}/896; inner rim clearance >= ${item.clearance.toFixed(2)} logical px`);
-  console.log(`PASS: 17 regular, concentric polygon frames; 24 matching 896px RGBA PNGs, valid cache hashes and measured widths. ${baseline ? '17 frames changed; all ornaments and 7 square badges preserved.' : ''} PNG total: ${bytes} bytes.`);
+  const scope = !baseline ? '' : generalOnly
+    ? 'Only four general layouts moved down 5px; identical frames, alpha, ornament artwork and 20 other badges.'
+    : '17 frames changed; all ornaments and 7 square badges preserved.';
+  console.log(`PASS: 17 regular, concentric polygon frames; 24 matching 896px RGBA PNGs, valid cache hashes and measured widths. ${scope} PNG total: ${bytes} bytes.`);
 }
 main().catch(error => { console.error(error); process.exitCode = 1; });

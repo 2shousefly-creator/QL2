@@ -156,6 +156,9 @@ const OFFICER_RING_RADIUS = { junior: 59, field: 57 };
 // Ring, star cluster and mini laurel share this offset across all four ranks.
 const JUNIOR_OPTICAL_OFFSET_Y = 8;
 const JUNIOR_RING_STROKE = 3.8;
+// The heptagon's broad lower body needs a small optical correction. Move the
+// complete circular wreath AND its stars together; never scale the ornaments.
+const GENERAL_OPTICAL_OFFSET_Y = 5;
 const polar = (radius, degrees) => {
   const angle=degrees*Math.PI/180;
   return [BADGE_CENTER+radius*Math.cos(angle), BADGE_CENTER+radius*Math.sin(angle)];
@@ -330,7 +333,7 @@ function drawBadge(group,count) {
     case 'nco': return squareMarks(count,true);
     case 'junior': return juniorOfficerBase()+`<g data-junior-stars="centered" transform="translate(0 ${JUNIOR_OPTICAL_OFFSET_Y})">${starCluster(count,BADGE_CENTER)}</g>`;
     case 'field': return frame(HEXAGON,'sapphire')+officerRing('field')+lowerLaurel()+starCluster(count,BADGE_CENTER);
-    case 'general': return frame(HEPTAGON,'ruby')+wreath()+starCluster(count,BADGE_CENTER);
+    case 'general': return frame(HEPTAGON,'ruby')+`<g data-general-layout="optical" transform="translate(0 ${GENERAL_OPTICAL_OFFSET_Y})">${wreath()}${starCluster(count,BADGE_CENTER)}</g>`;
     case 'guardian': return frame(OCTAGON,'obsidian',true)+wreath(true)+starCluster(count,BADGE_CENTER,'ceremonial');
     case 'supreme': return frame(NONAGON,'crimson',true,true)+supremeWreath()+`<g data-star-count="1" data-star-radius="${SUPREME_STAR_RADIUS}">${star(112,112,SUPREME_STAR_RADIUS,'supreme')}</g>`;
     default: throw new Error(`Unknown group ${group}`);
