@@ -19,20 +19,23 @@ const f = (value) => Number(value.toFixed(3));
 const points = (vertices) => vertices.map(([x, y]) => `${f(x)},${f(y)}`).join(' ');
 const polygon = (vertices, fill, attrs = '') => `<polygon points="${points(vertices)}" fill="${fill}" ${attrs}/>`;
 
+// Reflect only the body contours: square outer LEFT, clipped inner RIGHT.
+// Keep insignia, button, texture and lighting in their existing coordinate system.
 // Parallel inset contours preserve the same clipped-end angle and rounded corners.
 function outline(inset) {
   const l = body.left + inset, r = body.right - inset;
   const t = body.top + inset, b = body.bottom - inset;
   const cut = body.cut - inset * (2 - Math.SQRT2);
   const radius = body.cornerRadius;
-  return `M ${l + cut + radius} ${t} H ${r - radius} Q ${r} ${t} ${r} ${t + radius}
-    V ${b - radius} Q ${r} ${b} ${r - radius} ${b} H ${l + cut + radius}
-    Q ${l + cut} ${b} ${l + cut - radius / Math.SQRT2} ${b - radius / Math.SQRT2}
-    L ${l + radius / Math.SQRT2} ${b - cut + radius / Math.SQRT2}
-    Q ${l} ${b - cut} ${l} ${b - cut - radius}
-    V ${t + cut + radius} Q ${l} ${t + cut} ${l + radius / Math.SQRT2} ${t + cut - radius / Math.SQRT2}
-    L ${l + cut - radius / Math.SQRT2} ${t + radius / Math.SQRT2}
-    Q ${l + cut} ${t} ${l + cut + radius} ${t} Z`;
+  const x = (coordinate) => body.left + body.right - coordinate;
+  return `M ${x(l + cut + radius)} ${t} H ${x(r - radius)} Q ${x(r)} ${t} ${x(r)} ${t + radius}
+    V ${b - radius} Q ${x(r)} ${b} ${x(r - radius)} ${b} H ${x(l + cut + radius)}
+    Q ${x(l + cut)} ${b} ${x(l + cut - radius / Math.SQRT2)} ${b - radius / Math.SQRT2}
+    L ${x(l + radius / Math.SQRT2)} ${b - cut + radius / Math.SQRT2}
+    Q ${x(l)} ${b - cut} ${x(l)} ${b - cut - radius}
+    V ${t + cut + radius} Q ${x(l)} ${t + cut} ${x(l + radius / Math.SQRT2)} ${t + cut - radius / Math.SQRT2}
+    L ${x(l + cut - radius / Math.SQRT2)} ${t + radius / Math.SQRT2}
+    Q ${x(l + cut)} ${t} ${x(l + cut + radius)} ${t} Z`;
 }
 
 function starMarkup(radius, supreme = false) {

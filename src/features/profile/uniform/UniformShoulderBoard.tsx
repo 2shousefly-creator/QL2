@@ -7,6 +7,8 @@ type UniformShoulderBoardProps = {
 };
 
 export const UniformShoulderBoard: React.FC<UniformShoulderBoardProps> = ({ config, side }) => {
+  // PNG: square outer end LEFT; clipped inner end + attachment button RIGHT.
+  // Viewer-left uses the PNG as-is; mirror only viewer-right to face the collar.
   const mirror = side === "wearer-left";
   return (
     <img
