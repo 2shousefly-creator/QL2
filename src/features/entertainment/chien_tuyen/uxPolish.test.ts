@@ -4,6 +4,7 @@ import React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { getBattleStatusRail } from "./battleHud";
 import { TroopUpgradeModal } from "./components/TroopUpgradeModal";
+import { QuickFinishConfirmModal } from "./components/QuickFinishConfirmModal";
 import { MAX_BARRACKS_LEVEL, MAX_FORMATION_UNITS, MAX_SAME_TROOP_TYPE } from "./config";
 import { createTroopBattleUnit } from "./engine";
 import { getRosterSpeedRange, getRosterStatMaximumAtLevel, getTroopStatRatio } from "./statDisplay";
@@ -163,7 +164,10 @@ test("Progression and statistics presentation keep modal accessibility contracts
   const screenSource = readFileSync(new URL("./ChienTuyenScreen.tsx", import.meta.url), "utf8");
   const resultSource = readFileSync(new URL("./components/CampaignResult.tsx", import.meta.url), "utf8");
   const overlaySource = readFileSync(new URL("../../../components/overlay/AppOverlay.tsx", import.meta.url), "utf8");
-  assert.match(screenSource, /aria-describedby="ct-progression-subtitle"/);
+  // Main 3bbe1cb moved ARIA attributes behind the shared AppModal API.
+  assert.match(screenSource, /describedBy="ct-progression-subtitle"/);
+  assert.match(screenSource, /id="ct-progression-subtitle"/);
+  assert.match(overlaySource, /aria-describedby=\{describedBy\}/);
   assert.match(screenSource, /initialFocusRef=\{closeRef\}/);
   assert.match(overlaySource, /initialFocusRef\?\.current/);
   assert.match(overlaySource, /event\.key === "Escape"/);
@@ -185,7 +189,16 @@ test("Barracks actions are distinct and Quick Finish requires confirmation", () 
   assert.match(screenSource, /requestQuickFinishTroop/);
   assert.match(screenSource, /requestQuickFinishBarracks/);
   assert.match(screenSource, /<QuickFinishConfirmModal/);
-  assert.match(confirmSource, /data-quick-finish-confirm="required"/);
+  // Main 011c532 replaced the old marker with the shared confirmation archetype.
+  assert.match(confirmSource, /<ConfirmationDialog/);
+  assert.match(confirmSource, /onClick=\{confirmation\.onConfirm\}/);
+  const confirmationMarkup = renderToStaticMarkup(React.createElement(QuickFinishConfirmModal, {
+    confirmation: { id: "fixture", title: "Hoàn thành ngay", subject: "đào tạo", remainingMs: 60_000, costGold: 10, onConfirm: () => undefined },
+    onCancel: () => undefined,
+  }));
+  assert.match(confirmationMarkup, /role="dialog"/);
+  assert.match(confirmationMarkup, /aria-modal="true"/);
+  assert.match(confirmationMarkup, /data-modal-archetype="confirm"/);
   assert.match(confirmSource, /HỦY/);
   assert.match(confirmSource, /XÁC NHẬN/);
   assert.match(confirmSource, /data-quick-finish-charge="after-confirm"/);

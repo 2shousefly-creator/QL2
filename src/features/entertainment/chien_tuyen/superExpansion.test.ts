@@ -42,14 +42,15 @@ function find(state: BattleState, id: string): BattleUnit {
 
 console.log("=== CHIẾN TUYẾN SUPER EXPANSION TESTS ===");
 
+// Main c1d5584: level-one stats + 53 growth steps; fixed CRIT/SPEED.
 const expectedLevel54: Readonly<Record<"scout" | "marksman" | "electronic_warfare" | "special_ops" | "divine_medic" | "forensic_medic" | "martial_artist", readonly [number, number, number, number, number]>> = {
-  scout: [3650, 299, 93, .25, 68],
-  marksman: [2771, 607, 72, .25, 38],
-  electronic_warfare: [3693, 490, 99, .25, 47],
-  special_ops: [4536, 104, 170, .25, 35],
-  divine_medic: [3381, 85, 69, .25, 39],
-  forensic_medic: [3952, 268, 93, .25, 58],
-  martial_artist: [3753, 418, 119.5, .25, 54],
+  scout: [4071, 362, 117.5, .25, 68],
+  marksman: [3211, 603, 72, .25, 38],
+  electronic_warfare: [4005, 421, 117.5, .25, 47],
+  special_ops: [5372, 93, 175, .25, 35],
+  divine_medic: [3481, 85, 73, .25, 39],
+  forensic_medic: [3960, 414, 116.5, .25, 58],
+  martial_artist: [4021, 420, 117.5, .25, 54],
 };
 for (const [troopType, expected] of Object.entries(expectedLevel54) as Array<[keyof typeof expectedLevel54, typeof expectedLevel54[keyof typeof expectedLevel54]]>) {
   const stats = getTroopStats(troopType, 54);
@@ -149,7 +150,7 @@ for (const [troopType, expected] of Object.entries(expectedLevel54) as Array<[ke
   const ally = makeUnit("hurt-ally", "infantry", "player", "front_left", { hp: 100, maxHp: 1000, statuses: [{ id: "anti-heal", sourceUnitId: "forensic", type: "forensic_suppression", polarity: "debuff", cleansable: true, stackPolicy: "refresh", durationClock: "target_action_turn", appliedTargetActionTurn: 0, expiresAfterTargetActionTurn: 2, remainingActionTurns: 2, healingReceivedMultiplier: .60, shieldReceivedMultiplier: .60 }] });
   const enemy = makeUnit("healer-enemy", "armor", "enemy", "front_left");
   let state = resolveUltimateAction(makeState([healer, ally, enemy], "divine-heal"), "divine");
-  assert.equal(find(state, "hurt-ally").hp, 424, "Thần Y 540 base heal becomes 324 under 40 percent reduction");
+  assert.equal(find(state, "hurt-ally").hp, 460, "Thần Y 20 percent of 3000 HP heals 600, reduced to 360 by suppression");
   state = resolveActionTurnCompletion(state, "divine");
   const rescued = find(state, "hurt-ally");
   assert(rescued.statuses.some((status) => status.type === "rescue"), "lowest HP ally receives Rescue for the next round");
@@ -165,7 +166,8 @@ for (const [troopType, expected] of Object.entries(expectedLevel54) as Array<[ke
   assert.equal(getHealingReceivedMultiplier(find(state, "forensic-marked")), .60);
   assert.equal(getShieldReceivedMultiplier(find(state, "forensic-marked")), .60);
   assert.equal(find(state, "forensic-marked").shields[0].amount, 500, "Forensic passive never reduces an existing shield");
-  find(state, "forensic").rage = 40;
+  // Main ultimateConfig requires 50 Rage; 40 would leave this test on the passive.
+  find(state, "forensic").rage = 50;
   state = resolveUltimateAction(state, "forensic");
   assert.equal(getHealingReceivedMultiplier(find(state, "forensic-marked")), .4, "marked target uses strongest 60 percent Ultimate reduction");
   assert.equal(getHealingReceivedMultiplier(find(state, "forensic-normal")), .6, "unmarked target receives the normal 40 percent reduction");
