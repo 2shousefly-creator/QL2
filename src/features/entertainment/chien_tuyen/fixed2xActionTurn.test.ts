@@ -198,11 +198,15 @@ test("Basic, Ultimate, Basic→Ultimate, and Stun skip each complete exactly one
   assert.equal(stages.actionKind, "ultimate");
   assert.equal(findUnit(stages.afterAction, ultimateActor.instanceId).actionTurnCount, 1);
 
-  const chainActor = makeUnit("counter-chain", "player", "infantry", "front_left", { attack: 1, battleBaseAttack: 1, rage: 60 });
+  // Infantry casts at 60 Rage on main; 50 + the basic attack's 10 triggers
+  // the chain. Starting at 60 tests an immediate Ultimate instead.
+  const chainActor = makeUnit("counter-chain", "player", "infantry", "front_left", { attack: 1, battleBaseAttack: 1, rage: 50 });
   state = makeState([chainActor, enemy], "counter-chain");
   prioritize(state, chainActor.instanceId);
   stages = advanceBattleActionStages(state);
   assert.equal(stages.actionKind, "basic_ultimate");
+  assert.equal(findUnit(stages.afterBasic, chainActor.instanceId).rage, 60);
+  assert.equal(findUnit(stages.afterAction, chainActor.instanceId).rage, 0);
   assert.equal(findUnit(stages.afterAction, chainActor.instanceId).actionTurnCount, 1);
   const chainedEvents = stages.afterAction.events.filter((event) => event.sourceUnitId === chainActor.instanceId && ["attack", "ultimate_started", "action_completed"].includes(event.type));
   assert(chainedEvents.length >= 3);
@@ -254,7 +258,9 @@ test("periodic passives proc after each own Action Turn, even twice inside one B
   state = resolveActionTurnCompletion(state, medic.instanceId);
   assert.equal(state.round, battleRound);
   assert.equal(findUnit(state, medic.instanceId).actionTurnCount, 2);
-  assert.equal(findUnit(state, patient.instanceId).hp, 572);
+  // Main c1d5584 raised Medic HP from 900 to 970: two 4% heals = 77.6.
+  assert.equal(medic.maxHp, 970);
+  assert.ok(Math.abs(findUnit(state, patient.instanceId).hp - 577.6) < 1e-9);
   assert.equal(state.events.filter((event) => event.type === "heal" && event.targetUnitIds?.includes(patient.instanceId)).length, 2);
   const beforeRoundHealEvents = state.events.filter((event) => event.type === "heal").length;
   state = resolveEndOfRound(state);

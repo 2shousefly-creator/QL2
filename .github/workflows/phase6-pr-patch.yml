@@ -1,114 +1,31 @@
-name: Apply Phase 6 Source on PR
+name: Phase 6 Regression Validation
 
 on:
   pull_request:
-    branches:
-      - main
+    branches: [main]
+  workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   patch:
+    name: patch
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
+      # Validate the PR merge checkout; never rewrite source or push a legacy branch.
       - uses: actions/checkout@v4
         with:
-          ref: codex/chien-tuyen-phase-6
-          fetch-depth: 0
-      - name: Sync Phase 6 legacy regression fixtures
-        shell: bash
-        run: |
-          if grep -q 'getTroopStats(troopType, 54)' src/features/entertainment/chien_tuyen/domainEngine.test.ts && grep -q 'four-percent ATK stacks' src/features/entertainment/chien_tuyen/combatEngine.test.ts; then
-            echo 'Phase 6 legacy fixtures already synced.'
-            exit 0
-          fi
-          python - <<'PY'
-          from pathlib import Path
-
-          def read(path):
-              return Path(path).read_text(encoding='utf-8')
-
-          def write(path, text):
-              Path(path).write_text(text, encoding='utf-8')
-
-          def replace(path, old, new, count=1):
-              text = read(path)
-              found = text.count(old)
-              if found < count:
-                  raise SystemExit(f'{path}: expected {count}, found {found}: {old[:120]!r}')
-              write(path, text.replace(old, new, count))
-
-          path = 'src/features/entertainment/chien_tuyen/domainEngine.test.ts'
-          replace(path, '  const maxStats = getTroopStats(troopType, 24);', '  const maxStats = getTroopStats(troopType, 54);')
-          replace(path, 'definition.growth.maxHp * 23', 'definition.growth.maxHp * 53')
-          replace(path, 'definition.growth.attack * 23', 'definition.growth.attack * 53')
-          replace(path, 'definition.growth.defense * 23', 'definition.growth.defense * 53')
-          replace(path, 'equal(getRequiredRankIndexForBarracksLevel(2), 9, "barracks level two requires the tenth rank step");', 'equal(getRequiredRankIndexForBarracksLevel(2), 4, "barracks level two requires the fifth rank step");')
-          replace(path, 'equal(getRequiredRankIndexForBarracksLevel(24), 207, "barracks level twenty-four has a bounded rank requirement");', 'equal(getRequiredRankIndexForBarracksLevel(54), 212, "barracks level fifty-four starts at rank index 212");')
-          replace(path, 'equal(getMaxBarracksLevel(9), 1, "journey level 9 still unlocks Barracks 1");', 'equal(getMaxBarracksLevel(4), 1, "journey level 4 still unlocks Barracks 1");')
-          replace(path, 'equal(getMaxBarracksLevel(10), 2, "journey level 10 unlocks Barracks 2");', 'equal(getMaxBarracksLevel(5), 2, "journey level 5 unlocks Barracks 2");')
-          replace(path, 'equal(getMaxBarracksLevel(216), 24, "journey level 216 unlocks Barracks 24");', 'equal(getMaxBarracksLevel(216), 54, "journey level 216 unlocks Barracks 54");')
-          replace(path, 'equal(getMaxBarracksLevelFromRankIndex(215), 24, "zero-based currentRankIndex maps to one-based journey level");', 'equal(getMaxBarracksLevelFromRankIndex(215), 54, "zero-based final rank index maps to Barracks 54");')
-          replace(path, 'equal(getTrainingSlotCount(24), 12, "training slots cap at twelve");', 'equal(getTrainingSlotCount(54), 12, "training slots cap at twelve through Barracks 54");')
-
-          path = 'src/features/entertainment/chien_tuyen/engine.test.ts'
-          replace(path, 'test("created troop levels use the same 1-24 clamp as their stats", () => {', 'test("created troop levels use the same 1-54 clamp as their stats", () => {')
-          replace(path, '  assert.equal(aboveRange.level, 24);', '  assert.equal(aboveRange.level, 54);')
-
-          path = 'src/features/entertainment/chien_tuyen/profileEngine.test.ts'
-          replace(path, 'assert(!startBarracksUpgrade(starter, 9, 70_000).ok, "journey level 9 cannot start Barracks 2");', 'assert(!startBarracksUpgrade(starter, 4, 70_000).ok, "journey level 4 cannot start Barracks 2");')
-          replace(path, 'const barracksUpgrade = startBarracksUpgrade(starter, 10, 70_000, { jobId: "barracks-two" });', 'const barracksUpgrade = startBarracksUpgrade(starter, 5, 70_000, { jobId: "barracks-two" });')
-          replace(path, 'assert(barracksUpgrade.ok && barracksUpgrade.value, "journey level 10 unlocks Barracks 2 upgrade");', 'assert(barracksUpgrade.ok && barracksUpgrade.value, "journey level 5 unlocks Barracks 2 upgrade");')
-
-          path = 'src/features/entertainment/chien_tuyen/combatEngine.test.ts'
-          replace(path, 'test("Thống Trị Bầu Trời grants non-compounding five-percent ATK stacks capped at ten", () => {', 'test("Thống Trị Bầu Trời grants non-compounding four-percent ATK stacks capped at ten", () => {')
-          replace(path, '  close(findUnit(state, air.instanceId).attack, 105, "one Air stack");', '  close(findUnit(state, air.instanceId).attack, 104, "one Air stack");')
-          replace(path, '  close(findUnit(state, air.instanceId).attack, 150, "ten Air stacks");', '  close(findUnit(state, air.instanceId).attack, 140, "ten Air stacks");')
-          replace(path, '  close(findUnit(state, air.instanceId).attack, 150, "Air remains capped without compounding");', '  close(findUnit(state, air.instanceId).attack, 140, "Air remains capped without compounding");')
-          replace(path, '  assert.equal(protection?.expiresAfterRound, 1);', '  assert.equal(protection?.expiresAfterRound, 2);')
-          replace(path, 'test("Quyết Tâm Bất Diệt clamps repeated lethal damage at its HP floor and expires after one round", () => {', 'test("Quyết Tâm Bất Diệt protects the HP floor for exactly two rounds", () => {')
-          old = '  state.round = 1;\n  state = resolveEndOfRound(state);\n  const expired = findUnit(state, infantry.instanceId);\n  assert.equal(expired.statuses.some((status) => status.type === "infantry_death_refusal"), false);\n  applyShieldAndHpDamage(expired, 1_000);\n  assert.equal(expired.hp, 0);'
-          new = '  state.round = 1;\n  state = resolveEndOfRound(state);\n  const stillProtected = findUnit(state, infantry.instanceId);\n  assert.equal(stillProtected.statuses.some((status) => status.type === "infantry_death_refusal"), true);\n  applyShieldAndHpDamage(stillProtected, 1_000);\n  assert.equal(stillProtected.hp, 100);\n  state.round = 2;\n  state = resolveEndOfRound(state);\n  const expired = findUnit(state, infantry.instanceId);\n  assert.equal(expired.statuses.some((status) => status.type === "infantry_death_refusal"), false);\n  applyShieldAndHpDamage(expired, 1_000);\n  assert.equal(expired.hp, 0);'
-          replace(path, old, new)
-          replace(path, 'test("Artillery Ultimate fires up to three 40 percent volleys and skips targets killed earlier", () => {', 'test("Artillery Ultimate fires up to three 45 percent volleys and skips targets killed earlier", () => {')
-          text = read(path)
-          art_start = text.index('test("Artillery Ultimate fires up to three 45 percent volleys')
-          armor_start = text.index('test("Armor Thế Thủ', art_start)
-          art_block = text[art_start:armor_start].replace('rage: 70', 'rage: 50').replace('findUnit(resolved, durable.instanceId).hp, 880', 'findUnit(resolved, durable.instanceId).hp, 865')
-          text = text[:art_start] + art_block + text[armor_start:]
-          text = text.replace('test("Armor Thế Thủ doubles current DEF for three rounds and removes only its own snapshot bonus"', 'test("Armor Thế Thủ adds 150 percent reference DEF for three rounds and removes only its own snapshot bonus"')
-          text = text.replace('findUnit(state, armor.instanceId).defense, 160', 'findUnit(state, armor.instanceId).defense, 200')
-          text = text.replace('findUnit(state, armor.instanceId).armorUltimateDefenseBonus, 80', 'findUnit(state, armor.instanceId).armorUltimateDefenseBonus, 120')
-          text = text.replace('findUnit(state, armor.instanceId).defense, 196', 'findUnit(state, armor.instanceId).defense, 246')
-          text = text.replace('test("Engineer Lỳ Đòn heals 30 percent missing HP and applies one refreshable Toughness status"', 'test("Engineer Lỳ Đòn heals 22 percent missing HP and applies one refreshable Toughness status"')
-          text = text.replace('findUnit(state, engineer.instanceId).hp, 580', 'findUnit(state, engineer.instanceId).hp, 532')
-          text = text.replace('findUnit(state, engineer.instanceId).hp, 650', 'findUnit(state, engineer.instanceId).hp, 610')
-          write(path, text)
-
-          path = 'src/features/entertainment/chien_tuyen/phase5Combat.test.ts'
-          replacements = [
-              ('assert.match(guard.description ?? "", /18%/);', 'assert.match(guard.description ?? "", /12%/);'),
-              ('assert.equal(GUARD_ULTIMATE_SHIELD_MAX_HP_RATIO, 0.18);', 'assert.equal(GUARD_ULTIMATE_SHIELD_MAX_HP_RATIO, 0.12);'),
-              ('assert.match(pioneer.description ?? "", /200%/);', 'assert.match(pioneer.description ?? "", /135%/);'),
-              ('assert.equal(PIONEER_ULTIMATE_ATTACK_RATIO, 2);', 'assert.equal(PIONEER_ULTIMATE_ATTACK_RATIO, 1.35);'),
-              ('assert.equal(ultimateShield.amount, 360);', 'assert.equal(ultimateShield.amount, 240);'),
-              ('assert.equal(guardStats?.shieldCreated, 1_440);', 'assert.equal(guardStats?.shieldCreated, 960);'),
-              ('assert.equal(totalShield(findUnit(cast, ally.instanceId)), 480);', 'assert.equal(totalShield(findUnit(cast, ally.instanceId)), 360);'),
-              ('assert.equal(hit?.amount, 200);', 'assert.equal(hit?.amount, 135);'),
-              ('assert.equal(hit?.hpDamage, 150);', 'assert.equal(hit?.hpDamage, 85);'),
-              ('assert.equal(findUnit(resolved, target.instanceId).hp, 850);', 'assert.equal(findUnit(resolved, target.instanceId).hp, 915);'),
-          ]
-          text = read(path)
-          for old, new in replacements:
-              if old not in text:
-                  raise SystemExit(f'phase5 fixture marker missing: {old}')
-              text = text.replace(old, new)
-          write(path, text)
-          print('Legacy Phase 6 fixtures synced.')
-          PY
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add src/features/entertainment/chien_tuyen/*.test.ts
-          git commit -m "Update Phase 6 legacy regression fixtures"
-          git push origin HEAD:codex/chien-tuyen-phase-6
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.3.3
+      - run: bun install --frozen-lockfile
+      - name: Phase 6 regression tests (read-only)
+        run: node node_modules/tsx/dist/cli.mjs src/features/entertainment/chien_tuyen/phase6Update.test.ts
+      - name: Ensure validation did not modify tracked source
+        run: git diff --exit-code

@@ -41,25 +41,27 @@ equal(TROOP_TYPES.length, 18, "exactly eighteen canonical troop types");
 equal(TROOP_CATALOG_LIST.length, 18, "catalog contains each troop once");
 assert(TROOP_TYPES.every((type) => TROOP_BY_TYPE[type].id === type), "catalog is complete and keyed canonically");
 
+// Approved main balance: c1d5584 (troopCatalog.ts). Keep independent numeric
+// fixtures so an unintended catalog edit cannot change both actual and expected.
 const canonicalLevelOne = {
   infantry: [1050, 115, 38, 0.25, 44],
   artillery: [780, 125, 17, 0.25, 48],
-  armor: [1500, 40, 80, 0.25, 30],
-  commando: [800, 150, 30, 0.25, 76],
-  medic: [900, 30, 16, 0.25, 50],
-  anti_tank: [1100, 109, 40, 0.25, 42],
-  engineer: [1500, 38, 45, 0.25, 32],
-  chemical: [900, 102, 34, 0.25, 42],
-  air_force: [850, 121, 19, 0.25, 66],
-  guard: [1000, 25, 24, 0.25, 34],
-  pioneer: [1150, 75, 48, 0.25, 40],
-  scout: [1000, 87, 40, 0.25, 68],
-  marksman: [810, 130, 19, 0.25, 38],
-  electronic_warfare: [990, 119, 46, 0.25, 47],
-  special_ops: [1303, 51, 64, 0.25, 35],
-  divine_medic: [890, 32, 16, 0.25, 39],
-  forensic_medic: [1090, 56, 40, 0.25, 58],
-  martial_artist: [1050, 100, 40, 0.25, 54],
+  armor: [1510, 33, 80, 0.25, 30],
+  commando: [800, 135, 30, 0.25, 76],
+  medic: [970, 30, 16, 0.25, 50],
+  anti_tank: [1002, 109, 38, 0.25, 42],
+  engineer: [1630, 38, 59, 0.25, 32],
+  chemical: [1080, 97, 40, 0.25, 42],
+  air_force: [950, 121, 19, 0.25, 66],
+  guard: [1120, 42, 34, 0.25, 34],
+  pioneer: [1490, 39, 68, 0.25, 40],
+  scout: [1103, 97, 38, 0.25, 68],
+  marksman: [985, 126, 19, 0.25, 38],
+  electronic_warfare: [1090, 103, 38, 0.25, 47],
+  special_ops: [1503, 40, 69, 0.25, 35],
+  divine_medic: [990, 32, 20, 0.25, 39],
+  forensic_medic: [1098, 96, 37, 0.25, 58],
+  martial_artist: [1106, 102, 38, 0.25, 54],
 } as const;
 for (const troopType of TROOP_TYPES) {
   const stats = getTroopStats(troopType, 1);
@@ -80,22 +82,22 @@ for (const troopType of TROOP_TYPES) {
 const canonicalGrowth = {
   infantry: [52, 7, 1.5],
   artillery: [35, 8, 1],
-  armor: [65, 1, 2],
+  armor: [79, 1, 2],
   commando: [39, 10, 1],
   medic: [47, 1, 1],
-  anti_tank: [49, 7, 1],
-  engineer: [78, 1, 1.5],
-  chemical: [41, 7, 1],
-  air_force: [37, 9, 1],
-  guard: [52, 1, 1.5],
-  pioneer: [53, 3, 2],
-  scout: [50, 4, 1],
-  marksman: [37, 9, 1],
-  electronic_warfare: [51, 7, 1],
-  special_ops: [61, 1, 2],
+  anti_tank: [55, 7, 1],
+  engineer: [89, 1, 1.5],
+  chemical: [55, 6, 1.5],
+  air_force: [41, 9, 1],
+  guard: [54, 1, 1.5],
+  pioneer: [73, 1, 2],
+  scout: [56, 5, 1.5],
+  marksman: [42, 9, 1],
+  electronic_warfare: [55, 6, 1.5],
+  special_ops: [73, 1, 2],
   divine_medic: [47, 1, 1],
-  forensic_medic: [54, 4, 1],
-  martial_artist: [51, 6, 1.5],
+  forensic_medic: [54, 6, 1.5],
+  martial_artist: [55, 6, 1.5],
 } as const;
 const canonicalRoles = {
   infantry: "Đấu sĩ cân bằng · Công thủ toàn diện",
@@ -107,7 +109,7 @@ const canonicalRoles = {
   commando: "Ám sát hàng sau · Sốc sát thương",
   guard: "Bảo hộ · Tạo Khiên cho đồng đội",
   air_force: "Carry cuối trận · Càng đánh càng mạnh",
-  pioneer: "Đấu sĩ khống chế · Làm gián đoạn kẻ địch",
+  pioneer: "Khống chế · Làm gián đoạn kẻ địch",
   chemical: "Debuff diện rộng · Bào mòn và gây Choáng",
   scout: "Hỗ trợ Timeline · Đẩy lượt đồng minh",
   marksman: "DPS đơn mục tiêu · Kết liễu",
@@ -127,7 +129,7 @@ for (const troopType of TROOP_TYPES) {
 }
 
 const airLevelTwo = getTroopStats("air_force", 2);
-equal(airLevelTwo.maxHp, 887, "Air Force level-two HP");
+equal(airLevelTwo.maxHp, 991, "Air Force level-two HP");
 equal(airLevelTwo.attack, 130, "Air Force level-two ATK");
 equal(airLevelTwo.defense, 20, "Air Force level-two DEF");
 equal(airLevelTwo.critChance, 0.25, "Air Force level-two Crit");

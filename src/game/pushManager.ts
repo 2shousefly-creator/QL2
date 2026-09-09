@@ -2,6 +2,7 @@ import { GameState } from "./types";
 import { getCurrentRank, isXpBarFull, getRequiredXpTicksForTransition } from "./xpEngine";
 import { gameConfig } from "./config";
 import { RANK_STEPS } from "./rankBuilder";
+import { serverPushEnabled, serverPushUnavailableMessage } from './webDeployment';
 
 /**
  * DO NOT CHANGE PUSH_API_BASE_URL OR WEB PUSH INFRASTRUCTURE
@@ -59,6 +60,7 @@ export function isPushSupported(): boolean {
  * Fetches server's VAPID public key.
  */
 export async function getVapidPublicKey(): Promise<string | null> {
+  if (!serverPushEnabled) return null;
   try {
     const res = await fetch(pushApiUrl("/api/push/vapid-public-key"));
     if (!res.ok) return null;
@@ -76,6 +78,7 @@ let isRegistering = false;
  * Subscribes the current device to Web Push notifications and registers with backend.
  */
 export async function subscribeAndRegisterWebPush(): Promise<boolean> {
+  if (!serverPushEnabled) return false;
   if (!isPushSupported()) return false;
   if (isRegistering) return false;
   isRegistering = true;
@@ -165,6 +168,7 @@ export async function syncXpFullPushSchedule(
   force: boolean = false,
   isRetry: boolean = false
 ): Promise<void> {
+  if (!serverPushEnabled) return;
   if (typeof window === "undefined") return;
 
   const devicePushId = getDevicePushId();
@@ -279,6 +283,7 @@ export async function syncXpFullPushSchedule(
  * Triggers a test push notification via backend to test Web Push end-to-end.
  */
 export async function sendTestServerPush(): Promise<{ success: boolean; message: string }> {
+  if (!serverPushEnabled) return { success: false, message: serverPushUnavailableMessage };
   if (!isPushSupported()) {
     return {
       success: false,
@@ -317,6 +322,7 @@ export async function sendTestServerPush(): Promise<{ success: boolean; message:
  * Fetches server diagnostic status for this device.
  */
 export async function fetchPushDiagnosticStatus(): Promise<any> {
+  if (!serverPushEnabled) return { enabled: false, message: serverPushUnavailableMessage };
   const devicePushId = getDevicePushId();
   try {
     const res = await fetch(pushApiUrl(`/api/push/status?devicePushId=${encodeURIComponent(devicePushId)}`));
