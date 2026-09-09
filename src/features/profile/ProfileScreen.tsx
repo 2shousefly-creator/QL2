@@ -20,6 +20,8 @@ import {
   isPushSupported,
 } from "../../game/pushManager";
 import { performAppUpdate } from "../../app-update/appUpdateService";
+import { serverPushEnabled, serverPushUnavailableMessage } from '../../game/webDeployment';
+import { parseTransfer, TRANSFER_MAX_BYTES } from '../../storage/saveTransfer';
 import { APP_BUILD_ID, getShortBuildId } from "../../app-update/buildInfo";
 import { getInstalledBuildVersion, fetchLatestVersion } from "../../app-update/versionService";
 import { CommandHeader } from "../../components/military/MilitaryUI";
@@ -179,6 +181,11 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
         return;
       }
 
+      if (!serverPushEnabled) {
+        onUpdateState((draft) => { draft.settings.notificationsEnabled = true; });
+        setExportNotice(serverPushUnavailableMessage);
+        return;
+      }
       setExportNotice("Đang đăng ký dịch vụ Web Push với máy chủ...");
       const regSuccess = await subscribeAndRegisterWebPush();
       if (regSuccess) {
@@ -236,20 +243,28 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
 
   const handleExport = async () => {
     soundManager.playClick();
-    const json = await localGameRepository.export();
-    navigator.clipboard.writeText(json);
-    setExportNotice("Đã sao chép dữ liệu lưu trữ vào bộ nhớ tạm!");
-    setTimeout(() => setExportNotice(null), 3000);
+    try {
+      const json = await localGameRepository.export();
+      const url = URL.createObjectURL(new Blob([json], { type: 'application/json' }));
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `quan-lo-save-${new Date().toISOString().replaceAll(':', '-')}.json`;
+      link.click();
+      setTimeout(() => URL.revokeObjectURL(url), 30_000);
+      setExportNotice('Đã tạo file sao lưu. Hãy kiểm tra file trong thư mục tải xuống và giữ bản gốc.');
+    } catch (err) { setExportNotice(err instanceof Error ? err.message : 'Không thể xuất dữ liệu.'); }
   };
 
   const handleImport = async () => {
     soundManager.playClick();
     if (!importJson.trim()) return;
     try {
+      parseTransfer(importJson);
+      if (!confirm('Nhập sẽ thay thế tiến trình hiện tại và các minigame có trong file. Hãy xuất save đích trước và đóng các tab game khác. Bản gốc cùng backup đích được giữ trong kho lưu cục bộ; các trường chưa hỗ trợ chỉ được lưu trong bản gốc, không được game sử dụng. Tiếp tục?')) return;
       await localGameRepository.import(importJson);
       window.location.reload();
     } catch (err) {
-      alert("Dữ liệu nhập không hợp lệ! Vui lòng kiểm tra lại mã JSON.");
+      alert(err instanceof Error ? err.message : 'Không thể nhập dữ liệu.');
     }
   };
 
@@ -650,6 +665,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
             </div>
           )}
 
+          {!serverPushEnabled && <p className="text-xs text-amber-300">{serverPushUnavailableMessage}</p>}
           {/* Web Push Diagnostic Inspector */}
           {state.settings.notificationsEnabled && showDiagnostics && (
             <div className="mt-2 p-3 rounded-xl bg-slate-950/90 border border-sky-900/60 space-y-1.5 text-[11px] text-slate-300 font-mono">
@@ -814,6 +830,13 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
 
           {showImportBox && (
             <div className="p-3 bg-slate-950 rounded-xl border border-slate-700 space-y-2">
+              <input type="file" accept=".json,application/json" aria-label="Chọn file save Quân Lộ" onChange={async (event) => {
+                setImportJson('');
+                const file = event.target.files?.[0];
+                if (!file) return;
+                if (file.size > TRANSFER_MAX_BYTES) { alert('File vượt giới hạn 20 MiB.'); return; }
+                try { setImportJson(await file.text()); } catch { alert('Không đọc được file.'); }
+              }} className="w-full text-xs text-slate-200" />
               <textarea
                 value={importJson}
                 onChange={(e) => setImportJson(e.target.value)}
