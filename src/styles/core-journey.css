@@ -17,3 +17,17 @@
 @media (min-width: 640px) { .core-scene--journey .journey-sector::before { left: 32px; } .core-scene--journey .journey-sector[data-sector-state="current"]::after { left: 29px; } }
 
 .core-scene--journey [data-node-state="current"] { border-color: var(--theme-border-strong); box-shadow: inset 0 1px var(--theme-accent), 0 0 14px var(--theme-primary-soft) !important; }
+
+/* The campaign canvas shares document scroll; cards retain all input/focus. */
+.journey-route { isolation: isolate; }
+.journey-pixi-layer { position: absolute; inset: 0; margin: 0 !important; z-index: 0; pointer-events: none; overflow: hidden; }
+.journey-pixi-layer .core-pixi-host { position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity 300ms ease; }
+.journey-pixi-layer .core-pixi-host[data-ready="true"] { opacity: 1; }
+.journey-route > .journey-sector { z-index: 1; }
+.journey-route > .theme-journey-spine, .journey-sector::before, .journey-sector::after, .journey-sector-marker { transition: opacity 300ms ease; }
+.journey-route[data-pixi-ready="true"] > .theme-journey-spine,
+.journey-route[data-pixi-ready="true"] > .journey-sector::before,
+.journey-route[data-pixi-ready="true"] > .journey-sector::after,
+.journey-route[data-pixi-ready="true"] .journey-sector-marker { opacity: 0; animation: none; }
+[data-core-motion="reduced"] .journey-pixi-layer .core-pixi-host { transition: none; }
+@media (prefers-reduced-motion: reduce) { .journey-pixi-layer .core-pixi-host { transition: none; } }

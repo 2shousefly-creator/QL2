@@ -1,6 +1,9 @@
 import { CoreScene } from "../../components/core-visual/CoreScene";
 import "../../styles/core-journey.css";
 import React, { useEffect, useRef, useState } from "react";
+import type JourneyPixiLayer from "./pixi/JourneyPixiLayer";
+import { JOURNEY_CHAPTERS } from "../../game/journeyChapters";
+import { getStageTheme } from "../../game/stageThemes";
 import { CheckCircle2, Compass, Info, Lock, MapPin, Zap } from "lucide-react";
 import { GameState, RankFamily } from "../../game/types";
 import { buildJourneyMapViewModel } from "../../game/journeySelectors";
@@ -22,6 +25,42 @@ export const JourneyMapScreen: React.FC<JourneyMapScreenProps> = ({
   const [nowMs, setNowMs] = useState(() => Date.now());
   const [selectedFamily, setSelectedFamily] = useState<RankFamily | null>(null);
   const [showEtaInfoModal, setShowEtaInfoModal] = useState(false);
+
+  const routeRef = useRef<HTMLDivElement | null>(null);
+  const [PixiLayer, setPixiLayer] = useState<typeof JourneyPixiLayer | null>(null);
+  const [pixiReady, setPixiReady] = useState(false);
+  const [pixiFailed, setPixiFailed] = useState(false);
+  const [systemReduced, setSystemReduced] = useState(() => window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  const reducedMotion = Boolean(gameState.settings.reducedMotion || systemReduced);
+  useEffect(() => {
+    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const change = () => setSystemReduced(media.matches);
+    media.addEventListener("change", change);
+    return () => media.removeEventListener("change", change);
+  }, []);
+  useEffect(() => {
+    let cancelled = false, secondFrame = 0;
+    let idle: number | undefined;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const load = () => {
+      if (cancelled) return;
+      void import("./pixi/JourneyPixiLayer").then(module => {
+        if (!cancelled) setPixiLayer(() => module.default);
+      }).catch(() => { if (!cancelled) setPixiFailed(true); });
+    };
+    const firstFrame = requestAnimationFrame(() => {
+      secondFrame = requestAnimationFrame(() => {
+        if ("requestIdleCallback" in window) idle = window.requestIdleCallback(load, { timeout: 1200 });
+        else timer = setTimeout(load, 1000);
+      });
+    });
+    return () => {
+      cancelled = true;
+      cancelAnimationFrame(firstFrame); cancelAnimationFrame(secondFrame);
+      if (idle !== undefined) window.cancelIdleCallback(idle);
+      if (timer !== undefined) clearTimeout(timer);
+    };
+  }, []);
 
   const currentChapterRef = useRef<HTMLDivElement | null>(null);
   const hasAutoScrolledRef = useRef(false);
@@ -55,7 +94,7 @@ export const JourneyMapScreen: React.FC<JourneyMapScreenProps> = ({
   };
 
   return (
-    <CoreScene variant="journey" reducedMotion={gameState.settings.reducedMotion} className="command-screen journey-command-screen w-full max-w-lg mx-auto pb-24 px-4 pt-4 text-slate-100 animate-fadeIn">
+    <CoreScene variant="journey" reducedMotion={reducedMotion} density={pixiReady ? "none" : "quiet"} className="command-screen journey-command-screen w-full max-w-lg mx-auto pb-24 px-4 pt-4 text-slate-100 animate-fadeIn">
       {/* Header Banner */}
       <CommandHeader
         className="mb-6"
@@ -79,7 +118,14 @@ export const JourneyMapScreen: React.FC<JourneyMapScreenProps> = ({
       />
 
       {/* Chapters Vertical Roadmap */}
-      <div className="journey-route relative space-y-6">
+      <div ref={routeRef} className="journey-route relative space-y-6" data-pixi-ready={pixiReady}>
+        {PixiLayer && !pixiFailed && <div className="journey-pixi-layer" aria-hidden="true">
+          <PixiLayer routeRef={routeRef} reducedMotion={reducedMotion}
+            visualProps={{ theme: getStageTheme(JOURNEY_CHAPTERS.find(chapter => chapter.id === vm.currentChapterId)?.themeId),
+              currentChapterId: vm.currentChapterId,
+              chapters: vm.chapters.map(({ id, status, progressPercent }) => ({ id, status, progressPercent })) }}
+            onReady={() => setPixiReady(true)} onUnavailable={() => { setPixiReady(false); setPixiFailed(true); }} />
+        </div>}
         {/* Connecting Vertical Spine Line */}
         <div className="theme-journey-spine absolute left-6 sm:left-8 top-8 bottom-8 w-0.5 -z-0" />
 
@@ -98,7 +144,7 @@ export const JourneyMapScreen: React.FC<JourneyMapScreenProps> = ({
             >
               {/* Chapter Node Marker on Spine - Centered on track line and vertically centered relative to card frame */}
               <div
-                className={`absolute left-6 sm:left-8 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full flex items-center justify-center font-bold shadow-lg border transition-all z-10 ${
+                className={`journey-sector-marker absolute left-6 sm:left-8 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full flex items-center justify-center font-bold shadow-lg border transition-all z-10 ${
                   isCurrent
                     ? "theme-node-current w-8 h-8 scale-110"
                     : isCompleted
