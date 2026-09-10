@@ -80,16 +80,37 @@ export async function loadAssets(
       throw new Error("Animation không hợp lệ.");
   }
   onProgress(15);
-  const atlas = await loadImage(manifest.atlas, signal);
-  onProgress(60);
+  const controller = new AbortController();
+  const abort = () => controller.abort();
+  signal.addEventListener("abort", abort, { once: true });
+  if (signal.aborted) abort();
+  const loaded: HTMLImageElement[] = [];
+  let failed = false;
+  const loadResource = async (path: string) => {
+    const image = await loadImage(path, controller.signal);
+    if (failed || controller.signal.aborted) {
+      image.src = "";
+      throw new DOMException("Aborted", "AbortError");
+    }
+    loaded.push(image);
+    onProgress(15 + loaded.length * 40);
+    return image;
+  };
+  let atlas: HTMLImageElement;
   let background: HTMLImageElement;
   try {
-    background = await loadImage(manifest.background, signal);
+    [atlas, background] = await Promise.all([
+      loadResource(manifest.atlas),
+      loadResource(manifest.background),
+    ]);
   } catch (error) {
-    atlas.src = "";
+    failed = true;
+    controller.abort();
+    for (const image of loaded) image.src = "";
     throw error;
+  } finally {
+    signal.removeEventListener("abort", abort);
   }
-  onProgress(100);
   if (
     atlas.width !== manifest.sourceSize[0] ||
     atlas.height !== manifest.sourceSize[1]
@@ -98,6 +119,7 @@ export async function loadAssets(
     background.src = "";
     throw new Error("Kích thước atlas không khớp metadata.");
   }
+  onProgress(100);
   return {
     manifest,
     atlas,

@@ -324,7 +324,7 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
                   >
                     <div className="flex items-center gap-2.5 flex-1 min-w-0">
                       <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-slate-800/90 border border-slate-700/60 flex items-center justify-center shrink-0">
-                        <img
+                        <img loading="lazy" decoding="async" fetchPriority="low"
                           src={getCropAsset(crop.id, "mature")}
                           alt=""
                           aria-hidden="true"
@@ -374,7 +374,7 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
                           itemId: crop.id,
                           name: `Hạt giống ${crop.name}`,
                           icon: (
-                            <img
+                            <img loading="lazy" decoding="async" fetchPriority="low"
                               src={getCropAsset(crop.id, "mature")}
                               alt=""
                               aria-hidden="true"
@@ -410,7 +410,7 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
                   >
                     <div className="flex items-center gap-2.5 flex-1 min-w-0">
                       <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-slate-800/90 border border-slate-700/60 flex items-center justify-center text-xl sm:text-2xl shrink-0">
-                        <img
+                        <img loading="lazy" decoding="async" fetchPriority="low"
                           src={getFertilizerAsset(fert.id)}
                           alt=""
                           aria-hidden="true"
@@ -456,7 +456,7 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
                           itemId: fert.id,
                           name: fert.name,
                           icon: (
-                            <img
+                            <img loading="lazy" decoding="async" fetchPriority="low"
                               src={getFertilizerAsset(fert.id)}
                               alt=""
                               aria-hidden="true"
@@ -575,7 +575,7 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
                   >
                     <div className="flex items-center gap-2.5 flex-1 min-w-0">
                       <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-slate-800/90 border border-slate-700/60 flex items-center justify-center text-xl sm:text-2xl shrink-0">
-                        <img
+                        <img loading="lazy" decoding="async" fetchPriority="low"
                           src={getFeedAsset(feed.id)}
                           alt=""
                           aria-hidden="true"
@@ -622,7 +622,7 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
                           itemId: feed.id,
                           name: feed.name,
                           icon: (
-                            <img
+                            <img loading="lazy" decoding="async" fetchPriority="low"
                               src={getFeedAsset(feed.id)}
                               alt=""
                               aria-hidden="true"

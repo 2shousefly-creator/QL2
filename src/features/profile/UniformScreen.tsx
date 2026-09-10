@@ -39,6 +39,7 @@ export const UniformScreen: React.FC<UniformScreenProps> = ({ state, onBack }) =
   const [selectedFamilyId, setSelectedFamilyId] = useState(currentFamily.id);
   const [previewStatus, setPreviewStatus] = useState("");
   const previewRequest = useRef(0);
+  const neighborInFlight = useRef<Promise<void>>(Promise.resolve());
   const [inspectingMedal, setInspectingMedal] = useState<MedalDefinition | null>(null);
 
   useEffect(() => {
@@ -49,12 +50,36 @@ export const UniformScreen: React.FC<UniformScreenProps> = ({ state, onBack }) =
   }, [currentFamily.id]);
 
   useEffect(() => {
+    let cancelled = false;
+    let cancelIdle: (() => void) | undefined;
+    const connection = (navigator as Navigator & {
+      connection?: { saveData?: boolean; effectiveType?: string };
+    }).connection;
+    const canPreload = () => !connection?.saveData && !["slow-2g", "2g"].includes(connection?.effectiveType ?? "");
     const index = unlockedFamilies.findIndex((family) => family.id === selectedFamilyId);
-    // Warm only adjacent choices; avoid downloading all 24 uniforms on mobile.
-    for (const family of unlockedFamilies.slice(Math.max(0, index - 1), index + 2)) {
-      void loadUniformSprites(family.id).catch(() => undefined);
-    }
-  }, [selectedFamilyId, unlockedFamilies]);
+    const neighbors = [unlockedFamilies[index + 1], unlockedFamilies[index - 1]].filter(Boolean);
+    const scheduleNext = () => {
+      if (cancelled || previewStatus || !canPreload()) return;
+      const family = neighbors.shift();
+      if (!family) return;
+      const warm = () => {
+        neighborInFlight.current = neighborInFlight.current.then(async () => {
+          if (!cancelled && canPreload()) await loadUniformSprites(family.id, "low");
+        }).catch(() => undefined);
+        void neighborInFlight.current.then(scheduleNext);
+      };
+      if ("requestIdleCallback" in window) {
+        const id = window.requestIdleCallback(warm);
+        cancelIdle = () => window.cancelIdleCallback(id);
+      } else {
+        const id = setTimeout(warm, 1500);
+        cancelIdle = () => clearTimeout(id);
+      }
+    };
+    // Visible family first; speculative requests are serialized and idle-only.
+    void loadUniformSprites(selectedFamilyId, "high").then(scheduleNext).catch(() => undefined);
+    return () => { cancelled = true; cancelIdle?.(); };
+  }, [selectedFamilyId, unlockedFamilies, previewStatus]);
 
   const selectedFamily =
     unlockedFamilies.find((family) => family.id === selectedFamilyId) ?? currentFamily;

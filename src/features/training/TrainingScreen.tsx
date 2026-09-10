@@ -1,42 +1,43 @@
-import React, { useState, useRef } from "react";
+import type { MarchRhythmGameResult } from "../../game/training/marchRhythmJudgement";
+import React, { lazy, Suspense, useState, useRef } from "react";
 import { Sliders, Target, Activity, BrainCircuit, Grid3X3, HelpCircle, Swords, Eye, Crown } from "lucide-react";
-import { GameState, TrainingDifficulty, TrainingGameId } from "../../game/types";
+import type { GameState, TrainingDifficulty, TrainingGameId } from "../../game/types";
 import { TrainingRewardCard } from "./TrainingRewardCard";
 import { MarchRhythmCard } from "./MarchRhythmCard";
-import { MarchRhythmGame } from "./MarchRhythmGame";
-import { MarchRhythmResult } from "./MarchRhythmResult";
-import { MarchRhythmTutorialModal } from "./MarchRhythmTutorialModal";
 import { SignalCommandCard } from "./SignalCommandCard";
-import { SignalCommandGame } from "./SignalCommandGame";
-import { SignalCommandResultModal } from "./SignalCommandResult";
-import { SignalCommandTutorialModal } from "./SignalCommandTutorialModal";
 import { FormationAssemblyCard } from "./formationAssembly/FormationAssemblyCard";
-import { FormationAssemblyGame } from "./formationAssembly/FormationAssemblyGame";
-import { FormationAssemblyResultModal } from "./formationAssembly/FormationAssemblyResult";
-import { FormationTutorialModal } from "./formationAssembly/FormationTutorialModal";
 import { GomokuCard } from "./gomoku-v13/ui/GomokuCard";
-import { GomokuGameScreen } from "./gomoku-v13/ui/GomokuGameScreen";
-import { GomokuTutorialModal } from "./gomoku-v13/ui/GomokuTutorialModal";
-import { GomokuMark } from "./gomoku-v13/domain/gomokuTypes";
+import type { GomokuMark } from "./gomoku-v13/domain/gomokuTypes";
 import { RadarTrackingCard } from "./radarTracking/RadarTrackingCard";
-import { RadarTrackingGame } from "./radarTracking/RadarTrackingGame";
-import { RadarTrackingResultModal } from "./radarTracking/RadarTrackingResult";
-import { RadarTrackingTutorialModal } from "./radarTracking/RadarTrackingTutorialModal";
 import { ShootingCard } from "./shootingRange/ShootingCard";
-import { ShootingGame } from "./shootingRange/ShootingGame";
-import { ShootingResult } from "./shootingRange/ShootingResult";
-import { ShootingTutorialModal } from "./shootingRange/ShootingTutorialModal";
-import { ShootingRunState, ShootingRunResult } from "../../game/training/shootingRange/shootingTypes";
-import { TimingCalibrationModal } from "./TimingCalibrationModal";
-import { ActiveRunState } from "../../game/training/marchRhythmEngine";
-import { MarchRhythmGameResult } from "../../game/training/marchRhythmJudgement";
-import { SignalCommandRun, SignalCommandResult } from "../../game/training/signalCommand/signalCommandTypes";
-import { FormationRun, FormationResult } from "../../game/training/formationAssembly/formationTypes";
-import { RadarRunResult, RadarRunState } from "../../game/training/radarTracking/radarTypes";
+import type { ShootingRunState, ShootingRunResult } from "../../game/training/shootingRange/shootingTypes";
+import type { ActiveRunState } from "../../game/training/marchRhythmEngine";
+import type { SignalCommandRun, SignalCommandResult } from "../../game/training/signalCommand/signalCommandTypes";
+import type { FormationRun, FormationResult } from "../../game/training/formationAssembly/formationTypes";
+import type { RadarRunResult, RadarRunState } from "../../game/training/radarTracking/radarTypes";
 import { createEmptyRadarTrackingStats, createEmptyShootingRangeStats } from "../../game/training/trainingDefaults";
-import { claimDailyTrainingReward, DailyTrainingClaimResult } from "../../game/training/dailyTrainingReward";
+import { claimDailyTrainingReward, type DailyTrainingClaimResult } from "../../game/training/dailyTrainingReward";
 import { recordTrainingRunForMasteryAndMedals } from "../../game/medals/medalEngine";
 import { soundManager } from "../../game/audio";
+
+const MarchRhythmGame = lazy(() => import("./MarchRhythmGame").then(m => ({ default: m.MarchRhythmGame })));
+const MarchRhythmResult = lazy(() => import("./MarchRhythmResult").then(m => ({ default: m.MarchRhythmResult })));
+const MarchRhythmTutorialModal = lazy(() => import("./MarchRhythmTutorialModal").then(m => ({ default: m.MarchRhythmTutorialModal })));
+const SignalCommandGame = lazy(() => import("./SignalCommandGame").then(m => ({ default: m.SignalCommandGame })));
+const SignalCommandResultModal = lazy(() => import("./SignalCommandResult").then(m => ({ default: m.SignalCommandResultModal })));
+const SignalCommandTutorialModal = lazy(() => import("./SignalCommandTutorialModal").then(m => ({ default: m.SignalCommandTutorialModal })));
+const FormationAssemblyGame = lazy(() => import("./formationAssembly/FormationAssemblyGame").then(m => ({ default: m.FormationAssemblyGame })));
+const FormationAssemblyResultModal = lazy(() => import("./formationAssembly/FormationAssemblyResult").then(m => ({ default: m.FormationAssemblyResultModal })));
+const FormationTutorialModal = lazy(() => import("./formationAssembly/FormationTutorialModal").then(m => ({ default: m.FormationTutorialModal })));
+const GomokuGameScreen = lazy(() => import("./gomoku-v13/ui/GomokuGameScreen").then(m => ({ default: m.GomokuGameScreen })));
+const GomokuTutorialModal = lazy(() => import("./gomoku-v13/ui/GomokuTutorialModal").then(m => ({ default: m.GomokuTutorialModal })));
+const RadarTrackingGame = lazy(() => import("./radarTracking/RadarTrackingGame").then(m => ({ default: m.RadarTrackingGame })));
+const RadarTrackingResultModal = lazy(() => import("./radarTracking/RadarTrackingResult").then(m => ({ default: m.RadarTrackingResultModal })));
+const RadarTrackingTutorialModal = lazy(() => import("./radarTracking/RadarTrackingTutorialModal").then(m => ({ default: m.RadarTrackingTutorialModal })));
+const ShootingGame = lazy(() => import("./shootingRange/ShootingGame").then(m => ({ default: m.ShootingGame })));
+const ShootingResult = lazy(() => import("./shootingRange/ShootingResult").then(m => ({ default: m.ShootingResult })));
+const ShootingTutorialModal = lazy(() => import("./shootingRange/ShootingTutorialModal").then(m => ({ default: m.ShootingTutorialModal })));
+const TimingCalibrationModal = lazy(() => import("./TimingCalibrationModal").then(m => ({ default: m.TimingCalibrationModal })));
 
 type TrainingScreenProps = {
   gameState: GameState;
@@ -864,6 +865,7 @@ export const TrainingScreen: React.FC<TrainingScreenProps> = ({
         ) : null}
       </div>
 
+      <Suspense fallback={<div role="status" className="p-6 text-center text-slate-400">Đang tải huấn luyện…</div>}>
       {/* Active Fullscreen Gameplay */}
       {isPlayingGame && selectedGameId === "march_rhythm" && (
         <MarchRhythmGame
@@ -1020,6 +1022,7 @@ export const TrainingScreen: React.FC<TrainingScreenProps> = ({
           onClose={() => setTrainingModal(null)}
         />
       )}
+      </Suspense>
     </div>
   );
 };

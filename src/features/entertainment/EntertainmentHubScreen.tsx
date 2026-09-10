@@ -4,14 +4,15 @@ import { GameState, TabType } from "../../game/types";
 import { soundManager } from "../../game/audio";
 import { ENTERTAINMENT_GAMES } from "./entertainmentCatalog";
 import { EntertainmentGameId } from "./types";
-import { BauCuaScreen } from "./bau_cua/BauCuaScreen";
-import { BigSmallScreen } from "./big_small/BigSmallScreen";
 import { createDefaultFarmState } from "../tang_gia/farmEngine";
-import { KhongKichScreen } from "./khong_kich/KhongKichScreen";
-import { TankBattleScreen } from "./tank_battle/TankBattleScreen";
-import { ChienTuyenScreen } from "./chien_tuyen/ChienTuyenScreen";
 import { CommandHeader } from "../../components/military/MilitaryUI";
 import { ArmyLoadBoundary } from "./mobi_army3/LoadBoundary";
+
+const BauCuaScreen = lazy(() => import("./bau_cua/BauCuaScreen").then(m => ({ default: m.BauCuaScreen })));
+const BigSmallScreen = lazy(() => import("./big_small/BigSmallScreen").then(m => ({ default: m.BigSmallScreen })));
+const KhongKichScreen = lazy(() => import("./khong_kich/KhongKichScreen").then(m => ({ default: m.KhongKichScreen })));
+const TankBattleScreen = lazy(() => import("./tank_battle/TankBattleScreen").then(m => ({ default: m.TankBattleScreen })));
+const ChienTuyenScreen = lazy(() => import("./chien_tuyen/ChienTuyenScreen").then(m => ({ default: m.ChienTuyenScreen })));
 
 const MobiArmy3Screen = lazy(() => import("./mobi_army3/MobiArmy3Screen"));
 
@@ -57,47 +58,56 @@ export const EntertainmentHubScreen: React.FC<EntertainmentHubScreenProps> = ({
   }
   if (activeGame === "khong_kich") {
     return (
+      <Suspense fallback={<div role="status" className="p-6 text-slate-200">Đang tải trò chơi… <button onClick={() => setActiveGame(null)}>Quay lại</button></div>}>
       <KhongKichScreen
         gameState={gameState}
         onUpdateGameState={onUpdateGameState}
         onBack={() => setActiveGame(null)}
       />
+      </Suspense>
     );
   }
 
   if (activeGame === "tank_battle") {
     return (
+      <Suspense fallback={<div role="status" className="p-6 text-slate-200">Đang tải trò chơi… <button onClick={() => setActiveGame(null)}>Quay lại</button></div>}>
       <TankBattleScreen
         gameState={gameState}
         onUpdateGameState={onUpdateGameState}
         onBack={() => setActiveGame(null)}
       />
+      </Suspense>
     );
   }
 
   if (activeGame === "chien_tuyen") {
     return (
+      <Suspense fallback={<div role="status" className="p-6 text-slate-200">Đang tải trò chơi… <button onClick={() => setActiveGame(null)}>Quay lại</button></div>}>
       <ChienTuyenScreen
         gameState={gameState}
         onUpdateGameState={onUpdateGameState}
         onBack={() => setActiveGame(null)}
       />
+      </Suspense>
     );
   }
 
   if (activeGame === "bau_cua") {
     return (
+      <Suspense fallback={<div role="status" className="p-6 text-slate-200">Đang tải trò chơi… <button onClick={() => setActiveGame(null)}>Quay lại</button></div>}>
       <BauCuaScreen
         gameState={gameState}
         onUpdateGameState={onUpdateGameState}
         onBack={() => setActiveGame(null)}
         onNavigateTab={onNavigateTab}
       />
+      </Suspense>
     );
   }
 
   if (activeGame === "big_small") {
     return (
+      <Suspense fallback={<div role="status" className="p-6 text-slate-200">Đang tải trò chơi… <button onClick={() => setActiveGame(null)}>Quay lại</button></div>}>
       <BigSmallScreen
         gameState={gameState}
         onUpdateGameState={onUpdateGameState}
@@ -106,6 +116,7 @@ export const EntertainmentHubScreen: React.FC<EntertainmentHubScreenProps> = ({
         onBackToHub={() => setActiveGame(null)}
         onNavigateTab={onNavigateTab}
       />
+      </Suspense>
     );
   }
 

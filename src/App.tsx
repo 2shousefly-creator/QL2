@@ -1,19 +1,9 @@
+import { ScreenLoadBoundary } from "./components/ScreenLoadBoundary";
 import { useOverlayBusy } from "./components/overlay/AppOverlay";
 import { ModalButton, OverlayHost, OverlayPortal, useAppChromeMetrics } from "./components/overlay/AppOverlay";
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import React, { lazy, Suspense, useEffect, useState, useRef, useCallback } from "react";
 import { HomeScreen } from "./features/home/HomeScreen";
-import { JourneyMapScreen } from "./features/journey/JourneyMapScreen";
-import { TrainingScreen } from "./features/training/TrainingScreen";
-import { RanksScreen } from "./features/ranks/RanksScreen";
-import { ProfileScreen } from "./features/profile/ProfileScreen";
-import { MedalsScreen } from "./features/profile/MedalsScreen";
-import { MasteryScreen } from "./features/profile/MasteryScreen";
-import { IdCardScreen } from "./features/profile/IdCardScreen";
-import { JournalScreen } from "./features/profile/JournalScreen";
-import { UniformScreen } from "./features/profile/UniformScreen";
 import { MedalUnlockModal } from "./components/MedalUnlockModal";
-import { TangGiaScreen } from "./features/tang_gia/TangGiaScreen";
-import { EntertainmentHubScreen } from "./features/entertainment/EntertainmentHubScreen";
 import { PromotionChallenge } from "./components/PromotionChallenge";
 import { PromotionCeremony } from "./components/PromotionCeremony";
 import { DelegationReportModal } from "./components/DelegationReportModal";
@@ -39,6 +29,18 @@ import { MandatoryUpdateModal } from "./app-update/MandatoryUpdateModal";
 import { checkForAppUpdate } from "./app-update/versionService";
 import { recoverPendingAppUpdate } from "./app-update/updateBackupService";
 import { StartupGate } from "./app-update/updateTypes";
+
+const JourneyMapScreen = lazy(() => import("./features/journey/JourneyMapScreen").then(m => ({ default: m.JourneyMapScreen })));
+const TrainingScreen = lazy(() => import("./features/training/TrainingScreen").then(m => ({ default: m.TrainingScreen })));
+const RanksScreen = lazy(() => import("./features/ranks/RanksScreen").then(m => ({ default: m.RanksScreen })));
+const ProfileScreen = lazy(() => import("./features/profile/ProfileScreen").then(m => ({ default: m.ProfileScreen })));
+const MedalsScreen = lazy(() => import("./features/profile/MedalsScreen").then(m => ({ default: m.MedalsScreen })));
+const MasteryScreen = lazy(() => import("./features/profile/MasteryScreen").then(m => ({ default: m.MasteryScreen })));
+const IdCardScreen = lazy(() => import("./features/profile/IdCardScreen").then(m => ({ default: m.IdCardScreen })));
+const JournalScreen = lazy(() => import("./features/profile/JournalScreen").then(m => ({ default: m.JournalScreen })));
+const UniformScreen = lazy(() => import("./features/profile/UniformScreen").then(m => ({ default: m.UniformScreen })));
+const TangGiaScreen = lazy(() => import("./features/tang_gia/TangGiaScreen").then(m => ({ default: m.TangGiaScreen })));
+const EntertainmentHubScreen = lazy(() => import("./features/entertainment/EntertainmentHubScreen").then(m => ({ default: m.EntertainmentHubScreen })));
 
 function isUserActiveOnline(): boolean {
   if (typeof document === "undefined") return true;
@@ -592,6 +594,8 @@ export default function App() {
           key={activeTab}
           className="w-full h-full flex-1 min-h-0 flex flex-col animate-in fade-in slide-in-from-bottom-2 duration-200"
         >
+          <ScreenLoadBoundary key={activeTab} onBack={() => setActiveTab("home")}>
+          <Suspense fallback={<div role="status" className="flex-1 min-h-64 p-6 text-center text-slate-400">Đang tải…</div>}>
           {activeTab === "home" && (
             <HomeScreen
               state={gameState}
@@ -671,6 +675,8 @@ export default function App() {
               onTroughInfoToggle={setIsTroughInfoActive}
             />
           )}
+          </Suspense>
+          </ScreenLoadBoundary>
         </div>
       </main>}
 

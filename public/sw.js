@@ -1,4 +1,4 @@
-const CACHE_NAME = 'quan-lo-v5';
+const CACHE_NAME = 'quan-lo-v6';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
@@ -55,6 +55,23 @@ self.addEventListener('fetch', (event) => {
           });
         })
     );
+    return;
+  }
+
+  // Only content-hashed build assets use on-demand Cache-First.
+  // Stable public sprites retain Network-First so updates can refresh them.
+  if (url.origin === self.location.origin && event.request.method === 'GET' && url.pathname.startsWith('/build-assets/')) {
+    event.respondWith((async () => {
+      const cache = await caches.open(CACHE_NAME);
+      const cached = await cache.match(event.request);
+      if (cached) return cached;
+      const response = await fetch(event.request);
+      // Hosting rewrites missing chunks to HTML; never cache that as a build asset.
+      if (response.ok && !response.headers.get('content-type')?.includes('text/html')) {
+        await cache.put(event.request, response.clone());
+      }
+      return response;
+    })());
     return;
   }
 

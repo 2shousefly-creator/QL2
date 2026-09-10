@@ -171,7 +171,7 @@ export const PlantSeedModal: React.FC<PlantSeedModalProps> = ({
                       >
                         <div className="flex items-center gap-3 min-w-0">
                           <div className="w-11 h-11 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                            <img
+                            <img loading="lazy" decoding="async" fetchPriority="low"
                               src={getCropAsset(crop.id, "seed")}
                               alt=""
                               aria-hidden="true"
@@ -214,7 +214,7 @@ export const PlantSeedModal: React.FC<PlantSeedModalProps> = ({
           <OverlayBody>
             <div className="p-3 bg-slate-850 border border-slate-750 rounded-2xl flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <img
+                <img decoding="async"
                   src={getCropAsset(selectedCrop.id, "seed")}
                   alt=""
                   aria-hidden="true"
@@ -271,7 +271,7 @@ export const PlantSeedModal: React.FC<PlantSeedModalProps> = ({
                 }`}
               >
                 <div className="flex items-center gap-2.5">
-                  <img
+                  <img decoding="async"
                     src={getCropAsset(selectedCrop.id, "seed")}
                     alt=""
                     aria-hidden="true"

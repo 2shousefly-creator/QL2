@@ -26,6 +26,6 @@ export default defineConfig(() => {
       __WEB_PRODUCTION__: 'true',
     },
     resolve: { alias: { '@': path.resolve(__dirname, '.') }, dedupe: ['react', 'react-dom'] },
-    build: { outDir: 'dist-web/client', emptyOutDir: true, sourcemap: false },
+    build: { assetsDir: 'build-assets', outDir: 'dist-web/client', emptyOutDir: true, sourcemap: false },
   };
 });

@@ -307,7 +307,7 @@ export const KhoModal: React.FC<KhoModalProps> = ({
                     >
                       <div className="flex items-center gap-3 min-w-0">
                         <div className="w-12 h-12 rounded-2xl bg-slate-800/60 border border-slate-800/80 flex items-center justify-center shrink-0">
-                          <img
+                          <img loading="lazy" decoding="async" fetchPriority="low"
                             src={getCropAsset(crop.id, "seed")}
                             alt=""
                             aria-hidden="true"
@@ -346,7 +346,7 @@ export const KhoModal: React.FC<KhoModalProps> = ({
                             itemId: crop.id,
                             name: `Hạt giống ${crop.name}`,
                             icon: (
-                              <img
+                              <img loading="lazy" decoding="async" fetchPriority="low"
                                 src={getCropAsset(crop.id, "seed")}
                                 alt=""
                                 aria-hidden="true"
@@ -408,7 +408,7 @@ export const KhoModal: React.FC<KhoModalProps> = ({
                     >
                       <div className="flex items-center gap-3 min-w-0">
                         <div className="w-12 h-12 rounded-2xl bg-slate-800/60 border border-slate-800/80 flex items-center justify-center text-2xl shrink-0">
-                          <img
+                          <img loading="lazy" decoding="async" fetchPriority="low"
                             src={getFertilizerAsset(fert.id)}
                             alt=""
                             aria-hidden="true"
@@ -448,7 +448,7 @@ export const KhoModal: React.FC<KhoModalProps> = ({
                             itemId: fert.id,
                             name: fert.name,
                             icon: (
-                              <img
+                              <img loading="lazy" decoding="async" fetchPriority="low"
                                 src={getFertilizerAsset(fert.id)}
                                 alt=""
                                 aria-hidden="true"
@@ -599,7 +599,7 @@ export const KhoModal: React.FC<KhoModalProps> = ({
                     >
                       <div className="flex items-center gap-3 min-w-0">
                         <div className="w-12 h-12 rounded-2xl bg-slate-800/60 border border-slate-800/80 flex items-center justify-center text-2xl shrink-0">
-                          <img
+                          <img loading="lazy" decoding="async" fetchPriority="low"
                             src={getFeedAsset(feed.id)}
                             alt=""
                             aria-hidden="true"
@@ -637,7 +637,7 @@ export const KhoModal: React.FC<KhoModalProps> = ({
                             itemId: feed.id,
                             name: feed.name,
                             icon: (
-                              <img
+                              <img loading="lazy" decoding="async" fetchPriority="low"
                                 src={getFeedAsset(feed.id)}
                                 alt=""
                                 aria-hidden="true"
