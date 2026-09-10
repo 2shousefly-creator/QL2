@@ -26,3 +26,12 @@
 .home-screen .home-rank-hero button > div { box-shadow: inset 0 1px #ffffff35, 0 3px 6px #0008 !important; }
 .home-screen .home-progression-zone { position: relative; border-radius: 16px !important; background: linear-gradient(180deg, #08111990, #08111930) !important; }
 @media (max-width: 400px) { .core-home-backdrop .core-scene__veil { background: radial-gradient(ellipse at 50% 40%, #02061799, transparent 75%), linear-gradient(transparent 66%, #020617b0) !important; } }
+
+/* Home-only optional renderer; the SVG and DOM veil remain in place. */
+.core-pixi-host,.home-dynamic-fallback{position:absolute;inset:0;pointer-events:none;overflow:hidden;transition:opacity 300ms ease}
+.core-pixi-host{opacity:0}
+.core-pixi-host[data-ready="true"]{opacity:1}
+.home-dynamic-fallback[data-hidden="true"]{opacity:0}
+.core-home-backdrop--pixi-ready .home-environment[data-home-scene="simple_barracks"]::after{opacity:0;animation:none}
+.core-pixi-host[data-core-motion="reduced"], [data-core-motion="reduced"] .home-dynamic-fallback{transition:none}
+@media (prefers-reduced-motion:reduce){.core-pixi-host,.home-dynamic-fallback{transition:none}}

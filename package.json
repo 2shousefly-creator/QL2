@@ -41,6 +41,7 @@
     "google-auth-library": "^11.0.2",
     "lucide-react": "^0.546.0",
     "motion": "^12.23.24",
+    "pixi.js": "8.20.0",
     "react": "^19.0.1",
     "react-dom": "^19.0.1",
     "vite": "^6.2.3",

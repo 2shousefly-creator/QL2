@@ -10,9 +10,10 @@ type CoreSceneProps = {
   children?: React.ReactNode;
   layers?: readonly CoreSceneLayer[];
   style?: React.CSSProperties;
+  dynamicLayer?: React.ReactNode;
 };
 /** Decoration occupies its own clipped plane; content and overlay semantics stay intact. */
-export const CoreScene: React.FC<CoreSceneProps> = ({ variant, reducedMotion, density = "quiet", className = "", children, layers = [], style }: CoreSceneProps) => {
+export const CoreScene: React.FC<CoreSceneProps> = ({ variant, reducedMotion, density = "quiet", className = "", children, layers = [], style, dynamicLayer }: CoreSceneProps) => {
   return (
     <div className={`core-scene core-scene--${variant} ${className}`} style={style}
       data-core-motion={reducedMotion ? "reduced" : undefined}>
@@ -24,6 +25,7 @@ export const CoreScene: React.FC<CoreSceneProps> = ({ variant, reducedMotion, de
         </div>)}
         <div className="core-scene__foreground" />
         <CoreAmbientLayer variant={variant} density={density} reducedMotion={reducedMotion} />
+        {dynamicLayer}
         <div className="core-scene__veil" />
         <div className="core-scene__vignette" />
       </div>
