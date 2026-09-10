@@ -1,3 +1,4 @@
+import { createCoreArtRuntime } from "../../../components/core-visual/pixi/coreArtRuntime";
 import { Container, Graphics } from "pixi.js";
 import type { PixiSceneFactory } from "../../../components/core-visual/pixi/pixiSceneTypes";
 import { pixiThemeAdapter } from "../../../components/core-visual/pixi/pixiThemeAdapter";
@@ -5,6 +6,8 @@ import type { FarmPixiVisualProps } from "./farmPixiTypes";
 
 export const createFarmPixiScene: PixiSceneFactory<FarmPixiVisualProps> = (app, initial) => {
   const root = new Container(); root.eventMode = "none"; app.stage.addChild(root);
+  const art = createCoreArtRuntime(app, root);
+  art.update({ sceneId: "farm", themeId: initial.theme.id, variant: initial.phase }, pixiThemeAdapter(initial.theme).accent.color);
   const sky = root.addChild(new Graphics());
   const haze = Array.from({ length: 2 }, () => root.addChild(new Graphics()));
   const weather = Array.from({ length: 24 }, () => root.addChild(new Graphics()));
@@ -79,6 +82,8 @@ export const createFarmPixiScene: PixiSceneFactory<FarmPixiVisualProps> = (app, 
       if (seen.has(event.id) || !props.anchors?.[event.plotIndex]) return;
       seen.add(event.id); if (seen.size > 64) seen.delete(seen.values().next().value!);
       if (reduced || Date.now() - event.startedAt > 1500) return;
+      const anchor = props.anchors![event.plotIndex];
+      if (art.playEffect(event.kind, anchor.x, anchor.y)) return;
       const burst = bursts.find(item => item.age >= 1.2) ?? bursts.reduce((a, b) => a.age > b.age ? a : b);
       burst.age = Math.max(0, (Date.now() - event.startedAt) / 1000); burst.plotIndex = event.plotIndex;
       const color = event.kind === "water" ? 0x7dd3fc : event.kind === "fertilizer" ? 0xc4b5fd : 0xfde68a;
@@ -89,11 +94,13 @@ export const createFarmPixiScene: PixiSceneFactory<FarmPixiVisualProps> = (app, 
   return {
     update(next) {
       const atmosphereChanged = next.weather !== props.weather || next.phase !== props.phase || next.theme !== props.theme;
-      props = next; if (atmosphereChanged) draw(); else drawMarkers(); receiveEvents(); frame();
+      props = next;
+      art.update({ sceneId: "farm", themeId: props.theme.id, variant: props.phase }, pixiThemeAdapter(props.theme).accent.color);
+      if (atmosphereChanged) draw(); else drawMarkers(); receiveEvents(); frame();
     },
-    resize(w, h) { if (width !== w || height !== h) { width = w; height = h; draw(); } },
-    setReducedMotion(value) { reduced = value; if (value) bursts.forEach(burst => { burst.age = 2; }); frame(); },
-    tick(dt) { time += dt; bursts.forEach(burst => { burst.age = Math.min(2, burst.age + dt); }); frame(); },
-    destroy() { root.destroy({ children: true }); seen.clear(); },
+    resize(w, h) { art.resize(w, h); if (width !== w || height !== h) { width = w; height = h; draw(); } },
+    setReducedMotion(value) { art.setReducedMotion(value); reduced = value; if (value) bursts.forEach(burst => { burst.age = 2; }); frame(); },
+    tick(dt) { art.tick(dt); time += dt; bursts.forEach(burst => { burst.age = Math.min(2, burst.age + dt); }); frame(); },
+    destroy() { art.destroy(); root.destroy({ children: true }); seen.clear(); },
   };
 };

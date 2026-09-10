@@ -1,3 +1,4 @@
+import { createCoreArtRuntime } from "../../../components/core-visual/pixi/coreArtRuntime";
 import { Container, Graphics } from "pixi.js";
 import { pixiThemeAdapter } from "../../../components/core-visual/pixi/pixiThemeAdapter";
 import type { PixiSceneFactory } from "../../../components/core-visual/pixi/pixiSceneTypes";
@@ -13,6 +14,8 @@ const routePoint = (from: Point, to: Point, t: number) => ({
 export const createJourneyPixiScene: PixiSceneFactory<JourneySceneProps> = (app, initial) => {
   const root = new Container();
   app.stage.addChild(root);
+  const art = createCoreArtRuntime(app, app.stage);
+  art.update({ sceneId: "journey", themeId: initial.theme.id }, pixiThemeAdapter(initial.theme).accent.color);
   let props = initial, signature = "", width = 0, height = 0, time = 0, reduced = false;
   let halo: Graphics | undefined, radar: Graphics | undefined;
   const travelers: Traveler[] = [];
@@ -83,10 +86,11 @@ export const createJourneyPixiScene: PixiSceneFactory<JourneySceneProps> = (app,
     });
   };
   return {
-    update(next) { props = next; rebuild(); },
-    resize(w, h) { width = w; height = h; rebuild(); },
-    setReducedMotion(value) { reduced = value; },
+    update(next) { props = next; art.update({ sceneId: "journey", themeId: props.theme.id }, pixiThemeAdapter(props.theme).accent.color); rebuild(); },
+    resize(w, h) { art.resize(w, h); width = w; height = h; rebuild(); },
+    setReducedMotion(value) { art.setReducedMotion(value); reduced = value; },
     tick(seconds) {
+      art.tick(seconds);
       if (reduced) return;
       time += seconds;
       if (halo) { halo.alpha = .65 + Math.sin(time * .6) * .2; halo.scale.set(1 + Math.sin(time * .6) * .06); }
@@ -99,6 +103,6 @@ export const createJourneyPixiScene: PixiSceneFactory<JourneySceneProps> = (app,
         traveler.graphic.alpha = Math.sin(Math.PI * t) * .8;
       }
     },
-    destroy() { travelers.length = 0; root.destroy({ children: true }); },
+    destroy() { art.destroy(); travelers.length = 0; root.destroy({ children: true }); },
   };
 };

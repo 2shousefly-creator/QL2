@@ -1,0 +1,399 @@
+QL2 — CORE ART ASSET BIBLE V1
+Dành cho game chính dùng React + PixiJS Hybrid
+
+MỤC TIÊU
+Tạo bộ artwork/sprite production thật sự cho QL2. Kiến trúc Pixi hiện đã hoàn thành; bước này tập trung vào chất lượng hình ảnh, không đổi gameplay.
+
+============================================================
+1. ART DIRECTION CHUNG
+============================================================
+
+Phong cách:
+- 2D stylized semi-realistic military.
+- Trang nghiêm, premium, mạnh mẽ.
+- Chi tiết vừa phải, đọc tốt trên màn hình mobile.
+- Không cyberpunk/neon arcade.
+- Không photorealistic.
+- Không chibi.
+- Không quá hoạt hình trẻ em.
+- Không texture bẩn quá nặng.
+- Ánh sáng cinematic nhẹ, chiều sâu rõ.
+- Màu sắc bám stage theme hiện tại.
+- Đường nét sạch, dễ tách layer.
+- Không có chữ/text/logo/UI baked vào artwork.
+- Không tạo huy hiệu/rank giả trong background.
+
+Mobile portrait là ưu tiên. Mọi chi tiết quan trọng phải nằm trong central safe area 60% chiều ngang.
+
+Asset không được chứa thông tin gameplay.
+
+============================================================
+2. QUY ƯỚC FILE
+============================================================
+
+Target directory khi tích hợp:
+src/assets/core-art/v1/
+
+Không dùng stable public filename nếu có thể; import qua Vite để output content-hash vào /build-assets/**.
+
+Tên file:
+kebab-case.
+
+Background:
+- PNG lossless hoặc WebP lossless nếu được duyệt sau.
+- Phase đầu ưu tiên PNG.
+- Không baked text.
+
+Transparent layers:
+- PNG RGBA.
+
+Sprite sheet:
+- PNG RGBA transparent.
+- JSON metadata riêng.
+- Không ghép các animation không liên quan vào atlas quá lớn.
+
+============================================================
+3. HOME — 8 CHAPTER SCENE PACK
+============================================================
+
+Mỗi scene cần:
+A. base-background.png — 1536×1024, opaque.
+B. midground.png — 1536×1024, transparent.
+C. foreground.png — 1536×1024, transparent.
+D. ambient sprite strips/atlases nếu phù hợp.
+E. Không đặt focal object ngay chính giữa vùng rank badge; giữ hero readability.
+
+------------------------------------------------------------
+HOME 01 — training_dawn
+------------------------------------------------------------
+
+Concept:
+Thao trường quân sự lúc bình minh, nền đất, hàng rào, cột cờ, nhà huấn luyện thấp, xa xa có đồi nhẹ. Không khí bắt đầu sự nghiệp quân nhân.
+
+Palette:
+dark olive, slate, warm amber dawn.
+
+Layers:
+- base: trời bình minh + distant terrain + training field.
+- mid: barracks/training structures.
+- foreground: dark fence/sandbags/grass silhouettes.
+
+Ambient sprites:
+- flag-wave: 8 frames.
+- patrol-soldier: 8–12 frames walk cycle, silhouette.
+- dust-puff: 8 frames.
+- distant-bird optional: 6–8 frames.
+
+------------------------------------------------------------
+HOME 02 — simple_barracks
+------------------------------------------------------------
+
+Concept:
+Doanh trại thực địa, watchtower, tents/barracks, utility lights, road.
+
+Palette:
+olive green, charcoal, muted warm lamps.
+
+Ambient:
+- searchlight sweep can remain Pixi procedural.
+- smoke-loop 8–12 frames.
+- patrol 8–12 frames.
+- distant utility vehicle 8 frames optional.
+
+------------------------------------------------------------
+HOME 03 — organized_assembly
+------------------------------------------------------------
+
+Concept:
+Khu tập kết quân đội quy củ hơn, đội hình, xe quân sự, khu hậu cần, đèn tín hiệu.
+
+Palette:
+slate blue, military steel, cool sky.
+
+Ambient:
+- vehicle movement 6–8 frames wheel/body.
+- signal lamp procedural.
+- flag 8 frames.
+
+------------------------------------------------------------
+HOME 04 — map_room
+------------------------------------------------------------
+
+Concept:
+Phòng bản đồ tác chiến, bàn chiến thuật, map panels, radar display, tối nhưng rõ.
+
+Palette:
+deep emerald, dark slate, tactical green.
+
+Layers:
+- base: command room walls.
+- mid: table/map/display silhouettes.
+- foreground: console edges.
+
+Ambient:
+- radar sweep procedural Pixi.
+- screen glow procedural.
+- optional small operator silhouette idle 6 frames.
+
+------------------------------------------------------------
+HOME 05 — command_room
+------------------------------------------------------------
+
+Concept:
+Trung tâm chỉ huy cấp cao, command consoles, large tactical displays, secure military room.
+
+Palette:
+indigo/slate with controlled cool lighting.
+
+Ambient:
+- scan/grid procedural.
+- operator idle 6–8 frames.
+- display indicator loops.
+
+------------------------------------------------------------
+HOME 06 — ceremonial_abstract
+------------------------------------------------------------
+
+Concept:
+Đại sảnh nghi lễ quân đội, cột kiến trúc trang trọng, cờ/banner không chữ, ánh sáng ceremonial.
+
+Palette:
+deep rose, burgundy, dark steel.
+
+Ambient:
+- ceremonial dust.
+- fabric/banner sway 8 frames.
+- light beam procedural.
+
+------------------------------------------------------------
+HOME 07 — supreme_obsidian
+------------------------------------------------------------
+
+Concept:
+Không gian nghi lễ tối cao, obsidian black + restrained gold, symmetry, elite military authority.
+
+Palette:
+black, graphite, muted gold.
+
+Ambient:
+- gold dust procedural/sprite.
+- banner sway.
+- subtle ring light procedural.
+
+------------------------------------------------------------
+HOME 08 — supreme_sovereign
+------------------------------------------------------------
+
+Concept:
+Phòng chỉ huy tối thượng, đỏ đen và vàng kim, rất trang trọng nhưng không fantasy.
+
+Palette:
+black, dark red, antique gold.
+
+Ambient:
+- sparse gold motes.
+- flag/banner slow sway.
+- ceremonial light.
+
+============================================================
+4. JOURNEY — TACTICAL CAMPAIGN MAP ART
+============================================================
+
+Asset:
+- journey-map-base.png: 1536×2048 portrait, opaque.
+- journey-map-contours.png: 1536×2048 transparent.
+- journey-map-foreground.png: 1536×2048 transparent optional.
+- fog-soft.png: 512×512 transparent tile/overlay optional.
+
+Concept:
+Bản đồ chiến dịch quân sự trừu tượng, địa hình/topographic lines, vùng kiểm soát, đường hành quân nhưng KHÔNG baked route chính vì route do Pixi vẽ theo progression.
+
+Không baked:
+- chapter number.
+- rank text.
+- badge.
+- progress state.
+
+Pixi giữ:
+- route.
+- completed/current/upcoming.
+- radar/current marker.
+- fog state.
+
+============================================================
+5. TĂNG GIA — FARM WORLD ART
+============================================================
+
+Giữ gameplay nông trại hiện tại.
+
+Asset ưu tiên:
+- farm-base-day.png 1536×1024.
+- farm-base-night.png 1536×1024 nếu cần, hoặc tint bằng Pixi.
+- farm-midground.png transparent.
+- farm-foreground.png transparent.
+
+Art:
+Khu tăng gia trong doanh trại, vườn cây và khu chăn nuôi, sạch, ấm áp nhưng vẫn thuộc thế giới quân đội.
+
+Không đổi crop PNG hiện có trong V1 nếu chúng đã đúng art direction.
+
+Future sprite sets:
+- water-splash strip: 8 frames, 128×128/frame.
+- harvest-leaf burst: 8 frames, 128×128/frame.
+- fertilizer-spark: 8 frames.
+- pest-cue: 6–8 frames.
+- rain-splash: 6 frames.
+
+Animal animation future:
+Mỗi loài nên có:
+- idle 6–8 frames.
+- walk 8 frames.
+- eat 6–8 frames.
+- lay/egg feedback nếu phù hợp.
+Không triển khai nếu chưa có artwork nhất quán.
+
+============================================================
+6. UNIFORM — CEREMONIAL DISPLAY ART
+============================================================
+
+Không sửa uniform PNG/cầu vai/rank badge.
+
+Background:
+- uniform-stage.png: 1536×2048 portrait.
+- dark military wardrobe / ceremonial display room.
+- center empty for uniform.
+- soft spotlight.
+- no person/head.
+- no text.
+- no fake medals/badges.
+
+Overlay:
+- uniform-stage-foreground.png transparent optional.
+- light particles/shine can remain procedural Pixi.
+
+============================================================
+7. PROFILE / ARCHIVE BACKGROUNDS
+============================================================
+
+Dùng ít asset, tái sử dụng hợp lý.
+
+A. dossier-command-room.png — 1536×2048
+Cho:
+- Hồ Sơ.
+
+B. rank-gallery.png — 1536×2048
+Cho:
+- Quân Hàm.
+
+C. medal-hall.png — 1536×2048
+Cho:
+- Huân Chương.
+
+D. training-record-room.png — 1536×2048
+Cho:
+- Mastery.
+
+E. field-log-desk.png — 1536×2048
+Cho:
+- Nhật Ký.
+
+F. identity-security-room.png — 1536×2048
+Cho:
+- Thẻ Quân Nhân.
+
+Yêu cầu:
+- low contrast center để text/card đọc rõ.
+- không baked UI.
+- không baked text.
+- không giả badge/medal.
+
+============================================================
+8. SPRITE SHEET TECHNICAL CONTRACT
+============================================================
+
+Mỗi animation:
+- consistent canvas/frame dimensions.
+- subject anchor không nhảy giữa frame.
+- transparent background.
+- frame order left-to-right.
+- không crop subject.
+- không thay costume/shape giữa frame.
+
+Metadata tối thiểu:
+{
+  "id": "...",
+  "image": "...png",
+  "frameWidth": 256,
+  "frameHeight": 256,
+  "animations": {
+    "idle": { "frames": [0,1,2,3,4,5], "fps": 8, "loop": true }
+  }
+}
+
+Không tạo sprite sheet 50–100 MB.
+Ưu tiên atlas theo scene.
+
+============================================================
+9. VFX ART CONTRACT
+============================================================
+
+VFX nên có transparent sprites nếu procedural Pixi không đủ:
+- smoke.
+- dust.
+- impact sparkle.
+- water splash.
+- leaf burst.
+- ceremonial glint.
+
+Frame:
+128×128 hoặc 256×256 tùy effect.
+6–12 frames.
+FPS 12–20.
+One-shot effect không loop.
+
+Glow/radar/scan/searchlight:
+ưu tiên Pixi Graphics, không cần texture nếu procedural đẹp hơn.
+
+============================================================
+10. PERFORMANCE TARGET ASSET
+============================================================
+
+Không tải toàn bộ art archive lúc app start.
+
+Mỗi screen lazy-load asset riêng.
+
+Mục tiêu rough:
+- Home scene base + layers: cố gắng <= 3–5 MB tổng sau optimize lossless.
+- Journey: <= 3 MB.
+- Farm: <= 4–6 MB nếu có nhiều layer.
+- Archive screen: <= 1–2.5 MB/screen, ưu tiên reuse.
+- Sprite atlas mỗi nhóm: <= 2–4 MB.
+
+Không hy sinh chi tiết rõ rệt chỉ để đạt số tuyệt đối; đây là budget định hướng.
+
+============================================================
+11. ƯU TIÊN SẢN XUẤT
+============================================================
+
+Thứ tự nếu làm artwork:
+1. Home 8 scenes.
+2. Journey tactical map.
+3. Farm world.
+4. Uniform stage.
+5. Profile/Rank/Medal archive backgrounds.
+6. Ambient sprite sheets.
+7. Farm VFX sprite sheets.
+8. Animal sprite sheets nếu sau này cần.
+
+============================================================
+12. NGUYÊN TẮC KHÓA
+============================================================
+
+- Không tạo chữ trong ảnh.
+- Không tạo logo.
+- Không tạo rank badge giả.
+- Không tạo nhân vật chính cụ thể nếu chưa có character design chính thức.
+- Không thay uniform hiện tại.
+- Không thay gameplay.
+- Không đổi aspect/layout UI.
+- Không làm background quá sáng hoặc quá chi tiết phía sau text.

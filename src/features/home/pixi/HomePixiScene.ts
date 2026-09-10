@@ -1,3 +1,4 @@
+import { createCoreArtRuntime } from "../../../components/core-visual/pixi/coreArtRuntime";
 import { Container, Graphics } from "pixi.js";
 import type { StageThemeDefinition } from "../../../game/stageThemes";
 import type { JourneyStageThemeId } from "../../../game/types";
@@ -22,6 +23,7 @@ export const createHomePixiScene: PixiSceneFactory<HomeVisualProps> = (app, init
   const actorFx = new Container(), lightFx = new Container(), foregroundFx = new Container();
   root.addChild(farFx, ambientWorld, tacticalFx, actorFx, lightFx, foregroundFx);
   app.stage.addChild(root);
+  const art = createCoreArtRuntime(app, app.stage);
   type Actor = { graphic: Graphics; kind: "dust" | "beam" | "ring" | "scan" | "patrol" | "vehicle" | "node" | "haze" | "flag"; x: number; y: number; phase: number; alpha: number };
   const actors: Actor[] = [];
   let themeId: JourneyStageThemeId | undefined;
@@ -32,6 +34,7 @@ export const createHomePixiScene: PixiSceneFactory<HomeVisualProps> = (app, init
     actors.push({ graphic: g, kind, x, y, phase: actors.length * 1.7, alpha });
   };
   const update = ({ theme }: HomeVisualProps) => {
+    art.update({ sceneId: "home", themeId: theme.id }, pixiThemeAdapter(theme).accent.color);
     if (themeId === theme.id) return;
     const hadTheme = themeId !== undefined;
     themeId = theme.id; recipe = HOME_PIXI_SCENE_RECIPES[theme.id];
@@ -77,9 +80,10 @@ export const createHomePixiScene: PixiSceneFactory<HomeVisualProps> = (app, init
   update(initial);
   return {
     update,
-    resize(width, height) { const scale = Math.max(width / 1200, height / 800); root.scale.set(scale); root.position.set((width - 1200 * scale) / 2, (height - 800 * scale) / 2); },
-    setReducedMotion(value) { reduced = value; if (value) { fade = 1; root.alpha = 1; } },
+    resize(width, height) { art.resize(width, height); const scale = Math.max(width / 1200, height / 800); root.scale.set(scale); root.position.set((width - 1200 * scale) / 2, (height - 800 * scale) / 2); },
+    setReducedMotion(value) { art.setReducedMotion(value); reduced = value; if (value) { fade = 1; root.alpha = 1; } },
     tick(seconds) {
+      art.tick(seconds);
       if (reduced) return;
       time += seconds * recipe.speed;
       fade = Math.min(1, fade + seconds / .55); root.alpha = fade;
@@ -95,6 +99,6 @@ export const createHomePixiScene: PixiSceneFactory<HomeVisualProps> = (app, init
         else g.alpha = a.alpha * (.7 + .3 * Math.sin(phase * .5));
       }
     },
-    destroy() { actors.length = 0; root.destroy({ children: true }); },
+    destroy() { art.destroy(); actors.length = 0; root.destroy({ children: true }); },
   };
 };

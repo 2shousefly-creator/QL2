@@ -1,3 +1,4 @@
+import { createCoreArtRuntime } from "../../../components/core-visual/pixi/coreArtRuntime";
 import { Color, Container, Graphics } from "pixi.js";
 import type { PixiSceneFactory } from "../../../components/core-visual/pixi/pixiSceneTypes";
 import { pixiThemeAdapter } from "../../../components/core-visual/pixi/pixiThemeAdapter";
@@ -14,6 +15,12 @@ export const ARCHIVE_PIXI_RECIPES: Record<ArchiveVariant, { motes: number; nodes
 };
 export const createArchivePixiScene: PixiSceneFactory<ArchivePixiVisualProps> = (app, initial) => {
   const root = new Container(); root.eventMode = "none"; app.stage.addChild(root);
+  const art = createCoreArtRuntime(app, root);
+  const updateArt = (value: ArchivePixiVisualProps) => art.update({
+    sceneId: value.variant === "uniform" ? "uniform" : "archive", themeId: value.theme.id,
+    variant: value.variant === "uniform" ? undefined : value.variant,
+  }, pixiThemeAdapter(value.theme).accent.color);
+  updateArt(initial);
   const background = new Graphics(), light = new Graphics(), sweep = new Graphics();
   root.addChild(background, light, sweep);
   const motes = Array.from({ length: 5 }, () => root.addChild(new Graphics()));
@@ -64,10 +71,10 @@ export const createArchivePixiScene: PixiSceneFactory<ArchivePixiVisualProps> = 
   return {
     update(next) { const changed = next.theme !== props.theme || next.variant !== props.variant || next.glow !== props.glow;
       if (next.transitionKey !== props.transitionKey) shine = 0;
-      props = next; if (changed) draw(); else frame(); },
-    resize(w, h) { if (width !== w || height !== h) { width = w; height = h; draw(); } },
-    setReducedMotion(value) { reduced = value; if (value) shine = 2; frame(); },
-    tick(dt) { time += dt; shine = Math.min(2, shine + dt); frame(); },
-    destroy() { root.destroy({ children: true }); },
+      props = next; updateArt(next); if (changed) draw(); else frame(); },
+    resize(w, h) { art.resize(w, h); if (width !== w || height !== h) { width = w; height = h; draw(); } },
+    setReducedMotion(value) { art.setReducedMotion(value); reduced = value; if (value) shine = 2; frame(); },
+    tick(dt) { art.tick(dt); time += dt; shine = Math.min(2, shine + dt); frame(); },
+    destroy() { art.destroy(); root.destroy({ children: true }); },
   };
 };
