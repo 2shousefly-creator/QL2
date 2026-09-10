@@ -8,10 +8,18 @@ uses `web-push` encryption/VAPID and Workers `fetch` transport.
 
 ## Current provisioning state
 
-Source is ready behind a disabled gate. `wrangler whoami` reported no authenticated
-account during implementation. No Worker, D1 database or VAPID secret has been
-provisioned by this change. The client URL is intentionally empty. No placeholder
-is sent to production. Continue the following steps after `npx wrangler login`.
+Provisioned on 2026-09-10 in the authenticated Cloudflare account:
+
+- Worker: `ql2-push-api`, URL `https://ql2-push-api.quanlo-ql2.workers.dev`.
+- D1: `ql2-push`, remote migration `0001_push_schema.sql` applied.
+- `VAPID_PRIVATE_KEY` stored as a Worker Secret; only the public key is in config.
+- `PUSH_ENABLED=true`; Cron Trigger runs every minute.
+- Health and VAPID endpoints returned HTTP 200 with the production CORS origin;
+  health reported enabled/online and the public key/fingerprint matched config.
+- Production client points to this live Worker. Firebase remains static Hosting.
+
+No test push, browser check or gameplay simulation was performed. Actual device
+notification delivery remains subject to subscription, permission and OS support.
 
 ## Provision and resume
 
@@ -111,8 +119,8 @@ SW preserves cache/update handling and only accepts the four known payload types
 (including test). Ready visible clients acknowledge and render a toast; background clients get an OS
 notification (also the fallback when a visible app cannot acknowledge). This short
 handoff timeout never schedules a future gameplay notification. Clicks use fixed local destinations; startup consumes the query
-once. Notification delivery when the app is closed remains unavailable until
-provisioning and the client gate are completed.
+once. Background delivery is enabled for devices that register and grant
+notification permission.
 
 ## Operations
 

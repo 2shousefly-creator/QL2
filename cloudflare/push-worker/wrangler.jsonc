@@ -4,16 +4,23 @@
   "main": "src/index.ts",
   "compatibility_date": "2026-09-10",
   "workers_dev": true,
-  "triggers": { "crons": ["* * * * *"] },
+  "triggers": {
+    "crons": [
+      "* * * * *"
+    ]
+  },
   "vars": {
-    "PUSH_ENABLED": "false",
-    "VAPID_PUBLIC_KEY": "",
+    "PUSH_ENABLED": "true",
+    "VAPID_PUBLIC_KEY": "BLx35dFb3r8pG60V6x02bEUUAWEU98nffuiiPGfC67NP2W0eduxoyq4nWP1leHqfKXD4U50PkNGpA2NgK68lCn8",
     "VAPID_SUBJECT": "https://quanloweb.web.app"
   },
-  "d1_databases": [{
-    "binding": "DB",
-    "database_name": "ql2-push",
-    "database_id": "",
-    "migrations_dir": "migrations"
-  }]
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "ql2-push",
+      "database_id": "c7b32f44-de8d-4e8b-9f78-e98dea110aed",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "account_id": "c842951371186e6ddb3559943a7e2844"
 }
