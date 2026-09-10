@@ -1,3 +1,6 @@
+import { CoreMaterialPanel } from "../../components/core-visual/CoreMaterialPanel";
+import { CoreScene } from "../../components/core-visual/CoreScene";
+import "../../styles/core-records.css";
 import React, { useState, useRef } from "react";
 import { Bell, BellOff, Check, Clock, Coins, Download, Eye, Gift, RefreshCw, RotateCcw, Shield, Sparkles, Tag, Upload, User, Volume2, VolumeX, X, Zap } from "lucide-react";
 import { Avatar, AVATAR_SEEDS } from "../../components/Avatar";
@@ -319,7 +322,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
   };
 
   return (
-    <div className="command-screen personnel-command-screen w-full max-w-lg mx-auto p-4 select-none pb-28 space-y-4">
+    <CoreScene variant="dossier" reducedMotion={state.settings.reducedMotion} className="command-screen personnel-command-screen w-full max-w-lg mx-auto p-4 select-none pb-28 space-y-4">
       <CommandHeader
         title="Hồ Sơ Quân Vụ"
         subtitle="Thông tin cá nhân · Thiết lập · Quản trị dữ liệu"
@@ -327,7 +330,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
       />
 
       {/* Profile HUD Card */}
-      <div className="command-panel personnel-record theme-card-accent relative rounded-2xl bg-gradient-to-b from-slate-900/90 via-slate-900/60 to-slate-950/80 border p-4 shadow-2xl backdrop-blur-md overflow-hidden">
+      <CoreMaterialPanel material="dossier" className="command-panel personnel-record theme-card-accent relative rounded-2xl bg-gradient-to-b from-slate-900/90 via-slate-900/60 to-slate-950/80 border p-4 shadow-2xl backdrop-blur-md overflow-hidden">
         {/* Glow corner */}
         <div className="theme-corner-glow absolute top-0 right-0 w-32 h-32 rounded-full blur-2xl pointer-events-none" />
 
@@ -393,7 +396,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
             </p>
           </div>
         </div>
-      </div>
+      </CoreMaterialPanel>
 
       {/* Năng Lượng Card (HUB UI cá nhân) */}
       <div className="command-panel relative rounded-2xl bg-gradient-to-b from-slate-900/90 via-slate-900/70 to-slate-950/90 border border-slate-700/80 p-4 shadow-xl backdrop-blur-md overflow-hidden">
@@ -1042,6 +1045,6 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
             </OverlayBody>
         </AppModal>
       )}
-    </div>
+    </CoreScene>
   );
 };

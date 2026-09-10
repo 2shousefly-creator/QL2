@@ -1,3 +1,5 @@
+import { CoreScene } from "../../components/core-visual/CoreScene";
+import "../../styles/core-records.css";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowLeft, ShieldCheck } from "lucide-react";
 import { getPlayerFamily, getPlayerRank } from "../../game/selectors";
@@ -106,7 +108,7 @@ export const UniformScreen: React.FC<UniformScreenProps> = ({ state, onBack }) =
   };
 
   return (
-    <div className="command-screen uniform-archive-screen mx-auto w-full max-w-lg space-y-4 px-4 pb-10 pt-4 select-none">
+    <CoreScene variant="uniform" reducedMotion={state.settings.reducedMotion} className="command-screen uniform-archive-screen mx-auto w-full max-w-lg space-y-4 px-4 pb-10 pt-4 select-none">
       <CommandHeader
         title="Quân Phục"
         subtitle="Lễ phục theo quân hàm đã đạt"
@@ -174,6 +176,6 @@ export const UniformScreen: React.FC<UniformScreenProps> = ({ state, onBack }) =
       </p>
 
       <MedalInspectModal medal={inspectingMedal} onClose={() => setInspectingMedal(null)} />
-    </div>
+    </CoreScene>
   );
 };

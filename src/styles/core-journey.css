@@ -1,0 +1,19 @@
+.core-scene--journey .core-scene__environment { background: radial-gradient(ellipse at 15% 8%, #77997c15, transparent 38%), repeating-linear-gradient(0deg, #9fb9a408 0 1px, transparent 1px 48px), repeating-linear-gradient(90deg, #9fb9a408 0 1px, transparent 1px 48px), #0c171b !important; }
+.core-scene--journey .core-scene__depth { opacity: .3; background: repeating-radial-gradient(ellipse at 110% 28%, transparent 0 31px, #9bb2a028 32px 33px, transparent 34px 53px) !important; mask-image: none; }
+.core-scene--journey .journey-route > .theme-journey-spine { width: 4px; border-inline: 1px solid #adc1ad26; background: #61746740 !important; box-shadow: 0 0 0 4px #02060940 !important; }
+.core-scene--journey .journey-sector { transform: none; }
+.core-scene--journey .journey-sector::before { content: ""; position: absolute; top: -24px; bottom: 0; left: 24px; width: 3px; background: #70857835 !important; pointer-events: none; }
+.core-scene--journey .journey-sector[data-sector-state="completed"]::before { background: #83b9a5 !important; box-shadow: 0 0 8px #6ee7b720 !important; }
+.core-scene--journey .journey-sector[data-sector-state="current"]::before { background: linear-gradient(#83b9a5, var(--theme-accent) 50%, #70857835) !important; }
+.core-scene--journey .journey-sector[data-sector-state="current"]::after { content: ""; position: absolute; top: 12%; bottom: 12%; left: 21px; width: 8px; background: var(--theme-glow) !important; pointer-events: none; animation: core-pulse 10s ease-in-out infinite; }
+.core-scene--journey .journey-sector__panel { border-radius: 3px 16px 3px 16px !important; background: linear-gradient(145deg, #273534ee, #101e24f5 55%) !important; border-color: #a1b6a530; box-shadow: inset 0 1px #fff1, 0 10px 16px -14px #000 !important; }
+.core-scene--journey .journey-sector[data-sector-state="current"] .journey-sector__panel { border-color: var(--theme-border-strong); box-shadow: inset 3px 0 var(--theme-accent), 0 10px 28px -18px var(--theme-glow) !important; }
+.core-scene--journey .journey-sector[data-sector-state="upcoming"] .journey-sector__panel { opacity: 1; background: linear-gradient(150deg, #29343adc, #101922ee) !important; border-style: dashed; }
+.core-scene--journey .journey-sector__panel > div:first-child { flex-wrap: wrap; }
+.core-scene--journey .journey-sector__panel > div:first-child > div > div { flex-wrap: wrap; }
+.core-scene--journey .theme-node-current { box-shadow: 0 0 0 4px #09151b, 0 0 0 5px var(--theme-border), 0 0 20px var(--theme-glow) !important; }
+.core-scene--journey .status-tag.animate-pulse { animation: none; }
+.core-scene--journey .journey-family-node { background: linear-gradient(#22313999, #0a141a99) !important; box-shadow: inset 0 1px #fff1, 0 4px 8px #0003 !important; }
+@media (min-width: 640px) { .core-scene--journey .journey-sector::before { left: 32px; } .core-scene--journey .journey-sector[data-sector-state="current"]::after { left: 29px; } }
+
+.core-scene--journey [data-node-state="current"] { border-color: var(--theme-border-strong); box-shadow: inset 0 1px var(--theme-accent), 0 0 14px var(--theme-primary-soft) !important; }

@@ -1,3 +1,4 @@
+import { CoreVfx } from "../../components/core-visual/CoreVfx";
 import React, { useState, useEffect, useRef } from "react";
 import { Award, Sparkles, Compass } from "lucide-react";
 import { RankPresentation } from "../../components/RankPresentation";
@@ -82,7 +83,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   const etaDetails = getEtaDetailsToFullBar(state, nowMs);
 
   return (
-    <div className="home-screen relative h-full min-h-0 w-full overflow-hidden touch-pan-y select-none">
+    <div data-core-motion={state.settings.reducedMotion ? "reduced" : undefined} className="home-screen relative h-full min-h-0 w-full overflow-hidden touch-pan-y select-none">
       {/* Dynamic Chapter Backdrop */}
       <HomeJourneyBackdrop
         chapterId={currentChapter.id}
@@ -115,11 +116,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           <div className="home-hero-zone relative w-full flex flex-col items-center justify-center">
             {/* Background Ambient Radial Glow Rays when leveling up */}
             {isLevelingUp && (
-              <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
-                <div className="w-64 h-64 rounded-full bg-amber-400/15 blur-2xl animate-level-up-aura" />
-                <div className="absolute inset-x-6 top-1/2 h-px bg-amber-300/70 animate-level-up-banner" />
-                <Sparkles className="absolute -top-3 left-1/2 -translate-x-1/2 w-5 h-5 text-amber-300 animate-sparkle" />
-              </div>
+              <CoreVfx key={levelUpKey} type="spark" intensity="medium" reducedMotion={state.settings.reducedMotion} />
             )}
 
             {/* Level Up Banner Tag */}
@@ -150,6 +147,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               }`}
               aria-label="Xem chi tiết và mô tả cấp bậc"
             >
+              <CoreVfx type="shine" reducedMotion={state.settings.reducedMotion} className="home-hero-shine" />
               <RankPresentation
                 rankStep={currentRank}
                 badgeSize={224}

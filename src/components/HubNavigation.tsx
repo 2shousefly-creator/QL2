@@ -189,9 +189,10 @@ export const HubNavigation: React.FC<HubNavigationProps> = ({
     <>
       {/* Bottom Main Navigation Bar */}
       <nav
+        data-core-motion={reducedMotion ? "reduced" : undefined}
         data-app-navigation
         aria-label="Điều hướng chính"
-        className="theme-nav-shell command-dock fixed bottom-0 inset-x-0 z-40 bg-slate-950/95 border-t backdrop-blur-md pb-[env(safe-area-inset-bottom)] shadow-2xl select-none"
+        className="core-nav theme-nav-shell command-dock fixed bottom-0 inset-x-0 z-40 bg-slate-950/95 border-t backdrop-blur-md pb-[env(safe-area-inset-bottom)] shadow-2xl select-none"
       >
         <div className="hub-navigation-bar max-w-lg mx-auto flex items-center justify-around px-2">
           {mainTabs.map((tab) => {
@@ -202,6 +203,7 @@ export const HubNavigation: React.FC<HubNavigationProps> = ({
               <button
                 key={tab.id}
                 type="button"
+                aria-current={tab.isActive ? "page" : undefined}
                 onClick={tab.onClick}
                 className={`theme-focus flex-1 flex flex-col items-center justify-center h-full py-1 px-1 relative transition-all duration-150 focus:outline-none ${
                   isActive

@@ -1,3 +1,4 @@
+import { CoreScreenTransition } from "./components/core-visual/CoreScreenTransition";
 import { ScreenLoadBoundary } from "./components/ScreenLoadBoundary";
 import { useOverlayBusy } from "./components/overlay/AppOverlay";
 import { ModalButton, OverlayHost, OverlayPortal, useAppChromeMetrics } from "./components/overlay/AppOverlay";
@@ -590,9 +591,11 @@ export default function App() {
 
       {/* Main Interactive Body Area */}
       {!isExclusivePromotionFlow && <main className={`relative z-10 flex-1 min-h-0 flex flex-col ${activeTab === "home" ? "app-main-with-hub-navigation overflow-hidden" : isTrainingGameActive ? "overflow-y-auto" : "overflow-y-auto pb-28"}`}>
-        <div
+        <CoreScreenTransition
+          enabled={activeTab !== "training" && activeTab !== "entertainment"}
+          reducedMotion={activeTab !== "training" && activeTab !== "entertainment" && gameState.settings.reducedMotion}
           key={activeTab}
-          className="w-full h-full flex-1 min-h-0 flex flex-col animate-in fade-in slide-in-from-bottom-2 duration-200"
+          className="w-full h-full flex-1 min-h-0 flex flex-col"
         >
           <ScreenLoadBoundary key={activeTab} onBack={() => setActiveTab("home")}>
           <Suspense fallback={<div role="status" className="flex-1 min-h-64 p-6 text-center text-slate-400">Đang tải…</div>}>
@@ -677,7 +680,7 @@ export default function App() {
           )}
           </Suspense>
           </ScreenLoadBoundary>
-        </div>
+        </CoreScreenTransition>
       </main>}
 
       {/* Hub Bottom Navigation */}

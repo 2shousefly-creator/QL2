@@ -1,3 +1,6 @@
+import { CoreMaterialPanel } from "../../components/core-visual/CoreMaterialPanel";
+import { CoreScene } from "../../components/core-visual/CoreScene";
+import "../../styles/core-records.css";
 import React from "react";
 import { Award, Crown, Zap, Edit3, UserCheck, Star, Sparkles } from "lucide-react";
 import { GameState, TabType } from "../../game/types";
@@ -44,7 +47,7 @@ export const IdCardScreen: React.FC<IdCardScreenProps> = ({ state, onNavigateTab
   ).length;
 
   return (
-    <div className="command-screen identity-command-screen w-full max-w-lg mx-auto p-4 select-none pb-28 space-y-4">
+    <CoreScene variant="identity" reducedMotion={state.settings.reducedMotion} className="command-screen identity-command-screen w-full max-w-lg mx-auto p-4 select-none pb-28 space-y-4">
       {/* Title Bar */}
       <CommandHeader
         title="Thẻ Binh Nghiệp"
@@ -67,7 +70,7 @@ export const IdCardScreen: React.FC<IdCardScreenProps> = ({ state, onNavigateTab
       />
 
       {/* Main Identity Card Container */}
-      <div className="command-panel identity-credential theme-card-accent relative rounded-2xl bg-slate-950 border-2 p-5 shadow-2xl overflow-hidden backdrop-blur-md">
+      <CoreMaterialPanel material="ceremonial" className="command-panel identity-credential theme-card-accent relative rounded-2xl bg-slate-950 border-2 p-5 shadow-2xl overflow-hidden backdrop-blur-md">
         {/* Subtle Military Card Background Patterns */}
         <div className="theme-surface absolute inset-0 pointer-events-none" />
         <div className="theme-corner-glow absolute -top-12 -right-12 w-48 h-48 rounded-full blur-3xl pointer-events-none" />
@@ -202,7 +205,7 @@ export const IdCardScreen: React.FC<IdCardScreenProps> = ({ state, onNavigateTab
             </div>
           )}
         </div>
-      </div>
-    </div>
+      </CoreMaterialPanel>
+    </CoreScene>
   );
 };

@@ -1,0 +1,36 @@
+/* Shared quiet rooms for the lazy personnel/archive screens. */
+:is(.core-scene--dossier,.core-scene--identity) .core-scene__environment { background: linear-gradient(135deg, #1d2a2a, #0c151d 65%) !important; }
+:is(.core-scene--dossier,.core-scene--identity) .core-scene__depth { background: repeating-linear-gradient(90deg, transparent 0 70px, #adc1bb15 71px 72px), repeating-linear-gradient(0deg, transparent 0 100px, #adc1bb10 101px 103px) !important; }
+.core-scene--dossier .personnel-record, .core-scene--identity .identity-credential { background: linear-gradient(125deg, #303737, #15212a 65%, #232d32) !important; backdrop-filter: none !important; }
+.core-scene--dossier .personnel-record button[title="Đổi ảnh đại diện"] { box-shadow: 0 0 0 3px #081017, 0 0 0 4px var(--theme-border-strong), 0 8px 16px #0006 !important; }
+.core-scene--dossier .command-panel { border-top-color: #c2cdc330; box-shadow: inset 0 1px #ffffff0c, 0 8px 16px -12px #000 !important; backdrop-filter: none !important; }
+.core-scene--dossier .personnel-record .theme-corner-glow { display: none; }
+.core-scene--dossier :is(input,select) { min-width: 0; max-width: 100%; }
+.core-scene--dossier .personnel-record .flex-1 { min-width: 0; overflow-wrap: anywhere; }
+.core-scene--uniform .core-scene__environment { background: linear-gradient(90deg, #050a0e, #263036 50%, #050a0e) !important; }
+.core-scene--uniform .core-scene__depth { opacity: .6; background: linear-gradient(90deg, transparent 7%, #c4c4ad18 8%, transparent 9% 91%, #c4c4ad18 92%, transparent 93%) !important; }
+.core-scene--uniform .core-uniform-display { isolation: isolate; background: radial-gradient(ellipse at 50% 5%, #e1ddc126, transparent 62%), linear-gradient(#202a31, #0a1119 72%) !important; border-radius: 12px !important; box-shadow: inset 0 1px #ffffff20, 0 18px 24px -18px #000, 0 0 0 4px #090e14 !important; }
+.core-uniform-display::before { content: ""; position: absolute; inset: auto 15% 2%; height: 9%; border-radius: 50% !important; background: radial-gradient(ellipse, #000b, transparent 70%) !important; pointer-events: none; }
+.core-uniform-display::after { content: ""; position: absolute; inset: 9px; border: 1px solid #d1c8a91a; border-bottom: 2px solid var(--theme-border); border-radius: 8px !important; pointer-events: none; }
+.core-uniform-shine { z-index: 2; opacity: .5; }
+.core-scene--uniform .command-panel { background: linear-gradient(145deg, #2b3439, #101820) !important; }
+.core-scene--ranks .core-scene__environment, .core-scene--medals .core-scene__environment { background: radial-gradient(ellipse at 50% 0%, #c6aa7520, transparent 45%), #111a20 !important; }
+.core-scene--ranks .rank-archive-card { background: linear-gradient(145deg, #283139, #111b23) !important; box-shadow: inset 0 1px #fff1, 0 7px 16px -12px #000 !important; border-radius: 6px 14px 6px 14px !important; }
+.core-scene--ranks [data-rank-state="current"] { border-color: var(--theme-border-strong); background: radial-gradient(ellipse at 25% 0, var(--theme-primary-soft), transparent 75%), #1a252d !important; }
+.core-scene--ranks [data-rank-state="locked"] { border-color: #8c9aa330; }
+.core-scene--medals .medal-cabinet-item { border-radius: 6px !important; background: linear-gradient(145deg, #253038, #101820) !important; box-shadow: inset 0 0 0 4px #060b1260, inset 0 1px #ffffff24, 0 8px 16px -12px #000 !important; }
+.core-scene--medals [data-medal-state="unlocked"] { border-top-color: #d6c69b80; background: linear-gradient(135deg, #534a3120, transparent 65%), #1a252d !important; }
+.core-scene--medals [data-medal-state="locked"] { opacity: 1; border-style: dashed; }
+.core-scene--mastery .core-scene__environment { background: repeating-linear-gradient(0deg, transparent 0 36px, #b6c1ba08 37px), #142029 !important; }
+.core-scene--mastery .tactical-card { background: linear-gradient(140deg, #2a363b, #152029) !important; border-left: 3px solid var(--theme-border); box-shadow: inset 0 1px #fff1 !important; }
+.core-scene--mastery [role="progressbar"] { box-shadow: inset 0 2px 4px #0008 !important; }
+.core-scene--mastery .animate-pulse { animation: none; }
+.core-scene--journal .core-scene__environment { background: repeating-linear-gradient(0deg, transparent 0 31px, #bdc3b809 32px), linear-gradient(120deg, #2d3331, #121e26) !important; }
+.core-scene--journal .core-scene__depth { background: linear-gradient(90deg, transparent 25px, #d7c79920 26px, transparent 27px) !important; opacity: .7; }
+.core-scene--journal .border-l-2 { border-color: var(--theme-border-strong); }
+.core-scene--journal .tactical-card { background: linear-gradient(140deg, #2b3538e8, #111d25f5) !important; border-radius: 4px 12px 12px 4px !important; box-shadow: inset 0 1px #fff1, 0 5px 12px -8px #000 !important; }
+.core-scene--identity .identity-credential { border-radius: 16px !important; border-color: var(--theme-border-strong); box-shadow: inset 0 0 0 4px #d6c8a30a, inset 0 1px #fff3, 0 15px 25px -16px #000 !important; }
+.core-scene--identity .identity-credential .theme-corner-glow { display: none; }
+.core-scene--identity .identity-credential::after { content: ""; position: absolute; pointer-events: none; width: 130px; height: 130px; top: auto; right: -32px; bottom: -32px; background: none; border-radius: 50% !important; border: 8px double #cbbb9220; box-shadow: 0 0 0 8px #cbbb9208 !important; }
+.core-scene--identity .identity-credential .flex-1 { min-width: 0; overflow-wrap: anywhere; }
+.core-scene--identity .identity-credential .theme-text-accent { text-shadow: 0 1px 1px #000; }

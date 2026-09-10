@@ -1,3 +1,5 @@
+import { CoreVfx } from "../../../components/core-visual/CoreVfx";
+import "../../../styles/core-farm.css";
 import React from "react";
 import {
   AnimalTypeId,
@@ -47,6 +49,7 @@ import {
 import { getPestPresentation } from "../pestEngine";
 
 interface TangGiaCanvas2DProps {
+  reducedMotion?: boolean;
   plots: FarmPlotState[];
   penAnimals: PenAnimalState[];
   eggCount: number;
@@ -157,6 +160,7 @@ const SoilMoistureBlock: React.FC<{ moisture: number }> = ({ moisture }) => {
 };
 
 export const TangGiaCanvas2D: React.FC<TangGiaCanvas2DProps> = ({
+  reducedMotion = false,
   plots,
   penAnimals,
   eggCount,
@@ -275,7 +279,9 @@ export const TangGiaCanvas2D: React.FC<TangGiaCanvas2DProps> = ({
 
   return (
     <div
-      className="w-full relative min-h-[500px] sm:min-h-[540px] rounded-3xl border-2 border-emerald-700/60 p-3 sm:p-4 overflow-hidden shadow-2xl flex flex-col justify-between select-none transition-colors duration-1000"
+      data-core-motion={reducedMotion ? "reduced" : undefined}
+      data-weather={weatherType} data-night={isNight}
+      className="core-farm-scene w-full relative min-h-[500px] sm:min-h-[540px] rounded-3xl border-2 border-emerald-700/60 p-3 sm:p-4 overflow-hidden shadow-2xl flex flex-col justify-between select-none transition-colors duration-1000"
       style={{
         backgroundColor: "#74b96f",
         backgroundImage: `url(${sceneBackgroundAsset})`,
@@ -285,6 +291,10 @@ export const TangGiaCanvas2D: React.FC<TangGiaCanvas2DProps> = ({
         borderColor: visualTheme.sceneBorder,
       }}
     >
+      <div className="core-farm-atmosphere" aria-hidden="true">
+        <CoreVfx type="haze" themeAware={false} reducedMotion={reducedMotion} />
+        {(isNight || weatherType === "sunny") && <CoreVfx type="dust" themeAware={false} reducedMotion={reducedMotion} />}
+      </div>
       {/* --- SCENE BACKGROUND (FARM PATHS, FIELD ROWS, BARN & VEGETATION) --- */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-30">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.15)_0%,transparent_70%)]" />
@@ -410,6 +420,7 @@ export const TangGiaCanvas2D: React.FC<TangGiaCanvas2DProps> = ({
                 <div
                   key={`plot-${plotIndex}`}
                   data-farm-plot={plotIndex + 1}
+                  data-crop-ready={isReady}
                   data-selected={isSelected ? "true" : undefined}
                   onClick={(e) => {
                     e.stopPropagation();
@@ -436,6 +447,7 @@ export const TangGiaCanvas2D: React.FC<TangGiaCanvas2DProps> = ({
                       isUnlocked ? "" : "brightness-75 saturate-75"
                     }`}
                   />
+                  {harvestPresentation && <CoreVfx key={harvestPresentation.id} type="spark" themeAware={false} reducedMotion={reducedMotion} />}
                   {harvestPresentation &&
                     harvestPresentation.glowUntil > harvestPresentation.startedAt && (
                       <div
@@ -644,7 +656,7 @@ export const TangGiaCanvas2D: React.FC<TangGiaCanvas2DProps> = ({
       </div>
 
       {/* --- FOREGROUND RAIN OVERLAY (Falls over garden plots & livestock pen + splashes) --- */}
-      {weatherType === "rain" && <RainOverlay isNight={isNight} />}
+      {weatherType === "rain" && <RainOverlay isNight={isNight} reducedMotion={reducedMotion} />}
     </div>
   );
 };

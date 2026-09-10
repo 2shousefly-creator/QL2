@@ -1,0 +1,28 @@
+/* Existing eight SVG environments remain the source of chapter identity. */
+.core-scene.core-home-backdrop { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+.core-home-backdrop .core-scene__environment { background: radial-gradient(ellipse at 50% 18%, var(--theme-primary-soft), transparent 52%) !important; }
+.core-home-backdrop .core-scene__depth { background: linear-gradient(90deg, #0005, transparent 22% 78%, #0005) !important; opacity: .7; }
+.core-home-backdrop .core-scene__veil { background: radial-gradient(ellipse 37% 39% at 50% 42%, #020617a8, #02061718 88%, transparent), linear-gradient(transparent 70%, #020617b0) !important; }
+.core-home-backdrop .core-scene__foreground { height: 13%; background: linear-gradient(175deg, transparent 32%, #03090dc0 33% 48%, transparent 49%), linear-gradient(185deg, transparent 30%, #03090d 31%) !important; }
+.home-environment, .home-scene-art { position: absolute; inset: 0; width: 100%; height: 100%; }
+.home-environment { animation: core-screen-enter 600ms ease-out both; }
+.home-scene-art { opacity: .95; }
+.home-scene-art [data-layer="background-environment"] { transform: translateY(-10px); }
+.home-scene-art [data-layer="midground-scene"] { transform: translateY(10px); }
+.home-scene-art [data-layer="foreground-silhouette"] { transform: translateY(26px); }
+.home-environment[data-home-scene="training_dawn"]::after { content: ""; position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 12%, #ffc57420, transparent 34%) !important; }
+.home-environment[data-home-scene="simple_barracks"]::after { content: ""; position: absolute; inset: 0; background: conic-gradient(from 156deg at 32% 20%, transparent 0deg, #c1d6a810 4deg 15deg, transparent 18deg) !important; animation: core-glow 28s ease-in-out infinite alternate; }
+.home-environment[data-home-scene="organized_assembly"] { background: repeating-linear-gradient(0deg, transparent 0 78px, #c5dce504 79px 80px) !important; }
+.home-environment:is([data-home-scene="map_room"], [data-home-scene="command_room"])::after { content: ""; position: absolute; inset: 8% 12% 42%; border: 1px solid var(--theme-border); border-radius: 50% !important; opacity: .24; background: repeating-radial-gradient(ellipse, transparent 0 44px, var(--theme-border) 45px 46px) !important; }
+.home-environment:is([data-home-scene="ceremonial_abstract"], [data-home-scene="supreme_obsidian"], [data-home-scene="supreme_sovereign"])::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, transparent 12%, #d8be8310 13%, transparent 15% 85%, #d8be8310 87%, transparent 88%), radial-gradient(ellipse at 50% 0%, #d8be8320, transparent 52%) !important; }
+.home-screen .home-rank-hero::before, .home-screen .home-rank-hero::after { content: ""; position: absolute; pointer-events: none; z-index: -1; top: 42%; left: 50%; transform: translate(-50%, -50%); border-radius: 50% !important; }
+.home-screen .home-rank-hero::before { width: min(70%, 244px); aspect-ratio: 1; background: radial-gradient(ellipse, var(--theme-glow), transparent 68%) !important; box-shadow: 0 14px 38px -28px var(--theme-accent) !important; }
+.home-screen .home-rank-hero::after { width: min(65%, 220px); aspect-ratio: 1; border: 1px solid var(--theme-border); box-shadow: inset 0 0 18px var(--theme-primary-muted), 0 0 0 8px var(--theme-primary-muted) !important; opacity: .42; }
+.home-screen .home-hero-shine { inset: 0 12% 12%; border-radius: 50% !important; }
+.home-screen .home-personnel-plate { background: linear-gradient(135deg, #1e292de8, #101923ee) !important; box-shadow: inset 0 1px #ffffff12, 0 8px 20px -12px #000 !important; border-bottom-color: var(--theme-border-strong); }
+.home-screen .home-rank-hero button { transition: transform 180ms ease, opacity 180ms ease; }
+.home-screen .home-rank-hero button:hover { transform: translateY(-1px); }
+.home-screen .home-rank-hero button:active { transform: scale(.98); }
+.home-screen .home-rank-hero button > div { box-shadow: inset 0 1px #ffffff35, 0 3px 6px #0008 !important; }
+.home-screen .home-progression-zone { position: relative; border-radius: 16px !important; background: linear-gradient(180deg, #08111990, #08111930) !important; }
+@media (max-width: 400px) { .core-home-backdrop .core-scene__veil { background: radial-gradient(ellipse at 50% 40%, #02061799, transparent 75%), linear-gradient(transparent 66%, #020617b0) !important; } }

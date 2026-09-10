@@ -1,3 +1,5 @@
+import { CoreScene } from "../../components/core-visual/CoreScene";
+import "../../styles/core-records.css";
 import React, { useState } from "react";
 import { 
   ScrollText, 
@@ -167,7 +169,7 @@ export const JournalScreen: React.FC<JournalScreenProps> = ({ state }) => {
   };
 
   return (
-    <div className="command-screen journal-command-screen w-full max-w-lg mx-auto p-4 select-none pb-28 space-y-4">
+    <CoreScene variant="journal" reducedMotion={state.settings.reducedMotion} className="command-screen journal-command-screen w-full max-w-lg mx-auto p-4 select-none pb-28 space-y-4">
       {/* Title */}
       <CommandHeader
         title="Nhật Ký Binh Nghiệp"
@@ -270,7 +272,7 @@ export const JournalScreen: React.FC<JournalScreenProps> = ({ state }) => {
         onClose={() => setSelectedEvent(null)} 
         event={selectedEvent} 
       />
-    </div>
+    </CoreScene>
   );
 };
 

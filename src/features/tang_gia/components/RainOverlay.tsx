@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo, useRef } from "react";
 
 interface RainOverlayProps {
   isNight?: boolean;
+  reducedMotion?: boolean;
 }
 
 interface RainParticle {
@@ -57,7 +58,7 @@ function createRandomSplash(id: number, key: number): DynamicSplash {
   };
 }
 
-export const RainOverlay: React.FC<RainOverlayProps> = ({ isNight = false }) => {
+export const RainOverlay: React.FC<RainOverlayProps> = ({ isNight = false, reducedMotion = false }) => {
   // 1. Multi-depth raindrops falling smoothly over the entire scene (GPU-accelerated CSS)
   const particles: RainParticle[] = useMemo(() => {
     const list: RainParticle[] = [];
@@ -122,7 +123,7 @@ export const RainOverlay: React.FC<RainOverlayProps> = ({ isNight = false }) => 
       typeof window !== "undefined" &&
       window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    if (prefersReducedMotion) {
+    if (reducedMotion || prefersReducedMotion) {
       return;
     }
 
@@ -139,7 +140,7 @@ export const RainOverlay: React.FC<RainOverlayProps> = ({ isNight = false }) => 
     }, SPAWN_INTERVAL_MS);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [reducedMotion]);
 
   // Droplet gradients based on Day / Night
   const dropGradientNear = isNight

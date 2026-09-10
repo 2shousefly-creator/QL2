@@ -930,7 +930,7 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
           {/* Action Buttons Header */}
           <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
             {/* Kho Button with Badge */}
-            <button
+            <button aria-label="Kho"
               onClick={(e) => {
                 e.stopPropagation();
                 handleClearSelection();
@@ -948,7 +948,7 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
             </button>
 
             {/* Store Button */}
-            <button
+            <button aria-label="Cửa Hàng"
               onClick={(e) => {
                 e.stopPropagation();
                 handleClearSelection();
@@ -967,6 +967,7 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
 
       {/* --- MAIN 2D TOP-DOWN SCENE (SINGLE SCREEN) --- */}
       <TangGiaCanvas2D
+        reducedMotion={gameState.settings.reducedMotion}
         plots={presentationState.plots}
         penAnimals={presentationState.penAnimals}
         eggCount={totalEggCount}

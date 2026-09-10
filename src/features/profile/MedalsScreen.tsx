@@ -1,3 +1,5 @@
+import { CoreScene } from "../../components/core-visual/CoreScene";
+import "../../styles/core-records.css";
 import React, { useState } from "react";
 import { AlertCircle, Award, ChevronLeft, Lock, Star } from "lucide-react";
 import { GameState } from "../../game/types";
@@ -84,7 +86,7 @@ export const MedalsScreen: React.FC<MedalsScreenProps> = ({ state, onUpdateState
   });
 
   return (
-    <div className="command-screen medal-cabinet-screen w-full max-w-lg mx-auto p-4 select-none pb-28 space-y-4">
+    <CoreScene variant="medals" reducedMotion={state.settings.reducedMotion} className="command-screen medal-cabinet-screen w-full max-w-lg mx-auto p-4 select-none pb-28 space-y-4">
       {/* Toast Alert */}
       {toastMessage && (
         <OverlayPortal>
@@ -152,6 +154,7 @@ export const MedalsScreen: React.FC<MedalsScreenProps> = ({ state, onUpdateState
           return (
             <div
               key={medal.id}
+              data-medal-state={isUnlocked ? "unlocked" : "locked"}
               className={`tactical-card medal-cabinet-item relative rounded-2xl border p-3.5 transition-all duration-200 bg-gradient-to-br ${
                 isUnlocked
                   ? medal.bgGradient + " " + medal.borderColor + " shadow-lg"
@@ -238,6 +241,6 @@ export const MedalsScreen: React.FC<MedalsScreenProps> = ({ state, onUpdateState
           );
         })}
       </div>
-    </div>
+    </CoreScene>
   );
 };

@@ -1,3 +1,5 @@
+import { CoreScene } from "../../components/core-visual/CoreScene";
+import "../../styles/core-journey.css";
 import React, { useEffect, useRef, useState } from "react";
 import { CheckCircle2, Compass, Info, Lock, MapPin, Zap } from "lucide-react";
 import { GameState, RankFamily } from "../../game/types";
@@ -40,7 +42,7 @@ export const JourneyMapScreen: React.FC<JourneyMapScreenProps> = ({
       hasAutoScrolledRef.current = true;
       setTimeout(() => {
         currentChapterRef.current?.scrollIntoView({
-          behavior: "smooth",
+          behavior: gameState.settings.reducedMotion || window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
           block: "center",
         });
       }, 200);
@@ -53,7 +55,7 @@ export const JourneyMapScreen: React.FC<JourneyMapScreenProps> = ({
   };
 
   return (
-    <div className="command-screen journey-command-screen w-full max-w-lg mx-auto pb-24 px-4 pt-4 text-slate-100 animate-fadeIn">
+    <CoreScene variant="journey" reducedMotion={gameState.settings.reducedMotion} className="command-screen journey-command-screen w-full max-w-lg mx-auto pb-24 px-4 pt-4 text-slate-100 animate-fadeIn">
       {/* Header Banner */}
       <CommandHeader
         className="mb-6"
@@ -89,6 +91,7 @@ export const JourneyMapScreen: React.FC<JourneyMapScreenProps> = ({
             <div
               key={chapter.id}
               ref={isCurrent ? currentChapterRef : null}
+              data-sector-state={chapter.status}
               className={`journey-sector relative pl-12 sm:pl-16 transition-all duration-200 ${
                 isCurrent ? "scale-[1.01]" : ""
               }`}
@@ -210,9 +213,10 @@ export const JourneyMapScreen: React.FC<JourneyMapScreenProps> = ({
                     return (
                       <button
                         key={node.family.id}
+                        data-node-state={node.isCurrent ? "current" : node.isCompleted ? "completed" : "upcoming"}
                         type="button"
                         onClick={() => handleSelectFamilyNode(node.family)}
-                        className={`tactical-card flex flex-col items-center justify-center p-2.5 rounded-xl border transition-all text-center relative group ${
+                        className={`journey-family-node tactical-card flex flex-col items-center justify-center p-2.5 rounded-xl border transition-all text-center relative group ${
                           node.isCurrent
                             ? "theme-selected-card shadow-lg scale-102"
                             : node.isCompleted
@@ -324,6 +328,6 @@ export const JourneyMapScreen: React.FC<JourneyMapScreenProps> = ({
             </OverlayFooter>
         </AppModal>
       )}
-    </div>
+    </CoreScene>
   );
 };

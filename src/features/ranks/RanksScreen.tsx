@@ -1,3 +1,5 @@
+import { CoreScene } from "../../components/core-visual/CoreScene";
+import "../../styles/core-records.css";
 import React, { useState } from "react";
 import { ChevronDown, ChevronRight, CheckCircle2, Lock, Award } from "lucide-react";
 import { RANK_FAMILIES } from "../../game/rankFamilies";
@@ -28,7 +30,7 @@ export const RanksScreen: React.FC<RanksScreenProps> = ({ state, onDetailSheetTo
   };
 
   return (
-    <div className="command-screen rank-archive-screen w-full max-w-lg mx-auto p-4 select-none pb-24 space-y-4">
+    <CoreScene variant="ranks" reducedMotion={state.settings.reducedMotion} className="command-screen rank-archive-screen w-full max-w-lg mx-auto p-4 select-none pb-24 space-y-4">
       {/* Header Progress Banner */}
       <CommandHeader
         title="Cấp Bậc"
@@ -52,6 +54,7 @@ export const RanksScreen: React.FC<RanksScreenProps> = ({ state, onDetailSheetTo
           return (
             <div
               key={family.id}
+              data-rank-state={containsCurrent ? "current" : isFullyAchieved ? "completed" : "locked"}
               className={`rank-archive-card tactical-card rounded-2xl border transition-all overflow-hidden ${
                 containsCurrent
                   ? "theme-selected-card bg-slate-900/90"
@@ -189,6 +192,6 @@ export const RanksScreen: React.FC<RanksScreenProps> = ({ state, onDetailSheetTo
           onOpenChange={onDetailSheetToggle}
         />
       )}
-    </div>
+    </CoreScene>
   );
 };

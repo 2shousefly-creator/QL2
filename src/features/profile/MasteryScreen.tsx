@@ -1,3 +1,5 @@
+import { CoreScene } from "../../components/core-visual/CoreScene";
+import "../../styles/core-records.css";
 import React from "react";
 import { Target, Activity, BrainCircuit, Grid3X3, Eye, Swords, ChevronLeft, Award, Crown, CheckCircle2, Flame } from "lucide-react";
 import { GameState, TrainingGameId, MinigameMasteryState } from "../../game/types";
@@ -37,7 +39,7 @@ export const MasteryScreen: React.FC<MasteryScreenProps> = ({ state, onBack }) =
   ];
 
   return (
-    <div className="command-screen mastery-command-screen w-full max-w-lg mx-auto p-4 select-none pb-28 space-y-4">
+    <CoreScene variant="mastery" reducedMotion={state.settings.reducedMotion} className="command-screen mastery-command-screen w-full max-w-lg mx-auto p-4 select-none pb-28 space-y-4">
       {/* Header Banner */}
       <CommandHeader
         title="Tinh Thông"
@@ -239,6 +241,6 @@ export const MasteryScreen: React.FC<MasteryScreenProps> = ({ state, onBack }) =
           );
         })}
       </div>
-    </div>
+    </CoreScene>
   );
 };
