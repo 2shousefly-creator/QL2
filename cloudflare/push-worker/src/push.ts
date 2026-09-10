@@ -1,6 +1,11 @@
 import webpush from 'web-push';
 import type { Env, Subscription, IntentRow } from './types';
 export function payload(type: IntentRow['type'] | 'test', rows: IntentRow[] = []) {
+  if (type === 'test' && rows.some(row => row.intent_key === 'diagnostic-test')) return {
+    type, title: '🔔 Kiểm tra Web Push nền',
+    body: 'QL2 vẫn nhận được thông báo khi ứng dụng đã đóng. Hệ thống Web Push nền đang hoạt động.',
+    destination: 'test', tag: 'quan-lo-push-scheduled-test', rankIndex: 0,
+  };
   const rankIndex = Number(rows[0]?.intent_key.split(':')[1]) || 0;
   const copy = {
     xp_ready: ['🎖️ Sẵn sàng thăng cấp!', 'Bạn đã tích lũy đủ XP. Hãy quay lại Quân Lộ để xét thăng cấp.', 'xp-ready', `quan-lo-xp-ready-${rankIndex}`],

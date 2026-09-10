@@ -15,10 +15,10 @@ export interface Device {
   invalidated_at: number | null;
 }
 export interface IntentRow {
-  device_id: string; intent_key: string; type: 'xp_ready' | 'crop_ready' | 'feed_empty';
+  device_id: string; intent_key: string; type: 'xp_ready' | 'crop_ready' | 'feed_empty' | 'test';
   event_generation: string; due_at: number; attempt_count: number; lease_token: string;
 }
 export interface Intent {
-  key: string; type: IntentRow['type']; eventGeneration: string; dueAtEpochMs: number;
+  key: string; type: Exclude<IntentRow['type'], 'test'>; eventGeneration: string; dueAtEpochMs: number;
 }
 export type Subscription = PushSubscription;

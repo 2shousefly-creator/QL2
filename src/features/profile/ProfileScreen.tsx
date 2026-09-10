@@ -17,6 +17,7 @@ import { requestNotificationPermission } from "../../game/notifications";
 import {
   subscribeAndRegisterWebPush,
   sendTestServerPush,
+  scheduleTestServerPush,
   fetchPushDiagnosticStatus,
   syncXpFullPushSchedule,
   getDevicePushId,
@@ -162,6 +163,8 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
   const [pushStatusData, setPushStatusData] = useState<any>(null);
   const [showDiagnostics, setShowDiagnostics] = useState(false);
   const [isTestingPush, setIsTestingPush] = useState(false);
+  const [isSchedulingPush, setIsSchedulingPush] = useState(false);
+  const [scheduledPushNotice, setScheduledPushNotice] = useState<string | null>(null);
 
   const loadPushDiagnostics = async () => {
     const data = await fetchPushDiagnosticStatus();
@@ -232,6 +235,18 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
       setIsTestingPush(false);
       setTimeout(() => setExportNotice(null), 5000);
     }
+  };
+
+  const handleScheduleBackgroundPush = async () => {
+    if (isSchedulingPush || !serverPushEnabled || !state.settings.notificationsEnabled) return;
+    soundManager.playClick();
+    setIsSchedulingPush(true);
+    setScheduledPushNotice('Đang lên lịch trên máy chủ...');
+    try {
+      const result = await scheduleTestServerPush();
+      setScheduledPushNotice(result.message);
+      void loadPushDiagnostics();
+    } finally { setIsSchedulingPush(false); }
   };
 
   const handleExport = async () => {
@@ -636,13 +651,23 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
             <div className="pt-1.5 flex flex-wrap gap-2">
               <button
                 type="button"
-                disabled={isTestingPush || !serverPushEnabled || !state.settings.notificationsEnabled}
+                disabled={isTestingPush || isSchedulingPush || !serverPushEnabled || !state.settings.notificationsEnabled}
                 onClick={handleTestBackgroundPush}
                 className="theme-button-secondary theme-focus flex-1 py-1.5 px-2.5 rounded-lg text-xs font-semibold transition-colors flex items-center justify-center gap-1.5 focus:outline-none"
                 title="Kiểm tra gửi thông báo nền qua Web Push server"
               >
                 <Zap className="w-3.5 h-3.5" />
                 <span>{isTestingPush ? "Đang gửi..." : "Kiểm tra Web Push nền"}</span>
+              </button>
+
+              <button
+                type="button"
+                disabled={isSchedulingPush || isTestingPush || !serverPushEnabled || !state.settings.notificationsEnabled}
+                onClick={handleScheduleBackgroundPush}
+                className="theme-button-secondary theme-focus flex-1 py-1.5 px-2.5 rounded-lg text-xs font-semibold transition-colors flex items-center justify-center gap-1.5 focus:outline-none"
+              >
+                <Clock className="w-3.5 h-3.5" />
+                <span>{isSchedulingPush ? 'Đang lên lịch...' : 'Test nền sau 1 phút'}</span>
               </button>
 
               <button
@@ -661,6 +686,8 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
             </div>
           )}
 
+          <p className="text-xs text-slate-400">Lịch kiểm tra nền dự kiến gửi trong khoảng 1–2 phút theo chu kỳ máy chủ.</p>
+          {scheduledPushNotice && <p className="text-sm text-sky-300" role="status">{scheduledPushNotice}</p>}
           {!serverPushEnabled && <p className="text-xs text-amber-300">{serverPushUnavailableMessage}</p>}
           {/* Web Push Diagnostic Inspector */}
           {showDiagnostics && (

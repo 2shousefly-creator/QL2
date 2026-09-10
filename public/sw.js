@@ -99,7 +99,7 @@ self.addEventListener('push', (event) => {
   if (!payload || !Object.hasOwn(pushDestinations, payload.type) || typeof payload.title !== 'string' || typeof payload.body !== 'string') return;
   const destination = pushDestinations[payload.type];
   const rankIndex = Number.isInteger(payload.rankIndex) ? payload.rankIndex : 0;
-  const tag = { xp_ready: `quan-lo-xp-ready-${rankIndex}`, crop_ready: 'quan-lo-crop-ready', feed_empty: 'quan-lo-feed-empty', test: 'quan-lo-push-test' }[payload.type];
+  const tag = { xp_ready: `quan-lo-xp-ready-${rankIndex}`, crop_ready: 'quan-lo-crop-ready', feed_empty: 'quan-lo-feed-empty', test: payload.tag === 'quan-lo-push-scheduled-test' ? 'quan-lo-push-scheduled-test' : 'quan-lo-push-test' }[payload.type];
   payload = { type: payload.type, title: payload.title.slice(0, 160), body: payload.body.slice(0, 1000), destination, rankIndex, tag };
   event.waitUntil((async () => {
     const windows = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });

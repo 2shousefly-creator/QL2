@@ -2,7 +2,7 @@ import type { ScheduledController } from '@cloudflare/workers-types';
 import type { Env, Intent, Subscription } from './types';
 import { authenticate, hash, identity } from './auth';
 import { cors } from './cors';
-import { deliverDue, invalidate, snapshot } from './db';
+import { deliverDue, invalidate, snapshot, scheduleDiagnostic } from './db';
 import { payload, send } from './push';
 
 function bad(): never { throw new Response('Invalid request', { status: 400 }); }
@@ -89,12 +89,22 @@ async function route(request: Request, env: Env): Promise<Response> {
     await invalidate(env, id, now); return json({ enabled: false });
   }
   if (method === 'GET' && path === '/api/v2/push/status') {
-    const rows = await env.DB.prepare('SELECT intent_key,type,due_at,status FROM push_intents WHERE device_id=? ORDER BY due_at LIMIT 16').bind(id).all();
+    const rows = await env.DB.prepare("SELECT intent_key,type,due_at,status FROM push_intents WHERE device_id=? ORDER BY CASE WHEN intent_key='diagnostic-test' THEN 0 ELSE 1 END, due_at LIMIT 17").bind(id).all();
     return json({ online: true, enabled: !!device.enabled, registered: !device.invalidated_at, intents: rows.results });
   }
   if (!device.enabled || device.invalidated_at) return json({ error: 'RESUBSCRIBE' }, 410);
   if (method === 'PUT' && path === '/api/v2/push/intents') {
     await snapshot(env, id, intents(await body(request), now), now); return json({ success: true });
+  }
+  if (method === 'POST' && path === '/api/v2/push/test/schedule') {
+    const data = await body(request);
+    if (!data || typeof data !== 'object' || Array.isArray(data) || Object.keys(data).length !== 0 || new URL(request.url).search) bad();
+    // Validate stored subscription too; this endpoint only writes D1, never sends.
+    subscription(JSON.parse(device.subscription_json));
+    const scheduledAt = Date.now();
+    if (!(await scheduleDiagnostic(env, id, scheduledAt))) return json({ success: false, message: 'Vui lòng chờ 30 giây và kiểm tra trạng thái thông báo.' }, 429);
+    return json({ success: true, dueAtEpochMs: scheduledAt + 60000,
+      message: 'Đã lên lịch kiểm tra. Hãy đóng Quân Lộ ngay. Thông báo dự kiến đến trong khoảng 1–2 phút.' });
   }
   if (method === 'POST' && path === '/api/v2/push/test') {
     const result = await env.DB.prepare('UPDATE push_devices SET last_test_at=? WHERE device_id=? AND last_test_at<=?').bind(now, id, now - 30000).run();

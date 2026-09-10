@@ -4,7 +4,7 @@ export async function snapshot(env: Env, id: string, intents: Intent[], now: num
   // A D1 batch is a transaction. Retain sent tombstones even if an intent disappears.
   const keys = intents.map(i => i.key);
   const statements = [env.DB.prepare(`UPDATE push_intents SET status='canceled', lease_token=NULL, lease_until=NULL, updated_at=?
-    WHERE device_id=? AND status NOT IN ('sent','canceled') ${keys.length ? `AND intent_key NOT IN (${keys.map(() => '?').join(',')})` : ''}`).bind(now, id, ...keys)];
+    WHERE device_id=? AND type IN ('xp_ready','crop_ready','feed_empty') AND status NOT IN ('sent','canceled') ${keys.length ? `AND intent_key NOT IN (${keys.map(() => '?').join(',')})` : ''}`).bind(now, id, ...keys)];
   for (const i of intents) statements.push(env.DB.prepare(`
     INSERT INTO push_intents(device_id,intent_key,type,event_generation,due_at,status,created_at,updated_at,retry_at)
     VALUES(?,?,?,?,?,'scheduled',?,?,?)
@@ -22,6 +22,27 @@ export async function snapshot(env: Env, id: string, intents: Intent[], now: num
   statements.push(env.DB.prepare('UPDATE push_devices SET last_seen_at=?, updated_at=? WHERE device_id=?').bind(now, now, id));
   await env.DB.batch(statements);
 }
+/** Atomic cooldown + replacement; gameplay snapshots never own this row. */
+export async function scheduleDiagnostic(env: Env, id: string, now: number): Promise<boolean> {
+  const generation = `test:${crypto.randomUUID()}`;
+  const due = now + 60000;
+  const results = await env.DB.batch([
+    env.DB.prepare(`INSERT INTO push_intents
+      (device_id,intent_key,type,event_generation,due_at,status,created_at,updated_at,retry_at)
+      SELECT device_id,'diagnostic-test','test',?,?,'scheduled',?,?,?
+      FROM push_devices WHERE device_id=? AND enabled=1 AND invalidated_at IS NULL AND last_test_at<=?
+      ON CONFLICT(device_id,intent_key) DO UPDATE SET
+        type='test',event_generation=excluded.event_generation,due_at=excluded.due_at,
+        status='scheduled',created_at=excluded.created_at,updated_at=excluded.updated_at,
+        retry_at=excluded.retry_at,attempt_count=0,sent_at=NULL,last_attempt_at=NULL,
+        last_error=NULL,lease_token=NULL,lease_until=NULL`).bind(generation, due, now, now, due, id, now - 30000),
+    env.DB.prepare(`UPDATE push_devices SET last_test_at=? WHERE device_id=? AND EXISTS
+      (SELECT 1 FROM push_intents WHERE device_id=? AND intent_key='diagnostic-test' AND event_generation=?)`)
+      .bind(now, id, id, generation),
+  ]);
+  return results[0].meta.changes > 0;
+}
+
 export async function invalidate(env: Env, id: string, now: number, expectedSubscription?: string) {
   await env.DB.batch([
     env.DB.prepare('UPDATE push_devices SET enabled=0, invalidated_at=?, updated_at=? WHERE device_id=? AND (? IS NULL OR subscription_json=?)').bind(now, now, id, expectedSubscription ?? null, expectedSubscription ?? null),

@@ -76,6 +76,33 @@ XP uses generic copy. Past timestamps allow one day of client/network lag and
 future timestamps allow up to 100 years for long rank progression. These are
 reminders based on the most recent client projection, not gameplay guarantees.
 
+## Scheduled closed-app diagnostic
+
+Profile retains the immediate server test and adds **Test nền sau 1 phút**.
+`POST /api/v2/push/test/schedule` authenticates the current device and accepts
+only an empty object, with no query parameters. The server owns the UUID, fixed
+payload, and due time (`Date.now() + 60_000`). It only writes D1; it never calls
+the push provider from the schedule request. The UI confirms scheduling, not
+delivery, and explains the expected 1–2 minute Cron window.
+
+The existing `push_intents` table holds one `diagnostic-test` row per device,
+with type `test`. No schema migration or key rotation is required. An atomic D1
+batch conditionally replaces the row and updates the existing shared test
+cooldown (30 seconds/device, including the immediate test). Replacement resets
+attempts and revokes the old lease. Gameplay snapshots still accept only
+xp_ready/crop_ready/feed_empty and cancel only those types; they cannot cancel
+or create the diagnostic. Master disable and endpoint invalidation still cancel
+all pending delivery, including diagnostics.
+
+Cron sends this row through the same claim, VAPID, retry, invalidation and sent
+marking path. Its fixed tag is `quan-lo-push-scheduled-test`; the SW allows this
+specific test tag while retaining the immediate test tag. Background delivery
+uses an OS notification, and visible clients retain the existing in-app handoff.
+The authenticated status response prioritizes the diagnostic row so old gameplay
+tombstones cannot hide its scheduled/sent state. Refresh diagnostics to read the
+latest delivery state. No diagnostic was scheduled or sent during this change's
+release validation; validation remains only `npm run build:web`.
+
 ## Cron and delivery
 
 The cron is `* * * * *`. Indexed pending/lease queries acquire at most 8 due

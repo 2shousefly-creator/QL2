@@ -136,6 +136,31 @@ export async function sendTestServerPush(): Promise<{ success: boolean; message:
     return { success: response.ok, message: response.ok ? 'Máy chủ đã gửi thông báo thử.' : response.status === 429 ? 'Vui lòng chờ 30 giây trước khi thử lại.' : 'Không gửi được thông báo thử.' };
   } catch { return { success: false, message: 'Không kết nối được máy chủ thông báo.' }; }
 }
+export async function scheduleTestServerPush(): Promise<{ success: boolean; message: string; dueAtEpochMs?: number }> {
+  if (!serverPushEnabled) return { success: false, message: serverPushUnavailableMessage };
+  if (!isPushSupported()) return { success: false, message: 'Thiết bị chưa hỗ trợ Web Push.' };
+  if (Notification.permission !== 'granted') return { success: false, message: 'Hãy cho phép thông báo trong cài đặt trang web trước khi lên lịch.' };
+  try {
+    // Reconcile a missing/expired browser subscription before scheduling.
+    if (!(await subscribeAndRegisterWebPush())) return { success: false, message: 'Chưa đăng ký được thông báo đẩy. Vui lòng thử lại khi có kết nối.' };
+    let response = await request('test/schedule', 'POST', {});
+    if ([401, 404, 410].includes(response.status)) {
+      registered = false;
+      if (response.status === 410) {
+        const reg = await navigator.serviceWorker.getRegistration();
+        await (await reg?.pushManager.getSubscription())?.unsubscribe();
+      }
+      if (await subscribeAndRegisterWebPush()) response = await request('test/schedule', 'POST', {});
+    }
+    if (response.status === 429) return { success: false, message: 'Vui lòng chờ 30 giây trước khi lên lịch lại.' };
+    if (!response.ok) return { success: false, message: 'Chưa lên lịch được thông báo. Vui lòng kiểm tra kết nối và thử lại.' };
+    const data = await response.json();
+    if (data.success !== true || !Number.isSafeInteger(data.dueAtEpochMs)) return { success: false, message: 'Chưa xác nhận được lịch từ máy chủ.' };
+    return { success: true, dueAtEpochMs: data.dueAtEpochMs,
+      message: 'Đã lên lịch kiểm tra. Hãy đóng Quân Lộ ngay. Thông báo dự kiến đến trong khoảng 1–2 phút.' };
+  } catch { return { success: false, message: 'Không xác nhận được lịch do mất kết nối. Hãy xem Chẩn Đoán Push trước khi lên lịch lại.' }; }
+}
+
 export async function fetchPushDiagnosticStatus(): Promise<any> {
   if (!serverPushEnabled) return { online: false, registered: false, enabled: false, message: serverPushUnavailableMessage };
   try {
