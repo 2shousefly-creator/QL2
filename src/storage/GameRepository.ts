@@ -61,6 +61,7 @@ export function createInitialGameState(displayName: string = "Chiến sĩ"): Gam
       reducedMotion: false,
       compactNumbers: false,
       notificationsEnabled: true,
+      notificationPreferences: { xpReady: true, cropReady: true, feedEmpty: true },
     },
     farm: createDefaultFarmState(now),
     chienTuyen: createDefaultChienTuyenProfile(now),

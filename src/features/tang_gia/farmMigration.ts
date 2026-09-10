@@ -850,6 +850,7 @@ export function migrateFarmState(
     penFeedBuffValue,
     activeFeedSpeedBonus,
     penFeedBuffUpdatedAt,
+    pushFeedCycle: typeof farm.pushFeedCycle === "string" && /^[\w:.-]{1,100}$/.test(farm.pushFeedCycle) ? farm.pushFeedCycle : "legacy",
     penStarvationStartedAt: isFiniteNumber(farm.penStarvationStartedAt) &&
       farm.penStarvationStartedAt <= lastSettledAt
       ? farm.penStarvationStartedAt

@@ -1,0 +1,19 @@
+{
+  "$schema": "../../node_modules/wrangler/config-schema.json",
+  "name": "ql2-push-api",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-09-10",
+  "workers_dev": true,
+  "triggers": { "crons": ["* * * * *"] },
+  "vars": {
+    "PUSH_ENABLED": "false",
+    "VAPID_PUBLIC_KEY": "",
+    "VAPID_SUBJECT": "https://quanloweb.web.app"
+  },
+  "d1_databases": [{
+    "binding": "DB",
+    "database_name": "ql2-push",
+    "database_id": "",
+    "migrations_dir": "migrations"
+  }]
+}

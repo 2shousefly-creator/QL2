@@ -256,6 +256,8 @@ export type FarmSaveState = {
   activeFeedSpeedBonus?: number; // current catalog: 0, 10, 16, 25
   /** Last wall-clock timestamp already reflected in penFeedBuffValue. */
   penFeedBuffUpdatedAt: number;
+  /** Notification identity only; changes on successful refill, never on settlement. */
+  pushFeedCycle?: string;
   penStarvationStartedAt?: number | null;
   pendingAnimalDeathNotification?: AnimalDeathNotificationSummary | null;
   lastSettledAt: number;

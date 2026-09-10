@@ -2357,6 +2357,7 @@ export function feedPenBuff(
   // Increase trough level safely without exceeding 100%
   const addedBuff = feedDef.buffAmount * quantity;
   farm.penFeedBuffValue = Math.min(100, Math.round((currentBuff + addedBuff) * 10000) / 10000);
+  farm.pushFeedCycle = `${transactionAt}:${(Number(farm.pushFeedCycle?.split(":")[1]) || 0) + 1}`;
   farm.activeFeedSpeedBonus = newBonus;
   farm.penFeedBuffUpdatedAt = transactionAt;
   farm.penStarvationStartedAt = null;

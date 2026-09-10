@@ -91,65 +91,47 @@ self.addEventListener('fetch', (event) => {
   );
 });
 
-// --- Server-Pushed Notification Event Listener (Wakes up SW when app is closed) ---
+// Server-originated push wakes the service worker; no local scheduler.
+const pushDestinations = { xp_ready: 'xp-ready', crop_ready: 'crop-ready', feed_empty: 'feed-empty', test: 'test' };
 self.addEventListener('push', (event) => {
-  console.log('[SW] Push event received from server!');
-  
-  let payload = {
-    title: '🎖️ Sẵn sàng Thăng Cấp Bậc!',
-    body: 'Bạn đã tích lũy đủ XP. Hãy quay lại Quân Lộ để thực hiện thử thách thăng cấp.',
-    tag: 'quan-lo-xp-full',
-    url: '/'
-  };
-
-  if (event.data) {
-    try {
-      const json = event.data.json();
-      if (json) {
-        payload = { ...payload, ...json };
-      }
-    } catch (err) {
-      payload.body = event.data.text() || payload.body;
+  let payload;
+  try { payload = event.data?.json(); } catch { return; }
+  if (!payload || !Object.hasOwn(pushDestinations, payload.type) || typeof payload.title !== 'string' || typeof payload.body !== 'string') return;
+  const destination = pushDestinations[payload.type];
+  const rankIndex = Number.isInteger(payload.rankIndex) ? payload.rankIndex : 0;
+  const tag = { xp_ready: `quan-lo-xp-ready-${rankIndex}`, crop_ready: 'quan-lo-crop-ready', feed_empty: 'quan-lo-feed-empty', test: 'quan-lo-push-test' }[payload.type];
+  payload = { type: payload.type, title: payload.title.slice(0, 160), body: payload.body.slice(0, 1000), destination, rankIndex, tag };
+  event.waitUntil((async () => {
+    const windows = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
+    const visible = windows.find(client => new URL(client.url).origin === self.location.origin && client.visibilityState === 'visible');
+    if (visible) {
+      const handled = await new Promise(resolve => {
+        const channel = new MessageChannel();
+        const finish = value => { clearTimeout(timeout); channel.port1.close(); resolve(value); };
+        const timeout = setTimeout(() => finish(false), 1500);
+        channel.port1.onmessage = event => finish(event.data === 'handled');
+        visible.postMessage({ type: 'QL2_PUSH_EVENT', payload }, [channel.port2]);
+      });
+      if (handled) return;
     }
-  }
-
-  const title = payload.title || '🎖️ Sẵn sàng Thăng Cấp Bậc!';
-  const options = {
-    body: payload.body,
-    icon: '/favicon.ico',
-    badge: '/favicon.ico',
-    tag: payload.tag || 'quan-lo-xp-full',
-    renotify: true,
-    vibrate: [200, 100, 200, 100, 300],
-    data: {
-      url: payload.url || '/',
-      generation: payload.generation,
-      type: payload.type || 'xp_full',
-    },
-  };
-
-  event.waitUntil(
-    self.registration.showNotification(title, options)
-  );
+    await self.registration.showNotification(payload.title, {
+      body: payload.body, icon: '/favicon.ico', badge: '/favicon.ico', tag,
+      data: { destination },
+    });
+  })());
 });
-
-// --- Handle Notification Click ---
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
-  const urlToOpen = (event.notification.data && event.notification.data.url) || '/';
-
-  event.waitUntil(
-    clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
-      for (const client of clientList) {
-        if (client.url && 'focus' in client) {
-          return client.focus();
-        }
-      }
-      if (clients.openWindow) {
-        return clients.openWindow(urlToOpen);
-      }
-    })
-  );
+  const requested = event.notification.data?.destination;
+  const destination = Object.values(pushDestinations).includes(requested) ? requested : 'xp-ready';
+  event.waitUntil((async () => {
+    const windows = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
+    const client = windows.find(client => new URL(client.url).origin === self.location.origin);
+    if (client) {
+      await client.focus();
+      client.postMessage({ type: 'QL2_PUSH_NAVIGATE', destination });
+    } else await self.clients.openWindow('/?push=' + destination);
+  })());
 });
 
 // Handle client messages

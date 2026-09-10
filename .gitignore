@@ -10,3 +10,7 @@ dist-web/
 .tools/
 
 .firebase/
+
+# Worker local runtime and secrets
+.wrangler/
+.dev.vars*

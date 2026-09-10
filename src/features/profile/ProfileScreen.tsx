@@ -13,7 +13,7 @@ import { RANK_FAMILIES } from "../../game/rankFamilies";
 import { RANK_STEPS } from "../../game/rankBuilder";
 import { localGameRepository } from "../../storage/LocalGameRepository";
 import { redeemCoupon } from "../../game/coupons/couponEngine";
-import { requestNotificationPermission, sendTestNotification } from "../../game/notifications";
+import { requestNotificationPermission } from "../../game/notifications";
 import {
   subscribeAndRegisterWebPush,
   sendTestServerPush,
@@ -21,6 +21,7 @@ import {
   syncXpFullPushSchedule,
   getDevicePushId,
   isPushSupported,
+  isPushSnapshotSynced,
 } from "../../game/pushManager";
 import { performAppUpdate } from "../../app-update/appUpdateService";
 import { serverPushEnabled, serverPushUnavailableMessage } from '../../game/webDeployment';
@@ -171,6 +172,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
     soundManager.playClick();
     const nextState = !state.settings.notificationsEnabled;
     if (nextState) {
+      if (!serverPushEnabled) { setExportNotice(serverPushUnavailableMessage); return; }
       const granted = await requestNotificationPermission();
       if (!granted) {
         if (typeof window !== "undefined" && "Notification" in window && Notification.permission === "denied") {
@@ -184,11 +186,6 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
         return;
       }
 
-      if (!serverPushEnabled) {
-        onUpdateState((draft) => { draft.settings.notificationsEnabled = true; });
-        setExportNotice(serverPushUnavailableMessage);
-        return;
-      }
       setExportNotice("Đang đăng ký dịch vụ Web Push với máy chủ...");
       const regSuccess = await subscribeAndRegisterWebPush();
       if (regSuccess) {
@@ -196,7 +193,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
           draft.settings.notificationsEnabled = true;
         });
         await syncXpFullPushSchedule({ ...state, settings: { ...state.settings, notificationsEnabled: true } }, true);
-        setExportNotice("Đã bật thông báo thiết bị và đồng bộ lịch XP đầy thành công!");
+        setExportNotice(isPushSnapshotSynced({ ...state, settings: { ...state.settings, notificationsEnabled: true } }) ? "Đã đăng ký và đồng bộ lịch thông báo." : "Đã đăng ký; lịch thông báo chưa đồng bộ, sẽ thử lại khi có kết nối.");
         loadPushDiagnostics();
       } else {
         alert("Không thể đăng ký Web Push với máy chủ. Vui lòng kiểm tra kết nối mạng và thử lại!");
@@ -235,13 +232,6 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
       setIsTestingPush(false);
       setTimeout(() => setExportNotice(null), 5000);
     }
-  };
-
-  const handleTestLocalNotification = async () => {
-    soundManager.playClick();
-    const localResult = await sendTestNotification();
-    setExportNotice(localResult.message);
-    setTimeout(() => setExportNotice(null), 4000);
   };
 
   const handleExport = async () => {
@@ -569,7 +559,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
             {state.settings.soundEnabled ? (
               <>
                 <Volume2 className="w-4 h-4" />
-                <span>Bật</span>
+                <span>{serverPushEnabled ? "Bật" : "Bật · chờ máy chủ"}</span>
               </>
             ) : (
               <>
@@ -605,7 +595,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
           <div className="flex items-center justify-between text-xs sm:text-sm">
             <div className="flex flex-col">
               <span className="text-slate-300 font-medium">Thông báo thiết bị (Web Push)</span>
-              <span className="text-[10px] text-slate-400">Tự động đánh thức và báo khi XP đầy cả khi đóng app</span>
+              <span className="text-[10px] text-slate-400">XP, cây thu hoạch và máng ăn hết; phụ thuộc hỗ trợ trình duyệt/thiết bị</span>
             </div>
             <button
               type="button"
@@ -619,7 +609,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
               {state.settings.notificationsEnabled ? (
                 <>
                   <Bell className="w-4 h-4" />
-                  <span>Bật</span>
+                  <span>{serverPushEnabled ? "Bật" : "Bật · chờ máy chủ"}</span>
                 </>
               ) : (
                 <>
@@ -630,26 +620,29 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
             </button>
           </div>
 
-          {state.settings.notificationsEnabled && (
+          {([['xpReady', 'Sẵn sàng thăng cấp'], ['cropReady', 'Cây có thể thu hoạch'], ['feedEmpty', 'Máng ăn hết thức ăn']] as const).map(([key, label]) => (
+            <label key={key} className="flex items-center justify-between gap-3 text-sm py-1">
+              <span>{label}</span>
+              <input type="checkbox" className="accent-emerald-500" checked={state.settings.notificationPreferences?.[key] !== false}
+                onChange={(event) => {
+                  const checked = event.target.checked;
+                  onUpdateState(draft => {
+                    draft.settings.notificationPreferences = { xpReady: true, cropReady: true, feedEmpty: true, ...draft.settings.notificationPreferences, [key]: checked };
+                  });
+                }} />
+            </label>
+          ))}
+          {(
             <div className="pt-1.5 flex flex-wrap gap-2">
               <button
                 type="button"
-                disabled={isTestingPush}
+                disabled={isTestingPush || !serverPushEnabled || !state.settings.notificationsEnabled}
                 onClick={handleTestBackgroundPush}
                 className="theme-button-secondary theme-focus flex-1 py-1.5 px-2.5 rounded-lg text-xs font-semibold transition-colors flex items-center justify-center gap-1.5 focus:outline-none"
                 title="Kiểm tra gửi thông báo nền qua Web Push server"
               >
                 <Zap className="w-3.5 h-3.5" />
                 <span>{isTestingPush ? "Đang gửi..." : "Kiểm tra Web Push nền"}</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={handleTestLocalNotification}
-                className="py-1.5 px-2.5 rounded-lg bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700/80 text-slate-300 text-xs font-medium transition-colors"
-                title="Kiểm tra thông báo cục bộ của trình duyệt"
-              >
-                <span>Thử Cục Bộ</span>
               </button>
 
               <button
@@ -670,7 +663,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
 
           {!serverPushEnabled && <p className="text-xs text-amber-300">{serverPushUnavailableMessage}</p>}
           {/* Web Push Diagnostic Inspector */}
-          {state.settings.notificationsEnabled && showDiagnostics && (
+          {showDiagnostics && (
             <div className="mt-2 p-3 rounded-xl bg-slate-950/90 border border-sky-900/60 space-y-1.5 text-[11px] text-slate-300 font-mono">
               <div className="flex items-center justify-between text-sky-400 font-bold border-b border-slate-800 pb-1">
                 <span>CHẨN ĐOÁN WEB PUSH</span>
@@ -708,50 +701,15 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
               <div className="flex justify-between">
                 <span className="text-slate-400">Máy chủ đăng ký:</span>
                 <span className={pushStatusData?.registered ? "text-emerald-400" : "text-amber-400"}>
-                  {pushStatusData?.registered ? "Đã đăng ký (Firestore)" : "Chưa tìm thấy"}
+                  {pushStatusData?.registered ? "Đã đăng ký (Cloudflare)" : "Chưa tìm thấy"}
                 </span>
               </div>
 
-              {pushStatusData?.schedule && (
-                <>
-                  <div className="flex justify-between border-t border-slate-800/80 pt-1">
-                    <span className="text-slate-400">Lịch XP đầy:</span>
-                    <span className="text-amber-300 font-bold">{pushStatusData.schedule.status}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-400">Thời điểm hẹn:</span>
-                    <span className="text-slate-200">
-                      {pushStatusData.schedule.dueAt ? new Date(pushStatusData.schedule.dueAt).toLocaleTimeString("vi-VN") : "Không có"}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-400">Loại tác vụ:</span>
-                    <span className="text-slate-200">{pushStatusData.schedule.taskKind || "final"}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-400">Mã lịch:</span>
-                    <span className="text-slate-400">{pushStatusData.schedule.generation || "Không có"}</span>
-                  </div>
-                </>
-              )}
+              <div>Máy chủ: {pushStatusData ? (pushStatusData.online ? 'Đang kết nối' : 'Chưa kết nối') : 'Chưa kiểm tra'}</div>
+              {pushStatusData?.intents?.map((intent: any) => (
+                <div key={intent.intent_key}>{intent.type}: {intent.status} · {new Date(intent.due_at).toLocaleString('vi-VN')}</div>
+              ))}
 
-              {pushStatusData?.diagnostics?.lastPushSuccessAt && (
-                <div className="flex justify-between border-t border-slate-800/80 pt-1">
-                  <span className="text-slate-400">Push thành công gần nhất:</span>
-                  <span className="text-emerald-400">
-                    {new Date(pushStatusData.diagnostics.lastPushSuccessAt).toLocaleTimeString("vi-VN")}
-                  </span>
-                </div>
-              )}
-
-              {pushStatusData?.diagnostics?.lastPushFailureAt && (
-                <div className="flex justify-between">
-                  <span className="text-slate-400">Push lỗi gần nhất:</span>
-                  <span className="text-rose-400">
-                    {new Date(pushStatusData.diagnostics.lastPushFailureAt).toLocaleTimeString("vi-VN")} ({pushStatusData.diagnostics.lastPushStatusCode || "err"})
-                  </span>
-                </div>
-              )}
             </div>
           )}
         </div>

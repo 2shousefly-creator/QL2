@@ -27,7 +27,9 @@
     "test:quantity": "tsx src/utils/quantityInput.test.ts && tsx src/features/entertainment/betAmountInput.test.ts && tsx src/utils/quantityControlsSource.test.ts",
     "test:save": "tsx src/storage/migrations.test.ts && tsx src/game/xpEngine.test.ts",
     "test:questions": "tsx src/game/questionCatalog.test.ts",
-    "questions:import": "tsx scripts/import-question-pool.ts"
+    "questions:import": "tsx scripts/import-question-pool.ts",
+    "push:deploy": "wrangler deploy --config cloudflare/push-worker/wrangler.jsonc",
+    "push:d1:migrate": "wrangler d1 migrations apply ql2-push --remote --config cloudflare/push-worker/wrangler.jsonc"
   },
   "dependencies": {
     "@google-cloud/firestore": "^9.0.0",
@@ -48,6 +50,7 @@
     "web-push": "^3.6.7"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^5.20260910.1",
     "@types/express": "^4.17.21",
     "@types/node": "^22.14.0",
     "@types/web-push": "^3.6.4",
@@ -56,6 +59,7 @@
     "tailwindcss": "^4.1.14",
     "tsx": "^4.21.0",
     "typescript": "~5.8.2",
-    "vite": "^6.2.3"
+    "vite": "^6.2.3",
+    "wrangler": "^4.130.0"
   }
 }

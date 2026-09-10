@@ -59,6 +59,7 @@ interface TangGiaScreenProps {
     updater: ((draft: GameState) => void) | GameState
   ) => void;
   onTroughInfoToggle?: (isOpen: boolean) => void;
+  pushTarget?: { section: 'garden' | 'pen'; nonce: number } | null;
 }
 
 type FarmDialog = {
@@ -95,6 +96,7 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
   gameState,
   onUpdateGameState,
   onTroughInfoToggle,
+  pushTarget,
 }) => {
   const currentRank = getCurrentRank(gameState.progression.currentRankIndex);
 
@@ -110,6 +112,9 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
   const [contextMode, setContextMode] = useState<"none" | "garden" | "pen">(
     "none"
   );
+  useEffect(() => {
+    if (pushTarget) setContextMode(pushTarget.section);
+  }, [pushTarget]);
   const [selectedPlotIndex, setSelectedPlotIndex] = useState<number | null>(null);
   const [selectedAnimalId, setSelectedAnimalId] = useState<string | null>(null);
 

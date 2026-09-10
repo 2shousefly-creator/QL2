@@ -966,6 +966,11 @@ export function sanitizeAndMigrateState(rawObj: unknown, migrationNow: number = 
       reducedMotion: Boolean(obj.settings?.reducedMotion),
       compactNumbers: Boolean(obj.settings?.compactNumbers),
       notificationsEnabled: obj.settings?.notificationsEnabled !== false,
+      notificationPreferences: {
+        xpReady: obj.settings?.notificationPreferences?.xpReady !== false,
+        cropReady: obj.settings?.notificationPreferences?.cropReady !== false,
+        feedEmpty: obj.settings?.notificationPreferences?.feedEmpty !== false,
+      },
     },
     farm: obj.farm
       ? migrateFarmState(obj.farm, now)

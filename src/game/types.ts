@@ -527,6 +527,7 @@ export type GameState = {
     reducedMotion: boolean;
     compactNumbers: boolean;
     notificationsEnabled: boolean;
+    notificationPreferences?: { xpReady: boolean; cropReady: boolean; feedEmpty: boolean };
   };
   farm?: FarmSaveState;
   chienTuyen?: ChienTuyenProfileV2;

@@ -1,4 +1,5 @@
-declare const __WEB_PRODUCTION__: boolean;
-// Existing dev/legacy builds retain their exact Push endpoint and enabled behavior.
-export const serverPushEnabled = typeof __WEB_PRODUCTION__ === 'undefined' || !__WEB_PRODUCTION__;
-export const serverPushUnavailableMessage = 'Thông báo nền máy chủ chưa được bật trên website mới. Thông báo local vẫn dùng được khi trình duyệt hỗ trợ.';
+// Set only after the Worker, D1 migration and VAPID secret are live.
+// Empty is an intentional production gate, never a placeholder endpoint.
+export const PUSH_API_BASE_URL: string = '';
+export const serverPushEnabled = PUSH_API_BASE_URL.startsWith('https://');
+export const serverPushUnavailableMessage = 'Thông báo nền chưa được bật: máy chủ Cloudflare đang chờ cấu hình.';

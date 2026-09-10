@@ -16,7 +16,7 @@ import {
 import { localGameRepository } from "./storage/LocalGameRepository";
 import { settleEarning } from "./game/xpEngine";
 import { ensureEnergyState, getEnergyMultiplier, getEnergyVisuals, isEnergyActive } from "./game/energyEngine";
-import { registerServiceWorker, sendRankUpReadyNotification } from "./game/notifications";
+import { registerServiceWorker, sendRankUpReadyNotification, isRankAlreadyNotified, markRankAsNotified } from "./game/notifications";
 import { ensurePushRegistration, syncXpFullPushSchedule } from "./game/pushManager";
 import { canStartPromotionChallenge, completePromotionChallenge, dismissPromotionCeremony } from "./game/promotionEngine";
 import { getPlayerNextRank, getPlayerRank, getXpProgressDetails } from "./game/selectors";
@@ -58,6 +58,46 @@ function isUserActiveOnline(): boolean {
 export default function App() {
   const [gameState, setGameState] = useState<GameState | null>(null);
   const overlayBusy = useOverlayBusy();
+  const [pushNotice, setPushNotice] = useState<{ title: string; body: string; destination: string } | null>(null);
+  const [pushFarmTarget, setPushFarmTarget] = useState<{ section: 'garden' | 'pen'; nonce: number } | null>(null);
+  const lastPushProjectionAt = useRef(0);
+  const navigatePush = useCallback((destination: string) => {
+    if (destination === 'crop-ready' || destination === 'feed-empty') {
+      setPushFarmTarget({ section: destination === 'crop-ready' ? 'garden' : 'pen', nonce: Date.now() });
+      setActiveTab('tang_gia');
+    } else if (destination === 'xp-ready' || destination === 'test') setActiveTab('home');
+    setPushNotice(null);
+  }, []);
+  useEffect(() => {
+    const present = (payload: any, fromServer: boolean) => {
+      if (!payload || !['xp_ready','crop_ready','feed_empty','test'].includes(payload.type) || typeof payload.title !== 'string' || typeof payload.body !== 'string') return;
+      const settings = gameStateRef.current?.settings;
+      const preference = { xp_ready: 'xpReady', crop_ready: 'cropReady', feed_empty: 'feedEmpty' }[payload.type] as 'xpReady' | 'cropReady' | 'feedEmpty' | undefined;
+      if (payload.type !== 'test' && (!settings?.notificationsEnabled || (preference && settings.notificationPreferences?.[preference] === false))) return;
+      if (fromServer && payload.type === 'xp_ready' && Number.isInteger(payload.rankIndex)) {
+        if (isRankAlreadyNotified(payload.rankIndex)) return;
+        markRankAsNotified(payload.rankIndex);
+      }
+      setPushNotice({ title: payload.title.slice(0, 160), body: payload.body.slice(0, 1000), destination: { xp_ready: 'xp-ready', crop_ready: 'crop-ready', feed_empty: 'feed-empty', test: 'test' }[payload.type]! });
+    };
+    const onMessage = (event: MessageEvent) => {
+      if (event.data?.type === 'QL2_PUSH_NAVIGATE') navigatePush(event.data.destination);
+      if (event.data?.type === 'QL2_PUSH_EVENT' && gameStateRef.current) {
+        present(event.data.payload, true);
+        event.ports[0]?.postMessage('handled');
+      }
+    };
+    const onLocal = (event: Event) => present((event as CustomEvent).detail, false);
+    navigator.serviceWorker?.addEventListener('message', onMessage);
+    window.addEventListener('QL2_PUSH_EVENT', onLocal);
+    const url = new URL(window.location.href);
+    const destination = url.searchParams.get('push');
+    if (destination) { navigatePush(destination); url.searchParams.delete('push'); window.history.replaceState(window.history.state, '', url); }
+    return () => {
+      navigator.serviceWorker?.removeEventListener('message', onMessage);
+      window.removeEventListener('QL2_PUSH_EVENT', onLocal);
+    };
+  }, [navigatePush]);
   const [activeTab, setActiveTab] = useState<TabType>("home");
   const [isChallengeActive, setIsChallengeActive] = useState(false);
   const [isRankDetailOpen, setIsRankDetailOpen] = useState(false);
@@ -155,6 +195,7 @@ export default function App() {
         const { reportData } = settleEarning(draft, now, prevMode);
         draft.time.currentEarningMode = targetMode;
         localGameRepository.save(draft);
+        void syncXpFullPushSchedule(draft, true);
 
         if (reportData && active && prevMode === "delegation") {
           setDelegationReport(reportData);
@@ -288,7 +329,7 @@ export default function App() {
   useEffect(() => {
     if (!gameState) return;
     if (gameState.settings.notificationsEnabled) {
-      ensurePushRegistration();
+      ensurePushRegistration().then(ok => { if (ok && gameStateRef.current) void syncXpFullPushSchedule(gameStateRef.current, true); });
     }
   }, [gameState?.settings.notificationsEnabled]);
 
@@ -302,7 +343,7 @@ export default function App() {
     const notificationsEnabled = gameState.settings.notificationsEnabled;
 
     if (xpDetails.isFull && !xpDetails.isMaxRank) {
-      if (notificationsEnabled) {
+      if (notificationsEnabled && gameState.settings.notificationPreferences?.xpReady !== false) {
         sendRankUpReadyNotification(currentRank.displayName, nextRank?.displayName, currentRankIndex);
       }
     }
@@ -317,7 +358,17 @@ export default function App() {
   }, [
     gameState?.progression.currentRankIndex,
     gameState?.settings.notificationsEnabled,
+    gameState?.settings.notificationPreferences?.xpReady,
+    gameState?.settings.notificationPreferences?.cropReady,
+    gameState?.settings.notificationPreferences?.feedEmpty,
   ]);
+
+  useEffect(() => {
+    if (gameState && Date.now() - lastPushProjectionAt.current >= 30000) {
+      lastPushProjectionAt.current = Date.now();
+      void syncXpFullPushSchedule(gameState);
+    }
+  }, [gameState]);
 
   // Sync server schedule whenever user closes/hides tab, locks screen, or unload
   useEffect(() => {
@@ -328,12 +379,12 @@ export default function App() {
     };
 
     const handleVisibilityChange = () => {
-      if (document.visibilityState === "hidden") {
-        handleSyncOnExit();
-      }
+      handleSyncOnExit();
     };
 
     document.addEventListener("visibilitychange", handleVisibilityChange);
+    window.addEventListener("online", handleSyncOnExit);
+    window.addEventListener("pageshow", handleSyncOnExit);
     window.addEventListener("pagehide", handleSyncOnExit);
     window.addEventListener("beforeunload", handleSyncOnExit);
 
@@ -346,6 +397,8 @@ export default function App() {
 
     return () => {
       document.removeEventListener("visibilitychange", handleVisibilityChange);
+      window.removeEventListener("online", handleSyncOnExit);
+      window.removeEventListener("pageshow", handleSyncOnExit);
       window.removeEventListener("pagehide", handleSyncOnExit);
       window.removeEventListener("beforeunload", handleSyncOnExit);
       clearInterval(heartbeatTimer);
@@ -361,9 +414,11 @@ export default function App() {
           const draft = JSON.parse(JSON.stringify(prev)) as GameState;
           updater(draft);
           localGameRepository.save(draft);
+          void syncXpFullPushSchedule(draft, true);
           return draft;
         } else if (updater && typeof updater === "object") {
           localGameRepository.save(updater);
+          void syncXpFullPushSchedule(updater, true);
           return updater;
         }
         return prev;
@@ -673,6 +728,7 @@ export default function App() {
           )}
           {activeTab === "tang_gia" && (
             <TangGiaScreen
+              pushTarget={pushFarmTarget}
               gameState={gameState}
               onUpdateGameState={handleUpdateState}
               onTroughInfoToggle={setIsTroughInfoActive}
@@ -741,6 +797,18 @@ export default function App() {
           gameState={gameState}
           onUpdateState={handleUpdateState}
         />
+      )}
+
+      {!isExclusivePromotionFlow && pushNotice && (
+        <OverlayPortal>
+          <div className="app-overlay-toast modal-design modal-toast flex items-center gap-3" role="status" data-interactive="true">
+            <div className="min-w-0"><strong>{pushNotice.title}</strong><p className="text-sm">{pushNotice.body}</p></div>
+            <ModalButton onClick={() => navigatePush(pushNotice.destination)}>
+              {pushNotice.destination === 'crop-ready' ? 'Đến vườn' : pushNotice.destination === 'feed-empty' ? 'Đến chuồng nuôi' : 'Xem thăng cấp'}
+            </ModalButton>
+            <ModalButton variant="icon" aria-label="Đóng thông báo" onClick={() => setPushNotice(null)}>✕</ModalButton>
+          </div>
+        </OverlayPortal>
       )}
 
       {/* Manual Update Success Toast */}
