@@ -57,3 +57,7 @@
 
 .core-material.command-panel::before { width: auto; height: auto; left: 0; top: 0; opacity: 1; }
 .core-scene.command-screen::after { display: none; }
+
+.core-pixi-plane { position: absolute; inset: 0; overflow: hidden; pointer-events: none; border-radius: inherit; }
+.core-pixi-plane > .core-pixi-host { position: absolute; inset: 0; pointer-events: none; overflow: hidden; opacity: 0; transition: opacity 300ms ease; }
+.core-pixi-plane > .core-pixi-host[data-ready="true"] { opacity: 1; }

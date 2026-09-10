@@ -1,4 +1,4 @@
-import { CoreScene } from "../../components/core-visual/CoreScene";
+import { ArchiveScene } from "../profile/pixi/ArchiveScene";
 import "../../styles/core-records.css";
 import React, { useState } from "react";
 import { ChevronDown, ChevronRight, CheckCircle2, Lock, Award } from "lucide-react";
@@ -30,7 +30,7 @@ export const RanksScreen: React.FC<RanksScreenProps> = ({ state, onDetailSheetTo
   };
 
   return (
-    <CoreScene variant="ranks" reducedMotion={state.settings.reducedMotion} className="command-screen rank-archive-screen w-full max-w-lg mx-auto p-4 select-none pb-24 space-y-4">
+    <ArchiveScene rankIndex={state.progression.currentRankIndex} variant="ranks" reducedMotion={state.settings.reducedMotion} className="command-screen rank-archive-screen w-full max-w-lg mx-auto p-4 select-none pb-24 space-y-4">
       {/* Header Progress Banner */}
       <CommandHeader
         title="Cấp Bậc"
@@ -192,6 +192,6 @@ export const RanksScreen: React.FC<RanksScreenProps> = ({ state, onDetailSheetTo
           onOpenChange={onDetailSheetToggle}
         />
       )}
-    </CoreScene>
+    </ArchiveScene>
   );
 };

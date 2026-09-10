@@ -1,3 +1,7 @@
+import { useDeferredPixiLayer } from "../../../components/core-visual/pixi/useDeferredPixiLayer";
+import { getJourneyChapterForRank } from "../../../game/etaEngine";
+import { getStageTheme } from "../../../game/stageThemes";
+import type { FarmVisualEvent } from "../pixi/farmPixiTypes";
 import { CoreVfx } from "../../../components/core-visual/CoreVfx";
 import "../../../styles/core-farm.css";
 import React from "react";
@@ -48,7 +52,10 @@ import {
 } from "../tangGiaAssetManifest";
 import { getPestPresentation } from "../pestEngine";
 
+const loadFarmPixi = () => import("../pixi/FarmPixiLayer");
+
 interface TangGiaCanvas2DProps {
+  visualEvents?: readonly FarmVisualEvent[];
   reducedMotion?: boolean;
   plots: FarmPlotState[];
   penAnimals: PenAnimalState[];
@@ -160,6 +167,7 @@ const SoilMoistureBlock: React.FC<{ moisture: number }> = ({ moisture }) => {
 };
 
 export const TangGiaCanvas2D: React.FC<TangGiaCanvas2DProps> = ({
+  visualEvents = [],
   reducedMotion = false,
   plots,
   penAnimals,
@@ -187,6 +195,7 @@ export const TangGiaCanvas2D: React.FC<TangGiaCanvas2DProps> = ({
   onCloseTroughInfo,
   now,
 }) => {
+  const pixi = useDeferredPixiLayer(loadFarmPixi, reducedMotion);
   // Helper to format countdown timer
   const formatCountdown = (ms: number | null | undefined): string => {
     if (ms === null || ms === undefined || !Number.isFinite(ms)) {
@@ -279,7 +288,8 @@ export const TangGiaCanvas2D: React.FC<TangGiaCanvas2DProps> = ({
 
   return (
     <div
-      data-core-motion={reducedMotion ? "reduced" : undefined}
+      data-core-motion={pixi.reducedMotion ? "reduced" : undefined}
+      data-pixi-ready={pixi.ready}
       data-weather={weatherType} data-night={isNight}
       className="core-farm-scene w-full relative min-h-[500px] sm:min-h-[540px] rounded-3xl border-2 border-emerald-700/60 p-3 sm:p-4 overflow-hidden shadow-2xl flex flex-col justify-between select-none transition-colors duration-1000"
       style={{
@@ -291,6 +301,16 @@ export const TangGiaCanvas2D: React.FC<TangGiaCanvas2DProps> = ({
         borderColor: visualTheme.sceneBorder,
       }}
     >
+      <div className="core-farm-pixi" aria-hidden="true">
+        {pixi.Layer && <pixi.Layer visualProps={{
+          theme: getStageTheme(getJourneyChapterForRank(currentRank?.rankIndex ?? 0).themeId),
+          weather: weatherType, phase: isNight ? "night" : "day", weatherSeed, selectedPlotIndex,
+          readyPlotIndices: plots.flatMap((plot, index) => plot.status === "ready" ? [index] : []),
+          pestPlotIndices: plots.flatMap((plot, index) => getPestPresentation(plot, now) ? [index] : []),
+          events: [...harvestPresentations.map(entry => ({ id: entry.id, plotIndex: entry.plotIndex, startedAt: entry.startedAt, kind: "harvest" as const })), ...visualEvents].slice(-18),
+        }} reducedMotion={pixi.reducedMotion} onReady={pixi.onReady} onUnavailable={pixi.onUnavailable} />}
+      </div>
+      {!pixi.ready && <>
       <div className="core-farm-atmosphere" aria-hidden="true">
         <CoreVfx type="haze" themeAware={false} reducedMotion={reducedMotion} />
         {(isNight || weatherType === "sunny") && <CoreVfx type="dust" themeAware={false} reducedMotion={reducedMotion} />}
@@ -334,6 +354,7 @@ export const TangGiaCanvas2D: React.FC<TangGiaCanvas2DProps> = ({
         </div>
       )}
 
+      </>}
       {/* --- MAIN SCENE CONTENT (GARDEN & PEN ON ONE SCREEN) --- */}
       <div className="relative z-10 w-full h-full flex flex-col lg:flex-row items-stretch gap-3 sm:gap-4 my-auto">
         {/* --- LEFT / MAIN SECTION: 3x3 GARDEN PLOTS --- */}
@@ -420,6 +441,7 @@ export const TangGiaCanvas2D: React.FC<TangGiaCanvas2DProps> = ({
                 <div
                   key={`plot-${plotIndex}`}
                   data-farm-plot={plotIndex + 1}
+                  data-farm-plot-index={plotIndex}
                   data-crop-ready={isReady}
                   data-selected={isSelected ? "true" : undefined}
                   onClick={(e) => {
@@ -447,7 +469,7 @@ export const TangGiaCanvas2D: React.FC<TangGiaCanvas2DProps> = ({
                       isUnlocked ? "" : "brightness-75 saturate-75"
                     }`}
                   />
-                  {harvestPresentation && <CoreVfx key={harvestPresentation.id} type="spark" themeAware={false} reducedMotion={reducedMotion} />}
+                  {!pixi.ready && harvestPresentation && <CoreVfx key={harvestPresentation.id} type="spark" themeAware={false} reducedMotion={reducedMotion} />}
                   {harvestPresentation &&
                     harvestPresentation.glowUntil > harvestPresentation.startedAt && (
                       <div
@@ -656,7 +678,7 @@ export const TangGiaCanvas2D: React.FC<TangGiaCanvas2DProps> = ({
       </div>
 
       {/* --- FOREGROUND RAIN OVERLAY (Falls over garden plots & livestock pen + splashes) --- */}
-      {weatherType === "rain" && <RainOverlay isNight={isNight} reducedMotion={reducedMotion} />}
+      {!pixi.ready && weatherType === "rain" && <RainOverlay isNight={isNight} reducedMotion={reducedMotion} />}
     </div>
   );
 };

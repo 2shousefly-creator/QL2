@@ -23,8 +23,8 @@ Preferred workflow:
 2. Implement only the requested change and any necessary supporting changes.
 3. Preserve unrelated gameplay, saves, assets, balancing, configuration, and production behavior.
 4. Run `npm run build:web` before publishing changes.
-5. Run focused checks/tests relevant to the changed area when they already exist and are reasonably quick. Do not expand the scope into unrelated QA unless needed to prevent an obvious regression.
-6. If the required build/check fails, do not push broken code to `main`. Fix the issue first or report the blocker.
+5. Default validation is ONLY `npm run build:web`. Do not run tests, QA, simulations, browser checks, verification scripts, lint/typecheck, or benchmarks unless the user explicitly asks for a specific one in a newer instruction. Do not write new tests or modify existing tests just to validate a task. This includes unit/integration/E2E/smoke/manual/responsive checks, gameplay/balance simulations, `npm test`, `npm run test:*`, and `npm run verify:*`.
+6. If the required build fails, fix compile/bundle errors and rerun only `npm run build:web` before publishing.
 7. Commit the completed change directly to `main` and push it to `origin/main`.
 8. Do not run `firebase deploy` manually. The GitHub Actions workflow deploys Firebase Hosting automatically after the push to `main`.
 9. Confirm that the GitHub Actions deployment for the pushed commit succeeds. If it fails, diagnose and fix the deployment issue, then push the corrective commit to `main`.

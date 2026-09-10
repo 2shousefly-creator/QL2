@@ -1,5 +1,5 @@
 import { CoreMaterialPanel } from "../../components/core-visual/CoreMaterialPanel";
-import { CoreScene } from "../../components/core-visual/CoreScene";
+import { ArchiveScene } from "../profile/pixi/ArchiveScene";
 import "../../styles/core-records.css";
 import React from "react";
 import { Award, Crown, Zap, Edit3, UserCheck, Star, Sparkles } from "lucide-react";
@@ -47,7 +47,7 @@ export const IdCardScreen: React.FC<IdCardScreenProps> = ({ state, onNavigateTab
   ).length;
 
   return (
-    <CoreScene variant="identity" reducedMotion={state.settings.reducedMotion} className="command-screen identity-command-screen w-full max-w-lg mx-auto p-4 select-none pb-28 space-y-4">
+    <ArchiveScene rankIndex={state.progression.currentRankIndex} variant="identity" reducedMotion={state.settings.reducedMotion} className="command-screen identity-command-screen w-full max-w-lg mx-auto p-4 select-none pb-28 space-y-4">
       {/* Title Bar */}
       <CommandHeader
         title="Thẻ Binh Nghiệp"
@@ -206,6 +206,6 @@ export const IdCardScreen: React.FC<IdCardScreenProps> = ({ state, onNavigateTab
           )}
         </div>
       </CoreMaterialPanel>
-    </CoreScene>
+    </ArchiveScene>
   );
 };

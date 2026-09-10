@@ -1,5 +1,5 @@
 import { CoreMaterialPanel } from "../../components/core-visual/CoreMaterialPanel";
-import { CoreScene } from "../../components/core-visual/CoreScene";
+import { ArchiveScene } from "../profile/pixi/ArchiveScene";
 import "../../styles/core-records.css";
 import React, { useState, useRef } from "react";
 import { Bell, BellOff, Check, Clock, Coins, Download, Eye, Gift, RefreshCw, RotateCcw, Shield, Sparkles, Tag, Upload, User, Volume2, VolumeX, X, Zap } from "lucide-react";
@@ -322,7 +322,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
   };
 
   return (
-    <CoreScene variant="dossier" reducedMotion={state.settings.reducedMotion} className="command-screen personnel-command-screen w-full max-w-lg mx-auto p-4 select-none pb-28 space-y-4">
+    <ArchiveScene rankIndex={state.progression.currentRankIndex} variant="dossier" reducedMotion={state.settings.reducedMotion} className="command-screen personnel-command-screen w-full max-w-lg mx-auto p-4 select-none pb-28 space-y-4">
       <CommandHeader
         title="Hồ Sơ Quân Vụ"
         subtitle="Thông tin cá nhân · Thiết lập · Quản trị dữ liệu"
@@ -1045,6 +1045,6 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
             </OverlayBody>
         </AppModal>
       )}
-    </CoreScene>
+    </ArchiveScene>
   );
 };

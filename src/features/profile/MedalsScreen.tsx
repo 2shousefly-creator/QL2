@@ -1,4 +1,4 @@
-import { CoreScene } from "../../components/core-visual/CoreScene";
+import { ArchiveScene } from "../profile/pixi/ArchiveScene";
 import "../../styles/core-records.css";
 import React, { useState } from "react";
 import { AlertCircle, Award, ChevronLeft, Lock, Star } from "lucide-react";
@@ -86,7 +86,7 @@ export const MedalsScreen: React.FC<MedalsScreenProps> = ({ state, onUpdateState
   });
 
   return (
-    <CoreScene variant="medals" reducedMotion={state.settings.reducedMotion} className="command-screen medal-cabinet-screen w-full max-w-lg mx-auto p-4 select-none pb-28 space-y-4">
+    <ArchiveScene rankIndex={state.progression.currentRankIndex} variant="medals" reducedMotion={state.settings.reducedMotion} className="command-screen medal-cabinet-screen w-full max-w-lg mx-auto p-4 select-none pb-28 space-y-4">
       {/* Toast Alert */}
       {toastMessage && (
         <OverlayPortal>
@@ -241,6 +241,6 @@ export const MedalsScreen: React.FC<MedalsScreenProps> = ({ state, onUpdateState
           );
         })}
       </div>
-    </CoreScene>
+    </ArchiveScene>
   );
 };

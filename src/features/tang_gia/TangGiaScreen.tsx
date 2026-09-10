@@ -1,3 +1,4 @@
+import type { FarmVisualEvent } from "./pixi/farmPixiTypes";
 import React, { useState, useEffect, useRef } from "react";
 import { GameState } from "../../game/types";
 import { getCurrentRank } from "../../game/xpEngine";
@@ -143,6 +144,14 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
     return () => onTroughInfoToggle?.(false);
   }, [farmModal?.type, onTroughInfoToggle]);
 
+  const [visualEvents, setVisualEvents] = useState<FarmVisualEvent[]>([]);
+  const visualMounted = useRef(true);
+  useEffect(() => { visualMounted.current = true; return () => { visualMounted.current = false; }; }, []);
+  useEffect(() => {
+    if (!visualEvents.length) return;
+    const timer = window.setTimeout(() => setVisualEvents([]), 1600);
+    return () => window.clearTimeout(timer);
+  }, [visualEvents]);
   const [harvestPresentations, setHarvestPresentations] = useState<
     PlotHarvestPresentation[]
   >([]);
@@ -248,6 +257,7 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
       message?: string;
       summaryData?: RewardSummaryData;
       plotRewards?: PlotHarvestPresentation[];
+      visualEvent?: FarmVisualEvent;
     } | void,
     transactionNow: number = Date.now()
   ) => {
@@ -276,6 +286,12 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
       }
 
       if (res) {
+        if (res.visualEvent) {
+          const event = res.visualEvent;
+          queueMicrotask(() => {
+            if (visualMounted.current) setVisualEvents(current => [...current.filter(item => item.id !== event.id), event].slice(-9));
+          });
+        }
         let displayedXp = res.summaryData?.xpEarned ?? 0;
         if (res.xpEarned && res.xpEarned > 0) {
           displayedXp = applyFarmXpReward(draft, res.xpEarned).displayedXp;
@@ -569,7 +585,9 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
         currentNow
       );
       if (result.success) recordWatering(draft, 1);
-      return { message: result.message };
+      return { message: result.message, visualEvent: result.success ? {
+        id: `water-${selectedPlotIndex}-${currentNow}`, plotIndex: selectedPlotIndex, kind: "water", startedAt: currentNow,
+      } : undefined };
     }, currentNow);
   };
 
@@ -600,7 +618,9 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
         currentNow
       );
       if (result.success) recordFertilizerUsed(draft, fertilizerId);
-      return { message: result.message };
+      return { message: result.message, visualEvent: result.success ? {
+        id: `fertilizer-${plotIndex}-${currentNow}`, plotIndex, kind: "fertilizer", startedAt: currentNow,
+      } : undefined };
     }, currentNow);
   };
 
@@ -983,6 +1003,7 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
         currentWeatherSlot={currentWeatherSlot}
         weatherSeed={farmState.weatherSeed ?? 133742}
         harvestPresentations={harvestPresentations}
+        visualEvents={visualEvents}
         onGardenTap={handleGardenTap}
         onPlotTap={(index) => {
           const plot = farmState.plots[index];

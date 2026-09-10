@@ -1,4 +1,4 @@
-import { CoreScene } from "../../components/core-visual/CoreScene";
+import { ArchiveScene } from "../profile/pixi/ArchiveScene";
 import "../../styles/core-records.css";
 import React, { useState } from "react";
 import { 
@@ -169,7 +169,7 @@ export const JournalScreen: React.FC<JournalScreenProps> = ({ state }) => {
   };
 
   return (
-    <CoreScene variant="journal" reducedMotion={state.settings.reducedMotion} className="command-screen journal-command-screen w-full max-w-lg mx-auto p-4 select-none pb-28 space-y-4">
+    <ArchiveScene rankIndex={state.progression.currentRankIndex} variant="journal" reducedMotion={state.settings.reducedMotion} className="command-screen journal-command-screen w-full max-w-lg mx-auto p-4 select-none pb-28 space-y-4">
       {/* Title */}
       <CommandHeader
         title="Nhật Ký Binh Nghiệp"
@@ -272,7 +272,7 @@ export const JournalScreen: React.FC<JournalScreenProps> = ({ state }) => {
         onClose={() => setSelectedEvent(null)} 
         event={selectedEvent} 
       />
-    </CoreScene>
+    </ArchiveScene>
   );
 };
 

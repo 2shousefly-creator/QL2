@@ -1,4 +1,4 @@
-import { CoreScene } from "../../components/core-visual/CoreScene";
+import { ArchiveScene } from "../profile/pixi/ArchiveScene";
 import "../../styles/core-records.css";
 import React from "react";
 import { Target, Activity, BrainCircuit, Grid3X3, Eye, Swords, ChevronLeft, Award, Crown, CheckCircle2, Flame } from "lucide-react";
@@ -39,7 +39,7 @@ export const MasteryScreen: React.FC<MasteryScreenProps> = ({ state, onBack }) =
   ];
 
   return (
-    <CoreScene variant="mastery" reducedMotion={state.settings.reducedMotion} className="command-screen mastery-command-screen w-full max-w-lg mx-auto p-4 select-none pb-28 space-y-4">
+    <ArchiveScene rankIndex={state.progression.currentRankIndex} variant="mastery" reducedMotion={state.settings.reducedMotion} className="command-screen mastery-command-screen w-full max-w-lg mx-auto p-4 select-none pb-28 space-y-4">
       {/* Header Banner */}
       <CommandHeader
         title="Tinh Thông"
@@ -241,6 +241,6 @@ export const MasteryScreen: React.FC<MasteryScreenProps> = ({ state, onBack }) =
           );
         })}
       </div>
-    </CoreScene>
+    </ArchiveScene>
   );
 };

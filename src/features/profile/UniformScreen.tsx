@@ -32,6 +32,7 @@ const formatAchievedDate = (timestamp: number): string => {
 };
 
 export const UniformScreen: React.FC<UniformScreenProps> = ({ state, onBack }) => {
+  const [pixiReady, setPixiReady] = useState(false);
   const currentRank = getPlayerRank(state);
   const currentFamily = getPlayerFamily(state);
   const unlockedFamilies = useMemo(
@@ -108,7 +109,7 @@ export const UniformScreen: React.FC<UniformScreenProps> = ({ state, onBack }) =
   };
 
   return (
-    <CoreScene variant="uniform" reducedMotion={state.settings.reducedMotion} className="command-screen uniform-archive-screen mx-auto w-full max-w-lg space-y-4 px-4 pb-10 pt-4 select-none">
+    <CoreScene density={pixiReady ? "none" : "quiet"} variant="uniform" reducedMotion={state.settings.reducedMotion} className="command-screen uniform-archive-screen mx-auto w-full max-w-lg space-y-4 px-4 pb-10 pt-4 select-none">
       <CommandHeader
         title="Quân Phục"
         subtitle="Lễ phục theo quân hàm đã đạt"
@@ -156,6 +157,9 @@ export const UniformScreen: React.FC<UniformScreenProps> = ({ state, onBack }) =
       </section>
 
       <UniformPortrait
+        onPixiReadyChange={setPixiReady}
+        rankIndex={state.progression.currentRankIndex}
+        reducedMotion={state.settings.reducedMotion}
         config={artConfig}
         family={selectedFamily}
         filledSegments={filledSegments}

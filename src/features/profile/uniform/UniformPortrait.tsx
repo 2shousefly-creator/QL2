@@ -1,3 +1,7 @@
+import { useDeferredPixiLayer } from "../../../components/core-visual/pixi/useDeferredPixiLayer";
+import { loadArchivePixi } from "../pixi/ArchiveScene";
+import { getJourneyChapterForRank } from "../../../game/etaEngine";
+import { getStageTheme } from "../../../game/stageThemes";
 import { CoreVfx } from "../../../components/core-visual/CoreVfx";
 import React from "react";
 import type { MedalDefinition } from "../../../game/medals/medalCatalog";
@@ -8,6 +12,9 @@ import { UniformRankCluster } from "./UniformRankCluster";
 import { UniformShoulderBoard } from "./UniformShoulderBoard";
 
 type UniformPortraitProps = {
+  onPixiReadyChange?: (ready: boolean) => void;
+  rankIndex?: number;
+  reducedMotion?: boolean;
   config: UniformArtConfig;
   family: RankFamily;
   filledSegments: number;
@@ -17,6 +24,9 @@ type UniformPortraitProps = {
 };
 
 export const UniformPortrait: React.FC<UniformPortraitProps> = ({
+  onPixiReadyChange,
+  rankIndex = 0,
+  reducedMotion,
   config,
   family,
   filledSegments,
@@ -24,13 +34,19 @@ export const UniformPortrait: React.FC<UniformPortraitProps> = ({
   unlockedMedalIds,
   onSelectMedal,
 }) => {
+  const pixi = useDeferredPixiLayer(loadArchivePixi, reducedMotion);
+  React.useEffect(() => { onPixiReadyChange?.(pixi.ready); }, [pixi.ready, onPixiReadyChange]);
+  const theme = getStageTheme(getJourneyChapterForRank(rankIndex).themeId);
   return (
-    <div className="core-uniform-display relative mx-auto aspect-[3/4] min-h-[430px] w-full max-w-[420px] overflow-hidden rounded-[2rem] border border-white/10 bg-gradient-to-b from-slate-900/95 via-slate-950/90 to-black shadow-[0_25px_70px_rgba(0,0,0,0.55)]">
-      <div
+    <div data-core-motion={pixi.reducedMotion ? "reduced" : undefined} data-pixi-ready={pixi.ready} className="core-uniform-display relative mx-auto aspect-[3/4] min-h-[430px] w-full max-w-[420px] overflow-hidden rounded-[2rem] border border-white/10 bg-gradient-to-b from-slate-900/95 via-slate-950/90 to-black shadow-[0_25px_70px_rgba(0,0,0,0.55)]">
+      {!pixi.ready && <div
         className="pointer-events-none absolute inset-x-[8%] top-[6%] h-[44%] rounded-full blur-3xl"
         style={{ backgroundColor: config.glow }}
-      />
+      />}
 
+      <div className="core-pixi-plane" aria-hidden="true">
+        {pixi.Layer && <pixi.Layer visualProps={{ variant: "uniform", theme, glow: config.glow, transitionKey: family.id }} reducedMotion={pixi.reducedMotion} onReady={pixi.onReady} onUnavailable={pixi.onUnavailable} />}
+      </div>
       <img
         src={config.uniformSrc}
         width={840}
@@ -41,7 +57,7 @@ export const UniformPortrait: React.FC<UniformPortraitProps> = ({
         fetchPriority="high"
       />
 
-      <CoreVfx key={family.id} type="shine" className="core-uniform-shine" />
+      {!pixi.ready && <CoreVfx key={family.id} type="shine" reducedMotion={pixi.reducedMotion} className="core-uniform-shine" />}
 
       {/* Viewer-left shoulder is the wearer's right shoulder. */}
       <div className="absolute left-[2%] top-[16%] w-[30%]">
