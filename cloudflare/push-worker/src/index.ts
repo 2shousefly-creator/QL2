@@ -3,7 +3,7 @@ import type { Env, Intent, Subscription } from './types';
 import { authenticate, hash, identity } from './auth';
 import { cors } from './cors';
 import { deliverDue, invalidate, snapshot, scheduleDiagnostic } from './db';
-import { payload, send } from './push';
+import { payload, send, safePushFailure } from './push';
 
 function bad(): never { throw new Response('Invalid request', { status: 400 }); }
 async function body(request: Request) {
@@ -89,7 +89,7 @@ async function route(request: Request, env: Env): Promise<Response> {
     await invalidate(env, id, now); return json({ enabled: false });
   }
   if (method === 'GET' && path === '/api/v2/push/status') {
-    const rows = await env.DB.prepare("SELECT intent_key,type,due_at,status FROM push_intents WHERE device_id=? ORDER BY CASE WHEN intent_key='diagnostic-test' THEN 0 ELSE 1 END, due_at LIMIT 17").bind(id).all();
+    const rows = await env.DB.prepare("SELECT intent_key,type,due_at,status,attempt_count,last_attempt_at,last_error,retry_at FROM push_intents WHERE device_id=? ORDER BY CASE WHEN intent_key='diagnostic-test' THEN 0 ELSE 1 END, due_at LIMIT 17").bind(id).all();
     return json({ online: true, enabled: !!device.enabled, registered: !device.invalidated_at, intents: rows.results });
   }
   if (!device.enabled || device.invalidated_at) return json({ error: 'RESUBSCRIBE' }, 410);
@@ -109,10 +109,13 @@ async function route(request: Request, env: Env): Promise<Response> {
   if (method === 'POST' && path === '/api/v2/push/test') {
     const result = await env.DB.prepare('UPDATE push_devices SET last_test_at=? WHERE device_id=? AND last_test_at<=?').bind(now, id, now - 30000).run();
     if (!result.meta.changes) return json({ success: false, message: 'Vui lòng chờ 30 giây.' }, 429);
-    let status = 0;
-    try { status = await send(env, JSON.parse(device.subscription_json), payload('test')); } catch { /* No provider logs. */ }
+    let delivery;
+    try { delivery = await send(env, JSON.parse(device.subscription_json), payload('test')); }
+    catch (error) { delivery = safePushFailure(error); }
+    const status = delivery.statusCode;
     if (status === 404 || status === 410) await invalidate(env, id, now, device.subscription_json);
-    return json({ success: status >= 200 && status < 300 }, status >= 200 && status < 300 ? 200 : 502);
+    const success = status >= 200 && status < 300;
+    return json({ success, providerStatus: status || null, errorCode: delivery.errorCode }, success ? 200 : 502);
   }
   return new Response('Not found', { status: 404 });
 }

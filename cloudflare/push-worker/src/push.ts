@@ -15,16 +15,27 @@ export function payload(type: IntentRow['type'] | 'test', rows: IntentRow[] = []
   }[type];
   return { type, title: copy[0], body: copy[1], destination: copy[2], tag: copy[3], rankIndex };
 }
-export async function send(env: Env, subscription: Subscription, data: ReturnType<typeof payload>) {
-  // Use web-push for standard encryption/VAPID, fetch for Workers transport.
-  const details = webpush.generateRequestDetails(subscription, JSON.stringify(data), {
-    vapidDetails: { subject: env.VAPID_SUBJECT, publicKey: env.VAPID_PUBLIC_KEY, privateKey: env.VAPID_PRIVATE_KEY },
-    TTL: 3600, urgency: 'normal',
-  });
-  const response = await fetch(details.endpoint, {
-    method: 'POST', headers: details.headers as Record<string, string>,
-    body: details.body as unknown as BodyInit, redirect: 'error', signal: AbortSignal.timeout(15000),
-  });
-  await response.body?.cancel();
-  return response.status;
+export interface PushSendResult {
+  statusCode: number;
+  errorCode: string | null;
+}
+export function safePushFailure(error: unknown): PushSendResult {
+  const status = error instanceof webpush.WebPushError ? error.statusCode : 0;
+  const statusCode = Number.isInteger(status) && status >= 300 && status <= 599 ? status : 0;
+  return {
+    statusCode,
+    errorCode: statusCode >= 500 ? 'PUSH_PROVIDER_5XX' : statusCode ? `PUSH_PROVIDER_${statusCode}` : 'PUSH_SEND_EXCEPTION',
+  };
+}
+export async function send(env: Env, subscription: Subscription, data: ReturnType<typeof payload>): Promise<PushSendResult> {
+  try {
+    const response = await webpush.sendNotification(subscription, JSON.stringify(data), {
+      vapidDetails: { subject: env.VAPID_SUBJECT, publicKey: env.VAPID_PUBLIC_KEY, privateKey: env.VAPID_PRIVATE_KEY },
+      TTL: 3600, urgency: 'normal', timeout: 15000,
+    });
+    // Never return provider headers/body or retain the raw error outside here.
+    return { statusCode: response.statusCode, errorCode: null };
+  } catch (error) {
+    return safePushFailure(error);
+  }
 }

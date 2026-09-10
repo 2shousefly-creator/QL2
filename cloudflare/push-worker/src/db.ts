@@ -1,5 +1,5 @@
 import type { Env, Intent, IntentRow, Device } from './types';
-import { payload, send } from './push';
+import { payload, send, safePushFailure } from './push';
 export async function snapshot(env: Env, id: string, intents: Intent[], now: number) {
   // A D1 batch is a transaction. Retain sent tombstones even if an intent disappears.
   const keys = intents.map(i => i.key);
@@ -12,6 +12,7 @@ export async function snapshot(env: Env, id: string, intents: Intent[], now: num
       type=excluded.type, event_generation=excluded.event_generation, due_at=excluded.due_at,
       status=CASE WHEN push_intents.event_generation=excluded.event_generation AND (push_intents.status='sent' OR (push_intents.status='sending' AND ABS(push_intents.due_at-excluded.due_at)<30000) OR (push_intents.status='canceled' AND push_intents.attempt_count>=6)) THEN push_intents.status ELSE 'scheduled' END,
       attempt_count=CASE WHEN push_intents.event_generation=excluded.event_generation THEN push_intents.attempt_count ELSE 0 END,
+      last_attempt_at=CASE WHEN push_intents.event_generation=excluded.event_generation THEN push_intents.last_attempt_at ELSE NULL END,
       sent_at=CASE WHEN push_intents.event_generation=excluded.event_generation THEN push_intents.sent_at ELSE NULL END,
       lease_token=CASE WHEN push_intents.event_generation=excluded.event_generation AND ABS(push_intents.due_at-excluded.due_at)<30000 THEN push_intents.lease_token ELSE NULL END,
       lease_until=CASE WHEN push_intents.event_generation=excluded.event_generation AND ABS(push_intents.due_at-excluded.due_at)<30000 THEN push_intents.lease_until ELSE NULL END,
@@ -76,15 +77,20 @@ export async function deliverDue(env: Env, now: number) {
       if (exists) live.push(row);
     }
     if (!live.length) continue;
-    let status = 0;
-    try { status = await send(env, JSON.parse(device.subscription_json), payload(live[0].type, live)); } catch { /* Never log subscription or provider errors. */ }
-    if (status === 404 || status === 410) { await invalidate(env, id, now, device.subscription_json); continue; }
+    let delivery;
+    try { delivery = await send(env, JSON.parse(device.subscription_json), payload(live[0].type, live)); }
+    catch (error) { delivery = safePushFailure(error); }
+    const status = delivery.statusCode;
+    const invalid = status === 404 || status === 410;
     const success = status >= 200 && status < 300;
+
     await env.DB.batch(live.map(row => env.DB.prepare(`UPDATE push_intents SET status=?, sent_at=?, updated_at=?, retry_at=?, last_error=?, lease_token=NULL, lease_until=NULL
       WHERE device_id=? AND intent_key=? AND event_generation=? AND lease_token=?`).bind(
-      success ? 'sent' : row.attempt_count >= 6 ? 'canceled' : 'scheduled', success ? now : null, now,
-      now + Math.min(3600000, 60000 * 2 ** row.attempt_count), success ? null : `HTTP_${status}`,
+      success ? 'sent' : invalid || row.attempt_count >= 6 ? 'canceled' : 'scheduled', success ? now : null, now,
+      now + Math.min(3600000, 60000 * 2 ** row.attempt_count), success ? null : delivery.errorCode ?? 'PUSH_SEND_EXCEPTION',
       id, row.intent_key, row.event_generation, token)));
+    // Persist the provider cause before invalidation revokes pending leases.
+    if (invalid) await invalidate(env, id, now, device.subscription_json);
   }
   // Daily cleanup; sent tombstones are deliberately retained to dedupe old ranks.
   if (new Date(now).getUTCHours() === 0 && new Date(now).getUTCMinutes() === 0) {

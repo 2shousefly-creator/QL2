@@ -4,7 +4,8 @@ Firebase Hosting remains static. The browser derives up to 16 notification inten
 from local canonical XP/farm helpers. This Worker stores only device credentials
 (SHA-256 secret hash), PushSubscription, event identity, timestamps and delivery
 state in D1. It does not receive saves or run game engines. Standard Web Push
-uses `web-push` encryption/VAPID and Workers `fetch` transport.
+uses the official `webpush.sendNotification` API with the existing VAPID pair
+and Workers Node compatibility (no custom fetch transport).
 
 ## Current provisioning state
 
@@ -163,3 +164,18 @@ notification permission.
 
 References: [Workers Node compatibility](https://developers.cloudflare.com/workers/runtime-apis/nodejs/)
 and [D1 batch transactions](https://developers.cloudflare.com/d1/worker-api/d1-database/).
+
+## Safe provider diagnostics
+
+Delivery uses `webpush.sendNotification` as in the
+[Cloudflare push example](https://developers.cloudflare.com/agents/communication-channels/webhooks/push-notifications/).
+`WebPushError.statusCode` is reduced to `PUSH_PROVIDER_403`,
+`PUSH_PROVIDER_404`, `PUSH_PROVIDER_410`, other 3xx/4xx codes, or
+`PUSH_PROVIDER_5XX`. Other exceptions become `PUSH_SEND_EXCEPTION`.
+No raw exception, provider body, headers, endpoint, subscription keys or private
+VAPID key is logged or returned. Immediate test returns only success,
+providerStatus (number/null) and errorCode; the UI renders allowlisted codes.
+Cron retains attempt_count, last_attempt_at, last_error and retry_at in D1 and
+exposes those fields through authenticated diagnostics for every intent type.
+404/410 causes are saved on the attempted rows before subscription invalidation.
+Cooldown, retry policy, scheduling and keys are unchanged; no migration needed.

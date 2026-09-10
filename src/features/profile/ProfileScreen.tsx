@@ -734,7 +734,13 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
 
               <div>Máy chủ: {pushStatusData ? (pushStatusData.online ? 'Đang kết nối' : 'Chưa kết nối') : 'Chưa kiểm tra'}</div>
               {pushStatusData?.intents?.map((intent: any) => (
-                <div key={intent.intent_key}>{intent.type}: {intent.status} · {new Date(intent.due_at).toLocaleString('vi-VN')}</div>
+                <div key={intent.intent_key} className="border-t border-slate-800 pt-1.5 space-y-1">
+                  <div>{intent.type}: {intent.status} · {new Date(intent.due_at).toLocaleString('vi-VN')}</div>
+                  <div>Số lần thử (attempt_count): {Number.isInteger(intent.attempt_count) ? intent.attempt_count : 0}</div>
+                  <div>Lần thử gần nhất (last_attempt_at): {Number.isFinite(intent.last_attempt_at) ? new Date(intent.last_attempt_at).toLocaleString('vi-VN') : 'Chưa thử'}</div>
+                  <div>Lỗi gần nhất (last_error): {typeof intent.last_error === 'string' && /^(PUSH_PROVIDER_(?:[34][0-9]{2}|5XX)|PUSH_SEND_EXCEPTION|HTTP_[0-9]{1,3})$/.test(intent.last_error) ? intent.last_error : 'Không có'}</div>
+                  <div>Mốc thử lại (retry_at): {Number.isFinite(intent.retry_at) ? new Date(intent.retry_at).toLocaleString('vi-VN') : 'Không có'}{intent.status === 'sent' || intent.status === 'canceled' ? ' · Không còn chờ gửi' : ''}</div>
+                </div>
               ))}
 
             </div>

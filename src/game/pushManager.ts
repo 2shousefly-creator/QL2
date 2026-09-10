@@ -133,7 +133,16 @@ export async function sendTestServerPush(): Promise<{ success: boolean; message:
   try {
     if (!registered && !(await subscribeAndRegisterWebPush())) return { success: false, message: 'Chưa đăng ký được thông báo đẩy.' };
     const response = await request('test', 'POST', {});
-    return { success: response.ok, message: response.ok ? 'Máy chủ đã gửi thông báo thử.' : response.status === 429 ? 'Vui lòng chờ 30 giây trước khi thử lại.' : 'Không gửi được thông báo thử.' };
+    if (response.ok) return { success: true, message: 'Máy chủ đã gửi thông báo thử.' };
+    if (response.status === 429) return { success: false, message: 'Vui lòng chờ 30 giây trước khi thử lại.' };
+    const data = await response.json().catch(() => null);
+    const code = typeof data?.errorCode === 'string' && /^(PUSH_PROVIDER_(?:[34][0-9]{2}|5XX)|PUSH_SEND_EXCEPTION)$/.test(data.errorCode) ? data.errorCode : null;
+    const reason = code === 'PUSH_PROVIDER_403' ? 'Nhà cung cấp từ chối yêu cầu.'
+      : code === 'PUSH_PROVIDER_404' || code === 'PUSH_PROVIDER_410' ? 'Subscription không còn hợp lệ.'
+      : code === 'PUSH_PROVIDER_5XX' ? 'Nhà cung cấp đang gặp lỗi máy chủ.'
+      : code === 'PUSH_SEND_EXCEPTION' ? 'Lỗi khi gửi; chưa nhận được trạng thái hợp lệ từ nhà cung cấp.'
+      : 'Nhà cung cấp trả lỗi.';
+    return { success: false, message: code ? `${code}: ${reason}` : `Không gửi được thông báo thử (HTTP ${response.status}).` };
   } catch { return { success: false, message: 'Không kết nối được máy chủ thông báo.' }; }
 }
 export async function scheduleTestServerPush(): Promise<{ success: boolean; message: string; dueAtEpochMs?: number }> {
