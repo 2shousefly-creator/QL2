@@ -8,3 +8,5 @@ coverage/
 !.env.example
 dist-web/
 .tools/
+
+.firebase/
