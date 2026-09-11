@@ -34,9 +34,9 @@ import {
   AirCombatRunSummary,
   AircraftId,
 } from "./airCombatTypes";
-import { AirCombatCanvas } from "./AirCombatCanvas";
+import { AirCombatBattle } from "./AirCombatBattle";
 import { AirCombatResult } from "./AirCombatResult";
-import { AircraftGlyph } from "./AircraftGlyph";
+import { AircraftPreview } from "./AircraftPreview";
 import { AppModal, ExclusiveFullscreenOverlay, ModalButton, OverlayBody, OverlayHeader } from "../../../components/overlay/AppOverlay";
 
 interface KhongKichScreenProps {
@@ -220,7 +220,7 @@ export const KhongKichScreen: React.FC<KhongKichScreenProps> = ({
         onContextMenu={(e) => e.preventDefault()}
         data-khong-kich-phase="playing"
       >
-        <AirCombatCanvas
+        <AirCombatBattle
           aircraftId={selectedAircraft}
           reducedMotion={gameState.settings.reducedMotion}
           onComplete={finishRun}
@@ -268,7 +268,7 @@ export const KhongKichScreen: React.FC<KhongKichScreenProps> = ({
 
         <div className="flex items-center gap-1 text-[clamp(10.5px,1.4dvh,13px)] font-black uppercase tracking-wider text-sky-300">
           <Crosshair className="h-[clamp(12px,1.6dvh,15px)] w-[clamp(12px,1.6dvh,15px)] text-sky-400" />
-          <span>Không Kích</span>
+          <span>Không Kích · V2</span>
         </div>
 
         <div className="flex items-center gap-2 text-right">
@@ -317,9 +317,8 @@ export const KhongKichScreen: React.FC<KhongKichScreenProps> = ({
               />
               <div className="relative grid grid-cols-[clamp(56px,8.5dvh,76px)_1fr] items-center gap-[clamp(6px,1.2vw,12px)]">
                 <div className="flex flex-col items-center">
-                  <AircraftGlyph
-                    color={config.color}
-                    accent={config.accent}
+                  <AircraftPreview
+                    aircraftId={aircraftId}
                     className="h-[clamp(46px,6.8dvh,64px)] w-[clamp(46px,6.8dvh,64px)]"
                   />
                   <span
@@ -378,11 +377,6 @@ export const KhongKichScreen: React.FC<KhongKichScreenProps> = ({
                       label="Tốc bắn"
                       value={`${stats.fireRate.toFixed(1)}/s`}
                       percent={normalizeAircraftStat("fireRate", stats.fireRate)}
-                    />
-                    <SelectionStat
-                      label="Cơ động"
-                      value={stats.moveSpeed.toFixed(1)}
-                      percent={normalizeAircraftStat("moveSpeed", stats.moveSpeed)}
                     />
                     <SelectionStat
                       label={config.resourceKind === "mana" ? "Mana" : "Energy"}
@@ -477,6 +471,7 @@ export const KhongKichScreen: React.FC<KhongKichScreenProps> = ({
         </AppModal>
       )}
 
+      <p className="mt-2 text-center text-[10px] text-slate-400">Giữ và kéo trên chiến trường để lái · thả tay để đứng yên.<br />Dùng ngón tay thứ hai để kích hoạt kỹ năng.</p>
       {/* Action Button: XUẤT KÍCH */}
       <button
         type="button"

@@ -61,6 +61,8 @@ export interface EnemyEntity {
 export interface ProjectileEntity {
   id: number;
   owner: "player" | "enemy" | "drone";
+  /** Presentation metadata only; collision and damage never consult this field. */
+  appearance?: "dangerous" | "boss";
   x: number;
   y: number;
   vx: number;
@@ -116,12 +118,27 @@ interface RuntimePools {
   particles: ParticleEntity[];
 }
 
+export interface CombatVisualEvent {
+  id: number;
+  kind: "hit" | "explosion" | "bomb" | "player_hit";
+  x: number;
+  y: number;
+  size: number;
+  entityId?: number;
+  boss?: boolean;
+}
+
+function emitVisual(world: CombatWorld, event: Omit<CombatVisualEvent, "id">): void {
+  world.visualEvents.push({ ...event, id: world.nextVisualId++ });
+  if (world.visualEvents.length > 96) world.visualEvents.shift();
+}
+
 export interface CombatWorld {
   aircraft: AircraftCombatState;
   playerX: number;
   playerY: number;
-  playerInputX: number;
-  playerInputY: number;
+  visualEvents: CombatVisualEvent[];
+  nextVisualId: number;
   playerInputActive: boolean;
   playerRadius: number;
   playerInvulnerability: number;
@@ -175,14 +192,6 @@ export interface CombatWorld {
 
 const PLAYER_TARGET_ID = 0;
 
-export type PlayerControlAxis = "horizontal" | "vertical" | null;
-
-export interface PlayerControlInput {
-  axis: PlayerControlAxis;
-  inputX: number;
-  inputY: number;
-}
-
 function circleHit(
   ax: number,
   ay: number,
@@ -216,8 +225,8 @@ export function createCombatWorld(
     aircraft: createAircraftCombatState(aircraftId),
     playerX: initial.x,
     playerY: initial.y,
-    playerInputX: 0,
-    playerInputY: 0,
+    visualEvents: [],
+    nextVisualId: 1,
     playerInputActive: false,
     playerRadius: 9,
     playerInvulnerability: 0,
@@ -472,6 +481,7 @@ function addProjectile(
   Object.assign(projectile, {
     id: world.nextId++,
     owner: values.owner,
+    appearance: values.appearance,
     x: values.x,
     y: values.y,
     vx: values.vx,
@@ -601,6 +611,7 @@ function fireEnemyBullet(
   const adjustedSpeed = speed * 0.5;
   addProjectile(world, {
     owner: "enemy",
+    appearance: enemy.type === "boss" ? "boss" : homing ? "dangerous" : undefined,
     x: enemy.x,
     y: enemy.y + enemy.radius * 0.65,
     vx: Math.cos(angle) * adjustedSpeed,
@@ -815,76 +826,33 @@ export function castWorldSkill(
   return result;
 }
 
-export function resolvePlayerControlInput(
-  deltaX: number,
-  deltaY: number,
-  previousAxis: PlayerControlAxis = null
-): PlayerControlInput {
-  const absX = Math.abs(deltaX);
-  const absY = Math.abs(deltaY);
-  if (Math.max(absX, absY) <= AIR_COMBAT_WORLD.joystickDeadZone) {
-    return { axis: null, inputX: 0, inputY: 0 };
-  }
-
-  let axis = previousAxis;
-  if (axis === "horizontal" && absY > absX * AIR_COMBAT_WORLD.joystickAxisSwitchRatio) {
-    axis = "vertical";
-  } else if (axis === "vertical" && absX > absY * AIR_COMBAT_WORLD.joystickAxisSwitchRatio) {
-    axis = "horizontal";
-  } else if (!axis) {
-    axis = absX >= absY ? "horizontal" : "vertical";
-  }
-
-  const axisDistance = axis === "horizontal" ? absX : absY;
-  const usableRadius = AIR_COMBAT_WORLD.joystickRadius - AIR_COMBAT_WORLD.joystickDeadZone;
-  const rawMagnitude = Math.min(
-    1,
-    Math.max(0, (axisDistance - AIR_COMBAT_WORLD.joystickDeadZone) / usableRadius)
-  );
-  const magnitude = Math.pow(rawMagnitude, AIR_COMBAT_WORLD.inputSensitivity);
-  return axis === "horizontal"
-    ? { axis, inputX: Math.sign(deltaX) * magnitude, inputY: 0 }
-    : { axis, inputX: 0, inputY: Math.sign(deltaY) * magnitude };
-}
-
-export function setPlayerMoveInput(world: CombatWorld, x: number, y: number): void {
-  const absX = Math.abs(x);
-  const absY = Math.abs(y);
-  if (Math.max(absX, absY) <= 0.001) {
-    world.playerInputX = 0;
-    world.playerInputY = 0;
-  } else if (absX >= absY) {
-    world.playerInputX = Math.max(-1, Math.min(1, x));
-    world.playerInputY = 0;
-  } else {
-    world.playerInputX = 0;
-    world.playerInputY = Math.max(-1, Math.min(1, y));
-  }
-}
-
 export function setPlayerInputActive(world: CombatWorld, active: boolean): void {
   world.playerInputActive = active;
-  if (!active) {
-    world.playerInputX = 0;
-    world.playerInputY = 0;
-  }
 }
 
-function updatePlayerMovement(world: CombatWorld, dt: number): void {
-  if (!world.playerInputActive) return;
-  const inputMagnitude = Math.min(1, Math.hypot(world.playerInputX, world.playerInputY));
-  if (inputMagnitude <= 0.001) return;
-  const stats = getEffectiveAircraftStats(world.aircraft);
-  const directionX = world.playerInputX / inputMagnitude;
-  const directionY = world.playerInputY / inputMagnitude;
-  const distance = stats.moveSpeed * AIR_COMBAT_WORLD.movementPixelsPerSpeed * inputMagnitude * dt;
-  const point = clampCircleToGameplayRect(
-    world.playerX + directionX * distance,
-    world.playerY + directionY * distance,
-    world.playerRadius
-  );
-  world.playerX = point.x;
-  world.playerY = point.y;
+// Apply each coalesced pointer segment immediately. Subdivision checks the full
+// displacement without advancing time, limiting speed, or changing invulnerability.
+export function movePlayerByDelta(world: CombatWorld, dx: number, dy: number): void {
+  if (!world.playerInputActive || world.ended || world.currentCoreChoices || world.pendingCoreSelections > 0 ||
+      !Number.isFinite(dx) || !Number.isFinite(dy)) return;
+  const startX = world.playerX;
+  const startY = world.playerY;
+  const end = clampCircleToGameplayRect(startX + dx, startY + dy, world.playerRadius);
+  const steps = Math.max(1, Math.ceil(Math.hypot(end.x - startX, end.y - startY) / 2));
+  for (let step = 1; step <= steps; step++) {
+    world.playerX = startX + (end.x - startX) * step / steps;
+    world.playerY = startY + (end.y - startY) * step / steps;
+    // Only player contacts: do not repeat weapon damage or advance enemy AI.
+    for (let index = world.projectiles.length - 1; index >= 0; index--) {
+      const p = world.projectiles[index];
+      if (p.owner === "enemy" && circleHit(p.x, p.y, p.radius, world.playerX, world.playerY, world.playerRadius)) {
+        hitPlayer(world, p.rawDamage);
+        recycleProjectile(world, index);
+      }
+    }
+    updateEnemyPlayerCollisions(world);
+  }
+  if (world.aircraft.currentHp <= 0) world.ended = true;
 }
 
 function updateDroneMovement(world: CombatWorld, dt: number): void {
@@ -1055,6 +1023,7 @@ function applyDamageToEnemy(
 ): number {
   const damage = calculateDamage(rawDamage, enemy.armor);
   enemy.hp -= damage;
+  emitVisual(world, { kind: "hit", x: enemy.x, y: enemy.y, size: enemy.radius, entityId: enemy.id });
   world.damageDealt += damage;
   addParticles(world, enemy.x, enemy.y, color, 3);
   return damage;
@@ -1068,6 +1037,7 @@ function destroyEnemy(world: CombatWorld, enemyIndex: number): void {
   const enemy = world.enemies[enemyIndex];
   if (!enemy) return;
   const config = ENEMY_CONFIGS[enemy.type];
+  emitVisual(world, { kind: "explosion", x: enemy.x, y: enemy.y, size: enemy.radius * 3, boss: enemy.type === "boss" });
   world.score += config.score * getComboMultiplier(world.comboKills);
   world.comboKills += 1;
   world.comboTimer = 4;
@@ -1143,6 +1113,7 @@ function hitPlayer(world: CombatWorld, rawDamage: number): void {
   const damage = applyDamageToAircraft(world.aircraft, rawDamage, shieldMultiplier);
   world.damageTaken += damage;
   world.hitsReceived += 1;
+  emitVisual(world, { kind: "player_hit", x: world.playerX, y: world.playerY, size: 36 });
   world.comboKills = 0;
   world.comboTimer = 0;
   world.playerInvulnerability = AIR_COMBAT_WORLD.playerInvulnerabilitySeconds;
@@ -1197,6 +1168,7 @@ function updateEnemyPlayerCollisions(world: CombatWorld): void {
 }
 
 function detonateWarning(world: CombatWorld, warning: WarningZone): void {
+  emitVisual(world, { kind: "bomb", x: warning.x, y: warning.y, size: warning.radius * 2 });
   addParticles(world, warning.x, warning.y, warning.owner === "player" ? "#fbbf24" : "#ef4444", 22);
   if (warning.owner === "player") {
     for (let index = world.enemies.length - 1; index >= 0; index--) {
@@ -1286,7 +1258,6 @@ export function updateCombatWorld(world: CombatWorld, deltaSeconds: number): voi
   if (world.latestMessage && world.elapsed >= world.messageUntil) world.latestMessage = null;
 
   tickAircraftState(world.aircraft, dt, true);
-  updatePlayerMovement(world, dt);
   updateEncounter(world, dt);
   updateEnemies(world, dt);
   updateDroneMovement(world, dt);

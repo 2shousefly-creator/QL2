@@ -28,7 +28,6 @@ export type CoreTier = "silver" | "gold" | "diamond";
 export type CoreCategory =
   | "offense"
   | "defense"
-  | "mobility"
   | "resource"
   | "weapon"
   | "skill";
@@ -38,7 +37,6 @@ export type CoreId =
   | "armor"
   | "max_hp"
   | "fire_rate"
-  | "move_speed"
   | "repair"
   | "cooldown"
   | "mana_capacity"
@@ -65,7 +63,6 @@ export interface CombatStats {
   armor: number;
   firepower: number;
   fireRate: number;
-  moveSpeed: number;
   maxResource: number;
   resourceRegen: number;
 }
@@ -142,7 +139,6 @@ export interface AircraftModifiers {
   armorFlat: number;
   firepowerFlat: number;
   fireRateFlat: number;
-  moveSpeedFlat: number;
   hpRegen: number;
   cooldownReduction: number;
   maxResourceFlat: number;

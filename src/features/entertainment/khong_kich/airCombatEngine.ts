@@ -78,7 +78,6 @@ export function createAircraftCombatState(
       armorFlat: 0,
       firepowerFlat: 0,
       fireRateFlat: 0,
-      moveSpeedFlat: 0,
       hpRegen: 0,
       cooldownReduction: 0,
       maxResourceFlat: 0,
@@ -99,21 +98,14 @@ export function getEffectiveAircraftStats(
 ): EffectiveAircraftStats {
   const config = AIRCRAFT_CONFIGS[state.aircraftId];
   const growthCount = Math.max(0, state.level - 1);
-  const moveCoreCap = config.baseStats.moveSpeed * AIR_COMBAT_LIMITS.moveSpeedCoreRatio;
-  const moveCore = Math.min(moveCoreCap, Math.max(0, state.modifiers.moveSpeedFlat));
   let fireRate =
     config.baseStats.fireRate +
     config.growth.fireRate * growthCount +
     state.modifiers.fireRateFlat;
-  let moveSpeed =
-    config.baseStats.moveSpeed + config.growth.moveSpeed * growthCount + moveCore;
 
   if ((state.activeEffects.afterburner || 0) > 0) {
     fireRate *= state.modifiers.skillUpgrades.afterburner ? 1.5 : 1.35;
-    moveSpeed *= 1.2;
   }
-  if ((state.activeEffects.sweeping_cannon || 0) > 0) moveSpeed *= 0.8;
-  if ((state.activeEffects.invisibility || 0) > 0) moveSpeed *= 1.5;
 
   const maxResource =
     config.resourceKind === "energy"
@@ -138,7 +130,6 @@ export function getEffectiveAircraftStats(
       config.growth.firepower * growthCount +
       state.modifiers.firepowerFlat,
     fireRate: Math.min(AIR_COMBAT_LIMITS.maxFireRate, fireRate),
-    moveSpeed,
     maxResource,
     resourceRegen:
       config.baseStats.resourceRegen +
@@ -407,11 +398,6 @@ function isCoreEligible(
     definition.id === "cooldown" &&
     stats.cooldownReduction >= AIR_COMBAT_LIMITS.cooldownReduction
   ) return false;
-  if (
-    definition.id === "move_speed" &&
-    state.modifiers.moveSpeedFlat >=
-      AIRCRAFT_CONFIGS[state.aircraftId].baseStats.moveSpeed * AIR_COMBAT_LIMITS.moveSpeedCoreRatio
-  ) return false;
   if (state.aircraftId === "phantom" && definition.id === "mana_capacity") return false;
   return true;
 }
@@ -426,7 +412,6 @@ function formatCoreValue(id: CoreId, tier: CoreTier): string {
   if (value !== null) {
     if (id === "cooldown") return `-${Math.round(value * 100)}% hồi chiêu`;
     if (id === "fire_rate") return `+${value.toFixed(2)}/s`;
-    if (id === "move_speed") return `+${value.toFixed(2)} tốc độ`;
     if (id === "repair") return `+${value.toFixed(2)} HP/s`;
     if (id === "mana_regen") return `+${value.toFixed(2)} Mana/s`;
     if (id === "energy_regen") return `+${value.toFixed(2)} Energy/s`;
@@ -452,7 +437,6 @@ function previewCore(state: AircraftCombatState, id: CoreId, tier: CoreTier): st
     case "armor": return `${stats.armor.toFixed(0)} → ${(stats.armor + value).toFixed(0)}`;
     case "max_hp": return `${stats.maxHp.toFixed(0)} → ${(stats.maxHp + value).toFixed(0)}`;
     case "fire_rate": return `${stats.fireRate.toFixed(2)} → ${(stats.fireRate + value).toFixed(2)}/s`;
-    case "move_speed": return `${stats.moveSpeed.toFixed(2)} → ${(stats.moveSpeed + value).toFixed(2)}`;
     case "mana_capacity": return `${stats.maxResource.toFixed(0)} → ${(stats.maxResource + value).toFixed(0)} MP`;
     case "mana_regen": return `${stats.resourceRegen.toFixed(2)} → ${(stats.resourceRegen + value).toFixed(2)}/s`;
     case "energy_regen": return `${stats.resourceRegen.toFixed(2)} → ${(stats.resourceRegen + value).toFixed(2)}/s`;
@@ -538,11 +522,6 @@ export function applyCore(
     case "armor": state.modifiers.armorFlat += value; break;
     case "max_hp": state.modifiers.maxHpFlat += value; break;
     case "fire_rate": state.modifiers.fireRateFlat += value; break;
-    case "move_speed": {
-      const cap = AIRCRAFT_CONFIGS[state.aircraftId].baseStats.moveSpeed * AIR_COMBAT_LIMITS.moveSpeedCoreRatio;
-      state.modifiers.moveSpeedFlat = Math.min(cap, state.modifiers.moveSpeedFlat + value);
-      break;
-    }
     case "repair": state.modifiers.hpRegen += value; break;
     case "cooldown":
       state.modifiers.cooldownReduction = Math.min(
@@ -718,14 +697,13 @@ export function calculateRunRank(summary: Omit<AirCombatRunSummary, "rank">): Ai
 }
 
 export function normalizeAircraftStat(
-  stat: "hp" | "armor" | "firepower" | "moveSpeed" | "fireRate" | "resource",
+  stat: "hp" | "armor" | "firepower" | "fireRate" | "resource",
   value: number
 ): number {
   const caps = {
     hp: 2300,
     armor: 90,
     firepower: 180,
-    moveSpeed: 27.5,
     fireRate: 6,
     resource: 180,
   };

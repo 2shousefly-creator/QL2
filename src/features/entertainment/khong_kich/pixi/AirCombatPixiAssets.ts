@@ -1,0 +1,58 @@
+import { Assets, Rectangle, Texture } from "pixi.js";
+import aircraftUrl from "../../../../assets/khong-kich/v2/aircraft-atlas.png";
+import fortressUrl from "../../../../assets/khong-kich/v2/fortress-clouds-atlas.png";
+import vfxUrl from "../../../../assets/khong-kich/v2/vfx-atlas.png";
+import type { AircraftId, EnemyType } from "../airCombatTypes";
+import type { AircraftVisualDefinition, AtlasFrame } from "./airCombatPixiTypes";
+
+const cell = (atlas: AtlasFrame["atlas"], x: number, y: number): AtlasFrame => ({ atlas, rect: [x / 4, y / 4, 0.25, 0.25] });
+export const AIRCRAFT_VISUALS: Record<AircraftId, AircraftVisualDefinition> = {
+  black_eagle: { neutral: cell("aircraft", 0, 0), left: cell("aircraft", 1, 0), right: cell("aircraft", 2, 0), size: 51, tint: 0x67e8f9 },
+  breaker: { neutral: cell("aircraft", 0, 1), left: cell("aircraft", 1, 1), right: cell("aircraft", 2, 1), size: 60, tint: 0xfbbf24 },
+  phantom: { neutral: cell("aircraft", 0, 2), left: cell("aircraft", 1, 2), right: cell("aircraft", 2, 2), size: 56, tint: 0xc4b5fd },
+};
+export const ENEMY_VISUALS: Record<EnemyType, AtlasFrame> = {
+  scout: cell("aircraft", 3, 1), fighter: cell("aircraft", 3, 2),
+  attacker: cell("aircraft", 0, 3), kamikaze: cell("aircraft", 1, 3),
+  bomber: cell("aircraft", 2, 3), elite: cell("aircraft", 3, 3),
+  // The generated fortress spans 56% of the sheet; explicit trims avoid clipping its wings.
+  boss: { atlas: "fortress", rect: [0, 0, 0.56, 0.51] },
+  boss_guard: { atlas: "fortress", rect: [0.56, 0, 0.44, 0.51] },
+};
+export const VFX_VISUALS = {
+  muzzle: cell("vfx", 0, 0), tracer: cell("vfx", 1, 0), enemyTracer: cell("vfx", 2, 0), missile: cell("vfx", 3, 0),
+  smallExplosion: cell("vfx", 0, 1), mediumExplosion: cell("vfx", 1, 1), largeExplosion: cell("vfx", 2, 1), bossExplosion: cell("vfx", 3, 1),
+  sparks: cell("vfx", 0, 2), smoke: cell("vfx", 1, 2), damageSmoke: cell("vfx", 2, 2), fire: cell("vfx", 3, 2),
+  shield: cell("vfx", 0, 3), charge: cell("vfx", 1, 3), laser: cell("vfx", 2, 3), shockwave: cell("vfx", 3, 3),
+  drone: cell("aircraft", 3, 0),
+  cloud: { atlas: "fortress", rect: [0, 0.51, 0.51, 0.49] } as AtlasFrame,
+  haze: { atlas: "fortress", rect: [0.51, 0.51, 0.49, 0.49] } as AtlasFrame,
+};
+export type VisualKey = keyof typeof VFX_VISUALS;
+
+/** Each renderer owns its frame views. Assets owns cached shared source textures. */
+export async function loadAirCombatAssets() {
+  const [aircraft, fortress, vfx] = await Promise.all([
+    Assets.load<Texture>(aircraftUrl), Assets.load<Texture>(fortressUrl), Assets.load<Texture>(vfxUrl),
+  ]);
+  const sources = { aircraft, fortress, vfx };
+  const frames = new Map<AtlasFrame, Texture>();
+  const texture = (definition: AtlasFrame) => {
+    const cached = frames.get(definition);
+    if (cached) return cached;
+    const source = sources[definition.atlas];
+    if (!source || source.width < 16 || source.height < 16) throw new Error("Missing Không Kích production atlas");
+    const [x, y, w, h] = definition.rect;
+    const left = Math.round(x * source.width), top = Math.round(y * source.height);
+    const frame = new Rectangle(left, top, Math.round((x + w) * source.width) - left, Math.round((y + h) * source.height) - top);
+    const result = new Texture({ source: source.source, frame });
+    frames.set(definition, result);
+    return result;
+  };
+  // Resolve every mandatory frame before permitting the V2 renderer to start.
+  Object.values(AIRCRAFT_VISUALS).forEach(v => { texture(v.neutral); texture(v.left); texture(v.right); });
+  Object.values(ENEMY_VISUALS).forEach(texture);
+  Object.values(VFX_VISUALS).forEach(texture);
+  return { texture, effect: (key: VisualKey) => texture(VFX_VISUALS[key]), destroy: () => { frames.forEach(t => t.destroy(false)); frames.clear(); } };
+}
+export type AirCombatAssets = Awaited<ReturnType<typeof loadAirCombatAssets>>;
