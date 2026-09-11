@@ -3,21 +3,23 @@ import { spendSharedGold } from '../../chien_tuyen/sharedGold';
 import { CONSUMABLES, EQUIPMENT, HEROES, MATERIALS, RECIPES, SUMMON_TABLE, equipmentById, heroById, stageById } from '../data';
 import { awardXp, createProfile, freshHero, levelCap, sortFormation, stageUnlocked, updateUnlock } from './profile';
 import type { BattleReceipt, GameProfile, RewardItem, Slot } from '../types';
+import { pickUniform, unitRandom, weightedReward } from './summon';
 
 export type Action =
   | { type: 'equip'; heroId: string; slot: Slot; itemId?: string }
-  | { type: 'bottle' | 'star' | 'unlock'; heroId: string }
+  | { type: 'bottle'; heroId: string; count?: number }
+  | { type: 'star' | 'unlock'; heroId: string }
   | { type: 'craft'; recipeId: string }
   | { type: 'summon'; count: 1 | 10; payment: 'tickets' | 'gold' }
   | { type: 'chest'; itemId: string };
 export const randomValues = (n: number) => Array.from(crypto.getRandomValues(new Uint32Array(n)), x => x / 4294967296);
 const add = (stacks: Record<string, number>, id: string, n: number) => { stacks[id] = (stacks[id] || 0) + n; };
-const pick = <T,>(items: T[], roll: number) => items[Math.min(items.length - 1, Math.floor(roll * items.length))];
+const pick = pickUniform;
 export function transact(draft: GameState, id: string, action: Action, rolls: number[]) {
   const p = draft.nguDaiDeVuong ??= createProfile();
   if (p.lastAction?.id === id) return;
   let cursor = 0;
-  const roll = () => rolls[cursor++] ?? 0;
+  const roll = () => unitRandom(rolls[cursor++]);
   const finish = (ok: boolean, message: string, items?: RewardItem[]) => { p.lastAction = { id, ok, message, items }; };
   if (p.activeBattle) return finish(false, 'Hãy hoàn thành trận đấu trước.');
   if (action.type === 'equip') {
@@ -38,7 +40,12 @@ export function transact(draft: GameState, id: string, action: Action, rolls: nu
     if (!h) return finish(false, 'Bạn chưa sở hữu tướng.');
     if (action.type === 'bottle') {
       if (h.level >= levelCap(h) || !p.consumables.CON001) return finish(false, 'Cần thăng sao hoặc bổ sung Bình EXP.');
-      p.consumables.CON001--; awardXp(h, 10); return finish(true, '+10 Hero EXP.');
+      const requested = action.count ?? 1;
+      if (!Number.isInteger(requested) || requested < 1) return finish(false, 'Số bình không hợp lệ.');
+      let consumed = 0;
+      const limit = Math.min(requested, p.consumables.CON001);
+      while (consumed < limit && h.level < levelCap(h)) { p.consumables.CON001--; consumed++; awardXp(h, 10); }
+      return finish(true, `+${consumed * 10} Hero EXP · ${consumed} bình.`);
     }
     const cost = h.star * 25;
     if (h.star >= 5 || h.level < levelCap(h) || (p.shards[action.heroId] || 0) < cost) return finish(false, 'Chưa đủ cấp hoặc mảnh để thăng sao.');
@@ -62,20 +69,24 @@ export function transact(draft: GameState, id: string, action: Action, rolls: nu
   }
   if (action.type === 'summon') {
     if (action.count !== 1 && action.count !== 10) return finish(false, 'Số lượt không hợp lệ.');
+    // Two independent draws per roll: reward type, then the uniform pool member.
+    // Validate before debiting currency; never manufacture a zero on cursor exhaustion.
+    if (rolls.length < action.count * 2) return finish(false, 'Chưa chuẩn bị đủ lượt triệu hồi.');
+    for (const value of rolls.slice(0, action.count * 2)) unitRandom(value);
+    weightedReward(rolls[0]);
     if (action.payment === 'tickets') {
       if (p.summonTickets < action.count) return finish(false, 'Chưa đủ Vé Triệu Hồi.');
       p.summonTickets -= action.count;
     } else if (!spendSharedGold(draft, action.count * 30)) return finish(false, 'Chưa đủ Vàng.');
     const items: RewardItem[] = [];
     for (let i = 0; i < action.count; i++) {
-      let chance = roll() * 100;
-      const row = SUMMON_TABLE.find(r => (chance -= r.weight) < 0)!;
+      const row = weightedReward(roll()), poolRoll = roll();
       if (row.id === 'hero' || row.id === 'shard') {
-        const h = pick(HEROES, roll());
+        const h = pick(HEROES, poolRoll);
         if (row.id === 'hero' && !p.ownedHeroes[h.id]) { p.ownedHeroes[h.id] = freshHero(); items.push({ id: h.id, heroId: h.id, name: h.name, quantity: 1, rarity: 'S' }); }
         else { const n = row.id === 'hero' ? 25 : 1; add(p.shards, h.id, n); items.push({ id: `SH${h.id.slice(1)}`, heroId: h.id, name: `Mảnh ${h.name}`, quantity: n }); }
       } else if (row.id === 'bottles') { add(p.consumables, 'CON001', 5); items.push({ id: 'CON001', name: 'Bình EXP', quantity: 5 }); }
-      else { const e = pick(EQUIPMENT.filter(e => e.rarity === row.id), roll()); add(p.equipment, e.id, 1); items.push({ id: e.id, name: e.name, quantity: 1, rarity: e.rarity }); }
+      else { const e = pick(EQUIPMENT.filter(e => e.rarity === row.id), poolRoll); add(p.equipment, e.id, 1); items.push({ id: e.id, name: e.name, quantity: 1, rarity: e.rarity }); }
     }
     return finish(true, `Đã triệu hồi ${action.count} lần.`, items);
   }

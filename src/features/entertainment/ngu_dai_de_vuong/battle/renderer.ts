@@ -8,8 +8,10 @@ import type { BattleEngine } from './engine';
 import { shieldTotal } from './stats';
 import { VfxPool } from './vfx';
 import type { Actor } from './types';
+import type { CombatMode } from './manualControl';
+import { SKILL_VFX_PRESETS } from '../data/skillVfxPresets';
 
-export interface BattleControls { paused: boolean; speed: 1 | 2; }
+export interface BattleControls { paused: boolean; speed: 1 | 2; mode: CombatMode; }
 export interface SceneHandle { destroy(): Promise<void>; }
 // A disposed React effect may still be awaiting WebGL initialization. Serialize the
 // entire application lifetime so StrictMode/navigation cannot create two renderers.
@@ -67,12 +69,17 @@ export async function mountBattle(host: HTMLElement, engine: BattleEngine, setti
       const animator = animators.get(a.id)!, group = animator.view.parent;
       group.position.set(a.x, a.y); group.zIndex = a.y;
       animator.view.scale.set((a.boss ? 1.55 : 1.05) * a.facing, a.boss ? 1.55 : 1.05);
+      const knockup = a.statuses.find(s=>s.kind==='knockup');
+      const lift = knockup ? Math.sin(Math.PI*Math.max(0,Math.min(1,1-knockup.remaining/knockup.duration)))*95 : 0;
+      animator.view.y=-lift;
+      group.children[0].scale.set(1-lift/250,1-lift/400);
+      animator.view.alpha=a.statuses.some(s=>s.kind==='untargetable') ? .42 : 1;
       const bar = bars.get(a.id)!.clear(), y = a.boss ? -342 : -232, width = a.boss ? 220 : 110;
       if (a.hp > 0) {
         bar.roundRect(-width / 2, y, width, 10, 4).fill({ color: 0x152432, alpha: .85 });
         bar.roundRect(-width / 2, y, Math.max(2, width * a.hp / a.stats.hp), 10, 4).fill(a.side === 'player' ? 0x8dc5a3 : 0xd98d79);
         const shield = shieldTotal(a);
-        if (shield > 0) { bar.roundRect(-width / 2, y - 4, Math.min(width, width * shield / a.stats.hp), 3, 1).fill(0xc3e4f6); bar.ellipse(0, -105, a.boss ? 120 : 70, a.boss ? 145 : 105).stroke({ color: 0xb0d7ed, width: 2, alpha: .45 }); }
+        if (shield > 0) bar.roundRect(-width / 2, y - 4, Math.min(width, width * shield / a.stats.hp), 3, 1).fill(0xc3e4f6);
         if (a.enraged) bar.ellipse(0, 0, 108, 30).stroke({ color: 0xf0bd77, width: 4, alpha: .65 });
       }
     };
@@ -86,8 +93,14 @@ export async function mountBattle(host: HTMLElement, engine: BattleEngine, setti
         engine.step(dt);
         for (const command of engine.commands.splice(0)) animators.get(command.actorId)?.play(command);
         for (const actor of engine.actors) animators.get(actor.id)?.update(dt, actor.moveMultiplier);
-        for (const event of engine.visuals.splice(0)) { effects!.emit(event); audio.play(event.crit ? 'crit' : event.kind); if (event.crit || event.kind === 'enrage') shake = .12; }
-        effects!.update(dt, engine.projectiles);
+        for (const event of engine.visuals.splice(0)) {
+          effects!.emit(event);
+          const preset=event.skillId?SKILL_VFX_PRESETS[event.skillId]:undefined;
+          audio.play(event.crit?'crit':preset&&event.phase==='impact'?preset.sound:event.kind);
+          if(event.phase==='impact'&&preset?.shake)shake=Math.max(shake,preset.shake);
+          if(event.crit||event.kind==='enrage')shake=Math.max(shake,.1);
+        }
+        effects!.update(dt, engine.projectiles,engine.actors);
         shake = Math.max(0, shake - dt);
         world.position.set(shake > 0 ? Math.sin(engine.elapsed * 85) * 2.5 : 0, 0);
         hudTime += dt;

@@ -6,6 +6,8 @@ import type { Effect, GameProfile, Skill, Stage } from '../types';
 import type { Actor, AnimationCommand, AnimationEvent, AnimationName, Projectile, VisualEvent } from './types';
 import { attack, clamp, distance, hardCC, has, hpRatio, interval, isDebuff, modifier, resistanceMultiplier, valid } from './stats';
 import { areaTargets, chooseTargets, conditionMet, enemiesOf, nearest } from './targeting';
+import { resourceState, skillReach, withinSkillRange, type CombatMode, type ManualSkillState } from './manualControl';
+import { HERO_VISUAL_PROFILES } from '../data/heroVisualProfiles';
 
 export class BattleEngine {
   actors: Actor[] = [];
@@ -14,6 +16,8 @@ export class BattleEngine {
   visuals: VisualEvent[] = [];
   elapsed = 0;
   outcome?: 'victory' | 'defeat';
+  mode: CombatMode = 'auto';
+  private manualQueue = new Map<string, string>();
   constructor(public stage: Stage, profile: GameProfile, formation: string[], private random: () => number = Math.random) {
     const addActor = (heroId: string, side: Actor['side'], slot: number, bossId?: string) => {
       const boss = BOSSES.find(b => b.id === bossId);
@@ -32,6 +36,24 @@ export class BattleEngine {
     else sortFormation(stage.enemies).forEach((id, i) => addActor(id, 'enemy', i));
   }
   get(id: string) { return this.actors.find(a => a.id === id); }
+  setMode(mode: CombatMode) {
+    this.mode = mode;
+    if (mode === 'auto') this.manualQueue.clear();
+  }
+  manualSkillState(actorId: string, skillId: string): ManualSkillState {
+    if (this.outcome) return 'ended';
+    const a = this.get(actorId), skill = a?.skills.find(s => s.id === skillId);
+    if (!a || a.side !== 'player' || !skill) return 'dead';
+    const state = resourceState(a, skill);
+    if (state !== 'ready') return state;
+    if (!chooseTargets(a, this.actors, skill).length) return 'noTarget';
+    return this.manualQueue.get(actorId) === skillId ? 'queued' : 'ready';
+  }
+  requestManualSkill(actorId: string, skillId: string): boolean {
+    if (this.mode !== 'manual' || this.manualSkillState(actorId, skillId) !== 'ready') return false;
+    this.manualQueue.set(actorId, skillId);
+    return true;
+  }
   private pose(a: Actor, name: AnimationName) {
     if (a.pose === name) return;
     a.pose = name;
@@ -58,10 +80,11 @@ export class BattleEngine {
     else a.statuses.push({ ...effect, value, duration, source: source.id, key: statusKey, remaining: duration, tick: 0, snapshotAtk: attack(source), damageType: source.hero.damageType });
     if (['stun', 'freeze', 'knockback', 'knockup'].includes(effect.kind)) { this.interrupt(a); this.pose(a, effect.kind.startsWith('knock') ? 'knockback' : 'stun'); }
     if (effect.kind === 'knockback') {
+      const oldX = a.x, oldY = a.y;
       const d = distance(a, source) || 1;
       a.x = clamp(a.x + (a.x - source.x) / d * effect.value * BATTLE.rangeUnit, 85, 1835);
       a.y = clamp(a.y + (a.y - source.y) / d * effect.value * BATTLE.rangeUnit, BATTLE.floorMin, BATTLE.floorMax);
-      this.visuals.push({ kind: 'dust', x: a.x, y: a.y });
+      this.visuals.push({ kind: 'knockback', x: oldX, y: oldY - 90, toX: a.x, toY: a.y - 90 });
     }
   }
   private heal(a: Actor, value: number) {
@@ -78,13 +101,16 @@ export class BattleEngine {
     const preMitigation = raw * (reflected ? 1 : Math.max(.1, 1 + modifier(source, 'damageBonus') - modifier(source, 'damageDown'))) * (crit ? source.stats.critDamage : 1);
     let amount = Math.max(1, preMitigation * resistanceMultiplier(resist * (1 - pen)) * (1 - clamp(modifier(target, 'reduction'), 0, .9)));
     const total = amount, reflect = basic ? modifier(target, 'reflect') : 0;
+    let shieldHit = false;
     for (const shield of target.statuses.filter(s => s.kind === 'shield').sort((a, b) => a.remaining - b.remaining)) {
+      shieldHit = true;
       const absorbed = Math.min(shield.value, amount); shield.value -= absorbed; amount -= absorbed;
       if (amount <= 0) break;
     }
     const dealt = Math.min(target.hp, amount);
     target.hp = Math.max(0, target.hp - amount); source.damageDone += total;
     this.cleanShields(target);
+    if (shieldHit) this.visuals.push({kind:'shieldRipple',x:target.x,y:target.y-105});
     this.visuals.push({ kind: amount <= 0 ? 'absorb' : type, x: target.x, y: target.y - (target.boss ? 300 : 165), amount: total, crit });
     const mark = target.statuses.find(s => s.kind === 'mark' && s.source === source.id);
     if (mark && !reflected) this.heal(source, total * mark.value);
@@ -129,7 +155,7 @@ export class BattleEngine {
     if (skill) {
       a.mana -= a.boss ? 0 : skill.mana; a.cooldowns[skill.id] = skill.cooldown;
       if (skill.castUntargetable) this.applyStatus(a, a, { kind: 'untargetable', value: 1, duration: skill.castUntargetable }, skill.id);
-      this.visuals.push({ kind: 'cast', x: a.x, y: a.y - 220, text: skill.name });
+      this.visuals.push({ kind: 'cast', x: a.x, y: a.y - 220, text: skill.name, skillId: skill.id, heroId: a.hero.id, actorId: a.id, phase: 'cast', duration: impact });
       if (a.boss) {
         const targets = skill.shape === 'rain' ? enemiesOf(a, this.actors) : [target];
         if (skill.shape === 'rain') {
@@ -149,6 +175,8 @@ export class BattleEngine {
     if (!['basic_hit', 'skill_hit', 'projectile_spawn'].includes(event)) return;
     action.resolved.push(hitIndex);
     const skill = action.skill;
+    const anchor = HERO_VISUAL_PROFILES[a.hero.id]?.weaponAnchor || [55,-130];
+    this.visuals.push({kind:'release',x:a.x+anchor[0]*a.facing,y:a.y+anchor[1],skillId:skill?.id,heroId:a.hero.id,actorId:a.id,phase:'release'});
     let target = this.get(action.targetId);
     if (skill?.dive && hitIndex === 0 && valid(target)) { a.x = clamp(target.x - a.facing * 85, 85, 1835); a.y = clamp(target.y + 38, BATTLE.floorMin, BATTLE.floorMax); }
     if (!skill) {
@@ -179,7 +207,9 @@ export class BattleEngine {
       } else targets = areaTargets(a, a.boss ? action.center : target || action.center, this.actors, skill);
       for (const t of targets) {
         const c = skill.splashCoefficient !== undefined && t.id !== action.targetId ? skill.splashCoefficient : coefficient;
-        if (skill.projectile) this.launch(a, t, c, skill, false, hitIndex === action.hits - 1);
+        const previous = skill.shape === 'chain' && hitIndex > 0 ? this.get(action.targetIds?.[hitIndex-1] || '') : undefined;
+        if (skill.shape === 'chain') this.visuals.push({kind:'chain',x:(previous||a).x,y:(previous||a).y-115,toX:t.x,toY:t.y-115,skillId:skill.id,heroId:a.hero.id});
+        if (skill.projectile) this.launch(a, t, c, skill, false, hitIndex === action.hits - 1, previous);
         else this.impact(a, t, c, skill, false, hitIndex === action.hits - 1);
       }
     }
@@ -198,7 +228,7 @@ export class BattleEngine {
     if (skill.shieldDuration) this.shield(target, a, (skill.shieldAtk || 0) * attack(a) + (skill.shieldHp || 0) * a.stats.hp, skill.shieldDuration, skill.shieldArmor, skill.shieldMr, skill.shieldReflect, skill.id);
     for (const effect of skill.effects || []) this.applyStatus(target, a, effect, skill.id);
     if (skill.tauntCount) for (const enemy of nearest(a, enemiesOf(a, this.actors)).slice(0, skill.tauntCount)) this.applyStatus(enemy, a, { kind: 'taunt', value: 1, duration: skill.tauntDuration! }, skill.id);
-    this.visuals.push({ kind: skill.vfx, x: target.x, y: target.y - 90 });
+    this.visuals.push({ kind: skill.vfx, x: target.x, y: target.y - 90, skillId:skill.id,heroId:a.hero.id,actorId:target.id,phase:'impact' });
   }
   private impact(a: Actor, t: Actor, coefficient: number, skill: Skill | undefined, basic: boolean, lastHit: boolean) {
     if (!valid(t) || a.hp <= 0) return;
@@ -215,11 +245,12 @@ export class BattleEngine {
         if (lastHit && skill.lastHitEffect) this.applyStatus(t, a, skill.lastHitEffect, skill.id);
       } else if (skill.resetOnKill) a.cooldowns[skill.resetOnKill] = 0;
     }
-    this.visuals.push({ kind: skill?.vfx || (a.hero.damageType === 'magic' ? 'magic' : 'slash'), x: t.x, y: t.y - 95, toX: a.x, toY: a.y - 100 });
+    this.visuals.push({ kind: skill?.vfx || (a.hero.damageType === 'magic' ? 'magic' : 'slash'), x: t.x, y: t.y - 95, toX: a.x, toY: a.y - 100,skillId:skill?.id,heroId:a.hero.id,actorId:t.id,phase:'impact' });
   }
-  private launch(a: Actor, target: Actor, coefficient: number, skill: Skill | undefined, basic: boolean, lastHit: boolean) {
+  private launch(a: Actor, target: Actor, coefficient: number, skill: Skill | undefined, basic: boolean, lastHit: boolean, previous?: Actor) {
     let p = this.projectiles.find(p => !p.active);
-    const data: Projectile = { active: true, sourceId: a.id, targetId: target.id, x: a.x, y: a.y - 100, coefficient, skill, basic, lastHit, vfx: skill?.vfx || (a.hero.damageType === 'magic' ? 'magic' : 'arrow') };
+    const anchor = HERO_VISUAL_PROFILES[a.hero.id]?.weaponAnchor || [50,-100];
+    const data: Projectile = { active: true, sourceId: a.id, targetId: target.id, x: previous?.x ?? a.x+anchor[0]*a.facing, y: previous ? previous.y-100 : a.y+anchor[1], coefficient, skill, basic, lastHit, vfx: skill?.vfx || (a.hero.damageType === 'magic' ? 'magic' : 'arrow'),heroId:a.hero.id,rotation:Math.atan2(target.y-a.y,target.x-a.x) };
     if (p) Object.assign(p, data); else this.projectiles.push(data);
     this.visuals.push({ kind: 'projectile', x: a.x, y: a.y - 100 });
   }
@@ -234,11 +265,29 @@ export class BattleEngine {
       a.attackCooldown = Math.max(0, a.attackCooldown - dt); a.aiCooldown -= dt;
       if (hardCC(a)) { this.pose(a, has(a, 'knockup') || has(a, 'knockback') ? 'knockback' : 'stun'); continue; }
       if (a.action) { a.action.elapsed += dt; if (a.action.elapsed >= a.action.duration + .05) { a.action = undefined; this.pose(a, 'idle'); } else continue; }
-      const target = chooseTargets(a, this.actors)[0]; a.targetId = target?.id;
+      let target = chooseTargets(a, this.actors)[0];
+      let pendingReach: number | undefined;
+      if (this.mode === 'manual' && a.side === 'player') {
+        const pending = a.skills.find(s => s.id === this.manualQueue.get(a.id));
+        if (pending) {
+          const skillTarget = chooseTargets(a, this.actors, pending)[0];
+          // AI predicates deliberately do not participate in player requests.
+          if (resourceState(a, pending) === 'ready' && skillTarget) {
+            if (withinSkillRange(a, pending, skillTarget)) {
+              this.manualQueue.delete(a.id);
+              this.cast(a, skillTarget, pending);
+              continue;
+            }
+            target = skillTarget;
+            pendingReach = skillReach(a, pending, skillTarget);
+          }
+        }
+      }
+      a.targetId = target?.id;
       if (!target) { this.pose(a, 'idle'); continue; }
       if (a.aiCooldown <= 0) {
         a.aiCooldown = BATTLE.aiCadence;
-        if (!has(a, 'silence')) {
+        if (!has(a, 'silence') && (a.side === 'enemy' || this.mode === 'auto')) {
           for (const skill of [...a.skills].sort((x, y) => y.aiPriority - x.aiPriority || y.slot - x.slot)) {
             if ((a.cooldowns[skill.id] || 0) > 0 || (!a.boss && a.mana < skill.mana)) continue;
             const skillTarget = chooseTargets(a, this.actors, skill)[0];
@@ -251,7 +300,7 @@ export class BattleEngine {
         }
         if (a.action) continue;
       }
-      const dist = distance(a, target), range = a.hero.range * BATTLE.rangeUnit;
+      const dist = distance(a, target), range = pendingReach ?? a.hero.range * BATTLE.rangeUnit;
       a.facing = target.x >= a.x ? 1 : -1;
       if (dist > range) {
         a.moveMultiplier = Math.max(.1, a.hero.moveSpeed * (1 + modifier(a, 'moveSpeed')));
@@ -270,6 +319,7 @@ export class BattleEngine {
       const a = this.get(p.sourceId), target = this.get(p.targetId);
       if (!a || a.hp <= 0 || !valid(target)) { p.active = false; continue; }
       const point = { x: target.x, y: target.y - 100 }, dist = distance(p, point), step = BATTLE.projectileSpeed * dt;
+      p.rotation = Math.atan2(point.y-p.y,point.x-p.x);
       if (dist <= step) { p.active = false; this.impact(a, target, p.coefficient, p.skill, p.basic, p.lastHit); }
       else { p.x += (point.x - p.x) / dist * step; p.y += (point.y - p.y) / dist * step; }
     }
@@ -277,5 +327,5 @@ export class BattleEngine {
     else if (!this.actors.some(a => a.side === 'enemy' && a.hp > 0)) this.outcome = 'victory';
     if (this.outcome) { for (const p of this.projectiles) p.active = false; for (const a of this.actors) if (a.hp > 0) { this.interrupt(a); this.pose(a, 'victory'); } }
   }
-  destroy() { this.commands.length = 0; this.visuals.length = 0; this.projectiles.length = 0; this.actors.length = 0; }
+  destroy() { this.manualQueue.clear(); this.commands.length = 0; this.visuals.length = 0; this.projectiles.length = 0; this.actors.length = 0; }
 }
