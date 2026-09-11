@@ -106,8 +106,11 @@ release validation; validation remains only `npm run build:web`.
 
 ## Cron and delivery
 
-The cron is `* * * * *`. Indexed pending/lease queries acquire at most 8 due
-intents atomically with a unique lease token. Crops for one device in that batch
+The cron is `* * * * *`. Select at most 8 scheduled intents ordered by retry/due
+time, then claim each by device/key/generation with a conditional UPDATE. Only
+`meta.changes > 0` owns the lease; discovery/claim uses neither rowid nor RETURNING.
+Re-read owned rows before grouping to retain current delivery fields and attempts.
+Crops for one device in that batch
 are grouped into one notification. Other event types are sent separately.
 Leases expire after 15 minutes, exceeding the bounded 8 x 15-second transport
 budget. Provider 404/410 invalidates the device and cancels its pending intents.
@@ -116,6 +119,18 @@ generation resets delivery; the same sent generation cannot be resurrected.
 Daily cleanup removes canceled intents older than 30 days. Sent tombstones are
 retained so old rank generations remain deduplicated; active subscriptions are
 never removed by cleanup.
+
+Migration `0002_cron_health.sql` adds a singleton operational heartbeat. Cron
+records the scheduled epoch milliseconds, candidate/claim counts, completion,
+provider-accepted notification count (a crop group counts once), and allowlisted
+stage errors. Due/retry checks use current epoch milliseconds. A run token keeps
+older overlapping cycles from overwriting the latest started cycle's counters.
+The last completion and error remain visible until a normal cycle completes;
+delivery failures still follow the per-intent retry policy. Authenticated status
+and Profile's CRON NỀN panel expose health without subscription data or secrets.
+Deploy this migration before the Worker; no existing database, keys or triggers
+need replacement. Heartbeat/claim behavior was not exercised during release:
+the only validation command is `npm run build:web`.
 
 D1 batch transactions serialize authoritative snapshots. There is no transaction
 spanning D1 and an external push provider: a crash after provider acceptance but

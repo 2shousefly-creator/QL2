@@ -50,16 +50,76 @@ export async function invalidate(env: Env, id: string, now: number, expectedSubs
     env.DB.prepare("UPDATE push_intents SET status='canceled', lease_token=NULL, lease_until=NULL, updated_at=? WHERE device_id=? AND status!='sent' AND EXISTS (SELECT 1 FROM push_devices WHERE device_id=? AND enabled=0 AND invalidated_at=?)").bind(now, id, id, now),
   ]);
 }
-export async function deliverDue(env: Env, now: number) {
+type CronErrorCode = 'CRON_D1_RECOVERY_FAILED' | 'CRON_D1_SELECT_FAILED' |
+  'CRON_D1_CLAIM_FAILED' | 'CRON_DELIVERY_LOOP_FAILED' | 'CRON_UNKNOWN_FAILURE';
+interface CronProgress {
+  errorCode: CronErrorCode;
+  candidates: number;
+  claimed: number;
+  successes: number;
+}
+
+export async function runScheduledPushCycle(env: Env, scheduledTime: number) {
+  const token = crypto.randomUUID();
+  const progress: CronProgress = { errorCode: 'CRON_UNKNOWN_FAILURE', candidates: 0, claimed: 0, successes: 0 };
+  // An older overlapping invocation must not overwrite the latest cycle's health.
+  const saveProgress = async () => {
+    await env.DB.prepare(`UPDATE push_cron_health SET last_candidate_count=?, last_claimed_count=?,
+      last_success_count=?, updated_at=? WHERE id=1 AND run_token=?`)
+      .bind(progress.candidates, progress.claimed, progress.successes, Date.now(), token).run();
+  };
+  try {
+    await env.DB.prepare(`UPDATE push_cron_health SET run_token=?, last_started_at=?,
+      last_candidate_count=0, last_claimed_count=0, last_success_count=0, updated_at=? WHERE id=1`)
+      .bind(token, scheduledTime, Date.now()).run();
+    // Use current epoch milliseconds for due/retry checks even if Cron starts late.
+    await deliverDue(env, Date.now(), token, progress, saveProgress);
+    progress.errorCode = 'CRON_UNKNOWN_FAILURE';
+    await env.DB.prepare(`UPDATE push_cron_health SET last_completed_at=?, last_error_code=NULL,
+      last_candidate_count=?, last_claimed_count=?, last_success_count=?, updated_at=? WHERE id=1 AND run_token=?`)
+      .bind(Date.now(), progress.candidates, progress.claimed, progress.successes, Date.now(), token).run();
+  } catch {
+    try {
+      await env.DB.prepare(`UPDATE push_cron_health SET last_error_code=?, last_candidate_count=?,
+        last_claimed_count=?, last_success_count=?, updated_at=? WHERE id=1 AND run_token=?`)
+        .bind(progress.errorCode, progress.candidates, progress.claimed, progress.successes, Date.now(), token).run();
+    } catch { /* D1 may itself be unavailable; never expose the underlying exception. */ }
+    throw new Error(progress.errorCode);
+  }
+}
+
+async function deliverDue(env: Env, now: number, token: string, progress: CronProgress, saveProgress: () => Promise<void>) {
   if (env.PUSH_ENABLED !== 'true') return;
+  progress.errorCode = 'CRON_D1_RECOVERY_FAILED';
   await env.DB.prepare("UPDATE push_intents SET status=CASE WHEN attempt_count>=6 THEN 'canceled' ELSE 'scheduled' END, lease_token=NULL, lease_until=NULL WHERE status='sending' AND lease_until<=?").bind(now).run();
   // Limit the whole cron to 8 sends; leases cover this bounded sequential workload.
-  const token = crypto.randomUUID();
-  const claimed = await env.DB.prepare(`UPDATE push_intents SET status='sending', lease_token=?, lease_until=?, last_attempt_at=?, attempt_count=attempt_count+1
-    WHERE rowid IN (SELECT rowid FROM push_intents WHERE status='scheduled' AND retry_at<=? AND due_at<=? ORDER BY retry_at LIMIT 8)
-    AND status='scheduled' RETURNING *`).bind(token, now + 900000, now, now, now).all<IntentRow>();
+  progress.errorCode = 'CRON_D1_SELECT_FAILED';
+  const candidates = await env.DB.prepare(`SELECT device_id,intent_key,event_generation,type,due_at,attempt_count
+    FROM push_intents WHERE status='scheduled' AND retry_at<=? AND due_at<=?
+    ORDER BY retry_at,due_at LIMIT 8`).bind(now, now).all<IntentRow>();
+  progress.candidates = candidates.results.length;
+  await saveProgress();
+  progress.errorCode = 'CRON_D1_CLAIM_FAILED';
+  const claimed: IntentRow[] = [];
+  for (const row of candidates.results) {
+    const result = await env.DB.prepare(`UPDATE push_intents SET status='sending', lease_token=?, lease_until=?,
+      last_attempt_at=?, attempt_count=attempt_count+1
+      WHERE device_id=? AND intent_key=? AND event_generation=? AND status='scheduled' AND retry_at<=? AND due_at<=?`)
+      .bind(token, now + 900000, now, row.device_id, row.intent_key, row.event_generation, now, now).run();
+    if (result.meta.changes > 0) {
+      progress.claimed++;
+      // Re-read the claimed generation: a snapshot or another cycle may have
+      // changed delivery fields/attempt_count since candidate discovery.
+      const current = await env.DB.prepare(`SELECT device_id,intent_key,event_generation,type,due_at,attempt_count,lease_token
+        FROM push_intents WHERE device_id=? AND intent_key=? AND event_generation=? AND status='sending' AND lease_token=?`)
+        .bind(row.device_id, row.intent_key, row.event_generation, token).first<IntentRow>();
+      if (current) claimed.push(current);
+    }
+  }
+  await saveProgress();
+  progress.errorCode = 'CRON_DELIVERY_LOOP_FAILED';
   const groups = new Map<string, IntentRow[]>();
-  for (const row of claimed.results) {
+  for (const row of claimed) {
     const key = `${row.device_id}:${row.type === 'crop_ready' ? row.type : row.intent_key}`;
     groups.set(key, [...(groups.get(key) || []), row]);
   }
@@ -83,6 +143,8 @@ export async function deliverDue(env: Env, now: number) {
     const status = delivery.statusCode;
     const invalid = status === 404 || status === 410;
     const success = status >= 200 && status < 300;
+    // Count provider-accepted notifications; grouped crops count as one send.
+    if (success) progress.successes++;
 
     await env.DB.batch(live.map(row => env.DB.prepare(`UPDATE push_intents SET status=?, sent_at=?, updated_at=?, retry_at=?, last_error=?, lease_token=NULL, lease_until=NULL
       WHERE device_id=? AND intent_key=? AND event_generation=? AND lease_token=?`).bind(

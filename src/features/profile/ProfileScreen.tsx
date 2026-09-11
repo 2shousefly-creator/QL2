@@ -733,6 +733,15 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
               </div>
 
               <div>Máy chủ: {pushStatusData ? (pushStatusData.online ? 'Đang kết nối' : 'Chưa kết nối') : 'Chưa kiểm tra'}</div>
+              <div className="border-t border-slate-800 pt-1.5 space-y-1">
+                <div className="text-sky-400 font-bold">CRON NỀN</div>
+                <div>Lần chạy gần nhất: {Number.isFinite(pushStatusData?.cron?.lastStartedAt) ? new Date(pushStatusData.cron.lastStartedAt).toLocaleString('vi-VN') : 'Chưa ghi nhận'}</div>
+                <div>Hoàn tất gần nhất: {Number.isFinite(pushStatusData?.cron?.lastCompletedAt) ? new Date(pushStatusData.cron.lastCompletedAt).toLocaleString('vi-VN') : 'Chưa ghi nhận'}</div>
+                <div>Ứng viên đến hạn: {pushStatusData?.cron?.lastCandidateCount ?? 'Chưa ghi nhận'}</div>
+                <div>Đã claim: {pushStatusData?.cron?.lastClaimedCount ?? 'Chưa ghi nhận'}</div>
+                <div>Gửi thành công: {pushStatusData?.cron?.lastSuccessCount ?? 'Chưa ghi nhận'}</div>
+                <div>Lỗi Cron gần nhất: {!pushStatusData?.cron ? 'Chưa ghi nhận' : typeof pushStatusData.cron.lastErrorCode === 'string' && /^CRON_(D1_(RECOVERY|SELECT|CLAIM)_FAILED|DELIVERY_LOOP_FAILED|UNKNOWN_FAILURE)$/.test(pushStatusData.cron.lastErrorCode) ? pushStatusData.cron.lastErrorCode : 'Không có'}</div>
+              </div>
               {pushStatusData?.intents?.map((intent: any) => (
                 <div key={intent.intent_key} className="border-t border-slate-800 pt-1.5 space-y-1">
                   <div>{intent.type}: {intent.status} · {new Date(intent.due_at).toLocaleString('vi-VN')}</div>

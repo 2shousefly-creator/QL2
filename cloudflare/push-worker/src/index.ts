@@ -2,7 +2,7 @@ import type { ScheduledController } from '@cloudflare/workers-types';
 import type { Env, Intent, Subscription } from './types';
 import { authenticate, hash, identity } from './auth';
 import { cors } from './cors';
-import { deliverDue, invalidate, snapshot, scheduleDiagnostic } from './db';
+import { runScheduledPushCycle, invalidate, snapshot, scheduleDiagnostic } from './db';
 import { payload, send, safePushFailure } from './push';
 
 function bad(): never { throw new Response('Invalid request', { status: 400 }); }
@@ -90,7 +90,10 @@ async function route(request: Request, env: Env): Promise<Response> {
   }
   if (method === 'GET' && path === '/api/v2/push/status') {
     const rows = await env.DB.prepare("SELECT intent_key,type,due_at,status,attempt_count,last_attempt_at,last_error,retry_at FROM push_intents WHERE device_id=? ORDER BY CASE WHEN intent_key='diagnostic-test' THEN 0 ELSE 1 END, due_at LIMIT 17").bind(id).all();
-    return json({ online: true, enabled: !!device.enabled, registered: !device.invalidated_at, intents: rows.results });
+    const cron = await env.DB.prepare(`SELECT last_started_at AS lastStartedAt, last_completed_at AS lastCompletedAt,
+      last_error_code AS lastErrorCode, last_candidate_count AS lastCandidateCount,
+      last_claimed_count AS lastClaimedCount, last_success_count AS lastSuccessCount FROM push_cron_health WHERE id=1`).first();
+    return json({ online: true, enabled: !!device.enabled, registered: !device.invalidated_at, intents: rows.results, cron });
   }
   if (!device.enabled || device.invalidated_at) return json({ error: 'RESUBSCRIBE' }, 410);
   if (method === 'PUT' && path === '/api/v2/push/intents') {
@@ -129,5 +132,7 @@ export default {
     headers.forEach((value, key) => response.headers.set(key, value));
     return response;
   },
-  async scheduled(event: ScheduledController, env: Env) { await deliverDue(env, event.scheduledTime); },
+  async scheduled(controller: ScheduledController, env: Env) {
+    await runScheduledPushCycle(env, controller.scheduledTime);
+  },
 };
