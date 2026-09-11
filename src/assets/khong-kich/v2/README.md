@@ -1,5 +1,33 @@
 # Không Kích V2 production art
 
+## V2.1 combat UI atlases
+
+Generated with the built-in image generation tool on 2026-09-11; original PNG
+alpha retained. No CLI/API fallback was needed. Typed equal-cell metadata and
+the shared image component live in CombatUiIcon.tsx; both assets load with the
+Không Kích feature and receive Vite content hashes.
+
+- `combat-ui-icons-atlas.png`: 3×3, row-major: decoy, afterburner, missile swarm;
+  armor shield, heavy bomb, sweeping cannon; invisibility, laser, escort drone.
+- `core-icons-atlas.png`: 6×6, first 26 cells populated. Row-major: firepower,
+  armor, HP, fire rate, repair, cooldown; Mana capacity, Mana regen, Energy regen,
+  penetration, explosive round, charged round; dual cannon, ricochet, annihilator,
+  decoy upgrade, afterburner upgrade, missile upgrade; shield upgrade, bomb upgrade,
+  sweep upgrade, invisibility upgrade, laser upgrade, drone upgrade; critical
+  scope, critical warhead, then ten empty cells.
+
+Skill prompt: Premium semi-realistic military arcade aerial shooter production
+icon atlas, true transparent square PNG, strict equal 3×3 grid, centered isolated
+icons with transparent padding, metallic clean silhouettes and cyan/amber/violet
+emission, readable at 32–64 px. Subjects in the exact row-major order above.
+No text, baked borders, grid lines, watermark, logo or cartoon emoji.
+
+Core prompt: Matching premium military arcade production icon atlas, true
+transparent square PNG, strict equal 6×6 grid, realistic metallic hardware with
+cyan/amber/violet accents. Exact 26 subjects above; keep the ten remaining cells
+empty and transparent without compacting them. Center each icon within its cell,
+consistent visual scale and transparent padding. No text/borders/grid/watermark.
+
 Generated with the built-in image generation tool on 2026-09-11. Original PNG
 alpha and resolution are retained. Runtime slices are in AirCombatPixiAssets.ts;
 selection uses the same aircraft atlas. These are game assets, without baked UI.

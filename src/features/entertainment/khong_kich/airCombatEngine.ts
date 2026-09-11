@@ -74,6 +74,8 @@ export function createAircraftCombatState(
     currentHp: config.baseStats.maxHp,
     currentResource: config.baseStats.maxResource,
     modifiers: {
+      criticalChanceFlat: 0,
+      criticalDamageMultiplierFlat: 0,
       maxHpFlat: 0,
       armorFlat: 0,
       firepowerFlat: 0,
@@ -121,6 +123,11 @@ export function getEffectiveAircraftStats(
 
   return {
     maxHp,
+    criticalChance: Math.min(AIR_COMBAT_LIMITS.criticalChance, Math.max(0,
+      config.baseStats.criticalChance + state.modifiers.criticalChanceFlat)),
+    criticalDamageMultiplier: Math.min(AIR_COMBAT_LIMITS.criticalDamageMultiplier,
+      Math.max(AIR_COMBAT_LIMITS.baseCriticalDamageMultiplier,
+        config.baseStats.criticalDamageMultiplier + state.modifiers.criticalDamageMultiplierFlat)),
     armor:
       config.baseStats.armor +
       config.growth.armor * growthCount +
@@ -162,13 +169,26 @@ export function applyDamageToAircraft(
   rawDamage: number,
   additionalDamageTakenMultiplier = 1
 ): number {
-  const damage = calculateDamage(
+  const damage = Math.min(state.currentHp, calculateDamage(
     rawDamage,
     getEffectiveAircraftStats(state).armor,
     additionalDamageTakenMultiplier
-  );
+  ));
   state.currentHp = Math.max(0, state.currentHp - damage);
   return damage;
+}
+
+/** One authoritative roll per actual hit. Secondary projectiles retain RAW damage. */
+export function resolvePlayerDamage(
+  rawDamage: number,
+  targetArmor: number,
+  stats: EffectiveAircraftStats,
+  random: () => number,
+): { actualDamage: number; critical: boolean; multiplier: number } {
+  const chance = Math.max(0, Math.min(1, stats.criticalChance));
+  const critical = rawDamage > 0 && (chance >= 1 || (chance > 0 && random() < chance));
+  const multiplier = critical ? Math.max(1.70, Math.min(3, stats.criticalDamageMultiplier)) : 1;
+  return { actualDamage: calculateDamage(rawDamage * multiplier, targetArmor), critical, multiplier };
 }
 
 export function requiredCombatXp(level: number): number {
@@ -394,6 +414,8 @@ function isCoreEligible(
   }
   if (state.selectedCores.includes(definition.id)) return false;
   const stats = getEffectiveAircraftStats(state);
+  if (definition.id === "critical_chance" && stats.criticalChance >= AIR_COMBAT_LIMITS.criticalChance) return false;
+  if (definition.id === "critical_damage" && stats.criticalDamageMultiplier >= AIR_COMBAT_LIMITS.criticalDamageMultiplier) return false;
   if (
     definition.id === "cooldown" &&
     stats.cooldownReduction >= AIR_COMBAT_LIMITS.cooldownReduction
@@ -410,7 +432,9 @@ function coreNumericValue(id: CoreId, tier: CoreTier): number | null {
 function formatCoreValue(id: CoreId, tier: CoreTier): string {
   const value = coreNumericValue(id, tier);
   if (value !== null) {
-    if (id === "cooldown") return `-${Math.round(value * 100)}% hồi chiêu`;
+    if (id === "critical_chance") return `+${Math.round(value * 100)}% tỷ lệ chí mạng`;
+    if (id === "critical_damage") return `+${Math.round(value * 100)} điểm % sát thương chí mạng`;
+    if (id === "cooldown") return `+${Math.round(value * 100)} điểm % giảm hồi chiêu`;
     if (id === "fire_rate") return `+${value.toFixed(2)}/s`;
     if (id === "repair") return `+${value.toFixed(2)} HP/s`;
     if (id === "mana_regen") return `+${value.toFixed(2)} Mana/s`;
@@ -433,10 +457,17 @@ function previewCore(state: AircraftCombatState, id: CoreId, tier: CoreTier): st
   const value = coreNumericValue(id, tier);
   if (value === null) return undefined;
   switch (id) {
+    case "critical_chance": return `${Math.round(stats.criticalChance * 100)}% → ${Math.round(Math.min(1, stats.criticalChance + value) * 100)}%`;
+    case "critical_damage": return `${Math.round(stats.criticalDamageMultiplier * 100)}% → ${Math.round(Math.min(3, stats.criticalDamageMultiplier + value) * 100)}%`;
+    case "cooldown": return `${Math.round(stats.cooldownReduction * 100)}% → ${Math.round(Math.min(AIR_COMBAT_LIMITS.cooldownReduction, stats.cooldownReduction + value) * 100)}%`;
+    case "repair": return `${stats.hpRegen.toFixed(2)} → ${(stats.hpRegen + value).toFixed(2)} HP/s`;
     case "firepower": return `${stats.firepower.toFixed(0)} → ${(stats.firepower + value).toFixed(0)}`;
     case "armor": return `${stats.armor.toFixed(0)} → ${(stats.armor + value).toFixed(0)}`;
     case "max_hp": return `${stats.maxHp.toFixed(0)} → ${(stats.maxHp + value).toFixed(0)}`;
-    case "fire_rate": return `${stats.fireRate.toFixed(2)} → ${(stats.fireRate + value).toFixed(2)}/s`;
+    case "fire_rate": {
+      const boost = (state.activeEffects.afterburner || 0) > 0 ? (state.modifiers.skillUpgrades.afterburner ? 1.5 : 1.35) : 1;
+      return `${stats.fireRate.toFixed(2)} → ${Math.min(AIR_COMBAT_LIMITS.maxFireRate, stats.fireRate + value * boost).toFixed(2)}/s`;
+    }
     case "mana_capacity": return `${stats.maxResource.toFixed(0)} → ${(stats.maxResource + value).toFixed(0)} MP`;
     case "mana_regen": return `${stats.resourceRegen.toFixed(2)} → ${(stats.resourceRegen + value).toFixed(2)}/s`;
     case "energy_regen": return `${stats.resourceRegen.toFixed(2)} → ${(stats.resourceRegen + value).toFixed(2)}/s`;
@@ -481,7 +512,7 @@ export function generateCoreChoices(
     core.category === "offense" || core.category === "weapon"
   );
   const defensive = eligible.filter((core) =>
-    core.category === "defense" || core.category === "mobility"
+    core.category === "defense"
   );
   const skill = eligible.filter((core) => core.category === "skill");
 
@@ -518,6 +549,8 @@ export function applyCore(
   const value = coreNumericValue(card.id, card.tier) || 0;
   const before = getEffectiveAircraftStats(state);
   switch (card.id) {
+    case "critical_chance": state.modifiers.criticalChanceFlat += value; break;
+    case "critical_damage": state.modifiers.criticalDamageMultiplierFlat += value; break;
     case "firepower": state.modifiers.firepowerFlat += value; break;
     case "armor": state.modifiers.armorFlat += value; break;
     case "max_hp": state.modifiers.maxHpFlat += value; break;

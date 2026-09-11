@@ -33,6 +33,8 @@ export type CoreCategory =
   | "skill";
 
 export type CoreId =
+  | "critical_chance"
+  | "critical_damage"
   | "firepower"
   | "armor"
   | "max_hp"
@@ -59,6 +61,8 @@ export type CoreId =
   | "phantom_drone";
 
 export interface CombatStats {
+  criticalChance: number;
+  criticalDamageMultiplier: number;
   maxHp: number;
   armor: number;
   firepower: number;
@@ -135,6 +139,8 @@ export interface WeaponModifiers {
 }
 
 export interface AircraftModifiers {
+  criticalChanceFlat: number;
+  criticalDamageMultiplierFlat: number;
   maxHpFlat: number;
   armorFlat: number;
   firepowerFlat: number;

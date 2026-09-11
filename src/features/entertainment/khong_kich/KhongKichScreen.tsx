@@ -21,7 +21,6 @@ import {
   calculateRunReward,
   createAircraftCombatState,
   getEffectiveAircraftStats,
-  normalizeAircraftStat,
 } from "./airCombatEngine";
 import {
   getLocalRewardDateKey,
@@ -37,6 +36,9 @@ import {
 import { AirCombatBattle } from "./AirCombatBattle";
 import { AirCombatResult } from "./AirCombatResult";
 import { AircraftPreview } from "./AircraftPreview";
+import { CombatUiIcon } from "./CombatUiIcon";
+import { AircraftSelectionStats } from "./CombatStatReadout";
+import "./combat-ui.css";
 import { AppModal, ExclusiveFullscreenOverlay, ModalButton, OverlayBody, OverlayHeader } from "../../../components/overlay/AppOverlay";
 
 interface KhongKichScreenProps {
@@ -58,30 +60,6 @@ interface AircraftPressState {
   cancelled: boolean;
 }
 
-function SelectionStat({
-  label,
-  value,
-  percent,
-}: {
-  label: string;
-  value: string;
-  percent: number;
-}) {
-  return (
-    <div>
-      <div className="mb-0.5 flex justify-between text-[clamp(7.5px,1.05dvh,9px)] font-bold text-slate-400 leading-none">
-        <span>{label}</span>
-        <span className="text-slate-300">{value}</span>
-      </div>
-      <div className="h-[clamp(3.5px,0.55dvh,5px)] overflow-hidden rounded-full bg-slate-800">
-        <div
-          className="h-full rounded-full bg-gradient-to-r from-sky-500 to-cyan-300"
-          style={{ width: `${percent}%` }}
-        />
-      </div>
-    </div>
-  );
-}
 
 export const KhongKichScreen: React.FC<KhongKichScreenProps> = ({
   gameState,
@@ -357,33 +335,7 @@ export const KhongKichScreen: React.FC<KhongKichScreenProps> = ({
                   <p className="mt-[clamp(1px,0.3dvh,3px)] line-clamp-1 text-[clamp(7.5px,1.05dvh,9.5px)] leading-tight text-slate-400">
                     {config.description}
                   </p>
-                  <div className="mt-[clamp(3px,0.6dvh,6px)] grid grid-cols-2 gap-x-[clamp(6px,1.5vw,12px)] gap-y-[clamp(1.5px,0.4dvh,4px)]">
-                    <SelectionStat
-                      label="HP"
-                      value={stats.maxHp.toFixed(0)}
-                      percent={normalizeAircraftStat("hp", stats.maxHp)}
-                    />
-                    <SelectionStat
-                      label="Giáp"
-                      value={stats.armor.toFixed(0)}
-                      percent={normalizeAircraftStat("armor", stats.armor)}
-                    />
-                    <SelectionStat
-                      label="Hỏa lực"
-                      value={stats.firepower.toFixed(0)}
-                      percent={normalizeAircraftStat("firepower", stats.firepower)}
-                    />
-                    <SelectionStat
-                      label="Tốc bắn"
-                      value={`${stats.fireRate.toFixed(1)}/s`}
-                      percent={normalizeAircraftStat("fireRate", stats.fireRate)}
-                    />
-                    <SelectionStat
-                      label={config.resourceKind === "mana" ? "Mana" : "Energy"}
-                      value={`${stats.maxResource.toFixed(0)} · +${stats.resourceRegen.toFixed(1)}/s`}
-                      percent={normalizeAircraftStat("resource", stats.maxResource)}
-                    />
-                  </div>
+                  <AircraftSelectionStats stats={stats} />
                 </div>
               </div>
               <div className="relative mt-[clamp(4px,0.8dvh,8px)] grid grid-cols-3 gap-[clamp(3px,0.6vw,6px)] border-t border-slate-700/60 pt-[clamp(4px,0.8dvh,8px)]">
@@ -394,7 +346,7 @@ export const KhongKichScreen: React.FC<KhongKichScreenProps> = ({
                       key={skillId}
                       className="min-w-0 rounded-md bg-slate-950/60 px-[clamp(3px,0.6vw,6px)] py-[clamp(1.5px,0.35dvh,4px)] text-center"
                     >
-                      <div className="text-[clamp(11px,1.5dvh,14px)] leading-none">{skill.icon}</div>
+                      <CombatUiIcon kind="skill" id={skillId} fallback={skill.icon} className="!h-7 !w-7" />
                       <div className="mt-[clamp(1px,0.2dvh,2px)] truncate text-[clamp(7px,0.95dvh,8.5px)] font-black text-slate-300">
                         {skill.shortName}
                       </div>
@@ -436,7 +388,8 @@ export const KhongKichScreen: React.FC<KhongKichScreenProps> = ({
               <p className="text-xs leading-relaxed text-[var(--modal-muted)]">
                 {previewConfig.description}
               </p>
-            <div className="space-y-1.5">
+            <AircraftSelectionStats stats={getEffectiveAircraftStats(createAircraftCombatState(previewConfig.id))} />
+            <div className="mt-3 space-y-1.5">
               {previewConfig.skillIds.map((skillId, index) => {
                 const skill = SKILL_CONFIGS[skillId];
                 return (
@@ -447,7 +400,7 @@ export const KhongKichScreen: React.FC<KhongKichScreenProps> = ({
                   >
                     <div className="flex items-center gap-2">
                       <span className="grid h-8 w-8 place-items-center rounded-lg bg-sky-400/10 text-lg">
-                        {skill.icon}
+                        <CombatUiIcon kind="skill" id={skillId} fallback={skill.icon} className="!h-8 !w-8" />
                       </span>
                       <div className="min-w-0">
                         <div className="text-xs font-semibold uppercase text-[var(--modal-info)]">
@@ -456,7 +409,7 @@ export const KhongKichScreen: React.FC<KhongKichScreenProps> = ({
                         <div className="font-semibold text-xs text-[var(--modal-text)]">{skill.name}</div>
                       </div>
                       <div className="ml-auto text-right text-xs font-bold text-[var(--modal-muted)]">
-                        <div>{skill.cost} tài nguyên</div>
+                        <div>{skill.cost} {previewConfig.resourceKind === "mana" ? "Mana" : "Energy"}</div>
                         <div>{skill.cooldown}s hồi chiêu</div>
                       </div>
                     </div>

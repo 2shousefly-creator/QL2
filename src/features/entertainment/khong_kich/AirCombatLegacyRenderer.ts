@@ -1,6 +1,8 @@
 import { AIR_COMBAT_WORLD, AIRCRAFT_CONFIGS, ENEMY_CONFIGS, GAMEPLAY_SAFE_RECT } from "./airCombatConfig";
 import type { CombatWorld } from "./airCombatRuntime";
 import type { AircraftId, EnemyType } from "./airCombatTypes";
+import { getEffectiveAircraftStats } from "./airCombatEngine";
+import { DAMAGE_LABEL_SECONDS, trackingBarWidth, trackingBarX, trackingBarY, type DamageLabel } from "./airCombatFeedback";
 
 function traceAircraftBody(
   ctx: CanvasRenderingContext2D,
@@ -58,13 +60,11 @@ function drawAircraft(
   color: string,
   accent: string,
   alpha = 1,
-  scale = 1,
-  bank = 0
+  scale = 1
 ): void {
   ctx.save();
   ctx.globalAlpha = alpha;
   ctx.translate(x, y);
-  ctx.rotate(bank);
   ctx.scale(scale, scale);
   ctx.shadowColor = color;
   ctx.shadowBlur = 14;
@@ -263,7 +263,8 @@ export function drawLegacyWorld(
   ctx: CanvasRenderingContext2D,
   world: CombatWorld,
   aircraftId: AircraftId,
-  reducedMotion: boolean
+  reducedMotion: boolean,
+  damageLabels: readonly DamageLabel[]
 ): void {
   const { width, height, hudHeight } = AIR_COMBAT_WORLD;
   const aircraft = AIRCRAFT_CONFIGS[aircraftId];
@@ -416,7 +417,6 @@ export function drawLegacyWorld(
 
   const invisible = (world.aircraft.activeEffects.invisibility || 0) > 0;
   const hitBlink = world.playerInvulnerability > 0 && Math.floor(world.elapsed * 16) % 2 === 0;
-  const bank = 0;
   drawAircraft(
     ctx,
     aircraftId,
@@ -425,8 +425,7 @@ export function drawLegacyWorld(
     aircraft.color,
     aircraft.accent,
     hitBlink ? 0.25 : invisible ? 0.34 : 1,
-    0.82,
-    bank
+    0.82
   );
 
   if ((world.aircraft.activeEffects.armor_shield || 0) > 0) {
@@ -460,6 +459,38 @@ export function drawLegacyWorld(
 
   ctx.restore();
 
+  const stats = getEffectiveAircraftStats(world.aircraft);
+  const displayWidth = (aircraftId === "breaker" ? 54 : 48) * 0.82;
+  const barWidth = trackingBarWidth(displayWidth);
+  const barX = trackingBarX(world.playerX, barWidth);
+  const barY = trackingBarY(world.playerY, displayWidth);
+  const hp = Math.max(0, Math.min(1, stats.currentHp / stats.maxHp));
+  ctx.fillStyle = "rgba(2,6,23,.85)";
+  ctx.fillRect(barX - 1, barY - 1, barWidth + 2, 12);
+  ctx.strokeStyle = "rgba(203,213,225,.75)";
+  ctx.lineWidth = 0.6;
+  ctx.strokeRect(barX - 1, barY - 1, barWidth + 2, 12);
+  ctx.fillStyle = hp < 0.25 ? "#f87171" : hp < 0.5 ? "#fbbf24" : "#4ade80";
+  ctx.fillRect(barX, barY, barWidth * hp, 4);
+  ctx.fillStyle = stats.resourceKind === "energy" ? "#a78bfa" : "#38bdf8";
+  ctx.fillRect(barX, barY + 6, barWidth * Math.max(0, Math.min(1, stats.currentResource / stats.maxResource)), 4);
+
+  ctx.save();
+  ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.lineJoin = "round";
+  for (const label of damageLabels) {
+    if (!label.active) continue;
+    const progress = label.age / DAMAGE_LABEL_SECONDS;
+    const pop = reducedMotion ? 1 : 1 + 0.16 * Math.max(0, 1 - label.age / 0.12);
+    ctx.font = `${label.critical ? 800 : 500} ${13 * (label.critical ? 1.2 : 1) * pop}px Arial`;
+    ctx.globalAlpha = Math.min(1, (1 - progress) * 2);
+    ctx.fillStyle = label.critical ? "#ff4d55" : label.shielded ? "#ffffff" : "#fde047";
+    ctx.strokeStyle = label.shielded ? "#325777" : "#151c29"; ctx.lineWidth = 3;
+    const x = label.x + label.offset * (reducedMotion ? 0.4 : 0.4 + progress);
+    const y = label.y - progress * (reducedMotion ? 7 : 24);
+    ctx.strokeText(label.text, x, y); ctx.fillText(label.text, x, y);
+  }
+  ctx.restore();
+
   ctx.strokeStyle = "rgba(34,211,238,.52)";
   ctx.lineWidth = 1;
   ctx.beginPath();
@@ -467,4 +498,3 @@ export function drawLegacyWorld(
   ctx.lineTo(GAMEPLAY_SAFE_RECT.right, GAMEPLAY_SAFE_RECT.top);
   ctx.stroke();
 }
-

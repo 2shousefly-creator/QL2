@@ -6,6 +6,8 @@ import { AIRCRAFT_VISUALS, ENEMY_VISUALS, loadAirCombatAssets, type AirCombatAss
 import { AirCombatSpritePool } from "./AirCombatSpritePool";
 import { AirCombatSky } from "./AirCombatSky";
 import { AirCombatVfx } from "./AirCombatVfx";
+import { AirCombatDamageText } from "./AirCombatDamageText";
+import { trackingBarWidth, trackingBarX, trackingBarY } from "../airCombatFeedback";
 import type { AirCombatPresentation } from "./airCombatPixiTypes";
 
 /** A dedicated manually rendered WebGL application. Runtime is read-only here. */
@@ -15,6 +17,8 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
   private effects = new Container();
   private telegraphs = new Graphics();
   private hitbox = new Graphics();
+  private trackingBars = new Graphics();
+  private damageText = new AirCombatDamageText();
   private sky: AirCombatSky;
   private enemies: AirCombatSpritePool;
   private projectiles: AirCombatSpritePool;
@@ -33,7 +37,6 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
   private clock = 0;
   private previousX: number | null = null;
   private previousY = 0;
-  private bank = 0;
   private thrust = 0;
   private recoil = 0;
   private shake = 0;
@@ -66,7 +69,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     app.canvas.addEventListener("webglcontextlost", this.onLost);
     this.sky = new AirCombatSky(assets);
     app.stage.addChild(this.root);
-    this.root.addChild(this.sky.root, this.telegraphs, this.actors, this.effects, this.hitbox);
+    this.root.addChild(this.sky.root, this.telegraphs, this.actors, this.effects, this.hitbox, this.trackingBars, this.damageText.root);
     this.enemies = new AirCombatSpritePool(this.actors, 44);
     this.projectiles = new AirCombatSpritePool(this.actors, 330);
     this.companions = new AirCombatSpritePool(this.actors, 16);
@@ -96,7 +99,6 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     const dx = this.previousX === null ? 0 : world.playerX - this.previousX;
     const dy = this.previousX === null ? 0 : world.playerY - this.previousY;
     this.previousX = world.playerX; this.previousY = world.playerY;
-    this.bank = Math.abs(dx) > 0.05 ? Math.sign(dx) : this.bank * Math.exp(-delta * 16);
     this.thrust = Math.max(Math.hypot(dx, dy), this.thrust * Math.exp(-delta * 14));
     this.recoil *= Math.exp(-delta * 24);
     this.shake *= Math.exp(-delta * 12);
@@ -110,8 +112,13 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     for (const event of world.visualEvents) {
       if (event.id <= this.lastEvent) continue;
       this.lastEvent = event.id;
-      if (event.kind === "hit") {
-        if (event.entityId !== undefined) this.flashUntil.set(event.entityId, this.clock + 0.09);
+      if (event.kind === "damage_number") {
+        if (event.target === "enemy" && event.critical) {
+          if (event.entityId !== undefined) this.flashUntil.set(event.entityId, this.clock + 0.14);
+          this.vfx.spawn("sparks", event.x, event.y, reducedMotion ? 18 : 25, 0.22, 0xff8080);
+        }
+      } else if (event.kind === "hit") {
+        if (event.entityId !== undefined) this.flashUntil.set(event.entityId, Math.max(this.flashUntil.get(event.entityId) || 0, this.clock + 0.09));
         if (!reducedMotion) this.vfx.spawn("sparks", event.x, event.y, 16, 0.18);
       } else if (event.kind === "explosion") {
         this.vfx.spawn(event.boss ? "bossExplosion" : event.size > 65 ? "largeExplosion" : event.size > 40 ? "mediumExplosion" : "smallExplosion", event.x, event.y, event.size * 1.5, event.boss ? 1.1 : 0.5);
@@ -228,7 +235,8 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     this.warnings.end();
 
     const invisible = (world.aircraft.activeEffects.invisibility || 0) > 0;
-    this.player.texture = this.assets.texture(this.bank < -0.25 ? visual.left : this.bank > 0.25 ? visual.right : visual.neutral);
+    this.player.texture = this.assets.texture(visual.neutral);
+    this.player.rotation = 0;
     this.player.position.set(world.playerX, world.playerY + (reducedMotion ? 0 : this.recoil));
     this.player.width = this.player.height = visual.size;
     this.player.alpha = invisible ? 0.35 : 1;
@@ -254,7 +262,17 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
       this.hitbox.circle(world.playerX, world.playerY, world.playerRadius).stroke({ width: 1, color: 0xe0f2fe, alpha: world.playerInputActive ? 0.65 : 0.22 });
       this.hitbox.circle(world.playerX, world.playerY, 2).fill({ color: 0xffffff, alpha: 0.8 });
     }
-    const hp = world.aircraft.currentHp / getEffectiveAircraftStats(world.aircraft).maxHp;
+    const stats = getEffectiveAircraftStats(world.aircraft);
+    const hp = Math.max(0, Math.min(1, world.aircraft.currentHp / stats.maxHp));
+    const resource = Math.max(0, Math.min(1, world.aircraft.currentResource / stats.maxResource));
+    const barWidth = trackingBarWidth(visual.size);
+    const barX = trackingBarX(world.playerX, barWidth);
+    const barY = trackingBarY(this.player.y, visual.size);
+    this.trackingBars.clear();
+    this.trackingBars.roundRect(barX - 1, barY - 1, barWidth + 2, 12, 2).fill({ color: 0x020617, alpha: 0.85 }).stroke({ color: 0xcbd5e1, width: 0.6, alpha: 0.75 });
+    this.trackingBars.rect(barX, barY, barWidth * hp, 4).fill(hp < 0.25 ? 0xf87171 : hp < 0.5 ? 0xfbbf24 : 0x4ade80);
+    this.trackingBars.rect(barX, barY + 6, barWidth * resource, 4).fill(stats.resourceKind === "energy" ? 0xa78bfa : 0x38bdf8);
+    this.damageText.update(world, delta, reducedMotion);
     if (damageSmoke) {
       if (hp < 0.4) this.vfx.spawn("damageSmoke", world.playerX + 5, world.playerY + 15, 31, 0.8, 0xffffff, 25);
       if (hp < 0.2) this.vfx.spawn("fire", world.playerX - 7, world.playerY + 13, 24, 0.35);
@@ -266,6 +284,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     if (this.destroyed) return;
     this.destroyed = true;
     this.observer.disconnect();
+    this.damageText.destroy();
     this.app.canvas.removeEventListener("webglcontextlost", this.onLost);
     this.enemies.destroy(); this.projectiles.destroy(); this.companions.destroy(); this.warnings.destroy(); this.engines.destroy(); this.vfx.destroy();
     this.app.destroy(true, { children: true, texture: false, textureSource: false });

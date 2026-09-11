@@ -8,7 +8,7 @@ import {
 import {
   applyCore,
   applyDamageToAircraft,
-  calculateDamage,
+  resolvePlayerDamage,
   calculateRunRank,
   canAcquirePlayerTarget,
   castSkill,
@@ -118,9 +118,8 @@ interface RuntimePools {
   particles: ParticleEntity[];
 }
 
-export interface CombatVisualEvent {
+interface VisualEventBase {
   id: number;
-  kind: "hit" | "explosion" | "bomb" | "player_hit";
   x: number;
   y: number;
   size: number;
@@ -128,7 +127,20 @@ export interface CombatVisualEvent {
   boss?: boolean;
 }
 
-function emitVisual(world: CombatWorld, event: Omit<CombatVisualEvent, "id">): void {
+export interface DamageNumberEvent extends VisualEventBase {
+  kind: "damage_number";
+  amount: number;
+  target: "player" | "enemy";
+  critical: boolean;
+  shielded: boolean;
+}
+
+export type CombatVisualEvent = DamageNumberEvent | (VisualEventBase & {
+  kind: "hit" | "explosion" | "bomb" | "player_hit";
+});
+type NewVisualEvent = CombatVisualEvent extends infer E ? E extends CombatVisualEvent ? Omit<E, "id"> : never : never;
+
+function emitVisual(world: CombatWorld, event: NewVisualEvent): void {
   world.visualEvents.push({ ...event, id: world.nextVisualId++ });
   if (world.visualEvents.length > 96) world.visualEvents.shift();
 }
@@ -188,6 +200,7 @@ export interface CombatWorld {
   ended: boolean;
   pools: RuntimePools;
   random: () => number;
+  visualRandom: () => number;
 }
 
 const PLAYER_TARGET_ID = 0;
@@ -215,6 +228,12 @@ export function createCombatWorld(
   aircraftId: AircraftId,
   random: () => number = Math.random
 ): CombatWorld {
+  // Separate deterministic stream: visual density must never consume combat rolls.
+  let visualSeed = 0x41c6ce57;
+  const visualRandom = () => {
+    visualSeed = (Math.imul(visualSeed, 1664525) + 1013904223) >>> 0;
+    return visualSeed / 0x100000000;
+  };
   const initial = clampCircleToGameplayRect(
     AIR_COMBAT_WORLD.width / 2,
     GAMEPLAY_SAFE_RECT.bottom - 52,
@@ -276,6 +295,7 @@ export function createCombatWorld(
     ended: false,
     pools: { enemies: [], projectiles: [], particles: [] },
     random,
+    visualRandom,
   };
 }
 
@@ -368,9 +388,9 @@ function addParticles(
   const available = Math.max(0, AIR_COMBAT_WORLD.maxParticles - world.particles.length);
   for (let index = 0; index < Math.min(amount, available); index++) {
     const particle = acquireParticle(world);
-    const angle = world.random() * Math.PI * 2;
-    const speed = 30 + world.random() * 85;
-    const life = 0.22 + world.random() * 0.34;
+    const angle = world.visualRandom() * Math.PI * 2;
+    const speed = 30 + world.visualRandom() * 85;
+    const life = 0.22 + world.visualRandom() * 0.34;
     Object.assign(particle, {
       x,
       y,
@@ -378,7 +398,7 @@ function addParticles(
       vy: Math.sin(angle) * speed,
       life,
       maxLife: life,
-      size: 1.2 + world.random() * 3.2,
+      size: 1.2 + world.visualRandom() * 3.2,
       color,
     });
     world.particles.push(particle);
@@ -838,6 +858,8 @@ export function movePlayerByDelta(world: CombatWorld, dx: number, dy: number): v
   const startX = world.playerX;
   const startY = world.playerY;
   const end = clampCircleToGameplayRect(startX + dx, startY + dy, world.playerRadius);
+  // Common visual clearance for all aircraft: the tail and both bars stay on-screen.
+  end.y = Math.min(end.y, AIR_COMBAT_WORLD.height - AIR_COMBAT_WORLD.playerBottomClearance);
   const steps = Math.max(1, Math.ceil(Math.hypot(end.x - startX, end.y - startY) / 2));
   for (let step = 1; step <= steps; step++) {
     world.playerX = startX + (end.x - startX) * step / steps;
@@ -1021,8 +1043,13 @@ function applyDamageToEnemy(
   rawDamage: number,
   color = "#fde68a"
 ): number {
-  const damage = calculateDamage(rawDamage, enemy.armor);
-  enemy.hp -= damage;
+  if (enemy.hp <= 0 || rawDamage <= 0) return 0;
+  const resolved = resolvePlayerDamage(rawDamage, enemy.armor, getEffectiveAircraftStats(world.aircraft), world.random);
+  const damage = Math.min(enemy.hp, resolved.actualDamage);
+  if (damage <= 0) return 0;
+  enemy.hp = Math.max(0, enemy.hp - damage);
+  emitVisual(world, { kind: "damage_number", x: enemy.x, y: enemy.y, size: enemy.radius,
+    amount: damage, target: "enemy", critical: resolved.critical, shielded: false, entityId: enemy.id });
   emitVisual(world, { kind: "hit", x: enemy.x, y: enemy.y, size: enemy.radius, entityId: enemy.id });
   world.damageDealt += damage;
   addParticles(world, enemy.x, enemy.y, color, 3);
@@ -1106,11 +1133,14 @@ function applySecondaryHits(
 }
 
 function hitPlayer(world: CombatWorld, rawDamage: number): void {
-  if (world.playerInvulnerability > 0) return;
+  if (world.playerInvulnerability > 0 || world.aircraft.currentHp <= 0 || rawDamage <= 0) return;
   const shieldMultiplier = (world.aircraft.activeEffects.armor_shield || 0) > 0
     ? getSkillRuntimeValues(world.aircraft, "armor_shield").damageTakenMultiplier
     : 1;
   const damage = applyDamageToAircraft(world.aircraft, rawDamage, shieldMultiplier);
+  if (damage <= 0) return;
+  emitVisual(world, { kind: "damage_number", x: world.playerX, y: world.playerY, size: 36,
+    amount: damage, target: "player", critical: false, shielded: shieldMultiplier < 1 });
   world.damageTaken += damage;
   world.hitsReceived += 1;
   emitVisual(world, { kind: "player_hit", x: world.playerX, y: world.playerY, size: 36 });

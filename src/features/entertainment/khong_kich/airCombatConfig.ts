@@ -14,8 +14,9 @@ import {
 export const AIR_COMBAT_WORLD = {
   width: 360,
   height: 640,
-  hudHeight: 76,
+  hudHeight: 92,
   safeGap: 12,
+  playerBottomClearance: 50,
   bossStartsAtSeconds: 225,
   hardRunLimitSeconds: 330,
   maxDeltaSeconds: 1 / 30,
@@ -42,7 +43,10 @@ export const GAMEPLAY_SAFE_RECT: GameplaySafeRect = {
 };
 
 export const AIR_COMBAT_LIMITS = {
-  cooldownReduction: 0.35,
+  cooldownReduction: 0.80,
+  criticalChance: 1,
+  criticalDamageMultiplier: 3,
+  baseCriticalDamageMultiplier: 1.70,
   phantomMaxEnergy: 100,
   minimumDisplayedDamage: 1,
   maxFireRate: 12,
@@ -60,6 +64,8 @@ export const AIRCRAFT_CONFIGS: Record<AircraftId, AircraftConfig> = {
     accent: "#e0f2fe",
     resourceKind: "mana",
     baseStats: {
+      criticalChance: 0.05,
+      criticalDamageMultiplier: 1.70,
       maxHp: 1250,
       armor: 28,
       firepower: 118,
@@ -68,6 +74,8 @@ export const AIRCRAFT_CONFIGS: Record<AircraftId, AircraftConfig> = {
       resourceRegen: 6,
     },
     growth: {
+      criticalChance: 0,
+      criticalDamageMultiplier: 0,
       maxHp: 18,
       armor: 1,
       firepower: 4,
@@ -87,6 +95,8 @@ export const AIRCRAFT_CONFIGS: Record<AircraftId, AircraftConfig> = {
     accent: "#fef3c7",
     resourceKind: "mana",
     baseStats: {
+      criticalChance: 0.05,
+      criticalDamageMultiplier: 1.70,
       maxHp: 2050,
       armor: 55,
       firepower: 104,
@@ -95,6 +105,8 @@ export const AIRCRAFT_CONFIGS: Record<AircraftId, AircraftConfig> = {
       resourceRegen: 5,
     },
     growth: {
+      criticalChance: 0,
+      criticalDamageMultiplier: 0,
       maxHp: 45,
       armor: 2,
       firepower: 2,
@@ -114,6 +126,8 @@ export const AIRCRAFT_CONFIGS: Record<AircraftId, AircraftConfig> = {
     accent: "#f3e8ff",
     resourceKind: "energy",
     baseStats: {
+      criticalChance: 0.05,
+      criticalDamageMultiplier: 1.70,
       maxHp: 1600,
       armor: 40,
       firepower: 112,
@@ -122,6 +136,8 @@ export const AIRCRAFT_CONFIGS: Record<AircraftId, AircraftConfig> = {
       resourceRegen: 5,
     },
     growth: {
+      criticalChance: 0,
+      criticalDamageMultiplier: 0,
       maxHp: 30,
       armor: 1,
       firepower: 3,
@@ -388,6 +404,8 @@ export const CORE_TIER_LABELS: Record<CoreTier, string> = {
 };
 
 export const CORE_NUMERIC_VALUES = {
+  critical_chance: { silver: 0.06, gold: 0.10, diamond: 0.16 },
+  critical_damage: { silver: 0.15, gold: 0.25, diamond: 0.40 },
   firepower: { silver: 7, gold: 11, diamond: 16 },
   armor: { silver: 9, gold: 14, diamond: 21 },
   max_hp: { silver: 100, gold: 160, diamond: 240 },
@@ -402,12 +420,14 @@ export const CORE_NUMERIC_VALUES = {
 const ALL_TIERS: readonly CoreTier[] = ["silver", "gold", "diamond"];
 
 export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
+  { id: "critical_chance", name: "Kính Ngắm Tử Điểm", description: "Tăng tỷ lệ chí mạng, tối đa 100%.", icon: "✦", category: "offense", tiers: ALL_TIERS },
+  { id: "critical_damage", name: "Đầu Đạn Bạo Kích", description: "Cộng điểm phần trăm sát thương chí mạng, tối đa 300%.", icon: "✹", category: "offense", tiers: ALL_TIERS },
   { id: "firepower", name: "Tăng Hỏa Lực", description: "Cộng thẳng Hỏa lực.", icon: "⚔", category: "offense", tiers: ALL_TIERS },
   { id: "armor", name: "Giáp Gia Cường", description: "Cộng thẳng Giáp.", icon: "◆", category: "defense", tiers: ALL_TIERS },
   { id: "max_hp", name: "Khung Thân Bền", description: "Tăng Max HP và HP hiện tại cùng lượng.", icon: "♥", category: "defense", tiers: ALL_TIERS },
   { id: "fire_rate", name: "Nạp Đạn Nhanh", description: "Tăng số phát bắn mỗi giây.", icon: "◉", category: "offense", tiers: ALL_TIERS },
   { id: "repair", name: "Tự Sửa", description: "Hồi HP mỗi giây khi combat chạy.", icon: "+", category: "defense", tiers: ALL_TIERS },
-  { id: "cooldown", name: "Làm Mát Kỹ Năng", description: "Giảm hồi chiêu, tổng tối đa 35%.", icon: "⌛", category: "resource", tiers: ALL_TIERS },
+  { id: "cooldown", name: "Làm Mát Kỹ Năng", description: "Giảm hồi chiêu, tổng tối đa 80%.", icon: "⌛", category: "resource", tiers: ALL_TIERS },
   { id: "mana_capacity", name: "Dung Lượng Mana", description: "Tăng Max Mana và Mana hiện tại cùng lượng.", icon: "MP", category: "resource", tiers: ALL_TIERS, aircraftIds: ["black_eagle", "breaker"] },
   { id: "mana_regen", name: "Hồi Mana", description: "Tăng Mana hồi mỗi giây.", icon: "M+", category: "resource", tiers: ALL_TIERS, aircraftIds: ["black_eagle", "breaker"] },
   { id: "energy_regen", name: "Tụ Năng", description: "Tăng Energy hồi mỗi giây; không tăng Max Energy.", icon: "EN", category: "resource", tiers: ALL_TIERS, aircraftIds: ["phantom"] },

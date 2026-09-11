@@ -1,5 +1,6 @@
 import React from "react";
 import type { AirCombatPresentation } from "./airCombatPixiTypes";
+import { DamageLabelPool } from "../airCombatFeedback";
 
 export const AirCombatPixiStage = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   function AirCombatPixiStage(props, ref) {
@@ -16,11 +17,13 @@ export async function createLegacyPresentation(host: HTMLDivElement): Promise<Ai
   const context = canvas.getContext("2d");
   if (!context) throw new Error("Không thể khởi tạo hiển thị trận đấu");
   host.appendChild(canvas);
+  const damageLabels = new DamageLabelPool();
   return {
-    render(world, _delta, reducedMotion) {
+    render(world, delta, reducedMotion) {
       if (document.hidden) return;
       context.setTransform(ratio, 0, 0, ratio, 0, 0);
-      drawLegacyWorld(context, world, world.aircraft.aircraftId, reducedMotion);
+      damageLabels.update(world, delta);
+      drawLegacyWorld(context, world, world.aircraft.aircraftId, reducedMotion, damageLabels.labels);
     },
     destroy() { canvas.remove(); },
   };
