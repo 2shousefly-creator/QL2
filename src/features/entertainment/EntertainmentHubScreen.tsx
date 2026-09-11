@@ -7,6 +7,7 @@ import { EntertainmentGameId } from "./types";
 import { createDefaultFarmState } from "../tang_gia/farmEngine";
 import { CommandHeader } from "../../components/military/MilitaryUI";
 import { ArmyLoadBoundary } from "./mobi_army3/LoadBoundary";
+import { NguDaiDeVuongBoundary } from "./ngu_dai_de_vuong/components/LoadBoundary";
 
 const BauCuaScreen = lazy(() => import("./bau_cua/BauCuaScreen").then(m => ({ default: m.BauCuaScreen })));
 const BigSmallScreen = lazy(() => import("./big_small/BigSmallScreen").then(m => ({ default: m.BigSmallScreen })));
@@ -15,6 +16,7 @@ const TankBattleScreen = lazy(() => import("./tank_battle/TankBattleScreen").the
 const ChienTuyenScreen = lazy(() => import("./chien_tuyen/ChienTuyenScreen").then(m => ({ default: m.ChienTuyenScreen })));
 
 const MobiArmy3Screen = lazy(() => import("./mobi_army3/MobiArmy3Screen"));
+const NguDaiDeVuongScreen = lazy(() => import("./ngu_dai_de_vuong/NguDaiDeVuongScreen"));
 
 interface EntertainmentHubScreenProps {
   gameState: GameState;
@@ -35,7 +37,7 @@ export const EntertainmentHubScreen: React.FC<EntertainmentHubScreenProps> = ({
   const [activeGame, setActiveGame] = useState<EntertainmentGameId | null>(null);
 
   useEffect(() => {
-    onGameActiveChange?.(activeGame === "khong_kich" || activeGame === "tank_battle" || activeGame === "chien_tuyen" || activeGame === "mobi_army3");
+    onGameActiveChange?.(activeGame === "khong_kich" || activeGame === "tank_battle" || activeGame === "chien_tuyen" || activeGame === "mobi_army3" || activeGame === "ngu_dai_de_vuong");
     return () => onGameActiveChange?.(false);
   }, [activeGame, onGameActiveChange]);
 
@@ -51,6 +53,11 @@ export const EntertainmentHubScreen: React.FC<EntertainmentHubScreenProps> = ({
   };
 
   // If a specific minigame is active, render that minigame's screen
+  if (activeGame === "ngu_dai_de_vuong") {
+    return <NguDaiDeVuongBoundary onBack={() => setActiveGame(null)}><Suspense fallback={<div role="status" className="p-6 text-slate-200">Đang tải Ngũ Đại Đế Vương… <button onClick={() => setActiveGame(null)}>Quay lại</button></div>}>
+      <NguDaiDeVuongScreen gameState={gameState} onUpdateGameState={onUpdateGameState} onBack={() => setActiveGame(null)} onFarm={() => { setActiveGame(null); onNavigateTab("tang_gia"); }} />
+    </Suspense></NguDaiDeVuongBoundary>;
+  }
   if (activeGame === "mobi_army3") {
     return <ArmyLoadBoundary onBack={() => setActiveGame(null)}><Suspense fallback={<div className="p-6 text-slate-200" role="status">Đang tải Pháo Chiến… <button onClick={() => setActiveGame(null)}>Quay lại</button></div>}>
       <MobiArmy3Screen gameState={gameState} onUpdateGameState={onUpdateGameState} onBack={() => setActiveGame(null)} />

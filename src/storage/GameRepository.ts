@@ -5,6 +5,7 @@ import { createDefaultTrainingState } from "../game/training/trainingDefaults";
 import { createDefaultFarmState } from "../features/tang_gia/farmMigration";
 import { createDefaultChienTuyenProfile } from "../features/entertainment/chien_tuyen/profileEngine";
 import { getLocalDateString } from "../game/energyEngine";
+import { createProfile as createNguDaiDeVuong } from "../features/entertainment/ngu_dai_de_vuong/state/profile";
 
 export interface GameRepository {
   load(): Promise<GameState | null>;
@@ -65,6 +66,7 @@ export function createInitialGameState(displayName: string = "Chiến sĩ"): Gam
     },
     farm: createDefaultFarmState(now),
     chienTuyen: createDefaultChienTuyenProfile(now),
+    nguDaiDeVuong: createNguDaiDeVuong(),
     coupons: { redeemedCodes: [], redeemedAt: {} },
   };
 }

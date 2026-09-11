@@ -6,6 +6,15 @@ export const TANK_BATTLE_ENABLED = false;
 
 const ALL_ENTERTAINMENT_GAMES: readonly EntertainmentGameMeta[] = [
   {
+    id: "ngu_dai_de_vuong",
+    title: "Ngũ Đại Đế Vương",
+    subtitle: "Phiêu lưu đế vương 2.5D",
+    description: "Chiêu mộ 20 võ tướng, bố trí đội hình bốn người và chinh phục ba vùng đất trong những trận chiến tự động.",
+    status: "available",
+    badge: "Mới",
+    icon: "♛",
+  },
+  {
     id: "mobi_army3",
     title: ARMY_TITLE,
     subtitle: "Pháo chiến PVE theo lượt",

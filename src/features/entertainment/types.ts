@@ -21,7 +21,7 @@ export type BauCuaRound = {
   postGold: number;
 };
 
-export type EntertainmentGameId = "bau_cua" | "big_small" | "khong_kich" | "tank_battle" | "chien_tuyen" | "mobi_army3";
+export type EntertainmentGameId = "bau_cua" | "big_small" | "khong_kich" | "tank_battle" | "chien_tuyen" | "mobi_army3" | "ngu_dai_de_vuong";
 
 export type BigSmallBetId = "small" | "big";
 
