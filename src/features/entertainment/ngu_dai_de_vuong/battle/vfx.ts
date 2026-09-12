@@ -31,8 +31,9 @@ export class VfxPool {
     const g=item.graphic.clear();g.visible=true;g.alpha=1;g.rotation=0;g.position.set(x,y);g.scale.set(size,ground?size*.34:size);
     drawMotif(g,kind,color,accent);
   }
-  emit(e: VisualEvent) {
+  emit(e: VisualEvent, labelsOnly = false) {
     const preset=e.skillId?SKILL_VFX_PRESETS[e.skillId]:undefined;
+    if (!labelsOnly) {
     if(preset && e.phase){
       if(e.phase==='cast')this.motif(preset.cast,e.x,e.y+95,preset.color,preset.accent,Math.max(.15,e.duration||.4),preset.size*.55,false,false);
       else if(e.phase==='release')this.motif(preset.weaponTrail,e.x,e.y,preset.color,preset.accent,.23,preset.size*.65);
@@ -61,6 +62,7 @@ export class VfxPool {
       else g.ellipse(e.x, e.y, Math.min(e.radius || 100, 250), 70).fill({ color: 0xf07865, alpha: .22 }).stroke({ color: 0xffac7d, width: 4 });
       return;
     }
+    }
     if (e.amount !== undefined || e.text) {
       let item = this.texts.find(p => p.life <= 0);
       if (!item && this.texts.length < 48) { item = { text: new Text({ text: '', style: { fontFamily: 'Georgia, serif', fontSize: 25, fontWeight: 'bold', fill: 0xffffff, stroke: { color: 0x202333, width: 4 } } }), life: 0, total: 1 }; this.texts.push(item); this.labels.addChild(item.text); }
@@ -72,6 +74,7 @@ export class VfxPool {
         item.text.anchor.set(.5); item.text.position.set(e.x + (Math.random() - .5) * 24, e.y); item.text.visible = true; item.text.alpha = 1;
       }
     }
+    if (labelsOnly) return;
     const count = Math.round((e.kind === 'heal' || e.kind === 'shield' ? 10 : 7) * QUALITY[this.quality].density);
     for (let i = 0; i < count; i++) {
       let item = this.particles.find(p => p.life <= 0);
@@ -111,13 +114,10 @@ export class VfxPool {
       const g=view.g.clear(),keys=new Set(a.statuses.map(s=>s.kind)),shield=shieldTotal(a);
       if(view.keys.has('freeze')&&!keys.has('freeze'))this.motif('frostPrison',a.x,a.y-95,0x9fcdda,0xf0ffff,.45,1.2);
       if(view.keys.has('knockup')&&!keys.has('knockup'))this.motif('crater',a.x,a.y,0x998e73,0xe8d6ad,.45,1,true);
-      if(view.shield>0&&shield<=0)this.motif('ice',a.x,a.y-95,0xa9cad9,0xf3faff,.4,1.5);
       view.keys=keys;view.shield=shield;view.pulse+=dt;g.visible=a.hp>0;if(!g.visible)continue;
       const up=a.statuses.find(s=>s.kind==='knockup'),lift=up?Math.sin(Math.PI*Math.max(0,Math.min(1,1-up.remaining/up.duration)))*95:0;
       g.position.set(a.x,a.y-lift);const pulse=.55+Math.sin(this.time*4)*.15;
-      if(shield>0){g.ellipse(0,-105,71,106).fill({color:0xa5dcee,alpha:.04}).stroke({color:0xb2e2ef,width:2,alpha:pulse});g.arc(0,-105,68,this.time*.8,this.time*.8+1.1).stroke({color:0xe8ffff,width:3,alpha:.6});}
       if(keys.has('freeze')){for(let i=0;i<5;i++){const x=(i-2)*23;g.poly([x-15,-7,x-9,-85-Math.abs(i-2)*9,x+3,-108,x+16,-12]).fill({color:0x99e0ee,alpha:.18}).stroke({color:0xc6f4ff,width:1.5,alpha:.65});}g.ellipse(0,-8,66,17).fill({color:0xc1f5ff,alpha:.12});}
-      if(keys.has('burn')){for(let i=0;i<6;i++){const t=(this.time*1.4+i/6)%1,x=Math.sin(i*17)*42;g.poly([x-4,-8-t*120,x,-20-t*120,x+4,-8-t*120]).fill({color:i%2?0xffbd60:0xe97847,alpha:1-t});}if(view.pulse>=1)this.motif('flame',a.x,a.y-55,0xd66341,0xffce77,.32,.44);}
       let icon=0;
       const badge=(kind:string,color:number)=>{const x=(icon++-1)*29,y=-265;g.circle(x,y,12).fill({color:0x182a37,alpha:.85});if(kind==='stun'){for(let i=0;i<3;i++){const angle=this.time*3+i*Math.PI*2/3;g.star(x+Math.cos(angle)*10,y+Math.sin(angle)*5,4,4,2).fill(color);}}else if(kind==='silence'){g.circle(x,y,7).stroke({color,width:2});g.moveTo(x-7,y-7).lineTo(x+7,y+7).stroke({color,width:2});}else if(kind==='taunt'){g.poly([x-8,y-6,x+8,y-6,x+8,y+3,x,y+8,x-8,y+3]).stroke({color,width:2});g.moveTo(x,y-3).lineTo(x,y+2).stroke({color,width:2});}else if(kind==='mark'){g.poly([x,y-9,x+7,y+5,x-7,y+5]).stroke({color,width:2});}else{g.poly([x-7,y+5,x,y-5,x+7,y+5]).stroke({color,width:2});}};
       if(keys.has('stun'))badge('stun',0xffd578);

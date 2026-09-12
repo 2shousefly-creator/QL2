@@ -1,15 +1,18 @@
-import { Application, Container, Graphics, Sprite, Text, Texture } from 'pixi.js';
-import { assetRoot } from '../assets/manifest';
+import { Application, ColorMatrixFilter, Container, Graphics, Sprite, Text } from 'pixi.js';
+import { SPINE_EXPORTS } from '../assets/manifest';
 import { BATTLE, QUALITY } from '../data/config';
 import type { GameProfile } from '../types';
 import { AssetScope, createAnimator, type CharacterAnimator } from './animator';
 import { createBattleAudio } from './audio';
 import type { BattleEngine } from './engine';
 import { shieldTotal } from './stats';
-import { VfxPool } from './vfx';
+import { VfxManager } from './vfx/VfxManager';
+import { BattleCamera } from './vfx/BattleCamera';
+import { ParallaxBattlefield } from './vfx/ParallaxBattlefield';
 import type { Actor } from './types';
 import type { CombatMode } from './manualControl';
-import { SKILL_VFX_PRESETS } from '../data/skillVfxPresets';
+import { PRODUCTION_SKILL_VFX } from '../data/productionVfx';
+import { HERO_VISUAL_PROFILES } from '../data/heroVisualProfiles';
 
 export interface BattleControls { paused: boolean; speed: 1 | 2; mode: CombatMode; }
 export interface SceneHandle { destroy(): Promise<void>; }
@@ -26,16 +29,17 @@ export async function mountBattle(host: HTMLElement, engine: BattleEngine, setti
   const app = new Application(), assets = new AssetScope(), audio = createBattleAudio();
   const animators = new Map<string, CharacterAnimator>();
   const bars = new Map<string, Graphics>();
-  let effects: VfxPool | undefined, spark: Texture | undefined, destroyed = false, initialized = false;
+  let effects: VfxManager | undefined, battlefield: ParallaxBattlefield | undefined, destroyed = false, initialized = false;
+  const flashes = new Map<string,{filter:ColorMatrixFilter;remaining:number}>();
   const destroy = async () => {
     if (destroyed) return; destroyed = true;
     try {
       if (initialized) app.stop();
       audio.destroy();
       for (const a of animators.values()) a.destroy();
-      animators.clear(); effects?.destroy();
+      animators.clear(); effects?.destroy(); battlefield?.destroy();
+      for (const flash of flashes.values()) flash.filter.destroy(); flashes.clear();
       if (initialized) app.destroy(true, { children: true, texture: false, textureSource: false });
-      spark?.destroy(true);
       await assets.destroy();
     } finally { release(); }
   };
@@ -45,20 +49,26 @@ export async function mountBattle(host: HTMLElement, engine: BattleEngine, setti
     if (signal.aborted) { await destroy(); return; }
     const world = new Container(), actorsLayer = new Container(); actorsLayer.sortableChildren = true;
     app.stage.addChild(world);
-    const background = new Sprite(await assets.load<Texture>(`${assetRoot}/region-${engine.stage.region}.webp`));
-    background.width = BATTLE.width; background.height = BATTLE.height; world.addChild(background);
-    const shade = new Graphics().rect(0, 0, BATTLE.width, BATTLE.height).fill({ color: 0x0a1320, alpha: .1 }); world.addChild(shade);
-    const sparkGraphic = new Graphics().ellipse(24, 8, 24, 8).fill(0xffffff);
-    spark = app.renderer.generateTexture(sparkGraphic); sparkGraphic.destroy();
-    effects = new VfxPool(settings.quality, spark); world.addChild(effects.back, actorsLayer, effects.front, effects.labels);
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const camera = new BattleCamera(world,reducedMotion);
+    effects = new VfxManager(settings.quality,camera,key=>audio.play(key),id=>{
+      const flash=flashes.get(id);if(flash&&!reducedMotion)flash.remaining=.075;
+    });
+    await effects.preload(assets,engine.actors,world);
+    battlefield = new ParallaxBattlefield();await battlefield.load(engine.stage.region,assets,effects.textures,settings.quality);
+    // Camera moves only the battlefield; DOM HUD and floating numbers stay stable.
+    app.stage.addChildAt(battlefield.back,0);
+    world.addChild(effects.ground,effects.back,actorsLayer,effects.trails,effects.projectiles,effects.front,effects.lights,effects.status,battlefield.front);
+    app.stage.addChild(effects.labels);
     for (const actor of engine.actors) {
       const animator = await createAnimator(actor.boss?.id || actor.hero.id, assets, (token, event, index) => engine.animationEvent(actor.id, token, event, index));
       animators.set(actor.id, animator);
       const group = new Container(); group.label = actor.id;
-      const shadow = new Graphics().ellipse(0, 0, actor.boss ? 95 : 50, actor.boss ? 24 : 15).fill({ color: 0x17222a, alpha: .3 });
+      const shadow = new Sprite(effects.textures.get('light')![0]);shadow.anchor.set(.5);shadow.tint=0x17222a;shadow.blendMode='multiply';shadow.alpha=.35;shadow.width=actor.boss?190:108;shadow.height=actor.boss?48:30;
+      const flash = new ColorMatrixFilter();flash.brightness(1.65,false);flashes.set(actor.id,{filter:flash,remaining:0});
       const bar = new Graphics(); bars.set(actor.id, bar);
       const name = new Text({ text: actor.hero.name, style: { fontFamily: 'Arial', fontSize: actor.boss ? 24 : 19, fill: actor.side === 'player' ? 0xeee4c8 : 0xffc5b0, stroke: { color: 0x1b2933, width: 3 } } });
-      name.anchor.set(.5); name.y = actor.boss ? -365 : -252;
+      name.anchor.set(.5); name.y = actor.boss ? -410 : SPINE_EXPORTS[actor.hero.id] ? -285 : -252;
       group.addChild(shadow, animator.view, bar, name); actorsLayer.addChild(group);
       animator.play({ actorId: actor.id, name: 'idle', token: 0, duration: 1, impact: 0, hits: 0, projectile: false });
     }
@@ -68,13 +78,15 @@ export async function mountBattle(host: HTMLElement, engine: BattleEngine, setti
     const drawActor = (a: Actor) => {
       const animator = animators.get(a.id)!, group = animator.view.parent;
       group.position.set(a.x, a.y); group.zIndex = a.y;
-      animator.view.scale.set((a.boss ? 1.55 : 1.05) * a.facing, a.boss ? 1.55 : 1.05);
+      const presence = a.boss?.id==='B001'?1.8:a.boss?1.55:SPINE_EXPORTS[a.hero.id]?1.22:1.05;
+      animator.view.scale.set(presence * a.facing, presence);
+      const flash=flashes.get(a.id)!;animator.view.filters=flash.remaining>0?[flash.filter]:null;
       const knockup = a.statuses.find(s=>s.kind==='knockup');
       const lift = knockup ? Math.sin(Math.PI*Math.max(0,Math.min(1,1-knockup.remaining/knockup.duration)))*95 : 0;
       animator.view.y=-lift;
-      group.children[0].scale.set(1-lift/250,1-lift/400);
+      const shadow=group.children[0] as Sprite;shadow.width=(a.boss?190:108)*(1-lift/250);shadow.height=(a.boss?48:30)*(1-lift/400);
       animator.view.alpha=a.statuses.some(s=>s.kind==='untargetable') ? .42 : 1;
-      const bar = bars.get(a.id)!.clear(), y = a.boss ? -342 : -232, width = a.boss ? 220 : 110;
+      const bar = bars.get(a.id)!.clear(), y = a.boss ? -386 : SPINE_EXPORTS[a.hero.id] ? -264 : -232, width = a.boss ? 220 : 110;
       if (a.hp > 0) {
         bar.roundRect(-width / 2, y, width, 10, 4).fill({ color: 0x152432, alpha: .85 });
         bar.roundRect(-width / 2, y, Math.max(2, width * a.hp / a.stats.hp), 10, 4).fill(a.side === 'player' ? 0x8dc5a3 : 0xd98d79);
@@ -84,25 +96,36 @@ export async function mountBattle(host: HTMLElement, engine: BattleEngine, setti
       }
     };
     const portraitOrientation = window.matchMedia('(orientation: portrait)');
-    let hudTime = 0, resultDelay = 0, reported = false, shake = 0;
+    const weaponPoint={x:0,y:0};
+    const weaponPosition=(id:string)=>{
+      const actor=engine.get(id),animator=animators.get(id);if(!actor||!animator)return;
+      const bone=animator.weaponPosition?.();
+      const fallback=HERO_VISUAL_PROFILES[actor.hero.id]?.weaponAnchor||[55,-120];
+      weaponPoint.x=actor.x+(bone?.x??fallback[0])*Math.abs(animator.view.scale.x)*actor.facing;
+      weaponPoint.y=actor.y+(bone?.y??fallback[1])*animator.view.scale.y+animator.view.y;
+      return weaponPoint;
+    };
+    for(const actor of engine.actors)drawActor(actor);
+    let hudTime = 0, resultDelay = 0, reported = false;
     app.ticker.add(ticker => {
       if (destroyed || signal.aborted || controls.paused || document.hidden || portraitOrientation.matches) return;
       let remaining = Math.min(.05, ticker.deltaMS / 1000) * controls.speed;
       while (remaining > 1e-6) {
         const dt = Math.min(remaining, 1 / 60); remaining -= dt;
         engine.step(dt);
-        for (const command of engine.commands.splice(0)) animators.get(command.actorId)?.play(command);
-        for (const actor of engine.actors) animators.get(actor.id)?.update(dt, actor.moveMultiplier);
-        for (const event of engine.visuals.splice(0)) {
-          effects!.emit(event);
-          const preset=event.skillId?SKILL_VFX_PRESETS[event.skillId]:undefined;
-          audio.play(event.crit?'crit':preset&&event.phase==='impact'?preset.sound:event.kind);
-          if(event.phase==='impact'&&preset?.shake)shake=Math.max(shake,preset.shake);
-          if(event.crit||event.kind==='enrage')shake=Math.max(shake,.1);
+        for (const command of engine.commands.splice(0)) {
+          const skill=engine.get(command.actorId)?.action?.skill;
+          const animation=skill&&command.hits?PRODUCTION_SKILL_VFX[skill.id]?.animation:undefined;
+          animators.get(command.actorId)?.play(animation?{...command,name:animation}:command);
         }
-        effects!.update(dt, engine.projectiles,engine.actors);
-        shake = Math.max(0, shake - dt);
-        world.position.set(shake > 0 ? Math.sin(engine.elapsed * 85) * 2.5 : 0, 0);
+        for (const actor of engine.actors) animators.get(actor.id)?.update(dt, actor.moveMultiplier,camera.hold>0);
+        for (const event of engine.visuals.splice(0)) {
+          const releasePoint=event.phase==='release'&&event.actorId?weaponPosition(event.actorId):undefined;
+          effects!.emit(releasePoint?{...event,x:releasePoint.x,y:releasePoint.y}:event,engine.actors);
+        }
+        effects!.update(dt, engine.projectiles,engine.actors,weaponPosition);
+        for(const flash of flashes.values())flash.remaining=Math.max(0,flash.remaining-dt);
+        camera.update(dt/controls.speed);battlefield!.update(reducedMotion?0:dt/controls.speed,camera);
         hudTime += dt;
         if (engine.outcome) {
           resultDelay += dt;

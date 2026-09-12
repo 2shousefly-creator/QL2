@@ -1,5 +1,7 @@
 import { HERO_VISUAL_PROFILES } from './heroVisualProfiles';
+import { PRODUCTION_SKILL_VFX, type ProductionVfxPreset } from './productionVfx';
 export interface SkillVfxPreset {
+  production?: ProductionVfxPreset;
   cast: string; weaponTrail: string; projectile: string; impact: string; ground: string;
   status: string; duration: number; size: number; shake: number; sound: string; color: number; accent: number;
 }
@@ -49,5 +51,5 @@ const rows: Record<string, Row> = {
 };
 export const SKILL_VFX_PRESETS: Record<string, SkillVfxPreset> = Object.fromEntries(Object.entries(rows).map(([id,r]) => {
   const palette = HERO_VISUAL_PROFILES[id.split('-')[0]].palette;
-  return [id,{cast:r[0],weaponTrail:r[1],projectile:r[2],impact:r[3],ground:r[4],status:r[5],duration:r[6],size:r[7],shake:r[8],sound:r[9],color:parseInt(palette[0].slice(1),16),accent:parseInt(palette[1].slice(1),16)}];
+  return [id,{production:PRODUCTION_SKILL_VFX[id],cast:r[0],weaponTrail:r[1],projectile:r[2],impact:r[3],ground:r[4],status:r[5],duration:r[6],size:r[7],shake:r[8],sound:r[9],color:parseInt(palette[0].slice(1),16),accent:parseInt(palette[1].slice(1),16)}];
 }));

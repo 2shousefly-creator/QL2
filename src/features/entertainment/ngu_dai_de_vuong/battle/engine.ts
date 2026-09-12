@@ -18,6 +18,8 @@ export class BattleEngine {
   outcome?: 'victory' | 'defeat';
   mode: CombatMode = 'auto';
   private manualQueue = new Map<string, string>();
+  // Presentation identity distinguishes a reused projectile object from its old trail.
+  private projectileVisualId = 0;
   constructor(public stage: Stage, profile: GameProfile, formation: string[], private random: () => number = Math.random) {
     const addActor = (heroId: string, side: Actor['side'], slot: number, bossId?: string) => {
       const boss = BOSSES.find(b => b.id === bossId);
@@ -251,6 +253,7 @@ export class BattleEngine {
     let p = this.projectiles.find(p => !p.active);
     const anchor = HERO_VISUAL_PROFILES[a.hero.id]?.weaponAnchor || [50,-100];
     const data: Projectile = { active: true, sourceId: a.id, targetId: target.id, x: previous?.x ?? a.x+anchor[0]*a.facing, y: previous ? previous.y-100 : a.y+anchor[1], coefficient, skill, basic, lastHit, vfx: skill?.vfx || (a.hero.damageType === 'magic' ? 'magic' : 'arrow'),heroId:a.hero.id,rotation:Math.atan2(target.y-a.y,target.x-a.x) };
+    data.visualId = ++this.projectileVisualId;
     if (p) Object.assign(p, data); else this.projectiles.push(data);
     this.visuals.push({ kind: 'projectile', x: a.x, y: a.y - 100 });
   }

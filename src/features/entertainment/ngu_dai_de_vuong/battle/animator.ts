@@ -7,7 +7,8 @@ import { HERO_VISUAL_PROFILES } from '../data/heroVisualProfiles';
 export interface CharacterAnimator {
   view: Container;
   play(command: AnimationCommand): void;
-  update(dt: number, movement: number): void;
+  update(dt: number, movement: number, holdVisual?: boolean): void;
+  weaponPosition?(): { x: number; y: number };
   destroy(): void;
 }
 type EventCallback = (token: number, event: AnimationEvent, hitIndex: number) => void;
@@ -122,24 +123,56 @@ export async function createAnimator(id: string, assets: AssetScope, event: Even
       if (missing.length) { spine.destroy({ children: true }); throw new Error(`Incomplete Spine animations: ${missing.join(', ')}`); }
       spine.state.data.defaultMix = .14;
       if (exported.skin) { spine.skeleton.setSkinByName(exported.skin); spine.skeleton.setSlotsToSetupPose(); }
-      let command: AnimationCommand | undefined, index = 0;
-      spine.state.addListener({ event: (_entry, e) => {
-        if (!command || !command.hits) return;
+      let command: AnimationCommand | undefined, index = 0, elapsed = 0, clipTime = 0;
+      let activeTrack: ReturnType<typeof spine.state.setAnimation> | undefined;
+      let clock: number[] = [], authored: number[] = [], holding = false;
+      const pose = new Float32Array(spine.skeleton.bones.length * 6);
+      const weaponPoint = {x:0,y:0};
+      const fields = ['a','b','c','d','worldX','worldY'] as const;
+      let poseReady = false;
+      spine.afterUpdateWorldTransforms = () => {
+        for(let i=0;i<spine.skeleton.bones.length;i++)for(let j=0;j<fields.length;j++){
+          const bone=spine.skeleton.bones[i],field=fields[j];
+          if(holding&&poseReady)bone[field]=pose[i*6+j];else pose[i*6+j]=bone[field];
+        }
+        poseReady=true;
+      };
+      spine.state.addListener({ event: (entry, e) => {
+        if (!command || !command.hits || entry !== activeTrack) return;
         const name = e.data.name as AnimationEvent;
         if (name === 'vfx_burst') event(command.token, name, index);
         else if (['basic_hit', 'skill_hit', 'projectile_spawn'].includes(name) && index < command.hits) event(command.token, name, index++);
       } });
       return {
         view: spine,
+        weaponPosition() { spine.getBonePosition('weapon', weaponPoint); return weaponPoint; },
         play(c) {
-          command = c; index = 0;
+          command = c; index = 0; elapsed = 0; clipTime = 0;
           const clip = spine.skeleton.data.findAnimation(c.name);
           if (!clip) throw new Error(`Missing animation ${id}.${c.name}`);
           const looping = ['idle', 'move', 'stun', 'victory'].includes(c.name);
-          const track = spine.state.setAnimation(0, c.name, looping);
+          const track = spine.state.setAnimation(0, c.name, looping); activeTrack = track;
+          const markers=exported.markers[c.name]||[.45];
+          clock=[0,...markers.map((_,i)=>c.impact+i*.13),c.duration];
+          authored=[0,...markers,clip.duration];
+          // Action markers must never be suppressed or duplicated by an outgoing mix.
+          track.mixDuration = c.hits ? 0 : .12;
           track.timeScale = looping ? 1 : clip.duration / c.duration;
         },
-        update(dt, movement) { spine.state.timeScale = command?.name === 'move' ? Math.max(.1, movement) : 1; spine.update(dt); },
+        update(dt, movement, holdVisual = false) {
+          const c = command;
+          if (c?.hits && activeTrack) {
+            elapsed = Math.min(c.duration, elapsed + dt);
+            let segment = 0;
+            while (segment < clock.length - 2 && elapsed > clock[segment + 1]) segment++;
+            const t = Math.min(1, Math.max(0, (elapsed - clock[segment]) / Math.max(.001, clock[segment + 1] - clock[segment])));
+            const next = authored[segment] + (authored[segment + 1] - authored[segment]) * t;
+            activeTrack.timeScale = Math.max(0, next - clipTime) / dt; clipTime = next;
+          }
+          spine.state.timeScale = c?.name === 'move' ? Math.max(.1, movement) : 1;
+          holding=holdVisual;
+          spine.update(dt);
+        },
         destroy() { spine.state.clearListeners(); spine.state.clearTracks(); spine.destroy({ children: true }); },
       };
     } catch (error) { console.warn(`Spine unavailable for ${id}; using the original layered rig.`, error); }
