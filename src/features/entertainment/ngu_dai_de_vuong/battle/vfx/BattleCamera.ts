@@ -7,7 +7,8 @@ export class BattleCamera {
   constructor(private world:Container, private reducedMotion=false) {}
   impulse(p:CameraImpulse) {
     if (this.reducedMotion || this.cooldown > 0) return;
-    this.cooldown=.065;
+    if(![p.x,p.y,p.duration,p.damping].every(Number.isFinite))return;
+    this.cooldown=.18;
     this.vx=Math.max(-170,Math.min(170,this.vx+p.x/Math.max(.06,p.duration)*4));
     this.vy=Math.max(-210,Math.min(210,this.vy-p.y/Math.max(.06,p.duration)*4));
     this.zoomVelocity=Math.min(.25,this.zoomVelocity+(p.zoom||0)*7);

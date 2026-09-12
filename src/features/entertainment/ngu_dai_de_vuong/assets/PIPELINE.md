@@ -71,3 +71,84 @@ Only `npm run build:web` is permitted for validation on this task. No tests, QA,
 8. Keep failure fallback, teardown ownership and quality-independent core identity. Runtime evaluation requires a separately authorized QA task.
 
 Runtime references: [official Spine Pixi runtime](https://esotericsoftware.com/spine-pixi), [Pixi v8 mesh API](https://pixijs.com/8.x/guides/components/scene-objects/mesh).
+
+## Visual Quality 2 — September 2026
+
+The active vertical slice is `H001/spine-v2`, `H017/spine-v2`, and `B001/spine-v2`.
+Each uses a distinct painted character source, a 1024 px RGBA WebP page and a
+continuous weighted Spine 4.2 mesh. Portraits use the same source in
+`portrait-v2.webp`. These replace the flat source artwork for the three selected
+characters. The other heroes keep their existing assets. The original rig remains
+an asset-load fallback. Preserve the original IDs and combat event timestamps.
+
+Art standard: natural anatomy and readable faces; stone/bronze/moss on Kình Sơn,
+layered vermilion silk, soft hair and phoenix staff on Minh Châu, and basalt,
+weathered armor and worn cloth on Thạch Giáp Cự Tướng. Use volumetric shading,
+material separation and a restrained rim light. The mesh uses restrained joint
+rotations, with lighter boss recoil; it does not invent missing artwork by drawing
+procedural character parts. Full independent limb cutouts can be authored later
+without changing the source texture/animation event contract.
+
+### Texture and timing contract
+
+`vfx/quality-v2` contains four intent-specific 24-frame sheets:
+
+| File | Intent | Grid / FPS | Anchor / blend |
+| --- | --- | --- | --- |
+| h001-s1-rock-burst.webp | contact, stone peak, falling debris | 6x4 / 24 | center / normal |
+| h001-s2-barrier-rise.webp | rune, barrier rise, circulating edge, dissolve | 6x4 / 24 | center / normal |
+| h017-s1-contact-explosion.webp | ignition, fire peak, smoke | 6x4 / 24 | center / normal |
+| h017-s2-phoenix-impact.webp | meteor contact, phoenix peak, residual fire | 6x4 / 28 | center / normal |
+
+Square 1152 px sheets have rectangular cells (192x288); never assume square cells
+or a universal 4x4 atlas. Frame ranges, dimensions, layer and lifetime live in
+`productionVfx.ts`. Main sequences run once; cast subsets fit the existing windup.
+Smoke, dust and ground-fire tails use bounded delayed refs. New long effects may
+use 24–48 unique frames at 24–30 FPS; do not duplicate frames to inflate the count.
+Name new assets `<actor>-s<slot>-<phase>-<intent>` and keep sibling revisions.
+
+`status-intents.webp` is a 4x4 sheet with dedicated shield dome, lotus healing,
+burn, freeze, stun, silence, taunt, armor break, blood mark, speed, reduction,
+damage-down, moon healing, dust, shield break and ice-shatter textures.
+Persistent sprites attach to living actors, pulse without particle spam, and
+fade in 120 ms / out 150 ms. Shield edge frames loop from the mountain sheet when
+applied by H001. Apply/remove effects use separate transient lifetimes. Death
+suppresses removal bursts and fades status/name/bars before the 1.1 s death clip
+and subsequent model fade. Heal events carry the caster identity to select the
+moon or lotus motif. Low keeps the recognizable core texture.
+
+`projectile-intents.webp` is 3x3: physical arrow, feather arrow, solar arrow,
+frost bolt, spectral dagger, fireball, meteor, wind and lightning. All point right.
+Motion profiles declare acceleration, ease, arc, scaleFrom/To and wobble. Visual
+lag/arc return to zero at the engine contact point; they never change projectile
+speed, targeting or damage. Last 75 ms increase opacity and tighten the trail.
+Basic projectiles have no local light; normal basic attacks have no camera shake.
+Critical feedback is a micro impulse, skills use spaced impulses, large zooms
+remain reserved for large skills/boss events. Particle density is 100/65/30%.
+
+### Failure ownership
+
+The scene owns an independent requestAnimationFrame loop; the next frame is
+scheduled before simulation or drawing. Each visual subsystem is guarded and
+warns once. Draw-time shader compilation failures first strip filters, then
+quarantine GPU effects if necessary; unrecoverable rendering exposes a recovery
+message while the existing engine continues. Context loss prevents the default
+browser disposal and suspends visual updates. Restoration attempts a safe render.
+Reload scene reconstructs only graphics around the same BattleEngine instance.
+
+Engine action deadlines recover missing animation markers via the existing
+idempotent token/hit-index path. Balance values, mana, cooldowns, formation and
+save/profile schema remain unchanged. Distortion rejects non-finite uniforms,
+bounds duration/strength and force-disables after a 1.2 s wall-clock window; it is
+off on Low. Missing effects are skipped, missing projectiles use a safe sprite,
+and parallax load errors fall back to the existing region background. Dispose
+runs independent cleanup steps, cancels RAF, removes listeners, and unloads assets.
+
+### Source provenance and import
+
+Artwork and raster VFX were generated using the built-in imagegen tool. The
+prompt set is documented in `visual-quality-v2-prompts.md`. The source PNG names
+are recorded by `scripts/ngu-dai-de-vuong/import-visual-quality-v2.cjs`, which takes
+the source directory as its only argument. Sharp only packs/resizes those images
+and emits the Spine mesh/atlas; production consumes committed WebP/JSON output.
+Sources lacking alpha were discarded and are not referenced by the game.

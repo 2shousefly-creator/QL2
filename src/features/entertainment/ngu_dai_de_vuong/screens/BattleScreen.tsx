@@ -35,24 +35,30 @@ export default function BattleScreen({ profile, stage, battleId, onComplete, onR
   const controls = useRef<BattleControls>({ paused: false, speed: profile.settings.speed, mode: 'auto' });
   const callbacks = useRef({ onComplete }); callbacks.current = { onComplete };
   const [paused, setPaused] = useState(false), [speed, setSpeed] = useState(profile.settings.speed), [error, setError] = useState(''), [ready, setReady] = useState(false);
+  const [sceneRevision, reloadScene] = useState(0), [graphicsFailed, setGraphicsFailed] = useState(false);
   const [mode, setMode] = useState<CombatMode>('auto');
   const [, refresh] = useState(0);
   useEffect(() => {
-    const abort = new AbortController();
     controls.current.mode='auto';controls.current.paused=false;setMode('auto');setPaused(false);setReady(false);setError('');
     const engine = new BattleEngine(stage, profile, profile.activeBattle?.formation || profile.formation);
     engineRef.current = engine;
-    const scene = mountBattle(host.current!, engine, profile.settings, controls.current, abort.signal, () => { if (!abort.signal.aborted) refresh(n => n + 1); }, victory => { if (!abort.signal.aborted) callbacks.current.onComplete(victory); });
-    scene.then(handle => { if (abort.signal.aborted) void handle?.destroy(); else if (handle) setReady(true); }).catch(e => { if (!abort.signal.aborted) { console.error(e); setError('Không thể mở chiến trường WebGL. Tiến trình được giữ nguyên; hãy thử lại hoặc quay về.'); } });
-    return () => { abort.abort(); void scene.then(async handle => { await handle?.destroy(); engine.destroy(); }).catch(() => engine.destroy()); };
+    return () => engine.destroy();
   }, [battleId]);
+  useEffect(() => {
+    const abort = new AbortController(), engine=engineRef.current!;
+    setReady(false);setError('');setGraphicsFailed(false);
+    const scene = mountBattle(host.current!, engine, profile.settings, controls.current, abort.signal, () => { if (!abort.signal.aborted) refresh(n => n + 1); }, victory => { if (!abort.signal.aborted) callbacks.current.onComplete(victory); }, failed => { if(!abort.signal.aborted)setGraphicsFailed(failed); });
+    scene.then(handle => { if (abort.signal.aborted) void handle?.destroy(); else if (handle) setReady(true); }).catch(e => { if (!abort.signal.aborted) { console.error(e); setError('Không thể mở chiến trường WebGL. Tiến trình được giữ nguyên; hãy thử lại hoặc quay về.'); } });
+    return () => { abort.abort(); void scene.then(async handle => { await handle?.destroy(); }).catch(() => {}); };
+  }, [battleId, sceneRevision]);
   const engine = engineRef.current;
   const enemyHp = engine?.actors.filter(a => a.side === 'enemy').reduce((n, a) => n + a.hp, 0) || 0;
   const enemyMax = engine?.actors.filter(a => a.side === 'enemy').reduce((n, a) => n + a.stats.hp, 0) || 1;
   return <div className="nddv-battle">
     <div ref={host} className="nddv-canvas" />
     {!ready && !error && <div className="nddv-loading" role="status">Đang chuẩn bị chiến trường…</div>}
-    {error && <div className="nddv-loading"><p role="alert">{error}</p><button onClick={onRetreat}>Về bản đồ</button></div>}
+    {error && <div className="nddv-loading"><p role="alert">{error}</p><button onClick={() => reloadScene(n=>n+1)}>Thử tải lại cảnh</button><button onClick={onRetreat}>Về bản đồ</button></div>}
+    {graphicsFailed && !error && <div className="nddv-graphics-recovery" role="alert"><p>Đồ họa WebGL gặp sự cố. Trận đấu vẫn được giữ nguyên.</p><button onClick={() => reloadScene(n=>n+1)}>Thử tải lại cảnh</button><button onClick={onRetreat}>Về bản đồ</button></div>}
     <header className="nddv-battle-top"><div><small>PHIÊU LƯU · {stage.id}</small><strong>{stage.bossId ? engine?.actors.find(a => a.boss)?.hero.name : stage.name}</strong><div className="nddv-bar enemy"><i style={{ width: `${enemyHp / enemyMax * 100}%` }} /></div></div>
       <button className={`nddv-mode ${mode}`} aria-label={`Chế độ ${mode === 'auto' ? 'Tự Động' : 'Thủ Công'}, bấm để đổi`} aria-pressed={mode === 'manual'} disabled={!ready || !!engine?.outcome} onClick={() => { const next = mode === 'auto' ? 'manual' : 'auto'; controls.current.mode = next; engine?.setMode(next); setMode(next); }}> {mode === 'auto' ? 'TỰ ĐỘNG' : 'THỦ CÔNG'}</button><button onClick={() => { const next = speed === 1 ? 2 : 1; controls.current.speed = next; setSpeed(next); onSpeed(next); }}>×{speed}</button><button aria-label="Tạm dừng trận đấu" onClick={() => { controls.current.paused = true; setPaused(true); }}>Ⅱ</button>
     </header>

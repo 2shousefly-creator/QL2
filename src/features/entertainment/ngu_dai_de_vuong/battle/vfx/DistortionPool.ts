@@ -22,9 +22,11 @@ type Wave={life:number;total:number;data:Float32Array;};
 /** One reused short-lived post-process; spatial masks bound the visible distortion. */
 export class DistortionPool {
   private filter?:Filter; private waves:Wave[]=[];private group?:UniformGroup;
+  distortionDisabled=false; private activeSince=0;
   private life=new Float32Array([1,1,1,1]);private kind=new Float32Array(4);
   constructor(private world:Container,quality:VisualQuality){
-    if(quality==='low')return;
+    if(quality==='low'){this.distortionDisabled=true;return;}
+    try {
     const count=quality==='high'?4:2;
     this.waves=Array.from({length:count},()=>({life:0,total:1,data:new Float32Array([0,0,1,0])}));
     this.group=new UniformGroup({
@@ -34,8 +36,23 @@ export class DistortionPool {
     });
     this.filter=new Filter({glProgram:GlProgram.from({vertex,fragment}),resources:{distortionUniforms:this.group},resolution:quality==='high'?1:.5,padding:0});
     world.filterArea=new Rectangle(0,0,1920,1080);
+    } catch(error) { this.disable(error); }
   }
-  emit(x:number,y:number,p:ShaderImpulse){if(!this.filter)return;const i=this.waves.findIndex(w=>w.life<=0);if(i<0)return;const w=this.waves[i];w.life=w.total=p.duration;w.data.set([x,y,p.radius,p.strength]);this.kind[i]=p.kind==='heat'?1:0;this.life[i]=0;this.world.filters=[this.filter];}
-  update(dt:number){if(!this.filter)return;let active=false;this.waves.forEach((w,i)=>{w.life=Math.max(0,w.life-dt);this.life[i]=1-w.life/w.total;active ||= w.life>0;});this.group?.update();if(!active)this.world.filters=null;}
+  disable(error?:unknown){
+    this.world.filters=null;
+    if(!this.distortionDisabled&&error)console.warn('[Ngũ Đại] Distortion disabled',error);
+    this.distortionDisabled=true;this.activeSince=0;for(const w of this.waves)w.life=0;
+  }
+  emit(x:number,y:number,p:ShaderImpulse){
+    if(this.distortionDisabled||!this.filter||![x,y,p.radius,p.strength,p.duration].every(Number.isFinite)||p.radius<=0||p.duration<=0)return;
+    try {const i=this.waves.findIndex(w=>w.life<=0);if(i<0)return;const w=this.waves[i];w.life=w.total=Math.min(.8,p.duration);w.data.set([x,y,Math.min(600,p.radius),Math.max(-16,Math.min(16,p.strength))]);this.kind[i]=p.kind==='heat'?1:0;this.life[i]=0;if(!this.activeSince)this.activeSince=performance.now();this.world.filters=[this.filter];}catch(error){this.disable(error);}
+  }
+  update(dt:number){
+    if(this.distortionDisabled||!this.filter)return;
+    try {
+      if(!Number.isFinite(dt)||dt<0||this.activeSince&&performance.now()-this.activeSince>1200){this.disable();return;}
+      let active=false;this.waves.forEach((w,i)=>{w.life=Math.max(0,w.life-dt);this.life[i]=1-w.life/w.total;active ||= w.life>0;});this.group?.update();if(!active){this.world.filters=null;this.activeSince=0;}
+    }catch(error){this.disable(error);}
+  }
   destroy(){this.world.filters=null;this.filter?.destroy();}
 }

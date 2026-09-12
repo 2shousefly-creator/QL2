@@ -89,11 +89,11 @@ export class BattleEngine {
       this.visuals.push({ kind: 'knockback', x: oldX, y: oldY - 90, toX: a.x, toY: a.y - 90 });
     }
   }
-  private heal(a: Actor, value: number) {
+  private heal(a: Actor, value: number, source?:Actor) {
     if (a.hp <= 0 || value <= 0) return;
     const healed = Math.min(value, a.stats.hp - a.hp);
     a.hp += healed;
-    if (healed > 0) this.visuals.push({ kind: 'heal', x: a.x, y: a.y - 150, amount: healed });
+    if (healed > 0) this.visuals.push({ kind: 'heal', x: a.x, y: a.y - 150, amount: healed, heroId:source?.hero.id, actorId:a.id });
   }
   private damage(source: Actor, target: Actor, raw: number, type: 'physical' | 'magic', critAllowed: boolean, basic: boolean, extraPen = 0, reflected = false): number {
     if (target.hp <= 0) return 0;
@@ -112,10 +112,13 @@ export class BattleEngine {
     const dealt = Math.min(target.hp, amount);
     target.hp = Math.max(0, target.hp - amount); source.damageDone += total;
     this.cleanShields(target);
-    if (shieldHit) this.visuals.push({kind:'shieldRipple',x:target.x,y:target.y-105});
+    if (shieldHit) this.visuals.push({kind:'shieldRipple',x:target.x,y:target.y-105,toX:source.x});
     this.visuals.push({ kind: amount <= 0 ? 'absorb' : type, x: target.x, y: target.y - (target.boss ? 300 : 165), amount: total, crit });
     const mark = target.statuses.find(s => s.kind === 'mark' && s.source === source.id);
-    if (mark && !reflected) this.heal(source, total * mark.value);
+    if (mark && !reflected) {
+      this.heal(source, total * mark.value);
+      this.visuals.push({kind:'markPulse',x:target.x,y:target.y-150,actorId:target.id});
+    }
     if (target.hp <= 0) { this.interrupt(target); target.statuses = []; this.pose(target, 'death'); }
     else if (!target.action && !hardCC(target)) this.pose(target, 'hit');
     if (basic && reflect > 0 && source.hp > 0 && !reflected) this.damage(target, source, preMitigation * reflect, 'physical', false, false, 0, true);
@@ -226,7 +229,7 @@ export class BattleEngine {
   private support(a: Actor, target: Actor, skill: Skill) {
     const wasDebuffed = target.statuses.some(isDebuff);
     if (skill.cleanse) { target.statuses = target.statuses.filter(s => !isDebuff(s)); if (!wasDebuffed && skill.cleanReduction) this.applyStatus(target, a, { kind: 'reduction', value: skill.cleanReduction, duration: 4 }, skill.id); }
-    this.heal(target, (skill.healAtk || 0) * attack(a) + (skill.healTargetHp || 0) * target.stats.hp + (skill.healMissingHp || 0) * (target.stats.hp - target.hp));
+    this.heal(target, (skill.healAtk || 0) * attack(a) + (skill.healTargetHp || 0) * target.stats.hp + (skill.healMissingHp || 0) * (target.stats.hp - target.hp),a);
     if (skill.shieldDuration) this.shield(target, a, (skill.shieldAtk || 0) * attack(a) + (skill.shieldHp || 0) * a.stats.hp, skill.shieldDuration, skill.shieldArmor, skill.shieldMr, skill.shieldReflect, skill.id);
     for (const effect of skill.effects || []) this.applyStatus(target, a, effect, skill.id);
     if (skill.tauntCount) for (const enemy of nearest(a, enemiesOf(a, this.actors)).slice(0, skill.tauntCount)) this.applyStatus(enemy, a, { kind: 'taunt', value: 1, duration: skill.tauntDuration! }, skill.id);
@@ -267,7 +270,17 @@ export class BattleEngine {
       for (const id in a.cooldowns) a.cooldowns[id] = Math.max(0, a.cooldowns[id] - dt);
       a.attackCooldown = Math.max(0, a.attackCooldown - dt); a.aiCooldown -= dt;
       if (hardCC(a)) { this.pose(a, has(a, 'knockup') || has(a, 'knockback') ? 'knockback' : 'stun'); continue; }
-      if (a.action) { a.action.elapsed += dt; if (a.action.elapsed >= a.action.duration + .05) { a.action = undefined; this.pose(a, 'idle'); } else continue; }
+      if (a.action) {
+        const action = a.action; action.elapsed += dt;
+        // Named animation markers normally resolve the hit. The same authoritative
+        // deadline recovers missing markers (lost WebGL / disabled animator).
+        // resolved[] and the action token make both paths idempotent.
+        for (let i = 0; i < action.hits && a.action === action; i++) {
+          if (action.elapsed >= action.impact + i * .13 && !action.resolved.includes(i))
+            this.animationEvent(a.id, action.token, action.skill?.projectile || (!action.skill && a.hero.range > 1) ? 'projectile_spawn' : action.skill ? 'skill_hit' : 'basic_hit', i);
+        }
+        if (a.action && action.elapsed >= action.duration + .05) { a.action = undefined; this.pose(a, 'idle'); } else continue;
+      }
       let target = chooseTargets(a, this.actors)[0];
       let pendingReach: number | undefined;
       if (this.mode === 'manual' && a.side === 'player') {

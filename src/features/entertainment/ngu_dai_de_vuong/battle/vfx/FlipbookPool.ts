@@ -5,9 +5,11 @@ export class VfxTextures {
   private frames = new Map<string,Texture[]>();
   async preload(names:Iterable<string>, assets:AssetScope) {
     await Promise.all([...new Set(names)].map(async name=>{
+      try {
       const c=VFX_CLIPS[name]; if(!c||this.frames.has(name))return;
       const sheet=await assets.load<Texture>(c.sheet),w=sheet.width/c.columns,h=sheet.height/c.rows;
       this.frames.set(name,c.frames.map(i=>new Texture({source:sheet.source,frame:new Rectangle(i%c.columns*w,Math.floor(i/c.columns)*h,w,h)})));
+      } catch(error) { console.warn(`[Ngũ Đại] Missing effect: ${name}`,error); }
     }));
   }
   get(name:string){return this.frames.get(name);}
@@ -18,7 +20,7 @@ export class VfxSpritePool {
   private entries:Entry[]=[];
   constructor(private textures:VfxTextures, private layers:Record<VfxLayer,Container>, private cap=72){}
   emit(name:string,x:number,y:number,scale=1,alpha=1,stretchY=1,lifetime?:number){
-    const clip=VFX_CLIPS[name],frames=this.textures.get(name);if(!clip||!frames)return;
+    const clip=VFX_CLIPS[name],frames=this.textures.get(name);if(!clip||!frames||![x,y,scale,alpha,stretchY].every(Number.isFinite))return;
     let e=this.entries.find(e=>e.life<=0);
     if(!e&&this.entries.length<this.cap){e={sprite:new Sprite(),clip,frames,time:0,life:0,total:0,alpha:1};this.entries.push(e);}
     if(!e)return;

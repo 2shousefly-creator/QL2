@@ -1,4 +1,5 @@
-import { Application, ColorMatrixFilter, Container, Graphics, Sprite, Text } from 'pixi.js';
+import { Application, ColorMatrixFilter, Container, Graphics, Sprite, Text, Texture } from 'pixi.js';
+import { VisualGuard } from './visualGuard';
 import { SPINE_EXPORTS } from '../assets/manifest';
 import { BATTLE, QUALITY } from '../data/config';
 import type { GameProfile } from '../types';
@@ -19,7 +20,7 @@ export interface SceneHandle { destroy(): Promise<void>; }
 // A disposed React effect may still be awaiting WebGL initialization. Serialize the
 // entire application lifetime so StrictMode/navigation cannot create two renderers.
 let applicationLifetime: Promise<void> = Promise.resolve();
-export async function mountBattle(host: HTMLElement, engine: BattleEngine, settings: GameProfile['settings'], controls: BattleControls, signal: AbortSignal, onHud: () => void, onEnd: (victory: boolean) => void): Promise<SceneHandle | undefined> {
+export async function mountBattle(host: HTMLElement, engine: BattleEngine, settings: GameProfile['settings'], controls: BattleControls, signal: AbortSignal, onHud: () => void, onEnd: (victory: boolean) => void, onGraphics: (failed: boolean) => void = () => {}): Promise<SceneHandle | undefined> {
   const previous = applicationLifetime;
   let release!: () => void;
   const lifetime = new Promise<void>(resolve => { release = resolve; });
@@ -29,17 +30,22 @@ export async function mountBattle(host: HTMLElement, engine: BattleEngine, setti
   const app = new Application(), assets = new AssetScope(), audio = createBattleAudio();
   const animators = new Map<string, CharacterAnimator>();
   const bars = new Map<string, Graphics>();
+  const names = new Map<string, Text>(), deathTimes = new Map<string, number>();
+  const guard = new VisualGuard();
+  let frame = 0, lastTime = 0, contextLost = false, renderFailed = false, hitFilters = true;
+  let removeContextListeners = () => {};
   let effects: VfxManager | undefined, battlefield: ParallaxBattlefield | undefined, destroyed = false, initialized = false;
   const flashes = new Map<string,{filter:ColorMatrixFilter;remaining:number}>();
   const destroy = async () => {
     if (destroyed) return; destroyed = true;
     try {
+      cancelAnimationFrame(frame); removeContextListeners();
       if (initialized) app.stop();
-      audio.destroy();
-      for (const a of animators.values()) a.destroy();
-      animators.clear(); effects?.destroy(); battlefield?.destroy();
-      for (const flash of flashes.values()) flash.filter.destroy(); flashes.clear();
-      if (initialized) app.destroy(true, { children: true, texture: false, textureSource: false });
+      guard.run('dispose-audio',()=>audio.destroy());
+      for (const [id,a] of animators) guard.run(`dispose-${id}`,()=>a.destroy());
+      animators.clear(); guard.run('dispose-effects',()=>effects?.destroy()); guard.run('dispose-parallax',()=>battlefield?.destroy());
+      for (const [id,flash] of flashes) guard.run(`dispose-flash-${id}`,()=>flash.filter.destroy()); flashes.clear();
+      if (initialized) guard.run('dispose-app',()=>app.destroy(true, { children: true, texture: false, textureSource: false }));
       await assets.destroy();
     } finally { release(); }
   };
@@ -51,7 +57,7 @@ export async function mountBattle(host: HTMLElement, engine: BattleEngine, setti
     app.stage.addChild(world);
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const camera = new BattleCamera(world,reducedMotion);
-    effects = new VfxManager(settings.quality,camera,key=>audio.play(key),id=>{
+    effects = new VfxManager(settings.quality,camera,key=>guard.run('audio',()=>audio.play(key)),id=>{
       const flash=flashes.get(id);if(flash&&!reducedMotion)flash.remaining=.075;
     });
     await effects.preload(assets,engine.actors,world);
@@ -64,30 +70,40 @@ export async function mountBattle(host: HTMLElement, engine: BattleEngine, setti
       const animator = await createAnimator(actor.boss?.id || actor.hero.id, assets, (token, event, index) => engine.animationEvent(actor.id, token, event, index));
       animators.set(actor.id, animator);
       const group = new Container(); group.label = actor.id;
-      const shadow = new Sprite(effects.textures.get('light')![0]);shadow.anchor.set(.5);shadow.tint=0x17222a;shadow.blendMode='multiply';shadow.alpha=.35;shadow.width=actor.boss?190:108;shadow.height=actor.boss?48:30;
+      const shadow = new Sprite(effects.textures.get('light')?.[0] || Texture.WHITE);shadow.anchor.set(.5);shadow.tint=0x17222a;shadow.blendMode='multiply';shadow.alpha=.35;shadow.width=actor.boss?190:108;shadow.height=actor.boss?48:30;
       const flash = new ColorMatrixFilter();flash.brightness(1.65,false);flashes.set(actor.id,{filter:flash,remaining:0});
       const bar = new Graphics(); bars.set(actor.id, bar);
       const name = new Text({ text: actor.hero.name, style: { fontFamily: 'Arial', fontSize: actor.boss ? 24 : 19, fill: actor.side === 'player' ? 0xeee4c8 : 0xffc5b0, stroke: { color: 0x1b2933, width: 3 } } });
-      name.anchor.set(.5); name.y = actor.boss ? -410 : SPINE_EXPORTS[actor.hero.id] ? -285 : -252;
+      names.set(actor.id,name); name.anchor.set(.5); name.y = actor.boss?.id==='B001' ? -478 : actor.boss ? -410 : SPINE_EXPORTS[actor.hero.id] ? -328 : -252;
       group.addChild(shadow, animator.view, bar, name); actorsLayer.addChild(group);
-      animator.play({ actorId: actor.id, name: 'idle', token: 0, duration: 1, impact: 0, hits: 0, projectile: false });
+      const action=actor.action;
+      guard.run(`animator-${actor.id}`,()=>animator.play({ actorId: actor.id, name: actor.pose, token: actor.token, duration: action?.duration || 1.1, impact: action?.impact || 0, hits: 0, projectile: false }));
     }
     if (signal.aborted) { await destroy(); return; }
     host.appendChild(app.canvas);
     app.canvas.setAttribute('aria-label', 'Chiến trường Ngũ Đại Đế Vương');
-    const drawActor = (a: Actor) => {
+    const drawActor = (a: Actor, dt=0) => {
+      if(!Number.isFinite(a.x)||!Number.isFinite(a.y))return;
       const animator = animators.get(a.id)!, group = animator.view.parent;
+      const dead=a.hp<=0, death=dead?(deathTimes.get(a.id)||0)+dt:0;
+      deathTimes.set(a.id,death);
+      const uiAlpha=dead?Math.max(0,1-death/.15):1;
+      const name=names.get(a.id)!;name.alpha=uiAlpha;name.visible=uiAlpha>0;
+      bars.get(a.id)!.alpha=uiAlpha;bars.get(a.id)!.visible=uiAlpha>0;
       group.position.set(a.x, a.y); group.zIndex = a.y;
       const presence = a.boss?.id==='B001'?1.8:a.boss?1.55:SPINE_EXPORTS[a.hero.id]?1.22:1.05;
       animator.view.scale.set(presence * a.facing, presence);
-      const flash=flashes.get(a.id)!;animator.view.filters=flash.remaining>0?[flash.filter]:null;
+      const flash=flashes.get(a.id)!;animator.view.filters=hitFilters&&flash.remaining>0?[flash.filter]:null;
       const knockup = a.statuses.find(s=>s.kind==='knockup');
       const lift = knockup ? Math.sin(Math.PI*Math.max(0,Math.min(1,1-knockup.remaining/knockup.duration)))*95 : 0;
       animator.view.y=-lift;
       const shadow=group.children[0] as Sprite;shadow.width=(a.boss?190:108)*(1-lift/250);shadow.height=(a.boss?48:30)*(1-lift/400);
-      animator.view.alpha=a.statuses.some(s=>s.kind==='untargetable') ? .42 : 1;
-      const bar = bars.get(a.id)!.clear(), y = a.boss ? -386 : SPINE_EXPORTS[a.hero.id] ? -264 : -232, width = a.boss ? 220 : 110;
+      animator.view.alpha=dead?Math.max(0,1-Math.max(0,death-1.1)/.45):a.statuses.some(s=>s.kind==='untargetable') ? .42 : 1;
+      animator.view.tint=a.statuses.some(s=>s.kind==='freeze')?0xb8e6ff:0xffffff;
+      shadow.alpha=.35*animator.view.alpha;
+      const bar = bars.get(a.id)!, y = a.boss?.id==='B001' ? -452 : a.boss ? -386 : SPINE_EXPORTS[a.hero.id] ? -304 : -232, width = a.boss ? 220 : 110;
       if (a.hp > 0) {
+        bar.clear();
         bar.roundRect(-width / 2, y, width, 10, 4).fill({ color: 0x152432, alpha: .85 });
         bar.roundRect(-width / 2, y, Math.max(2, width * a.hp / a.stats.hp), 10, 4).fill(a.side === 'player' ? 0x8dc5a3 : 0xd98d79);
         const shield = shieldTotal(a);
@@ -99,43 +115,66 @@ export async function mountBattle(host: HTMLElement, engine: BattleEngine, setti
     const weaponPoint={x:0,y:0};
     const weaponPosition=(id:string)=>{
       const actor=engine.get(id),animator=animators.get(id);if(!actor||!animator)return;
-      const bone=animator.weaponPosition?.();
+      const bone=guard.run(`weapon-${id}`,()=>animator.weaponPosition?.());
       const fallback=HERO_VISUAL_PROFILES[actor.hero.id]?.weaponAnchor||[55,-120];
       weaponPoint.x=actor.x+(bone?.x??fallback[0])*Math.abs(animator.view.scale.x)*actor.facing;
       weaponPoint.y=actor.y+(bone?.y??fallback[1])*animator.view.scale.y+animator.view.y;
       return weaponPoint;
     };
-    for(const actor of engine.actors)drawActor(actor);
+    for(const actor of engine.actors)guard.run(`actor-${actor.id}`,()=>drawActor(actor));
     let hudTime = 0, resultDelay = 0, reported = false;
-    app.ticker.add(ticker => {
-      if (destroyed || signal.aborted || controls.paused || document.hidden || portraitOrientation.matches) return;
-      let remaining = Math.min(.05, ticker.deltaMS / 1000) * controls.speed;
+    const lost=(event:Event)=>{event.preventDefault();contextLost=true;effects?.disableDistortion();onGraphics(true);};
+    const restored=()=>{if(destroyed||signal.aborted)return;contextLost=false;renderFailed=false;effects?.disableDistortion();};
+    app.canvas.addEventListener('webglcontextlost',lost);
+    app.canvas.addEventListener('webglcontextrestored',restored);
+    removeContextListeners=()=>{app.canvas.removeEventListener('webglcontextlost',lost);app.canvas.removeEventListener('webglcontextrestored',restored);};
+    // Pixi render can throw after update callbacks. Owning RAF lets the simulation
+    // survive that failure; scheduling first also prevents a permanently dead loop.
+    const tick=(now:number)=>{
+      if(destroyed||signal.aborted)return;
+      frame=requestAnimationFrame(tick);
+      const elapsed=lastTime?Math.min(.05,(now-lastTime)/1000):0;lastTime=now;
+      if (controls.paused || document.hidden || portraitOrientation.matches) return;
+      let remaining = elapsed * controls.speed;
       while (remaining > 1e-6) {
         const dt = Math.min(remaining, 1 / 60); remaining -= dt;
         engine.step(dt);
         for (const command of engine.commands.splice(0)) {
           const skill=engine.get(command.actorId)?.action?.skill;
           const animation=skill&&command.hits?PRODUCTION_SKILL_VFX[skill.id]?.animation:undefined;
-          animators.get(command.actorId)?.play(animation?{...command,name:animation}:command);
+          guard.run(`animator-${command.actorId}`,()=>animators.get(command.actorId)?.play(animation?{...command,name:animation}:command));
         }
-        for (const actor of engine.actors) animators.get(actor.id)?.update(dt, actor.moveMultiplier,camera.hold>0);
+        if(!contextLost)for (const actor of engine.actors) guard.run(`animator-${actor.id}`,()=>animators.get(actor.id)?.update(dt, actor.moveMultiplier,camera.hold>0));
         for (const event of engine.visuals.splice(0)) {
+          if(contextLost)continue;
           const releasePoint=event.phase==='release'&&event.actorId?weaponPosition(event.actorId):undefined;
-          effects!.emit(releasePoint?{...event,x:releasePoint.x,y:releasePoint.y}:event,engine.actors);
+          guard.run('vfx-emit',()=>effects!.emit(releasePoint?{...event,x:releasePoint.x,y:releasePoint.y}:event,engine.actors));
         }
-        effects!.update(dt, engine.projectiles,engine.actors,weaponPosition);
+        if(!contextLost)guard.run('vfx-update',()=>effects!.update(dt, engine.projectiles,engine.actors,weaponPosition));
         for(const flash of flashes.values())flash.remaining=Math.max(0,flash.remaining-dt);
-        camera.update(dt/controls.speed);battlefield!.update(reducedMotion?0:dt/controls.speed,camera);
+        guard.run('camera',()=>camera.update(dt/controls.speed),()=>{world.filters=null;world.pivot.set(0);world.position.set(0);world.scale.set(1);camera.x=camera.y=camera.hold=0;camera.zoom=1;});
+        if(!contextLost)guard.run('parallax',()=>battlefield!.update(reducedMotion?0:dt/controls.speed,camera));
         hudTime += dt;
         if (engine.outcome) {
           resultDelay += dt;
-          if (resultDelay >= 1.6 && !reported) { reported = true; audio.play(engine.outcome); onEnd(engine.outcome === 'victory'); }
+          if (resultDelay >= 1.6 && !reported) { reported = true; guard.run('audio',()=>audio.play(engine.outcome!)); onEnd(engine.outcome === 'victory'); }
         }
       }
-      for (const a of engine.actors) drawActor(a);
+      for (const a of engine.actors) guard.run(`actor-${a.id}`,()=>drawActor(a,elapsed*controls.speed));
       if (hudTime > .1) { hudTime = 0; onHud(); }
-    });
-    app.start();
+      if(!contextLost&&!renderFailed){
+        try {app.render();onGraphics(false);}catch(error){
+          effects?.disableDistortion();world.filters=null;hitFilters=false;
+          for(const animator of animators.values())animator.view.filters=null;
+          if(guard.health.render!==false){guard.health.render=false;console.warn('[Ngũ Đại] Render fallback',error);}
+          try{app.render();}catch{
+            effects?.quarantineGpuEffects();
+            try{app.render();}catch{renderFailed=true;onGraphics(true);}
+          }
+        }
+      }
+    };
+    frame=requestAnimationFrame(tick);
     return { destroy };
   } catch (error) { await destroy(); throw error; }
 }

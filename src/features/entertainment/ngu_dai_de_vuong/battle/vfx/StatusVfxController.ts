@@ -1,31 +1,52 @@
 import { Container, Sprite } from 'pixi.js';
 import type { Actor } from '../types';
 import { shieldTotal } from '../stats';
+import { STATUS_CLIPS } from '../../data/statusVisuals';
 import type { VfxTextures, VfxSpritePool } from './FlipbookPool';
-type StatusView={shield:Sprite;burn:Sprite;core:Sprite;aura:Sprite;rune:Sprite;value:number;tick:number;hadBurn:boolean;};
+type Entry={sprite:Sprite;active:boolean;fade:number;age:number};
+type StatusView={entries:Map<string,Entry>;shield:number;burnTick:number;hp:number;pulse:number};
 export class StatusVfxController {
   private views=new Map<string,StatusView>();private time=0;
   constructor(private layer:Container,private ground:Container,private textures:VfxTextures,private effects:VfxSpritePool,private sound:(key:string)=>void){}
-  update(dt:number,actors:Actor[]){this.time+=dt;for(const a of actors){
-    let v=this.views.get(a.id);if(!v){
-      const sprite=(name:string)=>{const s=new Sprite(this.textures.get(name)?.[0]);s.anchor.set(.5);s.visible=false;this.layer.addChild(s);return s;};
-      v={shield:sprite('barrier'),burn:sprite('burn'),core:sprite('fireCore'),aura:sprite('bossAura'),rune:sprite('tauntRune'),value:0,tick:0,hadBurn:false};v.burn.blendMode='add';v.core.blendMode='add';v.rune.blendMode='add';this.ground.addChild(v.rune);this.views.set(a.id,v);
+  update(dt:number,actors:Actor[]){
+    this.time+=dt;
+    for(const a of actors){
+      if(!Number.isFinite(a.x)||!Number.isFinite(a.y))continue;
+      let view=this.views.get(a.id);
+      if(!view){view={entries:new Map(),shield:0,burnTick:0,hp:a.hp,pulse:0};this.views.set(a.id,view);}
+      const alive=a.hp>0,shield=alive?shieldTotal(a):0;
+      if(alive&&view.shield>0&&shield<=0){this.effects.emit('statusShieldBreak',a.x,a.y-100,.9,.7);this.sound('earth');}
+      const burn=a.statuses.find(s=>s.kind==='burn');
+      if(alive&&burn&&burn.tick<view.burnTick)this.effects.emit('statusBurn',a.x,a.y-55,.4,.7,1,.16);
+      view.burnTick=burn?.tick||0;view.shield=shield;
+      // Owner-triggered blood-mark pulses arrive as explicit visual events.
+      view.hp=a.hp;view.pulse=Math.max(0,view.pulse-dt);
+      const up=a.statuses.find(s=>s.kind==='knockup');
+      const lift=up?Math.sin(Math.PI*Math.max(0,Math.min(1,1-up.remaining/Math.max(.001,up.duration))))*95:0;
+      let headSlot=0;
+      for(const [kind,def] of Object.entries(STATUS_CLIPS)){
+        const active=alive&&(kind==='shield'?shield>0:a.statuses.some(s=>s.kind===kind&&(!['armor','armorPct'].includes(kind)||s.value<0)));
+        let e=view.entries.get(kind);
+        if(!e&&!active)continue;
+        if(!e){const texture=this.textures.get(def.clip)?.[0];if(!texture)continue;const sprite=new Sprite(texture);sprite.anchor.set(.5);(def.ground?this.ground:this.layer).addChild(sprite);e={sprite,active:false,fade:0,age:0};view.entries.set(kind,e);}
+        if(active&&!e.active){e.age=0;this.effects.emit(def.clip,a.x,a.y+def.y,def.scale*1.25,.72,def.ground?.4:1,.22);}
+        if(!active&&e.active&&alive){if(kind==='freeze')this.effects.emit('statusFrostBreak',a.x,a.y-95,.85,.7);if(kind==='knockup')this.effects.emit('statusDust',a.x,a.y,.9,.6,.35);}
+        e.active=active;e.age+=dt;e.fade=Math.max(0,Math.min(1,e.fade+(active?dt/.12:-dt/.15)));
+        const s=e.sprite;s.visible=e.fade>0;
+        if(kind==='shield'){
+          const mountain=a.statuses.some(status=>status.kind==='shield'&&status.source.endsWith('H001'));
+          const frames=this.textures.get(mountain?'h001S2Loop':def.clip);
+          if(frames)s.texture=frames[Math.floor(this.time*24)%frames.length];
+        }
+        const head=def.y===-284,slot=head?headSlot++:0;
+        const x=kind==='attackSpeed'?a.facing*48:head?(slot-1)*48:0;
+        s.position.set(a.x+x,a.y+(head?(a.boss?-510:-356):def.y)-(def.ground?0:lift));
+        const scale=def.scale*(a.boss&&!head?1.5:1)*(1+Math.sin(this.time*3)*.025+(kind==='mark'?view.pulse*.5:0));
+        s.scale.set(scale,scale*(def.ground?.35:1));s.rotation=def.rotate?(kind==='stun'?this.time*.7:Math.sin(this.time*1.2)*.14):0;
+        s.alpha=e.fade*(kind==='burn'?.48:kind==='shield'||kind==='freeze'?.38:head?.9:.65);
+        if(kind==='knockup')s.alpha*=Math.max(.12,1-e.age*4);
+      }
     }
-    const shield=shieldTotal(a),burn=a.statuses.find(s=>s.kind==='burn');
-    const liftStatus=a.statuses.find(s=>s.kind==='knockup');const lift=liftStatus?Math.sin(Math.PI*Math.max(0,Math.min(1,1-liftStatus.remaining/liftStatus.duration)))*95:0;
-    for(const s of [v.shield,v.burn,v.core,v.aura])s.position.set(a.x,a.y-110-lift);
-    v.shield.visible=shield>0&&a.hp>0;v.shield.scale.set(a.boss?1.7:1.12);v.shield.alpha=.48+Math.sin(this.time*2)*.07;
-    v.rune.visible=v.shield.visible;v.rune.position.set(a.x,a.y-4);v.rune.scale.set(a.boss?1.2:.72,.24);v.rune.rotation=Math.sin(this.time*.35)*.08;v.rune.alpha=.45;
-    if(v.value>0&&shield<=0){this.effects.emit('shieldImpact',a.x,a.y-90,1.1);this.sound('earth');}
-    else if(v.value>shield&&shield>0){this.effects.emit('barrier',a.x,a.y-110,1.15,.7,1,.18);}
-    v.value=shield;
-    v.burn.visible=!!burn&&a.hp>0;v.burn.position.set(a.x,a.y-55-lift);v.burn.scale.set(.45,.55+Math.sin(this.time*9)*.04);v.burn.alpha=.6+Math.sin(this.time*11)*.1;
-    v.core.visible=v.burn.visible;v.core.scale.set(.22);v.core.alpha=.35;
-    const frames=this.textures.get('fireCore');if(frames)v.core.texture=frames[Math.floor(this.time*18)%frames.length];
-    if(burn&&burn.tick<v.tick)this.effects.emit('fireCore',a.x,a.y-75,.8,.8,1,.14);
-    if(v.hadBurn&&!burn)this.effects.emit('fireImpact',a.x,a.y-55,.25,.3,1,.25);
-    v.hadBurn=!!burn;v.tick=burn?.tick||0;
-    v.aura.visible=a.boss?.id==='B001'&&a.enraged&&a.hp>0;v.aura.scale.set(1.75);v.aura.alpha=.24+Math.sin(this.time*2.2)*.04;
-  }}
-  destroy(){for(const v of this.views.values())for(const s of [v.shield,v.burn,v.core,v.aura,v.rune])s.destroy();this.views.clear();}
+  }
+  destroy(){for(const v of this.views.values())for(const e of v.entries.values())e.sprite.destroy();this.views.clear();}
 }
