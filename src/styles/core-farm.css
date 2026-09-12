@@ -22,3 +22,13 @@
 
 .core-farm-pixi { position: absolute; inset: 0; z-index: 3; pointer-events: none; overflow: hidden; border-radius: inherit; }
 .core-farm-scene[data-pixi-ready="true"] .animate-crop-gentle { animation: none; }
+
+/* React retains the layout and controls; only successfully loaded slice art is replaced. */
+.core-farm-scene [data-world-plot="true"] {
+  background: transparent !important; border-color: transparent !important;
+  box-shadow: none !important; transform: none !important; animation: none !important;
+}
+.core-farm-scene [data-world-plot="true"]:focus-visible { outline: 2px solid #ffe1a0; outline-offset: 2px; }
+.core-farm-scene [data-world-plot="true"] [data-moisture-anchor="bar"] { display: none; }
+.core-farm-scene [data-world-pen="true"] { background: transparent !important; border-color: transparent !important; box-shadow: none; }
+.core-farm-scene [data-world-section="true"] { background: transparent !important; backdrop-filter: none !important; }

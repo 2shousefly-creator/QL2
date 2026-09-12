@@ -605,7 +605,9 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
         selectedPlotIndex,
         currentNow
       );
-      return { message: result.message };
+      return { message: result.message, visualEvent: result.success ? {
+        id: `pest-${selectedPlotIndex}-${currentNow}`, plotIndex: selectedPlotIndex, kind: "pest", startedAt: currentNow,
+      } : undefined };
     }, currentNow);
   };
 
@@ -624,7 +626,7 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
       );
       if (result.success) recordFertilizerUsed(draft, fertilizerId);
       return { message: result.message, visualEvent: result.success ? {
-        id: `fertilizer-${plotIndex}-${currentNow}`, plotIndex, kind: "fertilizer", startedAt: currentNow,
+        id: `fertilizer-${plotIndex}-${currentNow}`, plotIndex, kind: "fertilizer", startedAt: currentNow, fertilizerId,
       } : undefined };
     }, currentNow);
   };
@@ -804,6 +806,7 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
         recordPerfectFarmItemSale(draft, res.soldByQuality.hoan_my);
         const eggInfo = EGG_INFO_MAP[eggTypeId];
         return {
+          visualEvent: { id: `egg-${Date.now()}`, plotIndex: -1, kind: "egg", startedAt: Date.now() },
           goldEarned: res.goldEarned,
           xpEarned: res.xpEarned,
           summaryData: {
@@ -836,6 +839,7 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
         recordEggSale(draft, res.totalCount);
         recordPerfectFarmItemSale(draft, res.soldByQuality.hoan_my);
         return {
+          visualEvent: { id: `egg-all-${Date.now()}`, plotIndex: -1, kind: "egg", startedAt: Date.now() },
           goldEarned: res.totalGold,
           xpEarned: res.totalXp,
           summaryData: {

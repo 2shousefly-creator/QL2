@@ -97,3 +97,21 @@ export function getFertilizerAsset(fertilizerId: FertilizerTypeId): string {
 export function getFeedAsset(feedId: FeedTypeId): string {
   return TANG_GIA_ASSETS.feed[feedId];
 }
+
+/** Versioned slice pack. Runtime URLs are centralized here, never in renderers. */
+const worldAsset = (name: string, extension = 'webp') => `${ASSET_ROOT}/world-v1/${name}.${extension}`;
+export const FARM_WORLD_ASSETS = {
+  environment: {
+    sky: worldAsset('sky', 'svg'), cloud: worldAsset('cloud'), farHill: worldAsset('farHill'),
+    farTree: worldAsset('farTree'), building: worldAsset('building'), field: worldAsset('field'),
+    path: worldAsset('path'), foreground: worldAsset('foreground'),
+  },
+  pen: { ground: worldAsset('penGround'), fence: worldAsset('fence'), shelter: worldAsset('shelter'),
+    trough: worldAsset('emptyTrough'), water: worldAsset('waterTrough'), nest: worldAsset('emptyNest'), egg: worldAsset('egg'), grain: worldAsset('grain') },
+  animals: { chicken: worldAsset('chicken'), duck: worldAsset('duck') },
+  vfx: { water: worldAsset('drop', 'svg'), rain: worldAsset('drop', 'svg'),
+    fertilizer: worldAsset('light', 'svg'), dust: worldAsset('light', 'svg'),
+    light: worldAsset('light', 'svg'), firefly: worldAsset('light', 'svg'),
+    leaf: worldAsset('leaf', 'svg'), ripple: worldAsset('ripple', 'svg'), butterfly: worldAsset('butterfly', 'svg'),
+    carrot: worldAsset('carrotReward'), tomato: worldAsset('tomatoReward'), pest: worldAsset('pest') },
+} as const;

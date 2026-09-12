@@ -1,7 +1,8 @@
 import { useDeferredPixiLayer } from "../../../components/core-visual/pixi/useDeferredPixiLayer";
 import { getJourneyChapterForRank } from "../../../game/etaEngine";
 import { getStageTheme } from "../../../game/stageThemes";
-import type { FarmVisualEvent } from "../pixi/farmPixiTypes";
+import { getAnimalVisualScale, isAnimalDead } from "../animalLifecycle";
+import type { FarmVisualEvent, FarmPlotVisual, FarmAnimalVisual } from "../pixi/farmPixiTypes";
 import { CoreVfx } from "../../../components/core-visual/CoreVfx";
 import "../../../styles/core-farm.css";
 import React from "react";
@@ -196,6 +197,21 @@ export const TangGiaCanvas2D: React.FC<TangGiaCanvas2DProps> = ({
   now,
 }) => {
   const pixi = useDeferredPixiLayer(loadFarmPixi, reducedMotion);
+  const [worldLoaded, setWorldLoaded] = React.useState(false);
+  const worldReady = pixi.ready && worldLoaded;
+  const [visualQuality, setVisualQuality] = React.useState<"low" | "medium" | "high">("high");
+  const worldPlots = plots.flatMap<FarmPlotVisual>((plot, index) => {
+    if (index > 2 || plot.status === "locked") return [];
+    const cropId = plot.status === "growing" || plot.status === "ready" ? plot.cropId : null;
+    if (cropId && cropId !== "carrot" && cropId !== "tomato") return [];
+    return [{ index, cropId, stage: getCropVisualStage(plot.status === "ready" ? 1 : plot.status === "growing" ? getCropGrowthProgress(plot) : 0), moisture: plot.soilMoisture, ready: plot.status === "ready", pest: !!getPestPresentation(plot, now), fertilizer: hasCropFertilizer(plot) }];
+  });
+  const worldAnimals = penAnimals.flatMap<FarmAnimalVisual>(animal => {
+    const species = animal.animalTypeId;
+    if (species !== "chicken" && species !== "duck") return [];
+    const definition = ANIMAL_CATALOG.find(entry => entry.id === species)!;
+    return [{ id: animal.instanceId, species, dead: isAnimalDead(animal), scale: getAnimalVisualScale(animal, definition, now), eggReady: !isAnimalDead(animal) && animal.nextEggAt <= now, cycle: animal.cycleStartedAt ?? animal.addedAt }];
+  });
   // Helper to format countdown timer
   const formatCountdown = (ms: number | null | undefined): string => {
     if (ms === null || ms === undefined || !Number.isFinite(ms)) {
@@ -289,7 +305,7 @@ export const TangGiaCanvas2D: React.FC<TangGiaCanvas2DProps> = ({
   return (
     <div
       data-core-motion={pixi.reducedMotion ? "reduced" : undefined}
-      data-pixi-ready={pixi.ready}
+      data-pixi-ready={worldReady}
       data-weather={weatherType} data-night={isNight}
       className="core-farm-scene w-full relative min-h-[500px] sm:min-h-[540px] rounded-3xl border-2 border-emerald-700/60 p-3 sm:p-4 overflow-hidden shadow-2xl flex flex-col justify-between select-none transition-colors duration-1000"
       style={{
@@ -304,13 +320,15 @@ export const TangGiaCanvas2D: React.FC<TangGiaCanvas2DProps> = ({
       <div className="core-farm-pixi" aria-hidden="true">
         {pixi.Layer && <pixi.Layer visualProps={{
           theme: getStageTheme(getJourneyChapterForRank(currentRank?.rankIndex ?? 0).themeId),
+          plots: worldPlots, animals: worldAnimals, feed: penFeedBuffValue, starving: penStarvationStartedAt != null && penFeedBuffValue <= 0, eggCount, quality: visualQuality,
+          selectedAnimalId, contextMode, onPlotTap, onPenTap, onAnimalTap, onEggTap: onOpenEggStorage,
           weather: weatherType, phase: isNight ? "night" : "day", weatherSeed, selectedPlotIndex,
           readyPlotIndices: plots.flatMap((plot, index) => plot.status === "ready" ? [index] : []),
           pestPlotIndices: plots.flatMap((plot, index) => getPestPresentation(plot, now) ? [index] : []),
-          events: [...harvestPresentations.map(entry => ({ id: entry.id, plotIndex: entry.plotIndex, startedAt: entry.startedAt, kind: "harvest" as const })), ...visualEvents].slice(-18),
-        }} reducedMotion={pixi.reducedMotion} onReady={pixi.onReady} onUnavailable={pixi.onUnavailable} />}
+          events: [...harvestPresentations.map(entry => ({ id: entry.id, plotIndex: entry.plotIndex, startedAt: entry.startedAt, cropId: entry.cropId, kind: "harvest" as const })), ...visualEvents].filter(event => event.kind === "egg" || worldPlots.some(p => p.index === event.plotIndex)).slice(-18),
+        }} reducedMotion={pixi.reducedMotion} onWorldLoading={() => setWorldLoaded(false)} onReady={() => { setWorldLoaded(true); pixi.onReady(); }} onUnavailable={pixi.onUnavailable} />}
       </div>
-      {!pixi.ready && <>
+      {!worldReady && <>
       <div className="core-farm-atmosphere" aria-hidden="true">
         <CoreVfx type="haze" themeAware={false} reducedMotion={reducedMotion} />
         {(isNight || weatherType === "sunny") && <CoreVfx type="dust" themeAware={false} reducedMotion={reducedMotion} />}
@@ -355,6 +373,12 @@ export const TangGiaCanvas2D: React.FC<TangGiaCanvas2DProps> = ({
       )}
 
       </>}
+      <label className="relative z-10 mb-2 ml-auto flex items-center gap-2 rounded-lg bg-slate-950/65 px-2 py-1 text-[10px] text-amber-100">
+        Chi tiết cảnh
+        <select aria-label="Mức chi tiết cảnh nông trại" value={visualQuality} onChange={e => setVisualQuality(e.target.value as typeof visualQuality)} className="rounded bg-slate-900 px-1 py-0.5 text-amber-100">
+          <option value="high">Cao</option><option value="medium">Vừa</option><option value="low">Thấp</option>
+        </select>
+      </label>
       {/* --- MAIN SCENE CONTENT (GARDEN & PEN ON ONE SCREEN) --- */}
       <div className="relative z-10 w-full h-full flex flex-col lg:flex-row items-stretch gap-3 sm:gap-4 my-auto">
         {/* --- LEFT / MAIN SECTION: 3x3 GARDEN PLOTS --- */}
@@ -363,6 +387,7 @@ export const TangGiaCanvas2D: React.FC<TangGiaCanvas2DProps> = ({
             e.stopPropagation();
             onGardenTap();
           }}
+          data-world-section={worldReady || undefined}
           className={`flex-1 rounded-2xl p-2 sm:p-3 flex flex-col justify-between transition-all duration-200 cursor-pointer ${
             contextMode === "garden"
               ? "ring-2 ring-amber-400/70 bg-emerald-900/30 backdrop-blur-[2px] shadow-lg shadow-emerald-900/30"
@@ -442,6 +467,10 @@ export const TangGiaCanvas2D: React.FC<TangGiaCanvas2DProps> = ({
                   key={`plot-${plotIndex}`}
                   data-farm-plot={plotIndex + 1}
                   data-farm-plot-index={plotIndex}
+                  data-world-plot={worldReady && worldPlots.some(p => p.index === plotIndex) || undefined}
+                  role="button" tabIndex={0}
+                  aria-label={`Ô đất ${plotIndex + 1}: ${cropDef?.name || (isUnlocked ? "Đất trống" : "Chưa mở khóa")}${isReady ? ", có thể thu hoạch" : ""}`}
+                  onKeyDown={e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); e.stopPropagation(); onPlotTap(plotIndex); } }}
                   data-crop-ready={isReady}
                   data-selected={isSelected ? "true" : undefined}
                   onClick={(e) => {
@@ -458,7 +487,7 @@ export const TangGiaCanvas2D: React.FC<TangGiaCanvas2DProps> = ({
                     zIndex: isSelected ? 30 : cropStage === "young" || cropStage === "mature" ? 10 : 1,
                   }}
                 >
-                  <img
+                  {!(worldReady && worldPlots.some(p => p.index === plotIndex)) && <img
                     src={getSoilAsset(soilState)}
                     alt=""
                     aria-hidden="true"
@@ -468,9 +497,9 @@ export const TangGiaCanvas2D: React.FC<TangGiaCanvas2DProps> = ({
                     className={`pointer-events-none absolute inset-0 h-full w-full object-contain transition-[filter] duration-500 ${
                       isUnlocked ? "" : "brightness-75 saturate-75"
                     }`}
-                  />
-                  {!pixi.ready && harvestPresentation && <CoreVfx key={harvestPresentation.id} type="spark" themeAware={false} reducedMotion={reducedMotion} />}
-                  {harvestPresentation &&
+                  />}
+                  {!(worldReady && worldPlots.some(p => p.index === plotIndex)) && harvestPresentation && <CoreVfx key={harvestPresentation.id} type="spark" themeAware={false} reducedMotion={reducedMotion} />}
+                  {!(worldReady && worldPlots.some(p => p.index === plotIndex)) && harvestPresentation &&
                     harvestPresentation.glowUntil > harvestPresentation.startedAt && (
                       <div
                         data-harvest-glow="true"
@@ -579,12 +608,12 @@ export const TangGiaCanvas2D: React.FC<TangGiaCanvas2DProps> = ({
                                 : formatCountdown(remainingMs)}
                             </span>
                           )}
-                          <CropGrowthVisual
+                          {worldReady && worldPlots.some(p => p.index === plotIndex) ? <div className="h-11 w-11 sm:h-12 sm:w-12" aria-hidden="true" /> : <CropGrowthVisual
                             stage={cropStage}
                             progress={progress}
                             cropId={cropId}
                             cropName={cropDef?.name}
-                          />
+                          />}
                         </div>
                       </div>
 
@@ -656,6 +685,7 @@ export const TangGiaCanvas2D: React.FC<TangGiaCanvas2DProps> = ({
 
         {/* --- RIGHT SECTION: LIVESTOCK PEN --- */}
         <LivestockPen2D
+          pixiWorld={worldReady}
           penAnimals={penAnimals}
           eggCount={eggCount}
           penFeedBuffValue={penFeedBuffValue}
@@ -678,7 +708,7 @@ export const TangGiaCanvas2D: React.FC<TangGiaCanvas2DProps> = ({
       </div>
 
       {/* --- FOREGROUND RAIN OVERLAY (Falls over garden plots & livestock pen + splashes) --- */}
-      {!pixi.ready && weatherType === "rain" && <RainOverlay isNight={isNight} reducedMotion={reducedMotion} />}
+      {!worldReady && weatherType === "rain" && <RainOverlay isNight={isNight} reducedMotion={reducedMotion} />}
     </div>
   );
 };

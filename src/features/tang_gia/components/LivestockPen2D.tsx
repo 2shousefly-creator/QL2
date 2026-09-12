@@ -29,6 +29,7 @@ import {
 import { TANG_GIA_ASSETS } from "../tangGiaAssetManifest";
 
 interface LivestockPen2DProps {
+  pixiWorld?: boolean;
   penAnimals: PenAnimalState[];
   eggCount: number;
   penFeedBuffValue: number;
@@ -560,6 +561,7 @@ const EggNest: React.FC<{
 };
 
 export const LivestockPen2D: React.FC<LivestockPen2DProps> = ({
+  pixiWorld = false,
   penAnimals,
   eggCount,
   penFeedBuffValue,
@@ -580,6 +582,7 @@ export const LivestockPen2D: React.FC<LivestockPen2DProps> = ({
   now,
 }) => {
   // State for animal physical positions & target wandering destinations
+  const hasLegacyAnimals = penAnimals.some(a => a.animalTypeId !== "chicken" && a.animalTypeId !== "duck");
   const [animalsState, setAnimalsState] = useState<WanderingAnimal[]>([]);
   const penAnimalsRef = useRef(penAnimals);
   const nowRef = useRef(now);
@@ -634,7 +637,7 @@ export const LivestockPen2D: React.FC<LivestockPen2DProps> = ({
     const prefersReducedMotion =
       typeof window !== "undefined" &&
       window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (prefersReducedMotion) return;
+    if (prefersReducedMotion || pixiWorld && !hasLegacyAnimals) return;
 
     const animate = (frameTime: number) => {
       const previousFrameTime = lastFrameTimeRef.current ?? frameTime;
@@ -644,6 +647,7 @@ export const LivestockPen2D: React.FC<LivestockPen2DProps> = ({
       setAnimalsState((prevList) => {
         if (prevList.length === 0) return prevList;
         return prevList.map((animal) => {
+          if (pixiWorld && (animal.animalTypeId === "chicken" || animal.animalTypeId === "duck")) return animal;
           const penAnimal = penAnimalsRef.current.find(
             (entry) => entry.instanceId === animal.instanceId
           );
@@ -751,7 +755,7 @@ export const LivestockPen2D: React.FC<LivestockPen2DProps> = ({
       animationFrameRef.current = null;
       lastFrameTimeRef.current = null;
     };
-  }, []);
+  }, [pixiWorld, hasLegacyAnimals]);
 
   const isNight = currentWeatherSlot?.phase === "night";
   const weatherType = currentWeatherSlot?.weather || "sunny";
@@ -782,6 +786,7 @@ export const LivestockPen2D: React.FC<LivestockPen2DProps> = ({
         e.stopPropagation();
         onPenTap();
       }}
+      data-world-section={pixiWorld || undefined}
       className={`w-full lg:w-[340px] rounded-2xl p-2 sm:p-3 flex flex-col justify-between cursor-pointer transition-all duration-200 select-none ${
         contextMode === "pen"
           ? "ring-2 ring-amber-400/70 bg-emerald-900/30 backdrop-blur-[2px] shadow-lg shadow-emerald-900/30"
@@ -945,6 +950,8 @@ export const LivestockPen2D: React.FC<LivestockPen2DProps> = ({
 
       {/* --- LIVING 2D PEN ARENA WITH FENCES & ANIMALS --- */}
       <div
+        data-livestock-pen-arena="true"
+        data-world-pen={pixiWorld || undefined}
         className="relative w-full h-[230px] sm:h-[250px] border-2 rounded-2xl overflow-hidden shadow-inner flex flex-col items-center justify-center transition-colors duration-500"
         style={getPenArenaBgStyle()}
       >
@@ -952,15 +959,15 @@ export const LivestockPen2D: React.FC<LivestockPen2DProps> = ({
           <div className="absolute inset-0 z-[2] bg-gradient-to-b from-sky-100/5 via-transparent to-sky-950/15" />
         )}
 
-        <img
+        {!pixiWorld && <img
           src={TANG_GIA_ASSETS.livestockPen}
           alt=""
           aria-hidden="true"
           draggable={false}
           data-livestock-pen-sprite="base"
           className="pointer-events-none absolute inset-0 z-[3] h-full w-full object-contain object-center"
-        />
-        <EggNest eggCount={eggCount} onOpenEggStorage={onOpenEggStorage} />
+        />}
+        {!pixiWorld && <EggNest eggCount={eggCount} onOpenEggStorage={onOpenEggStorage} />}
 
         {penAnimals.length === 0 ? (
           <div className="flex flex-col items-center justify-center text-center p-4 z-10">
@@ -975,6 +982,7 @@ export const LivestockPen2D: React.FC<LivestockPen2DProps> = ({
         ) : (
           /* Render Wandering Animal Entities */
           animalsState.map((animal) => {
+            if (pixiWorld && (animal.animalTypeId === "chicken" || animal.animalTypeId === "duck")) return null;
             const animalDef = ANIMAL_CATALOG.find(
               (a) => a.id === animal.animalTypeId
             );
@@ -1136,6 +1144,11 @@ export const LivestockPen2D: React.FC<LivestockPen2DProps> = ({
           })
         )}
       </div>
+      {pixiWorld && <div className="relative z-10 flex flex-wrap gap-1 pt-2" aria-label="Chọn vật nuôi">
+        {penAnimals.filter(a => a.animalTypeId === "chicken" || a.animalTypeId === "duck").map((a, i) => <button key={a.instanceId} type="button" onClick={e => { e.stopPropagation(); onAnimalTap(a.instanceId); }} aria-pressed={selectedAnimalId === a.instanceId} className="rounded-md bg-slate-950/75 px-2 py-1 text-[10px] text-amber-100 focus-visible:outline focus-visible:outline-amber-300">{ANIMAL_CATALOG.find(d => d.id === a.animalTypeId)?.name} {i + 1}{isAnimalDead(a) ? " · Chết" : ""}</button>)}
+        <button type="button" onClick={e => { e.stopPropagation(); onOpenEggStorage(); }} className="rounded-md bg-slate-950/75 px-2 py-1 text-[10px] text-amber-100">Kho trứng · {eggCount}</button>
+        <button type="button" onClick={e => { e.stopPropagation(); onPenTap(); }} className="rounded-md bg-slate-950/75 px-2 py-1 text-[10px] text-amber-100">Quản lý chuồng</button>
+      </div>}
     </div>
   );
 };
