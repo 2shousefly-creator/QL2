@@ -1,0 +1,5533 @@
+{
+  "generatedFrom": "farmCatalog.ts and actual image metadata, no gameplay or QA execution",
+  "counts": {
+    "crops": 19,
+    "animals": 10,
+    "fertilizers": 11,
+    "feeds": 3
+  },
+  "note": "Temporary-fallback means a real legacy file exists; it does not imply new-style approval. Dimensions are source pixel dimensions, not CSS display size. Shared file memory is counted once when budgeting.",
+  "rows": [
+    {
+      "canonicalId": "carrot",
+      "category": "crop",
+      "displayName": "Cà Rốt",
+      "stageOrClip": "seed",
+      "sourceFile": "public/assets/tanggia/crops/carrot/carrot_seed.png",
+      "atlasId": null,
+      "frameNames": [
+        "seed"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "carrot",
+      "category": "crop",
+      "displayName": "Cà Rốt",
+      "stageOrClip": "sprout",
+      "sourceFile": "public/assets/tanggia/crops/carrot/carrot_sprout.png",
+      "atlasId": null,
+      "frameNames": [
+        "sprout"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "carrot",
+      "category": "crop",
+      "displayName": "Cà Rốt",
+      "stageOrClip": "young",
+      "sourceFile": "public/assets/tanggia/crops/carrot/carrot_young.png",
+      "atlasId": null,
+      "frameNames": [
+        "young"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "carrot",
+      "category": "crop",
+      "displayName": "Cà Rốt",
+      "stageOrClip": "mature",
+      "sourceFile": "public/assets/tanggia/crops/carrot/carrot_mature.png",
+      "atlasId": null,
+      "frameNames": [
+        "mature"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "carrot",
+      "category": "seed-item",
+      "displayName": "Cà Rốt",
+      "stageOrClip": "icon",
+      "sourceFile": "public/assets/tanggia/crops/carrot/carrot_seed.png",
+      "atlasId": null,
+      "frameNames": [
+        "icon"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Legacy seed-stage art reused as item icon; cohesive seed packet still missing.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "carrot",
+      "category": "produce",
+      "displayName": "Cà Rốt",
+      "stageOrClip": "icon",
+      "sourceFile": "public/assets/tanggia/world-v1/carrotReward.webp",
+      "atlasId": "tanggia-world-v1-carrot",
+      "frameNames": [
+        "icon"
+      ],
+      "logicalSize": [
+        384,
+        256
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "scripts/tanggia/ART_PROMPTS.md; existing generated pack",
+      "status": "temporary-fallback",
+      "notes": "Harvest auto-sells using existing handlers; effect product is decorative, never a new inventory item.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 393216
+    },
+    {
+      "canonicalId": "cabbage",
+      "category": "crop",
+      "displayName": "Cải Bắp",
+      "stageOrClip": "seed",
+      "sourceFile": "public/assets/tanggia/crops/cabbage/cabbage_seed.png",
+      "atlasId": null,
+      "frameNames": [
+        "seed"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "cabbage",
+      "category": "crop",
+      "displayName": "Cải Bắp",
+      "stageOrClip": "sprout",
+      "sourceFile": "public/assets/tanggia/crops/cabbage/cabbage_sprout.png",
+      "atlasId": null,
+      "frameNames": [
+        "sprout"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "cabbage",
+      "category": "crop",
+      "displayName": "Cải Bắp",
+      "stageOrClip": "young",
+      "sourceFile": "public/assets/tanggia/crops/cabbage/cabbage_young.png",
+      "atlasId": null,
+      "frameNames": [
+        "young"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "cabbage",
+      "category": "crop",
+      "displayName": "Cải Bắp",
+      "stageOrClip": "mature",
+      "sourceFile": "public/assets/tanggia/crops/cabbage/cabbage_mature.png",
+      "atlasId": null,
+      "frameNames": [
+        "mature"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "cabbage",
+      "category": "seed-item",
+      "displayName": "Cải Bắp",
+      "stageOrClip": "icon",
+      "sourceFile": "public/assets/tanggia/crops/cabbage/cabbage_seed.png",
+      "atlasId": null,
+      "frameNames": [
+        "icon"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Legacy seed-stage art reused as item icon; cohesive seed packet still missing.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "cabbage",
+      "category": "produce",
+      "displayName": "Cải Bắp",
+      "stageOrClip": "icon",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Harvest auto-sells using existing handlers; effect product is decorative, never a new inventory item.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "potato",
+      "category": "crop",
+      "displayName": "Khoai Tây",
+      "stageOrClip": "seed",
+      "sourceFile": "public/assets/tanggia/crops/potato/potato_seed.png",
+      "atlasId": null,
+      "frameNames": [
+        "seed"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "potato",
+      "category": "crop",
+      "displayName": "Khoai Tây",
+      "stageOrClip": "sprout",
+      "sourceFile": "public/assets/tanggia/crops/potato/potato_sprout.png",
+      "atlasId": null,
+      "frameNames": [
+        "sprout"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "potato",
+      "category": "crop",
+      "displayName": "Khoai Tây",
+      "stageOrClip": "young",
+      "sourceFile": "public/assets/tanggia/crops/potato/potato_young.png",
+      "atlasId": null,
+      "frameNames": [
+        "young"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "potato",
+      "category": "crop",
+      "displayName": "Khoai Tây",
+      "stageOrClip": "mature",
+      "sourceFile": "public/assets/tanggia/crops/potato/potato_mature.png",
+      "atlasId": null,
+      "frameNames": [
+        "mature"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "potato",
+      "category": "seed-item",
+      "displayName": "Khoai Tây",
+      "stageOrClip": "icon",
+      "sourceFile": "public/assets/tanggia/crops/potato/potato_seed.png",
+      "atlasId": null,
+      "frameNames": [
+        "icon"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Legacy seed-stage art reused as item icon; cohesive seed packet still missing.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "potato",
+      "category": "produce",
+      "displayName": "Khoai Tây",
+      "stageOrClip": "icon",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Harvest auto-sells using existing handlers; effect product is decorative, never a new inventory item.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "tomato",
+      "category": "crop",
+      "displayName": "Cà Chua",
+      "stageOrClip": "seed",
+      "sourceFile": "public/assets/tanggia/crops/tomato/tomato_seed.png",
+      "atlasId": null,
+      "frameNames": [
+        "seed"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "tomato",
+      "category": "crop",
+      "displayName": "Cà Chua",
+      "stageOrClip": "sprout",
+      "sourceFile": "public/assets/tanggia/crops/tomato/tomato_sprout.png",
+      "atlasId": null,
+      "frameNames": [
+        "sprout"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "tomato",
+      "category": "crop",
+      "displayName": "Cà Chua",
+      "stageOrClip": "young",
+      "sourceFile": "public/assets/tanggia/crops/tomato/tomato_young.png",
+      "atlasId": null,
+      "frameNames": [
+        "young"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "tomato",
+      "category": "crop",
+      "displayName": "Cà Chua",
+      "stageOrClip": "mature",
+      "sourceFile": "public/assets/tanggia/crops/tomato/tomato_mature.png",
+      "atlasId": null,
+      "frameNames": [
+        "mature"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "tomato",
+      "category": "seed-item",
+      "displayName": "Cà Chua",
+      "stageOrClip": "icon",
+      "sourceFile": "public/assets/tanggia/crops/tomato/tomato_seed.png",
+      "atlasId": null,
+      "frameNames": [
+        "icon"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Legacy seed-stage art reused as item icon; cohesive seed packet still missing.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "tomato",
+      "category": "produce",
+      "displayName": "Cà Chua",
+      "stageOrClip": "icon",
+      "sourceFile": "public/assets/tanggia/world-v1/tomatoReward.webp",
+      "atlasId": "tanggia-world-v1-tomato",
+      "frameNames": [
+        "icon"
+      ],
+      "logicalSize": [
+        384,
+        256
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "scripts/tanggia/ART_PROMPTS.md; existing generated pack",
+      "status": "temporary-fallback",
+      "notes": "Harvest auto-sells using existing handlers; effect product is decorative, never a new inventory item.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 393216
+    },
+    {
+      "canonicalId": "strawberry",
+      "category": "crop",
+      "displayName": "Dâu Tây",
+      "stageOrClip": "seed",
+      "sourceFile": "public/assets/tanggia/crops/strawberry/strawberry_seed.png",
+      "atlasId": null,
+      "frameNames": [
+        "seed"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "strawberry",
+      "category": "crop",
+      "displayName": "Dâu Tây",
+      "stageOrClip": "sprout",
+      "sourceFile": "public/assets/tanggia/crops/strawberry/strawberry_sprout.png",
+      "atlasId": null,
+      "frameNames": [
+        "sprout"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "strawberry",
+      "category": "crop",
+      "displayName": "Dâu Tây",
+      "stageOrClip": "young",
+      "sourceFile": "public/assets/tanggia/crops/strawberry/strawberry_young.png",
+      "atlasId": null,
+      "frameNames": [
+        "young"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "strawberry",
+      "category": "crop",
+      "displayName": "Dâu Tây",
+      "stageOrClip": "mature",
+      "sourceFile": "public/assets/tanggia/crops/strawberry/strawberry_mature.png",
+      "atlasId": null,
+      "frameNames": [
+        "mature"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "strawberry",
+      "category": "seed-item",
+      "displayName": "Dâu Tây",
+      "stageOrClip": "icon",
+      "sourceFile": "public/assets/tanggia/crops/strawberry/strawberry_seed.png",
+      "atlasId": null,
+      "frameNames": [
+        "icon"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Legacy seed-stage art reused as item icon; cohesive seed packet still missing.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "strawberry",
+      "category": "produce",
+      "displayName": "Dâu Tây",
+      "stageOrClip": "icon",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Harvest auto-sells using existing handlers; effect product is decorative, never a new inventory item.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "corn",
+      "category": "crop",
+      "displayName": "Ngô",
+      "stageOrClip": "seed",
+      "sourceFile": "public/assets/tanggia/crops/corn/corn_seed.png",
+      "atlasId": null,
+      "frameNames": [
+        "seed"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "corn",
+      "category": "crop",
+      "displayName": "Ngô",
+      "stageOrClip": "sprout",
+      "sourceFile": "public/assets/tanggia/crops/corn/corn_sprout.png",
+      "atlasId": null,
+      "frameNames": [
+        "sprout"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "corn",
+      "category": "crop",
+      "displayName": "Ngô",
+      "stageOrClip": "young",
+      "sourceFile": "public/assets/tanggia/crops/corn/corn_young.png",
+      "atlasId": null,
+      "frameNames": [
+        "young"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "corn",
+      "category": "crop",
+      "displayName": "Ngô",
+      "stageOrClip": "mature",
+      "sourceFile": "public/assets/tanggia/crops/corn/corn_mature.png",
+      "atlasId": null,
+      "frameNames": [
+        "mature"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "corn",
+      "category": "seed-item",
+      "displayName": "Ngô",
+      "stageOrClip": "icon",
+      "sourceFile": "public/assets/tanggia/crops/corn/corn_seed.png",
+      "atlasId": null,
+      "frameNames": [
+        "icon"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Legacy seed-stage art reused as item icon; cohesive seed packet still missing.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "corn",
+      "category": "produce",
+      "displayName": "Ngô",
+      "stageOrClip": "icon",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Harvest auto-sells using existing handlers; effect product is decorative, never a new inventory item.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "pumpkin",
+      "category": "crop",
+      "displayName": "Bí Đỏ",
+      "stageOrClip": "seed",
+      "sourceFile": "public/assets/tanggia/crops/pumpkin/pumpkin_seed.png",
+      "atlasId": null,
+      "frameNames": [
+        "seed"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "pumpkin",
+      "category": "crop",
+      "displayName": "Bí Đỏ",
+      "stageOrClip": "sprout",
+      "sourceFile": "public/assets/tanggia/crops/pumpkin/pumpkin_sprout.png",
+      "atlasId": null,
+      "frameNames": [
+        "sprout"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "pumpkin",
+      "category": "crop",
+      "displayName": "Bí Đỏ",
+      "stageOrClip": "young",
+      "sourceFile": "public/assets/tanggia/crops/pumpkin/pumpkin_young.png",
+      "atlasId": null,
+      "frameNames": [
+        "young"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "pumpkin",
+      "category": "crop",
+      "displayName": "Bí Đỏ",
+      "stageOrClip": "mature",
+      "sourceFile": "public/assets/tanggia/crops/pumpkin/pumpkin_mature.png",
+      "atlasId": null,
+      "frameNames": [
+        "mature"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "pumpkin",
+      "category": "seed-item",
+      "displayName": "Bí Đỏ",
+      "stageOrClip": "icon",
+      "sourceFile": "public/assets/tanggia/crops/pumpkin/pumpkin_seed.png",
+      "atlasId": null,
+      "frameNames": [
+        "icon"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Legacy seed-stage art reused as item icon; cohesive seed packet still missing.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "pumpkin",
+      "category": "produce",
+      "displayName": "Bí Đỏ",
+      "stageOrClip": "icon",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Harvest auto-sells using existing handlers; effect product is decorative, never a new inventory item.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "watermelon",
+      "category": "crop",
+      "displayName": "Dưa Hấu",
+      "stageOrClip": "seed",
+      "sourceFile": "public/assets/tanggia/crops/watermelon/watermelon_seed.png",
+      "atlasId": null,
+      "frameNames": [
+        "seed"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "watermelon",
+      "category": "crop",
+      "displayName": "Dưa Hấu",
+      "stageOrClip": "sprout",
+      "sourceFile": "public/assets/tanggia/crops/watermelon/watermelon_sprout.png",
+      "atlasId": null,
+      "frameNames": [
+        "sprout"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "watermelon",
+      "category": "crop",
+      "displayName": "Dưa Hấu",
+      "stageOrClip": "young",
+      "sourceFile": "public/assets/tanggia/crops/watermelon/watermelon_young.png",
+      "atlasId": null,
+      "frameNames": [
+        "young"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "watermelon",
+      "category": "crop",
+      "displayName": "Dưa Hấu",
+      "stageOrClip": "mature",
+      "sourceFile": "public/assets/tanggia/crops/watermelon/watermelon_mature.png",
+      "atlasId": null,
+      "frameNames": [
+        "mature"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "watermelon",
+      "category": "seed-item",
+      "displayName": "Dưa Hấu",
+      "stageOrClip": "icon",
+      "sourceFile": "public/assets/tanggia/crops/watermelon/watermelon_seed.png",
+      "atlasId": null,
+      "frameNames": [
+        "icon"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Legacy seed-stage art reused as item icon; cohesive seed packet still missing.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "watermelon",
+      "category": "produce",
+      "displayName": "Dưa Hấu",
+      "stageOrClip": "icon",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Harvest auto-sells using existing handlers; effect product is decorative, never a new inventory item.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "pineapple",
+      "category": "crop",
+      "displayName": "Dứa",
+      "stageOrClip": "seed",
+      "sourceFile": "public/assets/tanggia/crops/pineapple/pineapple_seed.png",
+      "atlasId": null,
+      "frameNames": [
+        "seed"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "pineapple",
+      "category": "crop",
+      "displayName": "Dứa",
+      "stageOrClip": "sprout",
+      "sourceFile": "public/assets/tanggia/crops/pineapple/pineapple_sprout.png",
+      "atlasId": null,
+      "frameNames": [
+        "sprout"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "pineapple",
+      "category": "crop",
+      "displayName": "Dứa",
+      "stageOrClip": "young",
+      "sourceFile": "public/assets/tanggia/crops/pineapple/pineapple_young.png",
+      "atlasId": null,
+      "frameNames": [
+        "young"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "pineapple",
+      "category": "crop",
+      "displayName": "Dứa",
+      "stageOrClip": "mature",
+      "sourceFile": "public/assets/tanggia/crops/pineapple/pineapple_mature.png",
+      "atlasId": null,
+      "frameNames": [
+        "mature"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "pineapple",
+      "category": "seed-item",
+      "displayName": "Dứa",
+      "stageOrClip": "icon",
+      "sourceFile": "public/assets/tanggia/crops/pineapple/pineapple_seed.png",
+      "atlasId": null,
+      "frameNames": [
+        "icon"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Legacy seed-stage art reused as item icon; cohesive seed packet still missing.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "pineapple",
+      "category": "produce",
+      "displayName": "Dứa",
+      "stageOrClip": "icon",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Harvest auto-sells using existing handlers; effect product is decorative, never a new inventory item.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "banana",
+      "category": "crop",
+      "displayName": "Chuối",
+      "stageOrClip": "seed",
+      "sourceFile": "public/assets/tanggia/crops/banana/banana_seed.png",
+      "atlasId": null,
+      "frameNames": [
+        "seed"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "banana",
+      "category": "crop",
+      "displayName": "Chuối",
+      "stageOrClip": "sprout",
+      "sourceFile": "public/assets/tanggia/crops/banana/banana_sprout.png",
+      "atlasId": null,
+      "frameNames": [
+        "sprout"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "banana",
+      "category": "crop",
+      "displayName": "Chuối",
+      "stageOrClip": "young",
+      "sourceFile": "public/assets/tanggia/crops/banana/banana_young.png",
+      "atlasId": null,
+      "frameNames": [
+        "young"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "banana",
+      "category": "crop",
+      "displayName": "Chuối",
+      "stageOrClip": "mature",
+      "sourceFile": "public/assets/tanggia/crops/banana/banana_mature.png",
+      "atlasId": null,
+      "frameNames": [
+        "mature"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "banana",
+      "category": "seed-item",
+      "displayName": "Chuối",
+      "stageOrClip": "icon",
+      "sourceFile": "public/assets/tanggia/crops/banana/banana_seed.png",
+      "atlasId": null,
+      "frameNames": [
+        "icon"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Legacy seed-stage art reused as item icon; cohesive seed packet still missing.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "banana",
+      "category": "produce",
+      "displayName": "Chuối",
+      "stageOrClip": "icon",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Harvest auto-sells using existing handlers; effect product is decorative, never a new inventory item.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "orange",
+      "category": "crop",
+      "displayName": "Cam",
+      "stageOrClip": "seed",
+      "sourceFile": "public/assets/tanggia/crops/orange/orange_seed.png",
+      "atlasId": null,
+      "frameNames": [
+        "seed"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "orange",
+      "category": "crop",
+      "displayName": "Cam",
+      "stageOrClip": "sprout",
+      "sourceFile": "public/assets/tanggia/crops/orange/orange_sprout.png",
+      "atlasId": null,
+      "frameNames": [
+        "sprout"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "orange",
+      "category": "crop",
+      "displayName": "Cam",
+      "stageOrClip": "young",
+      "sourceFile": "public/assets/tanggia/crops/orange/orange_young.png",
+      "atlasId": null,
+      "frameNames": [
+        "young"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "orange",
+      "category": "crop",
+      "displayName": "Cam",
+      "stageOrClip": "mature",
+      "sourceFile": "public/assets/tanggia/crops/orange/orange_mature.png",
+      "atlasId": null,
+      "frameNames": [
+        "mature"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "orange",
+      "category": "seed-item",
+      "displayName": "Cam",
+      "stageOrClip": "icon",
+      "sourceFile": "public/assets/tanggia/crops/orange/orange_seed.png",
+      "atlasId": null,
+      "frameNames": [
+        "icon"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Legacy seed-stage art reused as item icon; cohesive seed packet still missing.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "orange",
+      "category": "produce",
+      "displayName": "Cam",
+      "stageOrClip": "icon",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Harvest auto-sells using existing handlers; effect product is decorative, never a new inventory item.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "mango",
+      "category": "crop",
+      "displayName": "Xoài",
+      "stageOrClip": "seed",
+      "sourceFile": "public/assets/tanggia/crops/mango/mango_seed.png",
+      "atlasId": null,
+      "frameNames": [
+        "seed"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "mango",
+      "category": "crop",
+      "displayName": "Xoài",
+      "stageOrClip": "sprout",
+      "sourceFile": "public/assets/tanggia/crops/mango/mango_sprout.png",
+      "atlasId": null,
+      "frameNames": [
+        "sprout"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "mango",
+      "category": "crop",
+      "displayName": "Xoài",
+      "stageOrClip": "young",
+      "sourceFile": "public/assets/tanggia/crops/mango/mango_young.png",
+      "atlasId": null,
+      "frameNames": [
+        "young"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "mango",
+      "category": "crop",
+      "displayName": "Xoài",
+      "stageOrClip": "mature",
+      "sourceFile": "public/assets/tanggia/crops/mango/mango_mature.png",
+      "atlasId": null,
+      "frameNames": [
+        "mature"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "mango",
+      "category": "seed-item",
+      "displayName": "Xoài",
+      "stageOrClip": "icon",
+      "sourceFile": "public/assets/tanggia/crops/mango/mango_seed.png",
+      "atlasId": null,
+      "frameNames": [
+        "icon"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Legacy seed-stage art reused as item icon; cohesive seed packet still missing.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "mango",
+      "category": "produce",
+      "displayName": "Xoài",
+      "stageOrClip": "icon",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Harvest auto-sells using existing handlers; effect product is decorative, never a new inventory item.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "apple",
+      "category": "crop",
+      "displayName": "Táo",
+      "stageOrClip": "seed",
+      "sourceFile": "public/assets/tanggia/crops/apple/apple_seed.png",
+      "atlasId": null,
+      "frameNames": [
+        "seed"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "apple",
+      "category": "crop",
+      "displayName": "Táo",
+      "stageOrClip": "sprout",
+      "sourceFile": "public/assets/tanggia/crops/apple/apple_sprout.png",
+      "atlasId": null,
+      "frameNames": [
+        "sprout"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "apple",
+      "category": "crop",
+      "displayName": "Táo",
+      "stageOrClip": "young",
+      "sourceFile": "public/assets/tanggia/crops/apple/apple_young.png",
+      "atlasId": null,
+      "frameNames": [
+        "young"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "apple",
+      "category": "crop",
+      "displayName": "Táo",
+      "stageOrClip": "mature",
+      "sourceFile": "public/assets/tanggia/crops/apple/apple_mature.png",
+      "atlasId": null,
+      "frameNames": [
+        "mature"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "apple",
+      "category": "seed-item",
+      "displayName": "Táo",
+      "stageOrClip": "icon",
+      "sourceFile": "public/assets/tanggia/crops/apple/apple_seed.png",
+      "atlasId": null,
+      "frameNames": [
+        "icon"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Legacy seed-stage art reused as item icon; cohesive seed packet still missing.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "apple",
+      "category": "produce",
+      "displayName": "Táo",
+      "stageOrClip": "icon",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Harvest auto-sells using existing handlers; effect product is decorative, never a new inventory item.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "pear",
+      "category": "crop",
+      "displayName": "Lê",
+      "stageOrClip": "seed",
+      "sourceFile": "public/assets/tanggia/crops/pear/pear_seed.png",
+      "atlasId": null,
+      "frameNames": [
+        "seed"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "pear",
+      "category": "crop",
+      "displayName": "Lê",
+      "stageOrClip": "sprout",
+      "sourceFile": "public/assets/tanggia/crops/pear/pear_sprout.png",
+      "atlasId": null,
+      "frameNames": [
+        "sprout"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "pear",
+      "category": "crop",
+      "displayName": "Lê",
+      "stageOrClip": "young",
+      "sourceFile": "public/assets/tanggia/crops/pear/pear_young.png",
+      "atlasId": null,
+      "frameNames": [
+        "young"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "pear",
+      "category": "crop",
+      "displayName": "Lê",
+      "stageOrClip": "mature",
+      "sourceFile": "public/assets/tanggia/crops/pear/pear_mature.png",
+      "atlasId": null,
+      "frameNames": [
+        "mature"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "pear",
+      "category": "seed-item",
+      "displayName": "Lê",
+      "stageOrClip": "icon",
+      "sourceFile": "public/assets/tanggia/crops/pear/pear_seed.png",
+      "atlasId": null,
+      "frameNames": [
+        "icon"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Legacy seed-stage art reused as item icon; cohesive seed packet still missing.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "pear",
+      "category": "produce",
+      "displayName": "Lê",
+      "stageOrClip": "icon",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Harvest auto-sells using existing handlers; effect product is decorative, never a new inventory item.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "grape",
+      "category": "crop",
+      "displayName": "Nho",
+      "stageOrClip": "seed",
+      "sourceFile": "public/assets/tanggia/crops/grape/grape_seed.png",
+      "atlasId": null,
+      "frameNames": [
+        "seed"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "grape",
+      "category": "crop",
+      "displayName": "Nho",
+      "stageOrClip": "sprout",
+      "sourceFile": "public/assets/tanggia/crops/grape/grape_sprout.png",
+      "atlasId": null,
+      "frameNames": [
+        "sprout"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "grape",
+      "category": "crop",
+      "displayName": "Nho",
+      "stageOrClip": "young",
+      "sourceFile": "public/assets/tanggia/crops/grape/grape_young.png",
+      "atlasId": null,
+      "frameNames": [
+        "young"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "grape",
+      "category": "crop",
+      "displayName": "Nho",
+      "stageOrClip": "mature",
+      "sourceFile": "public/assets/tanggia/crops/grape/grape_mature.png",
+      "atlasId": null,
+      "frameNames": [
+        "mature"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "grape",
+      "category": "seed-item",
+      "displayName": "Nho",
+      "stageOrClip": "icon",
+      "sourceFile": "public/assets/tanggia/crops/grape/grape_seed.png",
+      "atlasId": null,
+      "frameNames": [
+        "icon"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Legacy seed-stage art reused as item icon; cohesive seed packet still missing.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "grape",
+      "category": "produce",
+      "displayName": "Nho",
+      "stageOrClip": "icon",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Harvest auto-sells using existing handlers; effect product is decorative, never a new inventory item.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "dragon_fruit",
+      "category": "crop",
+      "displayName": "Lúa",
+      "stageOrClip": "seed",
+      "sourceFile": "public/assets/tanggia/crops/dragon_fruit/dragon_fruit_seed.png",
+      "atlasId": null,
+      "frameNames": [
+        "seed"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "dragon_fruit",
+      "category": "crop",
+      "displayName": "Lúa",
+      "stageOrClip": "sprout",
+      "sourceFile": "public/assets/tanggia/crops/dragon_fruit/dragon_fruit_sprout.png",
+      "atlasId": null,
+      "frameNames": [
+        "sprout"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "dragon_fruit",
+      "category": "crop",
+      "displayName": "Lúa",
+      "stageOrClip": "young",
+      "sourceFile": "public/assets/tanggia/crops/dragon_fruit/dragon_fruit_young.png",
+      "atlasId": null,
+      "frameNames": [
+        "young"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "dragon_fruit",
+      "category": "crop",
+      "displayName": "Lúa",
+      "stageOrClip": "mature",
+      "sourceFile": "public/assets/tanggia/crops/dragon_fruit/dragon_fruit_mature.png",
+      "atlasId": null,
+      "frameNames": [
+        "mature"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "dragon_fruit",
+      "category": "seed-item",
+      "displayName": "Lúa",
+      "stageOrClip": "icon",
+      "sourceFile": "public/assets/tanggia/crops/dragon_fruit/dragon_fruit_seed.png",
+      "atlasId": null,
+      "frameNames": [
+        "icon"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Legacy seed-stage art reused as item icon; cohesive seed packet still missing.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "dragon_fruit",
+      "category": "produce",
+      "displayName": "Lúa",
+      "stageOrClip": "icon",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Harvest auto-sells using existing handlers; effect product is decorative, never a new inventory item.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "avocado",
+      "category": "crop",
+      "displayName": "Bơ",
+      "stageOrClip": "seed",
+      "sourceFile": "public/assets/tanggia/crops/avocado/avocado_seed.png",
+      "atlasId": null,
+      "frameNames": [
+        "seed"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "avocado",
+      "category": "crop",
+      "displayName": "Bơ",
+      "stageOrClip": "sprout",
+      "sourceFile": "public/assets/tanggia/crops/avocado/avocado_sprout.png",
+      "atlasId": null,
+      "frameNames": [
+        "sprout"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "avocado",
+      "category": "crop",
+      "displayName": "Bơ",
+      "stageOrClip": "young",
+      "sourceFile": "public/assets/tanggia/crops/avocado/avocado_young.png",
+      "atlasId": null,
+      "frameNames": [
+        "young"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "avocado",
+      "category": "crop",
+      "displayName": "Bơ",
+      "stageOrClip": "mature",
+      "sourceFile": "public/assets/tanggia/crops/avocado/avocado_mature.png",
+      "atlasId": null,
+      "frameNames": [
+        "mature"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "avocado",
+      "category": "seed-item",
+      "displayName": "Bơ",
+      "stageOrClip": "icon",
+      "sourceFile": "public/assets/tanggia/crops/avocado/avocado_seed.png",
+      "atlasId": null,
+      "frameNames": [
+        "icon"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Legacy seed-stage art reused as item icon; cohesive seed packet still missing.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "avocado",
+      "category": "produce",
+      "displayName": "Bơ",
+      "stageOrClip": "icon",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Harvest auto-sells using existing handlers; effect product is decorative, never a new inventory item.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "durian",
+      "category": "crop",
+      "displayName": "Sầu Riêng",
+      "stageOrClip": "seed",
+      "sourceFile": "public/assets/tanggia/crops/durian/durian_seed.png",
+      "atlasId": null,
+      "frameNames": [
+        "seed"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "durian",
+      "category": "crop",
+      "displayName": "Sầu Riêng",
+      "stageOrClip": "sprout",
+      "sourceFile": "public/assets/tanggia/crops/durian/durian_sprout.png",
+      "atlasId": null,
+      "frameNames": [
+        "sprout"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "durian",
+      "category": "crop",
+      "displayName": "Sầu Riêng",
+      "stageOrClip": "young",
+      "sourceFile": "public/assets/tanggia/crops/durian/durian_young.png",
+      "atlasId": null,
+      "frameNames": [
+        "young"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "durian",
+      "category": "crop",
+      "displayName": "Sầu Riêng",
+      "stageOrClip": "mature",
+      "sourceFile": "public/assets/tanggia/crops/durian/durian_mature.png",
+      "atlasId": null,
+      "frameNames": [
+        "mature"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "durian",
+      "category": "seed-item",
+      "displayName": "Sầu Riêng",
+      "stageOrClip": "icon",
+      "sourceFile": "public/assets/tanggia/crops/durian/durian_seed.png",
+      "atlasId": null,
+      "frameNames": [
+        "icon"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Legacy seed-stage art reused as item icon; cohesive seed packet still missing.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "durian",
+      "category": "produce",
+      "displayName": "Sầu Riêng",
+      "stageOrClip": "icon",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Harvest auto-sells using existing handlers; effect product is decorative, never a new inventory item.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "mangosteen",
+      "category": "crop",
+      "displayName": "Măng Cụt",
+      "stageOrClip": "seed",
+      "sourceFile": "public/assets/tanggia/crops/mangosteen/mangosteen_seed.png",
+      "atlasId": null,
+      "frameNames": [
+        "seed"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "mangosteen",
+      "category": "crop",
+      "displayName": "Măng Cụt",
+      "stageOrClip": "sprout",
+      "sourceFile": "public/assets/tanggia/crops/mangosteen/mangosteen_sprout.png",
+      "atlasId": null,
+      "frameNames": [
+        "sprout"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "mangosteen",
+      "category": "crop",
+      "displayName": "Măng Cụt",
+      "stageOrClip": "young",
+      "sourceFile": "public/assets/tanggia/crops/mangosteen/mangosteen_young.png",
+      "atlasId": null,
+      "frameNames": [
+        "young"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "mangosteen",
+      "category": "crop",
+      "displayName": "Măng Cụt",
+      "stageOrClip": "mature",
+      "sourceFile": "public/assets/tanggia/crops/mangosteen/mangosteen_mature.png",
+      "atlasId": null,
+      "frameNames": [
+        "mature"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Existing distinct stage file; new art direction not approved. Mobile adapter uses canonical progress stage.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "mangosteen",
+      "category": "seed-item",
+      "displayName": "Măng Cụt",
+      "stageOrClip": "icon",
+      "sourceFile": "public/assets/tanggia/crops/mangosteen/mangosteen_seed.png",
+      "atlasId": null,
+      "frameNames": [
+        "icon"
+      ],
+      "logicalSize": [
+        724,
+        724
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Legacy seed-stage art reused as item icon; cohesive seed packet still missing.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 2096704
+    },
+    {
+      "canonicalId": "mangosteen",
+      "category": "produce",
+      "displayName": "Măng Cụt",
+      "stageOrClip": "icon",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Harvest auto-sells using existing handlers; effect product is decorative, never a new inventory item.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "chicken",
+      "category": "animal",
+      "displayName": "Gà",
+      "stageOrClip": "idle",
+      "sourceFile": "public/assets/tanggia/world-v1/chicken.webp",
+      "atlasId": "tanggia-world-v1-chicken",
+      "frameNames": [
+        "0.0",
+        "0.1",
+        "0.2",
+        "0.3",
+        "0.4",
+        "0.5"
+      ],
+      "logicalSize": [
+        1536,
+        1024
+      ],
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 3,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": "scripts/tanggia/ART_PROMPTS.md; existing generated pack",
+      "status": "temporary-fallback",
+      "notes": "Legacy authored row; mobile foundation currently uses idle/eat only. Walking/path/occlusion work remains before default release.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 6291456
+    },
+    {
+      "canonicalId": "chicken",
+      "category": "animal",
+      "displayName": "Gà",
+      "stageOrClip": "walk",
+      "sourceFile": "public/assets/tanggia/world-v1/chicken.webp",
+      "atlasId": "tanggia-world-v1-chicken",
+      "frameNames": [
+        "1.0",
+        "1.1",
+        "1.2",
+        "1.3",
+        "1.4",
+        "1.5"
+      ],
+      "logicalSize": [
+        1536,
+        1024
+      ],
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 12,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": "scripts/tanggia/ART_PROMPTS.md; existing generated pack",
+      "status": "temporary-fallback",
+      "notes": "Legacy authored row; mobile foundation currently uses idle/eat only. Walking/path/occlusion work remains before default release.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 6291456
+    },
+    {
+      "canonicalId": "chicken",
+      "category": "animal",
+      "displayName": "Gà",
+      "stageOrClip": "eat",
+      "sourceFile": "public/assets/tanggia/world-v1/chicken.webp",
+      "atlasId": "tanggia-world-v1-chicken",
+      "frameNames": [
+        "2.0",
+        "2.1",
+        "2.2",
+        "2.3",
+        "2.4",
+        "2.5"
+      ],
+      "logicalSize": [
+        1536,
+        1024
+      ],
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 12,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": "scripts/tanggia/ART_PROMPTS.md; existing generated pack",
+      "status": "temporary-fallback",
+      "notes": "Legacy authored row; mobile foundation currently uses idle/eat only. Walking/path/occlusion work remains before default release.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 6291456
+    },
+    {
+      "canonicalId": "chicken",
+      "category": "animal",
+      "displayName": "Gà",
+      "stageOrClip": "drink",
+      "sourceFile": "public/assets/tanggia/world-v1/chicken.webp",
+      "atlasId": "tanggia-world-v1-chicken",
+      "frameNames": [
+        "3.0",
+        "3.1",
+        "3.2",
+        "3.3",
+        "3.4",
+        "3.5"
+      ],
+      "logicalSize": [
+        1536,
+        1024
+      ],
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 12,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": "scripts/tanggia/ART_PROMPTS.md; existing generated pack",
+      "status": "temporary-fallback",
+      "notes": "Legacy authored row; mobile foundation currently uses idle/eat only. Walking/path/occlusion work remains before default release.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 6291456
+    },
+    {
+      "canonicalId": "chicken",
+      "category": "animal",
+      "displayName": "Gà",
+      "stageOrClip": "rest",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 0,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Dedicated native pose/clip missing. Foundation freezes/tints legacy pose for lifecycle states; not a finished clip.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "chicken",
+      "category": "animal",
+      "displayName": "Gà",
+      "stageOrClip": "react",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 0,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Dedicated native pose/clip missing. Foundation freezes/tints legacy pose for lifecycle states; not a finished clip.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "chicken",
+      "category": "animal",
+      "displayName": "Gà",
+      "stageOrClip": "weak",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 0,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Dedicated native pose/clip missing. Foundation freezes/tints legacy pose for lifecycle states; not a finished clip.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "chicken",
+      "category": "animal",
+      "displayName": "Gà",
+      "stageOrClip": "dead",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 0,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Dedicated native pose/clip missing. Foundation freezes/tints legacy pose for lifecycle states; not a finished clip.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "chicken_egg",
+      "category": "egg",
+      "displayName": "Trứng Gà",
+      "stageOrClip": "icon",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Distinct egg icon missing. Shared world-v1 egg remains representative VFX only. Eggs already enter canonical inventory.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "duck",
+      "category": "animal",
+      "displayName": "Vịt",
+      "stageOrClip": "idle",
+      "sourceFile": "public/assets/tanggia/world-v1/duck.webp",
+      "atlasId": "tanggia-world-v1-duck",
+      "frameNames": [
+        "0.0",
+        "0.1",
+        "0.2",
+        "0.3",
+        "0.4",
+        "0.5"
+      ],
+      "logicalSize": [
+        1536,
+        1024
+      ],
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 3,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": "scripts/tanggia/ART_PROMPTS.md; existing generated pack",
+      "status": "temporary-fallback",
+      "notes": "Legacy authored row; mobile foundation currently uses idle/eat only. Walking/path/occlusion work remains before default release.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 6291456
+    },
+    {
+      "canonicalId": "duck",
+      "category": "animal",
+      "displayName": "Vịt",
+      "stageOrClip": "walk",
+      "sourceFile": "public/assets/tanggia/world-v1/duck.webp",
+      "atlasId": "tanggia-world-v1-duck",
+      "frameNames": [
+        "1.0",
+        "1.1",
+        "1.2",
+        "1.3",
+        "1.4",
+        "1.5"
+      ],
+      "logicalSize": [
+        1536,
+        1024
+      ],
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 12,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": "scripts/tanggia/ART_PROMPTS.md; existing generated pack",
+      "status": "temporary-fallback",
+      "notes": "Legacy authored row; mobile foundation currently uses idle/eat only. Walking/path/occlusion work remains before default release.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 6291456
+    },
+    {
+      "canonicalId": "duck",
+      "category": "animal",
+      "displayName": "Vịt",
+      "stageOrClip": "eat",
+      "sourceFile": "public/assets/tanggia/world-v1/duck.webp",
+      "atlasId": "tanggia-world-v1-duck",
+      "frameNames": [
+        "2.0",
+        "2.1",
+        "2.2",
+        "2.3",
+        "2.4",
+        "2.5"
+      ],
+      "logicalSize": [
+        1536,
+        1024
+      ],
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 12,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": "scripts/tanggia/ART_PROMPTS.md; existing generated pack",
+      "status": "temporary-fallback",
+      "notes": "Legacy authored row; mobile foundation currently uses idle/eat only. Walking/path/occlusion work remains before default release.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 6291456
+    },
+    {
+      "canonicalId": "duck",
+      "category": "animal",
+      "displayName": "Vịt",
+      "stageOrClip": "drink",
+      "sourceFile": "public/assets/tanggia/world-v1/duck.webp",
+      "atlasId": "tanggia-world-v1-duck",
+      "frameNames": [
+        "3.0",
+        "3.1",
+        "3.2",
+        "3.3",
+        "3.4",
+        "3.5"
+      ],
+      "logicalSize": [
+        1536,
+        1024
+      ],
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 12,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": "scripts/tanggia/ART_PROMPTS.md; existing generated pack",
+      "status": "temporary-fallback",
+      "notes": "Legacy authored row; mobile foundation currently uses idle/eat only. Walking/path/occlusion work remains before default release.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 6291456
+    },
+    {
+      "canonicalId": "duck",
+      "category": "animal",
+      "displayName": "Vịt",
+      "stageOrClip": "rest",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 0,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Dedicated native pose/clip missing. Foundation freezes/tints legacy pose for lifecycle states; not a finished clip.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "duck",
+      "category": "animal",
+      "displayName": "Vịt",
+      "stageOrClip": "react",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 0,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Dedicated native pose/clip missing. Foundation freezes/tints legacy pose for lifecycle states; not a finished clip.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "duck",
+      "category": "animal",
+      "displayName": "Vịt",
+      "stageOrClip": "weak",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 0,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Dedicated native pose/clip missing. Foundation freezes/tints legacy pose for lifecycle states; not a finished clip.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "duck",
+      "category": "animal",
+      "displayName": "Vịt",
+      "stageOrClip": "dead",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 0,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Dedicated native pose/clip missing. Foundation freezes/tints legacy pose for lifecycle states; not a finished clip.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "duck_egg",
+      "category": "egg",
+      "displayName": "Trứng Vịt",
+      "stageOrClip": "icon",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Distinct egg icon missing. Shared world-v1 egg remains representative VFX only. Eggs already enter canonical inventory.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "quail",
+      "category": "animal",
+      "displayName": "Chim Cút",
+      "stageOrClip": "idle",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 3,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Legacy authored row; mobile foundation currently uses idle/eat only. Walking/path/occlusion work remains before default release.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "quail",
+      "category": "animal",
+      "displayName": "Chim Cút",
+      "stageOrClip": "walk",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 12,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Legacy authored row; mobile foundation currently uses idle/eat only. Walking/path/occlusion work remains before default release.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "quail",
+      "category": "animal",
+      "displayName": "Chim Cút",
+      "stageOrClip": "eat",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 12,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Legacy authored row; mobile foundation currently uses idle/eat only. Walking/path/occlusion work remains before default release.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "quail",
+      "category": "animal",
+      "displayName": "Chim Cút",
+      "stageOrClip": "drink",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 12,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Legacy authored row; mobile foundation currently uses idle/eat only. Walking/path/occlusion work remains before default release.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "quail",
+      "category": "animal",
+      "displayName": "Chim Cút",
+      "stageOrClip": "rest",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 0,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Dedicated native pose/clip missing. Foundation freezes/tints legacy pose for lifecycle states; not a finished clip.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "quail",
+      "category": "animal",
+      "displayName": "Chim Cút",
+      "stageOrClip": "react",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 0,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Dedicated native pose/clip missing. Foundation freezes/tints legacy pose for lifecycle states; not a finished clip.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "quail",
+      "category": "animal",
+      "displayName": "Chim Cút",
+      "stageOrClip": "weak",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 0,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Dedicated native pose/clip missing. Foundation freezes/tints legacy pose for lifecycle states; not a finished clip.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "quail",
+      "category": "animal",
+      "displayName": "Chim Cút",
+      "stageOrClip": "dead",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 0,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Dedicated native pose/clip missing. Foundation freezes/tints legacy pose for lifecycle states; not a finished clip.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "quail_egg",
+      "category": "egg",
+      "displayName": "Trứng Chim Cút",
+      "stageOrClip": "icon",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Distinct egg icon missing. Shared world-v1 egg remains representative VFX only. Eggs already enter canonical inventory.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "goose",
+      "category": "animal",
+      "displayName": "Ngỗng",
+      "stageOrClip": "idle",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 3,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Legacy authored row; mobile foundation currently uses idle/eat only. Walking/path/occlusion work remains before default release.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "goose",
+      "category": "animal",
+      "displayName": "Ngỗng",
+      "stageOrClip": "walk",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 12,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Legacy authored row; mobile foundation currently uses idle/eat only. Walking/path/occlusion work remains before default release.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "goose",
+      "category": "animal",
+      "displayName": "Ngỗng",
+      "stageOrClip": "eat",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 12,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Legacy authored row; mobile foundation currently uses idle/eat only. Walking/path/occlusion work remains before default release.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "goose",
+      "category": "animal",
+      "displayName": "Ngỗng",
+      "stageOrClip": "drink",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 12,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Legacy authored row; mobile foundation currently uses idle/eat only. Walking/path/occlusion work remains before default release.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "goose",
+      "category": "animal",
+      "displayName": "Ngỗng",
+      "stageOrClip": "rest",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 0,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Dedicated native pose/clip missing. Foundation freezes/tints legacy pose for lifecycle states; not a finished clip.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "goose",
+      "category": "animal",
+      "displayName": "Ngỗng",
+      "stageOrClip": "react",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 0,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Dedicated native pose/clip missing. Foundation freezes/tints legacy pose for lifecycle states; not a finished clip.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "goose",
+      "category": "animal",
+      "displayName": "Ngỗng",
+      "stageOrClip": "weak",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 0,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Dedicated native pose/clip missing. Foundation freezes/tints legacy pose for lifecycle states; not a finished clip.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "goose",
+      "category": "animal",
+      "displayName": "Ngỗng",
+      "stageOrClip": "dead",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 0,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Dedicated native pose/clip missing. Foundation freezes/tints legacy pose for lifecycle states; not a finished clip.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "goose_egg",
+      "category": "egg",
+      "displayName": "Trứng Ngỗng",
+      "stageOrClip": "icon",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Distinct egg icon missing. Shared world-v1 egg remains representative VFX only. Eggs already enter canonical inventory.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "muscovy_duck",
+      "category": "animal",
+      "displayName": "Ngan",
+      "stageOrClip": "idle",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 3,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Legacy authored row; mobile foundation currently uses idle/eat only. Walking/path/occlusion work remains before default release.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "muscovy_duck",
+      "category": "animal",
+      "displayName": "Ngan",
+      "stageOrClip": "walk",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 12,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Legacy authored row; mobile foundation currently uses idle/eat only. Walking/path/occlusion work remains before default release.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "muscovy_duck",
+      "category": "animal",
+      "displayName": "Ngan",
+      "stageOrClip": "eat",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 12,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Legacy authored row; mobile foundation currently uses idle/eat only. Walking/path/occlusion work remains before default release.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "muscovy_duck",
+      "category": "animal",
+      "displayName": "Ngan",
+      "stageOrClip": "drink",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 12,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Legacy authored row; mobile foundation currently uses idle/eat only. Walking/path/occlusion work remains before default release.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "muscovy_duck",
+      "category": "animal",
+      "displayName": "Ngan",
+      "stageOrClip": "rest",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 0,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Dedicated native pose/clip missing. Foundation freezes/tints legacy pose for lifecycle states; not a finished clip.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "muscovy_duck",
+      "category": "animal",
+      "displayName": "Ngan",
+      "stageOrClip": "react",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 0,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Dedicated native pose/clip missing. Foundation freezes/tints legacy pose for lifecycle states; not a finished clip.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "muscovy_duck",
+      "category": "animal",
+      "displayName": "Ngan",
+      "stageOrClip": "weak",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 0,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Dedicated native pose/clip missing. Foundation freezes/tints legacy pose for lifecycle states; not a finished clip.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "muscovy_duck",
+      "category": "animal",
+      "displayName": "Ngan",
+      "stageOrClip": "dead",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 0,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Dedicated native pose/clip missing. Foundation freezes/tints legacy pose for lifecycle states; not a finished clip.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "muscovy_duck_egg",
+      "category": "egg",
+      "displayName": "Trứng Ngan",
+      "stageOrClip": "icon",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Distinct egg icon missing. Shared world-v1 egg remains representative VFX only. Eggs already enter canonical inventory.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "turkey",
+      "category": "animal",
+      "displayName": "Gà Tây",
+      "stageOrClip": "idle",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 3,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Legacy authored row; mobile foundation currently uses idle/eat only. Walking/path/occlusion work remains before default release.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "turkey",
+      "category": "animal",
+      "displayName": "Gà Tây",
+      "stageOrClip": "walk",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 12,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Legacy authored row; mobile foundation currently uses idle/eat only. Walking/path/occlusion work remains before default release.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "turkey",
+      "category": "animal",
+      "displayName": "Gà Tây",
+      "stageOrClip": "eat",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 12,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Legacy authored row; mobile foundation currently uses idle/eat only. Walking/path/occlusion work remains before default release.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "turkey",
+      "category": "animal",
+      "displayName": "Gà Tây",
+      "stageOrClip": "drink",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 12,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Legacy authored row; mobile foundation currently uses idle/eat only. Walking/path/occlusion work remains before default release.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "turkey",
+      "category": "animal",
+      "displayName": "Gà Tây",
+      "stageOrClip": "rest",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 0,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Dedicated native pose/clip missing. Foundation freezes/tints legacy pose for lifecycle states; not a finished clip.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "turkey",
+      "category": "animal",
+      "displayName": "Gà Tây",
+      "stageOrClip": "react",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 0,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Dedicated native pose/clip missing. Foundation freezes/tints legacy pose for lifecycle states; not a finished clip.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "turkey",
+      "category": "animal",
+      "displayName": "Gà Tây",
+      "stageOrClip": "weak",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 0,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Dedicated native pose/clip missing. Foundation freezes/tints legacy pose for lifecycle states; not a finished clip.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "turkey",
+      "category": "animal",
+      "displayName": "Gà Tây",
+      "stageOrClip": "dead",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 0,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Dedicated native pose/clip missing. Foundation freezes/tints legacy pose for lifecycle states; not a finished clip.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "turkey_egg",
+      "category": "egg",
+      "displayName": "Trứng Gà Tây",
+      "stageOrClip": "icon",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Distinct egg icon missing. Shared world-v1 egg remains representative VFX only. Eggs already enter canonical inventory.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "guinea_fowl",
+      "category": "animal",
+      "displayName": "Gà Sao",
+      "stageOrClip": "idle",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 3,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Legacy authored row; mobile foundation currently uses idle/eat only. Walking/path/occlusion work remains before default release.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "guinea_fowl",
+      "category": "animal",
+      "displayName": "Gà Sao",
+      "stageOrClip": "walk",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 12,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Legacy authored row; mobile foundation currently uses idle/eat only. Walking/path/occlusion work remains before default release.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "guinea_fowl",
+      "category": "animal",
+      "displayName": "Gà Sao",
+      "stageOrClip": "eat",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 12,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Legacy authored row; mobile foundation currently uses idle/eat only. Walking/path/occlusion work remains before default release.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "guinea_fowl",
+      "category": "animal",
+      "displayName": "Gà Sao",
+      "stageOrClip": "drink",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 12,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Legacy authored row; mobile foundation currently uses idle/eat only. Walking/path/occlusion work remains before default release.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "guinea_fowl",
+      "category": "animal",
+      "displayName": "Gà Sao",
+      "stageOrClip": "rest",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 0,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Dedicated native pose/clip missing. Foundation freezes/tints legacy pose for lifecycle states; not a finished clip.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "guinea_fowl",
+      "category": "animal",
+      "displayName": "Gà Sao",
+      "stageOrClip": "react",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 0,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Dedicated native pose/clip missing. Foundation freezes/tints legacy pose for lifecycle states; not a finished clip.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "guinea_fowl",
+      "category": "animal",
+      "displayName": "Gà Sao",
+      "stageOrClip": "weak",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 0,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Dedicated native pose/clip missing. Foundation freezes/tints legacy pose for lifecycle states; not a finished clip.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "guinea_fowl",
+      "category": "animal",
+      "displayName": "Gà Sao",
+      "stageOrClip": "dead",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 0,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Dedicated native pose/clip missing. Foundation freezes/tints legacy pose for lifecycle states; not a finished clip.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "guinea_fowl_egg",
+      "category": "egg",
+      "displayName": "Trứng Gà Sao",
+      "stageOrClip": "icon",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Distinct egg icon missing. Shared world-v1 egg remains representative VFX only. Eggs already enter canonical inventory.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "pheasant",
+      "category": "animal",
+      "displayName": "Chim Trĩ",
+      "stageOrClip": "idle",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 3,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Legacy authored row; mobile foundation currently uses idle/eat only. Walking/path/occlusion work remains before default release.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "pheasant",
+      "category": "animal",
+      "displayName": "Chim Trĩ",
+      "stageOrClip": "walk",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 12,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Legacy authored row; mobile foundation currently uses idle/eat only. Walking/path/occlusion work remains before default release.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "pheasant",
+      "category": "animal",
+      "displayName": "Chim Trĩ",
+      "stageOrClip": "eat",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 12,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Legacy authored row; mobile foundation currently uses idle/eat only. Walking/path/occlusion work remains before default release.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "pheasant",
+      "category": "animal",
+      "displayName": "Chim Trĩ",
+      "stageOrClip": "drink",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 12,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Legacy authored row; mobile foundation currently uses idle/eat only. Walking/path/occlusion work remains before default release.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "pheasant",
+      "category": "animal",
+      "displayName": "Chim Trĩ",
+      "stageOrClip": "rest",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 0,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Dedicated native pose/clip missing. Foundation freezes/tints legacy pose for lifecycle states; not a finished clip.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "pheasant",
+      "category": "animal",
+      "displayName": "Chim Trĩ",
+      "stageOrClip": "react",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 0,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Dedicated native pose/clip missing. Foundation freezes/tints legacy pose for lifecycle states; not a finished clip.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "pheasant",
+      "category": "animal",
+      "displayName": "Chim Trĩ",
+      "stageOrClip": "weak",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 0,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Dedicated native pose/clip missing. Foundation freezes/tints legacy pose for lifecycle states; not a finished clip.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "pheasant",
+      "category": "animal",
+      "displayName": "Chim Trĩ",
+      "stageOrClip": "dead",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 0,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Dedicated native pose/clip missing. Foundation freezes/tints legacy pose for lifecycle states; not a finished clip.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "pheasant_egg",
+      "category": "egg",
+      "displayName": "Trứng Chim Trĩ",
+      "stageOrClip": "icon",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Distinct egg icon missing. Shared world-v1 egg remains representative VFX only. Eggs already enter canonical inventory.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "peafowl",
+      "category": "animal",
+      "displayName": "Công",
+      "stageOrClip": "idle",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 3,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Legacy authored row; mobile foundation currently uses idle/eat only. Walking/path/occlusion work remains before default release.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "peafowl",
+      "category": "animal",
+      "displayName": "Công",
+      "stageOrClip": "walk",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 12,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Legacy authored row; mobile foundation currently uses idle/eat only. Walking/path/occlusion work remains before default release.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "peafowl",
+      "category": "animal",
+      "displayName": "Công",
+      "stageOrClip": "eat",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 12,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Legacy authored row; mobile foundation currently uses idle/eat only. Walking/path/occlusion work remains before default release.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "peafowl",
+      "category": "animal",
+      "displayName": "Công",
+      "stageOrClip": "drink",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 12,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Legacy authored row; mobile foundation currently uses idle/eat only. Walking/path/occlusion work remains before default release.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "peafowl",
+      "category": "animal",
+      "displayName": "Công",
+      "stageOrClip": "rest",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 0,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Dedicated native pose/clip missing. Foundation freezes/tints legacy pose for lifecycle states; not a finished clip.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "peafowl",
+      "category": "animal",
+      "displayName": "Công",
+      "stageOrClip": "react",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 0,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Dedicated native pose/clip missing. Foundation freezes/tints legacy pose for lifecycle states; not a finished clip.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "peafowl",
+      "category": "animal",
+      "displayName": "Công",
+      "stageOrClip": "weak",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 0,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Dedicated native pose/clip missing. Foundation freezes/tints legacy pose for lifecycle states; not a finished clip.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "peafowl",
+      "category": "animal",
+      "displayName": "Công",
+      "stageOrClip": "dead",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 0,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Dedicated native pose/clip missing. Foundation freezes/tints legacy pose for lifecycle states; not a finished clip.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "peafowl_egg",
+      "category": "egg",
+      "displayName": "Trứng Công",
+      "stageOrClip": "icon",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Distinct egg icon missing. Shared world-v1 egg remains representative VFX only. Eggs already enter canonical inventory.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "ostrich",
+      "category": "animal",
+      "displayName": "Đà Điểu",
+      "stageOrClip": "idle",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 3,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Legacy authored row; mobile foundation currently uses idle/eat only. Walking/path/occlusion work remains before default release.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "ostrich",
+      "category": "animal",
+      "displayName": "Đà Điểu",
+      "stageOrClip": "walk",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 12,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Legacy authored row; mobile foundation currently uses idle/eat only. Walking/path/occlusion work remains before default release.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "ostrich",
+      "category": "animal",
+      "displayName": "Đà Điểu",
+      "stageOrClip": "eat",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 12,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Legacy authored row; mobile foundation currently uses idle/eat only. Walking/path/occlusion work remains before default release.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "ostrich",
+      "category": "animal",
+      "displayName": "Đà Điểu",
+      "stageOrClip": "drink",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 12,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Legacy authored row; mobile foundation currently uses idle/eat only. Walking/path/occlusion work remains before default release.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "ostrich",
+      "category": "animal",
+      "displayName": "Đà Điểu",
+      "stageOrClip": "rest",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 0,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Dedicated native pose/clip missing. Foundation freezes/tints legacy pose for lifecycle states; not a finished clip.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "ostrich",
+      "category": "animal",
+      "displayName": "Đà Điểu",
+      "stageOrClip": "react",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 0,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Dedicated native pose/clip missing. Foundation freezes/tints legacy pose for lifecycle states; not a finished clip.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "ostrich",
+      "category": "animal",
+      "displayName": "Đà Điểu",
+      "stageOrClip": "weak",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 0,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Dedicated native pose/clip missing. Foundation freezes/tints legacy pose for lifecycle states; not a finished clip.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "ostrich",
+      "category": "animal",
+      "displayName": "Đà Điểu",
+      "stageOrClip": "dead",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.86
+      ],
+      "frameRate": 0,
+      "directions": "side-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Dedicated native pose/clip missing. Foundation freezes/tints legacy pose for lifecycle states; not a finished clip.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "ostrich_egg",
+      "category": "egg",
+      "displayName": "Trứng Đà Điểu",
+      "stageOrClip": "icon",
+      "sourceFile": null,
+      "atlasId": null,
+      "frameNames": [],
+      "logicalSize": null,
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": null,
+      "status": "missing",
+      "notes": "Distinct egg icon missing. Shared world-v1 egg remains representative VFX only. Eggs already enter canonical inventory.",
+      "hasAlpha": null,
+      "estimatedRgbaBytes": null
+    },
+    {
+      "canonicalId": "fertilizer_nutrition_normal",
+      "category": "fertilizer",
+      "displayName": "Phân Dinh Dưỡng Loại Thường",
+      "stageOrClip": "icon",
+      "sourceFile": "public/assets/tanggia/items/fertilizer/fertilizer_nutrition_normal.png",
+      "atlasId": null,
+      "frameNames": [
+        "icon"
+      ],
+      "logicalSize": [
+        1254,
+        1254
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Legacy item art; awaiting unified replacement.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 6290064
+    },
+    {
+      "canonicalId": "fertilizer_growth_normal",
+      "category": "fertilizer",
+      "displayName": "Phân Tăng Trưởng Loại Thường",
+      "stageOrClip": "icon",
+      "sourceFile": "public/assets/tanggia/items/fertilizer/fertilizer_growth_normal.png",
+      "atlasId": null,
+      "frameNames": [
+        "icon"
+      ],
+      "logicalSize": [
+        1254,
+        1254
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Legacy item art; awaiting unified replacement.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 6290064
+    },
+    {
+      "canonicalId": "fertilizer_nutrition_medium",
+      "category": "fertilizer",
+      "displayName": "Phân Dinh Dưỡng Loại Vừa",
+      "stageOrClip": "icon",
+      "sourceFile": "public/assets/tanggia/items/fertilizer/fertilizer_nutrition_medium.png",
+      "atlasId": null,
+      "frameNames": [
+        "icon"
+      ],
+      "logicalSize": [
+        1254,
+        1254
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Legacy item art; awaiting unified replacement.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 6290064
+    },
+    {
+      "canonicalId": "fertilizer_growth_medium",
+      "category": "fertilizer",
+      "displayName": "Phân Tăng Trưởng Loại Vừa",
+      "stageOrClip": "icon",
+      "sourceFile": "public/assets/tanggia/items/fertilizer/fertilizer_growth_medium.png",
+      "atlasId": null,
+      "frameNames": [
+        "icon"
+      ],
+      "logicalSize": [
+        1254,
+        1254
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Legacy item art; awaiting unified replacement.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 6290064
+    },
+    {
+      "canonicalId": "fertilizer_nutrition_good",
+      "category": "fertilizer",
+      "displayName": "Phân Dinh Dưỡng Loại Tốt",
+      "stageOrClip": "icon",
+      "sourceFile": "public/assets/tanggia/items/fertilizer/fertilizer_nutrition_good.png",
+      "atlasId": null,
+      "frameNames": [
+        "icon"
+      ],
+      "logicalSize": [
+        1254,
+        1254
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Legacy item art; awaiting unified replacement.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 6290064
+    },
+    {
+      "canonicalId": "fertilizer_growth_good",
+      "category": "fertilizer",
+      "displayName": "Phân Tăng Trưởng Loại Tốt",
+      "stageOrClip": "icon",
+      "sourceFile": "public/assets/tanggia/items/fertilizer/fertilizer_growth_good.png",
+      "atlasId": null,
+      "frameNames": [
+        "icon"
+      ],
+      "logicalSize": [
+        1254,
+        1254
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Legacy item art; awaiting unified replacement.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 6290064
+    },
+    {
+      "canonicalId": "fertilizer_nutrition_super",
+      "category": "fertilizer",
+      "displayName": "Phân Dinh Dưỡng Loại Siêu Tốt",
+      "stageOrClip": "icon",
+      "sourceFile": "public/assets/tanggia/items/fertilizer/fertilizer_nutrition_super.png",
+      "atlasId": null,
+      "frameNames": [
+        "icon"
+      ],
+      "logicalSize": [
+        1254,
+        1254
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Legacy item art; awaiting unified replacement.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 6290064
+    },
+    {
+      "canonicalId": "fertilizer_growth_super",
+      "category": "fertilizer",
+      "displayName": "Phân Tăng Trưởng Loại Siêu Tốt",
+      "stageOrClip": "icon",
+      "sourceFile": "public/assets/tanggia/items/fertilizer/fertilizer_growth_super.png",
+      "atlasId": null,
+      "frameNames": [
+        "icon"
+      ],
+      "logicalSize": [
+        1254,
+        1254
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Legacy item art; awaiting unified replacement.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 6290064
+    },
+    {
+      "canonicalId": "fertilizer_premium_3",
+      "category": "fertilizer",
+      "displayName": "Phân Cao Cấp Loại 3",
+      "stageOrClip": "icon",
+      "sourceFile": "public/assets/tanggia/items/fertilizer/fertilizer_premium_3.png",
+      "atlasId": null,
+      "frameNames": [
+        "icon"
+      ],
+      "logicalSize": [
+        1254,
+        1254
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Legacy item art; awaiting unified replacement.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 6290064
+    },
+    {
+      "canonicalId": "fertilizer_premium_2",
+      "category": "fertilizer",
+      "displayName": "Phân Cao Cấp Loại 2",
+      "stageOrClip": "icon",
+      "sourceFile": "public/assets/tanggia/items/fertilizer/fertilizer_premium_2.png",
+      "atlasId": null,
+      "frameNames": [
+        "icon"
+      ],
+      "logicalSize": [
+        1254,
+        1254
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Legacy item art; awaiting unified replacement.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 6290064
+    },
+    {
+      "canonicalId": "fertilizer_premium_1",
+      "category": "fertilizer",
+      "displayName": "Phân Cao Cấp Loại 1",
+      "stageOrClip": "icon",
+      "sourceFile": "public/assets/tanggia/items/fertilizer/fertilizer_premium_1.png",
+      "atlasId": null,
+      "frameNames": [
+        "icon"
+      ],
+      "logicalSize": [
+        1254,
+        1254
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Legacy item art; awaiting unified replacement.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 6290064
+    },
+    {
+      "canonicalId": "feed_normal",
+      "category": "feed",
+      "displayName": "Thức ăn loại thường",
+      "stageOrClip": "icon",
+      "sourceFile": "public/assets/tanggia/items/feed/feed_normal.png",
+      "atlasId": null,
+      "frameNames": [
+        "icon"
+      ],
+      "logicalSize": [
+        1254,
+        1254
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Legacy item art; awaiting unified replacement.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 6290064
+    },
+    {
+      "canonicalId": "feed_good",
+      "category": "feed",
+      "displayName": "Thức ăn loại tốt",
+      "stageOrClip": "icon",
+      "sourceFile": "public/assets/tanggia/items/feed/feed_good.png",
+      "atlasId": null,
+      "frameNames": [
+        "icon"
+      ],
+      "logicalSize": [
+        1254,
+        1254
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Legacy item art; awaiting unified replacement.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 6290064
+    },
+    {
+      "canonicalId": "feed_super",
+      "category": "feed",
+      "displayName": "Thức ăn siêu tốt",
+      "stageOrClip": "icon",
+      "sourceFile": "public/assets/tanggia/items/feed/feed_super.png",
+      "atlasId": null,
+      "frameNames": [
+        "icon"
+      ],
+      "logicalSize": [
+        1254,
+        1254
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Legacy item art; awaiting unified replacement.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 6290064
+    },
+    {
+      "canonicalId": "empty",
+      "category": "soil",
+      "displayName": "empty",
+      "stageOrClip": "static",
+      "sourceFile": "public/assets/tanggia/soil/soil_empty.png",
+      "atlasId": null,
+      "frameNames": [
+        "static"
+      ],
+      "logicalSize": [
+        512,
+        512
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Legacy soil retained; new integrated earth contour/overlays need approval.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 1048576
+    },
+    {
+      "canonicalId": "planted_flat",
+      "category": "soil",
+      "displayName": "planted_flat",
+      "stageOrClip": "static",
+      "sourceFile": "public/assets/tanggia/soil/soil_planted_flat.png",
+      "atlasId": null,
+      "frameNames": [
+        "static"
+      ],
+      "logicalSize": [
+        1254,
+        1254
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Legacy soil retained; new integrated earth contour/overlays need approval.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 6290064
+    },
+    {
+      "canonicalId": "need_water",
+      "category": "soil",
+      "displayName": "need_water",
+      "stageOrClip": "static",
+      "sourceFile": "public/assets/tanggia/soil/soil_need_water.png",
+      "atlasId": null,
+      "frameNames": [
+        "static"
+      ],
+      "logicalSize": [
+        512,
+        512
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Existing repository art; source master and new-style approval not established",
+      "status": "temporary-fallback",
+      "notes": "Legacy soil retained; new integrated earth contour/overlays need approval.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 1048576
+    },
+    {
+      "canonicalId": "emptyTrough",
+      "category": "pen-prop",
+      "displayName": "emptyTrough",
+      "stageOrClip": "static",
+      "sourceFile": "public/assets/tanggia/world-v1/emptyTrough.webp",
+      "atlasId": "tanggia-world-v1-emptyTrough",
+      "frameNames": [
+        "static"
+      ],
+      "logicalSize": [
+        256,
+        256
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "scripts/tanggia/ART_PROMPTS.md; existing generated pack",
+      "status": "temporary-fallback",
+      "notes": "Existing authored prop; same-style mobile replacement pending.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 262144
+    },
+    {
+      "canonicalId": "grain",
+      "category": "pen-prop",
+      "displayName": "grain",
+      "stageOrClip": "static",
+      "sourceFile": "public/assets/tanggia/world-v1/grain.webp",
+      "atlasId": "tanggia-world-v1-grain",
+      "frameNames": [
+        "static"
+      ],
+      "logicalSize": [
+        256,
+        256
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "scripts/tanggia/ART_PROMPTS.md; existing generated pack",
+      "status": "temporary-fallback",
+      "notes": "Existing authored prop; same-style mobile replacement pending.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 262144
+    },
+    {
+      "canonicalId": "emptyNest",
+      "category": "pen-prop",
+      "displayName": "emptyNest",
+      "stageOrClip": "static",
+      "sourceFile": "public/assets/tanggia/world-v1/emptyNest.webp",
+      "atlasId": "tanggia-world-v1-emptyNest",
+      "frameNames": [
+        "static"
+      ],
+      "logicalSize": [
+        256,
+        256
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "scripts/tanggia/ART_PROMPTS.md; existing generated pack",
+      "status": "temporary-fallback",
+      "notes": "Existing authored prop; same-style mobile replacement pending.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 262144
+    },
+    {
+      "canonicalId": "egg",
+      "category": "pen-prop",
+      "displayName": "egg",
+      "stageOrClip": "static",
+      "sourceFile": "public/assets/tanggia/world-v1/egg.webp",
+      "atlasId": "tanggia-world-v1-egg",
+      "frameNames": [
+        "static"
+      ],
+      "logicalSize": [
+        256,
+        256
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "scripts/tanggia/ART_PROMPTS.md; existing generated pack",
+      "status": "temporary-fallback",
+      "notes": "Existing authored prop; same-style mobile replacement pending.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 262144
+    },
+    {
+      "canonicalId": "waterTrough",
+      "category": "pen-prop",
+      "displayName": "waterTrough",
+      "stageOrClip": "static",
+      "sourceFile": "public/assets/tanggia/world-v1/waterTrough.webp",
+      "atlasId": "tanggia-world-v1-waterTrough",
+      "frameNames": [
+        "static"
+      ],
+      "logicalSize": [
+        384,
+        256
+      ],
+      "anchor": [
+        0.5,
+        0.92
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "scripts/tanggia/ART_PROMPTS.md; existing generated pack",
+      "status": "temporary-fallback",
+      "notes": "Existing authored prop; same-style mobile replacement pending.",
+      "hasAlpha": true,
+      "estimatedRgbaBytes": 393216
+    },
+    {
+      "canonicalId": "garden-ground",
+      "category": "environment",
+      "displayName": "garden-ground",
+      "stageOrClip": "static",
+      "sourceFile": "docs/tang-gia-mobile/art/source/environment.png",
+      "atlasId": "tanggia-mobile-v2-environment",
+      "frameNames": [
+        "garden-ground"
+      ],
+      "logicalSize": [
+        627,
+        627
+      ],
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Original built-in imagegen output, 2026-09-12; no third-party reference images",
+      "status": "integrated",
+      "notes": "Integrated only in opt-in mobile view; user art approval pending.",
+      "filename": "public/assets/tanggia/mobile-v2/garden-ground.webp"
+    },
+    {
+      "canonicalId": "pen-ground",
+      "category": "environment",
+      "displayName": "pen-ground",
+      "stageOrClip": "static",
+      "sourceFile": "docs/tang-gia-mobile/art/source/environment.png",
+      "atlasId": "tanggia-mobile-v2-environment",
+      "frameNames": [
+        "pen-ground"
+      ],
+      "logicalSize": [
+        627,
+        627
+      ],
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Original built-in imagegen output, 2026-09-12; no third-party reference images",
+      "status": "integrated",
+      "notes": "Integrated only in opt-in mobile view; user art approval pending.",
+      "filename": "public/assets/tanggia/mobile-v2/pen-ground.webp"
+    },
+    {
+      "canonicalId": "garden-rear",
+      "category": "environment",
+      "displayName": "garden-rear",
+      "stageOrClip": "static",
+      "sourceFile": "docs/tang-gia-mobile/art/source/environment.png",
+      "atlasId": "tanggia-mobile-v2-environment",
+      "frameNames": [
+        "garden-rear"
+      ],
+      "logicalSize": [
+        627,
+        627
+      ],
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Original built-in imagegen output, 2026-09-12; no third-party reference images",
+      "status": "integrated",
+      "notes": "Integrated only in opt-in mobile view; user art approval pending.",
+      "filename": "public/assets/tanggia/mobile-v2/garden-rear.webp"
+    },
+    {
+      "canonicalId": "pen-rear",
+      "category": "environment",
+      "displayName": "pen-rear",
+      "stageOrClip": "static",
+      "sourceFile": "docs/tang-gia-mobile/art/source/environment.png",
+      "atlasId": "tanggia-mobile-v2-environment",
+      "frameNames": [
+        "pen-rear"
+      ],
+      "logicalSize": [
+        627,
+        627
+      ],
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Original built-in imagegen output, 2026-09-12; no third-party reference images",
+      "status": "integrated",
+      "notes": "Integrated only in opt-in mobile view; user art approval pending.",
+      "filename": "public/assets/tanggia/mobile-v2/pen-rear.webp"
+    }
+  ]
+}

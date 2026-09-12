@@ -52,6 +52,9 @@ import {
 import { CheckCircle2, Droplets, Egg, Package, Sparkles, Sprout, Store, Trash2, UserX, Wheat } from "lucide-react";
 import { MIN_PLANTING_SOIL_MOISTURE } from "./soilMoistureEngine";
 import { canTreatPest } from "./pestEngine";
+import FarmMobilePresentation from "./mobile/FarmMobilePresentation";
+import { adaptFarmMobile } from "./mobile/FarmMobileAdapter";
+import { FARM_MOBILE_REQUESTED } from "./mobile/mobileGate";
 
 interface TangGiaScreenProps {
   gameState: GameState;
@@ -69,7 +72,7 @@ type FarmDialog = {
   onConfirm?: () => void;
 };
 type StoreTab = "crop" | "fertilizer" | "animal" | "feed";
-type FarmPrimaryModal =
+export type FarmPrimaryModal =
   | { type: "store"; tab: StoreTab }
   | { type: "inventory"; tab: KhoTabType }
   | { type: "plant"; plotIndex: number }
@@ -99,6 +102,7 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
   pushTarget,
 }) => {
   const currentRank = getCurrentRank(gameState.progression.currentRankIndex);
+  const [mobileActive, setMobileActive] = useState(FARM_MOBILE_REQUESTED);
 
   // Active timestamp
   const [now, setNow] = useState(Date.now());
@@ -145,9 +149,9 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
     : undefined;
 
   useEffect(() => {
-    onTroughInfoToggle?.(farmModal?.type === "trough");
+    onTroughInfoToggle?.(!mobileActive && farmModal?.type === "trough");
     return () => onTroughInfoToggle?.(false);
-  }, [farmModal?.type, onTroughInfoToggle]);
+  }, [farmModal?.type, onTroughInfoToggle, mobileActive]);
 
   const [visualEvents, setVisualEvents] = useState<FarmVisualEvent[]>([]);
   const visualMounted = useRef(true);
@@ -575,7 +579,9 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
         return;
       }
       if (res.message) {
-        return { message: res.message };
+        return { message: res.message, visualEvent: res.success ? {
+          id: `sow-${plotIndex}-${currentNow}`, plotIndex, kind: 'sow', cropId, startedAt: currentNow,
+        } : undefined };
       }
     }, currentNow);
   };
@@ -751,6 +757,7 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
             soilMoisture: 100,
             soilMoistureUpdatedAt: unlockedAt,
           };
+          return { visualEvent: { id: `unlock-${plotIndex}-${unlockedAt}`, plotIndex, kind: 'unlock', startedAt: unlockedAt } };
         }, unlockedAt);
         showToast(`Đã mở khóa thành công Ô đất #${plotIndex + 1}!`);
         closeFarmModal();
@@ -794,7 +801,9 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
       if (res.success && res.quantityFed) {
         recordFeedBagsUsed(draft, res.quantityFed);
       }
-      return { message: res.message };
+      return { message: res.message, visualEvent: res.success ? {
+        id: `feed-${currentNow}`, plotIndex: -1, kind: 'feed', startedAt: currentNow,
+      } : undefined };
     }, currentNow);
   };
 
@@ -921,10 +930,31 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
     setSelectedAnimalId(null);
   };
 
+  if (mobileActive) return <FarmMobilePresentation
+    bridge={{
+      farm: farmState, rank: currentRank,
+      snapshot: adaptFarmMobile(gameState, farmState, presentationState, currentRank, currentWeatherSlot, now),
+      modal: farmModal, closeModal: closeFarmModal, openModal: openFarmModal,
+      selectedPlot: selectedPlotIndex, selectedAnimal: selectedAnimalId,
+      selectPlot: handlePlotTap, selectAnimal: handleAnimalTap,
+      canWater: canWaterSelectedPlot, canTreat: canTreatSelectedPlot, canFertilize: canApplyFertilizer,
+      harvesting: isHarvestingAll, plantOpen: handleOpenPlantModal, plant: handlePlantSeedWithFertilizer,
+      water: handleWaterPlot, treat: handleTreatPest, fertilize: handleApplyFertilizer,
+      harvest: handleHarvestSinglePlot, harvestAll: handleHarvestAll, clearPlot: handleClearPlot, unlock: handleUnlockPlot,
+      enter: handleEnterPen, dismiss: handleDismissAnimal, feed: handleFeedPen,
+      buyCrop: handleBuyCrop, buyAnimal: handleBuyAnimal, buyFeed: handleBuyFeed, buyFertilizer: handleBuyFertilizer,
+      sell: handleSellItem, sellEggs: handleSellEggsSingle, sellAllEggs: handleSellAllEggsQuick,
+    }}
+    toast={toastMessage} events={[...visualEvents, ...harvestPresentations.map(event => ({
+      id: event.id, plotIndex: event.plotIndex, kind: 'harvest' as const, cropId: event.cropId, startedAt: event.startedAt,
+    }))]} reducedMotion={gameState.settings.reducedMotion}
+    pushTarget={pushTarget} onExit={() => { closeFarmModal(); setMobileActive(false); }}
+  />;
+
   return (
     <div
       onClick={handleClearSelection}
-      className="command-screen logistics-command-screen w-full max-w-5xl mx-auto p-2 sm:p-4 space-y-3 font-sans pb-36 relative"
+      className={`command-screen logistics-command-screen w-full max-w-5xl mx-auto p-2 sm:p-4 space-y-3 font-sans pb-36 relative ${FARM_MOBILE_REQUESTED ? 'overflow-y-auto h-full' : ''}`}
     >
       {/* --- HUD HEADER (STICKY) --- */}
       {farmModal?.type !== "trough" && (

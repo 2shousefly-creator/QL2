@@ -133,3 +133,33 @@ No tests, QA, simulation, benchmark, browser automation, lint/typecheck or verif
 scripts were run. Build success establishes bundling, not measured frame rate or
 visual acceptance. GitHub Actions publishes the pushed main commit to Firebase;
 no manual Firebase deployment is used.
+
+## Mobile v2 foundation (2026-09-12, gated)
+
+`../mobile/` contains the next presentation, selected only by the explicit
+`farmView=mobile-v2` URL option. The default farm remains world-v1 until the
+representative art and catalog are complete. This is not a full-catalog art release.
+
+- `FarmMobileAdapter` consumes TangGiaScreen's existing projection; no engine tick.
+- `FarmMobilePresentation` retains canonical handlers and modal union. It mounts
+  either the new canvas or the legacy presentation, never both.
+- `FarmMobileScene`, `MobileLayoutController`, `FarmUiLayer` own world, HUD, tabs,
+  sheets, masked scrolling, 48 px actions and logical canvas targets.
+- `FarmMobileInput` uses one pointer-up dispatch, 10 px drag threshold, cancel,
+  pointer capture and bounded scroll. Hidden semantic controls share the actions;
+  their focus is drawn on canvas and sheet keyboard focus wraps locally.
+- `MobileTextureBank` owns texture leases and frame views, requests active scene
+  plus sheet icons, ignores late results and offers explicit retry on load error.
+- `FarmMobileVfx` uses a 48-slot pool and successful transaction events for
+  sow/water/fertilizer/harvest/pest/feed/unlock/egg sale. It awards nothing.
+- The shared runtime retains its existing 30 FPS cap, DPR <= 2, visibility pause,
+  delta clamp, ResizeObserver, context-loss disposal and unmount cleanup.
+- Weather and night tint only the world. Reduced motion retains state and stops
+  the shared ticker. Mobile sheets have no duplicate visible React modal.
+
+Production art sources, actual dimensions, provenance, missing coverage and the
+image-generation quota blocker are in `docs/tang-gia-mobile/ART_AND_ASSET_SPEC.md`.
+The new sample is four real environment layers; all crops/supplies and two bird
+sheets are explicitly legacy fallbacks. Eight species and native special clips
+still need new art. Static birds with native idle/eat frames are an intermediate
+foundation; pathing, species-specific motion and complete art approval remain open.

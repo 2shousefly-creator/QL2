@@ -1,0 +1,110 @@
+{
+  "sourceSize": [
+    1254,
+    1254
+  ],
+  "hasAlpha": true,
+  "estimatedRgbaBytes": 6290064,
+  "records": [
+    {
+      "canonicalId": "garden-ground",
+      "category": "environment",
+      "displayName": "garden-ground",
+      "stageOrClip": "static",
+      "sourceFile": "docs/tang-gia-mobile/art/source/environment.png",
+      "atlasId": "tanggia-mobile-v2-environment",
+      "frameNames": [
+        "garden-ground"
+      ],
+      "logicalSize": [
+        627,
+        627
+      ],
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Original built-in imagegen output, 2026-09-12; no third-party reference images",
+      "status": "new-production",
+      "notes": "Representative sample; awaiting art approval",
+      "filename": "public/assets/tanggia/mobile-v2/garden-ground.webp"
+    },
+    {
+      "canonicalId": "pen-ground",
+      "category": "environment",
+      "displayName": "pen-ground",
+      "stageOrClip": "static",
+      "sourceFile": "docs/tang-gia-mobile/art/source/environment.png",
+      "atlasId": "tanggia-mobile-v2-environment",
+      "frameNames": [
+        "pen-ground"
+      ],
+      "logicalSize": [
+        627,
+        627
+      ],
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Original built-in imagegen output, 2026-09-12; no third-party reference images",
+      "status": "new-production",
+      "notes": "Representative sample; awaiting art approval",
+      "filename": "public/assets/tanggia/mobile-v2/pen-ground.webp"
+    },
+    {
+      "canonicalId": "garden-rear",
+      "category": "environment",
+      "displayName": "garden-rear",
+      "stageOrClip": "static",
+      "sourceFile": "docs/tang-gia-mobile/art/source/environment.png",
+      "atlasId": "tanggia-mobile-v2-environment",
+      "frameNames": [
+        "garden-rear"
+      ],
+      "logicalSize": [
+        627,
+        627
+      ],
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Original built-in imagegen output, 2026-09-12; no third-party reference images",
+      "status": "new-production",
+      "notes": "Representative sample; awaiting art approval",
+      "filename": "public/assets/tanggia/mobile-v2/garden-rear.webp"
+    },
+    {
+      "canonicalId": "pen-rear",
+      "category": "environment",
+      "displayName": "pen-rear",
+      "stageOrClip": "static",
+      "sourceFile": "docs/tang-gia-mobile/art/source/environment.png",
+      "atlasId": "tanggia-mobile-v2-environment",
+      "frameNames": [
+        "pen-rear"
+      ],
+      "logicalSize": [
+        627,
+        627
+      ],
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "frameRate": 0,
+      "directions": "elevated-three-quarter",
+      "licenseOrProvenance": "Original built-in imagegen output, 2026-09-12; no third-party reference images",
+      "status": "new-production",
+      "notes": "Representative sample; awaiting art approval",
+      "filename": "public/assets/tanggia/mobile-v2/pen-rear.webp"
+    }
+  ]
+}

@@ -2,7 +2,7 @@ import type { StageThemeDefinition } from '../../../game/stageThemes';
 import type { CropAssetStage } from '../tangGiaAssetManifest';
 import type { CropId } from '../farmTypes';
 import type { FarmWorldTextures } from './FarmWorldAssets';
-export type FarmVisualEvent = { id: string; plotIndex: number; kind: 'harvest' | 'water' | 'fertilizer' | 'pest' | 'egg'; startedAt: number; cropId?: CropId; fertilizerId?: string };
+export type FarmVisualEvent = { id: string; plotIndex: number; kind: 'harvest' | 'water' | 'fertilizer' | 'pest' | 'egg' | 'sow' | 'feed' | 'unlock'; startedAt: number; cropId?: CropId; fertilizerId?: string };
 export type FarmAnchor = { x: number; y: number; radius: number; width: number; height: number };
 export type FarmPlotVisual = { index: number; cropId: 'carrot' | 'tomato' | null; stage: CropAssetStage; moisture: number; ready: boolean; pest: boolean; fertilizer: boolean };
 export type FarmAnimalVisual = { id: string; species: 'chicken' | 'duck'; dead: boolean; scale: number; eggReady: boolean; cycle: number };

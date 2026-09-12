@@ -11,6 +11,8 @@ export class FarmVfxManager {
   }
   receive(events: readonly FarmVisualEvent[], anchors: Readonly<Record<number, FarmAnchor>>, pen: FarmAnchor | undefined, reduced: boolean, bounce: (index: number) => void) {
     for (const event of events) {
+      // These actions have dedicated presentation in the gated mobile renderer.
+      if (event.kind === 'sow' || event.kind === 'feed' || event.kind === 'unlock') continue;
       if (this.seen.has(event.id)) continue;
       const a = event.kind === 'egg' ? pen : anchors[event.plotIndex]; if (!a) continue;
       this.seen.add(event.id); if (this.seen.size > 96) this.seen.delete(this.seen.values().next().value!);

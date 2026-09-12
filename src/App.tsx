@@ -1,4 +1,5 @@
 import { CoreScreenTransition } from "./components/core-visual/CoreScreenTransition";
+import { FARM_MOBILE_REQUESTED } from "./features/tang_gia/mobile/mobileGate";
 import { ScreenLoadBoundary } from "./components/ScreenLoadBoundary";
 import { useOverlayBusy } from "./components/overlay/AppOverlay";
 import { ModalButton, OverlayHost, OverlayPortal, useAppChromeMetrics } from "./components/overlay/AppOverlay";
@@ -645,7 +646,7 @@ export default function App() {
       )}
 
       {/* Main Interactive Body Area */}
-      {!isExclusivePromotionFlow && <main className={`relative z-10 flex-1 min-h-0 flex flex-col ${activeTab === "home" ? "app-main-with-hub-navigation overflow-hidden" : isTrainingGameActive ? "overflow-y-auto" : "overflow-y-auto pb-28"}`}>
+      {!isExclusivePromotionFlow && <main className={`relative z-10 flex-1 min-h-0 flex flex-col ${activeTab === "home" || (activeTab === "tang_gia" && FARM_MOBILE_REQUESTED) ? "app-main-with-hub-navigation overflow-hidden" : isTrainingGameActive ? "overflow-y-auto" : "overflow-y-auto pb-28"}`}>
         <CoreScreenTransition
           enabled={activeTab !== "training" && activeTab !== "entertainment"}
           reducedMotion={activeTab !== "training" && activeTab !== "entertainment" && gameState.settings.reducedMotion}
