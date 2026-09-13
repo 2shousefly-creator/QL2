@@ -1,5 +1,7 @@
 # Tăng Gia mobile — art and asset record
 
+> Historical v2 art specification. See [TOPDOWN_V3.md](TOPDOWN_V3.md) and `public/assets/tanggia/topdown-v3/manifest.json` for the current original artwork, frame mapping and mobile top-down composition.
+
 ## Direction and layout
 
 Original cozy painted 2.5D, soft elevated three-quarter camera, upper-left light,

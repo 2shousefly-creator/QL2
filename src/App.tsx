@@ -570,6 +570,7 @@ export default function App() {
     <div
       className="military-ui chapter-theme-root h-screen h-[100dvh] bg-slate-950 text-white font-sans overflow-hidden relative flex flex-col"
       data-stage-theme={currentStageTheme.id}
+      data-farm-mobile={activeTab === 'tang_gia' && FARM_MOBILE_REQUESTED ? 'true' : undefined}
       data-reduced-motion={gameState.settings.reducedMotion ? "true" : "false"}
       style={chapterThemeStyle}
     >

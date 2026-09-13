@@ -1,5 +1,7 @@
 # Tăng Gia mobile Pixi — implementation record
 
+> Historical v2 record. The current mobile rebuild, default gate, complete original atlas inventory and portrait top-down dimensions are documented in [TOPDOWN_V3.md](TOPDOWN_V3.md). The approval/opt-in constraints below belong to the superseded v2 request.
+
 ## Scope and release gate
 
 Source audited on 2026-09-12 at `e644e1b12673598f740b218dd6ce67157d80c337`,

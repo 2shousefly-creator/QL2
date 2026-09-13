@@ -5,7 +5,7 @@ import type { AnimalTypeId, CropId, EggTypeId, FarmSaveState, FeedTypeId, Fertil
 import { ANIMAL_CATALOG, CROP_CATALOG, EGG_INFO_MAP, FARM_PLOT_UNLOCKS, FEED_CATALOG, FERTILIZER_CATALOG } from '../farmCatalog';
 import { calculateMaxFeedQuantity, getItemSellPrice, getRankNameForDisplay, rankAtLeast } from '../farmEngine';
 import { QUALITY_CONFIG } from '../weatherEngine';
-import { TANG_GIA_ASSETS } from '../tangGiaAssetManifest';
+import { animalArt, cropArt, itemArt } from './FarmArtRegistry';
 import type { FarmMobileSnapshot, MobileAction, MobileRow, MobileSheet } from './mobileTypes';
 
 type Category = 'crop' | 'fertilizer' | 'animal' | 'feed' | 'egg';
@@ -53,11 +53,11 @@ export function useFarmMobileSheets(b: FarmMobileBridge) {
   const s = b.snapshot, modal = b.modal;
   const metadata = (category: Category) => {
     switch (category) {
-      case 'crop': return CROP_CATALOG.map(x => ({ id: x.id, title: x.name, price: x.seedCostGold, rank: x.requiredRank, icon: TANG_GIA_ASSETS.crops[x.id].seed, detail: `Thu hoạch cơ bản: ${x.harvestGold} Vàng · ${x.harvestXp} XP` }));
-      case 'fertilizer': return FERTILIZER_CATALOG.map(x => ({ id: x.id, title: x.name, price: x.purchaseGold, rank: x.requiredRank, icon: TANG_GIA_ASSETS.fertilizer[x.id], detail: `XP +${Math.round(x.xpBonusPct * 100)}% · Thời gian -${Math.round(x.growthTimeReductionPct * 100)}%` }));
-      case 'animal': return ANIMAL_CATALOG.map(x => ({ id: x.id, title: x.name, price: x.purchaseGold, rank: x.requiredRank, icon: undefined, detail: `${EGG_INFO_MAP[x.eggTypeId].name}: ${x.eggSellGold} Vàng · ${x.eggSellXp} XP cơ bản` }));
-      case 'feed': return FEED_CATALOG.map(x => ({ id: x.id, title: x.name, price: x.costGold, rank: x.requiredRank, icon: TANG_GIA_ASSETS.feed[x.id], detail: `Nạp ${x.buffAmount}% · Tăng tốc ${x.speedBonusPercent}%` }));
-      case 'egg': return Object.entries(EGG_INFO_MAP).map(([id, x]) => ({ id, title: x.name, price: x.sellGold, rank: null, icon: undefined, detail: `${x.sellGold} Vàng · ${x.sellXp} XP cơ bản; giá thực theo phẩm chất` }));
+      case 'crop': return CROP_CATALOG.map(x => ({ id: x.id, title: x.name, price: x.seedCostGold, rank: x.requiredRank, icon: cropArt(x.id, 'seed_icon'), detail: `Thu hoạch cơ bản: ${x.harvestGold} Vàng · ${x.harvestXp} XP` }));
+      case 'fertilizer': return FERTILIZER_CATALOG.map(x => ({ id: x.id, title: x.name, price: x.purchaseGold, rank: x.requiredRank, icon: itemArt(x.id), detail: `XP +${Math.round(x.xpBonusPct * 100)}% · Thời gian -${Math.round(x.growthTimeReductionPct * 100)}%` }));
+      case 'animal': return ANIMAL_CATALOG.map(x => ({ id: x.id, title: x.name, price: x.purchaseGold, rank: x.requiredRank, icon: animalArt(x.id), detail: `${EGG_INFO_MAP[x.eggTypeId].name}: ${x.eggSellGold} Vàng · ${x.eggSellXp} XP cơ bản` }));
+      case 'feed': return FEED_CATALOG.map(x => ({ id: x.id, title: x.name, price: x.costGold, rank: x.requiredRank, icon: itemArt(x.id), detail: `Nạp ${x.buffAmount}% · Tăng tốc ${x.speedBonusPercent}%` }));
+      case 'egg': return Object.entries(EGG_INFO_MAP).map(([id, x]) => ({ id, title: x.name, price: x.sellGold, rank: null, icon: itemArt(id), detail: `${x.sellGold} Vàng · ${x.sellXp} XP cơ bản; giá thực theo phẩm chất` }));
     }
   };
   const countOf = (category: Category, id: string) => (b.farm.inventory[categoryKey[category]] as Record<string, number>)[id] || 0;
@@ -68,7 +68,12 @@ export function useFarmMobileSheets(b: FarmMobileBridge) {
       [action('confirm', modal.dialog.confirmLabel || 'Xác nhận', () => { setLocal(null); modal.dialog.onConfirm ? modal.dialog.onConfirm() : close(); }, undefined, true)]);
   } else if (modal?.type === 'reward') {
     const reward = modal.summary;
-    const rows = (reward.itemsSummary ?? []).map((item, index) => row(`reward-${index}`, `${item.name ?? 'Vật phẩm'} ×${item.count ?? 0}`));
+    const rows = (reward.itemsSummary ?? []).map((item, index) => {
+      const crop = CROP_CATALOG.find(crop => crop.name === item.name);
+      const egg = Object.entries(EGG_INFO_MAP).find(([, egg]) => egg.name === item.name);
+      return row(`reward-${index}`, `${item.name ?? 'Vật phẩm'} ×${item.count ?? 0}`, undefined, undefined, undefined,
+        crop ? cropArt(crop.id, 'yield') : egg ? itemArt(egg[0]) : undefined);
+    });
     for (const [quality, data] of Object.entries(reward.qualityBreakdown ?? {})) {
       if (data.quantity) rows.push({ ...row(`quality-${quality}`, QUALITY_CONFIG[quality as keyof typeof QUALITY_CONFIG].name,
         `${data.quantity} vật phẩm · ${data.gold} Vàng · ${data.xp} XP`), accent: QUALITY_CONFIG[quality as keyof typeof QUALITY_CONFIG].color });
@@ -81,7 +86,7 @@ export function useFarmMobileSheets(b: FarmMobileBridge) {
   } else if (local?.kind === 'apply-confirm' && modal?.type === 'apply-fertilizer') {
     const item = FERTILIZER_CATALOG.find(item => item.id === local.id)!;
     sheet = make(`apply-confirm-${item.id}`, 'Xác nhận bón phân', [row('fertilizer-detail', item.name,
-      `Dùng 1 bao · XP +${Math.round(item.xpBonusPct * 100)}% · Thời gian còn lại -${Math.round(item.growthTimeReductionPct * 100)}%`, undefined, undefined, TANG_GIA_ASSETS.fertilizer[item.id])], undefined,
+      `Dùng 1 bao · XP +${Math.round(item.xpBonusPct * 100)}% · Thời gian còn lại -${Math.round(item.growthTimeReductionPct * 100)}%`, undefined, undefined, itemArt(item.id))], undefined,
       [action('apply-confirm', 'Bón phân', () => { setLocal(null); b.fertilize(item.id); }, countOf('fertilizer', item.id) < 1 ? 'Hết phân bón' : undefined, true)]);
   } else if (local?.kind === 'item' && (modal?.type === 'store' || modal?.type === 'inventory' || modal?.type === 'feed')) {
     const { category, id, mode } = local;
@@ -93,7 +98,8 @@ export function useFarmMobileSheets(b: FarmMobileBridge) {
       const qty = Math.max(1, Math.min(quantity, Math.max(1, max)));
       const price = mode === 'sell' && category !== 'egg' ? getItemSellPrice(categoryKey[category], id) : item.price;
       const reason = mode === 'buy' && !rankAtLeast(b.rank, item.rank) ? `Cần ${getRankNameForDisplay(item.rank)}` : max < 1 ? (mode === 'buy' ? 'Không đủ Vàng' : mode === 'feed' && s.feed >= 100 ? 'Máng đã đầy' : 'Không còn trong kho') : undefined;
-      const rows = [row('item-detail', item.title, `${item.detail}\nTrong kho: ${stock}`, undefined, undefined, item.icon),
+      const rows = [row('item-detail', item.title, `${item.detail}\nTrong kho: ${stock}`, undefined, undefined,
+        category === 'crop' ? cropArt(id as CropId, 'seed_item') : item.icon),
         row('quantity', `Số lượng: ${qty}`, `Tối đa: ${Math.max(0, max)}`),
         row('minus', 'Giảm 1', undefined, () => setQuantity(Math.max(1, qty - 1)), qty <= 1 ? 'Đã ở mức tối thiểu' : undefined),
         row('plus', 'Tăng 1', undefined, () => setQuantity(Math.min(max, qty + 1)), qty >= max ? 'Đã ở mức tối đa' : undefined),
@@ -106,7 +112,7 @@ export function useFarmMobileSheets(b: FarmMobileBridge) {
       const commit = () => {
         if (reason) return;
         setLocal(null);
-        if (mode === 'feed') b.feed(id as FeedTypeId, qty);
+        if (mode === 'feed') { b.closeModal(); b.feed(id as FeedTypeId, qty); }
         else if (mode === 'sell') category === 'egg' ? b.sellEggs(id as EggTypeId, qty) : b.sell(categoryKey[category], id, qty);
         else if (category === 'crop') b.buyCrop(id as CropId, qty);
         else if (category === 'fertilizer') b.buyFertilizer(id as FertilizerTypeId, qty);
@@ -124,14 +130,17 @@ export function useFarmMobileSheets(b: FarmMobileBridge) {
     const rows = [row('no-fertilizer', `${selected === null ? 'Đã chọn · ' : ''}Không dùng phân bón`, undefined, () => setFertilizer(null)),
       ...FERTILIZER_CATALOG.map(item => row(`seed-fert-${item.id}`, `${selected === item.id ? 'Đã chọn · ' : ''}${item.name}`,
         `Còn ${countOf('fertilizer', item.id)} · XP +${Math.round(item.xpBonusPct * 100)}% · Thời gian -${Math.round(item.growthTimeReductionPct * 100)}%`,
-        () => setFertilizer(item.id), countOf('fertilizer', item.id) < 1 ? 'Hết phân bón' : undefined, TANG_GIA_ASSETS.fertilizer[item.id]))];
+        () => setFertilizer(item.id), countOf('fertilizer', item.id) < 1 ? 'Hết phân bón' : undefined, itemArt(item.id)))];
     sheet = make(`seed-fert-${local.plotIndex}`, `Gieo ${crop.name}`, rows, 'Chọn phân bón cho lần gieo này.',
       [action('plant-confirm', 'Xác nhận gieo', () => { setLocal(null); b.plant(crop.id, selected); }, seedAvailable ? undefined : 'Hết hạt giống', true)]);
   } else if (modal?.type === 'store' || modal?.type === 'inventory') {
     const buying = modal.type === 'store';
     const category = modal.tab;
-    const rows = categories.filter(item => !buying || item.id !== 'egg').map(item => row(`category-${item.id}`, `${item.id === category ? 'Đang xem · ' : ''}${item.title}`, undefined,
-      () => open(buying ? { type: 'store', tab: item.id as Exclude<Category, 'egg'> } : { type: 'inventory', tab: item.id })));
+    const tabs = categories.filter(item => !buying || item.id !== 'egg').map(item => ({
+      ...action(`category-${item.id}`, ({ crop: 'Hạt', fertilizer: 'Phân', animal: 'Vật nuôi', feed: 'Thức ăn', egg: 'Trứng' })[item.id],
+        () => open(buying ? { type: 'store', tab: item.id as Exclude<Category, 'egg'> } : { type: 'inventory', tab: item.id })), primary: item.id === category,
+    }));
+    const rows: MobileRow[] = [];
     rows.push(...metadata(category).map(item => {
       const stock = countOf(category, item.id);
       const reason = buying ? !rankAtLeast(b.rank, item.rank) ? `Cần ${getRankNameForDisplay(item.rank)}` : b.farm.gold < item.price ? 'Không đủ Vàng' : undefined : stock < 1 ? 'Chưa có trong kho' : undefined;
@@ -140,27 +149,28 @@ export function useFarmMobileSheets(b: FarmMobileBridge) {
     }));
     sheet = make(`${modal.type}-${category}`, buying ? 'Cửa hàng' : 'Kho', rows, undefined,
       !buying && category === 'egg' ? [action('sell-all-eggs', 'Bán tất cả trứng', () => open({ type: 'dialog', dialog: { title: 'Bán tất cả trứng', message: `Bán ${s.eggs} trứng đang có trong kho theo phẩm chất thực tế?`, onConfirm: b.sellAllEggs } }), s.eggs ? undefined : 'Kho trứng trống', true)] : undefined);
+    sheet.tabs = tabs;
   } else if (modal?.type === 'plant') {
     sheet = make(`plant-${modal.plotIndex}`, 'Chọn hạt giống', CROP_CATALOG.map(crop => row(`seed-${crop.id}`, crop.name, `Còn ${countOf('crop', crop.id)} hạt`, () => {
       const plot = b.farm.plots[modal.plotIndex];
       const remembered = plot?.status === 'empty' ? plot.lastFertilizerId : null;
       setFertilizer(remembered && countOf('fertilizer', remembered) > 0 ? remembered : null);
       setLocal({ kind: 'seed-fertilizer', cropId: crop.id, plotIndex: modal.plotIndex });
-    }, countOf('crop', crop.id) < 1 ? 'Hết hạt giống' : undefined, TANG_GIA_ASSETS.crops[crop.id].seed)), undefined,
+    }, countOf('crop', crop.id) < 1 ? 'Hết hạt giống' : undefined, cropArt(crop.id, 'seed_icon'))), undefined,
     [action('buy-seeds', 'Mua hạt giống', () => open({ type: 'store', tab: 'crop' }))]);
   } else if (modal?.type === 'apply-fertilizer') {
     sheet = make(`fertilizer-${modal.plotIndex}`, 'Bón phân', FERTILIZER_CATALOG.map(item => row(`apply-${item.id}`, item.name,
       `Còn ${countOf('fertilizer', item.id)} · XP +${Math.round(item.xpBonusPct * 100)}% · Thời gian -${Math.round(item.growthTimeReductionPct * 100)}%`,
-      () => setLocal({ kind: 'apply-confirm', id: item.id }), countOf('fertilizer', item.id) < 1 ? 'Hết phân bón' : undefined, TANG_GIA_ASSETS.fertilizer[item.id])), undefined,
+      () => setLocal({ kind: 'apply-confirm', id: item.id }), countOf('fertilizer', item.id) < 1 ? 'Hết phân bón' : undefined, itemArt(item.id))), undefined,
       [action('buy-fert', 'Mua phân bón', () => open({ type: 'store', tab: 'fertilizer' }))]);
   } else if (modal?.type === 'enter-pen') {
     sheet = make('enter-pen', 'Thả vật nuôi', ANIMAL_CATALOG.map(item => row(`enter-${item.id}`, item.name, `Còn ${countOf('animal', item.id)}`,
-      () => b.enter(item.id), !countOf('animal', item.id) ? 'Chưa có trong kho' : s.animals.length >= s.capacity ? 'Chuồng đã đầy' : undefined)), `${s.animals.length}/${s.capacity} chỗ`,
+      () => b.enter(item.id), !countOf('animal', item.id) ? 'Chưa có trong kho' : s.animals.length >= s.capacity ? 'Chuồng đã đầy' : undefined, animalArt(item.id))), `${s.animals.length}/${s.capacity} chỗ`,
       [action('buy-animal', 'Mua vật nuôi', () => open({ type: 'store', tab: 'animal' }))]);
   } else if (modal?.type === 'feed') {
     sheet = make('feed', 'Chọn thức ăn', FEED_CATALOG.map(item => row(`feed-${item.id}`, item.name,
       `Còn ${countOf('feed', item.id)} · Tăng tốc ${item.speedBonusPercent}%`, () => itemSheet('feed', item.id, 'feed'),
-      !countOf('feed', item.id) ? 'Hết thức ăn' : s.feed >= 100 ? 'Máng đã đầy' : undefined, TANG_GIA_ASSETS.feed[item.id])), `Máng: ${s.feedLabel}`,
+      !countOf('feed', item.id) ? 'Hết thức ăn' : s.feed >= 100 ? 'Máng đã đầy' : undefined, itemArt(item.id))), `Máng: ${s.feedLabel}`,
       [action('buy-feed', 'Mua thức ăn', () => open({ type: 'store', tab: 'feed' }))]);
   } else if (modal?.type === 'trough') {
     sheet = make('trough', 'Máng ăn', [row('feed-amount', `Lượng thức ăn: ${s.feedLabel}`, 'Dung lượng 100%'),
@@ -180,13 +190,13 @@ export function useFarmMobileSheets(b: FarmMobileBridge) {
         if (unlock) rows.push(row('unlock', `Mở khóa · ${unlock.gold} Vàng`, getRankNameForDisplay(unlock.requiredRank), () => b.unlock(plot.index),
           !rankAtLeast(b.rank, unlock.requiredRank) ? 'Chưa đủ quân hàm' : b.farm.gold < unlock.gold ? 'Không đủ Vàng' : undefined));
       } else {
-        rows.push(row('plot-state', plot.title, `${plot.timer}\nĐộ ẩm ${Math.round(plot.moisture)}% · ${plot.moistureLabel}\n${plot.fertilizer ? 'Đã có phân bón' : 'Chưa dùng phân bón'}`));
+        rows.push(row('plot-state', plot.title, `${plot.timer}\nĐộ ẩm ${Math.round(plot.moisture)}% · ${plot.moistureLabel}\n${plot.fertilizer ? 'Đã có phân bón' : 'Chưa dùng phân bón'}`, undefined, undefined, plot.cropId ? cropArt(plot.cropId, plot.status === 'ready' ? 'yield' : plot.artStage) : undefined));
         if (plot.quality) rows.push({ ...row('plot-quality', `Phẩm chất: ${QUALITY_CONFIG[plot.quality].name}`), accent: QUALITY_CONFIG[plot.quality].color });
-        rows.push(row('water', 'Tưới nước', undefined, b.water, b.canWater ? undefined : 'Chưa thể tưới ô này'));
+        rows.push(row('water', 'Tưới nước', undefined, () => { setLocal(null); b.water(); }, b.canWater ? undefined : 'Chưa thể tưới ô này'));
         if (plot.status === 'empty') rows.push(row('plant-open', 'Gieo hạt', undefined, b.plantOpen));
         if (plot.status === 'growing') rows.push(row('fert-open', 'Bón phân', undefined, () => open({ type: 'apply-fertilizer', plotIndex: plot.index }), b.canFertilize ? undefined : 'Đã có phân bón'));
-        if (plot.pest) rows.push(row('pest', 'Trị sâu', undefined, b.treat, b.canTreat ? undefined : 'Chưa thể trị sâu'));
-        if (plot.status === 'ready') rows.push(row('harvest', 'Thu hoạch', undefined, b.harvest));
+        if (plot.pest) rows.push(row('pest', 'Trị sâu', undefined, () => { setLocal(null); b.treat(); }, b.canTreat ? undefined : 'Chưa thể trị sâu'));
+        if (plot.status === 'ready') rows.push(row('harvest', 'Thu hoạch', undefined, () => { setLocal(null); b.harvest(); }));
         if (plot.status === 'growing' || plot.status === 'ready') rows.push(row('clear-plot', 'Xúc đất dọn cây', 'Cần xác nhận trước khi dọn', b.clearPlot));
       }
       sheet = make(`plot-${plot.index}`, `Ô đất ${plot.index + 1}`, rows);
@@ -198,7 +208,7 @@ export function useFarmMobileSheets(b: FarmMobileBridge) {
         row('animal-dismiss', animal.dead ? 'Dọn vật nuôi' : 'Đuổi vật nuôi', 'Cần xác nhận', b.dismiss)], undefined,
       [action('herd-list', 'Danh sách vật nuôi', openPen)]);
   } else if (local?.kind === 'pen') {
-    sheet = make('pen', 'Đàn vật nuôi', s.animals.map(animal => row(`select-${animal.id}`, animal.title, animal.timer, () => selectAnimal(animal.id))),
+    sheet = make('pen', 'Đàn vật nuôi', s.animals.map(animal => row(`select-${animal.id}`, animal.title, animal.timer, () => selectAnimal(animal.id), undefined, animalArt(animal.species))),
       `${s.animals.length}/${s.capacity} chỗ · ${s.eggs} trứng trong kho`,
       [action('enter-open', 'Thả vật nuôi', () => open({ type: 'enter-pen' }), undefined, true), action('trough-open', 'Máng ăn', () => open({ type: 'trough' }))]);
   }

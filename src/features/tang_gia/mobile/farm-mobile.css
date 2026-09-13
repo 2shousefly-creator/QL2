@@ -1,7 +1,19 @@
-.farm-mobile-host { position: relative; width: 100%; height: 100%; min-height: 320px; overflow: hidden; isolation: isolate; background: #f7f1e3; }
+.farm-mobile-host { position: relative; width: 100%; height: 100%; min-height: 0; overflow: hidden; isolation: isolate; background: #f7f1e3; }
 .farm-mobile-host > .core-pixi-host { position: absolute; inset: 0; width: 100%; height: 100%; }
 .farm-mobile-recovery { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 12px; background: #f7f1e3; color: #293d32; padding: 24px; }
 .farm-mobile-recovery button { min-height: 48px; padding: 10px 20px; border-radius: 12px; background: #436b49; color: white; }
 /* Semantic controls are keyboard/screen-reader only; pointer hits belong to canvas. */
 .farm-mobile-semantics { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; pointer-events: none; }
 .farm-mobile-shell { flex: 1; min-height: 0; width: 100%; max-width: 480px; margin-inline: auto; display: flex; }
+/* The app reserves safe areas ONCE. Pixi's ResizeObserver receives the remaining box.
+   390×844 example: (60+47) app HUD + (56+34) nav => 390×647 host. */
+[data-farm-mobile="true"] .command-status-hud {
+  height: calc(60px + env(safe-area-inset-top, 0px));
+  min-height: calc(60px + env(safe-area-inset-top, 0px));
+  padding-top: calc(8px + env(safe-area-inset-top, 0px));
+  padding-bottom: 8px;
+  background: #304839 !important;
+}
+[data-farm-mobile="true"] .command-status-hud > div { height: 44px; }
+[data-farm-mobile="true"] .hub-navigation-bar { background: #304839; }
+[data-farm-mobile="true"] main { background: #f7f1e3; }

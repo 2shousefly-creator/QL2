@@ -30,7 +30,10 @@ export class FarmUiLayer {
   button(action: MobileAction, rect: MobileRect, pressed: string | null, parent = this.root, register = true) {
     const fill = action.reason ? 0xe2ded1 : pressed === action.id ? 0xc3d3b8 : action.primary ? FARM_PALETTE.green : FARM_PALETTE.pale;
     panel(parent, rect, fill, 12);
-    const text = label(parent, action.label, rect.x + 8, rect.y + 8, rect.width - 16, 14, action.primary && !action.reason ? 0xffffff : FARM_PALETTE.ink, true);
+    const image = action.icon ? this.texture(action.icon) : undefined;
+    const indent = image ? 34 : 8;
+    if (image) sprite(parent, image, { x: rect.x + 3, y: rect.y + (rect.height - 30) / 2, width: 30, height: 30 });
+    const text = label(parent, action.label, rect.x + indent, rect.y + 8, rect.width - indent - 6, image || rect.width < 90 ? 12 : 14, action.primary && !action.reason ? 0xffffff : FARM_PALETTE.ink, true);
     text.y = rect.y + Math.max(6, (rect.height - text.height) / 2);
     if (register) this.hits.push({ ...rect, action });
   }
@@ -38,13 +41,21 @@ export class FarmUiLayer {
     // Replace all world/HUD hits while a sheet owns interaction.
     this.hits = [];
     const shade = panel(this.root, { x: 0, y: 0, width, height }, 0x182c24, 0); shade.alpha = .45;
-    const top = Math.max(8, Math.min(140, height * .16)), inset = 12;
+    const tabsHeight = sheet.tabs?.length ? 52 : 0;
+    const estimated = 100 + tabsHeight + (sheet.actions?.length ?? 0) * 56
+      + (sheet.description ? 60 : 0) + sheet.rows.reduce((sum, row) => sum + Math.max(64, 42 + (row.detail?.length ?? 0) / 32 * 18), 0);
+    const top = Math.max(8, height - Math.min(height * .8, Math.max(260, estimated))), inset = 12;
     panel(this.root, { x: 0, y: top, width, height: height - top }, FARM_PALETTE.cream, 22);
+    panel(this.root, { x: width / 2 - 18, y: top + 5, width: 36, height: 3 }, 0xb4baa2, 2);
     label(this.root, sheet.title, inset + 4, top + 16, width - 100, 19, FARM_PALETTE.ink, true);
     this.button({ id: 'sheet-close', label: 'Đóng', run: sheet.close }, { x: width - 76, y: top + 8, width: 64, height: 48 }, pressed);
     const actions = sheet.actions ?? [];
     const footerHeight = actions.length ? actions.length * 56 + 8 : 0;
-    const body: MobileRect = { x: inset, y: top + 68, width: width - inset * 2, height: Math.max(32, height - top - 80 - footerHeight) };
+    if (sheet.tabs?.length) {
+      const tabWidth = (width - inset * 2 - (sheet.tabs.length - 1) * 4) / sheet.tabs.length;
+      sheet.tabs.forEach((tab, i) => this.button(tab, { x: inset + i * (tabWidth + 4), y: top + 63, width: tabWidth, height: 44 }, pressed));
+    }
+    const body: MobileRect = { x: inset, y: top + 68 + tabsHeight, width: width - inset * 2, height: Math.max(32, height - top - 80 - footerHeight - tabsHeight) };
     this.scrollRegion = body;
     const mask = this.root.addChild(new Graphics().rect(body.x, body.y, body.width, body.height).fill(0xffffff));
     const content = this.root.addChild(new Container()); content.mask = mask;
@@ -70,7 +81,7 @@ export class FarmUiLayer {
     this.maxScroll = Math.max(0, y + scroll - body.y - body.height);
     for (const hit of contentHits) {
       const y1 = Math.max(body.y, hit.y), y2 = Math.min(body.y + body.height, hit.y + hit.height);
-      if (y2 - y1 >= 24) this.hits.push({ ...hit, y: y1, height: y2 - y1 });
+      if (y2 - y1 >= 44) this.hits.push({ ...hit, y: y1, height: y2 - y1 });
     }
     if (this.maxScroll > 0) {
       const thumb = Math.max(24, body.height * body.height / (body.height + this.maxScroll));

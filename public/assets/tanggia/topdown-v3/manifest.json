@@ -1,0 +1,1489 @@
+{
+  "design": {
+    "viewport": [
+      390,
+      844
+    ],
+    "host": [
+      390,
+      647
+    ],
+    "world": [
+      390,
+      471
+    ],
+    "safeAreaExample": [
+      47,
+      34
+    ]
+  },
+  "crops": [
+    {
+      "id": "carrot",
+      "name": "Cà Rốt"
+    },
+    {
+      "id": "cabbage",
+      "name": "Cải Bắp"
+    },
+    {
+      "id": "potato",
+      "name": "Khoai Tây"
+    },
+    {
+      "id": "tomato",
+      "name": "Cà Chua"
+    },
+    {
+      "id": "strawberry",
+      "name": "Dâu Tây"
+    },
+    {
+      "id": "corn",
+      "name": "Ngô"
+    },
+    {
+      "id": "pumpkin",
+      "name": "Bí Đỏ"
+    },
+    {
+      "id": "watermelon",
+      "name": "Dưa Hấu"
+    },
+    {
+      "id": "pineapple",
+      "name": "Dứa"
+    },
+    {
+      "id": "banana",
+      "name": "Chuối"
+    },
+    {
+      "id": "orange",
+      "name": "Cam"
+    },
+    {
+      "id": "mango",
+      "name": "Xoài"
+    },
+    {
+      "id": "apple",
+      "name": "Táo"
+    },
+    {
+      "id": "pear",
+      "name": "Lê"
+    },
+    {
+      "id": "grape",
+      "name": "Nho"
+    },
+    {
+      "id": "dragon_fruit",
+      "name": "Lúa"
+    },
+    {
+      "id": "avocado",
+      "name": "Bơ"
+    },
+    {
+      "id": "durian",
+      "name": "Sầu Riêng"
+    },
+    {
+      "id": "mangosteen",
+      "name": "Măng Cụt"
+    }
+  ],
+  "animals": [
+    {
+      "id": "chicken",
+      "name": "Gà"
+    },
+    {
+      "id": "duck",
+      "name": "Vịt"
+    },
+    {
+      "id": "quail",
+      "name": "Chim Cút"
+    },
+    {
+      "id": "goose",
+      "name": "Ngỗng"
+    },
+    {
+      "id": "muscovy_duck",
+      "name": "Ngan"
+    },
+    {
+      "id": "turkey",
+      "name": "Gà Tây"
+    },
+    {
+      "id": "guinea_fowl",
+      "name": "Gà Sao"
+    },
+    {
+      "id": "pheasant",
+      "name": "Chim Trĩ"
+    },
+    {
+      "id": "peafowl",
+      "name": "Công"
+    },
+    {
+      "id": "ostrich",
+      "name": "Đà Điểu"
+    }
+  ],
+  "records": [
+    {
+      "sheet": "crop-carrot",
+      "frameSize": [
+        96,
+        96
+      ],
+      "columns": 8,
+      "rows": 1,
+      "frameNames": [
+        "seed_icon",
+        "seed_item",
+        "seeded",
+        "sprout",
+        "young",
+        "growing",
+        "mature",
+        "yield"
+      ],
+      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+    },
+    {
+      "sheet": "crop-cabbage",
+      "frameSize": [
+        96,
+        96
+      ],
+      "columns": 8,
+      "rows": 1,
+      "frameNames": [
+        "seed_icon",
+        "seed_item",
+        "seeded",
+        "sprout",
+        "young",
+        "growing",
+        "mature",
+        "yield"
+      ],
+      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+    },
+    {
+      "sheet": "crop-potato",
+      "frameSize": [
+        96,
+        96
+      ],
+      "columns": 8,
+      "rows": 1,
+      "frameNames": [
+        "seed_icon",
+        "seed_item",
+        "seeded",
+        "sprout",
+        "young",
+        "growing",
+        "mature",
+        "yield"
+      ],
+      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+    },
+    {
+      "sheet": "crop-tomato",
+      "frameSize": [
+        96,
+        96
+      ],
+      "columns": 8,
+      "rows": 1,
+      "frameNames": [
+        "seed_icon",
+        "seed_item",
+        "seeded",
+        "sprout",
+        "young",
+        "growing",
+        "mature",
+        "yield"
+      ],
+      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+    },
+    {
+      "sheet": "crop-strawberry",
+      "frameSize": [
+        96,
+        96
+      ],
+      "columns": 8,
+      "rows": 1,
+      "frameNames": [
+        "seed_icon",
+        "seed_item",
+        "seeded",
+        "sprout",
+        "young",
+        "growing",
+        "mature",
+        "yield"
+      ],
+      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+    },
+    {
+      "sheet": "crop-corn",
+      "frameSize": [
+        96,
+        96
+      ],
+      "columns": 8,
+      "rows": 1,
+      "frameNames": [
+        "seed_icon",
+        "seed_item",
+        "seeded",
+        "sprout",
+        "young",
+        "growing",
+        "mature",
+        "yield"
+      ],
+      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+    },
+    {
+      "sheet": "crop-pumpkin",
+      "frameSize": [
+        96,
+        96
+      ],
+      "columns": 8,
+      "rows": 1,
+      "frameNames": [
+        "seed_icon",
+        "seed_item",
+        "seeded",
+        "sprout",
+        "young",
+        "growing",
+        "mature",
+        "yield"
+      ],
+      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+    },
+    {
+      "sheet": "crop-watermelon",
+      "frameSize": [
+        96,
+        96
+      ],
+      "columns": 8,
+      "rows": 1,
+      "frameNames": [
+        "seed_icon",
+        "seed_item",
+        "seeded",
+        "sprout",
+        "young",
+        "growing",
+        "mature",
+        "yield"
+      ],
+      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+    },
+    {
+      "sheet": "crop-pineapple",
+      "frameSize": [
+        96,
+        96
+      ],
+      "columns": 8,
+      "rows": 1,
+      "frameNames": [
+        "seed_icon",
+        "seed_item",
+        "seeded",
+        "sprout",
+        "young",
+        "growing",
+        "mature",
+        "yield"
+      ],
+      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+    },
+    {
+      "sheet": "crop-banana",
+      "frameSize": [
+        96,
+        96
+      ],
+      "columns": 8,
+      "rows": 1,
+      "frameNames": [
+        "seed_icon",
+        "seed_item",
+        "seeded",
+        "sprout",
+        "young",
+        "growing",
+        "mature",
+        "yield"
+      ],
+      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+    },
+    {
+      "sheet": "crop-orange",
+      "frameSize": [
+        96,
+        96
+      ],
+      "columns": 8,
+      "rows": 1,
+      "frameNames": [
+        "seed_icon",
+        "seed_item",
+        "seeded",
+        "sprout",
+        "young",
+        "growing",
+        "mature",
+        "yield"
+      ],
+      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+    },
+    {
+      "sheet": "crop-mango",
+      "frameSize": [
+        96,
+        96
+      ],
+      "columns": 8,
+      "rows": 1,
+      "frameNames": [
+        "seed_icon",
+        "seed_item",
+        "seeded",
+        "sprout",
+        "young",
+        "growing",
+        "mature",
+        "yield"
+      ],
+      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+    },
+    {
+      "sheet": "crop-apple",
+      "frameSize": [
+        96,
+        96
+      ],
+      "columns": 8,
+      "rows": 1,
+      "frameNames": [
+        "seed_icon",
+        "seed_item",
+        "seeded",
+        "sprout",
+        "young",
+        "growing",
+        "mature",
+        "yield"
+      ],
+      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+    },
+    {
+      "sheet": "crop-pear",
+      "frameSize": [
+        96,
+        96
+      ],
+      "columns": 8,
+      "rows": 1,
+      "frameNames": [
+        "seed_icon",
+        "seed_item",
+        "seeded",
+        "sprout",
+        "young",
+        "growing",
+        "mature",
+        "yield"
+      ],
+      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+    },
+    {
+      "sheet": "crop-grape",
+      "frameSize": [
+        96,
+        96
+      ],
+      "columns": 8,
+      "rows": 1,
+      "frameNames": [
+        "seed_icon",
+        "seed_item",
+        "seeded",
+        "sprout",
+        "young",
+        "growing",
+        "mature",
+        "yield"
+      ],
+      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+    },
+    {
+      "sheet": "crop-dragon_fruit",
+      "frameSize": [
+        96,
+        96
+      ],
+      "columns": 8,
+      "rows": 1,
+      "frameNames": [
+        "seed_icon",
+        "seed_item",
+        "seeded",
+        "sprout",
+        "young",
+        "growing",
+        "mature",
+        "yield"
+      ],
+      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+    },
+    {
+      "sheet": "crop-avocado",
+      "frameSize": [
+        96,
+        96
+      ],
+      "columns": 8,
+      "rows": 1,
+      "frameNames": [
+        "seed_icon",
+        "seed_item",
+        "seeded",
+        "sprout",
+        "young",
+        "growing",
+        "mature",
+        "yield"
+      ],
+      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+    },
+    {
+      "sheet": "crop-durian",
+      "frameSize": [
+        96,
+        96
+      ],
+      "columns": 8,
+      "rows": 1,
+      "frameNames": [
+        "seed_icon",
+        "seed_item",
+        "seeded",
+        "sprout",
+        "young",
+        "growing",
+        "mature",
+        "yield"
+      ],
+      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+    },
+    {
+      "sheet": "crop-mangosteen",
+      "frameSize": [
+        96,
+        96
+      ],
+      "columns": 8,
+      "rows": 1,
+      "frameNames": [
+        "seed_icon",
+        "seed_item",
+        "seeded",
+        "sprout",
+        "young",
+        "growing",
+        "mature",
+        "yield"
+      ],
+      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+    },
+    {
+      "sheet": "animal-chicken",
+      "frameSize": [
+        96,
+        96
+      ],
+      "columns": 6,
+      "rows": 8,
+      "frameNames": [
+        "idle-0",
+        "idle-1",
+        "idle-2",
+        "idle-3",
+        "idle-4",
+        "idle-5",
+        "walk-0",
+        "walk-1",
+        "walk-2",
+        "walk-3",
+        "walk-4",
+        "walk-5",
+        "eat-0",
+        "eat-1",
+        "eat-2",
+        "eat-3",
+        "eat-4",
+        "eat-5",
+        "drink-0",
+        "drink-1",
+        "drink-2",
+        "drink-3",
+        "drink-4",
+        "drink-5",
+        "rest-0",
+        "rest-1",
+        "rest-2",
+        "rest-3",
+        "rest-4",
+        "rest-5",
+        "produce_ready-0",
+        "produce_ready-1",
+        "produce_ready-2",
+        "produce_ready-3",
+        "produce_ready-4",
+        "produce_ready-5",
+        "weak-0",
+        "weak-1",
+        "weak-2",
+        "weak-3",
+        "weak-4",
+        "weak-5",
+        "dead-0",
+        "dead-1",
+        "dead-2",
+        "dead-3",
+        "dead-4",
+        "dead-5"
+      ],
+      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+    },
+    {
+      "sheet": "item-chicken_egg",
+      "frameSize": [
+        96,
+        96
+      ],
+      "columns": 1,
+      "rows": 1,
+      "frameNames": [
+        "icon"
+      ],
+      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+    },
+    {
+      "sheet": "animal-duck",
+      "frameSize": [
+        96,
+        96
+      ],
+      "columns": 6,
+      "rows": 8,
+      "frameNames": [
+        "idle-0",
+        "idle-1",
+        "idle-2",
+        "idle-3",
+        "idle-4",
+        "idle-5",
+        "walk-0",
+        "walk-1",
+        "walk-2",
+        "walk-3",
+        "walk-4",
+        "walk-5",
+        "eat-0",
+        "eat-1",
+        "eat-2",
+        "eat-3",
+        "eat-4",
+        "eat-5",
+        "drink-0",
+        "drink-1",
+        "drink-2",
+        "drink-3",
+        "drink-4",
+        "drink-5",
+        "rest-0",
+        "rest-1",
+        "rest-2",
+        "rest-3",
+        "rest-4",
+        "rest-5",
+        "produce_ready-0",
+        "produce_ready-1",
+        "produce_ready-2",
+        "produce_ready-3",
+        "produce_ready-4",
+        "produce_ready-5",
+        "weak-0",
+        "weak-1",
+        "weak-2",
+        "weak-3",
+        "weak-4",
+        "weak-5",
+        "dead-0",
+        "dead-1",
+        "dead-2",
+        "dead-3",
+        "dead-4",
+        "dead-5"
+      ],
+      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+    },
+    {
+      "sheet": "item-duck_egg",
+      "frameSize": [
+        96,
+        96
+      ],
+      "columns": 1,
+      "rows": 1,
+      "frameNames": [
+        "icon"
+      ],
+      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+    },
+    {
+      "sheet": "animal-quail",
+      "frameSize": [
+        96,
+        96
+      ],
+      "columns": 6,
+      "rows": 8,
+      "frameNames": [
+        "idle-0",
+        "idle-1",
+        "idle-2",
+        "idle-3",
+        "idle-4",
+        "idle-5",
+        "walk-0",
+        "walk-1",
+        "walk-2",
+        "walk-3",
+        "walk-4",
+        "walk-5",
+        "eat-0",
+        "eat-1",
+        "eat-2",
+        "eat-3",
+        "eat-4",
+        "eat-5",
+        "drink-0",
+        "drink-1",
+        "drink-2",
+        "drink-3",
+        "drink-4",
+        "drink-5",
+        "rest-0",
+        "rest-1",
+        "rest-2",
+        "rest-3",
+        "rest-4",
+        "rest-5",
+        "produce_ready-0",
+        "produce_ready-1",
+        "produce_ready-2",
+        "produce_ready-3",
+        "produce_ready-4",
+        "produce_ready-5",
+        "weak-0",
+        "weak-1",
+        "weak-2",
+        "weak-3",
+        "weak-4",
+        "weak-5",
+        "dead-0",
+        "dead-1",
+        "dead-2",
+        "dead-3",
+        "dead-4",
+        "dead-5"
+      ],
+      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+    },
+    {
+      "sheet": "item-quail_egg",
+      "frameSize": [
+        96,
+        96
+      ],
+      "columns": 1,
+      "rows": 1,
+      "frameNames": [
+        "icon"
+      ],
+      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+    },
+    {
+      "sheet": "animal-goose",
+      "frameSize": [
+        96,
+        96
+      ],
+      "columns": 6,
+      "rows": 8,
+      "frameNames": [
+        "idle-0",
+        "idle-1",
+        "idle-2",
+        "idle-3",
+        "idle-4",
+        "idle-5",
+        "walk-0",
+        "walk-1",
+        "walk-2",
+        "walk-3",
+        "walk-4",
+        "walk-5",
+        "eat-0",
+        "eat-1",
+        "eat-2",
+        "eat-3",
+        "eat-4",
+        "eat-5",
+        "drink-0",
+        "drink-1",
+        "drink-2",
+        "drink-3",
+        "drink-4",
+        "drink-5",
+        "rest-0",
+        "rest-1",
+        "rest-2",
+        "rest-3",
+        "rest-4",
+        "rest-5",
+        "produce_ready-0",
+        "produce_ready-1",
+        "produce_ready-2",
+        "produce_ready-3",
+        "produce_ready-4",
+        "produce_ready-5",
+        "weak-0",
+        "weak-1",
+        "weak-2",
+        "weak-3",
+        "weak-4",
+        "weak-5",
+        "dead-0",
+        "dead-1",
+        "dead-2",
+        "dead-3",
+        "dead-4",
+        "dead-5"
+      ],
+      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+    },
+    {
+      "sheet": "item-goose_egg",
+      "frameSize": [
+        96,
+        96
+      ],
+      "columns": 1,
+      "rows": 1,
+      "frameNames": [
+        "icon"
+      ],
+      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+    },
+    {
+      "sheet": "animal-muscovy_duck",
+      "frameSize": [
+        96,
+        96
+      ],
+      "columns": 6,
+      "rows": 8,
+      "frameNames": [
+        "idle-0",
+        "idle-1",
+        "idle-2",
+        "idle-3",
+        "idle-4",
+        "idle-5",
+        "walk-0",
+        "walk-1",
+        "walk-2",
+        "walk-3",
+        "walk-4",
+        "walk-5",
+        "eat-0",
+        "eat-1",
+        "eat-2",
+        "eat-3",
+        "eat-4",
+        "eat-5",
+        "drink-0",
+        "drink-1",
+        "drink-2",
+        "drink-3",
+        "drink-4",
+        "drink-5",
+        "rest-0",
+        "rest-1",
+        "rest-2",
+        "rest-3",
+        "rest-4",
+        "rest-5",
+        "produce_ready-0",
+        "produce_ready-1",
+        "produce_ready-2",
+        "produce_ready-3",
+        "produce_ready-4",
+        "produce_ready-5",
+        "weak-0",
+        "weak-1",
+        "weak-2",
+        "weak-3",
+        "weak-4",
+        "weak-5",
+        "dead-0",
+        "dead-1",
+        "dead-2",
+        "dead-3",
+        "dead-4",
+        "dead-5"
+      ],
+      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+    },
+    {
+      "sheet": "item-muscovy_duck_egg",
+      "frameSize": [
+        96,
+        96
+      ],
+      "columns": 1,
+      "rows": 1,
+      "frameNames": [
+        "icon"
+      ],
+      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+    },
+    {
+      "sheet": "animal-turkey",
+      "frameSize": [
+        96,
+        96
+      ],
+      "columns": 6,
+      "rows": 8,
+      "frameNames": [
+        "idle-0",
+        "idle-1",
+        "idle-2",
+        "idle-3",
+        "idle-4",
+        "idle-5",
+        "walk-0",
+        "walk-1",
+        "walk-2",
+        "walk-3",
+        "walk-4",
+        "walk-5",
+        "eat-0",
+        "eat-1",
+        "eat-2",
+        "eat-3",
+        "eat-4",
+        "eat-5",
+        "drink-0",
+        "drink-1",
+        "drink-2",
+        "drink-3",
+        "drink-4",
+        "drink-5",
+        "rest-0",
+        "rest-1",
+        "rest-2",
+        "rest-3",
+        "rest-4",
+        "rest-5",
+        "produce_ready-0",
+        "produce_ready-1",
+        "produce_ready-2",
+        "produce_ready-3",
+        "produce_ready-4",
+        "produce_ready-5",
+        "weak-0",
+        "weak-1",
+        "weak-2",
+        "weak-3",
+        "weak-4",
+        "weak-5",
+        "dead-0",
+        "dead-1",
+        "dead-2",
+        "dead-3",
+        "dead-4",
+        "dead-5"
+      ],
+      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+    },
+    {
+      "sheet": "item-turkey_egg",
+      "frameSize": [
+        96,
+        96
+      ],
+      "columns": 1,
+      "rows": 1,
+      "frameNames": [
+        "icon"
+      ],
+      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+    },
+    {
+      "sheet": "animal-guinea_fowl",
+      "frameSize": [
+        96,
+        96
+      ],
+      "columns": 6,
+      "rows": 8,
+      "frameNames": [
+        "idle-0",
+        "idle-1",
+        "idle-2",
+        "idle-3",
+        "idle-4",
+        "idle-5",
+        "walk-0",
+        "walk-1",
+        "walk-2",
+        "walk-3",
+        "walk-4",
+        "walk-5",
+        "eat-0",
+        "eat-1",
+        "eat-2",
+        "eat-3",
+        "eat-4",
+        "eat-5",
+        "drink-0",
+        "drink-1",
+        "drink-2",
+        "drink-3",
+        "drink-4",
+        "drink-5",
+        "rest-0",
+        "rest-1",
+        "rest-2",
+        "rest-3",
+        "rest-4",
+        "rest-5",
+        "produce_ready-0",
+        "produce_ready-1",
+        "produce_ready-2",
+        "produce_ready-3",
+        "produce_ready-4",
+        "produce_ready-5",
+        "weak-0",
+        "weak-1",
+        "weak-2",
+        "weak-3",
+        "weak-4",
+        "weak-5",
+        "dead-0",
+        "dead-1",
+        "dead-2",
+        "dead-3",
+        "dead-4",
+        "dead-5"
+      ],
+      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+    },
+    {
+      "sheet": "item-guinea_fowl_egg",
+      "frameSize": [
+        96,
+        96
+      ],
+      "columns": 1,
+      "rows": 1,
+      "frameNames": [
+        "icon"
+      ],
+      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+    },
+    {
+      "sheet": "animal-pheasant",
+      "frameSize": [
+        96,
+        96
+      ],
+      "columns": 6,
+      "rows": 8,
+      "frameNames": [
+        "idle-0",
+        "idle-1",
+        "idle-2",
+        "idle-3",
+        "idle-4",
+        "idle-5",
+        "walk-0",
+        "walk-1",
+        "walk-2",
+        "walk-3",
+        "walk-4",
+        "walk-5",
+        "eat-0",
+        "eat-1",
+        "eat-2",
+        "eat-3",
+        "eat-4",
+        "eat-5",
+        "drink-0",
+        "drink-1",
+        "drink-2",
+        "drink-3",
+        "drink-4",
+        "drink-5",
+        "rest-0",
+        "rest-1",
+        "rest-2",
+        "rest-3",
+        "rest-4",
+        "rest-5",
+        "produce_ready-0",
+        "produce_ready-1",
+        "produce_ready-2",
+        "produce_ready-3",
+        "produce_ready-4",
+        "produce_ready-5",
+        "weak-0",
+        "weak-1",
+        "weak-2",
+        "weak-3",
+        "weak-4",
+        "weak-5",
+        "dead-0",
+        "dead-1",
+        "dead-2",
+        "dead-3",
+        "dead-4",
+        "dead-5"
+      ],
+      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+    },
+    {
+      "sheet": "item-pheasant_egg",
+      "frameSize": [
+        96,
+        96
+      ],
+      "columns": 1,
+      "rows": 1,
+      "frameNames": [
+        "icon"
+      ],
+      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+    },
+    {
+      "sheet": "animal-peafowl",
+      "frameSize": [
+        96,
+        96
+      ],
+      "columns": 6,
+      "rows": 8,
+      "frameNames": [
+        "idle-0",
+        "idle-1",
+        "idle-2",
+        "idle-3",
+        "idle-4",
+        "idle-5",
+        "walk-0",
+        "walk-1",
+        "walk-2",
+        "walk-3",
+        "walk-4",
+        "walk-5",
+        "eat-0",
+        "eat-1",
+        "eat-2",
+        "eat-3",
+        "eat-4",
+        "eat-5",
+        "drink-0",
+        "drink-1",
+        "drink-2",
+        "drink-3",
+        "drink-4",
+        "drink-5",
+        "rest-0",
+        "rest-1",
+        "rest-2",
+        "rest-3",
+        "rest-4",
+        "rest-5",
+        "produce_ready-0",
+        "produce_ready-1",
+        "produce_ready-2",
+        "produce_ready-3",
+        "produce_ready-4",
+        "produce_ready-5",
+        "weak-0",
+        "weak-1",
+        "weak-2",
+        "weak-3",
+        "weak-4",
+        "weak-5",
+        "dead-0",
+        "dead-1",
+        "dead-2",
+        "dead-3",
+        "dead-4",
+        "dead-5"
+      ],
+      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+    },
+    {
+      "sheet": "item-peafowl_egg",
+      "frameSize": [
+        96,
+        96
+      ],
+      "columns": 1,
+      "rows": 1,
+      "frameNames": [
+        "icon"
+      ],
+      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+    },
+    {
+      "sheet": "animal-ostrich",
+      "frameSize": [
+        96,
+        96
+      ],
+      "columns": 6,
+      "rows": 8,
+      "frameNames": [
+        "idle-0",
+        "idle-1",
+        "idle-2",
+        "idle-3",
+        "idle-4",
+        "idle-5",
+        "walk-0",
+        "walk-1",
+        "walk-2",
+        "walk-3",
+        "walk-4",
+        "walk-5",
+        "eat-0",
+        "eat-1",
+        "eat-2",
+        "eat-3",
+        "eat-4",
+        "eat-5",
+        "drink-0",
+        "drink-1",
+        "drink-2",
+        "drink-3",
+        "drink-4",
+        "drink-5",
+        "rest-0",
+        "rest-1",
+        "rest-2",
+        "rest-3",
+        "rest-4",
+        "rest-5",
+        "produce_ready-0",
+        "produce_ready-1",
+        "produce_ready-2",
+        "produce_ready-3",
+        "produce_ready-4",
+        "produce_ready-5",
+        "weak-0",
+        "weak-1",
+        "weak-2",
+        "weak-3",
+        "weak-4",
+        "weak-5",
+        "dead-0",
+        "dead-1",
+        "dead-2",
+        "dead-3",
+        "dead-4",
+        "dead-5"
+      ],
+      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+    },
+    {
+      "sheet": "item-ostrich_egg",
+      "frameSize": [
+        96,
+        96
+      ],
+      "columns": 1,
+      "rows": 1,
+      "frameNames": [
+        "icon"
+      ],
+      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+    },
+    {
+      "sheet": "item-fertilizer_nutrition_normal",
+      "frameSize": [
+        96,
+        96
+      ],
+      "columns": 1,
+      "rows": 1,
+      "frameNames": [
+        "icon"
+      ],
+      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+    },
+    {
+      "sheet": "item-fertilizer_growth_normal",
+      "frameSize": [
+        96,
+        96
+      ],
+      "columns": 1,
+      "rows": 1,
+      "frameNames": [
+        "icon"
+      ],
+      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+    },
+    {
+      "sheet": "item-fertilizer_nutrition_medium",
+      "frameSize": [
+        96,
+        96
+      ],
+      "columns": 1,
+      "rows": 1,
+      "frameNames": [
+        "icon"
+      ],
+      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+    },
+    {
+      "sheet": "item-fertilizer_growth_medium",
+      "frameSize": [
+        96,
+        96
+      ],
+      "columns": 1,
+      "rows": 1,
+      "frameNames": [
+        "icon"
+      ],
+      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+    },
+    {
+      "sheet": "item-fertilizer_nutrition_good",
+      "frameSize": [
+        96,
+        96
+      ],
+      "columns": 1,
+      "rows": 1,
+      "frameNames": [
+        "icon"
+      ],
+      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+    },
+    {
+      "sheet": "item-fertilizer_growth_good",
+      "frameSize": [
+        96,
+        96
+      ],
+      "columns": 1,
+      "rows": 1,
+      "frameNames": [
+        "icon"
+      ],
+      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+    },
+    {
+      "sheet": "item-fertilizer_nutrition_super",
+      "frameSize": [
+        96,
+        96
+      ],
+      "columns": 1,
+      "rows": 1,
+      "frameNames": [
+        "icon"
+      ],
+      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+    },
+    {
+      "sheet": "item-fertilizer_growth_super",
+      "frameSize": [
+        96,
+        96
+      ],
+      "columns": 1,
+      "rows": 1,
+      "frameNames": [
+        "icon"
+      ],
+      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+    },
+    {
+      "sheet": "item-fertilizer_premium_3",
+      "frameSize": [
+        96,
+        96
+      ],
+      "columns": 1,
+      "rows": 1,
+      "frameNames": [
+        "icon"
+      ],
+      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+    },
+    {
+      "sheet": "item-fertilizer_premium_2",
+      "frameSize": [
+        96,
+        96
+      ],
+      "columns": 1,
+      "rows": 1,
+      "frameNames": [
+        "icon"
+      ],
+      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+    },
+    {
+      "sheet": "item-fertilizer_premium_1",
+      "frameSize": [
+        96,
+        96
+      ],
+      "columns": 1,
+      "rows": 1,
+      "frameNames": [
+        "icon"
+      ],
+      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+    },
+    {
+      "sheet": "item-feed_normal",
+      "frameSize": [
+        96,
+        96
+      ],
+      "columns": 1,
+      "rows": 1,
+      "frameNames": [
+        "icon"
+      ],
+      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+    },
+    {
+      "sheet": "item-feed_good",
+      "frameSize": [
+        96,
+        96
+      ],
+      "columns": 1,
+      "rows": 1,
+      "frameNames": [
+        "icon"
+      ],
+      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+    },
+    {
+      "sheet": "item-feed_super",
+      "frameSize": [
+        96,
+        96
+      ],
+      "columns": 1,
+      "rows": 1,
+      "frameNames": [
+        "icon"
+      ],
+      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+    },
+    {
+      "sheet": "soil",
+      "frameSize": [
+        96,
+        96
+      ],
+      "columns": 5,
+      "rows": 3,
+      "frameNames": [
+        "locked",
+        "empty_dry",
+        "empty_moist",
+        "tilled_dry",
+        "tilled_moist",
+        "seeded",
+        "seeded_moist",
+        "fertilized",
+        "growing_stage_1",
+        "growing_stage_2",
+        "growing_stage_3",
+        "mature",
+        "ready_to_harvest",
+        "post_harvest_reset",
+        "selected"
+      ],
+      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+    },
+    {
+      "sheet": "props",
+      "frameSize": [
+        96,
+        96
+      ],
+      "columns": 8,
+      "rows": 2,
+      "frameNames": [
+        "shelter",
+        "trough",
+        "water",
+        "nest",
+        "hay",
+        "bush",
+        "stone",
+        "flowers",
+        "watering",
+        "granule",
+        "drop",
+        "spark",
+        "coin",
+        "basket",
+        "store",
+        "herd"
+      ],
+      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+    }
+  ]
+}

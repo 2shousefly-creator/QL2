@@ -68,6 +68,7 @@ export default function FarmMobileCanvas({ model, reducedMotion, onExit }: { mod
       {semanticView.hits.map(hit => <button key={hit.action.id} data-action={hit.action.id}
         aria-disabled={!!hit.action.reason} aria-label={`${hit.action.label}${hit.action.reason ? `. ${hit.action.reason}` : ''}`}
         onFocus={() => setFocusId(hit.action.id)} onBlur={() => setFocusId(null)} onClick={() => activate(hit.action.id)}>{hit.action.label}</button>)}
+      <p>{model.snapshot.gold} Vàng. XP {model.snapshot.xp.toFixed(1)}%.</p>
       {semanticView.scroll && <><button onClick={() => scrollFn.current?.(-180)}>Cuộn lên</button><button onClick={() => scrollFn.current?.(180)}>Cuộn xuống</button></>}
       {model.sheet && <p>{model.sheet.description}{model.sheet.rows.map(row => `${row.title}. ${row.detail ?? ''}`).join('\n')}</p>}
       <p role="status" aria-live="polite">{model.toast ?? ''}</p>

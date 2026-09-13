@@ -1,37 +1,34 @@
 import { Rectangle, Texture } from 'pixi.js';
 import { acquirePixiTexture } from '../../../components/core-visual/pixi/pixiAssets';
 import type { PixiAssetLease } from '../../../components/core-visual/pixi/pixiAssets';
-import { FARM_WORLD_ASSETS, TANG_GIA_ASSETS } from '../tangGiaAssetManifest';
+import { animalArt, cropArt, propArt, soilArt, itemArt } from './FarmArtRegistry';
+import type { AnimalArtState } from './FarmArtRegistry';
+import type { AnimalTypeId } from '../farmTypes';
 import type { FarmMobileModel } from './mobileTypes';
 
 const base = (path: string) => path.startsWith(import.meta.env.BASE_URL)
   ? path : `${import.meta.env.BASE_URL}${path.replace(/^\//, '')}`;
-export const mobileAssetUrl = (name: string) => base(`/assets/tanggia/mobile-v2/${name}.webp`);
+const sourceUrl = (path: string) => base(path.split('#')[0]);
 
-/** Resident assets follow the active tab and open sheet, not the entire catalog. */
+/** Only active world, FX and visible sheet atlases are resident. */
 export function mobileSources(model: FarmMobileModel): Record<string, string> {
   const sources: Record<string, string> = {};
-  const add = (path: string) => { sources[base(path)] = base(path); };
-  const prefix = model.tab === 'garden' ? 'garden' : 'pen';
-  add(mobileAssetUrl(`${prefix}-ground`)); add(mobileAssetUrl(`${prefix}-rear`));
-  for (const path of Object.values(FARM_WORLD_ASSETS.vfx)) add(path);
+  const add = (path: string) => { const url = sourceUrl(path); sources[url] = url; };
+  add(propArt('bush'));
   if (model.tab === 'garden') {
-    for (const path of Object.values(TANG_GIA_ASSETS.soil)) add(path);
-    for (const plot of model.snapshot.plots) if (plot.cropId) add(TANG_GIA_ASSETS.crops[plot.cropId][plot.stage]);
+    add(soilArt('empty_dry'));
+    for (const plot of model.snapshot.plots) if (plot.cropId) add(cropArt(plot.cropId, plot.artStage));
   } else {
-    for (const path of Object.values(FARM_WORLD_ASSETS.pen)) add(path);
-    for (const animal of model.snapshot.animals) {
-      if (animal.species === 'chicken' || animal.species === 'duck') add(FARM_WORLD_ASSETS.animals[animal.species]);
-    }
+    add(itemArt('chicken_egg'));
+    for (const animal of model.snapshot.animals) { add(animalArt(animal.species)); add(itemArt(`${animal.species}_egg`)); }
   }
   for (const row of model.sheet?.rows ?? []) if (row.icon) add(row.icon);
-  for (const event of model.events) {
-    if (event.kind === 'sow' && event.cropId) add(TANG_GIA_ASSETS.crops[event.cropId].seed);
-  }
+  for (const action of model.toolbar) if (action.icon) add(action.icon);
+  for (const event of model.events) if (event.cropId) add(cropArt(event.cropId, 'yield'));
   return sources;
 }
 
-/** Per-mount ownership. A late result cannot repopulate a destroyed scene. */
+/** Own frame views separately from leased sources. Asset errors cannot mutate gameplay. */
 export class MobileTextureBank {
   readonly textures = new Map<string, Texture>();
   readonly failed = new Set<string>();
@@ -43,6 +40,7 @@ export class MobileTextureBank {
   constructor(private changed: () => void) {}
   request(sources: Record<string, string>) {
     this.desired = new Set(Object.values(sources));
+    for (const url of this.failed) if (!this.desired.has(url)) this.failed.delete(url);
     for (const [url, lease] of this.leases) if (!this.desired.has(url)) {
       for (const [key, frame] of this.frames) if (key.startsWith(`${url}#`)) { frame.destroy(false); this.frames.delete(key); }
       this.textures.delete(url); this.leases.delete(url); lease.release();
@@ -58,15 +56,21 @@ export class MobileTextureBank {
       this.requests.set(url, request);
     }
   }
-  get(path: string) { return this.textures.get(base(path)); }
-  bird(species: 'chicken' | 'duck', row: number, column: number): Texture | undefined {
-    const url = base(FARM_WORLD_ASSETS.animals[species]), source = this.textures.get(url);
+  get(path: string): Texture | undefined {
+    const url = sourceUrl(path), source = this.textures.get(url);
     if (!source) return undefined;
-    const key = `${url}#${row}:${column}`;
-    if (!this.frames.has(key)) this.frames.set(key, new Texture({ source: source.source,
-      frame: new Rectangle(column * source.width / 6, row * source.height / 4, source.width / 6, source.height / 4) }));
+    const frame = path.split('#frame=')[1];
+    if (!frame) return source;
+    const key = `${url}#${frame}`;
+    if (!this.frames.has(key)) {
+      const [column, row] = frame.split(',').map(Number);
+      if (![column, row].every(value => Number.isInteger(value) && value >= 0)
+        || (column + 1) * 96 > source.width || (row + 1) * 96 > source.height) return undefined;
+      this.frames.set(key, new Texture({ source: source.source, frame: new Rectangle(column * 96, row * 96, 96, 96) }));
+    }
     return this.frames.get(key);
   }
+  bird(species: AnimalTypeId, state: AnimalArtState, frame: number) { return this.get(animalArt(species, state, frame)); }
   retry() { this.failed.clear(); this.request(Object.fromEntries([...this.desired].map(url => [url, url]))); }
   destroy() {
     this.disposed = true;

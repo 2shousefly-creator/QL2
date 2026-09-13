@@ -33,7 +33,9 @@ export function adaptFarmMobile(game: GameState, farm: FarmSaveState, view: Farm
       const cropId = plot.status === 'growing' || plot.status === 'ready' ? plot.cropId : null;
       const moisture = plot.status === 'locked' ? 0 : plot.soilMoisture;
       const band = getSoilMoistureBand(moisture);
+      const progress = getCropGrowthProgress(plot);
       return { index, status: plot.status, cropId, stage: getCropVisualStage(getCropGrowthProgress(plot)),
+        artStage: plot.status === 'ready' || progress >= .9 ? 'mature' : progress >= .6 ? 'growing' : progress >= .3 ? 'young' : progress >= .06 ? 'sprout' : 'seeded',
         title: cropId ? CROP_CATALOG.find(crop => crop.id === cropId)!.name : `Ô đất ${index + 1}`,
         timer: plot.status === 'ready' ? 'Thu hoạch' : plot.status === 'growing'
           ? mobileCountdown(getCurrentCropRemainingDurationMs(plot, now, farm.weatherSeed)) : '',
@@ -45,6 +47,7 @@ export function adaptFarmMobile(game: GameState, farm: FarmSaveState, view: Farm
       const definition = ANIMAL_CATALOG.find(item => item.id === animal.animalTypeId)!;
       const dead = isAnimalDead(animal);
       return { id: animal.instanceId, species: animal.animalTypeId, title: definition.name, dead,
+        storedEggs: farm.inventory.eggs[definition.eggTypeId] || 0,
         weak: !dead && view.penFeedBuffValue <= 0 && deadline !== null,
         scale: getAnimalVisualScale(animal, definition, now),
         lifeRemaining: dead ? 'Đã chết' : mobileCountdown(animal.lifeEndsAt - now),

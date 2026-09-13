@@ -4,6 +4,7 @@ import { useFarmMobileSheets } from './FarmMobileSheets';
 import type { FarmMobileBridge } from './FarmMobileSheets';
 import type { FarmMobileModel, FarmMobileTab } from './mobileTypes';
 import './farm-mobile.css';
+import { propArt } from './FarmArtRegistry';
 const Canvas = lazy(() => import('./FarmMobileCanvas'));
 class CanvasBoundary extends React.Component<{ onExit(): void; children: React.ReactNode }, { failed: boolean }> {
   state = { failed: false };
@@ -29,11 +30,12 @@ export default function FarmMobilePresentation({ bridge, toast, events, reducedM
     selectTab: next => { setTab(next); sheets.close(); },
     selectPlot: sheets.selectPlot, selectAnimal: sheets.selectAnimal, openPen: sheets.openPen,
     openTrough: () => sheets.open({ type: 'trough' }), openWeather: () => sheets.open({ type: 'weather' }),
+    openEggs: () => sheets.open({ type: 'inventory', tab: 'egg' }),
     toolbar: [
-      { id: 'inventory', label: 'Kho', run: () => sheets.open({ type: 'inventory', tab: tab === 'garden' ? 'crop' : 'egg' }) },
-      { id: 'store', label: 'Cửa hàng', run: () => sheets.open({ type: 'store', tab: tab === 'garden' ? 'crop' : 'animal' }) },
-      tab === 'pen' ? { id: 'herd', label: 'Đàn vật nuôi', run: sheets.openPen }
-        : { id: 'harvest-all', label: 'Thu hoạch', reason: bridge.harvesting ? 'Đang thu hoạch' : !bridge.snapshot.plots.some(plot => plot.status === 'ready') ? 'Chưa có cây sẵn sàng' : undefined,
+      { id: 'inventory', label: 'Kho', icon: propArt('basket'), run: () => sheets.open({ type: 'inventory', tab: tab === 'garden' ? 'crop' : 'egg' }) },
+      { id: 'store', label: 'Cửa hàng', icon: propArt('store'), run: () => sheets.open({ type: 'store', tab: tab === 'garden' ? 'crop' : 'animal' }) },
+      tab === 'pen' ? { id: 'herd', label: 'Đàn nuôi', icon: propArt('herd'), run: sheets.openPen }
+        : { id: 'harvest-all', label: 'Thu hoạch', icon: propArt('basket'), reason: bridge.harvesting ? 'Đang thu hoạch' : !bridge.snapshot.plots.some(plot => plot.status === 'ready') ? 'Chưa có cây sẵn sàng' : undefined,
           run: () => {
             const ready = bridge.snapshot.plots.filter(plot => plot.status === 'ready');
             if (ready.length === 1) sheets.selectPlot(ready[0].index);
