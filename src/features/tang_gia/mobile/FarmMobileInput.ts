@@ -26,7 +26,19 @@ export class FarmMobileInput {
     const { x, y } = this.point(event);
     // Preserve the browser's edge navigation gesture.
     if (x < 12 || x > this.canvas.clientWidth - 12) return;
-    const hit = [...this.hits].reverse().find(hit => contains(hit, x, y));
+    let hit: MobileHit | undefined;
+    for (let i = this.hits.length - 1; i >= 0; i--) {
+      const candidate = this.hits[i];
+      if (candidate.height < 44 || !contains(candidate, x, y)) continue;
+      if (!hit) hit = candidate;
+      // Roaming sprites can overlap: pick the closest visible animal body,
+      // while preserving the existing priority of toolbar/prop/modal targets.
+      else if (hit.action.id.startsWith('animal-') && candidate.action.id.startsWith('animal-')) {
+        const distance = (r: MobileHit) => Math.hypot(x - r.x - r.width / 2, y - r.y - r.height / 2);
+        if (distance(candidate) < distance(hit)) hit = candidate;
+      }
+      if (!hit.action.id.startsWith('animal-')) break;
+    }
     this.down = { pointer: event.pointerId, x, y, lastY: y, id: hit?.action.id, dragged: false,
       scroll: !!this.scrollRegion && contains(this.scrollRegion, x, y) };
     this.canvas.setPointerCapture(event.pointerId);

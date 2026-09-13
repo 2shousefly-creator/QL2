@@ -1,0 +1,135 @@
+/* Feature-local mobile shop and inventory skin. AppOverlay still owns portals,
+   focus, body locking, safe areas and scrolling; desktop keeps its existing UI. */
+.app-overlay.modal-design.farm-market {
+  --modal-surface: #fff9e9;
+  --modal-surface-soft: #f0edce;
+  --modal-text: #29462c;
+  --modal-muted: #66704a;
+  --modal-border: #d8be7d;
+  --modal-divider: #e6d8af;
+  --modal-success: #29814a;
+  --modal-danger: #b54232;
+  --modal-warning: #936023;
+  --modal-reward: #98601b;
+  --modal-info: #247b8e;
+  --modal-pad-x: 12px;
+  --modal-pad-y: 13px;
+  --modal-radius-lg: 23px;
+  --modal-button-radius: 13px;
+  --modal-backdrop: #172d29b8;
+  --modal-shadow: 0 18px 50px #132d2659;
+  --theme-primary: #368943;
+  --theme-primary-hover: #257534;
+  --theme-on-primary: #fffce5;
+  --theme-border-strong: #267338;
+  --theme-accent: #b9831b;
+  color-scheme: light;
+}
+.farm-market.modal-design > .app-overlay__panel {
+  border: 2px solid #e7c985;
+  box-shadow: 0 4px 0 #a8783b, var(--modal-shadow);
+}
+.farm-market.modal-design .app-overlay__header {
+  --modal-text: #fffce7;
+  --modal-muted: #ecf2c5;
+  --modal-reward: #ffdf79;
+  background: linear-gradient(110deg, #2f7b3f, #4d9e4a);
+  border-bottom: 4px solid #d4aa57;
+  padding: 15px 12px;
+}
+.farm-market .app-overlay__header .modal-title { font-size: 18px; letter-spacing: -.2px; }
+.farm-market .app-overlay__header .modal-copy { font-size: 12px; }
+.farm-market .app-overlay__header .modal-button--icon { background: #245f34; border: 1px solid #a3cb73; color: #fff; }
+.farm-market .app-overlay__header .modal-button--icon > svg { background: transparent; }
+.farm-market .app-overlay__header :is(.modal-status-icon, div:has(> .farm-market-art)) {
+  width: 54px; height: 54px; border: 1px solid #dadd9a; border-radius: 17px;
+  background: #fff2bd; box-shadow: 0 3px 0 #21582d40;
+}
+.farm-market .farm-market-art {
+  display: inline-block; width: 64px; height: 64px; flex: 0 0 auto;
+  background-repeat: no-repeat; vertical-align: middle;
+}
+.farm-market .app-overlay__header .farm-market-art { width: 50px; height: 50px; }
+.farm-market .farm-market-tabs {
+  display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 5px;
+  flex-shrink: 0; padding: 8px; overflow: visible; background: #f3edcc;
+  border-bottom: 1px solid #dace9b;
+}
+.farm-market .farm-market-tabs--four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.farm-market .farm-market-tabs > button {
+  display: flex; flex-direction: column; gap: 1px; min-width: 0;
+  min-height: 64px; padding: 3px 1px 6px; border: 1px solid #e4d7ab;
+  background: #fffae8; color: #5b673f; border-radius: 13px; font-size: 11px; line-height: 1.25;
+}
+.farm-market .farm-market-tabs .farm-market-art { width: 30px; height: 30px; }
+.farm-market .farm-market-tabs > button[aria-pressed="true"] {
+  background: #dbeeae; color: #245d2d; border-color: #81b556;
+  box-shadow: inset 0 -3px #8cbb57, 0 2px 4px #61733612;
+}
+.farm-market .farm-market-tabs > button:hover { background: #edf4ce; }
+.farm-market.modal-design .app-overlay__body { background: #fff9e9; gap: 12px; }
+/* Retire the old slate surfaces only inside these two feature-owned portals. */
+.farm-market [class*="bg-slate-"] { background: #f4efda; }
+.farm-market [class*="border-slate-"] { border-color: #e2d5ae; }
+.farm-market [class*="text-slate-"] { color: #304a31; }
+.farm-market :is([class*="text-purple-"], [class*="text-violet-"]) { color: #8052a2; }
+.farm-market [class*="text-amber-"] { color: #956318; }
+.farm-market [class*="bg-amber-500"] { background: #f8e3a6; }
+.farm-market [class*="bg-emerald-"] { background: #e2efc4; }
+.farm-market.modal-design .farm-market-card {
+  display: grid; grid-template-columns: 66px minmax(0, 1fr); align-items: center;
+  column-gap: 10px; row-gap: 9px; padding: 12px;
+  background: #fffef5; border: 1px solid #e7d6a8; border-radius: 18px;
+  box-shadow: 0 3px 0 #d8bb6d22, 0 5px 12px #79663b08;
+  overflow: visible;
+}
+.farm-market .farm-market-card > div:first-child { display: contents; }
+.farm-market .farm-market-card > div:first-child > div:has(> .farm-market-art) {
+  grid-column: 1; grid-row: 1 / span 2; align-self: start;
+  width: 66px; height: 78px; margin-top: 3px; border-radius: 18px;
+  background: radial-gradient(ellipse at 50% 78%, #b8ca7970 0 23%, transparent 25%), #f0f3d7;
+  border: 1px solid #e0e7b9;
+}
+.farm-market .farm-market-card > div:first-child > div:last-child { grid-column: 2; min-width: 0; }
+.farm-market .farm-market-card > div:first-child > div:last-child > div:first-child { flex-wrap: wrap; gap: 4px 8px; }
+.farm-market .farm-market-card h4 { font-size: 14px; white-space: normal; line-height: 1.35; }
+.farm-market .farm-market-card .grid-cols-2 { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+.farm-market .farm-market-card .col-span-2 { grid-column: auto; }
+.farm-market .farm-market-card .truncate { white-space: normal; overflow: visible; }
+.farm-market .farm-market-card > button {
+  grid-column: 2; justify-self: stretch; min-height: 44px; padding: 9px 12px;
+  border: 1px solid #297536; border-radius: 12px; background: #398d43; color: #fffce9;
+  box-shadow: inset 0 1px #92bf6c, 0 2px 0 #266834; font-size: 13px;
+}
+.farm-market .farm-market-card > button:disabled { background: #f0e8d3; color: #746b4a; border-color: #d4c594; box-shadow: none; opacity: 1; }
+.farm-market .farm-market-card > button:not(:disabled):hover { background: #2b7835; }
+.farm-market .farm-market-owned { padding: 2px 7px; border-radius: 7px; background: #edf2d1; color: #587435; font-size: 11px; }
+.farm-market.modal-design .farm-market-eggs { background: #fffef5; border: 1px solid #e7d6a8; border-radius: 18px; padding: 12px; }
+.farm-market .farm-market-eggs .farm-market-art { width: 52px; height: 52px; }
+.farm-market .farm-market-eggs > div:first-child > div { flex-wrap: wrap; }
+.farm-market .farm-market-eggs .space-y-1\.5 > div { flex-wrap: wrap; background: #f5efd8; gap: 5px; }
+.farm-market .farm-market-eggs .space-y-1\.5 > div > div:last-child { margin-left: auto; }
+.farm-market .farm-market-empty { padding: 24px 8px; }
+.farm-market .farm-market-empty > div:first-child {
+  width: 96px; height: 96px; border: 1px solid #d3dfa0; border-radius: 30px;
+  background: #edf3d1; box-shadow: 0 5px 0 #d0dba24d;
+}
+.farm-market .farm-market-empty .farm-market-art { width: 88px; height: 88px; }
+.farm-market .farm-market-empty > button { background: #368943; color: #fffce5; }
+.farm-market.modal-design .app-overlay__footer { background: #f6efd4; border-top: 1px solid #ddcc99; }
+.farm-market.modal-design .modal-section { border: 1px solid #e0ce94; border-radius: 14px; padding: 12px; background: #fff0c4; }
+.farm-market.modal-design input[type="number"] {
+  min-width: 96px; background: #fffef6; border: 2px solid #c2ce8a; color: #315b2f;
+  border-radius: 13px; font-size: 23px; font-weight: 700; font-variant-numeric: tabular-nums;
+}
+.farm-market .app-overlay__body > .space-y-2\.5 .modal-control { background: #e8efc8; border-color: #c3d295; color: #365d30; }
+.farm-market .modal-button--primary { box-shadow: inset 0 1px #91bd70, 0 2px 0 #266834; }
+.farm-market .modal-button--ghost { border: 1px solid #d5c493; }
+.farm-market :is(button, input):focus-visible { outline: 3px solid #a47721; outline-offset: 2px; }
+@media (max-width: 359px) {
+  .farm-market .farm-market-tabs { gap: 3px; padding-inline: 5px; }
+  .farm-market .farm-market-tabs > button { font-size: 10px; }
+  .farm-market.modal-design .farm-market-card { grid-template-columns: 56px minmax(0, 1fr); padding: 10px; column-gap: 8px; }
+  .farm-market .farm-market-card > div:first-child > div:has(> .farm-market-art) { width: 56px; height: 67px; }
+  .farm-market .farm-market-card .farm-market-art { width: 55px; height: 55px; }
+}

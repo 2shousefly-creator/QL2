@@ -22,6 +22,9 @@ export default function FarmMobilePresentation({ bridge, events, reducedMotion, 
     const change = () => setSystemReduced(media.matches);
     media.addEventListener('change', change); return () => media.removeEventListener('change', change);
   }, []);
+  // Either explicit accessibility preference disables motion. Ordinary day/night
+  // or selection state never enters this switch; the runtime resumes when both clear.
+  const effectiveReducedMotion = reducedMotion || systemReduced;
   const model: FarmMobileModel = {
     snapshot: bridge.snapshot, tab: 'garden', selectedPlot: bridge.selectedPlot, selectedAnimal: bridge.selectedAnimal,
     sheet: null, toast: null, events, quality: 'medium', blocked: !!bridge.modal, pushTarget,
@@ -33,7 +36,7 @@ export default function FarmMobilePresentation({ bridge, events, reducedMotion, 
   };
   return <div className="farm-mobile-shell" onClick={event => event.stopPropagation()}><CanvasBoundary onExit={onExit}>
     <Suspense fallback={<div className="farm-mobile-recovery">Đang tải nông trại…<button onClick={onExit}>Dùng giao diện hiện tại</button></div>}>
-      <Canvas model={model} reducedMotion={reducedMotion || systemReduced} onExit={onExit} />
+      <Canvas model={model} reducedMotion={effectiveReducedMotion} onExit={onExit} />
     </Suspense>
   </CanvasBoundary></div>;
 }

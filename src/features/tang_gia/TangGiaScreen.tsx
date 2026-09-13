@@ -1323,6 +1323,7 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
       {/* --- ALL GAME MODALS --- */}
       {farmModal?.type === "store" && (
         <FarmStoreModal
+          mobileVisual={mobileActive}
           isOpen={true}
           onClose={closeFarmModal}
           gold={farmState.gold}
@@ -1338,6 +1339,7 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
 
       {farmModal?.type === "inventory" && (
         <KhoModal
+          mobileVisual={mobileActive}
           isOpen={true}
           onClose={closeFarmModal}
           inventory={farmState.inventory}

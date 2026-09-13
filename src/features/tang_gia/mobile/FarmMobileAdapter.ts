@@ -20,6 +20,14 @@ export function mobileCountdown(ms: number | null | undefined): string {
   return `${Math.floor(seconds / 60)}p ${seconds % 60}s`;
 }
 
+/** Compact live plot timer; duration still comes exclusively from the crop projection. */
+function plotCountdown(ms: number | null | undefined): string {
+  if (ms == null || !Number.isFinite(ms)) return 'Đang tính…';
+  const seconds = Math.max(0, Math.ceil(ms / 1000));
+  return [Math.floor(seconds / 3600), Math.floor(seconds % 3600 / 60), seconds % 60]
+    .map(value => String(value).padStart(2, '0')).join(':');
+}
+
 /** Takes the owner's existing projection. No second settlement, timer or save. */
 export function adaptFarmMobile(game: GameState, farm: FarmSaveState, view: FarmPresentationState,
   rank: RankStep, weather: CanonicalWeatherSlot, now: number): FarmMobileSnapshot {
@@ -38,7 +46,7 @@ export function adaptFarmMobile(game: GameState, farm: FarmSaveState, view: Farm
         artStage: plot.status === 'ready' ? 'ready' : progress >= .9 ? 'mature' : progress >= .6 ? 'growing' : progress >= .3 ? 'young' : progress >= .06 ? 'sprout' : 'seeded',
         title: cropId ? CROP_CATALOG.find(crop => crop.id === cropId)!.name : `Ô đất ${index + 1}`,
         timer: plot.status === 'ready' ? 'Thu hoạch' : plot.status === 'growing'
-          ? mobileCountdown(getCurrentCropRemainingDurationMs(plot, now, farm.weatherSeed)) : '',
+          ? plotCountdown(getCurrentCropRemainingDurationMs(plot, now, farm.weatherSeed)) : '',
         moisture, moistureLabel: getSoilMoisturePresentation(moisture).label,
         thirsty: plot.status !== 'locked' && (band === 'thirsty' || band === 'barren' || band === 'drying'),
         fertilizer: hasCropFertilizer(plot), pest: !!getPestPresentation(plot, now), quality: plot.status === 'ready' ? plot.rolledQuality : undefined };

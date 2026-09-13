@@ -1,3 +1,6 @@
+import { FarmMarketArt } from './FarmMarketArt';
+import { animalArt, cropArt, itemArt, propArt } from '../mobile/FarmArtRegistry';
+import './farm-market.css';
 import React, { useState, useEffect, useRef } from "react";
 import { RankStep } from "../../../game/types";
 import {
@@ -28,6 +31,7 @@ import { AppModal, ModalButton, OverlayBody, OverlayFooter, OverlayHeader } from
 
 interface FarmStoreModalProps {
   isOpen: boolean;
+  mobileVisual?: boolean;
   onClose: () => void;
   gold: number;
   currentRank: RankStep;
@@ -84,6 +88,7 @@ interface PendingBuyState {
 
 export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
   isOpen,
+  mobileVisual = false,
   onClose,
   gold,
   currentRank,
@@ -163,7 +168,7 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
     const isOwned = ownedCount > 0;
     return (
       <span
-        className={`text-xs shrink-0 ${
+        className={`farm-market-owned text-xs shrink-0 ${
           isOwned
             ? "text-[var(--modal-reward)] font-semibold"
             : "text-[var(--modal-muted)]"
@@ -223,6 +228,7 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
   return (
     <>
       <AppModal theme="farm" archetype="transaction"
+        overlayClassName={mobileVisual ? "farm-market" : undefined}
         onClose={onClose}
         closeOnBackdrop
         labelledBy="farm-store-title"
@@ -231,7 +237,7 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
           <OverlayHeader className="flex items-center justify-between">
             <div className="flex items-center gap-2.5">
               <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-base sm:text-lg shrink-0">
-                🪙
+                <FarmMarketArt enabled={mobileVisual} art={propArt("store")}>🪙</FarmMarketArt>
               </div>
               <div>
                 <h3 id="farm-store-title" className="modal-title">
@@ -256,8 +262,9 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
           </OverlayHeader>
 
           {/* 4 Tabs (Sticky under Header, horizontal scroll on narrow mobile) */}
-          <div className="flex sm:grid sm:grid-cols-4 gap-1 p-1.5 bg-slate-900 border-b border-slate-800 text-xs overflow-x-auto no-scrollbar whitespace-nowrap shrink-0">
+          <div className="farm-market-tabs farm-market-tabs--four flex sm:grid sm:grid-cols-4 gap-1 p-1.5 bg-slate-900 border-b border-slate-800 text-xs overflow-x-auto no-scrollbar whitespace-nowrap shrink-0">
             <button
+              aria-pressed={activeTab === "crop"}
               onClick={() => setActiveTab("crop")}
               className={`modal-control app-overlay-button flex-1 sm:flex-initial py-1.5 px-2.5 sm:px-2 rounded-xl font-bold transition-all flex items-center justify-center gap-1 shrink-0 ${
                 activeTab === "crop"
@@ -265,10 +272,11 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
                   : "modal-control text-[var(--modal-muted)] hover:text-[var(--modal-text)] hover:bg-slate-800"
               }`}
             >
-              <span>🌱 Cây Trồng</span>
+              <FarmMarketArt enabled={mobileVisual} art={cropArt("carrot", "seed_item")}><span>🌱</span></FarmMarketArt><span>Cây Trồng</span>
             </button>
 
             <button
+              aria-pressed={activeTab === "fertilizer"}
               onClick={() => setActiveTab("fertilizer")}
               className={`modal-control app-overlay-button flex-1 sm:flex-initial py-1.5 px-2.5 sm:px-2 rounded-xl font-bold transition-all flex items-center justify-center gap-1 shrink-0 ${
                 activeTab === "fertilizer"
@@ -276,10 +284,11 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
                   : "modal-control text-[var(--modal-muted)] hover:text-[var(--modal-text)] hover:bg-slate-800"
               }`}
             >
-              <span>✨ Phân Bón</span>
+              <FarmMarketArt enabled={mobileVisual} art={itemArt("fertilizer_growth_normal")}><span>✨</span></FarmMarketArt><span>Phân Bón</span>
             </button>
 
             <button
+              aria-pressed={activeTab === "animal"}
               onClick={() => setActiveTab("animal")}
               className={`modal-control app-overlay-button flex-1 sm:flex-initial py-1.5 px-2.5 sm:px-2 rounded-xl font-bold transition-all flex items-center justify-center gap-1 shrink-0 ${
                 activeTab === "animal"
@@ -287,10 +296,11 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
                   : "modal-control text-[var(--modal-muted)] hover:text-[var(--modal-text)] hover:bg-slate-800"
               }`}
             >
-              <span>🐥 Vật Nuôi</span>
+              <FarmMarketArt enabled={mobileVisual} art={animalArt("chicken")}><span>🐥</span></FarmMarketArt><span>Vật Nuôi</span>
             </button>
 
             <button
+              aria-pressed={activeTab === "feed"}
               onClick={() => setActiveTab("feed")}
               className={`modal-control app-overlay-button flex-1 sm:flex-initial py-1.5 px-2.5 sm:px-2 rounded-xl font-bold transition-all flex items-center justify-center gap-1 shrink-0 ${
                 activeTab === "feed"
@@ -298,7 +308,7 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
                   : "modal-control text-[var(--modal-muted)] hover:text-[var(--modal-text)] hover:bg-slate-800"
               }`}
             >
-              <span>🌾 Thức Ăn</span>
+              <FarmMarketArt enabled={mobileVisual} art={itemArt("feed_normal")}><span>🌾</span></FarmMarketArt><span>Thức Ăn</span>
             </button>
           </div>
 
@@ -316,7 +326,7 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
                 return (
                   <div
                     key={crop.id}
-                    className={`p-2 sm:p-2.5 rounded-2xl border flex items-center justify-between gap-2.5 relative overflow-hidden transition-all ${
+                    className={`farm-market-card p-2 sm:p-2.5 rounded-2xl border flex items-center justify-between gap-2.5 relative overflow-hidden transition-all ${
                       hasRank
                         ? "bg-slate-800/40 hover:bg-slate-800/70 border-slate-800"
                         : "modal-section opacity-75"
@@ -324,12 +334,12 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
                   >
                     <div className="flex items-center gap-2.5 flex-1 min-w-0">
                       <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-slate-800/90 border border-slate-700/60 flex items-center justify-center shrink-0">
-                        <img loading="lazy" decoding="async" fetchPriority="low"
+                        <FarmMarketArt enabled={mobileVisual} art={cropArt(crop.id, "mature")}><img loading="lazy" decoding="async" fetchPriority="low"
                           src={getCropAsset(crop.id, "mature")}
                           alt=""
                           aria-hidden="true"
                           className="h-8 w-8 sm:h-9 sm:w-9 object-contain"
-                        />
+                        /></FarmMarketArt>
                       </div>
 
                       <div className="flex-1 min-w-0 space-y-0.5 text-xs">
@@ -374,12 +384,12 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
                           itemId: crop.id,
                           name: `Hạt giống ${crop.name}`,
                           icon: (
-                            <img loading="lazy" decoding="async" fetchPriority="low"
+                            <FarmMarketArt enabled={mobileVisual} art={cropArt(crop.id, "mature")}><img loading="lazy" decoding="async" fetchPriority="low"
                               src={getCropAsset(crop.id, "mature")}
                               alt=""
                               aria-hidden="true"
                               className="h-8 w-8 object-contain"
-                            />
+                            /></FarmMarketArt>
                           ),
                           unitCostGold: crop.seedCostGold,
                           ownedCount,
@@ -402,7 +412,7 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
                 return (
                   <div
                     key={fert.id}
-                    className={`p-2 sm:p-2.5 rounded-2xl border flex items-center justify-between gap-2.5 relative overflow-hidden transition-all ${
+                    className={`farm-market-card p-2 sm:p-2.5 rounded-2xl border flex items-center justify-between gap-2.5 relative overflow-hidden transition-all ${
                       hasRank
                         ? "bg-slate-800/40 hover:bg-slate-800/70 border-slate-800"
                         : "modal-section opacity-75"
@@ -410,12 +420,12 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
                   >
                     <div className="flex items-center gap-2.5 flex-1 min-w-0">
                       <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-slate-800/90 border border-slate-700/60 flex items-center justify-center text-xl sm:text-2xl shrink-0">
-                        <img loading="lazy" decoding="async" fetchPriority="low"
+                        <FarmMarketArt enabled={mobileVisual} art={itemArt(fert.id)}><img loading="lazy" decoding="async" fetchPriority="low"
                           src={getFertilizerAsset(fert.id)}
                           alt=""
                           aria-hidden="true"
                           className="h-9 w-9 sm:h-10 sm:w-10 object-contain"
-                        />
+                        /></FarmMarketArt>
                       </div>
 
                       <div className="flex-1 min-w-0 space-y-0.5 text-xs">
@@ -456,12 +466,12 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
                           itemId: fert.id,
                           name: fert.name,
                           icon: (
-                            <img loading="lazy" decoding="async" fetchPriority="low"
+                            <FarmMarketArt enabled={mobileVisual} art={itemArt(fert.id)}><img loading="lazy" decoding="async" fetchPriority="low"
                               src={getFertilizerAsset(fert.id)}
                               alt=""
                               aria-hidden="true"
                               className="h-8 w-8 object-contain"
-                            />
+                            /></FarmMarketArt>
                           ),
                           unitCostGold: fert.purchaseGold,
                           ownedCount,
@@ -484,7 +494,7 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
                 return (
                   <div
                     key={animal.id}
-                    className={`p-2 sm:p-2.5 rounded-2xl border flex items-center justify-between gap-2.5 relative overflow-hidden transition-all ${
+                    className={`farm-market-card p-2 sm:p-2.5 rounded-2xl border flex items-center justify-between gap-2.5 relative overflow-hidden transition-all ${
                       hasRank
                         ? "bg-slate-800/40 hover:bg-slate-800/70 border-slate-800"
                         : "modal-section opacity-75"
@@ -492,7 +502,7 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
                   >
                     <div className="flex items-center gap-2.5 flex-1 min-w-0">
                       <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-slate-800/90 border border-slate-700/60 flex items-center justify-center text-xl sm:text-2xl shrink-0">
-                        {getAnimalEmoji(animal.id)}
+                        <FarmMarketArt enabled={mobileVisual} art={animalArt(animal.id)}>{getAnimalEmoji(animal.id)}</FarmMarketArt>
                       </div>
 
                       <div className="flex-1 min-w-0 space-y-0.5 text-xs">
@@ -545,7 +555,7 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
                           category: "animal",
                           itemId: animal.id,
                           name: `Con giống ${animal.name}`,
-                          icon: getAnimalEmoji(animal.id),
+                          icon: <FarmMarketArt enabled={mobileVisual} art={animalArt(animal.id)}>{getAnimalEmoji(animal.id)}</FarmMarketArt>,
                           unitCostGold: animal.purchaseGold,
                           ownedCount,
                           requiredRankName: rankName,
@@ -567,7 +577,7 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
                 return (
                   <div
                     key={feed.id}
-                    className={`p-2 sm:p-2.5 rounded-2xl border flex items-center justify-between gap-2.5 relative overflow-hidden transition-all ${
+                    className={`farm-market-card p-2 sm:p-2.5 rounded-2xl border flex items-center justify-between gap-2.5 relative overflow-hidden transition-all ${
                       hasRank
                         ? "bg-slate-800/40 hover:bg-slate-800/70 border-slate-800"
                         : "modal-section opacity-75"
@@ -575,12 +585,12 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
                   >
                     <div className="flex items-center gap-2.5 flex-1 min-w-0">
                       <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-slate-800/90 border border-slate-700/60 flex items-center justify-center text-xl sm:text-2xl shrink-0">
-                        <img loading="lazy" decoding="async" fetchPriority="low"
+                        <FarmMarketArt enabled={mobileVisual} art={itemArt(feed.id)}><img loading="lazy" decoding="async" fetchPriority="low"
                           src={getFeedAsset(feed.id)}
                           alt=""
                           aria-hidden="true"
                           className="h-9 w-9 sm:h-10 sm:w-10 object-contain"
-                        />
+                        /></FarmMarketArt>
                       </div>
 
                       <div className="flex-1 min-w-0 space-y-0.5 text-xs">
@@ -622,12 +632,12 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
                           itemId: feed.id,
                           name: feed.name,
                           icon: (
-                            <img loading="lazy" decoding="async" fetchPriority="low"
+                            <FarmMarketArt enabled={mobileVisual} art={itemArt(feed.id)}><img loading="lazy" decoding="async" fetchPriority="low"
                               src={getFeedAsset(feed.id)}
                               alt=""
                               aria-hidden="true"
                               className="h-8 w-8 object-contain"
-                            />
+                            /></FarmMarketArt>
                           ),
                           unitCostGold: feed.costGold,
                           ownedCount,
@@ -643,6 +653,7 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
       {/* QUANTITY BUY CONFIRMATION (owned by Store) */}
       {buyModalData && (
         <AppModal size="compact" theme="farm" archetype="transaction"
+        overlayClassName={mobileVisual ? "farm-market" : undefined}
           layer="nested"
           onClose={() => setBuyModalData(null)}
           closeOnBackdrop

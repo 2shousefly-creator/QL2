@@ -5,7 +5,7 @@ import type { MobilePlot, MobileRect } from './mobileTypes';
 import type { MobileTextureBank } from './FarmMobileAssets';
 import { label, sprite } from './FarmUiLayer';
 
-/** State composition is presentation only: tilled/selected/reset are never saved. */
+/** State composition is presentation only; all text uses the canonical projection. */
 export function drawMobilePlot(parent: Container, badges: Container, bank: MobileTextureBank, plot: MobilePlot,
   rect: MobileRect, selected: boolean, reset: boolean, pulse: number) {
   const moist = plot.moisture >= 60;
@@ -16,39 +16,59 @@ export function drawMobilePlot(parent: Container, badges: Container, bank: Mobil
     : plot.artStage === 'growing' ? 'growing_stage_3' : plot.artStage === 'young' ? 'growing_stage_2' : 'growing_stage_1';
   const patch = { ...rect, y: rect.y + 3 };
   if (!sprite(parent, bank.get(soilArt(state)), patch)) {
-    // On missing assets keep every plot visible, focusable and operable.
-    parent.addChild(new Graphics().roundRect(rect.x + 8, rect.y + 16, rect.width - 16, rect.height - 30, 13).fill(plot.status === 'locked' ? 0x84955d : 0xad8057));
+    parent.addChild(new Graphics().roundRect(rect.x + 8, rect.y + 16, rect.width - 16, rect.height - 30, 13).fill(plot.status === 'locked' ? 0x77ac4b : 0xba754b));
   }
-  if (moist && plot.status !== 'locked') parent.addChild(new Graphics().roundRect(rect.x + 11, rect.y + 22, rect.width - 22, rect.height - 39, 13).fill({ color: 0x423b32, alpha: .12 + Math.min(100, plot.moisture) / 650 }));
-  if (plot.fertilizer) {
-    sprite(parent, bank.get(soilArt('fertilized')), patch);
-  }
-  let plant = null;
-  if (plot.cropId) {
-    plant = sprite(parent, bank.get(cropArt(plot.cropId, plot.artStage)), { x: rect.x + 7, y: rect.y - 5, width: rect.width - 14, height: rect.height - 8 }, .79);
-    if (plant && pulse > 0) plant.scale.set(plant.scale.x * (1 + pulse * .07));
-  }
-  if (plot.status === 'ready') {
-    badges.addChild(new Graphics().ellipse(rect.x + rect.width / 2, rect.y + rect.height * .79, rect.width * .37, 7).stroke({ color: 0xf4d783, width: 3, alpha: .8 }));
-  }
+  if (moist && plot.status !== 'locked') parent.addChild(new Graphics().roundRect(rect.x + 11, rect.y + 22, rect.width - 22, rect.height - 39, 13).fill({ color: 0x602f20, alpha: .12 }));
+  if (plot.fertilizer) sprite(parent, bank.get(soilArt('fertilized')), patch);
+  const plant = plot.cropId ? sprite(parent, bank.get(cropArt(plot.cropId, plot.artStage)),
+    { x: rect.x + 4, y: rect.y + 6, width: rect.width - 8, height: rect.height - 23 }, .79) : null;
+  if (plant && pulse > 0) plant.scale.set(plant.scale.x * (1 + pulse * .07));
   if (selected && !sprite(badges, bank.get(soilArt('selected')), patch)) badges.addChild(new Graphics().roundRect(rect.x + 8, rect.y + 18, rect.width - 16, rect.height - 33, 12).stroke({ color: 0xffe3a0, width: 2.5 }));
-  const x = rect.x + rect.width - 24, y = rect.y + rect.height - 26;
-  const icon = badges.addChild(new Graphics());
-  if (plot.status === 'locked') {
-    icon.roundRect(x - 5, y - 1, 12, 10, 2).fill(0xe8d6ac).roundRect(x - 3, y - 7, 8, 10, 4).stroke({ color: 0xe8d6ac, width: 2 });
-  } else if (plot.status === 'ready') {
-    icon.circle(x, y, 10).fill(0x4d7750).moveTo(x - 5, y).lineTo(x - 1, y + 4).lineTo(x + 6, y - 4).stroke({ color: 0xffecc2, width: 2 });
-  } else if (plot.pest) {
-    icon.ellipse(x, y, 4, 6).fill(0x9f5442);
-    for (const side of [-1, 1]) for (const offset of [-3, 3]) icon.moveTo(x + side * 3, y + offset).lineTo(x + side * 8, y + offset * 2).stroke({ color: 0x864b39, width: 2 });
-  } else if (plot.thirsty) sprite(badges, bank.get(propArt('drop')), { x: x - 11, y: y - 12, width: 22, height: 22 });
-  else if (plot.status === 'empty') icon.moveTo(x - 4, y).lineTo(x + 4, y).moveTo(x, y - 4).lineTo(x, y + 4).stroke({ color: 0xe9d7b0, width: 2 });
-  const number = label(badges, `${plot.index + 1}`, rect.x + 9, rect.y + rect.height - 26, 20, 11, 0xfff0cb, true);
-  number.alpha = .9;
-  if (selected) {
-    const text = plot.status === 'locked' ? 'Chưa mở khóa' : plot.status === 'empty' ? plot.moistureLabel : `${plot.title} · ${plot.timer}`;
-    const info = label(badges, text, rect.x + 5, rect.y + 4, rect.width - 10, 10, 0xfff2d5, true);
-    badges.addChildAt(new Graphics().roundRect(rect.x + 1, rect.y + 2, rect.width - 2, info.height + 4, 6).fill({ color: 0x203c32, alpha: .92 }), badges.children.indexOf(info));
+
+  const g = badges.addChild(new Graphics());
+  const centerText = (text: string, y: number, size: number, color = 0xfff8e5, mono = false) => {
+    const node = label(badges, text, rect.x + 4, y, rect.width - 8, size, color, true);
+    node.style.wordWrap = false;
+    if (mono) node.style.fontFamily = 'ui-monospace, SFMono-Regular, monospace';
+    if (node.width > rect.width - 8) node.scale.set((rect.width - 8) / node.width);
+    node.x = rect.x + (rect.width - node.width) / 2;
+    return node;
+  };
+  if (plot.cropId) {
+    const ready = plot.status === 'ready';
+    g.roundRect(rect.x + 3, rect.y + 1, rect.width - 6, 18, 7).fill({ color: ready ? 0x297d35 : 0x243e2c, alpha: .94 });
+    centerText(ready ? 'THU HOẠCH' : plot.timer, rect.y + 2, 11, ready ? 0xffed9a : 0xffffff, !ready);
+    g.roundRect(rect.x + 1, rect.y + rect.height - 31, rect.width - 2, 30, 7).fill({ color: 0x263d29, alpha: .9 });
+    centerText(plot.title, rect.y + rect.height - 31, 12);
+  } else if (plot.status === 'locked') {
+    const x = rect.x + rect.width / 2, y = rect.y + rect.height / 2 - 8;
+    g.roundRect(x - 7, y, 14, 12, 3).fill(0xffefbc).roundRect(x - 5, y - 8, 10, 13, 5).stroke({ color: 0xffefbc, width: 2 });
+    g.roundRect(rect.x + 3, rect.y + rect.height - 25, rect.width - 6, 22, 6).fill({ color: 0x294d30, alpha: .9 });
+    centerText('Chưa mở khóa', rect.y + rect.height - 23, 11);
+  } else {
+    g.roundRect(rect.x + 4, rect.y + rect.height - 43, rect.width - 8, 42, 7).fill({ color: 0x3b4927, alpha: .82 });
+    centerText('Trống · Gieo hạt', rect.y + rect.height - 40, 11);
+  }
+  if (plot.status !== 'locked') {
+    const moisture = Math.round(Math.max(0, Math.min(100, plot.moisture)));
+    const x = rect.x + 17, y = rect.y + rect.height - 10, bar = Math.max(12, rect.width - 56);
+    const color = moisture < 30 ? 0xff9457 : moisture < 60 ? 0xffd567 : 0x56d8f3;
+    sprite(badges, bank.get(propArt('drop')), { x: rect.x + 3, y: y - 8, width: 15, height: 16 });
+    g.roundRect(x, y - 2, bar, 4, 2).fill(0x667557);
+    if (moisture > 0) g.roundRect(x, y - 2, Math.max(2, bar * moisture / 100), 4, 2).fill(color);
+    label(badges, `${moisture}%`, x + bar + 4, y - 7, 33, 10, 0xffffff, true);
+  }
+  // Number and secondary statuses stay out of the timer/name/moisture bands.
+  g.circle(rect.x + 11, rect.y + 30, 8).fill({ color: 0x395a2e, alpha: .85 });
+  label(badges, `${plot.index + 1}`, rect.x + 7, rect.y + 23, 15, 10, 0xfff4cb, true);
+  if (plot.pest) {
+    const x = rect.x + rect.width - 12, y = rect.y + 31;
+    g.circle(x, y, 9).fill(0xffd49a).ellipse(x, y, 3, 5).fill(0xa23b31);
+    for (const side of [-1, 1]) for (const offset of [-2, 2]) g.moveTo(x + side * 2, y + offset).lineTo(x + side * 6, y + offset * 2).stroke({ color: 0xa23b31, width: 1.5 });
+  }
+  if (plot.fertilizer) {
+    const x = rect.x + rect.width - 12, y = rect.y + (plot.pest ? 51 : 31);
+    g.circle(x, y, 8).fill(0x41974a).poly([x, y - 5, x + 2, y - 1, x + 5, y, x + 1, y + 2, x, y + 5, x - 2, y + 1, x - 5, y, x - 1, y - 2]).fill(0xffe595);
   }
   return plant;
 }

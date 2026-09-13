@@ -19,3 +19,7 @@
 .farm-graphics-screen .logistics-hud > div:first-child > div:last-child { min-width: 0; }
 .farm-graphics-screen .logistics-hud .font-mono { font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .farm-graphics-screen .logistics-hud > div[title] { min-width: 0; flex: 1; padding: 5px; }
+
+/* Sunny turf surrounds the CSS-pixel world; retain the existing header/toolbar flow. */
+.farm-graphics-screen .farm-mobile-host { background: #78bc51; }
+.farm-graphics-screen > .farm-mobile-shell { box-shadow: inset 0 0 0 1px #5b9a4055, 0 3px 8px #294c2422; }

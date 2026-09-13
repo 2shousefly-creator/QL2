@@ -9,8 +9,8 @@ import { GroundComposer } from './GroundComposer';
 import { drawMobilePlot } from './PlotGridRenderer';
 import { LivestockRenderer } from './LivestockRenderer';
 import { FarmEnvironmentFx } from './FarmEnvironmentFx';
-import { itemArt, propArt } from './FarmArtRegistry';
-import type { FarmMobileModel, MobileHit, MobileRect } from './mobileTypes';
+import { cropArt, itemArt, propArt } from './FarmArtRegistry';
+import type { FarmMobileModel, MobileHit, MobileRect, MobilePlot } from './mobileTypes';
 
 export type MobileSceneProps = FarmMobileModel & {
   publishSemantics(hits: MobileHit[], title: string | null, scroll: ((delta: number) => void) | null): void;
@@ -27,6 +27,7 @@ export const createFarmMobileScene: PixiSceneFactory<MobileSceneProps> = (app, i
   const ground = new GroundComposer(lit);
   const penGround = new GroundComposer(lit);
   const art = lit.addChild(new Container());
+  const birds = new LivestockRenderer(lit);
   const environment = new FarmEnvironmentFx(world);
   const badges = world.addChild(new Container());
   const ui = new FarmUiLayer(root, path => bank.get(path));
@@ -34,8 +35,7 @@ export const createFarmMobileScene: PixiSceneFactory<MobileSceneProps> = (app, i
   let clock = 0;
   let sheetScroll = 0, worldScroll = 0, sheetId: string | undefined, targetNonce: number | undefined;
   let pressed: string | null = null, maxWorldScroll = 0;
-  let crops: Sprite[] = [];
-  const birds = new LivestockRenderer();
+  let crops: { image: Sprite; plot: MobilePlot; phase: number }[] = [];
   const bank = new MobileTextureBank(() => { if (!disposed) { draw(); app.render(); } });
   const vfx = new FarmMobileVfx(world, bank, initial.events);
   const moveScroll = (delta: number) => {
@@ -53,7 +53,7 @@ export const createFarmMobileScene: PixiSceneFactory<MobileSceneProps> = (app, i
     const s = props.snapshot, layout = mobileLayout(width, height, s.plots.length), w = layout.world;
     if (sheetId !== props.sheet?.id) { sheetScroll = 0; sheetId = props.sheet?.id; }
     const penStart = layout.extent + 24;
-    const penExtent = Math.max(w.height, 290 + Math.ceil(s.animals.length / 2) * 148);
+    const penExtent = Math.max(w.height, 410 + Math.ceil(s.animals.length / 4) * 64);
     const extent = penStart + penExtent + 88; // scroll room above the established contextual toolbar
     if (props.pushTarget && props.pushTarget.nonce !== targetNonce) {
       worldScroll = props.pushTarget.section === 'pen' ? penStart : 0;
@@ -61,14 +61,14 @@ export const createFarmMobileScene: PixiSceneFactory<MobileSceneProps> = (app, i
     }
     maxWorldScroll = Math.max(0, extent - w.height);
     worldScroll = Math.min(worldScroll, maxWorldScroll);
-    background.clear().rect(0, 0, width, height).fill(0x8da16b);
+    background.clear().rect(0, 0, width, height).fill(0x78bc51);
     clip.clear().rect(w.x, w.y, w.width, w.height).fill(0xffffff);
     world.position.set(0, w.y);
     ground.draw('garden', width, layout.extent, layout.plots, bank);
     penGround.draw('pen', width, penExtent, [], bank);
     penGround.root.y = penStart - worldScroll;
     ground.root.y = -worldScroll;
-    empty(art); empty(badges); crops = []; birds.clear();
+    empty(art); empty(badges); crops = [];
     const hits: MobileHit[] = [];
     const hit = (rect: MobileRect, action: MobileHit['action']) => {
       const top = Math.max(w.y, w.y + rect.y), bottom = Math.min(w.y + w.height, w.y + rect.y + rect.height);
@@ -83,20 +83,14 @@ export const createFarmMobileScene: PixiSceneFactory<MobileSceneProps> = (app, i
         if (rect.y + rect.height < 0 || rect.y > w.height) return;
         const event = props.events.find(event => event.plotIndex === index && event.kind === 'harvest' && Date.now() - event.startedAt < 1400);
         const plant = drawMobilePlot(art, badges, bank, plot, rect, props.selectedPlot === plot.index, !!event, 0);
-        if (plant) crops.push(plant);
+        if (plant) crops.push({ image: plant, plot, phase: plot.index * 1.73 + (plot.cropId?.length ?? 0) * .37 });
         const status = plot.status === 'locked' ? 'Khóa' : plot.status === 'ready' ? 'Sẵn sàng thu hoạch' : plot.pest ? 'Sâu bệnh' : plot.thirsty ? 'Thiếu nước' : plot.status === 'empty' ? 'Có thể gieo hạt' : plot.timer;
-        hit(rect, { id: `plot-${plot.index}`, label: `Ô ${plot.index + 1}, ${plot.title}. ${status}`, run: () => props.selectPlot(plot.index) });
+        hit(rect, { id: `plot-${plot.index}`, label: `Ô ${plot.index + 1}, ${plot.title}. ${status}${plot.status === 'locked' ? '' : `. Độ ẩm ${Math.round(plot.moisture)}%`}`, run: () => props.selectPlot(plot.index) });
       });
     }
     {
-      const columns = 2, cell = (width - 48) / columns;
-      birds.noteEggs(s.animals, clock);
-      s.animals.forEach((animal, index) => {
-        const rect = { x: 24 + index % columns * cell, y: penStart + 128 + Math.floor(index / columns) * 148 - worldScroll, width: cell, height: 140 };
-        if (rect.y + rect.height < 0 || rect.y > w.height) return;
-        birds.draw(art, badges, bank, animal, index, rect, props.selectedAnimal === animal.id);
-        hit(rect, { id: `animal-${animal.id}`, label: `${animal.title}. ${animal.dead ? 'Đã chết' : animal.weak ? 'Thiếu ăn' : animal.timer}`, run: () => props.selectAnimal(animal.id) });
-      });
+      hits.push(...birds.sync(bank, s.animals, width, penExtent, penStart - worldScroll, w.height,
+        props.selectedAnimal, clock, id => props.selectAnimal(id)));
       const y = penStart + penExtent - 104 - worldScroll;
       const trough = { x: 26, y, width: 94, height: 78 };
       sprite(art, bank.get(propArt('trough')), trough);
@@ -147,8 +141,13 @@ export const createFarmMobileScene: PixiSceneFactory<MobileSceneProps> = (app, i
     clock += dt;
     environment.tick(clock, reduced, props.snapshot.phase === 'night', props.snapshot.weather);
     ground.tick(clock, reduced); penGround.tick(clock, reduced);
-    crops.forEach((plant, index) => { plant.rotation = reduced ? 0 : Math.sin(clock * 1.3 + index * 1.7) * .025; });
-    birds.tick(bank, clock, reduced, props.snapshot.phase === 'night', props.snapshot.feed);
+    crops.forEach(({ image, plot, phase }) => {
+      if (!plot.cropId) return;
+      const frame = reduced || plot.artStage === 'seeded' ? 0 : Math.floor(clock * 4 + phase) % 6;
+      const texture = bank.get(cropArt(plot.cropId, plot.artStage, frame));
+      if (texture) image.texture = texture;
+    });
+    birds.tick(bank, dt, clock, reduced, props.snapshot.phase === 'night', props.snapshot.feed);
     vfx.tick(dt, reduced);
   }
   return {

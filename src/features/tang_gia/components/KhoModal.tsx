@@ -1,3 +1,6 @@
+import { FarmMarketArt } from './FarmMarketArt';
+import { animalArt, cropArt, itemArt, propArt } from '../mobile/FarmArtRegistry';
+import './farm-market.css';
 import React, { useState, useEffect, useRef } from "react";
 import {
   ANIMAL_CATALOG,
@@ -22,6 +25,7 @@ export type KhoTabType = "crop" | "fertilizer" | "animal" | "feed" | "egg";
 
 interface KhoModalProps {
   isOpen: boolean;
+  mobileVisual?: boolean;
   onClose: () => void;
   inventory: FarmInventory;
   eggQualityInventory?: EggQualityInventory;
@@ -79,6 +83,7 @@ interface PendingSellState {
 
 export const KhoModal: React.FC<KhoModalProps> = ({
   isOpen,
+  mobileVisual = false,
   onClose,
   inventory,
   eggQualityInventory,
@@ -163,6 +168,7 @@ export const KhoModal: React.FC<KhoModalProps> = ({
   return (
     <>
       <AppModal theme="farm" archetype="transaction"
+        overlayClassName={mobileVisual ? "farm-market" : undefined}
         onClose={onClose}
         closeOnBackdrop
         labelledBy="farm-inventory-title"
@@ -171,7 +177,7 @@ export const KhoModal: React.FC<KhoModalProps> = ({
         <OverlayHeader className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <div className="modal-status-icon">
-              <Package className="w-5 h-5" />
+              <FarmMarketArt enabled={mobileVisual} art={propArt("basket")}><Package className="w-5 h-5" /></FarmMarketArt>
             </div>
             <div>
               <h3 id="farm-inventory-title" className="modal-title">
@@ -192,64 +198,69 @@ export const KhoModal: React.FC<KhoModalProps> = ({
         </OverlayHeader>
 
         {/* 5 Tabs in exact required order: Cây Trồng | Phân Bón | Vật Nuôi | Thức Ăn | Trứng */}
-        <div className="grid grid-cols-5 gap-1 p-2 bg-slate-900/95 border-b border-slate-800/60 text-xs sm:text-xs">
+        <div className="farm-market-tabs grid grid-cols-5 gap-1 p-2 bg-slate-900/95 border-b border-slate-800/60 text-xs sm:text-xs">
           <button
-            onClick={() => setActiveTab("crop")}
+            aria-pressed={activeTab === "crop"}
+              onClick={() => setActiveTab("crop")}
             className={`modal-control app-overlay-button py-2 px-1 rounded-xl font-bold transition-all flex flex-col sm:flex-row items-center justify-center gap-1 ${
               activeTab === "crop"
                 ? "modal-control bg-amber-500 text-slate-950 shadow-md font-semibold"
                 : "modal-control text-[var(--modal-muted)] hover:text-[var(--modal-text)] hover:bg-slate-800/60"
             }`}
           >
-            <span>🌱</span>
+            <FarmMarketArt enabled={mobileVisual} art={cropArt("carrot", "seed_item")}><span>🌱</span></FarmMarketArt>
             <span className="truncate">Cây Trồng</span>
           </button>
 
           <button
-            onClick={() => setActiveTab("fertilizer")}
+            aria-pressed={activeTab === "fertilizer"}
+              onClick={() => setActiveTab("fertilizer")}
             className={`modal-control app-overlay-button py-2 px-1 rounded-xl font-bold transition-all flex flex-col sm:flex-row items-center justify-center gap-1 ${
               activeTab === "fertilizer"
                 ? "modal-control bg-amber-500 text-slate-950 shadow-md font-semibold"
                 : "modal-control text-[var(--modal-muted)] hover:text-[var(--modal-text)] hover:bg-slate-800/60"
             }`}
           >
-            <span>✨</span>
+            <FarmMarketArt enabled={mobileVisual} art={itemArt("fertilizer_growth_normal")}><span>✨</span></FarmMarketArt>
             <span className="truncate">Phân Bón</span>
           </button>
 
           <button
-            onClick={() => setActiveTab("animal")}
+            aria-pressed={activeTab === "animal"}
+              onClick={() => setActiveTab("animal")}
             className={`modal-control app-overlay-button py-2 px-1 rounded-xl font-bold transition-all flex flex-col sm:flex-row items-center justify-center gap-1 ${
               activeTab === "animal"
                 ? "modal-control bg-amber-500 text-slate-950 shadow-md font-semibold"
                 : "modal-control text-[var(--modal-muted)] hover:text-[var(--modal-text)] hover:bg-slate-800/60"
             }`}
           >
-            <span>🐥</span>
+            <FarmMarketArt enabled={mobileVisual} art={animalArt("chicken")}><span>🐥</span></FarmMarketArt>
             <span className="truncate">Vật Nuôi</span>
           </button>
 
           <button
-            onClick={() => setActiveTab("feed")}
+            aria-pressed={activeTab === "feed"}
+              onClick={() => setActiveTab("feed")}
             className={`modal-control app-overlay-button py-2 px-1 rounded-xl font-bold transition-all flex flex-col sm:flex-row items-center justify-center gap-1 ${
               activeTab === "feed"
                 ? "modal-control bg-amber-500 text-slate-950 shadow-md font-semibold"
                 : "modal-control text-[var(--modal-muted)] hover:text-[var(--modal-text)] hover:bg-slate-800/60"
             }`}
           >
-            <span>🌾</span>
+            <FarmMarketArt enabled={mobileVisual} art={itemArt("feed_normal")}><span>🌾</span></FarmMarketArt>
             <span className="truncate">Thức Ăn</span>
           </button>
 
           <button
-            onClick={() => setActiveTab("egg")}
+            aria-pressed={activeTab === "egg"}
+              onClick={() => setActiveTab("egg")}
             className={`modal-control app-overlay-button py-2 px-1 rounded-xl font-bold transition-all flex flex-col sm:flex-row items-center justify-center gap-1 relative ${
               activeTab === "egg"
                 ? "modal-control bg-amber-500 text-slate-950 shadow-md font-semibold"
                 : "modal-control text-[var(--modal-muted)] hover:text-[var(--modal-text)] hover:bg-slate-800/60"
             }`}
           >
-            <span>🥚</span>
+            <FarmMarketArt enabled={mobileVisual} art={itemArt("chicken_egg")}><span>🥚</span></FarmMarketArt>
             <span className="truncate">Trứng</span>
             {totalEggs > 0 && (
               <span
@@ -271,9 +282,9 @@ export const KhoModal: React.FC<KhoModalProps> = ({
           {activeTab === "crop" && (
             <>
               {ownedCrops.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-10 text-center space-y-3">
+                <div className="farm-market-empty flex flex-col items-center justify-center py-10 text-center space-y-3">
                   <div className="w-14 h-14 rounded-2xl bg-slate-800/60 border border-slate-800/80 flex items-center justify-center text-3xl">
-                    🌱
+                    <FarmMarketArt enabled={mobileVisual} art={cropArt("carrot", "seed_item")}>🌱</FarmMarketArt>
                   </div>
                   <div className="space-y-1">
                     <p className="text-sm font-bold text-[var(--modal-text)]">
@@ -303,16 +314,16 @@ export const KhoModal: React.FC<KhoModalProps> = ({
                   return (
                     <div
                       key={crop.id}
-                      className="p-3 rounded-2xl bg-slate-850/70 border border-slate-800/60 flex items-center justify-between gap-3 shadow-sm hover:border-slate-750 transition-all"
+                      className="farm-market-card p-3 rounded-2xl bg-slate-850/70 border border-slate-800/60 flex items-center justify-between gap-3 shadow-sm hover:border-slate-750 transition-all"
                     >
                       <div className="flex items-center gap-3 min-w-0">
                         <div className="w-12 h-12 rounded-2xl bg-slate-800/60 border border-slate-800/80 flex items-center justify-center shrink-0">
-                          <img loading="lazy" decoding="async" fetchPriority="low"
+                          <FarmMarketArt enabled={mobileVisual} art={cropArt(crop.id, "seed_item")}><img loading="lazy" decoding="async" fetchPriority="low"
                             src={getCropAsset(crop.id, "seed")}
                             alt=""
                             aria-hidden="true"
                             className="h-10 w-10 object-contain"
-                          />
+                          /></FarmMarketArt>
                         </div>
                         <div className="min-w-0 space-y-0.5">
                           <div className="flex items-center gap-2">
@@ -346,12 +357,12 @@ export const KhoModal: React.FC<KhoModalProps> = ({
                             itemId: crop.id,
                             name: `Hạt giống ${crop.name}`,
                             icon: (
-                              <img loading="lazy" decoding="async" fetchPriority="low"
+                              <FarmMarketArt enabled={mobileVisual} art={cropArt(crop.id, "seed_item")}><img loading="lazy" decoding="async" fetchPriority="low"
                                 src={getCropAsset(crop.id, "seed")}
                                 alt=""
                                 aria-hidden="true"
                                 className="app-overlay-button h-8 w-8 object-contain"
-                              />
+                              /></FarmMarketArt>
                             ),
                             ownedCount: count,
                             unitSellGold: sellGold,
@@ -372,9 +383,9 @@ export const KhoModal: React.FC<KhoModalProps> = ({
           {activeTab === "fertilizer" && (
             <>
               {ownedFertilizers.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-10 text-center space-y-3">
+                <div className="farm-market-empty flex flex-col items-center justify-center py-10 text-center space-y-3">
                   <div className="w-14 h-14 rounded-2xl bg-slate-800/60 border border-slate-800/80 flex items-center justify-center text-3xl">
-                    ✨
+                    <FarmMarketArt enabled={mobileVisual} art={itemArt("fertilizer_growth_normal")}>✨</FarmMarketArt>
                   </div>
                   <div className="space-y-1">
                     <p className="text-sm font-bold text-[var(--modal-text)]">
@@ -404,16 +415,16 @@ export const KhoModal: React.FC<KhoModalProps> = ({
                   return (
                     <div
                       key={fert.id}
-                      className="p-3 rounded-2xl bg-slate-850/70 border border-slate-800/60 flex items-center justify-between gap-3 shadow-sm hover:border-slate-750 transition-all"
+                      className="farm-market-card p-3 rounded-2xl bg-slate-850/70 border border-slate-800/60 flex items-center justify-between gap-3 shadow-sm hover:border-slate-750 transition-all"
                     >
                       <div className="flex items-center gap-3 min-w-0">
                         <div className="w-12 h-12 rounded-2xl bg-slate-800/60 border border-slate-800/80 flex items-center justify-center text-2xl shrink-0">
-                          <img loading="lazy" decoding="async" fetchPriority="low"
+                          <FarmMarketArt enabled={mobileVisual} art={itemArt(fert.id)}><img loading="lazy" decoding="async" fetchPriority="low"
                             src={getFertilizerAsset(fert.id)}
                             alt=""
                             aria-hidden="true"
                             className="h-11 w-11 object-contain"
-                          />
+                          /></FarmMarketArt>
                         </div>
                         <div className="min-w-0 space-y-0.5">
                           <div className="flex items-center gap-2">
@@ -448,12 +459,12 @@ export const KhoModal: React.FC<KhoModalProps> = ({
                             itemId: fert.id,
                             name: fert.name,
                             icon: (
-                              <img loading="lazy" decoding="async" fetchPriority="low"
+                              <FarmMarketArt enabled={mobileVisual} art={itemArt(fert.id)}><img loading="lazy" decoding="async" fetchPriority="low"
                                 src={getFertilizerAsset(fert.id)}
                                 alt=""
                                 aria-hidden="true"
                                 className="app-overlay-button h-9 w-9 object-contain"
-                              />
+                              /></FarmMarketArt>
                             ),
                             ownedCount: count,
                             unitSellGold: sellGold,
@@ -474,9 +485,9 @@ export const KhoModal: React.FC<KhoModalProps> = ({
           {activeTab === "animal" && (
             <>
               {ownedAnimals.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-10 text-center space-y-3">
+                <div className="farm-market-empty flex flex-col items-center justify-center py-10 text-center space-y-3">
                   <div className="w-14 h-14 rounded-2xl bg-slate-800/60 border border-slate-800/80 flex items-center justify-center text-3xl">
-                    🐥
+                    <FarmMarketArt enabled={mobileVisual} art={animalArt("chicken")}>🐥</FarmMarketArt>
                   </div>
                   <div className="space-y-1">
                     <p className="text-sm font-bold text-[var(--modal-text)]">
@@ -506,11 +517,11 @@ export const KhoModal: React.FC<KhoModalProps> = ({
                   return (
                     <div
                       key={animal.id}
-                      className="p-3 rounded-2xl bg-slate-850/70 border border-slate-800/60 flex items-center justify-between gap-3 shadow-sm hover:border-slate-750 transition-all"
+                      className="farm-market-card p-3 rounded-2xl bg-slate-850/70 border border-slate-800/60 flex items-center justify-between gap-3 shadow-sm hover:border-slate-750 transition-all"
                     >
                       <div className="flex items-center gap-3 min-w-0">
                         <div className="w-12 h-12 rounded-2xl bg-slate-800/60 border border-slate-800/80 flex items-center justify-center text-2xl shrink-0">
-                          {getAnimalEmoji(animal.id)}
+                          <FarmMarketArt enabled={mobileVisual} art={animalArt(animal.id)}>{getAnimalEmoji(animal.id)}</FarmMarketArt>
                         </div>
                         <div className="min-w-0 space-y-0.5">
                           <div className="flex items-center gap-2">
@@ -543,7 +554,7 @@ export const KhoModal: React.FC<KhoModalProps> = ({
                             category: "animals",
                             itemId: animal.id,
                             name: `Vật nuôi ${animal.name}`,
-                            icon: getAnimalEmoji(animal.id),
+                            icon: <FarmMarketArt enabled={mobileVisual} art={animalArt(animal.id)}>{getAnimalEmoji(animal.id)}</FarmMarketArt>,
                             ownedCount: count,
                             unitSellGold: sellGold,
                           })
@@ -563,9 +574,9 @@ export const KhoModal: React.FC<KhoModalProps> = ({
           {activeTab === "feed" && (
             <>
               {ownedFeed.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-10 text-center space-y-3">
+                <div className="farm-market-empty flex flex-col items-center justify-center py-10 text-center space-y-3">
                   <div className="w-14 h-14 rounded-2xl bg-slate-800/60 border border-slate-800/80 flex items-center justify-center text-3xl">
-                    🌾
+                    <FarmMarketArt enabled={mobileVisual} art={itemArt("feed_normal")}>🌾</FarmMarketArt>
                   </div>
                   <div className="space-y-1">
                     <p className="text-sm font-bold text-[var(--modal-text)]">
@@ -595,16 +606,16 @@ export const KhoModal: React.FC<KhoModalProps> = ({
                   return (
                     <div
                       key={feed.id}
-                      className="p-3 rounded-2xl bg-slate-850/70 border border-slate-800/60 flex items-center justify-between gap-3 shadow-sm hover:border-slate-750 transition-all"
+                      className="farm-market-card p-3 rounded-2xl bg-slate-850/70 border border-slate-800/60 flex items-center justify-between gap-3 shadow-sm hover:border-slate-750 transition-all"
                     >
                       <div className="flex items-center gap-3 min-w-0">
                         <div className="w-12 h-12 rounded-2xl bg-slate-800/60 border border-slate-800/80 flex items-center justify-center text-2xl shrink-0">
-                          <img loading="lazy" decoding="async" fetchPriority="low"
+                          <FarmMarketArt enabled={mobileVisual} art={itemArt(feed.id)}><img loading="lazy" decoding="async" fetchPriority="low"
                             src={getFeedAsset(feed.id)}
                             alt=""
                             aria-hidden="true"
                             className="h-11 w-11 object-contain"
-                          />
+                          /></FarmMarketArt>
                         </div>
                         <div className="min-w-0 space-y-0.5">
                           <div className="flex items-center gap-2">
@@ -637,12 +648,12 @@ export const KhoModal: React.FC<KhoModalProps> = ({
                             itemId: feed.id,
                             name: feed.name,
                             icon: (
-                              <img loading="lazy" decoding="async" fetchPriority="low"
+                              <FarmMarketArt enabled={mobileVisual} art={itemArt(feed.id)}><img loading="lazy" decoding="async" fetchPriority="low"
                                 src={getFeedAsset(feed.id)}
                                 alt=""
                                 aria-hidden="true"
                                 className="app-overlay-button h-9 w-9 object-contain"
-                              />
+                              /></FarmMarketArt>
                             ),
                             ownedCount: count,
                             unitSellGold: sellGold,
@@ -663,9 +674,9 @@ export const KhoModal: React.FC<KhoModalProps> = ({
           {activeTab === "egg" && (
             <>
               {ownedEggs.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-10 text-center space-y-3">
+                <div className="farm-market-empty flex flex-col items-center justify-center py-10 text-center space-y-3">
                   <div className="w-14 h-14 rounded-2xl bg-slate-800/60 border border-slate-800/80 flex items-center justify-center text-3xl">
-                    🥚
+                    <FarmMarketArt enabled={mobileVisual} art={itemArt("chicken_egg")}>🥚</FarmMarketArt>
                   </div>
                   <div className="space-y-1">
                     <p className="text-sm font-bold text-[var(--modal-text)]">
@@ -731,12 +742,12 @@ export const KhoModal: React.FC<KhoModalProps> = ({
                     return (
                       <div
                         key={typeId}
-                        className="p-3 rounded-2xl bg-slate-850/70 border border-slate-800/60 space-y-2.5 shadow-sm hover:border-slate-750 transition-all"
+                        className="farm-market-eggs p-3 rounded-2xl bg-slate-850/70 border border-slate-800/60 space-y-2.5 shadow-sm hover:border-slate-750 transition-all"
                       >
                         <div className="flex items-center justify-between gap-3">
                           <div className="flex items-center gap-3 min-w-0">
                             <div className="w-12 h-12 rounded-2xl bg-slate-800/60 border border-slate-800/80 flex items-center justify-center text-2xl shrink-0">
-                              🥚
+                              <FarmMarketArt enabled={mobileVisual} art={itemArt(typeId)}>🥚</FarmMarketArt>
                             </div>
                             <div className="min-w-0 space-y-0.5">
                               <div className="flex items-center gap-2">
@@ -818,6 +829,7 @@ export const KhoModal: React.FC<KhoModalProps> = ({
     {/* QUANTITY SELL CONFIRMATION (owned by Inventory) */}
     {sellModalData && (
       <AppModal size="compact" theme="farm" archetype="transaction"
+        overlayClassName={mobileVisual ? "farm-market" : undefined}
         layer="nested"
         onClose={() => setSellModalData(null)}
         closeOnBackdrop

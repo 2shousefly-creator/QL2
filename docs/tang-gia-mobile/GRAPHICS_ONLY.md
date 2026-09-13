@@ -1,5 +1,7 @@
 # Tăng Gia mobile — graphics-only correction
 
+Historical record. [VISUAL_QUALITY_V4.md](VISUAL_QUALITY_V4.md) supersedes the cell-local walking, whole-sprite crop sway, palette, plot labels and mobile store/inventory skin below.
+
 2026-09-13. Supersedes the two-tab and Pixi-sheet direction in TOPDOWN_V3.md. Implementation starts from f414bd2, synchronized main. Only mobile presentation, its authored assets and this documentation change; no engine, catalog, save, economy, reward, unlock or weather timeline change.
 
 ## Restored flow
