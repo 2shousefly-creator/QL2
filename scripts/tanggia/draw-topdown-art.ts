@@ -7,11 +7,12 @@ import { CROP_CATALOG, ANIMAL_CATALOG, FERTILIZER_CATALOG, FEED_CATALOG } from '
 import { ANIMAL_STATES, CROP_FRAMES, SOIL_STATES, PROP_NAMES } from '../../src/features/tang_gia/mobile/FarmArtRegistry';
 const out = 'public/assets/tanggia/topdown-v3';
 await mkdir(out, { recursive: true });
-const e = (x: number, y: number, rx: number, ry: number, fill: string, extra = '') => `<ellipse cx="${x}" cy="${y}" rx="${rx}" ry="${ry}" fill="${fill}" ${extra}/>`;
-const p = (d: string, fill: string, stroke = '', sw = 2) => `<path d="${d}" fill="${fill}"${stroke ? ` stroke="${stroke}" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round"` : ''}/>`;
+const paint = (color: string) => /^#[0-9a-f]{6}$/i.test(color) ? `url(#paint${color.slice(1)})` : color;
+const e = (x: number, y: number, rx: number, ry: number, fill: string, extra = '') => `<ellipse cx="${x}" cy="${y}" rx="${rx}" ry="${ry}" fill="${paint(fill)}" ${extra}/>`;
+const p = (d: string, fill: string, stroke = '', sw = 2) => `<path d="${d}" fill="${paint(fill)}"${stroke ? ` stroke="${stroke}" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round"` : ''}/>`;
 const r = (x: number, y: number, w: number, h: number, fill: string, radius = 5) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${radius}" fill="${fill}"/>`;
 const group = (x: number, y: number, scale: number, body: string, rotate = 0) => `<g transform="translate(${x} ${y}) rotate(${rotate}) scale(${scale})">${body}</g>`;
-const leaf = (x: number, y: number, size = 1, angle = 0, color = '#4d854a') => group(x, y, size, p('M0 0 Q-22 -5 -15 -23 Q3 -20 0 0', color) + p('M0 0 L-12 -18', 'none', '#80a85b', 1.5), angle);
+const leaf = (x: number, y: number, size = 1, angle = 0, color = '#4d854a') => group(x, y, size, p('M0 0 Q-22 -5 -15 -23 Q3 -20 0 0', color) + p('M0 0 L-12 -18 M-4 -6 L-13 -7 M-7 -11 L-7 -17', 'none', '#a4c974', 1.1), angle);
 const shadow = e(48, 77, 28, 8, '#354f33', 'opacity=".16"');
 const palette: Record<string, string> = { carrot: '#ed8d39', cabbage: '#a0c775', potato: '#cea36a', tomato: '#db5b42', strawberry: '#dc5264', corn: '#edc85d', pumpkin: '#dc853c', watermelon: '#65a15a', pineapple: '#d2b74b', banana: '#edcf69', orange: '#ed9f44', mango: '#eba85c', apple: '#d85b4e', pear: '#c2c76d', grape: '#9c79ae', dragon_fruit: '#d7bd65', avocado: '#6f934c', durian: '#9caa60', mangosteen: '#825775' };
 const trees = new Set(['orange', 'mango', 'apple', 'pear', 'avocado', 'durian', 'mangosteen']);
@@ -29,39 +30,94 @@ function fruit(id: string): string {
     case 'watermelon': return e(0, 1, 19, 15, '#42784c') + [-10, 0, 10].map(x => p(`M${x} -12 Q${x + 9} 0 ${x} 15`, 'none', '#8eb562', 4)).join('');
     case 'pumpkin': return e(0, 2, 20, 16, c) + e(0, 2, 12, 16, '#e99b46') + e(0, 2, 5, 16, '#f0ad53') + p('M0 -12 Q-4 -22 4 -23', 'none', '#6e8246', 4);
     case 'strawberry': return p('M-14 -7 Q-10 -19 0 -12 Q12 -19 15 -6 Q12 9 0 19 Q-12 9 -14 -7', c) + p('M-12 -12 L0 -17 L12 -12 L4 -8 L0 -12 L-6 -7Z', '#548954') + [-7, 0, 7].map(x => e(x, 0, 1, 2, '#f6d58c') + e(x / 2, 8, 1, 2, '#f6d58c')).join('');
+    case 'apple': return p('M0 -11 Q-16 -21 -19 -3 Q-20 13 -8 20 Q-1 17 5 20 Q18 16 20 -1 Q18 -20 0 -11Z', c, '#a04436', 1.2) + p('M0 -10 Q-2 -19 3 -23', 'none', '#725335', 2.5) + leaf(2, -13, .4, 75) + e(-10, -1, 3, 7, '#f4b88e', 'opacity=".55"');
+    case 'mangosteen': return e(0, 3, 18, 17, c) + e(-7, 0, 4, 7, '#bd899e', 'opacity=".5"') + [-60, 20, 100, 180].map(a => group(0, -12, .45, p('M0 0 Q-18 -2 -12 -14 Q3 -12 0 0', '#80a65d'), a)).join('') + p('M0 -13 L2 -22', 'none', '#6b8145', 3);
+    case 'orange': return e(0, 2, 17, 17, c) + Array.from({ length: 16 }, (_, i) => e(-12 + i * 7 % 26, -9 + i * 11 % 26, .8, .7, '#ffd07a')).join('') + leaf(0, -12, .48, 75) + e(-7, -4, 3, 5, '#ffe3a1', 'opacity=".4"');
     case 'pear': case 'avocado': return p('M-6 -14 Q0 -21 6 -14 L9 -4 Q22 14 8 21 Q-11 26 -16 12 Q-18 3 -9 -4Z', c, id === 'avocado' ? '#537140' : '#a0a552') + leaf(1, -15, .45, 75);
     case 'mango': return p('M-10 -14 Q13 -25 18 -6 Q23 14 1 20 Q-12 18 -14 7 Q-4 7 -10 -14', c) + e(7, -3, 5, 10, '#f4c471') + leaf(-5, -14, .4, 60);
     case 'durian': return p('M0 -21 L5 -17 L11 -19 L14 -12 L20 -8 L17 -2 L21 5 L16 9 L15 17 L8 17 L3 23 L-3 19 L-10 20 L-14 13 L-20 10 L-18 3 L-22 -3 L-17 -9 L-14 -15 L-7 -15Z', c, '#788948') + p('M0 -15 L-4 15 M-9 -9 L-5 -5 M9 -7 L5 -3 M10 7 L6 11', 'none', '#d0cb79');
     default: return e(0, 2, id === 'orange' ? 16 : 17, 16, c) + e(-6, -3, 4, 7, '#fff1bc', 'opacity=".24"') + p('M0 -12 L2 -19', 'none', '#786b3c', 3) + leaf(1, -12, .45, 70);
   }
 }
+/** Botanical silhouettes remain distinct even before fruit appears. */
+function cropLeaf(id: string, x: number, y: number, size: number, angle: number) {
+  let blade: string;
+  if (id === 'carrot') blade = p('M0 0 L-4 -27 M-1 -6 L-13 -12 M-2 -12 L-14 -21 M-3 -18 L-11 -29 M-2 -9 L7 -17 M-3 -16 L5 -27', 'none', '#518541', 2.2)
+    + p('M-10 -10 l-4 -7 M-10 -17 l-4 -9 M4 -15 l2 -7 M2 -23 l0 -6', 'none', '#8abc57', 1.6);
+  else if (['corn', 'dragon_fruit', 'pineapple'].includes(id)) blade = p('M0 0 Q-15 -14 -11 -39 Q-3 -28 0 0', '#63994b') + p('M0 0 Q-8 -20 -11 -39', 'none', '#c0d67b', 1);
+  else if (['pumpkin', 'watermelon', 'grape'].includes(id)) blade = p('M0 0 L-12 -3 L-9 -10 L-22 -14 L-13 -19 L-16 -29 L-5 -23 L1 -32 L6 -20 L16 -20 L10 -9 L17 -4Z', id === 'watermelon' ? '#4b9b62' : '#5e994e') + p('M0 0 L0 -25 M0 -9 L-15 -16 M0 -10 L10 -16', 'none', '#abc87c', 1.1);
+  else if (id === 'banana') blade = p('M0 0 Q-30 -5 -22 -43 Q7 -42 0 0', '#56a062') + p('M0 0 L-19 -38 M-4 -9 L-22 -15 M-7 -18 L-24 -24 M-11 -27 L-20 -32', 'none', '#bcda7f', 1.3);
+  else if (id === 'strawberry') blade = [-42, 0, 42].map(a => leaf(0, 0, .7, a, '#51904b')).join('');
+  else if (['mango', 'avocado'].includes(id)) blade = p('M0 0 Q-22 -14 -12 -35 Q6 -24 0 0', id === 'mango' ? '#488251' : '#3d7853') + p('M0 0 L-11 -31 M-4 -11 L-12 -15 M-7 -20 L-7 -27', 'none', '#98bc75', 1.2);
+  else if (id === 'cabbage') blade = e(-7, -11, 14, 17, '#84ba75') + p('M0 0 L-10 -25 M-3 -8 L-16 -11 M-6 -16 L-16 -21 M-4 -10 L3 -19', 'none', '#d5e4ad', 1.5);
+  else blade = leaf(0, 0, 1, 0, id === 'mangosteen' ? '#3f795d' : id === 'orange' ? '#508b4e' : '#619746');
+  return group(x, y, size, blade, angle);
+}
 function plant(id: string, stage: number) {
-  if (stage === 2) return [-17, 0, 17].map(x => e(48 + x, 66, 4, 2.5, '#d8b780') + p(`M${43 + x} 70 l10 0`, 'none', '#81604a', 2)).join('');
-  const age = stage - 3; // Four genuinely distinct growth stages: sprout, young, growing, mature.
-  if (age === 0) return shadow + p('M48 74 Q43 62 48 52', 'none', '#688d4b', 3) + leaf(48, 61, .55, -20) + leaf(48, 57, .48, 90);
+  if (stage === 2) return [-17, 0, 17].map(x => e(48 + x, 67, 7, 3, '#77553d') + e(48 + x, 65, 3.5, 2, '#ddb980') + p(`M${43 + x} 70 l10 0`, 'none', '#c29c68', 1.5)).join('');
+  const age = stage - 3;
+  if (age === 0) return shadow + p('M48 75 Q43 63 48 57', 'none', '#688d4b', 2.5)
+    + cropLeaf(id, 48, 64, .44, -20) + cropLeaf(id, 48, 60, .38, 95) + e(48, 73, 4, 2, '#c6ae75');
   if (trees.has(id)) {
-    const canopy = age === 1 ? 18 : age === 2 ? 27 : 33;
-    return shadow + p(`M44 77 L46 ${52 - age * 5} L51 ${49 - age * 5} L53 77Z`, '#9a7148') + p('M48 65 L32 45 M49 61 L65 42', 'none', '#9a7148', 4)
-      + e(48, 44, canopy, canopy * .73, '#3d7248') + e(36, 39, canopy * .64, canopy * .6, '#5e9050') + e(56, 33, canopy * .66, canopy * .6, '#78a05a')
-      + (age >= 2 ? [[32, 45], [62, 47], [47, 30]].map(([x, y], i) => group(x, y, age === 2 ? .23 : .42, fruit(id), i * 12)).join('') : '');
+    const canopy = age === 1 ? 16 : age === 2 ? 25 : 31;
+    const tall = id === 'pear' || id === 'durian' ? 1.15 : id === 'apple' ? .86 : 1;
+    return shadow + p(`M43 78 L46 ${53 - age * 5} L51 ${49 - age * 5} L54 78Z`, '#9a7148', '#765238', 1)
+      + p('M48 73 L48 51 M47 62 L32 44 M49 58 L65 40', 'none', '#c79a66', 2)
+      + e(48, 43, canopy, canopy * .76 * tall, '#3d7248')
+      + Array.from({ length: age * 4 + 6 }, (_, i) => {
+        const angle = i * 2.4, radius = canopy * (.4 + i % 3 * .2);
+        return cropLeaf(id, 48 + Math.cos(angle) * radius, 47 + Math.sin(angle) * radius * .62 * tall, .45 + age * .09, i * 49);
+      }).join('')
+      + (age >= 2 ? [[28, 48], [65, 49], [47, 29], [46, 61]].map(([x, y], i) => group(x, y, age === 2 ? .23 : id === 'durian' ? .42 : .48, fruit(id), i * 12)).join('') : '');
   }
-  if (id === 'banana') return shadow + p('M45 77 L47 32 L53 32 L53 77Z', '#95a161') + Array.from({ length: age * 2 + 1 }, (_, i) => leaf(50, 45, .9 + age * .2, -95 + i * 42, i % 2 ? '#76a45a' : '#50894f')).join('') + (age === 3 ? group(58, 59, .7, fruit(id)) : '');
-  if (id === 'corn' || id === 'dragon_fruit') return shadow + [-1, 0, 1].map((x, i) => group(48 + x * 16, 75, .7 + age * .13, p('M0 0 L0 -47', 'none', '#6e934e', 3) + leaf(0, -10, .65, -25) + leaf(0, -24, .65, 80) + (age > 1 ? group(0, -37, age === 2 ? .4 : .65, fruit(id), i * 8) : ''))).join('');
-  if (id === 'grape') return shadow + p('M24 78 L24 25 M73 78 L73 25 M20 35 L77 35 M20 57 L77 57', 'none', '#aa8056', 3) + Array.from({ length: age + 2 }, (_, i) => leaf(29 + i * 10, 51, .8, 45 + i * 24)).join('') + (age > 1 ? [35, 58].map(x => group(x, 61, age === 2 ? .38 : .65, fruit(id))).join('') : '');
-  const rosette = ['carrot', 'cabbage', 'pineapple'].includes(id);
-  return shadow + (rosette ? '' : p('M48 75 L48 35', 'none', '#668b4a', 3))
-    + Array.from({ length: age * 2 + 2 }, (_, i) => leaf(48, rosette ? 62 : 67 - i * 5, .6 + age * .12, i * (rosette ? 60 : 105), i % 2 ? '#78a65e' : '#4b864f')).join('')
-    + (age >= 2 ? (['tomato', 'strawberry', 'potato'].includes(id) ? [[33, 57], [59, 68], [56, 42]] : [[48, 66]]).map(([x, y]) => group(x, y, age === 2 ? .36 : ['pumpkin', 'watermelon', 'cabbage'].includes(id) ? .96 : .64, fruit(id))).join('') : '');
+  if (id === 'banana') return shadow + p('M43 78 L46 31 L53 31 L56 78Z', '#95a161') + p('M47 36 L49 76 M53 47 L53 74', 'none', '#d0c993', 2)
+    + Array.from({ length: age + 3 }, (_, i) => cropLeaf(id, 50, 43, .64 + age * .12, -108 + i * 48)).join('')
+    + (age > 1 ? group(62, 60, age === 2 ? .45 : .78, fruit(id), -12) : '');
+  if (id === 'dragon_fruit') return shadow + Array.from({ length: 3 + age * 2 }, (_, i) => {
+    const x = 29 + i * 13 % 39, top = 40 - age * 5 + i % 3 * 4;
+    return p(`M${x} 78 Q${x - 5} 48 ${x + 2} ${top}`, 'none', age === 3 ? '#acaa4d' : '#63934b', 2)
+      + cropLeaf(id, x, 76, .7 + age * .09, -22 + i * 13)
+      + (age > 1 ? group(x + 3, top + 4, age === 2 ? .4 : .58, fruit(id), 18) : '');
+  }).join('');
+  if (id === 'corn') return shadow + [-1, 0, 1].map((x, i) => group(48 + x * 19, 78, .64 + age * .12,
+    p('M0 0 L0 -57', 'none', '#62934b', 3) + [-12, -29].map(y => cropLeaf(id, 0, y, .75, y === -12 ? -55 : 65)).join('')
+    + (age > 1 ? group(3, -25, age === 2 ? .45 : .68, fruit(id), 18) + p('M0 -53 l-7 -10 M0 -53 l0 -13 M0 -53 l7 -10', 'none', '#e1c87b', 1.7) : ''), i * 2)).join('');
+  if (id === 'grape') return shadow + p('M22 80 L22 25 M75 80 L75 25 M18 35 L79 35 M18 57 L79 57', 'none', '#aa8056', 3)
+    + p('M25 72 Q69 58 29 47 Q17 29 72 32', 'none', '#69884d', 2)
+    + Array.from({ length: age * 2 + 2 }, (_, i) => cropLeaf(id, 25 + i * 13 % 48, 40 + i % 2 * 15, .58, 20 + i * 29)).join('')
+    + (age > 1 ? [33, 60].map(x => group(x, 61, age === 2 ? .4 : .65, fruit(id))).join('') : '');
+  if (id === 'pineapple') return shadow + Array.from({ length: 7 + age }, (_, i) => cropLeaf(id, 48, 75, .78 + age * .08, -80 + i * 18)).join('')
+    + (age > 1 ? group(48, 47, age === 2 ? .58 : .94, fruit(id)) : '');
+  if (id === 'cabbage') return shadow + Array.from({ length: 6 + age }, (_, i) => cropLeaf(id, 48, 63, .64 + age * .1, i * 46)).join('')
+    + group(48, 51, age === 1 ? .75 : age === 2 ? 1.1 : 1.48, fruit(id));
+  if (id === 'carrot') return shadow + [-1, 0, 1].map((x, i) => group(48 + x * 18, 70 - (i % 2) * 8, .68 + age * .1,
+    (age > 1 ? group(0, 0, .68, fruit(id), -8) : '') + [-28, 0, 32].map(a => cropLeaf(id, 0, -6, .9 + age * .12, a)).join(''))).join('');
+  const vine = id === 'pumpkin' || id === 'watermelon';
+  const body = shadow + (vine ? p('M18 73 Q28 41 53 62 T82 58 M37 61 q-18 -23 -22 -5 q0 9 7 5', 'none', '#608d45', 2)
+    : p('M48 77 L48 34 M48 57 L28 45 M48 63 L66 47', 'none', '#608d45', 3))
+    + (id === 'tomato' ? p('M53 80 L53 24 M43 51 L59 51', 'none', '#b89a6f', 2) : '')
+    + Array.from({ length: age * 2 + 3 }, (_, i) => cropLeaf(id, vine ? 25 + i * 17 % 50 : 48 + Math.sin(i * 2.4) * 17, vine ? 65 : 68 - i * 5, .48 + age * .11, i * 91)).join('');
+  const flowers = age >= 2 ? [0, 1, 2].map(i => group(30 + i * 16, 40 + i % 2 * 12, 1,
+    [-1, 0, 1].map(a => e(a * 2, a % 2 * 2, 2.5, 2.5, id === 'potato' ? '#d6bbec' : id === 'strawberry' ? '#fff8d9' : '#ffda72')).join('') + e(0, 0, 1.6, 1.6, '#e4b353'))).join('') : '';
+  return body + flowers + (age >= 2 ? (['tomato', 'strawberry', 'potato'].includes(id) ? [[30, 61], [65, 69], [55, 46]] : [[43, 69], [69, 62]])
+    .map(([x, y], i) => group(x, y, age === 2 ? .3 : vine ? (i ? .64 : .94) : .65, fruit(id), i * 8)).join('') : '');
 }
 const records: object[] = [];
 async function sheet(name: string, columns: number, rows: number, frames: string[], frameNames: readonly string[]) {
-  const body = frames.map((body, i) => group(i % columns * 96, Math.floor(i / columns) * 96, 1, body)).join('');
-  await writeFile(`${out}/${name}.svg`, `<svg xmlns="http://www.w3.org/2000/svg" width="${columns * 96}" height="${rows * 96}" viewBox="0 0 ${columns * 96} ${rows * 96}">${body}</svg>\n`);
+  const body = frames.map((body, i) => `<g clip-path="url(#cell${i})">${group(i % columns * 96, Math.floor(i / columns) * 96, 1, body)}</g>`).join('');
+  const colors = [...new Set([...body.matchAll(/url\(#paint([0-9a-f]{6})\)/gi)].map(match => match[1]))];
+  const tone = (hex: string, amount: number) => '#' + [0, 2, 4].map(i => {
+    const n = parseInt(hex.slice(i, i + 2), 16);
+    return Math.round(amount > 0 ? n + (255 - n) * amount : n * (1 + amount)).toString(16).padStart(2, '0');
+  }).join('');
+  const defs = '<defs>' + colors.map(hex => `<linearGradient id="paint${hex}" x1="15%" y1="0%" x2="75%" y2="100%"><stop stop-color="${tone(hex, .18)}"/><stop offset=".45" stop-color="#${hex}"/><stop offset="1" stop-color="${tone(hex, -.18)}"/></linearGradient>`).join('')
+    + frames.map((_, i) => `<clipPath id="cell${i}"><rect x="${i % columns * 96}" y="${Math.floor(i / columns) * 96}" width="96" height="96"/></clipPath>`).join('') + '</defs>';
+  await writeFile(`${out}/${name}.svg`, `<svg xmlns="http://www.w3.org/2000/svg" width="${columns * 96}" height="${rows * 96}" viewBox="0 0 ${columns * 96} ${rows * 96}">${defs}${body}</svg>\n`);
   records.push({ sheet: name, frameSize: [96, 96], columns, rows, frameNames, provenance: 'Original vector paths in scripts/tanggia/draw-topdown-art.ts' });
 }
 for (const crop of CROP_CATALOG) {
   const packet = r(25, 13, 46, 68, '#eddbac', 5) + r(25, 13, 46, 12, '#668750', 3) + r(29, 67, 38, 8, '#dcc48f', 2) + group(48, 46, .75, fruit(crop.id));
-  await sheet(`crop-${crop.id}`, 8, 1, [packet, packet + e(73, 75, 5, 3, '#b99665') + e(79, 69, 4, 2.5, '#ddbe80'), ...[2, 3, 4, 5, 6].map(stage => plant(crop.id, stage)), shadow + group(48, 45, 1.35, fruit(crop.id))], CROP_FRAMES);
+  await sheet(`crop-${crop.id}`, 9, 1, [packet, packet + e(73, 75, 5, 3, '#b99665') + e(79, 69, 4, 2.5, '#ddbe80'), ...[2, 3, 4, 5, 6].map(stage => plant(crop.id, stage)), plant(crop.id, 6) + p('M16 27 l2 -5 l2 5 l5 2 l-5 2 l-2 5 l-2 -5 l-5 -2Z M77 44 l2 -5 l2 5 l5 2 l-5 2 l-2 5 l-2 -5 l-5 -2Z', '#ffe7a0'), shadow + group(48, 45, 1.35, fruit(crop.id))], CROP_FRAMES);
 }
 // Species anatomy and plumage, not a tint of one chicken sprite.
 const birds: Record<string, { body: string; wing: string; head: string; neck: number; tail: number; beak: number; legs: number }> = {
@@ -86,13 +142,26 @@ function bird(id: string, state: string, frame: number) {
   else body += p(`M33 ${cy - 3} L${Math.max(4, 32 - b.tail)} ${cy - 21} L14 ${cy + 2} L35 ${cy + 9}Z`, b.wing);
   body += e(46, cy, id === 'quail' ? 21 : 24, rest ? 14 : 19, b.body) + e(40, cy + 1, 16, 12, b.wing) + p(`M30 ${cy} Q40 ${cy + 10} 52 ${cy + 3}`, 'none', b.body, 2);
   if (['quail', 'guinea_fowl', 'pheasant'].includes(id)) body += Array.from({ length: 14 }, (_, i) => e(28 + i % 5 * 5, cy - 7 + Math.floor(i / 5) * 6, 1.3, id === 'quail' ? 2.5 : 1.2, '#e1d5b6')).join('');
+  body += Array.from({ length: 10 }, (_, i) => {
+    const x = 27 + i % 5 * 5, y = cy - 4 + Math.floor(i / 5) * 7;
+    return p(`M${x} ${y} q3 7 7 1`, 'none', i % 2 ? b.body : '#c4b18b', .9);
+  }).join('') + e(43, cy - 8, 11, 4, '#fff2cf', 'opacity=".16"');
+  if (['duck', 'muscovy_duck', 'goose'].includes(id) && !rest) for (const side of [-1, 1]) {
+    const stride = state === 'walk' ? Math.sin(phase) * side * 6 : 0;
+    body += p(`M${43 + side * 8 + stride} ${cy + 12 + b.legs} l-4 3 l14 1 l-5 -5Z`, '#d5a355');
+  }
+  if (id === 'pheasant') body += p(`M8 ${cy - 17} L27 ${cy + 2} M13 ${cy - 19} L31 ${cy + 1}`, 'none', '#e9bd72', 1.3);
   body += p(`M58 ${cy - 2} Q${headX - 9} ${headY} ${headX} ${headY + 4}`, 'none', b.head, id === 'ostrich' ? 6 : 11) + e(headX, headY, id === 'ostrich' ? 7 : 10, 10, b.head);
+  if (['duck', 'pheasant'].includes(id)) body += p(`M${headX - 6} ${headY + 8} q5 4 10 0`, 'none', '#e9e8c3', 2);
+  if (id === 'quail') body += p(`M${headX - 7} ${headY - 5} l13 0 M${headX - 6} ${headY + 4} l11 0`, 'none', '#e9cf99', 1.8);
+  if (id === 'guinea_fowl') body += p(`M${headX - 3} ${headY - 9} l2 -6 l4 6Z`, '#bd8a69');
+  body += e(headX - 3, headY - 4, 3, 4, '#fff3cf', 'opacity=".25"');
   body += p(`M${headX + 7} ${headY + 1} l${b.beak} 4 l-${b.beak} 3Z`, '#daa15a');
   if (id === 'chicken') body += p(`M${headX - 7} ${headY - 8} q-2 -12 3 -8 q5 -9 7 1 l-1 8Z`, '#c56350');
   if (['turkey', 'muscovy_duck'].includes(id)) body += e(headX + 6, headY + 3, 4, 7, '#bb675d');
   if (id === 'peafowl') body += p(`M${headX} ${headY - 9} l-4 -8 m4 8 l3 -9`, 'none', '#52889e', 2);
   body += rest || state === 'weak' ? p(`M${headX + 2} ${headY - 1} l4 1`, 'none', '#3b4337', 2) : e(headX + 4, headY - 2, 1.8, 2, '#303c34') + e(headX + 4.4, headY - 2.6, .5, .6, '#fff3d4');
-  if (state === 'produce_ready') body += group(74, 79, .55, e(0, 0, 10, 13, '#f6e2af') + e(-3, -3, 3, 5, '#fff3d5'));
+  if (state === 'produce_ready') body += e(46, 80, 27, 5, '#efd486', `opacity="${.2 + frame % 3 * .1}"`) + group(74, 79 - Math.sin(phase) * 2, .55, e(0, 0, 10, 13, '#f6e2af') + e(-3, -3, 3, 5, '#fff3d5'));
   if (state === 'drink') body += e(84, 78 - frame % 3 * 3, 2, 3, '#91cad1');
   if (state === 'eat') body += [0, 1, 2].map(i => e(78 + i * 4, 78 + i % 2 * 3, 2, 1.4, '#d2b06a')).join('');
   if (state === 'weak') body += p('M24 36 l-3 6 m8 -8 l-2 6', 'none', '#bf9568', 2);
@@ -142,5 +211,11 @@ const props: Record<typeof PROP_NAMES[number], string> = {
   store: r(17, 41, 64, 36, '#c69e6b') + p('M12 43 L22 20 L75 20 L85 43Z', '#83a17c') + p('M32 20 L27 43 M51 20 L51 43 M67 20 L72 43', 'none', '#eddfbb', 9) + r(27, 54, 16, 23, '#705d45') + r(53, 54, 19, 13, '#e4d8b5'),
   herd: bird('chicken', 'idle', 0),
 };
+props.shelter += [17, 28, 45, 59, 74].map(x => p(`M${x} 42 L${x} 70`, 'none', '#8e6846', .8)).join('')
+  + p('M55 49 L72 49 M63 44 L63 61', 'none', '#d5b78a', 2) + p('M21 61 l15 0 M21 64 l15 0', 'none', '#d8b879', 1)
+  + r(18, 71, 26, 4, '#c4a16d', 1);
+props.trough += [23, 39, 56, 73].map(x => p(`M${x} 48 l-1 17`, 'none', '#d4b181', 1)).join('');
+props.bush += Array.from({ length: 16 }, (_, i) => leaf(24 + i * 13 % 49, 39 + i * 17 % 30, .26, i * 43, i % 2 ? '#7fab60' : '#96b771')).join('');
+props.hay += Array.from({ length: 15 }, (_, i) => p(`M${18 + i * 4} ${24 + i % 3 * 4} l6 -6`, 'none', '#f1d98d', 1)).join('');
 await sheet('props', 8, 2, PROP_NAMES.map(name => props[name]), PROP_NAMES);
-await writeFile(`${out}/manifest.json`, JSON.stringify({ design: { viewport: [390, 844], host: [390, 647], world: [390, 471], safeAreaExample: [47, 34] }, crops: CROP_CATALOG.map(x => ({ id: x.id, name: x.name })), animals: ANIMAL_CATALOG.map(x => ({ id: x.id, name: x.name })), records }, null, 2) + '\n');
+await writeFile(`${out}/manifest.json`, JSON.stringify({ design: { revision: 'graphics-only-continuous-world', frame: [96, 96], layout: 'garden then pen; bottom-left plot 1', rendering: 'original SVG paths with gradient shading; no external image source' }, crops: CROP_CATALOG.map(x => ({ id: x.id, name: x.name })), animals: ANIMAL_CATALOG.map(x => ({ id: x.id, name: x.name })), records }, null, 2) + '\n');

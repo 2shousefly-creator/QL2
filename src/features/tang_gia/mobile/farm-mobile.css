@@ -5,15 +5,17 @@
 /* Semantic controls are keyboard/screen-reader only; pointer hits belong to canvas. */
 .farm-mobile-semantics { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; pointer-events: none; }
 .farm-mobile-shell { flex: 1; min-height: 0; width: 100%; max-width: 480px; margin-inline: auto; display: flex; }
-/* The app reserves safe areas ONCE. Pixi's ResizeObserver receives the remaining box.
-   390×844 example: (60+47) app HUD + (56+34) nav => 390×647 host. */
-[data-farm-mobile="true"] .command-status-hud {
-  height: calc(60px + env(safe-area-inset-top, 0px));
-  min-height: calc(60px + env(safe-area-inset-top, 0px));
-  padding-top: calc(8px + env(safe-area-inset-top, 0px));
-  padding-bottom: 8px;
-  background: #304839 !important;
-}
-[data-farm-mobile="true"] .command-status-hud > div { height: 44px; }
-[data-farm-mobile="true"] .hub-navigation-bar { background: #304839; }
-[data-farm-mobile="true"] main { background: #f7f1e3; }
+/* Use the app's actual remaining height; no replacement global HUD/nav skin. */
+.farm-graphics-screen { display: flex; flex-direction: column; height: 100%; min-height: 0; overflow: hidden; padding-bottom: 0.5rem; gap: 6px; }
+.farm-graphics-screen > * { margin-block: 0 !important; flex-shrink: 0; }
+.farm-graphics-screen > .farm-mobile-shell { flex: 1 1 0; min-height: 0; position: relative; max-width: 480px; border-radius: 18px; overflow: hidden; }
+.farm-graphics-screen .logistics-hud { padding: 6px; gap: 4px; }
+.farm-graphics-screen .farm-entry-label { display: inline; font-size: 9px; white-space: nowrap; }
+.farm-graphics-screen .logistics-hud button[aria-label="Kho"],
+.farm-graphics-screen .logistics-hud button[aria-label="Cửa Hàng"] { flex-direction: column; gap: 2px; padding: 5px 7px; min-height: 44px; }
+
+.farm-graphics-screen .logistics-hud > div:first-child { min-width: 0; flex: 1; gap: 4px; }
+.farm-graphics-screen .logistics-hud > div:first-child > div:first-child { width: 26px; height: 32px; font-size: 14px; }
+.farm-graphics-screen .logistics-hud > div:first-child > div:last-child { min-width: 0; }
+.farm-graphics-screen .logistics-hud .font-mono { font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.farm-graphics-screen .logistics-hud > div[title] { min-width: 0; flex: 1; padding: 5px; }

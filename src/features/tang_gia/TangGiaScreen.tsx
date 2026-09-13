@@ -149,9 +149,9 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
     : undefined;
 
   useEffect(() => {
-    onTroughInfoToggle?.(!mobileActive && farmModal?.type === "trough");
+    onTroughInfoToggle?.(farmModal?.type === "trough");
     return () => onTroughInfoToggle?.(false);
-  }, [farmModal?.type, onTroughInfoToggle, mobileActive]);
+  }, [farmModal?.type, onTroughInfoToggle]);
 
   const [visualEvents, setVisualEvents] = useState<FarmVisualEvent[]>([]);
   const visualMounted = useRef(true);
@@ -930,31 +930,10 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
     setSelectedAnimalId(null);
   };
 
-  if (mobileActive) return <FarmMobilePresentation
-    bridge={{
-      farm: farmState, rank: currentRank,
-      snapshot: adaptFarmMobile(gameState, farmState, presentationState, currentRank, currentWeatherSlot, now),
-      modal: farmModal, closeModal: closeFarmModal, openModal: openFarmModal,
-      selectedPlot: selectedPlotIndex, selectedAnimal: selectedAnimalId,
-      selectPlot: handlePlotTap, selectAnimal: handleAnimalTap,
-      canWater: canWaterSelectedPlot, canTreat: canTreatSelectedPlot, canFertilize: canApplyFertilizer,
-      harvesting: isHarvestingAll, plantOpen: handleOpenPlantModal, plant: handlePlantSeedWithFertilizer,
-      water: handleWaterPlot, treat: handleTreatPest, fertilize: handleApplyFertilizer,
-      harvest: handleHarvestSinglePlot, harvestAll: handleHarvestAll, clearPlot: handleClearPlot, unlock: handleUnlockPlot,
-      enter: handleEnterPen, dismiss: handleDismissAnimal, feed: handleFeedPen,
-      buyCrop: handleBuyCrop, buyAnimal: handleBuyAnimal, buyFeed: handleBuyFeed, buyFertilizer: handleBuyFertilizer,
-      sell: handleSellItem, sellEggs: handleSellEggsSingle, sellAllEggs: handleSellAllEggsQuick,
-    }}
-    toast={toastMessage} events={[...visualEvents, ...harvestPresentations.map(event => ({
-      id: event.id, plotIndex: event.plotIndex, kind: 'harvest' as const, cropId: event.cropId, startedAt: event.startedAt,
-    }))]} reducedMotion={gameState.settings.reducedMotion}
-    pushTarget={pushTarget} onExit={() => { closeFarmModal(); setMobileActive(false); }}
-  />;
-
   return (
     <div
       onClick={handleClearSelection}
-      className={`command-screen logistics-command-screen w-full max-w-5xl mx-auto p-2 sm:p-4 space-y-3 font-sans pb-36 relative ${FARM_MOBILE_REQUESTED ? 'overflow-y-auto h-full' : ''}`}
+      className={`command-screen logistics-command-screen w-full max-w-5xl mx-auto p-2 sm:p-4 space-y-3 font-sans pb-36 relative ${mobileActive ? 'farm-graphics-screen' : FARM_MOBILE_REQUESTED ? 'overflow-y-auto h-full' : ''}`}
     >
       {/* --- HUD HEADER (STICKY) --- */}
       {farmModal?.type !== "trough" && (
@@ -998,7 +977,7 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
               className="relative px-2.5 sm:px-3 py-2 bg-slate-800 hover:bg-slate-750 border border-slate-700 text-amber-300 font-extrabold text-xs rounded-xl flex items-center gap-1.5 shadow-md active:scale-95 transition-all cursor-pointer"
             >
               <Package className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-400" />
-              <span className="hidden sm:inline">Kho</span>
+              <span className={mobileActive ? "farm-entry-label" : "hidden sm:inline"}>Kho</span>
               {totalEggCount > 0 && (
                 <span className="absolute -top-1.5 -right-1.5 px-1.5 py-0.5 rounded-full bg-red-500 text-white font-black text-[10px] shadow-md animate-bounce">
                   {totalEggCount}
@@ -1016,7 +995,7 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
               className="px-2.5 sm:px-3.5 py-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs rounded-xl flex items-center gap-1.5 shadow-md active:scale-95 transition-all cursor-pointer"
             >
               <Store className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-              <span className="hidden sm:inline">Cửa Hàng</span>
+              <span className={mobileActive ? "farm-entry-label" : "hidden sm:inline"}>{mobileActive ? "Cửa hàng" : "Cửa Hàng"}</span>
             </button>
           </div>
         </div>
@@ -1025,7 +1004,22 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
       <FarmXpProgressBar gameState={gameState} />
 
       {/* --- MAIN 2D TOP-DOWN SCENE (SINGLE SCREEN) --- */}
-      <TangGiaCanvas2D
+      {mobileActive ? (<FarmMobilePresentation
+        bridge={{
+          snapshot: adaptFarmMobile(gameState, farmState, presentationState, currentRank, currentWeatherSlot, now),
+          modal: farmModal, openModal: openFarmModal,
+          selectedPlot: selectedPlotIndex, selectedAnimal: selectedAnimalId,
+          selectPlot: index => {
+            if (farmState.plots[index]?.status === "locked") handleUnlockPlot(index);
+            else handlePlotTap(index);
+          }, selectAnimal: handleAnimalTap,
+        }}
+        toast={toastMessage} events={[...visualEvents, ...harvestPresentations.map(event => ({
+          id: event.id, plotIndex: event.plotIndex, kind: 'harvest' as const, cropId: event.cropId, startedAt: event.startedAt,
+        }))]} reducedMotion={gameState.settings.reducedMotion}
+        onGardenTap={handleGardenTap} onPenTap={handlePenTap}
+        pushTarget={pushTarget} onExit={() => { closeFarmModal(); setMobileActive(false); }}
+      />) : <TangGiaCanvas2D
         reducedMotion={gameState.settings.reducedMotion}
         plots={presentationState.plots}
         penAnimals={presentationState.penAnimals}
@@ -1063,7 +1057,7 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
         onOpenTroughInfo={() => openFarmModal({ type: "trough" })}
         onCloseTroughInfo={closeFarmModal}
         now={now}
-      />
+      />}
 
       {/* --- CONTEXTUAL BOTTOM TOOLBAR --- */}
       {contextMode !== "none" && farmModal?.type !== "trough" && (

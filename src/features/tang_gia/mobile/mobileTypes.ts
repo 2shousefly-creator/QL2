@@ -23,6 +23,7 @@ export type FarmMobileSnapshot = {
   feedBonus: number; dangerRemaining: string | null; capacity: number; eggs: number;
 };
 export type FarmMobileModel = {
+  blocked?: boolean; pushTarget?: { section: FarmMobileTab; nonce: number } | null;
   snapshot: FarmMobileSnapshot; tab: FarmMobileTab; selectedPlot: number | null;
   selectedAnimal: string | null; sheet: MobileSheet | null; toast: string | null;
   quality: 'low' | 'medium' | 'high'; events: readonly FarmVisualEvent[];

@@ -1,7 +1,7 @@
 import { Container, Graphics, Sprite, Texture } from 'pixi.js';
 import { cropArt, propArt } from './FarmArtRegistry';
 import type { FarmVisualEvent } from '../pixi/farmPixiTypes';
-import type { FarmMobileTab, MobileRect } from './mobileTypes';
+import type { MobileRect } from './mobileTypes';
 import type { MobileTextureBank } from './FarmMobileAssets';
 
 type Burst = { sprite: Sprite; elapsed: number; duration: number; x: number; y: number; vx: number; vy: number; size: number; gravity: number; bounce: boolean; ground: number };
@@ -24,14 +24,14 @@ export class FarmMobileVfx {
       this.pool.push({ sprite, elapsed: 2, duration: 1, x: 0, y: 0, vx: 0, vy: 0, size: 8, gravity: 0, bounce: false, ground: 0 });
     }
   }
-  receive(events: readonly FarmVisualEvent[], tab: FarmMobileTab, plots: readonly MobileRect[], width: number, height: number, scroll: number, reduced: boolean) {
+  receive(events: readonly FarmVisualEvent[], plots: readonly MobileRect[], width: number, height: number, scroll: number, reduced: boolean) {
     const shift = this.scroll - scroll;
     if (shift) { this.pool.forEach(p => { p.y += shift; p.ground += shift; }); this.splashes.forEach(p => p.y += shift); this.can.y += shift; }
     this.scroll = scroll;
     for (const event of events) {
       if (this.seen.has(event.id)) continue;
       const pen = event.kind === 'feed' || event.kind === 'egg';
-      if (Date.now() - event.startedAt > 1800 || pen !== (tab === 'pen')) { this.remember(event.id); continue; }
+      if (Date.now() - event.startedAt > 1800) { this.remember(event.id); continue; }
       const plot = plots[event.plotIndex]; if (!pen && !plot) { this.remember(event.id); continue; }
       const reward = event.kind === 'harvest' || event.kind === 'egg';
       const path = event.kind === 'water' ? propArt('drop')

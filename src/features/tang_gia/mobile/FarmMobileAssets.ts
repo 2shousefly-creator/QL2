@@ -10,18 +10,15 @@ const base = (path: string) => path.startsWith(import.meta.env.BASE_URL)
   ? path : `${import.meta.env.BASE_URL}${path.replace(/^\//, '')}`;
 const sourceUrl = (path: string) => base(path.split('#')[0]);
 
-/** Only active world, FX and visible sheet atlases are resident. */
+/** Lease both sections of the continuous world; only occupied crop/species atlases. */
 export function mobileSources(model: FarmMobileModel): Record<string, string> {
   const sources: Record<string, string> = {};
   const add = (path: string) => { const url = sourceUrl(path); sources[url] = url; };
   add(propArt('bush'));
-  if (model.tab === 'garden') {
-    add(soilArt('empty_dry'));
-    for (const plot of model.snapshot.plots) if (plot.cropId) add(cropArt(plot.cropId, plot.artStage));
-  } else {
-    add(itemArt('chicken_egg'));
-    for (const animal of model.snapshot.animals) { add(animalArt(animal.species)); add(itemArt(`${animal.species}_egg`)); }
-  }
+  add(soilArt('empty_dry'));
+  for (const plot of model.snapshot.plots) if (plot.cropId) add(cropArt(plot.cropId, plot.artStage));
+  add(itemArt('chicken_egg'));
+  for (const animal of model.snapshot.animals) { add(animalArt(animal.species)); add(itemArt(`${animal.species}_egg`)); }
   for (const row of model.sheet?.rows ?? []) if (row.icon) add(row.icon);
   for (const action of model.toolbar) if (action.icon) add(action.icon);
   for (const event of model.events) if (event.cropId) add(cropArt(event.cropId, 'yield'));

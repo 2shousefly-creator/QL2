@@ -1,5 +1,7 @@
 # Tăng Gia mobile — top-down v3
 
+Historical design record. The current graphics-only correction is documented in [GRAPHICS_ONLY.md](GRAPHICS_ONLY.md); it supersedes the tab layout, Pixi sheets, eight-frame crop layout and lighting described below.
+
 Implementation dated 2026-09-13. This document supersedes the gated v2 presentation plan and its historical asset inventory. Original scope: rebuild presentation only; no changes to gameplay, save schema, IDs, timers, economy, unlocks or rewards.
 
 ## Audit and composition decision

@@ -39,7 +39,7 @@ export default function FarmMobileCanvas({ model, reducedMotion, onExit }: { mod
   const activate = (id: string) => {
     if (pending.current.has(id)) return;
     const action = latestHits.current.find(hit => hit.action.id === id)?.action;
-    if (!action || action.reason) return;
+    if (!action || action.reason || model.blocked) return;
     pending.current.add(id);
     try { action.run(); } finally { queueMicrotask(() => pending.current.delete(id)); }
   };
@@ -52,7 +52,7 @@ export default function FarmMobileCanvas({ model, reducedMotion, onExit }: { mod
       {status === 'failed' && attempt < 2 && <button onClick={() => { signature.current = ''; setAttempt(value => value + 1); setStatus('loading'); }}>Thử lại</button>}
       <button onClick={onExit}>Dùng giao diện hiện tại</button>
     </div>}
-    {status === 'ready' && <div ref={controls} className="farm-mobile-semantics" role={semanticView.title ? 'dialog' : 'group'}
+    {status === 'ready' && !model.blocked && <div ref={controls} className="farm-mobile-semantics" role={semanticView.title ? 'dialog' : 'group'}
       aria-modal={semanticView.title ? true : undefined} aria-label={semanticView.title ?? 'Tăng Gia'}
       onKeyDown={event => {
         if (event.key === 'Escape' && model.sheet) { event.preventDefault(); model.sheet.close(); }

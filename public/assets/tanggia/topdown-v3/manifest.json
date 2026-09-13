@@ -1,21 +1,12 @@
 {
   "design": {
-    "viewport": [
-      390,
-      844
+    "revision": "graphics-only-continuous-world",
+    "frame": [
+      96,
+      96
     ],
-    "host": [
-      390,
-      647
-    ],
-    "world": [
-      390,
-      471
-    ],
-    "safeAreaExample": [
-      47,
-      34
-    ]
+    "layout": "garden then pen; bottom-left plot 1",
+    "rendering": "original SVG paths with gradient shading; no external image source"
   },
   "crops": [
     {
@@ -144,7 +135,7 @@
         96,
         96
       ],
-      "columns": 8,
+      "columns": 9,
       "rows": 1,
       "frameNames": [
         "seed_icon",
@@ -154,6 +145,7 @@
         "young",
         "growing",
         "mature",
+        "ready",
         "yield"
       ],
       "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
@@ -164,7 +156,7 @@
         96,
         96
       ],
-      "columns": 8,
+      "columns": 9,
       "rows": 1,
       "frameNames": [
         "seed_icon",
@@ -174,6 +166,7 @@
         "young",
         "growing",
         "mature",
+        "ready",
         "yield"
       ],
       "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
@@ -184,7 +177,7 @@
         96,
         96
       ],
-      "columns": 8,
+      "columns": 9,
       "rows": 1,
       "frameNames": [
         "seed_icon",
@@ -194,6 +187,7 @@
         "young",
         "growing",
         "mature",
+        "ready",
         "yield"
       ],
       "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
@@ -204,7 +198,7 @@
         96,
         96
       ],
-      "columns": 8,
+      "columns": 9,
       "rows": 1,
       "frameNames": [
         "seed_icon",
@@ -214,6 +208,7 @@
         "young",
         "growing",
         "mature",
+        "ready",
         "yield"
       ],
       "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
@@ -224,7 +219,7 @@
         96,
         96
       ],
-      "columns": 8,
+      "columns": 9,
       "rows": 1,
       "frameNames": [
         "seed_icon",
@@ -234,6 +229,7 @@
         "young",
         "growing",
         "mature",
+        "ready",
         "yield"
       ],
       "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
@@ -244,7 +240,7 @@
         96,
         96
       ],
-      "columns": 8,
+      "columns": 9,
       "rows": 1,
       "frameNames": [
         "seed_icon",
@@ -254,6 +250,7 @@
         "young",
         "growing",
         "mature",
+        "ready",
         "yield"
       ],
       "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
@@ -264,7 +261,7 @@
         96,
         96
       ],
-      "columns": 8,
+      "columns": 9,
       "rows": 1,
       "frameNames": [
         "seed_icon",
@@ -274,6 +271,7 @@
         "young",
         "growing",
         "mature",
+        "ready",
         "yield"
       ],
       "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
@@ -284,7 +282,7 @@
         96,
         96
       ],
-      "columns": 8,
+      "columns": 9,
       "rows": 1,
       "frameNames": [
         "seed_icon",
@@ -294,6 +292,7 @@
         "young",
         "growing",
         "mature",
+        "ready",
         "yield"
       ],
       "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
@@ -304,7 +303,7 @@
         96,
         96
       ],
-      "columns": 8,
+      "columns": 9,
       "rows": 1,
       "frameNames": [
         "seed_icon",
@@ -314,6 +313,7 @@
         "young",
         "growing",
         "mature",
+        "ready",
         "yield"
       ],
       "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
@@ -324,7 +324,7 @@
         96,
         96
       ],
-      "columns": 8,
+      "columns": 9,
       "rows": 1,
       "frameNames": [
         "seed_icon",
@@ -334,6 +334,7 @@
         "young",
         "growing",
         "mature",
+        "ready",
         "yield"
       ],
       "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
@@ -344,7 +345,7 @@
         96,
         96
       ],
-      "columns": 8,
+      "columns": 9,
       "rows": 1,
       "frameNames": [
         "seed_icon",
@@ -354,6 +355,7 @@
         "young",
         "growing",
         "mature",
+        "ready",
         "yield"
       ],
       "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
@@ -364,7 +366,7 @@
         96,
         96
       ],
-      "columns": 8,
+      "columns": 9,
       "rows": 1,
       "frameNames": [
         "seed_icon",
@@ -374,6 +376,7 @@
         "young",
         "growing",
         "mature",
+        "ready",
         "yield"
       ],
       "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
@@ -384,7 +387,7 @@
         96,
         96
       ],
-      "columns": 8,
+      "columns": 9,
       "rows": 1,
       "frameNames": [
         "seed_icon",
@@ -394,6 +397,7 @@
         "young",
         "growing",
         "mature",
+        "ready",
         "yield"
       ],
       "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
@@ -404,7 +408,7 @@
         96,
         96
       ],
-      "columns": 8,
+      "columns": 9,
       "rows": 1,
       "frameNames": [
         "seed_icon",
@@ -414,6 +418,7 @@
         "young",
         "growing",
         "mature",
+        "ready",
         "yield"
       ],
       "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
@@ -424,7 +429,7 @@
         96,
         96
       ],
-      "columns": 8,
+      "columns": 9,
       "rows": 1,
       "frameNames": [
         "seed_icon",
@@ -434,6 +439,7 @@
         "young",
         "growing",
         "mature",
+        "ready",
         "yield"
       ],
       "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
@@ -444,7 +450,7 @@
         96,
         96
       ],
-      "columns": 8,
+      "columns": 9,
       "rows": 1,
       "frameNames": [
         "seed_icon",
@@ -454,6 +460,7 @@
         "young",
         "growing",
         "mature",
+        "ready",
         "yield"
       ],
       "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
@@ -464,7 +471,7 @@
         96,
         96
       ],
-      "columns": 8,
+      "columns": 9,
       "rows": 1,
       "frameNames": [
         "seed_icon",
@@ -474,6 +481,7 @@
         "young",
         "growing",
         "mature",
+        "ready",
         "yield"
       ],
       "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
@@ -484,7 +492,7 @@
         96,
         96
       ],
-      "columns": 8,
+      "columns": 9,
       "rows": 1,
       "frameNames": [
         "seed_icon",
@@ -494,6 +502,7 @@
         "young",
         "growing",
         "mature",
+        "ready",
         "yield"
       ],
       "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
@@ -504,7 +513,7 @@
         96,
         96
       ],
-      "columns": 8,
+      "columns": 9,
       "rows": 1,
       "frameNames": [
         "seed_icon",
@@ -514,6 +523,7 @@
         "young",
         "growing",
         "mature",
+        "ready",
         "yield"
       ],
       "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"

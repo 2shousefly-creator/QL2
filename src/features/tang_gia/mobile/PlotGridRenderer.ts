@@ -3,7 +3,7 @@ import { cropArt, propArt, soilArt } from './FarmArtRegistry';
 import type { SoilArtState } from './FarmArtRegistry';
 import type { MobilePlot, MobileRect } from './mobileTypes';
 import type { MobileTextureBank } from './FarmMobileAssets';
-import { sprite } from './FarmUiLayer';
+import { label, sprite } from './FarmUiLayer';
 
 /** State composition is presentation only: tilled/selected/reset are never saved. */
 export function drawMobilePlot(parent: Container, badges: Container, bank: MobileTextureBank, plot: MobilePlot,
@@ -43,5 +43,12 @@ export function drawMobilePlot(parent: Container, badges: Container, bank: Mobil
     for (const side of [-1, 1]) for (const offset of [-3, 3]) icon.moveTo(x + side * 3, y + offset).lineTo(x + side * 8, y + offset * 2).stroke({ color: 0x864b39, width: 2 });
   } else if (plot.thirsty) sprite(badges, bank.get(propArt('drop')), { x: x - 11, y: y - 12, width: 22, height: 22 });
   else if (plot.status === 'empty') icon.moveTo(x - 4, y).lineTo(x + 4, y).moveTo(x, y - 4).lineTo(x, y + 4).stroke({ color: 0xe9d7b0, width: 2 });
+  const number = label(badges, `${plot.index + 1}`, rect.x + 9, rect.y + rect.height - 26, 20, 11, 0xfff0cb, true);
+  number.alpha = .9;
+  if (selected) {
+    const text = plot.status === 'locked' ? 'Chưa mở khóa' : plot.status === 'empty' ? plot.moistureLabel : `${plot.title} · ${plot.timer}`;
+    const info = label(badges, text, rect.x + 5, rect.y + 4, rect.width - 10, 10, 0xfff2d5, true);
+    badges.addChildAt(new Graphics().roundRect(rect.x + 1, rect.y + 2, rect.width - 2, info.height + 4, 6).fill({ color: 0x203c32, alpha: .92 }), badges.children.indexOf(info));
+  }
   return plant;
 }

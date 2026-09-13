@@ -35,7 +35,7 @@ export function adaptFarmMobile(game: GameState, farm: FarmSaveState, view: Farm
       const band = getSoilMoistureBand(moisture);
       const progress = getCropGrowthProgress(plot);
       return { index, status: plot.status, cropId, stage: getCropVisualStage(getCropGrowthProgress(plot)),
-        artStage: plot.status === 'ready' || progress >= .9 ? 'mature' : progress >= .6 ? 'growing' : progress >= .3 ? 'young' : progress >= .06 ? 'sprout' : 'seeded',
+        artStage: plot.status === 'ready' ? 'ready' : progress >= .9 ? 'mature' : progress >= .6 ? 'growing' : progress >= .3 ? 'young' : progress >= .06 ? 'sprout' : 'seeded',
         title: cropId ? CROP_CATALOG.find(crop => crop.id === cropId)!.name : `Ô đất ${index + 1}`,
         timer: plot.status === 'ready' ? 'Thu hoạch' : plot.status === 'growing'
           ? mobileCountdown(getCurrentCropRemainingDurationMs(plot, now, farm.weatherSeed)) : '',

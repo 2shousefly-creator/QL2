@@ -8,6 +8,7 @@ import { FarmUiLayer, FARM_PALETTE, label, sprite } from './FarmUiLayer';
 import { GroundComposer } from './GroundComposer';
 import { drawMobilePlot } from './PlotGridRenderer';
 import { LivestockRenderer } from './LivestockRenderer';
+import { FarmEnvironmentFx } from './FarmEnvironmentFx';
 import { itemArt, propArt } from './FarmArtRegistry';
 import type { FarmMobileModel, MobileHit, MobileRect } from './mobileTypes';
 
@@ -16,7 +17,7 @@ export type MobileSceneProps = FarmMobileModel & {
   focusId: string | null;
 };
 
-/** One top-down Pixi world: ground → plots/props/actors → status → weather/FX → HUD. */
+/** One top-down Pixi world: ground → plots/props/actors → weather/light → status/FX. */
 export const createFarmMobileScene: PixiSceneFactory<MobileSceneProps> = (app, initial) => {
   const root = app.stage.addChild(new Container()); root.eventMode = 'none';
   const background = root.addChild(new Graphics());
@@ -24,22 +25,21 @@ export const createFarmMobileScene: PixiSceneFactory<MobileSceneProps> = (app, i
   const world = root.addChild(new Container()); world.mask = clip;
   const lit = world.addChild(new Container());
   const ground = new GroundComposer(lit);
+  const penGround = new GroundComposer(lit);
   const art = lit.addChild(new Container());
+  const environment = new FarmEnvironmentFx(world);
   const badges = world.addChild(new Container());
-  const weather = world.addChild(new Container());
-  const ripples = weather.addChild(new Graphics());
   const ui = new FarmUiLayer(root, path => bank.get(path));
   let props = initial, width = 1, height = 1, reduced = false, disposed = false;
-  let clock = 0, night = initial.snapshot.phase === 'night' ? 1 : 0;
-  let rain = initial.snapshot.weather === 'rain' ? 1 : 0;
-  let sheetScroll = 0, worldScroll = 0, sheetId: string | undefined, currentTab = props.tab;
-  let pressed: string | null = null, maxWorldScroll = 0, worldHeight = 1;
+  let clock = 0;
+  let sheetScroll = 0, worldScroll = 0, sheetId: string | undefined, targetNonce: number | undefined;
+  let pressed: string | null = null, maxWorldScroll = 0;
   let crops: Sprite[] = [];
   const birds = new LivestockRenderer();
-  const drops: Sprite[] = [];
   const bank = new MobileTextureBank(() => { if (!disposed) { draw(); app.render(); } });
   const vfx = new FarmMobileVfx(world, bank, initial.events);
   const moveScroll = (delta: number) => {
+    if (props.blocked) return;
     if (props.sheet) sheetScroll = Math.max(0, Math.min(ui.maxScroll, sheetScroll + delta));
     else worldScroll = Math.max(0, Math.min(maxWorldScroll, worldScroll + delta));
     draw(); app.render();
@@ -51,17 +51,22 @@ export const createFarmMobileScene: PixiSceneFactory<MobileSceneProps> = (app, i
   function draw() {
     if (disposed || width < 2 || height < 2) return;
     const s = props.snapshot, layout = mobileLayout(width, height, s.plots.length), w = layout.world;
-    worldHeight = w.height;
     if (sheetId !== props.sheet?.id) { sheetScroll = 0; sheetId = props.sheet?.id; }
-    if (currentTab !== props.tab) { worldScroll = 0; currentTab = props.tab; vfx.clear(); }
-    const penExtent = Math.max(w.height, 230 + Math.ceil(s.animals.length / 3) * 96);
-    const extent = props.tab === 'garden' ? layout.extent : penExtent;
+    const penStart = layout.extent + 24;
+    const penExtent = Math.max(w.height, 290 + Math.ceil(s.animals.length / 2) * 148);
+    const extent = penStart + penExtent + 88; // scroll room above the established contextual toolbar
+    if (props.pushTarget && props.pushTarget.nonce !== targetNonce) {
+      worldScroll = props.pushTarget.section === 'pen' ? penStart : 0;
+      targetNonce = props.pushTarget.nonce;
+    }
     maxWorldScroll = Math.max(0, extent - w.height);
     worldScroll = Math.min(worldScroll, maxWorldScroll);
-    background.clear().rect(0, 0, width, height).fill(FARM_PALETTE.cream);
+    background.clear().rect(0, 0, width, height).fill(0x8da16b);
     clip.clear().rect(w.x, w.y, w.width, w.height).fill(0xffffff);
     world.position.set(0, w.y);
-    ground.draw(props.tab, width, extent, layout.plots, bank);
+    ground.draw('garden', width, layout.extent, layout.plots, bank);
+    penGround.draw('pen', width, penExtent, [], bank);
+    penGround.root.y = penStart - worldScroll;
     ground.root.y = -worldScroll;
     empty(art); empty(badges); crops = []; birds.clear();
     const hits: MobileHit[] = [];
@@ -70,7 +75,9 @@ export const createFarmMobileScene: PixiSceneFactory<MobileSceneProps> = (app, i
       // Partial objects stay scrollable, never become undersized tap targets.
       if (bottom - top >= 44) hits.push({ ...rect, y: top, height: bottom - top, action });
     };
-    if (props.tab === 'garden') {
+    hit({ x: 12, y: -worldScroll, width: width - 24, height: layout.extent }, { id: 'garden-ground', label: 'Khu vườn', run: () => props.selectTab('garden') });
+    hit({ x: 12, y: penStart - worldScroll, width: width - 24, height: penExtent }, { id: 'pen-ground', label: 'Khu chuồng nuôi', run: () => props.openPen() });
+    {
       s.plots.forEach((plot, index) => {
         const rect = { ...layout.plots[index], y: layout.plots[index].y - worldScroll };
         if (rect.y + rect.height < 0 || rect.y > w.height) return;
@@ -80,16 +87,17 @@ export const createFarmMobileScene: PixiSceneFactory<MobileSceneProps> = (app, i
         const status = plot.status === 'locked' ? 'Khóa' : plot.status === 'ready' ? 'Sẵn sàng thu hoạch' : plot.pest ? 'Sâu bệnh' : plot.thirsty ? 'Thiếu nước' : plot.status === 'empty' ? 'Có thể gieo hạt' : plot.timer;
         hit(rect, { id: `plot-${plot.index}`, label: `Ô ${plot.index + 1}, ${plot.title}. ${status}`, run: () => props.selectPlot(plot.index) });
       });
-    } else {
-      const columns = 3, cell = (width - 48) / columns;
+    }
+    {
+      const columns = 2, cell = (width - 48) / columns;
       birds.noteEggs(s.animals, clock);
       s.animals.forEach((animal, index) => {
-        const rect = { x: 24 + index % columns * cell, y: 119 + Math.floor(index / columns) * 96 - worldScroll, width: cell, height: 92 };
+        const rect = { x: 24 + index % columns * cell, y: penStart + 128 + Math.floor(index / columns) * 148 - worldScroll, width: cell, height: 140 };
         if (rect.y + rect.height < 0 || rect.y > w.height) return;
         birds.draw(art, badges, bank, animal, index, rect, props.selectedAnimal === animal.id);
         hit(rect, { id: `animal-${animal.id}`, label: `${animal.title}. ${animal.dead ? 'Đã chết' : animal.weak ? 'Thiếu ăn' : animal.timer}`, run: () => props.selectAnimal(animal.id) });
       });
-      const y = extent - 104 - worldScroll;
+      const y = penStart + penExtent - 104 - worldScroll;
       const trough = { x: 26, y, width: 94, height: 78 };
       sprite(art, bank.get(propArt('trough')), trough);
       if (s.feed > 0) {
@@ -108,25 +116,18 @@ export const createFarmMobileScene: PixiSceneFactory<MobileSceneProps> = (app, i
       hit(trough, { id: 'trough', label: `Máng ăn ${s.feedLabel}`, run: () => props.openTrough() });
       hit({ x: width / 2 - 40, y, width: 80, height: 78 }, { id: 'water-basin', label: 'Bãi chăn nuôi và máng nước', run: () => props.openPen() });
       hit(nest, { id: 'nest', label: `${s.eggs} trứng trong kho`, run: () => props.openEggs() });
-      hit({ x: width / 2 - 64, y: 26 - worldScroll, width: 128, height: 85 }, { id: 'shelter', label: `Chuồng ${s.animals.length}/${s.capacity} vật nuôi`, run: () => props.openPen() });
-      if (!s.animals.length) label(badges, 'Chạm chuồng để thả vật nuôi', 36, 180 - worldScroll, width - 72, 15, FARM_PALETTE.ink, true);
+      hit({ x: width / 2 - 64, y: penStart + 26 - worldScroll, width: 128, height: 85 }, { id: 'shelter', label: `Chuồng ${s.animals.length}/${s.capacity} vật nuôi`, run: () => props.openPen() });
+      if (!s.animals.length) label(badges, 'Chạm chuồng để thả vật nuôi', 36, penStart + 180 - worldScroll, width - 72, 15, FARM_PALETTE.ink, true);
     }
-    const rainTexture = bank.get(propArt('drop'));
-    if (rainTexture && !drops.length) for (let i = 0; i < (props.quality === 'low' ? 16 : 32); i++) {
-      const drop = weather.addChild(new Sprite(rainTexture)); drop.width = 5; drop.height = 19; drops.push(drop);
-    }
+    environment.layout(width, w.height, layout.extent, penStart, penExtent, worldScroll);
     ui.clear();
-    const h = layout.hud;
-    sprite(ui.root, bank.get(propArt('coin')), { x: h.x, y: 7, width: 30, height: 30 });
-    label(ui.root, s.gold, h.x + 34, h.y + 3, width * .43 - 32, 17, FARM_PALETTE.ink, true);
-    const xpWidth = width * .4;
-    ui.root.addChild(new Graphics().roundRect(h.x + 3, 39, xpWidth, 4, 2).fill(0xd9deca).roundRect(h.x + 3, 39, Math.max(1, xpWidth * s.xp / 100), 4, 2).fill(FARM_PALETTE.amber));
-    ui.button({ id: 'weather', label: s.weatherLabel, run: () => props.openWeather() }, { x: width * .51, y: 4, width: width * .49 - h.x, height: 44 }, pressed);
-    const tabs = layout.tabs, tabWidth = (tabs.width - 8) / 2;
-    ui.button({ id: 'garden-tab', label: `Trồng trọt${s.plots.some(p => p.status === 'ready') ? ' •' : ''}`, primary: props.tab === 'garden', run: () => props.selectTab('garden') }, { ...tabs, width: tabWidth }, pressed);
-    ui.button({ id: 'pen-tab', label: `Chăn nuôi${s.animals.some(a => a.weak || a.dead) ? ' •' : ''}`, primary: props.tab === 'pen', run: () => props.selectTab('pen') }, { ...tabs, x: tabs.x + tabWidth + 8, width: tabWidth }, pressed);
-    const count = props.toolbar.length, buttonWidth = (layout.toolbar.width - (count - 1) * 8) / Math.max(1, count);
-    props.toolbar.forEach((action, index) => ui.button(action, { ...layout.toolbar, x: layout.toolbar.x + index * (buttonWidth + 8), width: buttonWidth }, pressed));
+    badges.addChild(new Graphics().roundRect(22, 3, width - 44, 26, 8).fill({ color: 0x284e35, alpha: .82 }));
+    const sectionTitle = worldScroll < penStart - 36 ? 'KHU VƯỜN' : 'KHU CHUỒNG NUÔI';
+    label(badges, sectionTitle, 30, 8, width - 60, 12, 0xfff1cb, true);
+    if (worldScroll < 8) {
+      badges.addChild(new Graphics().roundRect(30, w.height - 28, width - 60, 23, 8).fill({ color: 0x284e35, alpha: .8 }));
+      label(badges, 'Cuộn xuống để xem chuồng nuôi ↓', 42, w.height - 25, width - 84, 11, 0xfff1cb, true);
+    }
     if (props.sheet) ui.sheet(props.sheet, width, height, sheetScroll, pressed);
     else ui.hits.push(...hits);
     if (bank.failed.size && !props.sheet) ui.button({ id: 'retry-assets', label: 'Một số ảnh lỗi · Tải lại', run: () => bank.retry() }, { x: 20, y: w.y + 4, width: width - 40, height: 48 }, pressed);
@@ -137,31 +138,17 @@ export const createFarmMobileScene: PixiSceneFactory<MobileSceneProps> = (app, i
     const focused = ui.hits.find(hit => hit.action.id === props.focusId);
     if (focused) ui.root.addChild(new Graphics().roundRect(focused.x + 2, focused.y + 2, focused.width - 4, focused.height - 4, 10).stroke({ color: 0x896014, width: 3 }));
     const scrollRect = props.sheet ? ui.scrollRegion : maxWorldScroll > 0 ? w : null;
-    input.update(ui.hits, scrollRect);
-    props.publishSemantics(ui.hits, props.sheet?.title ?? null, scrollRect ? moveScroll : null);
-    vfx.receive(props.events, props.tab, layout.plots, width, extent - worldScroll, worldScroll, reduced);
+    input.update(props.blocked ? [] : ui.hits, props.blocked ? null : scrollRect);
+    props.publishSemantics(props.blocked ? [] : ui.hits, props.sheet?.title ?? null, !props.blocked && scrollRect ? moveScroll : null);
+    vfx.receive(props.events, layout.plots, width, penStart + penExtent - worldScroll, worldScroll, reduced);
     frame(0);
   }
   function frame(dt: number) {
     clock += dt;
-    const step = reduced ? 1 : Math.min(1, dt / 1.1);
-    night += ((props.snapshot.phase === 'night' ? 1 : 0) - night) * step;
-    rain += ((props.snapshot.weather === 'rain' ? 1 : 0) - rain) * step;
-    const cool = props.snapshot.weather === 'cool' ? .13 : rain * .12;
-    // A single cheap lighting tint over ground and actors. UI/status retain contrast.
-    lit.tint = ((255 - Math.round(night * 72 + cool * 100)) << 16)
-      | ((250 - Math.round(night * 47 + cool * 40)) << 8) | (232 - Math.round(night * 8));
-    crops.forEach((plant, index) => { plant.rotation = reduced ? 0 : Math.sin(clock * .8 + index) * .012; });
+    environment.tick(clock, reduced, props.snapshot.phase === 'night', props.snapshot.weather);
+    ground.tick(clock, reduced); penGround.tick(clock, reduced);
+    crops.forEach((plant, index) => { plant.rotation = reduced ? 0 : Math.sin(clock * 1.3 + index * 1.7) * .025; });
     birds.tick(bank, clock, reduced, props.snapshot.phase === 'night', props.snapshot.feed);
-    drops.forEach((drop, i) => {
-      drop.visible = rain > .01; drop.alpha = rain * .65;
-      drop.position.set((i * 61.7 + (reduced ? 0 : clock * 9)) % Math.max(1, width), (i * 37.3 + (reduced ? 0 : clock * (170 + i % 3 * 30))) % Math.max(1, worldHeight));
-    });
-    ripples.clear();
-    if (rain > .01) for (let i = 0; i < 8; i++) {
-      const age = reduced ? .4 : (clock * 1.2 + i * .31) % 1;
-      ripples.ellipse(24 + i * 73 % Math.max(1, width - 48), 24 + i * 113 % Math.max(1, worldHeight - 48), 2 + age * 8, 1 + age * 3).stroke({ color: 0xd6dfbb, alpha: rain * (1 - age) * .4, width: 1 });
-    }
     vfx.tick(dt, reduced);
   }
   return {
