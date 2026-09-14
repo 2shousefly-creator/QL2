@@ -1,0 +1,254 @@
+import type { AircraftCombatState, CoreId, EffectiveAircraftStats, SkillId } from "./airCombatTypes";
+export const coreId = (row: number): CoreId => `core_${String(row).padStart(3, "0")}`;
+export const hasCore = (state: AircraftCombatState, row: number): boolean => state.selectedCores.includes(coreId(row));
+export type DamageSource = "basic" | "weapon" | "skill" | "lightning" | "burn";
+export type CoreEvent = "acquire" | "basic" | "hit" | "critical" | "kill" | "damageTaken" | "skillCast" | "tick";
+export interface CoreTarget {
+    id: number;
+    hp: number;
+    maxHp: number;
+    armor: number;
+    x: number;
+    y: number;
+    elite: boolean;
+    boss: boolean;
+}
+export interface CoreContext {
+    state: AircraftCombatState;
+    stats: EffectiveAircraftStats;
+    dt?: number;
+    target?: CoreTarget;
+    skillId?: SkillId;
+    damage?: number;
+    source?: DamageSource;
+    rawMultiplier: number;
+    extraShot?: number;
+    heal: (amount: number) => void;
+    reduceCooldowns: (seconds: number, except?: SkillId) => void;
+    explode: (target: CoreTarget, raw: number) => void;
+    lightning: (target: CoreTarget, raw: number) => void;
+    tomahawk: () => void;
+    weaken: (target: CoreTarget) => void;
+    stopSkills: () => void;
+}
+type StatEffect = (state: AircraftCombatState, stats: EffectiveAircraftStats) => void;
+type Hook = (ctx: CoreContext) => void;
+interface CoreEffect {
+    stats?: StatEffect;
+    finalStats?: StatEffect;
+    hooks?: Partial<Record<CoreEvent, Hook>>;
+}
+const effects: Record<string, CoreEffect> = {};
+const register = (row: number, effect: CoreEffect) => { effects[coreId(row)] = effect; };
+const active = (s: AircraftCombatState, key: string) => (s.coreState.timers[key] || 0) > s.coreState.time;
+const ready = (s: AircraftCombatState, key: string) => !active(s, key);
+const arm = (s: AircraftCombatState, key: string, seconds: number) => { s.coreState.timers[key] = s.coreState.time + seconds; };
+const shield = (ctx: CoreContext, key: string, fraction: number, seconds: number) => {
+    ctx.state.coreState.shields[key] = { amount: ctx.stats.maxHp * fraction, until: ctx.state.coreState.time + seconds };
+};
+const flat = (row: number, key: keyof EffectiveAircraftStats, amount: number) => register(row, {
+    stats: (_s, stats) => { (stats[key] as number) += amount; },
+});
+for (const [row, fp, armor, rate, hp, regen, cdr] of [
+    [1, 12, 12, .15, 110, .6, .04], [7, 20, 20, .4, 220, 1.3, .09], [13, 50, 50, 1.2, 420, 3, .2],
+]) {
+    flat(row, "firepower", fp);
+    flat(row + 1, "armor", armor);
+    flat(row + 2, "fireRate", rate);
+    flat(row + 3, "maxHp", hp);
+    flat(row + 4, "hpRegen", regen);
+    flat(row + 5, "cooldownReduction", cdr);
+}
+for (const [row, key, gain] of [[46, "firepower", .4], [47, "armor", .3], [48, "maxHp", 3]] as const)
+    register(row, {
+        stats: (s, stats) => { stats[key] += s.coreState.stacks[coreId(row)] || 0; },
+        hooks: { kill: ctx => {
+                const amount = gain * (ctx.target?.elite || ctx.target?.boss ? 5 : 1);
+                const stacks = ctx.state.coreState.stacks;
+                stacks[coreId(row)] = (stacks[coreId(row)] || 0) + amount;
+                if (key === "maxHp")
+                    ctx.state.currentHp += amount;
+            } },
+    });
+register(49, { finalStats: (s, stats) => { if (s.coreState.time - s.coreState.lastMove >= 3) {
+        stats.armor *= 1.8;
+        stats.firepower *= 1.4;
+    } } });
+flat(53, "criticalChance", .25);
+// Applied last after all flat, conditional, percentage and skill Fire Rate buffs.
+register(54, { finalStats: (_s, stats) => { stats.firepower += Math.max(0, stats.fireRate - 1.2) * 150; stats.fireRate = 1.2; } });
+flat(55, "criticalChance", .05);
+flat(56, "criticalDamageMultiplier", .1);
+register(58, { hooks: { hit: ctx => { if (ctx.target)
+            ctx.weaken(ctx.target); } } });
+register(59, { hooks: { basic: ctx => { if (ctx.state.basicShotsFired % 10 === 0)
+            ctx.rawMultiplier *= 1.8; } } });
+register(60, { hooks: { basic: ctx => { if (ctx.state.coreState.time - ctx.state.coreState.lastDamage >= 4)
+            ctx.rawMultiplier *= 1.15; } } });
+register(61, { stats: (s, stats) => { if (active(s, "reactiveArmor"))
+        stats.armor += 15; }, hooks: { damageTaken: ctx => {
+            if (ready(ctx.state, "reactiveArmorCd")) {
+                arm(ctx.state, "reactiveArmor", 4);
+                arm(ctx.state, "reactiveArmorCd", 12);
+            }
+        } } });
+register(62, { hooks: { tick: ctx => { if (ctx.state.currentHp < ctx.stats.maxHp * .2)
+            ctx.heal(Math.min(ctx.stats.maxHp * .005 * (ctx.dt || 0), ctx.stats.maxHp * .2 - ctx.state.currentHp)); } } });
+register(63, { stats: (s, stats) => { if (s.currentHp < stats.maxHp * .35) {
+        stats.firepower += 20;
+        stats.armor += 20;
+    } } });
+register(64, { hooks: { kill: ctx => { if (ctx.state.coreState.kills % 10 === 0)
+            ctx.heal(ctx.stats.maxHp * .02); } } });
+register(66, { hooks: { kill: ctx => {
+            const c = ctx.state.coreState;
+            c.stacks.combo = c.time - c.lastKill <= 3 ? Math.min(5, (c.stacks.combo || 0) + 1) : 0;
+        } } });
+register(70, { hooks: { kill: ctx => { if (ctx.state.coreState.kills % 8 === 0)
+            ctx.reduceCooldowns(.5); } } });
+register(71, { stats: (s, stats) => { if (active(s, "tacticalRate"))
+        stats.fireRate += .15; }, hooks: { skillCast: ctx => arm(ctx.state, "tacticalRate", 4) } });
+register(73, { hooks: { kill: ctx => { if (ctx.target)
+            ctx.explode(ctx.target, ctx.stats.firepower * .2); } } });
+register(74, { hooks: { critical: ctx => {
+            const c = ctx.state.coreState;
+            if (c.time - c.criticalWindow >= 1) {
+                c.criticalWindow = c.time;
+                c.criticalBudget = 1;
+            }
+            const reduction = Math.min(.1, c.criticalBudget);
+            c.criticalBudget = Math.max(0, c.criticalBudget - reduction);
+            ctx.reduceCooldowns(reduction);
+        } } });
+register(75, { finalStats: (s, stats) => { stats.firepower *= 1 + .03 * (s.coreState.stacks.slaying || 0); }, hooks: {
+        kill: ctx => { const c = ctx.state.coreState; if (c.kills % 5 === 0)
+            c.stacks.slaying = Math.min(5, (c.stacks.slaying || 0) + 1); },
+        damageTaken: ctx => { const c = ctx.state.coreState; c.stacks.slaying = Math.max(0, (c.stacks.slaying || 0) - 1); },
+    } });
+register(76, { hooks: { damageTaken: ctx => { if ((ctx.damage || 0) > ctx.stats.maxHp * .1 && ready(ctx.state, "reactiveShieldCd")) {
+            shield(ctx, "reactive", .12, 3);
+            arm(ctx.state, "reactiveShieldCd", 10);
+        } } } });
+register(77, { hooks: { kill: ctx => { if (ctx.target?.elite) {
+            ctx.heal(ctx.stats.maxHp * .18);
+            ctx.reduceCooldowns(4);
+        } } } });
+register(78, { finalStats: (s, stats) => { if (active(s, "reactor"))
+        stats.resourceRegen *= 1.35; }, hooks: { kill: ctx => {
+            const c = ctx.state.coreState;
+            if (c.killTimes.length >= 5 && c.time - c.killTimes[c.killTimes.length - 5] <= 4)
+                arm(ctx.state, "reactor", 6);
+        } } });
+register(79, { hooks: { basic: ctx => { if (ctx.state.basicShotsFired % 3 === 0)
+            ctx.extraShot = .4; } } });
+register(81, { hooks: { skillCast: ctx => { if (ready(ctx.state, "skillShieldCd")) {
+            shield(ctx, "skill", .08, 3);
+            arm(ctx.state, "skillShieldCd", 6);
+        } } } });
+register(82, { finalStats: (s, stats) => { if (s.coreState.time - s.coreState.lastDamage >= 4)
+        stats.fireRate *= 1.2; } });
+register(83, { hooks: { damageTaken: ctx => { if (ready(ctx.state, "counterCd")) {
+            ctx.state.coreState.stacks.counter = 3;
+            arm(ctx.state, "counterCd", 6);
+        } }, basic: ctx => {
+            if ((ctx.state.coreState.stacks.counter || 0) > 0) {
+                ctx.rawMultiplier *= 1.2;
+                ctx.state.coreState.stacks.counter--;
+            }
+        } } });
+register(85, { stats: (_s, stats) => { stats.firepower += 35; stats.armor -= 18; } });
+register(86, { finalStats: (s, stats) => {
+        // Phantom's explicit fixed 100 Energy takes precedence over the generic max-resource reduction.
+        if (s.aircraftId !== "phantom")
+            stats.maxResource *= .8;
+        stats.resourceRegen *= 1.7;
+    } });
+register(87, { stats: (_s, stats) => { stats.criticalChance += .2; stats.criticalDamageMultiplier += .3; } });
+register(92, { hooks: { tick: ctx => { if (ctx.state.coreState.time - ctx.state.coreState.lastDamage >= 5)
+            ctx.heal(ctx.stats.maxHp * .02 * (ctx.dt || 0)); } } });
+register(94, { stats: (_s, stats) => { stats.criticalChance += .1; }, finalStats: (_s, stats) => { stats.maxHp *= .65; stats.firepower *= 1.4; } });
+register(95, { finalStats: (_s, stats) => { stats.criticalChance = .25; stats.criticalDamageMultiplier += 3; } });
+register(96, { stats: (_s, stats) => { stats.cooldownReduction += .4; }, hooks: { skillCast: ctx => { ctx.state.currentHp = Math.max(Number.EPSILON, ctx.state.currentHp * .94); } } });
+register(97, { finalStats: (_s, stats) => { stats.firepower *= 1.6; stats.maxHp *= 1.4; stats.armor *= 1.4; }, hooks: { acquire: ctx => ctx.stopSkills() } });
+register(99, { hooks: { tick: ctx => { if (ctx.state.currentResource < ctx.stats.maxResource * .1 && ready(ctx.state, "reserveShieldCd")) {
+            shield(ctx, "reserve", .08, 4);
+            arm(ctx.state, "reserveShieldCd", 20);
+        } } } });
+register(100, { stats: (s, stats) => { if (s.currentHp > stats.maxHp * .7)
+        stats.firepower += 20;
+    else if (s.currentHp < stats.maxHp * .3)
+        stats.armor += 20; } });
+register(105, { hooks: { critical: ctx => { if (ctx.target && ctx.source !== "lightning")
+            ctx.lightning(ctx.target, ctx.stats.firepower * .7); } } });
+register(106, { hooks: { tick: ctx => { if (ready(ctx.state, "tomahawk")) {
+            ctx.tomahawk();
+            arm(ctx.state, "tomahawk", 1.5);
+        } }, acquire: ctx => arm(ctx.state, "tomahawk", 1.5) } });
+export function applyCoreStatEffects(state: AircraftCombatState, stats: EffectiveAircraftStats): void {
+    // Max HP first, so HP conditions use the final maximum rather than acquisition order.
+    for (const id of state.selectedCores)
+        if (id !== coreId(63) && id !== coreId(100))
+            effects[id]?.stats?.(state, stats);
+    const hpBefore = stats.maxHp;
+    if (hasCore(state, 94))
+        stats.maxHp *= .65;
+    if (hasCore(state, 97))
+        stats.maxHp *= 1.4;
+    // HP conditions run after all max-HP changes, independent of acquisition order.
+    for (const row of [63, 100])
+        if (hasCore(state, row)) {
+            effects[coreId(row)]?.stats?.(state, stats);
+        }
+    stats.maxHp = hpBefore;
+    for (const id of state.selectedCores)
+        if (id !== coreId(54))
+            effects[id]?.finalStats?.(state, stats);
+}
+export function applyFireRateLock(state: AircraftCombatState, stats: EffectiveAircraftStats): void {
+    if (hasCore(state, 54))
+        effects[coreId(54)].finalStats?.(state, stats);
+}
+export function dispatchCoreEvent(event: CoreEvent, ctx: CoreContext, only?: CoreId): void {
+    if (only)
+        effects[only]?.hooks?.[event]?.(ctx);
+    else
+        for (const id of ctx.state.selectedCores)
+            effects[id]?.hooks?.[event]?.(ctx);
+}
+export function outgoingCoreMultiplier(state: AircraftCombatState, target: CoreTarget, source: DamageSource, distance: number, screenHeight: number): number {
+    let m = 1;
+    const c = state.coreState;
+    if (active(state, "decoyCounter"))
+        m *= 1.2;
+    if (hasCore(state, 66) && c.time - c.lastKill <= 3)
+        m *= 1 + .02 * (c.stacks.combo || 0);
+    if (hasCore(state, 67) && (target.elite || target.boss))
+        m *= 1.06;
+    if (hasCore(state, 68) && target.hp < target.maxHp * .25)
+        m *= 1.08;
+    if (hasCore(state, 69) && target.hp > target.maxHp * .7)
+        m *= 1.1;
+    if (hasCore(state, 91))
+        m *= 1 + Math.min(.4, Math.floor((1 - state.currentHp / getMaxHpForDamage(state)) / .02) * .01);
+    if (source === "basic") {
+        if (hasCore(state, 101) && distance < screenHeight / 3)
+            m *= 1.12;
+        if (hasCore(state, 102) && distance > screenHeight * 2 / 3)
+            m *= 1.12;
+    }
+    return m;
+}
+// Populated by the authoritative stats calculation; only used during resolved hits.
+function getMaxHpForDamage(state: AircraftCombatState): number { return state.coreState.stacks.effectiveMaxHp || state.currentHp || 1; }
+export function armorPenetration(state: AircraftCombatState): number {
+    return Math.min(.95, (hasCore(state, 57) ? .05 : 0) + (hasCore(state, 88) ? .25 : 0));
+}
+export function negativeStatusDuration(state: AircraftCombatState, seconds: number): number {
+    if (hasCore(state, 24) && (state.activeEffects.afterburner || 0) > 0)
+        return 0;
+    return seconds * (hasCore(state, 98) ? .75 : 1);
+}
+export function coreStackLabel(state: AircraftCombatState, id: CoreId): string | null {
+    const labels: Record<string, string> = { [coreId(46)]: "Hỏa lực", [coreId(47)]: "Giáp", [coreId(48)]: "HP tối đa" };
+    return labels[id] ? `Đã cộng: +${(state.coreState.stacks[id] || 0).toLocaleString("vi-VN", { maximumFractionDigits: 1 })} ${labels[id]}` : null;
+}

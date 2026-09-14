@@ -38,3 +38,10 @@
   .combat-core-card .combat-core-icon { width: 48px; height: 48px; }
   .combat-core-card > span:nth-child(2) { width: 48px; height: 48px; }
 }
+
+.air-core-list-button { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; color:#a5f3fc; }
+.air-core-list-button span { font-size:9px; font-weight:700; }
+.air-owned-core { border:1px solid; border-radius:14px; padding:14px; }
+.air-owned-core--silver { border-color:#94a3b8; background:#1e293b; color:#f1f5f9; }
+.air-owned-core--gold { border-color:#fbbf24; background:#322510; color:#fef3c7; }
+.air-owned-core--diamond { border-color:#67e8f9; background:#17223c; color:#cffafe; }

@@ -1,3 +1,4 @@
+import { isElite } from "./airCombatWaves";
 import { AIR_COMBAT_WORLD, AIRCRAFT_CONFIGS, ENEMY_CONFIGS, GAMEPLAY_SAFE_RECT } from "./airCombatConfig";
 import type { CombatWorld } from "./airCombatRuntime";
 import type { AircraftId, EnemyType } from "./airCombatTypes";
@@ -214,7 +215,7 @@ function drawEnemyGlyph(
   ctx.save();
   ctx.translate(x, y);
   ctx.shadowColor = config.color;
-  ctx.shadowBlur = type === "boss" || type === "elite" ? 16 : 8;
+  ctx.shadowBlur = type === "boss" || isElite(type) ? 16 : 8;
   ctx.fillStyle = config.color;
   ctx.strokeStyle = "rgba(255,255,255,.78)";
   ctx.lineWidth = type === "boss" ? 2 : 1;
@@ -226,7 +227,7 @@ function drawEnemyGlyph(
     ctx.lineTo(0, -radius * 0.58);
     ctx.lineTo(radius * 0.58, -radius * 0.8);
     ctx.lineTo(radius * 1.15, -radius * 0.35);
-  } else if (type === "elite") {
+  } else if (isElite(type)) {
     for (let index = 0; index < 8; index++) {
       const angle = (Math.PI * 2 * index) / 8 - Math.PI / 2;
       const r = index % 2 === 0 ? radius : radius * 0.62;
@@ -252,7 +253,7 @@ function drawEnemyGlyph(
   ctx.fill();
   ctx.stroke();
   ctx.shadowBlur = 0;
-  if (type === "boss" || type === "elite") {
+  if (type === "boss" || isElite(type)) {
     ctx.fillStyle = "#fff7ed";
     ctx.fillRect(-radius * 0.28, -2, radius * 0.56, 4);
   }
@@ -313,6 +314,17 @@ export function drawLegacyWorld(
   }
 
   for (const warning of world.warnings) {
+    if(warning.kind==="rail"||warning.kind==="dash"){
+      ctx.strokeStyle="rgba(251,146,60,.25)";ctx.lineWidth=warning.kind==="dash"?warning.radius*2:12;
+      ctx.beginPath();ctx.moveTo(warning.fromX??warning.x,warning.fromY??warning.y);ctx.lineTo(warning.x,warning.y);ctx.stroke();
+      ctx.strokeStyle="#fde68a";ctx.lineWidth=2;ctx.stroke();continue;
+    }
+    if(warning.kind==="pulse"&&warning.stage==="active"){
+      ctx.strokeStyle="rgba(251,113,133,.7)";ctx.lineWidth=12;ctx.beginPath();ctx.arc(warning.x,warning.y,(warning.age||0)*190,0,Math.PI*2);ctx.stroke();continue;
+    }
+    if(warning.kind==="acid"&&warning.stage==="active"){
+      ctx.fillStyle="rgba(163,230,53,.25)";ctx.strokeStyle="#bef264";ctx.lineWidth=2;ctx.beginPath();ctx.arc(warning.x,warning.y,warning.radius,0,Math.PI*2);ctx.fill();ctx.stroke();continue;
+    }
     const progress = Math.max(0, warning.remaining / warning.totalDuration);
     ctx.fillStyle = warning.owner === "player"
       ? `rgba(250,204,21,${0.09 + (1 - progress) * 0.18})`
@@ -337,6 +349,7 @@ export function drawLegacyWorld(
   ctx.globalAlpha = 1;
 
   for (const projectile of world.projectiles) {
+    if(projectile.bigBang){drawHeavyBomb(ctx,projectile.x,projectile.y,0,world.elapsed);continue;}
     if (projectile.homing && projectile.owner === "player") {
       const angle = Math.atan2(projectile.vy, projectile.vx);
       ctx.save();
@@ -377,7 +390,10 @@ export function drawLegacyWorld(
       ctx.stroke();
     }
     drawEnemyGlyph(ctx, enemy.type, enemy.x, enemy.y, enemy.radius);
-    if (enemy.type === "elite" || enemy.type === "boss_guard" || enemy.type === "attacker") {
+    if(enemy.shield>0||enemy.aegisUntil>world.aircraft.coreState.time){ctx.strokeStyle="#7dd3fc";ctx.lineWidth=2;ctx.beginPath();ctx.arc(enemy.x,enemy.y,enemy.radius+7,0,Math.PI*2);ctx.stroke();}
+    if(enemy.stun>0){ctx.strokeStyle="#fde047";ctx.beginPath();ctx.arc(enemy.x,enemy.y-enemy.radius-7,5,0,Math.PI*2);ctx.stroke();}
+    if(enemy.type==="kamikaze"&&enemy.dashCharge>0){ctx.strokeStyle="rgba(251,191,36,.65)";ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(enemy.x,enemy.y);ctx.lineTo(enemy.dashEndX,enemy.dashEndY);ctx.stroke();}
+    if (isElite(enemy.type) || enemy.type === "attacker") {
       const ratio = Math.max(0, enemy.hp / enemy.maxHp);
       ctx.fillStyle = "rgba(2,6,23,.95)";
       ctx.fillRect(enemy.x - enemy.radius, enemy.y - enemy.radius - 8, enemy.radius * 2, 3);
@@ -404,6 +420,8 @@ export function drawLegacyWorld(
       ? Math.atan2(droneTarget.y - world.droneY, droneTarget.x - world.droneX) + Math.PI / 2
       : 0;
     drawCombatDrone(ctx, world.droneX, world.droneY, rotation, world.elapsed);
+    ctx.fillStyle="#201830";ctx.fillRect(world.droneX-17,world.droneY+20,34,3);
+    ctx.fillStyle="#c4b5fd";ctx.fillRect(world.droneX-17,world.droneY+20,34*Math.max(0,world.droneHp/(world.droneMaxHp||1)),3);
   }
 
   if (!reducedMotion) {
@@ -424,11 +442,11 @@ export function drawLegacyWorld(
     world.playerY,
     aircraft.color,
     aircraft.accent,
-    hitBlink ? 0.25 : invisible ? 0.34 : 1,
+    invisible ? 0.1 : hitBlink ? 0.25 : 1,
     0.82
   );
 
-  if ((world.aircraft.activeEffects.armor_shield || 0) > 0) {
+  if ((world.aircraft.activeEffects.armor_shield || 0) > 0 || Object.values(world.aircraft.coreState.shields).some(s=>s.amount>0&&s.until>world.aircraft.coreState.time)) {
     const pulse = 1 + Math.sin(world.elapsed * 8) * 0.045;
     const shieldRadius = 25 * pulse;
     ctx.save();

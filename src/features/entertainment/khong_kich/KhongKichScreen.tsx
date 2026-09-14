@@ -351,7 +351,7 @@ export const KhongKichScreen: React.FC<KhongKichScreenProps> = ({
                         {skill.shortName}
                       </div>
                       <div className="text-[clamp(6px,0.85dvh,7.5px)] font-bold text-sky-400">
-                        {skill.cost} · {skill.cooldown}s
+                        {skill.id === "escort_drone" ? "≥5" : skill.cost} · {skill.cooldown}s
                       </div>
                     </div>
                   );
@@ -409,7 +409,7 @@ export const KhongKichScreen: React.FC<KhongKichScreenProps> = ({
                         <div className="font-semibold text-xs text-[var(--modal-text)]">{skill.name}</div>
                       </div>
                       <div className="ml-auto text-right text-xs font-bold text-[var(--modal-muted)]">
-                        <div>{skill.cost} {previewConfig.resourceKind === "mana" ? "Mana" : "Energy"}</div>
+                        <div>{skill.id === "escort_drone" ? "Cần ≥5 Điện · bật không trừ phí" : `${skill.cost} ${previewConfig.resourceKind === "mana" ? "Mana" : "Điện"}`}</div>
                         <div>{skill.cooldown}s hồi chiêu</div>
                       </div>
                     </div>

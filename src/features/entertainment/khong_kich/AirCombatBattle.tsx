@@ -1,3 +1,5 @@
+import { AirCombatCoreList } from "./AirCombatCoreList";
+import { hasCore } from "./airCombatCoreEffects";
 import React, {
   useCallback,
   useEffect,
@@ -56,7 +58,7 @@ interface AirCombatBattleProps {
   onExit: () => void;
 }
 
-type PauseReason = "loading" | "user" | "core" | "tooltip" | "exit" | "hidden";
+type PauseReason = "loading" | "user" | "core" | "tooltip" | "exit" | "hidden" | "coreList";
 
 interface SkillPressState {
   skillId: SkillId;
@@ -86,21 +88,14 @@ const CATEGORY_STYLE: Record<CoreCategory, string> = {
   skill: "bg-gradient-to-r from-fuchsia-500/30 to-cyan-500/20 text-fuchsia-50 border-fuchsia-300/45",
 };
 
-const CATEGORY_LABEL: Record<CoreCategory, string> = {
-  offense: "Tấn công",
-  defense: "Phòng thủ",
-  resource: "Tài nguyên",
-  weapon: "Vũ khí",
-  skill: "Kỹ năng",
-};
-
 function formatTime(seconds: number): string {
   const safe = Math.max(0, Math.floor(seconds));
   return `${Math.floor(safe / 60)}:${String(safe % 60).padStart(2, "0")}`;
 }
 
 function pauseLabel(reasons: ReadonlySet<PauseReason>): string | null {
-  if (reasons.has("core")) return "Chọn Core";
+  if (reasons.has("core")) return "Chọn lõi";
+  if (reasons.has("coreList")) return "Danh sách lõi";
   if (reasons.has("tooltip")) return "Xem kỹ năng";
   if (reasons.has("exit")) return "Xác nhận thoát";
   if (reasons.has("hidden")) return "Ứng dụng tạm ẩn";
@@ -109,18 +104,17 @@ function pauseLabel(reasons: ReadonlySet<PauseReason>): string | null {
 }
 
 function skillFactLine(world: CombatWorld, skillId: SkillId): string {
-  const values = getSkillRuntimeValues(world.aircraft, skillId);
-  const stats = getEffectiveAircraftStats(world.aircraft);
-  switch (skillId) {
-    case "decoy": return `${values.count} mồi · ${values.duration.toFixed(1)} giây`;
-    case "afterburner": return `+${world.aircraft.modifiers.skillUpgrades.afterburner ? 50 : 35}% tốc bắn · đạn nảy 70% · ${values.duration.toFixed(1)} giây`;
-    case "missile_swarm": return `${values.count} tên lửa · ${Math.round(stats.firepower * values.damageMultiplier)} sát thương gốc/quả`;
-    case "armor_shield": return `Giảm ${Math.round((1 - values.damageTakenMultiplier) * 100)}% sau Giáp · ${values.duration.toFixed(1)} giây`;
-    case "heavy_bomb": return `${Math.round(stats.firepower * values.damageMultiplier)} sát thương gốc (×${values.damageMultiplier} Hỏa lực) · bán kính +${Math.round((values.radiusMultiplier - 1) * 100)}% · báo trước 0.9 giây`;
-    case "sweeping_cannon": return `${Math.round(stats.firepower)} / ${Math.round(stats.firepower * values.sideProjectileMultiplier)} / ${Math.round(stats.firepower * values.sideProjectileMultiplier)} sát thương gốc · ${values.duration.toFixed(1)} giây`;
-    case "invisibility": return `Ẩn mục tiêu · ngừng tự động bắn · ${values.duration.toFixed(1)} giây`;
-    case "focus_laser": return `${Math.round(stats.firepower * values.damageMultiplier)} sát thương gốc/nhịp (×${values.damageMultiplier}) · nhịp 0.2s · nạp 0.7s · xuyên mục tiêu · ${values.duration.toFixed(1)} giây`;
-    case "escort_drone": return `${Math.round(stats.firepower * stats.fireRate * values.damageMultiplier)} DPS gốc ước tính · ${values.upkeepPerSecond} Energy/giây`;
+  const values=getSkillRuntimeValues(world.aircraft,skillId),stats=getEffectiveAircraftStats(world.aircraft);
+  switch(skillId){
+    case "decoy":return `${values.count} đợt × 10 mồi · mỗi mồi ${values.duration}s · cách đợt 0,75s`;
+    case "afterburner":return `+${hasCore(world.aircraft,23)?130:80}% tốc bắn · nảy 75% → 56,25% · ${values.duration}s`;
+    case "missile_swarm":return `${values.count/2} mỗi bên · ${values.count} tên lửa · ${Math.round(stats.firepower*values.damageMultiplier)} sát thương gốc/quả`;
+    case "armor_shield":return `Giảm ${Math.round((1-values.damageTakenMultiplier)*100)}% sau Giáp · ${values.duration}s`;
+    case "heavy_bomb":return `${Math.round(stats.firepower*values.damageMultiplier)} sát thương gốc/địch · toàn màn hình · nổ sau 3s hoặc khi va chạm`;
+    case "sweeping_cannon":return `${values.count} tia × ${values.damageMultiplier*100}% Hỏa lực · trúng thêm cùng loạt: 15% viên đầu · ${values.duration}s`;
+    case "invisibility":return `Tàng hình + phân thân ${values.duration}s · lướt 0,16s · ${values.cost} Điện`;
+    case "focus_laser":return `${Math.round(stats.firepower*values.damageMultiplier)} sát thương gốc/nhịp · 0,25s/nhịp · tụ ${values.charge}s · bắn ${values.duration}s`;
+    case "escort_drone":return `Kế thừa ${Math.round(values.damageMultiplier*100)}% chỉ số · ${values.upkeepPerSecond} Điện/s · hồi chiêu khi kết thúc`;
   }
 }
 
@@ -147,6 +141,7 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
   const [coreChoices, setCoreChoices] = useState<CoreCard[] | null>(null);
   const [tooltipSkill, setTooltipSkill] = useState<SkillId | null>(null);
   const [showExitConfirm, setShowExitConfirm] = useState(false);
+  const [showCoreList, setShowCoreList] = useState(false);
   const [skillFeedback, setSkillFeedback] = useState<string | null>(null);
 
   const aircraft = AIRCRAFT_CONFIGS[aircraftId];
@@ -158,6 +153,8 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
 
   const setPauseReason = useCallback((reason: PauseReason, enabled: boolean) => {
     const reasons = pauseReasonsRef.current;
+    if (enabled) worldRef.current.pauseReasons.add(reason);
+    else worldRef.current.pauseReasons.delete(reason);
     if (enabled === reasons.has(reason)) return;
     if (enabled) {
       reasons.add(reason);
@@ -396,7 +393,7 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
 
   const resourceLabel = hud.stats.resourceKind === "mana" ? "Mana" : "Energy";
   const hpRatio = Math.max(0, Math.min(1, hud.stats.currentHp / hud.stats.maxHp));
-  const xpRatio = Math.max(0, Math.min(1, worldRef.current.aircraft.combatXp / hud.combatXpRequired));
+  const xpRatio = hud.combatXpRequired > 0 ? Math.max(0, Math.min(1, worldRef.current.aircraft.combatXp / hud.combatXpRequired)) : 1;
   const tooltipValues = tooltipSkill ? getSkillRuntimeValues(worldRef.current.aircraft, tooltipSkill) : null;
 
   useEffect(() => {
@@ -427,7 +424,7 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
       className="air-combat-surface relative aspect-[1/2] w-full max-w-[min(460px,calc((100dvh-env(safe-area-inset-top)-env(safe-area-inset-bottom)-12px)*0.5))] select-none touch-none overflow-hidden rounded-2xl border border-cyan-400/30 bg-black shadow-2xl shadow-black/80"
       style={{ WebkitTouchCallout: "none", WebkitUserSelect: "none", userSelect: "none", touchAction: "none" }}
       onContextMenu={(e) => e.preventDefault()}
-      data-air-combat-runtime="v2-pixi"
+      data-air-combat-runtime="big-update-pixi"
       data-renderer={rendererState}
       data-gameplay-safe-top={GAMEPLAY_SAFE_RECT.top}
       data-aircraft={aircraftId}
@@ -475,6 +472,7 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
             <div className="text-amber-200">{hud.comboKills} COMBO ×{hud.comboMultiplier}</div>
           </div>
           <div className="flex gap-1">
+            <button type="button" aria-label="Danh sách lõi" title="Danh sách lõi" disabled={!!coreChoices} className="air-core-list-button" onClick={() => { setShowCoreList(true); setPauseReason("coreList", true); }}>◆<span>Lõi</span></button>
             <button type="button" aria-label={pauseReasonsRef.current.has("user") ? "Tiếp tục" : "Tạm dừng"} onClick={() => setPauseReason("user", !pauseReasonsRef.current.has("user"))}>{pauseReasonsRef.current.has("user") ? <Play /> : <Pause />}</button>
             <button type="button" aria-label="Thoát trận" onClick={openExit} className="text-rose-300"><X /></button>
           </div>
@@ -482,15 +480,15 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
         <CombatStatChips stats={hud.stats} />
         <div className="flex items-center gap-2 text-lime-200 tabular-nums">
           <span className="shrink-0">Cấp {worldRef.current.aircraft.level}</span>
-          <div role="progressbar" aria-label="Kinh nghiệm chiến đấu" aria-valuenow={Math.floor(worldRef.current.aircraft.combatXp)} aria-valuemin={0} aria-valuemax={hud.combatXpRequired} className="h-1 flex-1 overflow-hidden rounded-full bg-emerald-950"><div className="h-full bg-lime-300" style={{ width: xpRatio * 100 + "%" }} /></div>
-          <span>{Math.floor(worldRef.current.aircraft.combatXp)}/{hud.combatXpRequired} XP</span>
+          <div role="progressbar" aria-label="Kinh nghiệm chiến đấu" aria-valuenow={Math.floor(worldRef.current.aircraft.combatXp)} aria-valuemin={0} aria-valuemax={Math.max(1,hud.combatXpRequired)} className="h-1 flex-1 overflow-hidden rounded-full bg-emerald-950"><div className="h-full bg-lime-300" style={{ width: xpRatio * 100 + "%" }} /></div>
+          <span>{worldRef.current.aircraft.level >= 30 ? "TỐI ĐA" : `${Math.floor(worldRef.current.aircraft.combatXp)}/${hud.combatXpRequired} XP`}</span>
         </div>
         <span className="sr-only">HP {Math.ceil(hud.stats.currentHp)}/{hud.stats.maxHp}; {resourceLabel} {Math.floor(hud.stats.currentResource)}/{hud.stats.maxResource}</span>
       </section>
 
       {hud.bossMaxHp > 0 && (
         <div className="absolute inset-x-[4%] top-[14.5%] z-10 rounded-xl border border-rose-300/70 bg-gradient-to-r from-rose-950/95 via-slate-950/95 to-rose-950/95 px-2 py-1.5 shadow-lg shadow-rose-950/50" data-boss-phase={hud.bossPhase}>
-          <div className="flex justify-between text-[7px] font-black uppercase text-rose-200"><span>Pháo Đài Bay · Giai đoạn {hud.bossPhase}</span><span>{Math.ceil(hud.bossHp).toLocaleString("vi-VN")}</span></div>
+          <div className="flex justify-between text-[7px] font-black uppercase text-rose-200"><span>Leviathan X-99 · Giai đoạn {hud.bossPhase}</span><span>{Math.ceil(hud.bossHp).toLocaleString("vi-VN")}</span></div>
           <div className="mt-1 h-1.5 overflow-hidden rounded bg-black"><div className="h-full bg-gradient-to-r from-red-700 via-rose-500 to-orange-300" style={{ width: `${Math.max(0, hud.bossHp / hud.bossMaxHp) * 100}%` }} /></div>
         </div>
       )}
@@ -501,14 +499,17 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
           const values = getSkillRuntimeValues(worldRef.current.aircraft, skillId);
           const cooldown = hud.cooldowns[skillId] || 0;
           const active = skillId === "escort_drone" ? hud.droneActive : (worldRef.current.aircraft.activeEffects[skillId] || 0) > 0;
-          const unavailable = !(skillId === "escort_drone" && active) && (cooldown > 0 || hud.stats.currentResource < values.cost);
+          const locked = hasCore(worldRef.current.aircraft,97);
+          const free = hasCore(worldRef.current.aircraft,84) && (worldRef.current.aircraft.coreState.skillCasts+1)%4===0;
+          const toggleActive = (skillId === "escort_drone" || skillId === "sweeping_cannon") && active;
+          const unavailable = locked || (!toggleActive && (cooldown > 0 || (!free || skillId === "escort_drone") && hud.stats.currentResource < values.cost));
           return (
             <button
               key={skillId}
               type="button"
               data-skill-id={skillId}
               data-skill-cost={values.cost}
-              aria-label={`${skill.name}, tốn ${values.cost} ${resourceLabel}`}
+              aria-label={`${skill.name}, ${skillId === "escort_drone" ? "cần ít nhất 5 Điện, không trừ phí bật" : `tốn ${free ? 0 : values.cost} ${resourceLabel}`}`}
               aria-disabled={unavailable}
               aria-pressed={active}
               onPointerDown={(event) => onSkillPointerDown(event, skillId)}
@@ -520,11 +521,11 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
               className={`relative flex h-full min-h-11 touch-none select-none flex-col items-center justify-center overflow-hidden rounded-2xl border text-center shadow-lg backdrop-blur transition-transform active:scale-95 ${active ? "border-emerald-200 bg-emerald-500/30 text-emerald-50 shadow-emerald-500/20" : unavailable ? "border-slate-700 bg-black/80 text-slate-500" : "border-cyan-200/70 bg-gradient-to-br from-cyan-950/95 to-indigo-950/95 text-cyan-50 shadow-cyan-500/15"}`}
             >
               {cooldown > 0 && <span className="pointer-events-none absolute inset-0 z-0 rounded-2xl" style={{ background: `conic-gradient(rgba(2,6,23,.42) ${(Math.min(1, cooldown / (values.cooldown * (1 - hud.stats.cooldownReduction)))) * 360}deg, transparent 0deg)` }} />}
-              <span className={`absolute left-1 top-1 z-20 rounded px-1 text-[6px] font-black ${hud.stats.resourceKind === "mana" ? "bg-sky-950/90 text-sky-200" : "bg-violet-950/90 text-violet-200"}`}>{values.cost}</span>
+              <span className={`absolute left-1 top-1 z-20 rounded px-1 text-[6px] font-black ${hud.stats.resourceKind === "mana" ? "bg-sky-950/90 text-sky-200" : "bg-violet-950/90 text-violet-200"}`}>{skillId === "escort_drone" ? "≥5" : free ? 0 : values.cost}</span>
               {skillId === "escort_drone" && active && <span className="absolute right-1 top-1 z-20 text-[6px] font-black text-violet-200">-{values.upkeepPerSecond}/s</span>}
               <CombatUiIcon kind="skill" id={skillId} fallback={skill.icon} className="combat-skill-icon relative z-10" />
               <span className="relative z-10 mt-0.5 max-w-[52px] truncate text-[7px] font-black uppercase">{skill.shortName}</span>
-              <span className={`relative z-10 text-[7px] font-black tabular-nums ${active ? "text-emerald-200" : unavailable ? "text-slate-500" : "text-cyan-200"}`}>{cooldown > 0 ? cooldown.toFixed(1) : active ? "ĐANG BẬT" : unavailable ? "THIẾU " + resourceLabel.toUpperCase() : "SẴN SÀNG"}</span>
+              <span className={`relative z-10 text-[7px] font-black tabular-nums ${active ? "text-emerald-200" : unavailable ? "text-slate-500" : "text-cyan-200"}`}>{locked ? "ĐÃ KHÓA" : cooldown > 0 ? cooldown.toFixed(1) : active ? "ĐANG BẬT" : unavailable ? "THIẾU " + resourceLabel.toUpperCase() : "SẴN SÀNG"}</span>
             </button>
           );
         })}
@@ -536,10 +537,10 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
           <div className="flex items-start justify-between gap-2"><div><div className="text-[9px] font-black uppercase tracking-wider text-cyan-300">Thông số thời gian thực</div><h3 className="mt-0.5 text-base font-black text-white">{SKILL_CONFIGS[tooltipSkill].name}</h3></div><CombatUiIcon kind="skill" id={tooltipSkill} fallback={SKILL_CONFIGS[tooltipSkill].icon} className="combat-tooltip-icon" /></div>
           <p className="mt-2 text-[10px] leading-relaxed text-slate-300">{SKILL_CONFIGS[tooltipSkill].description}</p>
           <div className="mt-2 grid grid-cols-2 gap-1.5 text-[9px] font-bold">
-            <div className="rounded-lg bg-sky-500/15 px-2 py-1.5 text-sky-200">Chi phí: {tooltipValues.cost} {resourceLabel}</div>
+            <div className="rounded-lg bg-sky-500/15 px-2 py-1.5 text-sky-200">{tooltipSkill === "escort_drone" ? "Cần ≥5 Điện · Không trừ phí bật" : `Chi phí: ${tooltipValues.cost} ${resourceLabel}`}</div>
             <div className="rounded-lg bg-amber-500/10 px-2 py-1.5 text-amber-100">Hồi chiêu: {(tooltipValues.cooldown * (1 - hud.stats.cooldownReduction)).toFixed(1)}s · gốc {tooltipValues.cooldown.toFixed(1)}s</div>
             <div className="col-span-2 text-emerald-200">Hồi {resourceLabel}: {hud.stats.resourceRegen.toFixed(1)}/s · Hồi HP: {hud.stats.hpRegen.toFixed(1)}/s</div>
-            <div className="col-span-2 text-cyan-200">Core Kim Cương kỹ năng: {worldRef.current.aircraft.modifiers.skillUpgrades[tooltipSkill] ? "Đang trang bị" : "Chưa trang bị"}{tooltipValues.duration > 0 ? " · Duy trì " + tooltipValues.duration.toFixed(1) + "s" : ""}</div>
+            <div className="col-span-2 text-cyan-200">Core Kim Cương kỹ năng: {worldRef.current.aircraft.modifiers.skillCores[tooltipSkill] ? getCoreDefinition(worldRef.current.aircraft.modifiers.skillCores[tooltipSkill]!).name : "Chưa trang bị"}{tooltipValues.duration > 0 ? " · Duy trì " + tooltipValues.duration.toFixed(1) + "s" : ""}</div>
             <div className="col-span-2 rounded-lg bg-violet-500/15 px-2 py-1.5 text-violet-100">{skillFactLine(worldRef.current, tooltipSkill)}</div>
           </div>
           <div className="mt-1.5 text-[8px] leading-relaxed text-slate-500">Core hiện có: {worldRef.current.aircraft.selectedCores.length > 0 ? worldRef.current.aircraft.selectedCores.map((id) => getCoreDefinition(id).name).join(" · ") : "Chưa có"}</div>
@@ -560,8 +561,8 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
           labelledBy="air-core-choice-title"
         >
           <OverlayHeader className="flex shrink-0 flex-col items-center justify-center text-center">
-            <div className="text-xs font-semibold uppercase tracking-[0.22em] text-[var(--modal-info)]">Cấp chiến đấu {worldRef.current.aircraft.level}</div>
-            <h2 id="air-core-choice-title" className="modal-title">Chọn Core nâng cấp</h2>
+            <div className="text-xs font-semibold uppercase tracking-[0.22em] text-[var(--modal-info)]">Cấp chiến đấu {worldRef.current.aircraft.pendingMilestones[0] ?? worldRef.current.aircraft.level}</div>
+            <h2 id="air-core-choice-title" className="modal-title">{coreChoices[0]?.skillSlot ? "NÂNG CẤP KỸ NĂNG" : "Chọn lõi nâng cấp"}</h2>
             <div className="mt-1 flex items-center gap-2">
               <span className="rounded-full border border-cyan-300/40 bg-cyan-400/10 px-2.5 py-1 text-xs font-semibold uppercase text-[var(--modal-info)]">{coreTierLabel(coreChoices[0].tier)}</span>
               <span className="text-xs font-bold text-[var(--modal-muted)]">Trận đấu đang tạm dừng</span>
@@ -570,8 +571,7 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
 
           <OverlayBody className="w-full grid" data-core-selection="open">
             {coreChoices.map((card) => {
-              const definition = getCoreDefinition(card.id);
-              const special = card.category === "weapon" || card.category === "skill";
+                            const special = card.category === "weapon" || card.category === "skill";
               return (
                 <button
                   key={card.id}
@@ -588,7 +588,7 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
                   <span className="min-w-0">
                     <span className="flex items-center justify-between gap-2">
                       <span className="min-w-0">
-                        <span className="block text-xs font-semibold uppercase tracking-wider opacity-70">{CATEGORY_LABEL[card.category]}{definition.aircraftIds ? " · " + aircraft.name : ""}</span>
+                        <span className="block text-xs font-semibold uppercase tracking-wider opacity-70">{card.system}</span>
                         <strong className="combat-core-name block text-[15px] font-semibold leading-tight">{card.name}</strong>
                       </span>
                       <span className="shrink-0 rounded-full border border-white/15 bg-black/25 px-2 py-1 text-xs font-semibold uppercase">{coreTierLabel(card.tier)}</span>
@@ -609,7 +609,9 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
         </AppModal>
       )}
 
-      {pauseReasonsRef.current.has("user") && !coreChoices && !showExitConfirm && (
+      {showCoreList && !coreChoices && <AirCombatCoreList state={worldRef.current.aircraft} onClose={() => { setShowCoreList(false); setPauseReason("coreList", false); }} />}
+
+      {pauseReasonsRef.current.has("user") && !coreChoices && !showExitConfirm && !showCoreList && (
         <ConfirmationDialog status="warning" layer="exclusive-dialog" layout="viewport-safe" onClose={() => setPauseReason("user", false)} labelledBy="air-paused-title" panelClassName="text-center">
           <OverlayHeader><Pause className="mx-auto h-8 w-8 text-[var(--modal-info)]" /><h2 id="air-paused-title" className="modal-title">Đã tạm dừng</h2></OverlayHeader>
           <OverlayBody data-pause-overlay="user"><p className="text-xs text-[var(--modal-text)]">Hồi tài nguyên, hồi chiêu và thời gian trận đều đứng yên.</p></OverlayBody>

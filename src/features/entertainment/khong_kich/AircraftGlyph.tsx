@@ -16,13 +16,13 @@ function visualKindFromColor(color: string): AircraftVisualKind {
 }
 
 const AIRCRAFT_PATHS: Record<AircraftVisualKind, string> = {
-  // X-07 Hắc Ưng: thân thon, mũi dài, cánh swept-back.
+  // X-07 Viper: thân thon, mũi dài, cánh swept-back.
   black_eagle:
     "M60 5 68 35 74 53 106 80 91 88 71 73 68 103 79 112 64 116 60 104 56 116 41 112 52 103 49 73 29 88 14 80 46 53 52 35Z",
-  // A-12 Phá Quân: khung thân rộng, cánh nặng, silhouette kiểu flying fortress.
+  // A-12 Titan: khung thân rộng, cánh nặng, silhouette kiểu flying fortress.
   breaker:
     "M60 10 72 31 79 49 108 59 111 82 84 79 82 103 98 111 82 116 67 101 60 113 53 101 38 116 22 111 38 103 36 79 9 82 12 59 41 49 48 31Z",
-  // NX-03 U Linh: delta/stealth angular, cạnh gãy rõ rệt.
+  // NX-03 Phantom: delta/stealth angular, cạnh gãy rõ rệt.
   phantom:
     "M60 7 71 39 106 70 83 75 100 96 73 88 65 111 60 104 55 111 47 88 20 96 37 75 14 70 49 39Z",
 };

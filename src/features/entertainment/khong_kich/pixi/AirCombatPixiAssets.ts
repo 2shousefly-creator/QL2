@@ -17,7 +17,9 @@ export const ENEMY_VISUALS: Record<EnemyType, AtlasFrame> = {
   bomber: cell("aircraft", 2, 3), elite: cell("aircraft", 3, 3),
   // The generated fortress spans 56% of the sheet; explicit trims avoid clipping its wings.
   boss: { atlas: "fortress", rect: [0, 0, 0.56, 0.51] },
-  boss_guard: { atlas: "fortress", rect: [0.56, 0, 0.44, 0.51] },
+  sniper: cell("aircraft",3,2), jammer: cell("aircraft",3,1),
+  iron_fortress: { atlas: "fortress", rect: [0.56, 0, 0.44, 0.51] },
+  acid_bomber:cell("aircraft",2,3), radar_hunter:cell("aircraft",3,3),
 };
 export const VFX_VISUALS = {
   muzzle: cell("vfx", 0, 0), tracer: cell("vfx", 1, 0), enemyTracer: cell("vfx", 2, 0), missile: cell("vfx", 3, 0),

@@ -20,7 +20,11 @@ export type EnemyType =
   | "kamikaze"
   | "bomber"
   | "elite"
-  | "boss_guard"
+  | "sniper"
+  | "jammer"
+  | "iron_fortress"
+  | "acid_bomber"
+  | "radar_hunter"
   | "boss";
 
 export type CoreTier = "silver" | "gold" | "diamond";
@@ -32,33 +36,7 @@ export type CoreCategory =
   | "weapon"
   | "skill";
 
-export type CoreId =
-  | "critical_chance"
-  | "critical_damage"
-  | "firepower"
-  | "armor"
-  | "max_hp"
-  | "fire_rate"
-  | "repair"
-  | "cooldown"
-  | "mana_capacity"
-  | "mana_regen"
-  | "energy_regen"
-  | "penetration"
-  | "explosive_rounds"
-  | "charged_round"
-  | "dual_cannon"
-  | "ricochet"
-  | "annihilator_round"
-  | "black_eagle_decoy"
-  | "black_eagle_afterburner"
-  | "black_eagle_missile"
-  | "breaker_shield"
-  | "breaker_bomb"
-  | "breaker_sweep"
-  | "phantom_invisibility"
-  | "phantom_laser"
-  | "phantom_drone";
+export type CoreId = string;
 
 export interface CombatStats {
   criticalChance: number;
@@ -150,7 +128,7 @@ export interface AircraftModifiers {
   maxResourceFlat: number;
   resourceRegenFlat: number;
   weapon: WeaponModifiers;
-  skillUpgrades: Partial<Record<SkillId, true>>;
+  skillCores: Partial<Record<SkillId, CoreId>>;
 }
 
 export interface AircraftCombatState {
@@ -165,6 +143,8 @@ export interface AircraftCombatState {
   activeEffects: Partial<Record<SkillId, number>>;
   droneActive: boolean;
   basicShotsFired: number;
+  pendingMilestones: number[];
+  coreState: CoreRuntimeState;
 }
 
 export interface EffectiveAircraftStats extends CombatStats {
@@ -177,6 +157,8 @@ export interface EffectiveAircraftStats extends CombatStats {
 }
 
 export interface CoreDefinition {
+  system: string;
+  skillSlot?: number;
   id: CoreId;
   name: string;
   description: string;
@@ -188,6 +170,8 @@ export interface CoreDefinition {
 }
 
 export interface CoreCard {
+  system: string;
+  skillSlot?: number;
   id: CoreId;
   tier: CoreTier;
   name: string;
@@ -268,4 +252,23 @@ export interface AirCombatHudSnapshot {
   cooldowns: Partial<Record<SkillId, number>>;
   droneActive: boolean;
   latestMessage: string | null;
+}
+
+/** Run-local event state; no persistent profile/schema changes. Timers use combat time. */
+export interface CoreRuntimeState {
+  time: number;
+  lastDamage: number;
+  lastMove: number;
+  lastKill: number;
+  kills: number;
+  skillCasts: number;
+  killTimes: number[];
+  stacks: Record<string, number>;
+  timers: Record<string, number>;
+  shields: Record<string, { amount: number; until: number }>;
+  consumed: Set<string>;
+  criticalBudget: number;
+  criticalWindow: number;
+  droneCycle: number;
+  deferredCooldowns: Partial<Record<SkillId, number>>;
 }
