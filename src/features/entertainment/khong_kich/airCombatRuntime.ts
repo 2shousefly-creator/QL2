@@ -518,7 +518,7 @@ function fireBasic(world: CombatWorld): void {
     const volleyId = world.nextId++, volleyHits = sweeping ? new Map<number, number>() : undefined;
     const source: DamageSource = "basic";
     const spawn = (multiplier: number, offset: number, extra = false) => {
-        const angle = -Math.PI / 2 + offset * (sweeping ? Math.PI / 10 : 0.06);
+        const angle = -Math.PI / 2 + offset * (sweeping ? Math.PI / 18 : 0.06);
         const ricochet = hasCore(state, 80) && world.random() < .15;
         addProjectile(world, { owner: "player", source: extra ? "basic" : source, skillId: sweeping && !extra ? "sweeping_cannon" : undefined,
             x: world.playerX + offset * 4, y: world.playerY - 17, vx: Math.cos(angle) * 480, vy: Math.sin(angle) * 480, radius: 3.2,
