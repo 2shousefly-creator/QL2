@@ -27,6 +27,7 @@ import {
 } from "./weatherEngine";
 import { evaluateMedalUnlocks, recordCropHarvestForMedals, recordEggSale, recordFarmGoldEarned, recordFeedBagsUsed, recordFertilizerUsed, recordPerfectFarmItemSale, recordWatering } from "../../game/medals/medalEngine";
 import { TangGiaCanvas2D } from "./components/TangGiaCanvas2D";
+import { FarmToolIcon } from "./mobile/FarmToolIcon";
 import { FarmXpProgressBar } from "./components/FarmXpProgressBar";
 import { FarmStoreModal } from "./components/FarmStoreModal";
 import { KhoModal, KhoTabType } from "./components/KhoModal";
@@ -933,6 +934,7 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
   return (
     <div
       onClick={handleClearSelection}
+      data-farm-reduced-motion={gameState.settings.reducedMotion ? "true" : undefined}
       className={`command-screen logistics-command-screen w-full max-w-5xl mx-auto p-2 sm:p-4 space-y-3 font-sans pb-36 relative ${mobileActive ? 'farm-graphics-screen' : FARM_MOBILE_REQUESTED ? 'overflow-y-auto h-full' : ''}`}
     >
       {/* --- HUD HEADER (STICKY) --- */}
@@ -976,7 +978,7 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
               }}
               className="relative px-2.5 sm:px-3 py-2 bg-slate-800 hover:bg-slate-750 border border-slate-700 text-amber-300 font-extrabold text-xs rounded-xl flex items-center gap-1.5 shadow-md active:scale-95 transition-all cursor-pointer"
             >
-              <Package className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-400" />
+              <FarmToolIcon mobile={mobileActive} name="warehouse" className="w-3.5 h-3.5 sm:w-4 sm:h-4" legacy={<Package className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-400" />} />
               <span className={mobileActive ? "farm-entry-label" : "hidden sm:inline"}>Kho</span>
               {totalEggCount > 0 && (
                 <span className="absolute -top-1.5 -right-1.5 px-1.5 py-0.5 rounded-full bg-red-500 text-white font-black text-[10px] shadow-md animate-bounce">
@@ -994,7 +996,7 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
               }}
               className="px-2.5 sm:px-3.5 py-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs rounded-xl flex items-center gap-1.5 shadow-md active:scale-95 transition-all cursor-pointer"
             >
-              <Store className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+              <FarmToolIcon mobile={mobileActive} name="store" className="w-3.5 h-3.5 sm:w-4 sm:h-4" legacy={<Store className="w-3.5 h-3.5 sm:w-4 sm:h-4" />} />
               <span className={mobileActive ? "farm-entry-label" : "hidden sm:inline"}>{mobileActive ? "Cửa hàng" : "Cửa Hàng"}</span>
             </button>
           </div>
@@ -1065,7 +1067,7 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
           onClick={(e) => e.stopPropagation()}
           className="fixed bottom-[calc(3.5rem+env(safe-area-inset-bottom,0px)+0.5rem)] left-1/2 -translate-x-1/2 z-30 w-full max-w-xl px-3 animate-in fade-in slide-in-from-bottom-2 duration-200"
         >
-          <div className="logistics-action-toolbar bg-slate-900/95 border-2 border-amber-500/80 rounded-2xl p-2.5 shadow-2xl backdrop-blur-md flex items-center justify-around gap-1.5">
+          <div data-farm-context={contextMode} data-farm-selection={selectedPlotIndex !== null || selectedAnimalId !== null ? "selected" : "none"} className="logistics-action-toolbar bg-slate-900/95 border-2 border-amber-500/80 rounded-2xl p-2.5 shadow-2xl backdrop-blur-md flex items-center justify-around gap-1.5">
             {/* TOOLBAR FOR GARDEN MODE */}
             {contextMode === "garden" && (
               <>
@@ -1074,7 +1076,7 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
                   onClick={() => openStore("crop")}
                   className="h-14 flex-1 rounded-xl border border-slate-700/80 bg-slate-800 hover:bg-slate-700 text-slate-200 flex flex-col items-center justify-center gap-1 shadow-sm active:scale-95 transition-all"
                 >
-                  <Store className="w-4 h-4 text-amber-400 shrink-0" />
+                  <FarmToolIcon mobile={mobileActive} name="store" className="w-4 h-4 shrink-0" legacy={<Store className="w-4 h-4 text-amber-400 shrink-0" />} />
                   <span className="text-[10px] font-extrabold leading-none">Cửa Hàng</span>
                 </button>
 
@@ -1084,7 +1086,7 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
                     onClick={handleOpenPlantModal}
                     className="h-14 flex-1 rounded-xl border border-slate-700/80 bg-slate-800 text-slate-200 shadow-sm transition-all hover:bg-slate-700 active:scale-95 flex flex-col items-center justify-center gap-1"
                   >
-                    <Sprout className="w-4 h-4 shrink-0 text-emerald-400" />
+                    <FarmToolIcon mobile={mobileActive} name="plant" className="w-4 h-4 shrink-0" legacy={<Sprout className="w-4 h-4 shrink-0 text-emerald-400" />} />
                     <span className="text-[10px] font-extrabold leading-none">Trồng Cây</span>
                   </button>
                 ) : canTreatSelectedPlot ? (
@@ -1093,7 +1095,7 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
                     data-pest-action="selected-plot"
                     className="h-14 flex-1 rounded-xl border border-lime-400/80 bg-gradient-to-r from-lime-500 to-emerald-600 text-slate-950 font-black shadow-sm shadow-lime-500/20 transition-all hover:from-lime-400 hover:to-emerald-500 active:scale-95 flex flex-col items-center justify-center gap-1"
                   >
-                    <span className="text-base leading-none" aria-hidden="true">🐛</span>
+                    <FarmToolIcon mobile={mobileActive} name="pest" legacy={<span className="text-base leading-none" aria-hidden="true">🐛</span>} />
                     <span className="text-[10px] font-extrabold leading-none">Diệt Sâu</span>
                   </button>
                 ) : null}
@@ -1109,11 +1111,11 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
                       : "border-slate-800/80 bg-slate-900/60 text-slate-600 cursor-not-allowed opacity-60"
                   }`}
                 >
-                  <Droplets
+                  <FarmToolIcon mobile={mobileActive} name="water" className="w-4 h-4 shrink-0" legacy={<Droplets
                     className={`w-4 h-4 shrink-0 ${
                       canWaterSelectedPlot ? "text-slate-950" : "text-slate-600"
                     }`}
-                  />
+                  />} />
                   <span className="text-[10px] font-extrabold leading-none">Tưới Nước</span>
                 </button>
 
@@ -1127,7 +1129,7 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
                       : "border-slate-800/80 bg-slate-900/60 text-slate-600 cursor-not-allowed opacity-60"
                   }`}
                 >
-                  <Sparkles className={`h-4 w-4 ${canApplyFertilizer ? "text-amber-400" : "text-slate-600"}`} />
+                  <FarmToolIcon mobile={mobileActive} name="fertilizer" className="w-4 h-4 shrink-0" legacy={<Sparkles className={`h-4 w-4 ${canApplyFertilizer ? "text-amber-400" : "text-slate-600"}`} />} />
                   <span className="text-[10px] font-extrabold leading-none">Bón Phân</span>
                 </button>
 
@@ -1144,11 +1146,11 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
                       : "border-slate-800/80 bg-slate-900/60 text-slate-600 cursor-not-allowed opacity-60"
                   }`}
                 >
-                  <Sparkles
+                  <FarmToolIcon mobile={mobileActive} name="harvest" className="w-4 h-4 shrink-0" legacy={<Sparkles
                     className={`w-4 h-4 shrink-0 ${
                       currentSelectedPlot?.status === "ready" ? "text-slate-950" : "text-slate-600"
                     }`}
-                  />
+                  />} />
                   <span className="text-[10px] font-extrabold leading-none">Thu Hoạch</span>
                 </button>
 
@@ -1159,7 +1161,7 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
                     data-harvest-action="all"
                     className="h-14 flex-1 rounded-xl border border-orange-300 bg-gradient-to-r from-orange-500 to-amber-500 text-slate-950 shadow-sm shadow-orange-500/25 transition-all hover:from-orange-400 hover:to-amber-400 active:scale-95 disabled:cursor-not-allowed disabled:opacity-60"
                   >
-                    <Sparkles className="mx-auto h-4 w-4" />
+                    <FarmToolIcon mobile={mobileActive} name="harvest" className="mx-auto h-4 w-4" legacy={<Sparkles className="mx-auto h-4 w-4" />} />
                     <span className="mt-1 block text-[9px] font-black leading-none">
                       Thu Hoạch Tất Cả
                     </span>
@@ -1181,7 +1183,7 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
                         : "border-slate-800/80 bg-slate-900/60 text-slate-600 cursor-not-allowed opacity-60"
                     }`}
                   >
-                    <Trash2
+                    <FarmToolIcon mobile={mobileActive} name="clear" className="w-4 h-4 shrink-0" legacy={<Trash2
                       className={`w-4 h-4 shrink-0 ${
                         currentSelectedPlot &&
                         currentSelectedPlot.status !== "empty" &&
@@ -1189,7 +1191,7 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
                           ? "text-red-400"
                           : ""
                       }`}
-                    />
+                    />} />
                     <span className="text-[10px] font-extrabold leading-none">Xúc Đất</span>
                   </button>
                 )}
@@ -1204,7 +1206,7 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
                   onClick={() => openStore("animal")}
                   className="h-14 flex-1 rounded-xl border border-slate-700/80 bg-slate-800 hover:bg-slate-700 text-slate-200 flex flex-col items-center justify-center gap-1 shadow-sm active:scale-95 transition-all"
                 >
-                  <Store className="w-4 h-4 text-amber-400 shrink-0" />
+                  <FarmToolIcon mobile={mobileActive} name="store" className="w-4 h-4 shrink-0" legacy={<Store className="w-4 h-4 text-amber-400 shrink-0" />} />
                   <span className="text-[10px] font-extrabold leading-none">Cửa Hàng</span>
                 </button>
 
@@ -1213,7 +1215,7 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
                   onClick={() => openFarmModal({ type: "enter-pen" })}
                   className="h-14 flex-1 rounded-xl border border-slate-700/80 bg-slate-800 hover:bg-slate-700 text-slate-200 flex flex-col items-center justify-center gap-1 shadow-sm active:scale-95 transition-all"
                 >
-                  <span className="text-base leading-none shrink-0">🐓</span>
+                  <FarmToolIcon mobile={mobileActive} name="herd" legacy={<span className="text-base leading-none shrink-0">🐓</span>} />
                   <span className="text-[10px] font-extrabold leading-none">Thả Nuôi</span>
                 </button>
 
@@ -1222,7 +1224,7 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
                   onClick={() => openFarmModal({ type: "feed" })}
                   className="h-14 flex-1 rounded-xl border border-slate-700/80 bg-slate-800 hover:bg-slate-700 text-slate-200 flex flex-col items-center justify-center gap-1 shadow-sm active:scale-95 transition-all"
                 >
-                  <Wheat className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <FarmToolIcon mobile={mobileActive} name="feed" className="w-4 h-4 shrink-0" legacy={<Wheat className="w-4 h-4 text-emerald-400 shrink-0" />} />
                   <span className="text-[10px] font-extrabold leading-none">Cho Ăn</span>
                 </button>
 
@@ -1235,11 +1237,11 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
                       : "border-slate-700/80 bg-slate-800 hover:bg-slate-700 text-slate-200 active:scale-95"
                   }`}
                 >
-                  <Egg
+                  <FarmToolIcon mobile={mobileActive} name="egg" className="w-4 h-4 shrink-0" legacy={<Egg
                     className={`w-4 h-4 shrink-0 ${
                       totalEggCount > 0 ? "text-slate-950" : "text-amber-400"
                     }`}
-                  />
+                  />} />
                   <span className="text-[10px] font-extrabold leading-none">Bán Trứng</span>
                 </button>
 
@@ -1253,15 +1255,15 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
                       : "border-slate-800/80 bg-slate-900/60 text-slate-600 cursor-not-allowed opacity-60"
                   }`}
                 >
-                  {currentSelectedAnimalIsDead ? <Trash2
+                  {currentSelectedAnimalIsDead ? <FarmToolIcon mobile={mobileActive} name="clear" className="w-4 h-4 shrink-0" legacy={<Trash2
                     className={`w-4 h-4 shrink-0 ${
                       selectedAnimalId ? "text-red-400" : ""
                     }`}
-                  /> : <UserX
+                  />} /> : <FarmToolIcon mobile={mobileActive} name="dismiss" className="w-4 h-4 shrink-0" legacy={<UserX
                     className={`w-4 h-4 shrink-0 ${
                       selectedAnimalId ? "text-red-400" : ""
                     }`}
-                  />}
+                  />} />}
                   <span className="text-[10px] font-extrabold leading-none">
                     {currentSelectedAnimalIsDead ? "Dọn" : "Đuổi"}
                   </span>

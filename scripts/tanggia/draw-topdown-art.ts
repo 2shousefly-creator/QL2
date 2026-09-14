@@ -12,8 +12,8 @@ const e = (x: number, y: number, rx: number, ry: number, fill: string, extra = '
 const p = (d: string, fill: string, stroke = '', sw = 2) => `<path d="${d}" fill="${paint(fill)}"${stroke ? ` stroke="${stroke}" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round"` : ''}/>`;
 const r = (x: number, y: number, w: number, h: number, fill: string, radius = 5) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${radius}" fill="${fill}"/>`;
 const group = (x: number, y: number, scale: number, body: string, rotate = 0) => `<g transform="translate(${x} ${y}) rotate(${rotate}) scale(${scale})">${body}</g>`;
-const leaf = (x: number, y: number, size = 1, angle = 0, color = '#31b849') => group(x, y, size, p('M0 0 Q-22 -5 -15 -23 Q3 -20 0 0', color) + p('M0 0 L-12 -18 M-4 -6 L-13 -7 M-7 -11 L-7 -17', 'none', '#b5e77b', 1.1), angle);
-const shadow = e(48, 77, 28, 8, '#354f33', 'opacity=".16"');
+const leaf = (x: number, y: number, size = 1, angle = 0, color = '#31b849') => group(x, y, size, p('M0 0 Q-22 -5 -15 -23 Q3 -20 0 0', color) + p('M0 0 L-12 -18 M-4 -6 L-13 -7 M-7 -11 L-7 -17', 'none', '#dcf5a0', 1.1), angle);
+const shadow = e(48, 77, 28, 8, '#325c43', 'opacity=".12"');
 const palette: Record<string, string> = { carrot: '#ff9834', cabbage: '#b5ee65', potato: '#e0b578', tomato: '#ff533c', strawberry: '#ff557b', corn: '#ffe15a', pumpkin: '#ff992e', watermelon: '#58ca59', pineapple: '#ffd143', banana: '#ffdc57', orange: '#ffa12f', mango: '#ffb249', apple: '#ed4945', pear: '#c8d95c', grape: '#a365ce', dragon_fruit: '#f1cd4d', avocado: '#76af3c', durian: '#adbd43', mangosteen: '#a04bbb' };
 const trees = new Set(['orange', 'mango', 'apple', 'pear', 'avocado', 'durian', 'mangosteen']);
 function fruit(id: string): string {
@@ -119,7 +119,7 @@ async function sheet(name: string, columns: number, rows: number, frames: string
     const n = parseInt(hex.slice(i, i + 2), 16);
     return Math.round(amount > 0 ? n + (255 - n) * amount : n * (1 + amount)).toString(16).padStart(2, '0');
   }).join('');
-  const defs = '<defs>' + colors.map(hex => `<linearGradient id="paint${hex}" x1="15%" y1="0%" x2="75%" y2="100%"><stop stop-color="${tone(hex, .24)}"/><stop offset=".45" stop-color="#${hex}"/><stop offset="1" stop-color="${tone(hex, -.10)}"/></linearGradient>`).join('')
+  const defs = '<defs>' + colors.map(hex => `<linearGradient id="paint${hex}" x1="15%" y1="0%" x2="75%" y2="100%"><stop stop-color="${tone(hex, .28)}"/><stop offset=".45" stop-color="#${hex}"/><stop offset="1" stop-color="${tone(hex, -.08)}"/></linearGradient>`).join('')
     + frames.map((_, i) => `<clipPath id="cell${i}"><rect x="${i % columns * 96}" y="${Math.floor(i / columns) * 96}" width="96" height="96"/></clipPath>`).join('') + '</defs>';
   await writeFile(`${out}/${name}.svg`, `<svg xmlns="http://www.w3.org/2000/svg" width="${columns * 96}" height="${rows * 96}" viewBox="0 0 ${columns * 96} ${rows * 96}">${defs}${body}</svg>\n`);
   records.push({ sheet: name, frameSize: [96, 96], columns, rows, frameNames, provenance: 'Original vector paths in scripts/tanggia/draw-topdown-art.ts' });
@@ -153,7 +153,7 @@ function bird(id: string, state: string, frame: number) {
   const b = birds[id], phase = frame / 6 * Math.PI * 2, rest = state === 'rest' || state === 'dead', peck = state === 'eat' || state === 'drink';
   const bob = state === 'walk' ? Math.sin(phase) * 2 : state === 'idle' ? Math.sin(phase) * 1.1 : state === 'rest' || state === 'weak' ? Math.sin(phase) * .45 : 0;
   const cy = rest ? 63 + bob : 54 + bob, headX = peck ? 72 + Math.sin(phase) * 3 : 62 + (state === 'idle' ? Math.sin(phase) * 2.4 : 0), headY = peck ? 65 + Math.cos(phase) * 4 : cy - 12 - b.neck;
-  let body = e(46, 79, 29, 7, '#354f33', 'opacity=".18"');
+  let body = e(46, 79, 29, 7, '#325c43', 'opacity=".14"');
   if (!rest) for (const side of [-1, 1]) { const stride = state === 'walk' ? Math.sin(phase) * side * 6 : 0; body += p(`M${43 + side * 8} ${cy + 12} l${stride} ${b.legs} l8 2`, 'none', '#c79a60', 3); }
   if (['turkey', 'peafowl'].includes(id)) body += Array.from({ length: 7 }, (_, i) => group(30, cy, 1, e(0, -b.tail / 2, 6, b.tail / 2, id === 'peafowl' ? (i % 2 ? '#22a77b' : '#6fce72') : (i % 2 ? '#8e4b3b' : '#cf8550')) + (id === 'peafowl' ? e(0, -b.tail + 7, 3, 5, '#ffe15d') + e(0, -b.tail + 7, 1.8, 3, '#258ace') : ''), -100 + i * 21 + (state === 'dead' ? 0 : Math.sin(phase) * 3))).join('');
   else body += p(`M33 ${cy - 3} L${Math.max(4, 32 - b.tail)} ${cy - 21} L14 ${cy + 2} L35 ${cy + 9}Z`, b.wing);
@@ -162,7 +162,7 @@ function bird(id: string, state: string, frame: number) {
   body += Array.from({ length: 10 }, (_, i) => {
     const x = 27 + i % 5 * 5, y = cy - 4 + Math.floor(i / 5) * 7;
     return p(`M${x} ${y} q3 7 7 1`, 'none', i % 2 ? b.body : '#c4b18b', .9);
-  }).join('') + e(43, cy - 8, 11, 4, '#fff2cf', 'opacity=".16"');
+  }).join('') + e(43, cy - 8, 11, 4, '#fff8e0', 'opacity=".25"');
   if (['duck', 'muscovy_duck', 'goose'].includes(id) && !rest) for (const side of [-1, 1]) {
     const stride = state === 'walk' ? Math.sin(phase) * side * 6 : 0;
     body += p(`M${43 + side * 8 + stride} ${cy + 12 + b.legs} l-4 3 l14 1 l-5 -5Z`, '#f7b04b');
@@ -239,4 +239,4 @@ props.trough += [23, 39, 56, 73].map(x => p(`M${x} 48 l-1 17`, 'none', '#d4b181'
 props.bush += Array.from({ length: 16 }, (_, i) => leaf(24 + i * 13 % 49, 39 + i * 17 % 30, .26, i * 43, i % 2 ? '#65bd48' : '#a5dc63')).join('');
 props.hay += Array.from({ length: 15 }, (_, i) => p(`M${18 + i * 4} ${24 + i % 3 * 4} l6 -6`, 'none', '#f1d98d', 1)).join('');
 await sheet('props', 8, 2, PROP_NAMES.map(name => props[name]), PROP_NAMES);
-await writeFile(`${out}/manifest.json`, JSON.stringify({ design: { revision: 'mobile-final-v5-bright-cartoon-retained', frame: [96, 96], layout: 'garden then pen; bottom-left plot 1', rendering: 'original SVG paths with gradient shading; no external image source' }, crops: CROP_CATALOG.map(x => ({ id: x.id, name: x.name })), animals: ANIMAL_CATALOG.map(x => ({ id: x.id, name: x.name })), records }, null, 2) + '\n');
+await writeFile(`${out}/manifest.json`, JSON.stringify({ design: { revision: 'world-ambient-v6-bright-cartoon', frame: [96, 96], layout: 'garden then pen; bottom-left plot 1', rendering: 'original SVG paths with gradient shading; no external image source' }, crops: CROP_CATALOG.map(x => ({ id: x.id, name: x.name })), animals: ANIMAL_CATALOG.map(x => ({ id: x.id, name: x.name })), records }, null, 2) + '\n');

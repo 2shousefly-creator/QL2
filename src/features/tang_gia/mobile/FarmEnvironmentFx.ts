@@ -1,14 +1,18 @@
 import { Container, Graphics } from 'pixi.js';
+import { GardenAmbientLayer } from './GardenAmbientLayer';
 
 /** Ground-attached lights/wet patches and bounded ambient/weather geometry.
  * No filters, shaders, timers or saved state. Geometry objects are reused. */
 export class FarmEnvironmentFx {
   private root: Container;
+  private worldGround = new Container();
+  private worldAtmosphere = new Container();
+  private garden: GardenAmbientLayer;
+  private ripples = Array.from({ length: 16 }, () => new Graphics().ellipse(0, 0, 10, 3).stroke({ color: 0xd7f5fa, width: 1.2 }));
   private wet = new Graphics();
   private shade = new Graphics();
   private light = new Graphics();
   private rain = new Graphics();
-  private ambient = new Graphics();
   private width = 1;
   private height = 1;
   private scroll = 0;
@@ -16,12 +20,21 @@ export class FarmEnvironmentFx {
   private staticKey = '';
   private lastMotionFrame = -1;
   private lastWeather = '';
-  scrollTo(scroll: number) { this.scroll = scroll; this.wet.y = -scroll; this.light.y = -scroll; }
+  scrollTo(scroll: number) {
+    this.scroll = scroll;
+    this.worldGround.y = this.worldAtmosphere.y = -scroll;
+    this.garden.viewport(scroll, this.height);
+  }
   private lamps: { x: number; y: number }[] = [];
   private patches: { x: number; y: number; radius: number }[] = [];
   constructor(parent: Container) {
     this.root = parent.addChild(new Container());
-    this.root.addChild(this.wet, this.shade, this.light, this.rain, this.ambient);
+    // Ground puddles and garden creatures share the world transform. Only rain
+    // and the camera-wide tint use viewport coordinates.
+    this.root.addChild(this.worldGround, this.shade, this.worldAtmosphere, this.rain);
+    this.worldGround.addChild(this.wet, ...this.ripples);
+    this.worldAtmosphere.addChild(this.light);
+    this.garden = new GardenAmbientLayer(this.worldAtmosphere);
   }
   layout(width: number, height: number, garden: number, penStart: number, penHeight: number, scroll: number) {
     this.scrollTo(scroll);
@@ -29,6 +42,7 @@ export class FarmEnvironmentFx {
     if (key === this.layoutKey) return;
     this.layoutKey = key; this.staticKey = '';
     this.width = width; this.height = height;
+    this.garden.layout(width, 0, garden); this.garden.viewport(scroll, height);
     this.lamps = [
       { x: 24, y: 70 }, { x: width - 25, y: garden - 50 },
       { x: 25, y: penStart + 80 }, { x: width - 25, y: penStart + penHeight - 55 },
@@ -39,8 +53,8 @@ export class FarmEnvironmentFx {
     }));
   }
   tick(clock: number, reduced: boolean, night: boolean, weather: string) {
-    const { width, height, scroll } = this, rainy = weather === 'rain';
-    const key = `${this.layoutKey}:${night}:${weather}`;
+    const { width, height } = this, rainy = weather === 'rain';
+    const key = `${this.layoutKey}:${night}:${weather}:${reduced}`;
     if (key !== this.staticKey) {
       this.staticKey = key;
       this.wet.clear(); this.shade.clear(); this.light.clear();
@@ -69,45 +83,24 @@ export class FarmEnvironmentFx {
         if (night) this.light.circle(x, y - 47, 16).fill({ color: 0xffdd83, alpha: .14 });
       }
     }
+    this.garden.tick(clock, reduced, night, rainy);
     const motionFrame = reduced ? 0 : Math.floor(clock * 30);
     if (motionFrame === this.lastMotionFrame && key === this.lastWeather) return;
     this.lastMotionFrame = motionFrame; this.lastWeather = key;
-    this.rain.clear(); this.ambient.clear();
+    this.rain.clear();
+    this.ripples.forEach((node, i) => {
+      const patch = this.patches[i];
+      node.visible = rainy && !!patch;
+      if (!node.visible) return;
+      const age = reduced ? .4 : (clock * 1.5 + i * .31) % 1;
+      node.position.set(patch.x, patch.y);
+      node.scale.set(.2 + age); node.alpha = (1 - age) * .6;
+    });
     if (rainy) {
       for (let i = 0; i < 42; i++) {
         const x = (i * 67.7 - (reduced ? 0 : clock * 38) % width + width) % width;
         const y = (i * 39.3 + (reduced ? 0 : clock * (235 + i % 3 * 28))) % height;
         this.rain.moveTo(x, y).lineTo(x - 4, y + 15 + i % 3 * 3).stroke({ color: 0xc5e7f3, alpha: .6, width: i % 3 ? 1.2 : 1.8 });
-      }
-      for (let i = 0; i < 12; i++) {
-        const age = reduced ? .4 : (clock * 1.5 + i * .31) % 1;
-        const x = 25 + i * 71 % Math.max(1, width - 50), y = (80 + i * 113 - scroll % height + height) % height;
-        this.rain.ellipse(x, y, 2 + age * 10, 1 + age * 3).stroke({ color: 0xd7edeb, alpha: (1 - age) * .55, width: 1.2 });
-      }
-    } else if (!reduced) {
-      if (!night) {
-        // One brief overhead bird pass every 24 seconds, plus six faint pollen motes.
-        const pass = clock % 24;
-        if (pass < 4) {
-          const x = -28 + (width + 56) * pass / 4, y = height * .3 + Math.sin(pass) * 18;
-          const wing = Math.sin(clock * 9) * 5;
-          this.ambient.moveTo(x - 10, y + wing).quadraticCurveTo(x - 3, y - 4, x, y)
-            .quadraticCurveTo(x + 4, y - 4, x + 10, y + wing).stroke({ color: 0x254e43, alpha: .2, width: 2.5 });
-        }
-        for (let i = 0; i < 6; i++) {
-          const x = (i * 91 + clock * 3) % width, y = (i * 137 + clock * 5) % height;
-          this.ambient.circle(x, y, 1.3).fill({ color: 0xfff4b6, alpha: .28 });
-        }
-      }
-      for (let i = 0; i < (night ? 8 : 3); i++) {
-        const x = 24 + (clock * (night ? 3 : 8) + i * 113) % Math.max(1, width - 48);
-        const y = 40 + (i * 157 + Math.sin(clock * .7 + i) * 16) % Math.max(1, height - 60);
-        if (night) this.ambient.circle(x, y, 2).fill({ color: 0xffe69e, alpha: .35 + Math.sin(clock * 2 + i) * .3 });
-        else {
-          const wing = 2 + Math.abs(Math.sin(clock * 7 + i)) * 3;
-          this.ambient.ellipse(x - 3, y, wing, 3).ellipse(x + 3, y, wing, 3).fill(i % 2 ? 0xffdb85 : 0xf5c0c7);
-          this.ambient.moveTo(x, y - 2).lineTo(x, y + 3).stroke({ color: 0x665b42, width: 1 });
-        }
       }
     }
   }

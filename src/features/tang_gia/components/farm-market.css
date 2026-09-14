@@ -143,3 +143,10 @@
   border-color: #dce9ab; box-shadow: 0 3px 0 #b7cd7530;
 }
 .farm-market .farm-market-tabs > button[aria-pressed="true"] { border-color: #64b442; box-shadow: inset 0 -3px #90d459; }
+/* Shared cream, leaf and warm wood language with the existing mobile toolbar. */
+.farm-market.modal-design > .app-overlay__panel { border-color: #d8ad68; box-shadow: 0 3px 0 #b5884950, var(--modal-shadow); }
+.farm-market.modal-design .app-overlay__footer { background: repeating-linear-gradient(0deg, #c9964410 0 1px, transparent 1px 9px), #fff4d5; }
+.farm-market .farm-market-tabs > button { background: linear-gradient(#fffdf0, #f5e6bd); border-color: #d6bf8e; color: #405b35; }
+.farm-market .farm-market-tabs > button[aria-pressed="true"] { background: linear-gradient(#eaffc5, #c5e89a); color: #345b32; }
+.farm-market :is(.modal-button, .farm-market-card > button):not(:disabled):active { box-shadow: inset 0 2px 3px #49682e35; }
+.farm-market .farm-market-card > button:disabled { background: #e9e6d5; border-color: #cbc8b1; color: #797b68; }

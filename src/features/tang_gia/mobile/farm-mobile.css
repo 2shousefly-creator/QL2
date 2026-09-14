@@ -23,3 +23,79 @@
 /* Sunny turf surrounds the CSS-pixel world; retain the existing header/toolbar flow. */
 .farm-graphics-screen .farm-mobile-host { background: #85d75a; }
 .farm-graphics-screen > .farm-mobile-shell { box-shadow: inset 0 0 0 1px #5b9a4055, 0 3px 8px #294c2422; }
+/* Mobile presentation only. Preserve every position, dimension, gap and button order. */
+.farm-graphics-screen {
+  --farm-cream: #fff8df;
+  --farm-wood: #dfb778;
+  --farm-ink: #385333;
+  --farm-leaf: #78bc59;
+  color: var(--farm-ink);
+  background: #f1f8df;
+}
+.farm-graphics-screen::before { background: radial-gradient(ellipse at 10% 0%, #fff2bd80, transparent 65%); }
+.farm-graphics-screen :is(.logistics-hud, .logistics-action-toolbar, [data-farm-player-xp]) {
+  background: repeating-linear-gradient(0deg, #c9964420 0 1px, transparent 1px 9px), linear-gradient(#fff8e2, #f6e5ba) !important;
+  border-color: #d8ad68 !important;
+  border-radius: 16px !important;
+  box-shadow: inset 0 1px #ffffff, 0 3px 0 #b5884940, 0 5px 12px #66512c16 !important;
+  backdrop-filter: none;
+  color: var(--farm-ink);
+}
+.farm-graphics-screen .command-panel::before { background: #91c765; border-radius: 2px; }
+.farm-graphics-screen .command-panel::after { background: transparent; border-color: transparent; }
+.farm-graphics-screen .logistics-action-toolbar[data-farm-selection="selected"] { border-color: #82b855 !important; }
+.farm-graphics-screen :is(.logistics-hud, [data-farm-player-xp]) [class*="text-slate-"] { color: #5b7042; }
+.farm-graphics-screen :is(.logistics-hud, [data-farm-player-xp]) [class*="text-amber-"] { color: #8a581b; }
+.farm-graphics-screen .logistics-hud > div[title] {
+  background: linear-gradient(#f6ffec, #e0f1c9); border-color: #b7d58f; color: #375a3f;
+}
+.farm-graphics-screen .logistics-hud > div[title] [class*="text-"] { color: #3b6142; }
+.farm-graphics-screen :is(.logistics-hud, .logistics-action-toolbar) button {
+  background: linear-gradient(#fffdf0, #f5e6bd);
+  border-color: #cfb078; color: #405b35;
+  border-radius: 12px !important;
+  box-shadow: inset 0 1px #ffffff, 0 2px 0 #b59a6440;
+  transition-property: background-color, border-color, box-shadow, opacity, transform;
+}
+.farm-graphics-screen .logistics-hud button[aria-label="Cửa Hàng"] {
+  background: linear-gradient(#dff4b7, #b9df86); color: #345b32;
+  box-shadow: inset 0 1px #fffbd9, 0 2px 0 #82ac55;
+}
+.farm-graphics-screen .logistics-hud button[aria-label="Kho"] > span.absolute {
+  background: #ed7953; color: white; box-shadow: 0 1px 0 #bd5838; animation: none;
+}
+.farm-graphics-screen .logistics-action-toolbar button:not(:disabled):is(.animate-pulse, [data-pest-action]) {
+  background: linear-gradient(#fff0a7, #f5cc66); border-color: #ca962f; color: #634916;
+  animation: farm-tool-attention 2.4s ease-in-out infinite;
+}
+.farm-graphics-screen .logistics-action-toolbar button[data-water-action]:not(:disabled) {
+  background: linear-gradient(#e0f9ff, #a4dfed); border-color: #68b4c6; color: #265968;
+}
+.farm-graphics-screen .logistics-action-toolbar button[data-pest-action]:not(:disabled) {
+  background: linear-gradient(#ebffcb, #bee993); border-color: #82b95e; color: #3a602b;
+}
+.farm-graphics-screen .logistics-action-toolbar button:not(:disabled):has(.lucide-trash-2, .lucide-user-x) { color: #994e38; }
+.farm-graphics-screen :is(.logistics-hud, .logistics-action-toolbar) button:disabled {
+  background: #e9e6d5; border-color: #cbc8b1; color: #797b68;
+  box-shadow: inset 0 1px #fff9df; opacity: .7; animation: none;
+}
+.farm-graphics-screen button:disabled .farm-tool-icon { opacity: .55; filter: saturate(.25); }
+.farm-graphics-screen :is(.logistics-hud, .logistics-action-toolbar) button:not(:disabled):hover { border-color: #8db760; }
+.farm-graphics-screen :is(.logistics-hud, .logistics-action-toolbar) button:not(:disabled):active {
+  background: #e4efbe; box-shadow: inset 0 2px 3px #66744330; animation: none;
+}
+.farm-graphics-screen :is(.logistics-hud, .logistics-action-toolbar) button:focus-visible {
+  outline: 2px solid #569b48; outline-offset: 2px;
+}
+.farm-graphics-screen [data-farm-player-xp] .xp-command-track {
+  background: #e0d9b3; border-color: #c6ac6d; border-radius: 8px !important;
+  box-shadow: inset 0 1px 3px #8d754330 !important;
+}
+.farm-graphics-screen [data-farm-xp-fill] { background: linear-gradient(#ffec80, #eab548); }
+.farm-graphics-screen [data-farm-xp-percent] { color: #806022; }
+.farm-graphics-screen .farm-tool-icon { overflow: visible; }
+@keyframes farm-tool-attention { 50% { box-shadow: inset 0 1px #fff, 0 0 0 2px #edbd5d55; } }
+.farm-graphics-screen[data-farm-reduced-motion="true"] :is(.logistics-hud, .logistics-action-toolbar) button { animation: none !important; transition: none; }
+@media (prefers-reduced-motion: reduce) {
+  .farm-graphics-screen :is(.logistics-hud, .logistics-action-toolbar) button { animation: none !important; transition: none; }
+}
