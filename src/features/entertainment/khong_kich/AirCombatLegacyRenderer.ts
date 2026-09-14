@@ -1,4 +1,5 @@
 import { angularBarPolygon } from "./airCombatHudLayout";
+import { SONIC_RING_THICKNESS } from "./airCombatBoss";
 import { getTerrainWorld, TERRAIN_HEIGHT, type TerrainShape } from "./airCombatTerrain";
 import type { CanvasCombatAccents } from "./CanvasCombatAccents";
 import { isElite } from "./airCombatWaves";
@@ -376,8 +377,38 @@ export function drawLegacyWorld(
       ctx.beginPath();ctx.moveTo(warning.fromX??warning.x,warning.fromY??warning.y);ctx.lineTo(warning.x,warning.y);ctx.stroke();
       ctx.strokeStyle="#fde68a";ctx.lineWidth=2;ctx.stroke();continue;
     }
-    if(warning.kind==="pulse"&&warning.stage==="active"){
-      ctx.strokeStyle="rgba(251,113,133,.7)";ctx.lineWidth=12;ctx.beginPath();ctx.arc(warning.x,warning.y,(warning.age||0)*190,0,Math.PI*2);ctx.stroke();continue;
+    if (warning.kind === "sonic") {
+      const active = warning.stage === "active";
+      const radius = active ? warning.ringRadius ?? 0 : 28 + 12 * (1 - warning.remaining / warning.totalDuration);
+      const angle = warning.safeAngle ?? Math.PI / 2, arc = warning.safeArc ?? 0;
+      ctx.save();
+      ctx.strokeStyle = "rgba(251,113,133,.75)"; ctx.lineWidth = active ? SONIC_RING_THICKNESS : 3;
+      ctx.beginPath(); ctx.arc(warning.x, warning.y, radius, angle + arc / 2, angle - arc / 2 + Math.PI * 2); ctx.stroke();
+      if (warning.ringIndex === 0) {
+        const left = angle - arc / 2, right = angle + arc / 2, reach = 680;
+        ctx.fillStyle = "rgba(103,232,249,.045)";
+        ctx.beginPath(); ctx.moveTo(warning.x, warning.y);
+        ctx.arc(warning.x, warning.y, reach, left, right); ctx.closePath(); ctx.fill();
+        ctx.strokeStyle = "rgba(103,232,249,.5)"; ctx.lineWidth = 1.5;
+        for (const edge of [left, right]) {
+          ctx.beginPath(); ctx.moveTo(warning.x, warning.y);
+          ctx.lineTo(warning.x + Math.cos(edge) * reach, warning.y + Math.sin(edge) * reach); ctx.stroke();
+        }
+      }
+      ctx.restore(); continue;
+    }
+    if (warning.kind === "lane_laser") {
+      const active = warning.stage === "active", width = warning.laneWidth ?? 0;
+      const x = warning.x - width / 2, top = GAMEPLAY_SAFE_RECT.top, height = GAMEPLAY_SAFE_RECT.height;
+      ctx.save(); ctx.fillStyle = active ? "rgba(255,82,110,.48)" : "rgba(251,146,60,.13)";
+      ctx.fillRect(x, top, width, height);
+      ctx.strokeStyle = active ? "#ffe4e6" : "#fbbf24"; ctx.lineWidth = active ? 3 : 1.5;
+      ctx.strokeRect(x, top, width, height);
+      if (active) { ctx.fillStyle = "rgba(255,228,230,.30)"; ctx.fillRect(x + 6, top, width - 12, height); }
+      else for (let y = top + 22; y < GAMEPLAY_SAFE_RECT.bottom; y += 64) {
+        ctx.beginPath(); ctx.moveTo(warning.x - 10, y); ctx.lineTo(warning.x, y + 10); ctx.lineTo(warning.x + 10, y); ctx.stroke();
+      }
+      ctx.restore(); continue;
     }
     if(warning.kind==="acid"&&warning.stage==="active"){
       ctx.fillStyle="rgba(163,230,53,.25)";ctx.strokeStyle="#bef264";ctx.lineWidth=2;ctx.beginPath();ctx.arc(warning.x,warning.y,warning.radius,0,Math.PI*2);ctx.fill();ctx.stroke();continue;
@@ -417,7 +448,11 @@ export function drawLegacyWorld(
   }
   ctx.restore();
   for (const projectile of world.projectiles) {
-    const missile = projectile.projectileKind === "missile" || projectile.projectileKind === "bigbang";
+    const missile = projectile.projectileKind !== "bullet";
+    if (projectile.owner === "enemy" && projectile.appearance === "boss" && (missile ? projectile.missileAge < .15 : projectile.lifetime > 5.88)) {
+      ctx.save(); ctx.fillStyle = "rgba(255,82,110,.55)";
+      ctx.beginPath(); ctx.arc(projectile.x, projectile.y, missile ? 10 : 6, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+    }
     if (!reducedMotion && !missile) {
       const speed = Math.max(1, Math.hypot(projectile.vx, projectile.vy));
       const length = projectile.owner === "enemy" ? 7 : 13;
@@ -434,7 +469,8 @@ export function drawLegacyWorld(
       if (projectile.bigBang) ctx.scale(1.5, 1.5);
       if (powered) {
         const flame = 6 + 10 * projectile.speed / Math.max(1, projectile.cruiseSpeed);
-        ctx.fillStyle = "#ffcc80"; ctx.shadowColor = "#fb923c"; ctx.shadowBlur = 12;
+        ctx.fillStyle = projectile.owner === "enemy" ? "#ff526e" : "#ffcc80";
+        ctx.shadowColor = projectile.owner === "enemy" ? "#fb7185" : "#fb923c"; ctx.shadowBlur = 12;
         ctx.beginPath(); ctx.moveTo(-3, 12); ctx.lineTo(0, 14 + flame); ctx.lineTo(3, 12); ctx.closePath(); ctx.fill();
       }
       ctx.shadowColor = projectile.color;
@@ -453,6 +489,10 @@ export function drawLegacyWorld(
       ctx.shadowBlur = 0;
       ctx.fillStyle = "#fef3c7";
       ctx.fillRect(-1.5, -3, 3, 5);
+      if (projectile.owner === "enemy" && !powered) {
+        ctx.fillStyle = "rgba(255,82,110,.6)";
+        ctx.beginPath(); ctx.arc(0, 14, 4 + Math.sin(projectile.missileAge * 16), 0, Math.PI * 2); ctx.fill();
+      }
       ctx.restore();
     } else {
       ctx.fillStyle = projectile.color;

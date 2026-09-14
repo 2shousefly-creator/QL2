@@ -1,4 +1,5 @@
 import { angularBarPolygon, BOSS_VISUAL_WIDTH_SCALE, BOSS_VISUAL_ASPECT } from "../airCombatHudLayout";
+import { SONIC_RING_THICKNESS } from "../airCombatBoss";
 import { isElite } from "../airCombatWaves";
 import { Application, Container, Graphics, Sprite, Text } from "pixi.js";
 import { AIR_COMBAT_WORLD, GAMEPLAY_SAFE_RECT } from "../airCombatConfig";
@@ -254,11 +255,11 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
       smoke.position.set(particle.x, particle.y);
       smoke.width = smoke.height = particle.size * (.65 + age * .9);
       smoke.alpha = Math.min(1, (1 - age) ** 1.4 * (reducedMotion ? .4 : .7) * 1.7);
-      smoke.tint = 0xcbd5e1;
+      smoke.tint = particle.color;
     }
     this.missileSmoke.end();
     for (const p of world.projectiles) {
-      const missile = p.projectileKind === "missile" || p.projectileKind === "bigbang";
+      const missile = p.projectileKind !== "bullet";
       const powered = missile && p.missileState === "powered";
       const round = p.owner === "enemy" ? "charge" : world.aircraft.aircraftId === "breaker" ? "enemyTracer"
         : p.owner === "drone" || world.aircraft.aircraftId === "phantom" ? "laser" : "tracer";
@@ -269,7 +270,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
       sprite.height = p.bigBang ? 42 : missile ? 28 : p.radius * (p.owner === "enemy" ? 4 : 6);
       const tint = p.owner === "enemy" ? p.appearance === "dangerous" ? 0xffbc4d : 0xff667d : p.owner === "drone" ? 0xc4b5fd : visual.tint;
       if (p.owner === "enemy") {
-        sprite.width = sprite.height = p.radius * (p.appearance === "boss" ? 3.5 : 3);
+        if (!missile) sprite.width = sprite.height = p.radius * (p.appearance === "boss" ? 3.5 : 3);
         sprite.tint = tint;
       } else sprite.tint = 0xffffff;
       const glow = this.projectileGlows.get(p.id, this.assets.effect(missile ? powered ? "fire" : "charge" : p.owner === "enemy" ? "charge" : "laser"));
@@ -280,9 +281,11 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
         glow.position.set(p.x - dx * nozzle, p.y - dy * nozzle);
         glow.rotation = sprite.rotation; glow.width = sprite.width * (missile ? .85 : 1.5);
         glow.height = missile ? powered ? (p.bigBang ? 32 : 22) * (.45 + .55 * p.speed / Math.max(1, p.cruiseSpeed)) : 6 : sprite.height * 1.6;
-        glow.tint = missile ? p.bigBang ? 0xffbd59 : 0xffdb99 : tint;
-        glow.alpha = missile ? powered ? .85 : .12 : p.owner === "enemy" ? .25 : .4; glow.blendMode = "add";
+        glow.tint = p.projectileKind === "boss_missile" ? 0xff526e : missile ? p.bigBang ? 0xffbd59 : 0xffdb99 : tint;
+        glow.alpha = missile ? powered ? .85 : p.owner === "enemy" ? .55 : .12 : p.owner === "enemy" ? .25 : .4; glow.blendMode = "add";
       }
+      if (p.id > this.lastProjectile && p.owner === "enemy" && p.appearance === "boss")
+        this.vfx.spawn("muzzle", p.x, p.y, missile ? 18 : 10, .12, 0xff526e);
       if (p.id > this.lastProjectile && p.owner !== "enemy") {
         this.vfx.spawn("muzzle", p.x, p.y, p.owner === "drone" ? 14 : 18, 0.09, p.owner === "drone" ? 0xc4b5fd : visual.tint);
         if (p.owner === "player") this.recoil = 1.4;
@@ -326,8 +329,36 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
         this.telegraphs.moveTo(warning.fromX??warning.x,warning.fromY??warning.y).lineTo(warning.x,warning.y).stroke({color:warning.kind==="dash"?0xfb923c:0xe879f9,width:warning.kind==="dash"?warning.radius*2:3,alpha:.24});
         this.telegraphs.moveTo(warning.fromX??warning.x,warning.fromY??warning.y).lineTo(warning.x,warning.y).stroke({color:0xfef3c7,width:1.5,alpha:.8});continue;
       }
-      if(warning.kind==="pulse"&&warning.stage==="active"){
-        this.telegraphs.circle(warning.x,warning.y,(warning.age||0)*190).stroke({color:0xfb7185,width:12,alpha:.6});continue;
+      if (warning.kind === "sonic") {
+        const active = warning.stage === "active";
+        const radius = active ? warning.ringRadius ?? 0 : 28 + 12 * (1 - warning.remaining / warning.totalDuration);
+        const angle = warning.safeAngle ?? Math.PI / 2, arc = warning.safeArc ?? 0;
+        const start = angle + arc / 2, end = angle - arc / 2 + Math.PI * 2;
+        this.telegraphs.moveTo(warning.x + Math.cos(start) * radius, warning.y + Math.sin(start) * radius)
+          .arc(warning.x, warning.y, radius, start, end)
+          .stroke({ color: 0xfb7185, width: active ? SONIC_RING_THICKNESS : 3, alpha: active ? .75 : .8 });
+        if (warning.ringIndex === 0) {
+          const left = angle - arc / 2, right = angle + arc / 2, reach = 680;
+          this.telegraphs.moveTo(warning.x, warning.y)
+            .lineTo(warning.x + Math.cos(left) * reach, warning.y + Math.sin(left) * reach)
+            .arc(warning.x, warning.y, reach, left, right).closePath().fill({ color: 0x67e8f9, alpha: .045 });
+          for (const edge of [left, right]) this.telegraphs.moveTo(warning.x, warning.y)
+            .lineTo(warning.x + Math.cos(edge) * reach, warning.y + Math.sin(edge) * reach)
+            .stroke({ color: 0x67e8f9, width: 1.5, alpha: .5 });
+        }
+        continue;
+      }
+      if (warning.kind === "lane_laser") {
+        const active = warning.stage === "active", width = warning.laneWidth ?? 0;
+        const x = warning.x - width / 2, top = GAMEPLAY_SAFE_RECT.top, height = GAMEPLAY_SAFE_RECT.height;
+        this.telegraphs.rect(x, top, width, height)
+          .fill({ color: active ? 0xff526e : 0xfb923c, alpha: active ? .48 : .13 })
+          .stroke({ color: active ? 0xffe4e6 : 0xfbbf24, width: active ? 3 : 1.5, alpha: .85 });
+        if (active) this.telegraphs.rect(x + 6, top, width - 12, height).fill({ color: 0xffe4e6, alpha: .30 });
+        else for (let y = top + 22; y < GAMEPLAY_SAFE_RECT.bottom; y += 64)
+          this.telegraphs.moveTo(warning.x - 10, y).lineTo(warning.x, y + 10).lineTo(warning.x + 10, y)
+            .stroke({ color: 0xfbbf24, width: 2, alpha: .7 });
+        continue;
       }
       if(warning.kind==="acid"&&warning.stage==="active"){
         this.telegraphs.circle(warning.x,warning.y,warning.radius).fill({color:0xa3e635,alpha:.22}).stroke({color:0xbef264,width:2,alpha:.85});continue;
