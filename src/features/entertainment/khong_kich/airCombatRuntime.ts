@@ -862,6 +862,7 @@ export function castWorldSkill(world: CombatWorld, skillId: SkillId): SkillCastR
             break;
         }
         case "escort_drone": {
+            droneNavigation.delete(world);
             const point = clampCircleToGameplayRect(world.playerX - 28, world.playerY + 8, 9);
             world.droneX = point.x;
             world.droneY = point.y;
@@ -925,49 +926,135 @@ export function movePlayerByDelta(world: CombatWorld, dx: number, dy: number): v
         world.ended = true;
     enterCountdownIfClear(world);
 }
+interface DroneNavigation {
+    vx: number; vy: number; side: number; dodgeX: number; dodgeY: number;
+    dodgeUntil: number; threatId: number; threatRisk: number;
+}
+const droneNavigation = new WeakMap<CombatWorld, DroneNavigation>();
 function updateDroneMovement(world: CombatWorld, dt: number): void {
     if (!world.aircraft.droneActive) {
         world.droneTargetId = null;
+        droneNavigation.delete(world);
         return;
     }
-    let target = world.enemies.find((enemy) => enemy.id === world.droneTargetId && enemy.hp > 0) || null;
-    if (!target) {
-        target = nearestEnemy(world, world.droneX, world.droneY, [], true);
-        world.droneTargetId = target?.id ?? null;
+    // Attack selection is independent of the navigation anchor.
+    const target = world.enemies.find(enemy => enemy.id === world.droneTargetId && enemy.hp > 0)
+        || nearestEnemy(world, world.droneX, world.droneY, [], true);
+    world.droneTargetId = target?.id ?? null;
+    let nav = droneNavigation.get(world);
+    if (!nav) {
+        nav = { vx: 0, vy: 0, side: -1, dodgeX: 0, dodgeY: 0, dodgeUntil: 0, threatId: -1, threatRisk: 0 };
+        droneNavigation.set(world, nav);
+    }
+    // Change escort side only near an edge, with a wide hysteresis band.
+    if (world.playerX < GAMEPLAY_SAFE_RECT.left + 48) nav.side = 1;
+    else if (world.playerX > GAMEPLAY_SAFE_RECT.right - 48) nav.side = -1;
+    const anchor = clampCircleToGameplayRect(world.playerX + nav.side * 37, world.playerY + 13, 9);
+    if (!Number.isFinite(world.droneX) || !Number.isFinite(world.droneY)) {
+        world.droneX = anchor.x; world.droneY = anchor.y; nav.vx = nav.vy = 0;
     }
     world.droneOrbitAngle = (world.droneOrbitAngle + dt * 1.9) % (Math.PI * 2);
-    const desired = target
-        ? {
-            x: target.x + Math.cos(world.droneOrbitAngle) * (target.radius + 44),
-            y: target.y + target.radius + 48 + Math.sin(world.droneOrbitAngle) * 16,
-        }
-        : { x: world.playerX - 28, y: world.playerY + 8 };
+    const leashX = world.droneX - world.playerX, leashY = world.droneY - world.playerY;
+    const leash = Math.hypot(leashX, leashY);
+    const returnWeight = Math.max(0, Math.min(1, (leash - 60) / 30));
+    const gain = 5 + returnWeight * 8;
+    let desiredVx = (anchor.x - world.droneX) * gain;
+    let desiredVy = (anchor.y - world.droneY) * gain;
+    // Cosmetic bob disappears as the leash tightens.
+    desiredVx += Math.cos(world.droneOrbitAngle) * 9 * (1 - returnWeight);
+    desiredVy += Math.sin(world.droneOrbitAngle) * 7 * (1 - returnWeight);
+    const horizon = .55;
+    const threats: { id: number; vx: number; vy: number; x: number; y: number; radius: number; time: number; risk: number }[] = [];
     for (const p of world.projectiles) {
-        if (p.owner !== "enemy")
-            continue;
-        const px = p.x + p.vx * .28, py = p.y + p.vy * .28, dist = Math.hypot(px - world.droneX, py - world.droneY);
-        if (dist < 48) {
-            desired.x += (world.droneX < px ? -1 : 1) * (48 - dist) * 2;
-            desired.y -= 18;
+        if (p.owner !== "enemy") continue;
+        const radius = 9 + p.radius + 10;
+        const dx = world.droneX - p.x, dy = world.droneY - p.y;
+        // Swept AABB rejects most bullets before closest-approach work.
+        if (Math.abs(dx) > Math.abs(p.vx) * horizon + radius || Math.abs(dy) > Math.abs(p.vy) * horizon + radius) continue;
+        const speedSquared = p.vx * p.vx + p.vy * p.vy;
+        if (speedSquared < 1) continue;
+        const approach = (dx * p.vx + dy * p.vy) / speedSquared;
+        if (approach < 0) continue;
+        const time = Math.min(horizon, approach);
+        const missSquared = (dx - p.vx * time) ** 2 + (dy - p.vy * time) ** 2;
+        if (missSquared >= radius * radius) continue;
+        const risk = (1 - Math.sqrt(missSquared) / radius) / (.07 + time);
+        let index = 0;
+        while (index < threats.length && threats[index].risk >= risk) index++;
+        if (index >= 4) continue;
+        threats.splice(index, 0, { id: p.id, vx: p.vx, vy: p.vy, x: p.x, y: p.y, radius, time, risk });
+        if (threats.length > 4) threats.pop();
+    }
+    const first = threats[0];
+    if (first) {
+        let dodgeX = 0, dodgeY = 0, totalWeight = 0, primaryX = 0, primaryY = 0;
+        for (const threat of threats) {
+            const speed = Math.hypot(threat.vx, threat.vy);
+            const nx = -threat.vy / speed, ny = threat.vx / speed;
+            const step = threat.radius + 16;
+            const score = (sign: number) => {
+                const x = world.droneX + nx * sign * step, y = world.droneY + ny * sign * step;
+                const bounded = clampCircleToGameplayRect(x, y, 9);
+                const boundaryCost = Math.hypot(x - bounded.x, y - bounded.y) * 14;
+                const leashCost = Math.max(0, Math.hypot(x - world.playerX, y - world.playerY) - 90) * 12;
+                const clearance = Math.abs((x - threat.x) * nx + (y - threat.y) * ny);
+                const commitment = nav!.dodgeUntil > world.elapsed ? (nx * sign * nav!.dodgeX + ny * sign * nav!.dodgeY) * 14 : 0;
+                return clearance * 2 - boundaryCost - leashCost - Math.hypot(x - anchor.x, y - anchor.y) * .3 + commitment;
+            };
+            const sign = score(1) > score(-1) ? 1 : -1;
+            if (threat === first) { primaryX = nx * sign; primaryY = ny * sign; }
+            dodgeX += nx * sign * threat.risk; dodgeY += ny * sign * threat.risk; totalWeight += threat.risk;
+        }
+        // Commit briefly to a side; a substantially riskier new threat can override it.
+        if (world.elapsed >= nav.dodgeUntil || first.id !== nav.threatId && first.risk > nav.threatRisk * 1.5) {
+            // Opposing threats must not cancel the most urgent escape completely.
+            if (Math.hypot(dodgeX, dodgeY) < totalWeight * .2) { dodgeX = primaryX; dodgeY = primaryY; }
+            const length = Math.hypot(dodgeX, dodgeY);
+            if (length > .01) {
+                nav.dodgeX = dodgeX / length; nav.dodgeY = dodgeY / length;
+                nav.dodgeUntil = world.elapsed + .16;
+                nav.threatId = first.id; nav.threatRisk = first.risk;
+            }
+        }
+        const urgency = Math.max(.25, Math.min(1, totalWeight / 5));
+        const escortWeight = first.time < .18 ? .2 : .65;
+        desiredVx = desiredVx * escortWeight + nav.dodgeX * 280 * urgency;
+        desiredVy = desiredVy * escortWeight + nav.dodgeY * 280 * urgency;
+    } else if (world.elapsed < nav.dodgeUntil) {
+        desiredVx += nav.dodgeX * 100; desiredVy += nav.dodgeY * 100;
+    }
+    if (leash > 75) {
+        const outward = (desiredVx * leashX + desiredVy * leashY) / leash;
+        const allowed = Math.max(-300, (90 - leash) * 9);
+        if (outward > allowed) {
+            desiredVx -= leashX / leash * (outward - allowed);
+            desiredVy -= leashY / leash * (outward - allowed);
         }
     }
+    const speed = Math.hypot(desiredVx, desiredVy);
+    if (speed > 300) { desiredVx *= 300 / speed; desiredVy *= 300 / speed; }
+    const acceleration = first?.time < .18 ? 2400 : 1500;
+    const dvx = desiredVx - nav.vx, dvy = desiredVy - nav.vy;
+    const steering = Math.min(1, acceleration * dt / (Math.hypot(dvx, dvy) || 1));
+    nav.vx += dvx * steering; nav.vy += dvy * steering;
+    // Brake outward momentum near the hard leash; player dashes can stretch it temporarily.
+    if (leash > 75) {
+        const outward = (nav.vx * leashX + nav.vy * leashY) / leash;
+        const allowed = Math.max(0, (90 - leash) / Math.max(dt, .001));
+        if (outward > allowed) { nav.vx -= leashX / leash * (outward - allowed); nav.vy -= leashY / leash * (outward - allowed); }
+    }
+    const nextX = world.droneX + nav.vx * dt, nextY = world.droneY + nav.vy * dt;
+    const next = clampCircleToGameplayRect(nextX, nextY, 9);
+    if (next.x !== nextX) nav.vx = 0;
+    if (next.y !== nextY) nav.vy = 0;
+    world.droneX = next.x; world.droneY = next.y;
+    // Keep inherited combat stats, regeneration and collision authority unchanged.
     const stats = getEffectiveAircraftStats(world.aircraft), ratio = getSkillRuntimeValues(world.aircraft, "escort_drone").damageMultiplier;
     const newMax = stats.maxHp * ratio;
     world.droneHp = Math.min(newMax, world.droneHp + Math.max(0, newMax - world.droneMaxHp) + stats.hpRegen * ratio * dt);
     world.droneMaxHp = newMax;
     world.droneArmor = stats.armor * ratio;
     world.droneInvulnerability = Math.max(0, world.droneInvulnerability - dt);
-    const clampedDesired = clampCircleToGameplayRect(desired.x, desired.y, 9);
-    const dx = clampedDesired.x - world.droneX;
-    const dy = clampedDesired.y - world.droneY;
-    const distance = Math.hypot(dx, dy);
-    if (distance <= 0.05)
-        return;
-    const maxDistance = (target ? 235 : 300) * dt;
-    const movementRatio = Math.min(1, maxDistance / distance);
-    const next = clampCircleToGameplayRect(world.droneX + dx * movementRatio, world.droneY + dy * movementRatio, 9);
-    world.droneX = next.x;
-    world.droneY = next.y;
 }
 function clearHostileObjects(world: CombatWorld): void {
     for (let i = world.projectiles.length - 1; i >= 0; i--)

@@ -1,4 +1,5 @@
 import { angularBarPolygon } from "./airCombatHudLayout";
+import { getTerrainWorld, TERRAIN_HEIGHT, type TerrainShape } from "./airCombatTerrain";
 import type { CanvasCombatAccents } from "./CanvasCombatAccents";
 import { isElite } from "./airCombatWaves";
 import { AIR_COMBAT_WORLD, AIRCRAFT_CONFIGS, ENEMY_CONFIGS, GAMEPLAY_SAFE_RECT } from "./airCombatConfig";
@@ -6,6 +7,59 @@ import type { CombatWorld } from "./airCombatRuntime";
 import type { AircraftId, EnemyType } from "./airCombatTypes";
 import { getEffectiveAircraftStats } from "./airCombatEngine";
 import { HealthBarPresentation, activeShieldAmount, statusBarText, DAMAGE_LABEL_SECONDS, trackingBarWidth, trackingBarX, trackingBarY, type DamageLabel } from "./airCombatFeedback";
+
+const terrainTiles = new WeakMap<CombatWorld, { canvas: HTMLCanvasElement; revision: number }[]>();
+function paintTerrainShapes(ctx: CanvasRenderingContext2D, shapes: TerrainShape[]) {
+  for (const shape of shapes) {
+    const p = shape.points;
+    ctx.fillStyle = ctx.strokeStyle = shape.css;
+    if (shape.kind === "rect") { ctx.fillRect(p[0], p[1], p[2], p[3]); continue; }
+    ctx.beginPath();
+    if (shape.kind === "ellipse") ctx.ellipse(p[0], p[1], p[2], p[3], 0, 0, Math.PI * 2);
+    else {
+      ctx.moveTo(p[0], p[1]);
+      for (let i = 2; i < p.length; i += 2) ctx.lineTo(p[i], p[i + 1]);
+    }
+    if (shape.kind === "line") { ctx.lineWidth = shape.width; ctx.stroke(); }
+    else { ctx.closePath(); ctx.fill(); }
+  }
+}
+function drawTerrain(ctx: CanvasRenderingContext2D, world: CombatWorld, reducedMotion: boolean) {
+  const terrain = getTerrainWorld(world, reducedMotion);
+  let tiles = terrainTiles.get(world);
+  if (!tiles) {
+    tiles = terrain.segments.map(() => {
+      const canvas = document.createElement("canvas");
+      canvas.width = AIR_COMBAT_WORLD.width; canvas.height = TERRAIN_HEIGHT;
+      return { canvas, revision: -1 };
+    });
+    terrainTiles.set(world, tiles);
+  }
+  ctx.save();
+  ctx.fillStyle = "#3b5547"; ctx.fillRect(0, 0, AIR_COMBAT_WORLD.width, AIR_COMBAT_WORLD.height);
+  for (let i = 0; i < tiles.length; i++) {
+    const tile = tiles[i], segment = terrain.segments[i];
+    if (tile.revision !== segment.revision) {
+      const surface = tile.canvas.getContext("2d");
+      if (surface) {
+        surface.clearRect(0, 0, tile.canvas.width, tile.canvas.height);
+        paintTerrainShapes(surface, segment.ground); paintTerrainShapes(surface, segment.landmarks);
+        tile.revision = segment.revision;
+      }
+    }
+    ctx.drawImage(tile.canvas, 0, Math.round(segment.y));
+  }
+  ctx.fillStyle = `rgba(30,65,88,${.24 + terrain.bossAtmosphere * .06})`;
+  ctx.fillRect(0, 0, AIR_COMBAT_WORLD.width, AIR_COMBAT_WORLD.height);
+  // A few broad translucent clouds; runtime time also freezes these on pause.
+  ctx.fillStyle = "#9ab8c5";
+  ctx.globalAlpha = .045 * (1 - terrain.bossAtmosphere * .6);
+  for (let i = 0; i < 5; i++) {
+    const y = ((i * 173 + world.elapsed * (reducedMotion ? .8 : 7)) % 880) - 120;
+    ctx.beginPath(); ctx.ellipse((i * 137) % 360, y, 105, 37, -.2, 0, Math.PI * 2); ctx.fill();
+  }
+  ctx.restore();
+}
 
 function traceAircraftBody(
   ctx: CanvasRenderingContext2D,
@@ -273,13 +327,7 @@ export function drawLegacyWorld(
 ): void {
   const { width, height, hudHeight } = AIR_COMBAT_WORLD;
   const aircraft = AIRCRAFT_CONFIGS[aircraftId];
-  const background = ctx.createLinearGradient(0, 0, 0, height);
-  background.addColorStop(0, "#203c57");
-  background.addColorStop(0.18, "#294e6d");
-  background.addColorStop(0.58, "#1d3b57");
-  background.addColorStop(1, "#142c44");
-  ctx.fillStyle = background;
-  ctx.fillRect(0, 0, width, height);
+  drawTerrain(ctx, world, reducedMotion);
 
   ctx.fillStyle = "rgba(2,6,23,.98)";
   ctx.fillRect(0, 0, width, hudHeight);
@@ -298,14 +346,14 @@ export function drawLegacyWorld(
   );
   ctx.clip();
 
-  for (let index = 0; index < 62; index++) {
+  for (let index = 0; index < 18; index++) {
     const x = GAMEPLAY_SAFE_RECT.left + ((index * 83 + 19) % GAMEPLAY_SAFE_RECT.width);
     const speed = 0.28 + (index % 5) * 0.14;
-    const scroll = reducedMotion ? 0 : world.scroll * speed;
+    const scroll = world.elapsed * (reducedMotion ? 6 : 65) * speed;
     const y = GAMEPLAY_SAFE_RECT.top + ((index * 67 + scroll) % GAMEPLAY_SAFE_RECT.height);
-    ctx.globalAlpha = 0.16 + (index % 4) * 0.1;
+    ctx.globalAlpha = reducedMotion ? .025 : .055;
     ctx.fillStyle = index % 11 === 0 ? "#93c5fd" : "#e2e8f0";
-    ctx.fillRect(x, y, index % 8 === 0 ? 1.5 : 0.9, index % 8 === 0 ? 2.5 : 1.2);
+    ctx.fillRect(x, y, .7, reducedMotion ? 3 : 14);
   }
   ctx.globalAlpha = 1;
 

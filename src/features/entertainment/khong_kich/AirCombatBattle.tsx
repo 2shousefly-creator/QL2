@@ -225,7 +225,7 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
         statusStripRef.current?.update(world);
         for (const id of skillIds) {
           const node = durationNodes.current[id], timer = getActiveSkillDuration(world, id);
-          if (node) { node.hidden = !timer; node.style.setProperty("--skill-duration", String(timer ? Math.min(1, timer.remaining / timer.duration) : 0)); }
+          if (node) { node.hidden = !timer; node.style.setProperty("--skill-duration", String(timer?.progress ?? 0)); }
         }
         try { presentation.render(world, visualDelta, reducedMotion); }
         catch {

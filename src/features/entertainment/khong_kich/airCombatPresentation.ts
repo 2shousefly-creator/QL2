@@ -5,6 +5,19 @@ import type { AircraftCombatState, CoreId, SkillId } from "./airCombatTypes";
 import type { CombatWorld } from "./airCombatRuntime";
 
 const number = (value: number) => value.toLocaleString("vi-VN", { maximumFractionDigits: 2 });
+function hawkEyeDuration(state: AircraftCombatState) {
+  const stats = getEffectiveAircraftStats(state);
+  const netDrain = getSkillRuntimeValues(state, "escort_drone").upkeepPerSecond - stats.resourceRegen;
+  const energy = Math.max(0, state.currentResource);
+  const estimate = netDrain > 0 ? energy / netDrain : null;
+  return {
+    progress: stats.maxResource > 0 ? Math.max(0, Math.min(1, energy / stats.maxResource)) : 0,
+    remaining: estimate !== null && Number.isFinite(estimate) ? estimate : null,
+  };
+}
+function hawkEyeTimeLabel(remaining: number | null) {
+  return remaining === null ? "Duy trì: Không giới hạn với mức hồi Điện hiện tại" : `Duy trì ước tính: ${number(remaining)}s`;
+}
 export function getSkillTooltipModel(state: AircraftCombatState, id: SkillId) {
   const config = SKILL_CONFIGS[id], v = getSkillRuntimeValues(state, id);
   const free = hasCore(state, 84) && (state.coreState.skillCasts + 1) % 4 === 0;
@@ -30,7 +43,10 @@ export function getSkillTooltipModel(state: AircraftCombatState, id: SkillId) {
     case "armor_shield": detailRows.push(`Giảm ${number((1 - v.damageTakenMultiplier) * 100)}% sát thương`); break;
     case "sweeping_cannon": detailRows.push(`${v.count} tia · trúng thêm cùng loạt: ${number(v.sideProjectileMultiplier * 100)}% viên đầu`); break;
     case "focus_laser": detailRows.push(`Tụ: ${number(v.charge)}s`); break;
-    case "escort_drone": detailRows.push(`Kế thừa ${number(v.damageMultiplier * 100)}% chỉ số · tiêu hao ${v.upkeepPerSecond} Điện/s`); break;
+    case "escort_drone":
+      detailRows.push(`Kế thừa ${number(v.damageMultiplier * 100)}% chỉ số · tiêu hao ${v.upkeepPerSecond} Điện/s`,
+        `Hồi Điện: ${number(getEffectiveAircraftStats(state).resourceRegen)}/s`, hawkEyeTimeLabel(hawkEyeDuration(state).remaining));
+      break;
   }
   // Secondary mechanics only; numerical upgrades above already come from runtime.
   for (const row of [21, 24, 27, 30, 33, 35, 38, 44]) {
@@ -45,7 +61,13 @@ export function getSkillTooltipModel(state: AircraftCombatState, id: SkillId) {
 
 export function getActiveSkillDuration(world: CombatWorld, id: SkillId) {
   const state = world.aircraft;
-  if (id === "escort_drone") return null;
+  if (id === "escort_drone") {
+    if (!state.droneActive) return null;
+    const energy = hawkEyeDuration(state);
+    // Time estimates are separate from visual progress for this resource-driven toggle.
+    return { remaining: energy.remaining ?? 0, duration: energy.remaining ?? 0, progress: energy.progress,
+      timeLabel: hawkEyeTimeLabel(energy.remaining) };
+  }
   const v = getSkillRuntimeValues(state, id);
   let remaining = state.activeEffects[id] || 0;
   let duration = state.activeEffectDurations?.[id] ?? v.duration + (id === "focus_laser" ? v.charge : 0);
@@ -56,7 +78,8 @@ export function getActiveSkillDuration(world: CombatWorld, id: SkillId) {
       world.decoyVolleys > 0 ? world.decoyVolleyCd + (world.decoyVolleys - 1) * .75 + v.duration : 0);
   }
   if (id === "focus_laser") remaining = world.laserCharge + world.laserRemaining;
-  return remaining > 0 && duration > 0 && Number.isFinite(duration) ? { remaining, duration: Math.max(duration, remaining) } : null;
+  return remaining > 0 && duration > 0 && Number.isFinite(duration)
+    ? { remaining, duration: Math.max(duration, remaining), progress: Math.min(1, remaining / duration), timeLabel: undefined } : null;
 }
 
 export interface StatusPresentation {
@@ -69,6 +92,8 @@ export interface StatusPresentation {
   stacks: number;
   remaining: number;
   duration: number;
+  progress?: number;
+  timeLabel?: string;
   priority: number;
 }
 
@@ -86,11 +111,11 @@ export function getStatusPresentations(world: CombatWorld): StatusPresentation[]
   const maxHp = getEffectiveAircraftStats(s).maxHp;
   for (const id of AIRCRAFT_CONFIGS[s.aircraftId].skillIds) {
     const timer = getActiveSkillDuration(world, id);
-    if (timer || id === "escort_drone" && s.droneActive) {
+    if (timer) {
       const model = getSkillTooltipModel(s, id);
       result.push({ id: `skill:${id}`, group: "buff", name: model.title, icon: { kind: "skill", id },
         description: [model.description, ...model.detailRows.slice(1)].join(" "), source: "Kỹ năng", stacks: 1,
-        remaining: timer?.remaining ?? Infinity, duration: timer?.duration ?? Infinity, priority: 100 });
+        remaining: timer.remaining, duration: timer.duration, progress: timer.progress, timeLabel: timer.timeLabel, priority: 100 });
     }
   }
   for (const entry of TIMED_STATUSES) {

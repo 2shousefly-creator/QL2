@@ -7,6 +7,10 @@ import type { CombatWorld } from "./airCombatRuntime";
 export interface StatusStripHandle { update(world: CombatWorld): void }
 const genericIcons = { burn: Flame, acid: FlaskConical, armor: ShieldMinus, shield: Shield, stun: Zap };
 const timeLabel = (value: number) => Number.isFinite(value) ? `${Math.max(0, value).toFixed(1).replace(".", ",")}s` : "Đang hiệu lực";
+const progressRatio = (status?: StatusPresentation) => {
+  const value = status?.progress ?? (status && status.duration > 0 ? status.remaining / status.duration : 1);
+  return Number.isFinite(value) ? Math.max(0, Math.min(1, value)) : 1;
+};
 
 /** Membership renders only when it changes. Timers use the existing combat frame loop. */
 export const AirCombatStatusStrip = React.memo(forwardRef<StatusStripHandle, { top: number }>(({ top }, ref) => {
@@ -29,7 +33,7 @@ export const AirCombatStatusStrip = React.memo(forwardRef<StatusStripHandle, { t
     if (signature.current !== nextSignature) { signature.current = nextSignature; setItems(current.current); }
     for (const node of host.current?.querySelectorAll<HTMLElement>("[data-status-id]") || []) {
       const status = current.current.find(s => s.id === node.dataset.statusId);
-      const ratio = status && Number.isFinite(status.duration) ? Math.max(0, Math.min(1, status.remaining / status.duration)) : 1;
+      const ratio = progressRatio(status);
       node.style.setProperty("--status-elapsed", `${(1 - ratio) * 360}deg`);
     }
     const active = current.current.find(s => s.id === selectedRef.current);
@@ -37,7 +41,7 @@ export const AirCombatStatusStrip = React.memo(forwardRef<StatusStripHandle, { t
     if (active && tooltip.current) {
       const time = tooltip.current.querySelector("[data-status-time]");
       const description = tooltip.current.querySelector("[data-status-description]");
-      if (time) time.textContent = timeLabel(active.remaining);
+      if (time) time.textContent = active.timeLabel ?? timeLabel(active.remaining);
       if (description) description.textContent = active.description;
     }
   } }), []);
@@ -50,6 +54,7 @@ export const AirCombatStatusStrip = React.memo(forwardRef<StatusStripHandle, { t
           const status = current.current.find(s => s.id === item.id) || item;
           const Generic = status.icon.kind === "status" ? genericIcons[status.icon.id] : null;
           return <button key={status.id} type="button" data-status-id={status.id} className="air-status-icon"
+            style={{ "--status-elapsed": `${(1 - progressRatio(status)) * 360}deg` } as React.CSSProperties}
             aria-label={`${status.name}${status.stacks > 1 ? ` ×${status.stacks}` : ""}`} aria-pressed={selected === status.id}
             onClick={() => { const next = selected === status.id ? null : status.id; selectedRef.current = next; setSelected(next); }}>
             {status.icon.kind === "status" ? Generic && <Generic aria-hidden="true" /> : <CombatUiIcon {...status.icon} fallback="◆" />}
@@ -61,7 +66,7 @@ export const AirCombatStatusStrip = React.memo(forwardRef<StatusStripHandle, { t
       </div>;
     })}
     {active && <aside ref={tooltip} className="air-status-tooltip" role="status">
-      <div className="air-tooltip-heading"><strong>{active.name}</strong><span data-status-time>{timeLabel(active.remaining)}</span></div>
+      <div className="air-tooltip-heading"><strong>{active.name}</strong><span data-status-time>{active.timeLabel ?? timeLabel(active.remaining)}</span></div>
       <p data-status-description>{active.description}</p>
       <small>Nguồn: {active.source}{active.stacks > 1 ? ` · Stack: ×${active.stacks}` : ""}</small>
     </aside>}

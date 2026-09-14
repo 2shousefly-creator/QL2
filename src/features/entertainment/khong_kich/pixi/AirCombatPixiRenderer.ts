@@ -133,7 +133,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     this.thrust = Math.max(Math.hypot(dx, dy), this.thrust * Math.exp(-delta * 14));
     this.recoil *= Math.exp(-delta * 24);
     this.shake *= Math.exp(-delta * 12);
-    this.sky.update(delta, world.elapsed, world.bossSpawned && !world.bossDefeated, reducedMotion);
+    this.sky.update(delta, world, reducedMotion);
     this.root.position.set(reducedMotion ? 0 : Math.sin(this.clock * 113) * this.shake, reducedMotion ? 0 : Math.cos(this.clock * 97) * this.shake * 0.65);
     this.vfx.update(delta);
     this.smokeClock += delta;
