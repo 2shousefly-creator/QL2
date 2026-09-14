@@ -1,3 +1,6 @@
+import { AirCombatStatusStrip, type StatusStripHandle } from "./AirCombatStatusStrip";
+import { getActiveSkillDuration, getSkillTooltipModel } from "./airCombatPresentation";
+import { BOSS_HUD_HEIGHT } from "./airCombatHudLayout";
 import { AirCombatOverlayFeedback } from "./AirCombatOverlayFeedback";
 import { CoreDescription } from "./CoreDescription";
 import { AirCombatCoreList } from "./AirCombatCoreList";
@@ -105,27 +108,14 @@ function pauseLabel(reasons: ReadonlySet<PauseReason>): string | null {
   return null;
 }
 
-function skillFactLine(world: CombatWorld, skillId: SkillId): string {
-  const values=getSkillRuntimeValues(world.aircraft,skillId),stats=getEffectiveAircraftStats(world.aircraft);
-  switch(skillId){
-    case "decoy":return `${values.count} đợt × 10 mồi · mỗi mồi ${values.duration}s · cách đợt 0,75s`;
-    case "afterburner":return `+${hasCore(world.aircraft,23)?130:80}% tốc bắn · nảy 75% → 56,25% · ${values.duration}s`;
-    case "missile_swarm":return `${values.count/2} mỗi bên · ${values.count} tên lửa · ${Math.round(stats.firepower*values.damageMultiplier)} sát thương gốc/quả`;
-    case "armor_shield":return `Giảm ${Math.round((1-values.damageTakenMultiplier)*100)}% sau Giáp · ${values.duration}s`;
-    case "heavy_bomb":return `${Math.round(stats.firepower*values.damageMultiplier)} sát thương gốc/địch · toàn màn hình · nổ sau 3s hoặc khi va chạm`;
-    case "sweeping_cannon":return `${values.count} tia × ${values.damageMultiplier*100}% Hỏa lực · trúng thêm cùng loạt: 15% viên đầu · ${values.duration}s`;
-    case "invisibility":return `Tàng hình + phân thân ${values.duration}s · lướt 0,16s · ${values.cost} Điện`;
-    case "focus_laser":return `${Math.round(stats.firepower*values.damageMultiplier)} sát thương gốc/nhịp · 0,25s/nhịp · tụ ${values.charge}s · bắn ${values.duration}s`;
-    case "escort_drone":return `Kế thừa ${Math.round(values.damageMultiplier*100)}% chỉ số · ${values.upkeepPerSecond} Điện/s · hồi chiêu khi kết thúc`;
-  }
-}
-
 export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
   aircraftId,
   reducedMotion,
   onComplete,
   onExit,
 }) => {
+  const statusStripRef = useRef<StatusStripHandle>(null);
+  const durationNodes = useRef<Partial<Record<SkillId, HTMLSpanElement | null>>>({});
   const stageRef = useRef<HTMLDivElement | null>(null);
   const [rendererState, setRendererState] = useState<"loading" | "pixi" | "legacy" | "failed">("loading");
   const worldRef = useRef<CombatWorld>(createCombatWorld(aircraftId));
@@ -232,6 +222,11 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
         const visualDelta = pauseReasonsRef.current.size > 0 ? 0 : elapsed;
         overlayFeedback?.render(world, visualDelta, pauseReasonsRef.current.size > 0, reducedMotion,
           bossHpRef.current, bossChipRef.current, bossShieldRef.current);
+        statusStripRef.current?.update(world);
+        for (const id of skillIds) {
+          const node = durationNodes.current[id], timer = getActiveSkillDuration(world, id);
+          if (node) { node.hidden = !timer; node.style.setProperty("--skill-duration", String(timer ? Math.min(1, timer.remaining / timer.duration) : 0)); }
+        }
         try { presentation.render(world, visualDelta, reducedMotion); }
         catch {
           if (!usingLegacy) void fallback();
@@ -405,7 +400,7 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
   const resourceLabel = hud.stats.resourceKind === "mana" ? "Mana" : "Energy";
   const hpRatio = Math.max(0, Math.min(1, hud.stats.currentHp / hud.stats.maxHp));
   const xpRatio = hud.combatXpRequired > 0 ? Math.max(0, Math.min(1, worldRef.current.aircraft.combatXp / hud.combatXpRequired)) : 1;
-  const tooltipValues = tooltipSkill ? getSkillRuntimeValues(worldRef.current.aircraft, tooltipSkill) : null;
+  const tooltipModel = tooltipSkill ? getSkillTooltipModel(worldRef.current.aircraft, tooltipSkill) : null;
 
   useEffect(() => {
     const message = hud.latestMessage;
@@ -488,7 +483,7 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
             <button type="button" aria-label="Thoát trận" onClick={openExit} className="text-rose-300"><X /></button>
           </div>
         </div>
-        <CombatStatChips stats={hud.stats} />
+        <CombatStatChips stats={hud.stats} baseline={getEffectiveAircraftStats(worldRef.current.aircraft, false)} />
         <div className="flex items-center gap-2 text-lime-200 tabular-nums">
           <span className="shrink-0">Cấp {worldRef.current.aircraft.level}</span>
           <div role="progressbar" aria-label="Kinh nghiệm chiến đấu" aria-valuenow={Math.floor(worldRef.current.aircraft.combatXp)} aria-valuemin={0} aria-valuemax={Math.max(1,hud.combatXpRequired)} className="h-1 flex-1 overflow-hidden rounded-full bg-emerald-950"><div className="h-full bg-lime-300" style={{ width: xpRatio * 100 + "%" }} /></div>
@@ -498,7 +493,7 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
       </section>
 
       {hud.bossMaxHp > 0 && (
-        <div className="absolute inset-x-[4%] top-[14.5%] z-10 rounded-xl border border-rose-300/70 bg-gradient-to-r from-rose-950/95 via-slate-950/95 to-rose-950/95 px-2 py-1.5 shadow-lg shadow-rose-950/50" data-boss-phase={hud.bossPhase}>
+        <div className="air-boss-hud" style={{ top: `${AIR_COMBAT_WORLD.hudHeight / 720 * 100}%`, height: `${BOSS_HUD_HEIGHT / 720 * 100}%` }} data-boss-phase={hud.bossPhase}>
           <div className="flex justify-between text-[7px] font-black uppercase text-rose-200"><span>Leviathan X-99 · Giai đoạn {hud.bossPhase}</span><span>{Math.ceil(hud.bossHp).toLocaleString("vi-VN")}</span></div>
           <div className="relative mt-1 h-1.5 overflow-hidden rounded bg-black">
             <div ref={bossShieldRef} className="absolute inset-y-0 left-0 bg-slate-200" />
@@ -507,6 +502,8 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
           </div>
         </div>
       )}
+
+      <AirCombatStatusStrip ref={statusStripRef} top={AIR_COMBAT_WORLD.hudHeight + (hud.bossMaxHp > 0 ? BOSS_HUD_HEIGHT : 0)} />
 
       <div className="absolute inset-x-0 bottom-0 z-20 grid h-[11.1111%] grid-cols-3 gap-2 border-t border-cyan-900/50 bg-slate-950 p-1.5" data-skill-rail="bottom">
         {skillIds.map((skillId) => {
@@ -538,7 +535,10 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
               {cooldown > 0 && <span className="pointer-events-none absolute inset-0 z-0 rounded-2xl" style={{ background: `conic-gradient(rgba(2,6,23,.42) ${(Math.min(1, cooldown / (values.cooldown * (1 - hud.stats.cooldownReduction)))) * 360}deg, transparent 0deg)` }} />}
               <span className={`absolute left-1 top-1 z-20 rounded px-1 text-[6px] font-black ${hud.stats.resourceKind === "mana" ? "bg-sky-950/90 text-sky-200" : "bg-violet-950/90 text-violet-200"}`}>{skillId === "escort_drone" ? "≥5" : free ? 0 : values.cost}</span>
               {skillId === "escort_drone" && active && <span className="absolute right-1 top-1 z-20 text-[6px] font-black text-violet-200">-{values.upkeepPerSecond}/s</span>}
+              <span className="air-skill-icon-wrap">
+              <span className="air-skill-duration" ref={node => { durationNodes.current[skillId] = node; }} hidden><span /></span>
               <CombatUiIcon kind="skill" id={skillId} fallback={skill.icon} className="combat-skill-icon relative z-10" />
+              </span>
               <span className="relative z-10 mt-0.5 max-w-[52px] truncate text-[7px] font-black uppercase">{skill.shortName}</span>
               <span className={`relative z-10 text-[7px] font-black tabular-nums ${active ? "text-emerald-200" : unavailable ? "text-slate-500" : "text-cyan-200"}`}>{locked ? "ĐÃ KHÓA" : cooldown > 0 ? cooldown.toFixed(1) : active ? "ĐANG BẬT" : unavailable ? "THIẾU " + resourceLabel.toUpperCase() : "SẴN SÀNG"}</span>
             </button>
@@ -547,19 +547,11 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
 
       </div>
 
-      {tooltipSkill && tooltipValues && (
-        <aside className="absolute right-[5%] bottom-[15%] z-30 w-[90%] max-h-[66%] overflow-y-auto overscroll-contain rounded-2xl border border-cyan-300/60 bg-gradient-to-br from-slate-950/98 to-indigo-950/96 p-3 text-left shadow-2xl shadow-cyan-950/30 backdrop-blur" data-skill-tooltip={tooltipSkill} onPointerDown={(event) => event.stopPropagation()} onPointerMove={(event) => event.stopPropagation()}>
-          <div className="flex items-start justify-between gap-2"><div><div className="text-[9px] font-black uppercase tracking-wider text-cyan-300">Thông số thời gian thực</div><h3 className="mt-0.5 text-base font-black text-white">{SKILL_CONFIGS[tooltipSkill].name}</h3></div><CombatUiIcon kind="skill" id={tooltipSkill} fallback={SKILL_CONFIGS[tooltipSkill].icon} className="combat-tooltip-icon" /></div>
-          <p className="mt-2 text-[10px] leading-relaxed text-slate-300">{SKILL_CONFIGS[tooltipSkill].description}</p>
-          <div className="mt-2 grid grid-cols-2 gap-1.5 text-[9px] font-bold">
-            <div className="rounded-lg bg-sky-500/15 px-2 py-1.5 text-sky-200">{tooltipSkill === "escort_drone" ? "Cần ≥5 Điện · Không trừ phí bật" : `Chi phí: ${tooltipValues.cost} ${resourceLabel}`}</div>
-            <div className="rounded-lg bg-amber-500/10 px-2 py-1.5 text-amber-100">Hồi chiêu: {(tooltipValues.cooldown * (1 - hud.stats.cooldownReduction)).toFixed(1)}s · gốc {tooltipValues.cooldown.toFixed(1)}s</div>
-            <div className="col-span-2 text-emerald-200">Hồi {resourceLabel}: {hud.stats.resourceRegen.toFixed(1)}/s · Hồi HP: {hud.stats.hpRegen.toFixed(1)}/s</div>
-            <div className="col-span-2 text-cyan-200">Core Kim Cương kỹ năng: {worldRef.current.aircraft.modifiers.skillCores[tooltipSkill] ? getCoreDefinition(worldRef.current.aircraft.modifiers.skillCores[tooltipSkill]!).name : "Chưa trang bị"}{tooltipValues.duration > 0 ? " · Duy trì " + tooltipValues.duration.toFixed(1) + "s" : ""}</div>
-            <div className="col-span-2 rounded-lg bg-violet-500/15 px-2 py-1.5 text-violet-100">{skillFactLine(worldRef.current, tooltipSkill)}</div>
-          </div>
-          <div className="mt-1.5 text-[8px] leading-relaxed text-slate-500">Core hiện có: {worldRef.current.aircraft.selectedCores.length > 0 ? worldRef.current.aircraft.selectedCores.map((id) => getCoreDefinition(id).name).join(" · ") : "Chưa có"}</div>
-          <div className="mt-2 text-center text-[8px] font-black uppercase text-slate-500">Thả tay để đóng · không kích hoạt</div>
+      {tooltipSkill && tooltipModel && (
+        <aside className="air-skill-tooltip" data-skill-tooltip={tooltipSkill} onPointerDown={event => event.stopPropagation()} onPointerMove={event => event.stopPropagation()}>
+          <div className="air-tooltip-heading"><h3>{tooltipModel.title}</h3><strong>{tooltipModel.cooldown.toFixed(1).replace(".", ",")}s</strong></div>
+          <p>{tooltipModel.description}</p>
+          <div className="air-tooltip-details">{tooltipModel.detailRows.map(row => <div key={row}>{row}</div>)}</div>
         </aside>
       )}
 

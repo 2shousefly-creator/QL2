@@ -2,7 +2,8 @@ import React from "react";
 import { Swords, Shield, Gauge, HeartPlus, Gem, Timer, Crosshair, Zap } from "lucide-react";
 import type { EffectiveAircraftStats } from "./airCombatTypes";
 
-export function CombatStatChips({ stats }: { stats: EffectiveAircraftStats }) {
+export function CombatStatChips({ stats, baseline }: { stats: EffectiveAircraftStats; baseline?: EffectiveAircraftStats }) {
+  const keys = ["firepower", "armor", "fireRate", "hpRegen", "resourceRegen", "cooldownReduction", "criticalChance", "criticalDamageMultiplier"] as const;
   const resource = stats.resourceKind === "mana" ? "Mana" : "Energy";
   const chips = [
     { label: "Hỏa lực", value: stats.firepower.toFixed(0), Icon: Swords },
@@ -15,9 +16,12 @@ export function CombatStatChips({ stats }: { stats: EffectiveAircraftStats }) {
     { label: "Sát thương chí mạng", value: `${Math.round(stats.criticalDamageMultiplier * 100)}%`, Icon: Zap },
   ];
   return <div className="combat-stat-chips" aria-label="Chỉ số chiến đấu">
-    {chips.map(({ label, value, Icon }) => <span key={label} className="combat-stat-chip" title={`${label}: ${value}`}>
+    {chips.map(({ label, value, Icon }, index) => {
+      const key = keys[index], delta = baseline ? stats[key] - baseline[key] : 0;
+      const direction = Math.abs(delta) < 1e-5 * Math.max(1, Math.abs(baseline?.[key] ?? 0)) ? "neutral" : delta > 0 ? "buff" : "debuff";
+      return <span key={label} className="combat-stat-chip" data-stat-change={direction} title={`${label}: ${value}`}>
       <Icon aria-hidden="true" /><span className="sr-only">{label}: </span><span>{value}</span>
-    </span>)}
+    </span>; })}
   </div>;
 }
 

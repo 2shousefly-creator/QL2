@@ -142,6 +142,7 @@ export interface AircraftCombatState {
   cooldowns: Partial<Record<SkillId, number>>;
   selectedCores: CoreId[];
   activeEffects: Partial<Record<SkillId, number>>;
+  activeEffectDurations?: Partial<Record<SkillId, number>>;
   droneActive: boolean;
   basicShotsFired: number;
   pendingMilestones: number[];

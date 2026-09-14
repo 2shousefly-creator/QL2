@@ -1,3 +1,4 @@
+import { angularBarPolygon, BOSS_VISUAL_WIDTH_SCALE, BOSS_VISUAL_ASPECT } from "../airCombatHudLayout";
 import { isElite } from "../airCombatWaves";
 import { Application, Container, Graphics, Sprite, Text } from "pixi.js";
 import { AIR_COMBAT_WORLD, GAMEPLAY_SAFE_RECT } from "../airCombatConfig";
@@ -23,8 +24,8 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
   private trackingBars = new Graphics();
   private stableHud = new Container();
   private healthBars = new HealthBarPresentation();
-  private hpText = new Text({ text: "", style: { fontFamily: "Arial", fontSize: 8, fontWeight: "bold", fill: 0xffffff, stroke: { color: 0x06101f, width: 2 } } });
-  private resourceText = new Text({ text: "", style: { fontFamily: "Arial", fontSize: 8, fontWeight: "bold", fill: 0xffffff, stroke: { color: 0x06101f, width: 2 } } });
+  private hpText = new Text({ text: "", style: { fontFamily: "Arial", fontSize: 6.4, fontWeight: "bold", fill: 0xffffff, stroke: { color: 0x06101f, width: 1 } } });
+  private resourceText = new Text({ text: "", style: { fontFamily: "Arial", fontSize: 6.4, fontWeight: "bold", fill: 0xffffff, stroke: { color: 0x06101f, width: 1 } } });
   private damageText = new AirCombatDamageText();
   private sky: AirCombatSky;
   private enemies: AirCombatSpritePool;
@@ -198,8 +199,8 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
       const sprite = this.enemies.get(enemy.id, this.assets.texture(ENEMY_VISUALS[enemy.type]));
       if (!sprite) continue;
       sprite.position.set(enemy.x, enemy.y);
-      sprite.width = enemy.radius * (enemy.type === "boss" ? 2.9 : 2.8);
-      sprite.height = sprite.width * sprite.texture.height / sprite.texture.width;
+      sprite.width = enemy.radius * (enemy.type === "boss" ? BOSS_VISUAL_WIDTH_SCALE : 2.8);
+      sprite.height = sprite.width * (enemy.type === "boss" ? BOSS_VISUAL_ASPECT : sprite.texture.height / sprite.texture.width);
       sprite.rotation = Math.PI;
       sprite.tint = this.flashUntil.has(enemy.id) ? 0xffe1b3 : enemy.type === "acid_bomber" ? 0xa3e635 : enemy.type === "jammer" ? 0x2dd4bf : enemy.type === "sniper" ? 0xe879f9 : enemy.type === "radar_hunter" ? 0x38bdf8 : 0xffffff;
       if(enemy.shield>0 || enemy.aegisUntil>world.aircraft.coreState.time)this.telegraphs.circle(enemy.x,enemy.y,enemy.radius+7).fill({color:0x38bdf8,alpha:.12}).stroke({color:0x7dd3fc,width:2,alpha:.85});
@@ -252,7 +253,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
       const age = 1 - Math.max(0, particle.life / particle.maxLife);
       smoke.position.set(particle.x, particle.y);
       smoke.width = smoke.height = particle.size * (.65 + age * .9);
-      smoke.alpha = (1 - age) ** 1.4 * (reducedMotion ? .4 : .7);
+      smoke.alpha = Math.min(1, (1 - age) ** 1.4 * (reducedMotion ? .4 : .7) * 1.7);
       smoke.tint = 0xcbd5e1;
     }
     this.missileSmoke.end();
@@ -411,13 +412,15 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     const barWidth = trackingBarWidth(visual.size);
     const barX = trackingBarX(world.playerX, barWidth);
     const barY = trackingBarY(world.playerY, visual.size);
-    this.trackingBars.roundRect(barX - 1, barY - 1, barWidth + 2, 25, 2).fill({ color: 0x020617, alpha: .92 }).stroke({ color: 0xcbd5e1, width: .6, alpha: .8 });
-    this.trackingBars.rect(barX, barY, barWidth * health.shieldEnd, 10).fill(0xd8e4ee);
-    this.trackingBars.rect(barX, barY, barWidth * health.chipRatio, 10).fill(0xffffff);
-    this.trackingBars.rect(barX, barY, barWidth * hp, 10).fill(hp < .25 ? 0xf87171 : hp < .5 ? 0xfbbf24 : 0x4ade80);
-    // Pearl shield has a quiet blue edge; the short damage chip is pure white.
-    if (health.shieldEnd > hp) this.trackingBars.rect(barX + barWidth * hp, barY + 9, barWidth * (health.shieldEnd - hp), 1).fill(0xa9c4db);
-    this.trackingBars.rect(barX, barY + 13, barWidth * resource, 10).fill(stats.resourceKind === "energy" ? 0xa78bfa : 0x38bdf8);
+    const layer = (y: number, ratio: number, color: number) => {
+      if (ratio > 0) this.trackingBars.poly(angularBarPolygon(barX, y, barWidth, 10, ratio)).fill(color);
+    };
+    for (const y of [barY, barY + 13]) this.trackingBars.poly(angularBarPolygon(barX, y, barWidth, 10)).fill({ color: 0x020617, alpha: .92 });
+    layer(barY, health.shieldEnd, 0xd8e4ee);
+    layer(barY, health.chipRatio, 0xffffff);
+    layer(barY, hp, hp < .25 ? 0xf87171 : hp < .5 ? 0xfbbf24 : 0x4ade80);
+    layer(barY + 13, resource, stats.resourceKind === "energy" ? 0xa78bfa : 0x38bdf8);
+    for (const y of [barY, barY + 13]) this.trackingBars.poly(angularBarPolygon(barX, y, barWidth, 10)).stroke({ color: 0xcbd5e1, width: .39, alpha: .8 });
     this.hpText.text = statusBarText(world.aircraft.currentHp, stats.maxHp);
     this.resourceText.text = statusBarText(world.aircraft.currentResource, stats.maxResource);
     this.hpText.position.set(barX + barWidth / 2, barY + 5);

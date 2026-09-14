@@ -85,3 +85,34 @@
 .modal-design .app-overlay__header.air-core-list-header { flex-direction:column; align-items:flex-start; gap:4px; }
 .combat-core-card[data-core-tier="gold"] .combat-core-name { font-weight:750; color:#fff0bd; }
 .combat-core-card[data-core-tier="diamond"] .combat-core-name { font-weight:800; color:#e2fbff; text-shadow:0 1px 8px #67e8f935; }
+
+/* Fixed overlay geometry uses the same 360-unit layout as boss movement. */
+.air-boss-hud { position:absolute; inset-inline:0; z-index:10; padding:.6cqw 2cqw; box-sizing:border-box; border-bottom:1px solid #fb718577; background:linear-gradient(90deg,#4c0519f5,#020617f5,#4c0519f5); }
+.air-boss-hud > div:first-child { font-size:2cqw; line-height:1.15; }
+.air-boss-hud > div:last-child { height:1.65cqw; margin-top:.8cqw; border-radius:0; }
+.air-status-strip { position:absolute; inset-inline:0; z-index:12; height:13.8889cqw; padding:.5556cqw 1.6667cqw; box-sizing:border-box; display:flex; justify-content:space-between; pointer-events:none; }
+.air-status-group { display:grid; grid-template-columns:repeat(5,6.1111cqw); grid-auto-rows:6.1111cqw; gap:.5556cqw; align-content:start; }
+.air-status-group--debuff { direction:rtl; }
+.air-status-icon, .air-status-overflow { position:relative; width:6.1111cqw; height:6.1111cqw; display:grid; place-items:center; background:#081321ed; border:1px solid #6ee7b780; border-radius:0; color:#bbf7d0; padding:0; pointer-events:auto; direction:ltr; }
+.air-status-group--debuff .air-status-icon { border-color:#fda4af88; color:#fda4af; }
+.air-status-icon > .combat-ui-icon { width:100%; height:100%; }
+.air-status-icon > svg { width:75%; height:75%; }
+.air-status-radial { position:absolute; inset:0; pointer-events:none; background:conic-gradient(from 0deg, #020617b8 var(--status-elapsed,0deg), transparent 0deg); }
+.air-status-stack { position:absolute; bottom:-.2cqw; right:0; z-index:1; color:white; font-size:2.1cqw; line-height:1; padding:.2cqw; background:#020617dc; }
+.air-status-overflow { font-size:2.5cqw; border-color:#94a3b8; }
+.air-status-icon[aria-pressed="true"] { outline:1px solid white; outline-offset:1px; }
+.air-status-tooltip, .air-skill-tooltip { pointer-events:auto; position:absolute; z-index:30; border:1px solid #7dd3fc77; border-radius:2px; background:#07111bf7; color:#e2e8f0; padding:2.5cqw; font-size:2.8cqw; line-height:1.45; box-shadow:0 4px 12px #02061780; overflow-y:auto; overscroll-behavior:contain; }
+.air-status-tooltip { top:100%; left:3%; right:3%; max-height:55cqw; }
+.air-skill-tooltip { bottom:14%; left:5%; right:5%; max-height:65%; }
+.air-tooltip-heading { display:flex; align-items:flex-start; justify-content:space-between; gap:2cqw; }
+.air-tooltip-heading h3 { margin:0; font-size:4cqw; line-height:1.15; font-weight:800; color:#f8fafc; }
+.air-tooltip-heading > :last-child { flex-shrink:0; color:#fde047; font-weight:800; font-variant-numeric:tabular-nums; }
+.air-status-tooltip p, .air-skill-tooltip p { margin:2cqw 0; }
+.air-tooltip-details { border-top:1px solid #64748b66; padding-top:1.5cqw; color:#c9e6f5; display:grid; gap:.6cqw; }
+.air-status-tooltip small { color:#94a3b8; }
+.combat-stat-chip[data-stat-change="buff"] { color:#fde047; font-weight:900; }
+.combat-stat-chip[data-stat-change="debuff"] { color:#f87171; font-weight:900; }
+.air-skill-icon-wrap { position:relative; display:inline-flex; }
+.air-skill-duration { position:absolute; left:0; right:0; top:-1.1cqw; height:.65cqw; background:#713f1266; z-index:15; pointer-events:none; }
+.air-skill-duration[hidden] { display:none; }
+.air-skill-duration > span { display:block; height:100%; width:100%; transform:scaleX(var(--skill-duration,1)); transform-origin:left; background:#fde047; }

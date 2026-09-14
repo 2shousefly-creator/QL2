@@ -1,3 +1,4 @@
+import { angularBarPolygon } from "./airCombatHudLayout";
 import type { CanvasCombatAccents } from "./CanvasCombatAccents";
 import { isElite } from "./airCombatWaves";
 import { AIR_COMBAT_WORLD, AIRCRAFT_CONFIGS, ENEMY_CONFIGS, GAMEPLAY_SAFE_RECT } from "./airCombatConfig";
@@ -362,7 +363,7 @@ export function drawLegacyWorld(
   for (const particle of world.particles) {
     if (particle.kind !== "missile_smoke") continue;
     const age = 1 - Math.max(0, particle.life / particle.maxLife);
-    ctx.globalAlpha = (1 - age) ** 1.4 * (reducedMotion ? .25 : .45);
+    ctx.globalAlpha = Math.min(1, (1 - age) ** 1.4 * (reducedMotion ? .25 : .45) * 1.7);
     ctx.fillStyle = particle.color;
     ctx.beginPath(); ctx.arc(particle.x, particle.y, particle.size * (.65 + age * .9) / 2, 0, Math.PI * 2); ctx.fill();
   }
@@ -546,20 +547,23 @@ export function drawLegacyWorld(
   const barY = trackingBarY(world.playerY, displayWidth);
   const health = healthBars.get(-1, world.aircraft.currentHp, stats.maxHp, activeShieldAmount(world.aircraft));
   const hp = health.hpRatio;
-  ctx.fillStyle = "rgba(2,6,23,.92)";
-  ctx.fillRect(barX - 1, barY - 1, barWidth + 2, 25);
-  ctx.strokeStyle = "rgba(203,213,225,.8)"; ctx.lineWidth = .6;
-  ctx.strokeRect(barX - 1, barY - 1, barWidth + 2, 25);
-  ctx.fillStyle = "#d8e4ee"; ctx.fillRect(barX, barY, barWidth * health.shieldEnd, 10);
-  ctx.fillStyle = "#fff"; ctx.fillRect(barX, barY, barWidth * health.chipRatio, 10);
-  ctx.fillStyle = hp < .25 ? "#f87171" : hp < .5 ? "#fbbf24" : "#4ade80";
-  ctx.fillRect(barX, barY, barWidth * hp, 10);
-  if (health.shieldEnd > hp) { ctx.fillStyle = "#a9c4db"; ctx.fillRect(barX + barWidth * hp, barY + 9, barWidth * (health.shieldEnd - hp), 1); }
-  ctx.fillStyle = stats.resourceKind === "energy" ? "#a78bfa" : "#38bdf8";
-  ctx.fillRect(barX, barY + 13, barWidth * Math.max(0, Math.min(1, stats.currentResource / stats.maxResource)), 10);
+  const barPath = (y: number, ratio = 1) => {
+    const points = angularBarPolygon(barX, y, barWidth, 10, ratio);
+    ctx.beginPath();
+    for (let i = 0; i < points.length; i += 2) i === 0 ? ctx.moveTo(points[i], points[i + 1]) : ctx.lineTo(points[i], points[i + 1]);
+    ctx.closePath();
+  };
+  const fillBar = (y: number, ratio: number, color: string) => { if (ratio > 0) { barPath(y, ratio); ctx.fillStyle = color; ctx.fill(); } };
+  ctx.save(); ctx.shadowBlur = 0;
+  fillBar(barY, 1, "rgba(2,6,23,.92)"); fillBar(barY + 13, 1, "rgba(2,6,23,.92)");
+  fillBar(barY, health.shieldEnd, "#d8e4ee"); fillBar(barY, health.chipRatio, "#fff");
+  fillBar(barY, hp, hp < .25 ? "#f87171" : hp < .5 ? "#fbbf24" : "#4ade80");
+  fillBar(barY + 13, stats.currentResource / stats.maxResource, stats.resourceKind === "energy" ? "#a78bfa" : "#38bdf8");
+  ctx.strokeStyle = "rgba(203,213,225,.8)"; ctx.lineWidth = .39;
+  barPath(barY); ctx.stroke(); barPath(barY + 13); ctx.stroke(); ctx.restore();
   ctx.save();
-  ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.font = "bold 8px Arial";
-  ctx.strokeStyle = "#06101f"; ctx.fillStyle = "#fff"; ctx.lineWidth = 2; ctx.lineJoin = "round";
+  ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.font = "bold 6.4px Arial";
+  ctx.strokeStyle = "#06101f"; ctx.fillStyle = "#fff"; ctx.lineWidth = 1; ctx.lineJoin = "round"; ctx.shadowBlur *= .5;
   const hpText = statusBarText(world.aircraft.currentHp, stats.maxHp), resourceText = statusBarText(world.aircraft.currentResource, stats.maxResource);
   ctx.strokeText(hpText, barX + barWidth / 2, barY + 5); ctx.fillText(hpText, barX + barWidth / 2, barY + 5);
   ctx.strokeText(resourceText, barX + barWidth / 2, barY + 18); ctx.fillText(resourceText, barX + barWidth / 2, barY + 18);

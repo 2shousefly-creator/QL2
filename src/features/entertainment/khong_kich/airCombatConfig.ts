@@ -186,12 +186,12 @@ export const SKILL_CONFIGS: Record<SkillId, SkillConfig> = {
     "aircraftId": "black_eagle",
     "name": "Mưa Tên Lửa",
     "shortName": "Tên lửa",
-    "description": "12 tên lửa mỗi bên (24 tổng), hai quả mỗi 0,25s. Mỗi quả gây 180% Hỏa lực, tự tìm lại mục tiêu.",
+    "description": "6 tên lửa mỗi bên (12 tổng), phóng theo cặp. Mỗi cặp lơ lửng 0,35s trước khi tìm mục tiêu; cặp tiếp theo xuất hiện khi cặp trước bắt đầu bay. Mỗi quả gây 245% Hỏa lực.",
     "icon": "▲",
     "cost": 220,
     "cooldown": 33,
     "duration": 0,
-    "damageMultiplier": 1.8
+    "damageMultiplier": 2.45
   },
   "armor_shield": {
     "id": "armor_shield",

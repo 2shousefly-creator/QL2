@@ -299,7 +299,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_025",
     "name": "Kho Tên Lửa",
-    "description": "Mưa Tên Lửa +5 tên lửa phóng ra mỗi bên",
+    "description": "Phóng ra thêm 6 tên lửa (tổng 18 tên lửa).",
     "system": "Viper · Skill 3",
     "icon": "◆",
     "category": "skill",
@@ -315,7 +315,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_026",
     "name": "Tên lửa hủy diệt",
-    "description": "Sát thương mỗi tên lửa +20% hỏa lực",
+    "description": "Tăng 50% Hỏa lực mỗi tên lửa.",
     "system": "Viper · Skill 3",
     "icon": "◆",
     "category": "skill",

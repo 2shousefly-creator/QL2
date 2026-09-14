@@ -230,7 +230,7 @@ export const KhongKichScreen: React.FC<KhongKichScreenProps> = ({
 
   return (
     <div
-      className="command-screen tactical-battle-screen mx-auto w-full max-w-lg flex flex-col justify-between flex-1 min-h-0 px-2.5 sm:px-4 py-[clamp(6px,1.4dvh,16px)] select-none"
+      className="command-screen tactical-battle-screen mx-auto w-full max-w-lg flex flex-col justify-start flex-1 min-h-0 px-2.5 sm:px-4 py-[clamp(6px,1.4dvh,16px)] select-none"
       data-khong-kich-phase="select"
     >
       {/* Compact Top Navigation Bar */}
@@ -264,7 +264,7 @@ export const KhongKichScreen: React.FC<KhongKichScreenProps> = ({
       </div>
 
       {/* Aircraft Cards Container */}
-      <div className="flex-1 flex flex-col justify-center space-y-[clamp(6px,1.4dvh,14px)] my-[clamp(2px,0.8dvh,8px)]">
+      <div className="flex flex-col space-y-[clamp(4px,0.7dvh,8px)] my-[clamp(2px,0.8dvh,8px)]">
         {AIRCRAFT_ORDER.map((aircraftId) => {
           const config = AIRCRAFT_CONFIGS[aircraftId];
           const stats = getEffectiveAircraftStats(createAircraftCombatState(aircraftId));
@@ -362,6 +362,22 @@ export const KhongKichScreen: React.FC<KhongKichScreenProps> = ({
         })}
       </div>
 
+      {/* Action Button: XUẤT KÍCH */}
+      <button
+        type="button"
+        onClick={startRun}
+        disabled={!selectedAircraft}
+        data-start-air-combat={selectedAircraft ?? "none"}
+        className={`mt-[clamp(6px,1.2dvh,14px)] flex h-[clamp(42px,5.8dvh,54px)] w-full items-center justify-center gap-1.5 rounded-xl text-[clamp(13px,1.7dvh,16px)] font-black transition active:scale-[.98] ${
+          selectedAircraft
+            ? "bg-gradient-to-r from-sky-400 via-cyan-300 to-emerald-300 text-slate-950 shadow-lg shadow-sky-500/25"
+            : "cursor-not-allowed border border-slate-800 bg-slate-900/90 text-slate-500"
+        }`}
+      >
+        <span>{selectedAircraft ? "XUẤT KÍCH" : "Chọn chiến cơ để xuất kích"}</span>
+        <ChevronRight className="h-[clamp(14px,1.9dvh,18px)] w-[clamp(14px,1.9dvh,18px)]" />
+      </button>
+
       {/* Skill Preview Modal */}
       {previewConfig && (
         <AppModal archetype="info"
@@ -425,21 +441,7 @@ export const KhongKichScreen: React.FC<KhongKichScreenProps> = ({
       )}
 
       <p className="mt-2 text-center text-[10px] text-slate-400">Giữ và kéo trên chiến trường để lái · thả tay để đứng yên.<br />Dùng ngón tay thứ hai để kích hoạt kỹ năng.</p>
-      {/* Action Button: XUẤT KÍCH */}
-      <button
-        type="button"
-        onClick={startRun}
-        disabled={!selectedAircraft}
-        data-start-air-combat={selectedAircraft ?? "none"}
-        className={`mt-[clamp(6px,1.2dvh,14px)] flex h-[clamp(42px,5.8dvh,54px)] w-full items-center justify-center gap-1.5 rounded-xl text-[clamp(13px,1.7dvh,16px)] font-black transition active:scale-[.98] ${
-          selectedAircraft
-            ? "bg-gradient-to-r from-sky-400 via-cyan-300 to-emerald-300 text-slate-950 shadow-lg shadow-sky-500/25"
-            : "cursor-not-allowed border border-slate-800 bg-slate-900/90 text-slate-500"
-        }`}
-      >
-        <span>{selectedAircraft ? "XUẤT KÍCH" : "Chọn chiến cơ để xuất kích"}</span>
-        <ChevronRight className="h-[clamp(14px,1.9dvh,18px)] w-[clamp(14px,1.9dvh,18px)]" />
-      </button>
+
     </div>
   );
 };

@@ -184,10 +184,11 @@ register(106, { hooks: { tick: ctx => { if (ready(ctx.state, "tomahawk")) {
             ctx.tomahawk();
             arm(ctx.state, "tomahawk", 1.5);
         } }, acquire: ctx => arm(ctx.state, "tomahawk", 1.5) } });
-export function applyCoreStatEffects(state: AircraftCombatState, stats: EffectiveAircraftStats): void {
+const transientStatCores = new Set([49, 61, 63, 71, 75, 78, 82, 100].map(coreId));
+export function applyCoreStatEffects(state: AircraftCombatState, stats: EffectiveAircraftStats, includeTemporary = true): void {
     // Max HP first, so HP conditions use the final maximum rather than acquisition order.
     for (const id of state.selectedCores)
-        if (id !== coreId(63) && id !== coreId(100))
+        if (id !== coreId(63) && id !== coreId(100) && (includeTemporary || !transientStatCores.has(id)))
             effects[id]?.stats?.(state, stats);
     const hpBefore = stats.maxHp;
     if (hasCore(state, 94))
@@ -196,12 +197,12 @@ export function applyCoreStatEffects(state: AircraftCombatState, stats: Effectiv
         stats.maxHp *= 1.4;
     // HP conditions run after all max-HP changes, independent of acquisition order.
     for (const row of [63, 100])
-        if (hasCore(state, row)) {
+        if (includeTemporary && hasCore(state, row)) {
             effects[coreId(row)]?.stats?.(state, stats);
         }
     stats.maxHp = hpBefore;
     for (const id of state.selectedCores)
-        if (id !== coreId(54))
+        if (id !== coreId(54) && (includeTemporary || !transientStatCores.has(id)))
             effects[id]?.finalStats?.(state, stats);
 }
 export function applyFireRateLock(state: AircraftCombatState, stats: EffectiveAircraftStats): void {

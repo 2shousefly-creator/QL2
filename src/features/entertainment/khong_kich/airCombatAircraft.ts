@@ -27,7 +27,7 @@ export function createAircraftCombatState(aircraftId: AircraftId): AircraftComba
             consumed: new Set(), criticalBudget: 1, criticalWindow: 0, droneCycle: 0, deferredCooldowns: {} },
     };
 }
-export function getEffectiveAircraftStats(state: AircraftCombatState): EffectiveAircraftStats {
+export function getEffectiveAircraftStats(state: AircraftCombatState, includeTemporary = true): EffectiveAircraftStats {
     const config = AIRCRAFT_CONFIGS[state.aircraftId], n = Math.min(29, Math.max(0, state.level - 1)), m = state.modifiers;
     const stats: EffectiveAircraftStats = {
         maxHp: config.baseStats.maxHp + config.growth.maxHp * n + m.maxHpFlat,
@@ -41,17 +41,17 @@ export function getEffectiveAircraftStats(state: AircraftCombatState): Effective
         cooldownReduction: m.cooldownReduction, hpRegen: config.hpRegen.base + config.hpRegen.growth * n + m.hpRegen, resourceKind: config.resourceKind,
         currentHp: state.currentHp, currentResource: state.currentResource, weapon: { ...m.weapon },
     };
-    applyCoreStatEffects(state, stats);
+    applyCoreStatEffects(state, stats, includeTemporary);
     const c = state.coreState;
-    if ((state.activeEffects.afterburner || 0) > 0)
+    if (includeTemporary && (state.activeEffects.afterburner || 0) > 0)
         stats.fireRate *= hasCore(state, 23) ? 2.3 : 1.8;
-    if ((c.timers.hawkRage || 0) > c.time)
+    if (includeTemporary && (c.timers.hawkRage || 0) > c.time)
         stats.fireRate *= 1.3;
-    if ((c.timers.shieldArmor || 0) > c.time)
+    if (includeTemporary && (c.timers.shieldArmor || 0) > c.time)
         stats.armor *= 1.5;
-    if ((state.activeEffects.sweeping_cannon || 0) > 0 && hasCore(state, 35))
+    if (includeTemporary && (state.activeEffects.sweeping_cannon || 0) > 0 && hasCore(state, 35))
         stats.armor *= 1.35;
-    if ((c.timers.acidArmor || 0) > c.time)
+    if (includeTemporary && (c.timers.acidArmor || 0) > c.time)
         stats.armor *= .7;
     applyFireRateLock(state, stats);
     stats.fireRate = hasCore(state, 54) ? 1.2 : Math.min(AIR_COMBAT_LIMITS.maxFireRate, Math.max(.1, stats.fireRate));
@@ -64,7 +64,7 @@ export function getEffectiveAircraftStats(state: AircraftCombatState): Effective
     stats.hpRegen = Math.max(0, stats.hpRegen);
     stats.currentHp = Math.min(state.currentHp, stats.maxHp);
     stats.currentResource = Math.min(state.currentResource, stats.maxResource);
-    c.stacks.effectiveMaxHp = stats.maxHp;
+    if (includeTemporary) c.stacks.effectiveMaxHp = stats.maxHp;
     return stats;
 }
 export function calculateDamage(rawDamage: number, targetArmor: number, additionalDamageTakenMultiplier = 1): number {
@@ -133,9 +133,9 @@ export function getSkillRuntimeValues(state: AircraftCombatState, skillId: Skill
                 v.duration = 10;
             break;
         case "missile_swarm":
-            v.count = hasCore(state, 25) ? 34 : 24;
+            v.count = hasCore(state, 25) ? 18 : 12;
             if (hasCore(state, 26))
-                v.damageMultiplier = 2;
+                v.damageMultiplier += .5;
             break;
         case "armor_shield":
             v.damageTakenMultiplier = hasCore(state, 28) ? .1 : .35;
@@ -180,6 +180,7 @@ export function endAircraftSkill(state: AircraftCombatState, skillId: SkillId): 
         delete state.coreState.timers.hawkRage;
     }
     delete state.activeEffects[skillId];
+    if (state.activeEffectDurations) delete state.activeEffectDurations[skillId];
     if (!wasActive)
         return;
     if (skillId === "sweeping_cannon" || skillId === "escort_drone") {
@@ -211,8 +212,10 @@ export function castSkill(state: AircraftCombatState, skillId: SkillId): SkillCa
         state.coreState.deferredCooldowns[skillId] = free ? 1.2 : 1;
     else
         state.cooldowns[skillId] = cooldown;
-    if (v.duration > 0 && skillId !== "decoy")
+    if (v.duration > 0 && skillId !== "decoy") {
         state.activeEffects[skillId] = v.duration + (skillId === "focus_laser" ? v.charge : 0);
+        (state.activeEffectDurations ??= {})[skillId] = state.activeEffects[skillId];
+    }
     if (skillId === "escort_drone") {
         state.droneActive = true;
         state.coreState.droneCycle = 0;
