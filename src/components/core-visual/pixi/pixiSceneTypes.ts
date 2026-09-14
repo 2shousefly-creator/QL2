@@ -1,5 +1,7 @@
 import type { Application } from "pixi.js";
 export interface PixiSceneController<Props> {
+  /** Optional scene-owned scheduler; legacy decorative scenes keep immediate rendering. */
+  requestRender?(paint?: () => void): void;
   update(props: Props): void;
   resize(width: number, height: number): void;
   setReducedMotion(reduced: boolean): void;

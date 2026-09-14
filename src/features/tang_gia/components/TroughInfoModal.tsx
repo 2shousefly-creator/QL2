@@ -13,6 +13,7 @@ import { AppModal, ModalButton, OverlayBody, OverlayFooter, OverlayHeader } from
 interface TroughInfoModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onFeed?: () => void;
   penAnimals: PenAnimalState[];
   penFeedBuffValue: number;
   penFeedEmptyAt?: number | null;
@@ -24,6 +25,7 @@ interface TroughInfoModalProps {
 export const TroughInfoModal: React.FC<TroughInfoModalProps> = ({
   isOpen,
   onClose,
+  onFeed,
   penAnimals,
   penFeedBuffValue = 0,
   penFeedEmptyAt = null,
@@ -294,6 +296,9 @@ export const TroughInfoModal: React.FC<TroughInfoModalProps> = ({
 
         {/* Footer (Fixed) */}
         <OverlayFooter className="flex items-center justify-end">
+          {onFeed && <ModalButton variant="primary" type="button" onClick={onFeed} className="w-full">
+            <Utensils className="h-4 w-4" /> Nạp Thức Ăn
+          </ModalButton>}
           <ModalButton variant="ghost"
             type="button"
             onClick={onClose}

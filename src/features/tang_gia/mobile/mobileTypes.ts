@@ -15,12 +15,12 @@ export type MobilePlot = {
   moisture: number; moistureLabel: string; thirsty: boolean; fertilizer: boolean; pest: boolean;
   quality?: ItemQuality;
 };
-export type MobileAnimal = { id: string; species: AnimalTypeId; title: string; timer: string; lifeRemaining: string; dead: boolean; weak: boolean; scale: number; storedEggs: number };
+export type MobileAnimal = { id: string; species: AnimalTypeId; title: string; timer: string; lifeRemaining: string; lifeRatio: number; dead: boolean; weak: boolean; scale: number; storedEggs: number };
 export type FarmMobileSnapshot = {
   gold: string; xp: number; weatherLabel: string; weatherDescription: string;
   weather: string; phase: 'day' | 'night'; plots: readonly MobilePlot[];
   animals: readonly MobileAnimal[]; feed: number; feedLabel: string; feedRemaining: string;
-  feedBonus: number; dangerRemaining: string | null; capacity: number; eggs: number;
+  feedBonus: number; dangerRemaining: string | null; dangerRatio: number; capacity: number; eggs: number;
 };
 export type FarmMobileModel = {
   blocked?: boolean; pushTarget?: { section: FarmMobileTab; nonce: number } | null;

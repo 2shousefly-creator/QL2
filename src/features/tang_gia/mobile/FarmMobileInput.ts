@@ -4,6 +4,17 @@ const contains = (r: MobileRect, x: number, y: number) => x >= r.x && x <= r.x +
 /** A single dispatch path: pointerup or keyboard semantic activation, never both. */
 export class FarmMobileInput {
   private down: { pointer: number; x: number; y: number; lastY: number; id?: string; dragged: boolean; scroll: boolean } | null = null;
+  private pendingScroll = 0;
+  private scrollFrame = 0;
+  private enqueueScroll = (delta: number) => {
+    this.pendingScroll += delta;
+    if (!this.scrollFrame) this.scrollFrame = requestAnimationFrame(this.flushScroll);
+  };
+  private flushScroll = () => {
+    cancelAnimationFrame(this.scrollFrame); this.scrollFrame = 0;
+    const delta = this.pendingScroll; this.pendingScroll = 0;
+    if (delta) this.scroll(delta);
+  };
   private hits: MobileHit[] = [];
   private scrollRegion: MobileRect | null = null;
   constructor(private canvas: HTMLCanvasElement, private scroll: (dy: number) => void,
@@ -48,13 +59,14 @@ export class FarmMobileInput {
     const down = this.down; if (!down || down.pointer !== event.pointerId) return;
     const { x, y } = this.point(event);
     if (Math.hypot(x - down.x, y - down.y) > 10) down.dragged = true;
-    if (down.dragged) { this.pressed(null); if (down.scroll) this.scroll(down.lastY - y); }
+    if (down.dragged) { this.pressed(null); if (down.scroll) this.enqueueScroll(down.lastY - y); }
     down.lastY = y;
   };
   private end = (event: PointerEvent) => {
     const down = this.down; if (!down || down.pointer !== event.pointerId) return;
     const { x, y } = this.point(event);
     const hit = this.hits.find(hit => hit.action.id === down.id && contains(hit, x, y));
+    this.flushScroll();
     this.cancel();
     if (!down.dragged && Math.hypot(x - down.x, y - down.y) <= 10 && hit && !hit.action.reason) hit.action.run();
   };
@@ -62,9 +74,10 @@ export class FarmMobileInput {
   private wheel = (event: WheelEvent) => {
     const { x, y } = this.point(event);
     if (!this.scrollRegion || !contains(this.scrollRegion, x, y)) return;
-    event.preventDefault(); this.scroll(event.deltaY * (event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? this.scrollRegion.height : 1));
+    event.preventDefault(); this.enqueueScroll(event.deltaY * (event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? this.scrollRegion.height : 1));
   };
   destroy() {
+    cancelAnimationFrame(this.scrollFrame); this.pendingScroll = 0;
     this.canvas.removeEventListener('pointerdown', this.start); this.canvas.removeEventListener('pointermove', this.move);
     this.canvas.removeEventListener('pointerup', this.end); this.canvas.removeEventListener('pointercancel', this.cancel);
     this.canvas.removeEventListener('lostpointercapture', this.cancel); this.canvas.removeEventListener('wheel', this.wheel);

@@ -41,6 +41,10 @@ export async function createPixiRuntime<Props>(host: HTMLElement, factory: PixiS
     try { controller?.tick(Math.min(app.ticker.deltaMS / 1000, .1)); }
     catch { fail(); }
   };
+  const paintScheduled = () => {
+    if (destroyed) return;
+    try { controller?.tick(0); app.render(); } catch { fail(); }
+  };
   const contextLost = (event: Event) => { event.preventDefault(); fail(); };
   const resize = () => {
     if (destroyed) return;
@@ -48,7 +52,7 @@ export async function createPixiRuntime<Props>(host: HTMLElement, factory: PixiS
       const width = Math.max(1, host.clientWidth), height = Math.max(1, host.clientHeight);
       app.renderer.resize(width, height);
       controller?.resize(width, height);
-      app.render();
+      if (controller?.requestRender) controller.requestRender(paintScheduled); else app.render();
     } catch { fail(); }
   };
   try {
@@ -82,7 +86,7 @@ export async function createPixiRuntime<Props>(host: HTMLElement, factory: PixiS
           controller!.setReducedMotion(reduced);
           controller!.update(props);
           controller!.resize(app.screen.width, app.screen.height);
-          app.render();
+          if (controller!.requestRender) controller!.requestRender!(paintScheduled); else app.render();
           visibility();
         } catch { fail(); }
       },

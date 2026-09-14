@@ -21,5 +21,5 @@
 .farm-graphics-screen .logistics-hud > div[title] { min-width: 0; flex: 1; padding: 5px; }
 
 /* Sunny turf surrounds the CSS-pixel world; retain the existing header/toolbar flow. */
-.farm-graphics-screen .farm-mobile-host { background: #78bc51; }
+.farm-graphics-screen .farm-mobile-host { background: #85d75a; }
 .farm-graphics-screen > .farm-mobile-shell { box-shadow: inset 0 0 0 1px #5b9a4055, 0 3px 8px #294c2422; }

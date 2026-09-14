@@ -20,31 +20,31 @@ export class GroundComposer {
     this.root.removeChildren().forEach(node => node.destroy({ children: true }));
     this.foliage = []; this.grasses = [];
     const g = this.root.addChild(new Graphics());
-    g.rect(0, 0, width, height).fill(0x78bc51);
+    g.rect(0, 0, width, height).fill(0x85d75a);
     // Low, scattered grass and trampled earth: nothing represents sky or horizon.
     for (let i = 0; i < 40; i++) {
       const x = i * 83 % width, y = i * 137 % height;
-      g.ellipse(x, y, 18 + i % 5 * 9, 9 + i % 3 * 6).fill({ color: i % 2 ? 0xb7df6c : 0x3d9b43, alpha: .25 });
+      g.ellipse(x, y, 18 + i % 5 * 9, 9 + i % 3 * 6).fill({ color: i % 2 ? 0xceee7e : 0x3eb649, alpha: .25 });
     }
     if (tab === 'garden') {
       const sorted = [...plots].sort((a, b) => a.y - b.y || a.x - b.x);
       const first = sorted[0], last = sorted[sorted.length - 1];
       if (first && last) {
         // Shared earth bed joins all nine patches to the farm. Paths follow the real grid.
-        g.roundRect(first.x - 9, first.y + 6, width - 2 * (first.x - 9), last.y + last.height - first.y - 2, 19).fill(0xdaac6d);
+        g.roundRect(first.x - 9, first.y + 6, width - 2 * (first.x - 9), last.y + last.height - first.y - 2, 19).fill(0xe9b878);
         for (let row = 1; row < Math.ceil(plots.length / 3); row++) {
           const y = sorted[row * 3]?.y;
-          if (y !== undefined) g.rect(first.x - 8, y - 3, width - first.x * 2 + 16, 12).fill(0xf0ce8e);
+          if (y !== undefined) g.rect(first.x - 8, y - 3, width - first.x * 2 + 16, 12).fill(0xffdfa0);
         }
-        g.moveTo(width / 2, last.y + last.height - 3).lineTo(width / 2, height).stroke({ width: 30, color: 0xf0ce8e });
+        g.moveTo(width / 2, last.y + last.height - 3).lineTo(width / 2, height).stroke({ width: 30, color: 0xffdfa0 });
       }
     } else {
-      g.roundRect(20, 26, width - 40, height - 52, 30).fill(0xc89457);
-      g.roundRect(29, 41, width - 58, height - 85, 26).fill(0xe6bf79);
+      g.roundRect(20, 26, width - 40, height - 52, 30).fill(0xdca052);
+      g.roundRect(29, 41, width - 58, height - 85, 26).fill(0xf7d58e);
       // Broken straw/dirt islands and worn trails, kept away from the grass rim.
       for (let i = 0; i < 18; i++) {
         const x = 52 + i * 67 % Math.max(1, width - 104), y = 128 + i * 79 % Math.max(1, height - 230);
-        g.ellipse(x, y, 14 + i % 4 * 8, 8 + i % 3 * 4).fill({ color: i % 3 ? 0xf8d895 : 0xc39052, alpha: .4 });
+        g.ellipse(x, y, 14 + i % 4 * 8, 8 + i % 3 * 4).fill({ color: i % 3 ? 0xf8d895 : 0xdfaa63, alpha: .4 });
         g.ellipse(x - 3, y, 1.5, 2.5).ellipse(x + 3, y + 3, 1.5, 2.5).fill({ color: 0x9d713e, alpha: .18 });
       }
       for (let i = 0; i < 25; i++) {
@@ -92,7 +92,7 @@ export class GroundComposer {
       const x = i % 2 ? width - 26 : 26, y = 44 + i * 61 % Math.max(1, height - 84);
       const tuft = this.root.addChild(new Graphics());
       tuft.moveTo(0, 0).quadraticCurveTo(-7, -5, -5, -13).moveTo(0, 0).quadraticCurveTo(5, -8, 9, -10)
-        .moveTo(1, 0).lineTo(2, -16).stroke({ color: i % 2 ? 0x389441 : 0xa7df61, width: 2 });
+        .moveTo(1, 0).lineTo(2, -16).stroke({ color: i % 2 ? 0x35b349 : 0xbced71, width: 2 });
       tuft.position.set(x, y); this.grasses.push(tuft);
       if (i % 4 === 0) {
         g.circle(x - 4, y - 5, 2.5).circle(x + 3, y - 8, 2.5).fill(0xfff5cb);

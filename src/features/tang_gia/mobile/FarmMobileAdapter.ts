@@ -4,7 +4,7 @@ import type { FarmPresentationState } from '../farmPresentation';
 import { formatFeedPercentage } from '../farmPresentation';
 import { ANIMAL_CATALOG, CROP_CATALOG } from '../farmCatalog';
 import { getAnimalCapacity, getCropGrowthProgress, getCurrentCropRemainingDurationMs, hasCropFertilizer } from '../farmEngine';
-import { getAnimalVisualScale, getStarvationDeadlineAt, isAnimalDead } from '../animalLifecycle';
+import { getAnimalVisualScale, getAnimalLifeRemainingRatio, getPenDangerRatio, getStarvationDeadlineAt, isAnimalDead } from '../animalLifecycle';
 import { getCropVisualStage } from '../farmVisualTheme';
 import { getSoilMoistureBand, getSoilMoisturePresentation } from '../soilMoistureEngine';
 import { getPestPresentation } from '../pestEngine';
@@ -59,13 +59,15 @@ export function adaptFarmMobile(game: GameState, farm: FarmSaveState, view: Farm
         weak: !dead && view.penFeedBuffValue <= 0 && deadline !== null,
         scale: getAnimalVisualScale(animal, definition, now),
         lifeRemaining: dead ? 'Đã chết' : mobileCountdown(animal.lifeEndsAt - now),
-        timer: dead ? 'Đã chết' : mobileCountdown(animal.nextEggAt - now) };
+        lifeRatio: getAnimalLifeRemainingRatio(animal, definition, now),
+        timer: dead ? 'Đã chết' : plotCountdown(animal.nextEggAt - now) };
     }),
     feed: view.penFeedBuffValue, feedLabel: formatFeedPercentage(view.penFeedBuffValue),
     feedRemaining: view.penAnimals.some(animal => !isAnimalDead(animal))
       ? mobileCountdown(view.penFeedEmptyAt == null ? null : view.penFeedEmptyAt - now) : 'Chưa có vật nuôi',
     feedBonus: view.activeFeedSpeedBonus,
     dangerRemaining: deadline === null ? null : mobileCountdown(deadline - now),
+    dangerRatio: getPenDangerRatio(view.penStarvationStartedAt, now),
     capacity: getAnimalCapacity(rank),
     // Eggs are already stored; never infer a new collect action from nextEggAt.
     eggs: Object.values(farm.inventory.eggs).reduce((sum, count) => sum + (count || 0), 0),

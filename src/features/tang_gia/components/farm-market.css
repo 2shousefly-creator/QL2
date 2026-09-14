@@ -1,10 +1,10 @@
 /* Feature-local mobile shop and inventory skin. AppOverlay still owns portals,
    focus, body locking, safe areas and scrolling; desktop keeps its existing UI. */
 .app-overlay.modal-design.farm-market {
-  --modal-surface: #fff9e9;
-  --modal-surface-soft: #f0edce;
+  --modal-surface: #fffbef;
+  --modal-surface-soft: #f0f8d7;
   --modal-text: #29462c;
-  --modal-muted: #66704a;
+  --modal-muted: #58753d;
   --modal-border: #d8be7d;
   --modal-divider: #e6d8af;
   --modal-success: #29814a;
@@ -18,7 +18,7 @@
   --modal-button-radius: 13px;
   --modal-backdrop: #172d29b8;
   --modal-shadow: 0 18px 50px #132d2659;
-  --theme-primary: #368943;
+  --theme-primary: #2ca657;
   --theme-primary-hover: #257534;
   --theme-on-primary: #fffce5;
   --theme-border-strong: #267338;
@@ -33,7 +33,7 @@
   --modal-text: #fffce7;
   --modal-muted: #ecf2c5;
   --modal-reward: #ffdf79;
-  background: linear-gradient(110deg, #2f7b3f, #4d9e4a);
+  background: linear-gradient(110deg, #249653, #79c84f);
   border-bottom: 4px solid #d4aa57;
   padding: 15px 12px;
 }
@@ -52,7 +52,7 @@
 .farm-market .app-overlay__header .farm-market-art { width: 50px; height: 50px; }
 .farm-market .farm-market-tabs {
   display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 5px;
-  flex-shrink: 0; padding: 8px; overflow: visible; background: #f3edcc;
+  flex-shrink: 0; padding: 8px; overflow: visible; background: #f3f8db;
   border-bottom: 1px solid #dace9b;
 }
 .farm-market .farm-market-tabs--four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
@@ -63,19 +63,19 @@
 }
 .farm-market .farm-market-tabs .farm-market-art { width: 30px; height: 30px; }
 .farm-market .farm-market-tabs > button[aria-pressed="true"] {
-  background: #dbeeae; color: #245d2d; border-color: #81b556;
+  background: #d8f6a6; color: #245d2d; border-color: #81b556;
   box-shadow: inset 0 -3px #8cbb57, 0 2px 4px #61733612;
 }
-.farm-market .farm-market-tabs > button:hover { background: #edf4ce; }
-.farm-market.modal-design .app-overlay__body { background: #fff9e9; gap: 12px; }
+.farm-market .farm-market-tabs > button:hover { background: #eaffcc; }
+.farm-market.modal-design .app-overlay__body { background: #fffbef; gap: 12px; }
 /* Retire the old slate surfaces only inside these two feature-owned portals. */
-.farm-market [class*="bg-slate-"] { background: #f4efda; }
+.farm-market [class*="bg-slate-"] { background: #f4f8e5; }
 .farm-market [class*="border-slate-"] { border-color: #e2d5ae; }
 .farm-market [class*="text-slate-"] { color: #304a31; }
 .farm-market :is([class*="text-purple-"], [class*="text-violet-"]) { color: #8052a2; }
 .farm-market [class*="text-amber-"] { color: #956318; }
 .farm-market [class*="bg-amber-500"] { background: #f8e3a6; }
-.farm-market [class*="bg-emerald-"] { background: #e2efc4; }
+.farm-market [class*="bg-emerald-"] { background: #dcf6bf; }
 .farm-market.modal-design .farm-market-card {
   display: grid; grid-template-columns: 66px minmax(0, 1fr); align-items: center;
   column-gap: 10px; row-gap: 9px; padding: 12px;
@@ -87,7 +87,7 @@
 .farm-market .farm-market-card > div:first-child > div:has(> .farm-market-art) {
   grid-column: 1; grid-row: 1 / span 2; align-self: start;
   width: 66px; height: 78px; margin-top: 3px; border-radius: 18px;
-  background: radial-gradient(ellipse at 50% 78%, #b8ca7970 0 23%, transparent 25%), #f0f3d7;
+  background: radial-gradient(ellipse at 50% 78%, #b8ca7970 0 23%, transparent 25%), #ecf9ce;
   border: 1px solid #e0e7b9;
 }
 .farm-market .farm-market-card > div:first-child > div:last-child { grid-column: 2; min-width: 0; }
@@ -98,7 +98,7 @@
 .farm-market .farm-market-card .truncate { white-space: normal; overflow: visible; }
 .farm-market .farm-market-card > button {
   grid-column: 2; justify-self: stretch; min-height: 44px; padding: 9px 12px;
-  border: 1px solid #297536; border-radius: 12px; background: #398d43; color: #fffce9;
+  border: 1px solid #297536; border-radius: 12px; background: #2da654; color: #fffce9;
   box-shadow: inset 0 1px #92bf6c, 0 2px 0 #266834; font-size: 13px;
 }
 .farm-market .farm-market-card > button:disabled { background: #f0e8d3; color: #746b4a; border-color: #d4c594; box-shadow: none; opacity: 1; }
@@ -115,14 +115,14 @@
   background: #edf3d1; box-shadow: 0 5px 0 #d0dba24d;
 }
 .farm-market .farm-market-empty .farm-market-art { width: 88px; height: 88px; }
-.farm-market .farm-market-empty > button { background: #368943; color: #fffce5; }
-.farm-market.modal-design .app-overlay__footer { background: #f6efd4; border-top: 1px solid #ddcc99; }
+.farm-market .farm-market-empty > button { background: #2ca657; color: #fffce5; }
+.farm-market.modal-design .app-overlay__footer { background: #fff4d0; border-top: 1px solid #ddcc99; }
 .farm-market.modal-design .modal-section { border: 1px solid #e0ce94; border-radius: 14px; padding: 12px; background: #fff0c4; }
 .farm-market.modal-design input[type="number"] {
   min-width: 96px; background: #fffef6; border: 2px solid #c2ce8a; color: #315b2f;
   border-radius: 13px; font-size: 23px; font-weight: 700; font-variant-numeric: tabular-nums;
 }
-.farm-market .app-overlay__body > .space-y-2\.5 .modal-control { background: #e8efc8; border-color: #c3d295; color: #365d30; }
+.farm-market .app-overlay__body > .space-y-2\.5 .modal-control { background: #e9f8cd; border-color: #c3d295; color: #365d30; }
 .farm-market .modal-button--primary { box-shadow: inset 0 1px #91bd70, 0 2px 0 #266834; }
 .farm-market .modal-button--ghost { border: 1px solid #d5c493; }
 .farm-market :is(button, input):focus-visible { outline: 3px solid #a47721; outline-offset: 2px; }
@@ -133,3 +133,13 @@
   .farm-market .farm-market-card > div:first-child > div:has(> .farm-market-art) { width: 56px; height: 67px; }
   .farm-market .farm-market-card .farm-market-art { width: 55px; height: 55px; }
 }
+
+/* Bright fabric awning and illustrated produce cards keep the familiar transactions. */
+.farm-market.modal-design .app-overlay__header {
+  background: repeating-linear-gradient(100deg, #ffffff0d 0 24px, transparent 24px 48px), linear-gradient(110deg, #249653, #79c84f);
+}
+.farm-market.modal-design .farm-market-card {
+  background: radial-gradient(ellipse at 0 0, #f0fad8, transparent 65%), #fffef8;
+  border-color: #dce9ab; box-shadow: 0 3px 0 #b7cd7530;
+}
+.farm-market .farm-market-tabs > button[aria-pressed="true"] { border-color: #64b442; box-shadow: inset 0 -3px #90d459; }

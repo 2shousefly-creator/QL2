@@ -3,12 +3,12 @@ import type { MobileAnimal, MobileRect } from './mobileTypes';
 
 const aquatic = new Set(['duck', 'muscovy_duck', 'goose']);
 const regal = new Set(['turkey', 'peafowl']);
-export type PenRoamArea = MobileRect & { troughX: number; waterX: number };
+export type PenRoamArea = MobileRect & { troughX: number; waterX: number; troughY: number; waterY: number };
 const clamp = (n: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, n));
 
 /** Transient visual state only. One instance survives snapshot, selection and scroll updates.
- * The inset rectangle excludes the shelter above, fence at either side, and all
- * trough/water/nest footprints below. Straight segments stay inside this convex area.
+ * Normal roaming stays in the inset yard. Eat/drink approaches extend to the
+ * shared prop anchors above it, with the beak aligned to the feed/water surface.
  */
 export class AnimalVisualAI {
   x: number; y: number; targetX: number; targetY: number;
@@ -32,10 +32,11 @@ export class AnimalVisualAI {
     return this.seed / 4294967296;
   }
   fit(area: PenRoamArea) {
+    const approachY = Math.min(area.y, area.troughY, area.waterY);
     this.x = clamp(this.x, area.x, area.x + area.width);
-    this.y = clamp(this.y, area.y, area.y + area.height);
+    this.y = clamp(this.y, approachY, area.y + area.height);
     this.targetX = clamp(this.targetX, area.x, area.x + area.width);
-    this.targetY = clamp(this.targetY, area.y, area.y + area.height);
+    this.targetY = clamp(this.targetY, approachY, area.y + area.height);
   }
   private choose(animal: MobileAnimal, area: PenRoamArea, clock: number, night: boolean, feed: number) {
     const choice = this.random();
@@ -43,7 +44,7 @@ export class AnimalVisualAI {
       : aquatic.has(animal.species) && choice < .65 ? 'drink' : regal.has(animal.species) || choice > .75 ? 'idle' : 'eat';
     if (this.nextAction === 'drink' || this.nextAction === 'eat' && feed > 0 && choice < .22) {
       this.targetX = clamp((this.nextAction === 'drink' ? area.waterX : area.troughX) + (this.random() - .5) * 24, area.x, area.x + area.width);
-      this.targetY = area.y + area.height;
+      this.targetY = this.nextAction === 'drink' ? area.waterY : area.troughY;
     } else {
       // Prefer a clearly visible stride, never a tiny periodic offset around a cell.
       for (let attempt = 0; attempt < 8; attempt++) {

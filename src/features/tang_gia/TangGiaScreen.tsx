@@ -1411,6 +1411,7 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
         <TroughInfoModal
           isOpen={true}
           onClose={closeFarmModal}
+          onFeed={mobileActive ? () => openFarmModal({ type: "feed" }) : undefined}
           penAnimals={presentationState.penAnimals}
           penFeedBuffValue={presentationState.penFeedBuffValue}
           penFeedEmptyAt={presentationState.penFeedEmptyAt}

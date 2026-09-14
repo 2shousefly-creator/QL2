@@ -12,22 +12,22 @@ const e = (x: number, y: number, rx: number, ry: number, fill: string, extra = '
 const p = (d: string, fill: string, stroke = '', sw = 2) => `<path d="${d}" fill="${paint(fill)}"${stroke ? ` stroke="${stroke}" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round"` : ''}/>`;
 const r = (x: number, y: number, w: number, h: number, fill: string, radius = 5) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${radius}" fill="${fill}"/>`;
 const group = (x: number, y: number, scale: number, body: string, rotate = 0) => `<g transform="translate(${x} ${y}) rotate(${rotate}) scale(${scale})">${body}</g>`;
-const leaf = (x: number, y: number, size = 1, angle = 0, color = '#32934b') => group(x, y, size, p('M0 0 Q-22 -5 -15 -23 Q3 -20 0 0', color) + p('M0 0 L-12 -18 M-4 -6 L-13 -7 M-7 -11 L-7 -17', 'none', '#b5e77b', 1.1), angle);
+const leaf = (x: number, y: number, size = 1, angle = 0, color = '#31b849') => group(x, y, size, p('M0 0 Q-22 -5 -15 -23 Q3 -20 0 0', color) + p('M0 0 L-12 -18 M-4 -6 L-13 -7 M-7 -11 L-7 -17', 'none', '#b5e77b', 1.1), angle);
 const shadow = e(48, 77, 28, 8, '#354f33', 'opacity=".16"');
-const palette: Record<string, string> = { carrot: '#ff923c', cabbage: '#a5db65', potato: '#cea36a', tomato: '#f25136', strawberry: '#f04768', corn: '#ffd155', pumpkin: '#f58b2f', watermelon: '#54b756', pineapple: '#efc443', banana: '#ffdc57', orange: '#ffa12f', mango: '#ffb249', apple: '#ed4945', pear: '#c8d95c', grape: '#a365ce', dragon_fruit: '#d7bd65', avocado: '#6f934c', durian: '#9caa60', mangosteen: '#8e478f' };
+const palette: Record<string, string> = { carrot: '#ff9834', cabbage: '#b5ee65', potato: '#e0b578', tomato: '#ff533c', strawberry: '#ff557b', corn: '#ffe15a', pumpkin: '#ff992e', watermelon: '#58ca59', pineapple: '#ffd143', banana: '#ffdc57', orange: '#ffa12f', mango: '#ffb249', apple: '#ed4945', pear: '#c8d95c', grape: '#a365ce', dragon_fruit: '#f1cd4d', avocado: '#76af3c', durian: '#adbd43', mangosteen: '#a04bbb' };
 const trees = new Set(['orange', 'mango', 'apple', 'pear', 'avocado', 'durian', 'mangosteen']);
 function fruit(id: string): string {
   const c = palette[id];
   switch (id) {
     case 'carrot': return p('M-10 -8 Q-4 -16 9 -8 L-4 21 Q-8 22 -8 16Z', c, '#b56b36') + p('M-5 -11 L-12 -22 M-4 -11 L-1 -25 M0 -11 L7 -21', 'none', '#53854a', 3) + p('M-8 0 L0 3 M-7 9 L-2 11', 'none', '#f4ba70');
-    case 'cabbage': return e(0, 0, 17, 15, '#6c9954') + e(-5, -3, 11, 12, c) + e(5, 0, 10, 12, '#b7d58b') + p('M-12 -8 Q6 0 -8 10 M10 -10 Q-6 0 8 10', 'none', '#779f5c', 1.5);
+    case 'cabbage': return e(0, 0, 17, 15, '#69b94c') + e(-5, -3, 11, 12, c) + e(5, 0, 10, 12, '#c4e99a') + p('M-12 -8 Q6 0 -8 10 M10 -10 Q-6 0 8 10', 'none', '#6eb645', 1.5);
     case 'potato': return e(-6, 2, 12, 10, c) + e(8, -3, 12, 9, '#e4bd84') + e(-9, 0, 1.5, 1, '#987149') + e(9, -6, 1.4, 1, '#987149');
     case 'banana': return p('M-18 -11 Q-5 15 18 -6 Q10 23 -9 13 Q-18 7 -18 -11', c, '#b49d45') + p('M-12 -15 Q1 9 18 -8 Q17 13 1 11Z', '#f5db7d') + r(-16, -18, 7, 6, '#7d8152', 1);
     case 'grape': return [-1, 0, 1].map((a) => e(a * 9, -6, 7, 8, a ? c : '#b08bc0')).join('') + e(-5, 6, 7, 8, c) + e(5, 6, 7, 8, '#8c65a0') + e(0, 16, 6, 7, c) + leaf(1, -13, .5, 55);
     case 'corn': return e(0, 0, 9, 21, c) + Array.from({ length: 5 }, (_, n) => p(`M-6 ${-13 + n * 6} L6 ${-13 + n * 6}`, 'none', '#b89945', 1)).join('') + p('M-9 -8 Q-19 17 0 24 Q17 11 12 -7 Q6 11 0 17Z', '#6d9952');
     case 'dragon_fruit': return [-1, 0, 1].map(a => group(a * 9, 6, .8, p('M0 15 Q-6 -5 0 -23', 'none', '#a39749', 2) + Array.from({ length: 5 }, (_, n) => e(n % 2 ? 3 : -3, -17 + n * 6, 4, 2.5, c)).join(''), a * 14)).join('');
     case 'pineapple': return e(0, 4, 12, 17, c) + p('M-9 -6 L10 12 M-10 3 L7 19 M8 -7 L-10 11 M10 2 L-7 20', 'none', '#a39143', 1.5) + p('M-2 -10 L-14 -25 L-4 -21 L0 -32 L5 -20 L15 -27 L7 -10Z', '#548954');
-    case 'watermelon': return e(0, 1, 19, 15, '#42784c') + [-10, 0, 10].map(x => p(`M${x} -12 Q${x + 9} 0 ${x} 15`, 'none', '#8eb562', 4)).join('');
+    case 'watermelon': return e(0, 1, 19, 15, '#2b9347') + [-10, 0, 10].map(x => p(`M${x} -12 Q${x + 9} 0 ${x} 15`, 'none', '#a7df66', 4)).join('');
     case 'pumpkin': return e(0, 2, 20, 16, c) + e(0, 2, 12, 16, '#e99b46') + e(0, 2, 5, 16, '#f0ad53') + p('M0 -12 Q-4 -22 4 -23', 'none', '#6e8246', 4);
     case 'strawberry': return p('M-14 -7 Q-10 -19 0 -12 Q12 -19 15 -6 Q12 9 0 19 Q-12 9 -14 -7', c) + p('M-12 -12 L0 -17 L12 -12 L4 -8 L0 -12 L-6 -7Z', '#548954') + [-7, 0, 7].map(x => e(x, 0, 1, 2, '#f6d58c') + e(x / 2, 8, 1, 2, '#f6d58c')).join('');
     case 'apple': return p('M0 -11 Q-16 -21 -19 -3 Q-20 13 -8 20 Q-1 17 5 20 Q18 16 20 -1 Q18 -20 0 -11Z', c, '#a04436', 1.2) + p('M0 -10 Q-2 -19 3 -23', 'none', '#725335', 2.5) + leaf(2, -13, .4, 75) + e(-10, -1, 3, 7, '#f4b88e', 'opacity=".55"');
@@ -46,15 +46,15 @@ let leafOrdinal = 0;
 /** Botanical silhouettes remain distinct even before fruit appears. */
 function cropLeaf(id: string, x: number, y: number, size: number, angle: number) {
   let blade: string;
-  if (id === 'carrot') blade = p('M0 0 L-4 -27 M-1 -6 L-13 -12 M-2 -12 L-14 -21 M-3 -18 L-11 -29 M-2 -9 L7 -17 M-3 -16 L5 -27', 'none', '#329441', 2.2)
-    + p('M-10 -10 l-4 -7 M-10 -17 l-4 -9 M4 -15 l2 -7 M2 -23 l0 -6', 'none', '#8abc57', 1.6);
-  else if (['corn', 'dragon_fruit', 'pineapple'].includes(id)) blade = p('M0 0 Q-15 -14 -11 -39 Q-3 -28 0 0', '#419f3d') + p('M0 0 Q-8 -20 -11 -39', 'none', '#c0d67b', 1);
-  else if (['pumpkin', 'watermelon', 'grape'].includes(id)) blade = p('M0 0 L-12 -3 L-9 -10 L-22 -14 L-13 -19 L-16 -29 L-5 -23 L1 -32 L6 -20 L16 -20 L10 -9 L17 -4Z', id === 'watermelon' ? '#4b9b62' : '#349343') + p('M0 0 L0 -25 M0 -9 L-15 -16 M0 -10 L10 -16', 'none', '#abc87c', 1.1);
+  if (id === 'carrot') blade = p('M0 0 L-4 -27 M-1 -6 L-13 -12 M-2 -12 L-14 -21 M-3 -18 L-11 -29 M-2 -9 L7 -17 M-3 -16 L5 -27', 'none', '#38b442', 2.2)
+    + p('M-10 -10 l-4 -7 M-10 -17 l-4 -9 M4 -15 l2 -7 M2 -23 l0 -6', 'none', '#a7dd55', 1.6);
+  else if (['corn', 'dragon_fruit', 'pineapple'].includes(id)) blade = p('M0 0 Q-15 -14 -11 -39 Q-3 -28 0 0', '#46ba3e') + p('M0 0 Q-8 -20 -11 -39', 'none', '#d4eb85', 1);
+  else if (['pumpkin', 'watermelon', 'grape'].includes(id)) blade = p('M0 0 L-12 -3 L-9 -10 L-22 -14 L-13 -19 L-16 -29 L-5 -23 L1 -32 L6 -20 L16 -20 L10 -9 L17 -4Z', id === 'watermelon' ? '#48b66b' : '#31b14c') + p('M0 0 L0 -25 M0 -9 L-15 -16 M0 -10 L10 -16', 'none', '#abc87c', 1.1);
   else if (id === 'banana') blade = p('M0 0 Q-30 -5 -22 -43 Q7 -42 0 0', '#35a753') + p('M0 0 L-19 -38 M-4 -9 L-22 -15 M-7 -18 L-24 -24 M-11 -27 L-20 -32', 'none', '#bcda7f', 1.3);
-  else if (id === 'strawberry') blade = [-42, 0, 42].map(a => leaf(0, 0, .7, a, '#51904b')).join('');
-  else if (['mango', 'avocado'].includes(id)) blade = p('M0 0 Q-22 -14 -12 -35 Q6 -24 0 0', id === 'mango' ? '#21814c' : '#247d4a') + p('M0 0 L-11 -31 M-4 -11 L-12 -15 M-7 -20 L-7 -27', 'none', '#98bc75', 1.2);
+  else if (id === 'strawberry') blade = [-42, 0, 42].map(a => leaf(0, 0, .7, a, '#53b34b')).join('');
+  else if (['mango', 'avocado'].includes(id)) blade = p('M0 0 Q-22 -14 -12 -35 Q6 -24 0 0', id === 'mango' ? '#239b48' : '#299b4b') + p('M0 0 L-11 -31 M-4 -11 L-12 -15 M-7 -20 L-7 -27', 'none', '#98bc75', 1.2);
   else if (id === 'cabbage') blade = e(-7, -11, 14, 17, '#84cb60') + p('M0 0 L-10 -25 M-3 -8 L-16 -11 M-6 -16 L-16 -21 M-4 -10 L3 -19', 'none', '#d5e4ad', 1.5);
-  else blade = leaf(0, 0, 1, 0, id === 'mangosteen' ? '#257e50' : id === 'orange' ? '#2e943e' : '#4ba039');
+  else blade = leaf(0, 0, 1, 0, id === 'mangosteen' ? '#299951' : id === 'orange' ? '#2e943e' : '#4ba039');
   const phase = leafOrdinal++ * 1.91;
   const flutter = Math.sin(cropFlutter + phase) * Math.abs(cropWind) * 1.8;
   return group(x + cropWind * size * .45, y, size, blade, angle + cropWind * 2 + flutter);
@@ -72,7 +72,7 @@ function plant(id: string, stage: number, frame = 0) {
     const tall = id === 'pear' || id === 'durian' ? 1.15 : id === 'apple' ? .86 : 1;
     return shadow + p(`M43 78 L46 ${53 - age * 5} L51 ${49 - age * 5} L54 78Z`, '#9a7148', '#765238', 1)
       + p('M48 73 L48 51 M47 62 L32 44 M49 58 L65 40', 'none', '#c79a66', 2)
-      + e(48 + cropWind, 43, canopy, canopy * .76 * tall, '#27743e')
+      + e(48 + cropWind, 43, canopy, canopy * .76 * tall, '#279443')
       + Array.from({ length: age * 4 + 6 }, (_, i) => {
         const angle = i * 2.4, radius = canopy * (.4 + i % 3 * .2);
         return cropLeaf(id, 48 + Math.cos(angle) * radius, 47 + Math.sin(angle) * radius * .62 * tall, .45 + age * .09, i * 49);
@@ -102,8 +102,8 @@ function plant(id: string, stage: number, frame = 0) {
   if (id === 'carrot') return shadow + [-1, 0, 1].map((x, i) => group(48 + x * 18, 70 - (i % 2) * 8, .68 + age * .1,
     (age > 1 ? group(0, 0, .68, fruit(id), -8) : '') + [-28, 0, 32].map(a => cropLeaf(id, 0, -6, .9 + age * .12, a)).join(''))).join('');
   const vine = id === 'pumpkin' || id === 'watermelon';
-  const body = shadow + (vine ? p('M18 73 Q28 41 53 62 T82 58 M37 61 q-18 -23 -22 -5 q0 9 7 5', 'none', '#608d45', 2)
-    : p('M48 77 L48 34 M48 57 L28 45 M48 63 L66 47', 'none', '#608d45', 3))
+  const body = shadow + (vine ? p('M18 73 Q28 41 53 62 T82 58 M37 61 q-18 -23 -22 -5 q0 9 7 5', 'none', '#51a13e', 2)
+    : p('M48 77 L48 34 M48 57 L28 45 M48 63 L66 47', 'none', '#51a13e', 3))
     + (id === 'tomato' ? p('M53 80 L53 24 M43 51 L59 51', 'none', '#b89a6f', 2) : '')
     + Array.from({ length: age * 2 + 3 }, (_, i) => cropLeaf(id, vine ? 25 + i * 17 % 50 : 48 + Math.sin(i * 2.4) * 17, vine ? 65 : 68 - i * 5, .48 + age * .11, i * 91)).join('');
   const flowers = age >= 2 ? [0, 1, 2].map(i => group(30 + i * 16, 40 + i % 2 * 12, 1,
@@ -119,7 +119,7 @@ async function sheet(name: string, columns: number, rows: number, frames: string
     const n = parseInt(hex.slice(i, i + 2), 16);
     return Math.round(amount > 0 ? n + (255 - n) * amount : n * (1 + amount)).toString(16).padStart(2, '0');
   }).join('');
-  const defs = '<defs>' + colors.map(hex => `<linearGradient id="paint${hex}" x1="15%" y1="0%" x2="75%" y2="100%"><stop stop-color="${tone(hex, .18)}"/><stop offset=".45" stop-color="#${hex}"/><stop offset="1" stop-color="${tone(hex, -.18)}"/></linearGradient>`).join('')
+  const defs = '<defs>' + colors.map(hex => `<linearGradient id="paint${hex}" x1="15%" y1="0%" x2="75%" y2="100%"><stop stop-color="${tone(hex, .24)}"/><stop offset=".45" stop-color="#${hex}"/><stop offset="1" stop-color="${tone(hex, -.10)}"/></linearGradient>`).join('')
     + frames.map((_, i) => `<clipPath id="cell${i}"><rect x="${i % columns * 96}" y="${Math.floor(i / columns) * 96}" width="96" height="96"/></clipPath>`).join('') + '</defs>';
   await writeFile(`${out}/${name}.svg`, `<svg xmlns="http://www.w3.org/2000/svg" width="${columns * 96}" height="${rows * 96}" viewBox="0 0 ${columns * 96} ${rows * 96}">${defs}${body}</svg>\n`);
   records.push({ sheet: name, frameSize: [96, 96], columns, rows, frameNames, provenance: 'Original vector paths in scripts/tanggia/draw-topdown-art.ts' });
@@ -138,16 +138,16 @@ for (const crop of CROP_CATALOG) {
 }
 // Species anatomy and plumage, not a tint of one chicken sprite.
 const birds: Record<string, { body: string; wing: string; head: string; neck: number; tail: number; beak: number; legs: number }> = {
-  chicken: { body: '#f2deb0', wing: '#d1a46a', head: '#edcf9b', neck: 4, tail: 15, beak: 7, legs: 8 },
-  duck: { body: '#e8dfc8', wing: '#c3b699', head: '#23825d', neck: 5, tail: 9, beak: 12, legs: 5 },
-  quail: { body: '#b49368', wing: '#795e45', head: '#bfa179', neck: 1, tail: 5, beak: 5, legs: 5 },
-  goose: { body: '#eeeee2', wing: '#cfd7cc', head: '#f3f1dc', neck: 17, tail: 10, beak: 9, legs: 8 },
-  muscovy_duck: { body: '#454e48', wing: '#e1dfc9', head: '#e3ddc5', neck: 5, tail: 12, beak: 9, legs: 6 },
-  turkey: { body: '#6c5448', wing: '#9c7860', head: '#ae7164', neck: 12, tail: 26, beak: 6, legs: 9 },
-  guinea_fowl: { body: '#6d7880', wing: '#53616b', head: '#91a6b0', neck: 7, tail: 7, beak: 5, legs: 9 },
-  pheasant: { body: '#b68c52', wing: '#895d42', head: '#298464', neck: 6, tail: 30, beak: 6, legs: 10 },
-  peafowl: { body: '#229ba4', wing: '#629270', head: '#298ad0', neck: 14, tail: 31, beak: 6, legs: 9 },
-  ostrich: { body: '#4d5654', wing: '#e8e2cd', head: '#d7b995', neck: 23, tail: 11, beak: 7, legs: 17 },
+  chicken: { body: '#fff0c4', wing: '#edb86a', head: '#ffe2a4', neck: 4, tail: 15, beak: 7, legs: 8 },
+  duck: { body: '#fff4dc', wing: '#e2d4ac', head: '#199f6c', neck: 5, tail: 9, beak: 12, legs: 5 },
+  quail: { body: '#d6ac68', wing: '#967044', head: '#e2bf85', neck: 1, tail: 5, beak: 5, legs: 5 },
+  goose: { body: '#fffdf0', wing: '#e0e7dd', head: '#fff9e0', neck: 17, tail: 10, beak: 9, legs: 8 },
+  muscovy_duck: { body: '#3a5660', wing: '#fff0d0', head: '#fff1d5', neck: 5, tail: 12, beak: 9, legs: 6 },
+  turkey: { body: '#995c40', wing: '#d29258', head: '#e78c7b', neck: 12, tail: 26, beak: 6, legs: 9 },
+  guinea_fowl: { body: '#6c90ae', wing: '#4d718f', head: '#b6d9e7', neck: 7, tail: 7, beak: 5, legs: 9 },
+  pheasant: { body: '#df9d49', wing: '#ac6a38', head: '#199e67', neck: 6, tail: 30, beak: 6, legs: 10 },
+  peafowl: { body: '#14b6c7', wing: '#56b575', head: '#299cfa', neck: 14, tail: 31, beak: 6, legs: 9 },
+  ostrich: { body: '#405968', wing: '#fff3d8', head: '#f0c699', neck: 23, tail: 11, beak: 7, legs: 17 },
 };
 function bird(id: string, state: string, frame: number) {
   const b = birds[id], phase = frame / 6 * Math.PI * 2, rest = state === 'rest' || state === 'dead', peck = state === 'eat' || state === 'drink';
@@ -155,9 +155,9 @@ function bird(id: string, state: string, frame: number) {
   const cy = rest ? 63 + bob : 54 + bob, headX = peck ? 72 + Math.sin(phase) * 3 : 62 + (state === 'idle' ? Math.sin(phase) * 2.4 : 0), headY = peck ? 65 + Math.cos(phase) * 4 : cy - 12 - b.neck;
   let body = e(46, 79, 29, 7, '#354f33', 'opacity=".18"');
   if (!rest) for (const side of [-1, 1]) { const stride = state === 'walk' ? Math.sin(phase) * side * 6 : 0; body += p(`M${43 + side * 8} ${cy + 12} l${stride} ${b.legs} l8 2`, 'none', '#c79a60', 3); }
-  if (['turkey', 'peafowl'].includes(id)) body += Array.from({ length: 7 }, (_, i) => group(30, cy, 1, e(0, -b.tail / 2, 6, b.tail / 2, id === 'peafowl' ? (i % 2 ? '#548665' : '#78a078') : (i % 2 ? '#705147' : '#a37b5e')) + (id === 'peafowl' ? e(0, -b.tail + 7, 3, 5, '#d4bd73') + e(0, -b.tail + 7, 1.8, 3, '#4b8493') : ''), -100 + i * 21 + (state === 'dead' ? 0 : Math.sin(phase) * 3))).join('');
+  if (['turkey', 'peafowl'].includes(id)) body += Array.from({ length: 7 }, (_, i) => group(30, cy, 1, e(0, -b.tail / 2, 6, b.tail / 2, id === 'peafowl' ? (i % 2 ? '#22a77b' : '#6fce72') : (i % 2 ? '#8e4b3b' : '#cf8550')) + (id === 'peafowl' ? e(0, -b.tail + 7, 3, 5, '#ffe15d') + e(0, -b.tail + 7, 1.8, 3, '#258ace') : ''), -100 + i * 21 + (state === 'dead' ? 0 : Math.sin(phase) * 3))).join('');
   else body += p(`M33 ${cy - 3} L${Math.max(4, 32 - b.tail)} ${cy - 21} L14 ${cy + 2} L35 ${cy + 9}Z`, b.wing);
-  body += e(46, cy, id === 'quail' ? 21 : 24, rest ? 14 : 19, b.body) + e(40, cy + 1, 16, 12 + (state === 'dead' ? 0 : Math.sin(phase) * .9), b.wing) + p(`M30 ${cy} Q40 ${cy + 10} 52 ${cy + 3}`, 'none', b.body, 2);
+  body += e(46, cy, id === 'quail' ? 19 : id === 'ostrich' ? 26 : id === 'goose' ? 23 : 24, rest ? 14 : id === 'quail' ? 17 : id === 'ostrich' ? 22 : 19, b.body) + e(40, cy + 1, 16, 12 + (state === 'dead' ? 0 : Math.sin(phase) * .9), b.wing) + p(`M30 ${cy} Q40 ${cy + 10} 52 ${cy + 3}`, 'none', b.body, 2);
   if (['quail', 'guinea_fowl', 'pheasant'].includes(id)) body += Array.from({ length: 14 }, (_, i) => e(28 + i % 5 * 5, cy - 7 + Math.floor(i / 5) * 6, 1.3, id === 'quail' ? 2.5 : 1.2, '#e1d5b6')).join('');
   body += Array.from({ length: 10 }, (_, i) => {
     const x = 27 + i % 5 * 5, y = cy - 4 + Math.floor(i / 5) * 7;
@@ -169,6 +169,10 @@ function bird(id: string, state: string, frame: number) {
   }
   if (id === 'pheasant') body += p(`M8 ${cy - 17} L27 ${cy + 2} M13 ${cy - 19} L31 ${cy + 1}`, 'none', '#e9bd72', 1.3);
   body += p(`M58 ${cy - 2} Q${headX - 9} ${headY} ${headX} ${headY + 4}`, 'none', b.head, id === 'ostrich' ? 6 : 11) + e(headX, headY, id === 'ostrich' ? 7 : 10, 10, b.head);
+  // Species accents remain readable at the actual mobile frame size.
+  if (id === 'goose') body += p(`M${headX - 7} ${headY + 3} Q${headX - 9} ${headY + 15} 57 ${cy}`, 'none', '#ffffff', 2);
+  if (id === 'turkey') body += p(`M${headX + 4} ${headY + 5} q8 7 3 16 q-5 -2 -3 -12`, '#fa6652');
+  if (id === 'peafowl') body += [-4, 0, 4].map(x => p(`M${headX} ${headY - 7} l${x} -9`, 'none', '#208bdf', 1.5) + e(headX + x, headY - 16, 2, 2, '#74dbea')).join('');
   if (['duck', 'pheasant'].includes(id)) body += p(`M${headX - 6} ${headY + 8} q5 4 10 0`, 'none', '#e9e8c3', 2);
   if (id === 'quail') body += p(`M${headX - 7} ${headY - 5} l13 0 M${headX - 6} ${headY + 4} l11 0`, 'none', '#e9cf99', 1.8);
   if (id === 'guinea_fowl') body += p(`M${headX - 3} ${headY - 9} l2 -6 l4 6Z`, '#bd8a69');
@@ -200,7 +204,7 @@ function soil(state: string) {
   if (state === 'fertilized') return Array.from({ length: 8 }, (_, i) => e(18 + i * 13 % 59, 29 + i * 17 % 43, 1.8, 1.5, '#e8ce8c')).join('');
   const moist = state.includes('moist'), locked = state === 'locked';
   // Shared organic contour, with no card frame or drop shadow.
-  let body = p('M9 24 Q8 16 22 16 L73 15 Q87 14 88 26 L86 73 Q83 82 70 80 L21 81 Q7 82 8 69Z', locked ? '#77ac4b' : moist ? '#854e38' : '#ba754b');
+  let body = p('M9 24 Q8 16 22 16 L73 15 Q87 14 88 26 L86 73 Q83 82 70 80 L21 81 Q7 82 8 69Z', locked ? '#77ac4b' : moist ? '#9c5b39' : '#ce874f');
   body += p('M12 24 Q24 19 37 22 L80 20 M12 72 Q45 77 82 72', 'none', locked ? '#718550' : moist ? '#91664d' : '#e2a46a', 2);
   if (!locked && !state.startsWith('empty')) for (let i = 0; i < 4; i++) body += p(`M17 ${30 + i * 12} Q45 ${27 + i * 12} 79 ${30 + i * 12}`, 'none', moist ? '#543e34' : '#8f5035', 3) + p(`M18 ${33 + i * 12} L77 ${33 + i * 12}`, 'none', moist ? '#88614a' : '#d89458', 2);
   for (let i = 0; i < 12; i++) body += e(16 + i * 17 % 64, 24 + i * 13 % 50, 1.5, .9, locked ? '#a8b17b' : '#d2ae78', 'opacity=".5"');
@@ -211,12 +215,12 @@ function soil(state: string) {
 }
 await sheet('soil', 5, 3, SOIL_STATES.map(soil), SOIL_STATES);
 const props: Record<typeof PROP_NAMES[number], string> = {
-  shelter: shadow + r(12, 25, 72, 49, '#d59a50') + r(18, 40, 24, 30, '#675140') + r(52, 43, 23, 19, '#7b624a') + p('M5 32 L18 8 L79 8 L91 32 L88 39 L8 39Z', '#d66747', '#994633') + p('M22 12 L16 31 M40 12 L37 31 M59 12 L59 31 M76 12 L82 31', 'none', '#f7b36a', 3) + r(11, 70, 76, 6, '#f0bf73'),
-  trough: shadow + p('M9 34 L87 34 L80 68 Q47 79 16 68Z', '#ad703c') + e(48, 34, 39, 12, '#e7b768') + e(48, 35, 33, 8, '#624e3c') + p('M19 56 L21 70 M75 56 L73 70', 'none', '#735339', 4),
+  shelter: shadow + r(12, 25, 72, 49, '#d59a50') + r(18, 40, 24, 30, '#675140') + r(52, 43, 23, 19, '#7b624a') + p('M5 32 L18 8 L79 8 L91 32 L88 39 L8 39Z', '#ef7450', '#994633') + p('M22 12 L16 31 M40 12 L37 31 M59 12 L59 31 M76 12 L82 31', 'none', '#f7b36a', 3) + r(11, 70, 76, 6, '#f0bf73'),
+  trough: shadow + p('M9 34 L87 34 L80 68 Q47 79 16 68Z', '#c8873c') + e(48, 34, 39, 12, '#ffd37d') + e(48, 35, 33, 8, '#624e3c') + p('M19 56 L21 70 M75 56 L73 70', 'none', '#735339', 4),
   water: shadow + e(48, 53, 37, 22, '#a49e81') + e(48, 46, 37, 20, '#c3bba0') + e(48, 45, 30, 15, '#32b9d6') + p('M25 46 Q35 37 51 41 M44 53 Q60 56 73 46', 'none', '#c0f3ff', 2),
-  nest: e(48, 56, 38, 24, '#9b7949') + e(48, 52, 34, 22, '#c7a461') + e(48, 51, 23, 13, '#806442') + Array.from({ length: 14 }, (_, i) => p(`M${17 + i * 5} ${58 + i % 3 * 4} l10 -6`, 'none', '#e5c980', 2)).join(''),
+  nest: e(48, 56, 38, 24, '#b48744') + e(48, 52, 34, 22, '#e7bc5d') + e(48, 51, 23, 13, '#806442') + Array.from({ length: 14 }, (_, i) => p(`M${17 + i * 5} ${58 + i % 3 * 4} l10 -6`, 'none', '#e5c980', 2)).join(''),
   hay: r(15, 28, 68, 46, '#dba444', 10) + e(48, 28, 34, 14, '#f5d579') + p('M33 17 L33 71 M65 17 L65 71', 'none', '#8e8354', 4) + Array.from({ length: 8 }, (_, i) => p(`M19 ${35 + i * 4} l59 0`, 'none', '#e1c881', 1)).join(''),
-  bush: shadow + e(48, 51, 35, 25, '#248840') + e(31, 44, 20, 19, '#53ae43') + e(60, 36, 22, 21, '#84cd4f') + e(62, 58, 22, 16, '#419d42'),
+  bush: shadow + e(48, 51, 35, 25, '#20a147') + e(31, 44, 20, 19, '#5fc743') + e(60, 36, 22, 21, '#a5e75d') + e(62, 58, 22, 16, '#39b44b'),
   stone: shadow + p('M16 61 L26 36 L57 25 L80 44 L83 63 L61 74 L32 74Z', '#a5a78d') + p('M26 36 L57 25 L70 47 L42 58 L16 61Z', '#c4c2a4') + p('M70 47 L83 63 L61 74 L42 58Z', '#8d9580'),
   flowers: [0, 1, 2].map(i => leaf(30 + i * 17, 76 - i % 2 * 12, .65, 50) + e(30 + i * 17, 44 - i % 2 * 12, 10, 10, i % 2 ? '#ffd15a' : '#f27f9d') + e(30 + i * 17, 44 - i % 2 * 12, 4, 4, '#f6dfa0')).join(''),
   watering: r(22, 31, 43, 39, '#40afbc', 10) + p('M63 46 L82 24 L90 29 L70 59 M27 33 Q14 8 42 17 L53 32', 'none', '#298293', 7) + e(88, 27, 5, 9, '#a0e4e9'),
@@ -235,4 +239,4 @@ props.trough += [23, 39, 56, 73].map(x => p(`M${x} 48 l-1 17`, 'none', '#d4b181'
 props.bush += Array.from({ length: 16 }, (_, i) => leaf(24 + i * 13 % 49, 39 + i * 17 % 30, .26, i * 43, i % 2 ? '#65bd48' : '#a5dc63')).join('');
 props.hay += Array.from({ length: 15 }, (_, i) => p(`M${18 + i * 4} ${24 + i % 3 * 4} l6 -6`, 'none', '#f1d98d', 1)).join('');
 await sheet('props', 8, 2, PROP_NAMES.map(name => props[name]), PROP_NAMES);
-await writeFile(`${out}/manifest.json`, JSON.stringify({ design: { revision: 'visual-quality-v4-foliage-idle-and-bright-pigments', frame: [96, 96], layout: 'garden then pen; bottom-left plot 1', rendering: 'original SVG paths with gradient shading; no external image source' }, crops: CROP_CATALOG.map(x => ({ id: x.id, name: x.name })), animals: ANIMAL_CATALOG.map(x => ({ id: x.id, name: x.name })), records }, null, 2) + '\n');
+await writeFile(`${out}/manifest.json`, JSON.stringify({ design: { revision: 'mobile-final-v5-bright-cartoon-retained', frame: [96, 96], layout: 'garden then pen; bottom-left plot 1', rendering: 'original SVG paths with gradient shading; no external image source' }, crops: CROP_CATALOG.map(x => ({ id: x.id, name: x.name })), animals: ANIMAL_CATALOG.map(x => ({ id: x.id, name: x.name })), records }, null, 2) + '\n');
