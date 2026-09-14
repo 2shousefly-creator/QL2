@@ -4,7 +4,7 @@ import type { CombatWorld } from "./airCombatRuntime";
 import type { CoreId } from "./airCombatTypes";
 
 type Acquisition = { id: number; coreId: CoreId };
-interface Toast { node: HTMLDivElement; age: number; y: number; height: number }
+interface Toast { node: HTMLDivElement; age: number; y: number; height: number; width: number }
 /** Fixed DOM pool. Explicit acquisition events drive content, never an ownership diff. */
 export class AirCombatOverlayFeedback {
   private lastAcquisition = 0;
@@ -17,7 +17,7 @@ export class AirCombatOverlayFeedback {
     for (let i = 0; i < 6; i++) {
       const node = document.createElement("div");
       node.className = "air-core-toast"; node.hidden = true;
-      host.appendChild(node); this.free.push({ node, age: 0, y: 0, height: 0 });
+      host.appendChild(node); this.free.push({ node, age: 0, y: 0, height: 0, width: 0 });
     }
   }
   render(world: CombatWorld, delta: number, hidden: boolean, reducedMotion: boolean,
@@ -55,7 +55,7 @@ export class AirCombatOverlayFeedback {
       this.width = width;
       let y = 0;
       for (const toast of this.active) {
-        toast.y = y; toast.height = toast.node.offsetHeight;
+        toast.y = y; toast.height = toast.node.offsetHeight; toast.width = toast.node.offsetWidth;
         toast.node.style.transform = `translateY(${y}px)`;
         y += toast.height + 5;
       }
@@ -63,8 +63,8 @@ export class AirCombatOverlayFeedback {
     const scale = width / 360;
     for (const toast of this.active) {
       const top = 200 + toast.y / scale, bottom = top + toast.height / scale;
-      const occluded = world.playerX < 122 && world.playerY + 66 > top && world.playerY - 35 < bottom;
-      // Keep a toast's full lifetime visible if the pilot crosses its fixed left-quarter anchor.
+      const occluded = world.playerX - 35 < 7.2 + toast.width / scale && world.playerY + 66 > top && world.playerY - 35 < bottom;
+      // Keep a toast's full lifetime visible if the pilot crosses its content-sized anchor.
       if (!hidden && !occluded) toast.age += delta;
       toast.node.style.opacity = hidden || occluded ? "0" : String(Math.max(0, Math.min(1, toast.age / .18, (3 - toast.age) / .45)));
     }

@@ -159,10 +159,8 @@ register(83, { hooks: { damageTaken: ctx => { if (ready(ctx.state, "counterCd"))
             }
         } } });
 register(85, { stats: (_s, stats) => { stats.firepower += 35; stats.armor -= 18; } });
-register(86, { finalStats: (s, stats) => {
-        // Phantom's explicit fixed 100 Energy takes precedence over the generic max-resource reduction.
-        if (s.aircraftId !== "phantom")
-            stats.maxResource *= .8;
+register(86, { finalStats: (_s, stats) => {
+        stats.maxResource *= .8;
         stats.resourceRegen *= 1.7;
     } });
 register(87, { stats: (_s, stats) => { stats.criticalChance += .2; stats.criticalDamageMultiplier += .3; } });

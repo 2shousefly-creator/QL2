@@ -73,10 +73,10 @@
 [data-core-selection][data-reduced-motion="true"] .combat-core-card,
 [data-core-selection][data-reduced-motion="true"] .combat-core-card::before,
 [data-core-selection][data-reduced-motion="true"] .combat-core-card::after { animation:none; }
-.air-core-toasts { pointer-events:none; position:absolute; left:2%; top:31.25%; width:23%; z-index:9; }
-.air-core-toast { position:absolute; inset:0 0 auto; min-height:36px; padding:5px; border:1px solid #b5c6d988; border-radius:6px; background:#101d30e8; color:#eef7ff; font-size:2.25cqw; line-height:1.25; text-shadow:0 1px 2px #000; transition:transform .18s ease-out; }
-.air-core-toast[data-tier="gold"] { border-color:#fcd34d; background:#302411ed; }
-.air-core-toast[data-tier="diamond"] { border-color:#67e8f9; background:#18213bed; }
+.air-core-toasts { pointer-events:none; position:absolute; left:2%; top:31.25%; width:max-content; max-width:94%; z-index:9; }
+.air-core-toast { pointer-events:none; position:absolute; inset:0 auto auto 0; width:max-content; max-width:94cqw; padding:0; border:0; border-radius:0; background:none; color:#eef7ff; font-size:clamp(8px,2.5cqw,13px); line-height:1.15; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; text-shadow:0 1px 3px #020617,0 0 2px #020617; transition:transform .18s ease-out; }
+.air-core-toast[data-tier="gold"] { color:#fde68a; }
+.air-core-toast[data-tier="diamond"] { color:#a5f3fc; }
 .air-wave-countdown { pointer-events:none; position:absolute; top:24%; left:50%; transform:translateX(-50%); z-index:10; padding:6px 12px; border:1px solid #a5f3fc88; border-radius:12px; background:#0c2036df; color:#e0f2fe; text-align:center; font-size:2.5cqw; }
 .air-wave-countdown strong { display:block; font-size:6cqw; line-height:1.15; }
 @media (prefers-reduced-motion:reduce) { .combat-core-card,.combat-core-card::before,.combat-core-card::after { animation:none!important; } .air-core-toast { transition:none; } }

@@ -1,6 +1,6 @@
 import { isElite } from "../airCombatWaves";
 import { Application, Container, Graphics, Sprite, Text } from "pixi.js";
-import { GAMEPLAY_SAFE_RECT } from "../airCombatConfig";
+import { AIR_COMBAT_WORLD, GAMEPLAY_SAFE_RECT } from "../airCombatConfig";
 import { getEffectiveAircraftStats } from "../airCombatEngine";
 import type { CombatWorld } from "../airCombatRuntime";
 import { AIRCRAFT_VISUALS, ENEMY_VISUALS, loadAirCombatAssets, type AirCombatAssets } from "./AirCombatPixiAssets";
@@ -16,6 +16,8 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
   private root = new Container();
   private actors = new Container();
   private effects = new Container();
+  private smokeLayer = new Container();
+  private missileSmoke: AirCombatSpritePool;
   private telegraphs = new Graphics();
   private hitbox = new Graphics();
   private trackingBars = new Graphics();
@@ -86,12 +88,13 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     app.canvas.addEventListener("webglcontextlost", this.onLost);
     this.sky = new AirCombatSky(assets);
     app.stage.addChild(this.root);
-    this.root.addChild(this.sky.root, this.telegraphs, this.actors, this.effects, this.hitbox, this.damageText.root);
+    this.root.addChild(this.sky.root, this.telegraphs, this.smokeLayer, this.actors, this.effects, this.hitbox, this.damageText.root);
     // Separate stage branch: neither recoil nor camera shake can move status bars.
     app.stage.addChild(this.stableHud);
     this.stableHud.addChild(this.trackingBars, this.hpText, this.resourceText);
     this.hpText.anchor.set(.5); this.resourceText.anchor.set(.5);
     this.enemies = new AirCombatSpritePool(this.actors, 44);
+    this.missileSmoke = new AirCombatSpritePool(this.smokeLayer, AIR_COMBAT_WORLD.maxParticles);
     this.projectileGlows = new AirCombatSpritePool(this.actors, 256);
     this.afterimages = new AirCombatSpritePool(this.actors, 4);
     this.projectiles = new AirCombatSpritePool(this.actors, 768);
@@ -241,13 +244,26 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     this.trailClock += delta;
     const trail = this.trailClock > (reducedMotion ? 0.2 : 0.055);
     if (trail) this.trailClock = 0;
+    this.missileSmoke.begin();
+    for (const particle of world.particles) {
+      if (particle.kind !== "missile_smoke") continue;
+      const smoke = this.missileSmoke.get(particle.id, this.assets.effect("smoke"));
+      if (!smoke) continue;
+      const age = 1 - Math.max(0, particle.life / particle.maxLife);
+      smoke.position.set(particle.x, particle.y);
+      smoke.width = smoke.height = particle.size * (.65 + age * .9);
+      smoke.alpha = (1 - age) ** 1.4 * (reducedMotion ? .4 : .7);
+      smoke.tint = 0xcbd5e1;
+    }
+    this.missileSmoke.end();
     for (const p of world.projectiles) {
-      const missile = p.bigBang || p.owner === "player" && p.homing;
+      const missile = p.projectileKind === "missile" || p.projectileKind === "bigbang";
+      const powered = missile && p.missileState === "powered";
       const round = p.owner === "enemy" ? "charge" : world.aircraft.aircraftId === "breaker" ? "enemyTracer"
         : p.owner === "drone" || world.aircraft.aircraftId === "phantom" ? "laser" : "tracer";
       const sprite = this.projectiles.get(p.id, this.assets.effect(missile ? "missile" : round));
       if (!sprite) continue;
-      sprite.position.set(p.x, p.y); sprite.rotation = Math.atan2(p.vy, p.vx) + Math.PI / 2;
+      sprite.position.set(p.x, p.y); sprite.rotation = (missile ? p.heading : Math.atan2(p.vy, p.vx)) + Math.PI / 2;
       sprite.width = p.bigBang ? 24 : missile ? 14 : p.radius * 2.8;
       sprite.height = p.bigBang ? 42 : missile ? 28 : p.radius * (p.owner === "enemy" ? 4 : 6);
       const tint = p.owner === "enemy" ? p.appearance === "dangerous" ? 0xffbc4d : 0xff667d : p.owner === "drone" ? 0xc4b5fd : visual.tint;
@@ -255,21 +271,20 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
         sprite.width = sprite.height = p.radius * (p.appearance === "boss" ? 3.5 : 3);
         sprite.tint = tint;
       } else sprite.tint = 0xffffff;
-      const glow = this.projectileGlows.get(p.id, this.assets.effect(missile ? "fire" : p.owner === "enemy" ? "charge" : "laser"));
+      const glow = this.projectileGlows.get(p.id, this.assets.effect(missile ? powered ? "fire" : "charge" : p.owner === "enemy" ? "charge" : "laser"));
       if (glow) {
         const speed = Math.max(1, Math.hypot(p.vx, p.vy));
-        glow.position.set(p.x - p.vx / speed * (missile ? 18 : 7), p.y - p.vy / speed * (missile ? 18 : 7));
+        const nozzle = missile ? p.bigBang ? 21 : 14 : 7;
+        const dx = missile ? Math.cos(p.heading) : p.vx / speed, dy = missile ? Math.sin(p.heading) : p.vy / speed;
+        glow.position.set(p.x - dx * nozzle, p.y - dy * nozzle);
         glow.rotation = sprite.rotation; glow.width = sprite.width * (missile ? .85 : 1.5);
-        glow.height = missile ? 24 : sprite.height * 1.6;
-        glow.tint = tint; glow.alpha = p.owner === "enemy" ? .25 : .4; glow.blendMode = "add";
+        glow.height = missile ? powered ? (p.bigBang ? 32 : 22) * (.45 + .55 * p.speed / Math.max(1, p.cruiseSpeed)) : 6 : sprite.height * 1.6;
+        glow.tint = missile ? p.bigBang ? 0xffbd59 : 0xffdb99 : tint;
+        glow.alpha = missile ? powered ? .85 : .12 : p.owner === "enemy" ? .25 : .4; glow.blendMode = "add";
       }
       if (p.id > this.lastProjectile && p.owner !== "enemy") {
         this.vfx.spawn("muzzle", p.x, p.y, p.owner === "drone" ? 14 : 18, 0.09, p.owner === "drone" ? 0xc4b5fd : visual.tint);
         if (p.owner === "player") this.recoil = 1.4;
-      }
-      if (missile && trail && !reducedMotion) {
-        const speed = Math.max(1, Math.hypot(p.vx, p.vy));
-        this.vfx.spawn("smoke", p.x - p.vx / speed * 14, p.y - p.vy / speed * 14, 12, .45, 0xcbd5e1, 15);
       }
     }
     this.lastProjectile = world.nextId - 1;
@@ -302,6 +317,10 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     this.companions.end();
     this.warnings.begin();
     for (const warning of world.warnings) {
+      if (warning.kind === "elite_lock") {
+        this.telegraphs.circle(warning.x, warning.y, warning.radius).stroke({ color: 0xfbbf24, width: 2, alpha: .7 });
+        continue;
+      }
       if(warning.kind==="rail"||warning.kind==="dash"){
         this.telegraphs.moveTo(warning.fromX??warning.x,warning.fromY??warning.y).lineTo(warning.x,warning.y).stroke({color:warning.kind==="dash"?0xfb923c:0xe879f9,width:warning.kind==="dash"?warning.radius*2:3,alpha:.24});
         this.telegraphs.moveTo(warning.fromX??warning.x,warning.fromY??warning.y).lineTo(warning.x,warning.y).stroke({color:0xfef3c7,width:1.5,alpha:.8});continue;
@@ -419,7 +438,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     this.damageText.destroy();
     this.healthBars.clear();
     this.app.canvas.removeEventListener("webglcontextlost", this.onLost);
-    this.enemies.destroy(); this.projectiles.destroy(); this.projectileGlows.destroy(); this.afterimages.destroy(); this.companions.destroy(); this.warnings.destroy(); this.engines.destroy(); this.vfx.destroy();
+    this.enemies.destroy(); this.missileSmoke.destroy(); this.projectiles.destroy(); this.projectileGlows.destroy(); this.afterimages.destroy(); this.companions.destroy(); this.warnings.destroy(); this.engines.destroy(); this.vfx.destroy();
     this.app.destroy(true, { children: true, texture: false, textureSource: false });
     this.assets.destroy();
   }

@@ -70,6 +70,18 @@ export interface ProjectileEntity {
     previousX: number;
     previousY: number;
     bigBang: boolean;
+    projectileKind: "bullet" | "missile" | "bigbang";
+    missileState: "loiter" | "turning" | "powered" | null;
+    missileAge: number;
+    heading: number;
+    angularVelocity: number;
+    speed: number;
+    cruiseSpeed: number;
+    angularAcceleration: number;
+    acceleration: number;
+    anchorX: number;
+    anchorY: number;
+    smokeDistanceAccumulator: number;
     x: number;
     y: number;
     vx: number;
@@ -120,6 +132,8 @@ export interface WarningZone {
     owner: "player" | "enemy";
 }
 export interface ParticleEntity {
+    id: number;
+    kind: "spark" | "missile_smoke";
     x: number;
     y: number;
     vx: number;
@@ -244,6 +258,12 @@ export interface CombatWorld {
     visualRandom: () => number;
 }
 const PLAYER_TARGET_ID = 0;
+// Applied on every acquisition and recycle, including generic homing/bounce bullets.
+const MISSILE_DEFAULTS = {
+    projectileKind: "bullet" as const, missileState: null, missileAge: 0,
+    heading: 0, angularVelocity: 0, speed: 0, cruiseSpeed: 0,
+    angularAcceleration: 0, acceleration: 0, anchorX: 0, anchorY: 0, smokeDistanceAccumulator: 0,
+};
 function circleHit(ax: number, ay: number, ar: number, bx: number, by: number, br: number): boolean {
     const dx = ax - bx;
     const dy = ay - by;
@@ -353,6 +373,7 @@ function recycleEnemy(world: CombatWorld, index: number): void {
 }
 function acquireProjectile(world: CombatWorld): ProjectileEntity {
     return world.pools.projectiles.pop() || {
+        ...MISSILE_DEFAULTS,
         id: 0,
         owner: "player",
         x: 0,
@@ -377,11 +398,13 @@ function recycleProjectile(world: CombatWorld, index: number): void {
     const [projectile] = world.projectiles.splice(index, 1);
     if (projectile && world.pools.projectiles.length < 768) {
         projectile.hitIds.length = 0;
+        Object.assign(projectile, MISSILE_DEFAULTS, { targetId: null, homing: false, bigBang: false, turnRate: 0, lifetime: 0 });
         world.pools.projectiles.push(projectile);
     }
 }
 function acquireParticle(world: CombatWorld): ParticleEntity {
     return world.pools.particles.pop() || {
+        id: 0, kind: "spark",
         x: 0,
         y: 0,
         vx: 0,
@@ -406,6 +429,7 @@ function addParticles(world: CombatWorld, x: number, y: number, color: string, a
         const speed = 30 + world.visualRandom() * 85;
         const life = 0.22 + world.visualRandom() * 0.34;
         Object.assign(particle, {
+            id: world.nextVisualId++, kind: "spark",
             x,
             y,
             vx: Math.cos(angle) * speed,
@@ -459,6 +483,7 @@ function addProjectile(world: CombatWorld, values: Partial<ProjectileEntity> & P
         return null;
     const projectile = acquireProjectile(world);
     Object.assign(projectile, {
+        ...MISSILE_DEFAULTS,
         id: world.nextId++,
         owner: values.owner,
         appearance: values.appearance,
@@ -481,6 +506,19 @@ function addProjectile(world: CombatWorld, values: Partial<ProjectileEntity> & P
         bounceMultiplier: values.bounceMultiplier ?? 0,
         color: values.color ?? (values.owner === "enemy" ? "#fb7185" : "#67e8f9"),
     });
+    if (values.projectileKind === "missile" || values.projectileKind === "bigbang") {
+        const heavy = values.projectileKind === "bigbang";
+        Object.assign(projectile, {
+            projectileKind: values.projectileKind, missileState: "loiter", targetId: null, homing: false,
+            heading: Math.atan2(values.vy, values.vx), cruiseSpeed: Math.hypot(values.vx, values.vy),
+            turnRate: heavy ? 1.8 : values.turnRate ?? 3.2,
+            angularAcceleration: heavy ? 4 : values.skillId === "missile_swarm" ? 12 : 10,
+            acceleration: heavy ? 65 : 300,
+            anchorX: values.anchorX ?? values.x - world.playerX,
+            anchorY: values.anchorY ?? values.y - world.playerY,
+            vx: 0, vy: 0,
+        });
+    }
     projectile.hitIds.length = 0;
     world.projectiles.push(projectile);
     return projectile;
@@ -579,13 +617,14 @@ function aimAtCurrentTarget(world: CombatWorld, enemy: EnemyEntity): number | nu
     const target = targetPosition(world, id);
     return target ? Math.atan2(target.y - enemy.y, target.x - enemy.x) : null;
 }
-function addWarning(world: CombatWorld, kind: WarningZone["kind"], x: number, y: number, radius: number, duration: number, rawDamage: number, owner: WarningZone["owner"]): void {
+function addWarning(world: CombatWorld, kind: WarningZone["kind"], x: number, y: number, radius: number, duration: number, rawDamage: number, owner: WarningZone["owner"], enemyId?: number): void {
     if (world.warnings.length >= AIR_COMBAT_WORLD.maxWarnings)
         return;
     const clamped = clampCircleToGameplayRect(x, y, radius);
     world.warnings.push({
         id: world.nextId++,
         kind,
+        enemyId,
         x: clamped.x,
         y: clamped.y,
         radius,
@@ -623,7 +662,7 @@ function fireEnemy(world: CombatWorld, enemy: EnemyEntity): void {
                 enemy.burst = 1;
                 enemy.burstCd = .65;
                 enemy.burstAngle = aim ?? Math.PI / 2;
-                addWarning(world, "elite_lock", enemy.x, enemy.y, 32, .6, 0, "enemy");
+                addWarning(world, "elite_lock", enemy.x, enemy.y, 32, .6, 0, "enemy", enemy.id);
             }
             break;
         case "acid_bomber":
@@ -674,7 +713,6 @@ function launchNextMissile(world: CombatWorld): boolean {
     const stats = getEffectiveAircraftStats(world.aircraft);
     const values = getSkillRuntimeValues(world.aircraft, "missile_swarm");
     const index = world.missileLaunchIndex;
-    const target = nearestEnemy(world, world.playerX, world.playerY, [], true);
     const angle = -Math.PI / 2 + (index % 2 ? 0.6 : -0.6);
     const side = index % 2 === 0 ? -1 : 1;
     const launch = clampCircleToGameplayRect(world.playerX + side * 14, world.playerY - 12 + (index % 3) * 2, 4.5);
@@ -687,8 +725,9 @@ function launchNextMissile(world: CombatWorld): boolean {
         radius: 4.5,
         rawDamage: stats.firepower * values.damageMultiplier,
         source: "skill", skillId: "missile_swarm", lifetime: 6,
-        homing: true,
-        targetId: target?.id ?? null,
+        projectileKind: "missile",
+        anchorX: side * (18 + Math.floor(index / 2) % 4 * 7),
+        anchorY: -12 + (Math.floor(index / 2) % 3) * 9,
         turnRate: 3.2,
         color: "#fb923c",
     });
@@ -791,7 +830,7 @@ export function castWorldSkill(world: CombatWorld, skillId: SkillId): SkillCastR
             queueMissileSwarm(world);
             break;
         case "heavy_bomb":
-            addProjectile(world, { owner: "player", source: "skill", skillId, bigBang: true, lifetime: 3,
+            addProjectile(world, { owner: "player", source: "skill", skillId, bigBang: true, projectileKind: "bigbang", lifetime: 3,
                 x: world.playerX, y: world.playerY - 20, vx: 0, vy: -58, radius: 9, rawDamage: getEffectiveAircraftStats(world.aircraft).firepower * values.damageMultiplier, color: "#fbbf24" });
             break;
         case "focus_laser":
@@ -1136,6 +1175,110 @@ function segmentDistance(px: number, py: number, ax: number, ay: number, bx: num
     const dx = bx - ax, dy = by - ay, t = Math.max(0, Math.min(1, ((px - ax) * dx + (py - ay) * dy) / (dx * dx + dy * dy || 1)));
     return Math.hypot(px - ax - t * dx, py - ay - t * dy);
 }
+const shortestAngle = (angle: number) => Math.atan2(Math.sin(angle), Math.cos(angle));
+const approach = (value: number, target: number, step: number) => value + Math.max(-step, Math.min(step, target - value));
+
+function followMissileAnchor(world: CombatWorld, p: ProjectileEntity, dt: number): void {
+    const heavy = p.projectileKind === "bigbang";
+    const bob = Math.sin(p.missileAge * 4 + p.id * 1.7) * (heavy ? .7 : 1.8);
+    const anchor = clampCircleToGameplayRect(world.playerX + p.anchorX, world.playerY + p.anchorY + bob, p.radius);
+    const easing = 1 - Math.exp(-dt * (heavy ? 8 : 12));
+    p.x += (anchor.x - p.x) * easing;
+    p.y += (anchor.y - p.y) * easing;
+}
+
+function acquireMissileTarget(world: CombatWorld, p: ProjectileEntity): EnemyEntity | null {
+    const current = world.enemies.find(e => e.id === p.targetId && e.hp > 0);
+    if (current) return current;
+    // Tomahawk's volley keeps its existing spread across distinct live enemies.
+    const excluded = p.volleyId ? world.projectiles
+        .filter(other => other !== p && other.volleyId === p.volleyId && other.targetId !== null)
+        .map(other => other.targetId!) : p.hitIds;
+    const target = nearestEnemy(world, p.x, p.y, excluded, true) || nearestEnemy(world, p.x, p.y, p.hitIds, true);
+    p.targetId = target?.id ?? null;
+    return target;
+}
+
+function addMissileSmoke(world: CombatWorld, p: ProjectileEntity, previousHeading: number): void {
+    const distance = Math.hypot(p.x - p.previousX, p.y - p.previousY);
+    if (distance <= 0) return;
+    const spacing = 7, heavy = p.projectileKind === "bigbang", nozzle = heavy ? 21 : 14;
+    for (let sample = spacing - p.smokeDistanceAccumulator; sample <= distance; sample += spacing) {
+        // Reserve some of the existing particle cap for impact feedback. Replace old smoke first.
+        const smokeCount = world.particles.reduce((n, particle) => n + (particle.kind === "missile_smoke" ? 1 : 0), 0);
+        if (smokeCount >= AIR_COMBAT_WORLD.maxParticles - 22 || world.particles.length >= AIR_COMBAT_WORLD.maxParticles) {
+            const oldest = world.particles.findIndex(particle => particle.kind === "missile_smoke");
+            if (oldest < 0) break;
+            recycleParticle(world, oldest);
+        }
+        const t = sample / distance;
+        const heading = previousHeading + shortestAngle(p.heading - previousHeading) * t;
+        const dx = Math.cos(heading), dy = Math.sin(heading);
+        const particle = acquireParticle(world), life = heavy ? .65 : .5;
+        Object.assign(particle, {
+            id: world.nextVisualId++, kind: "missile_smoke",
+            x: p.previousX + (p.x - p.previousX) * t - dx * nozzle,
+            y: p.previousY + (p.y - p.previousY) * t - dy * nozzle,
+            vx: -dx * 7 + (world.visualRandom() - .5) * 3,
+            vy: -dy * 7 + (world.visualRandom() - .5) * 3,
+            life, maxLife: life, size: heavy ? 17 : 12, color: "#cbd5e1",
+        });
+        world.particles.push(particle);
+    }
+    p.smokeDistanceAccumulator = (p.smokeDistanceAccumulator + distance) % spacing;
+}
+
+/** Only powered motion spends the existing lifetime/fuse and enables collisions. */
+function updateMissile(world: CombatWorld, p: ProjectileEntity, dt: number): boolean {
+    p.missileAge += dt;
+    if (p.missileState === "loiter") {
+        followMissileAnchor(world, p, dt);
+        if (p.missileAge < 1) return true;
+        if (acquireMissileTarget(world, p)) p.missileState = "turning";
+        // No enemies: keep hovering, but never retain an unpowered missile indefinitely.
+        return p.missileAge < 8;
+    }
+    const powered = p.missileState === "powered";
+    if (!powered) {
+        followMissileAnchor(world, p, dt);
+        if (p.missileAge >= 8) return false;
+    }
+    const target = acquireMissileTarget(world, p);
+    if (!target && !powered) {
+        p.missileState = "loiter";
+        p.angularVelocity = approach(p.angularVelocity, 0, p.angularAcceleration * dt);
+        return true;
+    }
+    const previousHeading = p.heading;
+    // With no remaining target in powered flight, arc back toward the playfield.
+    const desired = Math.atan2((target?.y ?? world.playerY - 100) - p.y, (target?.x ?? world.playerX) - p.x);
+    const error = shortestAngle(desired - p.heading);
+    const desiredAngularVelocity = Math.max(-p.turnRate, Math.min(p.turnRate, error * 4));
+    p.angularVelocity = approach(p.angularVelocity, desiredAngularVelocity, p.angularAcceleration * dt);
+    p.heading = shortestAngle(p.heading + p.angularVelocity * dt);
+    if (!powered) {
+        if (Math.abs(shortestAngle(desired - p.heading)) <= Math.PI / 9 && Math.abs(p.angularVelocity) <= p.turnRate * .6) {
+            p.missileState = "powered";
+            // Anchor movement is staging, so it must not become a swept damage segment.
+            p.previousX = p.x;
+            p.previousY = p.y;
+        }
+        return true;
+    }
+    p.lifetime -= dt;
+    if (p.lifetime <= 0) {
+        if (p.bigBang) detonateBigBang(world, p);
+        return false;
+    }
+    p.speed = approach(p.speed, p.cruiseSpeed, p.acceleration * dt);
+    p.vx = Math.cos(p.heading) * p.speed;
+    p.vy = Math.sin(p.heading) * p.speed;
+    p.x += p.vx * dt;
+    p.y += p.vy * dt;
+    addMissileSmoke(world, p, previousHeading);
+    return true;
+}
+
 function updateHoming(world: CombatWorld, projectile: ProjectileEntity, dt: number): void {
     if (!projectile.homing)
         return;
@@ -1181,13 +1324,12 @@ function coreContext(world: CombatWorld, extra: Partial<CoreContext> = {}): Core
         explode: (target, raw) => { world.effectQueue.push({ kind: "explosion", target, raw }); },
         lightning: (target, raw) => { world.effectQueue.push({ kind: "lightning", target, raw }); },
         tomahawk: () => {
-            const ids: number[] = [];
-            for (let i = 0; i < 3; i++) {
-                const target = nearestEnemy(world, world.playerX, world.playerY, ids, true);
-                if (!target)
-                    break;
-                ids.push(target.id);
-                addProjectile(world, { owner: "player", source: "weapon", homing: true, targetId: target.id, turnRate: 4, lifetime: 6,
+            // Preserve the existing count (up to three live enemies), but defer locks.
+            const count = Math.min(3, world.enemies.reduce((n, e) => n + (e.hp > 0 ? 1 : 0), 0));
+            const volleyId = world.nextId;
+            for (let i = 0; i < count; i++) {
+                addProjectile(world, { owner: "player", source: "weapon", projectileKind: "missile", volleyId, turnRate: 4, lifetime: 6,
+                    anchorX: (i - 1) * 25, anchorY: -24,
                     x: world.playerX + (i - 1) * 10, y: world.playerY - 15, vx: (i - 1) * 65, vy: -230, radius: 4.5,
                     rawDamage: getEffectiveAircraftStats(world.aircraft).firepower * 2.5, color: "#67e8f9" });
             }
@@ -1272,7 +1414,7 @@ function destroyEnemy(world: CombatWorld, enemyIndex: number): void {
     while (c.killTimes.length > 5)
         c.killTimes.shift();
     if (state.aircraftId === "phantom")
-        state.currentResource = Math.min(100, state.currentResource + 1);
+        state.currentResource = Math.min(getEffectiveAircraftStats(state).maxResource, state.currentResource + 1);
     dispatchCoreEvent("kill", coreContext(world, { target }));
     c.lastKill = c.time;
     if (target.boss) {
@@ -1412,6 +1554,8 @@ function updateProjectileCollisions(world: CombatWorld): void {
         const p = world.projectiles[i];
         if (!p || world.ended)
             break;
+        if (p.projectileKind !== "bullet" && p.missileState !== "powered")
+            continue;
         const touches = (x: number, y: number, radius: number) => segmentDistance(x, y, p.previousX, p.previousY, p.x, p.y) <= p.radius + radius;
         if (p.owner === "enemy") {
             // Every hostile projectile can be absorbed, regardless of its original target.
@@ -1486,6 +1630,9 @@ function detonateBigBang(world: CombatWorld, projectile: ProjectileEntity): void
     }
 }
 function detonateWarning(world: CombatWorld, w: WarningZone): void {
+    // Iron Fortress's follow-up shot owns the damage; this is only its telegraph.
+    if (w.kind === "elite_lock")
+        return;
     const enemy = world.enemies.find(e => e.id === w.enemyId && e.hp > 0);
     if (w.kind === "rail") {
         if (!enemy)
@@ -1524,6 +1671,12 @@ function detonateWarning(world: CombatWorld, w: WarningZone): void {
 function updateWarnings(world: CombatWorld, dt: number): void {
     for (let i = world.warnings.length - 1; i >= 0; i--) {
         const w = world.warnings[i];
+        if (w.kind === "elite_lock") {
+            const enemy = world.enemies.find(e => e.id === w.enemyId && e.hp > 0);
+            if (!enemy) { world.warnings.splice(i, 1); continue; }
+            w.x = enemy.x;
+            w.y = enemy.y;
+        }
         // A stun holds an unfinished targeted telegraph; it never discards BigBang's stun.
         if (w.enemyId && world.enemies.some(e => e.id === w.enemyId && e.stun > 0))
             continue;
@@ -1593,6 +1746,10 @@ function updateProjectiles(world: CombatWorld, dt: number): void {
         const p = world.projectiles[i];
         p.previousX = p.x;
         p.previousY = p.y;
+        if (p.projectileKind !== "bullet") {
+            if (!updateMissile(world, p, dt)) recycleProjectile(world, i);
+            continue;
+        }
         p.lifetime -= dt;
         if (p.lifetime <= 0) {
             if (p.bigBang)

@@ -317,6 +317,11 @@ export function drawLegacyWorld(
   }
 
   for (const warning of world.warnings) {
+    if (warning.kind === "elite_lock") {
+      ctx.strokeStyle = "#fbbf24"; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.arc(warning.x, warning.y, warning.radius, 0, Math.PI * 2); ctx.stroke();
+      continue;
+    }
     if(warning.kind==="rail"||warning.kind==="dash"){
       ctx.strokeStyle="rgba(251,146,60,.25)";ctx.lineWidth=warning.kind==="dash"?warning.radius*2:12;
       ctx.beginPath();ctx.moveTo(warning.fromX??warning.x,warning.fromY??warning.y);ctx.lineTo(warning.x,warning.y);ctx.stroke();
@@ -351,30 +356,49 @@ export function drawLegacyWorld(
   }
   ctx.globalAlpha = 1;
 
+  // The runtime supplies the same distance-sampled curved trail to both renderers.
+  ctx.save();
+  ctx.shadowBlur = 0;
+  for (const particle of world.particles) {
+    if (particle.kind !== "missile_smoke") continue;
+    const age = 1 - Math.max(0, particle.life / particle.maxLife);
+    ctx.globalAlpha = (1 - age) ** 1.4 * (reducedMotion ? .25 : .45);
+    ctx.fillStyle = particle.color;
+    ctx.beginPath(); ctx.arc(particle.x, particle.y, particle.size * (.65 + age * .9) / 2, 0, Math.PI * 2); ctx.fill();
+  }
+  ctx.restore();
   for (const projectile of world.projectiles) {
-    if (!reducedMotion) {
+    const missile = projectile.projectileKind === "missile" || projectile.projectileKind === "bigbang";
+    if (!reducedMotion && !missile) {
       const speed = Math.max(1, Math.hypot(projectile.vx, projectile.vy));
-      const length = projectile.homing ? 22 : projectile.owner === "enemy" ? 7 : 13;
-      ctx.globalAlpha = .35; ctx.strokeStyle = projectile.color; ctx.lineWidth = projectile.homing ? 4 : 2;
+      const length = projectile.owner === "enemy" ? 7 : 13;
+      ctx.globalAlpha = .35; ctx.strokeStyle = projectile.color; ctx.lineWidth = 2;
       ctx.beginPath(); ctx.moveTo(projectile.x, projectile.y);
       ctx.lineTo(projectile.x - projectile.vx / speed * length, projectile.y - projectile.vy / speed * length); ctx.stroke();
       ctx.globalAlpha = 1;
     }
-    if(projectile.bigBang){drawHeavyBomb(ctx,projectile.x,projectile.y,0,world.elapsed);continue;}
-    if (projectile.homing && projectile.owner === "player") {
-      const angle = Math.atan2(projectile.vy, projectile.vx);
+    if (missile) {
+      const powered = projectile.missileState === "powered";
       ctx.save();
       ctx.translate(projectile.x, projectile.y);
-      ctx.rotate(angle + Math.PI / 2);
+      ctx.rotate(projectile.heading + Math.PI / 2);
+      if (projectile.bigBang) ctx.scale(1.5, 1.5);
+      if (powered) {
+        const flame = 6 + 10 * projectile.speed / Math.max(1, projectile.cruiseSpeed);
+        ctx.fillStyle = "#ffcc80"; ctx.shadowColor = "#fb923c"; ctx.shadowBlur = 12;
+        ctx.beginPath(); ctx.moveTo(-3, 12); ctx.lineTo(0, 14 + flame); ctx.lineTo(3, 12); ctx.closePath(); ctx.fill();
+      }
       ctx.shadowColor = projectile.color;
-      ctx.shadowBlur = 12;
+      ctx.shadowBlur = powered ? 10 : 3;
       ctx.fillStyle = projectile.color;
       ctx.beginPath();
-      ctx.moveTo(0, -8);
-      ctx.lineTo(4, 3);
-      ctx.lineTo(2, 7);
-      ctx.lineTo(-2, 7);
-      ctx.lineTo(-4, 3);
+      ctx.moveTo(0, -14);
+      ctx.lineTo(4, -5);
+      ctx.lineTo(4, 7);
+      ctx.lineTo(7, 13);
+      ctx.lineTo(-7, 13);
+      ctx.lineTo(-4, 7);
+      ctx.lineTo(-4, -5);
       ctx.closePath();
       ctx.fill();
       ctx.shadowBlur = 0;
@@ -450,6 +474,7 @@ export function drawLegacyWorld(
 
   if (!reducedMotion) {
     for (const particle of world.particles) {
+      if (particle.kind === "missile_smoke") continue;
       ctx.globalAlpha = Math.max(0, particle.life / particle.maxLife);
       ctx.fillStyle = particle.color;
       ctx.fillRect(particle.x, particle.y, particle.size, particle.size);

@@ -36,7 +36,7 @@ export function getEffectiveAircraftStats(state: AircraftCombatState): Effective
         fireRate: config.baseStats.fireRate + config.growth.fireRate * n + m.fireRateFlat,
         criticalChance: config.baseStats.criticalChance + m.criticalChanceFlat,
         criticalDamageMultiplier: config.baseStats.criticalDamageMultiplier + m.criticalDamageMultiplierFlat,
-        maxResource: state.aircraftId === "phantom" ? 100 : config.baseStats.maxResource + config.growth.maxResource * n + m.maxResourceFlat,
+        maxResource: config.baseStats.maxResource + config.growth.maxResource * n + m.maxResourceFlat,
         resourceRegen: config.baseStats.resourceRegen + config.growth.resourceRegen * n + m.resourceRegenFlat,
         cooldownReduction: m.cooldownReduction, hpRegen: config.hpRegen.base + config.hpRegen.growth * n + m.hpRegen, resourceKind: config.resourceKind,
         currentHp: state.currentHp, currentResource: state.currentResource, weapon: { ...m.weapon },
