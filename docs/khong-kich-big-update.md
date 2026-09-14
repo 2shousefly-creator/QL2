@@ -26,9 +26,11 @@ rewards and save schema are unchanged.
 
 ## Interaction details
 
-The level milestone queue is independent of conversion rewards. Lv9/18/27 always
-offer the aircraft's three Skill 1/2/3 cores, including after specialization locks
-skills. Skill cores never enter a normal roll or conversion reward.
+The level milestone queue is independent of conversion rewards. Lv9/18/27 offer
+the aircraft's three Skill 1/2/3 cores unless specialization is already owned.
+The post-update polish replaces those remaining milestones with distinct eligible
+normal Diamond cores (up to three), without a rarity roll. Skill cores never enter
+a normal roll or conversion reward. See `khong-kich-post-update-polish.md`.
 
 Stat evaluation applies flat changes, final-Max-HP conditions, percentage and
 temporary modifiers, then the Fire Rate lock/conversion and final caps. Crit chance
@@ -47,10 +49,11 @@ retained until that end, and the then-current global CDR applies. Specialization
 cancels active skills, their emitted skill projectiles and their temporary effects.
 
 Full pause reasons freeze the runtime before advancing any clock or processing
-input/skills. Core List closes only its own reason. Between waves, a separate state
-allows movement, resource/HP regeneration and cooldowns while freezing combat buff,
-status, drone-drain and weapon clocks. The cleared wave's hostile projectiles and
-warnings are removed before the three-second break; the next banner lasts 1.15s.
+input/skills. Core List closes only its own reason. Following the post-update
+polish, all gameplay clocks continue during the three-second next-wave countdown,
+including buffs, statuses, drone drain and weapons. The cleared wave's hostile
+projectiles and warnings are removed; friendly skill objects remain active. The
+next wave starts at zero and its 1.15s banner is purely cosmetic.
 
 Normal enemies stay in the playfield until defeated; progression never counts
 off-screen escapes as a clear. Boss phases use HP thresholds, with a rolling

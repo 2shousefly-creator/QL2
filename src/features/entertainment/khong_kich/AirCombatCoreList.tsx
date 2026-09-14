@@ -1,34 +1,50 @@
-import React from "react";
+import React, { useState } from "react";
 import { AppModal, ModalButton, OverlayBody, OverlayFooter, OverlayHeader } from "../../../components/overlay/AppOverlay";
-import { CORE_DEFINITIONS, CORE_TIER_LABELS } from "./airCombatConfig";
-import { coreStackLabel, hasCore } from "./airCombatCoreEffects";
+import { CORE_DEFINITIONS, CORE_TIER_LABELS, SKILL_CONFIGS } from "./airCombatConfig";
+import { coreStackLabel, skillsLocked } from "./airCombatCoreEffects";
+import { CombatUiIcon } from "./CombatUiIcon";
+import { CoreDescription } from "./CoreDescription";
 import type { AircraftCombatState } from "./airCombatTypes";
-export function AirCombatCoreList({ state, onClose }: {
-    state: AircraftCombatState;
-    onClose: () => void;
-}) {
-    const owned = state.selectedCores.flatMap(id => {
-        const core = CORE_DEFINITIONS.find(c => c.id === id);
-        return core ? [core] : [];
-    });
-    return <AppModal archetype="info" layer="exclusive-dialog" layout="viewport-safe" onClose={onClose} labelledBy="air-core-list-title">
-    <OverlayHeader>
+
+export function AirCombatCoreList({ state, onClose }: { state: AircraftCombatState; onClose: () => void }) {
+  const owned = state.selectedCores.flatMap(id => {
+    const core = CORE_DEFINITIONS.find(c => c.id === id);
+    return core ? [core] : [];
+  });
+  const [selectedId, setSelectedId] = useState(owned[0]?.id);
+  const selected = owned.find(c => c.id === selectedId) ?? owned[0];
+  const stack = selected && coreStackLabel(state, selected.id);
+  return <AppModal archetype="info" layer="exclusive-dialog" layout="viewport-safe" onClose={onClose} labelledBy="air-core-list-title">
+    <OverlayHeader className="air-core-list-header">
       <h2 id="air-core-list-title" className="modal-title">Danh sách lõi · {owned.length}</h2>
-      <p className="mt-1 text-xs text-[var(--modal-muted)]">Trận đấu đang tạm dừng · Theo thứ tự nhận</p>
+      <p className="mt-1 text-xs text-[var(--modal-muted)]">Trận đấu đang tạm dừng · Chạm lõi để xem chi tiết</p>
     </OverlayHeader>
-    <OverlayBody className="space-y-3" data-core-list="open">
-      {owned.length === 0 && <p className="py-6 text-center text-sm text-[var(--modal-muted)]">Chưa có lõi. Lõi đầu tiên xuất hiện ở cấp 3.</p>}
-      {owned.map((core, index) => {
-            const stack = coreStackLabel(state, core.id), tier = core.tiers[0];
-            return <article key={core.id} className={`air-owned-core air-owned-core--${tier}`}>
-          <div className="flex items-center justify-between gap-2 text-xs opacity-80"><span>#{index + 1} · {CORE_TIER_LABELS[tier]}</span><span>{core.system}</span></div>
-          <h3 className="mt-1 text-base font-semibold">{core.name}</h3>
-          <p className="mt-1 text-sm leading-relaxed">{core.description}</p>
-          {core.skillSlot && <p className="mt-2 text-xs font-semibold">Đã chọn nâng cấp Kỹ năng {core.skillSlot}{hasCore(state, 97) ? " · Kỹ năng đang bị khóa" : ""}</p>}
-          {stack && <p className="mt-2 text-sm font-semibold text-emerald-200">{stack}</p>}
-          {state.coreState.consumed.has(core.id) && <p className="mt-2 text-xs text-amber-200">Đã sử dụng trong lượt này</p>}
-        </article>;
+    <OverlayBody className="air-core-inventory" data-core-list="open">
+      <div className="air-core-grid" role="group" aria-label="Lõi đã nhận">
+        {Array.from({ length: Math.max(14, owned.length) }, (_, index) => {
+          const core = owned[index];
+          return core ? <button key={core.id} type="button" aria-pressed={selected?.id === core.id}
+            className={`air-core-slot air-owned-core--${core.tiers[0]}`} onClick={() => setSelectedId(core.id)}>
+            <CombatUiIcon kind="core" id={core.id} fallback="◆" />
+            <span>{core.name}</span>
+          </button> : <div key={`empty-${index}`} className="air-core-slot air-core-slot--empty" aria-hidden="true">—</div>;
         })}
+      </div>
+      <section className="air-core-detail" aria-label="Chi tiết lõi" tabIndex={0}>
+        {selected ? <>
+          <div className="flex items-center gap-3">
+            <CombatUiIcon kind="core" id={selected.id} fallback="◆" />
+            <div><h3 className="font-semibold">{selected.name}</h3>
+              <p className="text-xs text-cyan-100">{CORE_TIER_LABELS[selected.tiers[0]]} · {selected.system}</p></div>
+          </div>
+          <p className="mt-2 text-sm leading-relaxed"><CoreDescription text={selected.description} /></p>
+          {selected.skillId && <p className="mt-2 text-xs font-semibold">Kỹ năng {selected.skillSlot} · {SKILL_CONFIGS[selected.skillId].name}{skillsLocked(state) ? " · Đang bị khóa" : ""}</p>}
+          {selected.skillId && !skillsLocked(state) && <p className="mt-1 text-xs text-violet-200">Hồi chiêu còn {(state.cooldowns[selected.skillId] || 0).toFixed(1)}s · Duy trì còn {(state.activeEffects[selected.skillId] || 0).toFixed(1)}s{selected.skillId === "escort_drone" && state.droneActive ? " · HawkEye đang hoạt động" : ""}</p>}
+          {stack && <p className="mt-2 text-sm font-semibold text-emerald-200">{stack}</p>}
+          {selected.id === "core_097" && <p className="mt-2 text-xs text-amber-200">Đã khóa cả 3 kỹ năng. Mốc 9 / 18 / 27 còn lại chuyển sang lõi Kim Cương thường.</p>}
+          {state.coreState.consumed.has(selected.id) && <p className="mt-2 text-xs text-amber-200">Đã sử dụng trong lượt này</p>}
+        </> : <p className="text-sm text-[var(--modal-muted)]">Chưa có lõi. Lõi đầu tiên xuất hiện ở cấp 3.</p>}
+      </section>
     </OverlayBody>
     <OverlayFooter><ModalButton variant="primary" onClick={onClose} className="w-full">Đóng danh sách lõi</ModalButton></OverlayFooter>
   </AppModal>;

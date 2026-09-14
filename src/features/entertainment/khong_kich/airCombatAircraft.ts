@@ -1,5 +1,5 @@
 import { AIRCRAFT_CONFIGS, AIR_COMBAT_LIMITS, SKILL_CONFIGS } from "./airCombatConfig";
-import { applyCoreStatEffects, applyFireRateLock, hasCore } from "./airCombatCoreEffects";
+import { applyCoreStatEffects, applyFireRateLock, hasCore, skillsLocked } from "./airCombatCoreEffects";
 import type { AircraftCombatState, AircraftId, EffectiveAircraftStats, LevelUpResult, SkillCastResult, SkillId, WeaponModifiers } from "./airCombatTypes";
 const DEFAULT_WEAPON: WeaponModifiers = {
     penetration: 0, penetrationDamageMultiplier: 0, splashDamageMultiplier: 0, chargedEvery: 0, chargedMultiplier: 1,
@@ -23,7 +23,7 @@ export function createAircraftCombatState(aircraftId: AircraftId): AircraftComba
         modifiers: { criticalChanceFlat: 0, criticalDamageMultiplierFlat: 0, maxHpFlat: 0, armorFlat: 0, firepowerFlat: 0, fireRateFlat: 0, hpRegen: 0,
             cooldownReduction: 0, maxResourceFlat: 0, resourceRegenFlat: 0, weapon: { ...DEFAULT_WEAPON }, skillCores: {} },
         cooldowns: {}, selectedCores: [], activeEffects: {}, droneActive: false, basicShotsFired: 0, pendingMilestones: [],
-        coreState: { time: 0, lastDamage: 0, lastMove: 0, lastKill: -Infinity, kills: 0, skillCasts: 0, killTimes: [], stacks: {}, timers: {}, shields: {},
+        coreState: { acquisitions: [], nextAcquisitionId: 1, healingTotal: 0, time: 0, lastDamage: 0, lastMove: 0, lastKill: -Infinity, kills: 0, skillCasts: 0, killTimes: [], stacks: {}, timers: {}, shields: {},
             consumed: new Set(), criticalBudget: 1, criticalWindow: 0, droneCycle: 0, deferredCooldowns: {} },
     };
 }
@@ -38,7 +38,7 @@ export function getEffectiveAircraftStats(state: AircraftCombatState): Effective
         criticalDamageMultiplier: config.baseStats.criticalDamageMultiplier + m.criticalDamageMultiplierFlat,
         maxResource: state.aircraftId === "phantom" ? 100 : config.baseStats.maxResource + config.growth.maxResource * n + m.maxResourceFlat,
         resourceRegen: config.baseStats.resourceRegen + config.growth.resourceRegen * n + m.resourceRegenFlat,
-        cooldownReduction: m.cooldownReduction, hpRegen: m.hpRegen, resourceKind: config.resourceKind,
+        cooldownReduction: m.cooldownReduction, hpRegen: config.hpRegen.base + config.hpRegen.growth * n + m.hpRegen, resourceKind: config.resourceKind,
         currentHp: state.currentHp, currentResource: state.currentResource, weapon: { ...m.weapon },
     };
     applyCoreStatEffects(state, stats);
@@ -61,6 +61,7 @@ export function getEffectiveAircraftStats(state: AircraftCombatState): Effective
     stats.armor = Math.max(-80, stats.armor);
     stats.maxHp = Math.max(1, stats.maxHp);
     stats.firepower = Math.max(0, stats.firepower);
+    stats.hpRegen = Math.max(0, stats.hpRegen);
     stats.currentHp = Math.min(state.currentHp, stats.maxHp);
     stats.currentResource = Math.min(state.currentResource, stats.maxResource);
     c.stacks.effectiveMaxHp = stats.maxHp;
@@ -185,12 +186,12 @@ export function endAircraftSkill(state: AircraftCombatState, skillId: SkillId): 
         state.cooldowns[skillId] = getSkillRuntimeValues(state, skillId).cooldown * (1 - getEffectiveAircraftStats(state).cooldownReduction) * (state.coreState.deferredCooldowns[skillId] ?? 1);
         delete state.coreState.deferredCooldowns[skillId];
     }
-    if (skillId === "armor_shield" && hasCore(state, 30) && !hasCore(state, 97))
+    if (skillId === "armor_shield" && hasCore(state, 30) && !skillsLocked(state))
         state.coreState.timers.shieldArmor = state.coreState.time + 5;
 }
 export function castSkill(state: AircraftCombatState, skillId: SkillId): SkillCastResult {
     const skill = SKILL_CONFIGS[skillId];
-    if (!skill || skill.aircraftId !== state.aircraftId || hasCore(state, 97))
+    if (!skill || skill.aircraftId !== state.aircraftId || skillsLocked(state))
         return { cast: false, reason: "invalid", resourceSpent: 0 };
     if ((skillId === "escort_drone" && state.droneActive) || (skillId === "sweeping_cannon" && (state.activeEffects.sweeping_cannon || 0) > 0)) {
         endAircraftSkill(state, skillId);
@@ -222,41 +223,40 @@ export function healAircraft(state: AircraftCombatState, amount: number): number
     const maxHp = getEffectiveAircraftStats(state).maxHp;
     const healing = Math.max(0, amount), effective = Math.min(healing, Math.max(0, maxHp - state.currentHp));
     state.currentHp = Math.min(maxHp, state.currentHp + effective);
+    state.coreState.healingTotal += effective;
     if (hasCore(state, 104) && healing > effective) {
         const current = state.coreState.shields.overheal?.amount || 0;
         state.coreState.shields.overheal = { amount: Math.min(maxHp * .12, current + healing - effective), until: Infinity };
     }
     return effective;
 }
-export function tickAircraftState(state: AircraftCombatState, deltaSeconds: number, gameplayRunning: boolean, intermission = false): void {
+export function tickAircraftState(state: AircraftCombatState, deltaSeconds: number, gameplayRunning: boolean): void {
     if (!gameplayRunning || deltaSeconds <= 0)
         return;
     const dt = deltaSeconds;
     for (const key of Object.keys(state.cooldowns) as SkillId[])
         state.cooldowns[key] = Math.max(0, (state.cooldowns[key] || 0) - dt);
-    if (!intermission) {
-        state.coreState.time += dt;
-        for (const key of Object.keys(state.activeEffects) as SkillId[]) {
-            const next = (state.activeEffects[key] || 0) - dt;
-            if (next <= 0)
-                endAircraftSkill(state, key);
-            else
-                state.activeEffects[key] = next;
-        }
-        if (state.droneActive && hasCore(state, 44)) {
-            state.coreState.droneCycle += dt;
-            if (state.coreState.droneCycle >= 11)
-                state.coreState.droneCycle -= 11;
-            if (state.coreState.droneCycle >= 8)
-                state.coreState.timers.hawkRage = state.coreState.time + (11 - state.coreState.droneCycle);
-        }
-        for (const [key, shield] of Object.entries(state.coreState.shields))
-            if (shield.until <= state.coreState.time)
-                delete state.coreState.shields[key];
+    state.coreState.time += dt;
+    for (const key of Object.keys(state.activeEffects) as SkillId[]) {
+        const next = (state.activeEffects[key] || 0) - dt;
+        if (next <= 0)
+            endAircraftSkill(state, key);
+        else
+            state.activeEffects[key] = next;
     }
+    if (state.droneActive && hasCore(state, 44)) {
+        state.coreState.droneCycle += dt;
+        if (state.coreState.droneCycle >= 11)
+            state.coreState.droneCycle -= 11;
+        if (state.coreState.droneCycle >= 8)
+            state.coreState.timers.hawkRage = state.coreState.time + (11 - state.coreState.droneCycle);
+    }
+    for (const [key, shield] of Object.entries(state.coreState.shields))
+        if (shield.until <= state.coreState.time)
+            delete state.coreState.shields[key];
     const stats = getEffectiveAircraftStats(state);
     healAircraft(state, stats.hpRegen * dt);
-    const upkeep = state.droneActive && !intermission ? getSkillRuntimeValues(state, "escort_drone").upkeepPerSecond : 0;
+    const upkeep = state.droneActive ? getSkillRuntimeValues(state, "escort_drone").upkeepPerSecond : 0;
     state.currentResource = Math.max(0, Math.min(stats.maxResource, state.currentResource + (stats.resourceRegen - upkeep) * dt));
     if (state.droneActive && state.currentResource <= 0)
         endAircraftSkill(state, "escort_drone");

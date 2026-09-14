@@ -3,7 +3,7 @@ import type { AirCombatAssets } from "./AirCombatPixiAssets";
 
 export class AirCombatSky {
   readonly root = new Container();
-  private atmosphere = new Graphics().rect(0, 0, 360, 640).fill(0x142c44);
+  private atmosphere = new Graphics().rect(0, 0, 360, 640).fill(0x234660);
   private clouds: { sprite: Sprite; speed: number }[] = [];
   private wind = new Graphics();
   constructor(assets: AirCombatAssets) {
@@ -15,7 +15,7 @@ export class AirCombatSky {
         sprite.position.set(((i * 137 + layer * 67) % 460) - 50, i * 230 - 160);
         sprite.width = 190 + layer * 62;
         sprite.height = sprite.width * 0.7;
-        sprite.alpha = [0.09, 0.13, 0.08][layer];
+        sprite.alpha = [0.13, 0.17, 0.11][layer];
         this.root.addChild(sprite);
         this.clouds.push({ sprite, speed: 5 + layer * 12 });
       }
@@ -27,7 +27,7 @@ export class AirCombatSky {
     this.root.addChild(this.wind);
   }
   update(delta: number, elapsed: number, boss: boolean, reducedMotion: boolean) {
-    this.atmosphere.tint = boss ? 0xa07886 : elapsed > 130 ? 0xb1c5df : 0xffffff;
+    this.atmosphere.tint = boss ? 0xb49bad : elapsed > 130 ? 0xc2d7ef : 0xffffff;
     this.wind.visible = !reducedMotion;
     this.wind.y = (this.wind.y + delta * 21) % 80;
     for (const cloud of this.clouds) {

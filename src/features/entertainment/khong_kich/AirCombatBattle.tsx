@@ -1,5 +1,7 @@
+import { AirCombatOverlayFeedback } from "./AirCombatOverlayFeedback";
+import { CoreDescription } from "./CoreDescription";
 import { AirCombatCoreList } from "./AirCombatCoreList";
-import { hasCore } from "./airCombatCoreEffects";
+import { hasCore, skillsLocked } from "./airCombatCoreEffects";
 import React, {
   useCallback,
   useEffect,
@@ -137,11 +139,16 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
   const lowHpWarnedRef = useRef(false);
   const announcementRef = useRef<string | null>(null);
   const [pauseState, setPauseState] = useState({ paused: false, label: null as string | null });
+  const toastHostRef = useRef<HTMLDivElement>(null);
+  const bossHpRef = useRef<HTMLDivElement>(null);
+  const bossChipRef = useRef<HTMLDivElement>(null);
+  const bossShieldRef = useRef<HTMLDivElement>(null);
   const [hud, setHud] = useState<AirCombatHudSnapshot>(() => makeHudSnapshot(worldRef.current, false, null));
   const [coreChoices, setCoreChoices] = useState<CoreCard[] | null>(null);
   const [tooltipSkill, setTooltipSkill] = useState<SkillId | null>(null);
   const [showExitConfirm, setShowExitConfirm] = useState(false);
   const [showCoreList, setShowCoreList] = useState(false);
+  const skillFeedbackUntil = useRef(0);
   const [skillFeedback, setSkillFeedback] = useState<string | null>(null);
 
   const aircraft = AIRCRAFT_CONFIGS[aircraftId];
@@ -180,6 +187,7 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
     const host = stageRef.current;
     if (!host) return;
     const world = worldRef.current;
+    const overlayFeedback = toastHostRef.current ? new AirCombatOverlayFeedback(toastHostRef.current) : null;
     let cancelled = false;
     let animationFrame = 0;
     let presentation: AirCombatPresentation | null = null;
@@ -221,10 +229,16 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
             soundManager.playXpFull(); soundManager.triggerHaptic("medium");
           }
         }
-        try { presentation.render(world, paused ? 0 : elapsed, reducedMotion); }
+        const visualDelta = pauseReasonsRef.current.size > 0 ? 0 : elapsed;
+        overlayFeedback?.render(world, visualDelta, pauseReasonsRef.current.size > 0, reducedMotion,
+          bossHpRef.current, bossChipRef.current, bossShieldRef.current);
+        try { presentation.render(world, visualDelta, reducedMotion); }
         catch {
           if (!usingLegacy) void fallback();
           else { presentation.destroy(); presentation = null; setRendererState("failed"); setPauseReason("loading", true); }
+        }
+        if (skillFeedbackUntil.current > 0 && world.elapsed >= skillFeedbackUntil.current) {
+          skillFeedbackUntil.current = 0; setSkillFeedback(null);
         }
         if (now - lastHudUpdate >= 90) {
           setHud(makeHudSnapshot(world, pauseReasonsRef.current.size > 0, pauseLabel(pauseReasonsRef.current)));
@@ -253,18 +267,14 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
       if (!cancelled) { lastTime = performance.now(); animationFrame = requestAnimationFrame(frame); }
     })();
     return () => {
-      cancelled = true; cancelAnimationFrame(animationFrame); presentation?.destroy();
+      cancelled = true;
+      overlayFeedback?.destroy(); cancelAnimationFrame(animationFrame); presentation?.destroy();
       document.removeEventListener("visibilitychange", resetClock);
       const press = pressRef.current;
       if (press?.timer != null) window.clearTimeout(press.timer);
     };
   }, [aircraftId, reducedMotion, setPauseReason]);
 
-  useEffect(() => {
-    if (!skillFeedback) return;
-    const timer = window.setTimeout(() => setSkillFeedback(null), 1300);
-    return () => window.clearTimeout(timer);
-  }, [skillFeedback]);
 
   const pointFromEvent = (event: React.PointerEvent<HTMLDivElement>) => {
     const rect = event.currentTarget.getBoundingClientRect();
@@ -359,6 +369,7 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
     if (!result.cast) {
       soundManager.playError();
       soundManager.triggerHaptic("light");
+      skillFeedbackUntil.current = worldRef.current.elapsed + 1.3;
       setSkillFeedback(result.reason === "resource" ? "Không đủ tài nguyên" : "Kỹ năng đang hồi");
     } else {
       soundManager.playClick();
@@ -489,7 +500,11 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
       {hud.bossMaxHp > 0 && (
         <div className="absolute inset-x-[4%] top-[14.5%] z-10 rounded-xl border border-rose-300/70 bg-gradient-to-r from-rose-950/95 via-slate-950/95 to-rose-950/95 px-2 py-1.5 shadow-lg shadow-rose-950/50" data-boss-phase={hud.bossPhase}>
           <div className="flex justify-between text-[7px] font-black uppercase text-rose-200"><span>Leviathan X-99 · Giai đoạn {hud.bossPhase}</span><span>{Math.ceil(hud.bossHp).toLocaleString("vi-VN")}</span></div>
-          <div className="mt-1 h-1.5 overflow-hidden rounded bg-black"><div className="h-full bg-gradient-to-r from-red-700 via-rose-500 to-orange-300" style={{ width: `${Math.max(0, hud.bossHp / hud.bossMaxHp) * 100}%` }} /></div>
+          <div className="relative mt-1 h-1.5 overflow-hidden rounded bg-black">
+            <div ref={bossShieldRef} className="absolute inset-y-0 left-0 bg-slate-200" />
+            <div ref={bossChipRef} className="absolute inset-y-0 left-0 bg-white" />
+            <div ref={bossHpRef} className="absolute inset-y-0 left-0 bg-gradient-to-r from-red-700 via-rose-500 to-orange-300" />
+          </div>
         </div>
       )}
 
@@ -499,7 +514,7 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
           const values = getSkillRuntimeValues(worldRef.current.aircraft, skillId);
           const cooldown = hud.cooldowns[skillId] || 0;
           const active = skillId === "escort_drone" ? hud.droneActive : (worldRef.current.aircraft.activeEffects[skillId] || 0) > 0;
-          const locked = hasCore(worldRef.current.aircraft,97);
+          const locked = skillsLocked(worldRef.current.aircraft);
           const free = hasCore(worldRef.current.aircraft,84) && (worldRef.current.aircraft.coreState.skillCasts+1)%4===0;
           const toggleActive = (skillId === "escort_drone" || skillId === "sweeping_cannon") && active;
           const unavailable = locked || (!toggleActive && (cooldown > 0 || (!free || skillId === "escort_drone") && hud.stats.currentResource < values.cost));
@@ -548,6 +563,8 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
         </aside>
       )}
 
+      <div ref={toastHostRef} className="air-core-toasts" aria-live="polite" aria-label="Lõi vừa nhận" />
+      {hud.waveCountdown > 0 && !hud.paused && <div className="air-wave-countdown">Đợt tiếp theo sau<strong>{hud.waveCountdown}</strong></div>}
       {(hud.latestMessage || skillFeedback) && !coreChoices && (
         <div className="pointer-events-none absolute left-1/2 top-[21%] z-10 -translate-x-1/2 whitespace-nowrap rounded-full border border-cyan-300/40 bg-black/90 px-3 py-1.5 text-[9px] font-black uppercase tracking-wider text-cyan-100 shadow-lg shadow-cyan-950/30">{skillFeedback || hud.latestMessage}</div>
       )}
@@ -569,7 +586,7 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
             </div>
           </OverlayHeader>
 
-          <OverlayBody className="w-full grid" data-core-selection="open">
+          <OverlayBody className="w-full grid" data-core-selection="open" data-reduced-motion={reducedMotion}>
             {coreChoices.map((card) => {
                             const special = card.category === "weapon" || card.category === "skill";
               return (
@@ -593,7 +610,7 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
                       </span>
                       <span className="shrink-0 rounded-full border border-white/15 bg-black/25 px-2 py-1 text-xs font-semibold uppercase">{coreTierLabel(card.tier)}</span>
                     </span>
-                    <span className="mt-1 block text-xs leading-snug opacity-85">{card.description}</span>
+                    <span className="mt-1 block text-xs leading-snug opacity-85"><CoreDescription text={card.description} /></span>
                     <span className="mt-2 flex flex-wrap items-center gap-1.5">
                       <span className={`rounded-lg border px-2 py-1 text-[12px] font-semibold ${CATEGORY_STYLE[card.category]}`}>{card.valueLabel}</span>
                       {card.previewLabel && <span className="rounded-lg border border-emerald-300/25 bg-emerald-400/15 px-2 py-1 text-xs font-semibold text-[var(--modal-success)]">{card.previewLabel}</span>}

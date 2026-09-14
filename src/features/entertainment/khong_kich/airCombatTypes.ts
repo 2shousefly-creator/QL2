@@ -62,6 +62,7 @@ export interface AircraftConfig {
   resourceKind: ResourceKind;
   baseStats: CombatStats;
   growth: AircraftGrowth;
+  hpRegen: { base: number; growth: number };
   skillIds: readonly [SkillId, SkillId, SkillId];
 }
 
@@ -243,6 +244,7 @@ export interface AirCombatHudSnapshot {
   comboMultiplier: number;
   elapsedSeconds: number;
   waveLabel: string;
+  waveCountdown: number;
   combatXpRequired: number;
   bossHp: number;
   bossMaxHp: number;
@@ -256,6 +258,10 @@ export interface AirCombatHudSnapshot {
 
 /** Run-local event state; no persistent profile/schema changes. Timers use combat time. */
 export interface CoreRuntimeState {
+  /** Explicit run-local acquisition journal, including conversion rewards; bounded by the finite catalog. */
+  acquisitions: { id: number; coreId: CoreId }[];
+  nextAcquisitionId: number;
+  healingTotal: number;
   time: number;
   lastDamage: number;
   lastMove: number;

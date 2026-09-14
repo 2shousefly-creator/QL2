@@ -1,5 +1,6 @@
 import { AIRCRAFT_CONFIGS, CORE_DEFINITIONS, CORE_TIER_CHANCES } from "./airCombatConfig";
 import { getEffectiveAircraftStats } from "./airCombatAircraft";
+import { skillsLocked } from "./airCombatCoreEffects";
 import type { AircraftCombatState, CoreCard, CoreDefinition, CoreTier } from "./airCombatTypes";
 const TIERS: CoreTier[] = ["silver", "gold", "diamond"];
 const pick = <T>(pool: readonly T[], random: () => number): T | undefined => pool[Math.min(pool.length - 1, Math.max(0, Math.floor(random() * pool.length)))];
@@ -21,12 +22,14 @@ export function makeCoreCard(definition: CoreDefinition): CoreCard {
 /** selectionNumber retained for callers; queued level is the authority. */
 export function generateCoreChoices(state: AircraftCombatState, selectionNumber: number, random: () => number = Math.random): CoreCard[] {
     const level = state.pendingMilestones[0] ?? selectionNumber * 3;
-    if (level === 9 || level === 18 || level === 27) {
+    const skillMilestone = level === 9 || level === 18 || level === 27;
+    if (skillMilestone && !skillsLocked(state)) {
         const skill = AIRCRAFT_CONFIGS[state.aircraftId].skillIds[level / 9 - 1];
         return CORE_DEFINITIONS.filter(c => c.skillId === skill).map(makeCoreCard);
     }
-    let tier: CoreTier | undefined = rollCoreTier(selectionNumber, random);
-    if (eligible(state, tier).length < 3)
+    const specializedMilestone = skillMilestone && skillsLocked(state);
+    let tier: CoreTier | undefined = specializedMilestone ? "diamond" : rollCoreTier(selectionNumber, random);
+    if (!specializedMilestone && eligible(state, tier).length < 3)
         tier = weightedTier(TIERS.filter(t => eligible(state, t).length >= 3), random);
     const pool = eligible(state, tier), chosen: CoreCard[] = [];
     while (pool.length && chosen.length < 3) {
@@ -41,7 +44,7 @@ export function applyCore(state: AircraftCombatState, card: CoreCard, random: ()
     const first = CORE_DEFINITIONS.find(c => c.id === card.id);
     if (!first || first.tiers[0] !== card.tier || state.selectedCores.includes(first.id))
         return false;
-    if (first.skillId && (!first.aircraftIds?.includes(state.aircraftId) || state.modifiers.skillCores[first.skillId]))
+    if (first.skillId && (skillsLocked(state) || !first.aircraftIds?.includes(state.aircraftId) || state.modifiers.skillCores[first.skillId]))
         return false;
     type Work = {
         core: CoreDefinition;
@@ -64,6 +67,7 @@ export function applyCore(state: AircraftCombatState, card: CoreCard, random: ()
             continue;
         const before = getEffectiveAircraftStats(state);
         state.selectedCores.push(core.id);
+        state.coreState.acquisitions.push({ id: state.coreState.nextAcquisitionId++, coreId: core.id });
         if (core.skillId)
             state.modifiers.skillCores[core.skillId] = core.id;
         const after = getEffectiveAircraftStats(state);

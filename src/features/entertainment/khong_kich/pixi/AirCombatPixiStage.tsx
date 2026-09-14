@@ -1,6 +1,7 @@
+import { CanvasCombatAccents } from "../CanvasCombatAccents";
 import React from "react";
 import type { AirCombatPresentation } from "./airCombatPixiTypes";
-import { DamageLabelPool } from "../airCombatFeedback";
+import { DamageLabelPool, HealthBarPresentation } from "../airCombatFeedback";
 
 export const AirCombatPixiStage = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   function AirCombatPixiStage(props, ref) {
@@ -18,13 +19,18 @@ export async function createLegacyPresentation(host: HTMLDivElement): Promise<Ai
   if (!context) throw new Error("Không thể khởi tạo hiển thị trận đấu");
   host.appendChild(canvas);
   const damageLabels = new DamageLabelPool();
+  const healthBars = new HealthBarPresentation();
+  const accents = new CanvasCombatAccents();
   return {
     render(world, delta, reducedMotion) {
       if (document.hidden) return;
       context.setTransform(ratio, 0, 0, ratio, 0, 0);
       damageLabels.update(world, delta);
-      drawLegacyWorld(context, world, world.aircraft.aircraftId, reducedMotion, damageLabels.labels);
+      healthBars.begin(delta);
+      accents.update(world, delta);
+      drawLegacyWorld(context, world, world.aircraft.aircraftId, reducedMotion, damageLabels.labels, healthBars, accents);
+      healthBars.end();
     },
-    destroy() { canvas.remove(); },
+    destroy() { accents.clear(); healthBars.clear(); canvas.remove(); },
   };
 }

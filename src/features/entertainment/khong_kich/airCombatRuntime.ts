@@ -142,6 +142,8 @@ interface VisualEventBase {
     size: number;
     entityId?: number;
     boss?: boolean;
+    fromX?: number;
+    fromY?: number;
 }
 export interface DamageNumberEvent extends VisualEventBase {
     kind: "damage_number";
@@ -151,7 +153,7 @@ export interface DamageNumberEvent extends VisualEventBase {
     shielded: boolean;
 }
 export type CombatVisualEvent = DamageNumberEvent | (VisualEventBase & {
-    kind: "hit" | "explosion" | "bomb" | "player_hit";
+    kind: "hit" | "explosion" | "bomb" | "player_hit" | "absorb" | "lightning" | "drone_hit";
 });
 type NewVisualEvent = CombatVisualEvent extends infer E ? E extends CombatVisualEvent ? Omit<E, "id"> : never : never;
 function emitVisual(world: CombatWorld, event: NewVisualEvent): void {
@@ -189,7 +191,7 @@ export interface CombatWorld {
     bossPhase: number;
     pauseReasons: Set<string>;
     waveIndex: number;
-    waveState: "combat" | "intermission" | "announcement";
+    waveState: "combat" | "countdown" | "announcement";
     waveTimer: number;
     spawnQueue: EnemyType[];
     spawnedInWave: number;
@@ -862,6 +864,7 @@ export function movePlayerByDelta(world: CombatWorld, dx: number, dy: number): v
         for (let index = world.projectiles.length - 1; index >= 0; index--) {
             const p = world.projectiles[index];
             if (p.owner === "enemy" && world.decoys.some(d => circleHit(p.x, p.y, p.radius, d.x, d.y, d.radius))) {
+                emitVisual(world, { kind: "absorb", x: p.x, y: p.y, size: 24 });
                 recycleProjectile(world, index);
                 continue;
             }
@@ -874,7 +877,7 @@ export function movePlayerByDelta(world: CombatWorld, dx: number, dy: number): v
     }
     if (world.aircraft.currentHp <= 0)
         world.ended = true;
-    enterIntermissionIfClear(world);
+    enterCountdownIfClear(world);
 }
 function updateDroneMovement(world: CombatWorld, dt: number): void {
     if (!world.aircraft.droneActive) {
@@ -924,43 +927,35 @@ function clearHostileObjects(world: CombatWorld): void {
     for (let i = world.projectiles.length - 1; i >= 0; i--)
         if (world.projectiles[i].owner === "enemy")
             recycleProjectile(world, i);
-    world.warnings.length = 0;
+    for (let i = world.warnings.length - 1; i >= 0; i--)
+        if (world.warnings[i].owner === "enemy") world.warnings.splice(i, 1);
 }
-function enterIntermissionIfClear(world: CombatWorld): void {
+function enterCountdownIfClear(world: CombatWorld): void {
     if (world.ended || world.waveState !== "combat" || world.spawnQueue.length || world.enemies.length)
         return;
     clearHostileObjects(world);
-    world.waveState = "intermission";
+    world.waveState = "countdown";
     world.waveTimer = 3;
-    setMessage(world, "ĐÃ DỌN SẠCH · NGHỈ 3 GIÂY", 3);
+    world.latestMessage = null;
 }
 function updateEncounter(world: CombatWorld, dt: number): void {
     if (world.waveState !== "combat") {
         world.waveTimer = Math.max(0, world.waveTimer - dt);
-        if (world.waveTimer > 0)
-            return;
-        if (world.waveState === "intermission") {
+        if (world.waveTimer > 0) return;
+        if (world.waveState === "countdown") {
+            if (!COMBAT_WAVES[world.waveIndex + 1]) return;
             world.waveIndex++;
-            if (!COMBAT_WAVES[world.waveIndex])
-                return;
             world.spawnQueue = createWaveQueue(world.waveIndex, world.random);
             world.spawnedInWave = 0;
-            world.waveState = "announcement";
-            world.waveTimer = 1.15;
             setMessage(world, COMBAT_WAVES[world.waveIndex].label.toUpperCase(), 1.15);
         }
-        else {
-            world.waveState = "combat";
-            world.enemySpawnCooldown = 0;
-        }
-        return;
+        // The wave banner is cosmetic: spawn and simulation resume immediately at zero.
+        world.waveState = "combat";
+        world.enemySpawnCooldown = 0;
     }
     const wave = COMBAT_WAVES[world.waveIndex];
-    if (world.spawnQueue.length === 0 && world.enemies.length === 0 && !world.bossDefeated) {
-        clearHostileObjects(world);
-        world.waveState = "intermission";
-        world.waveTimer = 3;
-        setMessage(world, "ĐÃ DỌN SẠCH · NGHỈ 3 GIÂY", 3);
+    if (!world.spawnQueue.length && !world.enemies.length && !world.bossDefeated) {
+        enterCountdownIfClear(world);
         return;
     }
     world.enemySpawnCooldown -= dt;
@@ -1325,7 +1320,7 @@ function resolveDeathsAndEffects(world: CombatWorld): void {
                     continue;
                 target.lightningUntil = world.aircraft.coreState.time + .5;
                 applyDamageToEnemy(world, target, effect.raw, "#67e8f9", "lightning");
-                emitVisual(world, { kind: "hit", x: target.x, y: target.y, size: target.radius * 3 });
+                emitVisual(world, { kind: "lightning", x: target.x, y: target.y, fromX: effect.target.x, fromY: effect.target.y, size: target.radius * 3 });
             }
         }
     }
@@ -1404,6 +1399,7 @@ function hitDrone(world: CombatWorld, rawDamage: number): void {
         return;
     world.droneHp = Math.max(0, world.droneHp - calculateDamage(rawDamage, world.droneArmor));
     world.droneInvulnerability = .3;
+    emitVisual(world, { kind: "drone_hit", x: world.droneX, y: world.droneY, size: 32 });
     addParticles(world, world.droneX, world.droneY, "#c4b5fd", 5);
     if (world.droneHp <= 0) {
         endAircraftSkill(world.aircraft, "escort_drone");
@@ -1420,6 +1416,7 @@ function updateProjectileCollisions(world: CombatWorld): void {
         if (p.owner === "enemy") {
             // Every hostile projectile can be absorbed, regardless of its original target.
             if (world.decoys.some(d => touches(d.x, d.y, d.radius))) {
+                emitVisual(world, { kind: "absorb", x: p.x, y: p.y, size: 24 });
                 recycleProjectile(world, i);
                 continue;
             }
@@ -1672,13 +1669,8 @@ export function updateCombatWorld(world: CombatWorld, deltaSeconds: number): voi
     world.scroll = (world.scroll + dt * 52) % 80;
     if (world.latestMessage && world.elapsed >= world.messageUntil)
         world.latestMessage = null;
-    const resting = world.waveState !== "combat";
-    tickAircraftState(world.aircraft, dt, true, resting);
+    tickAircraftState(world.aircraft, dt, true);
     updateEncounter(world, dt);
-    if (resting || world.waveState !== "combat") {
-        updateParticles(world, dt);
-        return;
-    }
     world.playerInvulnerability = Math.max(0, world.playerInvulnerability - dt);
     world.comboTimer = Math.max(0, world.comboTimer - dt);
     if (world.comboTimer <= 0)
@@ -1687,7 +1679,7 @@ export function updateCombatWorld(world: CombatWorld, deltaSeconds: number): voi
     updatePlayerDash(world, dt);
     updateEnemies(world, dt);
     if (world.pendingCoreSelections || world.ended) {
-        enterIntermissionIfClear(world);
+        enterCountdownIfClear(world);
         return;
     }
     updateDroneMovement(world, dt);
@@ -1696,7 +1688,7 @@ export function updateCombatWorld(world: CombatWorld, deltaSeconds: number): voi
     updateWarnings(world, dt);
     updateLaser(world, dt);
     if (world.pendingCoreSelections || world.ended) {
-        enterIntermissionIfClear(world);
+        enterCountdownIfClear(world);
         return;
     }
     updateMissileSalvo(world, dt);
@@ -1720,7 +1712,7 @@ export function updateCombatWorld(world: CombatWorld, deltaSeconds: number): voi
         world.ended = true;
         world.pauseReasons.add("result");
     }
-    enterIntermissionIfClear(world);
+    enterCountdownIfClear(world);
 }
 export function ensureCoreSelection(world: CombatWorld): CoreCard[] | null {
     world.pendingCoreSelections = world.aircraft.pendingMilestones.length;
@@ -1751,7 +1743,7 @@ export function selectCore(world: CombatWorld, card: CoreCard): boolean {
     world.currentCoreChoices = null;
     if (world.pendingCoreSelections === 0)
         world.pauseReasons.delete("core");
-    setMessage(world, `${card.name.toUpperCase()} · ĐÃ TRANG BỊ`, 1.8);
+
     return true;
 }
 export function makeHudSnapshot(world: CombatWorld, paused: boolean, pauseLabel: string | null): AirCombatHudSnapshot {
@@ -1762,7 +1754,8 @@ export function makeHudSnapshot(world: CombatWorld, paused: boolean, pauseLabel:
         comboKills: world.comboKills,
         comboMultiplier: getComboMultiplier(world.comboKills),
         elapsedSeconds: world.elapsed,
-        waveLabel: `${COMBAT_WAVES[world.waveIndex].label}${world.waveState === "intermission" ? " · Nghỉ " + Math.ceil(world.waveTimer) + "s" : ""}`,
+        waveLabel: `${COMBAT_WAVES[world.waveIndex].label}${world.waveState === "countdown" ? " · Đợt tiếp theo sau " + Math.ceil(world.waveTimer) + "s" : ""}`,
+        waveCountdown: world.waveState === "countdown" ? Math.ceil(world.waveTimer) : 0,
         combatXpRequired: requiredCombatXp(world.aircraft.level),
         bossHp: boss?.hp || 0,
         bossMaxHp: boss?.maxHp || 0,
