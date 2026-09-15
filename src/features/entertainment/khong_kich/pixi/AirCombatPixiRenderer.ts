@@ -1,3 +1,5 @@
+import { paintTacticalCores } from "../airCombatTacticalVisuals";
+import { enemyAllegiance } from "../airCombatRuntime";
 import { hasCore } from "../airCombatCoreEffects";
 import { enemyAirframeRotation } from "../airCombatHitboxes";
 import { paintTitanShield, type ShieldPainter } from "../airCombatTitanShield";
@@ -230,6 +232,10 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     for (const [id, until] of this.flashUntil) if (until < this.clock) this.flashUntil.delete(id);
 
     this.telegraphs.clear();
+    paintTacticalCores(world,{
+      circle:(x,y,r,color,alpha,fill)=>{this.telegraphs.circle(x,y,r);if(fill)this.telegraphs.fill({color,alpha});else this.telegraphs.stroke({color,alpha,width:2});},
+      line:(ax,ay,bx,by,color,alpha,width)=>{this.telegraphs.moveTo(ax,ay).lineTo(bx,by).stroke({color,alpha,width});}
+    },reducedMotion);
     this.enemies.begin();
     this.engines.begin();
     for (const enemy of world.enemies) {
@@ -239,13 +245,13 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
       sprite.width = enemy.radius * (enemy.type === "boss" ? BOSS_VISUAL_WIDTH_SCALE : 2.8);
       sprite.height = sprite.width * (enemy.type === "boss" ? BOSS_VISUAL_ASPECT : sprite.texture.height / sprite.texture.width);
       sprite.rotation = Math.PI;
-      sprite.tint = this.flashUntil.has(enemy.id) ? 0xffe1b3 : enemy.type === "acid_bomber" ? 0xa3e635 : enemy.type === "jammer" ? 0x2dd4bf : enemy.type === "sniper" ? 0xe879f9 : enemy.type === "radar_hunter" ? 0x38bdf8 : 0xffffff;
+      sprite.tint = enemyAllegiance(world,enemy)==="friendly_hacked" ? 0x67e8f9 : this.flashUntil.has(enemy.id) ? 0xffe1b3 : enemy.type === "acid_bomber" ? 0xa3e635 : enemy.type === "jammer" ? 0x2dd4bf : enemy.type === "sniper" ? 0xe879f9 : enemy.type === "radar_hunter" ? 0x38bdf8 : 0xffffff;
       if(enemy.shield>0 || enemy.aegisUntil>world.aircraft.coreState.time)this.telegraphs.circle(enemy.x,enemy.y,enemy.radius+7).fill({color:0x38bdf8,alpha:.12}).stroke({color:0x7dd3fc,width:2,alpha:.85});
       if(enemy.stun>0)this.telegraphs.circle(enemy.x,enemy.y-enemy.radius-7,5).stroke({color:0xfde047,width:2});
       if(enemy.burn>0&&!reducedMotion&&damageSmoke)this.vfx.spawn("fire",enemy.x,enemy.y,24,.3);
-      if (enemy.type === "kamikaze" && enemy.kamikazeState === "charge") {
-        this.telegraphs.circle(enemy.x, enemy.y, enemy.radius + 7).stroke({ color: 0xfbbf24, width: 1.5, alpha: 0.75 });
-        this.telegraphs.moveTo(enemy.x,enemy.y).lineTo(enemy.dashEndX,enemy.dashEndY).stroke({color:0xfbbf24,width:1.5,alpha:.55});
+      if (!world.ended && enemy.hp>0 && enemy.type === "kamikaze" && (enemy.kamikazeState === "charge" || enemy.kamikazeState === "dash")) {
+        this.telegraphs.circle(enemy.x, enemy.y, enemy.radius + 7).stroke({ color: enemyAllegiance(world,enemy)==="friendly_hacked"?0x67e8f9:0xfbbf24, width: 1.5, alpha: 0.75 });
+        this.telegraphs.moveTo(enemy.x,enemy.y).lineTo(enemy.dashEndX,enemy.dashEndY).stroke({color:enemyAllegiance(world,enemy)==="friendly_hacked"?0x67e8f9:0xfbbf24,width:1.5,alpha:.7});
       }
       if(enemy.type==="kamikaze")sprite.rotation=enemyAirframeRotation(enemy);
       if(enemy.type==="boss" && (enemy.bossAttack?.crossfirePending??0)>0 && !enemy.bossAttack?.patternWaiting) {
@@ -314,6 +320,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
         const ammoKey=getAmmoVisualKey(p),ammo=ammoKey?AMMO_VISUALS[ammoKey]:null;
         const sprite=this.projectiles.get(p.id,this.assets.effect(ammoKey??round));
         if(!sprite)continue;
+        sprite.tint=p.allegiance==="friendly_hacked"?0x67e8f9:0xffffff;
         sprite.position.set(p.x,p.y);sprite.rotation=Math.atan2(p.vy,p.vx)+Math.PI/2;
         sprite.width=ammo?.width??p.radius*2.8;sprite.height=ammo?.height??p.radius*6;
         const glow=this.projectileGlows.get(p.id,this.assets.effect(p.owner==="enemy"?"charge":"laser"));
@@ -324,7 +331,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
           glow.position.set(p.x-p.vx/speed*tail,p.y-p.vy/speed*tail);glow.rotation=sprite.rotation;
           glow.width=viper?3:titan?11:phantom?15:sprite.width*1.5;
           glow.height=viper?13:titan?9:phantom?15:sprite.height*1.6;
-          glow.tint=viper?0xb4efff:titan?0xffc778:phantom?0xc4a0ff:p.owner==="enemy"?(p.appearance==="dangerous"?0xffbc4d:0xff667d):p.owner==="drone"?0xc4b5fd:visual.tint;
+          glow.tint=p.allegiance==="friendly_hacked"?0x67e8f9:viper?0xb4efff:titan?0xffc778:phantom?0xc4a0ff:p.owner==="enemy"?(p.appearance==="dangerous"?0xffbc4d:0xff667d):p.owner==="drone"?0xc4b5fd:visual.tint;
           glow.alpha=p.owner==="enemy"?.25:.4;glow.blendMode="add";
         }
       }
@@ -368,6 +375,11 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     this.companions.end();
     this.warnings.begin();
     for (const warning of world.warnings) {
+      if(warning.allegiance==="friendly_hacked"){
+        if(warning.kind==="rail"||warning.kind==="dash")this.telegraphs.moveTo(warning.fromX??warning.x,warning.fromY??warning.y).lineTo(warning.x,warning.y).stroke({color:0x67e8f9,width:warning.kind==="dash"?warning.radius*2:3,alpha:.6});
+        else this.telegraphs.circle(warning.x,warning.y,warning.radius).fill({color:0x22d3ee,alpha:warning.stage==="active"?.2:.08}).stroke({color:0x67e8f9,width:2,alpha:.9});
+        continue;
+      }
       if (warning.kind === "elite_lock") {
         this.telegraphs.circle(warning.x, warning.y, warning.radius).stroke({ color: 0xfbbf24, width: 2, alpha: .7 });
         continue;

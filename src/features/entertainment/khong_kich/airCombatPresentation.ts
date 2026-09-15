@@ -125,6 +125,12 @@ export function getStatusPresentations(world: CombatWorld): StatusPresentation[]
     result.push({ id: entry.key, group: "buff", name: core.name, icon: { kind: "core", id: core.id }, description: core.description,
       source: "Lõi", stacks: 1, remaining, duration: entry.duration, priority: 80 });
   }
+  for(const row of [107,109,113,114,116,120,121])if(hasCore(s,row)){
+    const core=getCoreDefinition(coreId(row)),remaining=row===116?(c.timers.comeback??0)-c.time:Infinity;
+    if(row===116&&remaining<=0)continue;
+    const detail=row===121?`Phản Vật Chất: ${Math.round((c.stacks.antimatter??0)*100)}% / 600%`:row===107?`Graze: ${c.stacks.graze??0}/6`:row===114?`Còn ${c.stacks.linkedShots??0} phát bắn cường hóa`:row===113?(c.stacks.borrowPending?"Chờ kỹ năng kết thúc để trả nợ":(c.timers.futureDebt??0)>c.time?`Sẵn sàng sau ${((c.timers.futureDebt??0)-c.time).toFixed(1)}s`:"Có thể dùng ngay kỹ năng đang hồi"):row===109?`Cánh trái: ${Math.max(0,(c.timers["wing:left_wing"]??0)-c.time).toFixed(1)}s · Cánh phải: ${Math.max(0,(c.timers["wing:right_wing"]??0)-c.time).toFixed(1)}s`:core.description;
+    result.push({id:core.id,group:"buff",name:core.name,icon:{kind:"core",id:core.id},description:detail,source:"Lõi",stacks:1,remaining,duration:row===116?4:Infinity,priority:65});
+  }
   const conditional = [
     { row: 49, on: c.time - c.lastMove >= 3 },
     { row: 60, on: c.time - c.lastDamage >= 4 },

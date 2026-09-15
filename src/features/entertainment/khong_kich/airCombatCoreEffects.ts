@@ -3,7 +3,7 @@ export const coreId = (row: number): CoreId => `core_${String(row).padStart(3, "
 export const hasCore = (state: AircraftCombatState, row: number): boolean => state.selectedCores.includes(coreId(row));
 export const SPECIALIZATION_CORE_ID: CoreId = "core_097";
 export const skillsLocked = (state: AircraftCombatState): boolean => state.selectedCores.includes(SPECIALIZATION_CORE_ID);
-export type DamageSource = "basic" | "weapon" | "skill" | "lightning" | "burn";
+export type DamageSource = "basic" | "weapon" | "skill" | "lightning" | "burn" | "core";
 export type CoreEvent = "acquire" | "basic" | "hit" | "critical" | "kill" | "damageTaken" | "skillCast" | "tick";
 export interface CoreTarget {
     id: number;
@@ -52,7 +52,7 @@ const flat = (row: number, key: keyof EffectiveAircraftStats, amount: number) =>
     stats: (_s, stats) => { (stats[key] as number) += amount; },
 });
 for (const [row, fp, armor, rate, hp, regen, cdr] of [
-    [1, 12, 12, .15, 110, .6, .04], [7, 20, 20, .4, 220, 1.3, .09], [13, 50, 50, 1.0, 420, 3, .2],
+    [1, 12, 12, .15, 110, .7, .04], [7, 20, 20, .4, 220, 1.7, .09], [13, 50, 50, 1.0, 420, 4, .2],
 ]) {
     flat(row, "firepower", fp);
     flat(row + 1, "armor", armor);
@@ -165,7 +165,7 @@ register(86, { finalStats: (_s, stats) => {
     } });
 register(87, { stats: (_s, stats) => { stats.criticalChance += .2; stats.criticalDamageMultiplier += .3; } });
 register(92, { hooks: { tick: ctx => { if (ctx.state.status.regenDisabledUntil <= ctx.state.coreState.time && ctx.state.coreState.time - ctx.state.coreState.lastDamage >= 5)
-            ctx.heal(ctx.stats.maxHp * .01 * (ctx.dt || 0)); } } });
+            ctx.heal(ctx.stats.maxHp * .008 * (ctx.dt || 0)); } } });
 register(94, { stats: (_s, stats) => { stats.criticalChance += .1; }, finalStats: (_s, stats) => { stats.maxHp *= .65; stats.firepower *= 1.4; } });
 register(95, { finalStats: (_s, stats) => { stats.criticalChance = .25; stats.criticalDamageMultiplier += 3; } });
 register(96, { stats: (_s, stats) => { stats.cooldownReduction += .4; }, hooks: { skillCast: ctx => { ctx.state.currentHp = Math.max(Number.EPSILON, ctx.state.currentHp * .94); } } });
@@ -178,7 +178,7 @@ register(100, { stats: (s, stats) => { if (s.currentHp > stats.maxHp * .7)
         stats.firepower += 20;
     else if (s.currentHp < stats.maxHp * .3)
         stats.armor += 20; } });
-register(105, { hooks: { critical: ctx => { if (ctx.target && ctx.source !== "lightning")
+register(105, { stats: (_s, stats) => { stats.criticalChance += .15; }, hooks: { critical: ctx => { if (ctx.target && ctx.source !== "lightning")
             ctx.lightning(ctx.target, ctx.stats.firepower * .7); } } });
 register(106, { hooks: { tick: ctx => { if (ready(ctx.state, "tomahawk")) {
             ctx.tomahawk();
@@ -278,6 +278,13 @@ export function coreStackLabel(state: AircraftCombatState, id: CoreId): string |
         case "core_092": return c.time - c.lastDamage >= 5 ? "Đang hồi HP" : `Hồi HP sau ${Math.max(0, 5 - c.time + c.lastDamage).toFixed(1)}s không nhận sát thương`;
         case "core_099": return shieldStatus("reserve", "reserveShieldCd");
         case "core_104": return shieldStatus("overheal");
+        case "core_107": return `Graze: ${c.stacks.graze??0}/6`;
+        case "core_109": return `Cánh trái: ${remaining("wing:left_wing")}s · Cánh phải: ${remaining("wing:right_wing")}s`;
+        case "core_113": return c.stacks.borrowPending ? "Đang vay · trả nợ khi kỹ năng kết thúc" : `Có thể vay sau ${remaining("futureDebt")}s`;
+        case "core_114": return `Còn ${c.stacks.linkedShots??0}/3 phát bắn cường hóa`;
+        case "core_116": return `Comeback còn ${remaining("comeback")}s`;
+        case "core_120": return `Hồi lại sau ${remaining("controlOverride")}s kể từ khi hiệu ứng kết thúc`;
+        case "core_121": return `Phản Vật Chất: ${Math.round((c.stacks.antimatter??0)*100)}% / 600%`;
         case "core_106": return `Loạt Tomahawk tiếp theo sau ${remaining("tomahawk")}s`;
         default: return null;
     }

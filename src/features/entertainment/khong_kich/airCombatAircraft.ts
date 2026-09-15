@@ -180,6 +180,21 @@ export function getSkillRuntimeValues(state: AircraftCombatState, skillId: Skill
     }
     return v;
 }
+export function canBorrowSkill(state: AircraftCombatState, skillId: SkillId): boolean {
+    const c=state.coreState;
+    return hasCore(state,113) && (state.cooldowns[skillId]??0)>0 && (c.timers.futureDebt??0)<=c.time && !c.stacks.borrowPending;
+}
+export function finishBorrowedDuration(state:AircraftCombatState,skillId:SkillId):void {
+    const c=state.coreState;
+    if(!c.stacks[`debt:${skillId}`])return;
+    state.cooldowns[skillId]=c.stacks[`debtNormal:${skillId}`]??0;
+    delete c.stacks[`debtNormal:${skillId}`];beginDebt(state,skillId);
+}
+function beginDebt(state: AircraftCombatState, skillId: SkillId): void {
+    const c=state.coreState;
+    state.cooldowns[skillId]=(state.cooldowns[skillId]??0)+SKILL_CONFIGS[skillId].cooldown*.5;
+    c.timers.futureDebt=c.time+18;delete c.stacks.borrowPending;delete c.stacks[`debt:${skillId}`];
+}
 export function endAircraftSkill(state: AircraftCombatState, skillId: SkillId): void {
     const wasActive = skillId === "escort_drone" ? state.droneActive : (state.activeEffects[skillId] || 0) > 0;
     if (skillId === "escort_drone") {
@@ -193,7 +208,9 @@ export function endAircraftSkill(state: AircraftCombatState, skillId: SkillId): 
     if (skillId === "sweeping_cannon" || skillId === "escort_drone") {
         state.cooldowns[skillId] = getSkillRuntimeValues(state, skillId).cooldown * (1 - getEffectiveAircraftStats(state).cooldownReduction) * (state.coreState.deferredCooldowns[skillId] ?? 1);
         delete state.coreState.deferredCooldowns[skillId];
+        if(state.coreState.stacks[`debt:${skillId}`])beginDebt(state,skillId);
     }
+    if(skillId!=="sweeping_cannon"&&skillId!=="escort_drone")finishBorrowedDuration(state,skillId);
     if (skillId === "armor_shield" && hasCore(state, 30) && !skillsLocked(state))
         state.coreState.timers.shieldArmor = state.coreState.time + 5;
 }
@@ -205,7 +222,9 @@ export function castSkill(state: AircraftCombatState, skillId: SkillId): SkillCa
         endAircraftSkill(state, skillId);
         return { cast: true, resourceSpent: 0, toggledOff: true };
     }
-    if ((state.cooldowns[skillId] || 0) > 0)
+    if(state.coreState.stacks[`debt:${skillId}`])return {cast:false,reason:"cooldown",resourceSpent:0};
+    const borrowed=canBorrowSkill(state,skillId);
+    if ((state.cooldowns[skillId] || 0) > 0 && !borrowed)
         return { cast: false, reason: "cooldown", resourceSpent: 0 };
     const v = getSkillRuntimeValues(state, skillId);
     const free = hasCore(state, 84) && (state.coreState.skillCasts + 1) % 4 === 0;
@@ -214,11 +233,16 @@ export function castSkill(state: AircraftCombatState, skillId: SkillId): SkillCa
         return { cast: false, reason: "resource", resourceSpent: 0 };
     state.currentResource = Math.max(0, state.currentResource - cost);
     state.coreState.skillCasts++;
+    if(borrowed){state.coreState.stacks.borrowPending=1;state.coreState.stacks[`debt:${skillId}`]=1;}
     const cooldown = v.cooldown * (1 - getEffectiveAircraftStats(state).cooldownReduction) * (free ? 1.2 : 1);
     if (skillId === "sweeping_cannon" || skillId === "escort_drone")
         state.coreState.deferredCooldowns[skillId] = free ? 1.2 : 1;
     else
         state.cooldowns[skillId] = cooldown;
+    if(borrowed && skillId!=="sweeping_cannon" && skillId!=="escort_drone"){
+        if(v.duration>0){state.coreState.stacks[`debtNormal:${skillId}`]=cooldown;state.cooldowns[skillId]=0;}
+        else beginDebt(state,skillId);
+    }
     if (v.duration > 0 && skillId !== "decoy") {
         state.activeEffects[skillId] = v.duration + (skillId === "focus_laser" ? v.charge : 0);
         (state.activeEffectDurations ??= {})[skillId] = state.activeEffects[skillId];

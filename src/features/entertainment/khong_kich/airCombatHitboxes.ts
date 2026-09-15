@@ -6,18 +6,18 @@ import { BOSS_VISUAL_ASPECT, BOSS_VISUAL_WIDTH_SCALE } from "./airCombatHudLayou
 /** Authored against the neutral production atlas. Coordinates are fractions of
  * the sprite width, origin at its centre, nose UP. Flames/glow are excluded.
  * Capsules (including zero-length circles) make sweeps exact and inexpensive. */
-export interface HitCapsule { kind: "capsule"; ax:number; ay:number; bx:number; by:number; r:number }
+export type AirframeHitZone = "body" | "left_wing" | "right_wing" | "tail";
+export const wingDamageMultiplier = (zone?: AirframeHitZone) => zone === "left_wing" || zone === "right_wing" ? .7 : 1;
+export interface HitCapsule { zone?:AirframeHitZone; kind: "capsule"; ax:number; ay:number; bx:number; by:number; r:number }
 export interface AircraftHitboxProfile { localWidth:number; localHeight:number; broadRadius:number; shapes:readonly HitCapsule[] }
-const cap=(ax:number,ay:number,bx:number,by:number,r:number):HitCapsule=>({kind:"capsule",ax,ay,bx,by,r});
+const cap=(ax:number,ay:number,bx:number,by:number,r:number,zone:AirframeHitZone = ay>.2 && by>.2 ? "tail" : ax<0 && bx<0 ? "left_wing" : ax>0 && bx>0 ? "right_wing" : "body"):HitCapsule=>({kind:"capsule",ax,ay,bx,by,r,zone});
 function profile(shapes:HitCapsule[], aspect=1):AircraftHitboxProfile {
   return {localWidth:1,localHeight:aspect,shapes,broadRadius:Math.max(...shapes.map(s=>Math.max(Math.hypot(s.ax,s.ay),Math.hypot(s.bx,s.by))+s.r))};
 }
-export const PLAYER_AIRFRAME_SIZE:Record<AircraftId,number>={black_eagle:51,breaker:60,phantom:56};
-export const PLAYER_HITBOX_PROFILES:Record<AircraftId,AircraftHitboxProfile>={
-  black_eagle:profile([cap(0,-.39,0,.27,.055),cap(-.06,-.04,-.27,.15,.045),cap(.06,-.04,.27,.15,.045),cap(-.06,.26,.06,.26,.035)]),
-  breaker:profile([cap(0,-.36,0,.25,.085),cap(-.08,-.02,-.39,.16,.065),cap(.08,-.02,.39,.16,.065),cap(-.14,.15,-.14,.34,.05),cap(.14,.15,.14,.34,.05)]),
-  phantom:profile([cap(0,-.36,0,.25,.065),cap(-.06,-.07,-.34,.13,.07),cap(.06,-.07,.34,.13,.07),cap(-.1,.17,-.16,.28,.05),cap(.1,.17,.16,.28,.05)]),
-};
+export const PLAYER_STANDARD_AIRFRAME_SIZE = 46.92;
+export const PLAYER_AIRFRAME_SIZE:Record<AircraftId,number>={black_eagle:PLAYER_STANDARD_AIRFRAME_SIZE,breaker:PLAYER_STANDARD_AIRFRAME_SIZE,phantom:PLAYER_STANDARD_AIRFRAME_SIZE};
+export const PLAYER_STANDARD_HITBOX_PROFILE=profile([cap(0,-.39,0,.27,.055,"body"),cap(-.06,-.04,-.27,.15,.045,"left_wing"),cap(.06,-.04,.27,.15,.045,"right_wing"),cap(-.06,.26,.06,.26,.035,"tail")]);
+export const PLAYER_HITBOX_PROFILES:Record<AircraftId,AircraftHitboxProfile>={black_eagle:PLAYER_STANDARD_HITBOX_PROFILE,breaker:PLAYER_STANDARD_HITBOX_PROFILE,phantom:PLAYER_STANDARD_HITBOX_PROFILE};
 export const ENEMY_HITBOX_PROFILES:Record<EnemyType,AircraftHitboxProfile>={
   scout:profile([cap(0,-.21,0,.17,.055),cap(-.03,-.02,-.23,.09,.04),cap(.03,-.02,.23,.09,.04)]),
   fighter:profile([cap(0,-.36,0,.29,.065),cap(-.04,.04,-.23,.1,.055),cap(.04,.04,.23,.1,.055)]),
@@ -33,7 +33,7 @@ export const ENEMY_HITBOX_PROFILES:Record<EnemyType,AircraftHitboxProfile>={
   boss:profile([cap(0,-.39,0,.35,.055),cap(0,-.18,0,.28,.115),cap(-.1,-.17,-.2,.3,.08),cap(.1,-.17,.2,.3,.08),cap(-.27,-.03,-.39,.18,.08),cap(.27,-.03,.39,.18,.08),cap(-.1,.31,.1,.31,.09)],BOSS_VISUAL_ASPECT),
 };
 export interface AircraftHitbox { x:number;y:number;radius:number;shapes:HitCapsule[]; profile?:AircraftHitboxProfile; size?:number; rotation?:number }
-export interface HitResult { hit:boolean;x:number;y:number;t:number;shapeIndex:number }
+export interface HitResult { zone?:AirframeHitZone; hit:boolean;x:number;y:number;t:number;shapeIndex:number }
 export const createHitResult=():HitResult=>({hit:false,x:0,y:0,t:Infinity,shapeIndex:-1});
 const cache=new WeakMap<object,AircraftHitbox>();
 function transform(key:object,p:AircraftHitboxProfile,x:number,y:number,size:number,rotation:number):AircraftHitbox {
@@ -45,7 +45,7 @@ function transform(key:object,p:AircraftHitboxProfile,x:number,y:number,size:num
   for(let i=0;i<p.shapes.length;i++) {
     const a=p.shapes[i],b=h.shapes[i]??(h.shapes[i]=cap(0,0,0,0,0));
     b.ax=x+(a.ax*c-a.ay*s)*size;b.ay=y+(a.ax*s+a.ay*c)*size;
-    b.bx=x+(a.bx*c-a.by*s)*size;b.by=y+(a.bx*s+a.by*c)*size;b.r=a.r*size;
+    b.bx=x+(a.bx*c-a.by*s)*size;b.by=y+(a.bx*s+a.by*c)*size;b.r=a.r*size;b.zone=a.zone;
   }
   h.shapes.length=p.shapes.length;return h;
 }
@@ -78,14 +78,14 @@ function capsuleEntry(ax:number,ay:number,bx:number,by:number,cx:number,cy:numbe
   return enter<=exit?Math.min(t,enter):t;
 }
 export function segmentVsAircraft(ax:number,ay:number,bx:number,by:number,r:number,h:AircraftHitbox,out:HitResult):HitResult {
-  out.hit=false;out.t=Infinity;out.shapeIndex=-1;
+  out.hit=false;out.t=Infinity;out.shapeIndex=-1;out.zone=undefined;
   if(circleEntry(ax,ay,bx-ax,by-ay,h.x,h.y,h.radius+r)===Infinity)return out;
   for(let i=0;i<h.shapes.length;i++) {
     const s=h.shapes[i],t=capsuleEntry(ax,ay,bx,by,s.ax,s.ay,s.bx,s.by,s.r+r);
-    if(t>=out.t)continue;
+    if(!Number.isFinite(t) || t>out.t+1e-8 || (Math.abs(t-out.t)<=1e-8 && !(s.zone==="body" && out.zone!=="body")))continue;
     const x=ax+(bx-ax)*t,y=ay+(by-ay)*t,k=closestT(x,y,s.ax,s.ay,s.bx,s.by);
     const cx=s.ax+(s.bx-s.ax)*k,cy=s.ay+(s.by-s.ay)*k,d=Math.hypot(x-cx,y-cy);
-    out.hit=true;out.t=t;out.shapeIndex=i;
+    out.hit=true;out.t=t;out.shapeIndex=i;out.zone=s.zone;
     out.x=d>1e-9?cx+(x-cx)*s.r/d:x;out.y=d>1e-9?cy+(y-cy)*s.r/d:y;
   }
   return out;
@@ -96,7 +96,7 @@ export const circleVsAircraft=(x:number,y:number,r:number,h:AircraftHitbox)=>seg
 // against its rounded edges gives exact continuous hull contact, without sampling.
 const polyX=new Float64Array(4),polyY=new Float64Array(4);
 export function sweepAircraft(moving:AircraftHitbox,dx:number,dy:number,target:AircraftHitbox,out:HitResult):HitResult {
-  out.hit=false;out.t=Infinity;out.shapeIndex=-1;
+  out.hit=false;out.t=Infinity;out.shapeIndex=-1;out.zone=undefined;
   if(circleEntry(moving.x-dx,moving.y-dy,dx,dy,target.x,target.y,moving.radius+target.radius)===Infinity)return out;
   for(const a of moving.shapes)for(let j=0;j<target.shapes.length;j++) {
     const b=target.shapes[j],ax=a.ax-dx,ay=a.ay-dy,bx=a.bx-dx,by=a.by-dy;
@@ -109,7 +109,7 @@ export function sweepAircraft(moving:AircraftHitbox,dx:number,dy:number,target:A
       t=Math.min(t,capsuleEntry(0,0,dx,dy,polyX[i],polyY[i],polyX[k],polyY[k],a.r+b.r));
     }
     if(Math.abs(area)>1e-9 && !(pos&&neg))t=0;
-    if(t<out.t){out.hit=true;out.t=t;out.shapeIndex=j;out.x=moving.x-dx+dx*t;out.y=moving.y-dy+dy*t;}
+    if(Number.isFinite(t) && (t<out.t-1e-8 || (Math.abs(t-out.t)<=1e-8 && b.zone==="body" && out.zone!=="body"))){out.hit=true;out.t=t;out.shapeIndex=j;out.zone=b.zone;out.x=moving.x-dx+dx*t;out.y=moving.y-dy+dy*t;}
   }
   return out;
 }

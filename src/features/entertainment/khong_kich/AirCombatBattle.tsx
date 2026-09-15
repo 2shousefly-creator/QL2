@@ -1,3 +1,4 @@
+import { canBorrowSkill } from "./airCombatAircraft";
 import { playerSkillLocked } from "./airCombatStatus";
 import { AirCombatStatusStrip, type StatusStripHandle } from "./AirCombatStatusStrip";
 import { getActiveSkillDuration, getSkillTooltipModel } from "./airCombatPresentation";
@@ -512,17 +513,20 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
           const skill = SKILL_CONFIGS[skillId];
           const values = getSkillRuntimeValues(worldRef.current.aircraft, skillId);
           const cooldown = hud.cooldowns[skillId] || 0;
+          const borrow=canBorrowSkill(worldRef.current.aircraft,skillId);
           const active = skillId === "escort_drone" ? hud.droneActive : (worldRef.current.aircraft.activeEffects[skillId] || 0) > 0;
           const locked = skillsLocked(worldRef.current.aircraft) || playerSkillLocked(worldRef.current.aircraft);
           const free = hasCore(worldRef.current.aircraft,84) && (worldRef.current.aircraft.coreState.skillCasts+1)%4===0;
           const toggleActive = (skillId === "escort_drone" || skillId === "sweeping_cannon") && active;
-          const unavailable = locked || (!toggleActive && (cooldown > 0 || (!free || skillId === "escort_drone") && hud.stats.currentResource < values.cost));
+          const unavailable = locked || (!toggleActive && (Boolean(worldRef.current.aircraft.coreState.stacks[`debt:${skillId}`]) || cooldown > 0 && !borrow || (!free || skillId === "escort_drone") && hud.stats.currentResource < values.cost));
           return (
             <button
               key={skillId}
               type="button"
               data-skill-id={skillId}
               data-skill-cost={values.cost}
+              data-borrow-ready={borrow && !locked}
+              data-reduced-motion={reducedMotion}
               aria-label={`${skill.name}, ${skillId === "escort_drone" ? "cần ít nhất 5 Điện, không trừ phí bật" : `tốn ${free ? 0 : values.cost} ${resourceLabel}`}`}
               aria-disabled={unavailable}
               aria-pressed={active}
@@ -534,7 +538,7 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
               style={{ WebkitTouchCallout: "none", WebkitUserSelect: "none", userSelect: "none", touchAction: "none" }}
               className={`relative flex h-full min-h-11 touch-none select-none flex-col items-center justify-center overflow-hidden rounded-none border text-center shadow-lg backdrop-blur transition-transform active:scale-95 ${active ? "border-emerald-200 bg-emerald-500/30 text-emerald-50 shadow-emerald-500/20" : unavailable ? "border-slate-700 bg-black/80 text-slate-500" : "border-cyan-200/70 bg-gradient-to-br from-cyan-950/95 to-indigo-950/95 text-cyan-50 shadow-cyan-500/15"}`}
             >
-              {cooldown > 0 && <span className="pointer-events-none absolute inset-0 z-0" style={{ background: `conic-gradient(rgba(2,6,23,.42) ${(Math.min(1, cooldown / (values.cooldown * (1 - hud.stats.cooldownReduction)))) * 360}deg, transparent 0deg)` }} />}
+              {cooldown > 0 && !borrow && <span className="pointer-events-none absolute inset-0 z-0" style={{ background: `conic-gradient(rgba(2,6,23,.42) ${(Math.min(1, cooldown / (values.cooldown * (1 - hud.stats.cooldownReduction)))) * 360}deg, transparent 0deg)` }} />}
               <span className={`absolute left-1 top-1 z-20 rounded px-1 text-[6px] font-black ${hud.stats.resourceKind === "mana" ? "bg-sky-950/90 text-sky-200" : "bg-violet-950/90 text-violet-200"}`}>{skillId === "escort_drone" ? "≥5" : free ? 0 : values.cost}</span>
               {skillId === "escort_drone" && active && <span className="absolute right-1 top-1 z-20 text-[6px] font-black text-violet-200">-{values.upkeepPerSecond}/s</span>}
               <span className="air-skill-icon-wrap">
@@ -542,7 +546,7 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
               <CombatUiIcon kind="skill" id={skillId} fallback={skill.icon} className="combat-skill-icon relative z-10" />
               </span>
               <span className="relative z-10 mt-0.5 max-w-[52px] truncate text-[7px] font-black uppercase">{skill.shortName}</span>
-              <span className={`relative z-10 text-[7px] font-black tabular-nums ${active ? "text-emerald-200" : unavailable ? "text-slate-500" : "text-cyan-200"}`}>{locked ? "ĐÃ KHÓA" : cooldown > 0 ? cooldown.toFixed(1) : active ? "ĐANG BẬT" : unavailable ? "THIẾU " + resourceLabel.toUpperCase() : "SẴN SÀNG"}</span>
+              <span className={`relative z-10 text-[7px] font-black tabular-nums ${active ? "text-emerald-200" : unavailable ? "text-slate-500" : "text-cyan-200"}`}>{locked ? "ĐÃ KHÓA" : borrow ? "Có thể dùng ngay" : worldRef.current.aircraft.coreState.stacks[`debt:${skillId}`] ? "ĐANG BẬT" : cooldown > 0 ? cooldown.toFixed(1) : active ? "ĐANG BẬT" : unavailable ? "THIẾU " + resourceLabel.toUpperCase() : "SẴN SÀNG"}</span>
             </button>
           );
         })}

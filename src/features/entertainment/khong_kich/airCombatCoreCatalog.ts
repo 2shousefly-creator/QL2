@@ -49,7 +49,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_005",
     "name": "Bộ sửa chữa cơ bản",
-    "description": "+0,6 HP hồi/s.",
+    "description": "+0,7 HP hồi/s.",
     "system": "Chung",
     "icon": "core:core_005",
     "category": "offense",
@@ -115,7 +115,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_011",
     "name": "Sửa chữa Nano",
-    "description": "+1,3 HP hồi/s.",
+    "description": "+1,7 HP hồi/s.",
     "system": "Chung",
     "icon": "core:core_011",
     "category": "offense",
@@ -181,7 +181,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_017",
     "name": "Tái tạo lượng tử",
-    "description": "+3 HP hồi/s.",
+    "description": "+4 HP hồi/s.",
     "system": "Chung",
     "icon": "core:core_017",
     "category": "offense",
@@ -1141,7 +1141,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_092",
     "name": "Bộ tái tạo sinh học",
-    "description": "Sau 5s không trúng đòn: hồi 1% HP tối đa/s. Dừng khi trúng đòn.",
+    "description": "Sau 5s không nhận sát thương: hồi 0,8% HP tối đa/s.",
     "system": "Hồi Phục",
     "icon": "core:core_092",
     "category": "defense",
@@ -1284,7 +1284,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_105",
     "name": "Bão Sét Bạo Kích",
-    "description": "Chí mạng: sét lan tối đa 3 mục tiêu khác, gây 70% Hỏa lực/mục tiêu. Mỗi mục tiêu nhận sét tối đa 1 lần/0,5s.",
+    "description": "+15% Tỷ lệ chí mạng. Chí mạng: sét lan tối đa 3 mục tiêu khác, gây 70% Hỏa lực/mục tiêu. Mỗi mục tiêu nhận sét tối đa 1 lần/0,5s.",
     "system": "Chí Mạng",
     "icon": "core:core_105",
     "category": "offense",
@@ -1298,6 +1298,171 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
     "description": "Mỗi 1,5s: phóng tối đa 3 Tomahawk. Mỗi quả gây 195% Hỏa lực.",
     "system": "Hỏa Lực Tự Động",
     "icon": "core:core_106",
+    "category": "offense",
+    "tiers": [
+      "diamond"
+    ]
+  },
+  {
+    "id": "core_107",
+    "name": "Lướt Sát Tử Thần",
+    "description": "Đạn địch đi sát hitbox trong phạm vi 8px nhưng không trúng được tính 1 Graze. Mỗi 6 Graze hồi 10% tài nguyên tối đa.",
+    "system": "Chiến Thuật",
+    "icon": "core:core_107",
+    "category": "defense",
+    "tiers": [
+      "silver"
+    ]
+  },
+  {
+    "id": "core_108",
+    "name": "Thu Gom Mảnh Vỡ",
+    "description": "Kẻ địch bị hạ có 6% rơi Scrap tại vị trí mục tiêu, bay chạm Scrap hồi 1.25% HP tối đa. Scrap mất sau 4s.",
+    "system": "Chiến Thuật",
+    "icon": "core:core_108",
+    "category": "defense",
+    "tiers": [
+      "silver"
+    ]
+  },
+  {
+    "id": "core_109",
+    "name": "Giáp Cánh",
+    "description": "Mỗi bên cánh có cooldown riêng 12s. Đòn đầu tiên trúng một cánh được giảm 30% sát thương.",
+    "system": "Chiến Thuật",
+    "icon": "core:core_109",
+    "category": "defense",
+    "tiers": [
+      "silver"
+    ]
+  },
+  {
+    "id": "core_110",
+    "name": "Giáp Chống Nổ",
+    "description": "Giảm 15% sát thương nhận vào từ Bomb, Explosion và các AoE nổ.",
+    "system": "Chiến Thuật",
+    "icon": "core:core_110",
+    "category": "defense",
+    "tiers": [
+      "silver"
+    ]
+  },
+  {
+    "id": "core_111",
+    "name": "Đạn Siêu Âm",
+    "description": "Đạn thường bay nhanh hơn 100% (Không tăng damage/hitbox).",
+    "system": "Chiến Thuật",
+    "icon": "core:core_111",
+    "category": "offense",
+    "tiers": [
+      "silver"
+    ]
+  },
+  {
+    "id": "core_112",
+    "name": "Lưới Giao Hỏa",
+    "description": "Bắn trúng 2 mục tiêu khác nhau trong 0.75s tạo một đường năng lượng nối hai mục tiêu trong 1.5s. Địch khác chạm đường nhận 90% Hỏa lực, tối đa 1 lần/lưới. Hai mục tiêu tạo lưới không nhận sát thương từ chính lưới. Nếu một trong hai mục tiêu chết, lưới biến mất ngay.",
+    "system": "Chiến Thuật",
+    "icon": "core:core_112",
+    "category": "offense",
+    "tiers": [
+      "gold"
+    ]
+  },
+  {
+    "id": "core_113",
+    "name": "Vay Nợ Tương Lai",
+    "description": "Mỗi 18s, kỹ năng đang hồi chiêu có thể được dùng ngay ở 100% hiệu lực. Sau đó kỹ năng đó nhận thêm 50% hồi chiêu cơ bản như trả nợ.",
+    "system": "Chiến Thuật",
+    "icon": "core:core_113",
+    "category": "defense",
+    "tiers": [
+      "gold"
+    ]
+  },
+  {
+    "id": "core_114",
+    "name": "Nối Nhịp Hỏa Lực",
+    "description": "Sau khi dùng kỹ năng, 3 phát bắn thường kế tiếp gây thêm 80% sát thương.",
+    "system": "Chiến Thuật",
+    "icon": "core:core_114",
+    "category": "offense",
+    "tiers": [
+      "gold"
+    ]
+  },
+  {
+    "id": "core_115",
+    "name": "Cô Lập Mục Tiêu",
+    "description": "Nếu không có enemy khác trong phạm vi 80px quanh mục tiêu, mọi sát thương lên nó +25%. Riêng Boss chỉ chịu thêm 10% sát thương.",
+    "system": "Chiến Thuật",
+    "icon": "core:core_115",
+    "category": "offense",
+    "tiers": [
+      "gold"
+    ]
+  },
+  {
+    "id": "core_116",
+    "name": "Comeback",
+    "description": "Sau khi một hiệu ứng bất lợi trên Player kết thúc: +25% sát thương trong 4s. Nếu có thêm hiệu ứng bất lợi kết thúc trong thời gian này, làm mới thời gian.",
+    "system": "Chiến Thuật",
+    "icon": "core:core_116",
+    "category": "offense",
+    "tiers": [
+      "gold"
+    ]
+  },
+  {
+    "id": "core_117",
+    "name": "Phát Đạn Khai Màn",
+    "description": "Phát bắn thường đầu tiên trúng mỗi enemy luôn gây chí mạng.",
+    "system": "Chiến Thuật",
+    "icon": "core:core_117",
+    "category": "offense",
+    "tiers": [
+      "gold"
+    ]
+  },
+  {
+    "id": "core_118",
+    "name": "Càng Đông Càng Vui",
+    "description": "Gây thêm 1.5% sát thương với mỗi quái vật xuất hiện nhiều hơn phe người chơi.",
+    "system": "Chiến Thuật",
+    "icon": "core:core_118",
+    "category": "offense",
+    "tiers": [
+      "gold"
+    ]
+  },
+  {
+    "id": "core_119",
+    "name": "Kéo Dãn Thời Gian",
+    "description": "Dùng kỹ năng tạo Chrono Field bán kính 55px trong 3s tại vị trí cast. Đạn thường của địch đi vào bị chậm 40%.",
+    "system": "Chiến Thuật",
+    "icon": "core:core_119",
+    "category": "defense",
+    "tiers": [
+      "diamond"
+    ]
+  },
+  {
+    "id": "core_120",
+    "name": "Đoạt Quyền Điều Khiển",
+    "description": "Mỗi 20s, hack quái vật có % HP cao nhất trong 5s. Quái bị hack đổi phe và dùng chính đòn đánh/kỹ năng của nó tấn công phe địch. Boss không bị hack mà bị choáng 2.5s. Hồi chiêu lõi bắt đầu sau khi hiệu ứng kết thúc.",
+    "system": "Chiến Thuật",
+    "icon": "core:core_120",
+    "category": "defense",
+    "tiers": [
+      "diamond"
+    ]
+  },
+  {
+    "id": "core_121",
+    "name": "Kho Phản Vật Chất",
+    "description": "Tích 50% Overkill từ quái thường; Tinh Anh/Boss tích 2% sát thương nhận vào. Một kho chung, tối đa 600% Hỏa lực. Dùng kỹ năng xả toàn bộ thành shockwave toàn màn hình rồi reset.",
+    "system": "Chiến Thuật",
+    "icon": "core:core_121",
     "category": "offense",
     "tiers": [
       "diamond"

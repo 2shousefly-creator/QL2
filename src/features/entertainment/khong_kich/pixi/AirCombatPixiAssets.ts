@@ -1,3 +1,4 @@
+import { PLAYER_STANDARD_AIRFRAME_SIZE } from "../airCombatHitboxes";
 import basicAmmoUrl from "../../../../assets/khong-kich/v2/player-basic-ammo-atlas.svg";
 import bigbangUrl from "../../../../assets/khong-kich/v2/bigbang-missile.svg";
 import flameUrl from "../../../../assets/khong-kich/v2/missile-engine-flame.svg";
@@ -13,9 +14,9 @@ import type { AircraftVisualDefinition, AtlasFrame } from "./airCombatPixiTypes"
 
 const cell = (atlas: AtlasFrame["atlas"], x: number, y: number): AtlasFrame => ({ atlas, rect: [x / 4, y / 4, 0.25, 0.25] });
 export const AIRCRAFT_VISUALS: Record<AircraftId, AircraftVisualDefinition> = {
-  black_eagle: { neutral: cell("aircraft", 0, 0), left: cell("aircraft", 1, 0), right: cell("aircraft", 2, 0), size: 51, tint: 0x67e8f9 },
-  breaker: { neutral: cell("aircraft", 0, 1), left: cell("aircraft", 1, 1), right: cell("aircraft", 2, 1), size: 60, tint: 0xfbbf24 },
-  phantom: { neutral: cell("aircraft", 0, 2), left: cell("aircraft", 1, 2), right: cell("aircraft", 2, 2), size: 56, tint: 0xc4b5fd },
+  black_eagle: { neutral: cell("aircraft", 0, 0), left: cell("aircraft", 1, 0), right: cell("aircraft", 2, 0), size: PLAYER_STANDARD_AIRFRAME_SIZE, tint: 0x67e8f9 },
+  breaker: { neutral: cell("aircraft", 0, 1), left: cell("aircraft", 1, 1), right: cell("aircraft", 2, 1), size: PLAYER_STANDARD_AIRFRAME_SIZE, tint: 0xfbbf24 },
+  phantom: { neutral: cell("aircraft", 0, 2), left: cell("aircraft", 1, 2), right: cell("aircraft", 2, 2), size: PLAYER_STANDARD_AIRFRAME_SIZE, tint: 0xc4b5fd },
 };
 export const ENEMY_VISUALS: Record<EnemyType, AtlasFrame> = {
   scout: cell("aircraft", 3, 1), fighter: cell("aircraft", 3, 2),
