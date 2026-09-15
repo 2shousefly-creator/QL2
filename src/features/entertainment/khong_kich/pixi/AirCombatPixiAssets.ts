@@ -2,6 +2,7 @@ import { PLAYER_STANDARD_AIRFRAME_SIZE } from "../airCombatHitboxes";
 import { PLAYER_ARTWORK } from "../airCombatArtwork";
 import phantomBeamUrl from "../../../../assets/khong-kich/v2/phantom-firing-beam.svg";
 import basicAmmoUrl from "../../../../assets/khong-kich/v2/player-basic-ammo-atlas.svg";
+import healingCrossUrl from "../../../../assets/khong-kich/v2/healing-cross.svg";
 import bigbangUrl from "../../../../assets/khong-kich/v2/bigbang-missile.svg";
 import flameUrl from "../../../../assets/khong-kich/v2/missile-engine-flame.svg";
 import ammoUrl from "../../../../assets/khong-kich/v2/hardcore-ammo-atlas.svg";
@@ -32,6 +33,7 @@ export const ENEMY_VISUALS: Record<EnemyType, AtlasFrame> = {
 };
 const ammoFrames = Object.fromEntries(Object.entries(AMMO_VISUALS).map(([key,v]) => [key,key.endsWith("_basic_ammo")?{atlas:"basicAmmo",rect:[v.cell[0]/3,0,1/3,1/2]}:cell("ammo",v.cell[0],v.cell[1])])) as Record<AmmoVisualKey,AtlasFrame>;
 export const VFX_VISUALS = {
+  healingCross: { atlas: "healingCross", rect: [0, 0, 1, 1] } as AtlasFrame,
   ...ammoFrames,
   basicAmmoTrail: { atlas: "basicAmmo", rect: [0, 1/2, 1/3, 1/2] } as AtlasFrame,
   muzzle: cell("vfx", 0, 0), tracer: cell("vfx", 1, 0), enemyTracer: cell("vfx", 2, 0), missile: cell("vfx", 3, 0),
@@ -46,11 +48,12 @@ export type VisualKey = keyof typeof VFX_VISUALS;
 
 /** Each renderer owns its frame views. Assets owns cached shared source textures. */
 export async function loadAirCombatAssets() {
-  const [aircraft, fortress, vfx, ammo, bigbang, engineFlame, basicAmmo, phantomBeam] = await Promise.all([
+  const [aircraft, fortress, vfx, ammo, bigbang, engineFlame, basicAmmo, phantomBeam, healingCross] = await Promise.all([
     Assets.load<Texture>(aircraftUrl), Assets.load<Texture>(fortressUrl), Assets.load<Texture>(vfxUrl), Assets.load<Texture>(ammoUrl), Assets.load<Texture>(bigbangUrl), Assets.load<Texture>(flameUrl), Assets.load<Texture>(basicAmmoUrl),
     Assets.load<Texture>(phantomBeamUrl),
+    Assets.load<Texture>(healingCrossUrl),
   ]);
-  const sources = { aircraft, fortress, vfx, ammo, basicAmmo };
+  const sources = { aircraft, fortress, vfx, ammo, basicAmmo, healingCross };
   const frames = new Map<AtlasFrame, Texture>();
   const texture = (definition: AtlasFrame) => {
     const cached = frames.get(definition);

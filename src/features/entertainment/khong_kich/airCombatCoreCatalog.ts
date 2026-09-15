@@ -507,7 +507,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_038",
     "name": "Sửa chữa khẩn cấp",
-    "description": "Phản Ảnh: hồi 18% HP đã mất khi tàng hình.",
+    "description": "Phản Ảnh: hồi dần 18% HP đã mất tại lúc kích hoạt trong suốt thời gian tàng hình.",
     "system": "Phantom · Skill 1",
     "icon": "core:core_038",
     "category": "skill",
@@ -1075,12 +1075,12 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_086",
     "name": "Pin Xung Kích",
-    "description": "-20% tài nguyên tối đa; +70% hồi tài nguyên.",
+    "description": "-35% tài nguyên tối đa; +70% hồi tài nguyên.",
     "system": "Tài nguyên",
     "icon": "core:core_086",
     "category": "resource",
     "tiers": [
-      "gold"
+      "diamond"
     ]
   },
   {

@@ -265,6 +265,8 @@ export interface CoreRuntimeState {
   acquisitions: { id: number; coreId: CoreId }[];
   nextAcquisitionId: number;
   healingTotal: number;
+  /** Runtime-only budget belonging to the current invisibility cast. */
+  emergencyRepair?: { remaining: number; durationRemaining: number };
   time: number;
   lastDamage: number;
   lastMove: number;

@@ -44,8 +44,6 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
   private afterimages: AirCombatSpritePool;
   private aura = new Sprite();
   private laserMuzzle = new Sprite();
-  private lastHealing = 0;
-  private healUntil = 0;
   private techShieldPainter:ShieldPainter={
     circle:(x,y,r,color,alpha,fill,width)=>{const g=this.titanBubble.circle(x,y,r);if(fill)g.fill({color,alpha});else g.stroke({color,alpha,width});},
     arc:(r,a,b,color,alpha,width)=>{this.titanBubble.moveTo(Math.cos(a)*r,Math.sin(a)*r).arc(0,0,r,a,b).stroke({color,alpha,width});},
@@ -170,10 +168,9 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
           this.vfx.spawn("sparks", event.x, event.y, reducedMotion ? 18 : 25, 0.22, 0xff8080);
         }
       } else if (event.kind === "lightning") {
-        const fromX = event.fromX ?? event.x, fromY = event.fromY ?? event.y - 40;
-        let px=fromX,py=fromY;
-        for(let i=1;i<=6;i++){const t=i/6,offset=i===6?0:Math.sin(event.id+i*2.7)*9;const x=fromX+(event.x-fromX)*t+offset,y=fromY+(event.y-fromY)*t-offset*.5;this.vfx.streak(x,y,px,py,i%2?0x67e8f9:0xe0ffff,i%2?4:2.5);px=x;py=y;}
-        this.vfx.spawn("sparks", event.x, event.y, 28, .2, 0x67e8f9);
+        this.vfx.lightning(event.id, event.fromX ?? event.x, event.fromY ?? event.y - 40, event.x, event.y, reducedMotion);
+      } else if (event.kind === "player_heal") {
+        this.vfx.healing(event.id, event.x, event.y, reducedMotion);
       } else if(event.kind==="bullet_impact") {
         this.vfx.spawn("smallExplosion",event.x,event.y,event.size,.16,0xffd799);
         if(!reducedMotion)this.vfx.spawn("sparks",event.x,event.y,event.size*.85,.14,0xffedba);
@@ -513,12 +510,6 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
       }
     }
     this.afterimages.end();
-    if (world.aircraft.coreState.healingTotal > this.lastHealing && this.clock >= this.healUntil && delta > 0) {
-      this.lastHealing = world.aircraft.coreState.healingTotal;
-      this.healUntil = this.clock + (reducedMotion ? 1.5 : .75);
-      this.vfx.attract("charge",world.playerX-23,world.playerY+18,world.playerX,world.playerY,8,.6,0x6ee7b7);
-      if (!reducedMotion) this.vfx.attract("sparks",world.playerX+22,world.playerY-14,world.playerX,world.playerY,10,.65,0x67e8f9);
-    }
     this.charge.visible = world.laserCharge > 0;
     this.charge.position.set(world.playerX, world.playerY - 24);
     this.charge.width = this.charge.height = reducedMotion ? 32 : 32 + Math.sin(this.clock * 18) * 4;

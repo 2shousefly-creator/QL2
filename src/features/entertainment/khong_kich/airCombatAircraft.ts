@@ -196,6 +196,7 @@ function beginDebt(state: AircraftCombatState, skillId: SkillId): void {
     c.timers.futureDebt=c.time+18;delete c.stacks.borrowPending;delete c.stacks[`debt:${skillId}`];
 }
 export function endAircraftSkill(state: AircraftCombatState, skillId: SkillId): void {
+    if (skillId === "invisibility") delete state.coreState.emergencyRepair;
     const wasActive = skillId === "escort_drone" ? state.droneActive : (state.activeEffects[skillId] || 0) > 0;
     if (skillId === "escort_drone") {
         state.droneActive = false;
@@ -246,6 +247,13 @@ export function castSkill(state: AircraftCombatState, skillId: SkillId): SkillCa
     if (v.duration > 0 && skillId !== "decoy") {
         state.activeEffects[skillId] = v.duration + (skillId === "focus_laser" ? v.charge : 0);
         (state.activeEffectDurations ??= {})[skillId] = state.activeEffects[skillId];
+        if (skillId === "invisibility") {
+            delete state.coreState.emergencyRepair;
+            if (hasCore(state, 38)) state.coreState.emergencyRepair = {
+                remaining: Math.max(0, getEffectiveAircraftStats(state).maxHp - state.currentHp) * .18,
+                durationRemaining: v.duration,
+            };
+        }
     }
     if (skillId === "escort_drone") {
         state.droneActive = true;
@@ -264,7 +272,8 @@ export function healAircraft(state: AircraftCombatState, amount: number): number
     }
     return effective;
 }
-export function tickAircraftState(state: AircraftCombatState, deltaSeconds: number, gameplayRunning: boolean): void {
+export function tickAircraftState(state: AircraftCombatState, deltaSeconds: number, gameplayRunning: boolean,
+    onHealing?: (effective: number, source: "core" | "skill_core") => void): void {
     if (!gameplayRunning || deltaSeconds <= 0)
         return;
     const dt = deltaSeconds;
@@ -272,6 +281,22 @@ export function tickAircraftState(state: AircraftCombatState, deltaSeconds: numb
         state.cooldowns[key] = Math.max(0, (state.cooldowns[key] || 0) - dt);
     state.coreState.time += dt;
     tickPlayerStatus(state);
+    const repair = state.coreState.emergencyRepair;
+    if (repair) {
+        const active = state.activeEffects.invisibility || 0;
+        if (active <= 0 || state.currentHp <= 0 || repair.durationRemaining <= 0) {
+            delete state.coreState.emergencyRepair;
+        } else {
+            // Settle the final active fraction before skill expiry clears this budget.
+            const step = Math.min(dt, active, repair.durationRemaining);
+            const planned = step >= repair.durationRemaining - 1e-9
+                ? repair.remaining : repair.remaining * step / repair.durationRemaining;
+            const effective = healAircraft(state, planned);
+            repair.remaining = Math.max(0, repair.remaining - planned);
+            repair.durationRemaining = Math.max(0, repair.durationRemaining - step);
+            if (effective > 0) onHealing?.(effective, "skill_core");
+        }
+    }
     for (const key of Object.keys(state.activeEffects) as SkillId[]) {
         const next = (state.activeEffects[key] || 0) - dt;
         if (next <= 0)
@@ -290,7 +315,9 @@ export function tickAircraftState(state: AircraftCombatState, deltaSeconds: numb
         if (shield.until <= state.coreState.time)
             delete state.coreState.shields[key];
     const stats = getEffectiveAircraftStats(state);
-    healAircraft(state, stats.hpRegen * dt);
+    const regenerated = healAircraft(state, stats.hpRegen * dt);
+    if (regenerated > 0 && (hasCore(state, 5) || hasCore(state, 11) || hasCore(state, 17)))
+        onHealing?.(regenerated, "core");
     const upkeep = state.droneActive ? getSkillRuntimeValues(state, "escort_drone").upkeepPerSecond : 0;
     state.currentResource = Math.max(0, Math.min(stats.maxResource, state.currentResource + (stats.resourceRegen - upkeep) * dt));
     if (state.droneActive && state.currentResource <= 0)

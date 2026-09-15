@@ -1,4 +1,6 @@
-/** Raw damage before Armor/Core mitigation; no vulnerability multiplier. */
+/** Applied once at player impact, before Armor/Core mitigation. */
+export const BOSS_DAMAGE_MULTIPLIER = 1.10;
+/** Unscaled baseline raw damage; no vulnerability multiplier. */
 export const BOSS_TUNING = {
  phase1: {wing:180,fan:140,sonic:300,dash:0,lane:0,missile:0,fanCount:7,rings:1,safeArc:32,ringInterval:0.75,sonicWarning:0.68,ringSpeed:195,dashWarning:0.75,laneWarning:0.62,laneCount:0,laneSteps:0,laneActive:0,laneRecovery:0,suppressiveBudget:14,missiles:0,missileSpeed:185,wingInterval:1.1,fanInterval:7.5,recovery:1.2,speedScale:1,cadence:1},
  phase2: {wing:210,fan:160,sonic:340,dash:500,lane:380,missile:190,fanCount:9,rings:2,safeArc:20,ringInterval:0.58,sonicWarning:0.57,ringSpeed:215,dashWarning:0.74,laneWarning:0.62,laneCount:5,laneSteps:2,laneActive:0.3,laneRecovery:0.18,suppressiveBudget:24,missiles:6,missileSpeed:185,wingInterval:0.85,fanInterval:6.5,recovery:0.75,speedScale:1,cadence:1},

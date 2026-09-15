@@ -160,7 +160,7 @@ register(83, { hooks: { damageTaken: ctx => { if (ready(ctx.state, "counterCd"))
         } } });
 register(85, { stats: (_s, stats) => { stats.firepower += 35; stats.armor -= 18; } });
 register(86, { finalStats: (_s, stats) => {
-        stats.maxResource *= .8;
+        stats.maxResource *= .65;
         stats.resourceRegen *= 1.7;
     } });
 register(87, { stats: (_s, stats) => { stats.criticalChance += .2; stats.criticalDamageMultiplier += .3; } });
