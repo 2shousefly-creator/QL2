@@ -1,4 +1,4 @@
-import { AMMO_VISUALS, getAmmoVisualKey } from "./airCombatAmmo";
+import { AMMO_VISUALS, getAmmoVisualKey, getMissileVisual, missileRenderRotation } from "./airCombatAmmo";
 import type { AmmoVisualKey } from "./airCombatAmmo";
 import { angularBarPolygon } from "./airCombatHudLayout";
 import { SONIC_RING_THICKNESS } from "./airCombatBoss";
@@ -12,11 +12,23 @@ import { getEffectiveAircraftStats } from "./airCombatEngine";
 import { HealthBarPresentation, activeShieldAmount, statusBarText, DAMAGE_LABEL_SECONDS, trackingBarWidth, trackingBarX, trackingBarY, type DamageLabel } from "./airCombatFeedback";
 
 const ammoPaths = new Map<AmmoVisualKey, { body: Path2D; detail: Path2D }>();
-function drawAmmo(ctx:CanvasRenderingContext2D,key:AmmoVisualKey,x:number,y:number,angle:number) {
+function drawAmmoLocal(ctx:CanvasRenderingContext2D,key:AmmoVisualKey) {
  const art=AMMO_VISUALS[key];let paths=ammoPaths.get(key);
  if(!paths){paths={body:new Path2D(art.body),detail:new Path2D(art.detail)};ammoPaths.set(key,paths);}
- ctx.save();ctx.translate(x,y);ctx.rotate(angle+Math.PI/2);ctx.scale(art.width/64,art.height/64);ctx.translate(-32,-32);
- ctx.fillStyle=art.color;ctx.fill(paths.body);ctx.fillStyle=art.highlight;ctx.fill(paths.detail);ctx.restore();
+ ctx.save();ctx.scale(art.width/64,art.height/64);ctx.translate(-32,-32);
+ ctx.fillStyle=art.color;ctx.fill(paths.body);
+ if(key==="bigbang_missile"){ctx.strokeStyle="#a1aeba";ctx.lineWidth=.65;ctx.stroke(paths.body);}
+ ctx.fillStyle=art.highlight;ctx.fill(paths.detail);
+ if(key==="bigbang_missile") {
+   ctx.strokeStyle="#9aabb8";ctx.lineWidth=.6;
+   for(const x of [20,35])for(const y of [31,40])ctx.strokeRect(x,y,9,6);
+   ctx.fillStyle="#a1adb5";ctx.beginPath();ctx.moveTo(32,2);ctx.lineTo(43,8);ctx.lineTo(47,18);ctx.lineTo(17,18);ctx.lineTo(21,8);ctx.closePath();ctx.fill();
+   ctx.strokeStyle="#232d38";ctx.lineWidth=2;for(let x=23;x<42;x+=7){ctx.beginPath();ctx.moveTo(x,47);ctx.lineTo(x+4,50);ctx.stroke();}
+ }
+ ctx.restore();
+}
+function drawAmmo(ctx:CanvasRenderingContext2D,key:AmmoVisualKey,x:number,y:number,angle:number) {
+ ctx.save();ctx.translate(x,y);ctx.rotate(missileRenderRotation(angle));drawAmmoLocal(ctx,key);ctx.restore();
 }
 const terrainTiles = new WeakMap<CombatWorld, { canvas: HTMLCanvasElement; revision: number }[]>();
 function paintTerrainShapes(ctx: CanvasRenderingContext2D, shapes: TerrainShape[]) {
@@ -387,6 +399,7 @@ export function drawLegacyWorld(
       ctx.strokeStyle="#fde68a";ctx.lineWidth=2;ctx.stroke();continue;
     }
     if (warning.kind === "sonic") {
+        if(warning.stage!=="active" && world.warnings.some(w=>w.kind==="sonic" && w.enemyId===warning.enemyId && w.stage!=="active" && w.id<warning.id))continue;
       const active = warning.stage === "active";
       const radius = active ? warning.ringRadius ?? 0 : 28 + 12 * (1 - warning.remaining / warning.totalDuration);
       const angle = warning.safeAngle ?? Math.PI / 2, arc = warning.safeArc ?? 0;
@@ -478,25 +491,17 @@ export function drawLegacyWorld(
       ctx.globalAlpha = 1;
     }
     if (missile) {
-      const powered = projectile.missileState === "powered";
-      ctx.save();
-      ctx.translate(projectile.x, projectile.y);
-      ctx.rotate(projectile.heading + Math.PI / 2);
-      if (projectile.bigBang) ctx.scale(2.25, 2.25); else if(projectile.owner!=="enemy")ctx.scale(.8,.8);
-      if (powered) {
-        const flame = 6 + 10 * projectile.speed / Math.max(1, projectile.cruiseSpeed);
-        ctx.fillStyle = projectile.owner === "enemy" ? "#ff526e" : "#ffcc80";
-        ctx.shadowColor = projectile.owner === "enemy" ? "#fb7185" : "#fb923c"; ctx.shadowBlur = 12;
-        ctx.beginPath(); ctx.moveTo(-3, 12); ctx.lineTo(0, 14 + flame); ctx.lineTo(3, 12); ctx.closePath(); ctx.fill();
+      const visual=getMissileVisual(projectile)!,powered=projectile.missileState==="powered";
+      ctx.save();ctx.translate(projectile.x,projectile.y);ctx.rotate(missileRenderRotation(projectile.heading));
+      for(const nozzle of visual.engineNozzles) {
+        if(!powered)continue;
+        const length=nozzle.flameLength*(.45+.55*Math.min(1,projectile.speed/Math.max(1,projectile.cruiseSpeed)));
+        ctx.fillStyle=`#${nozzle.tint.toString(16).padStart(6,"0")}`;ctx.shadowColor=ctx.fillStyle;ctx.shadowBlur=8;
+        ctx.beginPath();ctx.moveTo(nozzle.x-nozzle.flameWidth/2,nozzle.y);ctx.quadraticCurveTo(nozzle.x-nozzle.flameWidth*.6,nozzle.y+length*.3,nozzle.x,nozzle.y+length);ctx.quadraticCurveTo(nozzle.x+nozzle.flameWidth*.6,nozzle.y+length*.3,nozzle.x+nozzle.flameWidth/2,nozzle.y);ctx.closePath();ctx.fill();
+        ctx.fillStyle="#fff7dc";ctx.beginPath();ctx.moveTo(nozzle.x-nozzle.flameWidth*.25,nozzle.y);ctx.lineTo(nozzle.x,nozzle.y+length*.6);ctx.lineTo(nozzle.x+nozzle.flameWidth*.25,nozzle.y);ctx.closePath();ctx.fill();
       }
-      ctx.restore();
-      const ammo=getAmmoVisualKey(projectile)!;
-      drawAmmo(ctx,ammo,projectile.x,projectile.y,projectile.heading);
-      ctx.save();ctx.translate(projectile.x,projectile.y);ctx.rotate(projectile.heading+Math.PI/2);
-      if (projectile.owner === "enemy" && !powered) {
-        ctx.fillStyle = "rgba(255,82,110,.6)";
-        ctx.beginPath(); ctx.arc(0, 14, 4 + Math.sin(projectile.missileAge * 16), 0, Math.PI * 2); ctx.fill();
-      }
+      ctx.shadowBlur=0;drawAmmoLocal(ctx,getAmmoVisualKey(projectile)!);
+      if(projectile.bigBang){ctx.globalAlpha=reducedMotion?.3:.3+.15*Math.sin(projectile.missileAge*4);ctx.fillStyle="#fff0b3";ctx.fillRect(-7,-10,14,2);}
       ctx.restore();
     } else if(projectile.owner==="enemy") {
       drawAmmo(ctx,getAmmoVisualKey(projectile)!,projectile.x,projectile.y,Math.atan2(projectile.vy,projectile.vx));
@@ -518,28 +523,36 @@ export function drawLegacyWorld(
   ctx.shadowBlur = 0;
 
   for (const enemy of world.enemies) {
-    if (enemy.type === "kamikaze" && enemy.dashCharge > 0) {
+    if (enemy.type === "kamikaze" && (enemy.kamikazeState === "charge_1" || enemy.kamikazeState === "charge_2")) {
       ctx.strokeStyle = `rgba(250,204,21,${0.35 + Math.sin(world.elapsed * 15) * 0.25})`;
       ctx.lineWidth = 2;
       ctx.beginPath();
       ctx.arc(enemy.x, enemy.y, enemy.radius + 7 + (1 - enemy.dashCharge / 0.75) * 7, 0, Math.PI * 2);
       ctx.stroke();
     }
+    if(enemy.type==="boss" && (enemy.bossAttack?.crossfirePending??0)>0 && !enemy.bossAttack?.patternWaiting) {
+      const attack=enemy.bossAttack!,center=attack.crossfireCenter!,half=attack.crossfireWidth!/2;
+      ctx.save();ctx.lineWidth=1.5;
+      for(const side of [-1,1]){const edge=center+side*half,wing=side<0?Math.min(enemy.x-64,edge-7):Math.max(enemy.x+64,edge+7);ctx.strokeStyle="#ffd49a";ctx.beginPath();ctx.arc(wing,enemy.y+18,8+(1-(attack.crossfireTimer??0)/.33)*8,0,Math.PI*2);ctx.stroke();ctx.strokeStyle="rgba(103,232,249,.65)";ctx.beginPath();ctx.moveTo(edge,enemy.y+20);ctx.lineTo(edge,GAMEPLAY_SAFE_RECT.bottom);ctx.stroke();}ctx.restore();
+    }
     drawEnemyGlyph(ctx, enemy.type, enemy.x, enemy.y, enemy.radius);
     if(enemy.shield>0||enemy.aegisUntil>world.aircraft.coreState.time){ctx.strokeStyle="#7dd3fc";ctx.lineWidth=2;ctx.beginPath();ctx.arc(enemy.x,enemy.y,enemy.radius+7,0,Math.PI*2);ctx.stroke();}
     if(enemy.stun>0){ctx.strokeStyle="#fde047";ctx.beginPath();ctx.arc(enemy.x,enemy.y-enemy.radius-7,5,0,Math.PI*2);ctx.stroke();}
-    if(enemy.type==="kamikaze"&&enemy.dashCharge>0){ctx.strokeStyle="rgba(251,191,36,.65)";ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(enemy.x,enemy.y);ctx.lineTo(enemy.dashEndX,enemy.dashEndY);ctx.stroke();}
+    if(enemy.type==="kamikaze"&&(enemy.kamikazeState==="charge_1"||enemy.kamikazeState==="charge_2")){ctx.strokeStyle="rgba(251,191,36,.65)";ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(enemy.x,enemy.y);ctx.lineTo(enemy.dashEndX,enemy.dashEndY);ctx.stroke();}
     if (enemy.type !== "boss") {
       const health = healthBars.get(enemy.id, enemy.hp, enemy.maxHp, enemy.shieldUntil > world.aircraft.coreState.time ? enemy.shield : 0);
       const w = Math.max(24, Math.min(70, enemy.radius * 2.2));
       const x = Math.max(GAMEPLAY_SAFE_RECT.left, Math.min(GAMEPLAY_SAFE_RECT.right - w, enemy.x - w / 2));
       const y = Math.min(GAMEPLAY_SAFE_RECT.bottom - 5, enemy.y + enemy.radius * 1.4 + 5);
       const barHeight=isElite(enemy.type)?5:3;
-      ctx.fillStyle="#071223";ctx.beginPath();ctx.moveTo(x-2,y+1);ctx.lineTo(x+1,y-2);ctx.lineTo(x+w+2,y-2);ctx.lineTo(x+w+2,y+barHeight-1);ctx.lineTo(x+w-1,y+barHeight+2);ctx.lineTo(x-2,y+barHeight+2);ctx.closePath();ctx.fill();ctx.strokeStyle=isElite(enemy.type)?"#ffad43":"#d05a69";ctx.lineWidth=.8;ctx.stroke();
-      ctx.fillStyle = "#d8e4ee"; ctx.fillRect(x, y, w * health.shieldEnd, barHeight);
-      ctx.fillStyle = "#fff"; ctx.fillRect(x, y, w * health.chipRatio, barHeight);
-      ctx.fillStyle = isElite(enemy.type) ? "#fbbf24" : "#fb7185";
-      ctx.fillRect(x, y, w * health.hpRatio, barHeight);
+      const fill=(bx:number,by:number,bw:number,bh:number,ratio:number,color:string,stroke=false)=>{
+        const points=angularBarPolygon(bx,by,bw,bh,ratio);if(!points.length)return;
+        ctx.beginPath();ctx.moveTo(points[0],points[1]);for(let i=2;i<points.length;i+=2)ctx.lineTo(points[i],points[i+1]);ctx.closePath();ctx.fillStyle=color;ctx.fill();
+        if(stroke){ctx.strokeStyle=isElite(enemy.type)?"#ffad43":"#d05a69";ctx.lineWidth=.8;ctx.stroke();}
+      };
+      fill(x-2,y-2,w+4,barHeight+4,1,"#071223",true);fill(x,y,w,barHeight,1,"#172638");
+      fill(x,y,w,barHeight,health.shieldEnd,"#d8e4ee");fill(x,y,w,barHeight,health.chipRatio,"#fff");fill(x,y,w,barHeight,health.hpRatio,isElite(enemy.type)?"#fbbf24":"#fb7185");
+
     }
   }
 
@@ -603,7 +616,7 @@ export function drawLegacyWorld(
     0.82
   );
 
-  if ((world.aircraft.activeEffects.armor_shield || 0) > 0 || Object.values(world.aircraft.coreState.shields).some(s=>s.amount>0&&s.until>world.aircraft.coreState.time)) {
+  if (!accents.titanShield.active && accents.titanShield.opacity < .01 && ((world.aircraft.activeEffects.armor_shield || 0) > 0 || Object.values(world.aircraft.coreState.shields).some(s=>s.amount>0&&s.until>world.aircraft.coreState.time))) {
     const pulse = 1 + Math.sin(world.elapsed * 8) * 0.045;
     const shieldRadius = 25 * pulse;
     ctx.save();
@@ -629,6 +642,18 @@ export function drawLegacyWorld(
     }
     ctx.closePath();
     ctx.stroke();
+    ctx.restore();
+  }
+
+  const bubble=accents.titanShield;
+  if(bubble.opacity>.01) {
+    ctx.save();ctx.translate(world.playerX,world.playerY);ctx.scale(bubble.scale,bubble.scale);ctx.globalAlpha=bubble.opacity;
+    ctx.fillStyle="rgba(56,189,248,.10)";ctx.strokeStyle="#baf4ff";ctx.lineWidth=1.6;
+    ctx.beginPath();ctx.ellipse(0,0,46,54,0,0,Math.PI*2);ctx.fill();ctx.stroke();
+    ctx.strokeStyle="rgba(56,189,248,.5)";ctx.lineWidth=.8;ctx.beginPath();ctx.ellipse(0,0,43,51,0,0,Math.PI*2);ctx.stroke();
+    if(bubble.age<.3){ctx.globalAlpha=bubble.opacity*(1-bubble.age/.3);ctx.beginPath();ctx.ellipse(0,0,46+bubble.age*45,54+bubble.age*45,0,0,Math.PI*2);ctx.stroke();}
+    if(!reducedMotion){ctx.globalAlpha=bubble.opacity*.65;ctx.strokeStyle="#e0ffff";ctx.lineWidth=2;for(let i=0;i<2;i++){const a=bubble.age*.4+i*Math.PI;ctx.beginPath();ctx.ellipse(0,0,45,53,0,a,a+.8);ctx.stroke();}}
+    for(const impact of bubble.impacts)if(impact.age<.35){const t=impact.age/.35;ctx.globalAlpha=(1-t)*bubble.opacity;ctx.strokeStyle="#eaffff";ctx.lineWidth=2;ctx.beginPath();ctx.arc(impact.x,impact.y,2+t*12,0,Math.PI*2);ctx.stroke();}
     ctx.restore();
   }
 

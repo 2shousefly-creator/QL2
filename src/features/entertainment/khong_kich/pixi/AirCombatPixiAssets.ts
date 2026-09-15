@@ -1,3 +1,5 @@
+import bigbangUrl from "../../../../assets/khong-kich/v2/bigbang-missile.svg";
+import flameUrl from "../../../../assets/khong-kich/v2/missile-engine-flame.svg";
 import ammoUrl from "../../../../assets/khong-kich/v2/hardcore-ammo-atlas.svg";
 import { AMMO_VISUALS } from "../airCombatAmmo";
 import type { AmmoVisualKey } from "../airCombatAmmo";
@@ -39,8 +41,8 @@ export type VisualKey = keyof typeof VFX_VISUALS;
 
 /** Each renderer owns its frame views. Assets owns cached shared source textures. */
 export async function loadAirCombatAssets() {
-  const [aircraft, fortress, vfx, ammo] = await Promise.all([
-    Assets.load<Texture>(aircraftUrl), Assets.load<Texture>(fortressUrl), Assets.load<Texture>(vfxUrl), Assets.load<Texture>(ammoUrl),
+  const [aircraft, fortress, vfx, ammo, bigbang, engineFlame] = await Promise.all([
+    Assets.load<Texture>(aircraftUrl), Assets.load<Texture>(fortressUrl), Assets.load<Texture>(vfxUrl), Assets.load<Texture>(ammoUrl), Assets.load<Texture>(bigbangUrl), Assets.load<Texture>(flameUrl),
   ]);
   const sources = { aircraft, fortress, vfx, ammo };
   const frames = new Map<AtlasFrame, Texture>();
@@ -60,6 +62,6 @@ export async function loadAirCombatAssets() {
   Object.values(AIRCRAFT_VISUALS).forEach(v => { texture(v.neutral); texture(v.left); texture(v.right); });
   Object.values(ENEMY_VISUALS).forEach(texture);
   Object.values(VFX_VISUALS).forEach(texture);
-  return { texture, effect: (key: VisualKey) => texture(VFX_VISUALS[key]), destroy: () => { frames.forEach(t => t.destroy(false)); frames.clear(); } };
+  return { texture, engineFlame, effect: (key: VisualKey) => key === "bigbang_missile" ? bigbang : texture(VFX_VISUALS[key]), destroy: () => { frames.forEach(t => t.destroy(false)); frames.clear(); } };
 }
 export type AirCombatAssets = Awaited<ReturnType<typeof loadAirCombatAssets>>;

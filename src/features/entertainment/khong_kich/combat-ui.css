@@ -131,7 +131,8 @@
 [data-skill-rail="bottom"] > button {border-radius:0;clip-path:polygon(9px 0,100% 0,100% calc(100% - 9px),calc(100% - 9px) 100%,0 100%,0 9px);box-shadow:inset 0 2px #caeeff38;}
 [data-skill-rail="bottom"] > button::after {content:"";position:absolute;inset:3px;border:1px solid #82cfdf30;pointer-events:none;}
 .air-skill-icon-wrap {border-radius:0;background:linear-gradient(135deg,#59728944,#071320);border:1px solid #9bccdf70;}
-.air-boss-health {clip-path:polygon(3px 0,100% 0,calc(100% - 3px) 100%,0 100%);border:1px solid #ffb5b655;}
+.air-boss-health {clip-path:polygon(3px 0,100% 0,100% calc(100% - 3px),calc(100% - 3px) 100%,0 100%,0 3px);box-shadow:inset 0 0 0 1px #ffb5b655;}
+.air-boss-health > div {--cut:min(3px,45%);clip-path:polygon(var(--cut) 0,100% 0,100% calc(100% - var(--cut)),calc(100% - var(--cut)) 100%,0 100%,0 var(--cut));}
 .air-boss-phase-marker {position:absolute;inset-block:0;z-index:3;width:1px;background:#ffecd1;box-shadow:0 0 2px #000;}
 .combat-core-card {border-radius:0!important;clip-path:polygon(14px 0,100% 0,100% calc(100% - 14px),calc(100% - 14px) 100%,0 100%,0 14px);}
 .combat-core-card > span:nth-child(2),.combat-core-card .rounded-full,.combat-core-card .rounded-lg {border-radius:0;}

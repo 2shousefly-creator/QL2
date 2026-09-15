@@ -1,8 +1,10 @@
+import { TitanShieldPresentation } from "./airCombatTitanShield";
 import type { CombatWorld, CombatVisualEvent } from "./airCombatRuntime";
 
 interface Accent { event: CombatVisualEvent; age: number }
 /** Bounded fallback effects with a presentation clock that stops for every modal pause. */
 export class CanvasCombatAccents {
+  readonly titanShield=new TitanShieldPresentation();
   private active: Accent[] = [];
   private free: Accent[] = [];
   private lastEvent = 0;
@@ -11,6 +13,7 @@ export class CanvasCombatAccents {
   private clock = 0;
   private healAge = 1;
   update(world: CombatWorld, delta: number) {
+    this.titanShield.update(world,delta);
     this.clock += delta; this.healAge += delta;
     for (let i = this.active.length - 1; i >= 0; i--) {
       const accent = this.active[i]; accent.age += delta;
@@ -32,6 +35,14 @@ export class CanvasCombatAccents {
     ctx.beginPath(); ctx.rect(0, 104, 360, 524); ctx.clip();
     for (const { event, age } of this.active) {
       const t = age / .55;
+      if(this.titanShield.active && (event.kind==="player_hit" || event.kind==="damage_number" && event.target==="player" || event.kind==="shield_ripple" && event.attachedToPlayer))continue;
+      if(event.kind==="missile_impact" && event.missileFamily==="bigbang") {
+        ctx.globalAlpha=(1-t)*.8;ctx.fillStyle=t<.15?"#fffef3":"#ffac32";
+        ctx.beginPath();ctx.arc(event.x,event.y,10+35*Math.sqrt(t),0,Math.PI*2);ctx.fill();
+        ctx.strokeStyle="#ffe19a";ctx.lineWidth=3;ctx.beginPath();ctx.arc(event.x,event.y,16+t*110,0,Math.PI*2);ctx.stroke();
+        if(!reducedMotion){ctx.fillStyle="#675f58";ctx.globalAlpha=t*(1-t);for(let i=0;i<4;i++){const a=i*Math.PI/2+.4;ctx.beginPath();ctx.arc(event.x+Math.cos(a)*t*55,event.y+Math.sin(a)*t*55,12+t*15,0,Math.PI*2);ctx.fill();}}
+        continue;
+      }
       const shield = event.kind === "shield_ripple" || event.kind === "absorb" || event.kind === "drone_hit" || event.kind === "damage_number";
       ctx.globalAlpha = (1 - t) * (reducedMotion ? .5 : .85);
       ctx.strokeStyle = shield ? "#c9f3ff" : event.kind === "lightning" || event.kind === "emp_pulse" ? "#a5f3fc" : event.kind==="missile_impact" && event.missileFamily==="tomahawk"?"#80eaff":event.kind==="missile_impact"&&event.missileFamily==="boss"?"#ff4a66":"#ffd49a";

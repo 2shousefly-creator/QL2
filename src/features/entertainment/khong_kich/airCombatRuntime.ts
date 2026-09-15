@@ -1,3 +1,4 @@
+import { getMissileVisual, missileRenderRotation } from "./airCombatAmmo";
 import { applyPlayerStatus, addStatusMark, playerStunned, playerSkillLocked } from "./airCombatStatus";
 import type { AttackMetadata, AttackTag, StatusPayload } from "./airCombatStatus";
 import { bossMinCenterY } from "./airCombatHudLayout";
@@ -12,7 +13,11 @@ import { applyCore, applyDamageToAircraft, resolvePlayerDamage, calculateRunRank
 import { AirCombatHudSnapshot, AirCombatRunSummary, AircraftCombatState, AircraftId, CoreCard, EnemyType, SkillCastResult, SkillId, } from "./airCombatTypes";
 export interface EnemyEntity {
     bossAttack?: BossAttackState;
-    dashCount?: number;
+    kamikazeState?: "approach" | "charge_1" | "dash_1" | "recover" | "charge_2" | "dash_2" | "shrapnel" | "resolved";
+    lockedX?: number; lockedY?: number;
+    dashDirX?: number; dashDirY?: number;
+    dashTravelled?: number; dashPlannedDistance?: number;
+    stateTimer?: number; attackAge?: number; hitResolved?: boolean;
     executionRecovery?: number;
     retaliationReady?: boolean;
     id: number;
@@ -74,6 +79,9 @@ export interface ProjectileEntity extends AttackMetadata {
     appearance?: "dangerous" | "boss";
     /** Critical hostile attacks may replace ordinary bullets when their pool is full. */
     criticalAttack?: boolean;
+    suppressive?: boolean;
+    allowOffscreenEntry?: boolean;
+    corridorEdge?: number; corridorSide?: number;
     source: DamageSource;
     skillId?: SkillId;
     lifetime: number;
@@ -95,6 +103,7 @@ export interface ProjectileEntity extends AttackMetadata {
     anchorX: number;
     anchorY: number;
     smokeDistanceAccumulator: number;
+    secondarySmokeDistanceAccumulator: number;
     x: number;
     y: number;
     vx: number;
@@ -139,6 +148,7 @@ export interface WarningZone extends AttackMetadata {
     ringRadius?: number;
     laneIndex?: number;
     laneWidth?: number;
+    activeDuration?: number;
     fromX?: number;
     fromY?: number;
     enemyId?: number;
@@ -174,6 +184,7 @@ interface RuntimePools {
     decoys: DecoyEntity[];
 }
 interface VisualEventBase {
+    attachedToPlayer?: boolean;
     missileFamily?: "viper" | "tomahawk" | "bigbang" | "boss";
     id: number;
     x: number;
@@ -296,7 +307,7 @@ const MISSILE_DEFAULTS = {
     fuseStarted: false, fuseRemaining: 0,
     projectileKind: "bullet" as const, missileState: null, missileAge: 0,
     heading: 0, angularVelocity: 0, speed: 0, cruiseSpeed: 0,
-    angularAcceleration: 0, acceleration: 0, anchorX: 0, anchorY: 0, smokeDistanceAccumulator: 0,
+    angularAcceleration: 0, acceleration: 0, anchorX: 0, anchorY: 0, smokeDistanceAccumulator: 0, secondarySmokeDistanceAccumulator: 0,
 };
 function circleHit(ax: number, ay: number, ar: number, bx: number, by: number, br: number): boolean {
     const dx = ax - bx;
@@ -409,6 +420,7 @@ function acquireEnemy(world: CombatWorld): EnemyEntity {
 }
 function recycleEnemy(world: CombatWorld, index: number): void {
     const [enemy] = world.enemies.splice(index, 1);
+    if (enemy) world.threats = world.threats.filter(t => t.enemyId !== enemy.id);
     if (enemy && world.pools.enemies.length < AIR_COMBAT_WORLD.maxEnemies) {
         world.pools.enemies.push(enemy);
     }
@@ -502,7 +514,7 @@ function spawnEnemy(world: CombatWorld, type: EnemyType): EnemyEntity | null {
         damageScale: wave.damage, eliteWave: wave.elite, stun: 0, burn: 0, burnDamage: 0, burnTick: 0, weakHits: 0, weakUntil: 0, lightningUntil: 0,
         shield: 0, shieldUntil: 0, shieldSource: 0, abilityCd: type === "jammer" ? 4.5 : type === "iron_fortress" ? 10 : 7.5, secondaryCd: 10, tertiaryCd: 10,
         burst: 0, burstCd: 0, burstAngle: 0, attackCount: 0, targetId: null, deathHandled: false, dashRemaining: 0, dashStartX: 0, dashStartY: 0, dashEndX: 0, dashEndY: 0,
-        aegisUntil: 0, aegisReady: 0, bossAttack: undefined, dashCount: 0, executionRecovery: 0, retaliationReady: false });
+        aegisUntil: 0, aegisReady: 0, bossAttack: undefined, kamikazeState: type === "kamikaze" ? "approach" : undefined, lockedX: 0, lockedY: 0, dashDirX: 0, dashDirY: 1, dashTravelled: 0, dashPlannedDistance: 0, stateTimer: 0, attackAge: 0, hitResolved: false, executionRecovery: 0, retaliationReady: false });
     enemy.recentDamage.length = 0;
     if (type === "elite" || type === "radar_hunter") enemy.secondaryCd = Infinity;
     if (type === "boss") {
@@ -533,7 +545,7 @@ function addProjectile(world: CombatWorld, values: Partial<ProjectileEntity> & P
     if (ownerCount >= limit) {
         // Preserve rail/homing/boss shots by recycling an ordinary hostile bullet first.
         const replace = values.owner === "enemy" && values.criticalAttack
-            ? world.projectiles.findIndex(p => p.owner === "enemy" && !p.criticalAttack && !p.homing) : -1;
+            ? (world.projectiles.findIndex(p => p.suppressive) >= 0 ? world.projectiles.findIndex(p => p.suppressive) : world.projectiles.findIndex(p => p.owner === "enemy" && !p.criticalAttack && !p.homing)) : -1;
         if (replace < 0) return null;
         recycleProjectile(world, replace);
     }
@@ -545,6 +557,7 @@ function addProjectile(world: CombatWorld, values: Partial<ProjectileEntity> & P
         appearance: values.appearance,
         sourceEnemyId: values.sourceEnemyId, sourceEnemyType: values.sourceEnemyType, attackTag: values.attackTag, majorBossAttack: values.majorBossAttack, payload: values.payload,
         criticalAttack: values.criticalAttack ?? false,
+        suppressive: values.suppressive ?? false, allowOffscreenEntry: values.allowOffscreenEntry ?? false, corridorEdge: values.corridorEdge, corridorSide: values.corridorSide,
         source: values.source ?? "weapon", skillId: values.skillId, lifetime: values.lifetime ?? 6,
         volleyId: values.volleyId ?? 0, volleyHits: values.volleyHits, initialDamage: values.initialDamage ?? values.rawDamage,
         previousX: values.x, previousY: values.y, bigBang: values.bigBang ?? false,
@@ -661,6 +674,7 @@ function fireEnemyBullet(world: CombatWorld, enemy: EnemyEntity, angle: number, 
         sourceEnemyId: enemy.id, sourceEnemyType: enemy.type, attackTag: tag, majorBossAttack: enemy.type === "boss" && tag !== "boss_wing" && tag !== "basic",
         appearance: enemy.type === "boss" ? "boss" : homing ? "dangerous" : undefined,
         criticalAttack: enemy.type === "boss" || isElite(enemy.type) || homing,
+        allowOffscreenEntry: tag === "kamikaze_dash",
         x: enemy.x,
         y: enemy.y + enemy.radius * 0.65,
         vx: Math.cos(angle) * adjustedSpeed,
@@ -880,19 +894,7 @@ function fireEnemy(world: CombatWorld, enemy: EnemyEntity): void {
                     enemy.secondaryCd = 1.75; // Rail resolves at 1.2s, then one staggered missile.
             }
             break;
-        case "boss":
-            if (aim !== null) {
-                const tuning = getBossTuning(enemy.hp / enemy.maxHp);
-                const side = enemy.attackCount % 2 ? -1 : 1;
-                const count = enemy.bossAttack?.majorAttack === "sonic" || enemy.bossAttack?.majorAttack === "lane_laser" ? 1 : world.bossPhase >= 2 ? 2 : 1;
-                for (let i = 0; i < count; i++) {
-                    const angle = aim + (i - (count - 1) / 2) * .16;
-                    addProjectile(world, { owner: "enemy", appearance: "boss", criticalAttack: true, x: enemy.x + side * 27, y: enemy.y + 20,
-                        vx: Math.cos(angle) * 175 * tuning.speedScale, vy: Math.sin(angle) * 175 * tuning.speedScale,
-                        rawDamage: tuning.wing, radius: 5, sourceEnemyId: enemy.id, sourceEnemyType: "boss", attackTag: "boss_wing" });
-                }
-            }
-            break;
+        case "boss": break; // Separate suppressive scheduler owns wing fire.
         default: if (aim !== null)
             fireEnemyBullet(world, enemy, aim, 155, damage);
     }
@@ -901,9 +903,21 @@ function fireEnemy(world: CombatWorld, enemy: EnemyEntity): void {
     enemy.fireCooldown = enemy.type === "boss" ? tuning.wingInterval * tuning.cadence
         : enemy.type === "acid_bomber" && enemy.eliteWave === 2 ? 4.8 : config.fireInterval * faster;
 }
-function fireFan(world: CombatWorld, enemy: EnemyEntity, count: number, damage: number, angle = Math.PI / 2, spacing = .19, speed = 145, tag: AttackTag = enemy.type === "boss" ? "boss_fan" : "burst"): void {
+function reserveBossVolley(world:CombatWorld,count:number):boolean {
+    let live=world.projectiles.reduce((n,p)=>n+Number(p.owner==="enemy"),0);
+    while(live+count>AIR_COMBAT_WORLD.maxEnemyProjectiles) {
+        let index=world.projectiles.findIndex(p=>p.suppressive);
+        if(index<0)index=world.projectiles.findIndex(p=>p.owner==="enemy"&&!p.criticalAttack&&!p.homing);
+        if(index<0)return false;
+        recycleProjectile(world,index);live--;
+    }
+    return true;
+}
+function fireFan(world: CombatWorld, enemy: EnemyEntity, count: number, damage: number, angle = Math.PI / 2, spacing = .19, speed = 145, tag: AttackTag = enemy.type === "boss" ? "boss_fan" : "burst"): boolean {
+    if(enemy.type==="boss" && !reserveBossVolley(world,count))return false;
     for (let i = 0; i < count; i++)
         fireEnemyBullet(world, enemy, angle + (i - (count - 1) / 2) * spacing, speed, damage, false, tag);
+    return true;
 }
 function addLineWarning(world: CombatWorld, enemy: EnemyEntity, kind: "rail" | "dash", x: number, y: number, duration: number, damage: number): void {
     if (world.warnings.length >= AIR_COMBAT_WORLD.maxWarnings)
@@ -1352,7 +1366,7 @@ function updateEnemyAbilities(world: CombatWorld, enemy: EnemyEntity, dt: number
 }
 function castBossEmp(world: CombatWorld, enemy: EnemyEntity, punishment=false): void {
     const enrage=enemy.hp/enemy.maxHp<.15, phase3=world.bossPhase>=3;
-    const radius=enrage?40:phase3?44:48, warning=punishment?.75:enrage?.6:phase3?.7:.85;
+    const radius=enrage?72:phase3?64:56, warning=punishment?.75:enrage?.52:phase3?.62:.75;
     const payload: StatusPayload=punishment?{stun:2,skillLock:3,resourceJam:3.5,resourceMultiplier:.25}
         :{stun:enrage?2:phase3?1.8:1.4,skillLock:enrage?3:phase3?2.5:2,resourceJam:enrage?3.5:phase3?3:2.5,resourceMultiplier:enrage?.3:phase3?.35:.4};
     addWarning(world,"emp",world.playerX,world.playerY,radius,warning,140,"enemy",enemy.id,{sourceEnemyType:"boss",attackTag:"boss_emp",majorBossAttack:true,payload});
@@ -1371,32 +1385,35 @@ function spawnBossPatternStep(world: CombatWorld, enemy: EnemyEntity): void {
             x:enemy.x,y:enemy.y,radius:24,ringRadius:0,ringIndex:index,ringSpeed:tuning.ringSpeed,safeAngle,safeArc:tuning.safeArc*Math.PI/180,stage:"warning",remaining:tuning.sonicWarning,totalDuration:tuning.sonicWarning,rawDamage:tuning.sonic});
         state.patternTimer=tuning.ringInterval;
     } else if(attack==="lane_laser") {
-        const width=GAMEPLAY_SAFE_RECT.width/4, safe=Math.floor(world.random()*4);
-        // A fresh two-safe layout in P2; one safe lane from P3 onward.
-        const second=(safe+1+Math.floor(world.random()*3))%4;
-        for(let lane=0;lane<4;lane++) if(lane!==safe && !(tuning.dangerousLanes===2 && lane===second) && world.warnings.length<AIR_COMBAT_WORLD.maxWarnings)
-            world.warnings.push({id:world.nextId++,kind:"lane_laser",enemyId:enemy.id,sourceEnemyId:enemy.id,attackTag:"boss_lane",majorBossAttack:true,owner:"enemy",x:GAMEPLAY_SAFE_RECT.left+(lane+.5)*width,y:GAMEPLAY_SAFE_RECT.top,radius:0,laneIndex:lane,laneWidth:width,stage:"warning",remaining:tuning.laneWarning,totalDuration:tuning.laneWarning,rawDamage:tuning.lane});
-        state.patternTimer=tuning.laneWarning+LANE_ACTIVE_SECONDS+.08;
+        const width=GAMEPLAY_SAFE_RECT.width/tuning.laneCount, safe=Math.floor(world.random()*tuning.laneCount);
+        for(let lane=0;lane<tuning.laneCount;lane++) if(lane!==safe && world.warnings.length<AIR_COMBAT_WORLD.maxWarnings)
+            world.warnings.push({id:world.nextId++,kind:"lane_laser",enemyId:enemy.id,sourceEnemyId:enemy.id,attackTag:"boss_lane",majorBossAttack:true,owner:"enemy",x:GAMEPLAY_SAFE_RECT.left+(lane+.5)*width,y:GAMEPLAY_SAFE_RECT.top,radius:0,laneIndex:lane,laneWidth:width,stage:"warning",remaining:tuning.laneWarning,totalDuration:tuning.laneWarning,activeDuration:tuning.laneActive,rawDamage:tuning.lane});
+        state.patternWaiting=true;
+        state.patternTimer=tuning.laneRecovery;
     } else if(attack==="dash") {
         const target=targetPosition(world,chooseEnemyTarget(world,false));
-        const warning=index===0?tuning.dashWarning:enemy.hp/enemy.maxHp<.15?.55:.62;
+        const warning=index===0?tuning.dashWarning:enemy.hp/enemy.maxHp<.15?.48:.54;
         if(target) { const point=clampCircleToGameplayRect(target.x,target.y,enemy.radius); addLineWarning(world,enemy,"dash",point.x,Math.max(bossMinCenterY(enemy.radius),point.y),warning,tuning.dash); }
-        state.patternTimer=warning+.65+.6;
+        state.patternWaiting=true;
+        state.patternTimer=enemy.hp/enemy.maxHp<.15?.39:.46;
     }
     state.patternRemaining=Math.max(0,(state.patternRemaining??0)-1); state.patternIndex=index+1;
 }
 function startBossMajor(world: CombatWorld, enemy: EnemyEntity, attack: BossMajorAttack): void {
     const state=enemy.bossAttack!, tuning=getBossTuning(enemy.hp/enemy.maxHp);
+    state.majorAttack=attack;state.majorAge=0;state.patternRemaining=0;state.patternIndex=0;state.patternWaiting=false;state.stepResolved=false;
     if(attack==="fan") {
         state.fanPending=world.bossPhase===1?1:world.bossPhase===2?3:5;
         state.fanIndex=0;state.fanTimer=0;state.fanReverse=world.random()<.5;
         return;
     }
-    state.majorAttack=attack;state.majorAge=0;state.patternRemaining=0;state.patternIndex=0;
     if(attack==="sonic" || attack==="lane_laser" || attack==="dash") {
-        state.patternRemaining=attack==="sonic"?tuning.rings:attack==="lane_laser"?(world.bossPhase===2?2:3):(world.bossPhase>=3?2:1);
+        state.patternRemaining=attack==="sonic"?tuning.rings:attack==="lane_laser"?tuning.laneSteps:(world.bossPhase>=3?2:1);
         spawnBossPatternStep(world,enemy);
         setMessage(world,attack==="sonic"?"SÓNG ÂM PHÂN CỰC":attack==="lane_laser"?"CHUYỂN LÀN HỎA LỰC":"LEVIATHAN · ĐỘT KÍCH",1);
+    } else if(attack==="crossfire_curtain") {
+        state.crossfirePending=enemy.hp/enemy.maxHp<.15?4:world.bossPhase>=3?3:2;
+        chargeCrossfire(world,enemy);
     } else if(attack==="emp") castBossEmp(world,enemy);
     else {
         state.missilesPending=tuning.missiles;state.missileIndex=0;state.missileCooldown=0;state.missileTuning=tuning;
@@ -1410,71 +1427,224 @@ function launchBossMissile(world: CombatWorld, enemy: EnemyEntity): void {
     const p = addProjectile(world, { owner: "enemy", appearance: "boss", criticalAttack: true, x: enemy.x + side * 30, y: enemy.y + 20,
         vx: 0, vy: 0, rawDamage: tuning.missile, radius: 5, homing: true,
         targetId: chooseEnemyTarget(world, true), turnRate: side<0?(world.bossPhase>=3?1.2:1.15):(world.bossPhase>=3?.7:.75), lifetime: 4.5, color: "#ff526e", sourceEnemyId: enemy.id, sourceEnemyType: "boss", attackTag: "boss_missile", majorBossAttack: true });
-    if (p) Object.assign(p, { projectileKind: "boss_missile", missileState: "loiter", heading,
+    if (!p) return;
+    Object.assign(p, { projectileKind: "boss_missile", missileState: "loiter", heading,
         cruiseSpeed: (side<0?tuning.missileSpeed:world.bossPhase>=3?245:225) * tuning.speedScale, speed: 0, acceleration: 220 });
     state.missileIndex++;
     state.missilesPending--;
     state.missileCooldown = .26 * tuning.cadence;
 }
-function updateBossAttacks(world: CombatWorld, enemy: EnemyEntity, dt: number): void {
+/** Corridor is authored before the wing cue. Bullets bank away at its edge;
+ * neither their center nor radius can invade the advertised vertical corridor. */
+function chargeCrossfire(world: CombatWorld, enemy: EnemyEntity): void {
+    const state=enemy.bossAttack!, enrage=enemy.hp/enemy.maxHp<.15;
+    state.crossfireWidth=enrage?42:world.bossPhase>=3?54:74;
+    const half=state.crossfireWidth/2;
+    state.crossfireCenter=Math.max(GAMEPLAY_SAFE_RECT.left+half+12,Math.min(GAMEPLAY_SAFE_RECT.right-half-12,enemy.x+(world.random()-.5)*32));
+    state.crossfireTimer=.33;
+    setMessage(world,"MÀN ĐẠN GIAO THOA",.8);
+}
+function fireCrossfire(world: CombatWorld, enemy: EnemyEntity): void {
     const state=enemy.bossAttack!, tuning=getBossTuning(enemy.hp/enemy.maxHp);
+    const count=enemy.hp/enemy.maxHp<.15?11:world.bossPhase>=3?9:7;
+    const half=state.crossfireWidth!/2;
+    if(!reserveBossVolley(world,count*2))return;
+    for(const side of [-1,1]) {
+        const edge=state.crossfireCenter!+side*half;
+        const wingX=side<0?Math.min(enemy.x-64,edge-7):Math.max(enemy.x+64,edge+7);
+        for(let i=0;i<count;i++) {
+            // Parallel diagonal rows form the curtain; no random aim or CC payload.
+            const angle=Math.PI/2+side*(.28+i*.055), speed=155+i*3;
+            addProjectile(world,{owner:"enemy",appearance:"boss",criticalAttack:true,sourceEnemyId:enemy.id,sourceEnemyType:"boss",attackTag:"boss_crossfire",majorBossAttack:true,
+                x:wingX,y:enemy.y+18-i*6,vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed,radius:3.5,rawDamage:tuning.fan*.8,lifetime:3.2,corridorEdge:edge,corridorSide:side});
+        }
+    }
+    state.crossfirePending!--;
+    if(state.crossfirePending!>0) { state.crossfireTimer=.42; state.patternWaiting=true; }
+}
+function fireSuppressiveWing(world: CombatWorld, enemy: EnemyEntity, side: number, count: number): void {
+    const tuning=getBossTuning(enemy.hp/enemy.maxHp);
+    let live=world.projectiles.reduce((n,p)=>n+Number(p.suppressive),0);
+    const hostileCount=world.projectiles.reduce((n,p)=>n+Number(p.owner==="enemy"),0);
+    if(hostileCount>=AIR_COMBAT_WORLD.maxEnemyProjectiles-80) return; // reserve a complete major volley
+    const target=targetPosition(world,chooseEnemyTarget(world,false));
+    if(!target)return;
+    const x=enemy.x+side*38,y=enemy.y+20, aim=Math.atan2(target.y-y,target.x-x);
+    for(let i=0;i<count && live<tuning.suppressiveBudget;i++,live++) {
+        const angle=aim+(i-(count-1)/2)*.18;
+        addProjectile(world,{owner:"enemy",appearance:"boss",suppressive:true,x,y,vx:Math.cos(angle)*150,vy:Math.sin(angle)*150,radius:3,
+            rawDamage:tuning.wing*.55,sourceEnemyId:enemy.id,sourceEnemyType:"boss",attackTag:"boss_suppressive",lifetime:5});
+    }
+}
+function updateBossSuppressive(world: CombatWorld, enemy: EnemyEntity, dt:number):void {
+    const state=enemy.bossAttack!, tuning=getBossTuning(enemy.hp/enemy.maxHp), enrage=enemy.hp/enemy.maxHp<.15;
+    // Locked ram geometry keeps its wing cues clear. Sonic deliberately uses sparse pressure.
+    if(state.majorAttack==="dash" && !state.stepResolved)return;
+    if((state.oppositeShotTimer??0)>0) {
+        state.oppositeShotTimer!-=dt;
+        if(state.oppositeShotTimer!<=0)fireSuppressiveWing(world,enemy,state.oppositeSide??1,1);
+    }
+    state.suppressiveClock=(state.suppressiveClock??.4)-dt;
+    if(state.suppressiveClock>0)return;
+    state.suppressiveClock=tuning.wingInterval;
+    const index=state.suppressiveIndex??0, side=index%2?1:-1;
+    const sparse=state.majorAttack==="sonic";
+    const count=sparse?1:enrage?5:world.bossPhase>=3?(index%2?3:5):world.bossPhase===2?(index%3===2?3:1):1;
+    fireSuppressiveWing(world,enemy,side,count);
+    if(!sparse && (world.bossPhase>=3 || index%4===3))fireSuppressiveWing(world,enemy,-side,world.bossPhase>=3?count:1);
+    if(enrage && !sparse && index%3===2){state.oppositeShotTimer=.2;state.oppositeSide=-side;}
+    state.suppressiveIndex=index+1;
+}
+function updateBossAttacks(world: CombatWorld, enemy: EnemyEntity, dt: number): void {
+    const state=enemy.bossAttack!, tuning=getBossTuning(enemy.hp/enemy.maxHp), enrage=enemy.hp/enemy.maxHp<.15;
     state.majorAge+=dt;
+    updateBossSuppressive(world,enemy,dt);
     if(state.missilesPending>0) {state.missileCooldown-=dt;if(state.missileCooldown<=0)launchBossMissile(world,enemy);}
     if((state.patternRemaining??0)>0) {
-        state.patternTimer=(state.patternTimer??0)-dt;
-        if(state.patternTimer<=0) spawnBossPatternStep(world,enemy);
+        const activeStep=enemy.dashRemaining>0 || world.warnings.some(w=>w.enemyId===enemy.id && w.kind===state.majorAttack);
+        if(!state.patternWaiting || !activeStep) {
+            state.patternTimer=(state.patternTimer??0)-dt;
+            if(state.patternTimer<=0)spawnBossPatternStep(world,enemy);
+        }
+    }
+    if((state.crossfirePending??0)>0) {
+        state.crossfireTimer!-=dt;
+        if(state.crossfireTimer!<=0) {
+            if(state.patternWaiting){state.patternWaiting=false;state.crossfireTimer=.33;}
+            else fireCrossfire(world,enemy);
+        }
     }
     if((state.fanPending??0)>0) {
         state.fanTimer=(state.fanTimer??0)-dt;
         if(state.fanTimer<=0) {
             const count=world.bossPhase===1?1:world.bossPhase===2?3:5, index=state.fanIndex??0;
             const degrees=count===1?0:count===3?-12+index*12:-16+index*8;
-            fireFan(world,enemy,tuning.fanCount,tuning.fan,Math.PI/2+degrees*Math.PI/180*(state.fanReverse?-1:1),.21,155*tuning.speedScale,"boss_fan");
-            state.fanIndex=index+1;state.fanPending!--;state.fanTimer=.2*tuning.cadence;
+            if(fireFan(world,enemy,tuning.fanCount,tuning.fan,Math.PI/2+degrees*Math.PI/180*(state.fanReverse?-1:1),1.26/(tuning.fanCount-1),155*tuning.speedScale,"boss_fan")) {
+                state.fanIndex=index+1;state.fanPending!--;state.fanTimer=enrage?.125:world.bossPhase>=3?.15:.18;
+            }
         }
+    }
+    const busy=(state.patternRemaining??0)>0 || (state.crossfirePending??0)>0 || (state.fanPending??0)>0 || state.missilesPending>0 || enemy.dashRemaining>0
+        || world.warnings.some(w=>w.enemyId===enemy.id && ["sonic","lane_laser","dash","emp"].includes(w.kind));
+    if(busy)return;
+    // Resolution, not elapsed combo timestamps, arms the intentional follow-up delay.
+    if(state.majorAttack && !state.stepResolved) {
+        state.stepResolved=true;
+        state.followupRemaining=enrage?.28:world.bossPhase>=3?(state.majorAttack==="dash"?.4:.35):state.majorAttack==="sonic"?.5:.45;
+        if(!state.comboSteps?.length && !state.punishmentFollowup){state.majorAttack=null;state.majorCooldown=tuning.recovery;}
+        return;
     }
     if(state.punishmentFollowup && world.elapsed>=state.punishmentFollowup) {
-        // Delay until incompatible lane/sonic geometry has resolved.
-        if(!(state.patternRemaining ?? 0) && !world.warnings.some(w=>w.enemyId===enemy.id && (w.kind==="sonic"||w.kind==="lane_laser"||w.kind==="dash"))) {
-            state.punishmentFollowup=undefined;
-            startBossMajor(world,enemy,"homing_missiles");
-        }
+        state.punishmentFollowup=undefined;
+        state.comboSteps=["homing_missiles",...(state.comboSteps??[])];
     }
-    state.comboTimer=(state.comboTimer??0)+dt;
-    const next=state.comboSteps?.[0];
-    if(next && state.comboTimer>=next.at) {
-        const geometryBusy=world.warnings.some(w=>w.enemyId===enemy.id && ["sonic","lane_laser","dash"].includes(w.kind)) || enemy.dashRemaining>0 || (state.patternRemaining??0)>0;
-        // Fan+pincer may overlap; incompatible moving fields wait only for geometry.
-        if(next.attack==="fan" || !geometryBusy) {state.comboSteps!.shift();startBossMajor(world,enemy,next.attack);}
+    if(state.comboSteps?.length) {
+        state.followupRemaining=(state.followupRemaining??0)-dt;
+        if(state.followupRemaining>0)return;
+        const next=state.comboSteps[0];
+        // Only contradictory authored geometry waits; ordinary fan/missiles keep travelling.
+        if((next==="sonic" || next==="lane_laser") && world.projectiles.some(p=>p.sourceEnemyId===enemy.id && p.attackTag==="boss_crossfire"))return;
+        startBossMajor(world,enemy,state.comboSteps.shift()!);return;
     }
-    const busy=(state.comboSteps?.length??0)>0 || (state.patternRemaining??0)>0 || (state.fanPending??0)>0 || state.missilesPending>0 || enemy.dashRemaining>0
-        || world.warnings.some(w=>w.enemyId===enemy.id && ["sonic","lane_laser","dash","emp"].includes(w.kind));
-    if(busy) return;
     state.majorCooldown-=dt;
-    if(state.majorCooldown>0) return;
-    state.majorCooldown=tuning.recovery*tuning.cadence;
-    state.comboTimer=0;
+    if(state.majorCooldown>0)return;
     const advanced=world.bossPhase>=3;
-    const choices: NonNullable<BossAttackState["comboId"]>[]=world.bossPhase===1?["sonic_wing"]:advanced?["pincer_sweep","sonic_emp","lane_ram","emp_pincer","ram_sweep"]:["pincer_sweep","lane_wing","emp_pincer","sonic_wing","ram_sweep"];
+    const choices: NonNullable<BossAttackState["comboId"]>[]=world.bossPhase===1?["sonic_wing","fan_wing"]:advanced?["pincer_sweep","lane_ram","sonic_crossfire","emp_pincer","ram_curtain"]:["pincer_sweep","lane_wing","crossfire_hunt","sonic_emp","ram_sweep"];
     state.comboId=choices[Math.floor(world.random()*choices.length)];
-    const decks: Record<NonNullable<BossAttackState["comboId"]>, {at:number;attack:BossMajorAttack}[]>={
-        sonic_wing:[{at:0,attack:"sonic"}],
-        pincer_sweep:[{at:0,attack:"homing_missiles"},{at:.55,attack:"fan"}],
-        lane_wing:[{at:0,attack:"lane_laser"}],
-        emp_pincer:[{at:0,attack:"emp"},{at:(advanced?.7:.85)+.55,attack:"homing_missiles"},{at:2,attack:"fan"}],
-        ram_sweep:[{at:0,attack:"dash"},{at:advanced?4.65:2.1,attack:"fan"}],
-        sonic_emp:[{at:0,attack:"sonic"},{at:4.9,attack:"emp"}],
-        lane_ram:[{at:0,attack:"lane_laser"},{at:3.2,attack:"dash"},{at:7.9,attack:"fan"}],
+    const decks:Record<NonNullable<BossAttackState["comboId"]>,BossMajorAttack[]>={
+        sonic_wing:["sonic"],fan_wing:["fan"],
+        pincer_sweep:advanced?["homing_missiles","fan","emp"]:["homing_missiles","fan"],
+        lane_wing:["lane_laser","emp"],crossfire_hunt:["crossfire_curtain","dash"],
+        sonic_emp:["sonic","emp"],ram_sweep:["dash","fan"],lane_ram:["lane_laser","dash"],
+        sonic_crossfire:["sonic","crossfire_curtain"],emp_pincer:["emp","homing_missiles","fan"],ram_curtain:["dash","crossfire_curtain"],
     };
     state.comboSteps=decks[state.comboId];
-    const first=state.comboSteps.shift()!;startBossMajor(world,enemy,first.attack);
-    // P1 retains its lighter fan between Sonic casts.
-    if(world.bossPhase===1 && ++state.fanCount%2===0) state.comboSteps.push({at:4,attack:"fan"});
+    // Never start a contradictory major field over a surviving Crossfire curtain.
+    if(["sonic","lane_laser"].includes(state.comboSteps[0]) && world.projectiles.some(p=>p.sourceEnemyId===enemy.id && p.attackTag==="boss_crossfire")) {state.followupRemaining=0;return;}
+    startBossMajor(world,enemy,state.comboSteps.shift()!);
 }
-function bossWingAllowed(world: CombatWorld, enemy: EnemyEntity): boolean {
-    const state=enemy.bossAttack!;
-    if(state.majorAttack==="dash" && (enemy.dashRemaining>0 || (state.patternRemaining??0)>0 || world.warnings.some(w=>w.kind==="dash"&&w.enemyId===enemy.id))) return false;
-    return state.majorAge>.8; // Sparse Wing pressure remains compatible with Sonic/Lane.
+/** A miss transfers its XP budget without creating a kill; impacts use the normal death path. */
+function resolveKamikaze(world: CombatWorld, enemy: EnemyEntity, impact: boolean): void {
+    if (enemy.kamikazeState === "resolved") return;
+    enemy.kamikazeState = "resolved";
+    world.threats = world.threats.filter(t => t.enemyId !== enemy.id);
+    if (!impact) {
+        const recipient = world.enemies.find(e => e !== enemy && e.hp > 0);
+        if (recipient) recipient.xp += enemy.xp;
+        else if (world.spawnQueue.length) world.xpBudgetRemaining += enemy.xp;
+        else { gainCombatXp(world.aircraft, enemy.xp); world.pendingCoreSelections = world.aircraft.pendingMilestones.length; }
+        enemy.xp = 0; enemy.deathHandled = true;
+    }
+    enemy.hp = 0;
+}
+function updateKamikaze(world: CombatWorld, enemy: EnemyEntity, dt: number): void {
+    enemy.attackAge = (enemy.attackAge ?? 0) + dt;
+    // Corrupt state guard, far beyond either authored route (never the normal dash timer).
+    if (enemy.attackAge > 30 || !Number.isFinite(enemy.x + enemy.y)) { resolveKamikaze(world, enemy, false); return; }
+    const state = enemy.kamikazeState ?? "approach";
+    if (state === "resolved") return;
+    if (state === "approach" || state === "recover") {
+        enemy.stateTimer = Math.max(0, (enemy.stateTimer ?? 0) - dt);
+        if (enemy.stateTimer > 0) return;
+        const target = targetPosition(world, chooseEnemyTarget(world, true));
+        if (!target) return;
+        if (state === "approach" && !reserveThreat(world, enemy, 1, 30)) return;
+        enemy.lockedX = target.x; enemy.lockedY = target.y;
+        enemy.dashEndX = target.x; enemy.dashEndY = target.y;
+        enemy.kamikazeState = state === "approach" ? "charge_1" : "charge_2";
+        enemy.stateTimer = state === "approach" ? 1.2 : .7;
+        enemy.dashCharge = enemy.stateTimer;
+        return;
+    }
+    if (state === "charge_1" || state === "charge_2") {
+        enemy.stateTimer = Math.max(0, (enemy.stateTimer ?? 0) - dt);
+        enemy.dashCharge = enemy.stateTimer;
+        if (enemy.stateTimer > 0) return;
+        const dx = enemy.lockedX! - enemy.x, dy = enemy.lockedY! - enemy.y, distance = Math.hypot(dx, dy);
+        enemy.dashStartX = enemy.x; enemy.dashStartY = enemy.y;
+        enemy.dashDirX = distance > .001 ? dx / distance : 0;
+        enemy.dashDirY = distance > .001 ? dy / distance : 1;
+        enemy.dashTravelled = 0; enemy.dashPlannedDistance = distance + 110;
+        enemy.vx = enemy.dashDirX * 270; enemy.vy = enemy.dashDirY * 270;
+        enemy.kamikazeState = state === "charge_1" ? "dash_1" : "dash_2";
+        return;
+    }
+    if (state === "shrapnel") {
+        fireFan(world, enemy, 5, ENEMY_CONFIGS.kamikaze.collisionDamage * enemy.damageScale * .3,
+            Math.atan2(world.playerY - enemy.y, world.playerX - enemy.x), .35, 165, "kamikaze_dash");
+        resolveKamikaze(world, enemy, false); return;
+    }
+    const oldX = enemy.x, oldY = enemy.y;
+    const step = Math.min(270 * dt, Math.max(0, enemy.dashPlannedDistance! - enemy.dashTravelled!));
+    enemy.x += enemy.dashDirX! * step; enemy.y += enemy.dashDirY! * step;
+    enemy.dashTravelled! += step;
+    // Earliest segment-circle entry wins, so a flare/drone can intercept before the player.
+    let hit = Infinity, targetKind: string = "player";
+    const consider = (x: number, y: number, radius: number, kind: "player" | "decoy" | "drone") => {
+        const dx = enemy.x-oldX, dy = enemy.y-oldY, ox = oldX-x, oy = oldY-y;
+        const r = enemy.radius * .78 + radius, a = dx*dx+dy*dy, c = ox*ox+oy*oy;
+        const b = ox*dx+oy*dy, discriminant = b*b-a*c;
+        const t = c <= 0 ? 0 : a > 0 && discriminant >= 0 ? (-b-Math.sqrt(discriminant))/a : Infinity;
+        if (t >= 0 && t <= 1 && t < hit) { hit=t; targetKind=kind; }
+    };
+    for (const d of world.decoys) if (d.active) consider(d.x,d.y,d.radius,"decoy");
+    if (world.aircraft.droneActive) consider(world.droneX,world.droneY,9,"drone");
+    consider(world.playerX,world.playerY,world.playerRadius,"player");
+    if (hit !== Infinity && !enemy.hitResolved) {
+        enemy.hitResolved = true;
+        enemy.x = oldX + (enemy.x-oldX)*hit; enemy.y = oldY + (enemy.y-oldY)*hit;
+        const damage = ENEMY_CONFIGS.kamikaze.collisionDamage * enemy.damageScale;
+        if (targetKind === "player") hitPlayer(world,damage,"collision",{sourceEnemyId:enemy.id,sourceEnemyType:"kamikaze",attackTag:"kamikaze_dash"});
+        else if (targetKind === "drone") hitDrone(world,damage);
+        emitVisual(world,{kind:"explosion",x:enemy.x,y:enemy.y,size:38});
+        resolveKamikaze(world,enemy,true); return;
+    }
+    if (enemy.dashTravelled! >= enemy.dashPlannedDistance!) {
+        enemy.vx = 0; enemy.vy = 0;
+        if (state === "dash_1" && enemy.wave >= 4) { enemy.kamikazeState="recover"; enemy.stateTimer=.55; }
+        else if (state === "dash_2" && enemy.wave >= 5) enemy.kamikazeState="shrapnel";
+        else resolveKamikaze(world,enemy,false);
+    }
 }
 function updateEnemies(world: CombatWorld, dt: number): void {
     updateBossPhase(world);
@@ -1501,7 +1671,7 @@ function updateEnemies(world: CombatWorld, dt: number): void {
         enemy.age += dt;
         enemy.fireCooldown -= dt;
         const top = GAMEPLAY_SAFE_RECT.top + enemy.radius;
-        const holdingTelegraph = world.warnings.some(w => w.enemyId === enemy.id && (w.kind === "rail" || w.kind === "dash" || w.kind === "sonic" || w.kind === "retaliation"));
+        const holdingTelegraph = (enemy.type === "boss" && (enemy.bossAttack?.crossfirePending ?? 0)>0 && !enemy.bossAttack?.patternWaiting) || world.warnings.some(w => w.enemyId === enemy.id && (w.kind === "rail" || w.kind === "dash" || w.kind === "sonic" || w.kind === "retaliation"));
         if (holdingTelegraph) {
             // Keep the visual origin and the actual attack lane aligned during the warning.
         }
@@ -1538,37 +1708,7 @@ function updateEnemies(world: CombatWorld, dt: number): void {
             if (enemy.executionRecovery! <= 0) fireFan(world, enemy, 7, ENEMY_CONFIGS[enemy.type].projectileDamage*enemy.damageScale, aimAtCurrentTarget(world, enemy) ?? -Math.PI/2, .22, 185, "elite_execution");
         }
         else if (enemy.type === "kamikaze") {
-            if (enemy.dashCharge > 0) {
-                if (enemy.targetId === null) {
-                    if (!reserveThreat(world, enemy, 1, 2.3)) continue;
-                    enemy.targetId = chooseEnemyTarget(world, true);
-                    const target = targetPosition(world, enemy.targetId);
-                    if (!target) continue;
-                    enemy.dashEndX = target.x; enemy.dashEndY = target.y;
-                }
-                enemy.dashCharge = Math.max(0, enemy.dashCharge - dt);
-                if (enemy.dashCharge === 0) {
-                    enemy.dashCount = (enemy.dashCount ?? 0) + 1;
-                    const angle = Math.atan2(enemy.dashEndY-enemy.y, enemy.dashEndX-enemy.x);
-                    enemy.vx = Math.cos(angle)*270; enemy.vy = Math.sin(angle)*270; enemy.tertiaryCd = .9;
-                }
-            } else {
-                enemy.x += enemy.vx*dt; enemy.y += enemy.vy*dt;
-                if (enemy.tertiaryCd <= 0 || enemy.x < 16 || enemy.x > 344 || enemy.y < top || enemy.y > GAMEPLAY_SAFE_RECT.bottom-enemy.radius) {
-                    if (enemy.wave >= 4 && (enemy.dashCount ?? 0) < 2) {
-                        enemy.dashCharge = .7; enemy.targetId = null; enemy.vx = 0; enemy.vy = 0;
-                    } else {
-                        if (enemy.wave >= 5) fireFan(world, enemy, 5, ENEMY_CONFIGS.kamikaze.collisionDamage*enemy.damageScale*.3, Math.PI/2, .35, 165, "kamikaze_dash");
-                        // Escaped enemies are removed without rewarding a kill or its XP.
-                        const recipient = world.enemies.find(e => e !== enemy && e.hp > 0);
-                        if (recipient) recipient.xp += enemy.xp;
-                        else if (world.spawnQueue.length) world.xpBudgetRemaining += enemy.xp;
-                        else {gainCombatXp(world.aircraft, enemy.xp);world.pendingCoreSelections=world.aircraft.pendingMilestones.length;}
-                        enemy.xp = 0; enemy.deathHandled = true; enemy.hp = 0;
-                    }
-                }
-                if (world.decoys.some(d => d.active && circleHit(enemy.x,enemy.y,enemy.radius,d.x,d.y,d.radius))) enemy.hp=0;
-            }
+            updateKamikaze(world, enemy, dt);
         }
         else {
             const holdY = top + (enemy.type === "sniper" ? 32 : enemy.type === "bomber" ? 100 : isElite(enemy.type) ? 100 : 55 + (enemy.id % 4) * 42);
@@ -1578,11 +1718,14 @@ function updateEnemies(world: CombatWorld, dt: number): void {
             if (enemy.type === "sniper" && Math.hypot(enemy.x - world.playerX, enemy.y - world.playerY) < 130)
                 enemy.y -= 45 * dt;
         }
-        const point = clampCircleToGameplayRect(enemy.x, enemy.y, enemy.radius);
-        enemy.x = point.x;
-        enemy.y = enemy.type === "boss" ? Math.max(point.y, bossMinCenterY(enemy.radius)) : point.y;
+        // Kamikaze owns its route, including the bounded 110px overshoot outside the arena.
+        if (enemy.type !== "kamikaze") {
+            const point = clampCircleToGameplayRect(enemy.x, enemy.y, enemy.radius);
+            enemy.x = point.x;
+            enemy.y = enemy.type === "boss" ? Math.max(point.y, bossMinCenterY(enemy.radius)) : point.y;
+        }
         updateEnemyAbilities(world, enemy, dt);
-        if (enemy.fireCooldown <= 0 && enemy.type !== "kamikaze" && enemy.dashRemaining <= 0 && (enemy.type !== "boss" || bossWingAllowed(world, enemy)))
+        if (enemy.fireCooldown <= 0 && enemy.type !== "kamikaze" && enemy.dashRemaining <= 0 && enemy.type !== "boss")
             fireEnemy(world, enemy);
         if (enemy.burst > 0) {
             enemy.burstCd -= dt;
@@ -1640,34 +1783,31 @@ function acquireMissileTarget(world: CombatWorld, p: ProjectileEntity): EnemyEnt
 }
 
 function addMissileSmoke(world: CombatWorld, p: ProjectileEntity, previousHeading: number): void {
-    const distance = Math.hypot(p.x - p.previousX, p.y - p.previousY);
-    if (distance <= 0) return;
-    const hostile = p.projectileKind === "boss_missile";
-    const heavy = p.projectileKind === "bigbang", tomahawk = p.projectileKind === "missile" && p.skillId !== "missile_swarm";
-    const spacing = heavy ? 6 : hostile ? 10 : tomahawk ? 9 : 8, nozzle = heavy ? 31 : hostile ? 16 : 11;
-    for (let sample = spacing - p.smokeDistanceAccumulator; sample <= distance; sample += spacing) {
-        // Reserve some of the existing particle cap for impact feedback. Replace old smoke first.
-        const smokeCount = world.particles.reduce((n, particle) => n + (particle.kind === "missile_smoke" ? 1 : 0), 0);
-        if (smokeCount >= AIR_COMBAT_WORLD.maxParticles - 22 || world.particles.length >= AIR_COMBAT_WORLD.maxParticles) {
-            const oldest = world.particles.findIndex(particle => particle.kind === "missile_smoke");
-            if (oldest < 0) break;
-            recycleParticle(world, oldest);
+    const visual=getMissileVisual(p); if(!visual)return;
+    const smoke=visual.smoke, oldRotation=missileRenderRotation(previousHeading), rotation=missileRenderRotation(p.heading);
+    const oldCos=Math.cos(oldRotation),oldSin=Math.sin(oldRotation),cos=Math.cos(rotation),sin=Math.sin(rotation);
+    const distance=Math.hypot(p.x-p.previousX,p.y-p.previousY);
+    if(distance<=0)return;
+    for(let nozzleIndex=0;nozzleIndex<visual.engineNozzles.length;nozzleIndex++) {
+        const nozzle=visual.engineNozzles[nozzleIndex];
+        const accumulator=nozzleIndex===0?p.smokeDistanceAccumulator:p.secondarySmokeDistanceAccumulator;
+        const ax=p.previousX+nozzle.x*oldCos-nozzle.y*oldSin,ay=p.previousY+nozzle.x*oldSin+nozzle.y*oldCos;
+        const bx=p.x+nozzle.x*cos-nozzle.y*sin,by=p.y+nozzle.x*sin+nozzle.y*cos;
+        const nozzleDistance=Math.hypot(bx-ax,by-ay);
+        for(let sample=smoke.spacing-accumulator;sample<=nozzleDistance;sample+=smoke.spacing) {
+            if(world.particles.length>=AIR_COMBAT_WORLD.maxParticles-22) {
+                const oldest=world.particles.findIndex(q=>q.kind==="missile_smoke");
+                if(oldest<0)break;recycleParticle(world,oldest);
+            }
+            const t=sample/nozzleDistance, particle=acquireParticle(world);
+            Object.assign(particle,{id:world.nextVisualId++,kind:"missile_smoke",x:ax+(bx-ax)*t,y:ay+(by-ay)*t,
+                vx:-Math.cos(p.heading)*smoke.drift+(world.visualRandom()-.5)*3,vy:-Math.sin(p.heading)*smoke.drift+(world.visualRandom()-.5)*3,
+                life:smoke.life,maxLife:smoke.life,size:smoke.size,color:smoke.color});
+            world.particles.push(particle);
         }
-        const t = sample / distance;
-        const heading = previousHeading + shortestAngle(p.heading - previousHeading) * t;
-        const dx = Math.cos(heading), dy = Math.sin(heading);
-        const particle = acquireParticle(world), life = (heavy ? .65 : .5) * 1.5;
-        Object.assign(particle, {
-            id: world.nextVisualId++, kind: "missile_smoke",
-            x: p.previousX + (p.x - p.previousX) * t - dx * nozzle,
-            y: p.previousY + (p.y - p.previousY) * t - dy * nozzle,
-            vx: -dx * 7 + (world.visualRandom() - .5) * 3,
-            vy: -dy * 7 + (world.visualRandom() - .5) * 3,
-            life, maxLife: life, size: heavy ? 22 : hostile ? 10 : tomahawk ? 8 : 6, color: hostile ? "#77404c" : heavy ? "#b7aa91" : tomahawk ? "#a9cbd6" : "#e4e4e7",
-        });
-        world.particles.push(particle);
+        const remainder=(accumulator+nozzleDistance)%smoke.spacing;
+        if(nozzleIndex===0)p.smokeDistanceAccumulator=remainder;else p.secondarySmokeDistanceAccumulator=remainder;
     }
-    p.smokeDistanceAccumulator = (p.smokeDistanceAccumulator + distance) % spacing;
 }
 
 /** Only powered motion spends the existing lifetime/fuse and enables collisions. */
@@ -1952,7 +2092,7 @@ function applySecondaryHits(world: CombatWorld, projectile: ProjectileEntity, pr
     if (bounced)
         bounced.hitIds.push(...projectile.hitIds);
 }
-function hitPlayer(world: CombatWorld, rawDamage: number, kind: "projectile" | "collision" | "hazard" = "projectile", attack: AttackMetadata = {}): void {
+function hitPlayer(world: CombatWorld, rawDamage: number, kind: "projectile" | "collision" | "hazard" = "projectile", attack: AttackMetadata & { x?:number; y?:number; previousX?:number; previousY?:number } = {}): void {
     const state = world.aircraft, c = state.coreState, stats = getEffectiveAircraftStats(state);
     if (world.ended || world.playerInvulnerability > 0 || state.currentHp <= 0 || rawDamage <= 0 || world.waveState !== "combat")
         return;
@@ -1971,6 +2111,15 @@ function hitPlayer(world: CombatWorld, rawDamage: number, kind: "projectile" | "
         shield.amount -= amount;
         damage -= amount;
         absorbed += amount;
+    }
+    if ((state.activeEffects.armor_shield ?? 0) > 0 || absorbed > 0) {
+        const source=world.enemies.find(e=>e.id===attack.sourceEnemyId);
+        const dx=(attack.previousX ?? attack.x ?? source?.x ?? world.playerX)-world.playerX;
+        const dy=(attack.previousY ?? attack.y ?? source?.y ?? world.playerY-1)-world.playerY;
+        const titan=state.aircraftId==="breaker" && (state.activeEffects.armor_shield??0)>0;
+        const rx=titan?46:30,ry=titan?54:30,denom=Math.hypot(dx/rx,dy/ry);
+        const localX=denom>.0001?dx/denom:0,localY=denom>.0001?dy/denom:-ry;
+        emitVisual(world,{kind:"shield_ripple",x:world.playerX+localX,y:world.playerY+localY,fromX:localX,fromY:localY,attachedToPlayer:true,size:18});
     }
     if (damage <= 0) {
         if (absorbed > 0)
@@ -2085,6 +2234,7 @@ function updateEnemyPlayerCollisions(world: CombatWorld): void {
     for (const enemy of world.enemies) {
         if (enemy.hp <= 0)
             continue;
+        if (enemy.type === "kamikaze" && (enemy.kamikazeState === "dash_1" || enemy.kamikazeState === "dash_2")) { updateKamikaze(world,enemy,0); continue; }
         if (world.aircraft.droneActive && circleHit(enemy.x, enemy.y, enemy.radius * .78, world.droneX, world.droneY, 9))
             hitDrone(world, ENEMY_CONFIGS[enemy.type].collisionDamage * enemy.damageScale);
         if (!circleHit(enemy.x, enemy.y, enemy.radius * .78, world.playerX, world.playerY, world.playerRadius))
@@ -2097,8 +2247,7 @@ function updateEnemyPlayerCollisions(world: CombatWorld): void {
             }
         } else
             hitPlayer(world, ENEMY_CONFIGS[enemy.type].collisionDamage * enemy.damageScale, "collision", { sourceEnemyId: enemy.id, sourceEnemyType: enemy.type, attackTag: enemy.type === "kamikaze" ? "kamikaze_dash" : "elite_execution" });
-        if (enemy.type === "kamikaze")
-            enemy.hp = 0;
+        if (enemy.type === "kamikaze") resolveKamikaze(world, enemy, true);
     }
     resolveDeathsAndEffects(world);
 }
@@ -2152,7 +2301,7 @@ function detonateWarning(world: CombatWorld, w: WarningZone): void {
         w.age = 0;
         w.tick = 1;
         w.ticksRemaining = 3;
-        w.remaining = w.kind === "acid" ? 3 : w.kind === "sonic" ? SONIC_ACTIVE_SECONDS : LANE_ACTIVE_SECONDS;
+        w.remaining = w.kind === "acid" ? 3 : w.kind === "sonic" ? SONIC_ACTIVE_SECONDS : (w.activeDuration ?? LANE_ACTIVE_SECONDS);
         w.hitPlayer = false;
         return;
     }
@@ -2274,11 +2423,23 @@ function updateProjectiles(world: CombatWorld, dt: number): void {
         updateHoming(world, p, dt);
         p.x += p.vx * dt;
         p.y += p.vy * dt;
+        if (p.corridorEdge !== undefined && p.corridorSide !== undefined) {
+            const boundary=p.corridorEdge+p.corridorSide*p.radius;
+            if((p.x-boundary)*p.corridorSide<0) {
+                p.x=boundary+(boundary-p.x); p.vx=p.corridorSide*Math.min(30,Math.abs(p.vx)*.25);
+            }
+        }
         if (p.bigBang) {
             p.y = Math.max(GAMEPLAY_SAFE_RECT.top + p.radius, p.y);
             continue;
         }
         const outside = p.x < -20 || p.x > 380 || p.y < GAMEPLAY_SAFE_RECT.top - 20 || p.y > 660;
+        if (p.allowOffscreenEntry) {
+            if (!outside) p.allowOffscreenEntry=false;
+            else if (p.x>=-180 && p.x<=540 && p.y>=GAMEPLAY_SAFE_RECT.top-180 && p.y<=820
+                && (p.x>=-20 || p.vx>0) && (p.x<=380 || p.vx<0)
+                && (p.y>=GAMEPLAY_SAFE_RECT.top-20 || p.vy>0) && (p.y<=660 || p.vy<0)) continue;
+        }
         if (outside && p.homing && p.owner !== "enemy") {
             const point = clampCircleToGameplayRect(p.x, p.y, p.radius);
             p.x = point.x;

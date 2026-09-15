@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="224" viewBox="0 0 64 64" preserveAspectRatio="none">
+<defs><linearGradient id="steel"><stop stop-color="#18222e"/><stop offset=".48" stop-color="#72828e"/><stop offset=".55" stop-color="#455463"/><stop offset="1" stop-color="#1a2532"/></linearGradient><linearGradient id="nose" x2="0" y2="1"><stop stop-color="#e0e8ed"/><stop offset=".55" stop-color="#7d8c96"/><stop offset="1" stop-color="#303f4b"/></linearGradient></defs>
+<path d="M32 1L43 7L48 18V29L59 39V48L47 43V49L57 58V62L42 57H22L7 62V58L17 49V43L5 48V39L16 29V18L21 7Z" fill="url(#steel)" stroke="#a1aeba" stroke-width=".7"/>
+<path d="M32 1L43 7L48 18H16L21 7Z" fill="url(#nose)" stroke="#182632" stroke-width=".6"/>
+<path d="M17 30L7 40V46L17 41ZM47 30L57 40V46L47 41ZM18 50L9 59L23 55ZM46 50L55 59L41 55Z" fill="#566979" stroke="#111b26" stroke-width=".7"/>
+<path d="M20 21H44V24H20ZM19 27H45V29H19Z" fill="#ffb83d"/>
+<path d="M22 22H42" stroke="#fff3bf" stroke-width=".7"/>
+<path d="M20 31H29V38H20ZM35 31H44V38H35ZM20 40H29V46H20ZM35 40H44V46H35Z" fill="#27333f" stroke="#a0afb5" stroke-width=".4"/>
+<path d="M31 31H33V46H31Z" fill="#bbd0d4"/>
+<path d="M22 47H42V50H22Z" fill="#e9a92e"/><path d="M23 47L27 50M30 47L34 50M37 47L41 50" stroke="#262b30" stroke-width="2"/>
+<path d="M20 52H44V56H20Z" fill="#0f1923" stroke="#a0acb5" stroke-width=".6"/>
+<path d="M20 56H29V62H20ZM35 56H44V62H35Z" fill="#19222a" stroke="#a2adb3" stroke-width=".6"/>
+<path d="M21 60H28V62H21ZM36 60H43V62H36Z" fill="#fff0c4"/>
+<g fill="#c8d4dc"><circle cx="19" cy="19" r=".6"/><circle cx="45" cy="19" r=".6"/><circle cx="19" cy="49" r=".6"/><circle cx="45" cy="49" r=".6"/></g>
+</svg>
