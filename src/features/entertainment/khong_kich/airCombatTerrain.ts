@@ -84,6 +84,7 @@ function generate(segment: TerrainSegment, bottom: { river: number; width: numbe
         x + rx * .65, y - ry * .7, x + rx, y + ry * .5, x + 12, y + ry];
       add(marks, "polygon", terrainColor(0x3c5548, 0x53616a, mountain), mass);
       add(marks, "polygon", terrainColor(0x344d42, 0x394c58, mountain), [x, y - ry + 8, x + rx * .65, y - ry * .7, x + rx, y + ry * .5, x + 12, y + ry, x + 7, y]);
+      for(let rock=0;rock<5;rock++){const rx=x-22+random()*44,ry=y-30+random()*60;add(marks,"polygon",0x455963,[rx-3,ry+2,rx,ry-4,rx+5,ry,rx+3,ry+4]);}
       if (biome < .88) add(marks, "line", 0x667477, [x - 10, y - ry + 6, x - 4, y - 15, x + 7, y + 12, x + 12, y + ry - 12], 2);
       else add(marks, "polygon", 0x5b6969, [x - 25, y - 45, x + 25, y - 48, x + 34, y + 26, x - 15, y + 38]);
     }
@@ -102,7 +103,9 @@ function generate(segment: TerrainSegment, bottom: { river: number; width: numbe
   }
   add(ground, "polygon", 0x53675b, bank);
   add(ground, "polygon", 0x355d68, water);
-  add(ground, "line", 0x416973, highlight, 2);
+  add(ground, "line", 0x527d84, highlight, 1.5);
+  for(let i=0;i<14;i++){const y=14+i*26,x=river(y),rw=riverWidth(y);add(ground,"line",i%2?0x426d77:0x365963,[x-rw*.5,y,x+rw*.4,y-2],.8);}
+  for(let i=0;i<10;i++){const y=20+i*36,x=river(y);add(ground,"ellipse",0x748272,[x-riverWidth(y)-3,y,2.5,1.2]);}
   if (biome > .15 && biome < .58 && random() < .8) {
     const y = 115 + random() * 145, x = river(y), points: number[] = [];
     for (let i = 0; i < 16; i++) {
@@ -114,7 +117,10 @@ function generate(segment: TerrainSegment, bottom: { river: number; width: numbe
   }
   const roadY = 70 + random() * 240, crossing = river(roadY), halfWater = riverWidth(roadY);
   if (biome < .6) {
+    add(marks, "line", 0x334941, [0,roadY+31,crossing-65,roadY+3,crossing+65,roadY+3,w,roadY-29],9);
     add(marks, "line", 0x73745e, [0, roadY + 28, crossing - 65, roadY, crossing + 65, roadY, w, roadY - 32], 5);
+    add(marks,"rect",0x233d40,[crossing-halfWater-5,roadY+3,halfWater*2+18,10]);
+    for(let pier=-1;pier<=1;pier++)add(marks,"rect",0x34494a,[crossing+pier*halfWater,roadY+4,3,8]);
     add(marks, "rect", 0x777c70, [crossing - halfWater - 7, roadY - 5, halfWater * 2 + 14, 10]);
     add(marks, "line", 0x4c5a54, [crossing - halfWater - 7, roadY - 5, crossing + halfWater + 7, roadY - 5], 1.5);
     add(marks, "line", 0x4c5a54, [crossing - halfWater - 7, roadY + 5, crossing + halfWater + 7, roadY + 5], 1.5);
@@ -123,9 +129,15 @@ function generate(segment: TerrainSegment, bottom: { river: number; width: numbe
       add(marks, "line", 0x66705c, [villageX + 19, roadY - 37, villageX + 19, roadY + 40], 3);
       for (let i = 0; i < 7; i++) {
         const x = villageX + i % 2 * 30 + random() * 5, y = roadY - 34 + Math.floor(i / 2) * 21;
-        add(marks, "rect", 0x33473f, [x + 2, y + 3, 12, 10]);
-        add(marks, "rect", i % 2 ? 0x7d7c6b : 0x68726a, [x, y, 12, 9]);
-        add(marks, "rect", 0x58615c, [x + 6, y, 6, 9]);
+        const bw=i%3===0?18:12,bh=i%3===0?12:9;
+        add(marks,"rect",0x53614d,[x-3,y-3,bw+6,bh+7]);
+        add(marks,"line",0x8a8970,[x-3,y-3,x+bw+3,y-3,x+bw+3,y+bh+3],.7);
+        add(marks,"rect",0x2a3f39,[x+3,y+4,bw,bh]);
+        add(marks,"rect",[0x938776,0x7d7c6b,0x6a807c][i%3],[x,y,bw,bh]);
+        add(marks,"polygon",0x4d625c,[x+bw*.5,y-2,x+bw+1,y+2,x+bw,y+bh,x+bw*.5,y+bh-2]);
+        add(marks,"line",0xa19b83,[x,y+2,x+bw*.5,y-2,x+bw,y+2],.8);
+        add(marks,"rect",0x334b4a,[x+2,y+3,2,2]);
+        add(marks,"line",0x7c7d64,[x+bw*.5,y+bh,x+bw*.5,y+bh+6],2);
       }
     }
   }
@@ -139,7 +151,9 @@ function generate(segment: TerrainSegment, bottom: { river: number; width: numbe
     for (let tree = 0; tree < 6; tree++) {
       const tx = x + (random() - .5) * 24, ty = y + (random() - .5) * 27, r = 5 + random() * 5;
       add(marks, "ellipse", 0x29453f, [tx + 2, ty + 3, r, r * .8]);
-      add(marks, "ellipse", tree % 2 ? 0x38574a : 0x3e5e4d, [tx, ty, r, r * .8]);
+      const canopy=[0x38574a,0x466b51,0x365b52,0x526c4c][tree%4];
+      if(tree%4===0)add(marks,"polygon",canopy,[tx,ty-r*1.4,tx+r*.75,ty+r*.7,tx-r*.75,ty+r*.7]);
+      else {add(marks,"ellipse",canopy,[tx,ty,r,r*(tree%4===1?.65:.9)]);add(marks,"ellipse",0x56785a,[tx-r*.25,ty-r*.25,r*.45,r*.35]);}
     }
   }
 }

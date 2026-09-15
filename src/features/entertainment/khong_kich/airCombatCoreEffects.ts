@@ -52,7 +52,7 @@ const flat = (row: number, key: keyof EffectiveAircraftStats, amount: number) =>
     stats: (_s, stats) => { (stats[key] as number) += amount; },
 });
 for (const [row, fp, armor, rate, hp, regen, cdr] of [
-    [1, 12, 12, .15, 110, .6, .04], [7, 20, 20, .4, 220, 1.3, .09], [13, 50, 50, 1.2, 420, 3, .2],
+    [1, 12, 12, .15, 110, .6, .04], [7, 20, 20, .4, 220, 1.3, .09], [13, 50, 50, 1.0, 420, 3, .2],
 ]) {
     flat(row, "firepower", fp);
     flat(row + 1, "armor", armor);
@@ -94,7 +94,7 @@ register(61, { stats: (s, stats) => { if (active(s, "reactiveArmor"))
                 arm(ctx.state, "reactiveArmorCd", 12);
             }
         } } });
-register(62, { hooks: { tick: ctx => { if (ctx.state.currentHp < ctx.stats.maxHp * .2)
+register(62, { hooks: { tick: ctx => { if (ctx.state.status.regenDisabledUntil <= ctx.state.coreState.time && ctx.state.currentHp < ctx.stats.maxHp * .2)
             ctx.heal(Math.min(ctx.stats.maxHp * .005 * (ctx.dt || 0), ctx.stats.maxHp * .2 - ctx.state.currentHp)); } } });
 register(63, { stats: (s, stats) => { if (s.currentHp < stats.maxHp * .35) {
         stats.firepower += 20;
@@ -164,8 +164,8 @@ register(86, { finalStats: (_s, stats) => {
         stats.resourceRegen *= 1.7;
     } });
 register(87, { stats: (_s, stats) => { stats.criticalChance += .2; stats.criticalDamageMultiplier += .3; } });
-register(92, { hooks: { tick: ctx => { if (ctx.state.coreState.time - ctx.state.coreState.lastDamage >= 5)
-            ctx.heal(ctx.stats.maxHp * .02 * (ctx.dt || 0)); } } });
+register(92, { hooks: { tick: ctx => { if (ctx.state.status.regenDisabledUntil <= ctx.state.coreState.time && ctx.state.coreState.time - ctx.state.coreState.lastDamage >= 5)
+            ctx.heal(ctx.stats.maxHp * .01 * (ctx.dt || 0)); } } });
 register(94, { stats: (_s, stats) => { stats.criticalChance += .1; }, finalStats: (_s, stats) => { stats.maxHp *= .65; stats.firepower *= 1.4; } });
 register(95, { finalStats: (_s, stats) => { stats.criticalChance = .25; stats.criticalDamageMultiplier += 3; } });
 register(96, { stats: (_s, stats) => { stats.cooldownReduction += .4; }, hooks: { skillCast: ctx => { ctx.state.currentHp = Math.max(Number.EPSILON, ctx.state.currentHp * .94); } } });

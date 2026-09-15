@@ -32,9 +32,9 @@ export class CanvasCombatAccents {
     ctx.beginPath(); ctx.rect(0, 104, 360, 524); ctx.clip();
     for (const { event, age } of this.active) {
       const t = age / .55;
-      const shield = event.kind === "absorb" || event.kind === "drone_hit" || event.kind === "damage_number";
+      const shield = event.kind === "shield_ripple" || event.kind === "absorb" || event.kind === "drone_hit" || event.kind === "damage_number";
       ctx.globalAlpha = (1 - t) * (reducedMotion ? .5 : .85);
-      ctx.strokeStyle = shield ? "#c9f3ff" : event.kind === "lightning" ? "#a5f3fc" : "#ffd49a";
+      ctx.strokeStyle = shield ? "#c9f3ff" : event.kind === "lightning" || event.kind === "emp_pulse" ? "#a5f3fc" : event.kind==="missile_impact" && event.missileFamily==="tomahawk"?"#80eaff":event.kind==="missile_impact"&&event.missileFamily==="boss"?"#ff4a66":"#ffd49a";
       ctx.lineWidth = shield ? 1.5 : 2;
       if (event.kind === "lightning") {
         ctx.beginPath(); ctx.moveTo(event.fromX ?? event.x, event.fromY ?? event.y - 35);
@@ -52,7 +52,8 @@ export class CanvasCombatAccents {
       ctx.globalAlpha = (1 - this.healAge / .65) * .7;
       ctx.fillStyle = "#6ee7b7";
       for (let i = 0; i < (reducedMotion ? 1 : 3); i++) {
-        const x = world.playerX + (i - 1) * 17, y = world.playerY + 10 - this.healAge * 25;
+        const converge=1-this.healAge/.65;
+        const x = world.playerX + (i - 1) * 22*converge, y = world.playerY + 18*converge;
         ctx.fillRect(x - 3, y - 1, 6, 2); ctx.fillRect(x - 1, y - 3, 2, 6);
       }
     }

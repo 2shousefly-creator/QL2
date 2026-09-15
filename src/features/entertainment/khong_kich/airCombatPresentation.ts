@@ -26,11 +26,11 @@ export function getSkillTooltipModel(state: AircraftCombatState, id: SkillId) {
   if (v.duration) detailRows.push(`Duy trì: ${number(v.duration)}s${id === "focus_laser" ? " bắn" : id === "decoy" ? " mỗi mồi" : ""}`);
   if (v.damageMultiplier && id !== "escort_drone") detailRows.push(`${number(v.damageMultiplier * 100)}% Hỏa lực/${id === "focus_laser" ? "nhịp (0,25s)" : id === "heavy_bomb" ? "địch" : id === "sweeping_cannon" ? "tia" : "tên lửa"}`);
   const descriptions: Record<SkillId, string> = {
-    decoy: "Thả mồi hút mục tiêu và hấp thụ đạn.",
+    decoy: "Phóng pháo sáng theo cung lên trước trong 0,45s; sau khi bung mới hút mục tiêu và hấp thụ đạn.",
     afterburner: "Tăng tốc bắn; đạn thường nảy thêm hai mục tiêu.",
     missile_swarm: "Phóng lần lượt từng cặp trái–phải. Lơ lửng 0,35s, tìm mục tiêu, xoay rồi tăng tốc. Cặp tiếp theo xuất hiện khi cặp trước bắt đầu bay.",
     armor_shield: "Giảm sát thương nhận vào sau khi tính Giáp.",
-    heavy_bomb: "Tên lửa chậm gây nổ toàn màn hình khi va chạm hoặc sau 3s bay.",
+    heavy_bomb: "Phát nổ sau 3s kể từ khi khai hỏa, hoặc ngay khi va chạm.",
     sweeping_cannon: "Thay đạn thường bằng quạt tia. Bấm lại để kết thúc; hồi chiêu bắt đầu khi kết thúc.",
     invisibility: "Tàng hình, để lại phân thân hút đạn và lướt theo hướng di chuyển cuối; mặc định lướt lên.",
     focus_laser: "Tụ năng lượng rồi bắn xuyên. Ngừng bắn thường trong toàn bộ kỹ năng.",
@@ -38,7 +38,7 @@ export function getSkillTooltipModel(state: AircraftCombatState, id: SkillId) {
   };
   switch (id) {
     case "decoy": detailRows.push(`${v.count} đợt × 10 mồi · cách đợt 0,75s`); break;
-    case "afterburner": detailRows.push(`+${hasCore(state, 23) ? 130 : 80}% tốc bắn · nảy 75% → 56,25%`); break;
+    case "afterburner": detailRows.push(`+${hasCore(state, 23) ? 75 : 40}% tốc bắn · nảy 50% → 25%`); break;
     case "missile_swarm": detailRows.push(`${v.count} tên lửa · ${v.count / 2} mỗi bên · ${v.count / 2} cặp`); break;
     case "armor_shield": detailRows.push(`Giảm ${number((1 - v.damageTakenMultiplier) * 100)}% sát thương`); break;
     case "sweeping_cannon": detailRows.push(`${v.count} tia · trúng thêm cùng loạt: ${number(v.sideProjectileMultiplier * 100)}% viên đầu`); break;
@@ -73,9 +73,9 @@ export function getActiveSkillDuration(world: CombatWorld, id: SkillId) {
   let duration = state.activeEffectDurations?.[id] ?? v.duration + (id === "focus_laser" ? v.charge : 0);
   if (id === "decoy") {
     // The last surviving mồi / pending volley is authoritative, including early destruction.
-    duration = v.duration + (v.count - 1) * .75;
-    remaining = Math.max(0, ...world.decoys.filter(d => !d.clone).map(d => d.remaining),
-      world.decoyVolleys > 0 ? world.decoyVolleyCd + (world.decoyVolleys - 1) * .75 + v.duration : 0);
+    duration = .45 + v.duration + (v.count - 1) * .75;
+    remaining = Math.max(0, ...world.decoys.filter(d => !d.clone).map(d => d.remaining + (d.active ? 0 : Math.max(0, .45-d.flightAge))),
+      world.decoyVolleys > 0 ? world.decoyVolleyCd + (world.decoyVolleys - 1) * .75 + .45 + v.duration : 0);
   }
   if (id === "focus_laser") remaining = world.laserCharge + world.laserRemaining;
   return remaining > 0 && duration > 0 && Number.isFinite(duration)
@@ -86,7 +86,7 @@ export interface StatusPresentation {
   id: string;
   group: "buff" | "debuff";
   name: string;
-  icon: { kind: "skill"; id: SkillId } | { kind: "core"; id: CoreId } | { kind: "status"; id: "acid" | "burn" | "stun" | "armor" | "shield" };
+  icon: { kind: "skill"; id: SkillId } | { kind: "core"; id: CoreId } | { kind: "status"; id: "acid" | "burn" | "stun" | "armor" | "shield" | "skill_lock" | "resource_jam" | "regen_off" | "mark" | "radar" };
   description: string;
   source: string;
   stacks: number;
@@ -128,12 +128,12 @@ export function getStatusPresentations(world: CombatWorld): StatusPresentation[]
   const conditional = [
     { row: 49, on: c.time - c.lastMove >= 3 },
     { row: 60, on: c.time - c.lastDamage >= 4 },
-    { row: 62, on: s.currentHp < maxHp * .2 },
+    { row: 62, on: s.status.regenDisabledUntil<=c.time && s.currentHp < maxHp * .2 },
     { row: 63, on: s.currentHp < maxHp * .35 },
     { row: 75, on: (c.stacks.slaying || 0) > 0, stacks: c.stacks.slaying },
     { row: 82, on: c.time - c.lastDamage >= 4 },
     { row: 83, on: (c.stacks.counter || 0) > 0, stacks: c.stacks.counter },
-    { row: 92, on: c.time - c.lastDamage >= 5 },
+    { row: 92, on: s.status.regenDisabledUntil<=c.time && c.time - c.lastDamage >= 5 },
     { row: 100, on: s.currentHp > maxHp * .7 || s.currentHp < maxHp * .3 },
   ];
   for (const entry of conditional) if (entry.on && hasCore(s, entry.row)) {
@@ -168,5 +168,16 @@ export function getStatusPresentations(world: CombatWorld): StatusPresentation[]
     if (timers.length) result.push({ id: `enemy:${entry.id}`, group: "debuff", name: entry.name, icon: { kind: "status", id: entry.id },
       description: entry.description, source: "Hiệu ứng trên địch", stacks: timers.length, remaining: Math.min(...timers), duration: entry.duration, priority: 50 });
   }
+  const status=s.status;
+  const timed = [
+    ["stunnedUntil","Choáng","stun","Không thể di chuyển, dùng kỹ năng hoặc bắn thường."],
+    ["skillLockedUntil","Khóa kỹ năng","skill_lock","Tạm khóa kỹ năng; vẫn di chuyển và bắn thường."],
+    ["resourceJammedUntil","Nhiễu tài nguyên","resource_jam","Giảm hồi tài nguyên; giữ nguyên tài nguyên đang có."],
+    ["armorBrokenUntil","Vỡ giáp","armor","Giáp -35%."],
+    ["regenDisabledUntil","Ngừng tái tạo","regen_off","Hồi HP theo thời gian bị vô hiệu."],
+  ] as const;
+  for(const [key,name,icon,description] of timed) if(status[key]>c.time) result.push({id:key,group:"debuff",name,icon:{kind:"status",id:icon},description,source:"Đòn địch",stacks:1,remaining:status[key]-c.time,duration:status.durations[key]??4,priority:110});
+  const markNames={hunterMark:"Dấu săn mồi",suppression:"Áp chế",corrosion:"Ăn mòn",targetLock:"Khóa radar",hunted:"Bị truy sát"};
+  for(const [key,mark] of Object.entries(status.marks)) if(mark && mark.until>c.time) result.push({id:key,group:"debuff",name:markNames[key as keyof typeof markNames],icon:{kind:"status",id:key==="corrosion"?"acid":key==="targetLock"?"radar":"mark"},description:"Tiếp tục trúng đòn có thể kích hoạt đòn trừng phạt.",source:"Đòn địch",stacks:mark.count,remaining:mark.until-c.time,duration:6,priority:100});
   return result.sort((a, b) => b.priority - a.priority || a.id.localeCompare(b.id));
 }

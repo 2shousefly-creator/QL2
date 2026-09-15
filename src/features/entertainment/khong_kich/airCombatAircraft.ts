@@ -1,3 +1,4 @@
+import { createPlayerStatus, playerSkillLocked, tickPlayerStatus } from "./airCombatStatus";
 import { AIRCRAFT_CONFIGS, AIR_COMBAT_LIMITS, SKILL_CONFIGS } from "./airCombatConfig";
 import { applyCoreStatEffects, applyFireRateLock, hasCore, skillsLocked } from "./airCombatCoreEffects";
 import type { AircraftCombatState, AircraftId, EffectiveAircraftStats, LevelUpResult, SkillCastResult, SkillId, WeaponModifiers } from "./airCombatTypes";
@@ -19,7 +20,7 @@ export interface RuntimeSkillValues {
 }
 export function createAircraftCombatState(aircraftId: AircraftId): AircraftCombatState {
     const config = AIRCRAFT_CONFIGS[aircraftId];
-    return { aircraftId, level: 1, combatXp: 0, currentHp: config.baseStats.maxHp, currentResource: config.baseStats.maxResource,
+    return { status: createPlayerStatus(), aircraftId, level: 1, combatXp: 0, currentHp: config.baseStats.maxHp, currentResource: config.baseStats.maxResource,
         modifiers: { criticalChanceFlat: 0, criticalDamageMultiplierFlat: 0, maxHpFlat: 0, armorFlat: 0, firepowerFlat: 0, fireRateFlat: 0, hpRegen: 0,
             cooldownReduction: 0, maxResourceFlat: 0, resourceRegenFlat: 0, weapon: { ...DEFAULT_WEAPON }, skillCores: {} },
         cooldowns: {}, selectedCores: [], activeEffects: {}, droneActive: false, basicShotsFired: 0, pendingMilestones: [],
@@ -44,7 +45,7 @@ export function getEffectiveAircraftStats(state: AircraftCombatState, includeTem
     applyCoreStatEffects(state, stats, includeTemporary);
     const c = state.coreState;
     if (includeTemporary && (state.activeEffects.afterburner || 0) > 0)
-        stats.fireRate *= hasCore(state, 23) ? 2.3 : 1.8;
+        stats.fireRate *= hasCore(state, 23) ? 1.75 : 1.4;
     if (includeTemporary && (c.timers.hawkRage || 0) > c.time)
         stats.fireRate *= 1.3;
     if (includeTemporary && (c.timers.shieldArmor || 0) > c.time)
@@ -53,6 +54,12 @@ export function getEffectiveAircraftStats(state: AircraftCombatState, includeTem
         stats.armor *= 1.35;
     if (includeTemporary && (c.timers.acidArmor || 0) > c.time)
         stats.armor *= .7;
+    if (includeTemporary) {
+        const status = state.status;
+        if (status.armorBrokenUntil > c.time) stats.armor *= .65;
+        if (status.regenDisabledUntil > c.time) stats.hpRegen = 0;
+        stats.resourceRegen *= Math.min(1, ...status.jams.filter(j => j.until > c.time).map(j => j.multiplier));
+    }
     applyFireRateLock(state, stats);
     stats.fireRate = hasCore(state, 54) ? 1.2 : Math.min(AIR_COMBAT_LIMITS.maxFireRate, Math.max(.1, stats.fireRate));
     stats.criticalChance = Math.max(0, Math.min(1, stats.criticalChance));
@@ -192,7 +199,7 @@ export function endAircraftSkill(state: AircraftCombatState, skillId: SkillId): 
 }
 export function castSkill(state: AircraftCombatState, skillId: SkillId): SkillCastResult {
     const skill = SKILL_CONFIGS[skillId];
-    if (!skill || skill.aircraftId !== state.aircraftId || skillsLocked(state))
+    if (!skill || skill.aircraftId !== state.aircraftId || (skillsLocked(state) || playerSkillLocked(state)))
         return { cast: false, reason: "invalid", resourceSpent: 0 };
     if ((skillId === "escort_drone" && state.droneActive) || (skillId === "sweeping_cannon" && (state.activeEffects.sweeping_cannon || 0) > 0)) {
         endAircraftSkill(state, skillId);
@@ -240,6 +247,7 @@ export function tickAircraftState(state: AircraftCombatState, deltaSeconds: numb
     for (const key of Object.keys(state.cooldowns) as SkillId[])
         state.cooldowns[key] = Math.max(0, (state.cooldowns[key] || 0) - dt);
     state.coreState.time += dt;
+    tickPlayerStatus(state);
     for (const key of Object.keys(state.activeEffects) as SkillId[]) {
         const next = (state.activeEffects[key] || 0) - dt;
         if (next <= 0)

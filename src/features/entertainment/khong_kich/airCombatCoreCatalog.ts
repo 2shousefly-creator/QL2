@@ -5,9 +5,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_001",
     "name": "Đạn hạng nhẹ",
-    "description": "12 Hỏa lực",
+    "description": "+12 Hỏa lực.",
     "system": "Chung",
-    "icon": "◆",
+    "icon": "core:core_001",
     "category": "offense",
     "tiers": [
       "silver"
@@ -16,9 +16,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_002",
     "name": "Lớp giáp phụ",
-    "description": "12 Giáp.",
+    "description": "+12 Giáp.",
     "system": "Chung",
-    "icon": "◆",
+    "icon": "core:core_002",
     "category": "offense",
     "tiers": [
       "silver"
@@ -27,9 +27,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_003",
     "name": "Tinh chỉnh cò súng",
-    "description": "0.15 Tốc độ bắn.",
+    "description": "+0,15 Tốc độ bắn.",
     "system": "Chung",
-    "icon": "◆",
+    "icon": "core:core_003",
     "category": "offense",
     "tiers": [
       "silver"
@@ -38,9 +38,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_004",
     "name": "Khung thân gia cố",
-    "description": "110 HP tối đa.",
+    "description": "+110 HP tối đa.",
     "system": "Chung",
-    "icon": "◆",
+    "icon": "core:core_004",
     "category": "offense",
     "tiers": [
       "silver"
@@ -49,9 +49,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_005",
     "name": "Bộ sửa chữa cơ bản",
-    "description": "0,6 HP hồi mỗi giây.",
+    "description": "+0,6 HP hồi/s.",
     "system": "Chung",
-    "icon": "◆",
+    "icon": "core:core_005",
     "category": "offense",
     "tiers": [
       "silver"
@@ -62,7 +62,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
     "name": "Tái tạo",
     "description": "Giảm 4% thời gian hồi chiêu.",
     "system": "Chung",
-    "icon": "◆",
+    "icon": "core:core_006",
     "category": "offense",
     "tiers": [
       "silver"
@@ -71,9 +71,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_007",
     "name": "Đạn xuyên giáp",
-    "description": "20 Hỏa lực.",
+    "description": "+20 Hỏa lực.",
     "system": "Chung",
-    "icon": "◆",
+    "icon": "core:core_007",
     "category": "offense",
     "tiers": [
       "gold"
@@ -82,9 +82,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_008",
     "name": "Giáp hợp kim",
-    "description": "20 Giáp.",
+    "description": "+20 Giáp.",
     "system": "Chung",
-    "icon": "◆",
+    "icon": "core:core_008",
     "category": "offense",
     "tiers": [
       "gold"
@@ -93,9 +93,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_009",
     "name": "Bộ nạp liên thanh",
-    "description": "0.4 Tốc độ bắn.",
+    "description": "+0,4 Tốc độ bắn.",
     "system": "Chung",
-    "icon": "◆",
+    "icon": "core:core_009",
     "category": "offense",
     "tiers": [
       "gold"
@@ -104,9 +104,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_010",
     "name": "Khung thân chiến đấu",
-    "description": "220 HP tối đa.",
+    "description": "+220 HP tối đa.",
     "system": "Chung",
-    "icon": "◆",
+    "icon": "core:core_010",
     "category": "offense",
     "tiers": [
       "gold"
@@ -115,9 +115,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_011",
     "name": "Sửa chữa Nano",
-    "description": "1.3 HP hồi mỗi giây.",
+    "description": "+1,3 HP hồi/s.",
     "system": "Chung",
-    "icon": "◆",
+    "icon": "core:core_011",
     "category": "offense",
     "tiers": [
       "gold"
@@ -128,7 +128,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
     "name": "Rút ngắn thời gian",
     "description": "Giảm 9% thời gian hồi chiêu.",
     "system": "Chung",
-    "icon": "◆",
+    "icon": "core:core_012",
     "category": "offense",
     "tiers": [
       "gold"
@@ -137,9 +137,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_013",
     "name": "Chúng sinh bình đẳng",
-    "description": "50 Hỏa lực.",
+    "description": "+50 Hỏa lực.",
     "system": "Chung",
-    "icon": "◆",
+    "icon": "core:core_013",
     "category": "offense",
     "tiers": [
       "diamond"
@@ -148,9 +148,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_014",
     "name": "Pháo đài kim cương",
-    "description": "50 Giáp",
+    "description": "+50 Giáp.",
     "system": "Chung",
-    "icon": "◆",
+    "icon": "core:core_014",
     "category": "offense",
     "tiers": [
       "diamond"
@@ -159,9 +159,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_015",
     "name": "Buồng bắn siêu tốc",
-    "description": "1.2 Tốc độ bắn.",
+    "description": "+1 Tốc độ bắn.",
     "system": "Chung",
-    "icon": "◆",
+    "icon": "core:core_015",
     "category": "offense",
     "tiers": [
       "diamond"
@@ -170,9 +170,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_016",
     "name": "Khung thân bất hoại",
-    "description": "420 HP tối đa.",
+    "description": "+420 HP tối đa.",
     "system": "Chung",
-    "icon": "◆",
+    "icon": "core:core_016",
     "category": "offense",
     "tiers": [
       "diamond"
@@ -181,9 +181,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_017",
     "name": "Tái tạo lượng tử",
-    "description": "3 HP hồi mỗi giây.",
+    "description": "+3 HP hồi/s.",
     "system": "Chung",
-    "icon": "◆",
+    "icon": "core:core_017",
     "category": "offense",
     "tiers": [
       "diamond"
@@ -194,7 +194,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
     "name": "Đồng hồ nghịch thời",
     "description": "Giảm 20% thời gian hồi chiêu.",
     "system": "Chung",
-    "icon": "◆",
+    "icon": "core:core_018",
     "category": "offense",
     "tiers": [
       "diamond"
@@ -203,9 +203,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_019",
     "name": "Nâng cấp Mồi Bẫy",
-    "description": "Mồi Bẫy +1 đợt bắn và +1 giây hiệu lực.",
+    "description": "Mồi Bẫy: +1 đợt phóng; +1s hút mục tiêu sau khi pháo sáng bung (2,5s).",
     "system": "Viper · Skill 1",
-    "icon": "◆",
+    "icon": "core:core_019",
     "category": "skill",
     "tiers": [
       "diamond"
@@ -219,9 +219,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_020",
     "name": "Chuẩn bị Bẫy",
-    "description": "Mồi Bẫy giảm 13 giây hồi chiêu",
+    "description": "Mồi Bẫy: -13s hồi chiêu.",
     "system": "Viper · Skill 1",
-    "icon": "◆",
+    "icon": "core:core_020",
     "category": "skill",
     "tiers": [
       "diamond"
@@ -235,9 +235,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_021",
     "name": "Phản công",
-    "description": "Sau khi kết thúc phóng mồi bẫy, Viper tăng 20% sát thương gây ra trong 4 giây",
+    "description": "Phóng xong đợt mồi cuối: +20% sát thương trong 4s.",
     "system": "Viper · Skill 1",
-    "icon": "◆",
+    "icon": "core:core_021",
     "category": "skill",
     "tiers": [
       "diamond"
@@ -251,9 +251,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_022",
     "name": "Cuồng Nộ Kéo Dài",
-    "description": "Thời gian duy trì Điên Cuồng +3 giây.",
+    "description": "Điên Cuồng: +3s duy trì.",
     "system": "Viper · Skill 2",
-    "icon": "◆",
+    "icon": "core:core_022",
     "category": "skill",
     "tiers": [
       "diamond"
@@ -267,9 +267,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_023",
     "name": "Quá Tải",
-    "description": "Điên Cuồng +50% Tốc độ bắn",
+    "description": "Điên Cuồng: +35% Tốc độ bắn.",
     "system": "Viper · Skill 2",
-    "icon": "◆",
+    "icon": "core:core_023",
     "category": "skill",
     "tiers": [
       "diamond"
@@ -283,9 +283,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_024",
     "name": "Không Thể Ngăn Cản",
-    "description": "Miễn nhiễm khống chế trong thời gian hiệu lực",
+    "description": "Điên Cuồng: miễn nhiễm khống chế trong thời gian hiệu lực.",
     "system": "Viper · Skill 2",
-    "icon": "◆",
+    "icon": "core:core_024",
     "category": "skill",
     "tiers": [
       "diamond"
@@ -299,9 +299,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_025",
     "name": "Kho Tên Lửa",
-    "description": "Phóng ra thêm 6 tên lửa (tổng 18 tên lửa).",
+    "description": "Tên lửa Bầy Đàn: +6 tên lửa (tổng 18).",
     "system": "Viper · Skill 3",
-    "icon": "◆",
+    "icon": "core:core_025",
     "category": "skill",
     "tiers": [
       "diamond"
@@ -315,9 +315,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_026",
     "name": "Tên lửa hủy diệt",
-    "description": "Tăng 50% Hỏa lực mỗi tên lửa.",
+    "description": "Tên lửa Bầy Đàn: +50% Hỏa lực mỗi tên lửa.",
     "system": "Viper · Skill 3",
-    "icon": "◆",
+    "icon": "core:core_026",
     "category": "skill",
     "tiers": [
       "diamond"
@@ -331,9 +331,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_027",
     "name": "Tên lửa tầm nhiệt",
-    "description": "Mỗi tên lửa gây thiêu đốt mục tiêu bằng 70% hỏa lực mỗi giây trong 5 giây và giảm 30% giáp của mục tiêu trong thời gian thiêu đốt. Làm mới thời gian khi trúng nhiều tên lửa",
+    "description": "Tên lửa gây đốt: 70% Hỏa lực/s và -30% Giáp mục tiêu trong 5s. Trúng tiếp làm mới thời gian.",
     "system": "Viper · Skill 3",
-    "icon": "◆",
+    "icon": "core:core_027",
     "category": "skill",
     "tiers": [
       "diamond"
@@ -347,9 +347,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_028",
     "name": "Bất tử hộ thân",
-    "description": "Khiên Năng Lượng +25% giảm sát thương.",
+    "description": "Khiên Năng Lượng: +25% giảm sát thương.",
     "system": "Titan · Skill 1",
-    "icon": "◆",
+    "icon": "core:core_028",
     "category": "skill",
     "tiers": [
       "diamond"
@@ -363,9 +363,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_029",
     "name": "Trường Lực Bền Bỉ",
-    "description": "Thời gian duy trì Khiên Năng Lượng +3 giây.",
+    "description": "Khiên Năng Lượng: +3s duy trì.",
     "system": "Titan · Skill 1",
-    "icon": "◆",
+    "icon": "core:core_029",
     "category": "skill",
     "tiers": [
       "diamond"
@@ -379,9 +379,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_030",
     "name": "Kiên Cố",
-    "description": "Tăng 50% giáp trong 5 giây sau khi khiên năng lượng biến mất",
+    "description": "Khiên Năng Lượng kết thúc: +50% Giáp trong 5s.",
     "system": "Titan · Skill 1",
-    "icon": "◆",
+    "icon": "core:core_030",
     "category": "skill",
     "tiers": [
       "diamond"
@@ -395,9 +395,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_031",
     "name": "Tử thần cận kề",
-    "description": "BigBang giảm 13 giây hồi chiêu.",
+    "description": "BigBang: -13s hồi chiêu.",
     "system": "Titan · Skill 2",
-    "icon": "◆",
+    "icon": "core:core_031",
     "category": "skill",
     "tiers": [
       "diamond"
@@ -411,9 +411,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_032",
     "name": "Tận Diệt",
-    "description": "BigBang +500% hỏa lực",
+    "description": "BigBang: +500% Hỏa lực.",
     "system": "Titan · Skill 2",
-    "icon": "◆",
+    "icon": "core:core_032",
     "category": "skill",
     "tiers": [
       "diamond"
@@ -427,9 +427,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_033",
     "name": "Sóng Xung Kích",
-    "description": "Làm choáng tất cả mục tiêu trong 4 giây khi phát nổ",
+    "description": "BigBang phát nổ: choáng mọi mục tiêu trong 4s.",
     "system": "Titan · Skill 2",
-    "icon": "◆",
+    "icon": "core:core_033",
     "category": "skill",
     "tiers": [
       "diamond"
@@ -443,9 +443,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_034",
     "name": "Pháo Nặng",
-    "description": "Oanh Tạc +20% Hỏa lực cho mỗi viên đạn.",
+    "description": "Oanh Tạc: +20% Hỏa lực mỗi viên đạn.",
     "system": "Titan · Skill 3",
-    "icon": "◆",
+    "icon": "core:core_034",
     "category": "skill",
     "tiers": [
       "diamond"
@@ -459,9 +459,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_035",
     "name": "Pháo đài kiên cố",
-    "description": "Tăng thêm 35% Giáp trong chế độ Oanh Tạc.",
+    "description": "Oanh Tạc: +35% Giáp khi đang bật.",
     "system": "Titan · Skill 3",
-    "icon": "◆",
+    "icon": "core:core_035",
     "category": "skill",
     "tiers": [
       "diamond"
@@ -475,9 +475,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_036",
     "name": "Bắn mọi ngóc ngách",
-    "description": "Tăng 2 tia đạn trong chế độ Oanh Tạc (tổng 7 tia mỗi đợt)",
+    "description": "Oanh Tạc: +2 tia (tổng 7 tia/đợt).",
     "system": "Titan · Skill 3",
-    "icon": "◆",
+    "icon": "core:core_036",
     "category": "skill",
     "tiers": [
       "diamond"
@@ -491,9 +491,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_037",
     "name": "Dư Ảnh Kéo Dài",
-    "description": "Phản Ảnh: thời gian tàng hình và phân thân +1,5 giây.",
+    "description": "Phản Ảnh: +1,5s tàng hình và phân thân.",
     "system": "Phantom · Skill 1",
-    "icon": "◆",
+    "icon": "core:core_037",
     "category": "skill",
     "tiers": [
       "diamond"
@@ -507,9 +507,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_038",
     "name": "Sửa chữa khẩn cấp",
-    "description": "Hồi lại 18% máu đã mất trong thời gian tàng hình",
+    "description": "Phản Ảnh: hồi 18% HP đã mất khi tàng hình.",
     "system": "Phantom · Skill 1",
-    "icon": "◆",
+    "icon": "core:core_038",
     "category": "skill",
     "tiers": [
       "diamond"
@@ -523,9 +523,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_039",
     "name": "Thanh Thoát",
-    "description": "Giảm 15 Điện tiêu hao",
+    "description": "Phản Ảnh: -15 Điện tiêu hao.",
     "system": "Phantom · Skill 1",
-    "icon": "◆",
+    "icon": "core:core_039",
     "category": "skill",
     "tiers": [
       "diamond"
@@ -539,9 +539,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_040",
     "name": "Thống khổ kéo dài",
-    "description": "Laser Hủy Diệt +1 giây bắn",
+    "description": "Laser Hủy Diệt: +1s bắn.",
     "system": "Phantom · Skill 2",
-    "icon": "◆",
+    "icon": "core:core_040",
     "category": "skill",
     "tiers": [
       "diamond"
@@ -555,9 +555,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_041",
     "name": "Hội tụ năng lượng",
-    "description": "Laser Hủy Diệt giảm 1,5 giây tụ năng lượng",
+    "description": "Laser Hủy Diệt: -1,5s tụ năng lượng.",
     "system": "Phantom · Skill 2",
-    "icon": "◆",
+    "icon": "core:core_041",
     "category": "skill",
     "tiers": [
       "diamond"
@@ -571,9 +571,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_042",
     "name": "Năng lượng tối",
-    "description": "Giảm 25 Điện tiêu hao",
+    "description": "Laser Hủy Diệt: -25 Điện tiêu hao.",
     "system": "Phantom · Skill 2",
-    "icon": "◆",
+    "icon": "core:core_042",
     "category": "skill",
     "tiers": [
       "diamond"
@@ -587,9 +587,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_043",
     "name": "Hệ thống pin tiên tiến",
-    "description": "HawkEye -1 Điện tiêu hao mỗi giây.",
+    "description": "HawkEye: -1 Điện tiêu hao/s.",
     "system": "Phantom · Skill 3",
-    "icon": "◆",
+    "icon": "core:core_043",
     "category": "skill",
     "tiers": [
       "diamond"
@@ -603,9 +603,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_044",
     "name": "HawkEye hiếu chiến",
-    "description": "Sau mỗi 8 giây, HawkEye tăng 100% tốc độ bắn trong 3 giây và cũng tăng cho chủ nhân Phantom 30% tốc độ bắn trong thời gian hiệu lực. Hồi chiêu sẽ bắt đầu tính sau khi hiệu ứng kết thúc",
+    "description": "Sau mỗi 8s: HawkEye +100%, Phantom +30% Tốc độ bắn trong 3s. Đếm lại khi hiệu ứng hết.",
     "system": "Phantom · Skill 3",
-    "icon": "◆",
+    "icon": "core:core_044",
     "category": "skill",
     "tiers": [
       "diamond"
@@ -619,9 +619,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_045",
     "name": "Liên kết bền chặt",
-    "description": "HawkEye +15% sức mạnh thừa hưởng.",
+    "description": "HawkEye: +15% sức mạnh kế thừa.",
     "system": "Phantom · Skill 3",
-    "icon": "◆",
+    "icon": "core:core_045",
     "category": "skill",
     "tiers": [
       "diamond"
@@ -635,9 +635,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_046",
     "name": "Càng đánh càng hăng",
-    "description": "Tiêu diệt 1 kẻ địch nhận +0.4 Hỏa lực vĩnh viễn; lượng nhận được ×5 nếu tiêu diệt Tinh Anh hoặc Boss.",
+    "description": "Hạ địch: +0,4 Hỏa lực trong lượt. Hạ Tinh Anh/Boss nhận gấp 5.",
     "system": "Khủng Long Cộng Dồn",
-    "icon": "◆",
+    "icon": "core:core_046",
     "category": "offense",
     "tiers": [
       "diamond"
@@ -646,9 +646,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_047",
     "name": "Thích ứng phòng ngự",
-    "description": "Tiêu diệt 1 kẻ địch nhận +0.3 Giáp vĩnh viễn; lượng nhận được ×5 nếu tiêu diệt Tinh Anh hoặc Boss.",
+    "description": "Hạ địch: +0,3 Giáp trong lượt. Hạ Tinh Anh/Boss nhận gấp 5.",
     "system": "Khủng Long Cộng Dồn",
-    "icon": "◆",
+    "icon": "core:core_047",
     "category": "offense",
     "tiers": [
       "gold"
@@ -657,9 +657,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_048",
     "name": "Trường Sinh",
-    "description": "Tiêu diệt 1 kẻ địch nhận +3 máu tối đa vĩnh viễn; lượng nhận được ×5 nếu tiêu diệt Tinh Anh hoặc Boss.",
+    "description": "Hạ địch: +3 HP tối đa trong lượt. Hạ Tinh Anh/Boss nhận gấp 5.",
     "system": "Khủng Long Cộng Dồn",
-    "icon": "◆",
+    "icon": "core:core_048",
     "category": "offense",
     "tiers": [
       "silver"
@@ -668,9 +668,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_049",
     "name": "Bất động minh vương",
-    "description": "Nếu không di chuyển trong 3 giây, nhận +80% Giáp và +40% Hỏa lực. Di chuyển sẽ kết thúc hiệu ứng.",
+    "description": "Đứng yên 3s: +80% Giáp, +40% Hỏa lực. Di chuyển sẽ mất hiệu ứng.",
     "system": "Đặc Biệt",
-    "icon": "◆",
+    "icon": "core:core_049",
     "category": "offense",
     "tiers": [
       "gold"
@@ -681,7 +681,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
     "name": "Chuyển đổi: Vàng",
     "description": "Nhận 1 lõi Vàng ngẫu nhiên.",
     "system": "Tay Bạc",
-    "icon": "✦",
+    "icon": "core:core_050",
     "category": "resource",
     "tiers": [
       "silver"
@@ -692,7 +692,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
     "name": "Chuyển đổi: Kim Cương",
     "description": "Nhận 1 lõi Kim Cương ngẫu nhiên.",
     "system": "Tay Bạc",
-    "icon": "✦",
+    "icon": "core:core_051",
     "category": "resource",
     "tiers": [
       "gold"
@@ -703,7 +703,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
     "name": "Chuyển đổi: Hỗn Loạn",
     "description": "Nhận 2 lõi ngẫu nhiên.",
     "system": "Tay Bạc",
-    "icon": "✦",
+    "icon": "core:core_052",
     "category": "resource",
     "tiers": [
       "diamond"
@@ -712,9 +712,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_053",
     "name": "Găng bảo thạch",
-    "description": "Kỹ năng giờ đây có thể chí mạng, nhận thêm 25% tỷ lệ chí mạng",
+    "description": "+25% Tỷ lệ chí mạng. Kỹ năng có thể chí mạng.",
     "system": "Đặc Biệt",
-    "icon": "◆",
+    "icon": "core:core_053",
     "category": "offense",
     "tiers": [
       "diamond"
@@ -723,9 +723,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_054",
     "name": "Chậm mà chắc",
-    "description": "Tốc độ bắn giờ sẽ bị khóa ở 1.2 và lượng tốc độ bắn tăng thêm hoặc dư ra sẽ chuyển thành hỏa lực với tỷ lệ 0,1 tốc độ bắn = 15 hỏa lực",
+    "description": "Khóa Tốc độ bắn ở 1,2. Mỗi 0,1 Tốc độ bắn dư chuyển thành +15 Hỏa lực.",
     "system": "Đặc biệt",
-    "icon": "◆",
+    "icon": "core:core_054",
     "category": "offense",
     "tiers": [
       "gold"
@@ -734,9 +734,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_055",
     "name": "Kính ngắm chiến trường",
-    "description": "Tăng 5% tỷ lệ chí mạng.",
+    "description": "+5% Tỷ lệ chí mạng.",
     "system": "Chí Mạng",
-    "icon": "◆",
+    "icon": "core:core_055",
     "category": "offense",
     "tiers": [
       "silver"
@@ -745,9 +745,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_056",
     "name": "Đầu đạn cân chỉnh",
-    "description": "Tăng 10% sát thương chí mạng.",
+    "description": "+10% Sát thương chí mạng.",
     "system": "Chí Mạng",
-    "icon": "◆",
+    "icon": "core:core_056",
     "category": "offense",
     "tiers": [
       "silver"
@@ -756,9 +756,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_057",
     "name": "Xuyên thủng",
-    "description": "Mọi sát thương gây ra bỏ qua 5% Giáp của mục tiêu.",
+    "description": "Mọi sát thương bỏ qua 5% Giáp mục tiêu.",
     "system": "Xuyên Giáp",
-    "icon": "◆",
+    "icon": "core:core_057",
     "category": "offense",
     "tiers": [
       "silver"
@@ -767,9 +767,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_058",
     "name": "Dấu ngắm yếu điểm",
-    "description": "Đánh trúng cùng một mục tiêu 5 lần sẽ giảm 8% Giáp của mục tiêu trong 4 giây; tiếp tục đánh trúng sẽ làm mới thời gian.",
+    "description": "Trúng cùng mục tiêu 5 lần: -8% Giáp trong 4s. Trúng tiếp làm mới thời gian.",
     "system": "Xuyên Giáp",
-    "icon": "◆",
+    "icon": "core:core_058",
     "category": "offense",
     "tiers": [
       "silver"
@@ -778,9 +778,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_059",
     "name": "Phát bắn tích điện",
-    "description": "Mỗi phát đánh thường thứ 10 gây 180% sát thương",
+    "description": "Mỗi phát bắn thường thứ 10: gây 180% sát thương.",
     "system": "Vũ Khí",
-    "icon": "⇧",
+    "icon": "core:core_059",
     "category": "weapon",
     "tiers": [
       "silver"
@@ -789,9 +789,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_060",
     "name": "Nòng súng ổn định",
-    "description": "Nếu không bị trúng đạn trong 4 giây, sát thương đánh thường tăng 15%; hiệu ứng mất ngay khi nhận sát thương.",
+    "description": "Không trúng đòn 4s: +15% sát thương bắn thường. Mất khi nhận sát thương.",
     "system": "Vũ Khí",
-    "icon": "⇧",
+    "icon": "core:core_060",
     "category": "weapon",
     "tiers": [
       "silver"
@@ -800,9 +800,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_061",
     "name": "Giáp phản ứng nhanh",
-    "description": "Sau khi nhận sát thương, nhận +15 Giáp trong 4 giây. Hồi nội tại 12 giây.",
+    "description": "Nhận sát thương: +15 Giáp trong 4s. Hồi nội tại 12s.",
     "system": "Phản Kích",
-    "icon": "◆",
+    "icon": "core:core_061",
     "category": "offense",
     "tiers": [
       "silver"
@@ -811,9 +811,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_062",
     "name": "Van sinh tồn",
-    "description": "Khi HP dưới 20%, hồi 0,5% HP tối đa mỗi giây cho đến khi HP đạt 20%.",
+    "description": "Dưới 20% HP: hồi 0,5% HP tối đa/s, dừng khi đạt 20%.",
     "system": "Sinh Tồn",
-    "icon": "♥",
+    "icon": "core:core_062",
     "category": "defense",
     "tiers": [
       "silver"
@@ -822,9 +822,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_063",
     "name": "Máu nóng",
-    "description": "Khi HP dưới 35%, nhận +20 Hỏa lực và +20 Giáp.",
+    "description": "Dưới 35% HP: +20 Hỏa lực, +20 Giáp.",
     "system": "Sinh Tồn",
-    "icon": "♥",
+    "icon": "core:core_063",
     "category": "defense",
     "tiers": [
       "silver"
@@ -833,9 +833,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_064",
     "name": "Hút Hồn",
-    "description": "Mỗi 10 kẻ địch bị tiêu diệt, hồi 2% HP tối đa.",
+    "description": "Mỗi 10 mạng: hồi 2% HP tối đa.",
     "system": "Hồi Phục",
-    "icon": "♥",
+    "icon": "core:core_064",
     "category": "defense",
     "tiers": [
       "silver"
@@ -844,9 +844,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_065",
     "name": "Khung chống va đập",
-    "description": "Giảm 20% sát thương nhận phải do va chạm với kẻ địch",
+    "description": "Giảm 20% sát thương va chạm với địch.",
     "system": "Phòng Thủ",
-    "icon": "♥",
+    "icon": "core:core_065",
     "category": "defense",
     "tiers": [
       "silver"
@@ -855,9 +855,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_066",
     "name": "Combo săn mồi",
-    "description": "Mỗi kẻ địch tiêu diệt trong vòng 3 giây kể từ lần hạ gục trước tăng 2% sát thương, cộng dồn tối đa 5 lần; mất toàn bộ cộng dồn nếu 3 giây không hạ gục mục tiêu.",
+    "description": "Hạ địch trong 3s từ mạng trước: +2% sát thương, tối đa 5 cộng dồn. Không hạ địch 3s: mất hết.",
     "system": "Combo",
-    "icon": "◆",
+    "icon": "core:core_066",
     "category": "offense",
     "tiers": [
       "silver"
@@ -866,9 +866,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_067",
     "name": "Đánh dấu Tinh Anh",
-    "description": "Gây thêm 6% sát thương lên Tinh Anh và Boss.",
+    "description": "+6% sát thương lên Tinh Anh và Boss.",
     "system": "Săn Boss",
-    "icon": "◆",
+    "icon": "core:core_067",
     "category": "offense",
     "tiers": [
       "silver"
@@ -877,9 +877,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_068",
     "name": "Kết liễu gọn",
-    "description": "Gây thêm 8% sát thương lên kẻ địch còn dưới 25% HP.",
+    "description": "+8% sát thương lên địch dưới 25% HP.",
     "system": "Kết Liễu",
-    "icon": "◆",
+    "icon": "core:core_068",
     "category": "offense",
     "tiers": [
       "silver"
@@ -888,9 +888,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_069",
     "name": "Phủ đầu",
-    "description": "Gây thêm 10% sát thương lên kẻ địch còn trên 70% HP.",
+    "description": "+10% sát thương lên địch trên 70% HP.",
     "system": "Hỏa Lực",
-    "icon": "◆",
+    "icon": "core:core_069",
     "category": "offense",
     "tiers": [
       "silver"
@@ -899,9 +899,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_070",
     "name": "Tái kích hoạt",
-    "description": "Mỗi 8 kẻ địch bị tiêu diệt, giảm 0,5 giây hồi chiêu còn lại của tất cả kỹ năng đang hồi.",
+    "description": "Mỗi 8 mạng: -0,5s hồi chiêu còn lại của mọi kỹ năng đang hồi.",
     "system": "Kỹ Năng Chung",
-    "icon": "✦",
+    "icon": "core:core_070",
     "category": "resource",
     "tiers": [
       "silver"
@@ -910,9 +910,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_071",
     "name": "Nhịp chiến thuật",
-    "description": "Sau khi sử dụng một kỹ năng, nhận +0,15 Tốc độ bắn trong 4 giây.",
+    "description": "Dùng kỹ năng: +0,15 Tốc độ bắn trong 4s.",
     "system": "Kỹ Năng Chung",
-    "icon": "✦",
+    "icon": "core:core_071",
     "category": "resource",
     "tiers": [
       "silver"
@@ -921,9 +921,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_072",
     "name": "Thép lạnh",
-    "description": "Nếu không nhận sát thương trong 5 giây, đòn đánh tiếp theo nhận phải được giảm 40% sát thương; hiệu ứng sau đó cần tích lại.",
+    "description": "Không nhận sát thương 5s: giảm 40% sát thương đòn nhận tiếp theo, rồi đếm lại.",
     "system": "Phòng Thủ",
-    "icon": "♥",
+    "icon": "core:core_072",
     "category": "defense",
     "tiers": [
       "silver"
@@ -932,9 +932,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_073",
     "name": "Đạn Phân Mảnh",
-    "description": "Kẻ địch bị tiêu diệt phát nổ, gây 20% Hỏa lực lên các mục tiêu xung quanh.",
+    "description": "Hạ địch: phát nổ gây 20% Hỏa lực lên mục tiêu xung quanh.",
     "system": "Vũ khí",
-    "icon": "⇧",
+    "icon": "core:core_073",
     "category": "weapon",
     "tiers": [
       "gold"
@@ -943,9 +943,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_074",
     "name": "Bạo Kích Hồi Tiếp",
-    "description": "Mỗi đòn chí mạng giảm 0.1 giây hồi chiêu của cả 3 kỹ năng. Giới hạn tối đa giảm 1 giây mỗi giây.",
+    "description": "Chí mạng: -0,1s hồi chiêu cả 3 kỹ năng; tối đa giảm 1s mỗi giây.",
     "system": "Chí mạng",
-    "icon": "◆",
+    "icon": "core:core_074",
     "category": "offense",
     "tiers": [
       "gold"
@@ -954,9 +954,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_075",
     "name": "Nhịp Sát Phạt",
-    "description": "Cứ 5 mạng hạ gục nhận +3% Hỏa lực, tối đa 5 cộng dồn. Bị trúng đòn mất 1 cộng dồn.",
+    "description": "Mỗi 5 mạng: +3% Hỏa lực, tối đa 5 cộng dồn. Trúng đòn mất 1 cộng dồn.",
     "system": "Combo",
-    "icon": "◆",
+    "icon": "core:core_075",
     "category": "offense",
     "tiers": [
       "gold"
@@ -965,9 +965,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_076",
     "name": "Lá Chắn Phản Ứng",
-    "description": "Nếu nhận một đòn gây trên 10% HP tối đa, nhận khiên bằng 12% HP tối đa trong 3 giây. Hồi nội bộ 10 giây.",
+    "description": "Nhận đòn trên 10% HP tối đa: khiên 12% HP tối đa trong 3s. Hồi nội tại 10s.",
     "system": "Phòng thủ",
-    "icon": "♥",
+    "icon": "core:core_076",
     "category": "defense",
     "tiers": [
       "gold"
@@ -976,9 +976,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_077",
     "name": "Hồi Phục Chiến Trường",
-    "description": "Hạ Elite hồi 18% HP tối đa và giảm 4 giây hồi chiêu tất cả kỹ năng",
+    "description": "Hạ Tinh Anh: hồi 18% HP tối đa, -4s hồi chiêu mọi kỹ năng.",
     "system": "Sinh tồn",
-    "icon": "♥",
+    "icon": "core:core_077",
     "category": "defense",
     "tiers": [
       "gold"
@@ -987,9 +987,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_078",
     "name": "Tiếp Sức Lò Phản Ứng",
-    "description": "Hạ 5 địch trong vòng 4 giây tăng 35% tốc độ hồi tài nguyên trong 6 giây.",
+    "description": "Hạ 5 địch trong 4s: +35% hồi tài nguyên trong 6s.",
     "system": "Tài nguyên",
-    "icon": "✦",
+    "icon": "core:core_078",
     "category": "resource",
     "tiers": [
       "gold"
@@ -998,9 +998,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_079",
     "name": "Tam Liên Pháo",
-    "description": "Mỗi phát bắn thường thứ 3 tạo thêm một viên đạn phụ gây 40% sát thương.",
+    "description": "Mỗi phát bắn thường thứ 3: thêm 1 đạn phụ gây 40% sát thương.",
     "system": "Vũ khí",
-    "icon": "⇧",
+    "icon": "core:core_079",
     "category": "weapon",
     "tiers": [
       "gold"
@@ -1009,9 +1009,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_080",
     "name": "Dội Xạ Chiến Thuật",
-    "description": "Đạn thường có 15% cơ hội nảy sang một mục tiêu khác với 55% sát thương.",
+    "description": "Đạn thường có 30% cơ hội nảy sang 1 mục tiêu khác, gây 40% sát thương.",
     "system": "Vũ khí",
-    "icon": "⇧",
+    "icon": "core:core_080",
     "category": "weapon",
     "tiers": [
       "gold"
@@ -1020,9 +1020,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_081",
     "name": "Lá chắn kỹ năng",
-    "description": "Mỗi khi dùng kỹ năng, nhận khiên bằng 8% HP tối đa trong 3 giây. Hồi nội bộ 6 giây.",
+    "description": "Dùng kỹ năng: khiên 8% HP tối đa trong 3s. Hồi nội tại 6s.",
     "system": "Kỹ năng",
-    "icon": "✦",
+    "icon": "core:core_081",
     "category": "resource",
     "tiers": [
       "gold"
@@ -1031,9 +1031,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_082",
     "name": "Áp Lực Liên Tục",
-    "description": "Không bị trúng đòn trong 4 giây sẽ nhận +20% Tốc độ bắn cho tới khi bị trúng đòn.",
+    "description": "Không trúng đòn 4s: +20% Tốc độ bắn. Mất khi trúng đòn.",
     "system": "Vũ khí",
-    "icon": "⇧",
+    "icon": "core:core_082",
     "category": "weapon",
     "tiers": [
       "gold"
@@ -1042,9 +1042,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_083",
     "name": "Phản Công Tức Thời",
-    "description": "Sau khi nhận sát thương, 3 phát bắn thường tiếp theo gây thêm 20% sát thương. Hồi nội bộ 6 giây.",
+    "description": "Nhận sát thương: 3 phát thường tiếp theo +20% sát thương. Hồi nội tại 6s.",
     "system": "Phản kích",
-    "icon": "◆",
+    "icon": "core:core_083",
     "category": "offense",
     "tiers": [
       "gold"
@@ -1053,9 +1053,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_084",
     "name": "Miễn Phí Có Điều Kiện",
-    "description": "Mỗi kỹ năng thứ 4 sử dụng không tiêu hao tài nguyên nhưng lần dùng đó có hồi chiêu tăng 20%.",
+    "description": "Mỗi lần dùng kỹ năng thứ 4: miễn tài nguyên, nhưng +20% hồi chiêu lần đó.",
     "system": "Kỹ năng",
-    "icon": "✦",
+    "icon": "core:core_084",
     "category": "resource",
     "tiers": [
       "gold"
@@ -1064,9 +1064,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_085",
     "name": "Pháo Đổi Giáp",
-    "description": "tăng 35 Hỏa lực nhưng -18 Giáp",
+    "description": "+35 Hỏa lực; -18 Giáp.",
     "system": "Đặc Biệt",
-    "icon": "◆",
+    "icon": "core:core_085",
     "category": "offense",
     "tiers": [
       "gold"
@@ -1075,9 +1075,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_086",
     "name": "Pin Xung Kích",
-    "description": "Giảm 20% tài nguyên tối đa nhưng tăng 70% tốc độ hồi tài nguyên.",
+    "description": "-20% tài nguyên tối đa; +70% hồi tài nguyên.",
     "system": "Tài nguyên",
-    "icon": "✦",
+    "icon": "core:core_086",
     "category": "resource",
     "tiers": [
       "gold"
@@ -1086,9 +1086,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_087",
     "name": "Mắt thần chiến trường",
-    "description": "Tăng 20% tỷ lệ chí mạng và 30% sát thương chí mạng.",
+    "description": "+20% Tỷ lệ chí mạng; +30% Sát thương chí mạng.",
     "system": "Chí Mạng",
-    "icon": "◆",
+    "icon": "core:core_087",
     "category": "offense",
     "tiers": [
       "diamond"
@@ -1097,9 +1097,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_088",
     "name": "Xuyên phá tuyệt đối",
-    "description": "Mọi sát thương gây ra bỏ qua 25% Giáp của mục tiêu.",
+    "description": "Mọi sát thương bỏ qua 25% Giáp mục tiêu.",
     "system": "Xuyên Giáp",
-    "icon": "◆",
+    "icon": "core:core_088",
     "category": "offense",
     "tiers": [
       "diamond"
@@ -1108,9 +1108,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_089",
     "name": "Đạn xuyên vô tận",
-    "description": "Đạn đánh thường xuyên qua tối đa 3 mục tiêu bổ sung; các mục tiêu tiếp theo lần lượt nhận 70%, 50% và 30% sát thương.",
+    "description": "Đạn thường xuyên thêm tối đa 3 mục tiêu, gây lần lượt 70%, 50%, 30% sát thương.",
     "system": "Vũ Khí",
-    "icon": "⇧",
+    "icon": "core:core_089",
     "category": "weapon",
     "tiers": [
       "diamond"
@@ -1119,9 +1119,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_090",
     "name": "Từ chối tử thần",
-    "description": "Một lần duy nhất trong mỗi lượt chơi, sát thương chí tử khiến HP còn 1 thay vì bị hạ gục; sau đó miễn nhiễm sát thương 2 giây và hồi 35% HP tối đa.",
+    "description": "Một lần/lượt: đòn chí tử để lại 1 HP; miễn sát thương 2s và hồi 35% HP tối đa.",
     "system": "Sinh Tồn",
-    "icon": "♥",
+    "icon": "core:core_090",
     "category": "defense",
     "tiers": [
       "diamond"
@@ -1130,9 +1130,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_091",
     "name": "Không khuất phục",
-    "description": "Mỗi 2% HP đã mất tăng 1% sát thương gây ra, tối đa +40%.",
+    "description": "Mỗi 2% HP đã mất: +1% sát thương, tối đa +40%.",
     "system": "Sinh Tồn",
-    "icon": "♥",
+    "icon": "core:core_091",
     "category": "defense",
     "tiers": [
       "diamond"
@@ -1141,9 +1141,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_092",
     "name": "Bộ tái tạo sinh học",
-    "description": "Nếu không nhận sát thương trong 5 giây, bắt đầu hồi 2% HP tối đa mỗi giây; hiệu ứng dừng ngay khi nhận sát thương.",
+    "description": "Sau 5s không trúng đòn: hồi 1% HP tối đa/s. Dừng khi trúng đòn.",
     "system": "Hồi Phục",
-    "icon": "♥",
+    "icon": "core:core_092",
     "category": "defense",
     "tiers": [
       "diamond"
@@ -1152,9 +1152,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_093",
     "name": "Đại Pháp Sư",
-    "description": "Mỗi khi sử dụng một kỹ năng, giảm hồi chiêu còn lại của 2 kỹ năng còn lại bằng 15% hồi chiêu cơ bản của chúng.",
+    "description": "Dùng kỹ năng: giảm hồi chiêu còn lại của 2 kỹ năng kia bằng 15% hồi chiêu cơ bản.",
     "system": "Kỹ Năng Chung",
-    "icon": "✦",
+    "icon": "core:core_093",
     "category": "resource",
     "tiers": [
       "diamond"
@@ -1163,9 +1163,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_094",
     "name": "Khế Ước Quỷ Quyệt",
-    "description": "Giảm 35% HP tối đa nhưng tăng 40% Hỏa lực và 10% tỷ lệ chí mạng.",
+    "description": "-35% HP tối đa; +40% Hỏa lực; +10% Tỷ lệ chí mạng.",
     "system": "Đặc Biệt",
-    "icon": "◆",
+    "icon": "core:core_094",
     "category": "offense",
     "tiers": [
       "diamond"
@@ -1174,9 +1174,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_095",
     "name": "Nghịch Lý Bạo Kích",
-    "description": "Tỷ lệ chí mạng bị cố định ở 25%, nhưng sát thương chí mạng tăng thêm 300% (ví dụ 170% tăng thành 470%)",
+    "description": "Khóa Tỷ lệ chí mạng ở 25%; +300% Sát thương chí mạng (170% thành 470%).",
     "system": "Đặc Biệt",
-    "icon": "◆",
+    "icon": "core:core_095",
     "category": "offense",
     "tiers": [
       "diamond"
@@ -1185,9 +1185,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_096",
     "name": "Hợp Đồng Huyết Năng",
-    "description": "Mỗi lần dùng kỹ năng mất 6% HP hiện tại; đổi lại giảm thêm 40% hồi chiêu",
+    "description": "Dùng kỹ năng mất 6% HP hiện tại; +40% giảm hồi chiêu.",
     "system": "Đặc Biệt",
-    "icon": "◆",
+    "icon": "core:core_096",
     "category": "offense",
     "tiers": [
       "diamond"
@@ -1196,9 +1196,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_097",
     "name": "Tập trung chuyên môn",
-    "description": "Khóa cả 3 kỹ năng. Đổi lại tăng 60% hỏa lực, 40% máu tối đa và 40% giáp",
+    "description": "Khóa cả 3 kỹ năng; +60% Hỏa lực, +40% HP tối đa, +40% Giáp.",
     "system": "Đặc Biệt",
-    "icon": "◆",
+    "icon": "core:core_097",
     "category": "offense",
     "tiers": [
       "diamond"
@@ -1207,9 +1207,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_098",
     "name": "Bộ Lọc Nhiễu",
-    "description": "Giảm 25% thời gian tồn tại của các hiệu ứng bất lợi tác động lên chiến cơ.",
+    "description": "Giảm 25% thời gian hiệu ứng bất lợi tác động lên chiến cơ.",
     "system": "Kháng Hiệu Ứng",
-    "icon": "♥",
+    "icon": "core:core_098",
     "category": "defense",
     "tiers": [
       "gold"
@@ -1218,9 +1218,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_099",
     "name": "Kíp Phòng Thủ",
-    "description": "Khi tài nguyên xuống dưới 10%, nhận Khiên bằng 8% HP tối đa trong 4 giây. Hồi nội tại 20 giây.",
+    "description": "Tài nguyên dưới 10%: khiên 8% HP tối đa trong 4s. Hồi nội tại 20s.",
     "system": "Sinh Tồn",
-    "icon": "♥",
+    "icon": "core:core_099",
     "category": "defense",
     "tiers": [
       "silver"
@@ -1229,9 +1229,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_100",
     "name": "Cân Bằng Chiến Trường",
-    "description": "Khi HP trên 70% nhận +20 Hỏa lực; khi HP dưới 30% nhận +20 Giáp. Hai hiệu ứng không cùng tồn tại.",
+    "description": "HP trên 70%: +20 Hỏa lực. HP dưới 30%: +20 Giáp. Không cùng hiệu lực.",
     "system": "Thích Ứng",
-    "icon": "◆",
+    "icon": "core:core_100",
     "category": "offense",
     "tiers": [
       "silver"
@@ -1240,9 +1240,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_101",
     "name": "Hỏa Lực Cự Ly Gần",
-    "description": "Đòn đánh thường gây thêm 12% sát thương lên mục tiêu ở cự ly gần (cự ly gần được tính là khoảng cách từ tâm chiến đấu cơ đến tâm quái vật mục tiêu nhỏ hơn độ dài của 1/3 màn hình chơi)",
+    "description": "Bắn thường: +12% sát thương khi khoảng cách hai tâm nhỏ hơn 1/3 chiều cao vùng chơi.",
     "system": "Vũ Khí",
-    "icon": "⇧",
+    "icon": "core:core_101",
     "category": "weapon",
     "tiers": [
       "silver"
@@ -1251,9 +1251,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_102",
     "name": "Hỏa Lực Cự Ly Xa",
-    "description": "Đòn đánh thường gây thêm 12% sát thương lên mục tiêu ở cự ly xa (cự ly xa được tính là khoảng cách từ tâm chiến đấu cơ đến tâm quái vật mục tiêu dài hơn độ dài của 2/3 màn hình chơi)",
+    "description": "Bắn thường: +12% sát thương khi khoảng cách hai tâm lớn hơn 2/3 chiều cao vùng chơi.",
     "system": "Vũ Khí",
-    "icon": "⇧",
+    "icon": "core:core_102",
     "category": "weapon",
     "tiers": [
       "silver"
@@ -1262,9 +1262,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_103",
     "name": "Bản Năng Sinh Tồn",
-    "description": "Khi HP dưới 30%, sát thương nhận từ đạn của địch giảm 12%.",
+    "description": "HP dưới 30%: giảm 12% sát thương đạn địch.",
     "system": "Sinh Tồn",
-    "icon": "♥",
+    "icon": "core:core_103",
     "category": "defense",
     "tiers": [
       "gold"
@@ -1273,9 +1273,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_104",
     "name": "Tràn trề",
-    "description": "Lượng hồi HP vượt quá HP tối đa được chuyển thành Khiên, tối đa bằng 12% HP tối đa.",
+    "description": "Hồi HP dư chuyển thành khiên, tối đa 12% HP tối đa.",
     "system": "Sinh Tồn",
-    "icon": "♥",
+    "icon": "core:core_104",
     "category": "defense",
     "tiers": [
       "gold"
@@ -1284,9 +1284,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_105",
     "name": "Bão Sét Bạo Kích",
-    "description": "Mỗi đòn chí mạng gọi sét lan tới tối đa 3 mục tiêu khác, mỗi mục tiêu nhận 70% Hỏa lực. Cùng một mục tiêu chỉ có thể bị sét đánh 1 lần mỗi 0,5 giây.",
+    "description": "Chí mạng: sét lan tối đa 3 mục tiêu khác, gây 70% Hỏa lực/mục tiêu. Mỗi mục tiêu nhận sét tối đa 1 lần/0,5s.",
     "system": "Chí Mạng",
-    "icon": "◆",
+    "icon": "core:core_105",
     "category": "offense",
     "tiers": [
       "diamond"
@@ -1295,9 +1295,9 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_106",
     "name": "Tên lửa Tomahawk",
-    "description": "Mỗi 1,5 giây, hệ thống tự khóa tối đa 3 mục tiêu và phóng một tên lửa vào mỗi mục tiêu, mỗi tên lửa gây 250% Hỏa lực.",
+    "description": "Mỗi 1,5s: phóng tối đa 3 Tomahawk. Mỗi quả gây 195% Hỏa lực.",
     "system": "Hỏa Lực Tự Động",
-    "icon": "◆",
+    "icon": "core:core_106",
     "category": "offense",
     "tiers": [
       "diamond"

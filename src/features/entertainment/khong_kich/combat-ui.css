@@ -116,3 +116,36 @@
 .air-skill-duration { position:absolute; left:0; right:0; top:-1.1cqw; height:.65cqw; background:#713f1266; z-index:15; pointer-events:none; }
 .air-skill-duration[hidden] { display:none; }
 .air-skill-duration > span { display:block; height:100%; width:100%; transform:scaleX(var(--skill-duration,1)); transform-origin:left; background:#fde047; }
+
+/* Tactical geometry stays feature-local and retains the existing HUD footprint. */
+.air-combat-hud-heading > div:nth-child(-n+2), .air-combat-hud-heading button,
+.combat-stat-chip, .air-core-slot, .air-core-detail, .air-owned-core {
+ border-radius:0;clip-path:polygon(6px 0,100% 0,100% calc(100% - 6px),calc(100% - 6px) 100%,0 100%,0 6px);
+}
+.air-combat-hud-heading > div:nth-child(-n+2) {padding:.7cqw 1.5cqw;background:linear-gradient(115deg,#213c50,#0b192a);border-left:2px solid #81c9e0;}
+.air-combat-hud-heading > div:nth-child(2) {border-color:#ffd681;background:linear-gradient(115deg,#40311d,#152331);}
+.air-combat-hud-heading button {box-shadow:inset 0 2px #96dcf633;}
+.combat-stat-chip {background:linear-gradient(130deg,#243e50,#122639);border-bottom:1px solid #7db5c65c;}
+.air-xp-bar {position:relative;clip-path:polygon(3px 0,100% 0,calc(100% - 3px) 100%,0 100%);}
+.air-xp-bar::after {content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0 8px,#07171e80 8px 9px);}
+[data-skill-rail="bottom"] > button {border-radius:0;clip-path:polygon(9px 0,100% 0,100% calc(100% - 9px),calc(100% - 9px) 100%,0 100%,0 9px);box-shadow:inset 0 2px #caeeff38;}
+[data-skill-rail="bottom"] > button::after {content:"";position:absolute;inset:3px;border:1px solid #82cfdf30;pointer-events:none;}
+.air-skill-icon-wrap {border-radius:0;background:linear-gradient(135deg,#59728944,#071320);border:1px solid #9bccdf70;}
+.air-boss-health {clip-path:polygon(3px 0,100% 0,calc(100% - 3px) 100%,0 100%);border:1px solid #ffb5b655;}
+.air-boss-phase-marker {position:absolute;inset-block:0;z-index:3;width:1px;background:#ffecd1;box-shadow:0 0 2px #000;}
+.combat-core-card {border-radius:0!important;clip-path:polygon(14px 0,100% 0,100% calc(100% - 14px),calc(100% - 14px) 100%,0 100%,0 14px);}
+.combat-core-card > span:nth-child(2),.combat-core-card .rounded-full,.combat-core-card .rounded-lg {border-radius:0;}
+.combat-core-card > span:nth-child(2) {clip-path:polygon(9px 0,100% 0,100% calc(100% - 9px),calc(100% - 9px) 100%,0 100%,0 9px);border-color:currentColor;}
+.combat-core-card:hover,.combat-core-card:focus-visible {filter:brightness(1.15);outline:2px solid #e0faff;outline-offset:-4px;}
+.combat-core-card:active {filter:brightness(1.3);}
+.core-semantic-icon {display:inline-grid;place-items:center;isolation:isolate;background:linear-gradient(145deg,#7696ad30,#071321);border:1px solid #a0d3e46b;clip-path:polygon(6px 0,100% 0,100% calc(100% - 6px),calc(100% - 6px) 100%,0 100%,0 6px);color:inherit;}
+.core-semantic-icon > svg {width:68%;height:68%;filter:drop-shadow(0 1px 3px #8addff55);}
+.core-skill-art {position:absolute;inset:5%;overflow:hidden;pointer-events:none;}
+.core-icon-modifier {position:absolute;right:1px;bottom:1px;padding:1px 3px;font-size:clamp(7px,.7em,12px);font-weight:900;line-height:1.1;background:#0a1829;border-top:1px solid #d2f4ff;color:#e0faff;z-index:2;}
+.air-status-icon {border-radius:2px!important;}
+.air-status-timer {position:absolute;bottom:-1px;left:0;right:0;z-index:3;background:#081526c9;color:#e3f5ff;font-size:1.55cqw;line-height:1;font-variant-numeric:tabular-nums;}
+.air-combat-surface[data-emp-jam="true"] .air-combat-hud {box-shadow:inset 0 -2px #67e8f9; background-image:repeating-linear-gradient(0deg,#67e8f907 0 1px,transparent 1px 5px);}
+@media(prefers-reduced-motion:reduce){.combat-core-card:hover{filter:none;}.combat-core-card{transition:none;}}
+
+.air-boss-hud[data-aegis-active="true"] .air-boss-health::after {content:"";position:absolute;inset:0;z-index:4;border-block:1px solid #b5f3ff;background:repeating-linear-gradient(115deg,#77dfff60 0 3px,transparent 3px 7px);pointer-events:none;}
+.air-boss-hud[data-aegis-active="true"] > div:first-child::after {content:"AEGIS";color:#b5f3ff;font-size:1.6cqw;font-weight:900;letter-spacing:.1em;}

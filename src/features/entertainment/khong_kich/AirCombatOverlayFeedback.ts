@@ -26,7 +26,11 @@ export class AirCombatOverlayFeedback {
     const boss = world.enemies.find(e => e.type === "boss");
     if (boss) {
       const bar = this.health.get(boss.id, boss.hp, boss.maxHp, boss.shieldUntil > world.aircraft.coreState.time ? boss.shield : 0);
-      if (bossHp) bossHp.style.width = `${bar.hpRatio * 100}%`;
+      if (bossHp) {
+        bossHp.style.width = `${bar.hpRatio * 100}%`;
+        const frame=bossHp.closest<HTMLElement>(".air-boss-hud");
+        if(frame)frame.dataset.aegisActive=String(boss.hp/boss.maxHp>=.15 && boss.aegisUntil>world.aircraft.coreState.time);
+      }
       if (bossChip) bossChip.style.width = `${bar.chipRatio * 100}%`;
       if (bossShield) bossShield.style.width = `${bar.shieldEnd * 100}%`;
     }

@@ -1,3 +1,4 @@
+import type { PlayerCombatStatus } from "./airCombatStatus";
 export type AircraftId = "black_eagle" | "breaker" | "phantom";
 
 export type ResourceKind = "mana" | "energy";
@@ -133,6 +134,7 @@ export interface AircraftModifiers {
 }
 
 export interface AircraftCombatState {
+  status: PlayerCombatStatus;
   aircraftId: AircraftId;
   level: number;
   combatXp: number;

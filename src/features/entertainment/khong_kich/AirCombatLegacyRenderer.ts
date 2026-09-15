@@ -1,3 +1,5 @@
+import { AMMO_VISUALS, getAmmoVisualKey } from "./airCombatAmmo";
+import type { AmmoVisualKey } from "./airCombatAmmo";
 import { angularBarPolygon } from "./airCombatHudLayout";
 import { SONIC_RING_THICKNESS } from "./airCombatBoss";
 import { getTerrainWorld, TERRAIN_HEIGHT, type TerrainShape } from "./airCombatTerrain";
@@ -9,6 +11,13 @@ import type { AircraftId, EnemyType } from "./airCombatTypes";
 import { getEffectiveAircraftStats } from "./airCombatEngine";
 import { HealthBarPresentation, activeShieldAmount, statusBarText, DAMAGE_LABEL_SECONDS, trackingBarWidth, trackingBarX, trackingBarY, type DamageLabel } from "./airCombatFeedback";
 
+const ammoPaths = new Map<AmmoVisualKey, { body: Path2D; detail: Path2D }>();
+function drawAmmo(ctx:CanvasRenderingContext2D,key:AmmoVisualKey,x:number,y:number,angle:number) {
+ const art=AMMO_VISUALS[key];let paths=ammoPaths.get(key);
+ if(!paths){paths={body:new Path2D(art.body),detail:new Path2D(art.detail)};ammoPaths.set(key,paths);}
+ ctx.save();ctx.translate(x,y);ctx.rotate(angle+Math.PI/2);ctx.scale(art.width/64,art.height/64);ctx.translate(-32,-32);
+ ctx.fillStyle=art.color;ctx.fill(paths.body);ctx.fillStyle=art.highlight;ctx.fill(paths.detail);ctx.restore();
+}
 const terrainTiles = new WeakMap<CombatWorld, { canvas: HTMLCanvasElement; revision: number }[]>();
 function paintTerrainShapes(ctx: CanvasRenderingContext2D, shapes: TerrainShape[]) {
   for (const shape of shapes) {
@@ -31,7 +40,7 @@ function drawTerrain(ctx: CanvasRenderingContext2D, world: CombatWorld, reducedM
   if (!tiles) {
     tiles = terrain.segments.map(() => {
       const canvas = document.createElement("canvas");
-      canvas.width = AIR_COMBAT_WORLD.width; canvas.height = TERRAIN_HEIGHT;
+      canvas.width = AIR_COMBAT_WORLD.width; canvas.height = TERRAIN_HEIGHT+1;
       return { canvas, revision: -1 };
     });
     terrainTiles.set(world, tiles);
@@ -48,7 +57,7 @@ function drawTerrain(ctx: CanvasRenderingContext2D, world: CombatWorld, reducedM
         tile.revision = segment.revision;
       }
     }
-    ctx.drawImage(tile.canvas, 0, Math.round(segment.y));
+    ctx.drawImage(tile.canvas, 0, segment.y);
   }
   ctx.fillStyle = `rgba(30,65,88,${.24 + terrain.bossAtmosphere * .06})`;
   ctx.fillRect(0, 0, AIR_COMBAT_WORLD.width, AIR_COMBAT_WORLD.height);
@@ -384,7 +393,7 @@ export function drawLegacyWorld(
       ctx.save();
       ctx.strokeStyle = "rgba(251,113,133,.75)"; ctx.lineWidth = active ? SONIC_RING_THICKNESS : 3;
       ctx.beginPath(); ctx.arc(warning.x, warning.y, radius, angle + arc / 2, angle - arc / 2 + Math.PI * 2); ctx.stroke();
-      if (warning.ringIndex === 0) {
+      if (!active) {
         const left = angle - arc / 2, right = angle + arc / 2, reach = 680;
         ctx.fillStyle = "rgba(103,232,249,.045)";
         ctx.beginPath(); ctx.moveTo(warning.x, warning.y);
@@ -410,6 +419,12 @@ export function drawLegacyWorld(
       }
       ctx.restore(); continue;
     }
+    if(warning.kind==="emp"||warning.kind==="shock_clamp") {
+      ctx.save();ctx.strokeStyle="#67e8f9";ctx.fillStyle="rgba(56,189,248,.1)";ctx.lineWidth=2;
+      ctx.beginPath();for(let i=0;i<6;i++){const a=i*Math.PI/3,x=warning.x+Math.cos(a)*warning.radius,y=warning.y+Math.sin(a)*warning.radius;if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);}ctx.closePath();ctx.fill();ctx.stroke();
+      ctx.strokeStyle="#fb7185";ctx.beginPath();ctx.arc(warning.x,warning.y,warning.radius,0,Math.PI*2);ctx.stroke();
+      ctx.strokeStyle="#c4b5fd";ctx.beginPath();ctx.arc(warning.x,warning.y,warning.radius*(1-warning.remaining/warning.totalDuration),0,Math.PI*2);ctx.stroke();ctx.restore();continue;
+    }
     if(warning.kind==="acid"&&warning.stage==="active"){
       ctx.fillStyle="rgba(163,230,53,.25)";ctx.strokeStyle="#bef264";ctx.lineWidth=2;ctx.beginPath();ctx.arc(warning.x,warning.y,warning.radius,0,Math.PI*2);ctx.fill();ctx.stroke();continue;
     }
@@ -432,7 +447,8 @@ export function drawLegacyWorld(
 
   for (const decoy of world.decoys) {
     const alpha = 0.42 + Math.sin(world.elapsed * 12 + decoy.id) * 0.2;
-    drawAircraft(ctx, aircraftId, decoy.x, decoy.y, aircraft.color, aircraft.accent, alpha, 0.55);
+    if(decoy.clone)drawAircraft(ctx, aircraftId, decoy.x, decoy.y, aircraft.color, aircraft.accent, alpha, 0.55);
+    else {ctx.save();ctx.globalAlpha=Math.min(1,decoy.remaining/.35);ctx.shadowColor="#ffbd6e";ctx.shadowBlur=reducedMotion?6:decoy.active?18:10;ctx.fillStyle="#fff3c4";ctx.beginPath();ctx.arc(decoy.x,decoy.y,decoy.active?3:1.8,0,Math.PI*2);ctx.fill();ctx.strokeStyle="#ffd69d";ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(decoy.x-6,decoy.y);ctx.lineTo(decoy.x+6,decoy.y);ctx.moveTo(decoy.x,decoy.y-6);ctx.lineTo(decoy.x,decoy.y+6);ctx.stroke();ctx.restore();}
   }
   ctx.globalAlpha = 1;
 
@@ -466,34 +482,24 @@ export function drawLegacyWorld(
       ctx.save();
       ctx.translate(projectile.x, projectile.y);
       ctx.rotate(projectile.heading + Math.PI / 2);
-      if (projectile.bigBang) ctx.scale(1.5, 1.5);
+      if (projectile.bigBang) ctx.scale(2.25, 2.25); else if(projectile.owner!=="enemy")ctx.scale(.8,.8);
       if (powered) {
         const flame = 6 + 10 * projectile.speed / Math.max(1, projectile.cruiseSpeed);
         ctx.fillStyle = projectile.owner === "enemy" ? "#ff526e" : "#ffcc80";
         ctx.shadowColor = projectile.owner === "enemy" ? "#fb7185" : "#fb923c"; ctx.shadowBlur = 12;
         ctx.beginPath(); ctx.moveTo(-3, 12); ctx.lineTo(0, 14 + flame); ctx.lineTo(3, 12); ctx.closePath(); ctx.fill();
       }
-      ctx.shadowColor = projectile.color;
-      ctx.shadowBlur = powered ? 10 : 3;
-      ctx.fillStyle = projectile.color;
-      ctx.beginPath();
-      ctx.moveTo(0, -14);
-      ctx.lineTo(4, -5);
-      ctx.lineTo(4, 7);
-      ctx.lineTo(7, 13);
-      ctx.lineTo(-7, 13);
-      ctx.lineTo(-4, 7);
-      ctx.lineTo(-4, -5);
-      ctx.closePath();
-      ctx.fill();
-      ctx.shadowBlur = 0;
-      ctx.fillStyle = "#fef3c7";
-      ctx.fillRect(-1.5, -3, 3, 5);
+      ctx.restore();
+      const ammo=getAmmoVisualKey(projectile)!;
+      drawAmmo(ctx,ammo,projectile.x,projectile.y,projectile.heading);
+      ctx.save();ctx.translate(projectile.x,projectile.y);ctx.rotate(projectile.heading+Math.PI/2);
       if (projectile.owner === "enemy" && !powered) {
         ctx.fillStyle = "rgba(255,82,110,.6)";
         ctx.beginPath(); ctx.arc(0, 14, 4 + Math.sin(projectile.missileAge * 16), 0, Math.PI * 2); ctx.fill();
       }
       ctx.restore();
+    } else if(projectile.owner==="enemy") {
+      drawAmmo(ctx,getAmmoVisualKey(projectile)!,projectile.x,projectile.y,Math.atan2(projectile.vy,projectile.vx));
     } else {
       ctx.fillStyle = projectile.color;
       ctx.shadowColor = projectile.color;
@@ -528,11 +534,12 @@ export function drawLegacyWorld(
       const w = Math.max(24, Math.min(70, enemy.radius * 2.2));
       const x = Math.max(GAMEPLAY_SAFE_RECT.left, Math.min(GAMEPLAY_SAFE_RECT.right - w, enemy.x - w / 2));
       const y = Math.min(GAMEPLAY_SAFE_RECT.bottom - 5, enemy.y + enemy.radius * 1.4 + 5);
-      ctx.fillStyle = "#071223"; ctx.fillRect(x - 1, y - 1, w + 2, 5);
-      ctx.fillStyle = "#d8e4ee"; ctx.fillRect(x, y, w * health.shieldEnd, 3);
-      ctx.fillStyle = "#fff"; ctx.fillRect(x, y, w * health.chipRatio, 3);
+      const barHeight=isElite(enemy.type)?5:3;
+      ctx.fillStyle="#071223";ctx.beginPath();ctx.moveTo(x-2,y+1);ctx.lineTo(x+1,y-2);ctx.lineTo(x+w+2,y-2);ctx.lineTo(x+w+2,y+barHeight-1);ctx.lineTo(x+w-1,y+barHeight+2);ctx.lineTo(x-2,y+barHeight+2);ctx.closePath();ctx.fill();ctx.strokeStyle=isElite(enemy.type)?"#ffad43":"#d05a69";ctx.lineWidth=.8;ctx.stroke();
+      ctx.fillStyle = "#d8e4ee"; ctx.fillRect(x, y, w * health.shieldEnd, barHeight);
+      ctx.fillStyle = "#fff"; ctx.fillRect(x, y, w * health.chipRatio, barHeight);
       ctx.fillStyle = isElite(enemy.type) ? "#fbbf24" : "#fb7185";
-      ctx.fillRect(x, y, w * health.hpRatio, 3);
+      ctx.fillRect(x, y, w * health.hpRatio, barHeight);
     }
   }
 

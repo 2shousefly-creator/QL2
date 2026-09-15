@@ -6,7 +6,7 @@ export interface AirCombatPresentation {
 }
 
 export interface AtlasFrame {
-  atlas: "aircraft" | "fortress" | "vfx";
+  atlas: "aircraft" | "fortress" | "vfx" | "ammo";
   /** Normalized source rectangle, independent of generator output resolution. */
   rect: readonly [number, number, number, number];
 }

@@ -1,3 +1,6 @@
+import ammoUrl from "../../../../assets/khong-kich/v2/hardcore-ammo-atlas.svg";
+import { AMMO_VISUALS } from "../airCombatAmmo";
+import type { AmmoVisualKey } from "../airCombatAmmo";
 import { Assets, Rectangle, Texture } from "pixi.js";
 import aircraftUrl from "../../../../assets/khong-kich/v2/aircraft-atlas.png";
 import fortressUrl from "../../../../assets/khong-kich/v2/fortress-clouds-atlas.png";
@@ -21,7 +24,9 @@ export const ENEMY_VISUALS: Record<EnemyType, AtlasFrame> = {
   iron_fortress: { atlas: "fortress", rect: [0.56, 0, 0.44, 0.51] },
   acid_bomber:cell("aircraft",2,3), radar_hunter:cell("aircraft",3,3),
 };
+const ammoFrames = Object.fromEntries(Object.entries(AMMO_VISUALS).map(([key,v]) => [key,cell("ammo",v.cell[0],v.cell[1])])) as Record<AmmoVisualKey,AtlasFrame>;
 export const VFX_VISUALS = {
+  ...ammoFrames,
   muzzle: cell("vfx", 0, 0), tracer: cell("vfx", 1, 0), enemyTracer: cell("vfx", 2, 0), missile: cell("vfx", 3, 0),
   smallExplosion: cell("vfx", 0, 1), mediumExplosion: cell("vfx", 1, 1), largeExplosion: cell("vfx", 2, 1), bossExplosion: cell("vfx", 3, 1),
   sparks: cell("vfx", 0, 2), smoke: cell("vfx", 1, 2), damageSmoke: cell("vfx", 2, 2), fire: cell("vfx", 3, 2),
@@ -34,10 +39,10 @@ export type VisualKey = keyof typeof VFX_VISUALS;
 
 /** Each renderer owns its frame views. Assets owns cached shared source textures. */
 export async function loadAirCombatAssets() {
-  const [aircraft, fortress, vfx] = await Promise.all([
-    Assets.load<Texture>(aircraftUrl), Assets.load<Texture>(fortressUrl), Assets.load<Texture>(vfxUrl),
+  const [aircraft, fortress, vfx, ammo] = await Promise.all([
+    Assets.load<Texture>(aircraftUrl), Assets.load<Texture>(fortressUrl), Assets.load<Texture>(vfxUrl), Assets.load<Texture>(ammoUrl),
   ]);
-  const sources = { aircraft, fortress, vfx };
+  const sources = { aircraft, fortress, vfx, ammo };
   const frames = new Map<AtlasFrame, Texture>();
   const texture = (definition: AtlasFrame) => {
     const cached = frames.get(definition);

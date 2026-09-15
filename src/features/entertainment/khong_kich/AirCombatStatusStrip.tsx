@@ -1,11 +1,11 @@
 import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
-import { Flame, FlaskConical, Shield, ShieldMinus, Zap } from "lucide-react";
+import { Flame, FlaskConical, Shield, ShieldMinus, Zap, Lock, BatteryWarning, HeartOff, Crosshair, Radar } from "lucide-react";
 import { CombatUiIcon } from "./CombatUiIcon";
 import { getStatusPresentations, type StatusPresentation } from "./airCombatPresentation";
 import type { CombatWorld } from "./airCombatRuntime";
 
 export interface StatusStripHandle { update(world: CombatWorld): void }
-const genericIcons = { burn: Flame, acid: FlaskConical, armor: ShieldMinus, shield: Shield, stun: Zap };
+const genericIcons = { burn: Flame, acid: FlaskConical, armor: ShieldMinus, shield: Shield, stun: Zap, skill_lock:Lock, resource_jam:BatteryWarning, regen_off:HeartOff, mark:Crosshair, radar:Radar };
 const timeLabel = (value: number) => Number.isFinite(value) ? `${Math.max(0, value).toFixed(1).replace(".", ",")}s` : "Đang hiệu lực";
 const progressRatio = (status?: StatusPresentation) => {
   const value = status?.progress ?? (status && status.duration > 0 ? status.remaining / status.duration : 1);
@@ -29,12 +29,15 @@ export const AirCombatStatusStrip = React.memo(forwardRef<StatusStripHandle, { t
   }, []);
   useImperativeHandle(ref, () => ({ update(world) {
     current.current = getStatusPresentations(world);
+    const surface=host.current?.closest<HTMLElement>(".air-combat-surface");
+    if(surface)surface.dataset.empJam=String(world.aircraft.status.resourceJammedUntil>world.aircraft.coreState.time);
     const nextSignature = current.current.map(s => `${s.id}:${s.stacks}`).join("|");
     if (signature.current !== nextSignature) { signature.current = nextSignature; setItems(current.current); }
     for (const node of host.current?.querySelectorAll<HTMLElement>("[data-status-id]") || []) {
       const status = current.current.find(s => s.id === node.dataset.statusId);
       const ratio = progressRatio(status);
       node.style.setProperty("--status-elapsed", `${(1 - ratio) * 360}deg`);
+      const timer=node.querySelector("[data-status-timer]");if(timer)timer.textContent=status && Number.isFinite(status.remaining)?`${status.remaining.toFixed(1).replace(".",",")}`:"";
     }
     const active = current.current.find(s => s.id === selectedRef.current);
     if (selectedRef.current && !active) close();
@@ -59,6 +62,7 @@ export const AirCombatStatusStrip = React.memo(forwardRef<StatusStripHandle, { t
             onClick={() => { const next = selected === status.id ? null : status.id; selectedRef.current = next; setSelected(next); }}>
             {status.icon.kind === "status" ? Generic && <Generic aria-hidden="true" /> : <CombatUiIcon {...status.icon} fallback="◆" />}
             <span className="air-status-radial" />
+            <small className="air-status-timer" data-status-timer>{Number.isFinite(status.remaining)?status.remaining.toFixed(1).replace(".",","):""}</small>
             {status.stacks > 1 && <b className="air-status-stack">×{status.stacks}</b>}
           </button>;
         })}

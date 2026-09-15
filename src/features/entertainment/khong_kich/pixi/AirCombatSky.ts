@@ -41,7 +41,8 @@ export class AirCombatSky {
         sprite.anchor.set(0.5);
         sprite.position.set(((i * 137 + layer * 67) % 460) - 50, i * 230 - 160);
         sprite.width = 190 + layer * 62;
-        sprite.height = sprite.width * 0.7;
+        sprite.height = sprite.width * (i%2?.52:.7);
+        sprite.rotation=(i%3-1)*.16;
         sprite.alpha = [0.13, 0.17, 0.11][layer];
         this.root.addChild(sprite);
         this.clouds.push({ sprite, speed: i % 2 ? 4 + layer * 2 : 5 + layer * 12, alpha: sprite.alpha, haze: i % 2 === 1 });
@@ -59,6 +60,8 @@ export class AirCombatSky {
       const view = this.terrain[i], segment = terrain.segments[i];
       if (view.revision !== segment.revision) {
         paint(view.ground, segment.ground); paint(view.landmarks, segment.landmarks);
+        if(view.revision<0)view.root.cacheAsTexture({resolution:1,antialias:true});
+        else view.root.updateCacheTexture();
         view.revision = segment.revision;
       }
       view.root.y = segment.y;
