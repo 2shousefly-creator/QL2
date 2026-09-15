@@ -1,24 +1,41 @@
 import type { ProjectileEntity } from "./airCombatRuntime";
 import type { AircraftId } from "./airCombatTypes";
 export const BASIC_AMMO_KEYS = { black_eagle:"viper_basic_ammo", breaker:"titan_basic_ammo", phantom:"phantom_basic_ammo" } as const satisfies Record<AircraftId,string>;
-/** Presentation only: sizes and paths never participate in hit detection. */
+/** Presentation only: never use these dimensions for hit detection. */
+export const PLAYER_BASIC_AMMO_VISUAL_SIZE = { width: 11, height: 30 } as const;
+// The wake overlaps the body by .5px: total local envelope is 11 x 33.5px.
+export const PLAYER_BASIC_AMMO_TRAIL_SIZE = { width: 2, length: 4, alpha: .28 } as const;
+const BASIC_AMMO_GLOW = {
+  body: "M32 0A32 32 0 1 1 32 64A32 32 0 1 1 32 0Z", alpha: .1,
+} as const;
 export const AMMO_VISUALS={
-  // Each body occupies a 64x64 source cell; width/height are world-space art dimensions.
+  // Equal 64x64 source cells. All identity (including rings/shards) stays inside each cell.
   viper_basic_ammo: {
-    body:"M32 0Q54 12 64 22L56 55L44 64H20L8 55L0 22Q10 12 32 0Z", color:"#a5eaff",
-    detail:"M32 0L39 20L36 57H28L25 20Z", highlight:"#ffffff", width:6, height:24, cell:[0,0] as const,
-    trail:{length:5,width:2,color:0x83eaff,css:"#83eaff",alpha:.42},
+    ...PLAYER_BASIC_AMMO_VISUAL_SIZE, cell:[0,0] as const,
+    body:"M32 0Q45 9 41 20L35 47L32 64L29 47L23 20Q19 9 32 0Z", color:"#67e8f9",
+    detail:"M32 1Q37 10 35 19L32 51L29 19Q27 10 32 1Z", highlight:"#e8fdff",
+    accents:"M0 29a32 5 0 1 0 64 0a32 5 0 1 0-64 0M3 29a29 3 0 1 0 58 0a29 3 0 1 0-58 0M5 42a27 4 0 1 0 54 0a27 4 0 1 0-54 0M8 42a24 2 0 1 0 48 0a24 2 0 1 0-48 0M12 54a20 3 0 1 0 40 0a20 3 0 1 0-40 0M15 54a17 1.5 0 1 0 34 0a17 1.5 0 1 0-34 0",
+    accentColor:"#38bdf8", accentAlpha:.65,
+    glow:{...BASIC_AMMO_GLOW,color:"#3b82f6"},
+    trail:{...PLAYER_BASIC_AMMO_TRAIL_SIZE,color:0x67e8f9,css:"#67e8f9"},
   },
   titan_basic_ammo: {
-    body:"M32 0Q49 5 60 16L64 22V54L52 64H12L0 54V22L4 16Q15 5 32 0Z", color:"#586676",
-    detail:"M29 12L35 12L36 56H28ZM16 59H48V62H16Z", highlight:"#ffc16b", width:8, height:29, cell:[1,0] as const,
-    trail:{length:7,width:2.5,color:0xffb052,css:"#ffb052",alpha:.5},
+    ...PLAYER_BASIC_AMMO_VISUAL_SIZE, cell:[1,0] as const,
+    body:"M32 0L49 10L43 16L55 29L45 26L48 48L36 30L32 64L26 34L17 53L19 28L8 34L16 17L11 14Z", color:"#ffd84d",
+    detail:"M32 1L40 12L35 19L32 37L28 21L23 13ZM19 19L24 28L22 38ZM42 20L48 31L42 28Z", highlight:"#fff7c2",
+    accents:"M0 21L13 28L7 47L8 32ZM64 18L54 36L57 52L49 32ZM14 51L18 56L13 61ZM43 48L47 56L44 60Z",
+    accentColor:"#f59e0b", accentAlpha:.72,
+    glow:{...BASIC_AMMO_GLOW,color:"#fbbf24"},
+    trail:{...PLAYER_BASIC_AMMO_TRAIL_SIZE,color:0xfbbf24,css:"#fbbf24"},
   },
   phantom_basic_ammo: {
-    body:"M32 0Q43 8 45.333 16L43 52Q39 60 32 64Q25 60 21 52L18.667 16Q21 8 32 0Z", color:"#baf6ff",
-    detail:"M32 0Q36 10 37 18L35 52L32 64L29 52L27 18Q28 10 32 0Z", highlight:"#ffffff", width:12, height:32, cell:[2,0] as const,
-    glow:{body:"M32 0C52 5 64 15 64 28C64 48 47 59 32 64C17 59 0 48 0 28C0 15 12 5 32 0Z",color:"#a78bfa",alpha:.24},
-    trail:{length:12,width:4,color:0xb8a0ff,css:"#b8a0ff",alpha:.55},
+    ...PLAYER_BASIC_AMMO_VISUAL_SIZE, cell:[2,0] as const,
+    body:"M32 0Q42 8 38 18L33 64L28 52L26 18Q23 8 32 0ZM14 12L19 21L12 57L0 48L6 23ZM45 9L49 22L47 59L41 49L41 20ZM57 18L64 26L60 51L55 44Z", color:"#e879f9",
+    detail:"M32 1L35 12L32 47L29 15ZM13 18L14 29L10 48L9 29ZM45 16L46 29L44 49L43 28ZM59 25L60 32L58 42Z", highlight:"#fff0ff",
+    accents:"M5 23L14 12L10 26ZM41 20L45 9L48 23ZM55 28L57 18L64 26L61 32Z",
+    accentColor:"#a855f7", accentAlpha:.6,
+    glow:{...BASIC_AMMO_GLOW,color:"#8b5cf6"},
+    trail:{...PLAYER_BASIC_AMMO_TRAIL_SIZE,color:0xa855f7,css:"#a855f7"},
   },
   viper_missile: { body: "M32 5L36 17L36 44L43 54L34 51L30 51L21 54L28 44L28 17Z", color: "#f4f4e8", detail: "M30 23H34V43H30Z", highlight: "#f59e0b", width: 11.2, height: 22.4, cell: [0,0] as const },
   bigbang_missile: { body: "M32 1L43 7L48 18V29L59 39V48L47 43V49L57 58V62L42 57H22L7 62V58L17 49V43L5 48V39L16 29V18L21 7Z", color: "#384450", detail: "M20 21H44V24H20ZM19 27H45V29H19ZM22 47H42V50H22ZM21 56H28V61H21ZM36 56H43V61H36Z", highlight: "#ffbe54", width: 36, height: 63, cell: [1,0] as const },

@@ -335,7 +335,8 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
         const glow=this.projectileGlows.get(p.id,this.assets.effect(basic?"basicAmmoTrail":p.owner==="enemy"?"charge":"laser"));
         if(glow){
           if(basic){
-            // One recycled sprite: fixed visual length, no historical particles or runtime writes.
+            // Shared 2x4px wake overlaps all 11x30px bodies by .5px (33.5px total).
+            // One recycled sprite; no historical particles or runtime writes.
             const length=basic.trail.length*(reducedMotion?.6:1);
             const rear=basic.height/2+length/2-.5;
             const heading=sprite.rotation-Math.PI/2;
@@ -355,7 +356,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
       if (p.id > this.lastProjectile && p.owner === "enemy" && p.appearance === "boss")
         this.vfx.spawn("muzzle", p.x, p.y, missile ? 18 : 10, .12, 0xff526e);
       if (p.id > this.lastProjectile && p.owner !== "enemy") {
-        this.vfx.spawn("muzzle", p.x, p.y, p.owner === "drone" ? 14 : p.ammoVisualKey==="titan_basic_ammo" ? 22 : 18, 0.09, p.owner === "drone" ? 0xc4b5fd : visual.tint);
+        this.vfx.spawn("muzzle", p.x, p.y, p.owner === "drone" ? 14 : 18, 0.09, p.owner === "drone" ? 0xc4b5fd : visual.tint);
         if(!reducedMotion){this.vfx.spawn("charge",p.x,p.y,9,.06,0xffffff);this.vfx.spawn("sparks",p.x,p.y,16,.13,visual.tint,0,.025);}
         if (p.owner === "player") this.recoil = 1.4;
       }

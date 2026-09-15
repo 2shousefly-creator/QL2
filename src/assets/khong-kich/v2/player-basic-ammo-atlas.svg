@@ -1,33 +1,54 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="192" height="128" viewBox="0 0 192 128">
   <defs>
-    <linearGradient id="steel" x1="0" y1="0" x2="1" y2="0">
-      <stop stop-color="#24303e"/><stop offset=".3" stop-color="#8495a6"/>
-      <stop offset=".48" stop-color="#586676"/><stop offset=".76" stop-color="#394755"/><stop offset="1" stop-color="#1e2936"/>
+    <!-- Shared opacity falloff and bounds; color and internal silhouettes carry identity. -->
+    <linearGradient id="fade" x1="0" y1="0" x2="0" y2="1">
+      <stop stop-color="#fff"/><stop offset=".45" stop-color="#fff" stop-opacity=".9"/>
+      <stop offset=".8" stop-color="#fff" stop-opacity=".5"/><stop offset="1" stop-color="#fff" stop-opacity="0"/>
     </linearGradient>
-    <radialGradient id="energy">
-      <stop stop-color="#bcfaff" stop-opacity=".7"/><stop offset=".5" stop-color="#a3acff" stop-opacity=".4"/>
-      <stop offset="1" stop-color="#9b73f5" stop-opacity="0"/>
+    <mask id="energyFade" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="url(#fade)"/>
+    </mask>
+    <radialGradient id="halo">
+      <stop stop-color="#fff" stop-opacity=".24"/><stop offset=".5" stop-color="#fff" stop-opacity=".12"/>
+      <stop offset="1" stop-color="#fff" stop-opacity="0"/>
     </radialGradient>
+    <mask id="haloFade" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="url(#halo)"/>
+    </mask>
     <linearGradient id="wake" x1="0" y1="0" x2="0" y2="1">
-      <stop stop-color="#ffffff"/><stop offset=".4" stop-color="#ffffff" stop-opacity=".55"/>
-      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+      <stop stop-color="#fff"/><stop offset=".4" stop-color="#fff" stop-opacity=".55"/>
+      <stop offset="1" stop-color="#fff" stop-opacity="0"/>
     </linearGradient>
   </defs>
-  <!-- Bodies point up. The independent lower-row wake points down from the rear. -->
-  <g>
-    <path d="M32 0Q54 12 64 22L56 55L44 64H20L8 55L0 22Q10 12 32 0Z" fill="#a5eaff"/>
-    <path d="M32 0L39 20L36 57H28L25 20Z" fill="#ffffff"/>
+  <!-- Three equal 64x64 cells, each points up. No blur/filter expands the footprint. -->
+  <!-- viper: cyan tracer and three shock rings -->
+  <g transform="translate(0)">
+    <circle cx="32" cy="32" r="32" fill="#3b82f6" mask="url(#haloFade)"/>
+    <g mask="url(#energyFade)">
+      <path d="M0 29a32 5 0 1 0 64 0a32 5 0 1 0-64 0M3 29a29 3 0 1 0 58 0a29 3 0 1 0-58 0M5 42a27 4 0 1 0 54 0a27 4 0 1 0-54 0M8 42a24 2 0 1 0 48 0a24 2 0 1 0-48 0M12 54a20 3 0 1 0 40 0a20 3 0 1 0-40 0M15 54a17 1.5 0 1 0 34 0a17 1.5 0 1 0-34 0" fill="#38bdf8" fill-rule="evenodd" opacity=".65"/>
+      <path d="M32 0Q45 9 41 20L35 47L32 64L29 47L23 20Q19 9 32 0Z" fill="#67e8f9"/>
+      <path d="M32 1Q37 10 35 19L32 51L29 19Q27 10 32 1Z" fill="#e8fdff"/>
+    </g>
   </g>
+  <!-- titan: gold head and jagged shards -->
   <g transform="translate(64)">
-    <path d="M32 0Q49 5 60 16L64 22V54L52 64H12L0 54V22L4 16Q15 5 32 0Z" fill="url(#steel)"/>
-    <path d="M32 0Q49 5 60 16L48 20L32 7L16 20L4 16Q15 5 32 0Z" fill="#a5b5c4"/>
-    <path d="M29 12L35 12L36 56H28ZM16 59H48V62H16Z" fill="#ffc16b"/>
+    <circle cx="32" cy="32" r="32" fill="#fbbf24" mask="url(#haloFade)"/>
+    <g mask="url(#energyFade)">
+      <path d="M0 21L13 28L7 47L8 32ZM64 18L54 36L57 52L49 32ZM14 51L18 56L13 61ZM43 48L47 56L44 60Z" fill="#f59e0b" fill-rule="evenodd" opacity=".72"/>
+      <path d="M32 0L49 10L43 16L55 29L45 26L48 48L36 30L32 64L26 34L17 53L19 28L8 34L16 17L11 14Z" fill="#ffd84d"/>
+      <path d="M32 1L40 12L35 19L32 37L28 21L23 13ZM19 19L24 28L22 38ZM42 20L48 31L42 28Z" fill="#fff7c2"/>
+    </g>
   </g>
+  <!-- phantom: four bundled magenta plasma streaks; one projectile -->
   <g transform="translate(128)">
-    <path d="M32 0C52 5 64 15 64 28C64 48 47 59 32 64C17 59 0 48 0 28C0 15 12 5 32 0Z" fill="url(#energy)"/>
-    <path d="M32 0Q43 8 45.333 16L43 52Q39 60 32 64Q25 60 21 52L18.667 16Q21 8 32 0Z" fill="#baf6ff"/>
-    <path d="M32 0Q36 10 37 18L35 52L32 64L29 52L27 18Q28 10 32 0Z" fill="#ffffff"/>
+    <circle cx="32" cy="32" r="32" fill="#8b5cf6" mask="url(#haloFade)"/>
+    <g mask="url(#energyFade)">
+      <path d="M5 23L14 12L10 26ZM41 20L45 9L48 23ZM55 28L57 18L64 26L61 32Z" fill="#a855f7" fill-rule="evenodd" opacity=".6"/>
+      <path d="M32 0Q42 8 38 18L33 64L28 52L26 18Q23 8 32 0ZM14 12L19 21L12 57L0 48L6 23ZM45 9L49 22L47 59L41 49L41 20ZM57 18L64 26L60 51L55 44Z" fill="#e879f9"/>
+      <path d="M32 1L35 12L32 47L29 15ZM13 18L14 29L10 48L9 29ZM45 16L46 29L44 49L43 28ZM59 25L60 32L58 42Z" fill="#fff0ff"/>
+    </g>
   </g>
+  <!-- One pooled shared wake, tinted per aircraft; rendered at 2x4px for all three. -->
   <g transform="translate(0 64)">
     <path d="M0 0H64Q54 29 32 64Q10 29 0 0Z" fill="url(#wake)"/>
   </g>

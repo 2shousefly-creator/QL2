@@ -2,6 +2,7 @@ import { paintTacticalCores } from "./airCombatTacticalVisuals";
 import { enemyAllegiance } from "./airCombatRuntime";
 import aircraftAtlasUrl from "../../../assets/khong-kich/v2/aircraft-atlas.png";
 import phantomBeamUrl from "../../../assets/khong-kich/v2/phantom-firing-beam.svg";
+import basicAmmoAtlasUrl from "../../../assets/khong-kich/v2/player-basic-ammo-atlas.svg";
 import { PLAYER_ARTWORK } from "./airCombatArtwork";
 import fortressAtlasUrl from "../../../assets/khong-kich/v2/fortress-clouds-atlas.png";
 import { hasCore } from "./airCombatCoreEffects";
@@ -26,6 +27,7 @@ import { HealthBarPresentation, activeShieldAmount, statusBarText, DAMAGE_LABEL_
 // decoding is unavailable, authored capsule silhouettes remain a vector fallback.
 let aircraftImage:HTMLImageElement|undefined,fortressImage:HTMLImageElement|undefined;
 let phantomBeamImage: HTMLImageElement | undefined;
+let basicAmmoImage: HTMLImageElement | undefined;
 function airframeImage(fortress:boolean) {
   let img=fortress?fortressImage:aircraftImage;
   if(!img){img=new Image();img.src=fortress?fortressAtlasUrl:aircraftAtlasUrl;if(fortress)fortressImage=img;else aircraftImage=img;}
@@ -45,12 +47,21 @@ function shieldPainter(ctx:CanvasRenderingContext2D):ShieldPainter {
      line:(ax,ay,bx,by,c,a,w)=>{ctx.beginPath();ctx.moveTo(ax,ay);ctx.lineTo(bx,by);ctx.strokeStyle=color(c,a);ctx.lineWidth=w;ctx.stroke();}};
   shieldPainters.set(ctx,p);return p;
 }
-const ammoPaths = new Map<AmmoVisualKey, { body: Path2D; detail: Path2D; glow?: Path2D }>();
+const ammoPaths = new Map<AmmoVisualKey, { body: Path2D; detail: Path2D; glow?: Path2D; accents?: Path2D }>();
 function drawAmmoLocal(ctx:CanvasRenderingContext2D,key:AmmoVisualKey) {
  const art=AMMO_VISUALS[key];let paths=ammoPaths.get(key);
- if(!paths){paths={body:new Path2D(art.body),detail:new Path2D(art.detail),glow:"glow" in art?new Path2D(art.glow.body):undefined};ammoPaths.set(key,paths);}
+ if(getBasicAmmoVisual(key)) {
+   if(!basicAmmoImage){basicAmmoImage=new Image();basicAmmoImage.src=basicAmmoAtlasUrl;}
+   if(basicAmmoImage.complete&&basicAmmoImage.naturalWidth>0) {
+     // Exact Pixi atlas parity, including static identity in Reduced Motion.
+     ctx.drawImage(basicAmmoImage,art.cell[0]*64,0,64,64,-art.width/2,-art.height/2,art.width,art.height);
+     return;
+   }
+ }
+ if(!paths){paths={body:new Path2D(art.body),detail:new Path2D(art.detail),glow:"glow" in art?new Path2D(art.glow.body):undefined,accents:"accents" in art?new Path2D(art.accents):undefined};ammoPaths.set(key,paths);}
  ctx.save();ctx.scale(art.width/64,art.height/64);ctx.translate(-32,-32);
  if(paths.glow&&"glow" in art){ctx.save();ctx.globalAlpha*=art.glow.alpha;ctx.fillStyle=art.glow.color;ctx.fill(paths.glow);ctx.restore();}
+ if(paths.accents&&"accents" in art){ctx.save();ctx.globalAlpha*=art.accentAlpha;ctx.fillStyle=art.accentColor;ctx.fill(paths.accents,"evenodd");ctx.restore();}
  ctx.fillStyle=art.color;ctx.fill(paths.body);
  if(key==="bigbang_missile"){ctx.strokeStyle="#a1aeba";ctx.lineWidth=.65;ctx.stroke(paths.body);}
  ctx.fillStyle=art.highlight;ctx.fill(paths.detail);
