@@ -97,8 +97,9 @@
 .air-status-group--debuff .air-status-icon { border-color:#fda4af88; color:#fda4af; }
 .air-status-icon > .combat-ui-icon { width:100%; height:100%; }
 .air-status-icon > svg { width:75%; height:75%; }
-.air-status-radial { position:absolute; inset:0; pointer-events:none; background:conic-gradient(from 0deg, #020617b8 var(--status-elapsed,0deg), transparent 0deg); }
-.air-status-stack { position:absolute; bottom:-.2cqw; right:0; z-index:1; color:white; font-size:2.1cqw; line-height:1; padding:.2cqw; background:#020617dc; }
+.air-status-radial { position:absolute; inset:0; pointer-events:none; border-radius:inherit; background:conic-gradient(from 0deg, #020617b8 var(--status-elapsed,0deg), currentColor 0deg); mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0); mask-composite:exclude; padding:1px; }
+.air-status-value-badge { position:absolute; bottom:1px; right:1px; z-index:2; max-width:calc(100% - 2px); box-sizing:border-box; color:#fff; font-size:1.8cqw; font-weight:800; font-variant-numeric:tabular-nums; letter-spacing:-.06em; white-space:nowrap; line-height:1.15; padding:.12cqw .18cqw; background:#020617f2; border-radius:1px; pointer-events:none; }
+.air-status-value-badge[hidden], .air-status-timer[hidden] { display:none; }
 .air-status-overflow { font-size:2.5cqw; border-color:#94a3b8; }
 .air-status-icon[aria-pressed="true"] { outline:1px solid white; outline-offset:1px; }
 .air-status-tooltip, .air-skill-tooltip { pointer-events:auto; position:absolute; z-index:30; border:1px solid #7dd3fc77; border-radius:2px; background:#07111bf7; color:#e2e8f0; padding:2.5cqw; font-size:2.8cqw; line-height:1.45; box-shadow:0 4px 12px #02061780; overflow-y:auto; overscroll-behavior:contain; }

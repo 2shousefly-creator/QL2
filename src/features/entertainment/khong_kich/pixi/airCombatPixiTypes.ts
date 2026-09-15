@@ -1,4 +1,5 @@
 import type { CombatWorld } from "../airCombatRuntime";
+import type { AirframeArtwork, AirframePose } from "../airCombatArtwork";
 
 export interface AirCombatPresentation {
   render(world: CombatWorld, delta: number, reducedMotion: boolean): void;
@@ -16,5 +17,6 @@ export interface AircraftVisualDefinition {
   left: AtlasFrame;
   right: AtlasFrame;
   size: number;
+  artwork: Record<AirframePose, AirframeArtwork>;
   tint: number;
 }

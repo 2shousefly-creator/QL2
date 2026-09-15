@@ -199,6 +199,7 @@ interface RuntimePools {
     decoys: DecoyEntity[];
 }
 interface VisualEventBase {
+    skillId?: SkillId;
     directContact?: boolean;
     attachedToPlayer?: boolean;
     missileFamily?: "viper" | "tomahawk" | "bigbang" | "boss";
@@ -984,7 +985,7 @@ function launchNextMissile(world: CombatWorld): boolean {
     const stats = getEffectiveAircraftStats(world.aircraft);
     const values = getSkillRuntimeValues(world.aircraft, "missile_swarm");
     const index = world.missileLaunchIndex;
-    const angle = -Math.PI / 2 + (index % 2 ? 0.6 : -0.6);
+    const angle = -Math.PI / 2;
     const side = index % 2 === 0 ? -1 : 1;
     const launch = clampCircleToGameplayRect(world.playerX + side * 32, world.playerY - 12, 4.5);
     const projectile = addProjectile(world, {
@@ -1634,6 +1635,15 @@ export function enemyAllegiance(world:CombatWorld,enemy?:EnemyEntity):Allegiance
     return enemy && ((enemy.hackedUntil??0)>world.elapsed || (enemy.dashAllegiance==="friendly_hacked" && ((enemy.kamikazeState==="dash" && enemy.dashCommitted) || enemy.dashRemaining>0))) ? "friendly_hacked" : "hostile";
 }
 export const isHostileToPlayer=(world:CombatWorld,e:EnemyEntity)=>e.hp>0 && enemyAllegiance(world,e)==="hostile";
+/** Shared live value for Core 118 damage and its status badge; no cap. */
+export function crowdDamageBonus(world: CombatWorld): number {
+    let hostile = 0, friendly = 1 + Number(world.aircraft.droneActive);
+    for (const enemy of world.enemies) if (enemy.hp > 0) {
+        if (isHostileToPlayer(world, enemy)) hostile++;
+        else friendly++;
+    }
+    return Math.max(0, hostile - friendly) * .015;
+}
 function canAttackEnemy(world:CombatWorld,allegiance:Allegiance,e:EnemyEntity,sourceId?:number):boolean {
     return e.hp>0 && e.id!==sourceId && (allegiance==="hostile" ? enemyAllegiance(world,e)==="friendly_hacked" : isHostileToPlayer(world,e));
 }
@@ -1831,7 +1841,7 @@ function updateKamikaze(world: CombatWorld, enemy: EnemyEntity, dt: number): voi
     }
     const oldX=enemy.x,oldY=enemy.y;
     let heading=Math.atan2(enemy.dashDirY!,enemy.dashDirX!);
-    const homingDistance=(enemy.dashPlannedDistance??0)*.5;
+    const homingDistance=(enemy.dashPlannedDistance??0)*.20;
     if(!enemy.dashCommitted && (enemy.dashTravelled??0)<homingDistance){
         const target=targetPosition(world,chooseEnemyTarget(world,true,enemy));
         if(target){const delta=shortestAngle(Math.atan2(target.y-enemy.y,target.x-enemy.x)-heading);heading+=Math.max(-2.4*dt,Math.min(2.4*dt,delta));}
@@ -1845,6 +1855,8 @@ function updateKamikaze(world: CombatWorld, enemy: EnemyEntity, dt: number): voi
     enemy.x+=enemy.dashDirX!*step;enemy.y+=enemy.dashDirY!*step;enemy.dashTravelled!+=Math.hypot(enemy.x-oldX,enemy.y-oldY);
     if(!enemy.dashCommitted && enemy.dashTravelled!>=homingDistance-1e-8){
         enemy.dashCommitted=true;
+        // Both renderers keep this entire projected line fixed for the final 80%.
+        enemy.dashStartX=enemy.x;enemy.dashStartY=enemy.y;
         const distance=rayToHunterEdge(enemy,enemy.dashDirX!,enemy.dashDirY!);
         enemy.dashEndX=enemy.x+enemy.dashDirX!*distance;enemy.dashEndY=enemy.y+enemy.dashDirY!*distance;
     }
@@ -2202,11 +2214,7 @@ function applyDamageToEnemy(world: CombatWorld, enemy: EnemyEntity, rawDamage: n
     const zoneMultiplier=delivery==="direct_projectile"||delivery==="aircraft_collision"?wingDamageMultiplier(contact?.zone):1;
     if(hasCore(state,115) && !world.enemies.some(e=>e.id!==enemy.id && isHostileToPlayer(world,e) && Math.hypot(e.x-enemy.x,e.y-enemy.y)<=80))multiplier*=enemy.type==="boss"?1.1:1.25;
     if((state.coreState.timers.comeback??0)>time)multiplier*=1.25;
-    if(hasCore(state,118)){
-        let hostile=0,friendly=1+Number(state.droneActive);
-        for(const e of world.enemies)if(e.hp>0){if(isHostileToPlayer(world,e))hostile++;else friendly++;}
-        multiplier*=1+Math.max(0,hostile-friendly)*.015;
-    }
+    if(hasCore(state,118))multiplier*=1+crowdDamageBonus(world);
     const firstVolleyDamage = volleyHits?.get(enemy.id);
     // Snapshot the first projectile after outgoing modifiers/crit, before target mitigation.
     // Later projectiles in this same fan retain exactly 15% of that value, without a second crit multiplier.
@@ -2235,7 +2243,7 @@ function applyDamageToEnemy(world: CombatWorld, enemy: EnemyEntity, rawDamage: n
     enemy.hp = Math.max(0, enemy.hp - damage);
     if (damage + absorbed > 0) {
         emitVisual(world, { kind: "damage_number", x: enemy.x, y: enemy.y, size: enemy.radius, amount: damage + absorbed, target: "enemy", critical: resolved.critical, shielded: aegis || absorbed > 0, entityId: enemy.id });
-        emitVisual(world, { kind: "hit", x: contact?.x??enemy.x, y: contact?.y??enemy.y, size: enemy.radius, entityId: enemy.id, directContact:!!contact });
+        emitVisual(world, { kind: "hit", x: contact?.x??enemy.x, y: contact?.y??enemy.y, size: enemy.radius, entityId: enemy.id, directContact:!!contact, skillId });
         world.damageDealt += damage;
         if(!contact)addParticles(world, enemy.x, enemy.y, color, 2);
         if(contact && (source==="basic"||source==="weapon"))recordCrossfire(world,enemy);

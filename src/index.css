@@ -24,6 +24,27 @@
   color-scheme: dark;
 }
 
+/* Game shell, including its overlay host. Keep native scrolling/touch actions. */
+.chapter-theme-root,
+.chapter-theme-root * {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.chapter-theme-root img {
+  -webkit-user-drag: none;
+}
+
+.chapter-theme-root input,
+.chapter-theme-root textarea,
+.chapter-theme-root [contenteditable]:not([contenteditable="false"]),
+.chapter-theme-root [contenteditable]:not([contenteditable="false"]) * {
+  -webkit-touch-callout: default;
+  -webkit-user-select: text;
+  user-select: text;
+}
+
 .theme-text-accent {
   color: var(--theme-text-accent);
 }

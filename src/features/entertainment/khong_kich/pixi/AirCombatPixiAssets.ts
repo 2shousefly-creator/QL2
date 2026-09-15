@@ -1,4 +1,6 @@
 import { PLAYER_STANDARD_AIRFRAME_SIZE } from "../airCombatHitboxes";
+import { PLAYER_ARTWORK } from "../airCombatArtwork";
+import phantomBeamUrl from "../../../../assets/khong-kich/v2/phantom-firing-beam.svg";
 import basicAmmoUrl from "../../../../assets/khong-kich/v2/player-basic-ammo-atlas.svg";
 import bigbangUrl from "../../../../assets/khong-kich/v2/bigbang-missile.svg";
 import flameUrl from "../../../../assets/khong-kich/v2/missile-engine-flame.svg";
@@ -14,9 +16,9 @@ import type { AircraftVisualDefinition, AtlasFrame } from "./airCombatPixiTypes"
 
 const cell = (atlas: AtlasFrame["atlas"], x: number, y: number): AtlasFrame => ({ atlas, rect: [x / 4, y / 4, 0.25, 0.25] });
 export const AIRCRAFT_VISUALS: Record<AircraftId, AircraftVisualDefinition> = {
-  black_eagle: { neutral: cell("aircraft", 0, 0), left: cell("aircraft", 1, 0), right: cell("aircraft", 2, 0), size: PLAYER_STANDARD_AIRFRAME_SIZE, tint: 0x67e8f9 },
-  breaker: { neutral: cell("aircraft", 0, 1), left: cell("aircraft", 1, 1), right: cell("aircraft", 2, 1), size: PLAYER_STANDARD_AIRFRAME_SIZE, tint: 0xfbbf24 },
-  phantom: { neutral: cell("aircraft", 0, 2), left: cell("aircraft", 1, 2), right: cell("aircraft", 2, 2), size: PLAYER_STANDARD_AIRFRAME_SIZE, tint: 0xc4b5fd },
+  black_eagle: { neutral: cell("aircraft", 0, 0), left: cell("aircraft", 1, 0), right: cell("aircraft", 2, 0), size: PLAYER_STANDARD_AIRFRAME_SIZE, artwork: PLAYER_ARTWORK.black_eagle, tint: 0x67e8f9 },
+  breaker: { neutral: cell("aircraft", 0, 1), left: cell("aircraft", 1, 1), right: cell("aircraft", 2, 1), size: PLAYER_STANDARD_AIRFRAME_SIZE, artwork: PLAYER_ARTWORK.breaker, tint: 0xfbbf24 },
+  phantom: { neutral: cell("aircraft", 0, 2), left: cell("aircraft", 1, 2), right: cell("aircraft", 2, 2), size: PLAYER_STANDARD_AIRFRAME_SIZE, artwork: PLAYER_ARTWORK.phantom, tint: 0xc4b5fd },
 };
 export const ENEMY_VISUALS: Record<EnemyType, AtlasFrame> = {
   scout: cell("aircraft", 3, 1), fighter: cell("aircraft", 3, 2),
@@ -43,8 +45,9 @@ export type VisualKey = keyof typeof VFX_VISUALS;
 
 /** Each renderer owns its frame views. Assets owns cached shared source textures. */
 export async function loadAirCombatAssets() {
-  const [aircraft, fortress, vfx, ammo, bigbang, engineFlame, basicAmmo] = await Promise.all([
+  const [aircraft, fortress, vfx, ammo, bigbang, engineFlame, basicAmmo, phantomBeam] = await Promise.all([
     Assets.load<Texture>(aircraftUrl), Assets.load<Texture>(fortressUrl), Assets.load<Texture>(vfxUrl), Assets.load<Texture>(ammoUrl), Assets.load<Texture>(bigbangUrl), Assets.load<Texture>(flameUrl), Assets.load<Texture>(basicAmmoUrl),
+    Assets.load<Texture>(phantomBeamUrl),
   ]);
   const sources = { aircraft, fortress, vfx, ammo, basicAmmo };
   const frames = new Map<AtlasFrame, Texture>();
@@ -64,6 +67,6 @@ export async function loadAirCombatAssets() {
   Object.values(AIRCRAFT_VISUALS).forEach(v => { texture(v.neutral); texture(v.left); texture(v.right); });
   Object.values(ENEMY_VISUALS).forEach(texture);
   Object.values(VFX_VISUALS).forEach(texture);
-  return { texture, engineFlame, effect: (key: VisualKey) => key === "bigbang_missile" ? bigbang : texture(VFX_VISUALS[key]), destroy: () => { frames.forEach(t => t.destroy(false)); frames.clear(); } };
+  return { texture, engineFlame, phantomBeam, effect: (key: VisualKey) => key === "bigbang_missile" ? bigbang : texture(VFX_VISUALS[key]), destroy: () => { frames.forEach(t => t.destroy(false)); frames.clear(); } };
 }
 export type AirCombatAssets = Awaited<ReturnType<typeof loadAirCombatAssets>>;

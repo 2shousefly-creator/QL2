@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="46" height="256" viewBox="0 0 46 256">
+  <defs>
+    <linearGradient id="halo">
+      <stop stop-color="#8b5cf6" stop-opacity="0"/>
+      <stop offset=".24" stop-color="#a78bfa" stop-opacity=".25"/>
+      <stop offset=".5" stop-color="#67e8f9" stop-opacity=".5"/>
+      <stop offset=".76" stop-color="#a78bfa" stop-opacity=".25"/>
+      <stop offset="1" stop-color="#8b5cf6" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="body">
+      <stop stop-color="#a78bfa" stop-opacity="0"/>
+      <stop offset=".18" stop-color="#a78bfa" stop-opacity=".75"/>
+      <stop offset=".38" stop-color="#67e8f9" stop-opacity=".95"/>
+      <stop offset=".5" stop-color="#d9ffff"/>
+      <stop offset=".62" stop-color="#67e8f9" stop-opacity=".95"/>
+      <stop offset=".82" stop-color="#a78bfa" stop-opacity=".75"/>
+      <stop offset="1" stop-color="#a78bfa" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="core">
+      <stop stop-color="#cfffff" stop-opacity=".3"/>
+      <stop offset=".22" stop-color="#fff"/>
+      <stop offset=".78" stop-color="#fff"/>
+      <stop offset="1" stop-color="#cfffff" stop-opacity=".3"/>
+    </linearGradient>
+    <linearGradient id="caps" x1="0" y1="0" x2="0" y2="1">
+      <stop stop-color="#fff" stop-opacity="0"/>
+      <stop offset=".04" stop-color="#fff"/>
+      <stop offset=".96" stop-color="#fff"/>
+      <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+    </linearGradient>
+    <mask id="fade"><rect width="46" height="256" fill="url(#caps)"/></mask>
+  </defs>
+  <!-- Fixed three-layer firing silhouette, rasterized once and reused by Pixi. -->
+  <g mask="url(#fade)">
+    <rect width="46" height="256" fill="url(#halo)"/>
+    <rect x="10" width="26" height="256" fill="url(#body)"/>
+    <rect x="19" width="8" height="256" fill="url(#core)"/>
+  </g>
+</svg>

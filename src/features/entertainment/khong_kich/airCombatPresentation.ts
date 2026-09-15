@@ -1,8 +1,8 @@
 import { getEffectiveAircraftStats, getSkillRuntimeValues } from "./airCombatAircraft";
 import { AIRCRAFT_CONFIGS, SKILL_CONFIGS, getCoreDefinition } from "./airCombatConfig";
-import { coreId, hasCore, negativeStatusDuration } from "./airCombatCoreEffects";
+import { coreId, coreStackLabel, hasCore, negativeStatusDuration } from "./airCombatCoreEffects";
 import type { AircraftCombatState, CoreId, SkillId } from "./airCombatTypes";
-import type { CombatWorld } from "./airCombatRuntime";
+import { crowdDamageBonus, isHostileToPlayer, type CombatWorld } from "./airCombatRuntime";
 
 const number = (value: number) => value.toLocaleString("vi-VN", { maximumFractionDigits: 2 });
 function hawkEyeDuration(state: AircraftCombatState) {
@@ -90,6 +90,9 @@ export interface StatusPresentation {
   description: string;
   source: string;
   stacks: number;
+  /** Explicit mechanic semantics, independent of whether the current value is 1. */
+  badgeText?: string;
+  badgeKind?: "stack" | "progress" | "charge" | "percent" | "bonus";
   remaining: number;
   duration: number;
   progress?: number;
@@ -125,11 +128,35 @@ export function getStatusPresentations(world: CombatWorld): StatusPresentation[]
     result.push({ id: entry.key, group: "buff", name: core.name, icon: { kind: "core", id: core.id }, description: core.description,
       source: "Lõi", stacks: 1, remaining, duration: entry.duration, priority: 80 });
   }
-  for(const row of [107,109,113,114,116,120,121])if(hasCore(s,row)){
+  for(const row of [107,109,113,114,116,118,120,121])if(hasCore(s,row)){
     const core=getCoreDefinition(coreId(row)),remaining=row===116?(c.timers.comeback??0)-c.time:Infinity;
     if(row===116&&remaining<=0)continue;
     const detail=row===121?`Phản Vật Chất: ${Math.round((c.stacks.antimatter??0)*100)}% / 600%`:row===107?`Graze: ${c.stacks.graze??0}/6`:row===114?`Còn ${c.stacks.linkedShots??0} phát bắn cường hóa`:row===113?(c.stacks.borrowPending?"Chờ kỹ năng kết thúc để trả nợ":(c.timers.futureDebt??0)>c.time?`Sẵn sàng sau ${((c.timers.futureDebt??0)-c.time).toFixed(1)}s`:"Có thể dùng ngay kỹ năng đang hồi"):row===109?`Cánh trái: ${Math.max(0,(c.timers["wing:left_wing"]??0)-c.time).toFixed(1)}s · Cánh phải: ${Math.max(0,(c.timers["wing:right_wing"]??0)-c.time).toFixed(1)}s`:core.description;
-    result.push({id:core.id,group:"buff",name:core.name,icon:{kind:"core",id:core.id},description:detail,source:"Lõi",stacks:1,remaining,duration:row===116?4:Infinity,priority:65});
+    let badgeText: string | undefined, badgeKind: StatusPresentation["badgeKind"];
+    if (row === 107) { badgeText = `${c.stacks.graze ?? 0}/6`; badgeKind = "progress"; }
+    if (row === 109) {
+      const ready = Number((c.timers["wing:left_wing"] ?? 0) <= c.time) + Number((c.timers["wing:right_wing"] ?? 0) <= c.time);
+      badgeText = `${ready}/2`; badgeKind = "charge";
+    }
+    if (row === 114) { badgeText = String(c.stacks.linkedShots ?? 0); badgeKind = "charge"; }
+    if (row === 118) { badgeText = `+${Math.round(crowdDamageBonus(world) * 100)}%`; badgeKind = "bonus"; }
+    if (row === 121) { badgeText = `${Math.round((c.stacks.antimatter ?? 0) * 100)}%`; badgeKind = "percent"; }
+    result.push({id:core.id,group:"buff",name:core.name,icon:{kind:"core",id:core.id},
+      description:row===118?`${core.description} Hiện tại: +${number(crowdDamageBonus(world) * 100)}%.`:detail===core.description?detail:`${core.description} ${detail}`,
+      source:"Lõi",stacks:1,badgeText,badgeKind,remaining,duration:row===116?4:Infinity,priority:65});
+  }
+  for (const row of [112, 119]) if (hasCore(s, row)) {
+    const live = row === 112
+      ? (world.tactical?.grids ?? []).filter(g => g.until > world.elapsed &&
+        world.enemies.some(e => e.id === g.a && isHostileToPlayer(world, e)) &&
+        world.enemies.some(e => e.id === g.b && isHostileToPlayer(world, e)))
+      : (world.tactical?.fields ?? []).filter(f => f.until > world.elapsed);
+    if (!live.length) continue;
+    const core = getCoreDefinition(coreId(row));
+    result.push({ id: core.id, group: "buff", name: core.name, icon: { kind: "core", id: core.id },
+      description: `${core.description} Đang tồn tại: ${live.length}.`, source: "Lõi", stacks: live.length,
+      badgeText: `×${live.length}`, badgeKind: "stack", remaining: Math.min(...live.map(v => v.until)) - world.elapsed,
+      duration: row === 112 ? 1.5 : 3, priority: 65 });
   }
   const conditional = [
     { row: 49, on: c.time - c.lastMove >= 3 },
@@ -144,20 +171,25 @@ export function getStatusPresentations(world: CombatWorld): StatusPresentation[]
   ];
   for (const entry of conditional) if (entry.on && hasCore(s, entry.row)) {
     const core = getCoreDefinition(coreId(entry.row));
-    result.push({ id: core.id, group: "buff", name: core.name, icon: { kind: "core", id: core.id }, description: core.description,
-      source: "Lõi · hiệu ứng có điều kiện", stacks: entry.stacks || 1, remaining: Infinity, duration: Infinity, priority: 60 });
+    result.push({ id: core.id, group: "buff", name: core.name, icon: { kind: "core", id: core.id },
+      description: [core.description, coreStackLabel(s, core.id)].filter(Boolean).join(" "),
+      source: "Lõi · hiệu ứng có điều kiện", stacks: entry.stacks || 1,
+      badgeText: entry.row === 75 ? `×${entry.stacks}` : entry.row === 83 ? String(entry.stacks) : undefined,
+      badgeKind: entry.row === 75 ? "stack" : entry.row === 83 ? "charge" : undefined,
+      remaining: Infinity, duration: Infinity, priority: 60 });
   }
   if (hasCore(s, 66) && c.time - c.lastKill <= 3 && (c.stacks.combo || 0) > 0) {
     const core = getCoreDefinition(coreId(66));
     result.push({ id: "combo", group: "buff", name: core.name, icon: { kind: "core", id: core.id }, description: core.description,
-      source: "Lõi", stacks: c.stacks.combo, remaining: 3 - (c.time - c.lastKill), duration: 3, priority: 70 });
+      source: "Lõi", stacks: c.stacks.combo, badgeText: `×${c.stacks.combo}`, badgeKind: "stack",
+      remaining: 3 - (c.time - c.lastKill), duration: 3, priority: 70 });
   }
   const shields = Object.entries(c.shields).filter(([, v]) => v.amount > 0 && v.until > c.time);
   if (shields.length) {
     const first = shields.reduce((a, b) => a[1].until < b[1].until ? a : b);
     result.push({ id: "shield", group: "buff", name: "Lá chắn", icon: { kind: "status", id: "shield" },
       description: `Hấp thụ ${Math.ceil(shields.reduce((n, [, v]) => n + v.amount, 0))} sát thương.`, source: "Lõi",
-      stacks: shields.length, remaining: first[1].until - c.time, duration: first[0] === "reserve" ? 4 : first[0] === "overheal" ? Infinity : 3, priority: 95 });
+      stacks: 1, remaining: first[1].until - c.time, duration: first[0] === "reserve" ? 4 : first[0] === "overheal" ? Infinity : 3, priority: 95 });
   }
   const acid = (c.timers.acidArmor || 0) - c.time;
   if (acid > 0) result.push({ id: "acidArmor", group: "debuff", name: "Ăn mòn", icon: { kind: "status", id: "acid" },
@@ -172,7 +204,8 @@ export function getStatusPresentations(world: CombatWorld): StatusPresentation[]
   for (const entry of enemyStates) {
     const timers = world.enemies.filter(e => e.hp > 0).map(entry.read).filter(t => t > 0);
     if (timers.length) result.push({ id: `enemy:${entry.id}`, group: "debuff", name: entry.name, icon: { kind: "status", id: entry.id },
-      description: entry.description, source: "Hiệu ứng trên địch", stacks: timers.length, remaining: Math.min(...timers), duration: entry.duration, priority: 50 });
+      description: `${entry.description} Số địch đang chịu hiệu ứng: ${timers.length}.`, source: "Hiệu ứng trên địch",
+      stacks: timers.length, badgeText: `×${timers.length}`, badgeKind: "stack", remaining: Math.min(...timers), duration: entry.duration, priority: 50 });
   }
   const status=s.status;
   const timed = [
@@ -184,6 +217,8 @@ export function getStatusPresentations(world: CombatWorld): StatusPresentation[]
   ] as const;
   for(const [key,name,icon,description] of timed) if(status[key]>c.time) result.push({id:key,group:"debuff",name,icon:{kind:"status",id:icon},description,source:"Đòn địch",stacks:1,remaining:status[key]-c.time,duration:status.durations[key]??4,priority:110});
   const markNames={hunterMark:"Dấu săn mồi",suppression:"Áp chế",corrosion:"Ăn mòn",targetLock:"Khóa radar",hunted:"Bị truy sát"};
-  for(const [key,mark] of Object.entries(status.marks)) if(mark && mark.until>c.time) result.push({id:key,group:"debuff",name:markNames[key as keyof typeof markNames],icon:{kind:"status",id:key==="corrosion"?"acid":key==="targetLock"?"radar":"mark"},description:"Tiếp tục trúng đòn có thể kích hoạt đòn trừng phạt.",source:"Đòn địch",stacks:mark.count,remaining:mark.until-c.time,duration:6,priority:100});
+  // All five player marks accumulate hits via addStatusMark. Trigger/reset at a
+  // threshold (including Hunted at 2) is not a hard single-instance status.
+  for(const [key,mark] of Object.entries(status.marks)) if(mark && mark.until>c.time) result.push({id:key,group:"debuff",name:markNames[key as keyof typeof markNames],icon:{kind:"status",id:key==="corrosion"?"acid":key==="targetLock"?"radar":"mark"},description:`Dấu hiện tại: ${mark.count}. Tiếp tục trúng đòn có thể kích hoạt đòn trừng phạt.`,source:"Đòn địch",stacks:mark.count,badgeText:`×${mark.count}`,badgeKind:"stack",remaining:mark.until-c.time,duration:mark.window,priority:100});
   return result.sort((a, b) => b.priority - a.priority || a.id.localeCompare(b.id));
 }

@@ -1,6 +1,8 @@
 import { paintTacticalCores } from "./airCombatTacticalVisuals";
 import { enemyAllegiance } from "./airCombatRuntime";
 import aircraftAtlasUrl from "../../../assets/khong-kich/v2/aircraft-atlas.png";
+import phantomBeamUrl from "../../../assets/khong-kich/v2/phantom-firing-beam.svg";
+import { PLAYER_ARTWORK } from "./airCombatArtwork";
 import fortressAtlasUrl from "../../../assets/khong-kich/v2/fortress-clouds-atlas.png";
 import { hasCore } from "./airCombatCoreEffects";
 import { PLAYER_AIRFRAME_SIZE, PLAYER_HITBOX_PROFILES, ENEMY_HITBOX_PROFILES, type AircraftHitboxProfile } from "./airCombatHitboxes";
@@ -23,6 +25,7 @@ import { HealthBarPresentation, activeShieldAmount, statusBarText, DAMAGE_LABEL_
 // Canvas uses the same local neutral art and transforms as Pixi. When image
 // decoding is unavailable, authored capsule silhouettes remain a vector fallback.
 let aircraftImage:HTMLImageElement|undefined,fortressImage:HTMLImageElement|undefined;
+let phantomBeamImage: HTMLImageElement | undefined;
 function airframeImage(fortress:boolean) {
   let img=fortress?fortressImage:aircraftImage;
   if(!img){img=new Image();img.src=fortress?fortressAtlasUrl:aircraftAtlasUrl;if(fortress)fortressImage=img;else aircraftImage=img;}
@@ -133,7 +136,13 @@ function drawAircraft(
   ctx.translate(x, y);
   ctx.scale(scale, scale);
   const img=airframeImage(false),size=PLAYER_AIRFRAME_SIZE[aircraftId]/.82;
-  if(img){const row=aircraftId==="black_eagle"?0:aircraftId==="breaker"?1:2;ctx.drawImage(img,0,row*img.naturalHeight/4,img.naturalWidth/4,img.naturalHeight/4,-size/2,-size/2,size,size);ctx.restore();return;}
+  if(img){
+    const row=aircraftId==="black_eagle"?0:aircraftId==="breaker"?1:2;
+    const top=Math.round(row*img.naturalHeight/4),height=Math.round((row+1)*img.naturalHeight/4)-top;
+    const art=PLAYER_ARTWORK[aircraftId].neutral,width=size*art.scaleX;
+    ctx.drawImage(img,0,top,Math.round(img.naturalWidth/4),height,-width*art.anchorX,-size/2,width,size);
+    ctx.restore();return;
+  }
   ctx.shadowColor = color;
   ctx.shadowBlur = 14;
   ctx.fillStyle = color;
@@ -516,7 +525,11 @@ export function drawLegacyWorld(
     drawEnemyGlyph(ctx, enemy.type, 0, 0, enemy.radius);ctx.restore();
     if(enemy.shield>0||enemy.aegisUntil>world.aircraft.coreState.time){ctx.strokeStyle="#7dd3fc";ctx.lineWidth=2;ctx.beginPath();ctx.arc(enemy.x,enemy.y,enemy.radius+7,0,Math.PI*2);ctx.stroke();}
     if(enemy.stun>0){ctx.strokeStyle="#fde047";ctx.beginPath();ctx.arc(enemy.x,enemy.y-enemy.radius-7,5,0,Math.PI*2);ctx.stroke();}
-    if(!world.ended&&enemy.hp>0&&enemy.type==="kamikaze"&&(enemy.kamikazeState==="charge"||enemy.kamikazeState==="dash")){ctx.strokeStyle=enemyAllegiance(world,enemy)==="friendly_hacked"?"#67e8f9":"rgba(251,191,36,.65)";ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(enemy.x,enemy.y);ctx.lineTo(enemy.dashEndX,enemy.dashEndY);ctx.stroke();}
+    if(!world.ended&&enemy.hp>0&&enemy.type==="kamikaze"&&(enemy.kamikazeState==="charge"||enemy.kamikazeState==="dash")){
+      const committed=enemy.kamikazeState==="dash"&&enemy.dashCommitted;
+      ctx.strokeStyle=enemyAllegiance(world,enemy)==="friendly_hacked"?"#67e8f9":"rgba(251,191,36,.65)";ctx.lineWidth=1.5;ctx.beginPath();
+      ctx.moveTo(committed?enemy.dashStartX:enemy.x,committed?enemy.dashStartY:enemy.y);ctx.lineTo(enemy.dashEndX,enemy.dashEndY);ctx.stroke();
+    }
     if (enemy.type !== "boss") {
       const health = healthBars.get(enemy.id, enemy.hp, enemy.maxHp, enemy.shieldUntil > world.aircraft.coreState.time ? enemy.shield : 0);
       const w = Math.max(24, Math.min(70, enemy.radius * 2.2));
@@ -534,19 +547,38 @@ export function drawLegacyWorld(
     }
   }
 
-  if (world.laserCharge > 0 || world.laserRemaining > 0) {
-    ctx.strokeStyle = world.laserCharge > 0 ? "rgba(196,181,253,.42)" : "#c4b5fd";
-    ctx.lineWidth = world.laserCharge > 0 ? 3 : 12;
+  if (world.laserCharge > 0) {
+    ctx.strokeStyle = "rgba(196,181,253,.42)";
+    ctx.lineWidth = 3;
     ctx.shadowColor = "#a78bfa";
-    ctx.shadowBlur = world.laserCharge > 0 ? 8 : 22;
+    ctx.shadowBlur = 8;
     ctx.beginPath();
     ctx.moveTo(world.playerX, world.playerY - 18);
     ctx.lineTo(world.playerX, GAMEPLAY_SAFE_RECT.top);
     ctx.stroke();
-    if (world.laserCharge <= 0) {
-      ctx.strokeStyle = "#f5f3ff"; ctx.lineWidth = 3; ctx.stroke();
-    }
     ctx.shadowBlur = 0;
+  } else if (world.laserRemaining > 0) {
+    if (!phantomBeamImage) { phantomBeamImage = new Image(); phantomBeamImage.src = phantomBeamUrl; }
+    const pulse = reducedMotion ? 0 : Math.sin(world.elapsed * 22) * 1.5;
+    const width = 44 + pulse, top = GAMEPLAY_SAFE_RECT.top, bottom = world.playerY - 18;
+    ctx.save();
+    ctx.globalCompositeOperation = "lighter";
+    if (phantomBeamImage.complete && phantomBeamImage.naturalWidth > 0) {
+      ctx.drawImage(phantomBeamImage, world.playerX - width / 2, top, width, Math.max(1, bottom - top));
+    } else {
+      // Keep the same full silhouette while the shared beam texture decodes.
+      ctx.lineCap = "round"; ctx.shadowColor = "#a78bfa"; ctx.shadowBlur = 12;
+      ctx.beginPath(); ctx.moveTo(world.playerX, bottom); ctx.lineTo(world.playerX, top);
+      ctx.strokeStyle = "rgba(167,139,250,.2)"; ctx.lineWidth = width; ctx.stroke();
+      ctx.strokeStyle = "rgba(103,232,249,.8)"; ctx.lineWidth = 24 + pulse; ctx.stroke();
+      ctx.strokeStyle = "#f0ffff"; ctx.lineWidth = 8; ctx.stroke();
+    }
+    ctx.shadowColor = "#67e8f9"; ctx.shadowBlur = 14;
+    ctx.fillStyle = "rgba(167,139,250,.35)";
+    ctx.beginPath(); ctx.arc(world.playerX, world.playerY - 24, 15, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = "#efffff";
+    ctx.beginPath(); ctx.arc(world.playerX, world.playerY - 24, 6, 0, Math.PI * 2); ctx.fill();
+    ctx.restore();
   }
 
   if (world.aircraft.droneActive) {

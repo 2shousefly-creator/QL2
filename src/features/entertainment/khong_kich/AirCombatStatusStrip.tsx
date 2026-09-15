@@ -31,21 +31,33 @@ export const AirCombatStatusStrip = React.memo(forwardRef<StatusStripHandle, { t
     current.current = getStatusPresentations(world);
     const surface=host.current?.closest<HTMLElement>(".air-combat-surface");
     if(surface)surface.dataset.empJam=String(world.aircraft.status.resourceJammedUntil>world.aircraft.coreState.time);
-    const nextSignature = current.current.map(s => `${s.id}:${s.stacks}`).join("|");
+    const nextSignature = current.current.map(s => s.id).join("|");
     if (signature.current !== nextSignature) { signature.current = nextSignature; setItems(current.current); }
     for (const node of host.current?.querySelectorAll<HTMLElement>("[data-status-id]") || []) {
       const status = current.current.find(s => s.id === node.dataset.statusId);
       const ratio = progressRatio(status);
       node.style.setProperty("--status-elapsed", `${(1 - ratio) * 360}deg`);
-      const timer=node.querySelector("[data-status-timer]");if(timer)timer.textContent=status && Number.isFinite(status.remaining)?`${status.remaining.toFixed(1).replace(".",",")}`:"";
+      const timer = node.querySelector<HTMLElement>("[data-status-timer]");
+      if (timer) {
+        timer.hidden = Boolean(status?.badgeText);
+        timer.textContent = status && Number.isFinite(status.remaining) ? status.remaining.toFixed(1).replace(".", ",") : "";
+      }
+      const badge = node.querySelector<HTMLElement>("[data-status-value]");
+      if (badge) {
+        badge.hidden = !status?.badgeText;
+        if (badge.textContent !== (status?.badgeText ?? "")) badge.textContent = status?.badgeText ?? "";
+      }
+      if (status) node.setAttribute("aria-label", `${status.name}${status.badgeText ? ` · ${status.badgeText}` : ""}`);
     }
     const active = current.current.find(s => s.id === selectedRef.current);
     if (selectedRef.current && !active) close();
     if (active && tooltip.current) {
       const time = tooltip.current.querySelector("[data-status-time]");
       const description = tooltip.current.querySelector("[data-status-description]");
+      const source = tooltip.current.querySelector("[data-status-source]");
       if (time) time.textContent = active.timeLabel ?? timeLabel(active.remaining);
       if (description) description.textContent = active.description;
+      if (source) source.textContent = `Nguồn: ${active.source}${active.badgeText ? ` · ${active.badgeText}` : ""}`;
     }
   } }), []);
   const active = current.current.find(s => s.id === selected);
@@ -58,12 +70,12 @@ export const AirCombatStatusStrip = React.memo(forwardRef<StatusStripHandle, { t
           const Generic = status.icon.kind === "status" ? genericIcons[status.icon.id] : null;
           return <button key={status.id} type="button" data-status-id={status.id} className="air-status-icon"
             style={{ "--status-elapsed": `${(1 - progressRatio(status)) * 360}deg` } as React.CSSProperties}
-            aria-label={`${status.name}${status.stacks > 1 ? ` ×${status.stacks}` : ""}`} aria-pressed={selected === status.id}
+            aria-label={`${status.name}${status.badgeText ? ` · ${status.badgeText}` : ""}`} aria-pressed={selected === status.id}
             onClick={() => { const next = selected === status.id ? null : status.id; selectedRef.current = next; setSelected(next); }}>
             {status.icon.kind === "status" ? Generic && <Generic aria-hidden="true" /> : <CombatUiIcon {...status.icon} fallback="◆" />}
             <span className="air-status-radial" />
-            <small className="air-status-timer" data-status-timer>{Number.isFinite(status.remaining)?status.remaining.toFixed(1).replace(".",","):""}</small>
-            {status.stacks > 1 && <b className="air-status-stack">×{status.stacks}</b>}
+            <small className="air-status-timer" data-status-timer hidden={Boolean(status.badgeText)}>{Number.isFinite(status.remaining)?status.remaining.toFixed(1).replace(".",","):""}</small>
+            <b className="air-status-value-badge" data-status-value hidden={!status.badgeText}>{status.badgeText}</b>
           </button>;
         })}
         {all.length > 10 && <span className="air-status-overflow" title={all.slice(9).map(s => s.name).join(" · ")}>+{all.length - 9}</span>}
@@ -72,7 +84,7 @@ export const AirCombatStatusStrip = React.memo(forwardRef<StatusStripHandle, { t
     {active && <aside ref={tooltip} className="air-status-tooltip" role="status">
       <div className="air-tooltip-heading"><strong>{active.name}</strong><span data-status-time>{active.timeLabel ?? timeLabel(active.remaining)}</span></div>
       <p data-status-description>{active.description}</p>
-      <small>Nguồn: {active.source}{active.stacks > 1 ? ` · Stack: ×${active.stacks}` : ""}</small>
+      <small data-status-source>Nguồn: {active.source}{active.badgeText ? ` · ${active.badgeText}` : ""}</small>
     </aside>}
   </div>;
 }));
