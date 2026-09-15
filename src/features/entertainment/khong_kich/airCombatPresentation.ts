@@ -98,10 +98,11 @@ export interface StatusPresentation {
   progress?: number;
   timeLabel?: string;
   priority: number;
+  timerKind?: "active" | "cooldown";
+  showNumericTimer?: boolean;
 }
 
 const TIMED_STATUSES = [
-  { key: "reactiveArmor", row: 61, duration: 4 },
   { key: "tacticalRate", row: 71, duration: 4 },
   { key: "reactor", row: 78, duration: 6 },
   { key: "decoyCounter", row: 21, duration: 4 },
@@ -109,8 +110,73 @@ const TIMED_STATUSES = [
   { key: "hawkRage", row: 44, duration: 3 },
 ] as const;
 
+// Read canonical runtime timers only. Core 106 deliberately has no entry.
+const CORE_COOLDOWN_PRESENTATIONS: readonly {row:number;timer:string;duration:number;shield?:string;active?:string;activeDuration?:number;charge?:string}[] = [
+  {row:61,timer:"reactiveArmorCd",duration:12,active:"reactiveArmor",activeDuration:4},
+  {row:76,timer:"reactiveShieldCd",duration:10,shield:"reactive"},
+  {row:81,timer:"skillShieldCd",duration:6,shield:"skill"},
+  {row:83,timer:"counterCd",duration:6,charge:"counter"},
+  {row:99,timer:"reserveShieldCd",duration:20,shield:"reserve"},
+];
+const seconds = (value:number) => `${Math.max(0,value).toFixed(1).replace(".",",")}s`;
+function coreCooldownStatuses(world:CombatWorld):StatusPresentation[] {
+  const s=world.aircraft,c=s.coreState,result:StatusPresentation[]=[];
+  const add=(row:number,detail:string,values:Partial<StatusPresentation>)=>{
+    const core=getCoreDefinition(coreId(row));
+    result.push({id:core.id,group:"buff",name:core.name,icon:{kind:"core",id:core.id},
+      description:`${core.description} ${detail}`,source:"Lõi",stacks:1,remaining:Infinity,duration:Infinity,priority:55,...values});
+  };
+  for(const entry of CORE_COOLDOWN_PRESENTATIONS){
+    if(!hasCore(s,entry.row))continue;
+    const cooldown=Math.max(0,(c.timers[entry.timer]??0)-c.time);
+    const active=entry.active?Math.max(0,(c.timers[entry.active]??0)-c.time):0;
+    const shield=entry.shield?c.shields[entry.shield]:undefined;
+    const shieldActive=Boolean(shield&&shield.amount>0&&shield.until>c.time);
+    const charges=entry.charge?(c.stacks[entry.charge]??0):0;
+    if(!cooldown&&!active&&!shieldActive&&!charges)continue;
+    const label=active?`Đang hoạt động: ${seconds(active)}`:shieldActive?"Khiên đang hoạt động (lượng khiên ở biểu tượng Lá chắn)":charges?`Còn ${charges} phát bắn cường hóa`:"";
+    const recovery=cooldown?`Hồi nội tại: ${seconds(cooldown)}`:"Nội tại đã sẵn sàng";
+    add(entry.row,`${label}${label?". ":""}${recovery}.`,{
+      remaining:active||cooldown||Infinity,duration:active?(entry.activeDuration??active):entry.duration,
+      timerKind:active?"active":cooldown?"cooldown":undefined,showNumericTimer:Boolean(active||cooldown),
+      badgeText:charges?String(charges):undefined,badgeKind:charges?"charge":undefined,
+      timeLabel:active?label:recovery,priority:active||shieldActive||charges?80:55,
+    });
+  }
+  if(hasCore(s,109)){
+    const left=Math.max(0,(c.timers["wing:left_wing"]??0)-c.time),right=Math.max(0,(c.timers["wing:right_wing"]??0)-c.time);
+    const pending=[left,right].filter(value=>value>0),remaining=pending.length?Math.min(...pending):Infinity;
+    add(109,`Cánh trái: ${left?seconds(left):"Sẵn sàng"}. Cánh phải: ${right?seconds(right):"Sẵn sàng"}.`,{
+      badgeText:`${2-pending.length}/2`,badgeKind:"charge",remaining,duration:12,
+      timerKind:pending.length?"cooldown":undefined,showNumericTimer:Boolean(pending.length),
+      timeLabel:pending.length?`Cánh hồi gần nhất: ${seconds(remaining)}`:"Hai cánh sẵn sàng",priority:pending.length?55:45,
+    });
+  }
+  if(hasCore(s,113)){
+    const cooldown=Math.max(0,(c.timers.futureDebt??0)-c.time),pending=Boolean(c.stacks.borrowPending);
+    const label=pending?"Chờ kỹ năng kết thúc để trả nợ":cooldown?`Hồi nội tại: ${seconds(cooldown)}`:"Sẵn sàng · có thể vay kỹ năng đang hồi";
+    add(113,label,{remaining:!pending&&cooldown?cooldown:Infinity,duration:18,
+      showNumericTimer:!pending&&cooldown>0,timerKind:!pending&&cooldown?"cooldown":undefined,
+      timeLabel:label,priority:pending?80:cooldown?55:45});
+  }
+  if(hasCore(s,120)){
+    const t=world.tactical,active=Boolean(t?.hackMode&&t.hackEnd>world.elapsed);
+    const boss=t?.hackMode==="boss_stun",cooldown=Math.max(0,(c.timers.controlOverride??0)-c.time);
+    const remaining=active?t!.hackEnd-world.elapsed:cooldown||Infinity;
+    const count=(t?.hackTargets??[]).filter(id=>world.enemies.some(e=>e.id===id&&e.hp>0)).length;
+    const label=active?`${boss?"Boss đang bị choáng":"Đang chiếm quyền"}: ${seconds(remaining)}`:cooldown?`Hồi chiêu: ${seconds(cooldown)}`:"Sẵn sàng";
+    add(120,`${label}. Khi đợt đã xuất hiện hết địch và chỉ còn mục tiêu bị hack, hiệu ứng kết thúc sớm để tiếp tục dọn đợt.`,{
+      remaining,duration:active?(boss?2.5:6):16,timerKind:active?"active":cooldown?"cooldown":undefined,
+      showNumericTimer:active||cooldown>0,badgeText:active&&!boss?`×${count}`:undefined,badgeKind:active&&!boss?"charge":undefined,
+      timeLabel:label,priority:active?85:cooldown?70:45,
+    });
+  }
+  return result;
+}
+
 export function getStatusPresentations(world: CombatWorld): StatusPresentation[] {
   const s = world.aircraft, c = s.coreState, result: StatusPresentation[] = [];
+  result.push(...coreCooldownStatuses(world));
   const maxHp = getEffectiveAircraftStats(s).maxHp;
   for (const id of AIRCRAFT_CONFIGS[s.aircraftId].skillIds) {
     const timer = getActiveSkillDuration(world, id);
@@ -128,22 +194,18 @@ export function getStatusPresentations(world: CombatWorld): StatusPresentation[]
     result.push({ id: entry.key, group: "buff", name: core.name, icon: { kind: "core", id: core.id }, description: core.description,
       source: "Lõi", stacks: 1, remaining, duration: entry.duration, priority: 80 });
   }
-  for(const row of [107,109,113,114,116,118,120,121])if(hasCore(s,row)){
+  for(const row of [107,114,116,118,121])if(hasCore(s,row)){
     const core=getCoreDefinition(coreId(row)),remaining=row===116?(c.timers.comeback??0)-c.time:Infinity;
     if(row===116&&remaining<=0)continue;
-    const detail=row===121?`Phản Vật Chất: ${Math.round((c.stacks.antimatter??0)*100)}% / 600%`:row===107?`Graze: ${c.stacks.graze??0}/6`:row===114?`Còn ${c.stacks.linkedShots??0} phát bắn cường hóa`:row===113?(c.stacks.borrowPending?"Chờ kỹ năng kết thúc để trả nợ":(c.timers.futureDebt??0)>c.time?`Sẵn sàng sau ${((c.timers.futureDebt??0)-c.time).toFixed(1)}s`:"Có thể dùng ngay kỹ năng đang hồi"):row===109?`Cánh trái: ${Math.max(0,(c.timers["wing:left_wing"]??0)-c.time).toFixed(1)}s · Cánh phải: ${Math.max(0,(c.timers["wing:right_wing"]??0)-c.time).toFixed(1)}s`:core.description;
+    const detail=row===121?`Phản Vật Chất: ${Math.round((c.stacks.antimatter??0)*100)}% / 600%`:row===107?`Graze: ${c.stacks.graze??0}/6`:row===114?`Còn ${c.stacks.linkedShots??0} phát bắn cường hóa`:core.description;
     let badgeText: string | undefined, badgeKind: StatusPresentation["badgeKind"];
     if (row === 107) { badgeText = `${c.stacks.graze ?? 0}/6`; badgeKind = "progress"; }
-    if (row === 109) {
-      const ready = Number((c.timers["wing:left_wing"] ?? 0) <= c.time) + Number((c.timers["wing:right_wing"] ?? 0) <= c.time);
-      badgeText = `${ready}/2`; badgeKind = "charge";
-    }
     if (row === 114) { badgeText = String(c.stacks.linkedShots ?? 0); badgeKind = "charge"; }
     if (row === 118) { badgeText = `+${Math.round(crowdDamageBonus(world) * 100)}%`; badgeKind = "bonus"; }
     if (row === 121) { badgeText = `${Math.round((c.stacks.antimatter ?? 0) * 100)}%`; badgeKind = "percent"; }
     result.push({id:core.id,group:"buff",name:core.name,icon:{kind:"core",id:core.id},
       description:row===118?`${core.description} Hiện tại: +${number(crowdDamageBonus(world) * 100)}%.`:detail===core.description?detail:`${core.description} ${detail}`,
-      source:"Lõi",stacks:1,badgeText,badgeKind,remaining,duration:row===116?4:Infinity,priority:65});
+      source:"Lõi",stacks:1,badgeText,badgeKind,remaining,duration:row===116?4:Infinity,priority:row===116||row===114&&(c.stacks.linkedShots??0)>0?80:45});
   }
   for (const row of [112, 119]) if (hasCore(s, row)) {
     const live = row === 112
@@ -156,7 +218,7 @@ export function getStatusPresentations(world: CombatWorld): StatusPresentation[]
     result.push({ id: core.id, group: "buff", name: core.name, icon: { kind: "core", id: core.id },
       description: `${core.description} Đang tồn tại: ${live.length}.`, source: "Lõi", stacks: live.length,
       badgeText: `×${live.length}`, badgeKind: "stack", remaining: Math.min(...live.map(v => v.until)) - world.elapsed,
-      duration: row === 112 ? 1.5 : 3, priority: 65 });
+      duration: row === 112 ? 1.5 : 3, priority: 80 });
   }
   const conditional = [
     { row: 49, on: c.time - c.lastMove >= 3 },
@@ -165,7 +227,6 @@ export function getStatusPresentations(world: CombatWorld): StatusPresentation[]
     { row: 63, on: s.currentHp < maxHp * .35 },
     { row: 75, on: (c.stacks.slaying || 0) > 0, stacks: c.stacks.slaying },
     { row: 82, on: c.time - c.lastDamage >= 4 },
-    { row: 83, on: (c.stacks.counter || 0) > 0, stacks: c.stacks.counter },
     { row: 92, on: s.status.regenDisabledUntil<=c.time && c.time - c.lastDamage >= 5 },
     { row: 100, on: s.currentHp > maxHp * .7 || s.currentHp < maxHp * .3 },
   ];
@@ -174,15 +235,15 @@ export function getStatusPresentations(world: CombatWorld): StatusPresentation[]
     result.push({ id: core.id, group: "buff", name: core.name, icon: { kind: "core", id: core.id },
       description: [core.description, coreStackLabel(s, core.id)].filter(Boolean).join(" "),
       source: "Lõi · hiệu ứng có điều kiện", stacks: entry.stacks || 1,
-      badgeText: entry.row === 75 ? `×${entry.stacks}` : entry.row === 83 ? String(entry.stacks) : undefined,
-      badgeKind: entry.row === 75 ? "stack" : entry.row === 83 ? "charge" : undefined,
-      remaining: Infinity, duration: Infinity, priority: 60 });
+      badgeText: entry.row === 75 ? `×${entry.stacks}` : undefined,
+      badgeKind: entry.row === 75 ? "stack" : undefined,
+      remaining: Infinity, duration: Infinity, priority: 80 });
   }
   if (hasCore(s, 66) && c.time - c.lastKill <= 3 && (c.stacks.combo || 0) > 0) {
     const core = getCoreDefinition(coreId(66));
     result.push({ id: "combo", group: "buff", name: core.name, icon: { kind: "core", id: core.id }, description: core.description,
       source: "Lõi", stacks: c.stacks.combo, badgeText: `×${c.stacks.combo}`, badgeKind: "stack",
-      remaining: 3 - (c.time - c.lastKill), duration: 3, priority: 70 });
+      remaining: 3 - (c.time - c.lastKill), duration: 3, priority: 80 });
   }
   const shields = Object.entries(c.shields).filter(([, v]) => v.amount > 0 && v.until > c.time);
   if (shields.length) {

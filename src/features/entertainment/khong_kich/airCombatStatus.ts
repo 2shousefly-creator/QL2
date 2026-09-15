@@ -1,7 +1,7 @@
 import type { AircraftCombatState } from "./airCombatTypes";
 import { negativeStatusDuration } from "./airCombatCoreEffects";
 
-export type AttackTag = "basic" | "burst" | "needle_pair" | "scissor" | "suppressive_gate" | "kamikaze_dash" | "carpet_bomb" | "rail" | "emp" | "elite_execution" | "shock_clamp" | "acid" | "radar_lock" | "boss_wing" | "boss_fan" | "boss_sonic" | "boss_lane" | "boss_dash" | "boss_missile" | "boss_emp" | "boss_crossfire" | "boss_suppressive";
+export type AttackTag = "crimson_barrage" | "iron_suppression" | "radar_bombardment" | "basic" | "burst" | "needle_pair" | "scissor" | "suppressive_gate" | "kamikaze_dash" | "carpet_bomb" | "rail" | "emp" | "elite_execution" | "shock_clamp" | "acid" | "radar_lock" | "boss_wing" | "boss_fan" | "boss_sonic" | "boss_lane" | "boss_dash" | "boss_missile" | "boss_emp" | "boss_crossfire" | "boss_suppressive";
 export interface StatusPayload { stun?: number; skillLock?: number; resourceJam?: number; resourceMultiplier?: number; armorBreak?: number; regenDisable?: number }
 export type Allegiance = "player" | "hostile" | "friendly_hacked";
 export type DamageDelivery = "direct_projectile" | "aircraft_collision" | "explosive_aoe" | "area_hazard" | "beam" | "shockwave";

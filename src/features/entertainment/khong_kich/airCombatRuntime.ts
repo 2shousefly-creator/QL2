@@ -32,6 +32,7 @@ export interface EnemyEntity {
     stateTimer?: number; attackAge?: number; hitResolved?: boolean;
     executionRecovery?: number;
     retaliationReady?: boolean;
+    elitePatternCd?: number; elitePatternIndex?: number; eliteSequenceUntil?: number;
     id: number;
     type: EnemyType;
     x: number;
@@ -152,11 +153,13 @@ export interface DecoyEntity {
 }
 export interface WarningZone extends AttackMetadata {
     victimTimers?:Map<number,number>;
+    barrage?: { angles:number[]; index:number; gap:number; next:number };
+    elitePattern?: "crimson_barrage" | "iron_suppression" | "acid_bombing" | "radar_bombardment";
     ringSpeed?: number;
     insideTimer?: number;
     droneInsideTimer?: number;
     id: number;
-    kind: "enemy_bomb" | "elite_lock" | "boss_strike" | "player_bomb" | "rail" | "acid" | "sonic" | "lane_laser" | "dash" | "emp" | "shock_clamp" | "retaliation";
+    kind: "elite_barrage" | "enemy_bomb" | "elite_lock" | "boss_strike" | "player_bomb" | "rail" | "acid" | "sonic" | "lane_laser" | "dash" | "emp" | "shock_clamp" | "retaliation";
     safeAngle?: number;
     safeArc?: number;
     ringIndex?: number;
@@ -238,17 +241,17 @@ export interface TacticalCoreState {
     fields:{id:number;x:number;y:number;until:number}[];
     grids:{id:number;a:number;b:number;until:number;raw:number;hits:Set<number>}[];
     lastWeaponHit?:{id:number;time:number}; openingHits:Set<number>;
-    previousStatuses:Set<string>; hackTarget?:number; hackEnd:number;
+    previousStatuses:Set<string>; hackTargets:number[]; hackEnd:number;
+    hackMode?: "normal" | "elite" | "boss_stun";
 }
 export interface CombatWorld {
     nextContinuousHealVisualAt?: number;
     tactical?:TacticalCoreState;
 
     threats: { enemyId: number; cost: number; until: number }[];
-    scheduledAttacks: { at: number; enemyId: number; kind: "needle" | "rail" | "execution" | "clamp" | "retaliation" | "radar_followup" | "acid_cage"; angle?: number; x?: number; y?: number }[];
-    nextEliteControlAt: number;
-    lastEliteControlStart: number;
-    eliteSpecials: { enemyId: number; until: number; control: boolean }[];
+    scheduledAttacks: { at: number; enemyId: number; kind: "needle" | "rail" | "execution" | "clamp" | "retaliation" | "radar_followup" | "acid_cage" | "crimson_barrage" | "iron_suppression" | "acid_bombing" | "radar_bombardment"; control?:boolean; angle?: number; x?: number; y?: number }[];
+    eliteSpecials: { enemyId: number; until: number; control: boolean; allegiance:Allegiance }[];
+    eliteResolve: number; eliteComboCooldown: number; eliteComboIndex: number; eliteCorridorSide?: -1 | 1;
     aircraft: AircraftCombatState;
     playerX: number;
     playerY: number;
@@ -367,7 +370,7 @@ export function createCombatWorld(aircraftId: AircraftId, random: () => number =
     const droneInitial = clampCircleToGameplayRect(initial.x - 28, initial.y + 8, 9);
     const spawnQueue = createWaveQueue(0, random);
     return {
-        threats: [], scheduledAttacks: [], nextEliteControlAt: 0, lastEliteControlStart: -Infinity, eliteSpecials: [],
+        threats: [], scheduledAttacks: [], eliteSpecials: [], eliteResolve:0, eliteComboCooldown:9, eliteComboIndex:0,
         aircraft: createAircraftCombatState(aircraftId),
         playerX: initial.x,
         playerY: initial.y,
@@ -553,7 +556,7 @@ function spawnEnemy(world: CombatWorld, type: EnemyType): EnemyEntity | null {
         damageScale: wave.damage, eliteWave: wave.elite, stun: 0, burn: 0, burnDamage: 0, burnTick: 0, weakHits: 0, weakUntil: 0, lightningUntil: 0,
         shield: 0, shieldUntil: 0, shieldSource: 0, abilityCd: type === "jammer" ? 4.5 : type === "iron_fortress" ? 10 : 7.5, secondaryCd: 10, tertiaryCd: 10,
         burst: 0, burstCd: 0, burstAngle: 0, attackCount: 0, targetId: null, deathHandled: false, dashRemaining: 0, dashStartX: 0, dashStartY: 0, dashEndX: 0, dashEndY: 0,
-        hackedUntil: 0, dashAllegiance: undefined, dashCommitted: false, skillLockedUntil:0, armorBrokenUntil:0, combatMarks:{}, aegisUntil: 0, aegisReady: 0, bossAttack: undefined, kamikazeState: type === "kamikaze" ? "approach" : undefined, lockedX: 0, lockedY: 0, dashDirX: 0, dashDirY: 1, dashTravelled: 0, dashPlannedDistance: 0, stateTimer: 0, attackAge: 0, missedDashCount: 0, airframeRotation: Math.PI, hitResolved: false, executionRecovery: 0, retaliationReady: false });
+        hackedUntil: 0, dashAllegiance: undefined, dashCommitted: false, skillLockedUntil:0, armorBrokenUntil:0, combatMarks:{}, aegisUntil: 0, aegisReady: 0, bossAttack: undefined, kamikazeState: type === "kamikaze" ? "approach" : undefined, lockedX: 0, lockedY: 0, dashDirX: 0, dashDirY: 1, dashTravelled: 0, dashPlannedDistance: 0, stateTimer: 0, attackAge: 0, missedDashCount: 0, airframeRotation: Math.PI, hitResolved: false, executionRecovery: 0, retaliationReady: false, elitePatternCd:type==="elite"?7.8:type==="iron_fortress"?8.5:8, elitePatternIndex:0, eliteSequenceUntil:0 });
     if(type==="kamikaze") {const point=clampHitboxToGameplayRect(enemy.x,enemy.y,getEnemyHitbox(enemy),true);enemy.x=point.x;enemy.y=point.y;}
     enemy.recentDamage.length = 0;
     if (type === "elite" || type === "radar_hunter") enemy.secondaryCd = Infinity;
@@ -744,11 +747,11 @@ function aimAtCurrentTarget(world: CombatWorld, enemy: EnemyEntity): number | nu
     const target = targetPosition(world, id);
     return target ? Math.atan2(target.y - enemy.y, target.x - enemy.x) : null;
 }
-function addWarning(world: CombatWorld, kind: WarningZone["kind"], x: number, y: number, radius: number, duration: number, rawDamage: number, owner: WarningZone["owner"], enemyId?: number, metadata: AttackMetadata = {}): void {
+function addWarning(world: CombatWorld, kind: WarningZone["kind"], x: number, y: number, radius: number, duration: number, rawDamage: number, owner: WarningZone["owner"], enemyId?: number, metadata: AttackMetadata = {}): WarningZone | undefined {
     if (world.warnings.length >= AIR_COMBAT_WORLD.maxWarnings)
         return;
     const clamped = clampCircleToGameplayRect(x, y, radius);
-    world.warnings.push({
+    const warning:WarningZone={
         id: world.nextId++,
         kind,
         ...metadata, sourceEnemyId: enemyId,
@@ -762,7 +765,9 @@ function addWarning(world: CombatWorld, kind: WarningZone["kind"], x: number, y:
         totalDuration: duration,
         rawDamage,
         owner,
-    });
+    };
+    world.warnings.push(warning);
+    return warning;
 }
 function reserveThreat(world: CombatWorld, enemy: EnemyEntity, cost: number, duration: number): boolean {
     if(enemyAllegiance(world,enemy)==="friendly_hacked")return true;
@@ -774,21 +779,144 @@ function reserveThreat(world: CombatWorld, enemy: EnemyEntity, cost: number, dur
 function scheduleAttack(world: CombatWorld, enemy: EnemyEntity, kind: CombatWorld["scheduledAttacks"][number]["kind"], delay: number, extra: Partial<CombatWorld["scheduledAttacks"][number]> = {}): void {
     if (world.scheduledAttacks.length < 32) world.scheduledAttacks.push({ ...extra, at: world.elapsed+delay, enemyId: enemy.id, kind });
 }
+type ElitePattern = NonNullable<WarningZone["elitePattern"]>;
+const ELITE_PATTERNS:readonly string[]=["crimson_barrage","iron_suppression","acid_bombing","radar_bombardment"];
+function eliteResolveStacks(world:CombatWorld,enemy:EnemyEntity):number {
+    return COMBAT_WAVES[world.waveIndex].elite&&isElite(enemy.type)&&isHostileToPlayer(world,enemy)?world.eliteResolve:0;
+}
+function getEliteAttackInterval(world:CombatWorld,enemy:EnemyEntity,base:number):number {
+    return base/(1+.10*eliteResolveStacks(world,enemy));
+}
+function getEliteSpecialInterval(world:CombatWorld,enemy:EnemyEntity,base:number):number {
+    return base*Math.max(.70,1-.10*eliteResolveStacks(world,enemy));
+}
+function eliteActivity(world:CombatWorld):Map<number,boolean> {
+    world.eliteSpecials=world.eliteSpecials.filter(a=>a.until>world.elapsed);
+    const active=new Map<number,boolean>();
+    const include=(id:number,control:boolean)=>active.set(id,Boolean(active.get(id))||control);
+    for(const a of world.eliteSpecials)if(a.allegiance==="hostile")include(a.enemyId,a.control);
+    for(const w of world.warnings)if(w.allegiance!=="friendly_hacked"&&w.enemyId&&
+        (w.elitePattern||["shock_clamp","dash","retaliation","acid","rail"].includes(w.kind))&&
+        (w.sourceEnemyType&&isElite(w.sourceEnemyType)||world.enemies.some(e=>e.id===w.enemyId&&isElite(e.type))))
+        include(w.enemyId,w.kind==="shock_clamp"||w.sourceEnemyType==="radar_hunter"&&w.kind==="rail");
+    // Radar's lock missiles can trigger control after their firing warning has ended.
+    for(const p of world.projectiles)if(p.allegiance!=="friendly_hacked"&&p.sourceEnemyType==="radar_hunter"&&p.sourceEnemyId&&["rail","radar_lock"].includes(p.attackTag??""))include(p.sourceEnemyId,true);
+    for(const e of world.enemies)if(isElite(e.type)&&isHostileToPlayer(world,e)&&(e.dashRemaining>0||(e.executionRecovery??0)>0))include(e.id,false);
+    return active;
+}
+function canStartEliteSpecial(world:CombatWorld,enemy:EnemyEntity,control:boolean,area=false):boolean {
+    if(!COMBAT_WAVES[world.waveIndex].elite)return true;
+    // A unit never starts two independent specials over its own warning.
+    if(world.warnings.some(w=>w.enemyId===enemy.id&&w.kind!=="elite_lock")||enemy.dashRemaining>0||(enemy.executionRecovery??0)>0)return false;
+    if(enemyAllegiance(world,enemy)==="friendly_hacked")return true;
+    const active=eliteActivity(world),controlActive=[...active.values()].some(Boolean);
+    if(active.has(enemy.id)||active.size>=(enemy.eliteWave===2?3:2))return false;
+    // Scheduling fairness only: no change to status duration, immunity or Core 024.
+    if(control&&(controlActive||playerStunned(world.aircraft)||world.warnings.some(w=>w.allegiance!=="friendly_hacked"&&w.kind==="acid")))return false;
+    if(area&&(controlActive||playerStunned(world.aircraft)))return false;
+    return true;
+}
+function canContinueRadarSequence(world:CombatWorld,enemy:EnemyEntity):boolean {
+    if(enemyAllegiance(world,enemy)==="friendly_hacked")return true;
+    const active=eliteActivity(world);
+    return (active.has(enemy.id)||active.size<(enemy.eliteWave===2?3:2))&&
+        ![...active].some(([id,control])=>id!==enemy.id&&control)&&
+        !world.warnings.some(w=>w.kind==="acid"&&w.allegiance!=="friendly_hacked");
+}
+function reserveEliteSpecial(world:CombatWorld,enemy:EnemyEntity,control:boolean,duration:number):void {
+    world.eliteSpecials.push({enemyId:enemy.id,until:world.elapsed+duration,control,allegiance:enemyAllegiance(world,enemy)});
+}
 function queueEliteSpecial(world: CombatWorld, enemy: EnemyEntity, kind: CombatWorld["scheduledAttacks"][number]["kind"], delay: number, control: boolean): void {
-    if (world.scheduledAttacks.some(a => a.enemyId === enemy.id && a.kind === kind)) return;
-    if(enemyAllegiance(world,enemy)==="friendly_hacked"){scheduleAttack(world,enemy,kind,delay);return;}
-    world.eliteSpecials = world.eliteSpecials.filter(a => a.until > world.elapsed);
-    const cap = enemy.eliteWave === 2 ? 2 : 1;
-    let at = world.elapsed+delay;
-    for(let guard=0;guard<32;guard++) {
-        const overlapping=world.eliteSpecials.filter(a=>a.until>at);
-        if(overlapping.length<cap)break;
-        at=Math.min(...overlapping.map(a=>a.until));
+    if(world.scheduledAttacks.some(a=>a.enemyId===enemy.id&&a.kind===kind))return;
+    // Intent has no allegiance yet; it acquires ownership when its warning spawns.
+    scheduleAttack(world,enemy,kind,delay,{control});
+}
+function elitePatternFor(enemy:EnemyEntity):ElitePattern|undefined {
+    return enemy.type==="elite"?"crimson_barrage":enemy.type==="iron_fortress"?"iron_suppression":enemy.type==="acid_bomber"?"acid_bombing":enemy.type==="radar_hunter"&&enemy.eliteWave===2?"radar_bombardment":undefined;
+}
+function elitePatternInterval(enemy:EnemyEntity):number {
+    return enemy.type==="elite"?7.8:enemy.type==="iron_fortress"?8.5:enemy.type==="acid_bomber"?(enemy.eliteWave===2?4.7:6.25):8;
+}
+/** A shared open side is kept until all hostile acid has expired. Successive
+ * carpets therefore cannot close each other's corridor, even with Resolve. */
+function eliteBombPoint(world:CombatWorld,x:number,y:number,radius:number,hostile:boolean):{x:number;y:number} {
+    if(!hostile)return clampCircleToGameplayRect(x,y,radius);
+    const corridor=100;
+    const minX=GAMEPLAY_SAFE_RECT.left+radius+(world.eliteCorridorSide===-1?corridor:0);
+    const maxX=GAMEPLAY_SAFE_RECT.right-radius-(world.eliteCorridorSide===1?corridor:0);
+    return clampCircleToGameplayRect(Math.max(minX,Math.min(maxX,x)),y,radius);
+}
+function startElitePattern(world:CombatWorld,enemy:EnemyEntity,kind:ElitePattern,target:{x:number;y:number}):boolean {
+    const count=kind==="acid_bombing"?(enemy.eliteWave===2?5:3):kind==="radar_bombardment"?3:1;
+    if(world.warnings.length+count>AIR_COMBAT_WORLD.maxWarnings)return false;
+    const hostile=isHostileToPlayer(world,enemy),index=enemy.elitePatternIndex??0,direction=index%2===0?1:-1;
+    const damage=ENEMY_CONFIGS[enemy.type].projectileDamage*enemy.damageScale;
+    if(kind==="crimson_barrage"||kind==="iron_suppression"){
+        const crimson=kind==="crimson_barrage",warning=crimson?.7:.65;
+        const offsets=crimson?(enemy.eliteWave===2?[-.24,0,.24,-.38]:[-.24,0,.24]):enemy.eliteWave===2?[-.3,0,.3]:[-.3,.3];
+        const angle=Math.atan2(target.y-enemy.y,target.x-enemy.x),gap=crimson?.21:.35;
+        const w=addWarning(world,"elite_barrage",enemy.x,enemy.y,32,warning,damage,"enemy",enemy.id,{sourceEnemyType:enemy.type,attackTag:crimson?"crimson_barrage":"iron_suppression"});
+        if(!w)return false;
+        w.fromX=enemy.x;w.fromY=enemy.y+enemy.radius*.65;w.elitePattern=kind;
+        w.barrage={angles:offsets.map(offset=>angle+offset*direction),index:0,gap,next:0};
+        const duration=warning+(offsets.length-1)*gap;
+        reserveEliteSpecial(world,enemy,false,duration+.7);
+        enemy.eliteSequenceUntil=world.elapsed+duration+.7;
+    }else{
+        if(hostile&&!world.warnings.some(w=>w.kind==="acid"&&w.allegiance!=="friendly_hacked"))
+            world.eliteCorridorSide=target.x<(GAMEPLAY_SAFE_RECT.left+GAMEPLAY_SAFE_RECT.right)/2?1:-1;
+        const acid=kind==="acid_bombing",radius=acid?42:30;
+        // Movement prediction is a fixed snapshot, never a homing zone.
+        const dx=hostile?world.moveDirectionX:0,dy=hostile?world.moveDirectionY:0;
+        const offsets=acid&&count===5?[[0,0],[-48*direction,-65],[48*direction,-130],[-48*direction,-195],[48*direction,-260]]
+            :[[0,0],[dx*58+direction*28,dy*58-48],[-dx*48-direction*28,-dy*48-96]];
+        offsets.forEach(([x,y],i)=>{
+            const point=eliteBombPoint(world,target.x+x,target.y+y,radius,hostile);
+            const w=addWarning(world,acid?"acid":"enemy_bomb",point.x,point.y,radius,(acid?.9:.8)+i*.32,damage*(acid?1:.75),"enemy",enemy.id,{sourceEnemyType:enemy.type,attackTag:acid?"acid":"radar_bombardment"});
+            if(w)w.elitePattern=kind;
+        });
+        // Keep a short gap after acid so pending Clamp/Radar sequences get a turn.
+        reserveEliteSpecial(world,enemy,false,(acid?.9+3+.65:.8)+.32*(count-1));
     }
-    if (control) at = Math.max(at, world.nextEliteControlAt);
-    if (control) world.nextEliteControlAt = at + (enemy.eliteWave === 2 ? .2 : .85);
-    world.eliteSpecials.push({ enemyId: enemy.id, until: at+1.7, control });
-    scheduleAttack(world, enemy, kind, at-world.elapsed);
+    enemy.elitePatternIndex=index+1;
+    const interval=getEliteSpecialInterval(world,enemy,elitePatternInterval(enemy));
+    if(kind==="acid_bombing")enemy.fireCooldown=interval;
+    else enemy.elitePatternCd=interval;
+    return true;
+}
+function updateEliteDirector(world:CombatWorld,dt:number):void {
+    const wave=COMBAT_WAVES[world.waveIndex];
+    if(!wave.elite||world.waveState!=="combat")return;
+    for(const enemy of world.enemies){
+        if(enemy.hp<=0||!isElite(enemy.type)||enemy.type==="acid_bomber"||enemy.stun>0||(enemy.skillLockedUntil??0)>world.elapsed)continue;
+        enemy.elitePatternCd=(enemy.elitePatternCd??elitePatternInterval(enemy))-dt;
+        const kind=elitePatternFor(enemy);
+        if(kind&&enemy.elitePatternCd<=0)queueEliteSpecial(world,enemy,kind,0,false);
+    }
+    world.eliteComboCooldown=Math.max(0,world.eliteComboCooldown-dt);
+    if(world.eliteComboCooldown>0)return;
+    const live=world.enemies.filter(e=>isElite(e.type)&&isHostileToPlayer(world,e)&&e.stun<=0&&(e.skillLockedUntil??0)<=world.elapsed).sort((a,b)=>a.id-b.id);
+    if(live.length<2)return;
+    type ComboStep={type:EnemyType;kind:ElitePattern|"rail";control?:boolean};
+    const templates:ComboStep[][]=wave.elite===2?[
+        [{type:"radar_hunter",kind:"radar_bombardment"},{type:"elite",kind:"crimson_barrage"}],
+        [{type:"acid_bomber",kind:"acid_bombing"},{type:"iron_fortress",kind:"iron_suppression"}],
+        [{type:"radar_hunter",kind:"rail",control:true},{type:"elite",kind:"crimson_barrage"}],
+        [{type:"iron_fortress",kind:"iron_suppression"},{type:"radar_hunter",kind:"radar_bombardment"}],
+    ]:[
+        [{type:"acid_bomber",kind:"acid_bombing"},{type:"iron_fortress",kind:"iron_suppression"}],
+        [{type:"elite",kind:"crimson_barrage"},{type:"iron_fortress",kind:"iron_suppression"}],
+        [{type:"iron_fortress",kind:"iron_suppression"},{type:"acid_bomber",kind:"acid_bombing"}],
+    ];
+    const valid=templates.filter(pair=>pair.every(step=>live.some(e=>e.type===step.type)));
+    const steps:ComboStep[]=valid.length?valid[world.eliteComboIndex%valid.length]:live.slice(0,2).map(e=>({type:e.type,kind:elitePatternFor(e)!}));
+    const pair=steps.map(step=>({step,enemy:live.find(e=>e.type===step.type)!}));
+    // Skip a busy beat rather than accumulate a large delayed combo backlog.
+    if(!pair.every(({enemy,step})=>canStartEliteSpecial(world,enemy,Boolean(step.control),step.kind==="acid_bombing"||step.kind==="radar_bombardment")))return;
+    if(eliteActivity(world).size+pair.length>(wave.elite===2?3:2))return;
+    pair.forEach(({enemy,step},i)=>queueEliteSpecial(world,enemy,step.kind,i*.18,Boolean(step.control)));
+    world.eliteComboIndex++;
+    world.eliteComboCooldown=wave.elite===2?7:9;
 }
 function tryNormalSpecial(world: CombatWorld, enemy: EnemyEntity, damage: number, aim: number | null, target: {x:number;y:number} | null): boolean {
     if (isElite(enemy.type) || enemy.type === "boss" || enemy.wave < 3 || !target || aim === null) return false;
@@ -842,7 +970,7 @@ function onHostileDamage(world: CombatWorld, attack: AttackMetadata): void {
         delete state.status.marks.hunterMark;
         queueEliteSpecial(world,enemy,"execution",.1,false);
     }
-    if(enemy.type==="iron_fortress" && (attack.attackTag==="basic" || attack.attackTag==="burst") && addStatusMark(state,"suppression",4,enemy.id)>=(enemy.eliteWave===2?3:4)) {
+    if(enemy.type==="iron_fortress" && (attack.attackTag==="basic" || attack.attackTag==="burst" || attack.attackTag==="iron_suppression") && addStatusMark(state,"suppression",4,enemy.id)>=(enemy.eliteWave===2?3:4)) {
         delete state.status.marks.suppression;
         queueEliteSpecial(world,enemy,"clamp",.1,true);
     }
@@ -866,39 +994,45 @@ function updateScheduledAttacks(world: CombatWorld): void {
         const a=world.scheduledAttacks[i], enemy=world.enemies.find(e=>e.id===a.enemyId && e.hp>0);
         if(!enemy) {world.scheduledAttacks.splice(i,1);continue;}
         if(a.at>world.elapsed || enemy.stun>0 || (enemy.skillLockedUntil??0)>world.elapsed) continue;
-        if(enemyAllegiance(world,enemy)!=="friendly_hacked" && ["clamp","execution","retaliation","acid_cage"].includes(a.kind)) {
-            const active=new Set(world.warnings.filter(w=>w.enemyId && w.allegiance!=="friendly_hacked" && ["shock_clamp","dash","retaliation","acid"].includes(w.kind)).map(w=>w.enemyId));
-            for(const e of world.enemies)if(isElite(e.type)&&enemyAllegiance(world,e)!=="friendly_hacked"&&(e.dashRemaining>0||(e.executionRecovery??0)>0))active.add(e.id);
-            if(active.has(enemy.id) || active.size >= (enemy.eliteWave===2?2:1)) {a.at=world.elapsed+.2;continue;}
-            if(a.kind==="clamp") {
-                if(world.elapsed-world.lastEliteControlStart<.2){a.at=world.elapsed+.2;continue;}
-                world.lastEliteControlStart=world.elapsed;
-            }
+        const pattern=ELITE_PATTERNS.includes(a.kind);
+        const special=pattern||a.kind==="rail"&&enemy.type==="radar_hunter"||["clamp","execution","retaliation","acid_cage","radar_followup"].includes(a.kind);
+        const control=Boolean(a.control)||a.kind==="clamp"||a.kind==="radar_followup"||a.kind==="rail"&&enemy.type==="radar_hunter";
+        if(special){
+            if(a.kind==="execution"&&(enemy.eliteSequenceUntil??0)>world.elapsed){a.at=enemy.eliteSequenceUntil!;continue;}
+            if(!canStartEliteSpecial(world,enemy,control,a.kind==="acid_cage"||a.kind==="acid_bombing"||a.kind==="radar_bombardment")){a.at=world.elapsed+.2;continue;}
         }
         world.scheduledAttacks.splice(i,1);
         const target=targetPosition(world,chooseEnemyTarget(world,false,enemy));
         if(!target)continue;
         const damage=ENEMY_CONFIGS[enemy.type].projectileDamage*enemy.damageScale;
+        if(pattern||a.kind==="acid_cage"){
+            if(!startElitePattern(world,enemy,a.kind==="acid_cage"?"acid_bombing":a.kind as ElitePattern,target))scheduleAttack(world,enemy,a.kind,.2);
+            continue;
+        }
+        if(special)reserveEliteSpecial(world,enemy,control,a.kind==="execution"?2.1:a.kind==="clamp"?.8+(enemy.eliteWave===2?1.75:1.25):1.2);
         if(a.kind==="needle") fireEnemyBullet(world,enemy,enemyAllegiance(world,enemy)==="friendly_hacked" ? Math.atan2(target.y-enemy.y,target.x-enemy.x) : a.angle??Math.PI/2,285,damage*.45,false,"needle_pair");
         if(a.kind==="rail") {
             const point=clampCircleToGameplayRect(target.x+world.moveDirectionX*30,target.y+world.moveDirectionY*30,10);
             addLineWarning(world,enemy,"rail",point.x,point.y,.75,damage*.85);
         }
         if(a.kind==="execution") { addLineWarning(world,enemy,"dash",target.x,target.y,.7,ENEMY_CONFIGS[enemy.type].collisionDamage*enemy.damageScale); setMessage(world,"CRIMSON · LAO HÀNH QUYẾT",.7); }
-        if(a.kind==="clamp") addWarning(world,"shock_clamp",target.x,target.y,44,.8,damage*.65,"enemy",enemy.id,{attackTag:"shock_clamp",payload:{stun:enemy.eliteWave===2?1.75:1.25}});
-        if(a.kind==="retaliation") addWarning(world,"retaliation",enemy.x,enemy.y,35,.5,damage,"enemy",enemy.id,{attackTag:"burst"});
+        if(a.kind==="clamp") addWarning(world,"shock_clamp",target.x,target.y,44,.8,damage*.65,"enemy",enemy.id,{sourceEnemyType:enemy.type,attackTag:"shock_clamp",payload:{stun:enemy.eliteWave===2?1.75:1.25}});
+        if(a.kind==="retaliation") addWarning(world,"retaliation",enemy.x,enemy.y,35,.5,damage,"enemy",enemy.id,{sourceEnemyType:enemy.type,attackTag:"burst"});
         if(a.kind==="radar_followup") { const aim=aimAtCurrentTarget(world,enemy); if(aim!==null) for(const offset of [-.3,0,.3]) fireEnemyBullet(world,enemy,aim+offset,180,damage*.8,true,"radar_lock"); }
-        if(a.kind==="acid_cage") fireEnemy(world,enemy);
     }
 }
 function fireEnemy(world: CombatWorld, enemy: EnemyEntity): void {
     const config = ENEMY_CONFIGS[enemy.type], damage = config.projectileDamage * enemy.damageScale, aim = aimAtCurrentTarget(world, enemy);
     const target = targetPosition(world, chooseEnemyTarget(world, false, enemy));
     if(enemyAllegiance(world,enemy)==="friendly_hacked"&&!target)return;
-    if(enemy.type==="acid_bomber" && enemyAllegiance(world,enemy)!=="friendly_hacked") {
-        const active=new Set(world.warnings.filter(w=>w.enemyId && w.allegiance!=="friendly_hacked" && ["shock_clamp","dash","retaliation","acid"].includes(w.kind)).map(w=>w.enemyId));
-        for(const e of world.enemies)if(isElite(e.type)&&enemyAllegiance(world,e)!=="friendly_hacked"&&(e.dashRemaining>0||(e.executionRecovery??0)>0))active.add(e.id);
-        if(active.has(enemy.id)||active.size>=(enemy.eliteWave===2?2:1)){enemy.fireCooldown=.2;return;}
+    if(COMBAT_WAVES[world.waveIndex].elite&&(enemy.type==="acid_bomber"||enemy.type==="radar_hunter")){
+        if(!canStartEliteSpecial(world,enemy,enemy.type==="radar_hunter",enemy.type==="acid_bomber")){enemy.fireCooldown=.2;return;}
+        if(enemy.type==="acid_bomber"){
+            if(target&&startElitePattern(world,enemy,"acid_bombing",target))enemy.attackCount++;
+            else enemy.fireCooldown=.2;
+            return;
+        }
+        reserveEliteSpecial(world,enemy,true,1.5);
     }
     enemy.attackCount++;
     if ((enemy.skillLockedUntil??0)<=world.elapsed && tryNormalSpecial(world, enemy, damage, aim, target)) { enemy.fireCooldown = config.fireInterval; return; }
@@ -960,7 +1094,7 @@ function fireEnemy(world: CombatWorld, enemy: EnemyEntity): void {
     const faster = enemy.type === "elite" && enemy.hp < enemy.maxHp * .5 ? .8 : enemy.type === "boss" && enemy.hp < enemy.maxHp * .15 ? .75 : 1;
     const tuning = getBossTuning(enemy.hp / enemy.maxHp);
     enemy.fireCooldown = enemy.type === "boss" ? tuning.wingInterval * tuning.cadence
-        : enemy.type === "acid_bomber" && enemy.eliteWave === 2 ? 4.8 : config.fireInterval * faster;
+        : getEliteAttackInterval(world,enemy,enemy.type === "acid_bomber" && enemy.eliteWave === 2 ? 4.8 : config.fireInterval * faster);
 }
 function reserveBossVolley(world:CombatWorld,count:number):boolean {
     let live=world.projectiles.reduce((n,p)=>n+Number(p.owner==="enemy"),0);
@@ -1365,6 +1499,7 @@ function updateEncounter(world: CombatWorld, dt: number): void {
             world.xpBudgetRemaining = COMBAT_WAVES[world.waveIndex].xpBudget;
             world.xpWeightRemaining = world.spawnQueue.reduce((sum, type) => sum + ENEMY_CONFIGS[type].combatXp, 0);
             world.spawnedInWave = 0;
+            world.eliteResolve=0;world.eliteComboIndex=0;world.eliteComboCooldown=COMBAT_WAVES[world.waveIndex].elite===2?7:9;world.eliteCorridorSide=undefined;
             setMessage(world, COMBAT_WAVES[world.waveIndex].label.toUpperCase(), 1.15);
         }
         // The wave banner is cosmetic: spawn and simulation resume immediately at zero.
@@ -1422,7 +1557,7 @@ function updateEnemyAbilities(world: CombatWorld, enemy: EnemyEntity, dt: number
         enemy.shield = enemy.maxHp * (enemy.eliteWave === 2 ? .3 : .2);
         enemy.retaliationReady = true;
         enemy.shieldUntil = world.aircraft.coreState.time + 4;
-        enemy.abilityCd = 10;
+        enemy.abilityCd = getEliteSpecialInterval(world,enemy,10);
     }
     if (enemy.type !== "boss")
         return;
@@ -1633,10 +1768,9 @@ function updateBossAttacks(world: CombatWorld, enemy: EnemyEntity, dt: number): 
     if(["sonic","lane_laser"].includes(state.comboSteps[0]) && world.projectiles.some(p=>p.sourceEnemyId===enemy.id && p.attackTag==="boss_crossfire")) {state.followupRemaining=0;return;}
     startBossMajor(world,enemy,state.comboSteps.shift()!);
 }
-/** Allegiance is queried for units and snapshotted for attacks. A committed
- * friendly dash keeps its context until arrival, even after the hack timer. */
+/** Unit allegiance expires immediately; committed attacks keep their own snapshot. */
 export function enemyAllegiance(world:CombatWorld,enemy?:EnemyEntity):Allegiance {
-    return enemy && ((enemy.hackedUntil??0)>world.elapsed || (enemy.dashAllegiance==="friendly_hacked" && ((enemy.kamikazeState==="dash" && enemy.dashCommitted) || enemy.dashRemaining>0))) ? "friendly_hacked" : "hostile";
+    return enemy && enemy.type!=="boss" && (enemy.hackedUntil??0)>world.elapsed ? "friendly_hacked" : "hostile";
 }
 export const isHostileToPlayer=(world:CombatWorld,e:EnemyEntity)=>e.hp>0 && enemyAllegiance(world,e)==="hostile";
 /** Shared live value for Core 118 damage and its status badge; no cap. */
@@ -1652,7 +1786,7 @@ function canAttackEnemy(world:CombatWorld,allegiance:Allegiance,e:EnemyEntity,so
     return e.hp>0 && e.id!==sourceId && (allegiance==="hostile" ? enemyAllegiance(world,e)==="friendly_hacked" : isHostileToPlayer(world,e));
 }
 function tacticalState(world:CombatWorld):TacticalCoreState {
-    return world.tactical??={scraps:[],fields:[],grids:[],openingHits:new Set(),previousStatuses:new Set(),hackEnd:0};
+    return world.tactical??={scraps:[],fields:[],grids:[],openingHits:new Set(),previousStatuses:new Set(),hackTargets:[],hackEnd:0};
 }
 const ordinaryHostileBullet=(p:ProjectileEntity)=>p.owner==="enemy" && p.allegiance!=="friendly_hacked" && p.projectileKind==="bullet" && !p.homing && p.attackTag!=="rail";
 function cBank(state:AircraftCombatState,gain:number):void {state.coreState.stacks.antimatter=Math.min(6,(state.coreState.stacks.antimatter??0)+gain);}
@@ -1690,23 +1824,16 @@ function observeComeback(world:CombatWorld):void {
     t.previousStatuses=active;
 }
 function rearmAllegiance(world:CombatWorld,e:EnemyEntity):void {
-    if(e.kamikazeState==="dash"&&!e.dashCommitted){e.kamikazeState="charge";e.dashAllegiance=undefined;e.vx=e.vy=0;}
-
     world.threats=world.threats.filter(t=>t.enemyId!==e.id);
-    world.eliteSpecials=world.eliteSpecials.filter(t=>t.enemyId!==e.id);
     delete world.aircraft.coreState.shields[`jammer:${e.id}`];
     for(const ally of world.enemies)if(ally.shieldSource===e.id&&enemyAllegiance(world,ally)!==enemyAllegiance(world,e)){ally.shield=0;ally.shieldUntil=0;}
+    // Warnings/hazards/dashes already committed retain their ownership and timing.
     const target=targetPosition(world,chooseEnemyTarget(world,true,e));
-    for(const w of world.warnings)if(w.enemyId===e.id && w.stage!=="active"){
-        w.allegiance=enemyAllegiance(world,e);w.remaining=w.totalDuration;
-        if(target && w.kind!=="retaliation"&&w.kind!=="elite_lock"){w.x=target.x;w.y=target.y;w.fromX=e.x;w.fromY=e.y;}
-    }
-    if(e.kamikazeState==="charge"){
-        e.stateTimer=.7;e.dashCharge=.7;e.dashAllegiance=undefined;
-        if(target){e.lockedX=target.x;e.lockedY=target.y;}
-    }
     // A burst is a sequence of newly spawned attacks; subsequent shots retarget.
-    if(target)e.burstAngle=Math.atan2(target.y-e.y,target.x-e.x);
+    if(target){
+        e.burstAngle=Math.atan2(target.y-e.y,target.x-e.x);
+        if(e.kamikazeState==="charge"){e.lockedX=target.x;e.lockedY=target.y;}
+    }
 }
 function collectScrap(world:CombatWorld):void {
     if(!world.tactical?.scraps.length)return;
@@ -1716,23 +1843,51 @@ function collectScrap(world:CombatWorld):void {
         if(circleVsAircraft(scrap.x,scrap.y,5,getPlayerHitbox(world))){healPlayerWithFeedback(world,getEffectiveAircraftStats(state).maxHp*.0125,"core");emitVisual(world,{kind:"absorb",x:scrap.x,y:scrap.y,size:18});return false;}return true;
     });
 }
+/** The queue is the only spawn source, including delayed interval spawns.
+ * Called after spawning and death resolution as well as before target acquisition. */
+function settleControlOverride(world:CombatWorld):void {
+    const t=world.tactical;
+    if(!t?.hackMode)return;
+    t.hackTargets=t.hackTargets.filter(id=>world.enemies.some(e=>e.id===id&&e.hp>0));
+    const fullySpawned=world.waveState==="combat"&&world.spawnQueue.length===0;
+    const lastAllies=t.hackMode!=="boss_stun"&&t.hackTargets.length>0&&fullySpawned&&
+        !world.enemies.some(e=>isHostileToPlayer(world,e));
+    const cohortDefeated=t.hackMode!=="boss_stun"&&t.hackTargets.length===0;
+    if(world.elapsed<t.hackEnd&&!lastAllies&&!cohortDefeated)return;
+    const endedAt=Math.min(world.elapsed,t.hackEnd);
+    const survivors=world.enemies.filter(e=>t.hackTargets.includes(e.id)&&e.hp>0);
+    for(const e of survivors)e.hackedUntil=0;
+    for(const e of survivors)rearmAllegiance(world,e);
+    t.hackTargets=[];t.hackMode=undefined;t.hackEnd=0;
+    world.aircraft.coreState.timers.controlOverride=world.aircraft.coreState.time-(world.elapsed-endedAt)+16;
+}
 function updateTacticalCores(world:CombatWorld,dt:number):void {
     const t=tacticalState(world),state=world.aircraft,c=state.coreState,now=world.elapsed;
     observeComeback(world);
     t.fields=t.fields.filter(f=>f.until>now);
     collectScrap(world);
-    if(t.hackTarget!==undefined){
-        const e=world.enemies.find(e=>e.id===t.hackTarget&&e.hp>0);
-        if(!e||now>=t.hackEnd){if(e){e.hackedUntil=0;rearmAllegiance(world,e);}t.hackTarget=undefined;c.timers.controlOverride=c.time+20;}
-    }
-    if(hasCore(state,120)&&t.hackTarget===undefined&&(c.timers.controlOverride??0)<=c.time){
-        const candidates=world.enemies.filter(e=>isHostileToPlayer(world,e));
+    settleControlOverride(world);
+    if(hasCore(state,120)&&!t.hackMode&&(c.timers.controlOverride??0)<=c.time&&world.waveState==="combat"){
+        const eliteWave=COMBAT_WAVES[world.waveIndex].elite>0;
+        const bossWave=Boolean(COMBAT_WAVES[world.waveIndex].counts.boss);
+        const candidates=world.enemies.filter(e=>isHostileToPlayer(world,e) &&
+            (bossWave?e.type==="boss":eliteWave?isElite(e.type):e.type!=="boss"&&!isElite(e.type)));
         candidates.sort((a,b)=>b.hp/b.maxHp-a.hp/a.maxHp||a.id-b.id);
-        const e=candidates[0];if(e){
-            const duration=e.type==="boss"?2.5:5;t.hackTarget=e.id;t.hackEnd=now+duration;
-            if(e.type==="boss")e.stun=Math.max(e.stun,2.5);
-            else {e.hackedUntil=t.hackEnd;rearmAllegiance(world,e);}
-            emitVisual(world,{kind:"emp_pulse",x:e.x,y:e.y,size:60});
+        const cohort=candidates.slice(0,bossWave||eliteWave?1:3);
+        if(cohort.length){
+            t.hackMode=bossWave?"boss_stun":eliteWave?"elite":"normal";
+            t.hackEnd=now+(bossWave?2.5:6);
+            t.hackTargets=bossWave?[]:cohort.map(e=>e.id);
+            // Assign the entire cohort before retargeting any member.
+            for(const e of cohort){
+                if(bossWave)e.stun=Math.max(e.stun,2.5);
+                else e.hackedUntil=t.hackEnd;
+            }
+            for(const e of cohort){
+                if(!bossWave)rearmAllegiance(world,e);
+                emitVisual(world,{kind:"emp_pulse",x:e.x,y:e.y,size:60});
+            }
+            settleControlOverride(world);
         }
     }
     // Persistent hazards hit opposing aircraft under their spawn-time ownership.
@@ -1922,7 +2077,7 @@ function updateEnemies(world: CombatWorld, dt: number): void {
         enemy.age += dt;
         enemy.fireCooldown -= dt;
         const top = GAMEPLAY_SAFE_RECT.top + enemy.radius;
-        const holdingTelegraph = (enemy.type === "boss" && (enemy.bossAttack?.crossfirePending ?? 0)>0 && !enemy.bossAttack?.patternWaiting) || world.warnings.some(w => w.enemyId === enemy.id && (w.kind === "rail" || w.kind === "dash" || w.kind === "sonic" || w.kind === "retaliation"));
+        const holdingTelegraph = (enemy.type === "boss" && (enemy.bossAttack?.crossfirePending ?? 0)>0 && !enemy.bossAttack?.patternWaiting) || world.warnings.some(w => w.enemyId === enemy.id && (w.kind === "rail" || w.kind === "dash" || w.kind === "sonic" || w.kind === "retaliation" || w.kind === "elite_barrage"));
         if (holdingTelegraph) {
             // Keep the visual origin and the actual attack lane aligned during the warning.
         }
@@ -2000,7 +2155,7 @@ function updateEnemies(world: CombatWorld, dt: number): void {
             fireFan(world, enemy, 7, 80 * enemy.damageScale, aimAtCurrentTarget(world, enemy) ?? Math.PI / 2);
             enemy.secondaryCd = Infinity;
         }
-        if ((enemy.skillLockedUntil??0)<=world.elapsed && enemy.type === "radar_hunter" && enemy.secondaryCd <= 0) {
+        if ((enemy.skillLockedUntil??0)<=world.elapsed && enemy.type === "radar_hunter" && enemy.secondaryCd <= 0 && canContinueRadarSequence(world,enemy)) {
             const aim = aimAtCurrentTarget(world, enemy);
             if (aim !== null) fireEnemyBullet(world, enemy, aim, 155, 120 * enemy.damageScale, true, "radar_lock");
             enemy.secondaryCd = Infinity;
@@ -2296,9 +2451,11 @@ function destroyEnemy(world: CombatWorld, enemyIndex: number): void {
     if (!enemy || enemy.deathHandled)
         return;
     enemy.deathHandled = true;
+    const eliteWave=COMBAT_WAVES[world.waveIndex].elite;
+    if(eliteWave&&isElite(enemy.type))world.eliteResolve=Math.min(eliteWave===2?3:2,world.eliteResolve+1);
     const tactical=tacticalState(world);tactical.openingHits.delete(enemy.id);
     tactical.grids=tactical.grids.filter(g=>g.a!==enemy.id&&g.b!==enemy.id);
-    if(tactical.hackTarget===enemy.id){tactical.hackTarget=undefined;world.aircraft.coreState.timers.controlOverride=world.aircraft.coreState.time+20;}
+    tactical.hackTargets=tactical.hackTargets.filter(id=>id!==enemy.id);
     if(hasCore(world.aircraft,108) && world.random()<.06 && tactical.scraps.length<64)tactical.scraps.push({id:world.nextId++,x:enemy.x,y:enemy.y,until:world.elapsed+4});
     const target = targetMetadata(enemy), config = ENEMY_CONFIGS[enemy.type], state = world.aircraft, c = state.coreState;
     emitVisual(world, { kind: "explosion", x: enemy.x, y: enemy.y, size: enemy.radius * 3, boss: target.boss });
@@ -2364,6 +2521,7 @@ function resolveDeathsAndEffects(world: CombatWorld): void {
             }
         }
     }
+    settleControlOverride(world);
 }
 function applySecondaryHits(world: CombatWorld, projectile: ProjectileEntity, primary: EnemyEntity): void {
     if (projectile.bounceRemaining <= 0)
@@ -2552,6 +2710,7 @@ function updateEnemyPlayerCollisions(world: CombatWorld): void {
         if (!isHostileToPlayer(world,enemy))
             continue;
         if (enemy.type === "kamikaze" && enemy.kamikazeState === "dash") { updateKamikaze(world,enemy,0); continue; }
+        if (enemy.dashRemaining>0&&enemy.dashAllegiance==="friendly_hacked")continue;
         if (world.aircraft.droneActive && circleVsAircraft(world.droneX,world.droneY,9,getEnemyHitbox(enemy)))
             hitDrone(world, ENEMY_CONFIGS[enemy.type].collisionDamage * enemy.damageScale);
         if (!aircraftVsAircraft(getEnemyHitbox(enemy),getPlayerHitbox(world)))
@@ -2579,11 +2738,28 @@ function detonateBigBang(world: CombatWorld, projectile: ProjectileEntity): void
             enemy.stun = Math.max(enemy.stun, 4);
     }
 }
+function fireEliteBarrageVolley(world:CombatWorld,w:WarningZone):void {
+    const barrage=w.barrage;
+    if(!barrage||barrage.index>=barrage.angles.length)return;
+    const angle=barrage.angles[barrage.index++];
+    for(let i=0;i<7;i++){
+        const a=angle+(i-3)*.14;
+        addProjectile(world,{owner:"enemy",allegiance:w.allegiance,sourceEnemyId:w.sourceEnemyId,sourceEnemyType:w.sourceEnemyType,
+            attackTag:w.attackTag,criticalAttack:true,x:w.fromX??w.x,y:w.fromY??w.y,
+            vx:Math.cos(a)*180,vy:Math.sin(a)*180,rawDamage:w.rawDamage,radius:4,color:"#fb7185"});
+    }
+}
 function detonateWarning(world: CombatWorld, w: WarningZone): void {
     // Iron Fortress's follow-up shot owns the damage; this is only its telegraph.
     if (w.kind === "elite_lock")
         return;
     const enemy = world.enemies.find(e => e.id === w.enemyId && e.hp > 0);
+    if(w.kind==="elite_barrage"&&w.barrage){
+        fireEliteBarrageVolley(world,w);
+        w.stage="active";w.age=0;w.barrage.next=w.barrage.gap;
+        w.remaining=(w.barrage.angles.length-1)*w.barrage.gap+.01;
+        return;
+    }
     if (w.kind === "retaliation") {
         if (enemy) {
             const safe=Math.floor(world.random()*12);
@@ -2671,7 +2847,11 @@ function updateWarnings(world: CombatWorld, dt: number): void {
         w.remaining -= dt;
         if (w.stage === "active") {
             w.age = (w.age || 0) + dt;
-            if (w.kind === "acid") {
+            if(w.kind==="elite_barrage"&&w.barrage){
+                w.barrage.next-=dt;
+                while(w.barrage.next<=0&&w.barrage.index<w.barrage.angles.length){fireEliteBarrageVolley(world,w);w.barrage.next+=w.barrage.gap;}
+            }
+            else if (w.kind === "acid") {
                 const inside = w.allegiance!=="friendly_hacked" && circleVsAircraft(w.x,w.y,w.radius,getPlayerHitbox(world));
                 if (!inside) w.insideTimer = undefined;
                 else {
@@ -2838,12 +3018,14 @@ export function updateCombatWorld(world: CombatWorld, deltaSeconds: number): voi
     tickAircraftState(world.aircraft, dt, true, (effective, source) => emitPlayerHealing(world, effective, source, true));
     updateTacticalCores(world,dt);
     updateEncounter(world, dt);
+    settleControlOverride(world);
     world.playerInvulnerability = Math.max(0, world.playerInvulnerability - dt);
     world.comboTimer = Math.max(0, world.comboTimer - dt);
     if (world.comboTimer <= 0)
         world.comboKills = 0;
     dispatchCoreEvent("tick", coreContext(world, { dt }));
     updatePlayerDash(world, dt);
+    updateEliteDirector(world,dt);
     updateScheduledAttacks(world);
     updateEnemies(world, dt);
     updateCrossfireGrids(world);

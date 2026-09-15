@@ -1449,7 +1449,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_120",
     "name": "Đoạt Quyền Điều Khiển",
-    "description": "Mỗi 20s, hack quái vật có % HP cao nhất trong 5s. Quái bị hack đổi phe và dùng chính đòn đánh/kỹ năng của nó tấn công phe địch. Boss không bị hack mà bị choáng 2.5s. Hồi chiêu lõi bắt đầu sau khi hiệu ứng kết thúc.",
+    "description": "Hack tối đa 3 quái thường hoặc 1 Tinh Anh trong 6s; mục tiêu đổi phe và dùng chính đòn đánh/kỹ năng của nó tấn công phe địch. Boss không bị hack mà bị choáng 2,5s. Hồi chiêu 16s bắt đầu sau khi hiệu ứng kết thúc.",
     "system": "Chiến Thuật",
     "icon": "core:core_120",
     "category": "defense",

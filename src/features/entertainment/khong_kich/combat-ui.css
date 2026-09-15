@@ -145,7 +145,7 @@
 .core-skill-art {position:absolute;inset:5%;overflow:hidden;pointer-events:none;}
 .core-icon-modifier {position:absolute;right:1px;bottom:1px;padding:1px 3px;font-size:clamp(7px,.7em,12px);font-weight:900;line-height:1.1;background:#0a1829;border-top:1px solid #d2f4ff;color:#e0faff;z-index:2;}
 .air-status-icon {border-radius:2px!important;}
-.air-status-timer {position:absolute;bottom:-1px;left:0;right:0;z-index:3;background:#081526c9;color:#e3f5ff;font-size:1.55cqw;line-height:1;font-variant-numeric:tabular-nums;}
+.air-status-timer {position:absolute;top:1px;bottom:auto;left:1px;right:1px;z-index:3;background:#081526c9;color:#e3f5ff;font-size:1.55cqw;line-height:1;font-variant-numeric:tabular-nums;}
 .air-combat-surface[data-emp-jam="true"] .air-combat-hud {box-shadow:inset 0 -2px #67e8f9; background-image:repeating-linear-gradient(0deg,#67e8f907 0 1px,transparent 1px 5px);}
 @media(prefers-reduced-motion:reduce){.combat-core-card:hover{filter:none;}.combat-core-card{transition:none;}}
 
@@ -157,3 +157,6 @@
 @media (prefers-reduced-motion: reduce) { [data-skill-id][data-borrow-ready="true"] { animation: none; box-shadow: inset 0 0 8px #22d3ee66; } }
 
 [data-skill-id][data-borrow-ready="true"][data-reduced-motion="true"] { animation: none; box-shadow: inset 0 0 8px #22d3ee66; }
+
+.air-status-icon[data-timer-kind="cooldown"] { color:#fbbf24; border-color:#fbbf2480; }
+.air-status-icon[data-timer-kind="cooldown"] .air-status-timer { color:#fde68a; }

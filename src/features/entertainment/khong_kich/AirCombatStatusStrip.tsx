@@ -7,6 +7,7 @@ import type { CombatWorld } from "./airCombatRuntime";
 export interface StatusStripHandle { update(world: CombatWorld): void }
 const genericIcons = { burn: Flame, acid: FlaskConical, armor: ShieldMinus, shield: Shield, stun: Zap, skill_lock:Lock, resource_jam:BatteryWarning, regen_off:HeartOff, mark:Crosshair, radar:Radar };
 const timeLabel = (value: number) => Number.isFinite(value) ? `${Math.max(0, value).toFixed(1).replace(".", ",")}s` : "Đang hiệu lực";
+const showTimer = (status?: StatusPresentation) => Boolean(status && Number.isFinite(status.remaining) && (status.showNumericTimer ?? !status.badgeText));
 const progressRatio = (status?: StatusPresentation) => {
   const value = status?.progress ?? (status && status.duration > 0 ? status.remaining / status.duration : 1);
   return Number.isFinite(value) ? Math.max(0, Math.min(1, value)) : 1;
@@ -37,9 +38,10 @@ export const AirCombatStatusStrip = React.memo(forwardRef<StatusStripHandle, { t
       const status = current.current.find(s => s.id === node.dataset.statusId);
       const ratio = progressRatio(status);
       node.style.setProperty("--status-elapsed", `${(1 - ratio) * 360}deg`);
+      node.dataset.timerKind = status?.timerKind ?? "active";
       const timer = node.querySelector<HTMLElement>("[data-status-timer]");
       if (timer) {
-        timer.hidden = Boolean(status?.badgeText);
+        timer.hidden = !showTimer(status);
         timer.textContent = status && Number.isFinite(status.remaining) ? status.remaining.toFixed(1).replace(".", ",") : "";
       }
       const badge = node.querySelector<HTMLElement>("[data-status-value]");
@@ -68,13 +70,13 @@ export const AirCombatStatusStrip = React.memo(forwardRef<StatusStripHandle, { t
         {shown.map(item => {
           const status = current.current.find(s => s.id === item.id) || item;
           const Generic = status.icon.kind === "status" ? genericIcons[status.icon.id] : null;
-          return <button key={status.id} type="button" data-status-id={status.id} className="air-status-icon"
+          return <button key={status.id} type="button" data-status-id={status.id} data-timer-kind={status.timerKind ?? "active"} className="air-status-icon"
             style={{ "--status-elapsed": `${(1 - progressRatio(status)) * 360}deg` } as React.CSSProperties}
             aria-label={`${status.name}${status.badgeText ? ` · ${status.badgeText}` : ""}`} aria-pressed={selected === status.id}
             onClick={() => { const next = selected === status.id ? null : status.id; selectedRef.current = next; setSelected(next); }}>
             {status.icon.kind === "status" ? Generic && <Generic aria-hidden="true" /> : <CombatUiIcon {...status.icon} fallback="◆" />}
             <span className="air-status-radial" />
-            <small className="air-status-timer" data-status-timer hidden={Boolean(status.badgeText)}>{Number.isFinite(status.remaining)?status.remaining.toFixed(1).replace(".",","):""}</small>
+            <small className="air-status-timer" data-status-timer hidden={!showTimer(status)}>{Number.isFinite(status.remaining)?status.remaining.toFixed(1).replace(".",","):""}</small>
             <b className="air-status-value-badge" data-status-value hidden={!status.badgeText}>{status.badgeText}</b>
           </button>;
         })}

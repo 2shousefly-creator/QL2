@@ -1,4 +1,4 @@
-import { paintTacticalCores } from "./airCombatTacticalVisuals";
+import { paintTacticalCores, paintElitePatternWarning, type TacticalPainter } from "./airCombatTacticalVisuals";
 import { enemyAllegiance } from "./airCombatRuntime";
 import aircraftAtlasUrl from "../../../assets/khong-kich/v2/aircraft-atlas.png";
 import phantomBeamUrl from "../../../assets/khong-kich/v2/phantom-firing-beam.svg";
@@ -385,11 +385,13 @@ export function drawLegacyWorld(
     ctx.fillRect(0, GAMEPLAY_SAFE_RECT.top, width, GAMEPLAY_SAFE_RECT.height);
   }
 
-  paintTacticalCores(world,{
+  const tacticalPainter:TacticalPainter={
     circle:(x,y,r,color,alpha,fill)=>{ctx.save();ctx.globalAlpha=alpha;ctx.strokeStyle=ctx.fillStyle=`#${color.toString(16).padStart(6,"0")}`;ctx.lineWidth=2;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);if(fill)ctx.fill();else ctx.stroke();ctx.restore();},
     line:(ax,ay,bx,by,color,alpha,width)=>{ctx.save();ctx.globalAlpha=alpha;ctx.strokeStyle=`#${color.toString(16).padStart(6,"0")}`;ctx.lineWidth=width;ctx.beginPath();ctx.moveTo(ax,ay);ctx.lineTo(bx,by);ctx.stroke();ctx.restore();}
-  },reducedMotion);
+  };
+  paintTacticalCores(world,tacticalPainter,reducedMotion);
   for (const warning of world.warnings) {
+    if(paintElitePatternWarning(warning,tacticalPainter))continue;
     if(warning.allegiance==="friendly_hacked"){
       ctx.save();ctx.strokeStyle="#67e8f9";ctx.fillStyle="rgba(34,211,238,.15)";ctx.lineWidth=2;ctx.beginPath();
       if(warning.kind==="rail"||warning.kind==="dash"){ctx.moveTo(warning.fromX??warning.x,warning.fromY??warning.y);ctx.lineTo(warning.x,warning.y);}

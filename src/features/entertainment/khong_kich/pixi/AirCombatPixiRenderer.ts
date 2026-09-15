@@ -1,4 +1,4 @@
-import { paintTacticalCores } from "../airCombatTacticalVisuals";
+import { paintTacticalCores, paintElitePatternWarning, type TacticalPainter } from "../airCombatTacticalVisuals";
 import { enemyAllegiance } from "../airCombatRuntime";
 import { hasCore } from "../airCombatCoreEffects";
 import { enemyAirframeRotation } from "../airCombatHitboxes";
@@ -235,10 +235,11 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     for (const [id, until] of this.flashUntil) if (until < this.clock) this.flashUntil.delete(id);
 
     this.telegraphs.clear();
-    paintTacticalCores(world,{
+    const tacticalPainter:TacticalPainter={
       circle:(x,y,r,color,alpha,fill)=>{this.telegraphs.circle(x,y,r);if(fill)this.telegraphs.fill({color,alpha});else this.telegraphs.stroke({color,alpha,width:2});},
       line:(ax,ay,bx,by,color,alpha,width)=>{this.telegraphs.moveTo(ax,ay).lineTo(bx,by).stroke({color,alpha,width});}
-    },reducedMotion);
+    };
+    paintTacticalCores(world,tacticalPainter,reducedMotion);
     this.enemies.begin();
     this.engines.begin();
     for (const enemy of world.enemies) {
@@ -392,6 +393,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     this.companions.end();
     this.warnings.begin();
     for (const warning of world.warnings) {
+      if(paintElitePatternWarning(warning,tacticalPainter))continue;
       if(warning.allegiance==="friendly_hacked"){
         if(warning.kind==="rail"||warning.kind==="dash")this.telegraphs.moveTo(warning.fromX??warning.x,warning.fromY??warning.y).lineTo(warning.x,warning.y).stroke({color:0x67e8f9,width:warning.kind==="dash"?warning.radius*2:3,alpha:.6});
         else this.telegraphs.circle(warning.x,warning.y,warning.radius).fill({color:0x22d3ee,alpha:warning.stage==="active"?.2:.08}).stroke({color:0x67e8f9,width:2,alpha:.9});

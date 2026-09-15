@@ -283,7 +283,7 @@ export function coreStackLabel(state: AircraftCombatState, id: CoreId): string |
         case "core_113": return c.stacks.borrowPending ? "Đang vay · trả nợ khi kỹ năng kết thúc" : `Có thể vay sau ${remaining("futureDebt")}s`;
         case "core_114": return `Còn ${c.stacks.linkedShots??0}/3 phát bắn cường hóa`;
         case "core_116": return `Comeback còn ${remaining("comeback")}s`;
-        case "core_120": return `Hồi lại sau ${remaining("controlOverride")}s kể từ khi hiệu ứng kết thúc`;
+        case "core_120": return (c.timers.controlOverride??0)>c.time ? `Hồi chiêu: ${remaining("controlOverride")}s` : "Hack 6s / choáng Boss 2,5s; hồi 16s sau khi hiệu ứng kết thúc. Theo dõi trạng thái trên biểu tượng Lõi.";
         case "core_121": return `Phản Vật Chất: ${Math.round((c.stacks.antimatter??0)*100)}% / 600%`;
         case "core_106": return `Loạt Tomahawk tiếp theo sau ${remaining("tomahawk")}s`;
         default: return null;
