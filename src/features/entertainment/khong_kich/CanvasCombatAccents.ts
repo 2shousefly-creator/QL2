@@ -17,12 +17,17 @@ export class CanvasCombatAccents {
     this.clock += delta; this.healAge += delta;
     for (let i = this.active.length - 1; i >= 0; i--) {
       const accent = this.active[i]; accent.age += delta;
-      if (accent.age >= .55) { this.active.splice(i, 1); this.free.push(accent); }
+      if (accent.age >= (accent.event.kind==="bullet_impact"?.16:.55)) { this.active.splice(i, 1); this.free.push(accent); }
     }
     for (const event of world.visualEvents) if (event.id > this.lastEvent) {
       this.lastEvent = event.id;
+      if (event.directContact && (event.kind==="hit" || event.kind==="player_hit"))continue;
       if (event.kind === "damage_number" && !event.shielded) continue;
-      if (this.active.length >= 40) continue;
+      if (this.active.length >= 40) {
+        if(event.kind!=="bullet_impact")continue;
+        const index=this.active.findIndex(a=>a.event.kind!=="bullet_impact");
+        const removed=this.active.splice(index<0?0:index,1)[0];this.free.push(removed);
+      }
       const accent = this.free.pop() || { event, age: 0 };
       accent.event = event; accent.age = 0; this.active.push(accent);
     }
@@ -36,6 +41,12 @@ export class CanvasCombatAccents {
     for (const { event, age } of this.active) {
       const t = age / .55;
       if(this.titanShield.active && (event.kind==="player_hit" || event.kind==="damage_number" && event.target==="player" || event.kind==="shield_ripple" && event.attachedToPlayer))continue;
+      if(event.kind==="bullet_impact") {
+        const t=age/.16;ctx.globalAlpha=1-t;ctx.fillStyle=t<.3?"#fffbea":"#ffc978";
+        ctx.beginPath();ctx.arc(event.x,event.y,(event.size/2)*(.35+.65*t),0,Math.PI*2);ctx.fill();
+        if(!reducedMotion){ctx.strokeStyle="#ffeabd";ctx.lineWidth=1;for(let i=0;i<3;i++){const a=i*Math.PI*2/3+event.id;ctx.beginPath();ctx.moveTo(event.x+Math.cos(a)*3,event.y+Math.sin(a)*3);ctx.lineTo(event.x+Math.cos(a)*event.size*t,event.y+Math.sin(a)*event.size*t);ctx.stroke();}}
+        continue;
+      }
       if(event.kind==="missile_impact" && event.missileFamily==="bigbang") {
         ctx.globalAlpha=(1-t)*.8;ctx.fillStyle=t<.15?"#fffef3":"#ffac32";
         ctx.beginPath();ctx.arc(event.x,event.y,10+35*Math.sqrt(t),0,Math.PI*2);ctx.fill();

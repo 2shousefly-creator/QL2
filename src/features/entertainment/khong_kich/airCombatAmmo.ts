@@ -1,6 +1,13 @@
 import type { ProjectileEntity } from "./airCombatRuntime";
+import type { AircraftId } from "./airCombatTypes";
+export const BASIC_AMMO_KEYS = { black_eagle:"viper_basic_ammo", breaker:"titan_basic_ammo", phantom:"phantom_basic_ammo" } as const satisfies Record<AircraftId,string>;
+// Previous Pixi basic width = radius 3.2 * 2.8. Width only; radius stays 3.2.
+export const BASIC_AMMO_WIDTH = 3.2 * 2.8 * 1.20;
 /** Presentation only: sizes and paths never participate in hit detection. */
 export const AMMO_VISUALS={
+  viper_basic_ammo: { body:"M32 1L39 22V48L47 61L32 55L17 61L25 48V22Z", color:"#c5f4ff", detail:"M31 15H34V50H31Z", highlight:"#ffffff", width:BASIC_AMMO_WIDTH, height:24, cell:[0,0] as const },
+  titan_basic_ammo: { body:"M20 7H44L58 22V49L50 59H14L6 49V22Z", color:"#586676", detail:"M19 10H45L52 22H12ZM9 44H55V50H9ZM18 54H46V58H18Z", highlight:"#ffcd79", width:BASIC_AMMO_WIDTH, height:15, cell:[1,0] as const },
+  phantom_basic_ammo: { body:"M32 1L61 27L53 45L32 63L11 45L3 27Z", color:"#a879ef", detail:"M32 10L44 30L32 53L20 30Z", highlight:"#d9ffff", width:BASIC_AMMO_WIDTH, height:19, cell:[2,0] as const },
   viper_missile: { body: "M32 5L36 17L36 44L43 54L34 51L30 51L21 54L28 44L28 17Z", color: "#f4f4e8", detail: "M30 23H34V43H30Z", highlight: "#f59e0b", width: 11.2, height: 22.4, cell: [0,0] as const },
   bigbang_missile: { body: "M32 1L43 7L48 18V29L59 39V48L47 43V49L57 58V62L42 57H22L7 62V58L17 49V43L5 48V39L16 29V18L21 7Z", color: "#384450", detail: "M20 21H44V24H20ZM19 27H45V29H19ZM22 47H42V50H22ZM21 56H28V61H21ZM36 56H43V61H36Z", highlight: "#ffbe54", width: 36, height: 63, cell: [1,0] as const },
   tomahawk_missile: { body: "M32 4L37 15V29L52 40V46L37 39V51L43 59L32 55L21 59L27 51V39L12 46V40L27 29V15Z", color: "#b2c7d8", detail: "M30 18H34V48H30Z", highlight: "#39dcff", width: 11.2, height: 22.4, cell: [2,0] as const },
@@ -20,6 +27,7 @@ export const AMMO_VISUALS={
 } as const;
 export type AmmoVisualKey=keyof typeof AMMO_VISUALS;
 export function getAmmoVisualKey(p:ProjectileEntity):AmmoVisualKey|null {
+ if(p.ammoVisualKey && p.projectileKind==="bullet")return p.ammoVisualKey;
  if(p.bigBang)return "bigbang_missile";
  if(p.projectileKind==="boss_missile")return "boss_missile";
  if(p.projectileKind==="missile")return p.skillId==="missile_swarm"?"viper_missile":"tomahawk_missile";

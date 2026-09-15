@@ -1,3 +1,6 @@
+import { hasCore } from "../airCombatCoreEffects";
+import { enemyAirframeRotation } from "../airCombatHitboxes";
+import { paintTitanShield, type ShieldPainter } from "../airCombatTitanShield";
 import { TitanShieldPresentation } from "../airCombatTitanShield";
 import { AirCombatMissilePool } from "./AirCombatMissilePool";
 import { AMMO_VISUALS, getAmmoVisualKey } from "../airCombatAmmo";
@@ -41,6 +44,11 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
   private laserGlow = new Sprite();
   private lastHealing = 0;
   private healUntil = 0;
+  private techShieldPainter:ShieldPainter={
+    circle:(x,y,r,color,alpha,fill,width)=>{const g=this.titanBubble.circle(x,y,r);if(fill)g.fill({color,alpha});else g.stroke({color,alpha,width});},
+    arc:(r,a,b,color,alpha,width)=>{this.titanBubble.moveTo(Math.cos(a)*r,Math.sin(a)*r).arc(0,0,r,a,b).stroke({color,alpha,width});},
+    line:(ax,ay,bx,by,color,alpha,width)=>{this.titanBubble.moveTo(ax,ay).lineTo(bx,by).stroke({color,alpha,width});},
+  };
   private shieldOpacity = 0;
   private dashTail = 0;
   private dashX = 0;
@@ -164,6 +172,9 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
         let px=fromX,py=fromY;
         for(let i=1;i<=6;i++){const t=i/6,offset=i===6?0:Math.sin(event.id+i*2.7)*9;const x=fromX+(event.x-fromX)*t+offset,y=fromY+(event.y-fromY)*t-offset*.5;this.vfx.streak(x,y,px,py,i%2?0x67e8f9:0xe0ffff,i%2?4:2.5);px=x;py=y;}
         this.vfx.spawn("sparks", event.x, event.y, 28, .2, 0x67e8f9);
+      } else if(event.kind==="bullet_impact") {
+        this.vfx.spawn("smallExplosion",event.x,event.y,event.size,.16,0xffd799);
+        if(!reducedMotion)this.vfx.spawn("sparks",event.x,event.y,event.size*.85,.14,0xffedba);
       } else if(event.kind==="missile_impact") {
         const heavy=event.missileFamily==="bigbang", tomahawk=event.missileFamily==="tomahawk", hostile=event.missileFamily==="boss";
         const color=heavy?0xffbc50:tomahawk?0x80eaff:hostile?0xff4a66:0xffd799;
@@ -185,6 +196,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
         this.vfx.spawn("sparks", event.x, event.y, event.size, .2, 0xa5f3fc);
       } else if (event.kind === "hit") {
         if (event.entityId !== undefined) this.flashUntil.set(event.entityId, Math.max(this.flashUntil.get(event.entityId) || 0, this.clock + 0.09));
+        if(event.directContact)continue;
         this.vfx.spawn("muzzle", event.x, event.y, 12, .08, 0xfff3c9);
         if (!reducedMotion) this.vfx.spawn("sparks", event.x, event.y, 22, .22);
       } else if (event.kind === "explosion") {
@@ -211,7 +223,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
         }
         this.shake = 4;
       } else {
-        if(!this.titanShield.active)this.vfx.spawn("sparks", event.x, event.y, event.size, 0.3);
+        if(!this.titanShield.active && !event.directContact)this.vfx.spawn("sparks", event.x, event.y, event.size, 0.3);
         this.shake = 2.5;
       }
     }
@@ -231,11 +243,11 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
       if(enemy.shield>0 || enemy.aegisUntil>world.aircraft.coreState.time)this.telegraphs.circle(enemy.x,enemy.y,enemy.radius+7).fill({color:0x38bdf8,alpha:.12}).stroke({color:0x7dd3fc,width:2,alpha:.85});
       if(enemy.stun>0)this.telegraphs.circle(enemy.x,enemy.y-enemy.radius-7,5).stroke({color:0xfde047,width:2});
       if(enemy.burn>0&&!reducedMotion&&damageSmoke)this.vfx.spawn("fire",enemy.x,enemy.y,24,.3);
-      if (enemy.type === "kamikaze" && (enemy.kamikazeState === "charge_1" || enemy.kamikazeState === "charge_2")) {
+      if (enemy.type === "kamikaze" && enemy.kamikazeState === "charge") {
         this.telegraphs.circle(enemy.x, enemy.y, enemy.radius + 7).stroke({ color: 0xfbbf24, width: 1.5, alpha: 0.75 });
         this.telegraphs.moveTo(enemy.x,enemy.y).lineTo(enemy.dashEndX,enemy.dashEndY).stroke({color:0xfbbf24,width:1.5,alpha:.55});
       }
-      if(enemy.type==="kamikaze" && (enemy.kamikazeState==="dash_1" || enemy.kamikazeState==="dash_2"))sprite.rotation=Math.atan2(enemy.vy,enemy.vx)+Math.PI/2;
+      if(enemy.type==="kamikaze")sprite.rotation=enemyAirframeRotation(enemy);
       if(enemy.type==="boss" && (enemy.bossAttack?.crossfirePending??0)>0 && !enemy.bossAttack?.patternWaiting) {
         const attack=enemy.bossAttack!,center=attack.crossfireCenter!,half=attack.crossfireWidth!/2;
         for(const side of [-1,1]) {
@@ -305,12 +317,21 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
         sprite.position.set(p.x,p.y);sprite.rotation=Math.atan2(p.vy,p.vx)+Math.PI/2;
         sprite.width=ammo?.width??p.radius*2.8;sprite.height=ammo?.height??p.radius*6;
         const glow=this.projectileGlows.get(p.id,this.assets.effect(p.owner==="enemy"?"charge":"laser"));
-        if(glow){const speed=Math.max(1,Math.hypot(p.vx,p.vy));glow.position.set(p.x-p.vx/speed*7,p.y-p.vy/speed*7);glow.rotation=sprite.rotation;glow.width=sprite.width*1.5;glow.height=sprite.height*1.6;glow.tint=p.owner==="enemy"?(p.appearance==="dangerous"?0xffbc4d:0xff667d):p.owner==="drone"?0xc4b5fd:visual.tint;glow.alpha=p.owner==="enemy"?.25:.4;glow.blendMode="add";}
+        if(glow){
+          const speed=Math.max(1,Math.hypot(p.vx,p.vy)),viper=ammoKey==="viper_basic_ammo",titan=ammoKey==="titan_basic_ammo",phantom=ammoKey==="phantom_basic_ammo";
+          glow.texture=this.assets.effect(phantom?"charge":titan?"muzzle":p.owner==="enemy"?"charge":"laser");
+          const tail=viper?5:titan?2:phantom?0:7;
+          glow.position.set(p.x-p.vx/speed*tail,p.y-p.vy/speed*tail);glow.rotation=sprite.rotation;
+          glow.width=viper?3:titan?11:phantom?15:sprite.width*1.5;
+          glow.height=viper?13:titan?9:phantom?15:sprite.height*1.6;
+          glow.tint=viper?0xb4efff:titan?0xffc778:phantom?0xc4a0ff:p.owner==="enemy"?(p.appearance==="dangerous"?0xffbc4d:0xff667d):p.owner==="drone"?0xc4b5fd:visual.tint;
+          glow.alpha=p.owner==="enemy"?.25:.4;glow.blendMode="add";
+        }
       }
       if (p.id > this.lastProjectile && p.owner === "enemy" && p.appearance === "boss")
         this.vfx.spawn("muzzle", p.x, p.y, missile ? 18 : 10, .12, 0xff526e);
       if (p.id > this.lastProjectile && p.owner !== "enemy") {
-        this.vfx.spawn("muzzle", p.x, p.y, p.owner === "drone" ? 14 : 18, 0.09, p.owner === "drone" ? 0xc4b5fd : visual.tint);
+        this.vfx.spawn("muzzle", p.x, p.y, p.owner === "drone" ? 14 : p.ammoVisualKey==="titan_basic_ammo" ? 22 : 18, 0.09, p.owner === "drone" ? 0xc4b5fd : visual.tint);
         if(!reducedMotion){this.vfx.spawn("charge",p.x,p.y,9,.06,0xffffff);this.vfx.spawn("sparks",p.x,p.y,16,.13,visual.tint,0,.025);}
         if (p.owner === "player") this.recoil = 1.4;
       }
@@ -434,16 +455,8 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     bubble.clear();bubble.visible=shieldState.opacity>.01;
     if(bubble.visible) {
       bubble.position.set(world.playerX,world.playerY);bubble.scale.set(shieldState.scale);bubble.alpha=shieldState.opacity;
-      const pulse=reducedMotion?0:Math.sin(shieldState.age*3)*.08;
-      bubble.ellipse(0,0,46,54).fill({color:0x38bdf8,alpha:.09+pulse*.15}).stroke({color:0xbaf4ff,width:1.6,alpha:.8+pulse});
-      bubble.ellipse(0,0,43,51).stroke({color:0x38bdf8,width:.8,alpha:.45});
-      if(shieldState.age<.3)bubble.ellipse(0,0,46+shieldState.age*45,54+shieldState.age*45).stroke({color:0xe0ffff,width:2,alpha:1-shieldState.age/.3});
-      if(!reducedMotion) for(let side=0;side<2;side++) {
-        const start=shieldState.age*.4+side*Math.PI;
-        for(let i=0;i<=16;i++){const a=start+i*.05,x=Math.cos(a)*45,y=Math.sin(a)*53;if(i===0)bubble.moveTo(x,y);else bubble.lineTo(x,y);}
-        bubble.stroke({color:0xecfeff,width:2,alpha:.55});
-      }
-      for(const impact of shieldState.impacts)if(impact.age<.35){const t=impact.age/.35;bubble.circle(impact.x,impact.y,2+t*12).stroke({color:0xeaffff,width:2*(1-t),alpha:1-t});bubble.circle(impact.x,impact.y,3*(1-t)).fill({color:0xffffff,alpha:1-t});}
+      paintTitanShield(this.techShieldPainter,shieldState,reducedMotion,hasCore(world.aircraft,28));
+
     }
     const sustained = (world.aircraft.activeEffects.afterburner || 0) > 0 || (world.aircraft.activeEffects.sweeping_cannon || 0) > 0;
     this.aura.visible = sustained;

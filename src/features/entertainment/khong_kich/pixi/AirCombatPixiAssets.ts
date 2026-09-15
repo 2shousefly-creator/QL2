@@ -1,3 +1,4 @@
+import basicAmmoUrl from "../../../../assets/khong-kich/v2/player-basic-ammo-atlas.svg";
 import bigbangUrl from "../../../../assets/khong-kich/v2/bigbang-missile.svg";
 import flameUrl from "../../../../assets/khong-kich/v2/missile-engine-flame.svg";
 import ammoUrl from "../../../../assets/khong-kich/v2/hardcore-ammo-atlas.svg";
@@ -26,7 +27,7 @@ export const ENEMY_VISUALS: Record<EnemyType, AtlasFrame> = {
   iron_fortress: { atlas: "fortress", rect: [0.56, 0, 0.44, 0.51] },
   acid_bomber:cell("aircraft",2,3), radar_hunter:cell("aircraft",3,3),
 };
-const ammoFrames = Object.fromEntries(Object.entries(AMMO_VISUALS).map(([key,v]) => [key,cell("ammo",v.cell[0],v.cell[1])])) as Record<AmmoVisualKey,AtlasFrame>;
+const ammoFrames = Object.fromEntries(Object.entries(AMMO_VISUALS).map(([key,v]) => [key,key.endsWith("_basic_ammo")?{atlas:"basicAmmo",rect:[v.cell[0]/3,0,1/3,1]}:cell("ammo",v.cell[0],v.cell[1])])) as Record<AmmoVisualKey,AtlasFrame>;
 export const VFX_VISUALS = {
   ...ammoFrames,
   muzzle: cell("vfx", 0, 0), tracer: cell("vfx", 1, 0), enemyTracer: cell("vfx", 2, 0), missile: cell("vfx", 3, 0),
@@ -41,10 +42,10 @@ export type VisualKey = keyof typeof VFX_VISUALS;
 
 /** Each renderer owns its frame views. Assets owns cached shared source textures. */
 export async function loadAirCombatAssets() {
-  const [aircraft, fortress, vfx, ammo, bigbang, engineFlame] = await Promise.all([
-    Assets.load<Texture>(aircraftUrl), Assets.load<Texture>(fortressUrl), Assets.load<Texture>(vfxUrl), Assets.load<Texture>(ammoUrl), Assets.load<Texture>(bigbangUrl), Assets.load<Texture>(flameUrl),
+  const [aircraft, fortress, vfx, ammo, bigbang, engineFlame, basicAmmo] = await Promise.all([
+    Assets.load<Texture>(aircraftUrl), Assets.load<Texture>(fortressUrl), Assets.load<Texture>(vfxUrl), Assets.load<Texture>(ammoUrl), Assets.load<Texture>(bigbangUrl), Assets.load<Texture>(flameUrl), Assets.load<Texture>(basicAmmoUrl),
   ]);
-  const sources = { aircraft, fortress, vfx, ammo };
+  const sources = { aircraft, fortress, vfx, ammo, basicAmmo };
   const frames = new Map<AtlasFrame, Texture>();
   const texture = (definition: AtlasFrame) => {
     const cached = frames.get(definition);

@@ -10,7 +10,13 @@ export class AirCombatVfx {
     const important = key === "shield" || key === "shockwave" || key === "laser" || key.endsWith("Explosion");
     if (this.active.length >= 80) {
       if (!important) return;
-      const index = this.active.findIndex(effect => !effect.important);
+      let index = this.active.findIndex(effect => !effect.important);
+      if(index<0 && key==="smallExplosion" && duration<=.18) {
+        // A new direct contact always gets its primary flash, even when every
+        // slot is occupied by important effects; recycle the oldest burst.
+        index=this.active.findIndex(effect=>effect.key==="smallExplosion" && effect.duration<=.18);
+        if(index<0)index=0;
+      }
       if (index < 0) return;
       const replaced = this.active.splice(index, 1)[0];
       replaced.sprite.visible = false; this.free.push(replaced);

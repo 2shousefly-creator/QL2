@@ -1,0 +1,144 @@
+import type { AircraftId, EnemyType } from "./airCombatTypes";
+import type { CombatWorld, EnemyEntity } from "./airCombatRuntime";
+import { GAMEPLAY_SAFE_RECT } from "./airCombatConfig";
+import { BOSS_VISUAL_ASPECT, BOSS_VISUAL_WIDTH_SCALE } from "./airCombatHudLayout";
+
+/** Authored against the neutral production atlas. Coordinates are fractions of
+ * the sprite width, origin at its centre, nose UP. Flames/glow are excluded.
+ * Capsules (including zero-length circles) make sweeps exact and inexpensive. */
+export interface HitCapsule { kind: "capsule"; ax:number; ay:number; bx:number; by:number; r:number }
+export interface AircraftHitboxProfile { localWidth:number; localHeight:number; broadRadius:number; shapes:readonly HitCapsule[] }
+const cap=(ax:number,ay:number,bx:number,by:number,r:number):HitCapsule=>({kind:"capsule",ax,ay,bx,by,r});
+function profile(shapes:HitCapsule[], aspect=1):AircraftHitboxProfile {
+  return {localWidth:1,localHeight:aspect,shapes,broadRadius:Math.max(...shapes.map(s=>Math.max(Math.hypot(s.ax,s.ay),Math.hypot(s.bx,s.by))+s.r))};
+}
+export const PLAYER_AIRFRAME_SIZE:Record<AircraftId,number>={black_eagle:51,breaker:60,phantom:56};
+export const PLAYER_HITBOX_PROFILES:Record<AircraftId,AircraftHitboxProfile>={
+  black_eagle:profile([cap(0,-.39,0,.27,.055),cap(-.06,-.04,-.27,.15,.045),cap(.06,-.04,.27,.15,.045),cap(-.06,.26,.06,.26,.035)]),
+  breaker:profile([cap(0,-.36,0,.25,.085),cap(-.08,-.02,-.39,.16,.065),cap(.08,-.02,.39,.16,.065),cap(-.14,.15,-.14,.34,.05),cap(.14,.15,.14,.34,.05)]),
+  phantom:profile([cap(0,-.36,0,.25,.065),cap(-.06,-.07,-.34,.13,.07),cap(.06,-.07,.34,.13,.07),cap(-.1,.17,-.16,.28,.05),cap(.1,.17,.16,.28,.05)]),
+};
+export const ENEMY_HITBOX_PROFILES:Record<EnemyType,AircraftHitboxProfile>={
+  scout:profile([cap(0,-.21,0,.17,.055),cap(-.03,-.02,-.23,.09,.04),cap(.03,-.02,.23,.09,.04)]),
+  fighter:profile([cap(0,-.36,0,.29,.065),cap(-.04,.04,-.23,.1,.055),cap(.04,.04,.23,.1,.055)]),
+  attacker:profile([cap(0,-.36,0,.32,.09),cap(-.1,-.03,-.37,.13,.09),cap(.1,-.03,.37,.13,.09)]),
+  kamikaze:profile([cap(0,-.36,0,.33,.055),cap(-.04,-.04,-.22,.06,.04),cap(.04,-.04,.22,.06,.04)]),
+  bomber:profile([cap(0,-.34,0,.33,.095),cap(-.1,.02,-.43,.08,.07),cap(.1,.02,.43,.08,.07)]),
+  sniper:profile([cap(0,-.36,0,.29,.065),cap(-.04,.04,-.23,.1,.055),cap(.04,.04,.23,.1,.055)]),
+  jammer:profile([cap(0,-.21,0,.17,.055),cap(-.03,-.02,-.23,.09,.04),cap(.03,-.02,.23,.09,.04)]),
+  elite:profile([cap(0,-.3,0,.31,.065),cap(-.06,-.05,-.34,.12,.075),cap(.06,-.05,.34,.12,.075),cap(0,-.24,0,-.24,.13)]),
+  iron_fortress:profile([cap(0,-.2,0,.37,.075),cap(-.27,.06,-.27,.06,.18),cap(.27,.06,.27,.06,.18),cap(-.22,.32,.22,.32,.065)],.51/.44),
+  acid_bomber:profile([cap(0,-.34,0,.33,.095),cap(-.1,.02,-.43,.08,.07),cap(.1,.02,.43,.08,.07),cap(-.22,.09,-.22,.29,.045),cap(.22,.09,.22,.29,.045)]),
+  radar_hunter:profile([cap(0,-.3,0,.31,.065),cap(-.06,-.05,-.34,.12,.075),cap(.06,-.05,.34,.12,.075),cap(0,-.24,0,-.24,.13)]),
+  boss:profile([cap(0,-.39,0,.35,.055),cap(0,-.18,0,.28,.115),cap(-.1,-.17,-.2,.3,.08),cap(.1,-.17,.2,.3,.08),cap(-.27,-.03,-.39,.18,.08),cap(.27,-.03,.39,.18,.08),cap(-.1,.31,.1,.31,.09)],BOSS_VISUAL_ASPECT),
+};
+export interface AircraftHitbox { x:number;y:number;radius:number;shapes:HitCapsule[]; profile?:AircraftHitboxProfile; size?:number; rotation?:number }
+export interface HitResult { hit:boolean;x:number;y:number;t:number;shapeIndex:number }
+export const createHitResult=():HitResult=>({hit:false,x:0,y:0,t:Infinity,shapeIndex:-1});
+const cache=new WeakMap<object,AircraftHitbox>();
+function transform(key:object,p:AircraftHitboxProfile,x:number,y:number,size:number,rotation:number):AircraftHitbox {
+  let h=cache.get(key);
+  if(!h){h={x,y,radius:0,shapes:[]};cache.set(key,h);}
+  if(h.profile===p&&h.x===x&&h.y===y&&h.size===size&&h.rotation===rotation)return h;
+  h.profile=p;h.size=size;h.rotation=rotation;h.x=x;h.y=y;h.radius=p.broadRadius*size;
+  const c=Math.cos(rotation),s=Math.sin(rotation);
+  for(let i=0;i<p.shapes.length;i++) {
+    const a=p.shapes[i],b=h.shapes[i]??(h.shapes[i]=cap(0,0,0,0,0));
+    b.ax=x+(a.ax*c-a.ay*s)*size;b.ay=y+(a.ax*s+a.ay*c)*size;
+    b.bx=x+(a.bx*c-a.by*s)*size;b.by=y+(a.bx*s+a.by*c)*size;b.r=a.r*size;
+  }
+  h.shapes.length=p.shapes.length;return h;
+}
+export const getPlayerHitbox=(w:CombatWorld)=>transform(w,PLAYER_HITBOX_PROFILES[w.aircraft.aircraftId],w.playerX,w.playerY,PLAYER_AIRFRAME_SIZE[w.aircraft.aircraftId],0);
+export const enemyAirframeRotation=(e:EnemyEntity)=>e.type==="kamikaze"?e.airframeRotation??Math.PI:Math.PI;
+export const getEnemyHitbox=(e:EnemyEntity)=>transform(e,ENEMY_HITBOX_PROFILES[e.type],e.x,e.y,e.radius*(e.type==="boss"?BOSS_VISUAL_WIDTH_SCALE:2.8),enemyAirframeRotation(e));
+const unit=(n:number)=>Math.max(0,Math.min(1,n));
+function closestT(x:number,y:number,ax:number,ay:number,bx:number,by:number) {
+  const dx=bx-ax,dy=by-ay;return unit(((x-ax)*dx+(y-ay)*dy)/(dx*dx+dy*dy||1));
+}
+function circleEntry(ax:number,ay:number,dx:number,dy:number,x:number,y:number,r:number) {
+  const ox=ax-x,oy=ay-y,c=ox*ox+oy*oy-r*r,a=dx*dx+dy*dy,b=ox*dx+oy*dy;
+  if(c<=0)return 0;
+  const d=b*b-a*c;if(a===0||d<0)return Infinity;
+  const t=(-b-Math.sqrt(d))/a;return t>=0&&t<=1?t:Infinity;
+}
+/** Exact segment against capsule, including initial overlap and zero travel. */
+function capsuleEntry(ax:number,ay:number,bx:number,by:number,cx:number,cy:number,ex:number,ey:number,r:number):number {
+  const dx=bx-ax,dy=by-ay,sx=ex-cx,sy=ey-cy,len=Math.hypot(sx,sy);
+  let t=Math.min(circleEntry(ax,ay,dx,dy,cx,cy,r),circleEntry(ax,ay,dx,dy,ex,ey,r));
+  if(len<1e-9)return t;
+  const ux=sx/len,uy=sy/len,px=(ax-cx)*ux+(ay-cy)*uy,py=-(ax-cx)*uy+(ay-cy)*ux;
+  const vx=dx*ux+dy*uy,vy=-dx*uy+dy*ux;
+  let enter=0,exit=1;
+  for(let axis=0;axis<2;axis++) {
+    const p=axis?py:px,v=axis?vy:vx,lo=axis?-r:0,hi=axis?r:len;
+    if(Math.abs(v)<1e-9){if(p<lo||p>hi)return t;}
+    else {const a=(lo-p)/v,b=(hi-p)/v;enter=Math.max(enter,Math.min(a,b));exit=Math.min(exit,Math.max(a,b));}
+  }
+  return enter<=exit?Math.min(t,enter):t;
+}
+export function segmentVsAircraft(ax:number,ay:number,bx:number,by:number,r:number,h:AircraftHitbox,out:HitResult):HitResult {
+  out.hit=false;out.t=Infinity;out.shapeIndex=-1;
+  if(circleEntry(ax,ay,bx-ax,by-ay,h.x,h.y,h.radius+r)===Infinity)return out;
+  for(let i=0;i<h.shapes.length;i++) {
+    const s=h.shapes[i],t=capsuleEntry(ax,ay,bx,by,s.ax,s.ay,s.bx,s.by,s.r+r);
+    if(t>=out.t)continue;
+    const x=ax+(bx-ax)*t,y=ay+(by-ay)*t,k=closestT(x,y,s.ax,s.ay,s.bx,s.by);
+    const cx=s.ax+(s.bx-s.ax)*k,cy=s.ay+(s.by-s.ay)*k,d=Math.hypot(x-cx,y-cy);
+    out.hit=true;out.t=t;out.shapeIndex=i;
+    out.x=d>1e-9?cx+(x-cx)*s.r/d:x;out.y=d>1e-9?cy+(y-cy)*s.r/d:y;
+  }
+  return out;
+}
+const overlapResult=createHitResult();
+export const circleVsAircraft=(x:number,y:number,r:number,h:AircraftHitbox)=>segmentVsAircraft(x,y,x,y,r,h,overlapResult).hit;
+// Minkowski difference of two capsule axes is a parallelogram; sweeping a point
+// against its rounded edges gives exact continuous hull contact, without sampling.
+const polyX=new Float64Array(4),polyY=new Float64Array(4);
+export function sweepAircraft(moving:AircraftHitbox,dx:number,dy:number,target:AircraftHitbox,out:HitResult):HitResult {
+  out.hit=false;out.t=Infinity;out.shapeIndex=-1;
+  if(circleEntry(moving.x-dx,moving.y-dy,dx,dy,target.x,target.y,moving.radius+target.radius)===Infinity)return out;
+  for(const a of moving.shapes)for(let j=0;j<target.shapes.length;j++) {
+    const b=target.shapes[j],ax=a.ax-dx,ay=a.ay-dy,bx=a.bx-dx,by=a.by-dy;
+    polyX[0]=b.ax-ax;polyY[0]=b.ay-ay;polyX[1]=b.bx-ax;polyY[1]=b.by-ay;
+    polyX[2]=b.bx-bx;polyY[2]=b.by-by;polyX[3]=b.ax-bx;polyY[3]=b.ay-by;
+    let t=Infinity,pos=false,neg=false,area=0;
+    for(let i=0;i<4;i++) {
+      const k=(i+1)%4,cross=polyX[i]*polyY[k]-polyY[i]*polyX[k];
+      area+=cross;pos ||= cross>1e-9;neg ||= cross< -1e-9;
+      t=Math.min(t,capsuleEntry(0,0,dx,dy,polyX[i],polyY[i],polyX[k],polyY[k],a.r+b.r));
+    }
+    if(Math.abs(area)>1e-9 && !(pos&&neg))t=0;
+    if(t<out.t){out.hit=true;out.t=t;out.shapeIndex=j;out.x=moving.x-dx+dx*t;out.y=moving.y-dy+dy*t;}
+  }
+  return out;
+}
+export const aircraftVsAircraft=(a:AircraftHitbox,b:AircraftHitbox)=>sweepAircraft(a,0,0,b,overlapResult).hit;
+export function hitboxProjectionExtent(h:AircraftHitbox,nx:number,ny:number):number {
+  let extent=0;for(const s of h.shapes)extent=Math.max(extent,Math.abs((s.ax-h.x)*nx+(s.ay-h.y)*ny)+s.r,Math.abs((s.bx-h.x)*nx+(s.by-h.y)*ny)+s.r);return extent;
+}
+export function clampHitboxToGameplayRect(x:number,y:number,h:AircraftHitbox, rotating=false) {
+  let left=0,right=0,top=0,bottom=0;
+  for(const s of h.shapes){left=Math.min(left,s.ax-h.x-s.r,s.bx-h.x-s.r);right=Math.max(right,s.ax-h.x+s.r,s.bx-h.x+s.r);top=Math.min(top,s.ay-h.y-s.r,s.by-h.y-s.r);bottom=Math.max(bottom,s.ay-h.y+s.r,s.by-h.y+s.r);}
+  // A hunter must be able to turn at rest without moving its endpoint. Derive
+  // its full-turn staging envelope from each authored capsule, not enemy.radius.
+  if(rotating)for(const s of h.shapes){const reach=Math.max(Math.hypot(s.ax-h.x,s.ay-h.y),Math.hypot(s.bx-h.x,s.by-h.y))+s.r;left=Math.min(left,-reach);right=Math.max(right,reach);top=Math.min(top,-reach);bottom=Math.max(bottom,reach);}
+  return {x:Math.max(GAMEPLAY_SAFE_RECT.left-left,Math.min(GAMEPLAY_SAFE_RECT.right-right,x)),y:Math.max(GAMEPLAY_SAFE_RECT.top-top,Math.min(GAMEPLAY_SAFE_RECT.bottom-bottom,y))};
+}
+export function rectVsAircraft(left:number,top:number,right:number,bottom:number,h:AircraftHitbox):boolean {
+  for(const s of h.shapes) {
+    if(s.ax>=left&&s.ax<=right&&s.ay>=top&&s.ay<=bottom)return true;
+    if(capsuleEntry(s.ax,s.ay,s.bx,s.by,left,top,right,top,s.r)!==Infinity || capsuleEntry(s.ax,s.ay,s.bx,s.by,right,top,right,bottom,s.r)!==Infinity || capsuleEntry(s.ax,s.ay,s.bx,s.by,right,bottom,left,bottom,s.r)!==Infinity || capsuleEntry(s.ax,s.ay,s.bx,s.by,left,bottom,left,top,s.r)!==Infinity)return true;
+  }return false;
+}
+export function ringVsAircraft(x:number,y:number,inner:number,outer:number,h:AircraftHitbox):boolean {
+  for(const s of h.shapes){const t=closestT(x,y,s.ax,s.ay,s.bx,s.by),near=Math.hypot(s.ax+(s.bx-s.ax)*t-x,s.ay+(s.by-s.ay)*t-y)-s.r,far=Math.max(Math.hypot(s.ax-x,s.ay-y),Math.hypot(s.bx-x,s.by-y))+s.r;if(near<=outer&&far>=inner)return true;}return false;
+}
+/** The complete hull must fit between BOTH wedge boundaries. */
+export function aircraftInsideWedge(h:AircraftHitbox,x:number,y:number,angle:number,arc:number):boolean {
+  const lo=angle-arc/2,hi=angle+arc/2;
+  for(const s of h.shapes)for(let i=0;i<2;i++) {
+    const px=(i?s.bx:s.ax)-x,py=(i?s.by:s.ay)-y;
+    if(Math.cos(lo)*py-Math.sin(lo)*px<s.r || Math.sin(hi)*px-Math.cos(hi)*py<s.r)return false;
+  }return true;
+}
