@@ -1,13 +1,25 @@
 import type { ProjectileEntity } from "./airCombatRuntime";
 import type { AircraftId } from "./airCombatTypes";
 export const BASIC_AMMO_KEYS = { black_eagle:"viper_basic_ammo", breaker:"titan_basic_ammo", phantom:"phantom_basic_ammo" } as const satisfies Record<AircraftId,string>;
-// Previous Pixi basic width = radius 3.2 * 2.8. Width only; radius stays 3.2.
-export const BASIC_AMMO_WIDTH = 3.2 * 2.8 * 1.20;
 /** Presentation only: sizes and paths never participate in hit detection. */
 export const AMMO_VISUALS={
-  viper_basic_ammo: { body:"M32 1L39 22V48L47 61L32 55L17 61L25 48V22Z", color:"#c5f4ff", detail:"M31 15H34V50H31Z", highlight:"#ffffff", width:BASIC_AMMO_WIDTH, height:24, cell:[0,0] as const },
-  titan_basic_ammo: { body:"M20 7H44L58 22V49L50 59H14L6 49V22Z", color:"#586676", detail:"M19 10H45L52 22H12ZM9 44H55V50H9ZM18 54H46V58H18Z", highlight:"#ffcd79", width:BASIC_AMMO_WIDTH, height:15, cell:[1,0] as const },
-  phantom_basic_ammo: { body:"M32 1L61 27L53 45L32 63L11 45L3 27Z", color:"#a879ef", detail:"M32 10L44 30L32 53L20 30Z", highlight:"#d9ffff", width:BASIC_AMMO_WIDTH, height:19, cell:[2,0] as const },
+  // Each body occupies a 64x64 source cell; width/height are world-space art dimensions.
+  viper_basic_ammo: {
+    body:"M32 0Q54 12 64 22L56 55L44 64H20L8 55L0 22Q10 12 32 0Z", color:"#a5eaff",
+    detail:"M32 0L39 20L36 57H28L25 20Z", highlight:"#ffffff", width:6, height:24, cell:[0,0] as const,
+    trail:{length:5,width:2,color:0x83eaff,css:"#83eaff",alpha:.42},
+  },
+  titan_basic_ammo: {
+    body:"M32 0Q49 5 60 16L64 22V54L52 64H12L0 54V22L4 16Q15 5 32 0Z", color:"#586676",
+    detail:"M29 12L35 12L36 56H28ZM16 59H48V62H16Z", highlight:"#ffc16b", width:8, height:29, cell:[1,0] as const,
+    trail:{length:7,width:2.5,color:0xffb052,css:"#ffb052",alpha:.5},
+  },
+  phantom_basic_ammo: {
+    body:"M32 0Q43 8 45.333 16L43 52Q39 60 32 64Q25 60 21 52L18.667 16Q21 8 32 0Z", color:"#baf6ff",
+    detail:"M32 0Q36 10 37 18L35 52L32 64L29 52L27 18Q28 10 32 0Z", highlight:"#ffffff", width:12, height:32, cell:[2,0] as const,
+    glow:{body:"M32 0C52 5 64 15 64 28C64 48 47 59 32 64C17 59 0 48 0 28C0 15 12 5 32 0Z",color:"#a78bfa",alpha:.24},
+    trail:{length:12,width:4,color:0xb8a0ff,css:"#b8a0ff",alpha:.55},
+  },
   viper_missile: { body: "M32 5L36 17L36 44L43 54L34 51L30 51L21 54L28 44L28 17Z", color: "#f4f4e8", detail: "M30 23H34V43H30Z", highlight: "#f59e0b", width: 11.2, height: 22.4, cell: [0,0] as const },
   bigbang_missile: { body: "M32 1L43 7L48 18V29L59 39V48L47 43V49L57 58V62L42 57H22L7 62V58L17 49V43L5 48V39L16 29V18L21 7Z", color: "#384450", detail: "M20 21H44V24H20ZM19 27H45V29H19ZM22 47H42V50H22ZM21 56H28V61H21ZM36 56H43V61H36Z", highlight: "#ffbe54", width: 36, height: 63, cell: [1,0] as const },
   tomahawk_missile: { body: "M32 4L37 15V29L52 40V46L37 39V51L43 59L32 55L21 59L27 51V39L12 46V40L27 29V15Z", color: "#b2c7d8", detail: "M30 18H34V48H30Z", highlight: "#39dcff", width: 11.2, height: 22.4, cell: [2,0] as const },
@@ -26,6 +38,9 @@ export const AMMO_VISUALS={
   needle_ammo: { body: "M32 1L34 50L32 63L30 50Z", color: "#f390d2", detail: "M31 8H33V53H31Z", highlight: "#ffffff", width: 4, height: 26, cell: [3,3] as const },
 } as const;
 export type AmmoVisualKey=keyof typeof AMMO_VISUALS;
+export function getBasicAmmoVisual(key: AmmoVisualKey | null | undefined) {
+  return key === "viper_basic_ammo" || key === "titan_basic_ammo" || key === "phantom_basic_ammo" ? AMMO_VISUALS[key] : null;
+}
 export function getAmmoVisualKey(p:ProjectileEntity):AmmoVisualKey|null {
  if(p.ammoVisualKey && p.projectileKind==="bullet")return p.ammoVisualKey;
  if(p.bigBang)return "bigbang_missile";

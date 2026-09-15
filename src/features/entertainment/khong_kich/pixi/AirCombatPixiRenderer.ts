@@ -5,7 +5,7 @@ import { enemyAirframeRotation } from "../airCombatHitboxes";
 import { paintTitanShield, type ShieldPainter } from "../airCombatTitanShield";
 import { TitanShieldPresentation } from "../airCombatTitanShield";
 import { AirCombatMissilePool } from "./AirCombatMissilePool";
-import { AMMO_VISUALS, getAmmoVisualKey } from "../airCombatAmmo";
+import { AMMO_VISUALS, getAmmoVisualKey, getBasicAmmoVisual } from "../airCombatAmmo";
 import { angularBarPolygon, BOSS_VISUAL_WIDTH_SCALE, BOSS_VISUAL_ASPECT } from "../airCombatHudLayout";
 import { SONIC_RING_THICKNESS } from "../airCombatBoss";
 import { isElite } from "../airCombatWaves";
@@ -113,7 +113,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     this.hpText.anchor.set(.5); this.resourceText.anchor.set(.5);
     this.enemies = new AirCombatSpritePool(this.actors, 44);
     this.missileSmoke = new AirCombatSpritePool(this.smokeLayer, AIR_COMBAT_WORLD.maxParticles);
-    this.projectileGlows = new AirCombatSpritePool(this.actors, 256);
+    this.projectileGlows = new AirCombatSpritePool(this.actors, AIR_COMBAT_WORLD.maxPlayerProjectiles + AIR_COMBAT_WORLD.maxEnemyProjectiles);
     this.afterimages = new AirCombatSpritePool(this.actors, 4);
     this.projectiles = new AirCombatSpritePool(this.actors, 768);
     this.missiles = new AirCombatMissilePool(this.actors, assets, AIR_COMBAT_WORLD.maxPlayerProjectiles + AIR_COMBAT_WORLD.maxEnemyProjectiles);
@@ -328,18 +328,28 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
         const sprite=this.projectiles.get(p.id,this.assets.effect(ammoKey??round));
         if(!sprite)continue;
         sprite.tint=p.allegiance==="friendly_hacked"?0x67e8f9:0xffffff;
+        // Source art points up; read current velocity every frame, including ricochets.
         sprite.position.set(p.x,p.y);sprite.rotation=Math.atan2(p.vy,p.vx)+Math.PI/2;
         sprite.width=ammo?.width??p.radius*2.8;sprite.height=ammo?.height??p.radius*6;
-        const glow=this.projectileGlows.get(p.id,this.assets.effect(p.owner==="enemy"?"charge":"laser"));
+        const basic=getBasicAmmoVisual(ammoKey);
+        const glow=this.projectileGlows.get(p.id,this.assets.effect(basic?"basicAmmoTrail":p.owner==="enemy"?"charge":"laser"));
         if(glow){
-          const speed=Math.max(1,Math.hypot(p.vx,p.vy)),viper=ammoKey==="viper_basic_ammo",titan=ammoKey==="titan_basic_ammo",phantom=ammoKey==="phantom_basic_ammo";
-          glow.texture=this.assets.effect(phantom?"charge":titan?"muzzle":p.owner==="enemy"?"charge":"laser");
-          const tail=viper?5:titan?2:phantom?0:7;
-          glow.position.set(p.x-p.vx/speed*tail,p.y-p.vy/speed*tail);glow.rotation=sprite.rotation;
-          glow.width=viper?3:titan?11:phantom?15:sprite.width*1.5;
-          glow.height=viper?13:titan?9:phantom?15:sprite.height*1.6;
-          glow.tint=p.allegiance==="friendly_hacked"?0x67e8f9:viper?0xb4efff:titan?0xffc778:phantom?0xc4a0ff:p.owner==="enemy"?(p.appearance==="dangerous"?0xffbc4d:0xff667d):p.owner==="drone"?0xc4b5fd:visual.tint;
-          glow.alpha=p.owner==="enemy"?.25:.4;glow.blendMode="add";
+          if(basic){
+            // One recycled sprite: fixed visual length, no historical particles or runtime writes.
+            const length=basic.trail.length*(reducedMotion?.6:1);
+            const rear=basic.height/2+length/2-.5;
+            const heading=sprite.rotation-Math.PI/2;
+            glow.position.set(p.x-Math.cos(heading)*rear,p.y-Math.sin(heading)*rear);
+            glow.width=basic.trail.width;glow.height=length;
+            glow.tint=basic.trail.color;glow.alpha=basic.trail.alpha*(reducedMotion?.55:1);
+          }else{
+            const speed=Math.max(1,Math.hypot(p.vx,p.vy));
+            glow.position.set(p.x-p.vx/speed*7,p.y-p.vy/speed*7);
+            glow.width=sprite.width*1.5;glow.height=sprite.height*1.6;
+            glow.tint=p.allegiance==="friendly_hacked"?0x67e8f9:p.owner==="enemy"?(p.appearance==="dangerous"?0xffbc4d:0xff667d):p.owner==="drone"?0xc4b5fd:visual.tint;
+            glow.alpha=p.owner==="enemy"?.25:.4;
+          }
+          glow.rotation=sprite.rotation;glow.blendMode="add";
         }
       }
       if (p.id > this.lastProjectile && p.owner === "enemy" && p.appearance === "boss")

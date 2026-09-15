@@ -9,7 +9,7 @@ import { PLAYER_AIRFRAME_SIZE, PLAYER_HITBOX_PROFILES, ENEMY_HITBOX_PROFILES, ty
 import { BOSS_VISUAL_WIDTH_SCALE, BOSS_VISUAL_ASPECT } from "./airCombatHudLayout";
 import { enemyAirframeRotation } from "./airCombatHitboxes";
 import { paintTitanShield, type ShieldPainter } from "./airCombatTitanShield";
-import { AMMO_VISUALS, getAmmoVisualKey, getMissileVisual, missileRenderRotation } from "./airCombatAmmo";
+import { AMMO_VISUALS, getAmmoVisualKey, getBasicAmmoVisual, getMissileVisual, missileRenderRotation } from "./airCombatAmmo";
 import type { AmmoVisualKey } from "./airCombatAmmo";
 import { angularBarPolygon } from "./airCombatHudLayout";
 import { SONIC_RING_THICKNESS } from "./airCombatBoss";
@@ -45,11 +45,12 @@ function shieldPainter(ctx:CanvasRenderingContext2D):ShieldPainter {
      line:(ax,ay,bx,by,c,a,w)=>{ctx.beginPath();ctx.moveTo(ax,ay);ctx.lineTo(bx,by);ctx.strokeStyle=color(c,a);ctx.lineWidth=w;ctx.stroke();}};
   shieldPainters.set(ctx,p);return p;
 }
-const ammoPaths = new Map<AmmoVisualKey, { body: Path2D; detail: Path2D }>();
+const ammoPaths = new Map<AmmoVisualKey, { body: Path2D; detail: Path2D; glow?: Path2D }>();
 function drawAmmoLocal(ctx:CanvasRenderingContext2D,key:AmmoVisualKey) {
  const art=AMMO_VISUALS[key];let paths=ammoPaths.get(key);
- if(!paths){paths={body:new Path2D(art.body),detail:new Path2D(art.detail)};ammoPaths.set(key,paths);}
+ if(!paths){paths={body:new Path2D(art.body),detail:new Path2D(art.detail),glow:"glow" in art?new Path2D(art.glow.body):undefined};ammoPaths.set(key,paths);}
  ctx.save();ctx.scale(art.width/64,art.height/64);ctx.translate(-32,-32);
+ if(paths.glow&&"glow" in art){ctx.save();ctx.globalAlpha*=art.glow.alpha;ctx.fillStyle=art.glow.color;ctx.fill(paths.glow);ctx.restore();}
  ctx.fillStyle=art.color;ctx.fill(paths.body);
  if(key==="bigbang_missile"){ctx.strokeStyle="#a1aeba";ctx.lineWidth=.65;ctx.stroke(paths.body);}
  ctx.fillStyle=art.highlight;ctx.fill(paths.detail);
@@ -63,6 +64,20 @@ function drawAmmoLocal(ctx:CanvasRenderingContext2D,key:AmmoVisualKey) {
 }
 function drawAmmo(ctx:CanvasRenderingContext2D,key:AmmoVisualKey,x:number,y:number,angle:number) {
  ctx.save();ctx.translate(x,y);ctx.rotate(missileRenderRotation(angle));drawAmmoLocal(ctx,key);ctx.restore();
+}
+// Cached unit wake, attached to the body rear in current-velocity coordinates.
+let basicAmmoWake: Path2D | undefined;
+function drawBasicAmmoTrail(ctx:CanvasRenderingContext2D,art:NonNullable<ReturnType<typeof getBasicAmmoVisual>>,x:number,y:number,angle:number,reducedMotion:boolean) {
+ basicAmmoWake ??= new Path2D("M-.5 0H.5Q.34 .5 0 1Q-.34 .5 -.5 0Z");
+ ctx.save();ctx.translate(x,y);ctx.rotate(missileRenderRotation(angle));
+ ctx.translate(0,art.height/2-.5);ctx.scale(art.trail.width,art.trail.length*(reducedMotion?.6:1));
+ ctx.globalCompositeOperation="lighter";ctx.fillStyle=art.trail.css;
+ // Three fixed tapered layers approximate the atlas fade without per-frame gradients/particles.
+ const alpha=art.trail.alpha*(reducedMotion?.55:1);
+ ctx.globalAlpha=alpha*.25;ctx.fill(basicAmmoWake);
+ ctx.scale(1,.65);ctx.globalAlpha=alpha*.35;ctx.fill(basicAmmoWake);
+ ctx.scale(1,.5);ctx.globalAlpha=alpha*.4;ctx.fill(basicAmmoWake);
+ ctx.restore();
 }
 const terrainTiles = new WeakMap<CombatWorld, { canvas: HTMLCanvasElement; revision: number }[]>();
 function paintTerrainShapes(ctx: CanvasRenderingContext2D, shapes: TerrainShape[]) {
@@ -460,13 +475,16 @@ export function drawLegacyWorld(
   ctx.restore();
   for (const projectile of world.projectiles) {
     const missile = projectile.projectileKind !== "bullet";
+    const basic = !missile ? getBasicAmmoVisual(projectile.ammoVisualKey) : null;
     if (projectile.owner === "enemy" && projectile.appearance === "boss" && (missile ? projectile.missileAge < .15 : projectile.lifetime > 5.88)) {
       ctx.save(); ctx.fillStyle = "rgba(255,82,110,.55)";
       ctx.beginPath(); ctx.arc(projectile.x, projectile.y, missile ? 10 : 6, 0, Math.PI * 2); ctx.fill(); ctx.restore();
     }
-    if (!reducedMotion && !missile) {
+    if (basic) {
+      drawBasicAmmoTrail(ctx,basic,projectile.x,projectile.y,Math.atan2(projectile.vy,projectile.vx),reducedMotion);
+    } else if (!reducedMotion && !missile) {
       const speed = Math.max(1, Math.hypot(projectile.vx, projectile.vy));
-      const length = projectile.ammoVisualKey==="titan_basic_ammo"?3:projectile.ammoVisualKey==="phantom_basic_ammo"?0:projectile.ammoVisualKey==="viper_basic_ammo"?9:projectile.owner === "enemy" ? 7 : 13;
+      const length = projectile.owner === "enemy" ? 7 : 13;
       ctx.globalAlpha = .35; ctx.strokeStyle = projectile.color; ctx.lineWidth = 2;
       ctx.beginPath(); ctx.moveTo(projectile.x, projectile.y);
       ctx.lineTo(projectile.x - projectile.vx / speed * length, projectile.y - projectile.vy / speed * length); ctx.stroke();
@@ -488,7 +506,6 @@ export function drawLegacyWorld(
       if(projectile.bigBang){ctx.globalAlpha=reducedMotion?.3:.3+.15*Math.sin(projectile.missileAge*4);ctx.fillStyle="#fff0b3";ctx.fillRect(-7,-10,14,2);}
       ctx.restore();
     } else if(projectile.owner==="enemy" || projectile.ammoVisualKey) {
-      if(projectile.ammoVisualKey==="phantom_basic_ammo"){ctx.save();ctx.fillStyle="rgba(184,130,255,.2)";ctx.beginPath();ctx.arc(projectile.x,projectile.y,7,0,Math.PI*2);ctx.fill();ctx.restore();}
       drawAmmo(ctx,getAmmoVisualKey(projectile)!,projectile.x,projectile.y,Math.atan2(projectile.vy,projectile.vx));
     } else {
       ctx.fillStyle = projectile.color;
