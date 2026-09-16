@@ -9,8 +9,10 @@ export const AirCombatPixiStage = React.forwardRef<HTMLDivElement, React.HTMLAtt
   },
 );
 
-export async function createLegacyPresentation(host: HTMLDivElement): Promise<AirCombatPresentation> {
-  const { drawLegacyWorld } = await import("../AirCombatLegacyRenderer");
+export async function createLegacyPresentation(host: HTMLDivElement, stageId = 1): Promise<AirCombatPresentation> {
+  const { drawLegacyWorld, loadMagneticCanvasAssets } = await import("../AirCombatLegacyRenderer");
+  if (stageId === 2) await loadMagneticCanvasAssets();
+  let magneticEndAge = 0;
   const canvas = document.createElement("canvas");
   const ratio = Math.min(2, window.devicePixelRatio || 1);
   canvas.width = 360 * ratio; canvas.height = 640 * ratio;
@@ -28,7 +30,8 @@ export async function createLegacyPresentation(host: HTMLDivElement): Promise<Ai
       damageLabels.update(world, delta);
       healthBars.begin(delta);
       accents.update(world, delta);
-      drawLegacyWorld(context, world, world.aircraft.aircraftId, reducedMotion, damageLabels.labels, healthBars, accents);
+      if (world.ended) magneticEndAge += delta;
+      drawLegacyWorld(context, world, world.aircraft.aircraftId, reducedMotion, damageLabels.labels, healthBars, accents, world.elapsed + magneticEndAge);
       healthBars.end();
     },
     destroy() { accents.clear(); healthBars.clear(); canvas.remove(); },

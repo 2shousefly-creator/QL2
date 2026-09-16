@@ -176,3 +176,16 @@
 .air-stage-arrow{display:grid;place-items:center;width:42px;height:42px;border:1px solid #475569;border-radius:50%;margin-bottom:20px}
 .air-stage-arrow:disabled{opacity:.25}
 @media(prefers-reduced-motion:reduce){.air-campaign-clouds{animation:none}}
+
+/* Presentation-only hero: no CombatWorld, entity spawn or game-clock updates. */
+.air-campaign-fullscreen{background:#071426;overflow-y:auto}
+.air-campaign-fullscreen .air-campaign-menu{max-width:none;min-height:100%;border-radius:0;isolation:isolate}
+.air-campaign-fullscreen .air-campaign-hero{min-height:100dvh;padding:calc(72px + env(safe-area-inset-top)) 24px calc(56px + env(safe-area-inset-bottom))}
+.air-campaign-landscape{position:absolute;inset:-3%;z-index:-3;background-position:center 57%;background-size:cover;animation:air-hero-drift 36s ease-in-out infinite alternate}
+.air-campaign-scrim{position:absolute;inset:0;z-index:-2;background:linear-gradient(180deg,#06102644,#07162c70 34%,#08152d99 57%,#03091455)}
+.air-campaign-fullscreen .air-campaign-clouds{z-index:-1;opacity:.13}
+.air-campaign-fullscreen .air-campaign-back{top:max(20px,env(safe-area-inset-top));left:max(20px,env(safe-area-inset-left));z-index:2}
+.air-campaign-fullscreen .air-campaign-hero h1{text-shadow:0 3px 32px #020617cc}
+.air-campaign-still .air-campaign-landscape{animation:none}
+@keyframes air-hero-drift{from{transform:scale(1) translateY(0)}to{transform:scale(1.04) translateY(-.8%)}}
+@media(prefers-reduced-motion:reduce){.air-campaign-landscape{animation:none}}

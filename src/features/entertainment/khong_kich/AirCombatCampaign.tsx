@@ -1,3 +1,4 @@
+import { STAGE2_ART_URLS } from "./airCombatStage2Art";
 import React, { useEffect, useRef } from "react";
 import { ArrowLeft, ChevronLeft, ChevronRight, LockKeyhole, Check, Plane } from "lucide-react";
 import { AIR_COMBAT_STAGES, getAirCombatStage, isStageCleared, isStageUnlocked } from "./airCombatStages";
@@ -5,6 +6,8 @@ import type { AirCombatCampaignProgress } from "./airCombatTypes";
 
 export function AirCombatMainMenu({ onStart, onBack, reducedMotion }: { onStart: () => void; onBack: () => void; reducedMotion: boolean }) {
   return <section className={`air-campaign-menu ${reducedMotion ? "air-campaign-still" : ""}`}>
+    <div className="air-campaign-landscape" style={{ backgroundImage: `url(${STAGE2_ART_URLS.menu})` }} aria-hidden="true" />
+    <div className="air-campaign-scrim" aria-hidden="true" />
     <div className="air-campaign-clouds" aria-hidden="true" />
     <button className="air-campaign-back" onClick={onBack}><ArrowLeft size={16} /> Giải Trí</button>
     <div className="air-campaign-hero">

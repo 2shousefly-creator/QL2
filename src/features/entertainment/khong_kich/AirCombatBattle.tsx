@@ -185,7 +185,7 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
       usingLegacy = true;
       setPauseReason("loading", true);
       try {
-        const legacy = await createLegacyPresentation(host);
+        const legacy = await createLegacyPresentation(host, world.stageId);
         if (cancelled) { legacy.destroy(); return; }
         presentation = legacy;
         setRendererState("legacy"); setPauseReason("loading", false);

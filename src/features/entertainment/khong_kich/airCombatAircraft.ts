@@ -92,16 +92,16 @@ export function resolvePlayerDamage(rawDamage: number, targetArmor: number, stat
     const multiplier = critical ? Math.max(1.7, Math.min(10, stats.criticalDamageMultiplier)) : 1;
     return { actualDamage: calculateDamage(rawDamage * multiplier, targetArmor), critical, multiplier };
 }
-export function requiredCombatXp(level: number): number {
+export function requiredCombatXp(level: number, stageId = 1): number {
     if (level >= 30)
         return 0;
     const n = Math.max(0, level - 1);
-    return Math.round(45 + 8 * n + .69 * n * n);
+    return stageId === 2 ? 36 + 4 * n : Math.round(45 + 8 * n + .69 * n * n);
 }
-export function gainCombatXp(state: AircraftCombatState, amount: number): LevelUpResult {
+export function gainCombatXp(state: AircraftCombatState, amount: number, stageId = 1): LevelUpResult {
     let remaining = Math.max(0, amount), levelsGained = 0, coreSelectionsDue = 0;
     while (remaining > 0 && state.level < 30) {
-        const needed = requiredCombatXp(state.level) - state.combatXp;
+        const needed = requiredCombatXp(state.level, stageId) - state.combatXp;
         if (remaining < needed) {
             state.combatXp += remaining;
             break;

@@ -10,6 +10,8 @@ export interface WaveDefinition {
     damage: number;
     armor: number;
     xpBudget: number;
+    /** Fixed per-main-enemy reward for stages with an authored XP curve. */
+    xpPerKill?: number;
     counts: Partial<Record<EnemyType, number>>;
 }
 export const COMBAT_WAVES: readonly WaveDefinition[] = [

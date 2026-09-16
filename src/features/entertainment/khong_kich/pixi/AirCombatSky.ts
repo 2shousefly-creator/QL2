@@ -22,19 +22,24 @@ function paint(graphics: Graphics, shapes: TerrainShape[]) {
 
 export class AirCombatSky {
   readonly root = new Container();
+  private storm: Sprite;
+  private stormShade = new Graphics().rect(0,0,360,640).fill({color:0x030819,alpha:.22});
   private atmosphere = new Graphics().rect(0, 0, 360, 640).fill(0xffffff);
   private terrain = Array.from({ length: 3 }, () => ({ root: new Container(), ground: new Graphics(), landmarks: new Graphics(), revision: -1 }));
   private clouds: { sprite: Sprite; speed: number; alpha: number; haze: boolean }[] = [];
   private wind = new Graphics();
   constructor(assets: AirCombatAssets) {
     this.root.addChild(new Graphics().rect(0, 0, 360, 640).fill(0x3b5547));
+    this.storm = new Sprite(assets.magneticStorm);
+    this.storm.position.set(-24,-30); this.storm.width=408; this.storm.height=700;
+    this.storm.visible=false; this.stormShade.visible=false;
     for (const segment of this.terrain) {
       segment.root.addChild(segment.ground, segment.landmarks);
       this.root.addChild(segment.root);
     }
     this.atmosphere.tint = 0x244c69;
     this.atmosphere.alpha = .24;
-    this.root.addChild(this.atmosphere);
+    this.root.addChild(this.atmosphere, this.storm, this.stormShade);
     for (let layer = 0; layer < 3; layer++) {
       for (let i = 0; i < 4; i++) {
         const sprite = new Sprite(assets.effect(i % 2 ? "haze" : "cloud"));
@@ -55,6 +60,21 @@ export class AirCombatSky {
     this.root.addChild(this.wind);
   }
   update(delta: number, world: CombatWorld, reducedMotion: boolean) {
+    const magnetic = !!world.magnetic;
+    this.storm.visible = magnetic; this.stormShade.visible = magnetic;
+    this.atmosphere.visible = !magnetic;
+    for (const view of this.terrain) view.root.visible = !magnetic;
+    if (magnetic) {
+      this.storm.y = -30 + (reducedMotion ? 0 : Math.sin(world.elapsed * .035) * 14);
+      this.wind.visible = false;
+      for (const cloud of this.clouds) {
+        cloud.sprite.alpha = cloud.alpha * .22;
+        cloud.sprite.tint = cloud.haze ? 0x8f85cb : 0x49849c;
+        cloud.sprite.y += delta * cloud.speed * (reducedMotion ? 0 : .35);
+        if (cloud.sprite.y > 850) cloud.sprite.y -= 1100;
+      }
+      return;
+    }
     const terrain = getTerrainWorld(world, reducedMotion);
     for (let i = 0; i < this.terrain.length; i++) {
       const view = this.terrain[i], segment = terrain.segments[i];
@@ -66,8 +86,8 @@ export class AirCombatSky {
       }
       view.root.y = segment.y;
     }
-    this.atmosphere.tint = world.stage.runtime === "magnetic" ? 0x101d58 : terrainColor(0x244c69, 0x1e354e, terrain.bossAtmosphere);
-    this.atmosphere.alpha = world.stage.runtime === "magnetic" ? .68 : .24 + terrain.bossAtmosphere * .06;
+    this.atmosphere.tint = terrainColor(0x244c69, 0x1e354e, terrain.bossAtmosphere);
+    this.atmosphere.alpha = .24 + terrain.bossAtmosphere * .06;
     this.wind.visible = !reducedMotion;
     this.wind.y = (this.wind.y + delta * 62) % 80;
     for (const cloud of this.clouds) {

@@ -1,3 +1,4 @@
+import { STAGE2_ART_URLS, STAGE2_ENEMY_ART, STAGE2_VFX_ART, TEMPEST_WEAKPOINT_ART } from "../airCombatStage2Art";
 import { PLAYER_STANDARD_AIRFRAME_SIZE } from "../airCombatHitboxes";
 import { PLAYER_ARTWORK } from "../airCombatArtwork";
 import phantomBeamUrl from "../../../../assets/khong-kich/v2/phantom-firing-beam.svg";
@@ -22,16 +23,16 @@ export const AIRCRAFT_VISUALS: Record<AircraftId, AircraftVisualDefinition> = {
   phantom: { neutral: cell("aircraft", 0, 2), left: cell("aircraft", 1, 2), right: cell("aircraft", 2, 2), size: PLAYER_STANDARD_AIRFRAME_SIZE, artwork: PLAYER_ARTWORK.phantom, tint: 0xc4b5fd },
 };
 export const ENEMY_VISUALS: Record<EnemyType, AtlasFrame> = {
-  orbit_wasp: cell("aircraft",3,1),
-  arc_reaver: cell("aircraft",3,1),
-  mine_seeder: cell("aircraft",3,1),
-  magnetic_leech: cell("aircraft",3,1),
-  prism_manta: cell("aircraft",3,1),
-  swarm_carrier: cell("aircraft",3,1),
-  micro_drone: cell("aircraft",3,1),
-  cyclone_ace: cell("aircraft",3,1),
-  grid_architect: cell("aircraft",3,1),
-  satellite: cell("aircraft",3,1),
+  orbit_wasp: STAGE2_ENEMY_ART.orbit_wasp!,
+  arc_reaver: STAGE2_ENEMY_ART.arc_reaver!,
+  mine_seeder: STAGE2_ENEMY_ART.mine_seeder!,
+  magnetic_leech: STAGE2_ENEMY_ART.magnetic_leech!,
+  prism_manta: STAGE2_ENEMY_ART.prism_manta!,
+  swarm_carrier: STAGE2_ENEMY_ART.swarm_carrier!,
+  micro_drone: STAGE2_ENEMY_ART.micro_drone!,
+  cyclone_ace: STAGE2_ENEMY_ART.cyclone_ace!,
+  grid_architect: STAGE2_ENEMY_ART.grid_architect!,
+  satellite: STAGE2_ENEMY_ART.satellite!,
   scout: cell("aircraft", 3, 1), fighter: cell("aircraft", 3, 2),
   attacker: cell("aircraft", 0, 3), kamikaze: cell("aircraft", 1, 3),
   bomber: cell("aircraft", 2, 3), elite: cell("aircraft", 3, 3),
@@ -43,6 +44,7 @@ export const ENEMY_VISUALS: Record<EnemyType, AtlasFrame> = {
 };
 const ammoFrames = Object.fromEntries(Object.entries(AMMO_VISUALS).map(([key,v]) => [key,key.endsWith("_basic_ammo")?{atlas:"basicAmmo",rect:[v.cell[0]/3,0,1/3,1/2]}:cell("ammo",v.cell[0],v.cell[1])])) as Record<AmmoVisualKey,AtlasFrame>;
 export const VFX_VISUALS = {
+  ...STAGE2_VFX_ART,
   healingCross: { atlas: "healingCross", rect: [0, 0, 1, 1] } as AtlasFrame,
   ...ammoFrames,
   basicAmmoTrail: { atlas: "basicAmmo", rect: [0, 1/2, 1/3, 1/2] } as AtlasFrame,
@@ -58,12 +60,13 @@ export type VisualKey = keyof typeof VFX_VISUALS;
 
 /** Each renderer owns its frame views. Assets owns cached shared source textures. */
 export async function loadAirCombatAssets() {
-  const [aircraft, fortress, vfx, ammo, bigbang, engineFlame, basicAmmo, phantomBeam, healingCross] = await Promise.all([
+  const [aircraft, fortress, vfx, ammo, bigbang, engineFlame, basicAmmo, phantomBeam, healingCross, stage2Enemy, stage2Vfx, magneticStorm] = await Promise.all([
     Assets.load<Texture>(aircraftUrl), Assets.load<Texture>(fortressUrl), Assets.load<Texture>(vfxUrl), Assets.load<Texture>(ammoUrl), Assets.load<Texture>(bigbangUrl), Assets.load<Texture>(flameUrl), Assets.load<Texture>(basicAmmoUrl),
     Assets.load<Texture>(phantomBeamUrl),
     Assets.load<Texture>(healingCrossUrl),
+    Assets.load<Texture>(STAGE2_ART_URLS.enemy), Assets.load<Texture>(STAGE2_ART_URLS.vfx), Assets.load<Texture>(STAGE2_ART_URLS.storm),
   ]);
-  const sources = { aircraft, fortress, vfx, ammo, basicAmmo, healingCross };
+  const sources = { aircraft, fortress, vfx, ammo, basicAmmo, healingCross, stage2Enemy, stage2Vfx };
   const frames = new Map<AtlasFrame, Texture>();
   const texture = (definition: AtlasFrame) => {
     const cached = frames.get(definition);
@@ -81,6 +84,8 @@ export async function loadAirCombatAssets() {
   Object.values(AIRCRAFT_VISUALS).forEach(v => { texture(v.neutral); texture(v.left); texture(v.right); });
   Object.values(ENEMY_VISUALS).forEach(texture);
   Object.values(VFX_VISUALS).forEach(texture);
-  return { texture, engineFlame, phantomBeam, effect: (key: VisualKey) => key === "bigbang_missile" ? bigbang : texture(VFX_VISUALS[key]), destroy: () => { frames.forEach(t => t.destroy(false)); frames.clear(); } };
+  Object.values(STAGE2_ENEMY_ART).forEach(texture);
+  texture(TEMPEST_WEAKPOINT_ART);
+  return { texture, magneticStorm, engineFlame, phantomBeam, effect: (key: VisualKey) => key === "bigbang_missile" ? bigbang : texture(VFX_VISUALS[key]), destroy: () => { frames.forEach(t => t.destroy(false)); frames.clear(); } };
 }
 export type AirCombatAssets = Awaited<ReturnType<typeof loadAirCombatAssets>>;

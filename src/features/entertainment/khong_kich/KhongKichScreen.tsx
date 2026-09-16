@@ -234,7 +234,7 @@ export const KhongKichScreen: React.FC<KhongKichScreenProps> = ({
     );
   }
 
-  if (phase === "menu") return <AirCombatMainMenu reducedMotion={gameState.settings.reducedMotion} onBack={onBack} onStart={() => { setSelectedStage(defaultSelectedStage(profile.campaign)); setPhase("stages"); }} />;
+  if (phase === "menu") return <ExclusiveFullscreenOverlay ariaLabel="Menu Không Kích" className="air-campaign-fullscreen"><AirCombatMainMenu reducedMotion={gameState.settings.reducedMotion} onBack={onBack} onStart={() => { setSelectedStage(defaultSelectedStage(profile.campaign)); setPhase("stages"); }} /></ExclusiveFullscreenOverlay>;
   if (phase === "stages") return <AirCombatStageSelect progress={profile.campaign} selected={selectedStage} onSelect={setSelectedStage} onBack={() => setPhase("menu")} onAircraft={id => {
     if (!canLaunchStage(id, loadAirCombatProfile().campaign)) return;
     setSelectedStage(id); setPhase("select");

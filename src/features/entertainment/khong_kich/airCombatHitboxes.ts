@@ -19,16 +19,16 @@ export const PLAYER_AIRFRAME_SIZE:Record<AircraftId,number>={black_eagle:PLAYER_
 export const PLAYER_STANDARD_HITBOX_PROFILE=profile([cap(0,-.39,0,.27,.055,"body"),cap(-.06,-.04,-.27,.15,.045,"left_wing"),cap(.06,-.04,.27,.15,.045,"right_wing"),cap(-.06,.26,.06,.26,.035,"tail")]);
 export const PLAYER_HITBOX_PROFILES:Record<AircraftId,AircraftHitboxProfile>={black_eagle:PLAYER_STANDARD_HITBOX_PROFILE,breaker:PLAYER_STANDARD_HITBOX_PROFILE,phantom:PLAYER_STANDARD_HITBOX_PROFILE};
 export const ENEMY_HITBOX_PROFILES:Record<EnemyType,AircraftHitboxProfile>={
-  orbit_wasp: profile([cap(0,-.17,0,.17,.055),cap(-.19,0,.19,0,.035)]),
-  arc_reaver: profile([cap(0,-.17,0,.17,.055),cap(-.19,0,.19,0,.035)]),
-  mine_seeder: profile([cap(0,-.17,0,.17,.055),cap(-.19,0,.19,0,.035)]),
-  magnetic_leech: profile([cap(0,-.17,0,.17,.055),cap(-.19,0,.19,0,.035)]),
-  prism_manta: profile([cap(0,-.17,0,.17,.055),cap(-.19,0,.19,0,.035)]),
-  swarm_carrier: profile([cap(0,-.17,0,.17,.055),cap(-.19,0,.19,0,.035)]),
-  micro_drone: profile([cap(0,-.17,0,.17,.055),cap(-.19,0,.19,0,.035)]),
-  cyclone_ace: profile([cap(0,-.17,0,.17,.055),cap(-.19,0,.19,0,.035)]),
-  grid_architect: profile([cap(0,-.17,0,.17,.055),cap(-.19,0,.19,0,.035)]),
-  satellite: profile([cap(0,-.17,0,.17,.055),cap(-.19,0,.19,0,.035)]),
+  orbit_wasp: profile([cap(0,-.42,0,.34,.05),cap(-.08,-.08,-.31,.25,.035),cap(.08,-.08,.31,.25,.035),cap(-.1,.21,-.16,.34,.03),cap(.1,.21,.16,.34,.03)]),
+  arc_reaver: profile([cap(0,-.4,0,.08,.07),cap(-.08,-.15,-.3,-.08,.055),cap(.08,-.15,.3,-.08,.055),cap(-.3,-.08,-.4,.16,.04),cap(.3,-.08,.4,.16,.04),cap(-.4,.16,-.4,.34,.025),cap(.4,.16,.4,.34,.025)]),
+  mine_seeder: profile([cap(0,-.42,0,.38,.055),cap(-.28,-.25,-.28,.25,.13),cap(.28,-.25,.28,.25,.13),cap(-.2,0,.2,0,.06)]),
+  magnetic_leech: profile([cap(0,-.33,0,.08,.09),cap(-.1,-.05,-.32,.12,.065),cap(.1,-.05,.32,.12,.065),cap(-.32,.12,-.24,.36,.04),cap(.32,.12,.24,.36,.04)]),
+  prism_manta: profile([cap(0,-.36,0,.36,.055),cap(-.05,-.08,-.35,.02,.07),cap(.05,-.08,.35,.02,.07),cap(-.1,-.06,-.23,-.16,.04),cap(.1,-.06,.23,-.16,.04)]),
+  swarm_carrier: profile([cap(0,-.36,0,.35,.1),cap(-.28,-.1,-.28,.28,.13),cap(.28,-.1,.28,.28,.13)]),
+  micro_drone: profile([cap(0,-.34,0,.18,.09),cap(-.1,-.02,-.35,.3,.065),cap(.1,-.02,.35,.3,.065)]),
+  cyclone_ace: profile([cap(0,-.39,0,.15,.095),cap(-.08,.02,-.32,.29,.075),cap(.08,.02,.32,.29,.075),cap(-.32,.29,-.4,.39,.04),cap(.32,.29,.4,.39,.04)]),
+  grid_architect: profile([cap(0,-.12,0,.15,.16),cap(-.1,-.1,-.28,-.3,.055),cap(.1,-.1,.28,-.3,.055),cap(-.1,.1,-.28,.3,.055),cap(.1,.1,.28,.3,.055),cap(-.28,-.3,-.28,-.3,.095),cap(.28,-.3,.28,-.3,.095),cap(-.28,.3,-.28,.3,.095),cap(.28,.3,.28,.3,.095)]),
+  satellite: profile([cap(0,-.12,0,.12,.16),cap(0,-.38,0,.38,.035),cap(-.4,0,.4,0,.035)]),
   scout:profile([cap(0,-.21,0,.17,.055),cap(-.03,-.02,-.23,.09,.04),cap(.03,-.02,.23,.09,.04)]),
   fighter:profile([cap(0,-.36,0,.29,.065),cap(-.04,.04,-.23,.1,.055),cap(.04,.04,.23,.1,.055)]),
   attacker:profile([cap(0,-.36,0,.32,.09),cap(-.1,-.03,-.37,.13,.09),cap(.1,-.03,.37,.13,.09)]),
@@ -61,7 +61,7 @@ function transform(key:object,p:AircraftHitboxProfile,x:number,y:number,size:num
 }
 export const getPlayerHitbox=(w:CombatWorld)=>transform(w,PLAYER_HITBOX_PROFILES[w.aircraft.aircraftId],w.playerX,w.playerY,PLAYER_AIRFRAME_SIZE[w.aircraft.aircraftId],0);
 export const enemyAirframeRotation=(e:EnemyEntity)=>e.type==="kamikaze"?e.airframeRotation??Math.PI:Math.PI;
-const TEMPEST_HITBOX_PROFILE=profile([cap(0,-.17,0,.17,.08),cap(-.10,0,-.48,0,.045),cap(.10,0,.48,0,.045)]);
+const TEMPEST_HITBOX_PROFILE=profile([cap(0,-.32,0,.32,.13),cap(-.1,-.17,-.22,.2,.075),cap(.1,-.17,.22,.2,.075),cap(-.18,0,-.4,0,.055),cap(.18,0,.4,0,.055)]);
 export const getEnemyHitbox=(e:EnemyEntity)=>{
   const tempest=e.type==="boss" && !!e.magnetic;
   return transform(e,tempest?TEMPEST_HITBOX_PROFILE:ENEMY_HITBOX_PROFILES[e.type],e.x,e.y,e.radius*(e.type==="boss"&&!tempest?BOSS_VISUAL_WIDTH_SCALE:2.8),enemyAirframeRotation(e));

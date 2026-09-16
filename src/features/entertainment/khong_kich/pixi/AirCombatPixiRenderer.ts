@@ -1,4 +1,5 @@
-import { paintMagnetic, usesMagneticArt } from "../airCombatMagnetic";
+import { STAGE2_ENEMY_ART, TEMPEST_WEAKPOINT_ART } from "../airCombatStage2Art";
+import { paintMagnetic, magneticEnemyDisabled } from "../airCombatMagnetic";
 import { getPlayerExhaust, hawkEyeExhaustTransform } from "../airCombatArtwork";
 import { paintTacticalCores, paintElitePatternWarning, type TacticalPainter } from "../airCombatTacticalVisuals";
 import { enemyAllegiance } from "../airCombatRuntime";
@@ -41,6 +42,8 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
   private resourceText = new Text({ text: "", style: { fontFamily: "Arial", fontSize: 6.4, fontWeight: "bold", fill: 0xffffff, stroke: { color: 0x06101f, width: 1 } } });
   private damageText = new AirCombatDamageText();
   private sky: AirCombatSky;
+  private magneticEndAge = 0;
+  private magneticSprites: AirCombatSpritePool;
   private enemies: AirCombatSpritePool;
   private projectiles: AirCombatSpritePool;
   private missiles: AirCombatMissilePool;
@@ -105,6 +108,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     host.appendChild(app.canvas);
     app.canvas.addEventListener("webglcontextlost", this.onLost);
     this.sky = new AirCombatSky(assets);
+    this.magneticSprites = new AirCombatSpritePool(this.effects, 512);
     app.stage.addChild(this.root);
     this.root.addChild(this.sky.root, this.telegraphs, this.smokeLayer, this.actors, this.effects, this.enemyStatusLayer, this.hitbox, this.damageText.root);
     // Separate stage branch: neither recoil nor camera shake can move status bars.
@@ -164,7 +168,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
         if (event.shieldAbsorbed > 0 && event.target !== "player") this.vfx.spawn("shield", event.x, event.y, 40, .25, 0xc9f3ff);
         if (event.target === "enemy" && event.hpDamage > 0 && event.critical) {
           if (event.entityId !== undefined) this.flashUntil.set(event.entityId, this.clock + 0.14);
-          this.vfx.spawn("sparks", event.x, event.y, reducedMotion ? 18 : 25, 0.22, 0xff8080);
+          this.vfx.spawn(world.magnetic ? "electricImpact" : "sparks", event.x, event.y, reducedMotion ? 18 : 25, 0.22, world.magnetic ? 0xffffff : 0xff8080);
         }
       } else if (event.kind === "lightning") {
         this.vfx.lightning(event.id, event.fromX ?? event.x, event.fromY ?? event.y - 40, event.x, event.y, reducedMotion);
@@ -204,6 +208,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
         this.vfx.spawn("muzzle", event.x, event.y, 12, .08, 0xfff3c9);
         if (!reducedMotion) this.vfx.spawn("sparks", event.x, event.y, 22, .22);
       } else if (event.kind === "explosion") {
+        if (event.magneticDeath) continue;
         this.vfx.spawn(event.boss ? "bossExplosion" : event.size > 65 ? "largeExplosion" : event.size > 40 ? "mediumExplosion" : "smallExplosion", event.x, event.y, event.size * 1.5, event.boss ? 1.1 : 0.5);
         this.vfx.spawn("charge", event.x, event.y, Math.min(90, event.size), .12, 0xffedbc);
         this.vfx.spawn("shockwave", event.x, event.y, event.size * 1.7, .42, 0xffc78e);
@@ -246,20 +251,34 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
       line:(ax,ay,bx,by,color,alpha,width)=>{this.telegraphs.moveTo(ax,ay).lineTo(bx,by).stroke({color,alpha,width});}
     };
     paintTacticalCores(world,tacticalPainter,reducedMotion);
-    paintMagnetic(world,tacticalPainter,reducedMotion);
+    if (world.ended) this.magneticEndAge += delta;
+    this.magneticSprites.begin();
+    paintMagnetic(world, { label: tacticalPainter.label,
+      sprite: (id, key, x, y, width, height, rotation = 0, alpha = 1, tint = 0xffffff) => {
+        const sprite = this.magneticSprites.get(id, this.assets.effect(key));
+        if (!sprite) return;
+        sprite.position.set(x,y); sprite.width=width; sprite.height=height;
+        sprite.rotation=rotation; sprite.alpha=alpha; sprite.tint=tint;
+      }
+    }, reducedMotion, world.elapsed + this.magneticEndAge);
+    this.magneticSprites.end();
     for(let i=labelCount;i<this.enemyStatusLabels.length;i++)this.enemyStatusLabels[i].visible=false;
     this.enemies.begin();
     this.engines.begin();
     for (const enemy of world.enemies) {
-      const sprite = this.enemies.get(enemy.id, this.assets.texture(ENEMY_VISUALS[enemy.type]));
+      const magnetic = !!world.magnetic;
+      const exposed = magnetic && enemy.type === "boss" && world.enemies.filter(e => e.type === "satellite" && !magneticEnemyDisabled(world,e)).length <= 2;
+      const frame = exposed ? TEMPEST_WEAKPOINT_ART : magnetic ? STAGE2_ENEMY_ART[enemy.type]! : ENEMY_VISUALS[enemy.type];
+      const sprite = this.enemies.get(enemy.id, this.assets.texture(frame));
       if (!sprite) continue;
       sprite.position.set(enemy.x, enemy.y);
-      sprite.visible = !usesMagneticArt(world, enemy);
-      sprite.width = enemy.radius * (enemy.type === "boss" ? BOSS_VISUAL_WIDTH_SCALE : 2.8);
-      sprite.height = sprite.width * (enemy.type === "boss" ? BOSS_VISUAL_ASPECT : sprite.texture.height / sprite.texture.width);
+      sprite.visible = enemy.hp > 0;
+      sprite.width = enemy.radius * (enemy.type === "boss" && !magnetic ? BOSS_VISUAL_WIDTH_SCALE : 2.8);
+      sprite.height = sprite.width * (magnetic ? 1 : enemy.type === "boss" ? BOSS_VISUAL_ASPECT : sprite.texture.height / sprite.texture.width);
       sprite.rotation = Math.PI;
       sprite.tint = enemyAllegiance(world,enemy)==="friendly_hacked" ? 0x67e8f9 : this.flashUntil.has(enemy.id) ? 0xffe1b3 : enemy.type === "acid_bomber" ? 0xa3e635 : enemy.type === "jammer" ? 0x2dd4bf : enemy.type === "sniper" ? 0xe879f9 : enemy.type === "radar_hunter" ? 0x38bdf8 : 0xffffff;
-      if(enemy.shield>0 || enemy.aegisUntil>world.aircraft.coreState.time)this.telegraphs.circle(enemy.x,enemy.y,enemy.radius+7).fill({color:0x38bdf8,alpha:.12}).stroke({color:0x7dd3fc,width:2,alpha:.85});
+      if(magneticEnemyDisabled(world,enemy)){sprite.tint=0x475569;sprite.alpha=.45;}
+      if(!magnetic && (enemy.shield>0 || enemy.aegisUntil>world.aircraft.coreState.time))this.telegraphs.circle(enemy.x,enemy.y,enemy.radius+7).fill({color:0x38bdf8,alpha:.12}).stroke({color:0x7dd3fc,width:2,alpha:.85});
       if(enemy.stun>0)this.telegraphs.circle(enemy.x,enemy.y-enemy.radius-7,5).stroke({color:0xfde047,width:2});
       if(enemy.burn>0&&!reducedMotion&&damageSmoke)this.vfx.spawn("fire",enemy.x,enemy.y,24,.3);
       if (!world.ended && enemy.hp>0 && enemy.type === "kamikaze" && (enemy.kamikazeState === "charge" || enemy.kamikazeState === "dash")) {
@@ -276,7 +295,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
           this.telegraphs.moveTo(edge,enemy.y+20).lineTo(edge,GAMEPLAY_SAFE_RECT.bottom).stroke({color:0x67e8f9,width:1.5,alpha:.65});
         }
       }
-      if (enemy.type === "boss") {
+      if (enemy.type === "boss" && !magnetic) {
         const entrance = reducedMotion ? 1 : Math.min(1, enemy.age / 0.8);
         sprite.width *= 0.8 + entrance * 0.2;
         sprite.height *= 0.8 + entrance * 0.2;
@@ -293,7 +312,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
           this.vfx.spawn("damageSmoke", enemy.x - enemy.radius * 0.5, enemy.y, 44, 0.6, 0xffffff, -18);
           if (enemy.hp / enemy.maxHp < 0.25) this.vfx.spawn("fire", enemy.x + enemy.radius * 0.5, enemy.y, 32, 0.3);
         }
-      } else {
+      } else if (enemy.type !== "boss") {
         const health = this.healthBars.get(enemy.id, enemy.hp, enemy.maxHp, enemy.shieldUntil > world.aircraft.coreState.time ? enemy.shield : 0);
         const w = Math.max(24, Math.min(70, enemy.radius * 2.2));
         const x = trackingBarX(enemy.x, w), y = Math.min(635, enemy.y + sprite.height / 2 + 5);
@@ -326,7 +345,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     this.missileSmoke.end();
     this.missiles.begin();
     for (const p of world.projectiles) {
-      if (p.magnetic) continue; // Shared magnetic painter owns phase cues and disc geometry.
+      if (world.magnetic && p.owner === "enemy" && p.magneticVisual) continue; // Shared atlas painter owns magnetic rounds.
       const missile = p.projectileKind !== "bullet";
       if (missile) this.missiles.render(p,reducedMotion);
       else {
@@ -599,6 +618,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     this.damageText.destroy();
     this.healthBars.clear();
     this.app.canvas.removeEventListener("webglcontextlost", this.onLost);
+    this.magneticSprites.destroy();
     this.enemies.destroy(); this.missileSmoke.destroy(); this.projectiles.destroy(); this.missiles.destroy(); this.projectileGlows.destroy(); this.afterimages.destroy(); this.companions.destroy(); this.warnings.destroy(); this.engines.destroy(); this.vfx.destroy();
     this.app.destroy(true, { children: true, texture: false, textureSource: false });
     this.assets.destroy();

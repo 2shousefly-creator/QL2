@@ -1,4 +1,6 @@
-import { paintMagnetic, usesMagneticArt } from "./airCombatMagnetic";
+import { STAGE2_ART_URLS, STAGE2_ENEMY_ART, STAGE2_VFX_ART, TEMPEST_WEAKPOINT_ART } from "./airCombatStage2Art";
+import type { AtlasFrame } from "./pixi/airCombatPixiTypes";
+import { paintMagnetic, magneticEnemyDisabled } from "./airCombatMagnetic";
 import { paintTacticalCores, paintElitePatternWarning, type TacticalPainter } from "./airCombatTacticalVisuals";
 import { enemyAllegiance } from "./airCombatRuntime";
 import aircraftAtlasUrl from "../../../assets/khong-kich/v2/aircraft-atlas.png";
@@ -33,6 +35,29 @@ function airframeImage(fortress:boolean) {
   let img=fortress?fortressImage:aircraftImage;
   if(!img){img=new Image();img.src=fortress?fortressAtlasUrl:aircraftAtlasUrl;if(fortress)fortressImage=img;else aircraftImage=img;}
   return img.complete&&img.naturalWidth>0?img:null;
+}
+const magneticImages = new Map<string, HTMLImageElement>();
+function magneticImage(url: string) {
+  let image = magneticImages.get(url);
+  if (!image) { image = new Image(); image.src = url; magneticImages.set(url, image); }
+  return image.complete && image.naturalWidth > 0 ? image : null;
+}
+/** Resolve the mandatory atlas before releasing the battle loading pause. */
+export async function loadMagneticCanvasAssets() {
+  await Promise.all([STAGE2_ART_URLS.enemy, STAGE2_ART_URLS.vfx, STAGE2_ART_URLS.storm].map(async url => {
+    magneticImage(url);
+    const image = magneticImages.get(url)!;
+    await image.decode();
+  }));
+}
+function drawMagneticFrame(ctx: CanvasRenderingContext2D, frame: AtlasFrame, x: number, y: number,
+  width: number, height: number, rotation = 0, alpha = 1) {
+  const image = magneticImage(frame.atlas === "stage2Enemy" ? STAGE2_ART_URLS.enemy : STAGE2_ART_URLS.vfx);
+  if (!image) return;
+  const [sx,sy,sw,sh] = frame.rect;
+  ctx.save(); ctx.globalAlpha = alpha; ctx.translate(x,y); ctx.rotate(rotation);
+  ctx.drawImage(image, sx*image.naturalWidth, sy*image.naturalHeight, sw*image.naturalWidth, sh*image.naturalHeight, -width/2, -height/2, width, height);
+  ctx.restore();
 }
 function traceProfile(ctx:CanvasRenderingContext2D,p:AircraftHitboxProfile,size:number) {
   ctx.beginPath();
@@ -335,12 +360,20 @@ export function drawLegacyWorld(
   reducedMotion: boolean,
   damageLabels: readonly DamageLabel[],
   healthBars: HealthBarPresentation,
-  accents: CanvasCombatAccents
+  accents: CanvasCombatAccents,
+  presentationTime = world.elapsed
 ): void {
   const { width, height, hudHeight } = AIR_COMBAT_WORLD;
   const aircraft = AIRCRAFT_CONFIGS[aircraftId];
-  drawTerrain(ctx, world, reducedMotion);
-  if (world.stage.runtime === "magnetic") { ctx.fillStyle = "rgba(16,29,88,.68)"; ctx.fillRect(0,0,width,height); }
+  if (world.magnetic) {
+    ctx.fillStyle = "#07112c"; ctx.fillRect(0,0,width,height);
+    const image = magneticImage(STAGE2_ART_URLS.storm);
+    if (image) {
+      const offset = reducedMotion ? 0 : Math.sin(world.elapsed * .035) * 14;
+      ctx.drawImage(image, -24, -30 + offset, 408, 700);
+      ctx.fillStyle = "rgba(3,8,25,.22)"; ctx.fillRect(0,0,width,height);
+    }
+  } else drawTerrain(ctx, world, reducedMotion);
 
   ctx.fillStyle = "rgba(2,6,23,.98)";
   ctx.fillRect(0, 0, width, hudHeight);
@@ -384,7 +417,9 @@ export function drawLegacyWorld(
     line:(ax,ay,bx,by,color,alpha,width)=>{ctx.save();ctx.globalAlpha=alpha;ctx.strokeStyle=`#${color.toString(16).padStart(6,"0")}`;ctx.lineWidth=width;ctx.beginPath();ctx.moveTo(ax,ay);ctx.lineTo(bx,by);ctx.stroke();ctx.restore();}
   };
   paintTacticalCores(world,tacticalPainter,reducedMotion);
-  paintMagnetic(world,tacticalPainter,reducedMotion);
+  paintMagnetic(world, { label: tacticalPainter.label,
+    sprite: (_id,key,x,y,w,h,rotation=0,alpha=1) => drawMagneticFrame(ctx, STAGE2_VFX_ART[key], x,y,w,h,rotation,alpha)
+  }, reducedMotion, presentationTime);
   for (const warning of world.warnings) {
     if(paintElitePatternWarning(warning,tacticalPainter))continue;
     if(warning.allegiance==="friendly_hacked"){
@@ -482,7 +517,7 @@ export function drawLegacyWorld(
   }
   ctx.restore();
   for (const projectile of world.projectiles) {
-    if (projectile.magnetic) continue;
+    if (world.magnetic && projectile.owner === "enemy" && projectile.magneticVisual) continue;
     const missile = projectile.projectileKind !== "bullet";
     const basic = !missile ? getBasicAmmoVisual(projectile.ammoVisualKey) : null;
     if (projectile.owner === "enemy" && projectile.appearance === "boss" && (missile ? projectile.missileAge < .15 : projectile.lifetime > 5.88)) {
@@ -534,6 +569,7 @@ export function drawLegacyWorld(
   ctx.shadowBlur = 0;
 
   for (const enemy of world.enemies) {
+    if (enemy.hp <= 0) continue;
     if (!world.ended && enemy.hp>0 && enemy.type === "kamikaze" && (enemy.kamikazeState === "charge" || enemy.kamikazeState === "dash")) {
       ctx.strokeStyle = enemyAllegiance(world,enemy)==="friendly_hacked"?"#67e8f9":`rgba(250,204,21,${reducedMotion ? .6 : 0.55 + Math.sin(world.elapsed * 15) * 0.15})`;
       ctx.lineWidth = 2;
@@ -548,8 +584,13 @@ export function drawLegacyWorld(
     }
     ctx.save();ctx.translate(enemy.x,enemy.y);
     if(enemy.type==="kamikaze")ctx.rotate(enemyAirframeRotation(enemy)-Math.PI);
-    if (!usesMagneticArt(world, enemy)) drawEnemyGlyph(ctx, enemy.type, 0, 0, enemy.radius);ctx.restore();
-    if(enemy.shield>0||enemy.aegisUntil>world.aircraft.coreState.time){ctx.strokeStyle="#7dd3fc";ctx.lineWidth=2;ctx.beginPath();ctx.arc(enemy.x,enemy.y,enemy.radius+7,0,Math.PI*2);ctx.stroke();}
+    if (world.magnetic) {
+      const exposed = enemy.type === "boss" && world.enemies.filter(e => e.type === "satellite" && !magneticEnemyDisabled(world,e)).length <= 2;
+      const frame = exposed ? TEMPEST_WEAKPOINT_ART : STAGE2_ENEMY_ART[enemy.type];
+      if (frame) drawMagneticFrame(ctx, frame, 0, 0, enemy.radius*2.8, enemy.radius*2.8, Math.PI, magneticEnemyDisabled(world,enemy) ? .3 : 1);
+    } else drawEnemyGlyph(ctx, enemy.type, 0, 0, enemy.radius);
+    ctx.restore();
+    if(!world.magnetic && (enemy.shield>0||enemy.aegisUntil>world.aircraft.coreState.time)){ctx.strokeStyle="#7dd3fc";ctx.lineWidth=2;ctx.beginPath();ctx.arc(enemy.x,enemy.y,enemy.radius+7,0,Math.PI*2);ctx.stroke();}
     if(enemy.stun>0){ctx.strokeStyle="#fde047";ctx.beginPath();ctx.arc(enemy.x,enemy.y-enemy.radius-7,5,0,Math.PI*2);ctx.stroke();}
     if(!world.ended&&enemy.hp>0&&enemy.type==="kamikaze"&&(enemy.kamikazeState==="charge"||enemy.kamikazeState==="dash")){
       const committed=enemy.kamikazeState==="dash"&&enemy.dashCommitted;
