@@ -17,28 +17,6 @@
 .combat-selection-stats > div { display: flex; justify-content: space-between; gap: 4px; min-width: 0; }
 .combat-selection-stats dt { color: #94a3b8; }
 .combat-selection-stats dd { color: #e2e8f0; font-weight: 700; margin: 0; }
-.combat-core-card { isolation: isolate; color: #f8fafc; }
-.combat-core-card > span:not(.absolute) { position: relative; z-index: 1; }
-.combat-core-card[data-core-tier="silver"] {
-  background: repeating-linear-gradient(115deg, #ffffff04 0px, #ffffff04 1px, transparent 1px, transparent 5px), linear-gradient(130deg, #708398, #26384c 45%, #101b2d);
-  border-color: #b5c6d9; box-shadow: inset 0 1px 0 #e5efff80, inset 0 0 26px #c9e1ff12, 0 4px 18px #91b0ca24;
-}
-.combat-core-card[data-core-tier="gold"] {
-  background: radial-gradient(ellipse at 10% 5%, #ffc75355, transparent 55%), linear-gradient(125deg, #85601c, #453012 42%, #1c1a16 85%);
-  border-color: #e8bb56; box-shadow: inset 0 1px 0 #ffeab3a6, inset 0 0 28px #fbbf2422, 0 5px 24px #fbbf2433;
-}
-.combat-core-card[data-core-tier="diamond"] {
-  background: linear-gradient(145deg, transparent 28%, #b8f3ff1c 28%, transparent 43%), linear-gradient(35deg, transparent 48%, #d0c3ff17 48%, transparent 68%), radial-gradient(ellipse at 0% 0%, #16bedb77, transparent 66%), linear-gradient(120deg, #154962, #25244e 55%, #101c35);
-  border-color: #99f6ff; box-shadow: inset 0 1px 0 #e0ffffcc, inset 0 0 34px #67e8f91f, 0 5px 28px #67e8f947;
-}
-.combat-core-card .combat-core-icon { width: 64px; height: 64px; }
-.combat-core-card .combat-core-name { white-space: normal; overflow-wrap: anywhere; }
-@media (max-width: 380px) {
-  .combat-core-card { grid-template-columns: 48px minmax(0, 1fr); gap: 8px; padding: 10px; }
-  .combat-core-card .combat-core-icon { width: 48px; height: 48px; }
-  .combat-core-card > span:nth-child(2) { width: 48px; height: 48px; }
-}
-
 .air-core-list-button { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; color:#a5f3fc; }
 .air-core-list-button span { font-size:9px; font-weight:700; }
 .air-owned-core { border:1px solid; border-radius:14px; padding:14px; }
@@ -56,23 +34,6 @@
 .air-core-slot--empty { justify-content:center; border:1px dashed #64748b55; background:#101a2866; color:#64748b; }
 .air-core-detail { overflow-y:auto; min-height:0; border:1px solid #64748b66; border-radius:10px; padding:10px; background:#0b172b; color:#f1f5f9; overscroll-behavior:contain; }
 .air-core-number { color:#fff4b3; font-weight:750; text-shadow:0 1px 2px #000; }
-/* Two composited decorative layers per choice, never animation of combat state. */
-.combat-core-card::before, .combat-core-card::after { content:""; position:absolute; pointer-events:none; z-index:0; }
-.combat-core-card::before { inset:-60% -40%; background:linear-gradient(110deg,transparent 38%,#fff3 49%,transparent 59%); transform:translateX(-75%); animation:air-core-sweep 7s ease-in-out infinite; }
-.combat-core-card[data-core-tier="silver"]::before { opacity:.45; animation-duration:9s; }
-.combat-core-card[data-core-tier="gold"]::before { background:linear-gradient(110deg,transparent 38%,#ffe09c55 49%,transparent 59%); animation-duration:5s; }
-.combat-core-card[data-core-tier="gold"]::after { inset:0; background:radial-gradient(circle at 93% 16%,#ffe8a3 0 1px,transparent 2px),radial-gradient(circle at 7% 85%,#ffd780 0 1px,transparent 2px),radial-gradient(circle at 73% 93%,#fff1c2 0 1px,transparent 2px); animation:air-core-spark 3.4s ease-in-out infinite; }
-.combat-core-card[data-core-tier="diamond"] { animation:air-core-enter .35s ease-out both; }
-.combat-core-card[data-core-tier="diamond"]::before { inset:0; border:2px solid transparent; border-radius:inherit; background:conic-gradient(from var(--air-core-angle),#67e8f9,#f0abfc,#c4b5fd,#e0ffff,#67e8f9) border-box; mask:linear-gradient(#fff 0 0) padding-box,linear-gradient(#fff 0 0); mask-composite:exclude; transform:none; animation:air-core-circuit 3s ease-in-out infinite; }
-.combat-core-card[data-core-tier="diamond"]::after { inset:0; background:radial-gradient(circle at 95% 13%,#fff 0 1px,#67e8f980 2px,transparent 6px),radial-gradient(circle at 5% 85%,#fff 0 1px,#c4b5fd80 2px,transparent 5px); animation:air-core-spark 2.2s ease-in-out infinite; }
-@keyframes air-core-sweep { 0%,25% { transform:translateX(-75%); } 70%,100% { transform:translateX(75%); } }
-@keyframes air-core-spark { 0%,100% { opacity:.35; } 50% { opacity:.9; } }
-@property --air-core-angle { syntax:"<angle>"; inherits:false; initial-value:0deg; }
-@keyframes air-core-circuit { 0% { --air-core-angle:0deg; opacity:.65; } 50% { --air-core-angle:180deg; opacity:1; } 100% { --air-core-angle:360deg; opacity:.65; } }
-@keyframes air-core-enter { from { opacity:0; transform:translateY(5px) scale(.985); } to { opacity:1; transform:none; } }
-[data-core-selection][data-reduced-motion="true"] .combat-core-card,
-[data-core-selection][data-reduced-motion="true"] .combat-core-card::before,
-[data-core-selection][data-reduced-motion="true"] .combat-core-card::after { animation:none; }
 .air-core-toasts { pointer-events:none; position:absolute; left:2%; top:31.25%; width:max-content; max-width:94%; z-index:9; }
 .air-core-toast { pointer-events:none; position:absolute; inset:0 auto auto 0; width:max-content; max-width:94cqw; padding:0; border:0; border-radius:0; background:none; color:#eef7ff; font-size:clamp(8px,2.5cqw,13px); line-height:1.15; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; text-shadow:0 1px 3px #020617,0 0 2px #020617; transition:transform .18s ease-out; }
 .air-core-toast[data-tier="gold"] { color:#fde68a; }
@@ -136,8 +97,8 @@
 .air-boss-health > div {--cut:min(3px,45%);clip-path:polygon(var(--cut) 0,100% 0,100% calc(100% - var(--cut)),calc(100% - var(--cut)) 100%,0 100%,0 var(--cut));}
 .air-boss-phase-marker {position:absolute;inset-block:0;z-index:3;width:1px;background:#ffecd1;box-shadow:0 0 2px #000;}
 .combat-core-card {border-radius:0!important;clip-path:polygon(14px 0,100% 0,100% calc(100% - 14px),calc(100% - 14px) 100%,0 100%,0 14px);}
-.combat-core-card > span:nth-child(2),.combat-core-card .rounded-full,.combat-core-card .rounded-lg {border-radius:0;}
-.combat-core-card > span:nth-child(2) {clip-path:polygon(9px 0,100% 0,100% calc(100% - 9px),calc(100% - 9px) 100%,0 100%,0 9px);border-color:currentColor;}
+
+
 .combat-core-card:hover,.combat-core-card:focus-visible {filter:brightness(1.15);outline:2px solid #e0faff;outline-offset:-4px;}
 .combat-core-card:active {filter:brightness(1.3);}
 .core-semantic-icon {display:inline-grid;place-items:center;isolation:isolate;background:linear-gradient(145deg,#7696ad30,#071321);border:1px solid #a0d3e46b;clip-path:polygon(6px 0,100% 0,100% calc(100% - 6px),calc(100% - 6px) 100%,0 100%,0 6px);color:inherit;}
@@ -160,3 +121,36 @@
 
 .air-status-icon[data-timer-kind="cooldown"] { color:#fbbf24; border-color:#fbbf2480; }
 .air-status-icon[data-timer-kind="cooldown"] .air-status-timer { color:#fde68a; }
+
+/* Selection shares the dialog's focus trap, but has no surrounding modal frame. */
+.app-overlay.air-upgrade-overlay { background:rgba(2,4,10,.84); padding:16px 8px; animation:air-upgrade-fade 140ms ease-out both; }
+.air-upgrade-overlay .app-overlay__panel.air-upgrade-panel { width:min(344px,calc(100vw - 16px)); max-width:100%; max-height:calc(100dvh - 32px); min-height:0; padding:0; border:0; border-radius:0; background:none; box-shadow:none; overflow-y:auto; overflow-x:hidden; gap:16px; clip-path:none; animation:none; }
+.air-upgrade-panel::before,.air-upgrade-panel::after { display:none!important; }
+.air-upgrade-panel h2 { margin:0; text-align:center; color:#f8f9ff; font-size:19px; font-weight:850; letter-spacing:.07em; animation:air-upgrade-fade 180ms ease-out both; }
+.air-upgrade-choices { display:grid; gap:10px; width:100%; padding:2px; box-sizing:border-box; }
+.air-upgrade-row { display:grid; grid-template-columns:minmax(0,1fr) 44px; align-items:center; gap:8px; min-width:0; animation:air-upgrade-enter 240ms cubic-bezier(.2,.8,.25,1.08) calc(var(--slot)*70ms) both; }
+.air-upgrade-card.combat-core-card { position:relative; display:grid; grid-template-columns:38px minmax(0,1fr); gap:8px; width:100%; min-width:0; min-height:106px; padding:13px 10px; border:1px solid; text-align:left; overflow:hidden; isolation:isolate; touch-action:manipulation; }
+.air-upgrade-card .combat-core-icon { width:38px; height:38px; align-self:center; }
+.air-upgrade-copy { min-width:0; position:relative; z-index:1; }
+.air-upgrade-copy .combat-core-name { display:block; font-size:14px; font-weight:800; line-height:1.2; overflow-wrap:anywhere; }
+.air-upgrade-description { display:block; margin-top:5px; font-size:11px; line-height:1.35; color:#f0f0f4; overflow-wrap:anywhere; }
+.combat-core-card[data-core-tier="silver"],.air-owned-core--silver { background:linear-gradient(135deg,#26292f,#14161a); border-color:#a7adb5; color:#f2f3f5; box-shadow:inset 0 1px #ffffff18; }
+.combat-core-card[data-core-tier="gold"],.air-owned-core--gold { background:linear-gradient(135deg,#4a310b,#1a1105); border-color:#e9b949; color:#fff0bd; box-shadow:inset 0 1px #ffe7a852; }
+.combat-core-card[data-core-tier="diamond"],.air-owned-core--diamond { background:linear-gradient(135deg,#0b102a,#1b2057); border-color:#8ff8ff; color:#eef5ff; box-shadow:inset 0 0 0 1px #b9a7ff55,inset 0 0 16px #b9a7ff18,0 0 8px #8ff8ff18; }
+.air-owned-core--silver .core-semantic-icon,.combat-core-card[data-core-tier="silver"] .core-semantic-icon { border-color:#a7adb577; background:#25272d; }
+.air-owned-core--silver svg,.combat-core-card[data-core-tier="silver"] svg { filter:none; }
+.air-upgrade-card[data-core-tier="diamond"]::after { content:""; position:absolute; inset:-60% -40%; z-index:0; pointer-events:none; background:linear-gradient(110deg,transparent 42%,#b9a7ff40 49%,#8ff8ff30 53%,transparent 60%); transform:translateX(-100%); animation:air-upgrade-sheen 650ms ease-out 460ms both; }
+.air-core-reroll { display:grid; place-items:center; width:44px; height:44px; min-height:44px; padding:0; border:1px solid #b9c1cf80; border-radius:6px; background:#1c2230; font-size:22px; touch-action:manipulation; }
+.air-core-reroll:hover:enabled,.air-core-reroll:focus-visible { background:#323c50; outline:2px solid #e7f0ff; outline-offset:2px; }
+.air-core-reroll:active:enabled { transform:scale(.94); }
+.air-core-reroll:disabled { opacity:.3; cursor:default; }
+.air-core-reroll[data-used="true"] span { animation:air-reroll-spin 180ms ease-out; }
+.air-upgrade-card[data-rerolled="true"] { animation:air-upgrade-swap 180ms ease-out both; }
+@keyframes air-upgrade-enter { from { opacity:0; transform:translateY(18px) scale(.96); } to { opacity:1; transform:none; } }
+@keyframes air-upgrade-fade { from { opacity:0; } to { opacity:1; } }
+@keyframes air-upgrade-swap { from { opacity:.2; transform:scale(.97); } to { opacity:1; transform:none; } }
+@keyframes air-reroll-spin { to { transform:rotate(360deg); } }
+@keyframes air-upgrade-sheen { to { transform:translateX(100%); } }
+.air-upgrade-overlay[data-reduced-motion="true"] .air-upgrade-row,.air-upgrade-overlay[data-reduced-motion="true"] .air-upgrade-card[data-rerolled="true"] { animation:air-upgrade-fade 140ms ease-out both; }
+.air-upgrade-overlay[data-reduced-motion="true"] .air-upgrade-card::after,.air-upgrade-overlay[data-reduced-motion="true"] .air-core-reroll span { animation:none; }
+@media(prefers-reduced-motion:reduce) { .air-upgrade-row,.air-upgrade-card[data-rerolled="true"] { animation:air-upgrade-fade 140ms ease-out both!important; } .air-upgrade-card::after,.air-core-reroll span { animation:none!important; } }

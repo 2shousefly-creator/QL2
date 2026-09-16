@@ -1,3 +1,4 @@
+import { SKILL_CORE_DESCRIPTIONS } from "./airCombatSkillCores";
 import type { CoreDefinition } from "./airCombatTypes";
 
 // Canonical Appendix B, workbook row numbers are stable run-local identifiers.
@@ -1467,5 +1468,437 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
     "tiers": [
       "diamond"
     ]
-  }
+  },
+{
+  "id": "core_122",
+  "name": "Thu Hồi Nhiệt Dư",
+  "description": SKILL_CORE_DESCRIPTIONS[122],
+  "system": "Kỹ Năng",
+  "icon": "skill:decoy",
+  "category": "skill",
+  "tiers": [
+    "diamond"
+  ],
+  "aircraftIds": [
+    "black_eagle"
+  ],
+  "skillId": "decoy",
+  "skillSlot": 1
+},
+{
+  "id": "core_123",
+  "name": "Mồi Phản Chấn",
+  "description": SKILL_CORE_DESCRIPTIONS[123],
+  "system": "Kỹ Năng",
+  "icon": "skill:decoy",
+  "category": "skill",
+  "tiers": [
+    "diamond"
+  ],
+  "aircraftIds": [
+    "black_eagle"
+  ],
+  "skillId": "decoy",
+  "skillSlot": 1
+},
+{
+  "id": "core_124",
+  "name": "Màn Che Nhiệt",
+  "description": SKILL_CORE_DESCRIPTIONS[124],
+  "system": "Kỹ Năng",
+  "icon": "skill:decoy",
+  "category": "skill",
+  "tiers": [
+    "diamond"
+  ],
+  "aircraftIds": [
+    "black_eagle"
+  ],
+  "skillId": "decoy",
+  "skillSlot": 1
+},
+{
+  "id": "core_125",
+  "name": "Hăng Hái Chiến Đấu",
+  "description": SKILL_CORE_DESCRIPTIONS[125],
+  "system": "Kỹ Năng",
+  "icon": "skill:afterburner",
+  "category": "skill",
+  "tiers": [
+    "diamond"
+  ],
+  "aircraftIds": [
+    "black_eagle"
+  ],
+  "skillId": "afterburner",
+  "skillSlot": 2
+},
+{
+  "id": "core_126",
+  "name": "Hạ Nhiệt Chủ Động",
+  "description": SKILL_CORE_DESCRIPTIONS[126],
+  "system": "Kỹ Năng",
+  "icon": "skill:afterburner",
+  "category": "skill",
+  "tiers": [
+    "diamond"
+  ],
+  "aircraftIds": [
+    "black_eagle"
+  ],
+  "skillId": "afterburner",
+  "skillSlot": 2
+},
+{
+  "id": "core_127",
+  "name": "Đạn Nảy Tăng Áp",
+  "description": SKILL_CORE_DESCRIPTIONS[127],
+  "system": "Kỹ Năng",
+  "icon": "skill:afterburner",
+  "category": "skill",
+  "tiers": [
+    "diamond"
+  ],
+  "aircraftIds": [
+    "black_eagle"
+  ],
+  "skillId": "afterburner",
+  "skillSlot": 2
+},
+{
+  "id": "core_128",
+  "name": "Đáp Ứng Nhanh",
+  "description": SKILL_CORE_DESCRIPTIONS[128],
+  "system": "Kỹ Năng",
+  "icon": "skill:missile_swarm",
+  "category": "skill",
+  "tiers": [
+    "diamond"
+  ],
+  "aircraftIds": [
+    "black_eagle"
+  ],
+  "skillId": "missile_swarm",
+  "skillSlot": 3
+},
+{
+  "id": "core_129",
+  "name": "Hệ Thống Đánh Chặn",
+  "description": SKILL_CORE_DESCRIPTIONS[129],
+  "system": "Kỹ Năng",
+  "icon": "skill:missile_swarm",
+  "category": "skill",
+  "tiers": [
+    "diamond"
+  ],
+  "aircraftIds": [
+    "black_eagle"
+  ],
+  "skillId": "missile_swarm",
+  "skillSlot": 3
+},
+{
+  "id": "core_130",
+  "name": "Dữ Liệu Chiến Thuật",
+  "description": SKILL_CORE_DESCRIPTIONS[130],
+  "system": "Kỹ Năng",
+  "icon": "skill:missile_swarm",
+  "category": "skill",
+  "tiers": [
+    "diamond"
+  ],
+  "aircraftIds": [
+    "black_eagle"
+  ],
+  "skillId": "missile_swarm",
+  "skillSlot": 3
+},
+{
+  "id": "core_131",
+  "name": "Xung Điện EMP",
+  "description": SKILL_CORE_DESCRIPTIONS[131],
+  "system": "Kỹ Năng",
+  "icon": "skill:armor_shield",
+  "category": "skill",
+  "tiers": [
+    "diamond"
+  ],
+  "aircraftIds": [
+    "breaker"
+  ],
+  "skillId": "armor_shield",
+  "skillSlot": 1
+},
+{
+  "id": "core_132",
+  "name": "Thu Hồi Năng Lượng",
+  "description": SKILL_CORE_DESCRIPTIONS[132],
+  "system": "Kỹ Năng",
+  "icon": "skill:armor_shield",
+  "category": "skill",
+  "tiers": [
+    "diamond"
+  ],
+  "aircraftIds": [
+    "breaker"
+  ],
+  "skillId": "armor_shield",
+  "skillSlot": 1
+},
+{
+  "id": "core_133",
+  "name": "Phước Lành Hộ Vệ",
+  "description": SKILL_CORE_DESCRIPTIONS[133],
+  "system": "Kỹ Năng",
+  "icon": "skill:armor_shield",
+  "category": "skill",
+  "tiers": [
+    "diamond"
+  ],
+  "aircraftIds": [
+    "breaker"
+  ],
+  "skillId": "armor_shield",
+  "skillSlot": 1
+},
+{
+  "id": "core_134",
+  "name": "Dư Chấn",
+  "description": SKILL_CORE_DESCRIPTIONS[134],
+  "system": "Kỹ Năng",
+  "icon": "skill:heavy_bomb",
+  "category": "skill",
+  "tiers": [
+    "diamond"
+  ],
+  "aircraftIds": [
+    "breaker"
+  ],
+  "skillId": "heavy_bomb",
+  "skillSlot": 2
+},
+{
+  "id": "core_135",
+  "name": "Dấu Ấn Trọng Pháo",
+  "description": SKILL_CORE_DESCRIPTIONS[135],
+  "system": "Kỹ Năng",
+  "icon": "skill:heavy_bomb",
+  "category": "skill",
+  "tiers": [
+    "diamond"
+  ],
+  "aircraftIds": [
+    "breaker"
+  ],
+  "skillId": "heavy_bomb",
+  "skillSlot": 2
+},
+{
+  "id": "core_136",
+  "name": "Hố Đen",
+  "description": SKILL_CORE_DESCRIPTIONS[136],
+  "system": "Kỹ Năng",
+  "icon": "skill:heavy_bomb",
+  "category": "skill",
+  "tiers": [
+    "diamond"
+  ],
+  "aircraftIds": [
+    "breaker"
+  ],
+  "skillId": "heavy_bomb",
+  "skillSlot": 2
+},
+{
+  "id": "core_137",
+  "name": "Chuyển Đổi Thần Tốc",
+  "description": SKILL_CORE_DESCRIPTIONS[137],
+  "system": "Kỹ Năng",
+  "icon": "skill:sweeping_cannon",
+  "category": "skill",
+  "tiers": [
+    "diamond"
+  ],
+  "aircraftIds": [
+    "breaker"
+  ],
+  "skillId": "sweeping_cannon",
+  "skillSlot": 3
+},
+{
+  "id": "core_138",
+  "name": "Mưa Đỏ",
+  "description": SKILL_CORE_DESCRIPTIONS[138],
+  "system": "Kỹ Năng",
+  "icon": "skill:sweeping_cannon",
+  "category": "skill",
+  "tiers": [
+    "diamond"
+  ],
+  "aircraftIds": [
+    "breaker"
+  ],
+  "skillId": "sweeping_cannon",
+  "skillSlot": 3
+},
+{
+  "id": "core_139",
+  "name": "Bộ Ổn Định Pháo",
+  "description": SKILL_CORE_DESCRIPTIONS[139],
+  "system": "Kỹ Năng",
+  "icon": "skill:sweeping_cannon",
+  "category": "skill",
+  "tiers": [
+    "diamond"
+  ],
+  "aircraftIds": [
+    "breaker"
+  ],
+  "skillId": "sweeping_cannon",
+  "skillSlot": 3
+},
+{
+  "id": "core_140",
+  "name": "Dư Ảnh Phản Kích",
+  "description": SKILL_CORE_DESCRIPTIONS[140],
+  "system": "Kỹ Năng",
+  "icon": "skill:invisibility",
+  "category": "skill",
+  "tiers": [
+    "diamond"
+  ],
+  "aircraftIds": [
+    "phantom"
+  ],
+  "skillId": "invisibility",
+  "skillSlot": 1
+},
+{
+  "id": "core_141",
+  "name": "Ảnh Lưu",
+  "description": SKILL_CORE_DESCRIPTIONS[141],
+  "system": "Kỹ Năng",
+  "icon": "skill:invisibility",
+  "category": "skill",
+  "tiers": [
+    "diamond"
+  ],
+  "aircraftIds": [
+    "phantom"
+  ],
+  "skillId": "invisibility",
+  "skillSlot": 1
+},
+{
+  "id": "core_142",
+  "name": "Đòn Xuất Hiện",
+  "description": SKILL_CORE_DESCRIPTIONS[142],
+  "system": "Kỹ Năng",
+  "icon": "skill:invisibility",
+  "category": "skill",
+  "tiers": [
+    "diamond"
+  ],
+  "aircraftIds": [
+    "phantom"
+  ],
+  "skillId": "invisibility",
+  "skillSlot": 1
+},
+{
+  "id": "core_143",
+  "name": "Lưỡi Hái Tử Thần",
+  "description": SKILL_CORE_DESCRIPTIONS[143],
+  "system": "Kỹ Năng",
+  "icon": "skill:focus_laser",
+  "category": "skill",
+  "tiers": [
+    "diamond"
+  ],
+  "aircraftIds": [
+    "phantom"
+  ],
+  "skillId": "focus_laser",
+  "skillSlot": 2
+},
+{
+  "id": "core_144",
+  "name": "Phá Giáp",
+  "description": SKILL_CORE_DESCRIPTIONS[144],
+  "system": "Kỹ Năng",
+  "icon": "skill:focus_laser",
+  "category": "skill",
+  "tiers": [
+    "diamond"
+  ],
+  "aircraftIds": [
+    "phantom"
+  ],
+  "skillId": "focus_laser",
+  "skillSlot": 2
+},
+{
+  "id": "core_145",
+  "name": "Tia Sáng Chói Lòa",
+  "description": SKILL_CORE_DESCRIPTIONS[145],
+  "system": "Kỹ Năng",
+  "icon": "skill:focus_laser",
+  "category": "skill",
+  "tiers": [
+    "diamond"
+  ],
+  "aircraftIds": [
+    "phantom"
+  ],
+  "skillId": "focus_laser",
+  "skillSlot": 2
+},
+{
+  "id": "core_146",
+  "name": "Đồng Bộ Mục Tiêu",
+  "description": SKILL_CORE_DESCRIPTIONS[146],
+  "system": "Kỹ Năng",
+  "icon": "skill:escort_drone",
+  "category": "skill",
+  "tiers": [
+    "diamond"
+  ],
+  "aircraftIds": [
+    "phantom"
+  ],
+  "skillId": "escort_drone",
+  "skillSlot": 3
+},
+{
+  "id": "core_147",
+  "name": "Hộ Vệ Điện Tử",
+  "description": SKILL_CORE_DESCRIPTIONS[147],
+  "system": "Kỹ Năng",
+  "icon": "skill:escort_drone",
+  "category": "skill",
+  "tiers": [
+    "diamond"
+  ],
+  "aircraftIds": [
+    "phantom"
+  ],
+  "skillId": "escort_drone",
+  "skillSlot": 3
+},
+{
+  "id": "core_148",
+  "name": "Thu Hồi Thông Minh",
+  "description": SKILL_CORE_DESCRIPTIONS[148],
+  "system": "Kỹ Năng",
+  "icon": "skill:escort_drone",
+  "category": "skill",
+  "tiers": [
+    "diamond"
+  ],
+  "aircraftIds": [
+    "phantom"
+  ],
+  "skillId": "escort_drone",
+  "skillSlot": 3
+}
 ];

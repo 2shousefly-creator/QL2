@@ -1,7 +1,7 @@
 import { AIRCRAFT_CONFIGS, CORE_DEFINITIONS, CORE_TIER_CHANCES } from "./airCombatConfig";
 import { getEffectiveAircraftStats } from "./airCombatAircraft";
 import { skillsLocked } from "./airCombatCoreEffects";
-import type { AircraftCombatState, CoreCard, CoreDefinition, CoreTier } from "./airCombatTypes";
+import type { AircraftCombatState, CoreCard, CoreDefinition, CoreTier, SkillId } from "./airCombatTypes";
 const TIERS: CoreTier[] = ["silver", "gold", "diamond"];
 const pick = <T>(pool: readonly T[], random: () => number): T | undefined => pool[Math.min(pool.length - 1, Math.max(0, Math.floor(random() * pool.length)))];
 function weightedTier(valid: CoreTier[], random: () => number): CoreTier | undefined {
@@ -25,7 +25,10 @@ export function generateCoreChoices(state: AircraftCombatState, selectionNumber:
     const skillMilestone = level === 9 || level === 18 || level === 27;
     if (skillMilestone && !skillsLocked(state)) {
         const skill = AIRCRAFT_CONFIGS[state.aircraftId].skillIds[level / 9 - 1];
-        return CORE_DEFINITIONS.filter(c => c.skillId === skill).map(makeCoreCard);
+        const pool = CORE_DEFINITIONS.filter(c => c.skillId === skill && !state.selectedCores.includes(c.id) && !state.modifiers.skillCores[skill]);
+        const choices: CoreCard[] = [];
+        while (pool.length && choices.length < 3) { const core = pick(pool, random)!; pool.splice(pool.indexOf(core), 1); choices.push(makeCoreCard(core)); }
+        return choices;
     }
     const specializedMilestone = skillMilestone && skillsLocked(state);
     let tier: CoreTier | undefined = specializedMilestone ? "diamond" : rollCoreTier(selectionNumber, random);
@@ -82,4 +85,23 @@ export function applyCore(state: AircraftCombatState, card: CoreCard, random: ()
             work.push({}, {});
     }
     return true;
+}
+
+export interface CoreSelectionEvent {
+    originalChoiceIds: string[];
+    currentChoiceIds: string[];
+    rerollUsedBySlot: boolean[];
+    context: { kind: "normal" | "skill" | "specialization"; tier: CoreTier; skillId?: SkillId };
+}
+export function createCoreSelectionEvent(state: AircraftCombatState, choices: CoreCard[]): CoreSelectionEvent {
+    const skillId = CORE_DEFINITIONS.find(c => c.id === choices[0]?.id)?.skillId;
+    const level = state.pendingMilestones[0];
+    return { originalChoiceIds: choices.map(c => c.id), currentChoiceIds: choices.map(c => c.id), rerollUsedBySlot: choices.map(() => false),
+        context: {kind: skillId ? "skill" : [9,18,27].includes(level) && skillsLocked(state) ? "specialization" : "normal", tier: choices[0].tier, skillId} };
+}
+export function getRerollCandidates(state: AircraftCombatState, event: CoreSelectionEvent, slot: number): CoreDefinition[] {
+    if (!Number.isInteger(slot) || slot < 0 || slot >= event.currentChoiceIds.length || event.rerollUsedBySlot[slot]) return [];
+    return CORE_DEFINITIONS.filter(c => !state.selectedCores.includes(c.id) && !event.originalChoiceIds.includes(c.id) && !event.currentChoiceIds.includes(c.id)
+        && (event.context.kind === "skill" ? c.skillId === event.context.skillId && !state.modifiers.skillCores[c.skillId!] && !skillsLocked(state)
+            : !c.skillId && c.tiers[0] === event.context.tier));
 }
