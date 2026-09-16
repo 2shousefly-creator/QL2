@@ -1,3 +1,5 @@
+import { AirCombatMainMenu, AirCombatStageSelect } from "./AirCombatCampaign";
+import { canLaunchStage, defaultSelectedStage, getAirCombatStage } from "./airCombatStages";
 import React, { useEffect, useRef, useState } from "react";
 import {
   ArrowLeft,
@@ -18,12 +20,11 @@ import {
   SKILL_CONFIGS,
 } from "./airCombatConfig";
 import {
-  calculateRunReward,
   createAircraftCombatState,
   getEffectiveAircraftStats,
 } from "./airCombatEngine";
 import {
-  getLocalRewardDateKey,
+  settleAirCombatRun,
   loadAirCombatProfile,
   saveAirCombatProfile,
 } from "./airCombatStorage";
@@ -49,7 +50,7 @@ interface KhongKichScreenProps {
   onBack: () => void;
 }
 
-type Phase = "select" | "playing" | "result";
+type Phase = "menu" | "stages" | "select" | "playing" | "result";
 
 interface AircraftPressState {
   aircraftId: AircraftId;
@@ -68,15 +69,18 @@ export const KhongKichScreen: React.FC<KhongKichScreenProps> = ({
   onUpdateGameState,
   onBack,
 }) => {
-  const [phase, setPhase] = useState<Phase>("select");
+  const [phase, setPhase] = useState<Phase>("menu");
   const [profile, setProfile] = useState<AirCombatProfile>(() => loadAirCombatProfile());
-  const [selectedAircraft, setSelectedAircraft] = useState<AircraftId | null>(null);
+  const [selectedStage, setSelectedStage] = useState(() => defaultSelectedStage(profile.campaign));
+  const stage = getAirCombatStage(selectedStage)!;
+  const [selectedAircraft, setSelectedAircraft] = useState<AircraftId | null>(profile.preferredAircraft);
   const [previewAircraft, setPreviewAircraft] = useState<AircraftId | null>(null);
   const aircraftPressRef = useRef<AircraftPressState | null>(null);
   const [completedRun, setCompletedRun] = useState<{
     summary: AirCombatRunSummary;
     reward: AirCombatReward;
     previousHighScore: number;
+    newlyUnlockedStage?: number;
   } | null>(null);
 
   useEffect(() => {
@@ -84,13 +88,17 @@ export const KhongKichScreen: React.FC<KhongKichScreenProps> = ({
   }, [phase]);
 
   const startRun = () => {
-    if (!selectedAircraft) {
+    if (!selectedAircraft || !canLaunchStage(selectedStage, loadAirCombatProfile().campaign)) {
       soundManager.playError();
       soundManager.triggerHaptic("light");
       return;
     }
     soundManager.playChallengeStart();
     soundManager.triggerHaptic("medium");
+    const nextProfile = { ...loadAirCombatProfile(), preferredAircraft: selectedAircraft };
+    nextProfile.campaign = { ...nextProfile.campaign, lastSelectedStage: selectedStage };
+    saveAirCombatProfile(nextProfile);
+    setProfile(nextProfile);
     setCompletedRun(null);
     setPhase("playing");
   };
@@ -157,15 +165,10 @@ export const KhongKichScreen: React.FC<KhongKichScreenProps> = ({
   };
 
   const finishRun = (summary: AirCombatRunSummary) => {
-    const previousHighScore = profile.highScore;
-    const { reward, nextProfile } = calculateRunReward(
-      summary,
-      profile,
-      getLocalRewardDateKey()
-    );
-    saveAirCombatProfile(nextProfile);
+    const { reward, nextProfile, previousHighScore, firstClear } = settleAirCombatRun(summary);
+    const newlyUnlockedStage = firstClear && getAirCombatStage(summary.stageId + 1) ? summary.stageId + 1 : undefined;
     setProfile(nextProfile);
-    setCompletedRun({ summary, reward, previousHighScore });
+    setCompletedRun({ summary, reward, previousHighScore, newlyUnlockedStage });
 
     onUpdateGameState((draft) => {
       if (!draft.farm) draft.farm = createDefaultFarmState();
@@ -201,12 +204,12 @@ export const KhongKichScreen: React.FC<KhongKichScreenProps> = ({
         data-khong-kich-phase="playing"
       >
         <AirCombatBattle
+          stageId={selectedStage}
           aircraftId={selectedAircraft}
           reducedMotion={gameState.settings.reducedMotion}
           onComplete={finishRun}
           onExit={() => {
-            setSelectedAircraft(null);
-            setPhase("select");
+            setPhase("stages");
           }}
         />
       </ExclusiveFullscreenOverlay>
@@ -224,11 +227,18 @@ export const KhongKichScreen: React.FC<KhongKichScreenProps> = ({
         <AirCombatResult
           {...completedRun}
           onReplay={startRun}
-          onBack={onBack}
+          onBack={() => setPhase("stages")}
+          onNext={getAirCombatStage(completedRun.summary.stageId + 1) && completedRun.summary.stageVictory ? () => { setSelectedStage(completedRun.summary.stageId + 1); setPhase("stages"); } : undefined}
         />
       </ExclusiveFullscreenOverlay>
     );
   }
+
+  if (phase === "menu") return <AirCombatMainMenu reducedMotion={gameState.settings.reducedMotion} onBack={onBack} onStart={() => { setSelectedStage(defaultSelectedStage(profile.campaign)); setPhase("stages"); }} />;
+  if (phase === "stages") return <AirCombatStageSelect progress={profile.campaign} selected={selectedStage} onSelect={setSelectedStage} onBack={() => setPhase("menu")} onAircraft={id => {
+    if (!canLaunchStage(id, loadAirCombatProfile().campaign)) return;
+    setSelectedStage(id); setPhase("select");
+  }} />;
 
   return (
     <div
@@ -239,16 +249,16 @@ export const KhongKichScreen: React.FC<KhongKichScreenProps> = ({
       <div className="tactical-battle-header mb-[clamp(4px,1dvh,10px)] flex items-center justify-between gap-2 border-b border-slate-700/80 pb-2">
         <button
           type="button"
-          onClick={onBack}
+          onClick={() => setPhase("stages")}
           className="flex h-[clamp(28px,3.8dvh,34px)] items-center gap-1 rounded-lg border border-slate-700/80 bg-slate-900/90 px-[clamp(6px,1vw,10px)] text-[clamp(10.5px,1.4dvh,12px)] font-bold text-slate-200 transition-colors hover:bg-slate-800 active:scale-95"
         >
           <ArrowLeft className="h-[clamp(11px,1.5dvh,14px)] w-[clamp(11px,1.5dvh,14px)]" />
-          <span>Giải Trí</span>
+          <span>Chọn màn</span>
         </button>
 
         <div className="flex items-center gap-1 text-[clamp(10.5px,1.4dvh,13px)] font-black uppercase tracking-wider text-sky-300">
           <Crosshair className="h-[clamp(12px,1.6dvh,15px)] w-[clamp(12px,1.6dvh,15px)] text-sky-400" />
-          <span>Không Kích · V2</span>
+          <span>MÀN {String(stage.id).padStart(2, "0")} · {stage.localizedName || stage.displayName}</span>
         </div>
 
         <div className="flex items-center gap-2 text-right">
@@ -265,6 +275,7 @@ export const KhongKichScreen: React.FC<KhongKichScreenProps> = ({
         </div>
       </div>
 
+      <h2 className="text-center text-sm font-black text-white">CHỌN CHIẾN CƠ</h2>
       {/* Aircraft Cards Container */}
       <div className="flex flex-col space-y-[clamp(4px,0.7dvh,8px)] my-[clamp(2px,0.8dvh,8px)]">
         {AIRCRAFT_ORDER.map((aircraftId) => {

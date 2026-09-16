@@ -1,3 +1,4 @@
+import { getAirCombatStage } from "./airCombatStages";
 import React from "react";
 import {
   ArrowLeft,
@@ -22,6 +23,8 @@ interface AirCombatResultProps {
   summary: AirCombatRunSummary;
   reward: AirCombatReward;
   previousHighScore: number;
+  newlyUnlockedStage?: number;
+  onNext?: () => void;
   onReplay: () => void;
   onBack: () => void;
 }
@@ -56,7 +59,10 @@ export const AirCombatResult: React.FC<AirCombatResultProps> = ({
   previousHighScore,
   onReplay,
   onBack,
+  onNext,
+  newlyUnlockedStage,
 }) => {
+  const stage = getAirCombatStage(summary.stageId);
   const aircraft = AIRCRAFT_CONFIGS[summary.aircraftId];
   const isNewRecord = summary.score > previousHighScore;
 
@@ -71,8 +77,11 @@ export const AirCombatResult: React.FC<AirCombatResultProps> = ({
         </div>
         <p className="mt-1 text-xs font-semibold uppercase tracking-[0.22em] text-[var(--modal-info)]">Báo cáo nhiệm vụ</p>
         <h2 className="modal-title">
-          {summary.bossDefeated ? "Pháo Đài Đã Bị Hạ" : summary.destroyed ? "Chiến Cơ Bị Hạ" : "Hết Thời Gian Xuất Kích"}
+          {summary.stageVictory ? `HOÀN THÀNH MÀN ${summary.stageId}` : summary.destroyed ? "Chiến Cơ Bị Hạ" : "Hết Thời Gian Xuất Kích"}
         </h2>
+        <p className="mt-2 font-bold text-cyan-200">{stage?.displayName}</p>
+        <p className="text-sm text-violet-200">{stage?.localizedName}</p>
+        {newlyUnlockedStage && <p className="mt-3 text-sm font-bold text-emerald-300">MÀN {newlyUnlockedStage} ĐÃ ĐƯỢC MỞ KHÓA</p>}
         <p className="mt-1 text-xs text-[var(--modal-muted)]">{aircraft.code} · {aircraft.name} · Cấp chiến đấu {summary.combatLevel}</p>
 
         <div className="mt-2">
@@ -110,8 +119,9 @@ export const AirCombatResult: React.FC<AirCombatResultProps> = ({
 
       </OverlayBody>
       <ModalActions>
-        <ModalButton type="button" onClick={onBack} variant="ghost"><ArrowLeft className="h-4 w-4" /> Giải Trí</ModalButton>
-        <ModalButton type="button" onClick={onReplay} variant="primary"><RefreshCw className="h-4 w-4" /> Xuất Kích Lại</ModalButton>
+        {onNext && <ModalButton type="button" onClick={onNext} variant="primary">MÀN TIẾP THEO</ModalButton>}
+        <ModalButton type="button" onClick={onBack} variant="ghost"><ArrowLeft className="h-4 w-4" /> CHỌN MÀN</ModalButton>
+        <ModalButton type="button" onClick={onReplay} variant="primary"><RefreshCw className="h-4 w-4" /> CHƠI LẠI</ModalButton>
       </ModalActions>
     </GameResultScreen>
   );

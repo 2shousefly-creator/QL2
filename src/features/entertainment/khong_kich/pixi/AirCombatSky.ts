@@ -66,8 +66,8 @@ export class AirCombatSky {
       }
       view.root.y = segment.y;
     }
-    this.atmosphere.tint = terrainColor(0x244c69, 0x1e354e, terrain.bossAtmosphere);
-    this.atmosphere.alpha = .24 + terrain.bossAtmosphere * .06;
+    this.atmosphere.tint = world.stage.runtime === "magnetic" ? 0x101d58 : terrainColor(0x244c69, 0x1e354e, terrain.bossAtmosphere);
+    this.atmosphere.alpha = world.stage.runtime === "magnetic" ? .68 : .24 + terrain.bossAtmosphere * .06;
     this.wind.visible = !reducedMotion;
     this.wind.y = (this.wind.y + delta * 62) % 80;
     for (const cloud of this.clouds) {

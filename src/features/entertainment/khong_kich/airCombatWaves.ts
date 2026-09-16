@@ -1,6 +1,7 @@
 import type { EnemyType } from "./airCombatTypes";
 export interface WaveDefinition {
     label: string;
+    groups?: readonly (readonly EnemyType[])[];
     normal: number;
     elite: number;
     interval: number;
@@ -21,9 +22,10 @@ export const COMBAT_WAVES: readonly WaveDefinition[] = [
     { label: "Đợt thường 5", normal: 5, elite: 0, interval: .42, cap: 20, hp: 1.9, damage: 1.5, armor: 1.25, xpBudget: 2545, counts: { scout: 4, fighter: 10, kamikaze: 12, attacker: 12, bomber: 14, sniper: 14, jammer: 14 } },
     { label: "LEVIATHAN X-99", normal: 5, elite: 0, interval: 1, cap: 1, hp: 1, damage: 1, armor: 1, xpBudget: 0, counts: { boss: 1 } },
 ];
-export const isElite = (type: EnemyType): boolean => ["elite", "iron_fortress", "acid_bomber", "radar_hunter"].includes(type);
-export function createWaveQueue(index: number, random: () => number): EnemyType[] {
-    const wave = COMBAT_WAVES[index];
+export const isElite = (type: EnemyType): boolean => ["elite", "iron_fortress", "acid_bomber", "radar_hunter", "cyclone_ace", "grid_architect"].includes(type);
+export function createWaveQueue(index: number, random: () => number, waves: readonly WaveDefinition[] = COMBAT_WAVES): EnemyType[] {
+    const wave = waves[index];
+    if (wave?.groups) return wave.groups.flat();
     if (!wave)
         return [];
     const queue: EnemyType[] = [];

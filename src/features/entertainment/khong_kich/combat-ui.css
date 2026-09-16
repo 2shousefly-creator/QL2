@@ -154,3 +154,25 @@
 .air-upgrade-overlay[data-reduced-motion="true"] .air-upgrade-row,.air-upgrade-overlay[data-reduced-motion="true"] .air-upgrade-card[data-rerolled="true"] { animation:air-upgrade-fade 140ms ease-out both; }
 .air-upgrade-overlay[data-reduced-motion="true"] .air-upgrade-card::after,.air-upgrade-overlay[data-reduced-motion="true"] .air-core-reroll span { animation:none; }
 @media(prefers-reduced-motion:reduce) { .air-upgrade-row,.air-upgrade-card[data-rerolled="true"] { animation:air-upgrade-fade 140ms ease-out both!important; } .air-upgrade-card::after,.air-core-reroll span { animation:none!important; } }
+
+/* Campaign scenes have presentation animation only; combat mounts after launch. */
+.air-campaign-menu,.air-stage-select{position:relative;width:100%;max-width:720px;min-height:70dvh;margin:auto;background:radial-gradient(ellipse at 50% 20%,#164064 0%,#0b172c 50%,#030916 100%);border-radius:20px;overflow:hidden;color:white}
+.air-campaign-hero{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:70dvh;padding:70px 24px;text-align:center}
+.air-campaign-back{position:absolute;z-index:2;top:18px;left:18px;display:flex;align-items:center;gap:6px;font-size:12px;color:#cbd5e1}
+.air-campaign-primary{display:flex;width:100%;min-height:48px;align-items:center;justify-content:center;gap:8px;border-radius:12px;background:linear-gradient(110deg,#38bdf8,#67e8f9);padding:12px;font-weight:900;font-size:13px;color:#082032;box-shadow:0 8px 35px #22d3ee20}
+.air-campaign-primary:disabled{background:#1e293b;color:#94a3b8;box-shadow:none;cursor:not-allowed}
+.air-campaign-hero .air-campaign-primary{max-width:290px}
+.air-campaign-plane{color:#9bdcf0;filter:drop-shadow(0 0 25px #22d3ee55);margin-bottom:32px;transform:rotate(-25deg)}
+.air-campaign-clouds{position:absolute;inset:-30%;opacity:.22;background:radial-gradient(ellipse at 20% 50%,#cbd5e166,transparent 30%),radial-gradient(ellipse at 80% 60%,#7dd3fc66,transparent 30%);animation:air-cloud-drift 24s ease-in-out infinite alternate}
+@keyframes air-cloud-drift{to{transform:translate(12%,8%)}}
+.air-campaign-still .air-campaign-clouds{animation:none}
+.air-stage-carousel{position:relative;display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;padding:10px 10% 15px;scrollbar-width:none;touch-action:pan-x pan-y}
+.air-stage-card{flex:0 0 92%;scroll-snap-align:center;border:1px solid color-mix(in srgb,var(--stage-accent) 50%,transparent);border-radius:20px;background:linear-gradient(145deg,#13233a,#070f20);overflow:hidden}
+.air-stage-card:last-child{margin-right:10%}
+.air-stage-locked .air-stage-art{filter:saturate(.2) brightness(.5)}
+.air-stage-art{position:relative;display:grid;place-items:center;height:155px;overflow:hidden;background:radial-gradient(ellipse,var(--stage-accent),#0f1738 65%);color:#d9f5ff}
+.air-stage-art>span{position:absolute;right:15px;bottom:-12px;font-weight:900;font-size:92px;opacity:.16}
+.air-stage-orbit{position:absolute;width:210px;height:85px;border:2px solid #c4b5fd66;border-radius:50%;transform:rotate(-25deg)}
+.air-stage-arrow{display:grid;place-items:center;width:42px;height:42px;border:1px solid #475569;border-radius:50%;margin-bottom:20px}
+.air-stage-arrow:disabled{opacity:.25}
+@media(prefers-reduced-motion:reduce){.air-campaign-clouds{animation:none}}

@@ -26,6 +26,8 @@ export type EnemyType =
   | "iron_fortress"
   | "acid_bomber"
   | "radar_hunter"
+  | "orbit_wasp" | "arc_reaver" | "mine_seeder" | "magnetic_leech"
+  | "prism_manta" | "swarm_carrier" | "micro_drone" | "cyclone_ace" | "grid_architect" | "satellite"
   | "boss";
 
 export type CoreTier = "silver" | "gold" | "diamond";
@@ -199,6 +201,9 @@ export interface SkillCastResult {
 }
 
 export interface AirCombatRunSummary {
+  stageId: number;
+  stageVictory: boolean;
+  stageFirstClear: boolean;
   aircraftId: AircraftId;
   score: number;
   rank: AirCombatRank;
@@ -225,7 +230,14 @@ export interface AirCombatReward {
   dailyCapReached: boolean;
 }
 
+export interface AirCombatCampaignProgress {
+  version: 1;
+  highestStageCleared: number;
+  lastSelectedStage?: number;
+}
+
 export interface AirCombatProfile {
+  campaign: AirCombatCampaignProgress;
   version: 2;
   highScore: number;
   highestCombo: number;

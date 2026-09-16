@@ -22,6 +22,16 @@ export const AIRCRAFT_VISUALS: Record<AircraftId, AircraftVisualDefinition> = {
   phantom: { neutral: cell("aircraft", 0, 2), left: cell("aircraft", 1, 2), right: cell("aircraft", 2, 2), size: PLAYER_STANDARD_AIRFRAME_SIZE, artwork: PLAYER_ARTWORK.phantom, tint: 0xc4b5fd },
 };
 export const ENEMY_VISUALS: Record<EnemyType, AtlasFrame> = {
+  orbit_wasp: cell("aircraft",3,1),
+  arc_reaver: cell("aircraft",3,1),
+  mine_seeder: cell("aircraft",3,1),
+  magnetic_leech: cell("aircraft",3,1),
+  prism_manta: cell("aircraft",3,1),
+  swarm_carrier: cell("aircraft",3,1),
+  micro_drone: cell("aircraft",3,1),
+  cyclone_ace: cell("aircraft",3,1),
+  grid_architect: cell("aircraft",3,1),
+  satellite: cell("aircraft",3,1),
   scout: cell("aircraft", 3, 1), fighter: cell("aircraft", 3, 2),
   attacker: cell("aircraft", 0, 3), kamikaze: cell("aircraft", 1, 3),
   bomber: cell("aircraft", 2, 3), elite: cell("aircraft", 3, 3),

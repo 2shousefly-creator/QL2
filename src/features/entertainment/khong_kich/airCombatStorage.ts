@@ -1,6 +1,7 @@
-import { createDefaultAirCombatProfile } from "./airCombatEngine";
+import { normalizeCampaign, canLaunchStage } from "./airCombatStages";
+import { createDefaultAirCombatProfile, calculateRunReward } from "./airCombatEngine";
 import { AIRCRAFT_CONFIGS, AIR_COMBAT_RANK_ORDER } from "./airCombatConfig";
-import { AirCombatProfile, AirCombatRank, AircraftId } from "./airCombatTypes";
+import { AirCombatProfile, AirCombatRank, AircraftId, AirCombatRunSummary } from "./airCombatTypes";
 
 const STORAGE_KEY = "quan_lo_air_combat_v1";
 
@@ -14,6 +15,7 @@ export function loadAirCombatProfile(): AirCombatProfile {
     const bestBossClearSeconds = Number(parsed.bestBossClearSeconds);
     return {
       version: 2,
+      campaign: normalizeCampaign(parsed.campaign, Number.isFinite(parsed.bossClears) ? parsed.bossClears : 0),
       highScore: Math.max(0, Number(parsed.highScore) || 0),
       highestCombo: Math.max(0, Number(parsed.highestCombo) || 0),
       totalRuns: Math.max(0, Number(parsed.totalRuns) || 0),
@@ -39,6 +41,9 @@ export function loadAirCombatProfile(): AirCombatProfile {
 export function saveAirCombatProfile(profile: AirCombatProfile): void {
   if (typeof window === "undefined") return;
   try {
+    const stored = loadAirCombatProfile();
+    profile.campaign = normalizeCampaign(profile.campaign);
+    profile.campaign.highestStageCleared = Math.max(profile.campaign.highestStageCleared, stored.campaign.highestStageCleared);
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(profile));
   } catch {
     // A full/private storage area must never block the result screen.
@@ -50,4 +55,31 @@ export function getLocalRewardDateKey(now = new Date()): string {
   const month = String(now.getMonth() + 1).padStart(2, "0");
   const day = String(now.getDate()).padStart(2, "0");
   return `${year}-${month}-${day}`;
+}
+
+/** Controller guard is also called by runtime construction, beyond disabled UI controls. */
+export function assertStageLaunch(stageId: number): void {
+  if (!canLaunchStage(stageId, loadAirCombatProfile().campaign)) throw new Error("Chiến trường chưa thể xuất kích.");
+}
+
+export function persistStageVictory(stageId: number): boolean {
+  const profile = loadAirCombatProfile();
+  if (!canLaunchStage(stageId, profile.campaign)) return false;
+  const firstClear = profile.campaign.highestStageCleared < stageId;
+  profile.campaign.highestStageCleared = Math.max(profile.campaign.highestStageCleared, stageId);
+  saveAirCombatProfile(profile);
+  return firstClear;
+}
+
+/** Persist the confirmed result before React can expose Results/Next Stage.
+ * UI never owns progression arithmetic; old-stage replay is monotonic. */
+export function settleAirCombatRun(summary: AirCombatRunSummary) {
+  const profile = loadAirCombatProfile();
+  const { reward, nextProfile } = calculateRunReward(summary, profile, getLocalRewardDateKey());
+  const validVictory = summary.stageVictory && summary.bossDefeated && canLaunchStage(summary.stageId, profile.campaign);
+  const firstClear = validVictory && summary.stageFirstClear;
+  nextProfile.campaign = { ...profile.campaign, highestStageCleared: validVictory
+    ? Math.max(profile.campaign.highestStageCleared, summary.stageId) : profile.campaign.highestStageCleared };
+  saveAirCombatProfile(nextProfile);
+  return { reward, nextProfile, previousHighScore: profile.highScore, firstClear };
 }

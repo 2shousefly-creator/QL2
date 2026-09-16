@@ -1,3 +1,4 @@
+import { paintMagnetic, usesMagneticArt } from "./airCombatMagnetic";
 import { paintTacticalCores, paintElitePatternWarning, type TacticalPainter } from "./airCombatTacticalVisuals";
 import { enemyAllegiance } from "./airCombatRuntime";
 import aircraftAtlasUrl from "../../../assets/khong-kich/v2/aircraft-atlas.png";
@@ -339,6 +340,7 @@ export function drawLegacyWorld(
   const { width, height, hudHeight } = AIR_COMBAT_WORLD;
   const aircraft = AIRCRAFT_CONFIGS[aircraftId];
   drawTerrain(ctx, world, reducedMotion);
+  if (world.stage.runtime === "magnetic") { ctx.fillStyle = "rgba(16,29,88,.68)"; ctx.fillRect(0,0,width,height); }
 
   ctx.fillStyle = "rgba(2,6,23,.98)";
   ctx.fillRect(0, 0, width, hudHeight);
@@ -382,6 +384,7 @@ export function drawLegacyWorld(
     line:(ax,ay,bx,by,color,alpha,width)=>{ctx.save();ctx.globalAlpha=alpha;ctx.strokeStyle=`#${color.toString(16).padStart(6,"0")}`;ctx.lineWidth=width;ctx.beginPath();ctx.moveTo(ax,ay);ctx.lineTo(bx,by);ctx.stroke();ctx.restore();}
   };
   paintTacticalCores(world,tacticalPainter,reducedMotion);
+  paintMagnetic(world,tacticalPainter,reducedMotion);
   for (const warning of world.warnings) {
     if(paintElitePatternWarning(warning,tacticalPainter))continue;
     if(warning.allegiance==="friendly_hacked"){
@@ -479,6 +482,7 @@ export function drawLegacyWorld(
   }
   ctx.restore();
   for (const projectile of world.projectiles) {
+    if (projectile.magnetic) continue;
     const missile = projectile.projectileKind !== "bullet";
     const basic = !missile ? getBasicAmmoVisual(projectile.ammoVisualKey) : null;
     if (projectile.owner === "enemy" && projectile.appearance === "boss" && (missile ? projectile.missileAge < .15 : projectile.lifetime > 5.88)) {
@@ -544,7 +548,7 @@ export function drawLegacyWorld(
     }
     ctx.save();ctx.translate(enemy.x,enemy.y);
     if(enemy.type==="kamikaze")ctx.rotate(enemyAirframeRotation(enemy)-Math.PI);
-    drawEnemyGlyph(ctx, enemy.type, 0, 0, enemy.radius);ctx.restore();
+    if (!usesMagneticArt(world, enemy)) drawEnemyGlyph(ctx, enemy.type, 0, 0, enemy.radius);ctx.restore();
     if(enemy.shield>0||enemy.aegisUntil>world.aircraft.coreState.time){ctx.strokeStyle="#7dd3fc";ctx.lineWidth=2;ctx.beginPath();ctx.arc(enemy.x,enemy.y,enemy.radius+7,0,Math.PI*2);ctx.stroke();}
     if(enemy.stun>0){ctx.strokeStyle="#fde047";ctx.beginPath();ctx.arc(enemy.x,enemy.y-enemy.radius-7,5,0,Math.PI*2);ctx.stroke();}
     if(!world.ended&&enemy.hp>0&&enemy.type==="kamikaze"&&(enemy.kamikazeState==="charge"||enemy.kamikazeState==="dash")){

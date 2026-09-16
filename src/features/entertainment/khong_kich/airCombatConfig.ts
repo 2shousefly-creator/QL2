@@ -269,6 +269,16 @@ export const SKILL_CONFIGS: Record<SkillId, SkillConfig> = {
 };
 
 export const ENEMY_CONFIGS: Record<EnemyType, EnemyConfig> = {
+  orbit_wasp: {"type": "orbit_wasp", "name": "ORBIT WASP · ONG QUỸ ĐẠO", "baseHp": 160, "baseArmor": 8, "speed": 74, "radius": 11, "score": 110, "combatXp": 24, "projectileDamage": 55, "collisionDamage": 120, "fireInterval": 3, "color": "#67e8f9"},
+  arc_reaver: {"type": "arc_reaver", "name": "ARC REAVER · KẺ SĂN BOOMERANG", "baseHp": 260, "baseArmor": 14, "speed": 50, "radius": 14, "score": 170, "combatXp": 30, "projectileDamage": 55, "collisionDamage": 150, "fireInterval": 4.8, "color": "#a78bfa"},
+  mine_seeder: {"type": "mine_seeder", "name": "MINE SEEDER · MÁY RẢI MÌN", "baseHp": 480, "baseArmor": 18, "speed": 38, "radius": 18, "score": 290, "combatXp": 44, "projectileDamage": 90, "collisionDamage": 180, "fireInterval": 3.8, "color": "#818cf8"},
+  magnetic_leech: {"type": "magnetic_leech", "name": "MAGNETIC LEECH · ĐỈA TỪ", "baseHp": 340, "baseArmor": 12, "speed": 45, "radius": 12, "score": 210, "combatXp": 32, "projectileDamage": 28, "collisionDamage": 120, "fireInterval": 4, "color": "#22d3ee"},
+  prism_manta: {"type": "prism_manta", "name": "PRISM MANTA · CÁ ĐUỐI LĂNG KÍNH", "baseHp": 480, "baseArmor": 18, "speed": 40, "radius": 18, "score": 290, "combatXp": 44, "projectileDamage": 65, "collisionDamage": 170, "fireInterval": 3.8, "color": "#c084fc"},
+  swarm_carrier: {"type": "swarm_carrier", "name": "SWARM CARRIER · TÀU MẸ BẦY ĐÀN", "baseHp": 620, "baseArmor": 30, "speed": 30, "radius": 19, "score": 320, "combatXp": 38, "projectileDamage": 30, "collisionDamage": 180, "fireInterval": 7, "color": "#818cf8"},
+  micro_drone: {"type": "micro_drone", "name": "MICRO DRONE", "baseHp": 70, "baseArmor": 0, "speed": 60, "radius": 7, "score": 0, "combatXp": 0, "projectileDamage": 0, "collisionDamage": 65, "fireInterval": 99, "color": "#a5f3fc"},
+  cyclone_ace: {"type": "cyclone_ace", "name": "CYCLONE ACE · BẬC THẦY QUỸ ĐẠO", "baseHp": 5400, "baseArmor": 35, "speed": 62, "radius": 23, "score": 1500, "combatXp": 230, "projectileDamage": 95, "collisionDamage": 240, "fireInterval": 4, "color": "#22d3ee"},
+  grid_architect: {"type": "grid_architect", "name": "GRID ARCHITECT · KIẾN TRÚC SƯ TỪ TRƯỜNG", "baseHp": 7800, "baseArmor": 66, "speed": 25, "radius": 28, "score": 1500, "combatXp": 230, "projectileDamage": 70, "collisionDamage": 280, "fireInterval": 7, "color": "#c084fc"},
+  satellite: {"type": "satellite", "name": "MAGNETIC SATELLITE", "baseHp": 1, "baseArmor": 0, "speed": 0, "radius": 10, "score": 0, "combatXp": 0, "projectileDamage": 70, "collisionDamage": 90, "fireInterval": 3, "color": "#67e8f9"},
   "scout": {
     "type": "scout",
     "name": "Scout Drone",

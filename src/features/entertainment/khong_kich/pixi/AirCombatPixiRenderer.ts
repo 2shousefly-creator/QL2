@@ -1,3 +1,4 @@
+import { paintMagnetic, usesMagneticArt } from "../airCombatMagnetic";
 import { getPlayerExhaust, hawkEyeExhaustTransform } from "../airCombatArtwork";
 import { paintTacticalCores, paintElitePatternWarning, type TacticalPainter } from "../airCombatTacticalVisuals";
 import { enemyAllegiance } from "../airCombatRuntime";
@@ -245,6 +246,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
       line:(ax,ay,bx,by,color,alpha,width)=>{this.telegraphs.moveTo(ax,ay).lineTo(bx,by).stroke({color,alpha,width});}
     };
     paintTacticalCores(world,tacticalPainter,reducedMotion);
+    paintMagnetic(world,tacticalPainter,reducedMotion);
     for(let i=labelCount;i<this.enemyStatusLabels.length;i++)this.enemyStatusLabels[i].visible=false;
     this.enemies.begin();
     this.engines.begin();
@@ -252,6 +254,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
       const sprite = this.enemies.get(enemy.id, this.assets.texture(ENEMY_VISUALS[enemy.type]));
       if (!sprite) continue;
       sprite.position.set(enemy.x, enemy.y);
+      sprite.visible = !usesMagneticArt(world, enemy);
       sprite.width = enemy.radius * (enemy.type === "boss" ? BOSS_VISUAL_WIDTH_SCALE : 2.8);
       sprite.height = sprite.width * (enemy.type === "boss" ? BOSS_VISUAL_ASPECT : sprite.texture.height / sprite.texture.width);
       sprite.rotation = Math.PI;
@@ -323,6 +326,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     this.missileSmoke.end();
     this.missiles.begin();
     for (const p of world.projectiles) {
+      if (p.magnetic) continue; // Shared magnetic painter owns phase cues and disc geometry.
       const missile = p.projectileKind !== "bullet";
       if (missile) this.missiles.render(p,reducedMotion);
       else {

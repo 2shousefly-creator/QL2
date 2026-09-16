@@ -59,6 +59,7 @@ export function normalizeAircraftStat(
 export function createDefaultAirCombatProfile(): AirCombatProfile {
   return {
     version: 2,
+    campaign: { version: 1, highestStageCleared: 0, lastSelectedStage: 1 },
     highScore: 0,
     highestCombo: 0,
     totalRuns: 0,

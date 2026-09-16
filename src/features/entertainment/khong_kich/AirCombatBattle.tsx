@@ -1,3 +1,4 @@
+import { getAirCombatStage } from "./airCombatStages";
 import { canBorrowSkill } from "./airCombatAircraft";
 import { playerSkillLocked } from "./airCombatStatus";
 import { AirCombatStatusStrip, type StatusStripHandle } from "./AirCombatStatusStrip";
@@ -58,6 +59,7 @@ import {
 } from "./airCombatTypes";
 
 interface AirCombatBattleProps {
+  stageId: number;
   aircraftId: AircraftId;
   reducedMotion: boolean;
   onComplete: (summary: AirCombatRunSummary) => void;
@@ -97,6 +99,7 @@ function pauseLabel(reasons: ReadonlySet<PauseReason>): string | null {
 
 export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
   aircraftId,
+  stageId,
   reducedMotion,
   onComplete,
   onExit,
@@ -105,7 +108,8 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
   const durationNodes = useRef<Partial<Record<SkillId, HTMLSpanElement | null>>>({});
   const stageRef = useRef<HTMLDivElement | null>(null);
   const [rendererState, setRendererState] = useState<"loading" | "pixi" | "legacy" | "failed">("loading");
-  const worldRef = useRef<CombatWorld>(createCombatWorld(aircraftId));
+  const [world] = useState(() => createCombatWorld(aircraftId, undefined, stageId));
+  const worldRef = useRef<CombatWorld>(world);
   const onCompleteRef = useRef(onComplete);
   const completedRef = useRef(false);
   const draggingRef = useRef(false);
@@ -481,7 +485,7 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
 
       {hud.bossMaxHp > 0 && (
         <div className="air-boss-hud" style={{ top: `${AIR_COMBAT_WORLD.hudHeight / 720 * 100}%`, height: `${BOSS_HUD_HEIGHT / 720 * 100}%` }} data-boss-phase={hud.bossPhase}>
-          <div className="flex justify-between text-[7px] font-black uppercase text-rose-200"><span>Leviathan X-99 · Giai đoạn {hud.bossPhase}</span><span>{Math.ceil(hud.bossHp).toLocaleString("vi-VN")}</span></div>
+          <div className="flex justify-between text-[7px] font-black uppercase text-rose-200"><span>{getAirCombatStage(stageId)?.bossName} · Giai đoạn {hud.bossPhase}</span><span>{Math.ceil(hud.bossHp).toLocaleString("vi-VN")}</span></div>
           <div className="air-boss-health relative mt-1 h-1.5 overflow-hidden bg-black">
             <div ref={bossShieldRef} className="absolute inset-y-0 left-0 bg-slate-200" />
             <div ref={bossChipRef} className="absolute inset-y-0 left-0 bg-white" />
