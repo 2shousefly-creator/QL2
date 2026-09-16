@@ -3,7 +3,7 @@ import { enemyAllegiance } from "./airCombatRuntime";
 import aircraftAtlasUrl from "../../../assets/khong-kich/v2/aircraft-atlas.png";
 import phantomBeamUrl from "../../../assets/khong-kich/v2/phantom-firing-beam.svg";
 import basicAmmoAtlasUrl from "../../../assets/khong-kich/v2/player-basic-ammo-atlas.svg";
-import { PLAYER_ARTWORK } from "./airCombatArtwork";
+import { PLAYER_ARTWORK, getPlayerExhaust } from "./airCombatArtwork";
 import fortressAtlasUrl from "../../../assets/khong-kich/v2/fortress-clouds-atlas.png";
 import { hasCore } from "./airCombatCoreEffects";
 import { PLAYER_AIRFRAME_SIZE, PLAYER_HITBOX_PROFILES, ENEMY_HITBOX_PROFILES, type AircraftHitboxProfile } from "./airCombatHitboxes";
@@ -215,16 +215,6 @@ function drawAircraft(
     ctx.stroke();
   }
 
-  const exhaust = aircraftId === "breaker" ? "#fb923c" : aircraftId === "phantom" ? "#c4b5fd" : "#67e8f9";
-  ctx.fillStyle = exhaust;
-  ctx.shadowColor = exhaust;
-  ctx.shadowBlur = 8;
-  ctx.beginPath();
-  ctx.moveTo(-3, 15);
-  ctx.lineTo(0, 23);
-  ctx.lineTo(3, 15);
-  ctx.closePath();
-  ctx.fill();
   ctx.restore();
 }
 
@@ -386,6 +376,7 @@ export function drawLegacyWorld(
   }
 
   const tacticalPainter:TacticalPainter={
+    label:(x,y,text,color,size)=>{ctx.save();ctx.font=`bold ${size}px Arial`;ctx.textAlign="center";ctx.textBaseline="bottom";ctx.strokeStyle="#020617";ctx.lineWidth=2;ctx.strokeText(text,x,y);ctx.fillStyle=`#${color.toString(16).padStart(6,"0")}`;ctx.fillText(text,x,y);ctx.restore();},
     circle:(x,y,r,color,alpha,fill)=>{ctx.save();ctx.globalAlpha=alpha;ctx.strokeStyle=ctx.fillStyle=`#${color.toString(16).padStart(6,"0")}`;ctx.lineWidth=2;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);if(fill)ctx.fill();else ctx.stroke();ctx.restore();},
     line:(ax,ay,bx,by,color,alpha,width)=>{ctx.save();ctx.globalAlpha=alpha;ctx.strokeStyle=`#${color.toString(16).padStart(6,"0")}`;ctx.lineWidth=width;ctx.beginPath();ctx.moveTo(ax,ay);ctx.lineTo(bx,by);ctx.stroke();ctx.restore();}
   };
@@ -645,6 +636,15 @@ export function drawLegacyWorld(
   }
   const invisible = (world.aircraft.activeEffects.invisibility || 0) > 0;
   const hitBlink = world.playerInvulnerability > 0 && Math.floor(world.elapsed * 16) % 2 === 0;
+  const exhaust=getPlayerExhaust(world,PLAYER_AIRFRAME_SIZE[aircraftId],reducedMotion);
+  ctx.save();ctx.globalCompositeOperation="lighter";
+  for(const mount of exhaust.mounts)for(let layer=0;layer<3;layer++){
+    const x=world.playerX+mount.x,y=world.playerY+mount.y,width=mount.width*(layer===0?2.6:layer===1?1:.48),length=exhaust.length*(layer===0?1.08:layer===1?1:.64);
+    ctx.globalAlpha=(invisible?.16:1)*(layer===0?exhaust.glow:layer===1?.9:1);
+    const gradient=ctx.createLinearGradient(x,y,x,y+length);gradient.addColorStop(0,layer===2?"#fff8e7":aircraft.accent);gradient.addColorStop(1,"transparent");ctx.fillStyle=gradient;
+    ctx.beginPath();ctx.moveTo(x-width/2,y);ctx.quadraticCurveTo(x-width*.55,y+length*.25,x,y+length);ctx.quadraticCurveTo(x+width*.55,y+length*.25,x+width/2,y);ctx.closePath();ctx.fill();
+  }
+  ctx.restore();
   drawAircraft(
     ctx,
     aircraftId,

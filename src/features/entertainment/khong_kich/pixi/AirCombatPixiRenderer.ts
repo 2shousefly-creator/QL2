@@ -1,3 +1,4 @@
+import { getPlayerExhaust } from "../airCombatArtwork";
 import { paintTacticalCores, paintElitePatternWarning, type TacticalPainter } from "../airCombatTacticalVisuals";
 import { enemyAllegiance } from "../airCombatRuntime";
 import { hasCore } from "../airCombatCoreEffects";
@@ -29,6 +30,8 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
   private smokeLayer = new Container();
   private missileSmoke: AirCombatSpritePool;
   private telegraphs = new Graphics();
+  private enemyStatusLabels: Text[] = [];
+  private enemyStatusLayer = new Container();
   private hitbox = new Graphics();
   private trackingBars = new Graphics();
   private stableHud = new Container();
@@ -59,7 +62,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
   private warnings: AirCombatSpritePool;
   private engines: AirCombatSpritePool;
   private player = new Sprite();
-  private thruster = new Sprite();
+  private playerExhaust = Array.from({length:6},()=>new Sprite());
   private shield = new Sprite();
   private titanBubble = new Graphics();
   private titanShield = new TitanShieldPresentation();
@@ -70,9 +73,6 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
   private lastProjectile = 0;
   private flashUntil = new Map<number, number>();
   private clock = 0;
-  private previousX: number | null = null;
-  private previousY = 0;
-  private thrust = 0;
   private recoil = 0;
   private shake = 0;
   private smokeClock = 0;
@@ -104,7 +104,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     app.canvas.addEventListener("webglcontextlost", this.onLost);
     this.sky = new AirCombatSky(assets);
     app.stage.addChild(this.root);
-    this.root.addChild(this.sky.root, this.telegraphs, this.smokeLayer, this.actors, this.effects, this.hitbox, this.damageText.root);
+    this.root.addChild(this.sky.root, this.telegraphs, this.smokeLayer, this.actors, this.effects, this.enemyStatusLayer, this.hitbox, this.damageText.root);
     // Separate stage branch: neither recoil nor camera shake can move status bars.
     app.stage.addChild(this.stableHud);
     this.stableHud.addChild(this.trackingBars, this.hpText, this.resourceText);
@@ -119,13 +119,13 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     this.warnings = new AirCombatSpritePool(this.effects, 40);
     this.engines = new AirCombatSpritePool(this.effects, 4);
     this.vfx = new AirCombatVfx(this.effects, assets);
-    this.thruster.texture = assets.effect("fire");
+    for(const sprite of this.playerExhaust){sprite.texture=assets.engineFlame;sprite.anchor.set(.5,0);sprite.blendMode="add";this.actors.addChild(sprite);}
     this.shield.texture = assets.effect("shield");
     this.laser.texture = assets.phantomBeam; this.laser.blendMode = "add";
     this.charge.texture = assets.effect("charge");
     this.aura.texture = assets.effect("shield"); this.aura.blendMode = "add";
     this.laserMuzzle.texture = assets.effect("charge"); this.laserMuzzle.blendMode = "add";
-    for (const sprite of [this.aura, this.thruster, this.player, this.shield, this.laser, this.laserMuzzle, this.charge]) {
+    for (const sprite of [this.aura, this.player, this.shield, this.laser, this.laserMuzzle, this.charge]) {
       sprite.anchor.set(0.5); this.actors.addChild(sprite);
     }
     this.actors.addChild(this.titanBubble);
@@ -144,10 +144,6 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     this.healthBars.begin(delta);
     this.trackingBars.clear();
     const visual = AIRCRAFT_VISUALS[world.aircraft.aircraftId];
-    const dx = this.previousX === null ? 0 : world.playerX - this.previousX;
-    const dy = this.previousX === null ? 0 : world.playerY - this.previousY;
-    this.previousX = world.playerX; this.previousY = world.playerY;
-    this.thrust = Math.max(Math.hypot(dx, dy), this.thrust * Math.exp(-delta * 14));
     this.recoil *= Math.exp(-delta * 24);
     this.shake *= Math.exp(-delta * 12);
     this.sky.update(delta, world, reducedMotion);
@@ -235,11 +231,19 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     for (const [id, until] of this.flashUntil) if (until < this.clock) this.flashUntil.delete(id);
 
     this.telegraphs.clear();
+    let labelCount=0;
     const tacticalPainter:TacticalPainter={
+      label:(x,y,text,color,size)=>{
+        let label=this.enemyStatusLabels[labelCount];
+        if(!label){label=new Text({text:"",style:{fontFamily:"Arial",fontSize:size,fontWeight:"bold",fill:color,stroke:{color:0x020617,width:2}}});label.anchor.set(.5,1);this.enemyStatusLabels.push(label);this.enemyStatusLayer.addChild(label);}
+        if(label.text!==text)label.text=text;
+        label.style.fill=color;label.style.fontSize=size;label.position.set(x,y);label.visible=true;labelCount++;
+      },
       circle:(x,y,r,color,alpha,fill)=>{this.telegraphs.circle(x,y,r);if(fill)this.telegraphs.fill({color,alpha});else this.telegraphs.stroke({color,alpha,width:2});},
       line:(ax,ay,bx,by,color,alpha,width)=>{this.telegraphs.moveTo(ax,ay).lineTo(bx,by).stroke({color,alpha,width});}
     };
     paintTacticalCores(world,tacticalPainter,reducedMotion);
+    for(let i=labelCount;i<this.enemyStatusLabels.length;i++)this.enemyStatusLabels[i].visible=false;
     this.enemies.begin();
     this.engines.begin();
     for (const enemy of world.enemies) {
@@ -473,10 +477,17 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     this.player.width *= visual.artwork.neutral.scaleX;
     this.player.alpha = invisible ? 0.1 : 1;
     this.player.tint = world.playerInvulnerability > 0 ? 0xffb1b1 : 0xffffff;
-    this.thruster.position.set(world.playerX, world.playerY + visual.size * 0.38);
-    this.thruster.width = 13;
-    this.thruster.height = 18 + Math.min(15, this.thrust) + (reducedMotion ? 0 : Math.sin(this.clock * 31) * 2);
-    this.thruster.tint = visual.tint; this.thruster.alpha = invisible ? 0.2 : 0.8;
+    const exhaust=getPlayerExhaust(world,visual.size,reducedMotion);
+    for(let i=0;i<this.playerExhaust.length;i++){
+      const sprite=this.playerExhaust[i],mount=exhaust.mounts[Math.floor(i/3)],layer=i%3;
+      sprite.visible=!!mount;
+      if(!mount)continue;
+      sprite.position.set(this.player.x+mount.x,this.player.y+mount.y);
+      sprite.width=mount.width*(layer===0?2.6:layer===1?1:.48);
+      sprite.height=exhaust.length*(layer===0?1.08:layer===1?1:.64);
+      sprite.tint=layer===2?0xfff8e7:visual.tint;
+      sprite.alpha=(invisible?.16:1)*(layer===0?exhaust.glow:layer===1?.9:1);
+    }
     const shieldActive = (world.aircraft.activeEffects.armor_shield || 0) > 0 || invisible || activeShieldAmount(world.aircraft) > 0;
     this.shieldOpacity += ((shieldActive ? 1 : 0) - this.shieldOpacity) * (1 - Math.exp(-delta * 15));
     this.shield.visible = this.shieldOpacity > .01 && !this.titanShield.active && this.titanShield.opacity < .01;
@@ -537,7 +548,6 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
       if(!reducedMotion)for(let i=0;i<6;i++){const y=GAMEPLAY_SAFE_RECT.top+(i*this.laser.height/6+this.clock*210)%this.laser.height,x=world.playerX+(i%2?10:-10);this.telegraphs.moveTo(x,y).lineTo(x+(i%2?-2:2),Math.max(GAMEPLAY_SAFE_RECT.top,y-25)).stroke({color:0xe0ffff,width:1.5,alpha:.65});}
     }
     if(world.aircraft.status.stunnedUntil>world.aircraft.coreState.time)this.telegraphs.circle(world.playerX,world.playerY,23).stroke({color:0x67e8f9,width:1.5,alpha:.65});
-    if(sustained)this.thruster.height*=1.45;
     this.hitbox.clear();
     if (world.playerInputActive || world.projectiles.length > 90) {
       this.hitbox.circle(world.playerX, world.playerY, world.playerRadius).stroke({ width: 1, color: 0xe0f2fe, alpha: world.playerInputActive ? 0.65 : 0.22 });

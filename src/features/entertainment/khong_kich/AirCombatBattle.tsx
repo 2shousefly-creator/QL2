@@ -31,12 +31,13 @@ import {
 } from "./airCombatConfig";
 import {
   classifySkillPress,
-  coreTierLabel,
   getEffectiveAircraftStats,
   getSkillRuntimeValues,
   shouldCastSkillPress,
 } from "./airCombatEngine";
 import {
+  canRerollCore,
+  rerollCore,
   castWorldSkill,
   CombatWorld,
   createCombatWorld,
@@ -53,8 +54,6 @@ import {
   AirCombatRunSummary,
   AircraftId,
   CoreCard,
-  CoreCategory,
-  CoreTier,
   SkillId,
 } from "./airCombatTypes";
 
@@ -80,20 +79,6 @@ interface PlayerControlState {
   originX: number;
   originY: number;
 }
-
-const TIER_STYLE: Record<CoreTier, string> = {
-  silver: "border-slate-200/80 bg-gradient-to-br from-slate-600/95 via-slate-800/96 to-slate-950/98 text-white shadow-slate-300/10",
-  gold: "border-amber-300/90 bg-gradient-to-br from-amber-500/35 via-amber-950/96 to-slate-950/98 text-amber-50 shadow-amber-400/20",
-  diamond: "border-cyan-200/95 bg-gradient-to-br from-cyan-400/30 via-indigo-950/96 to-slate-950/98 text-cyan-50 shadow-cyan-300/25",
-};
-
-const CATEGORY_STYLE: Record<CoreCategory, string> = {
-  offense: "bg-gradient-to-r from-rose-500/25 to-orange-400/15 text-orange-100 border-orange-300/35",
-  defense: "bg-gradient-to-r from-emerald-500/25 to-sky-500/15 text-emerald-100 border-emerald-300/35",
-  resource: "bg-gradient-to-r from-violet-500/25 to-indigo-500/15 text-violet-100 border-violet-300/35",
-  weapon: "bg-gradient-to-r from-amber-400/30 to-rose-500/15 text-amber-100 border-amber-300/40",
-  skill: "bg-gradient-to-r from-fuchsia-500/30 to-cyan-500/20 text-fuchsia-50 border-fuchsia-300/45",
-};
 
 function formatTime(seconds: number): string {
   const safe = Math.max(0, Math.floor(seconds));
@@ -569,58 +554,25 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
 
 
       {coreChoices && (
-        <AppModal archetype="transaction"
-          layer="exclusive-dialog"
-          layout="viewport-safe"
-          closeOnEscape={false}
-          labelledBy="air-core-choice-title"
-        >
-          <OverlayHeader className="flex shrink-0 flex-col items-center justify-center text-center">
-            <div className="text-xs font-semibold uppercase tracking-[0.22em] text-[var(--modal-info)]">Cấp chiến đấu {worldRef.current.aircraft.pendingMilestones[0] ?? worldRef.current.aircraft.level}</div>
-            <h2 id="air-core-choice-title" className="modal-title">{coreChoices[0]?.skillSlot ? "NÂNG CẤP KỸ NĂNG" : "Chọn lõi nâng cấp"}</h2>
-            <div className="mt-1 flex items-center gap-2">
-              <span className="rounded-full border border-cyan-300/40 bg-cyan-400/10 px-2.5 py-1 text-xs font-semibold uppercase text-[var(--modal-info)]">{coreTierLabel(coreChoices[0].tier)}</span>
-              <span className="text-xs font-bold text-[var(--modal-muted)]">Trận đấu đang tạm dừng</span>
-            </div>
-          </OverlayHeader>
-
-          <OverlayBody className="w-full grid" data-core-selection="open" data-reduced-motion={reducedMotion}>
-            {coreChoices.map((card) => {
-                            const special = card.category === "weapon" || card.category === "skill";
-              return (
-                <button
-                  key={card.id}
-                  type="button"
-                  data-core-choice={card.id}
-                  data-core-tier={card.tier}
-                  data-core-category={card.category}
-                  data-core-special={special ? "true" : "false"}
-                  onClick={() => chooseCore(card)}
-                  className={`combat-core-card modal-control relative grid min-h-[108px] w-full grid-cols-[68px_1fr] items-center gap-3 overflow-hidden rounded-none border p-3 text-left shadow-xl transition-transform active:scale-[.985] ${TIER_STYLE[card.tier]}  ${special ? "modal-control ring-1 ring-white/20" : "modal-control "}`}
-                >
-                  <span className={`absolute inset-x-0 top-0 h-1 border-b ${CATEGORY_STYLE[card.category]}`} />
-                  <span className={`grid h-16 w-16 place-items-center rounded-2xl border text-3xl shadow-inner ${CATEGORY_STYLE[card.category]}  ${special ? "shadow-lg shadow-current/10" : ""}`}><CombatUiIcon kind="core" id={card.id} fallback={card.icon} className="combat-core-icon" /></span>
-                  <span className="min-w-0">
-                    <span className="flex items-center justify-between gap-2">
-                      <span className="min-w-0">
-                        <span className="block text-xs font-semibold uppercase tracking-wider opacity-70">{card.system}</span>
-                        <strong className="combat-core-name block text-[15px] font-semibold leading-tight">{card.name}</strong>
-                      </span>
-                      <span className="shrink-0 rounded-full border border-white/15 bg-black/25 px-2 py-1 text-xs font-semibold uppercase">{coreTierLabel(card.tier)}</span>
-                    </span>
-                    <span className="mt-1 block text-xs leading-snug opacity-85"><CoreDescription text={card.description} /></span>
-                    <span className="mt-2 flex flex-wrap items-center gap-1.5">
-                      <span className={`rounded-lg border px-2 py-1 text-[12px] font-semibold ${CATEGORY_STYLE[card.category]}`}>{card.valueLabel}</span>
-                      {card.previewLabel && <span className="rounded-lg border border-emerald-300/25 bg-emerald-400/15 px-2 py-1 text-xs font-semibold text-[var(--modal-success)]">{card.previewLabel}</span>}
-                      {special && <span className="rounded-lg border border-fuchsia-300/25 bg-fuchsia-400/15 px-2 py-1 text-xs font-semibold uppercase text-fuchsia-100">Thay đổi lối chơi</span>}
-                    </span>
-                  </span>
-                </button>
-              );
-            })}
-          </OverlayBody>
-
-          <OverlayFooter className="flex items-center justify-center text-center text-xs font-bold text-[var(--modal-muted)]">Chạm một Core để trang bị ngay · lựa chọn không thể hoàn tác trong lượt này</OverlayFooter>
+        <AppModal archetype="transaction" layer="exclusive-dialog" layout="viewport-safe" closeOnEscape={false}
+          reducedMotion={reducedMotion} labelledBy="air-core-choice-title" overlayClassName="air-upgrade-overlay" panelClassName="air-upgrade-panel">
+          <h2 id="air-core-choice-title">CHỌN MỘT NÂNG CẤP</h2>
+          <div key={worldRef.current.coreSelectionCount} className="air-upgrade-choices" data-core-selection="open" data-reduced-motion={reducedMotion}>
+            {coreChoices.map((card, slot) => <div className="air-upgrade-row" key={slot} style={{"--slot":slot} as React.CSSProperties}>
+              <button key={card.id} type="button" data-core-choice={card.id} data-core-tier={card.tier}
+                data-rerolled={worldRef.current.coreSelectionEvent?.rerollUsedBySlot[slot] || false}
+                onClick={() => chooseCore(card)} className="combat-core-card air-upgrade-card">
+                <CombatUiIcon kind="core" id={card.id} fallback={card.icon} className="combat-core-icon" />
+                <span className="air-upgrade-copy"><strong className="combat-core-name">{card.name}</strong>
+                  <span className="air-upgrade-description"><CoreDescription text={card.description} /></span></span>
+              </button>
+              <button type="button" className="air-core-reroll" aria-label={`Đổi lựa chọn ${slot+1}`}
+                disabled={!canRerollCore(worldRef.current,slot)} data-used={worldRef.current.coreSelectionEvent?.rerollUsedBySlot[slot] || false}
+                onClick={() => { const choices=rerollCore(worldRef.current,slot); if(choices)setCoreChoices([...choices]); }}>
+                <span aria-hidden="true">🔄️</span>
+              </button>
+            </div>)}
+          </div>
         </AppModal>
       )}
 

@@ -1,3 +1,4 @@
+import type { CombatWorld } from "./airCombatRuntime";
 import type { AircraftId } from "./airCombatTypes";
 
 export type AirframePose = "neutral" | "left" | "right";
@@ -28,3 +29,25 @@ const poses = (id: AircraftId): Record<AirframePose, AirframeArtwork> => ({
 export const PLAYER_ARTWORK: Record<AircraftId, Record<AirframePose, AirframeArtwork>> = {
   black_eagle: poses("black_eagle"), breaker: poses("breaker"), phantom: poses("phantom"),
 };
+
+/** Nozzle locations in the neutral atlas cell, measured in source-art pixels.
+ * Titan and Phantom have two outlets; their midpoint follows the fuselage axis.
+ * These are visual transforms only, deliberately separate from airframe hitboxes. */
+export const PLAYER_ENGINE_MOUNTS: Record<AircraftId, readonly {engineMountX:number;engineMountY:number;width:number}[]> = {
+  black_eagle:[{engineMountX:157/314,engineMountY:252/314,width:6}],
+  breaker:[{engineMountX:114/314,engineMountY:260/314,width:4.8},{engineMountX:199/314,engineMountY:260/314,width:4.8}],
+  phantom:[{engineMountX:134/314,engineMountY:231/314,width:4.2},{engineMountX:178/314,engineMountY:231/314,width:4.2}],
+};
+const exhaustStates=new WeakMap<CombatWorld,{time:number;thrust:number}>();
+export function getPlayerExhaust(world:CombatWorld,size:number,reducedMotion:boolean) {
+  let state=exhaustStates.get(world);
+  if(!state){state={time:world.elapsed,thrust:0};exhaustStates.set(world,state);}
+  const dt=Math.max(0,Math.min(.1,world.elapsed-state.time));state.time=world.elapsed;
+  const moving=world.elapsed-world.aircraft.coreState.lastMove<.18 && world.elapsed>.18;
+  const skill=(world.aircraft.activeEffects.afterburner||0)>0 || (world.aircraft.activeEffects.sweeping_cannon||0)>0;
+  const target=moving?1:skill?.65:0;
+  state.thrust+=(target-state.thrust)*(1-Math.exp(-dt*(reducedMotion?3:7)));
+  const art=PLAYER_ARTWORK[world.aircraft.aircraftId].neutral;
+  return {length:27+state.thrust*(reducedMotion?5:16),glow:.25+state.thrust*.12,
+    mounts:PLAYER_ENGINE_MOUNTS[world.aircraft.aircraftId].map(m=>({x:(m.engineMountX-art.anchorX)*size*art.scaleX,y:(m.engineMountY-.5)*size,width:m.width}))};
+}

@@ -1,3 +1,4 @@
+import { SKILL_CORE_VALUES as V } from "./airCombatSkillCores";
 import { getEffectiveAircraftStats, getSkillRuntimeValues } from "./airCombatAircraft";
 import { AIRCRAFT_CONFIGS, SKILL_CONFIGS, getCoreDefinition } from "./airCombatConfig";
 import { coreId, coreStackLabel, hasCore, negativeStatusDuration } from "./airCombatCoreEffects";
@@ -38,7 +39,7 @@ export function getSkillTooltipModel(state: AircraftCombatState, id: SkillId) {
   };
   switch (id) {
     case "decoy": detailRows.push(`${v.count} đợt × 10 mồi · cách đợt 0,75s`); break;
-    case "afterburner": detailRows.push(`+${hasCore(state, 23) ? 75 : 40}% tốc bắn · nảy 50% → 25%`); break;
+    case "afterburner": detailRows.push(`+${hasCore(state, 23) ? 75 : 40}% tốc bắn · nảy ${hasCore(state,127) ? `${number(V.bounceFirst*100)}% → ${number(V.bounceSecond*100)}%` : "50% → 25%"}`); break;
     case "missile_swarm": detailRows.push(`${v.count} tên lửa · ${v.count / 2} mỗi bên · ${v.count / 2} cặp`); break;
     case "armor_shield": detailRows.push(`Giảm ${number((1 - v.damageTakenMultiplier) * 100)}% sát thương`); break;
     case "sweeping_cannon": detailRows.push(`${v.count} tia · trúng thêm cùng loạt: ${number(v.sideProjectileMultiplier * 100)}% viên đầu`); break;
@@ -49,10 +50,11 @@ export function getSkillTooltipModel(state: AircraftCombatState, id: SkillId) {
       break;
   }
   // Secondary mechanics only; numerical upgrades above already come from runtime.
-  for (const row of [21, 24, 27, 30, 33, 35, 38, 44]) {
+  for (const row of [21, 24, 27, 30, 33, 35, 38, 44, ...Array.from({length:27},(_,i)=>122+i)]) {
     const core = getCoreDefinition(coreId(row));
     if (hasCore(state, row) && core.skillId === id) detailRows.push(core.description);
   }
+  if (id === "escort_drone" && state.droneActive && hasCore(state,148)) detailRows.push(`Thu hồi chủ động lúc này: hoàn ${number((state.coreState.stacks.droneUpkeepSpent || 0)*V.recallRefund)} Điện (tối đa dung lượng còn trống).`);
   if (hasCore(state, 53)) detailRows.push("Kỹ năng có thể chí mạng.");
   if (hasCore(state, 96)) detailRows.push("Mỗi lần dùng kỹ năng mất 6% HP hiện tại.");
   return { title: config.name, description: descriptions[id], detailRows,
@@ -176,7 +178,7 @@ function coreCooldownStatuses(world:CombatWorld):StatusPresentation[] {
 
 export function getStatusPresentations(world: CombatWorld): StatusPresentation[] {
   const s = world.aircraft, c = s.coreState, result: StatusPresentation[] = [];
-  result.push(...coreCooldownStatuses(world));
+  result.push(...coreCooldownStatuses(world), ...skillCoreStatuses(world));
   const maxHp = getEffectiveAircraftStats(s).maxHp;
   for (const id of AIRCRAFT_CONFIGS[s.aircraftId].skillIds) {
     const timer = getActiveSkillDuration(world, id);
@@ -282,4 +284,33 @@ export function getStatusPresentations(world: CombatWorld): StatusPresentation[]
   // threshold (including Hunted at 2) is not a hard single-instance status.
   for(const [key,mark] of Object.entries(status.marks)) if(mark && mark.until>c.time) result.push({id:key,group:"debuff",name:markNames[key as keyof typeof markNames],icon:{kind:"status",id:key==="corrosion"?"acid":key==="targetLock"?"radar":"mark"},description:`Dấu hiện tại: ${mark.count}. Tiếp tục trúng đòn có thể kích hoạt đòn trừng phạt.`,source:"Đòn địch",stacks:mark.count,badgeText:`×${mark.count}`,badgeKind:"stack",remaining:mark.until-c.time,duration:mark.window,priority:100});
   return result.sort((a, b) => b.priority - a.priority || a.id.localeCompare(b.id));
+}
+
+function skillCoreStatuses(world:CombatWorld):StatusPresentation[] {
+  const s=world.aircraft,c=s.coreState,r=world.skillCores,result:StatusPresentation[]=[];
+  const add=(row:number,values:Partial<StatusPresentation>)=>{
+    const core=getCoreDefinition(coreId(row));
+    result.push({id:core.id,group:"buff",name:core.name,icon:{kind:"core",id:core.id},description:core.description,source:"Lõi kỹ năng",
+      stacks:1,remaining:Infinity,duration:Infinity,priority:85,showNumericTimer:false,...values});
+  };
+  const activeDecoys=world.decoys.some(d=>!d.clone&&d.active&&d.remaining>0);
+  const cover=(c.timers.thermalCover||0)-c.time;
+  if(hasCore(s,124)&&(activeDecoys||cover>0))add(124,{remaining:activeDecoys?Infinity:cover,duration:V.thermalTail,badgeText:`−${V.thermalReduction*100}%`,badgeKind:"percent",showNumericTimer:!activeDecoys,timeLabel:activeDecoys?"Duy trì bởi mồi đang hoạt động":undefined});
+  const cooling=(c.timers.activeCooling||0)-c.time;
+  if(hasCore(s,126)&&cooling>0)add(126,{remaining:cooling,duration:V.coolingDuration,badgeText:`+${V.coolingBonus*100}%`,badgeKind:"percent",showNumericTimer:true});
+  if(hasCore(s,122))for(const [id,cast] of r.decoyCasts)add(122,{id:`core_122:${id}`,badgeText:`${number(cast.restored/getEffectiveAircraftStats(s).maxResource*100)}%`,badgeKind:"progress",progress:cast.restored/(getEffectiveAircraftStats(s).maxResource*V.manaRefundCap),timeLabel:"Hồi Mana / giới hạn 50% mỗi lần dùng"});
+  if(hasCore(s,132)&&(s.activeEffects.armor_shield||0)>0)add(132,{remaining:s.activeEffects.armor_shield!,duration:getSkillRuntimeValues(s,"armor_shield").duration,
+    badgeText:`${number((c.stacks.shieldRefund||0)/getEffectiveAircraftStats(s).maxResource*100)}%`,badgeKind:"progress",showNumericTimer:true});
+  if(hasCore(s,130)){
+    for(const salvo of r.salvos)add(130,{id:`core_130:${salvo.id}`,badgeText:`${salvo.data}/${V.dataLimit}`,badgeKind:"stack",progress:salvo.data/V.dataLimit,timeLabel:"Salvo đang bay",description:`${getCoreDefinition(coreId(130)).description} Còn ${salvo.pending+salvo.live.size} tên lửa chưa kết thúc.`});
+    const remaining=(c.timers.tacticalData||0)-c.time;
+    if(remaining>0)add(130,{remaining,duration:V.dataDuration,badgeText:`+${number(hasCore(s,95)?0:(c.stacks.tacticalData||0)*V.dataCrit*100)}%`,badgeKind:"percent",showNumericTimer:true,description:getCoreDefinition(coreId(130)).description+(hasCore(s,95)?" Nghịch Lý Bạo Kích đang khóa tỷ lệ chí mạng ở 25%.":"")});
+  }
+  if(hasCore(s,136)&&r.blackHoles.length)add(136,{remaining:Math.max(...r.blackHoles.map(h=>h.until-world.elapsed)),duration:V.holeDuration,showNumericTimer:true});
+  const charges=c.stacks.reappearanceShots||0;
+  if(hasCore(s,142)&&charges>0)add(142,{badgeText:String(charges),badgeKind:"charge",progress:charges/V.reappearanceCharges,timeLabel:"Còn số lần bắn · không hết hạn"});
+  const linger=world.decoys.filter(d=>d.clonePhase==="linger").reduce((n,d)=>Math.max(n,d.remaining),0);
+  if(hasCore(s,141)&&linger>0)add(141,{remaining:linger,duration:V.cloneLinger,showNumericTimer:true});
+  if(hasCore(s,147)&&s.droneActive)add(147,{remaining:Math.max(0,(c.timers.electronicGuard||0)-c.time),duration:V.guardCycle,timerKind:"cooldown",showNumericTimer:true});
+  return result;
 }

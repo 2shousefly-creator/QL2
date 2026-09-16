@@ -1,3 +1,4 @@
+import { SKILL_CORE_VALUES as V } from "./airCombatSkillCores";
 import { createPlayerStatus, playerSkillLocked, tickPlayerStatus } from "./airCombatStatus";
 import { AIRCRAFT_CONFIGS, AIR_COMBAT_LIMITS, SKILL_CONFIGS } from "./airCombatConfig";
 import { applyCoreStatEffects, applyFireRateLock, hasCore, skillsLocked } from "./airCombatCoreEffects";
@@ -60,6 +61,8 @@ export function getEffectiveAircraftStats(state: AircraftCombatState, includeTem
         if (status.regenDisabledUntil > c.time) stats.hpRegen = 0;
         stats.resourceRegen *= Math.min(1, ...status.jams.filter(j => j.until > c.time).map(j => j.multiplier));
     }
+    if (includeTemporary && (c.timers.activeCooling || 0) > c.time) stats.resourceRegen *= 1 + V.coolingBonus;
+    if (includeTemporary && (c.timers.tacticalData || 0) > c.time && !hasCore(state, 95)) stats.criticalChance += (c.stacks.tacticalData || 0) * V.dataCrit;
     applyFireRateLock(state, stats);
     stats.fireRate = hasCore(state, 54) ? 1.2 : Math.min(AIR_COMBAT_LIMITS.maxFireRate, Math.max(.1, stats.fireRate));
     stats.criticalChance = Math.max(0, Math.min(1, stats.criticalChance));
@@ -178,6 +181,9 @@ export function getSkillRuntimeValues(state: AircraftCombatState, skillId: Skill
             v.damageMultiplier = hasCore(state, 45) ? .7 : .55;
             break;
     }
+    const flatCooldown = ({afterburner: [125,V.afterburnerCooldownReduction], missile_swarm: [128,V.swarmCooldownReduction], armor_shield: [133,V.shieldCooldownReduction], sweeping_cannon: [137,V.cannonCooldownReduction]} as Partial<Record<SkillId, readonly [number,number]>>)[skillId];
+    if (flatCooldown && hasCore(state, flatCooldown[0])) v.cooldown = Math.max(0, v.cooldown - flatCooldown[1]);
+    if (skillId === "focus_laser" && hasCore(state,145)) v.damageMultiplier *= 1 + V.laserBonus;
     return v;
 }
 export function canBorrowSkill(state: AircraftCombatState, skillId: SkillId): boolean {
@@ -206,6 +212,13 @@ export function endAircraftSkill(state: AircraftCombatState, skillId: SkillId): 
     if (state.activeEffectDurations) delete state.activeEffectDurations[skillId];
     if (!wasActive)
         return;
+    if (skillId === "afterburner" && hasCore(state,126) && !skillsLocked(state)) state.coreState.timers.activeCooling = state.coreState.time + V.coolingDuration;
+    if (skillId === "armor_shield" && hasCore(state,131) && !skillsLocked(state)) state.coreState.stacks.shieldEmpPending = 1;
+    if (skillId === "invisibility" && !skillsLocked(state)) {
+        state.coreState.stacks.cloneEndPending = 1;
+        if (hasCore(state,142)) state.coreState.stacks.reappearanceShots = V.reappearanceCharges;
+    }
+    if (skillId === "escort_drone") state.coreState.stacks.droneUpkeepSpent = 0;
     if (skillId === "sweeping_cannon" || skillId === "escort_drone") {
         state.cooldowns[skillId] = getSkillRuntimeValues(state, skillId).cooldown * (1 - getEffectiveAircraftStats(state).cooldownReduction) * (state.coreState.deferredCooldowns[skillId] ?? 1);
         delete state.coreState.deferredCooldowns[skillId];
@@ -220,7 +233,9 @@ export function castSkill(state: AircraftCombatState, skillId: SkillId): SkillCa
     if (!skill || skill.aircraftId !== state.aircraftId || (skillsLocked(state) || playerSkillLocked(state)))
         return { cast: false, reason: "invalid", resourceSpent: 0 };
     if ((skillId === "escort_drone" && state.droneActive) || (skillId === "sweeping_cannon" && (state.activeEffects.sweeping_cannon || 0) > 0)) {
+        const refund = skillId === "escort_drone" && hasCore(state,148) ? (state.coreState.stacks.droneUpkeepSpent || 0) * V.recallRefund : 0;
         endAircraftSkill(state, skillId);
+        state.currentResource = Math.min(getEffectiveAircraftStats(state).maxResource, state.currentResource + refund);
         return { cast: true, resourceSpent: 0, toggledOff: true };
     }
     if(state.coreState.stacks[`debt:${skillId}`])return {cast:false,reason:"cooldown",resourceSpent:0};
@@ -258,6 +273,8 @@ export function castSkill(state: AircraftCombatState, skillId: SkillId): SkillCa
     if (skillId === "escort_drone") {
         state.droneActive = true;
         state.coreState.droneCycle = 0;
+        state.coreState.stacks.droneUpkeepSpent = 0;
+        state.coreState.timers.electronicGuard = state.coreState.time + V.guardCycle;
     }
     return { cast: true, resourceSpent: cost };
 }
@@ -319,7 +336,10 @@ export function tickAircraftState(state: AircraftCombatState, deltaSeconds: numb
     if (regenerated > 0 && (hasCore(state, 5) || hasCore(state, 11) || hasCore(state, 17)))
         onHealing?.(regenerated, "core");
     const upkeep = state.droneActive ? getSkillRuntimeValues(state, "escort_drone").upkeepPerSecond : 0;
-    state.currentResource = Math.max(0, Math.min(stats.maxResource, state.currentResource + (stats.resourceRegen - upkeep) * dt));
+    const available = Math.max(0, state.currentResource + stats.resourceRegen * dt);
+    const spent = Math.min(available, upkeep * dt);
+    if (state.droneActive) state.coreState.stacks.droneUpkeepSpent = (state.coreState.stacks.droneUpkeepSpent || 0) + spent;
+    state.currentResource = Math.max(0, Math.min(stats.maxResource, available - spent));
     if (state.droneActive && state.currentResource <= 0)
         endAircraftSkill(state, "escort_drone");
 }
