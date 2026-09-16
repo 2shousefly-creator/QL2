@@ -1,4 +1,4 @@
-import { getPlayerExhaust } from "../airCombatArtwork";
+import { getPlayerExhaust, hawkEyeExhaustTransform } from "../airCombatArtwork";
 import { paintTacticalCores, paintElitePatternWarning, type TacticalPainter } from "../airCombatTacticalVisuals";
 import { enemyAllegiance } from "../airCombatRuntime";
 import { hasCore } from "../airCombatCoreEffects";
@@ -61,6 +61,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
   private companions: AirCombatSpritePool;
   private warnings: AirCombatSpritePool;
   private engines: AirCombatSpritePool;
+  private droneExhaust = new Sprite();
   private player = new Sprite();
   private playerExhaust = Array.from({length:6},()=>new Sprite());
   private shield = new Sprite();
@@ -119,6 +120,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     this.warnings = new AirCombatSpritePool(this.effects, 40);
     this.engines = new AirCombatSpritePool(this.effects, 4);
     this.vfx = new AirCombatVfx(this.effects, assets);
+    this.droneExhaust.texture=assets.engineFlame; this.droneExhaust.anchor.set(.5,0); this.droneExhaust.blendMode="add"; this.droneExhaust.visible=false; this.actors.addChild(this.droneExhaust);
     for(const sprite of this.playerExhaust){sprite.texture=assets.engineFlame;sprite.anchor.set(.5,0);sprite.blendMode="add";this.actors.addChild(sprite);}
     this.shield.texture = assets.effect("shield");
     this.laser.texture = assets.phantomBeam; this.laser.blendMode = "add";
@@ -158,8 +160,8 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
       if (event.id <= this.lastEvent) continue;
       this.lastEvent = event.id;
       if (event.kind === "damage_number") {
-        if (event.shielded && event.target !== "player") this.vfx.spawn("shield", event.x, event.y, 40, .25, 0xc9f3ff);
-        if (event.target === "enemy" && event.critical) {
+        if (event.shieldAbsorbed > 0 && event.target !== "player") this.vfx.spawn("shield", event.x, event.y, 40, .25, 0xc9f3ff);
+        if (event.target === "enemy" && event.hpDamage > 0 && event.critical) {
           if (event.entityId !== undefined) this.flashUntil.set(event.entityId, this.clock + 0.14);
           this.vfx.spawn("sparks", event.x, event.y, reducedMotion ? 18 : 25, 0.22, 0xff8080);
         }
@@ -288,7 +290,6 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
           this.vfx.spawn("damageSmoke", enemy.x - enemy.radius * 0.5, enemy.y, 44, 0.6, 0xffffff, -18);
           if (enemy.hp / enemy.maxHp < 0.25) this.vfx.spawn("fire", enemy.x + enemy.radius * 0.5, enemy.y, 32, 0.3);
         }
-        this.telegraphs.circle(enemy.x, enemy.y, enemy.radius * 1.35).stroke({ color: 0xef4444, width: 1.5, alpha: reducedMotion ? 0.3 : 0.25 + Math.sin(this.clock * 4) * 0.12 });
       } else {
         const health = this.healthBars.get(enemy.id, enemy.hp, enemy.maxHp, enemy.shieldUntil > world.aircraft.coreState.time ? enemy.shield : 0);
         const w = Math.max(24, Math.min(70, enemy.radius * 2.2));
@@ -380,14 +381,19 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
       if (decoy.clone) this.telegraphs.circle(decoy.x, decoy.y, 24).stroke({ color: 0xc4b5fd, width: 1, alpha: .4 });
       if (trail && !reducedMotion && !decoy.clone && decoy.id % 3 === 0) this.vfx.spawn("smoke", decoy.x, decoy.y + 5, decoy.active?13:7, .5, 0xb8aba0, 14);
     }
+    this.droneExhaust.visible=false;
     if (world.aircraft.droneActive) {
       const sprite = this.companions.get(-1, this.assets.effect("drone"));
       if (sprite) {
         sprite.position.set(world.droneX, world.droneY); sprite.width = sprite.height = 33;
         sprite.tint = world.droneInvulnerability > 0 ? 0xf5d0fe : 0xddd6fe;
-        if (trail && !reducedMotion) this.vfx.spawn("fire", world.droneX, world.droneY + 12, 12, .18, 0xa78bfa, 10);
+
         const target = world.enemies.find(e => e.id === world.droneTargetId);
         if (target) sprite.rotation = Math.atan2(target.y - world.droneY, target.x - world.droneX) + Math.PI / 2;
+        const mount=hawkEyeExhaustTransform(sprite.x,sprite.y,sprite.width,sprite.height,sprite.anchor.x,sprite.anchor.y,sprite.rotation);
+        this.droneExhaust.visible=true;this.droneExhaust.position.set(mount.x,mount.y);this.droneExhaust.rotation=mount.rotation;
+        this.droneExhaust.width=mount.width;this.droneExhaust.height=mount.length*(reducedMotion?1:1+.12*Math.sin(this.clock*24));
+        this.droneExhaust.tint=0xc4b5fd;this.droneExhaust.alpha=.9;
       }
     }
     if(world.aircraft.droneActive){

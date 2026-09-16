@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { AppModal, ModalButton, OverlayBody, OverlayFooter, OverlayHeader } from "../../../components/overlay/AppOverlay";
 import { CORE_DEFINITIONS, CORE_TIER_LABELS, SKILL_CONFIGS } from "./airCombatConfig";
-import { coreStackLabel, skillsLocked } from "./airCombatCoreEffects";
+import { skillsLocked } from "./airCombatCoreEffects";
 import { CombatUiIcon } from "./CombatUiIcon";
+import { getCoreTelemetryPresentation } from "./airCombatPresentation";
 import { CoreDescription } from "./CoreDescription";
 import type { AircraftCombatState } from "./airCombatTypes";
 
@@ -13,7 +14,6 @@ export function AirCombatCoreList({ state, onClose }: { state: AircraftCombatSta
   });
   const [selectedId, setSelectedId] = useState(owned[0]?.id);
   const selected = owned.find(c => c.id === selectedId) ?? owned[0];
-  const stack = selected && coreStackLabel(state, selected.id);
   return <AppModal archetype="info" layer="exclusive-dialog" layout="viewport-safe" onClose={onClose} labelledBy="air-core-list-title">
     <OverlayHeader className="air-core-list-header">
       <h2 id="air-core-list-title" className="modal-title">Danh sách lõi · {owned.length}</h2>
@@ -39,8 +39,11 @@ export function AirCombatCoreList({ state, onClose }: { state: AircraftCombatSta
           </div>
           <p className="mt-2 text-sm leading-relaxed"><CoreDescription text={selected.description} /></p>
           {selected.skillId && <p className="mt-2 text-xs font-semibold">Kỹ năng {selected.skillSlot} · {SKILL_CONFIGS[selected.skillId].name}{skillsLocked(state) ? " · Đang bị khóa" : ""}</p>}
-          {selected.skillId && !skillsLocked(state) && <p className="mt-1 text-xs text-violet-200">Hồi chiêu còn {(state.cooldowns[selected.skillId] || 0).toFixed(1)}s · Duy trì còn {(state.activeEffects[selected.skillId] || 0).toFixed(1)}s{selected.skillId === "escort_drone" && state.droneActive ? " · HawkEye đang hoạt động" : ""}</p>}
-          {stack && <p className="mt-2 text-sm font-semibold text-emerald-200">{stack}</p>}
+          {selected.skillId && !skillsLocked(state) && <p className="mt-1 text-xs text-violet-200">Hồi chiêu còn {(state.cooldowns[selected.skillId] || 0).toFixed(1).replace(".", ",")}s · Duy trì còn {(state.activeEffects[selected.skillId] || 0).toFixed(1).replace(".", ",")}s{selected.skillId === "escort_drone" && state.droneActive ? " · HawkEye đang hoạt động" : ""}</p>}
+          <section className="mt-3 border-t border-white/15 pt-3" aria-label="Thống kê lõi">
+            <h4 className="text-xs font-bold text-amber-200">THỐNG KÊ LÕI</h4>
+            <ul className="mt-2 space-y-1 text-xs">{getCoreTelemetryPresentation(state,selected.id).map((line,index)=><li key={index}><CoreDescription text={line}/></li>)}</ul>
+          </section>
           {selected.id === "core_097" && <p className="mt-2 text-xs text-amber-200">Đã khóa cả 3 kỹ năng. Mốc 9 / 18 / 27 còn lại chuyển sang lõi Kim Cương thường.</p>}
           {state.coreState.consumed.has(selected.id) && <p className="mt-2 text-xs text-amber-200">Đã sử dụng trong lượt này</p>}
         </> : <p className="text-sm text-[var(--modal-muted)]">Chưa có lõi. Lõi đầu tiên xuất hiện ở cấp 3.</p>}

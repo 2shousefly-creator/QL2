@@ -1,5 +1,6 @@
-import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
+import React, { forwardRef, useEffect, useLayoutEffect, useImperativeHandle, useRef, useState } from "react";
 import { Flame, FlaskConical, Shield, ShieldMinus, Zap, Lock, BatteryWarning, HeartOff, Crosshair, Radar } from "lucide-react";
+import { CombatStatIconTemplates, updateCombatRichText } from "./CoreDescription";
 import { CombatUiIcon } from "./CombatUiIcon";
 import { getStatusPresentations, type StatusPresentation } from "./airCombatPresentation";
 import type { CombatWorld } from "./airCombatRuntime";
@@ -58,11 +59,15 @@ export const AirCombatStatusStrip = React.memo(forwardRef<StatusStripHandle, { t
       const description = tooltip.current.querySelector("[data-status-description]");
       const source = tooltip.current.querySelector("[data-status-source]");
       if (time) time.textContent = active.timeLabel ?? timeLabel(active.remaining);
-      if (description) description.textContent = active.description;
+      if (description) updateCombatRichText(description, active.description, tooltip.current);
       if (source) source.textContent = `Nguồn: ${active.source}${active.badgeText ? ` · ${active.badgeText}` : ""}`;
     }
   } }), []);
   const active = current.current.find(s => s.id === selected);
+  useLayoutEffect(() => {
+    const node=tooltip.current?.querySelector("[data-status-description]");
+    if(node && tooltip.current && active)updateCombatRichText(node,active.description,tooltip.current);
+  });
   return <div ref={host} className="air-status-strip" style={{ top: `${top / 720 * 100}%` }} aria-label="Hiệu ứng chiến đấu">
     {(["buff", "debuff"] as const).map(group => {
       const all = items.filter(s => s.group === group), shown = all.length > 10 ? all.slice(0, 9) : all;
@@ -85,7 +90,7 @@ export const AirCombatStatusStrip = React.memo(forwardRef<StatusStripHandle, { t
     })}
     {active && <aside ref={tooltip} className="air-status-tooltip" role="status">
       <div className="air-tooltip-heading"><strong>{active.name}</strong><span data-status-time>{active.timeLabel ?? timeLabel(active.remaining)}</span></div>
-      <p data-status-description>{active.description}</p>
+      <CombatStatIconTemplates/><p data-status-description/>
       <small data-status-source>Nguồn: {active.source}{active.badgeText ? ` · ${active.badgeText}` : ""}</small>
     </aside>}
   </div>;

@@ -18,7 +18,7 @@ export class CanvasCombatAccents {
     for (const event of world.visualEvents) if (event.id > this.lastEvent) {
       this.lastEvent = event.id;
       if (event.directContact && (event.kind==="hit" || event.kind==="player_hit"))continue;
-      if (event.kind === "damage_number" && !event.shielded) continue;
+      if (event.kind === "damage_number" && event.shieldAbsorbed <= 0) continue;
       if (this.active.length >= 40) {
         if(event.kind!=="bullet_impact" && event.kind!=="player_heal" && event.kind!=="lightning")continue;
         const index=this.active.findIndex(a=>a.event.kind!=="bullet_impact");

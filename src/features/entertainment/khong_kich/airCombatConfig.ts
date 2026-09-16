@@ -1,3 +1,4 @@
+import { SKILL_BASE_VALUES as B } from "./airCombatSkillCores";
 import {
   AircraftConfig,
   AircraftId,
@@ -177,7 +178,7 @@ export const SKILL_CONFIGS: Record<SkillId, SkillConfig> = {
     "description": "7s: +40% tốc độ bắn. Đạn thường nảy thêm 2 mục tiêu với 50% rồi 25% sát thương.",
     "icon": "➤",
     "cost": 160,
-    "cooldown": 24,
+    "cooldown": B.afterburnerCooldown,
     "duration": 7,
     "damageMultiplier": 0
   },
@@ -189,7 +190,7 @@ export const SKILL_CONFIGS: Record<SkillId, SkillConfig> = {
     "description": "6 tên lửa mỗi bên (12 tổng), phóng theo cặp. Mỗi cặp lơ lửng 0,35s trước khi tìm mục tiêu; cặp tiếp theo xuất hiện khi cặp trước bắt đầu bay. Mỗi quả gây 245% Hỏa lực.",
     "icon": "▲",
     "cost": 220,
-    "cooldown": 33,
+    "cooldown": B.swarmCooldown,
     "duration": 0,
     "damageMultiplier": 2.45
   },
@@ -201,7 +202,7 @@ export const SKILL_CONFIGS: Record<SkillId, SkillConfig> = {
     "description": "Giảm 65% sát thương sau Giáp trong 6 giây.",
     "icon": "◆",
     "cost": 170,
-    "cooldown": 22,
+    "cooldown": B.shieldCooldown,
     "duration": 6,
     "damageMultiplier": 0
   },
@@ -225,7 +226,7 @@ export const SKILL_CONFIGS: Record<SkillId, SkillConfig> = {
     "description": "18s: thay đạn thường bằng quạt 5 tia, 60% Hỏa lực. Đạn cùng loạt trúng thêm chỉ gây 15% viên đầu. Bấm lại để kết thúc, sau đó mới hồi chiêu.",
     "icon": "⋔",
     "cost": 180,
-    "cooldown": 30,
+    "cooldown": B.cannonCooldown,
     "duration": 18,
     "damageMultiplier": 0.6
   },

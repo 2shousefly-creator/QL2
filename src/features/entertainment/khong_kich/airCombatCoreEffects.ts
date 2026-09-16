@@ -1,3 +1,4 @@
+import { recordCoreMetric } from "./airCombatTelemetry";
 import type { AircraftCombatState, CoreId, EffectiveAircraftStats, SkillId } from "./airCombatTypes";
 export const coreId = (row: number): CoreId => `core_${String(row).padStart(3, "0")}`;
 export const hasCore = (state: AircraftCombatState, row: number): boolean => state.selectedCores.includes(coreId(row));
@@ -23,6 +24,7 @@ export interface CoreContext {
     skillId?: SkillId;
     damage?: number;
     source?: DamageSource;
+    coreRow?: number;
     rawMultiplier: number;
     extraShot?: number;
     heal: (amount: number) => void;
@@ -46,11 +48,16 @@ const active = (s: AircraftCombatState, key: string) => (s.coreState.timers[key]
 const ready = (s: AircraftCombatState, key: string) => !active(s, key);
 const arm = (s: AircraftCombatState, key: string, seconds: number) => { s.coreState.timers[key] = s.coreState.time + seconds; };
 const shield = (ctx: CoreContext, key: string, fraction: number, seconds: number) => {
+    const old = ctx.state.coreState.shields[key];
+    const previous = old && old.until > ctx.state.coreState.time ? old.amount : 0;
     ctx.state.coreState.shields[key] = { amount: ctx.stats.maxHp * fraction, until: ctx.state.coreState.time + seconds };
+    recordCoreMetric(ctx.state, ctx.coreRow, "shieldCreated", Math.max(0, ctx.stats.maxHp * fraction - previous));
 };
-const flat = (row: number, key: keyof EffectiveAircraftStats, amount: number) => register(row, {
-    stats: (_s, stats) => { (stats[key] as number) += amount; },
-});
+export const FLAT_CORE_STATS: Record<string, {key:keyof EffectiveAircraftStats;amount:number}> = {};
+const flat = (row: number, key: keyof EffectiveAircraftStats, amount: number) => {
+    FLAT_CORE_STATS[coreId(row)] = {key,amount};
+    register(row, { stats: (_s, stats) => { (stats[key] as number) += amount; } });
+};
 for (const [row, fp, armor, rate, hp, regen, cdr] of [
     [1, 12, 12, .15, 110, .7, .04], [7, 20, 20, .4, 220, 1.7, .09], [13, 50, 50, 1.0, 420, 4, .2],
 ]) {
@@ -206,15 +213,20 @@ export function applyCoreStatEffects(state: AircraftCombatState, stats: Effectiv
             effects[id]?.finalStats?.(state, stats);
 }
 export function applyFireRateLock(state: AircraftCombatState, stats: EffectiveAircraftStats): void {
-    if (hasCore(state, 54))
+    if (hasCore(state, 54)) {
+        const before = stats.firepower;
         effects[coreId(54)].finalStats?.(state, stats);
+        state.coreState.stacks.fireRateConversion = stats.firepower - before;
+    }
 }
 export function dispatchCoreEvent(event: CoreEvent, ctx: CoreContext, only?: CoreId): void {
-    if (only)
-        effects[only]?.hooks?.[event]?.(ctx);
-    else
-        for (const id of ctx.state.selectedCores)
+    const previous = ctx.coreRow;
+    try {
+        for (const id of only ? [only] : ctx.state.selectedCores) {
+            ctx.coreRow = Number(id.slice(5));
             effects[id]?.hooks?.[event]?.(ctx);
+        }
+    } finally { ctx.coreRow = previous; }
 }
 export function outgoingCoreMultiplier(state: AircraftCombatState, target: CoreTarget, source: DamageSource, distance: number, screenHeight: number): number {
     let m = 1;
@@ -253,29 +265,29 @@ export function coreStackLabel(state: AircraftCombatState, id: CoreId): string |
     const c = state.coreState;
     const labels: Record<string, string> = { [coreId(46)]: "Hỏa lực", [coreId(47)]: "Giáp", [coreId(48)]: "HP tối đa" };
     if (labels[id]) return `Đã cộng: +${(c.stacks[id] || 0).toLocaleString("vi-VN", { maximumFractionDigits: 1 })} ${labels[id]}`;
-    const remaining = (key: string) => Math.max(0, (c.timers[key] || 0) - c.time).toFixed(1);
+    const remaining = (key: string) => Math.max(0, (c.timers[key] || 0) - c.time).toFixed(1).replace(".", ",");
     const shieldStatus = (key: string, cooldown?: string) => {
         const shield = c.shields[key];
         const amount = shield && shield.until > c.time ? Math.max(0, shield.amount) : 0;
         return `Khiên hiện tại: ${Math.floor(amount)}${cooldown ? ` · Hồi lại sau ${remaining(cooldown)}s` : ""}`;
     };
     switch (id) {
-        case "core_049": return c.time - c.lastMove >= 3 ? "Đang tăng Hỏa lực và Giáp" : `Kích hoạt sau ${Math.max(0, 3 - c.time + c.lastMove).toFixed(1)}s đứng yên`;
+        case "core_049": return c.time - c.lastMove >= 3 ? "Đang tăng Hỏa lực và Giáp" : `Kích hoạt sau ${Math.max(0, 3 - c.time + c.lastMove).toFixed(1).replace(".", ",")}s đứng yên`;
         case "core_059": return `Tiến độ đòn cường hóa: ${state.basicShotsFired % 10} / 10`;
-        case "core_060": case "core_082": return c.time - c.lastDamage >= 4 ? "Hiệu ứng không nhận sát thương đang hoạt động" : `Kích hoạt sau ${Math.max(0, 4 - c.time + c.lastDamage).toFixed(1)}s không nhận sát thương`;
+        case "core_060": case "core_082": return c.time - c.lastDamage >= 4 ? "Hiệu ứng không nhận sát thương đang hoạt động" : `Kích hoạt sau ${Math.max(0, 4 - c.time + c.lastDamage).toFixed(1).replace(".", ",")}s không nhận sát thương`;
         case "core_061": return `Giáp phản ứng: còn ${remaining("reactiveArmor")}s · Hồi lại sau ${remaining("reactiveArmorCd")}s`;
         case "core_064": return `Tiến độ hồi HP: ${c.kills % 10} / 10 hạ gục`;
         case "core_066": return `Chuỗi hiện tại: ${c.time - c.lastKill <= 3 ? c.stacks.combo || 0 : 0} / 5`;
         case "core_070": return `Tiến độ giảm hồi chiêu: ${c.kills % 8} / 8 hạ gục`;
         case "core_071": return `Tăng tốc bắn: còn ${remaining("tacticalRate")}s`;
-        case "core_074": return `Ngân sách giảm hồi chiêu còn: ${(c.time - c.criticalWindow >= 1 ? 1 : c.criticalBudget).toFixed(1)}s`;
+        case "core_074": return `Ngân sách giảm hồi chiêu còn: ${(c.time - c.criticalWindow >= 1 ? 1 : c.criticalBudget).toFixed(1).replace(".", ",")}s`;
         case "core_075": return `Cộng dồn: ${c.stacks.slaying || 0} / 5 · +${(c.stacks.slaying || 0) * 3}% Hỏa lực`;
         case "core_076": return shieldStatus("reactive", "reactiveShieldCd");
         case "core_078": return `Tăng hồi tài nguyên: còn ${remaining("reactor")}s`;
         case "core_079": return `Tiến độ bắn thêm: ${state.basicShotsFired % 3} / 3`;
         case "core_081": return shieldStatus("skill", "skillShieldCd");
         case "core_083": return `Đòn phản kích còn: ${c.stacks.counter || 0} · Hồi lại sau ${remaining("counterCd")}s`;
-        case "core_092": return c.time - c.lastDamage >= 5 ? "Đang hồi HP" : `Hồi HP sau ${Math.max(0, 5 - c.time + c.lastDamage).toFixed(1)}s không nhận sát thương`;
+        case "core_092": return c.time - c.lastDamage >= 5 ? "Đang hồi HP" : `Hồi HP sau ${Math.max(0, 5 - c.time + c.lastDamage).toFixed(1).replace(".", ",")}s không nhận sát thương`;
         case "core_099": return shieldStatus("reserve", "reserveShieldCd");
         case "core_104": return shieldStatus("overheal");
         case "core_107": return `Graze: ${c.stacks.graze??0}/6`;

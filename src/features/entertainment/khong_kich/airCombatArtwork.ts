@@ -51,3 +51,11 @@ export function getPlayerExhaust(world:CombatWorld,size:number,reducedMotion:boo
   return {length:27+state.thrust*(reducedMotion?5:16),glow:.25+state.thrust*.12,
     mounts:PLAYER_ENGINE_MOUNTS[world.aircraft.aircraftId].map(m=>({x:(m.engineMountX-art.anchorX)*size*art.scaleX,y:(m.engineMountY-.5)*size,width:m.width}))};
 }
+
+/** Normalized engine socket in the HawkEye artwork; presentation only. */
+export const HAWKEYE_EXHAUST_MOUNT = { u: .5, v: .79, width: .18, length: .43 } as const;
+export function hawkEyeExhaustTransform(x:number,y:number,width:number,height:number,anchorX:number,anchorY:number,rotation:number) {
+  const mount=HAWKEYE_EXHAUST_MOUNT,localX=(mount.u-anchorX)*width,localY=(mount.v-anchorY)*height;
+  return {x:x+localX*Math.cos(rotation)-localY*Math.sin(rotation),y:y+localX*Math.sin(rotation)+localY*Math.cos(rotation),
+    width:width*mount.width,length:height*mount.length,rotation};
+}

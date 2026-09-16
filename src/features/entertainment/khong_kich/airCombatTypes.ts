@@ -265,6 +265,7 @@ export interface CoreRuntimeState {
   acquisitions: { id: number; coreId: CoreId }[];
   nextAcquisitionId: number;
   healingTotal: number;
+  telemetry: Record<CoreId, Partial<Record<import("./airCombatTelemetry").CoreMetric, number>>>;
   /** Runtime-only budget belonging to the current invisibility cast. */
   emergencyRepair?: { remaining: number; durationRemaining: number };
   time: number;

@@ -540,9 +540,10 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
 
       {tooltipSkill && tooltipModel && (
         <aside className="air-skill-tooltip" data-skill-tooltip={tooltipSkill} onPointerDown={event => event.stopPropagation()} onPointerMove={event => event.stopPropagation()}>
-          <div className="air-tooltip-heading"><h3>{tooltipModel.title}</h3><strong>{tooltipModel.cooldown.toFixed(1).replace(".", ",")}s</strong></div>
-          <p>{tooltipModel.description}</p>
-          <div className="air-tooltip-details">{tooltipModel.detailRows.map(row => <div key={row}>{row}</div>)}</div>
+          <div className="air-tooltip-heading"><h3>{tooltipModel.title}</h3><strong style={{color:"#fde047"}}>Hồi chiêu: {tooltipModel.cooldown.toFixed(1).replace(".", ",")}s</strong></div>
+          <p><CoreDescription text={tooltipModel.description}/></p>
+          <div className="air-tooltip-details">{tooltipModel.detailRows.map(row => <div key={row}><CoreDescription text={row}/></div>)}</div>
+          {tooltipModel.coreRows.map(row=><p key={row} style={{color:"#fde047"}}><CoreDescription text={row}/></p>)}
         </aside>
       )}
 

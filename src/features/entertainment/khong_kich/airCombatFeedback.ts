@@ -13,14 +13,14 @@ export interface DamageLabel {
   offset: number;
   text: string;
   critical: boolean;
-  shielded: boolean;
+  damageKind: "hp" | "shield";
   revision: number;
 }
 
 /** Presentation-only ring shared by Pixi and emergency Canvas. Never reads HP deltas. */
 export class DamageLabelPool {
   readonly labels: DamageLabel[] = Array.from({ length: DAMAGE_LABEL_LIMIT }, () => ({
-    active: false, age: 0, x: 0, y: 0, offset: 0, text: "", critical: false, shielded: false, revision: 0,
+    active: false, age: 0, x: 0, y: 0, offset: 0, text: "", critical: false, damageKind: "hp", revision: 0,
   }));
   private next = 0;
   private lastEvent = 0;
@@ -34,18 +34,24 @@ export class DamageLabelPool {
     for (const event of world.visualEvents) {
       if (event.id <= this.lastEvent) continue;
       this.lastEvent = event.id;
-      if (event.kind !== "damage_number" || event.amount <= 0) continue;
-      const label = this.labels[this.next];
-      this.next = (this.next + 1) % this.labels.length;
-      label.active = true;
-      label.age = 0;
-      label.x = Math.max(24, Math.min(AIR_COMBAT_WORLD.width - 24, event.x));
-      label.y = Math.max(GAMEPLAY_SAFE_RECT.top + 18, Math.min(AIR_COMBAT_WORLD.height - 20, event.y - 10));
-      label.offset = ((event.id % 5) - 2) * 4;
-      label.text = String(Math.max(1, Math.round(event.amount)));
-      label.critical = event.target === "enemy" && event.critical;
-      label.shielded = event.target === "player" && event.shielded;
-      label.revision++;
+      if (event.kind !== "damage_number") continue;
+      for (const damageKind of ["shield", "hp"] as const) {
+        const amount = damageKind === "shield" ? event.shieldAbsorbed : event.hpDamage;
+        if (!(amount > 0)) continue;
+        const label = this.labels[this.next];
+        this.next = (this.next + 1) % this.labels.length;
+        label.active = true;
+        label.age = 0;
+        label.x = Math.max(24, Math.min(AIR_COMBAT_WORLD.width - 24, event.x));
+        label.y = Math.max(GAMEPLAY_SAFE_RECT.top + 18, Math.min(AIR_COMBAT_WORLD.height - 20, event.y - 10));
+        // Separate both parts of a hit so white absorption never hides the HP number.
+        label.offset = ((event.id % 5) - 2) * 4;
+        if (event.hpDamage > 0 && event.shieldAbsorbed > 0) { label.x += damageKind === "shield" ? -16 : 16; if (damageKind === "shield") label.y -= 13; }
+        label.text = String(Math.max(1, Math.round(amount)));
+        label.critical = damageKind === "hp" && event.target === "enemy" && event.critical;
+        label.damageKind = damageKind;
+        label.revision++;
+      }
       onSpawn?.(event);
     }
   }

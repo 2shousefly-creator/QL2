@@ -23,7 +23,7 @@ export class AirCombatDamageText {
       if (!label.active) continue;
       if (this.revisions[i] !== label.revision) {
         this.revisions[i] = label.revision;
-        text.style = label.critical ? this.critical : label.shielded ? this.shielded : this.normal;
+        text.style = label.critical ? this.critical : label.damageKind === "shield" ? this.shielded : this.normal;
         text.text = label.text;
       }
       const progress = label.age / DAMAGE_LABEL_SECONDS;

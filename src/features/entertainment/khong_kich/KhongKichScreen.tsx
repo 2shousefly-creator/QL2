@@ -36,6 +36,8 @@ import {
 import { AirCombatBattle } from "./AirCombatBattle";
 import { AirCombatResult } from "./AirCombatResult";
 import { AircraftPreview } from "./AircraftPreview";
+import { CoreDescription } from "./CoreDescription";
+import { getSkillTooltipModel } from "./airCombatPresentation";
 import { CombatUiIcon } from "./CombatUiIcon";
 import { AircraftSelectionStats } from "./CombatStatReadout";
 import "./combat-ui.css";
@@ -430,7 +432,7 @@ export const KhongKichScreen: React.FC<KhongKichScreenProps> = ({
                       </div>
                     </div>
                     <p className="mt-1 text-[9.5px] leading-relaxed text-[var(--modal-text)]">
-                      {skill.description}
+                      <CoreDescription text={getSkillTooltipModel(createAircraftCombatState(previewConfig.id),skillId).description}/>
                     </p>
                   </article>
                 );

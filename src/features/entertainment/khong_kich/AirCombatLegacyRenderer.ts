@@ -233,7 +233,8 @@ function drawCombatDrone(
   ctx.shadowBlur = 14;
   ctx.fillStyle = `rgba(139,92,246,${0.35 + pulse * 0.2})`;
   ctx.beginPath();
-  ctx.ellipse(0, 9, 5, 8 + pulse * 2, 0, 0, Math.PI * 2);
+  const mount=HAWKEYE_EXHAUST_MOUNT, length=33*mount.length*(.9+pulse*.1);
+  ctx.ellipse((mount.u-.5)*33, (mount.v-.5)*33+length/2, 33*mount.width/2, length/2, 0, 0, Math.PI * 2);
   ctx.fill();
   ctx.fillStyle = "#7c3aed";
   ctx.beginPath();
@@ -732,8 +733,8 @@ export function drawLegacyWorld(
     const pop = reducedMotion ? 1 : 1 + 0.16 * Math.max(0, 1 - label.age / 0.12);
     ctx.font = `${label.critical ? 800 : 500} ${13 * (label.critical ? 1.2 : 1) * pop}px Arial`;
     ctx.globalAlpha = Math.min(1, (1 - progress) * 2);
-    ctx.fillStyle = label.critical ? "#ff4d55" : label.shielded ? "#ffffff" : "#fde047";
-    ctx.strokeStyle = label.shielded ? "#325777" : "#151c29"; ctx.lineWidth = 3;
+    ctx.fillStyle = label.critical ? "#ff4d55" : label.damageKind === "shield" ? "#ffffff" : "#fde047";
+    ctx.strokeStyle = label.damageKind === "shield" ? "#325777" : "#151c29"; ctx.lineWidth = 3;
     const x = label.x + label.offset * (reducedMotion ? 0.4 : 0.4 + progress);
     const y = label.y - progress * (reducedMotion ? 7 : 24);
     ctx.strokeText(label.text, x, y); ctx.fillText(label.text, x, y);

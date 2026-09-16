@@ -1,5 +1,5 @@
 import React from "react";
-import { Swords, Shield, Gauge, HeartPlus, Gem, Timer, Crosshair, Zap } from "lucide-react";
+import { Swords, Shield, Gauge, HeartPulse, BatteryCharging, Timer, Crosshair, Zap } from "lucide-react";
 import type { EffectiveAircraftStats } from "./airCombatTypes";
 
 export function CombatStatChips({ stats, baseline }: { stats: EffectiveAircraftStats; baseline?: EffectiveAircraftStats }) {
@@ -9,8 +9,8 @@ export function CombatStatChips({ stats, baseline }: { stats: EffectiveAircraftS
     { label: "Hỏa lực", value: stats.firepower.toFixed(0), Icon: Swords },
     { label: "Giáp", value: stats.armor.toFixed(0), Icon: Shield },
     { label: "Tốc độ bắn", value: `${stats.fireRate.toFixed(1)}/s`, Icon: Gauge },
-    { label: "Hồi HP", value: `${stats.hpRegen.toFixed(1)}/s`, Icon: HeartPlus },
-    { label: `Hồi ${resource}`, value: `${stats.resourceRegen.toFixed(1)}/s`, Icon: Gem },
+    { label: "Hồi HP", value: `${stats.hpRegen.toFixed(1)}/s`, Icon: HeartPulse },
+    { label: `Hồi ${resource}`, value: `${stats.resourceRegen.toFixed(1)}/s`, Icon: BatteryCharging },
     { label: "Giảm hồi chiêu", value: `${Math.round(stats.cooldownReduction * 100)}%`, Icon: Timer },
     { label: "Tỷ lệ chí mạng", value: `${Math.round(stats.criticalChance * 100)}%`, Icon: Crosshair },
     { label: "Sát thương chí mạng", value: `${Math.round(stats.criticalDamageMultiplier * 100)}%`, Icon: Zap },
