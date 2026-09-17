@@ -2,7 +2,7 @@ import type { AircraftCombatState } from "./airCombatTypes";
 import { negativeStatusDuration } from "./airCombatCoreEffects";
 
 export type AttackTag = "crimson_barrage" | "iron_suppression" | "radar_bombardment" | "basic" | "burst" | "needle_pair" | "scissor" | "suppressive_gate" | "kamikaze_dash" | "carpet_bomb" | "rail" | "emp" | "elite_execution" | "shock_clamp" | "acid" | "radar_lock" | "boss_wing" | "boss_fan" | "boss_sonic" | "boss_lane" | "boss_dash" | "boss_missile" | "boss_emp" | "boss_crossfire" | "boss_suppressive";
-export interface StatusPayload { stun?: number; skillLock?: number; resourceJam?: number; resourceMultiplier?: number; armorBreak?: number; regenDisable?: number }
+export interface StatusPayload { stun?: number; skillLock?: number; resourceJam?: number; resourceMultiplier?: number; armorBreak?: number; regenDisable?: number; healingReduction?: number; healingReceivedMultiplier?: number }
 export type Allegiance = "player" | "hostile" | "friendly_hacked";
 export type DamageDelivery = "direct_projectile" | "aircraft_collision" | "explosive_aoe" | "area_hazard" | "beam" | "shockwave";
 export interface AttackMetadata { allegiance?:Allegiance; delivery?:DamageDelivery; sourceEnemyId?: number; sourceEnemyType?: import("./airCombatTypes").EnemyType; attackTag?: AttackTag; majorBossAttack?: boolean; payload?: StatusPayload }
@@ -10,15 +10,22 @@ export type MarkName = "hunterMark" | "suppression" | "corrosion" | "targetLock"
 export interface PlayerCombatStatus {
   stunnedUntil: number; skillLockedUntil: number; resourceJammedUntil: number;
   armorBrokenUntil: number; regenDisabledUntil: number; durations: Record<string,number>;
+  healingReceivedUntil: number; healingReceivedMultiplier: number;
   jams: { until: number; multiplier: number }[];
   marks: Partial<Record<MarkName, { count: number; until: number; hits:number[]; window:number; sourceEnemyId?: number }>>;
 }
-export const createPlayerStatus = (): PlayerCombatStatus => ({ stunnedUntil: 0, skillLockedUntil: 0, resourceJammedUntil: 0, armorBrokenUntil: 0, regenDisabledUntil: 0, durations: {}, jams: [], marks: {} });
+export const createPlayerStatus = (): PlayerCombatStatus => ({ stunnedUntil: 0, skillLockedUntil: 0, resourceJammedUntil: 0, armorBrokenUntil: 0, regenDisabledUntil: 0, healingReceivedUntil: 0, healingReceivedMultiplier: 1, durations: {}, jams: [], marks: {} });
 export function applyPlayerStatus(state: AircraftCombatState, payload: StatusPayload): void {
   const s = state.status, now = state.coreState.time;
   for (const [key, seconds] of [["stunnedUntil", payload.stun], ["skillLockedUntil", payload.skillLock], ["armorBrokenUntil", payload.armorBreak], ["regenDisabledUntil", payload.regenDisable]] as const) {
     const duration = negativeStatusDuration(state, seconds ?? 0);
     if (duration > 0) { s[key] = Math.max(s[key], now + duration); s.durations[key] = s[key]-now; }
+  }
+  const healingDuration = negativeStatusDuration(state, payload.healingReduction ?? 0);
+  if (healingDuration > 0) {
+    s.healingReceivedMultiplier = Math.min(s.healingReceivedUntil > now ? s.healingReceivedMultiplier : 1, payload.healingReceivedMultiplier ?? 1);
+    s.healingReceivedUntil = now + healingDuration;
+    s.durations.healingReceivedUntil = healingDuration;
   }
   const duration = negativeStatusDuration(state, payload.resourceJam ?? 0);
   if (duration > 0) {

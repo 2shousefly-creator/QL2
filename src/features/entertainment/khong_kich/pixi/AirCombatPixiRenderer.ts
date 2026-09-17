@@ -1,11 +1,11 @@
 import { magneticShake } from "../airCombatMagnetic";
 import { STAGE2_ENEMY_ART, TEMPEST_WEAKPOINT_ART } from "../airCombatStage2Art";
-import { paintMagnetic, magneticEnemyDisabled } from "../airCombatMagnetic";
+import { paintMagnetic, guardianSlots } from "../airCombatMagnetic";
 import { getPlayerExhaust, hawkEyeExhaustTransform } from "../airCombatArtwork";
 import { paintTacticalCores, paintElitePatternWarning, type TacticalPainter } from "../airCombatTacticalVisuals";
 import { enemyAllegiance } from "../airCombatRuntime";
 import { hasCore } from "../airCombatCoreEffects";
-import { enemyAirframeRotation } from "../airCombatHitboxes";
+import { getEnemyExhaustTransform } from "../airCombatHitboxes";
 import { paintTitanShield, type ShieldPainter } from "../airCombatTitanShield";
 import { TitanShieldPresentation } from "../airCombatTitanShield";
 import { AirCombatMissilePool } from "./AirCombatMissilePool";
@@ -126,7 +126,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     this.missiles = new AirCombatMissilePool(this.actors, assets, AIR_COMBAT_WORLD.maxPlayerProjectiles + AIR_COMBAT_WORLD.maxEnemyProjectiles);
     this.companions = new AirCombatSpritePool(this.actors, 65);
     this.warnings = new AirCombatSpritePool(this.effects, 40);
-    this.engines = new AirCombatSpritePool(this.effects, 4);
+    this.engines = new AirCombatSpritePool(this.effects, AIR_COMBAT_WORLD.maxEnemies + 4);
     this.vfx = new AirCombatVfx(this.effects, assets);
     this.droneExhaust.texture=assets.engineFlame; this.droneExhaust.anchor.set(.5,0); this.droneExhaust.blendMode="add"; this.droneExhaust.visible=false; this.actors.addChild(this.droneExhaust);
     for(const sprite of this.playerExhaust){sprite.texture=assets.engineFlame;sprite.anchor.set(.5,0);sprite.blendMode="add";this.actors.addChild(sprite);}
@@ -273,8 +273,8 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     this.engines.begin();
     for (const enemy of world.enemies) {
       const magnetic = !!world.magnetic;
-      const exposed = magnetic && enemy.type === "boss" && ((world.magnetic?.director?.recovery ?? 0) > 0 || world.enemies.filter(e => e.type === "satellite" && !magneticEnemyDisabled(world,e)).length <= 2);
-      const frame = exposed ? TEMPEST_WEAKPOINT_ART : magnetic ? STAGE2_ENEMY_ART[enemy.type]! : ENEMY_VISUALS[enemy.type];
+      const exposed = magnetic && enemy.type === "boss" && !guardianSlots(world, enemy.id).some(Boolean);
+      const frame = exposed ? TEMPEST_WEAKPOINT_ART : magnetic ? (STAGE2_ENEMY_ART[enemy.type] ?? ENEMY_VISUALS[enemy.type]) : ENEMY_VISUALS[enemy.type];
       const sprite = this.enemies.get(enemy.id, this.assets.texture(frame));
       if (!sprite) continue;
       sprite.position.set(enemy.x, enemy.y);
@@ -283,16 +283,17 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
       sprite.height = sprite.width * (magnetic ? 1 : enemy.type === "boss" ? BOSS_VISUAL_ASPECT : sprite.texture.height / sprite.texture.width);
       sprite.rotation = Math.PI;
       sprite.tint = enemyAllegiance(world,enemy)==="friendly_hacked" ? 0x67e8f9 : this.flashUntil.has(enemy.id) ? 0xffe1b3 : enemy.type === "acid_bomber" ? 0xa3e635 : enemy.type === "jammer" ? 0x2dd4bf : enemy.type === "sniper" ? 0xe879f9 : enemy.type === "radar_hunter" ? 0x38bdf8 : 0xffffff;
-      if(magneticEnemyDisabled(world,enemy)){sprite.tint=0x475569;sprite.alpha=.45;}
       if(!magnetic && (enemy.shield>0 || enemy.aegisUntil>world.aircraft.coreState.time))this.telegraphs.circle(enemy.x,enemy.y,enemy.radius+7).fill({color:0x38bdf8,alpha:.12}).stroke({color:0x7dd3fc,width:2,alpha:.85});
       if(enemy.stun>0)this.telegraphs.circle(enemy.x,enemy.y-enemy.radius-7,5).stroke({color:0xfde047,width:2});
       if(enemy.burn>0&&!reducedMotion&&damageSmoke)this.vfx.spawn("fire",enemy.x,enemy.y,24,.3);
       if (!world.ended && enemy.hp>0 && enemy.type === "kamikaze" && (enemy.kamikazeState === "charge" || enemy.kamikazeState === "dash")) {
-        this.vfx.spawn("charge",enemy.x,enemy.y-enemy.radius,16,.12,0xfbbf24);
+        const transform=getEnemyExhaustTransform(enemy);
+        const flame=this.engines.get(enemy.id+4,this.assets.engineFlame);
+        if(flame){flame.anchor.set(.5,0);flame.position.set(transform.x,transform.y);flame.rotation=transform.rotation;flame.width=transform.width;flame.height=transform.length*(reducedMotion?1:1+Math.sin(this.clock*22)*.06);flame.alpha=.95;}
         const committed = enemy.kamikazeState === "dash" && enemy.dashCommitted;
         this.telegraphs.moveTo(committed ? enemy.dashStartX : enemy.x, committed ? enemy.dashStartY : enemy.y).lineTo(enemy.dashEndX,enemy.dashEndY).stroke({color:enemyAllegiance(world,enemy)==="friendly_hacked"?0x67e8f9:0xfbbf24,width:1.5,alpha:.7});
       }
-      if(enemy.type==="kamikaze")sprite.rotation=enemyAirframeRotation(enemy);
+      if(enemy.type==="kamikaze")sprite.rotation=getEnemyExhaustTransform(enemy).rotation;
       if(enemy.type==="boss" && (enemy.bossAttack?.crossfirePending??0)>0 && !enemy.bossAttack?.patternWaiting) {
         const attack=enemy.bossAttack!,center=attack.crossfireCenter!,half=attack.crossfireWidth!/2;
         for(const side of [-1,1]) {

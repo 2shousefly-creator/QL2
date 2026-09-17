@@ -7,7 +7,7 @@ export interface AirCombatPresentation {
 }
 
 export interface AtlasFrame {
-  atlas: "aircraft" | "fortress" | "vfx" | "ammo" | "basicAmmo" | "healingCross" | "stage2Enemy" | "stage2Vfx";
+  atlas: "aircraft" | "fortress" | "vfx" | "ammo" | "basicAmmo" | "healingCross" | "stage2Enemy" | "stage2Vfx" | "stage2Elite";
   /** Normalized source rectangle, independent of generator output resolution. */
   rect: readonly [number, number, number, number];
 }

@@ -111,8 +111,7 @@ const KhongKichContent: React.FC<KhongKichScreenProps> = ({
     nextProfile.campaign = { ...nextProfile.campaign, lastSelectedStage: selectedStage };
     saveAirCombatProfile(nextProfile);
     setProfile(nextProfile);
-    setCompletedRun(null);
-    setPhase("playing");
+    navigate(() => { setCompletedRun(null); commitPhase("playing"); });
   };
 
   const chooseAircraft = (aircraftId: AircraftId) => {

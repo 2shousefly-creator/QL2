@@ -2,7 +2,7 @@ import { magneticShake } from "./airCombatMagnetic";
 import { magneticFlight, stormTile } from "./airCombatMagneticSky";
 import { STAGE2_ART_URLS, STAGE2_ENEMY_ART, STAGE2_VFX_ART, TEMPEST_WEAKPOINT_ART } from "./airCombatStage2Art";
 import type { AtlasFrame } from "./pixi/airCombatPixiTypes";
-import { paintMagnetic, magneticEnemyDisabled } from "./airCombatMagnetic";
+import { paintMagnetic, guardianSlots } from "./airCombatMagnetic";
 import { paintTacticalCores, paintElitePatternWarning, type TacticalPainter } from "./airCombatTacticalVisuals";
 import { enemyAllegiance } from "./airCombatRuntime";
 import aircraftAtlasUrl from "../../../assets/khong-kich/v2/aircraft-atlas.png";
@@ -13,7 +13,7 @@ import fortressAtlasUrl from "../../../assets/khong-kich/v2/fortress-clouds-atla
 import { hasCore } from "./airCombatCoreEffects";
 import { PLAYER_AIRFRAME_SIZE, PLAYER_HITBOX_PROFILES, ENEMY_HITBOX_PROFILES, type AircraftHitboxProfile } from "./airCombatHitboxes";
 import { BOSS_VISUAL_WIDTH_SCALE, BOSS_VISUAL_ASPECT } from "./airCombatHudLayout";
-import { enemyAirframeRotation } from "./airCombatHitboxes";
+import { getEnemyExhaustTransform } from "./airCombatHitboxes";
 import { paintTitanShield, type ShieldPainter } from "./airCombatTitanShield";
 import { AMMO_VISUALS, getAmmoVisualKey, getBasicAmmoVisual, getMissileVisual, missileRenderRotation } from "./airCombatAmmo";
 import type { AmmoVisualKey } from "./airCombatAmmo";
@@ -46,7 +46,7 @@ function magneticImage(url: string) {
 }
 /** Resolve the mandatory atlas before releasing the battle loading pause. */
 export async function loadMagneticCanvasAssets() {
-  await Promise.all([STAGE2_ART_URLS.enemy, STAGE2_ART_URLS.vfx, STAGE2_ART_URLS.storm].map(async url => {
+  await Promise.all([STAGE2_ART_URLS.enemy, STAGE2_ART_URLS.vfx, STAGE2_ART_URLS.storm, STAGE2_ART_URLS.elite].map(async url => {
     magneticImage(url);
     const image = magneticImages.get(url)!;
     await image.decode();
@@ -54,7 +54,7 @@ export async function loadMagneticCanvasAssets() {
 }
 function drawMagneticFrame(ctx: CanvasRenderingContext2D, frame: AtlasFrame, x: number, y: number,
   width: number, height: number, rotation = 0, alpha = 1) {
-  const image = magneticImage(frame.atlas === "stage2Enemy" ? STAGE2_ART_URLS.enemy : STAGE2_ART_URLS.vfx);
+  const image = magneticImage(frame.atlas === "stage2Elite" ? STAGE2_ART_URLS.elite : frame.atlas === "stage2Enemy" ? STAGE2_ART_URLS.enemy : STAGE2_ART_URLS.vfx);
   if (!image) return;
   const [sx,sy,sw,sh] = frame.rect;
   ctx.save(); ctx.globalAlpha = alpha; ctx.translate(x,y); ctx.rotate(rotation);
@@ -600,16 +600,22 @@ export function drawLegacyWorld(
       for(const side of [-1,1]){const edge=center+side*half,wing=side<0?Math.min(enemy.x-64,edge-7):Math.max(enemy.x+64,edge+7);ctx.strokeStyle="#ffd49a";ctx.beginPath();ctx.arc(wing,enemy.y+18,8+(1-(attack.crossfireTimer??0)/.33)*8,0,Math.PI*2);ctx.stroke();ctx.strokeStyle="rgba(103,232,249,.65)";ctx.beginPath();ctx.moveTo(edge,enemy.y+20);ctx.lineTo(edge,GAMEPLAY_SAFE_RECT.bottom);ctx.stroke();}ctx.restore();
     }
     ctx.save();ctx.translate(enemy.x,enemy.y);
-    if(enemy.type==="kamikaze")ctx.rotate(enemyAirframeRotation(enemy)-Math.PI);
+    if(enemy.type==="kamikaze")ctx.rotate(getEnemyExhaustTransform(enemy).rotation-Math.PI);
     if (world.magnetic) {
-      const exposed = enemy.type === "boss" && ((world.magnetic?.director?.recovery ?? 0) > 0 || world.enemies.filter(e => e.type === "satellite" && !magneticEnemyDisabled(world,e)).length <= 2);
+      const exposed = enemy.type === "boss" && !guardianSlots(world, enemy.id).some(Boolean);
       const frame = exposed ? TEMPEST_WEAKPOINT_ART : STAGE2_ENEMY_ART[enemy.type];
-      if (frame) drawMagneticFrame(ctx, frame, 0, 0, enemy.radius*2.8, enemy.radius*2.8, Math.PI, magneticEnemyDisabled(world,enemy) ? .3 : 1);
+      if (frame) drawMagneticFrame(ctx, frame, 0, 0, enemy.radius*2.8, enemy.radius*2.8, Math.PI, 1);
+      else drawEnemyGlyph(ctx, enemy.type, 0, 0, enemy.radius);
     } else drawEnemyGlyph(ctx, enemy.type, 0, 0, enemy.radius);
     ctx.restore();
     if(!world.magnetic && (enemy.shield>0||enemy.aegisUntil>world.aircraft.coreState.time)){ctx.strokeStyle="#7dd3fc";ctx.lineWidth=2;ctx.beginPath();ctx.arc(enemy.x,enemy.y,enemy.radius+7,0,Math.PI*2);ctx.stroke();}
     if(enemy.stun>0){ctx.strokeStyle="#fde047";ctx.beginPath();ctx.arc(enemy.x,enemy.y-enemy.radius-7,5,0,Math.PI*2);ctx.stroke();}
     if(!world.ended&&enemy.hp>0&&enemy.type==="kamikaze"&&(enemy.kamikazeState==="charge"||enemy.kamikazeState==="dash")){
+      const transform=getEnemyExhaustTransform(enemy);
+      ctx.save();ctx.translate(transform.x,transform.y);ctx.rotate(transform.rotation);
+      const length=transform.length*(reducedMotion?1:1+Math.sin(world.elapsed*22)*.06),width=transform.width;
+      ctx.fillStyle="#ff921f";ctx.beginPath();ctx.moveTo(-width/2,0);ctx.quadraticCurveTo(-width*.6,length*.3,0,length);ctx.quadraticCurveTo(width*.6,length*.3,width/2,0);ctx.fill();
+      ctx.fillStyle="#fff7dc";ctx.beginPath();ctx.moveTo(-width*.24,0);ctx.lineTo(0,length*.7);ctx.lineTo(width*.24,0);ctx.fill();ctx.restore();
       const committed=enemy.kamikazeState==="dash"&&enemy.dashCommitted;
       ctx.strokeStyle=enemyAllegiance(world,enemy)==="friendly_hacked"?"#67e8f9":"rgba(251,191,36,.65)";ctx.lineWidth=1.5;ctx.beginPath();
       ctx.moveTo(committed?enemy.dashStartX:enemy.x,committed?enemy.dashStartY:enemy.y);ctx.lineTo(enemy.dashEndX,enemy.dashEndY);ctx.stroke();

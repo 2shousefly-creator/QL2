@@ -23,6 +23,11 @@ export const AIRCRAFT_VISUALS: Record<AircraftId, AircraftVisualDefinition> = {
   phantom: { neutral: cell("aircraft", 0, 2), left: cell("aircraft", 1, 2), right: cell("aircraft", 2, 2), size: PLAYER_STANDARD_AIRFRAME_SIZE, artwork: PLAYER_ARTWORK.phantom, tint: 0xc4b5fd },
 };
 export const ENEMY_VISUALS: Record<EnemyType, AtlasFrame> = {
+  prism_sovereign: STAGE2_ENEMY_ART.prism_sovereign!,
+  mine_warden: STAGE2_ENEMY_ART.mine_warden!,
+  polarity_warden: STAGE2_ENEMY_ART.polarity_warden!,
+  swarm_overlord: STAGE2_ENEMY_ART.swarm_overlord!,
+  arc_reaver_prime: STAGE2_ENEMY_ART.arc_reaver_prime!,
   orbit_wasp: STAGE2_ENEMY_ART.orbit_wasp!,
   arc_reaver: STAGE2_ENEMY_ART.arc_reaver!,
   mine_seeder: STAGE2_ENEMY_ART.mine_seeder!,
@@ -60,13 +65,13 @@ export type VisualKey = keyof typeof VFX_VISUALS;
 
 /** Each renderer owns its frame views. Assets owns cached shared source textures. */
 export async function loadAirCombatAssets() {
-  const [aircraft, fortress, vfx, ammo, bigbang, engineFlame, basicAmmo, phantomBeam, healingCross, stage2Enemy, stage2Vfx, magneticStorm] = await Promise.all([
+  const [aircraft, fortress, vfx, ammo, bigbang, engineFlame, basicAmmo, phantomBeam, healingCross, stage2Enemy, stage2Vfx, magneticStorm, stage2Elite] = await Promise.all([
     Assets.load<Texture>(aircraftUrl), Assets.load<Texture>(fortressUrl), Assets.load<Texture>(vfxUrl), Assets.load<Texture>(ammoUrl), Assets.load<Texture>(bigbangUrl), Assets.load<Texture>(flameUrl), Assets.load<Texture>(basicAmmoUrl),
     Assets.load<Texture>(phantomBeamUrl),
     Assets.load<Texture>(healingCrossUrl),
-    Assets.load<Texture>(STAGE2_ART_URLS.enemy), Assets.load<Texture>(STAGE2_ART_URLS.vfx), Assets.load<Texture>(STAGE2_ART_URLS.storm),
+    Assets.load<Texture>(STAGE2_ART_URLS.enemy), Assets.load<Texture>(STAGE2_ART_URLS.vfx), Assets.load<Texture>(STAGE2_ART_URLS.storm), Assets.load<Texture>(STAGE2_ART_URLS.elite),
   ]);
-  const sources = { aircraft, fortress, vfx, ammo, basicAmmo, healingCross, stage2Enemy, stage2Vfx };
+  const sources = { aircraft, fortress, vfx, ammo, basicAmmo, healingCross, stage2Enemy, stage2Vfx, stage2Elite };
   const frames = new Map<AtlasFrame, Texture>();
   const texture = (definition: AtlasFrame) => {
     const cached = frames.get(definition);

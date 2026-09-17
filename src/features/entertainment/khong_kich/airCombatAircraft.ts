@@ -124,7 +124,7 @@ export function levelUpAircraft(state: AircraftCombatState): void {
     const before = getEffectiveAircraftStats(state);
     state.level++;
     const after = getEffectiveAircraftStats(state);
-    state.currentHp = Math.min(after.maxHp, state.currentHp + Math.max(0, after.maxHp - before.maxHp));
+    healAircraft(state, Math.max(0, after.maxHp - before.maxHp));
     state.currentResource = Math.min(after.maxResource, state.currentResource + Math.max(0, after.maxResource - before.maxResource));
 }
 export function getSkillRuntimeValues(state: AircraftCombatState, skillId: SkillId): RuntimeSkillValues {
@@ -281,7 +281,7 @@ export function castSkill(state: AircraftCombatState, skillId: SkillId): SkillCa
 }
 export function healAircraft(state: AircraftCombatState, amount: number): number {
     const maxHp = getEffectiveAircraftStats(state).maxHp;
-    const healing = Math.max(0, amount), effective = Math.min(healing, Math.max(0, maxHp - state.currentHp));
+    const healing = Math.max(0, amount) * (state.status.healingReceivedUntil > state.coreState.time ? state.status.healingReceivedMultiplier : 1), effective = Math.min(healing, Math.max(0, maxHp - state.currentHp));
     state.currentHp = Math.min(maxHp, state.currentHp + effective);
     state.coreState.healingTotal += effective;
     if (hasCore(state, 104) && healing > effective) {

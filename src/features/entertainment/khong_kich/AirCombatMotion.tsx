@@ -2,13 +2,14 @@ import React, { createContext, useContext, useEffect } from "react";
 import { usePresence, useReducedMotion } from "motion/react";
 import { AppModal, type AppDialogProps } from "../../../components/overlay/AppOverlay";
 export const AirCombatMotionContext = createContext(false);
-export function AirCombatModal(props:AppDialogProps) {
+export function AirCombatModal(props:AppDialogProps & { exitDuration?: number }) {
   const [present, remove]=usePresence();
   const contextReduced=useContext(AirCombatMotionContext);
   const systemReduced=useReducedMotion();
   const reduced=contextReduced||systemReduced||props.reducedMotion;
-  useEffect(()=>{if(!present){const timer=setTimeout(()=>remove?.(),reduced?100:280);return()=>clearTimeout(timer);}},[present,remove,reduced]);
-  return <AppModal {...props} reducedMotion={!!reduced} overlayClassName={`${props.overlayClassName??""} air-motion-modal ${present?"":"air-motion-exit"}`} />;
+  useEffect(()=>{if(!present){const timer=setTimeout(()=>remove?.(),props.exitDuration ?? (reduced?100:280));return()=>clearTimeout(timer);}},[present,remove,reduced,props.exitDuration]);
+  const { exitDuration, ...dialogProps } = props;
+  return <AppModal {...dialogProps} reducedMotion={!!reduced} overlayClassName={`${props.overlayClassName??""} ${exitDuration ? "air-core-motion" : ""} air-motion-modal ${present?"":"air-motion-exit"}`} />;
 }
 export function AirCombatConfirmation(props:Omit<AppDialogProps,"archetype">) {
   return <AirCombatModal {...props} archetype="confirm" />;

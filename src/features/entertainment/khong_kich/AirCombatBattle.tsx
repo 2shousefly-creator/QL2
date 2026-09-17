@@ -157,7 +157,7 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
       setPlayerInputActive(worldRef.current, false);
     } else {
       reasons.delete(reason);
-      if (["user","core","tooltip","exit","coreList"].includes(reason)) {
+      if (["user","tooltip","exit","coreList"].includes(reason)) {
         reasons.add("motion");worldRef.current.pauseReasons.add("motion");
         clearTimeout(motionPauseTimer.current);
         motionPauseTimer.current=setTimeout(()=>{
@@ -187,6 +187,7 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
     let usingLegacy = false;
     let lastTime = performance.now();
     let lastHudUpdate = 0;
+    let publishedWaveState = world.waveState, publishedWaveIndex = world.waveIndex;
     let endedAt: number | null = null;
     const resetClock = () => { lastTime = performance.now(); };
     document.addEventListener("visibilitychange", resetClock);
@@ -238,7 +239,8 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
         if (skillFeedbackUntil.current > 0 && world.elapsed >= skillFeedbackUntil.current) {
           skillFeedbackUntil.current = 0; setSkillFeedback(null);
         }
-        if (now - lastHudUpdate >= 90) {
+        if (now - lastHudUpdate >= 90 || publishedWaveState !== world.waveState || publishedWaveIndex !== world.waveIndex) {
+          publishedWaveState = world.waveState; publishedWaveIndex = world.waveIndex;
           setHud(makeHudSnapshot(world, pauseReasonsRef.current.size > 0, pauseLabel(pauseReasonsRef.current)));
           lastHudUpdate = now;
         }
@@ -498,10 +500,11 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
       {hud.bossMaxHp > 0 && (
         <div className="air-boss-hud" style={{ top: `${AIR_COMBAT_WORLD.hudHeight / 720 * 100}%`, height: `${BOSS_HUD_HEIGHT / 720 * 100}%` }} data-boss-phase={hud.bossPhase}>
           <div className="flex justify-between text-[7px] font-black uppercase text-rose-200"><span>{getAirCombatStage(stageId)?.bossName} · Giai đoạn {hud.bossPhase}</span><span>{Math.ceil(hud.bossHp).toLocaleString("vi-VN")}</span></div>
+          {stageId === 2 && <div className="air-guardian-hud"><span>VỆ TINH: {hud.guardianSlots.map((alive,slot)=><i key={slot} data-alive={alive}>●</i>)}</span><span>{hud.guardianSlots.some(Boolean) ? "BẢO HỘ: -35% SÁT THƯƠNG" : "BẢO HỘ ĐÃ PHÁ"}</span></div>}
           <div className="air-boss-health relative mt-1 h-1.5 overflow-hidden bg-black">
             <div ref={bossShieldRef} className="absolute inset-y-0 left-0 bg-slate-200" />
             <div ref={bossChipRef} className="absolute inset-y-0 left-0 bg-white" />
-            {[.7,.35,.15].map(mark => <i key={mark} className="air-boss-phase-marker" style={{left:`${mark*100}%`}} />)}
+            {(stageId === 2 ? [.75,.5,.25,.1] : [.7,.35,.15]).map(mark => <i key={mark} className="air-boss-phase-marker" style={{left:`${mark*100}%`}} />)}
             <div ref={bossHpRef} className="absolute inset-y-0 left-0 bg-gradient-to-r from-red-700 via-rose-500 to-orange-300" />
           </div>
         </div>
@@ -554,6 +557,7 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
 
       </div>
 
+      {hud.waveState === "countdown" && hud.waveCountdown > 0 && <div className="air-wave-countdown">Đợt tiếp theo sau<strong>{hud.waveCountdown}</strong></div>}
       <AnimatePresence>
       {tooltipSkill && tooltipModel && (
         <motion.aside key="skill-tooltip" {...airTooltipMotion} transition={{...airTooltipMotion.transition,duration:reducedMotion?.1:.28}} className="air-skill-tooltip" data-skill-tooltip={tooltipSkill} onPointerDown={event => event.stopPropagation()} onPointerMove={event => event.stopPropagation()}>
@@ -565,14 +569,13 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
       )}
 
       <div key="core-toasts" ref={toastHostRef} className="air-core-toasts" aria-live="polite" aria-label="Lõi vừa nhận" />
-      {hud.waveCountdown > 0 && !hud.paused && <div key="wave-countdown" className="air-wave-countdown">Đợt tiếp theo sau<strong>{hud.waveCountdown}</strong></div>}
       {(hud.latestMessage || skillFeedback) && !coreChoices && (
         <div key="combat-message" className="pointer-events-none absolute left-1/2 top-[21%] z-10 -translate-x-1/2 whitespace-nowrap rounded-full border border-cyan-300/40 bg-black/90 px-3 py-1.5 text-[9px] font-black uppercase tracking-wider text-cyan-100 shadow-lg shadow-cyan-950/30">{skillFeedback || hud.latestMessage}</div>
       )}
 
 
       {coreChoices && (
-        <AppModal key="core-choice" archetype="transaction" layer="exclusive-dialog" layout="viewport-safe" closeOnEscape={false}
+        <AppModal key="core-choice" exitDuration={90} archetype="transaction" layer="exclusive-dialog" layout="viewport-safe" closeOnEscape={false}
           reducedMotion={reducedMotion} labelledBy="air-core-choice-title" overlayClassName="air-upgrade-overlay" panelClassName="air-upgrade-panel">
           <h2 id="air-core-choice-title">CHỌN MỘT NÂNG CẤP</h2>
           <div key={worldRef.current.coreSelectionCount} className="air-upgrade-choices" data-core-selection="open" data-reduced-motion={reducedMotion}>

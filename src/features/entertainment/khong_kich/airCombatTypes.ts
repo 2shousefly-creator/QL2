@@ -28,6 +28,7 @@ export type EnemyType =
   | "radar_hunter"
   | "orbit_wasp" | "arc_reaver" | "mine_seeder" | "magnetic_leech"
   | "prism_manta" | "swarm_carrier" | "micro_drone" | "cyclone_ace" | "grid_architect" | "satellite"
+  | "prism_sovereign" | "mine_warden" | "polarity_warden" | "swarm_overlord" | "arc_reaver_prime"
   | "boss";
 
 export type CoreTier = "silver" | "gold" | "diamond";
@@ -259,6 +260,9 @@ export interface AirCombatHudSnapshot {
   comboMultiplier: number;
   elapsedSeconds: number;
   waveLabel: string;
+  waveIndex: number;
+  waveState: "combat" | "countdown" | "announcement";
+  guardianSlots: boolean[];
   waveCountdown: number;
   combatXpRequired: number;
   bossHp: number;

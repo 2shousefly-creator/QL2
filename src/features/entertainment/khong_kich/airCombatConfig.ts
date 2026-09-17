@@ -269,6 +269,11 @@ export const SKILL_CONFIGS: Record<SkillId, SkillConfig> = {
 };
 
 export const ENEMY_CONFIGS: Record<EnemyType, EnemyConfig> = {
+  prism_sovereign: {"type":"prism_sovereign","name":"PRISM SOVEREIGN","baseHp":4870.8,"baseArmor":31.57,"speed":44,"radius":24,"score":1500,"combatXp":230,"projectileDamage":82.992,"collisionDamage":209.664,"fireInterval":99,"color":"#a78bfa"},
+  mine_warden: {"type":"mine_warden","name":"MINE WARDEN","baseHp":4870.8,"baseArmor":31.57,"speed":32,"radius":25,"score":1500,"combatXp":230,"projectileDamage":82.992,"collisionDamage":209.664,"fireInterval":99,"color":"#a78bfa"},
+  polarity_warden: {"type":"polarity_warden","name":"POLARITY WARDEN","baseHp":7035.6,"baseArmor":59.532,"speed":38,"radius":27,"score":1500,"combatXp":230,"projectileDamage":61.152,"collisionDamage":244.608,"fireInterval":99,"color":"#a78bfa"},
+  swarm_overlord: {"type":"swarm_overlord","name":"SWARM OVERLORD","baseHp":7035.6,"baseArmor":59.532,"speed":30,"radius":29,"score":1500,"combatXp":230,"projectileDamage":61.152,"collisionDamage":244.608,"fireInterval":99,"color":"#a78bfa"},
+  arc_reaver_prime: {"type":"arc_reaver_prime","name":"ARC REAVER PRIME","baseHp":7035.6,"baseArmor":59.532,"speed":50,"radius":25,"score":1500,"combatXp":230,"projectileDamage":61.152,"collisionDamage":244.608,"fireInterval":99,"color":"#a78bfa"},
   orbit_wasp: {"type": "orbit_wasp", "name": "ORBIT WASP · ONG QUỸ ĐẠO", "baseHp": 137.28, "baseArmor": 6.864, "speed": 74, "radius": 11, "score": 110, "combatXp": 24, "projectileDamage": 44.352, "collisionDamage": 96.768, "fireInterval": 3, "color": "#67e8f9"},
   arc_reaver: {"type": "arc_reaver", "name": "ARC REAVER · KẺ SĂN BOOMERANG", "baseHp": 223.08, "baseArmor": 12.012, "speed": 50, "radius": 14, "score": 170, "combatXp": 30, "projectileDamage": 44.352, "collisionDamage": 120.96, "fireInterval": 4.8, "color": "#a78bfa"},
   mine_seeder: {"type": "mine_seeder", "name": "MINE SEEDER · MÁY RẢI MÌN", "baseHp": 411.84, "baseArmor": 15.444, "speed": 38, "radius": 18, "score": 290, "combatXp": 44, "projectileDamage": 72.576, "collisionDamage": 145.152, "fireInterval": 3.8, "color": "#818cf8"},
@@ -278,7 +283,7 @@ export const ENEMY_CONFIGS: Record<EnemyType, EnemyConfig> = {
   micro_drone: {"type": "micro_drone", "name": "MICRO DRONE", "baseHp": 62.79, "baseArmor": 0, "speed": 60, "radius": 7, "score": 0, "combatXp": 0, "projectileDamage": 0, "collisionDamage": 52.416, "fireInterval": 99, "color": "#a5f3fc"},
   cyclone_ace: {"type": "cyclone_ace", "name": "CYCLONE ACE · BẬC THẦY QUỸ ĐẠO", "baseHp": 4870.8, "baseArmor": 31.57, "speed": 62, "radius": 23, "score": 1500, "combatXp": 230, "projectileDamage": 82.992, "collisionDamage": 209.664, "fireInterval": 4, "color": "#22d3ee"},
   grid_architect: {"type": "grid_architect", "name": "GRID ARCHITECT · KIẾN TRÚC SƯ TỪ TRƯỜNG", "baseHp": 7035.6, "baseArmor": 59.532, "speed": 25, "radius": 28, "score": 1500, "combatXp": 230, "projectileDamage": 61.152, "collisionDamage": 244.608, "fireInterval": 7, "color": "#c084fc"},
-  satellite: {"type": "satellite", "name": "MAGNETIC SATELLITE", "baseHp": 9403.125, "baseArmor": 0, "speed": 0, "radius": 10, "score": 0, "combatXp": 0, "projectileDamage": 62.72, "collisionDamage": 80.64, "fireInterval": 3, "color": "#67e8f9"},
+  satellite: {"type": "satellite", "name": "MAGNETIC SATELLITE", "baseHp": 46750, "baseArmor": 44.88, "speed": 0, "radius": 10, "score": 0, "combatXp": 0, "projectileDamage": 125.44, "collisionDamage": 80.64, "fireInterval": 0.5, "color": "#67e8f9"},
   "scout": {
     "type": "scout",
     "name": "Scout Drone",

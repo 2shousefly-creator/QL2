@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="256" viewBox="0 0 640 256">
+ <defs>
+  <linearGradient id="hull" x2=".7" y2="1"><stop stop-color="#c4d6ef"/><stop offset=".22" stop-color="#506985"/><stop offset=".55" stop-color="#17243c"/><stop offset="1" stop-color="#080e20"/></linearGradient>
+  <linearGradient id="crystal" x2="1" y2="1"><stop stop-color="#ecfeff"/><stop offset=".3" stop-color="#67e8f9"/><stop offset=".65" stop-color="#8b5cf6"/><stop offset="1" stop-color="#312e81"/></linearGradient>
+  <linearGradient id="armor" x2="0" y2="1"><stop stop-color="#a5b4fc"/><stop offset=".4" stop-color="#334155"/><stop offset="1" stop-color="#0f172a"/></linearGradient>
+  <radialGradient id="acid"><stop stop-color="#f7fee7"/><stop offset=".3" stop-color="#d9f99d"/><stop offset=".7" stop-color="#84cc16"/><stop offset="1" stop-color="#3f6212" stop-opacity=".15"/></radialGradient>
+ </defs>
+ <!-- PRISM SOVEREIGN: segmented crystal crown and broad, forked prism wings. Nose up. -->
+ <g stroke-linejoin="round" stroke="#a5f3fc" stroke-width="1.2">
+  <path d="M64 8 76 35 115 22 104 47 123 69 96 72 83 99 73 87 64 116 55 87 45 99 32 72 5 69 24 47 13 22 52 35Z" fill="url(#hull)"/>
+  <path d="M18 29 50 42 36 60 11 66 29 46ZM110 29 78 42 92 60 117 66 99 46Z" fill="url(#crystal)"/>
+  <path d="M64 14 77 51 64 83 51 51Z" fill="url(#crystal)" stroke-width="2"/>
+  <path d="M64 14 64 83M51 51 77 51M38 69 49 83 54 68M90 69 79 83 74 68" fill="none" stroke="#e9d5ff"/>
+  <path d="M58 91 64 110 70 91" fill="#67e8f9"/>
+  <circle cx="64" cy="51" r="4" fill="white" stroke="none"/>
+ </g>
+ <!-- MINE WARDEN: armored hexagonal hull with separate six-cell ordnance racks. -->
+ <g transform="translate(128)" stroke-linejoin="round">
+  <path d="M50 10 78 10 87 27 114 35 119 94 99 112 80 96 64 118 48 96 29 112 9 94 14 35 41 27Z" fill="url(#hull)" stroke="#94a3b8" stroke-width="2"/>
+  <path d="M48 22 80 22 85 77 73 99 55 99 43 77Z" fill="url(#armor)" stroke="#c7d2fe"/>
+  <path d="M53 30 75 30 78 47 50 47Z" fill="#164e63" stroke="#67e8f9"/>
+  <path d="M23 34 37 30 39 94 26 100 17 86ZM105 34 91 30 89 94 102 100 111 86Z" fill="#0f172a" stroke="#fbbf24"/>
+  <g fill="#292548" stroke="#fbbf24" stroke-width="2"><circle cx="28" cy="47" r="7"/><circle cx="28" cy="66" r="7"/><circle cx="28" cy="85" r="7"/><circle cx="100" cy="47" r="7"/><circle cx="100" cy="66" r="7"/><circle cx="100" cy="85" r="7"/></g>
+  <g fill="#fde68a"><circle cx="28" cy="47" r="2"/><circle cx="28" cy="66" r="2"/><circle cx="28" cy="85" r="2"/><circle cx="100" cy="47" r="2"/><circle cx="100" cy="66" r="2"/><circle cx="100" cy="85" r="2"/></g>
+  <path d="M55 58H73M55 66H73M55 74H73" stroke="#94a3b8" stroke-width="3"/>
+  <path d="M54 103 58 117 62 103M66 103 70 117 74 103" fill="#67e8f9"/>
+ </g>
+ <!-- POLARITY WARDEN: split asymmetric coils connected by a magnetic ring. -->
+ <g transform="translate(256)" stroke-linejoin="round">
+  <circle cx="64" cy="65" r="38" fill="none" stroke="#312e81" stroke-width="13"/>
+  <path d="M64 27A38 38 0 0 0 64 103" fill="none" stroke="#67e8f9" stroke-width="3"/>
+  <path d="M64 27A38 38 0 0 1 64 103" fill="none" stroke="#e879f9" stroke-width="3"/>
+  <path d="M64 9 77 33 73 92 64 117 55 92 51 33Z" fill="url(#hull)" stroke="#c7d2fe" stroke-width="1.5"/>
+  <path d="M14 30 34 19 43 38 39 104 20 112 10 88Z" fill="url(#armor)" stroke="#67e8f9" stroke-width="2"/>
+  <path d="M89 23 111 33 119 86 106 104 87 92 85 43Z" fill="url(#armor)" stroke="#e879f9" stroke-width="2"/>
+  <path d="M15 45 39 40M14 55 39 50M13 65 38 60M13 75 37 70M14 85 36 80" stroke="#67e8f9" stroke-width="3"/>
+  <path d="M89 44 111 50M89 55 114 61M89 66 114 72M89 77 111 83" stroke="#e879f9" stroke-width="3"/>
+  <path d="M64 28 71 53 64 67 57 53Z" fill="url(#crystal)"/>
+  <path d="M22 94H32M27 89V99" stroke="#a5f3fc" stroke-width="2"/><path d="M96 91H106" stroke="#f5d0fe" stroke-width="2"/>
+ </g>
+ <!-- SWARM OVERLORD: twin flight decks, command spire, six launch apertures. -->
+ <g transform="translate(384)" stroke-linejoin="round">
+  <path d="M64 6 82 29 107 22 120 56 112 106 92 118 78 102 50 102 36 118 16 106 8 56 21 22 46 29Z" fill="url(#hull)" stroke="#a5b4fc" stroke-width="2"/>
+  <path d="M64 13 74 39 73 88 64 101 55 88 54 39Z" fill="url(#armor)" stroke="#c4b5fd"/>
+  <path d="M22 33 42 37 46 95 31 109 19 94 15 55ZM106 33 86 37 82 95 97 109 109 94 113 55Z" fill="#0b1225" stroke="#64748b"/>
+  <g fill="#164e63" stroke="#67e8f9"><path d="M21 43H38V53H20ZM20 61H40V71H21ZM23 80H42V90H24ZM90 43H107L108 53H90ZM88 61H108L107 71H88ZM86 80H105L104 90H86Z"/></g>
+  <g fill="#a5f3fc"><path d="M26 47 29 42 32 47 35 50H23ZM27 65 30 60 33 65 36 68H24ZM29 84 32 79 35 84 38 87H26ZM96 47 99 42 102 47 105 50H93ZM95 65 98 60 101 65 104 68H92ZM93 84 96 79 99 84 102 87H90Z"/></g>
+  <path d="M59 34H69L72 51H56Z" fill="url(#crystal)"/>
+  <path d="M59 61H69M59 68H69M59 75H69" stroke="#a78bfa" stroke-width="3"/>
+ </g>
+ <!-- ARC REAVER PRIME: double reverse-swept boomerang blades and needle fuselage. -->
+ <g transform="translate(512)" stroke-linejoin="round">
+  <path d="M64 7 77 36 105 19 119 28 108 66 89 84 107 107 97 117 75 100 64 116 53 100 31 117 21 107 39 84 20 66 9 28 23 19 51 36Z" fill="url(#hull)" stroke="#c4b5fd" stroke-width="1.5"/>
+  <path d="M13 29 23 24 52 44 48 56 25 50 40 79 26 66ZM115 29 105 24 76 44 80 56 103 50 88 79 102 66Z" fill="url(#crystal)"/>
+  <path d="M41 88 31 108 54 93 57 80ZM87 88 97 108 74 93 71 80Z" fill="url(#crystal)" stroke="#a5f3fc"/>
+  <path d="M64 14 71 45 69 91 64 108 59 91 57 45Z" fill="url(#armor)" stroke="#e9d5ff"/>
+  <path d="M64 28 68 47 64 59 60 47Z" fill="#ecfeff"/>
+  <path d="M17 31 29 54 45 66M111 31 99 54 83 66" fill="none" stroke="#67e8f9" stroke-width="2"/>
+ </g>
+ <!-- Combat cells: acid has a visible droplet body and a long downward cue. -->
+ <g transform="translate(0 128)"><path d="M64 10C56 40 35 65 35 87A29 29 0 0 0 93 87C93 65 72 40 64 10Z" fill="url(#acid)"/><path d="M64 41C60 59 48 78 48 88A16 16 0 0 0 80 88C80 78 68 59 64 41Z" fill="#d9f99d"/><ellipse cx="61" cy="90" rx="7" ry="11" fill="#fff"/></g>
+ <g transform="translate(128 128)" fill="url(#acid)"><circle cx="64" cy="64" r="32"/><circle cx="25" cy="44" r="12"/><circle cx="96" cy="32" r="9"/><circle cx="105" cy="75" r="13"/><circle cx="41" cy="103" r="10"/><circle cx="78" cy="110" r="7"/><path d="M63 14 73 47 113 52 81 70 86 99 59 81 20 87 41 62 21 23 53 44Z"/></g>
+</svg>

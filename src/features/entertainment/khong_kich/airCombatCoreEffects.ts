@@ -76,7 +76,7 @@ for (const [row, key, gain] of [[46, "firepower", .4], [47, "armor", .2], [48, "
                 const stacks = ctx.state.coreState.stacks;
                 stacks[coreId(row)] = (stacks[coreId(row)] || 0) + amount;
                 if (key === "maxHp")
-                    ctx.state.currentHp += amount;
+                    ctx.heal(amount);
             } },
     });
 register(49, { finalStats: (s, stats) => { if (s.coreState.time - s.coreState.lastMove >= 2.5) {

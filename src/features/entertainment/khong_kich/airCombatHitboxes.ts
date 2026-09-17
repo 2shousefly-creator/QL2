@@ -19,6 +19,11 @@ export const PLAYER_AIRFRAME_SIZE:Record<AircraftId,number>={black_eagle:PLAYER_
 export const PLAYER_STANDARD_HITBOX_PROFILE=profile([cap(0,-.39,0,.27,.055,"body"),cap(-.06,-.04,-.27,.15,.045,"left_wing"),cap(.06,-.04,.27,.15,.045,"right_wing"),cap(-.06,.26,.06,.26,.035,"tail")]);
 export const PLAYER_HITBOX_PROFILES:Record<AircraftId,AircraftHitboxProfile>={black_eagle:PLAYER_STANDARD_HITBOX_PROFILE,breaker:PLAYER_STANDARD_HITBOX_PROFILE,phantom:PLAYER_STANDARD_HITBOX_PROFILE};
 export const ENEMY_HITBOX_PROFILES:Record<EnemyType,AircraftHitboxProfile>={
+  prism_sovereign:profile([cap(0,-.39,0,.34,.07),cap(-.09,-.15,-.37,0,.075),cap(.09,-.15,.37,0,.075),cap(-.17,.12,-.12,.26,.04),cap(.17,.12,.12,.26,.04)]),
+  mine_warden:profile([cap(0,-.34,0,.31,.13),cap(-.27,-.19,-.27,.29,.1),cap(.27,-.19,.27,.29,.1)]),
+  polarity_warden:profile([cap(0,-.37,0,.34,.07),cap(-.29,-.21,-.29,.27,.1),cap(.29,-.16,.29,.21,.1)]),
+  swarm_overlord:profile([cap(0,-.39,0,.24,.09),cap(-.26,-.22,-.26,.32,.13),cap(.26,-.22,.26,.32,.13)]),
+  arc_reaver_prime:profile([cap(0,-.38,0,.34,.06),cap(-.12,-.13,-.34,-.24,.055),cap(.12,-.13,.34,-.24,.055),cap(-.34,-.24,-.24,.1,.055),cap(.34,-.24,.24,.1,.055),cap(-.13,.16,-.25,.34,.045),cap(.13,.16,.25,.34,.045)]),
   orbit_wasp: profile([cap(0,-.42,0,.34,.05),cap(-.08,-.08,-.31,.25,.035),cap(.08,-.08,.31,.25,.035),cap(-.1,.21,-.16,.34,.03),cap(.1,.21,.16,.34,.03)]),
   arc_reaver: profile([cap(0,-.4,0,.08,.07),cap(-.08,-.15,-.3,-.08,.055),cap(.08,-.15,.3,-.08,.055),cap(-.3,-.08,-.4,.16,.04),cap(.3,-.08,.4,.16,.04),cap(-.4,.16,-.4,.34,.025),cap(.4,.16,.4,.34,.025)]),
   mine_seeder: profile([cap(0,-.42,0,.38,.055),cap(-.28,-.25,-.28,.25,.13),cap(.28,-.25,.28,.25,.13),cap(-.2,0,.2,0,.06)]),
@@ -61,6 +66,15 @@ function transform(key:object,p:AircraftHitboxProfile,x:number,y:number,size:num
 }
 export const getPlayerHitbox=(w:CombatWorld)=>transform(w,PLAYER_HITBOX_PROFILES[w.aircraft.aircraftId],w.playerX,w.playerY,PLAYER_AIRFRAME_SIZE[w.aircraft.aircraftId],0);
 export const enemyAirframeRotation=(e:EnemyEntity)=>e.type==="kamikaze"?e.airframeRotation??Math.PI:Math.PI;
+/** Cosmetic rear anchor follows the planned charge or current/committed dash.
+ * It does not modify the Stage 1 collision profile or simulation heading. */
+export function getEnemyExhaustTransform(e:EnemyEntity) {
+  const rotation=e.type==="kamikaze" && e.kamikazeState==="charge"
+    ? Math.atan2((e.lockedY??e.dashEndY)-e.y,(e.lockedX??e.dashEndX)-e.x)+Math.PI/2
+    : enemyAirframeRotation(e);
+  const size=e.radius*2.8,rear=size*.34;
+  return {x:e.x-Math.sin(rotation)*rear,y:e.y+Math.cos(rotation)*rear,rotation,width:size*.18,length:size*(e.kamikazeState==="dash"?.65:.4)};
+}
 const TEMPEST_HITBOX_PROFILE=profile([cap(0,-.32,0,.32,.13),cap(-.1,-.17,-.22,.2,.075),cap(.1,-.17,.22,.2,.075),cap(-.18,0,-.4,0,.055),cap(.18,0,.4,0,.055)]);
 export const getEnemyHitbox=(e:EnemyEntity)=>{
   const tempest=e.type==="boss" && !!e.magnetic;

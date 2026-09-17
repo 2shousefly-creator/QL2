@@ -45,10 +45,10 @@ export const MAGNETIC_WAVES: readonly WaveDefinition[] = [
     [["orbit_wasp", "orbit_wasp", "orbit_wasp"], ["arc_reaver", "arc_reaver", "arc_reaver"], ["mine_seeder", "mine_seeder"]]),
   magneticWave("WAVE 2 · LĂNG KÍNH", { orbit_wasp: 12, arc_reaver: 10, mine_seeder: 9, magnetic_leech: 7, prism_manta: 7 }, 11, 14, 2, 0,
     [["magnetic_leech", "prism_manta"]]),
-  magneticWave("WAVE 3 · CYCLONE ACE", { cyclone_ace: 3 }, 80, 3, 2, 1),
+  magneticWave("WAVE 3 · MAGNETIC TRIAD", { cyclone_ace: 1, prism_sovereign: 1, mine_warden: 1 }, 80, 3, 2, 1),
   magneticWave("WAVE 4 · BẦY ĐÀN", { orbit_wasp: 12, arc_reaver: 10, mine_seeder: 9, magnetic_leech: 8, prism_manta: 9, swarm_carrier: 7 }, 12, 17, 3, 0,
     [["swarm_carrier", "orbit_wasp", "prism_manta"]]),
-  magneticWave("WAVE 5 · GRID ARCHITECT", { grid_architect: 4 }, 110, 4, 4, 2),
+  magneticWave("WAVE 5 · MAGNETIC EXECUTION", { grid_architect: 1, polarity_warden: 1, swarm_overlord: 1, arc_reaver_prime: 1 }, 110, 4, 4, 2),
   magneticWave("WAVE 6 · TÂM BÃO", { orbit_wasp: 16, arc_reaver: 14, mine_seeder: 12, magnetic_leech: 10, prism_manta: 10, swarm_carrier: 8 }, 14, 20, 5),
   magneticWave("WAVE 7 · TEMPEST CROWN", { boss: 1 }, 0, 1, 5),
 ];

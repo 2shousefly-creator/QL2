@@ -278,6 +278,7 @@ export function getStatusPresentations(world: CombatWorld): StatusPresentation[]
     ["armorBrokenUntil","Vỡ giáp","armor","Giáp -35%."],
     ["regenDisabledUntil","Ngừng tái tạo","regen_off","Hồi HP theo thời gian bị vô hiệu."],
   ] as const;
+  if(status.healingReceivedUntil>c.time) result.push({id:status.healingReceivedMultiplier===0?"healing_block":"healing_reduction",group:"debuff",name:status.healingReceivedMultiplier===0?"HỒI MÁU BỊ CHẶN":"HỒI MÁU -60%",icon:{kind:"status",id:"regen_off"},description:"Mưa Axit giảm mọi hồi máu nhận vào, kể cả lượng chuyển thành khiên dư.",source:"Tempest Crown · Mưa Axit",stacks:1,remaining:status.healingReceivedUntil-c.time,duration:status.durations.healingReceivedUntil??4,priority:115});
   for(const [key,name,icon,description] of timed) if(status[key]>c.time) result.push({id:key,group:"debuff",name,icon:{kind:"status",id:icon},description,source:"Đòn địch",stacks:1,remaining:status[key]-c.time,duration:status.durations[key]??4,priority:110});
   const markNames={hunterMark:"Dấu săn mồi",suppression:"Áp chế",corrosion:"Ăn mòn",targetLock:"Khóa radar",hunted:"Bị truy sát"};
   // All five player marks accumulate hits via addStatusMark. Trigger/reset at a
