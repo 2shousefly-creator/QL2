@@ -51,7 +51,7 @@ export function getEffectiveAircraftStats(state: AircraftCombatState, includeTem
     if (includeTemporary && (c.timers.hawkRage || 0) > c.time)
         stats.fireRate *= 1.3;
     if (includeTemporary && (c.timers.shieldArmor || 0) > c.time)
-        stats.armor *= 1.5;
+        stats.armor *= 1.6;
     if (includeTemporary && (state.activeEffects.sweeping_cannon || 0) > 0 && hasCore(state, 35))
         stats.armor *= 1.35;
     if (includeTemporary && (c.timers.acidArmor || 0) > c.time)
@@ -62,7 +62,6 @@ export function getEffectiveAircraftStats(state: AircraftCombatState, includeTem
         if (status.regenDisabledUntil > c.time) stats.hpRegen = 0;
         stats.resourceRegen *= Math.min(1, ...status.jams.filter(j => j.until > c.time).map(j => j.multiplier));
     }
-    if (includeTemporary && (c.timers.activeCooling || 0) > c.time) stats.resourceRegen *= 1 + V.coolingBonus;
     if (includeTemporary && (c.timers.tacticalData || 0) > c.time && !hasCore(state, 95)) stats.criticalChance += (c.stacks.tacticalData || 0) * V.dataCrit;
     applyFireRateLock(state, stats);
     stats.fireRate = hasCore(state, 54) ? 1.2 : Math.min(AIR_COMBAT_LIMITS.maxFireRate, Math.max(.1, stats.fireRate));
@@ -137,25 +136,25 @@ export function getSkillRuntimeValues(state: AircraftCombatState, skillId: Skill
             v.count = hasCore(state, 19) ? 4 : 3;
             v.duration = hasCore(state, 19) ? 2.5 : 1.5;
             if (hasCore(state, 20))
-                v.cooldown = 9;
+                v.cooldown = 11;
             break;
         case "afterburner":
             if (hasCore(state, 22))
                 v.duration = 10;
             break;
         case "missile_swarm":
-            v.count = hasCore(state, 25) ? 18 : 12;
+            v.count = hasCore(state, 25) ? 16 : 12;
             if (hasCore(state, 26))
-                v.damageMultiplier += .5;
+                v.damageMultiplier = 3.25;
             break;
         case "armor_shield":
-            v.damageTakenMultiplier = hasCore(state, 28) ? .1 : .35;
+            v.damageTakenMultiplier = hasCore(state, 28) ? .15 : .35;
             if (hasCore(state, 29))
                 v.duration = 9;
             break;
         case "heavy_bomb":
             if (hasCore(state, 31))
-                v.cooldown = 13;
+                v.cooldown = 15;
             if (hasCore(state, 32))
                 v.damageMultiplier = 19;
             break;
@@ -227,7 +226,7 @@ export function endAircraftSkill(state: AircraftCombatState, skillId: SkillId): 
     }
     if(skillId!=="sweeping_cannon"&&skillId!=="escort_drone")finishBorrowedDuration(state,skillId);
     if (skillId === "armor_shield" && hasCore(state, 30) && !skillsLocked(state))
-        state.coreState.timers.shieldArmor = state.coreState.time + 5;
+        state.coreState.timers.shieldArmor = state.coreState.time + 6;
 }
 export function castSkill(state: AircraftCombatState, skillId: SkillId): SkillCastResult {
     const skill = SKILL_CONFIGS[skillId];
@@ -267,7 +266,7 @@ export function castSkill(state: AircraftCombatState, skillId: SkillId): SkillCa
         if (skillId === "invisibility") {
             delete state.coreState.emergencyRepair;
             if (hasCore(state, 38)) state.coreState.emergencyRepair = {
-                remaining: Math.max(0, getEffectiveAircraftStats(state).maxHp - state.currentHp) * .18,
+                remaining: Math.max(0, getEffectiveAircraftStats(state).maxHp - state.currentHp) * .25,
                 durationRemaining: v.duration,
             };
         }
@@ -299,6 +298,12 @@ export function tickAircraftState(state: AircraftCombatState, deltaSeconds: numb
     const dt = deltaSeconds;
     for (const key of Object.keys(state.cooldowns) as SkillId[])
         state.cooldowns[key] = Math.max(0, (state.cooldowns[key] || 0) - dt);
+    const coolingStep = Math.max(0, Math.min(dt, (state.coreState.timers.activeCooling || 0) - state.coreState.time));
+    if (coolingStep > 0) {
+        const max = getEffectiveAircraftStats(state).maxResource;
+        const gain = Math.min(max - state.currentResource, max * V.coolingMana * coolingStep / V.coolingDuration);
+        state.currentResource += gain; recordCoreMetric(state, 126, "resource", gain);
+    }
     state.coreState.time += dt;
     tickPlayerStatus(state);
     const repair = state.coreState.emergencyRepair;

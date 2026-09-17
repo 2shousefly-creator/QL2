@@ -31,7 +31,7 @@ export function generateCoreChoices(state: AircraftCombatState, selectionNumber:
         return choices;
     }
     const specializedMilestone = skillMilestone && skillsLocked(state);
-    let tier: CoreTier | undefined = specializedMilestone ? "diamond" : rollCoreTier(selectionNumber, random);
+    let tier: CoreTier | undefined = specializedMilestone ? "gold" : rollCoreTier(selectionNumber, random);
     if (!specializedMilestone && eligible(state, tier).length < 3)
         tier = weightedTier(TIERS.filter(t => eligible(state, t).length >= 3), random);
     const pool = eligible(state, tier), chosen: CoreCard[] = [];

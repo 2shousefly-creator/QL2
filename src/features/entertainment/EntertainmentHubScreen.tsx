@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useEffect, useState } from "react";
+import React, { lazy, Suspense, useEffect, useState, useRef } from "react";
 import { Dices, Coins, Play, Sparkles, Crosshair } from "lucide-react";
 import { GameState, TabType } from "../../game/types";
 import { soundManager } from "../../game/audio";
@@ -41,6 +41,15 @@ export const EntertainmentHubScreen: React.FC<EntertainmentHubScreenProps> = ({
     return () => onGameActiveChange?.(false);
   }, [activeGame, onGameActiveChange]);
 
+  const [airLeaving,setAirLeaving]=useState(false);
+  const airTimer=useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  useEffect(()=>()=>clearTimeout(airTimer.current),[]);
+  const openGame=(id:EntertainmentGameId)=>{
+    if(id!=="khong_kich"){setActiveGame(id);return;}
+    if(airTimer.current)return;
+    setAirLeaving(true);
+    airTimer.current=setTimeout(()=>{setActiveGame(id);setAirLeaving(false);airTimer.current=undefined;},gameState.settings.reducedMotion?100:180);
+  };
   const currentGold = gameState.farm?.gold ?? 0;
 
   const handleUpdateGold = (newGold: number) => {
@@ -129,7 +138,7 @@ export const EntertainmentHubScreen: React.FC<EntertainmentHubScreenProps> = ({
 
   // Otherwise render Entertainment Hub
   return (
-    <div className="command-screen entertainment-command-screen w-full max-w-lg mx-auto flex-1 flex flex-col min-h-0 px-3.5 sm:px-4 py-3.5 space-y-4 select-none">
+    <div style={{opacity:airLeaving?0:1,filter:airLeaving&&!gameState.settings.reducedMotion?"blur(2px)":"none",transition:"opacity 180ms ease, filter 180ms ease"}} className="command-screen entertainment-command-screen w-full max-w-lg mx-auto flex-1 flex flex-col min-h-0 px-3.5 sm:px-4 py-3.5 space-y-4 select-none">
       {/* Hub Top Bar */}
       <CommandHeader
         title="Khu Giải Trí"
@@ -202,7 +211,7 @@ export const EntertainmentHubScreen: React.FC<EntertainmentHubScreenProps> = ({
                     aria-label={`Chơi ${game.title}`}
                     onClick={() => {
                       soundManager.playClick();
-                      setActiveGame(game.id);
+                      openGame(game.id);
                     }}
                     className="military-button military-button--primary theme-button-primary theme-focus shrink-0 focus:outline-none"
                   >

@@ -1,3 +1,5 @@
+import { AnimatePresence, motion } from "motion/react";
+import { AirCombatModal as AppModal, AirCombatConfirmation as ConfirmationDialog, airTooltipMotion } from "./AirCombatMotion";
 import { getAirCombatStage } from "./airCombatStages";
 import { canBorrowSkill } from "./airCombatAircraft";
 import { playerSkillLocked } from "./airCombatStatus";
@@ -22,7 +24,7 @@ import { CombatStatChips } from "./CombatStatReadout";
 import "./combat-ui.css";
 import { ArrowLeft, Layers, Pause, Play, X } from "lucide-react";
 import { soundManager } from "../../../game/audio";
-import { AppModal, ConfirmationDialog, ModalButton, OverlayBody, OverlayFooter, OverlayHeader } from "../../../components/overlay/AppOverlay";
+import { ModalButton, OverlayBody, OverlayFooter, OverlayHeader } from "../../../components/overlay/AppOverlay";
 import {
   AIR_COMBAT_WORLD,
   AIRCRAFT_CONFIGS,
@@ -66,7 +68,7 @@ interface AirCombatBattleProps {
   onExit: () => void;
 }
 
-type PauseReason = "loading" | "user" | "core" | "tooltip" | "exit" | "hidden" | "coreList";
+type PauseReason = "loading" | "user" | "core" | "tooltip" | "exit" | "hidden" | "coreList" | "motion";
 
 interface SkillPressState {
   skillId: SkillId;
@@ -139,6 +141,8 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
     onCompleteRef.current = onComplete;
   }, [onComplete]);
 
+  const motionPauseTimer=useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  useEffect(()=>()=>clearTimeout(motionPauseTimer.current),[]);
   const setPauseReason = useCallback((reason: PauseReason, enabled: boolean) => {
     const reasons = pauseReasonsRef.current;
     if (enabled) worldRef.current.pauseReasons.add(reason);
@@ -153,9 +157,17 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
       setPlayerInputActive(worldRef.current, false);
     } else {
       reasons.delete(reason);
+      if (["user","core","tooltip","exit","coreList"].includes(reason)) {
+        reasons.add("motion");worldRef.current.pauseReasons.add("motion");
+        clearTimeout(motionPauseTimer.current);
+        motionPauseTimer.current=setTimeout(()=>{
+          reasons.delete("motion");worldRef.current.pauseReasons.delete("motion");
+          setPauseState({paused:reasons.size>0,label:pauseLabel(reasons)});
+        },reducedMotion?100:280);
+      }
     }
     setPauseState({ paused: reasons.size > 0, label: pauseLabel(reasons) });
-  }, []);
+  }, [reducedMotion]);
 
   useEffect(() => {
     const handleVisibility = () => setPauseReason("hidden", document.hidden);
@@ -542,24 +554,25 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
 
       </div>
 
+      <AnimatePresence>
       {tooltipSkill && tooltipModel && (
-        <aside className="air-skill-tooltip" data-skill-tooltip={tooltipSkill} onPointerDown={event => event.stopPropagation()} onPointerMove={event => event.stopPropagation()}>
+        <motion.aside key="skill-tooltip" {...airTooltipMotion} transition={{...airTooltipMotion.transition,duration:reducedMotion?.1:.28}} className="air-skill-tooltip" data-skill-tooltip={tooltipSkill} onPointerDown={event => event.stopPropagation()} onPointerMove={event => event.stopPropagation()}>
           <div className="air-tooltip-heading"><h3>{tooltipModel.title}</h3><strong style={{color:"#fde047"}}>Hồi chiêu: {tooltipModel.cooldown.toFixed(1).replace(".", ",")}s</strong></div>
           <p><CoreDescription text={tooltipModel.description}/></p>
           <div className="air-tooltip-details">{tooltipModel.detailRows.map(row => <div key={row}><CoreDescription text={row}/></div>)}</div>
           {tooltipModel.coreRows.map(row=><p key={row} style={{color:"#fde047"}}><CoreDescription text={row}/></p>)}
-        </aside>
+        </motion.aside>
       )}
 
-      <div ref={toastHostRef} className="air-core-toasts" aria-live="polite" aria-label="Lõi vừa nhận" />
-      {hud.waveCountdown > 0 && !hud.paused && <div className="air-wave-countdown">Đợt tiếp theo sau<strong>{hud.waveCountdown}</strong></div>}
+      <div key="core-toasts" ref={toastHostRef} className="air-core-toasts" aria-live="polite" aria-label="Lõi vừa nhận" />
+      {hud.waveCountdown > 0 && !hud.paused && <div key="wave-countdown" className="air-wave-countdown">Đợt tiếp theo sau<strong>{hud.waveCountdown}</strong></div>}
       {(hud.latestMessage || skillFeedback) && !coreChoices && (
-        <div className="pointer-events-none absolute left-1/2 top-[21%] z-10 -translate-x-1/2 whitespace-nowrap rounded-full border border-cyan-300/40 bg-black/90 px-3 py-1.5 text-[9px] font-black uppercase tracking-wider text-cyan-100 shadow-lg shadow-cyan-950/30">{skillFeedback || hud.latestMessage}</div>
+        <div key="combat-message" className="pointer-events-none absolute left-1/2 top-[21%] z-10 -translate-x-1/2 whitespace-nowrap rounded-full border border-cyan-300/40 bg-black/90 px-3 py-1.5 text-[9px] font-black uppercase tracking-wider text-cyan-100 shadow-lg shadow-cyan-950/30">{skillFeedback || hud.latestMessage}</div>
       )}
 
 
       {coreChoices && (
-        <AppModal archetype="transaction" layer="exclusive-dialog" layout="viewport-safe" closeOnEscape={false}
+        <AppModal key="core-choice" archetype="transaction" layer="exclusive-dialog" layout="viewport-safe" closeOnEscape={false}
           reducedMotion={reducedMotion} labelledBy="air-core-choice-title" overlayClassName="air-upgrade-overlay" panelClassName="air-upgrade-panel">
           <h2 id="air-core-choice-title">CHỌN MỘT NÂNG CẤP</h2>
           <div key={worldRef.current.coreSelectionCount} className="air-upgrade-choices" data-core-selection="open" data-reduced-motion={reducedMotion}>
@@ -581,10 +594,10 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
         </AppModal>
       )}
 
-      {showCoreList && !coreChoices && <AirCombatCoreList state={worldRef.current.aircraft} onClose={() => { setShowCoreList(false); setPauseReason("coreList", false); }} />}
+      {showCoreList && !coreChoices && <AirCombatCoreList key="core-list" state={worldRef.current.aircraft} onClose={() => { setShowCoreList(false); setPauseReason("coreList", false); }} />}
 
       {pauseReasonsRef.current.has("user") && !coreChoices && !showExitConfirm && !showCoreList && (
-        <ConfirmationDialog status="warning" layer="exclusive-dialog" layout="viewport-safe" onClose={() => setPauseReason("user", false)} labelledBy="air-paused-title" panelClassName="text-center">
+        <ConfirmationDialog key="pause" status="warning" layer="exclusive-dialog" layout="viewport-safe" onClose={() => setPauseReason("user", false)} labelledBy="air-paused-title" panelClassName="text-center">
           <OverlayHeader><Pause className="mx-auto h-8 w-8 text-[var(--modal-info)]" /><h2 id="air-paused-title" className="modal-title">Đã tạm dừng</h2></OverlayHeader>
           <OverlayBody data-pause-overlay="user"><p className="text-xs text-[var(--modal-text)]">Hồi tài nguyên, hồi chiêu và thời gian trận đều đứng yên.</p></OverlayBody>
           <OverlayFooter><ModalButton variant="primary" type="button" onClick={() => setPauseReason("user", false)} className="w-full"><Play className="h-4 w-4" /> Tiếp tục</ModalButton></OverlayFooter>
@@ -592,13 +605,14 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
       )}
 
       {showExitConfirm && (
-        <ConfirmationDialog status="warning" layer="exclusive-dialog" layout="viewport-safe" onClose={closeExit} labelledBy="air-exit-title" panelClassName="text-center">
+        <ConfirmationDialog key="exit" status="warning" layer="exclusive-dialog" layout="viewport-safe" onClose={closeExit} labelledBy="air-exit-title" panelClassName="text-center">
           <OverlayHeader><ArrowLeft className="mx-auto h-8 w-8 text-[var(--modal-danger)]" /><h2 id="air-exit-title" className="modal-title">Rời lượt xuất kích?</h2></OverlayHeader>
           <OverlayBody data-exit-confirm="open"><p className="text-xs leading-relaxed text-[var(--modal-text)]">Lượt hiện tại sẽ kết thúc và không nhận thưởng.</p></OverlayBody>
           <OverlayFooter data-stack-actions="true"><ModalButton variant="ghost" type="button" onClick={closeExit}>Ở lại</ModalButton><ModalButton variant="danger" type="button" onClick={onExit}>Rời trận</ModalButton></OverlayFooter>
         </ConfirmationDialog>
       )}
 
+      </AnimatePresence>
       {pauseState.paused && pauseState.label && pauseReasonsRef.current.has("hidden") && (
         <div className="pointer-events-none absolute bottom-2 left-1/2 z-50 -translate-x-1/2 rounded-full bg-black/90 px-3 py-1 text-[8px] font-bold text-slate-300">{pauseState.label}</div>
       )}

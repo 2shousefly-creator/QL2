@@ -1,3 +1,5 @@
+import { AnimatePresence, MotionConfig } from "motion/react";
+import { AirCombatModal as AppModal, AirCombatMotionContext } from "./AirCombatMotion";
 import { AirCombatMainMenu, AirCombatStageSelect } from "./AirCombatCampaign";
 import { canLaunchStage, defaultSelectedStage, getAirCombatStage } from "./airCombatStages";
 import React, { useEffect, useRef, useState } from "react";
@@ -42,7 +44,7 @@ import { getSkillTooltipModel } from "./airCombatPresentation";
 import { CombatUiIcon } from "./CombatUiIcon";
 import { AircraftSelectionStats } from "./CombatStatReadout";
 import "./combat-ui.css";
-import { AppModal, ExclusiveFullscreenOverlay, ModalButton, OverlayBody, OverlayHeader } from "../../../components/overlay/AppOverlay";
+import { ExclusiveFullscreenOverlay, ModalButton, OverlayBody, OverlayHeader } from "../../../components/overlay/AppOverlay";
 
 interface KhongKichScreenProps {
   gameState: GameState;
@@ -64,12 +66,22 @@ interface AircraftPressState {
 }
 
 
-export const KhongKichScreen: React.FC<KhongKichScreenProps> = ({
+const KhongKichContent: React.FC<KhongKichScreenProps> = ({
   gameState,
   onUpdateGameState,
   onBack,
 }) => {
-  const [phase, setPhase] = useState<Phase>("menu");
+  const [phase, commitPhase] = useState<Phase>("menu");
+  const [leaving,setLeaving]=useState(false);
+  const routeTimer=useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  useEffect(()=>()=>clearTimeout(routeTimer.current),[]);
+  const navigate=(action:()=>void)=>{
+    if(routeTimer.current)return;
+    setLeaving(true);
+    routeTimer.current=setTimeout(()=>{action();setLeaving(false);routeTimer.current=undefined;},gameState.settings.reducedMotion?100:180);
+  };
+  const setPhase=(next:Phase)=>navigate(()=>commitPhase(next));
+  const motionClass=`air-screen-motion ${leaving?"air-screen-exit":""} ${gameState.settings.reducedMotion?"air-motion-reduced":""}`;
   const [profile, setProfile] = useState<AirCombatProfile>(() => loadAirCombatProfile());
   const [selectedStage, setSelectedStage] = useState(() => defaultSelectedStage(profile.campaign));
   const stage = getAirCombatStage(selectedStage)!;
@@ -189,7 +201,7 @@ export const KhongKichScreen: React.FC<KhongKichScreenProps> = ({
     return (
       <ExclusiveFullscreenOverlay
         ariaLabel="Không Kích"
-        className="tactical-battle-screen air-combat-surface flex select-none touch-none items-center justify-center overflow-hidden bg-slate-950 px-1.5 py-1.5"
+        className={`${motionClass} tactical-battle-screen air-combat-surface flex select-none touch-none items-center justify-center overflow-hidden bg-slate-950 px-1.5 py-1.5`}
         style={{
           WebkitTouchCallout: "none",
           WebkitUserSelect: "none",
@@ -222,7 +234,7 @@ export const KhongKichScreen: React.FC<KhongKichScreenProps> = ({
     return (
       <ExclusiveFullscreenOverlay
         ariaLabel="Kết quả Không Kích"
-        className="bg-slate-950"
+        className={`${motionClass} bg-slate-950`}
       >
         <AirCombatResult
           {...completedRun}
@@ -234,15 +246,16 @@ export const KhongKichScreen: React.FC<KhongKichScreenProps> = ({
     );
   }
 
-  if (phase === "menu") return <ExclusiveFullscreenOverlay ariaLabel="Menu Không Kích" className="air-campaign-fullscreen"><AirCombatMainMenu reducedMotion={gameState.settings.reducedMotion} onBack={onBack} onStart={() => { setSelectedStage(defaultSelectedStage(profile.campaign)); setPhase("stages"); }} /></ExclusiveFullscreenOverlay>;
-  if (phase === "stages") return <AirCombatStageSelect progress={profile.campaign} selected={selectedStage} onSelect={setSelectedStage} onBack={() => setPhase("menu")} onAircraft={id => {
+  if (phase === "menu") return <ExclusiveFullscreenOverlay ariaLabel="Menu Không Kích" className={`${motionClass} air-campaign-fullscreen`}><AirCombatMainMenu reducedMotion={gameState.settings.reducedMotion} onBack={()=>navigate(onBack)} onStart={() => { setSelectedStage(defaultSelectedStage(profile.campaign)); setPhase("stages"); }} /></ExclusiveFullscreenOverlay>;
+  if (phase === "stages") return <div key={phase} className={`${motionClass} air-stage-motion`}><AirCombatStageSelect progress={profile.campaign} selected={selectedStage} onSelect={setSelectedStage} onBack={() => setPhase("menu")} onAircraft={id => {
     if (!canLaunchStage(id, loadAirCombatProfile().campaign)) return;
     setSelectedStage(id); setPhase("select");
-  }} />;
+  }} /></div>;
 
   return (
     <div
-      className="command-screen tactical-battle-screen mx-auto w-full max-w-lg flex flex-col justify-start flex-1 min-h-0 px-2.5 sm:px-4 py-[clamp(6px,1.4dvh,16px)] select-none"
+      className={`${motionClass} command-screen tactical-battle-screen mx-auto w-full max-w-lg flex flex-col justify-start flex-1 min-h-0 px-2.5 sm:px-4 py-[clamp(6px,1.4dvh,16px)] select-none`}
+      key={phase}
       data-khong-kich-phase="select"
     >
       {/* Compact Top Navigation Bar */}
@@ -392,8 +405,8 @@ export const KhongKichScreen: React.FC<KhongKichScreenProps> = ({
       </button>
 
       {/* Skill Preview Modal */}
-      {previewConfig && (
-        <AppModal archetype="info"
+      <AnimatePresence>{previewConfig && (
+        <AppModal key="preview" archetype="info"
           onClose={() => setPreviewAircraft(null)}
           labelledBy="aircraft-preview-title"
           panelProps={{ "data-aircraft-preview": previewConfig.id } as React.HTMLAttributes<HTMLElement>}
@@ -451,10 +464,12 @@ export const KhongKichScreen: React.FC<KhongKichScreenProps> = ({
             </div>
             </OverlayBody>
         </AppModal>
-      )}
+      )}</AnimatePresence>
 
       <p className="mt-2 text-center text-[10px] text-slate-400">Giữ và kéo trên chiến trường để lái · thả tay để đứng yên.<br />Dùng ngón tay thứ hai để kích hoạt kỹ năng.</p>
 
     </div>
   );
 };
+
+export const KhongKichScreen: React.FC<KhongKichScreenProps> = props => <AirCombatMotionContext.Provider value={props.gameState.settings.reducedMotion}><MotionConfig reducedMotion={props.gameState.settings.reducedMotion?"always":"user"}><KhongKichContent {...props}/></MotionConfig></AirCombatMotionContext.Provider>;

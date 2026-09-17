@@ -18,9 +18,10 @@ export function recordCoreMetric(state: AircraftCombatState, row: number | undef
   entry[metric] = (entry[metric] ?? 0) + amount;
 }
 export const CORE_METRICS: Record<number, readonly CoreMetric[]> = {
+  78:["resource"],126:["resource"],
   27:["damage"],38:["healed"],62:["healed"],64:["healed"],70:["cooldown"],73:["damage"],74:["cooldown"],
   76:["shieldCreated","shieldAbsorbed"],77:["healed","cooldown"],81:["shieldCreated","shieldAbsorbed"],
-  90:["procs","healed"],92:["healed"],93:["cooldown"],99:["shieldCreated","shieldAbsorbed"],104:["shieldCreated","shieldAbsorbed"],
+  90:["procs","healed"],92:["healed"],93:["cooldown"],99:["shieldCreated","shieldAbsorbed","resource"],104:["shieldCreated","shieldAbsorbed"],
   105:["damage","hits"],106:["damage","launched","hits"],107:["grazes","resource"],108:["scraps","healed"],
   112:["damage"],120:["hacked","bossStuns"],121:["damage"],122:["resource"],123:["damage"],129:["blocked"],
   131:["blocked"],132:["resource"],134:["damage"],136:["damage","blocked"],138:["healed"],140:["damage"],143:["executes"],147:["blocked"],148:["resource"],

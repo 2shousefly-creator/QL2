@@ -1,3 +1,4 @@
+import { magneticShake } from "./airCombatMagnetic";
 import { magneticFlight, stormTile } from "./airCombatMagneticSky";
 import { STAGE2_ART_URLS, STAGE2_ENEMY_ART, STAGE2_VFX_ART, TEMPEST_WEAKPOINT_ART } from "./airCombatStage2Art";
 import type { AtlasFrame } from "./pixi/airCombatPixiTypes";
@@ -366,6 +367,9 @@ export function drawLegacyWorld(
 ): void {
   const { width, height, hudHeight } = AIR_COMBAT_WORLD;
   const aircraft = AIRCRAFT_CONFIGS[aircraftId];
+  ctx.save();
+  const shake=reducedMotion?0:magneticShake(world);
+  ctx.translate(Math.sin(world.elapsed*113)*shake,Math.cos(world.elapsed*97)*shake*.65);
   if (world.magnetic) {
     ctx.fillStyle = "#07112c"; ctx.fillRect(0,0,width,height);
     const image = magneticImage(STAGE2_ART_URLS.storm);
@@ -587,7 +591,7 @@ export function drawLegacyWorld(
       ctx.strokeStyle = enemyAllegiance(world,enemy)==="friendly_hacked"?"#67e8f9":`rgba(250,204,21,${reducedMotion ? .6 : 0.55 + Math.sin(world.elapsed * 15) * 0.15})`;
       ctx.lineWidth = 2;
       ctx.beginPath();
-      ctx.arc(enemy.x, enemy.y, enemy.radius + 7 + (1 - enemy.dashCharge / 0.75) * 7, 0, Math.PI * 2);
+      ctx.moveTo(enemy.x,enemy.y); ctx.lineTo(enemy.dashEndX,enemy.dashEndY);
       ctx.stroke();
     }
     if(enemy.type==="boss" && (enemy.bossAttack?.crossfirePending??0)>0 && !enemy.bossAttack?.patternWaiting) {
@@ -810,4 +814,5 @@ export function drawLegacyWorld(
   ctx.moveTo(GAMEPLAY_SAFE_RECT.left, GAMEPLAY_SAFE_RECT.top);
   ctx.lineTo(GAMEPLAY_SAFE_RECT.right, GAMEPLAY_SAFE_RECT.top);
   ctx.stroke();
+  ctx.restore();
 }

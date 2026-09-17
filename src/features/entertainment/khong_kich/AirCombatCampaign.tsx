@@ -1,10 +1,14 @@
+import { AIR_COMBAT_VERSION } from "./airCombatReleaseNotes";
+import { AirCombatReleaseNotes } from "./AirCombatReleaseNotesDialog";
+import { AnimatePresence } from "motion/react";
 import { STAGE2_ART_URLS } from "./airCombatStage2Art";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { ArrowLeft, ChevronLeft, ChevronRight, LockKeyhole, Check, Plane } from "lucide-react";
 import { AIR_COMBAT_STAGES, getAirCombatStage, isStageCleared, isStageUnlocked } from "./airCombatStages";
 import type { AirCombatCampaignProgress } from "./airCombatTypes";
 
 export function AirCombatMainMenu({ onStart, onBack, reducedMotion }: { onStart: () => void; onBack: () => void; reducedMotion: boolean }) {
+  const [notesOpen,setNotesOpen]=useState(false);
   return <section className={`air-campaign-menu ${reducedMotion ? "air-campaign-still" : ""}`}>
     <div className="air-campaign-landscape" style={{ backgroundImage: `url(${STAGE2_ART_URLS.menu})` }} aria-hidden="true" />
     <div className="air-campaign-scrim" aria-hidden="true" />
@@ -16,7 +20,9 @@ export function AirCombatMainMenu({ onStart, onBack, reducedMotion }: { onStart:
       <h1 className="mt-3 text-5xl font-black tracking-tight text-white">KHÔNG KÍCH</h1>
       <p className="mt-6 text-sm text-slate-300">Chọn chiến trường. Chọn chiến cơ. Xuất kích.</p>
       <button className="air-campaign-primary mt-10" onClick={onStart}>BẮT ĐẦU GAME <ChevronRight size={19} /></button>
+      <button className="air-release-button" onClick={()=>setNotesOpen(true)}>CHI TIẾT CẬP NHẬT · v{AIR_COMBAT_VERSION}</button>
     </div>
+    <AnimatePresence>{notesOpen&&<AirCombatReleaseNotes key="notes" onClose={()=>setNotesOpen(false)}/>}</AnimatePresence>
   </section>;
 }
 
@@ -50,7 +56,7 @@ export function AirCombatStageSelect({ progress, selected, onSelect, onAircraft,
       {AIR_COMBAT_STAGES.map(stage => {
         const unlocked = isStageUnlocked(stage.id, progress), cleared = isStageCleared(stage.id, progress);
         const previous = getAirCombatStage(stage.unlockAfterStage ?? -1);
-        return <article key={stage.id} data-stage={stage.id} className={`air-stage-card ${unlocked ? "" : "air-stage-locked"}`} style={{ "--stage-accent": stage.accent } as React.CSSProperties}>
+        return <article key={stage.id} data-stage={stage.id} className={`air-stage-card ${unlocked ? "" : "air-stage-locked"}`} style={{ "--stage-accent": stage.accent, "--stage-index": stage.id-1 } as React.CSSProperties}>
           <div className="air-stage-art" aria-hidden="true"><div className="air-stage-orbit" /><Plane size={72} /><span>{String(stage.id).padStart(2, "0")}</span></div>
           <div className="p-5">
             <p className="text-xs font-bold tracking-[.3em] text-slate-400">MÀN {String(stage.id).padStart(2, "0")}</p>

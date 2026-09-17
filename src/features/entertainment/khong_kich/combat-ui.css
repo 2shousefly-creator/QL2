@@ -189,3 +189,32 @@
 .air-campaign-still .air-campaign-landscape{animation:none}
 @keyframes air-hero-drift{from{transform:scale(1) translateY(0)}to{transform:scale(1.04) translateY(-.8%)}}
 @media(prefers-reduced-motion:reduce){.air-campaign-landscape{animation:none}}
+
+/* Shared Không Kích motion; aircraft cards and HUD retain their layout. */
+.air-screen-motion {animation:air-screen-enter 220ms cubic-bezier(.22,1,.36,1) both;}
+.air-screen-motion.air-screen-exit {animation:air-screen-leave 180ms ease both;pointer-events:none;}
+.air-stage-motion {min-height:100%;background:#020617;}
+.air-stage-select {background:linear-gradient(#02061799,#020617e8),url('../../../assets/khong-kich/stage2/main-menu-sky.png') center/cover;}
+.air-stage-card {animation:air-panel-enter 300ms cubic-bezier(.22,1,.36,1) both;animation-delay:calc(var(--stage-index,0)*60ms);}
+.air-campaign-hero>* {animation:air-panel-enter 300ms cubic-bezier(.22,1,.36,1) both;}
+.air-campaign-hero>*:nth-child(2) {animation-delay:40ms;}
+.air-campaign-hero>*:nth-child(3) {animation-delay:80ms;}
+.air-campaign-hero>*:nth-child(n+4) {animation-delay:120ms;}
+.air-release-button {display:block;margin:14px auto 0;padding:10px 16px;border:1px solid #a5b4fc66;border-radius:12px;background:#0f172aaa;color:#c7d2fe;font-size:11px;font-weight:700;}
+.air-release-copy {font-size:13px;line-height:1.65;}
+.air-release-copy p {margin:0 0 14px;}
+.air-release-copy h3 {margin:22px 0 10px;font-size:13px;font-weight:800;color:#67e8f9;}
+.air-release-values {white-space:pre-wrap;overflow-wrap:anywhere;background:#02061788;border-radius:10px;padding:12px;font-size:11px;line-height:1.65;margin-bottom:14px;}
+.air-motion-modal {animation:air-fade-in 280ms cubic-bezier(.22,1,.36,1) both;}
+.air-motion-modal .app-overlay__panel {animation:air-panel-enter 280ms cubic-bezier(.22,1,.36,1) both;}
+.air-motion-modal.air-motion-exit {animation:air-fade-out 280ms cubic-bezier(.22,1,.36,1) both;pointer-events:none;}
+.air-motion-modal.air-motion-exit .app-overlay__panel {animation:air-panel-leave 280ms cubic-bezier(.22,1,.36,1) both;}
+@keyframes air-fade-in {from{opacity:0}to{opacity:1}}
+@keyframes air-fade-out {from{opacity:1}to{opacity:0}}
+@keyframes air-panel-enter {from{opacity:0;transform:translateY(14px) scale(.985)}to{opacity:1;transform:none}}
+@keyframes air-panel-leave {from{opacity:1;transform:none}to{opacity:0;transform:translateY(8px) scale(.99)}}
+@keyframes air-screen-enter {from{opacity:0;filter:blur(2px)}to{opacity:1;filter:none}}
+@keyframes air-screen-leave {from{opacity:1}to{opacity:0;filter:blur(2px)}}
+.air-motion-reduced,.air-motion-reduced .air-stage-card,.air-motion-reduced .air-campaign-hero>*,.air-motion-modal[data-reduced-motion=true],.air-motion-modal[data-reduced-motion=true] .app-overlay__panel {animation-name:air-fade-in;animation-duration:100ms!important;animation-delay:0ms!important;filter:none!important;}
+.air-motion-reduced.air-screen-exit,.air-motion-modal[data-reduced-motion=true].air-motion-exit,.air-motion-modal[data-reduced-motion=true].air-motion-exit .app-overlay__panel {animation-name:air-fade-out;}
+@media(prefers-reduced-motion:reduce){.air-screen-motion,.air-stage-card,.air-campaign-hero>*,.air-motion-modal,.air-motion-modal .app-overlay__panel{animation-name:air-fade-in;animation-duration:100ms!important;animation-delay:0ms!important;filter:none!important;}.air-screen-exit,.air-motion-modal.air-motion-exit,.air-motion-modal.air-motion-exit .app-overlay__panel{animation-name:air-fade-out;}}

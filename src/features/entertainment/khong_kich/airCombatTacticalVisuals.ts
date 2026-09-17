@@ -32,7 +32,7 @@ export function paintTacticalCores(world:CombatWorld,p:TacticalPainter,reducedMo
     labels.forEach((label,i)=>p.label?.(Math.max(38,Math.min(322,e.x)),Math.max(16,e.y-e.radius-12-i*(large?10:8)),label.text,label.color,large?8:6.5));
   }
   for(const e of world.enemies)if(e.hp>0&&enemyAllegiance(world,e)==="friendly_hacked")p.circle(e.x,e.y,e.radius+9,0x67e8f9,.85);
-  for(const f of t?.fields??[]){p.circle(f.x,f.y,55,0x38bdf8,.1,true);p.circle(f.x,f.y,55,0x67e8f9,.7);if(!reducedMotion)p.circle(f.x,f.y,25+(now*15)%30,0x67e8f9,.2);}
+  for(const f of t?.fields??[]){p.circle(f.x,f.y,80,0x38bdf8,.1,true);p.circle(f.x,f.y,80,0x67e8f9,.7);if(!reducedMotion)p.circle(f.x,f.y,25+(now*15)%30,0x67e8f9,.2);}
   for(const scrap of t?.scraps??[]){const alpha=Math.max(0,Math.min(1,2*(scrap.until-now)));p.circle(scrap.x,scrap.y,5,0xfde68a,alpha,true);p.line(scrap.x-3,scrap.y,scrap.x+3,scrap.y,0xffffff,alpha,1);p.line(scrap.x,scrap.y-3,scrap.x,scrap.y+3,0xffffff,alpha,1);}
   for(const g of t?.grids??[]){const a=world.enemies.find(e=>e.id===g.a&&isHostileToPlayer(world,e)),b=world.enemies.find(e=>e.id===g.b&&isHostileToPlayer(world,e));if(a&&b&&g.until>now){p.line(a.x,a.y,b.x,b.y,0x22d3ee,.25,8);p.line(a.x,a.y,b.x,b.y,0xa5f3fc,.9,2);}}
   const wave=(c.timers.antimatterWave??0)-c.time;

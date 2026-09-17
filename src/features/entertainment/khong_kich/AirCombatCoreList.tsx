@@ -1,5 +1,6 @@
+import { AirCombatModal as AppModal } from "./AirCombatMotion";
 import React, { useState } from "react";
-import { AppModal, ModalButton, OverlayBody, OverlayFooter, OverlayHeader } from "../../../components/overlay/AppOverlay";
+import { ModalButton, OverlayBody, OverlayFooter, OverlayHeader } from "../../../components/overlay/AppOverlay";
 import { CORE_DEFINITIONS, CORE_TIER_LABELS, SKILL_CONFIGS } from "./airCombatConfig";
 import { skillsLocked } from "./airCombatCoreEffects";
 import { CombatUiIcon } from "./CombatUiIcon";
@@ -44,7 +45,7 @@ export function AirCombatCoreList({ state, onClose }: { state: AircraftCombatSta
             <h4 className="text-xs font-bold text-amber-200">THỐNG KÊ LÕI</h4>
             <ul className="mt-2 space-y-1 text-xs">{getCoreTelemetryPresentation(state,selected.id).map((line,index)=><li key={index}><CoreDescription text={line}/></li>)}</ul>
           </section>
-          {selected.id === "core_097" && <p className="mt-2 text-xs text-amber-200">Đã khóa cả 3 kỹ năng. Mốc 9 / 18 / 27 còn lại chuyển sang lõi Kim Cương thường.</p>}
+          {selected.id === "core_097" && <p className="mt-2 text-xs text-amber-200">Đã khóa cả 3 kỹ năng. Mốc 9 / 18 / 27 còn lại chuyển sang lõi Vàng thường.</p>}
           {state.coreState.consumed.has(selected.id) && <p className="mt-2 text-xs text-amber-200">Đã sử dụng trong lượt này</p>}
         </> : <p className="text-sm text-[var(--modal-muted)]">Chưa có lõi. Lõi đầu tiên xuất hiện ở cấp 3.</p>}
       </section>

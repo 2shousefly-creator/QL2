@@ -1,3 +1,4 @@
+import { magneticShake } from "../airCombatMagnetic";
 import { STAGE2_ENEMY_ART, TEMPEST_WEAKPOINT_ART } from "../airCombatStage2Art";
 import { paintMagnetic, magneticEnemyDisabled } from "../airCombatMagnetic";
 import { getPlayerExhaust, hawkEyeExhaustTransform } from "../airCombatArtwork";
@@ -154,7 +155,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     this.trackingBars.clear();
     const visual = AIRCRAFT_VISUALS[world.aircraft.aircraftId];
     this.recoil *= Math.exp(-delta * 24);
-    this.shake *= Math.exp(-delta * 12);
+    this.shake = Math.max(this.shake * Math.exp(-delta * 12), magneticShake(world));
     this.sky.update(delta, world, reducedMotion);
     this.root.position.set(reducedMotion ? 0 : Math.sin(this.clock * 113) * this.shake, reducedMotion ? 0 : Math.cos(this.clock * 97) * this.shake * 0.65);
     this.vfx.update(delta);
@@ -287,7 +288,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
       if(enemy.stun>0)this.telegraphs.circle(enemy.x,enemy.y-enemy.radius-7,5).stroke({color:0xfde047,width:2});
       if(enemy.burn>0&&!reducedMotion&&damageSmoke)this.vfx.spawn("fire",enemy.x,enemy.y,24,.3);
       if (!world.ended && enemy.hp>0 && enemy.type === "kamikaze" && (enemy.kamikazeState === "charge" || enemy.kamikazeState === "dash")) {
-        this.telegraphs.circle(enemy.x, enemy.y, enemy.radius + 7).stroke({ color: enemyAllegiance(world,enemy)==="friendly_hacked"?0x67e8f9:0xfbbf24, width: 1.5, alpha: 0.75 });
+        this.vfx.spawn("charge",enemy.x,enemy.y-enemy.radius,16,.12,0xfbbf24);
         const committed = enemy.kamikazeState === "dash" && enemy.dashCommitted;
         this.telegraphs.moveTo(committed ? enemy.dashStartX : enemy.x, committed ? enemy.dashStartY : enemy.y).lineTo(enemy.dashEndX,enemy.dashEndY).stroke({color:enemyAllegiance(world,enemy)==="friendly_hacked"?0x67e8f9:0xfbbf24,width:1.5,alpha:.7});
       }
@@ -583,10 +584,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     }
     if(world.aircraft.status.stunnedUntil>world.aircraft.coreState.time)this.telegraphs.circle(world.playerX,world.playerY,23).stroke({color:0x67e8f9,width:1.5,alpha:.65});
     this.hitbox.clear();
-    if (world.playerInputActive || world.projectiles.length > 90) {
-      this.hitbox.circle(world.playerX, world.playerY, world.playerRadius).stroke({ width: 1, color: 0xe0f2fe, alpha: world.playerInputActive ? 0.65 : 0.22 });
-      this.hitbox.circle(world.playerX, world.playerY, 2).fill({ color: 0xffffff, alpha: 0.8 });
-    }
+
     const stats = getEffectiveAircraftStats(world.aircraft);
     const health = this.healthBars.get(-1, world.aircraft.currentHp, stats.maxHp, activeShieldAmount(world.aircraft));
     const hp = health.hpRatio;

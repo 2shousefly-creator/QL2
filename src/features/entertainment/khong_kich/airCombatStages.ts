@@ -1,22 +1,13 @@
-import { COMBAT_WAVES, isElite, type WaveDefinition } from "./airCombatWaves";
+import { COMBAT_WAVES, type WaveDefinition } from "./airCombatWaves";
 import type { AirCombatCampaignProgress, EnemyType } from "./airCombatTypes";
 
-type TierScale = { hp: number; armor: number; damage: number };
 export interface AirCombatStageDefinition {
   id: number; key: string; displayName: string; localizedName: string;
   shortDescription: string; bossName: string; unlockAfterStage: number | null;
   theme: string; accent: string; available: boolean;
   runtime: "leviathan" | "magnetic";
   waves: readonly WaveDefinition[];
-  scaling: Record<"normal" | "elite" | "boss", TierScale>;
 }
-export const STAGE_ONE_SCALING = {
-  normal: { hp: .78, armor: .78, damage: .72 },
-  elite: { hp: .82, armor: .82, damage: .78 },
-  boss: { hp: .85, armor: .85, damage: .80 },
-};
-const scale = (base: TierScale, hp: number, armor: number, damage: number): TierScale =>
-  ({ hp: base.hp * hp, armor: base.armor * armor, damage: base.damage * damage });
 // Authored introductions followed by bounded mixed groups. Counts below own
 // every main-enemy slot; helper entities never enter these queues.
 function magneticWave(label: string, counts: Partial<Record<EnemyType, number>>, xpPerKill: number,
@@ -65,16 +56,14 @@ export const AIR_COMBAT_STAGES: readonly AirCombatStageDefinition[] = [
   { id: 1, key: "leviathan_front", displayName: "LEVIATHAN FRONT", localizedName: "PHÒNG TUYẾN LEVIATHAN",
     shortDescription: "Né hỏa lực trực diện. Đánh bại pháo đài bay Leviathan.", bossName: "Leviathan",
     unlockAfterStage: null, theme: "FRONTLINE · FIREPOWER", accent: "#38bdf8", available: true,
-    runtime: "leviathan", waves: COMBAT_WAVES, scaling: STAGE_ONE_SCALING },
+    runtime: "leviathan", waves: COMBAT_WAVES },
   { id: 2, key: "magnetic_storm", displayName: "MAGNETIC STORM", localizedName: "BÃO TỪ",
     shortDescription: "Làm chủ quỹ đạo, đạn quay trở lại và vùng không gian bị kiểm soát bởi từ trường.",
     bossName: "Tempest Crown", unlockAfterStage: 1, theme: "ORBIT · RETURN · CONTROL", accent: "#a78bfa", available: true,
-    runtime: "magnetic", scaling: { normal: scale(STAGE_ONE_SCALING.normal, 1.15, 1.10, 1.12),
-      elite: scale(STAGE_ONE_SCALING.elite, 1.15, 1.10, 1.12), boss: scale(STAGE_ONE_SCALING.boss, 1.18, 1.10, 1.12) },
-    waves: MAGNETIC_WAVES },
+    runtime: "magnetic", waves: MAGNETIC_WAVES },
   { id: 3, key: "stormbreaker", displayName: "STORMBREAKER", localizedName: "",
     shortDescription: "Chiến trường tiếp theo đang được chuẩn bị.", bossName: "", unlockAfterStage: 2,
-    theme: "SẮP RA MẮT", accent: "#64748b", available: false, runtime: "magnetic", waves: [], scaling: STAGE_ONE_SCALING },
+    theme: "SẮP RA MẮT", accent: "#64748b", available: false, runtime: "magnetic", waves: [] },
 ];
 export const getAirCombatStage = (id: number) => AIR_COMBAT_STAGES.find(stage => stage.id === id);
 export const isStageUnlocked = (id: number, progress: AirCombatCampaignProgress) => {
@@ -97,4 +86,3 @@ export function normalizeCampaign(raw: unknown, legacyBossClears = 0): AirCombat
     ? value.lastSelectedStage : defaultSelectedStage(progress);
   return progress;
 }
-export const stageEnemyScale = (stage: AirCombatStageDefinition, type: EnemyType) => stage.scaling[type === "boss" ? "boss" : isElite(type) ? "elite" : "normal"];

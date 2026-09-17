@@ -1,3 +1,5 @@
+import { AnimatePresence, motion } from "motion/react";
+import { airTooltipMotion } from "./AirCombatMotion";
 import React, { forwardRef, useEffect, useLayoutEffect, useImperativeHandle, useRef, useState } from "react";
 import { Flame, FlaskConical, Shield, ShieldMinus, Zap, Lock, BatteryWarning, HeartOff, Crosshair, Radar } from "lucide-react";
 import { CombatStatIconTemplates, updateCombatRichText } from "./CoreDescription";
@@ -88,10 +90,10 @@ export const AirCombatStatusStrip = React.memo(forwardRef<StatusStripHandle, { t
         {all.length > 10 && <span className="air-status-overflow" title={all.slice(9).map(s => s.name).join(" · ")}>+{all.length - 9}</span>}
       </div>;
     })}
-    {active && <aside ref={tooltip} className="air-status-tooltip" role="status">
+    <AnimatePresence>{active && <motion.aside key="status" {...airTooltipMotion} ref={tooltip} className="air-status-tooltip" role="status">
       <div className="air-tooltip-heading"><strong>{active.name}</strong><span data-status-time>{active.timeLabel ?? timeLabel(active.remaining)}</span></div>
       <CombatStatIconTemplates/><p data-status-description/>
       <small data-status-source>Nguồn: {active.source}{active.badgeText ? ` · ${active.badgeText}` : ""}</small>
-    </aside>}
+    </motion.aside>}</AnimatePresence>
   </div>;
 }));

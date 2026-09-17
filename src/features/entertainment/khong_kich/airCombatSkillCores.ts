@@ -25,26 +25,26 @@ const b=SKILL_BASE_VALUES;
 
 /** Shared gameplay/tooltip values for the 27 additive skill cores. */
 export const SKILL_CORE_VALUES = {
-  manaRefundCap:.5, heatRecovery:.025, decoyPulseRadius:52, decoyPulseDamage:.5,
-  thermalReduction:.15, thermalTail:4, afterburnerCooldownReduction:13, coolingBonus:.9, coolingDuration:5,
+  manaRefundCap:.5, decoyRefundCap:.35, heatRecovery:.025, decoyPulseRadius:60, decoyPulseDamage:.7,
+  thermalReduction:.2, thermalTail:4, afterburnerCooldownReduction:11, coolingMana:.18, coolingDuration:5,
   bounceFirst:.75, bounceSecond:.5, swarmCooldownReduction:11, interceptLimit:3, dataLimit:8, dataCrit:.04, dataDuration:8,
-  shieldConversion:.5, shieldCooldownReduction:13, aftershockDelay:1.2, aftershockDamage:2.8, weakenReduction:.2, weakenDuration:5,
-  knockbackNormal:55, knockbackElite:32, knockbackBoss:16, markBonus:.5, markDuration:8,
+  shieldConversion:.5, shieldCooldownReduction:10, aftershockDelay:1.2, aftershockDamage:2.8, weakenReduction:.2, weakenDuration:5,
+  knockbackNormal:55, knockbackElite:32, knockbackBoss:16, markBonus:.4, markDuration:8,
   holeDuration:5, holeRadius:120, holeCoreRadius:20, holeDamagePerSecond:1,
-  cannonCooldownReduction:11, cannonHeal:.025, cannonSpeedBonus:.5, cannonPierceDamage:.7,
+  cannonCooldownReduction:11, cannonHeal:.02, cannonSpeedBonus:.5, cannonPierceDamage:.7,
   cloneExplosionRadius:150, cloneExplosionDamage:4.2, cloneLinger:5, reappearanceCharges:6, reappearanceDamage:2, reappearanceSpeedBonus:.3,
-  executeThreshold:.12, laserArmorReduction:.35, laserArmorDuration:12, laserBonus:.4,
-  syncWindow:1, syncDuration:4, syncBonus:.2, guardCycle:6, guardRadius:32, recallRefund:.45, recallRefundCap:40,
+  executeThreshold:.12, executeEliteThreshold:.10, executeBossThreshold:.08, laserArmorReduction:.25, laserArmorDuration:8, laserBonus:.4,
+  syncWindow:1, syncDuration:4, syncBonus:.2, guardCycle:7, guardRadius:60, recallRefund:.45, recallRefundCap:40,
 } as const;
 const v=SKILL_CORE_VALUES;
 const n=(value:number)=>value.toLocaleString("vi-VN",{maximumFractionDigits:2});
 const pct=(value:number)=>`${n(value*100)}%`;
 export const SKILL_CORE_DESCRIPTIONS: Record<number,string> = {
-  122:`Mỗi Mồi Bẫy hấp thụ đạn hoặc chặn một đợt lao hồi ${pct(v.heatRecovery)} Mana Tối Đa, tối đa ${pct(v.manaRefundCap)} Mana Tối Đa mỗi lần dùng.`,
+  122:`Mỗi Mồi Bẫy hấp thụ đạn hoặc chặn một đợt lao hồi ${pct(v.heatRecovery)} Mana Tối Đa, tối đa ${pct(v.decoyRefundCap)} Mana Tối Đa mỗi lần dùng.`,
   123:`Mồi Bẫy hấp thụ đạn phát ra xung bán kính ${v.decoyPulseRadius}px, gây ${pct(v.decoyPulseDamage)} Hỏa Lực. Mỗi kẻ địch chỉ nhận 1 xung từ mỗi đợt Mồi Bẫy.`,
   124:`Khi còn ít nhất một Mồi Bẫy hoạt động, giảm ${pct(v.thermalReduction)} sát thương nhận vào. Hiệu ứng kéo dài thêm ${v.thermalTail} giây sau khi mồi cuối cùng biến mất.`,
   125:`Giảm ${v.afterburnerCooldownReduction} giây Hồi Chiêu của Điên Cuồng, còn ${b.afterburnerCooldown-v.afterburnerCooldownReduction} giây trước các hiệu ứng Giảm Hồi Chiêu khác.`,
-  126:`Khi Điên Cuồng kết thúc, nhận +${pct(v.coolingBonus)} Hồi Mana trong ${v.coolingDuration} giây.`,
+  126:`Khi Điên Cuồng kết thúc, hồi dần tổng ${pct(v.coolingMana)} Mana Tối Đa trong ${v.coolingDuration} giây.`,
   127:`Trong Điên Cuồng, hai lần nảy của đạn thường gây ${pct(v.bounceFirst)} và ${pct(v.bounceSecond)} sát thương gốc.`,
   128:`Giảm ${v.swarmCooldownReduction} giây Hồi Chiêu của Mưa Tên Lửa, còn ${b.swarmCooldown-v.swarmCooldownReduction} giây trước các hiệu ứng Giảm Hồi Chiêu khác.`,
   129:`Mỗi tên lửa đang bay có thể phá tối đa ${v.interceptLimit} đạn địch trên đường đi. Sau lần đánh chặn thứ ${v.interceptLimit}, tên lửa tự hủy và không gây sát thương lên kẻ địch.`,
@@ -61,7 +61,7 @@ export const SKILL_CORE_DESCRIPTIONS: Record<number,string> = {
   140:`Khi tàng hình kết thúc, phân thân lao đến kẻ địch gần nhất rồi phát nổ trong bán kính ${v.cloneExplosionRadius}px, gây ${pct(v.cloneExplosionDamage)} Hỏa Lực. Nếu không còn mục tiêu, phân thân phát nổ tại chỗ.`,
   141:`Sau khi Phantom hiện hình, phân thân tiếp tục tồn tại và thu hút đạn thêm ${v.cloneLinger} giây.`,
   142:`Sau khi tàng hình kết thúc, ${v.reappearanceCharges} lần bắn thường kế tiếp gây gấp ${n(v.reappearanceDamage)} sát thương và đạn bay nhanh hơn ${pct(v.reappearanceSpeedBonus)}. Không có giới hạn thời gian; hiệu ứng chỉ kết thúc khi dùng hết ${v.reappearanceCharges} lần bắn.`,
-  143:`Sau mỗi nhịp sát thương của Laser, kẻ địch còn không quá ${pct(v.executeThreshold)} Máu Tối Đa sẽ bị kết liễu ngay. Có hiệu lực với cả Tinh Anh và Boss.`,
+  143:`Sau mỗi nhịp sát thương của Laser, kết liễu Quái thường còn không quá ${pct(v.executeThreshold)} Máu Tối Đa, Tinh Anh ${pct(v.executeEliteThreshold)} và Boss ${pct(v.executeBossThreshold)}.`,
   144:`Laser trúng mục tiêu làm giảm ${pct(v.laserArmorReduction)} Giáp trong ${v.laserArmorDuration} giây. Hiệu ứng không cộng dồn; trúng lại làm mới thời gian.`,
   145:`Laser Hủy Diệt gây thêm ${pct(v.laserBonus)} sát thương mỗi nhịp.`,
   146:`Nếu Phantom và HawkEye cùng gây sát thương lên một mục tiêu trong vòng ${v.syncWindow} giây, mục tiêu được Đồng Bộ trong ${v.syncDuration} giây. Phantom và HawkEye cùng gây thêm ${pct(v.syncBonus)} sát thương lên mục tiêu đó. Chỉ có thể Đồng Bộ một mục tiêu cùng lúc.`,
