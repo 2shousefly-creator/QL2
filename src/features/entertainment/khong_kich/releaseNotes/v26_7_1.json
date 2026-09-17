@@ -1,0 +1,4293 @@
+{
+  "version": "26.7.1",
+  "releaseDate": "17/09/2026",
+  "title": "Magnetic Storm Refinement & Core Rebalance",
+  "displayTitle": "CHI TIẾT CẬP NHẬT 26.7.1",
+  "summary": "**Ngày phát hành:** **17/09/2026**\n\nPhiên bản 26.7.1 là bản tinh chỉnh lớn sau đợt đại tu Magnetic Storm. Bản cập nhật tập trung vào bốn mục tiêu: làm Màn 2 nguy hiểm và “đã tay” hơn khi chiến đấu, nâng chiều sâu của Tinh Anh và Tempest Crown, làm mượt trải nghiệm giao diện Không Kích, đồng thời cân bằng lại hệ thống Lõi Nâng Cấp để mọi lựa chọn đều có giá trị rõ rệt trong một build phù hợp.\n\nBên dưới là toàn bộ thay đổi so với phiên bản 26.7.0.",
+  "sections": [
+    {
+      "id": "section-1",
+      "title": "MÀN 2 – MAGNETIC STORM",
+      "icon": {
+        "kind": "system",
+        "id": "change"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "section-1-entry-1",
+          "title": "CHUẨN HÓA HỆ THỐNG CHỈ SỐ QUÁI",
+          "icon": {
+            "kind": "system",
+            "id": "change"
+          },
+          "rationale": "Làm thay đổi này rõ ràng, nhất quán và dễ đọc hơn trong trải nghiệm chiến đấu thực tế.",
+          "changes": [
+            {
+              "text": "Trước đây, chỉ số quái được lưu dưới dạng chỉ số gốc rồi tiếp tục nhân qua hệ số của từng màn. Cách này khiến việc đọc và cân bằng chỉ số thực tế trở nên khó theo dõi.",
+              "format": "paragraph"
+            },
+            {
+              "text": "**TRƯỚC:**\nChỉ số gốc × hệ số Màn × hệ số Wave",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "**SAU:**\nChỉ số cụ thể của từng Màn × hệ số Wave",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "**LOẠI BỎ:** **hệ số Stage 1 Normal HP/Armor/Damage 0,78 / 0,78 / 0,72.**",
+              "format": "bullet",
+              "changeType": "removed"
+            },
+            {
+              "text": "**LOẠI BỎ:** **hệ số Stage 1 Elite HP/Armor/Damage 0,82 / 0,82 / 0,78.**",
+              "format": "bullet",
+              "changeType": "removed"
+            },
+            {
+              "text": "**LOẠI BỎ:** **hệ số Stage 1 Boss HP/Armor/Damage 0,85 / 0,85 / 0,80.**",
+              "format": "bullet",
+              "changeType": "removed"
+            },
+            {
+              "text": "**LOẠI BỎ:** **các hệ số nhân bổ sung của Màn 2 như 1,15 / 1,10 / 1,12 và 1,18 / 1,10 / 1,12.**",
+              "format": "bullet",
+              "changeType": "removed"
+            },
+            {
+              "text": "**GIỮ NGUYÊN:** hệ số tăng tiến giữa các Wave trong cùng một màn.",
+              "format": "bullet",
+              "changeType": "unchanged"
+            }
+          ]
+        },
+        {
+          "id": "section-1-entry-2",
+          "title": "MÀN 1 – CHỈ THAY CÁCH LƯU CHỈ SỐ, KHÔNG ĐỔI SỨC MẠNH THỰC TẾ",
+          "icon": {
+            "kind": "system",
+            "id": "change"
+          },
+          "rationale": "Làm thay đổi này rõ ràng, nhất quán và dễ đọc hơn trong trải nghiệm chiến đấu thực tế.",
+          "changes": [
+            {
+              "text": "Các giá trị dưới đây trước kia được tạo ra sau khi nhân Stage Scaling. Từ 26.7.1, chúng được lưu trực tiếp thành chỉ số cụ thể. Hiệu lực chiến đấu của Màn 1 không bị cố ý thay đổi.",
+              "format": "paragraph"
+            }
+          ],
+          "group": true
+        },
+        {
+          "id": "section-1-entry-3",
+          "title": "Scout Drone",
+          "icon": {
+            "kind": "enemy",
+            "id": "scout"
+          },
+          "rationale": "Chuẩn hóa cách lưu chỉ số thành giá trị trực tiếp; sức mạnh thực tế của đơn vị này không được chủ đích thay đổi.",
+          "changes": [
+            {
+              "text": "**HP hiệu dụng:** **160 × 0,78 = 124,8 ⇒ 124,8 trực tiếp.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "HP hiệu dụng:",
+              "before": "160 × 0,78 = 124,8",
+              "after": "124,8 trực tiếp."
+            },
+            {
+              "text": "**Giáp hiệu dụng:** **8 × 0,78 = 6,24 ⇒ 6,24 trực tiếp.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Giáp hiệu dụng:",
+              "before": "8 × 0,78 = 6,24",
+              "after": "6,24 trực tiếp."
+            },
+            {
+              "text": "**Sát thương đạn hiệu dụng:** **78 × 0,72 = 56,16 ⇒ 56,16 trực tiếp.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Sát thương đạn hiệu dụng:",
+              "before": "78 × 0,72 = 56,16",
+              "after": "56,16 trực tiếp."
+            },
+            {
+              "text": "**Sát thương va chạm hiệu dụng:** **120 × 0,72 = 86,4 ⇒ 86,4 trực tiếp.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Sát thương va chạm hiệu dụng:",
+              "before": "120 × 0,72 = 86,4",
+              "after": "86,4 trực tiếp."
+            }
+          ]
+        },
+        {
+          "id": "section-1-entry-4",
+          "title": "Interceptor",
+          "icon": {
+            "kind": "enemy",
+            "id": "fighter"
+          },
+          "rationale": "Chuẩn hóa cách lưu chỉ số thành giá trị trực tiếp; sức mạnh thực tế của đơn vị này không được chủ đích thay đổi.",
+          "changes": [
+            {
+              "text": "**HP hiệu dụng:** **260 × 0,78 = 202,8 ⇒ 202,8 trực tiếp.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "HP hiệu dụng:",
+              "before": "260 × 0,78 = 202,8",
+              "after": "202,8 trực tiếp."
+            },
+            {
+              "text": "**Giáp hiệu dụng:** **14 × 0,78 = 10,92 ⇒ 10,92 trực tiếp.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Giáp hiệu dụng:",
+              "before": "14 × 0,78 = 10,92",
+              "after": "10,92 trực tiếp."
+            },
+            {
+              "text": "**Sát thương đạn hiệu dụng:** **55 × 0,72 = 39,6 ⇒ 39,6 trực tiếp.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Sát thương đạn hiệu dụng:",
+              "before": "55 × 0,72 = 39,6",
+              "after": "39,6 trực tiếp."
+            },
+            {
+              "text": "**Sát thương va chạm hiệu dụng:** **150 × 0,72 = 108 ⇒ 108 trực tiếp.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Sát thương va chạm hiệu dụng:",
+              "before": "150 × 0,72 = 108",
+              "after": "108 trực tiếp."
+            }
+          ]
+        },
+        {
+          "id": "section-1-entry-5",
+          "title": "Heavy Gunship",
+          "icon": {
+            "kind": "enemy",
+            "id": "attacker"
+          },
+          "rationale": "Chuẩn hóa cách lưu chỉ số thành giá trị trực tiếp; sức mạnh thực tế của đơn vị này không được chủ đích thay đổi.",
+          "changes": [
+            {
+              "text": "**HP hiệu dụng:** **620 × 0,78 = 483,6 ⇒ 483,6 trực tiếp.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "HP hiệu dụng:",
+              "before": "620 × 0,78 = 483,6",
+              "after": "483,6 trực tiếp."
+            },
+            {
+              "text": "**Giáp hiệu dụng:** **30 × 0,78 = 23,4 ⇒ 23,4 trực tiếp.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Giáp hiệu dụng:",
+              "before": "30 × 0,78 = 23,4",
+              "after": "23,4 trực tiếp."
+            },
+            {
+              "text": "**Sát thương đạn hiệu dụng:** **75 × 0,72 = 54 ⇒ 54 trực tiếp.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Sát thương đạn hiệu dụng:",
+              "before": "75 × 0,72 = 54",
+              "after": "54 trực tiếp."
+            },
+            {
+              "text": "**Sát thương va chạm hiệu dụng:** **210 × 0,72 = 151,2 ⇒ 151,2 trực tiếp.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Sát thương va chạm hiệu dụng:",
+              "before": "210 × 0,72 = 151,2",
+              "after": "151,2 trực tiếp."
+            }
+          ]
+        },
+        {
+          "id": "section-1-entry-6",
+          "title": "Kamikaze Drone",
+          "icon": {
+            "kind": "enemy",
+            "id": "kamikaze"
+          },
+          "rationale": "Chuẩn hóa cách lưu chỉ số thành giá trị trực tiếp; sức mạnh thực tế của đơn vị này không được chủ đích thay đổi.",
+          "changes": [
+            {
+              "text": "**HP hiệu dụng:** **220 × 0,78 = 171,6 ⇒ 171,6 trực tiếp.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "HP hiệu dụng:",
+              "before": "220 × 0,78 = 171,6",
+              "after": "171,6 trực tiếp."
+            },
+            {
+              "text": "**Giáp hiệu dụng:** **5 × 0,78 = 3,9 ⇒ 3,9 trực tiếp.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Giáp hiệu dụng:",
+              "before": "5 × 0,78 = 3,9",
+              "after": "3,9 trực tiếp."
+            },
+            {
+              "text": "**Sát thương va chạm hiệu dụng:** **260 × 0,72 = 187,2 ⇒ 187,2 trực tiếp.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Sát thương va chạm hiệu dụng:",
+              "before": "260 × 0,72 = 187,2",
+              "after": "187,2 trực tiếp."
+            }
+          ]
+        },
+        {
+          "id": "section-1-entry-7",
+          "title": "Bomber",
+          "icon": {
+            "kind": "enemy",
+            "id": "bomber"
+          },
+          "rationale": "Chuẩn hóa cách lưu chỉ số thành giá trị trực tiếp; sức mạnh thực tế của đơn vị này không được chủ đích thay đổi.",
+          "changes": [
+            {
+              "text": "**HP hiệu dụng:** **480 × 0,78 = 374,4 ⇒ 374,4 trực tiếp.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "HP hiệu dụng:",
+              "before": "480 × 0,78 = 374,4",
+              "after": "374,4 trực tiếp."
+            },
+            {
+              "text": "**Giáp hiệu dụng:** **18 × 0,78 = 14,04 ⇒ 14,04 trực tiếp.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Giáp hiệu dụng:",
+              "before": "18 × 0,78 = 14,04",
+              "after": "14,04 trực tiếp."
+            },
+            {
+              "text": "**Sát thương đạn hiệu dụng:** **180 × 0,72 = 129,6 ⇒ 129,6 trực tiếp.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Sát thương đạn hiệu dụng:",
+              "before": "180 × 0,72 = 129,6",
+              "after": "129,6 trực tiếp."
+            },
+            {
+              "text": "**Sát thương va chạm hiệu dụng:** **190 × 0,72 = 136,8 ⇒ 136,8 trực tiếp.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Sát thương va chạm hiệu dụng:",
+              "before": "190 × 0,72 = 136,8",
+              "after": "136,8 trực tiếp."
+            }
+          ]
+        },
+        {
+          "id": "section-1-entry-8",
+          "title": "Sniper Aircraft",
+          "icon": {
+            "kind": "enemy",
+            "id": "sniper"
+          },
+          "rationale": "Chuẩn hóa cách lưu chỉ số thành giá trị trực tiếp; sức mạnh thực tế của đơn vị này không được chủ đích thay đổi.",
+          "changes": [
+            {
+              "text": "**HP hiệu dụng:** **340 × 0,78 = 265,2 ⇒ 265,2 trực tiếp.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "HP hiệu dụng:",
+              "before": "340 × 0,78 = 265,2",
+              "after": "265,2 trực tiếp."
+            },
+            {
+              "text": "**Giáp hiệu dụng:** **12 × 0,78 = 9,36 ⇒ 9,36 trực tiếp.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Giáp hiệu dụng:",
+              "before": "12 × 0,78 = 9,36",
+              "after": "9,36 trực tiếp."
+            },
+            {
+              "text": "**Sát thương đạn hiệu dụng:** **240 × 0,72 = 172,8 ⇒ 172,8 trực tiếp.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Sát thương đạn hiệu dụng:",
+              "before": "240 × 0,72 = 172,8",
+              "after": "172,8 trực tiếp."
+            },
+            {
+              "text": "**Sát thương va chạm hiệu dụng:** **160 × 0,72 = 115,2 ⇒ 115,2 trực tiếp.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Sát thương va chạm hiệu dụng:",
+              "before": "160 × 0,72 = 115,2",
+              "after": "115,2 trực tiếp."
+            }
+          ]
+        },
+        {
+          "id": "section-1-entry-9",
+          "title": "Jammer Drone",
+          "icon": {
+            "kind": "enemy",
+            "id": "jammer"
+          },
+          "rationale": "Chuẩn hóa cách lưu chỉ số thành giá trị trực tiếp; sức mạnh thực tế của đơn vị này không được chủ đích thay đổi.",
+          "changes": [
+            {
+              "text": "**HP hiệu dụng:** **400 × 0,78 = 312 ⇒ 312 trực tiếp.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "HP hiệu dụng:",
+              "before": "400 × 0,78 = 312",
+              "after": "312 trực tiếp."
+            },
+            {
+              "text": "**Giáp hiệu dụng:** **20 × 0,78 = 15,6 ⇒ 15,6 trực tiếp.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Giáp hiệu dụng:",
+              "before": "20 × 0,78 = 15,6",
+              "after": "15,6 trực tiếp."
+            },
+            {
+              "text": "**Sát thương đạn hiệu dụng:** **85 × 0,72 = 61,2 ⇒ 61,2 trực tiếp.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Sát thương đạn hiệu dụng:",
+              "before": "85 × 0,72 = 61,2",
+              "after": "61,2 trực tiếp."
+            },
+            {
+              "text": "**Sát thương va chạm hiệu dụng:** **170 × 0,72 = 122,4 ⇒ 122,4 trực tiếp.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Sát thương va chạm hiệu dụng:",
+              "before": "170 × 0,72 = 122,4",
+              "after": "122,4 trực tiếp."
+            }
+          ]
+        },
+        {
+          "id": "section-1-entry-10",
+          "title": "Crimson Ace",
+          "icon": {
+            "kind": "enemy",
+            "id": "elite"
+          },
+          "rationale": "Chuẩn hóa cách lưu chỉ số thành giá trị trực tiếp; sức mạnh thực tế của đơn vị này không được chủ đích thay đổi.",
+          "changes": [
+            {
+              "text": "**HP hiệu dụng:** **5.400 × 0,82 = 4.428 ⇒ 4.428 trực tiếp.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "HP hiệu dụng:",
+              "before": "5.400 × 0,82 = 4.428",
+              "after": "4.428 trực tiếp."
+            },
+            {
+              "text": "**Giáp hiệu dụng:** **35 × 0,82 = 28,7 ⇒ 28,7 trực tiếp.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Giáp hiệu dụng:",
+              "before": "35 × 0,82 = 28,7",
+              "after": "28,7 trực tiếp."
+            },
+            {
+              "text": "**Sát thương đạn hiệu dụng:** **95 × 0,78 = 74,1 ⇒ 74,1 trực tiếp.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Sát thương đạn hiệu dụng:",
+              "before": "95 × 0,78 = 74,1",
+              "after": "74,1 trực tiếp."
+            },
+            {
+              "text": "**Sát thương va chạm hiệu dụng:** **240 × 0,78 = 187,2 ⇒ 187,2 trực tiếp.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Sát thương va chạm hiệu dụng:",
+              "before": "240 × 0,78 = 187,2",
+              "after": "187,2 trực tiếp."
+            }
+          ]
+        },
+        {
+          "id": "section-1-entry-11",
+          "title": "Iron Fortress",
+          "icon": {
+            "kind": "enemy",
+            "id": "iron_fortress"
+          },
+          "rationale": "Chuẩn hóa cách lưu chỉ số thành giá trị trực tiếp; sức mạnh thực tế của đơn vị này không được chủ đích thay đổi.",
+          "changes": [
+            {
+              "text": "**HP hiệu dụng:** **7.800 × 0,82 = 6.396 ⇒ 6.396 trực tiếp.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "HP hiệu dụng:",
+              "before": "7.800 × 0,82 = 6.396",
+              "after": "6.396 trực tiếp."
+            },
+            {
+              "text": "**Giáp hiệu dụng:** **66 × 0,82 = 54,12 ⇒ 54,12 trực tiếp.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Giáp hiệu dụng:",
+              "before": "66 × 0,82 = 54,12",
+              "after": "54,12 trực tiếp."
+            },
+            {
+              "text": "**Sát thương đạn hiệu dụng:** **70 × 0,78 = 54,6 ⇒ 54,6 trực tiếp.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Sát thương đạn hiệu dụng:",
+              "before": "70 × 0,78 = 54,6",
+              "after": "54,6 trực tiếp."
+            },
+            {
+              "text": "**Sát thương va chạm hiệu dụng:** **280 × 0,78 = 218,4 ⇒ 218,4 trực tiếp.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Sát thương va chạm hiệu dụng:",
+              "before": "280 × 0,78 = 218,4",
+              "after": "218,4 trực tiếp."
+            }
+          ]
+        },
+        {
+          "id": "section-1-entry-12",
+          "title": "Acid Bomber",
+          "icon": {
+            "kind": "enemy",
+            "id": "acid_bomber"
+          },
+          "rationale": "Chuẩn hóa cách lưu chỉ số thành giá trị trực tiếp; sức mạnh thực tế của đơn vị này không được chủ đích thay đổi.",
+          "changes": [
+            {
+              "text": "**HP hiệu dụng:** **6.300 × 0,82 = 5.166 ⇒ 5.166 trực tiếp.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "HP hiệu dụng:",
+              "before": "6.300 × 0,82 = 5.166",
+              "after": "5.166 trực tiếp."
+            },
+            {
+              "text": "**Giáp hiệu dụng:** **42 × 0,82 = 34,44 ⇒ 34,44 trực tiếp.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Giáp hiệu dụng:",
+              "before": "42 × 0,82 = 34,44",
+              "after": "34,44 trực tiếp."
+            },
+            {
+              "text": "**Sát thương đạn hiệu dụng:** **90 × 0,78 = 70,2 ⇒ 70,2 trực tiếp.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Sát thương đạn hiệu dụng:",
+              "before": "90 × 0,78 = 70,2",
+              "after": "70,2 trực tiếp."
+            },
+            {
+              "text": "**Sát thương va chạm hiệu dụng:** **240 × 0,78 = 187,2 ⇒ 187,2 trực tiếp.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Sát thương va chạm hiệu dụng:",
+              "before": "240 × 0,78 = 187,2",
+              "after": "187,2 trực tiếp."
+            }
+          ]
+        },
+        {
+          "id": "section-1-entry-13",
+          "title": "Radar Hunter",
+          "icon": {
+            "kind": "enemy",
+            "id": "radar_hunter"
+          },
+          "rationale": "Chuẩn hóa cách lưu chỉ số thành giá trị trực tiếp; sức mạnh thực tế của đơn vị này không được chủ đích thay đổi.",
+          "changes": [
+            {
+              "text": "**HP hiệu dụng:** **5.333 × 0,82 = 4.373,06 ⇒ 4.373,06 trực tiếp.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "HP hiệu dụng:",
+              "before": "5.333 × 0,82 = 4.373,06",
+              "after": "4.373,06 trực tiếp."
+            },
+            {
+              "text": "**Giáp hiệu dụng:** **40 × 0,82 = 32,8 ⇒ 32,8 trực tiếp.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Giáp hiệu dụng:",
+              "before": "40 × 0,82 = 32,8",
+              "after": "32,8 trực tiếp."
+            },
+            {
+              "text": "**Sát thương đạn hiệu dụng:** **260 × 0,78 = 202,8 ⇒ 202,8 trực tiếp.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Sát thương đạn hiệu dụng:",
+              "before": "260 × 0,78 = 202,8",
+              "after": "202,8 trực tiếp."
+            },
+            {
+              "text": "**Sát thương va chạm hiệu dụng:** **260 × 0,78 = 202,8 ⇒ 202,8 trực tiếp.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Sát thương va chạm hiệu dụng:",
+              "before": "260 × 0,78 = 202,8",
+              "after": "202,8 trực tiếp."
+            }
+          ]
+        },
+        {
+          "id": "section-1-entry-14",
+          "title": "Leviathan",
+          "icon": {
+            "kind": "enemy",
+            "id": "boss_stage1"
+          },
+          "rationale": "Chuẩn hóa cách lưu chỉ số thành giá trị trực tiếp; sức mạnh thực tế của đơn vị này không được chủ đích thay đổi.",
+          "changes": [
+            {
+              "text": "**HP hiệu dụng:** **125.000 × 0,85 = 106.250 ⇒ 106.250 trực tiếp.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "HP hiệu dụng:",
+              "before": "125.000 × 0,85 = 106.250",
+              "after": "106.250 trực tiếp."
+            },
+            {
+              "text": "**Giáp hiệu dụng:** **120 × 0,85 = 102 ⇒ 102 trực tiếp.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Giáp hiệu dụng:",
+              "before": "120 × 0,85 = 102",
+              "after": "102 trực tiếp."
+            },
+            {
+              "text": "**Sát thương đạn hiệu dụng:** **140 × 0,80 = 112 ⇒ 112 trực tiếp.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Sát thương đạn hiệu dụng:",
+              "before": "140 × 0,80 = 112",
+              "after": "112 trực tiếp."
+            },
+            {
+              "text": "**Sát thương va chạm hiệu dụng:** **500 × 0,80 = 400 ⇒ 400 trực tiếp.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Sát thương va chạm hiệu dụng:",
+              "before": "500 × 0,80 = 400",
+              "after": "400 trực tiếp."
+            }
+          ]
+        },
+        {
+          "id": "section-1-entry-15",
+          "title": "MÀN 2 – ĐỘ BỀN ĐƯỢC CHUẨN HÓA VỀ KHOẢNG +10% SO VỚI ĐƠN VỊ MÀN 1 CÙNG BẬC",
+          "icon": {
+            "kind": "system",
+            "id": "change"
+          },
+          "rationale": "Làm thay đổi này rõ ràng, nhất quán và dễ đọc hơn trong trải nghiệm chiến đấu thực tế.",
+          "changes": [
+            {
+              "text": "Ở 26.7.0, HP cơ sở hiệu dụng của nhiều đơn vị Màn 2 đang cao hơn baseline Màn 1 khoảng 15–18%. Từ 26.7.1, độ bền được chuẩn hóa về khoảng +10% HP và +10% Giáp so với đơn vị Màn 1 tương đương. Vì vậy một số HP Màn 2 giảm nhẹ so với 26.7.0, trong khi Giáp giữ nguyên mức đã tương đương +10%.",
+              "format": "paragraph",
+              "changeType": "unchanged"
+            }
+          ],
+          "group": true
+        },
+        {
+          "id": "section-1-entry-16",
+          "title": "Orbit Wasp",
+          "icon": {
+            "kind": "enemy",
+            "id": "orbit_wasp"
+          },
+          "rationale": "Chuẩn hóa độ bền Màn 2 về baseline đã chốt để độ khó đến nhiều hơn từ pattern và coverage thay vì HP bloat.",
+          "changes": [
+            {
+              "text": "**HP:** **143,52 ⇒ 137,28.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "HP:",
+              "before": "143,52",
+              "after": "137,28."
+            },
+            {
+              "text": "**Giáp:** **6,864 ⇒ 6,864.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Giáp:",
+              "before": "6,864",
+              "after": "6,864."
+            }
+          ]
+        },
+        {
+          "id": "section-1-entry-17",
+          "title": "Arc Reaver",
+          "icon": {
+            "kind": "enemy",
+            "id": "arc_reaver"
+          },
+          "rationale": "Chuẩn hóa độ bền Màn 2 về baseline đã chốt để độ khó đến nhiều hơn từ pattern và coverage thay vì HP bloat.",
+          "changes": [
+            {
+              "text": "**HP:** **233,22 ⇒ 223,08.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "HP:",
+              "before": "233,22",
+              "after": "223,08."
+            },
+            {
+              "text": "**Giáp:** **12,012 ⇒ 12,012.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Giáp:",
+              "before": "12,012",
+              "after": "12,012."
+            }
+          ]
+        },
+        {
+          "id": "section-1-entry-18",
+          "title": "Mine Seeder",
+          "icon": {
+            "kind": "enemy",
+            "id": "mine_seeder"
+          },
+          "rationale": "Chuẩn hóa độ bền Màn 2 về baseline đã chốt để độ khó đến nhiều hơn từ pattern và coverage thay vì HP bloat.",
+          "changes": [
+            {
+              "text": "**HP:** **430,56 ⇒ 411,84.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "HP:",
+              "before": "430,56",
+              "after": "411,84."
+            },
+            {
+              "text": "**Giáp:** **15,444 ⇒ 15,444.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Giáp:",
+              "before": "15,444",
+              "after": "15,444."
+            }
+          ]
+        },
+        {
+          "id": "section-1-entry-19",
+          "title": "Magnetic Leech",
+          "icon": {
+            "kind": "enemy",
+            "id": "magnetic_leech"
+          },
+          "rationale": "Chuẩn hóa độ bền Màn 2 về baseline đã chốt để độ khó đến nhiều hơn từ pattern và coverage thay vì HP bloat.",
+          "changes": [
+            {
+              "text": "**HP:** **304,98 ⇒ 291,72.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "HP:",
+              "before": "304,98",
+              "after": "291,72."
+            },
+            {
+              "text": "**Giáp:** **10,296 ⇒ 10,296.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Giáp:",
+              "before": "10,296",
+              "after": "10,296."
+            }
+          ]
+        },
+        {
+          "id": "section-1-entry-20",
+          "title": "Prism Manta",
+          "icon": {
+            "kind": "enemy",
+            "id": "prism_manta"
+          },
+          "rationale": "Chuẩn hóa độ bền Màn 2 về baseline đã chốt để độ khó đến nhiều hơn từ pattern và coverage thay vì HP bloat.",
+          "changes": [
+            {
+              "text": "**HP:** **430,56 ⇒ 411,84.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "HP:",
+              "before": "430,56",
+              "after": "411,84."
+            },
+            {
+              "text": "**Giáp:** **15,444 ⇒ 15,444.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Giáp:",
+              "before": "15,444",
+              "after": "15,444."
+            }
+          ]
+        },
+        {
+          "id": "section-1-entry-21",
+          "title": "Swarm Carrier",
+          "icon": {
+            "kind": "enemy",
+            "id": "swarm_carrier"
+          },
+          "rationale": "Chuẩn hóa độ bền Màn 2 về baseline đã chốt để độ khó đến nhiều hơn từ pattern và coverage thay vì HP bloat.",
+          "changes": [
+            {
+              "text": "**HP:** **556,14 ⇒ 531,96.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "HP:",
+              "before": "556,14",
+              "after": "531,96."
+            },
+            {
+              "text": "**Giáp:** **25,74 ⇒ 25,74.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Giáp:",
+              "before": "25,74",
+              "after": "25,74."
+            }
+          ]
+        },
+        {
+          "id": "section-1-entry-22",
+          "title": "Cyclone Ace",
+          "icon": {
+            "kind": "enemy",
+            "id": "cyclone_ace"
+          },
+          "rationale": "Chuẩn hóa độ bền Màn 2 về baseline đã chốt để độ khó đến nhiều hơn từ pattern và coverage thay vì HP bloat.",
+          "changes": [
+            {
+              "text": "**HP:** **5.092,2 ⇒ 4.870,8.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "HP:",
+              "before": "5.092,2",
+              "after": "4.870,8."
+            },
+            {
+              "text": "**Giáp:** **31,57 ⇒ 31,57.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Giáp:",
+              "before": "31,57",
+              "after": "31,57."
+            }
+          ]
+        },
+        {
+          "id": "section-1-entry-23",
+          "title": "Grid Architect",
+          "icon": {
+            "kind": "enemy",
+            "id": "grid_architect"
+          },
+          "rationale": "Chuẩn hóa độ bền Màn 2 về baseline đã chốt để độ khó đến nhiều hơn từ pattern và coverage thay vì HP bloat.",
+          "changes": [
+            {
+              "text": "**HP:** **7.355,4 ⇒ 7.035,6.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "HP:",
+              "before": "7.355,4",
+              "after": "7.035,6."
+            },
+            {
+              "text": "**Giáp:** **59,532 ⇒ 59,532.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Giáp:",
+              "before": "59,532",
+              "after": "59,532."
+            }
+          ]
+        },
+        {
+          "id": "section-1-entry-24",
+          "title": "Tempest Crown",
+          "icon": {
+            "kind": "enemy",
+            "id": "boss_stage2"
+          },
+          "rationale": "Chuẩn hóa độ bền Màn 2 về baseline đã chốt để độ khó đến nhiều hơn từ pattern và coverage thay vì HP bloat.",
+          "changes": [
+            {
+              "text": "**HP:** **125.375 ⇒ 116.875.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "HP:",
+              "before": "125.375",
+              "after": "116.875."
+            },
+            {
+              "text": "**Giáp:** **112,2 ⇒ 112,2.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Giáp:",
+              "before": "112,2",
+              "after": "112,2."
+            }
+          ]
+        },
+        {
+          "id": "section-1-entry-25",
+          "title": "SÁT THƯƠNG MÀN 2",
+          "icon": {
+            "kind": "system",
+            "id": "change"
+          },
+          "rationale": "Làm thay đổi này rõ ràng, nhất quán và dễ đọc hơn trong trải nghiệm chiến đấu thực tế.",
+          "changes": [
+            {
+              "text": "Việc chuyển sang chỉ số cụ thể không tự tăng sát thương quái. Sát thương hiệu dụng trước hệ số Wave được giữ tương đương 26.7.0.",
+              "format": "paragraph"
+            },
+            {
+              "text": "**Orbit Wasp:** **đạn 44,352; va chạm 96,768.**",
+              "format": "bullet"
+            },
+            {
+              "text": "**Arc Reaver:** **đạn 44,352; va chạm 120,96.**",
+              "format": "bullet"
+            },
+            {
+              "text": "**Mine Seeder:** **đạn 72,576; va chạm 145,152.**",
+              "format": "bullet"
+            },
+            {
+              "text": "**Magnetic Leech:** **đạn 22,5792; va chạm 96,768.**",
+              "format": "bullet"
+            },
+            {
+              "text": "**Prism Manta:** **đạn 52,416; va chạm 137,088.**",
+              "format": "bullet"
+            },
+            {
+              "text": "**Swarm Carrier:** **đạn 24,192; va chạm 145,152.**",
+              "format": "bullet"
+            },
+            {
+              "text": "**Cyclone Ace:** **đạn 82,992; va chạm 209,664.**",
+              "format": "bullet"
+            },
+            {
+              "text": "**Grid Architect:** **đạn 61,152; va chạm 244,608.**",
+              "format": "bullet"
+            },
+            {
+              "text": "**Tempest Crown:** **đạn cấu hình 125,44; va chạm 448.**",
+              "format": "bullet"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "section-2",
+      "title": "ĐẠN & HITBOX MÀN 2",
+      "icon": {
+        "kind": "system",
+        "id": "projectile"
+      },
+      "intro": [
+        {
+          "text": "Toàn bộ projectile thù địch thực sự của Màn 2 giờ lớn hơn cả về hình ảnh lẫn vùng va chạm. Thay đổi áp dụng cho quái thường, Tinh Anh, Tempest Crown, Magnetic Satellite, Reversal/Returning projectile, Prism projectile và các hostile bullet/missile tương đương.",
+          "format": "paragraph"
+        },
+        {
+          "text": "**Kích thước hiển thị projectile:** **100% ⇒ 140%.**",
+          "format": "bullet",
+          "changeType": "change",
+          "label": "Kích thước hiển thị projectile:",
+          "before": "100%",
+          "after": "140%."
+        },
+        {
+          "text": "**Bán kính hitbox projectile:** **100% ⇒ 140%.**",
+          "format": "bullet",
+          "changeType": "change",
+          "label": "Bán kính hitbox projectile:",
+          "before": "100%",
+          "after": "140%."
+        },
+        {
+          "text": "**Sát thương do thay đổi kích thước:** không đổi.",
+          "format": "bullet"
+        },
+        {
+          "text": "**Tốc độ projectile do thay đổi kích thước:** không đổi.",
+          "format": "bullet"
+        },
+        {
+          "text": "Không áp dụng tự động mức +40% này cho beam, Grid lane, Mine explosion radius, Event Horizon, warning zone, Guillotine wall hoặc AoE không phải projectile.",
+          "format": "paragraph"
+        }
+      ],
+      "entries": []
+    },
+    {
+      "id": "section-3",
+      "title": "VFX & CẢM GIÁC VA CHẠM",
+      "icon": {
+        "kind": "system",
+        "id": "vfx"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "section-3-entry-1",
+          "title": "MINE SEEDER",
+          "icon": {
+            "kind": "enemy",
+            "id": "mine_seeder"
+          },
+          "rationale": "Làm thay đổi này rõ ràng, nhất quán và dễ đọc hơn trong trải nghiệm chiến đấu thực tế.",
+          "changes": [
+            {
+              "text": "**TRƯỚC:**\nVụ nổ Mine Seeder chủ yếu dựa vào một shockwave đơn giản, thiếu nhiều lớp hiệu ứng và thiếu cảm giác lực khi quả bom phát nổ.",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "**SAU:**\nVụ nổ được chuyển thành chuỗi nhiều lớp:",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "Core flash / ignition.",
+              "format": "bullet"
+            },
+            {
+              "text": "Magnetic burst.",
+              "format": "bullet"
+            },
+            {
+              "text": "Main explosion.",
+              "format": "bullet"
+            },
+            {
+              "text": "Shockwave.",
+              "format": "bullet"
+            },
+            {
+              "text": "Electric arcs / sparks / debris.",
+              "format": "bullet"
+            },
+            {
+              "text": "Plasma smoke / residue.",
+              "format": "bullet"
+            },
+            {
+              "text": "**Screen Shake của Mine/Bomb thường:** **gần như không đáng kể ⇒ khoảng 2,5–3.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Screen Shake của Mine/Bomb thường:",
+              "before": "gần như không đáng kể",
+              "after": "khoảng 2,5–3."
+            },
+            {
+              "text": "**Elite heavy impact:** **⇒ khoảng 3,5.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Elite heavy impact:",
+              "before": "",
+              "after": "khoảng 3,5."
+            },
+            {
+              "text": "**Boss heavy impact / Ultimate:** **⇒ khoảng 4–5.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Boss heavy impact / Ultimate:",
+              "before": "",
+              "after": "khoảng 4–5."
+            }
+          ]
+        },
+        {
+          "id": "section-3-entry-2",
+          "title": "CÁC KỸ NĂNG MAGNETIC KHÁC",
+          "icon": {
+            "kind": "system",
+            "id": "change"
+          },
+          "rationale": "Làm thay đổi này rõ ràng, nhất quán và dễ đọc hơn trong trải nghiệm chiến đấu thực tế.",
+          "changes": [
+            {
+              "text": "**Charge Flash:** **hiệu ứng đơn giản ⇒ hiệu ứng sạc rõ hơn.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Charge Flash:",
+              "before": "hiệu ứng đơn giản",
+              "after": "hiệu ứng sạc rõ hơn."
+            },
+            {
+              "text": "**Dash Trail:** **hạn chế ⇒ trail thể hiện rõ quỹ đạo nguy hiểm.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Dash Trail:",
+              "before": "hạn chế",
+              "after": "trail thể hiện rõ quỹ đạo nguy hiểm."
+            },
+            {
+              "text": "**Reversal Blade Suspend/Recall:** **hiệu ứng cơ bản ⇒ phân biệt rõ trạng thái bay ra, treo và thu hồi.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Reversal Blade Suspend/Recall:",
+              "before": "hiệu ứng cơ bản",
+              "after": "phân biệt rõ trạng thái bay ra, treo và thu hồi."
+            },
+            {
+              "text": "**Grid Activation:** **hiệu ứng đơn giản ⇒ preview/activation rõ topology.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Grid Activation:",
+              "before": "hiệu ứng đơn giản",
+              "after": "preview/activation rõ topology."
+            },
+            {
+              "text": "**Lattice Topology Change:** **chuyển trạng thái khó đọc ⇒ có cảnh báo chuyển hình học.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Lattice Topology Change:",
+              "before": "chuyển trạng thái khó đọc",
+              "after": "có cảnh báo chuyển hình học."
+            },
+            {
+              "text": "**Flux Bomb:** **impact nhẹ ⇒ explosion/impact mạnh hơn.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Flux Bomb:",
+              "before": "impact nhẹ",
+              "after": "explosion/impact mạnh hơn."
+            },
+            {
+              "text": "**Magnetic Guillotine:** **activation đơn giản ⇒ cảnh báo và activation rõ hơn.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Magnetic Guillotine:",
+              "before": "activation đơn giản",
+              "after": "cảnh báo và activation rõ hơn."
+            },
+            {
+              "text": "**Event Horizon:** **presentation đơn giản ⇒ nhấn mạnh tâm hút, vòng trong/vòng ngoài và safe geometry.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Event Horizon:",
+              "before": "presentation đơn giản",
+              "after": "nhấn mạnh tâm hút, vòng trong/vòng ngoài và safe geometry."
+            },
+            {
+              "text": "**Satellite Dash/Crossfire:** **hiệu ứng đơn giản ⇒ charge/dash/crossfire dễ đọc hơn.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Satellite Dash/Crossfire:",
+              "before": "hiệu ứng đơn giản",
+              "after": "charge/dash/crossfire dễ đọc hơn."
+            },
+            {
+              "text": "**Tempest Overload:** **các đòn rời rạc ⇒ finale có VFX liên tục và cú Magnetic Overload rõ rệt.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Tempest Overload:",
+              "before": "các đòn rời rạc",
+              "after": "finale có VFX liên tục và cú Magnetic Overload rõ rệt."
+            },
+            {
+              "text": "Quy ước màu được giữ nhất quán:",
+              "format": "paragraph"
+            },
+            {
+              "text": "**Cyan:** lực từ / kéo / tether.",
+              "format": "bullet"
+            },
+            {
+              "text": "**Purple:** recall / reversal / prism.",
+              "format": "bullet"
+            },
+            {
+              "text": "**Yellow:** warning / charge / transformation.",
+              "format": "bullet"
+            },
+            {
+              "text": "**Orange/Red:** bomb / explosion.",
+              "format": "bullet"
+            },
+            {
+              "text": "**White/Purple:** Elite/Boss ultimate.",
+              "format": "bullet"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "section-4",
+      "title": "TELEGRAPH & HIỂN THỊ HITBOX",
+      "icon": {
+        "kind": "system",
+        "id": "change"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "section-4-entry-1",
+          "title": "VÒNG TRẮNG QUANH CHIẾN ĐẤU CƠ",
+          "icon": {
+            "kind": "system",
+            "id": "hitbox"
+          },
+          "rationale": "Làm thay đổi này rõ ràng, nhất quán và dễ đọc hơn trong trải nghiệm chiến đấu thực tế.",
+          "changes": [
+            {
+              "text": "**TRƯỚC:**\nKhi người chơi chạm điều khiển hoặc trong một số tình huống có nhiều projectile, renderer có thể hiển thị một vòng tròn và chấm trắng quanh chiến đấu cơ.",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "**SAU:**",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "**LOẠI BỎ** hoàn toàn vòng tròn trắng.",
+              "format": "bullet",
+              "changeType": "removed"
+            },
+            {
+              "text": "**LOẠI BỎ** chấm trắng ở giữa.",
+              "format": "bullet",
+              "changeType": "removed"
+            },
+            {
+              "text": "Hitbox gameplay thật không thay đổi.",
+              "format": "bullet"
+            },
+            {
+              "text": "Collision không thay đổi.",
+              "format": "bullet"
+            },
+            {
+              "text": "Input không thay đổi.",
+              "format": "bullet"
+            }
+          ]
+        },
+        {
+          "id": "section-4-entry-2",
+          "title": "VÒNG TRÒN GENERIC QUANH QUÁI",
+          "icon": {
+            "kind": "system",
+            "id": "target"
+          },
+          "rationale": "Làm thay đổi này rõ ràng, nhất quán và dễ đọc hơn trong trải nghiệm chiến đấu thực tế.",
+          "changes": [
+            {
+              "text": "**TRƯỚC:**\nNhiều trạng thái khác nhau có thể cùng dùng một kiểu vòng tròn quanh thân quái, khiến người chơi khó biết đó là shield, sắp bắn, sắp dash hay Elite special.",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "**SAU:**",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "**Đòn bắn thường:** dùng muzzle glow / directional charge.",
+              "format": "bullet"
+            },
+            {
+              "text": "**Shield:** dùng bubble/shield flare riêng.",
+              "format": "bullet"
+            },
+            {
+              "text": "**Dash:** dùng dash line + engine flare + hướng lao.",
+              "format": "bullet"
+            },
+            {
+              "text": "**Elite major attack:** dùng warning riêng theo kỹ năng.",
+              "format": "bullet"
+            },
+            {
+              "text": "**Grid/Lattice:** preview đúng hình học nguy hiểm.",
+              "format": "bullet"
+            },
+            {
+              "text": "**Transformation/Recall:** dùng trạng thái Yellow/Purple riêng.",
+              "format": "bullet"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "section-5",
+      "title": "TINH ANH MÀN 2",
+      "icon": {
+        "kind": "system",
+        "id": "change"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "section-5-entry-1",
+          "title": "CYCLONE ACE – MULTI-PASS HUNTER",
+          "icon": {
+            "kind": "enemy",
+            "id": "cyclone_ace"
+          },
+          "rationale": "Biến Elite từ một đòn dash dễ đọc thành chuỗi săn nhiều lượt có hậu quả không gian sau khi né.",
+          "changes": [
+            {
+              "text": "**TRƯỚC:**\nDash chủ yếu là một đợt lao đơn, đọc được khá nhanh và ít tạo hậu quả sau khi né.",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "**SAU:**",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "Dash đơn lượt ⇒ chuỗi nhiều lượt.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "**PASS 1:** snapshot hướng/vị trí người chơi, telegraph rõ rồi commit dash.",
+              "format": "bullet"
+            },
+            {
+              "text": "**PASS 2:** **sau recovery ngắn, đọc trạng thái mới của người chơi và cắt hướng thoát bằng một telegraph mới.**",
+              "format": "bullet"
+            },
+            {
+              "text": "**PASS 3:** có thể xuất hiện trong major pattern để phối hợp với Reversal Blade hoặc Cyclone Ace khác.",
+              "format": "bullet"
+            },
+            {
+              "text": "**MỚI:** **mỗi dash có thể để lại Magnetic Blade Trail tồn tại khoảng 1 giây, khiến đường vừa bị cắt tạm thời trở thành vùng nguy hiểm.**",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Dash sau khi commit không được homing gian lận.",
+              "format": "bullet"
+            }
+          ]
+        },
+        {
+          "id": "section-5-entry-2",
+          "title": "TRI-CYCLONE",
+          "icon": {
+            "kind": "enemy",
+            "id": "cyclone_ace"
+          },
+          "rationale": "Làm thay đổi này rõ ràng, nhất quán và dễ đọc hơn trong trải nghiệm chiến đấu thực tế.",
+          "changes": [
+            {
+              "text": "**TRƯỚC:**\nBa Cyclone Ace chủ yếu tạo áp lực bằng các kỹ năng riêng biệt.",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "**SAU:**\nTri-Cyclone trở thành chuỗi phối hợp có thứ tự:",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "1. Ace A tạo Blade Field ép vùng.",
+              "format": "bullet"
+            },
+            {
+              "text": "2. Ace C thực hiện Double Dash cắt safe corridor.",
+              "format": "bullet"
+            },
+            {
+              "text": "3. Ace B phóng 4–6 Reversal Blades.",
+              "format": "bullet"
+            },
+            {
+              "text": "4. Reversal Blades chuyển sang trạng thái SUSPEND.",
+              "format": "bullet"
+            },
+            {
+              "text": "5. POLAR RECALL thu hồi các blade theo nhịp.",
+              "format": "bullet"
+            },
+            {
+              "text": "**MỚI:** nếu một Cyclone Ace bị tiêu diệt, các Ace còn sống có thể tiếp quản một phần vai trò áp lực thay vì encounter mất hẳn một lớp mechanic.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Safe route vẫn phải tồn tại và được telegraph rõ.",
+              "format": "bullet"
+            }
+          ]
+        },
+        {
+          "id": "section-5-entry-3",
+          "title": "GRID ARCHITECT",
+          "icon": {
+            "kind": "enemy",
+            "id": "grid_architect"
+          },
+          "rationale": "Tăng khả năng kiểm soát hình học của chiến trường nhưng vẫn bắt buộc duy trì corridor hợp lệ.",
+          "changes": [
+            {
+              "text": "**TRƯỚC:**\nSecondary projectile pressure còn đơn giản; Grid ít biến đổi và người chơi có thể quen với vùng an toàn tương đối cố định.",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "**SAU:**",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "Secondary pressure đơn giản ⇒ Grid Shard Volley 5–7 projectile theo hướng/topology của Grid.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "**MỚI:** Node Pulse tạo radial burst nhưng luôn để lại gap hợp lệ.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "**MỚI:** Grid Shift cho phép topology chuyển:",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "**Horizontal ⇒ Diagonal ⇒ X ⇒ Side Corridor.**",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "**Thời gian cảnh báo khi Grid đổi topology:** **khoảng 0,6–0,9 giây.**",
+              "format": "bullet"
+            },
+            {
+              "text": "**MỚI:** Grid Sweep cho phép hai Grid line tiến vào giữa trong khi safe corridor di chuyển.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Architect khác có thể bắn shard suppression qua phần battlefield còn lại.",
+              "format": "bullet"
+            },
+            {
+              "text": "Không tạo geometry khóa kín toàn màn.",
+              "format": "bullet"
+            },
+            {
+              "text": "Cả 4 Grid Architect vẫn xuất hiện cùng encounter như trước.",
+              "format": "bullet"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "section-6",
+      "title": "TEMPEST CROWN",
+      "icon": {
+        "kind": "enemy",
+        "id": "boss_stage2"
+      },
+      "intro": [
+        {
+          "text": "Tempest Crown vẫn giữ 8 mechanic chính:\nCrown Lattice, Polarity Reversal, Reversal Blades, Flux Bombardment, Magnetic Guillotine, Event Horizon, Satellite Hunt và Storm Collapse.",
+          "format": "paragraph"
+        },
+        {
+          "text": "Thay đổi lớn của 26.7.1 nằm ở cách các mechanic phối hợp với nhau.",
+          "format": "paragraph"
+        }
+      ],
+      "entries": [
+        {
+          "id": "section-6-entry-1",
+          "title": "ATTACK DIRECTOR",
+          "icon": {
+            "kind": "system",
+            "id": "boss"
+          },
+          "rationale": "Làm thay đổi này rõ ràng, nhất quán và dễ đọc hơn trong trải nghiệm chiến đấu thực tế.",
+          "changes": [
+            {
+              "text": "**TRƯỚC:**\nBoss chủ yếu gọi từng skill theo nhịp riêng, có khoảng nghỉ giữa các skill và nhiều tình huống pressure rơi xuống trước khi mechanic tiếp theo thực sự bắt đầu.",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "**SAU:**\nBoss sử dụng các “Attack Phrase” được dựng sẵn, cho phép nhiều mechanic overlap có chủ đích rồi mới tạo recovery window cuối chuỗi.",
+              "format": "paragraph",
+              "changeType": "change"
+            }
+          ]
+        },
+        {
+          "id": "section-6-entry-2",
+          "title": "POLAR HUNT – MỚI / NÂNG CẤP",
+          "icon": {
+            "kind": "enemy",
+            "id": "boss_stage2"
+          },
+          "rationale": "Làm thay đổi này rõ ràng, nhất quán và dễ đọc hơn trong trải nghiệm chiến đấu thực tế.",
+          "changes": [
+            {
+              "text": "Một chuỗi khoảng 6–7 giây:",
+              "format": "paragraph"
+            },
+            {
+              "text": "**0,0s:** **2 Satellite/Node tạo pull pressure.**",
+              "format": "bullet"
+            },
+            {
+              "text": "**Khoảng 0,7s:** Reversal Blades phóng ra.",
+              "format": "bullet"
+            },
+            {
+              "text": "**Khoảng 1,4s:** Blades chuyển sang SUSPEND.",
+              "format": "bullet"
+            },
+            {
+              "text": "**Khoảng 1,7s:** Flux Bomb snapshot vị trí người chơi.",
+              "format": "bullet"
+            },
+            {
+              "text": "**Khoảng 2,3s:** POLARITY FLIP.",
+              "format": "bullet"
+            },
+            {
+              "text": "**Khoảng 2,4s:** **Blades RECALL theo polarity mới.**",
+              "format": "bullet"
+            },
+            {
+              "text": "**Khoảng 3,0s:** Flux Bomb follow-up.",
+              "format": "bullet"
+            },
+            {
+              "text": "**Khoảng 3,6s:** Flux Bomb follow-up tiếp theo.",
+              "format": "bullet"
+            },
+            {
+              "text": "**Khoảng 4,2s:** light crossfire.",
+              "format": "bullet"
+            },
+            {
+              "text": "**Khoảng 5–6s:** recovery/opening.",
+              "format": "bullet"
+            }
+          ]
+        },
+        {
+          "id": "section-6-entry-3",
+          "title": "LATTICE SHIFT",
+          "icon": {
+            "kind": "vfx",
+            "id": "gridBeam"
+          },
+          "rationale": "Làm thay đổi này rõ ràng, nhất quán và dễ đọc hơn trong trải nghiệm chiến đấu thực tế.",
+          "changes": [
+            {
+              "text": "**TRƯỚC:**\nCrown Lattice có xu hướng dựng một topology rồi duy trì tương đối ổn định.",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "**SAU:**\nTopology có thể chuyển theo chuỗi:\n**Horizontal ⇒ Diagonal ⇒ X ⇒ Side Corridor.**",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "Mỗi topology có preview khoảng 0,6–0,9 giây.",
+              "format": "bullet"
+            },
+            {
+              "text": "Topology cũ được release theo trình tự đọc được.",
+              "format": "bullet"
+            },
+            {
+              "text": "Boss vẫn có projectile pressure nhẹ trong quá trình chuyển.",
+              "format": "bullet"
+            },
+            {
+              "text": "Satellite bị vô hiệu hóa tiếp tục làm giảm pressure/topology thật.",
+              "format": "bullet"
+            }
+          ]
+        },
+        {
+          "id": "section-6-entry-4",
+          "title": "REVERSAL STORM",
+          "icon": {
+            "kind": "vfx",
+            "id": "returningDisc"
+          },
+          "rationale": "Làm thay đổi này rõ ràng, nhất quán và dễ đọc hơn trong trải nghiệm chiến đấu thực tế.",
+          "changes": [
+            {
+              "text": "**TRƯỚC:**\nReversal Blade pressure chủ yếu ở mức 2–4 blade tùy phase.",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "**SAU:**",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "**Phase thấp:** **2 Blades.**",
+              "format": "bullet"
+            },
+            {
+              "text": "**Phase giữa:** **4 Blades.**",
+              "format": "bullet"
+            },
+            {
+              "text": "**Phase cao:** **6 Blades.**",
+              "format": "bullet"
+            },
+            {
+              "text": "Pattern chuyển thành OUTBOUND ⇒ SUSPEND ⇒ staged RECALL theo từng beat.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "Blades không xuất hiện ngẫu nhiên cùng một lúc.",
+              "format": "bullet"
+            }
+          ]
+        },
+        {
+          "id": "section-6-entry-5",
+          "title": "HORIZON COLLAPSE",
+          "icon": {
+            "kind": "vfx",
+            "id": "magneticBurst"
+          },
+          "rationale": "Làm thay đổi này rõ ràng, nhất quán và dễ đọc hơn trong trải nghiệm chiến đấu thực tế.",
+          "changes": [
+            {
+              "text": "**TRƯỚC:**\nEvent Horizon tương đối tĩnh và safe corridor dễ ổn định sau khi người chơi hiểu mechanic.",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "**SAU:**",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "Singularity đứng yên ⇒ di chuyển chậm.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "Inner Ring và Outer Ring có gap lệch nhau.",
+              "format": "bullet"
+            },
+            {
+              "text": "Gap quay chậm trong quá trình pattern.",
+              "format": "bullet"
+            },
+            {
+              "text": "Phase 4 có thể chèn một Polarity Flip ở giữa phrase.",
+              "format": "bullet"
+            },
+            {
+              "text": "Luôn duy trì đường né hợp lệ.",
+              "format": "bullet"
+            }
+          ]
+        },
+        {
+          "id": "section-6-entry-6",
+          "title": "MAGNETIC GUILLOTINE II",
+          "icon": {
+            "kind": "vfx",
+            "id": "gridBeam"
+          },
+          "rationale": "Làm thay đổi này rõ ràng, nhất quán và dễ đọc hơn trong trải nghiệm chiến đấu thực tế.",
+          "changes": [
+            {
+              "text": "**TRƯỚC:**\nSafe corridor của Guillotine tương đối cố định.",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "**SAU:**",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "Safe corridor có thể di chuyển.",
+              "format": "bullet"
+            },
+            {
+              "text": "Corridor có thể đổi hướng một lần sau telegraph.",
+              "format": "bullet"
+            },
+            {
+              "text": "Reversal Blade có thể cắt ngang corridor với cảnh báo rõ.",
+              "format": "bullet"
+            },
+            {
+              "text": "Battlefield không bị khép kín hoàn toàn.",
+              "format": "bullet"
+            }
+          ]
+        },
+        {
+          "id": "section-6-entry-7",
+          "title": "SATELLITE EXECUTION",
+          "icon": {
+            "kind": "enemy",
+            "id": "satellite"
+          },
+          "rationale": "Làm thay đổi này rõ ràng, nhất quán và dễ đọc hơn trong trải nghiệm chiến đấu thực tế.",
+          "changes": [
+            {
+              "text": "**TRƯỚC:**\nSatellite Hunt tạo áp lực nhưng vai trò giữa các satellite chưa đủ phân hóa.",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "**SAU:**",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "2 Satellite đóng vai trò flank.",
+              "format": "bullet"
+            },
+            {
+              "text": "2 Satellite còn lại duy trì Lattice / space control.",
+              "format": "bullet"
+            },
+            {
+              "text": "**Flanker thực hiện:** **Charge ⇒ Dash ⇒ Crossfire ⇒ Return.**",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "Boss bổ sung 3-way suppression nhẹ trong phrase.",
+              "format": "bullet"
+            },
+            {
+              "text": "Satellite bị vô hiệu hóa làm giảm pressure thật, không chỉ thay đổi VFX.",
+              "format": "bullet"
+            }
+          ]
+        },
+        {
+          "id": "section-6-entry-8",
+          "title": "TEMPEST OVERLOAD",
+          "icon": {
+            "kind": "enemy",
+            "id": "boss_stage2"
+          },
+          "rationale": "Làm thay đổi này rõ ràng, nhất quán và dễ đọc hơn trong trải nghiệm chiến đấu thực tế.",
+          "changes": [
+            {
+              "text": "**TRƯỚC:**\nCác major mechanic trong finale có khoảng nghỉ đủ dài khiến pressure có thể rơi xuống giữa chuỗi.",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "**SAU:**\nFinale được chia thành 3 movement liên tục.",
+              "format": "paragraph",
+              "changeType": "change"
+            }
+          ]
+        },
+        {
+          "id": "section-6-entry-9",
+          "title": "MOVEMENT I – CROWN CAGE",
+          "icon": {
+            "kind": "system",
+            "id": "change"
+          },
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Crown Lattice Omega.",
+              "format": "bullet"
+            },
+            {
+              "text": "Flux Bomb Chase.",
+              "format": "bullet"
+            }
+          ]
+        },
+        {
+          "id": "section-6-entry-10",
+          "title": "MOVEMENT II – EVENT HORIZON",
+          "icon": {
+            "kind": "system",
+            "id": "change"
+          },
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Event Horizon.",
+              "format": "bullet"
+            },
+            {
+              "text": "6 Suspended Reversal Blades.",
+              "format": "bullet"
+            }
+          ]
+        },
+        {
+          "id": "section-6-entry-11",
+          "title": "MOVEMENT III – POLAR COLLAPSE",
+          "icon": {
+            "kind": "system",
+            "id": "change"
+          },
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Polarity Reverse.",
+              "format": "bullet"
+            },
+            {
+              "text": "Toàn bộ Blades Recall.",
+              "format": "bullet"
+            },
+            {
+              "text": "Magnetic Guillotine bắt đầu ép battlefield.",
+              "format": "bullet"
+            },
+            {
+              "text": "Sau khi người chơi sống sót:",
+              "format": "paragraph"
+            },
+            {
+              "text": "Magnetic Overload Burst.",
+              "format": "bullet"
+            },
+            {
+              "text": "Large Shockwave.",
+              "format": "bullet"
+            },
+            {
+              "text": "Screen Shake mạnh nhưng ngắn.",
+              "format": "bullet"
+            },
+            {
+              "text": "Weakpoint của Tempest Crown lộ ra khoảng 2–3 giây.",
+              "format": "bullet"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "section-7",
+      "title": "CÂN BẰNG LÕI NÂNG CẤP",
+      "icon": {
+        "kind": "system",
+        "id": "change"
+      },
+      "intro": [
+        {
+          "text": "Toàn bộ hệ thống Lõi đã được rà soát theo mục tiêu: không có lựa chọn “chọn cho có”, không có auto-pick áp đảo và mỗi Lõi phải mạnh trong một build hoặc hoàn cảnh phù hợp.",
+          "format": "paragraph"
+        },
+        {
+          "text": "Các Lõi không được liệt kê dưới đây giữ nguyên hiệu ứng so với 26.7.0.",
+          "format": "paragraph",
+          "changeType": "unchanged"
+        }
+      ],
+      "entries": [
+        {
+          "id": "section-7-entry-1",
+          "title": "LÕI CHỈ SỐ CHUNG",
+          "icon": {
+            "kind": "system",
+            "id": "change"
+          },
+          "rationale": "",
+          "changes": [],
+          "group": true
+        },
+        {
+          "id": "section-7-entry-2",
+          "title": "Tinh chỉnh cò súng",
+          "icon": {
+            "kind": "core",
+            "id": "003"
+          },
+          "rationale": "Điều chỉnh power budget để Lõi có giá trị rõ ràng trong build phù hợp và giảm chênh lệch giữa lựa chọn mạnh/yếu.",
+          "changes": [
+            {
+              "text": "**Tốc Độ Bắn:** **+0,15 ⇒ +0,25.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Tốc Độ Bắn:",
+              "before": "+0,15",
+              "after": "+0,25."
+            }
+          ]
+        },
+        {
+          "id": "section-7-entry-3",
+          "title": "Khung thân gia cố",
+          "icon": {
+            "kind": "core",
+            "id": "004"
+          },
+          "rationale": "Điều chỉnh power budget để Lõi có giá trị rõ ràng trong build phù hợp và giảm chênh lệch giữa lựa chọn mạnh/yếu.",
+          "changes": [
+            {
+              "text": "**Máu Tối Đa:** **+110 ⇒ +160.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Máu Tối Đa:",
+              "before": "+110",
+              "after": "+160."
+            }
+          ]
+        },
+        {
+          "id": "section-7-entry-4",
+          "title": "Bộ sửa chữa cơ bản",
+          "icon": {
+            "kind": "core",
+            "id": "005"
+          },
+          "rationale": "Điều chỉnh power budget để Lõi có giá trị rõ ràng trong build phù hợp và giảm chênh lệch giữa lựa chọn mạnh/yếu.",
+          "changes": [
+            {
+              "text": "**Hồi Máu mỗi giây:** **+0,7 ⇒ +0,9.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Hồi Máu mỗi giây:",
+              "before": "+0,7",
+              "after": "+0,9."
+            }
+          ]
+        },
+        {
+          "id": "section-7-entry-5",
+          "title": "Tái tạo",
+          "icon": {
+            "kind": "core",
+            "id": "006"
+          },
+          "rationale": "Điều chỉnh power budget để Lõi có giá trị rõ ràng trong build phù hợp và giảm chênh lệch giữa lựa chọn mạnh/yếu.",
+          "changes": [
+            {
+              "text": "**Giảm Hồi Chiêu:** **4% ⇒ 5%.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Giảm Hồi Chiêu:",
+              "before": "4%",
+              "after": "5%."
+            }
+          ]
+        },
+        {
+          "id": "section-7-entry-6",
+          "title": "Khung thân chiến đấu",
+          "icon": {
+            "kind": "core",
+            "id": "010"
+          },
+          "rationale": "Điều chỉnh power budget để Lõi có giá trị rõ ràng trong build phù hợp và giảm chênh lệch giữa lựa chọn mạnh/yếu.",
+          "changes": [
+            {
+              "text": "**Máu Tối Đa:** **+220 ⇒ +260.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Máu Tối Đa:",
+              "before": "+220",
+              "after": "+260."
+            }
+          ]
+        },
+        {
+          "id": "section-7-entry-7",
+          "title": "Rút ngắn thời gian",
+          "icon": {
+            "kind": "core",
+            "id": "012"
+          },
+          "rationale": "Điều chỉnh power budget để Lõi có giá trị rõ ràng trong build phù hợp và giảm chênh lệch giữa lựa chọn mạnh/yếu.",
+          "changes": [
+            {
+              "text": "**Giảm Hồi Chiêu:** **9% ⇒ 10%.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Giảm Hồi Chiêu:",
+              "before": "9%",
+              "after": "10%."
+            }
+          ]
+        },
+        {
+          "id": "section-7-entry-8",
+          "title": "Khung thân bất hoại",
+          "icon": {
+            "kind": "core",
+            "id": "016"
+          },
+          "rationale": "Điều chỉnh power budget để Lõi có giá trị rõ ràng trong build phù hợp và giảm chênh lệch giữa lựa chọn mạnh/yếu.",
+          "changes": [
+            {
+              "text": "**Máu Tối Đa:** **+420 ⇒ +520.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Máu Tối Đa:",
+              "before": "+420",
+              "after": "+520."
+            }
+          ]
+        },
+        {
+          "id": "section-7-entry-9",
+          "title": "VIPER – MỒI BẪY",
+          "icon": {
+            "kind": "skill",
+            "id": "decoy"
+          },
+          "rationale": "",
+          "changes": [],
+          "group": true
+        },
+        {
+          "id": "section-7-entry-10",
+          "title": "Chuẩn bị Bẫy",
+          "icon": {
+            "kind": "core",
+            "id": "020"
+          },
+          "rationale": "Tinh chỉnh Lõi kỹ năng để lựa chọn này có vai trò rõ ràng hơn trong build tương ứng mà không trở thành lựa chọn bắt buộc.",
+          "changes": [
+            {
+              "text": "**Hồi Chiêu Mồi Bẫy trước các hiệu ứng CDR khác:** **9 giây ⇒ 11 giây.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Hồi Chiêu Mồi Bẫy trước các hiệu ứng CDR khác:",
+              "before": "9 giây",
+              "after": "11 giây."
+            }
+          ]
+        },
+        {
+          "id": "section-7-entry-11",
+          "title": "Phản công",
+          "icon": {
+            "kind": "core",
+            "id": "021"
+          },
+          "rationale": "Tinh chỉnh Lõi kỹ năng để lựa chọn này có vai trò rõ ràng hơn trong build tương ứng mà không trở thành lựa chọn bắt buộc.",
+          "changes": [
+            {
+              "text": "**Sát thương cộng thêm sau đợt Mồi Bẫy cuối:** **+20% ⇒ +30%.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Sát thương cộng thêm sau đợt Mồi Bẫy cuối:",
+              "before": "+20%",
+              "after": "+30%."
+            },
+            {
+              "text": "**Thời gian hiệu lực:** **4 giây ⇒ 5 giây.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Thời gian hiệu lực:",
+              "before": "4 giây",
+              "after": "5 giây."
+            }
+          ]
+        },
+        {
+          "id": "section-7-entry-12",
+          "title": "Thu Hồi Nhiệt Dư",
+          "icon": {
+            "kind": "core",
+            "id": "122"
+          },
+          "rationale": "Tinh chỉnh Lõi kỹ năng để lựa chọn này có vai trò rõ ràng hơn trong build tương ứng mà không trở thành lựa chọn bắt buộc.",
+          "changes": [
+            {
+              "text": "**Giới hạn Mana có thể hoàn lại mỗi lần dùng:** **50% Mana Tối Đa ⇒ 35% Mana Tối Đa.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Giới hạn Mana có thể hoàn lại mỗi lần dùng:",
+              "before": "50% Mana Tối Đa",
+              "after": "35% Mana Tối Đa."
+            },
+            {
+              "text": "Cơ chế hồi Mana khi Mồi Bẫy hấp thụ đạn/chặn dash giữ nguyên.",
+              "format": "bullet",
+              "changeType": "unchanged"
+            }
+          ]
+        },
+        {
+          "id": "section-7-entry-13",
+          "title": "Mồi Phản Chấn",
+          "icon": {
+            "kind": "core",
+            "id": "123"
+          },
+          "rationale": "Tinh chỉnh Lõi kỹ năng để lựa chọn này có vai trò rõ ràng hơn trong build tương ứng mà không trở thành lựa chọn bắt buộc.",
+          "changes": [
+            {
+              "text": "**Bán kính xung:** **52px ⇒ 60px.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Bán kính xung:",
+              "before": "52px",
+              "after": "60px."
+            },
+            {
+              "text": "**Sát thương xung:** **50% Hỏa Lực ⇒ 70% Hỏa Lực.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Sát thương xung:",
+              "before": "50% Hỏa Lực",
+              "after": "70% Hỏa Lực."
+            },
+            {
+              "text": "Mỗi mục tiêu vẫn chỉ nhận tối đa 1 xung từ mỗi đợt Mồi Bẫy.",
+              "format": "bullet"
+            }
+          ]
+        },
+        {
+          "id": "section-7-entry-14",
+          "title": "Màn Che Nhiệt",
+          "icon": {
+            "kind": "core",
+            "id": "124"
+          },
+          "rationale": "Tinh chỉnh Lõi kỹ năng để lựa chọn này có vai trò rõ ràng hơn trong build tương ứng mà không trở thành lựa chọn bắt buộc.",
+          "changes": [
+            {
+              "text": "**Giảm sát thương nhận khi còn ít nhất một Mồi Bẫy:** **15% ⇒ 20%.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Giảm sát thương nhận khi còn ít nhất một Mồi Bẫy:",
+              "before": "15%",
+              "after": "20%."
+            },
+            {
+              "text": "**Thời gian kéo dài sau mồi cuối:** **4 giây ⇒ 4 giây.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Thời gian kéo dài sau mồi cuối:",
+              "before": "4 giây",
+              "after": "4 giây."
+            }
+          ]
+        },
+        {
+          "id": "section-7-entry-15",
+          "title": "VIPER – ĐIÊN CUỒNG",
+          "icon": {
+            "kind": "skill",
+            "id": "afterburner"
+          },
+          "rationale": "",
+          "changes": [],
+          "group": true
+        },
+        {
+          "id": "section-7-entry-16",
+          "title": "Không Thể Ngăn Cản",
+          "icon": {
+            "kind": "core",
+            "id": "024"
+          },
+          "rationale": "Tinh chỉnh Lõi kỹ năng để lựa chọn này có vai trò rõ ràng hơn trong build tương ứng mà không trở thành lựa chọn bắt buộc.",
+          "changes": [
+            {
+              "text": "**Miễn nhiễm hiệu ứng khống chế trong Điên Cuồng:** **giữ nguyên.**",
+              "format": "bullet",
+              "changeType": "unchanged"
+            },
+            {
+              "text": "**MỚI:** **giảm thêm 10% sát thương nhận trong Điên Cuồng.**",
+              "format": "bullet",
+              "changeType": "new"
+            }
+          ]
+        },
+        {
+          "id": "section-7-entry-17",
+          "title": "Hăng Hái Chiến Đấu",
+          "icon": {
+            "kind": "core",
+            "id": "125"
+          },
+          "rationale": "Tinh chỉnh Lõi kỹ năng để lựa chọn này có vai trò rõ ràng hơn trong build tương ứng mà không trở thành lựa chọn bắt buộc.",
+          "changes": [
+            {
+              "text": "**Hồi Chiêu Điên Cuồng trước các hiệu ứng CDR khác:** **11 giây ⇒ 13 giây.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Hồi Chiêu Điên Cuồng trước các hiệu ứng CDR khác:",
+              "before": "11 giây",
+              "after": "13 giây."
+            }
+          ]
+        },
+        {
+          "id": "section-7-entry-18",
+          "title": "Hạ Nhiệt Chủ Động",
+          "icon": {
+            "kind": "core",
+            "id": "126"
+          },
+          "rationale": "Tinh chỉnh Lõi kỹ năng để lựa chọn này có vai trò rõ ràng hơn trong build tương ứng mà không trở thành lựa chọn bắt buộc.",
+          "changes": [
+            {
+              "text": "**TRƯỚC:**",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "**Khi Điên Cuồng kết thúc:** **+90% Hồi Mana trong 5 giây.**",
+              "format": "bullet"
+            },
+            {
+              "text": "**SAU:**",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "**Khi Điên Cuồng kết thúc:** **hồi dần tổng cộng 18% Mana Tối Đa trong 5 giây.**",
+              "format": "bullet"
+            }
+          ]
+        },
+        {
+          "id": "section-7-entry-19",
+          "title": "VIPER – MƯA TÊN LỬA",
+          "icon": {
+            "kind": "skill",
+            "id": "missile_swarm"
+          },
+          "rationale": "",
+          "changes": [],
+          "group": true
+        },
+        {
+          "id": "section-7-entry-20",
+          "title": "Kho Tên Lửa",
+          "icon": {
+            "kind": "core",
+            "id": "025"
+          },
+          "rationale": "Tinh chỉnh Lõi kỹ năng để lựa chọn này có vai trò rõ ràng hơn trong build tương ứng mà không trở thành lựa chọn bắt buộc.",
+          "changes": [
+            {
+              "text": "**Số tên lửa:** **18 ⇒ 16.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Số tên lửa:",
+              "before": "18",
+              "after": "16."
+            }
+          ]
+        },
+        {
+          "id": "section-7-entry-21",
+          "title": "Tên lửa hủy diệt",
+          "icon": {
+            "kind": "core",
+            "id": "026"
+          },
+          "rationale": "Tinh chỉnh Lõi kỹ năng để lựa chọn này có vai trò rõ ràng hơn trong build tương ứng mà không trở thành lựa chọn bắt buộc.",
+          "changes": [
+            {
+              "text": "**Sát thương mỗi tên lửa:** **295% Hỏa Lực ⇒ 325% Hỏa Lực.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Sát thương mỗi tên lửa:",
+              "before": "295% Hỏa Lực",
+              "after": "325% Hỏa Lực."
+            }
+          ]
+        },
+        {
+          "id": "section-7-entry-22",
+          "title": "Tên lửa tầm nhiệt",
+          "icon": {
+            "kind": "core",
+            "id": "027"
+          },
+          "rationale": "Tinh chỉnh Lõi kỹ năng để lựa chọn này có vai trò rõ ràng hơn trong build tương ứng mà không trở thành lựa chọn bắt buộc.",
+          "changes": [
+            {
+              "text": "**Sát thương Thiêu Đốt mỗi giây:** **70% Hỏa Lực ⇒ 60% Hỏa Lực.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Sát thương Thiêu Đốt mỗi giây:",
+              "before": "70% Hỏa Lực",
+              "after": "60% Hỏa Lực."
+            },
+            {
+              "text": "**Thời gian Thiêu Đốt:** **5 giây ⇒ 4 giây.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Thời gian Thiêu Đốt:",
+              "before": "5 giây",
+              "after": "4 giây."
+            },
+            {
+              "text": "**Giảm Giáp:** **30% ⇒ 20%.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Giảm Giáp:",
+              "before": "30%",
+              "after": "20%."
+            },
+            {
+              "text": "**Thời gian giảm Giáp:** **5 giây ⇒ 5 giây.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Thời gian giảm Giáp:",
+              "before": "5 giây",
+              "after": "5 giây."
+            },
+            {
+              "text": "Trúng lại vẫn làm mới thời gian.",
+              "format": "bullet"
+            }
+          ]
+        },
+        {
+          "id": "section-7-entry-23",
+          "title": "TITAN – KHIÊN NĂNG LƯỢNG",
+          "icon": {
+            "kind": "skill",
+            "id": "armor_shield"
+          },
+          "rationale": "",
+          "changes": [],
+          "group": true
+        },
+        {
+          "id": "section-7-entry-24",
+          "title": "Bất tử hộ thân",
+          "icon": {
+            "kind": "core",
+            "id": "028"
+          },
+          "rationale": "Tinh chỉnh Lõi kỹ năng để lựa chọn này có vai trò rõ ràng hơn trong build tương ứng mà không trở thành lựa chọn bắt buộc.",
+          "changes": [
+            {
+              "text": "**Tổng mức giảm sát thương của Khiên Năng Lượng:** **90% ⇒ 85%.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Tổng mức giảm sát thương của Khiên Năng Lượng:",
+              "before": "90%",
+              "after": "85%."
+            }
+          ]
+        },
+        {
+          "id": "section-7-entry-25",
+          "title": "Kiên Cố",
+          "icon": {
+            "kind": "core",
+            "id": "030"
+          },
+          "rationale": "Tinh chỉnh Lõi kỹ năng để lựa chọn này có vai trò rõ ràng hơn trong build tương ứng mà không trở thành lựa chọn bắt buộc.",
+          "changes": [
+            {
+              "text": "**Giáp cộng thêm sau khi Khiên kết thúc:** **+50% ⇒ +60%.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Giáp cộng thêm sau khi Khiên kết thúc:",
+              "before": "+50%",
+              "after": "+60%."
+            },
+            {
+              "text": "**Thời gian hiệu lực:** **5 giây ⇒ 6 giây.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Thời gian hiệu lực:",
+              "before": "5 giây",
+              "after": "6 giây."
+            }
+          ]
+        },
+        {
+          "id": "section-7-entry-26",
+          "title": "Phước Lành Hộ Vệ",
+          "icon": {
+            "kind": "core",
+            "id": "133"
+          },
+          "rationale": "Tinh chỉnh Lõi kỹ năng để lựa chọn này có vai trò rõ ràng hơn trong build tương ứng mà không trở thành lựa chọn bắt buộc.",
+          "changes": [
+            {
+              "text": "**Hồi Chiêu Khiên Năng Lượng trước các hiệu ứng CDR khác:** **9 giây ⇒ 12 giây.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Hồi Chiêu Khiên Năng Lượng trước các hiệu ứng CDR khác:",
+              "before": "9 giây",
+              "after": "12 giây."
+            }
+          ]
+        },
+        {
+          "id": "section-7-entry-27",
+          "title": "TITAN – BIGBANG",
+          "icon": {
+            "kind": "skill",
+            "id": "heavy_bomb"
+          },
+          "rationale": "",
+          "changes": [],
+          "group": true
+        },
+        {
+          "id": "section-7-entry-28",
+          "title": "Tử thần cận kề",
+          "icon": {
+            "kind": "core",
+            "id": "031"
+          },
+          "rationale": "Tinh chỉnh Lõi kỹ năng để lựa chọn này có vai trò rõ ràng hơn trong build tương ứng mà không trở thành lựa chọn bắt buộc.",
+          "changes": [
+            {
+              "text": "**Hồi Chiêu BigBang trước các hiệu ứng CDR khác:** **13 giây ⇒ 15 giây.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Hồi Chiêu BigBang trước các hiệu ứng CDR khác:",
+              "before": "13 giây",
+              "after": "15 giây."
+            }
+          ]
+        },
+        {
+          "id": "section-7-entry-29",
+          "title": "Dấu Ấn Trọng Pháo",
+          "icon": {
+            "kind": "core",
+            "id": "135"
+          },
+          "rationale": "Tinh chỉnh Lõi kỹ năng để lựa chọn này có vai trò rõ ràng hơn trong build tương ứng mà không trở thành lựa chọn bắt buộc.",
+          "changes": [
+            {
+              "text": "**Sát thương trực tiếp Titan gây thêm lên mục tiêu bị đánh dấu:** **+50% ⇒ +40%.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Sát thương trực tiếp Titan gây thêm lên mục tiêu bị đánh dấu:",
+              "before": "+50%",
+              "after": "+40%."
+            },
+            {
+              "text": "**Thời gian đánh dấu:** **8 giây ⇒ 8 giây.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Thời gian đánh dấu:",
+              "before": "8 giây",
+              "after": "8 giây."
+            },
+            {
+              "text": "Lưu ý: Sóng Xung Kích tiếp tục làm choáng mọi loại mục tiêu trong 4 giây như 26.7.0; đây không phải thay đổi chỉ số của phiên bản này.",
+              "format": "paragraph",
+              "changeType": "note"
+            }
+          ]
+        },
+        {
+          "id": "section-7-entry-30",
+          "title": "TITAN – OANH TẠC",
+          "icon": {
+            "kind": "skill",
+            "id": "sweeping_cannon"
+          },
+          "rationale": "",
+          "changes": [],
+          "group": true
+        },
+        {
+          "id": "section-7-entry-31",
+          "title": "Mưa Đỏ",
+          "icon": {
+            "kind": "core",
+            "id": "138"
+          },
+          "rationale": "Tinh chỉnh Lõi kỹ năng để lựa chọn này có vai trò rõ ràng hơn trong build tương ứng mà không trở thành lựa chọn bắt buộc.",
+          "changes": [
+            {
+              "text": "**Hồi Máu theo sát thương thực tế do Oanh Tạc gây ra:** **2,5% ⇒ 2,0%.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Hồi Máu theo sát thương thực tế do Oanh Tạc gây ra:",
+              "before": "2,5%",
+              "after": "2,0%."
+            }
+          ]
+        },
+        {
+          "id": "section-7-entry-32",
+          "title": "PHANTOM – PHÂN ẢNH",
+          "icon": {
+            "kind": "skill",
+            "id": "invisibility"
+          },
+          "rationale": "",
+          "changes": [],
+          "group": true
+        },
+        {
+          "id": "section-7-entry-33",
+          "title": "Sửa chữa khẩn cấp",
+          "icon": {
+            "kind": "core",
+            "id": "038"
+          },
+          "rationale": "Tinh chỉnh Lõi kỹ năng để lựa chọn này có vai trò rõ ràng hơn trong build tương ứng mà không trở thành lựa chọn bắt buộc.",
+          "changes": [
+            {
+              "text": "**Lượng Máu đã mất được hồi dần khi kích hoạt Phân Ảnh:** **18% ⇒ 25%.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Lượng Máu đã mất được hồi dần khi kích hoạt Phân Ảnh:",
+              "before": "18%",
+              "after": "25%."
+            }
+          ]
+        },
+        {
+          "id": "section-7-entry-34",
+          "title": "PHANTOM – LASER HỦY DIỆT",
+          "icon": {
+            "kind": "skill",
+            "id": "focus_laser"
+          },
+          "rationale": "",
+          "changes": [],
+          "group": true
+        },
+        {
+          "id": "section-7-entry-35",
+          "title": "Lưỡi Hái Tử Thần",
+          "icon": {
+            "kind": "core",
+            "id": "143"
+          },
+          "rationale": "Tinh chỉnh Lõi kỹ năng để lựa chọn này có vai trò rõ ràng hơn trong build tương ứng mà không trở thành lựa chọn bắt buộc.",
+          "changes": [
+            {
+              "text": "**TRƯỚC:**",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "Tất cả mục tiêu bị kết liễu khi còn không quá 12% Máu Tối Đa.",
+              "format": "bullet"
+            },
+            {
+              "text": "**SAU:**",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "**Quái thường:** **12% ⇒ 12%.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Quái thường:",
+              "before": "12%",
+              "after": "12%."
+            },
+            {
+              "text": "**Tinh Anh:** **12% ⇒ 10%.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Tinh Anh:",
+              "before": "12%",
+              "after": "10%."
+            },
+            {
+              "text": "**Boss:** **12% ⇒ 8%.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Boss:",
+              "before": "12%",
+              "after": "8%."
+            }
+          ]
+        },
+        {
+          "id": "section-7-entry-36",
+          "title": "Phá Giáp",
+          "icon": {
+            "kind": "core",
+            "id": "144"
+          },
+          "rationale": "Tinh chỉnh Lõi kỹ năng để lựa chọn này có vai trò rõ ràng hơn trong build tương ứng mà không trở thành lựa chọn bắt buộc.",
+          "changes": [
+            {
+              "text": "**Giảm Giáp:** **35% ⇒ 25%.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Giảm Giáp:",
+              "before": "35%",
+              "after": "25%."
+            },
+            {
+              "text": "**Thời gian hiệu lực:** **12 giây ⇒ 8 giây.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Thời gian hiệu lực:",
+              "before": "12 giây",
+              "after": "8 giây."
+            },
+            {
+              "text": "Không cộng dồn; trúng lại tiếp tục làm mới thời gian.",
+              "format": "bullet"
+            }
+          ]
+        },
+        {
+          "id": "section-7-entry-37",
+          "title": "PHANTOM – HAWKEYE",
+          "icon": {
+            "kind": "skill",
+            "id": "escort_drone"
+          },
+          "rationale": "",
+          "changes": [],
+          "group": true
+        },
+        {
+          "id": "section-7-entry-38",
+          "title": "Hộ Vệ Điện Tử",
+          "icon": {
+            "kind": "core",
+            "id": "147"
+          },
+          "rationale": "Tinh chỉnh Lõi kỹ năng để lựa chọn này có vai trò rõ ràng hơn trong build tương ứng mà không trở thành lựa chọn bắt buộc.",
+          "changes": [
+            {
+              "text": "**Bán kính xung phòng thủ:** **32px ⇒ 60px.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Bán kính xung phòng thủ:",
+              "before": "32px",
+              "after": "60px."
+            },
+            {
+              "text": "**Chu kỳ phát xung:** **6 giây ⇒ 7 giây.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Chu kỳ phát xung:",
+              "before": "6 giây",
+              "after": "7 giây."
+            },
+            {
+              "text": "Cơ chế phá hostile projectile quanh HawkEye giữ nguyên.",
+              "format": "bullet",
+              "changeType": "unchanged"
+            }
+          ]
+        },
+        {
+          "id": "section-7-entry-39",
+          "title": "LÕI CỘNG DỒN / ĐẶC BIỆT",
+          "icon": {
+            "kind": "system",
+            "id": "change"
+          },
+          "rationale": "",
+          "changes": [],
+          "group": true
+        },
+        {
+          "id": "section-7-entry-40",
+          "title": "Thích ứng phòng ngự",
+          "icon": {
+            "kind": "core",
+            "id": "047"
+          },
+          "rationale": "Điều chỉnh power budget để Lõi có giá trị rõ ràng trong build phù hợp và giảm chênh lệch giữa lựa chọn mạnh/yếu.",
+          "changes": [
+            {
+              "text": "**Giáp nhận mỗi kẻ địch bị hạ:** **+0,3 ⇒ +0,2.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Giáp nhận mỗi kẻ địch bị hạ:",
+              "before": "+0,3",
+              "after": "+0,2."
+            },
+            {
+              "text": "Tinh Anh/Boss vẫn cho lượng tăng gấp 5 lần.",
+              "format": "bullet"
+            }
+          ]
+        },
+        {
+          "id": "section-7-entry-41",
+          "title": "Trường Sinh",
+          "icon": {
+            "kind": "core",
+            "id": "048"
+          },
+          "rationale": "Điều chỉnh power budget để Lõi có giá trị rõ ràng trong build phù hợp và giảm chênh lệch giữa lựa chọn mạnh/yếu.",
+          "changes": [
+            {
+              "text": "**Máu Tối Đa nhận mỗi kẻ địch bị hạ:** **+3 ⇒ +2.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Máu Tối Đa nhận mỗi kẻ địch bị hạ:",
+              "before": "+3",
+              "after": "+2."
+            },
+            {
+              "text": "Tinh Anh/Boss vẫn cho lượng tăng gấp 5 lần.",
+              "format": "bullet"
+            }
+          ]
+        },
+        {
+          "id": "section-7-entry-42",
+          "title": "Bất động minh vương",
+          "icon": {
+            "kind": "core",
+            "id": "049"
+          },
+          "rationale": "Điều chỉnh power budget để Lõi có giá trị rõ ràng trong build phù hợp và giảm chênh lệch giữa lựa chọn mạnh/yếu.",
+          "changes": [
+            {
+              "text": "**Thời gian phải đứng yên:** **3 giây ⇒ 2,5 giây.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Thời gian phải đứng yên:",
+              "before": "3 giây",
+              "after": "2,5 giây."
+            },
+            {
+              "text": "**Giáp khi kích hoạt:** **+80% ⇒ +60%.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Giáp khi kích hoạt:",
+              "before": "+80%",
+              "after": "+60%."
+            },
+            {
+              "text": "**Hỏa Lực khi kích hoạt:** **+40% ⇒ +30%.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Hỏa Lực khi kích hoạt:",
+              "before": "+40%",
+              "after": "+30%."
+            },
+            {
+              "text": "Di chuyển vẫn làm mất hiệu ứng.",
+              "format": "bullet"
+            }
+          ]
+        },
+        {
+          "id": "section-7-entry-43",
+          "title": "Chậm mà chắc",
+          "icon": {
+            "kind": "core",
+            "id": "054"
+          },
+          "rationale": "Giữ lối chơi tốc độ bắn thấp đổi Hỏa Lực, nhưng giảm hệ số chuyển đổi để tránh vượt quá power budget của các build cộng Fire Rate.",
+          "changes": [
+            {
+              "text": "**Tốc Độ Bắn bị khóa:** **1,2/s ⇒ 1,2/s.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Tốc Độ Bắn bị khóa:",
+              "before": "1,2/s",
+              "after": "1,2/s."
+            },
+            {
+              "text": "**Hỏa Lực nhận cho mỗi 0,1 Tốc Độ Bắn vượt giới hạn:** **+15 ⇒ +8.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Hỏa Lực nhận cho mỗi 0,1 Tốc Độ Bắn vượt giới hạn:",
+              "before": "+15",
+              "after": "+8."
+            }
+          ]
+        },
+        {
+          "id": "section-7-entry-44",
+          "title": "Pháo Đổi Giáp",
+          "icon": {
+            "kind": "core",
+            "id": "085"
+          },
+          "rationale": "Tăng mức đánh đổi để Lõi trở thành một lựa chọn Hỏa Lực rõ ràng hơn cho các build chấp nhận hy sinh phòng thủ.",
+          "changes": [
+            {
+              "text": "**Hỏa Lực:** **+35 ⇒ +48.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Hỏa Lực:",
+              "before": "+35",
+              "after": "+48."
+            },
+            {
+              "text": "**Giáp:** **-18 ⇒ -24.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Giáp:",
+              "before": "-18",
+              "after": "-24."
+            }
+          ]
+        },
+        {
+          "id": "section-7-entry-45",
+          "title": "Nghịch Lý Bạo Kích",
+          "icon": {
+            "kind": "core",
+            "id": "095"
+          },
+          "rationale": "Hạ phần Sát Thương Chí Mạng cộng thêm để giới hạn trần burst trong khi vẫn giữ bản sắc khóa Tỷ Lệ Chí Mạng.",
+          "changes": [
+            {
+              "text": "**Tỷ Lệ Chí Mạng bị khóa:** **25% ⇒ 25%.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Tỷ Lệ Chí Mạng bị khóa:",
+              "before": "25%",
+              "after": "25%."
+            },
+            {
+              "text": "**Sát Thương Chí Mạng cộng thêm:** **+300% ⇒ +140%.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Sát Thương Chí Mạng cộng thêm:",
+              "before": "+300%",
+              "after": "+140%."
+            }
+          ]
+        },
+        {
+          "id": "section-7-entry-46",
+          "title": "Hợp Đồng Huyết Năng",
+          "icon": {
+            "kind": "core",
+            "id": "096"
+          },
+          "rationale": "Điều chỉnh power budget để Lõi có giá trị rõ ràng trong build phù hợp và giảm chênh lệch giữa lựa chọn mạnh/yếu.",
+          "changes": [
+            {
+              "text": "**Giảm Hồi Chiêu:** **+40% ⇒ +30%.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Giảm Hồi Chiêu:",
+              "before": "+40%",
+              "after": "+30%."
+            },
+            {
+              "text": "**Máu hiện tại mất mỗi lần dùng kỹ năng:** **6% ⇒ 5%.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Máu hiện tại mất mỗi lần dùng kỹ năng:",
+              "before": "6%",
+              "after": "5%."
+            },
+            {
+              "text": "Hiệu ứng không thể tự giết người chơi.",
+              "format": "bullet"
+            }
+          ]
+        },
+        {
+          "id": "section-7-entry-47",
+          "title": "Tập trung chuyên môn",
+          "icon": {
+            "kind": "core",
+            "id": "097"
+          },
+          "rationale": "Giảm lượng stat tổng nhận được để lựa chọn khóa cả ba kỹ năng vẫn mạnh nhưng không áp đảo mọi build bắn thường.",
+          "changes": [
+            {
+              "text": "**Hỏa Lực:** **+60% ⇒ +40%.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Hỏa Lực:",
+              "before": "+60%",
+              "after": "+40%."
+            },
+            {
+              "text": "**Máu Tối Đa:** **+40% ⇒ +30%.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Máu Tối Đa:",
+              "before": "+40%",
+              "after": "+30%."
+            },
+            {
+              "text": "**Giáp:** **+40% ⇒ +30%.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Giáp:",
+              "before": "+40%",
+              "after": "+30%."
+            },
+            {
+              "text": "Cả 3 kỹ năng vẫn bị khóa.",
+              "format": "bullet"
+            },
+            {
+              "text": "**Lõi general nhận tại milestone kỹ năng 9/18/27:** **Kim Cương ⇒ Vàng.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Lõi general nhận tại milestone kỹ năng 9/18/27:",
+              "before": "Kim Cương",
+              "after": "Vàng."
+            }
+          ]
+        },
+        {
+          "id": "section-7-entry-48",
+          "title": "CHÍ MẠNG / XUYÊN GIÁP / SINH TỒN / LÕI BẠC",
+          "icon": {
+            "kind": "system",
+            "id": "change"
+          },
+          "rationale": "Làm thay đổi này rõ ràng, nhất quán và dễ đọc hơn trong trải nghiệm chiến đấu thực tế.",
+          "changes": [],
+          "group": true
+        },
+        {
+          "id": "section-7-entry-49",
+          "title": "Kính ngắm chiến trường",
+          "icon": {
+            "kind": "core",
+            "id": "055"
+          },
+          "rationale": "Điều chỉnh power budget để Lõi có giá trị rõ ràng trong build phù hợp và giảm chênh lệch giữa lựa chọn mạnh/yếu.",
+          "changes": [
+            {
+              "text": "**Tỷ Lệ Chí Mạng:** **+5% ⇒ +8%.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Tỷ Lệ Chí Mạng:",
+              "before": "+5%",
+              "after": "+8%."
+            }
+          ]
+        },
+        {
+          "id": "section-7-entry-50",
+          "title": "Đầu đạn cân chỉnh",
+          "icon": {
+            "kind": "core",
+            "id": "056"
+          },
+          "rationale": "Điều chỉnh power budget để Lõi có giá trị rõ ràng trong build phù hợp và giảm chênh lệch giữa lựa chọn mạnh/yếu.",
+          "changes": [
+            {
+              "text": "**TRƯỚC:**",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "+10% Sát Thương Chí Mạng.",
+              "format": "bullet"
+            },
+            {
+              "text": "**SAU:**",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "+3% Tỷ Lệ Chí Mạng.",
+              "format": "bullet"
+            },
+            {
+              "text": "+22% Sát Thương Chí Mạng.",
+              "format": "bullet"
+            }
+          ]
+        },
+        {
+          "id": "section-7-entry-51",
+          "title": "Xuyên thủng",
+          "icon": {
+            "kind": "core",
+            "id": "057"
+          },
+          "rationale": "Điều chỉnh power budget để Lõi có giá trị rõ ràng trong build phù hợp và giảm chênh lệch giữa lựa chọn mạnh/yếu.",
+          "changes": [
+            {
+              "text": "**Giáp mục tiêu bị bỏ qua:** **5% ⇒ 10%.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Giáp mục tiêu bị bỏ qua:",
+              "before": "5%",
+              "after": "10%."
+            }
+          ]
+        },
+        {
+          "id": "section-7-entry-52",
+          "title": "Dấu ngắm yếu điểm",
+          "icon": {
+            "kind": "core",
+            "id": "058"
+          },
+          "rationale": "Làm debuff mạnh hơn khi kích hoạt nhưng thêm chu kỳ hồi nội tại rõ ràng để tránh duy trì giảm Giáp gần như liên tục.",
+          "changes": [
+            {
+              "text": "**TRƯỚC:**",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "5 lần đánh trúng cùng mục tiêu.",
+              "format": "bullet"
+            },
+            {
+              "text": "Giảm 8% Giáp trong 4 giây.",
+              "format": "bullet"
+            },
+            {
+              "text": "Trúng tiếp có thể làm mới thời gian.",
+              "format": "bullet"
+            },
+            {
+              "text": "**SAU:**",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "4 lần đánh trúng cùng mục tiêu.",
+              "format": "bullet"
+            },
+            {
+              "text": "Giảm 15% Giáp trong 5 giây.",
+              "format": "bullet"
+            },
+            {
+              "text": "**MỚI:** **sau khi hiệu ứng 5 giây kết thúc, mục tiêu bắt đầu hồi nội tại 15 giây.**",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Trong thời gian debuff và hồi nội tại, không tích thêm hit.",
+              "format": "bullet"
+            },
+            {
+              "text": "Hết hồi nội tại mới bắt đầu chu kỳ 4 hit mới.",
+              "format": "bullet"
+            }
+          ]
+        },
+        {
+          "id": "section-7-entry-53",
+          "title": "Giáp phản ứng nhanh",
+          "icon": {
+            "kind": "core",
+            "id": "061"
+          },
+          "rationale": "Điều chỉnh power budget để Lõi có giá trị rõ ràng trong build phù hợp và giảm chênh lệch giữa lựa chọn mạnh/yếu.",
+          "changes": [
+            {
+              "text": "**Giáp nhận khi bị trúng:** **+15 ⇒ +25.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Giáp nhận khi bị trúng:",
+              "before": "+15",
+              "after": "+25."
+            },
+            {
+              "text": "**Thời gian hiệu lực:** **4 giây ⇒ 5 giây.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Thời gian hiệu lực:",
+              "before": "4 giây",
+              "after": "5 giây."
+            },
+            {
+              "text": "**Hồi nội tại:** **12 giây ⇒ 10 giây.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Hồi nội tại:",
+              "before": "12 giây",
+              "after": "10 giây."
+            }
+          ]
+        },
+        {
+          "id": "section-7-entry-54",
+          "title": "Van sinh tồn",
+          "icon": {
+            "kind": "core",
+            "id": "062"
+          },
+          "rationale": "Điều chỉnh power budget để Lõi có giá trị rõ ràng trong build phù hợp và giảm chênh lệch giữa lựa chọn mạnh/yếu.",
+          "changes": [
+            {
+              "text": "**Ngưỡng kích hoạt:** **dưới 20% HP ⇒ dưới 20% HP.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Ngưỡng kích hoạt:",
+              "before": "dưới 20% HP",
+              "after": "dưới 20% HP."
+            },
+            {
+              "text": "**Hồi Máu:** **0,5% Máu Tối Đa/giây ⇒ 0,8% Máu Tối Đa/giây.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Hồi Máu:",
+              "before": "0,5% Máu Tối Đa/giây",
+              "after": "0,8% Máu Tối Đa/giây."
+            },
+            {
+              "text": "Hiệu ứng vẫn dừng khi đạt 20% HP.",
+              "format": "bullet"
+            }
+          ]
+        },
+        {
+          "id": "section-7-entry-55",
+          "title": "Hút Hồn",
+          "icon": {
+            "kind": "core",
+            "id": "064"
+          },
+          "rationale": "Điều chỉnh power budget để Lõi có giá trị rõ ràng trong build phù hợp và giảm chênh lệch giữa lựa chọn mạnh/yếu.",
+          "changes": [
+            {
+              "text": "**Mỗi 10 kẻ địch bị hạ hồi:** **2% ⇒ 3% Máu Tối Đa.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Mỗi 10 kẻ địch bị hạ hồi:",
+              "before": "2%",
+              "after": "3% Máu Tối Đa."
+            }
+          ]
+        },
+        {
+          "id": "section-7-entry-56",
+          "title": "Khung chống va đập",
+          "icon": {
+            "kind": "core",
+            "id": "065"
+          },
+          "rationale": "Điều chỉnh power budget để Lõi có giá trị rõ ràng trong build phù hợp và giảm chênh lệch giữa lựa chọn mạnh/yếu.",
+          "changes": [
+            {
+              "text": "**TRƯỚC:**",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "Giảm 20% sát thương va chạm với kẻ địch.",
+              "format": "bullet"
+            },
+            {
+              "text": "**SAU:**",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "Giảm 35% sát thương từ collision / dash / ram hợp lệ.",
+              "format": "bullet"
+            }
+          ]
+        },
+        {
+          "id": "section-7-entry-57",
+          "title": "Combo săn mồi",
+          "icon": {
+            "kind": "core",
+            "id": "066"
+          },
+          "rationale": "Điều chỉnh power budget để Lõi có giá trị rõ ràng trong build phù hợp và giảm chênh lệch giữa lựa chọn mạnh/yếu.",
+          "changes": [
+            {
+              "text": "**Sát thương mỗi cộng dồn:** **+2% ⇒ +2,5%.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Sát thương mỗi cộng dồn:",
+              "before": "+2%",
+              "after": "+2,5%."
+            },
+            {
+              "text": "**Cộng dồn tối đa:** **5 ⇒ 5.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Cộng dồn tối đa:",
+              "before": "5",
+              "after": "5."
+            },
+            {
+              "text": "**Tổng bonus tối đa:** **+10% ⇒ +12,5%.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Tổng bonus tối đa:",
+              "before": "+10%",
+              "after": "+12,5%."
+            },
+            {
+              "text": "**Khoảng thời gian duy trì chuỗi hạ gục:** **3 giây ⇒ 3 giây.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Khoảng thời gian duy trì chuỗi hạ gục:",
+              "before": "3 giây",
+              "after": "3 giây."
+            }
+          ]
+        },
+        {
+          "id": "section-7-entry-58",
+          "title": "Đánh dấu Tinh Anh",
+          "icon": {
+            "kind": "core",
+            "id": "067"
+          },
+          "rationale": "Điều chỉnh power budget để Lõi có giá trị rõ ràng trong build phù hợp và giảm chênh lệch giữa lựa chọn mạnh/yếu.",
+          "changes": [
+            {
+              "text": "**Sát thương lên Tinh Anh và Boss:** **+6% ⇒ +8%.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Sát thương lên Tinh Anh và Boss:",
+              "before": "+6%",
+              "after": "+8%."
+            }
+          ]
+        },
+        {
+          "id": "section-7-entry-59",
+          "title": "Kết Liễu Gọn",
+          "icon": {
+            "kind": "core",
+            "id": "068"
+          },
+          "rationale": "Điều chỉnh power budget để Lõi có giá trị rõ ràng trong build phù hợp và giảm chênh lệch giữa lựa chọn mạnh/yếu.",
+          "changes": [
+            {
+              "text": "**Sát thương lên mục tiêu dưới 25% HP:** **+8% ⇒ +12%.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Sát thương lên mục tiêu dưới 25% HP:",
+              "before": "+8%",
+              "after": "+12%."
+            }
+          ]
+        },
+        {
+          "id": "section-7-entry-60",
+          "title": "Phủ đầu",
+          "icon": {
+            "kind": "core",
+            "id": "069"
+          },
+          "rationale": "Điều chỉnh power budget để Lõi có giá trị rõ ràng trong build phù hợp và giảm chênh lệch giữa lựa chọn mạnh/yếu.",
+          "changes": [
+            {
+              "text": "**Sát thương lên mục tiêu trên 70% HP:** **+10% ⇒ +12%.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Sát thương lên mục tiêu trên 70% HP:",
+              "before": "+10%",
+              "after": "+12%."
+            }
+          ]
+        },
+        {
+          "id": "section-7-entry-61",
+          "title": "Tái kích hoạt",
+          "icon": {
+            "kind": "core",
+            "id": "070"
+          },
+          "rationale": "Điều chỉnh power budget để Lõi có giá trị rõ ràng trong build phù hợp và giảm chênh lệch giữa lựa chọn mạnh/yếu.",
+          "changes": [
+            {
+              "text": "**Số mạng cần để kích hoạt:** **8 ⇒ 6.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Số mạng cần để kích hoạt:",
+              "before": "8",
+              "after": "6."
+            },
+            {
+              "text": "**Hồi Chiêu còn lại được giảm:** **0,5 giây ⇒ 0,75 giây cho tất cả kỹ năng đang hồi.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Hồi Chiêu còn lại được giảm:",
+              "before": "0,5 giây",
+              "after": "0,75 giây cho tất cả kỹ năng đang hồi."
+            }
+          ]
+        },
+        {
+          "id": "section-7-entry-62",
+          "title": "Nhịp chiến thuật",
+          "icon": {
+            "kind": "core",
+            "id": "071"
+          },
+          "rationale": "Điều chỉnh power budget để Lõi có giá trị rõ ràng trong build phù hợp và giảm chênh lệch giữa lựa chọn mạnh/yếu.",
+          "changes": [
+            {
+              "text": "**Tốc Độ Bắn sau khi dùng kỹ năng:** **+0,15 ⇒ +0,30.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Tốc Độ Bắn sau khi dùng kỹ năng:",
+              "before": "+0,15",
+              "after": "+0,30."
+            },
+            {
+              "text": "**Thời gian hiệu lực:** **4 giây ⇒ 5 giây.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Thời gian hiệu lực:",
+              "before": "4 giây",
+              "after": "5 giây."
+            }
+          ]
+        },
+        {
+          "id": "section-7-entry-63",
+          "title": "LÕI VÀNG / VŨ KHÍ / TÀI NGUYÊN",
+          "icon": {
+            "kind": "system",
+            "id": "change"
+          },
+          "rationale": "",
+          "changes": [],
+          "group": true
+        },
+        {
+          "id": "section-7-entry-64",
+          "title": "Đạn Phân Mảnh",
+          "icon": {
+            "kind": "core",
+            "id": "073"
+          },
+          "rationale": "Điều chỉnh power budget để Lõi có giá trị rõ ràng trong build phù hợp và giảm chênh lệch giữa lựa chọn mạnh/yếu.",
+          "changes": [
+            {
+              "text": "**Sát thương vụ nổ khi kẻ địch bị hạ:** **20% Hỏa Lực ⇒ 35% Hỏa Lực.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Sát thương vụ nổ khi kẻ địch bị hạ:",
+              "before": "20% Hỏa Lực",
+              "after": "35% Hỏa Lực."
+            },
+            {
+              "text": "**Bán kính vụ nổ:** **giữ nguyên so với 26.7.0.**",
+              "format": "bullet",
+              "changeType": "unchanged"
+            }
+          ]
+        },
+        {
+          "id": "section-7-entry-65",
+          "title": "Hồi Phục Chiến Trường",
+          "icon": {
+            "kind": "core",
+            "id": "077"
+          },
+          "rationale": "Điều chỉnh power budget để Lõi có giá trị rõ ràng trong build phù hợp và giảm chênh lệch giữa lựa chọn mạnh/yếu.",
+          "changes": [
+            {
+              "text": "**Máu hồi khi hạ Tinh Anh:** **18% ⇒ 15% Máu Tối Đa.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Máu hồi khi hạ Tinh Anh:",
+              "before": "18%",
+              "after": "15% Máu Tối Đa."
+            },
+            {
+              "text": "**Hồi Chiêu còn lại của mọi kỹ năng được giảm:** **4 giây ⇒ 3 giây.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Hồi Chiêu còn lại của mọi kỹ năng được giảm:",
+              "before": "4 giây",
+              "after": "3 giây."
+            }
+          ]
+        },
+        {
+          "id": "section-7-entry-66",
+          "title": "Tiếp Sức Lò Phản Ứng",
+          "icon": {
+            "kind": "core",
+            "id": "078"
+          },
+          "rationale": "Điều chỉnh power budget để Lõi có giá trị rõ ràng trong build phù hợp và giảm chênh lệch giữa lựa chọn mạnh/yếu.",
+          "changes": [
+            {
+              "text": "**TRƯỚC:**",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "Hạ 5 kẻ địch trong 4 giây cho +35% Hồi Tài Nguyên trong 6 giây.",
+              "format": "bullet"
+            },
+            {
+              "text": "**SAU:**",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "Điều kiện vẫn là hạ 5 kẻ địch trong 4 giây.",
+              "format": "bullet"
+            },
+            {
+              "text": "**MỚI:** **hồi ngay 5% Tài Nguyên Tối Đa.**",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "**Hồi Tài Nguyên trong 6 giây:** **+35% ⇒ +50%.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Hồi Tài Nguyên trong 6 giây:",
+              "before": "+35%",
+              "after": "+50%."
+            }
+          ]
+        },
+        {
+          "id": "section-7-entry-67",
+          "title": "Phản Công Tức Thời",
+          "icon": {
+            "kind": "core",
+            "id": "083"
+          },
+          "rationale": "Điều chỉnh power budget để Lõi có giá trị rõ ràng trong build phù hợp và giảm chênh lệch giữa lựa chọn mạnh/yếu.",
+          "changes": [
+            {
+              "text": "**Số phát bắn thường được cường hóa sau khi nhận sát thương:** **3 ⇒ 5.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Số phát bắn thường được cường hóa sau khi nhận sát thương:",
+              "before": "3",
+              "after": "5."
+            },
+            {
+              "text": "**Sát thương cộng thêm mỗi phát:** **+20% ⇒ +30%.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Sát thương cộng thêm mỗi phát:",
+              "before": "+20%",
+              "after": "+30%."
+            },
+            {
+              "text": "**Hồi nội tại:** **6 giây ⇒ 6 giây.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Hồi nội tại:",
+              "before": "6 giây",
+              "after": "6 giây."
+            }
+          ]
+        },
+        {
+          "id": "section-7-entry-68",
+          "title": "Mắt thần chiến trường",
+          "icon": {
+            "kind": "core",
+            "id": "087"
+          },
+          "rationale": "Điều chỉnh power budget để Lõi có giá trị rõ ràng trong build phù hợp và giảm chênh lệch giữa lựa chọn mạnh/yếu.",
+          "changes": [
+            {
+              "text": "**Tỷ Lệ Chí Mạng:** **+20% ⇒ +20%.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Tỷ Lệ Chí Mạng:",
+              "before": "+20%",
+              "after": "+20%."
+            },
+            {
+              "text": "**Sát Thương Chí Mạng:** **+30% ⇒ +40%.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Sát Thương Chí Mạng:",
+              "before": "+30%",
+              "after": "+40%."
+            }
+          ]
+        },
+        {
+          "id": "section-7-entry-69",
+          "title": "UTILITY / CHIẾN THUẬT",
+          "icon": {
+            "kind": "system",
+            "id": "change"
+          },
+          "rationale": "Làm thay đổi này rõ ràng, nhất quán và dễ đọc hơn trong trải nghiệm chiến đấu thực tế.",
+          "changes": [],
+          "group": true
+        },
+        {
+          "id": "section-7-entry-70",
+          "title": "Bộ Lọc Nhiễu",
+          "icon": {
+            "kind": "core",
+            "id": "098"
+          },
+          "rationale": "Điều chỉnh power budget để Lõi có giá trị rõ ràng trong build phù hợp và giảm chênh lệch giữa lựa chọn mạnh/yếu.",
+          "changes": [
+            {
+              "text": "**TRƯỚC:**",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "Giảm 25% thời gian hiệu lực của các hiệu ứng bất lợi.",
+              "format": "bullet"
+            },
+            {
+              "text": "**SAU:**",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "**MỚI:** **+15 Giáp.**",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "**Giảm thời gian hiệu lực của hiệu ứng bất lợi:** **25% ⇒ 30%.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Giảm thời gian hiệu lực của hiệu ứng bất lợi:",
+              "before": "25%",
+              "after": "30%."
+            }
+          ]
+        },
+        {
+          "id": "section-7-entry-71",
+          "title": "Kíp Phòng Thủ",
+          "icon": {
+            "kind": "core",
+            "id": "099"
+          },
+          "rationale": "Điều chỉnh power budget để Lõi có giá trị rõ ràng trong build phù hợp và giảm chênh lệch giữa lựa chọn mạnh/yếu.",
+          "changes": [
+            {
+              "text": "**Ngưỡng kích hoạt:** **Tài Nguyên dưới 10% ⇒ dưới 10%.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Ngưỡng kích hoạt:",
+              "before": "Tài Nguyên dưới 10%",
+              "after": "dưới 10%."
+            },
+            {
+              "text": "**Khiên:** **8% ⇒ 10% Máu Tối Đa.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Khiên:",
+              "before": "8%",
+              "after": "10% Máu Tối Đa."
+            },
+            {
+              "text": "**Thời gian Khiên:** **4 giây ⇒ 4 giây.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Thời gian Khiên:",
+              "before": "4 giây",
+              "after": "4 giây."
+            },
+            {
+              "text": "**MỚI:** **hồi ngay 5% Tài Nguyên Tối Đa khi kích hoạt.**",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "**Hồi nội tại:** **20 giây ⇒ 20 giây.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Hồi nội tại:",
+              "before": "20 giây",
+              "after": "20 giây."
+            }
+          ]
+        },
+        {
+          "id": "section-7-entry-72",
+          "title": "Cân Bằng Chiến Trường",
+          "icon": {
+            "kind": "core",
+            "id": "100"
+          },
+          "rationale": "Điều chỉnh power budget để Lõi có giá trị rõ ràng trong build phù hợp và giảm chênh lệch giữa lựa chọn mạnh/yếu.",
+          "changes": [
+            {
+              "text": "**Trên 70% HP:** **+20 Hỏa Lực ⇒ +20 Hỏa Lực.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Trên 70% HP:",
+              "before": "+20 Hỏa Lực",
+              "after": "+20 Hỏa Lực."
+            },
+            {
+              "text": "**Dưới 30% HP:** **+20 Giáp ⇒ +20 Giáp.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Dưới 30% HP:",
+              "before": "+20 Giáp",
+              "after": "+20 Giáp."
+            },
+            {
+              "text": "**MỚI:** **từ 30% đến 70% HP nhận +8 Hỏa Lực và +8 Giáp.**",
+              "format": "bullet",
+              "changeType": "new"
+            }
+          ]
+        },
+        {
+          "id": "section-7-entry-73",
+          "title": "Hỏa Lực Cự Ly Xa",
+          "icon": {
+            "kind": "core",
+            "id": "102"
+          },
+          "rationale": "Điều chỉnh power budget để Lõi có giá trị rõ ràng trong build phù hợp và giảm chênh lệch giữa lựa chọn mạnh/yếu.",
+          "changes": [
+            {
+              "text": "**Sát thương bắn thường cộng thêm ở cự ly xa:** **+12% ⇒ +6%.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Sát thương bắn thường cộng thêm ở cự ly xa:",
+              "before": "+12%",
+              "after": "+6%."
+            }
+          ]
+        },
+        {
+          "id": "section-7-entry-74",
+          "title": "Bản Năng Sinh Tồn",
+          "icon": {
+            "kind": "core",
+            "id": "103"
+          },
+          "rationale": "Điều chỉnh power budget để Lõi có giá trị rõ ràng trong build phù hợp và giảm chênh lệch giữa lựa chọn mạnh/yếu.",
+          "changes": [
+            {
+              "text": "**TRƯỚC:**",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "Dưới 30% HP.",
+              "format": "bullet"
+            },
+            {
+              "text": "Giảm 12% sát thương từ đạn địch.",
+              "format": "bullet"
+            },
+            {
+              "text": "**SAU:**",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "**Ngưỡng HP:** **dưới 30% ⇒ dưới 35%.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Ngưỡng HP:",
+              "before": "dưới 30%",
+              "after": "dưới 35%."
+            },
+            {
+              "text": "**Giảm sát thương nhận:** **12% ⇒ 15%.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Giảm sát thương nhận:",
+              "before": "12%",
+              "after": "15%."
+            },
+            {
+              "text": "**Phạm vi bảo vệ:** **chỉ projectile ⇒ hostile damage hợp lệ theo hệ thống damage tag.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Phạm vi bảo vệ:",
+              "before": "chỉ projectile",
+              "after": "hostile damage hợp lệ theo hệ thống damage tag."
+            }
+          ]
+        },
+        {
+          "id": "section-7-entry-75",
+          "title": "Bão Sét Bạo Kích",
+          "icon": {
+            "kind": "core",
+            "id": "105"
+          },
+          "rationale": "Tăng khả năng tự khởi động build Chí Mạng mà không thay đổi số mục tiêu hoặc sát thương của chuỗi sét.",
+          "changes": [
+            {
+              "text": "**Tỷ Lệ Chí Mạng:** **+15% ⇒ +25%.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Tỷ Lệ Chí Mạng:",
+              "before": "+15%",
+              "after": "+25%."
+            },
+            {
+              "text": "**Sét lan tối đa:** **3 mục tiêu ⇒ 3 mục tiêu.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Sét lan tối đa:",
+              "before": "3 mục tiêu",
+              "after": "3 mục tiêu."
+            },
+            {
+              "text": "**Sát thương mỗi mục tiêu bị sét lan:** **70% Hỏa Lực ⇒ 70% Hỏa Lực.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Sát thương mỗi mục tiêu bị sét lan:",
+              "before": "70% Hỏa Lực",
+              "after": "70% Hỏa Lực."
+            },
+            {
+              "text": "**Hồi nội tại trên cùng mục tiêu:** **0,5 giây ⇒ 0,5 giây.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Hồi nội tại trên cùng mục tiêu:",
+              "before": "0,5 giây",
+              "after": "0,5 giây."
+            }
+          ]
+        },
+        {
+          "id": "section-7-entry-76",
+          "title": "Tên lửa Tomahawk",
+          "icon": {
+            "kind": "core",
+            "id": "106"
+          },
+          "rationale": "Điều chỉnh power budget để Lõi có giá trị rõ ràng trong build phù hợp và giảm chênh lệch giữa lựa chọn mạnh/yếu.",
+          "changes": [
+            {
+              "text": "**Chu kỳ phóng:** **1,5 giây ⇒ 2 giây.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Chu kỳ phóng:",
+              "before": "1,5 giây",
+              "after": "2 giây."
+            },
+            {
+              "text": "**Số Tomahawk tối đa mỗi đợt:** **3 ⇒ 3.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Số Tomahawk tối đa mỗi đợt:",
+              "before": "3",
+              "after": "3."
+            },
+            {
+              "text": "**Sát thương mỗi Tomahawk:** **195% Hỏa Lực ⇒ 160% Hỏa Lực.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Sát thương mỗi Tomahawk:",
+              "before": "195% Hỏa Lực",
+              "after": "160% Hỏa Lực."
+            }
+          ]
+        },
+        {
+          "id": "section-7-entry-77",
+          "title": "Thu Gom Mảnh Vỡ",
+          "icon": {
+            "kind": "core",
+            "id": "108"
+          },
+          "rationale": "Điều chỉnh power budget để Lõi có giá trị rõ ràng trong build phù hợp và giảm chênh lệch giữa lựa chọn mạnh/yếu.",
+          "changes": [
+            {
+              "text": "**Tỷ lệ rơi Scrap:** **6% ⇒ 12%.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Tỷ lệ rơi Scrap:",
+              "before": "6%",
+              "after": "12%."
+            },
+            {
+              "text": "**Máu hồi khi nhặt Scrap:** **1,25% ⇒ 2,5% Máu Tối Đa.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Máu hồi khi nhặt Scrap:",
+              "before": "1,25%",
+              "after": "2,5% Máu Tối Đa."
+            },
+            {
+              "text": "**Thời gian Scrap tồn tại:** **4 giây ⇒ 4 giây.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Thời gian Scrap tồn tại:",
+              "before": "4 giây",
+              "after": "4 giây."
+            }
+          ]
+        },
+        {
+          "id": "section-7-entry-78",
+          "title": "Giáp Chống Nổ",
+          "icon": {
+            "kind": "core",
+            "id": "110"
+          },
+          "rationale": "Điều chỉnh power budget để Lõi có giá trị rõ ràng trong build phù hợp và giảm chênh lệch giữa lựa chọn mạnh/yếu.",
+          "changes": [
+            {
+              "text": "**Giảm sát thương từ Bomb / Explosion / vùng nổ diện rộng:** **15% ⇒ 25%.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Giảm sát thương từ Bomb / Explosion / vùng nổ diện rộng:",
+              "before": "15%",
+              "after": "25%."
+            }
+          ]
+        },
+        {
+          "id": "section-7-entry-79",
+          "title": "Đạn Siêu Âm",
+          "icon": {
+            "kind": "core",
+            "id": "111"
+          },
+          "rationale": "Điều chỉnh power budget để Lõi có giá trị rõ ràng trong build phù hợp và giảm chênh lệch giữa lựa chọn mạnh/yếu.",
+          "changes": [
+            {
+              "text": "**Tốc độ đạn thường:** **+100% ⇒ +100%.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Tốc độ đạn thường:",
+              "before": "+100%",
+              "after": "+100%."
+            },
+            {
+              "text": "**MỚI:** **sát thương bắn thường +4%.**",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Hitbox đạn của người chơi không thay đổi bởi Lõi này.",
+              "format": "bullet"
+            }
+          ]
+        },
+        {
+          "id": "section-7-entry-80",
+          "title": "Lưới Giao Hỏa",
+          "icon": {
+            "kind": "core",
+            "id": "112"
+          },
+          "rationale": "Điều chỉnh power budget để Lõi có giá trị rõ ràng trong build phù hợp và giảm chênh lệch giữa lựa chọn mạnh/yếu.",
+          "changes": [
+            {
+              "text": "**Thời gian Lưới tồn tại:** **1,5 giây ⇒ 2 giây.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Thời gian Lưới tồn tại:",
+              "before": "1,5 giây",
+              "after": "2 giây."
+            },
+            {
+              "text": "**Sát thương Lưới:** **90% Hỏa Lực ⇒ 120% Hỏa Lực.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Sát thương Lưới:",
+              "before": "90% Hỏa Lực",
+              "after": "120% Hỏa Lực."
+            },
+            {
+              "text": "Điều kiện tạo Lưới và giới hạn một lần nhận sát thương mỗi Lưới giữ nguyên.",
+              "format": "bullet",
+              "changeType": "unchanged"
+            }
+          ]
+        },
+        {
+          "id": "section-7-entry-81",
+          "title": "Comeback",
+          "icon": {
+            "kind": "core",
+            "id": "116"
+          },
+          "rationale": "Điều chỉnh power budget để Lõi có giá trị rõ ràng trong build phù hợp và giảm chênh lệch giữa lựa chọn mạnh/yếu.",
+          "changes": [
+            {
+              "text": "**Hiệu ứng sau khi debuff kết thúc:** **+25% sát thương trong 4 giây ⇒ giữ nguyên.**",
+              "format": "bullet",
+              "changeType": "unchanged",
+              "label": "Hiệu ứng sau khi debuff kết thúc:",
+              "before": "+25% sát thương trong 4 giây",
+              "after": "giữ nguyên."
+            },
+            {
+              "text": "**MỚI:** **giảm 10% thời gian hiệu lực của debuff.**",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Một debuff khác kết thúc vẫn làm mới thời gian tăng sát thương.",
+              "format": "bullet"
+            }
+          ]
+        },
+        {
+          "id": "section-7-entry-82",
+          "title": "Phát Đạn Khai Màn",
+          "icon": {
+            "kind": "core",
+            "id": "117"
+          },
+          "rationale": "Điều chỉnh power budget để Lõi có giá trị rõ ràng trong build phù hợp và giảm chênh lệch giữa lựa chọn mạnh/yếu.",
+          "changes": [
+            {
+              "text": "**TRƯỚC:**",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "Phát bắn thường đầu tiên trúng mỗi kẻ địch luôn chí mạng một lần.",
+              "format": "bullet"
+            },
+            {
+              "text": "**SAU:**",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "**Quái thường:** **giữ nguyên cơ chế một lần.**",
+              "format": "bullet",
+              "changeType": "unchanged"
+            },
+            {
+              "text": "**Tinh Anh/Boss:** **quyền “phát mở màn chí mạng” được làm mới sau 10 giây trên cùng mục tiêu.**",
+              "format": "bullet"
+            }
+          ]
+        },
+        {
+          "id": "section-7-entry-83",
+          "title": "Càng Đông Càng Vui",
+          "icon": {
+            "kind": "core",
+            "id": "118"
+          },
+          "rationale": "Điều chỉnh power budget để Lõi có giá trị rõ ràng trong build phù hợp và giảm chênh lệch giữa lựa chọn mạnh/yếu.",
+          "changes": [
+            {
+              "text": "**Sát thương cộng thêm cho mỗi kẻ địch vượt quân số phe người chơi:** **+1,5% ⇒ +1,5%.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Sát thương cộng thêm cho mỗi kẻ địch vượt quân số phe người chơi:",
+              "before": "+1,5%",
+              "after": "+1,5%."
+            },
+            {
+              "text": "**MỚI:** **giới hạn tổng bonus ở +18%.**",
+              "format": "bullet",
+              "changeType": "new"
+            }
+          ]
+        },
+        {
+          "id": "section-7-entry-84",
+          "title": "Kéo Dãn Thời Gian",
+          "icon": {
+            "kind": "core",
+            "id": "119"
+          },
+          "rationale": "Mở rộng vùng kiểm soát và cho Field đi theo Player để Lõi có giá trị rõ ràng hơn trong bullet hell.",
+          "changes": [
+            {
+              "text": "**Bán kính Chrono Field:** **55px ⇒ 80px.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Bán kính Chrono Field:",
+              "before": "55px",
+              "after": "80px."
+            },
+            {
+              "text": "**Thời gian tồn tại:** **3 giây ⇒ 4 giây.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Thời gian tồn tại:",
+              "before": "3 giây",
+              "after": "4 giây."
+            },
+            {
+              "text": "**Vị trí Field:** **đứng yên tại nơi kích hoạt ⇒ đi theo người chơi.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Vị trí Field:",
+              "before": "đứng yên tại nơi kích hoạt",
+              "after": "đi theo người chơi."
+            },
+            {
+              "text": "**Giảm tốc projectile địch:** **40% ⇒ 45%.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Giảm tốc projectile địch:",
+              "before": "40%",
+              "after": "45%."
+            }
+          ]
+        },
+        {
+          "id": "section-7-entry-85",
+          "title": "Đoạt Quyền Điều Khiển",
+          "icon": {
+            "kind": "core",
+            "id": "120"
+          },
+          "rationale": "Giảm hiệu lực lên Elite/Boss và tăng hồi nội tại để giữ utility mạnh nhưng tránh khóa mục tiêu quan trọng quá lâu.",
+          "changes": [
+            {
+              "text": "**Quái thường:** **tối đa 3 mục tiêu trong 6 giây ⇒ tối đa 3 mục tiêu trong 6 giây.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Quái thường:",
+              "before": "tối đa 3 mục tiêu trong 6 giây",
+              "after": "tối đa 3 mục tiêu trong 6 giây."
+            },
+            {
+              "text": "**Tinh Anh:** **1 mục tiêu trong 6 giây ⇒ 1 mục tiêu trong 4 giây.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Tinh Anh:",
+              "before": "1 mục tiêu trong 6 giây",
+              "after": "1 mục tiêu trong 4 giây."
+            },
+            {
+              "text": "**Boss:** **choáng 2,5 giây ⇒ choáng 1,25 giây.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Boss:",
+              "before": "choáng 2,5 giây",
+              "after": "choáng 1,25 giây."
+            },
+            {
+              "text": "**Hồi nội tại sau khi hiệu ứng kết thúc:** **16 giây ⇒ 18 giây.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Hồi nội tại sau khi hiệu ứng kết thúc:",
+              "before": "16 giây",
+              "after": "18 giây."
+            }
+          ]
+        },
+        {
+          "id": "section-7-entry-86",
+          "title": "Kho Phản Vật Chất",
+          "icon": {
+            "kind": "core",
+            "id": "121"
+          },
+          "rationale": "Tăng tốc tích kho từ damage hữu ích nhưng hạ trần tối đa để giảm burst cực đoan ở cuối chuỗi.",
+          "changes": [
+            {
+              "text": "**Tỷ lệ tích sát thương dư khi hạ quái thường:** **50% ⇒ 60%.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Tỷ lệ tích sát thương dư khi hạ quái thường:",
+              "before": "50%",
+              "after": "60%."
+            },
+            {
+              "text": "**Tỷ lệ tích sát thương thực tế lên Tinh Anh/Boss:** **2% ⇒ 3%.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Tỷ lệ tích sát thương thực tế lên Tinh Anh/Boss:",
+              "before": "2%",
+              "after": "3%."
+            },
+            {
+              "text": "**Giới hạn kho:** **600% Hỏa Lực ⇒ 500% Hỏa Lực.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Giới hạn kho:",
+              "before": "600% Hỏa Lực",
+              "after": "500% Hỏa Lực."
+            },
+            {
+              "text": "Dùng kỹ năng vẫn xả toàn bộ kho thành xung chấn toàn màn hình và đặt kho về 0.",
+              "format": "bullet"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "section-8",
+      "title": "GIAO DIỆN & TRẢI NGHIỆM",
+      "icon": {
+        "kind": "system",
+        "id": "change"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "section-8-entry-1",
+          "title": "CHUYỂN CẢNH GIỮA CÁC MÀN HÌNH",
+          "icon": {
+            "kind": "system",
+            "id": "motion"
+          },
+          "rationale": "Làm trải nghiệm menu liền mạch hơn mà không thay đổi layout hay gameplay.",
+          "changes": [
+            {
+              "text": "**Giải Trí ⇒ Không Kích Main Menu**\n**TRƯỚC:**",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "Chuyển component gần như trực tiếp.",
+              "format": "bullet"
+            },
+            {
+              "text": "**SAU:**",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "Screen cũ fade/blur nhẹ.",
+              "format": "bullet"
+            },
+            {
+              "text": "Background Không Kích xuất hiện trước.",
+              "format": "bullet"
+            },
+            {
+              "text": "Title, aircraft và CTA xuất hiện theo stagger.",
+              "format": "bullet"
+            },
+            {
+              "text": "**Thời lượng tổng mục tiêu:** **khoảng 350–450ms.**",
+              "format": "bullet"
+            },
+            {
+              "text": "**Main Menu ⇒ Chọn Màn**\n**TRƯỚC:**",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "Nội dung đổi tương đối trực tiếp.",
+              "format": "bullet"
+            },
+            {
+              "text": "**SAU:**",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "Background giữ continuity.",
+              "format": "bullet"
+            },
+            {
+              "text": "Hero/title fade và translate nhẹ.",
+              "format": "bullet"
+            },
+            {
+              "text": "**Stage Card:** **opacity 0 ⇒ 1.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Stage Card:",
+              "before": "opacity 0",
+              "after": "1."
+            },
+            {
+              "text": "**Stage Card:** **translateY khoảng +14px ⇒ 0.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Stage Card:",
+              "before": "translateY khoảng +14px",
+              "after": "0."
+            },
+            {
+              "text": "**Stage Card:** **scale khoảng 0,985 ⇒ 1.**",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Stage Card:",
+              "before": "scale khoảng 0,985",
+              "after": "1."
+            },
+            {
+              "text": "**Stagger giữa các card:** **khoảng 50–70ms.**",
+              "format": "bullet"
+            },
+            {
+              "text": "**Chọn Màn ⇒ Chọn Chiến Cơ**\n**TRƯỚC:**",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "Panel đổi tương đối trực tiếp.",
+              "format": "bullet"
+            },
+            {
+              "text": "**SAU:**",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "Stage Card/Panel có exit motion nhẹ.",
+              "format": "bullet"
+            },
+            {
+              "text": "Aircraft Selection xuất hiện mềm hơn.",
+              "format": "bullet"
+            },
+            {
+              "text": "Layout Aircraft Card không thay đổi.",
+              "format": "bullet"
+            }
+          ]
+        },
+        {
+          "id": "section-8-entry-2",
+          "title": "MODAL / OVERLAY",
+          "icon": {
+            "kind": "system",
+            "id": "ui"
+          },
+          "rationale": "Chuẩn hóa enter/exit motion để các popup không còn xuất hiện hoặc biến mất đột ngột.",
+          "changes": [
+            {
+              "text": "Áp dụng cho danh sách Lõi đã chọn, Tạm dừng, Tooltip, bảng thông tin/status, Chi tiết cập nhật và các modal tương đương.",
+              "format": "paragraph"
+            },
+            {
+              "text": "**TRƯỚC:**",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "Nhiều popup xuất hiện/biến mất nhanh, một số trường hợp unmount gần như tức thì.",
+              "format": "bullet"
+            },
+            {
+              "text": "**SAU:**",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "Enter/Exit motion thống nhất.",
+              "format": "bullet"
+            },
+            {
+              "text": "**Thời lượng mục tiêu:** **khoảng 260–320ms.**",
+              "format": "bullet"
+            },
+            {
+              "text": "**Easing mục tiêu:** **cubic-bezier(.22, 1, .36, 1).**",
+              "format": "bullet"
+            },
+            {
+              "text": "Reduced Motion giảm translate/scale và giữ fade ngắn thay vì tắt chức năng.",
+              "format": "bullet"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "section-9",
+      "title": "CHI TIẾT CẬP NHẬT",
+      "icon": {
+        "kind": "system",
+        "id": "change"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "section-9-entry-1",
+          "title": "MỚI – VERSION KHÔNG KÍCH",
+          "icon": {
+            "kind": "system",
+            "id": "version"
+          },
+          "rationale": "Làm thay đổi này rõ ràng, nhất quán và dễ đọc hơn trong trải nghiệm chiến đấu thực tế.",
+          "changes": [
+            {
+              "text": "Không Kích sử dụng quy ước:\nYY.MAJOR.PATCH",
+              "format": "paragraph"
+            },
+            {
+              "text": "Phiên bản hiện tại:\n26.7.1",
+              "format": "paragraph"
+            }
+          ]
+        },
+        {
+          "id": "section-9-entry-2",
+          "title": "MỚI – NÚT CHI TIẾT CẬP NHẬT",
+          "icon": {
+            "kind": "system",
+            "id": "release"
+          },
+          "rationale": "Làm thay đổi này rõ ràng, nhất quán và dễ đọc hơn trong trải nghiệm chiến đấu thực tế.",
+          "changes": [
+            {
+              "text": "Main Menu Không Kích giờ có thêm secondary action:\nCHI TIẾT CẬP NHẬT · v26.7.1",
+              "format": "paragraph"
+            },
+            {
+              "text": "Nút có hierarchy thấp hơn BẮT ĐẦU GAME.",
+              "format": "bullet"
+            },
+            {
+              "text": "Bấm vào mở modal/sheet Chi tiết cập nhật.",
+              "format": "bullet"
+            },
+            {
+              "text": "Nội dung có thể cuộn.",
+              "format": "bullet"
+            },
+            {
+              "text": "Có nút đóng / X.",
+              "format": "bullet"
+            },
+            {
+              "text": "Modal sử dụng cùng motion system mới của Không Kích.",
+              "format": "bullet"
+            },
+            {
+              "text": "Đây là nơi người chơi có thể xem đầy đủ các thay đổi của phiên bản mới nhất ngay trong game.",
+              "format": "paragraph"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

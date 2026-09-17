@@ -19,12 +19,14 @@ interface TempestScheduler {
 }
 interface Beam { from: Point; end: Point; radius: number; active: boolean }
 interface MagneticLane {
+  areaId?: number;
   owner: number; from: Point; end: Point; age: number; warning: number; duration: number;
   damage: number; width: number; wall?: -1 | 1; nextHit: number;
 }
 type EliteSkill = "assault" | "cyclone_blades" | "curtain" | "cross_prism" | "carpet" | "chase"
   | "shift" | "sweep" | "polarity" | "repulse" | "swarm" | "suppress" | "reversal" | "recall";
 interface EliteSequence {
+  id: number;
   skill: EliteSkill; age: number; step: number; next: number; warning: number; aim: number;
   target: Point; origin: Point; pass: number; mode: "warning" | "dash" | "turnaround" | "fire";
 }
@@ -50,7 +52,7 @@ export interface MagneticProjectileState {
   recalls?: number; splitElite?: boolean;
   phase: "outbound" | "turn" | "return"; baseAngle: number;
 }
-interface Mine extends Point { id: number; owner: number; sourceType: EnemyType; damage: number; age: number; warning: number; exploded: boolean; startY: number; targetY: number; fuse?: number; flight?: number; kind?: "bomb" | "field"; payload?: StatusPayload }
+interface Mine extends Point { id: number; areaId?: number; owner: number; sourceType: EnemyType; damage: number; age: number; warning: number; exploded: boolean; startY: number; targetY: number; fuse?: number; flight?: number; kind?: "bomb" | "field"; payload?: StatusPayload }
 export interface MagneticWorldState {
   mines: Mine[];
   scheduler?: TempestScheduler;
@@ -59,11 +61,11 @@ export interface MagneticWorldState {
   beams?: Beam[];
   lanes?: MagneticLane[];
   corridor?: { x: number; half: number };
-  trails?: {owner:number;from:Point;end:Point;until:number;damage:number;hitAt:number}[];
+  trails?: {owner:number;areaId:number;from:Point;end:Point;until:number;damage:number;hitAt:number}[];
   impact?: {at:number;strength:number};
 
   effects?: { id: number; key: MagneticVfxKey; x: number; y: number; size: number; at: number; duration: number; rotation: number }[];
-  polarity?: { owner: number; age: number; warning: number; duration: number };
+  polarity?: { owner: number; areaId: number; age: number; warning: number; duration: number };
   guardBroken?: boolean;
   playerMotion?: { x: number; y: number; vx: number; vy: number };
 }
@@ -114,6 +116,7 @@ function bullet(w: CombatWorld, e: EnemyEntity, h: MagneticHooks, angle: number,
     : e.type === "prism_manta" ? "prismOrb" : e.type === "arc_reaver" ? "arcBolt"
     : e.type === "micro_drone" ? "microSpark" : "needleBolt";
   const shot = h.projectile(w, { owner: "enemy", sourceEnemyId: e.id, sourceEnemyType: e.type, x: e.x, y: e.y,
+    magneticAreaId: e.magnetic?.elite && AREA_SKILLS.includes(e.magnetic.elite.skill) ? e.magnetic.elite.id : undefined,
     vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed, rawDamage: damage(e) * factor,
     radius, criticalAttack: ELITE_TYPES.includes(e.type), lifetime: e.type === "boss" || e.type === "satellite" ? 4.8 : 6, color: "#67e8f9", magneticVisual: visual });
   if (shot) magneticFx(w, e.type === "boss" || e.type === "cyclone_ace" ? "eliteMuzzle" : "smallMuzzle", e.x, e.y, e.radius * 1.2, .14, angle + Math.PI);
@@ -554,7 +557,7 @@ function fan(w:CombatWorld,e:EnemyEntity,h:MagneticHooks,count:number,spacing:nu
 function addMine(w:CombatWorld,e:EnemyEntity,at:Point,fuse:number,raw:number,flight=0,payload?:StatusPayload,kind:Mine["kind"]="bomb") {
   const m=w.magnetic!;
   if(m.mines.length+(m.lanes?.length??0)+w.warnings.length>=AIR_COMBAT_WORLD.maxWarnings)return;
-  m.mines.push({...at,id:w.nextId++,owner:e.id,sourceType:e.type,damage:raw*e.damageScale,age:0,warning:0,exploded:false,
+  m.mines.push({...at,id:w.nextId++,areaId:e.magnetic?.elite?.id,owner:e.id,sourceType:e.type,damage:raw*e.damageScale,age:0,warning:0,exploded:false,
     startY:flight?e.y:at.y,targetY:at.y,fuse,flight,payload,kind});
 }
 
@@ -572,20 +575,20 @@ function updateEliteDirector(w:CombatWorld,dt:number,h:MagneticHooks) {
   const gap=wave.elite===1?1.5:1.2;
   if(!owner) { d.event=(d.event+1)%events.length;d.nextAt=w.elapsed+gap;return; }
   if(owner.stun>0||(owner.skillLockedUntil??0)>w.elapsed||state(owner).elite){d.nextAt=w.elapsed+.1;return;}
-  // Reservations include complete lingering mechanics, rather than counting
-  // each lane/mine as an independent event. At most two area owners overlap.
+  // Count casts, not owners: a Warden's lingering carpet and a later chase
+  // are two mechanics. All mines/lanes/projectiles from one cast share its ID.
   const controls=new Set<number>();
-  for(const e of w.enemies)if(e.hp>0&&e.magnetic?.elite && AREA_SKILLS.includes(e.magnetic.elite.skill))controls.add(e.id);
-  for(const lane of m.lanes??[])controls.add(lane.owner);
-  for(const mine of m.mines)if(!mine.exploded)controls.add(mine.owner);
-  for(const trail of m.trails??[])controls.add(trail.owner);
-  if(m.polarity)controls.add(m.polarity.owner);
-  for(const p of w.projectiles)if(p.magnetic?.kind==="disc"&&p.lifetime>0&&p.sourceEnemyId)controls.add(p.sourceEnemyId);
+  for(const e of w.enemies)if(e.hp>0&&e.magnetic?.elite && AREA_SKILLS.includes(e.magnetic.elite.skill))controls.add(e.magnetic.elite.id);
+  for(const lane of m.lanes??[])controls.add(lane.areaId??lane.owner);
+  for(const mine of m.mines)if(!mine.exploded)controls.add(mine.areaId??mine.owner);
+  for(const trail of m.trails??[])controls.add(trail.areaId);
+  if(m.polarity)controls.add(m.polarity.areaId);
+  for(const p of w.projectiles)if(p.lifetime>0&&p.magneticAreaId!==undefined)controls.add(p.magneticAreaId);
   // Forced movement must not push the player across an active geometry wall.
   const geometryBusy=!!(m.lanes?.length||m.trails?.length||m.polarity);
   if((AREA_SKILLS.includes(skill) && controls.size>=2) || (geometryBusy && ["polarity","repulse","shift","sweep","assault"].includes(skill)) || (m.mines.some(mine=>!mine.exploded) && ["assault","cross_prism"].includes(skill))) {d.nextAt=w.elapsed+.1;return;}
   const warning=skill==="assault"?.65:skill==="shift"?.7:skill==="sweep"?.75:skill==="repulse"?.7:skill==="cross_prism"?.65:.6;
-  state(owner).elite={skill,age:0,step:0,next:warning,warning,aim:Math.atan2(w.playerY-owner.y,w.playerX-owner.x),
+  state(owner).elite={id:w.nextId++,skill,age:0,step:0,next:warning,warning,aim:Math.atan2(w.playerY-owner.y,w.playerX-owner.x),
     target:{x:w.playerX,y:w.playerY},origin:{x:owner.x,y:owner.y},pass:0,mode:"warning"};
   if(skill === "assault") lockAssaultTarget(owner, state(owner).elite!);
   magneticFx(w,"beamCharge",owner.x,owner.y,owner.radius*2,warning);
@@ -604,7 +607,7 @@ function returning(w:CombatWorld,e:EnemyEntity,h:MagneticHooks,angle:number,raw:
 function addLane(w:CombatWorld,e:EnemyEntity,from:Point,end:Point,warning:number,duration:number,wall?:-1|1) {
   const lanes=w.magnetic!.lanes??=[];
   if(lanes.length>=12||lanes.length+w.magnetic!.mines.length+w.warnings.length>=AIR_COMBAT_WORLD.maxWarnings)return;
-  lanes.push({owner:e.id,from:{...from},end:{...end},warning,duration,wall,age:0,width:5,damage:damage(e),nextHit:warning});
+  lanes.push({owner:e.id,areaId:e.magnetic?.elite?.id,from:{...from},end:{...end},warning,duration,wall,age:0,width:5,damage:damage(e),nextHit:warning});
 }
 function spawnMicroWave(w:CombatWorld,e:EnemyEntity,h:MagneticHooks,side:number) {
   const anchor=point(w.playerX,w.playerY,110);
@@ -615,6 +618,18 @@ function spawnMicroWave(w:CombatWorld,e:EnemyEntity,h:MagneticHooks,side:number)
     drone.magnetic={clock:0,attack:0,anchorX:anchor.x,anchorY:anchor.y,angle:-Math.PI+i*Math.PI/3+(side>0?.4:0),owner:e.id,slot:i};
     magneticFx(w,"droneSpawn",drone.x,drone.y,25,.3);
   }
+}
+/** Two genuine five-shard fans from fixed virtual emitters. Their crossings
+ * stay in the upper field, leaving the lower escape corridor unobstructed. */
+function crossPrismRays() {
+  return [-1,1].flatMap(side => {
+    const from={x:180+side*140,y:RECT.top+55};
+    const aim=Math.atan2(180,-side*285);
+    return Array.from({length:5},(_,index)=>{
+      const angle=aim+(index-2)*2*Math.PI/180;
+      return {from,angle,end:{x:from.x+Math.cos(angle)*335,y:from.y+Math.sin(angle)*335}};
+    });
+  });
 }
 function updateElite(w:CombatWorld,e:EnemyEntity,dt:number,h:MagneticHooks,canFire:boolean) {
   const s=state(e),q=s.elite,m=w.magnetic!;
@@ -643,7 +658,7 @@ function updateElite(w:CombatWorld,e:EnemyEntity,dt:number,h:MagneticHooks,canFi
     }
     s.elite=undefined;return;
   }
-  if(q.step===0&&q.skill==="polarity") {m.polarity={owner:e.id,age:0,warning:.6,duration:2.2};s.elite=undefined;return;}
+  if(q.step===0&&q.skill==="polarity") {m.polarity={owner:e.id,areaId:q.id,age:0,warning:.6,duration:2.2};s.elite=undefined;return;}
   if(q.age<q.next)return;
   const aim=Math.atan2(w.playerY-e.y,w.playerX-e.x);
   switch(q.skill) {
@@ -659,11 +674,9 @@ function updateElite(w:CombatWorld,e:EnemyEntity,dt:number,h:MagneticHooks,canFi
     case "cross_prism":
       // Fans cross in the upper field, then diverge outside the lower 88px
       // corridor. Their fixed vectors never retarget the player.
-      for(const side of [-1,1])for(let i=0;i<5;i++) {
-        const origin={x:180+side*140,y:RECT.top+55+i*9},end={x:180-side*145,y:RECT.top+235+i*9};
-        const a=Math.atan2(end.y-origin.y,end.x-origin.x);
-        const p=bullet(w,e,h,a,165,.45,4);
-        if(p){p.x=p.previousX=origin.x;p.y=p.previousY=origin.y;p.magneticVisual="prismShard";p.lifetime=2.4;}
+      for(const ray of crossPrismRays()) {
+        const p=bullet(w,e,h,ray.angle,165,.45,4);
+        if(p){p.x=p.previousX=ray.from.x;p.y=p.previousY=ray.from.y;p.magneticVisual="prismShard";p.lifetime=2.4;}
       }
       break;
     case "carpet": {
@@ -716,7 +729,7 @@ function updateAssault(w:CombatWorld,e:EnemyEntity,q:EliteSequence,dt:number,h:M
   drift(e,q.target,280,dt);
   const trails=w.magnetic!.trails??=[];
   let trail=trails.find(t=>t.owner===e.id&&t.from===q.origin);
-  if(!trail&&trails.length<9){trail={owner:e.id,from:q.origin,end:{x:e.x,y:e.y},until:w.elapsed+1,damage:62.244*e.damageScale,hitAt:0};trails.push(trail);}
+  if(!trail&&trails.length<9){trail={owner:e.id,areaId:q.id,from:q.origin,end:{x:e.x,y:e.y},until:w.elapsed+1,damage:62.244*e.damageScale,hitAt:0};trails.push(trail);}
   if(trail){trail.end={x:e.x,y:e.y};trail.until=w.elapsed+1;}
   if(Math.hypot(e.x-q.target.x,e.y-q.target.y)>1)return;
   if(++q.pass<3){q.mode="turnaround";q.age=0;return;}
@@ -807,7 +820,11 @@ function paintGeometry(w:CombatWorld,p:MagneticPainter) {
       if(q.skill==="repulse") {
         for(const side of [-1,1]){const a=q.aim+side*Math.PI/6;p.line(e.x,e.y,e.x+Math.cos(a)*260,e.y+Math.sin(a)*260,0x67e8f9,.65,2);}
       }
-      if(q.skill==="cross_prism"||q.skill==="recall")for(const side of [-1,1])p.line(180+side*140,RECT.top+55,180-side*140,RECT.top+235,0xfde047,.6,2);
+      if(q.skill==="cross_prism")for(const ray of crossPrismRays()) {
+        p.circle(ray.from.x,ray.from.y,9,0xc4b5fd,.8);
+        p.line(ray.from.x,ray.from.y,ray.end.x,ray.end.y,0xfde047,.55,1);
+      }
+      if(q.skill==="recall")for(const side of [-1,1])p.line(180+side*140,RECT.top+55,180-side*140,RECT.top+235,0xfde047,.6,2);
     }
     if(["orbit_wasp","arc_reaver","prism_manta"].includes(e.type)&&e.fireCooldown<.45) {
       const a=Math.atan2(w.playerY-e.y,w.playerX-e.x);

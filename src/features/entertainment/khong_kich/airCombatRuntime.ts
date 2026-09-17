@@ -102,6 +102,7 @@ export interface EnemyEntity {
 }
 export interface ProjectileEntity extends AttackMetadata {
     magnetic?: MagneticProjectileState;
+    magneticAreaId?: number;
     magneticVisual?: MagneticVfxKey;
     salvoId?: number;
     interceptCount?: number;
@@ -646,7 +647,7 @@ function addProjectile(world: CombatWorld, values: Partial<ProjectileEntity> & P
         owner: values.owner,
         allegiance: values.allegiance ?? (values.owner === "enemy" ? enemyAllegiance(world,world.enemies.find(e=>e.id===values.sourceEnemyId)) : "player"),
         delivery:values.delivery??"direct_projectile", grazeCandidate:false, playerContact:false,
-        magneticVisual: values.magneticVisual, appearance: values.appearance, ammoVisualKey: values.ammoVisualKey,
+        magneticVisual: values.magneticVisual, magneticAreaId: values.magneticAreaId, appearance: values.appearance, ammoVisualKey: values.ammoVisualKey,
         sourceEnemyId: values.sourceEnemyId, sourceEnemyType: values.sourceEnemyType, attackTag: values.attackTag, majorBossAttack: values.majorBossAttack, payload: values.payload,
         criticalAttack: values.criticalAttack ?? false,
         suppressive: values.suppressive ?? false, allowOffscreenEntry: values.allowOffscreenEntry ?? false, corridorEdge: values.corridorEdge, corridorSide: values.corridorSide,

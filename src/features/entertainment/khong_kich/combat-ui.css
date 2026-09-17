@@ -201,10 +201,60 @@
 .air-campaign-hero>*:nth-child(3) {animation-delay:80ms;}
 .air-campaign-hero>*:nth-child(n+4) {animation-delay:120ms;}
 .air-release-button {display:block;margin:14px auto 0;padding:10px 16px;border:1px solid #a5b4fc66;border-radius:12px;background:#0f172aaa;color:#c7d2fe;font-size:11px;font-weight:700;}
-.air-release-copy {font-size:13px;line-height:1.65;}
-.air-release-copy p {margin:0 0 14px;}
-.air-release-copy h3 {margin:22px 0 10px;font-size:13px;font-weight:800;color:#67e8f9;}
-.air-release-values {white-space:pre-wrap;overflow-wrap:anywhere;background:#02061788;border-radius:10px;padding:12px;font-size:11px;line-height:1.65;margin-bottom:14px;}
+.air-release-panel{width:min(100%,760px);max-height:100%;display:flex;flex-direction:column;overflow:hidden;}
+.air-release-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-shrink:0;}
+.air-release-heading{min-width:0;}
+.air-release-heading h2{font-size:clamp(15px,4vw,20px);font-weight:850;letter-spacing:.035em;color:#f1f5f9;line-height:1.4;}
+.air-release-back{display:flex;align-items:center;gap:6px;color:#a5b4fc;font-size:12px;margin-bottom:10px;min-height:32px;}
+.air-release-date{display:flex;align-items:center;flex-wrap:wrap;gap:7px;color:#94a3b8;font-size:11px;margin-top:7px;}
+.air-release-latest,.air-release-chip{display:inline-flex;align-items:center;width:fit-content;border:1px solid #67e8f944;border-radius:6px;padding:3px 6px;font-size:9px;line-height:1.3;font-weight:800;letter-spacing:.035em;color:#a5f3fc;background:#164e6344;white-space:nowrap;}
+.air-release-copy{min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-gutter:stable;-webkit-overflow-scrolling:touch;font-size:13px;line-height:1.75;color:#cbd5e1;overflow-wrap:anywhere;}
+.air-release-copy strong{font-weight:750;color:#f1f5f9;}
+.air-release-history{display:grid;gap:12px;padding:4px 0 10px;}
+.air-release-history-item{display:flex;align-items:center;gap:13px;width:100%;padding:17px 14px;border:1px solid #47556988;border-radius:14px;background:linear-gradient(125deg,#172139,#0c1526);text-align:left;color:#cbd5e1;transition:border-color .15s,background .15s;}
+.air-release-history-item:first-child{border-color:#818cf877;background:linear-gradient(125deg,#242445,#101a30);}
+.air-release-history-item:hover{border-color:#a5b4fc;}
+.air-release-history-item:focus-visible,.air-release-back:focus-visible{outline:2px solid #67e8f9;outline-offset:3px;}
+.air-release-history-symbol{display:grid;place-items:center;flex-shrink:0;width:44px;height:44px;border:1px solid #818cf844;border-radius:12px;background:#818cf815;color:#c4b5fd;}
+.air-release-history-content{display:grid;gap:4px;flex:1;min-width:0;}
+.air-release-history-version{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:17px;}
+.air-release-history-title{font-size:12px;line-height:1.5;color:#cbd5e1;}
+.air-release-history-content .air-release-date{margin-top:2px;}
+.air-release-summary{padding:4px 2px 8px;color:#b6c2d4;}
+.air-release-summary p{margin:0 0 14px;white-space:pre-line;}
+.air-release-section{margin:26px 0 8px;}
+.air-release-section-header{display:flex;align-items:flex-start;gap:10px;margin-bottom:14px;}
+.air-release-section-header h3{font-size:12px;line-height:1.55;font-weight:850;letter-spacing:.045em;color:#a5f3fc;}
+.air-release-section-number{font-size:10px;font-weight:800;color:#818cf8;line-height:1.9;font-variant-numeric:tabular-nums;}
+.air-release-card{padding:14px;border:1px solid #334155bb;border-radius:13px;margin:10px 0;background:#0a1425a6;}
+.air-release-card-header{display:flex;align-items:flex-start;gap:12px;}
+.air-release-card-header>div{flex:1;min-width:0;}
+.air-release-card h4,.air-release-group h4{font-size:14px;line-height:1.5;font-weight:800;color:#f1f5f9;margin:0;}
+.air-release-rationale{margin:5px 0 0;color:#94a3b8;font-size:12px;line-height:1.7;white-space:pre-line;}
+.air-release-entity-icon{display:inline-grid!important;place-items:center;position:relative;flex:0 0 44px!important;width:44px!important;height:44px!important;border-radius:10px;overflow:hidden;background:#02061766;}
+.air-release-system-icon{color:#a5b4fc;border:1px solid #818cf833;}
+.air-release-atlas{position:relative;width:100%;height:100%;overflow:hidden;display:block;}
+.air-release-atlas img{position:absolute;max-width:none!important;object-fit:fill;pointer-events:none;}
+.air-release-changes{margin-top:12px;display:grid;gap:0;}
+.air-release-comparison{display:grid;gap:4px;}
+.air-release-comparison-label{color:#a8b6ca;font-size:12px;}
+.air-release-comparison-values{display:flex;align-items:baseline;flex-wrap:wrap;gap:8px;}
+.air-release-comparison-values .air-release-before{color:#a8b6ca;}
+.air-release-arrow{color:#67e8f9;font-size:16px;font-weight:800;}
+.air-release-row{padding:8px 0;border-top:1px solid #33415566;white-space:pre-line;}
+.air-release-row:first-child{border-top:0;}
+.air-release-row--bullet{padding-left:12px;border-left:2px solid #47556977;}
+.air-release-row[data-change="change"]{border-left:2px solid #818cf866;padding-left:12px;background:linear-gradient(90deg,#818cf808,transparent);}
+.air-release-chip{margin-bottom:5px;}
+.air-release-row[data-change="removed"] .air-release-chip{color:#fda4af;border-color:#fb718544;background:#88133733;}
+.air-release-row[data-change="unchanged"] .air-release-chip{color:#cbd5e1;border-color:#64748b66;background:#33415544;}
+.air-release-row[data-change="note"] .air-release-chip{color:#fde68a;border-color:#fbbf2444;background:#78350f33;}
+.air-release-intro{display:flex;gap:12px;align-items:flex-start;}
+.air-release-intro .air-release-changes{min-width:0;flex:1;margin-top:0;}
+.air-release-group{margin:24px 0 12px;padding:12px 0;border-bottom:1px solid #818cf855;}
+.air-release-group h4{font-size:12px;color:#c4b5fd;}
+.air-release-footer{display:flex;flex-shrink:0;justify-content:flex-end;gap:8px;flex-wrap:wrap;}
+@media(max-width:480px){.air-release-card{padding:12px;}.air-release-card-header{gap:10px;}.air-release-intro{display:block;}.air-release-intro>.air-release-entity-icon{margin-bottom:8px;}.air-release-copy{font-size:12px;}.air-release-footer button{font-size:11px;}}
 .air-motion-modal {animation:air-fade-in 280ms cubic-bezier(.22,1,.36,1) both;}
 .air-motion-modal .app-overlay__panel {animation:air-panel-enter 280ms cubic-bezier(.22,1,.36,1) both;}
 .air-motion-modal.air-motion-exit {animation:air-fade-out 280ms cubic-bezier(.22,1,.36,1) both;pointer-events:none;}

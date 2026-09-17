@@ -1,3 +1,4 @@
+import { ENEMY_VISUALS } from "../airCombatEnemyArt";
 import { STAGE2_ART_URLS, STAGE2_ENEMY_ART, STAGE2_VFX_ART, TEMPEST_WEAKPOINT_ART } from "../airCombatStage2Art";
 import { PLAYER_STANDARD_AIRFRAME_SIZE } from "../airCombatHitboxes";
 import { PLAYER_ARTWORK } from "../airCombatArtwork";
@@ -13,7 +14,7 @@ import { Assets, Rectangle, Texture } from "pixi.js";
 import aircraftUrl from "../../../../assets/khong-kich/v2/aircraft-atlas.png";
 import fortressUrl from "../../../../assets/khong-kich/v2/fortress-clouds-atlas.png";
 import vfxUrl from "../../../../assets/khong-kich/v2/vfx-atlas.png";
-import type { AircraftId, EnemyType } from "../airCombatTypes";
+import type { AircraftId } from "../airCombatTypes";
 import type { AircraftVisualDefinition, AtlasFrame } from "./airCombatPixiTypes";
 
 const cell = (atlas: AtlasFrame["atlas"], x: number, y: number): AtlasFrame => ({ atlas, rect: [x / 4, y / 4, 0.25, 0.25] });
@@ -22,31 +23,7 @@ export const AIRCRAFT_VISUALS: Record<AircraftId, AircraftVisualDefinition> = {
   breaker: { neutral: cell("aircraft", 0, 1), left: cell("aircraft", 1, 1), right: cell("aircraft", 2, 1), size: PLAYER_STANDARD_AIRFRAME_SIZE, artwork: PLAYER_ARTWORK.breaker, tint: 0xfbbf24 },
   phantom: { neutral: cell("aircraft", 0, 2), left: cell("aircraft", 1, 2), right: cell("aircraft", 2, 2), size: PLAYER_STANDARD_AIRFRAME_SIZE, artwork: PLAYER_ARTWORK.phantom, tint: 0xc4b5fd },
 };
-export const ENEMY_VISUALS: Record<EnemyType, AtlasFrame> = {
-  prism_sovereign: STAGE2_ENEMY_ART.prism_sovereign!,
-  mine_warden: STAGE2_ENEMY_ART.mine_warden!,
-  polarity_warden: STAGE2_ENEMY_ART.polarity_warden!,
-  swarm_overlord: STAGE2_ENEMY_ART.swarm_overlord!,
-  arc_reaver_prime: STAGE2_ENEMY_ART.arc_reaver_prime!,
-  orbit_wasp: STAGE2_ENEMY_ART.orbit_wasp!,
-  arc_reaver: STAGE2_ENEMY_ART.arc_reaver!,
-  mine_seeder: STAGE2_ENEMY_ART.mine_seeder!,
-  magnetic_leech: STAGE2_ENEMY_ART.magnetic_leech!,
-  prism_manta: STAGE2_ENEMY_ART.prism_manta!,
-  swarm_carrier: STAGE2_ENEMY_ART.swarm_carrier!,
-  micro_drone: STAGE2_ENEMY_ART.micro_drone!,
-  cyclone_ace: STAGE2_ENEMY_ART.cyclone_ace!,
-  grid_architect: STAGE2_ENEMY_ART.grid_architect!,
-  satellite: STAGE2_ENEMY_ART.satellite!,
-  scout: cell("aircraft", 3, 1), fighter: cell("aircraft", 3, 2),
-  attacker: cell("aircraft", 0, 3), kamikaze: cell("aircraft", 1, 3),
-  bomber: cell("aircraft", 2, 3), elite: cell("aircraft", 3, 3),
-  // The generated fortress spans 56% of the sheet; explicit trims avoid clipping its wings.
-  boss: { atlas: "fortress", rect: [0, 0, 0.56, 0.51] },
-  sniper: cell("aircraft",3,2), jammer: cell("aircraft",3,1),
-  iron_fortress: { atlas: "fortress", rect: [0.56, 0, 0.44, 0.51] },
-  acid_bomber:cell("aircraft",2,3), radar_hunter:cell("aircraft",3,3),
-};
+export { ENEMY_VISUALS } from "../airCombatEnemyArt";
 const ammoFrames = Object.fromEntries(Object.entries(AMMO_VISUALS).map(([key,v]) => [key,key.endsWith("_basic_ammo")?{atlas:"basicAmmo",rect:[v.cell[0]/3,0,1/3,1/2]}:cell("ammo",v.cell[0],v.cell[1])])) as Record<AmmoVisualKey,AtlasFrame>;
 export const VFX_VISUALS = {
   ...STAGE2_VFX_ART,

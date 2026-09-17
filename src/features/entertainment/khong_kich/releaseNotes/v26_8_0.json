@@ -1,0 +1,1857 @@
+{
+  "version": "26.8.0",
+  "releaseDate": "17/09/2026",
+  "title": "Magnetic Storm Combat Redesign",
+  "displayTitle": "CHI TIẾT CẬP NHẬT 26.8.0",
+  "summary": "**26.8.0** là bản thiết kế lại chiến đấu lớn của **Magnetic Storm**. Phiên bản này xử lý các lỗi ảnh hưởng trực tiếp đến nhịp trận, xây lại hoàn toàn bộ kỹ năng của **Tempest Crown**, thay đổi toàn bộ cấu trúc của hai Wave Tinh Anh Màn 2 và bổ sung các Elite có vai trò riêng biệt.\n\nMục tiêu của bản cập nhật là khiến Màn 2 khó hơn nhờ **coverage, sequencing, target priority và khả năng luồn lách**, thay vì đơn thuần tăng Máu hoặc Sát Thương.\n\nDưới đây là **toàn bộ thay đổi player-facing so với 26.7.1**.",
+  "sections": [
+    {
+      "id": "section-1",
+      "title": "SỬA LỖI & TRẢI NGHIỆM CHIẾN ĐẤU",
+      "icon": {
+        "kind": "system",
+        "id": "release"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "section-1-entry-1",
+          "title": "Đếm ngược Wave",
+          "icon": {
+            "kind": "system",
+            "id": "wave"
+          },
+          "rationale": "Đồng bộ countdown với state thật của encounter để UI không thể tồn tại sau khi Wave mới đã bắt đầu.",
+          "changes": [
+            {
+              "text": "**TRƯỚC:** Sau khi đếm ngược tới **1 giây**, trong một số trường hợp Wave mới vẫn bắt đầu bình thường nhưng bảng **“Đợt tiếp theo sau 1”** có thể bị kẹt trên màn hình.",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "**SAU:** Countdown giờ bám trực tiếp vào trạng thái Wave hiện tại và biến mất ngay khi Wave mới bắt đầu.",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "Countdown UI: **có thể bị kẹt ở 1s ⇒ tự đóng đúng khi `waveState` trở lại Combat**.",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Countdown UI:",
+              "before": "có thể bị kẹt ở 1s",
+              "after": "tự đóng đúng khi waveState trở lại Combat."
+            },
+            {
+              "text": "Việc bắt đầu Wave và countdown UI giờ sử dụng cùng một nguồn trạng thái, không còn timer hiển thị độc lập.",
+              "format": "bullet"
+            }
+          ]
+        },
+        {
+          "id": "section-1-entry-2",
+          "title": "Tiếp tục trận sau khi chọn Lõi",
+          "icon": {
+            "kind": "system",
+            "id": "core"
+          },
+          "rationale": "Loại bỏ khoảng pause thừa sau lựa chọn để combat nối lại ngay khi quyết định nâng cấp đã hoàn tất.",
+          "changes": [
+            {
+              "text": "**TRƯỚC:** Sau khi chọn Lõi, giao diện chọn Lõi biến mất nhưng combat vẫn bị giữ pause thêm khoảng **280ms**, tạo cảm giác game bị khựng.",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "**SAU:** Combat tiếp tục ngay sau khi lựa chọn Lõi được áp dụng.",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "Post-Core gameplay pause: **~280ms ⇒ 0ms**.",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Post-Core gameplay pause:",
+              "before": "~280ms",
+              "after": "0ms."
+            },
+            {
+              "text": "Animation đóng giao diện, nếu còn, chỉ là hiệu ứng hình ảnh và không tiếp tục khóa simulation.",
+              "format": "bullet"
+            }
+          ]
+        },
+        {
+          "id": "section-1-entry-3",
+          "title": "Vệ tinh Tempest Crown vẽ đường ngắm sai",
+          "icon": {
+            "kind": "enemy",
+            "id": "satellite"
+          },
+          "rationale": "Loại bỏ telegraph di sản không còn phản ánh mục tiêu thực tế, giúp visual language chỉ báo đúng thứ đang gây nguy hiểm.",
+          "changes": [
+            {
+              "text": "**TRƯỚC:** Vệ tinh có thể giữ đường track của mechanic **Satellite Hunt / Satellite Execution** cũ tới một điểm snapshot hoặc corridor không còn liên quan đến vị trí Player hiện tại.",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "**SAU:** Toàn bộ tracking line cũ đã bị loại bỏ. Vệ tinh mới chỉ ngắm Player tại đúng thời điểm bắn rồi phóng đạn thẳng tới hướng đã khóa.",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "Persistent Satellite target track: **Có ⇒ Loại bỏ**.",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Persistent Satellite target track:",
+              "before": "Có",
+              "after": "Loại bỏ."
+            },
+            {
+              "text": "Projectile homing sau khi bắn: **Không ⇒ Không**.",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Projectile homing sau khi bắn:",
+              "before": "Không",
+              "after": "Không."
+            }
+          ]
+        },
+        {
+          "id": "section-1-entry-4",
+          "title": "Tia lửa đuôi Kamikaze",
+          "icon": {
+            "kind": "enemy",
+            "id": "kamikaze"
+          },
+          "rationale": "Khóa exhaust vào transform thật của airframe để hiệu ứng luôn nằm đúng đuôi máy bay khi Kamikaze đổi hướng.",
+          "changes": [
+            {
+              "text": "**TRƯỚC:** Thân Kamikaze xoay theo hướng lao nhưng vị trí tia lửa/charge ở đuôi vẫn dùng offset cố định theo màn hình, khiến hiệu ứng có thể lệch khỏi máy bay khi đổi hướng.",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "**SAU:** Engine exhaust giờ bám theo **heading thực tế của airframe**, bao gồm cả giai đoạn đang chỉnh hướng và giai đoạn dash đã khóa vector.",
+              "format": "paragraph",
+              "changeType": "change"
+            }
+          ]
+        },
+        {
+          "id": "section-1-entry-5",
+          "title": "Chuyển cảnh Chơi lại",
+          "icon": {
+            "kind": "system",
+            "id": "motion"
+          },
+          "rationale": "Đồng bộ state commit với transition để loại bỏ frame trung gian và hiện tượng chớp giao diện.",
+          "changes": [
+            {
+              "text": "**TRƯỚC:** Khi bấm Chơi lại, state kết quả có thể bị xóa trước khi transition hoàn tất, gây một nhịp chớp giao diện trung gian.",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "**SAU:** Result state và Playing state được chuyển cùng thời điểm tại transition commit, loại bỏ khoảng trống giữa hai màn hình.",
+              "format": "paragraph",
+              "changeType": "change"
+            }
+          ]
+        },
+        {
+          "id": "section-1-entry-6",
+          "title": "Grid Architect",
+          "icon": {
+            "kind": "enemy",
+            "id": "grid_architect"
+          },
+          "rationale": "Thay encounter đồng dạng bằng đội hình nhiều vai trò, đồng thời loại bỏ phụ thuộc vào role mặc định gây pattern trùng nhau.",
+          "changes": [
+            {
+              "text": "**TRƯỚC:** Đội hình **4 Grid Architect** có thể rơi vào cùng một role mặc định, khiến một số Grid pattern trùng hướng hoặc không tạo đúng áp lực phối hợp.",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "**SAU:** Wave Tinh Anh thứ hai đã được thiết kế lại hoàn toàn và chỉ còn **1 Grid Architect**, đi cùng 3 Elite có vai trò khác nhau. Grid Architect mới tự quản lý chu kỳ topology của chính nó.",
+              "format": "paragraph",
+              "changeType": "change"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "section-2",
+      "title": "TEMPEST CROWN — THIẾT KẾ LẠI HOÀN TOÀN",
+      "icon": {
+        "kind": "enemy",
+        "id": "boss_stage2"
+      },
+      "intro": [
+        {
+          "text": "Bộ kỹ năng Tempest Crown của **26.7.1** đã được gỡ bỏ và thay bằng một combat kit mới.",
+          "format": "paragraph"
+        }
+      ],
+      "entries": [
+        {
+          "id": "section-2-entry-1",
+          "title": "LOẠI BỎ — Bộ kỹ năng cũ",
+          "icon": {
+            "kind": "enemy",
+            "id": "boss_stage2"
+          },
+          "rationale": "Gỡ toàn bộ combat kit cũ để Boss mới dùng một hệ thống kỹ năng rõ ràng, độc lập và dễ đọc hơn trong 5 Phase.",
+          "changes": [
+            {
+              "text": "Các attack phrase/mechanic cũ sau không còn thuộc Tempest Crown:",
+              "format": "paragraph"
+            },
+            {
+              "text": "**Crown Lattice / Lattice Shift**.",
+              "format": "bullet"
+            },
+            {
+              "text": "**Polarity Reversal / Polar Hunt**.",
+              "format": "bullet"
+            },
+            {
+              "text": "**Reversal Blades / Reversal Storm**.",
+              "format": "bullet"
+            },
+            {
+              "text": "**Flux Bombardment**.",
+              "format": "bullet"
+            },
+            {
+              "text": "**Magnetic Guillotine / Magnetic Guillotine II**.",
+              "format": "bullet"
+            },
+            {
+              "text": "**Event Horizon / Horizon Collapse**.",
+              "format": "bullet"
+            },
+            {
+              "text": "**Satellite Hunt / Satellite Execution**.",
+              "format": "bullet"
+            },
+            {
+              "text": "**Storm Collapse**.",
+              "format": "bullet"
+            },
+            {
+              "text": "**Tempest Overload**.",
+              "format": "bullet"
+            },
+            {
+              "text": "Tempest Crown vẫn có **5 Phase** và giữ nguyên các mốc HP:",
+              "format": "paragraph",
+              "changeType": "unchanged"
+            },
+            {
+              "text": "**Phase 1:** trên **75% HP**.",
+              "format": "bullet"
+            },
+            {
+              "text": "**Phase 2:** trên **50% đến 75% HP**.",
+              "format": "bullet"
+            },
+            {
+              "text": "**Phase 3:** trên **25% đến 50% HP**.",
+              "format": "bullet"
+            },
+            {
+              "text": "**Phase 4:** trên **10% đến 25% HP**.",
+              "format": "bullet"
+            },
+            {
+              "text": "**Phase 5:** từ **10% HP trở xuống**.",
+              "format": "bullet"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "section-3",
+      "title": "NỘI TẠI MỚI — 4 VỆ TINH HỘ VỆ",
+      "icon": {
+        "kind": "enemy",
+        "id": "satellite"
+      },
+      "intro": [
+        {
+          "text": "Tempest Crown vẫn bắt đầu trận với **4 vệ tinh**, nhưng toàn bộ cơ chế của chúng đã thay đổi.",
+          "format": "paragraph"
+        }
+      ],
+      "entries": [
+        {
+          "id": "section-3-entry-1",
+          "title": "Vệ tinh — Máu",
+          "icon": {
+            "kind": "enemy",
+            "id": "satellite"
+          },
+          "rationale": "",
+          "changes": [
+            {
+              "text": "**TRƯỚC:** **9.403,125 HP**, hoạt động như Stability và có thể bị vô hiệu hóa rồi hồi lại.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "**SAU:** **46.750 HP**, tương đương **40% Máu cơ sở của Tempest Crown**, và chết vĩnh viễn khi bị phá hủy.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        },
+        {
+          "id": "section-3-entry-2",
+          "title": "Vệ tinh — Giáp",
+          "icon": {
+            "kind": "enemy",
+            "id": "satellite"
+          },
+          "rationale": "",
+          "changes": [
+            {
+              "text": "**TRƯỚC:** **0 Giáp**.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "**SAU:** **44,88 Giáp**, tương đương **40% Giáp của Tempest Crown**.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        },
+        {
+          "id": "section-3-entry-3",
+          "title": "Vệ tinh — Hỏa lực",
+          "icon": {
+            "kind": "enemy",
+            "id": "satellite"
+          },
+          "rationale": "",
+          "changes": [
+            {
+              "text": "**TRƯỚC:** **62,72** sát thương đạn cơ sở.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "**SAU:** **125,44** sát thương đạn cơ sở, bằng **100% Hỏa lực đạn của Tempest Crown**.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        },
+        {
+          "id": "section-3-entry-4",
+          "title": "Vệ tinh — Tốc độ bắn",
+          "icon": {
+            "kind": "enemy",
+            "id": "satellite"
+          },
+          "rationale": "",
+          "changes": [
+            {
+              "text": "**TRƯỚC:** khoảng **1 phát / 3 giây** trong logic cũ và còn phụ thuộc Attack Phrase.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "**SAU:** mỗi vệ tinh bắn **1 phát / 0,5 giây** liên tục.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "4 vệ tinh bắt đầu khai hỏa lệch nhau **0,3 giây** để hạn chế việc cả 4 viên xuất hiện trong đúng cùng một frame.",
+              "format": "paragraph"
+            },
+            {
+              "text": "Mỗi viên đạn khóa vị trí Player tại thời điểm khai hỏa và **không homing** sau đó.",
+              "format": "paragraph"
+            }
+          ]
+        },
+        {
+          "id": "section-3-entry-5",
+          "title": "Vệ tinh — Quỹ đạo",
+          "icon": {
+            "kind": "enemy",
+            "id": "satellite"
+          },
+          "rationale": "",
+          "changes": [
+            {
+              "text": "**TRƯỚC:** quỹ đạo có thể thay đổi theo skill, polarity hoặc Satellite Execution.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "**SAU:** 4 vệ tinh luôn bay theo **một vòng tròn quanh Boss**, cách đều nhau **90°**.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        },
+        {
+          "id": "section-3-entry-6",
+          "title": "Vệ tinh — Hồi sinh",
+          "icon": {
+            "kind": "enemy",
+            "id": "satellite"
+          },
+          "rationale": "",
+          "changes": [
+            {
+              "text": "**TRƯỚC:** HP về 0 ⇒ bị **Disable 6 giây ⇒ Reboot**.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "**SAU:** HP về 0 ⇒ **bị tiêu diệt vĩnh viễn trong trận**.",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "SAU:",
+              "before": "HP về 0",
+              "after": "bị tiêu diệt vĩnh viễn trong trận."
+            }
+          ]
+        },
+        {
+          "id": "section-3-entry-7",
+          "title": "Phần thưởng khi phá vệ tinh",
+          "icon": {
+            "kind": "enemy",
+            "id": "satellite"
+          },
+          "rationale": "Mỗi vệ tinh:",
+          "changes": [
+            {
+              "text": "**XP:** **0**.",
+              "format": "bullet"
+            },
+            {
+              "text": "**Gold:** **0**.",
+              "format": "bullet"
+            },
+            {
+              "text": "**Score:** **0**.",
+              "format": "bullet"
+            },
+            {
+              "text": "**On-Kill Core:** **Có thể kích hoạt**.",
+              "format": "bullet"
+            }
+          ]
+        },
+        {
+          "id": "section-3-entry-8",
+          "title": "MỚI — Magnetic Guard",
+          "icon": {
+            "kind": "enemy",
+            "id": "boss_stage2"
+          },
+          "rationale": "Biến 4 vệ tinh thành mục tiêu ưu tiên thật sự: phá vệ tinh sẽ mở trực tiếp khả năng gây đủ sát thương lên Boss.",
+          "changes": [
+            {
+              "text": "Chỉ cần còn ít nhất **1 vệ tinh sống**, Tempest Crown nhận:",
+              "format": "paragraph"
+            },
+            {
+              "text": "Sát thương nhận vào: **100% ⇒ 65%**.",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Sát thương nhận vào:",
+              "before": "100%",
+              "after": "65%."
+            },
+            {
+              "text": "Damage Reduction: **0% ⇒ 35%**.",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Damage Reduction:",
+              "before": "0%",
+              "after": "35%."
+            },
+            {
+              "text": "Mức giảm luôn là **35%** dù Boss còn **4, 3, 2 hay 1 vệ tinh**.",
+              "format": "paragraph"
+            },
+            {
+              "text": "Khi vệ tinh cuối cùng bị phá, **Magnetic Guard bị phá hoàn toàn** và Boss trở lại nhận **100% sát thương**.",
+              "format": "paragraph"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "section-4",
+      "title": "MỚI — KỸ NĂNG 1: BÃO ĐẠN",
+      "icon": {
+        "kind": "vfx",
+        "id": "crownBolt"
+      },
+      "intro": [
+        {
+          "text": "Có thể sử dụng từ **Phase 1**.",
+          "format": "paragraph"
+        },
+        {
+          "text": "Hồi chiêu: **10 giây**, bắt đầu tính **sau khi kỹ năng kết thúc**.",
+          "format": "bullet"
+        },
+        {
+          "text": "Mỗi loạt: **15 viên đạn**.",
+          "format": "bullet"
+        },
+        {
+          "text": "Góc giữa hai viên liên tiếp: **7°**.",
+          "format": "bullet"
+        },
+        {
+          "text": "Tổng góc bao phủ: **98°**.",
+          "format": "bullet"
+        },
+        {
+          "text": "Nhịp bắn: **1 loạt / 0,6 giây**.",
+          "format": "bullet"
+        },
+        {
+          "text": "Sát thương mỗi viên: **125,44 raw** trước hệ số Wave/Giáp.",
+          "format": "bullet"
+        },
+        {
+          "text": "Đạn snapshot hướng tới Player tại lúc bắn và **không homing**.",
+          "format": "bullet"
+        },
+        {
+          "text": "Thời gian duy trì:",
+          "format": "paragraph"
+        },
+        {
+          "text": "**Phase 1:** **5 giây**.",
+          "format": "bullet"
+        },
+        {
+          "text": "**Phase 2:** **6 giây**.",
+          "format": "bullet"
+        },
+        {
+          "text": "**Phase 3:** **7 giây**.",
+          "format": "bullet"
+        },
+        {
+          "text": "**Phase 4:** **8 giây**.",
+          "format": "bullet"
+        },
+        {
+          "text": "**Phase 5:** **9 giây**.",
+          "format": "bullet"
+        }
+      ],
+      "entries": []
+    },
+    {
+      "id": "section-5",
+      "title": "MỚI — KỸ NĂNG 2: TIA ÁNH SÁNG",
+      "icon": {
+        "kind": "vfx",
+        "id": "magneticBeam"
+      },
+      "intro": [
+        {
+          "text": "Có thể sử dụng từ **Phase 1**.",
+          "format": "paragraph"
+        },
+        {
+          "text": "Hồi chiêu: **7 giây**, bắt đầu sau toàn bộ laser sequence.",
+          "format": "bullet"
+        },
+        {
+          "text": "Tempest Crown tự di chuyển về **chính giữa vùng trên màn hình** trước khi khai hỏa.",
+          "format": "bullet"
+        },
+        {
+          "text": "Cảnh báo: **0,75 giây** bằng **2 đường track song song**.",
+          "format": "bullet"
+        },
+        {
+          "text": "Khoảng trống giữa 2 tia: khoảng **10px**, không đủ để Player đứng an toàn ở giữa.",
+          "format": "bullet"
+        },
+        {
+          "text": "Hai tia ban đầu bắn **thẳng xuống dưới**.",
+          "format": "bullet"
+        },
+        {
+          "text": "Mỗi tick beam: **94,08 raw / 0,20 giây**.",
+          "format": "bullet"
+        }
+      ],
+      "entries": [
+        {
+          "id": "section-5-entry-1",
+          "title": "Phase 1",
+          "icon": {
+            "kind": "vfx",
+            "id": "magneticBeam"
+          },
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Beam thẳng: **1,0 giây**.",
+              "format": "bullet"
+            },
+            {
+              "text": "Quét ra hai bên: **0° ⇒ ±75° trong 2,0 giây**.",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Quét ra hai bên:",
+              "before": "0°",
+              "after": "±75° trong 2,0 giây."
+            }
+          ]
+        },
+        {
+          "id": "section-5-entry-2",
+          "title": "Phase 2",
+          "icon": {
+            "kind": "vfx",
+            "id": "magneticBeam"
+          },
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Beam thẳng: **1,0 giây**.",
+              "format": "bullet"
+            },
+            {
+              "text": "Quét ra: **0° ⇒ ±75° trong 2,0 giây**.",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Quét ra:",
+              "before": "0°",
+              "after": "±75° trong 2,0 giây."
+            },
+            {
+              "text": "Quét ngược trở lại: **±75° ⇒ 0° trong 2,0 giây**.",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Quét ngược trở lại:",
+              "before": "±75°",
+              "after": "0° trong 2,0 giây."
+            }
+          ]
+        },
+        {
+          "id": "section-5-entry-3",
+          "title": "Phase 3–5",
+          "icon": {
+            "kind": "vfx",
+            "id": "magneticBeam"
+          },
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Beam thẳng: **1,0 giây**.",
+              "format": "bullet"
+            },
+            {
+              "text": "Quét ra: **0° ⇒ ±75° trong 1,5 giây**.",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Quét ra:",
+              "before": "0°",
+              "after": "±75° trong 1,5 giây."
+            },
+            {
+              "text": "Quét ngược trở lại: **±75° ⇒ 0° trong 1,5 giây**.",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Quét ngược trở lại:",
+              "before": "±75°",
+              "after": "0° trong 1,5 giây."
+            },
+            {
+              "text": "Từ Phase 3, laser quét nhanh hơn nhưng giữ cùng phạm vi **75° mỗi bên**.",
+              "format": "paragraph"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "section-6",
+      "title": "MỚI — KỸ NĂNG 3: BOM KHÔNG GIAN",
+      "icon": {
+        "kind": "vfx",
+        "id": "magneticMine"
+      },
+      "intro": [
+        {
+          "text": "Có thể sử dụng từ **Phase 2**.",
+          "format": "paragraph"
+        },
+        {
+          "text": "Hồi chiêu: **12 giây**, bắt đầu sau **5 giây ném bom**.",
+          "format": "bullet"
+        },
+        {
+          "text": "Thời gian ném bom: **5 giây**.",
+          "format": "bullet"
+        },
+        {
+          "text": "Mỗi bomb sau khi chạm điểm rơi có **2 giây đếm ngược** trước khi nổ.",
+          "format": "bullet"
+        },
+        {
+          "text": "Bán kính nổ: **40px**.",
+          "format": "bullet"
+        },
+        {
+          "text": "Sát thương vụ nổ: **125,44 raw**.",
+          "format": "bullet"
+        }
+      ],
+      "entries": [
+        {
+          "id": "section-6-entry-1",
+          "title": "Phase 2",
+          "icon": {
+            "kind": "vfx",
+            "id": "magneticMine"
+          },
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Nhịp ném: **1 bomb / 0,30 giây**.",
+              "format": "bullet"
+            },
+            {
+              "text": "Khoảng **17 bomb / lần dùng**.",
+              "format": "bullet"
+            },
+            {
+              "text": "Bomb snapshot vị trí Player tại lúc được ném.",
+              "format": "bullet"
+            }
+          ]
+        },
+        {
+          "id": "section-6-entry-2",
+          "title": "Phase 3–5",
+          "icon": {
+            "kind": "vfx",
+            "id": "magneticMine"
+          },
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Nhịp ném: **1 bomb / 0,20 giây**.",
+              "format": "bullet"
+            },
+            {
+              "text": "Khoảng **25 bomb / lần dùng**.",
+              "format": "bullet"
+            },
+            {
+              "text": "Boss dự đoán hướng di chuyển của Player khoảng **0,45 giây** về phía trước.",
+              "format": "bullet"
+            },
+            {
+              "text": "Khoảng dự đoán được giới hạn tối đa khoảng **60px**.",
+              "format": "bullet"
+            },
+            {
+              "text": "Bomb không live-homing sau khi target đã được khóa.",
+              "format": "paragraph"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "section-7",
+      "title": "MỚI — KỸ NĂNG 4: MƯA AXIT",
+      "icon": {
+        "kind": "vfx",
+        "id": "acidDrop"
+      },
+      "intro": [
+        {
+          "text": "Có thể sử dụng từ **Phase 2**.",
+          "format": "paragraph"
+        },
+        {
+          "text": "Hồi chiêu: **15 giây**, bắt đầu sau khi cơn mưa kết thúc.",
+          "format": "bullet"
+        },
+        {
+          "text": "Thời gian mưa: **4 giây**.",
+          "format": "bullet"
+        },
+        {
+          "text": "Nhịp Acid: **1 giọt / 0,28 giây**.",
+          "format": "bullet"
+        },
+        {
+          "text": "Acid xuất hiện tại **vị trí X ngẫu nhiên ở cạnh trên** rồi rơi **thẳng xuống cạnh dưới màn hình**.",
+          "format": "bullet"
+        },
+        {
+          "text": "Acid **không target Player**.",
+          "format": "bullet"
+        },
+        {
+          "text": "Acid **không homing**.",
+          "format": "bullet"
+        },
+        {
+          "text": "**Không có vòng cảnh báo hoặc đường track trước khi rơi**.",
+          "format": "bullet"
+        }
+      ],
+      "entries": [
+        {
+          "id": "section-7-entry-1",
+          "title": "Phase 2",
+          "icon": {
+            "kind": "vfx",
+            "id": "acidDrop"
+          },
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Sát thương mỗi lần trúng: **87,808 raw**.",
+              "format": "bullet"
+            },
+            {
+              "text": "Hồi máu nhận vào: **100% ⇒ 40%** trong **4 giây**.",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Hồi máu nhận vào:",
+              "before": "100%",
+              "after": "40% trong 4 giây."
+            },
+            {
+              "text": "Tức giảm **60%** mọi hồi máu và hồi phục nhận vào.",
+              "format": "bullet"
+            }
+          ]
+        },
+        {
+          "id": "section-7-entry-2",
+          "title": "Phase 3–5",
+          "icon": {
+            "kind": "vfx",
+            "id": "acidDrop"
+          },
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Sát thương mỗi lần trúng: **87,808 ⇒ 118,5408 raw** (**+35%**).",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Sát thương mỗi lần trúng:",
+              "before": "87,808",
+              "after": "118,5408 raw (+35%)."
+            },
+            {
+              "text": "Hồi máu nhận vào: **100% ⇒ 0%** trong **4 giây**.",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Hồi máu nhận vào:",
+              "before": "100%",
+              "after": "0% trong 4 giây."
+            },
+            {
+              "text": "Tức **chặn hoàn toàn hồi máu** trong thời gian debuff.",
+              "format": "bullet"
+            },
+            {
+              "text": "Trúng Acid lần nữa sẽ **làm mới thời gian 4 giây**, không cộng dồn thành nhiều tầng duration.",
+              "format": "paragraph"
+            },
+            {
+              "text": "Debuff áp dụng cho toàn bộ nguồn hồi máu của Player, bao gồm **HP Regen, Core Heal, Lifesteal, Scrap Heal, Skill Heal và Overheal**.",
+              "format": "paragraph"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "section-8",
+      "title": "MỚI — KỸ NĂNG 5: VỤ NỔ TỪ TRƯỜNG",
+      "icon": {
+        "kind": "vfx",
+        "id": "magneticBurst"
+      },
+      "intro": [
+        {
+          "text": "Có thể sử dụng từ **Phase 3**.",
+          "format": "paragraph"
+        },
+        {
+          "text": "Hồi chiêu: **8 giây**, bắt đầu sau **5 giây tạo vùng từ trường**.",
+          "format": "bullet"
+        },
+        {
+          "text": "Thời gian tạo field: **5 giây**.",
+          "format": "bullet"
+        },
+        {
+          "text": "Nhịp tạo: **1 field / 0,55 giây**.",
+          "format": "bullet"
+        },
+        {
+          "text": "Khoảng **9 field / lần dùng**.",
+          "format": "bullet"
+        },
+        {
+          "text": "Mỗi field:",
+          "format": "paragraph"
+        },
+        {
+          "text": "snapshot vị trí Player khi được tạo;",
+          "format": "bullet"
+        },
+        {
+          "text": "cảnh báo trong **0,65 giây**;",
+          "format": "bullet"
+        },
+        {
+          "text": "phát nổ trong bán kính **40px**;",
+          "format": "bullet"
+        },
+        {
+          "text": "gây **125,44 raw damage**;",
+          "format": "bullet"
+        },
+        {
+          "text": "làm choáng Player **2 giây**.",
+          "format": "bullet"
+        },
+        {
+          "text": "Dính nhiều vụ nổ không cộng stun thành 4/6/8 giây; hit mới làm mới thời gian stun theo hệ debuff hiện tại.",
+          "format": "paragraph"
+        }
+      ],
+      "entries": []
+    },
+    {
+      "id": "section-9",
+      "title": "MỚI — KỸ NĂNG 6: VẾT RÁCH KHÔNG GIAN",
+      "icon": {
+        "kind": "vfx",
+        "id": "droneSpawn"
+      },
+      "intro": [
+        {
+          "text": "Có thể sử dụng từ **Phase 3**.",
+          "format": "paragraph"
+        },
+        {
+          "text": "Hồi chiêu: **9 giây**, bắt đầu sau khi Rift hoàn tất triệu hồi.",
+          "format": "bullet"
+        },
+        {
+          "text": "Tempest Crown tạo Rift tại **vị trí Player ở thời điểm cast**.",
+          "format": "bullet"
+        },
+        {
+          "text": "Rift tồn tại **3 giây** trước khi mở hoàn toàn.",
+          "format": "bullet"
+        },
+        {
+          "text": "Sau **3 giây**, Rift gọi ra **7 Kamikaze Drone**.",
+          "format": "bullet"
+        },
+        {
+          "text": "7 Kamikaze sử dụng đúng chỉ số Màn 1:",
+          "format": "paragraph"
+        },
+        {
+          "text": "HP: **171,6**.",
+          "format": "bullet"
+        },
+        {
+          "text": "Giáp: **3,9**.",
+          "format": "bullet"
+        },
+        {
+          "text": "Tốc độ dash: **270**.",
+          "format": "bullet"
+        },
+        {
+          "text": "Sát thương va chạm: **187,2**.",
+          "format": "bullet"
+        },
+        {
+          "text": "Chúng sử dụng lại cơ chế **Charge ⇒ Early Homing ⇒ Committed Dash** của Kamikaze Màn 1.",
+          "format": "paragraph",
+          "changeType": "change"
+        },
+        {
+          "text": "Kamikaze do Rift triệu hồi:",
+          "format": "paragraph"
+        },
+        {
+          "text": "**0 XP**.",
+          "format": "bullet"
+        },
+        {
+          "text": "**0 Gold**.",
+          "format": "bullet"
+        },
+        {
+          "text": "**0 Score**.",
+          "format": "bullet"
+        },
+        {
+          "text": "**Không kích hoạt On-Kill Core**.",
+          "format": "bullet"
+        }
+      ],
+      "entries": []
+    },
+    {
+      "id": "section-10",
+      "title": "MỚI — BOSS SKILL SCHEDULER",
+      "icon": {
+        "kind": "enemy",
+        "id": "boss_stage2"
+      },
+      "intro": [
+        {
+          "text": "Tempest Crown không còn chạy chuỗi Attack Phrase cố định của 26.7.1.",
+          "format": "paragraph"
+        },
+        {
+          "text": "Scheduler mới tuân thủ:",
+          "format": "paragraph"
+        },
+        {
+          "text": "Tối đa **1 Major Skill** của Boss đang được cast tại một thời điểm.",
+          "format": "bullet"
+        },
+        {
+          "text": "Vệ tinh vẫn bắn liên tục trong khi Boss dùng skill.",
+          "format": "bullet"
+        },
+        {
+          "text": "Hazard còn tồn tại từ kỹ năng trước có thể overlap sang kỹ năng kế tiếp.",
+          "format": "bullet"
+        },
+        {
+          "text": "Cooldown chỉ bắt đầu **sau khi kỹ năng kết thúc**.",
+          "format": "bullet"
+        },
+        {
+          "text": "Không ưu tiên dùng cùng một skill 2 lần liên tiếp khi còn skill khác đang sẵn sàng.",
+          "format": "bullet"
+        },
+        {
+          "text": "Khoảng nghỉ giữa hai Major Skill khoảng **0,35 giây**.",
+          "format": "bullet"
+        }
+      ],
+      "entries": []
+    },
+    {
+      "id": "section-11",
+      "title": "WAVE TINH ANH 1 — MAGNETIC TRIAD",
+      "icon": {
+        "kind": "system",
+        "id": "elite_wave"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "section-11-entry-1",
+          "title": "Đội hình",
+          "icon": {
+            "kind": "system",
+            "id": "elite_wave"
+          },
+          "rationale": "",
+          "changes": [
+            {
+              "text": "**TRƯỚC:**",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "**3 × Cyclone Ace**.",
+              "format": "bullet"
+            },
+            {
+              "text": "**SAU:**",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "**1 × Cyclone Ace**.",
+              "format": "bullet"
+            },
+            {
+              "text": "**1 × Prism Sovereign**.",
+              "format": "bullet"
+            },
+            {
+              "text": "**1 × Mine Warden**.",
+              "format": "bullet"
+            },
+            {
+              "text": "Số Elite: **3 ⇒ 3**.",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "Mỗi Elite vẫn dùng durability tier cũ của Wave:",
+              "format": "paragraph"
+            },
+            {
+              "text": "HP: **4.870,8**.",
+              "format": "bullet"
+            },
+            {
+              "text": "Giáp: **31,57**.",
+              "format": "bullet"
+            },
+            {
+              "text": "Độ khó tăng bằng skill/coverage, không tăng thêm HP/Armor.",
+              "format": "paragraph"
+            }
+          ]
+        },
+        {
+          "id": "section-11-entry-2",
+          "title": "Cyclone Ace — Triple Vector Assault",
+          "icon": {
+            "kind": "enemy",
+            "id": "cyclone_ace"
+          },
+          "rationale": "Tăng pressure bằng nhiều vector lao liên tiếp và vùng nguy hiểm tồn tại sau dash, không tăng độ trâu.",
+          "changes": [
+            {
+              "text": "Dash liên tiếp: **1 kiểu đơn giản ⇒ 3 pass liên tiếp**.",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Dash liên tiếp:",
+              "before": "1 kiểu đơn giản",
+              "after": "3 pass liên tiếp."
+            },
+            {
+              "text": "Telegraph mỗi pass: **0,65 giây**.",
+              "format": "bullet"
+            },
+            {
+              "text": "Dash speed: khoảng **280 px/s**.",
+              "format": "bullet"
+            },
+            {
+              "text": "Mỗi dash để lại Magnetic Trail tồn tại **1,0 giây**.",
+              "format": "bullet"
+            },
+            {
+              "text": "Sau pass cuối: **9 viên đạn hình quạt**, cách nhau **6°**.",
+              "format": "bullet"
+            }
+          ]
+        },
+        {
+          "id": "section-11-entry-3",
+          "title": "Cyclone Ace — Cyclone Blades",
+          "icon": {
+            "kind": "enemy",
+            "id": "cyclone_ace"
+          },
+          "rationale": "Bổ sung lớp đạn quay lại để Cyclone Ace vừa ép đường di chuyển vừa đe dọa hướng quay về.",
+          "changes": [
+            {
+              "text": "**MỚI:** Bắn **4 Returning Disc**, suspend khoảng **0,55 giây** rồi quay lại theo quỹ đạo đã khóa.",
+              "format": "paragraph",
+              "changeType": "new"
+            }
+          ]
+        },
+        {
+          "id": "section-11-entry-4",
+          "title": "Prism Sovereign",
+          "icon": {
+            "kind": "enemy",
+            "id": "prism_sovereign"
+          },
+          "rationale": "Đóng vai trò bullet controller của Magnetic Triad, tạo projectile split và crossfire nhưng luôn chừa corridor hợp lệ.",
+          "changes": [
+            {
+              "text": "**MỚI — Prism Curtain:**",
+              "format": "paragraph",
+              "changeType": "new"
+            },
+            {
+              "text": "**7 Prism Orb**.",
+              "format": "bullet"
+            },
+            {
+              "text": "Góc cách nhau **12°**.",
+              "format": "bullet"
+            },
+            {
+              "text": "Sau **1,1 giây**, mỗi Orb tách thành **3 shard**.",
+              "format": "bullet"
+            },
+            {
+              "text": "**MỚI — Cross Prism:**",
+              "format": "paragraph",
+              "changeType": "new"
+            },
+            {
+              "text": "Hai emitter đối xứng bắn projectile cắt chéo battlefield.",
+              "format": "bullet"
+            },
+            {
+              "text": "Pattern luôn chừa một corridor có thể luồn qua.",
+              "format": "bullet"
+            }
+          ]
+        },
+        {
+          "id": "section-11-entry-5",
+          "title": "Mine Warden",
+          "icon": {
+            "kind": "enemy",
+            "id": "mine_warden"
+          },
+          "rationale": "Đóng vai trò area denial, khóa các vùng cũ bằng mine để ép Player phải thay đổi route né.",
+          "changes": [
+            {
+              "text": "**MỚI — Mine Carpet:**",
+              "format": "paragraph",
+              "changeType": "new"
+            },
+            {
+              "text": "Layout tiềm năng **2 × 4 vị trí**.",
+              "format": "bullet"
+            },
+            {
+              "text": "Luôn chừa **2 gap** có thể thoát.",
+              "format": "bullet"
+            },
+            {
+              "text": "Mine fuse: **1,6 giây**.",
+              "format": "bullet"
+            },
+            {
+              "text": "Bán kính nổ: **40px**.",
+              "format": "bullet"
+            },
+            {
+              "text": "**MỚI — Chase Bomb:**",
+              "format": "paragraph",
+              "changeType": "new"
+            },
+            {
+              "text": "**6 bomb**.",
+              "format": "bullet"
+            },
+            {
+              "text": "Cách nhau **0,35 giây**.",
+              "format": "bullet"
+            },
+            {
+              "text": "Mỗi bomb snapshot vị trí Player.",
+              "format": "bullet"
+            },
+            {
+              "text": "Fuse: **1,0 giây**.",
+              "format": "bullet"
+            }
+          ]
+        },
+        {
+          "id": "section-11-entry-6",
+          "title": "Nhịp Wave 3",
+          "icon": {
+            "kind": "system",
+            "id": "elite_wave"
+          },
+          "rationale": "Major pressure event ở cấp squad:",
+          "changes": [
+            {
+              "text": "**~1 event / 1,4–1,6 giây**.",
+              "format": "bullet"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "section-12",
+      "title": "WAVE TINH ANH 2 — MAGNETIC EXECUTION",
+      "icon": {
+        "kind": "system",
+        "id": "elite_wave"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "section-12-entry-1",
+          "title": "Đội hình",
+          "icon": {
+            "kind": "system",
+            "id": "elite_wave"
+          },
+          "rationale": "",
+          "changes": [
+            {
+              "text": "**TRƯỚC:**",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "**4 × Grid Architect**.",
+              "format": "bullet"
+            },
+            {
+              "text": "**SAU:**",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "**1 × Grid Architect**.",
+              "format": "bullet"
+            },
+            {
+              "text": "**1 × Polarity Warden**.",
+              "format": "bullet"
+            },
+            {
+              "text": "**1 × Swarm Overlord**.",
+              "format": "bullet"
+            },
+            {
+              "text": "**1 × Arc Reaver Prime**.",
+              "format": "bullet"
+            },
+            {
+              "text": "Số Elite: **4 ⇒ 4**.",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "Mỗi Elite dùng durability tier cũ của Wave:",
+              "format": "paragraph"
+            },
+            {
+              "text": "HP: **7.035,6**.",
+              "format": "bullet"
+            },
+            {
+              "text": "Giáp: **59,532**.",
+              "format": "bullet"
+            }
+          ]
+        },
+        {
+          "id": "section-12-entry-2",
+          "title": "Grid Architect",
+          "icon": {
+            "kind": "enemy",
+            "id": "grid_architect"
+          },
+          "rationale": "Thay encounter đồng dạng bằng đội hình nhiều vai trò, đồng thời loại bỏ phụ thuộc vào role mặc định gây pattern trùng nhau.",
+          "changes": [
+            {
+              "text": "**Grid Shift:**",
+              "format": "paragraph"
+            },
+            {
+              "text": "Pattern cũ của nhiều Architect giống nhau ⇒ một Architect điều khiển topology theo chu kỳ **Horizontal ⇒ Diagonal ⇒ X ⇒ Side Corridor**.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "Warning mỗi topology: khoảng **0,70 giây**.",
+              "format": "bullet"
+            },
+            {
+              "text": "**MỚI — Grid Sweep:**",
+              "format": "paragraph",
+              "changeType": "new"
+            },
+            {
+              "text": "Warning: **0,75 giây**.",
+              "format": "bullet"
+            },
+            {
+              "text": "Hai wall ép từ hai cạnh vào trong trong khoảng **2,2 giây**.",
+              "format": "bullet"
+            },
+            {
+              "text": "Safe corridor tối thiểu: **72px**.",
+              "format": "bullet"
+            }
+          ]
+        },
+        {
+          "id": "section-12-entry-3",
+          "title": "Polarity Warden",
+          "icon": {
+            "kind": "enemy",
+            "id": "polarity_warden"
+          },
+          "rationale": "Đóng vai trò forced movement, thay đổi quỹ đạo né bằng Pull/Push thay vì chỉ gây thêm damage.",
+          "changes": [
+            {
+              "text": "**MỚI — Dual Polarity Field:**",
+              "format": "paragraph",
+              "changeType": "new"
+            },
+            {
+              "text": "Warning: **0,60 giây**.",
+              "format": "bullet"
+            },
+            {
+              "text": "Một nửa màn hình Pull, nửa còn lại Push.",
+              "format": "bullet"
+            },
+            {
+              "text": "Sau **1,1 giây**, hai cực đảo cho nhau.",
+              "format": "bullet"
+            },
+            {
+              "text": "Tổng duration: **2,2 giây**.",
+              "format": "bullet"
+            },
+            {
+              "text": "**MỚI — Repulse Pulse:**",
+              "format": "paragraph",
+              "changeType": "new"
+            },
+            {
+              "text": "Warning: **0,70 giây**.",
+              "format": "bullet"
+            },
+            {
+              "text": "Đẩy Player ra khoảng **28px**.",
+              "format": "bullet"
+            },
+            {
+              "text": "Bắn vòng **12 projectile** nhưng chừa một safe gap khoảng **60°**.",
+              "format": "bullet"
+            }
+          ]
+        },
+        {
+          "id": "section-12-entry-4",
+          "title": "Swarm Overlord",
+          "icon": {
+            "kind": "enemy",
+            "id": "swarm_overlord"
+          },
+          "rationale": "Đóng vai trò pursuit, chia drone thành nhiều đợt để duy trì sức ép thay vì dồn toàn bộ vào một thời điểm.",
+          "changes": [
+            {
+              "text": "**MỚI — Double Swarm:**",
+              "format": "paragraph",
+              "changeType": "new"
+            },
+            {
+              "text": "Wave A: **3 Micro Drone**.",
+              "format": "bullet"
+            },
+            {
+              "text": "Sau **0,7 giây**: Wave B thêm **3 Micro Drone**.",
+              "format": "bullet"
+            },
+            {
+              "text": "**MỚI — Suppressive Fan:**",
+              "format": "paragraph",
+              "changeType": "new"
+            },
+            {
+              "text": "**3 volley**.",
+              "format": "bullet"
+            },
+            {
+              "text": "**11 viên / volley**.",
+              "format": "bullet"
+            },
+            {
+              "text": "**0,35 giây** giữa các volley.",
+              "format": "bullet"
+            },
+            {
+              "text": "**7°** giữa hai viên liên tiếp.",
+              "format": "bullet"
+            }
+          ]
+        },
+        {
+          "id": "section-12-entry-5",
+          "title": "Arc Reaver Prime",
+          "icon": {
+            "kind": "enemy",
+            "id": "arc_reaver_prime"
+          },
+          "rationale": "Đóng vai trò return-projectile specialist, biến vị trí projectile cũ thành mối đe dọa quay lại sau một nhịp.",
+          "changes": [
+            {
+              "text": "**MỚI — Reversal Curtain:**",
+              "format": "paragraph",
+              "changeType": "new"
+            },
+            {
+              "text": "**8 Returning Disc**.",
+              "format": "bullet"
+            },
+            {
+              "text": "**12°** spacing.",
+              "format": "bullet"
+            },
+            {
+              "text": "Outbound khoảng **1,4 giây**.",
+              "format": "bullet"
+            },
+            {
+              "text": "Suspend khoảng **0,55 giây**.",
+              "format": "bullet"
+            },
+            {
+              "text": "Return khoảng **1,4 giây**.",
+              "format": "bullet"
+            },
+            {
+              "text": "**MỚI — Cross Recall:**",
+              "format": "paragraph",
+              "changeType": "new"
+            },
+            {
+              "text": "Hai nhóm disc bay chéo từ hai phía rồi recall theo curve ngược.",
+              "format": "bullet"
+            },
+            {
+              "text": "Pattern bắt buộc giữ ít nhất một corridor có thể né.",
+              "format": "bullet"
+            }
+          ]
+        },
+        {
+          "id": "section-12-entry-6",
+          "title": "Nhịp Wave 5",
+          "icon": {
+            "kind": "system",
+            "id": "elite_wave"
+          },
+          "rationale": "Major pressure event ở cấp squad:",
+          "changes": [
+            {
+              "text": "**~1 event / 1,0–1,3 giây**.",
+              "format": "bullet"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "section-13",
+      "title": "QUY TẮC TINH ANH MÀN 2",
+      "icon": {
+        "kind": "system",
+        "id": "elite_wave"
+      },
+      "intro": [
+        {
+          "text": "Hai Wave Tinh Anh mới tuân thủ:",
+          "format": "paragraph"
+        },
+        {
+          "text": "Tối đa **2 major area-control mechanic** hoạt động cùng lúc.",
+          "format": "bullet"
+        },
+        {
+          "text": "Telegraph nguy hiểm tối thiểu khoảng **0,60 giây**.",
+          "format": "bullet"
+        },
+        {
+          "text": "Không tạo overlap không có đường thoát.",
+          "format": "bullet"
+        },
+        {
+          "text": "Không tăng HP/Armor thêm để giả tạo độ khó.",
+          "format": "bullet"
+        },
+        {
+          "text": "Không live-homing sau khi target/telegraph đã khóa.",
+          "format": "bullet"
+        },
+        {
+          "text": "Độ khó đến từ **coverage, sequencing, forced movement và target priority**.",
+          "format": "bullet"
+        }
+      ],
+      "entries": []
+    },
+    {
+      "id": "section-14",
+      "title": "ĐỒ HỌA TINH ANH MỚI",
+      "icon": {
+        "kind": "system",
+        "id": "elite_wave"
+      },
+      "intro": [
+        {
+          "text": "5 Elite mới giờ có **visual riêng**, không chỉ đổi màu quái thường:",
+          "format": "paragraph"
+        },
+        {
+          "text": "**Prism Sovereign**.",
+          "format": "bullet"
+        },
+        {
+          "text": "**Mine Warden**.",
+          "format": "bullet"
+        },
+        {
+          "text": "**Polarity Warden**.",
+          "format": "bullet"
+        },
+        {
+          "text": "**Swarm Overlord**.",
+          "format": "bullet"
+        },
+        {
+          "text": "**Arc Reaver Prime**.",
+          "format": "bullet"
+        },
+        {
+          "text": "Các visual mới được đưa vào atlas riêng của Màn 2 và dùng nhất quán ở cả renderer chính lẫn renderer tương thích.",
+          "format": "paragraph"
+        }
+      ],
+      "entries": []
+    },
+    {
+      "id": "section-15",
+      "title": "ĐẠN & HITBOX MÀN 2",
+      "icon": {
+        "kind": "vfx",
+        "id": "needleBolt"
+      },
+      "intro": [
+        {
+          "text": "Quy tắc của 26.7.1 tiếp tục được áp dụng cho projectile mới:",
+          "format": "paragraph"
+        },
+        {
+          "text": "Kích thước projectile thù địch Màn 2: **140%**.",
+          "format": "bullet"
+        },
+        {
+          "text": "Bán kính hitbox projectile thù địch Màn 2: **140%**.",
+          "format": "bullet"
+        },
+        {
+          "text": "Sát thương không tăng chỉ vì projectile lớn hơn.",
+          "format": "bullet"
+        },
+        {
+          "text": "Tốc độ không tăng chỉ vì projectile lớn hơn.",
+          "format": "bullet"
+        },
+        {
+          "text": "Quy tắc này áp dụng cho **đạn vệ tinh, Bão Đạn, Mưa Axit, Prism projectile, Elite bullets và Returning Disc**.",
+          "format": "paragraph"
+        },
+        {
+          "text": "Beam, mine explosion, magnetic field explosion, Grid lane và các AoE không phải projectile **không tự nhận +40% radius**.",
+          "format": "paragraph"
+        }
+      ],
+      "entries": []
+    },
+    {
+      "id": "section-16",
+      "title": "CHI TIẾT CẬP NHẬT & LỊCH SỬ PHIÊN BẢN",
+      "icon": {
+        "kind": "system",
+        "id": "release"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "section-16-entry-1",
+          "title": "MỚI — KHO LƯU TRỮ CẬP NHẬT",
+          "icon": {
+            "kind": "system",
+            "id": "release"
+          },
+          "rationale": "Biến Chi tiết cập nhật thành một thư viện lịch sử ngắn gọn để người chơi có thể xem lại những thay đổi gần đây mà không mất quyền truy cập khi phiên bản mới ra mắt.",
+          "changes": [
+            {
+              "text": "**TRƯỚC:** Nút **Chi tiết cập nhật** mở trực tiếp nội dung của phiên bản hiện tại và chỉ có một bản release note trong UI.",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "**SAU:** Nút **Chi tiết cập nhật** mở danh sách các bản cập nhật đang được lưu trữ.",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "Số bản lưu trữ tối đa: **1 ⇒ 10 phiên bản gần nhất**.",
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Số bản lưu trữ tối đa:",
+              "before": "1",
+              "after": "10 phiên bản gần nhất."
+            },
+            {
+              "text": "Thứ tự: **mới nhất ở trên cùng**.",
+              "format": "bullet"
+            },
+            {
+              "text": "Phiên bản đầu danh sách có badge **MỚI NHẤT**.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Mỗi bản hiển thị **số phiên bản + ngày phát hành `dd/mm/yyyy` + tiêu đề ngắn**.",
+              "format": "bullet"
+            },
+            {
+              "text": "Bấm vào một phiên bản để mở nội dung đầy đủ.",
+              "format": "bullet"
+            },
+            {
+              "text": "Trong trang chi tiết có nút **Quay lại danh sách**.",
+              "format": "bullet"
+            },
+            {
+              "text": "Khi hiện chỉ có 2 bản thật, UI chỉ hiển thị **2 bản thật**, không tạo placeholder.",
+              "format": "bullet"
+            },
+            {
+              "text": "Khi thêm bản thứ **11**, bản cũ nhất phải được **loại khỏi data/runtime**, không chỉ ẩn khỏi UI.",
+              "format": "bullet"
+            }
+          ]
+        },
+        {
+          "id": "section-16-entry-2",
+          "title": "MỚI — NGÀY PHÁT HÀNH",
+          "icon": {
+            "kind": "system",
+            "id": "calendar"
+          },
+          "rationale": "Mỗi phiên bản giờ có ngày phát hành Production rõ ràng để người chơi biết bản thay đổi được đưa lên game khi nào.",
+          "changes": [
+            {
+              "text": "**26.7.1:** **17/09/2026**.",
+              "format": "bullet"
+            },
+            {
+              "text": "**26.8.0:** dùng **ngày Production thực tế khi Codex triển khai phiên bản**, định dạng **dd/mm/yyyy**.",
+              "format": "bullet"
+            }
+          ]
+        },
+        {
+          "id": "section-16-entry-3",
+          "title": "MỚI — CARD THAY ĐỔI CÓ ICON / HÌNH ĐẠI DIỆN",
+          "icon": {
+            "kind": "system",
+            "id": "release"
+          },
+          "rationale": "Các mục thay đổi được chuyển từ text wall sang card có nhận diện hình ảnh, giúp người chơi nhận ra Lõi, Skill, Chiến Cơ và kẻ địch ngay khi đọc.",
+          "changes": [
+            {
+              "text": "**Lõi Nâng Cấp:** dùng icon Lõi thật.",
+              "format": "bullet"
+            },
+            {
+              "text": "**Kỹ năng:** dùng icon Skill thật.",
+              "format": "bullet"
+            },
+            {
+              "text": "**Chiến đấu cơ:** dùng aircraft thumbnail/art thật.",
+              "format": "bullet"
+            },
+            {
+              "text": "**Quái / Tinh Anh / Boss:** dùng sprite/atlas thật.",
+              "format": "bullet"
+            },
+            {
+              "text": "**Projectile / VFX:** dùng VFX/representative asset thật.",
+              "format": "bullet"
+            },
+            {
+              "text": "**System / UI / Bug Fix:** dùng icon hệ thống thống nhất, **không dùng emoji giả**.",
+              "format": "bullet"
+            },
+            {
+              "text": "Các Elite mới của 26.8.0 dùng chính thumbnail từ **atlas riêng mới** của từng Elite.",
+              "format": "bullet"
+            },
+            {
+              "text": "Mỗi card thay đổi sử dụng cấu trúc: **icon/hình đại diện → tên đối tượng → rationale ngắn → các dòng Before/After**. Các chỉ số, thời gian, phần trăm và mechanic quan trọng được **in đậm**.",
+              "format": "paragraph"
+            }
+          ]
+        },
+        {
+          "id": "section-16-entry-4",
+          "title": "MỚI — LƯU LẠI 26.7.1",
+          "icon": {
+            "kind": "system",
+            "id": "history"
+          },
+          "rationale": "26.7.1 không còn bị thay thế khi 26.8.0 phát hành. Toàn bộ changelog của 26.7.1 được giữ lại trong lịch sử và được tái trình bày bằng layout card mới mà không cắt bỏ thay đổi.",
+          "changes": []
+        }
+      ]
+    },
+    {
+      "id": "section-17",
+      "title": "PHIÊN BẢN",
+      "icon": {
+        "kind": "system",
+        "id": "release"
+      },
+      "intro": [
+        {
+          "text": "Phiên bản Không Kích: **26.7.1 ⇒ 26.8.0**.",
+          "format": "bullet",
+          "changeType": "change",
+          "label": "Phiên bản Không Kích:",
+          "before": "26.7.1",
+          "after": "26.8.0."
+        },
+        {
+          "text": "Nút Main Menu: **CHI TIẾT CẬP NHẬT · v26.8.0**.",
+          "format": "bullet"
+        },
+        {
+          "text": "Hành vi nút: **mở trực tiếp bản mới nhất ⇒ mở danh sách lịch sử cập nhật**.",
+          "format": "bullet",
+          "changeType": "change",
+          "label": "Hành vi nút:",
+          "before": "mở trực tiếp bản mới nhất",
+          "after": "mở danh sách lịch sử cập nhật."
+        }
+      ],
+      "entries": []
+    }
+  ]
+}
