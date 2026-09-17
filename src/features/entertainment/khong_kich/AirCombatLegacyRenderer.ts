@@ -1,3 +1,4 @@
+import { magneticFlight, stormTile } from "./airCombatMagneticSky";
 import { STAGE2_ART_URLS, STAGE2_ENEMY_ART, STAGE2_VFX_ART, TEMPEST_WEAKPOINT_ART } from "./airCombatStage2Art";
 import type { AtlasFrame } from "./pixi/airCombatPixiTypes";
 import { paintMagnetic, magneticEnemyDisabled } from "./airCombatMagnetic";
@@ -369,8 +370,23 @@ export function drawLegacyWorld(
     ctx.fillStyle = "#07112c"; ctx.fillRect(0,0,width,height);
     const image = magneticImage(STAGE2_ART_URLS.storm);
     if (image) {
-      const offset = reducedMotion ? 0 : Math.sin(world.elapsed * .035) * 14;
-      ctx.drawImage(image, -24, -30 + offset, 408, 700);
+      const distance = magneticFlight(world, reducedMotion);
+      for (let i = 0; i < 2; i++) {
+        const tile = stormTile(distance, i);
+        ctx.save(); ctx.translate(180, tile.y + 350); ctx.scale(1, tile.flipped ? -1 : 1);
+        ctx.drawImage(image, -204, -351, 408, 702); ctx.restore();
+      }
+      for (let i = 0; i < 12; i++) {
+        const x = (i * 137) % 460 - 50, y = (i * 183 + distance * 1.45) % 1000 - 180;
+        const haze = ctx.createRadialGradient(x, y, 5, x, y, 125);
+        haze.addColorStop(0, "rgba(123,130,190,.12)"); haze.addColorStop(1, "rgba(50,70,120,0)");
+        ctx.fillStyle = haze; ctx.fillRect(x - 125, y - 125, 250, 250);
+      }
+      ctx.strokeStyle = reducedMotion ? "rgba(165,216,255,.07)" : "rgba(165,216,255,.14)"; ctx.lineWidth = .8;
+      for (let i = 0; i < 24; i++) {
+        const x = (i * 73) % 360, y = (i * 131 + distance * 2.5) % 760 - 60;
+        ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x - 3, y + 27); ctx.stroke();
+      }
       ctx.fillStyle = "rgba(3,8,25,.22)"; ctx.fillRect(0,0,width,height);
     }
   } else drawTerrain(ctx, world, reducedMotion);
@@ -417,9 +433,6 @@ export function drawLegacyWorld(
     line:(ax,ay,bx,by,color,alpha,width)=>{ctx.save();ctx.globalAlpha=alpha;ctx.strokeStyle=`#${color.toString(16).padStart(6,"0")}`;ctx.lineWidth=width;ctx.beginPath();ctx.moveTo(ax,ay);ctx.lineTo(bx,by);ctx.stroke();ctx.restore();}
   };
   paintTacticalCores(world,tacticalPainter,reducedMotion);
-  paintMagnetic(world, { label: tacticalPainter.label,
-    sprite: (_id,key,x,y,w,h,rotation=0,alpha=1) => drawMagneticFrame(ctx, STAGE2_VFX_ART[key], x,y,w,h,rotation,alpha)
-  }, reducedMotion, presentationTime);
   for (const warning of world.warnings) {
     if(paintElitePatternWarning(warning,tacticalPainter))continue;
     if(warning.allegiance==="friendly_hacked"){
@@ -585,7 +598,7 @@ export function drawLegacyWorld(
     ctx.save();ctx.translate(enemy.x,enemy.y);
     if(enemy.type==="kamikaze")ctx.rotate(enemyAirframeRotation(enemy)-Math.PI);
     if (world.magnetic) {
-      const exposed = enemy.type === "boss" && world.enemies.filter(e => e.type === "satellite" && !magneticEnemyDisabled(world,e)).length <= 2;
+      const exposed = enemy.type === "boss" && ((world.magnetic?.director?.recovery ?? 0) > 0 || world.enemies.filter(e => e.type === "satellite" && !magneticEnemyDisabled(world,e)).length <= 2);
       const frame = exposed ? TEMPEST_WEAKPOINT_ART : STAGE2_ENEMY_ART[enemy.type];
       if (frame) drawMagneticFrame(ctx, frame, 0, 0, enemy.radius*2.8, enemy.radius*2.8, Math.PI, magneticEnemyDisabled(world,enemy) ? .3 : 1);
     } else drawEnemyGlyph(ctx, enemy.type, 0, 0, enemy.radius);
@@ -741,6 +754,11 @@ export function drawLegacyWorld(
   ctx.restore();
 
   accents.draw(ctx, world, reducedMotion);
+  ctx.save(); ctx.beginPath(); ctx.rect(GAMEPLAY_SAFE_RECT.left, GAMEPLAY_SAFE_RECT.top, GAMEPLAY_SAFE_RECT.width, GAMEPLAY_SAFE_RECT.height); ctx.clip();
+  paintMagnetic(world, { ...tacticalPainter,
+    sprite: (_id,key,x,y,w,h,rotation=0,alpha=1) => drawMagneticFrame(ctx, STAGE2_VFX_ART[key], x,y,w,h,rotation,alpha)
+  }, reducedMotion, presentationTime);
+  ctx.restore();
   const stats = getEffectiveAircraftStats(world.aircraft);
   const displayWidth = PLAYER_AIRFRAME_SIZE[aircraftId];
   const barWidth = trackingBarWidth(displayWidth);

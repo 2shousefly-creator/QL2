@@ -1,3 +1,4 @@
+import { magneticFlight, stormTile } from "../airCombatMagneticSky";
 import { Container, Graphics, Sprite } from "pixi.js";
 import type { AirCombatAssets } from "./AirCombatPixiAssets";
 import type { CombatWorld } from "../airCombatRuntime";
@@ -23,6 +24,8 @@ function paint(graphics: Graphics, shapes: TerrainShape[]) {
 export class AirCombatSky {
   readonly root = new Container();
   private storm: Sprite;
+  private stormNext: Sprite;
+  private stormWind = new Graphics();
   private stormShade = new Graphics().rect(0,0,360,640).fill({color:0x030819,alpha:.22});
   private atmosphere = new Graphics().rect(0, 0, 360, 640).fill(0xffffff);
   private terrain = Array.from({ length: 3 }, () => ({ root: new Container(), ground: new Graphics(), landmarks: new Graphics(), revision: -1 }));
@@ -31,7 +34,10 @@ export class AirCombatSky {
   constructor(assets: AirCombatAssets) {
     this.root.addChild(new Graphics().rect(0, 0, 360, 640).fill(0x3b5547));
     this.storm = new Sprite(assets.magneticStorm);
-    this.storm.position.set(-24,-30); this.storm.width=408; this.storm.height=700;
+    this.storm.position.set(-24,-30); this.storm.width=408; this.storm.height=702;
+    this.stormNext = new Sprite(assets.magneticStorm); this.stormNext.width = 408; this.stormNext.height = 702;
+    this.storm.anchor.set(.5); this.stormNext.anchor.set(.5);
+    this.storm.x = this.stormNext.x = 180;
     this.storm.visible=false; this.stormShade.visible=false;
     for (const segment of this.terrain) {
       segment.root.addChild(segment.ground, segment.landmarks);
@@ -39,7 +45,7 @@ export class AirCombatSky {
     }
     this.atmosphere.tint = 0x244c69;
     this.atmosphere.alpha = .24;
-    this.root.addChild(this.atmosphere, this.storm, this.stormShade);
+    this.root.addChild(this.atmosphere, this.storm, this.stormNext, this.stormShade);
     for (let layer = 0; layer < 3; layer++) {
       for (let i = 0; i < 4; i++) {
         const sprite = new Sprite(assets.effect(i % 2 ? "haze" : "cloud"));
@@ -57,21 +63,30 @@ export class AirCombatSky {
       const x = (i * 73) % 360, y = (i * 131) % 780 - 100;
       this.wind.moveTo(x, y).lineTo(x - 2, y + 18).stroke({ color: 0xd4e7f4, width: 0.6, alpha: 0.055 });
     }
-    this.root.addChild(this.wind);
+    this.root.addChild(this.wind, this.stormWind);
   }
   update(delta: number, world: CombatWorld, reducedMotion: boolean) {
     const magnetic = !!world.magnetic;
-    this.storm.visible = magnetic; this.stormShade.visible = magnetic;
+    this.storm.visible = magnetic; this.stormNext.visible = magnetic; this.stormWind.visible = magnetic; this.stormShade.visible = magnetic;
     this.atmosphere.visible = !magnetic;
     for (const view of this.terrain) view.root.visible = !magnetic;
     if (magnetic) {
-      this.storm.y = -30 + (reducedMotion ? 0 : Math.sin(world.elapsed * .035) * 14);
+      const distance = magneticFlight(world, reducedMotion);
+      for (let i = 0; i < 2; i++) {
+        const tile = stormTile(distance, i), sprite = i ? this.stormNext : this.storm;
+        sprite.y = tile.y + 350; sprite.scale.y = Math.abs(sprite.scale.y) * (tile.flipped ? -1 : 1);
+      }
       this.wind.visible = false;
-      for (const cloud of this.clouds) {
-        cloud.sprite.alpha = cloud.alpha * .22;
+      this.stormWind.clear();
+      for (let i = 0; i < 24; i++) {
+        const x = (i * 73) % 360, y = (i * 131 + distance * 2.5) % 760 - 60;
+        this.stormWind.moveTo(x, y).lineTo(x - 3, y + 27).stroke({ color: 0xa5d8ff, width: .8, alpha: reducedMotion ? .07 : .14 });
+      }
+      for (let i = 0; i < this.clouds.length; i++) {
+        const cloud = this.clouds[i];
+        cloud.sprite.alpha = cloud.alpha * .65;
         cloud.sprite.tint = cloud.haze ? 0x8f85cb : 0x49849c;
-        cloud.sprite.y += delta * cloud.speed * (reducedMotion ? 0 : .35);
-        if (cloud.sprite.y > 850) cloud.sprite.y -= 1100;
+        cloud.sprite.y = (i * 183 + distance * 1.45) % 1000 - 180;
       }
       return;
     }

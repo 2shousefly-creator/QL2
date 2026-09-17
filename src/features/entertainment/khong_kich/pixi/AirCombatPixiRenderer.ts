@@ -43,6 +43,8 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
   private damageText = new AirCombatDamageText();
   private sky: AirCombatSky;
   private magneticEndAge = 0;
+  private magneticWarnings = new Graphics();
+  private magneticLayer = new Container();
   private magneticSprites: AirCombatSpritePool;
   private enemies: AirCombatSpritePool;
   private projectiles: AirCombatSpritePool;
@@ -108,9 +110,9 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     host.appendChild(app.canvas);
     app.canvas.addEventListener("webglcontextlost", this.onLost);
     this.sky = new AirCombatSky(assets);
-    this.magneticSprites = new AirCombatSpritePool(this.effects, 512);
+    this.magneticSprites = new AirCombatSpritePool(this.magneticLayer, 512);
     app.stage.addChild(this.root);
-    this.root.addChild(this.sky.root, this.telegraphs, this.smokeLayer, this.actors, this.effects, this.enemyStatusLayer, this.hitbox, this.damageText.root);
+    this.root.addChild(this.sky.root, this.telegraphs, this.smokeLayer, this.actors, this.effects, this.magneticLayer, this.magneticWarnings, this.enemyStatusLayer, this.hitbox, this.damageText.root);
     // Separate stage branch: neither recoil nor camera shake can move status bars.
     app.stage.addChild(this.stableHud);
     this.stableHud.addChild(this.trackingBars, this.hpText, this.resourceText);
@@ -208,7 +210,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
         this.vfx.spawn("muzzle", event.x, event.y, 12, .08, 0xfff3c9);
         if (!reducedMotion) this.vfx.spawn("sparks", event.x, event.y, 22, .22);
       } else if (event.kind === "explosion") {
-        if (event.magneticDeath) continue;
+        if (event.magneticDeath) { this.shake = Math.min(3, event.boss ? 3 : 1); continue; }
         this.vfx.spawn(event.boss ? "bossExplosion" : event.size > 65 ? "largeExplosion" : event.size > 40 ? "mediumExplosion" : "smallExplosion", event.x, event.y, event.size * 1.5, event.boss ? 1.1 : 0.5);
         this.vfx.spawn("charge", event.x, event.y, Math.min(90, event.size), .12, 0xffedbc);
         this.vfx.spawn("shockwave", event.x, event.y, event.size * 1.7, .42, 0xffc78e);
@@ -253,7 +255,10 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     paintTacticalCores(world,tacticalPainter,reducedMotion);
     if (world.ended) this.magneticEndAge += delta;
     this.magneticSprites.begin();
+    this.magneticWarnings.clear();
     paintMagnetic(world, { label: tacticalPainter.label,
+      circle: (x,y,r,color,alpha,fill) => { this.magneticWarnings.circle(x,y,r); if(fill)this.magneticWarnings.fill({color,alpha});else this.magneticWarnings.stroke({color,alpha,width:2}); },
+      line: (ax,ay,bx,by,color,alpha,width) => { this.magneticWarnings.moveTo(ax,ay).lineTo(bx,by).stroke({color,alpha,width}); },
       sprite: (id, key, x, y, width, height, rotation = 0, alpha = 1, tint = 0xffffff) => {
         const sprite = this.magneticSprites.get(id, this.assets.effect(key));
         if (!sprite) return;
@@ -267,7 +272,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     this.engines.begin();
     for (const enemy of world.enemies) {
       const magnetic = !!world.magnetic;
-      const exposed = magnetic && enemy.type === "boss" && world.enemies.filter(e => e.type === "satellite" && !magneticEnemyDisabled(world,e)).length <= 2;
+      const exposed = magnetic && enemy.type === "boss" && ((world.magnetic?.director?.recovery ?? 0) > 0 || world.enemies.filter(e => e.type === "satellite" && !magneticEnemyDisabled(world,e)).length <= 2);
       const frame = exposed ? TEMPEST_WEAKPOINT_ART : magnetic ? STAGE2_ENEMY_ART[enemy.type]! : ENEMY_VISUALS[enemy.type];
       const sprite = this.enemies.get(enemy.id, this.assets.texture(frame));
       if (!sprite) continue;

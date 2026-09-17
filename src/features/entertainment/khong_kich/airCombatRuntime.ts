@@ -1,7 +1,7 @@
 import type { MagneticVfxKey } from "./airCombatStage2Art";
 import { getAirCombatStage, stageEnemyScale, type AirCombatStageDefinition } from "./airCombatStages";
 import { assertStageLaunch, persistStageVictory } from "./airCombatStorage";
-import { magneticFx, updateMagneticEnemy, updateMagneticHazards, updateMagneticProjectile, resetMagneticHazards, disableMagneticSatellite, magneticEnemyDisabled, type MagneticWorldState, type MagneticEnemyState, type MagneticProjectileState, type MagneticHooks } from "./airCombatMagnetic";
+import { inMagneticCorridor, magneticFx, updateMagneticEnemy, updateMagneticHazards, updateMagneticProjectile, resetMagneticHazards, disableMagneticSatellite, magneticEnemyDisabled, type MagneticWorldState, type MagneticEnemyState, type MagneticProjectileState, type MagneticHooks } from "./airCombatMagnetic";
 import { recordCoreMetric } from "./airCombatTelemetry";
 import { SKILL_BASE_VALUES as B, SKILL_CORE_VALUES as V, createSkillCoreRuntime, type SkillCoreRuntime, type MissileSalvo } from "./airCombatSkillCores";
 import { createCoreSelectionEvent, getRerollCandidates, makeCoreCard, type CoreSelectionEvent } from "./airCombatCoreSelection";
@@ -572,7 +572,7 @@ function addParticles(world: CombatWorld, x: number, y: number, color: string, a
 }
 function spawnEnemy(world: CombatWorld, type: EnemyType, auxiliary = false): EnemyEntity | null {
     if ((type === "magnetic_leech" || type === "swarm_carrier" || type === "micro_drone") &&
-        world.enemies.filter(e => e.type === type && e.hp > 0).length >= (type === "micro_drone" ? 6 : 2)) return null;
+        world.enemies.filter(e => e.type === type && e.hp > 0).length >= (type === "micro_drone" ? 12 : 5)) return null;
     if (world.enemies.length >= AIR_COMBAT_WORLD.maxEnemies)
         return null;
     const config = ENEMY_CONFIGS[type], wave = world.stage.waves[world.waveIndex], enemy = acquireEnemy(world);
@@ -1542,8 +1542,8 @@ function updateEncounter(world: CombatWorld, dt: number): void {
     const wave = world.stage.waves[world.waveIndex];
     const mainAlive = world.enemies.filter(e => e.hp > 0 && !e.auxiliary);
     if (!world.spawnQueue.length && !mainAlive.length && world.magnetic) {
-        // Summons and persistent hazards never extend the authoritative encounter.
-        for (let i = world.enemies.length - 1; i >= 0; i--) if (world.enemies[i].auxiliary) recycleEnemy(world, i);
+        // Surviving carrier drones complete their bounded, zero-reward final dive.
+        for (let i = world.enemies.length - 1; i >= 0; i--) if (world.enemies[i].auxiliary && world.enemies[i].type !== "micro_drone") recycleEnemy(world, i);
     }
     if (!world.spawnQueue.length && !world.enemies.length && !world.bossDefeated) {
         enterCountdownIfClear(world);
@@ -1552,41 +1552,48 @@ function updateEncounter(world: CombatWorld, dt: number): void {
     world.enemySpawnCooldown -= dt;
     if (!world.spawnQueue.length || mainAlive.length >= wave.cap || world.enemySpawnCooldown > 0) return;
     if (world.stageId === 2 && wave.elite) {
-        const spawned = world.spawnedInWave;
-        if (world.waveIndex === 2) {
-            if (spawned === 1 && mainAlive.length) return;
-            if (spawned === 2 && mainAlive.some(e => e.hp > e.maxHp * .5)) return;
-        } else if (spawned < 3 && mainAlive.length) return;
-        // Grid: solo, solo, then the final pair enter on the same combat tick.
-        const batch = world.waveIndex === 4 && spawned === 2 ? 2 : 1;
+        const batch = Math.min(world.spawnQueue.length, wave.cap - mainAlive.length);
         for (let i = 0; i < batch; i++) {
             const enemy = spawnEnemy(world, world.spawnQueue[0]);
             if (!enemy) break;
             enemy.magnetic = { clock: 0, attack: 0, anchorX: enemy.x, anchorY: enemy.y,
-                angle: enemy.phaseSeed, openerDelay: i * 1.2 };
+                angle: enemy.phaseSeed, slot: world.spawnedInWave, openerDelay: i * .3 };
             world.spawnQueue.shift(); world.spawnedInWave++;
         }
         world.enemySpawnCooldown = wave.interval;
         return;
     }
-    if (wave.groups && world.spawnedInWave > 0) {
-        let boundary = 0;
-        for (const group of wave.groups) {
-            boundary += group.length;
-            if (boundary === world.spawnedInWave && mainAlive.length > 3) return;
+    let entry = spawnEnemy(world, world.spawnQueue[0]), queueIndex = 0;
+    if (!entry && world.magnetic) {
+        for (let i = 1; i < world.spawnQueue.length; i++) {
+            if (world.spawnQueue[i] === world.spawnQueue[0]) continue;
+            entry = spawnEnemy(world, world.spawnQueue[i]);
+            if (entry) { queueIndex = i; break; }
         }
     }
-    if (spawnEnemy(world, world.spawnQueue[0])) {
-        world.spawnQueue.shift();
+    if (entry) {
+        if (world.magnetic && entry.type !== "boss") {
+            const lane = world.spawnedInWave % 6;
+            entry.x = GAMEPLAY_SAFE_RECT.left + 32 + lane * (GAMEPLAY_SAFE_RECT.width - 64) / 5;
+            entry.phaseSeed = lane * Math.PI / 3;
+        }
+        world.spawnQueue.splice(queueIndex, 1);
         world.spawnedInWave++;
         world.enemySpawnCooldown = wave.interval;
+        if (wave.groups) {
+            let boundary = 0;
+            for (const group of wave.groups) {
+                boundary += group.length;
+                if (boundary === world.spawnedInWave) { world.enemySpawnCooldown = .8; break; }
+            }
+        }
     }
 }
 function updateBossPhase(world: CombatWorld): void {
     const boss = world.enemies.find(e => e.type === "boss");
     if (!boss)
         return;
-    const ratio = boss.hp / boss.maxHp, next = ratio >= .7 ? 1 : ratio >= .35 ? 2 : 3;
+    const ratio = boss.hp / boss.maxHp, next = world.magnetic ? (ratio > .75 ? 1 : ratio > .5 ? 2 : ratio > .25 ? 3 : ratio > .1 ? 4 : 5) : ratio >= .7 ? 1 : ratio >= .35 ? 2 : 3;
     if (next !== world.bossPhase) {
         world.bossPhase = next;
         setMessage(world, `${world.stage.bossName.toUpperCase()} · GIAI ĐOẠN ${next}`, 2);
@@ -2827,7 +2834,7 @@ function updateEnemyPlayerCollisions(world: CombatWorld): void {
         if(enemy.hp>0&&enemy.type==="kamikaze"&&enemy.kamikazeState==="dash"&&enemyAllegiance(world,enemy)==="friendly_hacked")updateKamikaze(world,enemy,0);
         if (!isHostileToPlayer(world,enemy))
             continue;
-        if ((enemy.type === "micro_drone" && (enemy.magnetic?.clock ?? 0) < 2.4) || (enemy.type === "satellite" && (enemy.magnetic?.clock ?? 0) < 1.4)) continue;
+        if ((enemy.type === "micro_drone" && (enemy.magnetic?.clock ?? 0) < (enemy.magnetic?.diveAt ?? 2.8)) || (enemy.type === "satellite" && (enemy.magnetic?.clock ?? 0) < 1.4)) continue;
         if (enemy.type === "kamikaze" && enemy.kamikazeState === "dash") { updateKamikaze(world,enemy,0); continue; }
         if (enemy.dashRemaining>0&&enemy.dashAllegiance==="friendly_hacked")continue;
         if (world.aircraft.droneActive && circleVsAircraft(world.droneX,world.droneY,9,getEnemyHitbox(enemy)))
@@ -3043,7 +3050,8 @@ function updateProjectiles(world: CombatWorld, dt: number): void {
         p.previousX = p.x;
         p.previousY = p.y;
         if (updateCapturedProjectile(world,p,dt)) { if(p.lifetime<=0)recycleProjectile(world,i); continue; }
-        if (updateMagneticProjectile(world, p, dt, magneticHooks)) { if (p.lifetime <= 0) recycleProjectile(world, i); continue; }
+        if (world.magnetic && ordinaryHostileBullet(p) && inMagneticCorridor(world, p.x, p.radius, p.y)) { recycleProjectile(world, i); continue; }
+        if (updateMagneticProjectile(world, p, dt, magneticHooks)) { if (ordinaryHostileBullet(p) && inMagneticCorridor(world, p.x, p.radius, p.y)) p.lifetime = 0; if (p.lifetime <= 0) recycleProjectile(world, i); continue; }
         if (p.projectileKind === "boss_missile") {
             if (!updateBossMissile(world, p, dt)) recycleProjectile(world, i);
             continue;
@@ -3063,6 +3071,7 @@ function updateProjectiles(world: CombatWorld, dt: number): void {
         const speedScale=ordinaryHostileBullet(p) && tacticalState(world).fields.some(f=>Math.hypot(p.x-f.x,p.y-f.y)<=55)?.6:1;
         p.x += p.vx * dt * speedScale;
         p.y += p.vy * dt * speedScale;
+        if (world.magnetic && ordinaryHostileBullet(p) && inMagneticCorridor(world, p.x, p.radius, p.y)) { recycleProjectile(world, i); continue; }
         if (p.corridorEdge !== undefined && p.corridorSide !== undefined) {
             const boundary=p.corridorEdge+p.corridorSide*p.radius;
             if((p.x-boundary)*p.corridorSide<0) {
