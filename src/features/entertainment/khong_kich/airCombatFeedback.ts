@@ -47,7 +47,7 @@ export class DamageLabelPool {
         // Separate both parts of a hit so white absorption never hides the HP number.
         label.offset = ((event.id % 5) - 2) * 4;
         if (event.hpDamage > 0 && event.shieldAbsorbed > 0) { label.x += damageKind === "shield" ? -16 : 16; if (damageKind === "shield") label.y -= 13; }
-        label.text = String(Math.max(1, Math.round(amount)));
+        label.text = String(Math.max(0, Math.round(amount)));
         label.critical = damageKind === "hp" && event.target === "enemy" && event.critical;
         label.damageKind = damageKind;
         label.revision++;
@@ -75,7 +75,7 @@ export function activeShieldAmount(state: AircraftCombatState): number {
   }
   return amount;
 }
-export const statusBarText = (current: number, max: number) => `${Math.max(0, Math.floor(current))} / ${Math.max(1, Math.floor(max))}`;
+export const statusBarText = (current: number, max: number) => `${Math.max(0, Math.round(current))} / ${Math.max(1, Math.round(max))}`;
 
 export interface HealthBarState {
   hp: number; maxHp: number; hpRatio: number; shieldEnd: number;

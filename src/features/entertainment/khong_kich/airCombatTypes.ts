@@ -149,6 +149,8 @@ export interface AircraftCombatState {
   activeEffects: Partial<Record<SkillId, number>>;
   activeEffectDurations?: Partial<Record<SkillId, number>>;
   droneActive: boolean;
+  dronePhase?: "deploying" | "active" | "returning";
+  droneTransitionRemaining?: number;
   basicShotsFired: number;
   pendingMilestones: number[];
   coreState: CoreRuntimeState;

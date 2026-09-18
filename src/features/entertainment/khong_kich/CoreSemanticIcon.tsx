@@ -5,6 +5,7 @@ import skillAtlas from "../../../assets/khong-kich/v2/combat-ui-icons-atlas.png"
 const icons={Flame, Shield, Gauge, Heart, HeartPulse, Timer, Crosshair, Target, Swords, ScanLine, Zap, BatteryCharging, Battery, Sparkles, Layers, Skull, RotateCcw, ShieldCheck, ShieldPlus, ShieldOff, Rocket, Bomb, Orbit, Radar, Focus, Expand, Minimize, ArrowUpRight, ArrowDownRight, Waves, GitBranch, Repeat2, ChevronsUp, Activity, CircleDot, Diamond, Coins, Shuffle, Gem, Lock, Filter, ArrowLeftRight, Wind, Link, Snowflake, TriangleAlert};
 interface CoreIconSpec { family:keyof typeof icons; skill?:SkillId; badge?:string }
 export const CORE_SEMANTIC_ICONS:Record<string,CoreIconSpec>={
+  core_149: { family:"Crosshair", badge:"$" },
   core_001: { family: "Flame", badge: "I" },
   core_002: { family: "Shield", badge: "I" },
   core_003: { family: "Gauge", badge: "I" },

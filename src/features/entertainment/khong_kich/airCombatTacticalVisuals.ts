@@ -1,8 +1,9 @@
 import { SKILL_CORE_VALUES as V } from "./airCombatSkillCores";
 import { enemyAllegiance, isHostileToPlayer, type CombatWorld, type WarningZone } from "./airCombatRuntime";
 export interface TacticalPainter {
+  polygon?(points:readonly number[],color:number,alpha:number):void;
   label?(x:number,y:number,text:string,color:number,size:number):void;
-  circle(x:number,y:number,r:number,color:number,alpha:number,fill?:boolean):void;
+  circle(x:number,y:number,r:number,color:number,alpha:number,fill?:boolean,width?:number):void;
   line(ax:number,ay:number,bx:number,by:number,color:number,alpha:number,width:number):void;
 }
 /** Shared read-only geometry keeps Canvas, Pixi and gameplay endpoints aligned. */
@@ -21,6 +22,10 @@ export function paintTacticalCores(world:CombatWorld,p:TacticalPainter,reducedMo
     if(e.hp<=0)continue;
     const effect=world.skillCores.enemyEffects.get(e.id),large=e.type==="boss"||e.eliteWave>0;
     const labels:{text:string;color:number}[]=[];
+    if(world.skillCores.bountyTarget===e.id&&world.skillCores.bountyUntil>now){
+      const r=e.radius+10;p.circle(e.x,e.y,r,0xff3344,.95);
+      for(const side of [-1,1]){p.line(e.x+side*(r-5),e.y,e.x+side*(r+6),e.y,0xff3344,1,2);p.line(e.x,e.y+side*(r-5),e.x,e.y+side*(r+6),0xff3344,1,2);}
+    }
     if((effect?.weakenUntil||0)>now)labels.push({text:`↓DMG${V.weakenReduction*100}% ${Math.ceil(effect!.weakenUntil!-now)}s`,color:0xfbbf24});
     if((effect?.markUntil||0)>now)labels.push({text:`◎+${V.markBonus*100}% ${Math.ceil(effect!.markUntil!-now)}s`,color:0xfb923c});
     if((effect?.armorUntil||0)>now)labels.push({text:`◇−${V.laserArmorReduction*100}% ${Math.ceil(effect!.armorUntil!-now)}s`,color:0xc4b5fd});

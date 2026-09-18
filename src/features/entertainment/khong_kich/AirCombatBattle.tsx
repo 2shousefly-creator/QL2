@@ -488,18 +488,18 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
             <button type="button" aria-label="Thoát trận" onClick={openExit} className="text-rose-300"><X /></button>
           </div>
         </div>
-        <CombatStatChips stats={hud.stats} baseline={getEffectiveAircraftStats(worldRef.current.aircraft, false)} />
+        <CombatStatChips healingReceived={worldRef.current.aircraft.status.healingReceivedUntil > worldRef.current.aircraft.coreState.time ? worldRef.current.aircraft.status.healingReceivedMultiplier : 1} stats={hud.stats} baseline={getEffectiveAircraftStats(worldRef.current.aircraft, false)} />
         <div className="flex items-center gap-2 text-lime-200 tabular-nums">
           <span className="shrink-0">Cấp {worldRef.current.aircraft.level}</span>
           <div role="progressbar" aria-label="Kinh nghiệm chiến đấu" aria-valuenow={Math.floor(worldRef.current.aircraft.combatXp)} aria-valuemin={0} aria-valuemax={Math.max(1,hud.combatXpRequired)} className="air-xp-bar h-1 flex-1 overflow-hidden bg-emerald-950"><div className="h-full bg-lime-300" style={{ width: xpRatio * 100 + "%" }} /></div>
           <span>{worldRef.current.aircraft.level >= 30 ? "TỐI ĐA" : `${Math.floor(worldRef.current.aircraft.combatXp)}/${hud.combatXpRequired} XP`}</span>
         </div>
-        <span className="sr-only">HP {Math.ceil(hud.stats.currentHp)}/{hud.stats.maxHp}; {resourceLabel} {Math.floor(hud.stats.currentResource)}/{hud.stats.maxResource}</span>
+        <span className="sr-only">HP {Math.round(hud.stats.currentHp)}/{Math.round(hud.stats.maxHp)}; {resourceLabel} {Math.round(hud.stats.currentResource)}/{Math.round(hud.stats.maxResource)}</span>
       </section>
 
       {hud.bossMaxHp > 0 && (
         <div className="air-boss-hud" style={{ top: `${AIR_COMBAT_WORLD.hudHeight / 720 * 100}%`, height: `${BOSS_HUD_HEIGHT / 720 * 100}%` }} data-boss-phase={hud.bossPhase}>
-          <div className="flex justify-between text-[7px] font-black uppercase text-rose-200"><span>{getAirCombatStage(stageId)?.bossName} · Giai đoạn {hud.bossPhase}</span><span>{Math.ceil(hud.bossHp).toLocaleString("vi-VN")}</span></div>
+          <div className="flex justify-between text-[7px] font-black uppercase text-rose-200"><span>{getAirCombatStage(stageId)?.bossName} · Giai đoạn {hud.bossPhase}</span><span>{Math.round(hud.bossHp).toLocaleString("vi-VN")}</span></div>
           {stageId === 2 && <div className="air-guardian-hud"><span>VỆ TINH: {hud.guardianSlots.map((alive,slot)=><i key={slot} data-alive={alive}>●</i>)}</span><span>{hud.guardianSlots.some(Boolean) ? "BẢO HỘ: -35% SÁT THƯƠNG" : "BẢO HỘ ĐÃ PHÁ"}</span></div>}
           <div className="air-boss-health relative mt-1 h-1.5 overflow-hidden bg-black">
             <div ref={bossShieldRef} className="absolute inset-y-0 left-0 bg-slate-200" />
@@ -611,7 +611,7 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
         <ConfirmationDialog key="exit" status="warning" layer="exclusive-dialog" layout="viewport-safe" onClose={closeExit} labelledBy="air-exit-title" panelClassName="text-center">
           <OverlayHeader><ArrowLeft className="mx-auto h-8 w-8 text-[var(--modal-danger)]" /><h2 id="air-exit-title" className="modal-title">Rời lượt xuất kích?</h2></OverlayHeader>
           <OverlayBody data-exit-confirm="open"><p className="text-xs leading-relaxed text-[var(--modal-text)]">Lượt hiện tại sẽ kết thúc và không nhận thưởng.</p></OverlayBody>
-          <OverlayFooter data-stack-actions="true"><ModalButton variant="ghost" type="button" onClick={closeExit}>Ở lại</ModalButton><ModalButton variant="danger" type="button" onClick={onExit}>Rời trận</ModalButton></OverlayFooter>
+          <OverlayFooter data-stack-actions="true"><ModalButton variant="primary" type="button" autoFocus onClick={closeExit}>Ở Lại</ModalButton><ModalButton variant="ghost" type="button" className="text-rose-300" onClick={onExit}>Rời Đi</ModalButton></OverlayFooter>
         </ConfirmationDialog>
       )}
 

@@ -75,8 +75,6 @@ for (const [row, key, gain] of [[46, "firepower", .4], [47, "armor", .2], [48, "
                 const amount = gain * (ctx.target?.elite || ctx.target?.boss ? 5 : 1);
                 const stacks = ctx.state.coreState.stacks;
                 stacks[coreId(row)] = (stacks[coreId(row)] || 0) + amount;
-                if (key === "maxHp")
-                    ctx.heal(amount);
             } },
     });
 register(49, { finalStats: (s, stats) => { if (s.coreState.time - s.coreState.lastMove >= 2.5) {
@@ -159,14 +157,15 @@ register(81, { hooks: { skillCast: ctx => { if (ready(ctx.state, "skillShieldCd"
             arm(ctx.state, "skillShieldCd", 6);
         } } } });
 register(82, { finalStats: (s, stats) => { if (s.coreState.time - s.coreState.lastDamage >= 4)
-        stats.fireRate *= 1.2; } });
+        stats.fireRate += 1; } });
 register(83, { hooks: { damageTaken: ctx => { if (ready(ctx.state, "counterCd")) {
-            ctx.state.coreState.stacks.counter = 5;
-            arm(ctx.state, "counterCd", 6);
+            arm(ctx.state, "counterActive", 4);
+            arm(ctx.state, "counterCd", 13);
+            recordCoreMetric(ctx.state,83,"procs",1);
         } }, basic: ctx => {
-            if ((ctx.state.coreState.stacks.counter || 0) > 0) {
-                ctx.rawMultiplier *= 1.3;
-                ctx.state.coreState.stacks.counter--;
+            if (active(ctx.state,"counterActive")) {
+                ctx.rawMultiplier *= 1.2;
+                recordCoreMetric(ctx.state,83,"shots",1);
             }
         } } });
 register(85, { stats: (_s, stats) => { stats.firepower += 48; stats.armor -= 24; } });
@@ -181,10 +180,9 @@ register(94, { stats: (_s, stats) => { stats.criticalChance += .1; }, finalStats
 register(95, { finalStats: (_s, stats) => { stats.criticalChance = .25; stats.criticalDamageMultiplier += 1.4; } });
 register(96, { stats: (_s, stats) => { stats.cooldownReduction += .3; }, hooks: { skillCast: ctx => { ctx.state.currentHp = Math.max(Number.EPSILON, ctx.state.currentHp * .95); } } });
 register(97, { finalStats: (_s, stats) => { stats.firepower *= 1.4; stats.maxHp *= 1.3; stats.armor *= 1.3; }, hooks: { acquire: ctx => ctx.stopSkills() } });
-register(99, { hooks: { tick: ctx => { if (ctx.state.currentResource < ctx.stats.maxResource * .1 && ready(ctx.state, "reserveShieldCd")) {
+register(99, { hooks: { tick: ctx => { if (ctx.state.currentResource < ctx.stats.maxResource * .15 && ready(ctx.state, "reserveShieldCd")) {
             shield(ctx, "reserve", .10, 4);
-            const gain = Math.min(ctx.stats.maxResource * .05, ctx.stats.maxResource - ctx.state.currentResource);
-            ctx.state.currentResource += gain; recordCoreMetric(ctx.state, 99, "resource", gain);
+            recordCoreMetric(ctx.state,99,"procs",1);
             arm(ctx.state, "reserveShieldCd", 20);
         } } } });
 register(100, { stats: (s, stats) => { if (s.currentHp > stats.maxHp * .7)
@@ -276,7 +274,7 @@ export function coreStackLabel(state: AircraftCombatState, id: CoreId): string |
     const shieldStatus = (key: string, cooldown?: string) => {
         const shield = c.shields[key];
         const amount = shield && shield.until > c.time ? Math.max(0, shield.amount) : 0;
-        return `Khiên hiện tại: ${Math.floor(amount)}${cooldown ? ` · Hồi lại sau ${remaining(cooldown)}s` : ""}`;
+        return `Khiên hiện tại: ${Math.round(amount)}${cooldown ? ` · Hồi lại sau ${remaining(cooldown)}s` : ""}`;
     };
     switch (id) {
         case "core_049": return c.time - c.lastMove >= 2.5 ? "Đang tăng Hỏa lực và Giáp" : `Kích hoạt sau ${Math.max(0, 2.5 - c.time + c.lastMove).toFixed(1).replace(".", ",")}s đứng yên`;
@@ -293,7 +291,7 @@ export function coreStackLabel(state: AircraftCombatState, id: CoreId): string |
         case "core_078": return `Tăng hồi tài nguyên: còn ${remaining("reactor")}s`;
         case "core_079": return `Tiến độ bắn thêm: ${state.basicShotsFired % 3} / 3`;
         case "core_081": return shieldStatus("skill", "skillShieldCd");
-        case "core_083": return `Đòn phản kích còn: ${c.stacks.counter || 0} · Hồi lại sau ${remaining("counterCd")}s`;
+        case "core_083": return active(state,"counterActive") ? `Đang phản công: ${remaining("counterActive")}s` : `Hồi lại sau ${remaining("counterCd")}s`;
         case "core_092": return c.time - c.lastDamage >= 5 ? "Đang hồi HP" : `Hồi HP sau ${Math.max(0, 5 - c.time + c.lastDamage).toFixed(1).replace(".", ",")}s không nhận sát thương`;
         case "core_099": return shieldStatus("reserve", "reserveShieldCd");
         case "core_104": return shieldStatus("overheal");

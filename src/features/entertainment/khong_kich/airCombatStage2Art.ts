@@ -11,6 +11,7 @@ export const STAGE2_ART_URLS = { elite: eliteUrl, enemy: enemyUrl, vfx: vfxUrl, 
 // occupy identical grid cells. Original alpha is retained in the committed PNG.
 const ship = (x: number, y: number, w: number, h: number): AtlasFrame =>
   ({ atlas: "stage2Enemy", rect: [x / 1086, y / 1448, w / 1086, h / 1448] });
+// 26.8.1 aircraft redraw retains the five existing cells and all collision dimensions.
 export const STAGE2_ENEMY_ART: Partial<Record<EnemyType, AtlasFrame>> = {
   prism_sovereign: { atlas: "stage2Elite", rect: [0/5, 0, 1/5, 1/2] },
   mine_warden: { atlas: "stage2Elite", rect: [1/5, 0, 1/5, 1/2] },

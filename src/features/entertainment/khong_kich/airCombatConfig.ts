@@ -283,7 +283,7 @@ export const ENEMY_CONFIGS: Record<EnemyType, EnemyConfig> = {
   micro_drone: {"type": "micro_drone", "name": "MICRO DRONE", "baseHp": 62.79, "baseArmor": 0, "speed": 60, "radius": 7, "score": 0, "combatXp": 0, "projectileDamage": 0, "collisionDamage": 52.416, "fireInterval": 99, "color": "#a5f3fc"},
   cyclone_ace: {"type": "cyclone_ace", "name": "CYCLONE ACE · BẬC THẦY QUỸ ĐẠO", "baseHp": 4870.8, "baseArmor": 31.57, "speed": 62, "radius": 23, "score": 1500, "combatXp": 230, "projectileDamage": 82.992, "collisionDamage": 209.664, "fireInterval": 4, "color": "#22d3ee"},
   grid_architect: {"type": "grid_architect", "name": "GRID ARCHITECT · KIẾN TRÚC SƯ TỪ TRƯỜNG", "baseHp": 7035.6, "baseArmor": 59.532, "speed": 25, "radius": 28, "score": 1500, "combatXp": 230, "projectileDamage": 61.152, "collisionDamage": 244.608, "fireInterval": 7, "color": "#c084fc"},
-  satellite: {"type": "satellite", "name": "MAGNETIC SATELLITE", "baseHp": 46750, "baseArmor": 44.88, "speed": 0, "radius": 10, "score": 0, "combatXp": 0, "projectileDamage": 125.44, "collisionDamage": 80.64, "fireInterval": 0.5, "color": "#67e8f9"},
+  satellite: {"type": "satellite", "name": "MAGNETIC SATELLITE", "baseHp": 23375, "baseArmor": 22.44, "speed": 0, "radius": 10, "score": 0, "combatXp": 0, "projectileDamage": 125.44, "collisionDamage": 80.64, "fireInterval": 1, "color": "#67e8f9"},
   "scout": {
     "type": "scout",
     "name": "Scout Drone",

@@ -1,3 +1,4 @@
+import { recordCoreMetric } from "./airCombatTelemetry";
 import { AIRCRAFT_CONFIGS, CORE_DEFINITIONS, CORE_TIER_CHANCES } from "./airCombatConfig";
 import { getEffectiveAircraftStats } from "./airCombatAircraft";
 import { skillsLocked } from "./airCombatCoreEffects";
@@ -52,7 +53,7 @@ export function applyCore(state: AircraftCombatState, card: CoreCard, random: ()
     type Work = {
         core: CoreDefinition;
     } | {
-        tier?: CoreTier;
+        tier?: CoreTier; owner?:number;
     };
     const work: Work[] = [{ core: first }];
     while (work.length) {
@@ -68,21 +69,22 @@ export function applyCore(state: AircraftCombatState, card: CoreCard, random: ()
         }
         if (!core || state.selectedCores.includes(core.id))
             continue;
-        const before = getEffectiveAircraftStats(state);
+
         state.selectedCores.push(core.id);
+        if("owner" in item)recordCoreMetric(state,item.owner,"converted",1);
         state.coreState.acquisitions.push({ id: state.coreState.nextAcquisitionId++, coreId: core.id });
         if (core.skillId)
             state.modifiers.skillCores[core.skillId] = core.id;
         const after = getEffectiveAircraftStats(state);
-        state.currentHp = Math.min(after.maxHp, state.currentHp + Math.max(0, after.maxHp - before.maxHp));
+        state.currentHp = Math.min(after.maxHp, state.currentHp);
         state.currentResource = Math.min(after.maxResource, state.currentResource);
         onAcquire?.(core.id);
         if (core.id === "core_050")
-            work.push({ tier: "gold" });
+            work.push({ tier: "gold",owner:50 });
         if (core.id === "core_051")
-            work.push({ tier: "diamond" });
+            work.push({ tier: "diamond",owner:51 });
         if (core.id === "core_052")
-            work.push({}, {});
+            work.push({owner:52}, {owner:52});
     }
     return true;
 }

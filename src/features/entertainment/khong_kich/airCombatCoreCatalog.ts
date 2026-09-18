@@ -556,7 +556,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_041",
     "name": "Hội tụ năng lượng",
-    "description": "Giảm 1,5 giây thời gian tụ của Laser Hủy Diệt, còn 0,5 giây.",
+    "description": "Giảm thời gian tụ Laser 1,8 giây → từ 2s → 0,2s, đồng thời laser gây thêm 10% sát thương",
     "system": "Phantom · Skill 2",
     "icon": "core:core_041",
     "category": "skill",
@@ -620,7 +620,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_045",
     "name": "Liên kết bền chặt",
-    "description": "HawkEye kế thừa thêm 15% chỉ số của Phantom, nâng tổng tỷ lệ kế thừa lên 70%.",
+    "description": "HawkEye kế thừa thêm 20% chỉ số Phantom → từ 55% → 75%.",
     "system": "Phantom · Skill 3",
     "icon": "core:core_045",
     "category": "skill",
@@ -999,7 +999,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_079",
     "name": "Tam Liên Pháo",
-    "description": "Mỗi phát bắn thường thứ 3 bắn thêm một đạn phụ gây 40% sát thương.",
+    "description": "Mỗi phát bắn thường thứ 3 tạo thêm một viên đạn phụ gây 40% sát thương, viên đạn này sẽ có đường bay độc lập và tự nhắm vào mục tiêu gần nhất (không khóa mục tiêu)",
     "system": "Vũ khí",
     "icon": "core:core_079",
     "category": "weapon",
@@ -1032,7 +1032,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_082",
     "name": "Áp Lực Liên Tục",
-    "description": "Sau 4 giây không nhận sát thương, nhận +20% Tốc Độ Bắn. Hiệu ứng mất khi bạn nhận sát thương.",
+    "description": "Không bị trúng đòn trong 4 giây sẽ nhận +1 Tốc độ bắn cho tới khi bị trúng đòn",
     "system": "Vũ khí",
     "icon": "core:core_082",
     "category": "weapon",
@@ -1043,7 +1043,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_083",
     "name": "Phản Công Tức Thời",
-    "description": "Khi nhận sát thương, 5 phát bắn thường kế tiếp gây thêm 30% sát thương. Hồi nội tại 6 giây.",
+    "description": "Sau khi nhận sát thương, những phát bắn thường tiếp theo trong vòng 4 giây gây thêm 20% sát thương. Hồi nội bộ 9 giây (bắt đầu hồi chiêu sau khi kết thúc hiệu ứng).",
     "system": "Phản kích",
     "icon": "core:core_083",
     "category": "offense",
@@ -1054,7 +1054,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_084",
     "name": "Miễn Phí Có Điều Kiện",
-    "description": "Mỗi kỹ năng thứ 4 không tiêu hao tài nguyên, nhưng nhận thêm 20% Hồi Chiêu cho lần dùng đó.",
+    "description": "Mỗi kỹ năng thứ 4 sử dụng sẽ không tiêu hao tài nguyên nhưng lần dùng đó có hồi chiêu tăng 10%",
     "system": "Kỹ năng",
     "icon": "core:core_084",
     "category": "resource",
@@ -1219,7 +1219,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_099",
     "name": "Kíp Phòng Thủ",
-    "description": "Khi Tài Nguyên dưới 10%, tạo Khiên bằng 10% Máu Tối Đa trong 4 giây và hồi ngay 5% Tài Nguyên Tối Đa. Hồi nội tại 20 giây.",
+    "description": "Khi tài nguyên xuống dưới 15%, nhận Khiên bằng 10% HP tối đa trong 4 giây. Hồi nội tại 20 giây.",
     "system": "Sinh Tồn",
     "icon": "core:core_099",
     "category": "defense",
@@ -1900,5 +1900,17 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   ],
   "skillId": "escort_drone",
   "skillSlot": 3
+}
+,
+{
+  "id": "core_149",
+  "name": "Thợ Săn Tiền Thưởng",
+  "description": "Đánh dấu ngẫu nhiên một quái vật trong 4 giây. Mục tiêu bị đánh dấu chịu thêm 5% sát thương từ người chơi. Nếu tiêu diệt mục tiêu được đánh dấu trong thời gian này, nhận 1 phần thưởng vĩnh viễn ngẫu nhiên trong lượt chơi hiện tại. Hồi nội bộ 14 giây, bắt đầu sau khi hiệu ứng kết thúc hoặc mục tiêu bị tiêu diệt.",
+  "system": "Đặc Biệt",
+  "icon": "core:core_149",
+  "category": "offense",
+  "tiers": [
+    "gold"
+  ]
 }
 ];

@@ -433,7 +433,8 @@ export function drawLegacyWorld(
 
   const tacticalPainter:TacticalPainter={
     label:(x,y,text,color,size)=>{ctx.save();ctx.font=`bold ${size}px Arial`;ctx.textAlign="center";ctx.textBaseline="bottom";ctx.strokeStyle="#020617";ctx.lineWidth=2;ctx.strokeText(text,x,y);ctx.fillStyle=`#${color.toString(16).padStart(6,"0")}`;ctx.fillText(text,x,y);ctx.restore();},
-    circle:(x,y,r,color,alpha,fill)=>{ctx.save();ctx.globalAlpha=alpha;ctx.strokeStyle=ctx.fillStyle=`#${color.toString(16).padStart(6,"0")}`;ctx.lineWidth=2;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);if(fill)ctx.fill();else ctx.stroke();ctx.restore();},
+    polygon:(points,color,alpha)=>{ctx.save();ctx.globalAlpha=alpha;ctx.fillStyle=`#${color.toString(16).padStart(6,"0")}`;ctx.beginPath();ctx.moveTo(points[0],points[1]);for(let i=2;i<points.length;i+=2)ctx.lineTo(points[i],points[i+1]);ctx.closePath();ctx.fill();ctx.restore();},
+    circle:(x,y,r,color,alpha,fill,width=2)=>{ctx.save();ctx.globalAlpha=alpha;ctx.strokeStyle=ctx.fillStyle=`#${color.toString(16).padStart(6,"0")}`;ctx.lineWidth=width;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);if(fill)ctx.fill();else ctx.stroke();ctx.restore();},
     line:(ax,ay,bx,by,color,alpha,width)=>{ctx.save();ctx.globalAlpha=alpha;ctx.strokeStyle=`#${color.toString(16).padStart(6,"0")}`;ctx.lineWidth=width;ctx.beginPath();ctx.moveTo(ax,ay);ctx.lineTo(bx,by);ctx.stroke();ctx.restore();}
   };
   paintTacticalCores(world,tacticalPainter,reducedMotion);
@@ -632,7 +633,7 @@ export function drawLegacyWorld(
         if(stroke){ctx.strokeStyle=isElite(enemy.type)?"#ffad43":"#d05a69";ctx.lineWidth=.8;ctx.stroke();}
       };
       fill(x-2,y-2,w+4,barHeight+4,1,"#071223",true);fill(x,y,w,barHeight,1,"#172638");
-      fill(x,y,w,barHeight,health.shieldEnd,"#d8e4ee");fill(x,y,w,barHeight,health.chipRatio,"#fff");fill(x,y,w,barHeight,health.hpRatio,isElite(enemy.type)?"#fbbf24":"#fb7185");
+      fill(x,y,w,barHeight,health.shieldEnd,"#d8e4ee");fill(x,y,w,barHeight,health.chipRatio,"#ef4444");fill(x,y,w,barHeight,health.hpRatio,isElite(enemy.type)?"#fbbf24":"#fb7185");
 
     }
   }
@@ -785,7 +786,7 @@ export function drawLegacyWorld(
   const fillBar = (y: number, ratio: number, color: string) => { if (ratio > 0) { barPath(y, ratio); ctx.fillStyle = color; ctx.fill(); } };
   ctx.save(); ctx.shadowBlur = 0;
   fillBar(barY, 1, "rgba(2,6,23,.92)"); fillBar(barY + 13, 1, "rgba(2,6,23,.92)");
-  fillBar(barY, health.shieldEnd, "#d8e4ee"); fillBar(barY, health.chipRatio, "#fff");
+  fillBar(barY, health.shieldEnd, "#d8e4ee"); fillBar(barY, health.chipRatio, "#ef4444");
   fillBar(barY, hp, hp < .25 ? "#f87171" : hp < .5 ? "#fbbf24" : "#4ade80");
   fillBar(barY + 13, stats.currentResource / stats.maxResource, stats.resourceKind === "energy" ? "#a78bfa" : "#38bdf8");
   ctx.strokeStyle = "rgba(203,213,225,.8)"; ctx.lineWidth = .39;

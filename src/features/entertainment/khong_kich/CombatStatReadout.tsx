@@ -2,14 +2,14 @@ import React from "react";
 import { Swords, Shield, Gauge, HeartPulse, BatteryCharging, Timer, Crosshair, Zap } from "lucide-react";
 import type { EffectiveAircraftStats } from "./airCombatTypes";
 
-export function CombatStatChips({ stats, baseline }: { stats: EffectiveAircraftStats; baseline?: EffectiveAircraftStats }) {
+export function CombatStatChips({ stats, baseline, healingReceived = 1 }: { stats: EffectiveAircraftStats; baseline?: EffectiveAircraftStats; healingReceived?: number }) {
   const keys = ["firepower", "armor", "fireRate", "hpRegen", "resourceRegen", "cooldownReduction", "criticalChance", "criticalDamageMultiplier"] as const;
   const resource = stats.resourceKind === "mana" ? "Mana" : "Energy";
   const chips = [
     { label: "Hỏa lực", value: stats.firepower.toFixed(0), Icon: Swords },
     { label: "Giáp", value: stats.armor.toFixed(0), Icon: Shield },
     { label: "Tốc độ bắn", value: `${stats.fireRate.toFixed(1)}/s`, Icon: Gauge },
-    { label: "Hồi HP", value: `${stats.hpRegen.toFixed(1)}/s`, Icon: HeartPulse },
+    { label: "Hồi HP", value: `${(stats.hpRegen * healingReceived).toFixed(1)}/s`, Icon: HeartPulse },
     { label: `Hồi ${resource}`, value: `${stats.resourceRegen.toFixed(1)}/s`, Icon: BatteryCharging },
     { label: "Giảm hồi chiêu", value: `${Math.round(stats.cooldownReduction * 100)}%`, Icon: Timer },
     { label: "Tỷ lệ chí mạng", value: `${Math.round(stats.criticalChance * 100)}%`, Icon: Crosshair },
@@ -18,7 +18,7 @@ export function CombatStatChips({ stats, baseline }: { stats: EffectiveAircraftS
   return <div className="combat-stat-chips" aria-label="Chỉ số chiến đấu">
     {chips.map(({ label, value, Icon }, index) => {
       const key = keys[index], delta = baseline ? stats[key] - baseline[key] : 0;
-      const direction = Math.abs(delta) < 1e-5 * Math.max(1, Math.abs(baseline?.[key] ?? 0)) ? "neutral" : delta > 0 ? "buff" : "debuff";
+      const direction = key === "hpRegen" && healingReceived < 1 ? "debuff" : Math.abs(delta) < 1e-5 * Math.max(1, Math.abs(baseline?.[key] ?? 0)) ? "neutral" : delta > 0 ? "buff" : "debuff";
       return <span key={label} className="combat-stat-chip" data-stat-change={direction} title={`${label}: ${value}`}>
       <Icon aria-hidden="true" /><span className="sr-only">{label}: </span><span>{value}</span>
     </span>; })}

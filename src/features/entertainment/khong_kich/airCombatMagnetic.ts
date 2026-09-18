@@ -1,7 +1,7 @@
 import { bossMinCenterY } from "./airCombatHudLayout";
 import type { StatusPayload, DamageDelivery } from "./airCombatStatus";
 import { AIR_COMBAT_WORLD, ENEMY_CONFIGS, stageEnemyConfig, GAMEPLAY_SAFE_RECT as RECT } from "./airCombatConfig";
-import { circleVsAircraft, getPlayerHitbox, clampHitboxToGameplayRect, segmentVsAircraft, createHitResult, hitboxProjectionExtent } from "./airCombatHitboxes";
+import { circleVsAircraft, getEnemyHitbox, getPlayerHitbox, clampHitboxToGameplayRect, segmentVsAircraft, createHitResult, hitboxProjectionExtent } from "./airCombatHitboxes";
 import type { CombatWorld, EnemyEntity, ProjectileEntity } from "./airCombatRuntime";
 import type { EnemyType } from "./airCombatTypes";
 import type { TacticalPainter } from "./airCombatTacticalVisuals";
@@ -32,7 +32,10 @@ interface EliteSequence {
 }
 interface EliteDirector { wave: number; nextAt: number; event: number; cycle: number }
 const ELITE_TYPES: EnemyType[] = ["cyclone_ace", "prism_sovereign", "mine_warden", "grid_architect", "polarity_warden", "swarm_overlord", "arc_reaver_prime"];
-const AREA_SKILLS: EliteSkill[] = ["assault","cyclone_blades","cross_prism","carpet","chase","shift","sweep","polarity","reversal","recall"];
+const HARD_SKILLS: EliteSkill[] = ["assault","shift","sweep","polarity"];
+const BLAST_RADIUS = 40;
+const DASH_RADIUS = 13;
+const AREA_SKILLS: EliteSkill[] = ["curtain","repulse","swarm","suppress","assault","cyclone_blades","cross_prism","carpet","chase","shift","sweep","polarity","reversal","recall"];
 const TRIAD: [EnemyType, EliteSkill][] = [["mine_warden","carpet"],["prism_sovereign","curtain"],["cyclone_ace","assault"],["mine_warden","chase"],["prism_sovereign","cross_prism"],["cyclone_ace","cyclone_blades"]];
 const EXECUTION: [EnemyType, EliteSkill][] = [["grid_architect","shift"],["arc_reaver_prime","reversal"],["polarity_warden","polarity"],["swarm_overlord","swarm"],["grid_architect","sweep"],["arc_reaver_prime","recall"],["polarity_warden","repulse"],["swarm_overlord","suppress"]];
 
@@ -44,7 +47,7 @@ export interface MagneticEnemyState {
   openerDelay?: number;
   hitFxAt?: number; tetherUntil?: number; tetherReadyAt?: number;
   release?: number; releaseClock?: number;
-  elite?: EliteSequence; topology?: number;
+  elite?: EliteSequence; topology?: number; areaId?:number;
 }
 export interface MagneticProjectileState {
   kind: "disc" | "orb"; age: number; originX: number; originY: number;
@@ -109,6 +112,14 @@ function drift(e: EnemyEntity, target: Point, speed: number, dt: number) {
 function pushPlayer(w: CombatWorld, x: number, y: number) {
   if (w.dashRemaining > 0) return;
   const target = clampHitboxToGameplayRect(w.playerX + x, w.playerY + y, getPlayerHitbox(w));
+  const m=w.magnetic,box=getPlayerHitbox(w);
+  const radius=Math.max(hitboxProjectionExtent(box,1,0),hitboxProjectionExtent(box,0,1));
+  if(m && [...(m.lanes??[]).filter(l=>l.age>=l.warning).map(l=>({a:l.from,b:l.end,r:l.width})),...(m.trails??[]).map(t=>({a:t.from,b:t.end,r:DASH_RADIUS})),...(m.beams??[]).filter(b=>b.active).map(b=>({a:b.from,b:b.end,r:b.radius}))].some(g=>{
+    const dx=g.b.x-g.a.x,dy=g.b.y-g.a.y,l=Math.hypot(dx,dy)||1;
+    const old=((w.playerX-g.a.x)*dy-(w.playerY-g.a.y)*dx)/l,next=((target.x-g.a.x)*dy-(target.y-g.a.y)*dx)/l;
+    const along=((target.x-g.a.x)*dx+(target.y-g.a.y)*dy)/l;
+    return along>=-radius-g.r&&along<=l+radius+g.r&&(old*next<=0 || Math.abs(next)<g.r+radius&&Math.abs(next)<Math.abs(old));
+  }))return;
   w.playerX = target.x; w.playerY = Math.min(target.y, AIR_COMBAT_WORLD.height - AIR_COMBAT_WORLD.playerBottomClearance);
 }
 function bullet(w: CombatWorld, e: EnemyEntity, h: MagneticHooks, angle: number, speed = 110, factor = 1, radius = e.type === "boss" ? 6 : 4) {
@@ -117,7 +128,7 @@ function bullet(w: CombatWorld, e: EnemyEntity, h: MagneticHooks, angle: number,
     : e.type === "micro_drone" ? "microSpark" : "needleBolt";
   const shot = h.projectile(w, { owner: "enemy", sourceEnemyId: e.id, sourceEnemyType: e.type, x: e.x, y: e.y,
     magneticAreaId: e.magnetic?.elite && AREA_SKILLS.includes(e.magnetic.elite.skill) ? e.magnetic.elite.id : undefined,
-    vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed, rawDamage: damage(e) * factor,
+    vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed, rawDamage: damage(e) * factor * (e.magnetic?.elite ? 1.2 : 1),
     radius, criticalAttack: ELITE_TYPES.includes(e.type), lifetime: e.type === "boss" || e.type === "satellite" ? 4.8 : 6, color: "#67e8f9", magneticVisual: visual });
   if (shot) magneticFx(w, e.type === "boss" || e.type === "cyclone_ace" ? "eliteMuzzle" : "smallMuzzle", e.x, e.y, e.radius * 1.2, .14, angle + Math.PI);
   return shot;
@@ -271,7 +282,7 @@ export function updateMagneticProjectile(w: CombatWorld, p: ProjectileEntity, dt
       for (const side of (m.splitElite || w.waveIndex >= 3 ? [-1, 0, 1] : [-1, 1])) {
         const angle = m.baseAngle + side * (m.splitElite ? Math.PI / 18 : Math.PI / 6);
         h.projectile(w, { owner: p.owner, allegiance: p.allegiance, sourceEnemyId: p.sourceEnemyId, sourceEnemyType: p.sourceEnemyType,
-          x: p.x, y: p.y, vx: Math.cos(angle) * (m.splitElite ? 165 : 132), vy: Math.sin(angle) * (m.splitElite ? 165 : 132), rawDamage: p.rawDamage * (m.splitElite ? .45 : .75), radius: 4, color: "#e9d5ff", magneticVisual: "prismShard" });
+          magneticAreaId:p.magneticAreaId, criticalAttack:p.criticalAttack, x: p.x, y: p.y, vx: Math.cos(angle) * (m.splitElite ? 165 : 132), vy: Math.sin(angle) * (m.splitElite ? 165 : 132), rawDamage: p.rawDamage * (m.splitElite ? .45 : .75), radius: 4, color: "#e9d5ff", magneticVisual: "prismShard" });
       }
       p.lifetime = 0;
     }
@@ -320,7 +331,7 @@ export function updateMagneticHazards(w: CombatWorld, dt: number, h: MagneticHoo
     const owner = w.enemies.find(e => e.id === polarity.owner && h.hostile(w,e));
     if (!owner || polarity.age >= polarity.warning + polarity.duration) m.polarity = undefined;
     else if (polarity.age >= polarity.warning && owner.stun <= 0 && (owner.skillLockedUntil ?? 0) <= w.elapsed) {
-      const left = w.playerX < 180, reversed = polarity.age - polarity.warning >= 1.1;
+      const left = w.playerX < 180, reversed = polarity.age - polarity.warning >= 1.5;
       const sign = left !== reversed ? 1 : -1;
       const dx = 180 - w.playerX, dy = RECT.top + RECT.height / 2 - w.playerY, length = Math.max(1,Math.hypot(dx,dy));
       forceX += dx / length * 24 * sign; forceY += dy / length * 24 * sign;
@@ -341,7 +352,7 @@ export function updateMagneticHazards(w: CombatWorld, dt: number, h: MagneticHoo
       if (mine.warning >= (mine.fuse ?? 1.6) && !mine.exploded) {
         mine.exploded = true;
         magneticImpact(w, mine.x, mine.y, mine.sourceType === "boss" ? 4 : 2.8);
-        if (circleVsAircraft(mine.x, mine.y, 40, player)) h.hit(w, mine.damage, mine.owner, mine.sourceType, "explosive_aoe", mine.payload);
+        if (circleVsAircraft(mine.x, mine.y, BLAST_RADIUS, player)) h.hit(w, mine.damage, mine.owner, mine.sourceType, "explosive_aoe", mine.payload);
       }
       if (mine.warning > (mine.fuse ?? 1.6) + .45) m.mines.splice(i, 1);
     }
@@ -423,9 +434,18 @@ export function paintMagnetic(world: CombatWorld, p: MagneticPainter, reducedMot
     else if (mine.warning < 0) fx("pulseRing", mine.x, mine.y, 116, 116, 0, .14);
     if (mine.warning >= 0) {
       // Warning area and blast both use the actual 40px damage radius.
-      fx("pulseRing", mine.x, mine.targetY, 80, 80, 0, .65, 0xffdf85);
+      // The canonical danger painter owns the final blast outline.
       fx("warningPulse", mine.x, mine.y, 24, 24, 0, .9, 0xffdf85);
       p.label?.(mine.x, mine.y - 14, `${Math.max(0, (mine.fuse ?? 1.6) - mine.warning).toFixed(1)}s`, 0xfde68a, 7);
+    }
+  }
+  for(const enemy of world.enemies)if(enemy.hp>0&&enemy.type==="kamikaze"&&enemy.dashAllegiance!=="friendly_hacked"&&(enemy.kamikazeState==="charge"||enemy.kamikazeState==="dash")) {
+    const heading=enemy.kamikazeState==="charge"?Math.atan2(enemy.dashEndY-enemy.y,enemy.dashEndX-enemy.x)+Math.PI/2:enemy.airframeRotation;
+    const hull=getEnemyHitbox({...enemy,airframeRotation:heading}),dx=enemy.dashEndX-enemy.x,dy=enemy.dashEndY-enemy.y;
+    for(const shape of hull.shapes){
+      const a={x:shape.ax,y:shape.ay},b={x:shape.bx,y:shape.by},c={x:b.x+dx,y:b.y+dy},d={x:a.x+dx,y:a.y+dy};
+      p.polygon?.([a.x,a.y,b.x,b.y,c.x,c.y,d.x,d.y],0xff3344,.12);
+      for(const [from,to] of [[a,b],[b,c],[c,d],[d,a]])dangerCapsule(p,from,to,shape.r,enemy.kamikazeState==="dash");
     }
   }
   paintGeometry(world, p);
@@ -512,7 +532,7 @@ function updateTempest(w:CombatWorld, boss:EnemyEntity, dt:number, h:MagneticHoo
     // At most one emission per simulation step; no catch-up bursts after a pause/CC.
     const aim=Math.atan2(w.playerY-boss.y,w.playerX-boss.x);
     if(skill==="barrage") {
-      fan(w,boss,h,15,7,125.44,155,aim,6);d.nextEmission+=.6;
+      fan(w,boss,h,15,9,125.44,155,aim,6);d.nextEmission+=.6;
     } else if(skill==="bombs") {
       const motion=m.playerMotion;
       let dx=phase>=3?(motion?.vx??0)*.45:0,dy=phase>=3?(motion?.vy??0)*.45:0;
@@ -545,7 +565,7 @@ function updateSatellite(w:CombatWorld,e:EnemyEntity,dt:number,h:MagneticHooks) 
   positionMagneticGuardian(w,e);
   if(!h.hostile(w,e)||(e.skillLockedUntil??0)>w.elapsed||e.fireCooldown>0)return;
   bullet(w,e,h,Math.atan2(w.playerY-e.y,w.playerX-e.x),155,1,4);
-  e.fireCooldown+=.5;
+  e.fireCooldown+=1;
 }
 function fan(w:CombatWorld,e:EnemyEntity,h:MagneticHooks,count:number,spacing:number,raw:number,speed:number,aim:number,radius=4,visual?:MagneticVfxKey) {
   for(let i=0;i<count;i++) {
@@ -557,7 +577,7 @@ function fan(w:CombatWorld,e:EnemyEntity,h:MagneticHooks,count:number,spacing:nu
 function addMine(w:CombatWorld,e:EnemyEntity,at:Point,fuse:number,raw:number,flight=0,payload?:StatusPayload,kind:Mine["kind"]="bomb") {
   const m=w.magnetic!;
   if(m.mines.length+(m.lanes?.length??0)+w.warnings.length>=AIR_COMBAT_WORLD.maxWarnings)return;
-  m.mines.push({...at,id:w.nextId++,areaId:e.magnetic?.elite?.id,owner:e.id,sourceType:e.type,damage:raw*e.damageScale,age:0,warning:0,exploded:false,
+  m.mines.push({...at,id:w.nextId++,areaId:e.magnetic?.elite?.id,owner:e.id,sourceType:e.type,damage:raw*e.damageScale*(e.magnetic?.elite?1.2:1),age:0,warning:0,exploded:false,
     startY:flight?e.y:at.y,targetY:at.y,fuse,flight,payload,kind});
 }
 
@@ -572,22 +592,29 @@ function updateEliteDirector(w:CombatWorld,dt:number,h:MagneticHooks) {
   if(w.elapsed<d.nextAt)return;
   const events=wave.elite===1?TRIAD:EXECUTION;
   const [type,skill]=events[d.event],owner=w.enemies.find(e=>e.type===type&&h.hostile(w,e));
-  const gap=wave.elite===1?1.5:1.2;
+  const gap=wave.elite===1?.9:.75;
   if(!owner) { d.event=(d.event+1)%events.length;d.nextAt=w.elapsed+gap;return; }
   if(owner.stun>0||(owner.skillLockedUntil??0)>w.elapsed||state(owner).elite){d.nextAt=w.elapsed+.1;return;}
   // Count casts, not owners: a Warden's lingering carpet and a later chase
   // are two mechanics. All mines/lanes/projectiles from one cast share its ID.
   const controls=new Set<number>();
   for(const e of w.enemies)if(e.hp>0&&e.magnetic?.elite && AREA_SKILLS.includes(e.magnetic.elite.skill))controls.add(e.magnetic.elite.id);
+  for(const e of w.enemies)if(e.hp>0&&e.type==="micro_drone"&&e.magnetic?.areaId!==undefined)controls.add(e.magnetic.areaId);
   for(const lane of m.lanes??[])controls.add(lane.areaId??lane.owner);
   for(const mine of m.mines)if(!mine.exploded)controls.add(mine.areaId??mine.owner);
   for(const trail of m.trails??[])controls.add(trail.areaId);
   if(m.polarity)controls.add(m.polarity.areaId);
   for(const p of w.projectiles)if(p.lifetime>0&&p.magneticAreaId!==undefined)controls.add(p.magneticAreaId);
   // Forced movement must not push the player across an active geometry wall.
-  const geometryBusy=!!(m.lanes?.length||m.trails?.length||m.polarity);
-  if((AREA_SKILLS.includes(skill) && controls.size>=2) || (geometryBusy && ["polarity","repulse","shift","sweep","assault"].includes(skill)) || (m.mines.some(mine=>!mine.exploded) && ["assault","cross_prism"].includes(skill))) {d.nextAt=w.elapsed+.1;return;}
-  const warning=skill==="assault"?.65:skill==="shift"?.7:skill==="sweep"?.75:skill==="repulse"?.7:skill==="cross_prism"?.65:.6;
+  const hard=new Set<number>();
+  for(const e of w.enemies)if(e.hp>0&&e.magnetic?.elite&&HARD_SKILLS.includes(e.magnetic.elite.skill))hard.add(e.magnetic.elite.id);
+  for(const lane of m.lanes??[])hard.add(lane.areaId??lane.owner);
+  for(const trail of m.trails??[])hard.add(trail.areaId);
+  if(m.polarity)hard.add(m.polarity.areaId);
+  const forceConflict=(!!m.polarity&&["shift","sweep","assault"].includes(skill)) || (!!(m.lanes?.length||m.trails?.length)&&["polarity","repulse"].includes(skill));
+  const geometryBusy=hard.size>=2;
+  if((AREA_SKILLS.includes(skill) && controls.size>=(wave.elite===1?2:3)) || forceConflict || (geometryBusy && HARD_SKILLS.includes(skill)) || (m.mines.some(mine=>!mine.exploded) && ["assault","cross_prism"].includes(skill))) {d.nextAt=w.elapsed+.1;return;}
+  const warning=skill==="assault"?.55:skill==="shift"?.55:skill==="sweep"?.60:skill==="repulse"?.7:skill==="cross_prism"?.65:.6;
   state(owner).elite={id:w.nextId++,skill,age:0,step:0,next:warning,warning,aim:Math.atan2(w.playerY-owner.y,w.playerX-owner.x),
     target:{x:w.playerX,y:w.playerY},origin:{x:owner.x,y:owner.y},pass:0,mode:"warning"};
   if(skill === "assault") lockAssaultTarget(owner, state(owner).elite!);
@@ -596,7 +623,7 @@ function updateEliteDirector(w:CombatWorld,dt:number,h:MagneticHooks) {
   d.nextAt=w.elapsed+gap;
 }
 function returning(w:CombatWorld,e:EnemyEntity,h:MagneticHooks,angle:number,raw:number,travel:number,curve:number,origin:Point=e,end?:Point) {
-  if(w.projectiles.filter(p=>p.magnetic?.kind==="disc"&&p.lifetime>0).length>=32)return;
+  if(w.projectiles.filter(p=>p.magnetic?.kind==="disc"&&p.lifetime>0).length>=48)return;
   const p=bullet(w,e,h,angle,0,raw/stageEnemyConfig(e.type,2).projectileDamage,8);
   if(!p)return;
   const target=end??point(origin.x+Math.cos(angle)*300,origin.y+Math.sin(angle)*300,16);
@@ -607,37 +634,45 @@ function returning(w:CombatWorld,e:EnemyEntity,h:MagneticHooks,angle:number,raw:
 function addLane(w:CombatWorld,e:EnemyEntity,from:Point,end:Point,warning:number,duration:number,wall?:-1|1) {
   const lanes=w.magnetic!.lanes??=[];
   if(lanes.length>=12||lanes.length+w.magnetic!.mines.length+w.warnings.length>=AIR_COMBAT_WORLD.maxWarnings)return;
-  lanes.push({owner:e.id,areaId:e.magnetic?.elite?.id,from:{...from},end:{...end},warning,duration,wall,age:0,width:5,damage:damage(e),nextHit:warning});
+  lanes.push({owner:e.id,areaId:e.magnetic?.elite?.id,from:{...from},end:{...end},warning,duration,wall,age:0,width:9,damage:damage(e)*1.2,nextHit:warning});
 }
 function spawnMicroWave(w:CombatWorld,e:EnemyEntity,h:MagneticHooks,side:number) {
   const anchor=point(w.playerX,w.playerY,110);
-  for(let i=0;i<3;i++) {
+  for(let i=0;i<4;i++) {
     const drone=h.spawn(w,"micro_drone",true);if(!drone)break;
     drone.noWaveWait=true;
-    drone.x=clamp(e.x+side*35+(i-1)*14,RECT.left+12,RECT.right-12);drone.y=e.y+20;
-    drone.magnetic={clock:0,attack:0,anchorX:anchor.x,anchorY:anchor.y,angle:-Math.PI+i*Math.PI/3+(side>0?.4:0),owner:e.id,slot:i};
+    drone.x=clamp(e.x+side*35+(i-1.5)*14,RECT.left+12,RECT.right-12);drone.y=e.y+20;
+    drone.magnetic={clock:0,attack:0,anchorX:anchor.x,anchorY:anchor.y,angle:-Math.PI+i*Math.PI/3+(side>0?.4:0),owner:e.id,slot:i,areaId:e.magnetic?.elite?.id};
     magneticFx(w,"droneSpawn",drone.x,drone.y,25,.3);
   }
 }
-/** Two genuine five-shard fans from fixed virtual emitters. Their crossings
+/** Two genuine eight-shard fans from fixed virtual emitters. Their crossings
  * stay in the upper field, leaving the lower escape corridor unobstructed. */
 function crossPrismRays() {
   return [-1,1].flatMap(side => {
     const from={x:180+side*140,y:RECT.top+55};
     const aim=Math.atan2(180,-side*285);
-    return Array.from({length:5},(_,index)=>{
-      const angle=aim+(index-2)*2*Math.PI/180;
+    return Array.from({length:8},(_,index)=>{
+      const angle=aim+(index-3.5)*2*Math.PI/180;
       return {from,angle,end:{x:from.x+Math.cos(angle)*335,y:from.y+Math.sin(angle)*335}};
     });
   });
 }
+function updateEliteLocomotion(w:CombatWorld,e:EnemyEntity,dt:number) {
+  const s=state(e);
+  if(e.stun>0 || s.elite?.skill==="assault")return;
+  const lane=ELITE_TYPES.indexOf(e.type), slow=e.type==="grid_architect"||e.type==="polarity_warden";
+  const x=55+(lane%3)*120+Math.sin(s.clock*.8+e.phaseSeed)*(slow?22:42);
+  drift(e,point(x,RECT.top+80+(lane%2)*34+Math.sin(s.clock*1.2+e.phaseSeed)*12),ENEMY_CONFIGS[e.type].speed*(slow?.6:1),dt);
+}
 function updateElite(w:CombatWorld,e:EnemyEntity,dt:number,h:MagneticHooks,canFire:boolean) {
+  if(e.stun>0)return;
+  updateEliteLocomotion(w,e,dt);
+  updateEliteSkill(w,e,dt,h,canFire);
+}
+function updateEliteSkill(w:CombatWorld,e:EnemyEntity,dt:number,h:MagneticHooks,canFire:boolean) {
   const s=state(e),q=s.elite,m=w.magnetic!;
-  if(!q) {
-    const lane=ELITE_TYPES.indexOf(e.type),x=55+(lane%3)*120;
-    drift(e,point(x,RECT.top+80+(lane%2)*34),ENEMY_CONFIGS[e.type].speed,dt);return;
-  }
-  if(!canFire)return;
+  if(!q || !canFire)return;
   q.age+=dt;
   if(q.skill==="assault") {updateAssault(w,e,q,dt,h);return;}
   // Geometry warning starts as soon as the cast starts; collision and paint read
@@ -645,7 +680,7 @@ function updateElite(w:CombatWorld,e:EnemyEntity,dt:number,h:MagneticHooks,canFi
   if(q.step===0&&(q.skill==="shift"||q.skill==="sweep")) {
     const top=RECT.top+35,bottom=RECT.bottom-15;
     if(q.skill==="sweep")for(const side of [-1,1] as const) {
-      const x=side<0?RECT.left+5:RECT.right-5;addLane(w,e,{x,y:top},{x,y:bottom},.75,2.2,side);
+      const x=side<0?RECT.left+5:RECT.right-5;addLane(w,e,{x,y:top},{x,y:bottom},.60,2.2,side);
     } else {
       const layouts:[Point,Point][][]=[
         [[{x:RECT.left+12,y:RECT.top+215},{x:RECT.right-12,y:RECT.top+215}]],
@@ -654,20 +689,20 @@ function updateElite(w:CombatWorld,e:EnemyEntity,dt:number,h:MagneticHooks,canFi
         [[{x:105,y:top},{x:105,y:bottom}],[{x:255,y:top},{x:255,y:bottom}]],
       ];
       const index=s.topology??0;s.topology=(index+1)%4;
-      for(const [from,end]of layouts[index])addLane(w,e,from,end,.7,1.6);
+      for(const [from,end]of layouts[index])addLane(w,e,from,end,.55,2);
     }
     s.elite=undefined;return;
   }
-  if(q.step===0&&q.skill==="polarity") {m.polarity={owner:e.id,areaId:q.id,age:0,warning:.6,duration:2.2};s.elite=undefined;return;}
+  if(q.step===0&&q.skill==="polarity") {m.polarity={owner:e.id,areaId:q.id,age:0,warning:.6,duration:3};s.elite=undefined;return;}
   if(q.age<q.next)return;
   const aim=Math.atan2(w.playerY-e.y,w.playerX-e.x);
   switch(q.skill) {
     case "cyclone_blades":
-      for(const offset of [-28,-12,12,28])returning(w,e,h,q.aim+offset*Math.PI/180,58.0944,1.3,offset<0?-26:26);
+      for(const offset of [-30,-20,-10,0,10,20,30])returning(w,e,h,q.aim+offset*Math.PI/180,58.0944,1.3,offset<0?-26:26);
       break;
     case "curtain":
-      for(let i=0;i<7;i++) {
-        const a=q.aim+(i-3)*12*Math.PI/180,p=bullet(w,e,h,a,115,1,9);
+      for(let i=0;i<11;i++) {
+        const a=q.aim+(i-5)*10*Math.PI/180,p=bullet(w,e,h,a,115,1,9);
         if(p){p.magneticVisual="prismOrb";p.magnetic={kind:"orb",splitElite:true,age:0,originX:e.x,originY:e.y,endX:0,endY:0,curve:0,outbound:1.1,turn:0,returnDuration:0,phase:"outbound",baseAngle:a};}
       }
       break;
@@ -681,30 +716,30 @@ function updateElite(w:CombatWorld,e:EnemyEntity,dt:number,h:MagneticHooks,canFi
       break;
     case "carpet": {
       const gap=(m.eliteDirector?.cycle??0)%2?1:2;
-      for(let row=0;row<2;row++)for(let col=0;col<4;col++)if(col!==gap)
-        addMine(w,e,{x:RECT.left+44+col*(RECT.width-88)/3,y:RECT.top+245+row*155},1.6,82.992);
+      for(let row=0;row<3;row++)for(let col=0;col<4;col++)if(!(col===gap && row>=1))
+        addMine(w,e,{x:RECT.left+44+col*(RECT.width-88)/3,y:RECT.top+245+row*95},1,82.992);
       break;
     }
     case "chase":
-      addMine(w,e,{x:w.playerX,y:w.playerY},1,70.5432);q.step++;q.next+=.35;
-      if(q.step<6)return;break;
+      addMine(w,e,{x:w.playerX,y:w.playerY},.7,70.5432);q.step++;q.next=q.age+.22;
+      if(q.step<10)return;break;
     case "repulse": {
       const dx=w.playerX-e.x,dy=w.playerY-e.y,len=Math.max(1,Math.hypot(dx,dy));
       pushPlayer(w,dx/len*28,dy/len*28);
-      for(let i=0;i<12;i++)if(i!==0&&i!==11)bullet(w,e,h,q.aim+(i+.5)*TAU/12,145,.55,4);
+      for(let i=0;i<18;i++)bullet(w,e,h,q.aim+Math.PI/6+(i+.5)*(TAU-Math.PI/3)/18,145,.55,4);
       magneticFx(w,"pulseRing",e.x,e.y,180,.5);break;
     }
     case "swarm":
-      spawnMicroWave(w,e,h,q.step===0?-1:1);q.step++;q.next+=.7;if(q.step<2)return;break;
+      spawnMicroWave(w,e,h,q.step===0?-1:1);q.step++;q.next=q.age+.45;if(q.step<3)return;break;
     case "suppress":
-      fan(w,e,h,11,7,30.576,150,aim);q.step++;q.next+=.35;if(q.step<3)return;break;
+      fan(w,e,h,15,7,30.576,150,aim);q.step++;q.next=q.age+.35;if(q.step<4)return;break;
     case "reversal":
-      for(let i=0;i<8;i++)returning(w,e,h,q.aim+(i-3.5)*12*Math.PI/180,45.864,1.4,i<4?-22:22);
+      for(let i=0;i<12;i++)returning(w,e,h,q.aim+(i-5.5)*12*Math.PI/180,45.864,1.4/1.15,i<6?-22:22);
       break;
     case "recall":
-      for(const side of [-1,1])for(let i=0;i<3;i++) {
+      for(const side of [-1,1])for(let i=0;i<5;i++) {
         const origin={x:180+side*140,y:RECT.top+50+i*12},end={x:180-side*140,y:RECT.top+235+i*12};
-        returning(w,e,h,Math.atan2(end.y-origin.y,end.x-origin.x),45.864,1.4,side*25,origin,end);
+        returning(w,e,h,Math.atan2(end.y-origin.y,end.x-origin.x),45.864,1.4/1.15,side*25,origin,end);
       }
       break;
   }
@@ -717,7 +752,7 @@ function lockAssaultTarget(e:EnemyEntity,q:EliteSequence) {
 }
 function updateAssault(w:CombatWorld,e:EnemyEntity,q:EliteSequence,dt:number,h:MagneticHooks) {
   if(q.mode==="warning") {
-    if(q.age<.65)return;
+    if(q.age<.55)return;
     q.mode="dash";q.age=0;q.origin={x:e.x,y:e.y};
     // The dash uses exactly the endpoint shown throughout its warning.
     return;
@@ -726,38 +761,22 @@ function updateAssault(w:CombatWorld,e:EnemyEntity,q:EliteSequence,dt:number,h:M
     if(q.age<.18)return;
     q.mode="warning";q.age=0;q.origin={x:e.x,y:e.y};q.target={x:w.playerX,y:w.playerY};lockAssaultTarget(e,q);return;
   }
-  drift(e,q.target,280,dt);
+  drift(e,q.target,330,dt);
   const trails=w.magnetic!.trails??=[];
   let trail=trails.find(t=>t.owner===e.id&&t.from===q.origin);
-  if(!trail&&trails.length<9){trail={owner:e.id,areaId:q.id,from:q.origin,end:{x:e.x,y:e.y},until:w.elapsed+1,damage:62.244*e.damageScale,hitAt:0};trails.push(trail);}
+  if(!trail&&trails.length<9){trail={owner:e.id,areaId:q.id,from:q.origin,end:{x:e.x,y:e.y},until:w.elapsed+1,damage:62.244*e.damageScale*1.2,hitAt:0};trails.push(trail);}
   if(trail){trail.end={x:e.x,y:e.y};trail.until=w.elapsed+1;}
   if(Math.hypot(e.x-q.target.x,e.y-q.target.y)>1)return;
   if(++q.pass<3){q.mode="turnaround";q.age=0;return;}
-  fan(w,e,h,9,6,53.9448,155,Math.atan2(w.playerY-e.y,w.playerX-e.x));state(e).elite=undefined;
+  fan(w,e,h,15,7,53.9448,155,Math.atan2(w.playerY-e.y,w.playerX-e.x));state(e).elite=undefined;
 }
 
-/** Clip the lower portion of Elite grid lanes around a real, 88px opening.
- * Beam capsule radii leave 78px clear: wider than both the 72px requirement
- * and the actual player's horizontal hitbox extent. Boss lasers never use it. */
-function laneSegments(w:CombatWorld,a:Point,b:Point,visit:(a:Point,b:Point)=>void) {
-  const corridor=w.magnetic?.corridor;
-  if(!corridor){visit(a,b);return;}
-  const top=RECT.top+185;
-  if(a.y<top&&b.y<top){visit(a,b);return;}
-  if((a.y<top)!==(b.y<top)) {
-    const t=(top-a.y)/(b.y-a.y),crossing={x:a.x+(b.x-a.x)*t,y:top};
-    if(a.y<top){visit(a,crossing);a=crossing;}else{visit(crossing,b);b=crossing;}
-  }
-  const left=corridor.x-corridor.half,right=corridor.x+corridor.half,dx=b.x-a.x;
-  if(Math.abs(dx)<.001){if(a.x<=left||a.x>=right)visit(a,b);return;}
-  const low=clamp(Math.min((left-a.x)/dx,(right-a.x)/dx),0,1),high=clamp(Math.max((left-a.x)/dx,(right-a.x)/dx),0,1);
-  const at=(t:number)=>({x:a.x+dx*t,y:a.y+(b.y-a.y)*t});
-  if(low>0)visit(a,at(low));if(high<1)visit(at(high),b);
-}
+/** Damage beams always use their complete canonical segment. */
+function laneSegments(_w:CombatWorld,a:Point,b:Point,visit:(a:Point,b:Point)=>void) { visit(a,b); }
 function updateGeometry(w:CombatWorld,dt:number,h:MagneticHooks) {
   const m=w.magnetic!,player=getPlayerHitbox(w);
   m.trails=(m.trails??[]).filter(t=>t.until>w.elapsed);
-  for(const trail of m.trails)if(w.elapsed>=trail.hitAt&&segmentVsAircraft(trail.from.x,trail.from.y,trail.end.x,trail.end.y,9,player,contact).hit) {
+  for(const trail of m.trails)if(w.elapsed>=trail.hitAt&&segmentVsAircraft(trail.from.x,trail.from.y,trail.end.x,trail.end.y,DASH_RADIUS,player,contact).hit) {
     h.hit(w,trail.damage,trail.owner,"cyclone_ace");trail.hitAt=w.elapsed+.5;
   }
   const lanes=m.lanes??=[];
@@ -765,8 +784,8 @@ function updateGeometry(w:CombatWorld,dt:number,h:MagneticHooks) {
     const lane=lanes[i];lane.age+=dt;
     if(lane.age>lane.warning+lane.duration){lanes.splice(i,1);continue;}
     if(lane.wall) {
-      const outer=lane.wall<0?RECT.left+5:RECT.right-5,inner=(m.corridor?.x??180)+lane.wall*((m.corridor?.half??44)+5);
-      lane.from.x=lane.end.x=outer+(inner-outer)*clamp((lane.age-lane.warning)/2.2,0,1);
+      const outer=lane.wall<0?RECT.left+5:RECT.right-5,inner=(m.corridor?.x??180)+lane.wall*((m.corridor?.half??44)+9);
+      lane.from.x=lane.end.x=outer+(inner-outer)*clamp((lane.age-lane.warning)/1.5,0,1);
     }
     if(lane.age>=lane.nextHit) {
       lane.nextHit+=.2;
@@ -776,28 +795,36 @@ function updateGeometry(w:CombatWorld,dt:number,h:MagneticHooks) {
     }
   }
 }
+function dangerCapsule(p:MagneticPainter,a:Point,b:Point,r:number,active:boolean) {
+  const alpha=active?.35:.18,dx=b.x-a.x,dy=b.y-a.y,len=Math.max(.001,Math.hypot(dx,dy)),nx=-dy/len*r,ny=dx/len*r;
+  p.line(a.x,a.y,b.x,b.y,0xff3344,alpha,r*2);
+  p.circle(a.x,a.y,r,0xff3344,alpha,true);p.circle(b.x,b.y,r,0xff3344,alpha,true);
+  p.line(a.x+nx,a.y+ny,b.x+nx,b.y+ny,0xff3344,.85,1);
+  p.line(a.x-nx,a.y-ny,b.x-nx,b.y-ny,0xff3344,.85,1);
+  p.circle(a.x,a.y,r,0xff3344,.65);p.circle(b.x,b.y,r,0xff3344,.65);
+}
 function paintGeometry(w:CombatWorld,p:MagneticPainter) {
   const m=w.magnetic!;
   for(const lane of m.lanes??[]) {
-    const active=lane.age>=lane.warning,color=active?0xe9d5ff:0xfde047;
+    const active=lane.age>=lane.warning,color=0xff3344;
     laneSegments(w,lane.from,lane.end,(a,b)=>{
-      p.line(a.x,a.y,b.x,b.y,color,.2,active?lane.width*2+7:lane.width*2);
-      p.line(a.x,a.y,b.x,b.y,color,.95,active?lane.width*2:2);
+      dangerCapsule(p,a,b,lane.width,active);
+      if(active)p.line(a.x,a.y,b.x,b.y,0xe9d5ff,.95,3);
     });
-    if(lane.wall&&lane.age<lane.warning){const x=(m.corridor?.x??180)+lane.wall*((m.corridor?.half??44)+5);p.line(x,RECT.top+35,x,RECT.bottom-15,0x67e8f9,.55,2);}
+    if(lane.wall&&lane.age<lane.warning){const x=(m.corridor?.x??180)+lane.wall*((m.corridor?.half??44)+9);p.line(x,RECT.top+35,x,RECT.bottom-15,0x67e8f9,.55,2);}
   }
   for(const trail of m.trails??[]) {
-    p.line(trail.from.x,trail.from.y,trail.end.x,trail.end.y,0xc084fc,.25,18);
+    dangerCapsule(p,trail.from,trail.end,DASH_RADIUS,true);
     p.line(trail.from.x,trail.from.y,trail.end.x,trail.end.y,0xe9d5ff,.85,3);
   }
   for(const beam of m.beams??[]) {
-    p.line(beam.from.x,beam.from.y,beam.end.x,beam.end.y,beam.active?0xe0f2fe:0xfde047,beam.active?.85:.5,beam.radius*2);
+    dangerCapsule(p,beam.from,beam.end,beam.radius,beam.active);
     if(beam.active)p.line(beam.from.x,beam.from.y,beam.end.x,beam.end.y,0xffffff,1,3);
     p.circle(beam.from.x,beam.from.y,beam.active?9:13,0x67e8f9,.7);
   }
   if(m.rift){const r=m.rift;p.circle(r.x,r.y,28+r.age*4,0xc084fc,.9);p.circle(r.x,r.y,20,0x312e81,.7,true);p.label?.(r.x,r.y-42,`RIFT ${Math.max(0,3-r.age).toFixed(1)}s`,0xe9d5ff,8);}
   if(m.polarity) {
-    const q=m.polarity,reversed=q.age>=q.warning+1.1;
+    const q=m.polarity,reversed=q.age>=q.warning+1.5;
     p.line(180,RECT.top,180,RECT.bottom,0xc084fc,.55,2);
     for(const side of [-1,1]){
       const pull=(side<0)!==reversed;
@@ -816,7 +843,7 @@ function paintGeometry(w:CombatWorld,p:MagneticPainter) {
     const q=s.elite;
     if(q&&q.mode==="warning"&&q.age<q.warning){
       p.circle(e.x,e.y,e.radius*1.4,0xfde047,.7);p.label?.(e.x,e.y-e.radius*1.8,q.skill.toUpperCase().replaceAll("_"," "),0xfde047,7);
-      if(q.skill==="assault")p.line(e.x,e.y,q.target.x,q.target.y,0xfde047,.85,3);
+      if(q.skill==="assault")dangerCapsule(p,e,q.target,DASH_RADIUS,false);
       if(q.skill==="repulse") {
         for(const side of [-1,1]){const a=q.aim+side*Math.PI/6;p.line(e.x,e.y,e.x+Math.cos(a)*260,e.y+Math.sin(a)*260,0x67e8f9,.65,2);}
       }
@@ -826,13 +853,13 @@ function paintGeometry(w:CombatWorld,p:MagneticPainter) {
       }
       if(q.skill==="recall")for(const side of [-1,1])p.line(180+side*140,RECT.top+55,180-side*140,RECT.top+235,0xfde047,.6,2);
     }
-    if(["orbit_wasp","arc_reaver","prism_manta"].includes(e.type)&&e.fireCooldown<.45) {
-      const a=Math.atan2(w.playerY-e.y,w.playerX-e.x);
-      for(const side of [-1,1])p.line(e.x,e.y,e.x+Math.cos(a+side*.2)*28,e.y+Math.sin(a+side*.2)*28,0xfde047,.9,2);
-    }
+
   }
   for(const mine of m.mines)if(!mine.exploded) {
-    p.circle(mine.x,mine.targetY,40,mine.kind==="field"?0x67e8f9:0xfb923c,.9);
+    const progress=clamp(mine.warning/(mine.fuse??1.6),0,1);
+    p.circle(mine.x,mine.targetY,BLAST_RADIUS,0xff3344,.12,true);
+    p.circle(mine.x,mine.targetY,BLAST_RADIUS*progress,0xff3344,.26,true);
+    p.circle(mine.x,mine.targetY,BLAST_RADIUS,0xff3344,.9,false,1);
     p.label?.(mine.x,mine.targetY+12,mine.kind==="field"?"STUN":"BOMB",0xfde047,6);
   }
 }

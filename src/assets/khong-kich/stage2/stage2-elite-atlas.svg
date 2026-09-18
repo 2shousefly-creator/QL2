@@ -5,57 +5,85 @@
   <linearGradient id="armor" x2="0" y2="1"><stop stop-color="#a5b4fc"/><stop offset=".4" stop-color="#334155"/><stop offset="1" stop-color="#0f172a"/></linearGradient>
   <radialGradient id="acid"><stop stop-color="#f7fee7"/><stop offset=".3" stop-color="#d9f99d"/><stop offset=".7" stop-color="#84cc16"/><stop offset="1" stop-color="#3f6212" stop-opacity=".15"/></radialGradient>
  </defs>
- <!-- PRISM SOVEREIGN: segmented crystal crown and broad, forked prism wings. Nose up. -->
- <g stroke-linejoin="round" stroke="#a5f3fc" stroke-width="1.2">
-  <path d="M64 8 76 35 115 22 104 47 123 69 96 72 83 99 73 87 64 116 55 87 45 99 32 72 5 69 24 47 13 22 52 35Z" fill="url(#hull)"/>
-  <path d="M18 29 50 42 36 60 11 66 29 46ZM110 29 78 42 92 60 117 66 99 46Z" fill="url(#crystal)"/>
-  <path d="M64 14 77 51 64 83 51 51Z" fill="url(#crystal)" stroke-width="2"/>
-  <path d="M64 14 64 83M51 51 77 51M38 69 49 83 54 68M90 69 79 83 74 68" fill="none" stroke="#e9d5ff"/>
-  <path d="M58 91 64 110 70 91" fill="#67e8f9"/>
-  <circle cx="64" cy="51" r="4" fill="white" stroke="none"/>
+
+ <!-- 26.8.1: five layered aircraft, each in its existing 128px atlas cell. -->
+ <g stroke-linejoin="round" stroke-linecap="round">
+ <!-- Prism Sovereign: curved manta leading edges, separate faceted wing plates. -->
+ <g stroke="#829cbd" stroke-width="1.1">
+  <path d="M64 9C72 20 72 30 83 38L111 27 122 39 112 51 117 74 96 71 80 88 74 107 65 98 58 116 49 86 30 73 10 78 16 52 5 43 16 30 45 40C55 33 54 19 64 9Z" fill="url(#hull)"/>
+  <path d="M14 42Q30 43 50 49L45 63 20 67 28 53ZM114 40Q97 44 77 48L82 62 108 64 99 51Z" fill="url(#crystal)"/>
+  <path d="M18 42 44 48 28 53ZM45 50 43 60 22 65ZM108 43 83 49 99 51ZM82 51 86 60 106 63Z" fill="#a5f3fc" opacity=".4"/>
+  <path d="M35 64 48 61 54 81 46 76ZM80 62 93 64 82 79 76 82Z" fill="url(#armor)"/>
+  <path d="M63 16Q75 37 71 70L67 96 58 91 55 65Q52 38 63 16Z" fill="url(#armor)" stroke="#c4d4ed"/>
+  <path d="M63 28 68 40 67 56 61 60 57 51 59 36Z" fill="#071c37"/>
+  <path d="M63 32 66 41 65 51 61 54 59 47Z" fill="url(#crystal)" stroke="#e0f2fe"/>
+  <path d="M58 68 68 66 66 77 59 79ZM49 85 57 83 60 100 54 102ZM72 82 79 84 75 101 68 98Z" fill="#101d33"/>
+  <path d="M53 89 56 98M73 89 71 97" stroke="#67e8f9" stroke-width="3"/>
+  <path d="M22 56 29 55 31 73 26 84 22 72ZM96 54 103 55 104 70 99 80 96 69Z" fill="#17243c" stroke="#a78bfa"/>
+  <path d="M25 63 28 62 28 74 26 79ZM99 60 102 61 101 71 99 75Z" fill="#d8b4fe" stroke="none"/>
+  <path d="M34 38 40 42M86 40 94 36M60 84 66 82M18 71 27 69M104 69 110 72" stroke="#b8d0eb"/>
  </g>
- <!-- MINE WARDEN: armored hexagonal hull with separate six-cell ordnance racks. -->
- <g transform="translate(128)" stroke-linejoin="round">
-  <path d="M50 10 78 10 87 27 114 35 119 94 99 112 80 96 64 118 48 96 29 112 9 94 14 35 41 27Z" fill="url(#hull)" stroke="#94a3b8" stroke-width="2"/>
-  <path d="M48 22 80 22 85 77 73 99 55 99 43 77Z" fill="url(#armor)" stroke="#c7d2fe"/>
-  <path d="M53 30 75 30 78 47 50 47Z" fill="#164e63" stroke="#67e8f9"/>
-  <path d="M23 34 37 30 39 94 26 100 17 86ZM105 34 91 30 89 94 102 100 111 86Z" fill="#0f172a" stroke="#fbbf24"/>
-  <g fill="#292548" stroke="#fbbf24" stroke-width="2"><circle cx="28" cy="47" r="7"/><circle cx="28" cy="66" r="7"/><circle cx="28" cy="85" r="7"/><circle cx="100" cy="47" r="7"/><circle cx="100" cy="66" r="7"/><circle cx="100" cy="85" r="7"/></g>
-  <g fill="#fde68a"><circle cx="28" cy="47" r="2"/><circle cx="28" cy="66" r="2"/><circle cx="28" cy="85" r="2"/><circle cx="100" cy="47" r="2"/><circle cx="100" cy="66" r="2"/><circle cx="100" cy="85" r="2"/></g>
-  <path d="M55 58H73M55 66H73M55 74H73" stroke="#94a3b8" stroke-width="3"/>
-  <path d="M54 103 58 117 62 103M66 103 70 117 74 103" fill="#67e8f9"/>
+ <!-- Mine Warden: swept heavy bomber, deep fuselage, exposed vented bomb racks. -->
+ <g transform="translate(128)" stroke="#9aaec5" stroke-width="1.1">
+  <path d="M63 7 74 23 78 41 110 53 120 74 104 79 81 66 77 86 97 100 98 111 74 104 64 118 53 104 29 111 31 99 50 85 47 66 23 80 7 74 18 53 49 41 53 23Z" fill="url(#hull)" stroke-width="1.7"/>
+  <path d="M21 58 48 46 47 59 23 73 14 72ZM80 46 107 58 114 72 104 73 81 59Z" fill="url(#armor)"/>
+  <path d="M63 13 71 27 73 76 66 102 59 102 52 77 55 27Z" fill="url(#armor)"/>
+  <path d="M57 30 63 24 69 30 70 44 55 44Z" fill="#082f49" stroke="#7dd3fc"/>
+  <path d="M57 37 69 37M63 28V44" stroke="#38bdf8"/>
+  <path d="M29 51 41 47 44 89 38 102 29 96ZM86 47 98 51 99 96 90 102 83 89Z" fill="#0a1222" stroke="#64748b"/>
+  <g fill="#695846" stroke="#fbbf24"><path d="M31 59 38 57 40 66 32 69ZM32 74 40 71 41 80 33 84ZM33 89 41 85 40 94 36 98ZM89 57 96 59 95 69 87 66ZM87 71 95 74 94 84 86 80ZM86 85 94 89 91 98 87 94Z"/></g>
+  <path d="M57 53H69V82L64 90 58 82Z" fill="#192237"/>
+  <path d="M58 59H68M58 65H68M59 71H68M60 77H67" stroke="#64748b" stroke-width="2"/>
+  <path d="M53 99 61 101 61 115 54 112ZM67 101 75 99 74 112 67 115Z" fill="#050b14"/>
+  <path d="M55 104 59 105 59 112 55 110ZM69 105 73 104 72 110 69 112Z" fill="#67e8f9" stroke="#cffafe"/>
+  <path d="M24 63 44 54M85 54 105 63M36 104 48 99M81 99 92 104" stroke="#cbd5e1"/>
  </g>
- <!-- POLARITY WARDEN: split asymmetric coils connected by a magnetic ring. -->
- <g transform="translate(256)" stroke-linejoin="round">
-  <circle cx="64" cy="65" r="38" fill="none" stroke="#312e81" stroke-width="13"/>
-  <path d="M64 27A38 38 0 0 0 64 103" fill="none" stroke="#67e8f9" stroke-width="3"/>
-  <path d="M64 27A38 38 0 0 1 64 103" fill="none" stroke="#e879f9" stroke-width="3"/>
-  <path d="M64 9 77 33 73 92 64 117 55 92 51 33Z" fill="url(#hull)" stroke="#c7d2fe" stroke-width="1.5"/>
-  <path d="M14 30 34 19 43 38 39 104 20 112 10 88Z" fill="url(#armor)" stroke="#67e8f9" stroke-width="2"/>
-  <path d="M89 23 111 33 119 86 106 104 87 92 85 43Z" fill="url(#armor)" stroke="#e879f9" stroke-width="2"/>
-  <path d="M15 45 39 40M14 55 39 50M13 65 38 60M13 75 37 70M14 85 36 80" stroke="#67e8f9" stroke-width="3"/>
-  <path d="M89 44 111 50M89 55 114 61M89 66 114 72M89 77 111 83" stroke="#e879f9" stroke-width="3"/>
-  <path d="M64 28 71 53 64 67 57 53Z" fill="url(#crystal)"/>
-  <path d="M22 94H32M27 89V99" stroke="#a5f3fc" stroke-width="2"/><path d="M96 91H106" stroke="#f5d0fe" stroke-width="2"/>
+ <!-- Polarity Warden: aircraft wings carry two unequal longitudinal coil nacelles. -->
+ <g transform="translate(256)" stroke="#93a9c3" stroke-width="1.1">
+  <path d="M63 8 73 29 76 42 105 34 115 44 110 85 92 79 76 73 73 94 86 110 69 106 63 118 56 105 38 111 50 91 49 72 30 81 14 77 11 45 23 31 51 43 54 27Z" fill="url(#hull)"/>
+  <path d="M26 38 49 49 48 64 29 72 18 65ZM78 48 102 41 109 53 103 74 79 64Z" fill="url(#armor)"/>
+  <path d="M24 25 35 32 38 79 32 95 22 92 18 77 18 39Z" fill="#102b40" stroke="#67e8f9" stroke-width="1.6"/>
+  <path d="M93 32 105 38 109 77 100 98 90 91 87 48Z" fill="#29213d" stroke="#f0abfc" stroke-width="1.6"/>
+  <path d="M22 43 34 45M21 51 35 53M22 59 35 61M23 67 35 69M24 75 34 77" stroke="#67e8f9" stroke-width="3"/>
+  <path d="M92 48 104 50M91 58 105 60M92 68 105 70M93 78 103 80" stroke="#d879f0" stroke-width="3.5"/>
+  <path d="M25 38 25 83M100 44 100 87" stroke="#f8fafc" opacity=".55"/>
+  <path d="M63 17 70 38 69 88 63 105 56 89 55 39Z" fill="url(#armor)"/>
+  <path d="M62 30 67 44 65 59 60 59 58 43Z" fill="url(#crystal)"/>
+  <path d="M57 68 68 68M58 75H67M59 82H66" stroke="#90a9c9"/>
+  <path d="M56 94 62 96 60 109 55 105ZM66 96 72 94 73 106 68 110Z" fill="#0b1225"/>
+  <path d="M58 99V105M69 100 70 106" stroke="#a5f3fc" stroke-width="3"/>
+  <path d="M22 86H32M27 82V90" stroke="#cffafe"/><path d="M94 89H103" stroke="#f5d0fe"/>
  </g>
- <!-- SWARM OVERLORD: twin flight decks, command spire, six launch apertures. -->
- <g transform="translate(384)" stroke-linejoin="round">
-  <path d="M64 6 82 29 107 22 120 56 112 106 92 118 78 102 50 102 36 118 16 106 8 56 21 22 46 29Z" fill="url(#hull)" stroke="#a5b4fc" stroke-width="2"/>
-  <path d="M64 13 74 39 73 88 64 101 55 88 54 39Z" fill="url(#armor)" stroke="#c4b5fd"/>
-  <path d="M22 33 42 37 46 95 31 109 19 94 15 55ZM106 33 86 37 82 95 97 109 109 94 113 55Z" fill="#0b1225" stroke="#64748b"/>
-  <g fill="#164e63" stroke="#67e8f9"><path d="M21 43H38V53H20ZM20 61H40V71H21ZM23 80H42V90H24ZM90 43H107L108 53H90ZM88 61H108L107 71H88ZM86 80H105L104 90H86Z"/></g>
-  <g fill="#a5f3fc"><path d="M26 47 29 42 32 47 35 50H23ZM27 65 30 60 33 65 36 68H24ZM29 84 32 79 35 84 38 87H26ZM96 47 99 42 102 47 105 50H93ZM95 65 98 60 101 65 104 68H92ZM93 84 96 79 99 84 102 87H90Z"/></g>
-  <path d="M59 34H69L72 51H56Z" fill="url(#crystal)"/>
-  <path d="M59 61H69M59 68H69M59 75H69" stroke="#a78bfa" stroke-width="3"/>
+ <!-- Swarm Overlord: tapered carrier hull, inset launch tunnels and engine clusters. -->
+ <g transform="translate(384)" stroke="#889db6" stroke-width="1.1">
+  <path d="M63 7 78 23 86 39 106 32 118 50 112 94 99 113 80 105 71 116 55 116 47 105 28 114 14 94 8 51 22 33 43 40 49 23Z" fill="url(#hull)" stroke-width="1.6"/>
+  <path d="M23 41 42 48 43 91 31 103 21 87 15 54ZM85 48 104 41 112 54 106 87 96 104 84 91Z" fill="url(#armor)"/>
+  <path d="M63 16 75 30 77 87 70 101 56 101 49 86 51 30Z" fill="#25344e"/>
+  <path d="M57 27 69 27 74 38 70 47 56 47 52 38Z" fill="#0b1c31" stroke="#c4b5fd"/>
+  <path d="M56 35H70M56 40H70M63 29V44" stroke="#67e8f9" stroke-width="2"/>
+  <path d="M58 52H68V86H58Z" fill="#101b2c"/>
+  <path d="M61 56H65M61 63H65M61 70H65M61 77H65" stroke="#a78bfa" stroke-width="2"/>
+  <g fill="#071020" stroke="#67e8f9"><path d="M23 51 38 55 39 66 24 62ZM25 69 40 73 40 84 27 80ZM30 87 42 89 37 100 30 97ZM89 55 103 51 102 63 88 67ZM87 73 101 69 99 81 87 84ZM85 89 98 87 97 98 90 101Z"/></g>
+  <g fill="#9be9ed" stroke="none"><path d="M28 55 33 56 35 60 26 58ZM30 73 35 74 37 78 28 76ZM33 90 38 91 35 96 32 95ZM94 57 99 55 100 59 92 61ZM93 75 98 73 98 77 91 79ZM90 92 95 91 94 96 91 97Z"/></g>
+  <path d="M49 99 58 104 56 116 49 111ZM60 103H67V118H60ZM70 104 78 99 78 111 71 116Z" fill="#050b15"/>
+  <path d="M52 105 54 106 53 112M63 108V115M73 106 75 105 74 112" stroke="#67e8f9" stroke-width="3"/>
+  <path d="M17 48 22 44 41 51M88 51 104 44 109 48M45 53V86M81 54V86" fill="none" stroke="#bfcbdd"/>
  </g>
- <!-- ARC REAVER PRIME: double reverse-swept boomerang blades and needle fuselage. -->
- <g transform="translate(512)" stroke-linejoin="round">
-  <path d="M64 7 77 36 105 19 119 28 108 66 89 84 107 107 97 117 75 100 64 116 53 100 31 117 21 107 39 84 20 66 9 28 23 19 51 36Z" fill="url(#hull)" stroke="#c4b5fd" stroke-width="1.5"/>
-  <path d="M13 29 23 24 52 44 48 56 25 50 40 79 26 66ZM115 29 105 24 76 44 80 56 103 50 88 79 102 66Z" fill="url(#crystal)"/>
-  <path d="M41 88 31 108 54 93 57 80ZM87 88 97 108 74 93 71 80Z" fill="url(#crystal)" stroke="#a5f3fc"/>
-  <path d="M64 14 71 45 69 91 64 108 59 91 57 45Z" fill="url(#armor)" stroke="#e9d5ff"/>
-  <path d="M64 28 68 47 64 59 60 47Z" fill="#ecfeff"/>
-  <path d="M17 31 29 54 45 66M111 31 99 54 83 66" fill="none" stroke="#67e8f9" stroke-width="2"/>
+ <!-- Arc Reaver Prime: narrow interceptor spine and curved reverse-swept scythes. -->
+ <g transform="translate(512)" stroke="#95a8c6" stroke-width="1.1">
+  <path d="M64 5 72 30 74 51Q91 38 109 13L120 19Q116 54 99 70L78 82 74 97 91 106 89 115 67 105 63 122 58 105 36 115 34 107 51 96 48 81 28 70Q13 51 8 20L17 13Q33 38 52 51L55 30Z" fill="url(#hull)"/>
+  <path d="M16 23Q31 48 51 59L46 70Q24 61 16 23ZM111 23Q98 46 76 59L81 70Q103 59 111 23Z" fill="url(#armor)"/>
+  <path d="M15 20Q30 47 47 57M112 20Q98 46 81 56" fill="none" stroke="#b5a3ff" stroke-width="3"/>
+  <path d="M21 32Q32 52 47 61L44 64Q29 55 21 32ZM107 31Q94 51 80 61L84 64Q101 51 107 31Z" fill="url(#crystal)" stroke="none"/>
+  <path d="M63 15 69 37 68 93 63 106 58 92 58 36Z" fill="url(#armor)"/>
+  <path d="M63 32 66 48 64 65 60 57 61 43Z" fill="#e0f2fe" stroke="#67e8f9"/>
+  <path d="M11 18 17 16 22 33 17 39 12 29ZM109 17 115 19 113 29 108 39 104 34Z" fill="#17243b" stroke="#a78bfa"/>
+  <path d="M13 21 17 23 19 32M112 22 109 27 107 33" stroke="#e9d5ff" stroke-width="2"/>
+  <path d="M50 80 57 75 58 100 52 105 48 97ZM69 75 76 81 79 97 73 105 68 99Z" fill="#101b2c"/>
+  <path d="M52 91 55 89 55 100 52 101ZM71 89 75 91 75 101 71 100Z" fill="#67e8f9"/>
+  <path d="M38 107 50 101 49 108 39 111ZM78 102 87 108 86 112 77 108Z" fill="#586985"/>
+  <path d="M60 71H67M60 77H66M60 83H66M32 61 38 65M90 64 96 59" stroke="#d4d9e9"/>
+ </g>
  </g>
  <!-- Combat cells: acid has a visible droplet body and a long downward cue. -->
  <g transform="translate(0 128)"><path d="M64 10C56 40 35 65 35 87A29 29 0 0 0 93 87C93 65 72 40 64 10Z" fill="url(#acid)"/><path d="M64 41C60 59 48 78 48 88A16 16 0 0 0 80 88C80 78 68 59 64 41Z" fill="#d9f99d"/><ellipse cx="61" cy="90" rx="7" ry="11" fill="#fff"/></g>
