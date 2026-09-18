@@ -4,6 +4,7 @@ import { createPlayerStatus, playerSkillLocked, tickPlayerStatus } from "./airCo
 import { AIRCRAFT_CONFIGS, AIR_COMBAT_LIMITS, SKILL_CONFIGS } from "./airCombatConfig";
 import { applyCoreStatEffects, applyFireRateLock, hasCore, skillsLocked } from "./airCombatCoreEffects";
 import type { AircraftCombatState, AircraftId, EffectiveAircraftStats, LevelUpResult, SkillCastResult, SkillId, WeaponModifiers } from "./airCombatTypes";
+const isAstraSkill=(id:SkillId)=>id==="orbit_reversal"||id==="stellar_lance"||id==="starfall";
 const DEFAULT_WEAPON: WeaponModifiers = {
     penetration: 0, penetrationDamageMultiplier: 0, splashDamageMultiplier: 0, chargedEvery: 0, chargedMultiplier: 1,
     projectileCount: 1, perProjectileMultiplier: 1, bounceCount: 0, bounceDamageMultiplier: 0, annihilatorEvery: 0, annihilatorMultiplier: 1,
@@ -132,6 +133,15 @@ export function getSkillRuntimeValues(state: AircraftCombatState, skillId: Skill
     const v: RuntimeSkillValues = { cost: skill.cost, cooldown: skill.cooldown, duration: skill.duration || 0, damageMultiplier: skill.damageMultiplier || 0,
         count: 0, upkeepPerSecond: 0, sideProjectileMultiplier: .15, radiusMultiplier: 1, damageTakenMultiplier: 1, charge: 0 };
     switch (skillId) {
+        case "orbit_reversal":
+            v.count=hasCore(state,150)?22:16;v.radiusMultiplier=hasCore(state,150)?92/72:1;
+            v.damageMultiplier=hasCore(state,151)?.45:.3;v.cooldown=hasCore(state,154)?13:22;break;
+        case "stellar_lance": {
+            const stack=(state.coreState.timers.lanceChain??0)>state.coreState.time?(state.coreState.stacks.lanceStack??0):0;
+            v.cost=(hasCore(state,161)?45:60)*(1+stack);v.charge=hasCore(state,156)?.2:.6;
+            v.damageMultiplier=(hasCore(state,157)?10.5:8)*(1+.1*stack);break;
+        }
+        case "starfall":v.cooldown=hasCore(state,165)?23:34;v.damageMultiplier=hasCore(state,162)?2.65:2.1;break;
         case "decoy":
             v.count = hasCore(state, 19) ? 4 : 3;
             v.duration = hasCore(state, 19) ? 2.5 : 1.5;
@@ -220,13 +230,13 @@ export function endAircraftSkill(state: AircraftCombatState, skillId: SkillId): 
         if (hasCore(state,142)) state.coreState.timers.reappearanceBuff = state.coreState.time + V.reappearanceDuration;
     }
     if (skillId === "escort_drone") state.coreState.stacks.droneUpkeepSpent = 0;
-    if (skillId === "sweeping_cannon" || skillId === "escort_drone") {
+    if (skillId === "sweeping_cannon" || skillId === "escort_drone" || isAstraSkill(skillId)) {
         state.cooldowns[skillId] = getSkillRuntimeValues(state, skillId).cooldown * (1 - getEffectiveAircraftStats(state).cooldownReduction) * (state.coreState.deferredCooldowns[skillId] ?? 1);
         recordCooldownTelemetry(state,skillId,state.coreState.deferredCooldowns[skillId]??1);
         delete state.coreState.deferredCooldowns[skillId];
         if(state.coreState.stacks[`debt:${skillId}`])beginDebt(state,skillId);
     }
-    if(skillId!=="sweeping_cannon"&&skillId!=="escort_drone")finishBorrowedDuration(state,skillId);
+    if(skillId!=="sweeping_cannon"&&skillId!=="escort_drone"&&!isAstraSkill(skillId))finishBorrowedDuration(state,skillId);
     if (skillId === "armor_shield" && hasCore(state, 30) && !skillsLocked(state)){
         state.coreState.timers.shieldArmor = state.coreState.time + 6;recordCoreMetric(state,30,"procs",1);
     }
@@ -249,6 +259,7 @@ export function castSkill(state: AircraftCombatState, skillId: SkillId): SkillCa
         recordCoreMetric(state, 148, "resource", refund);
         return { cast: true, resourceSpent: 0, toggledOff: true };
     }
+    if(isAstraSkill(skillId) && (state.activeEffects[skillId]??0)>0)return {cast:false,reason:"invalid",resourceSpent:0};
     if(state.coreState.stacks[`debt:${skillId}`])return {cast:false,reason:"cooldown",resourceSpent:0};
     const borrowed=canBorrowSkill(state,skillId);
     if ((state.cooldowns[skillId] || 0) > 0 && !borrowed)
@@ -260,19 +271,27 @@ export function castSkill(state: AircraftCombatState, skillId: SkillId): SkillCa
         return { cast: false, reason: "resource", resourceSpent: 0 };
     state.currentResource = Math.max(0, state.currentResource - cost);
     state.coreState.skillCasts++;
+    if(isAstraSkill(skillId)) {
+        state.activeEffects[skillId]=skillId==="orbit_reversal"?3.2:skillId==="stellar_lance"?v.charge:5.5;
+        (state.activeEffectDurations??={})[skillId]=state.activeEffects[skillId];
+    }
+    if(skillId==="stellar_lance"){
+        const c=state.coreState,stack=(c.timers.lanceChain??0)>c.time?(c.stacks.lanceStack??0):0;
+        c.stacks.lanceCastStack=stack;c.stacks.lanceStack=Math.min(4,stack+1);c.timers.lanceChain=c.time+15;
+    }
     if(borrowed){state.coreState.stacks.borrowPending=1;state.coreState.stacks[`debt:${skillId}`]=1;}
     if(free){recordCoreMetric(state,84,"procs",1);recordCoreMetric(state,84,"saved",skillId==="escort_drone"?0:v.cost);}
     const savingRow=skillId==="invisibility"?39:skillId==="focus_laser"?42:undefined;
     if(!free)recordCoreMetric(state,savingRow,"saved",Math.max(0,skill.cost-v.cost));
     if(skillId==="focus_laser")recordCoreMetric(state,41,"chargeSaved",1.8);
     const cooldown = v.cooldown * (1 - getEffectiveAircraftStats(state).cooldownReduction) * (free ? 1.1 : 1);
-    if (skillId === "sweeping_cannon" || skillId === "escort_drone")
+    if (skillId === "sweeping_cannon" || skillId === "escort_drone" || isAstraSkill(skillId))
         state.coreState.deferredCooldowns[skillId] = free ? 1.1 : 1;
     else {
         state.cooldowns[skillId] = cooldown;
         recordCooldownTelemetry(state,skillId,free?1.1:1);
     }
-    if(borrowed && skillId!=="sweeping_cannon" && skillId!=="escort_drone"){
+    if(borrowed && skillId!=="sweeping_cannon" && skillId!=="escort_drone" && !isAstraSkill(skillId)){
         if(v.duration>0){state.coreState.stacks[`debtNormal:${skillId}`]=cooldown;state.cooldowns[skillId]=0;}
         else beginDebt(state,skillId);
     }
@@ -346,6 +365,7 @@ export function tickAircraftState(state: AircraftCombatState, deltaSeconds: numb
         }
     }
     for (const key of Object.keys(state.activeEffects) as SkillId[]) {
+        if(isAstraSkill(key))continue; // World-owned completion includes delayed impacts.
         const next = (state.activeEffects[key] || 0) - dt;
         if (next <= 0)
             endAircraftSkill(state, key);
@@ -380,7 +400,7 @@ export function tickAircraftState(state: AircraftCombatState, deltaSeconds: numb
 }
 export function isPlayerInvisible(state: AircraftCombatState): boolean { return (state.activeEffects.invisibility || 0) > 0; }
 export function canAcquirePlayerTarget(state: AircraftCombatState): boolean { return !isPlayerInvisible(state); }
-export function shouldAutoFire(state: AircraftCombatState): boolean { return (state.activeEffects.focus_laser || 0) <= 0; }
+export function shouldAutoFire(state: AircraftCombatState): boolean { return (state.activeEffects.focus_laser || 0) <= 0 && (state.activeEffects.stellar_lance || 0) <= 0; }
 export function classifySkillPress(durationMs: number, longPressMs = 400): "tap" | "hold" { return durationMs >= longPressMs ? "hold" : "tap"; }
 export function shouldCastSkillPress(durationMs: number, holdActivated: boolean, cancelled: boolean, longPressMs = 400): boolean {
     return !cancelled && !holdActivated && classifySkillPress(durationMs, longPressMs) === "tap";
@@ -396,6 +416,7 @@ export function resolveBasicProjectileMultipliers(state: AircraftCombatState, _s
 function recordCooldownTelemetry(state:AircraftCombatState,skillId:SkillId,penalty:number) {
     const reduction=1-getEffectiveAircraftStats(state).cooldownReduction;
     const sources:Partial<Record<SkillId,readonly [number,number][]>>={
+        orbit_reversal:[[154,9]],starfall:[[165,11]],
         decoy:[[20,SKILL_CONFIGS.decoy.cooldown-11]],heavy_bomb:[[31,SKILL_CONFIGS.heavy_bomb.cooldown-15]],
         afterburner:[[125,V.afterburnerCooldownReduction]],missile_swarm:[[128,V.swarmCooldownReduction]],
         armor_shield:[[133,V.shieldCooldownReduction]],sweeping_cannon:[[137,V.cannonCooldownReduction]],

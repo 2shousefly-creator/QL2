@@ -15,9 +15,9 @@ function profile(shapes:HitCapsule[], aspect=1):AircraftHitboxProfile {
   return {localWidth:1,localHeight:aspect,shapes,broadRadius:Math.max(...shapes.map(s=>Math.max(Math.hypot(s.ax,s.ay),Math.hypot(s.bx,s.by))+s.r))};
 }
 export const PLAYER_STANDARD_AIRFRAME_SIZE = 46.92;
-export const PLAYER_AIRFRAME_SIZE:Record<AircraftId,number>={black_eagle:PLAYER_STANDARD_AIRFRAME_SIZE,breaker:PLAYER_STANDARD_AIRFRAME_SIZE,phantom:PLAYER_STANDARD_AIRFRAME_SIZE};
+export const PLAYER_AIRFRAME_SIZE:Record<AircraftId,number>={black_eagle:PLAYER_STANDARD_AIRFRAME_SIZE,breaker:PLAYER_STANDARD_AIRFRAME_SIZE,astra:PLAYER_STANDARD_AIRFRAME_SIZE,phantom:PLAYER_STANDARD_AIRFRAME_SIZE};
 export const PLAYER_STANDARD_HITBOX_PROFILE=profile([cap(0,-.39,0,.27,.055,"body"),cap(-.06,-.04,-.27,.15,.045,"left_wing"),cap(.06,-.04,.27,.15,.045,"right_wing"),cap(-.06,.26,.06,.26,.035,"tail")]);
-export const PLAYER_HITBOX_PROFILES:Record<AircraftId,AircraftHitboxProfile>={black_eagle:PLAYER_STANDARD_HITBOX_PROFILE,breaker:PLAYER_STANDARD_HITBOX_PROFILE,phantom:PLAYER_STANDARD_HITBOX_PROFILE};
+export const PLAYER_HITBOX_PROFILES:Record<AircraftId,AircraftHitboxProfile>={black_eagle:PLAYER_STANDARD_HITBOX_PROFILE,breaker:PLAYER_STANDARD_HITBOX_PROFILE,astra:PLAYER_STANDARD_HITBOX_PROFILE,phantom:PLAYER_STANDARD_HITBOX_PROFILE};
 export const ENEMY_HITBOX_PROFILES:Record<EnemyType,AircraftHitboxProfile>={
   prism_sovereign:profile([cap(0,-.39,0,.34,.07),cap(-.09,-.15,-.37,0,.075),cap(.09,-.15,.37,0,.075),cap(-.17,.12,-.12,.26,.04),cap(.17,.12,.12,.26,.04)]),
   mine_warden:profile([cap(0,-.34,0,.31,.13),cap(-.27,-.19,-.27,.29,.1),cap(.27,-.19,.27,.29,.1)]),

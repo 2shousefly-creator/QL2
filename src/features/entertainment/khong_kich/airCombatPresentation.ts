@@ -28,6 +28,7 @@ export function getSkillTooltipModel(state: AircraftCombatState, id: SkillId) {
   const resource = AIRCRAFT_CONFIGS[state.aircraftId].resourceKind === "mana" ? "Mana" : "Điện";
   const detailRows = [id === "escort_drone" ? `Cần ≥${amount(v.cost)} Điện · bật không trừ phí` : `Tiêu hao: ${free ? 0 : amount(v.cost)} ${resource}`];
   const descriptions: Record<SkillId, string> = {
+    orbit_reversal:SKILL_CONFIGS.orbit_reversal.description,stellar_lance:SKILL_CONFIGS.stellar_lance.description,starfall:SKILL_CONFIGS.starfall.description,
     decoy: `Phóng ${v.count} đợt Mồi Bẫy, mỗi đợt gồm ${B.decoysPerVolley} mồi. Sau khi bung, mỗi mồi tồn tại ${number(v.duration)} giây, thu hút mục tiêu và hấp thụ đạn địch.`,
     afterburner: `Trong ${number(v.duration)} giây, nhận +${number((hasCore(state,23)?B.upgradedAfterburnerRate:B.afterburnerRate)*100)}% Tốc Độ Bắn. Đạn thường nảy thêm 2 lần, lần lượt gây ${number((hasCore(state,127)?V.bounceFirst:B.bounceFirst)*100)}% và ${number((hasCore(state,127)?V.bounceSecond:B.bounceSecond)*100)}% sát thương gốc.`,
     missile_swarm: `Phóng ${v.count} tên lửa tự tìm mục tiêu. Mỗi tên lửa gây ${number(v.damageMultiplier*100)}% Hỏa Lực. Tên lửa được phóng theo từng cặp trái–phải, lơ lửng trong ${number(B.swarmHover)} giây trước khi khóa mục tiêu và tăng tốc.`,
@@ -40,9 +41,15 @@ export function getSkillTooltipModel(state: AircraftCombatState, id: SkillId) {
   };
   if(id === "decoy")detailRows.push(`Khoảng cách giữa các đợt: ${number(B.decoyVolleyInterval)} giây`);
   if(id === "escort_drone")detailRows.push(`Hồi Điện: ${number(getEffectiveAircraftStats(state).resourceRegen)}/s`,hawkEyeTimeLabel(hawkEyeDuration(state).remaining));
+  if(id==="orbit_reversal")detailRows.push(`Vùng ${hasCore(state,150)?92:72}px · tối đa ${v.count} projectile · Tinh Đạn ${number(v.damageMultiplier*100)}% Hỏa Lực`);
+  if(id==="stellar_lance"){
+    const stack=(state.coreState.timers.lanceChain??0)>state.coreState.time?(state.coreState.stacks.lanceStack??0):0;
+    detailRows.push(`Chuỗi kế tiếp: ${stack}/4 · ${number(v.cost)} Mana · +${stack*10}% sát thương`, `Tụ lực ${number(v.charge)}s · mục tiêu đầu ${number(v.damageMultiplier*100)}% · mục tiêu sau ${number((hasCore(state,157)?930:680)*(1+.1*stack))}% Hỏa Lực`);
+  }
+  if(id==="starfall")detailRows.push(`Impact ${number(v.damageMultiplier*100)}% Hỏa Lực · bán kính ${hasCore(state,163)?50:30}px`);
   const coreRows: string[] = [];
   // The main copy uses effective values; these rows identify each owned upgrade.
-  for (const row of [...Array.from({length:27},(_,i)=>19+i), ...Array.from({length:27},(_,i)=>122+i)]) {
+  for (const row of [...Array.from({length:27},(_,i)=>19+i), ...Array.from({length:27},(_,i)=>122+i),...Array.from({length:18},(_,i)=>150+i)]) {
     const core = getCoreDefinition(coreId(row));
     if (hasCore(state, row) && core.skillId === id) coreRows.push(core.description);
   }
@@ -103,6 +110,7 @@ const TIMED_STATUSES = [
   { key: "decoyCounter", row: 21, duration: 5 },
   { key: "shieldArmor", row: 30, duration: 6 },
   { key: "hawkRage", row: 44, duration: 3 },
+  { key: "whiteHole", row: 155, duration: 5 },
 ] as const;
 
 // Read canonical runtime timers only. Core 106 deliberately has no entry.
@@ -162,7 +170,7 @@ function coreCooldownStatuses(world:CombatWorld):StatusPresentation[] {
     const count=(t?.hackTargets??[]).filter(id=>world.enemies.some(e=>e.id===id&&e.hp>0)).length;
     const label=active?`${boss?"Boss đang bị choáng":"Đang chiếm quyền"}: ${seconds(remaining)}`:cooldown?`Hồi chiêu: ${seconds(cooldown)}`:"Sẵn sàng";
     add(120,`${label}. Khi đợt đã xuất hiện hết địch và chỉ còn mục tiêu bị hack, hiệu ứng kết thúc sớm để tiếp tục dọn đợt.`,{
-      remaining,duration:active?(boss?1.25:t?.hackMode==="elite"?4:6):18,timerKind:active?"active":cooldown?"cooldown":undefined,
+      remaining,duration:active?(boss?1.25:t?.hackMode==="elite"?8:10):13,timerKind:active?"active":cooldown?"cooldown":undefined,
       showNumericTimer:active||cooldown>0,badgeText:active&&!boss?`×${count}`:undefined,badgeKind:active&&!boss?"charge":undefined,
       timeLabel:label,priority:active?85:cooldown?70:45,
     });

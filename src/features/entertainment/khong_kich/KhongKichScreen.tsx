@@ -289,7 +289,7 @@ const KhongKichContent: React.FC<KhongKichScreenProps> = ({
 
       <h2 className="text-center text-sm font-black text-white">CHỌN CHIẾN CƠ</h2>
       {/* Aircraft Cards Container */}
-      <div className="flex flex-col space-y-[clamp(4px,0.7dvh,8px)] my-[clamp(2px,0.8dvh,8px)]">
+      <div className="aircraft-selection-grid">
         {AIRCRAFT_ORDER.map((aircraftId) => {
           const config = AIRCRAFT_CONFIGS[aircraftId];
           const stats = getEffectiveAircraftStats(createAircraftCombatState(aircraftId));
@@ -318,7 +318,7 @@ const KhongKichContent: React.FC<KhongKichScreenProps> = ({
                 className="pointer-events-none absolute -left-4 -top-4 h-20 w-20 rounded-full blur-2xl"
                 style={{ backgroundColor: `${config.color}18` }}
               />
-              <div className="relative grid grid-cols-[clamp(56px,8.5dvh,76px)_1fr] items-center gap-[clamp(6px,1.2vw,12px)]">
+              <div className="aircraft-selection-card-body">
                 <div className="flex flex-col items-center">
                   <AircraftPreview
                     aircraftId={aircraftId}
@@ -360,9 +360,10 @@ const KhongKichContent: React.FC<KhongKichScreenProps> = ({
                   <p className="mt-[clamp(1px,0.3dvh,3px)] line-clamp-1 text-[clamp(7.5px,1.05dvh,9.5px)] leading-tight text-slate-400">
                     {config.description}
                   </p>
-                  <AircraftSelectionStats stats={stats} />
+
                 </div>
               </div>
+              <AircraftSelectionStats stats={stats} />
               <div className="relative mt-[clamp(4px,0.8dvh,8px)] grid grid-cols-3 gap-[clamp(3px,0.6vw,6px)] border-t border-slate-700/60 pt-[clamp(4px,0.8dvh,8px)]">
                 {config.skillIds.map((skillId) => {
                   const skill = SKILL_CONFIGS[skillId];

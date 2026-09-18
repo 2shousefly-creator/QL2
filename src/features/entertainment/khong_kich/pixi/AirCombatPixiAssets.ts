@@ -1,3 +1,4 @@
+import { ASTRA_ART } from "../airCombatAstraArt";
 import { ENEMY_VISUALS } from "../airCombatEnemyArt";
 import { STAGE2_ART_URLS, STAGE2_ENEMY_ART, STAGE2_VFX_ART, TEMPEST_WEAKPOINT_ART } from "../airCombatStage2Art";
 import { PLAYER_STANDARD_AIRFRAME_SIZE } from "../airCombatHitboxes";
@@ -19,6 +20,7 @@ import type { AircraftVisualDefinition, AtlasFrame } from "./airCombatPixiTypes"
 
 const cell = (atlas: AtlasFrame["atlas"], x: number, y: number): AtlasFrame => ({ atlas, rect: [x / 4, y / 4, 0.25, 0.25] });
 export const AIRCRAFT_VISUALS: Record<AircraftId, AircraftVisualDefinition> = {
+  astra:{neutral:{atlas:"astraAircraft",rect:[0,0,1/3,1]},left:{atlas:"astraAircraft",rect:[1/3,0,1/3,1]},right:{atlas:"astraAircraft",rect:[2/3,0,1/3,1]},size:PLAYER_STANDARD_AIRFRAME_SIZE,artwork:PLAYER_ARTWORK.astra,tint:0xffa64d},
   black_eagle: { neutral: cell("aircraft", 0, 0), left: cell("aircraft", 1, 0), right: cell("aircraft", 2, 0), size: PLAYER_STANDARD_AIRFRAME_SIZE, artwork: PLAYER_ARTWORK.black_eagle, tint: 0x67e8f9 },
   breaker: { neutral: cell("aircraft", 0, 1), left: cell("aircraft", 1, 1), right: cell("aircraft", 2, 1), size: PLAYER_STANDARD_AIRFRAME_SIZE, artwork: PLAYER_ARTWORK.breaker, tint: 0xfbbf24 },
   phantom: { neutral: cell("aircraft", 0, 2), left: cell("aircraft", 1, 2), right: cell("aircraft", 2, 2), size: PLAYER_STANDARD_AIRFRAME_SIZE, artwork: PLAYER_ARTWORK.phantom, tint: 0xc4b5fd },
@@ -26,9 +28,12 @@ export const AIRCRAFT_VISUALS: Record<AircraftId, AircraftVisualDefinition> = {
 export { ENEMY_VISUALS } from "../airCombatEnemyArt";
 const ammoFrames = Object.fromEntries(Object.entries(AMMO_VISUALS).map(([key,v]) => [key,key.endsWith("_basic_ammo")?{atlas:"basicAmmo",rect:[v.cell[0]/3,0,1/3,1/2]}:cell("ammo",v.cell[0],v.cell[1])])) as Record<AmmoVisualKey,AtlasFrame>;
 export const VFX_VISUALS = {
+  astra_meteor:{atlas:"astraEffects",rect:[2/3,0,1/3,1]} as AtlasFrame,
   ...STAGE2_VFX_ART,
   healingCross: { atlas: "healingCross", rect: [0, 0, 1, 1] } as AtlasFrame,
   ...ammoFrames,
+  astra_basic_ammo:{atlas:"astraEffects",rect:[0,0,1/3,1]} as AtlasFrame,
+  astra_lance:{atlas:"astraEffects",rect:[1/3,0,1/3,1]} as AtlasFrame,
   basicAmmoTrail: { atlas: "basicAmmo", rect: [0, 1/2, 1/3, 1/2] } as AtlasFrame,
   muzzle: cell("vfx", 0, 0), tracer: cell("vfx", 1, 0), enemyTracer: cell("vfx", 2, 0), missile: cell("vfx", 3, 0),
   smallExplosion: cell("vfx", 0, 1), mediumExplosion: cell("vfx", 1, 1), largeExplosion: cell("vfx", 2, 1), bossExplosion: cell("vfx", 3, 1),
@@ -48,7 +53,8 @@ export async function loadAirCombatAssets() {
     Assets.load<Texture>(healingCrossUrl),
     Assets.load<Texture>(STAGE2_ART_URLS.enemy), Assets.load<Texture>(STAGE2_ART_URLS.vfx), Assets.load<Texture>(STAGE2_ART_URLS.storm), Assets.load<Texture>(STAGE2_ART_URLS.elite),
   ]);
-  const sources = { aircraft, fortress, vfx, ammo, basicAmmo, healingCross, stage2Enemy, stage2Vfx, stage2Elite };
+  const [astraAircraft,astraEffects]=await Promise.all([Assets.load<Texture>(ASTRA_ART.aircraft),Assets.load<Texture>(ASTRA_ART.effects)]);
+  const sources = { astraAircraft,astraEffects,aircraft, fortress, vfx, ammo, basicAmmo, healingCross, stage2Enemy, stage2Vfx, stage2Elite };
   const frames = new Map<AtlasFrame, Texture>();
   const texture = (definition: AtlasFrame) => {
     const cached = frames.get(definition);

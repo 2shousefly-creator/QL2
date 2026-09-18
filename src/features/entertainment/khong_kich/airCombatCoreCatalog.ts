@@ -1450,7 +1450,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_120",
     "name": "Đoạt Quyền Điều Khiển",
-    "description": "Chiếm quyền tối đa 3 địch thường trong 6 giây hoặc 1 Tinh Anh trong 4 giây. Boss bị choáng 1,25 giây. Hồi nội tại 18 giây bắt đầu sau khi hiệu ứng kết thúc.",
+    "description": "Chiếm quyền tối đa 5 địch thường trong 10 giây hoặc 1 Tinh Anh trong 8 giây. Boss bị choáng 1,25 giây. Hồi nội tại 13 giây bắt đầu sau khi hiệu ứng kết thúc.",
     "system": "Chiến Thuật",
     "icon": "core:core_120",
     "category": "defense",
@@ -1912,5 +1912,293 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   "tiers": [
     "gold"
   ]
+},
+{
+  "id": "core_150",
+  "name": "Vành Đai Mở Rộng",
+  "description": "Phản Quỹ Đạo tăng bán kính từ 72px lên 92px và tăng giới hạn bắt giữ từ 16 lên 22 projectile.",
+  "system": "Kỹ Năng",
+  "icon": "skill:orbit_reversal",
+  "category": "skill",
+  "tiers": [
+    "diamond"
+  ],
+  "aircraftIds": [
+    "astra"
+  ],
+  "skillId": "orbit_reversal",
+  "skillSlot": 1
+},
+{
+  "id": "core_151",
+  "name": "Phản Xạ Cường Hóa",
+  "description": "Tinh Đạn của Phản Quỹ Đạo gây 45% Hỏa Lực thay vì 30%.",
+  "system": "Kỹ Năng",
+  "icon": "skill:orbit_reversal",
+  "category": "skill",
+  "tiers": [
+    "diamond"
+  ],
+  "aircraftIds": [
+    "astra"
+  ],
+  "skillId": "orbit_reversal",
+  "skillSlot": 1
+},
+{
+  "id": "core_152",
+  "name": "Thu Hồi Thiên Năng",
+  "description": "Mỗi projectile bắt giữ thành công hồi 2,5% Mana Tối Đa, tối đa 30% Mana Tối Đa mỗi lần dùng Phản Quỹ Đạo.",
+  "system": "Kỹ Năng",
+  "icon": "skill:orbit_reversal",
+  "category": "skill",
+  "tiers": [
+    "diamond"
+  ],
+  "aircraftIds": [
+    "astra"
+  ],
+  "skillId": "orbit_reversal",
+  "skillSlot": 1
+},
+{
+  "id": "core_153",
+  "name": "Xuyên Sao",
+  "description": "Tinh Đạn của Phản Quỹ Đạo bỏ qua 25% Giáp của mục tiêu.",
+  "system": "Kỹ Năng",
+  "icon": "skill:orbit_reversal",
+  "category": "skill",
+  "tiers": [
+    "diamond"
+  ],
+  "aircraftIds": [
+    "astra"
+  ],
+  "skillId": "orbit_reversal",
+  "skillSlot": 1
+},
+{
+  "id": "core_154",
+  "name": "Tái Khởi Động Quỹ Đạo",
+  "description": "Hồi Chiêu Phản Quỹ Đạo giảm từ 22 giây xuống 13 giây trước các hiệu ứng Giảm Hồi Chiêu khác.",
+  "system": "Kỹ Năng",
+  "icon": "skill:orbit_reversal",
+  "category": "skill",
+  "tiers": [
+    "diamond"
+  ],
+  "aircraftIds": [
+    "astra"
+  ],
+  "skillId": "orbit_reversal",
+  "skillSlot": 1
+},
+{
+  "id": "core_155",
+  "name": "Hố Trắng",
+  "description": "Nếu Phản Quỹ Đạo giải phóng ít nhất 1 Tinh Đạn, các phát bắn thường của Astra gây thêm 60% sát thương trong 5 giây sau khi kỹ năng kết thúc.",
+  "system": "Kỹ Năng",
+  "icon": "skill:orbit_reversal",
+  "category": "skill",
+  "tiers": [
+    "diamond"
+  ],
+  "aircraftIds": [
+    "astra"
+  ],
+  "skillId": "orbit_reversal",
+  "skillSlot": 1
+},
+{
+  "id": "core_156",
+  "name": "Tụ Quang Siêu Tốc",
+  "description": "Thời gian tụ lực của Thương Tinh Tú giảm từ 0,6 giây xuống 0,2 giây.",
+  "system": "Kỹ Năng",
+  "icon": "skill:stellar_lance",
+  "category": "skill",
+  "tiers": [
+    "diamond"
+  ],
+  "aircraftIds": [
+    "astra"
+  ],
+  "skillId": "stellar_lance",
+  "skillSlot": 2
+},
+{
+  "id": "core_157",
+  "name": "Lõi Siêu Mật",
+  "description": "Thương Tinh Tú gây 1.050% Hỏa Lực lên mục tiêu đầu tiên và 930% Hỏa Lực lên mỗi mục tiêu tiếp theo trước bonus chuỗi liên tiếp.",
+  "system": "Kỹ Năng",
+  "icon": "skill:stellar_lance",
+  "category": "skill",
+  "tiers": [
+    "diamond"
+  ],
+  "aircraftIds": [
+    "astra"
+  ],
+  "skillId": "stellar_lance",
+  "skillSlot": 2
+},
+{
+  "id": "core_158",
+  "name": "Mũi Giáo Xuyên Giáp",
+  "description": "Thương Tinh Tú bỏ qua 30% Giáp của mục tiêu.",
+  "system": "Kỹ Năng",
+  "icon": "skill:stellar_lance",
+  "category": "skill",
+  "tiers": [
+    "diamond"
+  ],
+  "aircraftIds": [
+    "astra"
+  ],
+  "skillId": "stellar_lance",
+  "skillSlot": 2
+},
+{
+  "id": "core_159",
+  "name": "Vệt Sao Đôi",
+  "description": "Sau phát Thương Tinh Tú chính 0,35 giây, một Vệt Sao lặp lại đúng quỹ đạo cũ và gây 25% sát thương của phát chính. Vệt Sao không tốn Mana, không tăng stack và không làm mới cửa sổ chuỗi 15 giây.",
+  "system": "Kỹ Năng",
+  "icon": "skill:stellar_lance",
+  "category": "skill",
+  "tiers": [
+    "diamond"
+  ],
+  "aircraftIds": [
+    "astra"
+  ],
+  "skillId": "stellar_lance",
+  "skillSlot": 2
+},
+{
+  "id": "core_160",
+  "name": "Trục Ngắm Mở Rộng",
+  "description": "Hành lang trúng đòn của Thương Tinh Tú rộng hơn 55% và tốc độ projectile tăng 35%.",
+  "system": "Kỹ Năng",
+  "icon": "skill:stellar_lance",
+  "category": "skill",
+  "tiers": [
+    "diamond"
+  ],
+  "aircraftIds": [
+    "astra"
+  ],
+  "skillId": "stellar_lance",
+  "skillSlot": 2
+},
+{
+  "id": "core_161",
+  "name": "Chu Kỳ Thiên Thương",
+  "description": "Mana cơ bản của Thương Tinh Tú giảm từ 60 xuống 45 và lượng Mana tăng thêm mỗi stack giảm từ 60 xuống 45.",
+  "system": "Kỹ Năng",
+  "icon": "skill:stellar_lance",
+  "category": "skill",
+  "tiers": [
+    "diamond"
+  ],
+  "aircraftIds": [
+    "astra"
+  ],
+  "skillId": "stellar_lance",
+  "skillSlot": 2
+},
+{
+  "id": "core_162",
+  "name": "Sao Neutron",
+  "description": "Mỗi thiên thạch của Sao Rơi gây 265% Hỏa Lực thay vì 210%.",
+  "system": "Kỹ Năng",
+  "icon": "skill:starfall",
+  "category": "skill",
+  "tiers": [
+    "diamond"
+  ],
+  "aircraftIds": [
+    "astra"
+  ],
+  "skillId": "starfall",
+  "skillSlot": 3
+},
+{
+  "id": "core_163",
+  "name": "Hủy Diệt Hàng Loạt",
+  "description": "Bán kính nổ của mỗi thiên thạch Sao Rơi tăng từ 30px lên 50px.",
+  "system": "Kỹ Năng",
+  "icon": "skill:starfall",
+  "category": "skill",
+  "tiers": [
+    "diamond"
+  ],
+  "aircraftIds": [
+    "astra"
+  ],
+  "skillId": "starfall",
+  "skillSlot": 3
+},
+{
+  "id": "core_164",
+  "name": "Thu Hồi Tàn Tích",
+  "description": "Mỗi kẻ địch bị Sao Rơi tiêu diệt hồi 5% Mana Tối Đa cho Astra, tối đa 35% Mana Tối Đa mỗi lần dùng.",
+  "system": "Kỹ Năng",
+  "icon": "skill:starfall",
+  "category": "skill",
+  "tiers": [
+    "diamond"
+  ],
+  "aircraftIds": [
+    "astra"
+  ],
+  "skillId": "starfall",
+  "skillSlot": 3
+},
+{
+  "id": "core_165",
+  "name": "Chu Kỳ Tận Diệt",
+  "description": "Hồi Chiêu Sao Rơi giảm từ 34 giây xuống 23 giây trước các hiệu ứng Giảm Hồi Chiêu khác. Hồi Chiêu vẫn chỉ bắt đầu sau khi thiên thạch cuối cùng hoàn tất.",
+  "system": "Kỹ Năng",
+  "icon": "skill:starfall",
+  "category": "skill",
+  "tiers": [
+    "diamond"
+  ],
+  "aircraftIds": [
+    "astra"
+  ],
+  "skillId": "starfall",
+  "skillSlot": 3
+},
+{
+  "id": "core_166",
+  "name": "Vết Nứt Thiên Sao",
+  "description": "Kẻ địch trúng Sao Rơi bị giảm 30% Giáp trong 6 giây. Hiệu ứng không cộng dồn; trúng lại làm mới thời gian.",
+  "system": "Kỹ Năng",
+  "icon": "skill:starfall",
+  "category": "skill",
+  "tiers": [
+    "diamond"
+  ],
+  "aircraftIds": [
+    "astra"
+  ],
+  "skillId": "starfall",
+  "skillSlot": 3
+},
+{
+  "id": "core_167",
+  "name": "Sao Cháy",
+  "description": "Mỗi thiên thạch Sao Rơi để lại vùng cháy trong 4 giây với bán kính bằng vụ nổ, gây 60% Hỏa Lực mỗi 0,5 giây. Nếu nhiều vùng cháy chồng nhau, mỗi kẻ địch chỉ nhận sát thương từ vùng cháy mới nhất đang tác động lên nó.",
+  "system": "Kỹ Năng",
+  "icon": "skill:starfall",
+  "category": "skill",
+  "tiers": [
+    "diamond"
+  ],
+  "aircraftIds": [
+    "astra"
+  ],
+  "skillId": "starfall",
+  "skillSlot": 3
 }
 ];

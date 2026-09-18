@@ -521,7 +521,7 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
           const active = skillId === "escort_drone" ? hud.droneActive : (worldRef.current.aircraft.activeEffects[skillId] || 0) > 0;
           const locked = skillsLocked(worldRef.current.aircraft) || playerSkillLocked(worldRef.current.aircraft);
           const free = hasCore(worldRef.current.aircraft,84) && (worldRef.current.aircraft.coreState.skillCasts+1)%4===0;
-          const toggleActive = (skillId === "escort_drone" || skillId === "sweeping_cannon") && active;
+          const toggleActive = (skillId === "orbit_reversal" || skillId === "escort_drone" || skillId === "sweeping_cannon") && active;
           const unavailable = locked || (!toggleActive && (Boolean(worldRef.current.aircraft.coreState.stacks[`debt:${skillId}`]) || cooldown > 0 && !borrow || (!free || skillId === "escort_drone") && hud.stats.currentResource < values.cost));
           return (
             <button

@@ -1,3 +1,4 @@
+import { ASTRA_ART } from "../airCombatAstraArt";
 import React from "react";
 import { Activity, Archive, CalendarDays, Clock3, Crosshair, History, Layers3, ListChecks, Orbit, PanelTop, Scan, Shield, Sparkles, Tag, Waves, Wrench } from "lucide-react";
 import aircraftUrl from "../../../../assets/khong-kich/v2/aircraft-atlas.png";
@@ -13,13 +14,13 @@ const SYSTEM_ICONS = {
   wave: Waves, elite_wave: Layers3, core: Layers3, motion: Activity,
   release: Archive, calendar: CalendarDays, history: History, change: Wrench,
   hitbox: Scan, target: Crosshair, boss: Shield, ui: PanelTop, version: Tag,
-  scheduler: Clock3, rules: ListChecks,
+  scheduler: Clock3, rules: ListChecks,aircraft_select:PanelTop,aircraft_balance:Activity,allegiance:Shield,explosion:Sparkles,
 };
 const ATLAS_URLS: Partial<Record<AtlasFrame["atlas"], string>> = {
-  aircraft: aircraftUrl, fortress: fortressUrl,
+  astraAircraft:ASTRA_ART.aircraft,astraEffects:ASTRA_ART.effects,aircraft: aircraftUrl, fortress: fortressUrl,
   stage2Enemy: STAGE2_ART_URLS.enemy, stage2Elite: STAGE2_ART_URLS.elite, stage2Vfx: STAGE2_ART_URLS.vfx,
 };
-const AIRCRAFT_ROWS: Record<AircraftId, number> = { black_eagle: 0, breaker: 1, phantom: 2 };
+const AIRCRAFT_ROWS: Record<AircraftId, number> = { black_eagle: 0, breaker: 1, phantom: 2,astra:0 };
 
 function AtlasThumbnail({ frame }: { frame: AtlasFrame }) {
   const [x, y, width, height] = frame.rect;
@@ -35,11 +36,11 @@ export function ReleaseNoteEntityIcon({ icon }: { icon: ReleaseIconRef }) {
   let frame: AtlasFrame | undefined;
   if (icon.kind === "aircraft") {
     const row = AIRCRAFT_ROWS[icon.id as AircraftId];
-    if (row !== undefined) frame = { atlas: "aircraft", rect: [0, row / 4, .25, .25] };
+    if (row !== undefined) frame = icon.id==="astra"?{atlas:"astraAircraft",rect:[0,0,1/3,1]}:{ atlas: "aircraft", rect: [0, row / 4, .25, .25] };
   } else if (icon.kind === "enemy" || icon.kind === "boss") {
     frame = icon.id === "boss_stage2" ? STAGE2_ENEMY_ART.boss : ENEMY_VISUALS[(icon.id === "boss_stage1" ? "boss" : icon.id) as EnemyType];
   } else if (icon.kind === "projectile" || icon.kind === "vfx") {
-    frame = STAGE2_VFX_ART[icon.id as keyof typeof STAGE2_VFX_ART];
+    frame = icon.id==="astra"?{atlas:"astraEffects",rect:[2/3,0,1/3,1]}:STAGE2_VFX_ART[icon.id as keyof typeof STAGE2_VFX_ART];
   } else if (icon.id === "projectile" || icon.id === "vfx") {
     // The historical copy uses system markers for these asset categories.
     frame = icon.id === "projectile" ? STAGE2_VFX_ART.needleBolt : STAGE2_VFX_ART.magneticBurst;

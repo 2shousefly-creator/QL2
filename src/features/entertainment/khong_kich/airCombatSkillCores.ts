@@ -35,7 +35,7 @@ export const SKILL_CORE_VALUES = {
   holeDuration:5, holeRadius:120, holeCoreRadius:20, holeDamagePerSecond:1,
   cannonCooldownReduction:11, cannonHeal:.02, cannonSpeedBonus:.5, cannonPierceDamage:.7,
   cloneExplosionRadius:150, cloneExplosionDamage:4.2, cloneLinger:5, reappearanceDuration:3.5, reappearanceDamage:2, reappearanceSpeedBonus:.3,
-  executeThreshold:.12, executeEliteThreshold:.10, executeBossThreshold:.08, laserArmorReduction:.25, laserArmorDuration:8, laserBonus:.4,
+  executeThreshold:.12, executeEliteThreshold:.10, executeBossThreshold:.08, laserArmorReduction:.25, laserArmorDuration:8, laserBonus:.32,
   syncWindow:1, syncDuration:4, syncBonus:.2, guardCycle:7, guardRadius:60, recallRefund:.45, recallRefundCap:40,
 } as const;
 const v=SKILL_CORE_VALUES;

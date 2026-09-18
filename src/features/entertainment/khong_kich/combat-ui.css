@@ -270,3 +270,20 @@
 @media(prefers-reduced-motion:reduce){.air-screen-motion,.air-stage-card,.air-campaign-hero>*,.air-motion-modal,.air-motion-modal .app-overlay__panel{animation-name:air-fade-in;animation-duration:100ms!important;animation-delay:0ms!important;filter:none!important;}.air-screen-exit,.air-motion-modal.air-motion-exit,.air-motion-modal.air-motion-exit .app-overlay__panel{animation-name:air-fade-out;}}
 
 .air-guardian-hud{display:flex;justify-content:space-between;font-size:6px;color:#a5f3fc;line-height:1.1}.air-guardian-hud i{font-style:normal;margin-left:3px;color:#475569}.air-guardian-hud i[data-alive="true"]{color:#67e8f9}.air-core-motion.air-motion-exit,.air-core-motion.air-motion-exit .app-overlay__panel{animation-duration:90ms!important}
+
+/* Four complete aircraft cards share the available mobile height. */
+.aircraft-selection-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin:4px 0;min-height:0}
+.aircraft-selection-grid .tactical-card{padding:clamp(5px,.8dvh,9px)}
+.aircraft-selection-card-body{display:grid;grid-template-columns:clamp(42px,6dvh,60px) minmax(0,1fr);align-items:center;gap:3px}
+.aircraft-selection-grid .status-tag{font-size:7px;padding:2px;text-align:center;white-space:normal}
+.aircraft-selection-grid .combat-ui-icon{width:clamp(18px,3.4dvh,26px)!important;height:clamp(18px,3.4dvh,26px)!important}
+.aircraft-selection-grid [aria-pressed] h3{font-size:clamp(11px,1.8dvh,15px)}
+@media(max-height:700px){.aircraft-selection-grid .tactical-card>div:last-child{margin-top:3px;padding-top:3px}.aircraft-selection-grid .status-tag{font-size:6.5px}.aircraft-selection-grid .tactical-card p{display:none}}
+
+.aircraft-selection-grid .combat-selection-stats{font-size:clamp(7px,1.1dvh,9px);gap:2px 6px;margin-top:4px}
+.aircraft-selection-grid .combat-selection-stats dt{white-space:nowrap;font-size:.9em}
+.aircraft-selection-grid .combat-selection-stats dd{white-space:nowrap}
+.aircraft-selection-grid .aircraft-selection-card-body>div:first-child>span:first-child{width:clamp(40px,6dvh,56px);height:clamp(40px,6dvh,56px)}
+.aircraft-selection-grid .aircraft-selection-card-body .status-tag{font-size:6px}
+.aircraft-selection-grid .aircraft-selection-card-body>div:last-child>div>span{font-size:6px;padding:2px}
+[data-khong-kich-phase="select"]>[data-start-air-combat]{flex-shrink:0}

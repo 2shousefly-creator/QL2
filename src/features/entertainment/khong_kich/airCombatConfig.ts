@@ -53,11 +53,19 @@ export const AIR_COMBAT_LIMITS = {
 } as const;
 
 export const AIRCRAFT_CONFIGS: Record<AircraftId, AircraftConfig> = {
+  astra: {
+    id:"astra", name:"Astra", code:"AS-04", role:"Precision Control · Mana",
+    description:"Kiểm soát projectile, xuyên tuyến bằng Thương Tinh Tú và không kích thiên thạch.",
+    color:"#ff8b35", accent:"#fff4d8", resourceKind:"mana", hpRegen:{base:3.3,growth:.13},
+    baseStats:{maxHp:1760,armor:39,firepower:124,fireRate:3.9,criticalChance:.05,criticalDamageMultiplier:1.7,maxResource:330,resourceRegen:1.5},
+    growth:{maxHp:34,armor:1.6,firepower:4,fireRate:.045,criticalChance:0,criticalDamageMultiplier:0,maxResource:15,resourceRegen:.24},
+    skillIds:["orbit_reversal","stellar_lance","starfall"],
+  },
   black_eagle: {
     id: "black_eagle",
     code: "X-07",
     name: "Viper",
-    hpRegen: { base: 2.9, growth: 0.10 },
+    hpRegen: { base: 3.2, growth: 0.12 },
     role: "Burst DPS · Tốc xạ",
     description: "Tốc xạ, sát thương bùng nổ và bầy tên lửa; dùng Mana để nối chuỗi kỹ năng.",
     color: "#38bdf8",
@@ -66,8 +74,8 @@ export const AIRCRAFT_CONFIGS: Record<AircraftId, AircraftConfig> = {
     baseStats: {
       criticalChance: 0.05,
       criticalDamageMultiplier: 1.70,
-      maxHp: 1670,
-      armor: 36,
+      maxHp: 1694,
+      armor: 38,
       firepower: 118,
       fireRate: 4.0,
       maxResource: 340,
@@ -101,7 +109,7 @@ export const AIRCRAFT_CONFIGS: Record<AircraftId, AircraftConfig> = {
       maxHp: 2067,
       armor: 46,
       firepower: 104,
-      fireRate: 3.1,
+      fireRate: 3.8,
       maxResource: 320,
       resourceRegen: 1.5,
     },
@@ -111,7 +119,7 @@ export const AIRCRAFT_CONFIGS: Record<AircraftId, AircraftConfig> = {
       maxHp: 42,
       armor: 2.1,
       firepower: 2,
-      fireRate: 0.04,
+      fireRate: 0.044,
       maxResource: 14,
       resourceRegen: 0.20,
     },
@@ -121,7 +129,7 @@ export const AIRCRAFT_CONFIGS: Record<AircraftId, AircraftConfig> = {
     id: "phantom",
     code: "NX-03",
     name: "Phantom",
-    hpRegen: { base: 3.2, growth: 0.14 },
+    hpRegen: { base: 3.4, growth: 0.15 },
     role: "Hybrid · Quản trị Energy",
     description: "Tàng hình, laser và drone hộ tống với Energy luôn giới hạn 100.",
     color: "#a78bfa",
@@ -133,7 +141,7 @@ export const AIRCRAFT_CONFIGS: Record<AircraftId, AircraftConfig> = {
       maxHp: 1839,
       armor: 41,
       firepower: 112,
-      fireRate: 3.5,
+      fireRate: 3.9,
       maxResource: 100,
       resourceRegen: 2,
     },
@@ -143,7 +151,7 @@ export const AIRCRAFT_CONFIGS: Record<AircraftId, AircraftConfig> = {
       maxHp: 37,
       armor: 1.8,
       firepower: 3,
-      fireRate: 0.045,
+      fireRate: 0.047,
       maxResource: 0,
       resourceRegen: 0,
     },
@@ -155,9 +163,16 @@ export const AIRCRAFT_ORDER: AircraftId[] = [
   "black_eagle",
   "breaker",
   "phantom",
+  "astra",
 ];
 
 export const SKILL_CONFIGS: Record<SkillId, SkillConfig> = {
+  orbit_reversal:{id:"orbit_reversal",aircraftId:"astra",name:"Phản Quỹ Đạo",shortName:"Quỹ Đạo",icon:"",cost:170,cooldown:22,duration:3.2,damageMultiplier:.3,
+    description:"Vùng 72px theo Astra bắt tối đa 16 projectile thù địch trong 3,2s. Bấm lại để giải phóng sớm, không tốn thêm Mana. Tinh Đạn bay thẳng phía trước, 0° spread, không tìm mục tiêu; mỗi viên gây 30% Hỏa Lực lên địch đầu tiên. Không bắt Beam, AoE, Bomb/Mine, va chạm thân và Boss mechanic không thể bắt. Hồi chiêu bắt đầu sau khi kết thúc."},
+  stellar_lance:{id:"stellar_lance",aircraftId:"astra",name:"Thương Tinh Tú",shortName:"Tinh Tú",icon:"",cost:60,cooldown:3,damageMultiplier:8,
+    description:"Tụ 0,6s, vẫn di chuyển nhưng ngừng bắn thường. Phóng thẳng phía trước, xuyên mọi địch: mục tiêu đầu 800%, mục tiêu sau 680% Hỏa Lực. Mỗi lần dùng thành công trong 15s tăng cost kế tiếp 60 Mana và +10% damage additive, tối đa 4 stack: 300 Mana/+40%. Hết 15s trở về ban đầu. Hồi chiêu sau phát chính."},
+  starfall:{id:"starfall",aircraftId:"astra",name:"Sao Rơi",shortName:"Sao Rơi",icon:"",cost:200,cooldown:34,damageMultiplier:2.1,
+    description:"Mỗi 0,5s khóa một địch, tối đa 10 lần trong 5s, ưu tiên mục tiêu chưa đánh dấu. Sau 1s, thiên thạch rơi vào marker, gây 210% Hỏa Lực trong 30px. Marker bám địch sống, giữ vị trí chết và không retarget. Hết mục tiêu thì ngừng khóa mới; thiên thạch đã hẹn vẫn rơi. Hồi chiêu chỉ bắt đầu sau impact cuối (~5,5s)."},
   "decoy": {
     "id": "decoy",
     "aircraftId": "black_eagle",
@@ -283,7 +298,7 @@ export const ENEMY_CONFIGS: Record<EnemyType, EnemyConfig> = {
   micro_drone: {"type": "micro_drone", "name": "MICRO DRONE", "baseHp": 62.79, "baseArmor": 0, "speed": 60, "radius": 7, "score": 0, "combatXp": 0, "projectileDamage": 0, "collisionDamage": 52.416, "fireInterval": 99, "color": "#a5f3fc"},
   cyclone_ace: {"type": "cyclone_ace", "name": "CYCLONE ACE · BẬC THẦY QUỸ ĐẠO", "baseHp": 4870.8, "baseArmor": 31.57, "speed": 62, "radius": 23, "score": 1500, "combatXp": 230, "projectileDamage": 82.992, "collisionDamage": 209.664, "fireInterval": 4, "color": "#22d3ee"},
   grid_architect: {"type": "grid_architect", "name": "GRID ARCHITECT · KIẾN TRÚC SƯ TỪ TRƯỜNG", "baseHp": 7035.6, "baseArmor": 59.532, "speed": 25, "radius": 28, "score": 1500, "combatXp": 230, "projectileDamage": 61.152, "collisionDamage": 244.608, "fireInterval": 7, "color": "#c084fc"},
-  satellite: {"type": "satellite", "name": "MAGNETIC SATELLITE", "baseHp": 23375, "baseArmor": 22.44, "speed": 0, "radius": 10, "score": 0, "combatXp": 0, "projectileDamage": 125.44, "collisionDamage": 80.64, "fireInterval": 1, "color": "#67e8f9"},
+  satellite: {"type": "satellite", "name": "MAGNETIC SATELLITE", "baseHp": 23375, "baseArmor": 22.44, "speed": 0, "radius": 10, "score": 0, "combatXp": 0, "projectileDamage": 125.44, "collisionDamage": 80.64, "fireInterval": 1.35, "color": "#67e8f9"},
   "scout": {
     "type": "scout",
     "name": "Scout Drone",

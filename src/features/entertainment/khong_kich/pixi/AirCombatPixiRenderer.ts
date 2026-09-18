@@ -1,3 +1,4 @@
+import { paintAstra } from "../airCombatAstraArt";
 import { magneticShake } from "../airCombatMagnetic";
 import { STAGE2_ENEMY_ART, TEMPEST_WEAKPOINT_ART } from "../airCombatStage2Art";
 import { paintMagnetic, guardianSlots } from "../airCombatMagnetic";
@@ -268,6 +269,10 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
         sprite.rotation=rotation; sprite.alpha=alpha; sprite.tint=tint;
       }
     }, reducedMotion, world.elapsed + this.magneticEndAge);
+    paintAstra(world,{...tacticalPainter,sprite:(id,key,x,y,width,height,rotation,alpha)=>{
+      const sprite=this.magneticSprites.get(-id,this.assets.effect(key));if(!sprite)return;
+      sprite.position.set(x,y);sprite.width=width;sprite.height=height;sprite.rotation=rotation;sprite.alpha=alpha;sprite.tint=0xffffff;
+    }},reducedMotion);
     this.magneticSprites.end();
     for(let i=labelCount;i<this.enemyStatusLabels.length;i++)this.enemyStatusLabels[i].visible=false;
     this.enemies.begin();

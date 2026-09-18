@@ -12,6 +12,7 @@ export interface AirframeArtwork {
 // Bounds use alpha > 16/255 to exclude almost-invisible export speckles.
 // [cell width, visible left, visible right (inclusive)] for all nine poses.
 const bounds: Record<AircraftId, Record<AirframePose, readonly [number, number, number]>> = {
+  astra: {neutral:[256,26,230],left:[256,44,212],right:[256,44,212]},
   black_eagle: { neutral: [314, 58, 255], left: [313, 97, 272], right: [314, 41, 215] },
   breaker: { neutral: [314, 17, 297], left: [313, 41, 299], right: [314, 13, 271] },
   phantom: { neutral: [314, 29, 285], left: [313, 46, 287], right: [314, 25, 266] },
@@ -27,6 +28,7 @@ const poses = (id: AircraftId): Record<AirframePose, AirframeArtwork> => ({
 /** Fixed reference visible width for every pose; no frame-dependent size pumping.
  * Never import this artwork compensation into collision or movement code. */
 export const PLAYER_ARTWORK: Record<AircraftId, Record<AirframePose, AirframeArtwork>> = {
+  astra:poses("astra"),
   black_eagle: poses("black_eagle"), breaker: poses("breaker"), phantom: poses("phantom"),
 };
 
@@ -34,6 +36,7 @@ export const PLAYER_ARTWORK: Record<AircraftId, Record<AirframePose, AirframeArt
  * Titan and Phantom have two outlets; their midpoint follows the fuselage axis.
  * These are visual transforms only, deliberately separate from airframe hitboxes. */
 export const PLAYER_ENGINE_MOUNTS: Record<AircraftId, readonly {engineMountX:number;engineMountY:number;width:number}[]> = {
+  astra:[{engineMountX:116/256,engineMountY:216/256,width:3.5},{engineMountX:139/256,engineMountY:216/256,width:3.5}],
   black_eagle:[{engineMountX:157/314,engineMountY:252/314,width:6}],
   breaker:[{engineMountX:114/314,engineMountY:260/314,width:4.8},{engineMountX:199/314,engineMountY:260/314,width:4.8}],
   phantom:[{engineMountX:134/314,engineMountY:231/314,width:4.2},{engineMountX:178/314,engineMountY:231/314,width:4.2}],

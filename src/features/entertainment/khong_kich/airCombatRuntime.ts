@@ -1,3 +1,4 @@
+import { astraMetric, beginAstraSkill, updateAstra, captureAstraProjectiles, releaseOrbit, freezeAstraTarget, isAstraSkill, type AstraRuntime, type AstraHooks } from "./airCombatAstra";
 import { BOUNTY_REWARDS } from "./airCombatTelemetry";
 import { stageEnemyConfig } from "./airCombatConfig";
 import type { MagneticVfxKey } from "./airCombatStage2Art";
@@ -28,6 +29,9 @@ import { AIR_COMBAT_WORLD, ENEMY_CONFIGS, GAMEPLAY_SAFE_RECT, SKILL_CONFIGS, } f
 import { applyCore, applyDamageToAircraft, resolvePlayerDamage, calculateRunRank, canAcquirePlayerTarget, castSkill, clampCircleToGameplayRect, createAircraftCombatState, gainCombatXp, generateCoreChoices, getComboMultiplier, getEffectiveAircraftStats, getSkillRuntimeValues, getTargetPriority, requiredCombatXp, resolveBasicProjectileMultipliers, shouldAutoFire, tickAircraftState, } from "./airCombatEngine";
 import { AirCombatHudSnapshot, AirCombatRunSummary, AircraftCombatState, AircraftId, CoreCard, EnemyType, SkillCastResult, SkillId, } from "./airCombatTypes";
 export interface EnemyEntity {
+    astraArmorUntil?:number;
+    bodyHitAt?:Record<number,number>;
+    inheritedAllegiance?:Allegiance; attackAllegiance?:Allegiance;
     magnetic?: MagneticEnemyState;
     auxiliary?: boolean;
     rewardless?: boolean;
@@ -86,6 +90,9 @@ export interface EnemyEntity {
     burst: number;
     burstCd: number;
     burstAngle: number;
+    burstAllegiance?: Allegiance;
+    secondaryAllegiance?: Allegiance;
+    recoveryAllegiance?: Allegiance;
     attackCount: number;
     targetId: number | null;
     deathHandled: boolean;
@@ -102,6 +109,7 @@ export interface EnemyEntity {
     }[];
 }
 export interface ProjectileEntity extends AttackMetadata {
+    astraLance?:{later:number;echo:boolean};
     magnetic?: MagneticProjectileState;
     magneticAreaId?: number;
     magneticVisual?: MagneticVfxKey;
@@ -280,6 +288,7 @@ export interface TacticalCoreState {
     hackMode?: "normal" | "elite" | "boss_stun";
 }
 export interface CombatWorld {
+    astra?: AstraRuntime;
     stageId: number;
     stage: AirCombatStageDefinition;
     magnetic?: MagneticWorldState;
@@ -291,7 +300,7 @@ export interface CombatWorld {
     tactical?:TacticalCoreState;
 
     threats: { enemyId: number; cost: number; until: number }[];
-    scheduledAttacks: { at: number; enemyId: number; kind: "needle" | "rail" | "execution" | "clamp" | "retaliation" | "radar_followup" | "acid_cage" | "crimson_barrage" | "iron_suppression" | "acid_bombing" | "radar_bombardment"; control?:boolean; angle?: number; x?: number; y?: number }[];
+    scheduledAttacks: { allegiance?:Allegiance; at: number; enemyId: number; kind: "needle" | "rail" | "execution" | "clamp" | "retaliation" | "radar_followup" | "acid_cage" | "crimson_barrage" | "iron_suppression" | "acid_bombing" | "radar_bombardment"; control?:boolean; angle?: number; x?: number; y?: number }[];
     eliteSpecials: { enemyId: number; until: number; control: boolean; allegiance:Allegiance }[];
     eliteResolve: number; eliteComboCooldown: number; eliteComboIndex: number; eliteCorridorSide?: -1 | 1;
     aircraft: AircraftCombatState;
@@ -492,11 +501,12 @@ function acquireEnemy(world: CombatWorld): EnemyEntity {
         phaseSeed: 0,
         wave: 1,
         dashCharge: 0, xp: 0, damageScale: 1, eliteWave: 0, stun: 0, burn: 0, burnDamage: 0, burnTick: 0, weakReadyAt: 0, weakDebuffUntil: 0, burnArmorUntil: 0, weakHits: 0, weakUntil: 0, lightningUntil: 0,
-        shield: 0, shieldUntil: 0, shieldSource: 0, abilityCd: 0, secondaryCd: 0, tertiaryCd: 0, burst: 0, burstCd: 0, burstAngle: 0, attackCount: 0,
-        targetId: null, deathHandled: false, dashRemaining: 0, dashStartX: 0, dashStartY: 0, dashEndX: 0, dashEndY: 0, hackedUntil: 0, dashAllegiance: undefined, dashCommitted: false, skillLockedUntil:0, armorBrokenUntil:0, combatMarks:{}, aegisUntil: 0, aegisReady: 0, recentDamage: [],
+        shield: 0, shieldUntil: 0, shieldSource: 0, abilityCd: 0, secondaryCd: 0, tertiaryCd: 0, burst: 0, burstCd: 0, burstAngle: 0, burstAllegiance:undefined, secondaryAllegiance:undefined, recoveryAllegiance:undefined, attackCount: 0,
+        targetId: null, deathHandled: false, dashRemaining: 0, dashStartX: 0, dashStartY: 0, dashEndX: 0, dashEndY: 0, astraArmorUntil:0,bodyHitAt:undefined,inheritedAllegiance:undefined,attackAllegiance:undefined,hackedUntil: 0, dashAllegiance: undefined, dashCommitted: false, skillLockedUntil:0, armorBrokenUntil:0, combatMarks:{}, aegisUntil: 0, aegisReady: 0, recentDamage: [],
     };
 }
 function recycleEnemy(world: CombatWorld, index: number): void {
+    freezeAstraTarget(world,world.enemies[index]);
     const [enemy] = world.enemies.splice(index, 1);
     if (enemy) {
         world.threats = world.threats.filter(t => t.enemyId !== enemy.id);
@@ -606,8 +616,8 @@ function spawnEnemy(world: CombatWorld, type: EnemyType, auxiliary = false): Ene
         phaseSeed: world.random() * Math.PI * 2, wave: wave.normal, dashCharge: 1.2, xp,
         damageScale: wave.damage, eliteWave: wave.elite, stun: 0, burn: 0, burnDamage: 0, burnTick: 0, weakReadyAt: 0, weakDebuffUntil: 0, burnArmorUntil: 0, weakHits: 0, weakUntil: 0, lightningUntil: 0,
         shield: 0, shieldUntil: 0, shieldSource: 0, abilityCd: type === "jammer" ? 4.5 : type === "iron_fortress" ? 10 : 7.5, secondaryCd: 10, tertiaryCd: 10,
-        burst: 0, burstCd: 0, burstAngle: 0, attackCount: 0, targetId: null, deathHandled: false, dashRemaining: 0, dashStartX: 0, dashStartY: 0, dashEndX: 0, dashEndY: 0,
-        hackedUntil: 0, dashAllegiance: undefined, dashCommitted: false, skillLockedUntil:0, armorBrokenUntil:0, combatMarks:{}, aegisUntil: 0, aegisReady: 0, bossAttack: undefined, kamikazeState: type === "kamikaze" ? "approach" : undefined, lockedX: 0, lockedY: 0, dashDirX: 0, dashDirY: 1, dashTravelled: 0, dashPlannedDistance: 0, stateTimer: 0, attackAge: 0, missedDashCount: 0, airframeRotation: Math.PI, hitResolved: false, executionRecovery: 0, retaliationReady: false, elitePatternCd:type==="elite"?7.8:type==="iron_fortress"?8.5:8, elitePatternIndex:0, eliteSequenceUntil:0 });
+        burst: 0, burstCd: 0, burstAngle: 0, burstAllegiance:undefined, secondaryAllegiance:undefined, recoveryAllegiance:undefined, attackCount: 0, targetId: null, deathHandled: false, dashRemaining: 0, dashStartX: 0, dashStartY: 0, dashEndX: 0, dashEndY: 0,
+        astraArmorUntil:0,bodyHitAt:undefined,inheritedAllegiance:undefined,attackAllegiance:undefined,hackedUntil: 0, dashAllegiance: undefined, dashCommitted: false, skillLockedUntil:0, armorBrokenUntil:0, combatMarks:{}, aegisUntil: 0, aegisReady: 0, bossAttack: undefined, kamikazeState: type === "kamikaze" ? "approach" : undefined, lockedX: 0, lockedY: 0, dashDirX: 0, dashDirY: 1, dashTravelled: 0, dashPlannedDistance: 0, stateTimer: 0, attackAge: 0, missedDashCount: 0, airframeRotation: Math.PI, hitResolved: false, executionRecovery: 0, retaliationReady: false, elitePatternCd:type==="elite"?7.8:type==="iron_fortress"?8.5:8, elitePatternIndex:0, eliteSequenceUntil:0 });
     if(type==="kamikaze") {const point=clampHitboxToGameplayRect(enemy.x,enemy.y,getEnemyHitbox(enemy),true);enemy.x=point.x;enemy.y=point.y;}
     enemy.recentDamage.length = 0;
     if (type === "elite" || type === "radar_hunter") enemy.secondaryCd = Infinity;
@@ -640,7 +650,9 @@ function addProjectile(world: CombatWorld, values: Partial<ProjectileEntity> & P
         : AIR_COMBAT_WORLD.maxPlayerProjectiles;
     if (ownerCount >= limit) {
         // Preserve rail/homing/boss shots by recycling an ordinary hostile bullet first.
-        const replace = values.owner === "enemy" && values.criticalAttack
+        const replace = values.owner === "player" && (values.skillId==="orbit_reversal"||values.skillId==="stellar_lance")
+            ? world.projectiles.findIndex(p=>p.owner==="player"&&p.source==="basic")
+            : values.owner === "enemy" && values.criticalAttack
             ? (world.projectiles.findIndex(p => p.suppressive) >= 0 ? world.projectiles.findIndex(p => p.suppressive) : world.projectiles.findIndex(p => p.owner === "enemy" && !p.criticalAttack && !p.homing)) : -1;
         if (replace < 0) return null;
         recycleProjectile(world, replace);
@@ -651,6 +663,7 @@ function addProjectile(world: CombatWorld, values: Partial<ProjectileEntity> & P
         id: world.nextId++,
         owner: values.owner,
         allegiance: values.allegiance ?? (values.owner === "enemy" ? enemyAllegiance(world,world.enemies.find(e=>e.id===values.sourceEnemyId)) : "player"),
+        astraLance:undefined, capturable:values.capturable??(values.owner==="enemy"&&!values.majorBossAttack&&values.attackTag!=="rail"&&(values.delivery??"direct_projectile")==="direct_projectile"),
         delivery:values.delivery??"direct_projectile", grazeCandidate:false, playerContact:false,
         magneticVisual: values.magneticVisual, magneticAreaId: values.magneticAreaId, appearance: values.appearance, ammoVisualKey: values.ammoVisualKey,
         sourceEnemyId: values.sourceEnemyId, sourceEnemyType: values.sourceEnemyType, attackTag: values.attackTag, majorBossAttack: values.majorBossAttack, payload: values.payload,
@@ -847,7 +860,7 @@ function reserveThreat(world: CombatWorld, enemy: EnemyEntity, cost: number, dur
     return true;
 }
 function scheduleAttack(world: CombatWorld, enemy: EnemyEntity, kind: CombatWorld["scheduledAttacks"][number]["kind"], delay: number, extra: Partial<CombatWorld["scheduledAttacks"][number]> = {}): void {
-    if (world.scheduledAttacks.length < 32) world.scheduledAttacks.push({ ...extra, at: world.elapsed+delay, enemyId: enemy.id, kind });
+    if (world.scheduledAttacks.length < 32) world.scheduledAttacks.push({ ...extra, allegiance:enemyAllegiance(world,enemy), at: world.elapsed+delay, enemyId: enemy.id, kind });
 }
 type ElitePattern = NonNullable<WarningZone["elitePattern"]>;
 const ELITE_PATTERNS:readonly string[]=["crimson_barrage","iron_suppression","acid_bombing","radar_bombardment"];
@@ -898,7 +911,7 @@ function reserveEliteSpecial(world:CombatWorld,enemy:EnemyEntity,control:boolean
 }
 function queueEliteSpecial(world: CombatWorld, enemy: EnemyEntity, kind: CombatWorld["scheduledAttacks"][number]["kind"], delay: number, control: boolean): void {
     if(world.scheduledAttacks.some(a=>a.enemyId===enemy.id&&a.kind===kind))return;
-    // Intent has no allegiance yet; it acquires ownership when its warning spawns.
+    // Delayed attacks retain the allegiance captured when their sequence starts.
     scheduleAttack(world,enemy,kind,delay,{control});
 }
 function elitePatternFor(enemy:EnemyEntity):ElitePattern|undefined {
@@ -966,7 +979,7 @@ function updateEliteDirector(world:CombatWorld,dt:number):void {
     }
     world.eliteComboCooldown=Math.max(0,world.eliteComboCooldown-dt);
     if(world.eliteComboCooldown>0)return;
-    const live=world.enemies.filter(e=>isElite(e.type)&&isHostileToPlayer(world,e)&&e.stun<=0&&(e.skillLockedUntil??0)<=world.elapsed).sort((a,b)=>a.id-b.id);
+    const live=world.enemies.filter(e=>isElite(e.type)&&e.hp>0&&e.stun<=0&&(e.skillLockedUntil??0)<=world.elapsed).sort((a,b)=>a.id-b.id);
     if(live.length<2)return;
     type ComboStep={type:EnemyType;kind:ElitePattern|"rail";control?:boolean};
     const templates:ComboStep[][]=wave.elite===2?[
@@ -1077,6 +1090,8 @@ function updateScheduledAttacks(world: CombatWorld): void {
             if(!canStartEliteSpecial(world,enemy,control,a.kind==="acid_cage"||a.kind==="acid_bombing"||a.kind==="radar_bombardment")){a.at=world.elapsed+.2;continue;}
         }
         world.scheduledAttacks.splice(i,1);
+        const prior=enemy.attackAllegiance;enemy.attackAllegiance=a.allegiance;
+        try {
         const target=targetPosition(world,chooseEnemyTarget(world,false,enemy));
         if(!target)continue;
         const damage=stageEnemyConfig(enemy.type, world.stageId).projectileDamage*enemy.damageScale;
@@ -1094,6 +1109,7 @@ function updateScheduledAttacks(world: CombatWorld): void {
         if(a.kind==="clamp") addWarning(world,"shock_clamp",target.x,target.y,44,.8,damage*.65,"enemy",enemy.id,{sourceEnemyType:enemy.type,attackTag:"shock_clamp",payload:{stun:enemy.eliteWave===2?1.75:1.25}});
         if(a.kind==="retaliation") addWarning(world,"retaliation",enemy.x,enemy.y,35,.5,damage,"enemy",enemy.id,{sourceEnemyType:enemy.type,attackTag:"burst"});
         if(a.kind==="radar_followup") { const aim=aimAtCurrentTarget(world,enemy); if(aim!==null) for(const offset of [-.3,0,.3]) fireEnemyBullet(world,enemy,aim+offset,180,damage*.8,true,"radar_lock"); }
+        } finally {enemy.attackAllegiance=prior;}
     }
 }
 function fireEnemy(world: CombatWorld, enemy: EnemyEntity): void {
@@ -1122,6 +1138,7 @@ function fireEnemy(world: CombatWorld, enemy: EnemyEntity): void {
                 enemy.burst = enemy.type === "elite" && enemy.eliteWave === 2 ? 4 : 3;
                 enemy.burstCd = 0;
                 enemy.burstAngle = aim;
+                enemy.burstAllegiance = enemyAllegiance(world,enemy);
             }
             if (enemy.type === "elite" && enemy.attackCount % 2 === 0 && enemy.eliteWave === 1)
                 fireFan(world, enemy, 5, 62.4 * enemy.damageScale, aim ?? Math.PI / 2);
@@ -1135,6 +1152,7 @@ function fireEnemy(world: CombatWorld, enemy: EnemyEntity): void {
                 enemy.burst = 1;
                 enemy.burstCd = .65;
                 enemy.burstAngle = aim ?? Math.PI / 2;
+                enemy.burstAllegiance = enemyAllegiance(world,enemy);
                 addWarning(world, "elite_lock", enemy.x, enemy.y, 32, .6, 0, "enemy", enemy.id);
             }
             break;
@@ -1158,8 +1176,10 @@ function fireEnemy(world: CombatWorld, enemy: EnemyEntity): void {
             }
             else if (target) {
                 addLineWarning(world, enemy, "rail", target.x, target.y, 1.2, damage);
-                if (enemy.type === "radar_hunter" && enemy.attackCount % 4 === 3)
-                    enemy.secondaryCd = 1.75; // Rail resolves at 1.2s, then one staggered missile.
+                if (enemy.type === "radar_hunter" && enemy.attackCount % 4 === 3) {
+                    enemy.secondaryAllegiance=enemyAllegiance(world,enemy);
+                    enemy.secondaryCd = 1.75;
+                } // Rail resolves at 1.2s, then one staggered missile.
             }
             break;
         case "boss": break; // Separate suppressive scheduler owns wing fire.
@@ -1181,10 +1201,10 @@ function reserveBossVolley(world:CombatWorld,count:number):boolean {
     }
     return true;
 }
-function fireFan(world: CombatWorld, enemy: EnemyEntity, count: number, damage: number, angle = Math.PI / 2, spacing = .19, speed = 145, tag: AttackTag = enemy.type === "boss" ? "boss_fan" : "burst"): boolean {
+function fireFan(world: CombatWorld, enemy: EnemyEntity, count: number, damage: number, angle = Math.PI / 2, spacing = .19, speed = 145, tag: AttackTag = enemy.type === "boss" ? "boss_fan" : "burst", allegiance?:Allegiance): boolean {
     if(enemy.type==="boss" && !reserveBossVolley(world,count))return false;
     for (let i = 0; i < count; i++)
-        fireEnemyBullet(world, enemy, angle + (i - (count - 1) / 2) * spacing, speed, damage, false, tag);
+        fireEnemyBullet(world, enemy, angle + (i - (count - 1) / 2) * spacing, speed, damage, false, tag, allegiance);
     return true;
 }
 function addLineWarning(world: CombatWorld, enemy: EnemyEntity, kind: "rail" | "dash", x: number, y: number, duration: number, damage: number): void {
@@ -1252,6 +1272,7 @@ function updateDecoySalvo(world: CombatWorld, dt: number): void {
 function stopAllSkills(world: CombatWorld): void {
     for (const id of SKILL_IDS)
         endAircraftSkill(world.aircraft, id);
+    if(world.astra){world.astra.orbit=undefined;world.astra.charge=undefined;world.astra.starfall=undefined;world.astra.echoes=[];world.astra.burns=[];}
     world.missilesPending = 0;
     const bounty=world.skillCores;
     world.skillCores = {...createSkillCoreRuntime(),bountyTarget:bounty.bountyTarget,bountyUntil:bounty.bountyUntil,bountyReady:bounty.bountyReady};
@@ -1278,7 +1299,9 @@ const SKILL_IDS = Object.keys(SKILL_CONFIGS) as SkillId[];
 export function castWorldSkill(world: CombatWorld, skillId: SkillId): SkillCastResult {
     if (playerSkillLocked(world.aircraft) || world.ended || world.pauseReasons.size || world.pendingCoreSelections || world.currentCoreChoices)
         return { cast: false, reason: "invalid", resourceSpent: 0 };
+    if(skillId==="orbit_reversal"&&world.astra?.orbit){releaseOrbit(world,astraHooks,true);return {cast:true,resourceSpent:0,toggledOff:true};}
     const result = castSkill(world.aircraft, skillId);
+    if(!result.cast&&result.reason==="resource"&&skillId==="stellar_lance")astraMetric(world,"lance.insufficientMana");
     if (!result.cast)
         return result;
     if (result.toggledOff) {
@@ -1297,6 +1320,7 @@ export function castWorldSkill(world: CombatWorld, skillId: SkillId): SkillCastR
                 world.aircraft.cooldowns[id] = Math.max(0, before - SKILL_CONFIGS[id].cooldown * .15);
                 recordCoreMetric(world.aircraft,93,"cooldown",before-world.aircraft.cooldowns[id]!);
             }
+    if(isAstraSkill(skillId))beginAstraSkill(world,skillId,result.resourceSpent,astraHooks);
     switch (skillId) {
         case "decoy":
             world.skillCores.decoyCastId = world.nextId++;
@@ -1382,6 +1406,7 @@ export function movePlayerByDelta(world: CombatWorld, dx: number, dy: number): v
         world.playerX = startX + (end.x - startX) * step / steps;
         world.playerY = startY + (end.y - startY) * step / steps;
         collectScrap(world);
+        captureAstraProjectiles(world,astraHooks);
         for (const w of world.warnings) if (w.kind === "acid" && !circleVsAircraft(w.x,w.y,w.radius,getPlayerHitbox(world))) w.insideTimer = undefined;
         // Only player contacts: do not repeat weapon damage or advance enemy AI.
         for (let index = world.projectiles.length - 1; index >= 0; index--) {
@@ -1891,7 +1916,9 @@ function updateBossAttacks(world: CombatWorld, enemy: EnemyEntity, dt: number): 
 }
 /** Unit allegiance expires immediately; committed attacks keep their own snapshot. */
 export function enemyAllegiance(world:CombatWorld,enemy?:EnemyEntity):Allegiance {
-    return enemy && enemy.type!=="boss" && enemy.type!=="satellite" && (enemy.hackedUntil??0)>world.elapsed ? "friendly_hacked" : "hostile";
+    if(enemy?.attackAllegiance)return enemy.attackAllegiance;
+    if(enemy && enemy.type!=="boss" && enemy.type!=="satellite" && (enemy.hackedUntil??0)>world.elapsed)return "friendly_hacked";
+    return enemy?.inheritedAllegiance??"hostile";
 }
 export const isHostileToPlayer=(world:CombatWorld,e:EnemyEntity)=>e.hp>0 && enemyAllegiance(world,e)==="hostile";
 /** Shared live value for Core 118 damage and its status badge; 18% cap. */
@@ -1950,9 +1977,9 @@ function rearmAllegiance(world:CombatWorld,e:EnemyEntity):void {
     for(const ally of world.enemies)if(ally.shieldSource===e.id&&enemyAllegiance(world,ally)!==enemyAllegiance(world,e)){ally.shield=0;ally.shieldUntil=0;}
     // Warnings/hazards/dashes already committed retain their ownership and timing.
     const target=targetPosition(world,chooseEnemyTarget(world,true,e));
-    // A burst is a sequence of newly spawned attacks; subsequent shots retarget.
+    // Preserve committed burst/dash aim; only uncommitted movement may retarget.
     if(target){
-        e.burstAngle=Math.atan2(target.y-e.y,target.x-e.x);
+        if(e.burst<=0)e.burstAngle=Math.atan2(target.y-e.y,target.x-e.x);
         if(e.kamikazeState==="charge"){e.lockedX=target.x;e.lockedY=target.y;}
     }
 }
@@ -1980,7 +2007,7 @@ function settleControlOverride(world:CombatWorld):void {
     for(const e of survivors)e.hackedUntil=0;
     for(const e of survivors)rearmAllegiance(world,e);
     t.hackTargets=[];t.hackMode=undefined;t.hackEnd=0;
-    world.aircraft.coreState.timers.controlOverride=world.aircraft.coreState.time-(world.elapsed-endedAt)+18;
+    world.aircraft.coreState.timers.controlOverride=world.aircraft.coreState.time-(world.elapsed-endedAt)+13;
 }
 function updateTacticalCores(world:CombatWorld,dt:number):void {
     const t=tacticalState(world),state=world.aircraft,c=state.coreState,now=world.elapsed;
@@ -1992,14 +2019,14 @@ function updateTacticalCores(world:CombatWorld,dt:number):void {
     if(hasCore(state,120)&&!t.hackMode&&(c.timers.controlOverride??0)<=c.time&&world.waveState==="combat"){
         const eliteWave=world.stage.waves[world.waveIndex].elite>0;
         const bossWave=Boolean(world.stage.waves[world.waveIndex].counts.boss);
-        const candidates=world.enemies.filter(e=>isHostileToPlayer(world,e) &&
+        const candidates=world.enemies.filter(e=>isHostileToPlayer(world,e) && e.type!=="satellite" &&
             (bossWave?e.type==="boss":eliteWave?isElite(e.type):e.type!=="boss"&&!isElite(e.type)));
         candidates.sort((a,b)=>b.hp/b.maxHp-a.hp/a.maxHp||a.id-b.id);
-        const cohort=candidates.slice(0,bossWave||eliteWave?1:3);
+        const cohort=candidates.slice(0,bossWave||eliteWave?1:5);
         if(cohort.length){
             recordCoreMetric(state,120,bossWave?"bossStuns":"hacked",cohort.length);
             t.hackMode=bossWave?"boss_stun":eliteWave?"elite":"normal";
-            t.hackEnd=now+(bossWave?1.25:eliteWave?4:6);
+            t.hackEnd=now+(bossWave?1.25:eliteWave?8:10);
             t.hackTargets=bossWave?[]:cohort.map(e=>e.id);
             // Assign the entire cohort before retargeting any member.
             for(const e of cohort){
@@ -2240,11 +2267,16 @@ function updateEnemies(world: CombatWorld, dt: number): void {
             for(const e of world.enemies)if(canAttackEnemy(world,enemy.dashAllegiance??"hostile",e,enemy.id)&&sweepAircraft(getEnemyHitbox(enemy),enemy.x-oldX,enemy.y-oldY,getEnemyHitbox(e),bodyContact).hit && !enemy.hitResolved){
                 enemy.hitResolved=true;damageEnemyAttack(world,e,stageEnemyConfig(enemy.type, world.stageId).collisionDamage*enemy.damageScale,{allegiance:enemy.dashAllegiance,sourceEnemyId:enemy.id,delivery:"aircraft_collision"},bodyContact);
             }
-            if (enemy.dashRemaining === 0){enemy.executionRecovery = .45;enemy.dashAllegiance=undefined;}
+            if (enemy.dashRemaining === 0){enemy.executionRecovery = .45;enemy.recoveryAllegiance=enemy.dashAllegiance;enemy.dashAllegiance=undefined;}
         }
         else if ((enemy.executionRecovery ?? 0) > 0) {
             enemy.executionRecovery! -= dt;
-            if (enemy.executionRecovery! <= 0) fireFan(world, enemy, 7, stageEnemyConfig(enemy.type, world.stageId).projectileDamage*enemy.damageScale, aimAtCurrentTarget(world, enemy) ?? -Math.PI/2, .22, 185, "elite_execution");
+            if (enemy.executionRecovery! <= 0) {
+                const prior=enemy.attackAllegiance;enemy.attackAllegiance=enemy.recoveryAllegiance;
+                const aim=aimAtCurrentTarget(world,enemy);
+                if(aim!==null)fireFan(world, enemy, 7, stageEnemyConfig(enemy.type, world.stageId).projectileDamage*enemy.damageScale, aim, .22, 185, "elite_execution");
+                enemy.attackAllegiance=prior;
+            }
         }
         else if (enemy.type === "kamikaze") {
             updateKamikaze(world, enemy, dt);
@@ -2270,16 +2302,19 @@ function updateEnemies(world: CombatWorld, dt: number): void {
             enemy.burstCd -= dt;
             if (enemy.burstCd <= 0) {
                 if (enemy.type === "iron_fortress")
-                    fireFan(world, enemy, 5, stageEnemyConfig(enemy.type, world.stageId).projectileDamage * enemy.damageScale, enemy.burstAngle, .22);
+                    fireFan(world, enemy, 5, stageEnemyConfig(enemy.type, world.stageId).projectileDamage * enemy.damageScale, enemy.burstAngle, .22,145,"burst",enemy.burstAllegiance);
                 else
-                    fireEnemyBullet(world, enemy, enemy.burstAngle, 180, stageEnemyConfig(enemy.type, world.stageId).projectileDamage * enemy.damageScale);
+                    fireEnemyBullet(world, enemy, enemy.burstAngle, 180, stageEnemyConfig(enemy.type, world.stageId).projectileDamage * enemy.damageScale,false,"basic",enemy.burstAllegiance);
                 enemy.burst--;
                 enemy.burstCd += enemy.type === "elite" && enemy.eliteWave === 2 ? .16 : .18;
                 if (enemy.burst === 0 && enemy.type === "elite" && enemy.eliteWave === 2) {
                     enemy.secondaryCd = .5;
+                    enemy.secondaryAllegiance=enemy.burstAllegiance;
                 }
             }
         }
+        const previousAttackAllegiance=enemy.attackAllegiance;
+        enemy.attackAllegiance=enemy.secondaryAllegiance;
         if ((enemy.skillLockedUntil??0)<=world.elapsed && enemy.type === "elite" && enemy.eliteWave === 2 && enemy.secondaryCd <= 0) {
             fireFan(world, enemy, 7, 62.4 * enemy.damageScale, aimAtCurrentTarget(world, enemy) ?? Math.PI / 2);
             enemy.secondaryCd = Infinity;
@@ -2289,6 +2324,7 @@ function updateEnemies(world: CombatWorld, dt: number): void {
             if (aim !== null) fireEnemyBullet(world, enemy, aim, 155, 93.6 * enemy.damageScale, true, "radar_lock");
             enemy.secondaryCd = Infinity;
         }
+        enemy.attackAllegiance=previousAttackAllegiance;
     }
     for (let i = world.enemies.length-1; i >= 0; i--) if (world.enemies[i].deathHandled && world.enemies[i].hp <= 0) recycleEnemy(world, i);
     resolveDeathsAndEffects(world);
@@ -2521,8 +2557,10 @@ function applyDamageToEnemy(world: CombatWorld, enemy: EnemyEntity, rawDamage: n
     if(opening)tacticalState(world).openingHits.set(enemy.id, target.elite || target.boss ? time + 10 : Infinity);
     const effectiveStats = opening ? {...stats,criticalChance:1} : canCrit ? stats : { ...stats, criticalChance: 0 };
     const skillEffects = world.skillCores.enemyEffects.get(enemy.id);
-    const armor = enemy.armor * ((skillEffects?.armorUntil || 0)>time ? 1 - V.laserArmorReduction : 1) * ((enemy.armorBrokenUntil??0)>world.elapsed?.7:1) * ((enemy.burnArmorUntil || 0) > time ? .8 : 1) * (enemy.weakUntil > time ? .92 : 1) * ((enemy.weakDebuffUntil || 0) > time ? .85 : 1) * (1 - armorPenetration(state));
-    let multiplier = outgoingCoreMultiplier(state, target, source, Math.hypot(enemy.x - world.playerX, enemy.y - world.playerY), GAMEPLAY_SAFE_RECT.height);
+    const skillPen=skillId==="orbit_reversal"&&hasCore(state,153)?.25:skillId==="stellar_lance"&&hasCore(state,158)?.30:0;
+    const armor = enemy.armor * (1-skillPen) * ((enemy.astraArmorUntil??0)>world.elapsed?.7:1) * ((skillEffects?.armorUntil || 0)>time ? 1 - V.laserArmorReduction : 1) * ((enemy.armorBrokenUntil??0)>world.elapsed?.7:1) * ((enemy.burnArmorUntil || 0) > time ? .8 : 1) * (enemy.weakUntil > time ? .92 : 1) * ((enemy.weakDebuffUntil || 0) > time ? .85 : 1) * (1 - armorPenetration(state));
+    const whiteHole=source==="basic"&&(state.coreState.timers.whiteHole??0)>time;
+    let multiplier = (whiteHole?1.6:1)*outgoingCoreMultiplier(state, target, source, Math.hypot(enemy.x - world.playerX, enemy.y - world.playerY), GAMEPLAY_SAFE_RECT.height);
     if (directPlayer && (source === "basic" || source === "weapon" || source === "skill") && state.aircraftId === "breaker" && (skillEffects?.markUntil || 0)>time) multiplier *= 1 + V.markBonus;
     if (directPlayer && (source === "basic" || source === "weapon" || source === "skill") && state.aircraftId === "phantom" && world.skillCores.syncTarget === enemy.id && world.skillCores.syncUntil>time) multiplier *= 1 + V.syncBonus;
     if(directPlayer && world.skillCores.bountyTarget===enemy.id && world.skillCores.bountyUntil>world.elapsed)multiplier*=1.05;
@@ -2563,6 +2601,8 @@ function applyDamageToEnemy(world: CombatWorld, enemy: EnemyEntity, rawDamage: n
         // Never reroll combat RNG to attribute a modifier.
         const bonus=(row:number,fraction:number)=>recordCoreMetric(state,row,"bonusDamage",damage-Math.min(hpBefore,Math.max(0,resolvedBeforeShield*(1-Math.max(0,Math.min(1,fraction)))-shieldBeforeHit)));
         const factor=(row:number,value:number)=>{if(hasCore(state,row))bonus(row,1-1/value);};
+        if(whiteHole){bonus(155,.6/1.6);astraMetric(world,"orbit.whiteHoleBonusDamage",damage-Math.min(hpBefore,Math.max(0,resolvedBeforeShield/1.6-shieldBeforeHit)));}
+        if(skillPen)bonus(skillId==="stellar_lance"?158:153,Math.max(0,1-(100+Math.max(-80,armor))/(100+Math.max(-80,armor/(1-skillPen)))));
         for(const [row,fraction] of shotBonuses)bonus(row,fraction);
         if((state.coreState.timers.decoyCounter??0)>time)factor(21,1.3);
         if(target.elite||target.boss)factor(67,1.08);
@@ -2578,9 +2618,11 @@ function applyDamageToEnemy(world: CombatWorld, enemy: EnemyEntity, rawDamage: n
         if(direct&&state.aircraftId==="phantom"&&world.skillCores.syncTarget===enemy.id&&world.skillCores.syncUntil>world.elapsed)factor(146,1+V.syncBonus);
         if(world.skillCores.bountyTarget===enemy.id&&world.skillCores.bountyUntil>world.elapsed)factor(149,1.05);
         if(skillId==="focus_laser"){
-            const total=1+(hasCore(state,41)?.1:0)+(hasCore(state,145)?.4:0);
-            if(hasCore(state,41))bonus(41,.1/total);if(hasCore(state,145))bonus(145,.4/total);
+            const total=1+(hasCore(state,41)?.1:0)+(hasCore(state,145)?V.laserBonus:0);
+            if(hasCore(state,41))bonus(41,.1/total);if(hasCore(state,145))bonus(145,V.laserBonus/total);
         }
+        if(skillId==="orbit_reversal")factor(151,1.5);
+        if(skillId==="starfall"&&source!=="burn")factor(162,2.65/2.1);
         if(skillId==="escort_drone"&&hasCore(state,45))bonus(45,.2/.75);
         if(skillId==="missile_swarm"&&source!=="burn")factor(26,3.25/(SKILL_CONFIGS.missile_swarm.damageMultiplier??1));
         if(skillId==="heavy_bomb"&&!telemetryCore)factor(32,19/(SKILL_CONFIGS.heavy_bomb.damageMultiplier??1));
@@ -2937,9 +2979,17 @@ function updateProjectileCollisions(world: CombatWorld): void {
             if((dealt>0 || enemy.shield<shieldBefore) && p.projectileKind==="bullet" && p.skillId!=="sweeping_cannon")emitVisual(world,{kind:"bullet_impact",x:contact.x,y:contact.y,size:enemy.type==="boss"||isElite(enemy.type)?16:enemy.type==="scout"||enemy.type==="kamikaze"?10:12});
             if(enemy.shield<shieldBefore)emitVisual(world,{kind:"shield_ripple",x:contact.x,y:contact.y,size:23});
             for(const row of p.telemetryExtraCores??[])recordCoreMetric(world.aircraft,row,"damage",dealt);
-            if(p.hitIds.length>1&&p.rawDamage<p.initialDamage){
+            if(!p.astraLance&&p.hitIds.length>1&&p.rawDamage<p.initialDamage){
                 if(p.stabilizedPierce&&p.hitIds.length<=3){const second=p.hitIds.length===3;recordCoreMetric(world.aircraft,139,second?"pierceTwo":"pierceOne",1);recordCoreMetric(world.aircraft,139,second?"pierceTwoDamage":"pierceOneDamage",dealt);}
                 else {recordCoreMetric(world.aircraft,89,"hits",1);recordCoreMetric(world.aircraft,89,"damage",dealt);}
+            }
+            if(p.skillId==="orbit_reversal"){astraMetric(world,"orbit.hits");astraMetric(world,"orbit.damage",dealt);}
+            if(p.astraLance){
+                if(hasCore(world.aircraft,160)&&!segmentVsAircraft(p.previousX,p.previousY,p.x,p.y,6,getEnemyHitbox(enemy),projectileContact).hit)recordCoreMetric(world.aircraft,160,"hits",1);
+                const prefix=p.astraLance.echo?"lance.echo":"lance";
+                astraMetric(world,`${prefix}.${p.hitIds.length===1?"firstHits":"penetratedHits"}`);astraMetric(world,`${prefix}.damage`,dealt);
+                if(p.astraLance.echo){recordCoreMetric(world.aircraft,159,"damage",dealt);recordCoreMetric(world.aircraft,159,"hits",1);}
+                p.rawDamage=p.astraLance.later;p.telemetryBonuses=hasCore(world.aircraft,157)?[[157,1-6.8/9.3]]:undefined;continue;
             }
             applySecondaryHits(world, p, enemy);
             if (p.penetrationRemaining > 0) {
@@ -2961,12 +3011,20 @@ function updateEnemyPlayerCollisions(world: CombatWorld): void {
     if (world.waveState !== "combat")
         return;
     for (const enemy of world.enemies) {
+        if ((enemy.type === "micro_drone" && (enemy.magnetic?.clock ?? 0) < (enemy.magnetic?.diveAt ?? 2.8)) || (enemy.type === "satellite" && (enemy.magnetic?.clock ?? 0) < 1.4)) continue;
         if(enemy.hp>0&&enemy.type==="kamikaze"&&enemy.kamikazeState==="dash"&&enemyAllegiance(world,enemy)==="friendly_hacked")updateKamikaze(world,enemy,0);
-        if (!isHostileToPlayer(world,enemy))
+        if(enemy.hp>0&&enemy.type!=="kamikaze") {
+            const allegiance=enemy.dashAllegiance??enemy.magnetic?.elite?.allegiance??enemyAllegiance(world,enemy);
+            for(const target of world.enemies)if(canAttackEnemy(world,allegiance,target,enemy.id)&&aircraftVsAircraft(getEnemyHitbox(enemy),getEnemyHitbox(target))&&(enemy.bodyHitAt?.[target.id]??0)<=world.elapsed){
+                (enemy.bodyHitAt??={})[target.id]=world.elapsed+.62;
+                damageEnemyAttack(world,target,stageEnemyConfig(enemy.type,world.stageId).collisionDamage*enemy.damageScale,{allegiance,sourceEnemyId:enemy.id,sourceEnemyType:enemy.type,delivery:"aircraft_collision"});
+            }
+            if(allegiance==="friendly_hacked")continue;
+        }
+        if (!isHostileToPlayer(world,enemy) && enemy.dashAllegiance!=="hostile" && enemy.magnetic?.elite?.allegiance!=="hostile")
             continue;
         if (world.magnetic && enemy.type === "boss") continue;
         if (enemy.auxiliary && enemy.type === "kamikaze" && enemy.kamikazeState !== "dash") continue;
-        if ((enemy.type === "micro_drone" && (enemy.magnetic?.clock ?? 0) < (enemy.magnetic?.diveAt ?? 2.8)) || (enemy.type === "satellite" && (enemy.magnetic?.clock ?? 0) < 1.4)) continue;
         if (enemy.type === "kamikaze" && enemy.kamikazeState === "dash") { updateKamikaze(world,enemy,0); continue; }
         if (enemy.dashRemaining>0&&enemy.dashAllegiance==="friendly_hacked")continue;
         if (droneCombatActive(world) && circleVsAircraft(world.droneX,world.droneY,9,getEnemyHitbox(enemy)))
@@ -3327,6 +3385,7 @@ export function updateCombatWorld(world: CombatWorld, deltaSeconds: number): voi
     updatePlayerDash(world, dt);
     updateEliteDirector(world,dt);
     updateScheduledAttacks(world);
+    updateAstra(world,dt,astraHooks);
     updateEnemies(world, dt);
     updateCrossfireGrids(world);
     updateMagneticHazards(world, dt, magneticHooks);
@@ -3360,6 +3419,7 @@ export function updateCombatWorld(world: CombatWorld, deltaSeconds: number): voi
     }
     updateProjectiles(world, dt);
     interceptMissiles(world);
+    captureAstraProjectiles(world,astraHooks);
     updateProjectileCollisions(world);
     settleMissileSalvos(world);
     updateEnemyPlayerCollisions(world);
@@ -3449,7 +3509,7 @@ export function summarizeCombatWorld(world: CombatWorld): AirCombatRunSummary {
         bossClearSeconds: world.bossClearSeconds,
         destroyed: world.aircraft.currentHp <= 0,
     };
-    return { ...withoutRank, rank: calculateRunRank(withoutRank) };
+    return { ...withoutRank, rank: calculateRunRank(withoutRank), astraTelemetry:world.astra?{...world.astra.metrics}:undefined };
 }
 
 export function canRerollCore(world:CombatWorld,slot:number):boolean {
@@ -3655,6 +3715,18 @@ function updateSkillCoreEffects(world:CombatWorld,dt:number):void {
 
 const magneticHooks: MagneticHooks = {
     spawn: spawnEnemy, projectile: addProjectile, hostile: isHostileToPlayer, message: setMessage,
+    allegiance:enemyAllegiance,target:(w,e,allegiance)=>{
+      if((allegiance??e.magnetic?.elite?.allegiance??enemyAllegiance(w,e))==="hostile")return {x:w.playerX,y:w.playerY};
+      return nearestEnemy(w,e.x,e.y,[e.id],true);
+    },
+    area:(w,raw,attack,shape)=>{
+        const touches=(box:AircraftHitbox)=>shape.end?segmentVsAircraft(shape.x,shape.y,shape.end.x,shape.end.y,shape.radius,box,projectileContact).hit:circleVsAircraft(shape.x,shape.y,shape.radius,box);
+        for(const e of w.enemies)if(canAttackEnemy(w,attack.allegiance??"hostile",e,attack.sourceEnemyId)&&touches(getEnemyHitbox(e)))damageEnemyAttack(w,e,raw,attack);
+        if((attack.allegiance??"hostile")==="hostile") {
+            if(touches(getPlayerHitbox(w)))hitPlayer(w,raw,"hazard",attack);
+            if(droneCombatActive(w)&&Math.hypot(w.droneX-shape.x,w.droneY-shape.y)<=shape.radius+10)hitDrone(w,raw);
+        }
+    },
     hit: (world, raw, owner, sourceType, delivery = "area_hazard", payload) => hitPlayer(world, raw, "hazard", { sourceEnemyId: owner, sourceEnemyType: sourceType, delivery, payload }),
 };
 
@@ -3694,3 +3766,6 @@ function settleBountyKill(world:CombatWorld,enemy:EnemyEntity) {
     }
     finishBounty(world);
 }
+
+const astraHooks:AstraHooks={projectile:addProjectile,hostile:isHostileToPlayer,remove:recycleProjectile,
+    damage:(w,e,raw,skill,burn)=>applyDamageToEnemy(w,e,raw,"#ff943f",burn?"burn":"skill",skill,undefined,undefined,"explosive_aoe")};

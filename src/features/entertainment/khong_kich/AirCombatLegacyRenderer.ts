@@ -1,3 +1,4 @@
+import { ASTRA_ART, paintAstra } from "./airCombatAstraArt";
 import { magneticShake } from "./airCombatMagnetic";
 import { magneticFlight, stormTile } from "./airCombatMagneticSky";
 import { STAGE2_ART_URLS, STAGE2_ENEMY_ART, STAGE2_VFX_ART, TEMPEST_WEAKPOINT_ART } from "./airCombatStage2Art";
@@ -54,7 +55,7 @@ export async function loadMagneticCanvasAssets() {
 }
 function drawMagneticFrame(ctx: CanvasRenderingContext2D, frame: AtlasFrame, x: number, y: number,
   width: number, height: number, rotation = 0, alpha = 1) {
-  const image = magneticImage(frame.atlas === "stage2Elite" ? STAGE2_ART_URLS.elite : frame.atlas === "stage2Enemy" ? STAGE2_ART_URLS.enemy : STAGE2_ART_URLS.vfx);
+  const image = magneticImage(frame.atlas === "astraEffects" ? ASTRA_ART.effects : frame.atlas === "stage2Elite" ? STAGE2_ART_URLS.elite : frame.atlas === "stage2Enemy" ? STAGE2_ART_URLS.enemy : STAGE2_ART_URLS.vfx);
   if (!image) return;
   const [sx,sy,sw,sh] = frame.rect;
   ctx.save(); ctx.globalAlpha = alpha; ctx.translate(x,y); ctx.rotate(rotation);
@@ -78,6 +79,7 @@ function shieldPainter(ctx:CanvasRenderingContext2D):ShieldPainter {
 const ammoPaths = new Map<AmmoVisualKey, { body: Path2D; detail: Path2D; glow?: Path2D; accents?: Path2D }>();
 function drawAmmoLocal(ctx:CanvasRenderingContext2D,key:AmmoVisualKey) {
  const art=AMMO_VISUALS[key];let paths=ammoPaths.get(key);
+ if(key==="astra_basic_ammo"||key==="astra_lance") {drawMagneticFrame(ctx,{atlas:"astraEffects",rect:[key==="astra_lance"?1/3:0,0,1/3,1]},0,0,art.width,art.height);return;}
  if(getBasicAmmoVisual(key)) {
    if(!basicAmmoImage){basicAmmoImage=new Image();basicAmmoImage.src=basicAmmoAtlasUrl;}
    if(basicAmmoImage.complete&&basicAmmoImage.naturalWidth>0) {
@@ -189,12 +191,12 @@ function drawAircraft(
   ctx.globalAlpha = alpha;
   ctx.translate(x, y);
   ctx.scale(scale, scale);
-  const img=airframeImage(false),size=PLAYER_AIRFRAME_SIZE[aircraftId]/.82;
+  const img=aircraftId==="astra"?magneticImage(ASTRA_ART.aircraft):airframeImage(false),size=PLAYER_AIRFRAME_SIZE[aircraftId]/.82;
   if(img){
-    const row=aircraftId==="black_eagle"?0:aircraftId==="breaker"?1:2;
+    const row=aircraftId==="astra"?0:aircraftId==="black_eagle"?0:aircraftId==="breaker"?1:2;
     const top=Math.round(row*img.naturalHeight/4),height=Math.round((row+1)*img.naturalHeight/4)-top;
     const art=PLAYER_ARTWORK[aircraftId].neutral,width=size*art.scaleX;
-    ctx.drawImage(img,0,top,Math.round(img.naturalWidth/4),height,-width*art.anchorX,-size/2,width,size);
+    ctx.drawImage(img,0,aircraftId==="astra"?0:top,Math.round(img.naturalWidth/(aircraftId==="astra"?3:4)),aircraftId==="astra"?img.naturalHeight:height,-width*art.anchorX,-size/2,width,size);
     ctx.restore();return;
   }
   ctx.shadowColor = color;
@@ -704,6 +706,11 @@ export function drawLegacyWorld(
     ctx.strokeStyle = aircraft.color; ctx.lineWidth = 2; ctx.globalAlpha = .35;
     ctx.beginPath(); ctx.arc(world.playerX, world.playerY, 30, 0, Math.PI * 2); ctx.stroke(); ctx.globalAlpha = 1;
   }
+  paintAstra(world,{
+    circle:(x,y,r,c,a,fill)=>{ctx.save();ctx.globalAlpha=a;ctx.strokeStyle=ctx.fillStyle=`#${c.toString(16).padStart(6,"0")}`;ctx.lineWidth=2;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);fill?ctx.fill():ctx.stroke();ctx.restore();},
+    line:(x,y,ex,ey,c,a,width)=>{ctx.save();ctx.globalAlpha=a;ctx.strokeStyle=`#${c.toString(16).padStart(6,"0")}`;ctx.lineWidth=width;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(ex,ey);ctx.stroke();ctx.restore();},
+    sprite:(_id,_key,x,y,width,height,rotation,alpha)=>drawMagneticFrame(ctx,{atlas:"astraEffects",rect:[2/3,0,1/3,1]},x,y,width,height,rotation,alpha)
+  },reducedMotion);
   const invisible = (world.aircraft.activeEffects.invisibility || 0) > 0;
   const hitBlink = world.playerInvulnerability > 0 && Math.floor(world.elapsed * 16) % 2 === 0;
   const exhaust=getPlayerExhaust(world,PLAYER_AIRFRAME_SIZE[aircraftId],reducedMotion);

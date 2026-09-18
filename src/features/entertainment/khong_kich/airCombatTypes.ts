@@ -1,5 +1,5 @@
 import type { PlayerCombatStatus } from "./airCombatStatus";
-export type AircraftId = "black_eagle" | "breaker" | "phantom";
+export type AircraftId = "black_eagle" | "breaker" | "phantom" | "astra";
 
 export type ResourceKind = "mana" | "energy";
 
@@ -12,7 +12,8 @@ export type SkillId =
   | "sweeping_cannon"
   | "invisibility"
   | "focus_laser"
-  | "escort_drone";
+  | "escort_drone"
+  | "orbit_reversal" | "stellar_lance" | "starfall";
 
 export type EnemyType =
   | "scout"
@@ -204,6 +205,7 @@ export interface SkillCastResult {
 }
 
 export interface AirCombatRunSummary {
+  astraTelemetry?:Record<string,number>;
   stageId: number;
   stageVictory: boolean;
   stageFirstClear: boolean;

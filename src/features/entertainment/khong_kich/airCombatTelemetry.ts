@@ -32,6 +32,9 @@ export function recordCoreMetric(state: AircraftCombatState, row: number | undef
   entry[metric] = (entry[metric] ?? 0) + amount;
 }
 export const CORE_METRICS: Record<number, readonly CoreMetric[]> = {
+  150:["blocked"],151:["bonusDamage"],152:["resource"],153:["bonusDamage"],154:["cooldown"],155:["procs","bonusDamage"],
+  156:["chargeSaved"],157:["bonusDamage"],158:["bonusDamage"],159:["damage","hits"],160:["hits"],161:["saved"],
+  162:["bonusDamage"],163:["hits"],164:["resource"],165:["cooldown"],166:["targets"],167:["damage"],
   19:["extraProjectiles","extraTime"],20:["cooldown"],21:["procs","bonusDamage"],22:["extraTime"],23:["shots"],24:["controlBlocked","prevented"],
   25:["extraProjectiles"],26:["bonusDamage"],28:["prevented"],29:["extraTime"],30:["procs","uptime"],31:["cooldown"],32:["bonusDamage"],33:["targets","uptime"],
   34:["bonusDamage"],35:["prevented"],36:["extraProjectiles","damage"],37:["extraTime"],39:["saved"],40:["shots","damage"],41:["chargeSaved","bonusDamage"],42:["saved"],43:["saved"],44:["procs","uptime"],45:["bonusDamage"],
