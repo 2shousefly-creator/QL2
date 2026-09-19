@@ -48,6 +48,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
   private magneticWarnings = new Graphics();
   private magneticLayer = new Container();
   private magneticSprites: AirCombatSpritePool;
+  private astraSprites: AirCombatSpritePool;
   private enemies: AirCombatSpritePool;
   private projectiles: AirCombatSpritePool;
   private missiles: AirCombatMissilePool;
@@ -113,6 +114,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     app.canvas.addEventListener("webglcontextlost", this.onLost);
     this.sky = new AirCombatSky(assets);
     this.magneticSprites = new AirCombatSpritePool(this.magneticLayer, 512);
+    this.astraSprites = new AirCombatSpritePool(this.magneticLayer, 192);
     app.stage.addChild(this.root);
     this.root.addChild(this.sky.root, this.telegraphs, this.smokeLayer, this.actors, this.effects, this.magneticLayer, this.magneticWarnings, this.enemyStatusLayer, this.hitbox, this.damageText.root);
     // Separate stage branch: neither recoil nor camera shake can move status bars.
@@ -178,6 +180,10 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
         this.vfx.lightning(event.id, event.fromX ?? event.x, event.fromY ?? event.y - 40, event.x, event.y, reducedMotion);
       } else if (event.kind === "player_heal") {
         this.vfx.healing(event.id, event.x, event.y, reducedMotion);
+      } else if(event.kind==="astra_lance_impact") {
+        this.vfx.lanceImpact(event.x,event.y,event.size,reducedMotion);
+      } else if(event.kind==="astra_starfall_impact") {
+        this.vfx.starfallImpact(event.x,event.y,event.size,reducedMotion);
       } else if(event.kind==="bullet_impact") {
         this.vfx.spawn("smallExplosion",event.x,event.y,event.size,.16,0xffd799);
         if(!reducedMotion)this.vfx.spawn("sparks",event.x,event.y,event.size*.85,.14,0xffedba);
@@ -240,6 +246,11 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
         this.shake = 2.5;
       }
     }
+    const starfallShake=Math.max(0,...(world.astra?.impacts??[]).map(i=>2.2*Math.exp(-(world.elapsed-i.at)*12)));
+    if(starfallShake>.02){
+      const combined=Math.min(2.8,this.shake+starfallShake);
+      this.root.position.set(reducedMotion?0:Math.sin(this.clock*113)*combined,reducedMotion?0:Math.cos(this.clock*97)*combined*.65);
+    }
     for (const [id, until] of this.flashUntil) if (until < this.clock) this.flashUntil.delete(id);
 
     this.telegraphs.clear();
@@ -269,10 +280,13 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
         sprite.rotation=rotation; sprite.alpha=alpha; sprite.tint=tint;
       }
     }, reducedMotion, world.elapsed + this.magneticEndAge);
+    this.astraSprites.begin();
     paintAstra(world,{...tacticalPainter,sprite:(id,key,x,y,width,height,rotation,alpha)=>{
-      const sprite=this.magneticSprites.get(-id,this.assets.effect(key));if(!sprite)return;
+      const sprite=this.astraSprites.get(id,this.assets.effect(key));if(!sprite)return;
+      sprite.blendMode=key==="astra_trail"||key==="astra_corona"||key==="astra_segments"||key==="astra_flash"?"add":"normal";
       sprite.position.set(x,y);sprite.width=width;sprite.height=height;sprite.rotation=rotation;sprite.alpha=alpha;sprite.tint=0xffffff;
     }},reducedMotion);
+    this.astraSprites.end();
     this.magneticSprites.end();
     for(let i=labelCount;i<this.enemyStatusLabels.length;i++)this.enemyStatusLabels[i].visible=false;
     this.enemies.begin();
@@ -629,6 +643,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     this.healthBars.clear();
     this.app.canvas.removeEventListener("webglcontextlost", this.onLost);
     this.magneticSprites.destroy();
+    this.astraSprites.destroy();
     this.enemies.destroy(); this.missileSmoke.destroy(); this.projectiles.destroy(); this.missiles.destroy(); this.projectileGlows.destroy(); this.afterimages.destroy(); this.companions.destroy(); this.warnings.destroy(); this.engines.destroy(); this.vfx.destroy();
     this.app.destroy(true, { children: true, texture: false, textureSource: false });
     this.assets.destroy();

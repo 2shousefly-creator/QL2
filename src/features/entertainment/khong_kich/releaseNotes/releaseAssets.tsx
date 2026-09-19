@@ -1,5 +1,6 @@
-import { ASTRA_ART } from "../airCombatAstraArt";
+import { ASTRA_ART, ASTRA_VFX_FRAMES } from "../airCombatAstraArt";
 import React from "react";
+import vfxUrl from "../../../../assets/khong-kich/v2/vfx-atlas.png";
 import { Activity, Archive, CalendarDays, Clock3, Crosshair, History, Layers3, ListChecks, Orbit, PanelTop, Scan, Shield, Sparkles, Tag, Waves, Wrench } from "lucide-react";
 import aircraftUrl from "../../../../assets/khong-kich/v2/aircraft-atlas.png";
 import fortressUrl from "../../../../assets/khong-kich/v2/fortress-clouds-atlas.png";
@@ -17,7 +18,7 @@ const SYSTEM_ICONS = {
   scheduler: Clock3, rules: ListChecks,aircraft_select:PanelTop,aircraft_balance:Activity,allegiance:Shield,explosion:Sparkles,
 };
 const ATLAS_URLS: Partial<Record<AtlasFrame["atlas"], string>> = {
-  astraAircraft:ASTRA_ART.aircraft,astraEffects:ASTRA_ART.effects,aircraft: aircraftUrl, fortress: fortressUrl,
+  astraVfx:ASTRA_ART.combatVfx,vfx:vfxUrl,astraAircraft:ASTRA_ART.aircraft,astraEffects:ASTRA_ART.effects,aircraft: aircraftUrl, fortress: fortressUrl,
   stage2Enemy: STAGE2_ART_URLS.enemy, stage2Elite: STAGE2_ART_URLS.elite, stage2Vfx: STAGE2_ART_URLS.vfx,
 };
 const AIRCRAFT_ROWS: Record<AircraftId, number> = { black_eagle: 0, breaker: 1, phantom: 2,astra:0 };
@@ -40,7 +41,7 @@ export function ReleaseNoteEntityIcon({ icon }: { icon: ReleaseIconRef }) {
   } else if (icon.kind === "enemy" || icon.kind === "boss") {
     frame = icon.id === "boss_stage2" ? STAGE2_ENEMY_ART.boss : ENEMY_VISUALS[(icon.id === "boss_stage1" ? "boss" : icon.id) as EnemyType];
   } else if (icon.kind === "projectile" || icon.kind === "vfx") {
-    frame = icon.id==="astra"?{atlas:"astraEffects",rect:[2/3,0,1/3,1]}:STAGE2_VFX_ART[icon.id as keyof typeof STAGE2_VFX_ART];
+    frame = icon.id==="astra"?ASTRA_VFX_FRAMES.astra_meteor:icon.id==="explosion"?ASTRA_VFX_FRAMES.astra_explosion2:STAGE2_VFX_ART[icon.id as keyof typeof STAGE2_VFX_ART];
   } else if (icon.id === "projectile" || icon.id === "vfx") {
     // The historical copy uses system markers for these asset categories.
     frame = icon.id === "projectile" ? STAGE2_VFX_ART.needleBolt : STAGE2_VFX_ART.magneticBurst;

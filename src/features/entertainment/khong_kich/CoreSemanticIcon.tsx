@@ -2,7 +2,7 @@ import { ASTRA_ART, ASTRA_SKILL_CELLS } from "./airCombatAstraArt";
 import React from "react";
 import { Flame, Shield, Gauge, Heart, HeartPulse, Timer, Crosshair, Target, Swords, ScanLine, Zap, BatteryCharging, Battery, Sparkles, Layers, Skull, RotateCcw, ShieldCheck, ShieldPlus, ShieldOff, Rocket, Bomb, Orbit, Radar, Focus, Expand, Minimize, ArrowUpRight, ArrowDownRight, Waves, GitBranch, Repeat2, ChevronsUp, Activity, CircleDot, Diamond, Coins, Shuffle, Gem, Lock, Filter, ArrowLeftRight, Wind, Link, Snowflake, TriangleAlert } from "lucide-react";
 import type { SkillId } from "./airCombatTypes";
-import skillAtlas from "../../../assets/khong-kich/v2/combat-ui-icons-atlas.png";
+import skillAtlas from "../../../assets/khong-kich/v2/skills-refined.svg";
 const icons={Flame, Shield, Gauge, Heart, HeartPulse, Timer, Crosshair, Target, Swords, ScanLine, Zap, BatteryCharging, Battery, Sparkles, Layers, Skull, RotateCcw, ShieldCheck, ShieldPlus, ShieldOff, Rocket, Bomb, Orbit, Radar, Focus, Expand, Minimize, ArrowUpRight, ArrowDownRight, Waves, GitBranch, Repeat2, ChevronsUp, Activity, CircleDot, Diamond, Coins, Shuffle, Gem, Lock, Filter, ArrowLeftRight, Wind, Link, Snowflake, TriangleAlert};
 interface CoreIconSpec { family:keyof typeof icons; skill?:SkillId; badge?:string }
 export const CORE_SEMANTIC_ICONS:Record<string,CoreIconSpec>={
@@ -156,24 +156,24 @@ export const CORE_SEMANTIC_ICONS:Record<string,CoreIconSpec>={
   core_147: {family:"Radar",skill:"escort_drone",badge:"EMP"},
   core_148: {family:"BatteryCharging",skill:"escort_drone",badge:"45%"},
 
-  core_150:{family:"Orbit",skill:"orbit_reversal",badge:"150"},
-  core_151:{family:"Orbit",skill:"orbit_reversal",badge:"151"},
-  core_152:{family:"Orbit",skill:"orbit_reversal",badge:"152"},
-  core_153:{family:"Orbit",skill:"orbit_reversal",badge:"153"},
-  core_154:{family:"Orbit",skill:"orbit_reversal",badge:"154"},
-  core_155:{family:"Orbit",skill:"orbit_reversal",badge:"155"},
-  core_156:{family:"Focus",skill:"stellar_lance",badge:"156"},
-  core_157:{family:"Focus",skill:"stellar_lance",badge:"157"},
-  core_158:{family:"Focus",skill:"stellar_lance",badge:"158"},
-  core_159:{family:"Focus",skill:"stellar_lance",badge:"159"},
-  core_160:{family:"Focus",skill:"stellar_lance",badge:"160"},
-  core_161:{family:"Focus",skill:"stellar_lance",badge:"161"},
-  core_162:{family:"Flame",skill:"starfall",badge:"162"},
-  core_163:{family:"Flame",skill:"starfall",badge:"163"},
-  core_164:{family:"Flame",skill:"starfall",badge:"164"},
-  core_165:{family:"Flame",skill:"starfall",badge:"165"},
-  core_166:{family:"Flame",skill:"starfall",badge:"166"},
-  core_167:{family:"Flame",skill:"starfall",badge:"167"},
+  core_150:{family:"Expand",skill:"orbit_reversal"},
+  core_151:{family:"Sparkles",skill:"orbit_reversal"},
+  core_152:{family:"BatteryCharging",skill:"orbit_reversal"},
+  core_153:{family:"ShieldOff",skill:"orbit_reversal"},
+  core_154:{family:"RotateCcw",skill:"orbit_reversal"},
+  core_155:{family:"ChevronsUp",skill:"orbit_reversal"},
+  core_156:{family:"Zap",skill:"stellar_lance"},
+  core_157:{family:"Minimize",skill:"stellar_lance"},
+  core_158:{family:"ShieldOff",skill:"stellar_lance"},
+  core_159:{family:"Layers",skill:"stellar_lance"},
+  core_160:{family:"ScanLine",skill:"stellar_lance"},
+  core_161:{family:"Repeat2",skill:"stellar_lance"},
+  core_162:{family:"CircleDot",skill:"starfall"},
+  core_163:{family:"Expand",skill:"starfall"},
+  core_164:{family:"BatteryCharging",skill:"starfall"},
+  core_165:{family:"RotateCcw",skill:"starfall"},
+  core_166:{family:"Swords",skill:"starfall"},
+  core_167:{family:"Flame",skill:"starfall"},
 
 };
 const skillCells:Record<SkillId,readonly [number,number]>={orbit_reversal:[0,0],stellar_lance:[1,0],starfall:[2,0],decoy:[0,0],afterburner:[1,0],missile_swarm:[2,0],armor_shield:[0,1],heavy_bomb:[1,1],sweeping_cannon:[2,1],invisibility:[0,2],focus_laser:[1,2],escort_drone:[2,2]};
@@ -181,9 +181,10 @@ export function CoreSemanticIcon({id,className=""}:{id:string;className?:string}
  const spec=CORE_SEMANTIC_ICONS[id]??{family:"TriangleAlert" as const};
  const astra=!!spec.skill&&spec.skill in ASTRA_SKILL_CELLS;
  const Icon=icons[spec.family], cell=spec.skill?skillCells[spec.skill]:null;
- return <span aria-hidden="true" className={`combat-ui-icon core-semantic-icon ${className}`} data-icon-family={spec.family}>
+ return <span aria-hidden="true" className={`combat-ui-icon core-semantic-icon ${className}`} data-icon-family={spec.family} data-astra-semantic={astra || undefined}>
    <Icon strokeWidth={1.6}/>
    {cell && <span className="core-skill-art"><img src={astra?ASTRA_ART.skills:skillAtlas} alt="" draggable={false} onError={e=>{e.currentTarget.style.display="none";}} style={{width:"300%",height:astra?"100%":"300%",left:`${-cell[0]*100}%`,top:`${-cell[1]*100}%`}}/></span>}
+   {astra && <span className="core-astra-semantic"><Icon strokeWidth={2.3}/></span>}
    {spec.badge && <b className="core-icon-modifier">{spec.badge}</b>}
  </span>;
 }

@@ -80,12 +80,12 @@ const KhongKichContent: React.FC<KhongKichScreenProps> = ({
     setLeaving(true);
     routeTimer.current=setTimeout(()=>{action();setLeaving(false);routeTimer.current=undefined;},gameState.settings.reducedMotion?100:180);
   };
-  const setPhase=(next:Phase)=>navigate(()=>commitPhase(next));
+  const setPhase=(next:Phase)=>navigate(()=>{if(next==="select")setSelectedAircraft(null);commitPhase(next);});
   const motionClass=`air-screen-motion ${leaving?"air-screen-exit":""} ${gameState.settings.reducedMotion?"air-motion-reduced":""}`;
   const [profile, setProfile] = useState<AirCombatProfile>(() => loadAirCombatProfile());
   const [selectedStage, setSelectedStage] = useState(() => defaultSelectedStage(profile.campaign));
   const stage = getAirCombatStage(selectedStage)!;
-  const [selectedAircraft, setSelectedAircraft] = useState<AircraftId | null>(profile.preferredAircraft);
+  const [selectedAircraft, setSelectedAircraft] = useState<AircraftId | null>(null);
   const [previewAircraft, setPreviewAircraft] = useState<AircraftId | null>(null);
   const aircraftPressRef = useRef<AircraftPressState | null>(null);
   const [completedRun, setCompletedRun] = useState<{
@@ -308,9 +308,10 @@ const KhongKichContent: React.FC<KhongKichScreenProps> = ({
               onContextMenu={(event) => event.preventDefault()}
               data-aircraft-option={aircraftId}
               aria-pressed={selected}
-              className={`tactical-card relative w-full touch-pan-y select-none overflow-hidden rounded-xl border p-[clamp(7px,1.3dvh,14px)] text-left transition-all active:scale-[.99] ${
+              style={{"--aircraft-color":config.color,"--aircraft-accent":config.accent} as React.CSSProperties}
+              className={`tactical-card air-aircraft-choice relative w-full touch-pan-y select-none overflow-hidden rounded-xl border p-[clamp(7px,1.3dvh,14px)] text-left transition-all active:scale-[.99] ${
                 selected
-                  ? "border-sky-300/80 bg-sky-400/10 shadow-md shadow-sky-950/40"
+                  ? "air-aircraft-choice-selected"
                   : "border-slate-800 bg-slate-900/80 hover:bg-slate-900"
               }`}
             >
@@ -352,7 +353,7 @@ const KhongKichContent: React.FC<KhongKichScreenProps> = ({
                       </h3>
                     </div>
                     {selected && (
-                      <span className="shrink-0 rounded-full bg-sky-300 px-[clamp(5px,0.8vw,8px)] py-[clamp(1.5px,0.3dvh,3px)] text-[clamp(7px,1dvh,8.5px)] font-black uppercase text-slate-950">
+                      <span style={{backgroundColor:config.accent}} className="shrink-0 rounded-full px-[clamp(5px,0.8vw,8px)] py-[clamp(1.5px,0.3dvh,3px)] text-[clamp(7px,1dvh,8.5px)] font-black uppercase text-slate-950">
                         Đã chọn
                       </span>
                     )}
@@ -394,9 +395,10 @@ const KhongKichContent: React.FC<KhongKichScreenProps> = ({
         onClick={startRun}
         disabled={!selectedAircraft}
         data-start-air-combat={selectedAircraft ?? "none"}
+        style={selectedAircraft ? {background:`linear-gradient(110deg, ${AIRCRAFT_CONFIGS[selectedAircraft].color}, ${AIRCRAFT_CONFIGS[selectedAircraft].accent})`,boxShadow:`0 5px 24px ${AIRCRAFT_CONFIGS[selectedAircraft].color}55`} : undefined}
         className={`mt-[clamp(6px,1.2dvh,14px)] flex h-[clamp(42px,5.8dvh,54px)] w-full items-center justify-center gap-1.5 rounded-xl text-[clamp(13px,1.7dvh,16px)] font-black transition active:scale-[.98] ${
           selectedAircraft
-            ? "bg-gradient-to-r from-sky-400 via-cyan-300 to-emerald-300 text-slate-950 shadow-lg shadow-sky-500/25"
+            ? "text-slate-950"
             : "cursor-not-allowed border border-slate-800 bg-slate-900/90 text-slate-500"
         }`}
       >

@@ -52,6 +52,27 @@ export class AirCombatVfx {
       removed.sprite.visible = false; this.free.push(removed);
     }
   }
+  lanceImpact(x:number,y:number,size:number,reducedMotion:boolean) {
+    this.reserveProc(reducedMotion?3:4);
+    this.spawn("charge",x,y,size*.6,.08,0xfff5df);
+    this.spawn("smallExplosion",x,y,size,.18,0xffc37c);
+    this.spawn("shockwave",x,y,size,.2,0xffdcb0);
+    if(!reducedMotion)this.spawn("sparks",x,y,size*.9,.19,0xffe4b9);
+  }
+  starfallImpact(x:number,y:number,size:number,reducedMotion:boolean) {
+    // At most eight pooled layers per meteor; persistent burn art uses another pool.
+    this.reserveProc(reducedMotion?4:8);
+    this.spawn("charge",x,y,size*.8,.1,0xfff5d9);
+    this.spawn("largeExplosion",x,y,size*1.25,.48,0xffbb76);
+    this.spawn("shockwave",x,y,size*1.8,.42,0xffc273);
+    this.spawn("fire",x,y,size*.75,.38,0xffaa52,0,.09);
+    if(!reducedMotion){
+      this.spawn("astra_debris",x,y,size*1.45,.5,0xffffff);
+      this.spawn("sparks",x,y,size*1.4,.38,0xffd897);
+      this.spawn("smoke",x,y,size*1.15,.6,0x9c8279,-12,.04);
+      this.spawn("charge",x,y,size*.5,.23,0xff9c4e,0,.13);
+    }
+  }
   lightning(id: number, fromX: number, fromY: number, x: number, y: number, reducedMotion: boolean) {
     const path = lightningPath(id, fromX, fromY, x, y, reducedMotion);
     this.reserveProc((path.length - 1) * 2 + 3);

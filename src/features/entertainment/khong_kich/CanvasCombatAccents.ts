@@ -17,6 +17,7 @@ export class CanvasCombatAccents {
     }
     for (const event of world.visualEvents) if (event.id > this.lastEvent) {
       this.lastEvent = event.id;
+      if(event.kind==="astra_lance_impact" || event.kind==="astra_starfall_impact")continue; // Shared Astra asset painter owns these contacts.
       if (event.kind === "explosion" && event.magneticDeath) continue;
       if (event.directContact && (event.kind==="hit" || event.kind==="player_hit"))continue;
       if (event.kind === "damage_number" && event.shieldAbsorbed <= 0) continue;

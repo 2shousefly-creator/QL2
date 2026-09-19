@@ -272,7 +272,7 @@ export function castSkill(state: AircraftCombatState, skillId: SkillId): SkillCa
     state.currentResource = Math.max(0, state.currentResource - cost);
     state.coreState.skillCasts++;
     if(isAstraSkill(skillId)) {
-        state.activeEffects[skillId]=skillId==="orbit_reversal"?3.2:skillId==="stellar_lance"?v.charge:5.5;
+        state.activeEffects[skillId]=skillId==="orbit_reversal"?v.duration:skillId==="stellar_lance"?v.charge:5.5;
         (state.activeEffectDurations??={})[skillId]=state.activeEffects[skillId];
     }
     if(skillId==="stellar_lance"){

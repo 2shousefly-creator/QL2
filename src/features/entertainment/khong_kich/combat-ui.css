@@ -287,3 +287,26 @@
 .aircraft-selection-grid .aircraft-selection-card-body .status-tag{font-size:6px}
 .aircraft-selection-grid .aircraft-selection-card-body>div:last-child>div>span{font-size:6px;padding:2px}
 [data-khong-kich-phase="select"]>[data-start-air-combat]{flex-shrink:0}
+
+/* 26.9.1: aircraft identity and a border-only light sweep; dimensions stay fixed. */
+@property --aircraft-border-angle { syntax:"<angle>"; initial-value:0deg; inherits:false; }
+.air-aircraft-choice[aria-pressed="true"] {
+  border-color:var(--aircraft-accent);
+  background:color-mix(in srgb,var(--aircraft-color) 12%,#101a2a);
+  box-shadow:0 0 16px color-mix(in srgb,var(--aircraft-color) 35%,transparent),inset 0 0 18px color-mix(in srgb,var(--aircraft-color) 12%,transparent);
+}
+.air-aircraft-choice[aria-pressed="true"]::after {
+  content:""; position:absolute; inset:0; border-radius:inherit; padding:2px; pointer-events:none;
+  background:conic-gradient(from var(--aircraft-border-angle),transparent 0deg,var(--aircraft-color) 60deg,var(--aircraft-accent) 90deg,transparent 130deg,transparent 230deg,var(--aircraft-accent) 280deg,transparent 320deg);
+  -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+  -webkit-mask-composite:xor; mask-composite:exclude;
+  animation:aircraft-border-orbit 3s linear infinite;
+}
+@keyframes aircraft-border-orbit { to { --aircraft-border-angle:360deg; } }
+.air-motion-reduced .air-aircraft-choice::after { animation:none; }
+@media (prefers-reduced-motion:reduce) { .air-aircraft-choice::after { animation:none !important; } }
+.core-semantic-icon[data-astra-semantic] .core-skill-art { inset:3%; opacity:.62; }
+.core-astra-semantic { position:absolute; inset:24% 2% 2% 24%; display:grid; place-items:center; color:#fff3d8; border:1px solid #ffd396; border-radius:28%; background:#24172aeb; box-shadow:0 0 5px #ff9b4166; }
+.core-astra-semantic svg { width:82%; height:82%; filter:drop-shadow(0 0 2px #ffab4e); }
+
+.air-aircraft-choice[aria-pressed="true"]::before { background:var(--aircraft-accent); }

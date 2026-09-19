@@ -1,4 +1,5 @@
-import { ASTRA_ART, paintAstra } from "./airCombatAstraArt";
+import sharedVfxUrl from "../../../assets/khong-kich/v2/vfx-atlas.png";
+import { ASTRA_ART, ASTRA_VFX_FRAMES, paintAstra } from "./airCombatAstraArt";
 import { magneticShake } from "./airCombatMagnetic";
 import { magneticFlight, stormTile } from "./airCombatMagneticSky";
 import { STAGE2_ART_URLS, STAGE2_ENEMY_ART, STAGE2_VFX_ART, TEMPEST_WEAKPOINT_ART } from "./airCombatStage2Art";
@@ -45,17 +46,18 @@ function magneticImage(url: string) {
   if (!image) { image = new Image(); image.src = url; magneticImages.set(url, image); }
   return image.complete && image.naturalWidth > 0 ? image : null;
 }
-/** Resolve the mandatory atlas before releasing the battle loading pause. */
-export async function loadMagneticCanvasAssets() {
-  await Promise.all([STAGE2_ART_URLS.enemy, STAGE2_ART_URLS.vfx, STAGE2_ART_URLS.storm, STAGE2_ART_URLS.elite].map(async url => {
+/** Resolve local textures before releasing the battle loading pause in either stage. */
+async function loadCanvasTextures(urls:string[]) {
+  await Promise.all(urls.map(async url=>{
     magneticImage(url);
-    const image = magneticImages.get(url)!;
-    await image.decode();
+    await magneticImages.get(url)!.decode();
   }));
 }
+export const loadAstraCanvasAssets=()=>loadCanvasTextures([ASTRA_ART.aircraft,ASTRA_ART.effects,ASTRA_ART.combatVfx,sharedVfxUrl]);
+export const loadMagneticCanvasAssets=()=>loadCanvasTextures([STAGE2_ART_URLS.enemy,STAGE2_ART_URLS.vfx,STAGE2_ART_URLS.storm,STAGE2_ART_URLS.elite]);
 function drawMagneticFrame(ctx: CanvasRenderingContext2D, frame: AtlasFrame, x: number, y: number,
   width: number, height: number, rotation = 0, alpha = 1) {
-  const image = magneticImage(frame.atlas === "astraEffects" ? ASTRA_ART.effects : frame.atlas === "stage2Elite" ? STAGE2_ART_URLS.elite : frame.atlas === "stage2Enemy" ? STAGE2_ART_URLS.enemy : STAGE2_ART_URLS.vfx);
+  const image = magneticImage(frame.atlas === "astraVfx" ? ASTRA_ART.combatVfx : frame.atlas === "vfx" ? sharedVfxUrl : frame.atlas === "astraEffects" ? ASTRA_ART.effects : frame.atlas === "stage2Elite" ? STAGE2_ART_URLS.elite : frame.atlas === "stage2Enemy" ? STAGE2_ART_URLS.enemy : STAGE2_ART_URLS.vfx);
   if (!image) return;
   const [sx,sy,sw,sh] = frame.rect;
   ctx.save(); ctx.globalAlpha = alpha; ctx.translate(x,y); ctx.rotate(rotation);
@@ -370,7 +372,8 @@ export function drawLegacyWorld(
   const { width, height, hudHeight } = AIR_COMBAT_WORLD;
   const aircraft = AIRCRAFT_CONFIGS[aircraftId];
   ctx.save();
-  const shake=reducedMotion?0:magneticShake(world);
+  const starfallShake=Math.max(0,...(world.astra?.impacts??[]).map(i=>2.2*Math.exp(-(world.elapsed-i.at)*12)));
+  const shake=reducedMotion?0:starfallShake>.02?Math.min(2.8,magneticShake(world)+starfallShake):magneticShake(world);
   ctx.translate(Math.sin(world.elapsed*113)*shake,Math.cos(world.elapsed*97)*shake*.65);
   if (world.magnetic) {
     ctx.fillStyle = "#07112c"; ctx.fillRect(0,0,width,height);
@@ -707,9 +710,15 @@ export function drawLegacyWorld(
     ctx.beginPath(); ctx.arc(world.playerX, world.playerY, 30, 0, Math.PI * 2); ctx.stroke(); ctx.globalAlpha = 1;
   }
   paintAstra(world,{
+    impactFallback:true,
     circle:(x,y,r,c,a,fill)=>{ctx.save();ctx.globalAlpha=a;ctx.strokeStyle=ctx.fillStyle=`#${c.toString(16).padStart(6,"0")}`;ctx.lineWidth=2;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);fill?ctx.fill():ctx.stroke();ctx.restore();},
     line:(x,y,ex,ey,c,a,width)=>{ctx.save();ctx.globalAlpha=a;ctx.strokeStyle=`#${c.toString(16).padStart(6,"0")}`;ctx.lineWidth=width;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(ex,ey);ctx.stroke();ctx.restore();},
-    sprite:(_id,_key,x,y,width,height,rotation,alpha)=>drawMagneticFrame(ctx,{atlas:"astraEffects",rect:[2/3,0,1/3,1]},x,y,width,height,rotation,alpha)
+    sprite:(_id,key,x,y,width,height,rotation,alpha)=>{
+      ctx.save();
+      if(key==="astra_trail"||key==="astra_corona"||key==="astra_segments"||key==="astra_flash")ctx.globalCompositeOperation="lighter";
+      drawMagneticFrame(ctx,ASTRA_VFX_FRAMES[key],x,y,width,height,rotation,alpha);
+      ctx.restore();
+    }
   },reducedMotion);
   const invisible = (world.aircraft.activeEffects.invisibility || 0) > 0;
   const hitBlink = world.playerInvulnerability > 0 && Math.floor(world.elapsed * 16) % 2 === 0;

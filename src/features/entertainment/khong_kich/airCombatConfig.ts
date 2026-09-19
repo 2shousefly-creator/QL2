@@ -167,12 +167,12 @@ export const AIRCRAFT_ORDER: AircraftId[] = [
 ];
 
 export const SKILL_CONFIGS: Record<SkillId, SkillConfig> = {
-  orbit_reversal:{id:"orbit_reversal",aircraftId:"astra",name:"Phản Quỹ Đạo",shortName:"Quỹ Đạo",icon:"",cost:170,cooldown:22,duration:3.2,damageMultiplier:.3,
-    description:"Vùng 72px theo Astra bắt tối đa 16 projectile thù địch trong 3,2s. Bấm lại để giải phóng sớm, không tốn thêm Mana. Tinh Đạn bay thẳng phía trước, 0° spread, không tìm mục tiêu; mỗi viên gây 30% Hỏa Lực lên địch đầu tiên. Không bắt Beam, AoE, Bomb/Mine, va chạm thân và Boss mechanic không thể bắt. Hồi chiêu bắt đầu sau khi kết thúc."},
+  orbit_reversal:{id:"orbit_reversal",aircraftId:"astra",name:"Phản Quỹ Đạo",shortName:"Quỹ Đạo",icon:"",cost:170,cooldown:22,duration:2,damageMultiplier:.3,
+    description:"Tạo vùng 72px theo Astra trong 2 giây, bắt tối đa 16 projectile thù địch. Bấm lại để kết thúc sớm, không tốn thêm Mana. Khi kết thúc, Tinh Đạn lần lượt hội tụ về phía trước Astra rồi phóng lên trong một hành lang 20px, không tự tìm mục tiêu, không homing hay retarget; mỗi viên gây 30% Hỏa Lực lên địch đầu tiên. Không bắt Beam, AoE, Bomb/Mine, va chạm thân và Boss mechanic không thể bắt. Hồi chiêu bắt đầu khi trạng thái bắt giữ kết thúc và Tinh Đạn bắt đầu hội tụ."},
   stellar_lance:{id:"stellar_lance",aircraftId:"astra",name:"Thương Tinh Tú",shortName:"Tinh Tú",icon:"",cost:60,cooldown:3,damageMultiplier:8,
     description:"Tụ 0,6s, vẫn di chuyển nhưng ngừng bắn thường. Phóng thẳng phía trước, xuyên mọi địch: mục tiêu đầu 800%, mục tiêu sau 680% Hỏa Lực. Mỗi lần dùng thành công trong 15s tăng cost kế tiếp 60 Mana và +10% damage additive, tối đa 4 stack: 300 Mana/+40%. Hết 15s trở về ban đầu. Hồi chiêu sau phát chính."},
   starfall:{id:"starfall",aircraftId:"astra",name:"Sao Rơi",shortName:"Sao Rơi",icon:"",cost:200,cooldown:34,damageMultiplier:2.1,
-    description:"Mỗi 0,5s khóa một địch, tối đa 10 lần trong 5s, ưu tiên mục tiêu chưa đánh dấu. Sau 1s, thiên thạch rơi vào marker, gây 210% Hỏa Lực trong 30px. Marker bám địch sống, giữ vị trí chết và không retarget. Hết mục tiêu thì ngừng khóa mới; thiên thạch đã hẹn vẫn rơi. Hồi chiêu chỉ bắt đầu sau impact cuối (~5,5s)."},
+    description:"Mỗi 0,5s khóa một địch, tối đa 10 lần trong 5s, ưu tiên mục tiêu chưa đánh dấu. Sau 1s, thiên thạch rơi vào marker, gây 210% Hỏa Lực trong 35px. Marker bám địch sống, giữ vị trí chết và không retarget. Hết mục tiêu thì ngừng khóa mới; thiên thạch đã hẹn vẫn rơi. Hồi chiêu chỉ bắt đầu sau impact cuối (~5,5s)."},
   "decoy": {
     "id": "decoy",
     "aircraftId": "black_eagle",

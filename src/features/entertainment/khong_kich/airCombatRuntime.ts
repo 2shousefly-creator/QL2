@@ -244,6 +244,7 @@ interface RuntimePools {
     decoys: DecoyEntity[];
 }
 interface VisualEventBase {
+    at?:number;
     skillId?: SkillId;
     directContact?: boolean;
     attachedToPlayer?: boolean;
@@ -271,11 +272,11 @@ export type CombatVisualEvent = DamageNumberEvent | (VisualEventBase & {
     amount: number;
     healSource: HealSource;
 }) | (VisualEventBase & {
-    kind: "bullet_impact" | "hit" | "explosion" | "bomb" | "player_hit" | "absorb" | "lightning" | "drone_hit" | "missile_impact" | "flare_burst" | "emp_pulse" | "shield_ripple";
+    kind: "astra_lance_impact" | "astra_starfall_impact" | "bullet_impact" | "hit" | "explosion" | "bomb" | "player_hit" | "absorb" | "lightning" | "drone_hit" | "missile_impact" | "flare_burst" | "emp_pulse" | "shield_ripple";
 });
 type NewVisualEvent = CombatVisualEvent extends infer E ? E extends CombatVisualEvent ? Omit<E, "id"> : never : never;
 function emitVisual(world: CombatWorld, event: NewVisualEvent): void {
-    world.visualEvents.push({ ...event, id: world.nextVisualId++ });
+    world.visualEvents.push({ ...event, at:world.elapsed, id: world.nextVisualId++ });
     if (world.visualEvents.length > 96)
         world.visualEvents.shift();
 }
@@ -654,8 +655,10 @@ function addProjectile(world: CombatWorld, values: Partial<ProjectileEntity> & P
             ? world.projectiles.findIndex(p=>p.owner==="player"&&p.source==="basic")
             : values.owner === "enemy" && values.criticalAttack
             ? (world.projectiles.findIndex(p => p.suppressive) >= 0 ? world.projectiles.findIndex(p => p.suppressive) : world.projectiles.findIndex(p => p.owner === "enemy" && !p.criticalAttack && !p.homing)) : -1;
-        if (replace < 0) return null;
-        recycleProjectile(world, replace);
+        // Captured ammunition is already earned. Permit its bounded release reserve
+        // when the normal pool contains only other special shots; never discard it.
+        if (replace < 0 && !(values.owner==="player" && values.skillId==="orbit_reversal")) return null;
+        if (replace >= 0) recycleProjectile(world, replace);
     }
     const projectile = acquireProjectile(world);
     Object.assign(projectile, {
@@ -2976,7 +2979,7 @@ function updateProjectileCollisions(world: CombatWorld): void {
             if(p.salvoId){const salvo=world.skillCores.salvos.find(s=>s.id===p.salvoId);if(salvo)salvo.data=Math.min(V.dataLimit,salvo.data+1);}
             const shieldBefore=enemy.shield;
             const dealt=p.allegiance==="friendly_hacked"?damageEnemyAttack(world,enemy,p.rawDamage,p,contact):applyDamageToEnemy(world, enemy, p.stabilizedPierce?p.initialDamage:p.rawDamage, p.color, p.source, p.skillId, p.volleyHits, contact, "direct_projectile", true, true, p.telemetryCore, p.stabilizedPierce?p.rawDamage/Math.max(Number.EPSILON,p.initialDamage):1, p.telemetryBonuses);
-            if((dealt>0 || enemy.shield<shieldBefore) && p.projectileKind==="bullet" && p.skillId!=="sweeping_cannon")emitVisual(world,{kind:"bullet_impact",x:contact.x,y:contact.y,size:enemy.type==="boss"||isElite(enemy.type)?16:enemy.type==="scout"||enemy.type==="kamikaze"?10:12});
+            if((dealt>0 || enemy.shield<shieldBefore) && p.projectileKind==="bullet" && p.skillId!=="sweeping_cannon" && !p.astraLance)emitVisual(world,{kind:"bullet_impact",x:contact.x,y:contact.y,size:enemy.type==="boss"||isElite(enemy.type)?16:enemy.type==="scout"||enemy.type==="kamikaze"?10:12});
             if(enemy.shield<shieldBefore)emitVisual(world,{kind:"shield_ripple",x:contact.x,y:contact.y,size:23});
             for(const row of p.telemetryExtraCores??[])recordCoreMetric(world.aircraft,row,"damage",dealt);
             if(!p.astraLance&&p.hitIds.length>1&&p.rawDamage<p.initialDamage){
@@ -2985,6 +2988,7 @@ function updateProjectileCollisions(world: CombatWorld): void {
             }
             if(p.skillId==="orbit_reversal"){astraMetric(world,"orbit.hits");astraMetric(world,"orbit.damage",dealt);}
             if(p.astraLance){
+                emitVisual(world,{kind:"astra_lance_impact",skillId:"stellar_lance",x:contact.x,y:contact.y,size:(enemy.type==="boss"||isElite(enemy.type)?28:23)*(p.astraLance.echo?.8:1)});
                 if(hasCore(world.aircraft,160)&&!segmentVsAircraft(p.previousX,p.previousY,p.x,p.y,6,getEnemyHitbox(enemy),projectileContact).hit)recordCoreMetric(world.aircraft,160,"hits",1);
                 const prefix=p.astraLance.echo?"lance.echo":"lance";
                 astraMetric(world,`${prefix}.${p.hitIds.length===1?"firstHits":"penetratedHits"}`);astraMetric(world,`${prefix}.damage`,dealt);
@@ -3767,5 +3771,5 @@ function settleBountyKill(world:CombatWorld,enemy:EnemyEntity) {
     finishBounty(world);
 }
 
-const astraHooks:AstraHooks={projectile:addProjectile,hostile:isHostileToPlayer,remove:recycleProjectile,
+const astraHooks:AstraHooks={impact:(w,x,y,radius)=>emitVisual(w,{kind:"astra_starfall_impact",skillId:"starfall",x,y,size:radius*2}),projectile:addProjectile,hostile:isHostileToPlayer,remove:recycleProjectile,
     damage:(w,e,raw,skill,burn)=>applyDamageToEnemy(w,e,raw,"#ff943f",burn?"burn":"skill",skill,undefined,undefined,"explosive_aoe")};

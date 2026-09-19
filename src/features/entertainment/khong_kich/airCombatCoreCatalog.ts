@@ -2124,7 +2124,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 {
   "id": "core_163",
   "name": "Hủy Diệt Hàng Loạt",
-  "description": "Bán kính nổ của mỗi thiên thạch Sao Rơi tăng từ 30px lên 50px.",
+  "description": "Bán kính nổ của mỗi thiên thạch Sao Rơi tăng từ 35px lên 55px.",
   "system": "Kỹ Năng",
   "icon": "skill:starfall",
   "category": "skill",

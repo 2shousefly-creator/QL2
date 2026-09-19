@@ -46,7 +46,7 @@ export function getSkillTooltipModel(state: AircraftCombatState, id: SkillId) {
     const stack=(state.coreState.timers.lanceChain??0)>state.coreState.time?(state.coreState.stacks.lanceStack??0):0;
     detailRows.push(`Chuỗi kế tiếp: ${stack}/4 · ${number(v.cost)} Mana · +${stack*10}% sát thương`, `Tụ lực ${number(v.charge)}s · mục tiêu đầu ${number(v.damageMultiplier*100)}% · mục tiêu sau ${number((hasCore(state,157)?930:680)*(1+.1*stack))}% Hỏa Lực`);
   }
-  if(id==="starfall")detailRows.push(`Impact ${number(v.damageMultiplier*100)}% Hỏa Lực · bán kính ${hasCore(state,163)?50:30}px`);
+  if(id==="starfall")detailRows.push(`Impact ${number(v.damageMultiplier*100)}% Hỏa Lực · bán kính ${hasCore(state,163)?55:35}px`);
   const coreRows: string[] = [];
   // The main copy uses effective values; these rows identify each owned upgrade.
   for (const row of [...Array.from({length:27},(_,i)=>19+i), ...Array.from({length:27},(_,i)=>122+i),...Array.from({length:18},(_,i)=>150+i)]) {
