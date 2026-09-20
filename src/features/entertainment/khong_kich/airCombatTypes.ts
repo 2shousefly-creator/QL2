@@ -166,8 +166,10 @@ export interface EffectiveAircraftStats extends CombatStats {
   weapon: WeaponModifiers;
 }
 
+export type CoreSystem = "attack" | "defense" | "resource" | "skill" | "utility";
+
 export interface CoreDefinition {
-  system: string;
+  system: CoreSystem;
   skillSlot?: number;
   id: CoreId;
   name: string;
@@ -180,7 +182,7 @@ export interface CoreDefinition {
 }
 
 export interface CoreCard {
-  system: string;
+  system: CoreSystem;
   skillSlot?: number;
   id: CoreId;
   tier: CoreTier;

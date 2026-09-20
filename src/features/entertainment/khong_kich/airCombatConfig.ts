@@ -496,7 +496,7 @@ export const AIR_COMBAT_RANK_ORDER = ["C", "B", "A", "S", "SS"] as const;
 
 export function getCoreDefinition(id: CoreId): CoreDefinition {
   const definition = CORE_DEFINITIONS.find((core) => core.id === id);
-  if (!definition) return { id, name: "Lõi cũ", description: "Lõi không còn thuộc danh mục hiện tại; không áp dụng hiệu ứng.", system: "Lưu cũ", icon: "◇", category: "offense", tiers: ["silver"] };
+  if (!definition) return { id, name: "Lõi cũ", description: "Lõi không còn thuộc danh mục hiện tại; không áp dụng hiệu ứng.", system: "utility", icon: "◇", category: "offense", tiers: ["silver"] };
   return definition;
 }
 

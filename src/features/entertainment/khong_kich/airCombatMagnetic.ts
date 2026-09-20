@@ -131,7 +131,7 @@ function bullet(w: CombatWorld, e: EnemyEntity, h: MagneticHooks, angle: number,
   const visual: MagneticVfxKey = e.type === "boss" ? "crownBolt" : e.type === "satellite" ? "satelliteOrb"
     : e.type === "prism_manta" ? "prismOrb" : e.type === "arc_reaver" ? "arcBolt"
     : e.type === "micro_drone" ? "microSpark" : "needleBolt";
-  const shot = h.projectile(w, { capturable:e.type!=="boss", owner: "enemy", allegiance:e.magnetic?.elite?.allegiance??h.allegiance(w,e), sourceEnemyId: e.id, sourceEnemyType: e.type, x: e.x, y: e.y,
+  const shot = h.projectile(w, { owner: "enemy", allegiance:e.magnetic?.elite?.allegiance??h.allegiance(w,e), sourceEnemyId: e.id, sourceEnemyType: e.type, x: e.x, y: e.y,
     magneticAreaId: e.magnetic?.elite && AREA_SKILLS.includes(e.magnetic.elite.skill) ? e.magnetic.elite.id : undefined,
     vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed, rawDamage: damage(e) * factor * (e.magnetic?.elite ? 1.2 : 1),
     radius, criticalAttack: ELITE_TYPES.includes(e.type), lifetime: e.type === "boss" || e.type === "satellite" ? 4.8 : 6, color: "#67e8f9", magneticVisual: visual });
@@ -527,7 +527,9 @@ function updateTempest(w:CombatWorld, boss:EnemyEntity, dt:number, h:MagneticHoo
         const at=point(rift.x+Math.cos(slot*TAU/7)*26,rift.y+Math.sin(slot*TAU/7)*26,30);
         drone.x=at.x;drone.y=at.y;drone.baseX=at.x;
         drone.hp=drone.maxHp=171.6;drone.armor=3.9;drone.damageScale=1;drone.wave=1;
-        drone.kamikazeState="approach";drone.stateTimer=.2;drone.magnetic=undefined;drone.noWaveWait=true;
+        drone.riftAttackReadyAt=w.elapsed+slot*.5;
+        drone.riftWait={spawnedAt:w.elapsed,x:at.x,y:at.y,phase:slot*TAU/7};
+        drone.kamikazeState="approach";drone.stateTimer=0;drone.magnetic=undefined;drone.noWaveWait=true;
       }
       magneticFx(w,"magneticBurst",rift.x,rift.y,110,.6);m.rift=undefined;
     }
@@ -543,7 +545,7 @@ function updateTempest(w:CombatWorld, boss:EnemyEntity, dt:number, h:MagneticHoo
       addMine(w,boss,h,point(w.playerX+dx,w.playerY+dy,10),.1,125.44,.6);
       d.nextEmission+=phase>=3?.2:.3;
     } else if(skill==="acid" && (d.acidEmissions??0)<20) {
-      h.projectile(w,{owner:"enemy",capturable:false,sourceEnemyId:boss.id,sourceEnemyType:"boss",x:RECT.left+10+w.random()*(RECT.width-20),y:RECT.top,
+      h.projectile(w,{owner:"enemy",sourceEnemyId:boss.id,sourceEnemyType:"boss",x:RECT.left+10+w.random()*(RECT.width-20),y:RECT.top,
         vx:0,vy:390,radius:6,rawDamage:(phase>=3?118.5408:87.808)*boss.damageScale,color:"#b4ff4b",magneticVisual:"acidDrop",lifetime:3,
         payload:{healingReduction:4,healingReceivedMultiplier:phase>=3?0:.4}});
       d.acidEmissions=(d.acidEmissions??0)+1;d.nextEmission=d.acidEmissions*.25;

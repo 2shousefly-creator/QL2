@@ -25,7 +25,6 @@ export interface AstraRuntime {
   orbit?:{until:number;captured:number;refunded:number};
   orbitReleases?:OrbitRelease[];
   charge?:{at:number;startedAt:number;duration:number;stack:number};
-  echoes:{at:number;x:number;y:number;first:number;later:number;speed:number;radius:number}[];
   starfall?:{next:number;locks:number;stopped:boolean;marked:Set<number>;pending:AstraMeteor[];refunded:number};
   burns:{id:number;x:number;y:number;radius:number;until:number;next:number}[];
   impacts:{id:number;x:number;y:number;radius:number;at:number}[];
@@ -37,7 +36,7 @@ export interface AstraHooks {
   hostile(w:CombatWorld,e:EnemyEntity):boolean;
   remove(w:CombatWorld,index:number):void;
 }
-export const astraState=(w:CombatWorld):AstraRuntime=>w.astra??={metrics:{},flashes:[],echoes:[],burns:[],impacts:[]};
+export const astraState=(w:CombatWorld):AstraRuntime=>w.astra??={metrics:{},flashes:[],burns:[],impacts:[]};
 export function astraMetric(w:CombatWorld,key:string,value=1) { const m=astraState(w).metrics;m[key]=(m[key]??0)+value; }
 function refund(w:CombatWorld,fraction:number,row:number,key:string):number {
   const s=w.aircraft,stats=getEffectiveAircraftStats(s),amount=Math.max(0,Math.min(stats.maxResource-s.currentResource,stats.maxResource*fraction));
@@ -57,9 +56,9 @@ export function releaseOrbit(w:CombatWorld,h:AstraHooks,manual=false) {
   if(o.captured&&hasCore(s,155)){s.coreState.timers.whiteHole=s.coreState.time+5;recordCoreMetric(s,155,"procs",1);astraMetric(w,"orbit.whiteHoleProcs");}
   r.releaseAt=w.elapsed;r.orbit=undefined;endAircraftSkill(s,"orbit_reversal");
 }
-function lance(w:CombatWorld,h:AstraHooks,x:number,y:number,first:number,later:number,speed:number,radius:number,echo=false) {
+function lance(w:CombatWorld,h:AstraHooks,x:number,y:number,first:number,later:number,speed:number,radius:number) {
   const p=h.projectile(w,{owner:"player",source:"skill",skillId:"stellar_lance",x,y,vx:0,vy:-speed,radius,rawDamage:first,penetrationRemaining:Infinity,ammoVisualKey:"astra_lance",color:"#fff0bb",lifetime:2,telemetryBonuses:hasCore(w.aircraft,157)?[[157,1-8/10.5]]:undefined});
-  if(p){p.astraLance={later,echo};if(echo)astraMetric(w,"lance.echoes");}
+  if(p)p.astraLance={later};
 }
 export function beginAstraSkill(w:CombatWorld,id:SkillId,spent:number,h:AstraHooks) {
   const r=astraState(w),s=w.aircraft,v=getSkillRuntimeValues(s,id);
@@ -106,11 +105,9 @@ export function updateAstra(w:CombatWorld,_dt:number,h:AstraHooks) {
       const k=1+.1*r.charge.stack,first=stats.firepower*(hasCore(s,157)?10.5:8)*k,later=stats.firepower*(hasCore(s,157)?9.3:6.8)*k;
       const speed=1000*(hasCore(s,160)?1.35:1),radius=6*(hasCore(s,160)?1.55:1),x=w.playerX,y=w.playerY-20;
       lance(w,h,x,y,first,later,speed,radius);
-      if(hasCore(s,159))r.echoes.push({at:now+.35,x,y,first:first*.25,later:later*.25,speed,radius});
       r.charge=undefined;endAircraftSkill(s,"stellar_lance");
     }
   }
-  for(let i=r.echoes.length-1;i>=0;i--)if(now>=r.echoes[i].at){const q=r.echoes.splice(i,1)[0];lance(w,h,q.x,q.y,q.first,q.later,q.speed,q.radius,true);}
   const f=r.starfall;
   if(f) {
     // World RNG selects only live opposing units; a cast never reassigns an existing marker.

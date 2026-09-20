@@ -103,8 +103,6 @@
 .combat-core-card:active {filter:brightness(1.3);}
 .core-semantic-icon {display:inline-grid;place-items:center;isolation:isolate;background:linear-gradient(145deg,#7696ad30,#071321);border:1px solid #a0d3e46b;clip-path:polygon(6px 0,100% 0,100% calc(100% - 6px),calc(100% - 6px) 100%,0 100%,0 6px);color:inherit;}
 .core-semantic-icon > svg {width:68%;height:68%;filter:drop-shadow(0 1px 3px #8addff55);}
-.core-skill-art {position:absolute;inset:5%;overflow:hidden;pointer-events:none;}
-.core-icon-modifier {position:absolute;right:1px;bottom:1px;padding:1px 3px;font-size:clamp(7px,.7em,12px);font-weight:900;line-height:1.1;background:#0a1829;border-top:1px solid #d2f4ff;color:#e0faff;z-index:2;}
 .air-status-icon {border-radius:2px!important;}
 .air-status-timer {position:absolute;top:1px;bottom:auto;left:1px;right:1px;z-index:3;background:#081526c9;color:#e3f5ff;font-size:1.55cqw;line-height:1;font-variant-numeric:tabular-nums;}
 .air-combat-surface[data-emp-jam="true"] .air-combat-hud {box-shadow:inset 0 -2px #67e8f9; background-image:repeating-linear-gradient(0deg,#67e8f907 0 1px,transparent 1px 5px);}
@@ -305,8 +303,10 @@
 @keyframes aircraft-border-orbit { to { --aircraft-border-angle:360deg; } }
 .air-motion-reduced .air-aircraft-choice::after { animation:none; }
 @media (prefers-reduced-motion:reduce) { .air-aircraft-choice::after { animation:none !important; } }
-.core-semantic-icon[data-astra-semantic] .core-skill-art { inset:3%; opacity:.62; }
-.core-astra-semantic { position:absolute; inset:24% 2% 2% 24%; display:grid; place-items:center; color:#fff3d8; border:1px solid #ffd396; border-radius:28%; background:#24172aeb; box-shadow:0 0 5px #ff9b4166; }
-.core-astra-semantic svg { width:82%; height:82%; filter:drop-shadow(0 0 2px #ffab4e); }
 
 .air-aircraft-choice[aria-pressed="true"]::before { background:var(--aircraft-accent); }
+
+/* Taxonomy accents are local to the tag; the card continues to communicate tier. */
+.air-core-system-tag { display:inline-flex; align-items:center; width:max-content; max-width:100%; margin-top:3px; padding:1px 5px; border:1px solid var(--core-system-color); border-radius:4px; background:color-mix(in srgb,var(--core-system-color) 17%,transparent); color:color-mix(in srgb,var(--core-system-color) 40%,white); font-size:9px; font-weight:800; line-height:1.2; }
+.air-upgrade-copy .air-core-system-tag + .air-upgrade-description { margin-top:3px; }
+.core-semantic-icon .core-refined-art { position:absolute; max-width:none; pointer-events:none; }

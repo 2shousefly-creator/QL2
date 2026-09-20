@@ -1,0 +1,1923 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1792" height="1536" viewBox="0 0 1792 1536"><defs><clipPath id="cell-clip"><rect width="128" height="128" rx="12"/></clipPath><linearGradient id="metal" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffffff"/><stop offset=".35" stop-color="#c4daeb"/><stop offset=".52" stop-color="#8aa4bd"/><stop offset=".57" stop-color="#d5e5f1"/><stop offset="1" stop-color="#415a75"/></linearGradient><radialGradient id="bg-cyan" cx=".4" cy=".3" r=".85"><stop stop-color="#073956"/><stop offset="1" stop-color="#050b17"/></radialGradient><radialGradient id="halo-cyan"><stop stop-color="#53ddff" stop-opacity=".5"/><stop offset="1" stop-color="#53ddff" stop-opacity="0"/></radialGradient><radialGradient id="bg-gold" cx=".4" cy=".3" r=".85"><stop stop-color="#4c300b"/><stop offset="1" stop-color="#050b17"/></radialGradient><radialGradient id="halo-gold"><stop stop-color="#ffd15d" stop-opacity=".5"/><stop offset="1" stop-color="#ffd15d" stop-opacity="0"/></radialGradient><radialGradient id="bg-violet" cx=".4" cy=".3" r=".85"><stop stop-color="#312059"/><stop offset="1" stop-color="#050b17"/></radialGradient><radialGradient id="halo-violet"><stop stop-color="#c4a1ff" stop-opacity=".5"/><stop offset="1" stop-color="#c4a1ff" stop-opacity="0"/></radialGradient><radialGradient id="bg-orange" cx=".4" cy=".3" r=".85"><stop stop-color="#5a2815"/><stop offset="1" stop-color="#050b17"/></radialGradient><radialGradient id="halo-orange"><stop stop-color="#ffb968" stop-opacity=".5"/><stop offset="1" stop-color="#ffb968" stop-opacity="0"/></radialGradient><radialGradient id="bg-green" cx=".4" cy=".3" r=".85"><stop stop-color="#0d3e32"/><stop offset="1" stop-color="#050b17"/></radialGradient><radialGradient id="halo-green"><stop stop-color="#6aefaa" stop-opacity=".5"/><stop offset="1" stop-color="#6aefaa" stop-opacity="0"/></radialGradient><radialGradient id="bg-blue" cx=".4" cy=".3" r=".85"><stop stop-color="#112c5b"/><stop offset="1" stop-color="#050b17"/></radialGradient><radialGradient id="halo-blue"><stop stop-color="#6cbaff" stop-opacity=".5"/><stop offset="1" stop-color="#6cbaff" stop-opacity="0"/></radialGradient><radialGradient id="bg-purple" cx=".4" cy=".3" r=".85"><stop stop-color="#3b1954"/><stop offset="1" stop-color="#050b17"/></radialGradient><radialGradient id="halo-purple"><stop stop-color="#d895ff" stop-opacity=".5"/><stop offset="1" stop-color="#d895ff" stop-opacity="0"/></radialGradient><radialGradient id="bg-red" cx=".4" cy=".3" r=".85"><stop stop-color="#501c29"/><stop offset="1" stop-color="#050b17"/></radialGradient><radialGradient id="halo-red"><stop stop-color="#ff8b79" stop-opacity=".5"/><stop offset="1" stop-color="#ff8b79" stop-opacity="0"/></radialGradient><g id="spark"><path d="M50 8 60 36 91 23 70 48 95 62 64 64 60 93 46 70 20 90 32 60 5 46 37 39Z" fill="currentColor" /><path d="M50 29 57 45 75 51 56 57 48 76 42 57 25 49 43 44Z" fill="#fff6dc" /></g>
+<g id="power"><path d="M19 48 50 12 81 48H63V87H37V48Z" fill="currentColor" /><path d="M50 21 71 44H56V77H46V44H30Z" fill="#fff6dc" /></g>
+<g id="speed"><path d="M13 15 51 50 13 85H35L75 50 35 15ZM51 15 89 50 51 85H70L99 50 70 15Z" fill="currentColor" /><path d="M22 28 46 50 22 72H32L58 50 32 28Z" fill="#fff6dc" /></g>
+<g id="shell"><path d="M57 10Q82 14 88 40L50 79 22 51Z" fill="url(#metal)" /><path d="M57 10 73 18 35 64 22 51Z" fill="currentColor" /><path d="M16 55 45 83 35 93 7 65Z" fill="url(#metal)" /><path d="M73 18 88 40 74 38 62 26Z" fill="#fff6dc" /><path d="M13 81 25 94 3 99Z" fill="currentColor" /></g>
+<g id="plate"><path d="M15 17 52 8 88 25 82 72 49 96 15 72Z" fill="url(#metal)" /><path d="M23 26 51 18 78 32 73 65 50 83 25 65Z" fill="currentColor" /><path d="M51 18V83L73 65 78 32Z" fill="#071a32" opacity=".55"/><path d="M27 29 48 23V32L28 39Z" fill="#fff6dc" /></g>
+<g id="shield"><path d="M50 5 89 21 84 62Q73 85 50 98 27 85 16 62L11 21Z" fill="url(#metal)" /><path d="M50 15 79 27 74 59Q65 76 50 86 35 76 26 59L21 27Z" fill="currentColor" /><path d="M50 15V86Q65 76 74 59L79 27Z" fill="#152339" opacity=".65"/><path d="M28 30 44 24V33L29 40Z" fill="#fff6dc" /></g>
+<g id="heart"><path d="M50 89 13 52C-7 23 26 2 50 29 75 2 106 24 86 53Z" fill="url(#metal)" /><path d="M50 78 23 49C10 31 29 18 50 42 71 18 90 31 77 49Z" fill="currentColor" /><path d="M24 31Q34 22 44 34L38 40Q31 32 24 38Z" fill="#fff6dc" /></g>
+<g id="heal"><use href="#heart" transform="translate(0 0) scale(1)"/><path d="M43 38H59V52H73V68H59V82H43V68H29V52H43Z" fill="#fff6dc" /></g>
+<g id="hull"><path d="M50 4 62 37 92 62V77L62 67 58 85 75 94 50 88 25 94 42 85 38 67 8 77V62L38 37Z" fill="url(#metal)" /><path d="M50 10 57 41 50 72 43 41Z" fill="currentColor" /><path d="M16 63 35 51 32 66 16 71ZM84 63 65 51 68 66 84 71Z" fill="currentColor" /><rect x="45" y="43" width="10" height="19" rx="4" fill="#fff6dc"/></g>
+<g id="repair"><use href="#hull" transform="translate(5 5) scale(0.85)"/><path d="M64 19 75 8 77 25 88 28 98 15Q105 38 84 43L51 77 40 66 73 33Q60 33 64 19Z" fill="url(#metal)" /><use href="#spark" transform="translate(-4 44) scale(0.5)"/></g>
+<g id="clock"><circle cx="50" cy="53" r="38" fill="url(#metal)" /><circle cx="50" cy="53" r="28" fill="#081323" /><path d="M47 29H55V50L71 61 66 68 47 56Z" fill="#fff6dc" /><path d="M12 22Q40 -2 77 12L85 2 88 32 59 29 68 21Q40 10 21 31Z" fill="currentColor" /><rect x="43" y="3" width="14" height="8" rx="2" fill="url(#metal)"/></g>
+<g id="duration"><circle cx="50" cy="50" r="34" fill="none" stroke="currentColor" stroke-width="13"/><path d="M50 13V3L74 19 50 36V26Z" fill="#fff6dc" /><rect x="44" y="29" width="12" height="28" rx="2" fill="#fff6dc"/><rect x="48" y="48" width="24" height="10" rx="2" fill="#fff6dc"/></g>
+<g id="battery"><rect x="20" y="19" width="61" height="70" rx="9" fill="url(#metal)"/><rect x="39" y="8" width="23" height="12" rx="2" fill="url(#metal)"/><rect x="28" y="27" width="45" height="53" rx="4" fill="#081323"/><path d="M53 29 34 55H48L42 77 66 48H51L60 29Z" fill="currentColor" /><rect x="28" y="74" width="45" height="6" rx="2" fill="#fff6dc"/></g>
+<g id="efficient"><use href="#battery" transform="translate(0 0) scale(1)"/><path d="M10 38 32 60 10 82H24L48 60 24 38Z" fill="#fff6dc" /></g>
+<g id="refund"><use href="#battery" transform="translate(25 12) scale(0.7)"/><path d="M39 13Q0 21 5 62L-2 60 17 87 33 60H20Q14 31 42 25Z" fill="#fff6dc" /></g>
+<g id="target"><circle cx="50" cy="50" r="32" fill="none" stroke="currentColor" stroke-width="10"/><circle cx="50" cy="50" r="13" fill="#fff6dc" /><path d="M45 0H55V28H45ZM45 72H55V100H45ZM0 45H28V55H0ZM72 45H100V55H72Z" fill="url(#metal)" /></g>
+<g id="skull"><path d="M19 48C8 -2 91 -2 81 48L74 65V87H26V65Z" fill="url(#metal)" /><path d="M28 31 45 39 41 55 25 47ZM72 31 55 39 59 55 75 47ZM49 49 57 65H42ZM36 72H43V91H36ZM56 72H63V91H56Z" fill="#081323" /></g>
+<g id="low"><rect x="8" y="65" width="84" height="24" rx="5" fill="url(#metal)"/><rect x="13" y="70" width="74" height="14" rx="2" fill="#081323"/><rect x="13" y="70" width="17" height="14" rx="2" fill="#ff4b66"/><rect x="35" y="59" width="5" height="35" rx="0" fill="#fff6dc"/><use href="#skull" transform="translate(24 -2) scale(0.52)"/></g>
+<g id="high"><rect x="8" y="68" width="84" height="23" rx="4" fill="url(#metal)"/><rect x="13" y="73" width="74" height="13" rx="2" fill="#77ffc9"/><use href="#spark" transform="translate(22 0) scale(0.66)"/></g>
+<g id="pierce"><use href="#plate" transform="translate(25 8) scale(0.8)"/><path d="M4 81 72 23 61 19 98 1 83 39 80 28 12 94Z" fill="#fff6dc" /><path d="M52 36 43 57 61 52 52 71 66 60 68 44Z" fill="#081323" /></g>
+<g id="break"><use href="#plate" transform="translate(0 0) scale(1)"/><path d="M54 7 41 41 58 47 37 71 51 96 62 66 51 56 70 42Z" fill="#081323" /></g>
+<g id="burst"><use href="#spark" transform="translate(0 0) scale(1)"/><circle cx="50" cy="50" r="20" fill="url(#metal)" /><circle cx="50" cy="50" r="11" fill="#fff6dc" /></g>
+<g id="flame"><path d="M56 0Q80 28 62 42L76 34Q104 75 70 94 33 109 17 77 6 51 31 30L30 51Q57 32 56 0Z" fill="currentColor" /><path d="M52 44Q78 65 64 84 44 100 32 80 28 66 44 55L42 71Q58 64 52 44Z" fill="#fff6dc" /></g>
+<g id="beam"><path d="M9 83 66 19 86 36 29 99Z" fill="currentColor" opacity=".5"/><path d="M15 87 68 22 82 31 23 96Z" fill="#fff6dc" /><path d="M2 73 26 95 41 78 19 56Z" fill="url(#metal)" /><use href="#spark" transform="translate(47 -7) scale(0.52)"/></g>
+<g id="lance"><path d="M8 100 46 34 62 29 70 10 93 0 83 34 65 44 62 61Z" fill="currentColor" /><path d="M13 94 56 38 70 30 86 8 70 44 60 46Z" fill="#fff6dc" /><path d="M33 58 46 34 62 29 53 45Z" fill="url(#metal)" /></g>
+<g id="meteor"><path d="M99 2 88 54 61 88 17 83 12 49 49 18Z" fill="currentColor" opacity=".65"/><path d="M99 2 69 48 86 20 54 53 54 28Z" fill="#fff6dc" /><circle cx="39" cy="64" r="31" fill="url(#metal)" /><path d="M20 44 47 37 65 60 50 84 22 80 9 62Z" fill="currentColor" /><path d="M20 44 37 51 25 65 9 62Z" fill="#fff6dc" /><circle cx="44" cy="67" r="9" fill="#081323" /></g>
+<g id="orbit"><circle cx="50" cy="50" r="15" fill="#fff6dc" /><ellipse cx="50" cy="50" rx="44" ry="25" transform="rotate(-30 50 50)" fill="none" stroke="currentColor" stroke-width="10"/><circle cx="14" cy="66" r="9" fill="url(#metal)" /><circle cx="84" cy="30" r="9" fill="url(#metal)" /><circle cx="68" cy="81" r="7" fill="#fff6dc" /></g>
+<g id="radius"><circle cx="50" cy="50" r="25" fill="none" stroke="currentColor" stroke-width="12"/><path d="M5 30V5H30L22 13 39 30 30 39 13 22ZM70 5H95V30L87 22 70 39 61 30 78 13ZM5 70V95H30L22 87 39 70 30 61 13 78ZM70 95H95V70L87 78 70 61 61 70 78 87Z" fill="#fff6dc" /></g>
+<g id="missile"><path d="M67 7Q91 7 92 32L54 72 28 45Z" fill="url(#metal)" /><path d="M28 45 9 54 5 77 30 65 41 96 64 82 54 72Z" fill="currentColor" /><path d="M67 7 92 32 77 34 65 22Z" fill="#fff6dc" /><path d="M14 80 27 85 6 99Z" fill="#fff6dc" /></g>
+<g id="salvo"><use href="#missile" transform="translate(-2 25) scale(0.64)"/><use href="#missile" transform="translate(33 -6) scale(0.64)"/><use href="#missile" transform="translate(20 22) scale(0.72)"/></g>
+<g id="cannon"><path d="M16 72 12 40 26 10 42 15 33 49 54 50 67 7 83 14 73 55 91 61 76 88 34 96Z" fill="url(#metal)" /><path d="M21 67 38 58 73 64 64 82 38 87Z" fill="currentColor" /><rect x="25" y="13" width="10" height="15" rx="3" fill="#081323"/><path d="M68 13 78 16 74 31 64 28Z" fill="#081323" /></g>
+<g id="rapid"><use href="#cannon" transform="translate(15 12) scale(0.8)"/><path d="M12 11 23 11 13 48 3 48ZM35 1H45L35 35H25ZM57 0H67L61 22H51Z" fill="#fff6dc" /></g>
+<g id="fan"><g transform="rotate(-42 50 88)"><path d="M46 72 47 21 50 15 53 21 54 72Z" fill="#fff6dc" /></g><g transform="rotate(-28 50 88)"><path d="M46 72 47 21 50 15 53 21 54 72Z" fill="#fff6dc" /></g><g transform="rotate(-14 50 88)"><path d="M46 72 47 21 50 15 53 21 54 72Z" fill="#fff6dc" /></g><g transform="rotate(0 50 88)"><path d="M46 72 47 21 50 15 53 21 54 72Z" fill="#fff6dc" /></g><g transform="rotate(14 50 88)"><path d="M46 72 47 21 50 15 53 21 54 72Z" fill="#fff6dc" /></g><g transform="rotate(28 50 88)"><path d="M46 72 47 21 50 15 53 21 54 72Z" fill="#fff6dc" /></g><g transform="rotate(42 50 88)"><path d="M46 72 47 21 50 15 53 21 54 72Z" fill="#fff6dc" /></g><use href="#cannon" transform="translate(30 57) scale(0.4)"/></g>
+<g id="drone"><path d="M12 25 38 38 50 29 62 38 88 25 98 45 68 61 65 82 35 82 32 61 2 45Z" fill="url(#metal)" /><path d="M34 46 50 37 66 46 61 70H39Z" fill="currentColor" /><circle cx="50" cy="56" r="9" fill="#fff6dc" /><rect x="6" y="25" width="16" height="13" rx="4" fill="#081323"/><rect x="78" y="25" width="16" height="13" rx="4" fill="#081323"/></g>
+<g id="decoy"><use href="#hull" transform="translate(0 18) scale(0.65)"/><use href="#hull" transform="translate(35 0) scale(0.65)"/><circle cx="20" cy="83" r="8" fill="#fff6dc" /><circle cx="85" cy="20" r="7" fill="#fff6dc" /></g>
+<g id="phase"><g opacity=".3"><use href="#hull" transform="translate(-7 22) scale(0.8)"/></g><g opacity=".6"><use href="#hull" transform="translate(5 11) scale(0.8)"/></g><use href="#hull" transform="translate(20 0) scale(0.8)"/></g>
+<g id="turbine"><circle cx="50" cy="50" r="38" fill="url(#metal)" /><circle cx="50" cy="50" r="28" fill="#081323" /><g transform="rotate(0 50 50)"><path d="M49 46 42 18Q65 11 77 31L58 49Z" fill="currentColor" /></g><g transform="rotate(90 50 50)"><path d="M49 46 42 18Q65 11 77 31L58 49Z" fill="currentColor" /></g><g transform="rotate(180 50 50)"><path d="M49 46 42 18Q65 11 77 31L58 49Z" fill="currentColor" /></g><g transform="rotate(270 50 50)"><path d="M49 46 42 18Q65 11 77 31L58 49Z" fill="currentColor" /></g><circle cx="50" cy="50" r="12" fill="#fff6dc" /></g>
+<g id="link"><path d="M21 73 79 27" fill="none" stroke="#fff6dc" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/><use href="#hull" transform="translate(-2 45) scale(0.48)"/><use href="#drone" transform="translate(52 -1) scale(0.48)"/></g>
+<g id="trade"><path d="M8 28H68V13L96 38 68 60V45H8ZM92 72H32V87L4 63 32 41V55H92Z" fill="currentColor" /><path d="M12 31H65V38H12ZM88 65H37V72H88Z" fill="#fff6dc" /></g>
+<g id="gem"><path d="M26 13H74L97 41 50 95 3 41Z" fill="url(#metal)" /><path d="M26 13 50 18 35 41H3ZM74 13 97 41H65L50 18ZM35 41 50 95 65 41Z" fill="currentColor" /><path d="M35 41 50 18 65 41Z" fill="#fff6dc" /></g>
+<g id="convert"><use href="#gem" transform="translate(3 50) scale(0.42)"/><path d="M19 40V20H69V9L96 29 69 50V38H35V46Z" fill="#fff6dc" /><use href="#gem" transform="translate(50 47) scale(0.5)"/></g>
+<g id="random"><use href="#convert" transform="translate(0 0) scale(1)"/><use href="#gem" transform="translate(-2 -2) scale(0.36)"/><path d="M22 14 50 30V49H40V36L18 24Z" fill="currentColor" /></g>
+<g id="chain"><path d="M15 77 48 49 80 18" fill="none" stroke="#fff6dc" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/><use href="#skull" transform="translate(5 61) scale(0.37)"/><use href="#skull" transform="translate(33 33) scale(0.37)"/><use href="#skull" transform="translate(60 3) scale(0.37)"/></g>
+<g id="shieldPower"><use href="#shield" transform="translate(1 3) scale(0.7)"/><use href="#shell" transform="translate(37 37) scale(0.64)"/></g>
+<g id="healthPower"><use href="#heart" transform="translate(0 15) scale(0.69)"/><use href="#flame" transform="translate(44 20) scale(0.55)"/></g>
+<g id="healClock"><use href="#heal" transform="translate(-3 23) scale(0.66)"/><use href="#clock" transform="translate(43 0) scale(0.6)"/></g>
+<g id="split"><use href="#shell" transform="translate(0 49) scale(0.5)"/><path d="M35 63 39 34 61 18 68 26 49 40 47 57ZM48 59H80V49L98 64 80 79V69H43Z" fill="#fff6dc" /></g>
+<g id="ricochet"><circle cx="79" cy="18" r="12" fill="url(#metal)" /><circle cx="80" cy="80" r="12" fill="url(#metal)" /><path d="M3 91 49 17H64L17 92ZM53 25Q90 34 77 66L88 68 66 88 61 57 69 61Q81 38 53 35Z" fill="#fff6dc" /></g>
+<g id="lightning"><path d="M53 1 14 55H43L32 99 90 35H58L77 1Z" fill="#fff6dc" /></g>
+<g id="lock"><rect x="17" y="45" width="66" height="49" rx="7" fill="url(#metal)"/><path d="M30 47V26A20 20 0 0 1 70 26V47" fill="none" stroke="currentColor" stroke-width="13"/><circle cx="50" cy="65" r="9" fill="#081323" /><rect x="46" y="65" width="8" height="16" rx="2" fill="#081323"/></g>
+<g id="cleanse"><use href="#shield" transform="translate(0 0) scale(1)"/><path d="M4 58 23 38 37 52 27 62 19 54 13 60ZM63 57 75 45 89 59 82 67 75 60 68 67Z" fill="#fff6dc" /><path d="M43 34 38 57 49 49 43 75 61 44 49 50Z" fill="#fff6dc" /></g>
+<g id="slow"><use href="#orbit" transform="translate(0 0) scale(1)"/><path d="M7 75H29V85H7ZM2 54H21V62H2ZM5 32H24V39H5Z" fill="url(#metal)" /><use href="#shell" transform="translate(67 56) scale(0.35)"/></g>
+<g id="wing"><path d="M2 20 36 35 43 87 8 65ZM98 20 64 35 57 87 92 65Z" fill="url(#metal)" /><path d="M12 35 28 44 32 70 16 59ZM88 35 72 44 68 70 84 59Z" fill="currentColor" /></g>
+<g id="debt"><use href="#clock" transform="translate(0 0) scale(1)"/><path d="M67 20A37 37 0 0 1 84 69L72 63A23 23 0 0 0 60 32Z" fill="#ff4b66" /></g>
+<g id="close"><use href="#hull" transform="translate(-4 45) scale(0.51)"/><use href="#target" transform="translate(53 0) scale(0.53)"/><path d="M33 48 47 39 42 27 71 30 66 58 57 48 42 60Z" fill="#fff6dc" /></g>
+<g id="far"><use href="#hull" transform="translate(-6 58) scale(0.4)"/><use href="#target" transform="translate(66 -3) scale(0.39)"/><path d="M20 73 75 16 83 24 27 81Z" fill="#fff6dc" /></g>
+<g id="grid"><path d="M15 20 85 80M15 80 85 20M15 20V80H85V20Z" fill="none" stroke="#fff6dc" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><use href="#target" transform="translate(-7 -7) scale(0.43)"/><use href="#target" transform="translate(64 64) scale(0.43)"/></g>
+<g id="crowd"><use href="#hull" transform="translate(0 49) scale(0.5)"/><use href="#hull" transform="translate(26 24) scale(0.5)"/><use href="#hull" transform="translate(51 -1) scale(0.5)"/></g>
+<g id="hack"><use href="#hull" transform="translate(26 20) scale(0.74)"/><path d="M5 27Q39 -3 66 18L57 28Q33 13 12 37ZM16 43Q34 25 52 38L45 49Q34 40 24 53Z" fill="#fff6dc" /><circle cx="33" cy="59" r="7" fill="#fff6dc" /></g>
+<g id="bank"><path d="M22 10H73L88 27V81L72 96H23L9 79V26Z" fill="url(#metal)" /><path d="M30 21H65L77 32V72L62 86H32L20 72V34Z" fill="#081323" /><use href="#orbit" transform="translate(20 18) scale(0.6)"/></g>
+<g id="pulse"><circle cx="50" cy="50" r="38" fill="none" stroke="currentColor" stroke-width="9"/><circle cx="50" cy="50" r="24" fill="none" stroke="#fff6dc" stroke-width="7"/><circle cx="50" cy="50" r="10" fill="#fff6dc" /></g>
+<g id="gravity"><circle cx="50" cy="50" r="34" fill="none" stroke="currentColor" stroke-width="13"/><circle cx="50" cy="50" r="23" fill="#081323" /><path d="M0 12 27 22 10 35 13 25ZM99 83 72 75 89 62 85 74ZM77 0 68 26 56 9 67 14Z" fill="#fff6dc" /></g>
+<g id="intercept"><use href="#missile" transform="translate(-5 25) scale(0.73)"/><use href="#shell" transform="translate(48 -2) scale(0.5)"/><use href="#burst" transform="translate(43 36) scale(0.55)"/></g>
+<g id="scrap"><path d="M12 31 36 17 51 44 28 63ZM60 12 88 25 73 47 53 34ZM57 60 81 53 93 79 68 92Z" fill="url(#metal)" /><path d="M3 66 23 61 24 83 10 94ZM42 83 50 65 61 74 54 97Z" fill="currentColor" /></g>
+<g id="valve"><circle cx="49" cy="44" r="32" fill="url(#metal)" /><circle cx="49" cy="44" r="20" fill="#081323" /><path d="M39 19H59V34H75V54H59V70H39V54H23V34H39Z" fill="currentColor" /><path d="M50 64Q30 87 50 99 70 87 50 64Z" fill="#fff6dc" /></g>
+<g id="eye"><path d="M0 52Q48 -7 100 52 50 112 0 52Z" fill="url(#metal)" /><path d="M13 52Q50 18 87 52 50 85 13 52Z" fill="#081323" /><circle cx="50" cy="52" r="22" fill="currentColor" /><circle cx="50" cy="52" r="10" fill="#fff6dc" /></g>
+<g id="gauntlet"><path d="M19 16 35 10 43 29 51 6 64 9 65 31 79 17 90 26 76 53 84 66 61 93 25 81 10 50Z" fill="url(#metal)" /><use href="#gem" transform="translate(24 34) scale(0.47)"/></g>
+<g id="scope"><use href="#target" transform="translate(0 0) scale(1)"/><path d="M53 43 69 33 82 40 72 53Z" fill="#fff6dc" /></g>
+<g id="capacitor"><use href="#shell" transform="translate(12 15) scale(0.8)"/><path d="M7 44H22V64H7ZM20 19H35V35H20ZM44 1H58V14H44Z" fill="#fff6dc" /><use href="#lightning" transform="translate(45 48) scale(0.47)"/></g>
+<g id="stable"><use href="#cannon" transform="translate(12 -2) scale(0.8)"/><path d="M4 84H92V96H4ZM14 63H25V84H14ZM70 63H81V84H70Z" fill="#fff6dc" /></g>
+<g id="loader"><circle cx="49" cy="56" r="35" fill="url(#metal)" /><circle cx="49" cy="56" r="18" fill="#081323" /><g transform="rotate(0 49 56)"><rect x="43" y="25" width="12" height="16" rx="4" fill="currentColor"/></g><g transform="rotate(72 49 56)"><rect x="43" y="25" width="12" height="16" rx="4" fill="currentColor"/></g><g transform="rotate(144 49 56)"><rect x="43" y="25" width="12" height="16" rx="4" fill="currentColor"/></g><g transform="rotate(216 49 56)"><rect x="43" y="25" width="12" height="16" rx="4" fill="currentColor"/></g><g transform="rotate(288 49 56)"><rect x="43" y="25" width="12" height="16" rx="4" fill="currentColor"/></g><use href="#shell" transform="translate(51 -9) scale(0.48)"/></g>
+<g id="neutron"><use href="#meteor" transform="translate(0 0) scale(1)"/><circle cx="39" cy="64" r="19" fill="#081323" /><circle cx="39" cy="64" r="12" fill="#fff6dc" /><circle cx="39" cy="64" r="26" fill="none" stroke="currentColor" stroke-width="4"/></g>
+<g id="lane"><path d="M5 95 33 5H43L15 95ZM65 95 93 5H103L75 95Z" fill="url(#metal)" /><use href="#lance" transform="translate(16 2) scale(0.78)"/></g>
+<g id="execute"><use href="#target" transform="translate(40 0) scale(0.59)"/><use href="#lance" transform="translate(0 13) scale(0.82)"/><use href="#low" transform="translate(0 63) scale(0.59)"/></g>
+<g id="laserExecute"><use href="#target" transform="translate(40 0) scale(0.59)"/><use href="#beam" transform="translate(0 13) scale(0.82)"/><use href="#low" transform="translate(0 63) scale(0.59)"/></g>
+<g id="overflow"><use href="#heart" transform="translate(-2 -2) scale(0.75)"/><use href="#shield" transform="translate(43 40) scale(0.61)"/><path d="M38 60Q39 81 59 81V70L82 86 59 99V89Q27 89 28 60Z" fill="#fff6dc" /></g>
+<g id="three"><use href="#shell" transform="translate(-1 44) scale(0.48)"/><use href="#shell" transform="translate(19 21) scale(0.48)"/><use href="#shell" transform="translate(43 -1) scale(0.58)"/></g>
+<g id="nodes"><use href="#clock" transform="translate(-3 43) scale(0.5)"/><use href="#clock" transform="translate(49 43) scale(0.5)"/><use href="#clock" transform="translate(23 -5) scale(0.5)"/><path d="M27 62 50 34 73 62" fill="none" stroke="#fff6dc" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g id="bounty"><use href="#target" transform="translate(3 -1) scale(0.83)"/><use href="#gem" transform="translate(48 47) scale(0.52)"/></g>
+<g id="freeCast"><use href="#battery" transform="translate(26 13) scale(0.7)"/><path d="M49 60H87V72H49Z" fill="#fff6dc" /><circle cx="9" cy="14" r="8" fill="currentColor" /><circle cx="32" cy="14" r="8" fill="currentColor" /><circle cx="55" cy="14" r="8" fill="currentColor" /><circle cx="78" cy="14" r="8" fill="#fff6dc" /><path d="M18 69V87H62V76H74V98H7V69Z" fill="currentColor" /></g>
+<g id="thirdShot"><use href="#shell" transform="translate(-2 40) scale(0.42)"/><use href="#shell" transform="translate(20 19) scale(0.42)"/><use href="#shell" transform="translate(43 -2) scale(0.49)"/><path d="M48 52Q83 48 85 75H94L80 96 66 75H75Q76 59 48 62Z" fill="#fff6dc" /></g>
+<g id="specialize"><use href="#hull" transform="translate(10 28) scale(0.7)"/><rect x="4" y="1" width="26" height="22" rx="4" fill="url(#metal)"/><rect x="37" y="1" width="26" height="22" rx="4" fill="url(#metal)"/><rect x="70" y="1" width="26" height="22" rx="4" fill="url(#metal)"/><path d="M0 0 27 25M33 0 60 25M66 0 93 25" fill="none" stroke="#ff657e" stroke-width="7"/></g>
+<g id="balance"><use href="#shell" transform="translate(-2 20) scale(0.5)"/><use href="#shieldPower" transform="translate(26 27) scale(0.5)"/><use href="#shield" transform="translate(55 32) scale(0.46)"/><rect x="3" y="4" width="29" height="9" rx="2" fill="#6aefaa"/><rect x="36" y="4" width="19" height="9" rx="2" fill="#ffd15d"/><rect x="69" y="4" width="7" height="9" rx="2" fill="#ff657e"/></g>
+<g id="data"><use href="#target" transform="translate(32 -2) scale(0.64)"/><rect x="3" y="61" width="13" height="13" rx="3" fill="#fff6dc"/><rect x="22" y="50" width="13" height="13" rx="3" fill="#fff6dc"/><rect x="41" y="39" width="13" height="13" rx="3" fill="#fff6dc"/><path d="M9 88H72V70H82V98H9Z" fill="currentColor" /></g>
+<g id="dense"><circle cx="50" cy="50" r="33" fill="url(#metal)" /><circle cx="50" cy="50" r="25" fill="#081323" /><use href="#spark" transform="translate(22 22) scale(0.56)"/><path d="M0 5 28 25 10 32ZM100 5 72 25 90 32ZM0 95 28 75 10 68ZM100 95 72 75 90 68Z" fill="#fff6dc" /></g></defs>
+<g id="core-001" transform="translate(0 0)" color="#ff8b79" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ff8b79" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#shell" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#power" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-002" transform="translate(128 0)" color="#6aefaa" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-green)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#6aefaa" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-green)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#6aefaa" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#plate" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#6aefaa" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#shield" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-003" transform="translate(256 0)" color="#ff8b79" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ff8b79" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#cannon" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#speed" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-004" transform="translate(384 0)" color="#6aefaa" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-green)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#6aefaa" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-green)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#6aefaa" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#hull" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#6aefaa" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#heart" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-005" transform="translate(512 0)" color="#6aefaa" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-green)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#6aefaa" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-green)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#6aefaa" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#repair" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#6aefaa" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#heal" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-006" transform="translate(640 0)" color="#d895ff" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-purple)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#d895ff" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-purple)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#d895ff" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#clock" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#d895ff" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#speed" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-007" transform="translate(768 0)" color="#ff8b79" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ff8b79" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#shell" transform="translate(0 0) scale(1)"/><g transform="translate(0 62) scale(.36)" color="#fff6dc"><use href="#pierce" transform="translate(0 0) scale(1)"/></g></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#power" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-008" transform="translate(896 0)" color="#6aefaa" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-green)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#6aefaa" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-green)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#6aefaa" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#shield" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#6aefaa" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#plate" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-009" transform="translate(1024 0)" color="#ff8b79" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ff8b79" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#loader" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#speed" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-010" transform="translate(1152 0)" color="#6aefaa" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-green)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#6aefaa" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-green)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#6aefaa" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#hull" transform="translate(0 0) scale(1)"/><g transform="translate(0 62) scale(.36)" color="#fff6dc"><use href="#plate" transform="translate(0 0) scale(1)"/></g></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#6aefaa" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#heart" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-011" transform="translate(1280 0)" color="#6aefaa" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-green)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#6aefaa" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-green)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#6aefaa" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#repair" transform="translate(0 0) scale(1)"/><g transform="translate(0 62) scale(.36)" color="#fff6dc"><use href="#scrap" transform="translate(0 0) scale(1)"/></g></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#6aefaa" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#heal" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-012" transform="translate(1408 0)" color="#d895ff" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-purple)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#d895ff" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-purple)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#d895ff" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#clock" transform="translate(0 0) scale(1)"/><g transform="translate(0 62) scale(.36)" color="#fff6dc"><use href="#lightning" transform="translate(0 0) scale(1)"/></g></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#d895ff" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#speed" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-013" transform="translate(1536 0)" color="#ff8b79" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ff8b79" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#cannon" transform="translate(0 0) scale(1)"/><g transform="translate(0 62) scale(.36)" color="#fff6dc"><use href="#shell" transform="translate(0 0) scale(1)"/></g></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#burst" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-014" transform="translate(1664 0)" color="#6aefaa" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-green)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#6aefaa" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-green)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#6aefaa" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#shield" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#6aefaa" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#gem" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-015" transform="translate(0 128)" color="#ff8b79" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ff8b79" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#rapid" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#speed" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-016" transform="translate(128 128)" color="#6aefaa" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-green)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#6aefaa" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-green)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#6aefaa" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#hull" transform="translate(0 0) scale(1)"/><g transform="translate(0 62) scale(.36)" color="#fff6dc"><use href="#heart" transform="translate(0 0) scale(1)"/></g></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#6aefaa" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#shield" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-017" transform="translate(256 128)" color="#6aefaa" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-green)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#6aefaa" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-green)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#6aefaa" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#repair" transform="translate(0 0) scale(1)"/><g transform="translate(0 62) scale(.36)" color="#fff6dc"><use href="#hull" transform="translate(0 0) scale(1)"/></g></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#6aefaa" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#pulse" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-018" transform="translate(384 128)" color="#d895ff" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-purple)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#d895ff" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-purple)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#d895ff" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#clock" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#d895ff" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#gravity" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-019" transform="translate(512 128)" color="#53ddff" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-cyan)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#53ddff" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-cyan)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#53ddff" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#decoy" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#53ddff" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#duration" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-020" transform="translate(640 128)" color="#53ddff" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-cyan)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#53ddff" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-cyan)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#53ddff" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#decoy" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#53ddff" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#clock" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-021" transform="translate(768 128)" color="#53ddff" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-cyan)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#53ddff" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-cyan)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#53ddff" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#decoy" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#53ddff" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#power" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-022" transform="translate(896 128)" color="#53ddff" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-cyan)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#53ddff" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-cyan)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#53ddff" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#turbine" transform="translate(0 0) scale(1)"/><g transform="translate(0 62) scale(.36)" color="#fff6dc"><use href="#flame" transform="translate(0 0) scale(1)"/></g></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#53ddff" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#duration" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-023" transform="translate(1024 128)" color="#53ddff" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-cyan)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#53ddff" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-cyan)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#53ddff" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#turbine" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#53ddff" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#speed" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-024" transform="translate(1152 128)" color="#53ddff" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-cyan)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#53ddff" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-cyan)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#53ddff" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#turbine" transform="translate(0 0) scale(1)"/><g transform="translate(0 62) scale(.36)" color="#fff6dc"><use href="#shield" transform="translate(0 0) scale(1)"/></g></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#53ddff" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#cleanse" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-025" transform="translate(1280 128)" color="#53ddff" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-cyan)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#53ddff" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-cyan)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#53ddff" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#salvo" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#53ddff" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#split" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-026" transform="translate(1408 128)" color="#53ddff" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-cyan)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#53ddff" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-cyan)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#53ddff" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#missile" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#53ddff" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#burst" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-027" transform="translate(1536 128)" color="#53ddff" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-cyan)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#53ddff" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-cyan)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#53ddff" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#missile" transform="translate(0 0) scale(1)"/><g transform="translate(0 62) scale(.36)" color="#fff6dc"><use href="#break" transform="translate(0 0) scale(1)"/></g></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#53ddff" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#flame" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-028" transform="translate(1664 128)" color="#ffd15d" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-gold)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffd15d" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-gold)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ffd15d" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#shield" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffd15d" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#shield" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-029" transform="translate(0 256)" color="#ffd15d" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-gold)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffd15d" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-gold)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ffd15d" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#shield" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffd15d" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#duration" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-030" transform="translate(128 256)" color="#ffd15d" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-gold)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffd15d" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-gold)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ffd15d" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#shield" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffd15d" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#plate" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-031" transform="translate(256 256)" color="#ffd15d" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-gold)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffd15d" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-gold)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ffd15d" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#burst" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffd15d" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#clock" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-032" transform="translate(384 256)" color="#ffd15d" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-gold)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffd15d" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-gold)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ffd15d" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#burst" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffd15d" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#power" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-033" transform="translate(512 256)" color="#ffd15d" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-gold)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffd15d" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-gold)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ffd15d" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#burst" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffd15d" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#pulse" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-034" transform="translate(640 256)" color="#ffd15d" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-gold)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffd15d" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-gold)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ffd15d" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#cannon" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffd15d" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#power" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-035" transform="translate(768 256)" color="#ffd15d" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-gold)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffd15d" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-gold)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ffd15d" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#fan" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffd15d" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#shield" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-036" transform="translate(896 256)" color="#ffd15d" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-gold)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffd15d" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-gold)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ffd15d" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#fan" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffd15d" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#radius" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-037" transform="translate(1024 256)" color="#c4a1ff" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-violet)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#c4a1ff" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-violet)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#c4a1ff" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#phase" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#c4a1ff" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#duration" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-038" transform="translate(1152 256)" color="#c4a1ff" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-violet)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#c4a1ff" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-violet)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#c4a1ff" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#phase" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#c4a1ff" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#heal" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-039" transform="translate(1280 256)" color="#c4a1ff" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-violet)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#c4a1ff" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-violet)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#c4a1ff" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#phase" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#c4a1ff" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#efficient" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-040" transform="translate(1408 256)" color="#c4a1ff" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-violet)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#c4a1ff" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-violet)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#c4a1ff" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#beam" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#c4a1ff" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#duration" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-041" transform="translate(1536 256)" color="#c4a1ff" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-violet)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#c4a1ff" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-violet)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#c4a1ff" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#beam" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#c4a1ff" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#capacitor" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-042" transform="translate(1664 256)" color="#c4a1ff" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-violet)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#c4a1ff" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-violet)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#c4a1ff" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#beam" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#c4a1ff" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#efficient" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-043" transform="translate(0 384)" color="#c4a1ff" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-violet)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#c4a1ff" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-violet)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#c4a1ff" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#drone" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#c4a1ff" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#efficient" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-044" transform="translate(128 384)" color="#c4a1ff" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-violet)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#c4a1ff" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-violet)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#c4a1ff" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#drone" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#c4a1ff" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#speed" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-045" transform="translate(256 384)" color="#c4a1ff" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-violet)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#c4a1ff" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-violet)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#c4a1ff" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#link" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#c4a1ff" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#power" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-046" transform="translate(384 384)" color="#ff8b79" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ff8b79" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#bank" transform="translate(0 0) scale(1)"/><g transform="translate(0 62) scale(.36)" color="#fff6dc"><use href="#skull" transform="translate(0 0) scale(1)"/></g></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#power" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-047" transform="translate(512 384)" color="#6aefaa" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-green)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#6aefaa" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-green)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#6aefaa" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#plate" transform="translate(0 0) scale(1)"/><g transform="translate(0 62) scale(.36)" color="#fff6dc"><use href="#skull" transform="translate(0 0) scale(1)"/></g></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#6aefaa" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#power" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-048" transform="translate(640 384)" color="#6aefaa" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-green)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#6aefaa" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-green)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#6aefaa" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#heart" transform="translate(0 0) scale(1)"/><g transform="translate(0 62) scale(.36)" color="#fff6dc"><use href="#skull" transform="translate(0 0) scale(1)"/></g></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#6aefaa" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#power" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-049" transform="translate(768 384)" color="#d895ff" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-purple)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#d895ff" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-purple)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#d895ff" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#hull" transform="translate(0 0) scale(1)"/><g transform="translate(0 62) scale(.36)" color="#fff6dc"><use href="#lock" transform="translate(0 0) scale(1)"/></g></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#d895ff" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#shieldPower" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-050" transform="translate(896 384)" color="#ffd15d" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-purple)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffd15d" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-purple)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ffd15d" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#convert" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffd15d" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#gem" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-051" transform="translate(1024 384)" color="#97f4ff" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-purple)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#97f4ff" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-purple)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#97f4ff" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#convert" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#97f4ff" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#gem" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-052" transform="translate(1152 384)" color="#d895ff" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-purple)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#d895ff" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-purple)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#d895ff" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#random" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#d895ff" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#split" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-053" transform="translate(1280 384)" color="#ff8b79" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ff8b79" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#gauntlet" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#spark" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-054" transform="translate(1408 384)" color="#d895ff" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-purple)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#d895ff" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-purple)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#d895ff" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#cannon" transform="translate(0 0) scale(1)"/><g transform="translate(0 62) scale(.36)" color="#fff6dc"><use href="#shell" transform="translate(0 0) scale(1)"/></g></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#d895ff" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#trade" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-055" transform="translate(1536 384)" color="#ff8b79" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ff8b79" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#scope" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#spark" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-056" transform="translate(1664 384)" color="#ff8b79" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ff8b79" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#shell" transform="translate(0 0) scale(1)"/><g transform="translate(0 62) scale(.36)" color="#fff6dc"><use href="#target" transform="translate(0 0) scale(1)"/></g></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#spark" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-057" transform="translate(0 512)" color="#ff8b79" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ff8b79" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#pierce" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#break" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-058" transform="translate(128 512)" color="#ff8b79" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ff8b79" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#target" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#break" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-059" transform="translate(256 512)" color="#ff8b79" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ff8b79" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#capacitor" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#lightning" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-060" transform="translate(384 512)" color="#ff8b79" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ff8b79" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#stable" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#duration" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-061" transform="translate(512 512)" color="#6aefaa" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-green)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#6aefaa" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-green)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#6aefaa" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#hull" transform="translate(0 0) scale(1)"/><g transform="translate(0 62) scale(.36)" color="#fff6dc"><use href="#shell" transform="translate(0 0) scale(1)"/></g></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#6aefaa" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#plate" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-062" transform="translate(640 512)" color="#6aefaa" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-green)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#6aefaa" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-green)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#6aefaa" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#valve" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#6aefaa" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#low" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-063" transform="translate(768 512)" color="#d895ff" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-purple)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#d895ff" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-purple)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#d895ff" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#healthPower" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#d895ff" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#low" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-064" transform="translate(896 512)" color="#6aefaa" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-green)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#6aefaa" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-green)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#6aefaa" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#heal" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#6aefaa" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#skull" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-065" transform="translate(1024 512)" color="#6aefaa" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-green)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#6aefaa" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-green)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#6aefaa" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#hull" transform="translate(0 0) scale(1)"/><g transform="translate(0 62) scale(.36)" color="#fff6dc"><use href="#burst" transform="translate(0 0) scale(1)"/></g></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#6aefaa" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#shield" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-066" transform="translate(1152 512)" color="#ff8b79" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ff8b79" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#chain" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#power" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-067" transform="translate(1280 512)" color="#ff8b79" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ff8b79" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#target" transform="translate(0 0) scale(1)"/><g transform="translate(0 62) scale(.36)" color="#fff6dc"><use href="#hull" transform="translate(0 0) scale(1)"/></g></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#power" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-068" transform="translate(1408 512)" color="#ff8b79" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ff8b79" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#execute" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#low" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-069" transform="translate(1536 512)" color="#ff8b79" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ff8b79" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#shell" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#high" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-070" transform="translate(1664 512)" color="#d895ff" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-purple)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#d895ff" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-purple)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#d895ff" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#nodes" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#d895ff" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#skull" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-071" transform="translate(0 640)" color="#ff8b79" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ff8b79" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#rapid" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#pulse" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-072" transform="translate(128 640)" color="#6aefaa" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-green)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#6aefaa" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-green)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#6aefaa" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#shield" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#6aefaa" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#duration" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-073" transform="translate(256 640)" color="#ff8b79" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ff8b79" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#burst" transform="translate(0 0) scale(1)"/><g transform="translate(0 62) scale(.36)" color="#fff6dc"><use href="#skull" transform="translate(0 0) scale(1)"/></g></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#split" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-074" transform="translate(384 640)" color="#d895ff" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-purple)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#d895ff" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-purple)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#d895ff" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#nodes" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#d895ff" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#spark" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-075" transform="translate(512 640)" color="#ff8b79" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ff8b79" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#chain" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#break" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-076" transform="translate(640 640)" color="#6aefaa" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-green)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#6aefaa" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-green)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#6aefaa" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#shield" transform="translate(0 0) scale(1)"/><g transform="translate(0 62) scale(.36)" color="#fff6dc"><use href="#shell" transform="translate(0 0) scale(1)"/></g></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#6aefaa" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#heart" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-077" transform="translate(768 640)" color="#d895ff" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-purple)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#d895ff" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-purple)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#d895ff" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#healClock" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#d895ff" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#skull" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-078" transform="translate(896 640)" color="#6cbaff" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-blue)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#6cbaff" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-blue)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#6cbaff" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#battery" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#6cbaff" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#chain" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-079" transform="translate(1024 640)" color="#ff8b79" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ff8b79" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#thirdShot" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#target" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-080" transform="translate(1152 640)" color="#ff8b79" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ff8b79" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#ricochet" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#shell" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-081" transform="translate(1280 640)" color="#6aefaa" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-green)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#6aefaa" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-green)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#6aefaa" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#shield" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#6aefaa" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#pulse" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-082" transform="translate(1408 640)" color="#ff8b79" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ff8b79" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#rapid" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#duration" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-083" transform="translate(1536 640)" color="#ff8b79" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ff8b79" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#shell" transform="translate(0 0) scale(1)"/><g transform="translate(0 62) scale(.36)" color="#fff6dc"><use href="#shield" transform="translate(0 0) scale(1)"/></g></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#trade" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-084" transform="translate(1664 640)" color="#6cbaff" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-blue)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#6cbaff" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-blue)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#6cbaff" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#freeCast" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#6cbaff" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#efficient" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-085" transform="translate(0 768)" color="#d895ff" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-purple)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#d895ff" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-purple)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#d895ff" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#cannon" transform="translate(0 0) scale(1)"/><g transform="translate(0 62) scale(.36)" color="#fff6dc"><use href="#break" transform="translate(0 0) scale(1)"/></g></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#d895ff" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#trade" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-086" transform="translate(128 768)" color="#6cbaff" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-blue)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#6cbaff" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-blue)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#6cbaff" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#battery" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#6cbaff" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#lightning" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-087" transform="translate(256 768)" color="#ff8b79" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ff8b79" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#eye" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#spark" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-088" transform="translate(384 768)" color="#ff8b79" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ff8b79" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#pierce" transform="translate(0 0) scale(1)"/><g transform="translate(0 62) scale(.36)" color="#fff6dc"><use href="#plate" transform="translate(0 0) scale(1)"/></g></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#power" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-089" transform="translate(512 768)" color="#ff8b79" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ff8b79" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#pierce" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#crowd" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-090" transform="translate(640 768)" color="#6aefaa" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-green)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#6aefaa" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-green)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#6aefaa" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#heal" transform="translate(0 0) scale(1)"/><g transform="translate(0 62) scale(.36)" color="#fff6dc"><use href="#shield" transform="translate(0 0) scale(1)"/></g></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#6aefaa" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#low" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-091" transform="translate(768 768)" color="#ff8b79" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ff8b79" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#flame" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#low" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-092" transform="translate(896 768)" color="#6aefaa" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-green)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#6aefaa" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-green)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#6aefaa" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#repair" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#6aefaa" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#duration" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-093" transform="translate(1024 768)" color="#d895ff" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-purple)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#d895ff" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-purple)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#d895ff" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#nodes" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#d895ff" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#clock" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-094" transform="translate(1152 768)" color="#d895ff" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-purple)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#d895ff" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-purple)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#d895ff" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#healthPower" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#d895ff" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#trade" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-095" transform="translate(1280 768)" color="#d895ff" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-purple)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#d895ff" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-purple)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#d895ff" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#gem" transform="translate(0 0) scale(1)"/><g transform="translate(0 62) scale(.36)" color="#fff6dc"><use href="#spark" transform="translate(0 0) scale(1)"/></g></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#d895ff" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#lock" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-096" transform="translate(1408 768)" color="#d895ff" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-purple)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#d895ff" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-purple)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#d895ff" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#heart" transform="translate(0 0) scale(1)"/><g transform="translate(0 62) scale(.36)" color="#fff6dc"><use href="#trade" transform="translate(0 0) scale(1)"/></g></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#d895ff" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#clock" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-097" transform="translate(1536 768)" color="#d895ff" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-purple)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#d895ff" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-purple)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#d895ff" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#specialize" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#d895ff" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#shieldPower" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-098" transform="translate(1664 768)" color="#6aefaa" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-green)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#6aefaa" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-green)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#6aefaa" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#shield" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#6aefaa" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#cleanse" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-099" transform="translate(0 896)" color="#6aefaa" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-green)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#6aefaa" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-green)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#6aefaa" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#battery" transform="translate(0 0) scale(1)"/><g transform="translate(0 62) scale(.36)" color="#fff6dc"><use href="#low" transform="translate(0 0) scale(1)"/></g></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#6aefaa" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#shield" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-100" transform="translate(128 896)" color="#d895ff" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-purple)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#d895ff" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-purple)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#d895ff" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#balance" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#d895ff" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#trade" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-101" transform="translate(256 896)" color="#ff8b79" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ff8b79" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#close" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#power" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-102" transform="translate(384 896)" color="#ff8b79" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ff8b79" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#far" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#power" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-103" transform="translate(512 896)" color="#6aefaa" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-green)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#6aefaa" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-green)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#6aefaa" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#hull" transform="translate(0 0) scale(1)"/><g transform="translate(0 62) scale(.36)" color="#fff6dc"><use href="#low" transform="translate(0 0) scale(1)"/></g></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#6aefaa" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#shield" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-104" transform="translate(640 896)" color="#6aefaa" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-green)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#6aefaa" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-green)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#6aefaa" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#overflow" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#6aefaa" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#shield" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-105" transform="translate(768 896)" color="#ff8b79" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ff8b79" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#spark" transform="translate(0 0) scale(1)"/><g transform="translate(0 62) scale(.36)" color="#fff6dc"><use href="#crowd" transform="translate(0 0) scale(1)"/></g></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#lightning" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-106" transform="translate(896 896)" color="#ff8b79" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ff8b79" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#salvo" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#clock" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-107" transform="translate(1024 896)" color="#6cbaff" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-blue)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#6cbaff" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-blue)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#6cbaff" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#hull" transform="translate(0 0) scale(1)"/><g transform="translate(0 62) scale(.36)" color="#fff6dc"><use href="#shell" transform="translate(0 0) scale(1)"/></g></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#6cbaff" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#battery" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-108" transform="translate(1152 896)" color="#6aefaa" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-green)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#6aefaa" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-green)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#6aefaa" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#scrap" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#6aefaa" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#heal" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-109" transform="translate(1280 896)" color="#6aefaa" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-green)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#6aefaa" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-green)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#6aefaa" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#wing" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#6aefaa" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#clock" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-110" transform="translate(1408 896)" color="#6aefaa" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-green)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#6aefaa" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-green)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#6aefaa" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#shield" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#6aefaa" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#burst" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-111" transform="translate(1536 896)" color="#ff8b79" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ff8b79" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#shell" transform="translate(0 0) scale(1)"/><g transform="translate(0 62) scale(.36)" color="#fff6dc"><use href="#pulse" transform="translate(0 0) scale(1)"/></g></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#speed" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-112" transform="translate(1664 896)" color="#ff8b79" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ff8b79" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#grid" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#target" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-113" transform="translate(0 1024)" color="#d895ff" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-purple)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#d895ff" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-purple)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#d895ff" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#debt" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#d895ff" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#trade" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-114" transform="translate(128 1024)" color="#ff8b79" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ff8b79" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#three" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#pulse" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-115" transform="translate(256 1024)" color="#ff8b79" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ff8b79" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#target" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#radius" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-116" transform="translate(384 1024)" color="#d895ff" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-purple)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#d895ff" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-purple)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#d895ff" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#cleanse" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#d895ff" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#power" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-117" transform="translate(512 1024)" color="#ff8b79" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ff8b79" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#shell" transform="translate(0 0) scale(1)"/><g transform="translate(0 62) scale(.36)" color="#fff6dc"><use href="#high" transform="translate(0 0) scale(1)"/></g></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#spark" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-118" transform="translate(640 1024)" color="#ff8b79" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ff8b79" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#crowd" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#power" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-119" transform="translate(768 1024)" color="#6aefaa" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-green)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#6aefaa" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-green)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#6aefaa" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#slow" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#6aefaa" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#clock" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-120" transform="translate(896 1024)" color="#d895ff" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-purple)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#d895ff" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-purple)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#d895ff" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#hack" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#d895ff" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#trade" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-121" transform="translate(1024 1024)" color="#ff8b79" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ff8b79" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#bank" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#pulse" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-122" transform="translate(1152 1024)" color="#53ddff" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-cyan)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#53ddff" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-cyan)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#53ddff" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#decoy" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#53ddff" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#refund" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-123" transform="translate(1280 1024)" color="#53ddff" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-cyan)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#53ddff" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-cyan)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#53ddff" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#decoy" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#53ddff" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#pulse" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-124" transform="translate(1408 1024)" color="#53ddff" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-cyan)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#53ddff" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-cyan)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#53ddff" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#decoy" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#53ddff" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#shield" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-125" transform="translate(1536 1024)" color="#53ddff" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-cyan)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#53ddff" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-cyan)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#53ddff" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#turbine" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#53ddff" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#clock" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-126" transform="translate(1664 1024)" color="#53ddff" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-cyan)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#53ddff" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-cyan)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#53ddff" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#turbine" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#53ddff" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#refund" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-127" transform="translate(0 1152)" color="#53ddff" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-cyan)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#53ddff" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-cyan)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#53ddff" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#turbine" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#53ddff" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#ricochet" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-128" transform="translate(128 1152)" color="#53ddff" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-cyan)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#53ddff" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-cyan)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#53ddff" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#salvo" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#53ddff" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#clock" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-129" transform="translate(256 1152)" color="#53ddff" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-cyan)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#53ddff" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-cyan)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#53ddff" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#intercept" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#53ddff" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#shield" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-130" transform="translate(384 1152)" color="#53ddff" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-cyan)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#53ddff" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-cyan)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#53ddff" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#salvo" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#53ddff" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#data" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-131" transform="translate(512 1152)" color="#ffd15d" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-gold)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffd15d" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-gold)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ffd15d" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#shield" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffd15d" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#pulse" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-132" transform="translate(640 1152)" color="#ffd15d" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-gold)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffd15d" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-gold)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ffd15d" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#shield" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffd15d" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#refund" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-133" transform="translate(768 1152)" color="#ffd15d" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-gold)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffd15d" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-gold)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ffd15d" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#shield" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffd15d" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#clock" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-134" transform="translate(896 1152)" color="#ffd15d" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-gold)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffd15d" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-gold)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ffd15d" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#burst" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffd15d" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#pulse" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-135" transform="translate(1024 1152)" color="#ffd15d" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-gold)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffd15d" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-gold)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ffd15d" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#burst" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffd15d" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#target" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-136" transform="translate(1152 1152)" color="#ffd15d" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-gold)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffd15d" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-gold)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ffd15d" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#burst" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffd15d" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#gravity" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-137" transform="translate(1280 1152)" color="#ffd15d" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-gold)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffd15d" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-gold)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ffd15d" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#fan" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffd15d" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#clock" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-138" transform="translate(1408 1152)" color="#ffd15d" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-gold)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffd15d" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-gold)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ffd15d" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#fan" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffd15d" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#heal" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-139" transform="translate(1536 1152)" color="#ffd15d" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-gold)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffd15d" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-gold)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ffd15d" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#cannon" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffd15d" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#pierce" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-140" transform="translate(1664 1152)" color="#c4a1ff" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-violet)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#c4a1ff" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-violet)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#c4a1ff" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#phase" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#c4a1ff" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#burst" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-141" transform="translate(0 1280)" color="#c4a1ff" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-violet)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#c4a1ff" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-violet)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#c4a1ff" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#phase" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#c4a1ff" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#decoy" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-142" transform="translate(128 1280)" color="#c4a1ff" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-violet)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#c4a1ff" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-violet)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#c4a1ff" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#phase" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#c4a1ff" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#three" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-143" transform="translate(256 1280)" color="#c4a1ff" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-violet)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#c4a1ff" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-violet)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#c4a1ff" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#laserExecute" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#c4a1ff" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#low" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-144" transform="translate(384 1280)" color="#c4a1ff" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-violet)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#c4a1ff" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-violet)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#c4a1ff" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#beam" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#c4a1ff" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#break" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-145" transform="translate(512 1280)" color="#c4a1ff" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-violet)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#c4a1ff" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-violet)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#c4a1ff" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#beam" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#c4a1ff" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#power" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-146" transform="translate(640 1280)" color="#c4a1ff" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-violet)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#c4a1ff" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-violet)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#c4a1ff" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#link" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#c4a1ff" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#target" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-147" transform="translate(768 1280)" color="#c4a1ff" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-violet)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#c4a1ff" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-violet)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#c4a1ff" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#drone" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#c4a1ff" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#pulse" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-148" transform="translate(896 1280)" color="#c4a1ff" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-violet)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#c4a1ff" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-violet)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#c4a1ff" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#drone" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#c4a1ff" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#refund" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-149" transform="translate(1024 1280)" color="#d895ff" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-purple)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#d895ff" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-purple)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#d895ff" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#bounty" transform="translate(0 0) scale(1)"/><g transform="translate(0 62) scale(.36)" color="#fff6dc"><use href="#clock" transform="translate(0 0) scale(1)"/></g></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#d895ff" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#random" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-150" transform="translate(1152 1280)" color="#ffb968" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-orange)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffb968" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-orange)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ffb968" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#orbit" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffb968" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#radius" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-151" transform="translate(1280 1280)" color="#ffb968" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-orange)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffb968" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-orange)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ffb968" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#orbit" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffb968" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#power" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-152" transform="translate(1408 1280)" color="#ffb968" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-orange)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffb968" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-orange)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ffb968" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#orbit" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffb968" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#refund" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-153" transform="translate(1536 1280)" color="#ffb968" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-orange)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffb968" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-orange)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ffb968" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#orbit" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffb968" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#pierce" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-154" transform="translate(1664 1280)" color="#ffb968" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-orange)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffb968" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-orange)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ffb968" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#orbit" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffb968" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#clock" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-155" transform="translate(0 1408)" color="#ffb968" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-orange)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffb968" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-orange)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ffb968" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#orbit" transform="translate(0 0) scale(1)"/><g transform="translate(0 62) scale(.36)" color="#fff6dc"><use href="#shell" transform="translate(0 0) scale(1)"/></g></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffb968" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#spark" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-156" transform="translate(128 1408)" color="#ffb968" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-orange)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffb968" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-orange)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ffb968" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#lance" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffb968" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#lightning" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-157" transform="translate(256 1408)" color="#ffb968" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-orange)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffb968" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-orange)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ffb968" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#lance" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffb968" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#dense" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-158" transform="translate(384 1408)" color="#ffb968" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-orange)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffb968" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-orange)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ffb968" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#lance" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffb968" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#pierce" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-159" transform="translate(512 1408)" color="#ffb968" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-orange)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffb968" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-orange)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ffb968" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#execute" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffb968" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#low" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-160" transform="translate(640 1408)" color="#ffb968" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-orange)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffb968" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-orange)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ffb968" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#lane" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffb968" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#speed" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-161" transform="translate(768 1408)" color="#ffb968" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-orange)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffb968" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-orange)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ffb968" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#lance" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffb968" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#efficient" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-162" transform="translate(896 1408)" color="#ffb968" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-orange)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffb968" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-orange)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ffb968" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#neutron" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffb968" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#power" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-163" transform="translate(1024 1408)" color="#ffb968" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-orange)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffb968" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-orange)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ffb968" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#meteor" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffb968" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#radius" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-164" transform="translate(1152 1408)" color="#ffb968" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-orange)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffb968" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-orange)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ffb968" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#meteor" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffb968" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#refund" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-165" transform="translate(1280 1408)" color="#ffb968" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-orange)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffb968" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-orange)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ffb968" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#meteor" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffb968" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#clock" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-166" transform="translate(1408 1408)" color="#ffb968" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-orange)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffb968" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-orange)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ffb968" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#meteor" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffb968" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#break" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-167" transform="translate(1536 1408)" color="#ffb968" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-orange)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffb968" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-orange)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ffb968" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#meteor" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffb968" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#flame" transform="translate(0 0) scale(1)"/></g></g></g>
+</svg>

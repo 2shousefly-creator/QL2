@@ -1,3 +1,4 @@
+import { CoreSystemTag } from "./CoreSystemTag";
 import { AirCombatModal as AppModal } from "./AirCombatMotion";
 import React, { useState } from "react";
 import { ModalButton, OverlayBody, OverlayFooter, OverlayHeader } from "../../../components/overlay/AppOverlay";
@@ -24,7 +25,7 @@ export function AirCombatCoreList({ state, onClose }: { state: AircraftCombatSta
       <div className="air-core-grid" role="group" aria-label="Lõi đã nhận">
         {Array.from({ length: Math.max(14, owned.length) }, (_, index) => {
           const core = owned[index];
-          return core ? <button key={core.id} type="button" aria-pressed={selected?.id === core.id}
+          return core ? <button key={core.id} type="button" aria-pressed={selected?.id === core.id} data-core-system={core.system}
             className={`air-core-slot air-owned-core--${core.tiers[0]}`} onClick={() => setSelectedId(core.id)}>
             <CombatUiIcon kind="core" id={core.id} fallback="◆" />
             <span>{core.name}</span>
@@ -36,7 +37,7 @@ export function AirCombatCoreList({ state, onClose }: { state: AircraftCombatSta
           <div className="flex items-center gap-3">
             <CombatUiIcon kind="core" id={selected.id} fallback="◆" />
             <div><h3 className="font-semibold">{selected.name}</h3>
-              <p className="text-xs text-slate-200">{CORE_TIER_LABELS[selected.tiers[0]]} · {selected.system}</p></div>
+              <p className="text-xs text-slate-200">{CORE_TIER_LABELS[selected.tiers[0]]}</p><CoreSystemTag system={selected.system} /></div>
           </div>
           <p className="mt-2 text-sm leading-relaxed"><CoreDescription text={selected.description} /></p>
           {selected.skillId && <p className="mt-2 text-xs font-semibold">Kỹ năng {selected.skillSlot} · {SKILL_CONFIGS[selected.skillId].name}{skillsLocked(state) ? " · Đang bị khóa" : ""}</p>}

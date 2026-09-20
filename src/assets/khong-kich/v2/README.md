@@ -43,3 +43,20 @@ Production game sprite atlas, TRUE TRANSPARENT PNG background, square, strict 2x
 ## VFX atlas prompt
 
 Create production 2D military arcade shooter VFX texture atlas TRUE TRANSPARENT PNG, square, precise 4x4 equal grid, all effects isolated centered in their own cell with generous empty margins. Painted high fidelity emissive effects, no labels grid lines text UI or watermark. Row1: cyan white muzzle flash; long vertical cyan tracer nose up; red orange vertical enemy tracer; detailed silver missile nose up with orange exhaust flame. Row2: small orange explosion; medium orange explosion; large orange smoke explosion; immense fiery boss explosion. Row3: sparks metallic debris burst; soft gray smoke puff; curling dark damage smoke; bright orange flame pointing down for thruster/fire overlay. Row4: circular blue energy shield ring; purple laser charging energy orb; narrow vertical violet laser beam; amber expanding bomb shockwave ring. Consistent orthographic top down game effects, alpha fading edges, black empty pixels must be transparent. Each full effect fits cell, absolutely no overlap.
+
+## 26.9.2 core illustrations
+
+`core-icons-refined.svg` is the active illustrated atlas for all 167 core IDs,
+sequential row-major in 14 × 12 cells of 128px; cell 168 is unused. It is original
+vector artwork authored in `scripts/generate-core-icons-refined.mjs`, with shared
+metal shading, energy halos, filled hardware/skill silhouettes and explicit
+per-core semantic recipes. Regenerate with `node scripts/generate-core-icons-refined.mjs`.
+It requires no external fonts, services or runtime canvas generation.
+
+Every cell includes a lower-right 37% semantic tile with 4% inset. No text, numeric
+ID or Roman numeral appears in the artwork. Skill palettes remain cyan (Viper),
+gold (Titan), violet (Phantom), and warm orange (Astra). Core 159 depicts a stellar
+lance, target, depleted HP bar/threshold and execution skull. `CoreSemanticIcon`
+shares the atlas across choices, owned cores and release notes; Lucide is used
+only if the atlas fails to load or the core ID is unknown. Tier borders and
+canonical system tags are independent of these illustration palettes.

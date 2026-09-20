@@ -1,3 +1,4 @@
+import { CoreSystemTag } from "./CoreSystemTag";
 import { AnimatePresence, motion } from "motion/react";
 import { AirCombatModal as AppModal, AirCombatConfirmation as ConfirmationDialog, airTooltipMotion } from "./AirCombatMotion";
 import { getAirCombatStage } from "./airCombatStages";
@@ -580,11 +581,12 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
           <h2 id="air-core-choice-title">CHỌN MỘT NÂNG CẤP</h2>
           <div key={worldRef.current.coreSelectionCount} className="air-upgrade-choices" data-core-selection="open" data-reduced-motion={reducedMotion}>
             {coreChoices.map((card, slot) => <div className="air-upgrade-row" key={slot} style={{"--slot":slot} as React.CSSProperties}>
-              <button key={card.id} type="button" data-core-choice={card.id} data-core-tier={card.tier}
+              <button key={card.id} type="button" data-core-choice={card.id} data-core-tier={card.tier} data-core-system={card.system}
                 data-rerolled={worldRef.current.coreSelectionEvent?.rerollUsedBySlot[slot] || false}
                 onClick={() => chooseCore(card)} className="combat-core-card air-upgrade-card">
                 <CombatUiIcon kind="core" id={card.id} fallback={card.icon} className="combat-core-icon" />
                 <span className="air-upgrade-copy"><strong className="combat-core-name">{card.name}</strong>
+                  <CoreSystemTag system={card.system} />
                   <span className="air-upgrade-description"><CoreDescription text={card.description} /></span></span>
               </button>
               <button type="button" className="air-core-reroll" aria-label={`Đổi lựa chọn ${slot+1}`}

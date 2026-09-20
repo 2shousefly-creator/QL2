@@ -1,3 +1,4 @@
+import { CORE_SYSTEM_LABELS } from "./airCombatCoreSystems";
 import { recordCoreMetric } from "./airCombatTelemetry";
 import { AIRCRAFT_CONFIGS, CORE_DEFINITIONS, CORE_TIER_CHANCES } from "./airCombatConfig";
 import { getEffectiveAircraftStats } from "./airCombatAircraft";
@@ -18,7 +19,7 @@ export function rollCoreTier(_selectionNumber: number, random: () => number = Ma
 const eligible = (state: AircraftCombatState, tier?: CoreTier) => CORE_DEFINITIONS.filter(c => !c.skillId && !state.selectedCores.includes(c.id) && (!tier || c.tiers[0] === tier));
 export function makeCoreCard(definition: CoreDefinition): CoreCard {
     return { id: definition.id, name: definition.name, description: definition.description, system: definition.system, skillSlot: definition.skillSlot,
-        icon: definition.icon, category: definition.category, tier: definition.tiers[0], valueLabel: definition.skillSlot ? `Kỹ năng ${definition.skillSlot}` : definition.system };
+        icon: definition.icon, category: definition.category, tier: definition.tiers[0], valueLabel: definition.skillSlot ? `Kỹ năng ${definition.skillSlot}` : CORE_SYSTEM_LABELS[definition.system] };
 }
 /** selectionNumber retained for callers; queued level is the authority. */
 export function generateCoreChoices(state: AircraftCombatState, selectionNumber: number, random: () => number = Math.random): CoreCard[] {
