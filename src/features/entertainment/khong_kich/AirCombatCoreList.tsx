@@ -37,7 +37,7 @@ export function AirCombatCoreList({ state, onClose }: { state: AircraftCombatSta
           <div className="flex items-center gap-3">
             <CombatUiIcon kind="core" id={selected.id} fallback="◆" />
             <div><h3 className="font-semibold">{selected.name}</h3>
-              <p className="text-xs text-slate-200">{CORE_TIER_LABELS[selected.tiers[0]]}</p><CoreSystemTag system={selected.system} /></div>
+              <p className="text-xs text-slate-200">{CORE_TIER_LABELS[selected.tiers[0]]}</p><CoreSystemTag system={selected.system} tier={selected.tiers[0]} /></div>
           </div>
           <p className="mt-2 text-sm leading-relaxed"><CoreDescription text={selected.description} /></p>
           {selected.skillId && <p className="mt-2 text-xs font-semibold">Kỹ năng {selected.skillSlot} · {SKILL_CONFIGS[selected.skillId].name}{skillsLocked(state) ? " · Đang bị khóa" : ""}</p>}

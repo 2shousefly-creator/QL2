@@ -1,3 +1,5 @@
+import { expansionStatuses } from "./airCombatExpansionStatus";
+import { expansionState } from "./airCombatExpansion";
 import { BOUNTY_REWARDS, CORE_METRICS, CORE_METRIC_LABELS } from "./airCombatTelemetry";
 import { FLAT_CORE_STATS } from "./airCombatCoreEffects";
 import { SKILL_BASE_VALUES as B, SKILL_CORE_VALUES as V } from "./airCombatSkillCores";
@@ -55,6 +57,9 @@ export function getSkillTooltipModel(state: AircraftCombatState, id: SkillId) {
   }
   if (id === "escort_drone" && state.droneActive && hasCore(state,148)) coreRows.push(`Nếu thu hồi lúc này: hoàn ${amount(Math.max(0,Math.min(V.recallRefundCap,(state.coreState.stacks.droneUpkeepSpent || 0)*V.recallRefund,getEffectiveAircraftStats(state).maxResource-state.currentResource)))} Điện.`);
   if (hasCore(state, 53)) coreRows.push("Kỹ năng có thể chí mạng.");
+  if (hasCore(state, 190)) coreRows.push("Nén Năng Lượng: +22% sát thương kỹ năng; chi phí đã gồm +15% Tài Nguyên.");
+  if (expansionState(state).primarySkill === id) coreRows.push("Kỹ Năng Chủ Lực: +22% sát thương; chi phí và hồi chiêu cơ bản đã giảm 15%.");
+  if (hasCore(state, 199)) coreRows.push(`Mạch Quá Tải: lần dùng kế tiếp +${(state.coreState.stacks.overclock ?? 0) * 18}% sát thương, giữ riêng theo lần dùng.`);
   if (hasCore(state, 96)) coreRows.push("Mỗi lần dùng kỹ năng mất 5% HP hiện tại.");
   return { title: config.name, description: descriptions[id], detailRows, coreRows,
     cooldown: v.cooldown * (1 - getEffectiveAircraftStats(state).cooldownReduction) * (free ? 1.1 : 1) };
@@ -180,7 +185,7 @@ function coreCooldownStatuses(world:CombatWorld):StatusPresentation[] {
 
 export function getStatusPresentations(world: CombatWorld): StatusPresentation[] {
   const s = world.aircraft, c = s.coreState, result: StatusPresentation[] = [];
-  result.push(...coreCooldownStatuses(world), ...skillCoreStatuses(world));
+  result.push(...coreCooldownStatuses(world), ...skillCoreStatuses(world), ...expansionStatuses(world));
   const maxHp = getEffectiveAircraftStats(s).maxHp;
   for (const id of AIRCRAFT_CONFIGS[s.aircraftId].skillIds) {
     const timer = getActiveSkillDuration(world, id);
@@ -260,8 +265,8 @@ export function getStatusPresentations(world: CombatWorld): StatusPresentation[]
   if (shields.length) {
     const first = shields.reduce((a, b) => a[1].until < b[1].until ? a : b);
     result.push({ id: "shield", group: "buff", name: "Lá chắn", icon: { kind: "status", id: "shield" },
-      description: `Hấp thụ ${Math.round(shields.reduce((n, [, v]) => n + v.amount, 0))} sát thương.`, source: "Lõi",
-      stacks: 1, remaining: first[1].until - c.time, duration: first[0] === "reserve" ? 4 : first[0] === "overheal" ? Infinity : 3, priority: 95 });
+      description: `Lá chắn còn ${Math.round(shields.reduce((n, [, v]) => n + v.amount, 0))} HP hấp thụ.${hasCore(s,200) ? ` Tái Chế Lá Chắn: dung lượng +50%; các lớp hiện tại đã hấp thụ ${amount(shields.reduce((n,[,v])=>n+(v.absorbed??0),0))} sát thương. Khi từng lớp kết thúc, phát nổ bằng 160% lượng lớp đó đã hấp thụ trong bán kính 120px.` : ""}`, source: "Lõi",
+      stacks: 1, remaining: first[1].until - c.time, duration: first[1].duration ?? (first[0] === "reserve" ? 4 : 3), priority: 95 });
   }
   const acid = (c.timers.acidArmor || 0) - c.time;
   if (acid > 0) result.push({ id: "acidArmor", group: "debuff", name: "Ăn mòn", icon: { kind: "status", id: "acid" },
@@ -283,7 +288,7 @@ export function getStatusPresentations(world: CombatWorld): StatusPresentation[]
   }
   const status=s.status;
   const timed = [
-    ["stunnedUntil","Choáng","stun","Không thể di chuyển, dùng kỹ năng hoặc bắn thường."],
+    ["stunnedUntil","Choáng","stun",hasCore(s,203)?"Không thể di chuyển; Nhiễu Chủ Động vẫn cho bắn thường và dùng kỹ năng.":"Không thể di chuyển, dùng kỹ năng hoặc bắn thường."],
     ["skillLockedUntil","Khóa kỹ năng","skill_lock","Tạm khóa kỹ năng; vẫn di chuyển và bắn thường."],
     ["resourceJammedUntil","Nhiễu tài nguyên","resource_jam","Giảm hồi tài nguyên; giữ nguyên tài nguyên đang có."],
     ["armorBrokenUntil","Vỡ giáp","armor","Giáp -35%."],
@@ -362,9 +367,10 @@ export function getCoreTelemetryPresentation(state:AircraftCombatState,id:CoreId
   if(row===149)BOUNTY_REWARDS.forEach((reward,index)=>{const count=c.stacks[`bountyReward:${index}`]??0;if(count)lines.push(`${reward.label}: +${number(count*reward.amount*("percent" in reward?100:1))}${"percent" in reward?"%":""} (${count} lần)`);});
   if(row===85)lines.push("Đang cung cấp: +48 Hỏa Lực; −24 Giáp.");
   if(row===86)lines.push("Đang cung cấp: +70% Hồi Tài Nguyên; −35% Tài Nguyên Tối Đa.");
-  if(row===87)lines.push("Đang cung cấp: +20% Tỷ Lệ Chí Mạng; +40% Sát Thương Chí Mạng.");
-  if(row===94)lines.push("Đang cung cấp: +40% Hỏa Lực; +10% Tỷ Lệ Chí Mạng; −35% Máu Tối Đa.");
-  if(row===95)lines.push("Tỷ Lệ Chí Mạng: 25%; +140% Sát Thương Chí Mạng.");
+  if(row===74)lines.push("Đang cung cấp: +10% Tỷ Lệ Chí Mạng; giảm 0,2s hồi chiêu/đòn chí mạng, tối đa 1s/s.");
+  if(row===87)lines.push("Đang cung cấp: +35% Tỷ Lệ Chí Mạng; +70% Sát Thương Chí Mạng.");
+  if(row===94)lines.push("Đang cung cấp: +40% Hỏa Lực; +25% Tỷ Lệ Chí Mạng; −35% Máu Tối Đa.");
+  if(row===95)lines.push("Tỷ Lệ Chí Mạng: 25%; +200% Sát Thương Chí Mạng.");
   if(row===97)lines.push("Đang cung cấp: +40% Hỏa Lực; +30% Máu Tối Đa; +30% Giáp.");
   if(row===100){bonus(state.currentHp>stats.maxHp*.7?20:state.currentHp>=stats.maxHp*.3?8:0,"Hỏa Lực");bonus(state.currentHp<stats.maxHp*.3?20:state.currentHp<=stats.maxHp*.7?8:0,"Giáp");}
   const key=({76:"reactive",81:"skill",99:"reserve",104:"overheal"} as Record<number,string>)[row];

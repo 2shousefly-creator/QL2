@@ -260,6 +260,7 @@ export interface AirCombatProfile {
 }
 
 export interface AirCombatHudSnapshot {
+  dps: number;
   stats: EffectiveAircraftStats;
   score: number;
   comboKills: number;
@@ -283,6 +284,7 @@ export interface AirCombatHudSnapshot {
 
 /** Run-local event state; no persistent profile/schema changes. Timers use combat time. */
 export interface CoreRuntimeState {
+  expansion?: import("./airCombatExpansion").ExpansionState;
   /** Explicit run-local acquisition journal, including conversion rewards; bounded by the finite catalog. */
   acquisitions: { id: number; coreId: CoreId }[];
   nextAcquisitionId: number;
@@ -299,7 +301,7 @@ export interface CoreRuntimeState {
   killTimes: number[];
   stacks: Record<string, number>;
   timers: Record<string, number>;
-  shields: Record<string, { amount: number; until: number }>;
+  shields: Record<string, import("./airCombatExpansion").AbsorbShield>;
   consumed: Set<string>;
   criticalBudget: number;
   criticalWindow: number;

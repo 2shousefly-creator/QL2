@@ -101,6 +101,19 @@ motif('dense',circle(50,50,33,metal)+circle(50,50,25,dark)+use('spark',22,22,.56
 motif('fan',[-42,-28,-14,0,14,28,42].map(a=>`<g transform="rotate(${a} 50 88)">${p('M46 72 47 21 50 15 53 21 54 72Z',light)}</g>`).join('')+use('cannon',30,57,.4));
 // Deliberate per-core compositions. The third motif is a small contextual inset
 // within the main illustration (not a second competing badge).
+
+motif('microCharge',use('shell',-4,16,.78)+rect(53,11,34,42,metal,7)+rect(61,20,18,24,dark,3)+use('spark',49,53,.48));
+motif('regulator',circle(50,50,34,metal)+circle(50,50,22,dark)+[0,120,240].map(a=>`<g transform="rotate(${a} 50 50)">${p('M42 3H58L63 24 50 36 37 24Z')}${circle(50,18,6,light)}</g>`).join('')+circle(50,50,10,light));
+motif('celestial',use('shield',14,4,.75)+p('M28 35 2 17 7 56 29 69ZM72 35 98 17 93 56 71 69Z',metal)+p('M2 17 27 44 20 48 7 34ZM98 17 73 44 80 48 93 34Z',light)+use('spark',36,29,.3));
+motif('blackBox',p('M10 28 69 10 94 31 90 80 31 97 7 73Z',metal)+p('M16 35 67 20 82 34 31 50Z')+p('M16 43 32 56 81 43 79 72 32 87 15 69Z',dark)+line('M20 64 31 64 39 53 46 75 54 57 63 61 75 55',light,5));
+motif('crimsonSeal',p('M50 3 62 14 78 11 82 28 97 37 88 52 94 70 77 78 69 95 51 89 34 98 24 81 7 76 12 57 2 42 18 30 20 13 38 15Z')+circle(50,50,29,metal)+use('spark',28,28,.44));
+motif('guardians',circle(50,50,25,'none','stroke="currentColor" stroke-width="7"')+use('hull',30,25,.4)+[0,120,240].map(a=>`<g transform="rotate(${a} 50 50)">${p('M38 1H62L69 19 50 30 31 19Z',metal)}${p('M42 6H58L59 16 50 22 41 16Z')}</g>`).join(''));
+motif('overclock',p('M50 2 88 24V75L50 98 12 75V24Z',metal)+p('M50 13 78 30V69L50 86 22 69V30Z',dark)+[0,120,240].map(a=>`<g transform="rotate(${a} 50 50)">${p('M44 19H56L63 39 50 45 37 39Z')}</g>`).join('')+circle(50,52,12,light));
+motif('arsenal',line('M22 24 78 78M78 24 22 78',light,10)+[ [0,0,'shell'],[53,0,'battery'],[0,53,'shield'],[53,53,'nodes'] ].map(([x,y,k])=>use(k,x,y,.47)).join(''));
+motif('doubleBlade',p('M8 4 48 33 51 46 72 59 61 72 48 51 35 48Z',metal)+p('M92 4 52 33 49 46 28 59 39 72 52 51 65 48Z')+p('M31 70 39 62 61 86 52 96ZM69 70 61 62 39 86 48 96Z',metal)+circle(50,49,9,light));
+motif('heavyRound',p('M33 7Q50 -4 67 7L78 61H22Z',metal)+p('M36 12Q50 3 64 12L67 51H33Z')+rect(20,60,60,26,metal,4)+rect(17,89,66,10,light,3)+rect(30,65,40,15,dark,3));
+motif('fortress',p('M7 24 26 12V32H40V8H60V32H74V12L93 24V83L50 99 7 83Z',metal)+p('M17 42H83V74L50 88 17 74Z')+use('battery',30,36,.4)+p('M17 49H28V68H17ZM72 49H83V68H72Z',light));
+
 const recipes=[
 // 001–018: each rank has a distinct silhouette, never a numeral.
 ['shell','power'],['plate','shield'],['cannon','speed'],['hull','heart'],['repair','heal'],['clock','speed'],
@@ -141,11 +154,23 @@ const recipes=[
 ['orbit','radius'],['orbit','power'],['orbit','refund'],['orbit','pierce'],['orbit','clock'],['orbit','spark','shell'],
 ['lance','lightning'],['lance','dense'],['lance','pierce'],['execute','low'],['lane','speed'],['lance','efficient'],
 ['neutron','power'],['meteor','radius'],['meteor','refund'],['meteor','clock'],['meteor','break'],['meteor','flame'],
+// 168–209: dedicated illustrated combinations, preserving every earlier recipe.
+['microCharge','clock'],['regulator','battery'],['target','plate'],['lock','shield','shell'],
+['battery','bank','high'],['break','heal'],['heart','refund','pulse'],['nodes','trade','power'],
+['heal','radius','shield'],['shield','lightning','missile'],['slow','shell'],['target','data','spark'],
+['pierce','shield'],['turbine','refund','nodes'],['battery','low','duration'],['plate','target','power'],
+['celestial','shield'],['shell','target','nodes'],['nodes','cannon','trade'],['bank','pulse','heart'],
+['eye','target','spark'],['skull','missile'],['gravity','battery','power'],['cannon','trade','nodes'],
+['shieldPower','trade','plate'],['three','refund','clock'],['break','spark','target'],['blackBox','heal'],
+['crimsonSeal','spark'],['debt','heart','clock'],['guardians','shield'],['overclock','pulse'],
+['shield','burst','trade'],['arsenal','power'],['specialize','three','target'],['hack','cannon','target'],
+['shield','clock','refund'],['doubleBlade','trade'],['heavyRound','pierce'],['phase','trade','shell'],
+['heal','battery','link'],['fortress','low','battery'],
 ];
 // Skill identity takes priority over role color in illustration only.
 const groups={
  cyan:[...[19,20,21,22,23,24,25,26,27],...Array.from({length:9},(_,i)=>122+i)],
- gold:[28,29,30,31,32,33,34,35,36,...Array.from({length:9},(_,i)=>131+i)],
+ gold:[184,198,199,200,201,202,204,209,28,29,30,31,32,33,34,35,36,...Array.from({length:9},(_,i)=>131+i)],
  violet:[37,38,39,40,41,42,43,44,45,...Array.from({length:9},(_,i)=>140+i)],
  orange:Array.from({length:18},(_,i)=>150+i),
  green:[2,4,5,8,10,11,14,16,17,47,48,61,62,64,65,72,76,81,90,92,98,99,103,104,108,109,110,119],
@@ -161,7 +186,7 @@ const cells=recipes.map(([base,badge,context],i)=>{
  let [accent]=palettes[palette];
  // Gold and diamond conversion have an explicit output palette.
  if(id===50)accent='#ffd15d';if(id===51)accent='#97f4ff';
- const x=i%14*128,y=Math.floor(i/14)*128;
+ const x=i%15*128,y=Math.floor(i/15)*128;
  return `<g id="core-${String(id).padStart(3,'0')}" transform="translate(${x} ${y})" color="${accent}" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-${palette})"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="${accent}" stroke-opacity=".4" stroke-width="2"/>
@@ -174,4 +199,4 @@ const cells=recipes.map(([base,badge,context],i)=>{
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)">${use(badge)}</g></g></g>`;
 });
-writeFileSync(fileURLToPath(new URL('../src/assets/khong-kich/v2/core-icons-refined.svg',import.meta.url)),`<svg xmlns="http://www.w3.org/2000/svg" width="1792" height="1536" viewBox="0 0 1792 1536"><defs>${defs}</defs>\n${cells.join('\n')}\n</svg>\n`);
+writeFileSync(fileURLToPath(new URL('../src/assets/khong-kich/v2/core-icons-refined.svg',import.meta.url)),`<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1792" viewBox="0 0 1920 1792"><defs>${defs}</defs>\n${cells.join('\n')}\n</svg>\n`);

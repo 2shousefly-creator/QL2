@@ -1,3 +1,4 @@
+import { satellitePositions } from "./airCombatExpansionRuntime";
 import { SKILL_CORE_VALUES as V } from "./airCombatSkillCores";
 import { enemyAllegiance, isHostileToPlayer, type CombatWorld, type WarningZone } from "./airCombatRuntime";
 export interface TacticalPainter {
@@ -10,6 +11,12 @@ export interface TacticalPainter {
 export function paintTacticalCores(world:CombatWorld,p:TacticalPainter,reducedMotion:boolean):void {
   if(world.ended)return;
   const t=world.tactical,now=world.elapsed,c=world.aircraft.coreState;
+  if ((c.timers.celestial??0)>now) {
+    p.circle(world.playerX,world.playerY,36,0xffd36a,.15,true);
+    p.circle(world.playerX,world.playerY,36,0xffd36a,.95,false,3);
+    p.polygon?.([world.playerX,world.playerY-31,world.playerX+27,world.playerY-18,world.playerX+22,world.playerY+19,world.playerX,world.playerY+33,world.playerX-22,world.playerY+19,world.playerX-27,world.playerY-18],0xffe5a3,.15);
+  }
+  for (const orb of satellitePositions(world)) { p.circle(orb.x,orb.y,8,0x67e8f9,.25,true); p.circle(orb.x,orb.y,5,0xffdf8a,1,true); p.circle(orb.x,orb.y,3,0xffffff,1,true); }
   for(const h of world.skillCores.blackHoles){
     p.circle(h.x,h.y,V.holeRadius,0x9d8aff,.06,true);p.circle(h.x,h.y,V.holeRadius,0xb9a7ff,.4);
     p.circle(h.x,h.y,V.holeCoreRadius,0x080619,.95,true);p.circle(h.x,h.y,V.holeCoreRadius+1,0xc4b5fd,.9);
@@ -22,6 +29,10 @@ export function paintTacticalCores(world:CombatWorld,p:TacticalPainter,reducedMo
     if(e.hp<=0)continue;
     const effect=world.skillCores.enemyEffects.get(e.id),large=e.type==="boss"||e.eliteWave>0;
     const labels:{text:string;color:number}[]=[];
+    const marks=e.expansionMarks;
+    for (const [key,text,color] of [["preliminary","◎ KỸ NĂNG",0x67e8f9],["shieldBroken","◇ PHÁ KHIÊN",0xffd36a],["criticalLock","✦ CHÍ MẠNG",0xfb7185],["skillPhase","PHA KỸ NĂNG",0xc4b5fd],["gunPhase","PHA SÚNG",0xffd36a]] as const) if ((marks?.[key]??0)>now) {
+      labels.push({text,color}); p.circle(e.x,e.y,e.radius+5,color,.75);
+    }
     if(world.skillCores.bountyTarget===e.id&&world.skillCores.bountyUntil>now){
       const r=e.radius+10;p.circle(e.x,e.y,r,0xff3344,.95);
       for(const side of [-1,1]){p.line(e.x+side*(r-5),e.y,e.x+side*(r+6),e.y,0xff3344,1,2);p.line(e.x,e.y+side*(r-5),e.x,e.y+side*(r+6),0xff3344,1,2);}

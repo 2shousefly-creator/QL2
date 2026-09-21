@@ -1,3 +1,5 @@
+import { expansionState } from "./airCombatExpansion";
+import { AirCombatTacticalHud, type HubTooltip } from "./AirCombatTacticalHud";
 import { CoreSystemTag } from "./CoreSystemTag";
 import { AnimatePresence, motion } from "motion/react";
 import { AirCombatModal as AppModal, AirCombatConfirmation as ConfirmationDialog, airTooltipMotion } from "./AirCombatMotion";
@@ -21,9 +23,8 @@ import React, {
 import { AirCombatPixiStage, createLegacyPresentation } from "./pixi/AirCombatPixiStage";
 import type { AirCombatPresentation } from "./pixi/airCombatPixiTypes";
 import { CombatUiIcon } from "./CombatUiIcon";
-import { CombatStatChips } from "./CombatStatReadout";
 import "./combat-ui.css";
-import { ArrowLeft, Layers, Pause, Play, X } from "lucide-react";
+import { ArrowLeft, Pause, Play, X } from "lucide-react";
 import { soundManager } from "../../../game/audio";
 import { ModalButton, OverlayBody, OverlayFooter, OverlayHeader } from "../../../components/overlay/AppOverlay";
 import {
@@ -69,7 +70,7 @@ interface AirCombatBattleProps {
   onExit: () => void;
 }
 
-type PauseReason = "loading" | "user" | "core" | "tooltip" | "exit" | "hidden" | "coreList" | "motion";
+type PauseReason = "loading" | "user" | "core" | "tooltip" | "exit" | "hidden" | "coreList" | "motion" | "primarySkill";
 
 interface SkillPressState {
   skillId: SkillId;
@@ -85,15 +86,10 @@ interface PlayerControlState {
   originY: number;
 }
 
-function formatTime(seconds: number): string {
-  const safe = Math.max(0, Math.floor(seconds));
-  return `${Math.floor(safe / 60)}:${String(safe % 60).padStart(2, "0")}`;
-}
-
 function pauseLabel(reasons: ReadonlySet<PauseReason>): string | null {
   if (reasons.has("core")) return "Chọn lõi";
   if (reasons.has("coreList")) return "Danh sách lõi";
-  if (reasons.has("tooltip")) return "Xem kỹ năng";
+  if (reasons.has("tooltip")) return "Xem thông tin";
   if (reasons.has("exit")) return "Xác nhận thoát";
   if (reasons.has("hidden")) return "Ứng dụng tạm ẩn";
   if (reasons.has("user")) return "Tạm dừng";
@@ -129,6 +125,10 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
   const bossShieldRef = useRef<HTMLDivElement>(null);
   const [hud, setHud] = useState<AirCombatHudSnapshot>(() => makeHudSnapshot(worldRef.current, false, null));
   const [coreChoices, setCoreChoices] = useState<CoreCard[] | null>(null);
+  const [hubTooltip, setHubTooltip] = useState<(HubTooltip & {id:string}) | null>(null);
+  const tooltipOwner = useRef<"hub"|"skill"|"status"|null>(null);
+  const [primaryChoice, setPrimaryChoice] = useState<SkillId | null>(null);
+  const [showPrimaryChoice, setShowPrimaryChoice] = useState(false);
   const [tooltipSkill, setTooltipSkill] = useState<SkillId | null>(null);
   const [showExitConfirm, setShowExitConfirm] = useState(false);
   const [showCoreList, setShowCoreList] = useState(false);
@@ -158,7 +158,7 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
       setPlayerInputActive(worldRef.current, false);
     } else {
       reasons.delete(reason);
-      if (["user","tooltip","exit","coreList"].includes(reason)) {
+      if (["user","tooltip","exit","coreList","primarySkill"].includes(reason)) {
         reasons.add("motion");worldRef.current.pauseReasons.add("motion");
         clearTimeout(motionPauseTimer.current);
         motionPauseTimer.current=setTimeout(()=>{
@@ -169,6 +169,35 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
     }
     setPauseState({ paused: reasons.size > 0, label: pauseLabel(reasons) });
   }, [reducedMotion]);
+
+  const activateTooltip = useCallback((owner: "hub"|"skill"|"status") => {
+    tooltipOwner.current = owner;
+    setPauseReason("tooltip", true);
+    if (owner !== "status") statusStripRef.current?.close();
+    if (owner !== "skill") setTooltipSkill(null);
+    if (owner !== "hub") setHubTooltip(null);
+  }, [setPauseReason]);
+  const closeAllTooltips = useCallback(() => {
+    tooltipOwner.current = null;
+    statusStripRef.current?.close(); setTooltipSkill(null); setHubTooltip(null);
+    setPauseReason("tooltip", false);
+  }, [setPauseReason]);
+  const onStatusTooltip = useCallback((open: boolean) => {
+    if (open) activateTooltip("status");
+    else if (tooltipOwner.current === "status") closeAllTooltips();
+  }, [activateTooltip, closeAllTooltips]);
+  const inspectHub = (id: string, tooltip: HubTooltip) => {
+    if (tooltipOwner.current === "hub" && hubTooltip?.id === id) { closeAllTooltips(); return; }
+    activateTooltip("hub"); setHubTooltip({ id, ...tooltip });
+  };
+  useEffect(() => {
+    const outside = (event: PointerEvent) => {
+      if (!(event.target as Element).closest?.("[data-combat-tooltip-trigger], [data-combat-tooltip-panel]")) closeAllTooltips();
+    };
+    const escape = (event: KeyboardEvent) => { if(event.key === "Escape") closeAllTooltips(); };
+    document.addEventListener("pointerdown", outside, true); document.addEventListener("keydown", escape);
+    return () => {document.removeEventListener("pointerdown", outside, true);document.removeEventListener("keydown", escape);};
+  }, [closeAllTooltips]);
 
   useEffect(() => {
     const handleVisibility = () => setPauseReason("hidden", document.hidden);
@@ -324,15 +353,14 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
   };
 
   const closeTooltip = useCallback(() => {
-    setTooltipSkill(null);
-    setPauseReason("tooltip", false);
-  }, [setPauseReason]);
+    if (tooltipOwner.current === "skill") closeAllTooltips();
+  }, [closeAllTooltips]);
 
   const onSkillPointerDown = (
     event: React.PointerEvent<HTMLButtonElement>,
     skillId: SkillId
   ) => {
-    if (pauseReasonsRef.current.size > 0 || worldRef.current.ended || pressRef.current) return;
+    if ([...pauseReasonsRef.current].some(reason=>reason!=="tooltip" && reason!=="motion") || worldRef.current.ended || pressRef.current) return;
     event.preventDefault();
     event.currentTarget.setPointerCapture(event.pointerId);
     const press: SkillPressState = {
@@ -345,8 +373,8 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
     press.timer = window.setTimeout(() => {
       if (pressRef.current !== press) return;
       press.held = true;
+      activateTooltip("skill");
       setTooltipSkill(skillId);
-      setPauseReason("tooltip", true);
     }, AIR_COMBAT_WORLD.longPressMs);
     pressRef.current = press;
   };
@@ -386,7 +414,16 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
       soundManager.playBubblePop();
       soundManager.triggerHaptic("medium");
       setCoreChoices(null);
+      const primaryPending = expansionState(worldRef.current.aircraft).primaryPending;
+      if (primaryPending) {
+        setPauseReason("primarySkill", true); setShowPrimaryChoice(true);
+      }
       setPauseReason("core", false);
+      if (!primaryPending && worldRef.current.pendingCoreSelections > 0) {
+        const next=ensureCoreSelection(worldRef.current);
+        if (next) { setCoreChoices(next);setPauseReason("core",true); }
+        else if (expansionState(worldRef.current.aircraft).primaryPending) { setPauseReason("primarySkill",true);setShowPrimaryChoice(true); }
+      }
     }
     window.setTimeout(() => {
       coreSelectingRef.current = false;
@@ -405,7 +442,6 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
 
   const resourceLabel = hud.stats.resourceKind === "mana" ? "Mana" : "Energy";
   const hpRatio = Math.max(0, Math.min(1, hud.stats.currentHp / hud.stats.maxHp));
-  const xpRatio = hud.combatXpRequired > 0 ? Math.max(0, Math.min(1, worldRef.current.aircraft.combatXp / hud.combatXpRequired)) : 1;
   const tooltipModel = tooltipSkill ? getSkillTooltipModel(worldRef.current.aircraft, tooltipSkill) : null;
 
   useEffect(() => {
@@ -474,27 +510,9 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
       {rendererState === "legacy" && <span className="pointer-events-none absolute right-2 top-[13%] z-10 text-[8px] text-slate-400">Hiển thị tương thích</span>}
       {hpRatio < 0.3 && <div className="pointer-events-none absolute inset-0 z-[5] rounded-2xl" style={{ boxShadow: "inset 0 0 55px rgba(225,29,72," + ((0.3 - hpRatio) * 1.6) + ")" }} />}
       <section className="air-combat-hud absolute inset-x-0 top-0 z-10 border-b border-cyan-300/30 bg-slate-950/95 text-white" style={{ height: AIR_COMBAT_WORLD.hudHeight / 720 * 100 + "%" }} data-hud-region="fixed">
-        <div className="air-combat-hud-heading">
-          <div className="min-w-0">
-            <div className="truncate font-black" style={{ color: aircraft.color }}>{aircraft.code} · {aircraft.name}</div>
-            <div className="mt-0.5 text-slate-300">{hud.waveLabel} · {formatTime(hud.elapsedSeconds)}</div>
-          </div>
-          <div className="text-right tabular-nums">
-            <strong className="text-[3.8cqw] text-amber-300" data-hud-score={hud.score}>{hud.score.toLocaleString("vi-VN")}</strong>
-            <div className="text-amber-200">{hud.comboKills} COMBO ×{hud.comboMultiplier}</div>
-          </div>
-          <div className="flex gap-1">
-            <button type="button" aria-label="Danh sách lõi" title="Danh sách lõi" disabled={!!coreChoices} className="air-core-list-button" onClick={() => { setShowCoreList(true); setPauseReason("coreList", true); }}><Layers aria-hidden="true"/><span>Lõi</span></button>
-            <button type="button" aria-label={pauseReasonsRef.current.has("user") ? "Tiếp tục" : "Tạm dừng"} onClick={() => setPauseReason("user", !pauseReasonsRef.current.has("user"))}>{pauseReasonsRef.current.has("user") ? <Play /> : <Pause />}</button>
-            <button type="button" aria-label="Thoát trận" onClick={openExit} className="text-rose-300"><X /></button>
-          </div>
-        </div>
-        <CombatStatChips healingReceived={worldRef.current.aircraft.status.healingReceivedUntil > worldRef.current.aircraft.coreState.time ? worldRef.current.aircraft.status.healingReceivedMultiplier : 1} stats={hud.stats} baseline={getEffectiveAircraftStats(worldRef.current.aircraft, false)} />
-        <div className="flex items-center gap-2 text-lime-200 tabular-nums">
-          <span className="shrink-0">Cấp {worldRef.current.aircraft.level}</span>
-          <div role="progressbar" aria-label="Kinh nghiệm chiến đấu" aria-valuenow={Math.floor(worldRef.current.aircraft.combatXp)} aria-valuemin={0} aria-valuemax={Math.max(1,hud.combatXpRequired)} className="air-xp-bar h-1 flex-1 overflow-hidden bg-emerald-950"><div className="h-full bg-lime-300" style={{ width: xpRatio * 100 + "%" }} /></div>
-          <span>{worldRef.current.aircraft.level >= 30 ? "TỐI ĐA" : `${Math.floor(worldRef.current.aircraft.combatXp)}/${hud.combatXpRequired} XP`}</span>
-        </div>
+        <AirCombatTacticalHud world={worldRef.current} hud={hud} reducedMotion={reducedMotion} coreChoice={!!coreChoices}
+          onInspect={inspectHub} onCores={()=>{setPauseReason("coreList",true);closeAllTooltips();setShowCoreList(true);}}
+          onPause={()=>{setPauseReason("user",true);closeAllTooltips();}}/>
         <span className="sr-only">HP {Math.round(hud.stats.currentHp)}/{Math.round(hud.stats.maxHp)}; {resourceLabel} {Math.round(hud.stats.currentResource)}/{Math.round(hud.stats.maxResource)}</span>
       </section>
 
@@ -511,7 +529,7 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
         </div>
       )}
 
-      <AirCombatStatusStrip ref={statusStripRef} top={AIR_COMBAT_WORLD.hudHeight + (hud.bossMaxHp > 0 ? BOSS_HUD_HEIGHT : 0)} />
+      <AirCombatStatusStrip ref={statusStripRef} onTooltipChange={onStatusTooltip} top={AIR_COMBAT_WORLD.hudHeight + (hud.bossMaxHp > 0 ? BOSS_HUD_HEIGHT : 0)} />
 
       <div className="absolute inset-x-0 bottom-0 z-20 grid h-[11.1111%] grid-cols-3 gap-2 border-t border-cyan-900/50 bg-slate-950 p-1.5" data-skill-rail="bottom">
         {skillIds.map((skillId) => {
@@ -529,6 +547,8 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
               key={skillId}
               type="button"
               data-skill-id={skillId}
+              data-combat-tooltip-trigger="skill"
+              data-primary-skill={expansionState(worldRef.current.aircraft).primarySkill === skillId}
               data-skill-cost={values.cost}
               data-borrow-ready={borrow && !locked}
               data-reduced-motion={reducedMotion}
@@ -560,8 +580,12 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
 
       {hud.waveState === "countdown" && hud.waveCountdown > 0 && <div className="air-wave-countdown">Đợt tiếp theo sau<strong>{hud.waveCountdown}</strong></div>}
       <AnimatePresence>
+      {hubTooltip && <motion.aside key="hub-tooltip" {...airTooltipMotion} className="air-hub-tooltip" data-combat-tooltip-panel="hub" role="status">
+        <div className="air-tooltip-heading"><strong>{hubTooltip.title}</strong><button type="button" aria-label="Đóng thông tin" onClick={closeAllTooltips}><X/></button></div>
+        <p>{hubTooltip.text}</p>
+      </motion.aside>}
       {tooltipSkill && tooltipModel && (
-        <motion.aside key="skill-tooltip" {...airTooltipMotion} transition={{...airTooltipMotion.transition,duration:reducedMotion?.1:.28}} className="air-skill-tooltip" data-skill-tooltip={tooltipSkill} onPointerDown={event => event.stopPropagation()} onPointerMove={event => event.stopPropagation()}>
+        <motion.aside key="skill-tooltip" {...airTooltipMotion} transition={{...airTooltipMotion.transition,duration:reducedMotion?.1:.28}} className="air-skill-tooltip" data-combat-tooltip-panel="skill" data-skill-tooltip={tooltipSkill} onPointerDown={event => event.stopPropagation()} onPointerMove={event => event.stopPropagation()}>
           <div className="air-tooltip-heading"><h3>{tooltipModel.title}</h3><strong style={{color:"#fde047"}}>Hồi chiêu: {tooltipModel.cooldown.toFixed(1).replace(".", ",")}s</strong></div>
           <p><CoreDescription text={tooltipModel.description}/></p>
           <div className="air-tooltip-details">{tooltipModel.detailRows.map(row => <div key={row}><CoreDescription text={row}/></div>)}</div>
@@ -586,7 +610,7 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
                 onClick={() => chooseCore(card)} className="combat-core-card air-upgrade-card">
                 <CombatUiIcon kind="core" id={card.id} fallback={card.icon} className="combat-core-icon" />
                 <span className="air-upgrade-copy"><strong className="combat-core-name">{card.name}</strong>
-                  <CoreSystemTag system={card.system} />
+                  <CoreSystemTag system={card.system} tier={card.tier} />
                   <span className="air-upgrade-description"><CoreDescription text={card.description} /></span></span>
               </button>
               <button type="button" className="air-core-reroll" aria-label={`Đổi lựa chọn ${slot+1}`}
@@ -599,21 +623,34 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
         </AppModal>
       )}
 
+      {showPrimaryChoice && !coreChoices && <AppModal key="primary-skill" archetype="transaction" layer="exclusive-dialog" layout="viewport-safe" closeOnEscape={false} labelledBy="air-primary-title" panelClassName="air-primary-panel" reducedMotion={reducedMotion}>
+        <OverlayHeader><h2 id="air-primary-title" className="modal-title">CHỌN KỸ NĂNG CHỦ LỰC</h2><p>Học Thuyết Một Mũi Nhọn · áp dụng đến hết lượt chơi</p></OverlayHeader>
+        <OverlayBody><div className="air-primary-choices">{skillIds.map(id=><button key={id} type="button" aria-pressed={primaryChoice===id} onClick={()=>setPrimaryChoice(id)}>
+          <CombatUiIcon kind="skill" id={id} fallback={SKILL_CONFIGS[id].icon}/><strong>{SKILL_CONFIGS[id].name}</strong><p>{SKILL_CONFIGS[id].description}</p>
+        </button>)}</div><p>+22% sát thương · -15% chi phí Tài Nguyên · -15% Hồi Chiêu cơ bản</p></OverlayBody>
+        <OverlayFooter><ModalButton variant="primary" type="button" disabled={!primaryChoice} onClick={()=>{
+          if (!primaryChoice) return;
+          const state=expansionState(worldRef.current.aircraft);state.primarySkill=primaryChoice;state.primaryPending=false;
+          const next=ensureCoreSelection(worldRef.current);
+          if (next) {setCoreChoices(next);setPauseReason("core",true);}
+          setShowPrimaryChoice(false);setPauseReason("primarySkill",false);setHud(makeHudSnapshot(worldRef.current,pauseReasonsRef.current.size>0,pauseLabel(pauseReasonsRef.current)));
+        }}>Xác nhận</ModalButton></OverlayFooter>
+      </AppModal>}
       {showCoreList && !coreChoices && <AirCombatCoreList key="core-list" state={worldRef.current.aircraft} onClose={() => { setShowCoreList(false); setPauseReason("coreList", false); }} />}
 
-      {pauseReasonsRef.current.has("user") && !coreChoices && !showExitConfirm && !showCoreList && (
+      {pauseReasonsRef.current.has("user") && !coreChoices && !showExitConfirm && !showCoreList && !showPrimaryChoice && (
         <ConfirmationDialog key="pause" status="warning" layer="exclusive-dialog" layout="viewport-safe" onClose={() => setPauseReason("user", false)} labelledBy="air-paused-title" panelClassName="text-center">
           <OverlayHeader><Pause className="mx-auto h-8 w-8 text-[var(--modal-info)]" /><h2 id="air-paused-title" className="modal-title">Đã tạm dừng</h2></OverlayHeader>
           <OverlayBody data-pause-overlay="user"><p className="text-xs text-[var(--modal-text)]">Hồi tài nguyên, hồi chiêu và thời gian trận đều đứng yên.</p></OverlayBody>
-          <OverlayFooter><ModalButton variant="primary" type="button" onClick={() => setPauseReason("user", false)} className="w-full"><Play className="h-4 w-4" /> Tiếp tục</ModalButton></OverlayFooter>
+          <OverlayFooter data-stack-actions="true"><ModalButton variant="primary" type="button" onClick={() => setPauseReason("user", false)} className="w-full"><Play className="h-4 w-4" /> Tiếp tục</ModalButton><ModalButton variant="ghost" type="button" className="text-rose-300" onClick={openExit}>Thoát Game</ModalButton></OverlayFooter>
         </ConfirmationDialog>
       )}
 
       {showExitConfirm && (
         <ConfirmationDialog key="exit" status="warning" layer="exclusive-dialog" layout="viewport-safe" onClose={closeExit} labelledBy="air-exit-title" panelClassName="text-center">
-          <OverlayHeader><ArrowLeft className="mx-auto h-8 w-8 text-[var(--modal-danger)]" /><h2 id="air-exit-title" className="modal-title">Rời lượt xuất kích?</h2></OverlayHeader>
+          <OverlayHeader><ArrowLeft className="mx-auto h-8 w-8 text-[var(--modal-danger)]" /><h2 id="air-exit-title" className="modal-title">Bạn có chắc chắn muốn rời đi?</h2></OverlayHeader>
           <OverlayBody data-exit-confirm="open"><p className="text-xs leading-relaxed text-[var(--modal-text)]">Lượt hiện tại sẽ kết thúc và không nhận thưởng.</p></OverlayBody>
-          <OverlayFooter data-stack-actions="true"><ModalButton variant="primary" type="button" autoFocus onClick={closeExit}>Ở Lại</ModalButton><ModalButton variant="ghost" type="button" className="text-rose-300" onClick={onExit}>Rời Đi</ModalButton></OverlayFooter>
+          <OverlayFooter data-stack-actions="true"><ModalButton variant="primary" type="button" autoFocus onClick={closeExit}>Ở Lại</ModalButton><ModalButton variant="ghost" type="button" className="text-rose-300" onClick={onExit}>Thoát Game</ModalButton></OverlayFooter>
         </ConfirmationDialog>
       )}
 

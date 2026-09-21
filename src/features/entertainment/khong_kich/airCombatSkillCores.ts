@@ -1,5 +1,6 @@
 /** Run-local state only. Never serialized into player saves. */
 export interface MissileSalvo {
+  expansionCast?: import("./airCombatExpansion").ExpansionCast;
   id: number; pending: number; total: number; launchIndex: number; pairIds: number[]; live: Set<number>; data: number;
 }
 export interface SkillCoreRuntime {
@@ -7,8 +8,8 @@ export interface SkillCoreRuntime {
   decoyCasts: Map<number, { restored: number; dashIds: Set<string> }>;
   volleyHits: Map<number, Set<number>>;
   salvos: MissileSalvo[];
-  aftershocks: {x:number;y:number;at:number}[];
-  blackHoles: {id:number;x:number;y:number;until:number}[];
+  aftershocks: {x:number;y:number;at:number;expansionCast?: import("./airCombatExpansion").ExpansionCast}[];
+  blackHoles: {id:number;x:number;y:number;until:number;expansionCast?: import("./airCombatExpansion").ExpansionCast}[];
   enemyEffects: Map<number, {weakenUntil?:number;markUntil?:number;armorUntil?:number;phantomHit?:number;hawkHit?:number}>;
   syncTarget: number | null; syncUntil: number;
   syncLockouts: Map<number,number>; syncedTargets: Set<number>;

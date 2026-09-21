@@ -724,7 +724,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_054",
     "name": "Chậm mà chắc",
-    "description": "Khóa Tốc Độ Bắn ở 1,2/s. Mỗi 0,1 Tốc Độ Bắn vượt giới hạn chuyển thành +8 Hỏa Lực.",
+    "description": "Khóa Tốc Độ Bắn ở 1,2/s. Mỗi 0,1 Tốc Độ Bắn vượt giới hạn chuyển thành +10 Hỏa Lực.",
     "system": "utility",
     "icon": "core:core_054",
     "category": "offense",
@@ -944,7 +944,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_074",
     "name": "Bạo Kích Hồi Tiếp",
-    "description": "Mỗi đòn chí mạng giảm 0,1 giây hồi chiêu của cả 3 kỹ năng, tối đa 1 giây mỗi giây.",
+    "description": "Nhận +10% Tỷ Lệ Chí Mạng, mỗi đòn chí mạng giảm 0,2 giây hồi chiêu của cả 3 kỹ năng, tối đa 1 giây mỗi giây.",
     "system": "utility",
     "icon": "core:core_074",
     "category": "offense",
@@ -1087,7 +1087,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_087",
     "name": "Mắt thần chiến trường",
-    "description": "+20% Crit Chance, +40% Crit Damage",
+    "description": "+35% Tỷ Lệ Chí Mạng, +70% Sát Thương Chí Mạng.",
     "system": "attack",
     "icon": "core:core_087",
     "category": "offense",
@@ -1141,8 +1141,8 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   },
   {
     "id": "core_092",
-    "name": "Bộ tái tạo sinh học",
-    "description": "Sau 5 giây không nhận sát thương, hồi 0,8% Máu Tối Đa mỗi giây. Hiệu ứng tiếp tục hoạt động khi đã đầy Máu.",
+    "name": "Tái Tạo Sinh Học",
+    "description": "Sau 5 giây không nhận sát thương, hồi 1% Máu Tối Đa mỗi giây.",
     "system": "defense",
     "icon": "core:core_092",
     "category": "defense",
@@ -1164,7 +1164,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_094",
     "name": "Khế Ước Quỷ Quyệt",
-    "description": "Mất 35% Máu Tối Đa để nhận +40% Hỏa Lực và +10% Tỷ Lệ Chí Mạng.",
+    "description": "Mất 35% Máu Tối Đa để nhận +40% Hỏa Lực và +25% Tỷ Lệ Chí Mạng.",
     "system": "utility",
     "icon": "core:core_094",
     "category": "offense",
@@ -1175,7 +1175,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_095",
     "name": "Nghịch Lý Bạo Kích",
-    "description": "Khóa Tỷ Lệ Chí Mạng ở 25%; nhận +140% Sát Thương Chí Mạng.",
+    "description": "Khóa Tỷ Lệ Chí Mạng ở 25%; bù lại nhận +200% Sát Thương Chí Mạng.",
     "system": "utility",
     "icon": "core:core_095",
     "category": "offense",
@@ -1932,7 +1932,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 {
   "id": "core_151",
   "name": "Phản Xạ Cường Hóa",
-  "description": "Tinh Đạn của Phản Quỹ Đạo gây 45% Hỏa Lực thay vì 30%.",
+  "description": "Tinh Đạn của Phản Quỹ Đạo gây 70% Hỏa Lực thay vì 30%.",
   "system": "skill",
   "icon": "skill:orbit_reversal",
   "category": "skill",
@@ -2200,5 +2200,468 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   ],
   "skillId": "starfall",
   "skillSlot": 3
+}
+,
+{
+  "id": "core_168",
+  "name": "Kíp Nổ Trễ",
+  "description": "Mỗi phát bắn thường thứ 8 trúng mục tiêu sẽ gắn một vi kíp. Sau 0,6 giây, vi kíp nổ gây sát thương tất cả mục tiêu bằng 45% Hỏa Lực trong bán kính 50px.",
+  "system": "attack",
+  "icon": "core:core_168",
+  "category": "offense",
+  "tiers": [
+    "silver"
+  ]
+},
+{
+  "id": "core_169",
+  "name": "Bộ Điều Áp",
+  "description": "Khi Tài Nguyên trên 70%: +10 Hoả Lực. Khi Tài Nguyên dưới 30%: +0,7 Hồi Máu mỗi giây. Khoảng 30–70% +0,2 tốc độ bắn.",
+  "system": "utility",
+  "icon": "core:core_169",
+  "category": "weapon",
+  "tiers": [
+    "silver"
+  ]
+},
+{
+  "id": "core_170",
+  "name": "Báo Động Sớm",
+  "description": "Khi các đòn tấn công của địch đi vào phạm vi bán kính 70px quanh chiến cơ, nhận +18 Giáp trong 1,5 giây. Hồi chiêu 15 giây.",
+  "system": "defense",
+  "icon": "core:core_170",
+  "category": "defense",
+  "tiers": [
+    "silver"
+  ]
+},
+{
+  "id": "core_171",
+  "name": "Chốt An Toàn",
+  "description": "Trong 1,5 giây sau khi dùng kỹ năng, đòn gây sát thương đầu tiên trúng người chơi bị giảm 25%.",
+  "system": "defense",
+  "icon": "core:core_171",
+  "category": "defense",
+  "tiers": [
+    "silver"
+  ]
+},
+{
+  "id": "core_172",
+  "name": "Tụ Điện Trống",
+  "description": "Giữ Tài Nguyên ở mức 100% liên tục 3 giây sẽ tích một lần Tụ Điện; kỹ năng kế tiếp tiêu hao Tụ Điện để hoàn lại 15% Tài Nguyên của kỹ năng đó.",
+  "system": "resource",
+  "icon": "core:core_172",
+  "category": "resource",
+  "tiers": [
+    "silver"
+  ]
+},
+{
+  "id": "core_173",
+  "name": "Dây Chằng Khẩn",
+  "description": "Khi một lớp Lá chắn tạm thời bị phá hoặc tự hết hạn, hồi lại 2,5% Máu Tối Đa (chỉ áp dụng cho các lá chắn hấp thụ sát thương - Máu ảo)",
+  "system": "defense",
+  "icon": "core:core_173",
+  "category": "defense",
+  "tiers": [
+    "silver"
+  ]
+},
+{
+  "id": "core_174",
+  "name": "Đệm Xung",
+  "description": "Khi mất trên 8% máu tối đa trong vòng 2 giây gần nhất, hồi lại 8% tài nguyên tối đa. Hồi chiêu 15 giây.",
+  "system": "resource",
+  "icon": "core:core_174",
+  "category": "resource",
+  "tiers": [
+    "silver"
+  ]
+},
+{
+  "id": "core_175",
+  "name": "Tần Số Xen Kẽ",
+  "description": "Dùng một kỹ năng khác kỹ năng vừa dùng gần nhất trong vòng 5 giây sẽ cho +12% mọi sát thương trong 4 giây (kể cả bắn thường)",
+  "system": "attack",
+  "icon": "core:core_175",
+  "category": "offense",
+  "tiers": [
+    "silver"
+  ]
+},
+{
+  "id": "core_176",
+  "name": "Khoảng Thở",
+  "description": "Khi không có hoả lực địch hoặc địch xuất hiện trong phạm vi bán kính 100px quanh chiến cơ, hồi 0,35% Máu Tối Đa mỗi giây. Hiệu ứng dừng ngay có hoả lực địch hoặc địch tiến vào vùng.",
+  "system": "defense",
+  "icon": "core:core_176",
+  "category": "defense",
+  "tiers": [
+    "gold"
+  ]
+},
+{
+  "id": "core_177",
+  "name": "Vỏ Bọc Chống Điện",
+  "description": "Giảm 25% sát thương nhận từ projectile tự dẫn, Beam và EMP.",
+  "system": "defense",
+  "icon": "core:core_177",
+  "category": "defense",
+  "tiers": [
+    "silver"
+  ]
+},
+{
+  "id": "core_178",
+  "name": "Phanh Từ",
+  "description": "Mỗi 12 giây, projectile địch đầu tiên tiến vào phạm vi bán kính 40px quanh chiến cơ bị giảm 60% tốc độ trong 1,2 giây.",
+  "system": "utility",
+  "icon": "core:core_178",
+  "category": "weapon",
+  "tiers": [
+    "silver"
+  ]
+},
+{
+  "id": "core_179",
+  "name": "Bộ Hiệu Chỉnh Sai Số",
+  "description": "Mỗi đòn bắn thường không chí mạng cho 1 cộng dồn Sai Số, mỗi cộng dồn tăng +2% Tỷ Lệ Chí Mạng, lên tới tối đa 10 cộng dồn. Khi một phát bắn thường gây chí mạng, mất toàn bộ cộng dồn Sai Số và sẽ tích lại từ đầu.",
+  "system": "attack",
+  "icon": "core:core_179",
+  "category": "offense",
+  "tiers": [
+    "silver"
+  ]
+},
+{
+  "id": "core_180",
+  "name": "Phá Khiên",
+  "description": "Đạn thường gây thêm 18% sát thương lên Lá Chắn của kẻ địch. Khi mục tiêu bị người chơi phá vỡ lá chắn, mục tiêu chịu thêm 8% sát thương từ đạn thường trong 3 giây.",
+  "system": "attack",
+  "icon": "core:core_180",
+  "category": "offense",
+  "tiers": [
+    "silver"
+  ]
+},
+{
+  "id": "core_181",
+  "name": "Van Xả Kỹ Năng",
+  "description": "Sau khi hiệu lực chính của một kỹ năng kết thúc, nhận +25% Hồi Tài Nguyên trong 3 giây.",
+  "system": "resource",
+  "icon": "core:core_181",
+  "category": "resource",
+  "tiers": [
+    "gold"
+  ]
+},
+{
+  "id": "core_182",
+  "name": "Pin Dự Phòng",
+  "description": "Khi Tài Nguyên tụt xuống dưới 20%, hồi dần 20% Tài Nguyên Tối Đa trong 4 giây. Hồi chiêu 18 giây sau khi kết thúc hiệu ứng",
+  "system": "resource",
+  "icon": "core:core_182",
+  "category": "resource",
+  "tiers": [
+    "silver"
+  ]
+},
+{
+  "id": "core_183",
+  "name": "Giáp Độ Sâu",
+  "description": "Nhận +20 Giáp cho mỗi loại hiệu ứng bất lợi đang hoạt động trên người chơi, tối đa +40 Giáp.",
+  "system": "defense",
+  "icon": "core:core_183",
+  "category": "defense",
+  "tiers": [
+    "silver"
+  ]
+},
+{
+  "id": "core_184",
+  "name": "Bảo Hộ Linh Hồn",
+  "description": "Sau khi hồi đủ 18 giây, đòn tấn công hoặc hiệu ứng khống chế kế tiếp trúng chiến cơ bị vô hiệu hoàn toàn và kích hoạt Bảo Hộ Thiên Giới: miễn toàn bộ sát thương và hiệu ứng khống chế trong 2,5 giây. Hồi chiêu bắt đầu sau khi hiệu ứng kết thúc.",
+  "system": "defense",
+  "icon": "core:core_184",
+  "category": "defense",
+  "tiers": [
+    "diamond"
+  ]
+},
+{
+  "id": "core_185",
+  "name": "Đánh Dấu Sơ Bộ",
+  "description": "Phát đạn thường chính đầu tiên trúng một mục tiêu sẽ đánh dấu 4 giây; sát thương kỹ năng kế tiếp lên mục tiêu đó gây thêm 12% và tiêu dấu. Hồi chiêu mỗi mục tiêu 12s",
+  "system": "attack",
+  "icon": "core:core_185",
+  "category": "offense",
+  "tiers": [
+    "silver"
+  ]
+},
+{
+  "id": "core_186",
+  "name": "Hợp Lưu Hỏa Lực",
+  "description": "Dùng 2 kỹ năng khác nhau trong vòng 4 giây sẽ cho +35% sát thương đạn thường trong 6 giây. Hồi chiêu 20s",
+  "system": "attack",
+  "icon": "core:core_186",
+  "category": "offense",
+  "tiers": [
+    "gold"
+  ]
+},
+{
+  "id": "core_187",
+  "name": "Tụ Năng Phản Chấn",
+  "description": "Tích 20% sát thương thực tế đã nhận sau giảm trừ vào bộ tụ, tối đa bằng 120% Hỏa Lực. Kỹ năng gây sát thương kế tiếp cộng lượng đã tích vào lần gây sát thương đầu tiên rồi xóa kho.",
+  "system": "attack",
+  "icon": "core:core_187",
+  "category": "offense",
+  "tiers": [
+    "gold"
+  ]
+},
+{
+  "id": "core_188",
+  "name": "Nhắm vào yếu điểm",
+  "description": "Nhận +15% tỷ lệ chí mạng",
+  "system": "attack",
+  "icon": "core:core_188",
+  "category": "offense",
+  "tiers": [
+    "gold"
+  ]
+},
+{
+  "id": "core_189",
+  "name": "Đạn Truy Kích",
+  "description": "Khi đạn thường hạ mục tiêu, phóng một mảnh đạn tự tìm tới địch gần nhất gây 150% Hỏa Lực.",
+  "system": "attack",
+  "icon": "core:core_189",
+  "category": "offense",
+  "tiers": [
+    "gold"
+  ]
+},
+{
+  "id": "core_190",
+  "name": "Nén Năng Lượng",
+  "description": "Nhận +22% sát thương kỹ năng, nhưng mọi kỹ năng tiêu tốn thêm 15% Tài Nguyên.",
+  "system": "attack",
+  "icon": "core:core_190",
+  "category": "offense",
+  "tiers": [
+    "gold"
+  ]
+},
+{
+  "id": "core_191",
+  "name": "Hỏa Lực Luân Phiên",
+  "description": "Hạ địch bằng đạn thường cho +20% sát thương kỹ năng kế tiếp trong 5 giây. Hạ địch bằng kỹ năng cho +20% sát thương đạn thường trong 4 giây. Hai trạng thái không cộng dồn.",
+  "system": "attack",
+  "icon": "core:core_191",
+  "category": "offense",
+  "tiers": [
+    "gold"
+  ]
+},
+{
+  "id": "core_192",
+  "name": "Áo Giáp Xoay Pha",
+  "description": "Khi đang có lá chắn: +15% mọi sát thương. Khi không có lá chắn: +14 Giáp.",
+  "system": "utility",
+  "icon": "core:core_192",
+  "category": "weapon",
+  "tiers": [
+    "gold"
+  ]
+},
+{
+  "id": "core_193",
+  "name": "Nhịp Ba Kỹ Năng",
+  "description": "Dùng đủ cả 3 kỹ năng khác nhau trong 7 giây sẽ giảm 3 giây hồi chiêu còn lại của cả 3 kỹ năng và cho +25% hồi phục tài nguyên trong 5 giây.",
+  "system": "resource",
+  "icon": "core:core_193",
+  "category": "resource",
+  "tiers": [
+    "gold"
+  ]
+},
+{
+  "id": "core_194",
+  "name": "Phá Khóa Chí Mạng",
+  "description": "Nhận +10% tỷ lệ chí mạng. Đòn chí mạng lên mục tiêu đang bị giảm Giáp sẽ làm Sát Thương Chí Mạng lên chính mục tiêu đó tăng thêm 35% trong 4 giây.",
+  "system": "attack",
+  "icon": "core:core_194",
+  "category": "offense",
+  "tiers": [
+    "gold"
+  ]
+},
+{
+  "id": "core_195",
+  "name": "Hộp Đen Cứu Sinh",
+  "description": "Nếu mất ít nhất 15% Máu Tối Đa trong 2 giây gần nhất, hồi dần 10% Máu Tối Đa trong 4 giây. Hồi chiêu 20s sau khi kết thúc hiệu ứng",
+  "system": "defense",
+  "icon": "core:core_195",
+  "category": "defense",
+  "tiers": [
+    "gold"
+  ]
+},
+{
+  "id": "core_196",
+  "name": "Dấu Son Bạo Kích",
+  "description": "Mỗi kẻ địch bị hạ bởi một đòn chí mạng trực tiếp sẽ cho +2,5% Sát Thương Chí Mạng vĩnh viễn trong suốt lượt chơi, tối đa kiếm được +50% sát thương chí mạng.",
+  "system": "attack",
+  "icon": "core:core_196",
+  "category": "offense",
+  "tiers": [
+    "gold"
+  ]
+},
+{
+  "id": "core_197",
+  "name": "Chịu Đau",
+  "description": "Chuyển hóa 25% sát thương đáng lẽ trừ trực tiếp vào Máu thành Sát Thương Trì Hoãn và trả dần mỗi giây trong 3 giây. Sát thương trả nợ không được xem là một lần nhận sát thương mới và không kích hoạt các proc “khi nhận/mất sát thương”. Mỗi 12 quái thường bị hạ, hoặc khi hạ 1 Tinh Anh/Boss, xóa toàn bộ Sát Thương Trì Hoãn đang còn và hồi 2% Máu Tối Đa.",
+  "system": "utility",
+  "icon": "core:core_197",
+  "category": "weapon",
+  "tiers": [
+    "gold"
+  ]
+},
+{
+  "id": "core_198",
+  "name": "Vệ Tinh Hộ Mệnh",
+  "description": "Dùng kỹ năng tạo tối đa 3 mảnh vệ tinh bay quanh người chơi trong 4 giây. Mỗi mảnh chặn tối đa 1 projectile địch có thể chặn; nếu hết thời gian mà chưa chặn, mảnh đó bắn vào địch gần nhất gây 90% Hỏa Lực. Sử dụng tiếp kỹ năng khi vẫn còn vệ tinh thì sẽ làm mới thời gian hiệu lực chứ không tạo thêm vệ tinh.",
+  "system": "utility",
+  "icon": "core:core_198",
+  "category": "weapon",
+  "tiers": [
+    "diamond"
+  ]
+},
+{
+  "id": "core_199",
+  "name": "Mạch Quá Tải",
+  "description": "Mỗi lần dùng kỹ năng nhận 1 Overclock. Kỹ năng kế tiếp gây thêm 18% sát thương cho mỗi cộng dồn, tối đa 3. Khi dùng kỹ năng ở 3 cộng dồn, kỹ năng đó nhận +54% sát thương, đồng thời phát xung toàn màn hình gây 250% Hỏa Lực rồi reset Overclock.",
+  "system": "attack",
+  "icon": "core:core_199",
+  "category": "offense",
+  "tiers": [
+    "diamond"
+  ]
+},
+{
+  "id": "core_200",
+  "name": "Tái Chế Lá Chắn",
+  "description": "Tăng 50% sức mạnh của lá chắn, khi lá chắn bị phá hoặc hết hạn, phát nổ trên một vùng rộng bán kính 120px xung quanh chiến cơ, gây sát thương bằng 160% tổng lượng sát thương lớp lá chắn đó đã hấp thụ.",
+  "system": "utility",
+  "icon": "core:core_200",
+  "category": "weapon",
+  "tiers": [
+    "diamond"
+  ]
+},
+{
+  "id": "core_201",
+  "name": "Cộng Hưởng Kho Vũ Khí",
+  "description": "Mỗi Lõi Tấn Công khác nhau đang sở hữu cho +5% sát thương đạn thường (tối đa +30%); mỗi Lõi Tài Nguyên cho +5% sát thương kỹ năng (tối đa +30%); mỗi Lõi Phòng Thủ cho +4% Giảm Sát Thương (tối đa 24%); mỗi Lõi Đa Dụng cho +2% sát thương đạn thường, +2% sát thương kỹ năng và +2% Giảm Sát Thương (mỗi phần tối đa +12%). Lõi Kỹ Năng không được tính. Bản thân Cộng Hưởng Kho Vũ Khí được tính là 1 Lõi Đa Dụng.",
+  "system": "utility",
+  "icon": "core:core_201",
+  "category": "weapon",
+  "tiers": [
+    "diamond"
+  ]
+},
+{
+  "id": "core_202",
+  "name": "Học Thuyết Một Mũi Nhọn",
+  "description": "Sau khi nhận lõi, chọn 1 Kỹ năng để trở thành Kỹ Năng Chủ Lực tới hết lượt chơi, kỹ năng Chủ Lực sẽ được: +22% sát thương, -15% chi phí Tài Nguyên và -15% Hồi Chiêu cơ bản",
+  "system": "attack",
+  "icon": "core:core_202",
+  "category": "offense",
+  "tiers": [
+    "diamond"
+  ]
+},
+{
+  "id": "core_203",
+  "name": "Nhiễu Chủ Động",
+  "description": "Thời lượng hiệu ứng bất lợi trên người chơi tăng thêm 20%. Đổi lại, chiến cơ giờ đây vẫn có thể bắn thường và sử dụng kỹ năng trong khi bị khống chế cứng (chỉ còn bị khoá di chuyển), đồng thời trong khi đang chịu ít nhất 1 hiệu ứng bất lợi, giảm 25% sát thương phải nhận và gây thêm 35% mọi sát thương cho đến khi hiệu ứng bất lợi kết thúc.",
+  "system": "utility",
+  "icon": "core:core_203",
+  "category": "weapon",
+  "tiers": [
+    "diamond"
+  ]
+},
+{
+  "id": "core_204",
+  "name": "Khiên Hồi Quy",
+  "description": "Khi lá chắn bị phá hoặc hết hiệu lực, nếu trong 2 giây tiếp theo người chơi không mất thêm Máu, tái tạo Khiên bằng 50% dung lượng ban đầu của lớp Khiên vừa vỡ. Tối đa tái tạo 1 lần với mỗi lần sử dụng.",
+  "system": "defense",
+  "icon": "core:core_204",
+  "category": "defense",
+  "tiers": [
+    "gold"
+  ]
+},
+{
+  "id": "core_205",
+  "name": "Dao 2 lưỡi",
+  "description": "Tăng thêm 25% mọi sát thương gây ra nhưng đổi lại bạn sẽ chịu thêm 18% sát thương nhận vào",
+  "system": "attack",
+  "icon": "core:core_205",
+  "category": "offense",
+  "tiers": [
+    "diamond"
+  ]
+},
+{
+  "id": "core_206",
+  "name": "Đạn Siêu Nặng",
+  "description": "Đạn bắn thường gây thêm 70% sát thương và xuyên thêm 1 mục tiêu, nhưng tổng Tốc Độ Bắn giảm 20% và tốc độ đạn bay giảm 30%.",
+  "system": "attack",
+  "icon": "core:core_206",
+  "category": "offense",
+  "tiers": [
+    "diamond"
+  ]
+},
+{
+  "id": "core_207",
+  "name": "Pha Đối Nghịch",
+  "description": "Nhận +25% tỷ lệ chí mạng. Đòn bắn thường chí mạng đánh dấu mục tiêu 5 giây bằng “Pha Kỹ Năng”; kỹ năng kế tiếp trúng mục tiêu tiêu dấu để gây thêm 45% sát thương. Một kỹ năng trúng mục tiêu không có Pha Kỹ Năng sẽ tạo “Pha Súng”; phát đạn thường chính kế tiếp tiêu dấu để gây thêm 45% sát thương.",
+  "system": "attack",
+  "icon": "core:core_207",
+  "category": "offense",
+  "tiers": [
+    "diamond"
+  ]
+},
+{
+  "id": "core_208",
+  "name": "Tế Bào Song Năng",
+  "description": "Tăng chỉ số hồi tài nguyên mỗi giây bằng 50% chỉ số hồi máu mỗi giây.",
+  "system": "resource",
+  "icon": "core:core_208",
+  "category": "resource",
+  "tiers": [
+    "diamond"
+  ]
+},
+{
+  "id": "core_209",
+  "name": "Chế Độ Tử Thủ",
+  "description": "Khi Máu xuống dưới 35%, chiến cơ kích hoạt chế độ Tử Thủ: +150 Giáp, +40% Hồi Tài Nguyên và giảm 20% Hồi Chiêu, nhưng mọi sát thương gây ra giảm 15%. Chỉ rời trạng thái khi Máu vượt 35%.",
+  "system": "utility",
+  "icon": "core:core_209",
+  "category": "weapon",
+  "tiers": [
+    "diamond"
+  ]
 }
 ];

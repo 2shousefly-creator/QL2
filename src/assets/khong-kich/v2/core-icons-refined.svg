@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1792" height="1536" viewBox="0 0 1792 1536"><defs><clipPath id="cell-clip"><rect width="128" height="128" rx="12"/></clipPath><linearGradient id="metal" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffffff"/><stop offset=".35" stop-color="#c4daeb"/><stop offset=".52" stop-color="#8aa4bd"/><stop offset=".57" stop-color="#d5e5f1"/><stop offset="1" stop-color="#415a75"/></linearGradient><radialGradient id="bg-cyan" cx=".4" cy=".3" r=".85"><stop stop-color="#073956"/><stop offset="1" stop-color="#050b17"/></radialGradient><radialGradient id="halo-cyan"><stop stop-color="#53ddff" stop-opacity=".5"/><stop offset="1" stop-color="#53ddff" stop-opacity="0"/></radialGradient><radialGradient id="bg-gold" cx=".4" cy=".3" r=".85"><stop stop-color="#4c300b"/><stop offset="1" stop-color="#050b17"/></radialGradient><radialGradient id="halo-gold"><stop stop-color="#ffd15d" stop-opacity=".5"/><stop offset="1" stop-color="#ffd15d" stop-opacity="0"/></radialGradient><radialGradient id="bg-violet" cx=".4" cy=".3" r=".85"><stop stop-color="#312059"/><stop offset="1" stop-color="#050b17"/></radialGradient><radialGradient id="halo-violet"><stop stop-color="#c4a1ff" stop-opacity=".5"/><stop offset="1" stop-color="#c4a1ff" stop-opacity="0"/></radialGradient><radialGradient id="bg-orange" cx=".4" cy=".3" r=".85"><stop stop-color="#5a2815"/><stop offset="1" stop-color="#050b17"/></radialGradient><radialGradient id="halo-orange"><stop stop-color="#ffb968" stop-opacity=".5"/><stop offset="1" stop-color="#ffb968" stop-opacity="0"/></radialGradient><radialGradient id="bg-green" cx=".4" cy=".3" r=".85"><stop stop-color="#0d3e32"/><stop offset="1" stop-color="#050b17"/></radialGradient><radialGradient id="halo-green"><stop stop-color="#6aefaa" stop-opacity=".5"/><stop offset="1" stop-color="#6aefaa" stop-opacity="0"/></radialGradient><radialGradient id="bg-blue" cx=".4" cy=".3" r=".85"><stop stop-color="#112c5b"/><stop offset="1" stop-color="#050b17"/></radialGradient><radialGradient id="halo-blue"><stop stop-color="#6cbaff" stop-opacity=".5"/><stop offset="1" stop-color="#6cbaff" stop-opacity="0"/></radialGradient><radialGradient id="bg-purple" cx=".4" cy=".3" r=".85"><stop stop-color="#3b1954"/><stop offset="1" stop-color="#050b17"/></radialGradient><radialGradient id="halo-purple"><stop stop-color="#d895ff" stop-opacity=".5"/><stop offset="1" stop-color="#d895ff" stop-opacity="0"/></radialGradient><radialGradient id="bg-red" cx=".4" cy=".3" r=".85"><stop stop-color="#501c29"/><stop offset="1" stop-color="#050b17"/></radialGradient><radialGradient id="halo-red"><stop stop-color="#ff8b79" stop-opacity=".5"/><stop offset="1" stop-color="#ff8b79" stop-opacity="0"/></radialGradient><g id="spark"><path d="M50 8 60 36 91 23 70 48 95 62 64 64 60 93 46 70 20 90 32 60 5 46 37 39Z" fill="currentColor" /><path d="M50 29 57 45 75 51 56 57 48 76 42 57 25 49 43 44Z" fill="#fff6dc" /></g>
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1792" viewBox="0 0 1920 1792"><defs><clipPath id="cell-clip"><rect width="128" height="128" rx="12"/></clipPath><linearGradient id="metal" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffffff"/><stop offset=".35" stop-color="#c4daeb"/><stop offset=".52" stop-color="#8aa4bd"/><stop offset=".57" stop-color="#d5e5f1"/><stop offset="1" stop-color="#415a75"/></linearGradient><radialGradient id="bg-cyan" cx=".4" cy=".3" r=".85"><stop stop-color="#073956"/><stop offset="1" stop-color="#050b17"/></radialGradient><radialGradient id="halo-cyan"><stop stop-color="#53ddff" stop-opacity=".5"/><stop offset="1" stop-color="#53ddff" stop-opacity="0"/></radialGradient><radialGradient id="bg-gold" cx=".4" cy=".3" r=".85"><stop stop-color="#4c300b"/><stop offset="1" stop-color="#050b17"/></radialGradient><radialGradient id="halo-gold"><stop stop-color="#ffd15d" stop-opacity=".5"/><stop offset="1" stop-color="#ffd15d" stop-opacity="0"/></radialGradient><radialGradient id="bg-violet" cx=".4" cy=".3" r=".85"><stop stop-color="#312059"/><stop offset="1" stop-color="#050b17"/></radialGradient><radialGradient id="halo-violet"><stop stop-color="#c4a1ff" stop-opacity=".5"/><stop offset="1" stop-color="#c4a1ff" stop-opacity="0"/></radialGradient><radialGradient id="bg-orange" cx=".4" cy=".3" r=".85"><stop stop-color="#5a2815"/><stop offset="1" stop-color="#050b17"/></radialGradient><radialGradient id="halo-orange"><stop stop-color="#ffb968" stop-opacity=".5"/><stop offset="1" stop-color="#ffb968" stop-opacity="0"/></radialGradient><radialGradient id="bg-green" cx=".4" cy=".3" r=".85"><stop stop-color="#0d3e32"/><stop offset="1" stop-color="#050b17"/></radialGradient><radialGradient id="halo-green"><stop stop-color="#6aefaa" stop-opacity=".5"/><stop offset="1" stop-color="#6aefaa" stop-opacity="0"/></radialGradient><radialGradient id="bg-blue" cx=".4" cy=".3" r=".85"><stop stop-color="#112c5b"/><stop offset="1" stop-color="#050b17"/></radialGradient><radialGradient id="halo-blue"><stop stop-color="#6cbaff" stop-opacity=".5"/><stop offset="1" stop-color="#6cbaff" stop-opacity="0"/></radialGradient><radialGradient id="bg-purple" cx=".4" cy=".3" r=".85"><stop stop-color="#3b1954"/><stop offset="1" stop-color="#050b17"/></radialGradient><radialGradient id="halo-purple"><stop stop-color="#d895ff" stop-opacity=".5"/><stop offset="1" stop-color="#d895ff" stop-opacity="0"/></radialGradient><radialGradient id="bg-red" cx=".4" cy=".3" r=".85"><stop stop-color="#501c29"/><stop offset="1" stop-color="#050b17"/></radialGradient><radialGradient id="halo-red"><stop stop-color="#ff8b79" stop-opacity=".5"/><stop offset="1" stop-color="#ff8b79" stop-opacity="0"/></radialGradient><g id="spark"><path d="M50 8 60 36 91 23 70 48 95 62 64 64 60 93 46 70 20 90 32 60 5 46 37 39Z" fill="currentColor" /><path d="M50 29 57 45 75 51 56 57 48 76 42 57 25 49 43 44Z" fill="#fff6dc" /></g>
 <g id="power"><path d="M19 48 50 12 81 48H63V87H37V48Z" fill="currentColor" /><path d="M50 21 71 44H56V77H46V44H30Z" fill="#fff6dc" /></g>
 <g id="speed"><path d="M13 15 51 50 13 85H35L75 50 35 15ZM51 15 89 50 51 85H70L99 50 70 15Z" fill="currentColor" /><path d="M22 28 46 50 22 72H32L58 50 32 28Z" fill="#fff6dc" /></g>
 <g id="shell"><path d="M57 10Q82 14 88 40L50 79 22 51Z" fill="url(#metal)" /><path d="M57 10 73 18 35 64 22 51Z" fill="currentColor" /><path d="M16 55 45 83 35 93 7 65Z" fill="url(#metal)" /><path d="M73 18 88 40 74 38 62 26Z" fill="#fff6dc" /><path d="M13 81 25 94 3 99Z" fill="currentColor" /></g>
@@ -82,7 +82,18 @@
 <g id="specialize"><use href="#hull" transform="translate(10 28) scale(0.7)"/><rect x="4" y="1" width="26" height="22" rx="4" fill="url(#metal)"/><rect x="37" y="1" width="26" height="22" rx="4" fill="url(#metal)"/><rect x="70" y="1" width="26" height="22" rx="4" fill="url(#metal)"/><path d="M0 0 27 25M33 0 60 25M66 0 93 25" fill="none" stroke="#ff657e" stroke-width="7"/></g>
 <g id="balance"><use href="#shell" transform="translate(-2 20) scale(0.5)"/><use href="#shieldPower" transform="translate(26 27) scale(0.5)"/><use href="#shield" transform="translate(55 32) scale(0.46)"/><rect x="3" y="4" width="29" height="9" rx="2" fill="#6aefaa"/><rect x="36" y="4" width="19" height="9" rx="2" fill="#ffd15d"/><rect x="69" y="4" width="7" height="9" rx="2" fill="#ff657e"/></g>
 <g id="data"><use href="#target" transform="translate(32 -2) scale(0.64)"/><rect x="3" y="61" width="13" height="13" rx="3" fill="#fff6dc"/><rect x="22" y="50" width="13" height="13" rx="3" fill="#fff6dc"/><rect x="41" y="39" width="13" height="13" rx="3" fill="#fff6dc"/><path d="M9 88H72V70H82V98H9Z" fill="currentColor" /></g>
-<g id="dense"><circle cx="50" cy="50" r="33" fill="url(#metal)" /><circle cx="50" cy="50" r="25" fill="#081323" /><use href="#spark" transform="translate(22 22) scale(0.56)"/><path d="M0 5 28 25 10 32ZM100 5 72 25 90 32ZM0 95 28 75 10 68ZM100 95 72 75 90 68Z" fill="#fff6dc" /></g></defs>
+<g id="dense"><circle cx="50" cy="50" r="33" fill="url(#metal)" /><circle cx="50" cy="50" r="25" fill="#081323" /><use href="#spark" transform="translate(22 22) scale(0.56)"/><path d="M0 5 28 25 10 32ZM100 5 72 25 90 32ZM0 95 28 75 10 68ZM100 95 72 75 90 68Z" fill="#fff6dc" /></g>
+<g id="microCharge"><use href="#shell" transform="translate(-4 16) scale(0.78)"/><rect x="53" y="11" width="34" height="42" rx="7" fill="url(#metal)"/><rect x="61" y="20" width="18" height="24" rx="3" fill="#081323"/><use href="#spark" transform="translate(49 53) scale(0.48)"/></g>
+<g id="regulator"><circle cx="50" cy="50" r="34" fill="url(#metal)" /><circle cx="50" cy="50" r="22" fill="#081323" /><g transform="rotate(0 50 50)"><path d="M42 3H58L63 24 50 36 37 24Z" fill="currentColor" /><circle cx="50" cy="18" r="6" fill="#fff6dc" /></g><g transform="rotate(120 50 50)"><path d="M42 3H58L63 24 50 36 37 24Z" fill="currentColor" /><circle cx="50" cy="18" r="6" fill="#fff6dc" /></g><g transform="rotate(240 50 50)"><path d="M42 3H58L63 24 50 36 37 24Z" fill="currentColor" /><circle cx="50" cy="18" r="6" fill="#fff6dc" /></g><circle cx="50" cy="50" r="10" fill="#fff6dc" /></g>
+<g id="celestial"><use href="#shield" transform="translate(14 4) scale(0.75)"/><path d="M28 35 2 17 7 56 29 69ZM72 35 98 17 93 56 71 69Z" fill="url(#metal)" /><path d="M2 17 27 44 20 48 7 34ZM98 17 73 44 80 48 93 34Z" fill="#fff6dc" /><use href="#spark" transform="translate(36 29) scale(0.3)"/></g>
+<g id="blackBox"><path d="M10 28 69 10 94 31 90 80 31 97 7 73Z" fill="url(#metal)" /><path d="M16 35 67 20 82 34 31 50Z" fill="currentColor" /><path d="M16 43 32 56 81 43 79 72 32 87 15 69Z" fill="#081323" /><path d="M20 64 31 64 39 53 46 75 54 57 63 61 75 55" fill="none" stroke="#fff6dc" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g id="crimsonSeal"><path d="M50 3 62 14 78 11 82 28 97 37 88 52 94 70 77 78 69 95 51 89 34 98 24 81 7 76 12 57 2 42 18 30 20 13 38 15Z" fill="currentColor" /><circle cx="50" cy="50" r="29" fill="url(#metal)" /><use href="#spark" transform="translate(28 28) scale(0.44)"/></g>
+<g id="guardians"><circle cx="50" cy="50" r="25" fill="none" stroke="currentColor" stroke-width="7"/><use href="#hull" transform="translate(30 25) scale(0.4)"/><g transform="rotate(0 50 50)"><path d="M38 1H62L69 19 50 30 31 19Z" fill="url(#metal)" /><path d="M42 6H58L59 16 50 22 41 16Z" fill="currentColor" /></g><g transform="rotate(120 50 50)"><path d="M38 1H62L69 19 50 30 31 19Z" fill="url(#metal)" /><path d="M42 6H58L59 16 50 22 41 16Z" fill="currentColor" /></g><g transform="rotate(240 50 50)"><path d="M38 1H62L69 19 50 30 31 19Z" fill="url(#metal)" /><path d="M42 6H58L59 16 50 22 41 16Z" fill="currentColor" /></g></g>
+<g id="overclock"><path d="M50 2 88 24V75L50 98 12 75V24Z" fill="url(#metal)" /><path d="M50 13 78 30V69L50 86 22 69V30Z" fill="#081323" /><g transform="rotate(0 50 50)"><path d="M44 19H56L63 39 50 45 37 39Z" fill="currentColor" /></g><g transform="rotate(120 50 50)"><path d="M44 19H56L63 39 50 45 37 39Z" fill="currentColor" /></g><g transform="rotate(240 50 50)"><path d="M44 19H56L63 39 50 45 37 39Z" fill="currentColor" /></g><circle cx="50" cy="52" r="12" fill="#fff6dc" /></g>
+<g id="arsenal"><path d="M22 24 78 78M78 24 22 78" fill="none" stroke="#fff6dc" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><use href="#shell" transform="translate(0 0) scale(0.47)"/><use href="#battery" transform="translate(53 0) scale(0.47)"/><use href="#shield" transform="translate(0 53) scale(0.47)"/><use href="#nodes" transform="translate(53 53) scale(0.47)"/></g>
+<g id="doubleBlade"><path d="M8 4 48 33 51 46 72 59 61 72 48 51 35 48Z" fill="url(#metal)" /><path d="M92 4 52 33 49 46 28 59 39 72 52 51 65 48Z" fill="currentColor" /><path d="M31 70 39 62 61 86 52 96ZM69 70 61 62 39 86 48 96Z" fill="url(#metal)" /><circle cx="50" cy="49" r="9" fill="#fff6dc" /></g>
+<g id="heavyRound"><path d="M33 7Q50 -4 67 7L78 61H22Z" fill="url(#metal)" /><path d="M36 12Q50 3 64 12L67 51H33Z" fill="currentColor" /><rect x="20" y="60" width="60" height="26" rx="4" fill="url(#metal)"/><rect x="17" y="89" width="66" height="10" rx="3" fill="#fff6dc"/><rect x="30" y="65" width="40" height="15" rx="3" fill="#081323"/></g>
+<g id="fortress"><path d="M7 24 26 12V32H40V8H60V32H74V12L93 24V83L50 99 7 83Z" fill="url(#metal)" /><path d="M17 42H83V74L50 88 17 74Z" fill="currentColor" /><use href="#battery" transform="translate(30 36) scale(0.4)"/><path d="M17 49H28V68H17ZM72 49H83V68H72Z" fill="#fff6dc" /></g></defs>
 <g id="core-001" transform="translate(0 0)" color="#ff8b79" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
@@ -237,7 +248,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#6aefaa" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#gem" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-015" transform="translate(0 128)" color="#ff8b79" clip-path="url(#cell-clip)">
+<g id="core-015" transform="translate(1792 0)" color="#ff8b79" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
@@ -248,7 +259,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#speed" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-016" transform="translate(128 128)" color="#6aefaa" clip-path="url(#cell-clip)">
+<g id="core-016" transform="translate(0 128)" color="#6aefaa" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-green)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#6aefaa" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-green)"/>
@@ -259,7 +270,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#6aefaa" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#shield" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-017" transform="translate(256 128)" color="#6aefaa" clip-path="url(#cell-clip)">
+<g id="core-017" transform="translate(128 128)" color="#6aefaa" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-green)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#6aefaa" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-green)"/>
@@ -270,7 +281,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#6aefaa" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#pulse" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-018" transform="translate(384 128)" color="#d895ff" clip-path="url(#cell-clip)">
+<g id="core-018" transform="translate(256 128)" color="#d895ff" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-purple)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#d895ff" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-purple)"/>
@@ -281,7 +292,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#d895ff" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#gravity" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-019" transform="translate(512 128)" color="#53ddff" clip-path="url(#cell-clip)">
+<g id="core-019" transform="translate(384 128)" color="#53ddff" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-cyan)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#53ddff" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-cyan)"/>
@@ -292,7 +303,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#53ddff" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#duration" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-020" transform="translate(640 128)" color="#53ddff" clip-path="url(#cell-clip)">
+<g id="core-020" transform="translate(512 128)" color="#53ddff" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-cyan)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#53ddff" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-cyan)"/>
@@ -303,7 +314,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#53ddff" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#clock" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-021" transform="translate(768 128)" color="#53ddff" clip-path="url(#cell-clip)">
+<g id="core-021" transform="translate(640 128)" color="#53ddff" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-cyan)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#53ddff" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-cyan)"/>
@@ -314,7 +325,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#53ddff" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#power" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-022" transform="translate(896 128)" color="#53ddff" clip-path="url(#cell-clip)">
+<g id="core-022" transform="translate(768 128)" color="#53ddff" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-cyan)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#53ddff" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-cyan)"/>
@@ -325,7 +336,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#53ddff" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#duration" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-023" transform="translate(1024 128)" color="#53ddff" clip-path="url(#cell-clip)">
+<g id="core-023" transform="translate(896 128)" color="#53ddff" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-cyan)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#53ddff" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-cyan)"/>
@@ -336,7 +347,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#53ddff" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#speed" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-024" transform="translate(1152 128)" color="#53ddff" clip-path="url(#cell-clip)">
+<g id="core-024" transform="translate(1024 128)" color="#53ddff" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-cyan)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#53ddff" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-cyan)"/>
@@ -347,7 +358,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#53ddff" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#cleanse" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-025" transform="translate(1280 128)" color="#53ddff" clip-path="url(#cell-clip)">
+<g id="core-025" transform="translate(1152 128)" color="#53ddff" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-cyan)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#53ddff" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-cyan)"/>
@@ -358,7 +369,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#53ddff" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#split" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-026" transform="translate(1408 128)" color="#53ddff" clip-path="url(#cell-clip)">
+<g id="core-026" transform="translate(1280 128)" color="#53ddff" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-cyan)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#53ddff" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-cyan)"/>
@@ -369,7 +380,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#53ddff" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#burst" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-027" transform="translate(1536 128)" color="#53ddff" clip-path="url(#cell-clip)">
+<g id="core-027" transform="translate(1408 128)" color="#53ddff" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-cyan)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#53ddff" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-cyan)"/>
@@ -380,7 +391,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#53ddff" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#flame" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-028" transform="translate(1664 128)" color="#ffd15d" clip-path="url(#cell-clip)">
+<g id="core-028" transform="translate(1536 128)" color="#ffd15d" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-gold)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffd15d" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-gold)"/>
@@ -391,7 +402,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffd15d" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#shield" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-029" transform="translate(0 256)" color="#ffd15d" clip-path="url(#cell-clip)">
+<g id="core-029" transform="translate(1664 128)" color="#ffd15d" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-gold)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffd15d" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-gold)"/>
@@ -402,7 +413,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffd15d" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#duration" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-030" transform="translate(128 256)" color="#ffd15d" clip-path="url(#cell-clip)">
+<g id="core-030" transform="translate(1792 128)" color="#ffd15d" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-gold)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffd15d" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-gold)"/>
@@ -413,7 +424,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffd15d" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#plate" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-031" transform="translate(256 256)" color="#ffd15d" clip-path="url(#cell-clip)">
+<g id="core-031" transform="translate(0 256)" color="#ffd15d" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-gold)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffd15d" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-gold)"/>
@@ -424,7 +435,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffd15d" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#clock" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-032" transform="translate(384 256)" color="#ffd15d" clip-path="url(#cell-clip)">
+<g id="core-032" transform="translate(128 256)" color="#ffd15d" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-gold)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffd15d" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-gold)"/>
@@ -435,7 +446,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffd15d" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#power" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-033" transform="translate(512 256)" color="#ffd15d" clip-path="url(#cell-clip)">
+<g id="core-033" transform="translate(256 256)" color="#ffd15d" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-gold)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffd15d" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-gold)"/>
@@ -446,7 +457,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffd15d" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#pulse" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-034" transform="translate(640 256)" color="#ffd15d" clip-path="url(#cell-clip)">
+<g id="core-034" transform="translate(384 256)" color="#ffd15d" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-gold)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffd15d" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-gold)"/>
@@ -457,7 +468,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffd15d" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#power" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-035" transform="translate(768 256)" color="#ffd15d" clip-path="url(#cell-clip)">
+<g id="core-035" transform="translate(512 256)" color="#ffd15d" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-gold)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffd15d" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-gold)"/>
@@ -468,7 +479,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffd15d" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#shield" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-036" transform="translate(896 256)" color="#ffd15d" clip-path="url(#cell-clip)">
+<g id="core-036" transform="translate(640 256)" color="#ffd15d" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-gold)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffd15d" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-gold)"/>
@@ -479,7 +490,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffd15d" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#radius" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-037" transform="translate(1024 256)" color="#c4a1ff" clip-path="url(#cell-clip)">
+<g id="core-037" transform="translate(768 256)" color="#c4a1ff" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-violet)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#c4a1ff" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-violet)"/>
@@ -490,7 +501,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#c4a1ff" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#duration" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-038" transform="translate(1152 256)" color="#c4a1ff" clip-path="url(#cell-clip)">
+<g id="core-038" transform="translate(896 256)" color="#c4a1ff" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-violet)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#c4a1ff" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-violet)"/>
@@ -501,7 +512,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#c4a1ff" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#heal" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-039" transform="translate(1280 256)" color="#c4a1ff" clip-path="url(#cell-clip)">
+<g id="core-039" transform="translate(1024 256)" color="#c4a1ff" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-violet)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#c4a1ff" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-violet)"/>
@@ -512,7 +523,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#c4a1ff" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#efficient" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-040" transform="translate(1408 256)" color="#c4a1ff" clip-path="url(#cell-clip)">
+<g id="core-040" transform="translate(1152 256)" color="#c4a1ff" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-violet)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#c4a1ff" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-violet)"/>
@@ -523,7 +534,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#c4a1ff" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#duration" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-041" transform="translate(1536 256)" color="#c4a1ff" clip-path="url(#cell-clip)">
+<g id="core-041" transform="translate(1280 256)" color="#c4a1ff" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-violet)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#c4a1ff" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-violet)"/>
@@ -534,7 +545,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#c4a1ff" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#capacitor" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-042" transform="translate(1664 256)" color="#c4a1ff" clip-path="url(#cell-clip)">
+<g id="core-042" transform="translate(1408 256)" color="#c4a1ff" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-violet)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#c4a1ff" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-violet)"/>
@@ -545,7 +556,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#c4a1ff" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#efficient" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-043" transform="translate(0 384)" color="#c4a1ff" clip-path="url(#cell-clip)">
+<g id="core-043" transform="translate(1536 256)" color="#c4a1ff" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-violet)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#c4a1ff" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-violet)"/>
@@ -556,7 +567,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#c4a1ff" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#efficient" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-044" transform="translate(128 384)" color="#c4a1ff" clip-path="url(#cell-clip)">
+<g id="core-044" transform="translate(1664 256)" color="#c4a1ff" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-violet)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#c4a1ff" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-violet)"/>
@@ -567,7 +578,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#c4a1ff" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#speed" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-045" transform="translate(256 384)" color="#c4a1ff" clip-path="url(#cell-clip)">
+<g id="core-045" transform="translate(1792 256)" color="#c4a1ff" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-violet)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#c4a1ff" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-violet)"/>
@@ -578,7 +589,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#c4a1ff" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#power" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-046" transform="translate(384 384)" color="#ff8b79" clip-path="url(#cell-clip)">
+<g id="core-046" transform="translate(0 384)" color="#ff8b79" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
@@ -589,7 +600,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#power" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-047" transform="translate(512 384)" color="#6aefaa" clip-path="url(#cell-clip)">
+<g id="core-047" transform="translate(128 384)" color="#6aefaa" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-green)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#6aefaa" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-green)"/>
@@ -600,7 +611,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#6aefaa" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#power" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-048" transform="translate(640 384)" color="#6aefaa" clip-path="url(#cell-clip)">
+<g id="core-048" transform="translate(256 384)" color="#6aefaa" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-green)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#6aefaa" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-green)"/>
@@ -611,7 +622,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#6aefaa" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#power" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-049" transform="translate(768 384)" color="#d895ff" clip-path="url(#cell-clip)">
+<g id="core-049" transform="translate(384 384)" color="#d895ff" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-purple)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#d895ff" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-purple)"/>
@@ -622,7 +633,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#d895ff" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#shieldPower" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-050" transform="translate(896 384)" color="#ffd15d" clip-path="url(#cell-clip)">
+<g id="core-050" transform="translate(512 384)" color="#ffd15d" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-purple)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffd15d" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-purple)"/>
@@ -633,7 +644,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffd15d" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#gem" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-051" transform="translate(1024 384)" color="#97f4ff" clip-path="url(#cell-clip)">
+<g id="core-051" transform="translate(640 384)" color="#97f4ff" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-purple)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#97f4ff" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-purple)"/>
@@ -644,7 +655,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#97f4ff" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#gem" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-052" transform="translate(1152 384)" color="#d895ff" clip-path="url(#cell-clip)">
+<g id="core-052" transform="translate(768 384)" color="#d895ff" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-purple)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#d895ff" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-purple)"/>
@@ -655,7 +666,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#d895ff" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#split" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-053" transform="translate(1280 384)" color="#ff8b79" clip-path="url(#cell-clip)">
+<g id="core-053" transform="translate(896 384)" color="#ff8b79" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
@@ -666,7 +677,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#spark" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-054" transform="translate(1408 384)" color="#d895ff" clip-path="url(#cell-clip)">
+<g id="core-054" transform="translate(1024 384)" color="#d895ff" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-purple)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#d895ff" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-purple)"/>
@@ -677,7 +688,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#d895ff" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#trade" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-055" transform="translate(1536 384)" color="#ff8b79" clip-path="url(#cell-clip)">
+<g id="core-055" transform="translate(1152 384)" color="#ff8b79" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
@@ -688,7 +699,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#spark" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-056" transform="translate(1664 384)" color="#ff8b79" clip-path="url(#cell-clip)">
+<g id="core-056" transform="translate(1280 384)" color="#ff8b79" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
@@ -699,7 +710,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#spark" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-057" transform="translate(0 512)" color="#ff8b79" clip-path="url(#cell-clip)">
+<g id="core-057" transform="translate(1408 384)" color="#ff8b79" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
@@ -710,7 +721,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#break" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-058" transform="translate(128 512)" color="#ff8b79" clip-path="url(#cell-clip)">
+<g id="core-058" transform="translate(1536 384)" color="#ff8b79" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
@@ -721,7 +732,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#break" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-059" transform="translate(256 512)" color="#ff8b79" clip-path="url(#cell-clip)">
+<g id="core-059" transform="translate(1664 384)" color="#ff8b79" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
@@ -732,7 +743,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#lightning" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-060" transform="translate(384 512)" color="#ff8b79" clip-path="url(#cell-clip)">
+<g id="core-060" transform="translate(1792 384)" color="#ff8b79" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
@@ -743,7 +754,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#duration" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-061" transform="translate(512 512)" color="#6aefaa" clip-path="url(#cell-clip)">
+<g id="core-061" transform="translate(0 512)" color="#6aefaa" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-green)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#6aefaa" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-green)"/>
@@ -754,7 +765,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#6aefaa" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#plate" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-062" transform="translate(640 512)" color="#6aefaa" clip-path="url(#cell-clip)">
+<g id="core-062" transform="translate(128 512)" color="#6aefaa" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-green)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#6aefaa" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-green)"/>
@@ -765,7 +776,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#6aefaa" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#low" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-063" transform="translate(768 512)" color="#d895ff" clip-path="url(#cell-clip)">
+<g id="core-063" transform="translate(256 512)" color="#d895ff" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-purple)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#d895ff" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-purple)"/>
@@ -776,7 +787,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#d895ff" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#low" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-064" transform="translate(896 512)" color="#6aefaa" clip-path="url(#cell-clip)">
+<g id="core-064" transform="translate(384 512)" color="#6aefaa" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-green)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#6aefaa" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-green)"/>
@@ -787,7 +798,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#6aefaa" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#skull" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-065" transform="translate(1024 512)" color="#6aefaa" clip-path="url(#cell-clip)">
+<g id="core-065" transform="translate(512 512)" color="#6aefaa" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-green)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#6aefaa" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-green)"/>
@@ -798,7 +809,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#6aefaa" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#shield" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-066" transform="translate(1152 512)" color="#ff8b79" clip-path="url(#cell-clip)">
+<g id="core-066" transform="translate(640 512)" color="#ff8b79" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
@@ -809,7 +820,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#power" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-067" transform="translate(1280 512)" color="#ff8b79" clip-path="url(#cell-clip)">
+<g id="core-067" transform="translate(768 512)" color="#ff8b79" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
@@ -820,7 +831,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#power" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-068" transform="translate(1408 512)" color="#ff8b79" clip-path="url(#cell-clip)">
+<g id="core-068" transform="translate(896 512)" color="#ff8b79" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
@@ -831,7 +842,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#low" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-069" transform="translate(1536 512)" color="#ff8b79" clip-path="url(#cell-clip)">
+<g id="core-069" transform="translate(1024 512)" color="#ff8b79" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
@@ -842,7 +853,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#high" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-070" transform="translate(1664 512)" color="#d895ff" clip-path="url(#cell-clip)">
+<g id="core-070" transform="translate(1152 512)" color="#d895ff" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-purple)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#d895ff" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-purple)"/>
@@ -853,7 +864,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#d895ff" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#skull" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-071" transform="translate(0 640)" color="#ff8b79" clip-path="url(#cell-clip)">
+<g id="core-071" transform="translate(1280 512)" color="#ff8b79" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
@@ -864,7 +875,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#pulse" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-072" transform="translate(128 640)" color="#6aefaa" clip-path="url(#cell-clip)">
+<g id="core-072" transform="translate(1408 512)" color="#6aefaa" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-green)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#6aefaa" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-green)"/>
@@ -875,7 +886,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#6aefaa" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#duration" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-073" transform="translate(256 640)" color="#ff8b79" clip-path="url(#cell-clip)">
+<g id="core-073" transform="translate(1536 512)" color="#ff8b79" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
@@ -886,7 +897,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#split" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-074" transform="translate(384 640)" color="#d895ff" clip-path="url(#cell-clip)">
+<g id="core-074" transform="translate(1664 512)" color="#d895ff" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-purple)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#d895ff" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-purple)"/>
@@ -897,7 +908,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#d895ff" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#spark" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-075" transform="translate(512 640)" color="#ff8b79" clip-path="url(#cell-clip)">
+<g id="core-075" transform="translate(1792 512)" color="#ff8b79" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
@@ -908,7 +919,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#break" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-076" transform="translate(640 640)" color="#6aefaa" clip-path="url(#cell-clip)">
+<g id="core-076" transform="translate(0 640)" color="#6aefaa" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-green)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#6aefaa" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-green)"/>
@@ -919,7 +930,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#6aefaa" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#heart" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-077" transform="translate(768 640)" color="#d895ff" clip-path="url(#cell-clip)">
+<g id="core-077" transform="translate(128 640)" color="#d895ff" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-purple)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#d895ff" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-purple)"/>
@@ -930,7 +941,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#d895ff" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#skull" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-078" transform="translate(896 640)" color="#6cbaff" clip-path="url(#cell-clip)">
+<g id="core-078" transform="translate(256 640)" color="#6cbaff" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-blue)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#6cbaff" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-blue)"/>
@@ -941,7 +952,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#6cbaff" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#chain" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-079" transform="translate(1024 640)" color="#ff8b79" clip-path="url(#cell-clip)">
+<g id="core-079" transform="translate(384 640)" color="#ff8b79" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
@@ -952,7 +963,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#target" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-080" transform="translate(1152 640)" color="#ff8b79" clip-path="url(#cell-clip)">
+<g id="core-080" transform="translate(512 640)" color="#ff8b79" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
@@ -963,7 +974,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#shell" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-081" transform="translate(1280 640)" color="#6aefaa" clip-path="url(#cell-clip)">
+<g id="core-081" transform="translate(640 640)" color="#6aefaa" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-green)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#6aefaa" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-green)"/>
@@ -974,7 +985,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#6aefaa" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#pulse" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-082" transform="translate(1408 640)" color="#ff8b79" clip-path="url(#cell-clip)">
+<g id="core-082" transform="translate(768 640)" color="#ff8b79" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
@@ -985,7 +996,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#duration" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-083" transform="translate(1536 640)" color="#ff8b79" clip-path="url(#cell-clip)">
+<g id="core-083" transform="translate(896 640)" color="#ff8b79" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
@@ -996,7 +1007,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#trade" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-084" transform="translate(1664 640)" color="#6cbaff" clip-path="url(#cell-clip)">
+<g id="core-084" transform="translate(1024 640)" color="#6cbaff" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-blue)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#6cbaff" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-blue)"/>
@@ -1007,7 +1018,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#6cbaff" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#efficient" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-085" transform="translate(0 768)" color="#d895ff" clip-path="url(#cell-clip)">
+<g id="core-085" transform="translate(1152 640)" color="#d895ff" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-purple)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#d895ff" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-purple)"/>
@@ -1018,7 +1029,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#d895ff" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#trade" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-086" transform="translate(128 768)" color="#6cbaff" clip-path="url(#cell-clip)">
+<g id="core-086" transform="translate(1280 640)" color="#6cbaff" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-blue)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#6cbaff" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-blue)"/>
@@ -1029,7 +1040,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#6cbaff" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#lightning" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-087" transform="translate(256 768)" color="#ff8b79" clip-path="url(#cell-clip)">
+<g id="core-087" transform="translate(1408 640)" color="#ff8b79" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
@@ -1040,7 +1051,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#spark" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-088" transform="translate(384 768)" color="#ff8b79" clip-path="url(#cell-clip)">
+<g id="core-088" transform="translate(1536 640)" color="#ff8b79" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
@@ -1051,7 +1062,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#power" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-089" transform="translate(512 768)" color="#ff8b79" clip-path="url(#cell-clip)">
+<g id="core-089" transform="translate(1664 640)" color="#ff8b79" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
@@ -1062,7 +1073,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#crowd" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-090" transform="translate(640 768)" color="#6aefaa" clip-path="url(#cell-clip)">
+<g id="core-090" transform="translate(1792 640)" color="#6aefaa" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-green)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#6aefaa" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-green)"/>
@@ -1073,7 +1084,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#6aefaa" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#low" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-091" transform="translate(768 768)" color="#ff8b79" clip-path="url(#cell-clip)">
+<g id="core-091" transform="translate(0 768)" color="#ff8b79" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
@@ -1084,7 +1095,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#low" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-092" transform="translate(896 768)" color="#6aefaa" clip-path="url(#cell-clip)">
+<g id="core-092" transform="translate(128 768)" color="#6aefaa" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-green)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#6aefaa" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-green)"/>
@@ -1095,7 +1106,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#6aefaa" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#duration" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-093" transform="translate(1024 768)" color="#d895ff" clip-path="url(#cell-clip)">
+<g id="core-093" transform="translate(256 768)" color="#d895ff" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-purple)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#d895ff" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-purple)"/>
@@ -1106,7 +1117,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#d895ff" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#clock" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-094" transform="translate(1152 768)" color="#d895ff" clip-path="url(#cell-clip)">
+<g id="core-094" transform="translate(384 768)" color="#d895ff" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-purple)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#d895ff" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-purple)"/>
@@ -1117,7 +1128,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#d895ff" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#trade" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-095" transform="translate(1280 768)" color="#d895ff" clip-path="url(#cell-clip)">
+<g id="core-095" transform="translate(512 768)" color="#d895ff" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-purple)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#d895ff" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-purple)"/>
@@ -1128,7 +1139,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#d895ff" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#lock" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-096" transform="translate(1408 768)" color="#d895ff" clip-path="url(#cell-clip)">
+<g id="core-096" transform="translate(640 768)" color="#d895ff" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-purple)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#d895ff" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-purple)"/>
@@ -1139,7 +1150,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#d895ff" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#clock" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-097" transform="translate(1536 768)" color="#d895ff" clip-path="url(#cell-clip)">
+<g id="core-097" transform="translate(768 768)" color="#d895ff" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-purple)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#d895ff" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-purple)"/>
@@ -1150,7 +1161,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#d895ff" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#shieldPower" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-098" transform="translate(1664 768)" color="#6aefaa" clip-path="url(#cell-clip)">
+<g id="core-098" transform="translate(896 768)" color="#6aefaa" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-green)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#6aefaa" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-green)"/>
@@ -1161,7 +1172,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#6aefaa" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#cleanse" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-099" transform="translate(0 896)" color="#6aefaa" clip-path="url(#cell-clip)">
+<g id="core-099" transform="translate(1024 768)" color="#6aefaa" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-green)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#6aefaa" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-green)"/>
@@ -1172,7 +1183,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#6aefaa" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#shield" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-100" transform="translate(128 896)" color="#d895ff" clip-path="url(#cell-clip)">
+<g id="core-100" transform="translate(1152 768)" color="#d895ff" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-purple)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#d895ff" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-purple)"/>
@@ -1183,7 +1194,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#d895ff" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#trade" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-101" transform="translate(256 896)" color="#ff8b79" clip-path="url(#cell-clip)">
+<g id="core-101" transform="translate(1280 768)" color="#ff8b79" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
@@ -1194,7 +1205,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#power" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-102" transform="translate(384 896)" color="#ff8b79" clip-path="url(#cell-clip)">
+<g id="core-102" transform="translate(1408 768)" color="#ff8b79" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
@@ -1205,7 +1216,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#power" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-103" transform="translate(512 896)" color="#6aefaa" clip-path="url(#cell-clip)">
+<g id="core-103" transform="translate(1536 768)" color="#6aefaa" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-green)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#6aefaa" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-green)"/>
@@ -1216,7 +1227,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#6aefaa" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#shield" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-104" transform="translate(640 896)" color="#6aefaa" clip-path="url(#cell-clip)">
+<g id="core-104" transform="translate(1664 768)" color="#6aefaa" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-green)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#6aefaa" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-green)"/>
@@ -1227,7 +1238,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#6aefaa" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#shield" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-105" transform="translate(768 896)" color="#ff8b79" clip-path="url(#cell-clip)">
+<g id="core-105" transform="translate(1792 768)" color="#ff8b79" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
@@ -1238,7 +1249,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#lightning" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-106" transform="translate(896 896)" color="#ff8b79" clip-path="url(#cell-clip)">
+<g id="core-106" transform="translate(0 896)" color="#ff8b79" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
@@ -1249,7 +1260,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#clock" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-107" transform="translate(1024 896)" color="#6cbaff" clip-path="url(#cell-clip)">
+<g id="core-107" transform="translate(128 896)" color="#6cbaff" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-blue)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#6cbaff" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-blue)"/>
@@ -1260,7 +1271,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#6cbaff" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#battery" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-108" transform="translate(1152 896)" color="#6aefaa" clip-path="url(#cell-clip)">
+<g id="core-108" transform="translate(256 896)" color="#6aefaa" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-green)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#6aefaa" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-green)"/>
@@ -1271,7 +1282,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#6aefaa" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#heal" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-109" transform="translate(1280 896)" color="#6aefaa" clip-path="url(#cell-clip)">
+<g id="core-109" transform="translate(384 896)" color="#6aefaa" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-green)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#6aefaa" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-green)"/>
@@ -1282,7 +1293,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#6aefaa" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#clock" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-110" transform="translate(1408 896)" color="#6aefaa" clip-path="url(#cell-clip)">
+<g id="core-110" transform="translate(512 896)" color="#6aefaa" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-green)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#6aefaa" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-green)"/>
@@ -1293,7 +1304,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#6aefaa" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#burst" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-111" transform="translate(1536 896)" color="#ff8b79" clip-path="url(#cell-clip)">
+<g id="core-111" transform="translate(640 896)" color="#ff8b79" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
@@ -1304,7 +1315,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#speed" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-112" transform="translate(1664 896)" color="#ff8b79" clip-path="url(#cell-clip)">
+<g id="core-112" transform="translate(768 896)" color="#ff8b79" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
@@ -1315,7 +1326,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#target" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-113" transform="translate(0 1024)" color="#d895ff" clip-path="url(#cell-clip)">
+<g id="core-113" transform="translate(896 896)" color="#d895ff" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-purple)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#d895ff" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-purple)"/>
@@ -1326,7 +1337,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#d895ff" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#trade" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-114" transform="translate(128 1024)" color="#ff8b79" clip-path="url(#cell-clip)">
+<g id="core-114" transform="translate(1024 896)" color="#ff8b79" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
@@ -1337,7 +1348,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#pulse" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-115" transform="translate(256 1024)" color="#ff8b79" clip-path="url(#cell-clip)">
+<g id="core-115" transform="translate(1152 896)" color="#ff8b79" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
@@ -1348,7 +1359,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#radius" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-116" transform="translate(384 1024)" color="#d895ff" clip-path="url(#cell-clip)">
+<g id="core-116" transform="translate(1280 896)" color="#d895ff" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-purple)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#d895ff" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-purple)"/>
@@ -1359,7 +1370,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#d895ff" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#power" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-117" transform="translate(512 1024)" color="#ff8b79" clip-path="url(#cell-clip)">
+<g id="core-117" transform="translate(1408 896)" color="#ff8b79" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
@@ -1370,7 +1381,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#spark" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-118" transform="translate(640 1024)" color="#ff8b79" clip-path="url(#cell-clip)">
+<g id="core-118" transform="translate(1536 896)" color="#ff8b79" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
@@ -1381,7 +1392,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#power" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-119" transform="translate(768 1024)" color="#6aefaa" clip-path="url(#cell-clip)">
+<g id="core-119" transform="translate(1664 896)" color="#6aefaa" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-green)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#6aefaa" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-green)"/>
@@ -1392,7 +1403,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#6aefaa" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#clock" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-120" transform="translate(896 1024)" color="#d895ff" clip-path="url(#cell-clip)">
+<g id="core-120" transform="translate(1792 896)" color="#d895ff" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-purple)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#d895ff" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-purple)"/>
@@ -1403,7 +1414,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#d895ff" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#trade" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-121" transform="translate(1024 1024)" color="#ff8b79" clip-path="url(#cell-clip)">
+<g id="core-121" transform="translate(0 1024)" color="#ff8b79" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
@@ -1414,7 +1425,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#pulse" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-122" transform="translate(1152 1024)" color="#53ddff" clip-path="url(#cell-clip)">
+<g id="core-122" transform="translate(128 1024)" color="#53ddff" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-cyan)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#53ddff" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-cyan)"/>
@@ -1425,7 +1436,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#53ddff" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#refund" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-123" transform="translate(1280 1024)" color="#53ddff" clip-path="url(#cell-clip)">
+<g id="core-123" transform="translate(256 1024)" color="#53ddff" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-cyan)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#53ddff" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-cyan)"/>
@@ -1436,7 +1447,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#53ddff" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#pulse" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-124" transform="translate(1408 1024)" color="#53ddff" clip-path="url(#cell-clip)">
+<g id="core-124" transform="translate(384 1024)" color="#53ddff" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-cyan)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#53ddff" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-cyan)"/>
@@ -1447,7 +1458,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#53ddff" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#shield" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-125" transform="translate(1536 1024)" color="#53ddff" clip-path="url(#cell-clip)">
+<g id="core-125" transform="translate(512 1024)" color="#53ddff" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-cyan)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#53ddff" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-cyan)"/>
@@ -1458,7 +1469,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#53ddff" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#clock" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-126" transform="translate(1664 1024)" color="#53ddff" clip-path="url(#cell-clip)">
+<g id="core-126" transform="translate(640 1024)" color="#53ddff" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-cyan)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#53ddff" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-cyan)"/>
@@ -1469,7 +1480,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#53ddff" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#refund" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-127" transform="translate(0 1152)" color="#53ddff" clip-path="url(#cell-clip)">
+<g id="core-127" transform="translate(768 1024)" color="#53ddff" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-cyan)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#53ddff" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-cyan)"/>
@@ -1480,7 +1491,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#53ddff" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#ricochet" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-128" transform="translate(128 1152)" color="#53ddff" clip-path="url(#cell-clip)">
+<g id="core-128" transform="translate(896 1024)" color="#53ddff" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-cyan)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#53ddff" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-cyan)"/>
@@ -1491,7 +1502,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#53ddff" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#clock" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-129" transform="translate(256 1152)" color="#53ddff" clip-path="url(#cell-clip)">
+<g id="core-129" transform="translate(1024 1024)" color="#53ddff" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-cyan)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#53ddff" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-cyan)"/>
@@ -1502,7 +1513,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#53ddff" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#shield" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-130" transform="translate(384 1152)" color="#53ddff" clip-path="url(#cell-clip)">
+<g id="core-130" transform="translate(1152 1024)" color="#53ddff" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-cyan)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#53ddff" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-cyan)"/>
@@ -1513,7 +1524,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#53ddff" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#data" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-131" transform="translate(512 1152)" color="#ffd15d" clip-path="url(#cell-clip)">
+<g id="core-131" transform="translate(1280 1024)" color="#ffd15d" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-gold)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffd15d" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-gold)"/>
@@ -1524,7 +1535,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffd15d" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#pulse" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-132" transform="translate(640 1152)" color="#ffd15d" clip-path="url(#cell-clip)">
+<g id="core-132" transform="translate(1408 1024)" color="#ffd15d" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-gold)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffd15d" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-gold)"/>
@@ -1535,7 +1546,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffd15d" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#refund" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-133" transform="translate(768 1152)" color="#ffd15d" clip-path="url(#cell-clip)">
+<g id="core-133" transform="translate(1536 1024)" color="#ffd15d" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-gold)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffd15d" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-gold)"/>
@@ -1546,7 +1557,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffd15d" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#clock" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-134" transform="translate(896 1152)" color="#ffd15d" clip-path="url(#cell-clip)">
+<g id="core-134" transform="translate(1664 1024)" color="#ffd15d" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-gold)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffd15d" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-gold)"/>
@@ -1557,7 +1568,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffd15d" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#pulse" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-135" transform="translate(1024 1152)" color="#ffd15d" clip-path="url(#cell-clip)">
+<g id="core-135" transform="translate(1792 1024)" color="#ffd15d" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-gold)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffd15d" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-gold)"/>
@@ -1568,7 +1579,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffd15d" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#target" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-136" transform="translate(1152 1152)" color="#ffd15d" clip-path="url(#cell-clip)">
+<g id="core-136" transform="translate(0 1152)" color="#ffd15d" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-gold)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffd15d" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-gold)"/>
@@ -1579,7 +1590,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffd15d" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#gravity" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-137" transform="translate(1280 1152)" color="#ffd15d" clip-path="url(#cell-clip)">
+<g id="core-137" transform="translate(128 1152)" color="#ffd15d" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-gold)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffd15d" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-gold)"/>
@@ -1590,7 +1601,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffd15d" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#clock" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-138" transform="translate(1408 1152)" color="#ffd15d" clip-path="url(#cell-clip)">
+<g id="core-138" transform="translate(256 1152)" color="#ffd15d" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-gold)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffd15d" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-gold)"/>
@@ -1601,7 +1612,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffd15d" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#heal" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-139" transform="translate(1536 1152)" color="#ffd15d" clip-path="url(#cell-clip)">
+<g id="core-139" transform="translate(384 1152)" color="#ffd15d" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-gold)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffd15d" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-gold)"/>
@@ -1612,7 +1623,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffd15d" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#pierce" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-140" transform="translate(1664 1152)" color="#c4a1ff" clip-path="url(#cell-clip)">
+<g id="core-140" transform="translate(512 1152)" color="#c4a1ff" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-violet)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#c4a1ff" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-violet)"/>
@@ -1623,7 +1634,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#c4a1ff" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#burst" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-141" transform="translate(0 1280)" color="#c4a1ff" clip-path="url(#cell-clip)">
+<g id="core-141" transform="translate(640 1152)" color="#c4a1ff" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-violet)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#c4a1ff" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-violet)"/>
@@ -1634,7 +1645,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#c4a1ff" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#decoy" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-142" transform="translate(128 1280)" color="#c4a1ff" clip-path="url(#cell-clip)">
+<g id="core-142" transform="translate(768 1152)" color="#c4a1ff" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-violet)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#c4a1ff" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-violet)"/>
@@ -1645,7 +1656,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#c4a1ff" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#three" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-143" transform="translate(256 1280)" color="#c4a1ff" clip-path="url(#cell-clip)">
+<g id="core-143" transform="translate(896 1152)" color="#c4a1ff" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-violet)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#c4a1ff" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-violet)"/>
@@ -1656,7 +1667,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#c4a1ff" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#low" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-144" transform="translate(384 1280)" color="#c4a1ff" clip-path="url(#cell-clip)">
+<g id="core-144" transform="translate(1024 1152)" color="#c4a1ff" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-violet)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#c4a1ff" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-violet)"/>
@@ -1667,7 +1678,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#c4a1ff" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#break" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-145" transform="translate(512 1280)" color="#c4a1ff" clip-path="url(#cell-clip)">
+<g id="core-145" transform="translate(1152 1152)" color="#c4a1ff" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-violet)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#c4a1ff" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-violet)"/>
@@ -1678,7 +1689,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#c4a1ff" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#power" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-146" transform="translate(640 1280)" color="#c4a1ff" clip-path="url(#cell-clip)">
+<g id="core-146" transform="translate(1280 1152)" color="#c4a1ff" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-violet)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#c4a1ff" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-violet)"/>
@@ -1689,7 +1700,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#c4a1ff" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#target" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-147" transform="translate(768 1280)" color="#c4a1ff" clip-path="url(#cell-clip)">
+<g id="core-147" transform="translate(1408 1152)" color="#c4a1ff" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-violet)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#c4a1ff" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-violet)"/>
@@ -1700,7 +1711,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#c4a1ff" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#pulse" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-148" transform="translate(896 1280)" color="#c4a1ff" clip-path="url(#cell-clip)">
+<g id="core-148" transform="translate(1536 1152)" color="#c4a1ff" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-violet)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#c4a1ff" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-violet)"/>
@@ -1711,7 +1722,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#c4a1ff" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#refund" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-149" transform="translate(1024 1280)" color="#d895ff" clip-path="url(#cell-clip)">
+<g id="core-149" transform="translate(1664 1152)" color="#d895ff" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-purple)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#d895ff" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-purple)"/>
@@ -1722,7 +1733,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#d895ff" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#random" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-150" transform="translate(1152 1280)" color="#ffb968" clip-path="url(#cell-clip)">
+<g id="core-150" transform="translate(1792 1152)" color="#ffb968" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-orange)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffb968" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-orange)"/>
@@ -1733,7 +1744,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffb968" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#radius" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-151" transform="translate(1280 1280)" color="#ffb968" clip-path="url(#cell-clip)">
+<g id="core-151" transform="translate(0 1280)" color="#ffb968" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-orange)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffb968" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-orange)"/>
@@ -1744,7 +1755,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffb968" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#power" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-152" transform="translate(1408 1280)" color="#ffb968" clip-path="url(#cell-clip)">
+<g id="core-152" transform="translate(128 1280)" color="#ffb968" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-orange)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffb968" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-orange)"/>
@@ -1755,7 +1766,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffb968" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#refund" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-153" transform="translate(1536 1280)" color="#ffb968" clip-path="url(#cell-clip)">
+<g id="core-153" transform="translate(256 1280)" color="#ffb968" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-orange)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffb968" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-orange)"/>
@@ -1766,7 +1777,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffb968" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#pierce" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-154" transform="translate(1664 1280)" color="#ffb968" clip-path="url(#cell-clip)">
+<g id="core-154" transform="translate(384 1280)" color="#ffb968" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-orange)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffb968" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-orange)"/>
@@ -1777,7 +1788,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffb968" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#clock" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-155" transform="translate(0 1408)" color="#ffb968" clip-path="url(#cell-clip)">
+<g id="core-155" transform="translate(512 1280)" color="#ffb968" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-orange)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffb968" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-orange)"/>
@@ -1788,7 +1799,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffb968" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#spark" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-156" transform="translate(128 1408)" color="#ffb968" clip-path="url(#cell-clip)">
+<g id="core-156" transform="translate(640 1280)" color="#ffb968" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-orange)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffb968" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-orange)"/>
@@ -1799,7 +1810,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffb968" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#lightning" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-157" transform="translate(256 1408)" color="#ffb968" clip-path="url(#cell-clip)">
+<g id="core-157" transform="translate(768 1280)" color="#ffb968" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-orange)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffb968" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-orange)"/>
@@ -1810,7 +1821,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffb968" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#dense" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-158" transform="translate(384 1408)" color="#ffb968" clip-path="url(#cell-clip)">
+<g id="core-158" transform="translate(896 1280)" color="#ffb968" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-orange)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffb968" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-orange)"/>
@@ -1821,7 +1832,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffb968" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#pierce" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-159" transform="translate(512 1408)" color="#ffb968" clip-path="url(#cell-clip)">
+<g id="core-159" transform="translate(1024 1280)" color="#ffb968" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-orange)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffb968" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-orange)"/>
@@ -1832,7 +1843,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffb968" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#low" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-160" transform="translate(640 1408)" color="#ffb968" clip-path="url(#cell-clip)">
+<g id="core-160" transform="translate(1152 1280)" color="#ffb968" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-orange)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffb968" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-orange)"/>
@@ -1843,7 +1854,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffb968" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#speed" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-161" transform="translate(768 1408)" color="#ffb968" clip-path="url(#cell-clip)">
+<g id="core-161" transform="translate(1280 1280)" color="#ffb968" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-orange)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffb968" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-orange)"/>
@@ -1854,7 +1865,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffb968" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#efficient" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-162" transform="translate(896 1408)" color="#ffb968" clip-path="url(#cell-clip)">
+<g id="core-162" transform="translate(1408 1280)" color="#ffb968" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-orange)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffb968" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-orange)"/>
@@ -1865,7 +1876,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffb968" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#power" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-163" transform="translate(1024 1408)" color="#ffb968" clip-path="url(#cell-clip)">
+<g id="core-163" transform="translate(1536 1280)" color="#ffb968" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-orange)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffb968" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-orange)"/>
@@ -1876,7 +1887,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffb968" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#radius" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-164" transform="translate(1152 1408)" color="#ffb968" clip-path="url(#cell-clip)">
+<g id="core-164" transform="translate(1664 1280)" color="#ffb968" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-orange)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffb968" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-orange)"/>
@@ -1887,7 +1898,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffb968" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#refund" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-165" transform="translate(1280 1408)" color="#ffb968" clip-path="url(#cell-clip)">
+<g id="core-165" transform="translate(1792 1280)" color="#ffb968" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-orange)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffb968" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-orange)"/>
@@ -1898,7 +1909,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffb968" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#clock" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-166" transform="translate(1408 1408)" color="#ffb968" clip-path="url(#cell-clip)">
+<g id="core-166" transform="translate(0 1408)" color="#ffb968" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-orange)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffb968" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-orange)"/>
@@ -1909,7 +1920,7 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffb968" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#break" transform="translate(0 0) scale(1)"/></g></g></g>
-<g id="core-167" transform="translate(1536 1408)" color="#ffb968" clip-path="url(#cell-clip)">
+<g id="core-167" transform="translate(128 1408)" color="#ffb968" clip-path="url(#cell-clip)">
 <rect width="128" height="128" rx="12" fill="url(#bg-orange)"/>
 <path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffb968" stroke-opacity=".4" stroke-width="2"/>
 <circle cx="52" cy="51" r="58" fill="url(#halo-orange)"/>
@@ -1920,4 +1931,466 @@
 <rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffb968" stroke-width="5"/>
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)"><use href="#flame" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-168" transform="translate(256 1408)" color="#ff8b79" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ff8b79" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#microCharge" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#clock" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-169" transform="translate(384 1408)" color="#ff8b79" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ff8b79" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#regulator" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#battery" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-170" transform="translate(512 1408)" color="#ff8b79" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ff8b79" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#target" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#plate" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-171" transform="translate(640 1408)" color="#ff8b79" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ff8b79" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#lock" transform="translate(0 0) scale(1)"/><g transform="translate(0 62) scale(.36)" color="#fff6dc"><use href="#shell" transform="translate(0 0) scale(1)"/></g></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#shield" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-172" transform="translate(768 1408)" color="#ff8b79" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ff8b79" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#battery" transform="translate(0 0) scale(1)"/><g transform="translate(0 62) scale(.36)" color="#fff6dc"><use href="#high" transform="translate(0 0) scale(1)"/></g></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#bank" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-173" transform="translate(896 1408)" color="#ff8b79" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ff8b79" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#break" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#heal" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-174" transform="translate(1024 1408)" color="#ff8b79" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ff8b79" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#heart" transform="translate(0 0) scale(1)"/><g transform="translate(0 62) scale(.36)" color="#fff6dc"><use href="#pulse" transform="translate(0 0) scale(1)"/></g></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#refund" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-175" transform="translate(1152 1408)" color="#ff8b79" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ff8b79" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#nodes" transform="translate(0 0) scale(1)"/><g transform="translate(0 62) scale(.36)" color="#fff6dc"><use href="#power" transform="translate(0 0) scale(1)"/></g></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#trade" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-176" transform="translate(1280 1408)" color="#ff8b79" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ff8b79" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#heal" transform="translate(0 0) scale(1)"/><g transform="translate(0 62) scale(.36)" color="#fff6dc"><use href="#shield" transform="translate(0 0) scale(1)"/></g></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#radius" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-177" transform="translate(1408 1408)" color="#ff8b79" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ff8b79" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#shield" transform="translate(0 0) scale(1)"/><g transform="translate(0 62) scale(.36)" color="#fff6dc"><use href="#missile" transform="translate(0 0) scale(1)"/></g></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#lightning" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-178" transform="translate(1536 1408)" color="#ff8b79" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ff8b79" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#slow" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#shell" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-179" transform="translate(1664 1408)" color="#ff8b79" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ff8b79" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#target" transform="translate(0 0) scale(1)"/><g transform="translate(0 62) scale(.36)" color="#fff6dc"><use href="#spark" transform="translate(0 0) scale(1)"/></g></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#data" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-180" transform="translate(1792 1408)" color="#ff8b79" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ff8b79" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#pierce" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#shield" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-181" transform="translate(0 1536)" color="#ff8b79" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ff8b79" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#turbine" transform="translate(0 0) scale(1)"/><g transform="translate(0 62) scale(.36)" color="#fff6dc"><use href="#nodes" transform="translate(0 0) scale(1)"/></g></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#refund" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-182" transform="translate(128 1536)" color="#ff8b79" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ff8b79" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#battery" transform="translate(0 0) scale(1)"/><g transform="translate(0 62) scale(.36)" color="#fff6dc"><use href="#duration" transform="translate(0 0) scale(1)"/></g></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#low" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-183" transform="translate(256 1536)" color="#ff8b79" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ff8b79" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#plate" transform="translate(0 0) scale(1)"/><g transform="translate(0 62) scale(.36)" color="#fff6dc"><use href="#power" transform="translate(0 0) scale(1)"/></g></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#target" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-184" transform="translate(384 1536)" color="#ffd15d" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-gold)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffd15d" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-gold)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ffd15d" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#celestial" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffd15d" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#shield" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-185" transform="translate(512 1536)" color="#ff8b79" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ff8b79" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#shell" transform="translate(0 0) scale(1)"/><g transform="translate(0 62) scale(.36)" color="#fff6dc"><use href="#nodes" transform="translate(0 0) scale(1)"/></g></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#target" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-186" transform="translate(640 1536)" color="#ff8b79" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ff8b79" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#nodes" transform="translate(0 0) scale(1)"/><g transform="translate(0 62) scale(.36)" color="#fff6dc"><use href="#trade" transform="translate(0 0) scale(1)"/></g></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#cannon" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-187" transform="translate(768 1536)" color="#ff8b79" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ff8b79" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#bank" transform="translate(0 0) scale(1)"/><g transform="translate(0 62) scale(.36)" color="#fff6dc"><use href="#heart" transform="translate(0 0) scale(1)"/></g></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#pulse" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-188" transform="translate(896 1536)" color="#ff8b79" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ff8b79" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#eye" transform="translate(0 0) scale(1)"/><g transform="translate(0 62) scale(.36)" color="#fff6dc"><use href="#spark" transform="translate(0 0) scale(1)"/></g></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#target" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-189" transform="translate(1024 1536)" color="#ff8b79" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ff8b79" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#skull" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#missile" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-190" transform="translate(1152 1536)" color="#ff8b79" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ff8b79" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#gravity" transform="translate(0 0) scale(1)"/><g transform="translate(0 62) scale(.36)" color="#fff6dc"><use href="#power" transform="translate(0 0) scale(1)"/></g></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#battery" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-191" transform="translate(1280 1536)" color="#ff8b79" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ff8b79" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#cannon" transform="translate(0 0) scale(1)"/><g transform="translate(0 62) scale(.36)" color="#fff6dc"><use href="#nodes" transform="translate(0 0) scale(1)"/></g></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#trade" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-192" transform="translate(1408 1536)" color="#ff8b79" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ff8b79" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#shieldPower" transform="translate(0 0) scale(1)"/><g transform="translate(0 62) scale(.36)" color="#fff6dc"><use href="#plate" transform="translate(0 0) scale(1)"/></g></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#trade" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-193" transform="translate(1536 1536)" color="#ff8b79" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ff8b79" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#three" transform="translate(0 0) scale(1)"/><g transform="translate(0 62) scale(.36)" color="#fff6dc"><use href="#clock" transform="translate(0 0) scale(1)"/></g></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#refund" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-194" transform="translate(1664 1536)" color="#ff8b79" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ff8b79" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#break" transform="translate(0 0) scale(1)"/><g transform="translate(0 62) scale(.36)" color="#fff6dc"><use href="#target" transform="translate(0 0) scale(1)"/></g></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#spark" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-195" transform="translate(1792 1536)" color="#ff8b79" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ff8b79" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#blackBox" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#heal" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-196" transform="translate(0 1664)" color="#ff8b79" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ff8b79" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#crimsonSeal" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#spark" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-197" transform="translate(128 1664)" color="#ff8b79" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ff8b79" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#debt" transform="translate(0 0) scale(1)"/><g transform="translate(0 62) scale(.36)" color="#fff6dc"><use href="#clock" transform="translate(0 0) scale(1)"/></g></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#heart" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-198" transform="translate(256 1664)" color="#ffd15d" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-gold)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffd15d" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-gold)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ffd15d" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#guardians" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffd15d" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#shield" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-199" transform="translate(384 1664)" color="#ffd15d" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-gold)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffd15d" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-gold)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ffd15d" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#overclock" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffd15d" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#pulse" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-200" transform="translate(512 1664)" color="#ffd15d" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-gold)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffd15d" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-gold)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ffd15d" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#shield" transform="translate(0 0) scale(1)"/><g transform="translate(0 62) scale(.36)" color="#fff6dc"><use href="#trade" transform="translate(0 0) scale(1)"/></g></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffd15d" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#burst" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-201" transform="translate(640 1664)" color="#ffd15d" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-gold)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffd15d" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-gold)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ffd15d" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#arsenal" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffd15d" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#power" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-202" transform="translate(768 1664)" color="#ffd15d" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-gold)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffd15d" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-gold)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ffd15d" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#specialize" transform="translate(0 0) scale(1)"/><g transform="translate(0 62) scale(.36)" color="#fff6dc"><use href="#target" transform="translate(0 0) scale(1)"/></g></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffd15d" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#three" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-203" transform="translate(896 1664)" color="#ff8b79" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ff8b79" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#hack" transform="translate(0 0) scale(1)"/><g transform="translate(0 62) scale(.36)" color="#fff6dc"><use href="#target" transform="translate(0 0) scale(1)"/></g></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#cannon" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-204" transform="translate(1024 1664)" color="#ffd15d" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-gold)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffd15d" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-gold)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ffd15d" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#shield" transform="translate(0 0) scale(1)"/><g transform="translate(0 62) scale(.36)" color="#fff6dc"><use href="#refund" transform="translate(0 0) scale(1)"/></g></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffd15d" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#clock" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-205" transform="translate(1152 1664)" color="#ff8b79" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ff8b79" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#doubleBlade" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#trade" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-206" transform="translate(1280 1664)" color="#ff8b79" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ff8b79" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#heavyRound" transform="translate(0 0) scale(1)"/></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#pierce" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-207" transform="translate(1408 1664)" color="#ff8b79" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ff8b79" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#phase" transform="translate(0 0) scale(1)"/><g transform="translate(0 62) scale(.36)" color="#fff6dc"><use href="#shell" transform="translate(0 0) scale(1)"/></g></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#trade" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-208" transform="translate(1536 1664)" color="#ff8b79" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-red)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ff8b79" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-red)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ff8b79" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#heal" transform="translate(0 0) scale(1)"/><g transform="translate(0 62) scale(.36)" color="#fff6dc"><use href="#link" transform="translate(0 0) scale(1)"/></g></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ff8b79" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#battery" transform="translate(0 0) scale(1)"/></g></g></g>
+<g id="core-209" transform="translate(1664 1664)" color="#ffd15d" clip-path="url(#cell-clip)">
+<rect width="128" height="128" rx="12" fill="url(#bg-gold)"/>
+<path d="M12 3H116L125 12V115L115 125H12L3 116V13Z" fill="none" stroke="#ffd15d" stroke-opacity=".4" stroke-width="2"/>
+<circle cx="52" cy="51" r="58" fill="url(#halo-gold)"/>
+<path d="M6 91 85 6H106L8 112Z" fill="#ffd15d" opacity=".07"/>
+<g transform="translate(8 3) scale(1.02)"><use href="#fortress" transform="translate(0 0) scale(1)"/><g transform="translate(0 62) scale(.36)" color="#fff6dc"><use href="#battery" transform="translate(0 0) scale(1)"/></g></g>
+<!-- Filled semantic tile: 47.36 / 128 = 37%; right/bottom inset 5.12 = 4%. -->
+<g transform="translate(75.52 75.52) scale(.4736)">
+<rect x="0" y="0" width="100" height="100" rx="23" fill="#081323" stroke="#ffd15d" stroke-width="5"/>
+<path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
+<g transform="translate(12 12) scale(.76)"><use href="#low" transform="translate(0 0) scale(1)"/></g></g></g>
 </svg>
