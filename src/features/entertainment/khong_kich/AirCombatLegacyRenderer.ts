@@ -1,3 +1,5 @@
+import { releaseState, playerAirframeScale } from "./airCombatReleaseState";
+import { enemyAirframeRotation } from "./airCombatHitboxes";
 import sharedVfxUrl from "../../../assets/khong-kich/v2/vfx-atlas.png";
 import { ASTRA_ART, ASTRA_VFX_FRAMES, paintAstra } from "./airCombatAstraArt";
 import { magneticShake } from "./airCombatMagnetic";
@@ -606,7 +608,7 @@ export function drawLegacyWorld(
       for(const side of [-1,1]){const edge=center+side*half,wing=side<0?Math.min(enemy.x-64,edge-7):Math.max(enemy.x+64,edge+7);ctx.strokeStyle="#ffd49a";ctx.beginPath();ctx.arc(wing,enemy.y+18,8+(1-(attack.crossfireTimer??0)/.33)*8,0,Math.PI*2);ctx.stroke();ctx.strokeStyle="rgba(103,232,249,.65)";ctx.beginPath();ctx.moveTo(edge,enemy.y+20);ctx.lineTo(edge,GAMEPLAY_SAFE_RECT.bottom);ctx.stroke();}ctx.restore();
     }
     ctx.save();ctx.translate(enemy.x,enemy.y);
-    if(enemy.type==="kamikaze")ctx.rotate(getEnemyExhaustTransform(enemy).rotation-Math.PI);
+    ctx.rotate(enemyAirframeRotation(enemy)-Math.PI);
     if (world.magnetic) {
       const exposed = enemy.type === "boss" && !guardianSlots(world, enemy.id).some(Boolean);
       const frame = exposed ? TEMPEST_WEAKPOINT_ART : STAGE2_ENEMY_ART[enemy.type];
@@ -615,6 +617,10 @@ export function drawLegacyWorld(
     } else drawEnemyGlyph(ctx, enemy.type, 0, 0, enemy.radius);
     ctx.restore();
     if(!world.magnetic && (enemy.shield>0||enemy.aegisUntil>world.aircraft.coreState.time)){ctx.strokeStyle="#7dd3fc";ctx.lineWidth=2;ctx.beginPath();ctx.arc(enemy.x,enemy.y,enemy.radius+7,0,Math.PI*2);ctx.stroke();}
+    if(enemy.hackedFacing!==undefined&&enemy.type!=="kamikaze"){
+      const exhaust=getEnemyExhaustTransform(enemy);ctx.save();ctx.translate(exhaust.x,exhaust.y);ctx.rotate(exhaust.rotation);
+      ctx.fillStyle="#67e8f9";ctx.globalAlpha=.65;ctx.beginPath();ctx.moveTo(-exhaust.width/2,0);ctx.quadraticCurveTo(-exhaust.width/2,exhaust.length*.4,0,exhaust.length);ctx.quadraticCurveTo(exhaust.width/2,exhaust.length*.4,exhaust.width/2,0);ctx.fill();ctx.restore();
+    }
     if(enemy.stun>0){ctx.strokeStyle="#fde047";ctx.beginPath();ctx.arc(enemy.x,enemy.y-enemy.radius-7,5,0,Math.PI*2);ctx.stroke();}
     if(!world.ended&&enemy.hp>0&&enemy.type==="kamikaze"&&(enemy.kamikazeState==="charge"||enemy.kamikazeState==="dash")){
       const transform=getEnemyExhaustTransform(enemy);
@@ -649,14 +655,14 @@ export function drawLegacyWorld(
     ctx.shadowColor = "#a78bfa";
     ctx.shadowBlur = 8;
     ctx.beginPath();
-    ctx.moveTo(world.playerX, world.playerY - 18);
+    ctx.moveTo(world.playerX, world.playerY - 18 * playerAirframeScale(world.aircraft));
     ctx.lineTo(world.playerX, GAMEPLAY_SAFE_RECT.top);
     ctx.stroke();
     ctx.shadowBlur = 0;
   } else if (world.laserRemaining > 0) {
     if (!phantomBeamImage) { phantomBeamImage = new Image(); phantomBeamImage.src = phantomBeamUrl; }
     const pulse = reducedMotion ? 0 : Math.sin(world.elapsed * 22) * 1.5;
-    const width = 44 + pulse, top = GAMEPLAY_SAFE_RECT.top, bottom = world.playerY - 18;
+    const width = 44 + pulse, top = GAMEPLAY_SAFE_RECT.top, bottom = world.playerY - 18 * playerAirframeScale(world.aircraft);
     ctx.save();
     ctx.globalCompositeOperation = "lighter";
     if (phantomBeamImage.complete && phantomBeamImage.naturalWidth > 0) {
@@ -671,9 +677,9 @@ export function drawLegacyWorld(
     }
     ctx.shadowColor = "#67e8f9"; ctx.shadowBlur = 14;
     ctx.fillStyle = "rgba(167,139,250,.35)";
-    ctx.beginPath(); ctx.arc(world.playerX, world.playerY - 24, 15, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(world.playerX, world.playerY - 24 * playerAirframeScale(world.aircraft), 15, 0, Math.PI * 2); ctx.fill();
     ctx.fillStyle = "#efffff";
-    ctx.beginPath(); ctx.arc(world.playerX, world.playerY - 24, 6, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(world.playerX, world.playerY - 24 * playerAirframeScale(world.aircraft), 6, 0, Math.PI * 2); ctx.fill();
     ctx.restore();
   }
 
@@ -721,8 +727,12 @@ export function drawLegacyWorld(
     }
   },reducedMotion);
   const invisible = (world.aircraft.activeEffects.invisibility || 0) > 0;
+  for(const ghost of releaseState(world.aircraft).ghosts){
+    ctx.save();ctx.translate(ghost.x,ghost.y);ctx.rotate(ghost.angle);
+    drawAircraft(ctx,aircraftId,0,0,aircraft.color,"#a5f3fc",.38*Math.min(1,(ghost.until-world.elapsed)*3),.82*playerAirframeScale(world.aircraft));ctx.restore();
+  }
   const hitBlink = world.playerInvulnerability > 0 && Math.floor(world.elapsed * 16) % 2 === 0;
-  const exhaust=getPlayerExhaust(world,PLAYER_AIRFRAME_SIZE[aircraftId],reducedMotion);
+  const exhaust=getPlayerExhaust(world,PLAYER_AIRFRAME_SIZE[aircraftId]*playerAirframeScale(world.aircraft),reducedMotion);
   ctx.save();ctx.globalCompositeOperation="lighter";
   for(const mount of exhaust.mounts)for(let layer=0;layer<3;layer++){
     const x=world.playerX+mount.x,y=world.playerY+mount.y,width=mount.width*(layer===0?2.6:layer===1?1:.48),length=exhaust.length*(layer===0?1.08:layer===1?1:.64);
@@ -744,7 +754,7 @@ export function drawLegacyWorld(
 
   if (!accents.titanShield.active && accents.titanShield.opacity < .01 && ((world.aircraft.activeEffects.armor_shield || 0) > 0 || Object.values(world.aircraft.coreState.shields).some(s=>s.amount>0&&s.until>world.aircraft.coreState.time))) {
     const pulse = 1 + Math.sin(world.elapsed * 8) * 0.045;
-    const shieldRadius = 25 * pulse;
+    const shieldRadius = 25 * pulse * playerAirframeScale(world.aircraft);
     ctx.save();
     const glow = ctx.createRadialGradient(world.playerX, world.playerY, 10, world.playerX, world.playerY, shieldRadius);
     glow.addColorStop(0, "rgba(125,211,252,.06)");
@@ -773,7 +783,7 @@ export function drawLegacyWorld(
 
   const bubble=accents.titanShield;
   if(bubble.opacity>.01) {
-    ctx.save();ctx.translate(world.playerX,world.playerY);ctx.scale(bubble.scale,bubble.scale);ctx.globalAlpha=bubble.opacity;
+    ctx.save();ctx.translate(world.playerX,world.playerY);ctx.scale(bubble.scale*playerAirframeScale(world.aircraft),bubble.scale*playerAirframeScale(world.aircraft));ctx.globalAlpha=bubble.opacity;
     paintTitanShield(shieldPainter(ctx),bubble,reducedMotion,hasCore(world.aircraft,28));
     ctx.restore();
   }
@@ -787,7 +797,7 @@ export function drawLegacyWorld(
   }, reducedMotion, presentationTime);
   ctx.restore();
   const stats = getEffectiveAircraftStats(world.aircraft);
-  const displayWidth = PLAYER_AIRFRAME_SIZE[aircraftId];
+  const displayWidth = PLAYER_AIRFRAME_SIZE[aircraftId]*playerAirframeScale(world.aircraft);
   const barWidth = trackingBarWidth(displayWidth);
   const barX = trackingBarX(world.playerX, barWidth);
   const barY = trackingBarY(world.playerY, displayWidth);

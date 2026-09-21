@@ -401,7 +401,8 @@ export function paintMagnetic(world: CombatWorld, p: MagneticPainter, reducedMot
       p.label?.(e.x, e.y - e.radius * 1.5, ENEMY_CONFIGS[e.type].name.split(" · ")[0], 0xc4b5fd, 8);
     }
     if (s.tether && e.stun <= 0 && (e.skillLockedUntil ?? 0) <= now) {
-      const player = { x: world.playerX, y: world.playerY };
+      const player = s.tetherAllegiance==="friendly_hacked"?world.enemies.find(target=>target.id===e.hackedTargetId&&target.hp>0):{ x: world.playerX, y: world.playerY };
+      if(!player)continue;
       link("magneticBeam", e, player, 6, .55);
       const t = reducedMotion ? .5 : now * .65 % 1;
       fx("tetherPulse", player.x + (e.x - player.x) * t, player.y + (e.y - player.y) * t, 8, 13, Math.atan2(e.y - player.y, e.x - player.x) + Math.PI / 2);

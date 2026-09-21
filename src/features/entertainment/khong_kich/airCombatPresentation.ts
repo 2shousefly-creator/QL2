@@ -1,4 +1,5 @@
 import { expansionStatuses } from "./airCombatExpansionStatus";
+import { releaseTelemetry } from "./airCombatReleaseTelemetry";
 import { expansionState } from "./airCombatExpansion";
 import { BOUNTY_REWARDS, CORE_METRICS, CORE_METRIC_LABELS } from "./airCombatTelemetry";
 import { FLAT_CORE_STATS } from "./airCombatCoreEffects";
@@ -46,7 +47,7 @@ export function getSkillTooltipModel(state: AircraftCombatState, id: SkillId) {
   if(id==="orbit_reversal")detailRows.push(`Vùng ${hasCore(state,150)?92:72}px · tối đa ${v.count} projectile · Tinh Đạn ${number(v.damageMultiplier*100)}% Hỏa Lực`);
   if(id==="stellar_lance"){
     const stack=(state.coreState.timers.lanceChain??0)>state.coreState.time?(state.coreState.stacks.lanceStack??0):0;
-    detailRows.push(`Chuỗi kế tiếp: ${stack}/4 · ${number(v.cost)} Mana · +${stack*10}% sát thương`, `Tụ lực ${number(v.charge)}s · mục tiêu đầu ${number(v.damageMultiplier*100)}% · mục tiêu sau ${number((hasCore(state,157)?930:680)*(1+.1*stack))}% Hỏa Lực`);
+    detailRows.push(`Chuỗi kế tiếp: ${stack}/4 · ${number(v.cost)} Mana · +${stack*10}% sát thương`, `Tụ lực ${number(v.charge)}s · mục tiêu đầu ${number(v.damageMultiplier*100)}% Hỏa Lực · mục tiêu sau ${number((hasCore(state,157)?930:680)*(1+.1*stack))}% Hỏa Lực`);
   }
   if(id==="starfall")detailRows.push(`Impact ${number(v.damageMultiplier*100)}% Hỏa Lực · bán kính ${hasCore(state,163)?55:35}px`);
   const coreRows: string[] = [];
@@ -335,11 +336,23 @@ function skillCoreStatuses(world:CombatWorld):StatusPresentation[] {
 /** Snapshot for the paused core inventory; no timers or React combat-frame updates. */
 export function getCoreTelemetryPresentation(state:AircraftCombatState,id:CoreId):string[] {
   const row=Number(id.slice(5)),c=state.coreState,stats=getEffectiveAircraftStats(state);
+  if(row===210)return [];
   const values=c.telemetry?.[id]??{},lines:string[]=[];
   const resource=stats.resourceKind==="mana"?"Mana":"Điện";
+  const labels:Record<number,Record<string,string>>={
+    100:{firepowerTime:"Thời gian +20 Hỏa Lực (giây)",armorTime:"Thời gian +20 Giáp (giây)",regenTime:"Thời gian +8 Hỏa Lực / +8 Giáp (giây)"},
+    179:{peak:"Cộng dồn cao nhất",consumed:"Lần chí mạng xóa Sai Số"},
+    183:{peak:"Giáp cộng thêm cao nhất",armorTime:"Thời gian +20 Giáp (giây)",shieldTime:"Thời gian +40 Giáp (giây)"},
+    191:{firepowerTime:"Thời gian Pha Kỹ Năng (giây)",fireRateTime:"Thời gian Pha Bắn Thường (giây)"},
+    197:{accumulated:"Sát thương đã trì hoãn",peak:"Nợ sát thương cao nhất"},
+    198:{granted:"Vệ tinh đã tạo",shots:"Phát bắn khi hết hạn"},200:{shieldCreated:"Dung lượng khiên cộng thêm"},
+    212:{converted:"Token dư chuyển thành dự trữ"},213:{blocked:"Lượt xuất hiện đã chặn"},
+    214:{picks:"Lần chọn ô thứ 4"},215:{picks:"Lần chọn ô bảo đảm"},
+    216:{converted:"Lõi đã chuyển đổi",rewards:"Lõi Kim Cương đã nhận"},218:{peak:"Dự trữ cao nhất"},
+  };
   for(const metric of CORE_METRICS[row]??[]){
-    const label=metric==="resource"?`${resource} thực tế đã hồi`:CORE_METRIC_LABELS[metric];
-    lines.push(`${label}: ${["cooldown","uptime","extraTime","extraCooldown","chargeSaved","debuffSaved","peakBonus"].includes(metric)?number(values[metric]??0):amount(values[metric]??0)}${metric==="cooldown"?" giây":""}`);
+    const label=labels[row]?.[metric]??(metric==="resource"?`${resource} thực tế đã hồi`:CORE_METRIC_LABELS[metric]);
+    lines.push(`${label}: ${number(values[metric]??0)}${metric==="cooldown"?" giây":""}`);
   }
   const flat=FLAT_CORE_STATS[id];
   if(flat){
@@ -378,6 +391,7 @@ export function getCoreTelemetryPresentation(state:AircraftCombatState,id:CoreId
   if(row===121)lines.push(`Kho hiện tại: ${number((c.stacks.antimatter??0)*100)}% / 500% Hỏa Lực`);
   if(row===126)bonus(active("activeCooling")?V.coolingMana*100:0,"% Mana Tối Đa hồi dần trong 5s");
   if(row===130){const stacks=active("tacticalData")?c.stacks.tacticalData??0:0;lines.push(`Dữ Liệu đang dùng: ${stacks} / ${V.dataLimit}`);bonus(hasCore(state,95)?0:stacks*V.dataCrit*100,"% Tỷ Lệ Chí Mạng");}
+  lines.push(...releaseTelemetry(state,row));
   const status=coreStackLabel(state,id);
   if(status&&!lines.includes(status))lines.push(status);
   if(!lines.length)lines.push("Đang trang bị. Hiệu ứng áp dụng theo mô tả lõi.");

@@ -18,7 +18,7 @@ export interface PlayerCombatStatus {
 }
 export const createPlayerStatus = (): PlayerCombatStatus => ({ stunnedUntil: 0, skillLockedUntil: 0, resourceJammedUntil: 0, armorBrokenUntil: 0, regenDisabledUntil: 0, healingReceivedUntil: 0, healingReceivedMultiplier: 1, durations: {}, jams: [], marks: {} });
 export function applyPlayerStatus(state: AircraftCombatState, payload: StatusPayload): void {
-  if (Object.values(payload).some(value => typeof value === "number" && value > 0) && celestialProtection(state)) return;
+  if (Object.values(payload).some(value => typeof value === "number" && value > 0) && celestialProtection(state)) {recordCoreMetric(state,184,"controlBlocked",1);return;}
   const s = state.status, now = state.coreState.time;
   for (const [key, seconds] of [["stunnedUntil", payload.stun], ["skillLockedUntil", payload.skillLock], ["armorBrokenUntil", payload.armorBreak], ["regenDisabledUntil", payload.regenDisable]] as const) {
     recordStatusMitigation(state,seconds??0,s[key]);
@@ -45,7 +45,7 @@ export function applyPlayerStatus(state: AircraftCombatState, payload: StatusPay
   }
 }
 export function addStatusMark(state: AircraftCombatState, name: MarkName, duration: number, sourceEnemyId?: number): number {
-  if (duration > 0 && celestialProtection(state)) return 0;
+  if (duration > 0 && celestialProtection(state)) {recordCoreMetric(state,184,"controlBlocked",1);return 0;}
   recordStatusMitigation(state,duration,state.coreState.time);
   const seconds = negativeStatusDuration(state, duration);
   if (seconds <= 0) return 0;

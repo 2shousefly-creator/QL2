@@ -114,6 +114,20 @@ motif('doubleBlade',p('M8 4 48 33 51 46 72 59 61 72 48 51 35 48Z',metal)+p('M92 
 motif('heavyRound',p('M33 7Q50 -4 67 7L78 61H22Z',metal)+p('M36 12Q50 3 64 12L67 51H33Z')+rect(20,60,60,26,metal,4)+rect(17,89,66,10,light,3)+rect(30,65,40,15,dark,3));
 motif('fortress',p('M7 24 26 12V32H40V8H60V32H74V12L93 24V83L50 99 7 83Z',metal)+p('M17 42H83V74L50 88 17 74Z')+use('battery',30,36,.4)+p('M17 49H28V68H17ZM72 49H83V68H72Z',light));
 
+// 26.10.1: filled illustrations reuse the atlas materials and semantic depth.
+motif('aimCorrect',use('target',22,-2,.76)+use('shell',-7,37,.66)+p('M18 69Q5 28 43 18L40 7 63 21 41 36 44 26Q17 31 28 65Z',light));
+motif('filterCards',rect(4,9,31,43,metal,5)+rect(44,5,31,43,metal,5)+p('M7 53H88L61 76V98H40V76Z')+p('M19 57H76L54 72H43Z',light)+use('gem',62,53,.39));
+motif('rerollTicket',p('M4 22H90V38Q71 50 90 63V81H4V63Q23 50 4 38Z',metal)+rect(28,30,42,43,dark,4)+use('clock',32,34,.36)+p('M13 27H23V36H13ZM13 67H23V76H13Z'));
+motif('memoryLock',rect(11,8,70,84,metal,8)+rect(19,17,53,66,dark,5)+p('M26 27 38 23 61 64 51 70ZM59 24 68 33 35 70 24 61Z','#eb617c')+use('blackBox',49,49,.5));
+motif('fourCards',[[-2,9],[45,9],[-2,54],[45,54]].map(([x,y])=>`<g transform="translate(${x} ${y})">${rect(0,0,43,39,metal,4)}${rect(5,5,33,29,dark,2)}${use('gem',8,4,.3)}</g>`).join(''));
+motif('oneLane',p('M7 1H23V33L50 58 77 33V1H93V39L59 73V98H41V73L7 39Z',metal)+p('M44 0H56V64H44Z')+use('gem',30,56,.4));
+motif('pandora',use('blackBox',0,18,.98)+p('M15 36 8 2 41 26 50 0 65 28 91 3 84 42Z')+use('gem',28,-1,.46)+p('M25 47 50 39 78 49 52 61Z',light));
+motif('rarityShift',use('gem',22,3,.75)+p('M7 63H42V48L66 72 42 95V82H7Z',metal)+circle(13,17,7,'#cbd5e1')+circle(19,40,8,'#ffd15d'));
+motif('tokenVault',use('blackBox',-1,-3,1)+[0,1,2].map(i=>use('clock',9+i*22,35-i*6,.37)).join('')+p('M74 65H94V95H65V77H74Z',light));
+motif('hotBarrel',use('cannon',1,12,.92)+p('M30 18 34 0 48 28 60 2 73 39 57 47 41 36Z','#ff663d')+p('M40 17 48 39 58 18 61 42 49 48Z','#fff7c2'));
+motif('ghostCraft',`<g opacity=".25">${use('hull',-11,9,.86)}</g><g opacity=".5">${use('hull',5,3,.86)}</g>`+use('hull',21,-4,.86)+p('M3 79 15 72 18 83 6 91ZM23 87 36 79 37 91 26 99Z',light));
+motif('deathSigil',circle(50,50,43,'#812943')+circle(50,50,34,'#210c30')+p('M8 3 28 9 53 36 80 8 97 3 89 25 64 51 91 79 96 98 77 90 51 64 24 92 4 98 10 77 37 50 11 25Z','#030207','stroke="#c579dc" stroke-width="2"')+p('M47 38 54 39 62 49 54 61 45 57 39 49Z','#280922'));
+motif('unstableCraft',use('hull',-7,43,.49)+use('hull',26,-6,1.04)+p('M32 13H47V28H32ZM2 30H17V45H2Z',light)+p('M15 9 29 21 15 32Z'));
 const recipes=[
 // 001–018: each rank has a distinct silhouette, never a numeral.
 ['shell','power'],['plate','shield'],['cannon','speed'],['hull','heart'],['repair','heal'],['clock','speed'],
@@ -166,16 +180,20 @@ const recipes=[
 ['shield','burst','trade'],['arsenal','power'],['specialize','three','target'],['hack','cannon','target'],
 ['shield','clock','refund'],['doubleBlade','trade'],['heavyRound','pierce'],['phase','trade','shell'],
 ['heal','battery','link'],['fortress','low','battery'],
+['aimCorrect','target','shell'],['filterCards','gem','nodes'],['rerollTicket','clock','battery'],
+['memoryLock','data','clock'],['fourCards','target','gem'],['oneLane','nodes','gem'],
+['pandora','gem','spark'],['rarityShift','gem','clock'],['tokenVault','clock','battery'],
+['hotBarrel','spark','cannon'],['ghostCraft','hull','duration'],['deathSigil','clock','spark'],['unstableCraft','hull','regulator'],
 ];
 // Skill identity takes priority over role color in illustration only.
 const groups={
- cyan:[...[19,20,21,22,23,24,25,26,27],...Array.from({length:9},(_,i)=>122+i)],
+ cyan:[210,211,220,...[19,20,21,22,23,24,25,26,27],...Array.from({length:9},(_,i)=>122+i)],
  gold:[184,198,199,200,201,202,204,209,28,29,30,31,32,33,34,35,36,...Array.from({length:9},(_,i)=>131+i)],
  violet:[37,38,39,40,41,42,43,44,45,...Array.from({length:9},(_,i)=>140+i)],
  orange:Array.from({length:18},(_,i)=>150+i),
  green:[2,4,5,8,10,11,14,16,17,47,48,61,62,64,65,72,76,81,90,92,98,99,103,104,108,109,110,119],
  blue:[78,84,86,107],
- purple:[6,12,18,49,50,51,52,54,63,70,74,77,85,93,94,95,96,97,100,113,116,120,149],
+ purple:[212,213,214,215,216,217,218,221,222,6,12,18,49,50,51,52,54,63,70,74,77,85,93,94,95,96,97,100,113,116,120,149],
 };
 const palettes={cyan:['#53ddff','#073956'],gold:['#ffd15d','#4c300b'],violet:['#c4a1ff','#312059'],orange:['#ffb968','#5a2815'],green:['#6aefaa','#0d3e32'],blue:['#6cbaff','#112c5b'],purple:['#d895ff','#3b1954'],red:['#ff8b79','#501c29']};
 const defs=`<clipPath id="cell-clip"><rect width="128" height="128" rx="12"/></clipPath><linearGradient id="metal" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffffff"/><stop offset=".35" stop-color="#c4daeb"/><stop offset=".52" stop-color="#8aa4bd"/><stop offset=".57" stop-color="#d5e5f1"/><stop offset="1" stop-color="#415a75"/></linearGradient>`+
@@ -199,4 +217,4 @@ const cells=recipes.map(([base,badge,context],i)=>{
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)">${use(badge)}</g></g></g>`;
 });
-writeFileSync(fileURLToPath(new URL('../src/assets/khong-kich/v2/core-icons-refined.svg',import.meta.url)),`<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1792" viewBox="0 0 1920 1792"><defs>${defs}</defs>\n${cells.join('\n')}\n</svg>\n`);
+writeFileSync(fileURLToPath(new URL('../src/assets/khong-kich/v2/core-icons-refined.svg',import.meta.url)),`<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1920" viewBox="0 0 1920 1920"><defs>${defs}</defs>\n${cells.join('\n')}\n</svg>\n`);

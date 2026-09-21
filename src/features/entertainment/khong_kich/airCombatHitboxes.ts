@@ -1,3 +1,4 @@
+import { playerAirframeScale } from "./airCombatReleaseState";
 import type { AircraftId, EnemyType } from "./airCombatTypes";
 import type { CombatWorld, EnemyEntity } from "./airCombatRuntime";
 import { GAMEPLAY_SAFE_RECT } from "./airCombatConfig";
@@ -64,12 +65,13 @@ function transform(key:object,p:AircraftHitboxProfile,x:number,y:number,size:num
   }
   h.shapes.length=p.shapes.length;return h;
 }
-export const getPlayerHitbox=(w:CombatWorld)=>transform(w,PLAYER_HITBOX_PROFILES[w.aircraft.aircraftId],w.playerX,w.playerY,PLAYER_AIRFRAME_SIZE[w.aircraft.aircraftId],0);
-export const enemyAirframeRotation=(e:EnemyEntity)=>e.type==="kamikaze"?e.airframeRotation??Math.PI:Math.PI;
+export const effectivePlayerAirframeSize=(w:CombatWorld)=>PLAYER_AIRFRAME_SIZE[w.aircraft.aircraftId]*playerAirframeScale(w.aircraft);
+export const getPlayerHitbox=(w:CombatWorld)=>transform(w,PLAYER_HITBOX_PROFILES[w.aircraft.aircraftId],w.playerX,w.playerY,effectivePlayerAirframeSize(w),0);
+export const enemyAirframeRotation=(e:EnemyEntity)=>e.type==="kamikaze"&&e.kamikazeState==="dash"?e.airframeRotation??Math.PI:e.hackedFacing??(e.type==="kamikaze"?e.airframeRotation??Math.PI:Math.PI);
 /** Cosmetic rear anchor follows the planned charge or current/committed dash.
  * It does not modify the Stage 1 collision profile or simulation heading. */
 export function getEnemyExhaustTransform(e:EnemyEntity) {
-  const rotation=e.type==="kamikaze" && e.kamikazeState==="charge"
+  const rotation=e.hackedFacing===undefined && e.type==="kamikaze" && e.kamikazeState==="charge"
     ? Math.atan2((e.lockedY??e.dashEndY)-e.y,(e.lockedX??e.dashEndX)-e.x)+Math.PI/2
     : enemyAirframeRotation(e);
   const size=e.radius*2.8,rear=size*.34;

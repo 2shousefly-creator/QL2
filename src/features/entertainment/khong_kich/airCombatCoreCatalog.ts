@@ -2293,7 +2293,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 {
   "id": "core_176",
   "name": "Khoảng Thở",
-  "description": "Khi không có hoả lực địch hoặc địch xuất hiện trong phạm vi bán kính 100px quanh chiến cơ, hồi 0,35% Máu Tối Đa mỗi giây. Hiệu ứng dừng ngay có hoả lực địch hoặc địch tiến vào vùng.",
+  "description": "Khi không có hỏa lực địch hoặc kẻ địch trong phạm vi bán kính 100px quanh chiến cơ, hồi 0,75% Máu Tối Đa mỗi giây. Hiệu ứng dừng ngay khi hỏa lực địch hoặc kẻ địch tiến vào vùng.",
   "system": "defense",
   "icon": "core:core_176",
   "category": "defense",
@@ -2645,7 +2645,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 {
   "id": "core_208",
   "name": "Tế Bào Song Năng",
-  "description": "Tăng chỉ số hồi tài nguyên mỗi giây bằng 50% chỉ số hồi máu mỗi giây.",
+  "description": "Khi nhận thêm chỉ số Hồi Máu mỗi giây, nhận thêm Hồi Tài Nguyên mỗi giây bằng 60% lượng đó. Khi nhận thêm chỉ số Hồi Tài Nguyên mỗi giây, nhận thêm Hồi Máu mỗi giây bằng 60% lượng đó. Lượng bonus không cộng dồn qua lại với nhau.",
   "system": "resource",
   "icon": "core:core_208",
   "category": "resource",
@@ -2659,6 +2659,149 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   "description": "Khi Máu xuống dưới 35%, chiến cơ kích hoạt chế độ Tử Thủ: +150 Giáp, +40% Hồi Tài Nguyên và giảm 20% Hồi Chiêu, nhưng mọi sát thương gây ra giảm 15%. Chỉ rời trạng thái khi Máu vượt 35%.",
   "system": "utility",
   "icon": "core:core_209",
+  "category": "weapon",
+  "tiers": [
+    "diamond"
+  ]
+},
+{
+  "id": "core_210",
+  "name": "Tự Sửa Đường Ngắm",
+  "description": "Nếu 3 viên đạn bắn thường chính liên tiếp bay hết màn hình chơi mà không chạm bất kỳ mục tiêu nào, viên kế tiếp được tự chỉnh hướng nhẹ về mục tiêu gần nhất trong tối đa 0,45 giây đầu. Trúng hoặc hết 0,45 giây sẽ mất dẫn hướng.",
+  "system": "attack",
+  "icon": "core:core_210",
+  "category": "offense",
+  "tiers": [
+    "silver"
+  ]
+},
+{
+  "id": "core_211",
+  "name": "Bộ Lọc Reroll",
+  "description": "Khi reroll một ô trong lựa chọn Lõi thường, lõi thay thế sẽ tránh cùng Hệ Lõi với lõi vừa bỏ nếu trong cùng Bậc còn lõi hợp lệ thuộc Hệ khác. Không thay đổi Bậc Lõi và không tác động lựa chọn Skill Core.",
+  "system": "utility",
+  "icon": "core:core_211",
+  "category": "weapon",
+  "tiers": [
+    "silver"
+  ]
+},
+{
+  "id": "core_212",
+  "name": "Phiếu Reroll Dự Phòng",
+  "description": "Khi nhận lõi này, các lượt chọn Lõi thường (ngoại trừ Skill Core) kế tiếp có thêm đúng 1 lần Reroll Dự Phòng dùng cho một ô bất kỳ.",
+  "system": "utility",
+  "icon": "core:core_212",
+  "category": "weapon",
+  "tiers": [
+    "gold"
+  ]
+},
+{
+  "id": "core_213",
+  "name": "Ghi Nhớ Từ Chối",
+  "description": "Một lõi thường bị loại bằng reroll sẽ không xuất hiện lại trong 2 lượt chọn Lõi thường kế tiếp. Chỉ ghi nhớ ID đã từ chối, không thay đổi tỷ lệ Bậc và không áp dụng Skill Core.",
+  "system": "utility",
+  "icon": "core:core_213",
+  "category": "weapon",
+  "tiers": [
+    "silver"
+  ]
+},
+{
+  "id": "core_214",
+  "name": "Bản Đồ Dự Thảo",
+  "description": "Mọi lượt chọn Lõi thường hiển thị 4 thẻ thay vì 3; thẻ lõi thứ 4 cũng có nút reroll như bình thường. Các mốc Skill Core vẫn hiển thị 3 thẻ và giữ logic reroll Skill Core hiện tại.",
+  "system": "utility",
+  "icon": "core:core_214",
+  "category": "weapon",
+  "tiers": [
+    "diamond"
+  ]
+},
+{
+  "id": "core_215",
+  "name": "Chuyên Tuyến Lõi",
+  "description": "Khi nhận, chọn 1 Hệ Lõi dùng chung. Trong mọi lượt chọn Lõi thường sau đó, đúng 1 ô được bảo đảm thuộc Hệ đã chọn nếu có ứng viên hợp lệ. Các ô còn lại và tỷ lệ Bậc giữ nguyên.",
+  "system": "utility",
+  "icon": "core:core_215",
+  "category": "weapon",
+  "tiers": [
+    "diamond"
+  ]
+},
+{
+  "id": "core_216",
+  "name": "Hộp Pandora",
+  "description": "Chuyển đổi tất cả Lõi Nâng Cấp thường người chơi đang sở hữu tại thời điểm kích hoạt thành các Lõi Kim Cương ngẫu nhiên, ngoại trừ Lõi Kỹ Năng, các Lõi Chuyển Đổi 050/051/052 và chính Hộp Pandora. Các Lõi thường từng nhận thông qua Lõi Chuyển Đổi vẫn là mục tiêu hợp lệ. Hiệu ứng của lõi cũ phải được tháo sạch; các giá trị vĩnh viễn đã thực sự kiếm được từ lõi cũ được bảo toàn.",
+  "system": "utility",
+  "icon": "core:core_216",
+  "category": "weapon",
+  "tiers": [
+    "diamond"
+  ]
+},
+{
+  "id": "core_217",
+  "name": "Thao Túng Bậc Lõi",
+  "description": "Tỷ lệ Bậc của các lượt chọn Lõi thường đổi từ 40% Bạc / 40% Vàng / 20% Kim Cương thành 25% Bạc / 40% Vàng / 35% Kim Cương. Mốc Skill Core 9/18/27 không đổi.",
+  "system": "utility",
+  "icon": "core:core_217",
+  "category": "weapon",
+  "tiers": [
+    "diamond"
+  ]
+},
+{
+  "id": "core_218",
+  "name": "Bảo Toàn Cơ Hội",
+  "description": "Khi một lượt chọn Lõi thường kết thúc, mỗi reroll chính theo ô chưa dùng sẽ chuyển thành 1 Reroll Dự Trữ. Nếu sở hữu Phiếu Reroll Dự Phòng, reroll phụ chưa dùng của lượt đó cũng chuyển thành 1 Reroll Dự Trữ. Kho tối đa 3, hoặc tối đa 4 khi đồng thời sở hữu Phiếu Reroll Dự Phòng. Reroll Dự Trữ chỉ sinh ra và sử dụng trong lựa chọn Lõi thường.",
+  "system": "utility",
+  "icon": "core:core_218",
+  "category": "weapon",
+  "tiers": [
+    "diamond"
+  ]
+},
+{
+  "id": "core_219",
+  "name": "Nòng Súng Đỏ Rực",
+  "description": "Mỗi kỹ năng cast tạo 25 Nhiệt; kỹ năng dạng bật/tắt đang hoạt động tạo 2,5 Nhiệt mỗi giây; mỗi phát bắn thường tạo 0,025 Nhiệt. Nếu không có kỹ năng nào hoạt động trong 10 giây kể từ lần kết thúc kỹ năng gần nhất, Nhiệt giảm 15/giây. Ở 50–99 Nhiệt, gây thêm 20% mọi sát thương. Chạm 100 Nhiệt gây Quá Nhiệt 3 giây: ngừng bắn thường, không thể dùng kỹ năng, tắt ngay kỹ năng đang hoạt động và Nhiệt giảm dần về 0 trong đúng 3 giây.",
+  "system": "attack",
+  "icon": "core:core_219",
+  "category": "offense",
+  "tiers": [
+    "gold"
+  ]
+},
+{
+  "id": "core_220",
+  "name": "Bóng Sống Ngắn",
+  "description": "Mỗi 10 giây, kỹ năng cast tiếp theo để lại một Bóng của Chiến Cơ tại vị trí cast trong 3 giây. Bóng ưu tiên mục tiêu hiện tại của chiến cơ chính, tự quay theo mục tiêu và bắn theo Tốc Độ Bắn effective hiện tại của chiến cơ chính. Mỗi viên gây 35% Hỏa Lực, không chí mạng, không kích hoạt bất kỳ hiệu ứng Lõi khác, không sao chép kỹ năng, không bị target và không chặn đòn.",
+  "system": "attack",
+  "icon": "core:core_220",
+  "category": "offense",
+  "tiers": [
+    "gold"
+  ]
+},
+{
+  "id": "core_221",
+  "name": "Dấu Ấn Tử Thần",
+  "description": "Mỗi 20 giây, đánh dấu một mục tiêu trong 3 giây. Khi hết thời gian, dấu nổ gây raw damage bằng 120% Hỏa Lực + 45% tổng sát thương thực tế mục tiêu đã nhận trong thời gian dấu tồn tại. Nếu damage nổ sau khi tính Giáp và các lớp hấp thụ hiện hành đủ hạ mục tiêu thì nổ ngay, đồng thời cooldown kế tiếp của lõi giảm 50%. Cooldown bắt đầu khi dấu kết thúc/nổ.",
+  "system": "attack",
+  "icon": "core:core_221",
+  "category": "offense",
+  "tiers": [
+    "gold"
+  ]
+},
+{
+  "id": "core_222",
+  "name": "Nâng Cấp Bất Ổn",
+  "description": "Roll ngay khi nhận và mỗi 60 giây, độc lập 50/50. Thu Nhỏ: -50% kích thước và hitbox, +25 điểm phần trăm Giảm Hồi Chiêu (vẫn cap 80%), +50% Hồi Tài Nguyên/s. Khổng Lồ: +50% kích thước và hitbox, +30% Máu Tối Đa, +30% Hỏa Lực. Roll cùng trạng thái không cộng dồn lại; đổi trạng thái phải gỡ sạch bonus cũ trước khi áp bonus mới.",
+  "system": "utility",
+  "icon": "core:core_222",
   "category": "weapon",
   "tiers": [
     "diamond"

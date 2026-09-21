@@ -1,5 +1,6 @@
 import { applyExpansionStats, expansionState, expansionActive, expansionSkillCost, finishExpansionSkill, finishAbsorbShield, observeExpansionResource } from "./airCombatExpansion";
 import { recordCoreMetric } from "./airCombatTelemetry";
+import { releaseState, overheated } from "./airCombatReleaseState";
 import { SKILL_BASE_VALUES as B, SKILL_CORE_VALUES as V } from "./airCombatSkillCores";
 import { createPlayerStatus, playerSkillLocked, tickPlayerStatus } from "./airCombatStatus";
 import { AIRCRAFT_CONFIGS, AIR_COMBAT_LIMITS, SKILL_CONFIGS } from "./airCombatConfig";
@@ -28,7 +29,7 @@ export function createAircraftCombatState(aircraftId: AircraftId): AircraftComba
         modifiers: { criticalChanceFlat: 0, criticalDamageMultiplierFlat: 0, maxHpFlat: 0, armorFlat: 0, firepowerFlat: 0, fireRateFlat: 0, hpRegen: 0,
             cooldownReduction: 0, maxResourceFlat: 0, resourceRegenFlat: 0, weapon: { ...DEFAULT_WEAPON }, skillCores: {} },
         cooldowns: {}, selectedCores: [], activeEffects: {}, droneActive: false, basicShotsFired: 0, pendingMilestones: [],
-        coreState: { acquisitions: [], nextAcquisitionId: 1, healingTotal: 0, telemetry: {}, time: 0, lastDamage: 0, lastMove: 0, lastKill: -Infinity, kills: 0, skillCasts: 0, killTimes: [], stacks: {}, timers: {}, shields: {},
+        coreState: { syncedMaxHp: config.baseStats.maxHp, acquisitions: [], nextAcquisitionId: 1, healingTotal: 0, telemetry: {}, time: 0, lastDamage: 0, lastMove: 0, lastKill: -Infinity, kills: 0, skillCasts: 0, killTimes: [], stacks: {}, timers: {}, shields: {},
             consumed: new Set(), criticalBudget: 1, criticalWindow: 0, droneCycle: 0, deferredCooldowns: {} },
     };
 }
@@ -58,7 +59,20 @@ export function getEffectiveAircraftStats(state: AircraftCombatState, includeTem
         stats.armor *= 1.35;
     if (includeTemporary && (c.timers.acidArmor || 0) > c.time)
         stats.armor *= .7;
+    if (includeTemporary && hasCore(state, 222)) {
+        if (releaseState(state).mode === "small") { stats.cooldownReduction += .25; stats.resourceRegen *= 1.5; }
+        if (releaseState(state).mode === "giant") { stats.maxHp *= 1.3; stats.firepower *= 1.3; }
+    }
     applyExpansionStats(state, stats, includeTemporary);
+    // Snapshot both positive sources before applying either conversion or any penalty.
+    if (hasCore(state, 208)) {
+        const hp = Math.max(0, stats.hpRegen - config.hpRegen.base);
+        const resource = Math.max(0, stats.resourceRegen - config.baseStats.resourceRegen);
+        stats.dualHpBonus = resource * .6;
+        stats.dualResourceBonus = hp * .6;
+        stats.hpRegen += stats.dualHpBonus;
+        stats.resourceRegen += stats.dualResourceBonus;
+    }
     if (includeTemporary) {
         const status = state.status;
         if (status.armorBrokenUntil > c.time) stats.armor *= .65;
@@ -66,7 +80,6 @@ export function getEffectiveAircraftStats(state: AircraftCombatState, includeTem
         stats.resourceRegen *= Math.min(1, ...status.jams.filter(j => j.until > c.time).map(j => j.multiplier));
     }
     if (includeTemporary && (c.timers.tacticalData || 0) > c.time && !hasCore(state, 95)) stats.criticalChance += (c.stacks.tacticalData || 0) * V.dataCrit;
-    if (hasCore(state, 208)) stats.resourceRegen += .5 * Math.max(0, stats.hpRegen) * (includeTemporary && state.status.healingReceivedUntil > c.time ? state.status.healingReceivedMultiplier : 1);
     applyFireRateLock(state, stats);
     stats.fireRate = hasCore(state, 54) ? 1.2 : Math.min(AIR_COMBAT_LIMITS.maxFireRate, Math.max(.1, stats.fireRate));
     stats.criticalChance = Math.max(0, Math.min(1, stats.criticalChance));
@@ -80,6 +93,13 @@ export function getEffectiveAircraftStats(state: AircraftCombatState, includeTem
     stats.currentResource = Math.min(state.currentResource, stats.maxResource);
     if (includeTemporary) c.stacks.effectiveMaxHp = stats.maxHp;
     return stats;
+}
+/** Capacity adjustment, deliberately separate from healing and from stat reads. */
+export function syncEffectiveMaxHp(state: AircraftCombatState): void {
+    const maxHp = getEffectiveAircraftStats(state).maxHp;
+    const previous = state.coreState.syncedMaxHp ?? maxHp;
+    state.currentHp = Math.min(maxHp, state.currentHp + Math.max(0, maxHp - previous));
+    state.coreState.syncedMaxHp = maxHp;
 }
 export function calculateDamage(rawDamage: number, targetArmor: number, additionalDamageTakenMultiplier = 1): number {
     return Math.max(0, rawDamage) * 100 / (100 + Math.max(-80, targetArmor)) * Math.max(0, additionalDamageTakenMultiplier);
@@ -128,7 +148,7 @@ export function levelUpAircraft(state: AircraftCombatState): void {
     const before = getEffectiveAircraftStats(state);
     state.level++;
     const after = getEffectiveAircraftStats(state);
-    state.currentHp = Math.min(state.currentHp, after.maxHp);
+    syncEffectiveMaxHp(state);
     state.currentResource = Math.min(after.maxResource, state.currentResource + Math.max(0, after.maxResource - before.maxResource));
 }
 export function getSkillRuntimeValues(state: AircraftCombatState, skillId: SkillId): RuntimeSkillValues {
@@ -216,6 +236,8 @@ export function finishBorrowedDuration(state:AircraftCombatState,skillId:SkillId
 function beginDebt(state: AircraftCombatState, skillId: SkillId): void {
     const c=state.coreState;
     state.cooldowns[skillId]=(state.cooldowns[skillId]??0)+SKILL_CONFIGS[skillId].cooldown*.5;
+    recordCoreMetric(state,113,"extraCooldown",SKILL_CONFIGS[skillId].cooldown*.5);
+    c.stacks[`paidDebt:${skillId}`]=(c.stacks[`paidDebt:${skillId}`]??0)+SKILL_CONFIGS[skillId].cooldown*.5;
     c.timers.futureDebt=c.time+18;delete c.stacks.borrowPending;delete c.stacks[`debt:${skillId}`];
 }
 export function endAircraftSkill(state: AircraftCombatState, skillId: SkillId): void {
@@ -251,7 +273,7 @@ export function endAircraftSkill(state: AircraftCombatState, skillId: SkillId): 
 }
 export function castSkill(state: AircraftCombatState, skillId: SkillId): SkillCastResult {
     const skill = SKILL_CONFIGS[skillId];
-    if (!skill || skill.aircraftId !== state.aircraftId || (skillsLocked(state) || playerSkillLocked(state)))
+    if (!skill || skill.aircraftId !== state.aircraftId || overheated(state) || (skillsLocked(state) || playerSkillLocked(state)))
         return { cast: false, reason: "invalid", resourceSpent: 0 };
     if ((skillId === "escort_drone" && state.droneActive) || (skillId === "sweeping_cannon" && (state.activeEffects.sweeping_cannon || 0) > 0)) {
         const refund = skillId === "escort_drone" && hasCore(state,148) ? Math.min(V.recallRefundCap, (state.coreState.stacks.droneUpkeepSpent || 0) * V.recallRefund, Math.max(0, getEffectiveAircraftStats(state).maxResource - state.currentResource)) : 0;
@@ -288,10 +310,14 @@ export function castSkill(state: AircraftCombatState, skillId: SkillId): SkillCa
         const c=state.coreState,stack=(c.timers.lanceChain??0)>c.time?(c.stacks.lanceStack??0):0;
         c.stacks.lanceCastStack=stack;c.stacks.lanceStack=Math.min(4,stack+1);c.timers.lanceChain=c.time+15;
     }
-    if(borrowed){state.coreState.stacks.borrowPending=1;state.coreState.stacks[`debt:${skillId}`]=1;}
+    if(borrowed){state.coreState.stacks.borrowPending=1;state.coreState.stacks[`debt:${skillId}`]=1;recordCoreMetric(state,113,"procs",1);}
     if(free){recordCoreMetric(state,84,"procs",1);recordCoreMetric(state,84,"saved",skillId==="escort_drone"?0:v.cost);}
     const savingRow=skillId==="invisibility"?39:skillId==="focus_laser"?42:undefined;
     if(!free)recordCoreMetric(state,savingRow,"saved",Math.max(0,skill.cost-v.cost));
+    if(!free&&skillId!=="escort_drone"){
+        if(hasCore(state,190))recordCoreMetric(state,190,"extraResource",cost-cost/1.15);
+        if(expansionState(state).primarySkill===skillId)recordCoreMetric(state,202,"saved",cost/.85-cost);
+    }
     if(skillId==="focus_laser")recordCoreMetric(state,41,"chargeSaved",1.8);
     const cooldown = v.cooldown * (1 - getEffectiveAircraftStats(state).cooldownReduction) * (free ? 1.1 : 1);
     if (skillId === "sweeping_cannon" || skillId === "escort_drone" || isAstraSkill(skillId))
@@ -346,8 +372,14 @@ export function tickAircraftState(state: AircraftCombatState, deltaSeconds: numb
     }
     recordCoreMetric(state,30,"uptime",Math.min(dt,Math.max(0,(state.coreState.timers.shieldArmor??0)-state.coreState.time)));
     if(state.coreState.time-state.coreState.lastDamage>=4)recordCoreMetric(state,82,"uptime",dt);
-    for (const key of Object.keys(state.cooldowns) as SkillId[])
+    for (const key of Object.keys(state.cooldowns) as SkillId[]) {
         state.cooldowns[key] = Math.max(0, (state.cooldowns[key] || 0) - dt);
+        const debtKey=`paidDebt:${key}`,debt=state.coreState.stacks[debtKey]??0;
+        const remaining=Math.min(debt,state.cooldowns[key]!);
+        recordCoreMetric(state,113,"debtPaid",debt-remaining);
+        if(remaining>0)state.coreState.stacks[debtKey]=remaining;
+        else delete state.coreState.stacks[debtKey];
+    }
     const coolingStep = Math.max(0, Math.min(dt, (state.coreState.timers.activeCooling || 0) - state.coreState.time));
     if (coolingStep > 0) {
         const max = getEffectiveAircraftStats(state).maxResource;
@@ -396,21 +428,43 @@ export function tickAircraftState(state: AircraftCombatState, deltaSeconds: numb
         if (shield.until <= state.coreState.time)
             { finishAbsorbShield(state, shield); delete state.coreState.shields[key]; }
     const stats = getEffectiveAircraftStats(state);
-    state.currentHp=Math.min(state.currentHp,stats.maxHp);
-    healAircraft(state, stats.hpRegen * dt);
+    syncEffectiveMaxHp(state);
+    const resourceWithout=new Map<number,number>();
+    for(const row of [181,193,209,222])if(hasCore(state,row)){
+        const without=getEffectiveAircraftStats({...state,selectedCores:state.selectedCores.filter(id=>id!==`core_${row}`),coreState:{...state.coreState,stacks:{...state.coreState.stacks}}});
+        resourceWithout.set(row,without.resourceRegen);
+    }
+    const missingHp = Math.max(0, stats.maxHp - state.currentHp);
+    const healed = healAircraft(state, stats.hpRegen * dt);
+    const healingMultiplier = state.status.healingReceivedUntil > state.coreState.time ? state.status.healingReceivedMultiplier : 1;
+    const dualHp = state.status.regenDisabledUntil > state.coreState.time ? 0 : (stats.dualHpBonus ?? 0);
+    recordCoreMetric(state, 208, "healed", healed - Math.min(missingHp, Math.max(0, stats.hpRegen - dualHp) * dt * healingMultiplier));
     const upkeep = state.droneActive && state.dronePhase === "active" ? getSkillRuntimeValues(state, "escort_drone").upkeepPerSecond : 0;
     const available = Math.max(0, state.currentResource + stats.resourceRegen * dt);
     const spent = Math.min(available, upkeep * dt);
     if(upkeep>0)recordCoreMetric(state,43,"saved",Math.min(available,4*dt)-spent);
     if (state.droneActive) state.coreState.stacks.droneUpkeepSpent = (state.coreState.stacks.droneUpkeepSpent || 0) + spent;
+    const resourceBefore = state.currentResource;
     state.currentResource = Math.max(0, Math.min(stats.maxResource, available - spent));
+    const jam = Math.min(1, ...state.status.jams.filter(j => j.until > state.coreState.time).map(j => j.multiplier));
+    const withoutDual = Math.max(0, Math.min(stats.maxResource, resourceBefore + (stats.resourceRegen - (stats.dualResourceBonus ?? 0) * jam) * dt - spent));
+    recordCoreMetric(state, 208, "resource", state.currentResource - withoutDual);
+    for(const [row,regen] of resourceWithout){
+        const counterfactual=Math.max(0,Math.min(stats.maxResource,resourceBefore+regen*dt-spent));
+        recordCoreMetric(state,row,"resource",state.currentResource-counterfactual);
+    }
+    if(upkeep>0){
+        if(hasCore(state,190))recordCoreMetric(state,190,"extraResource",spent-Math.min(available,upkeep/1.15*dt));
+        if(expansionState(state).primarySkill==="escort_drone")recordCoreMetric(state,202,"saved",Math.min(available,upkeep/.85*dt)-spent);
+        if(expansionActive(state,"capacitorHawk"))recordCoreMetric(state,172,"saved",Math.min(available,upkeep/.85*dt)-spent);
+    }
     observeExpansionResource(state, stats.maxResource);
     if (state.droneActive && state.dronePhase === "active" && state.currentResource <= 0)
         endAircraftSkill(state, "escort_drone");
 }
 export function isPlayerInvisible(state: AircraftCombatState): boolean { return (state.activeEffects.invisibility || 0) > 0; }
 export function canAcquirePlayerTarget(state: AircraftCombatState): boolean { return !isPlayerInvisible(state); }
-export function shouldAutoFire(state: AircraftCombatState): boolean { return (state.activeEffects.focus_laser || 0) <= 0 && (state.activeEffects.stellar_lance || 0) <= 0; }
+export function shouldAutoFire(state: AircraftCombatState): boolean { return !overheated(state) && (state.activeEffects.focus_laser || 0) <= 0 && (state.activeEffects.stellar_lance || 0) <= 0; }
 export function classifySkillPress(durationMs: number, longPressMs = 400): "tap" | "hold" { return durationMs >= longPressMs ? "hold" : "tap"; }
 export function shouldCastSkillPress(durationMs: number, holdActivated: boolean, cancelled: boolean, longPressMs = 400): boolean {
     return !cancelled && !holdActivated && classifySkillPress(durationMs, longPressMs) === "tap";
@@ -433,4 +487,9 @@ function recordCooldownTelemetry(state:AircraftCombatState,skillId:SkillId,penal
     };
     for(const [row,seconds] of sources[skillId]??[])recordCoreMetric(state,row,"cooldown",seconds*reduction*penalty);
     if(penalty>1)recordCoreMetric(state,84,"extraCooldown",getSkillRuntimeValues(state,skillId).cooldown*reduction*(penalty-1));
+    if(expansionState(state).primarySkill===skillId)recordCoreMetric(state,202,"cooldown",getSkillRuntimeValues(state,skillId).cooldown*(1/.85-1)*reduction*penalty);
+    for(const row of [209,222])if(hasCore(state,row)){
+        const without=getEffectiveAircraftStats({...state,selectedCores:state.selectedCores.filter(id=>id!==`core_${row}`),coreState:{...state.coreState,stacks:{...state.coreState.stacks}}});
+        recordCoreMetric(state,row,"cooldown",getSkillRuntimeValues(state,skillId).cooldown*Math.max(0,(1-without.cooldownReduction)-reduction)*penalty);
+    }
 }

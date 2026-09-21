@@ -1,3 +1,4 @@
+import { playerAirframeScale } from "./airCombatReleaseState";
 import type { CombatWorld } from "./airCombatRuntime";
 import type { AircraftId } from "./airCombatTypes";
 
@@ -51,8 +52,8 @@ export function getPlayerExhaust(world:CombatWorld,size:number,reducedMotion:boo
   const target=moving?1:skill?.65:0;
   state.thrust+=(target-state.thrust)*(1-Math.exp(-dt*(reducedMotion?3:7)));
   const art=PLAYER_ARTWORK[world.aircraft.aircraftId].neutral;
-  return {length:27+state.thrust*(reducedMotion?5:16),glow:.25+state.thrust*.12,
-    mounts:PLAYER_ENGINE_MOUNTS[world.aircraft.aircraftId].map(m=>({x:(m.engineMountX-art.anchorX)*size*art.scaleX,y:(m.engineMountY-.5)*size,width:m.width}))};
+  return {length:(27+state.thrust*(reducedMotion?5:16))*playerAirframeScale(world.aircraft),glow:.25+state.thrust*.12,
+    mounts:PLAYER_ENGINE_MOUNTS[world.aircraft.aircraftId].map(m=>({x:(m.engineMountX-art.anchorX)*size*art.scaleX,y:(m.engineMountY-.5)*size,width:m.width*playerAirframeScale(world.aircraft)}))};
 }
 
 /** Normalized engine socket in the HawkEye artwork; presentation only. */

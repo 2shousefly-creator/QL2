@@ -4,6 +4,8 @@ import { getCoreDefinition } from "./airCombatConfig";
 import { coreId, hasCore } from "./airCombatCoreEffects";
 import { getEffectiveAircraftStats } from "./airCombatAircraft";
 import { activeNegativeStatusTypes, expansionState, hasAbsorbShield } from "./airCombatExpansion";
+import { releaseState, overheated } from "./airCombatReleaseState";
+import { CORE_SYSTEM_LABELS } from "./airCombatCoreSystems";
 
 export function expansionStatuses(w: CombatWorld): StatusPresentation[] {
   const s=w.aircraft,c=s.coreState,r=expansionState(s),stats=getEffectiveAircraftStats(s),result:StatusPresentation[]=[];
@@ -29,7 +31,7 @@ export function expansionStatuses(w: CombatWorld): StatusPresentation[] {
   add(172,hawk?"HawkEye giảm 15% Điện tiêu hao mỗi giây":charge?"Đã tích Tụ Điện":`Tích điện: ${charging.toFixed(1)} / 3s`,{badgeText:hawk?"−15%":`${charge}/1`,badgeKind:"charge",progress:hawk?hawk/3:charge?1:charging/3,remaining:hawk||Infinity,duration:hawk?3:Infinity,showNumericTimer:!!hawk});
   timed(174,"shockPadActive",0,"shockPadCd",15);
   timed(175,"alternating",4);
-  if(c.stacks.breathing)add(176,"Đang hồi 0,35% Máu Tối Đa/s");
+  if(c.stacks.breathing)add(176,"Đang hồi 0,75% Máu Tối Đa/s");
   timed(178,"magneticBrake",1.2,"magneticBrakeCd",12);
   add(179,`Sai Số: +${(c.stacks.error??0)*2}% Tỷ Lệ Chí Mạng`,{badgeText:`${c.stacks.error??0}/10`,badgeKind:"stack",progress:(c.stacks.error??0)/10});
   timed(181,"skillExhaust",3);
@@ -54,5 +56,17 @@ export function expansionStatuses(w: CombatWorld): StatusPresentation[] {
   if(negative)add(203,"Khống chế cứng chỉ khóa di chuyển; +35% sát thương, -25% sát thương nhận vào.");
   if(r.returns.length)add(204,"Không mất Máu để tái tạo Lá chắn",{badgeText:String(r.returns.length),badgeKind:"charge",remaining:Math.min(...r.returns.map(p=>p.at-c.time)),duration:2});
   if(c.stacks.lastStand)add(209,"Tử Thủ: +150 Giáp, +40% Hồi Tài Nguyên, +20% Giảm Hồi Chiêu, -15% sát thương.");
+  const release=releaseState(s);
+  if(release.system)add(215,CORE_SYSTEM_LABELS[release.system],{badgeText:CORE_SYSTEM_LABELS[release.system],priority:30});
+  if(release.reserve>0)add(218,`Reroll Dự Trữ: ${release.reserve}`,{badgeText:String(release.reserve),badgeKind:"charge",priority:45});
+  const hot=overheated(s);
+  add(219,hot?"QUÁ NHIỆT · ngừng bắn và khóa kỹ năng":release.heat>=50?"+20% mọi sát thương":"Nhiệt nòng súng",{
+    group:hot?"debuff":"buff",badgeText:`${Math.ceil(release.heat)}`,progress:release.heat/100,
+    remaining:hot?release.overheatUntil-c.time:Infinity,duration:hot?3:Infinity,showNumericTimer:hot,priority:hot?150:85});
+  const ghostTime=Math.max(0,...release.ghosts.map(g=>g.until-c.time)),ghostCd=Math.max(0,release.ghostReady-c.time);
+  add(220,ghostTime?"Bóng đang bắn":ghostCd?"Đang hồi nội tại":"READY",{badgeText:ghostTime?"BÓNG":ghostCd?undefined:"READY",remaining:ghostTime||ghostCd||Infinity,duration:ghostTime?3:10,timerKind:ghostTime?"active":"cooldown",showNumericTimer:!!(ghostTime||ghostCd),priority:80});
+  const markTime=release.mark?Math.max(0,release.mark.until-c.time):0,markCd=Math.max(0,release.markReady-c.time);
+  add(221,markTime?"Dấu Ấn đang tích sát thương":markCd?"Đang hồi nội tại":"Sẵn sàng đánh dấu",{remaining:markTime||markCd||Infinity,duration:markTime?3:20,timerKind:markTime?"active":"cooldown",showNumericTimer:!!(markTime||markCd),priority:85});
+  add(222,release.mode==="small"?"THU NHỎ · +25 điểm % Giảm Hồi Chiêu · +50% Hồi Tài Nguyên":"KHỔNG LỒ · +30% Máu Tối Đa · +30% Hỏa Lực",{badgeText:release.mode==="small"?"NHỎ":"LỚN",remaining:Math.max(0,release.nextMode-c.time),duration:60,showNumericTimer:true,priority:80});
   return result;
 }

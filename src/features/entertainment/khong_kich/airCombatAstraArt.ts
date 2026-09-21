@@ -1,3 +1,4 @@
+import { playerAirframeScale } from "./airCombatReleaseState";
 import aircraft from "../../../assets/khong-kich/astra/aircraft.svg";
 import effects from "../../../assets/khong-kich/astra/effects.svg";
 import skills from "../../../assets/khong-kich/astra/skills.svg";
@@ -47,7 +48,7 @@ export function paintAstra(w:CombatWorld,p:AstraPainter,reduced:boolean) {
   }
   if(r.charge){
     const t=clamp((now-r.charge.startedAt)/Math.max(.001,r.charge.duration));
-    const x=w.playerX,y=w.playerY-20,wide=hasCore(w.aircraft,160)?1.55:1;
+    const x=w.playerX,y=w.playerY-20*playerAirframeScale(w.aircraft),wide=hasCore(w.aircraft,160)?1.55:1;
     p.line(x,Math.max(y,GAMEPLAY_SAFE_RECT.top),x,GAMEPLAY_SAFE_RECT.top,0xffa455,.13+t*.12,7*wide);
     p.line(x,Math.max(y,GAMEPLAY_SAFE_RECT.top),x,GAMEPLAY_SAFE_RECT.top,0xffe2b0,.45+t*.35,1.2);
     p.circle(x,y,7+t*7,0xffaa4b,.22+t*.2,true);

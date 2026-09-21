@@ -158,6 +158,8 @@ export interface AircraftCombatState {
 }
 
 export interface EffectiveAircraftStats extends CombatStats {
+  dualHpBonus?: number;
+  dualResourceBonus?: number;
   currentHp: number;
   currentResource: number;
   cooldownReduction: number;
@@ -284,6 +286,8 @@ export interface AirCombatHudSnapshot {
 
 /** Run-local event state; no persistent profile/schema changes. Timers use combat time. */
 export interface CoreRuntimeState {
+  syncedMaxHp?: number;
+  release?: import("./airCombatReleaseState").ReleaseCoreState;
   expansion?: import("./airCombatExpansion").ExpansionState;
   /** Explicit run-local acquisition journal, including conversion rewards; bounded by the finite catalog. */
   acquisitions: { id: number; coreId: CoreId }[];

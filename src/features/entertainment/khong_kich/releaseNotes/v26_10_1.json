@@ -1,0 +1,377 @@
+{
+  "version": "26.10.1",
+  "title": "Core Selection Expansion, Telemetry & Combat Polish",
+  "displayTitle": "CHI TIẾT CẬP NHẬT 26.10.1",
+  "releaseDate": "21/09/2026",
+  "summary": "**26.10.1** mở rộng Không Kích lên **222 Lõi Nâng Cấp** với 13 Lõi mới tập trung vào Reroll, định hướng build và các cơ chế chiến đấu đặc biệt. Bản cập nhật đồng thời nâng cấp sâu hệ thống **Thống Kê Lõi**, cải thiện cách Max HP vận hành, đồng bộ hướng quay của kẻ địch bị hack, cân bằng Khoảng Thở/Tế Bào Song Năng và hoàn thiện nhiều chi tiết UI/tooltip sau 26.10.0.\n\nCác Core 210–222 tiếp tục sử dụng visual language minh họa hiện có; các trạng thái động như Nhiệt, Bóng Sống Ngắn, Dấu Ấn Tử Thần và Nâng Cấp Bất Ổn được tích hợp vào hệ thống trạng thái/VFX phù hợp.",
+  "sections": [
+    {
+      "id": "s1",
+      "title": "13 LÕI NÂNG CẤP MỚI",
+      "icon": {
+        "kind": "system",
+        "id": "core"
+      },
+      "intro": [
+        {
+          "text": "Danh mục Lõi dùng chung tăng từ **209 lên 222**. Batch mới gồm **3 Bạc, 4 Vàng và 6 Kim Cương**, tập trung vào hai Hệ **Tấn Công** và **Đa Dụng**.",
+          "format": "paragraph"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s1-e1",
+          "icon": {
+            "kind": "core",
+            "id": "210"
+          },
+          "title": "Bạc — 3 Lõi mới",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "**210 — Tự Sửa Đường Ngắm:** Nếu 3 viên đạn bắn thường chính liên tiếp bay hết màn hình chơi mà không chạm bất kỳ mục tiêu nào, viên kế tiếp được tự chỉnh hướng nhẹ về mục tiêu gần nhất trong tối đa 0,45 giây đầu. Trúng hoặc hết 0,45 giây sẽ mất dẫn hướng.",
+              "format": "bullet"
+            },
+            {
+              "text": "**211 — Bộ Lọc Reroll:** Khi reroll một ô trong lựa chọn Lõi thường, lõi thay thế sẽ tránh cùng Hệ Lõi với lõi vừa bỏ nếu trong cùng Bậc còn lõi hợp lệ thuộc Hệ khác. Không thay đổi Bậc Lõi và không tác động lựa chọn Skill Core.",
+              "format": "bullet"
+            },
+            {
+              "text": "**213 — Ghi Nhớ Từ Chối:** Một lõi thường bị loại bằng reroll sẽ không xuất hiện lại trong 2 lượt chọn Lõi thường kế tiếp. Chỉ ghi nhớ ID đã từ chối, không thay đổi tỷ lệ Bậc và không áp dụng Skill Core.",
+              "format": "bullet"
+            }
+          ]
+        },
+        {
+          "id": "s1-e2",
+          "icon": {
+            "kind": "core",
+            "id": "212"
+          },
+          "title": "Vàng — 4 Lõi mới",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "**212 — Phiếu Reroll Dự Phòng:** Khi nhận lõi này, các lượt chọn Lõi thường (ngoại trừ Skill Core) kế tiếp có thêm đúng 1 lần Reroll Dự Phòng dùng cho một ô bất kỳ.",
+              "format": "bullet"
+            },
+            {
+              "text": "**219 — Nòng Súng Đỏ Rực:** Mỗi kỹ năng cast tạo 25 Nhiệt; kỹ năng dạng bật/tắt đang hoạt động tạo 2,5 Nhiệt mỗi giây; mỗi phát bắn thường tạo 0,025 Nhiệt. Nếu không có kỹ năng nào hoạt động trong 10 giây kể từ lần kết thúc kỹ năng gần nhất, Nhiệt giảm 15/giây. Ở 50–99 Nhiệt, gây thêm 20% mọi sát thương. Chạm 100 Nhiệt gây Quá Nhiệt 3 giây: ngừng bắn thường, không thể dùng kỹ năng, tắt ngay kỹ năng đang hoạt động và Nhiệt giảm dần về 0 trong đúng 3 giây.",
+              "format": "bullet"
+            },
+            {
+              "text": "**220 — Bóng Sống Ngắn:** Mỗi 10 giây, kỹ năng cast tiếp theo để lại một Bóng của Chiến Cơ tại vị trí cast trong 3 giây. Bóng ưu tiên mục tiêu hiện tại của chiến cơ chính, tự quay theo mục tiêu và bắn theo Tốc Độ Bắn effective hiện tại của chiến cơ chính. Mỗi viên gây 35% Hỏa Lực, không chí mạng, không kích hoạt bất kỳ hiệu ứng Lõi khác, không sao chép kỹ năng, không bị target và không chặn đòn.",
+              "format": "bullet"
+            },
+            {
+              "text": "**221 — Dấu Ấn Tử Thần:** Mỗi 20 giây, đánh dấu một mục tiêu trong 3 giây. Khi hết thời gian, dấu nổ gây raw damage bằng 120% Hỏa Lực + 45% tổng sát thương thực tế mục tiêu đã nhận trong thời gian dấu tồn tại. Nếu damage nổ sau khi tính Giáp và các lớp hấp thụ hiện hành đủ hạ mục tiêu thì nổ ngay, đồng thời cooldown kế tiếp của lõi giảm 50%. Cooldown bắt đầu khi dấu kết thúc/nổ.",
+              "format": "bullet"
+            }
+          ]
+        },
+        {
+          "id": "s1-e3",
+          "icon": {
+            "kind": "core",
+            "id": "214"
+          },
+          "title": "Kim Cương — 6 Lõi mới",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "**214 — Bản Đồ Dự Thảo:** Mọi lượt chọn Lõi thường hiển thị 4 thẻ thay vì 3; thẻ lõi thứ 4 cũng có nút reroll như bình thường. Các mốc Skill Core vẫn hiển thị 3 thẻ và giữ logic reroll Skill Core hiện tại.",
+              "format": "bullet"
+            },
+            {
+              "text": "**215 — Chuyên Tuyến Lõi:** Khi nhận, chọn 1 Hệ Lõi dùng chung. Trong mọi lượt chọn Lõi thường sau đó, đúng 1 ô được bảo đảm thuộc Hệ đã chọn nếu có ứng viên hợp lệ. Các ô còn lại và tỷ lệ Bậc giữ nguyên.",
+              "format": "bullet"
+            },
+            {
+              "text": "**216 — Hộp Pandora:** Chuyển đổi tất cả Lõi Nâng Cấp thường người chơi đang sở hữu tại thời điểm kích hoạt thành các Lõi Kim Cương ngẫu nhiên, ngoại trừ Lõi Kỹ Năng, các Lõi Chuyển Đổi 050/051/052 và chính Hộp Pandora. Các Lõi thường từng nhận thông qua Lõi Chuyển Đổi vẫn là mục tiêu hợp lệ. Hiệu ứng của lõi cũ phải được tháo sạch; các giá trị vĩnh viễn đã thực sự kiếm được từ lõi cũ được bảo toàn.",
+              "format": "bullet"
+            },
+            {
+              "text": "**217 — Thao Túng Bậc Lõi:** Tỷ lệ Bậc của các lượt chọn Lõi thường đổi từ 40% Bạc / 40% Vàng / 20% Kim Cương thành 25% Bạc / 40% Vàng / 35% Kim Cương. Mốc Skill Core 9/18/27 không đổi.",
+              "format": "bullet"
+            },
+            {
+              "text": "**218 — Bảo Toàn Cơ Hội:** Khi một lượt chọn Lõi thường kết thúc, mỗi reroll chính theo ô chưa dùng sẽ chuyển thành 1 Reroll Dự Trữ. Nếu sở hữu Phiếu Reroll Dự Phòng, reroll phụ chưa dùng của lượt đó cũng chuyển thành 1 Reroll Dự Trữ. Kho tối đa 3, hoặc tối đa 4 khi đồng thời sở hữu Phiếu Reroll Dự Phòng. Reroll Dự Trữ chỉ sinh ra và sử dụng trong lựa chọn Lõi thường.",
+              "format": "bullet"
+            },
+            {
+              "text": "**222 — Nâng Cấp Bất Ổn:** Roll ngay khi nhận và mỗi 60 giây, độc lập 50/50. Thu Nhỏ: -50% kích thước và hitbox, +25 điểm phần trăm Giảm Hồi Chiêu (vẫn cap 80%), +50% Hồi Tài Nguyên/s. Khổng Lồ: +50% kích thước và hitbox, +30% Máu Tối Đa, +30% Hỏa Lực. Roll cùng trạng thái không cộng dồn lại; đổi trạng thái phải gỡ sạch bonus cũ trước khi áp bonus mới.",
+              "format": "bullet"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "CÂN BẰNG & QUY TẮC CHỈ SỐ",
+      "icon": {
+        "kind": "system",
+        "id": "core"
+      },
+      "intro": [
+        {
+          "text": "Một số quy tắc chỉ số và hai Lõi hiện có được điều chỉnh để phản ánh đúng kỳ vọng khi xây dựng build hồi phục và tăng Máu Tối Đa.",
+          "format": "paragraph"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s2-e1",
+          "icon": {
+            "kind": "core",
+            "id": "176"
+          },
+          "title": "176 — Khoảng Thở",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Hồi phục tăng từ **0,35% lên 0,75% Máu Tối Đa mỗi giây** khi không có hỏa lực địch hoặc kẻ địch trong bán kính 100px.",
+              "format": "paragraph",
+              "label": "Khoảng Thở",
+              "before": "0,35% Max HP/s",
+              "after": "0,75% Max HP/s",
+              "changeType": "change"
+            }
+          ]
+        },
+        {
+          "id": "s2-e2",
+          "icon": {
+            "kind": "core",
+            "id": "208"
+          },
+          "title": "208 — Tế Bào Song Năng",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "**LÀM LẠI:** Khi nhận thêm Hồi Máu/s, nhận thêm Hồi Tài Nguyên/s bằng **60%** lượng đó; khi nhận thêm Hồi Tài Nguyên/s, nhận thêm Hồi Máu/s bằng **60%** lượng đó. Bonus hai chiều dùng snapshot độc lập và **không cộng dồn qua lại thành vòng lặp**.",
+              "format": "paragraph",
+              "label": "Tế Bào Song Năng",
+              "before": "50% Hồi Máu/s → Hồi Tài Nguyên/s",
+              "after": "60% bonus hai chiều, không feedback loop",
+              "changeType": "change"
+            }
+          ]
+        },
+        {
+          "id": "s2-e3",
+          "icon": {
+            "kind": "system",
+            "id": "ui"
+          },
+          "title": "Máu Tối Đa tăng giờ tăng cả Máu hiện tại",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Khi Effective Max HP tăng thêm một lượng, Current HP tăng đúng **cùng lượng tuyệt đối**. Ví dụ 1.250/1.500 nhận +300 Max HP sẽ thành **1.550/1.800**.",
+              "format": "paragraph",
+              "changeType": "new"
+            },
+            {
+              "text": "Khi Max HP giảm, không gây damage; Current HP chỉ bị clamp nếu vượt trần mới. Phần tăng Current HP do tăng Max HP không được xem là healing và không kích hoạt proc hồi máu/overheal.",
+              "format": "bullet"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "THỐNG KÊ LÕI & REROLL",
+      "icon": {
+        "kind": "system",
+        "id": "core"
+      },
+      "intro": [
+        {
+          "text": "Danh sách Lõi được nâng từ một màn hình mô tả thành công cụ đọc hiệu quả build: hệ thống rà lại **toàn bộ Core 001–222** và bổ sung tối đa các số liệu có thể đo chính xác từ runtime.",
+          "format": "paragraph"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s3-e1",
+          "icon": {
+            "kind": "system",
+            "id": "core"
+          },
+          "title": "Telemetry toàn catalog",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Bổ sung các thống kê như damage cộng thêm, damage đã ngăn chặn, HP/Tài Nguyên đã hồi, cooldown đã giảm, uptime, proc, hit, mark, stack, shield, projectile, reroll và các giá trị trạng thái hiện tại tùy mechanic từng lõi.",
+              "format": "paragraph",
+              "changeType": "new"
+            },
+            {
+              "text": "Các Lõi thuần cộng chỉ số hiển thị contribution trực tiếp thay vì tạo counter giả. Không ước lượng số liệu nếu runtime không thể xác định chính xác.",
+              "format": "bullet"
+            },
+            {
+              "text": "**Tự Sửa Đường Ngắm (210)** là ngoại lệ theo thiết kế: không có Buff/Debuff icon và không có thống kê riêng trong bảng Lõi.",
+              "format": "bullet"
+            }
+          ]
+        },
+        {
+          "id": "s3-e2",
+          "icon": {
+            "kind": "core",
+            "id": "218"
+          },
+          "title": "Reroll Dự Trữ & lựa chọn Lõi",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Các Core 211–218 mở rộng selection engine với lọc Hệ, reroll phụ, bộ nhớ từ chối, 4 card, chuyên tuyến Hệ, Pandora, tỷ lệ Bậc mới và kho Reroll Dự Trữ.",
+              "format": "paragraph",
+              "changeType": "new"
+            },
+            {
+              "text": "Khi có cả **Phiếu Reroll Dự Phòng + Bảo Toàn Cơ Hội**, reroll phụ chưa dùng cũng được chuyển vào kho nhưng **hard cap vẫn là 4**.",
+              "format": "bullet"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "COMBAT UI & TOOLTIP POLISH",
+      "icon": {
+        "kind": "system",
+        "id": "ui"
+      },
+      "intro": [
+        {
+          "text": "Các chi tiết presentation sau bản HUB overhaul được chuẩn hóa để số liệu dễ đọc và không còn lỗi số thực dài trên icon kỹ năng.",
+          "format": "paragraph"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s4-e1",
+          "icon": {
+            "kind": "system",
+            "id": "ui"
+          },
+          "title": "Chi phí kỹ năng & tooltip HUB",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Chi phí Tài Nguyên hiển thị trên icon kỹ năng giờ **luôn làm tròn đến hàng đơn vị**, kể cả khi Nén Năng Lượng thay đổi chi phí.",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "Các giá trị số quan trọng trong tooltip chỉ số HUB được **in đậm và tô vàng**; Score/DPS tiếp tục hiển thị giá trị hiện tại rõ ràng trong tooltip.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        },
+        {
+          "id": "s4-e2",
+          "icon": {
+            "kind": "aircraft",
+            "id": "astra"
+          },
+          "title": "Astra — tooltip Thương Tinh Tú",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Mô tả mục tiêu đầu tiên giờ ghi đầy đủ đơn vị **Hỏa Lực**, ví dụ: “mục tiêu đầu 800% Hỏa Lực”.",
+              "format": "paragraph",
+              "changeType": "change"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "ĐỊNH HƯỚNG, VFX & HITBOX",
+      "icon": {
+        "kind": "system",
+        "id": "ui"
+      },
+      "intro": [
+        {
+          "text": "26.10.1 đồng bộ chặt hơn giữa simulation và hình ảnh đối với đơn vị bị hack, Dấu Ấn Tử Thần và thay đổi kích thước chiến cơ.",
+          "format": "paragraph"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s5-e1",
+          "icon": {
+            "kind": "core",
+            "id": "120"
+          },
+          "title": "Đoạt Quyền Điều Khiển — hướng quay đồng bộ",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Quái thường/Tinh Anh bị hack tự động quay về mục tiêu đang tấn công. Thân máy bay, hitbox, muzzle, projectile/skill origin, engine/thruster và VFX liên quan dùng cùng một hướng authoritative.",
+              "format": "paragraph",
+              "changeType": "change"
+            }
+          ]
+        },
+        {
+          "id": "s5-e2",
+          "icon": {
+            "kind": "core",
+            "id": "221"
+          },
+          "title": "Dấu Ấn Tử Thần — VFX hắc ám",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Mục tiêu bị đánh dấu có một **dấu X màu đen hắc ám** bám theo thân máy; kích thước dấu X tự scale theo kích thước visual của mục tiêu và biến mất chính xác khi dấu kết thúc hoặc mục tiêu chết.",
+              "format": "paragraph",
+              "changeType": "new"
+            }
+          ]
+        },
+        {
+          "id": "s5-e3",
+          "icon": {
+            "kind": "core",
+            "id": "222"
+          },
+          "title": "Nâng Cấp Bất Ổn — kích thước & hitbox",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Thu Nhỏ/Khổng Lồ thay đổi đồng bộ sprite, hitbox thân, hitbox cánh trái/phải, collision, graze, VFX, shield/exhaust và vị trí health bar; không còn trường hợp visual và hitbox lệch scale.",
+              "format": "paragraph",
+              "changeType": "new"
+            }
+          ]
+        },
+        {
+          "id": "s5-e4",
+          "icon": {
+            "kind": "core",
+            "id": "210"
+          },
+          "title": "13 artwork Lõi mới",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Core 210–222 có illustration riêng và tiếp tục đúng **visual language** của atlas Core hiện tại: dark layered background, silhouette semantic rõ, luminous accent, high contrast ở kích thước nhỏ, không dùng chữ/số ID và không dùng line-icon đơn giản làm artwork cuối.",
+              "format": "paragraph",
+              "changeType": "new"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

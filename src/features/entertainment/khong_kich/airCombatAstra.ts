@@ -1,3 +1,4 @@
+import { playerAirframeScale } from "./airCombatReleaseState";
 import { expansionState, type ExpansionCast } from "./airCombatExpansion";
 import { endAircraftSkill, getEffectiveAircraftStats, getSkillRuntimeValues } from "./airCombatAircraft";
 import { hasCore } from "./airCombatCoreEffects";
@@ -50,7 +51,7 @@ export function releaseOrbit(w:CombatWorld,h:AstraHooks,manual=false) {
   const bullets=Array.from({length:o.captured},(_,i)=>({
     id:w.nextId++,...orbitBulletPosition(w.playerX,w.playerY,radius,i,o.captured,w.elapsed),
     lane:0,launchAt:0,fired:false,
-  })).sort((a,b)=>Math.hypot(a.x-w.playerX,a.y-(w.playerY-20))-Math.hypot(b.x-w.playerX,b.y-(w.playerY-20)));
+  })).sort((a,b)=>Math.hypot(a.x-w.playerX,a.y-(w.playerY-20*playerAirframeScale(w.aircraft)))-Math.hypot(b.x-w.playerX,b.y-(w.playerY-20*playerAirframeScale(w.aircraft))));
   // Fixed lanes and nearest-muzzle order are chosen once. Last launch is at 450ms.
   bullets.forEach((b,i)=>{b.lane=w.random()*20-10;b.launchAt=w.elapsed+.10+.35*i/Math.max(1,bullets.length-1);});
   if(bullets.length)(r.orbitReleases??=[]).push({expansionCast:o.expansionCast,at:w.elapsed,damage:getEffectiveAircraftStats(s).firepower*v.damageMultiplier,bullets});
@@ -104,7 +105,7 @@ export function updateAstra(w:CombatWorld,_dt:number,h:AstraHooks) {
     s.activeEffects.stellar_lance=Math.max(.0001,r.charge.at-now);
     if(now>=r.charge.at) {
       const k=1+.1*r.charge.stack,first=stats.firepower*(hasCore(s,157)?10.5:8)*k,later=stats.firepower*(hasCore(s,157)?9.3:6.8)*k;
-      const speed=1000*(hasCore(s,160)?1.35:1),radius=6*(hasCore(s,160)?1.55:1),x=w.playerX,y=w.playerY-20;
+      const speed=1000*(hasCore(s,160)?1.35:1),radius=6*(hasCore(s,160)?1.55:1),x=w.playerX,y=w.playerY-20*playerAirframeScale(w.aircraft);
       lance(w,h,x,y,first,later,speed,radius,r.charge.expansionCast);
       r.charge=undefined;endAircraftSkill(s,"stellar_lance");
     }

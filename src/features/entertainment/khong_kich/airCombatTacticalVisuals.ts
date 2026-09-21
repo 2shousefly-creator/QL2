@@ -1,4 +1,5 @@
 import { satellitePositions } from "./airCombatExpansionRuntime";
+import { releaseState, playerAirframeScale } from "./airCombatReleaseState";
 import { SKILL_CORE_VALUES as V } from "./airCombatSkillCores";
 import { enemyAllegiance, isHostileToPlayer, type CombatWorld, type WarningZone } from "./airCombatRuntime";
 export interface TacticalPainter {
@@ -27,6 +28,14 @@ export function paintTacticalCores(world:CombatWorld,p:TacticalPainter,reducedMo
   }
   for(const e of world.enemies){
     if(e.hp<=0)continue;
+    const deathMark=releaseState(world.aircraft).mark;
+    if(deathMark?.target===e.id&&deathMark.until>now){
+      const radius=e.radius*.95,width=Math.max(4,e.radius*.23);
+      for(const side of [-1,1]){
+        p.line(e.x-radius,e.y-side*radius,e.x+radius,e.y+side*radius,0x78365e,.9,width+3);
+        p.line(e.x-radius,e.y-side*radius,e.x+radius,e.y+side*radius,0x030207,1,width);
+      }
+    }
     const effect=world.skillCores.enemyEffects.get(e.id),large=e.type==="boss"||e.eliteWave>0;
     const labels:{text:string;color:number}[]=[];
     const marks=e.expansionMarks;
@@ -53,7 +62,7 @@ export function paintTacticalCores(world:CombatWorld,p:TacticalPainter,reducedMo
   for(const g of t?.grids??[]){const a=world.enemies.find(e=>e.id===g.a&&isHostileToPlayer(world,e)),b=world.enemies.find(e=>e.id===g.b&&isHostileToPlayer(world,e));if(a&&b&&g.until>now){p.line(a.x,a.y,b.x,b.y,0x22d3ee,.25,8);p.line(a.x,a.y,b.x,b.y,0xa5f3fc,.9,2);}}
   const wave=(c.timers.antimatterWave??0)-c.time;
   if(wave>0)p.circle(world.playerX,world.playerY,reducedMotion?160:900*(1-wave/.65),0xa5f3fc,Math.min(.8,wave*2));
-  for(const side of [-1,1]){const remaining=(c.timers[`wing:${side<0?"left_wing":"right_wing"}`]??0)-c.time;if(remaining>11.6)p.circle(world.playerX+side*11,world.playerY+5,7,0xbae6fd,(remaining-11.6)*2,true);}
+  for(const side of [-1,1]){const remaining=(c.timers[`wing:${side<0?"left_wing":"right_wing"}`]??0)-c.time,scale=playerAirframeScale(world.aircraft);if(remaining>11.6)p.circle(world.playerX+side*11*scale,world.playerY+5*scale,7*scale,0xbae6fd,(remaining-11.6)*2,true);}
 }
 
 /** Fixed warning geometry remains fully visible with Reduced Motion enabled. */

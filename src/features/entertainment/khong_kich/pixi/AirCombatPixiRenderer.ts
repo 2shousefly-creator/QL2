@@ -1,3 +1,5 @@
+import { releaseState, playerAirframeScale } from "../airCombatReleaseState";
+import { enemyAirframeRotation } from "../airCombatHitboxes";
 import { paintAstra } from "../airCombatAstraArt";
 import { magneticShake } from "../airCombatMagnetic";
 import { STAGE2_ENEMY_ART, TEMPEST_WEAKPOINT_ART } from "../airCombatStage2Art";
@@ -301,7 +303,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
       sprite.visible = enemy.hp > 0;
       sprite.width = enemy.radius * (enemy.type === "boss" && !magnetic ? BOSS_VISUAL_WIDTH_SCALE : 2.8);
       sprite.height = sprite.width * (magnetic ? 1 : enemy.type === "boss" ? BOSS_VISUAL_ASPECT : sprite.texture.height / sprite.texture.width);
-      sprite.rotation = Math.PI;
+      sprite.rotation = enemyAirframeRotation(enemy);
       sprite.tint = enemyAllegiance(world,enemy)==="friendly_hacked" ? 0x67e8f9 : this.flashUntil.has(enemy.id) ? 0xffe1b3 : enemy.type === "acid_bomber" ? 0xa3e635 : enemy.type === "jammer" ? 0x2dd4bf : enemy.type === "sniper" ? 0xe879f9 : enemy.type === "radar_hunter" ? 0x38bdf8 : 0xffffff;
       if(!magnetic && (enemy.shield>0 || enemy.aegisUntil>world.aircraft.coreState.time))this.telegraphs.circle(enemy.x,enemy.y,enemy.radius+7).fill({color:0x38bdf8,alpha:.12}).stroke({color:0x7dd3fc,width:2,alpha:.85});
       if(enemy.stun>0)this.telegraphs.circle(enemy.x,enemy.y-enemy.radius-7,5).stroke({color:0xfde047,width:2});
@@ -313,7 +315,11 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
         const committed = enemy.kamikazeState === "dash" && enemy.dashCommitted;
         this.telegraphs.moveTo(committed ? enemy.dashStartX : enemy.x, committed ? enemy.dashStartY : enemy.y).lineTo(enemy.dashEndX,enemy.dashEndY).stroke({color:enemyAllegiance(world,enemy)==="friendly_hacked"?0x67e8f9:0xfbbf24,width:1.5,alpha:.7});
       }
-      if(enemy.type==="kamikaze")sprite.rotation=getEnemyExhaustTransform(enemy).rotation;
+      sprite.rotation=enemyAirframeRotation(enemy);
+      if(enemy.hackedFacing!==undefined&&enemy.type!=="kamikaze"){
+        const transform=getEnemyExhaustTransform(enemy),flame=this.engines.get(enemy.id+4,this.assets.engineFlame);
+        if(flame){flame.anchor.set(.5,0);flame.position.set(transform.x,transform.y);flame.rotation=transform.rotation;flame.width=transform.width;flame.height=transform.length;flame.alpha=.65;}
+      }
       if(enemy.type==="boss" && (enemy.bossAttack?.crossfirePending??0)>0 && !enemy.bossAttack?.patternWaiting) {
         const attack=enemy.bossAttack!,center=attack.crossfireCenter!,half=attack.crossfireWidth!/2;
         for(const side of [-1,1]) {
@@ -450,6 +456,12 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
       this.telegraphs.rect(world.droneX-17,world.droneY+20,34,3).fill(0x201830);
       this.telegraphs.rect(world.droneX-17,world.droneY+20,34*Math.max(0,world.droneHp/(world.droneMaxHp||1)),3).fill(0xc4b5fd);
     }
+    for(const ghost of releaseState(world.aircraft).ghosts){
+      const sprite=this.companions.get(ghost.id,this.assets.texture(visual.neutral));if(!sprite)continue;
+      sprite.position.set(ghost.x,ghost.y);sprite.rotation=ghost.angle;sprite.width=sprite.height=visual.size*playerAirframeScale(world.aircraft);
+      sprite.anchor.x=visual.artwork.neutral.anchorX;sprite.width*=visual.artwork.neutral.scaleX;
+      sprite.tint=0xa5f3fc;sprite.alpha=.38*Math.min(1,(ghost.until-world.elapsed)*3);
+    }
     this.companions.end();
     this.warnings.begin();
     for (const warning of world.warnings) {
@@ -528,12 +540,12 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     this.player.texture = this.assets.texture(visual.neutral);
     this.player.rotation = 0;
     this.player.position.set(world.playerX, world.playerY + (reducedMotion ? 0 : this.recoil));
-    this.player.width = this.player.height = visual.size;
+    this.player.width = this.player.height = visual.size*playerAirframeScale(world.aircraft);
     this.player.anchor.x = visual.artwork.neutral.anchorX;
     this.player.width *= visual.artwork.neutral.scaleX;
     this.player.alpha = invisible ? 0.1 : 1;
     this.player.tint = world.playerInvulnerability > 0 ? 0xffb1b1 : 0xffffff;
-    const exhaust=getPlayerExhaust(world,visual.size,reducedMotion);
+    const exhaust=getPlayerExhaust(world,visual.size*playerAirframeScale(world.aircraft),reducedMotion);
     for(let i=0;i<this.playerExhaust.length;i++){
       const sprite=this.playerExhaust[i],mount=exhaust.mounts[Math.floor(i/3)],layer=i%3;
       sprite.visible=!!mount;
@@ -548,19 +560,19 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     this.shieldOpacity += ((shieldActive ? 1 : 0) - this.shieldOpacity) * (1 - Math.exp(-delta * 15));
     this.shield.visible = this.shieldOpacity > .01 && !this.titanShield.active && this.titanShield.opacity < .01;
     this.shield.position.set(world.playerX, world.playerY);
-    this.shield.width = this.shield.height = 66;
+    this.shield.width = this.shield.height = 66*playerAirframeScale(world.aircraft);
     this.shield.tint = invisible ? 0xc4b5fd : 0xffffff;
     this.shield.alpha = this.shieldOpacity * (invisible ? .23 : reducedMotion ? .65 : .6 + Math.sin(this.clock * 3) * .08);
     const bubble=this.titanBubble, shieldState=this.titanShield;
     bubble.clear();bubble.visible=shieldState.opacity>.01;
     if(bubble.visible) {
-      bubble.position.set(world.playerX,world.playerY);bubble.scale.set(shieldState.scale);bubble.alpha=shieldState.opacity;
+      bubble.position.set(world.playerX,world.playerY);bubble.scale.set(shieldState.scale*playerAirframeScale(world.aircraft));bubble.alpha=shieldState.opacity;
       paintTitanShield(this.techShieldPainter,shieldState,reducedMotion,hasCore(world.aircraft,28));
 
     }
     const sustained = (world.aircraft.activeEffects.afterburner || 0) > 0 || (world.aircraft.activeEffects.sweeping_cannon || 0) > 0;
     this.aura.visible = sustained;
-    this.aura.position.set(world.playerX, world.playerY); this.aura.width = this.aura.height = visual.size * 1.4;
+    this.aura.position.set(world.playerX, world.playerY); this.aura.width = this.aura.height = visual.size*playerAirframeScale(world.aircraft) * 1.4;
     this.aura.tint = visual.tint; this.aura.alpha = reducedMotion ? .2 : .22 + Math.sin(this.clock * 6) * .06;
     this.afterimages.begin();
     if (world.dashRemaining > 0) {
@@ -573,34 +585,34 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
       if (ghost) {
         const t = (i + 1) / 5;
         ghost.position.set(this.dashX + (this.dashEndX - this.dashX) * t, this.dashY + (this.dashEndY - this.dashY) * t);
-        ghost.width = ghost.height = visual.size; ghost.tint = 0xc4b5fd; ghost.alpha = .28 * t * this.dashTail / .24;
+        ghost.width = ghost.height = visual.size*playerAirframeScale(world.aircraft); ghost.tint = 0xc4b5fd; ghost.alpha = .28 * t * this.dashTail / .24;
         ghost.anchor.x = visual.artwork.neutral.anchorX;
         ghost.width *= visual.artwork.neutral.scaleX;
       }
     }
     this.afterimages.end();
     this.charge.visible = world.laserCharge > 0;
-    this.charge.position.set(world.playerX, world.playerY - 24);
+    this.charge.position.set(world.playerX, world.playerY - 24 * playerAirframeScale(world.aircraft));
     this.charge.width = this.charge.height = reducedMotion ? 32 : 32 + Math.sin(this.clock * 18) * 4;
     this.charge.tint = 0xc4b5fd; this.charge.blendMode = "add";
     this.laser.visible = world.laserCharge <= 0 && world.laserRemaining > 0;
     const beamPulse = reducedMotion ? 0 : Math.sin(this.clock * 22) * 1.5;
     this.laser.width = 44 + beamPulse;
-    this.laser.height = Math.max(1, world.playerY - 18 - GAMEPLAY_SAFE_RECT.top);
+    this.laser.height = Math.max(1, world.playerY - 18 * playerAirframeScale(world.aircraft) - GAMEPLAY_SAFE_RECT.top);
     this.laser.position.set(world.playerX, GAMEPLAY_SAFE_RECT.top + this.laser.height / 2);
     this.laserMuzzle.visible = this.laser.visible;
-    this.laserMuzzle.position.set(world.playerX, world.playerY - 24);
+    this.laserMuzzle.position.set(world.playerX, world.playerY - 24 * playerAirframeScale(world.aircraft));
     this.laserMuzzle.width = this.laserMuzzle.height = 32 + beamPulse;
     this.laserMuzzle.tint = 0xcfffff; this.laserMuzzle.alpha = .85;
     if(world.laserCharge>0) {
       const total=getSkillRuntimeValues(world.aircraft,"focus_laser").charge;
       const t=1-world.laserCharge/Math.max(.1,total), radius=6+(1-t)*32;
       this.charge.width=this.charge.height=18+t*25+(world.laserCharge<.1?12:0);
-      for(let ring=0;ring<3;ring++)this.telegraphs.circle(world.playerX,world.playerY-24,radius+ring*5).stroke({color:ring%2?0x67e8f9:0xc4b5fd,width:1,alpha:.45});
-      if(!reducedMotion)for(let i=0;i<12;i++){const a=i*Math.PI/6+this.clock*7,r=radius*(.5+(i%3)*.2);this.telegraphs.circle(world.playerX+Math.cos(a)*r,world.playerY-24+Math.sin(a)*r*.7,1.6).fill(i%2?0xc4b5fd:0x67e8f9);}
+      for(let ring=0;ring<3;ring++)this.telegraphs.circle(world.playerX,world.playerY-24*playerAirframeScale(world.aircraft),radius+ring*5).stroke({color:ring%2?0x67e8f9:0xc4b5fd,width:1,alpha:.45});
+      if(!reducedMotion)for(let i=0;i<12;i++){const a=i*Math.PI/6+this.clock*7,r=radius*(.5+(i%3)*.2);this.telegraphs.circle(world.playerX+Math.cos(a)*r,world.playerY-24*playerAirframeScale(world.aircraft)+Math.sin(a)*r*.7,1.6).fill(i%2?0xc4b5fd:0x67e8f9);}
     }
     if(this.laser.visible) {
-      this.telegraphs.circle(world.playerX,world.playerY-24,9).fill({color:0xf3e8ff,alpha:.75});
+      this.telegraphs.circle(world.playerX,world.playerY-24*playerAirframeScale(world.aircraft),9).fill({color:0xf3e8ff,alpha:.75});
       if(!reducedMotion)for(let i=0;i<6;i++){const y=GAMEPLAY_SAFE_RECT.top+(i*this.laser.height/6+this.clock*210)%this.laser.height,x=world.playerX+(i%2?10:-10);this.telegraphs.moveTo(x,y).lineTo(x+(i%2?-2:2),Math.max(GAMEPLAY_SAFE_RECT.top,y-25)).stroke({color:0xe0ffff,width:1.5,alpha:.65});}
     }
     if(world.aircraft.status.stunnedUntil>world.aircraft.coreState.time)this.telegraphs.circle(world.playerX,world.playerY,23).stroke({color:0x67e8f9,width:1.5,alpha:.65});
@@ -610,9 +622,9 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     const health = this.healthBars.get(-1, world.aircraft.currentHp, stats.maxHp, activeShieldAmount(world.aircraft));
     const hp = health.hpRatio;
     const resource = Math.max(0, Math.min(1, world.aircraft.currentResource / stats.maxResource));
-    const barWidth = trackingBarWidth(visual.size);
+    const barWidth = trackingBarWidth(visual.size*playerAirframeScale(world.aircraft));
     const barX = trackingBarX(world.playerX, barWidth);
-    const barY = trackingBarY(world.playerY, visual.size);
+    const barY = trackingBarY(world.playerY, visual.size*playerAirframeScale(world.aircraft));
     const layer = (y: number, ratio: number, color: number) => {
       if (ratio > 0) this.trackingBars.poly(angularBarPolygon(barX, y, barWidth, 10, ratio)).fill(color);
     };

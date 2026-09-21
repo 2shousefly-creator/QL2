@@ -7,7 +7,7 @@ import { getEffectiveAircraftStats } from "./airCombatAircraft";
 import type { CombatWorld } from "./airCombatRuntime";
 import type { AirCombatHudSnapshot } from "./airCombatTypes";
 
-export interface HubTooltip { title: string; text: string }
+export interface HubTooltip { title: React.ReactNode; text: React.ReactNode }
 export function AirCombatTacticalHud({ world, hud, reducedMotion, onInspect, onCores, onPause, coreChoice }: {
   world: CombatWorld; hud: AirCombatHudSnapshot; reducedMotion: boolean; coreChoice: boolean;
   onInspect: (id: string, tooltip: HubTooltip) => void; onCores: () => void; onPause: () => void;
@@ -37,10 +37,10 @@ export function AirCombatTacticalHud({ world, hud, reducedMotion, onInspect, onC
       <span className="air-hub-level">{state.level}</span>
     </button>
     <div className="air-hub-top">
-      <button type="button" className="air-hub-number" data-combat-tooltip-trigger="hub" onClick={()=>onInspect("score",{title:`Điểm Số: ${integer(hud.score)}`,text:"Hạ địch có thưởng nhận điểm cơ bản theo loại địch × hệ số chuỗi tại thời điểm hạ. Dưới 10: ×1; 10–24: ×2; 25–49: ×3; từ 50: ×5. Chuỗi về 0 khi mất Máu do địch hoặc sau 4 giây không hạ địch."})}>
+      <button type="button" className="air-hub-number" data-combat-tooltip-trigger="hub" onClick={()=>onInspect("score",{title:<>Điểm Số: <strong className="air-tooltip-value">{integer(hud.score)}</strong></>,text:"Hạ địch có thưởng nhận điểm cơ bản theo loại địch × hệ số chuỗi tại thời điểm hạ. Dưới 10: ×1; 10–24: ×2; 25–49: ×3; từ 50: ×5. Chuỗi về 0 khi mất Máu do địch hoặc sau 4 giây không hạ địch."})}>
         <span>ĐIỂM SỐ</span><strong data-hud-score={hud.score}>{integer(hud.score)}</strong>
       </button>
-      <button type="button" className="air-hub-number" data-combat-tooltip-trigger="hub" onClick={()=>onInspect("dps",{title:`DPS: ${integer(hud.dps)}`,text:"DPS là sát thương trung bình mỗi giây trong 5 giây gần nhất. Tính HP và Lá chắn thực tế bị mất do người chơi, kỹ năng và Lõi gây ra; không tính sát thương vượt Máu còn lại (overkill). Tổng trong 5 giây chiến đấu chia 5; cửa sổ đứng yên khi tạm dừng."})}>
+      <button type="button" className="air-hub-number" data-combat-tooltip-trigger="hub" onClick={()=>onInspect("dps",{title:<>DPS: <strong className="air-tooltip-value">{integer(hud.dps)}</strong></>,text:"DPS là sát thương trung bình mỗi giây trong 5 giây gần nhất. Tính HP và Lá chắn thực tế bị mất do người chơi, kỹ năng và Lõi gây ra; không tính sát thương vượt Máu còn lại (overkill). Tổng trong 5 giây chiến đấu chia 5; cửa sổ đứng yên khi tạm dừng."})}>
         <span>DPS</span><strong ref={dpsNode}>{integer(hud.dps)}</strong>
       </button>
       <button type="button" className="air-hub-action" aria-label="Danh sách Lõi" disabled={coreChoice} onClick={onCores}><Layers aria-hidden="true"/></button>

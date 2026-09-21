@@ -1,4 +1,7 @@
 import { expansionState } from "./airCombatExpansion";
+import { releaseState, overheated } from "./airCombatReleaseState";
+import { reserveCap } from "./airCombatSelectionRules";
+import { CORE_SYSTEM_LABELS } from "./airCombatCoreSystems";
 import { AirCombatTacticalHud, type HubTooltip } from "./AirCombatTacticalHud";
 import { CoreSystemTag } from "./CoreSystemTag";
 import { AnimatePresence, motion } from "motion/react";
@@ -541,7 +544,7 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
           const locked = skillsLocked(worldRef.current.aircraft) || playerSkillLocked(worldRef.current.aircraft);
           const free = hasCore(worldRef.current.aircraft,84) && (worldRef.current.aircraft.coreState.skillCasts+1)%4===0;
           const toggleActive = (skillId === "orbit_reversal" || skillId === "escort_drone" || skillId === "sweeping_cannon") && active;
-          const unavailable = locked || (!toggleActive && (Boolean(worldRef.current.aircraft.coreState.stacks[`debt:${skillId}`]) || cooldown > 0 && !borrow || (!free || skillId === "escort_drone") && hud.stats.currentResource < values.cost));
+          const unavailable = overheated(worldRef.current.aircraft) || locked || (!toggleActive && (Boolean(worldRef.current.aircraft.coreState.stacks[`debt:${skillId}`]) || cooldown > 0 && !borrow || (!free || skillId === "escort_drone") && hud.stats.currentResource < values.cost));
           return (
             <button
               key={skillId}
@@ -552,7 +555,7 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
               data-skill-cost={values.cost}
               data-borrow-ready={borrow && !locked}
               data-reduced-motion={reducedMotion}
-              aria-label={`${skill.name}, ${skillId === "escort_drone" ? "cần ít nhất 5 Điện, không trừ phí bật" : `tốn ${free ? 0 : values.cost} ${resourceLabel}`}`}
+              aria-label={`${skill.name}, ${skillId === "escort_drone" ? "cần ít nhất 5 Điện, không trừ phí bật" : `tốn ${free ? 0 : Math.round(values.cost)} ${resourceLabel}`}`}
               aria-disabled={unavailable}
               aria-pressed={active}
               onPointerDown={(event) => onSkillPointerDown(event, skillId)}
@@ -564,7 +567,7 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
               className={`relative flex h-full min-h-11 touch-none select-none flex-col items-center justify-center overflow-hidden rounded-none border text-center shadow-lg backdrop-blur transition-transform active:scale-95 ${active ? "border-emerald-200 bg-emerald-500/30 text-emerald-50 shadow-emerald-500/20" : unavailable ? "border-slate-700 bg-black/80 text-slate-500" : "border-cyan-200/70 bg-gradient-to-br from-cyan-950/95 to-indigo-950/95 text-cyan-50 shadow-cyan-500/15"}`}
             >
               {cooldown > 0 && !borrow && <span className="pointer-events-none absolute inset-0 z-0" style={{ background: `conic-gradient(rgba(2,6,23,.42) ${(Math.min(1, cooldown / (values.cooldown * (1 - hud.stats.cooldownReduction)))) * 360}deg, transparent 0deg)` }} />}
-              <span className={`absolute left-1 top-1 z-20 rounded px-1 text-[6px] font-black ${hud.stats.resourceKind === "mana" ? "bg-sky-950/90 text-sky-200" : "bg-violet-950/90 text-violet-200"}`}>{skillId === "escort_drone" ? "≥5" : free ? 0 : values.cost}</span>
+              <span className={`absolute left-1 top-1 z-20 rounded px-1 text-[6px] font-black ${hud.stats.resourceKind === "mana" ? "bg-sky-950/90 text-sky-200" : "bg-violet-950/90 text-violet-200"}`}>{skillId === "escort_drone" ? "≥5" : free ? 0 : Math.round(values.cost)}</span>
               {skillId === "escort_drone" && active && <span className="absolute right-1 top-1 z-20 text-[6px] font-black text-violet-200">-{values.upkeepPerSecond}/s</span>}
               <span className="air-skill-icon-wrap">
               <span className="air-skill-duration" ref={node => { durationNodes.current[skillId] = node; }} hidden><span /></span>
@@ -603,6 +606,14 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
         <AppModal key="core-choice" exitDuration={90} archetype="transaction" layer="exclusive-dialog" layout="viewport-safe" closeOnEscape={false}
           reducedMotion={reducedMotion} labelledBy="air-core-choice-title" overlayClassName="air-upgrade-overlay" panelClassName="air-upgrade-panel">
           <h2 id="air-core-choice-title">CHỌN MỘT NÂNG CẤP</h2>
+          {worldRef.current.coreSelectionEvent?.context.kind==="normal"&&<div className="air-selection-rules">
+            {hasCore(worldRef.current.aircraft,211)&&<span>Lọc reroll: ưu tiên Hệ khác</span>}
+            {hasCore(worldRef.current.aircraft,212)&&<span>Reroll Dự Phòng: {worldRef.current.coreSelectionEvent?.extraAvailable&&!worldRef.current.coreSelectionEvent?.extraUsed?"1":"0"}</span>}
+            {hasCore(worldRef.current.aircraft,213)&&<span>Đang nhớ {Object.keys(releaseState(worldRef.current.aircraft).refused).length} ID từ chối</span>}
+            {hasCore(worldRef.current.aircraft,215)&&<span>Chuyên tuyến: {CORE_SYSTEM_LABELS[releaseState(worldRef.current.aircraft).system??"utility"]}</span>}
+            {hasCore(worldRef.current.aircraft,217)&&<span>Bạc 25% · Vàng 40% · Kim Cương 35%</span>}
+            {hasCore(worldRef.current.aircraft,218)&&<span>Reroll Dự Trữ: {releaseState(worldRef.current.aircraft).reserve} / {reserveCap(worldRef.current.aircraft)}</span>}
+          </div>}
           <div key={worldRef.current.coreSelectionCount} className="air-upgrade-choices" data-core-selection="open" data-reduced-motion={reducedMotion}>
             {coreChoices.map((card, slot) => <div className="air-upgrade-row" key={slot} style={{"--slot":slot} as React.CSSProperties}>
               <button key={card.id} type="button" data-core-choice={card.id} data-core-tier={card.tier} data-core-system={card.system}
@@ -611,30 +622,43 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
                 <CombatUiIcon kind="core" id={card.id} fallback={card.icon} className="combat-core-icon" />
                 <span className="air-upgrade-copy"><strong className="combat-core-name">{card.name}</strong>
                   <CoreSystemTag system={card.system} tier={card.tier} />
+                  {worldRef.current.coreSelectionEvent?.guaranteedSlot===slot&&<small>Ô bảo đảm Chuyên Tuyến</small>}
                   <span className="air-upgrade-description"><CoreDescription text={card.description} /></span></span>
               </button>
-              <button type="button" className="air-core-reroll" aria-label={`Đổi lựa chọn ${slot+1}`}
+              <div className="air-reroll-controls"><button type="button" className="air-core-reroll" aria-label={`Đổi lựa chọn ${slot+1}`}
                 disabled={!canRerollCore(worldRef.current,slot)} data-used={worldRef.current.coreSelectionEvent?.rerollUsedBySlot[slot] || false}
                 onClick={() => { const choices=rerollCore(worldRef.current,slot); if(choices)setCoreChoices([...choices]); }}>
                 <span aria-hidden="true">🔄️</span>
               </button>
+              {worldRef.current.coreSelectionEvent?.context.kind==="normal"&&(["extra","reserve"] as const).filter(source=>hasCore(worldRef.current.aircraft,source==="extra"?212:218)).map(source=>
+                <button key={source} type="button" className="air-core-reroll air-extra-reroll" aria-label={(source==="extra"?"Dùng Reroll Dự Phòng":"Dùng Reroll Dự Trữ")+` cho ô ${slot+1}`}
+                  disabled={!canRerollCore(worldRef.current,slot,source)} onClick={()=>{const choices=rerollCore(worldRef.current,slot,source);if(choices)setCoreChoices([...choices]);}}>{source==="extra"?"Phụ":"Kho"}</button>)}
+              </div>
             </div>)}
           </div>
         </AppModal>
       )}
 
       {showPrimaryChoice && !coreChoices && <AppModal key="primary-skill" archetype="transaction" layer="exclusive-dialog" layout="viewport-safe" closeOnEscape={false} labelledBy="air-primary-title" panelClassName="air-primary-panel" reducedMotion={reducedMotion}>
-        <OverlayHeader><h2 id="air-primary-title" className="modal-title">CHỌN KỸ NĂNG CHỦ LỰC</h2><p>Học Thuyết Một Mũi Nhọn · áp dụng đến hết lượt chơi</p></OverlayHeader>
+        <OverlayHeader><h2 id="air-primary-title" className="modal-title">{releaseState(worldRef.current.aircraft).followups[0]==="system"?"CHỌN HỆ CHUYÊN TUYẾN":"CHỌN KỸ NĂNG CHỦ LỰC"}</h2><p>Lựa chọn áp dụng khi còn sở hữu Lõi</p></OverlayHeader>
+        {releaseState(worldRef.current.aircraft).followups[0]==="system"?<OverlayBody><div className="air-primary-choices">{(["attack","defense","resource","utility"] as const).map(system=><button key={system} type="button" onClick={()=>{
+          const state=worldRef.current.aircraft,r=releaseState(state);r.system=system;r.followups.shift();
+          expansionState(state).primaryPending=r.followups.length>0;setPrimaryChoice(null);
+          if(!r.followups.length){setShowPrimaryChoice(false);setPauseReason("primarySkill",false);const next=ensureCoreSelection(worldRef.current);if(next){setCoreChoices(next);setPauseReason("core",true);}}
+          setHud(makeHudSnapshot(worldRef.current,true,pauseLabel(pauseReasonsRef.current)));
+        }}><strong>{CORE_SYSTEM_LABELS[system]}</strong><p>Bảo đảm một ô thuộc Hệ này khi còn ứng viên hợp lệ.</p></button>)}</div></OverlayBody>:<>
         <OverlayBody><div className="air-primary-choices">{skillIds.map(id=><button key={id} type="button" aria-pressed={primaryChoice===id} onClick={()=>setPrimaryChoice(id)}>
           <CombatUiIcon kind="skill" id={id} fallback={SKILL_CONFIGS[id].icon}/><strong>{SKILL_CONFIGS[id].name}</strong><p>{SKILL_CONFIGS[id].description}</p>
         </button>)}</div><p>+22% sát thương · -15% chi phí Tài Nguyên · -15% Hồi Chiêu cơ bản</p></OverlayBody>
         <OverlayFooter><ModalButton variant="primary" type="button" disabled={!primaryChoice} onClick={()=>{
           if (!primaryChoice) return;
           const state=expansionState(worldRef.current.aircraft);state.primarySkill=primaryChoice;state.primaryPending=false;
+          const release=releaseState(worldRef.current.aircraft);release.followups.shift();setPrimaryChoice(null);
+          if(release.followups.length){state.primaryPending=true;setHud(makeHudSnapshot(worldRef.current,true,pauseLabel(pauseReasonsRef.current)));return;}
           const next=ensureCoreSelection(worldRef.current);
           if (next) {setCoreChoices(next);setPauseReason("core",true);}
           setShowPrimaryChoice(false);setPauseReason("primarySkill",false);setHud(makeHudSnapshot(worldRef.current,pauseReasonsRef.current.size>0,pauseLabel(pauseReasonsRef.current)));
-        }}>Xác nhận</ModalButton></OverlayFooter>
+        }}>Xác nhận</ModalButton></OverlayFooter></>}
       </AppModal>}
       {showCoreList && !coreChoices && <AirCombatCoreList key="core-list" state={worldRef.current.aircraft} onClose={() => { setShowCoreList(false); setPauseReason("coreList", false); }} />}
 

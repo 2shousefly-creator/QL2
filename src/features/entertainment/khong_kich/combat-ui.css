@@ -344,3 +344,9 @@
 .air-primary-choices .combat-ui-icon { grid-row:1 / 3; width:48px; height:48px; }
 .air-primary-choices button p { font-size:11px; line-height:1.45; color:#cbd5e1; }
 .air-primary-choices button[aria-pressed="true"] { border-color:#ffda79; background:#273442; box-shadow:inset 0 0 15px #ffd56b22; }
+
+.air-tooltip-value { color: #facc15; font-weight: 900; }
+.air-selection-rules { display:flex; flex-wrap:wrap; gap:6px 12px; font-size:11px; color:#cbd5e1; padding:8px 0; }
+.air-reroll-controls { display:flex; flex-direction:column; gap:4px; justify-content:center; }
+.air-extra-reroll { font-size:10px; min-height:28px; }
+.air-upgrade-choices { overflow-y:auto; min-height:0; }

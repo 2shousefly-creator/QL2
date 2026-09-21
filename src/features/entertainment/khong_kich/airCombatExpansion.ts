@@ -1,5 +1,7 @@
+import { releaseState, overheated } from "./airCombatReleaseState";
 import type { AircraftCombatState, EffectiveAircraftStats, SkillId } from "./airCombatTypes";
 import { CORE_DEFINITIONS } from "./airCombatCoreCatalog";
+import { recordCoreMetric } from "./airCombatTelemetry";
 
 const owns = (s: AircraftCombatState, n: number) => s.selectedCores.includes(`core_${n}`);
 export interface ExpansionCast { skillId: SkillId; overclock: number; ended?: boolean }
@@ -78,6 +80,7 @@ export function applyExpansionStats(s: AircraftCombatState, stats: EffectiveAirc
 }
 export function expansionOutgoing(s: AircraftCombatState, basic: boolean, skill: boolean, primary = false): number {
   let value = 1;
+  if(owns(s,219)&&!overheated(s)&&releaseState(s).heat>=50&&releaseState(s).heat<100)value*=1.2;
   if (expansionActive(s, "alternating")) value *= 1.12;
   if (owns(s, 192) && hasAbsorbShield(s)) value *= 1.15;
   if (owns(s, 203) && activeNegativeStatusTypes(s).size) value *= 1.35;
@@ -105,7 +108,8 @@ export function expansionSkillCost(s: AircraftCombatState, id: SkillId): number 
 export function finishExpansionSkill(s: AircraftCombatState, cast?: ExpansionCast) {
   if (!cast || cast.ended) return;
   cast.ended = true;
-  if (owns(s, 181)) s.coreState.timers.skillExhaust = s.coreState.time + 3;
+  releaseState(s).lastSkillEnd=s.coreState.time;
+  if (owns(s, 181)) {s.coreState.timers.skillExhaust = s.coreState.time + 3;recordCoreMetric(s,181,"procs",1);}
 }
 /** One charge blocks the triggering damage/control payload as well as the tail. */
 export function celestialProtection(s: AircraftCombatState): boolean {
@@ -116,13 +120,14 @@ export function celestialProtection(s: AircraftCombatState): boolean {
   if (c.time < c.timers.celestialReady) return false;
   c.timers.celestial = c.time + 2.5;
   c.timers.celestialReady = c.time + 2.5 + 18;
+  recordCoreMetric(s,184,"procs",1);
   return true;
 }
 /** Initialize exactly once per temporary shield instance, never on every tick. */
 export function prepareAbsorbShield(s: AircraftCombatState, sh: AbsorbShield) {
   if (sh.capacity !== undefined) return;
   const temporary = Number.isFinite(sh.until);
-  if (temporary && owns(s, 200)) sh.amount *= 1.5;
+  if (temporary && owns(s, 200)) {recordCoreMetric(s,200,"shieldCreated",sh.amount*.5);sh.amount *= 1.5;}
   sh.capacity = sh.amount; sh.absorbed = 0;
   sh.duration = temporary ? Math.max(0, sh.until - s.coreState.time) : Infinity;
 }
@@ -145,6 +150,7 @@ export function observeExpansionResource(s: AircraftCombatState, maxResource: nu
   if (ratio<1) r.fullSince=undefined;
   if (owns(s,182) && ratio<.20 && (r.resourceRatio??1)>=.20 && !expansionActive(s,"reserveBatteryCd")) {
     c.timers.reserveBattery=c.time+4;c.timers.reserveBatteryCd=c.time+22;
+    recordCoreMetric(s,182,"procs",1);
   }
   r.resourceRatio=ratio;
 }
