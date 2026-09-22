@@ -1,3 +1,4 @@
+import { equipmentSkillEnd } from "./airCombatEquipmentRuntime";
 import { releaseState, overheated } from "./airCombatReleaseState";
 import type { AircraftCombatState, EffectiveAircraftStats, SkillId } from "./airCombatTypes";
 import { CORE_DEFINITIONS } from "./airCombatCoreCatalog";
@@ -108,6 +109,7 @@ export function expansionSkillCost(s: AircraftCombatState, id: SkillId): number 
 export function finishExpansionSkill(s: AircraftCombatState, cast?: ExpansionCast) {
   if (!cast || cast.ended) return;
   cast.ended = true;
+  equipmentSkillEnd(s);
   releaseState(s).lastSkillEnd=s.coreState.time;
   if (owns(s, 181)) {s.coreState.timers.skillExhaust = s.coreState.time + 3;recordCoreMetric(s,181,"procs",1);}
 }

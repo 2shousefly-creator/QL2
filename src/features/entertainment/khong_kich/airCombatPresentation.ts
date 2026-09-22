@@ -1,3 +1,6 @@
+import { equipmentStatuses } from "./airCombatEquipmentPresentation";
+import type { EquipmentRewardId } from "./airCombatEquipmentState";
+import { canSkillsCrit, getTempestJewelledCritDamageBonus } from "./airCombatEquipmentStats";
 import { expansionStatuses } from "./airCombatExpansionStatus";
 import { releaseTelemetry } from "./airCombatReleaseTelemetry";
 import { expansionState } from "./airCombatExpansion";
@@ -57,7 +60,7 @@ export function getSkillTooltipModel(state: AircraftCombatState, id: SkillId) {
     if (hasCore(state, row) && core.skillId === id) coreRows.push(core.description);
   }
   if (id === "escort_drone" && state.droneActive && hasCore(state,148)) coreRows.push(`Nếu thu hồi lúc này: hoàn ${amount(Math.max(0,Math.min(V.recallRefundCap,(state.coreState.stacks.droneUpkeepSpent || 0)*V.recallRefund,getEffectiveAircraftStats(state).maxResource-state.currentResource)))} Điện.`);
-  if (hasCore(state, 53)) coreRows.push("Kỹ năng có thể chí mạng.");
+  if (canSkillsCrit(state)) coreRows.push(`Kỹ năng có thể chí mạng. Synergy Găng Bảo Thạch × Mắt Tempest: +${getTempestJewelledCritDamageBonus(state)*100} điểm phần trăm Sát Thương Chí Mạng toàn cục.`);
   if (hasCore(state, 190)) coreRows.push("Nén Năng Lượng: +22% sát thương kỹ năng; chi phí đã gồm +15% Tài Nguyên.");
   if (expansionState(state).primarySkill === id) coreRows.push("Kỹ Năng Chủ Lực: +22% sát thương; chi phí và hồi chiêu cơ bản đã giảm 15%.");
   if (hasCore(state, 199)) coreRows.push(`Mạch Quá Tải: lần dùng kế tiếp +${(state.coreState.stacks.overclock ?? 0) * 18}% sát thương, giữ riêng theo lần dùng.`);
@@ -94,7 +97,7 @@ export interface StatusPresentation {
   id: string;
   group: "buff" | "debuff";
   name: string;
-  icon: { kind: "skill"; id: SkillId } | { kind: "core"; id: CoreId } | { kind: "status"; id: "acid" | "burn" | "stun" | "armor" | "shield" | "skill_lock" | "resource_jam" | "regen_off" | "mark" | "radar" };
+  icon: { kind: "equipment" | "item"; id: EquipmentRewardId } | { kind: "skill"; id: SkillId } | { kind: "core"; id: CoreId } | { kind: "status"; id: "acid" | "burn" | "stun" | "armor" | "shield" | "skill_lock" | "resource_jam" | "regen_off" | "mark" | "radar" };
   description: string;
   source: string;
   stacks: number;
@@ -186,7 +189,7 @@ function coreCooldownStatuses(world:CombatWorld):StatusPresentation[] {
 
 export function getStatusPresentations(world: CombatWorld): StatusPresentation[] {
   const s = world.aircraft, c = s.coreState, result: StatusPresentation[] = [];
-  result.push(...coreCooldownStatuses(world), ...skillCoreStatuses(world), ...expansionStatuses(world));
+  result.push(...coreCooldownStatuses(world), ...skillCoreStatuses(world), ...expansionStatuses(world), ...equipmentStatuses(world));
   const maxHp = getEffectiveAircraftStats(s).maxHp;
   for (const id of AIRCRAFT_CONFIGS[s.aircraftId].skillIds) {
     const timer = getActiveSkillDuration(world, id);
@@ -337,6 +340,7 @@ function skillCoreStatuses(world:CombatWorld):StatusPresentation[] {
 export function getCoreTelemetryPresentation(state:AircraftCombatState,id:CoreId):string[] {
   const row=Number(id.slice(5)),c=state.coreState,stats=getEffectiveAircraftStats(state);
   if(row===210)return [];
+  if(row>=223){const t=c.telemetry?.[id]??{};return row===224?[`Trang bị rơi thêm: ${t.extraDrops??0}`,`Quái thường: ${t.normalDrops??0} · Tinh Anh sau đầu wave: ${t.eliteDrops??0}`]:[`${row===223?"Trang bị thành phần":row===225?"Trang bị hoàn chỉnh":"Trang bị Huyền Thoại"} đã nhận: ${t.itemsReceived??0}`];}
   const values=c.telemetry?.[id]??{},lines:string[]=[];
   const resource=stats.resourceKind==="mana"?"Mana":"Điện";
   const labels:Record<number,Record<string,string>>={

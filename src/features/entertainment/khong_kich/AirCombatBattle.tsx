@@ -1,3 +1,4 @@
+import { AirCombatEquipmentInventory } from "./AirCombatEquipmentInventory";
 import { expansionState } from "./airCombatExpansion";
 import { releaseState, overheated } from "./airCombatReleaseState";
 import { reserveCap } from "./airCombatSelectionRules";
@@ -73,7 +74,7 @@ interface AirCombatBattleProps {
   onExit: () => void;
 }
 
-type PauseReason = "loading" | "user" | "core" | "tooltip" | "exit" | "hidden" | "coreList" | "motion" | "primarySkill";
+type PauseReason = "loading" | "user" | "core" | "tooltip" | "exit" | "hidden" | "coreList" | "motion" | "primarySkill" | "equipment";
 
 interface SkillPressState {
   skillId: SkillId;
@@ -91,6 +92,7 @@ interface PlayerControlState {
 
 function pauseLabel(reasons: ReadonlySet<PauseReason>): string | null {
   if (reasons.has("core")) return "Chọn lõi";
+  if (reasons.has("equipment")) return "Kho Trang Bị";
   if (reasons.has("coreList")) return "Danh sách lõi";
   if (reasons.has("tooltip")) return "Xem thông tin";
   if (reasons.has("exit")) return "Xác nhận thoát";
@@ -135,6 +137,7 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
   const [tooltipSkill, setTooltipSkill] = useState<SkillId | null>(null);
   const [showExitConfirm, setShowExitConfirm] = useState(false);
   const [showCoreList, setShowCoreList] = useState(false);
+  const [showEquipment,setShowEquipment]=useState(false);
   const skillFeedbackUntil = useRef(0);
   const [skillFeedback, setSkillFeedback] = useState<string | null>(null);
 
@@ -161,7 +164,7 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
       setPlayerInputActive(worldRef.current, false);
     } else {
       reasons.delete(reason);
-      if (["user","tooltip","exit","coreList","primarySkill"].includes(reason)) {
+      if (["user","tooltip","exit","coreList","primarySkill","equipment"].includes(reason)) {
         reasons.add("motion");worldRef.current.pauseReasons.add("motion");
         clearTimeout(motionPauseTimer.current);
         motionPauseTimer.current=setTimeout(()=>{
@@ -513,7 +516,8 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
       {rendererState === "legacy" && <span className="pointer-events-none absolute right-2 top-[13%] z-10 text-[8px] text-slate-400">Hiển thị tương thích</span>}
       {hpRatio < 0.3 && <div className="pointer-events-none absolute inset-0 z-[5] rounded-2xl" style={{ boxShadow: "inset 0 0 55px rgba(225,29,72," + ((0.3 - hpRatio) * 1.6) + ")" }} />}
       <section className="air-combat-hud absolute inset-x-0 top-0 z-10 border-b border-cyan-300/30 bg-slate-950/95 text-white" style={{ height: AIR_COMBAT_WORLD.hudHeight / 720 * 100 + "%" }} data-hud-region="fixed">
-        <AirCombatTacticalHud world={worldRef.current} hud={hud} reducedMotion={reducedMotion} coreChoice={!!coreChoices}
+        <AirCombatTacticalHud world={worldRef.current} hud={hud} reducedMotion={reducedMotion} coreChoice={!!coreChoices || showEquipment || showCoreList || showPrimaryChoice || showExitConfirm}
+          onEquipment={()=>{setPauseReason("equipment",true);closeAllTooltips();setShowEquipment(true);}}
           onInspect={inspectHub} onCores={()=>{setPauseReason("coreList",true);closeAllTooltips();setShowCoreList(true);}}
           onPause={()=>{setPauseReason("user",true);closeAllTooltips();}}/>
         <span className="sr-only">HP {Math.round(hud.stats.currentHp)}/{Math.round(hud.stats.maxHp)}; {resourceLabel} {Math.round(hud.stats.currentResource)}/{Math.round(hud.stats.maxResource)}</span>
@@ -660,9 +664,10 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
           setShowPrimaryChoice(false);setPauseReason("primarySkill",false);setHud(makeHudSnapshot(worldRef.current,pauseReasonsRef.current.size>0,pauseLabel(pauseReasonsRef.current)));
         }}>Xác nhận</ModalButton></OverlayFooter></>}
       </AppModal>}
+      {showEquipment && !coreChoices && <AirCombatEquipmentInventory key="equipment" world={worldRef.current} onChange={()=>setHud(makeHudSnapshot(worldRef.current,true,pauseLabel(pauseReasonsRef.current)))} onClose={()=>{setShowEquipment(false);setPauseReason("equipment",false);}}/>}
       {showCoreList && !coreChoices && <AirCombatCoreList key="core-list" state={worldRef.current.aircraft} onClose={() => { setShowCoreList(false); setPauseReason("coreList", false); }} />}
 
-      {pauseReasonsRef.current.has("user") && !coreChoices && !showExitConfirm && !showCoreList && !showPrimaryChoice && (
+      {pauseReasonsRef.current.has("user") && !coreChoices && !showExitConfirm && !showCoreList && !showPrimaryChoice && !showEquipment && (
         <ConfirmationDialog key="pause" status="warning" layer="exclusive-dialog" layout="viewport-safe" onClose={() => setPauseReason("user", false)} labelledBy="air-paused-title" panelClassName="text-center">
           <OverlayHeader><Pause className="mx-auto h-8 w-8 text-[var(--modal-info)]" /><h2 id="air-paused-title" className="modal-title">Đã tạm dừng</h2></OverlayHeader>
           <OverlayBody data-pause-overlay="user"><p className="text-xs text-[var(--modal-text)]">Hồi tài nguyên, hồi chiêu và thời gian trận đều đứng yên.</p></OverlayBody>

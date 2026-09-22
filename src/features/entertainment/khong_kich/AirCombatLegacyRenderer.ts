@@ -1,3 +1,5 @@
+import { EQUIPMENT_ART, paintEquipment } from "./airCombatEquipmentArt";
+import { equipmentUntargetable } from "./airCombatEquipmentStats";
 import { releaseState, playerAirframeScale } from "./airCombatReleaseState";
 import { enemyAirframeRotation } from "./airCombatHitboxes";
 import sharedVfxUrl from "../../../assets/khong-kich/v2/vfx-atlas.png";
@@ -55,11 +57,11 @@ async function loadCanvasTextures(urls:string[]) {
     await magneticImages.get(url)!.decode();
   }));
 }
-export const loadAstraCanvasAssets=()=>loadCanvasTextures([ASTRA_ART.aircraft,ASTRA_ART.effects,ASTRA_ART.combatVfx,sharedVfxUrl]);
+export const loadAstraCanvasAssets=()=>loadCanvasTextures([EQUIPMENT_ART.icons,EQUIPMENT_ART.vfx,ASTRA_ART.aircraft,ASTRA_ART.effects,ASTRA_ART.combatVfx,sharedVfxUrl]);
 export const loadMagneticCanvasAssets=()=>loadCanvasTextures([STAGE2_ART_URLS.enemy,STAGE2_ART_URLS.vfx,STAGE2_ART_URLS.storm,STAGE2_ART_URLS.elite]);
 function drawMagneticFrame(ctx: CanvasRenderingContext2D, frame: AtlasFrame, x: number, y: number,
   width: number, height: number, rotation = 0, alpha = 1) {
-  const image = magneticImage(frame.atlas === "astraVfx" ? ASTRA_ART.combatVfx : frame.atlas === "vfx" ? sharedVfxUrl : frame.atlas === "astraEffects" ? ASTRA_ART.effects : frame.atlas === "stage2Elite" ? STAGE2_ART_URLS.elite : frame.atlas === "stage2Enemy" ? STAGE2_ART_URLS.enemy : STAGE2_ART_URLS.vfx);
+  const image = magneticImage(frame.atlas === "equipmentIcons" ? EQUIPMENT_ART.icons : frame.atlas === "equipmentVfx" ? EQUIPMENT_ART.vfx : frame.atlas === "astraVfx" ? ASTRA_ART.combatVfx : frame.atlas === "vfx" ? sharedVfxUrl : frame.atlas === "astraEffects" ? ASTRA_ART.effects : frame.atlas === "stage2Elite" ? STAGE2_ART_URLS.elite : frame.atlas === "stage2Enemy" ? STAGE2_ART_URLS.enemy : STAGE2_ART_URLS.vfx);
   if (!image) return;
   const [sx,sy,sw,sh] = frame.rect;
   ctx.save(); ctx.globalAlpha = alpha; ctx.translate(x,y); ctx.rotate(rotation);
@@ -715,6 +717,7 @@ export function drawLegacyWorld(
     ctx.strokeStyle = aircraft.color; ctx.lineWidth = 2; ctx.globalAlpha = .35;
     ctx.beginPath(); ctx.arc(world.playerX, world.playerY, 30, 0, Math.PI * 2); ctx.stroke(); ctx.globalAlpha = 1;
   }
+  paintEquipment(world,(_id,frame,x,y,width,height,rotation,alpha)=>drawMagneticFrame(ctx,frame,x,y,width,height,rotation,alpha));
   paintAstra(world,{
     impactFallback:true,
     circle:(x,y,r,c,a,fill)=>{ctx.save();ctx.globalAlpha=a;ctx.strokeStyle=ctx.fillStyle=`#${c.toString(16).padStart(6,"0")}`;ctx.lineWidth=2;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);fill?ctx.fill():ctx.stroke();ctx.restore();},
@@ -726,7 +729,7 @@ export function drawLegacyWorld(
       ctx.restore();
     }
   },reducedMotion);
-  const invisible = (world.aircraft.activeEffects.invisibility || 0) > 0;
+  const invisible = (world.aircraft.activeEffects.invisibility || 0) > 0 || equipmentUntargetable(world.aircraft);
   for(const ghost of releaseState(world.aircraft).ghosts){
     ctx.save();ctx.translate(ghost.x,ghost.y);ctx.rotate(ghost.angle);
     drawAircraft(ctx,aircraftId,0,0,aircraft.color,"#a5f3fc",.38*Math.min(1,(ghost.until-world.elapsed)*3),.82*playerAirframeScale(world.aircraft));ctx.restore();

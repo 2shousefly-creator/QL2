@@ -1,3 +1,6 @@
+import { equipmentState, equipmentScale, equipmentEffect, equipmentMetric } from "./airCombatEquipmentState";
+import { canSkillsCrit, equipmentUntargetable } from "./airCombatEquipmentStats";
+import { tickEquipment, equipmentOnHit, equipmentOnCast, equipmentOnDamage, equipmentOnKill, equipmentOutgoing, equipmentArmorMultiplier, equipmentIncoming, equipmentSlow, equipmentFx, type EquipmentHooks } from "./airCombatEquipmentRuntime";
 import { releaseState, playerAirframeScale, overheated } from "./airCombatReleaseState";
 import { closeCoreSelection, spendReroll, rollUnstableMode, type RerollSource } from "./airCombatSelectionRules";
 import { syncEffectiveMaxHp } from "./airCombatAircraft";
@@ -1352,6 +1355,7 @@ export function castWorldSkill(world: CombatWorld, skillId: SkillId): SkillCastR
     }
     const values = getSkillRuntimeValues(world.aircraft, skillId);
     castExpansion(world, skillId, result.resourceSpent, expansionHooks);
+    equipmentOnCast(world,equipmentHooks,skillId);
     const release=releaseState(world.aircraft);
     if(hasCore(world.aircraft,220)&&world.elapsed>=release.ghostReady){
         release.ghosts.push({id:world.nextId++,x:world.playerX,y:world.playerY,angle:0,until:world.elapsed+3,fireIn:0});
@@ -2264,6 +2268,7 @@ function updateKamikaze(world: CombatWorld, enemy: EnemyEntity, dt: number): voi
     }
 }
 function updateEnemies(world: CombatWorld, dt: number): void {
+    const equipmentPositions = new Map(world.enemies.map(e=>[e.id,{x:e.x,y:e.y}]));
     updateBossPhase(world);
 
     for (const enemy of world.enemies) {
@@ -2394,6 +2399,8 @@ function updateEnemies(world: CombatWorld, dt: number): void {
     }
     for (let i = world.enemies.length-1; i >= 0; i--) if (world.enemies[i].deathHandled && world.enemies[i].hp <= 0) recycleEnemy(world, i);
     resolveDeathsAndEffects(world);
+    for(const enemy of world.enemies){const start=equipmentPositions.get(enemy.id),factor=equipmentSlow(world.aircraft,enemy);if(start&&factor<1){enemy.x=start.x+(enemy.x-start.x)*factor;enemy.y=start.y+(enemy.y-start.y)*factor;}}
+
 }
 function segmentDistance(px: number, py: number, ax: number, ay: number, bx: number, by: number): number {
     const dx = bx - ax, dy = by - ay, t = Math.max(0, Math.min(1, ((px - ax) * dx + (py - ay) * dy) / (dx * dx + dy * dy || 1)));
@@ -2637,17 +2644,20 @@ function repayExpansionDebt(world: CombatWorld, amount: number) {
     if (hasCore(state,24) && (state.activeEffects.afterburner ?? 0) > 0) reduction *= .9;
     if (hasCore(state,72) && c.time - c.lastDamage >= 5) reduction *= .6;
     if (expansionActive(state,"thermalCover")) reduction *= 1 - V.thermalReduction;
+    reduction *= equipmentIncoming(state);
     let damage = amount * reduction, absorbed = 0;
-    for (const shield of Object.values(c.shields)) {
+    for (const [key,shield] of Object.entries(c.shields)) {
         if (shield.until <= c.time || shield.amount <= 0) continue;
         prepareAbsorbShield(state,shield);
         const part = Math.min(shield.amount,damage);
         shield.amount -= part; shield.absorbed = (shield.absorbed ?? 0) + part;
         absorbed += part; damage -= part;
-        if (shield.amount <= 0) finishAbsorbShield(state,shield);
+        if(key.startsWith("equipment:"))equipmentMetric(state,Number(key.slice(10)),"shieldAbsorbed",part);
+        if (shield.amount <= 0) {finishAbsorbShield(state,shield);if(key==="equipment:4"){equipmentEffect(state,4).until=c.time;equipmentEffect(state,4).ready=c.time+60;}}
     }
     damage = Math.min(state.currentHp,damage);
     state.currentHp -= damage; world.damageTaken += damage;
+    if(damage+absorbed>0)equipmentOnDamage(world,equipmentHooks,damage,damage+absorbed);
     // Any HP loss cancels a pending shield return, including debt repayment.
     if (damage > 0) expansionState(state).returns.length = 0;
     if (damage + absorbed > 0) emitVisual(world,{kind:"damage_number",x:world.playerX,y:world.playerY,size:36,hpDamage:damage,shieldAbsorbed:absorbed,target:"player",critical:false});
@@ -2727,13 +2737,13 @@ function applyDamageToEnemy(world: CombatWorld, enemy: EnemyEntity, rawDamage: n
     }
     if (basic && (marks.shieldBroken ?? 0) > time) expansionMultiplier *= 1.08;
     if (primary && (marks.gunPhase ?? 0) > time) { hitMultiplier *= 1.45; marks.gunPhase = 0; }
-    const canCrit = source !== "core" && source !== "lightning" && ((!skillId && source !== "skill" && source !== "burn") || hasCore(state, 53));
+    const canCrit = source !== "core" && source !== "lightning" && ((!skillId && source !== "skill" && source !== "burn") || canSkillsCrit(state));
     const opening=source==="basic" && hasCore(state,117) && (tacticalState(world).openingHits.get(enemy.id) ?? -Infinity) <= time;
     if(opening)tacticalState(world).openingHits.set(enemy.id, target.elite || target.boss ? time + 10 : Infinity);
     let effectiveStats = opening ? {...stats,criticalChance:1} : canCrit ? stats : { ...stats, criticalChance: 0 };
     const skillEffects = world.skillCores.enemyEffects.get(enemy.id);
     const skillPen=skillId==="orbit_reversal"&&hasCore(state,153)?.25:skillId==="stellar_lance"&&hasCore(state,158)?.30:0;
-    const armor = enemy.armor * (1-skillPen) * ((enemy.astraArmorUntil??0)>world.elapsed?.7:1) * ((skillEffects?.armorUntil || 0)>time ? 1 - V.laserArmorReduction : 1) * ((enemy.armorBrokenUntil??0)>world.elapsed?.7:1) * ((enemy.burnArmorUntil || 0) > time ? .8 : 1) * (enemy.weakUntil > time ? .92 : 1) * ((enemy.weakDebuffUntil || 0) > time ? .85 : 1) * (1 - armorPenetration(state));
+    const armor = enemy.armor * equipmentArmorMultiplier(state,enemy) * (1-skillPen) * ((enemy.astraArmorUntil??0)>world.elapsed?.7:1) * ((skillEffects?.armorUntil || 0)>time ? 1 - V.laserArmorReduction : 1) * ((enemy.armorBrokenUntil??0)>world.elapsed?.7:1) * ((enemy.burnArmorUntil || 0) > time ? .8 : 1) * (enemy.weakUntil > time ? .92 : 1) * ((enemy.weakDebuffUntil || 0) > time ? .85 : 1) * (1 - armorPenetration(state));
     if (directPlayer && (marks.criticalLock ?? 0) > time) effectiveStats = { ...effectiveStats, criticalDamageMultiplier: effectiveStats.criticalDamageMultiplier + .35 };
     const whiteHole=source==="basic"&&(state.coreState.timers.whiteHole??0)>time;
     let multiplier = expansionMultiplier * (whiteHole?1.6:1)*outgoingCoreMultiplier(state, target, source, Math.hypot(enemy.x - world.playerX, enemy.y - world.playerY), GAMEPLAY_SAFE_RECT.height);
@@ -2745,6 +2755,11 @@ function applyDamageToEnemy(world: CombatWorld, enemy: EnemyEntity, rawDamage: n
     if((state.coreState.timers.comeback??0)>time)multiplier*=1.25;
     const crowdBonus=hasCore(state,118)?crowdDamageBonus(world):0;
     if(hasCore(state,118))multiplier*=1+crowdBonus;
+    const equipmentDirect=directPlayer && source!=="burn" && source!=="core" && source!=="lightning" && (basic || source==="weapon" || skillHit);
+    const equipmentDamage=equipmentOutgoing(state,enemy,basic,skillHit&&equipmentDirect,equipmentDirect);
+    const equipmentBaseRaw=rawDamage;
+    rawDamage+=equipmentDamage.bonus;
+    multiplier*=equipmentDamage.multiplier;
     const firstVolleyDamage = volleyHits?.get(enemy.id);
     // Preserve the fan's 15% baseline without copying consumed, one-hit Core bonuses.
     // Each hit resolves its own mark/capacitor once, including later fan projectiles.
@@ -2806,6 +2821,14 @@ function applyDamageToEnemy(world: CombatWorld, enemy: EnemyEntity, rawDamage: n
         if(whiteHole){bonus(155,.6/1.6);astraMetric(world,"orbit.whiteHoleBonusDamage",damage-Math.min(hpBefore,Math.max(0,resolvedBeforeShield/1.6-shieldBeforeHit)));}
         if(skillPen)bonus(skillId==="stellar_lance"?158:153,Math.max(0,1-(100+Math.max(-80,armor))/(100+Math.max(-80,armor/(1-skillPen)))));
         for(const [row,fraction] of shotBonuses)bonus(row,fraction);
+        const equipmentContribution=(family:number,fraction:number,key="bonusDamage")=>{
+          const budget=resolvedBeforeShield*(1-Math.max(0,Math.min(1,fraction))),shield=Math.min(shieldBeforeHit,budget*shieldFactor);
+          equipmentMetric(state,family,key,damage+absorbed-shield-Math.min(hpBefore,Math.max(0,budget-shield/shieldFactor)));
+        };
+        for(const [family,factor] of equipmentDamage.factors)equipmentContribution(family,1-1/factor);
+        for(const [family,value] of equipmentDamage.bonuses)equipmentContribution(family,value/Math.max(Number.EPSILON,equipmentBaseRaw+equipmentDamage.bonus+recoilDamage));
+        if(equipmentEffect(state,14).until>time)equipmentContribution(14,35*equipmentScale(state,14)/Math.max(1,stats.firepower));
+        if(state.currentHp>=stats.maxHp*.5)equipmentContribution(33,1-1/(1+.1*equipmentScale(state,33)));
         if(preliminary){recordCoreMetric(state,185,"consumed",1);factor(185,1.12);}
         if(skillPhase||gunPhase){recordCoreMetric(state,207,"consumed",1);factor(207,1.45);}
         if(alternatingSkill)factor(191,1.20);
@@ -2889,6 +2912,7 @@ function applyDamageToEnemy(world: CombatWorld, enemy: EnemyEntity, rawDamage: n
         if (enemy.burnTick <= 0)
             enemy.burnTick = 1;
     }
+    if(damage+absorbed>0)equipmentOnHit(world,equipmentHooks,{enemy,basic,primary:firstPrimaryHit,skill:skillHit&&equipmentDirect,critical:resolved.critical,direct:equipmentDirect,damage:damage+absorbed,skillId,cast});
     observeBossDamage(world,enemy,damage);
     accumulateDeathMark(world,enemy,damage+absorbed);
     return damage;
@@ -2913,6 +2937,7 @@ function destroyEnemy(world: CombatWorld, enemyIndex: number): void {
     const enemy = world.enemies[enemyIndex];
     if (!enemy || enemy.deathHandled)
         return;
+    equipmentOnKill(world,equipmentHooks,enemy);
     expansionKill(world, enemy, expansionHooks);
     if(enemy.killProcEligible!==false)settleBountyKill(world,enemy);
     guardianDestroyed(world, enemy);
@@ -3033,6 +3058,7 @@ function hitPlayer(world: CombatWorld, rawDamage: number, kind: "projectile" | "
     const state = world.aircraft, c = state.coreState, stats = getEffectiveAircraftStats(state);
     // Tempest beams own a 0.20s tick schedule. Ordinary contact grace must not
     // turn that into 0.62s DPS; independently granted invulnerability still wins.
+    if(equipmentUntargetable(state))return;
     const scheduledBeam = world.stageId === 2 && attack.sourceEnemyType === "boss" && attack.delivery === "beam";
     const contactGrace = world.playerInvulnerability <= Math.max(0,world.playerDamageGraceUntil-world.elapsed)+1e-8;
     if (attack.allegiance==="friendly_hacked" || world.ended || (world.playerInvulnerability > 0 && (!scheduledBeam || !contactGrace)) || state.currentHp <= 0 || rawDamage <= 0 || world.waveState !== "combat")
@@ -3080,12 +3106,20 @@ function hitPlayer(world: CombatWorld, rawDamage: number, kind: "projectile" | "
         const restored = refundResource(world,prevented*V.shieldConversion,c.stacks.shieldRefund || 0,132);
         c.stacks.shieldRefund = (c.stacks.shieldRefund || 0)+restored;
     }
+    const equipmentIncomingFactor=equipmentIncoming(state);
+    const equipmentPreDamage=calculateDamage(rawDamage*zoneMultiplier,stats.armor,multiplier);
+    multiplier*=equipmentIncomingFactor;
     let damage = calculateDamage(rawDamage*zoneMultiplier, stats.armor, multiplier), absorbed = 0;
     const incomingBudget=damage;
     const incomingShields=Object.values(c.shields).filter(sh=>sh.until>c.time);
     for(const shield of incomingShields)prepareAbsorbShield(state,shield);
     const shieldCapacity=incomingShields.reduce((n,sh)=>n+sh.amount,0);
     const incomingCapacity=state.currentHp+shieldCapacity;
+    const gorgon=1-.12*equipmentScale(state,16),aegisEquipment=equipmentIncomingFactor/gorgon;
+    equipmentMetric(state,16,"prevented",Math.min(incomingCapacity,damage/gorgon)-Math.min(incomingCapacity,damage));
+    equipmentMetric(state,21,"prevented",Math.min(incomingCapacity,damage/aegisEquipment)-Math.min(incomingCapacity,damage));
+    const attacker=world.enemies.find(e=>e.id===attack.sourceEnemyId);
+    if(attacker&&equipmentScale(state,16)){const reflected=Math.min(incomingCapacity,damage/gorgon)-Math.min(incomingCapacity,damage);equipmentMetric(state,16,"damage",resolveEquipmentDamage(world,attacker,reflected,16));equipmentFx(world,16,attacker.x,attacker.y,48,.5,attacker.id,{x:world.playerX,y:world.playerY});}
     const exactPrevented=(row:number,factor:number)=>recordCoreMetric(state,row,"prevented",Math.min(incomingCapacity,damage/factor)-Math.min(incomingCapacity,damage));
     if(wingProtection){recordCoreMetric(state,109,"hits",1);exactPrevented(109,.7);}
     if(electric){recordCoreMetric(state,177,"hits",1);exactPrevented(177,.75);}
@@ -3113,7 +3147,11 @@ function hitPlayer(world: CombatWorld, rawDamage: number, kind: "projectile" | "
         damage -= amount;
         absorbed += amount;
         shield.absorbed = (shield.absorbed ?? 0) + amount;
-        if (shield.amount <= 0) finishAbsorbShield(state, shield);
+        if(key.startsWith("equipment:"))equipmentMetric(state,Number(key.slice(10)),"shieldAbsorbed",amount);
+        if (shield.amount <= 0) {
+          finishAbsorbShield(state, shield);
+          if(key==="equipment:4"){equipmentEffect(state,4).until=c.time;equipmentEffect(state,4).ready=c.time+60;}
+        }
         recordCoreMetric(state, ({reactive:76,skill:81,reserve:99,overheal:104} as Record<string,number>)[key], "shieldAbsorbed", amount);
         if(Number.isFinite(shield.until))recordCoreMetric(state,200,"shieldAbsorbed",amount);
         if(shield.returned)recordCoreMetric(state,204,"shieldAbsorbed",amount);
@@ -3135,6 +3173,7 @@ function hitPlayer(world: CombatWorld, rawDamage: number, kind: "projectile" | "
         emitVisual(world,{kind:"shield_ripple",x:world.playerX+localX,y:world.playerY+localY,fromX:localX,fromY:localY,attachedToPlayer:true,size:18});
     }
     if (damage <= 0) {
+        if(absorbed>0)equipmentOnDamage(world,equipmentHooks,0,absorbed);
         if (absorbed > 0)
             emitVisual(world, { kind: "damage_number", x: world.playerX, y: world.playerY, size: 36, hpDamage: 0, shieldAbsorbed: absorbed, target: "player", critical: false });
         return;
@@ -3157,6 +3196,7 @@ function hitPlayer(world: CombatWorld, rawDamage: number, kind: "projectile" | "
         damage = Math.min(state.currentHp, damage);
         state.currentHp = Math.max(0, state.currentHp - damage);
     }
+    if(damage+absorbed>0)equipmentOnDamage(world,equipmentHooks,damage,damage+absorbed);
     if (damage > 0) expansionHpLoss(world, damage);
     if (damage > 0) { onHostileDamage(world, attack);observeComeback(world); }
     c.lastDamage = c.time;
@@ -3222,7 +3262,7 @@ function updateProjectileCollisions(world: CombatWorld): void {
                 recycleProjectile(world, i);
                 continue;
             }
-            if (segmentVsAircraft(p.previousX,p.previousY,p.x,p.y,p.radius,getPlayerHitbox(world),projectileContact).hit) {
+            if (!equipmentUntargetable(world.aircraft) && segmentVsAircraft(p.previousX,p.previousY,p.x,p.y,p.radius,getPlayerHitbox(world),projectileContact).hit) {
                 if(p.projectileKind==="boss_missile")emitVisual(world,{kind:"missile_impact",x:p.x,y:p.y,size:42,missileFamily:"boss"});
                 p.playerContact=true;
                 hitPlayer(world, p.rawDamage, "projectile", p, projectileContact);
@@ -3668,6 +3708,7 @@ export function updateCombatWorld(world: CombatWorld, deltaSeconds: number): voi
         world.latestMessage = null;
     tickAircraftState(world.aircraft, dt, true, (effective, source) => emitPlayerHealing(world, effective, source, true));
     tickReleaseCores(world,dt);
+    tickEquipment(world,dt,equipmentHooks);
     syncEffectiveMaxHp(world.aircraft);
     tickExpansion(world, dt, expansionHooks);
     tickCoreTelemetry(world.aircraft,dt);
@@ -4214,3 +4255,28 @@ function settleBountyKill(world:CombatWorld,enemy:EnemyEntity) {
 
 const astraHooks:AstraHooks={impact:(w,x,y,radius)=>emitVisual(w,{kind:"astra_starfall_impact",skillId:"starfall",x,y,size:radius*2}),projectile:addProjectile,hostile:isHostileToPlayer,remove:recycleProjectile,
     damage:(w,e,raw,skill,burn,cast)=>applyDamageToEnemy(w,e,raw,"#ff943f",burn?"burn":"skill",skill,undefined,undefined,"explosive_aoe",true,true,undefined,1,[],cast)};
+
+/** Equipment procs share enemy mitigation, shields, overkill, boss feedback and DPS,
+ * but cannot recursively dispatch hit/critical/Core proc hooks. */
+function resolveEquipmentDamage(w:CombatWorld,e:EnemyEntity,raw:number,family:number):number {
+    if(!isHostileToPlayer(w,e)||raw<=0)return 0;
+    const s=w.aircraft,t=s.coreState.time,fx=w.skillCores.enemyEffects.get(e.id);
+    const armor=e.armor*equipmentArmorMultiplier(s,e)*((e.astraArmorUntil??0)>t?.7:1)*((fx?.armorUntil??0)>t?1-V.laserArmorReduction:1)*((e.armorBrokenUntil??0)>t?.7:1)*((e.burnArmorUntil??0)>t?.8:1)*(e.weakUntil>t?.92:1)*((e.weakDebuffUntil??0)>t?.85:1);
+    const outgoing=equipmentOutgoing(s,e,false,false,false);
+    const budget=calculateDamage(raw,armor,outgoing.multiplier)*guardianMultiplier(w,e)*(e.type==="boss"&&e.hp/e.maxHp>=.15&&e.aegisUntil>t?.6:1);
+    const absorbed=Math.min(e.shield,budget),hpDamage=Math.min(e.hp,Math.max(0,budget-absorbed));
+    e.shield-=absorbed;e.hp-=hpDamage;
+    if(absorbed>0&&e.shield<=0&&e.type==="iron_fortress"&&e.retaliationReady){e.retaliationReady=false;queueEliteSpecial(w,e,"retaliation",.01,false);}
+    if(e.hp<=0){e.killProcEligible=family!==12&&family!==16;e.expansionKillingHit={primary:false,basic:false,skill:false,direct:false,critical:false,elite:isElite(e.type)};}
+    recordDpsDamage(w,hpDamage+absorbed);w.damageDealt+=hpDamage;
+    emitVisual(w,{kind:"damage_number",x:e.x,y:e.y,size:e.radius,hpDamage,shieldAbsorbed:absorbed,target:"enemy",critical:false,entityId:e.id});
+    observeBossDamage(w,e,hpDamage);
+    const actual=hpDamage+absorbed;
+    if(family!==12&&family!==16){
+      if(equipmentScale(s,33)&&s.currentHp<getEffectiveAircraftStats(s).maxHp*.5)equipmentMetric(s,33,"healed",healPlayerWithFeedback(w,actual*.02*equipmentScale(s,33),"core",true));
+      accumulateDeathMark(w,e,actual,false);
+    }
+    for(const [f,factor] of outgoing.factors)equipmentMetric(s,f,"bonusDamage",actual-Math.min(e.hp+hpDamage+e.shield+absorbed,budget/factor));
+    return actual;
+}
+const equipmentHooks:EquipmentHooks={damage:resolveEquipmentDamage,heal:(w,n)=>w.aircraft.currentHp>0?healPlayerWithFeedback(w,n,"core",true):0,hostile:isHostileToPlayer,elite:e=>isElite(e.type)};

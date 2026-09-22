@@ -128,6 +128,10 @@ motif('hotBarrel',use('cannon',1,12,.92)+p('M30 18 34 0 48 28 60 2 73 39 57 47 4
 motif('ghostCraft',`<g opacity=".25">${use('hull',-11,9,.86)}</g><g opacity=".5">${use('hull',5,3,.86)}</g>`+use('hull',21,-4,.86)+p('M3 79 15 72 18 83 6 91ZM23 87 36 79 37 91 26 99Z',light));
 motif('deathSigil',circle(50,50,43,'#812943')+circle(50,50,34,'#210c30')+p('M8 3 28 9 53 36 80 8 97 3 89 25 64 51 91 79 96 98 77 90 51 64 24 92 4 98 10 77 37 50 11 25Z','#030207','stroke="#c579dc" stroke-width="2"')+p('M47 38 54 39 62 49 54 61 45 57 39 49Z','#280922'));
 motif('unstableCraft',use('hull',-7,43,.49)+use('hull',26,-6,1.04)+p('M32 13H47V28H32ZM2 30H17V45H2Z',light)+p('M15 9 29 21 15 32Z'));
+motif('luckyFragment',use('gem',10,10,.8)+p('M50 0 59 19 80 20 64 34 69 54 50 44 31 54 36 34 20 20 41 19Z',light)+use('spark',61,64,.32));
+motif('probability',p('M14 22 52 5 89 25 86 72 50 95 13 73Z',metal)+p('M14 22 50 43 89 25 52 5Z')+p('M50 43V95L86 72 89 25Z',dark)+circle(34,54,5,light)+circle(34,74,5,light)+circle(64,56,5,light)+circle(75,48,5,light)+circle(64,76,5,light)+circle(75,67,5,light));
+motif('equipmentCrate',p('M8 31 31 10H75L94 31V81L74 97H26L8 81Z',metal)+p('M17 39H84V78L69 87H31L17 78Z')+p('M32 12H44V95H32ZM64 12H76V95H64Z',dark)+use('shield',32,35,.36));
+motif('relicVault',use('equipmentCrate')+p('M13 30 9 3 33 18 51 1 69 18 93 3 88 30Z')+use('gem',29,28,.44)+use('spark',59,62,.35));
 const recipes=[
 // 001–018: each rank has a distinct silhouette, never a numeral.
 ['shell','power'],['plate','shield'],['cannon','speed'],['hull','heart'],['repair','heal'],['clock','speed'],
@@ -184,16 +188,17 @@ const recipes=[
 ['memoryLock','data','clock'],['fourCards','target','gem'],['oneLane','nodes','gem'],
 ['pandora','gem','spark'],['rarityShift','gem','clock'],['tokenVault','clock','battery'],
 ['hotBarrel','spark','cannon'],['ghostCraft','hull','duration'],['deathSigil','clock','spark'],['unstableCraft','hull','regulator'],
+['luckyFragment','gem'],['probability','target'],['equipmentCrate','shield'],['relicVault','spark'],
 ];
 // Skill identity takes priority over role color in illustration only.
 const groups={
  cyan:[210,211,220,...[19,20,21,22,23,24,25,26,27],...Array.from({length:9},(_,i)=>122+i)],
- gold:[184,198,199,200,201,202,204,209,28,29,30,31,32,33,34,35,36,...Array.from({length:9},(_,i)=>131+i)],
+ gold:[225,226,184,198,199,200,201,202,204,209,28,29,30,31,32,33,34,35,36,...Array.from({length:9},(_,i)=>131+i)],
  violet:[37,38,39,40,41,42,43,44,45,...Array.from({length:9},(_,i)=>140+i)],
  orange:Array.from({length:18},(_,i)=>150+i),
  green:[2,4,5,8,10,11,14,16,17,47,48,61,62,64,65,72,76,81,90,92,98,99,103,104,108,109,110,119],
  blue:[78,84,86,107],
- purple:[212,213,214,215,216,217,218,221,222,6,12,18,49,50,51,52,54,63,70,74,77,85,93,94,95,96,97,100,113,116,120,149],
+ purple:[223,224,212,213,214,215,216,217,218,221,222,6,12,18,49,50,51,52,54,63,70,74,77,85,93,94,95,96,97,100,113,116,120,149],
 };
 const palettes={cyan:['#53ddff','#073956'],gold:['#ffd15d','#4c300b'],violet:['#c4a1ff','#312059'],orange:['#ffb968','#5a2815'],green:['#6aefaa','#0d3e32'],blue:['#6cbaff','#112c5b'],purple:['#d895ff','#3b1954'],red:['#ff8b79','#501c29']};
 const defs=`<clipPath id="cell-clip"><rect width="128" height="128" rx="12"/></clipPath><linearGradient id="metal" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffffff"/><stop offset=".35" stop-color="#c4daeb"/><stop offset=".52" stop-color="#8aa4bd"/><stop offset=".57" stop-color="#d5e5f1"/><stop offset="1" stop-color="#415a75"/></linearGradient>`+
@@ -217,4 +222,4 @@ const cells=recipes.map(([base,badge,context],i)=>{
 <path d="M10 29Q10 10 29 10H78" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="3"/>
 <g transform="translate(12 12) scale(.76)">${use(badge)}</g></g></g>`;
 });
-writeFileSync(fileURLToPath(new URL('../src/assets/khong-kich/v2/core-icons-refined.svg',import.meta.url)),`<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1920" viewBox="0 0 1920 1920"><defs>${defs}</defs>\n${cells.join('\n')}\n</svg>\n`);
+writeFileSync(fileURLToPath(new URL('../src/assets/khong-kich/v2/core-icons-refined.svg',import.meta.url)),`<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="2048" viewBox="0 0 1920 2048"><defs>${defs}</defs>\n${cells.join('\n')}\n</svg>\n`);

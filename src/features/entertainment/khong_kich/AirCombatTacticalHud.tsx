@@ -1,3 +1,5 @@
+import { EquipmentIcon } from "./EquipmentIcon";
+import { equipmentState } from "./airCombatEquipmentState";
 import React, { useEffect, useRef } from "react";
 import { Layers, Pause } from "lucide-react";
 import { AircraftPreview } from "./AircraftPreview";
@@ -8,9 +10,9 @@ import type { CombatWorld } from "./airCombatRuntime";
 import type { AirCombatHudSnapshot } from "./airCombatTypes";
 
 export interface HubTooltip { title: React.ReactNode; text: React.ReactNode }
-export function AirCombatTacticalHud({ world, hud, reducedMotion, onInspect, onCores, onPause, coreChoice }: {
+export function AirCombatTacticalHud({ world, hud, reducedMotion, onInspect, onCores, onEquipment, onPause, coreChoice }: {
   world: CombatWorld; hud: AirCombatHudSnapshot; reducedMotion: boolean; coreChoice: boolean;
-  onInspect: (id: string, tooltip: HubTooltip) => void; onCores: () => void; onPause: () => void;
+  onInspect: (id: string, tooltip: HubTooltip) => void; onCores: () => void; onEquipment: () => void; onPause: () => void;
 }) {
   const state=world.aircraft,aircraft=AIRCRAFT_CONFIGS[state.aircraftId];
   const xp=hud.combatXpRequired>0?Math.max(0,Math.min(1,state.combatXp/hud.combatXpRequired)):1;
@@ -36,6 +38,8 @@ export function AirCombatTacticalHud({ world, hud, reducedMotion, onInspect, onC
       </svg>
       <span className="air-hub-level">{state.level}</span>
     </button>
+    <div className="air-hub-equipment" aria-label="Trang bị đang mang">{equipmentState(state).equipped.map((item,i)=><button key={i} className="air-hub-equipment-slot" type="button" disabled={coreChoice} onClick={onEquipment} aria-label={`Trang bị ${i+1}`}>
+      {item?<EquipmentIcon id={item.definitionId}/>:<span>{i+1}</span>}</button>)}</div>
     <div className="air-hub-top">
       <button type="button" className="air-hub-number" data-combat-tooltip-trigger="hub" onClick={()=>onInspect("score",{title:<>Điểm Số: <strong className="air-tooltip-value">{integer(hud.score)}</strong></>,text:"Hạ địch có thưởng nhận điểm cơ bản theo loại địch × hệ số chuỗi tại thời điểm hạ. Dưới 10: ×1; 10–24: ×2; 25–49: ×3; từ 50: ×5. Chuỗi về 0 khi mất Máu do địch hoặc sau 4 giây không hạ địch."})}>
         <span>ĐIỂM SỐ</span><strong data-hud-score={hud.score}>{integer(hud.score)}</strong>
@@ -43,6 +47,7 @@ export function AirCombatTacticalHud({ world, hud, reducedMotion, onInspect, onC
       <button type="button" className="air-hub-number" data-combat-tooltip-trigger="hub" onClick={()=>onInspect("dps",{title:<>DPS: <strong className="air-tooltip-value">{integer(hud.dps)}</strong></>,text:"DPS là sát thương trung bình mỗi giây trong 5 giây gần nhất. Tính HP và Lá chắn thực tế bị mất do người chơi, kỹ năng và Lõi gây ra; không tính sát thương vượt Máu còn lại (overkill). Tổng trong 5 giây chiến đấu chia 5; cửa sổ đứng yên khi tạm dừng."})}>
         <span>DPS</span><strong ref={dpsNode}>{integer(hud.dps)}</strong>
       </button>
+      <button type="button" className="air-hub-equipment-button" data-equipment-target disabled={coreChoice} onClick={onEquipment}><EquipmentIcon id="TH20"/><span>Kho Trang Bị</span></button>
       <button type="button" className="air-hub-action" aria-label="Danh sách Lõi" disabled={coreChoice} onClick={onCores}><Layers aria-hidden="true"/></button>
       <button type="button" className="air-hub-action" aria-label="Tạm dừng" onClick={onPause}><Pause aria-hidden="true"/></button>
     </div>

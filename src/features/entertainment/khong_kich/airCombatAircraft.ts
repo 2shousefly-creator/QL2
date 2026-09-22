@@ -1,3 +1,6 @@
+import { applyEquipmentStats, equipmentUntargetable } from "./airCombatEquipmentStats";
+import { equipmentState, equipmentScale, equipmentEffect, equipmentMetric } from "./airCombatEquipmentState";
+import { equipmentResourceSpent } from "./airCombatEquipmentRuntime";
 import { applyExpansionStats, expansionState, expansionActive, expansionSkillCost, finishExpansionSkill, finishAbsorbShield, observeExpansionResource } from "./airCombatExpansion";
 import { recordCoreMetric } from "./airCombatTelemetry";
 import { releaseState, overheated } from "./airCombatReleaseState";
@@ -33,7 +36,7 @@ export function createAircraftCombatState(aircraftId: AircraftId): AircraftComba
             consumed: new Set(), criticalBudget: 1, criticalWindow: 0, droneCycle: 0, deferredCooldowns: {} },
     };
 }
-export function getEffectiveAircraftStats(state: AircraftCombatState, includeTemporary = true): EffectiveAircraftStats {
+export function getEffectiveAircraftStats(state: AircraftCombatState, includeTemporary = true, omittedEquipmentEffect?: number): EffectiveAircraftStats {
     const config = AIRCRAFT_CONFIGS[state.aircraftId], n = Math.min(29, Math.max(0, state.level - 1)), m = state.modifiers;
     const stats: EffectiveAircraftStats = {
         maxHp: config.baseStats.maxHp + config.growth.maxHp * n + m.maxHpFlat,
@@ -64,6 +67,7 @@ export function getEffectiveAircraftStats(state: AircraftCombatState, includeTem
         if (releaseState(state).mode === "giant") { stats.maxHp *= 1.3; stats.firepower *= 1.3; }
     }
     applyExpansionStats(state, stats, includeTemporary);
+    applyEquipmentStats(state, stats, includeTemporary, omittedEquipmentEffect);
     // Snapshot both positive sources before applying either conversion or any penalty.
     if (hasCore(state, 208)) {
         const hp = Math.max(0, stats.hpRegen - config.hpRegen.base);
@@ -221,6 +225,9 @@ export function getSkillRuntimeValues(state: AircraftCombatState, skillId: Skill
     if (skillId !== "escort_drone") v.cost *= costMultiplier;
     v.upkeepPerSecond *= costMultiplier * (skillId === "escort_drone" && expansionActive(state, "capacitorHawk") ? .85 : 1);
     if (expansionState(state).primarySkill === skillId) v.cooldown *= .85;
+    const equipmentCost = 1 - .15 * equipmentScale(state,31);
+    if(skillId !== "escort_drone")v.cost *= equipmentCost;
+    v.upkeepPerSecond *= equipmentCost;
     return v;
 }
 export function canBorrowSkill(state: AircraftCombatState, skillId: SkillId): boolean {
@@ -300,6 +307,9 @@ export function castSkill(state: AircraftCombatState, skillId: SkillId): SkillCa
     if (state.currentResource + Number.EPSILON < (skillId === "escort_drone" ? 5 : cost))
         return { cast: false, reason: "resource", resourceSpent: 0 };
     state.currentResource = Math.max(0, state.currentResource - cost);
+    equipmentResourceSpent(state,cost);
+    const equipmentCost = 1-.15*equipmentScale(state,31);
+    equipmentMetric(state,31,"saved",cost/equipmentCost-cost);
     observeExpansionResource(state, getEffectiveAircraftStats(state).maxResource);
     state.coreState.skillCasts++;
     if(isAstraSkill(skillId)) {
@@ -434,6 +444,8 @@ export function tickAircraftState(state: AircraftCombatState, deltaSeconds: numb
         const without=getEffectiveAircraftStats({...state,selectedCores:state.selectedCores.filter(id=>id!==`core_${row}`),coreState:{...state.coreState,stacks:{...state.coreState.stacks}}});
         resourceWithout.set(row,without.resourceRegen);
     }
+    const equipmentRegenWithout = new Map<number, EffectiveAircraftStats>();
+    for(const family of [28,32])if(equipmentScale(state,family))equipmentRegenWithout.set(family,getEffectiveAircraftStats(state,true,family));
     const missingHp = Math.max(0, stats.maxHp - state.currentHp);
     const healed = healAircraft(state, stats.hpRegen * dt);
     const healingMultiplier = state.status.healingReceivedUntil > state.coreState.time ? state.status.healingReceivedMultiplier : 1;
@@ -442,6 +454,8 @@ export function tickAircraftState(state: AircraftCombatState, deltaSeconds: numb
     const upkeep = state.droneActive && state.dronePhase === "active" ? getSkillRuntimeValues(state, "escort_drone").upkeepPerSecond : 0;
     const available = Math.max(0, state.currentResource + stats.resourceRegen * dt);
     const spent = Math.min(available, upkeep * dt);
+    equipmentResourceSpent(state,spent);
+    equipmentMetric(state,31,"saved",Math.min(available,upkeep/(1-.15*equipmentScale(state,31))*dt)-spent);
     if(upkeep>0)recordCoreMetric(state,43,"saved",Math.min(available,4*dt)-spent);
     if (state.droneActive) state.coreState.stacks.droneUpkeepSpent = (state.coreState.stacks.droneUpkeepSpent || 0) + spent;
     const resourceBefore = state.currentResource;
@@ -458,12 +472,16 @@ export function tickAircraftState(state: AircraftCombatState, deltaSeconds: numb
         if(expansionState(state).primarySkill==="escort_drone")recordCoreMetric(state,202,"saved",Math.min(available,upkeep/.85*dt)-spent);
         if(expansionActive(state,"capacitorHawk"))recordCoreMetric(state,172,"saved",Math.min(available,upkeep/.85*dt)-spent);
     }
+    for(const [family,without] of equipmentRegenWithout){
+      equipmentMetric(state,family,"extraHealing",healed-Math.min(missingHp,without.hpRegen*dt*healingMultiplier));
+      equipmentMetric(state,family,"extraResource",state.currentResource-Math.max(0,Math.min(stats.maxResource,resourceBefore+without.resourceRegen*dt-spent)));
+    }
     observeExpansionResource(state, stats.maxResource);
     if (state.droneActive && state.dronePhase === "active" && state.currentResource <= 0)
         endAircraftSkill(state, "escort_drone");
 }
 export function isPlayerInvisible(state: AircraftCombatState): boolean { return (state.activeEffects.invisibility || 0) > 0; }
-export function canAcquirePlayerTarget(state: AircraftCombatState): boolean { return !isPlayerInvisible(state); }
+export function canAcquirePlayerTarget(state: AircraftCombatState): boolean { return !isPlayerInvisible(state) && !equipmentUntargetable(state); }
 export function shouldAutoFire(state: AircraftCombatState): boolean { return !overheated(state) && (state.activeEffects.focus_laser || 0) <= 0 && (state.activeEffects.stellar_lance || 0) <= 0; }
 export function classifySkillPress(durationMs: number, longPressMs = 400): "tap" | "hold" { return durationMs >= longPressMs ? "hold" : "tap"; }
 export function shouldCastSkillPress(durationMs: number, holdActivated: boolean, cancelled: boolean, longPressMs = 400): boolean {

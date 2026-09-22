@@ -1,3 +1,4 @@
+import { grantEquipmentReward, randomEquipmentId } from "./airCombatEquipmentState";
 import { releaseState } from "./airCombatReleaseState";
 import { initializeReleaseCore, removeReleaseCoreState } from "./airCombatSelectionRules";
 import { CORE_SYSTEM_LABELS } from "./airCombatCoreSystems";
@@ -83,9 +84,13 @@ export function applyCore(state: AircraftCombatState, card: CoreCard, random: ()
 
         state.selectedCores.push(core.id);
         if("owner" in item)recordCoreMetric(state,item.owner,"converted",1);
-        state.coreState.acquisitions.push({ id: state.coreState.nextAcquisitionId++, coreId: core.id });
+        state.coreState.acquisitions.push({ id: state.coreState.nextAcquisitionId++, kind: "core", coreId: core.id });
         if (core.skillId)
             state.modifiers.skillCores[core.skillId] = core.id;
+        if(core.id==="core_223"||core.id==="core_225"||core.id==="core_226"){
+          grantEquipmentReward(state,randomEquipmentId(core.id==="core_223"?"TP":core.id==="core_225"?"TH":"HL",random),core.id);
+          recordCoreMetric(state,Number(core.id.slice(5)),"itemsReceived",1);
+        }
         initializeReleaseCore(state, core.id, random);
         syncEffectiveMaxHp(state);
         const after = getEffectiveAircraftStats(state);

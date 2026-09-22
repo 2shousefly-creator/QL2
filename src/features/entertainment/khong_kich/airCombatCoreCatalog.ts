@@ -713,7 +713,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_053",
     "name": "Găng bảo thạch",
-    "description": "Nhận +25% Tỷ Lệ Chí Mạng. Kỹ năng của bạn có thể chí mạng.",
+    "description": "Nhận +25% Tỷ Lệ Chí Mạng. Kỹ năng của bạn có thể chí mạng. Nếu đồng thời mang Mắt Tempest: +50 điểm phần trăm Sát Thương Chí Mạng toàn cục; Thiên Nhãn Raijin: +100 điểm phần trăm. Synergy chỉ áp dụng một lần theo family.",
     "system": "attack",
     "icon": "core:core_053",
     "category": "offense",
@@ -2802,6 +2802,50 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   "description": "Roll ngay khi nhận và mỗi 60 giây, độc lập 50/50. Thu Nhỏ: -50% kích thước và hitbox, +25 điểm phần trăm Giảm Hồi Chiêu (vẫn cap 80%), +50% Hồi Tài Nguyên/s. Khổng Lồ: +50% kích thước và hitbox, +30% Máu Tối Đa, +30% Hỏa Lực. Roll cùng trạng thái không cộng dồn lại; đổi trạng thái phải gỡ sạch bonus cũ trước khi áp bonus mới.",
   "system": "utility",
   "icon": "core:core_222",
+  "category": "weapon",
+  "tiers": [
+    "diamond"
+  ]
+},
+{
+  "id": "core_223",
+  "name": "Mảnh Ghép May Mắn",
+  "description": "Nhận 1 trang bị thành phần ngẫu nhiên",
+  "system": "utility",
+  "icon": "core:core_223",
+  "category": "weapon",
+  "tiers": [
+    "silver"
+  ]
+},
+{
+  "id": "core_224",
+  "name": "Thích Chơi Xác Suất",
+  "description": "Tăng xác suất quái vật rơi ra trang bị thành phần khi bị tiêu diệt từ 4% lên 6%. Quái Tinh Anh tiêu diệt thứ 2 trở đi trong wave tăng xác suất rơi trang bị thành phần từ 20% lên 30%.",
+  "system": "utility",
+  "icon": "core:core_224",
+  "category": "weapon",
+  "tiers": [
+    "gold"
+  ]
+},
+{
+  "id": "core_225",
+  "name": "Ăn Chắc Mặc Bền",
+  "description": "Nhận 1 trang bị hoàn chỉnh ngẫu nhiên",
+  "system": "utility",
+  "icon": "core:core_225",
+  "category": "weapon",
+  "tiers": [
+    "gold"
+  ]
+},
+{
+  "id": "core_226",
+  "name": "Rương Báu Vật",
+  "description": "Nhận 1 trang Bị Huyền Thoại ngẫu nhiên",
+  "system": "utility",
+  "icon": "core:core_226",
   "category": "weapon",
   "tiers": [
     "diamond"

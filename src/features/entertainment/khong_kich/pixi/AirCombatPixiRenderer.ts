@@ -1,3 +1,5 @@
+import { paintEquipment } from "../airCombatEquipmentArt";
+import { equipmentUntargetable } from "../airCombatEquipmentStats";
 import { releaseState, playerAirframeScale } from "../airCombatReleaseState";
 import { enemyAirframeRotation } from "../airCombatHitboxes";
 import { paintAstra } from "../airCombatAstraArt";
@@ -51,6 +53,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
   private magneticLayer = new Container();
   private magneticSprites: AirCombatSpritePool;
   private astraSprites: AirCombatSpritePool;
+  private equipmentSprites: AirCombatSpritePool;
   private enemies: AirCombatSpritePool;
   private projectiles: AirCombatSpritePool;
   private missiles: AirCombatMissilePool;
@@ -117,6 +120,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     this.sky = new AirCombatSky(assets);
     this.magneticSprites = new AirCombatSpritePool(this.magneticLayer, 512);
     this.astraSprites = new AirCombatSpritePool(this.magneticLayer, 192);
+    this.equipmentSprites = new AirCombatSpritePool(this.magneticLayer, 640);
     app.stage.addChild(this.root);
     this.root.addChild(this.sky.root, this.telegraphs, this.smokeLayer, this.actors, this.effects, this.magneticLayer, this.magneticWarnings, this.enemyStatusLayer, this.hitbox, this.damageText.root);
     // Separate stage branch: neither recoil nor camera shake can move status bars.
@@ -536,7 +540,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     }
     this.warnings.end();
 
-    const invisible = (world.aircraft.activeEffects.invisibility || 0) > 0;
+    const invisible = (world.aircraft.activeEffects.invisibility || 0) > 0 || equipmentUntargetable(world.aircraft);
     this.player.texture = this.assets.texture(visual.neutral);
     this.player.rotation = 0;
     this.player.position.set(world.playerX, world.playerY + (reducedMotion ? 0 : this.recoil));
@@ -644,6 +648,13 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
       if (hp < 0.4) this.vfx.spawn("damageSmoke", world.playerX + 5, world.playerY + 15, 31, 0.8, 0xffffff, 25);
       if (hp < 0.2) this.vfx.spawn("fire", world.playerX - 7, world.playerY + 13, 24, 0.35);
     }
+    this.equipmentSprites.begin();
+    paintEquipment(world,(id,frame,x,y,width,height,rotation,alpha)=>{
+      const sprite=this.equipmentSprites.get(id,this.assets.texture(frame));if(!sprite)return;
+      sprite.position.set(x,y);sprite.width=width;sprite.height=height;sprite.rotation=rotation;sprite.alpha=alpha;
+      sprite.blendMode=frame.atlas==="equipmentVfx"?"add":"normal";
+    });
+    this.equipmentSprites.end();
     this.app.render();
   }
 
@@ -656,6 +667,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     this.app.canvas.removeEventListener("webglcontextlost", this.onLost);
     this.magneticSprites.destroy();
     this.astraSprites.destroy();
+    this.equipmentSprites.destroy();
     this.enemies.destroy(); this.missileSmoke.destroy(); this.projectiles.destroy(); this.missiles.destroy(); this.projectileGlows.destroy(); this.afterimages.destroy(); this.companions.destroy(); this.warnings.destroy(); this.engines.destroy(); this.vfx.destroy();
     this.app.destroy(true, { children: true, texture: false, textureSource: false });
     this.assets.destroy();

@@ -1,3 +1,4 @@
+import { EQUIPMENT_ART } from "../airCombatEquipmentArt";
 import { ASTRA_ART, ASTRA_VFX_FRAMES } from "../airCombatAstraArt";
 import { ENEMY_VISUALS } from "../airCombatEnemyArt";
 import { STAGE2_ART_URLS, STAGE2_ENEMY_ART, STAGE2_VFX_ART, TEMPEST_WEAKPOINT_ART } from "../airCombatStage2Art";
@@ -54,7 +55,8 @@ export async function loadAirCombatAssets() {
     Assets.load<Texture>(STAGE2_ART_URLS.enemy), Assets.load<Texture>(STAGE2_ART_URLS.vfx), Assets.load<Texture>(STAGE2_ART_URLS.storm), Assets.load<Texture>(STAGE2_ART_URLS.elite),
   ]);
   const [astraAircraft,astraEffects,astraVfx]=await Promise.all([Assets.load<Texture>(ASTRA_ART.aircraft),Assets.load<Texture>(ASTRA_ART.effects),Assets.load<Texture>(ASTRA_ART.combatVfx)]);
-  const sources = { astraVfx,astraAircraft,astraEffects,aircraft, fortress, vfx, ammo, basicAmmo, healingCross, stage2Enemy, stage2Vfx, stage2Elite };
+  const [equipmentIcons,equipmentVfx]=await Promise.all([Assets.load<Texture>(EQUIPMENT_ART.icons),Assets.load<Texture>(EQUIPMENT_ART.vfx)]);
+  const sources = { equipmentIcons,equipmentVfx,astraVfx,astraAircraft,astraEffects,aircraft, fortress, vfx, ammo, basicAmmo, healingCross, stage2Enemy, stage2Vfx, stage2Elite };
   const frames = new Map<AtlasFrame, Texture>();
   const texture = (definition: AtlasFrame) => {
     const cached = frames.get(definition);

@@ -1,3 +1,4 @@
+import type { EquipmentState, AcquisitionEvent } from "./airCombatEquipmentState";
 import type { PlayerCombatStatus } from "./airCombatStatus";
 export type AircraftId = "black_eagle" | "breaker" | "phantom" | "astra";
 
@@ -138,6 +139,7 @@ export interface AircraftModifiers {
 }
 
 export interface AircraftCombatState {
+  equipment?: EquipmentState;
   status: PlayerCombatStatus;
   aircraftId: AircraftId;
   level: number;
@@ -290,7 +292,7 @@ export interface CoreRuntimeState {
   release?: import("./airCombatReleaseState").ReleaseCoreState;
   expansion?: import("./airCombatExpansion").ExpansionState;
   /** Explicit run-local acquisition journal, including conversion rewards; bounded by the finite catalog. */
-  acquisitions: { id: number; coreId: CoreId }[];
+  acquisitions: AcquisitionEvent[];
   nextAcquisitionId: number;
   healingTotal: number;
   telemetry: Record<CoreId, Partial<Record<import("./airCombatTelemetry").CoreMetric, number>>>;

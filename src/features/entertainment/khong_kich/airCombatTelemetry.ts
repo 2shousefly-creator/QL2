@@ -7,6 +7,7 @@ export const BOUNTY_REWARDS = [
   {key:"criticalDamageMultiplierFlat",amount:.06,label:"Sát Thương Chí Mạng",percent:true}, {key:"fireRateFlat",amount:.12,label:"Tốc Độ Bắn"},
 ] as const;
 export const CORE_METRIC_LABELS = {
+  itemsReceived:"Trang bị đã nhận", extraDrops:"Trang bị rơi thêm",normalDrops:"Rơi thêm từ quái thường",eliteDrops:"Rơi thêm từ Tinh Anh",
   debtPaid:"Nợ hồi chiêu đã trả (giây)",
   granted:"Token đã nhận", spent:"Token đã dùng", discarded:"Token bỏ do đầy kho", peak:"Giá trị cao nhất",
   remembered:"ID đã ghi nhớ", alternatives:"Reroll tìm được Hệ khác", skipped:"Ứng viên cùng Hệ đã bỏ qua", rerolls:"Reroll ô thứ 4", picks:"Lần chọn ô đặc biệt", guaranteed:"Ô bảo đảm đã tạo", fallbacks:"Lần hết ứng viên Hệ",
