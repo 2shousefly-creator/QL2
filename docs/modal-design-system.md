@@ -53,17 +53,9 @@ Counts by composition: 23 info, 16 confirm, 16 transaction, 15 result (including
 | `src/features/entertainment/big_small/BigSmallBetModal.tsx` | transaction ×1 |
 | `src/features/entertainment/big_small/BigSmallResultModal.tsx` | result ×1 |
 | `src/features/entertainment/big_small/BigSmallRulesModal.tsx` | info ×1 |
-| `src/features/entertainment/chien_tuyen/ChienTuyenGame.tsx` | info ×1, confirm ×1 |
-| `src/features/entertainment/chien_tuyen/ChienTuyenScreen.tsx` | ceremony ×1, info ×1 |
-| `src/features/entertainment/chien_tuyen/components/CampaignResult.tsx` | info ×1, result ×1 |
-| `src/features/entertainment/chien_tuyen/components/QuickFinishConfirmModal.tsx` | confirm ×1 |
-| `src/features/entertainment/chien_tuyen/components/TroopDetailModal.tsx` | info ×1 |
-| `src/features/entertainment/chien_tuyen/components/TroopUpgradeModal.tsx` | transaction ×1 |
 | `src/features/entertainment/khong_kich/AirCombatCanvas.tsx` | transaction ×1, confirm ×2 |
 | `src/features/entertainment/khong_kich/AirCombatResult.tsx` | result ×1 |
 | `src/features/entertainment/khong_kich/KhongKichScreen.tsx` | info ×1 |
-| `src/features/entertainment/tank_battle/TankBattleCanvas.tsx` | transaction ×1, confirm ×2 |
-| `src/features/entertainment/tank_battle/TankBattleResult.tsx` | result ×1 |
 | `src/features/journey/JourneyMapScreen.tsx` | info ×1 |
 | `src/features/profile/JournalScreen.tsx` | info ×1 |
 | `src/features/profile/ProfileScreen.tsx` | transaction ×2 |
@@ -133,20 +125,9 @@ No gameplay tests, simulations, runtime rendering, screenshots or device QA were
 - `src/features/entertainment/big_small/BigSmallBetModal.tsx`
 - `src/features/entertainment/big_small/BigSmallResultModal.tsx`
 - `src/features/entertainment/big_small/BigSmallRulesModal.tsx`
-- `src/features/entertainment/chien_tuyen/ChienTuyenGame.tsx`
-- `src/features/entertainment/chien_tuyen/ChienTuyenScreen.tsx`
-- `src/features/entertainment/chien_tuyen/chienTuyen.css`
-- `src/features/entertainment/chien_tuyen/chienTuyenUxPolish.css`
-- `src/features/entertainment/chien_tuyen/components/CampaignResult.tsx`
-- `src/features/entertainment/chien_tuyen/components/QuickFinishConfirmModal.tsx`
-- `src/features/entertainment/chien_tuyen/components/TroopDetailModal.tsx`
-- `src/features/entertainment/chien_tuyen/components/TroopUpgradeModal.tsx`
 - `src/features/entertainment/khong_kich/AirCombatCanvas.tsx`
 - `src/features/entertainment/khong_kich/AirCombatResult.tsx`
 - `src/features/entertainment/khong_kich/KhongKichScreen.tsx`
-- `src/features/entertainment/tank_battle/TankBattleCanvas.tsx`
-- `src/features/entertainment/tank_battle/TankBattleResult.tsx`
-- `src/features/entertainment/tank_battle/TankBattleScreen.tsx`
 - `src/features/journey/JourneyMapScreen.tsx`
 - `src/features/profile/JournalScreen.tsx`
 - `src/features/profile/MedalsScreen.tsx`

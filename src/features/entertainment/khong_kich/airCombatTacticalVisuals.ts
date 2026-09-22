@@ -28,14 +28,6 @@ export function paintTacticalCores(world:CombatWorld,p:TacticalPainter,reducedMo
   }
   for(const e of world.enemies){
     if(e.hp<=0)continue;
-    const deathMark=releaseState(world.aircraft).mark;
-    if(deathMark?.target===e.id&&deathMark.until>now){
-      const radius=e.radius*.95,width=Math.max(4,e.radius*.23);
-      for(const side of [-1,1]){
-        p.line(e.x-radius,e.y-side*radius,e.x+radius,e.y+side*radius,0x78365e,.9,width+3);
-        p.line(e.x-radius,e.y-side*radius,e.x+radius,e.y+side*radius,0x030207,1,width);
-      }
-    }
     const effect=world.skillCores.enemyEffects.get(e.id),large=e.type==="boss"||e.eliteWave>0;
     const labels:{text:string;color:number}[]=[];
     const marks=e.expansionMarks;
@@ -63,6 +55,23 @@ export function paintTacticalCores(world:CombatWorld,p:TacticalPainter,reducedMo
   const wave=(c.timers.antimatterWave??0)-c.time;
   if(wave>0)p.circle(world.playerX,world.playerY,reducedMotion?160:900*(1-wave/.65),0xa5f3fc,Math.min(.8,wave*2));
   for(const side of [-1,1]){const remaining=(c.timers[`wing:${side<0?"left_wing":"right_wing"}`]??0)-c.time,scale=playerAirframeScale(world.aircraft);if(remaining>11.6)p.circle(world.playerX+side*11*scale,world.playerY+5*scale,7*scale,0xbae6fd,(remaining-11.6)*2,true);}
+}
+
+/** Target-attached marks are painted after airframes and defensive auras. */
+export function paintEnemyForegroundMarks(world:CombatWorld,p:TacticalPainter):void {
+  if(world.ended)return;
+  const now=world.elapsed;
+  for(const e of world.enemies){
+    if(e.hp<=0)continue;
+    const deathMark=releaseState(world.aircraft).mark;
+    if(deathMark?.target===e.id&&deathMark.until>now){
+      const radius=e.radius*.95,width=Math.max(4,e.radius*.23);
+      for(const side of [-1,1]){
+        p.line(e.x-radius,e.y-side*radius,e.x+radius,e.y+side*radius,0x78365e,.9,width+3);
+        p.line(e.x-radius,e.y-side*radius,e.x+radius,e.y+side*radius,0x030207,1,width);
+      }
+    }
+  }
 }
 
 /** Fixed warning geometry remains fully visible with Reduced Motion enabled. */

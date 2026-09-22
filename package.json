@@ -4,7 +4,6 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "nddv:import": "tsx scripts/ngu-dai-de-vuong/import-xlsx.ts",
     "dev": "tsx server.ts",
     "build": "vite build && esbuild server.ts --bundle --platform=node --format=cjs --packages=external --sourcemap --outfile=dist/server.cjs",
     "start": "node dist/server.cjs",
@@ -18,8 +17,6 @@
     "test:gomoku": "tsx --test scripts/gomoku/core.test.ts scripts/gomoku/runtime.test.ts",
     "bench:gomoku": "tsx scripts/gomoku/benchmark.ts",
     "test:air-combat": "tsx src/features/entertainment/khong_kich/airCombatEngine.test.ts && tsx src/features/entertainment/khong_kich/airCombatRuntime.test.ts && tsx src/features/entertainment/khong_kich/airCombatStorage.test.ts",
-    "test:chien-tuyen": "tsx src/features/entertainment/chien_tuyen/domainEngine.test.ts && tsx src/features/entertainment/chien_tuyen/profileEngine.test.ts && tsx src/features/entertainment/chien_tuyen/towerFloorCatalog.test.ts && tsx src/features/entertainment/chien_tuyen/combatEngine.test.ts && tsx src/features/entertainment/chien_tuyen/phase5Combat.test.ts && tsx src/features/entertainment/chien_tuyen/phase6Update.test.ts && tsx src/features/entertainment/chien_tuyen/engine.test.ts && tsx src/features/entertainment/chien_tuyen/immediateUltimate.test.ts && tsx src/features/entertainment/chien_tuyen/fixed2xActionTurn.test.ts && tsx src/features/entertainment/chien_tuyen/medicCasualtyCare.test.ts && tsx src/features/entertainment/chien_tuyen/gameStateIntegration.test.ts && tsx src/features/entertainment/chien_tuyen/uxPolish.test.ts && tsx src/features/entertainment/chien_tuyen/balanceSimulation.test.ts && tsx src/features/entertainment/chien_tuyen/superExpansion.test.ts",
-    "test:tank-battle": "tsx src/features/entertainment/tank_battle/tankBattleEngine.test.ts && tsx src/features/entertainment/tank_battle/tankBattleRuntime.test.ts && tsx src/features/entertainment/tank_battle/tankBattleStorage.test.ts && tsx src/features/entertainment/tank_battle/tankBattleV2Engine.test.ts",
     "test:quality": "tsx src/features/tang_gia/qualityReward.test.ts",
     "test:pen-timeline": "tsx src/features/tang_gia/penTimeline.test.ts",
     "test:farm": "npm run test:pen-timeline && tsx src/features/tang_gia/farmEngine.test.ts && tsx src/features/tang_gia/animalLifecycle.test.ts && tsx src/features/tang_gia/farmVisualTheme.test.ts && tsx src/features/tang_gia/farmUiPolish.test.ts && npm run test:quality",
@@ -33,7 +30,6 @@
     "push:d1:migrate": "wrangler d1 migrations apply ql2-push --remote --config cloudflare/push-worker/wrangler.jsonc"
   },
   "dependencies": {
-    "@esotericsoftware/spine-pixi-v8": "~4.2.0",
     "@google-cloud/firestore": "^9.0.0",
     "@google-cloud/tasks": "^7.0.0",
     "@google/genai": "^2.4.0",
@@ -62,7 +58,6 @@
     "tsx": "^4.21.0",
     "typescript": "~5.8.2",
     "vite": "^6.2.3",
-    "wrangler": "^4.130.0",
-    "xlsx": "^0.18.5"
+    "wrangler": "^4.130.0"
   }
 }

@@ -1,3 +1,4 @@
+import { astraOrbitProtectionActive } from "./airCombatAstra";
 import { equipmentStatuses } from "./airCombatEquipmentPresentation";
 import type { EquipmentRewardId } from "./airCombatEquipmentState";
 import { canSkillsCrit, getTempestJewelledCritDamageBonus } from "./airCombatEquipmentStats";
@@ -314,6 +315,7 @@ function skillCoreStatuses(world:CombatWorld):StatusPresentation[] {
     result.push({id:core.id,group:"buff",name:core.name,icon:{kind:"core",id:core.id},description:core.description,source:"Lõi kỹ năng",
       stacks:1,remaining:Infinity,duration:Infinity,priority:85,showNumericTimer:false,...values});
   };
+  if(astraOrbitProtectionActive(world))add(153,{badgeText:"−60%",badgeKind:"percent",timeLabel:world.astra?.orbit?"Bảo hộ · bắt giữ Tinh Đạn":"Bảo hộ · hội tụ và bắn trả"});
   const activeDecoys=world.decoys.some(d=>!d.clone&&d.active&&d.remaining>0);
   const cover=(c.timers.thermalCover||0)-c.time;
   if(hasCore(s,124)&&(activeDecoys||cover>0))add(124,{remaining:activeDecoys?Infinity:cover,duration:V.thermalTail,badgeText:`−${V.thermalReduction*100}%`,badgeKind:"percent",showNumericTimer:!activeDecoys,timeLabel:activeDecoys?"Duy trì bởi mồi đang hoạt động":undefined});
@@ -342,6 +344,7 @@ export function getCoreTelemetryPresentation(state:AircraftCombatState,id:CoreId
   if(row===210)return [];
   if(row>=223){const t=c.telemetry?.[id]??{};return row===224?[`Trang bị rơi thêm: ${t.extraDrops??0}`,`Quái thường: ${t.normalDrops??0} · Tinh Anh sau đầu wave: ${t.eliteDrops??0}`]:[`${row===223?"Trang bị thành phần":row===225?"Trang bị hoàn chỉnh":"Trang bị Huyền Thoại"} đã nhận: ${t.itemsReceived??0}`];}
   const values=c.telemetry?.[id]??{},lines:string[]=[];
+  if(row===160)return [`Tia Sao Băng đã bắn: ${values.procs??0}`,`Mục tiêu trúng lần đầu mỗi tia: ${values.hits??0}`,`Sát thương tia thực tế: ${amount(values.damage??0)}`];
   const resource=stats.resourceKind==="mana"?"Mana":"Điện";
   const labels:Record<number,Record<string,string>>={
     100:{firepowerTime:"Thời gian +20 Hỏa Lực (giây)",armorTime:"Thời gian +20 Giáp (giây)",regenTime:"Thời gian +8 Hỏa Lực / +8 Giáp (giây)"},

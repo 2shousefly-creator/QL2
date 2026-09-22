@@ -1,9 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="512" height="384" viewBox="0 0 512 384"><defs>
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512"><defs>
 <radialGradient id="heat"><stop stop-color="#fffce2"/><stop offset=".2" stop-color="#ffe68a"/><stop offset=".48" stop-color="#ff962e" stop-opacity=".85"/><stop offset="1" stop-color="#ef4818" stop-opacity="0"/></radialGradient>
 <linearGradient id="plasma" x1="0" y1="1" x2="0" y2="0"><stop stop-color="#fffbe1"/><stop offset=".23" stop-color="#ffd875"/><stop offset=".48" stop-color="#ff7b24"/><stop offset="1" stop-color="#8b291e" stop-opacity="0"/></linearGradient>
 <linearGradient id="stone" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#82716c"/><stop offset=".32" stop-color="#38303a"/><stop offset=".72" stop-color="#171824"/><stop offset="1" stop-color="#8d3824"/></linearGradient>
 <radialGradient id="scorch"><stop stop-color="#ffa545" stop-opacity=".75"/><stop offset=".3" stop-color="#7d331f" stop-opacity=".7"/><stop offset=".7" stop-color="#241c22" stop-opacity=".85"/><stop offset="1" stop-color="#211f27" stop-opacity="0"/></radialGradient>
-</defs>
+<linearGradient id="guardMetal" x2="1" y2="1"><stop stop-color="#ffffff"/><stop offset=".35" stop-color="#a4f6ff"/><stop offset=".6" stop-color="#397596"/><stop offset="1" stop-color="#e1fbff"/></linearGradient>
+<linearGradient id="spearSheath"><stop stop-color="#ff8f3e" stop-opacity="0"/><stop offset=".22" stop-color="#ffad59" stop-opacity=".45"/><stop offset=".4" stop-color="#ffdb80"/><stop offset=".5" stop-color="#ffffed"/><stop offset=".6" stop-color="#ffdb80"/><stop offset=".78" stop-color="#ffad59" stop-opacity=".45"/><stop offset="1" stop-color="#ff8f3e" stop-opacity="0"/></linearGradient></defs>
 <g transform="translate(0 0)"><g>
 <path d="M42 98C10 61 39 30 31 5Q59 22 56 53L68 4Q85 25 80 53L102 19Q116 68 91 106Z" fill="url(#plasma)" opacity=".6"/>
 <path d="M47 101Q30 67 53 16Q51 55 68 64Q79 53 91 37Q84 73 96 101Z" fill="url(#plasma)"/>
@@ -64,4 +65,20 @@
 <g transform="translate(128 256)"><circle cx="64" cy="64" r="62" fill="url(#heat)"/><ellipse cx="64" cy="64" rx="27" ry="12" fill="#ffedb0" opacity=".45"/><path d="M13 64H115M64 43V85" stroke="#fff7df" stroke-width="2" opacity=".6"/></g>
 <g transform="translate(256 256)"><path d="M64 126Q33 75 64 2Q95 77 64 126Z" fill="url(#plasma)" opacity=".65"/><path d="M64 124L59 30L64 4L69 30Z" fill="#fff7cd" opacity=".9"/><path d="M48 104L43 41M80 100L86 24" stroke="#ffbd69" stroke-width="2" opacity=".6"/></g>
 <g transform="translate(384 256)"><g fill="#583027" stroke="#ffbc68" stroke-width="2"><path d="M64 7L71 18L67 28L59 23L57 13Z"/><path d="M104 27L111 35L103 46L97 41Z"/><path d="M105 91L116 99L109 111L99 103Z"/><path d="M49 101L53 114L41 119L36 110Z"/><path d="M9 67L21 61L29 72L16 78Z"/></g><g fill="#ffdb86"><circle cx="31" cy="30" r="2"/><circle cx="84" cy="111" r="2"/><circle cx="118" cy="64" r="2"/><circle cx="63" cy="41" r="2"/></g></g>
+<g transform="translate(0 384)" fill="none">
+<ellipse cx="64" cy="64" rx="55" ry="43" transform="rotate(-28 64 64)" stroke="#68dfff" stroke-width="8" opacity=".13"/>
+<ellipse cx="64" cy="64" rx="53" ry="40" transform="rotate(-28 64 64)" stroke="url(#guardMetal)" stroke-width="2"/>
+<ellipse cx="64" cy="64" rx="44" ry="55" transform="rotate(26 64 64)" stroke="#bceeff" stroke-width="1.5" opacity=".65"/>
+<path d="M14 43 21 28 36 20 31 29 23 38 20 50ZM91 104 107 92 114 76 108 80 102 92 91 98ZM45 10 63 5 81 10 74 16H54ZM47 118 64 123 82 117 73 111H55Z" fill="url(#guardMetal)" stroke="#d4fbff"/>
+<path d="M29 18 32 25 39 28 32 31 29 39 26 31 19 28 26 25ZM99 89 102 96 110 99 102 102 99 110 96 102 88 99 96 96Z" fill="#ffe4a0"/>
+<path d="M9 65 16 59 19 65 16 71ZM111 59 119 65 112 71 108 65Z" fill="#bffaff"/>
+</g>
+<g transform="translate(128 384)"><path d="M64 0 128 17 128 128H0V17Z" fill="url(#spearSheath)"/>
+<path d="M64 0 72 18 68 128H60L56 18Z" fill="#ffffed"/>
+<path d="M37 128 47 83 36 56 48 19M92 128 81 84 92 52 80 19" fill="none" stroke="#ffc66f" stroke-width="2" opacity=".7"/>
+<path d="M23 114 40 76 31 59 44 32M105 114 88 76 97 59 84 32" fill="none" stroke="#87e7f6" stroke-width="1" opacity=".45"/></g>
+<g transform="translate(256 384)"><path d="M64 4 101 72 76 65 72 119H56L52 65 27 72Z" fill="url(#guardMetal)"/>
+<path d="M64 9 81 61 68 54 64 125 60 54 47 61Z" fill="#ffffdf"/>
+<path d="M64 15V101M41 77 36 111M87 77 92 111" stroke="#ffcf7c" stroke-width="3"/>
+<path d="M64 3 69 28 91 39 68 45 64 67 60 45 37 39 59 28Z" fill="#fff2be" opacity=".65"/></g>
 </svg>

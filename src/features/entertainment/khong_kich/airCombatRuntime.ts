@@ -7,7 +7,7 @@ import { syncEffectiveMaxHp } from "./airCombatAircraft";
 import { tickCoreTelemetry } from "./airCombatReleaseTelemetry";
 import { expansionState, expansionActive, expansionOutgoing, expansionIncoming, celestialProtection, activeNegativeStatusTypes, hasAbsorbShield, prepareAbsorbShield, finishAbsorbShield, finishExpansionSkill, createAbsorbShield, type ExpansionCast } from "./airCombatExpansion";
 import { castExpansion, tickExpansion, expansionHpLoss, deferExpansionDamage, expansionKill, settleExpansionShields, satellitePositions, slowExpansionProjectile, type ExpansionHooks } from "./airCombatExpansionRuntime";
-import { astraMetric, beginAstraSkill, updateAstra, captureAstraProjectiles, releaseOrbit, freezeAstraTarget, isAstraSkill, type AstraRuntime, type AstraHooks } from "./airCombatAstra";
+import { astraOrbitProtectionActive, exitStellarLance, type StellarLancePath, astraMetric, beginAstraSkill, updateAstra, captureAstraProjectiles, releaseOrbit, freezeAstraTarget, isAstraSkill, type AstraRuntime, type AstraHooks } from "./airCombatAstra";
 import { BOUNTY_REWARDS } from "./airCombatTelemetry";
 import { stageEnemyConfig } from "./airCombatConfig";
 import type { MagneticVfxKey } from "./airCombatStage2Art";
@@ -131,7 +131,7 @@ export interface ProjectileEntity extends AttackMetadata {
     extraPierceOrdinal?: number;
     expansionCast?: ExpansionCast; expansionSlowUntil?: number;
     primaryShot?: { resolved: boolean };
-    astraLance?:{later:number};
+    astraLance?:{later:number;followup?:StellarLancePath};
     magnetic?: MagneticProjectileState;
     magneticAreaId?: number;
     magneticVisual?: MagneticVfxKey;
@@ -1316,7 +1316,7 @@ function updateDecoySalvo(world: CombatWorld, dt: number): void {
 function stopAllSkills(world: CombatWorld, preserveControl = false): void {
     for (const id of SKILL_IDS)
         endAircraftSkill(world.aircraft, id);
-    if(world.astra){world.astra.orbit=undefined;world.astra.charge=undefined;world.astra.starfall=undefined;world.astra.burns=[];}
+    if(world.astra){world.astra.orbit=undefined;world.astra.charge=undefined;world.astra.starfall=undefined;world.astra.burns=[];world.astra.meteorSpears=[];}
     world.missilesPending = 0;
     const bounty=world.skillCores;
     world.skillCores = {...createSkillCoreRuntime(),bountyTarget:bounty.bountyTarget,bountyUntil:bounty.bountyUntil,bountyReady:bounty.bountyReady};
@@ -2645,6 +2645,11 @@ function repayExpansionDebt(world: CombatWorld, amount: number) {
     if (hasCore(state,72) && c.time - c.lastDamage >= 5) reduction *= .6;
     if (expansionActive(state,"thermalCover")) reduction *= 1 - V.thermalReduction;
     reduction *= equipmentIncoming(state);
+    if(astraOrbitProtectionActive(world)) {
+        const capacity=state.currentHp+Object.values(c.shields).filter(sh=>sh.until>c.time).reduce((n,sh)=>n+sh.amount,0);
+        recordCoreMetric(state,153,"prevented",Math.min(capacity,amount*reduction)-Math.min(capacity,amount*reduction*.4));
+        reduction*=.4;
+    }
     let damage = amount * reduction, absorbed = 0;
     for (const [key,shield] of Object.entries(c.shields)) {
         if (shield.until <= c.time || shield.amount <= 0) continue;
@@ -2742,7 +2747,7 @@ function applyDamageToEnemy(world: CombatWorld, enemy: EnemyEntity, rawDamage: n
     if(opening)tacticalState(world).openingHits.set(enemy.id, target.elite || target.boss ? time + 10 : Infinity);
     let effectiveStats = opening ? {...stats,criticalChance:1} : canCrit ? stats : { ...stats, criticalChance: 0 };
     const skillEffects = world.skillCores.enemyEffects.get(enemy.id);
-    const skillPen=skillId==="orbit_reversal"&&hasCore(state,153)?.25:skillId==="stellar_lance"&&hasCore(state,158)?.30:0;
+    const skillPen=skillId==="stellar_lance"&&hasCore(state,158)?.30:0;
     const armor = enemy.armor * equipmentArmorMultiplier(state,enemy) * (1-skillPen) * ((enemy.astraArmorUntil??0)>world.elapsed?.7:1) * ((skillEffects?.armorUntil || 0)>time ? 1 - V.laserArmorReduction : 1) * ((enemy.armorBrokenUntil??0)>world.elapsed?.7:1) * ((enemy.burnArmorUntil || 0) > time ? .8 : 1) * (enemy.weakUntil > time ? .92 : 1) * ((enemy.weakDebuffUntil || 0) > time ? .85 : 1) * (1 - armorPenetration(state));
     if (directPlayer && (marks.criticalLock ?? 0) > time) effectiveStats = { ...effectiveStats, criticalDamageMultiplier: effectiveStats.criticalDamageMultiplier + .35 };
     const whiteHole=source==="basic"&&(state.coreState.timers.whiteHole??0)>time;
@@ -2819,7 +2824,7 @@ function applyDamageToEnemy(world: CombatWorld, enemy: EnemyEntity, rawDamage: n
         };
         const factor=(row:number,value:number)=>{if(hasCore(state,row))bonus(row,1-1/value);};
         if(whiteHole){bonus(155,.6/1.6);astraMetric(world,"orbit.whiteHoleBonusDamage",damage-Math.min(hpBefore,Math.max(0,resolvedBeforeShield/1.6-shieldBeforeHit)));}
-        if(skillPen)bonus(skillId==="stellar_lance"?158:153,Math.max(0,1-(100+Math.max(-80,armor))/(100+Math.max(-80,armor/(1-skillPen)))));
+        if(skillPen)bonus(158,Math.max(0,1-(100+Math.max(-80,armor))/(100+Math.max(-80,armor/(1-skillPen)))));
         for(const [row,fraction] of shotBonuses)bonus(row,fraction);
         const equipmentContribution=(family:number,fraction:number,key="bonusDamage")=>{
           const budget=resolvedBeforeShield*(1-Math.max(0,Math.min(1,fraction))),shield=Math.min(shieldBeforeHit,budget*shieldFactor);
@@ -3089,6 +3094,8 @@ function hitPlayer(world: CombatWorld, rawDamage: number, kind: "projectile" | "
     if (hasCore(state, 72) && c.time - c.lastDamage >= 5)
         multiplier *= .6;
     if ((c.timers.thermalCover || 0)>c.time) multiplier *= 1 - V.thermalReduction;
+    const orbitProtection=astraOrbitProtectionActive(world);
+    if(orbitProtection)multiplier*=.4;
     multiplier *= expansionIncoming(state);
     const electric=hasCore(state,177)&&(attack.homing||attack.delivery==="beam"||attack.attackTag==="emp"||attack.attackTag==="boss_emp");
     const latch=expansionActive(state,"safetyLatch");
@@ -3121,6 +3128,7 @@ function hitPlayer(world: CombatWorld, rawDamage: number, kind: "projectile" | "
     const attacker=world.enemies.find(e=>e.id===attack.sourceEnemyId);
     if(attacker&&equipmentScale(state,16)){const reflected=Math.min(incomingCapacity,damage/gorgon)-Math.min(incomingCapacity,damage);equipmentMetric(state,16,"damage",resolveEquipmentDamage(world,attacker,reflected,16));equipmentFx(world,16,attacker.x,attacker.y,48,.5,attacker.id,{x:world.playerX,y:world.playerY});}
     const exactPrevented=(row:number,factor:number)=>recordCoreMetric(state,row,"prevented",Math.min(incomingCapacity,damage/factor)-Math.min(incomingCapacity,damage));
+    if(orbitProtection){exactPrevented(153,.4);recordCoreMetric(state,153,"protectedHits",1);}
     if(wingProtection){recordCoreMetric(state,109,"hits",1);exactPrevented(109,.7);}
     if(electric){recordCoreMetric(state,177,"hits",1);exactPrevented(177,.75);}
     if(latch){recordCoreMetric(state,171,"procs",1);exactPrevented(171,.75);}
@@ -3309,7 +3317,6 @@ function updateProjectileCollisions(world: CombatWorld): void {
             if(p.skillId==="orbit_reversal"){astraMetric(world,"orbit.hits");astraMetric(world,"orbit.damage",dealt);}
             if(p.astraLance){
                 emitVisual(world,{kind:"astra_lance_impact",skillId:"stellar_lance",x:contact.x,y:contact.y,size:enemy.type==="boss"||isElite(enemy.type)?28:23});
-                if(hasCore(world.aircraft,160)&&!segmentVsAircraft(p.previousX,p.previousY,p.x,p.y,6,getEnemyHitbox(enemy),projectileContact).hit)recordCoreMetric(world.aircraft,160,"hits",1);
                 astraMetric(world,`lance.${p.hitIds.length===1?"firstHits":"penetratedHits"}`);astraMetric(world,"lance.damage",dealt);
                 p.rawDamage=p.astraLance.later;p.telemetryBonuses=hasCore(world.aircraft,157)?[[157,1-6.8/9.3]]:undefined;continue;
             }
@@ -3628,6 +3635,7 @@ function updateProjectiles(world: CombatWorld, dt: number): void {
                 p.vy = -p.vy;
         }
         else if (outside){
+            if(p.astraLance && p.vy<0 && p.y<GAMEPLAY_SAFE_RECT.top-20 && p.x>=-20 && p.x<=380)exitStellarLance(world,p);
             // Primary shots settle their last swept contact before counting a miss.
             if(p.mainBasicMiss)continue;
             recycleProjectile(world, i);
@@ -4254,7 +4262,7 @@ function settleBountyKill(world:CombatWorld,enemy:EnemyEntity) {
 }
 
 const astraHooks:AstraHooks={impact:(w,x,y,radius)=>emitVisual(w,{kind:"astra_starfall_impact",skillId:"starfall",x,y,size:radius*2}),projectile:addProjectile,hostile:isHostileToPlayer,remove:recycleProjectile,
-    damage:(w,e,raw,skill,burn,cast)=>applyDamageToEnemy(w,e,raw,"#ff943f",burn?"burn":"skill",skill,undefined,undefined,"explosive_aoe",true,true,undefined,1,[],cast)};
+    damage:(w,e,raw,skill,burn,cast,beam)=>applyDamageToEnemy(w,e,raw,"#ff943f",burn?"burn":"skill",skill,undefined,undefined,beam?"beam":"explosive_aoe",true,true,undefined,1,[],cast)};
 
 /** Equipment procs share enemy mitigation, shields, overkill, boss feedback and DPS,
  * but cannot recursively dispatch hit/critical/Core proc hooks. */

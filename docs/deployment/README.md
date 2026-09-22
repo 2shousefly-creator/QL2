@@ -62,8 +62,7 @@ URL legacy được giữ trong `pushManager.ts` và `src/server/config.ts`: bac
 | `quan_lo_manual_update_backup`, `quan_lo_app_update_backup_v1` | Backup manual/emergency update |
 | `quan_lo_app_update_pending_v1`, `quan_lo_just_updated` | Marker phục hồi/trạng thái cập nhật |
 | `quan_lo_installed_build_v1`, `quan-lo-installed-build-v1` | Marker phiên bản đã chấp nhận |
-| `quan_lo_air_combat_v1`, `quan_lo_tank_battle_v1` | Save minigame riêng, đưa vào export mới |
-| `quan_lo_chien_tuyen_v1` | Hồ sơ Chiến Tuyến legacy; giữ nguyên raw, không tự chuyển thành V2 |
+| `quan_lo_air_combat_v1` | Save minigame riêng, đưa vào export mới |
 | `quanlo_notified_rank_indices_v1` | Lịch sử chống trùng thông báo local, không chuyển giữa origin |
 | `quan-lo-device-push-id-v1`, browser Push subscription | Identity/subscription riêng từng origin, không export |
 | Cache Storage `quan-lo-v5` | Cache app shell/assets, không save; không chuyển |

@@ -1,22 +1,15 @@
 import React, { lazy, Suspense, useEffect, useState, useRef } from "react";
-import { Dices, Coins, Play, Sparkles, Crosshair } from "lucide-react";
+import { Dices, Coins, Play, Sparkles } from "lucide-react";
 import { GameState, TabType } from "../../game/types";
 import { soundManager } from "../../game/audio";
 import { ENTERTAINMENT_GAMES } from "./entertainmentCatalog";
 import { EntertainmentGameId } from "./types";
 import { createDefaultFarmState } from "../tang_gia/farmEngine";
 import { CommandHeader } from "../../components/military/MilitaryUI";
-import { ArmyLoadBoundary } from "./mobi_army3/LoadBoundary";
-import { NguDaiDeVuongBoundary } from "./ngu_dai_de_vuong/components/LoadBoundary";
 
 const BauCuaScreen = lazy(() => import("./bau_cua/BauCuaScreen").then(m => ({ default: m.BauCuaScreen })));
 const BigSmallScreen = lazy(() => import("./big_small/BigSmallScreen").then(m => ({ default: m.BigSmallScreen })));
 const KhongKichScreen = lazy(() => import("./khong_kich/KhongKichScreen").then(m => ({ default: m.KhongKichScreen })));
-const TankBattleScreen = lazy(() => import("./tank_battle/TankBattleScreen").then(m => ({ default: m.TankBattleScreen })));
-const ChienTuyenScreen = lazy(() => import("./chien_tuyen/ChienTuyenScreen").then(m => ({ default: m.ChienTuyenScreen })));
-
-const MobiArmy3Screen = lazy(() => import("./mobi_army3/MobiArmy3Screen"));
-const NguDaiDeVuongScreen = lazy(() => import("./ngu_dai_de_vuong/NguDaiDeVuongScreen"));
 
 interface EntertainmentHubScreenProps {
   gameState: GameState;
@@ -37,7 +30,7 @@ export const EntertainmentHubScreen: React.FC<EntertainmentHubScreenProps> = ({
   const [activeGame, setActiveGame] = useState<EntertainmentGameId | null>(null);
 
   useEffect(() => {
-    onGameActiveChange?.(activeGame === "khong_kich" || activeGame === "tank_battle" || activeGame === "chien_tuyen" || activeGame === "mobi_army3" || activeGame === "ngu_dai_de_vuong");
+    onGameActiveChange?.(activeGame === "khong_kich");
     return () => onGameActiveChange?.(false);
   }, [activeGame, onGameActiveChange]);
 
@@ -62,16 +55,6 @@ export const EntertainmentHubScreen: React.FC<EntertainmentHubScreenProps> = ({
   };
 
   // If a specific minigame is active, render that minigame's screen
-  if (activeGame === "ngu_dai_de_vuong") {
-    return <NguDaiDeVuongBoundary onBack={() => setActiveGame(null)}><Suspense fallback={<div role="status" className="p-6 text-slate-200">Đang tải Ngũ Đại Đế Vương… <button onClick={() => setActiveGame(null)}>Quay lại</button></div>}>
-      <NguDaiDeVuongScreen gameState={gameState} onUpdateGameState={onUpdateGameState} onBack={() => setActiveGame(null)} onFarm={() => { setActiveGame(null); onNavigateTab("tang_gia"); }} />
-    </Suspense></NguDaiDeVuongBoundary>;
-  }
-  if (activeGame === "mobi_army3") {
-    return <ArmyLoadBoundary onBack={() => setActiveGame(null)}><Suspense fallback={<div className="p-6 text-slate-200" role="status">Đang tải Pháo Chiến… <button onClick={() => setActiveGame(null)}>Quay lại</button></div>}>
-      <MobiArmy3Screen gameState={gameState} onUpdateGameState={onUpdateGameState} onBack={() => setActiveGame(null)} />
-    </Suspense></ArmyLoadBoundary>;
-  }
   if (activeGame === "khong_kich") {
     return (
       <Suspense fallback={<div role="status" className="p-6 text-slate-200">Đang tải trò chơi… <button onClick={() => setActiveGame(null)}>Quay lại</button></div>}>
@@ -84,29 +67,6 @@ export const EntertainmentHubScreen: React.FC<EntertainmentHubScreenProps> = ({
     );
   }
 
-  if (activeGame === "tank_battle") {
-    return (
-      <Suspense fallback={<div role="status" className="p-6 text-slate-200">Đang tải trò chơi… <button onClick={() => setActiveGame(null)}>Quay lại</button></div>}>
-      <TankBattleScreen
-        gameState={gameState}
-        onUpdateGameState={onUpdateGameState}
-        onBack={() => setActiveGame(null)}
-      />
-      </Suspense>
-    );
-  }
-
-  if (activeGame === "chien_tuyen") {
-    return (
-      <Suspense fallback={<div role="status" className="p-6 text-slate-200">Đang tải trò chơi… <button onClick={() => setActiveGame(null)}>Quay lại</button></div>}>
-      <ChienTuyenScreen
-        gameState={gameState}
-        onUpdateGameState={onUpdateGameState}
-        onBack={() => setActiveGame(null)}
-      />
-      </Suspense>
-    );
-  }
 
   if (activeGame === "bau_cua") {
     return (
@@ -142,7 +102,7 @@ export const EntertainmentHubScreen: React.FC<EntertainmentHubScreenProps> = ({
       {/* Hub Top Bar */}
       <CommandHeader
         title="Khu Giải Trí"
-        subtitle="Mô phỏng chiến thuật · Trò chơi kỹ năng · Giải trí dân gian"
+        subtitle="Không chiến · Trò chơi kỹ năng · Giải trí dân gian"
         icon={<Dices />}
         action={(
           <div className="data-readout flex items-center gap-1.5 px-2.5 py-2 border border-amber-500/30 text-amber-400 bg-slate-950/80">
@@ -175,9 +135,6 @@ export const EntertainmentHubScreen: React.FC<EntertainmentHubScreenProps> = ({
         {ENTERTAINMENT_GAMES.map((game) => {
           return (
             <React.Fragment key={game.id}>
-              {game.id === "chien_tuyen" && (
-                <div className="entertainment-section-label">Chiến thuật & mô phỏng</div>
-              )}
               {game.id === "bau_cua" && (
                 <div className="entertainment-section-label">Giải trí doanh trại</div>
               )}
@@ -189,7 +146,7 @@ export const EntertainmentHubScreen: React.FC<EntertainmentHubScreenProps> = ({
                 <div className="flex items-center justify-between gap-3">
                   <div className="flex items-center gap-3">
                     <div className="theme-badge w-12 h-12 rounded-2xl border flex items-center justify-center text-2xl shadow-md transition-transform select-none shrink-0">
-                      {game.id === "mobi_army3" ? <Crosshair aria-hidden="true" /> : game.icon || "🎲"}
+                      {game.icon || "🎲"}
                     </div>
                     <div className="min-w-0">
                       <div className="flex items-center gap-2">

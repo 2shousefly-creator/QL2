@@ -1,7 +1,7 @@
 import { GameRepository } from "./GameRepository";
 import { sanitizeAndMigrateState } from "./migrations";
 import { GameState } from "../game/types";
-import { EXTRA_SAVE_KEYS, makeTransfer, parseTransfer } from './saveTransfer';
+import { EXTRA_SAVE_KEYS, RETIRED_EXTRA_SAVE_KEYS, makeTransfer, parseTransfer } from './saveTransfer';
 
 const STORAGE_KEY = "quan_lo_game_state_v1";
 const BACKUP_STORAGE_KEY = "quan_lo_game_state_backup_v1";
@@ -9,6 +9,12 @@ const DB_NAME = "quan_lo_db";
 const DB_STORE = "game_state";
 const DB_KEY = "current";
 let importInProgress = false;
+function cleanupRetiredExtras(): void {
+  // Best effort only after the main save has loaded/migrated successfully.
+  for (const key of RETIRED_EXTRA_SAVE_KEYS) {
+    try { window.localStorage.removeItem(key); } catch { /* Storage may be unavailable. */ }
+  }
+}
 
 function openIndexedDB(): Promise<IDBDatabase | null> {
   if (typeof window === "undefined" || !window.indexedDB) {
@@ -101,6 +107,7 @@ export class LocalGameRepository implements GameRepository {
       const state = sanitizeAndMigrateState(raw);
       // Synchronize back to all stores
       await this.save(state);
+      cleanupRetiredExtras();
       return state;
     } catch (err) {
       console.error("Failed to load game state:", err);
@@ -159,6 +166,7 @@ export class LocalGameRepository implements GameRepository {
       for (const [key, value] of Object.entries(extras)) storage.setItem(key, value);
       await writeImportedIndexedDB(json);
       if (storage.getItem(STORAGE_KEY) !== json) throw new Error('Không xác minh được dữ liệu sau khi ghi.');
+      cleanupRetiredExtras();
       return state;
     } catch {
       if (changed) {

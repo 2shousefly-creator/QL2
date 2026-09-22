@@ -1,0 +1,253 @@
+{
+  "version": "26.11.2",
+  "title": "Visual Identity Overhaul, Astra Core Reworks & Equipment Polish",
+  "displayTitle": "CHI TIẾT CẬP NHẬT 26.11.2",
+  "releaseDate": "2026-09-22",
+  "summary": "**26.11.2** nâng cấp mạnh ngôn ngữ hình ảnh của Không Kích để mọi lựa chọn trong trận đấu dễ nhận diện hơn chỉ bằng một ánh nhìn. Toàn bộ hình minh họa **Trang Bị/Vật Phẩm**, **226 Lõi Nâng Cấp** và **12 Kỹ Năng của 4 chiến cơ** được làm mới theo hướng tập trung vào một chủ thể chính, silhouette rõ và giảm chi tiết gây nhiễu.\n\nBản cập nhật đồng thời rework hai Lõi kỹ năng của Astra, hoàn thiện thêm Kho Trang Bị và sửa Dấu Ấn Tử Thần để hiệu ứng đánh dấu luôn hiển thị rõ trên mục tiêu.",
+  "sections": [
+    {
+      "id": "s1",
+      "title": "KHO TRANG BỊ & VẬT PHẨM",
+      "icon": {
+        "kind": "system",
+        "id": "ui"
+      },
+      "intro": [
+        {
+          "text": "Tiếp tục hoàn thiện khả năng quan sát và thao tác trong Kho Trang Bị, đặc biệt với khu vực Vật Phẩm và tooltip.",
+          "format": "paragraph"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s1-e1",
+          "icon": {
+            "kind": "system",
+            "id": "ui"
+          },
+          "title": "Khu Vật Phẩm 5 ô vuông",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Khu vực **Vật Phẩm** giờ hiển thị thành một hàng **5 ô vuông** cân đối, đồng bộ với ngôn ngữ lưới của Kho Trang Bị.",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "Sửa lỗi hình minh họa **Nam Châm Ma Thuật** bị cắt trong ô Vật Phẩm; artwork giờ hiển thị đầy đủ và đúng tỷ lệ 1:1.",
+              "format": "bullet",
+              "changeType": "fix"
+            },
+            {
+              "text": "Huy hiệu số lượng được cân lại để không che phần chủ thể chính của hình minh họa.",
+              "format": "bullet"
+            }
+          ]
+        },
+        {
+          "id": "s1-e2",
+          "icon": {
+            "kind": "system",
+            "id": "ui"
+          },
+          "title": "Tooltip tự nhiên hơn",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Khi tooltip Trang Bị/Vật Phẩm đang mở, người chơi giờ có thể **nhấp vào vùng trống trong Kho Trang Bị để đóng tooltip** mà không cần bấm dấu ×.",
+              "format": "paragraph",
+              "changeType": "new"
+            },
+            {
+              "text": "Đóng tooltip theo cách này vẫn giữ highlight của Trang Bị/Vật Phẩm đang chọn.",
+              "format": "bullet"
+            },
+            {
+              "text": "Kích thước tên Trang Bị/Vật Phẩm trong tooltip được giảm khoảng **25%** để giao diện cân đối hơn nhưng vẫn giữ hierarchy rõ ràng.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "ĐẠI TU HÌNH ẢNH KHÔNG KÍCH",
+      "icon": {
+        "kind": "system",
+        "id": "core"
+      },
+      "intro": [
+        {
+          "text": "Hệ thống icon được thiết kế lại theo nguyên tắc **một hình minh họa = một chủ thể chính dễ nhận ra**, ưu tiên silhouette, độ tương phản và khả năng đọc khi thu nhỏ.",
+          "format": "paragraph"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s2-e1",
+          "icon": {
+            "kind": "system",
+            "id": "ui"
+          },
+          "title": "Trang Bị & Vật Phẩm mới",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Toàn bộ hình minh họa **Trang Bị Thành Phần, Trang Bị Hoàn Chỉnh, Trang Bị Huyền Thoại và Vật Phẩm** được vẽ lại để vật thể chính lớn hơn, ít chi tiết thừa hơn và dễ nhận biết khi nhìn lướt.",
+              "format": "paragraph",
+              "changeType": "new"
+            },
+            {
+              "text": "Trang Bị Huyền Thoại tiếp tục giữ silhouette và concept cốt lõi của bản Hoàn Chỉnh tương ứng nhưng có mức độ năng lượng và độ quý hiếm cao hơn.",
+              "format": "bullet"
+            }
+          ]
+        },
+        {
+          "id": "s2-e2",
+          "icon": {
+            "kind": "core",
+            "id": "1"
+          },
+          "title": "226 Lõi Nâng Cấp được làm mới",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Toàn bộ **226 icon Lõi Nâng Cấp** được làm mới với chủ thể trung tâm rõ ràng hơn. Hình minh họa tập trung thể hiện fantasy hoặc cơ chế chính của từng Lõi thay vì phụ thuộc vào badge/glyph nhỏ.",
+              "format": "paragraph",
+              "changeType": "new"
+            },
+            {
+              "text": "Các Lõi cùng hệ vẫn giữ ngôn ngữ hình khối liên quan nhưng được phân biệt bằng silhouette và vật thể riêng để tránh cảm giác lặp lại.",
+              "format": "bullet"
+            }
+          ]
+        },
+        {
+          "id": "s2-e3",
+          "icon": {
+            "kind": "skill",
+            "id": "stellar_lance"
+          },
+          "title": "12 icon Kỹ Năng mới",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Cả **12 kỹ năng của Viper, Titan, Phantom và Astra** nhận hình minh họa mới với một vật thể/chủ thể đặc trưng cho từng kỹ năng, giúp phân biệt nhanh hơn trên HUD.",
+              "format": "paragraph",
+              "changeType": "new"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "ASTRA — REWORK LÕI KỸ NĂNG",
+      "icon": {
+        "kind": "skill",
+        "id": "stellar_lance"
+      },
+      "intro": [
+        {
+          "text": "Hai Lõi kỹ năng của Astra được thay đổi hoàn toàn để tạo thêm lựa chọn phòng thủ và combo follow-up rõ ràng hơn.",
+          "format": "paragraph"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s3-e1",
+          "icon": {
+            "kind": "core",
+            "id": "153"
+          },
+          "title": "153 — Vành Đai Bảo Hộ",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "**REWORK:** Xuyên Sao được thay thế hoàn toàn bởi **Vành Đai Bảo Hộ**.",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "Khi **Phản Quỹ Đạo** đang tồn tại, Astra **giảm 60% sát thương nhận vào**.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Hiệu ứng bảo hộ tiếp tục hoạt động trong giai đoạn Tinh Đạn hội tụ và bắn trả, sau đó kết thúc cùng chuỗi giải phóng.",
+              "format": "bullet"
+            },
+            {
+              "text": "Astra nhận VFX vành bảo hộ mới bao quanh chiến cơ để thể hiện rõ thời gian hiệu ứng đang hoạt động.",
+              "format": "bullet"
+            }
+          ]
+        },
+        {
+          "id": "s3-e2",
+          "icon": {
+            "kind": "core",
+            "id": "160"
+          },
+          "title": "160 — Ngọn Giáo Sao Băng",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "**REWORK:** Trục Ngắm Mở Rộng được thay thế hoàn toàn bởi **Ngọn Giáo Sao Băng**.",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "Sau khi viên đạn **Thương Tinh Tú** bay hết màn hình, chờ **0,75 giây** rồi xuất hiện đường track cảnh báo trên chính đường bay cũ trong **0,6 giây**.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Sau cảnh báo, một tia laser bắn **từ dưới màn hình lên** theo đúng đường track, xuyên mọi mục tiêu và gây **320% Hỏa Lực**.",
+              "format": "bullet"
+            },
+            {
+              "text": "Laser tồn tại **1 giây** nhưng mỗi mục tiêu chỉ nhận sát thương ở lần đầu tia chạm phải. Đòn đánh được tính là sát thương kỹ năng và tuân theo các tương tác chí mạng kỹ năng hiện có.",
+              "format": "bullet"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "SỬA LỖI HIỂN THỊ CHIẾN ĐẤU",
+      "icon": {
+        "kind": "system",
+        "id": "ui"
+      },
+      "intro": [
+        {
+          "text": "Một số lớp hiệu ứng chiến đấu được sắp xếp lại để thông tin mục tiêu luôn đọc được đúng như thiết kế.",
+          "format": "paragraph"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s4-e1",
+          "icon": {
+            "kind": "core",
+            "id": "221"
+          },
+          "title": "Dấu Ấn Tử Thần luôn hiển thị trên mục tiêu",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Sửa lỗi khiến **Dấu Ấn Tử Thần** có thể nằm phía dưới sprite quái vật. Dấu Ấn giờ được render ở lớp foreground của mục tiêu để luôn nhìn thấy rõ trên kẻ địch bị đánh dấu.",
+              "format": "paragraph",
+              "changeType": "fix"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

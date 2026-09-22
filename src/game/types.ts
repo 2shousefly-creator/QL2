@@ -1,7 +1,4 @@
 import type { FarmSaveState } from "../features/tang_gia/farmTypes";
-import type { ChienTuyenProfileV2 } from "../features/entertainment/chien_tuyen/types";
-import type { ArmyProfile } from "../features/entertainment/mobi_army3/types";
-import type { GameProfile as NguDaiDeVuongProfile } from "../features/entertainment/ngu_dai_de_vuong/types";
 
 export type TierCount = 1 | 2 | 4 | 6 | 8 | 10 | 12 | 14 | 16 | 18 | 20;
 
@@ -531,9 +528,6 @@ export type GameState = {
     notificationPreferences?: { xpReady: boolean; cropReady: boolean; feedEmpty: boolean };
   };
   farm?: FarmSaveState;
-  chienTuyen?: ChienTuyenProfileV2;
-  mobiArmy3?: ArmyProfile;
-  nguDaiDeVuong?: NguDaiDeVuongProfile;
   coupons?: CouponState;
 };
 

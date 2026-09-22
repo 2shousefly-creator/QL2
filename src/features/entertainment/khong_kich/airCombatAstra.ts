@@ -1,9 +1,10 @@
+import { AIR_COMBAT_WORLD, GAMEPLAY_SAFE_RECT } from "./airCombatConfig";
 import { playerAirframeScale } from "./airCombatReleaseState";
 import { expansionState, type ExpansionCast } from "./airCombatExpansion";
 import { endAircraftSkill, getEffectiveAircraftStats, getSkillRuntimeValues } from "./airCombatAircraft";
 import { hasCore } from "./airCombatCoreEffects";
 import { recordCoreMetric } from "./airCombatTelemetry";
-import { circleVsAircraft, getEnemyHitbox } from "./airCombatHitboxes";
+import { circleVsAircraft, getEnemyHitbox, segmentVsAircraft, createHitResult } from "./airCombatHitboxes";
 import type { CombatWorld, EnemyEntity, ProjectileEntity } from "./airCombatRuntime";
 import type { SkillId } from "./airCombatTypes";
 
@@ -21,7 +22,34 @@ export function orbitConvergencePosition(release:OrbitRelease,b:OrbitReleaseBull
   const ease=t*t*(3-2*t);
   return {x:b.x+(x+b.lane-b.x)*ease,y:b.y+(y-20-b.y)*ease};
 }
+export interface StellarLancePath {
+  origin: { x:number; y:number }; axis: { x:number; y:number };
+  projectileHitboxWidth:number; rawDamageBasis:number; expansionCast?:ExpansionCast;
+}
+export interface MeteorSpear extends StellarLancePath {
+  id:number; warningStartsAt:number; beamStartsAt:number; beamEndsAt:number;
+  fired:boolean; hitEnemyIds:Set<number>;
+}
+/** Capturing and unlaunched release bullets share one protection lifetime. */
+export function astraOrbitProtectionActive(w:CombatWorld):boolean {
+  return !w.ended && hasCore(w.aircraft,153) && !!(w.astra?.orbit || w.astra?.orbitReleases?.some(r=>r.bullets.some(b=>!b.fired)));
+}
+export function meteorSpearEndpoints(path:StellarLancePath) {
+  const bottom=AIR_COMBAT_WORLD.height+path.projectileHitboxWidth,top=GAMEPLAY_SAFE_RECT.top;
+  const atY=(y:number)=>({x:path.origin.x+(y-path.origin.y)*path.axis.x/path.axis.y,y});
+  return {start:atY(bottom),end:atY(top)};
+}
+/** Called exclusively by normal upward projectile exit, never by pool recycling. */
+export function exitStellarLance(w:CombatWorld,p:ProjectileEntity) {
+  const path=p.astraLance?.followup;
+  if(!path || w.ended || p.vy>=0)return;
+  const r=astraState(w);
+  (r.meteorSpears??=[]).push({...path,id:w.nextId++,warningStartsAt:w.elapsed+.75,
+    beamStartsAt:w.elapsed+1.35,beamEndsAt:w.elapsed+2.35,fired:false,hitEnemyIds:new Set()});
+  p.astraLance!.followup=undefined;
+}
 export interface AstraRuntime {
+  meteorSpears?:MeteorSpear[];
   metrics:Record<string,number>;
   flashes:{x:number;y:number;at:number}[];releaseAt?:number;
   orbit?:{expansionCast?:ExpansionCast;until:number;captured:number;refunded:number};
@@ -33,7 +61,7 @@ export interface AstraRuntime {
 }
 export interface AstraHooks {
   projectile(w:CombatWorld,p:Partial<ProjectileEntity>&Pick<ProjectileEntity,"owner"|"x"|"y"|"vx"|"vy"|"rawDamage">):ProjectileEntity|null;
-  damage(w:CombatWorld,e:EnemyEntity,raw:number,skill:SkillId,burn?:boolean,cast?:ExpansionCast):number;
+  damage(w:CombatWorld,e:EnemyEntity,raw:number,skill:SkillId,burn?:boolean,cast?:ExpansionCast,beam?:boolean):number;
   impact(w:CombatWorld,x:number,y:number,radius:number):void;
   hostile(w:CombatWorld,e:EnemyEntity):boolean;
   remove(w:CombatWorld,index:number):void;
@@ -60,7 +88,10 @@ export function releaseOrbit(w:CombatWorld,h:AstraHooks,manual=false) {
 }
 function lance(w:CombatWorld,h:AstraHooks,x:number,y:number,first:number,later:number,speed:number,radius:number,cast?:ExpansionCast) {
   const p=h.projectile(w,{owner:"player",source:"skill",skillId:"stellar_lance",expansionCast:cast,x,y,vx:0,vy:-speed,radius,rawDamage:first,penetrationRemaining:Infinity,ammoVisualKey:"astra_lance",color:"#fff0bb",lifetime:2,telemetryBonuses:hasCore(w.aircraft,157)?[[157,1-8/10.5]]:undefined});
-  if(p)p.astraLance={later};
+  if(p)p.astraLance={later,followup:hasCore(w.aircraft,160)?{
+    origin:{x,y},axis:{x:0,y:-1},projectileHitboxWidth:p.radius*2,
+    rawDamageBasis:getEffectiveAircraftStats(w.aircraft).firepower*3.2,expansionCast:cast,
+  }:undefined};
 }
 export function beginAstraSkill(w:CombatWorld,id:SkillId,spent:number,h:AstraHooks) {
   const r=astraState(w),s=w.aircraft,v=getSkillRuntimeValues(s,id);
@@ -105,11 +136,26 @@ export function updateAstra(w:CombatWorld,_dt:number,h:AstraHooks) {
     s.activeEffects.stellar_lance=Math.max(.0001,r.charge.at-now);
     if(now>=r.charge.at) {
       const k=1+.1*r.charge.stack,first=stats.firepower*(hasCore(s,157)?10.5:8)*k,later=stats.firepower*(hasCore(s,157)?9.3:6.8)*k;
-      const speed=1000*(hasCore(s,160)?1.35:1),radius=6*(hasCore(s,160)?1.55:1),x=w.playerX,y=w.playerY-20*playerAirframeScale(w.aircraft);
+      const speed=1000,radius=6,x=w.playerX,y=w.playerY-20*playerAirframeScale(w.aircraft);
       lance(w,h,x,y,first,later,speed,radius,r.charge.expansionCast);
       r.charge=undefined;endAircraftSkill(s,"stellar_lance");
     }
   }
+  // Each cast owns its path and hit set; expired events are removed every combat tick.
+  const beamContact=createHitResult();
+  for(const beam of r.meteorSpears??[]) {
+    if(now+1e-8<beam.beamStartsAt || now>=beam.beamEndsAt)continue;
+    if(!beam.fired){beam.fired=true;recordCoreMetric(s,160,"procs",1);astraMetric(w,"lance.meteorSpears");}
+    const {start,end}=meteorSpearEndpoints(beam),radius=beam.projectileHitboxWidth;
+    for(const e of w.enemies) {
+      if(!h.hostile(w,e)||beam.hitEnemyIds.has(e.id)||!segmentVsAircraft(start.x,start.y,end.x,end.y,radius,getEnemyHitbox(e),beamContact).hit)continue;
+      beam.hitEnemyIds.add(e.id);
+      const damage=h.damage(w,e,beam.rawDamageBasis,"stellar_lance",false,beam.expansionCast,true);
+      recordCoreMetric(s,160,"hits",1);recordCoreMetric(s,160,"damage",damage);
+      astraMetric(w,"lance.meteorHits");astraMetric(w,"lance.meteorDamage",damage);
+    }
+  }
+  r.meteorSpears=r.meteorSpears?.filter(beam=>now<beam.beamEndsAt);
   const f=r.starfall;
   if(f) {
     // World RNG selects only live opposing units; a cast never reassigns an existing marker.

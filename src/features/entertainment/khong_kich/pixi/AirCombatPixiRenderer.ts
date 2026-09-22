@@ -7,7 +7,7 @@ import { magneticShake } from "../airCombatMagnetic";
 import { STAGE2_ENEMY_ART, TEMPEST_WEAKPOINT_ART } from "../airCombatStage2Art";
 import { paintMagnetic, guardianSlots } from "../airCombatMagnetic";
 import { getPlayerExhaust, hawkEyeExhaustTransform } from "../airCombatArtwork";
-import { paintTacticalCores, paintElitePatternWarning, type TacticalPainter } from "../airCombatTacticalVisuals";
+import { paintTacticalCores, paintEnemyForegroundMarks, paintElitePatternWarning, type TacticalPainter } from "../airCombatTacticalVisuals";
 import { enemyAllegiance } from "../airCombatRuntime";
 import { hasCore } from "../airCombatCoreEffects";
 import { getEnemyExhaustTransform } from "../airCombatHitboxes";
@@ -38,6 +38,8 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
   private smokeLayer = new Container();
   private missileSmoke: AirCombatSpritePool;
   private telegraphs = new Graphics();
+  private enemyForegroundMarks = new Graphics();
+  private globalVfx = new Container();
   private enemyStatusLabels: Text[] = [];
   private enemyStatusLayer = new Container();
   private hitbox = new Graphics();
@@ -122,7 +124,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     this.astraSprites = new AirCombatSpritePool(this.magneticLayer, 192);
     this.equipmentSprites = new AirCombatSpritePool(this.magneticLayer, 640);
     app.stage.addChild(this.root);
-    this.root.addChild(this.sky.root, this.telegraphs, this.smokeLayer, this.actors, this.effects, this.magneticLayer, this.magneticWarnings, this.enemyStatusLayer, this.hitbox, this.damageText.root);
+    this.root.addChild(this.sky.root, this.telegraphs, this.smokeLayer, this.actors, this.effects, this.magneticLayer, this.magneticWarnings, this.enemyForegroundMarks, this.globalVfx, this.enemyStatusLayer, this.hitbox, this.damageText.root);
     // Separate stage branch: neither recoil nor camera shake can move status bars.
     app.stage.addChild(this.stableHud);
     this.stableHud.addChild(this.trackingBars, this.hpText, this.resourceText);
@@ -136,7 +138,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     this.companions = new AirCombatSpritePool(this.actors, 65);
     this.warnings = new AirCombatSpritePool(this.effects, 40);
     this.engines = new AirCombatSpritePool(this.effects, AIR_COMBAT_WORLD.maxEnemies + 4);
-    this.vfx = new AirCombatVfx(this.effects, assets);
+    this.vfx = new AirCombatVfx(this.globalVfx, assets);
     this.droneExhaust.texture=assets.engineFlame; this.droneExhaust.anchor.set(.5,0); this.droneExhaust.blendMode="add"; this.droneExhaust.visible=false; this.actors.addChild(this.droneExhaust);
     for(const sprite of this.playerExhaust){sprite.texture=assets.engineFlame;sprite.anchor.set(.5,0);sprite.blendMode="add";this.actors.addChild(sprite);}
     this.shield.texture = assets.effect("shield");
@@ -272,6 +274,11 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
       line:(ax,ay,bx,by,color,alpha,width)=>{this.telegraphs.moveTo(ax,ay).lineTo(bx,by).stroke({color,alpha,width});}
     };
     paintTacticalCores(world,tacticalPainter,reducedMotion);
+    this.enemyForegroundMarks.clear();
+    paintEnemyForegroundMarks(world,{
+      circle:(x,y,r,color,alpha,fill,width=2)=>{const g=this.enemyForegroundMarks.circle(x,y,r);if(fill)g.fill({color,alpha});else g.stroke({color,alpha,width});},
+      line:(ax,ay,bx,by,color,alpha,width)=>{this.enemyForegroundMarks.moveTo(ax,ay).lineTo(bx,by).stroke({color,alpha,width});},
+    });
     if (world.ended) this.magneticEndAge += delta;
     this.magneticSprites.begin();
     this.magneticWarnings.clear();

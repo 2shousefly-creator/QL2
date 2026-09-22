@@ -1963,8 +1963,8 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 },
 {
   "id": "core_153",
-  "name": "Xuyên Sao",
-  "description": "Tinh Đạn của Phản Quỹ Đạo bỏ qua 25% Giáp của mục tiêu.",
+  "name": "Vành Đai Bảo Hộ",
+  "description": "Khi Phản Quỹ Đạo đang tồn tại, Astra giảm 60% sát thương nhận vào. Hiệu ứng duy trì cả trong giai đoạn Tinh Đạn hội tụ và bắn trả, kết thúc khi chuỗi giải phóng Tinh Đạn hoàn tất.",
   "system": "skill",
   "icon": "skill:orbit_reversal",
   "category": "skill",
@@ -2075,8 +2075,8 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 },
 {
   "id": "core_160",
-  "name": "Trục Ngắm Mở Rộng",
-  "description": "Hành lang trúng đòn của Thương Tinh Tú rộng hơn 55% và tốc độ projectile tăng 35%.",
+  "name": "Ngọn Giáo Sao Băng",
+  "description": "Sau khi viên đạn của Thương Tinh Tú bay hết màn hình, chờ 0,75 giây rồi tạo một đường track cảnh báo trên chính đường bay cũ trong 0,6 giây. Sau đó một tia laser bắn từ dưới màn hình lên theo đường track, xuyên tất cả mục tiêu và gây 320% Hỏa Lực. Laser rộng 200% hitbox viên đạn gốc, tồn tại 1 giây; mỗi mục tiêu chỉ nhận sát thương ở lần đầu tia chạm phải và tuân theo chí mạng kỹ năng hiện có.",
   "system": "skill",
   "icon": "skill:stellar_lance",
   "category": "skill",

@@ -85,6 +85,17 @@ export function AirCombatEquipmentInventory({ world, onClose, onChange }: { worl
   const s = world.aircraft, q = equipmentState(s);
   const equippedRegion = useRef<HTMLElement>(null), craftRegion = useRef<HTMLElement>(null), craftSlots = useRef<(HTMLDivElement | null)[]>([]);
   const [selection, setSelection] = useState<number | null>(null), [tooltip, setTooltip] = useState<EquipmentTooltipAnchor | null>(null);
+  useEffect(() => {
+    if (!tooltip) return;
+    const dismiss = (event: PointerEvent) => {
+      const target = event.target;
+      if (!(target instanceof Element) || !target.closest(".equipment-inventory-panel")) return;
+      if (target.closest(".equipment-tooltip, .equipment-tile, .equipment-result")) return;
+      setTooltip(null);
+    };
+    document.addEventListener("pointerdown", dismiss, true);
+    return () => document.removeEventListener("pointerdown", dismiss, true);
+  }, [tooltip]);
   const [drag, setDrag] = useState<Drag | null>(null), [clock, setClock] = useState(() => performance.now() / 1000), [extraction, setExtraction] = useState(0), [, refresh] = useState(0);
   const [feedback, setFeedback] = useState<{ text: string; until: number } | null>(null), [flights, setFlights] = useState<Flight[]>([]), [impact, setImpact] = useState<{ slot: number; until: number } | null>(null);
   const flightId = useRef(0);
@@ -148,7 +159,7 @@ export function AirCombatEquipmentInventory({ world, onClose, onChange }: { worl
       {result && <div className="equipment-result-copy"><strong style={{ color: EQUIPMENT_NAME_COLORS.completed }}>{EQUIPMENT_CATALOG[result].name}</strong><p><CoreDescription text={EQUIPMENT_CATALOG[result].statsText} /></p><p><CoreDescription text={EQUIPMENT_CATALOG[result].effect} /></p></div>}
       </section>
       <div className="equipment-inventories">{inventory("components", "Kho Trang Bị Thành Phần")}{inventory("completed", "Kho Trang Bị Hoàn Chỉnh")}</div>
-      <section className="equipment-item-tray"><h3>Vật Phẩm</h3><Tile id="VP01" location="item" selected={selection === -1} quantity={q.items.VP01 ?? 0} locked={!(q.items.VP01 > 0)} onSelect={() => setSelection(-1)} onInspect={inspect} onDouble={() => {}} onDrag={dragging} onDrop={drop} /><small>Giữ 1 giây rồi kéo Nam Châm vào vùng đang mang</small></section>
+      <section className="equipment-item-tray"><h3>Vật Phẩm</h3><div className="equipment-item-grid"><div className="equipment-grid-cell"><Tile id="VP01" location="item" selected={selection === -1} quantity={q.items.VP01 ?? 0} locked={!(q.items.VP01 > 0)} onSelect={() => setSelection(-1)} onInspect={inspect} onDouble={() => {}} onDrag={dragging} onDrop={drop} /></div>{[1,2,3,4].map(i => <div key={i} className="equipment-grid-cell" aria-hidden="true" />)}</div><small>Giữ 1 giây rồi kéo Nam Châm vào vùng đang mang</small></section>
     </OverlayBody>
     <OverlayFooter><ModalButton type="button" variant="primary" onClick={close}>Đóng Kho Trang Bị</ModalButton></OverlayFooter>
     {tooltip && <EquipmentTooltip anchor={tooltip} state={s} onClose={() => setTooltip(null)} />}

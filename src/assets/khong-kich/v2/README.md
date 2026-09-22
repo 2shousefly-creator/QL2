@@ -44,19 +44,21 @@ Production game sprite atlas, TRUE TRANSPARENT PNG background, square, strict 2x
 
 Create production 2D military arcade shooter VFX texture atlas TRUE TRANSPARENT PNG, square, precise 4x4 equal grid, all effects isolated centered in their own cell with generous empty margins. Painted high fidelity emissive effects, no labels grid lines text UI or watermark. Row1: cyan white muzzle flash; long vertical cyan tracer nose up; red orange vertical enemy tracer; detailed silver missile nose up with orange exhaust flame. Row2: small orange explosion; medium orange explosion; large orange smoke explosion; immense fiery boss explosion. Row3: sparks metallic debris burst; soft gray smoke puff; curling dark damage smoke; bright orange flame pointing down for thruster/fire overlay. Row4: circular blue energy shield ring; purple laser charging energy orb; narrow vertical violet laser beam; amber expanding bomb shockwave ring. Consistent orthographic top down game effects, alpha fading edges, black empty pixels must be transparent. Each full effect fits cell, absolutely no overlap.
 
-## 26.9.2 core illustrations
+## 26.11.2 UI illustrations
 
-`core-icons-refined.svg` is the active illustrated atlas for all 167 core IDs,
-sequential row-major in 14 × 12 cells of 128px; cell 168 is unused. It is original
-vector artwork authored in `scripts/generate-core-icons-refined.mjs`, with shared
-metal shading, energy halos, filled hardware/skill silhouettes and explicit
-per-core semantic recipes. Regenerate with `node scripts/generate-core-icons-refined.mjs`.
-It requires no external fonts, services or runtime canvas generation.
+The canonical local SVG atlases have 128px square cells:
+- Equipment/Item: 9 × 9, TP01–08, TH01–36, HL01–36, VP01.
+- Core: 15 × 16, Core001–226 in row-major order; remaining cells unused.
+- Skill: 3 × 4, Viper, Titan, Phantom, Astra, one row per aircraft.
 
-Every cell includes a lower-right 37% semantic tile with 4% inset. No text, numeric
-ID or Roman numeral appears in the artwork. Skill palettes remain cyan (Viper),
-gold (Titan), violet (Phantom), and warm orange (Astra). Core 159 depicts a stellar
-lance, target, depleted HP bar/threshold and execution skull. `CoreSemanticIcon`
-shares the atlas across choices, owned cores and release notes; Lucide is used
-only if the atlas fails to load or the core ID is unknown. Tier borders and
-canonical system tags are independent of these illustration palettes.
+Source art lives in `scripts/air-combat/icon-illustrations.mjs`; the explicit
+catalog-to-object decisions and atlas authoring entrypoint live in
+`scripts/air-combat/generate-visual-identity.mjs`. Each illustration focuses on
+one large artifact with shaded material and restrained energy. Core artwork
+contains no baked system/tier badges. Surrounding cards retain those labels.
+Legendary equipment inherits its Complete counterpart's object construction.
+
+`SpriteAtlasIcon` crops the atlas using square CSS backgrounds and normalized
+cell positions; all three UI icon families use that same contract. No external
+fonts, raster payloads, CDN requests or runtime artwork generation are required.
+The original equipment combat VFX remain separate and unchanged.

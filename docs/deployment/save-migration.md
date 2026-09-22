@@ -6,7 +6,7 @@ Chưa di chuyển save thật. SchemaVersion **11**, catalogVersion **17**, stor
 
 Luồng Profile/Hồ sơ → Xuất Dữ Liệu hiện tải file JSON xuống máy thay cho chỉ clipboard. Nó đọc save **hiện tại** từ `quan_lo_game_state_v1`, fallback IndexedDB `quan_lo_db/game_state/current` khi thiếu primary. Không gọi `load()` (vốn sanitize và ghi lại), không xuất state khởi tạo nếu trống, không coi backup là save hiện tại. Nếu chỉ còn backup, phải phục hồi và kiểm tra trước khi xuất. Primary bị lỗi thì báo lỗi, không tự chọn save khác để che lỗi.
 
-Envelope `quan-lo-save-transfer`, formatVersion 1 giữ gameState nguyên văn theo JSON (bao gồm trường chưa nhận diện), exportedAt/source và raw extraSaves của `quan_lo_air_combat_v1`, `quan_lo_tank_battle_v1`, `quan_lo_chien_tuyen_v1` nếu tồn tại. Farm, Chiến Tuyến V2, Mobi Army và các trường GameState đi theo save chính. Chiến Tuyến V1 chỉ bảo quản raw theo logic hiện có, không tự chuyển bộ bài cũ thành V2.
+Envelope `quan-lo-save-transfer`, formatVersion 1 giữ các trường gameState không liên quan và extraSave `quan_lo_air_combat_v1`. Các nhánh game đã nghỉ được bỏ khỏi save canonical/export. Backup cũ có extra-save legacy đã biết vẫn nhập được; các extra đó được bỏ qua, còn key lạ vẫn bị từ chối.
 
 Không export identity/subscription Push, installed-build/update markers, caches, trạng thái tạm và lịch sử thông báo local. Backup update/save mirror không phải file lịch sử tự động. Avatar có thể nằm trong save; giữ file riêng tư, không dán vào chat/log/server.
 

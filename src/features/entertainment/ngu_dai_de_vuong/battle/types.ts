@@ -1,9 +1,0 @@
-import type { Boss, Effect, Hero, Skill, Stats } from '../types';
-export type AnimationName = 'idle' | 'move' | 'basicAttack' | 'skill1' | 'skill2' | 'hit' | 'stun' | 'knockback' | 'death' | 'victory' | 'jump';
-export type AnimationEvent = 'basic_hit' | 'projectile_spawn' | 'skill_hit' | 'vfx_burst';
-export interface Status extends Effect { source: string; key: string; remaining: number; tick: number; shieldKey?: string; snapshotAtk?: number; damageType?: 'physical' | 'magic'; }
-export interface Action { token: number; skill?: Skill; targetId: string; center: { x: number; y: number }; elapsed: number; duration: number; impact: number; hits: number; resolved: number[]; targetIds?: string[]; points?: { x: number; y: number }[]; }
-export interface Actor { id: string; hero: Hero; boss?: Boss; side: 'player' | 'enemy'; slot: number; level: number; stats: Stats; hp: number; mana: number; x: number; y: number; facing: number; skills: Skill[]; cooldowns: Record<string, number>; statuses: Status[]; attackCooldown: number; aiCooldown: number; targetId?: string; action?: Action; token: number; pose: AnimationName; moveMultiplier: number; enraged: boolean; damageDone: number; }
-export interface AnimationCommand { actorId: string; name: AnimationName; token: number; duration: number; impact: number; hits: number; projectile: boolean; }
-export interface VisualEvent { kind: string; x: number; y: number; toX?: number; toY?: number; amount?: number; crit?: boolean; duration?: number; radius?: number; shape?: string; text?: string; skillId?: string; heroId?: string; actorId?: string; phase?: 'cast' | 'release' | 'impact'; }
-export interface Projectile { visualId?: number; active: boolean; sourceId: string; targetId: string; x: number; y: number; skill?: Skill; coefficient: number; basic: boolean; lastHit: boolean; vfx: string; rotation: number; heroId: string; }

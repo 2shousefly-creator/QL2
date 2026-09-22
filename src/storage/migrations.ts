@@ -7,13 +7,10 @@ import {
   createDefaultFarmState,
   migrateFarmState,
 } from "../features/tang_gia/farmMigration";
-import { sanitizeChienTuyenProfile } from "../features/entertainment/chien_tuyen/profileEngine";
 import { ensureMedalAndMasteryState, evaluateMedalUnlocks } from "../game/medals/medalEngine";
 import { backfillJournalEvents } from "../game/journal/journalEngine";
 import { sanitizeCouponState } from "../game/coupons/couponEngine";
 import { sanitizePersistedEnergyState } from "./energyPersistence";
-import { sanitizeArmyProfile } from "../features/entertainment/mobi_army3/profile/profileEngine";
-import { sanitizeProfile as sanitizeNguDaiDeVuong } from "../features/entertainment/ngu_dai_de_vuong/state/profile";
 
 function isRecord(value: unknown): value is Record<string, any> {
   return Boolean(value) && typeof value === "object" && !Array.isArray(value);
@@ -976,9 +973,6 @@ export function sanitizeAndMigrateState(rawObj: unknown, migrationNow: number = 
     farm: obj.farm
       ? migrateFarmState(obj.farm, now)
       : createDefaultFarmState(now),
-    chienTuyen: sanitizeChienTuyenProfile(obj.chienTuyen, now),
-    mobiArmy3: sanitizeArmyProfile(obj.mobiArmy3),
-    nguDaiDeVuong: sanitizeNguDaiDeVuong(obj.nguDaiDeVuong),
     medals: obj.medals ? obj.medals : { unlockedMedalIds: [], unlockedAtMap: {}, selectedMedalIds: [] },
     mastery: obj.mastery ? obj.mastery : {},
     globalStats: obj.globalStats ? obj.globalStats : undefined,

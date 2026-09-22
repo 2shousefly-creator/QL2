@@ -1,45 +1,6 @@
 import { EntertainmentGameMeta } from "./types";
-import { ARMY_TITLE } from "./mobi_army3/config";
 
-// Temporary feature flag: keep Tank Battle source/routing intact while hiding it from the Entertainment Hub.
-export const TANK_BATTLE_ENABLED = false;
-
-const ALL_ENTERTAINMENT_GAMES: readonly EntertainmentGameMeta[] = [
-  {
-    id: "ngu_dai_de_vuong",
-    title: "Ngũ Đại Đế Vương",
-    subtitle: "Phiêu lưu đế vương 2.5D",
-    description: "Chiêu mộ 20 võ tướng, bố trí đội hình bốn người và chinh phục ba vùng đất trong những trận chiến tự động.",
-    status: "available",
-    badge: "Mới",
-    icon: "♛",
-  },
-  {
-    id: "mobi_army3",
-    title: ARMY_TITLE,
-    subtitle: "Pháo chiến PVE theo lượt",
-    description: "Ngắm góc, lấy lực, tính gió và phá địa hình qua 15 nhiệm vụ cùng các Boss chiến thuật. Chơi màn hình ngang.",
-    status: "available",
-    badge: "PVE mới",
-  },
-  {
-    id: "chien_tuyen",
-    title: "Chiến Tuyến",
-    subtitle: "Leo tháp chiến thuật",
-    description: "Đào tạo binh chủng, bố trí đội hình và chinh phục 100 tầng bằng các trận auto-combat chiến thuật.",
-    status: "available",
-    badge: "Cập nhật lớn",
-    icon: "⚔️",
-  },
-  {
-    id: "tank_battle",
-    title: "Bắn Xe Tăng 2D",
-    subtitle: "Roguelite phòng thủ chiến thuật",
-    description: "Điều khiển Báo Thép, giữ Sở Chỉ Huy qua 5 đợt, xe tinh nhuệ và ba giai đoạn Pháo Đài Công Thành.",
-    status: "available",
-    badge: "Cập nhật lớn",
-    icon: "🛡️",
-  },
+export const ENTERTAINMENT_GAMES: readonly EntertainmentGameMeta[] = [
   {
     id: "khong_kich",
     title: "Không Kích",
@@ -68,7 +29,3 @@ const ALL_ENTERTAINMENT_GAMES: readonly EntertainmentGameMeta[] = [
     icon: "🎲",
   },
 ] as const;
-
-export const ENTERTAINMENT_GAMES: readonly EntertainmentGameMeta[] = ALL_ENTERTAINMENT_GAMES.filter(
-  (game) => TANK_BATTLE_ENABLED || game.id !== "tank_battle"
-);

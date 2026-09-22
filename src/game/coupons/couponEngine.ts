@@ -1,5 +1,5 @@
 import type { GameState } from "../types";
-import { creditSharedGold } from "../../features/entertainment/chien_tuyen/sharedGold";
+import { creditSharedGold } from "../sharedGold";
 
 export interface CouponDefinition {
   code: string;

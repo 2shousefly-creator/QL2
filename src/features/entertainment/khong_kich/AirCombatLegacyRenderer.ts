@@ -9,7 +9,7 @@ import { magneticFlight, stormTile } from "./airCombatMagneticSky";
 import { STAGE2_ART_URLS, STAGE2_ENEMY_ART, STAGE2_VFX_ART, TEMPEST_WEAKPOINT_ART } from "./airCombatStage2Art";
 import type { AtlasFrame } from "./pixi/airCombatPixiTypes";
 import { paintMagnetic, guardianSlots } from "./airCombatMagnetic";
-import { paintTacticalCores, paintElitePatternWarning, type TacticalPainter } from "./airCombatTacticalVisuals";
+import { paintTacticalCores, paintEnemyForegroundMarks, paintElitePatternWarning, type TacticalPainter } from "./airCombatTacticalVisuals";
 import { enemyAllegiance } from "./airCombatRuntime";
 import aircraftAtlasUrl from "../../../assets/khong-kich/v2/aircraft-atlas.png";
 import phantomBeamUrl from "../../../assets/khong-kich/v2/phantom-firing-beam.svg";
@@ -793,12 +793,13 @@ export function drawLegacyWorld(
 
   ctx.restore();
 
-  accents.draw(ctx, world, reducedMotion);
   ctx.save(); ctx.beginPath(); ctx.rect(GAMEPLAY_SAFE_RECT.left, GAMEPLAY_SAFE_RECT.top, GAMEPLAY_SAFE_RECT.width, GAMEPLAY_SAFE_RECT.height); ctx.clip();
   paintMagnetic(world, { ...tacticalPainter,
     sprite: (_id,key,x,y,w,h,rotation=0,alpha=1) => drawMagneticFrame(ctx, STAGE2_VFX_ART[key], x,y,w,h,rotation,alpha)
   }, reducedMotion, presentationTime);
+  paintEnemyForegroundMarks(world,tacticalPainter);
   ctx.restore();
+  accents.draw(ctx, world, reducedMotion);
   const stats = getEffectiveAircraftStats(world.aircraft);
   const displayWidth = PLAYER_AIRFRAME_SIZE[aircraftId]*playerAirframeScale(world.aircraft);
   const barWidth = trackingBarWidth(displayWidth);

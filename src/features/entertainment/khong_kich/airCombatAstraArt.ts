@@ -1,19 +1,18 @@
 import { playerAirframeScale } from "./airCombatReleaseState";
 import aircraft from "../../../assets/khong-kich/astra/aircraft.svg";
 import effects from "../../../assets/khong-kich/astra/effects.svg";
-import skills from "../../../assets/khong-kich/astra/skills.svg";
 import combatVfx from "../../../assets/khong-kich/astra/combat-vfx.svg";
 import type { CombatWorld } from "./airCombatRuntime";
 import type { TacticalPainter } from "./airCombatTacticalVisuals";
 import type { AtlasFrame } from "./pixi/airCombatPixiTypes";
 import { hasCore } from "./airCombatCoreEffects";
 import { GAMEPLAY_SAFE_RECT } from "./airCombatConfig";
-import { orbitBulletPosition, orbitConvergencePosition } from "./airCombatAstra";
-export const ASTRA_ART={aircraft,effects,skills,combatVfx};
-export const ASTRA_SKILL_CELLS={orbit_reversal:0,stellar_lance:1,starfall:2} as const;
-const cell=(column:number,row:number):AtlasFrame=>({atlas:"astraVfx",rect:[column/4,row/3,1/4,1/3]});
+import { astraOrbitProtectionActive, meteorSpearEndpoints, orbitBulletPosition, orbitConvergencePosition } from "./airCombatAstra";
+export const ASTRA_ART={aircraft,effects,combatVfx};
+const cell=(column:number,row:number):AtlasFrame=>({atlas:"astraVfx",rect:[column/4,row/4,1/4,1/4]});
 const shared=(column:number,row:number):AtlasFrame=>({atlas:"vfx",rect:[column/4,row/4,1/4,1/4]});
 export const ASTRA_VFX_FRAMES={
+  astra_guard:cell(0,3),astra_spearBeam:cell(1,3),astra_spearTip:cell(2,3),
   astra_meteor:cell(0,0),astra_meteor1:cell(1,0),astra_meteor2:cell(2,0),astra_meteor3:cell(3,0),
   astra_reticle:cell(0,1),astra_segments:cell(1,1),astra_scorch:cell(2,1),astra_flame:cell(3,1),
   astra_flame1:cell(0,2),astra_corona:cell(1,2),astra_trail:cell(2,2),astra_debris:cell(3,2),
@@ -25,10 +24,29 @@ export interface AstraPainter extends TacticalPainter {
   impactFallback?:boolean;
   sprite(id:number,key:AstraVisualKey,x:number,y:number,width:number,height:number,rotation:number,alpha:number):void;
 }
+export const STELLAR_TRACK_STYLE={sheath:0xffa455,core:0xffe2b0,width:7,coreWidth:1.2} as const;
 const clamp=(t:number)=>Math.max(0,Math.min(1,t));
 /** Shared world state feeds Canvas and Pixi. Sprite bounds never participate in damage. */
 export function paintAstra(w:CombatWorld,p:AstraPainter,reduced:boolean) {
   const r=w.astra;if(!r||w.ended)return;const now=w.elapsed;
+  if(astraOrbitProtectionActive(w)) {
+    const size=92*playerAirframeScale(w.aircraft);
+    p.sprite(-30,"astra_guard",w.playerX,w.playerY,size,size,reduced?0:Math.sin(now*.8)*.12,.9);
+  }
+  for(const beam of r.meteorSpears??[]) {
+    if(now<beam.warningStartsAt||now>=beam.beamEndsAt)continue;
+    const {start,end}=meteorSpearEndpoints(beam),dx=end.x-start.x,dy=end.y-start.y;
+    if(now<beam.beamStartsAt){
+      p.line(start.x,start.y,end.x,end.y,STELLAR_TRACK_STYLE.sheath,.25,STELLAR_TRACK_STYLE.width);
+      p.line(start.x,start.y,end.x,end.y,STELLAR_TRACK_STYLE.core,.8,STELLAR_TRACK_STYLE.coreWidth);
+    } else {
+      const width=beam.projectileHitboxWidth*2,angle=Math.atan2(dy,dx)+Math.PI/2;
+      const alpha=Math.min(1,(beam.beamEndsAt-now)/.15),id=beam.id*32;
+      p.sprite(id,"astra_spearBeam",(start.x+end.x)/2,(start.y+end.y)/2,width,Math.hypot(dx,dy),angle,alpha);
+      const travel=reduced?1:clamp((now-beam.beamStartsAt)/.09);
+      p.sprite(id+1,"astra_spearTip",start.x+dx*travel,start.y+dy*travel,width*1.4,width*2.1,angle,alpha);
+    }
+  }
   for(const f of r.flashes){const a=1-(now-f.at)/.2;p.circle(f.x,f.y,7,0xffebbf,a*.6,true);}
   if(r.orbit){
     const radius=hasCore(w.aircraft,150)?92:72;
@@ -48,9 +66,9 @@ export function paintAstra(w:CombatWorld,p:AstraPainter,reduced:boolean) {
   }
   if(r.charge){
     const t=clamp((now-r.charge.startedAt)/Math.max(.001,r.charge.duration));
-    const x=w.playerX,y=w.playerY-20*playerAirframeScale(w.aircraft),wide=hasCore(w.aircraft,160)?1.55:1;
-    p.line(x,Math.max(y,GAMEPLAY_SAFE_RECT.top),x,GAMEPLAY_SAFE_RECT.top,0xffa455,.13+t*.12,7*wide);
-    p.line(x,Math.max(y,GAMEPLAY_SAFE_RECT.top),x,GAMEPLAY_SAFE_RECT.top,0xffe2b0,.45+t*.35,1.2);
+    const x=w.playerX,y=w.playerY-20*playerAirframeScale(w.aircraft);
+    p.line(x,Math.max(y,GAMEPLAY_SAFE_RECT.top),x,GAMEPLAY_SAFE_RECT.top,STELLAR_TRACK_STYLE.sheath,.13+t*.12,STELLAR_TRACK_STYLE.width);
+    p.line(x,Math.max(y,GAMEPLAY_SAFE_RECT.top),x,GAMEPLAY_SAFE_RECT.top,STELLAR_TRACK_STYLE.core,.45+t*.35,STELLAR_TRACK_STYLE.coreWidth);
     p.circle(x,y,7+t*7,0xffaa4b,.22+t*.2,true);
     p.circle(x,y,2+t*4,0xfff8df,.6+t*.4,true);
     for(let i=0;i<(reduced?1:3);i++){

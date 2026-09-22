@@ -3,7 +3,8 @@ import { sanitizeAndMigrateState } from './migrations';
 
 export const TRANSFER_FORMAT = 'quan-lo-save-transfer';
 export const TRANSFER_MAX_BYTES = 20 * 1024 * 1024;
-export const EXTRA_SAVE_KEYS = ['quan_lo_air_combat_v1', 'quan_lo_tank_battle_v1', 'quan_lo_chien_tuyen_v1'] as const;
+export const EXTRA_SAVE_KEYS = ['quan_lo_air_combat_v1'] as const;
+export const RETIRED_EXTRA_SAVE_KEYS = ['quan_lo_tank_battle_v1', 'quan_lo_chien_tuyen_v1'] as const;
 const record = (value: unknown): value is Record<string, any> => !!value && typeof value === 'object' && !Array.isArray(value);
 
 export function validateSave(raw: unknown) {
@@ -35,6 +36,7 @@ export function parseTransfer(text: string) {
     if (raw.format !== TRANSFER_FORMAT || raw.formatVersion !== 1 || !record(raw.extraSaves)) throw new Error('Định dạng sao lưu chưa được hỗ trợ.');
     game = raw.gameState;
     for (const [key, value] of Object.entries(raw.extraSaves)) {
+      if ((RETIRED_EXTRA_SAVE_KEYS as readonly string[]).includes(key)) continue;
       if (!(EXTRA_SAVE_KEYS as readonly string[]).includes(key) || typeof value !== 'string') throw new Error('Kho dữ liệu bổ sung chưa được hỗ trợ; chưa nhập dữ liệu.');
       try { if (!record(JSON.parse(value))) throw new Error(); }
       catch { throw new Error('Save minigame không hợp lệ; chưa nhập dữ liệu.'); }
@@ -52,6 +54,9 @@ export function makeTransfer(gameRaw: string, storage: Storage, source: string) 
     const value = storage.getItem(key);
     if (value !== null) extraSaves[key] = value;
   }
-  // Export the ORIGINAL data, not the sanitizer output: unknown fields survive.
+  // Preserve unknown/unrelated data, dropping only explicitly retired branches.
+  delete gameState.chienTuyen;
+  delete gameState.mobiArmy3;
+  delete gameState.nguDaiDeVuong;
   return JSON.stringify({ format: TRANSFER_FORMAT, formatVersion: 1, exportedAt: new Date().toISOString(), source, gameState, extraSaves }, null, 2);
 }
