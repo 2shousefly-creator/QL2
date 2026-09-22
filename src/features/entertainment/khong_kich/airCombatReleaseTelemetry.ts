@@ -10,17 +10,17 @@ const number=(n:number)=>n.toLocaleString("vi-VN",{maximumFractionDigits:2});
 export function releaseTelemetry(state:AircraftCombatState,row:number):string[]{
   const c=state.coreState,stats=getEffectiveAircraftStats(state),r=releaseState(state),expansion=expansionState(state),lines:string[]=[];
   const descriptions:Record<number,string>={
-    169:state.currentResource/stats.maxResource>.7?"+10 Hỏa Lực":state.currentResource/stats.maxResource<.3?"+0,7 HP/s":"+0,2 Tốc Độ Bắn",
-    172:c.stacks.capacitorCharge?"Đã tích điện":"Chưa tích đủ điện",179:`Sai Số: ${c.stacks.error??0}/10 · +${(c.stacks.error??0)*2}% Chí Mạng`,
+    169:state.currentResource/stats.maxResource>.7?"+10 Hỏa Lực":state.currentResource/stats.maxResource<.3?"+0,7 Hồi Máu/s":"+0,2 Tốc Độ Bắn",
+    172:c.stacks.capacitorCharge?"Đã tích điện":"Chưa tích đủ điện",179:`Sai Số: ${c.stacks.error??0}/10 · +${(c.stacks.error??0)*2}% Tỷ Lệ Chí Mạng`,
     183:`+${Math.min(40,activeNegativeStatusTypes(state).size*20)} Giáp`,187:`Đang tích ${number(c.stacks.recoil??0)} sát thương`,188:"+15% Tỷ Lệ Chí Mạng",
     192:hasAbsorbShield(state)?"+15% mọi sát thương":"+14 Giáp",193:`Chuỗi: ${expansion.sequence.filter(cast=>c.time-cast.at<=7).length}/3 kỹ năng`,
-    196:`+${number(Math.min(.5,(c.stacks.crimsonCrit??0)*.025)*100)}% Sát Thương Chí Mạng / 50%`,197:`Nợ còn lại: ${number(expansion.debt.reduce((n,d)=>n+d.amount*d.ticks,0))}`,
+    196:`+${number(Math.min(.5,(c.stacks.crimsonCrit??0)*.025)*100)}% Sát Thương Chí Mạng / +50% Sát Thương Chí Mạng`,197:`Nợ còn lại: ${number(expansion.debt.reduce((n,d)=>n+d.amount*d.ticks,0))}`,
     199:`Cộng dồn quá tải: ${c.stacks.overclock??0}/3`,202:expansion.primarySkill?`Chủ lực: ${SKILL_CONFIGS[expansion.primarySkill].name}`:"Đang chờ chọn kỹ năng",
     204:`Khiên chờ hồi quy: ${expansion.returns.length}`,209:c.stacks.lastStand?"Tử Thủ đang hoạt động":"Chưa kích hoạt Tử Thủ",
   };
   if(descriptions[row])lines.push(descriptions[row]);
-  if(row===201){const counts={attack:0,defense:0,resource:0,utility:0};for(const id of state.selectedCores){const core=getCoreDefinition(id);if(core.system!=="skill")counts[core.system]++;}const b=arsenalBonuses(state);lines.push(...Object.entries(counts).map(([system,count])=>`${CORE_SYSTEM_LABELS[system as keyof typeof counts]}: ${count}`),`Bắn thường +${number(b.basic*100)}% · Kỹ năng +${number(b.skill*100)}% · Giảm sát thương ${number(b.reduction*100)}%`);}
-  if(row===208)lines.push(`+${number(stats.dualHpBonus??0)} HP/s từ Tế Bào Song Năng`,`+${number(stats.dualResourceBonus??0)} Tài Nguyên/s từ Tế Bào Song Năng`);
+  if(row===201){const counts={attack:0,defense:0,resource:0,utility:0};for(const id of state.selectedCores){const core=getCoreDefinition(id);if(core.system!=="skill")counts[core.system]++;}const b=arsenalBonuses(state);lines.push(...Object.entries(counts).map(([system,count])=>`${CORE_SYSTEM_LABELS[system as keyof typeof counts]}: ${count}`),`+${number(b.basic*100)}% sát thương đạn thường · +${number(b.skill*100)}% sát thương kỹ năng · ${number(b.reduction*100)}% Giảm Sát Thương`);}
+  if(row===208)lines.push(`+${number(stats.dualHpBonus??0)} Hồi Máu/s từ Tế Bào Song Năng`,`+${number(stats.dualResourceBonus??0)} Hồi Tài Nguyên/s từ Tế Bào Song Năng`);
   if(row===213)lines.push(...Object.entries(r.refused).map(([id,expiry])=>`${id.slice(5)}: còn ${Math.max(0,expiry-r.completedSelections)} lượt chọn thường`));
   if(row===215)lines.push(r.system?`Hệ đã chọn: ${CORE_SYSTEM_LABELS[r.system]}`:"Đang chờ chọn Hệ");
   if(row===216)lines.push("Đã sử dụng · Giữ lại chỉ số vĩnh viễn đã kiếm được từ các Lõi chuyển đổi.");
@@ -28,7 +28,7 @@ export function releaseTelemetry(state:AircraftCombatState,row:number):string[]{
   if(row===219)lines.push(`Nhiệt: ${number(r.heat)} / 100`);
   if(row===220)lines.push(`Bóng đang hoạt động: ${r.ghosts.length} · Sẵn sàng sau ${number(Math.max(0,r.ghostReady-c.time))} giây`);
   if(row===221)lines.push(r.mark?`Dấu đang tích ${number(r.mark.damage)} sát thương thực nhận`:`Hồi lại sau ${number(Math.max(0,r.markReady-c.time))} giây`);
-  if(row===222)lines.push(r.mode==="small"?"Thu Nhỏ: kích thước/hitbox ×0,5; +25 điểm % Giảm Hồi Chiêu (cap 80%); +50% Hồi Tài Nguyên":"Khổng Lồ: kích thước/hitbox ×1,5; +30% Máu Tối Đa; +30% Hỏa Lực",`Roll kế tiếp: ${number(Math.max(0,r.nextMode-c.time))} giây`);
+  if(row===222)lines.push(r.mode==="small"?"Thu Nhỏ: kích thước/hitbox ×0,5; +25 điểm phần trăm Giảm Hồi Chiêu (cap 80%); +50% Hồi Tài Nguyên":"Khổng Lồ: kích thước/hitbox ×1,5; +30% Máu Tối Đa; +30% Hỏa Lực",`Roll kế tiếp: ${number(Math.max(0,r.nextMode-c.time))} giây`);
   return lines;
 }
 

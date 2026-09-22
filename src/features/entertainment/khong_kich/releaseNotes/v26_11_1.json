@@ -1,0 +1,306 @@
+{
+  "version": "26.11.1",
+  "title": "Equipment Inventory UX, Tooltip Clarity & Loot Balance",
+  "displayTitle": "CHI TIẾT CẬP NHẬT 26.11.1",
+  "releaseDate": "22/09/2026",
+  "summary": "**26.11.1** tập trung hoàn thiện trải nghiệm của hệ thống Trang Bị vừa ra mắt. Kho Trang Bị được sửa lỗi hiển thị, chuyển sang lưới **4×4** vuông vắn, nâng cấp thao tác kéo-thả và Ghép Trang Bị, đồng thời thiết kế lại tooltip để thông tin chỉ số dễ đọc và nhất quán hơn.\n\nBản cập nhật cũng rà soát cách trình bày số liệu trong tooltip toàn bộ Không Kích, làm rõ các giá trị sát thương/chỉ số còn mơ hồ và điều chỉnh tỷ lệ rơi Trang Bị Thành Phần cùng Nam Châm Ma Thuật để tiến trình build có trọng lượng hơn.",
+  "sections": [
+    {
+      "id": "s1",
+      "title": "SỬA LỖI & BỐ CỤC KHO TRANG BỊ",
+      "icon": {
+        "kind": "system",
+        "id": "ui"
+      },
+      "intro": [
+        {
+          "text": "Kho Trang Bị được chỉnh lại nền tảng layout để các ô Trang Bị/Vật Phẩm luôn hiển thị cân đối, không còn bị cắt hoặc ép sai tỷ lệ.",
+          "format": "paragraph"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s1-e1",
+          "icon": {
+            "kind": "system",
+            "id": "ui"
+          },
+          "title": "Lưới Trang Bị 4×4",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "**THAY ĐỔI:** Kho Trang Bị Thành Phần và Kho Trang Bị Hoàn Chỉnh/Huyền Thoại giờ sử dụng lưới **4×4 = 16 ô mỗi trang** thay cho 8×5 trước đây.",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "Toàn bộ ô slot và hình minh họa Trang Bị/Vật Phẩm được khóa tỷ lệ **1:1**, giữ hình vuông ổn định và không bị cắt khi thay đổi kích thước giao diện.",
+              "format": "bullet"
+            },
+            {
+              "text": "Các ô trong kho được căn đều với khoảng cách nhỏ giữa từng Trang Bị để highlight và viền không chạm vào nhau.",
+              "format": "bullet"
+            },
+            {
+              "text": "Hệ thống Trang 1, Trang 2… vẫn hoạt động độc lập cho từng kho và tự mở thêm trang khi vượt 16 món.",
+              "format": "bullet"
+            }
+          ]
+        },
+        {
+          "id": "s1-e2",
+          "icon": {
+            "kind": "system",
+            "id": "ui"
+          },
+          "title": "Vật Phẩm chuyển xuống cuối Kho",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Khu vực **Vật Phẩm** được chuyển xuống dưới hai kho Trang Bị thay vì nằm ngay dưới Ghép Trang Bị, giúp luồng quản lý build tập trung hơn.",
+              "format": "paragraph",
+              "changeType": "change"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "THAO TÁC KHO TRANG BỊ NHANH HƠN",
+      "icon": {
+        "kind": "system",
+        "id": "ui"
+      },
+      "intro": [
+        {
+          "text": "Các thao tác xem, kéo, trang bị và ghép được điều chỉnh để người chơi có thể quản lý build bằng ít bước hơn nhưng vẫn tránh thao tác nhầm.",
+          "format": "paragraph"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s2-e1",
+          "icon": {
+            "kind": "system",
+            "id": "ui"
+          },
+          "title": "Chạm để xem · Giữ để kéo",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Nhấp/chạm **1 lần** vào Trang Bị hoặc Vật Phẩm giờ vừa highlight lựa chọn vừa mở tooltip ngay lập tức. Không còn phải giữ 1 giây để xem thông tin.",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "Nhấn giữ khoảng **1 giây** sẽ chuyển sang thao tác kéo-thả. Khi bắt đầu kéo, các tooltip đang mở trong Kho Trang Bị tự đóng để không che thao tác.",
+              "format": "bullet"
+            },
+            {
+              "text": "Khi đang xem một Trang Bị rồi chọn Trang Bị khác, tooltip chuyển trực tiếp sang nội dung mới bằng transition nhẹ thay vì đóng và mở lại.",
+              "format": "bullet"
+            }
+          ]
+        },
+        {
+          "id": "s2-e2",
+          "icon": {
+            "kind": "system",
+            "id": "ui"
+          },
+          "title": "Kéo Component trực tiếp vào Ghép Trang Bị",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Trang Bị Thành Phần giờ có thể được **nhấn giữ và kéo trực tiếp** vào khu vực Ghép Trang Bị. Khu vực Ghép phát sáng khi Component được kéo tới.",
+              "format": "paragraph",
+              "changeType": "new"
+            },
+            {
+              "text": "Nhấp đúp Component vẫn là thao tác chọn nhanh. Khi dùng shortcut này, Component có animation bay từ kho vào Craft Slot.",
+              "format": "bullet"
+            },
+            {
+              "text": "Nếu hai Craft Slot đã đầy, Component thứ ba không thay thế món nào; khu vực Ghép phản hồi trạng thái đầy và item giữ nguyên trong kho.",
+              "format": "bullet"
+            }
+          ]
+        },
+        {
+          "id": "s2-e3",
+          "icon": {
+            "kind": "system",
+            "id": "ui"
+          },
+          "title": "Drop Zone rõ ràng hơn",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Khi kéo Trang Bị, vùng **Trang Bị Đang Mang** giờ có glow mạnh hơn, text hướng dẫn đổi sang vàng và viền ánh sáng chuyển động quanh khu vực khi pointer đi vào drop zone.",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "Ngay khi bắt đầu kéo, text hướng dẫn của vùng Trang Bị Đang Mang đã được làm sáng để báo cho người chơi vị trí có thể thả item.",
+              "format": "bullet"
+            }
+          ]
+        },
+        {
+          "id": "s2-e4",
+          "icon": {
+            "kind": "system",
+            "id": "ui"
+          },
+          "title": "HỦY GHÉP không trả Component về kho",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Khi HỦY trong lúc quá trình GHÉP 3 giây đang chạy, hai Trang Bị Thành Phần giờ **giữ nguyên trong hai Craft Slot**. Người chơi có thể chỉnh lại hoặc bấm GHÉP tiếp mà không phải chọn lại từ kho.",
+              "format": "paragraph",
+              "changeType": "change"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "TOOLTIP TRANG BỊ & THÔNG TIN CHỈ SỐ",
+      "icon": {
+        "kind": "system",
+        "id": "ui"
+      },
+      "intro": [
+        {
+          "text": "Tooltip Trang Bị/Vật Phẩm được thiết kế lại theo phong cách gaming góc cạnh hơn, đồng thời chuẩn hóa cách game trình bày các con số chiến đấu.",
+          "format": "paragraph"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s3-e1",
+          "icon": {
+            "kind": "system",
+            "id": "ui"
+          },
+          "title": "Tooltip gọn hơn, hierarchy mạnh hơn",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Panel tooltip, artwork và phần nội dung phụ được thu gọn để ít che màn hình hơn, trong khi **tên Trang Bị/Vật Phẩm được tăng kích thước rõ rệt** để trở thành điểm nhận diện chính.",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "Tooltip có phong cách góc cạnh, viền ánh sáng và accent theo độ hiếm; vị trí hiển thị được tính theo item nguồn để **không che chính Trang Bị/Vật Phẩm đang xem**.",
+              "format": "bullet"
+            }
+          ]
+        },
+        {
+          "id": "s3-e2",
+          "icon": {
+            "kind": "system",
+            "id": "ui"
+          },
+          "title": "Chỉ số có icon, màu và tên đầy đủ",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Mỗi chỉ số trực tiếp của Trang Bị được tách thành một hàng riêng và hiển thị theo chuẩn **giá trị → icon → tên chỉ số**, sử dụng đúng màu semantic đã thống nhất cho Hỏa Lực, Giáp, Máu, Tốc Độ Bắn, Chí Mạng, Hồi Chiêu, Tài Nguyên…",
+              "format": "paragraph",
+              "changeType": "new"
+            },
+            {
+              "text": "Tên hiệu ứng Trang Bị được in đậm; các chỉ số xuất hiện bên trong mô tả hiệu ứng cũng sử dụng cùng icon, màu và cách nhấn mạnh.",
+              "format": "bullet"
+            }
+          ]
+        },
+        {
+          "id": "s3-e3",
+          "icon": {
+            "kind": "system",
+            "id": "ui"
+          },
+          "title": "Rà soát tooltip toàn bộ Không Kích",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Các tooltip Kỹ Năng, Lõi, Buff/Debuff và Trang Bị được rà lại để các con số luôn nói rõ chúng đại diện cho gì. Ví dụ sát thương trực tiếp theo Hỏa Lực không còn hiển thị dạng mơ hồ như “800%” mà ghi đầy đủ “800% Hỏa Lực”.",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "Các thuật ngữ và cách viết như Tỷ Lệ Chí Mạng, Sát Thương Chí Mạng, Hồi Tài Nguyên, Hỏa Lực… được chuẩn hóa để hệ thống icon/màu semantic hoạt động nhất quán.",
+              "format": "bullet"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "CÂN BẰNG LOOT TRANG BỊ",
+      "icon": {
+        "kind": "core",
+        "id": "224"
+      },
+      "intro": [
+        {
+          "text": "Tỷ lệ rơi từ quái thường được giảm để mỗi Trang Bị Thành Phần và mỗi Nam Châm Ma Thuật có giá trị hơn trong quá trình xây dựng build.",
+          "format": "paragraph"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s4-e1",
+          "icon": {
+            "kind": "system",
+            "id": "core"
+          },
+          "title": "Quái thường",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Tỷ lệ rơi **Trang Bị Thành Phần** từ quái thường giảm từ **4% → 2%**.",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "Tỷ lệ rơi **Nam Châm Ma Thuật** từ quái thường giảm từ **4% → 1%**.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "Hai lần roll vẫn độc lập, vì vậy một quái vẫn có thể rất hiếm khi rơi cả hai.",
+              "format": "bullet"
+            }
+          ]
+        },
+        {
+          "id": "s4-e2",
+          "icon": {
+            "kind": "core",
+            "id": "224"
+          },
+          "title": "224 — Thích Chơi Xác Suất",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "**THAY ĐỔI:** Tăng xác suất quái thường rơi Trang Bị Thành Phần từ **2% → 3%**. Tinh Anh thứ 2 trở đi trong wave vẫn tăng từ **20% → 30%**.",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "Tinh Anh đầu tiên mỗi wave vẫn chắc chắn rơi Trang Bị Thành Phần. Lõi không làm tăng tỷ lệ rơi Nam Châm Ma Thuật.",
+              "format": "bullet"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

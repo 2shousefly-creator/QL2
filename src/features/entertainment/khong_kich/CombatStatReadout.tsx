@@ -1,5 +1,6 @@
 import React from "react";
 import { Swords, Shield, Gauge, HeartPulse, BatteryCharging, Timer, Crosshair, Zap } from "lucide-react";
+import { CoreDescription } from "./CoreDescription";
 import type { EffectiveAircraftStats } from "./airCombatTypes";
 
 export function CombatStatChips({ stats, baseline, healingReceived = 1, onInspect }: { onInspect?: (id: string, title: React.ReactNode, text: React.ReactNode) => void; stats: EffectiveAircraftStats; baseline?: EffectiveAircraftStats; healingReceived?: number }) {
@@ -15,13 +16,18 @@ export function CombatStatChips({ stats, baseline, healingReceived = 1, onInspec
     { label: "Tỷ lệ chí mạng", value: `${Math.round(stats.criticalChance * 100)}%`, Icon: Crosshair },
     { label: "Sát thương chí mạng", value: `${Math.round(stats.criticalDamageMultiplier * 100)}%`, Icon: Zap },
   ];
+  const semanticValues = [
+    `${stats.firepower.toFixed(0)} Hỏa Lực`, `${stats.armor.toFixed(0)} Giáp`, `${stats.fireRate.toFixed(1)} Tốc Độ Bắn`,
+    `${(stats.hpRegen * healingReceived).toFixed(1)} Hồi Máu/s`, `${stats.resourceRegen.toFixed(1)} Hồi Tài Nguyên/s`,
+    `${Math.round(stats.cooldownReduction * 100)}% Giảm Hồi Chiêu`, `${Math.round(stats.criticalChance * 100)}% Tỷ Lệ Chí Mạng`, `${Math.round(stats.criticalDamageMultiplier * 100)}% Sát Thương Chí Mạng`,
+  ];
   const descriptions = [
     "Hỏa Lực thể hiện khả năng gây sát thương của chiến cơ từ bắn thường và kỹ năng.",
-    <>Giáp giúp bạn giảm sát thương phải nhận từ hỏa lực của kẻ thù. Hiện tại bạn đang nhận giảm <strong className="air-tooltip-value">{((1-100/(100+Math.max(-80,stats.armor)))*100).toLocaleString("vi-VN",{maximumFractionDigits:1})}%</strong> sát thương.</>,
+    `Giáp giảm ${((1-100/(100+Math.max(-80,stats.armor)))*100).toLocaleString("vi-VN",{maximumFractionDigits:1})}% sát thương nhận vào từ kẻ địch.`,
     "Số lần khai hỏa đạn thường trong 1 giây.", "Số HP hồi lại mỗi 1 giây.", `Số ${resource} hồi lại mỗi 1 giây.`,
-    <>Các kỹ năng của bạn được giảm <strong className="air-tooltip-value">{Math.round(stats.cooldownReduction*100)}%</strong> thời gian hồi chiêu, tối đa lên tới <strong className="air-tooltip-value">80%</strong>.</>,
-    <>Chiến cơ có <strong className="air-tooltip-value">{Math.round(stats.criticalChance*100)}%</strong> xác suất gây chí mạng trong mỗi đòn tấn công.</>,
-    <>Khi chí mạng, lượng sát thương gây ra bằng <strong className="air-tooltip-value">{Math.round(stats.criticalDamageMultiplier*100)}%</strong> so với đòn thông thường.</>,
+    `Chiến cơ có ${Math.round(stats.cooldownReduction*100)}% Giảm Hồi Chiêu cho kỹ năng, tối đa 80% Giảm Hồi Chiêu.`,
+    `Chiến cơ có ${Math.round(stats.criticalChance*100)}% Tỷ Lệ Chí Mạng cho mỗi đòn có thể chí mạng.`,
+    `Chiến cơ có ${Math.round(stats.criticalDamageMultiplier*100)}% Sát Thương Chí Mạng: đòn chí mạng gây ${Math.round(stats.criticalDamageMultiplier*100)}% sát thương của đòn không chí mạng tương ứng.`,
   ];
   return <div className="combat-stat-chips" aria-label="Chỉ số chiến đấu">
     {chips.map(({ label, value, Icon }, index) => {
@@ -29,7 +35,7 @@ export function CombatStatChips({ stats, baseline, healingReceived = 1, onInspec
       const direction = key === "hpRegen" && healingReceived < 1 ? "debuff" : Math.abs(delta) < 1e-5 * Math.max(1, Math.abs(baseline?.[key] ?? 0)) ? "neutral" : delta > 0 ? "buff" : "debuff";
       const content = <><Icon aria-hidden="true" /><span className="sr-only">{label}: </span><span>{value}</span></>;
       if (onInspect) return <button type="button" key={label} className="combat-stat-chip" data-stat-change={direction} data-combat-tooltip-trigger="hub" aria-label={`${label}: ${value}`}
-        onClick={()=>onInspect(key,<>{label}: <strong className="air-tooltip-value">{value}</strong></>,descriptions[index])}>{content}</button>;
+        onClick={()=>onInspect(key,<CoreDescription text={semanticValues[index]}/>,<CoreDescription text={descriptions[index]}/>)}>{content}</button>;
       return <span key={label} className="combat-stat-chip" data-stat-change={direction} title={`${label}: ${value}`}>
       <Icon aria-hidden="true" /><span className="sr-only">{label}: </span><span>{value}</span>
     </span>; })}

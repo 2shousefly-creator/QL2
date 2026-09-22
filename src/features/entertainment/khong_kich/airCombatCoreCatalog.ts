@@ -236,7 +236,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_021",
     "name": "Phản công",
-    "description": "Sau đợt Mồi Bẫy cuối cùng, gây thêm 30% sát thương trong 5 giây.",
+    "description": "Sau đợt Mồi Bẫy cuối cùng, gây thêm 30% mọi sát thương trong 5 giây.",
     "system": "skill",
     "icon": "core:core_021",
     "category": "skill",
@@ -268,7 +268,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_023",
     "name": "Quá Tải",
-    "description": "Điên Cuồng nhận thêm +35% Tốc Độ Bắn, nâng tổng hiệu ứng lên +75%.",
+    "description": "Điên Cuồng nhận thêm +35% Tốc Độ Bắn, nâng tổng hiệu ứng lên +75% Tốc Độ Bắn.",
     "system": "skill",
     "icon": "core:core_023",
     "category": "skill",
@@ -556,7 +556,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_041",
     "name": "Hội tụ năng lượng",
-    "description": "Giảm thời gian tụ Laser 1,8 giây → từ 2s → 0,2s, đồng thời laser gây thêm 10% sát thương",
+    "description": "Giảm thời gian tụ Laser 1,8 giây → từ 2s → 0,2s, đồng thời Laser Hủy Diệt gây thêm 10% sát thương Laser Hủy Diệt mỗi nhịp",
     "system": "skill",
     "icon": "core:core_041",
     "category": "skill",
@@ -713,7 +713,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_053",
     "name": "Găng bảo thạch",
-    "description": "Nhận +25% Tỷ Lệ Chí Mạng. Kỹ năng của bạn có thể chí mạng. Nếu đồng thời mang Mắt Tempest: +50 điểm phần trăm Sát Thương Chí Mạng toàn cục; Thiên Nhãn Raijin: +100 điểm phần trăm. Synergy chỉ áp dụng một lần theo family.",
+    "description": "Nhận +25% Tỷ Lệ Chí Mạng. Kỹ năng của bạn có thể chí mạng. Nếu đồng thời mang Mắt Tempest: +50 điểm phần trăm Sát Thương Chí Mạng toàn cục; Thiên Nhãn Raijin: +100 điểm phần trăm Sát Thương Chí Mạng toàn cục. Synergy chỉ áp dụng một lần theo family.",
     "system": "attack",
     "icon": "core:core_053",
     "category": "offense",
@@ -735,7 +735,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_055",
     "name": "Kính ngắm chiến trường",
-    "description": "+8% Crit Chance",
+    "description": "+8% Tỷ Lệ Chí Mạng",
     "system": "attack",
     "icon": "core:core_055",
     "category": "offense",
@@ -779,7 +779,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_059",
     "name": "Phát bắn tích điện",
-    "description": "Mỗi phát bắn thường thứ 10 gây 180% sát thương.",
+    "description": "Mỗi phát bắn thường thứ 10 gây 180% sát thương của phát bắn thường.",
     "system": "attack",
     "icon": "core:core_059",
     "category": "weapon",
@@ -790,7 +790,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_060",
     "name": "Nòng súng ổn định",
-    "description": "Sau 4 giây không nhận sát thương, đòn bắn thường gây thêm 15% sát thương. Hiệu ứng mất khi bạn nhận sát thương.",
+    "description": "Sau 4 giây không nhận sát thương, đòn bắn thường gây thêm 15% sát thương đạn thường. Hiệu ứng mất khi bạn nhận sát thương.",
     "system": "attack",
     "icon": "core:core_060",
     "category": "weapon",
@@ -856,7 +856,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_066",
     "name": "Combo săn mồi",
-    "description": "Hạ gục liên tiếp cách nhau không quá 3 giây tăng 2,5% sát thương mỗi cộng dồn, tối đa 5 (12,5%). Mất toàn bộ khi quá 3 giây không hạ gục.",
+    "description": "Hạ gục liên tiếp cách nhau không quá 3 giây tăng 2,5% mọi sát thương mỗi cộng dồn, tối đa 5 cộng dồn (+12,5% mọi sát thương). Mất toàn bộ khi quá 3 giây không hạ gục.",
     "system": "attack",
     "icon": "core:core_066",
     "category": "offense",
@@ -867,7 +867,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_067",
     "name": "Đánh dấu Tinh Anh",
-    "description": "Gây thêm 8% sát thương lên Tinh Anh và Boss.",
+    "description": "Gây thêm 8% mọi sát thương lên Tinh Anh và Boss.",
     "system": "attack",
     "icon": "core:core_067",
     "category": "offense",
@@ -878,7 +878,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_068",
     "name": "Kết liễu gọn",
-    "description": "Gây thêm 12% sát thương lên mục tiêu dưới 25% Máu.",
+    "description": "Gây thêm 12% mọi sát thương lên mục tiêu dưới 25% Máu.",
     "system": "attack",
     "icon": "core:core_068",
     "category": "offense",
@@ -889,7 +889,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_069",
     "name": "Phủ đầu",
-    "description": "Gây thêm 12% sát thương lên mục tiêu trên 70% Máu.",
+    "description": "Gây thêm 12% mọi sát thương lên mục tiêu trên 70% Máu.",
     "system": "attack",
     "icon": "core:core_069",
     "category": "offense",
@@ -922,7 +922,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_072",
     "name": "Thép lạnh",
-    "description": "Sau 5 giây không nhận sát thương, đòn đánh kế tiếp trúng bạn gây ít hơn 40% sát thương. Sau đó hiệu ứng bắt đầu tích lại.",
+    "description": "Sau 5 giây không nhận sát thương, đòn đánh kế tiếp trúng bạn bị giảm 40% sát thương nhận vào. Sau đó hiệu ứng bắt đầu tích lại.",
     "system": "defense",
     "icon": "core:core_072",
     "category": "defense",
@@ -999,7 +999,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_079",
     "name": "Tam Liên Pháo",
-    "description": "Mỗi phát bắn thường thứ 3 tạo thêm một viên đạn phụ gây 40% sát thương, viên đạn này sẽ có đường bay độc lập và tự nhắm vào mục tiêu gần nhất (không khóa mục tiêu)",
+    "description": "Mỗi phát bắn thường thứ 3 tạo thêm một viên đạn phụ gây 40% sát thương của phát bắn thường cơ bản (trước hệ số riêng của loại đạn), viên đạn này sẽ có đường bay độc lập và tự nhắm vào mục tiêu gần nhất (không khóa mục tiêu)",
     "system": "attack",
     "icon": "core:core_079",
     "category": "weapon",
@@ -1010,7 +1010,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_080",
     "name": "Dội Xạ Chiến Thuật",
-    "description": "Đạn thường có 30% cơ hội nảy sang một mục tiêu khác, gây 40% sát thương.",
+    "description": "Đạn thường có 30% cơ hội nảy sang một mục tiêu khác, gây 40% sát thương đạn gốc.",
     "system": "attack",
     "icon": "core:core_080",
     "category": "weapon",
@@ -1043,7 +1043,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_083",
     "name": "Phản Công Tức Thời",
-    "description": "Sau khi nhận sát thương, những phát bắn thường tiếp theo trong vòng 4 giây gây thêm 20% sát thương. Hồi nội bộ 9 giây (bắt đầu hồi chiêu sau khi kết thúc hiệu ứng).",
+    "description": "Sau khi nhận sát thương, những phát bắn thường tiếp theo trong vòng 4 giây gây thêm 20% sát thương đạn thường. Hồi nội bộ 9 giây (bắt đầu hồi chiêu sau khi kết thúc hiệu ứng).",
     "system": "attack",
     "icon": "core:core_083",
     "category": "offense",
@@ -1109,7 +1109,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_089",
     "name": "Đạn xuyên vô tận",
-    "description": "Đạn thường xuyên thêm tối đa 3 mục tiêu, lần lượt gây 70% / 50% / 30% sát thương.",
+    "description": "Đạn thường xuyên thêm tối đa 3 mục tiêu; ba mục tiêu xuyên thêm lần lượt nhận 70%, 50% và 30% sát thương của phát bắn gốc.",
     "system": "attack",
     "icon": "core:core_089",
     "category": "weapon",
@@ -1131,7 +1131,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_091",
     "name": "Không khuất phục",
-    "description": "Mỗi 2% Máu đã mất tăng 1% sát thương, tối đa +40%.",
+    "description": "Mỗi 2% Máu đã mất tăng 1% mọi sát thương, tối đa +40% mọi sát thương.",
     "system": "attack",
     "icon": "core:core_091",
     "category": "defense",
@@ -1241,7 +1241,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_101",
     "name": "Hỏa Lực Cự Ly Gần",
-    "description": "Đòn bắn thường gây thêm 12% sát thương ở cự ly gần — dưới 1/3 chiều cao vùng chiến đấu.",
+    "description": "Đòn bắn thường gây thêm 12% sát thương đạn thường ở cự ly gần — dưới 1/3 chiều cao vùng chiến đấu.",
     "system": "attack",
     "icon": "core:core_101",
     "category": "weapon",
@@ -1252,7 +1252,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_102",
     "name": "Hỏa Lực Cự Ly Xa",
-    "description": "Đòn bắn thường gây thêm 6% sát thương ở cự ly xa — trên 2/3 chiều cao vùng chiến đấu.",
+    "description": "Đòn bắn thường gây thêm 6% sát thương đạn thường ở cự ly xa — trên 2/3 chiều cao vùng chiến đấu.",
     "system": "attack",
     "icon": "core:core_102",
     "category": "weapon",
@@ -1329,7 +1329,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_109",
     "name": "Giáp Cánh",
-    "description": "Mỗi cánh có hồi nội tại riêng 12 giây. Đòn đầu tiên trúng một cánh gây ít hơn 30% sát thương.",
+    "description": "Mỗi cánh có hồi nội tại riêng 12 giây. Đòn đầu tiên trúng một cánh bị giảm 30% sát thương nhận vào tại cánh đó.",
     "system": "defense",
     "icon": "core:core_109",
     "category": "defense",
@@ -1340,7 +1340,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_110",
     "name": "Giáp Chống Nổ",
-    "description": "Giảm 25% sát thương từ Bom, vụ nổ và vùng nổ diện rộng.",
+    "description": "Giảm 25% sát thương nhận vào từ Bom, vụ nổ và vùng nổ diện rộng.",
     "system": "defense",
     "icon": "core:core_110",
     "category": "defense",
@@ -1351,7 +1351,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_111",
     "name": "Đạn Siêu Âm",
-    "description": "Đạn thường bay nhanh hơn 100% và gây thêm 4% sát thương. Hitbox không đổi.",
+    "description": "Đạn thường bay nhanh hơn 100% và gây thêm 4% sát thương đạn thường. Hitbox không đổi.",
     "system": "attack",
     "icon": "core:core_111",
     "category": "offense",
@@ -1384,7 +1384,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_114",
     "name": "Nối Nhịp Hỏa Lực",
-    "description": "Sau khi dùng kỹ năng, 3 phát bắn thường kế tiếp gây thêm 80% sát thương.",
+    "description": "Sau khi dùng kỹ năng, 3 phát bắn thường kế tiếp gây thêm 80% sát thương đạn thường.",
     "system": "attack",
     "icon": "core:core_114",
     "category": "offense",
@@ -1395,7 +1395,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_115",
     "name": "Cô Lập Mục Tiêu",
-    "description": "Nếu không có kẻ địch khác trong phạm vi 80px quanh mục tiêu, gây thêm 25% sát thương lên mục tiêu đó. Với Boss, mức tăng là 10%.",
+    "description": "Nếu không có kẻ địch khác trong phạm vi 80px quanh mục tiêu, gây thêm 25% mọi sát thương lên mục tiêu đó. Với Boss, mức tăng là 10% mọi sát thương.",
     "system": "attack",
     "icon": "core:core_115",
     "category": "offense",
@@ -1406,7 +1406,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_116",
     "name": "Comeback",
-    "description": "Giảm 10% thời gian hiệu ứng bất lợi. Khi một hiệu ứng bất lợi kết thúc, gây thêm 25% sát thương trong 4 giây. Hiệu ứng khác kết thúc làm mới thời gian.",
+    "description": "Giảm 10% thời gian hiệu ứng bất lợi. Khi một hiệu ứng bất lợi kết thúc, gây thêm 25% mọi sát thương trong 4 giây. Hiệu ứng khác kết thúc làm mới thời gian.",
     "system": "utility",
     "icon": "core:core_116",
     "category": "offense",
@@ -1428,7 +1428,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_118",
     "name": "Càng Đông Càng Vui",
-    "description": "Gây thêm 1,5% sát thương cho mỗi kẻ địch vượt quân số phe người chơi, tối đa 18%.",
+    "description": "Gây thêm 1,5% mọi sát thương cho mỗi kẻ địch vượt quân số phe người chơi, tối đa 18% mọi sát thương.",
     "system": "attack",
     "icon": "core:core_118",
     "category": "offense",
@@ -1932,7 +1932,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 {
   "id": "core_151",
   "name": "Phản Xạ Cường Hóa",
-  "description": "Tinh Đạn của Phản Quỹ Đạo gây 70% Hỏa Lực thay vì 30%.",
+  "description": "Tinh Đạn của Phản Quỹ Đạo gây 70% Hỏa Lực thay vì 30% Hỏa Lực.",
   "system": "skill",
   "icon": "skill:orbit_reversal",
   "category": "skill",
@@ -1996,7 +1996,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 {
   "id": "core_155",
   "name": "Hố Trắng",
-  "description": "Nếu Phản Quỹ Đạo giải phóng ít nhất 1 Tinh Đạn, các phát bắn thường của Astra gây thêm 60% sát thương trong 5 giây sau khi kỹ năng kết thúc.",
+  "description": "Nếu Phản Quỹ Đạo giải phóng ít nhất 1 Tinh Đạn, các phát bắn thường của Astra gây thêm 60% sát thương đạn thường trong 5 giây sau khi kỹ năng kết thúc.",
   "system": "skill",
   "icon": "skill:orbit_reversal",
   "category": "skill",
@@ -2060,7 +2060,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 {
   "id": "core_159",
   "name": "Tinh Tú Tử Thần",
-  "description": "Phát bắn của Thương Tinh Tú gây thêm 40% sát thương cho các mục tiêu dưới 30% Máu.",
+  "description": "Phát bắn của Thương Tinh Tú gây thêm 40% sát thương Thương Tinh Tú cho các mục tiêu dưới 30% Máu.",
   "system": "skill",
   "icon": "skill:stellar_lance",
   "category": "skill",
@@ -2108,7 +2108,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 {
   "id": "core_162",
   "name": "Sao Neutron",
-  "description": "Mỗi thiên thạch của Sao Rơi gây 265% Hỏa Lực thay vì 210%.",
+  "description": "Mỗi thiên thạch của Sao Rơi gây 265% Hỏa Lực thay vì 210% Hỏa Lực.",
   "system": "skill",
   "icon": "skill:starfall",
   "category": "skill",
@@ -2216,7 +2216,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 {
   "id": "core_169",
   "name": "Bộ Điều Áp",
-  "description": "Khi Tài Nguyên trên 70%: +10 Hoả Lực. Khi Tài Nguyên dưới 30%: +0,7 Hồi Máu mỗi giây. Khoảng 30–70% +0,2 tốc độ bắn.",
+  "description": "Khi Tài Nguyên trên 70%: +10 Hỏa Lực. Khi Tài Nguyên dưới 30%: +0,7 Hồi Máu mỗi giây. Khoảng 30–70% +0,2 tốc độ bắn.",
   "system": "utility",
   "icon": "core:core_169",
   "category": "weapon",
@@ -2238,7 +2238,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 {
   "id": "core_171",
   "name": "Chốt An Toàn",
-  "description": "Trong 1,5 giây sau khi dùng kỹ năng, đòn gây sát thương đầu tiên trúng người chơi bị giảm 25%.",
+  "description": "Trong 1,5 giây sau khi dùng kỹ năng, đòn gây sát thương đầu tiên trúng người chơi bị giảm 25% sát thương nhận vào.",
   "system": "defense",
   "icon": "core:core_171",
   "category": "defense",
@@ -2337,7 +2337,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 {
   "id": "core_180",
   "name": "Phá Khiên",
-  "description": "Đạn thường gây thêm 18% sát thương lên Lá Chắn của kẻ địch. Khi mục tiêu bị người chơi phá vỡ lá chắn, mục tiêu chịu thêm 8% sát thương từ đạn thường trong 3 giây.",
+  "description": "Đạn thường gây thêm 18% sát thương đạn thường lên Lá Chắn của kẻ địch. Khi mục tiêu bị người chơi phá vỡ lá chắn, mục tiêu chịu thêm 8% sát thương từ đạn thường trong 3 giây.",
   "system": "attack",
   "icon": "core:core_180",
   "category": "offense",
@@ -2392,7 +2392,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 {
   "id": "core_185",
   "name": "Đánh Dấu Sơ Bộ",
-  "description": "Phát đạn thường chính đầu tiên trúng một mục tiêu sẽ đánh dấu 4 giây; sát thương kỹ năng kế tiếp lên mục tiêu đó gây thêm 12% và tiêu dấu. Hồi chiêu mỗi mục tiêu 12s",
+  "description": "Phát đạn thường chính đầu tiên trúng một mục tiêu sẽ đánh dấu 4 giây; lần gây sát thương kỹ năng kế tiếp lên mục tiêu đó nhận +12% sát thương kỹ năng và tiêu dấu. Hồi chiêu mỗi mục tiêu 12s",
   "system": "attack",
   "icon": "core:core_185",
   "category": "offense",
@@ -2546,7 +2546,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 {
   "id": "core_199",
   "name": "Mạch Quá Tải",
-  "description": "Mỗi lần dùng kỹ năng nhận 1 Overclock. Kỹ năng kế tiếp gây thêm 18% sát thương cho mỗi cộng dồn, tối đa 3. Khi dùng kỹ năng ở 3 cộng dồn, kỹ năng đó nhận +54% sát thương, đồng thời phát xung toàn màn hình gây 250% Hỏa Lực rồi reset Overclock.",
+  "description": "Mỗi lần dùng kỹ năng nhận 1 Overclock. Kỹ năng kế tiếp gây thêm 18% sát thương kỹ năng cho mỗi cộng dồn, tối đa 3. Khi dùng kỹ năng ở 3 cộng dồn, kỹ năng đó nhận +54% sát thương kỹ năng, đồng thời phát xung toàn màn hình gây 250% Hỏa Lực rồi reset Overclock.",
   "system": "attack",
   "icon": "core:core_199",
   "category": "offense",
@@ -2568,7 +2568,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 {
   "id": "core_201",
   "name": "Cộng Hưởng Kho Vũ Khí",
-  "description": "Mỗi Lõi Tấn Công khác nhau đang sở hữu cho +5% sát thương đạn thường (tối đa +30%); mỗi Lõi Tài Nguyên cho +5% sát thương kỹ năng (tối đa +30%); mỗi Lõi Phòng Thủ cho +4% Giảm Sát Thương (tối đa 24%); mỗi Lõi Đa Dụng cho +2% sát thương đạn thường, +2% sát thương kỹ năng và +2% Giảm Sát Thương (mỗi phần tối đa +12%). Lõi Kỹ Năng không được tính. Bản thân Cộng Hưởng Kho Vũ Khí được tính là 1 Lõi Đa Dụng.",
+  "description": "Mỗi Lõi Tấn Công khác nhau đang sở hữu cho +5% sát thương đạn thường (tối đa +30% sát thương đạn thường); mỗi Lõi Tài Nguyên cho +5% sát thương kỹ năng (tối đa +30% sát thương kỹ năng); mỗi Lõi Phòng Thủ cho +4% Giảm Sát Thương (tối đa 24% Giảm Sát Thương); mỗi Lõi Đa Dụng cho +2% sát thương đạn thường, +2% sát thương kỹ năng và +2% Giảm Sát Thương (tối đa +12% sát thương đạn thường, +12% sát thương kỹ năng và +12% Giảm Sát Thương). Lõi Kỹ Năng không được tính. Bản thân Cộng Hưởng Kho Vũ Khí được tính là 1 Lõi Đa Dụng.",
   "system": "utility",
   "icon": "core:core_201",
   "category": "weapon",
@@ -2579,7 +2579,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 {
   "id": "core_202",
   "name": "Học Thuyết Một Mũi Nhọn",
-  "description": "Sau khi nhận lõi, chọn 1 Kỹ năng để trở thành Kỹ Năng Chủ Lực tới hết lượt chơi, kỹ năng Chủ Lực sẽ được: +22% sát thương, -15% chi phí Tài Nguyên và -15% Hồi Chiêu cơ bản",
+  "description": "Sau khi nhận lõi, chọn 1 Kỹ năng để trở thành Kỹ Năng Chủ Lực tới hết lượt chơi, kỹ năng Chủ Lực sẽ được: +22% sát thương kỹ năng Chủ Lực, -15% chi phí Tài Nguyên và -15% Hồi Chiêu cơ bản",
   "system": "attack",
   "icon": "core:core_202",
   "category": "offense",
@@ -2623,7 +2623,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 {
   "id": "core_206",
   "name": "Đạn Siêu Nặng",
-  "description": "Đạn bắn thường gây thêm 70% sát thương và xuyên thêm 1 mục tiêu, nhưng tổng Tốc Độ Bắn giảm 20% và tốc độ đạn bay giảm 30%.",
+  "description": "Đạn bắn thường chính gây thêm 70% sát thương đạn thường và xuyên thêm 1 mục tiêu, nhưng tổng Tốc Độ Bắn giảm 20% và tốc độ đạn bay giảm 30%.",
   "system": "attack",
   "icon": "core:core_206",
   "category": "offense",
@@ -2634,7 +2634,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 {
   "id": "core_207",
   "name": "Pha Đối Nghịch",
-  "description": "Nhận +25% tỷ lệ chí mạng. Đòn bắn thường chí mạng đánh dấu mục tiêu 5 giây bằng “Pha Kỹ Năng”; kỹ năng kế tiếp trúng mục tiêu tiêu dấu để gây thêm 45% sát thương. Một kỹ năng trúng mục tiêu không có Pha Kỹ Năng sẽ tạo “Pha Súng”; phát đạn thường chính kế tiếp tiêu dấu để gây thêm 45% sát thương.",
+  "description": "Nhận +25% tỷ lệ chí mạng. Đòn bắn thường chí mạng đánh dấu mục tiêu 5 giây bằng “Pha Kỹ Năng”; kỹ năng kế tiếp trúng mục tiêu tiêu dấu để gây thêm 45% sát thương kỹ năng. Một kỹ năng trúng mục tiêu không có Pha Kỹ Năng sẽ tạo “Pha Súng”; phát đạn thường chính kế tiếp tiêu dấu để gây thêm 45% sát thương đạn thường.",
   "system": "attack",
   "icon": "core:core_207",
   "category": "offense",
@@ -2821,7 +2821,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 {
   "id": "core_224",
   "name": "Thích Chơi Xác Suất",
-  "description": "Tăng xác suất quái vật rơi ra trang bị thành phần khi bị tiêu diệt từ 4% lên 6%. Quái Tinh Anh tiêu diệt thứ 2 trở đi trong wave tăng xác suất rơi trang bị thành phần từ 20% lên 30%.",
+  "description": "Tăng xác suất quái vật rơi ra trang bị thành phần khi bị tiêu diệt từ 2% lên 3%. Quái Tinh Anh tiêu diệt thứ 2 trở đi trong wave tăng xác suất rơi trang bị thành phần từ 20% lên 30%.",
   "system": "utility",
   "icon": "core:core_224",
   "category": "weapon",

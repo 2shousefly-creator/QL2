@@ -132,9 +132,9 @@ export function equipmentOnKill(w:CombatWorld,h:EquipmentHooks,e:EnemyEntity) {
     if(q.eliteDropWave!==w.waveIndex){q.eliteDropWave=w.waveIndex;q.eliteKillsThisWave=0;}
     const elite=h.elite(e),boost=s.selectedCores.includes("core_224");
     if(elite||e.type!=="boss"){
-      const first=elite&&q.eliteKillsThisWave++===0,base=first?1:elite?.20:.04,chance=first?1:boost?(elite?.30:.06):base,roll=w.random();
+      const first=elite&&q.eliteKillsThisWave++===0,base=first?1:elite?.20:.02,chance=first?1:boost?(elite?.30:.03):base,roll=w.random();
       if(roll<chance){q.loot.push({id:w.nextId++,definitionId:randomEquipmentId("TP",w.random),x:e.x,y:e.y,age:0});if(boost&&roll>=base){recordCoreMetric(s,224,"extraDrops",1);recordCoreMetric(s,224,elite?"eliteDrops":"normalDrops",1);}}
-      if(!elite&&w.random()<.04)q.loot.push({id:w.nextId++,definitionId:"VP01",x:e.x+10,y:e.y,age:0});
+      if(!elite&&w.random()<.01)q.loot.push({id:w.nextId++,definitionId:"VP01",x:e.x+10,y:e.y,age:0});
     }
   }
   if(e.killProcEligible!==false)for(const c of contexts(w,h))EFFECTS[c.f]?.kill?.(c,e);

@@ -315,7 +315,7 @@ const definitions: EquipmentDefinition[] = [
       "TP08"
     ],
     "statsText": "+23 Hỏa Lực; +15% Tỷ Lệ Chí Mạng",
-    "effect": "Xung Kích Bão Tố: Kỹ năng của chiến cơ có thể gây chí mạng. Nếu kỹ năng đã có thể gây chí mạng từ trước đó nhờ có lõi nâng cấp Găng Bảo Thạch thì bù lại sẽ tăng thêm 50% sát thương chí mạng.",
+    "effect": "Xung Kích Bão Tố: Kỹ năng của chiến cơ có thể gây chí mạng. Nếu kỹ năng đã có thể gây chí mạng từ trước đó nhờ có lõi nâng cấp Găng Bảo Thạch thì bù lại sẽ tăng thêm 50% Sát Thương Chí Mạng.",
     "stats": {
       "firepower": 23.0,
       "criticalChance": 0.15
@@ -331,7 +331,7 @@ const definitions: EquipmentDefinition[] = [
       "TP08"
     ],
     "statsText": "+46 Hỏa Lực; +30% Tỷ Lệ Chí Mạng",
-    "effect": "Xung Kích Bão Tố: Kỹ năng của chiến cơ có thể gây chí mạng. Nếu kỹ năng đã có thể gây chí mạng từ trước đó nhờ có lõi nâng cấp Găng Bảo Thạch thì bù lại sẽ tăng thêm 100% sát thương chí mạng.",
+    "effect": "Xung Kích Bão Tố: Kỹ năng của chiến cơ có thể gây chí mạng. Nếu kỹ năng đã có thể gây chí mạng từ trước đó nhờ có lõi nâng cấp Găng Bảo Thạch thì bù lại sẽ tăng thêm 100% Sát Thương Chí Mạng.",
     "stats": {
       "firepower": 46.0,
       "criticalChance": 0.3
@@ -347,7 +347,7 @@ const definitions: EquipmentDefinition[] = [
       "TP02"
     ],
     "statsText": "+0,85 Tốc Độ Bắn",
-    "effect": "Tia Chớp Đen: Nhận thêm +25% tổng tốc độ bắn, đòn bắn thường gây thêm sát thương bằng 3% máu hiện tại của mục tiêu ( Đối với Tinh Anh và Boss, sát thương theo máu hiện tại của mục tiêu không vượt quá 40% Hỏa lực của chiến cơ)",
+    "effect": "Tia Chớp Đen: Nhận thêm +25% tổng Tốc Độ Bắn, đòn bắn thường gây thêm sát thương bằng 3% máu hiện tại của mục tiêu ( Đối với Tinh Anh và Boss, sát thương theo máu hiện tại của mục tiêu không vượt quá 40% Hỏa lực của chiến cơ)",
     "stats": {
       "fireRate": 0.85
     }
@@ -362,7 +362,7 @@ const definitions: EquipmentDefinition[] = [
       "TP02"
     ],
     "statsText": "+1,7 Tốc Độ Bắn",
-    "effect": "Tia Chớp Đen: Nhận thêm +50% tổng tốc độ bắn, đòn bắn thường gây thêm sát thương bằng 6% máu hiện tại của mục tiêu ( Đối với Tinh Anh và Boss, sát thương theo máu hiện tại của mục tiêu không vượt quá 80% Hỏa lực của chiến cơ)",
+    "effect": "Tia Chớp Đen: Nhận thêm +50% tổng Tốc Độ Bắn, đòn bắn thường gây thêm sát thương bằng 6% máu hiện tại của mục tiêu ( Đối với Tinh Anh và Boss, sát thương theo máu hiện tại của mục tiêu không vượt quá 80% Hỏa lực của chiến cơ)",
     "stats": {
       "fireRate": 1.7
     }
@@ -537,7 +537,7 @@ const definitions: EquipmentDefinition[] = [
       "TP08"
     ],
     "statsText": "+0,45 Tốc Độ Bắn; +15% Tỷ Lệ Chí Mạng",
-    "effect": "Mềm Xương: Đòn chí mạng sẽ làm giảm giáp của mục tiêu đi 10% trong 4 giây, lam mới thời gian hiệu ứng và cộng dồn lên tới 3 lần.",
+    "effect": "Mềm Xương: Đòn chí mạng sẽ làm giảm 10% Giáp của mục tiêu trong 4 giây, làm mới thời gian hiệu ứng và cộng dồn lên tới 3 lần.",
     "stats": {
       "fireRate": 0.45,
       "criticalChance": 0.15
@@ -553,7 +553,7 @@ const definitions: EquipmentDefinition[] = [
       "TP08"
     ],
     "statsText": "+0,9 Tốc Độ Bắn; +30% Tỷ Lệ Chí Mạng",
-    "effect": "Mềm Xương: Đòn chí mạng sẽ làm giảm giáp của mục tiêu đi 20% trong 4 giây, lam mới thời gian hiệu ứng và cộng dồn lên tới 3 lần.",
+    "effect": "Mềm Xương: Đòn chí mạng sẽ làm giảm 20% Giáp của mục tiêu trong 4 giây, làm mới thời gian hiệu ứng và cộng dồn lên tới 3 lần.",
     "stats": {
       "fireRate": 0.9,
       "criticalChance": 0.3
@@ -1104,7 +1104,7 @@ const definitions: EquipmentDefinition[] = [
       "TP06",
       "TP08"
     ],
-    "statsText": "+17% tốc độ Hồi Tài Nguyên/ss; +15% Tỷ Lệ Chí Mạng",
+    "statsText": "+17% tốc độ Hồi Tài Nguyên/s; +15% Tỷ Lệ Chí Mạng",
     "effect": "Ứng Biến: Khi chiến cơ từ 50% máu trở lên, nhận thêm 10% hỏa lực, khi chiến cơ còn dưới 50% máu, hồi lại máu bằng 2% tất cả sát thương gây ra cho kẻ thù.",
     "stats": {
       "resourceRegenPct": 0.17,
@@ -1120,7 +1120,7 @@ const definitions: EquipmentDefinition[] = [
       "TP06",
       "TP08"
     ],
-    "statsText": "+34% tốc độ Hồi Tài Nguyên/ss; +30% Tỷ Lệ Chí Mạng",
+    "statsText": "+34% tốc độ Hồi Tài Nguyên/s; +30% Tỷ Lệ Chí Mạng",
     "effect": "Ứng Biến: Khi chiến cơ từ 50% máu trở lên, nhận thêm 20% hỏa lực, khi chiến cơ còn dưới 50% máu, hồi lại máu bằng 4% tất cả sát thương gây ra cho kẻ thù.",
     "stats": {
       "resourceRegenPct": 0.34,

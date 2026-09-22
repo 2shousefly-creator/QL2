@@ -11,10 +11,10 @@ export function equipmentTelemetry(s:AircraftCombatState,id:EquipmentDefinitionI
   const d=EQUIPMENT_CATALOG[id];if(!d.family)return [];
   const f=Number(d.family.slice(2)),result=Object.entries(equipmentState(s).telemetry[d.family]??{}).map(([key,value])=>`${labels[key]??key}: ${number(value)}`);
   if(f===8)result.unshift(`Synergy hiện tại: +${number(getTempestJewelledCritDamageBonus(s)*100)} điểm phần trăm Sát Thương Chí Mạng`);
-  if(f===9)result.unshift(`Tổng Tốc Độ Bắn: ×${number(1+.25*equipmentScale(s,9))}`);
-  if(f===22)result.unshift(`Máu Tối Đa từ hiệu ứng: ${number(getEffectiveAircraftStats(s).maxHp*(1-1/(1+.15*equipmentScale(s,22))))}`);
-  if(f===31)result.unshift(`Tài Nguyên Tối Đa từ hiệu ứng: ${number(getEffectiveAircraftStats(s).maxResource*(1-1/(1+.12*equipmentScale(s,31))))}`);
-  if(f===36)result.unshift(`Sát Thương Chí Mạng từ hiệu ứng: +${45*equipmentScale(s,36)} điểm phần trăm`);
+  if(f===9)result.unshift(`+${number(.25*equipmentScale(s,9)*100)}% tổng Tốc Độ Bắn từ hiệu ứng`);
+  if(f===22)result.unshift(`+${number(getEffectiveAircraftStats(s).maxHp*(1-1/(1+.15*equipmentScale(s,22))))} Máu Tối Đa từ hiệu ứng`);
+  if(f===31)result.unshift(`+${number(getEffectiveAircraftStats(s).maxResource*(1-1/(1+.12*equipmentScale(s,31))))} Tài Nguyên Tối Đa từ hiệu ứng`);
+  if(f===36)result.unshift(`+${45*equipmentScale(s,36)} điểm phần trăm Sát Thương Chí Mạng từ hiệu ứng`);
   return result;
 }
 export function equipmentStatuses(w:CombatWorld):StatusPresentation[] {

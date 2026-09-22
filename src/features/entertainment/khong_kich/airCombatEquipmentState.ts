@@ -1,6 +1,10 @@
 import { EQUIPMENT_CATALOG, equipmentRecipe, type EquipmentDefinitionId, type EquipmentFamilyId } from "./airCombatEquipmentCatalog";
 import type { AircraftCombatState, SkillId } from "./airCombatTypes";
 
+export const EQUIPMENT_GRID_COLUMNS = 4;
+export const EQUIPMENT_GRID_ROWS = 4;
+export const EQUIPMENT_PAGE_SIZE = EQUIPMENT_GRID_COLUMNS * EQUIPMENT_GRID_ROWS;
+
 export interface EquipmentInstance { instanceId: number; definitionId: EquipmentDefinitionId }
 export type EquipmentRewardId = EquipmentDefinitionId | "VP01";
 export type AcquisitionEvent = { id: number; kind: "core"; coreId: string } | { id: number; kind: "equipment" | "item"; definitionId: EquipmentRewardId; source: string; x?: number; y?: number };
@@ -56,8 +60,8 @@ export function equipmentMetric(s: AircraftCombatState, family: number, key: str
   t[key]=(t[key]??0)+value;
 }
 export function clampEquipmentPages(e: EquipmentState) {
-  e.componentPage=Math.max(0,Math.min(e.componentPage,Math.ceil(e.components.length/40)-1));
-  e.completedPage=Math.max(0,Math.min(e.completedPage,Math.ceil(e.completed.length/40)-1));
+  e.componentPage=Math.max(0,Math.min(e.componentPage,Math.ceil(e.components.length/EQUIPMENT_PAGE_SIZE)-1));
+  e.completedPage=Math.max(0,Math.min(e.completedPage,Math.ceil(e.completed.length/EQUIPMENT_PAGE_SIZE)-1));
 }
 /** All reward sources share instance allocation and an explicit acquisition event. */
 export function grantEquipmentReward(s: AircraftCombatState, id: EquipmentRewardId, source: string, position?: {x:number;y:number}) {
@@ -68,6 +72,7 @@ export function grantEquipmentReward(s: AircraftCombatState, id: EquipmentReward
     (EQUIPMENT_CATALOG[id].rarity === "component" ? e.components : e.completed).push(item);
   }
   s.coreState.acquisitions.push({id:s.coreState.nextAcquisitionId++,kind:id === "VP01" ? "item" : "equipment",definitionId:id,source,...position});
+  clampEquipmentPages(e);
 }
 export function randomEquipmentId(prefix: "TP"|"TH"|"HL", random:()=>number): EquipmentDefinitionId {
   return `${prefix}${String(1+Math.min(prefix === "TP" ? 7 : 35,Math.floor(random()*(prefix === "TP" ? 8 : 36)))).padStart(2,"0")}`;
@@ -88,7 +93,7 @@ export function extractEquipment(s: AircraftCombatState): EquipmentInstance[] {
   e.equipped=[null,null,null];e.items.VP01--;
   e.effects={};e.marks={};e.visuals=[];e.presentationGate={};e.orb=undefined;e.meteors=[];e.fireCast=undefined;e.endedSkills=[];
   for(const key of Object.keys(s.coreState.shields))if(key.startsWith("equipment:"))delete s.coreState.shields[key];
-  return items;
+  clampEquipmentPages(e);return items;
 }
 export function toggleCraftComponent(s: AircraftCombatState, id:number) {
   const e=equipmentState(s);if(e.craftJob)return;
@@ -98,8 +103,7 @@ export function toggleCraftComponent(s: AircraftCombatState, id:number) {
   clampEquipmentPages(e);
 }
 export function cancelEquipmentCraft(s: AircraftCombatState) {
-  const e=equipmentState(s);for(const item of e.craftSlots)if(item)e.components.push(item);
-  e.craftSlots=[null,null];delete e.craftJob;clampEquipmentPages(e);
+  delete equipmentState(s).craftJob;
 }
 export function startEquipmentCraft(s: AircraftCombatState, uiTime:number) {
   const e=equipmentState(s),[a,b]=e.craftSlots;if(!a||!b||e.craftJob)return;
