@@ -1,3 +1,4 @@
+import { useIsPresent } from "motion/react";
 import { createPortal } from "react-dom";
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { AirCombatModal } from "./AirCombatMotion";
@@ -13,7 +14,7 @@ import type { CombatWorld } from "./airCombatRuntime";
 
 type TileLocation = "storage" | "craft" | "equipped" | "item";
 type Drag = { id: EquipmentRewardId; instanceId: number; x: number; y: number; size: number };
-type Gesture = { pointer: number; startX: number; startY: number; x: number; y: number; phase: "pending" | "dragging" | "cancelled"; timer: ReturnType<typeof setTimeout> };
+type Gesture = { pointer: number; startX: number; startY: number; x: number; y: number; phase: "pending" | "dragging" | "cancelled"; timer: ReturnType<typeof setTimeout>; target: HTMLButtonElement };
 /** Pointer events exclusively own tap, double tap and the 500ms drag gate. */
 function Tile({ item, id, location, selected, onSelect, onInspect, onDouble, onDrag, onDrop, quantity, locked = false }: {
   item?: EquipmentInstance; id?: EquipmentRewardId; location: TileLocation; selected: boolean; onSelect: () => void;
@@ -23,8 +24,41 @@ function Tile({ item, id, location, selected, onSelect, onInspect, onDouble, onD
   const definitionId = id ?? item!.definitionId, instanceId = item?.instanceId ?? -1;
   const gesture = useRef<Gesture | null>(null), lastTap = useRef(0);
   const dragCallback = useRef(onDrag); dragCallback.current = onDrag;
-  const reset = () => { if (gesture.current) clearTimeout(gesture.current.timer); gesture.current = null; };
-  useEffect(() => () => { if (gesture.current?.phase === "dragging") dragCallback.current(null); reset(); }, []);
+  const present = useIsPresent();
+  const reset = () => {
+    const g = gesture.current; gesture.current = null;
+    if (!g) return;
+    clearTimeout(g.timer);
+    try { if (g.target.hasPointerCapture(g.pointer)) g.target.releasePointerCapture(g.pointer); } catch { /* Already cancelled. */ }
+  };
+  useEffect(() => {
+    const endTimers = new Set<number>();
+    const cancelGesture = () => { reset(); dragCallback.current(null); lastTap.current = 0; };
+    const end = (event: PointerEvent) => {
+      const g = gesture.current;
+      if (g?.pointer === event.pointerId) {
+        const timer = window.setTimeout(() => {
+          endTimers.delete(timer);
+          if (gesture.current === g) cancelGesture();
+        }, 0);
+        endTimers.add(timer);
+      }
+    };
+    document.addEventListener("pointerup", end, true);
+    document.addEventListener("pointercancel", end, true);
+    document.addEventListener("visibilitychange", cancelGesture);
+    window.addEventListener("blur", cancelGesture);
+    return () => {
+      endTimers.forEach(timer => window.clearTimeout(timer));
+      document.removeEventListener("pointerup", end, true);
+      document.removeEventListener("pointercancel", end, true);
+      document.removeEventListener("visibilitychange", cancelGesture);
+      window.removeEventListener("blur", cancelGesture);
+      if (gesture.current?.phase === "dragging") dragCallback.current(null);
+      reset();
+    };
+  }, []);
+  useEffect(() => { if (!present) { reset(); dragCallback.current(null); lastTap.current = 0; } }, [present]);
   const draggable = !locked && (location === "storage" || location === "item");
   const rarity = definitionId === "VP01" ? "item" : EQUIPMENT_CATALOG[definitionId].rarity;
   const title = definitionId === "VP01" ? "Nam Châm Ma Thuật" : EQUIPMENT_CATALOG[definitionId].name;
@@ -32,10 +66,11 @@ function Tile({ item, id, location, selected, onSelect, onInspect, onDouble, onD
   const cancel = () => { reset(); onDrag(null); lastTap.current = 0; };
   return <button type="button" className={`equipment-tile equipment-rarity-${rarity}`} aria-label={title} aria-pressed={selected}
     onPointerDown={event => {
-      if (event.button !== 0 || !event.isPrimary || gesture.current) return;
+      if (!present || event.button !== 0 || !event.isPrimary || gesture.current) return;
       event.stopPropagation(); event.preventDefault();
-      const source = event.currentTarget; source.setPointerCapture(event.pointerId);
-      const g: Gesture = { pointer: event.pointerId, startX: event.clientX, startY: event.clientY, x: event.clientX, y: event.clientY, phase: "pending", timer: setTimeout(() => {
+      const source = event.currentTarget;
+      try { source.setPointerCapture(event.pointerId); } catch { return; }
+      const g: Gesture = { target: source, pointer: event.pointerId, startX: event.clientX, startY: event.clientY, x: event.clientX, y: event.clientY, phase: "pending", timer: setTimeout(() => {
         if (gesture.current !== g || g.phase !== "pending" || !draggable) return;
         g.phase = "dragging"; lastTap.current = 0; onSelect(); dragCallback.current(payload(g, source));
       }, 500) }; gesture.current = g;
@@ -81,6 +116,7 @@ function CraftFlight({ flight, onArrive }: { flight: Flight; onArrive: () => voi
   return createPortal(<div ref={node} className="equipment-craft-flight" style={{ left: flight.from.left, top: flight.from.top, width: flight.from.width }}><EquipmentIcon id={flight.id} /></div>, document.body);
 }
 export function AirCombatEquipmentInventory({ world, onClose, onChange }: { world: CombatWorld; onClose: () => void; onChange: () => void }) {
+  const present = useIsPresent();
   const s = world.aircraft, q = equipmentState(s);
   const equippedRegion = useRef<HTMLElement>(null), craftRegion = useRef<HTMLElement>(null), craftSlots = useRef<(HTMLDivElement | null)[]>([]);
   const [selection, setSelection] = useState<number | null>(null), [tooltip, setTooltip] = useState<EquipmentTooltipAnchor | null>(null);
@@ -117,6 +153,9 @@ export function AirCombatEquipmentInventory({ world, onClose, onChange }: { worl
   const [drag, setDrag] = useState<Drag | null>(null), [clock, setClock] = useState(() => performance.now() / 1000), [extraction, setExtraction] = useState(0), [, refresh] = useState(0);
   const [feedback, setFeedback] = useState<{ text: string; until: number } | null>(null), [flights, setFlights] = useState<Flight[]>([]), [impact, setImpact] = useState<{ slot: number; until: number } | null>(null);
   const flightId = useRef(0);
+  useEffect(() => {
+    if (!present) { setDrag(null); setTooltip(null); setFlights([]); cancelEquipmentCraft(s); }
+  }, [present, s]);
   const changed = () => { clampEquipmentPages(q); refresh(n => n + 1); syncEffectiveMaxHp(s); s.currentResource = Math.min(s.currentResource, getEffectiveAircraftStats(s).maxResource); onChange(); };
   useEffect(() => {
     let frame = 0;

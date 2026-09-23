@@ -1,0 +1,180 @@
+{
+  "version": "26.11.5",
+  "title": "Mobile Input Recovery, Equipment Fit & Core Visual Polish",
+  "displayTitle": "CHI TIẾT CẬP NHẬT 26.11.5",
+  "releaseDate": "23/09/2026",
+  "summary": "**26.11.5** tập trung xử lý các vấn đề ổn định và hiển thị sau đợt mở rộng lớn của 26.11.4. Hệ thống điều khiển trên mobile được gia cố lại để việc mở/đóng Tooltip, Kho Trang Bị, Danh sách Lõi, Pause và các UI chiến đấu không còn có thể để chiến cơ rơi vào trạng thái mất điều khiển kéo.\n\nKho Trang Bị trên mobile cũng được sửa cách fit hình minh họa để toàn bộ Trang Bị Thành Phần, Hoàn Chỉnh và Huyền Thoại nằm trọn trong ô lưới. Đồng thời hệ hình minh họa Lõi được polish lại theo hướng giàu chi tiết và dễ nhận diện hơn, riêng nhóm Hỏa Lực chuyển sang hình ảnh phát bắn đang rời nòng. Nâng Cấp Bất Ổn cũng được đồng bộ presentation để số Máu/Tài Nguyên thay đổi kích thước cùng chiến cơ.",
+  "sections": [
+    {
+      "id": "s1",
+      "title": "ĐIỀU KHIỂN MOBILE ỔN ĐỊNH HƠN",
+      "icon": { "kind": "system", "id": "ui" },
+      "intro": [
+        {
+          "text": "Vòng đời touch/pointer và trạng thái tạm dừng của Không Kích được gia cố để các lớp Tooltip/UI không còn có thể khiến chiến cơ mất quyền điều khiển di chuyển.",
+          "format": "paragraph"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s1-e1",
+          "icon": { "kind": "system", "id": "ui" },
+          "title": "Khắc phục lỗi chiến cơ bị khóa di chuyển",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Khắc phục tình trạng trên mobile mà chiến cơ có thể **đứng yên hoàn toàn và không nhận thao tác kéo** sau khi người chơi mở/đóng Tooltip hoặc chuyển qua một UI chiến đấu.",
+              "format": "paragraph",
+              "changeType": "fix"
+            },
+            {
+              "text": "Skill Tooltip, Status Tooltip và HUD Tooltip giờ quản lý touch/pointer an toàn hơn; thao tác dùng để đóng Tooltip không còn để lại movement state bị kẹt.",
+              "format": "bullet",
+              "changeType": "fix"
+            },
+            {
+              "text": "Các tình huống multi-touch được gia cố để việc một ngón mở Tooltip không làm quyền điều khiển của ngón đang kéo chiến cơ rơi vào trạng thái không thể phục hồi.",
+              "format": "bullet",
+              "changeType": "fix"
+            }
+          ]
+        },
+        {
+          "id": "s1-e2",
+          "icon": { "kind": "system", "id": "ui" },
+          "title": "Đồng bộ lại vòng đời UI chiến đấu",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Kho Trang Bị, Danh sách Lõi, Pause, xác nhận Thoát và các màn lựa chọn chiến đấu giờ dọn sạch movement pointer khi mở và trả trạng thái điều khiển về đúng điều kiện khi đóng.",
+              "format": "paragraph",
+              "changeType": "fix"
+            },
+            {
+              "text": "Loại bỏ việc dùng khoảng chờ animation như một khóa điều khiển gameplay; một thao tác chạm mới hợp lệ sau khi UI đóng có thể được nhận ngay khi trận đấu thực sự ở trạng thái có thể điều khiển.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "Các trạng thái mất focus, app tạm ẩn hoặc pointer bị hủy giữa chừng được cleanup để không còn giữ một pointer cũ chặn toàn bộ thao tác mới.",
+              "format": "bullet",
+              "changeType": "fix"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "KHO TRANG BỊ MOBILE HIỂN THỊ TRỌN VẸN",
+      "icon": { "kind": "equipment", "id": "TH08" },
+      "intro": [
+        {
+          "text": "Bố cục Kho Trang Bị 3×3 của 26.11.4 được giữ nguyên, nhưng artwork bên trong từng ô được căn lại để phù hợp hơn với kích thước cell nhỏ trên màn hình dọc.",
+          "format": "paragraph"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s2-e1",
+          "icon": { "kind": "system", "id": "ui" },
+          "title": "Trang Bị không còn bị cắt mép trong lưới",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Trên mobile, hình minh họa **Trang Bị Thành Phần, Hoàn Chỉnh và Huyền Thoại** được fit vào vùng an toàn bên trong ô vuông để cả vật thể lẫn khung trang trí đều hiển thị trọn vẹn.",
+              "format": "paragraph",
+              "changeType": "fix"
+            },
+            {
+              "text": "Kho Thành Phần và Kho Hoàn Chỉnh/Huyền Thoại vẫn hiển thị song song, mỗi kho **3×3 = 9 ô/trang** và phân trang độc lập như 26.11.4.",
+              "format": "bullet",
+              "changeType": "unchanged"
+            },
+            {
+              "text": "Kích thước hit area, thao tác kéo 0,5 giây, Ghép Trang Bị, Trang Bị Đang Mang và khay Vật Phẩm được giữ nguyên.",
+              "format": "bullet",
+              "changeType": "unchanged"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "POLISH HÌNH MINH HỌA LÕI & NÂNG CẤP BẤT ỔN",
+      "icon": { "kind": "system", "id": "core" },
+      "intro": [
+        {
+          "text": "Hệ semantic icon của Lõi được quality-pass để mỗi nhóm có chủ thể rõ ràng hơn, giàu chi tiết hơn và giữ được khả năng nhận diện ở kích thước nhỏ.",
+          "format": "paragraph"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s3-e1",
+          "icon": { "kind": "core", "id": "1" },
+          "title": "Hỏa Lực chuyển sang hình ảnh phát bắn đang khai hỏa",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Các Lõi có semantic chính là **Hỏa Lực** giờ dùng hình minh họa nòng súng đang khai hỏa, có muzzle flash, viên đạn đã rời khỏi nòng và vệt chuyển động thay cho hình nòng pháo đơn giản trước đây.",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "Thay đổi chỉ tác động presentation; semantic mapping và hiệu ứng gameplay của từng Lõi được giữ nguyên.",
+              "format": "bullet",
+              "changeType": "unchanged"
+            }
+          ]
+        },
+        {
+          "id": "s3-e2",
+          "icon": { "kind": "system", "id": "core" },
+          "title": "Nâng chất lượng bộ semantic icon",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Toàn bộ nhóm hình minh họa semantic được rà soát để loại bỏ các biểu tượng quá sơ sài chỉ dựa vào vài đường nét, mũi tên hoặc hình khối đơn giản.",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "Các nhóm được polish theo cùng ngôn ngữ sci-fi/air-combat, bổ sung chủ thể chính và cue phụ rõ ràng nhưng vẫn giữ silhouette dễ đọc trên card Lõi.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "Skill Core tiếp tục sử dụng artwork Kỹ Năng riêng; hệ bậc Lõi, pool và gameplay không thay đổi.",
+              "format": "bullet",
+              "changeType": "unchanged"
+            }
+          ]
+        },
+        {
+          "id": "s3-e3",
+          "icon": { "kind": "core", "id": "222" },
+          "title": "222 — Nâng Cấp Bất Ổn đồng bộ text Máu/Tài Nguyên",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Khi trạng thái **Thu Nhỏ** kích hoạt, text số Máu và Tài Nguyên gắn dưới chiến cơ giờ giảm kích thước cùng chiến cơ; khi chuyển sang **Khổng Lồ**, text tăng kích thước tương ứng.",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "Tỷ lệ presentation được đồng bộ theo scale của chiến cơ: **Thu Nhỏ 0,5× · Bình thường 1× · Khổng Lồ 1,5×**.",
+              "format": "bullet"
+            },
+            {
+              "text": "Các hiệu ứng gameplay, hitbox và chỉ số của Nâng Cấp Bất Ổn không thay đổi.",
+              "format": "bullet",
+              "changeType": "unchanged"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

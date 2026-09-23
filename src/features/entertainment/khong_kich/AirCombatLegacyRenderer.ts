@@ -824,8 +824,8 @@ export function drawLegacyWorld(
   ctx.strokeStyle = "rgba(203,213,225,.8)"; ctx.lineWidth = .39;
   barPath(barY); ctx.stroke(); barPath(barY + 13); ctx.stroke(); ctx.restore();
   ctx.save();
-  ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.font = "bold 6.4px Arial";
-  ctx.strokeStyle = "#06101f"; ctx.fillStyle = "#fff"; ctx.lineWidth = 1; ctx.lineJoin = "round"; ctx.shadowBlur *= .5;
+  ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.font = `bold ${6.4 * playerAirframeScale(world.aircraft)}px Arial`;
+  ctx.strokeStyle = "#06101f"; ctx.fillStyle = "#fff"; ctx.lineWidth = playerAirframeScale(world.aircraft); ctx.lineJoin = "round"; ctx.shadowBlur *= .5;
   const hpText = statusBarText(world.aircraft.currentHp, stats.maxHp), resourceText = statusBarText(world.aircraft.currentResource, stats.maxResource);
   ctx.strokeText(hpText, barX + barWidth / 2, barY + 5); ctx.fillText(hpText, barX + barWidth / 2, barY + 5);
   ctx.strokeText(resourceText, barX + barWidth / 2, barY + 18); ctx.fillText(resourceText, barX + barWidth / 2, barY + 18);

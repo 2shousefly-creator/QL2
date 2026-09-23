@@ -519,3 +519,10 @@
 .equipment-storage-grid .equipment-grid-cell:has(.equipment-tile) { border-color:transparent; }
 .air-status-reward { display:block; color:#facc15; font-weight:800; margin:8px 0; }
 .air-status-reward[hidden] { display:none; }
+
+/* Exit animations are presentation-only, including descendants with explicit hit areas. */
+.air-motion-modal.air-motion-exit * { pointer-events:none!important; }
+/* Keep storage hit areas/page geometry; inset only compact TP/TH/HL artwork. */
+.equipment-inventory-body[data-compact="true"] .equipment-storage-grid .equipment-tile > .equipment-icon {
+  position:absolute; width:87%; height:87%; left:6.5%; top:6.5%;
+}

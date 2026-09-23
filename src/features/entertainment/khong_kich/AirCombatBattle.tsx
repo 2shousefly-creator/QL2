@@ -74,7 +74,7 @@ interface AirCombatBattleProps {
   onExit: () => void;
 }
 
-type PauseReason = "loading" | "user" | "core" | "tooltip" | "exit" | "hidden" | "coreList" | "motion" | "primarySkill" | "equipment";
+type PauseReason = "loading" | "user" | "core" | "tooltip" | "exit" | "hidden" | "coreList" | "primarySkill" | "equipment";
 
 interface SkillPressState {
   skillId: SkillId;
@@ -82,15 +82,17 @@ interface SkillPressState {
   startedAt: number;
   timer: number | null;
   held: boolean;
+  target: HTMLButtonElement;
 }
 
 interface PlayerControlState {
   pointerId: number;
+  target: HTMLDivElement;
   originX: number;
   originY: number;
 }
 
-function pauseLabel(reasons: ReadonlySet<PauseReason>): string | null {
+function pauseLabel(reasons: ReadonlySet<string>): string | null {
   if (reasons.has("core")) return "Chọn lõi";
   if (reasons.has("equipment")) return "Kho Trang Bị";
   if (reasons.has("coreList")) return "Danh sách lõi";
@@ -112,13 +114,18 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
   const durationNodes = useRef<Partial<Record<SkillId, HTMLSpanElement | null>>>({});
   const stageRef = useRef<HTMLDivElement | null>(null);
   const [rendererState, setRendererState] = useState<"loading" | "pixi" | "legacy" | "failed">("loading");
-  const [world] = useState(() => createCombatWorld(aircraftId, undefined, stageId));
+  const [world] = useState(() => {
+    const initial = createCombatWorld(aircraftId, undefined, stageId);
+    initial.pauseReasons.add("loading");
+    return initial;
+  });
   const worldRef = useRef<CombatWorld>(world);
   const onCompleteRef = useRef(onComplete);
   const completedRef = useRef(false);
   const draggingRef = useRef(false);
   const playerControlRef = useRef<PlayerControlState | null>(null);
-  const pauseReasonsRef = useRef<Set<PauseReason>>(new Set(["loading"]));
+  const activePointers = useRef(new Map<number, string>());
+  const suppressedPointers = useRef(new Set<number>());
   const coreSelectingRef = useRef(false);
   const pressRef = useRef<SkillPressState | null>(null);
   const lowHpWarnedRef = useRef(false);
@@ -148,46 +155,51 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
     onCompleteRef.current = onComplete;
   }, [onComplete]);
 
-  const motionPauseTimer=useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
-  useEffect(()=>()=>clearTimeout(motionPauseTimer.current),[]);
+  const resetPlayerControl = useCallback((pointerId?: number) => {
+    const control = playerControlRef.current;
+    if (pointerId !== undefined && control && control.pointerId !== pointerId) return;
+    draggingRef.current = false;
+    playerControlRef.current = null;
+    setPlayerInputActive(worldRef.current, false);
+    if (control) {
+      try {
+        if (control.target.hasPointerCapture(control.pointerId)) control.target.releasePointerCapture(control.pointerId);
+      } catch { /* The browser may already have cancelled/unmounted the capture target. */ }
+    }
+  }, []);
+  const resetSkillPress = useCallback(() => {
+    const press = pressRef.current;
+    pressRef.current = null;
+    if (!press) return;
+    if (press.timer !== null) window.clearTimeout(press.timer);
+    try {
+      if (press.target.hasPointerCapture(press.pointerId)) press.target.releasePointerCapture(press.pointerId);
+    } catch { /* Capture may already have ended. */ }
+  }, []);
   const setPauseReason = useCallback((reason: PauseReason, enabled: boolean) => {
-    const reasons = pauseReasonsRef.current;
-    if (enabled) worldRef.current.pauseReasons.add(reason);
-    else worldRef.current.pauseReasons.delete(reason);
-    if (enabled === reasons.has(reason)) return;
+    const reasons = worldRef.current.pauseReasons;
     if (enabled) {
       reasons.add(reason);
-      draggingRef.current = false;
-      const pointer = playerControlRef.current?.pointerId;
-      playerControlRef.current = null;
-      if (pointer !== undefined && stageRef.current?.hasPointerCapture(pointer)) stageRef.current.releasePointerCapture(pointer);
-      setPlayerInputActive(worldRef.current, false);
-    } else {
-      reasons.delete(reason);
-      if (["user","tooltip","exit","coreList","primarySkill","equipment"].includes(reason)) {
-        reasons.add("motion");worldRef.current.pauseReasons.add("motion");
-        clearTimeout(motionPauseTimer.current);
-        motionPauseTimer.current=setTimeout(()=>{
-          reasons.delete("motion");worldRef.current.pauseReasons.delete("motion");
-          setPauseState({paused:reasons.size>0,label:pauseLabel(reasons)});
-        },reducedMotion?100:280);
-      }
-    }
+      // Tooltip pauses simulation but preserves an existing movement gesture.
+      if (reason !== "tooltip") { resetPlayerControl(); resetSkillPress(); }
+    } else reasons.delete(reason);
+    // Runtime selection code can already have changed this same canonical Set.
     setPauseState({ paused: reasons.size > 0, label: pauseLabel(reasons) });
-  }, [reducedMotion]);
+  }, [resetPlayerControl, resetSkillPress]);
 
   const activateTooltip = useCallback((owner: "hub"|"skill"|"status") => {
     tooltipOwner.current = owner;
     setPauseReason("tooltip", true);
     if (owner !== "status") statusStripRef.current?.close();
-    if (owner !== "skill") setTooltipSkill(null);
+    if (owner !== "skill") { resetSkillPress(); setTooltipSkill(null); }
     if (owner !== "hub") setHubTooltip(null);
-  }, [setPauseReason]);
+  }, [setPauseReason, resetSkillPress]);
   const closeAllTooltips = useCallback(() => {
     tooltipOwner.current = null;
+    resetSkillPress();
     statusStripRef.current?.close(); setTooltipSkill(null); setHubTooltip(null);
     setPauseReason("tooltip", false);
-  }, [setPauseReason]);
+  }, [setPauseReason, resetSkillPress]);
   const onStatusTooltip = useCallback((open: boolean) => {
     if (open) activateTooltip("status");
     else if (tooltipOwner.current === "status") closeAllTooltips();
@@ -197,20 +209,75 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
     activateTooltip("hub"); setHubTooltip({ id, ...tooltip });
   };
   useEffect(() => {
-    const outside = (event: PointerEvent) => {
-      if (!(event.target as Element).closest?.("[data-combat-tooltip-trigger], [data-combat-tooltip-panel]")) closeAllTooltips();
+    const endTimers = new Set<number>();
+    const pointerDown = (event: PointerEvent) => {
+      const dismissTooltip = tooltipOwner.current !== null && !(event.target as Element).closest?.("[data-combat-tooltip-trigger], [data-combat-tooltip-panel]");
+      // A new primary contact proves earlier contacts of this type have ended,
+      // even if the WebView lost their terminal events. Other touch fingers stay owned.
+      for (const [id, type] of activePointers.current) {
+        if (id === event.pointerId || (event.isPrimary && type === event.pointerType)) {
+          activePointers.current.delete(id);
+          suppressedPointers.current.delete(id);
+        }
+      }
+      const owner = playerControlRef.current;
+      if (owner && !activePointers.current.has(owner.pointerId)) resetPlayerControl();
+      const press = pressRef.current;
+      if (press && !activePointers.current.has(press.pointerId)) {
+        if (tooltipOwner.current === "skill") closeAllTooltips();
+        else resetSkillPress();
+      }
+      activePointers.current.set(event.pointerId, event.pointerType);
+      if (dismissTooltip) {
+        suppressedPointers.current.add(event.pointerId);
+        closeAllTooltips();
+      }
     };
-    const escape = (event: KeyboardEvent) => { if(event.key === "Escape") closeAllTooltips(); };
-    document.addEventListener("pointerdown", outside, true); document.addEventListener("keydown", escape);
-    return () => {document.removeEventListener("pointerdown", outside, true);document.removeEventListener("keydown", escape);};
-  }, [closeAllTooltips]);
-
-  useEffect(() => {
-    const handleVisibility = () => setPauseReason("hidden", document.hidden);
-    handleVisibility();
-    document.addEventListener("visibilitychange", handleVisibility);
-    return () => document.removeEventListener("visibilitychange", handleVisibility);
-  }, [setPauseReason]);
+    const pointerEnd = (event: PointerEvent) => {
+      activePointers.current.delete(event.pointerId);
+      suppressedPointers.current.delete(event.pointerId);
+      resetPlayerControl(event.pointerId);
+      // Let the skill button handle a normal release/cast first, then cancel any
+      // orphaned press even if propagation never reaches document's bubble phase.
+      const press = pressRef.current;
+      if (press?.pointerId === event.pointerId) {
+        const timer = window.setTimeout(() => {
+          endTimers.delete(timer);
+          if (pressRef.current !== press) return;
+          if (tooltipOwner.current === "skill") closeAllTooltips();
+          else resetSkillPress();
+        }, 0);
+        endTimers.add(timer);
+      }
+    };
+    const resetPointers = () => {
+      activePointers.current.clear(); suppressedPointers.current.clear();
+      resetPlayerControl(); resetSkillPress(); closeAllTooltips();
+    };
+    const visibility = () => {
+      resetPointers();
+      setPauseReason("hidden", document.hidden);
+    };
+    const escape = (event: KeyboardEvent) => { if (event.key === "Escape") closeAllTooltips(); };
+    document.addEventListener("pointerdown", pointerDown, true);
+    document.addEventListener("pointerup", pointerEnd, true);
+    document.addEventListener("pointercancel", pointerEnd, true);
+    document.addEventListener("keydown", escape);
+    document.addEventListener("visibilitychange", visibility);
+    window.addEventListener("blur", resetPointers);
+    setPauseReason("hidden", document.hidden);
+    return () => {
+      endTimers.forEach(timer => window.clearTimeout(timer));
+      document.removeEventListener("pointerdown", pointerDown, true);
+      document.removeEventListener("pointerup", pointerEnd, true);
+      document.removeEventListener("pointercancel", pointerEnd, true);
+      document.removeEventListener("keydown", escape);
+      document.removeEventListener("visibilitychange", visibility);
+      window.removeEventListener("blur", resetPointers);
+      activePointers.current.clear(); suppressedPointers.current.clear();
+      resetPlayerControl(); resetSkillPress();
+    };
+  }, [closeAllTooltips, resetPlayerControl, resetSkillPress, setPauseReason]);
 
   useEffect(() => {
     const host = stageRef.current;
@@ -245,7 +312,10 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
       if (cancelled) return;
       const elapsed = Math.min(0.12, Math.max(0, (now - lastTime) / 1000));
       lastTime = now;
-      const paused = pauseReasonsRef.current.size > 0;
+      if ([...world.pauseReasons].some(reason => reason !== "tooltip")) {
+        resetPlayerControl(); resetSkillPress();
+      } else if (!playerControlRef.current) setPlayerInputActive(world, false);
+      const paused = world.pauseReasons.size > 0;
       if (!document.hidden && presentation) {
         if (!paused && !world.ended) {
           let remaining = elapsed;
@@ -259,8 +329,10 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
             soundManager.playXpFull(); soundManager.triggerHaptic("medium");
           }
         }
-        const visualDelta = pauseReasonsRef.current.size > 0 ? 0 : elapsed;
-        overlayFeedback?.render(world, visualDelta, pauseReasonsRef.current.size > 0, reducedMotion,
+        // The result reason stops runtime; the final explosion still finishes visually.
+        const presentationPaused = [...world.pauseReasons].some(reason => reason !== "result");
+        const visualDelta = presentationPaused ? 0 : elapsed;
+        overlayFeedback?.render(world, visualDelta, presentationPaused, reducedMotion,
           bossHpRef.current, bossChipRef.current, bossShieldRef.current);
         statusStripRef.current?.update(world);
         for (const id of skillIds) {
@@ -277,11 +349,11 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
         }
         if (now - lastHudUpdate >= 90 || publishedWaveState !== world.waveState || publishedWaveIndex !== world.waveIndex) {
           publishedWaveState = world.waveState; publishedWaveIndex = world.waveIndex;
-          setHud(makeHudSnapshot(world, pauseReasonsRef.current.size > 0, pauseLabel(pauseReasonsRef.current)));
+          setHud(makeHudSnapshot(world, worldRef.current.pauseReasons.size > 0, pauseLabel(worldRef.current.pauseReasons)));
           lastHudUpdate = now;
         }
         // Present the final explosion after gameplay ends without advancing runtime time.
-        if (world.ended && !paused && presentation) {
+        if (world.ended && !presentationPaused && presentation) {
           endedAt ??= now;
           if (now - endedAt >= (reducedMotion ? 180 : 850) && !completedRef.current) {
             completedRef.current = true;
@@ -306,10 +378,9 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
       cancelled = true;
       overlayFeedback?.destroy(); cancelAnimationFrame(animationFrame); presentation?.destroy();
       document.removeEventListener("visibilitychange", resetClock);
-      const press = pressRef.current;
-      if (press?.timer != null) window.clearTimeout(press.timer);
+      resetPlayerControl(); resetSkillPress();
     };
-  }, [aircraftId, reducedMotion, setPauseReason]);
+  }, [aircraftId, reducedMotion, setPauseReason, resetPlayerControl, resetSkillPress]);
 
 
   const pointFromEvent = (event: React.PointerEvent<HTMLDivElement>) => {
@@ -323,7 +394,7 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
   const updatePlayerControl = (event: React.PointerEvent<HTMLDivElement>) => {
     const control = playerControlRef.current;
     if (!control || control.pointerId !== event.pointerId) return;
-    if (pauseReasonsRef.current.size > 0) return;
+    if (event.buttons === 0) { resetPlayerControl(event.pointerId); return; }
     const rect = event.currentTarget.getBoundingClientRect();
     if (!rect.width || !rect.height) return;
     const coalesced = event.nativeEvent.getCoalescedEvents?.() || [];
@@ -331,31 +402,27 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
     for (const sample of samples) {
       const x = ((sample.clientX - rect.left) / rect.width) * AIR_COMBAT_WORLD.width;
       const y = ((sample.clientY - rect.top) / rect.height) * AIR_COMBAT_WORLD.height;
-      movePlayerByDelta(worldRef.current, x - control.originX, y - control.originY);
+      if (!worldRef.current.pauseReasons.size) movePlayerByDelta(worldRef.current, x - control.originX, y - control.originY);
       control.originX = x; control.originY = y;
     }
   };
 
   const onCanvasPointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
-    if (pauseReasonsRef.current.size > 0 || playerControlRef.current) return;
+    const owner = playerControlRef.current;
+    if (!owner || !activePointers.current.has(owner.pointerId) || !owner.target.hasPointerCapture(owner.pointerId)) resetPlayerControl();
+    if (event.button !== 0 || suppressedPointers.current.has(event.pointerId) || worldRef.current.pauseReasons.size > 0 || playerControlRef.current || worldRef.current.ended) return;
     event.preventDefault();
     const point = pointFromEvent(event);
     draggingRef.current = true;
     playerControlRef.current = {
       pointerId: event.pointerId,
+      target: event.currentTarget,
       originX: point.x,
       originY: point.y,
     };
     setPlayerInputActive(worldRef.current, true);
-    event.currentTarget.setPointerCapture(event.pointerId);
-  };
-
-  const stopPlayerInput = (pointerId?: number) => {
-    const control = playerControlRef.current;
-    if (pointerId !== undefined && control && control.pointerId !== pointerId) return;
-    draggingRef.current = false;
-    playerControlRef.current = null;
-    setPlayerInputActive(worldRef.current, false);
+    try { event.currentTarget.setPointerCapture(event.pointerId); }
+    catch { resetPlayerControl(); }
   };
 
   const closeTooltip = useCallback(() => {
@@ -366,15 +433,16 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
     event: React.PointerEvent<HTMLButtonElement>,
     skillId: SkillId
   ) => {
-    if ([...pauseReasonsRef.current].some(reason=>reason!=="tooltip" && reason!=="motion") || worldRef.current.ended || pressRef.current) return;
+    if (suppressedPointers.current.has(event.pointerId) || [...worldRef.current.pauseReasons].some(reason=>reason!=="tooltip") || worldRef.current.ended || pressRef.current) return;
     event.preventDefault();
-    event.currentTarget.setPointerCapture(event.pointerId);
+    try { event.currentTarget.setPointerCapture(event.pointerId); } catch { return; }
     const press: SkillPressState = {
       skillId,
       pointerId: event.pointerId,
       startedAt: performance.now(),
       timer: null,
       held: false,
+      target: event.currentTarget,
     };
     press.timer = window.setTimeout(() => {
       if (pressRef.current !== press) return;
@@ -394,12 +462,12 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
     if (press.timer !== null) window.clearTimeout(press.timer);
     const durationMs = performance.now() - press.startedAt;
     const classification = classifySkillPress(durationMs);
-    pressRef.current = null;
+    resetSkillPress();
     if (press.held || classification === "hold") {
       closeTooltip();
       return;
     }
-    if (!shouldCastSkillPress(durationMs, press.held, cancelled) || pauseReasonsRef.current.size > 0 || worldRef.current.ended) return;
+    if (!shouldCastSkillPress(durationMs, press.held, cancelled) || worldRef.current.pauseReasons.size > 0 || worldRef.current.ended) return;
     const result = castWorldSkill(worldRef.current, press.skillId);
     if (!result.cast) {
       soundManager.playError();
@@ -504,11 +572,10 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
         onPointerMove={(event) => draggingRef.current && updatePlayerControl(event)}
         onPointerUp={(event) => {
           updatePlayerControl(event);
-          stopPlayerInput(event.pointerId);
-          if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
+          resetPlayerControl(event.pointerId);
         }}
-        onPointerCancel={(event) => stopPlayerInput(event.pointerId)}
-        onLostPointerCapture={(event) => stopPlayerInput(event.pointerId)}
+        onPointerCancel={(event) => resetPlayerControl(event.pointerId)}
+        onLostPointerCapture={(event) => resetPlayerControl(event.pointerId)}
       />
 
       {rendererState === "loading" && <div role="status" className="pointer-events-none absolute inset-0 z-30 grid place-items-center bg-slate-950 text-sm text-cyan-100">Đang chuẩn bị chiến trường…</div>}
@@ -649,7 +716,7 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
           const state=worldRef.current.aircraft,r=releaseState(state);r.system=system;r.followups.shift();
           expansionState(state).primaryPending=r.followups.length>0;setPrimaryChoice(null);
           if(!r.followups.length){setShowPrimaryChoice(false);setPauseReason("primarySkill",false);const next=ensureCoreSelection(worldRef.current);if(next){setCoreChoices(next);setPauseReason("core",true);}}
-          setHud(makeHudSnapshot(worldRef.current,true,pauseLabel(pauseReasonsRef.current)));
+          setHud(makeHudSnapshot(worldRef.current,true,pauseLabel(worldRef.current.pauseReasons)));
         }}><strong>{CORE_SYSTEM_LABELS[system]}</strong><p>Bảo đảm một ô thuộc Hệ này khi còn ứng viên hợp lệ.</p></button>)}</div></OverlayBody>:<>
         <OverlayBody><div className="air-primary-choices">{skillIds.map(id=><button key={id} type="button" aria-pressed={primaryChoice===id} onClick={()=>setPrimaryChoice(id)}>
           <CombatUiIcon kind="skill" id={id} fallback={SKILL_CONFIGS[id].icon}/><strong>{SKILL_CONFIGS[id].name}</strong><p>{SKILL_CONFIGS[id].description}</p>
@@ -658,16 +725,16 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
           if (!primaryChoice) return;
           const state=expansionState(worldRef.current.aircraft);state.primarySkill=primaryChoice;state.primaryPending=false;
           const release=releaseState(worldRef.current.aircraft);release.followups.shift();setPrimaryChoice(null);
-          if(release.followups.length){state.primaryPending=true;setHud(makeHudSnapshot(worldRef.current,true,pauseLabel(pauseReasonsRef.current)));return;}
+          if(release.followups.length){state.primaryPending=true;setHud(makeHudSnapshot(worldRef.current,true,pauseLabel(worldRef.current.pauseReasons)));return;}
           const next=ensureCoreSelection(worldRef.current);
           if (next) {setCoreChoices(next);setPauseReason("core",true);}
-          setShowPrimaryChoice(false);setPauseReason("primarySkill",false);setHud(makeHudSnapshot(worldRef.current,pauseReasonsRef.current.size>0,pauseLabel(pauseReasonsRef.current)));
+          setShowPrimaryChoice(false);setPauseReason("primarySkill",false);setHud(makeHudSnapshot(worldRef.current,worldRef.current.pauseReasons.size>0,pauseLabel(worldRef.current.pauseReasons)));
         }}>Xác nhận</ModalButton></OverlayFooter></>}
       </AppModal>}
-      {showEquipment && !coreChoices && <AirCombatEquipmentInventory key="equipment" world={worldRef.current} onChange={()=>setHud(makeHudSnapshot(worldRef.current,true,pauseLabel(pauseReasonsRef.current)))} onClose={()=>{setShowEquipment(false);setPauseReason("equipment",false);}}/>}
+      {showEquipment && !coreChoices && <AirCombatEquipmentInventory key="equipment" world={worldRef.current} onChange={()=>setHud(makeHudSnapshot(worldRef.current,true,pauseLabel(worldRef.current.pauseReasons)))} onClose={()=>{setShowEquipment(false);setPauseReason("equipment",false);}}/>}
       {showCoreList && !coreChoices && <AirCombatCoreList key="core-list" state={worldRef.current.aircraft} onClose={() => { setShowCoreList(false); setPauseReason("coreList", false); }} />}
 
-      {pauseReasonsRef.current.has("user") && !coreChoices && !showExitConfirm && !showCoreList && !showPrimaryChoice && !showEquipment && (
+      {worldRef.current.pauseReasons.has("user") && !coreChoices && !showExitConfirm && !showCoreList && !showPrimaryChoice && !showEquipment && (
         <ConfirmationDialog key="pause" status="warning" layer="exclusive-dialog" layout="viewport-safe" onClose={() => setPauseReason("user", false)} labelledBy="air-paused-title" panelClassName="text-center">
           <OverlayHeader><Pause className="mx-auto h-8 w-8 text-[var(--modal-info)]" /><h2 id="air-paused-title" className="modal-title">Đã tạm dừng</h2></OverlayHeader>
           <OverlayBody data-pause-overlay="user"><p className="text-xs text-[var(--modal-text)]">Hồi tài nguyên, hồi chiêu và thời gian trận đều đứng yên.</p></OverlayBody>
@@ -684,7 +751,7 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
       )}
 
       </AnimatePresence>
-      {pauseState.paused && pauseState.label && pauseReasonsRef.current.has("hidden") && (
+      {pauseState.paused && pauseState.label && worldRef.current.pauseReasons.has("hidden") && (
         <div className="pointer-events-none absolute bottom-2 left-1/2 z-50 -translate-x-1/2 rounded-full bg-black/90 px-3 py-1 text-[8px] font-bold text-slate-300">{pauseState.label}</div>
       )}
     </div>

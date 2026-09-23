@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from "motion/react";
 import { airTooltipMotion } from "./AirCombatMotion";
-import React, { forwardRef, useEffect, useLayoutEffect, useImperativeHandle, useRef, useState } from "react";
+import React, { forwardRef, useLayoutEffect, useImperativeHandle, useRef, useState } from "react";
 import { Flame, FlaskConical, Shield, ShieldMinus, Zap, Lock, BatteryWarning, HeartOff, Crosshair, Radar } from "lucide-react";
 import { CombatStatIconTemplates, updateCombatRichText } from "./CoreDescription";
 import { CombatUiIcon } from "./CombatUiIcon";
@@ -32,12 +32,7 @@ export const AirCombatStatusStrip = React.memo(forwardRef<StatusStripHandle, { t
   const tooltip = useRef<HTMLElement>(null);
   const tooltipChange = useRef(onTooltipChange); tooltipChange.current = onTooltipChange;
   const close = () => { if (!selectedRef.current) return; selectedRef.current = null; setSelected(null); tooltipChange.current(false); };
-  useEffect(() => {
-    const outside = (e: PointerEvent) => { if (!host.current?.contains(e.target as Node) && !(e.target as Element).closest?.("[data-combat-tooltip-trigger]")) close(); };
-    const escape = (e: KeyboardEvent) => { if (e.key === "Escape") close(); };
-    document.addEventListener("pointerdown", outside, true); document.addEventListener("keydown", escape);
-    return () => { document.removeEventListener("pointerdown", outside, true); document.removeEventListener("keydown", escape); };
-  }, []);
+  // Battle owns outside-dismiss, Escape and dismiss-pointer suppression.
   useImperativeHandle(ref, () => ({ close, update(world) {
     current.current = getStatusPresentations(world);
     const surface=host.current?.closest<HTMLElement>(".air-combat-surface");

@@ -14,4 +14,4 @@ export function AirCombatModal(props:AppDialogProps & { exitDuration?: number })
 export function AirCombatConfirmation(props:Omit<AppDialogProps,"archetype">) {
   return <AirCombatModal {...props} archetype="confirm" />;
 }
-export const airTooltipMotion={initial:{opacity:0,y:5},animate:{opacity:1,y:0},exit:{opacity:0,y:3},transition:{duration:.28,ease:[.22,1,.36,1] as [number,number,number,number]}};
+export const airTooltipMotion={initial:{opacity:0,y:5},animate:{opacity:1,y:0,pointerEvents:"auto" as const},exit:{opacity:0,y:3,pointerEvents:"none" as const},transition:{duration:.28,ease:[.22,1,.36,1] as [number,number,number,number]}};

@@ -1,119 +1,194 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="640" height="640" viewBox="0 0 640 640" fill="none" stroke="#E8F2FF" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
-  <!-- 26.11.3 canonical glyphs. Row-major 5 by 5; transparent cells, no tier variants. -->
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="640" viewBox="0 0 640 640" fill="none" stroke="#E8F2FF" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+  <!-- 26.11.5 semantic illustrations. Locked row-major 5x5 / 128px cells; transparent backgrounds. -->
+  <defs>
+    <linearGradient id="metal" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#E8F2FF"/><stop offset=".45" stop-color="#8FA8C2"/><stop offset="1" stop-color="#344C68"/>
+    </linearGradient>
+    <linearGradient id="energy" x1="0" y1="1" x2="0" y2="0">
+      <stop stop-color="#8FA8C2"/><stop offset="1" stop-color="#FFFFFF"/>
+    </linearGradient>
+  </defs>
   <g id="growth" transform="translate(0 0)">
-    <path d="M22 106V90H32V106ZM46 106V76H56V106ZM70 106V62H80V106ZM94 106V48H104V106Z" fill="#8FA8C2" stroke="none"/>
-    <path d="M22 70 48 52 74 40 104 22M84 22H104V42"/>
+    <!-- Expanding reactor chamber and rising energy plume. -->
+    <path d="M30 100 22 86 30 74H98L106 86 98 100Z" fill="url(#metal)"/>
+    <path d="M36 77 29 64 38 51H90L99 64 92 77Z" fill="#344C68"/>
+    <path d="M43 54 36 41 45 29H83L92 41 85 54Z" fill="url(#metal)"/>
+    <path d="M50 88V48L57 39 64 14 72 36 79 47V88Z" fill="url(#energy)" stroke="#8FA8C2" stroke-width="3"/>
+    <path d="M40 103V111H88V103M23 51 18 38M104 51 110 38M48 66H80M42 87H86" stroke-width="4"/>
+    <path d="M60 80V54M64 44V34" stroke="#FFFFFF" stroke-width="4"/>
   </g>
   <g id="firepower" transform="translate(128 0)">
-    <g transform="rotate(-35 64 64)">
-      <path d="M24 50H44V78H24ZM44 54H94V74H44Z" fill="#8FA8C2"/>
-      <path d="M94 49H106V79H94Z" fill="#E8F2FF"/>
-      <path d="M28 78V86H48V78"/>
+    <!-- Barrel, muzzle flash, separate fired round and trailing energy. -->
+    <g transform="rotate(-30 64 64)">
+      <path d="M15 59 25 51H39V83H19L15 76ZM39 58H64V76H39Z" fill="url(#metal)"/>
+      <path d="M24 85V97H42L48 82M29 58V75M48 58V76" stroke="#8FA8C2"/>
+      <path d="M62 53H72V81H62Z" fill="#344C68"/>
+      <path d="M75 65 82 48 85 60 96 54 89 66 97 78 84 74 79 88Z" fill="url(#energy)" stroke="none"/>
+      <path d="M91 62H99M92 73H101" stroke="#8FA8C2" stroke-width="3"/>
+      <path d="M101 60H111L120 67 111 74H101Z" fill="#FFFFFF" stroke="#8FA8C2" stroke-width="3"/>
+      <path d="M108 62V72M17 40H38M10 47H24" stroke="#8FA8C2" stroke-width="3"/>
     </g>
   </g>
   <g id="rapid_fire" transform="translate(256 0)">
-    <path d="M58 26H88L106 36 88 46H58ZM58 54H88L106 64 88 74H58ZM58 82H88L106 92 88 102H58Z" fill="#E8F2FF" stroke="none"/>
-    <path d="M22 30H44M28 42H44M22 58H44M28 70H44M22 86H44M28 98H44" stroke="#8FA8C2"/>
+    <path d="M19 48 32 35 47 41 55 59 49 84 31 93 19 80Z" fill="url(#metal)"/>
+    <path d="M35 46H70V57H35ZM35 67H70V78H35Z" fill="#344C68"/>
+    <ellipse cx="70" cy="62" rx="10" ry="25" fill="url(#metal)"/>
+    <path d="M69 47V52M69 62V67M69 76V81" stroke="#344C68" stroke-width="6"/>
+    <path d="M86 38H101L112 44 101 50H86ZM92 58H107L119 64 107 70H92ZM86 79H101L112 85 101 91H86Z" fill="#FFFFFF" stroke="none"/>
+    <path d="M79 44H82M81 64H88M79 85H82M19 102H46" stroke="#8FA8C2" stroke-width="4"/>
+    <path d="M30 57V73" stroke="#FFFFFF" stroke-width="4"/>
   </g>
   <g id="critical" transform="translate(384 0)">
-    <circle cx="64" cy="64" r="30"/>
-    <path d="M64 22V38M64 90V106M22 64H38M90 64H106"/>
-    <path d="M64 44 70 58 84 64 70 70 64 84 58 70 44 64 58 58Z" fill="#FFFFFF" stroke="none"/>
+    <path d="M40 35 64 25 88 35 101 64 88 93 64 103 40 93 27 64Z" fill="#344C68" stroke="#8FA8C2"/>
+    <circle cx="64" cy="64" r="28"/>
+    <path d="M64 14V34M64 94V114M14 64H34M94 64H114"/>
+    <path d="M64 43 70 57 85 64 70 71 64 86 58 71 43 64 58 57Z" fill="#FFFFFF" stroke="none"/>
+    <path d="M34 25 26 33M94 25 102 33M34 103 26 95M94 103 102 95" stroke="#8FA8C2" stroke-width="3"/>
   </g>
   <g id="crit_damage" transform="translate(512 0)">
-    <path d="M53 27A39 39 0 0 0 27 53M27 75A39 39 0 0 0 53 101M75 101A39 39 0 0 0 101 75M101 53A39 39 0 0 0 75 27" stroke="#8FA8C2"/>
-    <path d="M64 22 72 45 94 34 83 56 106 64 83 72 94 94 72 83 64 106 56 83 34 94 45 72 22 64 45 56 34 34 56 45Z" fill="#E8F2FF" stroke="none"/>
-    <path d="M68 43 58 60 70 68 60 85" stroke="#8FA8C2"/>
+    <path d="M30 36 48 25 83 28 101 52 96 88 72 104 38 92 24 64Z" fill="#344C68" stroke="#8FA8C2"/>
+    <path d="M64 17 72 43 97 30 84 55 111 64 84 73 97 98 72 85 64 112 56 85 31 98 44 73 17 64 44 55 31 30 56 43Z" fill="url(#energy)" stroke="none"/>
+    <path d="M69 44 56 60 72 69 59 87" stroke="#344C68"/>
+    <path d="M23 28 17 19M104 27 112 18M23 102 16 110M105 102 113 110" stroke="#8FA8C2" stroke-width="4"/>
   </g>
   <g id="penetration" transform="translate(0 128)">
-    <path d="M60 24 86 40V88L60 104 34 88V40Z" fill="#8FA8C2"/>
-    <path d="M22 64H94" stroke="#FFFFFF"/>
-    <path d="M84 49 110 64 84 79Z" fill="#FFFFFF" stroke="none"/>
+    <path d="M34 25 49 32V99L34 105 25 96V35ZM63 20 78 27V94L63 100 54 91V30ZM92 15 107 22V89L92 95 83 86V25Z" fill="url(#metal)" stroke="#8FA8C2" stroke-width="4"/>
+    <path d="M17 63H90" stroke="#344C68" stroke-width="16"/>
+    <path d="M13 63H92" stroke="#FFFFFF" stroke-width="6"/>
+    <path d="M91 55H105L119 63 105 71H91Z" fill="#FFFFFF" stroke="none"/>
+    <path d="M44 49 49 43M72 77 78 83M97 44 104 39M91 78 98 85" stroke="#FFFFFF" stroke-width="3"/>
   </g>
   <g id="burst" transform="translate(128 128)">
-    <circle cx="64" cy="64" r="17" fill="#FFFFFF" stroke="none"/>
-    <path d="M57 40 64 18 71 40ZM76 42 97 31 86 52ZM88 57 110 64 88 71ZM86 76 97 97 76 86ZM71 88 64 110 57 88ZM52 86 31 97 42 76ZM40 71 18 64 40 57ZM42 52 31 31 52 42Z" fill="#E8F2FF" stroke="none"/>
+    <path d="M54 28 64 12 74 28M91 37 110 30 103 49M101 83 113 99 94 94M71 103 64 116 56 103M31 92 15 99 23 81M24 47 16 29 36 36" stroke="#8FA8C2" stroke-width="4"/>
+    <path d="M64 26 76 44 98 35 90 55 109 65 88 76 97 96 75 88 64 107 54 86 31 96 39 75 19 64 40 55 31 34 54 43Z" fill="url(#energy)" stroke="none"/>
+    <path d="M50 50 64 43 79 51 83 65 74 80 55 82 45 67Z" fill="#344C68"/>
+    <path d="M56 53H70L78 63 70 73H56L50 63Z" fill="#FFFFFF" stroke="#8FA8C2" stroke-width="3"/>
   </g>
   <g id="multi_hit" transform="translate(256 128)">
-    <path d="M18 57H35L47 64 35 71H18Z" fill="#E8F2FF" stroke="none"/>
-    <path d="M49 64 68 44M49 64H77M49 64 68 84" stroke="#8FA8C2"/>
-    <path d="M70 38 85 23 101 23 101 39 86 54ZM80 57H97L110 64 97 71H80ZM70 90 86 74 101 89 101 105 85 105Z" fill="#E8F2FF" stroke="none"/>
+    <path d="M14 57H31L43 64 31 71H14Z" fill="url(#metal)"/>
+    <path d="M42 64H57M57 64 78 35M57 64H88M57 64 78 93" stroke="#8FA8C2" stroke-width="6"/>
+    <path d="M48 57 57 49 67 57V71L57 79 48 71Z" fill="#344C68"/>
+    <g fill="#FFFFFF" stroke="none">
+      <path d="M88 16 93 27 106 30 95 36 92 49 86 39 73 38 81 30Z"/>
+      <path d="M103 48 107 58 119 64 108 70 104 81 99 71 87 65 98 59Z"/>
+      <path d="M90 79 95 90 108 94 97 100 94 113 88 103 75 100 83 92Z"/>
+    </g>
+    <path d="M76 19 70 14M114 39 119 34M76 111 70 116" stroke="#8FA8C2" stroke-width="3"/>
   </g>
   <g id="execute" transform="translate(384 128)">
-    <path d="M40 82C12 68 25 24 64 24S116 68 88 82V101H40Z" fill="#8FA8C2"/>
-    <path d="M41 57H51M77 57H87M56 99V87M72 99V87" stroke="#FFFFFF"/>
-    <path d="M102 22 24 106" stroke="#FFFFFF"/>
+    <path d="M38 83C17 67 25 31 48 25H79C103 31 111 65 91 82L86 104H42Z" fill="url(#metal)"/>
+    <path d="M39 57 54 63 48 72 37 68ZM76 63 90 57 92 68 81 72Z" fill="#344C68" stroke="none"/>
+    <path d="M58 87V101M72 87V101M18 43V22H37M93 107H112V88" stroke="#8FA8C2" stroke-width="4"/>
+    <path d="M101 22 25 107" stroke="#344C68" stroke-width="12"/>
+    <path d="M101 22 25 107M93 23 105 18 102 32" stroke="#FFFFFF" stroke-width="5"/>
   </g>
   <g id="defense" transform="translate(512 128)">
-    <path d="M64 22 100 42V86L64 106 28 86V42Z" fill="#8FA8C2"/>
-    <path d="M64 28V100" stroke="#FFFFFF"/>
+    <path d="M64 17 110 37 103 82 89 101 64 114 39 101 25 82 18 37Z" fill="#344C68" stroke="#8FA8C2"/>
+    <path d="M64 27 97 43 91 77 80 93 64 103 48 93 37 77 31 43Z" fill="url(#metal)"/>
+    <path d="M64 37 83 47 79 72 64 87 49 72 45 47Z" fill="#344C68"/>
+    <path d="M64 42V78M37 77 49 72M91 77 79 72M64 87V102" stroke="#8FA8C2" stroke-width="4"/>
+    <path d="M53 57H75M57 66H71" stroke="#FFFFFF" stroke-width="4"/>
+    <path d="M22 22 29 29M106 22 99 29" stroke="#8FA8C2" stroke-width="3"/>
   </g>
   <g id="barrier" transform="translate(0 256)">
-    <path d="M22 94V68A42 42 0 0 1 106 68V94Z"/>
-    <circle cx="64" cy="68" r="17" fill="#FFFFFF" stroke="#8FA8C2"/>
+    <path d="M15 97V64A49 49 0 0 1 98 29M108 45 113 65V97" stroke="#8FA8C2" stroke-width="3"/>
+    <path d="M25 96V65A39 39 0 0 1 103 65V96Z" fill="#344C68"/>
+    <path d="M64 28V45M30 50 46 58M98 50 82 58M25 81 46 72M103 81 82 72" stroke="#8FA8C2" stroke-width="3"/>
+    <path d="M64 45 82 55V76L64 86 46 76V55Z" fill="url(#energy)"/>
+    <path d="M17 101H111L100 111H28Z" fill="url(#metal)" stroke-width="4"/>
+    <path d="M96 18 101 27 114 30 104 36 101 46 97 35 88 30Z" fill="#FFFFFF" stroke="none"/>
   </g>
   <g id="vitality" transform="translate(128 256)">
-    <path d="M64 105C51 95 22 70 22 46 22 18 51 18 64 39 77 18 106 18 106 46 106 70 77 95 64 105Z"/>
-    <path d="M37 76H91L84 92 64 106 44 92Z" fill="#8FA8C2"/>
+    <path d="M25 26 40 18 51 25M77 25 89 18 105 26 114 57 105 88 81 111H47L23 88 14 57 25 26" fill="#344C68" stroke="#8FA8C2"/>
+    <path d="M64 95C49 84 28 65 28 45 28 24 52 24 64 43 76 24 100 24 100 45 100 65 79 84 64 95Z" fill="url(#energy)"/>
+    <path d="M38 61H50L57 49 66 76 74 58H89" stroke="#344C68" stroke-width="4"/>
+    <path d="M24 80 40 76M104 80 88 76M49 105H79" stroke="#E8F2FF" stroke-width="4"/>
   </g>
   <g id="sustain" transform="translate(256 256)">
-    <path d="M64 105C51 95 22 70 22 46 22 18 51 18 64 39 77 18 106 18 106 46 106 70 77 95 64 105Z" stroke="#8FA8C2"/>
-    <path d="M22 64H43L51 51 61 80 72 49 82 64H106" stroke="#FFFFFF"/>
+    <path d="M24 48A43 43 0 0 1 96 29L105 41M104 81A43 43 0 0 1 31 99L22 87" stroke="#8FA8C2" stroke-width="6"/>
+    <path d="M89 40H107V22M39 88H21V106" stroke-width="4"/>
+    <path d="M45 38H82L95 52V81L80 95H47L33 81V52Z" fill="url(#metal)"/>
+    <path d="M57 46H71V59H84V73H71V86H57V73H44V59H57Z" fill="#FFFFFF" stroke="#344C68" stroke-width="3"/>
+    <path d="M15 64H24M104 64H115" stroke="#FFFFFF" stroke-width="3"/>
   </g>
   <g id="cooldown" transform="translate(384 256)">
-    <path d="M32 22H96M32 106H96M39 24V39Q39 51 58 64 39 77 39 89V104M89 24V39Q89 51 70 64 89 77 89 89V104"/>
-    <path d="M46 37H82L64 56ZM46 96 64 75 82 96Z" fill="#8FA8C2" stroke="none"/>
+    <path d="M52 20V14H76V20L94 28 100 22 110 35 104 42 110 58H116V78H108L99 96 103 101 88 112 80 104 64 109 46 104 39 111 25 100 31 91 23 77H16V56H23L30 40 25 34 39 23 45 29Z" fill="#344C68" stroke="#8FA8C2" stroke-width="3"/>
+    <circle cx="65" cy="66" r="32" fill="url(#metal)"/>
+    <circle cx="65" cy="66" r="23" fill="#344C68" stroke-width="3"/>
+    <path d="M65 46V66L79 75M65 90V94M41 66H37M88 66H92" stroke-width="4"/>
+    <path d="M85 29A43 43 0 0 0 26 49M26 32V50H43" stroke="#FFFFFF" stroke-width="5"/>
   </g>
   <g id="resource" transform="translate(512 256)">
-    <path d="M56 22H72M56 106H72"/>
-    <path d="M38 38Q64 24 90 38V91Q64 105 38 91Z" fill="#8FA8C2"/>
-    <path d="M38 38Q64 52 90 38"/>
-    <path d="M64 52V87" stroke="#FFFFFF"/>
+    <path d="M49 16H79V27H49ZM49 102H79V113H49Z" fill="url(#metal)" stroke-width="4"/>
+    <path d="M40 28H88L100 41V89L88 102H40L28 89V41Z" fill="#344C68"/>
+    <path d="M48 37H80V92H48Z" fill="url(#energy)" stroke="#8FA8C2" stroke-width="3"/>
+    <path d="M65 42 54 66H65L60 86 77 59H65Z" fill="#FFFFFF" stroke="#344C68" stroke-width="3"/>
+    <path d="M35 45V58M35 71V85M93 45V58M93 71V85" stroke="#8FA8C2" stroke-width="4"/>
   </g>
   <g id="control" transform="translate(0 384)">
-    <path d="M73 22 39 67H60L53 106 89 58H68Z" fill="#FFFFFF" stroke="none"/>
-    <g stroke="#8FA8C2">
-      <ellipse cx="64" cy="38" rx="14" ry="8"/>
-      <ellipse cx="88" cy="46" rx="14" ry="8" transform="rotate(40 88 46)"/>
-      <ellipse cx="98" cy="64" rx="8" ry="14"/>
-      <ellipse cx="88" cy="82" rx="14" ry="8" transform="rotate(-40 88 82)"/>
-      <ellipse cx="64" cy="90" rx="14" ry="8"/>
-      <ellipse cx="40" cy="82" rx="14" ry="8" transform="rotate(40 40 82)"/>
-      <ellipse cx="30" cy="64" rx="8" ry="14"/>
-      <ellipse cx="40" cy="46" rx="14" ry="8" transform="rotate(-40 40 46)"/>
-    </g>
+    <path d="M17 41 30 29 43 36 34 48V80L43 92 30 99 17 87ZM111 41 98 29 85 36 94 48V80L85 92 98 99 111 87Z" fill="url(#metal)"/>
+    <ellipse cx="64" cy="64" rx="33" ry="22" stroke="#8FA8C2" stroke-width="3"/>
+    <ellipse cx="64" cy="64" rx="22" ry="42" stroke="#8FA8C2" stroke-width="3"/>
+    <path d="M64 37 71 55 84 67V75L69 70 71 87 64 82 57 87 59 70 44 75V67L57 55Z" fill="#344C68" stroke-width="3"/>
+    <path d="M29 58 44 63 37 70M99 58 84 63 91 70M60 17H68M60 111H68" stroke="#FFFFFF" stroke-width="4"/>
   </g>
   <g id="mark" transform="translate(128 384)">
-    <path d="M22 44V22H44M84 22H106V44M106 84V106H84M44 106H22V84"/>
-    <circle cx="64" cy="64" r="12" fill="#FFFFFF" stroke="none"/>
+    <path d="M18 42V20H41M87 20H110V42M110 86V109H87M41 109H18V86" stroke="#8FA8C2"/>
+    <circle cx="64" cy="64" r="32" stroke-width="3"/>
+    <path d="M64 31 73 54 91 70V81L70 74 75 96 64 88 53 96 58 74 37 81V70L55 54Z" fill="url(#metal)" stroke-width="3"/>
+    <path d="M64 17V31M64 99V114M16 64H34M94 64H113"/>
+    <path d="M59 54H69V67H59Z" fill="#FFFFFF" stroke="#344C68" stroke-width="3"/>
   </g>
   <g id="loot" transform="translate(256 384)">
-    <path d="M22 56 42 44 106 56 87 72ZM22 56 87 72V106L22 88ZM87 72 106 56V89L87 106Z" fill="#8FA8C2"/>
-    <path d="M22 56 29 22 94 34 106 56"/>
-    <path d="M43 53 78 58 75 64 40 59Z" fill="#FFFFFF" stroke="none"/>
+    <path d="M23 55 44 45 106 56 87 73ZM23 55 87 73V110L23 91ZM87 73 106 56V91L87 110Z" fill="url(#metal)"/>
+    <path d="M23 49 29 21 93 34 106 50 86 60Z" fill="#344C68" stroke="#8FA8C2"/>
+    <path d="M39 63 42 39 51 50 63 26 75 54 90 43 85 70" fill="url(#energy)" stroke="none"/>
+    <path d="M53 78V92H66V81M32 76V86M96 76V89" stroke="#344C68" stroke-width="4"/>
+    <path d="M62 12V18M99 20 94 26M15 32 19 37" stroke="#FFFFFF" stroke-width="3"/>
   </g>
   <g id="chance" transform="translate(384 384)">
-    <path d="M24 43 64 22 104 43V87L64 106 24 87ZM24 43 64 62 104 43M64 62V106"/>
+    <path d="M25 43 64 23 103 43V87L64 107 25 87ZM25 43 64 62 103 43M64 62V107" fill="#344C68"/>
+    <path d="M64 23 103 43 64 62 25 43Z" fill="url(#metal)"/>
+    <path d="M14 50V36L29 28M99 26 114 34V48M14 80V96L29 104M99 107 114 98V83" stroke="#8FA8C2" stroke-width="3"/>
     <g fill="#FFFFFF" stroke="none">
-      <ellipse cx="54" cy="37" rx="5" ry="3"/><ellipse cx="75" cy="45" rx="5" ry="3"/>
-      <circle cx="34" cy="58" r="4"/><circle cx="53" cy="67" r="4"/><circle cx="44" cy="74" r="4"/><circle cx="34" cy="82" r="4"/><circle cx="53" cy="91" r="4"/>
+      <ellipse cx="53" cy="38" rx="5" ry="3"/><ellipse cx="76" cy="46" rx="5" ry="3"/>
+      <circle cx="37" cy="61" r="4"/><circle cx="52" cy="89" r="4"/><circle cx="45" cy="75" r="4"/>
+      <ellipse cx="77" cy="75" rx="4" ry="5"/><ellipse cx="91" cy="62" rx="4" ry="5"/><ellipse cx="91" cy="85" rx="4" ry="5"/>
     </g>
   </g>
   <g id="follow_up" transform="translate(512 384)">
-    <path d="M22 28 86 64 22 100 38 64ZM42 28 106 64 42 100 58 64Z"/>
+    <path d="M18 23H36L48 31 36 39H18ZM55 74H77L91 85 77 96H55Z" fill="url(#metal)" stroke-width="4"/>
+    <path d="M50 31H70M34 44C25 71 33 85 49 85" stroke="#8FA8C2" stroke-width="4"/>
+    <path d="M47 78 54 85 46 92" stroke-width="3"/>
+    <path d="M84 16 89 28 103 32 90 38 85 51 79 39 66 33 79 28Z" fill="#E8F2FF" stroke="none"/>
+    <path d="M104 61 109 77 121 85 109 91 104 110 98 95 85 85 98 79Z" fill="#FFFFFF" stroke="none"/>
+    <path d="M93 17 100 12M114 105 119 113M58 104H77" stroke="#8FA8C2" stroke-width="3"/>
   </g>
   <g id="summon" transform="translate(0 512)">
-    <path d="M53 30H75L81 47 105 40V86L79 76 74 98H54L49 76 23 86V40L47 47Z" fill="#8FA8C2"/>
-    <circle cx="64" cy="62" r="12" fill="#FFFFFF" stroke="none"/>
+    <path d="M19 86 36 73H93L110 86V107H19Z" fill="#344C68" stroke="#8FA8C2"/>
+    <path d="M19 86 42 96H88L110 86M43 97V107M87 97V107" stroke-width="3"/>
+    <path d="M56 22H73L79 38 103 31V61L77 54 73 70H55L50 54 26 61V31L50 38Z" fill="url(#metal)"/>
+    <circle cx="64" cy="43" r="9" fill="#FFFFFF" stroke="#344C68" stroke-width="3"/>
+    <path d="M53 74 49 85M75 74 79 85M37 67 32 77M91 67 96 77" stroke="#E8F2FF" stroke-width="3"/>
+    <path d="M60 12H68" stroke="#8FA8C2" stroke-width="3"/>
   </g>
   <g id="conversion" transform="translate(128 512)">
-    <path d="M29 45A39 39 0 0 1 101 51M99 83A39 39 0 0 1 27 77"/>
-    <path d="M86 48 104 59 108 38M42 80 24 69 20 90"/>
-    <circle cx="64" cy="64" r="9" fill="#FFFFFF" stroke="none"/>
+    <path d="M26 31C45 9 80 13 99 34M102 95C84 116 48 115 28 94M85 33H101V17M44 94H27V111" stroke="#8FA8C2" stroke-width="4"/>
+    <path d="M15 49 30 40 45 49V77L30 86 15 77Z" fill="url(#metal)"/>
+    <path d="M22 54 30 59 38 54M30 59V78" stroke="#344C68" stroke-width="3"/>
+    <path d="M85 44H106L114 54V76L106 86H85L78 76V54Z" fill="#344C68"/>
+    <path d="M91 52H102V78H91Z" fill="url(#energy)" stroke="none"/>
+    <path d="M46 63H80" stroke="#FFFFFF" stroke-width="5"/>
+    <path d="M57 51 68 48 75 59 70 75 59 78 51 67Z" fill="#344C68" stroke="#8FA8C2" stroke-width="3"/>
+    <path d="M65 55 58 65H67L61 73" stroke="#FFFFFF" stroke-width="3"/>
   </g>
   <g id="selection" transform="translate(256 512)">
-    <path d="M22 58H40V106H22ZM54 43H74V106H54ZM88 58H106V106H88Z" fill="#8FA8C2"/>
-    <path d="M53 20H75L64 33Z" fill="#FFFFFF" stroke="none"/>
+    <path d="M13 43 38 38V99L13 104ZM90 38 115 43V104L90 99Z" fill="#344C68" stroke="#8FA8C2" stroke-width="4"/>
+    <path d="M43 29H85V106H43Z" fill="url(#metal)"/>
+    <path d="M51 43H77V75H51Z" fill="#344C68" stroke-width="3"/>
+    <path d="M64 48 71 58 64 69 57 58Z" fill="#FFFFFF" stroke="none"/>
+    <path d="M53 85H75M53 94H68M21 56 30 53M21 67 30 64M98 54 107 57M98 66 107 69" stroke="#8FA8C2" stroke-width="3"/>
+    <path d="M36 40V21H53M75 21H92V40M57 12H71" stroke="#FFFFFF" stroke-width="4"/>
   </g>
   <!-- Cells (4,3) and (4,4) are reserved and intentionally empty. -->
 </svg>

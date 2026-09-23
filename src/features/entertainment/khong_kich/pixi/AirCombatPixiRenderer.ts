@@ -645,6 +645,9 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     layer(barY, hp, hp < .25 ? 0xf87171 : hp < .5 ? 0xfbbf24 : 0x4ade80);
     layer(barY + 13, resource, stats.resourceKind === "energy" ? 0xa78bfa : 0x38bdf8);
     for (const y of [barY, barY + 13]) this.trackingBars.poly(angularBarPolygon(barX, y, barWidth, 10)).stroke({ color: 0xcbd5e1, width: .39, alpha: .8 });
+    const playerTextScale = playerAirframeScale(world.aircraft);
+    this.hpText.scale.set(playerTextScale);
+    this.resourceText.scale.set(playerTextScale);
     this.hpText.text = statusBarText(world.aircraft.currentHp, stats.maxHp);
     this.resourceText.text = statusBarText(world.aircraft.currentResource, stats.maxResource);
     this.hpText.position.set(barX + barWidth / 2, barY + 5);
