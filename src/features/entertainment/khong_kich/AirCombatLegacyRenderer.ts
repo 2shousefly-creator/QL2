@@ -717,7 +717,9 @@ export function drawLegacyWorld(
     ctx.strokeStyle = aircraft.color; ctx.lineWidth = 2; ctx.globalAlpha = .35;
     ctx.beginPath(); ctx.arc(world.playerX, world.playerY, 30, 0, Math.PI * 2); ctx.stroke(); ctx.globalAlpha = 1;
   }
-  paintEquipment(world,(_id,frame,x,y,width,height,rotation,alpha)=>drawMagneticFrame(ctx,frame,x,y,width,height,rotation,alpha));
+  paintEquipment(world,(_id,frame,x,y,width,height,rotation,alpha)=>drawMagneticFrame(ctx,frame,x,y,width,height,rotation,alpha),reducedMotion,(x,y,ex,ey,color,alpha,width)=>{
+    ctx.save();ctx.globalAlpha=alpha;ctx.strokeStyle=`#${color.toString(16).padStart(6,"0")}`;ctx.lineWidth=width;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(ex,ey);ctx.stroke();ctx.restore();
+  });
   paintAstra(world,{
     impactFallback:true,
     circle:(x,y,r,c,a,fill)=>{ctx.save();ctx.globalAlpha=a;ctx.strokeStyle=ctx.fillStyle=`#${c.toString(16).padStart(6,"0")}`;ctx.lineWidth=2;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);fill?ctx.fill():ctx.stroke();ctx.restore();},

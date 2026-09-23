@@ -61,7 +61,7 @@ export function getSkillTooltipModel(state: AircraftCombatState, id: SkillId) {
     if (hasCore(state, row) && core.skillId === id) coreRows.push(core.description);
   }
   if (id === "escort_drone" && state.droneActive && hasCore(state,148)) coreRows.push(`Nếu thu hồi lúc này: hoàn ${amount(Math.max(0,Math.min(V.recallRefundCap,(state.coreState.stacks.droneUpkeepSpent || 0)*V.recallRefund,getEffectiveAircraftStats(state).maxResource-state.currentResource)))} Điện.`);
-  if (canSkillsCrit(state)) coreRows.push(`Kỹ năng có thể chí mạng. Synergy Găng Bảo Thạch × Mắt Tempest: +${getTempestJewelledCritDamageBonus(state)*100} điểm phần trăm Sát Thương Chí Mạng toàn cục.`);
+  if (canSkillsCrit(state)) coreRows.push(`Kỹ năng có thể chí mạng. Synergy Găng Bảo Thạch × Mắt Tempest: +${getTempestJewelledCritDamageBonus(state)*100}% Sát Thương Chí Mạng toàn cục.`);
   if (hasCore(state, 190)) coreRows.push("Nén Năng Lượng: +22% sát thương kỹ năng; chi phí đã gồm +15% Tài Nguyên.");
   if (expansionState(state).primarySkill === id) coreRows.push("Kỹ Năng Chủ Lực: +22% sát thương kỹ năng Chủ Lực; chi phí và hồi chiêu cơ bản đã giảm 15%.");
   if (hasCore(state, 199)) coreRows.push(`Mạch Quá Tải: lần dùng kế tiếp +${(state.coreState.stacks.overclock ?? 0) * 18}% sát thương kỹ năng, giữ riêng theo lần dùng.`);
@@ -112,6 +112,7 @@ export interface StatusPresentation {
   priority: number;
   timerKind?: "active" | "cooldown";
   showNumericTimer?: boolean;
+  rewardMessage?: string;
 }
 
 const TIMED_STATUSES = [
@@ -342,7 +343,9 @@ function skillCoreStatuses(world:CombatWorld):StatusPresentation[] {
 export function getCoreTelemetryPresentation(state:AircraftCombatState,id:CoreId):string[] {
   const row=Number(id.slice(5)),c=state.coreState,stats=getEffectiveAircraftStats(state);
   if(row===210)return [];
-  if(row>=223){const t=c.telemetry?.[id]??{};return row===224?[`Trang bị rơi thêm: ${t.extraDrops??0}`,`Quái thường: ${t.normalDrops??0} · Tinh Anh sau đầu wave: ${t.eliteDrops??0}`]:[`${row===223?"Trang bị thành phần":row===225?"Trang bị hoàn chỉnh":"Trang bị Huyền Thoại"} đã nhận: ${t.itemsReceived??0}`];}
+  if(row===227){const chest=state.coreState.release?.waitingChest;return chest?.claimed?[`Đã nhận phần thưởng: ${chest.rewardLabel}`]:[chest?.cancelled?"Đã hủy bởi Cái Giá Phải Trả":`Còn ${number(chest?.remaining??600)} giây chiến đấu`];}
+  if(row===228)return ["Đã nhận 1 Trang Bị Huyền Thoại. Mọi nguồn nhận Trang Bị đã khóa tới hết run."];
+  if(row>=223){const t=c.telemetry?.[id]??{};return row===224?[`Trang bị rơi thêm: ${t.extraDrops??0}`,`Quái thường: ${t.normalDrops??0} · Tinh Anh: ${t.eliteDrops??0}`]:[`Trang Bị/Vật Phẩm đã nhận: ${t.itemsReceived??0}`];}
   const values=c.telemetry?.[id]??{},lines:string[]=[];
   if(row===160)return [`Tia Sao Băng đã bắn: ${values.procs??0}`,`Mục tiêu trúng lần đầu mỗi tia: ${values.hits??0}`,`Sát thương tia thực tế: ${amount(values.damage??0)}`];
   const resource=stats.resourceKind==="mana"?"Mana":"Điện";
@@ -391,7 +394,7 @@ export function getCoreTelemetryPresentation(state:AircraftCombatState,id:CoreId
   if(row===87)lines.push("Đang cung cấp: +35% Tỷ Lệ Chí Mạng; +70% Sát Thương Chí Mạng.");
   if(row===94)lines.push("Đang cung cấp: +40% Hỏa Lực; +25% Tỷ Lệ Chí Mạng; −35% Máu Tối Đa.");
   if(row===95)lines.push("25% Tỷ Lệ Chí Mạng; +200% Sát Thương Chí Mạng.");
-  if(row===97)lines.push("Đang cung cấp: +40% Hỏa Lực; +30% Máu Tối Đa; +30% Giáp.");
+  if(row===97)lines.push("Đang cung cấp: +40 Hỏa Lực; +30 Máu Tối Đa; +30 Giáp.");
   if(row===100){bonus(state.currentHp>stats.maxHp*.7?20:state.currentHp>=stats.maxHp*.3?8:0,"Hỏa Lực");bonus(state.currentHp<stats.maxHp*.3?20:state.currentHp<=stats.maxHp*.7?8:0,"Giáp");}
   const key=({76:"reactive",81:"skill",99:"reserve",104:"overheal"} as Record<number,string>)[row];
   if(key){const shield=c.shields[key];const amount=shield&&shield.until>c.time?shield.amount:0;lines.push(`Khiên hiện tại: ${Math.round(amount).toLocaleString("vi-VN")}${row===104?` / ${Math.round(stats.maxHp*.12).toLocaleString("vi-VN")}`:""}`);}

@@ -225,7 +225,7 @@ export function getSkillRuntimeValues(state: AircraftCombatState, skillId: Skill
     if (skillId !== "escort_drone") v.cost *= costMultiplier;
     v.upkeepPerSecond *= costMultiplier * (skillId === "escort_drone" && expansionActive(state, "capacitorHawk") ? .85 : 1);
     if (expansionState(state).primarySkill === skillId) v.cooldown *= .85;
-    const equipmentCost = 1 - .15 * equipmentScale(state,31);
+    const equipmentCost = 1 - .10 * equipmentScale(state,31);
     if(skillId !== "escort_drone")v.cost *= equipmentCost;
     v.upkeepPerSecond *= equipmentCost;
     return v;
@@ -308,7 +308,7 @@ export function castSkill(state: AircraftCombatState, skillId: SkillId): SkillCa
         return { cast: false, reason: "resource", resourceSpent: 0 };
     state.currentResource = Math.max(0, state.currentResource - cost);
     equipmentResourceSpent(state,cost);
-    const equipmentCost = 1-.15*equipmentScale(state,31);
+    const equipmentCost = 1-.10*equipmentScale(state,31);
     equipmentMetric(state,31,"saved",cost/equipmentCost-cost);
     observeExpansionResource(state, getEffectiveAircraftStats(state).maxResource);
     state.coreState.skillCasts++;
@@ -455,7 +455,7 @@ export function tickAircraftState(state: AircraftCombatState, deltaSeconds: numb
     const available = Math.max(0, state.currentResource + stats.resourceRegen * dt);
     const spent = Math.min(available, upkeep * dt);
     equipmentResourceSpent(state,spent);
-    equipmentMetric(state,31,"saved",Math.min(available,upkeep/(1-.15*equipmentScale(state,31))*dt)-spent);
+    equipmentMetric(state,31,"saved",Math.min(available,upkeep/(1-.10*equipmentScale(state,31))*dt)-spent);
     if(upkeep>0)recordCoreMetric(state,43,"saved",Math.min(available,4*dt)-spent);
     if (state.droneActive) state.coreState.stacks.droneUpkeepSpent = (state.coreState.stacks.droneUpkeepSpent || 0) + spent;
     const resourceBefore = state.currentResource;

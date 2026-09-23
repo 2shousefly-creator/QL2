@@ -1,3 +1,4 @@
+import { WAITING_CHEST_DESCRIPTION } from "./airCombatEquipmentRewards";
 import { SKILL_CORE_DESCRIPTIONS } from "./airCombatSkillCores";
 import type { CoreDefinition } from "./airCombatTypes";
 
@@ -713,7 +714,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_053",
     "name": "Găng bảo thạch",
-    "description": "Nhận +25% Tỷ Lệ Chí Mạng. Kỹ năng của bạn có thể chí mạng. Nếu đồng thời mang Mắt Tempest: +50 điểm phần trăm Sát Thương Chí Mạng toàn cục; Thiên Nhãn Raijin: +100 điểm phần trăm Sát Thương Chí Mạng toàn cục. Synergy chỉ áp dụng một lần theo family.",
+    "description": "Nhận +25% Tỷ Lệ Chí Mạng; kỹ năng có thể chí mạng. Có Mắt Tempest: +25% Sát Thương Chí Mạng; có Thiên Nhãn Raijin: +50% Sát Thương Chí Mạng. Synergy chỉ áp dụng một lần theo family.",
     "system": "attack",
     "icon": "core:core_053",
     "category": "offense",
@@ -1197,7 +1198,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_097",
     "name": "Tập trung chuyên môn",
-    "description": "Khóa cả 3 kỹ năng; nhận +40% Hỏa Lực, +30% Máu Tối Đa và +30% Giáp. Các mốc 9/18/27 chuyển sang lựa chọn Lõi Vàng thường.",
+    "description": "Khóa cả 3 kỹ năng; nhận +40 Hỏa Lực, +30 Máu Tối Đa và +30 Giáp. Mỗi Lõi Kỹ Năng đang sở hữu chuyển thành 1 Lõi Kim Cương hợp lệ. Các mốc 9/18/27 còn lại mở 3 Lõi Kim Cương thường, chọn 1. Hộp Pandora có thể xóa Lõi này để mở lại kỹ năng; không hoàn trả Lõi Kỹ Năng hay milestone đã tiêu thụ.",
     "system": "utility",
     "icon": "core:core_097",
     "category": "offense",
@@ -2810,7 +2811,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 {
   "id": "core_223",
   "name": "Mảnh Ghép May Mắn",
-  "description": "Nhận 1 trang bị thành phần ngẫu nhiên",
+  "description": "Nhận 1 Trang Bị Thành Phần ngẫu nhiên.",
   "system": "utility",
   "icon": "core:core_223",
   "category": "weapon",
@@ -2821,7 +2822,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 {
   "id": "core_224",
   "name": "Thích Chơi Xác Suất",
-  "description": "Tăng xác suất quái vật rơi ra trang bị thành phần khi bị tiêu diệt từ 2% lên 3%. Quái Tinh Anh tiêu diệt thứ 2 trở đi trong wave tăng xác suất rơi trang bị thành phần từ 20% lên 30%.",
+  "description": "Nhân 1,5 lần từng xác suất rơi độc lập Nam Châm Ma Thuật / Thành Phần / Hoàn Chỉnh / Huyền Thoại, tối đa 100% mỗi roll. Sau Cái Giá Phải Trả, Trang Bị không rơi và Nam Châm trở về xác suất gốc.",
   "system": "utility",
   "icon": "core:core_224",
   "category": "weapon",
@@ -2832,7 +2833,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 {
   "id": "core_225",
   "name": "Ăn Chắc Mặc Bền",
-  "description": "Nhận 1 trang bị hoàn chỉnh ngẫu nhiên",
+  "description": "Nhận 2 Trang Bị Thành Phần ngẫu nhiên.",
   "system": "utility",
   "icon": "core:core_225",
   "category": "weapon",
@@ -2843,12 +2844,14 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 {
   "id": "core_226",
   "name": "Rương Báu Vật",
-  "description": "Nhận 1 trang Bị Huyền Thoại ngẫu nhiên",
+  "description": "Nhận 4 Trang Bị Thành Phần ngẫu nhiên và 1 Nam Châm Ma Thuật.",
   "system": "utility",
   "icon": "core:core_226",
   "category": "weapon",
   "tiers": [
     "diamond"
   ]
-}
+},
+{ id:"core_227", name:"Chờ Đợi Xứng Đáng?", description:WAITING_CHEST_DESCRIPTION, system:"utility", icon:"core:core_227", category:"weapon", tiers:["diamond"] },
+{ id:"core_228", name:"Cái Giá Phải Trả", description:"Xóa toàn bộ Trang Bị đang mang, trong kho, đang ghép và dưới đất; nhận 1 Trang Bị Huyền Thoại ngẫu nhiên rồi khóa mọi nguồn nhận Trang Bị tới hết run. Giữ Nam Châm Ma Thuật; Nam Châm vẫn rơi theo xác suất gốc. Hủy Chờ Đợi Xứng Đáng? nếu chưa nhận thưởng.", system:"utility", icon:"core:core_228", category:"weapon", tiers:["diamond"] }
 ];

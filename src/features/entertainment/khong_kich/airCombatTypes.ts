@@ -135,7 +135,7 @@ export interface AircraftModifiers {
   maxResourceFlat: number;
   resourceRegenFlat: number;
   weapon: WeaponModifiers;
-  skillCores: Partial<Record<SkillId, CoreId>>;
+  skillCores: Partial<Record<SkillId, CoreId[]>>;
 }
 
 export interface AircraftCombatState {

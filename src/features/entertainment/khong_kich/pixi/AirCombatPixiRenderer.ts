@@ -660,7 +660,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
       const sprite=this.equipmentSprites.get(id,this.assets.texture(frame));if(!sprite)return;
       sprite.position.set(x,y);sprite.width=width;sprite.height=height;sprite.rotation=rotation;sprite.alpha=alpha;
       sprite.blendMode=frame.atlas==="equipmentVfx"?"add":"normal";
-    });
+    },reducedMotion,(x,y,ex,ey,color,alpha,width)=>{this.enemyForegroundMarks.moveTo(x,y).lineTo(ex,ey).stroke({color,alpha,width});});
     this.equipmentSprites.end();
     this.app.render();
   }

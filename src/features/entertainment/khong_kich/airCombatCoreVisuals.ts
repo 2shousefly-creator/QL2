@@ -154,4 +154,6 @@ export const CORE_VISUAL_SEMANTIC_BY_ID = {
   "core_224": "chance",
   "core_225": "loot",
   "core_226": "loot",
+  "core_227": "loot",
+  "core_228": "conversion",
 } as const;

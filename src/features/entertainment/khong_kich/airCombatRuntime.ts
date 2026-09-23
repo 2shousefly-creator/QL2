@@ -1,6 +1,7 @@
 import { equipmentState, equipmentScale, equipmentEffect, equipmentMetric } from "./airCombatEquipmentState";
 import { canSkillsCrit, equipmentUntargetable } from "./airCombatEquipmentStats";
-import { tickEquipment, equipmentOnHit, equipmentOnCast, equipmentOnDamage, equipmentOnKill, equipmentOutgoing, equipmentArmorMultiplier, equipmentIncoming, equipmentSlow, equipmentFx, type EquipmentHooks } from "./airCombatEquipmentRuntime";
+import { advanceWaitingChest, claimWaitingChest } from "./airCombatEquipmentRewards";
+import { tickEquipment, flushEquipmentDrops, equipmentOnHit, equipmentOnCast, equipmentOnDamage, equipmentOnKill, equipmentOutgoing, equipmentArmor, equipmentIncoming, equipmentSlow, equipmentFx, type EquipmentHooks } from "./airCombatEquipmentRuntime";
 import { releaseState, playerAirframeScale, overheated } from "./airCombatReleaseState";
 import { closeCoreSelection, spendReroll, rollUnstableMode, type RerollSource } from "./airCombatSelectionRules";
 import { syncEffectiveMaxHp } from "./airCombatAircraft";
@@ -2748,7 +2749,7 @@ function applyDamageToEnemy(world: CombatWorld, enemy: EnemyEntity, rawDamage: n
     let effectiveStats = opening ? {...stats,criticalChance:1} : canCrit ? stats : { ...stats, criticalChance: 0 };
     const skillEffects = world.skillCores.enemyEffects.get(enemy.id);
     const skillPen=skillId==="stellar_lance"&&hasCore(state,158)?.30:0;
-    const armor = enemy.armor * equipmentArmorMultiplier(state,enemy) * (1-skillPen) * ((enemy.astraArmorUntil??0)>world.elapsed?.7:1) * ((skillEffects?.armorUntil || 0)>time ? 1 - V.laserArmorReduction : 1) * ((enemy.armorBrokenUntil??0)>world.elapsed?.7:1) * ((enemy.burnArmorUntil || 0) > time ? .8 : 1) * (enemy.weakUntil > time ? .92 : 1) * ((enemy.weakDebuffUntil || 0) > time ? .85 : 1) * (1 - armorPenetration(state));
+    const armor = equipmentArmor(state,enemy) * (1-skillPen) * ((enemy.astraArmorUntil??0)>world.elapsed?.7:1) * ((skillEffects?.armorUntil || 0)>time ? 1 - V.laserArmorReduction : 1) * ((enemy.armorBrokenUntil??0)>world.elapsed?.7:1) * ((enemy.burnArmorUntil || 0) > time ? .8 : 1) * (enemy.weakUntil > time ? .92 : 1) * ((enemy.weakDebuffUntil || 0) > time ? .85 : 1) * (1 - armorPenetration(state));
     if (directPlayer && (marks.criticalLock ?? 0) > time) effectiveStats = { ...effectiveStats, criticalDamageMultiplier: effectiveStats.criticalDamageMultiplier + .35 };
     const whiteHole=source==="basic"&&(state.coreState.timers.whiteHole??0)>time;
     let multiplier = expansionMultiplier * (whiteHole?1.6:1)*outgoingCoreMultiplier(state, target, source, Math.hypot(enemy.x - world.playerX, enemy.y - world.playerY), GAMEPLAY_SAFE_RECT.height);
@@ -2832,8 +2833,8 @@ function applyDamageToEnemy(world: CombatWorld, enemy: EnemyEntity, rawDamage: n
         };
         for(const [family,factor] of equipmentDamage.factors)equipmentContribution(family,1-1/factor);
         for(const [family,value] of equipmentDamage.bonuses)equipmentContribution(family,value/Math.max(Number.EPSILON,equipmentBaseRaw+equipmentDamage.bonus+recoilDamage));
-        if(equipmentEffect(state,14).until>time)equipmentContribution(14,35*equipmentScale(state,14)/Math.max(1,stats.firepower));
-        if(state.currentHp>=stats.maxHp*.5)equipmentContribution(33,1-1/(1+.1*equipmentScale(state,33)));
+        if(equipmentEffect(state,14).until>time)equipmentContribution(14,20*equipmentScale(state,14)/Math.max(1,stats.firepower));
+        if(state.currentHp>=stats.maxHp*.5)equipmentContribution(33,6*equipmentScale(state,33)/Math.max(1,stats.firepower));
         if(preliminary){recordCoreMetric(state,185,"consumed",1);factor(185,1.12);}
         if(skillPhase||gunPhase){recordCoreMetric(state,207,"consumed",1);factor(207,1.45);}
         if(alternatingSkill)factor(191,1.20);
@@ -3122,7 +3123,7 @@ function hitPlayer(world: CombatWorld, rawDamage: number, kind: "projectile" | "
     for(const shield of incomingShields)prepareAbsorbShield(state,shield);
     const shieldCapacity=incomingShields.reduce((n,sh)=>n+sh.amount,0);
     const incomingCapacity=state.currentHp+shieldCapacity;
-    const gorgon=1-.12*equipmentScale(state,16),aegisEquipment=equipmentIncomingFactor/gorgon;
+    const gorgon=1-.08*equipmentScale(state,16),aegisEquipment=equipmentIncomingFactor/gorgon;
     equipmentMetric(state,16,"prevented",Math.min(incomingCapacity,damage/gorgon)-Math.min(incomingCapacity,damage));
     equipmentMetric(state,21,"prevented",Math.min(incomingCapacity,damage/aegisEquipment)-Math.min(incomingCapacity,damage));
     const attacker=world.enemies.find(e=>e.id===attack.sourceEnemyId);
@@ -3710,6 +3711,8 @@ export function updateCombatWorld(world: CombatWorld, deltaSeconds: number): voi
     if (world.ended || world.pauseReasons.size || world.currentCoreChoices || world.pendingCoreSelections > 0 || deltaSeconds <= 0)
         return;
     const dt = Math.min(AIR_COMBAT_WORLD.maxDeltaSeconds, deltaSeconds);
+    try {
+    advanceWaitingChest(world.aircraft,dt);
     world.elapsed += dt;
     world.scroll = (world.scroll + dt * 52) % 80;
     if (world.latestMessage && world.elapsed >= world.messageUntil)
@@ -3781,6 +3784,11 @@ export function updateCombatWorld(world: CombatWorld, deltaSeconds: number): voi
         world.pauseReasons.add("result");
     }
     enterCountdownIfClear(world);
+    } finally {
+      flushEquipmentDrops(world);
+      const reward=claimWaitingChest(world.aircraft,world.random);
+      if(reward)setMessage(world,reward,5);
+    }
 }
 export function ensureCoreSelection(world: CombatWorld): CoreCard[] | null {
     if(releaseState(world.aircraft).followups.length)return null;
@@ -4269,7 +4277,7 @@ const astraHooks:AstraHooks={impact:(w,x,y,radius)=>emitVisual(w,{kind:"astra_st
 function resolveEquipmentDamage(w:CombatWorld,e:EnemyEntity,raw:number,family:number):number {
     if(!isHostileToPlayer(w,e)||raw<=0)return 0;
     const s=w.aircraft,t=s.coreState.time,fx=w.skillCores.enemyEffects.get(e.id);
-    const armor=e.armor*equipmentArmorMultiplier(s,e)*((e.astraArmorUntil??0)>t?.7:1)*((fx?.armorUntil??0)>t?1-V.laserArmorReduction:1)*((e.armorBrokenUntil??0)>t?.7:1)*((e.burnArmorUntil??0)>t?.8:1)*(e.weakUntil>t?.92:1)*((e.weakDebuffUntil??0)>t?.85:1);
+    const armor=equipmentArmor(s,e)*((e.astraArmorUntil??0)>t?.7:1)*((fx?.armorUntil??0)>t?1-V.laserArmorReduction:1)*((e.armorBrokenUntil??0)>t?.7:1)*((e.burnArmorUntil??0)>t?.8:1)*(e.weakUntil>t?.92:1)*((e.weakDebuffUntil??0)>t?.85:1);
     const outgoing=equipmentOutgoing(s,e,false,false,false);
     const budget=calculateDamage(raw,armor,outgoing.multiplier)*guardianMultiplier(w,e)*(e.type==="boss"&&e.hp/e.maxHp>=.15&&e.aegisUntil>t?.6:1);
     const absorbed=Math.min(e.shield,budget),hpDamage=Math.min(e.hp,Math.max(0,budget-absorbed));
@@ -4281,7 +4289,7 @@ function resolveEquipmentDamage(w:CombatWorld,e:EnemyEntity,raw:number,family:nu
     observeBossDamage(w,e,hpDamage);
     const actual=hpDamage+absorbed;
     if(family!==12&&family!==16){
-      if(equipmentScale(s,33)&&s.currentHp<getEffectiveAircraftStats(s).maxHp*.5)equipmentMetric(s,33,"healed",healPlayerWithFeedback(w,actual*.02*equipmentScale(s,33),"core",true));
+      if(equipmentScale(s,33)&&s.currentHp<getEffectiveAircraftStats(s).maxHp*.5)equipmentMetric(s,33,"healed",healPlayerWithFeedback(w,actual*.01*equipmentScale(s,33),"core",true));
       accumulateDeathMark(w,e,actual,false);
     }
     for(const [f,factor] of outgoing.factors)equipmentMetric(s,f,"bonusDamage",actual-Math.min(e.hp+hpDamage+e.shield+absorbed,budget/factor));

@@ -602,7 +602,7 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
 
       <div key="core-toasts" ref={toastHostRef} className="air-core-toasts" aria-live="polite" aria-label="Lõi vừa nhận" />
       {(hud.latestMessage || skillFeedback) && !coreChoices && (
-        <div key="combat-message" className="pointer-events-none absolute left-1/2 top-[21%] z-10 -translate-x-1/2 whitespace-nowrap rounded-full border border-cyan-300/40 bg-black/90 px-3 py-1.5 text-[9px] font-black uppercase tracking-wider text-cyan-100 shadow-lg shadow-cyan-950/30">{skillFeedback || hud.latestMessage}</div>
+        <div key="combat-message" className="pointer-events-none absolute left-1/2 top-[21%] z-10 w-max max-w-[94%] -translate-x-1/2 whitespace-normal text-center rounded-full border border-cyan-300/40 bg-black/90 px-3 py-1.5 text-[9px] font-black uppercase tracking-wider text-cyan-100 shadow-lg shadow-cyan-950/30">{skillFeedback || hud.latestMessage}</div>
       )}
 
 

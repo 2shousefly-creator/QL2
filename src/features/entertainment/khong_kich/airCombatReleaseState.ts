@@ -2,6 +2,8 @@ import type { AircraftCombatState, CoreSystem } from "./airCombatTypes";
 
 /** Run-local 26.10.1 state. No profile or save migration. */
 export interface ReleaseCoreState {
+  seenSkillCoreIds: Set<string>;
+  waitingChest?: { remaining:number; claimed:boolean; cancelled:boolean; rewardLabel?:string };
   reserve: number;
   refused: Record<string, number>;
   completedSelections: number;
@@ -22,7 +24,7 @@ export interface ReleaseCoreState {
   aimReady: boolean;
 }
 export const releaseState = (s: AircraftCombatState): ReleaseCoreState => s.coreState.release ??= {
-  reserve: 0, refused: {}, completedSelections: 0, followups: [], nextMode: Infinity,
+  seenSkillCoreIds: new Set(), reserve: 0, refused: {}, completedSelections: 0, followups: [], nextMode: Infinity,
   heat: 0, overheatUntil: 0, lastSkillEnd: s.coreState.time, hadActiveSkill: false,
   ghostReady: Infinity, ghosts: [], markReady: Infinity, misses: 0, aimReady: false,
 };

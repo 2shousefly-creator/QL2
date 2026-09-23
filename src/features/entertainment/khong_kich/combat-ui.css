@@ -496,18 +496,13 @@
 .equipment-storage-area { display:flex; flex-direction:column; gap:4px; }
 .equipment-dashboard .equipment-inventories { gap:8px; }
 .equipment-dashboard .equipment-storage { padding:0; }
-.equipment-dashboard .equipment-storage[hidden] { display:none; }
-.equipment-dashboard .equipment-storage h3 { height:14px; line-height:14px; margin-bottom:4px; }
-.equipment-dashboard .equipment-storage-grid { width:max-content; margin-inline:auto; }
-.equipment-dashboard .equipment-pages { height:26px; margin:4px auto 0; max-width:calc(var(--equipment-cell-size) * 4 + 6px); }
-.equipment-storage-switch { display:flex; gap:4px; height:24px; }
-.equipment-storage-switch button { flex:1; min-width:0; border:1px solid #375069; border-radius:5px; background:#11263a; color:#aac5d8; font-size:10px; font-weight:800; }
-.equipment-storage-switch button[aria-pressed="true"] { border-color:#8aeaff; color:#e8fbff; background:#173d50; }
+.equipment-dashboard .equipment-storage h3 { height:28px; line-height:14px; margin-bottom:4px; text-align:left; }
+.equipment-dashboard .equipment-storage-grid { width:max-content; margin-inline:0; }
+.equipment-dashboard .equipment-pages { height:26px; margin:4px 0 0; max-width:calc(var(--equipment-cell-size) * 3 + 4px); }
 .equipment-dashboard .equipment-item-tray { box-sizing:border-box; height:calc(var(--equipment-cell-size) + 44px); padding:4px; border-radius:9px; }
 .equipment-dashboard .equipment-item-grid { grid-template-rows:var(--equipment-cell-size); width:max-content; margin:3px 0; }
 .equipment-dashboard .equipment-item-tray small { height:16px; line-height:16px; font-size:10px; white-space:nowrap; }
-.equipment-inventory-body[data-compact="true"] .equipment-operations,
-.equipment-inventory-body[data-compact="true"] .equipment-inventories { grid-template-columns:minmax(0,1fr); }
+.equipment-inventory-body[data-compact="true"] .equipment-operations { grid-template-columns:minmax(0,1fr); }
 .equipment-inventory-body[data-emergency="true"] { overflow-y:auto; overflow-x:hidden; scrollbar-gutter:stable; }
 /* display:contents frees the sticky target from the short operations-row bounds. */
 .equipment-inventory-body[data-emergency="true"][data-magnet-drag="true"] .equipment-operations { display:contents; }
@@ -518,3 +513,9 @@
 }
 .equipment-dashboard .equipment-magnet-ready .equipment-drop-label { color:#c0f4ff; text-shadow:0 0 9px #49caff66; }
 .equipment-dashboard .equipment-magnet-ready.equipment-drop-ready { box-shadow:inset 0 0 30px #49caff66,inset 0 0 3px #d8faff,0 0 7px #7ce9ff; }
+
+/* 26.11.4: both paginated stores remain visible within the fixed viewport. */
+.equipment-storage-grid .equipment-grid-cell { border:1px solid #b8d6ed38; background:#060e1940; }
+.equipment-storage-grid .equipment-grid-cell:has(.equipment-tile) { border-color:transparent; }
+.air-status-reward { display:block; color:#facc15; font-weight:800; margin:8px 0; }
+.air-status-reward[hidden] { display:none; }

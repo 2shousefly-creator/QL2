@@ -67,6 +67,8 @@ export const AirCombatStatusStrip = React.memo(forwardRef<StatusStripHandle, { t
       const time = tooltip.current.querySelector("[data-status-time]");
       const description = tooltip.current.querySelector("[data-status-description]");
       const source = tooltip.current.querySelector("[data-status-source]");
+      const reward = tooltip.current.querySelector<HTMLElement>("[data-status-reward]");
+      if(reward){reward.hidden=!active.rewardMessage;reward.textContent=active.rewardMessage??"";}
       if (time) time.textContent = active.timeLabel ?? timeLabel(active.remaining);
       if (description) updateCombatRichText(description, active.description, tooltip.current);
       if (source) source.textContent = `Nguồn: ${active.source}${active.badgeText ? ` · ${active.badgeText}` : ""}`;
@@ -100,6 +102,7 @@ export const AirCombatStatusStrip = React.memo(forwardRef<StatusStripHandle, { t
     <AnimatePresence>{active && <motion.aside key="status" {...airTooltipMotion} ref={tooltip} className="air-status-tooltip" data-combat-tooltip-panel="status" role="status">
       <div className="air-tooltip-heading"><strong>{active.name}</strong><span data-status-time>{active.timeLabel ?? timeLabel(active.remaining)}</span></div>
       <CombatStatIconTemplates/><p data-status-description/>
+      <strong className="air-status-reward" data-status-reward hidden={!active.rewardMessage}>{active.rewardMessage}</strong>
       <small data-status-source>Nguồn: {active.source}{active.badgeText ? ` · ${active.badgeText}` : ""}</small>
     </motion.aside>}</AnimatePresence>
   </div>;

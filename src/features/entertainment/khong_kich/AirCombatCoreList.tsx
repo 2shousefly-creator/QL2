@@ -46,7 +46,7 @@ export function AirCombatCoreList({ state, onClose }: { state: AircraftCombatSta
             <h4 className="text-xs font-bold text-amber-200">THỐNG KÊ LÕI</h4>
             <ul className="mt-2 space-y-1 text-xs">{getCoreTelemetryPresentation(state,selected.id).map((line,index)=><li key={index}><CoreDescription text={line}/></li>)}</ul>
           </section>}
-          {selected.id === "core_097" && <p className="mt-2 text-xs text-amber-200">Đã khóa cả 3 kỹ năng. Mốc 9 / 18 / 27 còn lại chuyển sang lõi Vàng thường.</p>}
+          {selected.id === "core_097" && <p className="mt-2 text-xs text-amber-200">Đã khóa cả 3 kỹ năng. Mốc 9 / 18 / 27 còn lại chuyển sang 3 Lõi Kim Cương thường, chọn 1.</p>}
           {state.coreState.consumed.has(selected.id) && <p className="mt-2 text-xs text-amber-200">Đã sử dụng trong lượt này</p>}
         </> : <p className="text-sm text-[var(--modal-muted)]">Chưa có lõi. Lõi đầu tiên xuất hiện ở cấp 3.</p>}
       </section>

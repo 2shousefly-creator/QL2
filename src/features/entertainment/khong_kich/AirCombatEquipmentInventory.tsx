@@ -14,7 +14,7 @@ import type { CombatWorld } from "./airCombatRuntime";
 type TileLocation = "storage" | "craft" | "equipped" | "item";
 type Drag = { id: EquipmentRewardId; instanceId: number; x: number; y: number; size: number };
 type Gesture = { pointer: number; startX: number; startY: number; x: number; y: number; phase: "pending" | "dragging" | "cancelled"; timer: ReturnType<typeof setTimeout> };
-/** Pointer events exclusively own tap, double tap and the one-second drag gate. */
+/** Pointer events exclusively own tap, double tap and the 500ms drag gate. */
 function Tile({ item, id, location, selected, onSelect, onInspect, onDouble, onDrag, onDrop, quantity, locked = false }: {
   item?: EquipmentInstance; id?: EquipmentRewardId; location: TileLocation; selected: boolean; onSelect: () => void;
   onInspect: (id: EquipmentRewardId, source: HTMLElement) => void; onDouble: (source: HTMLElement) => void;
@@ -38,7 +38,7 @@ function Tile({ item, id, location, selected, onSelect, onInspect, onDouble, onD
       const g: Gesture = { pointer: event.pointerId, startX: event.clientX, startY: event.clientY, x: event.clientX, y: event.clientY, phase: "pending", timer: setTimeout(() => {
         if (gesture.current !== g || g.phase !== "pending" || !draggable) return;
         g.phase = "dragging"; lastTap.current = 0; onSelect(); dragCallback.current(payload(g, source));
-      }, 1000) }; gesture.current = g;
+      }, 500) }; gesture.current = g;
     }}
     onPointerMove={event => {
       const g = gesture.current; if (!g || g.pointer !== event.pointerId) return;
@@ -85,7 +85,6 @@ export function AirCombatEquipmentInventory({ world, onClose, onChange }: { worl
   const equippedRegion = useRef<HTMLElement>(null), craftRegion = useRef<HTMLElement>(null), craftSlots = useRef<(HTMLDivElement | null)[]>([]);
   const [selection, setSelection] = useState<number | null>(null), [tooltip, setTooltip] = useState<EquipmentTooltipAnchor | null>(null);
   const dashboard = useRef<HTMLDivElement>(null);
-  const [storageTab, setStorageTab] = useState<"components" | "completed">("components");
   const [layout, setLayout] = useState({ compact: false, emergency: false, cell: 36 });
   useLayoutEffect(() => {
     const body = dashboard.current!.parentElement!;
@@ -94,28 +93,27 @@ export function AirCombatEquipmentInventory({ world, onClose, onChange }: { worl
       const width = body.clientWidth - 16, height = body.clientHeight - 16;
       const compact = width < 600;
       // These fixed chrome budgets mirror the dashboard rows in combat-ui.css.
-      const heightCell = (height - (compact ? 244 : 162)) / (compact ? 7 : 6);
-      const widthCell = compact ? Math.min((width - 22) / 5, (width - 106) / 3) : Math.min((width - 20) / 8, (width / 2 - 110) / 3);
-      const cell = Math.max(36, Math.floor(Math.min(64, heightCell, widthCell)));
-      const emergency = heightCell < 36 || widthCell < 36;
+      const heightCell = (height - (compact ? 226 : 176)) / (compact ? 6 : 5);
+      const widthCell = Math.min((width - 16) / 6, compact ? (width - 106) / 3 : (width / 2 - 110) / 3);
+      const cell = Math.max(24, Math.floor(Math.min(64, heightCell, widthCell)));
+      const emergency = heightCell < 24 || widthCell < 24;
       setLayout(previous => previous.compact === compact && previous.emergency === emergency && previous.cell === cell ? previous : { compact, emergency, cell });
     };
     resize();
     const observer = new ResizeObserver(resize); observer.observe(body);
     return () => observer.disconnect();
   }, []);
-  useEffect(() => { setTooltip(null); }, [layout.compact]);
+  useEffect(() => { setTooltip(null); setSelection(null); }, [layout.compact, layout.cell]);
   useEffect(() => {
-    if (!tooltip) return;
     const dismiss = (event: PointerEvent) => {
       const target = event.target;
       if (!(target instanceof Element) || !target.closest(".equipment-inventory-panel")) return;
-      if (target.closest(".equipment-tooltip, .equipment-tile, .equipment-result")) return;
-      setTooltip(null);
+      if (target.closest(".equipment-tooltip, .equipment-tile, .equipment-result, button, .equipment-pages")) return;
+      setTooltip(null); setSelection(null);
     };
     document.addEventListener("pointerdown", dismiss, true);
     return () => document.removeEventListener("pointerdown", dismiss, true);
-  }, [tooltip]);
+  }, []);
   const [drag, setDrag] = useState<Drag | null>(null), [clock, setClock] = useState(() => performance.now() / 1000), [extraction, setExtraction] = useState(0), [, refresh] = useState(0);
   const [feedback, setFeedback] = useState<{ text: string; until: number } | null>(null), [flights, setFlights] = useState<Flight[]>([]), [impact, setImpact] = useState<{ slot: number; until: number } | null>(null);
   const flightId = useRef(0);
@@ -147,19 +145,25 @@ export function AirCombatEquipmentInventory({ world, onClose, onChange }: { worl
       if (location === "storage") addToCraft(item, source);
       else if (location === "craft") { toggleCraftComponent(s, item.instanceId); setTooltip(null); changed(); }
     }} onDrag={dragging} onDrop={drop} locked={location === "craft" && !!q.craftJob} />;
+  useEffect(() => {
+    if(selection===null||selection===-1)return;
+    const completed=[...q.completed].sort((a,b)=>Number(b.definitionId.startsWith("HL"))-Number(a.definitionId.startsWith("HL"))||a.instanceId-b.instanceId);
+    const visible=[...q.equipped,...q.craftSlots,...q.components.slice(q.componentPage*EQUIPMENT_PAGE_SIZE,(q.componentPage+1)*EQUIPMENT_PAGE_SIZE),...completed.slice(q.completedPage*EQUIPMENT_PAGE_SIZE,(q.completedPage+1)*EQUIPMENT_PAGE_SIZE)];
+    if(!visible.some(item=>item?.instanceId===selection)){setSelection(null);setTooltip(null);}
+  });
   const [a, b] = q.craftSlots, result = a && b ? equipmentRecipe(a.definitionId, b.definitionId) : null, progress = q.craftJob ? Math.min(1, (clock - q.craftJob.startedUiAt) / 3) : 0;
   const inventory = (kind: "components" | "completed", title: string) => {
     const list = kind === "components" ? q.components : [...q.completed].sort((a, b) => Number(b.definitionId.startsWith("HL")) - Number(a.definitionId.startsWith("HL")) || a.instanceId - b.instanceId);
     const pageKey = kind === "components" ? "componentPage" : "completedPage", page = q[pageKey], pages = Math.max(1, Math.ceil(list.length / EQUIPMENT_PAGE_SIZE));
-    return <section className="equipment-storage" hidden={layout.compact && storageTab !== kind} id={`equipment-storage-${kind}`}><h3>{title}<span>{list.length}</span></h3><div className="equipment-storage-grid" aria-label={title} style={{ gridTemplateColumns: `repeat(${EQUIPMENT_GRID_COLUMNS},var(--equipment-cell-size))`, gridTemplateRows: `repeat(${EQUIPMENT_GRID_ROWS},var(--equipment-cell-size))` }}>
+    return <section className="equipment-storage" id={`equipment-storage-${kind}`}><h3>{title}<span>{list.length}</span></h3><div className="equipment-storage-grid" aria-label={title} style={{ gridTemplateColumns: `repeat(${EQUIPMENT_GRID_COLUMNS},var(--equipment-cell-size))`, gridTemplateRows: `repeat(${EQUIPMENT_GRID_ROWS},var(--equipment-cell-size))` }}>
       {Array.from({ length: EQUIPMENT_PAGE_SIZE }, (_, i) => { const item = list[page * EQUIPMENT_PAGE_SIZE + i]; return <div className="equipment-grid-cell" key={item?.instanceId ?? `empty-${i}`}>{item ? tile(item, "storage") : null}</div>; })}</div>
-      <nav className="equipment-pages" aria-label={`Phân trang ${title}`}><button disabled={page === 0} onClick={() => { q[pageKey]--; setTooltip(null); changed(); }} aria-label="Trang trước">‹</button><span>Trang {page + 1} / {pages}</span><button disabled={page + 1 >= pages} onClick={() => { q[pageKey]++; setTooltip(null); changed(); }} aria-label="Trang sau">›</button></nav></section>;
+      <nav className="equipment-pages" aria-label={`Phân trang ${title}`}><button disabled={page === 0} onClick={() => { q[pageKey]--; setTooltip(null); setSelection(null); changed(); }} aria-label="Trang trước">‹</button><span>Trang {page + 1} / {pages}</span><button disabled={page + 1 >= pages} onClick={() => { q[pageKey]++; setTooltip(null); setSelection(null); changed(); }} aria-label="Trang sau">›</button></nav></section>;
   };
   const close = () => { cancelEquipmentCraft(s); onClose(); };
   const componentDrag = !!drag?.id.startsWith("TP"), craftInvalid = !!q.craftJob || !q.craftSlots.includes(null), craftHover = !!drag && inside(craftRegion.current, drag);
   const equipValid = !!drag && (drag.id === "VP01" ? q.equipped.some(Boolean) && q.items.VP01 > 0 : q.equipped.includes(null));
   return <AirCombatModal archetype="info" layer="exclusive-dialog" layout="viewport-safe" labelledBy="equipment-title" onClose={close} overlayClassName="equipment-inventory-overlay" panelClassName="equipment-inventory-panel">
-    <OverlayHeader><h2 id="equipment-title" className="modal-title">KHO TRANG BỊ</h2><p className="equipment-subtitle">Chạm để xem · Giữ 1 giây để kéo · Nhấp đúp Thành Phần để ghép</p></OverlayHeader>
+    <OverlayHeader><h2 id="equipment-title" className="modal-title">KHO TRANG BỊ</h2><p className="equipment-subtitle">Chạm để xem · Giữ 0,5 giây để kéo · Nhấp đúp Thành Phần để ghép</p></OverlayHeader>
     <OverlayBody className="equipment-inventory-body" data-compact={layout.compact} data-emergency={layout.emergency} data-magnet-drag={drag?.id === "VP01"} style={{ "--equipment-cell-size": `${layout.cell}px` } as React.CSSProperties}>
       <div ref={dashboard} className="equipment-dashboard">
       <div className="equipment-operations">
@@ -181,13 +185,9 @@ export function AirCombatEquipmentInventory({ world, onClose, onChange }: { worl
       </section>
       </div>
       <div className="equipment-storage-area">
-      {layout.compact && <nav className="equipment-storage-switch" aria-label="Chọn kho trang bị">
-        <button type="button" aria-pressed={storageTab === "components"} aria-controls="equipment-storage-components" onClick={() => { setStorageTab("components"); setTooltip(null); }}>THÀNH PHẦN</button>
-        <button type="button" aria-pressed={storageTab === "completed"} aria-controls="equipment-storage-completed" onClick={() => { setStorageTab("completed"); setTooltip(null); }}>HOÀN CHỈNH</button>
-      </nav>}
-      <div className="equipment-inventories">{inventory("components", "Kho Trang Bị Thành Phần")}{inventory("completed", "Kho Trang Bị Hoàn Chỉnh")}</div>
+      <div className="equipment-inventories">{inventory("components", "Kho Trang Bị Thành Phần")}{inventory("completed", "Kho Hoàn Chỉnh/Huyền Thoại")}</div>
       </div>
-      <section className="equipment-item-tray"><h3>Vật Phẩm</h3><div className="equipment-item-grid"><div className="equipment-grid-cell"><Tile id="VP01" location="item" selected={selection === -1} quantity={q.items.VP01 ?? 0} locked={!(q.items.VP01 > 0)} onSelect={() => setSelection(-1)} onInspect={inspect} onDouble={() => {}} onDrag={dragging} onDrop={drop} /></div>{[1,2,3,4].map(i => <div key={i} className="equipment-grid-cell" aria-hidden="true" />)}</div><small>Giữ 1 giây rồi kéo Nam Châm vào vùng đang mang</small></section>
+      <section className="equipment-item-tray"><h3>Vật Phẩm</h3><div className="equipment-item-grid"><div className="equipment-grid-cell"><Tile id="VP01" location="item" selected={selection === -1} quantity={q.items.VP01 ?? 0} locked={!(q.items.VP01 > 0)} onSelect={() => setSelection(-1)} onInspect={inspect} onDouble={() => {}} onDrag={dragging} onDrop={drop} /></div>{[1,2,3,4].map(i => <div key={i} className="equipment-grid-cell" aria-hidden="true" />)}</div><small>Giữ 0,5 giây để kéo Nam Châm vào vùng đang mang</small></section>
       </div>
     </OverlayBody>
     <OverlayFooter><ModalButton type="button" variant="primary" onClick={close}>Đóng Kho Trang Bị</ModalButton></OverlayFooter>

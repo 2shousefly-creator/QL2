@@ -184,7 +184,7 @@ register(92, { hooks: { tick: ctx => { if (ctx.state.status.regenDisabledUntil <
 register(94, { stats: (_s, stats) => { stats.criticalChance += .25; }, finalStats: (_s, stats) => { stats.maxHp *= .65; stats.firepower *= 1.4; } });
 register(95, { finalStats: (_s, stats) => { stats.criticalChance = .25; stats.criticalDamageMultiplier += 2.0; } });
 register(96, { stats: (_s, stats) => { stats.cooldownReduction += .3; }, hooks: { skillCast: ctx => { const before=ctx.state.currentHp;ctx.state.currentHp = Math.max(Number.EPSILON, before * .95);recordCoreMetric(ctx.state,96,"hpPaid",before-ctx.state.currentHp); } } });
-register(97, { finalStats: (_s, stats) => { stats.firepower *= 1.4; stats.maxHp *= 1.3; stats.armor *= 1.3; }, hooks: { acquire: ctx => ctx.stopSkills() } });
+register(97, { stats: (_s, stats) => { stats.firepower += 40; stats.maxHp += 30; stats.armor += 30; }, hooks: { acquire: ctx => ctx.stopSkills() } });
 register(99, { hooks: { tick: ctx => { if (ctx.state.currentResource < ctx.stats.maxResource * .15 && ready(ctx.state, "reserveShieldCd")) {
             shield(ctx, "reserve", .10, 4);
             recordCoreMetric(ctx.state,99,"procs",1);
@@ -209,8 +209,6 @@ export function applyCoreStatEffects(state: AircraftCombatState, stats: Effectiv
     const hpBefore = stats.maxHp;
     if (hasCore(state, 94))
         stats.maxHp *= .65;
-    if (skillsLocked(state))
-        stats.maxHp *= 1.3;
     if(includeTemporary&&hasCore(state,222)&&state.coreState.release?.mode==="giant")stats.maxHp*=1.3;
     // HP conditions run after all max-HP changes, independent of acquisition order.
     for (const row of [63, 100])

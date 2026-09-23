@@ -1,8 +1,8 @@
 import { EQUIPMENT_CATALOG, equipmentRecipe, type EquipmentDefinitionId, type EquipmentFamilyId } from "./airCombatEquipmentCatalog";
 import type { AircraftCombatState, SkillId } from "./airCombatTypes";
 
-export const EQUIPMENT_GRID_COLUMNS = 4;
-export const EQUIPMENT_GRID_ROWS = 4;
+export const EQUIPMENT_GRID_COLUMNS = 3;
+export const EQUIPMENT_GRID_ROWS = 3;
 export const EQUIPMENT_PAGE_SIZE = EQUIPMENT_GRID_COLUMNS * EQUIPMENT_GRID_ROWS;
 
 export interface EquipmentInstance { instanceId: number; definitionId: EquipmentDefinitionId }
@@ -13,6 +13,8 @@ export interface EquipmentMark { until: number; stacks: number; tick: number }
 export interface EquipmentVisual { id: number; family: number; x: number; y: number; fromX?: number; fromY?: number; size: number; start: number; duration: number; target?: number; player?: boolean; legendary?: boolean }
 export interface EquipmentLoot { id: number; definitionId: EquipmentRewardId; x: number; y: number; age: number; collection?: { age:number; x:number; y:number; source:string } }
 export interface EquipmentState {
+  rewardsLocked: boolean;
+  pendingDrops: { x:number; y:number; elite:boolean; wave:number }[];
   nextInstanceId: number;
   components: EquipmentInstance[]; completed: EquipmentInstance[];
   equipped: [EquipmentInstance | null, EquipmentInstance | null, EquipmentInstance | null];
@@ -32,7 +34,7 @@ export interface EquipmentState {
   presentationGate: Record<string,number>;
 }
 export function createEquipmentState(): EquipmentState {
-  return { nextInstanceId: 1, components: [], completed: [], equipped: [null,null,null], craftSlots: [null,null], items: {}, componentPage: 0, completedPage: 0, telemetry: {}, effects: {}, marks: {}, eliteDropWave: -1, eliteKillsThisWave: 0, loot: [], visuals: [], nextVisualId: 1, meteors: [], endedSkills: [], presentationGate: {} };
+  return { rewardsLocked: false, pendingDrops: [], nextInstanceId: 1, components: [], completed: [], equipped: [null,null,null], craftSlots: [null,null], items: {}, componentPage: 0, completedPage: 0, telemetry: {}, effects: {}, marks: {}, eliteDropWave: -1, eliteKillsThisWave: 0, loot: [], visuals: [], nextVisualId: 1, meteors: [], endedSkills: [], presentationGate: {} };
 }
 export const equipmentState = (s: AircraftCombatState): EquipmentState => s.equipment ??= createEquipmentState();
 const familyCache = new WeakMap<EquipmentState, {signature:string; families:Map<EquipmentFamilyId, typeof EQUIPMENT_CATALOG[EquipmentDefinitionId]>}>();
@@ -65,6 +67,10 @@ export function clampEquipmentPages(e: EquipmentState) {
 }
 /** All reward sources share instance allocation and an explicit acquisition event. */
 export function grantEquipmentReward(s: AircraftCombatState, id: EquipmentRewardId, source: string, position?: {x:number;y:number}) {
+  if(!canGrantEquipmentReward(s,id))return false;
+  return receiveEquipmentReward(s,id,source,position);
+}
+function receiveEquipmentReward(s: AircraftCombatState, id: EquipmentRewardId, source: string, position?: {x:number;y:number}) {
   const e=equipmentState(s);
   if(id === "VP01") e.items.VP01=(e.items.VP01??0)+1;
   else {
@@ -73,6 +79,7 @@ export function grantEquipmentReward(s: AircraftCombatState, id: EquipmentReward
   }
   s.coreState.acquisitions.push({id:s.coreState.nextAcquisitionId++,kind:id === "VP01" ? "item" : "equipment",definitionId:id,source,...position});
   clampEquipmentPages(e);
+  return true;
 }
 export function randomEquipmentId(prefix: "TP"|"TH"|"HL", random:()=>number): EquipmentDefinitionId {
   return `${prefix}${String(1+Math.min(prefix === "TP" ? 7 : 35,Math.floor(random()*(prefix === "TP" ? 8 : 36)))).padStart(2,"0")}`;
@@ -96,7 +103,7 @@ export function extractEquipment(s: AircraftCombatState): EquipmentInstance[] {
   clampEquipmentPages(e);return items;
 }
 export function toggleCraftComponent(s: AircraftCombatState, id:number) {
-  const e=equipmentState(s);if(e.craftJob)return;
+  const e=equipmentState(s);if(e.craftJob||equipmentRewardsLocked(s))return;
   const reserved=e.craftSlots.findIndex(i=>i?.instanceId===id);
   if(reserved>=0){e.components.push(e.craftSlots[reserved]!);e.craftSlots[reserved]=null;}
   else {const i=e.components.findIndex(i=>i.instanceId===id),slot=e.craftSlots.indexOf(null);if(i>=0&&slot>=0)e.craftSlots[slot]=e.components.splice(i,1)[0];}
@@ -106,10 +113,25 @@ export function cancelEquipmentCraft(s: AircraftCombatState) {
   delete equipmentState(s).craftJob;
 }
 export function startEquipmentCraft(s: AircraftCombatState, uiTime:number) {
-  const e=equipmentState(s),[a,b]=e.craftSlots;if(!a||!b||e.craftJob)return;
+  const e=equipmentState(s),[a,b]=e.craftSlots;if(!a||!b||e.craftJob||equipmentRewardsLocked(s))return;
   const resultId=equipmentRecipe(a.definitionId,b.definitionId);if(resultId)e.craftJob={resultId,startedUiAt:uiTime,duration:3};
 }
 export function tickEquipmentCraft(s: AircraftCombatState, uiTime:number) {
   const e=equipmentState(s), job=e.craftJob;if(!job || uiTime-job.startedUiAt<job.duration)return;
   e.craftSlots=[null,null];delete e.craftJob;grantEquipmentReward(s,job.resultId,"craft");
+}
+
+/** Permanent run-local lock; Pandora removing Core228 cannot reopen rewards. */
+export const equipmentRewardsLocked = (s: AircraftCombatState) => equipmentState(s).rewardsLocked;
+export const canGrantEquipmentReward = (s: AircraftCombatState, id: EquipmentRewardId) => id === "VP01" || !equipmentRewardsLocked(s);
+/** The only bypass is private receipt of Core228's own Legendary, after the atomic wipe. */
+export function sacrificeEquipment(s: AircraftCombatState, random:()=>number) {
+  const e=equipmentState(s);
+  e.equipped=[null,null,null];e.components=[];e.completed=[];e.craftSlots=[null,null];delete e.craftJob;
+  e.loot=e.loot.filter(l=>l.definitionId==="VP01");
+  e.effects={};e.marks={};e.meteors=[];e.orb=undefined;e.fireCast=undefined;e.endedSkills=[];
+  e.visuals=[];e.presentationGate={};e.lastX=undefined;e.lastY=undefined;
+  for(const key of Object.keys(s.coreState.shields))if(key.startsWith("equipment:"))delete s.coreState.shields[key];
+  e.componentPage=0;e.completedPage=0;e.rewardsLocked=true;
+  receiveEquipmentReward(s,randomEquipmentId("HL",random),"core_228");
 }

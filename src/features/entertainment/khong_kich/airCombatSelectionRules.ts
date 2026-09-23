@@ -1,3 +1,4 @@
+import { isCoreEligible } from "./airCombatCoreEligibility";
 import type { AircraftCombatState, CoreCard, CoreDefinition, CoreTier, SkillId } from "./airCombatTypes";
 import { CORE_DEFINITIONS } from "./airCombatCoreCatalog";
 import { hasCore, skillsLocked } from "./airCombatCoreEffects";
@@ -14,7 +15,7 @@ export interface CoreSelectionEvent {
   extraAvailable: boolean;
   extraUsed: boolean;
   guaranteedSlot?: number;
-  context: { kind: "normal" | "skill" | "specialization"; tier: CoreTier; skillId?: SkillId };
+  context: { kind: "normal" | "skill" | "specialization"; tier: CoreTier; skillIdsBySlot?: (SkillId | undefined)[] };
 }
 export type RerollSource = "main" | "extra" | "reserve";
 export const reserveCap = (s: AircraftCombatState) => hasCore(s,212) ? 4 : 3;
@@ -25,11 +26,11 @@ export function createCoreSelectionEvent(state: AircraftCombatState, choices: Co
   const extraAvailable=kind==="normal"&&hasCore(state,212);
   if(extraAvailable)recordCoreMetric(state,212,"granted",1);
   return {originalChoiceIds:choices.map(c=>c.id),currentChoiceIds:choices.map(c=>c.id),seenChoiceIds:choices.map(c=>c.id),rerollUsedBySlot:choices.map(()=>false),extraAvailable,extraUsed:false,
-    guaranteedSlot:kind!=="normal"?undefined:releaseState(state).guaranteedSlot,context:{kind,tier:choices[0].tier,skillId}};
+    guaranteedSlot:kind!=="normal"?undefined:releaseState(state).guaranteedSlot,context:{kind,tier:choices[0].tier,skillIdsBySlot:choices.map(card=>CORE_DEFINITIONS.find(c=>c.id===card.id)?.skillId)}};
 }
 function rerollPool(state: AircraftCombatState,event: CoreSelectionEvent,slot: number) {
-  let pool=CORE_DEFINITIONS.filter(c=>(!c.aircraftIds||c.aircraftIds.includes(state.aircraftId))&&!state.selectedCores.includes(c.id)&&!event.seenChoiceIds.includes(c.id)&&
-    (event.context.kind==="skill"?c.skillId===event.context.skillId&&!state.modifiers.skillCores[c.skillId!]&&!skillsLocked(state):!c.skillId&&c.tiers[0]===event.context.tier));
+  let pool=CORE_DEFINITIONS.filter(c=>isCoreEligible(state,c)&&!state.selectedCores.includes(c.id)&&!event.seenChoiceIds.includes(c.id)&&
+    (event.context.kind==="skill"?c.skillId===event.context.skillIdsBySlot?.[slot]&&!releaseState(state).seenSkillCoreIds.has(c.id)&&!skillsLocked(state):!c.skillId&&c.tiers[0]===event.context.tier));
   if(event.context.kind!=="normal")return {pool,skipped:0,alternative:false};
   const r=releaseState(state);
   if(hasCore(state,213))pool=pool.filter(c=>(r.refused[c.id]??0)<=r.completedSelections);
@@ -52,7 +53,7 @@ export function spendReroll(state:AircraftCombatState,event:CoreSelectionEvent,s
   const old=event.currentChoiceIds[slot],r=releaseState(state),normal=event.context.kind==="normal";
   if(normal&&hasCore(state,211)){const info=rerollPool(state,event,slot);recordCoreMetric(state,211,"procs",1);recordCoreMetric(state,211,"alternatives",info.alternative?1:0);recordCoreMetric(state,211,"skipped",info.skipped);}
   if(normal&&hasCore(state,213)){
-    const blocked=CORE_DEFINITIONS.filter(c=>!c.skillId&&c.tiers[0]===event.context.tier&&(!c.aircraftIds||c.aircraftIds.includes(state.aircraftId))&&!state.selectedCores.includes(c.id)&&!event.seenChoiceIds.includes(c.id)&&(r.refused[c.id]??0)>r.completedSelections).length;
+    const blocked=CORE_DEFINITIONS.filter(c=>!c.skillId&&c.tiers[0]===event.context.tier&&isCoreEligible(state,c)&&!state.selectedCores.includes(c.id)&&!event.seenChoiceIds.includes(c.id)&&(r.refused[c.id]??0)>r.completedSelections).length;
     recordCoreMetric(state,213,"blocked",blocked);
     r.refused[old]=r.completedSelections+3;recordCoreMetric(state,213,"remembered",1);
   }
@@ -61,6 +62,7 @@ export function spendReroll(state:AircraftCombatState,event:CoreSelectionEvent,s
   if(source==="reserve"){r.reserve--;recordCoreMetric(state,218,"spent",1);}
   if(normal&&slot===3)recordCoreMetric(state,214,"rerolls",1);
   event.currentChoiceIds[slot]=next.id;event.seenChoiceIds.push(next.id);
+  if(next.skillId)r.seenSkillCoreIds.add(next.id);
   return makeCoreCard(next);
 }
 export function closeCoreSelection(state:AircraftCombatState,event:CoreSelectionEvent,slot:number){
@@ -94,6 +96,7 @@ export function initializeReleaseCore(state:AircraftCombatState,id:string,random
 }
 export function removeReleaseCoreState(state:AircraftCombatState,ids:string[]){
   const r=releaseState(state);
+  if(ids.includes("core_227"))r.waitingChest=undefined;
   if(ids.includes("core_213"))r.refused={};
   if(ids.includes("core_215")){r.system=undefined;r.guaranteedSlot=undefined;}
   if(ids.includes("core_218"))r.reserve=0;
