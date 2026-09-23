@@ -283,22 +283,25 @@ export const SKILL_CONFIGS: Record<SkillId, SkillConfig> = {
   }
 };
 
+/** Stage 2 power correction; exact scaled config values below are before wave progression. */
+export const STAGE2_POWER_MULTIPLIER = 1.5;
+
 export const ENEMY_CONFIGS: Record<EnemyType, EnemyConfig> = {
-  prism_sovereign: {"type":"prism_sovereign","name":"PRISM SOVEREIGN","baseHp":4870.8,"baseArmor":31.57,"speed":44,"radius":24,"score":1500,"combatXp":230,"projectileDamage":82.992,"collisionDamage":209.664,"fireInterval":99,"color":"#a78bfa"},
-  mine_warden: {"type":"mine_warden","name":"MINE WARDEN","baseHp":4870.8,"baseArmor":31.57,"speed":32,"radius":25,"score":1500,"combatXp":230,"projectileDamage":82.992,"collisionDamage":209.664,"fireInterval":99,"color":"#a78bfa"},
-  polarity_warden: {"type":"polarity_warden","name":"POLARITY WARDEN","baseHp":7035.6,"baseArmor":59.532,"speed":38,"radius":27,"score":1500,"combatXp":230,"projectileDamage":61.152,"collisionDamage":244.608,"fireInterval":99,"color":"#a78bfa"},
-  swarm_overlord: {"type":"swarm_overlord","name":"SWARM OVERLORD","baseHp":7035.6,"baseArmor":59.532,"speed":30,"radius":29,"score":1500,"combatXp":230,"projectileDamage":61.152,"collisionDamage":244.608,"fireInterval":99,"color":"#a78bfa"},
-  arc_reaver_prime: {"type":"arc_reaver_prime","name":"ARC REAVER PRIME","baseHp":7035.6,"baseArmor":59.532,"speed":50,"radius":25,"score":1500,"combatXp":230,"projectileDamage":61.152,"collisionDamage":244.608,"fireInterval":99,"color":"#a78bfa"},
-  orbit_wasp: {"type": "orbit_wasp", "name": "ORBIT WASP · ONG QUỸ ĐẠO", "baseHp": 137.28, "baseArmor": 6.864, "speed": 74, "radius": 11, "score": 110, "combatXp": 24, "projectileDamage": 44.352, "collisionDamage": 96.768, "fireInterval": 3, "color": "#67e8f9"},
-  arc_reaver: {"type": "arc_reaver", "name": "ARC REAVER · KẺ SĂN BOOMERANG", "baseHp": 223.08, "baseArmor": 12.012, "speed": 50, "radius": 14, "score": 170, "combatXp": 30, "projectileDamage": 44.352, "collisionDamage": 120.96, "fireInterval": 4.8, "color": "#a78bfa"},
-  mine_seeder: {"type": "mine_seeder", "name": "MINE SEEDER · MÁY RẢI MÌN", "baseHp": 411.84, "baseArmor": 15.444, "speed": 38, "radius": 18, "score": 290, "combatXp": 44, "projectileDamage": 72.576, "collisionDamage": 145.152, "fireInterval": 3.8, "color": "#818cf8"},
-  magnetic_leech: {"type": "magnetic_leech", "name": "MAGNETIC LEECH · ĐỈA TỪ", "baseHp": 291.72, "baseArmor": 10.296, "speed": 45, "radius": 12, "score": 210, "combatXp": 32, "projectileDamage": 22.5792, "collisionDamage": 96.768, "fireInterval": 4, "color": "#22d3ee"},
-  prism_manta: {"type": "prism_manta", "name": "PRISM MANTA · CÁ ĐUỐI LĂNG KÍNH", "baseHp": 411.84, "baseArmor": 15.444, "speed": 40, "radius": 18, "score": 290, "combatXp": 44, "projectileDamage": 52.416, "collisionDamage": 137.088, "fireInterval": 3.8, "color": "#c084fc"},
-  swarm_carrier: {"type": "swarm_carrier", "name": "SWARM CARRIER · TÀU MẸ BẦY ĐÀN", "baseHp": 531.96, "baseArmor": 25.74, "speed": 30, "radius": 19, "score": 320, "combatXp": 38, "projectileDamage": 24.192, "collisionDamage": 145.152, "fireInterval": 7, "color": "#818cf8"},
-  micro_drone: {"type": "micro_drone", "name": "MICRO DRONE", "baseHp": 62.79, "baseArmor": 0, "speed": 60, "radius": 7, "score": 0, "combatXp": 0, "projectileDamage": 0, "collisionDamage": 52.416, "fireInterval": 99, "color": "#a5f3fc"},
-  cyclone_ace: {"type": "cyclone_ace", "name": "CYCLONE ACE · BẬC THẦY QUỸ ĐẠO", "baseHp": 4870.8, "baseArmor": 31.57, "speed": 62, "radius": 23, "score": 1500, "combatXp": 230, "projectileDamage": 82.992, "collisionDamage": 209.664, "fireInterval": 4, "color": "#22d3ee"},
-  grid_architect: {"type": "grid_architect", "name": "GRID ARCHITECT · KIẾN TRÚC SƯ TỪ TRƯỜNG", "baseHp": 7035.6, "baseArmor": 59.532, "speed": 25, "radius": 28, "score": 1500, "combatXp": 230, "projectileDamage": 61.152, "collisionDamage": 244.608, "fireInterval": 7, "color": "#c084fc"},
-  satellite: {"type": "satellite", "name": "MAGNETIC SATELLITE", "baseHp": 23375, "baseArmor": 22.44, "speed": 0, "radius": 10, "score": 0, "combatXp": 0, "projectileDamage": 125.44, "collisionDamage": 80.64, "fireInterval": 1.35, "color": "#67e8f9"},
+  prism_sovereign: {"type":"prism_sovereign","name":"PRISM SOVEREIGN","baseHp":7306.2,"baseArmor":47.355,"speed":44,"radius":24,"score":1500,"combatXp":230,"projectileDamage":124.488,"collisionDamage":314.496,"fireInterval":99,"color":"#a78bfa"},
+  mine_warden: {"type":"mine_warden","name":"MINE WARDEN","baseHp":7306.2,"baseArmor":47.355,"speed":32,"radius":25,"score":1500,"combatXp":230,"projectileDamage":124.488,"collisionDamage":314.496,"fireInterval":99,"color":"#a78bfa"},
+  polarity_warden: {"type":"polarity_warden","name":"POLARITY WARDEN","baseHp":10553.4,"baseArmor":89.298,"speed":38,"radius":27,"score":1500,"combatXp":230,"projectileDamage":91.728,"collisionDamage":366.912,"fireInterval":99,"color":"#a78bfa"},
+  swarm_overlord: {"type":"swarm_overlord","name":"SWARM OVERLORD","baseHp":10553.4,"baseArmor":89.298,"speed":30,"radius":29,"score":1500,"combatXp":230,"projectileDamage":91.728,"collisionDamage":366.912,"fireInterval":99,"color":"#a78bfa"},
+  arc_reaver_prime: {"type":"arc_reaver_prime","name":"ARC REAVER PRIME","baseHp":10553.4,"baseArmor":89.298,"speed":50,"radius":25,"score":1500,"combatXp":230,"projectileDamage":91.728,"collisionDamage":366.912,"fireInterval":99,"color":"#a78bfa"},
+  orbit_wasp: {"type": "orbit_wasp", "name": "ORBIT WASP · ONG QUỸ ĐẠO", "baseHp": 205.92, "baseArmor": 10.296, "speed": 74, "radius": 11, "score": 110, "combatXp": 24, "projectileDamage": 66.528, "collisionDamage": 145.152, "fireInterval": 3, "color": "#67e8f9"},
+  arc_reaver: {"type": "arc_reaver", "name": "ARC REAVER · KẺ SĂN BOOMERANG", "baseHp": 334.62, "baseArmor": 18.018, "speed": 50, "radius": 14, "score": 170, "combatXp": 30, "projectileDamage": 66.528, "collisionDamage": 181.44, "fireInterval": 4.8, "color": "#a78bfa"},
+  mine_seeder: {"type": "mine_seeder", "name": "MINE SEEDER · MÁY RẢI MÌN", "baseHp": 617.76, "baseArmor": 23.166, "speed": 38, "radius": 18, "score": 290, "combatXp": 44, "projectileDamage": 108.864, "collisionDamage": 217.728, "fireInterval": 3.8, "color": "#818cf8"},
+  magnetic_leech: {"type": "magnetic_leech", "name": "MAGNETIC LEECH · ĐỈA TỪ", "baseHp": 437.58, "baseArmor": 15.444, "speed": 45, "radius": 12, "score": 210, "combatXp": 32, "projectileDamage": 33.8688, "collisionDamage": 145.152, "fireInterval": 4, "color": "#22d3ee"},
+  prism_manta: {"type": "prism_manta", "name": "PRISM MANTA · CÁ ĐUỐI LĂNG KÍNH", "baseHp": 617.76, "baseArmor": 23.166, "speed": 40, "radius": 18, "score": 290, "combatXp": 44, "projectileDamage": 78.624, "collisionDamage": 205.632, "fireInterval": 3.8, "color": "#c084fc"},
+  swarm_carrier: {"type": "swarm_carrier", "name": "SWARM CARRIER · TÀU MẸ BẦY ĐÀN", "baseHp": 797.94, "baseArmor": 38.61, "speed": 30, "radius": 19, "score": 320, "combatXp": 38, "projectileDamage": 36.288, "collisionDamage": 217.728, "fireInterval": 7, "color": "#818cf8"},
+  micro_drone: {"type": "micro_drone", "name": "MICRO DRONE", "baseHp": 94.185, "baseArmor": 0, "speed": 60, "radius": 7, "score": 0, "combatXp": 0, "projectileDamage": 0, "collisionDamage": 78.624, "fireInterval": 99, "color": "#a5f3fc"},
+  cyclone_ace: {"type": "cyclone_ace", "name": "CYCLONE ACE · BẬC THẦY QUỸ ĐẠO", "baseHp": 7306.2, "baseArmor": 47.355, "speed": 62, "radius": 23, "score": 1500, "combatXp": 230, "projectileDamage": 124.488, "collisionDamage": 314.496, "fireInterval": 4, "color": "#22d3ee"},
+  grid_architect: {"type": "grid_architect", "name": "GRID ARCHITECT · KIẾN TRÚC SƯ TỪ TRƯỜNG", "baseHp": 10553.4, "baseArmor": 89.298, "speed": 25, "radius": 28, "score": 1500, "combatXp": 230, "projectileDamage": 91.728, "collisionDamage": 366.912, "fireInterval": 7, "color": "#c084fc"},
+  satellite: {"type": "satellite", "name": "MAGNETIC SATELLITE", "baseHp": 35062.5, "baseArmor": 33.66, "speed": 0, "radius": 10, "score": 0, "combatXp": 0, "projectileDamage": 188.16, "collisionDamage": 120.96, "fireInterval": 1.35, "color": "#67e8f9"},
   "scout": {
     "type": "scout",
     "name": "Scout Drone",
@@ -501,5 +504,5 @@ export function getCoreDefinition(id: CoreId): CoreDefinition {
 }
 
 /** Concrete Magnetic Storm boss stats, before wave progression. */
-export const TEMPEST_CONFIG: EnemyConfig = { ...ENEMY_CONFIGS.boss, name: "TEMPEST CROWN", baseHp: 116875, baseArmor: 112.2, projectileDamage: 125.44, collisionDamage: 448 };
+export const TEMPEST_CONFIG: EnemyConfig = { ...ENEMY_CONFIGS.boss, name: "TEMPEST CROWN", baseHp: 175312.5, baseArmor: 168.3, projectileDamage: 188.16, collisionDamage: 672 };
 export const stageEnemyConfig = (type: EnemyType, stageId: number): EnemyConfig => type === "boss" && stageId === 2 ? TEMPEST_CONFIG : ENEMY_CONFIGS[type];

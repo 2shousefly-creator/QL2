@@ -60,7 +60,7 @@ export function EquipmentTooltip({ anchor, state, onClose }: { anchor: Equipment
   return <div ref={layer} className="equipment-tooltip-layer"><section ref={panel} className="equipment-tooltip" role="dialog" aria-label="Chi tiết trang bị" style={{ "--equipment-accent": EQUIPMENT_NAME_COLORS[d?.rarity ?? "item"] } as React.CSSProperties}>
     <button type="button" className="equipment-tooltip-close" onClick={onClose} aria-label="Đóng chi tiết">×</button>
     <div key={anchor.id} className="equipment-tooltip-content">
-      <header className="equipment-tooltip-heading"><EquipmentIcon id={anchor.id} /><h3>{d?.name ?? "Nam Châm Ma Thuật"}</h3></header>
+      <header className="equipment-tooltip-heading"><EquipmentIcon id={anchor.id} inventory /><h3>{d?.name ?? "Nam Châm Ma Thuật"}</h3></header>
       {d ? <>
         <div className="equipment-direct-stats">{d.statsText.split(";").map((stat, i) => <div key={i}><CoreDescription text={stat.trim()} /></div>)}</div>
         <EffectDescription text={d.effect} />

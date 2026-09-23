@@ -1,6 +1,6 @@
 import { bossMinCenterY } from "./airCombatHudLayout";
 import type { StatusPayload, DamageDelivery, Allegiance, AttackMetadata } from "./airCombatStatus";
-import { AIR_COMBAT_WORLD, ENEMY_CONFIGS, stageEnemyConfig, GAMEPLAY_SAFE_RECT as RECT } from "./airCombatConfig";
+import { AIR_COMBAT_WORLD, ENEMY_CONFIGS, STAGE2_POWER_MULTIPLIER, stageEnemyConfig, GAMEPLAY_SAFE_RECT as RECT } from "./airCombatConfig";
 import { circleVsAircraft, getEnemyHitbox, getPlayerHitbox, clampHitboxToGameplayRect, segmentVsAircraft, createHitResult, hitboxProjectionExtent } from "./airCombatHitboxes";
 import type { CombatWorld, EnemyEntity, ProjectileEntity } from "./airCombatRuntime";
 import type { EnemyType } from "./airCombatTypes";
@@ -89,6 +89,8 @@ const TEMPEST_HOME_Y = bossMinCenterY(43) + 8;
 const clamp = (v: number, a: number, b: number) => Math.max(a, Math.min(b, v));
 const point = (x: number, y: number, margin = 22): Point => ({ x: clamp(x, RECT.left + margin, RECT.right - margin), y: clamp(y, RECT.top + margin, RECT.bottom - margin) });
 const state = (e: EnemyEntity): MagneticEnemyState => e.magnetic ??= { clock: 0, attack: 0, anchorX: e.x, anchorY: e.y, angle: e.phaseSeed };
+// Only raw authored damage uses this helper; config/parent-projectile damage is already scaled.
+const magneticAuthoredDamage = (raw: number) => raw * STAGE2_POWER_MULTIPLIER;
 const damage = (e: EnemyEntity) => stageEnemyConfig(e.type, 2).projectileDamage * e.damageScale;
 /** Cosmetic event journal: bounded, combat-clock timed, shared by both renderers. */
 export function magneticFx(w: CombatWorld, key: MagneticVfxKey, x: number, y: number, size: number, duration = .35, rotation = 0, delay = 0) {
@@ -517,7 +519,7 @@ function updateTempest(w:CombatWorld, boss:EnemyEntity, dt:number, h:MagneticHoo
     });
     if(d.elapsed>=.75 && d.elapsed<duration && d.elapsed>=d.nextEmission) {
       d.nextEmission=d.nextEmission<.75?.75+.2:d.nextEmission+.2;
-      for(const beam of m.beams)h.area(w,94.08*boss.damageScale,{allegiance:"hostile",sourceEnemyId:boss.id,sourceEnemyType:"boss",delivery:"beam",majorBossAttack:true},{x:beam.from.x,y:beam.from.y,end:beam.end,radius:beam.radius});
+      for(const beam of m.beams)h.area(w,magneticAuthoredDamage(94.08)*boss.damageScale,{allegiance:"hostile",sourceEnemyId:boss.id,sourceEnemyType:"boss",delivery:"beam",majorBossAttack:true},{x:beam.from.x,y:beam.from.y,end:beam.end,radius:beam.radius});
     }
   } else if(skill==="rift") {
     if(m.rift)m.rift.age=d.elapsed;
@@ -527,7 +529,8 @@ function updateTempest(w:CombatWorld, boss:EnemyEntity, dt:number, h:MagneticHoo
         const drone=h.spawn(w,"kamikaze",true);if(!drone)break;
         const at=point(rift.x+Math.cos(slot*TAU/7)*26,rift.y+Math.sin(slot*TAU/7)*26,30);
         drone.x=at.x;drone.y=at.y;drone.baseX=at.x;
-        drone.hp=drone.maxHp=171.6;drone.armor=3.9;drone.damageScale=1;drone.wave=1;
+        // Rift-only output scaling: collision/shrapnel still read the shared Stage 1 config.
+        drone.hp=drone.maxHp=257.4;drone.armor=5.85;drone.damageScale=STAGE2_POWER_MULTIPLIER;drone.wave=1;
         drone.riftAttackReadyAt=w.elapsed+slot*.5;
         drone.riftWait={spawnedAt:w.elapsed,x:at.x,y:at.y,phase:slot*TAU/7};
         drone.kamikazeState="approach";drone.stateTimer=0;drone.magnetic=undefined;drone.noWaveWait=true;
@@ -538,20 +541,20 @@ function updateTempest(w:CombatWorld, boss:EnemyEntity, dt:number, h:MagneticHoo
     // At most one emission per simulation step; no catch-up bursts after a pause/CC.
     const aim=Math.atan2(w.playerY-boss.y,w.playerX-boss.x);
     if(skill==="barrage") {
-      fan(w,boss,h,15,10,125.44,155,aim,6);d.nextEmission+=.6;
+      fan(w,boss,h,15,10,magneticAuthoredDamage(125.44),155,aim,6);d.nextEmission+=.6;
     } else if(skill==="bombs") {
       const motion=m.playerMotion;
       let dx=phase>=3?(motion?.vx??0)*.45:0,dy=phase>=3?(motion?.vy??0)*.45:0;
       const scale=Math.min(1,60/Math.max(1,Math.hypot(dx,dy)));dx*=scale;dy*=scale;
-      addMine(w,boss,h,point(w.playerX+dx,w.playerY+dy,10),.1,125.44,.6);
+      addMine(w,boss,h,point(w.playerX+dx,w.playerY+dy,10),.1,magneticAuthoredDamage(125.44),.6);
       d.nextEmission+=phase>=3?.2:.3;
     } else if(skill==="acid" && (d.acidEmissions??0)<20) {
       h.projectile(w,{owner:"enemy",sourceEnemyId:boss.id,sourceEnemyType:"boss",x:RECT.left+10+w.random()*(RECT.width-20),y:RECT.top,
-        vx:0,vy:390,radius:6,rawDamage:(phase>=3?118.5408:87.808)*boss.damageScale,color:"#b4ff4b",magneticVisual:"acidDrop",lifetime:3,
+        vx:0,vy:390,radius:6,rawDamage:magneticAuthoredDamage(phase>=3?118.5408:87.808)*boss.damageScale,color:"#b4ff4b",magneticVisual:"acidDrop",lifetime:3,
         payload:{healingReduction:4,healingReceivedMultiplier:phase>=3?0:.4}});
       d.acidEmissions=(d.acidEmissions??0)+1;d.nextEmission=d.acidEmissions*.25;
     } else if(skill==="fields") {
-      addMine(w,boss,h,{x:w.playerX,y:w.playerY},.3,125.44,0,{stun:2},"field");d.nextEmission+=.55;
+      addMine(w,boss,h,{x:w.playerX,y:w.playerY},.3,magneticAuthoredDamage(125.44),0,{stun:2},"field");d.nextEmission+=.55;
     }
   }
   if(d.elapsed>=duration) {
@@ -705,7 +708,7 @@ function updateEliteSkill(w:CombatWorld,e:EnemyEntity,dt:number,h:MagneticHooks,
   const aim=Math.atan2((h.target(w,e)?.y??e.y)-e.y,(h.target(w,e)?.x??e.x)-e.x);
   switch(q.skill) {
     case "cyclone_blades":
-      for(const offset of [-30,-20,-10,0,10,20,30])returning(w,e,h,q.aim+offset*Math.PI/180,58.0944,1.3,offset<0?-26:26);
+      for(const offset of [-30,-20,-10,0,10,20,30])returning(w,e,h,q.aim+offset*Math.PI/180,magneticAuthoredDamage(58.0944),1.3,offset<0?-26:26);
       break;
     case "curtain":
       for(let i=0;i<11;i++) {
@@ -724,11 +727,11 @@ function updateEliteSkill(w:CombatWorld,e:EnemyEntity,dt:number,h:MagneticHooks,
     case "carpet": {
       const gap=(m.eliteDirector?.cycle??0)%2?1:2;
       for(let row=0;row<3;row++)for(let col=0;col<4;col++)if(!(col===gap && row>=1))
-        addMine(w,e,h,{x:RECT.left+44+col*(RECT.width-88)/3,y:RECT.top+245+row*95},.45,82.992);
+        addMine(w,e,h,{x:RECT.left+44+col*(RECT.width-88)/3,y:RECT.top+245+row*95},.45,magneticAuthoredDamage(82.992));
       break;
     }
     case "chase":
-      addMine(w,e,h,{x:(h.target(w,e)?.x??e.x),y:(h.target(w,e)?.y??e.y)},.35,70.5432);q.step++;q.next=q.age+.22;
+      addMine(w,e,h,{x:(h.target(w,e)?.x??e.x),y:(h.target(w,e)?.y??e.y)},.35,magneticAuthoredDamage(70.5432));q.step++;q.next=q.age+.22;
       if(q.step<10)return;break;
     case "repulse": {
       const dx=(h.target(w,e)?.x??e.x)-e.x,dy=(h.target(w,e)?.y??e.y)-e.y,len=Math.max(1,Math.hypot(dx,dy));
@@ -739,14 +742,14 @@ function updateEliteSkill(w:CombatWorld,e:EnemyEntity,dt:number,h:MagneticHooks,
     case "swarm":
       spawnMicroWave(w,e,h,q.step===0?-1:1);q.step++;q.next=q.age+.45;if(q.step<3)return;break;
     case "suppress":
-      fan(w,e,h,15,7,30.576,150,aim);q.step++;q.next=q.age+.35;if(q.step<4)return;break;
+      fan(w,e,h,15,7,magneticAuthoredDamage(30.576),150,aim);q.step++;q.next=q.age+.35;if(q.step<4)return;break;
     case "reversal":
-      for(let i=0;i<12;i++)returning(w,e,h,q.aim+(i-5.5)*12*Math.PI/180,45.864,1.4/1.15,i<6?-22:22);
+      for(let i=0;i<12;i++)returning(w,e,h,q.aim+(i-5.5)*12*Math.PI/180,magneticAuthoredDamage(45.864),1.4/1.15,i<6?-22:22);
       break;
     case "recall":
       for(const side of [-1,1])for(let i=0;i<5;i++) {
         const origin={x:180+side*140,y:RECT.top+50+i*12},end={x:180-side*140,y:RECT.top+235+i*12};
-        returning(w,e,h,Math.atan2(end.y-origin.y,end.x-origin.x),45.864,1.4/1.15,side*25,origin,end);
+        returning(w,e,h,Math.atan2(end.y-origin.y,end.x-origin.x),magneticAuthoredDamage(45.864),1.4/1.15,side*25,origin,end);
       }
       break;
   }
@@ -771,11 +774,11 @@ function updateAssault(w:CombatWorld,e:EnemyEntity,q:EliteSequence,dt:number,h:M
   drift(e,q.target,330,dt);
   const trails=w.magnetic!.trails??=[];
   let trail=trails.find(t=>t.owner===e.id&&t.from===q.origin);
-  if(!trail&&trails.length<9){trail={allegiance:q.allegiance,owner:e.id,areaId:q.id,from:q.origin,end:{x:e.x,y:e.y},until:w.elapsed+1,damage:62.244*e.damageScale*1.2,hitAt:0};trails.push(trail);}
+  if(!trail&&trails.length<9){trail={allegiance:q.allegiance,owner:e.id,areaId:q.id,from:q.origin,end:{x:e.x,y:e.y},until:w.elapsed+1,damage:magneticAuthoredDamage(62.244)*e.damageScale*1.2,hitAt:0};trails.push(trail);}
   if(trail){trail.end={x:e.x,y:e.y};trail.until=w.elapsed+1;}
   if(Math.hypot(e.x-q.target.x,e.y-q.target.y)>1)return;
   if(++q.pass<3){q.mode="turnaround";q.age=0;return;}
-  fan(w,e,h,15,7,53.9448,155,Math.atan2((h.target(w,e)?.y??e.y)-e.y,(h.target(w,e)?.x??e.x)-e.x));state(e).elite=undefined;
+  fan(w,e,h,15,7,magneticAuthoredDamage(53.9448),155,Math.atan2((h.target(w,e)?.y??e.y)-e.y,(h.target(w,e)?.x??e.x)-e.x));state(e).elite=undefined;
 }
 
 /** Damage beams always use their complete canonical segment. */

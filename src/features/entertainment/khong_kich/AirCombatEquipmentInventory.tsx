@@ -97,7 +97,7 @@ function Tile({ item, id, location, selected, onSelect, onInspect, onDouble, onD
       if (event.key === "Enter") { event.preventDefault(); onSelect(); onInspect(definitionId, event.currentTarget); }
       if (event.key === " ") { event.preventDefault(); onSelect(); if (!locked) onDouble(event.currentTarget); }
     }}>
-    <EquipmentIcon id={definitionId} />{quantity !== undefined && <span className="equipment-quantity">{quantity}</span>}
+    <EquipmentIcon id={definitionId} inventory />{quantity !== undefined && <span className="equipment-quantity">{quantity}</span>}
   </button>;
 }
 
@@ -113,7 +113,7 @@ function CraftFlight({ flight, onArrive }: { flight: Flight; onArrive: () => voi
     if (animation) animation.onfinish = onArrive;
     return () => animation?.cancel();
   }, [flight]);
-  return createPortal(<div ref={node} className="equipment-craft-flight" style={{ left: flight.from.left, top: flight.from.top, width: flight.from.width }}><EquipmentIcon id={flight.id} /></div>, document.body);
+  return createPortal(<div ref={node} className="equipment-craft-flight" style={{ left: flight.from.left, top: flight.from.top, width: flight.from.width }}><EquipmentIcon id={flight.id} inventory /></div>, document.body);
 }
 export function AirCombatEquipmentInventory({ world, onClose, onChange }: { world: CombatWorld; onClose: () => void; onChange: () => void }) {
   const present = useIsPresent();
@@ -215,7 +215,7 @@ export function AirCombatEquipmentInventory({ world, onClose, onChange }: { worl
         {q.craftSlots.map((item, i) => <div key={i} ref={node => { craftSlots.current[i] = node; }} className={`equipment-slot equipment-craft-slot ${componentDrag && !craftInvalid && i === q.craftSlots.indexOf(null) ? "equipment-slot-target" : ""} ${impact?.slot === i && clock < impact.until ? "equipment-slot-impact" : ""}`}>{item ? tile(item, "craft") : <span className="equipment-empty">+</span>}</div>)}
         <span className="equipment-craft-arrow" aria-hidden="true">›</span>
         <button className="equipment-slot equipment-result" type="button" disabled={!result} onClick={event => result && inspect(result, event.currentTarget)} aria-label={result ? `Xem ${EQUIPMENT_CATALOG[result].name}` : "Kết quả ghép"}>
-          {result ? <EquipmentIcon id={result} /> : <span className="equipment-empty">?</span>}
+          {result ? <EquipmentIcon id={result} inventory /> : <span className="equipment-empty">?</span>}
           {q.craftJob && <span className="equipment-craft-energy" style={{ clipPath: `inset(${(1 - progress) * 100}% 0 0 0)`, backgroundImage: `url(${EQUIPMENT_ART.vfx})` }} />}
         </button>
         <button type="button" className="equipment-craft-button" disabled={!result} onClick={() => { q.craftJob ? cancelEquipmentCraft(s) : startEquipmentCraft(s, performance.now() / 1000); changed(); }}>{q.craftJob ? `HỦY · ${Math.round(progress * 100)}%` : "GHÉP"}</button>
@@ -231,7 +231,7 @@ export function AirCombatEquipmentInventory({ world, onClose, onChange }: { worl
     </OverlayBody>
     <OverlayFooter><ModalButton type="button" variant="primary" onClick={close}>Đóng Kho Trang Bị</ModalButton></OverlayFooter>
     {tooltip && <EquipmentTooltip anchor={tooltip} state={s} onClose={() => setTooltip(null)} />}
-    {drag && createPortal(<div className="equipment-drag-ghost" style={{ left: drag.x, top: drag.y, width: drag.size }}><EquipmentIcon id={drag.id} /></div>, document.body)}
+    {drag && createPortal(<div className="equipment-drag-ghost" style={{ left: drag.x, top: drag.y, width: drag.size }}><EquipmentIcon id={drag.id} inventory /></div>, document.body)}
     {flights.map(flight => <CraftFlight key={flight.key} flight={flight} onArrive={() => { setFlights(current => current.filter(f => f.key !== flight.key)); setImpact({ slot: flight.slot, until: performance.now() / 1000 + .35 }); }} />)}
   </AirCombatModal>;
 }

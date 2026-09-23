@@ -1,0 +1,140 @@
+{
+  "version": "26.11.6",
+  "title": "Equipment Rendering Fix & Magnetic Storm Power Correction",
+  "displayTitle": "CHI TIẾT CẬP NHẬT 26.11.6",
+  "releaseDate": "24/09/2026",
+  "summary": "**26.11.6** xử lý triệt để lỗi khung hình Trang Bị vẫn bị cắt trong Kho sau thay đổi của 26.11.5. Cách render icon được chuẩn hóa lại để phần artwork và khung trang trí của Trang Bị Thành Phần, Hoàn Chỉnh và Huyền Thoại nằm trọn trong vùng hiển thị ở mọi khu vực của Kho, thay vì chỉ tiếp tục thu nhỏ hình trong lưới.\n\nBản cập nhật đồng thời khôi phục progression sức mạnh của **Stage 2 – Bão Từ** sau khi Stage 1 đã được tăng sức mạnh ở 26.11.4. Toàn bộ lực lượng Stage 2, bao gồm quái thường, Tinh Anh, Tempest Crown, Magnetic Satellite và các đơn vị triệu hồi, được tăng 50% Máu, Giáp, sát thương đạn/va chạm và các sát thương đặc thù của hệ Magnetic, trong khi tốc độ, mật độ, nhịp tấn công và toàn bộ cơ chế chiến đấu được giữ nguyên.",
+  "sections": [
+    {
+      "id": "s1",
+      "title": "KHO TRANG BỊ HIỂN THỊ ARTWORK TRỌN VẸN",
+      "icon": {
+        "kind": "equipment",
+        "id": "TH08"
+      },
+      "intro": [
+        {
+          "text": "Pipeline hiển thị Trang Bị được tách rõ giữa vùng layout/hit-area và phần sprite artwork để tránh decorative frame bị crop khi cell thu nhỏ trên mobile.",
+          "format": "paragraph"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s1-e1",
+          "icon": {
+            "kind": "system",
+            "id": "ui"
+          },
+          "title": "Khắc phục triệt để lỗi icon Trang Bị bị cắt",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Trang Bị Thành Phần, Hoàn Chỉnh và Huyền Thoại giờ render trọn vẹn frame hình minh họa thay vì để border-radius/overflow của vùng sprite cắt mất các chi tiết sát mép.",
+              "format": "paragraph",
+              "changeType": "fix"
+            },
+            {
+              "text": "Cách hiển thị được chuẩn hóa cho Kho Thành Phần, Kho Hoàn Chỉnh/Huyền Thoại, Trang Bị Đang Mang, Ghép Trang Bị, kết quả ghép, Tooltip và các representation kéo-thả trong Kho.",
+              "format": "bullet",
+              "changeType": "fix"
+            },
+            {
+              "text": "Lưới 3×3, hai kho hiển thị song song, phân trang, hit area và thao tác giữ 0,5 giây để kéo được giữ nguyên.",
+              "format": "bullet",
+              "changeType": "unchanged"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "STAGE 2 – BÃO TỪ ĐƯỢC NÂNG ĐÚNG BẬC SỨC MẠNH",
+      "icon": {
+        "kind": "system",
+        "id": "ui"
+      },
+      "intro": [
+        {
+          "text": "Stage 2 được đồng bộ lại với mặt bằng sức mạnh mới của Stage 1 để Bão Từ tiếp tục là bước tiến tiếp theo về độ nguy hiểm thay vì có nhiều raw stat thấp hơn màn trước.",
+          "format": "paragraph"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s2-e1",
+          "icon": {
+            "kind": "system",
+            "id": "ui"
+          },
+          "title": "Toàn bộ lực lượng Stage 2 tăng 50% sức mạnh nền",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Toàn bộ quái thường và Tinh Anh Stage 2 nhận **+50% Máu, +50% Giáp, +50% sát thương đạn và +50% sát thương va chạm** so với 26.11.5.",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "**Micro Drone, Magnetic Satellite và các đơn vị phụ/triệu hồi của Stage 2** cũng được áp dụng cùng hệ số để không trở thành điểm hụt sức mạnh trong encounter.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "Tốc độ di chuyển, fire interval, số lượng đạn, số lượng quái, mật độ spawn và các hệ số tăng tiến theo wave được giữ nguyên.",
+              "format": "bullet",
+              "changeType": "unchanged"
+            }
+          ]
+        },
+        {
+          "id": "s2-e2",
+          "icon": {
+            "kind": "system",
+            "id": "ui"
+          },
+          "title": "Các mechanic Magnetic cũng được đồng bộ sát thương",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Beam, mine, acid, returning projectile, dash trail, Elite hazard và các sát thương Magnetic được author riêng cũng tăng **50%** để toàn bộ bộ kỹ năng Stage 2 cùng theo một baseline mới.",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "Các multiplier đặc trưng của wave, Elite và từng mechanic vẫn giữ nguyên; hệ số mới chỉ được áp dụng một lần để tránh double-scale.",
+              "format": "bullet",
+              "changeType": "unchanged"
+            }
+          ]
+        },
+        {
+          "id": "s2-e3",
+          "icon": {
+            "kind": "system",
+            "id": "ui"
+          },
+          "title": "Tempest Crown vượt lại Leviathan về raw power",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "**Tempest Crown** tăng lên **175.312,5 Máu · 168,3 Giáp · 188,16 sát thương đạn · 672 sát thương va chạm** trước các mechanic riêng của Boss.",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "Bốn **Magnetic Satellite** tăng lên **35.062,5 Máu · 33,66 Giáp · 188,16 sát thương đạn · 120,96 sát thương va chạm** mỗi đơn vị.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "Phase, Guardian Shield, số Satellite, skill cadence, telegraph và geometry của Tempest Crown không thay đổi.",
+              "format": "bullet",
+              "changeType": "unchanged"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

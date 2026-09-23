@@ -358,7 +358,7 @@
 .air-hub-equipment-button { display:flex; align-items:center; justify-content:center; gap:.7cqw; border:1px solid #91d8e3; border-radius:1cqw; background:#183c50; color:#e5fcff; box-shadow:inset 0 1px #d3faff55; font-weight:800; font-size:2.35cqw; line-height:1.05; transform-origin:center; }
 .air-hub-equipment-button .equipment-icon { width:5.4cqw; height:5.4cqw; flex-shrink:0; }
 .equipment-icon { display:inline-block; position:relative; width:100%; height:100%; aspect-ratio:1; overflow:hidden; border-radius:8%; }
-.equipment-icon img { position:absolute; max-width:none!important; max-height:none!important; pointer-events:none; }
+.equipment-icon > .equipment-icon-art { display:block; position:absolute; inset:var(--equipment-art-inset,0); width:auto; height:auto; min-width:0; min-height:0; overflow:visible; border-radius:0; pointer-events:none; }
 .equipment-inventory-panel { width:min(940px,98vw)!important; max-width:940px!important; }
 .equipment-inventory-body { position:relative; display:flex; flex-direction:column; gap:12px; padding:12px!important; color:#e4edf7; }
 .equipment-subtitle { font-size:11px; color:#9cbed0; margin-top:5px; }
@@ -522,7 +522,11 @@
 
 /* Exit animations are presentation-only, including descendants with explicit hit areas. */
 .air-motion-modal.air-motion-exit * { pointer-events:none!important; }
-/* Keep storage hit areas/page geometry; inset only compact TP/TH/HL artwork. */
-.equipment-inventory-body[data-compact="true"] .equipment-storage-grid .equipment-tile > .equipment-icon {
-  position:absolute; width:87%; height:87%; left:6.5%; top:6.5%;
-}
+/* 26.11.6: Inventory layout owns the safe inset, independently of the full atlas
+   frame. Block/absolute wrappers avoid inline baseline descent clipping the bottom.
+   HUD/release icons and VP01 retain their default framing. */
+.equipment-icon.equipment-icon-inventory { --equipment-art-inset:6.5%; display:block; overflow:visible; border-radius:0; }
+.equipment-tile > .equipment-icon-inventory,
+.equipment-result > .equipment-icon-inventory,
+.equipment-drag-ghost > .equipment-icon-inventory,
+.equipment-craft-flight > .equipment-icon-inventory { position:absolute; inset:0; width:100%; height:100%; }
