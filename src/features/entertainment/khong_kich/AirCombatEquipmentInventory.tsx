@@ -1,12 +1,11 @@
 import { createPortal } from "react-dom";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { AirCombatModal } from "./AirCombatMotion";
 import { ModalButton, OverlayBody, OverlayFooter, OverlayHeader } from "../../../components/overlay/AppOverlay";
 import { EquipmentIcon } from "./EquipmentIcon";
-import { EQUIPMENT_CATALOG, EQUIPMENT_NAME_COLORS, equipmentRecipe } from "./airCombatEquipmentCatalog";
+import { EQUIPMENT_CATALOG, equipmentRecipe } from "./airCombatEquipmentCatalog";
 import { equipmentState, equipEquipment, extractEquipment, toggleCraftComponent, startEquipmentCraft, cancelEquipmentCraft, tickEquipmentCraft, clampEquipmentPages, EQUIPMENT_PAGE_SIZE, EQUIPMENT_GRID_COLUMNS, EQUIPMENT_GRID_ROWS, type EquipmentInstance, type EquipmentRewardId } from "./airCombatEquipmentState";
 import { EquipmentTooltip, type EquipmentTooltipAnchor } from "./EquipmentTooltip";
-import { CoreDescription } from "./CoreDescription";
 import { EQUIPMENT_ART } from "./airCombatEquipmentArt";
 import { equipmentFx } from "./airCombatEquipmentRuntime";
 import { syncEffectiveMaxHp, getEffectiveAircraftStats } from "./airCombatAircraft";
@@ -85,6 +84,27 @@ export function AirCombatEquipmentInventory({ world, onClose, onChange }: { worl
   const s = world.aircraft, q = equipmentState(s);
   const equippedRegion = useRef<HTMLElement>(null), craftRegion = useRef<HTMLElement>(null), craftSlots = useRef<(HTMLDivElement | null)[]>([]);
   const [selection, setSelection] = useState<number | null>(null), [tooltip, setTooltip] = useState<EquipmentTooltipAnchor | null>(null);
+  const dashboard = useRef<HTMLDivElement>(null);
+  const [storageTab, setStorageTab] = useState<"components" | "completed">("components");
+  const [layout, setLayout] = useState({ compact: false, emergency: false, cell: 36 });
+  useLayoutEffect(() => {
+    const body = dashboard.current!.parentElement!;
+    const resize = () => {
+      // The fixed panel gives this body a real budget after Header and Footer.
+      const width = body.clientWidth - 16, height = body.clientHeight - 16;
+      const compact = width < 600;
+      // These fixed chrome budgets mirror the dashboard rows in combat-ui.css.
+      const heightCell = (height - (compact ? 244 : 162)) / (compact ? 7 : 6);
+      const widthCell = compact ? Math.min((width - 22) / 5, (width - 106) / 3) : Math.min((width - 20) / 8, (width / 2 - 110) / 3);
+      const cell = Math.max(36, Math.floor(Math.min(64, heightCell, widthCell)));
+      const emergency = heightCell < 36 || widthCell < 36;
+      setLayout(previous => previous.compact === compact && previous.emergency === emergency && previous.cell === cell ? previous : { compact, emergency, cell });
+    };
+    resize();
+    const observer = new ResizeObserver(resize); observer.observe(body);
+    return () => observer.disconnect();
+  }, []);
+  useEffect(() => { setTooltip(null); }, [layout.compact]);
   useEffect(() => {
     if (!tooltip) return;
     const dismiss = (event: PointerEvent) => {
@@ -131,16 +151,18 @@ export function AirCombatEquipmentInventory({ world, onClose, onChange }: { worl
   const inventory = (kind: "components" | "completed", title: string) => {
     const list = kind === "components" ? q.components : [...q.completed].sort((a, b) => Number(b.definitionId.startsWith("HL")) - Number(a.definitionId.startsWith("HL")) || a.instanceId - b.instanceId);
     const pageKey = kind === "components" ? "componentPage" : "completedPage", page = q[pageKey], pages = Math.max(1, Math.ceil(list.length / EQUIPMENT_PAGE_SIZE));
-    return <section className="equipment-storage"><h3>{title}<span>{list.length}</span></h3><div className="equipment-storage-grid" aria-label={title} style={{ gridTemplateColumns: `repeat(${EQUIPMENT_GRID_COLUMNS},minmax(0,1fr))`, gridTemplateRows: `repeat(${EQUIPMENT_GRID_ROWS},auto)` }}>
+    return <section className="equipment-storage" hidden={layout.compact && storageTab !== kind} id={`equipment-storage-${kind}`}><h3>{title}<span>{list.length}</span></h3><div className="equipment-storage-grid" aria-label={title} style={{ gridTemplateColumns: `repeat(${EQUIPMENT_GRID_COLUMNS},var(--equipment-cell-size))`, gridTemplateRows: `repeat(${EQUIPMENT_GRID_ROWS},var(--equipment-cell-size))` }}>
       {Array.from({ length: EQUIPMENT_PAGE_SIZE }, (_, i) => { const item = list[page * EQUIPMENT_PAGE_SIZE + i]; return <div className="equipment-grid-cell" key={item?.instanceId ?? `empty-${i}`}>{item ? tile(item, "storage") : null}</div>; })}</div>
       <nav className="equipment-pages" aria-label={`Phân trang ${title}`}><button disabled={page === 0} onClick={() => { q[pageKey]--; setTooltip(null); changed(); }} aria-label="Trang trước">‹</button><span>Trang {page + 1} / {pages}</span><button disabled={page + 1 >= pages} onClick={() => { q[pageKey]++; setTooltip(null); changed(); }} aria-label="Trang sau">›</button></nav></section>;
   };
   const close = () => { cancelEquipmentCraft(s); onClose(); };
   const componentDrag = !!drag?.id.startsWith("TP"), craftInvalid = !!q.craftJob || !q.craftSlots.includes(null), craftHover = !!drag && inside(craftRegion.current, drag);
   const equipValid = !!drag && (drag.id === "VP01" ? q.equipped.some(Boolean) && q.items.VP01 > 0 : q.equipped.includes(null));
-  return <AirCombatModal archetype="info" layer="exclusive-dialog" layout="viewport-safe" labelledBy="equipment-title" onClose={close} panelClassName="equipment-inventory-panel">
+  return <AirCombatModal archetype="info" layer="exclusive-dialog" layout="viewport-safe" labelledBy="equipment-title" onClose={close} overlayClassName="equipment-inventory-overlay" panelClassName="equipment-inventory-panel">
     <OverlayHeader><h2 id="equipment-title" className="modal-title">KHO TRANG BỊ</h2><p className="equipment-subtitle">Chạm để xem · Giữ 1 giây để kéo · Nhấp đúp Thành Phần để ghép</p></OverlayHeader>
-    <OverlayBody className="equipment-inventory-body">
+    <OverlayBody className="equipment-inventory-body" data-compact={layout.compact} data-emergency={layout.emergency} data-magnet-drag={drag?.id === "VP01"} style={{ "--equipment-cell-size": `${layout.cell}px` } as React.CSSProperties}>
+      <div ref={dashboard} className="equipment-dashboard">
+      <div className="equipment-operations">
       <section ref={equippedRegion} className={`equipment-equipped-region ${equipValid ? "equipment-drop-preview" : ""} ${drag && inside(equippedRegion.current, drag) ? equipValid ? "equipment-drop-ready" : "equipment-drop-invalid" : ""} ${drag?.id === "VP01" ? "equipment-magnet-ready" : ""}`}>
         <h3>Trang Bị Đang Mang</h3><div className="equipment-equipped-slots">{q.equipped.map((item, i) => <div key={i} className="equipment-slot">{item ? tile(item, "equipped") : <span className="equipment-empty">{i + 1}</span>}</div>)}</div>
         <p className="equipment-drop-label">{drag ? drag.id === "VP01" ? "Thả Nam Châm vào đây để tháo toàn bộ trang bị" : equipValid ? "Thả trang bị vào đây để trang bị cho chiến cơ" : "Trang Bị Đang Mang đã đầy" : "3 slot · Dùng Nam Châm Ma Thuật để tháo"}</p>
@@ -156,10 +178,17 @@ export function AirCombatEquipmentInventory({ world, onClose, onChange }: { worl
         <button type="button" className="equipment-craft-button" disabled={!result} onClick={() => { q.craftJob ? cancelEquipmentCraft(s) : startEquipmentCraft(s, performance.now() / 1000); changed(); }}>{q.craftJob ? `HỦY · ${Math.round(progress * 100)}%` : "GHÉP"}</button>
       </div>
       <p className="equipment-drop-label" role="status">{feedback && clock < feedback.until ? feedback.text : componentDrag ? craftInvalid ? q.craftJob ? "Đang ghép · Không thể thêm Thành Phần" : "Đã đầy · Craft Full" : "Thả Thành Phần vào đây để ghép" : "2 Thành Phần · Nhấp đúp ô ghép để trả về kho"}</p>
-      {result && <div className="equipment-result-copy"><strong style={{ color: EQUIPMENT_NAME_COLORS.completed }}>{EQUIPMENT_CATALOG[result].name}</strong><p><CoreDescription text={EQUIPMENT_CATALOG[result].statsText} /></p><p><CoreDescription text={EQUIPMENT_CATALOG[result].effect} /></p></div>}
       </section>
+      </div>
+      <div className="equipment-storage-area">
+      {layout.compact && <nav className="equipment-storage-switch" aria-label="Chọn kho trang bị">
+        <button type="button" aria-pressed={storageTab === "components"} aria-controls="equipment-storage-components" onClick={() => { setStorageTab("components"); setTooltip(null); }}>THÀNH PHẦN</button>
+        <button type="button" aria-pressed={storageTab === "completed"} aria-controls="equipment-storage-completed" onClick={() => { setStorageTab("completed"); setTooltip(null); }}>HOÀN CHỈNH</button>
+      </nav>}
       <div className="equipment-inventories">{inventory("components", "Kho Trang Bị Thành Phần")}{inventory("completed", "Kho Trang Bị Hoàn Chỉnh")}</div>
+      </div>
       <section className="equipment-item-tray"><h3>Vật Phẩm</h3><div className="equipment-item-grid"><div className="equipment-grid-cell"><Tile id="VP01" location="item" selected={selection === -1} quantity={q.items.VP01 ?? 0} locked={!(q.items.VP01 > 0)} onSelect={() => setSelection(-1)} onInspect={inspect} onDouble={() => {}} onDrag={dragging} onDrop={drop} /></div>{[1,2,3,4].map(i => <div key={i} className="equipment-grid-cell" aria-hidden="true" />)}</div><small>Giữ 1 giây rồi kéo Nam Châm vào vùng đang mang</small></section>
+      </div>
     </OverlayBody>
     <OverlayFooter><ModalButton type="button" variant="primary" onClick={close}>Đóng Kho Trang Bị</ModalButton></OverlayFooter>
     {tooltip && <EquipmentTooltip anchor={tooltip} state={s} onClose={() => setTooltip(null)} />}

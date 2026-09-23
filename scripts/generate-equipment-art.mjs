@@ -1,9 +1,8 @@
-/** Original 26.11 equipment combat VFX source; gameplay VFX stay unchanged. No text, external images or fonts.
+/** Authored vector source for the 26.11 arsenal. No text, external images or fonts.
  * Base silhouettes are shared verbatim by each Completed/Legendary pair.
  * Eight temporal frames separate anticipation, active energy, impact and dissipation.
  */
 import {writeFileSync} from 'node:fs';
-import { equipmentAtlas } from './air-combat/generate-visual-identity.mjs';
 const out=new URL('../src/assets/khong-kich/v2/',import.meta.url);
 const path=(d,fill='url(#steel)',extra='')=>`<path d="${d}" fill="${fill}" ${extra}/>`;
 const line=(d,color='#c9faff',width=2)=>path(d,'none',`stroke="${color}" stroke-width="${width}" stroke-linejoin="round"`);
@@ -72,8 +71,10 @@ const motifs=[
 ];
 const defs=`<linearGradient id="steel" x2=".8" y2="1"><stop stop-color="#f4f9ff"/><stop offset=".28" stop-color="#aabdcf"/><stop offset=".5" stop-color="#3f5576"/><stop offset=".57" stop-color="#b6d2e6"/><stop offset="1" stop-color="#1a2c43"/></linearGradient><linearGradient id="energy" x2="1" y2="1"><stop stop-color="#f8ffff"/><stop offset=".25" stop-color="currentColor"/><stop offset="1" stop-color="#142950"/></linearGradient><radialGradient id="halo"><stop stop-color="currentColor" stop-opacity=".6"/><stop offset="1" stop-color="currentColor" stop-opacity="0"/></radialGradient>`;
 const accents=['#ec6389','#a4f5ff','#ba9fff','#ff6d98','#ffb54c','#98e6ff','#c799ff','#92c8ff','#82aaff','#7dcfd5','#dfc8ff','#86f2eb','#65eaff','#f4b979','#abd2f7','#a6f19a','#98ddf9','#93f3af','#76d4ff','#adc2ff','#c3c8ff','#edaa9e','#b9f7cd','#acc1ff','#e7d7b0','#ffa2b7','#a5f8c7','#b0b4ff','#8af3d0','#fc859f','#7df2cd','#ad9fff','#ecadb4','#e0daff','#b3d1ff','#ff839e'];
-// UI icons are authored by the canonical 26.11.2 single-object atlas.
-equipmentAtlas();
+const illustration=(index)=>`<g transform="translate(14 14)">${motifs[index]}</g>`;
+function icon(index,rarity){const accent=rarity==='legendary'?'#ffca62':rarity==='item'?'#7cdfff':index<8?'#8bddf0':accents[index-8],bg=rarity==='legendary'?'#672e0b':rarity==='completed'?'#281444':rarity==='item'?'#092a55':'#090f17';return `<g color="${accent}"><rect width="128" height="128" rx="13" fill="${bg}"/><path d="M14 4H114L124 14V114L114 124H14L4 114V14Z" fill="none" stroke="${rarity==='legendary'?'#ffd878':accent}" stroke-width="${rarity==='legendary'?4:2}"/><ellipse cx="65" cy="58" rx="61" ry="56" fill="url(#halo)"/>${illustration(index)}${line('M10 37V18L18 10H38M90 10H110L118 18V38M10 90V110L18 118H38M90 118H110L118 110V90',accent,2)}${rarity==='legendary'?gem(18,110,7)+gem(110,18,7)+line('M8 62 14 53 10 43M117 87 110 75 116 64','#fff4bc',3):''}</g>`;}
+const icons=[];for(let i=0;i<81;i++){const index=i<44?i:i<80?i-36:44,rarity=i<8?'component':i<44?'completed':i<80?'legendary':'item';icons.push(`<g transform="translate(${i%9*128} ${Math.floor(i/9)*128})">${icon(index,rarity)}</g>`);}
+writeFileSync(new URL('equipment-icons.svg',out),`<svg xmlns="http://www.w3.org/2000/svg" width="1152" height="1152" viewBox="0 0 1152 1152"><defs>${defs}</defs>${icons.join('')}</svg>`);
 const frames=[];
 for(let family=0;family<40;family++)for(let frame=0;frame<8;frame++){
  const t=frame/7,accent=accents[family%36],scale=.4+.6*Math.sin(Math.PI*Math.min(.7,t)/1.4),alpha=t<.2?.35+t*3:1-(t-.2)*.8;

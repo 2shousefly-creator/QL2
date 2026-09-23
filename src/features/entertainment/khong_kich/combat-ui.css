@@ -101,8 +101,8 @@
 
 .combat-core-card:hover,.combat-core-card:focus-visible {filter:brightness(1.15);outline:2px solid #e0faff;outline-offset:-4px;}
 .combat-core-card:active {filter:brightness(1.3);}
-.core-semantic-icon {display:inline-grid;place-items:center;isolation:isolate;background:linear-gradient(145deg,#7696ad30,#071321);border:1px solid #a0d3e46b;clip-path:polygon(6px 0,100% 0,100% calc(100% - 6px),calc(100% - 6px) 100%,0 100%,0 6px);color:inherit;}
-.core-semantic-icon > svg {width:68%;height:68%;filter:drop-shadow(0 1px 3px #8addff55);}
+.core-semantic-icon {display:inline-grid;place-items:center;isolation:isolate;background-color:transparent;border:0;color:inherit;}
+.core-semantic-icon > svg {width:68%;height:68%;}
 .air-status-icon {border-radius:2px!important;}
 .air-status-timer {position:absolute;top:1px;bottom:auto;left:1px;right:1px;z-index:3;background:#081526c9;color:#e3f5ff;font-size:1.55cqw;line-height:1;font-variant-numeric:tabular-nums;}
 .air-combat-surface[data-emp-jam="true"] .air-combat-hud {box-shadow:inset 0 -2px #67e8f9; background-image:repeating-linear-gradient(0deg,#67e8f907 0 1px,transparent 1px 5px);}
@@ -135,7 +135,6 @@
 .combat-core-card[data-core-tier="silver"],.air-owned-core--silver { background:linear-gradient(135deg,#26292f,#14161a); border-color:#a7adb5; color:#f2f3f5; box-shadow:inset 0 1px #ffffff18; }
 .combat-core-card[data-core-tier="gold"],.air-owned-core--gold { background:linear-gradient(135deg,#4a310b,#1a1105); border-color:#e9b949; color:#fff0bd; box-shadow:inset 0 1px #ffe7a852; }
 .combat-core-card[data-core-tier="diamond"],.air-owned-core--diamond { background:linear-gradient(135deg,#0b102a,#1b2057); border-color:#8ff8ff; color:#eef5ff; box-shadow:inset 0 0 0 1px #b9a7ff55,inset 0 0 16px #b9a7ff18,0 0 8px #8ff8ff18; }
-.air-owned-core--silver .core-semantic-icon,.combat-core-card[data-core-tier="silver"] .core-semantic-icon { border-color:#a7adb577; background:#25272d; }
 .air-owned-core--silver svg,.combat-core-card[data-core-tier="silver"] svg { filter:none; }
 .air-upgrade-card[data-core-tier="diamond"]::after { content:""; position:absolute; inset:-60% -40%; z-index:0; pointer-events:none; background:linear-gradient(110deg,transparent 42%,#b9a7ff40 49%,#8ff8ff30 53%,transparent 60%); transform:translateX(-100%); animation:air-upgrade-sheen 650ms ease-out 460ms both; }
 .air-core-reroll { display:grid; place-items:center; width:44px; height:44px; min-height:44px; padding:0; border:1px solid #b9c1cf80; border-radius:6px; background:#1c2230; font-size:22px; touch-action:manipulation; }
@@ -309,7 +308,6 @@
 /* Taxonomy accents are local to the tag; the card continues to communicate tier. */
 .air-core-system-tag { display:inline-flex; align-items:center; width:max-content; max-width:100%; margin-top:3px; padding:1px 5px; border:1px solid var(--core-system-color); border-radius:4px; background:color-mix(in srgb,var(--core-system-color) 17%,transparent); color:color-mix(in srgb,var(--core-system-color) 40%,white); font-size:9px; font-weight:800; line-height:1.2; }
 .air-upgrade-copy .air-core-system-tag + .air-upgrade-description { margin-top:3px; }
-.core-semantic-icon .core-refined-art { position:absolute; max-width:none; pointer-events:none; }
 
 /* 26.10.0 tactical hub fits the existing runtime HUD rectangle. */
 .air-combat-hud { grid-template-columns: 19cqw minmax(0,1fr); grid-template-rows: minmax(0,1fr) minmax(0,1.2fr); gap:1cqw 1.5cqw; padding:1.6cqw 1.5cqw 1.2cqw; background:linear-gradient(125deg,#06111e,#132d40 60%,#081525); }
@@ -385,8 +383,6 @@
 .equipment-craft-arrow { font-size:28px; color:#bfa5de; }
 .equipment-craft-button { padding:10px 12px; border:1px solid #c49fe0; border-radius:7px; background:#513968; color:#fff4ff; font-size:11px; font-weight:800; }
 .equipment-craft-button:disabled { opacity:.35; }
-.equipment-result-copy { max-height:100px; overflow:auto; margin:10px 0; font-size:11px; line-height:1.5; }
-.equipment-result-copy p { margin:3px 0; }
 .equipment-craft-energy { position:absolute; inset:0; background-size:800% 4000%; background-position:0 97.44%; mix-blend-mode:screen; pointer-events:none; animation:equipment-energy-frames .75s steps(7) infinite; }
 @keyframes equipment-energy-frames { to { background-position-x:100%; } }
 .equipment-item-tray { display:flex; align-items:center; gap:10px; margin-top:10px; padding-top:8px; border-top:1px solid #ffffff16; font-size:11px; }
@@ -452,13 +448,73 @@
 .equipment-tooltip .equipment-telemetry { font-size:9px; padding-top:4px; }
 .equipment-tooltip-content { animation:equipment-tooltip-switch .16s ease-out; }
 @keyframes equipment-tooltip-switch { from { opacity:.45; transform:translateY(3px); } to { opacity:1; transform:translateY(0); } }
-@media(max-width:380px) { .equipment-inventories { grid-template-columns:minmax(0,1fr); } .equipment-craft-row { flex-wrap:wrap; } .equipment-tooltip { padding:10px; } }
+@media(max-width:380px) { .equipment-tooltip { padding:10px; } }
 @media(prefers-reduced-motion:reduce) { .equipment-drop-ready::before,.equipment-slot-target,.equipment-slot-impact,.equipment-tooltip-content { animation:none; } }
 
 /* 26.11.2: the Item tray uses the same square cell contract as Equipment. */
 .equipment-item-tray { display:block; }
-.equipment-item-grid { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:2px; margin:6px 0; }
+.equipment-item-grid { display:grid; grid-template-columns:repeat(5,var(--equipment-cell-size,36px)); gap:2px; margin:6px 0; }
 .equipment-item-grid .equipment-grid-cell { aspect-ratio:1; box-sizing:border-box; border:1px solid #30435a; background:#060e19; }
 .equipment-item-grid .equipment-tile { width:100%; height:100%; }
 .equipment-item-tray small { display:block; }
 .equipment-quantity { bottom:2px; right:2px; min-width:12px; padding:0 2px; font-size:8px; line-height:1.3; border-radius:2px; }
+
+/* 26.11.3: fixed visual-viewport dashboard. Only the emergency body scrolls. */
+.equipment-inventory-overlay { --app-overlay-inline-gutter:8px; }
+.equipment-inventory-panel.app-overlay__panel {
+  box-sizing:border-box; width:min(940px,100%)!important; max-width:940px!important;
+  height:100%; max-height:100%; min-height:0; overflow:hidden;
+}
+.equipment-inventory-panel>.app-overlay__header,
+.equipment-inventory-panel>.app-overlay__footer { flex:0 0 auto; padding:6px 12px; }
+.equipment-inventory-panel>.app-overlay__header { flex-direction:column; align-items:flex-start; gap:0; }
+.equipment-inventory-panel>.app-overlay__header .modal-title { margin:0; font-size:18px; line-height:22px; }
+.equipment-inventory-panel .equipment-subtitle { margin:4px 0 0; line-height:14px; }
+.equipment-inventory-panel>.app-overlay__footer button { min-height:34px; padding:6px 12px; }
+.equipment-inventory-panel>.equipment-inventory-body {
+  display:block; flex:1 1 0; min-height:0; padding:8px!important; overflow:hidden;
+}
+.equipment-dashboard { display:flex; flex-direction:column; gap:6px; min-width:0; }
+.equipment-inventory-panel .equipment-dashboard button { min-height:0; }
+.equipment-dashboard>* { flex-shrink:0; }
+.equipment-operations { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:6px; }
+.equipment-dashboard .equipment-equipped-region,
+.equipment-dashboard .equipment-crafting {
+  box-sizing:border-box; display:grid; grid-template-rows:12px var(--equipment-cell-size) 20px;
+  gap:3px; height:calc(var(--equipment-cell-size) + 48px); min-width:0; padding:4px;
+  overflow:visible; border-radius:9px;
+}
+.equipment-dashboard h3 { margin:0; font-size:11px; line-height:12px; }
+.equipment-dashboard .equipment-equipped-slots { gap:8px; }
+.equipment-dashboard .equipment-slot { width:var(--equipment-cell-size); height:var(--equipment-cell-size); }
+.equipment-inventory-panel .equipment-dashboard .equipment-drop-label {
+  box-sizing:border-box; height:20px; min-height:0; margin:0; font-size:9px; line-height:10px;
+}
+.equipment-dashboard .equipment-craft-row { gap:4px; flex-wrap:nowrap; min-width:0; }
+.equipment-dashboard .equipment-craft-arrow { flex:0 0 12px; font-size:22px; text-align:center; }
+.equipment-dashboard .equipment-craft-button { flex:0 0 64px; height:32px; padding:3px; font-size:10px; white-space:nowrap; }
+.equipment-storage-area { display:flex; flex-direction:column; gap:4px; }
+.equipment-dashboard .equipment-inventories { gap:8px; }
+.equipment-dashboard .equipment-storage { padding:0; }
+.equipment-dashboard .equipment-storage[hidden] { display:none; }
+.equipment-dashboard .equipment-storage h3 { height:14px; line-height:14px; margin-bottom:4px; }
+.equipment-dashboard .equipment-storage-grid { width:max-content; margin-inline:auto; }
+.equipment-dashboard .equipment-pages { height:26px; margin:4px auto 0; max-width:calc(var(--equipment-cell-size) * 4 + 6px); }
+.equipment-storage-switch { display:flex; gap:4px; height:24px; }
+.equipment-storage-switch button { flex:1; min-width:0; border:1px solid #375069; border-radius:5px; background:#11263a; color:#aac5d8; font-size:10px; font-weight:800; }
+.equipment-storage-switch button[aria-pressed="true"] { border-color:#8aeaff; color:#e8fbff; background:#173d50; }
+.equipment-dashboard .equipment-item-tray { box-sizing:border-box; height:calc(var(--equipment-cell-size) + 44px); padding:4px; border-radius:9px; }
+.equipment-dashboard .equipment-item-grid { grid-template-rows:var(--equipment-cell-size); width:max-content; margin:3px 0; }
+.equipment-dashboard .equipment-item-tray small { height:16px; line-height:16px; font-size:10px; white-space:nowrap; }
+.equipment-inventory-body[data-compact="true"] .equipment-operations,
+.equipment-inventory-body[data-compact="true"] .equipment-inventories { grid-template-columns:minmax(0,1fr); }
+.equipment-inventory-body[data-emergency="true"] { overflow-y:auto; overflow-x:hidden; scrollbar-gutter:stable; }
+/* display:contents frees the sticky target from the short operations-row bounds. */
+.equipment-inventory-body[data-emergency="true"][data-magnet-drag="true"] .equipment-operations { display:contents; }
+.equipment-inventory-body[data-emergency="true"] .equipment-magnet-ready { position:sticky; top:0; }
+.equipment-dashboard .equipment-magnet-ready {
+  z-index:5; border-color:#91edff; background:#081d2d;
+  box-shadow:inset 0 0 30px #49caff44,0 0 6px #7ce9ff99;
+}
+.equipment-dashboard .equipment-magnet-ready .equipment-drop-label { color:#c0f4ff; text-shadow:0 0 9px #49caff66; }
+.equipment-dashboard .equipment-magnet-ready.equipment-drop-ready { box-shadow:inset 0 0 30px #49caff66,inset 0 0 3px #d8faff,0 0 7px #7ce9ff; }

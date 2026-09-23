@@ -1,0 +1,119 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="640" viewBox="0 0 640 640" fill="none" stroke="#E8F2FF" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
+  <!-- 26.11.3 canonical glyphs. Row-major 5 by 5; transparent cells, no tier variants. -->
+  <g id="growth" transform="translate(0 0)">
+    <path d="M22 106V90H32V106ZM46 106V76H56V106ZM70 106V62H80V106ZM94 106V48H104V106Z" fill="#8FA8C2" stroke="none"/>
+    <path d="M22 70 48 52 74 40 104 22M84 22H104V42"/>
+  </g>
+  <g id="firepower" transform="translate(128 0)">
+    <g transform="rotate(-35 64 64)">
+      <path d="M24 50H44V78H24ZM44 54H94V74H44Z" fill="#8FA8C2"/>
+      <path d="M94 49H106V79H94Z" fill="#E8F2FF"/>
+      <path d="M28 78V86H48V78"/>
+    </g>
+  </g>
+  <g id="rapid_fire" transform="translate(256 0)">
+    <path d="M58 26H88L106 36 88 46H58ZM58 54H88L106 64 88 74H58ZM58 82H88L106 92 88 102H58Z" fill="#E8F2FF" stroke="none"/>
+    <path d="M22 30H44M28 42H44M22 58H44M28 70H44M22 86H44M28 98H44" stroke="#8FA8C2"/>
+  </g>
+  <g id="critical" transform="translate(384 0)">
+    <circle cx="64" cy="64" r="30"/>
+    <path d="M64 22V38M64 90V106M22 64H38M90 64H106"/>
+    <path d="M64 44 70 58 84 64 70 70 64 84 58 70 44 64 58 58Z" fill="#FFFFFF" stroke="none"/>
+  </g>
+  <g id="crit_damage" transform="translate(512 0)">
+    <path d="M53 27A39 39 0 0 0 27 53M27 75A39 39 0 0 0 53 101M75 101A39 39 0 0 0 101 75M101 53A39 39 0 0 0 75 27" stroke="#8FA8C2"/>
+    <path d="M64 22 72 45 94 34 83 56 106 64 83 72 94 94 72 83 64 106 56 83 34 94 45 72 22 64 45 56 34 34 56 45Z" fill="#E8F2FF" stroke="none"/>
+    <path d="M68 43 58 60 70 68 60 85" stroke="#8FA8C2"/>
+  </g>
+  <g id="penetration" transform="translate(0 128)">
+    <path d="M60 24 86 40V88L60 104 34 88V40Z" fill="#8FA8C2"/>
+    <path d="M22 64H94" stroke="#FFFFFF"/>
+    <path d="M84 49 110 64 84 79Z" fill="#FFFFFF" stroke="none"/>
+  </g>
+  <g id="burst" transform="translate(128 128)">
+    <circle cx="64" cy="64" r="17" fill="#FFFFFF" stroke="none"/>
+    <path d="M57 40 64 18 71 40ZM76 42 97 31 86 52ZM88 57 110 64 88 71ZM86 76 97 97 76 86ZM71 88 64 110 57 88ZM52 86 31 97 42 76ZM40 71 18 64 40 57ZM42 52 31 31 52 42Z" fill="#E8F2FF" stroke="none"/>
+  </g>
+  <g id="multi_hit" transform="translate(256 128)">
+    <path d="M18 57H35L47 64 35 71H18Z" fill="#E8F2FF" stroke="none"/>
+    <path d="M49 64 68 44M49 64H77M49 64 68 84" stroke="#8FA8C2"/>
+    <path d="M70 38 85 23 101 23 101 39 86 54ZM80 57H97L110 64 97 71H80ZM70 90 86 74 101 89 101 105 85 105Z" fill="#E8F2FF" stroke="none"/>
+  </g>
+  <g id="execute" transform="translate(384 128)">
+    <path d="M40 82C12 68 25 24 64 24S116 68 88 82V101H40Z" fill="#8FA8C2"/>
+    <path d="M41 57H51M77 57H87M56 99V87M72 99V87" stroke="#FFFFFF"/>
+    <path d="M102 22 24 106" stroke="#FFFFFF"/>
+  </g>
+  <g id="defense" transform="translate(512 128)">
+    <path d="M64 22 100 42V86L64 106 28 86V42Z" fill="#8FA8C2"/>
+    <path d="M64 28V100" stroke="#FFFFFF"/>
+  </g>
+  <g id="barrier" transform="translate(0 256)">
+    <path d="M22 94V68A42 42 0 0 1 106 68V94Z"/>
+    <circle cx="64" cy="68" r="17" fill="#FFFFFF" stroke="#8FA8C2"/>
+  </g>
+  <g id="vitality" transform="translate(128 256)">
+    <path d="M64 105C51 95 22 70 22 46 22 18 51 18 64 39 77 18 106 18 106 46 106 70 77 95 64 105Z"/>
+    <path d="M37 76H91L84 92 64 106 44 92Z" fill="#8FA8C2"/>
+  </g>
+  <g id="sustain" transform="translate(256 256)">
+    <path d="M64 105C51 95 22 70 22 46 22 18 51 18 64 39 77 18 106 18 106 46 106 70 77 95 64 105Z" stroke="#8FA8C2"/>
+    <path d="M22 64H43L51 51 61 80 72 49 82 64H106" stroke="#FFFFFF"/>
+  </g>
+  <g id="cooldown" transform="translate(384 256)">
+    <path d="M32 22H96M32 106H96M39 24V39Q39 51 58 64 39 77 39 89V104M89 24V39Q89 51 70 64 89 77 89 89V104"/>
+    <path d="M46 37H82L64 56ZM46 96 64 75 82 96Z" fill="#8FA8C2" stroke="none"/>
+  </g>
+  <g id="resource" transform="translate(512 256)">
+    <path d="M56 22H72M56 106H72"/>
+    <path d="M38 38Q64 24 90 38V91Q64 105 38 91Z" fill="#8FA8C2"/>
+    <path d="M38 38Q64 52 90 38"/>
+    <path d="M64 52V87" stroke="#FFFFFF"/>
+  </g>
+  <g id="control" transform="translate(0 384)">
+    <path d="M73 22 39 67H60L53 106 89 58H68Z" fill="#FFFFFF" stroke="none"/>
+    <g stroke="#8FA8C2">
+      <ellipse cx="64" cy="38" rx="14" ry="8"/>
+      <ellipse cx="88" cy="46" rx="14" ry="8" transform="rotate(40 88 46)"/>
+      <ellipse cx="98" cy="64" rx="8" ry="14"/>
+      <ellipse cx="88" cy="82" rx="14" ry="8" transform="rotate(-40 88 82)"/>
+      <ellipse cx="64" cy="90" rx="14" ry="8"/>
+      <ellipse cx="40" cy="82" rx="14" ry="8" transform="rotate(40 40 82)"/>
+      <ellipse cx="30" cy="64" rx="8" ry="14"/>
+      <ellipse cx="40" cy="46" rx="14" ry="8" transform="rotate(-40 40 46)"/>
+    </g>
+  </g>
+  <g id="mark" transform="translate(128 384)">
+    <path d="M22 44V22H44M84 22H106V44M106 84V106H84M44 106H22V84"/>
+    <circle cx="64" cy="64" r="12" fill="#FFFFFF" stroke="none"/>
+  </g>
+  <g id="loot" transform="translate(256 384)">
+    <path d="M22 56 42 44 106 56 87 72ZM22 56 87 72V106L22 88ZM87 72 106 56V89L87 106Z" fill="#8FA8C2"/>
+    <path d="M22 56 29 22 94 34 106 56"/>
+    <path d="M43 53 78 58 75 64 40 59Z" fill="#FFFFFF" stroke="none"/>
+  </g>
+  <g id="chance" transform="translate(384 384)">
+    <path d="M24 43 64 22 104 43V87L64 106 24 87ZM24 43 64 62 104 43M64 62V106"/>
+    <g fill="#FFFFFF" stroke="none">
+      <ellipse cx="54" cy="37" rx="5" ry="3"/><ellipse cx="75" cy="45" rx="5" ry="3"/>
+      <circle cx="34" cy="58" r="4"/><circle cx="53" cy="67" r="4"/><circle cx="44" cy="74" r="4"/><circle cx="34" cy="82" r="4"/><circle cx="53" cy="91" r="4"/>
+    </g>
+  </g>
+  <g id="follow_up" transform="translate(512 384)">
+    <path d="M22 28 86 64 22 100 38 64ZM42 28 106 64 42 100 58 64Z"/>
+  </g>
+  <g id="summon" transform="translate(0 512)">
+    <path d="M53 30H75L81 47 105 40V86L79 76 74 98H54L49 76 23 86V40L47 47Z" fill="#8FA8C2"/>
+    <circle cx="64" cy="62" r="12" fill="#FFFFFF" stroke="none"/>
+  </g>
+  <g id="conversion" transform="translate(128 512)">
+    <path d="M29 45A39 39 0 0 1 101 51M99 83A39 39 0 0 1 27 77"/>
+    <path d="M86 48 104 59 108 38M42 80 24 69 20 90"/>
+    <circle cx="64" cy="64" r="9" fill="#FFFFFF" stroke="none"/>
+  </g>
+  <g id="selection" transform="translate(256 512)">
+    <path d="M22 58H40V106H22ZM54 43H74V106H54ZM88 58H106V106H88Z" fill="#8FA8C2"/>
+    <path d="M53 20H75L64 33Z" fill="#FFFFFF" stroke="none"/>
+  </g>
+  <!-- Cells (4,3) and (4,4) are reserved and intentionally empty. -->
+</svg>

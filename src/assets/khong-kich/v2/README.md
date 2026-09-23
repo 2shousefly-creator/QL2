@@ -44,21 +44,20 @@ Production game sprite atlas, TRUE TRANSPARENT PNG background, square, strict 2x
 
 Create production 2D military arcade shooter VFX texture atlas TRUE TRANSPARENT PNG, square, precise 4x4 equal grid, all effects isolated centered in their own cell with generous empty margins. Painted high fidelity emissive effects, no labels grid lines text UI or watermark. Row1: cyan white muzzle flash; long vertical cyan tracer nose up; red orange vertical enemy tracer; detailed silver missile nose up with orange exhaust flame. Row2: small orange explosion; medium orange explosion; large orange smoke explosion; immense fiery boss explosion. Row3: sparks metallic debris burst; soft gray smoke puff; curling dark damage smoke; bright orange flame pointing down for thruster/fire overlay. Row4: circular blue energy shield ring; purple laser charging energy orb; narrow vertical violet laser beam; amber expanding bomb shockwave ring. Consistent orthographic top down game effects, alpha fading edges, black empty pixels must be transparent. Each full effect fits cell, absolutely no overlap.
 
-## 26.11.2 UI illustrations
+## 26.11.3 canonical UI art
 
-The canonical local SVG atlases have 128px square cells:
-- Equipment/Item: 9 × 9, TP01–08, TH01–36, HL01–36, VP01.
-- Core: 15 × 16, Core001–226 in row-major order; remaining cells unused.
-- Skill: 3 × 4, Viper, Titan, Phantom, Astra, one row per aircraft.
+- Equipment/Item: restored 26.11.1 9 × 9 artwork, TP01–08, TH01–36,
+  HL01–36, VP01. `scripts/generate-equipment-art.mjs` retains that source.
+- Skill: `skills-refined.svg` is the canonical static 3 × 4 source. Its first
+  nine cells restore the 26.11.1 skill atlas, and its last row preserves the
+  three 26.11.1 Astra cells. `SkillIcon.tsx` owns the shared cell mapping.
+- Core: `core-semantic-icons.svg` is the hand-authored static 5 × 5 atlas,
+  with 23 transparent glyph cells and two empty reserved cells. The exact
+  non-skill mapping lives in `airCombatCoreVisuals.ts`; skill cores use their
+  catalog `skillId` and the canonical skill atlas. Card styling owns tiers.
 
-Source art lives in `scripts/air-combat/icon-illustrations.mjs`; the explicit
-catalog-to-object decisions and atlas authoring entrypoint live in
-`scripts/air-combat/generate-visual-identity.mjs`. Each illustration focuses on
-one large artifact with shaded material and restrained energy. Core artwork
-contains no baked system/tier badges. Surrounding cards retain those labels.
-Legendary equipment inherits its Complete counterpart's object construction.
-
-`SpriteAtlasIcon` crops the atlas using square CSS backgrounds and normalized
-cell positions; all three UI icon families use that same contract. No external
-fonts, raster payloads, CDN requests or runtime artwork generation are required.
-The original equipment combat VFX remain separate and unchanged.
+The 226-core illustration atlas and its authoring pipeline are retired.
+Do not generate alternative glyphs or infer semantics from catalog text.
+The 26.11.2 skill/equipment generator is retired so it cannot overwrite the
+restored canonical artwork. The original equipment combat VFX stay unchanged.
+`SpriteAtlasIcon` retains exact square CSS background crops for every cell.
