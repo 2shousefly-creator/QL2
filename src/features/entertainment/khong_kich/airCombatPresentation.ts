@@ -15,6 +15,11 @@ import { coreId, coreStackLabel, hasCore, negativeStatusDuration } from "./airCo
 import type { AircraftCombatState, CoreId, SkillId } from "./airCombatTypes";
 import { crowdDamageBonus, isHostileToPlayer, type CombatWorld } from "./airCombatRuntime";
 
+export function formatCooldownSeconds(value: number): string {
+  const rounded = Math.round(value * 10) / 10;
+  return Number.isInteger(rounded) ? `${rounded}s` : `${rounded.toFixed(1).replace(".", ",")}s`;
+}
+
 const amount = (value:number) => Math.round(value).toLocaleString("vi-VN");
 const number = (value: number) => value.toLocaleString("vi-VN", { maximumFractionDigits: 2 });
 function hawkEyeDuration(state: AircraftCombatState) {
@@ -61,7 +66,7 @@ function effectiveSkillDescription(s:AircraftCombatState,id:SkillId):string {
  case "starfall":return `Tối đa 10 marker trong 5s, impact sau 1s gây ${p(v.damageMultiplier)} trong ${r>=2?55:35}px. Hồi chiêu sau impact cuối.`+extra(3);
  case "predator_lock":return `Khóa mục tiêu 8s. Mỗi ${r>=5?4:5} stack từ đạn thường chính phóng ${r>=3?2:1} Micro Missile, quả chính ${r>=2?240:200}% Hỏa Lực${r>=3?", quả phụ 70% quả chính":""}.`+(r>=2?" Mục tiêu nhận thêm 15% sát thương trực tiếp từ Viper.":"")+extra(4)+extra(5);
  case "gravity_anchor":return SKILL_RANKS[id][0].description+extra(2)+extra(3)+extra(4)+extra(5);
- case "electronic_interference":return `Phát ${r>=5?"3 sóng tại 0 / 0,8 / 1,6s":r>=2?"2 sóng tại 0 / 1s":"1 sóng"}; sóng đầu 100% Hỏa Lực, sóng sau 70%. Nhiễu 3s: di chuyển -25%, tốc độ bắn -20%, projectile -30%.`+extra(3)+extra(4)+(r>=5?" Trúng đủ 3 sóng: trong 2s di chuyển -55%, tốc độ bắn -45%, projectile -65%.":"");
+ case "electronic_interference":return `Phát ${r>=5?"3 sóng tại 0 / 0,8 / 1,6s":r>=2?"2 sóng tại 0 / 1s":"1 sóng"}, lan 360° từ vị trí phát ra toàn chiến trường, tác động khi quét qua mục tiêu; sóng đầu 100% Hỏa Lực, sóng sau 70%. Nhiễu 3s: di chuyển -25%, tốc độ bắn -20%, projectile -30%.`+extra(3)+extra(4)+(r>=5?" Trúng đủ 3 sóng: trong 2s di chuyển -55%, tốc độ bắn -45%, projectile -65%.":"");
  case "twin_reflection":return `2 tinh thể tồn tại 6s, chỉ phản chiếu phát thường chính của Astra; mỗi tinh thể gây ${r>=2?30:25}% sát thương đạn gốc.`+(r>=2?" Xuyên thêm 1 địch với 60% sát thương Twin Shot.":"")+extra(3)+extra(4)+extra(5);
  }
 }

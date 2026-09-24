@@ -533,7 +533,7 @@
 
 /* Ranked skills and bounded draft layout take precedence over legacy combat styles. */
 .air-ranked-skill{position:relative;min-width:0;min-height:0}
-.air-skill-plus{position:absolute;z-index:25;right:1px;top:0;width:25px;height:25px;border:1px solid #fff1a5;background:#9c6c13;color:#fff8c0;font-size:23px;font-weight:900;line-height:20px;touch-action:manipulation}
+.air-skill-plus{display:grid;place-items:center;position:absolute;z-index:25;left:50%;bottom:calc(100% + 6px);transform:translateX(-50%);width:34px;height:34px;border:1px solid #fff1a5;background:#9c6c13;color:#fff8c0;font-size:23px;font-weight:900;line-height:20px;touch-action:manipulation}
 .air-rank-nodes{display:flex;gap:3px;position:relative;z-index:12;margin:3px 0 1px;pointer-events:none}
 .air-rank-nodes i{width:6px;height:5px;border:1px solid #718096;background:#111827}
 .air-rank-nodes i[data-earned=true]{background:#facc15;border-color:#fef08a;box-shadow:0 0 3px #facc1588}
@@ -553,13 +553,11 @@
 .air-rank-preview section[data-current=true]{border-color:#facc1566;background:#facc1518}
 .air-upgrade-overlay .app-overlay__panel.air-upgrade-panel{max-height:92dvh;overflow:hidden;gap:10px}
 .air-upgrade-choices{overscroll-behavior:contain;touch-action:pan-y}
-.air-upgrade-row{grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr) auto;align-items:stretch;gap:4px}
-.air-upgrade-card.combat-core-card{height:100%;max-height:25dvh;grid-template-rows:minmax(0,1fr);cursor:default}
+.air-upgrade-row{grid-template-columns:minmax(0,1fr) 44px;grid-template-rows:minmax(0,1fr);align-items:stretch;gap:6px}
+.air-upgrade-card.combat-core-card{height:100%;max-height:25dvh;grid-template-rows:minmax(0,1fr);cursor:pointer}
 .air-upgrade-copy{display:flex;flex-direction:column;min-height:0}
 .air-upgrade-description{min-height:0;overflow-y:auto;overscroll-behavior:contain;touch-action:pan-y;scrollbar-width:thin}
-.air-reroll-controls{display:flex;align-items:center;justify-content:center;gap:5px}
 .air-core-pick{flex:1;min-height:36px;background:#164e63;color:#ecfeff;border:1px solid #67e8f9;font-weight:800}
-.air-card-counter{color:#cbd5e1;font-size:11px;white-space:nowrap}
 .air-upgrade-overlay .app-overlay__panel.air-upgrade-panel--five{width:min(1400px,96vw)}
 .air-upgrade-panel--five .air-upgrade-choices{display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;touch-action:pan-x;padding:3px 7%;gap:12px}
 .air-upgrade-panel--five .air-upgrade-row{flex:0 0 86%;scroll-snap-align:center;min-width:0}
@@ -571,7 +569,7 @@
 @media(prefers-reduced-motion:reduce){.air-skill-up-vfx::before{display:none}}
 [data-reduced-motion=true] .air-skill-up-vfx::before{display:none}
 
-.air-skill-points{position:absolute;bottom:100%;left:4px;padding:2px 5px;background:#0f172acc;color:#fde68a;font-size:10px;pointer-events:none}
+.air-skill-points{position:absolute;bottom:calc(100% + 46px);left:50%;transform:translateX(-50%);white-space:nowrap;padding:3px 7px;background:#0f172acc;color:#fde68a;font-size:10px;pointer-events:none}
 
 .air-upgrade-panel:not(.air-upgrade-panel--five){height:min(760px,92dvh)}
 .air-upgrade-panel:not(.air-upgrade-panel--five) .air-upgrade-choices{min-height:0;flex:1;grid-template-rows:repeat(3,minmax(0,1fr))}
@@ -580,3 +578,36 @@
 .air-upgrade-copy>.combat-core-name,.air-upgrade-copy>.air-core-system-tag{flex-shrink:0}
 .air-upgrade-description{flex:1}
 .air-upgrade-panel>h2,.air-selection-rules{flex-shrink:0}
+
+/* 26.12.1: a single Core transaction with a scroll-safe detail layer. */
+.air-upgrade-row > .air-core-reroll { width:44px;height:100%;min-height:44px;align-self:stretch; }
+.air-upgrade-card:focus-visible,.air-core-reroll:focus-visible,.air-core-detail button:focus-visible { outline:2px solid #e0f2fe;outline-offset:-3px; }
+.air-core-stat-line { display:block;margin:.2em 0; }
+.air-core-detail-backdrop { position:fixed;inset:0;z-index:5;display:flex;align-items:center;justify-content:center;padding:16px;background:#02040dde;touch-action:pan-y; }
+.air-core-detail { --detail-color:#bbc9da;position:relative;isolation:isolate;display:flex;flex-direction:column;width:min(440px,100%);max-height:calc(100dvh - 32px);min-height:0;padding:18px;border:1px solid var(--detail-color);background:linear-gradient(145deg,#182438,#080c17 75%);box-shadow:0 8px 48px #000a;overflow:hidden;color:#f1f5f9; }
+.air-core-detail[data-core-tier=gold] { --detail-color:#f6c94c; }
+.air-core-detail[data-core-tier=diamond] { --detail-color:#c4b5fd; }
+.air-core-detail::after { content:"";position:absolute;inset:-60% -40%;pointer-events:none;background:linear-gradient(110deg,transparent 45%,var(--detail-color) 50%,transparent 55%);opacity:.12;transform:translateX(-100%);animation:air-upgrade-sheen 300ms ease-out both; }
+.air-core-detail-close { position:absolute;right:4px;top:3px;z-index:2;width:32px;height:32px;color:#e2e8f0;font-size:24px; }
+.air-core-detail-scroll { min-height:0;overflow-y:auto;overscroll-behavior:contain;touch-action:pan-y;-webkit-overflow-scrolling:touch; }
+.air-core-detail-card { padding:8px 3px;overflow-wrap:anywhere; }
+.air-core-detail-card > .combat-core-icon { display:block;width:76px;height:76px;margin:0 auto 12px; }
+.air-core-detail-card h3 { font-size:clamp(20px,5vw,26px);line-height:1.2;font-weight:900;margin:0 24px 10px 0; }
+.air-core-detail-description { font-size:14px;line-height:1.6;margin:14px 0 6px; }
+.air-core-detail-actions { flex-shrink:0;display:grid;grid-template-columns:1fr 1fr;gap:12px;padding-top:14px; }
+.air-core-detail-actions button { width:100%;height:auto;min-height:44px;font-size:14px; }
+.air-core-detail-backdrop[data-reduced-motion=true] .air-core-detail::after { display:none; }
+@media(prefers-reduced-motion:reduce) { .air-core-detail::after { display:none; } }
+@media(max-height:440px) { .air-core-detail { padding:10px; }.air-core-detail-card > .combat-core-icon { width:48px;height:48px; } }
+/* The portal has no touch-none ancestor; only its panel accepts input. */
+.air-skill-tooltip-portal { position:fixed;z-index:calc(var(--z-overlay-exclusive) + 1);container-type:inline-size;pointer-events:none;touch-action:pan-y; }
+.air-skill-tooltip-portal .air-skill-tooltip { left:8%;right:8%;bottom:8%;max-height:78%;padding:2cqw;font-size:clamp(8px,2.1cqw,11px);overflow-y:auto;overscroll-behavior:contain;touch-action:pan-y;-webkit-overflow-scrolling:touch; }
+.air-skill-tooltip .air-tooltip-heading { flex-direction:column;gap:1.2cqw; }
+.air-skill-tooltip .air-tooltip-heading h3 { font-size:clamp(20px,7cqw,28px);font-weight:900; }
+.air-skill-tooltip .air-tooltip-cooldown { font-size:clamp(14px,4.9cqw,20px);font-weight:900;color:#fde047;white-space:normal; }
+.air-skill-tooltip p { margin:1.4cqw 0; }
+.air-skill-tooltip .air-rank-preview section { padding:5px; }
+[data-skill-rail=bottom],.air-ranked-skill { overflow:visible; }
+
+/* A fixed detail layer must not acquire the list panel as its containing block. */
+.air-upgrade-overlay.air-motion-modal .app-overlay__panel.air-upgrade-panel { transform:none;animation:none;filter:none; }

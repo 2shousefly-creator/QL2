@@ -1,3 +1,4 @@
+import { RANKED_ART, RANKED_VFX_FRAMES } from "../airCombatRankArt";
 import { EQUIPMENT_ART } from "../airCombatEquipmentArt";
 import { ASTRA_ART, ASTRA_VFX_FRAMES } from "../airCombatAstraArt";
 import { ENEMY_VISUALS } from "../airCombatEnemyArt";
@@ -29,6 +30,7 @@ export const AIRCRAFT_VISUALS: Record<AircraftId, AircraftVisualDefinition> = {
 export { ENEMY_VISUALS } from "../airCombatEnemyArt";
 const ammoFrames = Object.fromEntries(Object.entries(AMMO_VISUALS).map(([key,v]) => [key,key.endsWith("_basic_ammo")?{atlas:"basicAmmo",rect:[v.cell[0]/3,0,1/3,1/2]}:cell("ammo",v.cell[0],v.cell[1])])) as Record<AmmoVisualKey,AtlasFrame>;
 export const VFX_VISUALS = {
+  ...RANKED_VFX_FRAMES,
   ...ASTRA_VFX_FRAMES,
   ...STAGE2_VFX_ART,
   healingCross: { atlas: "healingCross", rect: [0, 0, 1, 1] } as AtlasFrame,
@@ -56,7 +58,8 @@ export async function loadAirCombatAssets() {
   ]);
   const [astraAircraft,astraEffects,astraVfx]=await Promise.all([Assets.load<Texture>(ASTRA_ART.aircraft),Assets.load<Texture>(ASTRA_ART.effects),Assets.load<Texture>(ASTRA_ART.combatVfx)]);
   const [equipmentIcons,equipmentVfx]=await Promise.all([Assets.load<Texture>(EQUIPMENT_ART.icons),Assets.load<Texture>(EQUIPMENT_ART.vfx)]);
-  const sources = { equipmentIcons,equipmentVfx,astraVfx,astraAircraft,astraEffects,aircraft, fortress, vfx, ammo, basicAmmo, healingCross, stage2Enemy, stage2Vfx, stage2Elite };
+  const [rankedVfx,rankedProjectiles]=await Promise.all([Assets.load<Texture>(RANKED_ART.vfx),Assets.load<Texture>(RANKED_ART.projectiles)]);
+  const sources = { rankedVfx,rankedProjectiles, equipmentIcons,equipmentVfx,astraVfx,astraAircraft,astraEffects,aircraft, fortress, vfx, ammo, basicAmmo, healingCross, stage2Enemy, stage2Vfx, stage2Elite };
   const frames = new Map<AtlasFrame, Texture>();
   const texture = (definition: AtlasFrame) => {
     const cached = frames.get(definition);

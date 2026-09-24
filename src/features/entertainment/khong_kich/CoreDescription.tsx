@@ -38,7 +38,16 @@ export function combatTextTokens(text:string): {text:string;semantic?:Semantic;n
     return {text:part,semantic:match.key,number:!!amount,value:amount+unit,label};
   }).filter(token=>!!token.text);
 }
-export function CoreDescription({text}:{text:string}) {
+// Only a complete package of numeric stat clauses gets line breaks. Decimal commas
+// and commas in prose remain untouched; the catalog stays canonical.
+export function CoreDescription({text, statLines = false}:{text:string; statLines?:boolean}) {
+  if (statLines) {
+    const clauses = text.trim().replace(/[.]$/, "").split(/[,;]\s+|\s+và\s+/u);
+    const direct = new RegExp(`^(?:${value})${units}\\s+(?:${stat})$`, "iu");
+    if (clauses.length > 1 && clauses.every(clause => direct.test(clause.trim()))) {
+      return <>{clauses.map((clause, i) => <span className="air-core-stat-line" key={i}><CoreDescription text={clause.trim()} /></span>)}</>;
+    }
+  }
   return <>{combatTextTokens(text).map((token,i)=>{
     if(token.semantic){const {Icon,color}=COMBAT_STAT_SEMANTICS[token.semantic];return <strong key={i} style={{color}}>{token.value && <>{token.value}{" "}</>}<Icon aria-hidden="true" style={{display:"inline",width:"1em",height:"1em",verticalAlign:"-.12em",marginRight:".15em"}}/>{token.label}</strong>;}
     return token.number?<strong key={i} style={{color:"#fde047"}}>{token.text}</strong>:token.text;

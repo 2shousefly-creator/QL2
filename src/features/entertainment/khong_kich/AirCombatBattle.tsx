@@ -1,4 +1,6 @@
 import { skillRank, SKILL_RANKS, isUltimate, canAllocateSkill, allocateSkillPoint, ultimateCastDisabled } from "./airCombatSkillRanks";
+import { AirCombatCoreDetail } from "./AirCombatCoreDetail";
+import { AirCombatTooltipPortal } from "./AirCombatTooltipPortal";
 import { AirCombatEquipmentInventory } from "./AirCombatEquipmentInventory";
 import { expansionState } from "./airCombatExpansion";
 import { releaseState, overheated } from "./airCombatReleaseState";
@@ -12,7 +14,7 @@ import { getAirCombatStage } from "./airCombatStages";
 import { canBorrowSkill } from "./airCombatAircraft";
 import { playerSkillLocked } from "./airCombatStatus";
 import { AirCombatStatusStrip, type StatusStripHandle } from "./AirCombatStatusStrip";
-import { getActiveSkillDuration, getSkillTooltipModel } from "./airCombatPresentation";
+import { formatCooldownSeconds, getActiveSkillDuration, getSkillTooltipModel } from "./airCombatPresentation";
 import { BOSS_HUD_HEIGHT } from "./airCombatHudLayout";
 import { AirCombatOverlayFeedback } from "./AirCombatOverlayFeedback";
 import { CoreDescription } from "./CoreDescription";
@@ -46,7 +48,7 @@ import {
   shouldCastSkillPress,
 } from "./airCombatEngine";
 import {
-  canRerollCore,
+  bestAvailableRerollSource,
   rerollCore,
   castWorldSkill,
   CombatWorld,
@@ -138,6 +140,7 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
   const bossChipRef = useRef<HTMLDivElement>(null);
   const bossShieldRef = useRef<HTMLDivElement>(null);
   const [hud, setHud] = useState<AirCombatHudSnapshot>(() => makeHudSnapshot(worldRef.current, false, null));
+  const [detailSlot, setDetailSlot] = useState<number | null>(null);
   const [coreChoices, setCoreChoices] = useState<CoreCard[] | null>(null);
   const [hubTooltip, setHubTooltip] = useState<(HubTooltip & {id:string}) | null>(null);
   const tooltipOwner = useRef<"hub"|"skill"|"status"|null>(null);
@@ -192,12 +195,13 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
   }, [resetPlayerControl, resetSkillPress]);
 
   const activateTooltip = useCallback((owner: "hub"|"skill"|"status") => {
+    if (owner === "skill") resetPlayerControl();
     tooltipOwner.current = owner;
     setPauseReason("tooltip", true);
     if (owner !== "status") statusStripRef.current?.close();
     if (owner !== "skill") { resetSkillPress(); setTooltipSkill(null); }
     if (owner !== "hub") setHubTooltip(null);
-  }, [setPauseReason, resetSkillPress]);
+  }, [setPauseReason, resetSkillPress, resetPlayerControl]);
   const closeAllTooltips = useCallback(() => {
     tooltipOwner.current = null;
     resetSkillPress();
@@ -230,8 +234,7 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
       if (owner && !activePointers.current.has(owner.pointerId)) resetPlayerControl();
       const press = pressRef.current;
       if (press && !activePointers.current.has(press.pointerId)) {
-        if (tooltipOwner.current === "skill") closeAllTooltips();
-        else resetSkillPress();
+        resetSkillPress();
       }
       activePointers.current.set(event.pointerId, event.pointerType);
       if (dismissTooltip) {
@@ -250,8 +253,7 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
         const timer = window.setTimeout(() => {
           endTimers.delete(timer);
           if (pressRef.current !== press) return;
-          if (tooltipOwner.current === "skill") closeAllTooltips();
-          else resetSkillPress();
+          resetSkillPress();
         }, 0);
         endTimers.add(timer);
       }
@@ -438,10 +440,6 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
     catch { resetPlayerControl(); }
   };
 
-  const closeTooltip = useCallback(() => {
-    if (tooltipOwner.current === "skill") closeAllTooltips();
-  }, [closeAllTooltips]);
-
   const onSkillPointerDown = (
     event: React.PointerEvent<HTMLButtonElement>,
     skillId: SkillId
@@ -477,7 +475,6 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
     const classification = classifySkillPress(durationMs);
     resetSkillPress();
     if (press.held || classification === "hold") {
-      closeTooltip();
       return;
     }
     if (!shouldCastSkillPress(durationMs, press.held, cancelled) || worldRef.current.pauseReasons.size > 0 || worldRef.current.ended) return;
@@ -500,6 +497,7 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
     if (applied) {
       soundManager.playBubblePop();
       soundManager.triggerHaptic("medium");
+      setDetailSlot(null);
       setCoreChoices(null);
       const primaryPending = expansionState(worldRef.current.aircraft).primaryPending;
       if (primaryPending) {
@@ -515,6 +513,13 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
     window.setTimeout(() => {
       coreSelectingRef.current = false;
     }, 160);
+  };
+
+  const rerollSlot = (slot: number) => {
+    const source = bestAvailableRerollSource(worldRef.current, slot);
+    if (!source) return;
+    const choices = rerollCore(worldRef.current, slot, source);
+    if (choices) setCoreChoices([...choices]);
   };
 
   const openExit = () => {
@@ -619,7 +624,7 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
       <AirCombatStatusStrip ref={statusStripRef} onTooltipChange={onStatusTooltip} top={AIR_COMBAT_WORLD.hudHeight + (hud.bossMaxHp > 0 ? BOSS_HUD_HEIGHT : 0)} />
 
       <div className="absolute inset-x-0 bottom-0 z-20 grid h-[11.1111%] grid-cols-4 gap-1 border-t border-cyan-900/50 bg-slate-950 p-1.5" data-skill-rail="bottom">
-        <span className="air-skill-points" aria-live="polite">Điểm kỹ năng: {worldRef.current.aircraft.skillPoints}</span>
+        {worldRef.current.aircraft.skillPoints > 0 && <span className="air-skill-points" aria-live="polite">Điểm kỹ năng: {worldRef.current.aircraft.skillPoints}</span>}
         {skillIds.map((skillId) => {
           const skill = SKILL_CONFIGS[skillId];
           const values = getSkillRuntimeValues(worldRef.current.aircraft, skillId);
@@ -663,7 +668,7 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
               </span>
               <span className="air-rank-nodes" aria-label={`Cấp ${rank}/${SKILL_RANKS[skillId].length}`}>{SKILL_RANKS[skillId].map(row=><i key={`${row.rank}:${rank}`} data-earned={row.rank<=rank} data-next={allocatable&&row.rank===rank+1} data-new={row.rank===rank&&state.coreState.time-(state.skillUpAt[skillId]??-Infinity)<2}/>)}</span>
               {rank>0&&<span key={`up:${rank}`} className="air-skill-up-vfx" aria-hidden="true"/>}
-              <span className={`relative z-10 text-[7px] font-black tabular-nums ${active ? "text-emerald-200" : unavailable ? "text-slate-500" : "text-cyan-200"}`}>{locked ? rank===0?(isUltimate(skillId)&&state.level<6?"🔒 Lv6":"CHƯA HỌC"):"ĐÃ KHÓA" : borrow ? "Có thể dùng ngay" : worldRef.current.aircraft.coreState.stacks[`debt:${skillId}`] ? "ĐANG BẬT" : manualDetonate ? "KÍCH NỔ" : cooldown > 0 ? cooldown.toFixed(1) : active ? "ĐANG BẬT" : unavailable ? "THIẾU " + resourceLabel.toUpperCase() : "SẴN SÀNG"}</span>
+              <span className={`relative z-10 text-[7px] font-black tabular-nums ${active ? "text-emerald-200" : unavailable ? "text-slate-500" : "text-cyan-200"}`}>{locked ? rank===0?(isUltimate(skillId)&&state.level<6?"🔒 Lv6":"CHƯA HỌC"):"ĐÃ KHÓA" : borrow ? "Có thể dùng ngay" : worldRef.current.aircraft.coreState.stacks[`debt:${skillId}`] ? "ĐANG BẬT" : manualDetonate ? "KÍCH NỔ" : cooldown > 0 ? formatCooldownSeconds(cooldown) : active ? "ĐANG BẬT" : unavailable ? "THIẾU " + resourceLabel.toUpperCase() : "SẴN SÀNG"}</span>
             </button>
             {allocatable&&<button type="button" className="air-skill-plus" aria-label={`Nâng ${skill.name} lên cấp ${rank+1}`} onPointerDown={e=>e.stopPropagation()} onPointerUp={e=>e.stopPropagation()} onClick={e=>{e.stopPropagation();if(allocateSkillPoint(state,skillId))setHud(makeHudSnapshot(worldRef.current,worldRef.current.pauseReasons.size>0,pauseLabel(worldRef.current.pauseReasons)));}}>+</button>}
             </div>
@@ -679,13 +684,13 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
         <p>{hubTooltip.text}</p>
       </motion.aside>}
       {tooltipSkill && tooltipModel && (
-        <motion.aside key="skill-tooltip" {...airTooltipMotion} transition={{...airTooltipMotion.transition,duration:reducedMotion?.1:.28}} className="air-skill-tooltip" data-combat-tooltip-panel="skill" data-skill-tooltip={tooltipSkill} onPointerDown={event => event.stopPropagation()} onPointerMove={event => event.stopPropagation()}>
-          <div className="air-tooltip-heading"><h3>{tooltipModel.title}</h3><strong style={{color:"#fde047"}}>Hồi chiêu: {tooltipModel.cooldown.toFixed(1).replace(".", ",")}s</strong></div>
+        <AirCombatTooltipPortal key="skill-tooltip" anchor={stageRef}><motion.aside {...airTooltipMotion} transition={{...airTooltipMotion.transition,duration:reducedMotion?.1:.28}} className="air-skill-tooltip" data-combat-tooltip-panel="skill" data-skill-tooltip={tooltipSkill} onPointerDown={event => event.stopPropagation()} onPointerMove={event => event.stopPropagation()}>
+          <div className="air-tooltip-heading"><h3>{tooltipModel.title}</h3><strong className="air-tooltip-cooldown">Hồi chiêu: {formatCooldownSeconds(tooltipModel.cooldown)}</strong></div>
           <p><CoreDescription text={tooltipModel.description}/></p>
           <div className="air-tooltip-details">{tooltipModel.detailRows.map(row => <div key={row}><CoreDescription text={row}/></div>)}</div>
           {tooltipModel.coreRows.map(row=><p key={row} style={{color:"#fde047"}}><CoreDescription text={row}/></p>)}
           <div className="air-rank-preview">{tooltipModel.rankRows.map(row=><section key={row.rank} data-unlocked={row.rank<=tooltipModel.rank} data-current={row.rank===tooltipModel.rank}><strong>◆ Cấp {row.rank} — {row.name}</strong><p><CoreDescription text={row.description}/></p></section>)}</div>
-        </motion.aside>
+        </motion.aside></AirCombatTooltipPortal>
       )}
 
       <div key="core-toasts" ref={toastHostRef} className="air-core-toasts" aria-live="polite" aria-label="Lõi vừa nhận" />
@@ -696,7 +701,7 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
 
       {coreChoices && (
         <AppModal key="core-choice" exitDuration={90} archetype="transaction" layer="exclusive-dialog" layout="viewport-safe" closeOnEscape={false}
-          reducedMotion={reducedMotion} labelledBy="air-core-choice-title" overlayClassName="air-upgrade-overlay" panelClassName={`air-upgrade-panel ${coreChoices.length===5?"air-upgrade-panel--five":""}`}>
+          reducedMotion={reducedMotion} labelledBy={detailSlot === null ? "air-core-choice-title" : "air-core-detail-title"} overlayClassName="air-upgrade-overlay" panelClassName={`air-upgrade-panel ${coreChoices.length===5?"air-upgrade-panel--five":""}`}>
           <h2 id="air-core-choice-title">CHỌN MỘT NÂNG CẤP</h2>
           {worldRef.current.coreSelectionEvent?.context.kind==="normal"&&<div className="air-selection-rules">
             {hasCore(worldRef.current.aircraft,211)&&<span>Lọc reroll: ưu tiên Hệ khác</span>}
@@ -706,25 +711,25 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
           </div>}
           <div key={worldRef.current.coreSelectionCount} className="air-upgrade-choices" data-core-selection="open" onPointerDown={e=>e.stopPropagation()} onPointerMove={e=>e.stopPropagation()} onTouchMove={e=>e.stopPropagation()} data-reduced-motion={reducedMotion}>
             {coreChoices.map((card, slot) => <div className="air-upgrade-row" key={slot} style={{"--slot":slot} as React.CSSProperties}>
-              <div key={card.id} data-core-choice={card.id} data-core-tier={card.tier} data-core-system={card.system}
+              <button type="button" disabled={detailSlot !== null} onClick={() => setDetailSlot(slot)} aria-label={`Xem ${card.name}`} key={card.id} data-core-slot={slot} data-core-choice={card.id} data-core-tier={card.tier} data-core-system={card.system}
                 data-rerolled={worldRef.current.coreSelectionEvent?.rerollUsedBySlot[slot] || false}
                 className="combat-core-card air-upgrade-card">
                 <CombatUiIcon kind="core" id={card.id} fallback={card.icon} className="combat-core-icon" />
                 <span className="air-upgrade-copy"><strong className="combat-core-name">{card.name}</strong>
                   <CoreSystemTag system={card.system} tier={card.tier} />
-                  <span className="air-upgrade-description"><CoreDescription text={card.description} /></span></span>
-              </div>
-              <div className="air-reroll-controls"><span className="air-card-counter">{slot+1} / {coreChoices.length}</span><button type="button" className="air-core-pick" onClick={()=>chooseCore(card)}>CHỌN</button><button type="button" className="air-core-reroll" aria-label={`Đổi lựa chọn ${slot+1}`}
-                disabled={!canRerollCore(worldRef.current,slot)} data-used={worldRef.current.coreSelectionEvent?.rerollUsedBySlot[slot] || false}
-                onClick={() => { const choices=rerollCore(worldRef.current,slot); if(choices)setCoreChoices([...choices]); }}>
-                <span aria-hidden="true">🔄️</span>
+                  <span className="air-upgrade-description"><CoreDescription text={card.description} statLines /></span></span>
               </button>
-              {worldRef.current.coreSelectionEvent?.context.kind==="normal"&&(["extra","reserve"] as const).filter(source=>source==="extra"?hasCore(worldRef.current.aircraft,212):releaseState(worldRef.current.aircraft).reserve>0).map(source=>
-                <button key={source} type="button" className="air-core-reroll air-extra-reroll" aria-label={(source==="extra"?"Dùng Reroll Dự Phòng":"Dùng Reroll Dự Trữ")+` cho ô ${slot+1}`}
-                  disabled={!canRerollCore(worldRef.current,slot,source)} onClick={()=>{const choices=rerollCore(worldRef.current,slot,source);if(choices)setCoreChoices([...choices]);}}>{source==="extra"?"Phụ":"Kho"}</button>)}
-              </div>
+              <button type="button" className="air-core-reroll" aria-label={`Đổi lại lựa chọn ${slot+1}`}
+                disabled={detailSlot !== null || !bestAvailableRerollSource(worldRef.current,slot)} onClick={() => rerollSlot(slot)}>
+                <span aria-hidden="true">↻</span>
+              </button>
             </div>)}
           </div>
+          <AnimatePresence>
+            {detailSlot !== null && coreChoices[detailSlot] && <AirCombatCoreDetail key="detail" card={coreChoices[detailSlot]} slot={detailSlot}
+              reducedMotion={reducedMotion} canReroll={!!bestAvailableRerollSource(worldRef.current,detailSlot)}
+              onClose={() => setDetailSlot(null)} onSelect={() => chooseCore(coreChoices[detailSlot])} onReroll={() => rerollSlot(detailSlot)} />}
+          </AnimatePresence>
         </AppModal>
       )}
 

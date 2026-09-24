@@ -1,4 +1,4 @@
-import { beginRankSkill, collapseAnchor, tickRankSkills, rankRuntime, rankEnemyMovement, rankEnemyFireRate, rankProjectileSpeed, rankDirectMultiplier, rankArmorMultiplier, predatorBasicHit, rankProjectileHit, echoTwinShot, type RankRuntime, type RankRuntimeHooks } from "./airCombatRankRuntime";
+import { beginRankSkill, collapseAnchor, tickRankSkills, rankRuntime, rankEnemyMovement, rankEnemyFireRate, rankProjectileSpeed, rankDirectMultiplier, rankArmorMultiplier, predatorBasicHit, rankProjectileHit, echoTwinShot, type RankEffect, type RankRuntime, type RankRuntimeHooks } from "./airCombatRankRuntime";
 import { isUltimate, ultimateCastDisabled } from "./airCombatSkillRanks";
 import { skillRank } from "./airCombatSkillRanks";
 import { equipmentState, equipmentScale, equipmentEffect, equipmentMetric } from "./airCombatEquipmentState";
@@ -269,6 +269,7 @@ interface RuntimePools {
     decoys: DecoyEntity[];
 }
 interface VisualEventBase {
+    rankEffect?: RankEffect;
     at?:number;
     skillId?: SkillId;
     directContact?: boolean;
@@ -297,7 +298,7 @@ export type CombatVisualEvent = DamageNumberEvent | (VisualEventBase & {
     amount: number;
     healSource: HealSource;
 }) | (VisualEventBase & {
-    kind: "astra_lance_impact" | "astra_starfall_impact" | "bullet_impact" | "hit" | "explosion" | "bomb" | "player_hit" | "absorb" | "lightning" | "drone_hit" | "missile_impact" | "flare_burst" | "emp_pulse" | "shield_ripple";
+    kind: "rank_effect" | "astra_lance_impact" | "astra_starfall_impact" | "bullet_impact" | "hit" | "explosion" | "bomb" | "player_hit" | "absorb" | "lightning" | "drone_hit" | "missile_impact" | "flare_burst" | "emp_pulse" | "shield_ripple";
 });
 type NewVisualEvent = CombatVisualEvent extends infer E ? E extends CombatVisualEvent ? Omit<E, "id"> : never : never;
 function emitVisual(world: CombatWorld, event: NewVisualEvent): void {
@@ -3893,6 +3894,11 @@ export function summarizeCombatWorld(world: CombatWorld): AirCombatRunSummary {
 export function canRerollCore(world:CombatWorld,slot:number,source:RerollSource="main"):boolean {
  return !!world.currentCoreChoices&&!!world.coreSelectionEvent&&getRerollCandidates(world.aircraft,world.coreSelectionEvent,slot,source).length>0;
 }
+/** One canonical priority for both selection surfaces; eligibility/telemetry stay in rerollCore. */
+export function bestAvailableRerollSource(world: CombatWorld, slot: number): RerollSource | null {
+    for (const source of ["main", "extra", "reserve"] as const) if (canRerollCore(world, slot, source)) return source;
+    return null;
+}
 export function rerollCore(world:CombatWorld,slot:number,source:RerollSource="main"):CoreCard[]|null {
  if(!world.coreSelectionEvent||!world.currentCoreChoices)return null;
  const card=spendReroll(world.aircraft,world.coreSelectionEvent,slot,source,world.random);if(!card)return null;
@@ -4275,4 +4281,4 @@ function resolvedEnemyArmor(w:CombatWorld,e:EnemyEntity,penetration=0):number {
 }
 const rankHooks:RankRuntimeHooks={hostile:isHostileToPlayer,elite:e=>isElite(e.type),priority:w=>nearestEnemy(w,w.playerX,w.playerY,[],true),projectile:addProjectile,
  damage:(w,e,raw,id,procFree=false)=>applyDamageToEnemy(w,e,raw,"#fde68a","skill",id,undefined,undefined,"area_hazard",true,true,undefined,1,[],expansionState(w.aircraft).casts[id],undefined,procFree),
- remove:recycleProjectile,blockable:isHostileBallisticProjectile,displace:displaceEnemy,pulse:(w,x,y,size)=>emitVisual(w,{kind:"emp_pulse",x,y,size})};
+ remove:recycleProjectile,blockable:isHostileBallisticProjectile,displace:displaceEnemy,effect:(w,x,y,size,rankEffect)=>emitVisual(w,{kind:"rank_effect",x,y,size,rankEffect})};

@@ -1,4 +1,4 @@
-import { paintRankSkills } from "./airCombatRankArt";
+import { paintRankSkills, rankProjectileVisual, RANKED_ART, RANKED_VFX_FRAMES } from "./airCombatRankArt";
 import { skillRank } from "./airCombatSkillRanks";
 import { EQUIPMENT_ART, paintEquipment } from "./airCombatEquipmentArt";
 import { equipmentUntargetable } from "./airCombatEquipmentStats";
@@ -59,11 +59,11 @@ async function loadCanvasTextures(urls:string[]) {
     await magneticImages.get(url)!.decode();
   }));
 }
-export const loadAstraCanvasAssets=()=>loadCanvasTextures([EQUIPMENT_ART.icons,EQUIPMENT_ART.vfx,ASTRA_ART.aircraft,ASTRA_ART.effects,ASTRA_ART.combatVfx,sharedVfxUrl]);
+export const loadAstraCanvasAssets=()=>loadCanvasTextures([RANKED_ART.vfx,RANKED_ART.projectiles,EQUIPMENT_ART.icons,EQUIPMENT_ART.vfx,ASTRA_ART.aircraft,ASTRA_ART.effects,ASTRA_ART.combatVfx,sharedVfxUrl]);
 export const loadMagneticCanvasAssets=()=>loadCanvasTextures([STAGE2_ART_URLS.enemy,STAGE2_ART_URLS.vfx,STAGE2_ART_URLS.storm,STAGE2_ART_URLS.elite]);
 function drawMagneticFrame(ctx: CanvasRenderingContext2D, frame: AtlasFrame, x: number, y: number,
   width: number, height: number, rotation = 0, alpha = 1) {
-  const image = magneticImage(frame.atlas === "equipmentIcons" ? EQUIPMENT_ART.icons : frame.atlas === "equipmentVfx" ? EQUIPMENT_ART.vfx : frame.atlas === "astraVfx" ? ASTRA_ART.combatVfx : frame.atlas === "vfx" ? sharedVfxUrl : frame.atlas === "astraEffects" ? ASTRA_ART.effects : frame.atlas === "stage2Elite" ? STAGE2_ART_URLS.elite : frame.atlas === "stage2Enemy" ? STAGE2_ART_URLS.enemy : STAGE2_ART_URLS.vfx);
+  const image = magneticImage(frame.atlas === "rankedVfx" ? RANKED_ART.vfx : frame.atlas === "rankedProjectiles" ? RANKED_ART.projectiles : frame.atlas === "equipmentIcons" ? EQUIPMENT_ART.icons : frame.atlas === "equipmentVfx" ? EQUIPMENT_ART.vfx : frame.atlas === "astraVfx" ? ASTRA_ART.combatVfx : frame.atlas === "vfx" ? sharedVfxUrl : frame.atlas === "astraEffects" ? ASTRA_ART.effects : frame.atlas === "stage2Elite" ? STAGE2_ART_URLS.elite : frame.atlas === "stage2Enemy" ? STAGE2_ART_URLS.enemy : STAGE2_ART_URLS.vfx);
   if (!image) return;
   const [sx,sy,sw,sh] = frame.rect;
   ctx.save(); ctx.globalAlpha = alpha; ctx.translate(x,y); ctx.rotate(rotation);
@@ -546,6 +546,7 @@ export function drawLegacyWorld(
   }
   ctx.restore();
   for (const projectile of world.projectiles) {
+    if (rankProjectileVisual(projectile)) continue;
     if (world.magnetic && projectile.owner === "enemy" && projectile.magneticVisual) continue;
     const missile = projectile.projectileKind !== "bullet";
     const basic = !missile ? getBasicAmmoVisual(projectile.ammoVisualKey) : null;
@@ -722,9 +723,10 @@ export function drawLegacyWorld(
   paintEquipment(world,(_id,frame,x,y,width,height,rotation,alpha)=>drawMagneticFrame(ctx,frame,x,y,width,height,rotation,alpha),reducedMotion,(x,y,ex,ey,color,alpha,width)=>{
     ctx.save();ctx.globalAlpha=alpha;ctx.strokeStyle=`#${color.toString(16).padStart(6,"0")}`;ctx.lineWidth=width;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(ex,ey);ctx.stroke();ctx.restore();
   });
-  paintRankSkills(world,{
-    circle:(x,y,r,color,alpha,width)=>{ctx.save();ctx.globalAlpha=alpha;ctx.strokeStyle=`#${color.toString(16).padStart(6,"0")}`;ctx.lineWidth=width;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.stroke();ctx.restore();},
-    line:(x,y,ex,ey,color,alpha,width)=>{ctx.save();ctx.globalAlpha=alpha;ctx.strokeStyle=`#${color.toString(16).padStart(6,"0")}`;ctx.lineWidth=width;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(ex,ey);ctx.stroke();ctx.restore();},
+  paintRankSkills(world,(_id,key,x,y,width,height,rotation,alpha)=>{
+    ctx.save();
+    if(key!=="rankAnchor"&&key!=="rankCrystal"&&key!=="rankMicroMissile")ctx.globalCompositeOperation="lighter";
+    drawMagneticFrame(ctx,RANKED_VFX_FRAMES[key],x,y,width,height,rotation,alpha);ctx.restore();
   },reducedMotion);
   paintAstra(world,{
     impactFallback:true,

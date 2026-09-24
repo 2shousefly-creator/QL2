@@ -1,4 +1,4 @@
-import { paintRankSkills } from "../airCombatRankArt";
+import { rankProjectileVisual } from "../airCombatRankArt";
 import { skillRank } from "../airCombatSkillRanks";
 import { paintEquipment } from "../airCombatEquipmentArt";
 import { equipmentUntargetable } from "../airCombatEquipmentStats";
@@ -391,6 +391,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     this.missileSmoke.end();
     this.missiles.begin();
     for (const p of world.projectiles) {
+      if (rankProjectileVisual(p)) continue; // Dedicated ranked sprite pool owns body and wake.
       if (world.magnetic && p.owner === "enemy" && p.magneticVisual) continue; // Shared atlas painter owns magnetic rounds.
       const missile = p.projectileKind !== "bullet";
       if (missile) this.missiles.render(p,reducedMotion);
@@ -667,10 +668,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
       sprite.blendMode=frame.atlas==="equipmentVfx"?"add":"normal";
     },reducedMotion,(x,y,ex,ey,color,alpha,width)=>{this.enemyForegroundMarks.moveTo(x,y).lineTo(ex,ey).stroke({color,alpha,width});});
     this.equipmentSprites.end();
-    paintRankSkills(world,{
-      circle:(x,y,r,color,alpha,width)=>{this.enemyForegroundMarks.circle(x,y,r).stroke({color,alpha,width});},
-      line:(x,y,ex,ey,color,alpha,width)=>{this.enemyForegroundMarks.moveTo(x,y).lineTo(ex,ey).stroke({color,alpha,width});},
-    },reducedMotion);
+    this.vfx.renderRankSkills(world,reducedMotion);
     this.app.render();
   }
 

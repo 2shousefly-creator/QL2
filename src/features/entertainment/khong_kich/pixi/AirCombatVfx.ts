@@ -1,3 +1,6 @@
+import { paintRankSkills } from "../airCombatRankArt";
+import type { CombatWorld } from "../airCombatRuntime";
+import { AirCombatSpritePool } from "./AirCombatSpritePool";
 import { Container, Sprite } from "pixi.js";
 import type { AirCombatAssets, VisualKey } from "./AirCombatPixiAssets";
 import { healingCrossPlacement, lightningPath } from "../airCombatProcVisuals";
@@ -6,7 +9,19 @@ interface Effect { key?:VisualKey; startX?:number; startY?:number; targetX?:numb
 export class AirCombatVfx {
   private active: Effect[] = [];
   private free: Effect[] = [];
-  constructor(private root: Container, private assets: AirCombatAssets) {}
+  private ranked: AirCombatSpritePool;
+  constructor(private root: Container, private assets: AirCombatAssets) {
+    this.ranked = new AirCombatSpritePool(root, 640);
+  }
+  renderRankSkills(world: CombatWorld, reducedMotion: boolean) {
+    this.ranked.begin();
+    paintRankSkills(world, (id,key,x,y,width,height,rotation,alpha) => {
+      const sprite=this.ranked.get(id,this.assets.effect(key));if(!sprite)return;
+      sprite.position.set(x,y);sprite.width=width;sprite.height=height;sprite.rotation=rotation;sprite.alpha=alpha;
+      sprite.blendMode=key==="rankAnchor"||key==="rankCrystal"||key==="rankMicroMissile"?"normal":"add";
+    }, reducedMotion);
+    this.ranked.end();
+  }
   spawn(key: VisualKey, x: number, y: number, size: number, duration = .45, tint = 0xffffff, drift = 0, delay = 0, rotation = 0, aspect = 1, opacity = 1) {
     const important = key === "shield" || key === "shockwave" || key === "laser" || key.endsWith("Explosion");
     if (this.active.length >= 80) {
@@ -115,6 +130,7 @@ export class AirCombatVfx {
     }
   }
   destroy() {
+    this.ranked.destroy();
     [...this.active, ...this.free].forEach(e => e.sprite.destroy());
     this.active.length = 0; this.free.length = 0;
   }

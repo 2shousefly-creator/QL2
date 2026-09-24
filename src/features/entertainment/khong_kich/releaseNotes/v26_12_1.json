@@ -1,0 +1,299 @@
+{
+  "version": "26.12.1",
+  "title": "Core Selection UX, Skill Tooltip & New Skill VFX Polish",
+  "displayTitle": "CHI TIẾT CẬP NHẬT 26.12.1",
+  "releaseDate": "24/09/2026",
+  "summary": "**26.12.1** tập trung hoàn thiện trải nghiệm sử dụng các hệ thống lớn vừa ra mắt trong 26.12.0. Giao diện chọn Lõi được thiết kế lại để thao tác gọn hơn: mỗi card giữ nút Đổi Lại ở bên phải, việc chọn Lõi được đưa vào một modal chi tiết riêng và người chơi có thể đọc toàn bộ nội dung trước khi quyết định. Hệ thống Đổi Lại cũng được hợp nhất để tự ưu tiên lượt đổi của card, Reroll Dự Phòng rồi Reroll Dự Trữ.\n\nSkill HUD và Tooltip tiếp tục được tối ưu cho mobile. Tooltip giờ vẫn giữ trạng thái tạm dừng sau khi người chơi thả tay, có thể cuộn tự do để đọc toàn bộ cấp kỹ năng, trong khi tên kỹ năng, thời gian hồi chiêu, Điểm Kỹ Năng và nút tăng cấp được bố trí lại rõ ràng hơn.\n\nBốn Kỹ Năng Thường mới của Viper, Titan, Phantom và Astra nhận một đợt nâng cấp hình ảnh lớn với icon và VFX riêng. Đặc biệt, **Nhiễu Điện Tử** của Phantom giờ phát các luồng năng lượng 360° lan từ chiến cơ ra toàn chiến trường; sát thương và hiệu ứng Nhiễu được áp dụng khi từng luồng sóng thực sự quét qua mục tiêu.",
+  "sections": [
+    {
+      "id": "s1",
+      "title": "GIAO DIỆN CHỌN LÕI MỚI",
+      "icon": {
+        "kind": "core",
+        "id": "selection"
+      },
+      "intro": [
+        {
+          "text": "Màn chọn Lõi được làm lại để giảm các nút rời rạc và giúp người chơi có nhiều không gian hơn để đọc, so sánh và quyết định.",
+          "format": "paragraph"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s1-e1",
+          "icon": {
+            "kind": "core",
+            "id": "selection"
+          },
+          "title": "Card Lõi gọn hơn, Đổi Lại luôn ở bên phải",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Gỡ nút **CHỌN** khỏi danh sách Lõi. Mỗi card giờ giữ nút **Đổi Lại** ngay bên phải để bố cục rõ ràng và nhất quán hơn.",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "Các Lõi cấp nhiều chỉ số trực tiếp giờ hiển thị **mỗi chỉ số trên một hàng riêng**, giúp đọc nhanh hơn trong chiến đấu.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "Bố cục 5 card từ **Bản Đồ Dự Thảo** tiếp tục tự thích nghi theo kích thước màn hình và không ép card tràn khỏi vùng chơi.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        },
+        {
+          "id": "s1-e2",
+          "icon": {
+            "kind": "core",
+            "id": "selection"
+          },
+          "title": "Modal xem chi tiết Lõi",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Chạm vào một card Lõi sẽ mở card đó trên một **modal toàn màn hình có nền tối**, mở rộng nội dung để người chơi đọc trước khi lựa chọn.",
+              "format": "paragraph",
+              "changeType": "new"
+            },
+            {
+              "text": "Modal có hai thao tác chính: **CHỌN** ở bên trái và **ĐỔI LẠI** ở bên phải. Chạm vùng trống bên ngoài để quay lại danh sách mà không chọn Lõi.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Khi Đổi Lại ngay trong modal, modal **không đóng**; card mới thay thế card cũ bằng animation và danh sách bên dưới cũng được cập nhật ngay.",
+              "format": "bullet",
+              "changeType": "new"
+            }
+          ]
+        },
+        {
+          "id": "s1-e3",
+          "icon": {
+            "kind": "core",
+            "id": "selection"
+          },
+          "title": "Một nút Đổi Lại thống nhất",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Không còn các nút riêng cho từng nguồn reroll. Khi người chơi bấm **Đổi Lại**, hệ thống tự sử dụng theo thứ tự: **lượt đổi của card → Reroll Dự Phòng → Reroll Dự Trữ**.",
+              "format": "paragraph",
+              "changeType": "change"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "SKILL TOOLTIP & ĐIỂM KỸ NĂNG DỄ ĐỌC HƠN",
+      "icon": {
+        "kind": "skill",
+        "id": "rank"
+      },
+      "intro": [
+        {
+          "text": "Việc xem trước các cấp kỹ năng giờ thuận tiện hơn trên màn hình cảm ứng và không còn buộc người chơi phải giữ ngón tay suốt thời gian đọc.",
+          "format": "paragraph"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s2-e1",
+          "icon": {
+            "kind": "skill",
+            "id": "rank"
+          },
+          "title": "Thả tay vẫn giữ Tooltip và tạm dừng trận đấu",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Sau khi giữ lâu để mở Skill Tooltip, người chơi có thể **thả tay** và cuộn lên xuống để đọc tự do; trận đấu vẫn tạm dừng.",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "Trận đấu chỉ tiếp tục khi người chơi chạm ra vùng trống bên ngoài Tooltip.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "Tooltip được tối ưu cuộn mượt hơn trên thiết bị cảm ứng và không truyền thao tác cuộn xuống điều khiển chiến cơ.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        },
+        {
+          "id": "s2-e2",
+          "icon": {
+            "kind": "skill",
+            "id": "rank"
+          },
+          "title": "Bố cục Tooltip gọn và rõ",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Tên kỹ năng và thời gian hồi chiêu được **in đậm và phóng lớn**, trong khi phần mô tả được thu gọn để khung Tooltip chiếm ít diện tích hơn.",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "Hồi chiêu tròn số không còn hiển thị phần thập phân không cần thiết: ví dụ **27s** thay cho 27,0s; các giá trị như **21,5s** vẫn giữ một chữ số thập phân.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        },
+        {
+          "id": "s2-e3",
+          "icon": {
+            "kind": "skill",
+            "id": "rank"
+          },
+          "title": "Nút tăng cấp kỹ năng dễ thao tác hơn",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Dấu **+** tăng cấp được làm lớn hơn, căn giữa theo từng ô kỹ năng và đặt hoàn toàn bên ngoài hitbox của ô để giảm bấm nhầm.",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "**Điểm kỹ năng: X** được căn giữa phía trên dãy nút tăng cấp và chỉ xuất hiện khi người chơi còn Điểm Kỹ Năng chưa sử dụng.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "ICON & VFX MỚI CHO BỐN KỸ NĂNG THƯỜNG",
+      "icon": {
+        "kind": "skill",
+        "id": "new-skills"
+      },
+      "intro": [
+        {
+          "text": "Bốn kỹ năng mới từ 26.12.0 được nâng cấp toàn diện về hình ảnh để đồng bộ với phong cách chiến đấu và hệ icon hiện có.",
+          "format": "paragraph"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s3-e1",
+          "icon": {
+            "kind": "aircraft",
+            "id": "black_eagle"
+          },
+          "title": "Viper · Khóa Săn Mồi",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Khóa mục tiêu có reticle riêng, phản hồi stack rõ hơn, Micro Missile sử dụng sprite, trail và hiệu ứng va chạm mới thay cho hình ảnh tạm thời.",
+              "format": "paragraph",
+              "changeType": "change"
+            }
+          ]
+        },
+        {
+          "id": "s3-e2",
+          "icon": {
+            "kind": "aircraft",
+            "id": "breaker"
+          },
+          "title": "Titan · Neo Trọng Lực",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Neo Trọng Lực giờ hiển thị một thiết bị trọng lực hoàn chỉnh với lõi cơ khí, vòng năng lượng, hiệu ứng hút vào tâm và animation sụp đổ riêng.",
+              "format": "paragraph",
+              "changeType": "change"
+            }
+          ]
+        },
+        {
+          "id": "s3-e3",
+          "icon": {
+            "kind": "aircraft",
+            "id": "phantom"
+          },
+          "title": "Phantom · Nhiễu Điện Tử",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Nhiễu Điện Tử nhận hiệu ứng sóng điện tử mới với các lớp tín hiệu, mạch nhiễu và phản hồi glitch khi quét qua mục tiêu.",
+              "format": "paragraph",
+              "changeType": "change"
+            }
+          ]
+        },
+        {
+          "id": "s3-e4",
+          "icon": {
+            "kind": "aircraft",
+            "id": "astra"
+          },
+          "title": "Astra · Song Tinh Phản Xạ",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Hai tinh thể Song Tinh có sprite hoàn chỉnh, projectile phản xạ, hiệu ứng hội tụ và mini Thương Tinh Tú riêng ở các cấp cao.",
+              "format": "paragraph",
+              "changeType": "change"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "NHIỄU ĐIỆN TỬ GIỜ QUÉT TOÀN CHIẾN TRƯỜNG",
+      "icon": {
+        "kind": "aircraft",
+        "id": "phantom"
+      },
+      "intro": [
+        {
+          "text": "Nhiễu Điện Tử được thay đổi cách lan truyền để cảm giác kỹ năng đúng với một xung tác chiến điện tử quy mô toàn chiến trường.",
+          "format": "paragraph"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s4-e1",
+          "icon": {
+            "kind": "aircraft",
+            "id": "phantom"
+          },
+          "title": "Sóng 360° lan từ Phantom ra ngoài",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Mỗi sóng chính giờ xuất phát từ vị trí Phantom và **lan tròn 360° ra toàn vùng chiến đấu** thay vì chỉ tác động tức thời trong một khu vực quanh chiến cơ.",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "Kẻ địch nhận sát thương và hiệu ứng Nhiễu khi wavefront thực sự quét qua chúng; projectile địch cũng bị làm chậm khi bị sóng đi qua.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "Số lượng sóng, sát thương, các mốc Nhiễu Cộng Hưởng và Phổ Nhiễu Toàn Phần vẫn giữ đúng theo cấp kỹ năng hiện tại.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
