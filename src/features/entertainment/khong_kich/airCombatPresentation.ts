@@ -20,6 +20,12 @@ export function formatCooldownSeconds(value: number): string {
   return Number.isInteger(rounded) ? `${rounded}s` : `${rounded.toFixed(1).replace(".", ",")}s`;
 }
 
+export function formatSkillCellCooldown(seconds:number):string {
+  const safe=Math.max(0,seconds);
+  if(safe>=1)return `${Math.max(1,Math.round(safe))}s`;
+  return `${Math.max(.1,Math.round(safe*10)/10).toFixed(1).replace(".",",")}s`;
+}
+
 const amount = (value:number) => Math.round(value).toLocaleString("vi-VN");
 const number = (value: number) => value.toLocaleString("vi-VN", { maximumFractionDigits: 2 });
 function hawkEyeDuration(state: AircraftCombatState) {
@@ -39,7 +45,7 @@ export function getSkillTooltipModel(state: AircraftCombatState, id: SkillId) {
  const config=SKILL_CONFIGS[id],v=getSkillRuntimeValues(state,id),rank=skillRank(state,id),rows=SKILL_RANKS[id];
  const free=hasCore(state,84)&&(state.coreState.skillCasts+1)%4===0;
  const resource=AIRCRAFT_CONFIGS[state.aircraftId].resourceKind==="mana"?"Mana":"Điện";
- const detailRows=[`${isUltimate(id)?"Ultimate":"Kỹ Năng Thường"} · Cấp ${rank}/${rows.length}`,id==="escort_drone"?`Duy trì ${number(v.upkeepPerSecond)} Điện/s · cần 5 Điện để bật, không trừ phí bật`:`Chi phí thực tế: ${number(free?0:v.cost)} ${resource}`];
+ const detailRows=[`${isUltimate(id)?"Ultimate":"Kỹ Năng Thường"} · Cấp ${rank}/${rows.length}`,id==="escort_drone"?`Duy trì ${number(v.upkeepPerSecond)} Điện/s · Yêu cầu triệu hồi ${v.cost} Điện · Không tiêu hao Điện khi triệu hồi`:`Chi phí thực tế: ${number(free?0:v.cost)} ${resource}`];
  const coreRows:string[]=[];
  if(ultimateCastDisabled(state,id))coreRows.push("Tập Trung Chuyên Môn: khóa dùng chủ động Ultimate; cấp và nội tại vẫn giữ nguyên.");
  if(hasCore(state,97)&&!isUltimate(id))coreRows.push("Tập Trung Chuyên Môn: +30% Sát Thương Kỹ Năng; chi phí đã giảm 20%, hồi chiêu cơ bản đã giảm 25%.");
@@ -54,19 +60,19 @@ function effectiveSkillDescription(s:AircraftCombatState,id:SkillId):string {
  switch(id){
  case "decoy":return `${v.count} đợt cách 0,75s, mỗi đợt 5 mồi mỗi bên; hút mục tiêu và hấp thụ projectile trong ${number(v.duration)}s.`+extra(3)+extra(4)+extra(5);
  case "afterburner":return `${number(v.duration)}s: +${r>=3?75:40}% Tốc Độ Bắn. Đạn thường nảy 2 mục tiêu với ${r>=4?"75% / 50%":"50% / 25%"} sát thương đạn gốc.`+(r>=4?" Kết thúc hồi 18% Mana Tối Đa trong 5s.":"")+extra(5);
- case "missile_swarm":return `${v.count} tên lửa phóng theo cặp, mỗi quả ${p(v.damageMultiplier)}.`+(r>=2?" Mỗi quả phá tối đa 3 projectile có thể chặn, vẫn giữ mục tiêu.":"")+(r>=3?" Gây Thiêu Đốt 60% Hỏa Lực/s trong 4s, giảm 20% Giáp 5s. Mỗi hit cho 1 Dữ Liệu, tối đa 8; sau loạt mỗi Data cho +4% Chí Mạng trong 8s, tối đa +32%.":"");
+ case "missile_swarm":return `${v.count} tên lửa phóng theo cặp, mỗi quả ${p(v.damageMultiplier)}. Hồi chiêu sau khi phóng quả cuối.`+(r>=2?" Tự tìm mục tiêu mới khi mục tiêu chết; mỗi quả phá tối đa 3 projectile hợp lệ và tiếp tục bay.":"")+(r>=3?" Hit làm mới một Thiêu Đốt 90% Hỏa Lực/s trong 5s và -30% Giáp trong 6s. Mỗi hit cho 1 Data, tối đa 8; chỉ sau khi mọi tên lửa đã kết thúc mới nhận +5% Chí Mạng/Data trong 10s, tối đa +40%.":"");
  case "armor_shield":return `Giảm ${number((1-v.damageTakenMultiplier)*100)}% sát thương sau Giáp trong ${number(v.duration)}s.`+extra(4)+extra(5);
  case "heavy_bomb":return `Nổ sau 3s hoặc khi va chạm, gây ${p(v.damageMultiplier)} toàn màn hình.`+extra(3)+extra(4)+extra(5);
- case "sweeping_cannon":return `18s: ${v.count} tia, mỗi tia ${p(v.damageMultiplier)}; tia phụ cùng loạt lên cùng mục tiêu gây 15% tia đầu. Bấm lại kết thúc; hồi chiêu bắt đầu sau khi kết thúc.`+(r>=2?" +35% Giáp khi đang bật.":"")+extra(3);
+ case "sweeping_cannon":return `18s: ${v.count} tia ×${p(v.damageMultiplier)}; tia phụ cùng volley lên cùng mục tiêu gây 15% tia đầu. Không thể hủy sớm; hồi chiêu sau khi hết 18s.`+(r>=2?" +40% Giáp khi đang bật.":"")+extra(3);
  case "invisibility":return `Tàng hình và phân thân hút đạn ${number(v.duration)}s; lướt theo hướng cuối hoặc lên trên.`+(r>=3?" Hồi 25% Máu thiếu đo tại lúc dùng trong thời gian tàng hình.":"")+extra(4)+extra(5);
  case "focus_laser":return `Tụ ${number(v.charge)}s, bắn ${number(v.duration)}s; mỗi 0,25s gây ${p(v.damageMultiplier)}. Ngừng bắn thường suốt kỹ năng.`+(r>=4?" Hit giảm 25% Giáp 8s, không cộng dồn, làm mới thời gian.":"")+extra(5);
- case "escort_drone":return `HawkEye kế thừa ${number(v.damageMultiplier*100)}% chỉ số; duy trì ${number(v.upkeepPerSecond)} Điện/s. Cần 5 Điện để bật, không mất phí bật. Bấm lại thu hồi; hồi chiêu 24s sau kết thúc.`+(r>=2?" Thu hồi chủ động hoàn 45% Điện đã duy trì, tối đa 40.":"")+extra(3);
+ case "escort_drone":return `HawkEye kế thừa ${number(v.damageMultiplier*100)}% chỉ số, không giới hạn thời gian. Yêu cầu triệu hồi: ${v.cost} Điện; không tiêu hao Điện khi triệu hồi. Duy trì: ${number(v.upkeepPerSecond)} Điện/s. Bấm lại thu hồi; hồi chiêu sau kết thúc/thu hồi. Không hoàn Điện khi thu hồi.`+extra(3);
  case "orbit_reversal":return `Vùng ${number(72*v.radiusMultiplier)}px theo Astra 2s; bắt tối đa ${v.count} projectile. Bấm lại kết thúc miễn phí. Tinh Đạn ${p(v.damageMultiplier)}, không tự tìm mục tiêu.`+extra(4)+extra(5);
  case "stellar_lance":return `Tụ ${number(v.charge)}s; mục tiêu đầu ${p(v.damageMultiplier)}, mục tiêu sau ${p((r>=3?9.3:6.8)*(1+.1*((s.coreState.timers.lanceChain??0)>s.coreState.time?(s.coreState.stacks.lanceStack??0):0)))}. Mỗi lần dùng trong 15s +10% sát thương và +${r>=2?45:60} Mana chi phí kế tiếp; tối đa 4 stack.`+extra(4)+extra(5);
- case "starfall":return `Tối đa 10 marker trong 5s, impact sau 1s gây ${p(v.damageMultiplier)} trong ${r>=2?55:35}px. Hồi chiêu sau impact cuối.`+extra(3);
+ case "starfall":return `${v.count} thiên thạch, marker tuần tự mỗi 0,5s; thiên thạch thường rơi trong 1s, gây ${p(v.damageMultiplier)} trong ${r>=2?65:45}px. Hồi chiêu sau impact cuối.`+(r>=2?" Mỗi kill do cast này hồi 6% Mana Tối Đa, tối đa 36% mỗi cast.":"")+(r>=3?" Viên thứ 16 thay bằng Thiên Thạch Tận Thế ×1200% Hỏa Lực, bán kính 110px, lớn hơn gấp đôi và rơi trong 2s.":"");
  case "predator_lock":return `Khóa mục tiêu 8s. Mỗi ${r>=5?4:5} stack từ đạn thường chính phóng ${r>=3?2:1} Micro Missile, quả chính ${r>=2?240:200}% Hỏa Lực${r>=3?", quả phụ 70% quả chính":""}.`+(r>=2?" Mục tiêu nhận thêm 15% sát thương trực tiếp từ Viper.":"")+extra(4)+extra(5);
  case "gravity_anchor":return SKILL_RANKS[id][0].description+extra(2)+extra(3)+extra(4)+extra(5);
- case "electronic_interference":return `Phát ${r>=5?"3 sóng tại 0 / 0,8 / 1,6s":r>=2?"2 sóng tại 0 / 1s":"1 sóng"}, lan 360° từ vị trí phát ra toàn chiến trường, tác động khi quét qua mục tiêu; sóng đầu 100% Hỏa Lực, sóng sau 70%. Nhiễu 3s: di chuyển -25%, tốc độ bắn -20%, projectile -30%.`+extra(3)+extra(4)+(r>=5?" Trúng đủ 3 sóng: trong 2s di chuyển -55%, tốc độ bắn -45%, projectile -65%.":"");
+ case "electronic_interference":return `Phát ${r>=5?"3 sóng tại 0 / 0,8 / 1,6s":r>=2?"2 sóng tại 0 / 1s":"1 sóng"}, lan 360° từ vị trí phát ra toàn chiến trường, tác động khi quét qua mục tiêu; sóng đầu 100% Hỏa Lực, sóng sau 70%. Nhiễu 3s: di chuyển -25%, tốc độ bắn -20%, projectile -30%.`+(r>=3?" Trúng hai sóng: trong 3s di chuyển -40%, tốc độ bắn -35%, projectile -50%.":"")+extra(4)+extra(5);
  case "twin_reflection":return `2 tinh thể tồn tại 6s, chỉ phản chiếu phát thường chính của Astra; mỗi tinh thể gây ${r>=2?30:25}% sát thương đạn gốc.`+(r>=2?" Xuyên thêm 1 địch với 60% sát thương Twin Shot.":"")+extra(3)+extra(4)+extra(5);
  }
 }
@@ -335,7 +341,6 @@ function skillCoreStatuses(world:CombatWorld):StatusPresentation[] {
   if((skillRank(s, "invisibility") >= 5)&&reappearance>0)add(142,{remaining:reappearance,duration:V.reappearanceDuration,showNumericTimer:true,timeLabel:"Cửa sổ bắn cường hóa"});
   const linger=world.decoys.filter(d=>d.clonePhase==="linger").reduce((n,d)=>Math.max(n,d.remaining),0);
   if((skillRank(s, "invisibility") >= 4)&&linger>0)add(141,{remaining:linger,duration:V.cloneLinger,showNumericTimer:true});
-  if((skillRank(s, "escort_drone") >= 3)&&s.droneActive)add(147,{remaining:Math.max(0,(c.timers.electronicGuard||0)-c.time),duration:V.guardCycle,timerKind:"cooldown",showNumericTimer:true});
   return result;
 }
 

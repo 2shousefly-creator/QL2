@@ -175,9 +175,9 @@ export function flushEquipmentDrops(w:CombatWorld) {
   for(const wave of new Set(pending.map(e=>e.wave))){
     const kills=pending.filter(e=>e.wave===wave),elites=kills.filter(e=>e.elite);
     if(q.eliteDropWave!==wave){q.eliteDropWave=wave;q.eliteKillsThisWave=0;}
-    const first=q.eliteKillsThisWave===0&&elites.length?elites[Math.min(elites.length-1,Math.floor(w.random()*elites.length))]:undefined;
+    const first=q.eliteKillsThisWave===0&&elites.length?elites[0]:undefined;
     for(const e of kills){
-      const chances=e===first?[.05,1,.10,.02]:e.elite?[.0125,.25,.025,.005]:[.005,.015,.0025,.0005];
+      const chances=e===first?[.10,.35,1,.10]:e.elite?[.05,.35,.10,.02]:[.005,.015,.0025,.0005];
       const boost=s.selectedCores.includes("core_224")&&!equipmentRewardsLocked(s)?1.75:1;
       for(const [index,prefix] of (["VP01","TP","TH","HL"] as const).entries()){
         const roll=w.random(),base=chances[index];

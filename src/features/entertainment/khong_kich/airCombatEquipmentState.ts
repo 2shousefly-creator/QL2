@@ -7,7 +7,8 @@ export const EQUIPMENT_PAGE_SIZE = EQUIPMENT_GRID_COLUMNS * EQUIPMENT_GRID_ROWS;
 
 export interface EquipmentInstance { instanceId: number; definitionId: EquipmentDefinitionId }
 export type EquipmentRewardId = EquipmentDefinitionId | "VP01";
-export type AcquisitionEvent = { id: number; kind: "core"; coreId: string } | { id: number; kind: "equipment" | "item"; definitionId: EquipmentRewardId; source: string; x?: number; y?: number };
+export type CoreConversionSource = "core_050" | "core_051" | "core_052" | "core_216";
+export type AcquisitionEvent = { id: number; kind: "core"; coreId: string; conversionSourceCoreId?: CoreConversionSource } | { id: number; kind: "equipment" | "item"; definitionId: EquipmentRewardId; source: string; x?: number; y?: number };
 export interface EquipmentEffectState { stacks: number; until: number; ready: number; value: number; tick: number; count: number; duration: number }
 export interface EquipmentMark { until: number; stacks: number; tick: number }
 export interface EquipmentVisual { id: number; family: number; x: number; y: number; fromX?: number; fromY?: number; size: number; start: number; duration: number; target?: number; player?: boolean; legendary?: boolean }
@@ -17,7 +18,7 @@ export interface EquipmentState {
   pendingDrops: { x:number; y:number; elite:boolean; wave:number }[];
   nextInstanceId: number;
   components: EquipmentInstance[]; completed: EquipmentInstance[];
-  equipped: [EquipmentInstance | null, EquipmentInstance | null, EquipmentInstance | null];
+  equipped: [EquipmentInstance | null, EquipmentInstance | null, EquipmentInstance | null, EquipmentInstance | null, EquipmentInstance | null, EquipmentInstance | null];
   craftSlots: [EquipmentInstance | null, EquipmentInstance | null];
   items: Record<string, number>; componentPage: number; completedPage: number;
   craftJob?: { resultId: EquipmentDefinitionId; startedUiAt: number; duration: 3 };
@@ -34,7 +35,7 @@ export interface EquipmentState {
   presentationGate: Record<string,number>;
 }
 export function createEquipmentState(): EquipmentState {
-  return { rewardsLocked: false, pendingDrops: [], nextInstanceId: 1, components: [], completed: [], equipped: [null,null,null], craftSlots: [null,null], items: {}, componentPage: 0, completedPage: 0, telemetry: {}, effects: {}, marks: {}, eliteDropWave: -1, eliteKillsThisWave: 0, loot: [], visuals: [], nextVisualId: 1, meteors: [], endedSkills: [], presentationGate: {} };
+  return { rewardsLocked: false, pendingDrops: [], nextInstanceId: 1, components: [], completed: [], equipped: [null,null,null,null,null,null], craftSlots: [null,null], items: {}, componentPage: 0, completedPage: 0, telemetry: {}, effects: {}, marks: {}, eliteDropWave: -1, eliteKillsThisWave: 0, loot: [], visuals: [], nextVisualId: 1, meteors: [], endedSkills: [], presentationGate: {} };
 }
 export const equipmentState = (s: AircraftCombatState): EquipmentState => s.equipment ??= createEquipmentState();
 const familyCache = new WeakMap<EquipmentState, {signature:string; families:Map<EquipmentFamilyId, typeof EQUIPMENT_CATALOG[EquipmentDefinitionId]>}>();
@@ -97,7 +98,7 @@ export function extractEquipment(s: AircraftCombatState): EquipmentInstance[] {
   const e=equipmentState(s), items=e.equipped.filter((i):i is EquipmentInstance=>!!i);
   if(!items.length || !(e.items.VP01>0))return [];
   for(const item of items)(item.definitionId.startsWith("TP")?e.components:e.completed).push(item);
-  e.equipped=[null,null,null];e.items.VP01--;
+  e.equipped=[null,null,null,null,null,null];e.items.VP01--;
   e.effects={};e.marks={};e.visuals=[];e.presentationGate={};e.orb=undefined;e.meteors=[];e.fireCast=undefined;e.endedSkills=[];
   for(const key of Object.keys(s.coreState.shields))if(key.startsWith("equipment:"))delete s.coreState.shields[key];
   clampEquipmentPages(e);return items;
@@ -127,7 +128,7 @@ export const canGrantEquipmentReward = (s: AircraftCombatState, id: EquipmentRew
 /** The only bypass is private receipt of Core228's own Legendary, after the atomic wipe. */
 export function sacrificeEquipment(s: AircraftCombatState, random:()=>number) {
   const e=equipmentState(s);
-  e.equipped=[null,null,null];e.components=[];e.completed=[];e.craftSlots=[null,null];delete e.craftJob;
+  e.equipped=[null,null,null,null,null,null];e.components=[];e.completed=[];e.craftSlots=[null,null];delete e.craftJob;
   e.loot=e.loot.filter(l=>l.definitionId==="VP01");
   e.effects={};e.marks={};e.meteors=[];e.orb=undefined;e.fireCast=undefined;e.endedSkills=[];
   e.visuals=[];e.presentationGate={};e.lastX=undefined;e.lastY=undefined;

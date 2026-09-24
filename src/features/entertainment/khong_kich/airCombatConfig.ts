@@ -180,14 +180,14 @@ export const AIRCRAFT_ORDER: AircraftId[] = [
 export const SKILL_CONFIGS: Record<SkillId, SkillConfig> = {
   predator_lock: {id:"predator_lock",aircraftId:"black_eagle",name:"Khóa Săn Mồi",shortName:"Khóa Săn Mồi",description:"Khóa Săn Mồi",icon:"✦",cost:110,cooldown:18,duration:8},
   gravity_anchor: {id:"gravity_anchor",aircraftId:"breaker",name:"Neo Trọng Lực",shortName:"Neo Trọng Lực",description:"Neo Trọng Lực",icon:"✦",cost:140,cooldown:20,duration:5},
-  electronic_interference: {id:"electronic_interference",aircraftId:"phantom",name:"Nhiễu Điện Tử",shortName:"Nhiễu Điện Tử",description:"Nhiễu Điện Tử",icon:"✦",cost:30,cooldown:18,duration:1.6},
+  electronic_interference: {id:"electronic_interference",aircraftId:"phantom",name:"Nhiễu Điện Tử",shortName:"Nhiễu Điện Tử",description:"Nhiễu Điện Tử",icon:"✦",cost:30,cooldown:30,duration:1.6},
   twin_reflection: {id:"twin_reflection",aircraftId:"astra",name:"Song Tinh Phản Xạ",shortName:"Song Tinh Phản Xạ",description:"Song Tinh Phản Xạ",icon:"✦",cost:120,cooldown:20,duration:6},
   orbit_reversal:{id:"orbit_reversal",aircraftId:"astra",name:"Phản Quỹ Đạo",shortName:"Quỹ Đạo",icon:"",cost:170,cooldown:22,duration:2,damageMultiplier:.3,
     description:"Tạo vùng 72px theo Astra trong 2 giây, bắt tối đa 16 projectile thù địch. Bấm lại để kết thúc sớm, không tốn thêm Mana. Khi kết thúc, Tinh Đạn lần lượt hội tụ về phía trước Astra rồi phóng lên trong một hành lang 20px, không tự tìm mục tiêu, không homing hay retarget; mỗi viên gây 30% Hỏa Lực lên địch đầu tiên. Không bắt Beam, AoE, Bomb/Mine, va chạm thân và Boss mechanic không thể bắt. Hồi chiêu bắt đầu khi trạng thái bắt giữ kết thúc và Tinh Đạn bắt đầu hội tụ."},
   stellar_lance:{id:"stellar_lance",aircraftId:"astra",name:"Thương Tinh Tú",shortName:"Tinh Tú",icon:"",cost:60,cooldown:3,damageMultiplier:8,
     description:"Tụ 0,6s, vẫn di chuyển nhưng ngừng bắn thường. Phóng thẳng phía trước, xuyên mọi địch: mục tiêu đầu 800% Hỏa Lực, mục tiêu sau 680% Hỏa Lực. Mỗi lần dùng thành công trong 15s tăng cost kế tiếp 60 Mana và +10% sát thương Thương Tinh Tú, cộng dồn theo phép cộng, tối đa 4 stack: 300 Mana / +40% sát thương Thương Tinh Tú. Hết 15s trở về ban đầu. Hồi chiêu sau phát chính."},
-  starfall:{id:"starfall",aircraftId:"astra",name:"Sao Rơi",shortName:"Sao Rơi",icon:"",cost:200,cooldown:34,damageMultiplier:2.1,
-    description:"Mỗi 0,5s khóa một địch, tối đa 10 lần trong 5s, ưu tiên mục tiêu chưa đánh dấu. Sau 1s, thiên thạch rơi vào marker, gây 210% Hỏa Lực trong 35px. Marker bám địch sống, giữ vị trí chết và không retarget. Hết mục tiêu thì ngừng khóa mới; thiên thạch đã hẹn vẫn rơi. Hồi chiêu chỉ bắt đầu sau impact cuối (~5,5s)."},
+  starfall:{id:"starfall",aircraftId:"astra",name:"Sao Rơi",shortName:"Sao Rơi",icon:"",cost:130,cooldown:110,damageMultiplier:3.55,
+    description:SKILL_RANKS.starfall[0].description},
   "decoy": {
     "id": "decoy",
     "aircraftId": "black_eagle",
@@ -217,12 +217,12 @@ export const SKILL_CONFIGS: Record<SkillId, SkillConfig> = {
     "aircraftId": "black_eagle",
     "name": "Mưa Tên Lửa",
     "shortName": "Tên lửa",
-    "description": "6 tên lửa mỗi bên (12 tổng), phóng theo cặp. Mỗi cặp lơ lửng 0,35s trước khi tìm mục tiêu; cặp tiếp theo xuất hiện khi cặp trước bắt đầu bay. Mỗi quả gây 245% Hỏa lực.",
+    "description": SKILL_RANKS.missile_swarm[0].description,
     "icon": "▲",
-    "cost": 220,
+    "cost": 100,
     "cooldown": B.swarmCooldown,
     "duration": 0,
-    "damageMultiplier": 2.45
+    "damageMultiplier": 3
   },
   "armor_shield": {
     "id": "armor_shield",
@@ -253,12 +253,12 @@ export const SKILL_CONFIGS: Record<SkillId, SkillConfig> = {
     "aircraftId": "breaker",
     "name": "Oanh Tạc",
     "shortName": "Oanh Tạc",
-    "description": "18s: thay đạn thường bằng quạt 5 tia, 60% Hỏa lực. Tia bổ sung trúng cùng mục tiêu chỉ gây 15% sát thương của tia đầu tiên. Bấm lại để kết thúc, sau đó mới hồi chiêu.",
+    "description": SKILL_RANKS.sweeping_cannon[0].description,
     "icon": "⋔",
-    "cost": 180,
+    "cost": 120,
     "cooldown": B.cannonCooldown,
     "duration": 18,
-    "damageMultiplier": 0.6
+    "damageMultiplier": 0.9
   },
   "invisibility": {
     "id": "invisibility",
@@ -289,12 +289,12 @@ export const SKILL_CONFIGS: Record<SkillId, SkillConfig> = {
     "aircraftId": "phantom",
     "name": "Giúp Nào HawkEye!",
     "shortName": "HawkEye",
-    "description": "Cần ít nhất 5 Điện để bật, không trừ phí ban đầu; duy trì 4 Điện/s. Một drone kế thừa 55% chỉ số. Bấm lại để thu hồi; hồi chiêu 24s khi kết thúc.",
+    "description": SKILL_RANKS.escort_drone[0].description,
     "icon": "◇",
     "cost": 5,
-    "cooldown": 24,
+    "cooldown": 100,
     "duration": 0,
-    "damageMultiplier": 0.55
+    "damageMultiplier": 0.7
   }
 };
 for(const id of Object.keys(SKILL_CONFIGS) as SkillId[]){SKILL_CONFIGS[id].cost=SKILL_RANKS[id][0].cost;SKILL_CONFIGS[id].description=SKILL_RANKS[id][0].description;}

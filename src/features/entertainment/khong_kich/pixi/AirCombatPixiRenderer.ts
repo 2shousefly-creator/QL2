@@ -1,3 +1,4 @@
+import { ultimateProjectileVisual } from "../airCombatUltimateArt";
 import { rankProjectileVisual } from "../airCombatRankArt";
 import { skillRank } from "../airCombatSkillRanks";
 import { paintEquipment } from "../airCombatEquipmentArt";
@@ -8,7 +9,7 @@ import { paintAstra } from "../airCombatAstraArt";
 import { magneticShake } from "../airCombatMagnetic";
 import { STAGE2_ENEMY_ART, TEMPEST_WEAKPOINT_ART } from "../airCombatStage2Art";
 import { paintMagnetic, guardianSlots } from "../airCombatMagnetic";
-import { getPlayerExhaust, hawkEyeExhaustTransform } from "../airCombatArtwork";
+import { getPlayerExhaust } from "../airCombatArtwork";
 import { paintTacticalCores, paintEnemyForegroundMarks, paintElitePatternWarning, type TacticalPainter } from "../airCombatTacticalVisuals";
 import { enemyAllegiance } from "../airCombatRuntime";
 import { hasCore } from "../airCombatCoreEffects";
@@ -79,7 +80,6 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
   private companions: AirCombatSpritePool;
   private warnings: AirCombatSpritePool;
   private engines: AirCombatSpritePool;
-  private droneExhaust = new Sprite();
   private player = new Sprite();
   private playerExhaust = Array.from({length:6},()=>new Sprite());
   private shield = new Sprite();
@@ -141,7 +141,6 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     this.warnings = new AirCombatSpritePool(this.effects, 40);
     this.engines = new AirCombatSpritePool(this.effects, AIR_COMBAT_WORLD.maxEnemies + 4);
     this.vfx = new AirCombatVfx(this.globalVfx, assets);
-    this.droneExhaust.texture=assets.engineFlame; this.droneExhaust.anchor.set(.5,0); this.droneExhaust.blendMode="add"; this.droneExhaust.visible=false; this.actors.addChild(this.droneExhaust);
     for(const sprite of this.playerExhaust){sprite.texture=assets.engineFlame;sprite.anchor.set(.5,0);sprite.blendMode="add";this.actors.addChild(sprite);}
     this.shield.texture = assets.effect("shield");
     this.laser.texture = assets.phantomBeam; this.laser.blendMode = "add";
@@ -192,8 +191,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
         this.vfx.healing(event.id, event.x, event.y, reducedMotion);
       } else if(event.kind==="astra_lance_impact") {
         this.vfx.lanceImpact(event.x,event.y,event.size,reducedMotion);
-      } else if(event.kind==="astra_starfall_impact") {
-        this.vfx.starfallImpact(event.x,event.y,event.size,reducedMotion);
+
       } else if(event.kind==="bullet_impact") {
         this.vfx.spawn("smallExplosion",event.x,event.y,event.size,.16,0xffd799);
         if(!reducedMotion)this.vfx.spawn("sparks",event.x,event.y,event.size*.85,.14,0xffedba);
@@ -391,7 +389,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     this.missileSmoke.end();
     this.missiles.begin();
     for (const p of world.projectiles) {
-      if (rankProjectileVisual(p)) continue; // Dedicated ranked sprite pool owns body and wake.
+      if (rankProjectileVisual(p)||ultimateProjectileVisual(p)) continue; // Dedicated ranked sprite pool owns body and wake.
       if (world.magnetic && p.owner === "enemy" && p.magneticVisual) continue; // Shared atlas painter owns magnetic rounds.
       const missile = p.projectileKind !== "bullet";
       if (missile) this.missiles.render(p,reducedMotion);
@@ -451,21 +449,8 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
       if (decoy.clone) this.telegraphs.circle(decoy.x, decoy.y, 24).stroke({ color: 0xc4b5fd, width: 1, alpha: .4 });
       if (trail && !reducedMotion && !decoy.clone && decoy.id % 3 === 0) this.vfx.spawn("smoke", decoy.x, decoy.y + 5, decoy.active?13:7, .5, 0xb8aba0, 14);
     }
-    this.droneExhaust.visible=false;
-    if (world.aircraft.droneActive) {
-      const sprite = this.companions.get(-1, this.assets.effect("drone"));
-      if (sprite) {
-        sprite.position.set(world.droneX, world.droneY); sprite.width = sprite.height = 33;
-        sprite.tint = world.droneInvulnerability > 0 ? 0xf5d0fe : 0xddd6fe;
+    // HawkEye body, engines, deployment and Rage share the Ultimate sprite pool.
 
-        const target = world.enemies.find(e => e.id === world.droneTargetId);
-        if (target) sprite.rotation = Math.atan2(target.y - world.droneY, target.x - world.droneX) + Math.PI / 2;
-        const mount=hawkEyeExhaustTransform(sprite.x,sprite.y,sprite.width,sprite.height,sprite.anchor.x,sprite.anchor.y,sprite.rotation);
-        this.droneExhaust.visible=true;this.droneExhaust.position.set(mount.x,mount.y);this.droneExhaust.rotation=mount.rotation;
-        this.droneExhaust.width=mount.width;this.droneExhaust.height=mount.length*(reducedMotion?1:1+.12*Math.sin(this.clock*24));
-        this.droneExhaust.tint=0xc4b5fd;this.droneExhaust.alpha=.9;
-      }
-    }
     if(world.aircraft.droneActive){
       this.telegraphs.rect(world.droneX-17,world.droneY+20,34,3).fill(0x201830);
       this.telegraphs.rect(world.droneX-17,world.droneY+20,34*Math.max(0,world.droneHp/(world.droneMaxHp||1)),3).fill(0xc4b5fd);

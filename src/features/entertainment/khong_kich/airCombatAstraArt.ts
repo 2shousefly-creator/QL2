@@ -94,31 +94,8 @@ export function paintAstra(w:CombatWorld,p:AstraPainter,reduced:boolean) {
     }
     if(!reduced)p.sprite(id+6,"astra_smoke",z.x,z.y-z.radius*.35,z.radius*1.3,z.radius,0,alpha*.18);
   }
-  for(const m of r.starfall?.pending??[]) {
-    const t=clamp(1-(m.at-now)),id=m.id*32;
-    const pulse=reduced?1:.93+.07*Math.sin(t*t*48),lockSize=(56-12*Math.min(1,t/.35))*pulse;
-    p.sprite(id,"astra_reticle",m.x,m.y,lockSize,lockSize,0,.6+t*.4);
-    p.sprite(id+1,"astra_segments",m.x,m.y,lockSize,lockSize,reduced?0:(1-t)*1.4,.35+t*.55);
-    const fly=1-t,x=m.x-80*fly,y=m.y-150*fly,angle=-Math.atan2(80,150);
-    const dx=80/170,dy=150/170;
-    // The hot rock sits near the bottom of the texture; place that leading edge on the trajectory.
-    const cx=x-dx*29,cy=y-dy*29;
-    p.sprite(id+2,"astra_trail",x-dx*(reduced?24:47),y-dy*(reduced?24:47),reduced?14:22,reduced?48:94,angle,.65);
-    if(!reduced)p.sprite(id+3,"astra_smoke",x-dx*65,y-dy*65,40,58,angle,.24);
-    const frames:AstraVisualKey[]=["astra_meteor","astra_meteor1","astra_meteor2","astra_meteor3"];
-    p.sprite(id+4,frames[reduced?0:Math.floor(now*14+m.id)%4],cx,cy,43.2,86.4,angle,Math.min(1,t*3+.3));
-    p.sprite(id+5,"astra_corona",x,y,33,29,angle,.6);
-  }
   // Canvas fallback uses the same local frame pipeline; Pixi handles these events in its VFX pool.
   if(p.impactFallback){
-    for(const i of r.impacts){
-      const t=clamp((now-i.at)/.75),alpha=1-t,size=i.radius*2,id=i.id*32;
-      const frames:AstraVisualKey[]=["astra_flash","astra_explosion0","astra_explosion1","astra_explosion2","astra_fire"];
-      p.sprite(id,frames[Math.min(4,Math.floor(t*5))],i.x,i.y,size*(.7+t*.65),size*(.7+t*.65),0,alpha);
-      p.sprite(id+1,"astra_shockwave",i.x,i.y,size*(1+t),size*(1+t),0,alpha*.8);
-      p.sprite(id+2,"astra_fire",i.x,i.y,size*.65,size*.65,0,alpha*.7);
-      if(!reduced){p.sprite(id+3,"astra_debris",i.x,i.y,size*(.5+t),size*(.5+t),t,alpha);p.sprite(id+4,"astra_smoke",i.x,i.y,size,size,0,alpha*.35);p.sprite(id+5,"astra_sparks",i.x,i.y,size*1.2,size*1.2,0,alpha);}
-    }
     for(const e of w.visualEvents)if(e.kind==="astra_lance_impact"&&e.at!==undefined&&now-e.at<.22){
       const alpha=1-(now-e.at)/.22,id=e.id*32;
       p.sprite(id,"astra_explosion0",e.x,e.y,e.size,e.size,0,alpha);

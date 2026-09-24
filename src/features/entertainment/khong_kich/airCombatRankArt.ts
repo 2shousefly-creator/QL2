@@ -1,3 +1,4 @@
+import { ULTIMATE_FRAMES } from "./airCombatUltimateArt";
 import type { CombatWorld, ProjectileEntity } from "./airCombatRuntime";
 import { INTERFERENCE_WAVE_THICKNESS } from "./airCombatRankRuntime";
 import { skillRank } from "./airCombatSkillRanks";
@@ -9,6 +10,7 @@ export const RANKED_ART = { vfx, projectiles };
 const cell = (index:number):AtlasFrame => ({atlas:"rankedVfx",rect:[index%4/4,Math.floor(index/4)/4,1/4,1/4]});
 const shot = (index:number):AtlasFrame => ({atlas:"rankedProjectiles",rect:[index/4,0,1/4,1]});
 export const RANKED_VFX_FRAMES = {
+ rankDestructiveBand:{atlas:"ultimateVfx",rect:[1/4,800/896,1/4,64/896]} as AtlasFrame,rankDisintegrate:ULTIMATE_FRAMES.ultimateDisintegrate,
  rankLock:cell(0), rankLockPips:cell(1), rankMicroImpact:cell(2), rankAnchor:cell(3),
  rankAnchorRings:cell(4), rankCompression:cell(5), rankImplosion:cell(6), rankCrystal:cell(7),
  rankConvergence:cell(8), rankSignalBand:{atlas:"rankedVfx",rect:[1/4,9/16,1/4,1/8]} as AtlasFrame, rankRelay:cell(10), rankGlitch:cell(11),
@@ -55,7 +57,7 @@ export function paintRankSkills(w:CombatWorld,draw:RankSpritePainter,reducedMoti
   const segments=48,arc=2*Math.PI/segments,thickness=Math.min(INTERFERENCE_WAVE_THICKNESS,radius*2);
   for(let n=0;n<segments;n++){
    const angle=n*arc;
-   draw(wave.id*128+n,"rankSignalBand",wave.originX+Math.cos(angle)*radius,wave.originY+Math.sin(angle)*radius,
+   draw(wave.id*128+n,wave.rank>=5&&wave.wave===2?"rankDestructiveBand":"rankSignalBand",wave.originX+Math.cos(angle)*radius,wave.originY+Math.sin(angle)*radius,
     Math.max(1,2*radius*Math.tan(arc/2)+1),thickness,angle+Math.PI/2,.85);
   }
   if(!reducedMotion)for(let n=0;n<12;n++){
@@ -97,7 +99,7 @@ export function paintRankSkills(w:CombatWorld,draw:RankSpritePainter,reducedMoti
    if(age>=.16){const spread=Math.min(1,(age-.16)/.25);draw(id+1,"rankImplosion",e.x,e.y,e.size*(.2+spread*.85),e.size*(.2+spread*.85),0,alpha*1.3);}
    draw(id+2,"rankAnchor",e.x,e.y,48*contraction,48*contraction,0,alpha);
   }else{
-   const key:RankVisualKey=e.rankEffect==="interference_relay"?"rankRelay":e.rankEffect==="interference_hit"?"rankGlitch":e.rankEffect==="twin_convergence"?"rankConvergence":e.rankEffect==="lock_complete"?"rankLockPips":"rankMicroImpact";
+   const key:RankVisualKey=e.rankEffect==="interference_destroy"?"rankDisintegrate":e.rankEffect==="interference_hit"?"rankGlitch":e.rankEffect==="twin_convergence"?"rankConvergence":e.rankEffect==="lock_complete"?"rankLockPips":"rankMicroImpact";
    const size=e.size*(reducedMotion?1:.8+progress*.3);
    draw(id,key,e.x,e.y,size,size,0,alpha);
   }

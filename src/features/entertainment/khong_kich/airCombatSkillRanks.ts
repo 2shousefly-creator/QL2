@@ -25,10 +25,10 @@ export const SKILL_RANKS: Record<SkillId, readonly SkillRankConfig[]> = {
   ["Tên Lửa Song Kích","Mỗi lần kích hoạt phóng 2 tên lửa; quả phụ gây 70% sát thương quả chính."],
   ["Bản Năng Săn Mồi","Khi mục tiêu dưới 40% Máu, đạn thường chính tích 2 stack và Micro Missile gây thêm 50% sát thương."],
   ["Lệnh Tiêu Diệt","Ngưỡng còn 4 stack. Hạ mục tiêu trước khi hết khóa chuyển sang mục tiêu ưu tiên mới với thời gian còn lại +3s. Micro Missile trúng Tinh Anh/Boss kéo dài 0,4s, tối đa +4s mỗi lần dùng."]]),
- missile_swarm:ranks([200,220,240],[
-  ["Mưa Tên Lửa","12 tên lửa phóng theo cặp; mỗi quả gây 245% Hỏa Lực."],
-  ["Kho Tên Lửa Hủy Diệt","16 tên lửa, mỗi quả 290% Hỏa Lực. Mỗi tên lửa đang bay phá tối đa 3 projectile có thể chặn mà không mất mục tiêu chính."],
-  ["Mưa Tận Diệt","Mỗi quả 325% Hỏa Lực, Thiêu Đốt 60% Hỏa Lực/s trong 4s và giảm 20% Giáp trong 5s. Mỗi hit cho 1 Dữ Liệu, tối đa 8; khi loạt kết thúc, mỗi Dữ Liệu cho 4% Chí Mạng trong 8s, tối đa 32%."]]),
+ missile_swarm:ranks([100,150,200],[
+  ["Mưa Tên Lửa","14 tên lửa phóng theo cặp, mỗi quả 300% Hỏa Lực. Hồi chiêu cơ bản 120s, bắt đầu sau khi phóng quả cuối."],
+  ["Kho Tên Lửa Hủy Diệt","18 tên lửa ×340% Hỏa Lực; tự tìm mục tiêu mới nếu mục tiêu chết khi đang bay. Mỗi quả phá tối đa 3 projectile có thể chặn mà vẫn tiếp tục truy đuổi. Hồi chiêu cơ bản 100s."],
+  ["Mưa Tận Diệt","22 tên lửa ×380% Hỏa Lực. Hit làm mới một Thiêu Đốt 90% Hỏa Lực/s trong 5s và giảm 30% Giáp trong 6s, không cộng dồn. Mỗi hit cho 1 Dữ Liệu, tối đa 8; sau khi toàn bộ loạt tên lửa kết thúc, mỗi Data cho +5% Chí Mạng trong 10s, tối đa +40%. Hồi chiêu cơ bản 80s."]]),
  armor_shield:ranks([150,160,170,180,190],[
   ["Khiên Năng Lượng","Giảm 65% sát thương sau Giáp trong 6s."],["Trường Lực Bền Bỉ","Thời gian tăng lên 9s."],
   ["Bất Tử Hộ Thân","Giảm sát thương tăng lên 85%."],["Thu Hồi Năng Lượng","Chuyển 80% sát thương thực tế được Khiên ngăn thành Mana, tối đa 35% Mana Tối Đa mỗi lần dùng."],
@@ -44,10 +44,10 @@ export const SKILL_RANKS: Record<SkillId, readonly SkillRankConfig[]> = {
   ["Áp Suất Nghiền Nát","Giảm 25% Giáp trong vùng, 35% trong lõi; lưu lại 1,5s sau khi rời vùng."],
   ["Khối Lượng Tới Hạn","Sụp đổ thêm 25% Hỏa Lực mỗi địch bị kéo và 10% mỗi projectile bị phá, tổng phần thêm tối đa 400% Hỏa Lực."],
   ["Sụp Đổ Không Gian","Hết hạn tự nhiên kéo mạnh quái thường/Tinh Anh lần cuối. Mục tiêu ở lõi ít nhất 2s nhận thêm 50% sát thương sụp đổ. Bấm lại để nổ sớm với khối lượng đã tích."]]),
- sweeping_cannon:ranks([170,190,210],[
-  ["Oanh Tạc","18s: thay đạn thường bằng quạt 5 tia, mỗi tia 60% Hỏa Lực; tia phụ cùng loạt trúng cùng mục tiêu gây 15% tia đầu. Bấm lại để kết thúc; hồi chiêu sau khi kết thúc."],
-  ["Pháo Đài Hỏa Lực","7 tia, mỗi tia 80% Hỏa Lực; +35% Giáp trong lúc bật."],
-  ["Pháo Đài Di Động","Góc tia 3,5°, tốc độ projectile +50%, xuyên thêm 2 mục tiêu với 70% / 40% sát thương tia gốc. Hồi Máu bằng 2% sát thương thực tế. Hồi chiêu cơ bản 20s sau khi kết thúc."]]),
+ sweeping_cannon:ranks([120,170,220],[
+  ["Oanh Tạc","18s: quạt 7 tia ×90% Hỏa Lực; tia phụ cùng volley trúng cùng mục tiêu gây 15% tia đầu. Không thể kết thúc sớm. Hồi chiêu cơ bản 100s sau khi hết 18s."],
+  ["Pháo Đài Hỏa Lực","9 tia ×100% Hỏa Lực và +40% Giáp trong Oanh Tạc. Hồi chiêu cơ bản 85s."],
+  ["Pháo Đài Di Động","9 tia ×125% Hỏa Lực, góc tia 3,5°, projectile +60% tốc độ, xuyên thêm 2 mục tiêu với 75% / 45% sát thương. Hồi Máu bằng 3% sát thương thực tế. Hồi chiêu cơ bản 70s."]]),
  invisibility:ranks([25,10,10,10,10],[
   ["Phân Ảnh","Tàng hình và để phân thân hút đạn 2s; lướt theo hướng di chuyển cuối, hoặc lên trên nếu chưa di chuyển."],
   ["Thanh Thoát","Chi phí còn 10 Điện; tàng hình/phân thân 3s."],["Sửa Chữa Khẩn Cấp","Thời gian 3,5s; trong lúc tàng hình hồi 25% Máu thiếu đo tại lúc dùng."],
@@ -59,15 +59,15 @@ export const SKILL_RANKS: Record<SkillId, readonly SkillRankConfig[]> = {
   ["Phá Giáp","Mỗi hit giảm 25% Giáp trong 8s, chỉ làm mới; sát thương Laser nhân thêm 1,32 so với Cấp 3."],
   ["Lưỡi Hái Tử Thần","Kết liễu quái thường dưới 12% Máu, Tinh Anh dưới 10%, Boss dưới 8%."]]),
  electronic_interference:ranks([30,32,34,36,38],[
-  ["Sóng Nhiễu","Xung rộng tức thời gây 100% Hỏa Lực. Trong 3s: địch chậm 25%, tốc độ bắn -20%, projectile chậm 30%."],
-  ["Sóng Phản Hồi","Sau 1s phát sóng thứ hai gây 70% Hỏa Lực và làm mới nhiễu."],
-  ["Nhiễu Cộng Hưởng","Địch trúng cả hai sóng: trong 3s chậm 40%, tốc độ bắn -35%, projectile chậm 50%."],
-  ["Tiếp Sóng Dây Chuyền","Mỗi địch trúng sóng chính đầu phát một xung nhỏ sau 0,5s, lan tới địch/projectile mới; xung tiếp sóng không tự sinh xung tiếp theo."],
-  ["Phổ Nhiễu Toàn Phần","Phát 3 sóng chính tại 0 / 0,8 / 1,6s; sóng sau gây 70% Hỏa Lực. Địch trúng đủ 3: trong 2s chậm 55%, tốc độ bắn -45%, projectile chậm 65%."]]),
- escort_drone:ranks([5,5,5],[
-  ["HawkEye","Cần 5 Điện để bật, không trừ phí bật; duy trì 4 Điện/s. Drone kế thừa 55% chỉ số. Bấm lại thu hồi; hồi chiêu 24s sau kết thúc."],
-  ["Liên Kết Bền Chặt","Kế thừa 75%, duy trì 3 Điện/s. Chủ động thu hồi hoàn 45% Điện thực tế đã duy trì, tối đa 40 Điện mỗi lần triệu hồi."],
-  ["HawkEye Hiếu Chiến","Mỗi chu kỳ 8s hoạt động: trong 3s HawkEye +100% Tốc Độ Bắn, Phantom +30%. Cùng gây sát thương một địch trong 1s Đồng Bộ mục tiêu 4s, cả hai +20% sát thương trực tiếp; một mục tiêu cùng lúc, hồi riêng 7s sau hết Đồng Bộ. Mỗi 7s drone phá projectile có thể chặn gần nó."]]),
+  ["Sóng Nhiễu","Wavefront 360° lan qua chiến trường gây 100% Hỏa Lực. Hồi chiêu cơ bản 30s. Trong 3s: địch chậm 25%, tốc độ bắn -20%, projectile chậm 30%."],
+  ["Sóng Phản Hồi","Sau 1s phát sóng thứ hai gây 70% Hỏa Lực và làm mới nhiễu. Hồi chiêu cơ bản 28s."],
+  ["Nhiễu Cộng Hưởng","Địch trúng cả hai sóng: trong 3s chậm 40%, tốc độ bắn -35%, projectile chậm 50%. Hồi chiêu cơ bản 26s."],
+  ["Tiếp Sóng","Mỗi enemy bị một wave chính quét trúng hồi 5 Điện, tối đa 15 Điện trên từng wave, không vượt Max Điện. Hồi chiêu cơ bản 24s."],
+  ["Phổ Nhiễu Toàn Phần","Phát 3 sóng chính tại 0 / 0,8 / 1,6s; sóng sau gây 70% Hỏa Lực. Địch trúng đủ 3: trong 3s chậm 55%, tốc độ bắn -45%; trạng thái cực đại không giảm tốc projectile. Wave thứ ba phá mọi projectile/missile thù địch hợp lệ nó quét qua, kể cả Tinh Anh/Boss; không phá laser, telegraph hay đòn lao. Mỗi wave hồi tối đa 15 Điện. Hồi chiêu cơ bản 22s."]]),
+ escort_drone:ranks([5,10,15],[
+  ["HawkEye","Yêu cầu triệu hồi: 5 Điện, không tiêu hao Điện khi triệu hồi. Duy trì 4 Điện/s, kế thừa 70% chỉ số Phantom, không giới hạn thời gian. Bấm lại thu hồi; hồi chiêu cơ bản 100s sau khi kết thúc/thu hồi."],
+  ["Liên Kết Bền Chặt","Yêu cầu triệu hồi: 10 Điện, không tiêu hao khi triệu hồi. Duy trì 3 Điện/s, kế thừa 90% chỉ số. Không hoàn Điện khi thu hồi. Hồi chiêu cơ bản 80s."],
+  ["HawkEye Hiếu Chiến","Yêu cầu triệu hồi: 15 Điện, không tiêu hao khi triệu hồi; duy trì 3 Điện/s, kế thừa 90%. Sau 7s hoạt động, Cuồng Nộ 3s: HawkEye +120% Tốc Độ Bắn, Phantom +35%; hết hiệu ứng mới hồi 7s. Cùng gây sát thương trực tiếp lên một địch trong 1s tạo Đồng Bộ 4s: cả hai +30% sát thương lên mục tiêu. Chỉ một mục tiêu Đồng Bộ, hồi riêng 12s sau khi hiệu ứng hết. Hồi chiêu cơ bản 60s."]]),
  orbit_reversal:ranks([150,160,170,180,190],[
   ["Phản Quỹ Đạo","Vùng 72px theo Astra 2s, bắt tối đa 16 projectile có thể chặn. Bấm lại kết thúc miễn phí. Tinh Đạn phản xạ gây 30% Hỏa Lực, giữ đường phóng không tự tìm mục tiêu."],
   ["Vành Đai Mở Rộng","Bán kính 92px; bắt tối đa 22 projectile."],["Phản Xạ Cường Hóa","Tinh Đạn gây 70% Hỏa Lực."],
@@ -85,10 +85,10 @@ export const SKILL_RANKS: Record<SkillId, readonly SkillRankConfig[]> = {
   ["Điểm Hội Tụ","Cả hai tinh thể trúng cùng địch trong cửa sổ hội tụ ngắn gây burst 120% Hỏa Lực; mỗi volley chỉ kích hoạt một lần trên mỗi mục tiêu."],
   ["Cộng Hưởng Quỹ Đạo","Mỗi 5 phát thường chính, volley phản xạ kế tiếp +75% sát thương, lớn và bay nhanh hơn; tinh thể không tự bắn."],
   ["Phản Xạ Tinh Tú","Trong lúc Song Tinh, dùng Thương Tinh Tú khiến mỗi tinh thể bắn một mini Thương song song gây 30% sát thương hiệu dụng của Thương chính. Mini Thương không tăng stack hay kích hoạt lại chuỗi proc Trang Bị/Lõi của lần dùng chính."]]),
- starfall:ranks([180,200,220],[
-  ["Sao Rơi","Tối đa 10 marker trong 5s; thiên thạch rơi sau 1s, gây 210% Hỏa Lực trong 35px. Hồi chiêu sau impact cuối."],
-  ["Sao Neutron","Mỗi thiên thạch 265% Hỏa Lực, bán kính 55px."],
-  ["Vết Nứt Thiên Sao","Hit giảm 30% Giáp trong 6s, chỉ làm mới. Hạ địch hồi 5% Mana Tối Đa, tối đa 35% mỗi lần dùng. Hồi chiêu cơ bản còn 23s, bắt đầu sau thiên thạch cuối."]]),
+ starfall:ranks([130,180,230],[
+  ["Sao Rơi","12 thiên thạch ×355% Hỏa Lực, bán kính 45px; đánh dấu tuần tự mỗi 0,5s, rơi trong 1s. Hồi chiêu cơ bản 110s sau impact cuối."],
+  ["Sao Neutron","14 thiên thạch ×395% Hỏa Lực, bán kính 65px. Mỗi địch do Sao Rơi tiêu diệt hồi 6% Mana Tối Đa, tối đa 36% mỗi cast. Hồi chiêu cơ bản 100s."],
+  ["Vết Nứt Thiên Sao","Tổng 16 thiên thạch: 15 viên đầu ×435% Hỏa Lực, bán kính 65px; viên cuối là Thiên Thạch Tận Thế ×1200%, bán kính 110px, lớn hơn gấp đôi và rơi trong 2s. Giữ hồi Mana 6% mỗi kill, tối đa 36%. Hồi chiêu cơ bản 90s sau impact cuối."]]),
 };
 export const isUltimate = (id: SkillId) => SKILL_RANKS[id].length === 3;
 export const skillRank = (s: AircraftCombatState, id: SkillId) => s.skillRanks[id] ?? 0;
@@ -108,19 +108,19 @@ export function rankValues(s:AircraftCombatState,id:SkillId) {
  const all={
   decoy:{cost,cooldown:r>=5?14:22,duration:r>=2?2.5:1.5,count:r>=2?4:3},
   afterburner:{cost,cooldown:r>=5?16:24,duration:r>=2?10:7},
-  missile_swarm:{cost,cooldown:33,count:r>=2?16:12,damageMultiplier:r>=3?3.25:r>=2?2.9:2.45},
+  missile_swarm:{cost,cooldown:[120,100,80][r-1],count:[14,18,22][r-1],damageMultiplier:[3,3.4,3.8][r-1]},
   armor_shield:{cost,cooldown:r>=5?14:22,duration:r>=2?9:6,damageTakenMultiplier:r>=3?.15:.35},
   heavy_bomb:{cost,cooldown:r>=5?15:26,damageMultiplier:r>=2?19:14},
-  sweeping_cannon:{cost,cooldown:r>=3?20:30,duration:18,count:r>=2?7:5,damageMultiplier:r>=2?.8:.6},
+  sweeping_cannon:{cost,cooldown:[100,85,70][r-1],duration:18,count:r>=2?9:7,damageMultiplier:[.9,1,1.25][r-1]},
   invisibility:{cost,cooldown:20,duration:r>=3?3.5:r>=2?3:2},
   focus_laser:{cost,cooldown:15,charge:r>=2?.2:2,duration:r>=3?3:2,damageMultiplier:(r>=3?3.3:3)*(r>=4?1.32:1)},
-  escort_drone:{cost:5,cooldown:24,upkeepPerSecond:r>=2?3:4,damageMultiplier:r>=2?.75:.55},
+  escort_drone:{cost,cooldown:[100,80,60][r-1],upkeepPerSecond:r>=2?3:4,damageMultiplier:r>=2?.9:.7},
   orbit_reversal:{cost,cooldown:r>=5?13:22,duration:2,count:r>=2?22:16,radiusMultiplier:r>=2?92/72:1,damageMultiplier:r>=3?.7:.3},
   stellar_lance:{cost:cost*(1+((s.coreState.timers.lanceChain??0)>s.coreState.time?(s.coreState.stacks.lanceStack??0):0)),cooldown:3,charge:r>=2?.2:.6,damageMultiplier:(r>=3?10.5:8)*(1+.1*((s.coreState.timers.lanceChain??0)>s.coreState.time?(s.coreState.stacks.lanceStack??0):0))},
-  starfall:{cost,cooldown:r>=3?23:34,damageMultiplier:r>=2?2.65:2.1},
+  starfall:{cost,cooldown:[110,100,90][r-1],count:[12,14,16][r-1],damageMultiplier:[3.55,3.95,4.35][r-1]},
   predator_lock:{cost,cooldown:18,duration:8,damageMultiplier:r>=2?2.4:2},
   gravity_anchor:{cost,cooldown:20,duration:5,radiusMultiplier:r>=2?1.25:1,damageMultiplier:.35},
-  electronic_interference:{cost,cooldown:18,duration:r>=5?1.6:r>=2?1:0,damageMultiplier:1},
+  electronic_interference:{cost,cooldown:[30,28,26,24,22][r-1],duration:r>=5?1.6:r>=2?1:0,damageMultiplier:1},
   twin_reflection:{cost,cooldown:20,duration:6,damageMultiplier:r>=2?.3:.25},
  };
  return all[id];

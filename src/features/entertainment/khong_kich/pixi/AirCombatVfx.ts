@@ -1,3 +1,4 @@
+import { paintUltimates, ultimateBody } from "../airCombatUltimateArt";
 import { paintRankSkills } from "../airCombatRankArt";
 import type { CombatWorld } from "../airCombatRuntime";
 import { AirCombatSpritePool } from "./AirCombatSpritePool";
@@ -9,8 +10,10 @@ interface Effect { key?:VisualKey; startX?:number; startY?:number; targetX?:numb
 export class AirCombatVfx {
   private active: Effect[] = [];
   private free: Effect[] = [];
+  private ultimates: AirCombatSpritePool;
   private ranked: AirCombatSpritePool;
   constructor(private root: Container, private assets: AirCombatAssets) {
+    this.ultimates = new AirCombatSpritePool(root, 640);
     this.ranked = new AirCombatSpritePool(root, 640);
   }
   renderRankSkills(world: CombatWorld, reducedMotion: boolean) {
@@ -21,6 +24,13 @@ export class AirCombatVfx {
       sprite.blendMode=key==="rankAnchor"||key==="rankCrystal"||key==="rankMicroMissile"?"normal":"add";
     }, reducedMotion);
     this.ranked.end();
+    this.ultimates.begin();
+    paintUltimates(world,(id,key,x,y,width,height,rotation,alpha)=>{
+      const sprite=this.ultimates.get(id,this.assets.effect(key));if(!sprite)return;
+      sprite.position.set(x,y);sprite.width=width;sprite.height=height;sprite.rotation=rotation;sprite.alpha=alpha;
+      sprite.blendMode=ultimateBody(key)?"normal":"add";
+    },reducedMotion);
+    this.ultimates.end();
   }
   spawn(key: VisualKey, x: number, y: number, size: number, duration = .45, tint = 0xffffff, drift = 0, delay = 0, rotation = 0, aspect = 1, opacity = 1) {
     const important = key === "shield" || key === "shockwave" || key === "laser" || key.endsWith("Explosion");
@@ -74,20 +84,6 @@ export class AirCombatVfx {
     this.spawn("shockwave",x,y,size,.2,0xffdcb0);
     if(!reducedMotion)this.spawn("sparks",x,y,size*.9,.19,0xffe4b9);
   }
-  starfallImpact(x:number,y:number,size:number,reducedMotion:boolean) {
-    // At most eight pooled layers per meteor; persistent burn art uses another pool.
-    this.reserveProc(reducedMotion?4:8);
-    this.spawn("charge",x,y,size*.8,.1,0xfff5d9);
-    this.spawn("largeExplosion",x,y,size*1.25,.48,0xffbb76);
-    this.spawn("shockwave",x,y,size*1.8,.42,0xffc273);
-    this.spawn("fire",x,y,size*.75,.38,0xffaa52,0,.09);
-    if(!reducedMotion){
-      this.spawn("astra_debris",x,y,size*1.45,.5,0xffffff);
-      this.spawn("sparks",x,y,size*1.4,.38,0xffd897);
-      this.spawn("smoke",x,y,size*1.15,.6,0x9c8279,-12,.04);
-      this.spawn("charge",x,y,size*.5,.23,0xff9c4e,0,.13);
-    }
-  }
   lightning(id: number, fromX: number, fromY: number, x: number, y: number, reducedMotion: boolean) {
     const path = lightningPath(id, fromX, fromY, x, y, reducedMotion);
     this.reserveProc((path.length - 1) * 2 + 3);
@@ -130,7 +126,7 @@ export class AirCombatVfx {
     }
   }
   destroy() {
-    this.ranked.destroy();
+    this.ranked.destroy();this.ultimates.destroy();
     [...this.active, ...this.free].forEach(e => e.sprite.destroy());
     this.active.length = 0; this.free.length = 0;
   }

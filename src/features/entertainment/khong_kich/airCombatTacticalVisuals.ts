@@ -35,8 +35,7 @@ export function paintTacticalCores(world:CombatWorld,p:TacticalPainter,reducedMo
     if((effect?.armorUntil||0)>now)labels.push({text:`◇−${V.laserArmorReduction*100}% ${Math.ceil(effect!.armorUntil!-now)}s`,color:0xc4b5fd});
     if(world.skillCores.syncTarget===e.id&&world.skillCores.syncUntil>now){
       labels.push({text:`⊕+${V.syncBonus*100}% ${Math.ceil(world.skillCores.syncUntil-now)}s`,color:0x67e8f9});
-      const r=e.radius+7;p.circle(e.x,e.y,r,0x67e8f9,.9);
-      for(const side of [-1,1]){p.line(e.x+side*(r-4),e.y,e.x+side*(r+5),e.y,0xe0ffff,.95,2);p.line(e.x,e.y+side*(r-4),e.x,e.y+side*(r+5),0xe0ffff,.95,2);}
+      // Dedicated paired synchronization glyph is owned by the Ultimate atlas painter.
     }
     labels.forEach((label,i)=>p.label?.(Math.max(38,Math.min(322,e.x)),Math.max(16,e.y-e.radius-12-i*(large?10:8)),label.text,label.color,large?8:6.5));
   }

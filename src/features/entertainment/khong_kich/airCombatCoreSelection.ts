@@ -1,3 +1,4 @@
+import type { CoreConversionSource } from "./airCombatEquipmentState";
 import { isCoreEligible, isCoreOfferable, hasCoreRewardCapacity, canCommitCoreOffers, randomGrantCandidates, pandoraConvertibleCoreIds, planPandoraReplacements } from "./airCombatCoreEligibility";
 import { grantEquipmentReward, randomEquipmentId, equipmentRewardsLocked, sacrificeEquipment } from "./airCombatEquipmentState";
 import { releaseState } from "./airCombatReleaseState";
@@ -65,13 +66,13 @@ export function applyCore(state: AircraftCombatState, card: CoreCard, random: ()
     if (!first || !isCoreEligible(state,first) || first.tiers[0] !== card.tier || state.selectedCores.includes(first.id) || !hasCoreRewardCapacity(state,first))
         return false;
     type Work = {
-        core: CoreDefinition; owner?:number;
+        core: CoreDefinition; owner?:number; conversionSourceCoreId?:CoreConversionSource;
     } | {
-        tier?: CoreTier; owner?:number;
+        tier?: CoreTier; owner?:number; conversionSourceCoreId?:CoreConversionSource;
     };
     const work: Work[] = [{ core: first }];
     const reserved=new Set<string>();
-    const queueBatch=(batch:CoreDefinition[],owner?:number)=>{for(const c of batch){reserved.add(c.id);state.coreState.encounteredCoreIds.add(c.id);}work.push(...batch.slice().reverse().map(core=>({core,owner})));};
+    const queueBatch=(batch:CoreDefinition[],owner?:number,conversionSourceCoreId?:CoreConversionSource)=>{for(const c of batch){reserved.add(c.id);state.coreState.encounteredCoreIds.add(c.id);}work.push(...batch.slice().reverse().map(core=>({core,owner,conversionSourceCoreId})));};
     while (work.length) {
         const item = work.pop()!;
         let core: CoreDefinition | undefined;
@@ -95,7 +96,7 @@ export function applyCore(state: AircraftCombatState, card: CoreCard, random: ()
         state.coreState.encounteredCoreIds.add(core.id);
         state.selectedCores.push(core.id);
         if("owner" in item)recordCoreMetric(state,item.owner,"converted",1);
-        state.coreState.acquisitions.push({ id: state.coreState.nextAcquisitionId++, kind: "core", coreId: core.id });
+        state.coreState.acquisitions.push({ id: state.coreState.nextAcquisitionId++, kind: "core", coreId: core.id, conversionSourceCoreId:item.conversionSourceCoreId });
         if(core.id==="core_223"||core.id==="core_225"||core.id==="core_226"){
           const count=core.id==="core_223"?2:core.id==="core_225"?3:4;
           if(!equipmentRewardsLocked(state)){
@@ -122,13 +123,13 @@ export function applyCore(state: AircraftCombatState, card: CoreCard, random: ()
           onRemove?.(removed);state.selectedCores=state.selectedCores.filter(id=>!removed.includes(id));removeReleaseCoreState(state,removed);syncEffectiveMaxHp(state);
           state.coreState.consumed.add("core_216");
           recordCoreMetric(state,216,"converted",removed.length);
-          recordCoreMetric(state,216,"rewards",replacements.length);queueBatch(replacements);
+          recordCoreMetric(state,216,"rewards",replacements.length);queueBatch(replacements,undefined,"core_216");
         }
         if (core.id === "core_050")
-            work.push({ tier: "gold",owner:50 });
+            work.push({ tier: "gold",owner:50,conversionSourceCoreId:"core_050" });
         if (core.id === "core_051")
-            work.push({ tier: "diamond",owner:51 });
-        if (core.id === "core_052")queueBatch(chaos,52);
+            work.push({ tier: "diamond",owner:51,conversionSourceCoreId:"core_051" });
+        if (core.id === "core_052")queueBatch(chaos,52,"core_052");
     }
     return true;
 }

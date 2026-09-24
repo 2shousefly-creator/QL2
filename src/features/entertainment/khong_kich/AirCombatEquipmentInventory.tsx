@@ -130,7 +130,7 @@ export function AirCombatEquipmentInventory({ world, onClose, onChange }: { worl
       const compact = width < 600;
       // These fixed chrome budgets mirror the dashboard rows in combat-ui.css.
       const heightCell = (height - (compact ? 226 : 176)) / (compact ? 6 : 5);
-      const widthCell = Math.min((width - 16) / 6, compact ? (width - 106) / 3 : (width / 2 - 110) / 3);
+      const widthCell = Math.min(((compact?width:(width-6)/2) - 30) / 6, compact ? (width - 106) / 3 : (width / 2 - 110) / 3);
       const cell = Math.max(24, Math.floor(Math.min(64, heightCell, widthCell)));
       const emergency = heightCell < 24 || widthCell < 24;
       setLayout(previous => previous.compact === compact && previous.emergency === emergency && previous.cell === cell ? previous : { compact, emergency, cell });
@@ -208,7 +208,7 @@ export function AirCombatEquipmentInventory({ world, onClose, onChange }: { worl
       <div className="equipment-operations">
       <section ref={equippedRegion} className={`equipment-equipped-region ${equipValid ? "equipment-drop-preview" : ""} ${drag && inside(equippedRegion.current, drag) ? equipValid ? "equipment-drop-ready" : "equipment-drop-invalid" : ""} ${drag?.id === "VP01" ? "equipment-magnet-ready" : ""}`}>
         <h3>Trang Bị Đang Mang</h3><div className="equipment-equipped-slots">{q.equipped.map((item, i) => <div key={i} className="equipment-slot">{item ? tile(item, "equipped") : <span className="equipment-empty">{i + 1}</span>}</div>)}</div>
-        <p className="equipment-drop-label">{drag ? drag.id === "VP01" ? "Thả Nam Châm vào đây để tháo toàn bộ trang bị" : equipValid ? "Thả trang bị vào đây để trang bị cho chiến cơ" : "Trang Bị Đang Mang đã đầy" : "3 slot · Dùng Nam Châm Ma Thuật để tháo"}</p>
+        <p className="equipment-drop-label">{drag ? drag.id === "VP01" ? "Thả Nam Châm vào đây để tháo toàn bộ trang bị" : equipValid ? "Thả trang bị vào đây để trang bị cho chiến cơ" : "Trang Bị Đang Mang đã đầy (6/6)" : "6 slot · Dùng Nam Châm Ma Thuật để tháo"}</p>
         {extraction > 0 && clock * 1000 - extraction < 900 && <div key={extraction} className="equipment-extraction" aria-hidden="true"><span /><span /><span /></div>}
       </section>
       <section ref={craftRegion} className={`equipment-crafting ${componentDrag && !craftInvalid ? "equipment-drop-preview" : ""} ${componentDrag && craftHover ? craftInvalid ? "equipment-drop-invalid" : "equipment-drop-ready" : ""} ${feedback && clock < feedback.until ? "equipment-drop-invalid" : ""}`}><h3>Ghép Trang Bị</h3><div className="equipment-craft-row">

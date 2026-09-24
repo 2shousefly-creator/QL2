@@ -317,6 +317,5 @@ export interface CoreRuntimeState {
   consumed: Set<string>;
   criticalBudget: number;
   criticalWindow: number;
-  droneCycle: number;
   deferredCooldowns: Partial<Record<SkillId, number>>;
 }

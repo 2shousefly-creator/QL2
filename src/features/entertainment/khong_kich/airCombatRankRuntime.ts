@@ -1,6 +1,7 @@
 import { GAMEPLAY_SAFE_RECT } from "./airCombatConfig";
 import type { CombatWorld, EnemyEntity, ProjectileEntity } from "./airCombatRuntime";
 import type { SkillId } from "./airCombatTypes";
+import { observeExpansionResource } from "./airCombatExpansion";
 import { skillRank } from "./airCombatSkillRanks";
 import { getEffectiveAircraftStats, getSkillRuntimeValues, endAircraftSkill } from "./airCombatAircraft";
 import { expansionState, finishExpansionSkill } from "./airCombatExpansion";
@@ -15,15 +16,15 @@ export interface RankRuntimeHooks {
  displace(w:CombatWorld,e:EnemyEntity,x:number,y:number):void;
  effect(w:CombatWorld,x:number,y:number,size:number,effect:RankEffect):void;
 }
-export type RankEffect = "lock_complete" | "micro_impact" | "anchor_collapse" | "twin_convergence" | "interference_relay" | "interference_hit";
+export type RankEffect = "lock_complete" | "micro_impact" | "anchor_collapse" | "twin_convergence" | "interference_destroy" | "interference_hit";
 export const INTERFERENCE_WAVE_SPEED = 720;
 export const INTERFERENCE_WAVE_THICKNESS = 32;
 interface Interference {until:number; movement:number; firing:number; projectile:number; waves:Set<number>;cast:number}
-interface Pulse {at:number;wave:number;x?:number;y?:number;radius:number;relay:boolean;cast:number;rank:number;emitterId?:number}
+interface Pulse {at:number;wave:number;cast:number;rank:number}
 export interface InterferenceWave {
  id:number; cast:number; wave:number; rank:number; startsAt:number;
  originX:number; originY:number; radius:number; previousRadius:number; maxRadius:number;
- hitEnemies:Set<number>; hitProjectiles:Set<number>;
+ energyBudget:number; hitEnemies:Set<number>; hitProjectiles:Set<number>;
  enemyDistances:Map<number,number>; projectileDistances:Map<number,number>;
 }
 export interface RankRuntime {
@@ -34,9 +35,9 @@ export interface RankRuntime {
  pulses:Pulse[];
  waves:InterferenceWave[];
  twinVolleys:Map<number,Map<number,{side:number;at:number;done:boolean}>>;
- twinShots:number;
+ twinShots:number; interferenceEnergyRestored:number;
 }
-export const rankRuntime=(w:CombatWorld):RankRuntime=>w.rankRuntime??={interference:new Map(),projectileSlows:new Map(),pulses:[],waves:[],twinVolleys:new Map(),twinShots:0};
+export const rankRuntime=(w:CombatWorld):RankRuntime=>w.rankRuntime??={interference:new Map(),projectileSlows:new Map(),pulses:[],waves:[],twinVolleys:new Map(),twinShots:0,interferenceEnergyRestored:0};
 export function beginRankSkill(w:CombatWorld,id:SkillId,h:RankRuntimeHooks) {
  const r=rankRuntime(w),rank=skillRank(w.aircraft,id),target=h.priority(w);
  if(id==="predator_lock"){r.lock=target?{target:target.id,until:w.elapsed+getSkillRuntimeValues(w.aircraft,id).duration,stacks:0,extended:0,cast:w.nextId++}:undefined;if(!r.lock)endAircraftSkill(w.aircraft,id);}
@@ -47,7 +48,7 @@ export function beginRankSkill(w:CombatWorld,id:SkillId,h:RankRuntimeHooks) {
   w.aircraft.activeEffects.electronic_interference=duration;
   (w.aircraft.activeEffectDurations??={}).electronic_interference=duration;
   times.forEach((delay,wave)=>{
-   const scheduled:Pulse={at:w.elapsed+delay,wave,radius:0,relay:false,cast,rank};
+   const scheduled:Pulse={at:w.elapsed+delay,wave,cast,rank};
    if(delay===0)emitInterferenceWave(w,scheduled);else r.pulses.push(scheduled);
   });
  }
@@ -135,15 +136,9 @@ export function tickRankSkills(w:CombatWorld,dt:number,h:RankRuntimeHooks) {
   while(a.next<=Math.min(now,a.until)+1e-8){a.next+=.5;for(const e of w.enemies)if(h.hostile(w,e)&&Math.hypot(e.x-a.x,e.y-a.y)<=radius+e.radius)h.damage(w,e,getEffectiveAircraftStats(s).firepower*.35,"gravity_anchor");}
   if(now>=a.until)collapseAnchor(w,h,true);
  }
- // Scheduled main waves capture Phantom once at emission; relays remain local.
+ // Each scheduled main wave captures Phantom's position at emission.
  for(let index=r.pulses.length-1;index>=0;index--){
-  const p=r.pulses[index];if(p.at>now)continue;r.pulses.splice(index,1);
-  if(!p.relay){emitInterferenceWave(w,p);continue;}
-  const emitter=p.emitterId===undefined?undefined:w.enemies.find(e=>e.id===p.emitterId&&e.hp>0);
-  const x=emitter?.x??p.x??w.playerX,y=emitter?.y??p.y??w.playerY;
-  h.effect(w,x,y,p.radius*2,"interference_relay");
-  for(const e of w.enemies)if(h.hostile(w,e)&&Math.hypot(e.x-x,e.y-y)<=p.radius+e.radius)applyInterference(w,e,p,h);
-  for(const bullet of w.projectiles)if(bullet.owner==="enemy"&&bullet.allegiance!=="friendly_hacked"&&Math.hypot(bullet.x-x,bullet.y-y)<=p.radius)slowCrossedProjectile(w,bullet);
+  const p=r.pulses[index];if(p.at>now)continue;r.pulses.splice(index,1);emitInterferenceWave(w,p);
  }
  for(let index=r.waves.length-1;index>=0;index--){
   const wave=r.waves[index];wave.previousRadius=wave.radius;
@@ -154,14 +149,23 @@ export function tickRankSkills(w:CombatWorld,dt:number,h:RankRuntimeHooks) {
    wave.enemyDistances.set(e.id,distance);
    if(!crossesWave(wave,previous,distance,e.radius))continue;
    wave.hitEnemies.add(e.id);wave.enemyDistances.delete(e.id);
-   applyInterference(w,e,{cast:wave.cast,wave:wave.wave,rank:wave.rank,relay:false},h);
+   applyInterference(w,e,wave,h);
+   if(wave.rank>=4&&wave.energyBudget<15){
+    const budget=Math.min(5,15-wave.energyBudget);wave.energyBudget+=budget;
+    const max=getEffectiveAircraftStats(s).maxResource,actual=Math.max(0,Math.min(budget,max-s.currentResource));
+    s.currentResource+=actual;r.interferenceEnergyRestored+=actual;observeExpansionResource(s,max);
+   }
   }
-  for(const bullet of w.projectiles){
+  for(let projectileIndex=w.projectiles.length-1;projectileIndex>=0;projectileIndex--){
+   const bullet=w.projectiles[projectileIndex];
    if(bullet.owner!=="enemy"||bullet.allegiance==="friendly_hacked"||wave.hitProjectiles.has(bullet.id))continue;
-   const distance=Math.hypot(bullet.x-wave.originX,bullet.y-wave.originY),previous=wave.projectileDistances.get(bullet.id)??distance;
+   const distance=Math.hypot(bullet.x-wave.originX,bullet.y-wave.originY),previous=wave.projectileDistances.get(bullet.id)??Math.hypot(bullet.previousX-wave.originX,bullet.previousY-wave.originY);
    wave.projectileDistances.set(bullet.id,distance);
    if(!crossesWave(wave,previous,distance,bullet.radius))continue;
-   wave.hitProjectiles.add(bullet.id);wave.projectileDistances.delete(bullet.id);slowCrossedProjectile(w,bullet);
+   wave.hitProjectiles.add(bullet.id);wave.projectileDistances.delete(bullet.id);
+   if(wave.rank>=5&&wave.wave===2){
+    if(h.blockable(bullet)){h.effect(w,bullet.x,bullet.y,26,"interference_destroy");h.remove(w,projectileIndex);}
+   }else slowCrossedProjectile(w,bullet);
   }
   // Removing the wave releases all per-wave IDs, including any already-dead entities.
   if(wave.radius>=wave.maxRadius)r.waves.splice(index,1);
@@ -181,22 +185,21 @@ function emitInterferenceWave(w:CombatWorld,p:Pulse) {
  const x=w.playerX,y=w.playerY,rect=GAMEPLAY_SAFE_RECT;
  const maxRadius=Math.hypot(Math.max(Math.abs(x-rect.left),Math.abs(x-rect.right)),Math.max(Math.abs(y-rect.top),Math.abs(y-rect.bottom)))+INTERFERENCE_WAVE_THICKNESS;
  rankRuntime(w).waves.push({id:w.nextId++,cast:p.cast,wave:p.wave,rank:p.rank,startsAt:p.at,originX:x,originY:y,radius:0,previousRadius:0,maxRadius,
-  hitEnemies:new Set(),hitProjectiles:new Set(),enemyDistances:new Map(),projectileDistances:new Map()});
+  energyBudget:0,hitEnemies:new Set(),hitProjectiles:new Set(),enemyDistances:new Map(),projectileDistances:new Map()});
 }
 function crossesWave(wave:InterferenceWave,previousDistance:number,distance:number,support:number):boolean {
  const before=previousDistance-wave.previousRadius,after=distance-wave.radius,edge=INTERFERENCE_WAVE_THICKNESS/2+support;
  return Math.min(before,after)<=edge&&Math.max(before,after)>=-edge;
 }
-function applyInterference(w:CombatWorld,e:EnemyEntity,p:Pick<Pulse,"cast"|"wave"|"rank"|"relay">,h:RankRuntimeHooks) {
+function applyInterference(w:CombatWorld,e:EnemyEntity,p:Pick<Pulse,"cast"|"wave"|"rank">,h:RankRuntimeHooks) {
  const r=rankRuntime(w),now=w.elapsed;
  let i=r.interference.get(e.id);
  if(!i||i.cast!==p.cast){i={until:now+3,movement:.75,firing:.8,projectile:.7,waves:new Set(),cast:p.cast};r.interference.set(e.id,i);}
- if(!p.relay)i.waves.add(p.wave);
+ i.waves.add(p.wave);
  const max=p.rank>=5&&i.waves.size>=3,resonant=p.rank>=3&&i.waves.size>=2;
- Object.assign(i,{until:now+(max?2:3),movement:max?.45:resonant?.6:.75,firing:max?.55:resonant?.65:.8,projectile:max?.35:resonant?.5:.7});
+ Object.assign(i,{until:now+3,movement:max?.45:resonant?.6:.75,firing:max?.55:resonant?.65:.8,projectile:max?1:resonant?.5:.7});
  h.effect(w,e.x,e.y,e.radius*2+12,"interference_hit");
- if(!p.relay)h.damage(w,e,getEffectiveAircraftStats(w.aircraft).firepower*(p.wave===0?1:.7),"electronic_interference");
- if(!p.relay&&p.wave===0&&p.rank>=4)r.pulses.push({...p,at:now+.5,x:e.x,y:e.y,emitterId:e.id,radius:70,relay:true});
+ h.damage(w,e,getEffectiveAircraftStats(w.aircraft).firepower*(p.wave===0?1:.7),"electronic_interference");
 }
 function slowCrossedProjectile(w:CombatWorld,bullet:ProjectileEntity) {
  const r=rankRuntime(w),emitter=bullet.sourceEnemyId===undefined?undefined:r.interference.get(bullet.sourceEnemyId);

@@ -10,7 +10,7 @@ import type { CombatWorld, EnemyEntity, ProjectileEntity } from "./airCombatRunt
 import type { SkillId } from "./airCombatTypes";
 
 export const isAstraSkill = (id:SkillId) => id === "orbit_reversal" || id === "stellar_lance" || id === "starfall";
-export interface AstraMeteor { id:number; target:number; x:number; y:number; at:number; frozen:boolean }
+export interface AstraMeteor { id:number; target:number; x:number; y:number; at:number; fallDuration:number; doom:boolean; frozen:boolean }
 export interface OrbitReleaseBullet { id:number; x:number; y:number; lane:number; launchAt:number; fired:boolean }
 export interface OrbitRelease { expansionCast?: ExpansionCast; at:number; damage:number; bullets:OrbitReleaseBullet[] }
 /** Shared phase even in Reduced Motion: suppress trails, never move the capture snapshot. */
@@ -56,14 +56,14 @@ export interface AstraRuntime {
   orbit?:{expansionCast?:ExpansionCast;until:number;captured:number;refunded:number};
   orbitReleases?:OrbitRelease[];
   charge?:{expansionCast?:ExpansionCast;at:number;startedAt:number;duration:number;stack:number};
-  starfall?:{expansionCast?:ExpansionCast;next:number;locks:number;stopped:boolean;marked:Set<number>;pending:AstraMeteor[];refunded:number};
+  starfall?:{expansionCast?:ExpansionCast;next:number;locks:number;count:number;rank:number;stopped:boolean;marked:Set<number>;pending:AstraMeteor[];refunded:number};
   burns:{expansionCast?:ExpansionCast;id:number;x:number;y:number;radius:number;until:number;next:number}[];
-  impacts:{id:number;x:number;y:number;radius:number;at:number}[];
+  impacts:{id:number;x:number;y:number;radius:number;at:number;doom:boolean}[];
 }
 export interface AstraHooks {
   projectile(w:CombatWorld,p:Partial<ProjectileEntity>&Pick<ProjectileEntity,"owner"|"x"|"y"|"vx"|"vy"|"rawDamage">):ProjectileEntity|null;
   damage(w:CombatWorld,e:EnemyEntity,raw:number,skill:SkillId,burn?:boolean,cast?:ExpansionCast,beam?:boolean):number;
-  impact(w:CombatWorld,x:number,y:number,radius:number):void;
+  impact(w:CombatWorld,x:number,y:number,radius:number,doom:boolean):void;
   hostile(w:CombatWorld,e:EnemyEntity):boolean;
   remove(w:CombatWorld,index:number):void;
 }
@@ -103,7 +103,7 @@ export function beginAstraSkill(w:CombatWorld,id:SkillId,spent:number,h:AstraHoo
     const stack=s.coreState.stacks.lanceCastStack??0;r.charge={expansionCast:expansionState(s).casts[id],at:w.elapsed+v.charge,startedAt:w.elapsed,duration:v.charge,stack};
     r.metrics["lance.peakStack"]=Math.max(r.metrics["lance.peakStack"]??0,stack);
   }
-  if(id==="starfall")r.starfall={expansionCast:expansionState(s).casts[id],next:w.elapsed,locks:0,stopped:false,marked:new Set(),pending:[],refunded:0};
+  if(id==="starfall")r.starfall={expansionCast:expansionState(s).casts[id],next:w.elapsed,locks:0,count:v.count,rank:skillRank(s,id),stopped:false,marked:new Set(),pending:[],refunded:0};
   updateAstra(w,0,h);
 }
 export function captureAstraProjectiles(w:CombatWorld,h:AstraHooks) {
@@ -165,14 +165,15 @@ export function updateAstra(w:CombatWorld,_dt:number,h:AstraHooks) {
   const f=r.starfall;
   if(f) {
     // World RNG selects only live opposing units; a cast never reassigns an existing marker.
-    if(!f.stopped&&f.locks<10&&now+1e-8>=f.next) {
+    if(!f.stopped&&f.locks<f.count&&now+1e-8>=f.next) {
       const pool=w.enemies.filter(e=>h.hostile(w,e));
       if(!pool.length)f.stopped=true;
       else {
         const fresh=pool.filter(e=>!f.marked.has(e.id)),targets=fresh.length?fresh:pool;
         const e=targets[Math.min(targets.length-1,Math.floor(w.random()*targets.length))];
         astraMetric(w,f.marked.has(e.id)?"starfall.repeatedMarks":"starfall.uniqueTargets");
-        f.marked.add(e.id);f.pending.push({id:w.nextId++,target:e.id,x:e.x,y:e.y,at:f.next+1,frozen:false});
+        const doom=f.rank>=3&&f.locks===f.count-1,fallDuration=doom?2:1;
+        f.marked.add(e.id);f.pending.push({id:w.nextId++,target:e.id,x:e.x,y:e.y,at:f.next+fallDuration,fallDuration,doom,frozen:false});
         f.locks++;f.next+=.5;astraMetric(w,"starfall.locks");
       }
     }
@@ -180,19 +181,18 @@ export function updateAstra(w:CombatWorld,_dt:number,h:AstraHooks) {
       const m=f.pending[i],target=w.enemies.find(e=>e.id===m.target);
       if(!m.frozen){if(target){m.x=target.x;m.y=target.y;}if(!target||target.hp<=0)m.frozen=true;}
       if(now+1e-8<m.at)continue;
-      f.pending.splice(i,1);const radius=(skillRank(s, "starfall") >= 2)?55:35;
-      h.impact(w,m.x,m.y,radius);
-      r.impacts.push({id:w.nextId++,x:m.x,y:m.y,radius,at:now});astraMetric(w,"starfall.impacts");
+      f.pending.splice(i,1);const radius=m.doom?110:f.rank>=2?65:45;
+      h.impact(w,m.x,m.y,radius,m.doom);
+      r.impacts.push({id:w.nextId++,x:m.x,y:m.y,radius,at:now,doom:m.doom});astraMetric(w,"starfall.impacts");
       for(const e of w.enemies)if(h.hostile(w,e)&&circleVsAircraft(m.x,m.y,radius,getEnemyHitbox(e))) {
-        if((skillRank(s, "starfall") >= 2)&&!circleVsAircraft(m.x,m.y,35,getEnemyHitbox(e)))recordCoreMetric(s,163,"hits",1);
-        const dealt=h.damage(w,e,stats.firepower*((skillRank(s, "starfall") >= 2)?2.65:2.1),"starfall",false,f.expansionCast);
+        if((skillRank(s, "starfall") >= 2)&&!circleVsAircraft(m.x,m.y,45,getEnemyHitbox(e)))recordCoreMetric(s,163,"hits",1);
+        const dealt=h.damage(w,e,stats.firepower*(m.doom?12:[3.55,3.95,4.35][f.rank-1]),"starfall",false,f.expansionCast);
         astraMetric(w,"starfall.impactHits");astraMetric(w,"starfall.impactDamage",dealt);
-        if((skillRank(s, "starfall") >= 3)&&e.hp>0){e.astraArmorUntil=now+6;recordCoreMetric(s,166,"targets",1);astraMetric(w,"starfall.armorDebuffs");}
-        if(e.hp<=0&&dealt>0){astraMetric(w,"starfall.kills");if((skillRank(s, "starfall") >= 3)){const fraction=Math.min(.05,.35-f.refunded);f.refunded+=fraction;refund(w,fraction,164,"starfall.manaRestored");}}
+        if(e.hp<=0&&dealt>0){astraMetric(w,"starfall.kills");if(f.rank>=2){const fraction=Math.max(0,Math.min(.06,.36-f.refunded));f.refunded+=fraction;refund(w,fraction,164,"starfall.manaRestored");}}
       }
     }
-    s.activeEffects.starfall=Math.max(.0001,...f.pending.map(m=>m.at-now),f.stopped?0:5.5-(now-(f.next-f.locks*.5)));
-    if((f.stopped||f.locks===10)&&!f.pending.length){r.starfall=undefined;endAircraftSkill(s,"starfall");}
+    s.activeEffects.starfall=Math.max(.0001,...f.pending.map(m=>m.at-now),f.stopped||f.locks>=f.count?0:f.next-now+(f.count-f.locks-1)*.5+(f.rank>=3?2:1));
+    if((f.stopped||f.locks===f.count)&&!f.pending.length){r.starfall=undefined;endAircraftSkill(s,"starfall");}
   }
   // The newest containing active zone owns damage even if an older zone's tick is due.
   for(let i=r.burns.length-1;i>=0;i--) {

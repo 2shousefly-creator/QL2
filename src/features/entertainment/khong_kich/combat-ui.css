@@ -24,9 +24,9 @@
 .air-owned-core--gold { border-color:#fbbf24; background:#322510; color:#fef3c7; }
 .air-owned-core--diamond { border-color:#67e8f9; background:#17223c; color:#cffafe; }
 
-/* Inventory: eight slots per page, independent detail scrolling, fixed footer. */
+/* Inventory: six retained core slots, independent detail scrolling, fixed footer. */
 .modal-design .app-overlay__body.air-core-inventory { display:grid; grid-template-rows:minmax(170px, .8fr) minmax(95px, 1fr); gap:10px; height:min(68dvh, 650px); min-height:0; overflow:hidden; }
-.air-core-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); grid-template-rows:repeat(2,minmax(0,1fr)); gap:5px; min-height:0; touch-action:pan-y; }
+.air-core-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); grid-template-rows:repeat(2,minmax(0,1fr)); gap:5px; min-height:0; touch-action:pan-y; }
 .air-core-slot { display:flex; align-items:center; gap:6px; min-width:0; border:1px solid; border-radius:8px; padding:3px 6px; text-align:left; touch-action:manipulation; }
 .air-core-slot .combat-ui-icon { width:30px; height:30px; }
 .air-core-slot > span:last-child { font-size:11px; font-weight:650; line-height:1.15; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
@@ -348,12 +348,12 @@
 .air-reroll-controls { display:flex; flex-direction:column; gap:4px; justify-content:center; }
 .air-extra-reroll { font-size:10px; min-height:28px; }
 .air-upgrade-choices { overflow-y:auto; min-height:0; }
-.air-combat-hud { grid-template-columns:16cqw 7.4cqw minmax(0,1fr); column-gap:1cqw; }
-.air-combat-hud .air-hub-avatar { grid-column:1; grid-row:1 / 3; }
-.air-combat-hud .air-hub-equipment { grid-column:2; grid-row:1 / 3; display:grid; grid-template-rows:repeat(3,minmax(0,1fr)); gap:.55cqw; min-height:0; }
+.air-combat-hud { grid-template-columns:14cqw 12.2cqw minmax(0,1fr); column-gap:1cqw; }
+.air-combat-hud .air-hub-avatar { grid-column:1; grid-row:1 / 3;width:14cqw;height:14cqw; }
+.air-combat-hud .air-hub-equipment { grid-column:2; grid-row:1 / 3; display:grid; grid-auto-flow:column; grid-template-columns:repeat(2,minmax(0,1fr)); grid-template-rows:repeat(3,minmax(0,1fr)); gap:.55cqw; min-height:0; }
 .air-hub-equipment-slot { min-width:0; min-height:0; aspect-ratio:1; width:100%; overflow:hidden; border:1px solid #3d5266; border-radius:.7cqw; background:#040c17; color:#74869b; display:grid; place-items:center; font-size:2cqw; }
-.air-hub-equipment-slot .equipment-icon { width:100%; height:100%; }
-.air-combat-hud .air-hub-top { grid-column:3; grid-template-columns:minmax(0,1fr) minmax(0,1fr) 21cqw 6cqw 6cqw; gap:.65cqw; }
+.air-hub-equipment-slot .equipment-icon { width:100%; height:100%; --equipment-art-inset:8%; display:block; }
+.air-combat-hud .air-hub-top { grid-column:3; grid-template-columns:minmax(0,1fr) minmax(0,1fr) 18cqw 5.5cqw 5.5cqw; gap:.65cqw; }
 .air-combat-hud .combat-stat-chips { grid-column:3; }
 .air-hub-equipment-button { display:flex; align-items:center; justify-content:center; gap:.7cqw; border:1px solid #91d8e3; border-radius:1cqw; background:#183c50; color:#e5fcff; box-shadow:inset 0 1px #d3faff55; font-weight:800; font-size:2.35cqw; line-height:1.05; transform-origin:center; }
 .air-hub-equipment-button .equipment-icon { width:5.4cqw; height:5.4cqw; flex-shrink:0; }
@@ -485,8 +485,8 @@
   overflow:visible; border-radius:9px;
 }
 .equipment-dashboard h3 { margin:0; font-size:11px; line-height:12px; }
-.equipment-dashboard .equipment-equipped-slots { gap:8px; }
-.equipment-dashboard .equipment-slot { width:var(--equipment-cell-size); height:var(--equipment-cell-size); }
+.equipment-dashboard .equipment-equipped-slots { display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:4px;min-width:0; }
+.equipment-dashboard .equipment-equipped-slots .equipment-slot { width:min(100%,var(--equipment-cell-size));height:auto;justify-self:center; }
 .equipment-inventory-panel .equipment-dashboard .equipment-drop-label {
   box-sizing:border-box; height:20px; min-height:0; margin:0; font-size:9px; line-height:10px;
 }
@@ -534,7 +534,7 @@
 /* Ranked skills and bounded draft layout take precedence over legacy combat styles. */
 .air-ranked-skill{position:relative;min-width:0;min-height:0}
 .air-skill-plus{display:grid;place-items:center;position:absolute;z-index:25;left:50%;bottom:calc(100% + 6px);transform:translateX(-50%);width:34px;height:34px;border:1px solid #fff1a5;background:#9c6c13;color:#fff8c0;font-size:23px;font-weight:900;line-height:20px;touch-action:none}
-.air-rank-nodes{display:flex;gap:3px;position:relative;z-index:22;margin:3px 0 1px;pointer-events:none}
+.air-rank-nodes{display:flex;gap:3px;position:relative;z-index:22;margin:7px 0 1px;pointer-events:none}
 .air-rank-nodes i{width:6px;height:5px;border:1px solid #718096;background:#111827}
 .air-rank-nodes i[data-earned=true]{background:#facc15;border-color:#fef08a;box-shadow:0 0 3px #facc1588}
 .air-rank-nodes i[data-next=true]{border-color:#fde047}
@@ -617,11 +617,8 @@
 .air-core-reroll[data-bonus=true]:enabled { color:#241300;background:linear-gradient(145deg,#ffe58a,#dba32a);border-color:#fff0a6;box-shadow:0 0 12px #fbbf2499,inset 0 0 6px #fff2bd88; }
 .air-core-reroll:disabled { opacity:1;color:#64748b;background:#111720;border-color:#3d4654;box-shadow:none;cursor:default; }
 .air-core-once-rule { flex-basis:100%;margin:0;color:#cbd5e1;font-size:11px;line-height:1.4;text-align:center; }
-.air-core-pages { display:grid;grid-template-rows:minmax(0,1fr) auto;gap:6px;min-height:0; }
+.air-core-retained { display:grid;grid-template-rows:minmax(0,1fr);min-height:0; }
 .air-core-grid .air-core-slot { flex-direction:column;justify-content:center;padding:5px 3px;text-align:center; }
-.air-core-pagination { display:flex;justify-content:center;align-items:center;gap:16px;font-size:12px;color:#e2e8f0; }
-.air-core-pagination button { width:44px;height:36px;border:1px solid #94a3b877;background:#17253a;font-size:24px;touch-action:manipulation; }
-.air-core-pagination button:disabled { opacity:.3; }
 .air-core-owned-detail { width:100%;box-sizing:border-box; }
 
 .air-core-transition { display:block;position:relative;width:100%;height:100%;min-height:0; }
@@ -633,21 +630,21 @@
 .air-core-transition[data-detail=true] { height:auto; }
 .air-core-shatter { position:absolute;inset:0;pointer-events:none;z-index:2;overflow:hidden;color:#f1f5f9; }
 .air-core-old,.air-core-shard { position:absolute;inset:0;background:var(--core-background); }
-.air-core-old { animation:air-core-old-exit 320ms linear both; }
-.air-core-cracks { position:absolute;inset:0;width:100%;height:100%;z-index:3;fill:none;stroke:var(--core-highlight);stroke-width:.8;animation:air-core-crack 150ms linear both; }
-.air-core-flash { position:absolute;inset:0;z-index:4;background:var(--core-highlight);animation:air-core-flash 160ms linear both; }
-.air-core-shard { animation:air-core-shard 320ms ease-out both; }
+.air-core-old { animation:air-core-old-exit 640ms linear both; }
+.air-core-cracks { position:absolute;inset:0;width:100%;height:100%;z-index:3;fill:none;stroke:var(--core-highlight);stroke-width:.8;animation:air-core-crack 300ms linear both; }
+.air-core-flash { position:absolute;inset:0;z-index:4;background:var(--core-highlight);animation:air-core-flash 320ms linear both; }
+.air-core-shard { filter:drop-shadow(0 0 5px var(--core-highlight));animation:air-core-shard 640ms ease-out both; }
 .air-core-shard-0 { clip-path:polygon(0 0,48% 0,35% 42%,0 20%);--shard-x:-25px;--shard-y:-24px;--shard-r:-12deg; }
 .air-core-shard-1 { clip-path:polygon(48% 0,100% 0,100% 30%,54% 55%,35% 42%);--shard-x:22px;--shard-y:-28px;--shard-r:14deg; }
 .air-core-shard-2 { clip-path:polygon(0 20%,35% 42%,54% 55%,0 85%);--shard-x:-40px;--shard-y:0px;--shard-r:-18deg; }
 .air-core-shard-3 { clip-path:polygon(54% 55%,100% 30%,100% 85%);--shard-x:40px;--shard-y:0px;--shard-r:18deg; }
 .air-core-shard-4 { clip-path:polygon(0 85%,54% 55%,70% 100%,0 100%);--shard-x:-20px;--shard-y:28px;--shard-r:-15deg; }
 .air-core-shard-5 { clip-path:polygon(54% 55%,100% 85%,100% 100%,70% 100%);--shard-x:28px;--shard-y:30px;--shard-r:12deg; }
-.air-core-transition[data-transition=true]>.air-core-materialize { animation:air-core-materialize 460ms ease-out both; }
+.air-core-transition[data-transition=true]>.air-core-materialize { animation:air-core-materialize 920ms ease-out both; }
 @keyframes air-core-crack { 0%{opacity:0;stroke-dasharray:0 200}60%,95%{opacity:1;stroke-dasharray:200 0}100%{opacity:0} }
 @keyframes air-core-flash { 0%,55%{opacity:0}70%{opacity:.95}100%{opacity:0} }
 @keyframes air-core-old-exit { 0%,46%{opacity:1}47%,100%{opacity:0} }
-@keyframes air-core-shard { 0%,46%{opacity:0;transform:none}47%{opacity:1;transform:none}100%{opacity:0;transform:translate(var(--shard-x),var(--shard-y)) rotate(var(--shard-r)) scale(.8)} }
+@keyframes air-core-shard { 0%,46%{opacity:0;transform:none}47%{opacity:1;transform:none}100%{opacity:0;transform:translate(var(--shard-x),var(--shard-y)) rotate(var(--shard-r)) scale(var(--shard-scale,.8))} }
 @keyframes air-core-materialize { 0%,54%{opacity:0;transform:scale(.94);filter:brightness(1.6)}92%{opacity:1;transform:scale(1.015);filter:brightness(1.1)}100%{opacity:1;transform:none;filter:none} }
 @keyframes air-core-crossfade-out { from{opacity:1}to{opacity:0} }
 [data-reduced-motion=true] .air-core-shard,[data-reduced-motion=true] .air-core-cracks,[data-reduced-motion=true] .air-core-flash { display:none; }
@@ -661,12 +658,35 @@
 
 @property --skill-cooldown-angle { syntax:'<angle>';inherits:false;initial-value:360deg; }
 .air-skill-block-overlay,.air-skill-resource-overlay { position:absolute;inset:0;z-index:21;pointer-events:none;display:flex;align-items:center;justify-content:center; }
-.air-skill-block-overlay { background:#0005; }
+.air-skill-block-overlay { background:#12182055; }
 /* From twelve o'clock, the clockwise remainder shrinks counter-clockwise. Text is a separate layer. */
-.air-skill-cooldown-mask { position:absolute;inset:0;background:conic-gradient(from 0deg,#03060bb3 var(--skill-cooldown-angle),transparent 0deg);transition:--skill-cooldown-angle 90ms linear; }
+.air-skill-cooldown-mask { position:absolute;inset:0;background:conic-gradient(from 0deg,#202a36b3 var(--skill-cooldown-angle),transparent 0deg);transition:--skill-cooldown-angle 90ms linear; }
 .air-skill-cooldown-number { position:relative;color:#fff;font-size:clamp(17px,5.8cqw,27px);line-height:1;font-weight:900;font-variant-numeric:tabular-nums;text-shadow:0 2px 4px #000; }
-.air-skill-resource-overlay { gap:3px;background:#89dfff88;color:#09293c;text-shadow:0 0 3px #fff; }
+.air-skill-resource-overlay { gap:3px;background:#b0f3ff98;color:#09293c;text-shadow:0 0 3px #fff; }
 .air-skill-resource-overlay svg { width:6cqw;height:6cqw;stroke-width:3; }
 .air-skill-resource-overlay strong { font-size:clamp(24px,8cqw,36px);font-weight:950; }
 
 @media(max-height:500px) { .modal-design .app-overlay__body.air-core-inventory { overflow-y:auto;grid-template-rows:170px minmax(100px,1fr); } }
+
+/* Completed recovery travels counter-clockwise from twelve; the icon/text stay upright. */
+.air-skill-cooldown-border { position:absolute;inset:0;z-index:23;padding:2px;pointer-events:none;transform:scaleX(-1);background:conic-gradient(from 0deg,#a5f3fc 0deg var(--skill-completed-angle),transparent var(--skill-completed-angle) 360deg);mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);mask-composite:exclude;-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor; }
+.air-skill-lock { position:absolute;z-index:23;right:4px;bottom:4px;pointer-events:none;font-size:12px; }
+.air-core-materialize { position:relative; }
+.air-core-arrival-flash { position:absolute;inset:0;pointer-events:none;opacity:0;background:linear-gradient(115deg,transparent 15%,var(--core-highlight) 48%,#fff 50%,var(--core-highlight) 52%,transparent 85%);mix-blend-mode:screen; }
+.air-core-transition[data-transition=true] .air-core-arrival-flash { animation:air-core-arrival 920ms ease-out both; }
+@keyframes air-core-arrival { 0%,54%{opacity:0;transform:scale(.7)}65%{opacity:.9;transform:scale(.85)}82%{opacity:.5;transform:scale(1)}100%{opacity:0;transform:scale(1.02)} }
+.air-core-shard-6 { clip-path:polygon(0 0,22% 0,18% 28%,0 20%);--shard-x:-33px;--shard-y:-18px;--shard-r:27deg;--shard-scale:.55; }
+.air-core-shard-7 { clip-path:polygon(22% 0,48% 0,35% 42%,18% 28%);--shard-x:-14px;--shard-y:-36px;--shard-r:-30deg;--shard-scale:.7; }
+.air-core-shard-8 { clip-path:polygon(48% 0,78% 0,72% 26%,54% 55%,35% 42%);--shard-x:17px;--shard-y:-32px;--shard-r:35deg;--shard-scale:.65; }
+.air-core-shard-9 { clip-path:polygon(78% 0,100% 0,100% 30%,72% 26%);--shard-x:38px;--shard-y:-25px;--shard-r:22deg;--shard-scale:.5; }
+.air-core-shard-10 { clip-path:polygon(54% 55%,100% 85%,86% 100%,70% 100%);--shard-x:32px;--shard-y:21px;--shard-r:-32deg;--shard-scale:.6; }
+.air-core-shard-11 { clip-path:polygon(54% 55%,70% 100%,30% 100%,0 85%);--shard-x:-25px;--shard-y:34px;--shard-r:29deg;--shard-scale:.7; }
+/* The twelve fragments partition the old card instead of duplicating its surface. */
+.air-core-shard-0 { clip-path:polygon(0 20%,18% 28%,35% 42%,0 52%); }
+.air-core-shard-1 { clip-path:polygon(0 52%,35% 42%,54% 55%,20% 68%,0 85%); }
+.air-core-shard-2 { clip-path:polygon(100% 30%,54% 55%,77% 63%,100% 58%); }
+.air-core-shard-3 { clip-path:polygon(100% 58%,77% 63%,54% 55%,100% 85%); }
+.air-core-shard-4 { clip-path:polygon(0 85%,30% 100%,0 100%); }
+.air-core-shard-5 { clip-path:polygon(100% 85%,100% 100%,86% 100%); }
+[data-reduced-motion=true] .air-core-arrival-flash { display:none; }
+@media(prefers-reduced-motion:reduce){.air-core-arrival-flash { display:none; }}

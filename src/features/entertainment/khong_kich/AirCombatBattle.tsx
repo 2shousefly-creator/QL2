@@ -13,7 +13,7 @@ import { AirCombatModal as AppModal, AirCombatConfirmation as ConfirmationDialog
 import { getAirCombatStage } from "./airCombatStages";
 import { playerSkillLocked } from "./airCombatStatus";
 import { AirCombatStatusStrip, type StatusStripHandle } from "./AirCombatStatusStrip";
-import { formatCooldownSeconds, getActiveSkillDuration, getSkillTooltipModel } from "./airCombatPresentation";
+import { formatCooldownSeconds, formatSkillCellCooldown, getActiveSkillDuration, getSkillTooltipModel } from "./airCombatPresentation";
 import { BOSS_HUD_HEIGHT } from "./airCombatHudLayout";
 import { AirCombatOverlayFeedback } from "./AirCombatOverlayFeedback";
 import { CoreDescription } from "./CoreDescription";
@@ -530,7 +530,7 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
     if (choices) {
       setCoreChoices([...choices]);setRerollTransition({slot,origin,previous});
       // Timeout is independent of animation events (including reduced/disabled motion).
-      rerollTimer.current=window.setTimeout(()=>{rerollTimer.current=null;setRerollTransition(null);},reducedMotion||systemReducedMotion?180:480);
+      rerollTimer.current=window.setTimeout(()=>{rerollTimer.current=null;setRerollTransition(null);},reducedMotion||systemReducedMotion?180:960);
     }
   };
   const bonusRerollAvailable=()=>Boolean(worldRef.current.coreSelectionEvent?.extraAvailable&&!worldRef.current.coreSelectionEvent.extraUsed)||releaseState(worldRef.current.aircraft).reserve>0;
@@ -648,13 +648,14 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
           const values = getSkillRuntimeValues(worldRef.current.aircraft, skillId);
           const availability=getWorldSkillAvailability(worldRef.current,skillId);
           const {cooldown,borrow,free}=availability;
-          const active = skillId === "escort_drone" ? hud.droneActive : (worldRef.current.aircraft.activeEffects[skillId] || 0) > 0;
+          const active = skillId === "escort_drone" ? hud.droneActive : (worldRef.current.aircraft.activeEffects[skillId] || 0) > 0 || (skillId==="missile_swarm"&&worldRef.current.aircraft.coreState.deferredCooldowns[skillId]!==undefined);
           const state=worldRef.current.aircraft, rank=skillRank(state,skillId), allocatable=canAllocateSkill(state,skillId);
           const locked = rank===0 || ultimateCastDisabled(state,skillId) || playerSkillLocked(state);
           const manualDetonate=availability.manualAction==="detonate";
           const unavailable=!availability.available;
           const blockingCooldown=availability.reason==="cooldown"&&cooldown>0;
           const missingResource=availability.reason==="resource";
+          const statusLabel=locked ? rank===0?(isUltimate(skillId)&&state.level<6?"Khóa đến Lv6":"Chưa học"):"Đã khóa" : manualDetonate ? "Kích nổ" : active ? "Đang bật" : borrow&&availability.available ? "Có thể vay dùng ngay" : blockingCooldown ? `Đang hồi ${formatCooldownSeconds(cooldown)}` : missingResource ? `Thiếu ${resourceLabel}` : unavailable ? "Chưa thể dùng" : "Sẵn sàng";
           return (
             <div className="air-ranked-skill" key={skillId}>
             <button
@@ -666,7 +667,7 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
               data-skill-cost={values.cost}
               data-borrow-ready={borrow && availability.available}
               data-reduced-motion={reducedMotion}
-              aria-label={`${skill.name}, ${skillId === "escort_drone" ? "cần ít nhất 5 Điện, không trừ phí bật" : `tốn ${free ? 0 : Math.round(values.cost)} ${resourceLabel}`}`}
+              aria-label={`${skill.name}, ${skillId === "escort_drone" ? `yêu cầu triệu hồi ${values.cost} Điện, không tiêu hao khi triệu hồi` : `tốn ${free ? 0 : Math.round(values.cost)} ${resourceLabel}`}, ${statusLabel}`}
               aria-disabled={unavailable}
               aria-pressed={active}
               onPointerDown={(event) => onSkillPointerDown(event, skillId)}
@@ -685,10 +686,11 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
               </span>
               <span className="air-rank-nodes" aria-label={`Cấp ${rank}/${SKILL_RANKS[skillId].length}`}>{SKILL_RANKS[skillId].map(row=><i key={`${row.rank}:${rank}`} data-earned={row.rank<=rank} data-next={allocatable&&row.rank===rank+1} data-new={row.rank===rank&&state.coreState.time-(state.skillUpAt[skillId]??-Infinity)<2}/>)}</span>
               {rank>0&&<span key={`up:${rank}`} className="air-skill-up-vfx" aria-hidden="true"/>}
-              <span className={`relative z-10 text-[7px] font-black tabular-nums ${active ? "text-emerald-200" : unavailable ? "text-slate-500" : "text-cyan-200"}`}>{locked ? rank===0?(isUltimate(skillId)&&state.level<6?"🔒 Lv6":"CHƯA HỌC"):"ĐÃ KHÓA" : manualDetonate ? "KÍCH NỔ" : active ? "ĐANG BẬT" : borrow ? "Có thể dùng ngay" : blockingCooldown ? "ĐANG HỒI" : missingResource ? "THIẾU " + resourceLabel.toUpperCase() : unavailable ? "CHƯA THỂ DÙNG" : "SẴN SÀNG"}</span>
+              {locked&&<span className="air-skill-lock" aria-hidden="true">🔒</span>}
               {blockingCooldown&&<span className="air-skill-block-overlay" aria-label={`Hồi chiêu ${formatCooldownSeconds(cooldown)}`}>
                 <span className="air-skill-cooldown-mask" style={{"--skill-cooldown-angle":`${availability.cooldownProgress*360}deg`} as React.CSSProperties}/>
-                <strong className="air-skill-cooldown-number">{formatCooldownSeconds(cooldown)}</strong>
+                <strong className="air-skill-cooldown-number">{formatSkillCellCooldown(cooldown)}</strong>
+                <span className="air-skill-cooldown-border" style={{"--skill-completed-angle":`${(1-availability.cooldownProgress)*360}deg`} as React.CSSProperties} aria-hidden="true"/>
               </span>}
               {missingResource&&<span className="air-skill-resource-overlay" aria-label={`Thiếu ${resourceLabel}`}>
                 {hud.stats.resourceKind==="mana"?<Droplet aria-hidden="true"/>:<Zap aria-hidden="true"/>}<strong>!</strong>
