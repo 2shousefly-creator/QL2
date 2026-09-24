@@ -291,6 +291,9 @@ export interface AirCombatHudSnapshot {
 
 /** Run-local event state; no persistent profile/schema changes. Timers use combat time. */
 export interface CoreRuntimeState {
+  /** Every offer/grant in this run, including skipped and Pandora-removed Cores. */
+  encounteredCoreIds: Set<CoreId>;
+  skillCooldownDurations: Partial<Record<SkillId, number>>;
   syncedMaxHp?: number;
   release?: import("./airCombatReleaseState").ReleaseCoreState;
   expansion?: import("./airCombatExpansion").ExpansionState;

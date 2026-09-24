@@ -1,4 +1,4 @@
-import { isCoreEligible } from "./airCombatCoreEligibility";
+import { isCoreEligible, isCoreOfferable, hasCoreRewardCapacity, canCommitCoreOffers, randomGrantCandidates, pandoraConvertibleCoreIds, planPandoraReplacements } from "./airCombatCoreEligibility";
 import { grantEquipmentReward, randomEquipmentId, equipmentRewardsLocked, sacrificeEquipment } from "./airCombatEquipmentState";
 import { releaseState } from "./airCombatReleaseState";
 import { initializeReleaseCore, removeReleaseCoreState } from "./airCombatSelectionRules";
@@ -21,7 +21,7 @@ function weightedTier(valid: CoreTier[], random: () => number, state?: AircraftC
     return valid[valid.length - 1];
 }
 export function rollCoreTier(_selectionNumber: number, random: () => number = Math.random): CoreTier { return weightedTier(TIERS, random)!; }
-const eligible = (state: AircraftCombatState, tier?: CoreTier) => CORE_DEFINITIONS.filter(c => !c.skillId && isCoreEligible(state,c) && !state.selectedCores.includes(c.id) && (!tier || c.tiers[0] === tier));
+const eligible = (state: AircraftCombatState, tier?: CoreTier) => CORE_DEFINITIONS.filter(c => isCoreOfferable(state,c) && (!tier || c.tiers[0] === tier));
 const normalPool = eligible;
 export function makeCoreCard(definition: CoreDefinition): CoreCard {
     return { id: definition.id, name: definition.name, description: definition.description, system: definition.system, skillSlot: definition.skillSlot,
@@ -32,53 +32,67 @@ export function generateCoreChoices(state: AircraftCombatState, selectionNumber:
     const count=hasCore(state,214)?5:3;
     let tier=weightedTier(TIERS,random,state);
     if(normalPool(state,tier).length<count)tier=weightedTier(TIERS.filter(t=>normalPool(state,t).length>=count),random,state)??tier;
-    const pool=normalPool(state,tier),chosen:CoreCard[]=[];
+    // At exhaustion use the largest remaining tier, without resurrecting old offers.
+    if(normalPool(state,tier).length<count && !TIERS.some(t=>normalPool(state,t).length>=count))
+      tier=TIERS.reduce((best,t)=>normalPool(state,t).length>normalPool(state,best).length?t:best,tier!);
+    const pool=normalPool(state,tier),chosen:CoreDefinition[]=[];
     recordCoreMetric(state,217,tier==="silver"?"silverRolls":tier==="gold"?"goldRolls":"diamondRolls",1);
-    while(pool.length&&chosen.length<count){const core=pick(pool,random)!;pool.splice(pool.indexOf(core),1);chosen.push(makeCoreCard(core));}
+    while(pool.length&&chosen.length<count){
+      const core=pick(pool,random)!;pool.splice(pool.indexOf(core),1);
+      if(canCommitCoreOffers(state,[...chosen,core]))chosen.push(core);
+    }
     if(chosen.length===5)recordCoreMetric(state,214,"procs",1);
-    return chosen;
+    for(const core of chosen)state.coreState.encounteredCoreIds.add(core.id);
+    return chosen.map(makeCoreCard);
 }
 
-function rollDiamondBatch(state:AircraftCombatState,count:number,random:()=>number,excluded:ReadonlySet<string>,reserved:ReadonlySet<string>,oldIds:readonly string[]=[]):CoreDefinition[] {
-    const batch:CoreDefinition[]=[];
-    const pool=()=>eligible(state,"diamond").filter(c=>!excluded.has(c.id)&&!reserved.has(c.id)&&!batch.some(b=>b.id===c.id));
-    for(let i=0;i<count;i++){const next=pick(pool().filter(c=>c.id!==oldIds[i]),random);if(next)batch.push(next);}
-    if(equipmentRewardsLocked(state)||batch.some(c=>c.id==="core_228")){
-      for(let i=0;i<batch.length;i++)if(["core_226","core_227"].includes(batch[i].id)){
-        const next=pick(pool().filter(c=>!["core_226","core_227"].includes(c.id)&&c.id!==oldIds[i]),random);
-        if(next)batch[i]=next;
-      }
-    }
-    return batch;
+function rollChaosBatch(state:AircraftCombatState,random:()=>number,reserved:ReadonlySet<string>):CoreDefinition[] {
+    const pool=randomGrantCandidates(state,undefined,reserved);
+    const pairs=pool.map(first=>({first,seconds:randomGrantCandidates(state,undefined,new Set([...reserved,first.id]))
+      .filter(second=>canCommitCoreOffers(state,[first,second],reserved))})).filter(pair=>pair.seconds.length>0);
+    const tier=weightedTier(TIERS.filter(t=>pairs.some(pair=>pair.first.tiers[0]===t)),random,state);
+    const pair=pick(pairs.filter(pair=>pair.first.tiers[0]===tier),random);if(!pair)return [];
+    state.coreState.encounteredCoreIds.add(pair.first.id);
+    const secondTier=weightedTier(TIERS.filter(t=>pair.seconds.some(c=>c.tiers[0]===t)),random,state);
+    const second=pick(pair.seconds.filter(c=>c.tiers[0]===secondTier),random)!;
+    state.coreState.encounteredCoreIds.add(second.id);
+    // Resolve Pandora before another random reward can increase its conversion count.
+    return [pair.first,second].sort((a,b)=>Number(b.id==="core_216")-Number(a.id==="core_216"));
 }
 /** Ownership precedes callbacks; explicit work stack resolves nested conversions immediately. */
 export function applyCore(state: AircraftCombatState, card: CoreCard, random: () => number = Math.random, onAcquire?: (id: string) => void, onRemove?: (ids: string[]) => void): boolean {
     const first = CORE_DEFINITIONS.find(c => c.id === card.id);
-    if (!first || !isCoreEligible(state,first) || first.tiers[0] !== card.tier || state.selectedCores.includes(first.id))
+    if (!first || !isCoreEligible(state,first) || first.tiers[0] !== card.tier || state.selectedCores.includes(first.id) || !hasCoreRewardCapacity(state,first))
         return false;
     type Work = {
-        core: CoreDefinition;
+        core: CoreDefinition; owner?:number;
     } | {
         tier?: CoreTier; owner?:number;
     };
     const work: Work[] = [{ core: first }];
     const reserved=new Set<string>();
-    const queueBatch=(batch:CoreDefinition[])=>{for(const c of batch)reserved.add(c.id);work.push(...batch.slice().reverse().map(core=>({core})));};
+    const queueBatch=(batch:CoreDefinition[],owner?:number)=>{for(const c of batch){reserved.add(c.id);state.coreState.encounteredCoreIds.add(c.id);}work.push(...batch.slice().reverse().map(core=>({core,owner})));};
     while (work.length) {
         const item = work.pop()!;
         let core: CoreDefinition | undefined;
         if ("core" in item)
             core = item.core;
         else {
-            const tier = item.tier ?? weightedTier(TIERS.filter(t => eligible(state, t).length > 0), random,state);
+            const tier = item.tier ?? weightedTier(TIERS.filter(t => randomGrantCandidates(state,t,reserved).length > 0), random,state);
             if (!tier)
                 continue;
-            core = pick(eligible(state, tier).filter(c=>!reserved.has(c.id)), random);
+            core = pick(randomGrantCandidates(state,tier,reserved), random);
         }
         if (!core || state.selectedCores.includes(core.id))
             continue;
 
+        // Plan the entire Pandora transaction before changing ownership or earned stats.
+        const removed=core.id==="core_216"?pandoraConvertibleCoreIds(state):[];
+        const replacements=core.id==="core_216"?planPandoraReplacements(state,reserved,random):[];
+        const chaos=core.id==="core_052"?rollChaosBatch(state,random,new Set([...reserved,core.id])):[];
+        if(replacements===null||(core.id==="core_052"&&chaos.length!==2)){if(core===first)return false;continue;}
         reserved.delete(core.id);
+        state.coreState.encounteredCoreIds.add(core.id);
         state.selectedCores.push(core.id);
         if("owner" in item)recordCoreMetric(state,item.owner,"converted",1);
         state.coreState.acquisitions.push({ id: state.coreState.nextAcquisitionId++, kind: "core", coreId: core.id });
@@ -101,22 +115,20 @@ export function applyCore(state: AircraftCombatState, card: CoreCard, random: ()
         state.currentResource = Math.min(after.maxResource, state.currentResource);
         onAcquire?.(core.id);
         if(core.id==="core_216"){
-          const removed=state.selectedCores.filter(id=>id!=="core_216"&&!["core_050","core_051","core_052"].includes(id)&&!CORE_DEFINITIONS.find(c=>c.id===id)?.skillId);
+          for(const id of removed)state.coreState.encounteredCoreIds.add(id);
           // Only earned permanent stats survive. Bounty rewards already live in modifiers.
           for(const [id,key] of [["core_046","firepowerFlat"],["core_047","armorFlat"],["core_048","maxHpFlat"]] as const)if(removed.includes(id))state.modifiers[key]+=state.coreState.stacks[id]??0;
           if(removed.includes("core_196"))state.modifiers.criticalDamageMultiplierFlat+=Math.min(.5,(state.coreState.stacks.crimsonCrit??0)*.025);
           onRemove?.(removed);state.selectedCores=state.selectedCores.filter(id=>!removed.includes(id));removeReleaseCoreState(state,removed);syncEffectiveMaxHp(state);
           state.coreState.consumed.add("core_216");
           recordCoreMetric(state,216,"converted",removed.length);
-          const replacements=rollDiamondBatch(state,removed.length,random,new Set(["core_216",...(removed.includes("core_097")?["core_097"]:[])]),reserved,removed);
           recordCoreMetric(state,216,"rewards",replacements.length);queueBatch(replacements);
         }
         if (core.id === "core_050")
             work.push({ tier: "gold",owner:50 });
         if (core.id === "core_051")
             work.push({ tier: "diamond",owner:51 });
-        if (core.id === "core_052")
-            work.push({owner:52}, {owner:52});
+        if (core.id === "core_052")queueBatch(chaos,52);
     }
     return true;
 }

@@ -1,4 +1,4 @@
-import { isCoreEligible } from "./airCombatCoreEligibility";
+import { isCoreOfferable, canCommitCoreOffers } from "./airCombatCoreEligibility";
 import type { AircraftCombatState, CoreCard, CoreDefinition, CoreTier } from "./airCombatTypes";
 import { CORE_DEFINITIONS } from "./airCombatCoreCatalog";
 import { hasCore } from "./airCombatCoreEffects";
@@ -19,15 +19,17 @@ export interface CoreSelectionEvent {
 export type RerollSource = "main" | "extra" | "reserve";
 export const reserveCap = (s: AircraftCombatState) => 5;
 export function createCoreSelectionEvent(state: AircraftCombatState, choices: CoreCard[]): CoreSelectionEvent {
+  for(const card of choices)state.coreState.encounteredCoreIds.add(card.id);
   const kind="normal" as const;
   const extraAvailable=kind==="normal"&&hasCore(state,212);
   if(extraAvailable)recordCoreMetric(state,212,"granted",1);
   return {originalChoiceIds:choices.map(c=>c.id),currentChoiceIds:choices.map(c=>c.id),seenChoiceIds:choices.map(c=>c.id),rerollUsedBySlot:choices.map(()=>false),extraAvailable,extraUsed:false,
-    context:{kind,tier:choices[0].tier}};
+    context:{kind,tier:choices[0]?.tier??"silver"}};
 }
 function rerollPool(state: AircraftCombatState,event: CoreSelectionEvent,slot: number) {
-  let pool=CORE_DEFINITIONS.filter(c=>isCoreEligible(state,c)&&!state.selectedCores.includes(c.id)&&!event.seenChoiceIds.includes(c.id)&&
-    (!c.skillId&&c.tiers[0]===event.context.tier));
+  const displayed=CORE_DEFINITIONS.filter(c=>event.currentChoiceIds.some((id,i)=>i!==slot&&id===c.id));
+  let pool=CORE_DEFINITIONS.filter(c=>isCoreOfferable(state,c)&&!event.seenChoiceIds.includes(c.id)&&
+    c.tiers[0]===event.context.tier&&canCommitCoreOffers(state,[...displayed,c]));
   if(event.context.kind!=="normal")return {pool,skipped:0,alternative:false};
   const r=releaseState(state);
   const system=CORE_DEFINITIONS.find(c=>c.id===event.currentChoiceIds[slot])?.system;
@@ -52,6 +54,7 @@ export function spendReroll(state:AircraftCombatState,event:CoreSelectionEvent,s
   if(source==="reserve"){r.reserve--;recordCoreMetric(state,218,"spent",1);}
   if(normal&&slot>=3)recordCoreMetric(state,214,"rerolls",1);
   event.currentChoiceIds[slot]=next.id;event.seenChoiceIds.push(next.id);
+  state.coreState.encounteredCoreIds.add(next.id);
 
   return makeCoreCard(next);
 }

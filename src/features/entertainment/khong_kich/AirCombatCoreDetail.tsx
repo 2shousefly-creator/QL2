@@ -1,13 +1,12 @@
 import React, { useLayoutEffect, useRef } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 import type { CoreCard } from "./airCombatTypes";
-import { CombatUiIcon } from "./CombatUiIcon";
-import { CoreSystemTag } from "./CoreSystemTag";
-import { CoreDescription } from "./CoreDescription";
+import { AirCombatCoreTransition } from "./AirCombatCoreTransition";
 
 /** A detail layer of the existing mandatory transaction, never another dialog owner. */
-export function AirCombatCoreDetail({ card, slot, reducedMotion: requestedReducedMotion, canReroll, onClose, onSelect, onReroll }: {
+export function AirCombatCoreDetail({ card, previous, busy, bonus, slot, reducedMotion: requestedReducedMotion, canReroll, onClose, onSelect, onReroll }: {
   card: CoreCard; slot: number; reducedMotion: boolean; canReroll: boolean;
+  previous?: CoreCard; busy: boolean; bonus: boolean;
   onClose(): void; onSelect(): void; onReroll(): void;
 }) {
   const systemReducedMotion = useReducedMotion();
@@ -38,22 +37,11 @@ export function AirCombatCoreDetail({ card, slot, reducedMotion: requestedReduce
       transition={reducedMotion ? { duration: .12 } : { type: "spring", duration: .28, bounce: .16 }}>
       <button className="air-core-detail-close" type="button" aria-label="Trở lại danh sách Lõi" onClick={onClose}>×</button>
       <div className="air-core-detail-scroll">
-        <AnimatePresence mode="wait" initial={false}>
-          <motion.article key={card.id} className="air-core-detail-card" data-core-tier={card.tier}
-            initial={{ opacity: 0, x: reducedMotion ? 0 : 18, filter: reducedMotion ? "none" : "blur(2px)" }}
-            animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
-            exit={{ opacity: 0, x: reducedMotion ? 0 : -14, filter: reducedMotion ? "none" : "blur(2px)" }}
-            transition={{ duration: reducedMotion ? .1 : .13 }}>
-            <CombatUiIcon kind="core" id={card.id} fallback={card.icon} className="combat-core-icon" />
-            <h3 id="air-core-detail-title">{card.name}</h3>
-            <CoreSystemTag system={card.system} tier={card.tier} />
-            <div className="air-core-detail-description"><CoreDescription text={card.description} statLines /></div>
-          </motion.article>
-        </AnimatePresence>
+        <AirCombatCoreTransition card={card} previous={previous} detail/>
       </div>
       <div className="air-core-detail-actions">
-        <button ref={select} type="button" className="air-core-pick" onClick={onSelect}>CHỌN</button>
-        <button type="button" className="air-core-reroll" disabled={!canReroll} onClick={onReroll}>ĐỔI LẠI</button>
+        <button ref={select} type="button" className="air-core-pick" disabled={busy} onClick={onSelect}>CHỌN</button>
+        <button type="button" className="air-core-reroll" data-bonus={bonus} disabled={busy||!canReroll} onClick={onReroll}>ĐỔI LẠI</button>
       </div>
     </motion.div>
   </motion.div>;

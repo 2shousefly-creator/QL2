@@ -1,0 +1,289 @@
+{
+  "version": "26.12.2",
+  "title": "Core Draft Commitment & Skill HUD Clarity",
+  "displayTitle": "CHI TIẾT CẬP NHẬT 26.12.2",
+  "releaseDate": "24/09/2026",
+  "summary": "**26.12.2** tiếp tục tinh gọn trải nghiệm Không Kích sau đợt đại tu hệ Kỹ Năng và Lõi. Màn chọn Lõi giờ sử dụng card thấp và đồng đều hơn, nội dung dài được rút gọn bằng dấu ba chấm và người chơi vẫn có thể mở modal để đọc đầy đủ. Nút Đổi Lại cũng được làm rõ trạng thái, đồng thời nhận hiệu ứng vỡ card mới khi thay Lõi.\\n\\nSkill HUD được nâng cấp mạnh cho giao tranh thực tế: người chơi có thể cộng Điểm Kỹ Năng bằng ngón tay thứ hai mà không mất điều khiển chiến cơ, thời gian hồi chiêu được hiển thị bằng lớp phủ radial toàn ô và trạng thái thiếu Mana/Điện có cảnh báo riêng.\\n\\nQuan trọng nhất, hệ Draft Lõi giờ áp dụng quy tắc **mỗi Lõi chỉ xuất hiện một lần trong toàn bộ lượt chơi**. Lõi đã bỏ qua hoặc Đổi Lại sẽ không trở lại; quy tắc này cũng áp dụng cho Lõi chuyển đổi ngẫu nhiên và Hộp Pandora.",
+  "sections": [
+    {
+      "id": "s1",
+      "title": "CARD LÕI GỌN HƠN, DỄ SO SÁNH HƠN",
+      "icon": {
+        "kind": "core",
+        "id": "selection"
+      },
+      "intro": [
+        {
+          "text": "Màn chọn Lõi được thu gọn để người chơi có thể quét nhanh nhiều lựa chọn mà vẫn giữ đầy đủ thông tin chi tiết khi cần.",
+          "format": "paragraph"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s1-e1",
+          "icon": {
+            "kind": "core",
+            "id": "selection"
+          },
+          "title": "Card đồng đều và thấp hơn",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Card Lõi trong màn chọn thường và bố cục 5 card của **Bản Đồ Dự Thảo** giờ có chiều cao đồng đều và được thu gọn đáng kể.",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "Cỡ chữ nội dung trên card được giảm nhẹ. Nếu mô tả dài vượt khỏi card, phần còn lại được báo bằng **…**; chạm vào card vẫn mở modal để đọc toàn bộ nội dung.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        },
+        {
+          "id": "s1-e2",
+          "icon": {
+            "kind": "core",
+            "id": "selection"
+          },
+          "title": "Modal chi tiết đồng bộ theo Bậc Lõi",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Card mở rộng trong modal giờ sử dụng màu nền, viền và ánh sáng đồng bộ với **Bạc / Vàng / Kim Cương** của Lõi đang xem.",
+              "format": "paragraph",
+              "changeType": "change"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "ĐỔI LẠI RÕ RÀNG VÀ ĐÃ TAY HƠN",
+      "icon": {
+        "kind": "core",
+        "id": "selection"
+      },
+      "intro": [
+        {
+          "text": "Reroll được làm lại cả về bố cục lẫn phản hồi hình ảnh để người chơi nhận ra ngay mình còn bao nhiêu khả năng thay Lõi.",
+          "format": "paragraph"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s2-e1",
+          "icon": {
+            "kind": "core",
+            "id": "selection"
+          },
+          "title": "Nút Đổi Lại mới",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Nút Đổi Lại giờ là nút vuông nằm giữa cạnh phải card. Trạng thái còn reroll chính được làm sáng rõ hơn, trong khi trạng thái hết lượt được làm tối.",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "Nếu người chơi còn **Reroll Dự Phòng hoặc Reroll Dự Trữ**, nút Đổi Lại chuyển sang nền Gold và có viền phát sáng vàng.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        },
+        {
+          "id": "s2-e2",
+          "icon": {
+            "kind": "core",
+            "id": "selection"
+          },
+          "title": "Hiệu ứng vỡ card khi Reroll",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Card cũ giờ nứt, lóe sáng rồi **vỡ thành các mảnh năng lượng** trước khi Lõi mới xuất hiện.",
+              "format": "paragraph",
+              "changeType": "new"
+            },
+            {
+              "text": "Nếu Đổi Lại trong modal chi tiết, chỉ card trong modal chạy hiệu ứng; card phía sau được cập nhật âm thầm để tránh hiệu ứng lặp.",
+              "format": "bullet",
+              "changeType": "new"
+            }
+          ]
+        },
+        {
+          "id": "s2-e3",
+          "icon": {
+            "kind": "core",
+            "id": "selection"
+          },
+          "title": "Danh sách Lõi sở hữu: 8 ô mỗi trang",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Danh sách Lõi giờ hiển thị tối đa **8 ô mỗi trang**. Khi sở hữu nhiều hơn 8 Lõi, người chơi có thể chuyển trang để xem phần còn lại.",
+              "format": "paragraph",
+              "changeType": "change"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "SKILL HUD TỐI ƯU CHO GIAO TRANH",
+      "icon": {
+        "kind": "skill",
+        "id": "rank"
+      },
+      "intro": [
+        {
+          "text": "Các trạng thái quan trọng của kỹ năng giờ được thể hiện trực tiếp trên ô Skill để người chơi có thể đọc nhanh trong lúc đang né đạn và điều khiển chiến cơ.",
+          "format": "paragraph"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s3-e1",
+          "icon": {
+            "kind": "skill",
+            "id": "rank"
+          },
+          "title": "Cộng điểm khi vẫn đang điều khiển",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Người chơi giờ có thể giữ một ngón tay để điều khiển chiến cơ và dùng ngón tay thứ hai bấm **+** để tăng cấp kỹ năng mà không bị ngắt di chuyển.",
+              "format": "paragraph",
+              "changeType": "new"
+            },
+            {
+              "text": "Nút cấp vừa mở lập tức sáng lên và vẫn giữ hiệu ứng lóe sáng 2 giây báo hiệu kỹ năng đã được nâng cấp.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        },
+        {
+          "id": "s3-e2",
+          "icon": {
+            "kind": "skill",
+            "id": "rank"
+          },
+          "title": "Overlay Hồi Chiêu mới",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Khi kỹ năng đang hồi, toàn bộ ô Skill được phủ lớp tối radial bắt đầu từ vị trí 12 giờ và thu dần **ngược chiều kim đồng hồ** về 0%.",
+              "format": "paragraph",
+              "changeType": "new"
+            },
+            {
+              "text": "Con số Hồi Chiêu được đặt lớn ở giữa ô, trong khi icon kỹ năng vẫn còn nhìn thấy phía dưới lớp tối.",
+              "format": "bullet",
+              "changeType": "new"
+            }
+          ]
+        },
+        {
+          "id": "s3-e3",
+          "icon": {
+            "kind": "skill",
+            "id": "rank"
+          },
+          "title": "Cảnh báo thiếu Tài Nguyên",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Kỹ năng đã sẵn sàng nhưng thiếu Mana/Điện giờ có overlay xanh lam nhạt kèm icon Tài Nguyên và dấu **!**.",
+              "format": "paragraph",
+              "changeType": "new"
+            },
+            {
+              "text": "Nếu kỹ năng vừa đang hồi vừa thiếu Tài Nguyên, trạng thái Hồi Chiêu luôn được ưu tiên hiển thị trước.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        },
+        {
+          "id": "s3-e4",
+          "icon": {
+            "kind": "skill",
+            "id": "rank"
+          },
+          "title": "Tooltip cân đối lại",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Tên kỹ năng được thu nhỏ nhẹ, nội dung mô tả được tăng kích thước để dễ đọc hơn. Tên và số Hồi Chiêu giờ nằm cùng một hàng, với số Hồi Chiêu ghim ở mép phải.",
+              "format": "paragraph",
+              "changeType": "change"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "MỖI LÕI CHỈ XUẤT HIỆN MỘT LẦN",
+      "icon": {
+        "kind": "core",
+        "id": "selection"
+      },
+      "intro": [
+        {
+          "text": "Draft Lõi giờ yêu cầu nhiều cân nhắc hơn: một Lõi đã xuất hiện trong lượt chơi sẽ không có cơ hội xuất hiện lần thứ hai.",
+          "format": "paragraph"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s4-e1",
+          "icon": {
+            "kind": "core",
+            "id": "selection"
+          },
+          "title": "Bỏ qua là từ bỏ cơ hội",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Ngay khi một Lõi xuất hiện trên màn chọn, Lõi đó được xem là đã gặp trong lượt chơi. Nếu không chọn hoặc Đổi Lại, nó **không thể quay trở lại** ở các mốc sau.",
+              "format": "paragraph",
+              "changeType": "new"
+            },
+            {
+              "text": "Các Lõi xuất hiện qua Reroll cũng tuân theo quy tắc tương tự, khiến mỗi lần Đổi Lại vừa là tìm lựa chọn mới vừa là quyết định loại một Lõi khỏi pool của lượt chơi.",
+              "format": "bullet",
+              "changeType": "new"
+            }
+          ]
+        },
+        {
+          "id": "s4-e2",
+          "icon": {
+            "kind": "core",
+            "id": "selection"
+          },
+          "title": "Áp dụng cả Lõi chuyển đổi và Pandora",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Chuyển đổi Vàng, Kim Cương, Hỗn Loạn và **Hộp Pandora** chỉ có thể cấp các Lõi chưa từng xuất hiện trong lượt chơi hiện tại.",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "Lõi đã từng sở hữu rồi bị Pandora chuyển đổi cũng không thể xuất hiện lại. Pandora chỉ xuất hiện khi còn đủ Lõi Kim Cương hợp lệ để thay thế toàn bộ các Lõi sẽ bị chuyển.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

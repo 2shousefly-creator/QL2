@@ -7,7 +7,7 @@ import { advanceWaitingChest, claimWaitingChest } from "./airCombatEquipmentRewa
 import { tickEquipment, flushEquipmentDrops, equipmentOnHit, equipmentOnCast, equipmentOnDamage, equipmentOnKill, equipmentOutgoing, equipmentArmor, equipmentIncoming, equipmentSlow, equipmentFx, type EquipmentHooks } from "./airCombatEquipmentRuntime";
 import { releaseState, playerAirframeScale, overheated } from "./airCombatReleaseState";
 import { closeCoreSelection, spendReroll, rollUnstableMode, type RerollSource } from "./airCombatSelectionRules";
-import { syncEffectiveMaxHp } from "./airCombatAircraft";
+import { syncEffectiveMaxHp, getSkillAvailability } from "./airCombatAircraft";
 import { tickCoreTelemetry } from "./airCombatReleaseTelemetry";
 import { expansionState, expansionActive, expansionOutgoing, expansionIncoming, celestialProtection, activeNegativeStatusTypes, hasAbsorbShield, prepareAbsorbShield, finishAbsorbShield, finishExpansionSkill, createAbsorbShield, type ExpansionCast } from "./airCombatExpansion";
 import { castExpansion, tickExpansion, expansionHpLoss, deferExpansionDamage, expansionKill, settleExpansionShields, satellitePositions, slowExpansionProjectile, type ExpansionHooks } from "./airCombatExpansionRuntime";
@@ -1347,10 +1347,25 @@ function stopAllSkills(world: CombatWorld, preserveControl = false): void {
     }
 }
 const SKILL_IDS = Object.keys(SKILL_CONFIGS) as SkillId[];
+export function getWorldSkillAvailability(world: CombatWorld, skillId: SkillId) {
+    let manual: "toggle" | "detonate" | "pending" | undefined;
+    if(skillId==="heavy_bomb"&&skillRank(world.aircraft,skillId)>=5){
+      const bomb=world.projectiles.find(p=>p.bigBang&&p.skillId===skillId);
+      if(bomb)manual=bomb.missileAge>=1?"detonate":"pending";
+    }
+    if(skillId==="gravity_anchor"&&world.rankRuntime?.anchor&&skillRank(world.aircraft,skillId)>=5)manual="detonate";
+    if(skillId==="orbit_reversal"&&world.astra?.orbit)manual="toggle";
+    const availability=getSkillAvailability(world.aircraft,skillId,manual);
+    if(world.ended||world.pauseReasons.size||world.pendingCoreSelections||world.currentCoreChoices)
+      return {...availability,available:false,reason:"invalid" as const};
+    return availability;
+}
 export function castWorldSkill(world: CombatWorld, skillId: SkillId): SkillCastResult {
-    if (overheated(world.aircraft) || playerSkillLocked(world.aircraft) || world.ended || world.pauseReasons.size || world.pendingCoreSelections || world.currentCoreChoices)
-        return { cast: false, reason: "invalid", resourceSpent: 0 };
-    if(ultimateCastDisabled(world.aircraft,skillId))return {cast:false,reason:"invalid",resourceSpent:0};
+    const availability=getWorldSkillAvailability(world,skillId);
+    if(!availability.available){
+      if(availability.reason==="resource"&&skillId==="stellar_lance")astraMetric(world,"lance.insufficientMana");
+      return {cast:false,reason:availability.reason,resourceSpent:0};
+    }
     if(skillId==="heavy_bomb"&&skillRank(world.aircraft,skillId)>=5){const i=world.projectiles.findIndex(p=>p.bigBang&&p.skillId===skillId);if(i>=0){const bomb=world.projectiles[i];if(bomb.missileAge<1)return {cast:false,reason:"invalid",resourceSpent:0};detonateBigBang(world,bomb);recycleProjectile(world,i);return {cast:true,resourceSpent:0,toggledOff:true};}}
     if(skillId==="gravity_anchor"&&world.rankRuntime?.anchor&&skillRank(world.aircraft,skillId)>=5){collapseAnchor(world,rankHooks,false);return {cast:true,resourceSpent:0,toggledOff:true};}
     if(skillId==="orbit_reversal"&&world.astra?.orbit){releaseOrbit(world,astraHooks,true);return {cast:true,resourceSpent:0,toggledOff:true};}
