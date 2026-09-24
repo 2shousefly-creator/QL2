@@ -8,6 +8,11 @@ export class ScreenLoadBoundary extends React.Component<
   declare props: { children: React.ReactNode; onBack: () => void };
   state = { failed: false };
   static getDerivedStateFromError() { return { failed: true }; }
+  componentDidCatch(error: unknown, info: React.ErrorInfo) {
+    console.error("[ScreenLoadBoundary] Uncaught screen error", error, {
+      componentStack: info.componentStack,
+    });
+  }
   render() {
     if (!this.state.failed) return this.props.children;
     return (

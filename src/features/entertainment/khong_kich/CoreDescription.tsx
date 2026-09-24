@@ -44,16 +44,3 @@ export function CoreDescription({text}:{text:string}) {
     return token.number?<strong key={i} style={{color:"#fde047"}}>{token.text}</strong>:token.text;
   })}</>;
 }
-/** Hidden icon prototypes let the existing status DOM updater share the same renderer vocabulary. */
-export function CombatStatIconTemplates(){return <span hidden aria-hidden="true">{Object.entries(COMBAT_STAT_SEMANTICS).map(([key,{Icon}])=><span data-semantic-icon={key} key={key}><Icon/></span>)}</span>;}
-export function updateCombatRichText(node:Element,text:string,templates:Element){
-  if(node.getAttribute("data-rich-text")===text)return;
-  const children=combatTextTokens(text).map(token=>{
-    if(!token.number&&!token.semantic)return document.createTextNode(token.text);
-    const strong=document.createElement("strong");strong.style.color=token.semantic?COMBAT_STAT_SEMANTICS[token.semantic].color:"#fde047";
-    if(token.semantic){if(token.value)strong.append(document.createTextNode(`${token.value} `));const icon=templates.querySelector(`[data-semantic-icon="${token.semantic}"] svg`)?.cloneNode(true) as SVGElement|undefined;
-      if(icon){icon.setAttribute("aria-hidden","true");icon.style.cssText="display:inline;width:1em;height:1em;vertical-align:-.12em;margin-right:.15em";strong.append(icon);}}
-    strong.append(document.createTextNode(token.semantic ? token.label! : token.text));return strong;
-  });
-  node.replaceChildren(...children);node.setAttribute("data-rich-text",text);
-}

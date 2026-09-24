@@ -75,6 +75,7 @@ interface AirCombatBattleProps {
 }
 
 type PauseReason = "loading" | "user" | "core" | "tooltip" | "exit" | "hidden" | "coreList" | "primarySkill" | "equipment";
+const STATUS_UI_INTERVAL_MS = 100;
 
 interface SkillPressState {
   skillId: SkillId;
@@ -178,13 +179,15 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
   }, []);
   const setPauseReason = useCallback((reason: PauseReason, enabled: boolean) => {
     const reasons = worldRef.current.pauseReasons;
-    if (enabled) {
+    const had = reasons.has(reason);
+    if (enabled && !had) {
       reasons.add(reason);
       // Tooltip pauses simulation but preserves an existing movement gesture.
       if (reason !== "tooltip") { resetPlayerControl(); resetSkillPress(); }
-    } else reasons.delete(reason);
+    } else if (!enabled && had) reasons.delete(reason);
     // Runtime selection code can already have changed this same canonical Set.
-    setPauseState({ paused: reasons.size > 0, label: pauseLabel(reasons) });
+    const next = { paused: reasons.size > 0, label: pauseLabel(reasons) };
+    setPauseState(previous => previous.paused === next.paused && previous.label === next.label ? previous : next);
   }, [resetPlayerControl, resetSkillPress]);
 
   const activateTooltip = useCallback((owner: "hub"|"skill"|"status") => {
@@ -201,7 +204,9 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
     setPauseReason("tooltip", false);
   }, [setPauseReason, resetSkillPress]);
   const onStatusTooltip = useCallback((open: boolean) => {
-    if (open) activateTooltip("status");
+    if (open) {
+      if (tooltipOwner.current !== "status") activateTooltip("status");
+    }
     else if (tooltipOwner.current === "status") closeAllTooltips();
   }, [activateTooltip, closeAllTooltips]);
   const inspectHub = (id: string, tooltip: HubTooltip) => {
@@ -290,6 +295,7 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
     let usingLegacy = false;
     let lastTime = performance.now();
     let lastHudUpdate = 0;
+    let lastStatusUiUpdate = -Infinity;
     let publishedWaveState = world.waveState, publishedWaveIndex = world.waveIndex;
     let endedAt: number | null = null;
     const resetClock = () => { lastTime = performance.now(); };
@@ -334,7 +340,13 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
         const visualDelta = presentationPaused ? 0 : elapsed;
         overlayFeedback?.render(world, visualDelta, presentationPaused, reducedMotion,
           bossHpRef.current, bossChipRef.current, bossShieldRef.current);
-        statusStripRef.current?.update(world);
+        // Selection may have paused the world earlier in this frame. Freeze the
+        // snapshot for every pause reason and refresh on the first resumed tick.
+        if (world.pauseReasons.size > 0) lastStatusUiUpdate = -Infinity;
+        else if (now - lastStatusUiUpdate >= STATUS_UI_INTERVAL_MS) {
+          statusStripRef.current?.update(world);
+          lastStatusUiUpdate = now;
+        }
         for (const id of skillIds) {
           const node = durationNodes.current[id], timer = getActiveSkillDuration(world, id);
           if (node) { node.hidden = !timer; node.style.setProperty("--skill-duration", String(timer?.progress ?? 0)); }
