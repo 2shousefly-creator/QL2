@@ -530,3 +530,53 @@
 .equipment-result > .equipment-icon-inventory,
 .equipment-drag-ghost > .equipment-icon-inventory,
 .equipment-craft-flight > .equipment-icon-inventory { position:absolute; inset:0; width:100%; height:100%; }
+
+/* Ranked skills and bounded draft layout take precedence over legacy combat styles. */
+.air-ranked-skill{position:relative;min-width:0;min-height:0}
+.air-skill-plus{position:absolute;z-index:25;right:1px;top:0;width:25px;height:25px;border:1px solid #fff1a5;background:#9c6c13;color:#fff8c0;font-size:23px;font-weight:900;line-height:20px;touch-action:manipulation}
+.air-rank-nodes{display:flex;gap:3px;position:relative;z-index:12;margin:3px 0 1px;pointer-events:none}
+.air-rank-nodes i{width:6px;height:5px;border:1px solid #718096;background:#111827}
+.air-rank-nodes i[data-earned=true]{background:#facc15;border-color:#fef08a;box-shadow:0 0 3px #facc1588}
+.air-rank-nodes i[data-next=true]{border-color:#fde047}
+.air-rank-nodes i[data-new=true]{animation:air-node-up 2s ease-out both}
+.air-skill-up-vfx{position:absolute;inset:0;pointer-events:none;z-index:18;animation:air-skill-up 2s ease-out both}
+.air-skill-up-vfx::after{content:"";position:absolute;inset:20%;border:2px solid #fde68a;border-radius:50%;animation:air-rank-ring 2s ease-out both}
+@keyframes air-skill-up{0%,10%{background:#fff7bdcc;box-shadow:inset 0 0 20px #fff}35%{background:#facc1522;box-shadow:inset 0 0 12px #fde047,0 0 8px #fbbf24}100%{background:transparent;box-shadow:inset 0 0 0 transparent}}
+@keyframes air-rank-ring{0%,10%{opacity:0;transform:scale(.3)}15%{opacity:1}35%{transform:scale(2);opacity:.7}100%{transform:scale(2.2);opacity:0}}
+@keyframes air-node-up{0%,15%{background:#fff;box-shadow:0 0 9px #fff}100%{background:#facc15}}
+[data-reduced-motion=true] .air-skill-up-vfx::after{display:none}
+@media(prefers-reduced-motion:reduce){.air-skill-up-vfx::after{display:none}.air-rank-nodes i{animation:none!important}}
+.air-rank-preview{border-top:1px solid #facc1544;margin-top:10px;padding-top:6px}
+.air-rank-preview section{padding:7px;border:1px solid transparent;opacity:.5}
+.air-rank-preview section[data-unlocked=true]{opacity:1;background:#facc150a;color:#fff4c2}
+.air-rank-preview section[data-unlocked=true] strong{color:#fde047}
+.air-rank-preview section[data-current=true]{border-color:#facc1566;background:#facc1518}
+.air-upgrade-overlay .app-overlay__panel.air-upgrade-panel{max-height:92dvh;overflow:hidden;gap:10px}
+.air-upgrade-choices{overscroll-behavior:contain;touch-action:pan-y}
+.air-upgrade-row{grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr) auto;align-items:stretch;gap:4px}
+.air-upgrade-card.combat-core-card{height:100%;max-height:25dvh;grid-template-rows:minmax(0,1fr);cursor:default}
+.air-upgrade-copy{display:flex;flex-direction:column;min-height:0}
+.air-upgrade-description{min-height:0;overflow-y:auto;overscroll-behavior:contain;touch-action:pan-y;scrollbar-width:thin}
+.air-reroll-controls{display:flex;align-items:center;justify-content:center;gap:5px}
+.air-core-pick{flex:1;min-height:36px;background:#164e63;color:#ecfeff;border:1px solid #67e8f9;font-weight:800}
+.air-card-counter{color:#cbd5e1;font-size:11px;white-space:nowrap}
+.air-upgrade-overlay .app-overlay__panel.air-upgrade-panel--five{width:min(1400px,96vw)}
+.air-upgrade-panel--five .air-upgrade-choices{display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;touch-action:pan-x;padding:3px 7%;gap:12px}
+.air-upgrade-panel--five .air-upgrade-row{flex:0 0 86%;scroll-snap-align:center;min-width:0}
+.air-upgrade-panel--five .air-upgrade-card.combat-core-card{height:58dvh;max-height:58dvh;grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr)}
+@media(min-width:760px){.air-upgrade-panel--five .air-upgrade-choices{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));padding:2px;overflow:hidden}.air-upgrade-panel--five .air-upgrade-row{grid-column:span 2}.air-upgrade-panel--five .air-upgrade-row:nth-child(4){grid-column:2/span 2}.air-upgrade-panel--five .air-upgrade-card.combat-core-card{height:29dvh;max-height:29dvh}}
+@media(min-width:1250px){.air-upgrade-panel--five .air-upgrade-choices{grid-template-columns:repeat(5,minmax(0,1fr))}.air-upgrade-panel--five .air-upgrade-row,.air-upgrade-panel--five .air-upgrade-row:nth-child(4){grid-column:auto}.air-upgrade-panel--five .air-upgrade-card.combat-core-card{height:60dvh;max-height:60dvh}}
+
+.air-skill-up-vfx::before{content:"";position:absolute;inset:12%;background:radial-gradient(circle at 10% 15%,#fff 0 2px,transparent 3px),radial-gradient(circle at 90% 30%,#fde047 0 2px,transparent 3px),radial-gradient(circle at 70% 85%,#fff 0 2px,transparent 3px);animation:air-rank-ring 2s ease-out both}
+@media(prefers-reduced-motion:reduce){.air-skill-up-vfx::before{display:none}}
+[data-reduced-motion=true] .air-skill-up-vfx::before{display:none}
+
+.air-skill-points{position:absolute;bottom:100%;left:4px;padding:2px 5px;background:#0f172acc;color:#fde68a;font-size:10px;pointer-events:none}
+
+.air-upgrade-panel:not(.air-upgrade-panel--five){height:min(760px,92dvh)}
+.air-upgrade-panel:not(.air-upgrade-panel--five) .air-upgrade-choices{min-height:0;flex:1;grid-template-rows:repeat(3,minmax(0,1fr))}
+.air-upgrade-card.combat-core-card{min-height:0}
+.air-upgrade-panel:not(.air-upgrade-panel--five) .air-upgrade-card.combat-core-card{max-height:none}
+.air-upgrade-copy>.combat-core-name,.air-upgrade-copy>.air-core-system-tag{flex-shrink:0}
+.air-upgrade-description{flex:1}
+.air-upgrade-panel>h2,.air-selection-rules{flex-shrink:0}

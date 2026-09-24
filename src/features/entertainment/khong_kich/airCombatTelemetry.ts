@@ -54,7 +54,7 @@ export const CORE_METRICS: Record<number, readonly CoreMetric[]> = {
   50:["converted"],51:["converted"],52:["converted"],53:["procs","bonusDamage"],56:["crits"],57:["bonusDamage"],58:["procs","targets"],
   65:["prevented"],67:["bonusDamage"],68:["bonusDamage"],69:["bonusDamage"],72:["procs","prevented"],79:["extraProjectiles","damage"],80:["procs","damage"],
   82:["uptime"],83:["procs","shots","bonusDamage"],84:["procs","saved","extraCooldown"],88:["bonusDamage"],89:["hits","damage"],98:["debuffSaved"],
-  101:["bonusDamage"],102:["bonusDamage"],103:["prevented"],110:["prevented"],111:["shots"],115:["bonusDamage"],117:["procs"],118:["peakBonus","bonusDamage"],119:["targets","uptime"],
+  101:["bonusDamage"],102:["bonusDamage"],103:["prevented"],110:["prevented"],111:["shots"],115:["bonusDamage"],117:["procs"],118:["peakBonus","bonusDamage"],119:["cooldown","resource","uptime"],
   124:["prevented"],125:["cooldown"],127:["bonusDamage"],128:["cooldown"],133:["cooldown"],135:["bonusDamage"],137:["cooldown"],139:["pierceOne","pierceTwo","pierceOneDamage","pierceTwoDamage"],
   141:["extraTime"],142:["shots","bonusDamage"],144:["targets"],145:["bonusDamage"],146:["procs","targets","bonusDamage"],149:["marks","successes","rewards","bonusDamage"],
   78:["resource"],126:["resource"],

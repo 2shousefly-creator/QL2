@@ -1,3 +1,4 @@
+import { skillRank } from "./airCombatSkillRanks";
 import { playerAirframeScale } from "./airCombatReleaseState";
 import aircraft from "../../../assets/khong-kich/astra/aircraft.svg";
 import effects from "../../../assets/khong-kich/astra/effects.svg";
@@ -49,7 +50,7 @@ export function paintAstra(w:CombatWorld,p:AstraPainter,reduced:boolean) {
   }
   for(const f of r.flashes){const a=1-(now-f.at)/.2;p.circle(f.x,f.y,7,0xffebbf,a*.6,true);}
   if(r.orbit){
-    const radius=hasCore(w.aircraft,150)?92:72;
+    const radius=(skillRank(w.aircraft, "orbit_reversal") >= 2)?92:72;
     p.circle(w.playerX,w.playerY,radius,0xff9138,.8);p.circle(w.playerX,w.playerY,radius-4,0xffdfab,.22);
     for(let i=0;i<12;i++){const a=i*Math.PI/6+(reduced?0:now*.5),a2=a+.22;
       p.line(w.playerX+Math.cos(a)*(radius-7),w.playerY+Math.sin(a)*(radius-7),w.playerX+Math.cos(a2)*(radius-7),w.playerY+Math.sin(a2)*(radius-7),0xffce88,.7,2);}
@@ -57,7 +58,7 @@ export function paintAstra(w:CombatWorld,p:AstraPainter,reduced:boolean) {
       const {x,y}=orbitBulletPosition(w.playerX,w.playerY,radius,i,r.orbit.captured,now);
       p.circle(x,y,5,0xff792b,.35,true);p.circle(x,y,2,0xfff2cf,1,true);
     }
-    p.label?.(w.playerX,w.playerY+radius+12,`${r.orbit.captured}/${hasCore(w.aircraft,150)?22:16}`,0xffd397,9);
+    p.label?.(w.playerX,w.playerY+radius+12,`${r.orbit.captured}/${(skillRank(w.aircraft, "orbit_reversal") >= 2)?22:16}`,0xffd397,9);
   }
   for(const release of r.orbitReleases??[])for(const b of release.bullets)if(!b.fired){
     const q=orbitConvergencePosition(release,b,w.playerX,w.playerY,now);

@@ -1,3 +1,4 @@
+import { SKILL_RANKS } from "./airCombatSkillRanks";
 import { SKILL_BASE_VALUES as B } from "./airCombatSkillCores";
 import {
   AircraftConfig,
@@ -42,7 +43,7 @@ export const GAMEPLAY_SAFE_RECT: GameplaySafeRect = {
 };
 
 export const AIR_COMBAT_LIMITS = {
-  cooldownReduction: 0.80,
+  cooldownReduction: 0.60,
   criticalChance: 1,
   criticalDamageMultiplier: 10,
   baseCriticalDamageMultiplier: 1.70,
@@ -59,7 +60,7 @@ export const AIRCRAFT_CONFIGS: Record<AircraftId, AircraftConfig> = {
     color:"#ff8b35", accent:"#fff4d8", resourceKind:"mana", hpRegen:{base:3.3,growth:.13},
     baseStats:{maxHp:1760,armor:39,firepower:124,fireRate:3.9,criticalChance:.05,criticalDamageMultiplier:1.7,maxResource:330,resourceRegen:1.5},
     growth:{maxHp:34,armor:1.6,firepower:4,fireRate:.045,criticalChance:0,criticalDamageMultiplier:0,maxResource:15,resourceRegen:.24},
-    skillIds:["orbit_reversal","stellar_lance","starfall"],
+    skillIds:["orbit_reversal","stellar_lance","twin_reflection","starfall"],
   },
   black_eagle: {
     id: "black_eagle",
@@ -91,7 +92,7 @@ export const AIRCRAFT_CONFIGS: Record<AircraftId, AircraftConfig> = {
       maxResource: 15,
       resourceRegen: 0.25,
     },
-    skillIds: ["decoy", "afterburner", "missile_swarm"],
+    skillIds: ["decoy", "afterburner", "predator_lock", "missile_swarm"],
   },
   breaker: {
     id: "breaker",
@@ -123,7 +124,7 @@ export const AIRCRAFT_CONFIGS: Record<AircraftId, AircraftConfig> = {
       maxResource: 14,
       resourceRegen: 0.20,
     },
-    skillIds: ["armor_shield", "heavy_bomb", "sweeping_cannon"],
+    skillIds: ["armor_shield", "heavy_bomb", "gravity_anchor", "sweeping_cannon"],
   },
   phantom: {
     id: "phantom",
@@ -131,7 +132,7 @@ export const AIRCRAFT_CONFIGS: Record<AircraftId, AircraftConfig> = {
     name: "Phantom",
     hpRegen: { base: 3.4, growth: 0.15 },
     role: "Hybrid · Quản trị Energy",
-    description: "Tàng hình, laser và drone hộ tống với Energy luôn giới hạn 100.",
+    description: "Tàng hình, laser và drone hộ tống với 100 Energy cơ bản; Trang Bị có thể tăng giới hạn.",
     color: "#a78bfa",
     accent: "#f3e8ff",
     resourceKind: "energy",
@@ -155,9 +156,19 @@ export const AIRCRAFT_CONFIGS: Record<AircraftId, AircraftConfig> = {
       maxResource: 0,
       resourceRegen: 0,
     },
-    skillIds: ["invisibility", "focus_laser", "escort_drone"],
+    skillIds: ["invisibility", "focus_laser", "electronic_interference", "escort_drone"],
   },
 };
+
+
+const LEVEL_18_TARGETS = {"black_eagle": [2884.2, 89.65, 257.4, 5.995, 7.348, 852.5, 9.625], "breaker": [3613.5, 117.59, 178.2, 5.5836, 9.702, 920, 8.5], "phantom": [3203.2, 102.52, 218.9, 5.7893, 8.525, 100, 2], "astra": [3020.6, 93.94, 264, 5.7255, 7.777, 841.5, 9.306]} as const;
+for (const id of Object.keys(LEVEL_18_TARGETS) as AircraftId[]) {
+ const c=AIRCRAFT_CONFIGS[id], t=LEVEL_18_TARGETS[id];
+ const keys=["maxHp","armor","firepower","fireRate","maxResource","resourceRegen"] as const;
+ const values=[t[0],t[1],t[2],t[3],t[5],t[6]];
+ keys.forEach((key,i)=>{c.growth[key]=(values[i]-c.baseStats[key])/17;});
+ c.hpRegen.growth=(t[4]-c.hpRegen.base)/17;
+}
 
 export const AIRCRAFT_ORDER: AircraftId[] = [
   "black_eagle",
@@ -167,6 +178,10 @@ export const AIRCRAFT_ORDER: AircraftId[] = [
 ];
 
 export const SKILL_CONFIGS: Record<SkillId, SkillConfig> = {
+  predator_lock: {id:"predator_lock",aircraftId:"black_eagle",name:"Khóa Săn Mồi",shortName:"Khóa Săn Mồi",description:"Khóa Săn Mồi",icon:"✦",cost:110,cooldown:18,duration:8},
+  gravity_anchor: {id:"gravity_anchor",aircraftId:"breaker",name:"Neo Trọng Lực",shortName:"Neo Trọng Lực",description:"Neo Trọng Lực",icon:"✦",cost:140,cooldown:20,duration:5},
+  electronic_interference: {id:"electronic_interference",aircraftId:"phantom",name:"Nhiễu Điện Tử",shortName:"Nhiễu Điện Tử",description:"Nhiễu Điện Tử",icon:"✦",cost:30,cooldown:18,duration:1.6},
+  twin_reflection: {id:"twin_reflection",aircraftId:"astra",name:"Song Tinh Phản Xạ",shortName:"Song Tinh Phản Xạ",description:"Song Tinh Phản Xạ",icon:"✦",cost:120,cooldown:20,duration:6},
   orbit_reversal:{id:"orbit_reversal",aircraftId:"astra",name:"Phản Quỹ Đạo",shortName:"Quỹ Đạo",icon:"",cost:170,cooldown:22,duration:2,damageMultiplier:.3,
     description:"Tạo vùng 72px theo Astra trong 2 giây, bắt tối đa 16 projectile thù địch. Bấm lại để kết thúc sớm, không tốn thêm Mana. Khi kết thúc, Tinh Đạn lần lượt hội tụ về phía trước Astra rồi phóng lên trong một hành lang 20px, không tự tìm mục tiêu, không homing hay retarget; mỗi viên gây 30% Hỏa Lực lên địch đầu tiên. Không bắt Beam, AoE, Bomb/Mine, va chạm thân và Boss mechanic không thể bắt. Hồi chiêu bắt đầu khi trạng thái bắt giữ kết thúc và Tinh Đạn bắt đầu hội tụ."},
   stellar_lance:{id:"stellar_lance",aircraftId:"astra",name:"Thương Tinh Tú",shortName:"Tinh Tú",icon:"",cost:60,cooldown:3,damageMultiplier:8,
@@ -282,6 +297,8 @@ export const SKILL_CONFIGS: Record<SkillId, SkillConfig> = {
     "damageMultiplier": 0.55
   }
 };
+for(const id of Object.keys(SKILL_CONFIGS) as SkillId[]){SKILL_CONFIGS[id].cost=SKILL_RANKS[id][0].cost;SKILL_CONFIGS[id].description=SKILL_RANKS[id][0].description;}
+
 
 /** Stage 2 power correction; exact scaled config values below are before wave progression. */
 export const STAGE2_POWER_MULTIPLIER = 1.5;

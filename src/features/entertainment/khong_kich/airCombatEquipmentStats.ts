@@ -22,10 +22,10 @@ export function applyEquipmentStats(s: AircraftCombatState, stats: EffectiveAirc
     if(active(2))stats.fireRate+=equipmentEffect(s,2).stacks*.015*scale(2);
     if(equipmentEffect(s,10).stacks>=10){stats.armor+=30*scale(10);stats.fireRate+=.20*scale(10);stats.hpRegen+=.6*scale(10);}
     if(active(11))stats.fireRate+=.4*scale(11);
-    if(active(14)){stats.fireRate+=.4*scale(14);stats.firepower+=20*scale(14);}
-    if(active(20))stats.armor+=25*scale(20);
+    if(active(14)){stats.fireRate+=.4*scale(14);stats.firepower+=25*scale(14);}
+    if(active(20))stats.armor+=30*scale(20);
     if(active(32))stats.resourceRegen*=1+.2*scale(32);
-    if(s.currentHp>=stats.maxHp*.5)stats.firepower+=6*scale(33);
+    if(s.currentHp>=stats.maxHp*.5)stats.firepower*=1+.06*scale(33);
     const mode=equipmentGeminiMode(s,stats.maxHp,stats.maxResource);
     if(mode==="hp")stats.hpRegen*=1+.15*scale(28);
     if(mode==="resource")stats.resourceRegen*=1+.15*scale(28);

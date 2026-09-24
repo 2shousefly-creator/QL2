@@ -1,3 +1,5 @@
+import { paintRankSkills } from "./airCombatRankArt";
+import { skillRank } from "./airCombatSkillRanks";
 import { EQUIPMENT_ART, paintEquipment } from "./airCombatEquipmentArt";
 import { equipmentUntargetable } from "./airCombatEquipmentStats";
 import { releaseState, playerAirframeScale } from "./airCombatReleaseState";
@@ -720,6 +722,10 @@ export function drawLegacyWorld(
   paintEquipment(world,(_id,frame,x,y,width,height,rotation,alpha)=>drawMagneticFrame(ctx,frame,x,y,width,height,rotation,alpha),reducedMotion,(x,y,ex,ey,color,alpha,width)=>{
     ctx.save();ctx.globalAlpha=alpha;ctx.strokeStyle=`#${color.toString(16).padStart(6,"0")}`;ctx.lineWidth=width;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(ex,ey);ctx.stroke();ctx.restore();
   });
+  paintRankSkills(world,{
+    circle:(x,y,r,color,alpha,width)=>{ctx.save();ctx.globalAlpha=alpha;ctx.strokeStyle=`#${color.toString(16).padStart(6,"0")}`;ctx.lineWidth=width;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.stroke();ctx.restore();},
+    line:(x,y,ex,ey,color,alpha,width)=>{ctx.save();ctx.globalAlpha=alpha;ctx.strokeStyle=`#${color.toString(16).padStart(6,"0")}`;ctx.lineWidth=width;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(ex,ey);ctx.stroke();ctx.restore();},
+  },reducedMotion);
   paintAstra(world,{
     impactFallback:true,
     circle:(x,y,r,c,a,fill)=>{ctx.save();ctx.globalAlpha=a;ctx.strokeStyle=ctx.fillStyle=`#${c.toString(16).padStart(6,"0")}`;ctx.lineWidth=2;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);fill?ctx.fill():ctx.stroke();ctx.restore();},
@@ -789,7 +795,7 @@ export function drawLegacyWorld(
   const bubble=accents.titanShield;
   if(bubble.opacity>.01) {
     ctx.save();ctx.translate(world.playerX,world.playerY);ctx.scale(bubble.scale*playerAirframeScale(world.aircraft),bubble.scale*playerAirframeScale(world.aircraft));ctx.globalAlpha=bubble.opacity;
-    paintTitanShield(shieldPainter(ctx),bubble,reducedMotion,hasCore(world.aircraft,28));
+    paintTitanShield(shieldPainter(ctx),bubble,reducedMotion,(skillRank(world.aircraft, "armor_shield") >= 3));
     ctx.restore();
   }
 

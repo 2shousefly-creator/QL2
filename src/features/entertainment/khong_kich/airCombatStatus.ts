@@ -1,3 +1,4 @@
+import { skillRank } from "./airCombatSkillRanks";
 import { celestialProtection } from "./airCombatExpansion";
 import type { AircraftCombatState } from "./airCombatTypes";
 import { recordCoreMetric } from "./airCombatTelemetry";
@@ -21,6 +22,7 @@ export function applyPlayerStatus(state: AircraftCombatState, payload: StatusPay
   if (Object.values(payload).some(value => typeof value === "number" && value > 0) && celestialProtection(state)) {recordCoreMetric(state,184,"controlBlocked",1);return;}
   const s = state.status, now = state.coreState.time;
   for (const [key, seconds] of [["stunnedUntil", payload.stun], ["skillLockedUntil", payload.skillLock], ["armorBrokenUntil", payload.armorBreak], ["regenDisabledUntil", payload.regenDisable]] as const) {
+    if(key==="stunnedUntil"&&hardControlImmune(state))continue;
     recordStatusMitigation(state,seconds??0,s[key]);
     const duration = negativeStatusDuration(state, seconds ?? 0);
     if (duration > 0) { s[key] = Math.max(s[key], now + duration); s.durations[key] = s[key]-now; }
@@ -56,7 +58,8 @@ export function addStatusMark(state: AircraftCombatState, name: MarkName, durati
   state.status.marks[name] = { count, hits, window:seconds, until: now + seconds, sourceEnemyId };
   return count;
 }
-export const playerStunned = (state: AircraftCombatState) => state.status.stunnedUntil > state.coreState.time;
+const hardControlImmune = (state:AircraftCombatState) => skillRank(state,"afterburner")>=5&&(state.activeEffects.afterburner??0)>0;
+export const playerStunned = (state: AircraftCombatState) => !hardControlImmune(state)&&state.status.stunnedUntil > state.coreState.time;
 export const playerSkillLocked = (state: AircraftCombatState) => (playerStunned(state) && !hasCore(state,203)) || state.status.skillLockedUntil > state.coreState.time;
 
 export function tickPlayerStatus(state:AircraftCombatState):void {
@@ -72,7 +75,6 @@ export function tickPlayerStatus(state:AircraftCombatState):void {
  * Existing longer effects do not manufacture saved duration. UI never records metrics. */
 function recordStatusMitigation(state:AircraftCombatState,seconds:number,priorUntil:number) {
   if(seconds<=0)return;
-  if(hasCore(state,24)&&(state.activeEffects.afterburner??0)>0){recordCoreMetric(state,24,"controlBlocked",1);return;}
   const now=state.coreState.time,without=seconds*(hasCore(state,116)?.9:1),withCore=negativeStatusDuration(state,seconds);
   recordCoreMetric(state,98,"debuffSaved",Math.max(priorUntil,now+without)-Math.max(priorUntil,now+withCore));
 }

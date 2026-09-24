@@ -9,14 +9,13 @@ export interface SkillCoreRuntime {
   volleyHits: Map<number, Set<number>>;
   salvos: MissileSalvo[];
   aftershocks: {x:number;y:number;at:number;expansionCast?: import("./airCombatExpansion").ExpansionCast}[];
-  blackHoles: {id:number;x:number;y:number;until:number;expansionCast?: import("./airCombatExpansion").ExpansionCast}[];
   enemyEffects: Map<number, {weakenUntil?:number;markUntil?:number;armorUntil?:number;phantomHit?:number;hawkHit?:number}>;
   syncTarget: number | null; syncUntil: number;
   syncLockouts: Map<number,number>; syncedTargets: Set<number>;
   bountyTarget: number | null; bountyUntil:number; bountyReady:number;
 }
 export const createSkillCoreRuntime = (): SkillCoreRuntime => ({decoyCastId:0,decoyVolleyId:0,invisibilityCastId:0,decoyCasts:new Map(),volleyHits:new Map(),
-  salvos:[],aftershocks:[],blackHoles:[],enemyEffects:new Map(),syncTarget:null,syncUntil:0,syncLockouts:new Map(),syncedTargets:new Set(),bountyTarget:null,bountyUntil:0,bountyReady:0});
+  salvos:[],aftershocks:[],enemyEffects:new Map(),syncTarget:null,syncUntil:0,syncLockouts:new Map(),syncedTargets:new Set(),bountyTarget:null,bountyUntil:0,bountyReady:0});
 
 /** Base mechanic values shared by resolution, skill configuration and player copy. */
 export const SKILL_BASE_VALUES = {
@@ -26,7 +25,7 @@ export const SKILL_BASE_VALUES = {
 } as const;
 const b=SKILL_BASE_VALUES;
 
-/** Shared gameplay/tooltip values for the 27 additive skill cores. */
+/** Shared values retained by the ranked skill mechanics. */
 export const SKILL_CORE_VALUES = {
   manaRefundCap:.35, decoyRefundCap:.35, heatRecovery:.025, decoyPulseRadius:60, decoyPulseDamage:.7,
   thermalReduction:.2, thermalTail:4, afterburnerCooldownReduction:11, coolingMana:.18, coolingDuration:5,

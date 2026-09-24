@@ -95,7 +95,7 @@ const EFFECTS:Readonly<Record<number,EquipmentEffectHooks>>={
       q.orb={x:c.w.playerX+dx,y:c.w.playerY+dy,until:c.t+7,shield:c.w.random()<.5,scale:c.k};e.value=0;metric(c,"orbs");}
   }},
   24:{tick(c){const e=equipmentEffect(c.s,24),targets=nearby(c,c.w.playerX,c.w.playerY).sort((a,b)=>b.hp-a.hp);if(e.value>=getEffectiveAircraftStats(c.s).maxResource*.40&&targets.length){e.value=0;const target=targets[0];equipmentState(c.s).meteors.push({x:target.x,y:target.y,at:c.t+.6,scale:c.k});equipmentFx(c.w,24,target.x,target.y,140,.6);metric(c,"meteors");}}},
-  25:{damaged(c,lost){if(lost>0&&c.s.currentHp<hp(c)*.3&&ready(c)){reduceCooldown(c,4*c.k,AIRCRAFT_CONFIGS[c.s.aircraftId].skillIds);shield(c,hp(c)*.08*c.k,4);equipmentEffect(c.s,25).ready=c.t+40;}}},
+  25:{damaged(c,lost){if(lost>0&&c.s.currentHp<hp(c)*.3&&ready(c)){reduceCooldown(c,3*c.k,AIRCRAFT_CONFIGS[c.s.aircraftId].skillIds);shield(c,hp(c)*.08*c.k,4);equipmentEffect(c.s,25).ready=c.t+40;}}},
   26:{hit(c,h){if(h.critical)stack(c,1,5,5);}},
   27:{tick(c,dt){heal(c,Math.max(0,hp(c)-c.s.currentHp)*.01*c.k*dt);}},
   28:{tick(c,dt){const stats=getEffectiveAircraftStats(c.s);metric(c,`${equipmentGeminiMode(c.s,stats.maxHp,stats.maxResource)}Time`,dt);}},
@@ -104,7 +104,7 @@ const EFFECTS:Readonly<Record<number,EquipmentEffectHooks>>={
   31:{cast(c){equipmentFx(c.w,31);}},
   32:{kill(c){activate(c,5);}},
   33:{hit(c,h){if(c.s.currentHp<hp(c)*.5)heal(c,h.damage*.01*c.k);},tick(c,dt){metric(c,c.s.currentHp<hp(c)*.5?"siphonTime":"offenseTime",dt);}},
-  34:{cast(c,id){reduceCooldown(c,1.5*c.k,AIRCRAFT_CONFIGS[c.s.aircraftId].skillIds.filter(s=>s!==id));equipmentFx(c.w,34);}},
+  34:{cast(c,id){reduceCooldown(c,c.k,AIRCRAFT_CONFIGS[c.s.aircraftId].skillIds.filter(s=>s!==id));equipmentFx(c.w,34);}},
   35:{hit(c,h){if(!h.primary)return;const id=AIRCRAFT_CONFIGS[c.s.aircraftId].skillIds.slice().sort((a,b)=>(c.s.cooldowns[b]??0)-(c.s.cooldowns[a]??0))[0];const e=equipmentEffect(c.s,35);if(c.t>=e.tick){e.tick=c.t+1;e.value=0;}const reduction=Math.min((h.critical?.40:.12)*c.k,Math.max(0,.75*c.k-e.value),c.s.cooldowns[id]??0);e.value+=reduction;reduceCooldown(c,reduction,[id],h.critical?"criticalCooldown":"basicCooldown");if(reduction>0)equipmentFx(c.w,35);}},
   36:{hit(c,h){if(!h.critical)return;const m=mark(c.s,h.enemy,36);if(m.until<=c.t){m.stacks=0;m.tick=c.t+1;}m.stacks=Math.min(2,m.stacks+1);m.until=c.t+4;metric(c,"stacks");equipmentFx(c.w,36,h.enemy.x,h.enemy.y,50,4,h.enemy.id);}},
 };
@@ -113,7 +113,7 @@ export function equipmentOnHit(w:CombatWorld,h:EquipmentHooks,hit:EquipmentHit) 
 export function equipmentOnCast(w:CombatWorld,h:EquipmentHooks,id:SkillId) {for(const c of contexts(w,h))EFFECTS[c.f]?.cast?.(c,id);}
 export function equipmentOnDamage(w:CombatWorld,h:EquipmentHooks,hp:number,total:number) {for(const c of contexts(w,h))EFFECTS[c.f]?.damaged?.(c,hp,total);}
 export function equipmentResourceSpent(s:AircraftCombatState,amount:number) {if(equipmentScale(s,24))equipmentEffect(s,24).value+=amount;}
-export function equipmentSkillEnd(s:AircraftCombatState) {if(equipmentScale(s,29)){const e=equipmentEffect(s,29);e.until=s.coreState.time+3;e.duration=3;equipmentMetric(s,29,"procs",1);}}
+export function equipmentSkillEnd(s:AircraftCombatState) {if(equipmentScale(s,29)){const e=equipmentEffect(s,29);if(e.ready>s.coreState.time)return;e.ready=s.coreState.time+4;e.until=s.coreState.time+3;e.duration=3;equipmentMetric(s,29,"procs",1);}}
 export function equipmentArmor(s:AircraftCombatState,e:EnemyEntity) {const m=equipmentState(s).marks[e.id]?.[15];return e.armor-(m&&m.until>s.coreState.time?6*equipmentScale(s,15)*m.stacks:0);}
 export function equipmentOutgoing(s:AircraftCombatState,e:EnemyEntity,basic:boolean,skill:boolean,direct:boolean) {
   const t=s.coreState.time,stats=getEffectiveAircraftStats(s),factors:[number,number][]=[],bonuses:[number,number][]=[];
@@ -178,7 +178,7 @@ export function flushEquipmentDrops(w:CombatWorld) {
     const first=q.eliteKillsThisWave===0&&elites.length?elites[Math.min(elites.length-1,Math.floor(w.random()*elites.length))]:undefined;
     for(const e of kills){
       const chances=e===first?[.05,1,.10,.02]:e.elite?[.0125,.25,.025,.005]:[.005,.015,.0025,.0005];
-      const boost=s.selectedCores.includes("core_224")&&!equipmentRewardsLocked(s)?1.5:1;
+      const boost=s.selectedCores.includes("core_224")&&!equipmentRewardsLocked(s)?1.75:1;
       for(const [index,prefix] of (["VP01","TP","TH","HL"] as const).entries()){
         const roll=w.random(),base=chances[index];
         if(roll>=Math.min(1,base*boost)||!canGrantEquipmentReward(s,prefix==="VP01"?prefix:`${prefix}01`))continue;

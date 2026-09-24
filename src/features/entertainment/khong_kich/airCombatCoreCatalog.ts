@@ -6,8 +6,8 @@ import type { CoreDefinition } from "./airCombatTypes";
 export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_001",
-    "name": "Đạn hạng nhẹ",
-    "description": "Nhận +12 Hỏa Lực.",
+    "name": "Hỏa Lực Đồng Bộ",
+    "description": "+18 Hỏa Lực, +0,30 Tốc Độ Bắn.",
     "system": "attack",
     "icon": "core:core_001",
     "category": "offense",
@@ -17,8 +17,8 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   },
   {
     "id": "core_002",
-    "name": "Lớp giáp phụ",
-    "description": "Nhận +12 Giáp.",
+    "name": "Khung Hộ Vệ",
+    "description": "+220 Máu Tối Đa, +16 Giáp.",
     "system": "defense",
     "icon": "core:core_002",
     "category": "offense",
@@ -50,8 +50,8 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   },
   {
     "id": "core_005",
-    "name": "Bộ sửa chữa cơ bản",
-    "description": "+0.9 Hồi Máu/giây",
+    "name": "Hệ Tái Tạo Chiến Thuật",
+    "description": "+1,1 Hồi Máu/s, +6% Giảm Hồi Chiêu, +8% Hồi Tài Nguyên.",
     "system": "defense",
     "icon": "core:core_005",
     "category": "offense",
@@ -72,8 +72,8 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   },
   {
     "id": "core_007",
-    "name": "Đạn xuyên giáp",
-    "description": "Nhận +20 Hỏa Lực.",
+    "name": "Hỏa Lực Tăng Áp",
+    "description": "+32 Hỏa Lực, +0,50 Tốc Độ Bắn.",
     "system": "attack",
     "icon": "core:core_007",
     "category": "offense",
@@ -83,8 +83,8 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   },
   {
     "id": "core_008",
-    "name": "Giáp hợp kim",
-    "description": "Nhận +20 Giáp.",
+    "name": "Khung Hợp Kim Chiến Đấu",
+    "description": "+400 Máu Tối Đa, +28 Giáp.",
     "system": "defense",
     "icon": "core:core_008",
     "category": "offense",
@@ -116,8 +116,8 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   },
   {
     "id": "core_011",
-    "name": "Sửa chữa Nano",
-    "description": "Nhận +1,7 Hồi Máu mỗi giây.",
+    "name": "Tái Tạo Nano",
+    "description": "+2 Hồi Máu/s, +11% Giảm Hồi Chiêu, +15% Hồi Tài Nguyên.",
     "system": "defense",
     "icon": "core:core_011",
     "category": "offense",
@@ -138,8 +138,8 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   },
   {
     "id": "core_013",
-    "name": "Chúng sinh bình đẳng",
-    "description": "Nhận +50 Hỏa Lực.",
+    "name": "Nền Tảng Hủy Diệt",
+    "description": "+60 Hỏa Lực, +1 Tốc Độ Bắn.",
     "system": "attack",
     "icon": "core:core_013",
     "category": "offense",
@@ -149,8 +149,8 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   },
   {
     "id": "core_014",
-    "name": "Pháo đài kim cương",
-    "description": "Nhận +50 Giáp.",
+    "name": "Pháo Đài Kim Cương",
+    "description": "+650 Máu Tối Đa, +45 Giáp.",
     "system": "defense",
     "icon": "core:core_014",
     "category": "offense",
@@ -182,8 +182,8 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   },
   {
     "id": "core_017",
-    "name": "Tái tạo lượng tử",
-    "description": "Nhận +4 Hồi Máu mỗi giây.",
+    "name": "Tái Tạo Lượng Tử",
+    "description": "+4,5 Hồi Máu/s, +20% Giảm Hồi Chiêu, +25% Hồi Tài Nguyên.",
     "system": "defense",
     "icon": "core:core_017",
     "category": "offense",
@@ -637,7 +637,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_046",
     "name": "Càng đánh càng hăng",
-    "description": "Mỗi kẻ địch bị hạ cho +0,4 Hỏa Lực trong lượt. Tinh Anh và Boss cho lượng tăng gấp 5 lần.",
+    "description": "Mỗi hạ quái thường +0,6 Hỏa Lực vĩnh viễn trong run; Tinh Anh/Boss ×5.",
     "system": "attack",
     "icon": "core:core_046",
     "category": "offense",
@@ -648,7 +648,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_047",
     "name": "Thích ứng phòng ngự",
-    "description": "Mỗi hạ gục tăng vĩnh viễn 0,2 Giáp trong lượt chơi. Tinh Anh/Boss tính gấp 5.",
+    "description": "Mỗi hạ quái thường +0,3 Giáp vĩnh viễn trong run; Tinh Anh/Boss ×5.",
     "system": "defense",
     "icon": "core:core_047",
     "category": "offense",
@@ -659,7 +659,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_048",
     "name": "Trường Sinh",
-    "description": "Mỗi hạ gục tăng vĩnh viễn 2 Máu Tối Đa trong lượt chơi. Tinh Anh/Boss tính gấp 5.",
+    "description": "Mỗi hạ quái thường +3 Máu Tối Đa vĩnh viễn trong run; Tinh Anh/Boss ×5.",
     "system": "defense",
     "icon": "core:core_048",
     "category": "offense",
@@ -735,8 +735,8 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   },
   {
     "id": "core_055",
-    "name": "Kính ngắm chiến trường",
-    "description": "+8% Tỷ Lệ Chí Mạng",
+    "name": "Kính Ngắm Hiệu Chỉnh",
+    "description": "+10% Tỷ Lệ Chí Mạng, +20% Sát Thương Chí Mạng.",
     "system": "attack",
     "icon": "core:core_055",
     "category": "offense",
@@ -802,7 +802,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_061",
     "name": "Giáp phản ứng nhanh",
-    "description": "Khi nhận sát thương, nhận +25 Giáp trong 5 giây. Hồi nội tại 10 giây.",
+    "description": "Khi nhận sát thương: +30 Giáp trong 5s. Hồi nội tại 10s.",
     "system": "defense",
     "icon": "core:core_061",
     "category": "offense",
@@ -824,7 +824,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_063",
     "name": "Máu nóng",
-    "description": "Khi dưới 35% Máu, nhận +20 Hỏa Lực và +20 Giáp.",
+    "description": "Dưới 35% Máu: +30 Hỏa Lực và +30 Giáp.",
     "system": "utility",
     "icon": "core:core_063",
     "category": "defense",
@@ -835,7 +835,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_064",
     "name": "Hút Hồn",
-    "description": "Mỗi 10 hạ gục hồi 3% Máu Tối Đa.",
+    "description": "Mỗi 10 hạ gục hồi 4% Máu Tối Đa.",
     "system": "defense",
     "icon": "core:core_064",
     "category": "defense",
@@ -868,7 +868,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_067",
     "name": "Đánh dấu Tinh Anh",
-    "description": "Gây thêm 8% mọi sát thương lên Tinh Anh và Boss.",
+    "description": "+10% mọi sát thương lên Tinh Anh/Boss.",
     "system": "attack",
     "icon": "core:core_067",
     "category": "offense",
@@ -901,7 +901,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_070",
     "name": "Tái kích hoạt",
-    "description": "Mỗi 6 hạ gục giảm 0,75 giây hồi chiêu còn lại của mọi kỹ năng đang hồi.",
+    "description": "Mỗi 6 hạ gục giảm 0,6s hồi chiêu còn lại của cả 4 kỹ năng.",
     "system": "utility",
     "icon": "core:core_070",
     "category": "resource",
@@ -934,7 +934,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_073",
     "name": "Đạn Phân Mảnh",
-    "description": "Kẻ địch bị hạ phát nổ gây 35% Hỏa Lực lên kẻ địch xung quanh.",
+    "description": "Hạ địch gây nổ 60% Hỏa Lực.",
     "system": "attack",
     "icon": "core:core_073",
     "category": "weapon",
@@ -945,7 +945,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_074",
     "name": "Bạo Kích Hồi Tiếp",
-    "description": "Nhận +10% Tỷ Lệ Chí Mạng, mỗi đòn chí mạng giảm 0,2 giây hồi chiêu của cả 3 kỹ năng, tối đa 1 giây mỗi giây.",
+    "description": "+10% Chí Mạng. Mỗi chí mạng giảm 0,15s hồi chiêu còn lại của cả 4 kỹ năng; ngân sách tối đa 0,75s mỗi giây.",
     "system": "utility",
     "icon": "core:core_074",
     "category": "offense",
@@ -956,7 +956,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_075",
     "name": "Nhịp Sát Phạt",
-    "description": "Mỗi 5 kẻ địch bị hạ cho +3% Hỏa Lực, tối đa 5 cộng dồn. Nhận sát thương làm mất 1 cộng dồn.",
+    "description": "Mỗi 5 hạ gục +4% Hỏa Lực, tối đa 5 stack / +20%. Nhận sát thương mất 1 stack.",
     "system": "attack",
     "icon": "core:core_075",
     "category": "offense",
@@ -967,7 +967,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_076",
     "name": "Lá Chắn Phản Ứng",
-    "description": "Khi một đòn gây sát thương lớn hơn 10% Máu Tối Đa, nhận khiên bằng 12% Máu Tối Đa trong 3 giây. Hồi nội tại 10 giây.",
+    "description": "Khi một lần nhận sát thương vượt 10% Máu Tối Đa, tạo Khiên bằng 15% Máu Tối Đa trong 3s. Hồi 10s.",
     "system": "defense",
     "icon": "core:core_076",
     "category": "defense",
@@ -1066,7 +1066,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_085",
     "name": "Pháo Đổi Giáp",
-    "description": "+48 Firepower, -24 Armor",
+    "description": "+60 Hỏa Lực, -25 Giáp.",
     "system": "utility",
     "icon": "core:core_085",
     "category": "offense",
@@ -1154,7 +1154,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_093",
     "name": "Đại Pháp Sư",
-    "description": "Dùng một kỹ năng giảm hồi chiêu còn lại của 2 kỹ năng khác bằng 15% Hồi Chiêu cơ bản của chúng.",
+    "description": "Dùng một kỹ năng giảm hồi chiêu còn lại của 3 kỹ năng khác bằng 10% hồi chiêu cơ bản của từng kỹ năng đó.",
     "system": "utility",
     "icon": "core:core_093",
     "category": "resource",
@@ -1165,7 +1165,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_094",
     "name": "Khế Ước Quỷ Quyệt",
-    "description": "Mất 35% Máu Tối Đa để nhận +40% Hỏa Lực và +25% Tỷ Lệ Chí Mạng.",
+    "description": "-35% Máu Tối Đa, +40% Hỏa Lực theo phép nhân, +25% Chí Mạng.",
     "system": "utility",
     "icon": "core:core_094",
     "category": "offense",
@@ -1198,7 +1198,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_097",
     "name": "Tập trung chuyên môn",
-    "description": "Khóa cả 3 kỹ năng; nhận +40 Hỏa Lực, +30 Máu Tối Đa và +30 Giáp. Mỗi Lõi Kỹ Năng đang sở hữu chuyển thành 1 Lõi Kim Cương hợp lệ. Các mốc 9/18/27 còn lại mở 3 Lõi Kim Cương thường, chọn 1. Hộp Pandora có thể xóa Lõi này để mở lại kỹ năng; không hoàn trả Lõi Kỹ Năng hay milestone đã tiêu thụ.",
+    "description": "Không thể chủ động sử dụng Ultimate. Nội tại của Ultimate và việc đầu tư Điểm Kỹ Năng vào Ultimate vẫn hoạt động bình thường. Ba Kỹ Năng Thường nhận +30% Sát Thương Kỹ Năng, -25% Hồi Chiêu Cơ Bản và -20% Chi Phí Tài Nguyên.",
     "system": "utility",
     "icon": "core:core_097",
     "category": "offense",
@@ -1209,7 +1209,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_098",
     "name": "Bộ Lọc Nhiễu",
-    "description": "Nhận +15 Giáp và giảm 30% thời gian hiệu ứng bất lợi.",
+    "description": "+20 Giáp và giảm 30% thời gian hiệu ứng bất lợi.",
     "system": "defense",
     "icon": "core:core_098",
     "category": "defense",
@@ -1231,7 +1231,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_100",
     "name": "Cân Bằng Chiến Trường",
-    "description": "Trên 70% Máu: +20 Hỏa Lực. Dưới 30% Máu: +20 Giáp. Từ 30% đến 70%: +8 Hỏa Lực và +8 Giáp.",
+    "description": "Trên 70% Máu: +30 Hỏa Lực; dưới 30%: +30 Giáp; còn lại +12 Hỏa Lực và +12 Giáp.",
     "system": "utility",
     "icon": "core:core_100",
     "category": "offense",
@@ -1253,7 +1253,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_102",
     "name": "Hỏa Lực Cự Ly Xa",
-    "description": "Đòn bắn thường gây thêm 6% sát thương đạn thường ở cự ly xa — trên 2/3 chiều cao vùng chiến đấu.",
+    "description": "Đạn thường ở khoảng cách xa hơn 2/3 vùng chơi gây thêm 8% sát thương.",
     "system": "attack",
     "icon": "core:core_102",
     "category": "weapon",
@@ -1264,7 +1264,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_103",
     "name": "Bản Năng Sinh Tồn",
-    "description": "Khi dưới 35% Máu, giảm 15% sát thương nhận từ kẻ địch.",
+    "description": "Dưới 35% Máu: giảm 18% sát thương nhận.",
     "system": "defense",
     "icon": "core:core_103",
     "category": "defense",
@@ -1352,7 +1352,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_111",
     "name": "Đạn Siêu Âm",
-    "description": "Đạn thường bay nhanh hơn 100% và gây thêm 4% sát thương đạn thường. Hitbox không đổi.",
+    "description": "+100% tốc độ projectile đạn thường và +8% sát thương đạn thường.",
     "system": "attack",
     "icon": "core:core_111",
     "category": "offense",
@@ -1363,7 +1363,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_112",
     "name": "Lưới Giao Hỏa",
-    "description": "Bắn trúng 2 mục tiêu khác nhau trong 0,75 giây tạo Lưới Giao Hỏa giữa chúng trong 2 giây. Kẻ địch khác chạm lưới nhận 120% Hỏa Lực, tối đa 1 lần mỗi lưới. Hai mục tiêu tạo lưới không nhận sát thương từ chính lưới. Lưới biến mất nếu một trong hai mục tiêu bị hạ.",
+    "description": "Bắn trúng 2 mục tiêu khác nhau trong 0,75 giây tạo Lưới Giao Hỏa giữa chúng trong 2 giây. Kẻ địch khác chạm lưới nhận 160% Hỏa Lực, tối đa 1 lần mỗi lưới. Hai mục tiêu tạo lưới không nhận sát thương từ chính lưới. Lưới biến mất nếu một trong hai mục tiêu bị hạ.",
     "system": "attack",
     "icon": "core:core_112",
     "category": "offense",
@@ -1440,7 +1440,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_119",
     "name": "Kéo Dãn Thời Gian",
-    "description": "Dùng kỹ năng tạo Chrono Field bán kính 80px trong 4 giây, đi theo người chơi. Đạn thường của địch trong vùng giảm 45% tốc độ.",
+    "description": "Sau khi dùng kỹ năng, trong 4s nhận +30% tốc độ hồi Hồi Chiêu và +30% Hồi Tài Nguyên. Dùng kỹ năng mới làm mới thời gian. Tốc độ hồi độc lập với giới hạn 60% Giảm Hồi Chiêu.",
     "system": "defense",
     "icon": "core:core_119",
     "category": "defense",
@@ -1906,7 +1906,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 {
   "id": "core_149",
   "name": "Thợ Săn Tiền Thưởng",
-  "description": "Đánh dấu ngẫu nhiên một quái vật trong 4 giây. Mục tiêu bị đánh dấu chịu thêm 5% sát thương từ người chơi. Nếu tiêu diệt mục tiêu được đánh dấu trong thời gian này, nhận 1 phần thưởng vĩnh viễn ngẫu nhiên trong lượt chơi hiện tại. Hồi nội bộ 14 giây, bắt đầu sau khi hiệu ứng kết thúc hoặc mục tiêu bị tiêu diệt.",
+  "description": "Đánh dấu mục tiêu ưu tiên 6s, mục tiêu nhận thêm 10% sát thương. Hồi nội tại 12s sau khi kết thúc; giữ phần thưởng hạ mục tiêu.",
   "system": "utility",
   "icon": "core:core_149",
   "category": "offense",
@@ -2206,7 +2206,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 {
   "id": "core_168",
   "name": "Kíp Nổ Trễ",
-  "description": "Mỗi phát bắn thường thứ 8 trúng mục tiêu sẽ gắn một vi kíp. Sau 0,6 giây, vi kíp nổ gây sát thương tất cả mục tiêu bằng 45% Hỏa Lực trong bán kính 50px.",
+  "description": "Mỗi phát bắn thường thứ 8 trúng mục tiêu sẽ gắn một vi kíp. Sau 0,6 giây, vi kíp nổ gây sát thương tất cả mục tiêu bằng 70% Hỏa Lực trong bán kính 50px.",
   "system": "attack",
   "icon": "core:core_168",
   "category": "offense",
@@ -2217,7 +2217,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 {
   "id": "core_169",
   "name": "Bộ Điều Áp",
-  "description": "Khi Tài Nguyên trên 70%: +10 Hỏa Lực. Khi Tài Nguyên dưới 30%: +0,7 Hồi Máu mỗi giây. Khoảng 30–70% +0,2 tốc độ bắn.",
+  "description": "Tài nguyên trên 70%: +18 Hỏa Lực; dưới 30%: +1,2 Hồi Máu/s; còn lại +0,3 Tốc Độ Bắn.",
   "system": "utility",
   "icon": "core:core_169",
   "category": "weapon",
@@ -2228,7 +2228,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 {
   "id": "core_170",
   "name": "Báo Động Sớm",
-  "description": "Khi các đòn tấn công của địch đi vào phạm vi bán kính 70px quanh chiến cơ, nhận +18 Giáp trong 1,5 giây. Hồi chiêu 15 giây.",
+  "description": "Khi phát hiện cảnh báo nguy hiểm: +30 Giáp trong 2s, hồi nội tại 12s.",
   "system": "defense",
   "icon": "core:core_170",
   "category": "defense",
@@ -2272,7 +2272,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 {
   "id": "core_174",
   "name": "Đệm Xung",
-  "description": "Khi mất trên 8% máu tối đa trong vòng 2 giây gần nhất, hồi lại 8% tài nguyên tối đa. Hồi chiêu 15 giây.",
+  "description": "Khi mất trên 8% máu tối đa trong vòng 2 giây gần nhất, hồi lại 10% tài nguyên tối đa. Hồi chiêu 15 giây.",
   "system": "resource",
   "icon": "core:core_174",
   "category": "resource",
@@ -2283,7 +2283,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 {
   "id": "core_175",
   "name": "Tần Số Xen Kẽ",
-  "description": "Dùng một kỹ năng khác kỹ năng vừa dùng gần nhất trong vòng 5 giây sẽ cho +12% mọi sát thương trong 4 giây (kể cả bắn thường)",
+  "description": "Dùng kỹ năng khác trong cửa sổ 5s cho +15% mọi sát thương trong 4s.",
   "system": "attack",
   "icon": "core:core_175",
   "category": "offense",
@@ -2349,7 +2349,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 {
   "id": "core_181",
   "name": "Van Xả Kỹ Năng",
-  "description": "Sau khi hiệu lực chính của một kỹ năng kết thúc, nhận +25% Hồi Tài Nguyên trong 3 giây.",
+  "description": "Khi hiệu ứng kỹ năng chính kết thúc, +30% Hồi Tài Nguyên trong 4s.",
   "system": "resource",
   "icon": "core:core_181",
   "category": "resource",
@@ -2393,7 +2393,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 {
   "id": "core_185",
   "name": "Đánh Dấu Sơ Bộ",
-  "description": "Phát đạn thường chính đầu tiên trúng một mục tiêu sẽ đánh dấu 4 giây; lần gây sát thương kỹ năng kế tiếp lên mục tiêu đó nhận +12% sát thương kỹ năng và tiêu dấu. Hồi chiêu mỗi mục tiêu 12s",
+  "description": "Phát đạn thường chính đầu tiên trúng một mục tiêu sẽ đánh dấu 4 giây; lần gây sát thương kỹ năng kế tiếp lên mục tiêu đó nhận +15% sát thương kỹ năng và tiêu dấu. Hồi chiêu mỗi mục tiêu 12s",
   "system": "attack",
   "icon": "core:core_185",
   "category": "offense",
@@ -2415,7 +2415,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 {
   "id": "core_187",
   "name": "Tụ Năng Phản Chấn",
-  "description": "Tích 20% sát thương thực tế đã nhận sau giảm trừ vào bộ tụ, tối đa bằng 120% Hỏa Lực. Kỹ năng gây sát thương kế tiếp cộng lượng đã tích vào lần gây sát thương đầu tiên rồi xóa kho.",
+  "description": "Lưu 25% sát thương thực tế đã nhận, tối đa 160% Hỏa Lực; kỹ năng gây sát thương kế tiếp giải phóng lượng đã lưu.",
   "system": "attack",
   "icon": "core:core_187",
   "category": "offense",
@@ -2425,8 +2425,8 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 },
 {
   "id": "core_188",
-  "name": "Nhắm vào yếu điểm",
-  "description": "Nhận +15% tỷ lệ chí mạng",
+  "name": "Nhắm Vào Yếu Điểm",
+  "description": "+18% Tỷ Lệ Chí Mạng, +35% Sát Thương Chí Mạng.",
   "system": "attack",
   "icon": "core:core_188",
   "category": "offense",
@@ -2448,7 +2448,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 {
   "id": "core_190",
   "name": "Nén Năng Lượng",
-  "description": "Nhận +22% sát thương kỹ năng, nhưng mọi kỹ năng tiêu tốn thêm 15% Tài Nguyên.",
+  "description": "+25% Sát Thương Kỹ Năng, +12% Chi Phí Tài Nguyên.",
   "system": "attack",
   "icon": "core:core_190",
   "category": "offense",
@@ -2459,7 +2459,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 {
   "id": "core_191",
   "name": "Hỏa Lực Luân Phiên",
-  "description": "Hạ địch bằng đạn thường cho +20% sát thương kỹ năng kế tiếp trong 5 giây. Hạ địch bằng kỹ năng cho +20% sát thương đạn thường trong 4 giây. Hai trạng thái không cộng dồn.",
+  "description": "Đạn thường hạ địch cường hóa kỹ năng kế tiếp +25% trong 5s; kỹ năng hạ địch cường hóa đạn thường +25% trong 4s.",
   "system": "attack",
   "icon": "core:core_191",
   "category": "offense",
@@ -2481,7 +2481,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 {
   "id": "core_193",
   "name": "Nhịp Ba Kỹ Năng",
-  "description": "Dùng đủ cả 3 kỹ năng khác nhau trong 7 giây sẽ giảm 3 giây hồi chiêu còn lại của cả 3 kỹ năng và cho +25% hồi phục tài nguyên trong 5 giây.",
+  "description": "Dùng bất kỳ 3 kỹ năng khác nhau trong bộ 4 kỹ năng trong 8s: giảm hồi chiêu cả 4 kỹ năng 3s và +30% Hồi Tài Nguyên trong 5s.",
   "system": "resource",
   "icon": "core:core_193",
   "category": "resource",
@@ -2569,7 +2569,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 {
   "id": "core_201",
   "name": "Cộng Hưởng Kho Vũ Khí",
-  "description": "Mỗi Lõi Tấn Công khác nhau đang sở hữu cho +5% sát thương đạn thường (tối đa +30% sát thương đạn thường); mỗi Lõi Tài Nguyên cho +5% sát thương kỹ năng (tối đa +30% sát thương kỹ năng); mỗi Lõi Phòng Thủ cho +4% Giảm Sát Thương (tối đa 24% Giảm Sát Thương); mỗi Lõi Đa Dụng cho +2% sát thương đạn thường, +2% sát thương kỹ năng và +2% Giảm Sát Thương (tối đa +12% sát thương đạn thường, +12% sát thương kỹ năng và +12% Giảm Sát Thương). Lõi Kỹ Năng không được tính. Bản thân Cộng Hưởng Kho Vũ Khí được tính là 1 Lõi Đa Dụng.",
+  "description": "Mỗi Hệ Lõi hiện diện cho một gói: Tấn Công +15% Sát Thương Đạn Thường; Tài Nguyên +15% Sát Thương Kỹ Năng; Phòng Thủ giảm 10% sát thương nhận; Đa Dụng +8% Sát Thương Đạn Thường, +8% Sát Thương Kỹ Năng và +8% Hồi Tài Nguyên. Lõi này tính là Đa Dụng.",
   "system": "utility",
   "icon": "core:core_201",
   "category": "weapon",
@@ -2580,7 +2580,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 {
   "id": "core_202",
   "name": "Học Thuyết Một Mũi Nhọn",
-  "description": "Sau khi nhận lõi, chọn 1 Kỹ năng để trở thành Kỹ Năng Chủ Lực tới hết lượt chơi, kỹ năng Chủ Lực sẽ được: +22% sát thương kỹ năng Chủ Lực, -15% chi phí Tài Nguyên và -15% Hồi Chiêu cơ bản",
+  "description": "Chọn bất kỳ 1 trong 4 kỹ năng, kể cả Ultimate hoặc Cấp 0: +30% sát thương kỹ năng đó, -20% chi phí và -20% hồi chiêu cơ bản. Không đổi cấp kỹ năng.",
   "system": "attack",
   "icon": "core:core_202",
   "category": "offense",
@@ -2668,7 +2668,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 {
   "id": "core_210",
   "name": "Tự Sửa Đường Ngắm",
-  "description": "Nếu 3 viên đạn bắn thường chính liên tiếp bay hết màn hình chơi mà không chạm bất kỳ mục tiêu nào, viên kế tiếp được tự chỉnh hướng nhẹ về mục tiêu gần nhất trong tối đa 0,45 giây đầu. Trúng hoặc hết 0,45 giây sẽ mất dẫn hướng.",
+  "description": "Sau 2 phát thường chính liên tiếp bay khỏi màn hình không trúng địch, 3 phát chính kế tiếp được homing nhẹ tối đa 0,6s và +25% tốc độ. Phát được hiệu chỉnh đầu tiên trúng gây thêm 30% sát thương đạn thường. Trúng địch đặt lại chuỗi trượt.",
   "system": "attack",
   "icon": "core:core_210",
   "category": "offense",
@@ -2679,7 +2679,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 {
   "id": "core_211",
   "name": "Bộ Lọc Reroll",
-  "description": "Khi reroll một ô trong lựa chọn Lõi thường, lõi thay thế sẽ tránh cùng Hệ Lõi với lõi vừa bỏ nếu trong cùng Bậc còn lõi hợp lệ thuộc Hệ khác. Không thay đổi Bậc Lõi và không tác động lựa chọn Skill Core.",
+  "description": "Reroll ưu tiên Lõi thuộc Hệ khác khi còn ứng viên. Không xuất hiện tại Lv15.",
   "system": "utility",
   "icon": "core:core_211",
   "category": "weapon",
@@ -2690,7 +2690,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 {
   "id": "core_212",
   "name": "Phiếu Reroll Dự Phòng",
-  "description": "Khi nhận lõi này, các lượt chọn Lõi thường (ngoại trừ Skill Core) kế tiếp có thêm đúng 1 lần Reroll Dự Phòng dùng cho một ô bất kỳ.",
+  "description": "Nhận ngay +1 Reroll Dự Trữ. Mỗi lượt chọn Lõi tương lai có đúng 1 reroll phụ cho một ô. Không xuất hiện tại Lv15.",
   "system": "utility",
   "icon": "core:core_212",
   "category": "weapon",
@@ -2712,7 +2712,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 {
   "id": "core_214",
   "name": "Bản Đồ Dự Thảo",
-  "description": "Mọi lượt chọn Lõi thường hiển thị 4 thẻ thay vì 3; thẻ lõi thứ 4 cũng có nút reroll như bình thường. Các mốc Skill Core vẫn hiển thị 3 thẻ và giữ logic reroll Skill Core hiện tại.",
+  "description": "Mọi lượt chọn Lõi sau khi sở hữu hiển thị 5 card thay vì 3, mỗi ô có reroll riêng. Không thay đổi lượt đang chọn; không xuất hiện tại Lv15.",
   "system": "utility",
   "icon": "core:core_214",
   "category": "weapon",
@@ -2734,7 +2734,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 {
   "id": "core_216",
   "name": "Hộp Pandora",
-  "description": "Chuyển đổi tất cả Lõi Nâng Cấp thường người chơi đang sở hữu tại thời điểm kích hoạt thành các Lõi Kim Cương ngẫu nhiên, ngoại trừ Lõi Kỹ Năng, các Lõi Chuyển Đổi 050/051/052 và chính Hộp Pandora. Các Lõi thường từng nhận thông qua Lõi Chuyển Đổi vẫn là mục tiêu hợp lệ. Hiệu ứng của lõi cũ phải được tháo sạch; các giá trị vĩnh viễn đã thực sự kiếm được từ lõi cũ được bảo toàn.",
+  "description": "Chuyển các Lõi thường đang sở hữu thành Lõi Kim Cương ngẫu nhiên. Loại trừ Core050/051/052 và Hộp Pandora. Giữ chỉ số vĩnh viễn đã kiếm được. Nếu mất Tập Trung Chuyên Môn, Ultimate dùng lại ở cấp hiện tại.",
   "system": "utility",
   "icon": "core:core_216",
   "category": "weapon",
@@ -2745,7 +2745,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 {
   "id": "core_217",
   "name": "Thao Túng Bậc Lõi",
-  "description": "Tỷ lệ Bậc của các lượt chọn Lõi thường đổi từ 40% Bạc / 40% Vàng / 20% Kim Cương thành 25% Bạc / 40% Vàng / 35% Kim Cương. Mốc Skill Core 9/18/27 không đổi.",
+  "description": "Chỉ xuất hiện tại Lv1 hoặc Lv7. Các lượt tương lai dùng tỷ lệ 20% Bạc / 35% Vàng / 45% Kim Cương.",
   "system": "utility",
   "icon": "core:core_217",
   "category": "weapon",
@@ -2756,7 +2756,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 {
   "id": "core_218",
   "name": "Bảo Toàn Cơ Hội",
-  "description": "Khi một lượt chọn Lõi thường kết thúc, mỗi reroll chính theo ô chưa dùng sẽ chuyển thành 1 Reroll Dự Trữ. Nếu sở hữu Phiếu Reroll Dự Phòng, reroll phụ chưa dùng của lượt đó cũng chuyển thành 1 Reroll Dự Trữ. Kho tối đa 3, hoặc tối đa 4 khi đồng thời sở hữu Phiếu Reroll Dự Phòng. Reroll Dự Trữ chỉ sinh ra và sử dụng trong lựa chọn Lõi thường.",
+  "description": "Nhận ngay +1 Reroll Dự Trữ. Reroll chính/phụ chưa dùng được cất sau mỗi lượt, tối đa 5. Không xuất hiện tại Lv15.",
   "system": "utility",
   "icon": "core:core_218",
   "category": "weapon",
@@ -2767,7 +2767,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 {
   "id": "core_219",
   "name": "Nòng Súng Đỏ Rực",
-  "description": "Mỗi kỹ năng cast tạo 25 Nhiệt; kỹ năng dạng bật/tắt đang hoạt động tạo 2,5 Nhiệt mỗi giây; mỗi phát bắn thường tạo 0,025 Nhiệt. Nếu không có kỹ năng nào hoạt động trong 10 giây kể từ lần kết thúc kỹ năng gần nhất, Nhiệt giảm 15/giây. Ở 50–99 Nhiệt, gây thêm 20% mọi sát thương. Chạm 100 Nhiệt gây Quá Nhiệt 3 giây: ngừng bắn thường, không thể dùng kỹ năng, tắt ngay kỹ năng đang hoạt động và Nhiệt giảm dần về 0 trong đúng 3 giây.",
+  "description": "Dùng kỹ năng +20 Nhiệt; kỹ năng bật duy trì +2 Nhiệt/s; mỗi phát thường +0,025 Nhiệt. 50–99 Nhiệt: +25% mọi sát thương. 100 Nhiệt kết thúc kỹ năng đang bật và gây Quá Nhiệt khóa 3s rồi đặt lại. Không dùng kỹ năng trong 10s thì giảm 15 Nhiệt/s.",
   "system": "attack",
   "icon": "core:core_219",
   "category": "offense",
@@ -2800,7 +2800,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 {
   "id": "core_222",
   "name": "Nâng Cấp Bất Ổn",
-  "description": "Roll ngay khi nhận và mỗi 60 giây, độc lập 50/50. Thu Nhỏ: -50% kích thước và hitbox, +25 điểm phần trăm Giảm Hồi Chiêu (vẫn cap 80%), +50% Hồi Tài Nguyên/s. Khổng Lồ: +50% kích thước và hitbox, +30% Máu Tối Đa, +30% Hỏa Lực. Roll cùng trạng thái không cộng dồn lại; đổi trạng thái phải gỡ sạch bonus cũ trước khi áp bonus mới.",
+  "description": "Roll ngay khi nhận và mỗi 60 giây, độc lập 50/50. Thu Nhỏ: -50% kích thước và hitbox, +25 điểm phần trăm Giảm Hồi Chiêu (vẫn cap 60%), +50% Hồi Tài Nguyên/s. Khổng Lồ: +50% kích thước và hitbox, +30% Máu Tối Đa, +30% Hỏa Lực. Roll cùng trạng thái không cộng dồn lại; đổi trạng thái phải gỡ sạch bonus cũ trước khi áp bonus mới.",
   "system": "utility",
   "icon": "core:core_222",
   "category": "weapon",
@@ -2811,7 +2811,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 {
   "id": "core_223",
   "name": "Mảnh Ghép May Mắn",
-  "description": "Nhận 1 Trang Bị Thành Phần ngẫu nhiên.",
+  "description": "Nhận 2 Trang Bị Thành Phần ngẫu nhiên.",
   "system": "utility",
   "icon": "core:core_223",
   "category": "weapon",
@@ -2822,7 +2822,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 {
   "id": "core_224",
   "name": "Thích Chơi Xác Suất",
-  "description": "Nhân 1,5 lần từng xác suất rơi độc lập Nam Châm Ma Thuật / Thành Phần / Hoàn Chỉnh / Huyền Thoại, tối đa 100% mỗi roll. Sau Cái Giá Phải Trả, Trang Bị không rơi và Nam Châm trở về xác suất gốc.",
+  "description": "Nhân 1,75 lần từng xác suất rơi độc lập Nam Châm Ma Thuật / Thành Phần / Hoàn Chỉnh / Huyền Thoại, tối đa 100% mỗi roll. Sau Cái Giá Phải Trả, Trang Bị không rơi và Nam Châm trở về xác suất gốc.",
   "system": "utility",
   "icon": "core:core_224",
   "category": "weapon",
@@ -2833,7 +2833,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 {
   "id": "core_225",
   "name": "Ăn Chắc Mặc Bền",
-  "description": "Nhận 2 Trang Bị Thành Phần ngẫu nhiên.",
+  "description": "Nhận 3 Trang Bị Thành Phần ngẫu nhiên.",
   "system": "utility",
   "icon": "core:core_225",
   "category": "weapon",

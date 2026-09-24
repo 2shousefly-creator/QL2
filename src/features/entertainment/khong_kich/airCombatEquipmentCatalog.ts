@@ -7,70 +7,70 @@ const definitions: EquipmentDefinition[] = [
     "id": "TP01",
     "name": "Tinh Thiết",
     "rarity": "component",
-    "statsText": "+15 Hỏa Lực",
+    "statsText": "+20 Hỏa Lực",
     "effect": "Tăng trực tiếp Hỏa Lực của chiến cơ.",
     "stats": {
-      "firepower": 15
+      "firepower": 20
     }
   },
   {
     "id": "TP02",
     "name": "Phong Luân",
     "rarity": "component",
-    "statsText": "+0,3 Tốc Độ Bắn",
+    "statsText": "+0,35 Tốc Độ Bắn",
     "effect": "Tăng số lần khai hỏa đạn thường mỗi giây.",
     "stats": {
-      "fireRate": 0.3
+      "fireRate": 0.35
     }
   },
   {
     "id": "TP03",
     "name": "Hắc Giáp",
     "rarity": "component",
-    "statsText": "+15 Giáp",
+    "statsText": "+18 Giáp",
     "effect": "Tăng Giáp và giảm sát thương nhận vào theo công thức Giáp hiện hành.",
     "stats": {
-      "armor": 15
+      "armor": 18
     }
   },
   {
     "id": "TP04",
     "name": "Cốt Titan",
     "rarity": "component",
-    "statsText": "+200 Máu Tối Đa",
+    "statsText": "+250 Máu Tối Đa",
     "effect": "Tăng Máu Tối Đa.",
     "stats": {
-      "maxHp": 200
+      "maxHp": 250
     }
   },
   {
     "id": "TP05",
     "name": "Sinh Mạch",
     "rarity": "component",
-    "statsText": "+1,1 Hồi Máu/s",
+    "statsText": "+1,3 Hồi Máu/s",
     "effect": "Tăng lượng HP tự hồi mỗi giây.",
     "stats": {
-      "hpRegen": 1.1
+      "hpRegen": 1.3
     }
   },
   {
     "id": "TP06",
     "name": "Tụ Bão",
     "rarity": "component",
-    "statsText": "+12% Hồi Tài Nguyên/s",
+    "statsText": "+15% Hồi Tài Nguyên/s",
     "effect": "Tăng tốc độ hồi Mana/Điện tùy chiến cơ.",
     "stats": {
-      "resourceRegenPct": 0.12
+      "resourceRegenPct": 0.15
     }
   },
   {
     "id": "TP07",
     "name": "Thời Phiến",
     "rarity": "component",
-    "statsText": "+6% Giảm Hồi Chiêu",
+    "statsText": "+7% Giảm Hồi Chiêu",
     "effect": "Tăng CDR theo điểm phần trăm",
     "stats": {
-      "cooldownReduction": 0.06
+      "cooldownReduction": 0.07
     }
   },
   {
@@ -92,10 +92,10 @@ const definitions: EquipmentDefinition[] = [
       "TP01",
       "TP01"
     ],
-    "statsText": "+30 Hỏa Lực",
+    "statsText": "+40 Hỏa Lực",
     "effect": "Mọi sát thương trực tiếp tăng 8%.",
     "stats": {
-      "firepower": 30
+      "firepower": 40
     }
   },
   {
@@ -107,10 +107,10 @@ const definitions: EquipmentDefinition[] = [
       "TP01",
       "TP01"
     ],
-    "statsText": "+60 Hỏa Lực",
+    "statsText": "+80 Hỏa Lực",
     "effect": "Mọi sát thương trực tiếp tăng 16%.",
     "stats": {
-      "firepower": 60
+      "firepower": 80
     }
   },
   {
@@ -122,11 +122,11 @@ const definitions: EquipmentDefinition[] = [
       "TP01",
       "TP02"
     ],
-    "statsText": "+15 Hỏa Lực; +0,3 Tốc Độ Bắn",
+    "statsText": "+20 Hỏa Lực; +0,35 Tốc Độ Bắn",
     "effect": "Đạn thường trúng: +0,5 cộng dồn; dùng kỹ năng: +4. Tối đa 30 cộng dồn, mỗi cộng dồn +0,015 Tốc Độ Bắn trong 4 giây; nhận sát thương mất 5 cộng dồn.",
     "stats": {
-      "firepower": 15,
-      "fireRate": 0.3
+      "firepower": 20,
+      "fireRate": 0.35
     }
   },
   {
@@ -138,11 +138,11 @@ const definitions: EquipmentDefinition[] = [
       "TP01",
       "TP02"
     ],
-    "statsText": "+30 Hỏa Lực; +0,6 Tốc Độ Bắn",
+    "statsText": "+40 Hỏa Lực; +0,7 Tốc Độ Bắn",
     "effect": "Đạn thường trúng: +0,5 cộng dồn; dùng kỹ năng: +4. Tối đa 30 cộng dồn, mỗi cộng dồn +0,03 Tốc Độ Bắn trong 4 giây; nhận sát thương mất 5 cộng dồn.",
     "stats": {
-      "firepower": 30,
-      "fireRate": 0.6
+      "firepower": 40,
+      "fireRate": 0.7
     }
   },
   {
@@ -154,11 +154,11 @@ const definitions: EquipmentDefinition[] = [
       "TP01",
       "TP03"
     ],
-    "statsText": "+15 Hỏa Lực; +15 Giáp",
+    "statsText": "+20 Hỏa Lực; +18 Giáp",
     "effect": "Khi HP dưới 40%: không thể bị chỉ định trong 1,5 giây và hồi 10% Máu đã mất trong thời gian này. Hồi chiêu 60 giây từ khi hiệu ứng kết thúc.",
     "stats": {
-      "firepower": 15,
-      "armor": 15
+      "firepower": 20,
+      "armor": 18
     }
   },
   {
@@ -170,11 +170,11 @@ const definitions: EquipmentDefinition[] = [
       "TP01",
       "TP03"
     ],
-    "statsText": "+30 Hỏa Lực; +30 Giáp",
+    "statsText": "+40 Hỏa Lực; +36 Giáp",
     "effect": "Khi HP dưới 40%: không thể bị chỉ định trong 1,5 giây và hồi 20% Máu đã mất trong thời gian này. Hồi chiêu 60 giây từ khi hiệu ứng kết thúc.",
     "stats": {
-      "firepower": 30,
-      "armor": 30
+      "firepower": 40,
+      "armor": 36
     }
   },
   {
@@ -186,11 +186,11 @@ const definitions: EquipmentDefinition[] = [
       "TP01",
       "TP04"
     ],
-    "statsText": "+15 Hỏa Lực; +200 Máu Tối Đa",
+    "statsText": "+20 Hỏa Lực; +250 Máu Tối Đa",
     "effect": "Khi HP dưới 60%: tạo lá chắn bằng 10% Máu Tối Đa trong 8 giây. Hồi chiêu 60 giây từ khi hiệu ứng kết thúc.",
     "stats": {
-      "firepower": 15,
-      "maxHp": 200
+      "firepower": 20,
+      "maxHp": 250
     }
   },
   {
@@ -202,11 +202,11 @@ const definitions: EquipmentDefinition[] = [
       "TP01",
       "TP04"
     ],
-    "statsText": "+30 Hỏa Lực; +400 Máu Tối Đa",
+    "statsText": "+40 Hỏa Lực; +500 Máu Tối Đa",
     "effect": "Khi HP dưới 60%: tạo lá chắn bằng 20% Máu Tối Đa trong 8 giây. Hồi chiêu 60 giây từ khi hiệu ứng kết thúc.",
     "stats": {
-      "firepower": 30,
-      "maxHp": 400
+      "firepower": 40,
+      "maxHp": 500
     }
   },
   {
@@ -218,11 +218,11 @@ const definitions: EquipmentDefinition[] = [
       "TP01",
       "TP05"
     ],
-    "statsText": "+15 Hỏa Lực; +1,1 Hồi Máu/s",
+    "statsText": "+20 Hỏa Lực; +1,3 Hồi Máu/s",
     "effect": "Mỗi 10 giây, sát thương kỹ năng kế tiếp đặt Hỏa Ấn trong 8 giây. 6 đòn thường kích nổ 180% Hỏa Lực lên mục tiêu và 120% Hỏa Lực lên mục tiêu khác trong bán kính 100.",
     "stats": {
-      "firepower": 15,
-      "hpRegen": 1.1
+      "firepower": 20,
+      "hpRegen": 1.3
     }
   },
   {
@@ -234,11 +234,11 @@ const definitions: EquipmentDefinition[] = [
       "TP01",
       "TP05"
     ],
-    "statsText": "+30 Hỏa Lực; +2,2 Hồi Máu/s",
+    "statsText": "+40 Hỏa Lực; +2,6 Hồi Máu/s",
     "effect": "Mỗi 10 giây, sát thương kỹ năng kế tiếp đặt Hỏa Ấn trong 8 giây. 6 đòn thường kích nổ 360% Hỏa Lực lên mục tiêu và 240% Hỏa Lực lên mục tiêu khác trong bán kính 100.",
     "stats": {
-      "firepower": 30,
-      "hpRegen": 2.2
+      "firepower": 40,
+      "hpRegen": 2.6
     }
   },
   {
@@ -250,11 +250,11 @@ const definitions: EquipmentDefinition[] = [
       "TP01",
       "TP06"
     ],
-    "statsText": "+15 Hỏa Lực; +12% Hồi Tài Nguyên/s",
+    "statsText": "+20 Hỏa Lực; +15% Hồi Tài Nguyên/s",
     "effect": "Mỗi 10 đòn thường trúng hồi 2% Tài Nguyên Tối Đa.",
     "stats": {
-      "firepower": 15,
-      "resourceRegenPct": 0.12
+      "firepower": 20,
+      "resourceRegenPct": 0.15
     }
   },
   {
@@ -266,11 +266,11 @@ const definitions: EquipmentDefinition[] = [
       "TP01",
       "TP06"
     ],
-    "statsText": "+30 Hỏa Lực; +24% Hồi Tài Nguyên/s",
+    "statsText": "+40 Hỏa Lực; +30% Hồi Tài Nguyên/s",
     "effect": "Mỗi 10 đòn thường trúng hồi 4% Tài Nguyên Tối Đa.",
     "stats": {
-      "firepower": 30,
-      "resourceRegenPct": 0.24
+      "firepower": 40,
+      "resourceRegenPct": 0.3
     }
   },
   {
@@ -282,11 +282,11 @@ const definitions: EquipmentDefinition[] = [
       "TP01",
       "TP07"
     ],
-    "statsText": "+15 Hỏa Lực; +6% Giảm Hồi Chiêu",
+    "statsText": "+20 Hỏa Lực; +7% Giảm Hồi Chiêu",
     "effect": "+6% Sát Thương Kỹ Năng; kỹ năng trúng khiến mục tiêu nhận thêm 8% mọi sát thương trong 3 giây.",
     "stats": {
-      "firepower": 15,
-      "cooldownReduction": 0.06
+      "firepower": 20,
+      "cooldownReduction": 0.07
     }
   },
   {
@@ -298,11 +298,11 @@ const definitions: EquipmentDefinition[] = [
       "TP01",
       "TP07"
     ],
-    "statsText": "+30 Hỏa Lực; +12% Giảm Hồi Chiêu",
+    "statsText": "+40 Hỏa Lực; +14% Giảm Hồi Chiêu",
     "effect": "+12% Sát Thương Kỹ Năng; kỹ năng trúng khiến mục tiêu nhận thêm 16% mọi sát thương trong 3 giây.",
     "stats": {
-      "firepower": 30,
-      "cooldownReduction": 0.12
+      "firepower": 40,
+      "cooldownReduction": 0.14
     }
   },
   {
@@ -314,10 +314,10 @@ const definitions: EquipmentDefinition[] = [
       "TP01",
       "TP08"
     ],
-    "statsText": "+15 Hỏa Lực; +10% Tỷ Lệ Chí Mạng",
+    "statsText": "+20 Hỏa Lực; +10% Tỷ Lệ Chí Mạng",
     "effect": "Kỹ năng có thể chí mạng. Khi có Găng Bảo Thạch: +25% Sát Thương Chí Mạng; chỉ áp dụng một lần theo family.",
     "stats": {
-      "firepower": 15,
+      "firepower": 20,
       "criticalChance": 0.1
     }
   },
@@ -330,10 +330,10 @@ const definitions: EquipmentDefinition[] = [
       "TP01",
       "TP08"
     ],
-    "statsText": "+30 Hỏa Lực; +20% Tỷ Lệ Chí Mạng",
+    "statsText": "+40 Hỏa Lực; +20% Tỷ Lệ Chí Mạng",
     "effect": "Kỹ năng có thể chí mạng. Khi có Găng Bảo Thạch: +50% Sát Thương Chí Mạng; chỉ áp dụng một lần theo family.",
     "stats": {
-      "firepower": 30,
+      "firepower": 40,
       "criticalChance": 0.2
     }
   },
@@ -346,10 +346,10 @@ const definitions: EquipmentDefinition[] = [
       "TP02",
       "TP02"
     ],
-    "statsText": "+0,6 Tốc Độ Bắn",
+    "statsText": "+0,7 Tốc Độ Bắn",
     "effect": "+12% tổng Tốc Độ Bắn; đạn thường thêm 1% HP hiện tại của mục tiêu, giới hạn 20% Hỏa Lực với Tinh Anh/Boss.",
     "stats": {
-      "fireRate": 0.6
+      "fireRate": 0.7
     }
   },
   {
@@ -361,10 +361,10 @@ const definitions: EquipmentDefinition[] = [
       "TP02",
       "TP02"
     ],
-    "statsText": "+1,2 Tốc Độ Bắn",
+    "statsText": "+1,4 Tốc Độ Bắn",
     "effect": "+24% tổng Tốc Độ Bắn; đạn thường thêm 2% HP hiện tại của mục tiêu, giới hạn 40% Hỏa Lực với Tinh Anh/Boss.",
     "stats": {
-      "fireRate": 1.2
+      "fireRate": 1.4
     }
   },
   {
@@ -376,11 +376,11 @@ const definitions: EquipmentDefinition[] = [
       "TP02",
       "TP03"
     ],
-    "statsText": "+0,3 Tốc Độ Bắn; +15 Giáp",
+    "statsText": "+0,35 Tốc Độ Bắn; +18 Giáp",
     "effect": "Nhận sát thương tích tối đa 10 cộng dồn. Đủ cộng dồn: +30 Giáp, +0,2 Tốc Độ Bắn, +0,6 Hồi Máu/s; giữ 5 giây rồi giảm dần.",
     "stats": {
-      "fireRate": 0.3,
-      "armor": 15
+      "fireRate": 0.35,
+      "armor": 18
     }
   },
   {
@@ -392,11 +392,11 @@ const definitions: EquipmentDefinition[] = [
       "TP02",
       "TP03"
     ],
-    "statsText": "+0,6 Tốc Độ Bắn; +30 Giáp",
+    "statsText": "+0,7 Tốc Độ Bắn; +36 Giáp",
     "effect": "Nhận sát thương tích tối đa 10 cộng dồn. Đủ cộng dồn: +60 Giáp, +0,4 Tốc Độ Bắn, +1,2 Hồi Máu/s; giữ 5 giây rồi giảm dần.",
     "stats": {
-      "fireRate": 0.6,
-      "armor": 30
+      "fireRate": 0.7,
+      "armor": 36
     }
   },
   {
@@ -408,11 +408,11 @@ const definitions: EquipmentDefinition[] = [
       "TP02",
       "TP04"
     ],
-    "statsText": "+0,3 Tốc Độ Bắn; +200 Máu Tối Đa",
+    "statsText": "+0,35 Tốc Độ Bắn; +250 Máu Tối Đa",
     "effect": "Dùng kỹ năng: +0,4 Tốc Độ Bắn trong 5 giây, làm mới thời gian.",
     "stats": {
-      "fireRate": 0.3,
-      "maxHp": 200
+      "fireRate": 0.35,
+      "maxHp": 250
     }
   },
   {
@@ -424,11 +424,11 @@ const definitions: EquipmentDefinition[] = [
       "TP02",
       "TP04"
     ],
-    "statsText": "+0,6 Tốc Độ Bắn; +400 Máu Tối Đa",
+    "statsText": "+0,7 Tốc Độ Bắn; +500 Máu Tối Đa",
     "effect": "Dùng kỹ năng: +0,8 Tốc Độ Bắn trong 5 giây, làm mới thời gian.",
     "stats": {
-      "fireRate": 0.6,
-      "maxHp": 400
+      "fireRate": 0.7,
+      "maxHp": 500
     }
   },
   {
@@ -440,11 +440,11 @@ const definitions: EquipmentDefinition[] = [
       "TP02",
       "TP05"
     ],
-    "statsText": "+0,3 Tốc Độ Bắn; +1,1 Hồi Máu/s",
+    "statsText": "+0,35 Tốc Độ Bắn; +1,3 Hồi Máu/s",
     "effect": "Đòn thường thứ 7 tạo 2 tàn ảnh, mỗi tàn ảnh gây 60% Hỏa Lực. Không có mục tiêu phụ: hợp nhất gây 90% Hỏa Lực.",
     "stats": {
-      "fireRate": 0.3,
-      "hpRegen": 1.1
+      "fireRate": 0.35,
+      "hpRegen": 1.3
     }
   },
   {
@@ -456,11 +456,11 @@ const definitions: EquipmentDefinition[] = [
       "TP02",
       "TP05"
     ],
-    "statsText": "+0,6 Tốc Độ Bắn; +2,2 Hồi Máu/s",
+    "statsText": "+0,7 Tốc Độ Bắn; +2,6 Hồi Máu/s",
     "effect": "Đòn thường thứ 7 tạo 2 tàn ảnh, mỗi tàn ảnh gây 120% Hỏa Lực. Không có mục tiêu phụ: hợp nhất gây 180% Hỏa Lực.",
     "stats": {
-      "fireRate": 0.6,
-      "hpRegen": 2.2
+      "fireRate": 0.7,
+      "hpRegen": 2.6
     }
   },
   {
@@ -472,11 +472,11 @@ const definitions: EquipmentDefinition[] = [
       "TP02",
       "TP06"
     ],
-    "statsText": "+0,3 Tốc Độ Bắn; +12% Hồi Tài Nguyên/s",
+    "statsText": "+0,35 Tốc Độ Bắn; +15% Hồi Tài Nguyên/s",
     "effect": "Di chuyển và đạn thường tích Điện Năng. Đạt 100: đòn thường tiếp theo tạo chuỗi sét tối đa 4 mục tiêu, mỗi mục tiêu chịu 75% Hỏa Lực.",
     "stats": {
-      "fireRate": 0.3,
-      "resourceRegenPct": 0.12
+      "fireRate": 0.35,
+      "resourceRegenPct": 0.15
     }
   },
   {
@@ -488,11 +488,11 @@ const definitions: EquipmentDefinition[] = [
       "TP02",
       "TP06"
     ],
-    "statsText": "+0,6 Tốc Độ Bắn; +24% Hồi Tài Nguyên/s",
+    "statsText": "+0,7 Tốc Độ Bắn; +30% Hồi Tài Nguyên/s",
     "effect": "Di chuyển và đạn thường tích Điện Năng. Đạt 100: đòn thường tiếp theo tạo chuỗi sét tối đa 4 mục tiêu, mỗi mục tiêu chịu 150% Hỏa Lực.",
     "stats": {
-      "fireRate": 0.6,
-      "resourceRegenPct": 0.24
+      "fireRate": 0.7,
+      "resourceRegenPct": 0.3
     }
   },
   {
@@ -504,11 +504,11 @@ const definitions: EquipmentDefinition[] = [
       "TP02",
       "TP07"
     ],
-    "statsText": "+0,3 Tốc Độ Bắn; +6% Giảm Hồi Chiêu",
-    "effect": "Kỹ năng hạ địch: +0,4 Tốc Độ Bắn và +20 Hỏa Lực trong 6 giây.",
+    "statsText": "+0,35 Tốc Độ Bắn; +7% Giảm Hồi Chiêu",
+    "effect": "Kỹ năng hạ địch: +0,4 Tốc Độ Bắn và +25 Hỏa Lực trong 6 giây.",
     "stats": {
-      "fireRate": 0.3,
-      "cooldownReduction": 0.06
+      "fireRate": 0.35,
+      "cooldownReduction": 0.07
     }
   },
   {
@@ -520,11 +520,11 @@ const definitions: EquipmentDefinition[] = [
       "TP02",
       "TP07"
     ],
-    "statsText": "+0,6 Tốc Độ Bắn; +12% Giảm Hồi Chiêu",
-    "effect": "Kỹ năng hạ địch: +0,8 Tốc Độ Bắn và +40 Hỏa Lực trong 6 giây.",
+    "statsText": "+0,7 Tốc Độ Bắn; +14% Giảm Hồi Chiêu",
+    "effect": "Kỹ năng hạ địch: +0,8 Tốc Độ Bắn và +50 Hỏa Lực trong 6 giây.",
     "stats": {
-      "fireRate": 0.6,
-      "cooldownReduction": 0.12
+      "fireRate": 0.7,
+      "cooldownReduction": 0.14
     }
   },
   {
@@ -536,10 +536,10 @@ const definitions: EquipmentDefinition[] = [
       "TP02",
       "TP08"
     ],
-    "statsText": "+0,3 Tốc Độ Bắn; +10% Tỷ Lệ Chí Mạng",
+    "statsText": "+0,35 Tốc Độ Bắn; +10% Tỷ Lệ Chí Mạng",
     "effect": "Chí mạng giảm 6 Giáp mục tiêu trong 4 giây, tối đa 3 cộng dồn.",
     "stats": {
-      "fireRate": 0.3,
+      "fireRate": 0.35,
       "criticalChance": 0.1
     }
   },
@@ -552,10 +552,10 @@ const definitions: EquipmentDefinition[] = [
       "TP02",
       "TP08"
     ],
-    "statsText": "+0,6 Tốc Độ Bắn; +20% Tỷ Lệ Chí Mạng",
+    "statsText": "+0,7 Tốc Độ Bắn; +20% Tỷ Lệ Chí Mạng",
     "effect": "Chí mạng giảm 12 Giáp mục tiêu trong 4 giây, tối đa 3 cộng dồn.",
     "stats": {
-      "fireRate": 0.6,
+      "fireRate": 0.7,
       "criticalChance": 0.2
     }
   },
@@ -568,10 +568,10 @@ const definitions: EquipmentDefinition[] = [
       "TP03",
       "TP03"
     ],
-    "statsText": "+30 Giáp",
+    "statsText": "+36 Giáp",
     "effect": "Giảm 8% sát thương nhận và phản lại 100% lượng sát thương đã giảm.",
     "stats": {
-      "armor": 30
+      "armor": 36
     }
   },
   {
@@ -583,10 +583,10 @@ const definitions: EquipmentDefinition[] = [
       "TP03",
       "TP03"
     ],
-    "statsText": "+60 Giáp",
+    "statsText": "+72 Giáp",
     "effect": "Giảm 16% sát thương nhận và phản lại 100% lượng sát thương đã giảm.",
     "stats": {
-      "armor": 60
+      "armor": 72
     }
   },
   {
@@ -598,11 +598,11 @@ const definitions: EquipmentDefinition[] = [
       "TP03",
       "TP04"
     ],
-    "statsText": "+15 Giáp; +200 Máu Tối Đa",
+    "statsText": "+18 Giáp; +250 Máu Tối Đa",
     "effect": "Mỗi 12 giây, lần mất HP đầu tạo lá chắn 7% Máu Tối Đa trong 4 giây.",
     "stats": {
-      "armor": 15,
-      "maxHp": 200
+      "armor": 18,
+      "maxHp": 250
     }
   },
   {
@@ -614,11 +614,11 @@ const definitions: EquipmentDefinition[] = [
       "TP03",
       "TP04"
     ],
-    "statsText": "+30 Giáp; +400 Máu Tối Đa",
+    "statsText": "+36 Giáp; +500 Máu Tối Đa",
     "effect": "Mỗi 12 giây, lần mất HP đầu tạo lá chắn 14% Máu Tối Đa trong 4 giây.",
     "stats": {
-      "armor": 30,
-      "maxHp": 400
+      "armor": 36,
+      "maxHp": 500
     }
   },
   {
@@ -630,11 +630,11 @@ const definitions: EquipmentDefinition[] = [
       "TP03",
       "TP05"
     ],
-    "statsText": "+15 Giáp; +1,1 Hồi Máu/s",
+    "statsText": "+18 Giáp; +1,3 Hồi Máu/s",
     "effect": "Lưu 20% HP đã mất, tối đa 12% Máu Tối Đa. Sau 3 giây an toàn, hồi 40% bộ đệm.",
     "stats": {
-      "armor": 15,
-      "hpRegen": 1.1
+      "armor": 18,
+      "hpRegen": 1.3
     }
   },
   {
@@ -646,11 +646,11 @@ const definitions: EquipmentDefinition[] = [
       "TP03",
       "TP05"
     ],
-    "statsText": "+30 Giáp; +2,2 Hồi Máu/s",
+    "statsText": "+36 Giáp; +2,6 Hồi Máu/s",
     "effect": "Lưu 20% HP đã mất, tối đa 12% Máu Tối Đa. Sau 3 giây an toàn, hồi 80% bộ đệm.",
     "stats": {
-      "armor": 30,
-      "hpRegen": 2.2
+      "armor": 36,
+      "hpRegen": 2.6
     }
   },
   {
@@ -662,11 +662,11 @@ const definitions: EquipmentDefinition[] = [
       "TP03",
       "TP06"
     ],
-    "statsText": "+15 Giáp; +12% Hồi Tài Nguyên/s",
+    "statsText": "+18 Giáp; +15% Hồi Tài Nguyên/s",
     "effect": "Mất HP: hồi 4% Tài Nguyên Tối Đa, hồi chiêu nội tại 5 giây.",
     "stats": {
-      "armor": 15,
-      "resourceRegenPct": 0.12
+      "armor": 18,
+      "resourceRegenPct": 0.15
     }
   },
   {
@@ -678,11 +678,11 @@ const definitions: EquipmentDefinition[] = [
       "TP03",
       "TP06"
     ],
-    "statsText": "+30 Giáp; +24% Hồi Tài Nguyên/s",
+    "statsText": "+36 Giáp; +30% Hồi Tài Nguyên/s",
     "effect": "Mất HP: hồi 8% Tài Nguyên Tối Đa, hồi chiêu nội tại 5 giây.",
     "stats": {
-      "armor": 30,
-      "resourceRegenPct": 0.24
+      "armor": 36,
+      "resourceRegenPct": 0.3
     }
   },
   {
@@ -694,11 +694,11 @@ const definitions: EquipmentDefinition[] = [
       "TP03",
       "TP07"
     ],
-    "statsText": "+15 Giáp; +6% Giảm Hồi Chiêu",
-    "effect": "Dùng kỹ năng: +25 Giáp trong 5 giây.",
+    "statsText": "+18 Giáp; +7% Giảm Hồi Chiêu",
+    "effect": "Dùng kỹ năng: +30 Giáp trong 5 giây.",
     "stats": {
-      "armor": 15,
-      "cooldownReduction": 0.06
+      "armor": 18,
+      "cooldownReduction": 0.07
     }
   },
   {
@@ -710,11 +710,11 @@ const definitions: EquipmentDefinition[] = [
       "TP03",
       "TP07"
     ],
-    "statsText": "+30 Giáp; +12% Giảm Hồi Chiêu",
-    "effect": "Dùng kỹ năng: +50 Giáp trong 5 giây.",
+    "statsText": "+36 Giáp; +14% Giảm Hồi Chiêu",
+    "effect": "Dùng kỹ năng: +60 Giáp trong 5 giây.",
     "stats": {
-      "armor": 30,
-      "cooldownReduction": 0.12
+      "armor": 36,
+      "cooldownReduction": 0.14
     }
   },
   {
@@ -726,10 +726,10 @@ const definitions: EquipmentDefinition[] = [
       "TP03",
       "TP08"
     ],
-    "statsText": "+15 Giáp; +10% Tỷ Lệ Chí Mạng",
+    "statsText": "+18 Giáp; +10% Tỷ Lệ Chí Mạng",
     "effect": "Chí mạng: +2,5% Giảm Sát Thương trong 3 giây, tối đa 3 cộng dồn.",
     "stats": {
-      "armor": 15,
+      "armor": 18,
       "criticalChance": 0.1
     }
   },
@@ -742,10 +742,10 @@ const definitions: EquipmentDefinition[] = [
       "TP03",
       "TP08"
     ],
-    "statsText": "+30 Giáp; +20% Tỷ Lệ Chí Mạng",
+    "statsText": "+36 Giáp; +20% Tỷ Lệ Chí Mạng",
     "effect": "Chí mạng: +5% Giảm Sát Thương trong 3 giây, tối đa 3 cộng dồn.",
     "stats": {
-      "armor": 30,
+      "armor": 36,
       "criticalChance": 0.2
     }
   },
@@ -758,10 +758,10 @@ const definitions: EquipmentDefinition[] = [
       "TP04",
       "TP04"
     ],
-    "statsText": "+400 Máu Tối Đa",
+    "statsText": "+500 Máu Tối Đa",
     "effect": "+8% Máu Tối Đa; đạn thường thêm sát thương bằng 0,4% Máu Tối Đa của chiến cơ.",
     "stats": {
-      "maxHp": 400
+      "maxHp": 500
     }
   },
   {
@@ -773,10 +773,10 @@ const definitions: EquipmentDefinition[] = [
       "TP04",
       "TP04"
     ],
-    "statsText": "+800 Máu Tối Đa",
+    "statsText": "+1000 Máu Tối Đa",
     "effect": "+16% Máu Tối Đa; đạn thường thêm sát thương bằng 0,8% Máu Tối Đa của chiến cơ.",
     "stats": {
-      "maxHp": 800
+      "maxHp": 1000
     }
   },
   {
@@ -788,11 +788,11 @@ const definitions: EquipmentDefinition[] = [
       "TP04",
       "TP05"
     ],
-    "statsText": "+200 Máu Tối Đa; +1,1 Hồi Máu/s",
+    "statsText": "+250 Máu Tối Đa; +1,3 Hồi Máu/s",
     "effect": "Mỗi lần mất cộng dồn 12% Máu Tối Đa tạo ngọc hồi 4% Máu Tối Đa hoặc lá chắn 6% Máu Tối Đa trong 4 giây.",
     "stats": {
-      "maxHp": 200,
-      "hpRegen": 1.1
+      "maxHp": 250,
+      "hpRegen": 1.3
     }
   },
   {
@@ -804,11 +804,11 @@ const definitions: EquipmentDefinition[] = [
       "TP04",
       "TP05"
     ],
-    "statsText": "+400 Máu Tối Đa; +2,2 Hồi Máu/s",
+    "statsText": "+500 Máu Tối Đa; +2,6 Hồi Máu/s",
     "effect": "Mỗi lần mất cộng dồn 12% Máu Tối Đa tạo ngọc hồi 8% Máu Tối Đa hoặc lá chắn 12% Máu Tối Đa trong 4 giây.",
     "stats": {
-      "maxHp": 400,
-      "hpRegen": 2.2
+      "maxHp": 500,
+      "hpRegen": 2.6
     }
   },
   {
@@ -820,11 +820,11 @@ const definitions: EquipmentDefinition[] = [
       "TP04",
       "TP06"
     ],
-    "statsText": "+200 Máu Tối Đa; +12% Hồi Tài Nguyên/s",
+    "statsText": "+250 Máu Tối Đa; +15% Hồi Tài Nguyên/s",
     "effect": "Mỗi 40% Tài Nguyên Tối Đa đã tiêu thụ gọi thiên thạch gây 160% Hỏa Lực trong bán kính 70, làm chậm 25% trong 2 giây.",
     "stats": {
-      "maxHp": 200,
-      "resourceRegenPct": 0.12
+      "maxHp": 250,
+      "resourceRegenPct": 0.15
     }
   },
   {
@@ -836,11 +836,11 @@ const definitions: EquipmentDefinition[] = [
       "TP04",
       "TP06"
     ],
-    "statsText": "+400 Máu Tối Đa; +24% Hồi Tài Nguyên/s",
+    "statsText": "+500 Máu Tối Đa; +30% Hồi Tài Nguyên/s",
     "effect": "Mỗi 40% Tài Nguyên Tối Đa đã tiêu thụ gọi thiên thạch gây 320% Hỏa Lực trong bán kính 70, làm chậm 25% trong 2 giây.",
     "stats": {
-      "maxHp": 400,
-      "resourceRegenPct": 0.24
+      "maxHp": 500,
+      "resourceRegenPct": 0.3
     }
   },
   {
@@ -852,11 +852,11 @@ const definitions: EquipmentDefinition[] = [
       "TP04",
       "TP07"
     ],
-    "statsText": "+200 Máu Tối Đa; +6% Giảm Hồi Chiêu",
-    "effect": "Mỗi 40 giây khi HP dưới 30%: giảm 4 giây hồi chiêu còn lại của cả 3 kỹ năng và tạo lá chắn 8% Máu Tối Đa trong 4 giây.",
+    "statsText": "+250 Máu Tối Đa; +7% Giảm Hồi Chiêu",
+    "effect": "Mỗi 40 giây khi HP dưới 30%: giảm 3 giây hồi chiêu còn lại của cả 4 kỹ năng và tạo lá chắn 8% Máu Tối Đa trong 4 giây.",
     "stats": {
-      "maxHp": 200,
-      "cooldownReduction": 0.06
+      "maxHp": 250,
+      "cooldownReduction": 0.07
     }
   },
   {
@@ -868,11 +868,11 @@ const definitions: EquipmentDefinition[] = [
       "TP04",
       "TP07"
     ],
-    "statsText": "+400 Máu Tối Đa; +12% Giảm Hồi Chiêu",
-    "effect": "Mỗi 40 giây khi HP dưới 30%: giảm 8 giây hồi chiêu còn lại của cả 3 kỹ năng và tạo lá chắn 16% Máu Tối Đa trong 4 giây.",
+    "statsText": "+500 Máu Tối Đa; +14% Giảm Hồi Chiêu",
+    "effect": "Mỗi 40 giây khi HP dưới 30%: giảm 6 giây hồi chiêu còn lại của cả 4 kỹ năng và tạo lá chắn 16% Máu Tối Đa trong 4 giây.",
     "stats": {
-      "maxHp": 400,
-      "cooldownReduction": 0.12
+      "maxHp": 500,
+      "cooldownReduction": 0.14
     }
   },
   {
@@ -884,10 +884,10 @@ const definitions: EquipmentDefinition[] = [
       "TP04",
       "TP08"
     ],
-    "statsText": "+200 Máu Tối Đa; +10% Tỷ Lệ Chí Mạng",
+    "statsText": "+250 Máu Tối Đa; +10% Tỷ Lệ Chí Mạng",
     "effect": "Chí mạng: +2% mọi sát thương trong 5 giây, tối đa 5 cộng dồn.",
     "stats": {
-      "maxHp": 200,
+      "maxHp": 250,
       "criticalChance": 0.1
     }
   },
@@ -900,10 +900,10 @@ const definitions: EquipmentDefinition[] = [
       "TP04",
       "TP08"
     ],
-    "statsText": "+400 Máu Tối Đa; +20% Tỷ Lệ Chí Mạng",
+    "statsText": "+500 Máu Tối Đa; +20% Tỷ Lệ Chí Mạng",
     "effect": "Chí mạng: +4% mọi sát thương trong 5 giây, tối đa 5 cộng dồn.",
     "stats": {
-      "maxHp": 400,
+      "maxHp": 500,
       "criticalChance": 0.2
     }
   },
@@ -916,10 +916,10 @@ const definitions: EquipmentDefinition[] = [
       "TP05",
       "TP05"
     ],
-    "statsText": "+2,2 Hồi Máu/s",
+    "statsText": "+2,6 Hồi Máu/s",
     "effect": "Hồi thêm 1% Máu đã mất mỗi giây.",
     "stats": {
-      "hpRegen": 2.2
+      "hpRegen": 2.6
     }
   },
   {
@@ -931,10 +931,10 @@ const definitions: EquipmentDefinition[] = [
       "TP05",
       "TP05"
     ],
-    "statsText": "+4,4 Hồi Máu/s",
+    "statsText": "+5,2 Hồi Máu/s",
     "effect": "Hồi thêm 2% Máu đã mất mỗi giây.",
     "stats": {
-      "hpRegen": 4.4
+      "hpRegen": 5.2
     }
   },
   {
@@ -946,11 +946,11 @@ const definitions: EquipmentDefinition[] = [
       "TP05",
       "TP06"
     ],
-    "statsText": "+1,1 Hồi Máu/s; +12% Hồi Tài Nguyên/s",
+    "statsText": "+1,3 Hồi Máu/s; +15% Hồi Tài Nguyên/s",
     "effect": "HP và Tài Nguyên đều trên 50%: +7% mọi sát thương. Ngược lại, tăng 15% tốc độ hồi thanh có tỷ lệ thấp hơn.",
     "stats": {
-      "hpRegen": 1.1,
-      "resourceRegenPct": 0.12
+      "hpRegen": 1.3,
+      "resourceRegenPct": 0.15
     }
   },
   {
@@ -962,11 +962,11 @@ const definitions: EquipmentDefinition[] = [
       "TP05",
       "TP06"
     ],
-    "statsText": "+2,2 Hồi Máu/s; +24% Hồi Tài Nguyên/s",
+    "statsText": "+2,6 Hồi Máu/s; +30% Hồi Tài Nguyên/s",
     "effect": "HP và Tài Nguyên đều trên 50%: +14% mọi sát thương. Ngược lại, tăng 30% tốc độ hồi thanh có tỷ lệ thấp hơn.",
     "stats": {
-      "hpRegen": 2.2,
-      "resourceRegenPct": 0.24
+      "hpRegen": 2.6,
+      "resourceRegenPct": 0.3
     }
   },
   {
@@ -978,11 +978,11 @@ const definitions: EquipmentDefinition[] = [
       "TP05",
       "TP07"
     ],
-    "statsText": "+1,1 Hồi Máu/s; +6% Giảm Hồi Chiêu",
-    "effect": "Khi hiệu ứng kỹ năng kết thúc, hồi 4% Máu Tối Đa trong 3 giây.",
+    "statsText": "+1,3 Hồi Máu/s; +7% Giảm Hồi Chiêu",
+    "effect": "Khi hiệu ứng kỹ năng kết thúc, hồi 4% Máu Tối Đa trong 3 giây. Hồi nội tại 4 giây.",
     "stats": {
-      "hpRegen": 1.1,
-      "cooldownReduction": 0.06
+      "hpRegen": 1.3,
+      "cooldownReduction": 0.07
     }
   },
   {
@@ -994,11 +994,11 @@ const definitions: EquipmentDefinition[] = [
       "TP05",
       "TP07"
     ],
-    "statsText": "+2,2 Hồi Máu/s; +12% Giảm Hồi Chiêu",
-    "effect": "Khi hiệu ứng kỹ năng kết thúc, hồi 8% Máu Tối Đa trong 3 giây.",
+    "statsText": "+2,6 Hồi Máu/s; +14% Giảm Hồi Chiêu",
+    "effect": "Khi hiệu ứng kỹ năng kết thúc, hồi 8% Máu Tối Đa trong 3 giây. Hồi nội tại 4 giây.",
     "stats": {
-      "hpRegen": 2.2,
-      "cooldownReduction": 0.12
+      "hpRegen": 2.6,
+      "cooldownReduction": 0.14
     }
   },
   {
@@ -1010,10 +1010,10 @@ const definitions: EquipmentDefinition[] = [
       "TP05",
       "TP08"
     ],
-    "statsText": "+1,1 Hồi Máu/s; +10% Tỷ Lệ Chí Mạng",
+    "statsText": "+1,3 Hồi Máu/s; +10% Tỷ Lệ Chí Mạng",
     "effect": "Chí mạng hồi 0,15% Máu Tối Đa, giới hạn 0,45% mỗi giây. Gấp đôi khi HP dưới 30%.",
     "stats": {
-      "hpRegen": 1.1,
+      "hpRegen": 1.3,
       "criticalChance": 0.1
     }
   },
@@ -1026,10 +1026,10 @@ const definitions: EquipmentDefinition[] = [
       "TP05",
       "TP08"
     ],
-    "statsText": "+2,2 Hồi Máu/s; +20% Tỷ Lệ Chí Mạng",
+    "statsText": "+2,6 Hồi Máu/s; +20% Tỷ Lệ Chí Mạng",
     "effect": "Chí mạng hồi 0,3% Máu Tối Đa, giới hạn 0,9% mỗi giây. Gấp đôi khi HP dưới 30%.",
     "stats": {
-      "hpRegen": 2.2,
+      "hpRegen": 2.6,
       "criticalChance": 0.2
     }
   },
@@ -1072,11 +1072,11 @@ const definitions: EquipmentDefinition[] = [
       "TP06",
       "TP07"
     ],
-    "statsText": "+12% Hồi Tài Nguyên/s; +6% Giảm Hồi Chiêu",
+    "statsText": "+15% Hồi Tài Nguyên/s; +7% Giảm Hồi Chiêu",
     "effect": "Hạ địch: +20% Hồi Tài Nguyên trong 5 giây.",
     "stats": {
-      "resourceRegenPct": 0.12,
-      "cooldownReduction": 0.06
+      "resourceRegenPct": 0.15,
+      "cooldownReduction": 0.07
     }
   },
   {
@@ -1088,11 +1088,11 @@ const definitions: EquipmentDefinition[] = [
       "TP06",
       "TP07"
     ],
-    "statsText": "+24% Hồi Tài Nguyên/s; +12% Giảm Hồi Chiêu",
+    "statsText": "+30% Hồi Tài Nguyên/s; +14% Giảm Hồi Chiêu",
     "effect": "Hạ địch: +40% Hồi Tài Nguyên trong 5 giây.",
     "stats": {
-      "resourceRegenPct": 0.24,
-      "cooldownReduction": 0.12
+      "resourceRegenPct": 0.3,
+      "cooldownReduction": 0.14
     }
   },
   {
@@ -1104,10 +1104,10 @@ const definitions: EquipmentDefinition[] = [
       "TP06",
       "TP08"
     ],
-    "statsText": "+12% Hồi Tài Nguyên/s; +10% Tỷ Lệ Chí Mạng",
-    "effect": "HP từ 50%: +6 Hỏa Lực; HP dưới 50%: hồi Máu bằng 1% sát thương gây ra.",
+    "statsText": "+15% Hồi Tài Nguyên/s; +10% Tỷ Lệ Chí Mạng",
+    "effect": "HP từ 50%: +6% Hỏa Lực; HP dưới 50%: hồi Máu bằng 1% sát thương gây ra.",
     "stats": {
-      "resourceRegenPct": 0.12,
+      "resourceRegenPct": 0.15,
       "criticalChance": 0.1
     }
   },
@@ -1120,10 +1120,10 @@ const definitions: EquipmentDefinition[] = [
       "TP06",
       "TP08"
     ],
-    "statsText": "+24% Hồi Tài Nguyên/s; +20% Tỷ Lệ Chí Mạng",
-    "effect": "HP từ 50%: +12 Hỏa Lực; HP dưới 50%: hồi Máu bằng 2% sát thương gây ra.",
+    "statsText": "+30% Hồi Tài Nguyên/s; +20% Tỷ Lệ Chí Mạng",
+    "effect": "HP từ 50%: +12% Hỏa Lực; HP dưới 50%: hồi Máu bằng 2% sát thương gây ra.",
     "stats": {
-      "resourceRegenPct": 0.24,
+      "resourceRegenPct": 0.3,
       "criticalChance": 0.2
     }
   },
@@ -1136,10 +1136,10 @@ const definitions: EquipmentDefinition[] = [
       "TP07",
       "TP07"
     ],
-    "statsText": "+12% Giảm Hồi Chiêu",
-    "effect": "+8% Sát Thương Kỹ Năng; dùng kỹ năng giảm 1,5 giây hồi chiêu hai kỹ năng còn lại.",
+    "statsText": "+14% Giảm Hồi Chiêu",
+    "effect": "+8% Sát Thương Kỹ Năng; dùng kỹ năng giảm 1 giây hồi chiêu 3 kỹ năng còn lại.",
     "stats": {
-      "cooldownReduction": 0.12
+      "cooldownReduction": 0.14
     }
   },
   {
@@ -1151,10 +1151,10 @@ const definitions: EquipmentDefinition[] = [
       "TP07",
       "TP07"
     ],
-    "statsText": "+24% Giảm Hồi Chiêu",
-    "effect": "+16% Sát Thương Kỹ Năng; dùng kỹ năng giảm 3 giây hồi chiêu hai kỹ năng còn lại.",
+    "statsText": "+28% Giảm Hồi Chiêu",
+    "effect": "+16% Sát Thương Kỹ Năng; dùng kỹ năng giảm 2 giây hồi chiêu 3 kỹ năng còn lại.",
     "stats": {
-      "cooldownReduction": 0.24
+      "cooldownReduction": 0.28
     }
   },
   {
@@ -1166,10 +1166,10 @@ const definitions: EquipmentDefinition[] = [
       "TP07",
       "TP08"
     ],
-    "statsText": "+6% Giảm Hồi Chiêu; +10% Tỷ Lệ Chí Mạng",
+    "statsText": "+7% Giảm Hồi Chiêu; +10% Tỷ Lệ Chí Mạng",
     "effect": "Đạn thường giảm 0,12 giây hồi chiêu dài nhất; chí mạng giảm 0,4 giây. Giới hạn 0,75 giây mỗi giây.",
     "stats": {
-      "cooldownReduction": 0.06,
+      "cooldownReduction": 0.07,
       "criticalChance": 0.1
     }
   },
@@ -1182,10 +1182,10 @@ const definitions: EquipmentDefinition[] = [
       "TP07",
       "TP08"
     ],
-    "statsText": "+12% Giảm Hồi Chiêu; +20% Tỷ Lệ Chí Mạng",
+    "statsText": "+14% Giảm Hồi Chiêu; +20% Tỷ Lệ Chí Mạng",
     "effect": "Đạn thường giảm 0,24 giây hồi chiêu dài nhất; chí mạng giảm 0,8 giây. Giới hạn 1,5 giây mỗi giây.",
     "stats": {
-      "cooldownReduction": 0.12,
+      "cooldownReduction": 0.14,
       "criticalChance": 0.2
     }
   },
@@ -1220,7 +1220,17 @@ const definitions: EquipmentDefinition[] = [
     }
   }
 ];
-export const EQUIPMENT_CATALOG = Object.freeze(Object.fromEntries(definitions.map(d => [d.id, Object.freeze({...d, stats:Object.freeze(d.stats), recipe:d.recipe && Object.freeze(d.recipe)})]))) as Readonly<Record<EquipmentDefinitionId, EquipmentDefinition>>;
+
+export function equipmentRecipeStats(id:EquipmentDefinitionId):EquipmentDefinition["stats"] {
+ const d=definitions.find(d=>d.id===id)!;
+ if(d.rarity==="component"||d.family==="TH31")return d.stats;
+ const result:Partial<Record<keyof EquipmentDefinition["stats"],number>>={};
+ for(const id of d.recipe??[])for(const [key,value] of Object.entries(definitions.find(c=>c.id===id)!.stats)){
+  const stat=key as keyof EquipmentDefinition["stats"];result[stat]=(result[stat]??0)+value*(d.rarity==="legendary"?2:1);
+ }
+ return result;
+}
+export const EQUIPMENT_CATALOG = Object.freeze(Object.fromEntries(definitions.map(d => [d.id, Object.freeze({...d, stats:Object.freeze(equipmentRecipeStats(d.id)), recipe:d.recipe && Object.freeze(d.recipe)})]))) as Readonly<Record<EquipmentDefinitionId, EquipmentDefinition>>;
 export const EQUIPMENT_DEFINITIONS = Object.freeze(definitions);
 export function equipmentRecipe(a: EquipmentDefinitionId, b: EquipmentDefinitionId): EquipmentDefinitionId | null { return definitions.find(d => d.rarity === "completed" && d.recipe && [...d.recipe].sort().join("+") === [a,b].sort().join("+"))?.id ?? null; }
 export const EQUIPMENT_NAME_COLORS = {component:"#ffffff",completed:"#c084fc",legendary:"#fb923c",item:"#60a5fa"} as const;

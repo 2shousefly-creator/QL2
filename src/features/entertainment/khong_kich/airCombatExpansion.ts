@@ -44,14 +44,14 @@ export function arsenalBonuses(s: AircraftCombatState) {
     const core = CORE_DEFINITIONS.find(c => c.id === id);
     if (core && core.system !== "skill") counts[core.system]++;
   }
-  const utility = Math.min(.12, counts.utility * .02);
-  return { basic: Math.min(.30, counts.attack * .05) + utility, skill: Math.min(.30, counts.resource * .05) + utility,
-    reduction: Math.min(.24, counts.defense * .04) + utility };
+  return { basic:(counts.attack? .15:0)+(counts.utility?.08:0), skill:(counts.resource?.15:0)+(counts.utility?.08:0), reduction:counts.defense?.10:0, resource:counts.utility?.08:0 };
 }
 /** Runs after all legacy final stats, before canonical clamps/Fire Rate lock. */
 export function applyExpansionStats(s: AircraftCombatState, stats: EffectiveAircraftStats, temporary: boolean) {
   const c = s.coreState;
-  if (owns(s, 188)) stats.criticalChance += .15;
+  if (owns(s, 188)) {stats.criticalChance += .18;stats.criticalDamageMultiplier+=.35;}
+  stats.resourceRegen*=1+arsenalBonuses(s).resource;
+  if(temporary&&expansionActive(s,"timeRecovery"))stats.resourceRegen*=1.3;
   if (owns(s, 194)) stats.criticalChance += .10;
   if (owns(s, 207)) stats.criticalChance += .25;
   if (owns(s, 196)) stats.criticalDamageMultiplier += Math.min(.50, (c.stacks.crimsonCrit ?? 0) * .025);
@@ -59,16 +59,16 @@ export function applyExpansionStats(s: AircraftCombatState, stats: EffectiveAirc
     const negative = activeNegativeStatusTypes(s).size;
     if (owns(s, 169)) {
       const ratio = s.currentResource / stats.maxResource;
-      if (ratio > .70) stats.firepower += 10;
-      else if (ratio < .30) stats.hpRegen += .7;
-      else stats.fireRate += .2;
+      if (ratio > .70) stats.firepower += 18;
+      else if (ratio < .30) stats.hpRegen += 1.2;
+      else stats.fireRate += .3;
     }
-    if (owns(s, 170) && expansionActive(s, "earlyArmor")) stats.armor += 18;
+    if (owns(s, 170) && expansionActive(s, "earlyArmor")) stats.armor += 30;
     if (owns(s, 179)) stats.criticalChance += Math.min(10, c.stacks.error ?? 0) * .02;
-    if (owns(s, 181) && expansionActive(s, "skillExhaust")) stats.resourceRegen *= 1.25;
+    if (owns(s, 181) && expansionActive(s, "skillExhaust")) stats.resourceRegen *= 1.30;
     if (owns(s, 183)) stats.armor += Math.min(40, negative * 20);
     if (owns(s, 192) && !hasAbsorbShield(s)) stats.armor += 14;
-    if (owns(s, 193) && expansionActive(s, "tripleRegen")) stats.resourceRegen *= 1.25;
+    if (owns(s, 193) && expansionActive(s, "tripleRegen")) stats.resourceRegen *= 1.30;
     if (owns(s, 209)) {
       if (s.currentHp < stats.maxHp * .35) c.stacks.lastStand = 1;
       else if (s.currentHp > stats.maxHp * .35) c.stacks.lastStand = 0;
@@ -81,8 +81,8 @@ export function applyExpansionStats(s: AircraftCombatState, stats: EffectiveAirc
 }
 export function expansionOutgoing(s: AircraftCombatState, basic: boolean, skill: boolean, primary = false): number {
   let value = 1;
-  if(owns(s,219)&&!overheated(s)&&releaseState(s).heat>=50&&releaseState(s).heat<100)value*=1.2;
-  if (expansionActive(s, "alternating")) value *= 1.12;
+  if(owns(s,219)&&!overheated(s)&&releaseState(s).heat>=50&&releaseState(s).heat<100)value*=1.25;
+  if (expansionActive(s, "alternating")) value *= 1.15;
   if (owns(s, 192) && hasAbsorbShield(s)) value *= 1.15;
   if (owns(s, 203) && activeNegativeStatusTypes(s).size) value *= 1.35;
   if (owns(s, 205)) value *= 1.25;
@@ -91,10 +91,10 @@ export function expansionOutgoing(s: AircraftCombatState, basic: boolean, skill:
   if (basic) {
     value *= 1 + arsenal.basic;
     if (expansionActive(s, "confluence")) value *= 1.35;
-    if (expansionActive(s, "alternatingBasic")) value *= 1.20;
+    if (expansionActive(s, "alternatingBasic")) value *= 1.25;
     if (primary && owns(s, 206)) value *= 1.70;
   }
-  if (skill) { value *= 1 + arsenal.skill; if (owns(s, 190)) value *= 1.22; }
+  if (skill) { value *= 1 + arsenal.skill; if (owns(s, 190)) value *= 1.25; }
   return value;
 }
 export function expansionIncoming(s: AircraftCombatState): number {
@@ -104,14 +104,14 @@ export function expansionIncoming(s: AircraftCombatState): number {
   return value;
 }
 export function expansionSkillCost(s: AircraftCombatState, id: SkillId): number {
-  return (owns(s, 190) ? 1.15 : 1) * (expansionState(s).primarySkill === id ? .85 : 1);
+  return (owns(s, 190) ? 1.12 : 1) * (expansionState(s).primarySkill === id ? .8 : 1);
 }
 export function finishExpansionSkill(s: AircraftCombatState, cast?: ExpansionCast) {
   if (!cast || cast.ended) return;
   cast.ended = true;
   equipmentSkillEnd(s);
   releaseState(s).lastSkillEnd=s.coreState.time;
-  if (owns(s, 181)) {s.coreState.timers.skillExhaust = s.coreState.time + 3;recordCoreMetric(s,181,"procs",1);}
+  if (owns(s, 181)) {s.coreState.timers.skillExhaust = s.coreState.time + 4;recordCoreMetric(s,181,"procs",1);}
 }
 /** One charge blocks the triggering damage/control payload as well as the tail. */
 export function celestialProtection(s: AircraftCombatState): boolean {

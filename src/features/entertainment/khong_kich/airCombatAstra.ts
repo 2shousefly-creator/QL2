@@ -1,3 +1,4 @@
+import { skillRank } from "./airCombatSkillRanks";
 import { AIR_COMBAT_WORLD, GAMEPLAY_SAFE_RECT } from "./airCombatConfig";
 import { playerAirframeScale } from "./airCombatReleaseState";
 import { expansionState, type ExpansionCast } from "./airCombatExpansion";
@@ -32,7 +33,7 @@ export interface MeteorSpear extends StellarLancePath {
 }
 /** Capturing and unlaunched release bullets share one protection lifetime. */
 export function astraOrbitProtectionActive(w:CombatWorld):boolean {
-  return !w.ended && hasCore(w.aircraft,153) && !!(w.astra?.orbit || w.astra?.orbitReleases?.some(r=>r.bullets.some(b=>!b.fired)));
+  return !w.ended && (skillRank(w.aircraft, "orbit_reversal") >= 4) && !!(w.astra?.orbit || w.astra?.orbitReleases?.some(r=>r.bullets.some(b=>!b.fired)));
 }
 export function meteorSpearEndpoints(path:StellarLancePath) {
   const bottom=AIR_COMBAT_WORLD.height+path.projectileHitboxWidth,top=GAMEPLAY_SAFE_RECT.top;
@@ -74,7 +75,7 @@ function refund(w:CombatWorld,fraction:number,row:number,key:string):number {
 }
 export function releaseOrbit(w:CombatWorld,h:AstraHooks,manual=false) {
   const r=astraState(w),o=r.orbit;if(!o)return;
-  const s=w.aircraft,v=getSkillRuntimeValues(s,"orbit_reversal"),radius=hasCore(s,150)?92:72;
+  const s=w.aircraft,v=getSkillRuntimeValues(s,"orbit_reversal"),radius=(skillRank(s, "orbit_reversal") >= 2)?92:72;
   if(manual)astraMetric(w,"orbit.manualReleases");
   const bullets=Array.from({length:o.captured},(_,i)=>({
     id:w.nextId++,...orbitBulletPosition(w.playerX,w.playerY,radius,i,o.captured,w.elapsed),
@@ -83,19 +84,19 @@ export function releaseOrbit(w:CombatWorld,h:AstraHooks,manual=false) {
   // Fixed lanes and nearest-muzzle order are chosen once. Last launch is at 450ms.
   bullets.forEach((b,i)=>{b.lane=w.random()*20-10;b.launchAt=w.elapsed+.10+.35*i/Math.max(1,bullets.length-1);});
   if(bullets.length)(r.orbitReleases??=[]).push({expansionCast:o.expansionCast,at:w.elapsed,damage:getEffectiveAircraftStats(s).firepower*v.damageMultiplier,bullets});
-  if(o.captured&&hasCore(s,155)){s.coreState.timers.whiteHole=s.coreState.time+5;recordCoreMetric(s,155,"procs",1);astraMetric(w,"orbit.whiteHoleProcs");}
+
   r.releaseAt=w.elapsed;r.orbit=undefined;endAircraftSkill(s,"orbit_reversal");
 }
 function lance(w:CombatWorld,h:AstraHooks,x:number,y:number,first:number,later:number,speed:number,radius:number,cast?:ExpansionCast) {
-  const p=h.projectile(w,{owner:"player",source:"skill",skillId:"stellar_lance",expansionCast:cast,x,y,vx:0,vy:-speed,radius,rawDamage:first,penetrationRemaining:Infinity,ammoVisualKey:"astra_lance",color:"#fff0bb",lifetime:2,telemetryBonuses:hasCore(w.aircraft,157)?[[157,1-8/10.5]]:undefined});
-  if(p)p.astraLance={later,followup:hasCore(w.aircraft,160)?{
+  const p=h.projectile(w,{owner:"player",source:"skill",skillId:"stellar_lance",expansionCast:cast,x,y,vx:0,vy:-speed,radius,rawDamage:first,penetrationRemaining:Infinity,ammoVisualKey:"astra_lance",color:"#fff0bb",lifetime:2,telemetryBonuses:(skillRank(w.aircraft, "stellar_lance") >= 3)?[[157,1-8/10.5]]:undefined});
+  if(p)p.astraLance={later,followup:(skillRank(w.aircraft, "stellar_lance") >= 5)?{
     origin:{x,y},axis:{x:0,y:-1},projectileHitboxWidth:p.radius*2,
     rawDamageBasis:getEffectiveAircraftStats(w.aircraft).firepower*3.2,expansionCast:cast,
   }:undefined};
 }
 export function beginAstraSkill(w:CombatWorld,id:SkillId,spent:number,h:AstraHooks) {
   const r=astraState(w),s=w.aircraft,v=getSkillRuntimeValues(s,id);
-  if(id==="stellar_lance"){recordCoreMetric(s,156,"chargeSaved",.4);if(spent>0&&hasCore(s,161))recordCoreMetric(s,161,"saved",15*(1+(s.coreState.stacks.lanceCastStack??0)));}
+  if(id==="stellar_lance"){recordCoreMetric(s,156,"chargeSaved",.4);if(spent>0&&(skillRank(s, "stellar_lance") >= 2))recordCoreMetric(s,161,"saved",15*(1+(s.coreState.stacks.lanceCastStack??0)));}
   astraMetric(w,`${id}.casts`);astraMetric(w,`${id}.manaSpent`,spent);
   if(id==="orbit_reversal")r.orbit={expansionCast:expansionState(s).casts[id],until:w.elapsed+v.duration,captured:0,refunded:0};
   if(id==="stellar_lance") {
@@ -107,17 +108,17 @@ export function beginAstraSkill(w:CombatWorld,id:SkillId,spent:number,h:AstraHoo
 }
 export function captureAstraProjectiles(w:CombatWorld,h:AstraHooks) {
   const r=w.astra,o=r?.orbit;if(!o)return;
-  const s=w.aircraft,cap=hasCore(s,150)?22:16,radius=hasCore(s,150)?92:72;
+  const s=w.aircraft,cap=(skillRank(s, "orbit_reversal") >= 2)?22:16,radius=(skillRank(s, "orbit_reversal") >= 2)?92:72;
   for(let i=w.projectiles.length-1;i>=0&&o.captured<cap;i--) {
     const p=w.projectiles[i];
-    if(p.lifetime<=0||!p.capturable||p.allegiance!=="hostile"||p.capturedBy!==undefined)continue;
+    if(p.lifetime<=0||!p.capturable||p.allegiance!=="hostile")continue;
     const dx=p.x-p.previousX,dy=p.y-p.previousY,l=dx*dx+dy*dy;
     const t=l?Math.max(0,Math.min(1,((w.playerX-p.previousX)*dx+(w.playerY-p.previousY)*dy)/l)):0;
     if(Math.hypot(p.previousX+dx*t-w.playerX,p.previousY+dy*t-w.playerY)>radius+p.radius)continue;
     r!.flashes.push({x:p.x,y:p.y,at:w.elapsed});
     h.remove(w,i);o.captured++;if(o.captured>16)recordCoreMetric(s,150,"blocked",1);astraMetric(w,"orbit.captured");
     if(o.captured===cap)astraMetric(w,"orbit.capReached");
-    if(hasCore(s,152)) {const fraction=Math.min(.025,.30-o.refunded);o.refunded+=fraction;refund(w,fraction,152,"orbit.manaRestored");}
+    if((skillRank(s, "orbit_reversal") >= 4)) {const fraction=Math.min(.025,.30-o.refunded);o.refunded+=fraction;refund(w,fraction,152,"orbit.manaRestored");}
   }
 }
 export function updateAstra(w:CombatWorld,_dt:number,h:AstraHooks) {
@@ -131,13 +132,18 @@ export function updateAstra(w:CombatWorld,_dt:number,h:AstraHooks) {
       b.fired=true;astraMetric(w,"orbit.released");
     }
   }
+  if((skillRank(s,"orbit_reversal")>=5)&&r.orbitReleases?.some(release=>release.bullets.length>0&&release.bullets.every(b=>b.fired)))s.coreState.timers.whiteHole=now+5;
   r.orbitReleases=r.orbitReleases?.filter(release=>release.bullets.some(b=>!b.fired));
   if(r.charge) {
     s.activeEffects.stellar_lance=Math.max(.0001,r.charge.at-now);
     if(now>=r.charge.at) {
-      const k=1+.1*r.charge.stack,first=stats.firepower*(hasCore(s,157)?10.5:8)*k,later=stats.firepower*(hasCore(s,157)?9.3:6.8)*k;
+      const k=1+.1*r.charge.stack,first=stats.firepower*((skillRank(s, "stellar_lance") >= 3)?10.5:8)*k,later=stats.firepower*((skillRank(s, "stellar_lance") >= 3)?9.3:6.8)*k;
       const speed=1000,radius=6,x=w.playerX,y=w.playerY-20*playerAirframeScale(w.aircraft);
       lance(w,h,x,y,first,later,speed,radius,r.charge.expansionCast);
+      if(skillRank(s,"twin_reflection")>=5&&(s.activeEffects.twin_reflection??0)>0)for(const side of [-1,1]){
+       const mini=h.projectile(w,{owner:"player",source:"skill",skillId:"stellar_lance",procFree:true,expansionCast:r.charge.expansionCast,x:x+side*27,y:y+8,vx:0,vy:-speed,radius:3,rawDamage:first*.3,penetrationRemaining:Infinity,ammoVisualKey:"astra_lance",color:"#fff0bb",lifetime:2});
+       if(mini)mini.astraLance={later:later*.3};
+      }
       r.charge=undefined;endAircraftSkill(s,"stellar_lance");
     }
   }
@@ -174,17 +180,16 @@ export function updateAstra(w:CombatWorld,_dt:number,h:AstraHooks) {
       const m=f.pending[i],target=w.enemies.find(e=>e.id===m.target);
       if(!m.frozen){if(target){m.x=target.x;m.y=target.y;}if(!target||target.hp<=0)m.frozen=true;}
       if(now+1e-8<m.at)continue;
-      f.pending.splice(i,1);const radius=hasCore(s,163)?55:35;
+      f.pending.splice(i,1);const radius=(skillRank(s, "starfall") >= 2)?55:35;
       h.impact(w,m.x,m.y,radius);
       r.impacts.push({id:w.nextId++,x:m.x,y:m.y,radius,at:now});astraMetric(w,"starfall.impacts");
       for(const e of w.enemies)if(h.hostile(w,e)&&circleVsAircraft(m.x,m.y,radius,getEnemyHitbox(e))) {
-        if(hasCore(s,163)&&!circleVsAircraft(m.x,m.y,35,getEnemyHitbox(e)))recordCoreMetric(s,163,"hits",1);
-        const dealt=h.damage(w,e,stats.firepower*(hasCore(s,162)?2.65:2.1),"starfall",false,f.expansionCast);
+        if((skillRank(s, "starfall") >= 2)&&!circleVsAircraft(m.x,m.y,35,getEnemyHitbox(e)))recordCoreMetric(s,163,"hits",1);
+        const dealt=h.damage(w,e,stats.firepower*((skillRank(s, "starfall") >= 2)?2.65:2.1),"starfall",false,f.expansionCast);
         astraMetric(w,"starfall.impactHits");astraMetric(w,"starfall.impactDamage",dealt);
-        if(hasCore(s,166)&&e.hp>0){e.astraArmorUntil=now+6;recordCoreMetric(s,166,"targets",1);astraMetric(w,"starfall.armorDebuffs");}
-        if(e.hp<=0&&dealt>0){astraMetric(w,"starfall.kills");if(hasCore(s,164)){const fraction=Math.min(.05,.35-f.refunded);f.refunded+=fraction;refund(w,fraction,164,"starfall.manaRestored");}}
+        if((skillRank(s, "starfall") >= 3)&&e.hp>0){e.astraArmorUntil=now+6;recordCoreMetric(s,166,"targets",1);astraMetric(w,"starfall.armorDebuffs");}
+        if(e.hp<=0&&dealt>0){astraMetric(w,"starfall.kills");if((skillRank(s, "starfall") >= 3)){const fraction=Math.min(.05,.35-f.refunded);f.refunded+=fraction;refund(w,fraction,164,"starfall.manaRestored");}}
       }
-      if(hasCore(s,167))r.burns.push({expansionCast:f.expansionCast,id:w.nextId++,x:m.x,y:m.y,radius,until:now+4,next:now+.5});
     }
     s.activeEffects.starfall=Math.max(.0001,...f.pending.map(m=>m.at-now),f.stopped?0:5.5-(now-(f.next-f.locks*.5)));
     if((f.stopped||f.locks===10)&&!f.pending.length){r.starfall=undefined;endAircraftSkill(s,"starfall");}

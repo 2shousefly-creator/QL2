@@ -1,3 +1,4 @@
+import { rankEnemyFireRate } from "./airCombatRankRuntime";
 import { bossMinCenterY } from "./airCombatHudLayout";
 import type { StatusPayload, DamageDelivery, Allegiance, AttackMetadata } from "./airCombatStatus";
 import { AIR_COMBAT_WORLD, ENEMY_CONFIGS, STAGE2_POWER_MULTIPLIER, stageEnemyConfig, GAMEPLAY_SAFE_RECT as RECT } from "./airCombatConfig";
@@ -481,7 +482,7 @@ function updateTempest(w:CombatWorld, boss:EnemyEntity, dt:number, h:MagneticHoo
   const m=w.magnetic!, s=state(boss), d=m.scheduler??=createScheduler();
   initializeTempestGuardians(w,boss,h);
   if(!h.hostile(w,boss)||(boss.skillLockedUntil??0)>w.elapsed)return;
-  d.clock+=dt;
+  d.clock+=dt*rankEnemyFireRate(w,boss);
   if(d.phase!==w.bossPhase) {
     for(const skill of TEMPEST_SKILLS) if(SKILL_PHASE[skill]>d.phase && SKILL_PHASE[skill]<=w.bossPhase)
       d.readyAt[skill]=Math.max(d.readyAt[skill],d.clock+.5);

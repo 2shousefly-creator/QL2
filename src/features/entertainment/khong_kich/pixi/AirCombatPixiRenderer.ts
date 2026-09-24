@@ -1,3 +1,5 @@
+import { paintRankSkills } from "../airCombatRankArt";
+import { skillRank } from "../airCombatSkillRanks";
 import { paintEquipment } from "../airCombatEquipmentArt";
 import { equipmentUntargetable } from "../airCombatEquipmentStats";
 import { releaseState, playerAirframeScale } from "../airCombatReleaseState";
@@ -578,7 +580,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     bubble.clear();bubble.visible=shieldState.opacity>.01;
     if(bubble.visible) {
       bubble.position.set(world.playerX,world.playerY);bubble.scale.set(shieldState.scale*playerAirframeScale(world.aircraft));bubble.alpha=shieldState.opacity;
-      paintTitanShield(this.techShieldPainter,shieldState,reducedMotion,hasCore(world.aircraft,28));
+      paintTitanShield(this.techShieldPainter,shieldState,reducedMotion,(skillRank(world.aircraft, "armor_shield") >= 3));
 
     }
     const sustained = (world.aircraft.activeEffects.afterburner || 0) > 0 || (world.aircraft.activeEffects.sweeping_cannon || 0) > 0;
@@ -665,6 +667,10 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
       sprite.blendMode=frame.atlas==="equipmentVfx"?"add":"normal";
     },reducedMotion,(x,y,ex,ey,color,alpha,width)=>{this.enemyForegroundMarks.moveTo(x,y).lineTo(ex,ey).stroke({color,alpha,width});});
     this.equipmentSprites.end();
+    paintRankSkills(world,{
+      circle:(x,y,r,color,alpha,width)=>{this.enemyForegroundMarks.circle(x,y,r).stroke({color,alpha,width});},
+      line:(x,y,ex,ey,color,alpha,width)=>{this.enemyForegroundMarks.moveTo(x,y).lineTo(ex,ey).stroke({color,alpha,width});},
+    },reducedMotion);
     this.app.render();
   }
 

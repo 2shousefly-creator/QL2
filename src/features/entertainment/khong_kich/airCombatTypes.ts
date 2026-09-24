@@ -5,6 +5,7 @@ export type AircraftId = "black_eagle" | "breaker" | "phantom" | "astra";
 export type ResourceKind = "mana" | "energy";
 
 export type SkillId =
+  | "predator_lock" | "gravity_anchor" | "electronic_interference" | "twin_reflection"
   | "decoy"
   | "afterburner"
   | "missile_swarm"
@@ -69,7 +70,7 @@ export interface AircraftConfig {
   baseStats: CombatStats;
   growth: AircraftGrowth;
   hpRegen: { base: number; growth: number };
-  skillIds: readonly [SkillId, SkillId, SkillId];
+  skillIds: readonly [SkillId, SkillId, SkillId, SkillId];
 }
 
 export interface SkillConfig {
@@ -135,7 +136,6 @@ export interface AircraftModifiers {
   maxResourceFlat: number;
   resourceRegenFlat: number;
   weapon: WeaponModifiers;
-  skillCores: Partial<Record<SkillId, CoreId[]>>;
 }
 
 export interface AircraftCombatState {
@@ -144,6 +144,9 @@ export interface AircraftCombatState {
   aircraftId: AircraftId;
   level: number;
   combatXp: number;
+  skillRanks: Partial<Record<SkillId, number>>;
+  skillPoints: number;
+  skillUpAt: Partial<Record<SkillId, number>>;
   currentHp: number;
   currentResource: number;
   modifiers: AircraftModifiers;

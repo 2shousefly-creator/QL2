@@ -36,7 +36,7 @@ export function castExpansion(w: CombatWorld, id: SkillId, spent: number, h: Exp
   }
   r.lastSkill = { id, at: now };
   if (hasCore(s, 193)) {
-    r.sequence = r.sequence.filter(cast => now - cast.at <= 7 && cast.id !== id);
+    r.sequence = r.sequence.filter(cast => now - cast.at <= 8 && cast.id !== id);
     r.sequence.push({ id, at: now });
     if (r.sequence.length === 3) {
       for (const skill of AIRCRAFT_CONFIGS[s.aircraftId].skillIds) {const before=s.cooldowns[skill]??0;s.cooldowns[skill]=Math.max(0,before-3);recordCoreMetric(s,193,"cooldown",before-s.cooldowns[skill]!);}
@@ -70,9 +70,9 @@ export function expansionHpLoss(w: CombatWorld, amount: number, receivedDamage =
   r.hpLoss = r.hpLoss.filter(hit => hit.at >= c.time - 2);
   const recent = r.hpLoss.reduce((n, hit) => n + hit.amount, 0);
   if (hasCore(s, 174) && recent > stats.maxHp * .08 && !expansionActive(s, "shockPadCd")) {
-    resource(w, stats.maxResource * .08,174); timer(w, "shockPadCd", 15);recordCoreMetric(s,174,"procs",1);
+    resource(w, stats.maxResource * .10,174); timer(w, "shockPadCd", 15);recordCoreMetric(s,174,"procs",1);
   }
-  if (receivedDamage && hasCore(s, 187)) {const before=c.stacks.recoil??0;c.stacks.recoil = Math.min(stats.firepower * 1.2, before + amount * .20);recordCoreMetric(s,187,"damageStored",c.stacks.recoil-before);const entry=c.telemetry.core_187??={};entry.peak=Math.max(entry.peak??0,c.stacks.recoil);}
+  if (receivedDamage && hasCore(s, 187)) {const before=c.stacks.recoil??0;c.stacks.recoil = Math.min(stats.firepower * 1.6, before + amount * .25);recordCoreMetric(s,187,"damageStored",c.stacks.recoil-before);const entry=c.telemetry.core_187??={};entry.peak=Math.max(entry.peak??0,c.stacks.recoil);}
   if (hasCore(s, 195) && recent >= stats.maxHp * .15 && !expansionActive(s, "blackBoxCd")) {
     timer(w, "blackBox", 4); timer(w, "blackBoxCd", 24);
     recordCoreMetric(s,195,"procs",1);
@@ -113,7 +113,7 @@ export function tickExpansion(w: CombatWorld, dt: number, h: ExpansionHooks) {
   const s = w.aircraft, c = s.coreState, r = expansionState(s), now = c.time, stats = getEffectiveAircraftStats(s);
   if (hasCore(s, 184) && c.timers.celestialReady === undefined) timer(w, "celestialReady", 18);
   if (hasCore(s, 170) && !expansionActive(s, "earlyArmorCd") && h.threat(w, 70, false)) {
-    timer(w, "earlyArmor", 1.5); timer(w, "earlyArmorCd", 16.5);
+    timer(w, "earlyArmor", 2); timer(w, "earlyArmorCd", 12);
     recordCoreMetric(s,170,"procs",1);
   }
   if (hasCore(s, 172) && !c.stacks.capacitorCharge) {
@@ -134,7 +134,7 @@ export function tickExpansion(w: CombatWorld, dt: number, h: ExpansionHooks) {
   for (const charge of r.charges) {
     const target = w.enemies.find(e => e.id === charge.target);
     if (target) { charge.x = target.x; charge.y = target.y; }
-    if (now >= charge.at) {recordCoreMetric(s,168,"procs",1);h.area(w, charge.x, charge.y, 50, stats.firepower * .45, 168);}
+    if (now >= charge.at) {recordCoreMetric(s,168,"procs",1);h.area(w, charge.x, charge.y, 50, stats.firepower * .70, 168);}
   }
   r.charges = r.charges.filter(charge => charge.at > now);
   if (c.stacks.satellites && !expansionActive(s, "satellites")) {

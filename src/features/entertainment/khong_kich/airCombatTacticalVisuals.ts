@@ -18,14 +18,6 @@ export function paintTacticalCores(world:CombatWorld,p:TacticalPainter,reducedMo
     p.polygon?.([world.playerX,world.playerY-31,world.playerX+27,world.playerY-18,world.playerX+22,world.playerY+19,world.playerX,world.playerY+33,world.playerX-22,world.playerY+19,world.playerX-27,world.playerY-18],0xffe5a3,.15);
   }
   for (const orb of satellitePositions(world)) { p.circle(orb.x,orb.y,8,0x67e8f9,.25,true); p.circle(orb.x,orb.y,5,0xffdf8a,1,true); p.circle(orb.x,orb.y,3,0xffffff,1,true); }
-  for(const h of world.skillCores.blackHoles){
-    p.circle(h.x,h.y,V.holeRadius,0x9d8aff,.06,true);p.circle(h.x,h.y,V.holeRadius,0xb9a7ff,.4);
-    p.circle(h.x,h.y,V.holeCoreRadius,0x080619,.95,true);p.circle(h.x,h.y,V.holeCoreRadius+1,0xc4b5fd,.9);
-    for(let arm=0;arm<3;arm++)for(let segment=0;segment<14;segment++){
-      const a=arm*Math.PI*2/3+segment*.23+(reducedMotion?0:now*.7),b=a+.23,r=28+segment*6,r2=r+6;
-      p.line(h.x+Math.cos(a)*r,h.y+Math.sin(a)*r,h.x+Math.cos(b)*r2,h.y+Math.sin(b)*r2,0x9f8fff,.15+segment*.012,1.2);
-    }
-  }
   for(const e of world.enemies){
     if(e.hp<=0)continue;
     const effect=world.skillCores.enemyEffects.get(e.id),large=e.type==="boss"||e.eliteWave>0;
@@ -49,7 +41,6 @@ export function paintTacticalCores(world:CombatWorld,p:TacticalPainter,reducedMo
     labels.forEach((label,i)=>p.label?.(Math.max(38,Math.min(322,e.x)),Math.max(16,e.y-e.radius-12-i*(large?10:8)),label.text,label.color,large?8:6.5));
   }
   for(const e of world.enemies)if(e.hp>0&&enemyAllegiance(world,e)==="friendly_hacked")p.circle(e.x,e.y,e.radius+9,0x67e8f9,.85);
-  for(const f of t?.fields??[]){p.circle(f.x,f.y,80,0x38bdf8,.1,true);p.circle(f.x,f.y,80,0x67e8f9,.7);if(!reducedMotion)p.circle(f.x,f.y,25+(now*15)%30,0x67e8f9,.2);}
   for(const scrap of t?.scraps??[]){const alpha=Math.max(0,Math.min(1,2*(scrap.until-now)));p.circle(scrap.x,scrap.y,5,0xfde68a,alpha,true);p.line(scrap.x-3,scrap.y,scrap.x+3,scrap.y,0xffffff,alpha,1);p.line(scrap.x,scrap.y-3,scrap.x,scrap.y+3,0xffffff,alpha,1);}
   for(const g of t?.grids??[]){const a=world.enemies.find(e=>e.id===g.a&&isHostileToPlayer(world,e)),b=world.enemies.find(e=>e.id===g.b&&isHostileToPlayer(world,e));if(a&&b&&g.until>now){p.line(a.x,a.y,b.x,b.y,0x22d3ee,.25,8);p.line(a.x,a.y,b.x,b.y,0xa5f3fc,.9,2);}}
   const wave=(c.timers.antimatterWave??0)-c.time;
