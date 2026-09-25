@@ -1,0 +1,471 @@
+{
+  "version": "26.13.0",
+  "title": "Core Rebalance, Equipment Ascension & Build Diversity",
+  "displayTitle": "CHI TIẾT CẬP NHẬT 26.13.0",
+  "releaseDate": "25/09/2026",
+  "summary": "**26.13.0** là bản đại cân bằng toàn diện cho hai lớp sức mạnh lớn nhất của Không Kích: **Lõi Nâng Cấp** và **Trang Bị**. Pool Lõi thường được chuẩn hóa còn **141 lõi**, mặt bằng sức mạnh của cả Bạc, Vàng và Kim Cương được nâng lên để mỗi lần chọn Core ở Lv1 / Lv7 / Lv11 / Lv15 đều đủ giá trị, đồng thời ba lõi Đạn Truy Kích, Hỏa Lực Luân Phiên và Nhịp Ba Kỹ Năng được retire hoàn toàn.\n\nHệ Trang Bị cũng được nâng cấp trên toàn bộ **8 Thành Phần, 36 Hoàn Chỉnh và 36 Huyền Thoại**. Trang Bị Hoàn Chỉnh giờ đủ sức trở thành trục build thực sự; Huyền Thoại sử dụng đúng cùng mechanic của family nhưng có **sức mạnh gấp đôi Hoàn Chỉnh**. Sáu slot Trang Bị, cơ chế cộng dồn chỉ số trực tiếp và quy tắc Huyền Thoại ưu tiên hiệu ứng family vẫn được giữ nguyên.\n\nCác Core meta cũng được viết lại rõ ràng hơn: Thao Túng Bậc Lõi bảo đảm lượt Core Selection chính kế tiếp là **100% Kim Cương**, Hộp Pandora chuyển đổi 1:1 toàn bộ Core thường hợp lệ đã sở hữu trước đó, còn Dư Chấn Tối Hậu tạo một cửa sổ sức mạnh mới sau khi Ultimate thực sự kết thúc.",
+  "sections": [
+    {
+      "id": "s1",
+      "title": "ĐẠI CÂN BẰNG 141 LÕI NÂNG CẤP",
+      "icon": {
+        "kind": "core",
+        "id": "core_001"
+      },
+      "intro": [
+        {
+          "text": "Mặt bằng Core được nâng đồng loạt để cả bốn lần chọn Core trong một run đều có sức nặng. File cân bằng 26.13.0 là nguồn số liệu chuẩn cho toàn bộ tên, bậc, hệ, mô tả và điều kiện xuất hiện.",
+          "format": "paragraph"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s1-e1",
+          "icon": {
+            "kind": "core",
+            "id": "core_001"
+          },
+          "title": "Mặt bằng sức mạnh mới",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Pool Core thường của 26.13.0 có **141 lõi: 48 Bạc · 50 Vàng · 43 Kim Cương**.",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "Các Core chỉ số nền được nâng rõ rệt. Ví dụ: **Hỏa Lực Đồng Bộ** +25 Hỏa Lực, +0,5 Tốc Độ Bắn; **Hỏa Lực Tăng Áp** +40 Hỏa Lực, +0,8 Tốc Độ Bắn; **Nền Tảng Hủy Diệt** +60 Hỏa Lực, +1,2 Tốc Độ Bắn.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "Nhóm Phòng Thủ/Tài Nguyên cũng được nâng tương ứng, giúp Bạc không còn là lựa chọn bị bỏ qua và Kim Cương vẫn giữ vai trò thay đổi mạnh hướng build.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        },
+        {
+          "id": "s1-e2",
+          "icon": {
+            "kind": "core",
+            "id": "core_054"
+          },
+          "title": "Các mechanic cũ được nâng hoặc tái thiết kế",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Các Core dựa trên kill, cùng mục tiêu, Basic hit, low-HP, Shield/Armor, Skill rotation, Resource và Critical đều được cân lại theo cùng power floor mới.",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "**Chậm Mà Chắc:** Basic Fire Rate bị giới hạn ở 1,8 phát/giây; mỗi +0,1 Fire Rate vượt cap chuyển thành +5,56% Basic Damage.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "**Phản Lực Giáp:** mỗi lượng damage thực sự được Armor/Shield ngăn bằng 25% Max HP sẽ phát shockwave 250% Hỏa Lực và hồi 5% Max Resource; giữ overflow và tối đa 1 proc mỗi incoming hit.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "**Thợ Săn Tiền Thưởng:** mỗi 20s đánh dấu mục tiêu 5s; mục tiêu nhận +20% mọi sát thương và nếu bị hạ sẽ cấp ngẫu nhiên 1 trong 8 phần thưởng stat vĩnh viễn.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "META CORE & LUẬT LỰA CHỌN MỚI",
+      "icon": {
+        "kind": "core",
+        "id": "core_217"
+      },
+      "intro": [
+        {
+          "text": "Các Core can thiệp vào lựa chọn, chuyển đổi và nhịp Ultimate được chuẩn hóa để mạnh nhưng có rule rõ ràng.",
+          "format": "paragraph"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s2-e1",
+          "icon": {
+            "kind": "core",
+            "id": "core_217"
+          },
+          "title": "Thao Túng Bậc Lõi",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Nhận **+10% mọi sát thương**. Lượt Core Selection chính kế tiếp có tỷ lệ **0% Bạc / 0% Vàng / 100% Kim Cương**.",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "Nếu có Bản Đồ Dự Thảo, toàn bộ **5 card** của lượt bảo đảm đều là Kim Cương; mọi reroll trong lượt đó cũng chỉ ra Kim Cương.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Sau khi tiêu lượt bảo đảm, các lượt chính còn lại dùng tỷ lệ **20% Bạc / 40% Vàng / 40% Kim Cương**. Random grant/conversion không tiêu lượt bảo đảm.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        },
+        {
+          "id": "s2-e2",
+          "icon": {
+            "kind": "core",
+            "id": "core_216"
+          },
+          "title": "Hộp Pandora",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Pandora không tự biến đổi chính nó và vẫn nằm trong danh sách Core đã chọn. Khi chọn, toàn bộ Core thường hợp lệ sở hữu trước đó được đổi **1:1** thành Core Kim Cương unseen/hợp lệ.",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "Core050 / Core051 / Core052 và Pandora không bị chuyển đổi. Các chỉ số vĩnh viễn đã kiếm được từ Core cũ được giữ lại.",
+              "format": "bullet",
+              "changeType": "unchanged"
+            },
+            {
+              "text": "Pandora chỉ được offer khi hệ thống có đủ toàn bộ Diamond replacement cho batch; không partial conversion.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        },
+        {
+          "id": "s2-e3",
+          "icon": {
+            "kind": "core",
+            "id": "core_218"
+          },
+          "title": "Dư Chấn Tối Hậu",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Sau khi Ultimate **fully resolves**, nhận **+35% mọi damage và +35% Resource Regen trong 8s**. Không giảm Ultimate cooldown.",
+              "format": "paragraph",
+              "changeType": "new"
+            },
+            {
+              "text": "Core097 và Core218 vẫn có thể cùng tồn tại. Nếu Core097 khóa việc chủ động dùng Ultimate thì Core218 tự nhiên không có điều kiện để kích hoạt.",
+              "format": "bullet",
+              "changeType": "unchanged"
+            }
+          ]
+        },
+        {
+          "id": "s2-e4",
+          "icon": {
+            "kind": "core",
+            "id": "core_052"
+          },
+          "title": "Chuyển Đổi Hỗn Loạn giữ nguyên tính biến động",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Core052 tiếp tục cấp **2 Core ngẫu nhiên unseen/hợp lệ** khi hệ thống có thể commit đủ cả hai trong cùng batch; không ép composition theo bậc và không giảm reward.",
+              "format": "paragraph",
+              "changeType": "unchanged"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "BA LÕI RỜI KHỎI POOL",
+      "icon": {
+        "kind": "core",
+        "id": "core_189"
+      },
+      "intro": [
+        {
+          "text": "Ba Core được retire hoàn toàn để loại bỏ những mechanic không còn phù hợp với hướng build mới.",
+          "format": "paragraph"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s3-e1",
+          "icon": {
+            "kind": "core",
+            "id": "core_189"
+          },
+          "title": "Retired Cores",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "**Đạn Truy Kích (core_189)** được retire.",
+              "format": "bullet",
+              "changeType": "removed"
+            },
+            {
+              "text": "**Hỏa Lực Luân Phiên (core_191)** được retire.",
+              "format": "bullet",
+              "changeType": "removed"
+            },
+            {
+              "text": "**Nhịp Ba Kỹ Năng (core_193)** được retire.",
+              "format": "bullet",
+              "changeType": "removed"
+            },
+            {
+              "text": "Các Core đã retire không thể xuất hiện qua offer, reroll, random grant, conversion hay Pandora replacement.",
+              "format": "paragraph",
+              "changeType": "change"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "TRANG BỊ ĐƯỢC NÂNG CẤP TOÀN DIỆN",
+      "icon": {
+        "kind": "system",
+        "id": "ui"
+      },
+      "intro": [
+        {
+          "text": "Toàn bộ hệ Trang Bị được đưa lên cùng mặt bằng sức mạnh với Core mới để sáu slot thật sự tạo thành một hướng build, thay vì chỉ là các bonus phụ.",
+          "format": "paragraph"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s4-e1",
+          "icon": {
+            "kind": "system",
+            "id": "ui"
+          },
+          "title": "8 Thành Phần mạnh hơn",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "**Tinh Thiết:** +28 Hỏa Lực · **Phong Luân:** +0,45 Tốc Độ Bắn · **Hắc Giáp:** +24 Giáp · **Cốt Titan:** +320 Máu Tối Đa.",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "**Sinh Mạch:** +1,8 Hồi Máu/s · **Tụ Bão:** +20% Hồi Tài Nguyên/s · **Thời Phiến:** +10% Giảm Hồi Chiêu · **Tinh Nhãn:** +12% Tỷ Lệ Chí Mạng.",
+              "format": "paragraph",
+              "changeType": "change"
+            }
+          ]
+        },
+        {
+          "id": "s4-e2",
+          "icon": {
+            "kind": "system",
+            "id": "ui"
+          },
+          "title": "36 Trang Bị Hoàn Chỉnh trở thành engine build",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Các family Basic/rapid-fire, Skill cycle, Resource, Crit, Shield/Tank và sustain được nâng cả stat nền lẫn payoff mechanic. Những family như Prometheus, Colossus, Plasma, Gorgon, Tinh Vân, Chronos và Huyết Nguyệt giờ có thể trực tiếp định hình rotation và lối chơi của cả run.",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "Sáu slot Trang Bị vẫn giữ nguyên. Chỉ số trực tiếp của mọi món đang mang vẫn cộng dồn đầy đủ.",
+              "format": "bullet",
+              "changeType": "unchanged"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "HUYỀN THOẠI = 2× HOÀN CHỈNH",
+      "icon": {
+        "kind": "system",
+        "id": "ui"
+      },
+      "intro": [
+        {
+          "text": "Huyền Thoại giờ tuân theo một luật nhất quán: cùng mechanic với Trang Bị Hoàn Chỉnh của family đó, nhưng toàn bộ phần sức mạnh có lợi được nhân đôi.",
+          "format": "paragraph"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s5-e1",
+          "icon": {
+            "kind": "system",
+            "id": "ui"
+          },
+          "title": "Quy tắc 2× thống nhất",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Các giá trị như Hỏa Lực, Giáp, HP, hồi phục, Shield, bonus damage, Crit, CDR, Resource refund/cost reduction, debuff magnitude và các hệ số gây damage được tăng thành **2×** bản Hoàn Chỉnh.",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "Trigger, số hit/kill cần thiết, ngưỡng HP/Resource, số stack tối đa, thời lượng, cooldown và cấu trúc mechanic **không bị nhân đôi** chỉ vì lên Huyền Thoại.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "Ví dụ: Pháo Hắc Tinh +56 Hỏa Lực, +18% direct damage → Tinh Vong Pháo +112 Hỏa Lực, +36%; Đồng Hồ Chronos +20% CDR, +15% Skill Damage và -1,5s cooldown khác → Vương Miện Chronos +40%, +30% và -3s.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        },
+        {
+          "id": "s5-e2",
+          "icon": {
+            "kind": "system",
+            "id": "ui"
+          },
+          "title": "Family rule giữ nguyên",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Nhiều món cùng family vẫn cộng toàn bộ **chỉ số trực tiếp**, nhưng hiệu ứng family chỉ chạy **một lần**. Nếu có cả Hoàn Chỉnh và Huyền Thoại cùng family, hiệu ứng Huyền Thoại được ưu tiên.",
+              "format": "paragraph",
+              "changeType": "unchanged"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s6",
+      "title": "LÕI TRANG BỊ & PHẦN THƯỞNG",
+      "icon": {
+        "kind": "core",
+        "id": "core_226"
+      },
+      "intro": [
+        {
+          "text": "Các Core gắn với hệ Trang Bị được chỉnh lại để phù hợp với power budget mới và sáu slot đang mang.",
+          "format": "paragraph"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s6-e1",
+          "icon": {
+            "kind": "core",
+            "id": "core_226"
+          },
+          "title": "Mảnh Ghép, Xác Suất, Ăn Chắc và Rương Báu Vật",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "**Mảnh Ghép May Mắn:** nhận 2 Thành Phần ngẫu nhiên. **Ăn Chắc Mặc Bền:** nhận 3 Thành Phần ngẫu nhiên. **Rương Báu Vật:** nhận 6 Thành Phần ngẫu nhiên + 1 Nam Châm Ma Thuật.",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "**Thích Chơi Xác Suất:** nhận ngay 1 Thành Phần và tăng 75% xác suất rơi Nam Châm Ma Thuật / Thành Phần / Hoàn Chỉnh / Huyền Thoại.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        },
+        {
+          "id": "s6-e2",
+          "icon": {
+            "kind": "core",
+            "id": "core_227"
+          },
+          "title": "Chờ Đợi Xứng Đáng?",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Đếm ngược **500 giây combat**; mỗi quái thường hạ được giảm 1s, mỗi Tinh Anh giảm 8s, Boss không giảm. Đồng hồ chỉ chạy khi combat thực sự đang diễn ra.",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "Khi hết giờ: **40%** 3 Hoàn Chỉnh · **30%** 4 Hoàn Chỉnh · **20%** 1 Huyền Thoại + 2 Hoàn Chỉnh · **8%** 2 Huyền Thoại · **2%** 3 Huyền Thoại + 1 Nam Châm Ma Thuật.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        },
+        {
+          "id": "s6-e3",
+          "icon": {
+            "kind": "core",
+            "id": "core_228"
+          },
+          "title": "Cái Giá Phải Trả",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Xóa toàn bộ Trang Bị đang mang, trong kho, đang ghép và dưới đất; nhận **2 Trang Bị Huyền Thoại ngẫu nhiên thuộc 2 family khác nhau**, sau đó khóa mọi nguồn nhận Trang Bị đến hết run.",
+              "format": "paragraph",
+              "changeType": "change"
+            },
+            {
+              "text": "Giữ Nam Châm Ma Thuật và hủy Chờ Đợi Xứng Đáng? nếu phần thưởng chưa được nhận.",
+              "format": "bullet",
+              "changeType": "unchanged"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s7",
+      "title": "CÁC GIỚI HẠN HỆ THỐNG GIỮ NGUYÊN",
+      "icon": {
+        "kind": "system",
+        "id": "ui"
+      },
+      "intro": [
+        {
+          "text": "26.13.0 tăng power floor nhưng không nới các cap toàn cục hoặc phá các nguyên tắc nền của run.",
+          "format": "paragraph"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s7-e1",
+          "icon": {
+            "kind": "system",
+            "id": "ui"
+          },
+          "title": "Global caps & progression",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Giữ nguyên **60% Giảm Hồi Chiêu · 100% Tỷ Lệ Chí Mạng · 10× Crit Multiplier · 12 Tốc Độ Bắn · 40% Xuyên Giáp**.",
+              "format": "paragraph",
+              "changeType": "unchanged"
+            },
+            {
+              "text": "Core Selection vẫn ở **Lv1 / Lv7 / Lv11 / Lv15**, mặc định 3 card; one-time encounter vẫn khiến Core đã từng được offer biến mất khỏi các offer tương lai trong cùng run.",
+              "format": "bullet",
+              "changeType": "unchanged"
+            },
+            {
+              "text": "Không thay đổi base stat chiến cơ, skill rank, Ultimate 26.12.3, Phantom Nhiễu Điện Tử đã chốt hoặc số lượng 6 slot Trang Bị.",
+              "format": "bullet",
+              "changeType": "unchanged"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

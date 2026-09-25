@@ -1,30 +1,31 @@
-import { WAITING_CHEST_DESCRIPTION } from "./airCombatEquipmentRewards";
 import { SKILL_CORE_DESCRIPTIONS } from "./airCombatSkillCores";
 import type { CoreDefinition } from "./airCombatTypes";
 
-// Canonical Appendix B, workbook row numbers are stable run-local identifiers.
+// Canonical 26.13.0 Appendix A. Retired IDs remain stable but are excluded by eligibility.
 export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_001",
     "name": "Hỏa Lực Đồng Bộ",
-    "description": "+18 Hỏa Lực, +0,30 Tốc Độ Bắn.",
+    "description": "+25 Hỏa Lực, +0,5 Tốc Độ Bắn.",
     "system": "attack",
     "icon": "core:core_001",
     "category": "offense",
     "tiers": [
       "silver"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_002",
     "name": "Khung Hộ Vệ",
-    "description": "+220 Máu Tối Đa, +16 Giáp.",
+    "description": "+270 Máu Tối Đa, +25 Giáp.",
     "system": "defense",
     "icon": "core:core_002",
     "category": "offense",
     "tiers": [
       "silver"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_003",
@@ -51,13 +52,14 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_005",
     "name": "Hệ Tái Tạo Chiến Thuật",
-    "description": "+1,1 Hồi Máu/s, +6% Giảm Hồi Chiêu, +8% Hồi Tài Nguyên.",
+    "description": "+2 Hồi Máu/s, +10% Giảm Hồi Chiêu, +15% Hồi Tài Nguyên.",
     "system": "defense",
     "icon": "core:core_005",
     "category": "offense",
     "tiers": [
       "silver"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_006",
@@ -73,24 +75,26 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_007",
     "name": "Hỏa Lực Tăng Áp",
-    "description": "+32 Hỏa Lực, +0,50 Tốc Độ Bắn.",
+    "description": "+40 Hỏa Lực, +0,8 Tốc Độ Bắn.",
     "system": "attack",
     "icon": "core:core_007",
     "category": "offense",
     "tiers": [
       "gold"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_008",
     "name": "Khung Hợp Kim Chiến Đấu",
-    "description": "+400 Máu Tối Đa, +28 Giáp.",
+    "description": "+400 Máu Tối Đa, +40 Giáp.",
     "system": "defense",
     "icon": "core:core_008",
     "category": "offense",
     "tiers": [
       "gold"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_009",
@@ -117,13 +121,14 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_011",
     "name": "Tái Tạo Nano",
-    "description": "+2 Hồi Máu/s, +11% Giảm Hồi Chiêu, +15% Hồi Tài Nguyên.",
+    "description": "+3 Hồi Máu/s, +15% Giảm Hồi Chiêu, +25% Hồi Tài Nguyên.",
     "system": "defense",
     "icon": "core:core_011",
     "category": "offense",
     "tiers": [
       "gold"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_012",
@@ -139,24 +144,26 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_013",
     "name": "Nền Tảng Hủy Diệt",
-    "description": "+60 Hỏa Lực, +1 Tốc Độ Bắn.",
+    "description": "+60 Hỏa Lực, +1,2 Tốc Độ Bắn.",
     "system": "attack",
     "icon": "core:core_013",
     "category": "offense",
     "tiers": [
       "diamond"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_014",
     "name": "Pháo Đài Kim Cương",
-    "description": "+650 Máu Tối Đa, +45 Giáp.",
+    "description": "+650 Máu Tối Đa, +60 Giáp.",
     "system": "defense",
     "icon": "core:core_014",
     "category": "offense",
     "tiers": [
       "diamond"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_015",
@@ -183,13 +190,14 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_017",
     "name": "Tái Tạo Lượng Tử",
-    "description": "+4,5 Hồi Máu/s, +20% Giảm Hồi Chiêu, +25% Hồi Tài Nguyên.",
+    "description": "+4,5 Hồi Máu/s, +20% Giảm Hồi Chiêu, +35% Hồi Tài Nguyên.",
     "system": "defense",
     "icon": "core:core_017",
     "category": "offense",
     "tiers": [
       "diamond"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_018",
@@ -637,35 +645,38 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_046",
     "name": "Càng đánh càng hăng",
-    "description": "Mỗi hạ quái thường +0,6 Hỏa Lực vĩnh viễn trong run; Tinh Anh/Boss ×5.",
+    "description": "Mỗi mạng hạ gục quái thường cho +0,5 Hỏa Lực, Tinh Anh/Boss ×5, vĩnh viễn trong lượt chơi.",
     "system": "attack",
     "icon": "core:core_046",
     "category": "offense",
     "tiers": [
       "diamond"
-    ]
+    ],
+    "availability": "Lv1 / Lv7  · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_047",
     "name": "Thích ứng phòng ngự",
-    "description": "Mỗi hạ quái thường +0,3 Giáp vĩnh viễn trong run; Tinh Anh/Boss ×5.",
+    "description": "Mỗi mạng hạ gục quái thường cho +0,25 Giáp, Tinh Anh/Boss ×5, vĩnh viễn trong lượt chơi.",
     "system": "defense",
     "icon": "core:core_047",
     "category": "offense",
     "tiers": [
       "gold"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_048",
     "name": "Trường Sinh",
-    "description": "Mỗi hạ quái thường +3 Máu Tối Đa vĩnh viễn trong run; Tinh Anh/Boss ×5.",
+    "description": "Mỗi mạng hạ gục quái thường cho +3 Máu Tối Đa, Tinh Anh/Boss ×5, vĩnh viễn trong lượt chơi.",
     "system": "defense",
     "icon": "core:core_048",
     "category": "offense",
     "tiers": [
       "silver"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_049",
@@ -676,7 +687,8 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
     "category": "offense",
     "tiers": [
       "gold"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_050",
@@ -687,7 +699,8 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
     "category": "resource",
     "tiers": [
       "silver"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run. Chỉ được offer khi còn ít nhất 1 Lõi Vàng unseen/hợp lệ để cấp."
   },
   {
     "id": "core_051",
@@ -698,7 +711,8 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
     "category": "resource",
     "tiers": [
       "gold"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run. Chỉ được offer khi còn ít nhất 1 Lõi Kim Cương unseen/hợp lệ để cấp."
   },
   {
     "id": "core_052",
@@ -709,40 +723,44 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
     "category": "resource",
     "tiers": [
       "diamond"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run. Chỉ được offer khi hệ thống có thể commit đủ 2 Lõi ngẫu nhiên unseen/hợp lệ trong cùng batch.<br>Giữ nguyên sức mạnh và tính ngẫu nhiên hiện tại."
   },
   {
     "id": "core_053",
     "name": "Găng bảo thạch",
-    "description": "Nhận +25% Tỷ Lệ Chí Mạng; kỹ năng có thể chí mạng. Có Mắt Tempest: +25% Sát Thương Chí Mạng; có Thiên Nhãn Raijin: +50% Sát Thương Chí Mạng. Synergy chỉ áp dụng một lần theo family.",
+    "description": "+25% Tỷ Lệ Chí Mạng; kỹ năng có thể chí mạng. Có Mắt Tempest: +25% Sát Thương Chí Mạng; có Thiên Nhãn Raijin: +50% Sát Thương Chí Mạng.",
     "system": "attack",
     "icon": "core:core_053",
     "category": "offense",
     "tiers": [
       "diamond"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run. Synergy chỉ áp dụng một lần theo family."
   },
   {
     "id": "core_054",
     "name": "Chậm mà chắc",
-    "description": "Khóa Tốc Độ Bắn ở 1,2/s. Mỗi 0,1 Tốc Độ Bắn vượt giới hạn chuyển thành +10 Hỏa Lực.",
+    "description": "Tốc Độ Bắn thường bị giới hạn tối đa là 1,8 phát/giây. Với mỗi 0,1 Tốc Độ Bắn vượt quá giới hạn, tăng 5,56% Basic Damage.",
     "system": "utility",
     "icon": "core:core_054",
     "category": "offense",
     "tiers": [
       "gold"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_055",
     "name": "Kính Ngắm Hiệu Chỉnh",
-    "description": "+10% Tỷ Lệ Chí Mạng, +20% Sát Thương Chí Mạng.",
+    "description": "+15% Tỷ Lệ Chí Mạng, +35% Sát Thương Chí Mạng.",
     "system": "attack",
     "icon": "core:core_055",
     "category": "offense",
     "tiers": [
       "silver"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_056",
@@ -758,365 +776,398 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_057",
     "name": "Xuyên thủng",
-    "description": "Mọi sát thương bỏ qua 10% Giáp.",
+    "description": "Mọi sát thương bỏ qua 20% Giáp của mục tiêu.",
     "system": "attack",
     "icon": "core:core_057",
     "category": "offense",
     "tiers": [
       "silver"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_058",
-    "name": "Dấu ngắm yếu điểm",
-    "description": "Đánh trúng cùng mục tiêu 4 lần làm giảm 15% Giáp trong 5 giây. Khi hiệu ứng kết thúc, mục tiêu đó có hồi nội tại 15 giây. Không tích hit trong thời gian giảm Giáp hoặc hồi nội tại; hết hồi nội tại bắt đầu chu kỳ mới.",
+    "name": "Quá Tải Nòng Súng",
+    "description": "Sau khi dùng Skill, các phát bắn thường kế tiếp trong 3 giây gây +50% Basic Damage và xuyên thêm 1 mục tiêu.",
     "system": "attack",
     "icon": "core:core_058",
     "category": "offense",
     "tiers": [
       "silver"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run. <br>Làm mới thời gian hiệu ứng, không cộng dồn"
   },
   {
     "id": "core_059",
     "name": "Phát bắn tích điện",
-    "description": "Mỗi phát bắn thường thứ 10 gây 180% sát thương của phát bắn thường.",
+    "description": "Mỗi phát bắn thường thứ 8 gây 230% Basic Damage.",
     "system": "attack",
     "icon": "core:core_059",
     "category": "weapon",
     "tiers": [
       "silver"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_060",
     "name": "Nòng súng ổn định",
-    "description": "Sau 4 giây không nhận sát thương, đòn bắn thường gây thêm 15% sát thương đạn thường. Hiệu ứng mất khi bạn nhận sát thương.",
+    "description": "Sau 3 giây không nhận sát thương, Basic Damage tăng 20%. Hiệu ứng mất khi nhận sát thương.",
     "system": "attack",
     "icon": "core:core_060",
     "category": "weapon",
     "tiers": [
       "silver"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_061",
     "name": "Giáp phản ứng nhanh",
-    "description": "Khi nhận sát thương: +30 Giáp trong 5s. Hồi nội tại 10s.",
+    "description": "Khi nhận sát thương: +45 Giáp trong 5 giây. Hồi nội tại 10 giây sau khi hiệu ứng kết thúc.",
     "system": "defense",
     "icon": "core:core_061",
     "category": "offense",
     "tiers": [
       "silver"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_062",
     "name": "Van sinh tồn",
-    "description": "Khi dưới 20% Máu, hồi 0,8% Máu Tối Đa mỗi giây, dừng khi đạt 20%.",
+    "description": "Khi dưới 22% Máu, hồi 1% máu đã mất mỗi giây cho tới khi đạt 22% Máu.",
     "system": "defense",
     "icon": "core:core_062",
     "category": "defense",
     "tiers": [
       "silver"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_063",
     "name": "Máu nóng",
-    "description": "Dưới 35% Máu: +30 Hỏa Lực và +30 Giáp.",
+    "description": "Dưới 35% Máu: +50 Hỏa Lực và +35 Giáp.",
     "system": "utility",
     "icon": "core:core_063",
     "category": "defense",
     "tiers": [
       "silver"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_064",
     "name": "Hút Hồn",
-    "description": "Mỗi 10 hạ gục hồi 4% Máu Tối Đa.",
+    "description": "Mỗi 10 điểm hạ gục hồi 5% Máu Tối Đa; quái thường tính 1, Tinh Anh/Boss tính 5.",
     "system": "defense",
     "icon": "core:core_064",
     "category": "defense",
     "tiers": [
       "silver"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_065",
     "name": "Khung chống va đập",
-    "description": "Giảm 35% sát thương va chạm và các đòn lao trực tiếp.",
+    "description": "Giảm 40% sát thương va chạm/đòn lao trực tiếp. Sau khi bị va chạm hoặc trúng đòn lao, +12% mọi sát thương trong 3 giây. Hiệu ứng chỉ làm mới thời gian chứ không cộng dồn.",
     "system": "defense",
     "icon": "core:core_065",
     "category": "defense",
     "tiers": [
       "silver"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_066",
     "name": "Combo săn mồi",
-    "description": "Hạ gục liên tiếp cách nhau không quá 3 giây tăng 2,5% mọi sát thương mỗi cộng dồn, tối đa 5 cộng dồn (+12,5% mọi sát thương). Mất toàn bộ khi quá 3 giây không hạ gục.",
+    "description": "Hạ gục liên tiếp cách nhau không quá 4 giây cho +4% mọi sát thương mỗi stack, tối đa 5 stack (+20%). Quá 4 giây không hạ gục mất toàn bộ stack.",
     "system": "attack",
     "icon": "core:core_066",
     "category": "offense",
     "tiers": [
       "silver"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_067",
     "name": "Đánh dấu Tinh Anh",
-    "description": "+10% mọi sát thương lên Tinh Anh/Boss.",
+    "description": "+18% mọi sát thương lên Tinh Anh/Boss.",
     "system": "attack",
     "icon": "core:core_067",
     "category": "offense",
     "tiers": [
       "silver"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_068",
     "name": "Kết liễu gọn",
-    "description": "Gây thêm 12% mọi sát thương lên mục tiêu dưới 25% Máu.",
+    "description": "Gây thêm 30% mọi sát thương lên mục tiêu dưới 30% Máu.",
     "system": "attack",
     "icon": "core:core_068",
     "category": "offense",
     "tiers": [
       "silver"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_069",
     "name": "Phủ đầu",
-    "description": "Gây thêm 12% mọi sát thương lên mục tiêu trên 70% Máu.",
+    "description": "Gây thêm 30% mọi sát thương lên mục tiêu trên 70% Máu.",
     "system": "attack",
     "icon": "core:core_069",
     "category": "offense",
     "tiers": [
       "silver"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_070",
     "name": "Tái kích hoạt",
-    "description": "Mỗi 6 hạ gục giảm 0,6s hồi chiêu còn lại của cả 4 kỹ năng.",
+    "description": "Mỗi 5 hạ gục giảm 3 giây hồi chiêu còn lại của 3 kỹ năng cơ bản (ngoại trừ kỹ năng Ultimate).",
     "system": "utility",
     "icon": "core:core_070",
     "category": "resource",
     "tiers": [
       "silver"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_071",
     "name": "Nhịp chiến thuật",
-    "description": "Sau khi dùng kỹ năng, nhận +0,30 Tốc Độ Bắn trong 5 giây.",
+    "description": "Sau khi dùng Skill, nhận +0,50 Tốc Độ Bắn trong 6 giây. Hiệu ứng chỉ làm mới thời gian chứ không cộng dồn.",
     "system": "attack",
     "icon": "core:core_071",
     "category": "resource",
     "tiers": [
       "silver"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_072",
     "name": "Thép lạnh",
-    "description": "Sau 5 giây không nhận sát thương, đòn đánh kế tiếp trúng bạn bị giảm 40% sát thương nhận vào. Sau đó hiệu ứng bắt đầu tích lại.",
+    "description": "Sau 4 giây không nhận sát thương, 3 đòn kế tiếp trúng bạn bị giảm 70% sát thương; sau khi đỡ 3 đòn, nhận +25 Giáp trong 3 giây rồi bắt đầu tích lại.",
     "system": "defense",
     "icon": "core:core_072",
     "category": "defense",
     "tiers": [
       "silver"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_073",
     "name": "Đạn Phân Mảnh",
-    "description": "Hạ địch gây nổ 60% Hỏa Lực.",
+    "description": "Hạ địch gây nổ bằng 100% Hỏa Lực quanh mục tiêu bán kính 40 px.",
     "system": "attack",
     "icon": "core:core_073",
     "category": "weapon",
     "tiers": [
       "gold"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_074",
     "name": "Bạo Kích Hồi Tiếp",
-    "description": "+10% Chí Mạng. Mỗi chí mạng giảm 0,15s hồi chiêu còn lại của cả 4 kỹ năng; ngân sách tối đa 0,75s mỗi giây.",
+    "description": "+15% Chí Mạng. Mỗi đòn chí mạng giảm 0,3 giây hồi chiêu còn lại của 3 kỹ năng cơ bản (ngoại trừ kỹ năng Ultimate)",
     "system": "utility",
     "icon": "core:core_074",
     "category": "offense",
     "tiers": [
       "gold"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_075",
     "name": "Nhịp Sát Phạt",
-    "description": "Mỗi 5 hạ gục +4% Hỏa Lực, tối đa 5 stack / +20%. Nhận sát thương mất 1 stack.",
+    "description": "Mỗi 1 hạ gục +4% Hỏa Lực, tối đa 5 stack. Nhận sát thương mất 1 stack.",
     "system": "attack",
     "icon": "core:core_075",
     "category": "offense",
     "tiers": [
       "gold"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_076",
     "name": "Lá Chắn Phản Ứng",
-    "description": "Khi một lần nhận sát thương vượt 10% Máu Tối Đa, tạo Khiên bằng 15% Máu Tối Đa trong 3s. Hồi 10s.",
+    "description": "Khi nhận sát thương vượt 10% Máu Tối Đa trong vòng 3 giây gần nhất, tạo Khiên bằng 15% Máu Tối Đa trong 3 giây. Hồi 10 giây sau khi kết thúc hiệu ứng.",
     "system": "defense",
     "icon": "core:core_076",
     "category": "defense",
     "tiers": [
       "gold"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_077",
     "name": "Hồi Phục Chiến Trường",
-    "description": "Hạ Tinh Anh hồi 15% Máu Tối Đa và giảm 3 giây hồi chiêu còn lại của mọi kỹ năng.",
+    "description": "Hạ Tinh Anh/Boss hồi 18% Máu Tối Đa và giảm 5 giây hồi chiêu còn lại của mọi Skill.",
     "system": "utility",
     "icon": "core:core_077",
     "category": "defense",
     "tiers": [
       "gold"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_078",
     "name": "Tiếp Sức Lò Phản Ứng",
-    "description": "Hạ 5 kẻ địch trong 4 giây hồi ngay 5% Tài Nguyên Tối Đa và nhận +50% Hồi Tài Nguyên trong 6 giây.",
+    "description": "Hạ 5 kẻ địch trong 4 giây hồi ngay 5% Tài Nguyên Tối Đa và nhận +50% Hồi Tài Nguyên trong 6 giây. Hiệu ứng chỉ làm mới thời gian chứ không cộng dồn.",
     "system": "resource",
     "icon": "core:core_078",
     "category": "resource",
     "tiers": [
       "gold"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_079",
     "name": "Tam Liên Pháo",
-    "description": "Mỗi phát bắn thường thứ 3 tạo thêm một viên đạn phụ gây 40% sát thương của phát bắn thường cơ bản (trước hệ số riêng của loại đạn), viên đạn này sẽ có đường bay độc lập và tự nhắm vào mục tiêu gần nhất (không khóa mục tiêu)",
+    "description": "Mỗi Basic thứ 3 tạo thêm một viên đạn phụ tự nhắm mục tiêu gần nhất, gây 70% Basic Damage.",
     "system": "attack",
     "icon": "core:core_079",
     "category": "weapon",
     "tiers": [
       "gold"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_080",
     "name": "Dội Xạ Chiến Thuật",
-    "description": "Đạn thường có 30% cơ hội nảy sang một mục tiêu khác, gây 40% sát thương đạn gốc.",
+    "description": "Basic có 50% cơ hội nảy sang mục tiêu khác gây 60% Basic Damage. Nếu không có mục tiêu phụ hợp lệ, dội lại 25% Basic Damage lên mục tiêu chính.",
     "system": "attack",
     "icon": "core:core_080",
     "category": "weapon",
     "tiers": [
       "gold"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_081",
     "name": "Lá chắn kỹ năng",
-    "description": "Dùng kỹ năng cho một khiên bằng 8% Máu Tối Đa trong 3 giây. Hồi nội tại 6 giây.",
+    "description": "Dùng Skill tạo lá chắn bằng 12% Máu Tối Đa trong 4 giây. Hồi nội tại 10 giây sau khi kết thúc hiệu ứng. Hiệu ứng chỉ làm mới thời gian chứ không cộng dồn.",
     "system": "defense",
     "icon": "core:core_081",
     "category": "resource",
     "tiers": [
       "gold"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_082",
     "name": "Áp Lực Liên Tục",
-    "description": "Không bị trúng đòn trong 4 giây sẽ nhận +1 Tốc độ bắn cho tới khi bị trúng đòn",
+    "description": "Không bị trúng đòn trong 4 giây sẽ nhận +1 Tốc Độ Bắn cho tới khi bị trúng đòn.",
     "system": "attack",
     "icon": "core:core_082",
     "category": "weapon",
     "tiers": [
       "gold"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_083",
     "name": "Phản Công Tức Thời",
-    "description": "Sau khi nhận sát thương, những phát bắn thường tiếp theo trong vòng 4 giây gây thêm 20% sát thương đạn thường. Hồi nội bộ 9 giây (bắt đầu hồi chiêu sau khi kết thúc hiệu ứng).",
+    "description": "Sau khi nhận sát thương, Basic Damage tăng 45% trong 5 giây. Hồi nội tại 15 giây sau khi hiệu ứng kết thúc.",
     "system": "attack",
     "icon": "core:core_083",
     "category": "offense",
     "tiers": [
       "gold"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_084",
     "name": "Miễn Phí Có Điều Kiện",
-    "description": "Mỗi kỹ năng thứ 4 sử dụng sẽ không tiêu hao tài nguyên nhưng lần dùng đó có hồi chiêu tăng 10%",
+    "description": "Mỗi kỹ năng thứ 4 sử dụng không tiêu hao tài nguyên nhưng lần dùng đó có hồi chiêu tăng 10%.",
     "system": "resource",
     "icon": "core:core_084",
     "category": "resource",
     "tiers": [
       "gold"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_085",
     "name": "Pháo Đổi Giáp",
-    "description": "+60 Hỏa Lực, -25 Giáp.",
+    "description": "+70 Hỏa Lực nhưng đội lại bị -45 Giáp.",
     "system": "utility",
     "icon": "core:core_085",
     "category": "offense",
     "tiers": [
       "gold"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_086",
     "name": "Pin Xung Kích",
-    "description": "Giảm 35% Tài Nguyên Tối Đa, nhưng nhận +70% Hồi Tài Nguyên.",
+    "description": "Giảm 50% Tài Nguyên Tối Đa, nhưng nhận +80% Hồi Tài Nguyên.",
     "system": "resource",
     "icon": "core:core_086",
     "category": "resource",
     "tiers": [
       "diamond"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_087",
     "name": "Mắt thần chiến trường",
-    "description": "+35% Tỷ Lệ Chí Mạng, +70% Sát Thương Chí Mạng.",
+    "description": "+40% Tỷ Lệ Chí Mạng, +100% Sát Thương Chí Mạng.",
     "system": "attack",
     "icon": "core:core_087",
     "category": "offense",
     "tiers": [
       "diamond"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_088",
     "name": "Xuyên phá tuyệt đối",
-    "description": "Mọi sát thương của bạn bỏ qua 25% Giáp của mục tiêu.",
+    "description": "Mọi sát thương bỏ qua 40% Giáp của mục tiêu. Gây thêm 10% mọi sát thương lên Tinh Anh/Boss có từ 80 Giáp trở lên.",
     "system": "attack",
     "icon": "core:core_088",
     "category": "offense",
     "tiers": [
       "diamond"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_089",
     "name": "Đạn xuyên vô tận",
-    "description": "Đạn thường xuyên thêm tối đa 3 mục tiêu; ba mục tiêu xuyên thêm lần lượt nhận 70%, 50% và 30% sát thương của phát bắn gốc.",
+    "description": "Đòn basic chính gây thêm 20% sát thương lên mục tiêu đầu tiên và xuyên tất cả mục tiêu; các mục tiêu bị xuyên lần lượt nhận 70% / 50% / 30% từ mục tiêu thứ 3 trở đi sát thương phát gốc.",
     "system": "attack",
     "icon": "core:core_089",
     "category": "weapon",
     "tiers": [
       "diamond"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_090",
@@ -1127,348 +1178,380 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
     "category": "defense",
     "tiers": [
       "diamond"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_091",
     "name": "Không khuất phục",
-    "description": "Mỗi 2% Máu đã mất tăng 1% mọi sát thương, tối đa +40% mọi sát thương.",
+    "description": "Mỗi 1% Máu đã mất tăng 0,8% mọi sát thương gây ra, tối đa +80%.",
     "system": "attack",
     "icon": "core:core_091",
     "category": "defense",
     "tiers": [
       "diamond"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_092",
     "name": "Tái Tạo Sinh Học",
-    "description": "Sau 5 giây không nhận sát thương, hồi 1% Máu Tối Đa mỗi giây.",
+    "description": "Sau 4 giây không nhận sát thương, hồi 1,5% Máu Tối Đa mỗi giây.",
     "system": "defense",
     "icon": "core:core_092",
     "category": "defense",
     "tiers": [
       "diamond"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_093",
     "name": "Đại Pháp Sư",
-    "description": "Dùng một kỹ năng giảm hồi chiêu còn lại của 3 kỹ năng khác bằng 10% hồi chiêu cơ bản của từng kỹ năng đó.",
+    "description": "Khi cast một Skill: ba Basic Skill còn lại giảm 15% hồi chiêu cơ bản của từng Skill; Ultimate chỉ giảm 5% hồi chiêu cơ bản.",
     "system": "utility",
     "icon": "core:core_093",
     "category": "resource",
     "tiers": [
       "diamond"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_094",
     "name": "Khế Ước Quỷ Quyệt",
-    "description": "-35% Máu Tối Đa, +40% Hỏa Lực theo phép nhân, +25% Chí Mạng.",
+    "description": "-40% Máu Tối Đa, +50% Hỏa Lực, +25% Chí Mạng.",
     "system": "utility",
     "icon": "core:core_094",
     "category": "offense",
     "tiers": [
       "diamond"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_095",
     "name": "Nghịch Lý Bạo Kích",
-    "description": "Khóa Tỷ Lệ Chí Mạng ở 25%; bù lại nhận +200% Sát Thương Chí Mạng.",
+    "description": "Khóa Tỷ Lệ Chí Mạng ở 25%; bù lại nhận +300% Sát Thương Chí Mạng.",
     "system": "utility",
     "icon": "core:core_095",
     "category": "offense",
     "tiers": [
       "diamond"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_096",
     "name": "Hợp Đồng Huyết Năng",
-    "description": "Nhận +30% Giảm Hồi Chiêu. Mỗi lần dùng kỹ năng mất 5% Máu hiện tại, không thể tự hạ gục.",
+    "description": "+40% Giảm Hồi Chiêu. Mỗi lần dùng kỹ năng mất 5% Máu hiện tại, không thể tự hạ gục.",
     "system": "utility",
     "icon": "core:core_096",
     "category": "offense",
     "tiers": [
       "diamond"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_097",
     "name": "Tập trung chuyên môn",
-    "description": "Không thể chủ động sử dụng Ultimate. Nội tại của Ultimate và việc đầu tư Điểm Kỹ Năng vào Ultimate vẫn hoạt động bình thường. Ba Kỹ Năng Thường nhận +30% Sát Thương Kỹ Năng, -25% Hồi Chiêu Cơ Bản và -20% Chi Phí Tài Nguyên.",
+    "description": "Không thể chủ động sử dụng Ultimate. Ba Kỹ Năng cơ bản nhận +30% Sát Thương Kỹ Năng, -25% Hồi Chiêu Cơ Bản và -20% Chi Phí Tài Nguyên. Nội tại/đầu tư Ultimate vẫn hoạt động.",
     "system": "utility",
     "icon": "core:core_097",
     "category": "offense",
     "tiers": [
       "diamond"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_098",
     "name": "Bộ Lọc Nhiễu",
-    "description": "+20 Giáp và giảm 30% thời gian hiệu ứng bất lợi.",
+    "description": "+20 Giáp, giảm 30% thời gian hiệu ứng bất lợi. Khi một debuff kết thúc, +25% mọi sát thương gây ra trong 4 giây; Hiệu ứng chỉ làm mới thời gian chứ không cộng dồn.",
     "system": "defense",
     "icon": "core:core_098",
     "category": "defense",
     "tiers": [
       "gold"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_099",
     "name": "Kíp Phòng Thủ",
-    "description": "Khi tài nguyên xuống dưới 15%, nhận Khiên bằng 10% HP tối đa trong 4 giây. Hồi nội tại 20 giây.",
+    "description": "Khi tài nguyên còn dưới 15%, nhận lá chắn bằng 12% máu tối đa trong 4 giây, hồi nội tại 15s. Hiệu ứng chỉ làm mới thời gian chứ không cộng dồn.",
     "system": "defense",
     "icon": "core:core_099",
     "category": "defense",
     "tiers": [
       "silver"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_100",
     "name": "Cân Bằng Chiến Trường",
-    "description": "Trên 70% Máu: +30 Hỏa Lực; dưới 30%: +30 Giáp; còn lại +12 Hỏa Lực và +12 Giáp.",
+    "description": "Trên 70% Máu: +45 Hỏa Lực; dưới 30%: +45 Giáp; còn lại +22 Hỏa Lực và +22 Giáp.",
     "system": "utility",
     "icon": "core:core_100",
     "category": "offense",
     "tiers": [
       "silver"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_101",
     "name": "Hỏa Lực Cự Ly Gần",
-    "description": "Đòn bắn thường gây thêm 12% sát thương đạn thường ở cự ly gần — dưới 1/3 chiều cao vùng chiến đấu.",
+    "description": "Basic Damage tăng 20% ở cự ly gần — dưới 1/3 chiều cao vùng chiến đấu.",
     "system": "attack",
     "icon": "core:core_101",
     "category": "weapon",
     "tiers": [
       "silver"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_102",
-    "name": "Hỏa Lực Cự Ly Xa",
-    "description": "Đạn thường ở khoảng cách xa hơn 2/3 vùng chơi gây thêm 8% sát thương.",
+    "name": "Nén Xung Kỹ Năng",
+    "description": "Nếu 4 giây chưa sử dụng Skill nào kể từ khi hiệu lực của Skill cuối cùng kết thúc, Skill gây damage kế tiếp nhận +20% Skill Damage. Bonus áp dụng cho toàn bộ cast gây damage đó.",
     "system": "attack",
     "icon": "core:core_102",
     "category": "weapon",
     "tiers": [
       "silver"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_103",
     "name": "Bản Năng Sinh Tồn",
-    "description": "Dưới 35% Máu: giảm 18% sát thương nhận.",
+    "description": "Dưới 30% Máu: giảm 25% sát thương nhận vào.",
     "system": "defense",
     "icon": "core:core_103",
     "category": "defense",
     "tiers": [
       "gold"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_104",
-    "name": "Tràn trề",
-    "description": "Lượng hồi Máu vượt quá Máu Tối Đa chuyển thành Khiên, tối đa bằng 12% Máu Tối Đa.",
+    "name": "Hồi Máu Tràn trề",
+    "description": "Khi đầy máu, lượng hồi máu dư ra sẽ chuyển thành lá chắn, tối đa 20% Máu Tối Đa. Hồi Máu tự nhiên khi đang đầy Máu vẫn có thể nuôi lớp Khiên này.",
     "system": "defense",
     "icon": "core:core_104",
     "category": "defense",
     "tiers": [
       "gold"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_105",
     "name": "Bão Sét Bạo Kích",
-    "description": "Nhận +25% Tỷ Lệ Chí Mạng. Đòn chí mạng phóng sét sang tối đa 3 mục tiêu khác, mỗi mục tiêu nhận 70% Hỏa Lực. Một mục tiêu chỉ có thể nhận sét mỗi 0,5 giây.",
+    "description": "+25% Tỷ Lệ Chí Mạng. Đòn chí mạng phóng sét sang tối đa 5 mục tiêu khác, mỗi mục tiêu nhận 270% Hỏa Lực. Một mục tiêu chỉ nhận sét mỗi 0,5 giây.",
     "system": "attack",
     "icon": "core:core_105",
     "category": "offense",
     "tiers": [
       "diamond"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_106",
     "name": "Tên lửa Tomahawk",
-    "description": "Mỗi 2 giây phóng tối đa 3 Tomahawk, mỗi quả gây 160% Hỏa Lực.",
+    "description": "Mỗi 2 giây phóng tối đa 3 Tomahawk vào 3 mục tiêu, mỗi quả gây sát thương 360% Hỏa Lực.",
     "system": "attack",
     "icon": "core:core_106",
     "category": "offense",
     "tiers": [
       "diamond"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_107",
     "name": "Lướt Sát Tử Thần",
-    "description": "Đạn địch lướt qua trong phạm vi 8px quanh hitbox mà không trúng được tính là 1 Graze. Mỗi 6 Graze hồi 10% Tài Nguyên Tối Đa.",
+    "description": "Đạn địch lướt qua trong 8px quanh hitbox mà không trúng tính là 1 Graze. Mỗi 5 Graze hồi 15% Max Resource.",
     "system": "resource",
     "icon": "core:core_107",
     "category": "defense",
     "tiers": [
       "silver"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_108",
     "name": "Thu Gom Mảnh Vỡ",
-    "description": "Kẻ địch bị hạ có 12% cơ hội rơi Scrap. Thu thập Scrap hồi 2,5% Máu Tối Đa. Scrap biến mất sau 4 giây.",
+    "description": "Kẻ địch bị hạ có 18% cơ hội rơi Scrap. Thu Scrap hồi 5% Máu Tối Đa. Scrap biến mất sau 4 giây.",
     "system": "defense",
     "icon": "core:core_108",
     "category": "defense",
     "tiers": [
       "silver"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_109",
     "name": "Giáp Cánh",
-    "description": "Mỗi cánh có hồi nội tại riêng 12 giây. Đòn đầu tiên trúng một cánh bị giảm 30% sát thương nhận vào tại cánh đó.",
+    "description": "Mỗi cánh có hồi nội tại riêng 8 giây. Đòn đầu tiên trúng một cánh bị giảm 50% sát thương tại cánh đó.",
     "system": "defense",
     "icon": "core:core_109",
     "category": "defense",
     "tiers": [
       "silver"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_110",
     "name": "Giáp Chống Nổ",
-    "description": "Giảm 25% sát thương nhận vào từ Bom, vụ nổ và vùng nổ diện rộng.",
+    "description": "Giảm 45% sát thương nhận từ Bom, vụ nổ và vùng nổ diện rộng.",
     "system": "defense",
     "icon": "core:core_110",
     "category": "defense",
     "tiers": [
       "silver"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_111",
-    "name": "Đạn Siêu Âm",
-    "description": "+100% tốc độ projectile đạn thường và +8% sát thương đạn thường.",
+    "name": "Đạn Vượt Âm",
+    "description": "+200% tốc độ projectile Basic và +15% Basic Damage.",
     "system": "attack",
     "icon": "core:core_111",
     "category": "offense",
     "tiers": [
       "silver"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_112",
     "name": "Lưới Giao Hỏa",
-    "description": "Bắn trúng 2 mục tiêu khác nhau trong 0,75 giây tạo Lưới Giao Hỏa giữa chúng trong 2 giây. Kẻ địch khác chạm lưới nhận 160% Hỏa Lực, tối đa 1 lần mỗi lưới. Hai mục tiêu tạo lưới không nhận sát thương từ chính lưới. Lưới biến mất nếu một trong hai mục tiêu bị hạ.",
+    "description": "Bắn trúng 2 mục tiêu khác nhau trong 0,75 giây tạo Lưới Giao Hỏa trong 2 giây. Kẻ địch khác chạm lưới nhận 240% Hỏa Lực; tối đa 2 kẻ địch khác có thể nhận sát thương từ mỗi lưới.",
     "system": "attack",
     "icon": "core:core_112",
     "category": "offense",
     "tiers": [
       "gold"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_113",
     "name": "Vay Nợ Tương Lai",
-    "description": "Mỗi 18 giây, bạn có thể dùng ngay một kỹ năng đang hồi chiêu với 100% hiệu lực. Sau đó kỹ năng đó nhận thêm 50% Hồi Chiêu cơ bản như khoản nợ phải trả.",
+    "description": "Mỗi 18 giây, có thể dùng ngay một kỹ năng đang hồi chiêu với 100% hiệu lực; sau đó kỹ năng đó nhận thêm 50% Hồi Chiêu cơ bản như khoản nợ.",
     "system": "utility",
     "icon": "core:core_113",
     "category": "defense",
     "tiers": [
       "gold"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_114",
-    "name": "Nối Nhịp Hỏa Lực",
-    "description": "Sau khi dùng kỹ năng, 3 phát bắn thường kế tiếp gây thêm 80% sát thương đạn thường.",
+    "name": "Nhịp Bắn Gia Tốc",
+    "description": "Mỗi 5 Basic chính liên tiếp trúng cùng 1 kẻ địch cho 1 tầng Nhịp Bắn trong 3 giây, tối đa 4 tầng, mỗi tầng +0,35 Tốc Độ Bắn. Basic chính trúng địch làm mới 3 giây; quá 3 giây không trúng hoặc chuyển sang kẻ địch mới sẽ mất toàn bộ stack",
     "system": "attack",
     "icon": "core:core_114",
     "category": "offense",
     "tiers": [
       "gold"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_115",
     "name": "Cô Lập Mục Tiêu",
-    "description": "Nếu không có kẻ địch khác trong phạm vi 80px quanh mục tiêu, gây thêm 25% mọi sát thương lên mục tiêu đó. Với Boss, mức tăng là 10% mọi sát thương.",
+    "description": "Nếu không có kẻ địch khác trong 80px quanh mục tiêu, gây thêm 30% mọi sát thương. Với Boss, mức tăng là 20%.",
     "system": "attack",
     "icon": "core:core_115",
     "category": "offense",
     "tiers": [
       "gold"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_116",
-    "name": "Comeback",
-    "description": "Giảm 10% thời gian hiệu ứng bất lợi. Khi một hiệu ứng bất lợi kết thúc, gây thêm 25% mọi sát thương trong 4 giây. Hiệu ứng khác kết thúc làm mới thời gian.",
-    "system": "utility",
+    "name": "Hỏa Lực Hội Tụ",
+    "description": "Mỗi 5 Basic chính liên tiếp trúng cùng 1 kẻ địch cho 1 tầng Hội Tụ trong 3 giây, tối đa 4 tầng, mỗi tầng +4% Basic Damage và +4% Skill Damage.  Basic chính trúng địch làm mới 3 giây; quá 3 giây không trúng hoặc chuyển sang kẻ địch mới sẽ mất toàn bộ stack",
+    "system": "attack",
     "icon": "core:core_116",
     "category": "offense",
     "tiers": [
       "gold"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_117",
     "name": "Phát Đạn Khai Màn",
-    "description": "Phát bắn thường đầu tiên trúng mỗi địch thường luôn chí mạng. Với Tinh Anh và Boss, quyền chí mạng này được làm mới sau 10 giây trên cùng mục tiêu.",
+    "description": "Đòn bắn thường đầu tiên lên mỗi kẻ địch sẽ chắc chắn chí mạng và gây sát thương chuẩn (bỏ qua 100% giáp của kẻ địch)",
     "system": "attack",
     "icon": "core:core_117",
     "category": "offense",
     "tiers": [
       "gold"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_118",
     "name": "Càng Đông Càng Vui",
-    "description": "Gây thêm 1,5% mọi sát thương cho mỗi kẻ địch vượt quân số phe người chơi, tối đa 18% mọi sát thương.",
+    "description": "+2% mọi sát thương cho mỗi kẻ địch vượt quân số phe người chơi, tối đa +24%.",
     "system": "attack",
     "icon": "core:core_118",
     "category": "offense",
     "tiers": [
       "gold"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_119",
     "name": "Kéo Dãn Thời Gian",
-    "description": "Sau khi dùng kỹ năng, trong 4s nhận +30% tốc độ hồi Hồi Chiêu và +30% Hồi Tài Nguyên. Dùng kỹ năng mới làm mới thời gian. Tốc độ hồi độc lập với giới hạn 60% Giảm Hồi Chiêu.",
+    "description": "+15% sát thương kỹ năng. Sau khi dùng kỹ năng, giảm 7 giây cho 1 kỹ năng cơ bản khác đang có thời gian hồi chiêu dài nhất (ngoại trừ Ultimate) và +35% Hồi Tài Nguyên trong 4 giây. Dùng kỹ năng mới làm mới thời gian.'",
     "system": "defense",
     "icon": "core:core_119",
     "category": "defense",
     "tiers": [
       "diamond"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_120",
     "name": "Đoạt Quyền Điều Khiển",
-    "description": "Chiếm quyền tối đa 5 địch thường trong 10 giây hoặc 1 Tinh Anh trong 8 giây. Boss bị choáng 1,25 giây. Hồi nội tại 13 giây bắt đầu sau khi hiệu ứng kết thúc.",
+    "description": "Chiếm quyền tối đa 5 địch thường 12 giây hoặc 1 Tinh Anh 9 giây. Boss bị choáng 2 giây. Hồi nội tại 13 giây sau khi hiệu ứng kết thúc.",
     "system": "utility",
     "icon": "core:core_120",
     "category": "defense",
     "tiers": [
       "diamond"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
   {
     "id": "core_121",
     "name": "Kho Phản Vật Chất",
-    "description": "Tích 60% sát thương dư khi hạ địch thường và 3% sát thương thực tế lên Tinh Anh/Boss vào kho, tối đa 500% Hỏa Lực. Dùng kỹ năng xả toàn bộ kho thành xung chấn toàn màn hình.",
+    "description": "Tích 60% sát thương dư khi hạ địch thường và 3% sát thương thực tế lên Tinh Anh/Boss, tối đa 500% Hỏa Lực. Dùng kỹ năng xả toàn bộ kho thành xung chấn toàn màn hình.",
     "system": "attack",
     "icon": "core:core_121",
     "category": "offense",
     "tiers": [
       "diamond"
-    ]
+    ],
+    "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
   },
 {
   "id": "core_122",
@@ -1906,13 +1989,14 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 {
   "id": "core_149",
   "name": "Thợ Săn Tiền Thưởng",
-  "description": "Đánh dấu mục tiêu ưu tiên 6s, mục tiêu nhận thêm 10% sát thương. Hồi nội tại 12s sau khi kết thúc; giữ phần thưởng hạ mục tiêu.",
+  "description": "Mỗi 20 giây, Đánh dấu mục tiêu ưu tiên trong 5 giây; mục tiêu nhận thêm 20% mọi sát thương. Hạ mục tiêu bị đánh dấu nhận ngẫu nhiên 1 trong 8 phần thưởng vĩnh viễn, mỗi loại 12,5%: +15 Hỏa Lực; +15 Giáp; +80 Máu Tối Đa; +4% Giảm Hồi Chiêu; +0,6 Hồi Máu/s; +4% Tỷ Lệ Chí Mạng; +10% Sát Thương Chí Mạng; +0,20 Tốc Độ Bắn.",
   "system": "utility",
   "icon": "core:core_149",
   "category": "offense",
   "tiers": [
     "gold"
-  ]
+  ],
+  "availability": "Lv1 / Lv7 / Lv11 · Không xuất hiện tại Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
 },
 {
   "id": "core_150",
@@ -2205,234 +2289,255 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 ,
 {
   "id": "core_168",
-  "name": "Kíp Nổ Trễ",
-  "description": "Mỗi phát bắn thường thứ 8 trúng mục tiêu sẽ gắn một vi kíp. Sau 0,6 giây, vi kíp nổ gây sát thương tất cả mục tiêu bằng 70% Hỏa Lực trong bán kính 50px.",
-  "system": "attack",
+  "name": "Chuyển Nhịp",
+  "description": "Mỗi 10 quái thường bị tiêu diệt hoặc mỗi 40 đòn Basic chính trúng Tinh Anh/Boss, Skill tiếp theo trong 5 giây được giảm 15% Resource Cost. Làm mới thời gian hiệu ứng chứ không cộng dồn.",
+  "system": "resource",
   "icon": "core:core_168",
   "category": "offense",
   "tiers": [
     "silver"
-  ]
+  ],
+  "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
 },
 {
   "id": "core_169",
   "name": "Bộ Điều Áp",
-  "description": "Tài nguyên trên 70%: +18 Hỏa Lực; dưới 30%: +1,2 Hồi Máu/s; còn lại +0,3 Tốc Độ Bắn.",
+  "description": "Resource >70%: +40 Hỏa Lực; Resource <30%: +2,5 Hồi Máu/s; còn lại +0,45 Tốc Độ Bắn.",
   "system": "utility",
   "icon": "core:core_169",
   "category": "weapon",
   "tiers": [
     "silver"
-  ]
+  ],
+  "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
 },
 {
   "id": "core_170",
   "name": "Báo Động Sớm",
-  "description": "Khi phát hiện cảnh báo nguy hiểm: +30 Giáp trong 2s, hồi nội tại 12s.",
+  "description": "Khi phát hiện cảnh báo nguy hiểm: +50 Giáp trong 3 giây. Hồi nội tại 10 giây.",
   "system": "defense",
   "icon": "core:core_170",
   "category": "defense",
   "tiers": [
     "silver"
-  ]
+  ],
+  "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
 },
 {
   "id": "core_171",
   "name": "Chốt An Toàn",
-  "description": "Trong 1,5 giây sau khi dùng kỹ năng, đòn gây sát thương đầu tiên trúng người chơi bị giảm 25% sát thương nhận vào.",
+  "description": "Trong 2 giây sau khi dùng Skill, đòn gây sát thương đầu tiên trúng người chơi bị giảm 40% sát thương.  Làm mới thời gian hiệu ứng chứ không cộng dồn.",
   "system": "defense",
   "icon": "core:core_171",
   "category": "defense",
   "tiers": [
     "silver"
-  ]
+  ],
+  "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
 },
 {
   "id": "core_172",
   "name": "Tụ Điện Trống",
-  "description": "Giữ Tài Nguyên ở mức 100% liên tục 3 giây sẽ tích một lần Tụ Điện; kỹ năng kế tiếp tiêu hao Tụ Điện để hoàn lại 15% Tài Nguyên của kỹ năng đó.",
+  "description": "Giữ Resource ở 100% liên tục 2 giây tích 1 Tụ Điện; Skill kế tiếp tiêu Tụ Điện, hoàn lại 25% Resource Cost và nhận +15% Skill Damage cho cast đó.",
   "system": "resource",
   "icon": "core:core_172",
   "category": "resource",
   "tiers": [
     "silver"
-  ]
+  ],
+  "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
 },
 {
   "id": "core_173",
   "name": "Dây Chằng Khẩn",
-  "description": "Khi một lớp Lá chắn tạm thời bị phá hoặc tự hết hạn, hồi lại 2,5% Máu Tối Đa (chỉ áp dụng cho các lá chắn hấp thụ sát thương - Máu ảo)",
+  "description": "Khi hiệu lực của một lá chắn kết thúc hoặc bị phá vỡ, hồi máu bằng 35% giá trị của lá chắn đó.",
   "system": "defense",
   "icon": "core:core_173",
   "category": "defense",
   "tiers": [
     "silver"
-  ]
+  ],
+  "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
 },
 {
   "id": "core_174",
   "name": "Đệm Xung",
-  "description": "Khi mất trên 8% máu tối đa trong vòng 2 giây gần nhất, hồi lại 10% tài nguyên tối đa. Hồi chiêu 15 giây.",
+  "description": "Khi mất trên 8% Máu Tối Đa trong 2 giây gần nhất, hồi 12% Max Resource và nhận +20% Resource Regen trong 4 giây. Hồi chiêu 15 giây.",
   "system": "resource",
   "icon": "core:core_174",
   "category": "resource",
   "tiers": [
     "silver"
-  ]
+  ],
+  "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
 },
 {
   "id": "core_175",
   "name": "Tần Số Xen Kẽ",
-  "description": "Dùng kỹ năng khác trong cửa sổ 5s cho +15% mọi sát thương trong 4s.",
+  "description": "Sau khi dùng 1 skill, dùng thêm ít nhất một Skill khác trong cửa sổ 5 giây cho +20% mọi sát thương trong 5 giây. Hồi chiêu 20 giây.",
   "system": "attack",
   "icon": "core:core_175",
   "category": "offense",
   "tiers": [
     "silver"
-  ]
+  ],
+  "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
 },
 {
   "id": "core_176",
   "name": "Khoảng Thở",
-  "description": "Khi không có hỏa lực địch hoặc kẻ địch trong phạm vi bán kính 100px quanh chiến cơ, hồi 0,75% Máu Tối Đa mỗi giây. Hiệu ứng dừng ngay khi hỏa lực địch hoặc kẻ địch tiến vào vùng.",
+  "description": "Khi không có hỏa lực địch hoặc kẻ địch trong bán kính 150px, hồi 1% Máu Tối Đa/s và +25% Resource Regen. Dừng ngay khi có nguy hiểm vào vùng.",
   "system": "defense",
   "icon": "core:core_176",
   "category": "defense",
   "tiers": [
     "gold"
-  ]
+  ],
+  "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
 },
 {
   "id": "core_177",
   "name": "Vỏ Bọc Chống Điện",
-  "description": "Giảm 25% sát thương nhận từ projectile tự dẫn, Beam và EMP.",
+  "description": "Giảm 45% sát thương nhận từ projectile tự dẫn, Beam và EMP.",
   "system": "defense",
   "icon": "core:core_177",
   "category": "defense",
   "tiers": [
     "silver"
-  ]
+  ],
+  "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
 },
 {
   "id": "core_178",
   "name": "Phanh Từ",
-  "description": "Mỗi 12 giây, projectile địch đầu tiên tiến vào phạm vi bán kính 40px quanh chiến cơ bị giảm 60% tốc độ trong 1,2 giây.",
+  "description": "Định kỳ mỗi 20 giây, phát một xung điện ra khung quanh chiến cơ bán kính 150px, xung điện này có khả năng giảm 50% tốc độ bay của tất cả đạn đạo và tên lửa tự dẫn của kẻ địch trong 3 giây.",
   "system": "utility",
   "icon": "core:core_178",
   "category": "weapon",
   "tiers": [
     "silver"
-  ]
+  ],
+  "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
 },
 {
   "id": "core_179",
   "name": "Bộ Hiệu Chỉnh Sai Số",
-  "description": "Mỗi đòn bắn thường không chí mạng cho 1 cộng dồn Sai Số, mỗi cộng dồn tăng +2% Tỷ Lệ Chí Mạng, lên tới tối đa 10 cộng dồn. Khi một phát bắn thường gây chí mạng, mất toàn bộ cộng dồn Sai Số và sẽ tích lại từ đầu.",
+  "description": "Nếu 1 đòn bắn thường không chí mạng, nhận +2% tỷ lệ chí mạng cho đến khi  có 1 đòn bắn thường chí mạng.<br><br>Ghi chú: reset về ban đầu khi gây được đòn chí mạng",
   "system": "attack",
   "icon": "core:core_179",
   "category": "offense",
   "tiers": [
     "silver"
-  ]
+  ],
+  "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
 },
 {
   "id": "core_180",
   "name": "Phá Khiên",
-  "description": "Đạn thường gây thêm 18% sát thương đạn thường lên Lá Chắn của kẻ địch. Khi mục tiêu bị người chơi phá vỡ lá chắn, mục tiêu chịu thêm 8% sát thương từ đạn thường trong 3 giây.",
+  "description": "Basic gây thêm 30% sát thương lên Shield địch. Khi phá Shield của mục tiêu, +20% mọi sát thương lên mục tiêu đó trong 4 giây.",
   "system": "attack",
   "icon": "core:core_180",
   "category": "offense",
   "tiers": [
     "silver"
-  ]
+  ],
+  "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
 },
 {
   "id": "core_181",
   "name": "Van Xả Kỹ Năng",
-  "description": "Khi hiệu ứng kỹ năng chính kết thúc, +30% Hồi Tài Nguyên trong 4s.",
+  "description": "Khi hiệu ứng Skill chính kết thúc, +45% Resource Regen trong 4 giây.  Làm mới thời gian hiệu ứng chứ không cộng dồn.",
   "system": "resource",
   "icon": "core:core_181",
   "category": "resource",
   "tiers": [
     "gold"
-  ]
+  ],
+  "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
 },
 {
   "id": "core_182",
-  "name": "Pin Dự Phòng",
-  "description": "Khi Tài Nguyên tụt xuống dưới 20%, hồi dần 20% Tài Nguyên Tối Đa trong 4 giây. Hồi chiêu 18 giây sau khi kết thúc hiệu ứng",
+  "name": "Bình Năng Lượng Mở Rộng",
+  "description": "+15% Max Resource. Khi Resource >70%, +10% Skill Damage. Điện của Phantom vẫn có thể vượt mức tối đa 100 như bình thường.",
   "system": "resource",
   "icon": "core:core_182",
   "category": "resource",
   "tiers": [
-    "silver"
-  ]
+    "gold"
+  ],
+  "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
 },
 {
   "id": "core_183",
   "name": "Giáp Độ Sâu",
-  "description": "Nhận +20 Giáp cho mỗi loại hiệu ứng bất lợi đang hoạt động trên người chơi, tối đa +40 Giáp.",
+  "description": "+20 Giáp. Nhận thêm +20 Giáp cho mỗi loại debuff đang hoạt động trên người chơi, tổng bonus từ lõi tối đa +60 Giáp.",
   "system": "defense",
   "icon": "core:core_183",
   "category": "defense",
   "tiers": [
     "silver"
-  ]
+  ],
+  "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
 },
 {
   "id": "core_184",
   "name": "Bảo Hộ Linh Hồn",
-  "description": "Sau khi hồi đủ 18 giây, đòn tấn công hoặc hiệu ứng khống chế kế tiếp trúng chiến cơ bị vô hiệu hoàn toàn và kích hoạt Bảo Hộ Thiên Giới: miễn toàn bộ sát thương và hiệu ứng khống chế trong 2,5 giây. Hồi chiêu bắt đầu sau khi hiệu ứng kết thúc.",
+  "description": "Sau 15 giây, đòn tấn công/khống chế kế tiếp bị vô hiệu hoàn toàn và kích hoạt 3 giây miễn toàn bộ sát thương/khống chế. Hồi chiêu bắt đầu sau hiệu ứng.",
   "system": "defense",
   "icon": "core:core_184",
   "category": "defense",
   "tiers": [
     "diamond"
-  ]
+  ],
+  "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
 },
 {
   "id": "core_185",
   "name": "Đánh Dấu Sơ Bộ",
-  "description": "Phát đạn thường chính đầu tiên trúng một mục tiêu sẽ đánh dấu 4 giây; lần gây sát thương kỹ năng kế tiếp lên mục tiêu đó nhận +15% sát thương kỹ năng và tiêu dấu. Hồi chiêu mỗi mục tiêu 12s",
+  "description": "Basic chính đầu tiên trúng mục tiêu đánh dấu 4 giây; Skill damage kế tiếp lên mục tiêu +30% và tiêu dấu. Hồi chiêu mỗi mục tiêu 10 giây.",
   "system": "attack",
   "icon": "core:core_185",
   "category": "offense",
   "tiers": [
     "silver"
-  ]
+  ],
+  "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
 },
 {
   "id": "core_186",
   "name": "Hợp Lưu Hỏa Lực",
-  "description": "Dùng 2 kỹ năng khác nhau trong vòng 4 giây sẽ cho +35% sát thương đạn thường trong 6 giây. Hồi chiêu 20s",
+  "description": "Dùng 2 Skill khác nhau trong 4 giây cho +45% Basic Damage trong 8 giây. Hồi chiêu 16 giây.",
   "system": "attack",
   "icon": "core:core_186",
   "category": "offense",
   "tiers": [
     "gold"
-  ]
+  ],
+  "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
 },
 {
   "id": "core_187",
   "name": "Tụ Năng Phản Chấn",
-  "description": "Lưu 25% sát thương thực tế đã nhận, tối đa 160% Hỏa Lực; kỹ năng gây sát thương kế tiếp giải phóng lượng đã lưu.",
+  "description": "Lưu 40% sát thương thực tế đã nhận, tối đa 300% Hỏa Lực; Skill gây damage kế tiếp giải phóng lượng đã lưu.",
   "system": "attack",
   "icon": "core:core_187",
   "category": "offense",
   "tiers": [
     "gold"
-  ]
+  ],
+  "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
 },
 {
   "id": "core_188",
   "name": "Nhắm Vào Yếu Điểm",
-  "description": "+18% Tỷ Lệ Chí Mạng, +35% Sát Thương Chí Mạng.",
+  "description": "+15% Tỷ Lệ Chí Mạng, +50% Sát Thương Chí Mạng.",
   "system": "attack",
   "icon": "core:core_188",
   "category": "offense",
   "tiers": [
     "gold"
-  ]
+  ],
+  "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
 },
 {
   "id": "core_189",
@@ -2448,13 +2553,14 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 {
   "id": "core_190",
   "name": "Nén Năng Lượng",
-  "description": "+25% Sát Thương Kỹ Năng, +12% Chi Phí Tài Nguyên.",
+  "description": "+30% Skill Damage, +10% Resource Cost.",
   "system": "attack",
   "icon": "core:core_190",
   "category": "offense",
   "tiers": [
     "gold"
-  ]
+  ],
+  "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
 },
 {
   "id": "core_191",
@@ -2470,13 +2576,14 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 {
   "id": "core_192",
   "name": "Áo Giáp Xoay Pha",
-  "description": "Khi đang có lá chắn: +15% mọi sát thương. Khi không có lá chắn: +14 Giáp.",
+  "description": "Khi đang có Shield: +20% mọi sát thương. Khi không có Shield: +25 Giáp.",
   "system": "utility",
   "icon": "core:core_192",
   "category": "weapon",
   "tiers": [
     "gold"
-  ]
+  ],
+  "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
 },
 {
   "id": "core_193",
@@ -2492,211 +2599,230 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 {
   "id": "core_194",
   "name": "Phá Khóa Chí Mạng",
-  "description": "Nhận +10% tỷ lệ chí mạng. Đòn chí mạng lên mục tiêu đang bị giảm Giáp sẽ làm Sát Thương Chí Mạng lên chính mục tiêu đó tăng thêm 35% trong 4 giây.",
+  "description": "+15% Tỷ Lệ Chí Mạng. Chí mạng lên bất kỳ mục tiêu nào làm +70% Sát Thương Chí Mạng lên chính mục tiêu đó trong 4 giây;",
   "system": "attack",
   "icon": "core:core_194",
   "category": "offense",
   "tiers": [
     "gold"
-  ]
+  ],
+  "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
 },
 {
   "id": "core_195",
   "name": "Hộp Đen Cứu Sinh",
-  "description": "Nếu mất ít nhất 15% Máu Tối Đa trong 2 giây gần nhất, hồi dần 10% Máu Tối Đa trong 4 giây. Hồi chiêu 20s sau khi kết thúc hiệu ứng",
+  "description": "Nếu mất ít nhất 12% Máu Tối Đa trong 2 giây, hồi dần 12% Máu Tối Đa trong 4 giây. Hồi chiêu 18 giây sau khi hiệu ứng kết thúc.",
   "system": "defense",
   "icon": "core:core_195",
   "category": "defense",
   "tiers": [
     "gold"
-  ]
+  ],
+  "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
 },
 {
   "id": "core_196",
   "name": "Dấu Son Bạo Kích",
-  "description": "Mỗi kẻ địch bị hạ bởi một đòn chí mạng trực tiếp sẽ cho +2,5% Sát Thương Chí Mạng vĩnh viễn trong suốt lượt chơi, tối đa kiếm được +50% sát thương chí mạng.",
+  "description": "+10% Tỷ Lệ Chí Mạng. Mỗi 5 đòn chí mạng trực tiếp cho +5% Sát Thương Chí Mạng vĩnh viễn trong run, tối đa +75%. Đòn chí mạng trực tiếp lên Tinh Anh/Boss tính 2 tiến độ; cùng một mục tiêu chỉ có thể đóng góp tiến độ tối đa 1 lần mỗi 0,5 giây.",
   "system": "attack",
   "icon": "core:core_196",
   "category": "offense",
   "tiers": [
     "gold"
-  ]
+  ],
+  "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
 },
 {
   "id": "core_197",
   "name": "Chịu Đau",
-  "description": "Chuyển hóa 25% sát thương đáng lẽ trừ trực tiếp vào Máu thành Sát Thương Trì Hoãn và trả dần mỗi giây trong 3 giây. Sát thương trả nợ không được xem là một lần nhận sát thương mới và không kích hoạt các proc “khi nhận/mất sát thương”. Mỗi 12 quái thường bị hạ, hoặc khi hạ 1 Tinh Anh/Boss, xóa toàn bộ Sát Thương Trì Hoãn đang còn và hồi 2% Máu Tối Đa.",
+  "description": "35% sát thương đáng lẽ trừ Máu trở thành Sát Thương Trì Hoãn và được trả dần trong 4 giây. Dùng Skill xóa 20% lượng Sát Thương Trì Hoãn còn lại, tối đa 1 lần mỗi 5 giây. Mỗi 15 quái thường hoặc 1 Tinh Anh/Boss bị hạ sẽ xóa toàn bộ Sát Thương Trì Hoãn còn lại và hồi 3% Máu Tối Đa.",
   "system": "utility",
   "icon": "core:core_197",
   "category": "weapon",
   "tiers": [
     "gold"
-  ]
+  ],
+  "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
 },
 {
   "id": "core_198",
   "name": "Vệ Tinh Hộ Mệnh",
-  "description": "Dùng kỹ năng tạo tối đa 3 mảnh vệ tinh bay quanh người chơi trong 4 giây. Mỗi mảnh chặn tối đa 1 projectile địch có thể chặn; nếu hết thời gian mà chưa chặn, mảnh đó bắn vào địch gần nhất gây 90% Hỏa Lực. Sử dụng tiếp kỹ năng khi vẫn còn vệ tinh thì sẽ làm mới thời gian hiệu lực chứ không tạo thêm vệ tinh.",
+  "description": "Dùng Skill tạo tối đa 3 Vệ Tinh Hộ Mệnh trong 5 giây. Mỗi vệ tinh chặn 1 projectile địch có thể chặn; khi chặn projectile hoặc hết hạn mà chưa được dùng, vệ tinh bắn địch gần nhất gây 120% Hỏa Lực. Nếu cast Skill khi vệ tinh đang hoạt động, làm mới thời gian 5 giây và bổ sung 1 vệ tinh đã mất, tối đa 3.",
   "system": "utility",
   "icon": "core:core_198",
   "category": "weapon",
   "tiers": [
     "diamond"
-  ]
+  ],
+  "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
 },
 {
   "id": "core_199",
   "name": "Mạch Quá Tải",
-  "description": "Mỗi lần dùng kỹ năng nhận 1 Overclock. Kỹ năng kế tiếp gây thêm 18% sát thương kỹ năng cho mỗi cộng dồn, tối đa 3. Khi dùng kỹ năng ở 3 cộng dồn, kỹ năng đó nhận +54% sát thương kỹ năng, đồng thời phát xung toàn màn hình gây 250% Hỏa Lực rồi reset Overclock.",
+  "description": "Mỗi Skill +1 Overclock. Skill kế tiếp +18% Skill Damage mỗi stack, tối đa 3; ở 3 stack Skill nhận +54% và phát xung toàn màn hình 250% Hỏa Lực rồi reset.",
   "system": "attack",
   "icon": "core:core_199",
   "category": "offense",
   "tiers": [
     "diamond"
-  ]
+  ],
+  "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
 },
 {
   "id": "core_200",
   "name": "Tái Chế Lá Chắn",
-  "description": "Tăng 50% sức mạnh của lá chắn, khi lá chắn bị phá hoặc hết hạn, phát nổ trên một vùng rộng bán kính 120px xung quanh chiến cơ, gây sát thương bằng 160% tổng lượng sát thương lớp lá chắn đó đã hấp thụ.",
+  "description": "+50% sức mạnh Shield. Nếu cast Skill khi không có Shield tạm thời, tạo Shield bằng 8% Max HP trong 4 giây, hồi nội tại 6 giây. Khi Shield bị phá/hết hạn, nổ bán kính 120px gây 160% tổng lượng damage lớp Shield đó đã hấp thụ.",
   "system": "utility",
   "icon": "core:core_200",
   "category": "weapon",
   "tiers": [
     "diamond"
-  ]
+  ],
+  "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
 },
 {
   "id": "core_201",
   "name": "Cộng Hưởng Kho Vũ Khí",
-  "description": "Mỗi Hệ Lõi hiện diện cho một gói: Tấn Công +15% Sát Thương Đạn Thường; Tài Nguyên +15% Sát Thương Kỹ Năng; Phòng Thủ giảm 10% sát thương nhận; Đa Dụng +8% Sát Thương Đạn Thường, +8% Sát Thương Kỹ Năng và +8% Hồi Tài Nguyên. Lõi này tính là Đa Dụng.",
+  "description": "Mỗi Hệ Lõi hiện diện cho gói: Tấn Công +15% Basic Damage; Tài Nguyên +15% Skill Damage; Phòng Thủ -10% sát thương nhận; Đa Dụng +8% Basic Damage, +8% Skill Damage, +8% Resource Regen. Lõi này tính là Đa Dụng.",
   "system": "utility",
   "icon": "core:core_201",
   "category": "weapon",
   "tiers": [
     "diamond"
-  ]
+  ],
+  "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
 },
 {
   "id": "core_202",
   "name": "Học Thuyết Một Mũi Nhọn",
-  "description": "Chọn bất kỳ 1 trong 4 kỹ năng, kể cả Ultimate hoặc Cấp 0: +30% sát thương kỹ năng đó, -20% chi phí và -20% hồi chiêu cơ bản. Không đổi cấp kỹ năng.",
+  "description": "Chọn 1 trong 4 kỹ năng, kể cả Ultimate hoặc Cấp 0: +30% Skill Damage, -20% chi phí và -20% hồi chiêu cơ bản. Không đổi cấp kỹ năng.",
   "system": "attack",
   "icon": "core:core_202",
   "category": "offense",
   "tiers": [
     "diamond"
-  ]
+  ],
+  "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
 },
 {
   "id": "core_203",
   "name": "Nhiễu Chủ Động",
-  "description": "Thời lượng hiệu ứng bất lợi trên người chơi tăng thêm 20%. Đổi lại, chiến cơ giờ đây vẫn có thể bắn thường và sử dụng kỹ năng trong khi bị khống chế cứng (chỉ còn bị khoá di chuyển), đồng thời trong khi đang chịu ít nhất 1 hiệu ứng bất lợi, giảm 25% sát thương phải nhận và gây thêm 35% mọi sát thương cho đến khi hiệu ứng bất lợi kết thúc.",
+  "description": "+10% mọi sát thương nền. Debuff trên người chơi kéo dài +20%; vẫn có thể bắn/cast khi hard CC (chỉ khóa di chuyển). Khi có ít nhất 1 debuff: giảm 25% sát thương nhận và +35% mọi sát thương.",
   "system": "utility",
   "icon": "core:core_203",
   "category": "weapon",
   "tiers": [
     "diamond"
-  ]
+  ],
+  "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
 },
 {
   "id": "core_204",
-  "name": "Khiên Hồi Quy",
-  "description": "Khi lá chắn bị phá hoặc hết hiệu lực, nếu trong 2 giây tiếp theo người chơi không mất thêm Máu, tái tạo Khiên bằng 50% dung lượng ban đầu của lớp Khiên vừa vỡ. Tối đa tái tạo 1 lần với mỗi lần sử dụng.",
+  "name": "Phản Lực Giáp",
+  "description": "Mỗi khi Armor/Shield tích lũy ngăn được lượng damage tương đương 25% Max HP, phóng shockwave gây 250% Hỏa Lực và hồi 5% Max Resource. Phần tiến độ vượt ngưỡng được giữ lại; tối đa 1 lần kích hoạt cho mỗi lần nhận damage.",
   "system": "defense",
   "icon": "core:core_204",
   "category": "defense",
   "tiers": [
     "gold"
-  ]
+  ],
+  "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run. Chỉ tính lượng damage thực sự được Armor, Shield tạm thời hoặc Khiên Năng Lượng của Titan ngăn lại; các nguồn giảm damage chung khác không tính."
 },
 {
   "id": "core_205",
   "name": "Dao 2 lưỡi",
-  "description": "Tăng thêm 25% mọi sát thương gây ra nhưng đổi lại bạn sẽ chịu thêm 18% sát thương nhận vào",
+  "description": "+40% mọi sát thương gây ra, nhưng +20% sát thương nhận vào.",
   "system": "attack",
   "icon": "core:core_205",
   "category": "offense",
   "tiers": [
     "diamond"
-  ]
+  ],
+  "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
 },
 {
   "id": "core_206",
   "name": "Đạn Siêu Nặng",
-  "description": "Đạn bắn thường chính gây thêm 70% sát thương đạn thường và xuyên thêm 1 mục tiêu, nhưng tổng Tốc Độ Bắn giảm 20% và tốc độ đạn bay giảm 30%.",
+  "description": "Basic chính +70% Basic Damage và xuyên thêm 1 mục tiêu, nhưng tổng Tốc Độ Bắn -10% và tốc độ đạn -20%.",
   "system": "attack",
   "icon": "core:core_206",
   "category": "offense",
   "tiers": [
     "diamond"
-  ]
+  ],
+  "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
 },
 {
   "id": "core_207",
   "name": "Pha Đối Nghịch",
-  "description": "Nhận +25% tỷ lệ chí mạng. Đòn bắn thường chí mạng đánh dấu mục tiêu 5 giây bằng “Pha Kỹ Năng”; kỹ năng kế tiếp trúng mục tiêu tiêu dấu để gây thêm 45% sát thương kỹ năng. Một kỹ năng trúng mục tiêu không có Pha Kỹ Năng sẽ tạo “Pha Súng”; phát đạn thường chính kế tiếp tiêu dấu để gây thêm 45% sát thương đạn thường.",
+  "description": "+25% Chí Mạng. Basic crit tạo Pha Kỹ Năng 5 giây; Skill kế tiếp tiêu dấu +45% Skill Damage. Skill trúng mục tiêu không có Pha Kỹ Năng tạo Pha Súng; Basic chính kế tiếp tiêu dấu +45% Basic Damage.",
   "system": "attack",
   "icon": "core:core_207",
   "category": "offense",
   "tiers": [
     "diamond"
-  ]
+  ],
+  "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
 },
 {
   "id": "core_208",
   "name": "Tế Bào Song Năng",
-  "description": "Khi nhận thêm chỉ số Hồi Máu mỗi giây, nhận thêm Hồi Tài Nguyên mỗi giây bằng 60% lượng đó. Khi nhận thêm chỉ số Hồi Tài Nguyên mỗi giây, nhận thêm Hồi Máu mỗi giây bằng 60% lượng đó. Lượng bonus không cộng dồn qua lại với nhau.",
+  "description": "+2 Hồi Máu/s và +20% Resource Regen nền. Bonus Hồi Máu/s chuyển thêm 60% sang Resource Regen; bonus Resource Regen chuyển thêm 60% sang Hồi Máu/s; không feedback qua lại.",
   "system": "resource",
   "icon": "core:core_208",
   "category": "resource",
   "tiers": [
     "diamond"
-  ]
+  ],
+  "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
 },
 {
   "id": "core_209",
   "name": "Chế Độ Tử Thủ",
-  "description": "Khi Máu xuống dưới 35%, chiến cơ kích hoạt chế độ Tử Thủ: +150 Giáp, +40% Hồi Tài Nguyên và giảm 20% Hồi Chiêu, nhưng mọi sát thương gây ra giảm 15%. Chỉ rời trạng thái khi Máu vượt 35%.",
+  "description": "Dưới 35% Máu: +150 Giáp, +40% Hồi Tài Nguyên, mất 20 điểm phần trăm Giảm Hồi Chiêu và -15% mọi sát thương gây ra. Rời trạng thái khi Máu vượt 35%.",
   "system": "utility",
   "icon": "core:core_209",
   "category": "weapon",
   "tiers": [
     "diamond"
-  ]
+  ],
+  "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
 },
 {
   "id": "core_210",
   "name": "Tự Sửa Đường Ngắm",
-  "description": "Sau 2 phát thường chính liên tiếp bay khỏi màn hình không trúng địch, 3 phát chính kế tiếp được homing nhẹ tối đa 0,6s và +25% tốc độ. Phát được hiệu chỉnh đầu tiên trúng gây thêm 30% sát thương đạn thường. Trúng địch đặt lại chuỗi trượt.",
+  "description": "Basic chính có homing nhẹ trong tối đa 0,6 giây. Mỗi 6 Basic chính trúng địch, 3 Basic chính kế tiếp gây +60% Basic Damage và +30% tốc độ projectile. Sau khi bắn hết 3 phát cường hóa, tiến độ bắt đầu lại từ đầu.",
   "system": "attack",
   "icon": "core:core_210",
   "category": "offense",
   "tiers": [
     "silver"
-  ]
+  ],
+  "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
 },
 {
   "id": "core_211",
   "name": "Bộ Lọc Reroll",
-  "description": "Reroll ưu tiên Lõi thuộc Hệ khác khi còn ứng viên. Không xuất hiện tại Lv15.",
+  "description": "+10% mọi sát thương. Khi reroll một card Lõi, ưu tiên ứng viên thuộc Hệ khác với card vừa bị thay nếu còn ứng viên hợp lệ.",
   "system": "utility",
   "icon": "core:core_211",
   "category": "weapon",
   "tiers": [
     "silver"
-  ]
+  ],
+  "availability": "Lv1 / Lv7 / Lv11 · Không xuất hiện tại Lv15 · One-time encounter; đã từng được offer thì không xuất hiện lại."
 },
 {
   "id": "core_212",
   "name": "Phiếu Reroll Dự Phòng",
-  "description": "Nhận ngay +1 Reroll Dự Trữ. Mỗi lượt chọn Lõi tương lai có đúng 1 reroll phụ cho một ô. Không xuất hiện tại Lv15.",
+  "description": "+12% mọi sát thương. Nhận ngay +1 Reroll Dự Trữ. Mỗi lượt Core Selection tương lai có đúng 1 reroll phụ cho một ô.",
   "system": "utility",
   "icon": "core:core_212",
   "category": "weapon",
   "tiers": [
     "gold"
-  ]
+  ],
+  "availability": "Lv1 / Lv7 / Lv11 · Không xuất hiện tại Lv15 · One-time encounter; đã từng được offer thì không xuất hiện lại."
 },
 {
   "id": "core_213",
@@ -2712,13 +2838,14 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 {
   "id": "core_214",
   "name": "Bản Đồ Dự Thảo",
-  "description": "Mọi lượt chọn Lõi sau khi sở hữu hiển thị 5 card thay vì 3, mỗi ô có reroll riêng. Không thay đổi lượt đang chọn; không xuất hiện tại Lv15.",
+  "description": "+15% mọi sát thương. Mọi lượt Core Selection sau khi sở hữu hiển thị 5 card thay vì 3, mỗi ô có reroll riêng. Không thay đổi lượt đang chọn.",
   "system": "utility",
   "icon": "core:core_214",
   "category": "weapon",
   "tiers": [
     "diamond"
-  ]
+  ],
+  "availability": "Lv1 / Lv7 / Lv11 · Không xuất hiện tại Lv15 · One-time encounter; đã từng được offer thì không xuất hiện lại."
 },
 {
   "id": "core_215",
@@ -2734,79 +2861,86 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 {
   "id": "core_216",
   "name": "Hộp Pandora",
-  "description": "Chuyển các Lõi thường đang sở hữu thành Lõi Kim Cương ngẫu nhiên. Loại trừ Core050/051/052 và Hộp Pandora. Giữ chỉ số vĩnh viễn đã kiếm được. Nếu mất Tập Trung Chuyên Môn, Ultimate dùng lại ở cấp hiện tại.",
+  "description": "Không tự biến đổi chính Hộp Pandora; lõi này vẫn nằm trong danh sách Lõi đã chọn. Khi chọn, biến đổi 1:1 toàn bộ Lõi thường hợp lệ đã sở hữu trước đó thành các Lõi Kim Cương ngẫu nhiên unseen/hợp lệ. Core050/051/052 và Hộp Pandora không bị chuyển đổi; giữ các chỉ số vĩnh viễn đã kiếm được từ lõi cũ.",
   "system": "utility",
   "icon": "core:core_216",
   "category": "weapon",
   "tiers": [
     "diamond"
-  ]
+  ],
+  "availability": "Lv7 / Lv11 / Lv15 · Không xuất hiện ở lượt Core đầu tiên. One-time encounter. Chỉ được offer khi còn đủ Lõi Kim Cương unseen/hợp lệ để thay thế 1:1 toàn bộ Core trước đó có thể chuyển đổi."
 },
 {
   "id": "core_217",
   "name": "Thao Túng Bậc Lõi",
-  "description": "Chỉ xuất hiện tại Lv1 hoặc Lv7. Các lượt tương lai dùng tỷ lệ 20% Bạc / 35% Vàng / 45% Kim Cương.",
+  "description": "+10% mọi sát thương gây ra. Lượt Core Selection chính kế tiếp chắc chắn là Bậc Kim Cương. Sau lượt bảo đảm đó, các lượt Core Selection còn lại dùng tỷ lệ 20% Bạc / 40% Vàng / 40% Kim Cương. Random grant/conversion không tiêu hao lượt Diamond bảo đảm.",
   "system": "utility",
   "icon": "core:core_217",
   "category": "weapon",
   "tiers": [
     "diamond"
-  ]
+  ],
+  "availability": "Chỉ Lv1 hoặc Lv7 · One-time encounter; đã từng được offer thì không xuất hiện lại."
 },
 {
   "id": "core_218",
-  "name": "Bảo Toàn Cơ Hội",
-  "description": "Nhận ngay +1 Reroll Dự Trữ. Reroll chính/phụ chưa dùng được cất sau mỗi lượt, tối đa 5. Không xuất hiện tại Lv15.",
-  "system": "utility",
+  "name": "Dư Chấn Tối Hậu",
+  "description": "Sau khi Ultimate fully resolves: +35% mọi damage và +35% Resource Regen trong 8 giây. Không giảm Ultimate cooldown. Core097 và Core218 được phép cùng tồn tại; nếu Core097 khóa Ultimate thì Core218 tự nhiên không thể kích hoạt.",
+  "system": "attack",
   "icon": "core:core_218",
   "category": "weapon",
   "tiers": [
     "diamond"
-  ]
+  ],
+  "availability": "Lv7 / Lv11 / Lv15 · Không xuất hiện tại Lv1 · One-time encounter. Không có rule loại trừ với Core097."
 },
 {
   "id": "core_219",
   "name": "Nòng Súng Đỏ Rực",
-  "description": "Dùng kỹ năng +20 Nhiệt; kỹ năng bật duy trì +2 Nhiệt/s; mỗi phát thường +0,025 Nhiệt. 50–99 Nhiệt: +25% mọi sát thương. 100 Nhiệt kết thúc kỹ năng đang bật và gây Quá Nhiệt khóa 3s rồi đặt lại. Không dùng kỹ năng trong 10s thì giảm 15 Nhiệt/s.",
+  "description": "Dùng Skill +20 Nhiệt; Skill duy trì +2 Nhiệt/s; mỗi Basic +0,025 Nhiệt. 50–99 Nhiệt: +25% mọi sát thương. 100 Nhiệt: quá nhiệt khóa 3 giây rồi reset. Không dùng Skill 10 giây thì -15 Nhiệt/s.",
   "system": "attack",
   "icon": "core:core_219",
   "category": "offense",
   "tiers": [
     "gold"
-  ]
+  ],
+  "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
 },
 {
   "id": "core_220",
   "name": "Bóng Sống Ngắn",
-  "description": "Mỗi 10 giây, kỹ năng cast tiếp theo để lại một Bóng của Chiến Cơ tại vị trí cast trong 3 giây. Bóng ưu tiên mục tiêu hiện tại của chiến cơ chính, tự quay theo mục tiêu và bắn theo Tốc Độ Bắn effective hiện tại của chiến cơ chính. Mỗi viên gây 35% Hỏa Lực, không chí mạng, không kích hoạt bất kỳ hiệu ứng Lõi khác, không sao chép kỹ năng, không bị target và không chặn đòn.",
+  "description": "Mỗi 10 giây, Skill cast tiếp theo để lại một Bóng trong 3,5 giây. Bóng bắn theo Fire Rate hiệu lực hiện tại, mỗi viên gây 60% Hỏa Lực; không crit/proc/cast/target/block.",
   "system": "attack",
   "icon": "core:core_220",
   "category": "offense",
   "tiers": [
     "gold"
-  ]
+  ],
+  "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
 },
 {
   "id": "core_221",
   "name": "Dấu Ấn Tử Thần",
-  "description": "Mỗi 20 giây, đánh dấu một mục tiêu trong 3 giây. Khi hết thời gian, dấu nổ gây raw damage bằng 120% Hỏa Lực + 45% tổng sát thương thực tế mục tiêu đã nhận trong thời gian dấu tồn tại. Nếu damage nổ sau khi tính Giáp và các lớp hấp thụ hiện hành đủ hạ mục tiêu thì nổ ngay, đồng thời cooldown kế tiếp của lõi giảm 50%. Cooldown bắt đầu khi dấu kết thúc/nổ.",
+  "description": "Mỗi 16 giây đánh dấu mục tiêu trong 4 giây. Khi dấu kết thúc, nổ gây raw damage bằng 200% Hỏa Lực +60% tổng sát thương thực tế mục tiêu đã nhận trong thời gian dấu. Nếu vụ nổ đủ kết liễu thì nổ sớm và cooldown kế tiếp của lõi giảm 50%.",
   "system": "attack",
   "icon": "core:core_221",
   "category": "offense",
   "tiers": [
     "gold"
-  ]
+  ],
+  "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
 },
 {
   "id": "core_222",
   "name": "Nâng Cấp Bất Ổn",
-  "description": "Roll ngay khi nhận và mỗi 60 giây, độc lập 50/50. Thu Nhỏ: -50% kích thước và hitbox, +25 điểm phần trăm Giảm Hồi Chiêu (vẫn cap 60%), +50% Hồi Tài Nguyên/s. Khổng Lồ: +50% kích thước và hitbox, +30% Máu Tối Đa, +30% Hỏa Lực. Roll cùng trạng thái không cộng dồn lại; đổi trạng thái phải gỡ sạch bonus cũ trước khi áp bonus mới.",
+  "description": "Nhận ngay 1 trong 2 hiệu ứng và mỗi 60 giây. Thu Nhỏ: -50% size/hitbox, +25% giảm thời gian hồi chiêu, +50% Hồi Tài Nguyên. Khổng Lồ: +50% size/hitbox, +30% Máu Tối Đa, +30% Hỏa Lực.",
   "system": "utility",
   "icon": "core:core_222",
   "category": "weapon",
   "tiers": [
     "diamond"
-  ]
+  ],
+  "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run."
 },
 {
   "id": "core_223",
@@ -2817,18 +2951,20 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   "category": "weapon",
   "tiers": [
     "silver"
-  ]
+  ],
+  "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run. Không xuất hiện nếu Core228 đã khóa các nguồn nhận Trang Bị."
 },
 {
   "id": "core_224",
   "name": "Thích Chơi Xác Suất",
-  "description": "Nhân 1,75 lần từng xác suất rơi độc lập Nam Châm Ma Thuật / Thành Phần / Hoàn Chỉnh / Huyền Thoại, tối đa 100% mỗi roll. Sau Cái Giá Phải Trả, Trang Bị không rơi và Nam Châm trở về xác suất gốc.",
+  "description": "Nhận ngay 1 Trang Bị Thành Phần ngẫu nhiên. Tăng 75% xác suất rơi Nam Châm Ma Thuật / Thành Phần / Hoàn Chỉnh / Huyền Thoại",
   "system": "utility",
   "icon": "core:core_224",
   "category": "weapon",
   "tiers": [
     "gold"
-  ]
+  ],
+  "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run. Không xuất hiện nếu Core228 đã khóa các nguồn nhận Trang Bị."
 },
 {
   "id": "core_225",
@@ -2839,19 +2975,43 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   "category": "weapon",
   "tiers": [
     "gold"
-  ]
+  ],
+  "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run. Không xuất hiện nếu Core228 đã khóa các nguồn nhận Trang Bị."
 },
 {
   "id": "core_226",
   "name": "Rương Báu Vật",
-  "description": "Nhận 4 Trang Bị Thành Phần ngẫu nhiên và 1 Nam Châm Ma Thuật.",
+  "description": "Nhận 6 Trang Bị Thành Phần ngẫu nhiên và 1 Nam Châm Ma Thuật.",
   "system": "utility",
   "icon": "core:core_226",
   "category": "weapon",
   "tiers": [
     "diamond"
-  ]
+  ],
+  "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run. Không xuất hiện nếu Core228 đã khóa các nguồn nhận Trang Bị."
 },
-{ id:"core_227", name:"Chờ Đợi Xứng Đáng?", description:WAITING_CHEST_DESCRIPTION, system:"utility", icon:"core:core_227", category:"weapon", tiers:["diamond"] },
-{ id:"core_228", name:"Cái Giá Phải Trả", description:"Xóa toàn bộ Trang Bị đang mang, trong kho, đang ghép và dưới đất; nhận 1 Trang Bị Huyền Thoại ngẫu nhiên rồi khóa mọi nguồn nhận Trang Bị tới hết run. Giữ Nam Châm Ma Thuật; Nam Châm vẫn rơi theo xác suất gốc. Hủy Chờ Đợi Xứng Đáng? nếu chưa nhận thưởng.", system:"utility", icon:"core:core_228", category:"weapon", tiers:["diamond"] }
+{
+  "id": "core_227",
+  "name": "Chờ Đợi Xứng Đáng?",
+  "description": "Đếm ngược 500 giây combat; mỗi quái thường bị hạ giảm 1 giây, mỗi Tinh Anh bị hạ giảm 8 giây, Boss không giảm. Khi hết giờ, nhận ngẫu nhiên 1 gói: 40% nhận 3 Trang Bị Hoàn Chỉnh; 30% nhận 4 Trang Bị Hoàn Chỉnh; 20% nhận 1 Huyền Thoại + 2 Hoàn Chỉnh; 8% nhận 2 Huyền Thoại; 2% nhận 3 Huyền Thoại + 1 Nam Châm Ma Thuật.",
+  "system": "utility",
+  "icon": "core:core_227",
+  "category": "weapon",
+  "tiers": [
+    "diamond"
+  ],
+  "availability": "Lv1 / Lv7 / Lv11 · Không xuất hiện tại Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run. Đồng hồ chỉ chạy khi combat thực sự đang diễn ra. Không xuất hiện nếu Core228 đã khóa các nguồn nhận Trang Bị."
+},
+{
+  "id": "core_228",
+  "name": "Cái Giá Phải Trả",
+  "description": "Xóa toàn bộ Trang Bị đang mang, trong kho, đang ghép và dưới đất; nhận 2 Trang Bị Huyền Thoại ngẫu nhiên thuộc 2 family khác nhau rồi khóa mọi nguồn nhận Trang Bị tới hết run. Giữ Nam Châm Ma Thuật; hủy Chờ Đợi Xứng Đáng? nếu chưa nhận thưởng.",
+  "system": "utility",
+  "icon": "core:core_228",
+  "category": "weapon",
+  "tiers": [
+    "diamond"
+  ],
+  "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run. Không được nằm cùng một conversion/random-grant batch với Core223–227."
+}
 ];

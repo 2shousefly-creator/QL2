@@ -10,12 +10,12 @@ import { CoreDescription } from "./CoreDescription";
 import type { AircraftCombatState } from "./airCombatTypes";
 
 export function AirCombatCoreList({ state, onClose }: { state: AircraftCombatState; onClose: () => void }) {
-  const owned = state.selectedCores.filter(id=>!["core_050","core_051","core_052","core_216"].includes(id)).flatMap(id => {
+  const owned = state.selectedCores.filter(id=>!["core_050","core_051","core_052"].includes(id)).flatMap(id => {
     const core = CORE_DEFINITIONS.find(c => c.id === id);
     return core ? [core] : [];
   });
   const [selectedId, setSelectedId] = useState(owned[0]?.id);
-  const visible=owned.slice(0,6);
+  const visible=owned;
   const selected=visible.find(c=>c.id===selectedId)??visible[0];
   const converted=new Map(state.coreState.acquisitions.flatMap(event=>event.kind==="core"?[[event.coreId,Boolean(event.conversionSourceCoreId)] as const]:[]));
   const title=(core:typeof owned[number])=>`${converted.get(core.id)?"Đã Chuyển Đổi: ":""}${core.name}`;
@@ -27,7 +27,7 @@ export function AirCombatCoreList({ state, onClose }: { state: AircraftCombatSta
     <OverlayBody className="air-core-inventory" data-core-list="open">
       <div className="air-core-retained">
       <div className="air-core-grid" role="group" aria-label="Lõi đã nhận">
-        {Array.from({ length: 6 }, (_, index) => {
+        {Array.from({ length: Math.max(6,visible.length) }, (_, index) => {
           const core = visible[index];
           return core ? <button key={core.id} type="button" aria-pressed={selected?.id === core.id} data-core-system={core.system}
             className={`air-core-slot air-owned-core--${core.tiers[0]}`} onClick={() => setSelectedId(core.id)}>
@@ -45,7 +45,7 @@ export function AirCombatCoreList({ state, onClose }: { state: AircraftCombatSta
             <div><h3 className="font-semibold">{title(selected)}</h3>
               <p className="text-xs text-slate-200">{CORE_TIER_LABELS[selected.tiers[0]]}</p><CoreSystemTag system={selected.system} tier={selected.tiers[0]} /></div>
           </div>
-          <p className="mt-2 text-sm leading-relaxed"><CoreDescription text={selected.description} /></p>
+          <p className="mt-2 text-sm leading-relaxed"><CoreDescription text={selected.description} />{selected.availability&&<small className="block mt-2"><CoreDescription text={selected.availability}/></small>}</p>
           {selected.skillId && <p className="mt-2 text-xs font-semibold">Kỹ năng {selected.skillSlot} · {SKILL_CONFIGS[selected.skillId].name}</p>}
           {selected.skillId && <p className="mt-1 text-xs text-violet-200">Hồi chiêu còn {(state.cooldowns[selected.skillId] || 0).toFixed(1).replace(".", ",")}s · Duy trì còn {(state.activeEffects[selected.skillId] || 0).toFixed(1).replace(".", ",")}s{selected.skillId === "escort_drone" && state.droneActive ? " · HawkEye đang hoạt động" : ""}</p>}
           {selected.id!=="core_210"&&<section className="mt-3 border-t border-white/15 pt-3" aria-label="Thống kê lõi">

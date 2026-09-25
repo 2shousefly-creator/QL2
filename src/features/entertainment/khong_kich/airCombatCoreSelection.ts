@@ -12,7 +12,7 @@ import type { AircraftCombatState, CoreCard, CoreDefinition, CoreTier } from "./
 const TIERS: CoreTier[] = ["silver", "gold", "diamond"];
 const pick = <T>(pool: readonly T[], random: () => number): T | undefined => pool[Math.min(pool.length - 1, Math.max(0, Math.floor(random() * pool.length)))];
 function weightedTier(valid: CoreTier[], random: () => number, state?: AircraftCombatState): CoreTier | undefined {
-    const chances = state && hasCore(state,217) ? {silver:.20,gold:.35,diamond:.45} : CORE_TIER_CHANCES;
+    const chances = state && hasCore(state,217) ? {silver:.20,gold:.40,diamond:.40} : CORE_TIER_CHANCES;
     let roll = random() * valid.reduce((n, t) => n + chances[t], 0);
     for (const tier of valid) {
         roll -= chances[tier];
@@ -25,16 +25,17 @@ export function rollCoreTier(_selectionNumber: number, random: () => number = Ma
 const eligible = (state: AircraftCombatState, tier?: CoreTier) => CORE_DEFINITIONS.filter(c => isCoreOfferable(state,c) && (!tier || c.tiers[0] === tier));
 const normalPool = eligible;
 export function makeCoreCard(definition: CoreDefinition): CoreCard {
-    return { id: definition.id, name: definition.name, description: definition.description, system: definition.system, skillSlot: definition.skillSlot,
+    return { id: definition.id, name: definition.name, description: definition.description, availability:definition.availability, system: definition.system, skillSlot: definition.skillSlot,
         icon: definition.icon, category: definition.category, tier: definition.tiers[0], valueLabel: definition.skillSlot ? `Kỹ năng ${definition.skillSlot}` : CORE_SYSTEM_LABELS[definition.system] };
 }
 /** selectionNumber retained for callers; queued level is the authority. */
 export function generateCoreChoices(state: AircraftCombatState, selectionNumber: number, random: () => number = Math.random): CoreCard[] {
     const count=hasCore(state,214)?5:3;
-    let tier=weightedTier(TIERS,random,state);
-    if(normalPool(state,tier).length<count)tier=weightedTier(TIERS.filter(t=>normalPool(state,t).length>=count),random,state)??tier;
+    const guaranteed=!!releaseState(state).pendingGuaranteedDiamondSelection;
+    let tier:CoreTier|undefined=guaranteed?"diamond":weightedTier(TIERS,random,state);
+    if(!guaranteed&&normalPool(state,tier).length<count)tier=weightedTier(TIERS.filter(t=>normalPool(state,t).length>=count),random,state)??tier;
     // At exhaustion use the largest remaining tier, without resurrecting old offers.
-    if(normalPool(state,tier).length<count && !TIERS.some(t=>normalPool(state,t).length>=count))
+    if(!guaranteed&&normalPool(state,tier).length<count && !TIERS.some(t=>normalPool(state,t).length>=count))
       tier=TIERS.reduce((best,t)=>normalPool(state,t).length>normalPool(state,best).length?t:best,tier!);
     const pool=normalPool(state,tier),chosen:CoreDefinition[]=[];
     recordCoreMetric(state,217,tier==="silver"?"silverRolls":tier==="gold"?"goldRolls":"diamondRolls",1);
@@ -97,15 +98,15 @@ export function applyCore(state: AircraftCombatState, card: CoreCard, random: ()
         state.selectedCores.push(core.id);
         if("owner" in item)recordCoreMetric(state,item.owner,"converted",1);
         state.coreState.acquisitions.push({ id: state.coreState.nextAcquisitionId++, kind: "core", coreId: core.id, conversionSourceCoreId:item.conversionSourceCoreId });
-        if(core.id==="core_223"||core.id==="core_225"||core.id==="core_226"){
-          const count=core.id==="core_223"?2:core.id==="core_225"?3:4;
+        if(core.id==="core_223"||core.id==="core_224"||core.id==="core_225"||core.id==="core_226"){
+          const count=core.id==="core_223"?2:core.id==="core_224"?1:core.id==="core_225"?3:6;
           if(!equipmentRewardsLocked(state)){
             for(let i=0;i<count;i++)grantEquipmentReward(state,randomEquipmentId("TP",random),core.id);
             if(core.id==="core_226")grantEquipmentReward(state,"VP01",core.id);
             recordCoreMetric(state,Number(core.id.slice(5)),"itemsReceived",count+(core.id==="core_226"?1:0));
           }
         }
-        if(core.id==="core_227"&&!equipmentRewardsLocked(state))releaseState(state).waitingChest={remaining:600,claimed:false,cancelled:false};
+        if(core.id==="core_227"&&!equipmentRewardsLocked(state))releaseState(state).waitingChest={remaining:500,claimed:false,cancelled:false};
         if(core.id==="core_228"){
           const chest=releaseState(state).waitingChest;if(chest&&!chest.claimed)chest.cancelled=true;
           sacrificeEquipment(state,random);
@@ -119,7 +120,7 @@ export function applyCore(state: AircraftCombatState, card: CoreCard, random: ()
           for(const id of removed)state.coreState.encounteredCoreIds.add(id);
           // Only earned permanent stats survive. Bounty rewards already live in modifiers.
           for(const [id,key] of [["core_046","firepowerFlat"],["core_047","armorFlat"],["core_048","maxHpFlat"]] as const)if(removed.includes(id))state.modifiers[key]+=state.coreState.stacks[id]??0;
-          if(removed.includes("core_196"))state.modifiers.criticalDamageMultiplierFlat+=Math.min(.5,(state.coreState.stacks.crimsonCrit??0)*.025);
+          if(removed.includes("core_196"))state.modifiers.criticalDamageMultiplierFlat+=Math.min(.75,(state.coreState.stacks.crimsonCrit??0)*.05);
           onRemove?.(removed);state.selectedCores=state.selectedCores.filter(id=>!removed.includes(id));removeReleaseCoreState(state,removed);syncEffectiveMaxHp(state);
           state.coreState.consumed.add("core_216");
           recordCoreMetric(state,216,"converted",removed.length);

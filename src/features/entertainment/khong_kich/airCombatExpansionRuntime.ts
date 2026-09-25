@@ -4,7 +4,7 @@ import { getEffectiveAircraftStats } from "./airCombatAircraft";
 import { hasCore } from "./airCombatCoreEffects";
 import { AIRCRAFT_CONFIGS } from "./airCombatConfig";
 import { recordCoreMetric } from "./airCombatTelemetry";
-import { expansionState, expansionActive, finishAbsorbShield, prepareAbsorbShield, finishExpansionSkill, observeExpansionResource, type ExpansionCast } from "./airCombatExpansion";
+import { expansionState, expansionActive, finishAbsorbShield, prepareAbsorbShield, finishExpansionSkill, observeExpansionResource, createAbsorbShield, hasAbsorbShield, type ExpansionCast } from "./airCombatExpansion";
 
 export interface ExpansionHooks {
   hostile(w: CombatWorld, e: EnemyEntity): boolean;
@@ -20,36 +20,28 @@ const resource = (w: CombatWorld, amount: number, row: number) => { const s = w.
 export function castExpansion(w: CombatWorld, id: SkillId, spent: number, h: ExpansionHooks): ExpansionCast {
   const s = w.aircraft, c = s.coreState, r = expansionState(s), now = c.time;
   const prior = r.lastSkill;
-  if (hasCore(s, 171)) timer(w, "safetyLatch", 1.5);
-  if (hasCore(s, 172) && c.stacks.capacitorCharge) {
+  if (hasCore(s, 171)) timer(w, "safetyLatch", 2);
+  const capacitor=hasCore(s,172)&&!!c.stacks.capacitorCharge;
+  if (capacitor) {
     recordCoreMetric(s,172,"consumed",1);
     c.stacks.capacitorCharge = 0; r.fullSince = undefined;
-    if (id === "escort_drone") timer(w, "capacitorHawk", 3);
-    else resource(w, spent * .15,172);
+    resource(w, spent * .25,172);
   }
   if (prior && prior.id !== id) {
-    if (hasCore(s, 175) && now - prior.at <= 5) {timer(w, "alternating", 4);recordCoreMetric(s,175,"procs",1);}
+    if (hasCore(s, 175) && now - prior.at <= 5 && !expansionActive(s,"alternatingCd")) {timer(w, "alternating", 5);timer(w,"alternatingCd",20);recordCoreMetric(s,175,"procs",1);}
     if (hasCore(s, 186) && now - prior.at <= 4 && !expansionActive(s, "confluenceCd")) {
-      timer(w, "confluence", 6); timer(w, "confluenceCd", 20);
+      timer(w, "confluence", 8); timer(w, "confluenceCd", 16);
       recordCoreMetric(s,186,"procs",1);
     }
   }
   r.lastSkill = { id, at: now };
-  if (hasCore(s, 193)) {
-    r.sequence = r.sequence.filter(cast => now - cast.at <= 8 && cast.id !== id);
-    r.sequence.push({ id, at: now });
-    if (r.sequence.length === 3) {
-      for (const skill of AIRCRAFT_CONFIGS[s.aircraftId].skillIds) {const before=s.cooldowns[skill]??0;s.cooldowns[skill]=Math.max(0,before-3);recordCoreMetric(s,193,"cooldown",before-s.cooldowns[skill]!);}
-      recordCoreMetric(s,193,"procs",1);
-      r.sequence.length = 0; timer(w, "tripleRegen", 5);
-    }
+  if(hasCore(s,200)&&!Object.values(c.shields).some(sh=>Number.isFinite(sh.until)&&sh.until>now&&sh.amount>0)&&!expansionActive(s,"recycleShieldCd")){
+    const sh=createAbsorbShield(s,"recycled",getEffectiveAircraftStats(s).maxHp*.08,4);timer(w,"recycleShieldCd",6);recordCoreMetric(s,200,"shieldCreated",sh.amount);
   }
-  if (hasCore(s, 198)) {
-    if (!expansionActive(s, "satellites") || !c.stacks.satellites) {c.stacks.satellites = 3;recordCoreMetric(s,198,"granted",3);}
-    timer(w, "satellites", 4);
-  }
+  if(hasCore(s,197)&&!expansionActive(s,"debtCleanse")){let cleared=0;for(const debt of r.debt){cleared+=debt.amount*debt.ticks*.2;debt.amount*=.8;}recordCoreMetric(s,197,"debtCleared",cleared);timer(w,"debtCleanse",5);}
+  if(hasCore(s,198)){const before=expansionActive(s,"satellites")?c.stacks.satellites??0:0;c.stacks.satellites=expansionActive(s,"satellites")?Math.min(3,before+1):3;recordCoreMetric(s,198,"granted",c.stacks.satellites-before);timer(w,"satellites",5);}
   const overclock = hasCore(s, 199) ? (c.stacks.overclock ?? 0) : 0;
-  const cast = { skillId: id, overclock: overclock * .18 };
+  const cast:ExpansionCast = { skillId: id, overclock: overclock * .18, capacitor, compressed:hasCore(s,102)&&!r.liveCasts.some(c=>!c.ended)&&now-Math.max(s.coreState.release?.lastSkillEnd??0,prior?.at??0)>=4 };
   // A refreshed duration remains one active effect; retired snapshots can still
   // belong to in-flight projectiles, but must not emit a second completion.
   const previous = r.casts[id];
@@ -67,42 +59,37 @@ export function expansionHpLoss(w: CombatWorld, amount: number, receivedDamage =
   const s = w.aircraft, c = s.coreState, r = expansionState(s), stats = getEffectiveAircraftStats(s);
   r.returns.length = 0;
   r.hpLoss.push({ at: c.time, amount });
-  r.hpLoss = r.hpLoss.filter(hit => hit.at >= c.time - 2);
-  const recent = r.hpLoss.reduce((n, hit) => n + hit.amount, 0);
+  r.hpLoss = r.hpLoss.filter(hit => hit.at >= c.time - 3);
+  c.stacks.recentThreeSecondLoss=r.hpLoss.reduce((n,hit)=>n+hit.amount,0);
+  const recent = r.hpLoss.filter(hit=>hit.at>=c.time-2).reduce((n, hit) => n + hit.amount, 0);
   if (hasCore(s, 174) && recent > stats.maxHp * .08 && !expansionActive(s, "shockPadCd")) {
-    resource(w, stats.maxResource * .10,174); timer(w, "shockPadCd", 15);recordCoreMetric(s,174,"procs",1);
+    resource(w, stats.maxResource * .12,174); timer(w, "shockPadCd", 15);timer(w,"shockPadRegen",4);recordCoreMetric(s,174,"procs",1);
   }
-  if (receivedDamage && hasCore(s, 187)) {const before=c.stacks.recoil??0;c.stacks.recoil = Math.min(stats.firepower * 1.6, before + amount * .25);recordCoreMetric(s,187,"damageStored",c.stacks.recoil-before);const entry=c.telemetry.core_187??={};entry.peak=Math.max(entry.peak??0,c.stacks.recoil);}
-  if (hasCore(s, 195) && recent >= stats.maxHp * .15 && !expansionActive(s, "blackBoxCd")) {
-    timer(w, "blackBox", 4); timer(w, "blackBoxCd", 24);
+  if (receivedDamage && hasCore(s, 187)) {const before=c.stacks.recoil??0;c.stacks.recoil = Math.min(stats.firepower * 3, before + amount * .40);recordCoreMetric(s,187,"damageStored",c.stacks.recoil-before);const entry=c.telemetry.core_187??={};entry.peak=Math.max(entry.peak??0,c.stacks.recoil);}
+  if (hasCore(s, 195) && recent >= stats.maxHp * .12 && !expansionActive(s, "blackBoxCd")) {
+    timer(w, "blackBox", 4); timer(w, "blackBoxCd", 22);
     recordCoreMetric(s,195,"procs",1);
   }
 }
 export function deferExpansionDamage(w: CombatWorld, damage: number): number {
   if (!hasCore(w.aircraft, 197) || damage <= 0) return damage;
-  expansionState(w.aircraft).debt.push({ amount: damage * .25 / 3, next: w.elapsed + 1, ticks: 3 });
-  recordCoreMetric(w.aircraft,197,"accumulated",damage*.25);
+  expansionState(w.aircraft).debt.push({ amount: damage * .35 / 4, next: w.elapsed + 1, ticks: 4 });
+  recordCoreMetric(w.aircraft,197,"accumulated",damage*.35);
   const entry=w.aircraft.coreState.telemetry.core_197??={};entry.peak=Math.max(entry.peak??0,expansionState(w.aircraft).debt.reduce((n,d)=>n+d.amount*d.ticks,0));
-  return damage * .75;
+  return damage * .65;
 }
 
 export function expansionKill(w: CombatWorld, enemy: EnemyEntity, h: ExpansionHooks) {
   const s = w.aircraft, c = s.coreState, r = expansionState(s), hit = enemy.expansionKillingHit;
   if (!hit || enemy.killProcEligible === false) return;
   const stats = getEffectiveAircraftStats(s);
-  if (hasCore(s, 189) && hit.primary) h.shard(w, enemy.x, enemy.y, stats.firepower * 1.5, 189);
-  if (hasCore(s, 191)) {
-    if(hit.basic||hit.skill)recordCoreMetric(s,191,"procs",1);
-    if (hit.basic) { timer(w, "alternatingSkill", 5); c.timers.alternatingBasic = 0; }
-    else if (hit.skill) { timer(w, "alternatingBasic", 4); c.timers.alternatingSkill = 0; }
-  }
-  if (hasCore(s, 196) && hit.critical && hit.direct) {c.stacks.crimsonCrit = Math.min(20, (c.stacks.crimsonCrit ?? 0) + 1);recordCoreMetric(s,196,"procs",1);}
+  if(hasCore(s,168)&&enemy.type!=="boss"&&!hElite(enemy)){c.stacks.shiftKills=(c.stacks.shiftKills??0)+1;if(c.stacks.shiftKills>=10){c.stacks.shiftKills-=10;timer(w,"shiftDiscount",5);recordCoreMetric(s,168,"procs",1);}}
   if (hasCore(s, 197)) {
     const elite = enemy.type === "boss" || hElite(enemy);
     if (!elite) c.stacks.debtKills = (c.stacks.debtKills ?? 0) + 1;
-    if (elite || c.stacks.debtKills >= 12) {
+    if (elite || c.stacks.debtKills >= 15) {
       if (!elite) c.stacks.debtKills = 0;
-      recordCoreMetric(s,197,"debtCleared",r.debt.reduce((n,d)=>n+d.amount*d.ticks,0));r.debt.length = 0; h.heal(w, stats.maxHp * .02, 197);
+      recordCoreMetric(s,197,"debtCleared",r.debt.reduce((n,d)=>n+d.amount*d.ticks,0));r.debt.length = 0; h.heal(w, stats.maxHp * .03, 197);
     }
   }
 }
@@ -111,34 +98,30 @@ const hElite = (e: EnemyEntity) => !!e.expansionKillingHit?.elite;
 
 export function tickExpansion(w: CombatWorld, dt: number, h: ExpansionHooks) {
   const s = w.aircraft, c = s.coreState, r = expansionState(s), now = c.time, stats = getEffectiveAircraftStats(s);
-  if (hasCore(s, 184) && c.timers.celestialReady === undefined) timer(w, "celestialReady", 18);
+  if(hasCore(s,72)&&!(c.stacks.coldCharges??0)&&now-Math.max(c.lastDamage,c.timers.coldRecharge??0)>=4)c.stacks.coldCharges=3;
+  if((c.timers.sameTarget??0)<now){c.stacks.sameTargetHits=0;delete c.stacks.sameTargetId;}
+  if (hasCore(s, 184) && c.timers.celestialReady === undefined) timer(w, "celestialReady", 15);
   if (hasCore(s, 170) && !expansionActive(s, "earlyArmorCd") && h.threat(w, 70, false)) {
-    timer(w, "earlyArmor", 2); timer(w, "earlyArmorCd", 12);
+    timer(w, "earlyArmor", 3); timer(w, "earlyArmorCd", 10);
     recordCoreMetric(s,170,"procs",1);
   }
   if (hasCore(s, 172) && !c.stacks.capacitorCharge) {
     if (s.currentResource >= stats.maxResource) {
       r.fullSince ??= now - dt;
-      if (now - r.fullSince >= 3) {c.stacks.capacitorCharge = 1;recordCoreMetric(s,172,"procs",1);}
+      if (now - r.fullSince >= 2) {c.stacks.capacitorCharge = 1;recordCoreMetric(s,172,"procs",1);}
     } else r.fullSince = undefined;
   }
   if (hasCore(s, 176)) {
-    c.stacks.breathing = h.threat(w, 100, true) ? 0 : 1;
-    if (c.stacks.breathing) {h.heal(w, stats.maxHp * .0075 * dt, 176);recordCoreMetric(s,176,"uptime",dt);}
+    c.stacks.breathing = h.threat(w, 150, true) ? 0 : 1;
+    if (c.stacks.breathing) {h.heal(w, stats.maxHp * .01 * dt, 176);recordCoreMetric(s,176,"uptime",dt);}
   }
+  if(hasCore(s,178)&&!expansionActive(s,"magneticBrakeCd")){timer(w,"magneticBrakeCd",20);timer(w,"magneticBrake",3);for(const p of w.projectiles)if(p.owner==="enemy"&&p.allegiance!=="friendly_hacked"&&Math.hypot(p.x-w.playerX,p.y-w.playerY)<=150){p.expansionSlowUntil=now+3;recordCoreMetric(s,178,"targets",1);}}
   observeExpansionResource(s, stats.maxResource);
   const activeStep = (key: string) => Math.max(0, Math.min(dt, (c.timers[key] ?? 0) - (now - dt)));
-  if (hasCore(s, 182)) resource(w, stats.maxResource * .20 / 4 * activeStep("reserveBattery"),182);
-  if (hasCore(s, 195)) h.heal(w, stats.maxHp * .10 / 4 * activeStep("blackBox"), 195);
-  r.hpLoss = r.hpLoss.filter(hit => hit.at >= now - 2);
-  for (const charge of r.charges) {
-    const target = w.enemies.find(e => e.id === charge.target);
-    if (target) { charge.x = target.x; charge.y = target.y; }
-    if (now >= charge.at) {recordCoreMetric(s,168,"procs",1);h.area(w, charge.x, charge.y, 50, stats.firepower * .70, 168);}
-  }
-  r.charges = r.charges.filter(charge => charge.at > now);
+  if (hasCore(s, 195)) h.heal(w, stats.maxHp * .12 / 4 * activeStep("blackBox"), 195);
+  r.hpLoss = r.hpLoss.filter(hit => hit.at >= now - 3);
   if (c.stacks.satellites && !expansionActive(s, "satellites")) {
-    for (let i = 0; i < c.stacks.satellites; i++) {h.shard(w, w.playerX, w.playerY, stats.firepower * .90, 198);recordCoreMetric(s,198,"shots",1);}
+    for (let i = 0; i < c.stacks.satellites; i++) {h.shard(w, w.playerX, w.playerY, stats.firepower * 1.20, 198);recordCoreMetric(s,198,"shots",1);}
     c.stacks.satellites = 0;
   }
   // Expiration and break share one exactly-once settlement path.
@@ -151,14 +134,6 @@ export function tickExpansion(w: CombatWorld, dt: number, h: ExpansionHooks) {
     debt.ticks--; debt.next += 1; h.debt(w, debt.amount);
   }
   r.debt = r.debt.filter(debt => debt.ticks > 0);
-  for (const pending of r.returns) if (now >= pending.at) {
-    const key = `return:${w.nextId++}`;
-    // Capacity already includes Core200. Returning is not a second amplification.
-    c.shields[key] = { amount: pending.capacity * .5, capacity: pending.capacity * .5, absorbed: 0,
-      until: now + pending.duration, duration: pending.duration, returned: true };
-    recordCoreMetric(s,204,"returned",1);recordCoreMetric(s,204,"shieldCreated",pending.capacity*.5);
-  }
-  r.returns = r.returns.filter(pending => pending.at > now);
   // Projectile/discrete skill lifetimes are world-owned rather than cooldown-owned.
   for (const cast of r.liveCasts) {
     if (!cast || cast.ended) continue;
@@ -172,9 +147,8 @@ export function tickExpansion(w: CombatWorld, dt: number, h: ExpansionHooks) {
 export function settleExpansionShields(w: CombatWorld, h: ExpansionHooks) {
   const s = w.aircraft, r = expansionState(s), stats = getEffectiveAircraftStats(s);
   for (const sh of r.endedShields.splice(0)) {
-    if (hasCore(s, 173)) {recordCoreMetric(s,173,"procs",1);h.heal(w, stats.maxHp * .025, 173);}
+    if (hasCore(s, 173)) {recordCoreMetric(s,173,"procs",1);h.heal(w, (sh.capacity??0) * .35, 173);}
     if (hasCore(s, 200) && (sh.absorbed ?? 0) > 0) {recordCoreMetric(s,200,"detonations",1);h.area(w, w.playerX, w.playerY, 120, sh.absorbed! * 1.60, 200);}
-    if (hasCore(s, 204) && !sh.returned) r.returns.push({ at: w.elapsed + 2, capacity: sh.capacity!, duration: sh.duration! });
   }
 }
 export function satellitePositions(w: CombatWorld) {
@@ -188,9 +162,5 @@ export function satellitePositions(w: CombatWorld) {
 export function slowExpansionProjectile(w: CombatWorld, p: ProjectileEntity): number {
   const s = w.aircraft;
   if (p.owner !== "enemy" || p.allegiance === "friendly_hacked" || p.rawDamage <= 0) return 1;
-  if (hasCore(s, 178) && !expansionActive(s, "magneticBrakeCd") && Math.hypot(p.x - w.playerX, p.y - w.playerY) <= 40 + p.radius) {
-    recordCoreMetric(s,178,"targets",1);
-    p.expansionSlowUntil = w.elapsed + 1.2; timer(w, "magneticBrake", 1.2); timer(w, "magneticBrakeCd", 12);
-  }
-  return (p.expansionSlowUntil ?? 0) > w.elapsed ? .40 : 1;
+  return (p.expansionSlowUntil ?? 0) > w.elapsed ? .50 : 1;
 }

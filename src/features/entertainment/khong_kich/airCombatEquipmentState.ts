@@ -9,7 +9,7 @@ export interface EquipmentInstance { instanceId: number; definitionId: Equipment
 export type EquipmentRewardId = EquipmentDefinitionId | "VP01";
 export type CoreConversionSource = "core_050" | "core_051" | "core_052" | "core_216";
 export type AcquisitionEvent = { id: number; kind: "core"; coreId: string; conversionSourceCoreId?: CoreConversionSource } | { id: number; kind: "equipment" | "item"; definitionId: EquipmentRewardId; source: string; x?: number; y?: number };
-export interface EquipmentEffectState { stacks: number; until: number; ready: number; value: number; tick: number; count: number; duration: number }
+export interface EquipmentEffectState { bonusUntil?: number; progress?: number; empowered?: boolean; stacks: number; until: number; ready: number; value: number; tick: number; count: number; duration: number }
 export interface EquipmentMark { until: number; stacks: number; tick: number }
 export interface EquipmentVisual { id: number; family: number; x: number; y: number; fromX?: number; fromY?: number; size: number; start: number; duration: number; target?: number; player?: boolean; legendary?: boolean }
 export interface EquipmentLoot { id: number; definitionId: EquipmentRewardId; x: number; y: number; age: number; collection?: { age:number; x:number; y:number; source:string } }
@@ -133,6 +133,10 @@ export function sacrificeEquipment(s: AircraftCombatState, random:()=>number) {
   e.effects={};e.marks={};e.meteors=[];e.orb=undefined;e.fireCast=undefined;e.endedSkills=[];
   e.visuals=[];e.presentationGate={};e.lastX=undefined;e.lastY=undefined;
   for(const key of Object.keys(s.coreState.shields))if(key.startsWith("equipment:"))delete s.coreState.shields[key];
-  e.componentPage=0;e.completedPage=0;e.rewardsLocked=true;
-  receiveEquipmentReward(s,randomEquipmentId("HL",random),"core_228");
+  e.pendingDrops=[];
+  e.componentPage=0;e.completedPage=0;
+  const first=Math.min(35,Math.max(0,Math.floor(random()*36)));
+  const offset=1+Math.min(34,Math.max(0,Math.floor(random()*35)));
+  for(const family of [first,(first+offset)%36])receiveEquipmentReward(s,`HL${String(family+1).padStart(2,"0")}`,"core_228");
+  e.rewardsLocked=true;
 }

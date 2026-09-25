@@ -14,7 +14,7 @@ export interface CoreSelectionEvent {
   rerollUsedBySlot: boolean[];
   extraAvailable: boolean;
   extraUsed: boolean;
-  context: { kind: "normal"; tier: CoreTier };
+  context: { kind: "normal"; tier: CoreTier; guaranteedDiamond?: boolean };
 }
 export type RerollSource = "main" | "extra" | "reserve";
 export const reserveCap = (s: AircraftCombatState) => 5;
@@ -24,7 +24,7 @@ export function createCoreSelectionEvent(state: AircraftCombatState, choices: Co
   const extraAvailable=kind==="normal"&&hasCore(state,212);
   if(extraAvailable)recordCoreMetric(state,212,"granted",1);
   return {originalChoiceIds:choices.map(c=>c.id),currentChoiceIds:choices.map(c=>c.id),seenChoiceIds:choices.map(c=>c.id),rerollUsedBySlot:choices.map(()=>false),extraAvailable,extraUsed:false,
-    context:{kind,tier:choices[0]?.tier??"silver"}};
+    context:{kind,tier:choices[0]?.tier??"silver",guaranteedDiamond:!!releaseState(state).pendingGuaranteedDiamondSelection}};
 }
 function rerollPool(state: AircraftCombatState,event: CoreSelectionEvent,slot: number) {
   const displayed=CORE_DEFINITIONS.filter(c=>event.currentChoiceIds.some((id,i)=>i!==slot&&id===c.id));
@@ -51,7 +51,7 @@ export function spendReroll(state:AircraftCombatState,event:CoreSelectionEvent,s
   if(normal&&hasCore(state,211)){const info=rerollPool(state,event,slot);recordCoreMetric(state,211,"procs",1);recordCoreMetric(state,211,"alternatives",info.alternative?1:0);recordCoreMetric(state,211,"skipped",info.skipped);}
   if(source==="main")event.rerollUsedBySlot[slot]=true;
   if(source==="extra"){event.extraUsed=true;recordCoreMetric(state,212,"spent",1);}
-  if(source==="reserve"){r.reserve--;recordCoreMetric(state,218,"spent",1);}
+  if(source==="reserve"){r.reserve--;recordCoreMetric(state,212,"spent",1);}
   if(normal&&slot>=3)recordCoreMetric(state,214,"rerolls",1);
   event.currentChoiceIds[slot]=next.id;event.seenChoiceIds.push(next.id);
   state.coreState.encounteredCoreIds.add(next.id);
@@ -61,14 +61,7 @@ export function spendReroll(state:AircraftCombatState,event:CoreSelectionEvent,s
 export function closeCoreSelection(state:AircraftCombatState,event:CoreSelectionEvent,slot:number){
   if(event.context.kind!=="normal")return;
   const r=releaseState(state);
-  if(hasCore(state,218)){
-    const unusedMain=event.rerollUsedBySlot.filter(used=>!used).length;
-    const extra=event.extraAvailable&&!event.extraUsed?1:0,earned=unusedMain+extra;
-    const capacity=Math.max(0,reserveCap(state)-r.reserve),accepted=Math.min(earned,capacity);r.reserve+=accepted;
-    recordCoreMetric(state,218,"granted",accepted);recordCoreMetric(state,218,"discarded",earned-accepted);
-    recordCoreMetric(state,212,"converted",Math.min(extra,Math.max(0,capacity-unusedMain)));
-    const entry=state.coreState.telemetry.core_218??={};entry.peak=Math.max(entry.peak??0,r.reserve);
-  }
+  if(event.context.guaranteedDiamond)r.pendingGuaranteedDiamondSelection=false;
   if(slot>=3)recordCoreMetric(state,214,"picks",1);
 }
 export function rollUnstableMode(state:AircraftCombatState,random:()=>number){
@@ -77,17 +70,20 @@ export function rollUnstableMode(state:AircraftCombatState,random:()=>number){
 }
 export function initializeReleaseCore(state:AircraftCombatState,id:string,random:()=>number){
   const r=releaseState(state);
+  if(id==="core_178")state.coreState.timers.magneticBrakeCd=state.coreState.time+20;
   if(id==="core_202"&&!r.followups.includes("primary"))r.followups.push("primary");
-  if(id==="core_212"||id==="core_218")r.reserve=Math.min(5,r.reserve+1);
+  if(id==="core_212"){r.reserve=Math.min(5,r.reserve+1);recordCoreMetric(state,212,"granted",1);}
+  if(id==="core_217")r.pendingGuaranteedDiamondSelection=true;
   if(id==="core_219"){r.heat=0;r.overheatUntil=0;r.lastSkillEnd=state.coreState.time;}
   if(id==="core_220")r.ghostReady=state.coreState.time+10;
-  if(id==="core_221")r.markReady=state.coreState.time+20;
+  if(id==="core_221")r.markReady=state.coreState.time+16;
   if(id==="core_222")rollUnstableMode(state,random);
 }
 export function removeReleaseCoreState(state:AircraftCombatState,ids:string[]){
   const r=releaseState(state);
   if(ids.includes("core_227"))r.waitingChest=undefined;
-  if(ids.includes("core_218"))r.reserve=0;
+  if(ids.includes("core_217"))r.pendingGuaranteedDiamondSelection=false;
+  if(ids.includes("core_218"))delete state.coreState.timers.ultimateAftershock;
   r.reserve=Math.min(r.reserve,reserveCap(state));
   r.followups=r.followups.filter(()=>!ids.includes("core_202"));
   if(ids.includes("core_219")){r.heat=0;r.overheatUntil=0;}

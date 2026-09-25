@@ -1,3 +1,4 @@
+import { EQUIPMENT_POWER as P } from "./airCombatEquipmentBalance";
 import { skillRank, rankValues, isUltimate, ultimateCastDisabled, COMBAT_LEVEL_CAP, CORE_MILESTONES } from "./airCombatSkillRanks";
 import { applyEquipmentStats, equipmentUntargetable } from "./airCombatEquipmentStats";
 import { equipmentState, equipmentScale, equipmentEffect, equipmentMetric } from "./airCombatEquipmentState";
@@ -86,7 +87,8 @@ export function getEffectiveAircraftStats(state: AircraftCombatState, includeTem
     }
     if (includeTemporary && (c.timers.tacticalData || 0) > c.time && !hasCore(state, 95)) stats.criticalChance += (c.stacks.tacticalData || 0) * V.dataCrit;
     applyFireRateLock(state, stats);
-    stats.fireRate = hasCore(state, 54) ? 1.2 : Math.min(AIR_COMBAT_LIMITS.maxFireRate, Math.max(.1, stats.fireRate));
+    stats.fireRate = hasCore(state, 54) ? Math.min(1.8,Math.max(.1,stats.fireRate)) : Math.min(AIR_COMBAT_LIMITS.maxFireRate, Math.max(.1, stats.fireRate));
+    if(hasCore(state,95))stats.criticalChance=.25;
     stats.criticalChance = Math.max(0, Math.min(1, stats.criticalChance));
     stats.criticalDamageMultiplier = Math.max(1.7, Math.min(10, stats.criticalDamageMultiplier));
     stats.cooldownReduction = Math.max(0, Math.min(.6, stats.cooldownReduction));
@@ -95,6 +97,7 @@ export function getEffectiveAircraftStats(state: AircraftCombatState, includeTem
     stats.firepower = Math.max(0, stats.firepower);
     stats.hpRegen = Math.max(0, stats.hpRegen);
     stats.currentHp = Math.min(state.currentHp, stats.maxHp);
+    state.coreState.stacks.resourceRatio=state.currentResource/stats.maxResource;
     stats.currentResource = Math.min(state.currentResource, stats.maxResource);
     if (includeTemporary) c.stacks.effectiveMaxHp = stats.maxHp;
     return stats;
@@ -164,9 +167,11 @@ export function getSkillRuntimeValues(state: AircraftCombatState, skillId: Skill
         count: 0, upkeepPerSecond: 0, sideProjectileMultiplier: .15, radiusMultiplier: 1, damageTakenMultiplier: 1, charge: 0 };
     Object.assign(v, rankValues(state,skillId));
     const specialized=hasCore(state,97)&&!isUltimate(skillId);
-    const costMultiplier=Math.max(.4, expansionSkillCost(state,skillId)*(specialized?.8:1)*(1-.10*equipmentScale(state,31)));
-    if(skillId!=="escort_drone")v.cost*=costMultiplier;
-    v.upkeepPerSecond*=Math.max(.4,costMultiplier*(skillId==="escort_drone"&&expansionActive(state,"capacitorHawk")?.85:1));
+    const costMultiplier=Math.max(.4, expansionSkillCost(state,skillId)*(specialized?.8:1)*(1-P[31].discount*equipmentScale(state,31)));
+    const shift=expansionActive(state,"shiftDiscount")?.85:1;
+    const aether=(equipmentEffect(state,6).bonusUntil??0)>state.coreState.time?1-P[6].discount*equipmentScale(state,6):1;
+    v.cost*=costMultiplier*shift*aether;
+    v.upkeepPerSecond*=costMultiplier;
     if(specialized)v.cooldown*=.75;
     if(expansionState(state).primarySkill===skillId)v.cooldown*=.8;
     return v;
@@ -218,6 +223,7 @@ export function startDeferredSkillCooldown(state:AircraftCombatState,skillId:Ski
     state.coreState.skillCooldownDurations[skillId]=state.cooldowns[skillId];
     recordCooldownTelemetry(state,skillId,factor);
     delete state.coreState.deferredCooldowns[skillId];
+    if(isUltimate(skillId)&&hasCore(state,218)&&!state.coreState.stacks.cancellingSkills){state.coreState.timers.ultimateAftershock=state.coreState.time+8;recordCoreMetric(state,218,"procs",1);}
     if(state.coreState.stacks[`debt:${skillId}`])beginDebt(state,skillId);
 }
 export function endAircraftSkill(state: AircraftCombatState, skillId: SkillId): void {
@@ -261,7 +267,9 @@ export function castSkill(state: AircraftCombatState, skillId: SkillId): SkillCa
     const {free,cost}=availability;
     state.currentResource = Math.max(0, state.currentResource - cost);
     equipmentResourceSpent(state,cost);
-    const equipmentCost = 1-.10*equipmentScale(state,31);
+    if(expansionActive(state,"shiftDiscount")){recordCoreMetric(state,168,"saved",cost/.85-cost);state.coreState.timers.shiftDiscount=0;}
+    equipmentEffect(state,6).bonusUntil=0;
+    const equipmentCost = 1-P[31].discount*equipmentScale(state,31);
     equipmentMetric(state,31,"saved",cost/equipmentCost-cost);
     observeExpansionResource(state, getEffectiveAircraftStats(state).maxResource);
     state.coreState.skillCasts++;
@@ -278,7 +286,7 @@ export function castSkill(state: AircraftCombatState, skillId: SkillId): SkillCa
     const savingRow=skillId==="invisibility"?39:skillId==="focus_laser"?42:undefined;
     if(!free)recordCoreMetric(state,savingRow,"saved",Math.max(0,skill.cost-v.cost));
     if(!free&&skillId!=="escort_drone"){
-        if(hasCore(state,190))recordCoreMetric(state,190,"extraResource",cost-cost/1.12);
+        if(hasCore(state,190))recordCoreMetric(state,190,"extraResource",cost-cost/1.10);
         if(expansionState(state).primarySkill===skillId)recordCoreMetric(state,202,"saved",cost/.8-cost);
     }
     if(skillId==="focus_laser")recordCoreMetric(state,41,"chargeSaved",1.8);
@@ -321,7 +329,7 @@ export function healAircraft(state: AircraftCombatState, amount: number): number
     state.coreState.healingTotal += effective;
     if (hasCore(state, 104) && healing > effective) {
         const current = state.coreState.shields.overheal?.amount || 0;
-        state.coreState.shields.overheal = { amount: Math.min(maxHp * .12, current + healing - effective), until: Infinity };
+        state.coreState.shields.overheal = { amount: Math.min(maxHp * .20, current + healing - effective), until: Infinity };
         recordCoreMetric(state, 104, "shieldCreated", Math.max(0, state.coreState.shields.overheal.amount - current));
     }
     return effective;
@@ -337,7 +345,7 @@ export function tickAircraftState(state: AircraftCombatState, deltaSeconds: numb
     recordCoreMetric(state,30,"uptime",Math.min(dt,Math.max(0,(state.coreState.timers.shieldArmor??0)-state.coreState.time)));
     if(state.coreState.time-state.coreState.lastDamage>=4)recordCoreMetric(state,82,"uptime",dt);
     for (const key of Object.keys(state.cooldowns) as SkillId[]) {
-        const before=state.cooldowns[key]||0,extra=.3*Math.max(0,Math.min(dt,(state.coreState.timers.timeRecovery??0)-state.coreState.time));
+        const before=state.cooldowns[key]||0,extra=0;
         state.cooldowns[key] = Math.max(0,before-dt-extra);
         recordCoreMetric(state,119,"cooldown",Math.max(0,before-dt)-state.cooldowns[key]!);
         const debtKey=`paidDebt:${key}`,debt=state.coreState.stacks[debtKey]??0;
@@ -395,7 +403,7 @@ export function tickAircraftState(state: AircraftCombatState, deltaSeconds: numb
     const stats = getEffectiveAircraftStats(state);
     syncEffectiveMaxHp(state);
     const resourceWithout=new Map<number,number>();
-    for(const row of [119,181,193,209,222])if(hasCore(state,row)){
+    for(const row of [119,174,176,181,209,218,222])if(hasCore(state,row)){
         const without=getEffectiveAircraftStats({...state,selectedCores:state.selectedCores.filter(id=>id!==`core_${row}`),coreState:{...state.coreState,stacks:{...state.coreState.stacks}}});
         resourceWithout.set(row,without.resourceRegen);
     }
@@ -410,7 +418,7 @@ export function tickAircraftState(state: AircraftCombatState, deltaSeconds: numb
     const available = Math.max(0, state.currentResource + stats.resourceRegen * dt);
     const spent = Math.min(available, upkeep * dt);
     equipmentResourceSpent(state,spent);
-    equipmentMetric(state,31,"saved",Math.min(available,upkeep/(1-.10*equipmentScale(state,31))*dt)-spent);
+    equipmentMetric(state,31,"saved",Math.min(available,upkeep/(1-P[31].discount*equipmentScale(state,31))*dt)-spent);
     if(upkeep>0)recordCoreMetric(state,43,"saved",Math.min(available,4*dt)-spent);
     const resourceBefore = state.currentResource;
     state.currentResource = Math.max(0, Math.min(stats.maxResource, available - spent));
@@ -422,9 +430,8 @@ export function tickAircraftState(state: AircraftCombatState, deltaSeconds: numb
         recordCoreMetric(state,row,"resource",state.currentResource-counterfactual);
     }
     if(upkeep>0){
-        if(hasCore(state,190))recordCoreMetric(state,190,"extraResource",spent-Math.min(available,upkeep/1.15*dt));
-        if(expansionState(state).primarySkill==="escort_drone")recordCoreMetric(state,202,"saved",Math.min(available,upkeep/.85*dt)-spent);
-        if(expansionActive(state,"capacitorHawk"))recordCoreMetric(state,172,"saved",Math.min(available,upkeep/.85*dt)-spent);
+        if(hasCore(state,190))recordCoreMetric(state,190,"extraResource",spent-Math.min(available,upkeep/1.10*dt));
+        if(expansionState(state).primarySkill==="escort_drone")recordCoreMetric(state,202,"saved",Math.min(available,upkeep/.8*dt)-spent);
     }
     for(const [family,without] of equipmentRegenWithout){
       equipmentMetric(state,family,"extraHealing",healed-Math.min(missingHp,without.hpRegen*dt*healingMultiplier));

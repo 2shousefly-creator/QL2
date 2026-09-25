@@ -176,6 +176,7 @@ export interface EffectiveAircraftStats extends CombatStats {
 export type CoreSystem = "attack" | "defense" | "resource" | "skill" | "utility";
 
 export interface CoreDefinition {
+  availability?: string;
   system: CoreSystem;
   skillSlot?: number;
   id: CoreId;
@@ -189,6 +190,7 @@ export interface CoreDefinition {
 }
 
 export interface CoreCard {
+  availability?: string;
   system: CoreSystem;
   skillSlot?: number;
   id: CoreId;

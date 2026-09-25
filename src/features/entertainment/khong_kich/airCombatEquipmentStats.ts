@@ -1,8 +1,9 @@
+import { EQUIPMENT_POWER as P } from "./airCombatEquipmentBalance";
 import type { AircraftCombatState, EffectiveAircraftStats } from "./airCombatTypes";
 import { EQUIPMENT_CATALOG } from "./airCombatEquipmentCatalog";
 import { equipmentState, equipmentScale, equipmentEffect } from "./airCombatEquipmentState";
 export function canSkillsCrit(s: AircraftCombatState) { return s.selectedCores.includes("core_053") || equipmentScale(s,8)>0; }
-export function getTempestJewelledCritDamageBonus(s: AircraftCombatState) { return s.selectedCores.includes("core_053") ? .25*equipmentScale(s,8) : 0; }
+export function getTempestJewelledCritDamageBonus(s: AircraftCombatState) { return s.selectedCores.includes("core_053") ? P[8].synergy*equipmentScale(s,8) : 0; }
 export function equipmentUntargetable(s: AircraftCombatState) {return equipmentScale(s,3)>0 && equipmentEffect(s,3).until>s.coreState.time;}
 export function equipmentGeminiMode(s: AircraftCombatState, hp:number, resource:number) {
   const h=s.currentHp/hp,r=s.currentResource/resource;
@@ -16,19 +17,20 @@ export function applyEquipmentStats(s: AircraftCombatState, stats: EffectiveAirc
   }
   stats.resourceRegen*=1+regen;
   const scale=(id:number)=>id===omittedEffect?0:equipmentScale(s,id),active=(id:number)=>equipmentEffect(s,id).until>s.coreState.time;
-  stats.maxHp*=1+.08*scale(22);stats.maxResource+=8*scale(31);
-  stats.criticalDamageMultiplier+=getTempestJewelledCritDamageBonus(s)+.25*scale(36);
+  stats.maxHp*=1+P[22].hp*scale(22);stats.maxResource+=P[31].resource*scale(31);
+  stats.criticalDamageMultiplier+=P[36].crit*scale(36);
   if(temporary) {
-    if(active(2))stats.fireRate+=equipmentEffect(s,2).stacks*.015*scale(2);
-    if(equipmentEffect(s,10).stacks>=10){stats.armor+=30*scale(10);stats.fireRate+=.20*scale(10);stats.hpRegen+=.6*scale(10);}
-    if(active(11))stats.fireRate+=.4*scale(11);
-    if(active(14)){stats.fireRate+=.4*scale(14);stats.firepower+=25*scale(14);}
-    if(active(20))stats.armor+=30*scale(20);
-    if(active(32))stats.resourceRegen*=1+.2*scale(32);
-    if(s.currentHp>=stats.maxHp*.5)stats.firepower*=1+.06*scale(33);
+    if(active(2))stats.fireRate+=equipmentEffect(s,2).stacks*P[2].rate*scale(2);
+    if(active(10)){stats.armor+=P[10].armor*scale(10);stats.fireRate+=P[10].rate*scale(10);stats.hpRegen+=P[10].regen*scale(10);}
+    if(active(11))stats.fireRate+=P[11].rate*scale(11);
+    if(active(14)){const strength=equipmentEffect(s,14).value;stats.fireRate+=P[14].rate*scale(14)*strength;stats.firepower+=P[14].firepower*scale(14)*strength;}
+    if(active(20))stats.armor+=P[20].armor*scale(20);
+    if(active(32))stats.resourceRegen*=1+P[32].regen*scale(32)*equipmentEffect(s,32).value;
+    if(active(26)&&equipmentEffect(s,26).stacks===6)stats.criticalDamageMultiplier+=P[26].crit*scale(26);
+    if(s.currentHp<stats.maxHp*.5)stats.resourceRegen*=1+P[19].regen*scale(19);
     const mode=equipmentGeminiMode(s,stats.maxHp,stats.maxResource);
-    if(mode==="hp")stats.hpRegen*=1+.15*scale(28);
-    if(mode==="resource")stats.resourceRegen*=1+.15*scale(28);
+    if(mode==="hp")stats.hpRegen*=1+P[28].regen*scale(28);
+    if(mode==="resource")stats.resourceRegen*=1+P[28].regen*scale(28);
   }
-  stats.fireRate*=1+.12*scale(9);
+  stats.fireRate*=1+P[9].rate*scale(9);
 }

@@ -1,0 +1,23 @@
+/** 26.13.0 completed-family power. Only power fields receive Legendary scale 2. */
+export const EQUIPMENT_POWER = {
+  1: { damage: .18 }, 2: { rate: .025, basic: .20 },
+  3: { heal: .15, damage: .15 }, 4: { shield: .25 },
+  5: { hit: 3, area: 2, skill: .25 }, 6: { resource: .06, discount: .15 },
+  7: { skill: .15, vulnerability: .15 }, 8: { crit: .30, synergy: .25 },
+  9: { rate: .18, currentHp: .015, eliteCap: .35 },
+  10: { armor: 60, rate: .5, regen: 1.5, damage: .20 },
+  11: { rate: .6, basic: .15 }, 12: { echo: .8, merged: 1.4 },
+  13: { damage: 1.4 }, 14: { rate: .6, firepower: 35, skill: .15 },
+  15: { armor: 10, vulnerability: .15 }, 16: { reduction: .12, damage: 3 },
+  17: { shield: .12, damage: .10 }, 18: { stored: .35, cap: .18, heal: .75, damage: .10 },
+  19: { resource: .07, regen: .25 }, 20: { armor: 45, reduction: .10 },
+  21: { reduction: .04, damage: .10 }, 22: { hp: .12, damage: .007 },
+  23: { heal: .06, shield: .10, damage: .10 }, 24: { damage: 3, slow: .30, resource: .06 },
+  25: { cooldown: 5, shield: .15, damage: .15 }, 26: { damage: .03, crit: .25 },
+  27: { regen: .015 }, 28: { damage: .15, regen: .35 },
+  29: { heal: .06, shield: .05 }, 30: { heal: .0025, cap: .0075 },
+  31: { resource: 20, discount: .20, skill: .10 }, 32: { regen: .40, skill: .10 },
+  33: { damage: .15, heal: .02, reduction: .10 }, 34: { skill: .15, cooldown: 1.5 },
+  35: { cooldown: .18, critical: .6, cap: 1.2, skill: .10 },
+  36: { crit: .40, bleed: .40, vulnerability: .08 },
+} as const;

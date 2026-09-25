@@ -5,7 +5,7 @@ import { CORE_DEFINITIONS } from "./airCombatCoreCatalog";
 import { recordCoreMetric } from "./airCombatTelemetry";
 
 const owns = (s: AircraftCombatState, n: number) => s.selectedCores.includes(`core_${n}`);
-export interface ExpansionCast { skillId: SkillId; overclock: number; ended?: boolean }
+export interface ExpansionCast { skillId: SkillId; overclock: number; compressed?: boolean; capacitor?: boolean; equipmentBonus?: number; ended?: boolean }
 export interface AbsorbShield {
   amount: number; until: number;
   capacity?: number; absorbed?: number; duration?: number; returned?: boolean; settled?: boolean;
@@ -49,62 +49,74 @@ export function arsenalBonuses(s: AircraftCombatState) {
 /** Runs after all legacy final stats, before canonical clamps/Fire Rate lock. */
 export function applyExpansionStats(s: AircraftCombatState, stats: EffectiveAircraftStats, temporary: boolean) {
   const c = s.coreState;
-  if (owns(s, 188)) {stats.criticalChance += .18;stats.criticalDamageMultiplier+=.35;}
+  if (owns(s, 188)) {stats.criticalChance += .15;stats.criticalDamageMultiplier+=.50;}
   stats.resourceRegen*=1+arsenalBonuses(s).resource;
-  if(temporary&&expansionActive(s,"timeRecovery"))stats.resourceRegen*=1.3;
-  if (owns(s, 194)) stats.criticalChance += .10;
+  if(temporary&&expansionActive(s,"timeRecovery"))stats.resourceRegen*=1.35;
+  if (owns(s, 194)) stats.criticalChance += .15;
   if (owns(s, 207)) stats.criticalChance += .25;
-  if (owns(s, 196)) stats.criticalDamageMultiplier += Math.min(.50, (c.stacks.crimsonCrit ?? 0) * .025);
+  if (owns(s, 196)) stats.criticalDamageMultiplier += Math.min(.75, (c.stacks.crimsonCrit ?? 0) * .05);
+  if(owns(s,196))stats.criticalChance+=.10;
+  if(owns(s,182))stats.maxResource*=1.15;
+  if(owns(s,183))stats.armor+=20;
+  if(owns(s,208)){stats.hpRegen+=2;stats.resourceRegen*=1.20;}
   if (temporary) {
+    if(owns(s,114)&&expansionActive(s,"sameTarget"))stats.fireRate+=Math.min(4,Math.floor((c.stacks.sameTargetHits??0)/5))*.35;
+    if(expansionActive(s,"coldArmor"))stats.armor+=25;
+    if(owns(s,174)&&expansionActive(s,"shockPadRegen"))stats.resourceRegen*=1.20;
+    if(owns(s,176)&&c.stacks.breathing)stats.resourceRegen*=1.25;
+    if(owns(s,218)&&expansionActive(s,"ultimateAftershock"))stats.resourceRegen*=1.35;
     const negative = activeNegativeStatusTypes(s).size;
     if (owns(s, 169)) {
       const ratio = s.currentResource / stats.maxResource;
-      if (ratio > .70) stats.firepower += 18;
-      else if (ratio < .30) stats.hpRegen += 1.2;
-      else stats.fireRate += .3;
+      if (ratio > .70) stats.firepower += 40;
+      else if (ratio < .30) stats.hpRegen += 2.5;
+      else stats.fireRate += .45;
     }
-    if (owns(s, 170) && expansionActive(s, "earlyArmor")) stats.armor += 30;
-    if (owns(s, 179)) stats.criticalChance += Math.min(10, c.stacks.error ?? 0) * .02;
-    if (owns(s, 181) && expansionActive(s, "skillExhaust")) stats.resourceRegen *= 1.30;
+    if (owns(s, 170) && expansionActive(s, "earlyArmor")) stats.armor += 50;
+    if (owns(s, 179)) stats.criticalChance += (c.stacks.error ?? 0) * .02;
+    if (owns(s, 181) && expansionActive(s, "skillExhaust")) stats.resourceRegen *= 1.45;
     if (owns(s, 183)) stats.armor += Math.min(40, negative * 20);
-    if (owns(s, 192) && !hasAbsorbShield(s)) stats.armor += 14;
-    if (owns(s, 193) && expansionActive(s, "tripleRegen")) stats.resourceRegen *= 1.30;
+    if (owns(s, 192) && !hasAbsorbShield(s)) stats.armor += 25;
     if (owns(s, 209)) {
       if (s.currentHp < stats.maxHp * .35) c.stacks.lastStand = 1;
       else if (s.currentHp > stats.maxHp * .35) c.stacks.lastStand = 0;
-      if (c.stacks.lastStand) { stats.armor += 150; stats.resourceRegen *= 1.4; stats.cooldownReduction += .20; }
+      if (c.stacks.lastStand) { stats.armor += 150; stats.resourceRegen *= 1.4; stats.cooldownReduction -= .20; }
     }
   }
   // The locked final chance wins over every new flat/conditional contribution.
   if (owns(s, 95)) stats.criticalChance = .25;
-  if (owns(s, 206)) { stats.fireRate *= .8; stats.weapon.penetration++; }
+  if (owns(s, 206)) { stats.fireRate *= .9; stats.weapon.penetration++; }
 }
 export function expansionOutgoing(s: AircraftCombatState, basic: boolean, skill: boolean, primary = false): number {
   let value = 1;
   if(owns(s,219)&&!overheated(s)&&releaseState(s).heat>=50&&releaseState(s).heat<100)value*=1.25;
-  if (expansionActive(s, "alternating")) value *= 1.15;
-  if (owns(s, 192) && hasAbsorbShield(s)) value *= 1.15;
+  if (expansionActive(s, "alternating")) value *= 1.20;
+  if (owns(s, 192) && hasAbsorbShield(s)) value *= 1.20;
   if (owns(s, 203) && activeNegativeStatusTypes(s).size) value *= 1.35;
-  if (owns(s, 205)) value *= 1.25;
+  if (owns(s, 205)) value *= 1.40;
   if (owns(s, 209) && s.coreState.stacks.lastStand) value *= .85;
+  for(const [row,bonus] of [[211,.10],[212,.12],[214,.15],[217,.10],[203,.10]])if(owns(s,row))value*=1+bonus;
+  if(owns(s,218)&&expansionActive(s,"ultimateAftershock"))value*=1.35;
+  if(owns(s,116)&&(basic||skill)&&expansionActive(s,"sameTarget"))value*=1+.04*Math.min(4,Math.floor((s.coreState.stacks.sameTargetHits??0)/5));
+  if(skill&&owns(s,119))value*=1.15;
+  if(skill&&owns(s,182)&&(s.coreState.stacks.resourceRatio??0)>.7)value*=1.10;
   const arsenal = arsenalBonuses(s);
   if (basic) {
     value *= 1 + arsenal.basic;
-    if (expansionActive(s, "confluence")) value *= 1.35;
-    if (expansionActive(s, "alternatingBasic")) value *= 1.25;
+    if (expansionActive(s, "confluence")) value *= 1.45;
     if (primary && owns(s, 206)) value *= 1.70;
   }
-  if (skill) { value *= 1 + arsenal.skill; if (owns(s, 190)) value *= 1.25; }
+  if (skill) { value *= 1 + arsenal.skill; if (owns(s, 190)) value *= 1.30; }
   return value;
 }
 export function expansionIncoming(s: AircraftCombatState): number {
   let value = 1 - arsenalBonuses(s).reduction;
   if (owns(s, 203) && activeNegativeStatusTypes(s).size) value *= .75;
-  if (owns(s, 205)) value *= 1.18;
+  if (owns(s, 205)) value *= 1.20;
   return value;
 }
 export function expansionSkillCost(s: AircraftCombatState, id: SkillId): number {
-  return (owns(s, 190) ? 1.12 : 1) * (expansionState(s).primarySkill === id ? .8 : 1);
+  return (owns(s, 190) ? 1.10 : 1) * (expansionState(s).primarySkill === id ? .8 : 1);
 }
 export function finishExpansionSkill(s: AircraftCombatState, cast?: ExpansionCast) {
   if (!cast || cast.ended) return;
@@ -118,10 +130,10 @@ export function celestialProtection(s: AircraftCombatState): boolean {
   if (!owns(s, 184)) return false;
   const c = s.coreState;
   if (expansionActive(s, "celestial")) return true;
-  if (c.timers.celestialReady === undefined) { c.timers.celestialReady = c.time + 18; return false; }
+  if (c.timers.celestialReady === undefined) { c.timers.celestialReady = c.time + 15; return false; }
   if (c.time < c.timers.celestialReady) return false;
-  c.timers.celestial = c.time + 2.5;
-  c.timers.celestialReady = c.time + 2.5 + 18;
+  c.timers.celestial = c.time + 3;
+  c.timers.celestialReady = c.time + 3 + 15;
   recordCoreMetric(s,184,"procs",1);
   return true;
 }
@@ -137,6 +149,9 @@ export function finishAbsorbShield(s: AircraftCombatState, sh: AbsorbShield) {
   if (sh.settled) return;
   prepareAbsorbShield(s, sh);
   sh.settled = true;
+  const key=Object.entries(s.coreState.shields).find(([,value])=>value===sh)?.[0];
+  if(key==="skill")s.coreState.timers.skillShieldCd=s.coreState.time+10;
+  if(key==="reactive")s.coreState.timers.reactiveShieldCd=s.coreState.time+10;
   if (Number.isFinite(sh.until)) expansionState(s).endedShields.push(sh);
 }
 export function createAbsorbShield(s: AircraftCombatState, key: string, amount: number, seconds: number) {
@@ -150,9 +165,5 @@ export function createAbsorbShield(s: AircraftCombatState, key: string, amount: 
 export function observeExpansionResource(s: AircraftCombatState, maxResource: number) {
   const c=s.coreState,r=expansionState(s),ratio=s.currentResource/maxResource;
   if (ratio<1) r.fullSince=undefined;
-  if (owns(s,182) && ratio<.20 && (r.resourceRatio??1)>=.20 && !expansionActive(s,"reserveBatteryCd")) {
-    c.timers.reserveBattery=c.time+4;c.timers.reserveBatteryCd=c.time+22;
-    recordCoreMetric(s,182,"procs",1);
-  }
   r.resourceRatio=ratio;
 }

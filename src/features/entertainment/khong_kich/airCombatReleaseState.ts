@@ -5,6 +5,7 @@ export interface ReleaseCoreState {
   aimShots?: number;
   aimBonusReady?: boolean;
   waitingChest?: { remaining:number; claimed:boolean; cancelled:boolean; rewardLabel?:string };
+  pendingGuaranteedDiamondSelection?: boolean;
   reserve: number;
   followups: "primary"[];
   mode?: "small" | "giant";

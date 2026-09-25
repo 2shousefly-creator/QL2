@@ -737,7 +737,7 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
             {hasCore(worldRef.current.aircraft,211)&&<span>Lọc reroll: ưu tiên Hệ khác</span>}
             {hasCore(worldRef.current.aircraft,212)&&<span>Reroll Dự Phòng: {worldRef.current.coreSelectionEvent?.extraAvailable&&!worldRef.current.coreSelectionEvent?.extraUsed?"1":"0"}</span>}
             {hasCore(worldRef.current.aircraft,217)&&<span>Bạc 20% · Vàng 35% · Kim Cương 45%</span>}
-            {hasCore(worldRef.current.aircraft,218)&&<span>Reroll Dự Trữ: {releaseState(worldRef.current.aircraft).reserve} / {reserveCap(worldRef.current.aircraft)}</span>}
+            {hasCore(worldRef.current.aircraft,212)&&<span>Reroll Dự Trữ: {releaseState(worldRef.current.aircraft).reserve} / {reserveCap(worldRef.current.aircraft)}</span>}
           </div>}
           <div key={worldRef.current.coreSelectionCount} className="air-upgrade-choices" data-core-selection="open" onPointerDown={e=>e.stopPropagation()} onPointerMove={e=>e.stopPropagation()} onTouchMove={e=>e.stopPropagation()} data-reduced-motion={reducedMotion}>
             {coreChoices.map((card, slot) => <div className="air-upgrade-row" key={slot} style={{"--slot":slot} as React.CSSProperties}>

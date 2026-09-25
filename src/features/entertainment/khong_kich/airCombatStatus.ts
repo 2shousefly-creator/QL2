@@ -75,6 +75,6 @@ export function tickPlayerStatus(state:AircraftCombatState):void {
  * Existing longer effects do not manufacture saved duration. UI never records metrics. */
 function recordStatusMitigation(state:AircraftCombatState,seconds:number,priorUntil:number) {
   if(seconds<=0)return;
-  const now=state.coreState.time,without=seconds*(hasCore(state,116)?.9:1),withCore=negativeStatusDuration(state,seconds);
+  const now=state.coreState.time,without=seconds*(hasCore(state,203)?1.2:1),withCore=negativeStatusDuration(state,seconds);
   recordCoreMetric(state,98,"debuffSaved",Math.max(priorUntil,now+without)-Math.max(priorUntil,now+withCore));
 }
