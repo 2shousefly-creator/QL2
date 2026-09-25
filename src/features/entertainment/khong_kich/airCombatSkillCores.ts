@@ -20,7 +20,7 @@ export const createSkillCoreRuntime = (): SkillCoreRuntime => ({decoyCastId:0,de
 /** Base mechanic values shared by resolution, skill configuration and player copy. */
 export const SKILL_BASE_VALUES = {
   afterburnerCooldown:24, swarmCooldown:120, shieldCooldown:22, cannonCooldown:100,
-  decoysPerVolley:10, decoyVolleyInterval:.75, afterburnerRate:.4, upgradedAfterburnerRate:.75,
+  decoysPerVolley:10, decoyVolleyInterval:.75, afterburnerRate:1.2, upgradedAfterburnerRate:2.25,
   bounceFirst:.5, bounceSecond:.25, swarmHover:.35, bombFuse:3, laserTick:.25,
 } as const;
 const b=SKILL_BASE_VALUES;
@@ -45,19 +45,19 @@ export const SKILL_CORE_DESCRIPTIONS: Record<number,string> = {
   122:`Mỗi Mồi Bẫy hấp thụ đạn hoặc chặn một đợt lao hồi ${pct(v.heatRecovery)} Mana Tối Đa, tối đa ${pct(v.decoyRefundCap)} Mana Tối Đa mỗi lần dùng.`,
   123:`Mồi Bẫy hấp thụ đạn phát ra xung bán kính ${v.decoyPulseRadius}px, gây ${pct(v.decoyPulseDamage)} Hỏa Lực. Mỗi kẻ địch chỉ nhận 1 xung từ mỗi đợt Mồi Bẫy.`,
   124:`Khi còn ít nhất một Mồi Bẫy hoạt động, giảm ${pct(v.thermalReduction)} sát thương nhận vào. Hiệu ứng kéo dài thêm ${v.thermalTail} giây sau khi mồi cuối cùng biến mất.`,
-  125:`Giảm ${v.afterburnerCooldownReduction} giây Hồi Chiêu của Điên Cuồng, còn ${b.afterburnerCooldown-v.afterburnerCooldownReduction} giây trước các hiệu ứng Giảm Hồi Chiêu khác.`,
+  125:`Giảm ${v.afterburnerCooldownReduction} giây Hồi Chiêu của Điên Cuồng, còn ${b.afterburnerCooldown-v.afterburnerCooldownReduction} giây trước khi áp Điểm Hồi Kỹ Năng và các modifier Hồi Chiêu khác.`,
   126:`Khi Điên Cuồng kết thúc, hồi dần tổng ${pct(v.coolingMana)} Mana Tối Đa trong ${v.coolingDuration} giây.`,
   127:`Trong Điên Cuồng, mục tiêu nảy thứ nhất nhận ${pct(v.bounceFirst)} sát thương đạn gốc, mục tiêu nảy thứ hai nhận ${pct(v.bounceSecond)} sát thương đạn gốc.`,
-  128:`Giảm ${v.swarmCooldownReduction} giây Hồi Chiêu của Mưa Tên Lửa, còn ${b.swarmCooldown-v.swarmCooldownReduction} giây trước các hiệu ứng Giảm Hồi Chiêu khác.`,
+  128:`Giảm ${v.swarmCooldownReduction} giây Hồi Chiêu của Mưa Tên Lửa, còn ${b.swarmCooldown-v.swarmCooldownReduction} giây trước khi áp Điểm Hồi Kỹ Năng và các modifier Hồi Chiêu khác.`,
   129:`Mỗi tên lửa đang bay có thể phá tối đa ${v.interceptLimit} đạn địch trên đường đi. Tên lửa tiếp tục truy đuổi mục tiêu sau khi đánh chặn.`,
   130:`Mỗi tên lửa trúng địch tạo 1 Dữ Liệu, tối đa ${v.dataLimit} mỗi lần dùng. Khi toàn bộ loạt tên lửa kết thúc, nhận +${pct(v.dataCrit)} Tỷ Lệ Chí Mạng mỗi Dữ Liệu trong ${v.dataDuration} giây.`,
   131:`Khi Khiên Năng Lượng kết thúc, phát một xung EMP phá hủy toàn bộ đạn và tên lửa thù địch đang tồn tại trên màn hình.`,
   132:"Chuyển 80% sát thương thực tế được Khiên ngăn chặn thành Mana, tối đa 35% Mana Tối Đa mỗi lần dùng",
-  133:`Giảm ${v.shieldCooldownReduction} giây Hồi Chiêu của Khiên Năng Lượng, còn ${b.shieldCooldown-v.shieldCooldownReduction} giây trước các hiệu ứng Giảm Hồi Chiêu khác.`,
+  133:`Giảm ${v.shieldCooldownReduction} giây Hồi Chiêu của Khiên Năng Lượng, còn ${b.shieldCooldown-v.shieldCooldownReduction} giây trước khi áp Điểm Hồi Kỹ Năng và các modifier Hồi Chiêu khác.`,
   134:`Sau khi BigBang nổ ${n(v.aftershockDelay)} giây, phát thêm một vụ nổ toàn màn hình gây ${pct(v.aftershockDamage)} Hỏa Lực. Kẻ địch trúng phải gây ít hơn ${pct(v.weakenReduction)} mọi sát thương trong ${v.weakenDuration} giây và bị đẩy lùi theo cấp độ mục tiêu.`,
   135:`Kẻ địch sống sót sau BigBang bị đánh dấu trong ${v.markDuration} giây và nhận thêm ${pct(v.markBonus)} sát thương trực tiếp từ Titan.`,
   136:`BigBang tạo Hố Đen trong ${v.holeDuration} giây, hút đạn địch và kéo địch thường/Tinh Anh trong bán kính ${v.holeRadius}px về tâm. Vùng lõi ${v.holeCoreRadius}px phá hủy đạn và gây ${pct(v.holeDamagePerSecond)} Hỏa Lực mỗi giây. Boss không bị kéo.`,
-  137:`Giảm ${v.cannonCooldownReduction} giây Hồi Chiêu của Oanh Tạc, còn ${b.cannonCooldown-v.cannonCooldownReduction} giây. Hồi chiêu vẫn bắt đầu sau khi Oanh Tạc kết thúc.`,
+  137:`Giảm ${v.cannonCooldownReduction} giây Hồi Chiêu của Oanh Tạc, còn ${b.cannonCooldown-v.cannonCooldownReduction} giây trước khi áp Điểm Hồi Kỹ Năng và các modifier Hồi Chiêu khác. Hồi chiêu vẫn bắt đầu sau khi Oanh Tạc kết thúc.`,
   138:`Titan hồi Máu bằng ${pct(v.cannonHeal)} sát thương thực tế do Oanh Tạc gây ra.`,
   139:"Giảm góc mỗi tia xuống còn 3,5 độ, Tia Oanh Tạc bay nhanh hơn 60% và xuyên thêm 2 mục tiêu. Hai mục tiêu xuyên thêm lần lượt nhận 75% và 45% sát thương của tia gốc, vẫn tuân theo giảm damage của cùng một loạt",
   140:`Khi tàng hình kết thúc, phân thân lao đến kẻ địch gần nhất rồi phát nổ trong bán kính ${v.cloneExplosionRadius}px, gây ${pct(v.cloneExplosionDamage)} Hỏa Lực. Nếu không còn mục tiêu, phân thân phát nổ tại chỗ.`,

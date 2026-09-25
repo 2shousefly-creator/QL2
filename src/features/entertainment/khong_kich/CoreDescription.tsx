@@ -8,9 +8,9 @@ export const COMBAT_STAT_SEMANTICS = {
   regen:{Icon:HeartPulse,color:"#86efac",names:["Hồi Máu mỗi giây","Hồi Máu/giây","Hồi Máu/s","Hồi Máu","HP Regen","Hồi HP","HP/s"]},
   crit:{Icon:Crosshair,color:"#f97316",names:["Tỷ Lệ Chí Mạng","Crit Chance"]},
   critDamage:{Icon:Zap,color:"#fb923c",names:["Sát Thương Chí Mạng"]},
-  cooldown:{Icon:Timer,color:"#f9a8d4",names:["Thời Gian Hồi Chiêu","Giảm Hồi Chiêu","Hồi Chiêu"]},
+  cooldown:{Icon:Timer,color:"#f9a8d4",names:["Điểm Hồi Kỹ Năng","Hồi Chiêu Cơ Bản","Hồi Chiêu thực tế","Hồi Chiêu còn lại","Thời Gian Hồi Chiêu","Giảm Hồi Chiêu","Hồi Chiêu"]},
   resource:{Icon:BatteryCharging,color:"#c4b5fd",names:["tốc độ hồi phục tài nguyên mỗi giây","tốc độ hồi phục tài nguyên","tốc độ Hồi Tài Nguyên mỗi giây","tốc độ Hồi Tài Nguyên/s","tốc độ Hồi Tài Nguyên","hồi phục tài nguyên","Hồi Tài Nguyên mỗi giây","Hồi Tài Nguyên/s","Hồi Tài Nguyên","Hồi Mana","Hồi Điện","Mana Tối Đa","Điện Tối Đa","Tài Nguyên Tối Đa","Điện"]},
-  fireRate:{Icon:Gauge,color:"#facc15",names:["Tốc Độ Bắn"]},
+  fireRate:{Icon:Gauge,color:"#facc15",names:["Tốc Độ Bắn Cơ Bản","Tỷ Lệ Tốc Độ Bắn","Tốc Độ Bắn Cộng Thêm","Tổng Tốc Độ Bắn","Tốc Độ Bắn hiệu lực","Tốc Độ Bắn"]},
 } as const;
 type Semantic = keyof typeof COMBAT_STAT_SEMANTICS;
 const names=Object.entries(COMBAT_STAT_SEMANTICS).flatMap(([key,value])=>value.names.map(name=>({key:key as Semantic,name}))).sort((a,b)=>b.name.length-a.name.length);
@@ -34,7 +34,7 @@ export function combatTextTokens(text:string): {text:string;semantic?:Semantic;n
     else if(match.key==="maxHp")label="Máu Tối Đa";
     else if(match.key==="resource"&&/tài nguyên/i.test(match.name)&&!/tối đa/i.test(match.name))label=/mỗi giây|\/s/i.test(match.name)?"Hồi Tài Nguyên/s":"Hồi Tài Nguyên";
     else if(match.key==="cooldown"&&match.name==="Hồi Chiêu")label="Thời Gian Hồi Chiêu";
-    if(/\btổng\s/i.test(part))label=`tổng ${label}`;
+    if(/\btổng\s/i.test(part)&&!/^Tổng /i.test(label))label=`tổng ${label}`;
     return {text:part,semantic:match.key,number:!!amount,value:amount+unit,label};
   }).filter(token=>!!token.text);
 }

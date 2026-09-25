@@ -15,8 +15,8 @@ export const SKILL_RANKS: Record<SkillId, readonly SkillRankConfig[]> = {
   ["Mồi Phản Chấn","Mỗi lần hấp thụ projectile phát xung 60px gây 70% Hỏa Lực. Khi có mồi sống, giảm 20% sát thương nhận; kéo dài 4s sau mồi cuối."],
   ["Phản Công Hoàn Hảo","Hồi chiêu cơ bản còn 14s. Sau đợt mồi cuối, tăng 30% mọi sát thương trong 5s."]]),
  afterburner:ranks([150,155,160,165,170],[
-  ["Điên Cuồng","7s: +40% Tốc Độ Bắn. Đạn thường nảy thêm 2 mục tiêu, gây 50% / 25% sát thương đạn gốc."],
-  ["Cuồng Nộ Kéo Dài","Thời gian tăng lên 10s."],["Quá Tải","Tốc Độ Bắn cộng thêm tăng lên 75%."],
+  ["Điên Cuồng","7s: +120% Tốc Độ Bắn Cộng Thêm. Đạn thường nảy thêm 2 mục tiêu, gây 50% / 25% sát thương đạn gốc."],
+  ["Cuồng Nộ Kéo Dài","Thời gian tăng lên 10s."],["Quá Tải","Tốc Độ Bắn Cộng Thêm tăng từ +120% lên +225%."],
   ["Đạn Nảy Tăng Áp","Đạn nảy gây 75% / 50%; khi kết thúc hồi 18% Mana Tối Đa trong 5s."],
   ["Không Thể Ngăn Cản","Miễn khống chế cứng và giảm 15% sát thương nhận khi đang bật. Hồi chiêu cơ bản còn 16s."]]),
  predator_lock:ranks([110,120,130,140,150],[
@@ -67,7 +67,7 @@ export const SKILL_RANKS: Record<SkillId, readonly SkillRankConfig[]> = {
  escort_drone:ranks([5,10,15],[
   ["HawkEye","Yêu cầu triệu hồi: 5 Điện, không tiêu hao Điện khi triệu hồi. Duy trì 4 Điện/s, kế thừa 70% chỉ số Phantom, không giới hạn thời gian. Bấm lại thu hồi; hồi chiêu cơ bản 100s sau khi kết thúc/thu hồi."],
   ["Liên Kết Bền Chặt","Yêu cầu triệu hồi: 10 Điện, không tiêu hao khi triệu hồi. Duy trì 3 Điện/s, kế thừa 90% chỉ số. Không hoàn Điện khi thu hồi. Hồi chiêu cơ bản 80s."],
-  ["HawkEye Hiếu Chiến","Yêu cầu triệu hồi: 15 Điện, không tiêu hao khi triệu hồi; duy trì 3 Điện/s, kế thừa 90%. Sau 7s hoạt động, Cuồng Nộ 3s: HawkEye +120% Tốc Độ Bắn, Phantom +35%; hết hiệu ứng mới hồi 7s. Cùng gây sát thương trực tiếp lên một địch trong 1s tạo Đồng Bộ 4s: cả hai +30% sát thương lên mục tiêu. Chỉ một mục tiêu Đồng Bộ, hồi riêng 12s sau khi hiệu ứng hết. Hồi chiêu cơ bản 60s."]]),
+  ["HawkEye Hiếu Chiến","Yêu cầu triệu hồi: 15 Điện, không tiêu hao khi triệu hồi; duy trì 3 Điện/s, kế thừa 90%. Sau 7s hoạt động, Cuồng Nộ 3s: HawkEye +120% tốc độ bắn riêng (×2,2), Phantom +105% Tốc Độ Bắn Cộng Thêm; hết hiệu ứng mới hồi 7s. Cùng gây sát thương trực tiếp lên một địch trong 1s tạo Đồng Bộ 4s: cả hai +30% sát thương lên mục tiêu. Chỉ một mục tiêu Đồng Bộ, hồi riêng 12s sau khi hiệu ứng hết. Hồi chiêu cơ bản 60s."]]),
  orbit_reversal:ranks([150,160,170,180,190],[
   ["Phản Quỹ Đạo","Vùng 72px theo Astra 2s, bắt tối đa 16 projectile có thể chặn. Bấm lại kết thúc miễn phí. Tinh Đạn phản xạ gây 30% Hỏa Lực, giữ đường phóng không tự tìm mục tiêu."],
   ["Vành Đai Mở Rộng","Bán kính 92px; bắt tối đa 22 projectile."],["Phản Xạ Cường Hóa","Tinh Đạn gây 70% Hỏa Lực."],

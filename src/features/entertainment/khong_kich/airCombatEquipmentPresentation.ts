@@ -14,7 +14,7 @@ export function equipmentTelemetry(s:AircraftCombatState,id:EquipmentDefinitionI
   const d=EQUIPMENT_CATALOG[id];if(!d.family)return [];
   const f=Number(d.family.slice(2)),result=Object.entries(equipmentState(s).telemetry[d.family]??{}).map(([key,value])=>`${labels[key]??key}: ${number(value)}`);
   if(f===8)result.unshift(`Synergy hiện tại: +${number(getTempestJewelledCritDamageBonus(s)*100)}% Sát Thương Chí Mạng`);
-  if(f===9)result.unshift(`+${number(P[9].rate*equipmentScale(s,9)*100)}% tổng Tốc Độ Bắn từ hiệu ứng`);
+  if(f===9)result.unshift(`+${number(P[9].bonusFireRatePct*equipmentScale(s,9)*100)}% Tốc Độ Bắn Cộng Thêm từ hiệu ứng`);
   if(f===22)result.unshift(`+${number(getEffectiveAircraftStats(s).maxHp*(1-1/(1+P[22].hp*equipmentScale(s,22))))} Máu Tối Đa từ hiệu ứng`);
   if(f===31)result.unshift(`+${number(P[31].resource*equipmentScale(s,31))} Tài Nguyên Tối Đa từ hiệu ứng`);
   if(f===36)result.unshift(`+${P[36].crit*100*equipmentScale(s,36)}% Sát Thương Chí Mạng từ hiệu ứng`);
