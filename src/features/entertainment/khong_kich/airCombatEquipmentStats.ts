@@ -20,10 +20,10 @@ export function applyEquipmentStats(s: AircraftCombatState, stats: EffectiveAirc
   stats.maxHp*=1+P[22].hp*scale(22);stats.maxResource+=P[31].resource*scale(31);
   stats.criticalDamageMultiplier+=P[36].crit*scale(36);
   if(temporary) {
-    if(active(2))stats.fireRate+=equipmentEffect(s,2).stacks*P[2].rate*scale(2);
-    if(active(10)){stats.armor+=P[10].armor*scale(10);stats.fireRate+=P[10].rate*scale(10);stats.hpRegen+=P[10].regen*scale(10);}
-    if(active(11))stats.fireRate+=P[11].rate*scale(11);
-    if(active(14)){const strength=equipmentEffect(s,14).value;stats.fireRate+=P[14].rate*scale(14)*strength;stats.firepower+=P[14].firepower*scale(14)*strength;}
+    if(active(2))stats.bonusFireRatePct+=equipmentEffect(s,2).stacks*P[2].bonusFireRatePct*scale(2);
+    if(active(10)){stats.armor+=P[10].armor*scale(10);stats.bonusFireRatePct+=P[10].bonusFireRatePct*scale(10);stats.hpRegen+=P[10].regen*scale(10);}
+    if(active(11))stats.bonusFireRatePct+=P[11].bonusFireRatePct*scale(11);
+    if(active(14)){const strength=equipmentEffect(s,14).value;stats.bonusFireRatePct+=P[14].bonusFireRatePct*scale(14)*strength;stats.firepower+=P[14].firepower*scale(14)*strength;}
     if(active(20))stats.armor+=P[20].armor*scale(20);
     if(active(32))stats.resourceRegen*=1+P[32].regen*scale(32)*equipmentEffect(s,32).value;
     if(active(26)&&equipmentEffect(s,26).stacks===6)stats.criticalDamageMultiplier+=P[26].crit*scale(26);
@@ -32,5 +32,5 @@ export function applyEquipmentStats(s: AircraftCombatState, stats: EffectiveAirc
     if(mode==="hp")stats.hpRegen*=1+P[28].regen*scale(28);
     if(mode==="resource")stats.resourceRegen*=1+P[28].regen*scale(28);
   }
-  stats.fireRate*=1+P[9].rate*scale(9);
+  stats.bonusFireRatePct+=P[9].bonusFireRatePct*scale(9);
 }

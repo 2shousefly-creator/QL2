@@ -43,7 +43,6 @@ export const GAMEPLAY_SAFE_RECT: GameplaySafeRect = {
 };
 
 export const AIR_COMBAT_LIMITS = {
-  cooldownReduction: 0.60,
   criticalChance: 1,
   criticalDamageMultiplier: 10,
   baseCriticalDamageMultiplier: 1.70,
@@ -58,9 +57,10 @@ export const AIRCRAFT_CONFIGS: Record<AircraftId, AircraftConfig> = {
     id:"astra", name:"Astra", code:"AS-04", role:"Precision Control · Mana",
     description:"Kiểm soát projectile, xuyên tuyến bằng Thương Tinh Tú và không kích thiên thạch.",
     color:"#ff8b35", accent:"#fff4d8", resourceKind:"mana", hpRegen:{base:3.3,growth:.13},
-    baseStats:{maxHp:1760,armor:39,firepower:124,fireRate:3.9,criticalChance:.05,criticalDamageMultiplier:1.7,maxResource:330,resourceRegen:1.5},
-    growth:{maxHp:34,armor:1.6,firepower:4,fireRate:.045,criticalChance:0,criticalDamageMultiplier:0,maxResource:15,resourceRegen:.24},
+    baseStats:{maxHp:1760,armor:39,firepower:124,fireRate:4.06,criticalChance:.05,criticalDamageMultiplier:1.7,maxResource:330,resourceRegen:1.5},
+    growth:{maxHp:34,armor:1.6,firepower:4,criticalChance:0,criticalDamageMultiplier:0,maxResource:15,resourceRegen:.24},
     skillIds:["orbit_reversal","stellar_lance","twin_reflection","starfall"],
+    fireRateRatio: 0.337, fireRateGrowthPct: .05,
   },
   black_eagle: {
     id: "black_eagle",
@@ -78,7 +78,7 @@ export const AIRCRAFT_CONFIGS: Record<AircraftId, AircraftConfig> = {
       maxHp: 1694,
       armor: 38,
       firepower: 118,
-      fireRate: 4.0,
+      fireRate: 4.15,
       maxResource: 340,
       resourceRegen: 1.5,
     },
@@ -88,11 +88,11 @@ export const AIRCRAFT_CONFIGS: Record<AircraftId, AircraftConfig> = {
       maxHp: 32,
       armor: 1.5,
       firepower: 4,
-      fireRate: 0.05,
       maxResource: 15,
       resourceRegen: 0.25,
     },
     skillIds: ["decoy", "afterburner", "predator_lock", "missile_swarm"],
+    fireRateRatio: 0.355, fireRateGrowthPct: .05,
   },
   breaker: {
     id: "breaker",
@@ -110,7 +110,7 @@ export const AIRCRAFT_CONFIGS: Record<AircraftId, AircraftConfig> = {
       maxHp: 2067,
       armor: 46,
       firepower: 104,
-      fireRate: 3.8,
+      fireRate: 3.95,
       maxResource: 320,
       resourceRegen: 1.5,
     },
@@ -120,11 +120,11 @@ export const AIRCRAFT_CONFIGS: Record<AircraftId, AircraftConfig> = {
       maxHp: 42,
       armor: 2.1,
       firepower: 2,
-      fireRate: 0.044,
       maxResource: 14,
       resourceRegen: 0.20,
     },
     skillIds: ["armor_shield", "heavy_bomb", "gravity_anchor", "sweeping_cannon"],
+    fireRateRatio: 0.328, fireRateGrowthPct: .05,
   },
   phantom: {
     id: "phantom",
@@ -142,7 +142,7 @@ export const AIRCRAFT_CONFIGS: Record<AircraftId, AircraftConfig> = {
       maxHp: 1839,
       armor: 41,
       firepower: 112,
-      fireRate: 3.9,
+      fireRate: 4.04,
       maxResource: 100,
       resourceRegen: 2,
     },
@@ -152,22 +152,22 @@ export const AIRCRAFT_CONFIGS: Record<AircraftId, AircraftConfig> = {
       maxHp: 37,
       armor: 1.8,
       firepower: 3,
-      fireRate: 0.047,
       maxResource: 0,
       resourceRegen: 0,
     },
     skillIds: ["invisibility", "focus_laser", "electronic_interference", "escort_drone"],
+    fireRateRatio: 0.346, fireRateGrowthPct: .05,
   },
 };
 
 
-const LEVEL_18_TARGETS = {"black_eagle": [2884.2, 89.65, 257.4, 5.995, 7.348, 852.5, 9.625], "breaker": [3613.5, 117.59, 178.2, 5.5836, 9.702, 920, 8.5], "phantom": [3203.2, 102.52, 218.9, 5.7893, 8.525, 100, 2], "astra": [3020.6, 93.94, 264, 5.7255, 7.777, 841.5, 9.306]} as const;
+const LEVEL_18_TARGETS = {"black_eagle": [2884.2, 89.65, 257.4, 7.348, 852.5, 9.625], "breaker": [3613.5, 117.59, 178.2, 9.702, 920, 8.5], "phantom": [3203.2, 102.52, 218.9, 8.525, 100, 2], "astra": [3020.6, 93.94, 264, 7.777, 841.5, 9.306]} as const;
 for (const id of Object.keys(LEVEL_18_TARGETS) as AircraftId[]) {
  const c=AIRCRAFT_CONFIGS[id], t=LEVEL_18_TARGETS[id];
- const keys=["maxHp","armor","firepower","fireRate","maxResource","resourceRegen"] as const;
- const values=[t[0],t[1],t[2],t[3],t[5],t[6]];
+ const keys=["maxHp","armor","firepower","maxResource","resourceRegen"] as const;
+ const values=[t[0],t[1],t[2],t[4],t[5]];
  keys.forEach((key,i)=>{c.growth[key]=(values[i]-c.baseStats[key])/17;});
- c.hpRegen.growth=(t[4]-c.hpRegen.base)/17;
+ c.hpRegen.growth=(t[3]-c.hpRegen.base)/17;
 }
 
 export const AIRCRAFT_ORDER: AircraftId[] = [
@@ -205,7 +205,7 @@ export const SKILL_CONFIGS: Record<SkillId, SkillConfig> = {
     "aircraftId": "black_eagle",
     "name": "Điên Cuồng",
     "shortName": "Điên Cuồng",
-    "description": "7s: +40% tốc độ bắn. Đạn thường nảy thêm 2 mục tiêu: mục tiêu nảy thứ nhất nhận 50% sát thương đạn gốc, mục tiêu nảy thứ hai nhận 25% sát thương đạn gốc.",
+    "description": "7s: +120% Tốc Độ Bắn Cộng Thêm. Đạn thường nảy thêm 2 mục tiêu: mục tiêu nảy thứ nhất nhận 50% sát thương đạn gốc, mục tiêu nảy thứ hai nhận 25% sát thương đạn gốc.",
     "icon": "➤",
     "cost": 160,
     "cooldown": B.afterburnerCooldown,

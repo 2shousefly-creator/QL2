@@ -59,11 +59,13 @@ const flat = (row: number, key: keyof EffectiveAircraftStats, amount: number) =>
     FLAT_CORE_STATS[coreId(row)] = {key,amount};
     register(row, { stats: (_s, stats) => { (stats[key] as number) += amount; } });
 };
-for (const [row,fp,rate,hp,armor,regen,cdr,resource] of [[1,25,.5,270,25,2,.10,.15],[7,40,.8,400,40,3,.15,.25],[13,60,1.2,650,60,4.5,.20,.35]]) {
- register(row,{stats:(_s,t)=>{t.firepower+=fp;t.fireRate+=rate;}});
+for (const [row,fp,rate,hp,armor,regen,haste,resource] of [[1,25,.36,270,25,2,12,.15],[7,40,.58,400,40,3,18,.25],[13,60,.87,650,60,4.5,25,.35]]) {
+ register(row,{stats:(_s,t)=>{t.firepower+=fp;t.bonusFireRatePct+=rate;}});
  register(row+1,{stats:(_s,t)=>{t.maxHp+=hp;t.armor+=armor;}});
- register(row+4,{stats:(_s,t)=>{t.hpRegen+=regen;t.cooldownReduction+=cdr;t.resourceRegen*=1+resource;}});
+ register(row+4,{stats:(_s,t)=>{t.hpRegen+=regen;t.skillHaste+=haste;t.resourceRegen*=1+resource;}});
 }
+for (const [row, amount] of [[3,.18],[9,.29],[15,.72]] as const) flat(row, "bonusFireRatePct", amount);
+for (const [row, amount] of [[6,6],[12,12],[18,25]] as const) flat(row, "skillHaste", amount);
 for (const [row, key, gain] of [[46, "firepower", .5], [47, "armor", .25], [48, "maxHp", 3]] as const)
     register(row, {
         stats: (s, stats) => { stats[key] += s.coreState.stacks[coreId(row)] || 0; },
@@ -79,7 +81,7 @@ register(49, { finalStats: (s, stats) => { if (s.coreState.time - s.coreState.la
         stats.firepower *= 1.3;
     } } });
 flat(53, "criticalChance", .25);
-// Applied last after all flat, conditional, percentage and skill Fire Rate buffs.
+// Applied after the central Fire Rate resolver, including its global cap.
 register(54, { finalStats: (s, stats) => { s.coreState.stacks.fireRateConversion = Math.max(1,stats.fireRate/1.8); stats.fireRate = Math.min(stats.fireRate,1.8); } });
 register(55,{stats:(_s,t)=>{t.criticalChance+=.15;t.criticalDamageMultiplier+=.35;}});
 register(56, { stats: (_s, stats) => { stats.criticalChance += .03; stats.criticalDamageMultiplier += .22; } });
@@ -113,7 +115,7 @@ register(66, { hooks: { kill: ctx => {
 register(70, { hooks: { kill: ctx => { if (ctx.state.coreState.kills % 5 === 0)
             ctx.reduceCooldowns(3); } } });
 register(71, { stats: (s, stats) => { if (active(s, "tacticalRate"))
-        stats.fireRate += .50; }, hooks: { skillCast: ctx => {arm(ctx.state, "tacticalRate", 6);recordCoreMetric(ctx.state,71,"procs",1);} } });
+        stats.bonusFireRatePct += .36; }, hooks: { skillCast: ctx => {arm(ctx.state, "tacticalRate", 6);recordCoreMetric(ctx.state,71,"procs",1);} } });
 register(73, { hooks: { kill: ctx => { if (ctx.target)
             ctx.explode(ctx.target, ctx.stats.firepower * 1); } } });
 register(74, { stats: (_s, stats) => { stats.criticalChance += .15; }, hooks: { critical: ctx => ctx.reduceCooldowns(.3) } });
@@ -146,7 +148,7 @@ register(81, { hooks: { skillCast: ctx => { if (ready(ctx.state, "skillShieldCd"
             arm(ctx.state, "skillShieldCd", 14);
         } } } });
 register(82, { finalStats: (s, stats) => { if (s.coreState.time - s.coreState.lastDamage >= 4)
-        stats.fireRate += 1; } });
+        stats.bonusFireRatePct += .72; } });
 register(83, { hooks: { damageTaken: ctx => { if (ready(ctx.state, "counterCd")) {
             arm(ctx.state, "counterActive", 5);
             arm(ctx.state, "counterCd", 20);
@@ -167,7 +169,7 @@ register(92, { hooks: { tick: ctx => { if (ctx.state.status.regenDisabledUntil <
             ctx.heal(ctx.stats.maxHp * .015 * (ctx.dt || 0)); } } });
 register(94, { stats: (_s, stats) => { stats.criticalChance += .25; }, finalStats: (_s, stats) => { stats.maxHp *= .6; stats.firepower *= 1.5; } });
 register(95, { finalStats: (_s, stats) => { stats.criticalChance = .25; stats.criticalDamageMultiplier += 3; } });
-register(96, { stats: (_s, stats) => { stats.cooldownReduction += .4; }, hooks: { skillCast: ctx => { const before=ctx.state.currentHp;ctx.state.currentHp = Math.max(Number.EPSILON, before * .95);recordCoreMetric(ctx.state,96,"hpPaid",before-ctx.state.currentHp); } } });
+register(96, { stats: (_s, stats) => { stats.skillHaste += 67; }, hooks: { skillCast: ctx => { const before=ctx.state.currentHp;ctx.state.currentHp = Math.max(Number.EPSILON, before * .95);recordCoreMetric(ctx.state,96,"hpPaid",before-ctx.state.currentHp); } } });
 
 register(99, { hooks: { tick: ctx => { if (ctx.state.currentResource < ctx.stats.maxResource * .15 && ready(ctx.state, "reserveShieldCd")) {
             shield(ctx, "reserve", .12, 4);
@@ -285,7 +287,8 @@ export function coreStackLabel(state: AircraftCombatState, id: CoreId): string |
         case "core_107": return `Graze: ${c.stacks.graze??0}/5`;
         case "core_109": return `Cánh trái: ${remaining("wing:left_wing")}s · Cánh phải: ${remaining("wing:right_wing")}s`;
         case "core_113": return c.stacks.borrowPending ? "Đang vay · trả nợ khi kỹ năng kết thúc" : `Có thể vay sau ${remaining("futureDebt")}s`;
-        case "core_114": case "core_116": return `Cùng mục tiêu: ${active(state,"sameTarget")?Math.min(4,Math.floor((c.stacks.sameTargetHits??0)/5)):0}/4 tầng · ${active(state,"sameTarget")?(c.stacks.sameTargetHits??0)%5:0}/5 hit · ${remaining("sameTarget")}s`;
+        case "core_114": { const stacks=active(state,"sameTarget")?Math.min(4,Math.floor((c.stacks.sameTargetHits??0)/5)):0; return `Nhịp Bắn ${stacks}/4 · +${stacks*25}% Tốc Độ Bắn Cộng Thêm · ${remaining("sameTarget")}s`; }
+        case "core_116": return `Cùng mục tiêu: ${active(state,"sameTarget")?Math.min(4,Math.floor((c.stacks.sameTargetHits??0)/5)):0}/4 tầng · ${active(state,"sameTarget")?(c.stacks.sameTargetHits??0)%5:0}/5 hit · ${remaining("sameTarget")}s`;
         case "core_168": return `Quái thường: ${c.stacks.shiftKills??0}/10 · Basic Elite/Boss: ${c.stacks.microHits??0}/40 · Giảm phí: ${remaining("shiftDiscount")}s`;
         case "core_196": return `Tiến độ chí mạng: ${c.stacks.crimsonProgress??0}/5 · +${Math.min(75,(c.stacks.crimsonCrit??0)*5)}% Sát Thương Chí Mạng`;
         case "core_204": return `Damage Armor/Shield đã ngăn: ${Math.round(c.stacks.armorMeter??0)}/${Math.round((c.stacks.effectiveMaxHp??1)*.25)}`;

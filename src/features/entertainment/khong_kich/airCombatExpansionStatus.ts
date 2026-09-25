@@ -23,7 +23,7 @@ export function expansionStatuses(w: CombatWorld): StatusPresentation[] {
       timerKind:active?"active":"cooldown",timeLabel:undefined,showNumericTimer:true});
   };
   const ratio=s.currentResource/stats.maxResource;
-  add(169,ratio>.7?"+40 Hỏa Lực":ratio<.3?"+2,5 Hồi Máu/s":"+0,45 Tốc Độ Bắn",{badgeText:ratio>.7?"HL":ratio<.3?"HP":"TB"});
+  add(169,ratio>.7?"+40 Hỏa Lực":ratio<.3?"+2,5 Hồi Máu/s":"+32,5% Tốc Độ Bắn Cộng Thêm",{badgeText:ratio>.7?"HL":ratio<.3?"HP":"TB"});
   timed(170,"earlyArmor",3,"earlyArmorCd",10);
   timed(171,"safetyLatch",2);
   const charge=c.stacks.capacitorCharge??0,charging=r.fullSince===undefined?0:Math.min(2,c.time-r.fullSince);
@@ -53,7 +53,7 @@ export function expansionStatuses(w: CombatWorld): StatusPresentation[] {
   add(199,`Kỹ năng kế tiếp +${(c.stacks.overclock??0)*18}% sát thương kỹ năng`,{badgeText:`${c.stacks.overclock??0}/3`,badgeKind:"stack",progress:(c.stacks.overclock??0)/3});
   if(negative)add(203,"Khống chế cứng chỉ khóa di chuyển; +35% mọi sát thương, -25% sát thương nhận vào.");
   add(204,`Đã ngăn ${Math.round(c.stacks.armorMeter??0)} / ${Math.round(stats.maxHp*.25)} damage`,{progress:(c.stacks.armorMeter??0)/(stats.maxHp*.25),badgeText:`${Math.round(c.stacks.armorMeter??0)}`,badgeKind:"progress"});
-  if(c.stacks.lastStand)add(209,"Tử Thủ: +150 Giáp, +40% Hồi Tài Nguyên, −20 điểm phần trăm Giảm Hồi Chiêu, -15% mọi sát thương.");
+  if(c.stacks.lastStand)add(209,"Tử Thủ: +150 Giáp, +40% Hồi Tài Nguyên, −25 Điểm Hồi Kỹ Năng (tối thiểu 0), -15% mọi sát thương.");
   const release=releaseState(s);
   if(release.reserve>0)add(212,`Reroll Dự Trữ: ${release.reserve}`,{badgeText:String(release.reserve),badgeKind:"charge",priority:45});
   add(217,release.pendingGuaranteedDiamondSelection?"Milestone kế tiếp: 100% Kim Cương":"20% Bạc / 40% Vàng / 40% Kim Cương");
@@ -65,6 +65,6 @@ export function expansionStatuses(w: CombatWorld): StatusPresentation[] {
   add(220,ghostTime?"Bóng đang bắn":ghostCd?"Đang hồi nội tại":"READY",{badgeText:ghostTime?"BÓNG":ghostCd?undefined:"READY",remaining:ghostTime||ghostCd||Infinity,duration:ghostTime?3.5:10,timerKind:ghostTime?"active":"cooldown",showNumericTimer:!!(ghostTime||ghostCd),priority:80});
   const markTime=release.mark?Math.max(0,release.mark.until-c.time):0,markCd=Math.max(0,release.markReady-c.time);
   add(221,markTime?"Dấu Ấn đang tích sát thương":markCd?"Đang hồi nội tại":"Sẵn sàng đánh dấu",{remaining:markTime||markCd||Infinity,duration:markTime?4:16,timerKind:markTime?"active":"cooldown",showNumericTimer:!!(markTime||markCd),priority:85});
-  add(222,release.mode==="small"?"THU NHỎ · +25 điểm phần trăm Giảm Hồi Chiêu · +50% Hồi Tài Nguyên":"KHỔNG LỒ · +30% Máu Tối Đa · +30% Hỏa Lực",{badgeText:release.mode==="small"?"NHỎ":"LỚN",remaining:Math.max(0,release.nextMode-c.time),duration:60,showNumericTimer:true,priority:80});
+  add(222,release.mode==="small"?"THU NHỎ · +33 Điểm Hồi Kỹ Năng · +50% Hồi Tài Nguyên":"KHỔNG LỒ · +30% Máu Tối Đa · +30% Hỏa Lực",{badgeText:release.mode==="small"?"NHỎ":"LỚN",remaining:Math.max(0,release.nextMode-c.time),duration:60,showNumericTimer:true,priority:80});
   return result;
 }

@@ -60,7 +60,7 @@ export function applyExpansionStats(s: AircraftCombatState, stats: EffectiveAirc
   if(owns(s,183))stats.armor+=20;
   if(owns(s,208)){stats.hpRegen+=2;stats.resourceRegen*=1.20;}
   if (temporary) {
-    if(owns(s,114)&&expansionActive(s,"sameTarget"))stats.fireRate+=Math.min(4,Math.floor((c.stacks.sameTargetHits??0)/5))*.35;
+    if(owns(s,114)&&expansionActive(s,"sameTarget"))stats.bonusFireRatePct+=Math.min(4,Math.floor((c.stacks.sameTargetHits??0)/5))*.25;
     if(expansionActive(s,"coldArmor"))stats.armor+=25;
     if(owns(s,174)&&expansionActive(s,"shockPadRegen"))stats.resourceRegen*=1.20;
     if(owns(s,176)&&c.stacks.breathing)stats.resourceRegen*=1.25;
@@ -70,7 +70,7 @@ export function applyExpansionStats(s: AircraftCombatState, stats: EffectiveAirc
       const ratio = s.currentResource / stats.maxResource;
       if (ratio > .70) stats.firepower += 40;
       else if (ratio < .30) stats.hpRegen += 2.5;
-      else stats.fireRate += .45;
+      else stats.bonusFireRatePct += .325;
     }
     if (owns(s, 170) && expansionActive(s, "earlyArmor")) stats.armor += 50;
     if (owns(s, 179)) stats.criticalChance += (c.stacks.error ?? 0) * .02;
@@ -80,12 +80,12 @@ export function applyExpansionStats(s: AircraftCombatState, stats: EffectiveAirc
     if (owns(s, 209)) {
       if (s.currentHp < stats.maxHp * .35) c.stacks.lastStand = 1;
       else if (s.currentHp > stats.maxHp * .35) c.stacks.lastStand = 0;
-      if (c.stacks.lastStand) { stats.armor += 150; stats.resourceRegen *= 1.4; stats.cooldownReduction -= .20; }
+      if (c.stacks.lastStand) { stats.armor += 150; stats.resourceRegen *= 1.4; stats.skillHaste -= 25; }
     }
   }
   // The locked final chance wins over every new flat/conditional contribution.
   if (owns(s, 95)) stats.criticalChance = .25;
-  if (owns(s, 206)) { stats.fireRate *= .9; stats.weapon.penetration++; }
+  if (owns(s, 206)) { stats.totalFireRateMultiplier *= .9; stats.weapon.penetration++; }
 }
 export function expansionOutgoing(s: AircraftCombatState, basic: boolean, skill: boolean, primary = false): number {
   let value = 1;

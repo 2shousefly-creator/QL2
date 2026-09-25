@@ -1,3 +1,4 @@
+import { resolveFireRate, resolveSkillCooldown } from "./airCombatStatResolvers";
 import { EQUIPMENT_POWER as P } from "./airCombatEquipmentBalance";
 import { skillRank, rankValues, isUltimate, ultimateCastDisabled, COMBAT_LEVEL_CAP, CORE_MILESTONES } from "./airCombatSkillRanks";
 import { applyEquipmentStats, equipmentUntargetable } from "./airCombatEquipmentStats";
@@ -8,7 +9,7 @@ import { recordCoreMetric } from "./airCombatTelemetry";
 import { releaseState, overheated } from "./airCombatReleaseState";
 import { SKILL_BASE_VALUES as B, SKILL_CORE_VALUES as V } from "./airCombatSkillCores";
 import { createPlayerStatus, playerSkillLocked, tickPlayerStatus } from "./airCombatStatus";
-import { AIRCRAFT_CONFIGS, AIR_COMBAT_LIMITS, SKILL_CONFIGS } from "./airCombatConfig";
+import { AIRCRAFT_CONFIGS, SKILL_CONFIGS } from "./airCombatConfig";
 import { applyCoreStatEffects, applyFireRateLock, hasCore } from "./airCombatCoreEffects";
 import type { AircraftCombatState, AircraftId, EffectiveAircraftStats, LevelUpResult, SkillCastResult, SkillId, WeaponModifiers } from "./airCombatTypes";
 const isAstraSkill=(id:SkillId)=>id==="orbit_reversal"||id==="stellar_lance"||id==="starfall";
@@ -31,8 +32,8 @@ export interface RuntimeSkillValues {
 export function createAircraftCombatState(aircraftId: AircraftId): AircraftCombatState {
     const config = AIRCRAFT_CONFIGS[aircraftId];
     return { status: createPlayerStatus(), aircraftId, level: 1, combatXp: 0, skillRanks: {}, skillPoints: 1, skillUpAt: {}, currentHp: config.baseStats.maxHp, currentResource: config.baseStats.maxResource,
-        modifiers: { criticalChanceFlat: 0, criticalDamageMultiplierFlat: 0, maxHpFlat: 0, armorFlat: 0, firepowerFlat: 0, fireRateFlat: 0, hpRegen: 0,
-            cooldownReduction: 0, maxResourceFlat: 0, resourceRegenFlat: 0, weapon: { ...DEFAULT_WEAPON } },
+        modifiers: { criticalChanceFlat: 0, criticalDamageMultiplierFlat: 0, maxHpFlat: 0, armorFlat: 0, firepowerFlat: 0, bonusFireRatePct: 0, hpRegen: 0,
+            skillHaste: 0, maxResourceFlat: 0, resourceRegenFlat: 0, weapon: { ...DEFAULT_WEAPON } },
         cooldowns: {}, selectedCores: [], activeEffects: {}, droneActive: false, basicShotsFired: 0, pendingMilestones: [],
         coreState: { syncedMaxHp: config.baseStats.maxHp, acquisitions: [], nextAcquisitionId: 1, healingTotal: 0, telemetry: {}, time: 0, lastDamage: 0, lastMove: 0, lastKill: -Infinity, kills: 0, skillCasts: 0, killTimes: [], stacks: {}, timers: {}, shields: {},
             encounteredCoreIds: new Set(), skillCooldownDurations: {}, consumed: new Set(), criticalBudget: .75, criticalWindow: 0, deferredCooldowns: {} },
@@ -44,20 +45,22 @@ export function getEffectiveAircraftStats(state: AircraftCombatState, includeTem
         maxHp: config.baseStats.maxHp + config.growth.maxHp * n + m.maxHpFlat,
         armor: config.baseStats.armor + config.growth.armor * n + m.armorFlat,
         firepower: config.baseStats.firepower + config.growth.firepower * n + m.firepowerFlat,
-        fireRate: config.baseStats.fireRate + config.growth.fireRate * n + m.fireRateFlat,
+        fireRate: config.baseStats.fireRate,
+        baseFireRate: config.baseStats.fireRate, fireRateRatio: config.fireRateRatio, fireRateGrowthPct: config.fireRateGrowthPct,
+        bonusFireRatePct: n * config.fireRateGrowthPct + m.bonusFireRatePct, totalFireRateMultiplier: 1,
         criticalChance: config.baseStats.criticalChance + m.criticalChanceFlat,
         criticalDamageMultiplier: config.baseStats.criticalDamageMultiplier + m.criticalDamageMultiplierFlat,
         maxResource: config.baseStats.maxResource + config.growth.maxResource * n + m.maxResourceFlat,
         resourceRegen: config.baseStats.resourceRegen + config.growth.resourceRegen * n + m.resourceRegenFlat,
-        cooldownReduction: m.cooldownReduction, hpRegen: config.hpRegen.base + config.hpRegen.growth * n + m.hpRegen, resourceKind: config.resourceKind,
+        skillHaste: m.skillHaste, hpRegen: config.hpRegen.base + config.hpRegen.growth * n + m.hpRegen, resourceKind: config.resourceKind,
         currentHp: state.currentHp, currentResource: state.currentResource, weapon: { ...m.weapon },
     };
     applyCoreStatEffects(state, stats, includeTemporary);
     const c = state.coreState;
     if (includeTemporary && (state.activeEffects.afterburner || 0) > 0)
-        stats.fireRate *= 1 + ((skillRank(state, "afterburner") >= 3) ? B.upgradedAfterburnerRate : B.afterburnerRate);
+        stats.bonusFireRatePct += skillRank(state, "afterburner") >= 3 ? B.upgradedAfterburnerRate : B.afterburnerRate;
     if (includeTemporary && !omitHawkRage && (c.timers.hawkRage || 0) > c.time)
-        stats.fireRate *= 1.35;
+        stats.bonusFireRatePct += 1.05;
     if (includeTemporary && (c.timers.shieldArmor || 0) > c.time)
         stats.armor *= 1.6;
     if (includeTemporary && (state.activeEffects.sweeping_cannon || 0) > 0 && (skillRank(state, "sweeping_cannon") >= 2))
@@ -65,7 +68,7 @@ export function getEffectiveAircraftStats(state: AircraftCombatState, includeTem
     if (includeTemporary && (c.timers.acidArmor || 0) > c.time)
         stats.armor *= .7;
     if (includeTemporary && hasCore(state, 222)) {
-        if (releaseState(state).mode === "small") { stats.cooldownReduction += .25; stats.resourceRegen *= 1.5; }
+        if (releaseState(state).mode === "small") { stats.skillHaste += 33; stats.resourceRegen *= 1.5; }
         if (releaseState(state).mode === "giant") { stats.maxHp *= 1.3; stats.firepower *= 1.3; }
     }
     applyExpansionStats(state, stats, includeTemporary);
@@ -86,12 +89,12 @@ export function getEffectiveAircraftStats(state: AircraftCombatState, includeTem
         stats.resourceRegen *= Math.min(1, ...status.jams.filter(j => j.until > c.time).map(j => j.multiplier));
     }
     if (includeTemporary && (c.timers.tacticalData || 0) > c.time && !hasCore(state, 95)) stats.criticalChance += (c.stacks.tacticalData || 0) * V.dataCrit;
+    stats.fireRate = resolveFireRate(stats);
     applyFireRateLock(state, stats);
-    stats.fireRate = hasCore(state, 54) ? Math.min(1.8,Math.max(.1,stats.fireRate)) : Math.min(AIR_COMBAT_LIMITS.maxFireRate, Math.max(.1, stats.fireRate));
     if(hasCore(state,95))stats.criticalChance=.25;
     stats.criticalChance = Math.max(0, Math.min(1, stats.criticalChance));
     stats.criticalDamageMultiplier = Math.max(1.7, Math.min(10, stats.criticalDamageMultiplier));
-    stats.cooldownReduction = Math.max(0, Math.min(.6, stats.cooldownReduction));
+    stats.skillHaste = Math.max(0, stats.skillHaste);
     stats.armor = Math.max(-80, stats.armor);
     stats.maxHp = Math.max(1, stats.maxHp);
     stats.firepower = Math.max(0, stats.firepower);
@@ -186,7 +189,7 @@ export function getSkillAvailability(state: AircraftCombatState, skillId: SkillI
     const free=hasCore(state,84)&&(state.coreState.skillCasts+1)%4===0;
     const cost=skillId==="escort_drone"||free?0:values.cost;
     const cooldown=Math.max(0,state.cooldowns[skillId]??0);
-    const duration=state.coreState.skillCooldownDurations[skillId]??values.cooldown*(1-getEffectiveAircraftStats(state).cooldownReduction);
+    const duration=state.coreState.skillCooldownDurations[skillId]??resolveSkillCooldown(values.cooldown, getEffectiveAircraftStats(state).skillHaste, state.coreState.deferredCooldowns[skillId] ?? (free ? 1.1 : 1));
     const borrow=canBorrowSkill(state,skillId);
     const toggle=skillId==="escort_drone"&&state.droneActive;
     let reason: SkillCastResult["reason"];
@@ -219,7 +222,7 @@ function beginDebt(state: AircraftCombatState, skillId: SkillId): void {
 export function startDeferredSkillCooldown(state:AircraftCombatState,skillId:SkillId):void {
     const factor=state.coreState.deferredCooldowns[skillId];
     if(factor===undefined)return;
-    state.cooldowns[skillId]=getSkillRuntimeValues(state,skillId).cooldown*(1-getEffectiveAircraftStats(state).cooldownReduction)*factor;
+    state.cooldowns[skillId]=resolveSkillCooldown(getSkillRuntimeValues(state,skillId).cooldown, getEffectiveAircraftStats(state).skillHaste, factor);
     state.coreState.skillCooldownDurations[skillId]=state.cooldowns[skillId];
     recordCooldownTelemetry(state,skillId,factor);
     delete state.coreState.deferredCooldowns[skillId];
@@ -290,7 +293,7 @@ export function castSkill(state: AircraftCombatState, skillId: SkillId): SkillCa
         if(expansionState(state).primarySkill===skillId)recordCoreMetric(state,202,"saved",cost/.8-cost);
     }
     if(skillId==="focus_laser")recordCoreMetric(state,41,"chargeSaved",1.8);
-    const cooldown = v.cooldown * (1 - getEffectiveAircraftStats(state).cooldownReduction) * (free ? 1.1 : 1);
+    const cooldown = resolveSkillCooldown(v.cooldown, getEffectiveAircraftStats(state).skillHaste, free ? 1.1 : 1);
     if (skillId === "missile_swarm" || skillId === "sweeping_cannon" || skillId === "escort_drone" || isAstraSkill(skillId)) {
         state.coreState.deferredCooldowns[skillId] = free ? 1.1 : 1;
         state.cooldowns[skillId] = 0;
@@ -457,18 +460,19 @@ export function resolveBasicProjectileMultipliers(state: AircraftCombatState, _s
 }
 
 function recordCooldownTelemetry(state:AircraftCombatState,skillId:SkillId,penalty:number) {
-    const reduction=1-getEffectiveAircraftStats(state).cooldownReduction;
+    const haste=getEffectiveAircraftStats(state).skillHaste;
+    const cooldown=(base:number,castMultiplier=penalty)=>resolveSkillCooldown(base,haste,castMultiplier);
     const sources:Partial<Record<SkillId,readonly [number,number][]>>={
         orbit_reversal:[[154,9]],starfall:[[165,11]],
         decoy:[[20,SKILL_CONFIGS.decoy.cooldown-11]],heavy_bomb:[[31,SKILL_CONFIGS.heavy_bomb.cooldown-15]],
         afterburner:[[125,V.afterburnerCooldownReduction]],missile_swarm:[[128,V.swarmCooldownReduction]],
         armor_shield:[[133,V.shieldCooldownReduction]],sweeping_cannon:[[137,V.cannonCooldownReduction]],
     };
-    for(const [row,seconds] of sources[skillId]??[])recordCoreMetric(state,row,"cooldown",seconds*reduction*penalty);
-    if(penalty>1)recordCoreMetric(state,84,"extraCooldown",getSkillRuntimeValues(state,skillId).cooldown*reduction*(penalty-1));
-    if(expansionState(state).primarySkill===skillId)recordCoreMetric(state,202,"cooldown",getSkillRuntimeValues(state,skillId).cooldown*(1/.8-1)*reduction*penalty);
+    for(const [row,seconds] of sources[skillId]??[])recordCoreMetric(state,row,"cooldown",cooldown(seconds));
+    if(penalty>1)recordCoreMetric(state,84,"extraCooldown",cooldown(getSkillRuntimeValues(state,skillId).cooldown,penalty-1));
+    if(expansionState(state).primarySkill===skillId)recordCoreMetric(state,202,"cooldown",cooldown(getSkillRuntimeValues(state,skillId).cooldown*(1/.8-1)));
     for(const row of [209,222])if(hasCore(state,row)){
         const without=getEffectiveAircraftStats({...state,selectedCores:state.selectedCores.filter(id=>id!==`core_${row}`),coreState:{...state.coreState,stacks:{...state.coreState.stacks}}});
-        recordCoreMetric(state,row,"cooldown",getSkillRuntimeValues(state,skillId).cooldown*Math.max(0,(1-without.cooldownReduction)-reduction)*penalty);
+        recordCoreMetric(state,row,"cooldown",Math.abs(resolveSkillCooldown(getSkillRuntimeValues(state,skillId).cooldown,without.skillHaste,penalty)-cooldown(getSkillRuntimeValues(state,skillId).cooldown)));
     }
 }

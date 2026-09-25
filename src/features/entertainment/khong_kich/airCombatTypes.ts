@@ -72,7 +72,7 @@ export interface CombatStats {
   resourceRegen: number;
 }
 
-export interface AircraftGrowth extends CombatStats {}
+export type AircraftGrowth = Omit<CombatStats, "fireRate">;
 
 export interface AircraftConfig {
   id: AircraftId;
@@ -85,6 +85,8 @@ export interface AircraftConfig {
   resourceKind: ResourceKind;
   baseStats: CombatStats;
   growth: AircraftGrowth;
+  fireRateRatio: number;
+  fireRateGrowthPct: number;
   hpRegen: { base: number; growth: number };
   skillIds: readonly [SkillId, SkillId, SkillId, SkillId];
 }
@@ -146,9 +148,9 @@ export interface AircraftModifiers {
   maxHpFlat: number;
   armorFlat: number;
   firepowerFlat: number;
-  fireRateFlat: number;
+  bonusFireRatePct: number;
   hpRegen: number;
-  cooldownReduction: number;
+  skillHaste: number;
   maxResourceFlat: number;
   resourceRegenFlat: number;
   weapon: WeaponModifiers;
@@ -179,11 +181,16 @@ export interface AircraftCombatState {
 }
 
 export interface EffectiveAircraftStats extends CombatStats {
+  baseFireRate: number;
+  fireRateRatio: number;
+  fireRateGrowthPct: number;
+  bonusFireRatePct: number;
+  totalFireRateMultiplier: number;
   dualHpBonus?: number;
   dualResourceBonus?: number;
   currentHp: number;
   currentResource: number;
-  cooldownReduction: number;
+  skillHaste: number;
   hpRegen: number;
   resourceKind: ResourceKind;
   weapon: WeaponModifiers;

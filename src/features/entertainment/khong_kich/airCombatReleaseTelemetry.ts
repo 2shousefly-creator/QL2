@@ -10,7 +10,7 @@ const number=(n:number)=>n.toLocaleString("vi-VN",{maximumFractionDigits:2});
 export function releaseTelemetry(state:AircraftCombatState,row:number):string[]{
   const c=state.coreState,stats=getEffectiveAircraftStats(state),r=releaseState(state),expansion=expansionState(state),lines:string[]=[];
   const descriptions:Record<number,string>={
-    169:state.currentResource/stats.maxResource>.7?"+40 Hỏa Lực":state.currentResource/stats.maxResource<.3?"+2,5 Hồi Máu/s":"+0,45 Tốc Độ Bắn",
+    169:state.currentResource/stats.maxResource>.7?"+40 Hỏa Lực":state.currentResource/stats.maxResource<.3?"+2,5 Hồi Máu/s":"+32,5% Tốc Độ Bắn Cộng Thêm",
     172:c.stacks.capacitorCharge?"Đã tích điện":"Chưa tích đủ điện",179:`Sai Số: ${c.stacks.error??0} · +${(c.stacks.error??0)*2}% Tỷ Lệ Chí Mạng`,
     183:`+${Math.min(60,20+activeNegativeStatusTypes(state).size*20)} Giáp`,187:`Đang tích ${number(c.stacks.recoil??0)} sát thương`,188:"+15% Tỷ Lệ Chí Mạng · +50% Sát Thương Chí Mạng",
     192:hasAbsorbShield(state)?"+20% mọi sát thương":"+25 Giáp",
@@ -27,7 +27,7 @@ export function releaseTelemetry(state:AircraftCombatState,row:number):string[]{
   if(row===219)lines.push(`Nhiệt: ${number(r.heat)} / 100`);
   if(row===220)lines.push(`Bóng đang hoạt động: ${r.ghosts.length} · Sẵn sàng sau ${number(Math.max(0,r.ghostReady-c.time))} giây`);
   if(row===221)lines.push(r.mark?`Dấu đang tích ${number(r.mark.damage)} sát thương thực nhận`:`Hồi lại sau ${number(Math.max(0,r.markReady-c.time))} giây`);
-  if(row===222)lines.push(r.mode==="small"?"Thu Nhỏ: kích thước/hitbox ×0,5; +25 điểm phần trăm Giảm Hồi Chiêu (cap 60%); +50% Hồi Tài Nguyên":"Khổng Lồ: kích thước/hitbox ×1,5; +30% Máu Tối Đa; +30% Hỏa Lực",`Roll kế tiếp: ${number(Math.max(0,r.nextMode-c.time))} giây`);
+  if(row===222)lines.push(r.mode==="small"?"Thu Nhỏ: kích thước/hitbox ×0,5; +33 Điểm Hồi Kỹ Năng; +50% Hồi Tài Nguyên":"Khổng Lồ: kích thước/hitbox ×1,5; +30% Máu Tối Đa; +30% Hỏa Lực",`Roll kế tiếp: ${number(Math.max(0,r.nextMode-c.time))} giây`);
   return lines;
 }
 

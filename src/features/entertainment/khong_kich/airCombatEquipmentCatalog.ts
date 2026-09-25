@@ -1,7 +1,7 @@
 export type EquipmentDefinitionId = `TP${string}` | `TH${string}` | `HL${string}`;
 export type EquipmentFamilyId = `TH${string}`;
 export type EquipmentRarity = "component" | "completed" | "legendary";
-export interface EquipmentDefinition { readonly id: EquipmentDefinitionId; readonly name: string; readonly rarity: EquipmentRarity; readonly family?: EquipmentFamilyId; readonly recipe?: readonly EquipmentDefinitionId[]; readonly statsText: string; readonly effect: string; readonly stats: Readonly<Partial<Record<"firepower"|"armor"|"fireRate"|"maxHp"|"hpRegen"|"resourceRegenPct"|"cooldownReduction"|"criticalChance", number>>>; }
+export interface EquipmentDefinition { readonly id: EquipmentDefinitionId; readonly name: string; readonly rarity: EquipmentRarity; readonly family?: EquipmentFamilyId; readonly recipe?: readonly EquipmentDefinitionId[]; readonly statsText: string; readonly effect: string; readonly stats: Readonly<Partial<Record<"firepower"|"armor"|"bonusFireRatePct"|"maxHp"|"hpRegen"|"resourceRegenPct"|"skillHaste"|"criticalChance", number>>>; }
 const definitions: EquipmentDefinition[] = [
   {
     "id": "TP01",
@@ -17,10 +17,10 @@ const definitions: EquipmentDefinition[] = [
     "id": "TP02",
     "name": "Phong Luân",
     "rarity": "component",
-    "statsText": "+0,45 Tốc Độ Bắn",
+    "statsText": "+32,5% Tốc Độ Bắn Cộng Thêm",
     "effect": "",
     "stats": {
-      "fireRate": 0.45
+      "bonusFireRatePct": .325
     }
   },
   {
@@ -67,10 +67,10 @@ const definitions: EquipmentDefinition[] = [
     "id": "TP07",
     "name": "Thời Phiến",
     "rarity": "component",
-    "statsText": "+10% Giảm Hồi Chiêu",
+    "statsText": "+12 Điểm Hồi Kỹ Năng",
     "effect": "",
     "stats": {
-      "cooldownReduction": 0.1
+      "skillHaste": 12
     }
   },
   {
@@ -102,8 +102,8 @@ const definitions: EquipmentDefinition[] = [
     "id": "TH02",
     "name": "Luân Cuồng Phong",
     "rarity": "completed",
-    "statsText": "+28 Hỏa Lực; +0,45 Tốc Độ Bắn",
-    "effect": "Đạn thường trúng +1 cộng dồn; dùng Skill +5 cộng dồn. Tối đa 20 cộng dồn, mỗi cộng dồn +0,025 Tốc Độ Bắn trong 4 giây; nhận sát thương mất 5 cộng dồn. Khi đủ 20 cộng dồn, tăng thêm 20% Basic Damage.",
+    "statsText": "+28 Hỏa Lực; +32,5% Tốc Độ Bắn Cộng Thêm",
+    "effect": "Đạn thường trúng +1 cộng dồn; dùng Skill +5 cộng dồn. Tối đa 20 cộng dồn, mỗi cộng dồn +1,8% Tốc Độ Bắn Cộng Thêm trong 4 giây; nhận sát thương mất 5 cộng dồn. Khi đủ 20 cộng dồn, tăng thêm 20% Basic Damage.",
     "family": "TH02",
     "recipe": [
       "TP01",
@@ -111,7 +111,7 @@ const definitions: EquipmentDefinition[] = [
     ],
     "stats": {
       "firepower": 28,
-      "fireRate": 0.45
+      "bonusFireRatePct": .325
     }
   },
   {
@@ -182,7 +182,7 @@ const definitions: EquipmentDefinition[] = [
     "id": "TH07",
     "name": "Ấn Hắc Nguyệt",
     "rarity": "completed",
-    "statsText": "+28 Hỏa Lực; +10% Giảm Hồi Chiêu",
+    "statsText": "+28 Hỏa Lực; +12 Điểm Hồi Kỹ Năng",
     "effect": "+15% Skill Damage. Skill trúng khiến mục tiêu nhận thêm 15% mọi sát thương trong 4 giây.",
     "family": "TH07",
     "recipe": [
@@ -191,7 +191,7 @@ const definitions: EquipmentDefinition[] = [
     ],
     "stats": {
       "firepower": 28,
-      "cooldownReduction": 0.1
+      "skillHaste": 12
     }
   },
   {
@@ -214,30 +214,30 @@ const definitions: EquipmentDefinition[] = [
     "id": "TH09",
     "name": "Nanh Lôi Ảnh",
     "rarity": "completed",
-    "statsText": "+0,9 Tốc Độ Bắn",
-    "effect": "+18% tổng Tốc Độ Bắn; Basic gây thêm sát thương bằng 1,5% HP hiện tại của mục tiêu, với Tinh Anh/Boss giới hạn 35% Hỏa Lực mỗi hit.",
+    "statsText": "+65% Tốc Độ Bắn Cộng Thêm",
+    "effect": "+54% Tốc Độ Bắn Cộng Thêm; Basic gây thêm sát thương bằng 1,5% HP hiện tại của mục tiêu, với Tinh Anh/Boss giới hạn 35% Hỏa Lực mỗi hit.",
     "family": "TH09",
     "recipe": [
       "TP02",
       "TP02"
     ],
     "stats": {
-      "fireRate": 0.9
+      "bonusFireRatePct": .65
     }
   },
   {
     "id": "TH10",
     "name": "Giáp Colossus",
     "rarity": "completed",
-    "statsText": "+0,45 Tốc Độ Bắn; +24 Giáp",
-    "effect": "Nhận sát thương +1 cộng dồn, tối đa 6. Đủ 6 cộng dồn kích hoạt Colossus 8 giây: +60 Giáp, +0,5 Tốc Độ Bắn, +1,5 Hồi Máu/s và +20% mọi sát thương. Trong Colossus không tích stack; mỗi lần nhận hit kéo dài 0,5 giây, tối đa thêm 3 giây.",
+    "statsText": "+32,5% Tốc Độ Bắn Cộng Thêm; +24 Giáp",
+    "effect": "Nhận sát thương +1 cộng dồn, tối đa 6. Đủ 6 cộng dồn kích hoạt Colossus 8 giây: +60 Giáp, +36% Tốc Độ Bắn Cộng Thêm, +1,5 Hồi Máu/s và +20% mọi sát thương. Trong Colossus không tích stack; mỗi lần nhận hit kéo dài 0,5 giây, tối đa thêm 3 giây.",
     "family": "TH10",
     "recipe": [
       "TP02",
       "TP03"
     ],
     "stats": {
-      "fireRate": 0.45,
+      "bonusFireRatePct": .325,
       "armor": 24
     }
   },
@@ -245,15 +245,15 @@ const definitions: EquipmentDefinition[] = [
     "id": "TH11",
     "name": "Cánh Valkyrie",
     "rarity": "completed",
-    "statsText": "+0,45 Tốc Độ Bắn; +320 Máu Tối Đa",
-    "effect": "Dùng Skill: +0,6 Tốc Độ Bắn và +15% Basic Damage trong 6 giây; làm mới thời gian, không cộng dồn.",
+    "statsText": "+32,5% Tốc Độ Bắn Cộng Thêm; +320 Máu Tối Đa",
+    "effect": "Dùng Skill: +43,5% Tốc Độ Bắn Cộng Thêm và +15% Basic Damage trong 6 giây; làm mới thời gian, không cộng dồn.",
     "family": "TH11",
     "recipe": [
       "TP02",
       "TP04"
     ],
     "stats": {
-      "fireRate": 0.45,
+      "bonusFireRatePct": .325,
       "maxHp": 320
     }
   },
@@ -261,7 +261,7 @@ const definitions: EquipmentDefinition[] = [
     "id": "TH12",
     "name": "Tâm Cơ Giới",
     "rarity": "completed",
-    "statsText": "+0,45 Tốc Độ Bắn; +1,8 Hồi Máu/s",
+    "statsText": "+32,5% Tốc Độ Bắn Cộng Thêm; +1,8 Hồi Máu/s",
     "effect": "Mỗi Basic thứ 5 tạo 2 Tàn Ảnh, mỗi Tàn Ảnh gây 80% Hỏa Lực lên mục tiêu phụ. Nếu không có mục tiêu phụ, hai Tàn Ảnh hợp nhất vào mục tiêu chính gây tổng 140% Hỏa Lực.",
     "family": "TH12",
     "recipe": [
@@ -269,7 +269,7 @@ const definitions: EquipmentDefinition[] = [
       "TP05"
     ],
     "stats": {
-      "fireRate": 0.45,
+      "bonusFireRatePct": .325,
       "hpRegen": 1.8
     }
   },
@@ -277,7 +277,7 @@ const definitions: EquipmentDefinition[] = [
     "id": "TH13",
     "name": "Luân Plasma",
     "rarity": "completed",
-    "statsText": "+0,45 Tốc Độ Bắn; +20% Hồi Tài Nguyên/s",
+    "statsText": "+32,5% Tốc Độ Bắn Cộng Thêm; +20% Hồi Tài Nguyên/s",
     "effect": "Di chuyển và Basic tích Điện Năng. Đạt 100: Basic kế tiếp tạo chuỗi sét tối đa 4 lần, mỗi lần gây 140% Hỏa Lực. Nếu thiếu mục tiêu phụ, các lượt nhảy chưa dùng quay lại mục tiêu chính với 50% sát thương.",
     "family": "TH13",
     "recipe": [
@@ -285,7 +285,7 @@ const definitions: EquipmentDefinition[] = [
       "TP06"
     ],
     "stats": {
-      "fireRate": 0.45,
+      "bonusFireRatePct": .325,
       "resourceRegenPct": 0.2
     }
   },
@@ -293,23 +293,23 @@ const definitions: EquipmentDefinition[] = [
     "id": "TH14",
     "name": "Tù Và Ares",
     "rarity": "completed",
-    "statsText": "+0,45 Tốc Độ Bắn; +10% Giảm Hồi Chiêu",
-    "effect": "Skill hạ địch: +0,6 Tốc Độ Bắn, +35 Hỏa Lực và +15% Skill Damage trong 8 giây. Skill trực tiếp trúng Tinh Anh/Boss cũng kích hoạt với 50% hiệu lực. Làm mới thời gian, không cộng dồn.",
+    "statsText": "+32,5% Tốc Độ Bắn Cộng Thêm; +12 Điểm Hồi Kỹ Năng",
+    "effect": "Skill hạ địch: +43,5% Tốc Độ Bắn Cộng Thêm, +35 Hỏa Lực và +15% Skill Damage trong 8 giây. Skill trực tiếp trúng Tinh Anh/Boss cũng kích hoạt với 50% hiệu lực. Làm mới thời gian, không cộng dồn.",
     "family": "TH14",
     "recipe": [
       "TP02",
       "TP07"
     ],
     "stats": {
-      "fireRate": 0.45,
-      "cooldownReduction": 0.1
+      "bonusFireRatePct": .325,
+      "skillHaste": 12
     }
   },
   {
     "id": "TH15",
     "name": "Nanh Fenrir",
     "rarity": "completed",
-    "statsText": "+0,45 Tốc Độ Bắn; +12% Tỷ Lệ Chí Mạng",
+    "statsText": "+32,5% Tốc Độ Bắn Cộng Thêm; +12% Tỷ Lệ Chí Mạng",
     "effect": "Chí mạng giảm 10 Giáp mục tiêu trong 5 giây, tối đa 4 stack. Ở 4 stack, mục tiêu nhận thêm 15% mọi sát thương từ chiến cơ.",
     "family": "TH15",
     "recipe": [
@@ -317,7 +317,7 @@ const definitions: EquipmentDefinition[] = [
       "TP08"
     ],
     "stats": {
-      "fireRate": 0.45,
+      "bonusFireRatePct": .325,
       "criticalChance": 0.12
     }
   },
@@ -388,7 +388,7 @@ const definitions: EquipmentDefinition[] = [
     "id": "TH20",
     "name": "Khung Hộ Vệ",
     "rarity": "completed",
-    "statsText": "+24 Giáp; +10% Giảm Hồi Chiêu",
+    "statsText": "+24 Giáp; +12 Điểm Hồi Kỹ Năng",
     "effect": "Dùng Skill: +45 Giáp và giảm 10% sát thương nhận trong 5 giây. Làm mới thời gian, không cộng dồn.",
     "family": "TH20",
     "recipe": [
@@ -397,7 +397,7 @@ const definitions: EquipmentDefinition[] = [
     ],
     "stats": {
       "armor": 24,
-      "cooldownReduction": 0.1
+      "skillHaste": 12
     }
   },
   {
@@ -467,7 +467,7 @@ const definitions: EquipmentDefinition[] = [
     "id": "TH25",
     "name": "Đồng Hồ Lazarus",
     "rarity": "completed",
-    "statsText": "+320 Máu Tối Đa; +10% Giảm Hồi Chiêu",
+    "statsText": "+320 Máu Tối Đa; +12 Điểm Hồi Kỹ Năng",
     "effect": "Mỗi 25 giây khi HP dưới 35%: giảm 5 giây hồi chiêu còn lại của cả 4 Skill, tạo Shield 15% Máu Tối Đa trong 5 giây và +15% mọi sát thương trong 6 giây.",
     "family": "TH25",
     "recipe": [
@@ -476,7 +476,7 @@ const definitions: EquipmentDefinition[] = [
     ],
     "stats": {
       "maxHp": 320,
-      "cooldownReduction": 0.1
+      "skillHaste": 12
     }
   },
   {
@@ -530,7 +530,7 @@ const definitions: EquipmentDefinition[] = [
     "id": "TH29",
     "name": "Bình Ambrosia",
     "rarity": "completed",
-    "statsText": "+1,8 Hồi Máu/s; +10% Giảm Hồi Chiêu",
+    "statsText": "+1,8 Hồi Máu/s; +12 Điểm Hồi Kỹ Năng",
     "effect": "Khi hiệu ứng Skill kết thúc, hồi 6% Máu Tối Đa trong 3 giây; phần hồi dư chuyển thành Shield tối đa 5% Máu Tối Đa. Hồi nội tại 3 giây.",
     "family": "TH29",
     "recipe": [
@@ -539,7 +539,7 @@ const definitions: EquipmentDefinition[] = [
     ],
     "stats": {
       "hpRegen": 1.8,
-      "cooldownReduction": 0.1
+      "skillHaste": 12
     }
   },
   {
@@ -577,7 +577,7 @@ const definitions: EquipmentDefinition[] = [
     "id": "TH32",
     "name": "Miện Hư Không",
     "rarity": "completed",
-    "statsText": "+20% Hồi Tài Nguyên/s; +10% Giảm Hồi Chiêu",
+    "statsText": "+20% Hồi Tài Nguyên/s; +12 Điểm Hồi Kỹ Năng",
     "effect": "Hạ địch: +40% Hồi Tài Nguyên trong 6 giây. Skill trực tiếp trúng Tinh Anh/Boss cho +20% trong 6 giây. Khi buff đang hoạt động, +10% Skill Damage.",
     "family": "TH32",
     "recipe": [
@@ -586,7 +586,7 @@ const definitions: EquipmentDefinition[] = [
     ],
     "stats": {
       "resourceRegenPct": 0.2,
-      "cooldownReduction": 0.1
+      "skillHaste": 12
     }
   },
   {
@@ -609,7 +609,7 @@ const definitions: EquipmentDefinition[] = [
     "id": "TH34",
     "name": "Đồng Hồ Chronos",
     "rarity": "completed",
-    "statsText": "+20% Giảm Hồi Chiêu",
+    "statsText": "+30 Điểm Hồi Kỹ Năng",
     "effect": "+15% Skill Damage. Dùng Skill giảm 1,5 giây hồi chiêu còn lại của 3 Skill còn lại.",
     "family": "TH34",
     "recipe": [
@@ -617,14 +617,14 @@ const definitions: EquipmentDefinition[] = [
       "TP07"
     ],
     "stats": {
-      "cooldownReduction": 0.2
+      "skillHaste": 30
     }
   },
   {
     "id": "TH35",
     "name": "Nanh Thời Gian",
     "rarity": "completed",
-    "statsText": "+10% Giảm Hồi Chiêu; +12% Tỷ Lệ Chí Mạng",
+    "statsText": "+12 Điểm Hồi Kỹ Năng; +12% Tỷ Lệ Chí Mạng",
     "effect": "Basic trúng giảm 0,18 giây hồi chiêu dài nhất; chí mạng giảm 0,6 giây. Giới hạn 1,2 giây mỗi giây. Mỗi khi tổng cộng giảm được 4 giây, Skill gây damage kế tiếp nhận +10% Skill Damage.",
     "family": "TH35",
     "recipe": [
@@ -632,7 +632,7 @@ const definitions: EquipmentDefinition[] = [
       "TP08"
     ],
     "stats": {
-      "cooldownReduction": 0.1,
+      "skillHaste": 12,
       "criticalChance": 0.12
     }
   },
@@ -670,8 +670,8 @@ const definitions: EquipmentDefinition[] = [
     "id": "HL02",
     "name": "Luân Thiên Bạo",
     "rarity": "legendary",
-    "statsText": "+56 Hỏa Lực; +0,9 Tốc Độ Bắn",
-    "effect": "Đạn thường trúng +1 cộng dồn; dùng Skill +5 cộng dồn. Tối đa 20 cộng dồn, mỗi cộng dồn +0,05 Tốc Độ Bắn trong 4 giây; nhận sát thương mất 5 cộng dồn. Khi đủ 20 cộng dồn, tăng thêm 40% Basic Damage.",
+    "statsText": "+56 Hỏa Lực; +65% Tốc Độ Bắn Cộng Thêm",
+    "effect": "Đạn thường trúng +1 cộng dồn; dùng Skill +5 cộng dồn. Tối đa 20 cộng dồn, mỗi cộng dồn +3,6% Tốc Độ Bắn Cộng Thêm trong 4 giây; nhận sát thương mất 5 cộng dồn. Khi đủ 20 cộng dồn, tăng thêm 40% Basic Damage.",
     "family": "TH02",
     "recipe": [
       "TP01",
@@ -679,7 +679,7 @@ const definitions: EquipmentDefinition[] = [
     ],
     "stats": {
       "firepower": 56,
-      "fireRate": 0.9
+      "bonusFireRatePct": .65
     }
   },
   {
@@ -750,7 +750,7 @@ const definitions: EquipmentDefinition[] = [
     "id": "HL07",
     "name": "Vương Ấn Erebus",
     "rarity": "legendary",
-    "statsText": "+56 Hỏa Lực; +20% Giảm Hồi Chiêu",
+    "statsText": "+56 Hỏa Lực; +24 Điểm Hồi Kỹ Năng",
     "effect": "+30% Skill Damage. Skill trúng khiến mục tiêu nhận thêm 30% mọi sát thương trong 4 giây.",
     "family": "TH07",
     "recipe": [
@@ -759,7 +759,7 @@ const definitions: EquipmentDefinition[] = [
     ],
     "stats": {
       "firepower": 56,
-      "cooldownReduction": 0.2
+      "skillHaste": 24
     }
   },
   {
@@ -782,30 +782,30 @@ const definitions: EquipmentDefinition[] = [
     "id": "HL09",
     "name": "Nanh Thiên Lôi",
     "rarity": "legendary",
-    "statsText": "+1,8 Tốc Độ Bắn",
-    "effect": "+36% tổng Tốc Độ Bắn; Basic gây thêm sát thương bằng 3% HP hiện tại của mục tiêu, với Tinh Anh/Boss giới hạn 70% Hỏa Lực mỗi hit.",
+    "statsText": "+130% Tốc Độ Bắn Cộng Thêm",
+    "effect": "+108% Tốc Độ Bắn Cộng Thêm; Basic gây thêm sát thương bằng 3% HP hiện tại của mục tiêu, với Tinh Anh/Boss giới hạn 70% Hỏa Lực mỗi hit.",
     "family": "TH09",
     "recipe": [
       "TP02",
       "TP02"
     ],
     "stats": {
-      "fireRate": 1.8
+      "bonusFireRatePct": 1.3
     }
   },
   {
     "id": "HL10",
     "name": "Vương Giáp Colossus",
     "rarity": "legendary",
-    "statsText": "+0,9 Tốc Độ Bắn; +48 Giáp",
-    "effect": "Nhận sát thương +1 cộng dồn, tối đa 6. Đủ 6 cộng dồn kích hoạt Colossus 8 giây: +120 Giáp, +1 Tốc Độ Bắn, +3 Hồi Máu/s và +40% mọi sát thương. Trong Colossus không tích stack; mỗi lần nhận hit kéo dài 0,5 giây, tối đa thêm 3 giây.",
+    "statsText": "+65% Tốc Độ Bắn Cộng Thêm; +48 Giáp",
+    "effect": "Nhận sát thương +1 cộng dồn, tối đa 6. Đủ 6 cộng dồn kích hoạt Colossus 8 giây: +120 Giáp, +72% Tốc Độ Bắn Cộng Thêm, +3 Hồi Máu/s và +40% mọi sát thương. Trong Colossus không tích stack; mỗi lần nhận hit kéo dài 0,5 giây, tối đa thêm 3 giây.",
     "family": "TH10",
     "recipe": [
       "TP02",
       "TP03"
     ],
     "stats": {
-      "fireRate": 0.9,
+      "bonusFireRatePct": .65,
       "armor": 48
     }
   },
@@ -813,15 +813,15 @@ const definitions: EquipmentDefinition[] = [
     "id": "HL11",
     "name": "Thiên Dực Valkyrie",
     "rarity": "legendary",
-    "statsText": "+0,9 Tốc Độ Bắn; +640 Máu Tối Đa",
-    "effect": "Dùng Skill: +1,2 Tốc Độ Bắn và +30% Basic Damage trong 6 giây; làm mới thời gian, không cộng dồn.",
+    "statsText": "+65% Tốc Độ Bắn Cộng Thêm; +640 Máu Tối Đa",
+    "effect": "Dùng Skill: +87% Tốc Độ Bắn Cộng Thêm và +30% Basic Damage trong 6 giây; làm mới thời gian, không cộng dồn.",
     "family": "TH11",
     "recipe": [
       "TP02",
       "TP04"
     ],
     "stats": {
-      "fireRate": 0.9,
+      "bonusFireRatePct": .65,
       "maxHp": 640
     }
   },
@@ -829,7 +829,7 @@ const definitions: EquipmentDefinition[] = [
     "id": "HL12",
     "name": "Trái Tim Titan",
     "rarity": "legendary",
-    "statsText": "+0,9 Tốc Độ Bắn; +3,6 Hồi Máu/s",
+    "statsText": "+65% Tốc Độ Bắn Cộng Thêm; +3,6 Hồi Máu/s",
     "effect": "Mỗi Basic thứ 5 tạo 2 Tàn Ảnh, mỗi Tàn Ảnh gây 160% Hỏa Lực lên mục tiêu phụ. Nếu không có mục tiêu phụ, hai Tàn Ảnh hợp nhất vào mục tiêu chính gây tổng 280% Hỏa Lực.",
     "family": "TH12",
     "recipe": [
@@ -837,7 +837,7 @@ const definitions: EquipmentDefinition[] = [
       "TP05"
     ],
     "stats": {
-      "fireRate": 0.9,
+      "bonusFireRatePct": .65,
       "hpRegen": 3.6
     }
   },
@@ -845,7 +845,7 @@ const definitions: EquipmentDefinition[] = [
     "id": "HL13",
     "name": "Vòng Möbius",
     "rarity": "legendary",
-    "statsText": "+0,9 Tốc Độ Bắn; +40% Hồi Tài Nguyên/s",
+    "statsText": "+65% Tốc Độ Bắn Cộng Thêm; +40% Hồi Tài Nguyên/s",
     "effect": "Di chuyển và Basic tích Điện Năng. Đạt 100: Basic kế tiếp tạo chuỗi sét tối đa 4 lần, mỗi lần gây 280% Hỏa Lực. Nếu thiếu mục tiêu phụ, các lượt nhảy chưa dùng quay lại mục tiêu chính với 50% sát thương.",
     "family": "TH13",
     "recipe": [
@@ -853,7 +853,7 @@ const definitions: EquipmentDefinition[] = [
       "TP06"
     ],
     "stats": {
-      "fireRate": 0.9,
+      "bonusFireRatePct": .65,
       "resourceRegenPct": 0.4
     }
   },
@@ -861,23 +861,23 @@ const definitions: EquipmentDefinition[] = [
     "id": "HL14",
     "name": "Kèn Ngày Tận",
     "rarity": "legendary",
-    "statsText": "+0,9 Tốc Độ Bắn; +20% Giảm Hồi Chiêu",
-    "effect": "Skill hạ địch: +1,2 Tốc Độ Bắn, +70 Hỏa Lực và +30% Skill Damage trong 8 giây. Skill trực tiếp trúng Tinh Anh/Boss cũng kích hoạt với 50% hiệu lực. Làm mới thời gian, không cộng dồn.",
+    "statsText": "+65% Tốc Độ Bắn Cộng Thêm; +24 Điểm Hồi Kỹ Năng",
+    "effect": "Skill hạ địch: +87% Tốc Độ Bắn Cộng Thêm, +70 Hỏa Lực và +30% Skill Damage trong 8 giây. Skill trực tiếp trúng Tinh Anh/Boss cũng kích hoạt với 50% hiệu lực. Làm mới thời gian, không cộng dồn.",
     "family": "TH14",
     "recipe": [
       "TP02",
       "TP07"
     ],
     "stats": {
-      "fireRate": 0.9,
-      "cooldownReduction": 0.2
+      "bonusFireRatePct": .65,
+      "skillHaste": 24
     }
   },
   {
     "id": "HL15",
     "name": "Hàm Sói Fenrir",
     "rarity": "legendary",
-    "statsText": "+0,9 Tốc Độ Bắn; +24% Tỷ Lệ Chí Mạng",
+    "statsText": "+65% Tốc Độ Bắn Cộng Thêm; +24% Tỷ Lệ Chí Mạng",
     "effect": "Chí mạng giảm 20 Giáp mục tiêu trong 5 giây, tối đa 4 stack. Ở 4 stack, mục tiêu nhận thêm 30% mọi sát thương từ chiến cơ.",
     "family": "TH15",
     "recipe": [
@@ -885,7 +885,7 @@ const definitions: EquipmentDefinition[] = [
       "TP08"
     ],
     "stats": {
-      "fireRate": 0.9,
+      "bonusFireRatePct": .65,
       "criticalChance": 0.24
     }
   },
@@ -956,7 +956,7 @@ const definitions: EquipmentDefinition[] = [
     "id": "HL20",
     "name": "Pháo Đài Argus",
     "rarity": "legendary",
-    "statsText": "+48 Giáp; +20% Giảm Hồi Chiêu",
+    "statsText": "+48 Giáp; +24 Điểm Hồi Kỹ Năng",
     "effect": "Dùng Skill: +90 Giáp và giảm 20% sát thương nhận trong 5 giây. Làm mới thời gian, không cộng dồn.",
     "family": "TH20",
     "recipe": [
@@ -965,7 +965,7 @@ const definitions: EquipmentDefinition[] = [
     ],
     "stats": {
       "armor": 48,
-      "cooldownReduction": 0.2
+      "skillHaste": 24
     }
   },
   {
@@ -1035,7 +1035,7 @@ const definitions: EquipmentDefinition[] = [
     "id": "HL25",
     "name": "Thời Khắc Lazarus",
     "rarity": "legendary",
-    "statsText": "+640 Máu Tối Đa; +20% Giảm Hồi Chiêu",
+    "statsText": "+640 Máu Tối Đa; +24 Điểm Hồi Kỹ Năng",
     "effect": "Mỗi 25 giây khi HP dưới 35%: giảm 10 giây hồi chiêu còn lại của cả 4 Skill, tạo Shield 30% Máu Tối Đa trong 5 giây và +30% mọi sát thương trong 6 giây.",
     "family": "TH25",
     "recipe": [
@@ -1044,7 +1044,7 @@ const definitions: EquipmentDefinition[] = [
     ],
     "stats": {
       "maxHp": 640,
-      "cooldownReduction": 0.2
+      "skillHaste": 24
     }
   },
   {
@@ -1098,7 +1098,7 @@ const definitions: EquipmentDefinition[] = [
     "id": "HL29",
     "name": "Chén Elysium",
     "rarity": "legendary",
-    "statsText": "+3,6 Hồi Máu/s; +20% Giảm Hồi Chiêu",
+    "statsText": "+3,6 Hồi Máu/s; +24 Điểm Hồi Kỹ Năng",
     "effect": "Khi hiệu ứng Skill kết thúc, hồi 12% Máu Tối Đa trong 3 giây; phần hồi dư chuyển thành Shield tối đa 10% Máu Tối Đa. Hồi nội tại 3 giây.",
     "family": "TH29",
     "recipe": [
@@ -1107,7 +1107,7 @@ const definitions: EquipmentDefinition[] = [
     ],
     "stats": {
       "hpRegen": 3.6,
-      "cooldownReduction": 0.2
+      "skillHaste": 24
     }
   },
   {
@@ -1145,7 +1145,7 @@ const definitions: EquipmentDefinition[] = [
     "id": "HL32",
     "name": "Thánh Miện Aether",
     "rarity": "legendary",
-    "statsText": "+40% Hồi Tài Nguyên/s; +20% Giảm Hồi Chiêu",
+    "statsText": "+40% Hồi Tài Nguyên/s; +24 Điểm Hồi Kỹ Năng",
     "effect": "Hạ địch: +80% Hồi Tài Nguyên trong 6 giây. Skill trực tiếp trúng Tinh Anh/Boss cho +40% trong 6 giây. Khi buff đang hoạt động, +20% Skill Damage.",
     "family": "TH32",
     "recipe": [
@@ -1154,7 +1154,7 @@ const definitions: EquipmentDefinition[] = [
     ],
     "stats": {
       "resourceRegenPct": 0.4,
-      "cooldownReduction": 0.2
+      "skillHaste": 24
     }
   },
   {
@@ -1177,7 +1177,7 @@ const definitions: EquipmentDefinition[] = [
     "id": "HL34",
     "name": "Vương Miện Chronos",
     "rarity": "legendary",
-    "statsText": "+40% Giảm Hồi Chiêu",
+    "statsText": "+60 Điểm Hồi Kỹ Năng",
     "effect": "+30% Skill Damage. Dùng Skill giảm 3 giây hồi chiêu còn lại của 3 Skill còn lại.",
     "family": "TH34",
     "recipe": [
@@ -1185,14 +1185,14 @@ const definitions: EquipmentDefinition[] = [
       "TP07"
     ],
     "stats": {
-      "cooldownReduction": 0.4
+      "skillHaste": 60
     }
   },
   {
     "id": "HL35",
     "name": "Thương Xé Thời",
     "rarity": "legendary",
-    "statsText": "+20% Giảm Hồi Chiêu; +24% Tỷ Lệ Chí Mạng",
+    "statsText": "+24 Điểm Hồi Kỹ Năng; +24% Tỷ Lệ Chí Mạng",
     "effect": "Basic trúng giảm 0,36 giây hồi chiêu dài nhất; chí mạng giảm 1,2 giây. Giới hạn 2,4 giây mỗi giây. Mỗi khi tổng cộng giảm được 4 giây, Skill gây damage kế tiếp nhận +20% Skill Damage.",
     "family": "TH35",
     "recipe": [
@@ -1200,7 +1200,7 @@ const definitions: EquipmentDefinition[] = [
       "TP08"
     ],
     "stats": {
-      "cooldownReduction": 0.2,
+      "skillHaste": 24,
       "criticalChance": 0.24
     }
   },

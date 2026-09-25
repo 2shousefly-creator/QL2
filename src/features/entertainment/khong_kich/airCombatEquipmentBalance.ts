@@ -1,13 +1,13 @@
 /** 26.13.0 completed-family power. Only power fields receive Legendary scale 2. */
 export const EQUIPMENT_POWER = {
-  1: { damage: .18 }, 2: { rate: .025, basic: .20 },
+  1: { damage: .18 }, 2: { bonusFireRatePct: .018, basic: .20 },
   3: { heal: .15, damage: .15 }, 4: { shield: .25 },
   5: { hit: 3, area: 2, skill: .25 }, 6: { resource: .06, discount: .15 },
   7: { skill: .15, vulnerability: .15 }, 8: { crit: .30, synergy: .25 },
-  9: { rate: .18, currentHp: .015, eliteCap: .35 },
-  10: { armor: 60, rate: .5, regen: 1.5, damage: .20 },
-  11: { rate: .6, basic: .15 }, 12: { echo: .8, merged: 1.4 },
-  13: { damage: 1.4 }, 14: { rate: .6, firepower: 35, skill: .15 },
+  9: { bonusFireRatePct: .54, currentHp: .015, eliteCap: .35 },
+  10: { armor: 60, bonusFireRatePct: .36, regen: 1.5, damage: .20 },
+  11: { bonusFireRatePct: .435, basic: .15 }, 12: { echo: .8, merged: 1.4 },
+  13: { damage: 1.4 }, 14: { bonusFireRatePct: .435, firepower: 35, skill: .15 },
   15: { armor: 10, vulnerability: .15 }, 16: { reduction: .12, damage: 3 },
   17: { shield: .12, damage: .10 }, 18: { stored: .35, cap: .18, heal: .75, damage: .10 },
   19: { resource: .07, regen: .25 }, 20: { armor: 45, reduction: .10 },

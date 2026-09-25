@@ -1,0 +1,510 @@
+{
+  "version": "26.15.0",
+  "title": "Fire Rate Rework, Skill Haste & Combat Stat Clarity",
+  "displayTitle": "CHI TIẾT CẬP NHẬT 26.15.0",
+  "releaseDate": "25/09/2026",
+  "summary": "**26.15.0** cải tổ hai chỉ số nền quan trọng của Không Kích: **Tốc Độ Bắn** và **Hồi Chiêu Kỹ Năng**. Tốc Độ Bắn giờ sử dụng ba thành phần rõ ràng — **Tốc Độ Bắn Cơ Bản, Tỷ Lệ Tốc Độ Bắn và Tốc Độ Bắn Cộng Thêm** — để mọi nguồn tăng tốc độ bắn cộng dồn tuyến tính hơn và thể hiện rõ bản sắc riêng của từng chiến cơ.\n\nHệ **% Giảm Hồi Chiêu** được thay thế bằng **Điểm Hồi Kỹ Năng**. Mỗi điểm giúp tăng tần suất sử dụng kỹ năng theo cách cộng dồn ổn định; thời gian hồi thực tế được tính bằng `Hồi Chiêu Cơ Bản × 100 / (100 + Điểm Hồi Kỹ Năng)`. Các hiệu ứng giảm trực tiếp số giây hồi chiêu còn lại và các hiệu ứng thay đổi Hồi Chiêu Cơ Bản vẫn giữ nguyên vai trò riêng.\n\nToàn bộ Core, Skill, Trang Bị, telemetry và tooltip liên quan được quy đổi sang hai hệ mới. Bản cập nhật cũng đồng bộ một số Lõi có mô tả tăng Tốc Độ Bắn hoặc Giảm Hồi Chiêu nhưng đường stat cũ chưa áp dụng đầy đủ, đồng thời giữ nguyên giới hạn **12 phát/giây**, rule Trang Bị Huyền Thoại = 2× bản Hoàn Chỉnh và toàn bộ nội dung chiến đấu của ba Màn hiện tại.",
+  "sections": [
+    {
+      "id": "s1",
+      "title": "HỆ TỐC ĐỘ BẮN MỚI",
+      "icon": {
+        "kind": "system",
+        "id": "ui"
+      },
+      "intro": [
+        {
+          "text": "Tốc Độ Bắn không còn tăng bằng các lượng cộng phẳng rời rạc hoặc nhiều lớp nhân chồng lên nhau. Mọi nguồn tăng thông thường giờ đi qua một công thức thống nhất.",
+          "format": "paragraph"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s1-e1",
+          "icon": {
+            "kind": "system",
+            "id": "ui"
+          },
+          "title": "Công thức Tốc Độ Bắn",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "**Tốc Độ Bắn nhận thêm = Tốc Độ Bắn Cơ Bản × Tỷ Lệ Tốc Độ Bắn × % Tốc Độ Bắn Cộng Thêm.**",
+              "format": "paragraph",
+              "changeType": "new"
+            },
+            {
+              "text": "Tốc Độ Bắn Cộng Thêm từ cấp độ, Lõi, Trang Bị, kỹ năng, phần thưởng vĩnh viễn và buff tạm thời được cộng với nhau trước khi quy đổi thành phát/giây.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Các hiệu ứng ghi **Tổng Tốc Độ Bắn** tác động trực tiếp lên lượng Tốc Độ Bắn đang có và không đi qua Tốc Độ Bắn Cơ Bản hoặc Tỷ Lệ Tốc Độ Bắn.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Giới hạn Tốc Độ Bắn toàn cục vẫn là **12 phát/giây**.",
+              "format": "bullet",
+              "changeType": "unchanged"
+            }
+          ]
+        },
+        {
+          "id": "s1-e2",
+          "icon": {
+            "kind": "system",
+            "id": "ui"
+          },
+          "title": "Bốn hồ sơ Tốc Độ Bắn riêng",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "**Viper:** Tốc Độ Bắn Cơ Bản 4,15 · Tỷ Lệ Tốc Độ Bắn 0,355.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "**Titan:** Tốc Độ Bắn Cơ Bản 3,95 · Tỷ Lệ Tốc Độ Bắn 0,328.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "**Phantom:** Tốc Độ Bắn Cơ Bản 4,04 · Tỷ Lệ Tốc Độ Bắn 0,346.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "**Astra:** Tốc Độ Bắn Cơ Bản 4,06 · Tỷ Lệ Tốc Độ Bắn 0,337.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Cả bốn chiến cơ nhận **+5% Tốc Độ Bắn Cộng Thêm mỗi lần lên cấp**, bắt đầu từ Lv2.",
+              "format": "bullet",
+              "changeType": "new"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "KỸ NĂNG & LÕI TỐC ĐỘ BẮN",
+      "icon": {
+        "kind": "system",
+        "id": "ui"
+      },
+      "intro": [
+        {
+          "text": "Các nguồn tăng Tốc Độ Bắn cũ được quy đổi sang phần trăm Tốc Độ Bắn Cộng Thêm để giữ sức mạnh tương đối nhưng loại bỏ cách cộng/nhân thiếu nhất quán.",
+          "format": "paragraph"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s2-e1",
+          "icon": {
+            "kind": "system",
+            "id": "ui"
+          },
+          "title": "Điên Cuồng & HawkEye",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "**Điên Cuồng của Viper:** trong thời gian hiệu lực nhận **+120% Tốc Độ Bắn Cộng Thêm**.",
+              "format": "bullet",
+              "changeType": "changed"
+            },
+            {
+              "text": "**Quá Tải:** nâng Điên Cuồng từ +120% lên **+225% Tốc Độ Bắn Cộng Thêm**.",
+              "format": "bullet",
+              "changeType": "changed"
+            },
+            {
+              "text": "**HawkEye Hiếu Chiến:** sau 7 giây hoạt động, Cuồng Nộ 3 giây; HawkEye vẫn nhận +120% tốc độ bắn riêng, còn Phantom nhận **+105% Tốc Độ Bắn Cộng Thêm**. Chu kỳ 7 giây bắt đầu lại sau khi Cuồng Nộ kết thúc.",
+              "format": "bullet",
+              "changeType": "changed"
+            }
+          ]
+        },
+        {
+          "id": "s2-e2",
+          "icon": {
+            "kind": "system",
+            "id": "ui"
+          },
+          "title": "Các Lõi Tốc Độ Bắn được quy đổi",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Hỏa Lực Đồng Bộ **+36%** · Tinh chỉnh cò súng **+18%** · Hỏa Lực Tăng Áp **+58%** · Bộ nạp liên thanh **+29%** Tốc Độ Bắn Cộng Thêm.",
+              "format": "bullet",
+              "changeType": "changed"
+            },
+            {
+              "text": "Nền Tảng Hủy Diệt **+87%** · Buồng bắn siêu tốc **+72%** · Nhịp chiến thuật **+36% trong 6 giây** · Áp Lực Liên Tục **+72%**.",
+              "format": "bullet",
+              "changeType": "changed"
+            },
+            {
+              "text": "Nhịp Bắn Gia Tốc: **+25% mỗi tầng**, tối đa 4 tầng = **+100% Tốc Độ Bắn Cộng Thêm**.",
+              "format": "bullet",
+              "changeType": "changed"
+            },
+            {
+              "text": "Thợ Săn Tiền Thưởng: phần thưởng Tốc Độ Bắn trở thành **+15% Tốc Độ Bắn Cộng Thêm vĩnh viễn**. Bộ Điều Áp ở vùng Resource trung tính cho **+32,5%**.",
+              "format": "bullet",
+              "changeType": "changed"
+            },
+            {
+              "text": "Đạn Siêu Nặng giữ penalty đặc biệt **-10% Tổng Tốc Độ Bắn**; Bóng Sống Ngắn tiếp tục bắn theo Tốc Độ Bắn hiệu lực hiện tại.",
+              "format": "bullet",
+              "changeType": "changed"
+            }
+          ]
+        },
+        {
+          "id": "s2-e3",
+          "icon": {
+            "kind": "system",
+            "id": "ui"
+          },
+          "title": "Chậm Mà Chắc",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Chậm Mà Chắc tiếp tục khóa Tốc Độ Bắn thường ở **1,8 phát/giây** và chuyển lượng Tốc Độ Bắn trước khóa thành Basic Damage.",
+              "format": "paragraph",
+              "changeType": "changed"
+            },
+            {
+              "text": "Nguồn chuyển đổi được giới hạn bởi cap Tốc Độ Bắn toàn cục 12 trước khi khóa xuống 1,8; phần Tốc Độ Bắn vượt 12 không tiếp tục làm tăng hệ số chuyển đổi.",
+              "format": "bullet",
+              "changeType": "changed"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "TRANG BỊ TỐC ĐỘ BẮN",
+      "icon": {
+        "kind": "system",
+        "id": "ui"
+      },
+      "intro": [
+        {
+          "text": "Các chỉ số Tốc Độ Bắn phẳng trên Trang Bị được chuyển sang Tốc Độ Bắn Cộng Thêm, đồng thời giữ nguyên nguyên tắc Trang Bị Huyền Thoại có direct beneficial power bằng 2× bản Hoàn Chỉnh.",
+          "format": "paragraph"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s3-e1",
+          "icon": {
+            "kind": "system",
+            "id": "ui"
+          },
+          "title": "Các mốc quy đổi chính",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Phong Luân và các direct stat cũ +0,45 trở thành **+32,5% Tốc Độ Bắn Cộng Thêm**; direct stat +0,9 của bản Huyền Thoại trở thành **+65%**.",
+              "format": "bullet",
+              "changeType": "changed"
+            },
+            {
+              "text": "Luân Cuồng Phong: +32,5% trực tiếp và **+1,8% mỗi cộng dồn**; Luân Thiên Bạo: +65% trực tiếp và **+3,6% mỗi cộng dồn**.",
+              "format": "bullet",
+              "changeType": "changed"
+            },
+            {
+              "text": "Nanh Lôi Ảnh: +65% trực tiếp và +54% từ hiệu ứng; Nanh Thiên Lôi: +130% trực tiếp và +108% từ hiệu ứng.",
+              "format": "bullet",
+              "changeType": "changed"
+            },
+            {
+              "text": "Colossus nhận +36% / +72% khi kích hoạt; Valkyrie và Ares nhận +43,5% / +87% từ proc ở bản Hoàn Chỉnh / Huyền Thoại.",
+              "format": "bullet",
+              "changeType": "changed"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "ĐIỂM HỒI KỸ NĂNG",
+      "icon": {
+        "kind": "system",
+        "id": "ui"
+      },
+      "intro": [
+        {
+          "text": "Chỉ số % Giảm Hồi Chiêu toàn cục được thay thế bằng **Điểm Hồi Kỹ Năng**, giúp giá trị của các nguồn hồi kỹ năng cộng dồn ổn định hơn.",
+          "format": "paragraph"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s4-e1",
+          "icon": {
+            "kind": "system",
+            "id": "ui"
+          },
+          "title": "Công thức mới",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "**Hồi Chiêu thực tế = Hồi Chiêu Cơ Bản × 100 / (100 + Điểm Hồi Kỹ Năng).**",
+              "format": "paragraph",
+              "changeType": "new"
+            },
+            {
+              "text": "Ví dụ: 25 Điểm Hồi Kỹ Năng biến 20 giây thành 16 giây; 100 điểm biến 20 giây thành 10 giây.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Điểm Hồi Kỹ Năng không có hard cap; giá trị tối thiểu là 0.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Các hiệu ứng thay đổi **Hồi Chiêu Cơ Bản** hoặc giảm trực tiếp **X giây Hồi Chiêu còn lại** vẫn là mechanic riêng và không bị chuyển thành Điểm Hồi Kỹ Năng.",
+              "format": "bullet",
+              "changeType": "unchanged"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "LÕI & TRANG BỊ HỒI KỸ NĂNG",
+      "icon": {
+        "kind": "system",
+        "id": "ui"
+      },
+      "intro": [
+        {
+          "text": "Các nguồn % Giảm Hồi Chiêu được quy đổi sang Điểm Hồi Kỹ Năng theo power budget mới.",
+          "format": "paragraph"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s5-e1",
+          "icon": {
+            "kind": "system",
+            "id": "ui"
+          },
+          "title": "Lõi",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Hệ Tái Tạo Chiến Thuật **+12** · Tái tạo **+6** · Tái Tạo Nano **+18** · Rút ngắn thời gian **+12** Điểm Hồi Kỹ Năng.",
+              "format": "bullet",
+              "changeType": "changed"
+            },
+            {
+              "text": "Tái Tạo Lượng Tử **+25** · Đồng hồ nghịch thời **+25** · Hợp Đồng Huyết Năng **+67** Điểm Hồi Kỹ Năng.",
+              "format": "bullet",
+              "changeType": "changed"
+            },
+            {
+              "text": "Thợ Săn Tiền Thưởng có thể nhận **+4 Điểm Hồi Kỹ Năng vĩnh viễn**. Chế Độ Tử Thủ trừ **25 Điểm Hồi Kỹ Năng** khi kích hoạt, không thể làm chỉ số xuống dưới 0.",
+              "format": "bullet",
+              "changeType": "changed"
+            },
+            {
+              "text": "Nâng Cấp Bất Ổn — Thu Nhỏ nhận **+33 Điểm Hồi Kỹ Năng**.",
+              "format": "bullet",
+              "changeType": "changed"
+            }
+          ]
+        },
+        {
+          "id": "s5-e2",
+          "icon": {
+            "kind": "system",
+            "id": "ui"
+          },
+          "title": "Trang Bị",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Thời Phiến nhận **+12 Điểm Hồi Kỹ Năng**.",
+              "format": "bullet",
+              "changeType": "changed"
+            },
+            {
+              "text": "Các family cũ có +10% / +20% Giảm Hồi Chiêu được chuyển thành **+12 / +24 Điểm Hồi Kỹ Năng** ở bản Hoàn Chỉnh / Huyền Thoại.",
+              "format": "bullet",
+              "changeType": "changed"
+            },
+            {
+              "text": "Riêng Đồng Hồ Chronos / Vương Miện Chronos chuyển thành **+30 / +60 Điểm Hồi Kỹ Năng** để giữ đúng rule Huyền Thoại = 2× Hoàn Chỉnh.",
+              "format": "bullet",
+              "changeType": "changed"
+            },
+            {
+              "text": "Các proc giảm thẳng 1,5 giây, 3 giây, 5 giây, 10 giây hoặc các lượng Hồi Chiêu còn lại khác giữ nguyên cách hoạt động.",
+              "format": "bullet",
+              "changeType": "unchanged"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s6",
+      "title": "TOOLTIP & THUẬT NGỮ",
+      "icon": {
+        "kind": "system",
+        "id": "ui"
+      },
+      "intro": [
+        {
+          "text": "Toàn bộ UI được chuẩn hóa để người chơi có thể phân biệt chỉ số cơ bản, chỉ số cộng thêm và modifier tác động trực tiếp.",
+          "format": "paragraph"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s6-e1",
+          "icon": {
+            "kind": "system",
+            "id": "ui"
+          },
+          "title": "Tốc Độ Bắn",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "UI sử dụng bốn thuật ngữ thống nhất: **Tốc Độ Bắn Cơ Bản · Tỷ Lệ Tốc Độ Bắn · Tốc Độ Bắn Cộng Thêm · Tổng Tốc Độ Bắn**.",
+              "format": "paragraph",
+              "changeType": "new"
+            },
+            {
+              "text": "Chỉ số Tốc Độ Bắn thực tế hiển thị với hai chữ số thập phân để các thay đổi nhỏ từ Tỷ Lệ Tốc Độ Bắn dễ quan sát hơn.",
+              "format": "bullet",
+              "changeType": "changed"
+            }
+          ]
+        },
+        {
+          "id": "s6-e2",
+          "icon": {
+            "kind": "system",
+            "id": "ui"
+          },
+          "title": "Hồi Kỹ Năng",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "UI dùng các thuật ngữ **Điểm Hồi Kỹ Năng · Hồi Chiêu Cơ Bản · Hồi Chiêu thực tế · Hồi Chiêu còn lại**.",
+              "format": "paragraph",
+              "changeType": "new"
+            },
+            {
+              "text": "Tooltip Điểm Hồi Kỹ Năng cho biết tần suất sử dụng kỹ năng tăng bao nhiêu và hệ số Hồi Chiêu thực tế tương ứng.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Tooltip từng Skill hiển thị Hồi Chiêu Cơ Bản và Hồi Chiêu thực tế theo lượng Điểm Hồi Kỹ Năng hiện tại.",
+              "format": "bullet",
+              "changeType": "new"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s7",
+      "title": "ĐỒNG BỘ RUNTIME & MÔ TẢ",
+      "icon": {
+        "kind": "system",
+        "id": "ui"
+      },
+      "intro": [
+        {
+          "text": "Bản cải tổ stat cũng dọn các trường hợp mô tả và đường tính runtime chưa đồng nhất.",
+          "format": "paragraph"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s7-e1",
+          "icon": {
+            "kind": "system",
+            "id": "ui"
+          },
+          "title": "Các Lõi được đồng bộ",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Tinh chỉnh cò súng, Bộ nạp liên thanh và Buồng bắn siêu tốc giờ nhận đúng lượng Tốc Độ Bắn Cộng Thêm được ghi trong mô tả.",
+              "format": "bullet",
+              "changeType": "fixed"
+            },
+            {
+              "text": "Tái tạo, Rút ngắn thời gian và Đồng hồ nghịch thời giờ nhận đúng Điểm Hồi Kỹ Năng được ghi trong mô tả.",
+              "format": "bullet",
+              "changeType": "fixed"
+            },
+            {
+              "text": "HawkEye Hiếu Chiến được thống nhất về chu kỳ 7 giây, thời gian Cuồng Nộ 3 giây và các giá trị Tốc Độ Bắn mới giữa Skill Rank, runtime, Core catalog và tooltip.",
+              "format": "bullet",
+              "changeType": "fixed"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s8",
+      "title": "HỆ THỐNG ĐƯỢC GIỮ NGUYÊN",
+      "icon": {
+        "kind": "system",
+        "id": "ui"
+      },
+      "intro": [
+        {
+          "text": "26.15.0 là bản cải tổ cách tính stat; các hệ thống chiến đấu khác tiếp tục sử dụng thiết kế đã khóa ở các phiên bản trước.",
+          "format": "paragraph"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s8-e1",
+          "icon": {
+            "kind": "system",
+            "id": "ui"
+          },
+          "title": "Core, Equipment, Ultimate & Campaign",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Giữ nguyên 141 Core thường, Core Selection Lv1 / Lv7 / Lv11 / Lv15, Max Level 18 và sáu slot Trang Bị.",
+              "format": "bullet",
+              "changeType": "unchanged"
+            },
+            {
+              "text": "Giữ nguyên global cap Chí Mạng, Sát Thương Chí Mạng, Xuyên Giáp và toàn bộ family rule Trang Bị 26.13.0 ngoài các giá trị Tốc Độ Bắn / Hồi Kỹ Năng được quy đổi.",
+              "format": "bullet",
+              "changeType": "unchanged"
+            },
+            {
+              "text": "Không thay đổi Ultimate 26.12.3, Phantom Nhiễu Điện Tử đã khóa hoặc gameplay của Leviathan Front, Magnetic Storm và STORMBREAKER.",
+              "format": "bullet",
+              "changeType": "unchanged"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

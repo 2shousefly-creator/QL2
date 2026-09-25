@@ -1,4 +1,5 @@
-import { skillRank, SKILL_RANKS, isUltimate, ultimateCastDisabled } from "./airCombatSkillRanks";
+import { resolveSkillCooldown } from "./airCombatStatResolvers";
+import { skillRank, rankValues, SKILL_RANKS, isUltimate, ultimateCastDisabled } from "./airCombatSkillRanks";
 import { astraOrbitProtectionActive } from "./airCombatAstra";
 import { equipmentStatuses } from "./airCombatEquipmentPresentation";
 import type { EquipmentRewardId } from "./airCombatEquipmentState";
@@ -44,22 +45,31 @@ function hawkEyeTimeLabel(remaining: number | null) {
 export function getSkillTooltipModel(state: AircraftCombatState, id: SkillId) {
  const config=SKILL_CONFIGS[id],v=getSkillRuntimeValues(state,id),rank=skillRank(state,id),rows=SKILL_RANKS[id];
  const free=hasCore(state,84)&&(state.coreState.skillCasts+1)%4===0;
+ const stats=getEffectiveAircraftStats(state),baseCooldown=rankValues(state,id).cooldown;
+ const castMultiplier=state.coreState.deferredCooldowns[id]??(free?1.1:1);
+ const cooldown=resolveSkillCooldown(v.cooldown,stats.skillHaste,castMultiplier);
  const resource=AIRCRAFT_CONFIGS[state.aircraftId].resourceKind==="mana"?"Mana":"Điện";
  const detailRows=[`${isUltimate(id)?"Ultimate":"Kỹ Năng Thường"} · Cấp ${rank}/${rows.length}`,id==="escort_drone"?`Duy trì ${number(v.upkeepPerSecond)} Điện/s · Yêu cầu triệu hồi ${v.cost} Điện · Không tiêu hao Điện khi triệu hồi`:`Chi phí thực tế: ${number(free?0:v.cost)} ${resource}`];
  const coreRows:string[]=[];
+ detailRows.push(`Hồi Chiêu Cơ Bản${baseCooldown!==v.cooldown?" gốc":""}: ${number(baseCooldown)}s`);
+ if(baseCooldown!==v.cooldown)detailRows.push(`Hồi Chiêu Cơ Bản sau hiệu ứng: ${number(v.cooldown)}s`);
+ detailRows.push(`Điểm Hồi Kỹ Năng: ${number(stats.skillHaste)}`);
+ if(castMultiplier>1)detailRows.push("Miễn Phí Có Điều Kiện: +10% Hồi Chiêu của lần cast này sau Điểm Hồi Kỹ Năng.");
+ detailRows.push(`Hồi Chiêu thực tế: ${number(cooldown)}s`);
+ if((state.cooldowns[id]??0)>0)detailRows.push(`Hồi Chiêu còn lại: ${number(state.cooldowns[id]!)}s`);
  if(ultimateCastDisabled(state,id))coreRows.push("Tập Trung Chuyên Môn: khóa dùng chủ động Ultimate; cấp và nội tại vẫn giữ nguyên.");
  if(hasCore(state,97)&&!isUltimate(id))coreRows.push("Tập Trung Chuyên Môn: +30% Sát Thương Kỹ Năng; chi phí đã giảm 20%, hồi chiêu cơ bản đã giảm 25%.");
  if(canSkillsCrit(state))coreRows.push("Kỹ năng có thể chí mạng.");
  if(hasCore(state,190))coreRows.push("Nén Năng Lượng: +25% Sát Thương Kỹ Năng; chi phí đã gồm +12%.");
  if(expansionState(state).primarySkill===id)coreRows.push("Chủ Lực: +30% Sát Thương Kỹ Năng; chi phí và hồi chiêu cơ bản đã giảm 20%.");
  return {title:config.name,description:rank?effectiveSkillDescription(state,id):"Chưa học kỹ năng. Có thể giữ Điểm Kỹ Năng để đầu tư sau.",detailRows,coreRows,rank,rankRows:rows,
-  cooldown:v.cooldown*(1-getEffectiveAircraftStats(state).cooldownReduction)*(free?1.1:1)};
+  cooldown};
 }
 function effectiveSkillDescription(s:AircraftCombatState,id:SkillId):string {
  const r=skillRank(s,id),v=getSkillRuntimeValues(s,id),p=(n:number)=>number(n*100)+"% Hỏa Lực",extra=(level:number)=>r>=level?" "+SKILL_RANKS[id][level-1].description:"";
  switch(id){
  case "decoy":return `${v.count} đợt cách 0,75s, mỗi đợt 5 mồi mỗi bên; hút mục tiêu và hấp thụ projectile trong ${number(v.duration)}s.`+extra(3)+extra(4)+extra(5);
- case "afterburner":return `${number(v.duration)}s: +${r>=3?75:40}% Tốc Độ Bắn. Đạn thường nảy 2 mục tiêu với ${r>=4?"75% / 50%":"50% / 25%"} sát thương đạn gốc.`+(r>=4?" Kết thúc hồi 18% Mana Tối Đa trong 5s.":"")+extra(5);
+ case "afterburner":return `${number(v.duration)}s: +${number((r>=3?B.upgradedAfterburnerRate:B.afterburnerRate)*100)}% Tốc Độ Bắn Cộng Thêm. Đạn thường nảy 2 mục tiêu với ${r>=4?"75% / 50%":"50% / 25%"} sát thương đạn gốc.`+(r>=4?" Kết thúc hồi 18% Mana Tối Đa trong 5s.":"")+extra(5);
  case "missile_swarm":return `${v.count} tên lửa phóng theo cặp, mỗi quả ${p(v.damageMultiplier)}. Hồi chiêu sau khi phóng quả cuối.`+(r>=2?" Tự tìm mục tiêu mới khi mục tiêu chết; mỗi quả phá tối đa 3 projectile hợp lệ và tiếp tục bay.":"")+(r>=3?" Hit làm mới một Thiêu Đốt 90% Hỏa Lực/s trong 5s và -30% Giáp trong 6s. Mỗi hit cho 1 Data, tối đa 8; chỉ sau khi mọi tên lửa đã kết thúc mới nhận +5% Chí Mạng/Data trong 10s, tối đa +40%.":"");
  case "armor_shield":return `Giảm ${number((1-v.damageTakenMultiplier)*100)}% sát thương sau Giáp trong ${number(v.duration)}s.`+extra(4)+extra(5);
  case "heavy_bomb":return `Nổ sau 3s hoặc khi va chạm, gây ${p(v.damageMultiplier)} toàn màn hình.`+extra(3)+extra(4)+extra(5);
@@ -361,6 +371,7 @@ export function getCoreTelemetryPresentation(state:AircraftCombatState,id:CoreId
     191:{firepowerTime:"Thời gian Pha Kỹ Năng (giây)",fireRateTime:"Thời gian Pha Bắn Thường (giây)"},
     197:{accumulated:"Sát thương đã trì hoãn",peak:"Nợ sát thương cao nhất"},
     198:{granted:"Vệ tinh đã tạo",shots:"Phát bắn khi hết hạn"},200:{shieldCreated:"Dung lượng khiên cộng thêm"},
+    209:{cooldown:"Giây Hồi Chiêu tăng thêm do mất Điểm Hồi Kỹ Năng"},
     212:{converted:"Token dư chuyển thành dự trữ"},213:{blocked:"Lượt xuất hiện đã chặn"},
     214:{picks:"Lần chọn ô thứ 4–5"},215:{picks:"Lần chọn ô bảo đảm"},
     216:{converted:"Lõi đã chuyển đổi",rewards:"Lõi Kim Cương đã nhận"},
@@ -371,25 +382,25 @@ export function getCoreTelemetryPresentation(state:AircraftCombatState,id:CoreId
   }
   const flat=FLAT_CORE_STATS[id];
   if(flat){
-    const names:Partial<Record<keyof typeof stats,string>>={firepower:"Hỏa Lực",armor:"Giáp",fireRate:"Tốc Độ Bắn",maxHp:"Máu Tối Đa",hpRegen:"Hồi Máu mỗi giây",cooldownReduction:"Giảm Hồi Chiêu",criticalChance:"Tỷ Lệ Chí Mạng",criticalDamageMultiplier:"Sát Thương Chí Mạng"};
-    const percent=["cooldownReduction","criticalChance","criticalDamageMultiplier"].includes(flat.key);
+    const names:Partial<Record<keyof typeof stats,string>>={firepower:"Hỏa Lực",armor:"Giáp",bonusFireRatePct:"Tốc Độ Bắn Cộng Thêm",maxHp:"Máu Tối Đa",hpRegen:"Hồi Máu mỗi giây",skillHaste:"Điểm Hồi Kỹ Năng",criticalChance:"Tỷ Lệ Chí Mạng",criticalDamageMultiplier:"Sát Thương Chí Mạng"};
+    const percent=["bonusFireRatePct","criticalChance","criticalDamageMultiplier"].includes(flat.key);
     lines.push(`Chỉ số từ lõi: +${number(flat.amount*(percent?100:1))}${percent?"%":""} ${names[flat.key]}`);
   }
   const active=(key:string)=>(c.timers[key]??0)>c.time;
   const bonus=(value:number,label:string)=>lines.push(`Đang cung cấp: +${number(value)} ${label}`);
   if(row>=46&&row<=48)bonus(c.stacks[id]??0,row===46?"Hỏa Lực":row===47?"Giáp":"Máu Tối Đa");
   if(row===54)bonus(((c.stacks.fireRateConversion??1)-1)*100,"% Basic Damage từ chuyển đổi Tốc Độ Bắn");
-  if(row===96)bonus(40,"% Giảm Hồi Chiêu");
+  if(row===96)bonus(67,"Điểm Hồi Kỹ Năng");
   if(row===105)bonus(25,"% Tỷ Lệ Chí Mạng");
   if(row===91)bonus(Math.min(.8,Math.max(0,1-state.currentHp/stats.maxHp)*.8)*100,"% mọi sát thương");
   if(row===49){const on=c.time-c.lastMove>=2.5;bonus(on?30:0,"% Hỏa Lực");bonus(on?60:0,"% Giáp");}
   if(row===61)bonus(active("reactiveArmor")?45:0,"Giáp");
   if(row===63){const on=state.currentHp<stats.maxHp*.35;bonus(on?50:0,"Hỏa Lực");bonus(on?35:0,"Giáp");}
   if(row===66)lines.push(`Cộng dồn: ${c.time-c.lastKill<=4?c.stacks.combo??0:0} / 5`);
-  if(row===71)bonus(active("tacticalRate")?.50:0,"Tốc Độ Bắn");
+  if(row===71)bonus(active("tacticalRate")?36:0,"% Tốc Độ Bắn Cộng Thêm");
   if(row===75){lines.push(`Cộng dồn: ${c.stacks.slaying??0} / 5`);bonus((c.stacks.slaying??0)*4,"% Hỏa Lực");}
   if(row===78)bonus(active("reactor")?50:0,"% Hồi Tài Nguyên");
-  if(row===82)bonus(c.time-c.lastDamage>=4?1:0,"Tốc Độ Bắn");
+  if(row===82)bonus(c.time-c.lastDamage>=4?72:0,"% Tốc Độ Bắn Cộng Thêm");
   if(row===56)lines.push("Đang cung cấp: +3% Tỷ Lệ Chí Mạng; +22% Sát Thương Chí Mạng (trước giới hạn).");
   if(row===111)lines.push("Tốc độ đạn thường: 1440 px/s.");
   if(row===149)BOUNTY_REWARDS.forEach((reward,index)=>{const count=c.stacks[`bountyReward:${index}`]??0;if(count)lines.push(`+${number(count*reward.amount*("percent" in reward?100:1))}${"percent" in reward?"%":""} ${reward.label} (${count} lần)`);});
