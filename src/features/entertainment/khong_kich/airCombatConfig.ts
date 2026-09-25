@@ -304,6 +304,22 @@ for(const id of Object.keys(SKILL_CONFIGS) as SkillId[]){SKILL_CONFIGS[id].cost=
 export const STAGE2_POWER_MULTIPLIER = 1.5;
 
 export const ENEMY_CONFIGS: Record<EnemyType, EnemyConfig> = {
+  spark_wasp: {"type":"spark_wasp","name":"SPARK WASP","baseHp":242.9856,"baseArmor":11.8404,"speed":78,"radius":11,"projectileDamage":78.503,"collisionDamage":171.2794,"fireInterval":3,"score":110,"combatXp":24,"color":"#8ed5ff"},
+  volt_lancer: {"type":"volt_lancer","name":"VOLT LANCER","baseHp":394.8516,"baseArmor":20.7207,"speed":53,"radius":14,"projectileDamage":78.503,"collisionDamage":214.0992,"fireInterval":4.8,"score":170,"combatXp":30,"color":"#8ed5ff"},
+  storm_capacitor: {"type":"storm_capacitor","name":"STORM CAPACITOR","baseHp":728.9568,"baseArmor":26.6409,"speed":38,"radius":18,"projectileDamage":128.4595,"collisionDamage":256.919,"fireInterval":3.8,"score":290,"combatXp":44,"color":"#8ed5ff"},
+  storm_weaver: {"type":"storm_weaver","name":"STORM WEAVER","baseHp":516.3444,"baseArmor":17.7606,"speed":47,"radius":12,"projectileDamage":38.9491,"collisionDamage":171.2794,"fireInterval":4,"score":210,"combatXp":32,"color":"#8ed5ff"},
+  ion_hunter: {"type":"ion_hunter","name":"ION HUNTER","baseHp":728.9568,"baseArmor":26.6409,"speed":42,"radius":18,"projectileDamage":94.3488,"collisionDamage":242.6458,"fireInterval":3.8,"score":290,"combatXp":44,"color":"#8ed5ff"},
+  thunderhead: {"type":"thunderhead","name":"THUNDERHEAD","baseHp":957.528,"baseArmor":45.5598,"speed":31,"radius":19,"projectileDamage":41.7312,"collisionDamage":256.919,"fireInterval":7,"score":320,"combatXp":38,"color":"#8ed5ff"},
+  storm_herald: {"type":"storm_herald","name":"STORM HERALD","baseHp":12453.012,"baseArmor":105.3716,"speed":26,"radius":28,"projectileDamage":108.239,"collisionDamage":432.9562,"fireInterval":4,"score":1500,"combatXp":230,"color":"#8ed5ff"},
+  volt_executioner: {"type":"volt_executioner","name":"VOLT EXECUTIONER","baseHp":8621.316,"baseArmor":54.4582,"speed":65,"radius":23,"projectileDamage":146.8958,"collisionDamage":371.1053,"fireInterval":4,"score":1500,"combatXp":230,"color":"#8ed5ff"},
+  capacitor_prime: {"type":"capacitor_prime","name":"CAPACITOR PRIME","baseHp":8767.44,"baseArmor":55.8789,"speed":32,"radius":25,"projectileDamage":146.8958,"collisionDamage":371.1053,"fireInterval":4,"score":1500,"combatXp":230,"color":"#8ed5ff"},
+  ion_arbiter: {"type":"ion_arbiter","name":"ION ARBITER","baseHp":8621.316,"baseArmor":54.4582,"speed":46,"radius":24,"projectileDamage":149.3856,"collisionDamage":371.1053,"fireInterval":4,"score":1500,"combatXp":230,"color":"#8ed5ff"},
+  thunder_bastion: {"type":"thunder_bastion","name":"THUNDER BASTION","baseHp":12664.08,"baseArmor":107.1576,"speed":38,"radius":27,"projectileDamage":108.239,"collisionDamage":440.2944,"fireInterval":4,"score":1500,"combatXp":230,"color":"#8ed5ff"},
+  arc_seraph: {"type":"arc_seraph","name":"ARC SERAPH","baseHp":12453.012,"baseArmor":102.6927,"speed":53,"radius":25,"projectileDamage":110.0736,"collisionDamage":432.9562,"fireInterval":4,"score":1500,"combatXp":230,"color":"#8ed5ff"},
+  storm_weaver_prime: {"type":"storm_weaver_prime","name":"STORM WEAVER PRIME","baseHp":12453.012,"baseArmor":105.3716,"speed":31,"radius":29,"projectileDamage":105.4872,"collisionDamage":432.9562,"fireInterval":4,"score":1500,"combatXp":230,"color":"#8ed5ff"},
+  storm_node: {"type":"storm_node","name":"STORM NODE","baseHp":1200,"baseArmor":30,"speed":0,"radius":16,"projectileDamage":0,"collisionDamage":0,"fireInterval":99,"score":0,"combatXp":0,"color":"#8ed5ff"},
+  omega_storm_node: {"type":"omega_storm_node","name":"OMEGA STORM NODE","baseHp":5260,"baseArmor":60,"speed":0,"radius":16,"projectileDamage":0,"collisionDamage":0,"fireInterval":99,"score":0,"combatXp":0,"color":"#8ed5ff"},
+  storm_conductor: {"type":"storm_conductor","name":"STORM CONDUCTOR","baseHp":10520,"baseArmor":85,"speed":0,"radius":18,"projectileDamage":110,"collisionDamage":0,"fireInterval":3,"score":0,"combatXp":0,"color":"#8ed5ff"},
   prism_sovereign: {"type":"prism_sovereign","name":"PRISM SOVEREIGN","baseHp":7306.2,"baseArmor":47.355,"speed":44,"radius":24,"score":1500,"combatXp":230,"projectileDamage":124.488,"collisionDamage":314.496,"fireInterval":99,"color":"#a78bfa"},
   mine_warden: {"type":"mine_warden","name":"MINE WARDEN","baseHp":7306.2,"baseArmor":47.355,"speed":32,"radius":25,"score":1500,"combatXp":230,"projectileDamage":124.488,"collisionDamage":314.496,"fireInterval":99,"color":"#a78bfa"},
   polarity_warden: {"type":"polarity_warden","name":"POLARITY WARDEN","baseHp":10553.4,"baseArmor":89.298,"speed":38,"radius":27,"score":1500,"combatXp":230,"projectileDamage":91.728,"collisionDamage":366.912,"fireInterval":99,"color":"#a78bfa"},
@@ -522,4 +538,5 @@ export function getCoreDefinition(id: CoreId): CoreDefinition {
 
 /** Concrete Magnetic Storm boss stats, before wave progression. */
 export const TEMPEST_CONFIG: EnemyConfig = { ...ENEMY_CONFIGS.boss, name: "TEMPEST CROWN", baseHp: 175312.5, baseArmor: 168.3, projectileDamage: 188.16, collisionDamage: 672 };
-export const stageEnemyConfig = (type: EnemyType, stageId: number): EnemyConfig => type === "boss" && stageId === 2 ? TEMPEST_CONFIG : ENEMY_CONFIGS[type];
+export const STORMBREAKER_CONFIG: EnemyConfig = { ...ENEMY_CONFIGS.boss, name: "STORMBREAKER Ω", baseHp: 210375, baseArmor: 198.59, speed: 31, radius: 43, projectileDamage: 222.03, collisionDamage: 792.96 };
+export const stageEnemyConfig = (type: EnemyType, stageId: number): EnemyConfig => type === "boss" && stageId === 3 ? STORMBREAKER_CONFIG : type === "boss" && stageId === 2 ? TEMPEST_CONFIG : ENEMY_CONFIGS[type];

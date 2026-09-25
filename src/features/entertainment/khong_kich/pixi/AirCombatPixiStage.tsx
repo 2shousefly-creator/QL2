@@ -1,4 +1,5 @@
 import { CanvasCombatAccents } from "../CanvasCombatAccents";
+import { StormbreakerPresentation } from "../airCombatStormbreakerVisuals";
 import React from "react";
 import type { AirCombatPresentation } from "./airCombatPixiTypes";
 import { DamageLabelPool, HealthBarPresentation } from "../airCombatFeedback";
@@ -10,8 +11,8 @@ export const AirCombatPixiStage = React.forwardRef<HTMLDivElement, React.HTMLAtt
 );
 
 export async function createLegacyPresentation(host: HTMLDivElement, stageId = 1): Promise<AirCombatPresentation> {
-  const { drawLegacyWorld, loadMagneticCanvasAssets, loadAstraCanvasAssets } = await import("../AirCombatLegacyRenderer");
-  await Promise.all([loadAstraCanvasAssets(),...(stageId===2?[loadMagneticCanvasAssets()]:[])]);
+  const { drawLegacyWorld, loadStormbreakerCanvasAssets, loadMagneticCanvasAssets, loadAstraCanvasAssets } = await import("../AirCombatLegacyRenderer");
+  await Promise.all([loadAstraCanvasAssets(),...(stageId===2?[loadMagneticCanvasAssets()]:stageId===3?[loadStormbreakerCanvasAssets()]:[])]);
   let magneticEndAge = 0;
   const canvas = document.createElement("canvas");
   const ratio = Math.min(2, window.devicePixelRatio || 1);
@@ -23,6 +24,7 @@ export async function createLegacyPresentation(host: HTMLDivElement, stageId = 1
   const damageLabels = new DamageLabelPool();
   const healthBars = new HealthBarPresentation();
   const accents = new CanvasCombatAccents();
+  const stormbreakerPresentation = new StormbreakerPresentation();
   return {
     render(world, delta, reducedMotion) {
       if (document.hidden) return;
@@ -30,10 +32,11 @@ export async function createLegacyPresentation(host: HTMLDivElement, stageId = 1
       damageLabels.update(world, delta);
       healthBars.begin(delta);
       accents.update(world, delta);
+      stormbreakerPresentation.update(world, delta);
       if (world.ended) magneticEndAge += delta;
-      drawLegacyWorld(context, world, world.aircraft.aircraftId, reducedMotion, damageLabels.labels, healthBars, accents, world.elapsed + magneticEndAge);
+      drawLegacyWorld(context, world, world.aircraft.aircraftId, reducedMotion, damageLabels.labels, healthBars, accents, world.elapsed + magneticEndAge, stormbreakerPresentation);
       healthBars.end();
     },
-    destroy() { accents.clear(); healthBars.clear(); canvas.remove(); },
+    destroy() { stormbreakerPresentation.clear(); accents.clear(); healthBars.clear(); canvas.remove(); },
   };
 }

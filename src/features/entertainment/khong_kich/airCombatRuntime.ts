@@ -1,3 +1,5 @@
+import { createStormbreakerState, initializeStormEnemy, updateStormbreakerEnemy, updateStormbreaker, updateStormbreakerProjectile, resetStormbreaker, onStormEnemyDamage, stormEnemyDestroyed, stormDamageTakenMultiplier, isStormObjective, stormFx, type StormbreakerWorldState, type StormbreakerEnemyState, type StormbreakerHooks } from "./airCombatStormbreaker";
+import type { StormbreakerVfxKey } from "./airCombatStage3Art";
 import { EQUIPMENT_POWER as P } from "./airCombatEquipmentBalance";
 import type { UltimateVisualKey } from "./airCombatUltimateArt";
 import { beginRankSkill, collapseAnchor, tickRankSkills, rankRuntime, rankEnemyMovement, rankEnemyFireRate, rankProjectileSpeed, rankDirectMultiplier, rankArmorMultiplier, predatorBasicHit, rankProjectileHit, echoTwinShot, type RankEffect, type RankRuntime, type RankRuntimeHooks } from "./airCombatRankRuntime";
@@ -51,6 +53,7 @@ export interface EnemyEntity {
     burnCast?: ExpansionCast;
     bodyHitAt?:Record<number,number>;
     inheritedAllegiance?:Allegiance; attackAllegiance?:Allegiance;
+    stormbreaker?: StormbreakerEnemyState;
     magnetic?: MagneticEnemyState;
     auxiliary?: boolean;
     rewardless?: boolean;
@@ -138,6 +141,10 @@ export interface ProjectileEntity extends AttackMetadata {
     expansionCast?: ExpansionCast; expansionSlowUntil?: number;
     primaryShot?: { resolved: boolean };
     astraLance?:{later:number;followup?:StellarLancePath};
+    stormbreakerVisual?: StormbreakerVfxKey;
+    stormbreakerSalvo?: number;
+    stormbreakerSplit?: { at: number; count: number; factor: number; radial: boolean };
+    stormbreakerGrace?: Map<number, number>;
     magnetic?: MagneticProjectileState;
     magneticAreaId?: number;
     magneticVisual?: MagneticVfxKey;
@@ -323,6 +330,7 @@ export interface CombatWorld {
     astra?: AstraRuntime;
     stageId: number;
     stage: AirCombatStageDefinition;
+    stormbreaker?: StormbreakerWorldState;
     magnetic?: MagneticWorldState;
     stageVictory: boolean;
     stageFirstClear: boolean;
@@ -455,7 +463,7 @@ export function createCombatWorld(aircraftId: AircraftId, random: () => number =
     const droneInitial = clampCircleToGameplayRect(initial.x - 28, initial.y + 8, 9);
     const spawnQueue = createWaveQueue(0, random, stage.waves);
     return {
-        stageId, stage, stageVictory: false, stageFirstClear: false, magnetic: stage.runtime === "magnetic" ? { mines: [] } : undefined,
+        stageId, stage, stageVictory: false, stageFirstClear: false, stormbreaker: stage.runtime === "stormbreaker" ? createStormbreakerState() : undefined, magnetic: stage.runtime === "magnetic" ? { mines: [] } : undefined,
         skillCores: createSkillCoreRuntime(), coreSelectionEvent: null,
         threats: [], scheduledAttacks: [], eliteSpecials: [], eliteResolve:0, eliteComboCooldown:9, eliteComboIndex:0,
         aircraft: createAircraftCombatState(aircraftId),
@@ -636,7 +644,8 @@ function spawnEnemy(world: CombatWorld, type: EnemyType, auxiliary = false): Ene
         return null;
     const config = stageEnemyConfig(type, world.stageId), wave = world.stage.waves[world.waveIndex], enemy = acquireEnemy(world);
     const exactMagneticDurability = world.stageId === 2 && (isElite(type) || type === "satellite" || (auxiliary && type === "kamikaze"));
-    const hpScale = exactMagneticDurability ? 1 : wave.hp, armorScale = exactMagneticDurability ? 1 : wave.armor;
+    const exactDurability = exactMagneticDurability || world.stage.runtime === "stormbreaker" && (isElite(type) || type === "boss" || type === "omega_storm_node" || type === "storm_conductor");
+    const hpScale = exactDurability ? 1 : wave.hp, armorScale = exactDurability ? 1 : wave.armor;
     // Stage 2 rewards are exact per kill, independent of archetype weights.
     const xp = auxiliary || type === "boss" || type === "satellite" || type === "micro_drone" ? 0
         : wave.xpPerKill ?? (world.spawnQueue.length === 1 ? world.xpBudgetRemaining
@@ -644,7 +653,7 @@ function spawnEnemy(world: CombatWorld, type: EnemyType, auxiliary = false): Ene
     world.xpBudgetRemaining -= xp;
     if (!auxiliary) world.xpWeightRemaining = Math.max(0, world.xpWeightRemaining - config.combatXp);
     const x = GAMEPLAY_SAFE_RECT.left + config.radius + world.random() * (GAMEPLAY_SAFE_RECT.width - config.radius * 2);
-    Object.assign(enemy, { expansionMarks: undefined, expansionKillingHit: undefined, burnCast: undefined, auxiliary, noWaveWait: false, rewardless: auxiliary, killProcEligible: !auxiliary || type === "satellite", expiresAt: auxiliary && type === "kamikaze" ? world.elapsed + 20 : undefined, magnetic: undefined, id: world.nextId++, type, x, y: GAMEPLAY_SAFE_RECT.top + config.radius, baseX: x, vx: 0, vy: config.speed, radius: config.radius,
+    Object.assign(enemy, { expansionMarks: undefined, expansionKillingHit: undefined, burnCast: undefined, auxiliary, noWaveWait: false, rewardless: auxiliary, killProcEligible: !auxiliary || type === "satellite", expiresAt: auxiliary && type === "kamikaze" ? world.elapsed + 20 : undefined, magnetic: undefined, stormbreaker: undefined, id: world.nextId++, type, x, y: GAMEPLAY_SAFE_RECT.top + config.radius, baseX: x, vx: 0, vy: config.speed, radius: config.radius,
         hp: config.baseHp * hpScale, maxHp: config.baseHp * hpScale, armor: config.baseArmor * armorScale, age: 0, fireCooldown: 1.2 + world.random() * .8,
         phaseSeed: world.random() * Math.PI * 2, wave: wave.normal, dashCharge: 1.2, xp,
         damageScale: wave.damage, eliteWave: wave.elite, stun: 0, burn: 0, burnDamage: 0, burnTick: 0, weakReadyAt: 0, weakDebuffUntil: 0, burnArmorUntil: 0, weakHits: 0, weakUntil: 0, lightningUntil: 0,
@@ -667,6 +676,7 @@ function spawnEnemy(world: CombatWorld, type: EnemyType, auxiliary = false): Ene
         setMessage(world, world.stage.bossName.toUpperCase(), 2.5);
     }
     if (world.magnetic) enemy.magnetic = { clock: 0, attack: 0, anchorX: enemy.x, anchorY: enemy.y, angle: enemy.phaseSeed };
+    if (world.stormbreaker) initializeStormEnemy(world, enemy);
     world.enemies.push(enemy);
     if (world.magnetic && type === "boss") initializeTempestGuardians(world, enemy, magneticHooks);
     return enemy;
@@ -703,6 +713,7 @@ function addProjectile(world: CombatWorld, values: Partial<ProjectileEntity> & P
         rankCast:values.rankCast, rankVolley:values.rankVolley, twinSide:values.twinSide, procFree:values.procFree, aimBonus:false, echoScale:values.echoScale,
         mainBasicMiss:false, aimCorrectionUntil:undefined, extraPierceOrdinal:undefined, astraLance:undefined, capturable:values.capturable??((values.delivery??"direct_projectile")==="direct_projectile"),
         delivery:values.delivery??"direct_projectile", grazeCandidate:false, playerContact:false,
+        stormbreakerVisual: values.stormbreakerVisual, stormbreakerSalvo: values.stormbreakerSalvo, stormbreakerSplit: values.stormbreakerSplit, stormbreakerGrace: values.stormbreakerGrace,
         magneticVisual: values.magneticVisual, magneticAreaId: values.magneticAreaId, appearance: values.appearance, ammoVisualKey: values.ammoVisualKey,
         sourceEnemyId: values.sourceEnemyId, sourceEnemyType: values.sourceEnemyType, attackTag: values.attackTag, majorBossAttack: values.majorBossAttack, payload: values.payload,
         criticalAttack: values.criticalAttack ?? false,
@@ -1022,7 +1033,7 @@ function startElitePattern(world:CombatWorld,enemy:EnemyEntity,kind:ElitePattern
     return true;
 }
 function updateEliteDirector(world:CombatWorld,dt:number):void {
-    if (world.magnetic) return;
+    if (world.magnetic || world.stormbreaker) return;
     const wave=world.stage.waves[world.waveIndex];
     if(!wave.elite||world.waveState!=="combat")return;
     for(const enemy of world.enemies){
@@ -1512,16 +1523,22 @@ export function movePlayerByDelta(world: CombatWorld, dx: number, dy: number): v
             if (p.owner === "enemy" && p.allegiance!=="friendly_hacked" && segmentVsAircraft(p.x,p.y,p.x,p.y,p.radius,getPlayerHitbox(world),projectileContact).hit) {
                 if(p.projectileKind==="boss_missile")emitVisual(world,{kind:"missile_impact",x:p.x,y:p.y,size:42,missileFamily:"boss"});
                 p.playerContact=true;
-                hitPlayer(world, p.rawDamage, "projectile", p, projectileContact);
+                if (!p.stormbreakerGrace || (p.stormbreakerGrace.get(-1) ?? -Infinity) + .3 <= world.elapsed) {
+                    p.stormbreakerGrace?.set(-1, world.elapsed);
+                    hitPlayer(world, p.rawDamage, "projectile", p, projectileContact);
+                }
                 recycleProjectile(world, index);
             }
         }
         for (const warning of world.warnings) hitBossWarningPlayer(world, warning);
         updateMagneticHazards(world, 0, magneticHooks);
+        resolveStormbreakerContacts(world);
         updateEnemyPlayerCollisions(world);
     }
-    if (world.aircraft.currentHp <= 0)
+    if (world.aircraft.currentHp <= 0) {
         world.ended = true;
+        if (world.stormbreaker) resetStormbreaker(world);
+    }
     enterCountdownIfClear(world);
 }
 interface DroneNavigation {
@@ -1674,6 +1691,7 @@ function updateDroneMovement(world: CombatWorld, dt: number): void {
 }
 function clearHostileObjects(world: CombatWorld): void {
     resetMagneticHazards(world);
+    resetStormbreaker(world);
     world.threats.length=0;world.scheduledAttacks.length=0;world.eliteSpecials.length=0;
     for (let i = world.projectiles.length - 1; i >= 0; i--)
         if (world.projectiles[i].owner === "enemy")
@@ -1709,6 +1727,9 @@ function updateEncounter(world: CombatWorld, dt: number): void {
     }
     const wave = world.stage.waves[world.waveIndex];
     const mainAlive = world.enemies.filter(e => e.hp > 0 && !e.auxiliary);
+    if (!world.spawnQueue.length && !mainAlive.length && world.stormbreaker) {
+        for (let i = world.enemies.length - 1; i >= 0; i--) if (world.enemies[i].noWaveWait) recycleEnemy(world, i);
+    }
     if (!world.spawnQueue.length && !mainAlive.length && world.magnetic) {
         // Surviving carrier drones complete their bounded, zero-reward final dive.
         for (let i = world.enemies.length - 1; i >= 0; i--) if (world.enemies[i].auxiliary && (world.enemies[i].type !== "micro_drone" || world.enemies[i].noWaveWait)) recycleEnemy(world, i);
@@ -1740,7 +1761,7 @@ function updateEncounter(world: CombatWorld, dt: number): void {
         }
     }
     if (entry) {
-        if (world.magnetic && entry.type !== "boss") {
+        if ((world.magnetic || world.stormbreaker) && entry.type !== "boss") {
             const lane = world.spawnedInWave % 6;
             entry.x = GAMEPLAY_SAFE_RECT.left + 32 + lane * (GAMEPLAY_SAFE_RECT.width - 64) / 5;
             entry.phaseSeed = lane * Math.PI / 3;
@@ -1761,7 +1782,7 @@ function updateBossPhase(world: CombatWorld): void {
     const boss = world.enemies.find(e => e.type === "boss");
     if (!boss)
         return;
-    const ratio = boss.hp / boss.maxHp, next = world.magnetic ? (ratio > .75 ? 1 : ratio > .5 ? 2 : ratio > .25 ? 3 : ratio > .1 ? 4 : 5) : ratio >= .7 ? 1 : ratio >= .35 ? 2 : 3;
+    const ratio = boss.hp / boss.maxHp, next = world.stormbreaker ? (ratio > .7 ? 1 : ratio > .35 ? 2 : ratio >= .15 ? 3 : 4) : world.magnetic ? (ratio > .75 ? 1 : ratio > .5 ? 2 : ratio > .25 ? 3 : ratio > .1 ? 4 : 5) : ratio >= .7 ? 1 : ratio >= .35 ? 2 : 3;
     if (next !== world.bossPhase) {
         world.bossPhase = next;
         setMessage(world, `${world.stage.bossName.toUpperCase()} · GIAI ĐOẠN ${next}`, 2);
@@ -2010,7 +2031,7 @@ function updateBossAttacks(world: CombatWorld, enemy: EnemyEntity, dt: number): 
 /** Unit allegiance expires immediately; committed attacks keep their own snapshot. */
 export function enemyAllegiance(world:CombatWorld,enemy?:EnemyEntity):Allegiance {
     if(enemy?.attackAllegiance)return enemy.attackAllegiance;
-    if(enemy && enemy.type!=="boss" && enemy.type!=="satellite" && (enemy.hackedUntil??0)>world.elapsed)return "friendly_hacked";
+    if(enemy && enemy.type!=="boss" && enemy.type!=="satellite" && !isStormObjective(enemy.type) && (enemy.hackedUntil??0)>world.elapsed)return "friendly_hacked";
     return enemy?.inheritedAllegiance??"hostile";
 }
 export const isHostileToPlayer=(world:CombatWorld,e:EnemyEntity)=>e.hp>0 && enemyAllegiance(world,e)==="hostile";
@@ -2106,7 +2127,7 @@ function updateTacticalCores(world:CombatWorld,dt:number):void {
     if(hasCore(state,120)&&!t.hackMode&&(c.timers.controlOverride??0)<=c.time&&world.waveState==="combat"){
         const eliteWave=world.stage.waves[world.waveIndex].elite>0;
         const bossWave=Boolean(world.stage.waves[world.waveIndex].counts.boss);
-        const candidates=world.enemies.filter(e=>isHostileToPlayer(world,e) && e.type!=="satellite" &&
+        const candidates=world.enemies.filter(e=>isHostileToPlayer(world,e) && e.type!=="satellite" && !isStormObjective(e.type) &&
             (bossWave?e.type==="boss":eliteWave?isElite(e.type):e.type!=="boss"&&!isElite(e.type)));
         candidates.sort((a,b)=>b.hp/b.maxHp-a.hp/a.maxHp||a.id-b.id);
         const cohort=candidates.slice(0,bossWave||eliteWave?1:5);
@@ -2154,8 +2175,9 @@ function damageEnemyAttack(world:CombatWorld,target:EnemyEntity,raw:number,attac
     let damage:number;
     if(allegiance!=="hostile")damage=applyDamageToEnemy(world,target,raw,"#67e8f9","core",undefined,undefined,contact,attack.delivery??(contact?"direct_projectile":"area_hazard"),true,false);
     else {
-        damage=calculateDamage(raw*(contact?wingDamageMultiplier(contact.zone):1),target.armor*((target.armorBrokenUntil??0)>world.elapsed?.7:1));
-        const absorbed=Math.min(target.shield,damage);target.shield-=absorbed;damage=Math.min(target.hp,damage-absorbed);target.hp-=damage;
+        damage=calculateDamage(raw*(contact?wingDamageMultiplier(contact.zone):1),target.armor*((target.armorBrokenUntil??0)>world.elapsed?.7:1))*stormDamageTakenMultiplier(world,target);
+        const shieldBefore=target.shield,absorbed=Math.min(target.shield,damage);target.shield-=absorbed;damage=Math.min(target.hp,damage-absorbed);target.hp-=damage;
+        if(world.stormbreaker)onStormEnemyDamage(world,target,damage,shieldBefore);
         accumulateDeathMark(world,target,damage+absorbed);
         emitVisual(world,{kind:"damage_number",x:target.x,y:target.y,size:target.radius,hpDamage:damage,shieldAbsorbed:absorbed,target:"enemy",critical:false,entityId:target.id});
         if(absorbed>0&&target.shield<=0&&target.type==="iron_fortress"&&target.retaliationReady){target.retaliationReady=false;queueEliteSpecial(world,target,"retaliation",.01,false);}
@@ -2326,8 +2348,10 @@ function updateEnemies(world: CombatWorld, dt: number): void {
         }
         if (enemy.hp <= 0)
             continue;
-        if (enemy.shieldUntil <= world.aircraft.coreState.time)
+        if (enemy.shieldUntil <= world.aircraft.coreState.time) {
             enemy.shield = 0;
+            if (enemy.stormbreaker) { enemy.stormbreaker.lastShield=0; enemy.stormbreaker.shieldArmed=false; }
+        }
         if (enemy.type === "boss") enemy.y = Math.max(enemy.y, bossMinCenterY(enemy.radius));
         if (enemy.type === "satellite") positionMagneticGuardian(world, enemy);
         if (enemy.stun > 0) {
@@ -2336,6 +2360,7 @@ function updateEnemies(world: CombatWorld, dt: number): void {
         }
         enemy.age += dt;
         enemy.fireCooldown -= dt * rankEnemyFireRate(world,enemy);
+        if (updateStormbreakerEnemy(world, enemy, dt, stormbreakerHooks)) continue;
         if (updateMagneticEnemy(world, enemy, dt, magneticHooks)) continue;
         const top = GAMEPLAY_SAFE_RECT.top + enemy.radius;
         const holdingTelegraph = (enemy.type === "boss" && (enemy.bossAttack?.crossfirePending ?? 0)>0 && !enemy.bossAttack?.patternWaiting) || world.warnings.some(w => w.enemyId === enemy.id && (w.kind === "rail" || w.kind === "dash" || w.kind === "sonic" || w.kind === "retaliation" || w.kind === "elite_barrage"));
@@ -2433,7 +2458,7 @@ function updateEnemies(world: CombatWorld, dt: number): void {
     }
     for (let i = world.enemies.length-1; i >= 0; i--) if (world.enemies[i].deathHandled && world.enemies[i].hp <= 0) recycleEnemy(world, i);
     resolveDeathsAndEffects(world);
-    for(const enemy of world.enemies){const start=equipmentPositions.get(enemy.id),factor=equipmentSlow(world.aircraft,enemy)*rankEnemyMovement(world,enemy);if(start&&factor<1){enemy.x=start.x+(enemy.x-start.x)*factor;enemy.y=start.y+(enemy.y-start.y)*factor;}}
+    for(const enemy of world.enemies){if(enemy.stormbreaker)continue;const start=equipmentPositions.get(enemy.id),factor=equipmentSlow(world.aircraft,enemy)*rankEnemyMovement(world,enemy);if(start&&factor<1){enemy.x=start.x+(enemy.x-start.x)*factor;enemy.y=start.y+(enemy.y-start.y)*factor;}}
 
 }
 function segmentDistance(px: number, py: number, ax: number, ay: number, bx: number, by: number): number {
@@ -2708,7 +2733,11 @@ function repayExpansionDebt(world: CombatWorld, amount: number) {
     // Any HP loss cancels a pending shield return, including debt repayment.
     if (damage > 0) expansionState(state).returns.length = 0;
     if (damage + absorbed > 0) emitVisual(world,{kind:"damage_number",x:world.playerX,y:world.playerY,size:36,hpDamage:damage,shieldAbsorbed:absorbed,target:"player",critical:false});
-    if (state.currentHp <= 0) { world.ended = true; world.pauseReasons.add("result"); }
+    if (state.currentHp <= 0) {
+        world.ended = true;
+        if (world.stormbreaker) resetStormbreaker(world);
+        world.pauseReasons.add("result");
+    }
     else settleExpansionShields(world,expansionHooks);
 }
 function expansionThreatNearby(world: CombatWorld, radius: number, bodies: boolean): boolean {
@@ -2823,7 +2852,7 @@ function applyDamageToEnemy(world: CombatWorld, enemy: EnemyEntity, rawDamage: n
         : { actualDamage: calculateDamage((firstVolleyDamage * .15 + recoilDamage * multiplier) * hitMultiplier * zoneMultiplier, armor), critical: false, multiplier: 1 };
     if (volleyHits && firstVolleyDamage === undefined)
         volleyHits.set(enemy.id, rawDamage * multiplier * resolved.multiplier);
-    let damage = resolved.actualDamage * penetrationScale * guardianMultiplier(world, enemy);
+    let damage = resolved.actualDamage * penetrationScale * guardianMultiplier(world, enemy) * stormDamageTakenMultiplier(world, enemy);
     const aegis = enemy.type === "boss" && enemy.hp / enemy.maxHp >= .15 && enemy.aegisUntil > time;
     if (aegis)
         damage *= .6;
@@ -2846,6 +2875,7 @@ function applyDamageToEnemy(world: CombatWorld, enemy: EnemyEntity, rawDamage: n
         cBank(state,gain);
     }
     enemy.hp = Math.max(0, enemy.hp - damage);
+    if (world.stormbreaker) onStormEnemyDamage(world, enemy, damage, shieldBeforeHit);
     if(directPlayer&&damage+absorbed>0)recordDpsDamage(world,damage+absorbed);
     if(procFree&&enemy.hp<=0){enemy.expansionKillingHit=undefined;enemy.killProcEligible=false;}
     if (directPlayer && !procFree && damage + absorbed > 0) {
@@ -3000,6 +3030,7 @@ function destroyEnemy(world: CombatWorld, enemyIndex: number): void {
     const enemy = world.enemies[enemyIndex];
     if (!enemy || enemy.deathHandled)
         return;
+    if (world.stormbreaker && isStormObjective(enemy.type)) { enemy.killProcEligible=false; enemy.expansionKillingHit=undefined; }
     if(world.rankRuntime?.lock?.target===enemy.id)world.rankRuntime.lock.killed=true;
     equipmentOnKill(world,equipmentHooks,enemy);
     expansionKill(world, enemy, expansionHooks);
@@ -3016,6 +3047,7 @@ function destroyEnemy(world: CombatWorld, enemyIndex: number): void {
     tactical.hackTargets=tactical.hackTargets.filter(id=>id!==enemy.id);
     if(enemy.killProcEligible !== false && hasCore(world.aircraft,108) && world.random()<.18 && tactical.scraps.length<64)tactical.scraps.push({id:world.nextId++,x:enemy.x,y:enemy.y,until:world.elapsed+4});
     const target = targetMetadata(enemy), config = stageEnemyConfig(enemy.type, world.stageId), state = world.aircraft, c = state.coreState;
+    if (world.stormbreaker) stormEnemyDestroyed(world, enemy);
     if (world.magnetic) {
         magneticFx(world, target.boss ? "bossBurst" : target.elite ? "plasmaImpact" : "smallBurst", enemy.x, enemy.y, enemy.radius * 3, target.boss ? 1.8 : .5);
         if (target.boss) {
@@ -3023,7 +3055,7 @@ function destroyEnemy(world: CombatWorld, enemyIndex: number): void {
             for (let i = 0; i < 4; i++) magneticFx(world, "bossBurst", enemy.x + (i % 2 ? 30 : -30), enemy.y + (i < 2 ? -25 : 25), 80, .65, 0, .12 + i * .16);
         }
     }
-    emitVisual(world, { kind: "explosion", x: enemy.x, y: enemy.y, size: enemy.radius * 3, boss: target.boss, magneticDeath: !!world.magnetic });
+    emitVisual(world, { kind: "explosion", x: enemy.x, y: enemy.y, size: enemy.radius * 3, boss: target.boss, magneticDeath: !!world.magnetic || !!world.stormbreaker });
     if (!enemy.rewardless) {
         world.score += config.score * getComboMultiplier(world.comboKills);
         world.comboKills++; world.comboTimer = 4;
@@ -3044,11 +3076,12 @@ function destroyEnemy(world: CombatWorld, enemyIndex: number): void {
     if (target.boss) {
         world.bossDefeated = true;
         world.ended = true;
+        if (world.stormbreaker) resetStormbreaker(world);
         world.pauseReasons.add("result");
         world.bossClearSeconds = world.bossStartedAt === null ? null : world.elapsed - world.bossStartedAt;
         setMessage(world, `${world.stage.bossName.toUpperCase()} ĐÃ BỊ HẠ`, 3);
         clearHostileObjects(world);
-        if (world.magnetic) for (const helper of world.enemies) if (helper.auxiliary) { helper.hp = 0; helper.deathHandled = true; }
+        if (world.magnetic || world.stormbreaker) for (const helper of world.enemies) if (helper.auxiliary) { helper.hp = 0; helper.deathHandled = true; }
         world.effectQueue.length = 0;
     }
     else {
@@ -3127,7 +3160,7 @@ function applySecondaryHits(world: CombatWorld, projectile: ProjectileEntity, pr
         bounced.hitIds.push(...projectile.hitIds);
     }
 }
-function hitPlayer(world: CombatWorld, rawDamage: number, kind: "projectile" | "collision" | "hazard" = "projectile", attack: AttackMetadata & { homing?: boolean; x?:number; y?:number; previousX?:number; previousY?:number; projectileKind?:ProjectileEntity["projectileKind"] } = {}, contact?:HitResult): void {
+function hitPlayer(world: CombatWorld, rawDamage: number, kind: "projectile" | "collision" | "hazard" = "projectile", attack: AttackMetadata & { stormbreakerVisual?: StormbreakerVfxKey; homing?: boolean; x?:number; y?:number; previousX?:number; previousY?:number; projectileKind?:ProjectileEntity["projectileKind"] } = {}, contact?:HitResult): void {
     const state = world.aircraft, c = state.coreState, stats = getEffectiveAircraftStats(state);
     // Tempest beams own a 0.20s tick schedule. Ordinary contact grace must not
     // turn that into 0.62s DPS; independently granted invulnerability still wins.
@@ -3259,6 +3292,7 @@ function hitPlayer(world: CombatWorld, rawDamage: number, kind: "projectile" | "
             emitVisual(world, { kind: "damage_number", x: world.playerX, y: world.playerY, size: 36, hpDamage: 0, shieldAbsorbed: absorbed, target: "player", critical: false });
         return;
     }
+    if(world.stormbreaker && kind==="projectile" && attack.stormbreakerVisual && contact) stormFx(world,attack.stormbreakerVisual==="stormSpear"?"stormSpearImpact":"stormRailImpact",contact.x,contact.y,attack.stormbreakerVisual==="stormSpear"?66:26,.35);
     if(kind==="projectile" && attack.projectileKind==="bullet" && contact && !((state.activeEffects.armor_shield??0)>0 && state.aircraftId==="breaker"))
         emitVisual(world,{kind:"bullet_impact",x:contact.x,y:contact.y,size:14});
     let survived = false;
@@ -3295,6 +3329,7 @@ function hitPlayer(world: CombatWorld, rawDamage: number, kind: "projectile" | "
     if(!contact && !(state.aircraftId==="breaker" && (state.activeEffects.armor_shield??0)>0)) addParticles(world, contact?.x??world.playerX, contact?.y??world.playerY, "#fb7185", 13);
     if (state.currentHp <= 0) {
         world.ended = true;
+        if (world.stormbreaker) resetStormbreaker(world);
         world.pauseReasons.add("result");
     }
 }
@@ -3346,7 +3381,10 @@ function updateProjectileCollisions(world: CombatWorld): void {
             if (!equipmentUntargetable(world.aircraft) && segmentVsAircraft(p.previousX,p.previousY,p.x,p.y,p.radius,getPlayerHitbox(world),projectileContact).hit) {
                 if(p.projectileKind==="boss_missile")emitVisual(world,{kind:"missile_impact",x:p.x,y:p.y,size:42,missileFamily:"boss"});
                 p.playerContact=true;
-                hitPlayer(world, p.rawDamage, "projectile", p, projectileContact);
+                if (!p.stormbreakerGrace || (p.stormbreakerGrace.get(-1) ?? -Infinity) + .3 <= world.elapsed) {
+                    p.stormbreakerGrace?.set(-1, world.elapsed);
+                    hitPlayer(world, p.rawDamage, "projectile", p, projectileContact);
+                }
                 recycleProjectile(world, i);
             }
             if(world.projectiles[i]===p && hasCore(world.aircraft,107) && ordinaryHostileBullet(p) && !p.playerContact && segmentVsAircraft(p.previousX,p.previousY,p.x,p.y,p.radius+8,getPlayerHitbox(world),projectileContact).hit)p.grazeCandidate=true;
@@ -3421,6 +3459,7 @@ function updateEnemyPlayerCollisions(world: CombatWorld): void {
     if (world.waveState !== "combat")
         return;
     for (const enemy of world.enemies) {
+        if (world.stormbreaker && (isStormObjective(enemy.type) || (enemy.stormbreaker?.bodyUntil ?? 0) > world.elapsed)) continue;
         if ((enemy.type === "micro_drone" && (enemy.magnetic?.clock ?? 0) < (enemy.magnetic?.diveAt ?? 2.8)) || (enemy.type === "satellite" && (enemy.magnetic?.clock ?? 0) < 1.4)) continue;
         if(enemy.hp>0&&enemy.type==="kamikaze"&&enemy.kamikazeState==="dash"&&enemyAllegiance(world,enemy)==="friendly_hacked")updateKamikaze(world,enemy,0);
         if(enemy.hp>0&&enemy.type!=="kamikaze") {
@@ -3653,6 +3692,8 @@ function updateProjectiles(world: CombatWorld, dt: number): void {
         if (p.lifetime <= 0) { recycleProjectile(world, i); continue; }
         p.previousX = p.x;
         p.previousY = p.y;
+        updateStormbreakerProjectile(world, p, stormbreakerHooks);
+        if (p.lifetime <= 0) { recycleProjectile(world, i); continue; }
         if (updateMagneticProjectile(world, p, motionDt, magneticHooks)) { if (p.lifetime <= 0) recycleProjectile(world, i); continue; }
         if (p.projectileKind === "boss_missile") {
             if (!updateBossMissile(world, p, dt, motionDt/dt)) recycleProjectile(world, i);
@@ -3809,6 +3850,7 @@ export function updateCombatWorld(world: CombatWorld, deltaSeconds: number): voi
     updateEnemies(world, dt);
     updateCrossfireGrids(world);
     updateMagneticHazards(world, dt, magneticHooks);
+    updateStormbreaker(world, dt, stormbreakerHooks);
     if (world.pendingCoreSelections || world.ended) {
         enterCountdownIfClear(world);
         return;
@@ -3848,6 +3890,7 @@ export function updateCombatWorld(world: CombatWorld, deltaSeconds: number): voi
         delete world.aircraft.coreState.emergencyRepair;
         const tactical=tacticalState(world);tactical.grids.length=0;tactical.scraps.length=0;
         world.ended = true;
+        if (world.stormbreaker) resetStormbreaker(world);
         world.pauseReasons.add("result");
     }
     enterCountdownIfClear(world);
@@ -4099,6 +4142,43 @@ function updateSkillCoreEffects(world:CombatWorld,dt:number):void {
     resolveDeathsAndEffects(world);
 }
 
+function resolveStormbreakerContacts(w: CombatWorld) {
+    if (!w.stormbreaker || w.ended) return;
+    for (const a of w.stormbreaker.hazards) {
+        if (a.decoy || w.elapsed < a.hitAt || w.elapsed >= a.until || a.conditionalOwner && !w.enemies.some(e => e.id === a.conditionalOwner && e.hp > 0)) continue;
+        const insulated = a.environmental !== undefined && a.delivery === "area_hazard" && w.stormbreaker.fields.some(f => f.until > w.elapsed && f.cycle === a.environmental && Math.hypot(w.playerX-f.x,w.playerY-f.y) <= f.radius);
+        stormbreakerHooks.area(w,a.damage,a,{...a.start,end:a.end,radius:a.radius},a.hits,a.grace,insulated);
+    }
+    for (const e of w.enemies) {
+        const d=e.stormbreaker?.dash;
+        if (!d || e.hp<=0 || w.elapsed<d.start || d.progress>=d.duration) continue;
+        stormbreakerHooks.area(w,d.damage,{sourceEnemyId:e.id,sourceEnemyType:e.type,allegiance:d.allegiance,delivery:"aircraft_collision"},
+            {x:e.x,y:e.y,radius:e.radius*.65},d.hits,Infinity);
+    }
+}
+const stormbreakerHooks: StormbreakerHooks = {
+    movement:(w,e)=>equipmentSlow(w.aircraft,e)*rankEnemyMovement(w,e),
+    spawn: spawnEnemy, projectile: addProjectile, allegiance: enemyAllegiance, message: setMessage,
+    target: (w,e,allegiance) => {
+        if ((allegiance ?? enemyAllegiance(w,e)) === "hostile") return {x:w.playerX,y:w.playerY};
+        return nearestEnemy(w,e.x,e.y,[e.id],true);
+    },
+    area: (w,raw,attack,shape,hits,grace,insulated=false) => {
+        if (w.ended || raw<=0) return;
+        const touches=(box:AircraftHitbox)=>shape.end?segmentVsAircraft(shape.x,shape.y,shape.end.x,shape.end.y,shape.radius,box,projectileContact).hit:circleVsAircraft(shape.x,shape.y,shape.radius,box);
+        const ready=(id:number)=>!hits.has(id)||w.elapsed-hits.get(id)!>=grace;
+        for(const e of w.enemies) if(canAttackEnemy(w,attack.allegiance??"hostile",e,attack.sourceEnemyId)&&ready(e.id)&&touches(getEnemyHitbox(e))) {
+            hits.set(e.id,w.elapsed); damageEnemyAttack(w,e,raw,attack);
+        }
+        if((attack.allegiance??"hostile")==="hostile") {
+            if(!insulated&&ready(-1)&&touches(getPlayerHitbox(w))) {hits.set(-1,w.elapsed);hitPlayer(w,raw,attack.delivery==="aircraft_collision"?"collision":"hazard",attack);}
+            if(!w.ended&&droneCombatActive(w)&&ready(-2)) {
+                const drone={x:w.droneX,y:w.droneY,radius:9,shapes:[{kind:"capsule" as const,ax:w.droneX,ay:w.droneY,bx:w.droneX,by:w.droneY,r:9}]};
+                if(touches(drone)){hits.set(-2,w.elapsed);hitDrone(w,raw*enemyOutputMultiplier(w,attack.sourceEnemyId));}
+            }
+        }
+    },
+};
 const magneticHooks: MagneticHooks = {
     spawn: spawnEnemy, projectile: addProjectile, hostile: isHostileToPlayer, message: setMessage,
     allegiance:enemyAllegiance,target:(w,e,allegiance)=>{
@@ -4155,12 +4235,13 @@ function releaseDamageBudget(w:CombatWorld,e:EnemyEntity,raw:number,row:220|221)
     if(w.skillCores.bountyTarget===e.id&&w.skillCores.bountyUntil>w.elapsed)multiplier*=1.20;
     if((e.expansionMarks?.shieldBroken??0)>t)multiplier*=1.20;
     multiplier*=equipmentOutgoing(s,e,false,false,false).multiplier;
-    return calculateDamage(raw,armor,multiplier)*guardianMultiplier(w,e)*(e.type==="boss"&&e.hp/e.maxHp>=.15&&e.aegisUntil>t?.6:1);
+    return calculateDamage(raw,armor,multiplier)*guardianMultiplier(w,e)*stormDamageTakenMultiplier(w,e)*(e.type==="boss"&&e.hp/e.maxHp>=.15&&e.aegisUntil>t?.6:1);
 }
 function resolveReleaseDamage(w:CombatWorld,e:EnemyEntity,raw:number,row:220|221){
     if(!isHostileToPlayer(w,e)||raw<=0)return 0;
-    const budget=releaseDamageBudget(w,e,raw,row),absorbed=Math.min(e.shield,budget),damage=Math.min(e.hp,Math.max(0,budget-absorbed));
+    const budget=releaseDamageBudget(w,e,raw,row),shieldBefore=e.shield,absorbed=Math.min(e.shield,budget),damage=Math.min(e.hp,Math.max(0,budget-absorbed));
     e.shield-=absorbed;e.hp-=damage;
+    if(w.stormbreaker)onStormEnemyDamage(w,e,damage,shieldBefore);
     if(absorbed>0&&e.shield<=0&&e.type==="iron_fortress"&&e.retaliationReady){e.retaliationReady=false;queueEliteSpecial(w,e,"retaliation",.01,false);}
     if(e.hp<=0){e.killProcEligible=row!==220;e.expansionKillingHit=row===220?undefined:{primary:false,basic:false,skill:false,direct:false,critical:false,elite:isElite(e.type)};}
     recordDpsDamage(w,damage+absorbed);w.damageDealt+=damage;
@@ -4312,9 +4393,10 @@ function resolveEquipmentDamage(w:CombatWorld,e:EnemyEntity,raw:number,family:nu
     if(hasCore(s,118))coreMultiplier*=1+crowdDamageBonus(w);
     if(w.skillCores.bountyTarget===e.id&&w.skillCores.bountyUntil>w.elapsed)coreMultiplier*=1.20;
     if((e.expansionMarks?.shieldBroken??0)>t)coreMultiplier*=1.20;
-    const budget=calculateDamage(raw,armor,outgoing.multiplier*coreMultiplier)*guardianMultiplier(w,e)*(e.type==="boss"&&e.hp/e.maxHp>=.15&&e.aegisUntil>t?.6:1);
-    const absorbed=Math.min(e.shield,budget),hpDamage=Math.min(e.hp,Math.max(0,budget-absorbed));
+    const budget=calculateDamage(raw,armor,outgoing.multiplier*coreMultiplier)*guardianMultiplier(w,e)*stormDamageTakenMultiplier(w,e)*(e.type==="boss"&&e.hp/e.maxHp>=.15&&e.aegisUntil>t?.6:1);
+    const shieldBefore=e.shield,absorbed=Math.min(e.shield,budget),hpDamage=Math.min(e.hp,Math.max(0,budget-absorbed));
     e.shield-=absorbed;e.hp-=hpDamage;
+    if(w.stormbreaker)onStormEnemyDamage(w,e,hpDamage,shieldBefore);
     if(absorbed>0&&e.shield<=0&&e.type==="iron_fortress"&&e.retaliationReady){e.retaliationReady=false;queueEliteSpecial(w,e,"retaliation",.01,false);}
     if(e.hp<=0){e.killProcEligible=family!==12&&family!==16;e.expansionKillingHit={primary:false,basic:false,skill:false,direct:false,critical:false,elite:isElite(e.type)};}
     recordDpsDamage(w,hpDamage+absorbed);w.damageDealt+=hpDamage;

@@ -1,0 +1,476 @@
+{
+  "version": "26.14.0",
+  "title": "Stormbreaker, Thunderstorm Warfare & Stage 3",
+  "displayTitle": "CHI TIẾT CẬP NHẬT 26.14.0",
+  "releaseDate": "25/09/2026",
+  "summary": "**26.14.0** mở khóa **Màn 3 — STORMBREAKER**, chiến trường lôi điện dành cho những phi công đã vượt qua Leviathan Front và Magnetic Storm. Stage mới sử dụng nhịp chiến đấu **CHARGE · DISCHARGE · PRIORITY**, đưa người chơi vào một battlefield có mật độ đạn, sét, kỹ năng và các đòn phối hợp dồn dập hơn rõ rệt, với safe space nhỏ và liên tục dịch chuyển.\n\nMàn 3 bổ sung **6 loại quái thường, 7 Tinh Anh mới và Boss STORMBREAKER Ω**, tổng cộng **257 quái thường** qua bốn wave normal — nhiều hơn khoảng 25% so với Magnetic Storm. Quái Stage 3 có mặt bằng sức mạnh cao hơn khoảng 15–20% so với archetype tương đương của Stage 2, nhưng thử thách chính đến từ Storm Cycle, enemy synergy, target priority và các pattern chồng lớp theo thời gian.\n\nToàn bộ sprite, projectile, skill effect và lightning của STORMBREAKER sử dụng art riêng với nhiều lớp cơ khí, emissive, charge, impact và điện plasma. Lightning lớn không còn chỉ là một đường cảnh báo đơn giản: mỗi đòn được tách thành telegraph, ionization, main channel, branching arc, impact bloom, shock ring và residual corona để vừa hoành tráng vừa giữ khả năng đọc trong combat tốc độ cao.",
+  "sections": [
+    {
+      "id": "s1",
+      "title": "MÀN 3 — STORMBREAKER",
+      "icon": {
+        "kind": "system",
+        "id": "ui"
+      },
+      "intro": [
+        {
+          "text": "Đánh bại Tempest Crown sẽ mở khóa chiến trường mới **TÂM BÃO LÔI ĐIỆN**. STORMBREAKER giữ cấu trúc run quen thuộc nhưng đẩy mật độ giao tranh lên một tầng mới.",
+          "format": "paragraph"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s1-e1",
+          "icon": {
+            "kind": "system",
+            "id": "ui"
+          },
+          "title": "CHARGE · DISCHARGE · PRIORITY",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Stage 3 xoay quanh việc đọc trạng thái tích điện, ưu tiên đúng mục tiêu và tìm đường sống trong một chiến trường gần như luôn có nhiều threat hoạt động cùng lúc.",
+              "format": "paragraph",
+              "changeType": "new"
+            },
+            {
+              "text": "Safe space lớn không còn là mặc định. Nhiều pattern chỉ để lại các khe né hẹp hoặc trajectory an toàn đang di chuyển, buộc player liên tục tái định vị.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Mọi đòn sát thương lớn vẫn có telegraph rõ và luôn được author để còn một đường né hợp lệ; độ khó đến từ mật độ, timing và overlap thay vì damage không thể tránh.",
+              "format": "bullet",
+              "changeType": "new"
+            }
+          ]
+        },
+        {
+          "id": "s1-e2",
+          "icon": {
+            "kind": "system",
+            "id": "ui"
+          },
+          "title": "7 wave hoàn toàn mới",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Cấu trúc Màn 3: **STATIC FRONT → BUILDING CHARGE → THUNDER COUNCIL → EYE WALL → EYE OF THE STORM → PERPETUAL STORM → STORMBREAKER Ω**.",
+              "format": "paragraph",
+              "changeType": "new"
+            },
+            {
+              "text": "Bốn wave thường có **44 / 56 / 69 / 88** quái, tổng cộng **257 quái thường**, với giới hạn hiện diện đồng thời **13 / 15 / 18 / 21**.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "XP mỗi quái thường được cân về **8 / 9 / 10 / 11** theo từng wave để số lượng quái tăng không làm progression đạt cấp tối đa quá sớm.",
+              "format": "bullet",
+              "changeType": "new"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "6 QUÁI THƯỜNG CỦA TÂM BÃO",
+      "icon": {
+        "kind": "system",
+        "id": "ui"
+      },
+      "intro": [
+        {
+          "text": "Mỗi archetype Stage 3 giữ một nhiệm vụ chiến thuật riêng và có thể phối hợp trực tiếp với đồng minh, thay vì chỉ tăng HP hoặc tốc độ bắn.",
+          "format": "paragraph"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s2-e1",
+          "icon": {
+            "kind": "system",
+            "id": "ui"
+          },
+          "title": "Spark Wasp · Volt Lancer · Storm Capacitor",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "**Spark Wasp** tạo Ion Mark, Static Barrage và Forked Needle để giữ projectile pressure liên tục; marker sét khóa vị trí trước khi đánh xuống.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "**Volt Lancer** sử dụng Ion Lance và Scissor Lance: đường dash được telegraph trước, sau điểm commit sẽ khóa trajectory và có Arc Scission làm follow-up.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "**Storm Capacitor** tích Charge theo lượng HP mất. Burst damage quá nhanh sẽ đẩy nó tới Controlled Overload sớm hơn, nhưng toàn bộ Overload vẫn có warning và khe né rõ.",
+              "format": "bullet",
+              "changeType": "new"
+            }
+          ]
+        },
+        {
+          "id": "s2-e2",
+          "icon": {
+            "kind": "system",
+            "id": "ui"
+          },
+          "title": "Storm Weaver · Thunderhead · Ion Hunter",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "**Storm Weaver** nối Conductive Link với đồng minh, tăng tốc Charge và có thể chuẩn bị enhanced Storm skill; hạ Weaver sớm sẽ trực tiếp làm chuỗi nguy hiểm yếu đi.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "**Thunderhead** gieo Ion Cloud chờ kỳ DISCHARGE, bắn Thunder Salvo và có thể nối nhiều cloud thành chuỗi sét ngắn.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "**Ion Hunter** dự đoán hướng di chuyển của player, khóa nhiều điểm đánh sét liên tiếp và dùng Ion Rail để cắt đường thoát thay vì homing vô hạn.",
+              "format": "bullet",
+              "changeType": "new"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "STORM CYCLE & ĐIỆN TRƯỜNG",
+      "icon": {
+        "kind": "system",
+        "id": "ui"
+      },
+      "intro": [
+        {
+          "text": "Một chu kỳ bão 20 giây liên tục thay đổi cách các enemy chuẩn bị và giải phóng điện năng.",
+          "format": "paragraph"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s3-e1",
+          "icon": {
+            "kind": "system",
+            "id": "ui"
+          },
+          "title": "STATIC → CHARGING → DISCHARGE → RECOVERY",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "**STATIC** vẫn có hỏa lực thường; **CHARGING** tăng tín hiệu tích điện và chuẩn bị Storm mechanic; **DISCHARGE** giải phóng các threat đã lập trình; **RECOVERY** chỉ ngăn major Storm cast mới trong một khoảng rất ngắn.",
+              "format": "paragraph",
+              "changeType": "new"
+            },
+            {
+              "text": "Projectile thường vẫn tiếp tục tồn tại trong lúc major skill telegraph và trong Recovery, vì vậy Màn 3 gần như không có downtime thực sự.",
+              "format": "bullet",
+              "changeType": "new"
+            }
+          ]
+        },
+        {
+          "id": "s3-e2",
+          "icon": {
+            "kind": "system",
+            "id": "ui"
+          },
+          "title": "Storm Node & Insulated Field",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Storm Node còn sống tới DISCHARGE sẽ bổ sung thêm strike/pattern cho cơn bão. Phá Node trước thời điểm đó tạo một **Insulated Field** ngắn, bảo vệ khỏi environmental lightning của lần Discharge tương ứng.",
+              "format": "paragraph",
+              "changeType": "new"
+            },
+            {
+              "text": "Insulated Field không miễn nhiễm projectile, collision, beam hoặc skill khác. Player có thể xử lý Node để kiểm soát battlefield hoặc bỏ qua và tiếp tục DPS.",
+              "format": "bullet",
+              "changeType": "new"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "7 TINH ANH MỚI",
+      "icon": {
+        "kind": "system",
+        "id": "ui"
+      },
+      "intro": [
+        {
+          "text": "Hai wave Tinh Anh sử dụng authored combo thay vì để từng enemy tung major skill ngẫu nhiên độc lập.",
+          "format": "paragraph"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s4-e1",
+          "icon": {
+            "kind": "system",
+            "id": "ui"
+          },
+          "title": "THUNDER COUNCIL",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "**Storm Herald** tạo Storm Node và tăng tốc Charge; **Volt Executioner** nối nhiều Judgment Dash; **Capacitor Prime** chuyển burst damage của player thành áp lực Overload có telegraph.",
+              "format": "paragraph",
+              "changeType": "new"
+            },
+            {
+              "text": "Ba Elite phối hợp theo sequence: Node và Sermon có thể xuất hiện trong lúc Executioner cắt battlefield, trong khi Capacitor Prime tiến gần ngưỡng Overload.",
+              "format": "bullet",
+              "changeType": "new"
+            }
+          ]
+        },
+        {
+          "id": "s4-e2",
+          "icon": {
+            "kind": "system",
+            "id": "ui"
+          },
+          "title": "EYE OF THE STORM",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "**Ion Arbiter, Thunder Bastion, Arc Seraph và Storm Weaver Prime** tạo các combo Predictive Marker, Ram, Rail, Halo Arc, Chain Judgment và Grand Conduction.",
+              "format": "paragraph",
+              "changeType": "new"
+            },
+            {
+              "text": "Storm Director cho phép nhiều warning và projectile chồng lớp theo thời gian nhưng ngăn những tổ hợp hard geometry không còn đường né hợp lệ.",
+              "format": "bullet",
+              "changeType": "new"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "BOSS — STORMBREAKER Ω",
+      "icon": {
+        "kind": "system",
+        "id": "ui"
+      },
+      "intro": [
+        {
+          "text": "STORMBREAKER Ω là boss quản lý cả battlefield thay vì dựng thêm một lớp khiên bắt buộc. Boss luôn có thể nhận damage, nhưng càng bỏ qua các objective điện trường thì arena càng nguy hiểm.",
+          "format": "paragraph"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s5-e1",
+          "icon": {
+            "kind": "system",
+            "id": "ui"
+          },
+          "title": "4 tầng áp lực",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "**STATIC DOMINION 100–70%:** Thunderbrand, Arc Barrage, Skybreaker Dive và Storm Node mở đầu bài kiểm tra.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "**CONDUCTOR ARRAY 70–35%:** ba Conductor tách khỏi boss; mỗi Conductor còn sống bổ sung một pattern vào DISCHARGE nhưng không bảo vệ HP boss.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "**BROKEN CYCLE 35–15%:** Partial Discharge chen vào chu kỳ chính, kết hợp Fractured Heaven và Thunder Guillotine theo temporal weaving.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "**PERMANENT OVERCHARGE <15%:** gần như không còn full idle; Arc Barrage dày hơn, Partial Discharge nhanh hơn và có thể xuất hiện hai Ω Storm Node.",
+              "format": "bullet",
+              "changeType": "new"
+            }
+          ]
+        },
+        {
+          "id": "s5-e2",
+          "icon": {
+            "kind": "system",
+            "id": "ui"
+          },
+          "title": "Sức mạnh Boss mới",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "STORMBREAKER Ω có **210.375 HP · 198,59 Giáp · 222,03 Projectile Damage anchor · 792,96 Collision Damage** trước các hệ số skill.",
+              "format": "paragraph",
+              "changeType": "new"
+            },
+            {
+              "text": "Boss không được tăng thành HP sponge; phần lớn độ khó đến từ Conductor, Storm Node, skill overlap và mật độ projectile.",
+              "format": "bullet",
+              "changeType": "new"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s6",
+      "title": "MẬT ĐỘ CHIẾN ĐẤU CAO HƠN",
+      "icon": {
+        "kind": "system",
+        "id": "ui"
+      },
+      "intro": [
+        {
+          "text": "Màn 3 được cân cho player đã hoàn thành hai màn trước và chủ động thu hẹp khoảng thở giữa các threat.",
+          "format": "paragraph"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s6-e1",
+          "icon": {
+            "kind": "system",
+            "id": "ui"
+          },
+          "title": "Nhiều threat hoạt động cùng lúc",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Normal Wave đầu có thể có 2–3 major threat cùng lúc; PERPETUAL STORM có thể duy trì 5–6 lớp threat gồm telegraph, projectile và prepared Storm mechanic.",
+              "format": "paragraph",
+              "changeType": "new"
+            },
+            {
+              "text": "Boss phase cuối duy trì continuous secondary fire trong lúc major skill telegraph, thay vì ngừng toàn bộ hỏa lực giữa từng skill.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Projectile/hazard lớn được stagger theo thời gian để tạo các khe sống nhỏ và di động thay vì phủ damage toàn battlefield trong cùng một frame.",
+              "format": "bullet",
+              "changeType": "new"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s7",
+      "title": "SPRITE, PROJECTILE & LIGHTNING VFX MỚI",
+      "icon": {
+        "kind": "system",
+        "id": "ui"
+      },
+      "intro": [
+        {
+          "text": "STORMBREAKER có art direction riêng: black gunmetal, white-blue plasma và amber charge, tách biệt rõ khỏi palette cyan/violet của Magnetic Storm.",
+          "format": "paragraph"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s7-e1",
+          "icon": {
+            "kind": "system",
+            "id": "ui"
+          },
+          "title": "Enemy art nhiều lớp",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Quái thường, Tinh Anh, objective và Boss sử dụng sprite sản xuất riêng với hull, armor plate, panel, emitter, coil, emissive core, charge state và exhaust; không dùng hình khối đơn giản làm body.",
+              "format": "paragraph",
+              "changeType": "new"
+            },
+            {
+              "text": "Tinh Anh có silhouette riêng thay vì chỉ phóng to quái thường. STORMBREAKER Ω có presentation state riêng theo phase và Permanent Overcharge.",
+              "format": "bullet",
+              "changeType": "new"
+            }
+          ]
+        },
+        {
+          "id": "s7-e2",
+          "icon": {
+            "kind": "system",
+            "id": "ui"
+          },
+          "title": "Lightning và projectile nhiều tầng",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Lightning lớn được dựng theo chuỗi **warning → ionization → leader arc → white-hot main channel → branching electricity → impact bloom → shock ring → residual corona**.",
+              "format": "paragraph",
+              "changeType": "new"
+            },
+            {
+              "text": "Projectile kỹ năng có authored body, emissive core, glow, trail, muzzle và impact riêng; visual glow được phép lớn hơn hitbox để giữ cảm giác mạnh nhưng collision vẫn công bằng.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Pixi và Canvas fallback dùng cùng production atlas, cùng telegraph geometry và cùng thời điểm hit; Reduced Motion giảm parallax/particle noise nhưng không xóa warning.",
+              "format": "bullet",
+              "changeType": "new"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s8",
+      "title": "HỆ THỐNG NỀN ĐƯỢC GIỮ NGUYÊN",
+      "icon": {
+        "kind": "system",
+        "id": "ui"
+      },
+      "intro": [
+        {
+          "text": "26.14.0 mở rộng Campaign nhưng không thay đổi các hệ build đã được khóa ở 26.13.0.",
+          "format": "paragraph"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s8-e1",
+          "icon": {
+            "kind": "system",
+            "id": "ui"
+          },
+          "title": "Build, Ultimate và hai màn cũ",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Giữ nguyên Core Selection **Lv1 / Lv7 / Lv11 / Lv15**, 141 Core thường của 26.13.0, sáu slot Trang Bị, global cap và toàn bộ family rule hiện hành.",
+              "format": "paragraph",
+              "changeType": "unchanged"
+            },
+            {
+              "text": "Không thay đổi base stat chiến cơ, Skill Rank progression, Ultimate 26.12.3 hoặc Phantom Nhiễu Điện Tử đã chốt.",
+              "format": "bullet",
+              "changeType": "unchanged"
+            },
+            {
+              "text": "Leviathan Front và Magnetic Storm giữ gameplay hiện tại. STORMBREAKER dùng runtime riêng để không làm magnetic mechanic rò sang Màn 3.",
+              "format": "bullet",
+              "changeType": "unchanged"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

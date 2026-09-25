@@ -1,3 +1,4 @@
+import { stormbreakerSkyTile } from "../airCombatStage3Art";
 import { magneticFlight, stormTile } from "../airCombatMagneticSky";
 import { Container, Graphics, Sprite } from "pixi.js";
 import type { AirCombatAssets } from "./AirCombatPixiAssets";
@@ -23,6 +24,8 @@ function paint(graphics: Graphics, shapes: TerrainShape[]) {
 
 export class AirCombatSky {
   readonly root = new Container();
+  private stormbreaker: Sprite;
+  private stormbreakerNext: Sprite;
   private storm: Sprite;
   private stormNext: Sprite;
   private stormWind = new Graphics();
@@ -33,6 +36,9 @@ export class AirCombatSky {
   private wind = new Graphics();
   constructor(assets: AirCombatAssets) {
     this.root.addChild(new Graphics().rect(0, 0, 360, 640).fill(0x3b5547));
+    this.stormbreaker = new Sprite(assets.stormbreakerSky);
+    this.stormbreakerNext = new Sprite(assets.stormbreakerSky);
+    for(const sprite of [this.stormbreaker,this.stormbreakerNext]){sprite.anchor.set(.5);sprite.width=408;sprite.height=702;sprite.visible=false;}
     this.storm = new Sprite(assets.magneticStorm);
     this.storm.position.set(-24,-30); this.storm.width=408; this.storm.height=702;
     this.stormNext = new Sprite(assets.magneticStorm); this.stormNext.width = 408; this.stormNext.height = 702;
@@ -45,7 +51,7 @@ export class AirCombatSky {
     }
     this.atmosphere.tint = 0x244c69;
     this.atmosphere.alpha = .24;
-    this.root.addChild(this.atmosphere, this.storm, this.stormNext, this.stormShade);
+    this.root.addChild(this.atmosphere, this.storm, this.stormNext, this.stormShade, this.stormbreaker, this.stormbreakerNext);
     for (let layer = 0; layer < 3; layer++) {
       for (let i = 0; i < 4; i++) {
         const sprite = new Sprite(assets.effect(i % 2 ? "haze" : "cloud"));
@@ -66,6 +72,16 @@ export class AirCombatSky {
     this.root.addChild(this.wind, this.stormWind);
   }
   update(delta: number, world: CombatWorld, reducedMotion: boolean) {
+    const stormbreaker=!!world.stormbreaker;
+    this.stormbreaker.visible=this.stormbreakerNext.visible=stormbreaker;
+    if(stormbreaker){
+      this.storm.visible=this.stormNext.visible=this.stormWind.visible=this.stormShade.visible=this.wind.visible=this.atmosphere.visible=false;
+      for(const view of this.terrain)view.root.visible=false;
+      for(let i=0;i<2;i++){const tile=stormbreakerSkyTile(world.elapsed,reducedMotion,i),sprite=i?this.stormbreakerNext:this.stormbreaker;sprite.x=tile.x;sprite.y=tile.y;sprite.scale.y=Math.abs(sprite.scale.y)*(tile.flipped?-1:1);}
+      for(const cloud of this.clouds) cloud.sprite.visible=false;
+      return;
+    }
+    for(const cloud of this.clouds) cloud.sprite.visible=true;
     const magnetic = !!world.magnetic;
     this.storm.visible = magnetic; this.stormNext.visible = magnetic; this.stormWind.visible = magnetic; this.stormShade.visible = magnetic;
     this.atmosphere.visible = !magnetic;

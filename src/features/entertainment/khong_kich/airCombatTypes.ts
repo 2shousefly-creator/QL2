@@ -32,6 +32,22 @@ export type EnemyType =
   | "orbit_wasp" | "arc_reaver" | "mine_seeder" | "magnetic_leech"
   | "prism_manta" | "swarm_carrier" | "micro_drone" | "cyclone_ace" | "grid_architect" | "satellite"
   | "prism_sovereign" | "mine_warden" | "polarity_warden" | "swarm_overlord" | "arc_reaver_prime"
+  | "spark_wasp"
+  | "volt_lancer"
+  | "storm_capacitor"
+  | "storm_weaver"
+  | "ion_hunter"
+  | "thunderhead"
+  | "storm_herald"
+  | "volt_executioner"
+  | "capacitor_prime"
+  | "ion_arbiter"
+  | "thunder_bastion"
+  | "arc_seraph"
+  | "storm_weaver_prime"
+  | "storm_node"
+  | "omega_storm_node"
+  | "storm_conductor"
   | "boss";
 
 export type CoreTier = "silver" | "gold" | "diamond";

@@ -129,7 +129,7 @@ const XP_CURVES = [1,2].map(stage => {
  const cumulative=Array.from({length:18},(_,i)=>{const x=i*29/17,lo=Math.floor(x);return Math.round(old[lo]+(old[Math.min(29,lo+1)]-old[lo])*(x-lo));});
  return cumulative.slice(1).map((value,i)=>value-cumulative[i]);
 });
-export function requiredCombatXp(level:number,stageId=1):number {return level>=COMBAT_LEVEL_CAP?0:XP_CURVES[stageId===2?1:0][Math.max(0,level-1)];}
+export function requiredCombatXp(level:number,stageId=1):number {return level>=COMBAT_LEVEL_CAP?0:XP_CURVES[stageId===2||stageId===3?1:0][Math.max(0,level-1)];}
 export function gainCombatXp(state: AircraftCombatState, amount: number, stageId = 1): LevelUpResult {
     let remaining = Math.max(0, amount), levelsGained = 0, coreSelectionsDue = 0;
     while (remaining > 0 && state.level < COMBAT_LEVEL_CAP) {

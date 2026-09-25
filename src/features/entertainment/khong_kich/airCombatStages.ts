@@ -1,3 +1,4 @@
+import { STORMBREAKER_WAVES } from "./airCombatStormbreakerWaves";
 import { COMBAT_WAVES, type WaveDefinition } from "./airCombatWaves";
 import type { AirCombatCampaignProgress, EnemyType } from "./airCombatTypes";
 
@@ -5,7 +6,7 @@ export interface AirCombatStageDefinition {
   id: number; key: string; displayName: string; localizedName: string;
   shortDescription: string; bossName: string; unlockAfterStage: number | null;
   theme: string; accent: string; available: boolean;
-  runtime: "leviathan" | "magnetic";
+  runtime: "leviathan" | "magnetic" | "stormbreaker";
   waves: readonly WaveDefinition[];
 }
 // Authored introductions followed by bounded mixed groups. Counts below own
@@ -61,9 +62,9 @@ export const AIR_COMBAT_STAGES: readonly AirCombatStageDefinition[] = [
     shortDescription: "Làm chủ quỹ đạo, đạn quay trở lại và vùng không gian bị kiểm soát bởi từ trường.",
     bossName: "Tempest Crown", unlockAfterStage: 1, theme: "ORBIT · RETURN · CONTROL", accent: "#a78bfa", available: true,
     runtime: "magnetic", waves: MAGNETIC_WAVES },
-  { id: 3, key: "stormbreaker", displayName: "STORMBREAKER", localizedName: "",
-    shortDescription: "Chiến trường tiếp theo đang được chuẩn bị.", bossName: "", unlockAfterStage: 2,
-    theme: "SẮP RA MẮT", accent: "#64748b", available: false, runtime: "magnetic", waves: [] },
+  { id: 3, key: "stormbreaker", displayName: "STORMBREAKER", localizedName: "TÂM BÃO LÔI ĐIỆN",
+    shortDescription: "Đọc nhịp tích điện, phá chuỗi dẫn sét và sống sót giữa tâm bão.", bossName: "STORMBREAKER Ω", unlockAfterStage: 2,
+    theme: "CHARGE · DISCHARGE · PRIORITY", accent: "#fbbf24", available: true, runtime: "stormbreaker", waves: STORMBREAKER_WAVES },
 ];
 export const getAirCombatStage = (id: number) => AIR_COMBAT_STAGES.find(stage => stage.id === id);
 export const isStageUnlocked = (id: number, progress: AirCombatCampaignProgress) => {

@@ -1,3 +1,5 @@
+import { STAGE3_ART_URLS, STAGE3_VFX_ART, stormEnemyFrame, stormbreakerSkyTile } from "./airCombatStage3Art";
+import { paintStormbreaker, type StormbreakerPresentation } from "./airCombatStormbreakerVisuals";
 import { ULTIMATE_ART, ULTIMATE_FRAMES, paintUltimates, ultimateBody, ultimateProjectileVisual } from "./airCombatUltimateArt";
 import { paintRankSkills, rankProjectileVisual, RANKED_ART, RANKED_VFX_FRAMES } from "./airCombatRankArt";
 import { skillRank } from "./airCombatSkillRanks";
@@ -61,10 +63,11 @@ async function loadCanvasTextures(urls:string[]) {
   }));
 }
 export const loadAstraCanvasAssets=()=>loadCanvasTextures([ULTIMATE_ART,RANKED_ART.vfx,RANKED_ART.projectiles,EQUIPMENT_ART.icons,EQUIPMENT_ART.vfx,ASTRA_ART.aircraft,ASTRA_ART.effects,ASTRA_ART.combatVfx,sharedVfxUrl]);
+export const loadStormbreakerCanvasAssets=()=>loadCanvasTextures(Object.values(STAGE3_ART_URLS));
 export const loadMagneticCanvasAssets=()=>loadCanvasTextures([STAGE2_ART_URLS.enemy,STAGE2_ART_URLS.vfx,STAGE2_ART_URLS.storm,STAGE2_ART_URLS.elite]);
 function drawMagneticFrame(ctx: CanvasRenderingContext2D, frame: AtlasFrame, x: number, y: number,
   width: number, height: number, rotation = 0, alpha = 1) {
-  const image = magneticImage(frame.atlas === "ultimateVfx" ? ULTIMATE_ART : frame.atlas === "rankedVfx" ? RANKED_ART.vfx : frame.atlas === "rankedProjectiles" ? RANKED_ART.projectiles : frame.atlas === "equipmentIcons" ? EQUIPMENT_ART.icons : frame.atlas === "equipmentVfx" ? EQUIPMENT_ART.vfx : frame.atlas === "astraVfx" ? ASTRA_ART.combatVfx : frame.atlas === "vfx" ? sharedVfxUrl : frame.atlas === "astraEffects" ? ASTRA_ART.effects : frame.atlas === "stage2Elite" ? STAGE2_ART_URLS.elite : frame.atlas === "stage2Enemy" ? STAGE2_ART_URLS.enemy : STAGE2_ART_URLS.vfx);
+  const image = magneticImage(frame.atlas === "stage3Enemy" ? STAGE3_ART_URLS.enemy : frame.atlas === "stage3Boss" ? STAGE3_ART_URLS.boss : frame.atlas === "stage3Vfx" ? STAGE3_ART_URLS.vfx : frame.atlas === "stage3Emissive" ? STAGE3_ART_URLS.emissive : frame.atlas === "ultimateVfx" ? ULTIMATE_ART : frame.atlas === "rankedVfx" ? RANKED_ART.vfx : frame.atlas === "rankedProjectiles" ? RANKED_ART.projectiles : frame.atlas === "equipmentIcons" ? EQUIPMENT_ART.icons : frame.atlas === "equipmentVfx" ? EQUIPMENT_ART.vfx : frame.atlas === "astraVfx" ? ASTRA_ART.combatVfx : frame.atlas === "vfx" ? sharedVfxUrl : frame.atlas === "astraEffects" ? ASTRA_ART.effects : frame.atlas === "stage2Elite" ? STAGE2_ART_URLS.elite : frame.atlas === "stage2Enemy" ? STAGE2_ART_URLS.enemy : STAGE2_ART_URLS.vfx);
   if (!image) return;
   const [sx,sy,sw,sh] = frame.rect;
   ctx.save(); ctx.globalAlpha = alpha; ctx.translate(x,y); ctx.rotate(rotation);
@@ -340,7 +343,8 @@ export function drawLegacyWorld(
   damageLabels: readonly DamageLabel[],
   healthBars: HealthBarPresentation,
   accents: CanvasCombatAccents,
-  presentationTime = world.elapsed
+  presentationTime = world.elapsed,
+  stormbreakerPresentation?: StormbreakerPresentation
 ): void {
   const { width, height, hudHeight } = AIR_COMBAT_WORLD;
   const aircraft = AIRCRAFT_CONFIGS[aircraftId];
@@ -348,7 +352,11 @@ export function drawLegacyWorld(
   const starfallShake=Math.max(0,...(world.astra?.impacts??[]).map(i=>2.2*Math.exp(-(world.elapsed-i.at)*12)));
   const shake=reducedMotion?0:starfallShake>.02?Math.min(2.8,magneticShake(world)+starfallShake):magneticShake(world);
   ctx.translate(Math.sin(world.elapsed*113)*shake,Math.cos(world.elapsed*97)*shake*.65);
-  if (world.magnetic) {
+  if(world.stormbreaker){
+    ctx.fillStyle="#080f18";ctx.fillRect(0,0,width,height);
+    const image=magneticImage(STAGE3_ART_URLS.sky);
+    if(image)for(let i=0;i<2;i++){const tile=stormbreakerSkyTile(world.elapsed,reducedMotion,i);ctx.save();ctx.translate(tile.x,tile.y);ctx.scale(1,tile.flipped?-1:1);ctx.drawImage(image,-204,-351,408,702);ctx.restore();}
+  } else if (world.magnetic) {
     ctx.fillStyle = "#07112c"; ctx.fillRect(0,0,width,height);
     const image = magneticImage(STAGE2_ART_URLS.storm);
     if (image) {
@@ -514,6 +522,7 @@ export function drawLegacyWorld(
   ctx.restore();
   for (const projectile of world.projectiles) {
     if (rankProjectileVisual(projectile)||ultimateProjectileVisual(projectile)) continue;
+    if(world.stormbreaker&&projectile.stormbreakerVisual)continue;
     if (world.magnetic && projectile.owner === "enemy" && projectile.magneticVisual) continue;
     const missile = projectile.projectileKind !== "bullet";
     const basic = !missile ? getBasicAmmoVisual(projectile.ammoVisualKey) : null;
@@ -581,7 +590,10 @@ export function drawLegacyWorld(
     }
     ctx.save();ctx.translate(enemy.x,enemy.y);
     ctx.rotate(enemyAirframeRotation(enemy)-Math.PI);
-    if (world.magnetic) {
+    if(world.stormbreaker){
+      const size=enemy.radius*(enemy.type==="boss"?3.2:2.8);
+      drawMagneticFrame(ctx,stormEnemyFrame(enemy,world.bossPhase),0,0,size,size,Math.PI,1);
+    } else if (world.magnetic) {
       const exposed = enemy.type === "boss" && !guardianSlots(world, enemy.id).some(Boolean);
       const frame = exposed ? TEMPEST_WEAKPOINT_ART : STAGE2_ENEMY_ART[enemy.type];
       if (frame) drawMagneticFrame(ctx, frame, 0, 0, enemy.radius*2.8, enemy.radius*2.8, Math.PI, 1);
@@ -771,6 +783,10 @@ export function drawLegacyWorld(
   ctx.restore();
 
   ctx.save(); ctx.beginPath(); ctx.rect(GAMEPLAY_SAFE_RECT.left, GAMEPLAY_SAFE_RECT.top, GAMEPLAY_SAFE_RECT.width, GAMEPLAY_SAFE_RECT.height); ctx.clip();
+  paintStormbreaker(world,{...tacticalPainter,
+    sprite:(_id,key,x,y,width,height,rotation=0,alpha=1,additive=false)=>{ctx.save();ctx.globalCompositeOperation=additive?"lighter":"source-over";drawMagneticFrame(ctx,STAGE3_VFX_ART[key],x,y,width,height,rotation,alpha);ctx.restore();},
+    frame:(_id,frame,x,y,size,rotation,alpha)=>{ctx.save();ctx.globalCompositeOperation="lighter";drawMagneticFrame(ctx,frame,x,y,size,size,rotation,alpha);ctx.restore();}
+  },reducedMotion,stormbreakerPresentation);
   paintMagnetic(world, { ...tacticalPainter,
     sprite: (_id,key,x,y,w,h,rotation=0,alpha=1) => drawMagneticFrame(ctx, STAGE2_VFX_ART[key], x,y,w,h,rotation,alpha)
   }, reducedMotion, presentationTime);

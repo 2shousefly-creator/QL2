@@ -7,6 +7,7 @@ import fortressUrl from "../../../../assets/khong-kich/v2/fortress-clouds-atlas.
 import { CombatUiIcon } from "../CombatUiIcon";
 import { ENEMY_VISUALS } from "../airCombatEnemyArt";
 import { STAGE2_ART_URLS, STAGE2_ENEMY_ART, STAGE2_VFX_ART } from "../airCombatStage2Art";
+import { STAGE3_ART_URLS, STAGE3_VFX_ART, STORMBREAKER_BOSS_ART } from "../airCombatStage3Art";
 import type { AircraftId, EnemyType, SkillId } from "../airCombatTypes";
 import type { AtlasFrame } from "../pixi/airCombatPixiTypes";
 import type { ReleaseIconRef } from "./types";
@@ -18,6 +19,7 @@ const SYSTEM_ICONS = {
   scheduler: Clock3, rules: ListChecks,aircraft_select:PanelTop,aircraft_balance:Activity,allegiance:Shield,explosion:Sparkles,
 };
 const ATLAS_URLS: Partial<Record<AtlasFrame["atlas"], string>> = {
+  stage3Enemy:STAGE3_ART_URLS.enemy,stage3Boss:STAGE3_ART_URLS.boss,stage3Vfx:STAGE3_ART_URLS.vfx,stage3Emissive:STAGE3_ART_URLS.emissive,
   astraVfx:ASTRA_ART.combatVfx,vfx:vfxUrl,astraAircraft:ASTRA_ART.aircraft,astraEffects:ASTRA_ART.effects,aircraft: aircraftUrl, fortress: fortressUrl,
   stage2Enemy: STAGE2_ART_URLS.enemy, stage2Elite: STAGE2_ART_URLS.elite, stage2Vfx: STAGE2_ART_URLS.vfx,
 };
@@ -39,9 +41,9 @@ export function ReleaseNoteEntityIcon({ icon }: { icon: ReleaseIconRef }) {
     const row = AIRCRAFT_ROWS[icon.id as AircraftId];
     if (row !== undefined) frame = icon.id==="astra"?{atlas:"astraAircraft",rect:[0,0,1/3,1]}:{ atlas: "aircraft", rect: [0, row / 4, .25, .25] };
   } else if (icon.kind === "enemy" || icon.kind === "boss") {
-    frame = icon.id === "boss_stage2" ? STAGE2_ENEMY_ART.boss : ENEMY_VISUALS[(icon.id === "boss_stage1" ? "boss" : icon.id) as EnemyType];
+    frame = icon.id === "boss_stage3" ? STORMBREAKER_BOSS_ART[0] : icon.id === "boss_stage2" ? STAGE2_ENEMY_ART.boss : ENEMY_VISUALS[(icon.id === "boss_stage1" ? "boss" : icon.id) as EnemyType];
   } else if (icon.kind === "projectile" || icon.kind === "vfx") {
-    frame = icon.id==="astra"?ASTRA_VFX_FRAMES.astra_meteor:icon.id==="explosion"?ASTRA_VFX_FRAMES.astra_explosion2:STAGE2_VFX_ART[icon.id as keyof typeof STAGE2_VFX_ART];
+    frame = STAGE3_VFX_ART[icon.id as keyof typeof STAGE3_VFX_ART] ?? (icon.id==="astra"?ASTRA_VFX_FRAMES.astra_meteor:icon.id==="explosion"?ASTRA_VFX_FRAMES.astra_explosion2:STAGE2_VFX_ART[icon.id as keyof typeof STAGE2_VFX_ART]);
   } else if (icon.id === "projectile" || icon.id === "vfx") {
     // The historical copy uses system markers for these asset categories.
     frame = icon.id === "projectile" ? STAGE2_VFX_ART.needleBolt : STAGE2_VFX_ART.magneticBurst;

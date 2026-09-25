@@ -1,3 +1,5 @@
+import { paintStormbreaker, StormbreakerPresentation } from "../airCombatStormbreakerVisuals";
+import { stormEnemyFrame } from "../airCombatStage3Art";
 import { ultimateProjectileVisual } from "../airCombatUltimateArt";
 import { rankProjectileVisual } from "../airCombatRankArt";
 import { skillRank } from "../airCombatSkillRanks";
@@ -53,6 +55,12 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
   private resourceText = new Text({ text: "", style: { fontFamily: "Arial", fontSize: 6.4, fontWeight: "bold", fill: 0xffffff, stroke: { color: 0x06101f, width: 1 } } });
   private damageText = new AirCombatDamageText();
   private sky: AirCombatSky;
+  private stormbreakerSprites: AirCombatSpritePool;
+  private stormbreakerPresentation = new StormbreakerPresentation();
+  private stormbreakerRoot = new Container();
+  private stormbreakerMask = new Graphics();
+  private stormbreakerLayer = new Container();
+  private stormbreakerWarnings = new Graphics();
   private magneticEndAge = 0;
   private magneticWarnings = new Graphics();
   private magneticLayer = new Container();
@@ -122,11 +130,15 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     host.appendChild(app.canvas);
     app.canvas.addEventListener("webglcontextlost", this.onLost);
     this.sky = new AirCombatSky(assets);
+    this.stormbreakerSprites = new AirCombatSpritePool(this.stormbreakerLayer, 2048);
+    this.stormbreakerRoot.addChild(this.stormbreakerLayer, this.stormbreakerWarnings);
+    this.stormbreakerMask.rect(GAMEPLAY_SAFE_RECT.left, GAMEPLAY_SAFE_RECT.top, GAMEPLAY_SAFE_RECT.width, GAMEPLAY_SAFE_RECT.height).fill(0xffffff);
+    this.stormbreakerRoot.mask = this.stormbreakerMask;
     this.magneticSprites = new AirCombatSpritePool(this.magneticLayer, 512);
     this.astraSprites = new AirCombatSpritePool(this.magneticLayer, 192);
     this.equipmentSprites = new AirCombatSpritePool(this.magneticLayer, 640);
     app.stage.addChild(this.root);
-    this.root.addChild(this.sky.root, this.telegraphs, this.smokeLayer, this.actors, this.effects, this.magneticLayer, this.magneticWarnings, this.enemyForegroundMarks, this.globalVfx, this.enemyStatusLayer, this.hitbox, this.damageText.root);
+    this.root.addChild(this.sky.root, this.telegraphs, this.smokeLayer, this.actors, this.effects, this.magneticLayer, this.magneticWarnings, this.stormbreakerRoot, this.stormbreakerMask, this.enemyForegroundMarks, this.globalVfx, this.enemyStatusLayer, this.hitbox, this.damageText.root);
     // Separate stage branch: neither recoil nor camera shake can move status bars.
     app.stage.addChild(this.stableHud);
     this.stableHud.addChild(this.trackingBars, this.hpText, this.resourceText);
@@ -301,19 +313,35 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     }},reducedMotion);
     this.astraSprites.end();
     this.magneticSprites.end();
+    this.stormbreakerSprites.begin(); this.stormbreakerWarnings.clear();
+    this.stormbreakerPresentation.update(world, delta);
+    let stormSpriteId=0;
+    paintStormbreaker(world, {
+      circle:(x,y,r,color,alpha,fill,width=1)=>{const g=this.stormbreakerWarnings.circle(x,y,r);if(fill)g.fill({color,alpha});else g.stroke({color,alpha,width});},
+      line:(ax,ay,bx,by,color,alpha,width)=>{this.stormbreakerWarnings.moveTo(ax,ay).lineTo(bx,by).stroke({color,alpha,width});},
+      sprite:(_id,key,x,y,width,height,rotation=0,alpha=1,additive=false)=>{
+        const sprite=this.stormbreakerSprites.get(stormSpriteId++,this.assets.effect(key));if(!sprite)return;
+        sprite.position.set(x,y);sprite.width=width;sprite.height=height;sprite.rotation=rotation;sprite.alpha=alpha;sprite.blendMode=additive?"add":"normal";
+      },
+      frame:(_id,frame,x,y,size,rotation,alpha)=>{
+        const sprite=this.stormbreakerSprites.get(stormSpriteId++,this.assets.texture(frame));if(!sprite)return;
+        sprite.position.set(x,y);sprite.width=size;sprite.height=size;sprite.rotation=rotation;sprite.alpha=alpha;sprite.blendMode="add";
+      }
+    },reducedMotion,this.stormbreakerPresentation);
+    this.stormbreakerSprites.end();
     for(let i=labelCount;i<this.enemyStatusLabels.length;i++)this.enemyStatusLabels[i].visible=false;
     this.enemies.begin();
     this.engines.begin();
     for (const enemy of world.enemies) {
       const magnetic = !!world.magnetic;
       const exposed = magnetic && enemy.type === "boss" && !guardianSlots(world, enemy.id).some(Boolean);
-      const frame = exposed ? TEMPEST_WEAKPOINT_ART : magnetic ? (STAGE2_ENEMY_ART[enemy.type] ?? ENEMY_VISUALS[enemy.type]) : ENEMY_VISUALS[enemy.type];
+      const frame = world.stormbreaker ? stormEnemyFrame(enemy,world.bossPhase) : exposed ? TEMPEST_WEAKPOINT_ART : magnetic ? (STAGE2_ENEMY_ART[enemy.type] ?? ENEMY_VISUALS[enemy.type]) : ENEMY_VISUALS[enemy.type];
       const sprite = this.enemies.get(enemy.id, this.assets.texture(frame));
       if (!sprite) continue;
       sprite.position.set(enemy.x, enemy.y);
       sprite.visible = enemy.hp > 0;
-      sprite.width = enemy.radius * (enemy.type === "boss" && !magnetic ? BOSS_VISUAL_WIDTH_SCALE : 2.8);
-      sprite.height = sprite.width * (magnetic ? 1 : enemy.type === "boss" ? BOSS_VISUAL_ASPECT : sprite.texture.height / sprite.texture.width);
+      sprite.width = enemy.radius * (world.stormbreaker ? enemy.type === "boss" ? 3.2 : 2.8 : enemy.type === "boss" && !magnetic ? BOSS_VISUAL_WIDTH_SCALE : 2.8);
+      sprite.height = sprite.width * (magnetic || world.stormbreaker ? 1 : enemy.type === "boss" ? BOSS_VISUAL_ASPECT : sprite.texture.height / sprite.texture.width);
       sprite.rotation = enemyAirframeRotation(enemy);
       sprite.tint = enemyAllegiance(world,enemy)==="friendly_hacked" ? 0x67e8f9 : this.flashUntil.has(enemy.id) ? 0xffe1b3 : enemy.type === "acid_bomber" ? 0xa3e635 : enemy.type === "jammer" ? 0x2dd4bf : enemy.type === "sniper" ? 0xe879f9 : enemy.type === "radar_hunter" ? 0x38bdf8 : 0xffffff;
       if(!magnetic && (enemy.shield>0 || enemy.aegisUntil>world.aircraft.coreState.time))this.telegraphs.circle(enemy.x,enemy.y,enemy.radius+7).fill({color:0x38bdf8,alpha:.12}).stroke({color:0x7dd3fc,width:2,alpha:.85});
@@ -339,7 +367,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
           this.telegraphs.moveTo(edge,enemy.y+20).lineTo(edge,GAMEPLAY_SAFE_RECT.bottom).stroke({color:0x67e8f9,width:1.5,alpha:.65});
         }
       }
-      if (enemy.type === "boss" && !magnetic) {
+      if (enemy.type === "boss" && !magnetic && !world.stormbreaker) {
         const entrance = reducedMotion ? 1 : Math.min(1, enemy.age / 0.8);
         sprite.width *= 0.8 + entrance * 0.2;
         sprite.height *= 0.8 + entrance * 0.2;
@@ -390,6 +418,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     this.missiles.begin();
     for (const p of world.projectiles) {
       if (rankProjectileVisual(p)||ultimateProjectileVisual(p)) continue; // Dedicated ranked sprite pool owns body and wake.
+      if (world.stormbreaker && p.stormbreakerVisual) continue;
       if (world.magnetic && p.owner === "enemy" && p.magneticVisual) continue; // Shared atlas painter owns magnetic rounds.
       const missile = p.projectileKind !== "bullet";
       if (missile) this.missiles.render(p,reducedMotion);
@@ -665,6 +694,8 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     this.healthBars.clear();
     this.app.canvas.removeEventListener("webglcontextlost", this.onLost);
     this.magneticSprites.destroy();
+    this.stormbreakerSprites.destroy();
+    this.stormbreakerPresentation.clear();
     this.astraSprites.destroy();
     this.equipmentSprites.destroy();
     this.enemies.destroy(); this.missileSmoke.destroy(); this.projectiles.destroy(); this.missiles.destroy(); this.projectileGlows.destroy(); this.afterimages.destroy(); this.companions.destroy(); this.warnings.destroy(); this.engines.destroy(); this.vfx.destroy();
