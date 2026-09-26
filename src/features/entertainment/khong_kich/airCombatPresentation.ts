@@ -1,6 +1,6 @@
 import { resolveTooltipValues } from "./airCombatTooltipValues";
 import { resolveSkillCooldown } from "./airCombatStatResolvers";
-import { skillRank, rankValues, SKILL_RANKS, isUltimate, ultimateCastDisabled } from "./airCombatSkillRanks";
+import { skillRank, SKILL_RANKS, isUltimate, ultimateCastDisabled } from "./airCombatSkillRanks";
 import { astraOrbitProtectionActive } from "./airCombatAstra";
 import { equipmentStatuses } from "./airCombatEquipmentPresentation";
 import type { EquipmentRewardId } from "./airCombatEquipmentState";
@@ -46,32 +46,27 @@ function hawkEyeTimeLabel(remaining: number | null) {
 export function getSkillTooltipModel(state: AircraftCombatState, id: SkillId) {
  const config=SKILL_CONFIGS[id],v=getSkillRuntimeValues(state,id),rank=skillRank(state,id),rows=SKILL_RANKS[id];
  const free=hasCore(state,84)&&(state.coreState.skillCasts+1)%4===0;
- const stats=getEffectiveAircraftStats(state),baseCooldown=rankValues(state,id).cooldown;
+ const stats=getEffectiveAircraftStats(state);
  const castMultiplier=state.coreState.deferredCooldowns[id]??(free?1.1:1);
  const cooldown=resolveSkillCooldown(v.cooldown,stats.skillHaste,castMultiplier);
  const resource=AIRCRAFT_CONFIGS[state.aircraftId].resourceKind==="mana"?"Mana":"Điện";
- const detailRows=[`${isUltimate(id)?"Kỹ Năng Tối Thượng":"Kỹ Năng Thường"} · Cấp ${rank}/${rows.length}`,id==="escort_drone"?`Duy trì ${number(v.upkeepPerSecond)} Điện/s · Yêu cầu triệu hồi ${v.cost} Điện · Không tiêu hao Điện khi triệu hồi`:`Chi phí thực tế: ${number(free?0:v.cost)} ${resource}`];
+ const detailRows=[isUltimate(id)?"Kỹ Năng Tối Thượng":"Kỹ Năng Cơ Bản",
+  `Yêu cầu Tài Nguyên: ${number(id==="escort_drone"?v.cost:free?0:v.cost)} ${resource}`];
  const coreRows:string[]=[];
- detailRows.push(`Hồi Chiêu Cơ Bản${baseCooldown!==v.cooldown?" gốc":""}: ${number(baseCooldown)}s`);
- if(baseCooldown!==v.cooldown)detailRows.push(`Hồi Chiêu Cơ Bản sau hiệu ứng: ${number(v.cooldown)}s`);
- detailRows.push(`Điểm Hồi Kỹ Năng: ${number(stats.skillHaste)}`);
- if(castMultiplier>1)detailRows.push("Miễn Phí Có Điều Kiện: +10% Hồi Chiêu của lần dùng này sau Điểm Hồi Kỹ Năng.");
- detailRows.push(`Hồi Chiêu thực tế: ${number(cooldown)}s`);
- if((state.cooldowns[id]??0)>0)detailRows.push(`Hồi Chiêu còn lại: ${number(state.cooldowns[id]!)}s`);
  if(ultimateCastDisabled(state,id))coreRows.push("Tập Trung Chuyên Môn: khóa dùng chủ động Kỹ Năng Tối Thượng; cấp và nội tại vẫn giữ nguyên.");
  if(hasCore(state,97)&&!isUltimate(id))coreRows.push("Tập Trung Chuyên Môn: +20% Sát Thương Kỹ Năng; chi phí đã giảm 20%, hồi chiêu cơ bản đã giảm 25%.");
  if(canSkillsCrit(state))coreRows.push("Kỹ năng có thể chí mạng.");
  if(hasCore(state,190))coreRows.push("Nén Năng Lượng: +20% Sát Thương Kỹ Năng; chi phí đã gồm +10%.");
  if(expansionState(state).primarySkill===id)coreRows.push("Chủ Lực: +20% Sát Thương Kỹ Năng; chi phí và hồi chiêu cơ bản đã giảm 20%.");
- return {title:config.name,description:rank?effectiveSkillDescription(state,id):"Chưa học kỹ năng. Có thể giữ Điểm Kỹ Năng để đầu tư sau.",detailRows,coreRows,rank,rankRows:rows,
+ const rankRows=rows.map(row=>({...row,displayDescription:resolveTooltipValues(row.upgradeDescription,
+  {stats,currentHp:state.currentHp,skillCost:v.cost})}));
+ return {title:config.name,description:rank?effectiveSkillDescription(state,id):"Chưa học kỹ năng. Có thể giữ Điểm Kỹ Năng để đầu tư sau.",detailRows,coreRows,rank,rankRows,
   cooldown};
 }
 function effectiveSkillDescription(s:AircraftCombatState,id:SkillId):string {
- const rank=skillRank(s,id), stats=getEffectiveAircraftStats(s), base={...stats};
- if(id==="afterburner"&&(s.activeEffects.afterburner??0)>0)base.bonusFireRatePct-=rank>=3?B.upgradedAfterburnerRate:B.afterburnerRate;
- if(id==="escort_drone"&&(s.coreState.timers.hawkRage??0)>s.coreState.time)base.bonusFireRatePct-=1.05;
+ const rank=skillRank(s,id), stats=getEffectiveAircraftStats(s);
  return resolveTooltipValues(SKILL_RANKS[id][rank-1].description, {stats,currentHp:s.currentHp,
-   skillCost:getSkillRuntimeValues(s,id).cost,fireRateBase:base,fireRateLocked:hasCore(s,54)});
+   skillCost:getSkillRuntimeValues(s,id).cost});
 }
 
 export function getActiveSkillDuration(world: CombatWorld, id: SkillId) {
