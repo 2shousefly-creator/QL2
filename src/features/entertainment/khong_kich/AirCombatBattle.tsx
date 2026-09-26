@@ -718,7 +718,7 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
           <p><CoreDescription text={tooltipModel.description}/></p>
           <div className="air-tooltip-details">{tooltipModel.detailRows.map(row => <div key={row}><CoreDescription text={row}/></div>)}</div>
           {tooltipModel.coreRows.map(row=><p key={row} style={{color:"#fde047"}}><CoreDescription text={row}/></p>)}
-          <div className="air-rank-preview">{tooltipModel.rankRows.map(row=><section key={row.rank} data-unlocked={row.rank<=tooltipModel.rank} data-current={row.rank===tooltipModel.rank}><strong>◆ Cấp {row.rank} — {row.name}</strong><p><CoreDescription text={row.description}/></p></section>)}</div>
+          <div className="air-rank-preview">{tooltipModel.rankRows.map(row=><section key={row.rank} data-unlocked={row.rank<=tooltipModel.rank} data-current={row.rank===tooltipModel.rank}><strong>◆ Cấp {row.rank} — {row.name}</strong><p style={{whiteSpace:"pre-line"}}><CoreDescription text={row.displayDescription}/></p></section>)}</div>
         </motion.aside></AirCombatTooltipPortal>
       )}
 

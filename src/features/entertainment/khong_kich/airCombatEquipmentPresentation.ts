@@ -42,9 +42,8 @@ export function equipmentStatuses(w:CombatWorld):StatusPresentation[] {
 }
 
 export function equipmentEffectDescription(s: AircraftCombatState, id: EquipmentDefinitionId): string {
-  const d=EQUIPMENT_CATALOG[id], family=d.family?Number(d.family.slice(2)):undefined;
-  // Counterfactual stats must not overwrite authoritative Core54/resource/HP caches.
+  const d=EQUIPMENT_CATALOG[id];
+  // Reading tooltip stats must not overwrite authoritative Core54/resource/HP caches.
   const snapshot={...s,coreState:{...s.coreState,stacks:{...s.coreState.stacks}}};
-  return resolveTooltipValues(d.effect,{stats:getEffectiveAircraftStats(snapshot),currentHp:s.currentHp,
-    fireRateBase:getEffectiveAircraftStats(snapshot,true,family),fireRateLocked:s.selectedCores.includes("core_054")});
+  return resolveTooltipValues(d.effect,{stats:getEffectiveAircraftStats(snapshot),currentHp:s.currentHp});
 }

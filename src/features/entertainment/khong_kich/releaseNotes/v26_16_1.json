@@ -1,0 +1,156 @@
+{
+  "version": "26.16.1",
+  "releaseDate": "26/09/2026",
+  "title": "Tooltip Kỹ Năng Gọn Hơn",
+  "displayTitle": "KHÔNG KÍCH 26.16.1 — TOOLTIP KỸ NĂNG GỌN HƠN",
+  "summary": "**26.16.1** tinh gọn cách trình bày tooltip kỹ năng của cả 4 chiến cơ. Mô tả lớn ở đầu tooltip vẫn cho biết đầy đủ kỹ năng đang hoạt động như thế nào ở cấp hiện tại, nhưng phần Cấp 2 trở lên giờ chỉ hiển thị những thay đổi mới so với cấp trước, giúp người chơi đọc nhanh hơn và tránh lặp lại cùng một mechanic nhiều lần.\n\nKhối thông tin kỹ năng cũng được rút gọn chỉ còn loại kỹ năng và yêu cầu Tài Nguyên. Hệ quy đổi động theo Hỏa Lực, Máu và Tài Nguyên tiếp tục được giữ lại, trong khi Tốc Độ Bắn không còn được quy đổi sang phát/giây trong tooltip mà trở về hiển thị trực tiếp dưới dạng phần trăm.",
+  "sections": [
+    {
+      "id": "s1",
+      "title": "TOOLTIP KỸ NĂNG",
+      "icon": { "kind": "skill", "id": "afterburner" },
+      "intro": [
+        {
+          "text": "Tooltip của Viper, Titan, Phantom và Astra được tổ chức lại để phần nâng cấp kỹ năng ngắn gọn hơn nhưng vẫn giữ đầy đủ thông tin cần thiết.",
+          "format": "paragraph",
+          "changeType": "change"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s1-e1",
+          "icon": { "kind": "skill", "id": "afterburner" },
+          "title": "Mô tả theo từng cấp",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Mô tả lớn ở đầu tooltip tiếp tục hiển thị **đầy đủ trạng thái hiện tại của kỹ năng** ở cấp đang sở hữu.",
+              "format": "bullet",
+              "changeType": "unchanged"
+            },
+            {
+              "text": "**Cấp 1** tiếp tục mô tả đầy đủ kỹ năng gốc.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "Từ **Cấp 2 trở lên**, mỗi cấp chỉ hiển thị những giá trị hoặc cơ chế mới thay đổi so với cấp ngay trước đó, thay vì lặp lại toàn bộ mô tả kỹ năng.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "Các thay đổi số liệu được trình bày trực tiếp theo dạng **giá trị cũ → giá trị mới** khi phù hợp, ví dụ thời gian Điên Cuồng **7 → 10 giây** hoặc Tốc Độ Bắn Cộng Thêm **+120% → +225%**.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        },
+        {
+          "id": "s1-e2",
+          "icon": { "kind": "system", "id": "ui" },
+          "title": "Thông tin kỹ năng gọn hơn",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Khối thông tin dưới mô tả kỹ năng giờ chỉ còn **Kỹ Năng Cơ Bản/Kỹ Năng Tối Thượng** và **Yêu cầu Tài Nguyên**.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "Các dòng Cấp hiện tại, Hồi Chiêu Cơ Bản, Điểm Hồi Kỹ Năng, Hồi Chiêu Thực Tế và Hồi Chiêu Còn Lại được loại khỏi phần thân tooltip để giảm nhiễu thông tin.",
+              "format": "bullet",
+              "changeType": "removed"
+            },
+            {
+              "text": "Badge Hồi Chiêu ở phần tiêu đề tooltip vẫn được giữ để người chơi có thể xem nhanh thời gian Hồi Chiêu hiện tại.",
+              "format": "bullet",
+              "changeType": "unchanged"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "GIÁ TRỊ ĐỘNG TRONG TOOLTIP",
+      "icon": { "kind": "system", "id": "ui" },
+      "intro": [
+        {
+          "text": "Hệ thống quy đổi giá trị động của 26.16.0 được giữ lại nhưng Tốc Độ Bắn được đơn giản hóa cách hiển thị.",
+          "format": "paragraph",
+          "changeType": "change"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s2-e1",
+          "icon": { "kind": "system", "id": "ui" },
+          "title": "Hỏa Lực, Máu & Tài Nguyên",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Các công thức theo **Hỏa Lực, Máu Tối Đa, Máu đã mất, Tài Nguyên Tối Đa** và **Chi Phí Tài Nguyên** tiếp tục được quy đổi động khi có đủ dữ liệu.",
+              "format": "bullet",
+              "changeType": "unchanged"
+            },
+            {
+              "text": "Giá trị quy đổi theo Hỏa Lực vẫn là sát thương gốc trước Giáp và không cộng các modifier sát thương cuối, Chí Mạng hoặc debuff mục tiêu.",
+              "format": "bullet",
+              "changeType": "unchanged"
+            }
+          ]
+        },
+        {
+          "id": "s2-e2",
+          "icon": { "kind": "skill", "id": "afterburner" },
+          "title": "Tốc Độ Bắn",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Tooltip không còn quy đổi **Tốc Độ Bắn Cộng Thêm** hoặc **Tổng Tốc Độ Bắn** thành số phát/giây.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "Các hiệu ứng Tốc Độ Bắn giờ hiển thị trực tiếp theo công thức gốc, ví dụ **+120% Tốc Độ Bắn Cộng Thêm** hoặc **+10% Tổng Tốc Độ Bắn**.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "SỨC MẠNH KỸ NĂNG",
+      "icon": { "kind": "aircraft", "id": "black_eagle" },
+      "intro": [
+        {
+          "text": "26.16.1 là bản cập nhật presentation cho tooltip kỹ năng và không chủ động rebalance sức mạnh của 16 kỹ năng chiến cơ.",
+          "format": "paragraph",
+          "changeType": "unchanged"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s3-e1",
+          "icon": { "kind": "system", "id": "ui" },
+          "title": "Không thay đổi mechanic",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Các giá trị sát thương, thời lượng, Tài Nguyên, Hồi Chiêu, số đạn, hiệu ứng và ngưỡng kích hoạt tiếp tục dùng đúng runtime của 26.16.0.",
+              "format": "bullet",
+              "changeType": "unchanged"
+            },
+            {
+              "text": "Ví dụ, **Điên Cuồng Cấp 5** vẫn giảm Hồi Chiêu Cơ Bản từ **24 xuống 16 giây**; không có thay đổi cân bằng thành 15 giây.",
+              "format": "bullet",
+              "changeType": "unchanged"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
