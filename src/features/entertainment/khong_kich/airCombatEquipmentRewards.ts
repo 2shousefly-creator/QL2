@@ -10,7 +10,7 @@ export const WAITING_CHEST_REWARDS = [
   {chance:.08, completed:0, legendary:2, magnet:false, label:"2 Huyền Thoại"},
   {chance:.02, completed:0, legendary:3, magnet:true, label:"3 Huyền Thoại + 1 Nam Châm Ma Thuật"},
 ] as const;
-export const WAITING_CHEST_DESCRIPTION = "Đếm ngược 500 giây combat; mỗi quái thường bị hạ giảm 1 giây, mỗi Tinh Anh bị hạ giảm 8 giây, Boss không giảm. Đồng hồ chỉ chạy khi combat thực sự đang diễn ra. Khi hết giờ: " + WAITING_CHEST_REWARDS.map(r=>`${r.chance*100}%: ${r.label}`).join("; ");
+export const WAITING_CHEST_DESCRIPTION = "Đếm ngược 500 giây giao chiến; mỗi quái thường bị hạ giảm 1 giây, mỗi Tinh Anh bị hạ giảm 8 giây, Boss không giảm. Đồng hồ chỉ chạy khi giao chiến đang diễn ra. Khi hết giờ: " + WAITING_CHEST_REWARDS.map(r=>`${r.chance*100}%: ${r.label}`).join("; ");
 export function advanceWaitingChest(s:AircraftCombatState,seconds:number) {
   const chest=releaseState(s).waitingChest;
   if(chest&&!chest.claimed&&!chest.cancelled)chest.remaining=Math.max(0,chest.remaining-seconds);

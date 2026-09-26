@@ -13,7 +13,7 @@ export interface StormHazard extends AttackMetadata {
   id: number; cast: number; start: StormPoint; end?: StormPoint; radius: number;
   warningAt: number; hitAt: number; until: number; damage: number; visual: StormbreakerVfxKey;
   environmental?: number; conditionalOwner?: number; decoy?: boolean; resolved: boolean;
-  hits: Map<number, number>; grace: number;
+  hits: Map<number, number>; grace: number; afterStrike?: () => void;
 }
 export interface StormEvent {
   at: number; owner: number; committed: boolean; action: () => void;
@@ -27,6 +27,7 @@ export interface StormCloud extends StormPoint {
 }
 export interface StormbreakerEnemyState {
   lastHp: number; lastShield: number;
+  objectiveThresholds: number; objectiveDamageBank: number; sourceDamage: number;
   charge: number; chargeRemainder: number; attack: number; nextMajor: number; hitAt: number;
   links: number[]; relay?: number; relayUntil: number; channelUntil: number; channelKind?: "sermon" | "relay";
   boosted: boolean; enhanced: boolean; shieldArmed: boolean; shieldReady: number; breakUntil: number;

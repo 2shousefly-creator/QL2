@@ -41,7 +41,7 @@ export function castExpansion(w: CombatWorld, id: SkillId, spent: number, h: Exp
   if(hasCore(s,197)&&!expansionActive(s,"debtCleanse")){let cleared=0;for(const debt of r.debt){cleared+=debt.amount*debt.ticks*.2;debt.amount*=.8;}recordCoreMetric(s,197,"debtCleared",cleared);timer(w,"debtCleanse",5);}
   if(hasCore(s,198)){const before=expansionActive(s,"satellites")?c.stacks.satellites??0:0;c.stacks.satellites=expansionActive(s,"satellites")?Math.min(3,before+1):3;recordCoreMetric(s,198,"granted",c.stacks.satellites-before);timer(w,"satellites",5);}
   const overclock = hasCore(s, 199) ? (c.stacks.overclock ?? 0) : 0;
-  const cast:ExpansionCast = { skillId: id, overclock: overclock * .18, capacitor, compressed:hasCore(s,102)&&!r.liveCasts.some(c=>!c.ended)&&now-Math.max(s.coreState.release?.lastSkillEnd??0,prior?.at??0)>=4 };
+  const cast:ExpansionCast = { skillId: id, overclock: overclock * .12, capacitor, compressed:hasCore(s,102)&&!r.liveCasts.some(c=>!c.ended)&&now-Math.max(s.coreState.release?.lastSkillEnd??0,prior?.at??0)>=4 };
   // A refreshed duration remains one active effect; retired snapshots can still
   // belong to in-flight projectiles, but must not emit a second completion.
   const previous = r.casts[id];

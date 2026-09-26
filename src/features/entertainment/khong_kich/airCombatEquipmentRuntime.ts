@@ -54,9 +54,9 @@ const EFFECTS:Readonly<Record<number,EquipmentEffectHooks>>={
   1:{hit(c,h){if(h.direct)equipmentFx(c.w,1,h.enemy.x,h.enemy.y,30,.2,h.enemy.id);}},
   2:{hit(c,h){if(h.basic)stack(c,1,20,4);},cast(c){stack(c,5,20,4);},damaged(c,_hp,total){if(total>0)equipmentEffect(c.s,2).stacks=Math.max(0,equipmentEffect(c.s,2).stacks-5);}},
   3:{damaged(c){if(c.s.currentHp<hp(c)*.4&&ready(c)){
-    const e=equipmentEffect(c.s,3);e.value=(hp(c)-c.s.currentHp)*P[3].heal*c.k;activate(c,2);e.ready=c.t+40;e.bonusUntil=c.t+6;
+    const e=equipmentEffect(c.s,3);e.value=(hp(c)-c.s.currentHp)*P[3].heal*c.k;activate(c,1.5);e.ready=c.t+40;e.bonusUntil=c.t+5.5;
     for(const p of c.w.projectiles)if(p.owner==="enemy"&&p.targetId===0)p.targetId=null;
-  }},tick(c,dt){const e=equipmentEffect(c.s,3),step=Math.min(dt,Math.max(0,e.until-(c.t-dt)));if(step>0)heal(c,e.value*step/2);}},
+  }},tick(c,dt){const e=equipmentEffect(c.s,3),step=Math.min(dt,Math.max(0,e.until-(c.t-dt)));if(step>0)heal(c,e.value*step/1.5);}},
   4:{damaged(c){if(c.s.currentHp<hp(c)*.6&&ready(c)){shield(c,hp(c)*P[4].shield*c.k,8);equipmentEffect(c.s,4).ready=Infinity;}},tick(c){const e=equipmentEffect(c.s,4),sh=c.s.coreState.shields["equipment:4"];if(e.ready===Infinity&&(!sh||sh.amount<=0||sh.until<=c.t))e.ready=c.t+60;}},
   5:{hit(c,h){const e=equipmentEffect(c.s,5),m=mark(c.s,h.enemy,5);
     if(h.skill&&h.direct){if(m.until<=c.t)m.stacks=0;m.until=c.t+8;metric(c,"marks");equipmentFx(c.w,5,h.enemy.x,h.enemy.y,52,8,h.enemy.id);}
@@ -77,7 +77,7 @@ const EFFECTS:Readonly<Record<number,EquipmentEffectHooks>>={
   }},
   13:{hit(c,h){if(!h.primary)return;const e=equipmentEffect(c.s,13);
     if(e.value>=100){e.value=0;metric(c,"chains");const used=new Set<number>();let next:EnemyEntity|undefined=h.enemy,from={x:c.w.playerX,y:c.w.playerY};
-      for(let i=0;i<4;i++){const target=next??h.enemy;damage(c,target,power(c)*P[13].damage*c.k*(next?1:.5),from);used.add(target.id);from={x:target.x,y:target.y};next=nearby(c,from.x,from.y).find(e=>!used.has(e.id));}}
+      for(let i=0;i<4;i++){const target=next??h.enemy;damage(c,target,power(c)*P[13].damage*c.k*(next?1:P[13].returnRatio*c.k),from);used.add(target.id);from={x:target.x,y:target.y};next=nearby(c,from.x,from.y).find(e=>!used.has(e.id));}}
     else {const before=e.value;e.value=Math.min(100,e.value+8);if(before<100&&e.value===100)metric(c,"charged");}
   }},
   14:{kill(c,e){if(e.expansionKillingHit?.skill){activate(c,8);equipmentEffect(c.s,14).value=1;}},hit(c,h){if(h.skill&&h.direct&&(h.enemy.type==="boss"||c.h.elite(h.enemy))){const e=equipmentEffect(c.s,14);e.value=e.until>c.t?Math.max(.5,e.value):.5;activate(c,8);}}},

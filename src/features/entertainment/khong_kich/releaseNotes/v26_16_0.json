@@ -1,0 +1,414 @@
+{
+  "version": "26.16.0",
+  "title": "Equipment & Core Rebalance, Dynamic Tooltips & Stormbreaker Escalation",
+  "displayTitle": "CHI TIẾT CẬP NHẬT 26.16.0",
+  "releaseDate": "26/09/2026",
+  "summary": "**26.16.0** tái cân bằng toàn bộ hệ Trang Bị và Lõi nâng cấp, đồng thời làm lại cách trình bày tooltip để thông tin chiến đấu dễ đọc và hữu ích hơn ngay trong trận. Các nguồn Sát Thương Chí Mạng, Sát Thương Đòn Đánh Thường và Sát Thương Kỹ Năng được hạ sức mạnh theo bộ giá trị mới; Tỷ Lệ Chí Mạng của Trang Bị được chốt theo bảng cân bằng mới.\n\nTooltip kỹ năng và Trang Bị giờ có thể quy đổi trực tiếp các công thức theo **Hỏa Lực, Máu, Lá Chắn, Tài Nguyên và Tốc Độ Bắn** thành giá trị hiện tại của chiến cơ, trong khi vẫn giữ công thức gốc trong ngoặc. Các giá trị quy đổi được làm tròn đến hàng đơn vị và cập nhật động theo chỉ số trong trận.\n\nMàn 3 **STORMBREAKER** cũng được nâng độ khó rõ rệt ở hai wave Tinh Anh và Boss: cảnh báo ngắn hơn, đạn dày hơn, kỹ năng xuất hiện thường xuyên và duy trì lâu hơn. Các Storm Node, Omega Storm Node và Storm Conductor giờ phản ứng khi bị dồn sát thương, biến chúng thành mục tiêu chiến thuật thay vì chỉ là các mục tiêu đứng yên để bắn.",
+  "sections": [
+    {
+      "id": "s1",
+      "title": "CÂN BẰNG TRANG BỊ",
+      "icon": {
+        "kind": "system",
+        "id": "ui"
+      },
+      "intro": [
+        {
+          "text": "Toàn bộ 80 Trang Bị được đồng bộ theo bảng cân bằng 26.16.0. Các chỉ số trực tiếp và nội tại đều dùng đúng giá trị đã chốt.",
+          "format": "paragraph",
+          "changeType": "change"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s1-e1",
+          "icon": {
+            "kind": "system",
+            "id": "ui"
+          },
+          "title": "Power budget mới",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Các chỉ số có lợi trên Trang Bị được giảm sức mạnh theo bộ giá trị mới, trong khi cấu trúc kích hoạt, số cộng dồn và Hồi Chiêu đặc trưng được giữ nguyên nếu bảng 26.16.0 không ghi khác.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "Tỷ Lệ Chí Mạng sử dụng đúng các giá trị chốt trong bảng 26.16.0; Sát Thương Chí Mạng và các hiệu ứng bùng nổ liên quan Chí Mạng tiếp tục dùng power budget thấp hơn.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "Bản Huyền Thoại tiếp tục giữ quan hệ sức mạnh với bản Hoàn Chỉnh theo từng family, nhưng giá trị cuối cùng luôn lấy bảng 26.16.0 làm chuẩn.",
+              "format": "bullet",
+              "changeType": "unchanged"
+            }
+          ]
+        },
+        {
+          "id": "s1-e2",
+          "icon": {
+            "kind": "system",
+            "id": "ui"
+          },
+          "title": "Nanh Lôi Ảnh & Nanh Thiên Lôi",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "**Nanh Lôi Ảnh:** nội tại nhận **+10% Tổng Tốc Độ Bắn**; đòn đánh thường gây thêm sát thương bằng **1% Máu hiện tại** của mục tiêu, với Tinh Anh/Boss giới hạn **25% Hỏa Lực** mỗi khi trúng.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "**Nanh Thiên Lôi:** nội tại nhận **+20% Tổng Tốc Độ Bắn**; đòn đánh thường gây thêm sát thương bằng **2% Máu hiện tại** của mục tiêu, với Tinh Anh/Boss giới hạn **50% Hỏa Lực** mỗi khi trúng.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "CÂN BẰNG LÕI NÂNG CẤP",
+      "icon": {
+        "kind": "core",
+        "id": "core_001"
+      },
+      "intro": [
+        {
+          "text": "141 Lõi thường được đồng bộ với bộ mô tả và giá trị 26.16.0. Các Lõi gây sát thương bùng nổ được đưa về power budget ổn định hơn.",
+          "format": "paragraph",
+          "changeType": "change"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s2-e1",
+          "icon": {
+            "kind": "core",
+            "id": "core_053"
+          },
+          "title": "Chí Mạng, Đòn Đánh Thường & Kỹ Năng",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Các nguồn **Sát Thương Chí Mạng** mạnh được giảm đáng kể; các nguồn **Sát Thương Đòn Đánh Thường** và **Sát Thương Kỹ Năng** được hạ theo bảng 26.16.0.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "Các cơ chế one-time encounter, mốc chọn Lõi, Pandora, thao túng bậc Lõi và quy tắc không xuất hiện lại sau khi đã được đề xuất tiếp tục giữ nguyên.",
+              "format": "bullet",
+              "changeType": "unchanged"
+            }
+          ]
+        },
+        {
+          "id": "s2-e2",
+          "icon": {
+            "kind": "core",
+            "id": "core_149"
+          },
+          "title": "Thợ Săn Tiền Thưởng",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Mỗi 20 giây đánh dấu mục tiêu ưu tiên trong 5 giây, khiến mục tiêu nhận thêm **10% mọi sát thương**.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "Phần thưởng vĩnh viễn được chốt thành: **+10 Hỏa Lực · +10 Giáp · +60 Máu Tối Đa · +4 Điểm Hồi Kỹ Năng · +0,4 Hồi Máu/s · +4% Tỷ Lệ Chí Mạng · +4% Sát Thương Chí Mạng · +12% Tốc Độ Bắn Cộng Thêm**.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "TOOLTIP CHIẾN ĐẤU ĐỘNG",
+      "icon": {
+        "kind": "system",
+        "id": "ui"
+      },
+      "intro": [
+        {
+          "text": "Tooltip không chỉ hiển thị công thức phần trăm mà còn quy đổi sang giá trị thực tế dựa trên chỉ số hiện tại của chiến cơ.",
+          "format": "paragraph",
+          "changeType": "new"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s3-e1",
+          "icon": {
+            "kind": "system",
+            "id": "ui"
+          },
+          "title": "Quy đổi từ Hỏa Lực",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Các hiệu ứng dạng **% Hỏa Lực** hiển thị theo cấu trúc **giá trị sát thương gốc (% Hỏa Lực)**. Ví dụ với 300 Hỏa Lực: **2.400 sát thương (800% Hỏa Lực)**.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Giá trị này chỉ bằng **Hỏa Lực hiện tại × hệ số Hỏa Lực**; không cộng Sát Thương Kỹ Năng, mọi sát thương, Chí Mạng, xuyên Giáp hoặc hiệu ứng khiến mục tiêu nhận thêm sát thương.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Số quy đổi được làm tròn đến **hàng đơn vị** và cập nhật ngay khi chỉ số trong trận thay đổi.",
+              "format": "bullet",
+              "changeType": "new"
+            }
+          ]
+        },
+        {
+          "id": "s3-e2",
+          "icon": {
+            "kind": "system",
+            "id": "ui"
+          },
+          "title": "Máu, Lá Chắn, Tài Nguyên & Tốc Độ Bắn",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Các công thức theo **Máu Tối Đa, Máu đã mất, Tài Nguyên Tối Đa** và **Chi Phí Tài Nguyên** được quy đổi khi tooltip có đủ dữ liệu đầu vào.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Các nguồn Tốc Độ Bắn hiển thị thêm lượng phát/giây thực tế hoặc mốc trước ⇒ sau khi có thể xác định chính xác từ build hiện tại.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Công thức phụ thuộc chỉ số của kẻ địch chỉ được quy đổi phần đã biết. Ví dụ giới hạn **25% Hỏa Lực** của Nanh Lôi Ảnh có thể hiển thị thành số, còn **1% Máu hiện tại của mục tiêu** vẫn giữ dạng phần trăm nếu chưa có mục tiêu cụ thể.",
+              "format": "bullet",
+              "changeType": "note"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "TOOLTIP & CÁCH DIỄN ĐẠT",
+      "icon": {
+        "kind": "system",
+        "id": "ui"
+      },
+      "intro": [
+        {
+          "text": "Mô tả của kỹ năng, Lõi và Trang Bị được viết lại theo hướng ngắn, trực tiếp và ưu tiên người chơi Việt Nam.",
+          "format": "paragraph",
+          "changeType": "change"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s4-e1",
+          "icon": {
+            "kind": "skill",
+            "id": "heavy_bomb"
+          },
+          "title": "Kỹ năng chiến cơ",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "72 tooltip cấp kỹ năng của Viper, Titan, Phantom và Astra được viết lại để mỗi cấp tự mô tả đầy đủ trạng thái hiện tại của kỹ năng, thay vì chỉ ghi phần thay đổi so với cấp trước.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "Các cụm kỹ thuật được Việt hóa; các câu ưu tiên trình tự **điều kiện → hành động → kết quả → giới hạn/Hồi Chiêu**.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        },
+        {
+          "id": "s4-e2",
+          "icon": {
+            "kind": "system",
+            "id": "ui"
+          },
+          "title": "Lõi & Trang Bị",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "141 Lõi và 80 Trang Bị sử dụng mô tả mới theo cùng chuẩn diễn đạt. Các nội tại đi thẳng vào hành vi bằng “Nhận…”, “Khi…”, “Mỗi khi…” hoặc “Sau khi…”.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "Các cụm như “sát thương nhận sau Giáp” được rút gọn thành **sát thương phải nhận** khi không cần giải thích lớp tính toán phòng thủ.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "MÀN 3 — TINH ANH & STORMBREAKER Ω",
+      "icon": {
+        "kind": "boss",
+        "id": "stormbreaker"
+      },
+      "intro": [
+        {
+          "text": "Hai wave Tinh Anh và Boss Màn 3 được đẩy lên mức áp lực cao hơn, nhưng cảnh báo và hitbox được làm rõ để độ khó đến từ nhịp chiến đấu chứ không phải thông tin mơ hồ.",
+          "format": "paragraph",
+          "changeType": "change"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s5-e1",
+          "icon": {
+            "kind": "wave",
+            "id": "stage3-elite"
+          },
+          "title": "Nhịp chiến đấu mới",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Thời gian cảnh báo trước kỹ năng còn **35%** so với trước, tương đương giảm **65%**.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "Mật độ đạn của các đòn bắn thuộc wave Tinh Anh và Boss tăng **100%**; sát thương mỗi viên không tự tăng theo thay đổi này.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "Tần suất sử dụng kỹ năng tăng **100%** và thời lượng của các kỹ năng duy trì tăng **100%**.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "Cảnh báo và biên hitbox nguy hiểm được tăng độ tương phản, hiển thị đúng vùng va chạm thực tế và nhấn mạnh thời điểm sắp kích hoạt.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        },
+        {
+          "id": "s5-e2",
+          "icon": {
+            "kind": "boss",
+            "id": "stormbreaker"
+          },
+          "title": "Stormbreaker Ω",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Máu cơ bản: **210.375 ⇒ 284.006,25** (**+35%**).",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "Giáp cơ bản: **198,59 ⇒ 268,0965** (**+35%**).",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "Hai giá trị mới là baseline chính thức để cân bằng Boss Màn 4 về sau.",
+              "format": "bullet",
+              "changeType": "note"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s6",
+      "title": "STORM OBJECTIVE PHẢN ỨNG",
+      "icon": {
+        "kind": "enemy",
+        "id": "storm_node"
+      },
+      "intro": [
+        {
+          "text": "Các mục tiêu đứng yên của Màn 3 không còn chỉ là “bao cát”. Chúng phản ứng khi bị dồn sát thương và tạo quyết định ưu tiên mục tiêu rõ ràng hơn.",
+          "format": "paragraph",
+          "changeType": "new"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s6-e1",
+          "icon": {
+            "kind": "enemy",
+            "id": "storm_node"
+          },
+          "title": "Storm Node",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Khi Máu đi qua các mốc **75% / 50% / 25%**, Storm Node phóng một vòng **8 đạn điện** với một **khoảng trống 60°** để người chơi né.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Khi bị phá, Storm Node tiếp tục tạo **Insulated Field** như trước.",
+              "format": "bullet",
+              "changeType": "unchanged"
+            }
+          ]
+        },
+        {
+          "id": "s6-e2",
+          "icon": {
+            "kind": "enemy",
+            "id": "omega_storm_node"
+          },
+          "title": "Omega Storm Node",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Tại các mốc **75% / 50% / 25% Máu**, Omega Storm Node khóa vị trí hiện tại của người chơi, báo hiệu ngắn rồi gọi sét; sau cú sét phát ra vòng **8 đạn điện**.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Ở mốc **25% Máu**, phản ứng gồm **2 cú sét liên tiếp**. Khi bị phá, Node phát một đợt xung cuối và tạo Insulated Field lớn hơn Storm Node thường.",
+              "format": "bullet",
+              "changeType": "new"
+            }
+          ]
+        },
+        {
+          "id": "s6-e3",
+          "icon": {
+            "kind": "enemy",
+            "id": "storm_conductor"
+          },
+          "title": "Storm Conductor",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Mỗi lượng sát thương thực tế tích lũy bằng **10% Máu Tối Đa** khiến Conductor phản kích bằng một fan **6 đạn điện** hướng về phía người chơi.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Mỗi Conductor còn sống tăng **10% tần suất hoạt động kỹ năng của Boss**. Khi một Conductor bị phá, hiệu ứng này biến mất và kỹ năng lớn kế tiếp của Boss bị trì hoãn **1,25 giây**.",
+              "format": "bullet",
+              "changeType": "new"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

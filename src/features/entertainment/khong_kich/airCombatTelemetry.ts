@@ -1,10 +1,10 @@
 import type { AircraftCombatState } from "./airCombatTypes";
 
 export const BOUNTY_REWARDS = [
-  {key:"firepowerFlat",amount:15,label:"Hỏa Lực"}, {key:"armorFlat",amount:15,label:"Giáp"},
-  {key:"maxHpFlat",amount:80,label:"Máu Tối Đa"}, {key:"skillHaste",amount:4,label:"Điểm Hồi Kỹ Năng"},
-  {key:"hpRegen",amount:.6,label:"Hồi Máu mỗi giây"}, {key:"criticalChanceFlat",amount:.04,label:"Tỷ Lệ Chí Mạng",percent:true},
-  {key:"criticalDamageMultiplierFlat",amount:.10,label:"Sát Thương Chí Mạng",percent:true}, {key:"bonusFireRatePct",amount:.15,label:"Tốc Độ Bắn Cộng Thêm",percent:true},
+  {key:"firepowerFlat",amount:10,label:"Hỏa Lực"}, {key:"armorFlat",amount:10,label:"Giáp"},
+  {key:"maxHpFlat",amount:60,label:"Máu Tối Đa"}, {key:"skillHaste",amount:4,label:"Điểm Hồi Kỹ Năng"},
+  {key:"hpRegen",amount:.4,label:"Hồi Máu mỗi giây"}, {key:"criticalChanceFlat",amount:.04,label:"Tỷ Lệ Chí Mạng",percent:true},
+  {key:"criticalDamageMultiplierFlat",amount:.04,label:"Sát Thương Chí Mạng",percent:true}, {key:"bonusFireRatePct",amount:.12,label:"Tốc Độ Bắn Cộng Thêm",percent:true},
 ] as const;
 export const CORE_METRIC_LABELS = {
   itemsReceived:"Trang bị đã nhận", extraDrops:"Trang bị rơi thêm",normalDrops:"Rơi thêm từ quái thường",eliteDrops:"Rơi thêm từ Tinh Anh",

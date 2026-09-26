@@ -35,7 +35,7 @@ export function expansionStatuses(w: CombatWorld): StatusPresentation[] {
   timed(178,"magneticBrake",3,"magneticBrakeCd",20);
   add(179,`Sai Số: +${(c.stacks.error??0)*2}% Tỷ Lệ Chí Mạng`,{badgeText:`${c.stacks.error??0}`,badgeKind:"stack",progress:Math.min(1,(c.stacks.error??0)*.02)});
   timed(181,"skillExhaust",4);
-  add(182,ratio>.7?"+15% Max Resource · +10% Skill Damage":"+15% Max Resource");
+  add(182,ratio>.7?"+15% Tài Nguyên Tối Đa · +7% Sát Thương Kỹ Năng":"+15% Tài Nguyên Tối Đa");
   timed(168,"shiftDiscount",5);
   timed(218,"ultimateAftershock",8);
   const negative=activeNegativeStatusTypes(s).size;
@@ -46,19 +46,19 @@ export function expansionStatuses(w: CombatWorld): StatusPresentation[] {
   add(187,`Đã tích ${Math.round(c.stacks.recoil??0)} sát thương`,{badgeText:String(Math.round(c.stacks.recoil??0)),badgeKind:"charge",progress:(c.stacks.recoil??0)/Math.max(1,stats.firepower*3)});
   add(192,hasAbsorbShield(s)?"Có Lá chắn: +20% mọi sát thương":"Không có Lá chắn: +25 Giáp",{badgeText:hasAbsorbShield(s)?"+20%":"+25"});
   timed(195,"blackBox",4,"blackBoxCd",22);
-  add(196,`+${(c.stacks.crimsonCrit??0)*5}% Sát Thương Chí Mạng / +75% Sát Thương Chí Mạng`,{badgeText:`+${(c.stacks.crimsonCrit??0)*5}%`,badgeKind:"bonus",progress:(c.stacks.crimsonCrit??0)/15});
+  add(196,`+${Math.min(25,(c.stacks.crimsonCrit??0)*2.5)}% Sát Thương Chí Mạng / +25% Sát Thương Chí Mạng`,{badgeText:`+${Math.min(25,(c.stacks.crimsonCrit??0)*2.5)}%`,badgeKind:"bonus",progress:Math.min(1,(c.stacks.crimsonCrit??0)/10)});
   const debt=r.debt.reduce((sum,d)=>sum+d.amount*d.ticks,0);
   if(debt>0)add(197,`Sát Thương Trì Hoãn còn nợ: ${Math.ceil(debt)}. Hạ quái thường: ${c.stacks.debtKills??0}/15.`,{group:"debuff",badgeText:String(Math.ceil(debt)),badgeKind:"shield",remaining:Math.max(...r.debt.map(d=>d.next+(d.ticks-1)-c.time)),duration:4,priority:120});
   if(c.stacks.satellites)add(198,"Vệ tinh đang bảo vệ",{badgeText:`${c.stacks.satellites}/3`,badgeKind:"charge",remaining:remaining("satellites"),duration:5});
-  add(199,`Kỹ năng kế tiếp +${(c.stacks.overclock??0)*18}% sát thương kỹ năng`,{badgeText:`${c.stacks.overclock??0}/3`,badgeKind:"stack",progress:(c.stacks.overclock??0)/3});
-  if(negative)add(203,"Khống chế cứng chỉ khóa di chuyển; +35% mọi sát thương, -25% sát thương nhận vào.");
+  add(199,`Kỹ năng kế tiếp +${(c.stacks.overclock??0)*12}% sát thương kỹ năng`,{badgeText:`${c.stacks.overclock??0}/3`,badgeKind:"stack",progress:(c.stacks.overclock??0)/3});
+  if(negative)add(203,"Khống chế cứng chỉ khóa di chuyển; +25% mọi sát thương, -25% sát thương phải nhận.");
   add(204,`Đã ngăn ${Math.round(c.stacks.armorMeter??0)} / ${Math.round(stats.maxHp*.25)} damage`,{progress:(c.stacks.armorMeter??0)/(stats.maxHp*.25),badgeText:`${Math.round(c.stacks.armorMeter??0)}`,badgeKind:"progress"});
   if(c.stacks.lastStand)add(209,"Tử Thủ: +150 Giáp, +40% Hồi Tài Nguyên, −25 Điểm Hồi Kỹ Năng (tối thiểu 0), -15% mọi sát thương.");
   const release=releaseState(s);
   if(release.reserve>0)add(212,`Reroll Dự Trữ: ${release.reserve}`,{badgeText:String(release.reserve),badgeKind:"charge",priority:45});
   add(217,release.pendingGuaranteedDiamondSelection?"Milestone kế tiếp: 100% Kim Cương":"20% Bạc / 40% Vàng / 40% Kim Cương");
   const hot=overheated(s);
-  add(219,hot?"QUÁ NHIỆT · ngừng bắn và khóa kỹ năng":release.heat>=50?"+25% mọi sát thương":"Nhiệt nòng súng",{
+  add(219,hot?"QUÁ NHIỆT · ngừng bắn và khóa kỹ năng":release.heat>=50?"+20% mọi sát thương":"Nhiệt nòng súng",{
     group:hot?"debuff":"buff",badgeText:`${Math.ceil(release.heat)}`,progress:release.heat/100,
     remaining:hot?release.overheatUntil-c.time:Infinity,duration:hot?3:Infinity,showNumericTimer:hot,priority:hot?150:85});
   const ghostTime=Math.max(0,...release.ghosts.map(g=>g.until-c.time)),ghostCd=Math.max(0,release.ghostReady-c.time);

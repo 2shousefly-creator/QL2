@@ -135,8 +135,11 @@ export function sacrificeEquipment(s: AircraftCombatState, random:()=>number) {
   for(const key of Object.keys(s.coreState.shields))if(key.startsWith("equipment:"))delete s.coreState.shields[key];
   e.pendingDrops=[];
   e.componentPage=0;e.completedPage=0;
-  const first=Math.min(35,Math.max(0,Math.floor(random()*36)));
-  const offset=1+Math.min(34,Math.max(0,Math.floor(random()*35)));
-  for(const family of [first,(first+offset)%36])receiveEquipmentReward(s,`HL${String(family+1).padStart(2,"0")}`,"core_228");
+  const families=Array.from({length:36},(_,i)=>i+1);
+  for(let i=0;i<3;i++){
+    const index=Math.min(families.length-1,Math.max(0,Math.floor(random()*families.length)));
+    const [family]=families.splice(index,1);
+    receiveEquipmentReward(s,`HL${String(family).padStart(2,"0")}`,"core_228");
+  }
   e.rewardsLocked=true;
 }

@@ -65,14 +65,21 @@ export function paintStormbreaker(w: CombatWorld, p: StormbreakerPainter, reduce
   for (const a of s.hazards) {
     if (now < a.warningAt || now >= a.until) continue;
     const warning = now < a.hitAt, progress = Math.max(0, Math.min(1, (now - a.warningAt) / (a.hitAt - a.warningAt)));
+    const pulse = reducedMotion ? 1 : .82 + .18*Math.sin(progress*Math.PI*8);
+    const edgeAlpha = warning ? .8 + .2*progress*pulse : 1;
     const friendly = a.allegiance === "friendly_hacked", color = friendly ? 0x80ffd8 : a.decoy && a.damage > 0 ? 0xa1b3cc : 0xffc65a;
     if (a.end) {
       const dx = a.end.x - a.start.x, dy = a.end.y - a.start.y, length = Math.hypot(dx, dy), angle = Math.atan2(dy, dx), nx = -Math.sin(angle), ny = Math.cos(angle);
-      // Thin boundaries trace exactly the capsule width used by segmentVsAircraft.
+      // Fill the complete collision capsule; bright boundaries remain on its actual radius.
+      if(warning){
+        p.line(a.start.x,a.start.y,a.end.x,a.end.y,color,.16+progress*.16,2*a.radius);
+        p.circle(a.start.x,a.start.y,a.radius,color,.16+progress*.16,true);
+        p.circle(a.end.x,a.end.y,a.radius,color,.16+progress*.16,true);
+      }
       for (const side of [-1, 1]) p.line(a.start.x + nx * a.radius * side, a.start.y + ny * a.radius * side,
-        a.end.x + nx * a.radius * side, a.end.y + ny * a.radius * side, color, warning ? .75 : .95, 1);
-      p.circle(a.start.x, a.start.y, a.radius, color, .35, false, 1);
-      p.circle(a.end.x, a.end.y, a.radius, color, .35, false, 1);
+        a.end.x + nx * a.radius * side, a.end.y + ny * a.radius * side, color, edgeAlpha, 2.6);
+      p.circle(a.start.x, a.start.y, a.radius, color, edgeAlpha, false, 2.6);
+      p.circle(a.end.x, a.end.y, a.radius, color, edgeAlpha, false, 2.6);
       if (warning) {
         p.line(a.start.x, a.start.y, a.end.x, a.end.y, color, .2 + progress * .35, 1);
         p.sprite(`leader:${a.id}`, "stormLeaderArc", (a.start.x + a.end.x) / 2, (a.start.y + a.end.y) / 2, Math.max(8, a.radius * 1.5), length, angle + Math.PI / 2, progress * .35);
@@ -81,10 +88,11 @@ export function paintStormbreaker(w: CombatWorld, p: StormbreakerPainter, reduce
         p.sprite(`branch:${a.id}`, "stormBranchLightning", (a.start.x + a.end.x) / 2, (a.start.y + a.end.y) / 2, Math.max(25, a.radius * 2.6), length, angle + Math.PI / 2, .5, true);
       }
     } else {
-      p.circle(a.start.x, a.start.y, a.radius, color, .95, false, a.decoy ? 1 : 1.6);
+      p.circle(a.start.x, a.start.y, a.radius, color, edgeAlpha, false, a.decoy ? 2 : 3);
+      if(warning)p.circle(a.start.x,a.start.y,a.radius,color,.15+progress*.18,true);
       if (warning) {
-        p.sprite(`warn:${a.id}`, a.decoy ? "stormIonizationRing" : "stormPredictiveMarker", a.start.x, a.start.y, a.radius * 3, a.radius * 3, 0, a.decoy ? .35 : .65);
-        p.sprite(`ion:${a.id}`, "stormIonizationRing", a.start.x, a.start.y, a.radius * (3 - progress), a.radius * (3 - progress), 0, progress * .5);
+        p.sprite(`warn:${a.id}`, a.decoy ? "stormIonizationRing" : "stormPredictiveMarker", a.start.x, a.start.y, a.radius * 2, a.radius * 2, 0, a.decoy ? .45 : .8);
+        p.sprite(`ion:${a.id}`, "stormIonizationRing", a.start.x, a.start.y, a.radius * 2, a.radius * 2, 0, progress * .5);
       }
       const height = Math.max(32, a.start.y - RECT.top);
       if (!warning && !a.decoy || warning && progress > .65) {

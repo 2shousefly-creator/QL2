@@ -1,3 +1,4 @@
+import { resolveTooltipValues } from "./airCombatTooltipValues";
 import { EQUIPMENT_POWER as P } from "./airCombatEquipmentBalance";
 import { releaseState } from "./airCombatReleaseState";
 import { WAITING_CHEST_DESCRIPTION } from "./airCombatEquipmentRewards";
@@ -9,12 +10,12 @@ import type { AircraftCombatState } from "./airCombatTypes";
 import type { CombatWorld } from "./airCombatRuntime";
 import type { StatusPresentation } from "./airCombatPresentation";
 const number=(n:number)=>n.toLocaleString("vi-VN",{maximumFractionDigits:2});
-const labels:Record<string,string>={bonusDamage:"Sát thương cộng thêm",damage:"Sát thương gây ra",healed:"HP hồi thực tế",resource:"Tài Nguyên hồi thực tế",extraHealing:"HP hồi thêm từ hiệu ứng",extraResource:"Tài Nguyên hồi thêm từ hiệu ứng",procs:"Lần kích hoạt",peak:"Cộng dồn cao nhất",uptime:"Thời gian hiệu lực (giây)",maxStackTime:"Thời gian tối đa cộng dồn (giây)",shields:"Lá chắn tạo",shieldCreated:"Lá chắn đã tạo",shieldAbsorbed:"Lá chắn đã hấp thụ",marks:"Hỏa Ấn đã đặt",explosions:"Hỏa Ấn phát nổ",aoeTargets:"Mục tiêu AoE",targets:"Mục tiêu chịu hiệu ứng",skillCrits:"Kỹ năng chí mạng",echoes:"Tàn Ảnh tạo",merged:"Lần hợp nhất",hits:"Mục tiêu trúng",chains:"Chuỗi sét",charged:"Lần đầy Điện Năng",stacks:"Cộng dồn đã áp",prevented:"Sát thương ngăn chặn",stored:"HP mất đã lưu vào Bộ Đệm",orbs:"Châu tạo",lifeOrbs:"Sinh Châu nhặt",shieldOrbs:"Hộ Châu nhặt",meteors:"Thiên thạch gọi",slows:"Lần làm chậm",cooldown:"Giây hồi chiêu đã giảm",offenseTime:"Thời gian chế độ tấn công (giây)",hpTime:"Thời gian hỗ trợ hồi HP (giây)",resourceTime:"Thời gian hỗ trợ hồi Tài Nguyên (giây)",siphonTime:"Thời gian hút máu (giây)",lowHpHealing:"HP hồi khi dưới 30%",saved:"Tài Nguyên tiết kiệm",basicCooldown:"Giây hồi chiêu giảm bởi đạn thường",criticalCooldown:"Giây hồi chiêu giảm bởi chí mạng"};
+const labels:Record<string,string>={bonusDamage:"Sát thương cộng thêm",damage:"Sát thương gây ra",healed:"Máu hồi thực tế",resource:"Tài Nguyên hồi thực tế",extraHealing:"Máu hồi thêm từ hiệu ứng",extraResource:"Tài Nguyên hồi thêm từ hiệu ứng",procs:"Lần kích hoạt",peak:"Cộng dồn cao nhất",uptime:"Thời gian hiệu lực (giây)",maxStackTime:"Thời gian tối đa cộng dồn (giây)",shields:"Lá chắn tạo",shieldCreated:"Lá chắn đã tạo",shieldAbsorbed:"Lá chắn đã hấp thụ",marks:"Hỏa Ấn đã đặt",explosions:"Hỏa Ấn phát nổ",aoeTargets:"Mục tiêu diện rộng",targets:"Mục tiêu chịu hiệu ứng",skillCrits:"Kỹ năng chí mạng",echoes:"Tàn Ảnh tạo",merged:"Lần hợp nhất",hits:"Mục tiêu trúng",chains:"Chuỗi sét",charged:"Lần đầy Điện Năng",stacks:"Cộng dồn đã áp",prevented:"Sát thương ngăn chặn",stored:"Máu mất đã lưu vào Bộ Đệm",orbs:"Châu tạo",lifeOrbs:"Sinh Châu nhặt",shieldOrbs:"Hộ Châu nhặt",meteors:"Thiên thạch gọi",slows:"Lần làm chậm",cooldown:"Giây hồi chiêu đã giảm",offenseTime:"Thời gian chế độ tấn công (giây)",hpTime:"Thời gian hỗ trợ hồi Máu (giây)",resourceTime:"Thời gian hỗ trợ hồi Tài Nguyên (giây)",siphonTime:"Thời gian hút máu (giây)",lowHpHealing:"Máu hồi khi dưới 30%",saved:"Tài Nguyên tiết kiệm",basicCooldown:"Giây hồi chiêu giảm bởi đạn thường",criticalCooldown:"Giây hồi chiêu giảm bởi chí mạng"};
 export function equipmentTelemetry(s:AircraftCombatState,id:EquipmentDefinitionId):string[] {
   const d=EQUIPMENT_CATALOG[id];if(!d.family)return [];
   const f=Number(d.family.slice(2)),result=Object.entries(equipmentState(s).telemetry[d.family]??{}).map(([key,value])=>`${labels[key]??key}: ${number(value)}`);
-  if(f===8)result.unshift(`Synergy hiện tại: +${number(getTempestJewelledCritDamageBonus(s)*100)}% Sát Thương Chí Mạng`);
-  if(f===9)result.unshift(`+${number(P[9].bonusFireRatePct*equipmentScale(s,9)*100)}% Tốc Độ Bắn Cộng Thêm từ hiệu ứng`);
+  if(f===8)result.unshift(`Tương tác hiện tại: +${number(getTempestJewelledCritDamageBonus(s)*100)}% Sát Thương Chí Mạng`);
+  if(f===9)result.unshift(`+${number(P[9].totalFireRate*equipmentScale(s,9)*100)}% Tổng Tốc Độ Bắn từ hiệu ứng`);
   if(f===22)result.unshift(`+${number(getEffectiveAircraftStats(s).maxHp*(1-1/(1+P[22].hp*equipmentScale(s,22))))} Máu Tối Đa từ hiệu ứng`);
   if(f===31)result.unshift(`+${number(P[31].resource*equipmentScale(s,31))} Tài Nguyên Tối Đa từ hiệu ứng`);
   if(f===36)result.unshift(`+${P[36].crit*100*equipmentScale(s,36)}% Sát Thương Chí Mạng từ hiệu ứng`);
@@ -34,8 +35,16 @@ export function equipmentStatuses(w:CombatWorld):StatusPresentation[] {
     const cap=f===2?20:f===10?6:f===13?100:f===21?4:f===26?6:0;
     let badge=cap?`${number(f===13?e.value:e.stacks)}/${cap}`:f===6?`${e.count%8}/8`:f===12?`${e.count%5}/5`:f===18?number(e.value):f===23?`${number(e.value/stats.maxHp*100)}%`:f===24?`${number(e.value/stats.maxResource*100)}%`:undefined;
     const remaining=active?e.until-t:cooldown?e.ready-t:Infinity;
-    const modeLabel=mode==="offense"?"Tấn công":mode==="hp"?"Hồi HP":mode==="resource"?"Hồi Tài Nguyên":mode==="siphon"?"Hút máu":undefined;
-    result.push({id:`equipment:${d.id}`,group:"buff",name:d.name,icon:{kind:"equipment",id:d.id},description:d.effect,source:`${d.rarity==="legendary"?"Trang Bị Huyền Thoại":"Trang Bị"} · ${d.name}`,stacks:e.stacks,badgeText:badge,badgeKind:charged?"charge":"stack",remaining,duration:active?e.duration:cooldown?Math.max(remaining,1):Infinity,priority:active?58:40,timerKind:active?"active":"cooldown",timeLabel:modeLabel??(remaining===Infinity?"Sẵn sàng":undefined),showNumericTimer:!badge&&Number.isFinite(remaining)});
+    const modeLabel=mode==="offense"?"Tấn công":mode==="hp"?"Hồi Máu":mode==="resource"?"Hồi Tài Nguyên":mode==="siphon"?"Hút máu":undefined;
+    result.push({id:`equipment:${d.id}`,group:"buff",name:d.name,icon:{kind:"equipment",id:d.id},description:equipmentEffectDescription(s,d.id),source:`${d.rarity==="legendary"?"Trang Bị Huyền Thoại":"Trang Bị"} · ${d.name}`,stacks:e.stacks,badgeText:badge,badgeKind:charged?"charge":"stack",remaining,duration:active?e.duration:cooldown?Math.max(remaining,1):Infinity,priority:active?58:40,timerKind:active?"active":"cooldown",timeLabel:modeLabel??(remaining===Infinity?"Sẵn sàng":undefined),showNumericTimer:!badge&&Number.isFinite(remaining)});
   }
   return result;
+}
+
+export function equipmentEffectDescription(s: AircraftCombatState, id: EquipmentDefinitionId): string {
+  const d=EQUIPMENT_CATALOG[id], family=d.family?Number(d.family.slice(2)):undefined;
+  // Counterfactual stats must not overwrite authoritative Core54/resource/HP caches.
+  const snapshot={...s,coreState:{...s.coreState,stacks:{...s.coreState.stacks}}};
+  return resolveTooltipValues(d.effect,{stats:getEffectiveAircraftStats(snapshot),currentHp:s.currentHp,
+    fireRateBase:getEffectiveAircraftStats(snapshot,true,family),fireRateLocked:s.selectedCores.includes("core_054")});
 }

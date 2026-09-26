@@ -82,15 +82,15 @@ register(49, { finalStats: (s, stats) => { if (s.coreState.time - s.coreState.la
     } } });
 flat(53, "criticalChance", .25);
 // Applied after the central Fire Rate resolver, including its global cap.
-register(54, { finalStats: (s, stats) => { s.coreState.stacks.fireRateConversion = Math.max(1,stats.fireRate/1.8); stats.fireRate = Math.min(stats.fireRate,1.8); } });
-register(55,{stats:(_s,t)=>{t.criticalChance+=.15;t.criticalDamageMultiplier+=.35;}});
+register(54, { finalStats: (s, stats) => { s.coreState.stacks.fireRateConversion = 1+Math.max(0,stats.fireRate/1.8-1)*.7; stats.fireRate = Math.min(stats.fireRate,1.8); } });
+register(55,{stats:(_s,t)=>{t.criticalChance+=.10;t.criticalDamageMultiplier+=.10;}});
 register(56, { stats: (_s, stats) => { stats.criticalChance += .03; stats.criticalDamageMultiplier += .22; } });
 flat(98, "armor", 20);
 register(58, { hooks: { skillCast: ctx => {arm(ctx.state,"overloadedBarrel",3);recordCoreMetric(ctx.state,58,"procs",1);} } });
 register(59, { hooks: { basic: ctx => { if (ctx.state.basicShotsFired % 8 === 0){
-            ctx.rawMultiplier *= 2.3;recordCoreMetric(ctx.state,59,"shots",1);} } } });
+            ctx.rawMultiplier *= 1.9;recordCoreMetric(ctx.state,59,"shots",1);} } } });
 register(60, { hooks: { basic: ctx => { if (ctx.state.coreState.time - ctx.state.coreState.lastDamage >= 3){
-            ctx.rawMultiplier *= 1.20;recordCoreMetric(ctx.state,60,"shots",1);} } } });
+            ctx.rawMultiplier *= 1.14;recordCoreMetric(ctx.state,60,"shots",1);} } } });
 register(61, { stats: (s, stats) => { if (active(s, "reactiveArmor"))
         stats.armor += 45; }, hooks: { damageTaken: ctx => {
             if (ready(ctx.state, "reactiveArmorCd")) {
@@ -142,7 +142,7 @@ register(78, { finalStats: (s, stats) => { if (active(s, "reactor"))
             }
         } } });
 register(79, { hooks: { basic: ctx => { if (ctx.state.basicShotsFired % 3 === 0)
-            ctx.extraShot = .7; } } });
+            ctx.extraShot = .5; } } });
 register(81, { hooks: { skillCast: ctx => { if (ready(ctx.state, "skillShieldCd")) {
             shield(ctx, "skill", .12, 4);
             arm(ctx.state, "skillShieldCd", 14);
@@ -155,7 +155,7 @@ register(83, { hooks: { damageTaken: ctx => { if (ready(ctx.state, "counterCd"))
             recordCoreMetric(ctx.state,83,"procs",1);
         } }, basic: ctx => {
             if (active(ctx.state,"counterActive")) {
-                ctx.rawMultiplier *= 1.45;
+                ctx.rawMultiplier *= 1.30;
                 recordCoreMetric(ctx.state,83,"shots",1);
             }
         } } });
@@ -164,11 +164,11 @@ register(86, { finalStats: (_s, stats) => {
         stats.maxResource *= .5;
         stats.resourceRegen *= 1.8;
     } });
-register(87, { stats: (_s, stats) => { stats.criticalChance += .40; stats.criticalDamageMultiplier += 1; } });
+register(87, { stats: (_s, stats) => { stats.criticalChance += .25; stats.criticalDamageMultiplier += .4; } });
 register(92, { hooks: { tick: ctx => { if (ctx.state.status.regenDisabledUntil <= ctx.state.coreState.time && ctx.state.coreState.time - ctx.state.coreState.lastDamage >= 4)
             ctx.heal(ctx.stats.maxHp * .015 * (ctx.dt || 0)); } } });
 register(94, { stats: (_s, stats) => { stats.criticalChance += .25; }, finalStats: (_s, stats) => { stats.maxHp *= .6; stats.firepower *= 1.5; } });
-register(95, { finalStats: (_s, stats) => { stats.criticalChance = .25; stats.criticalDamageMultiplier += 3; } });
+register(95, { finalStats: (_s, stats) => { stats.criticalChance = .25; stats.criticalDamageMultiplier += 1; } });
 register(96, { stats: (_s, stats) => { stats.skillHaste += 67; }, hooks: { skillCast: ctx => { const before=ctx.state.currentHp;ctx.state.currentHp = Math.max(Number.EPSILON, before * .95);recordCoreMetric(ctx.state,96,"hpPaid",before-ctx.state.currentHp); } } });
 
 register(99, { hooks: { tick: ctx => { if (ctx.state.currentResource < ctx.stats.maxResource * .15 && ready(ctx.state, "reserveShieldCd")) {
@@ -181,7 +181,7 @@ register(100, { stats: (s, stats) => { if (s.currentHp > stats.maxHp * .7)
     else if (s.currentHp < stats.maxHp * .3)
         stats.armor += 45; else { stats.firepower += 22; stats.armor += 22; } } });
 register(105, { stats: (_s, stats) => { stats.criticalChance += .25; }, hooks: { critical: ctx => { if (ctx.target && ctx.source !== "lightning")
-            ctx.lightning(ctx.target, ctx.stats.firepower * 2.7); } } });
+            ctx.lightning(ctx.target, ctx.stats.firepower * 1.5); } } });
 register(106, { hooks: { tick: ctx => { if (ready(ctx.state, "tomahawk")) {
             ctx.tomahawk();
             arm(ctx.state, "tomahawk", 2);
@@ -234,15 +234,15 @@ export function outgoingCoreMultiplier(state: AircraftCombatState, target: CoreT
     if (hasCore(state, 69) && target.hp > target.maxHp * .7)
         m *= 1.30;
     if (hasCore(state, 91))
-        m *= 1 + Math.min(.8, Math.max(0,1-state.currentHp/getMaxHpForDamage(state))*.8);
+        m *= 1 + Math.min(.6, Math.max(0,1-state.currentHp/getMaxHpForDamage(state))*.6);
     if (hasCore(state,88)&&(target.elite||target.boss)&&target.armor>=80)m*=1.1;
     if (active(state,"collisionCounter"))m*=1.12;
     if (source === "basic") {
         if (hasCore(state, 101) && distance < screenHeight / 3)
-            m *= 1.20;
-        if (hasCore(state, 111)) m *= 1.15;
+            m *= 1.14;
+        if (hasCore(state, 111)) m *= 1.10;
         if (hasCore(state,54)) m *= c.stacks.fireRateConversion ?? 1;
-        if (active(state,"overloadedBarrel")) m *= 1.5;
+        if (active(state,"overloadedBarrel")) m *= 1.35;
     }
     return m;
 }
@@ -267,7 +267,7 @@ export function coreStackLabel(state: AircraftCombatState, id: CoreId): string |
     switch (id) {
         case "core_049": return c.time - c.lastMove >= 2.5 ? "Đang tăng Hỏa lực và Giáp" : `Kích hoạt sau ${Math.max(0, 2.5 - c.time + c.lastMove).toFixed(1).replace(".", ",")}s đứng yên`;
         case "core_059": return `Tiến độ đòn cường hóa: ${state.basicShotsFired % 8} / 8`;
-        case "core_060": return c.time-c.lastDamage>=3?"+20% Basic Damage":`Còn ${Math.max(0,3-c.time+c.lastDamage).toFixed(1)}s`;
+        case "core_060": return c.time-c.lastDamage>=3?"+14% Sát Thương Đòn Đánh Thường":`Còn ${Math.max(0,3-c.time+c.lastDamage).toFixed(1)}s`;
         case "core_082": return c.time - c.lastDamage >= 4 ? "Hiệu ứng không nhận sát thương đang hoạt động" : `Kích hoạt sau ${Math.max(0, 4 - c.time + c.lastDamage).toFixed(1).replace(".", ",")}s không nhận sát thương`;
         case "core_061": return `Giáp phản ứng: còn ${remaining("reactiveArmor")}s · Hồi lại sau ${remaining("reactiveArmorCd")}s`;
         case "core_064": return `Tiến độ hồi HP: ${c.stacks.soulKills??0} / 10 điểm`;
@@ -290,12 +290,12 @@ export function coreStackLabel(state: AircraftCombatState, id: CoreId): string |
         case "core_114": { const stacks=active(state,"sameTarget")?Math.min(4,Math.floor((c.stacks.sameTargetHits??0)/5)):0; return `Nhịp Bắn ${stacks}/4 · +${stacks*25}% Tốc Độ Bắn Cộng Thêm · ${remaining("sameTarget")}s`; }
         case "core_116": return `Cùng mục tiêu: ${active(state,"sameTarget")?Math.min(4,Math.floor((c.stacks.sameTargetHits??0)/5)):0}/4 tầng · ${active(state,"sameTarget")?(c.stacks.sameTargetHits??0)%5:0}/5 hit · ${remaining("sameTarget")}s`;
         case "core_168": return `Quái thường: ${c.stacks.shiftKills??0}/10 · Basic Elite/Boss: ${c.stacks.microHits??0}/40 · Giảm phí: ${remaining("shiftDiscount")}s`;
-        case "core_196": return `Tiến độ chí mạng: ${c.stacks.crimsonProgress??0}/5 · +${Math.min(75,(c.stacks.crimsonCrit??0)*5)}% Sát Thương Chí Mạng`;
+        case "core_196": return `Tiến độ chí mạng: ${c.stacks.crimsonProgress??0}/5 · +${Math.min(25,(c.stacks.crimsonCrit??0)*2.5)}% Sát Thương Chí Mạng`;
         case "core_204": return `Damage Armor/Shield đã ngăn: ${Math.round(c.stacks.armorMeter??0)}/${Math.round((c.stacks.effectiveMaxHp??1)*.25)}`;
         case "core_217": return state.coreState.release?.pendingGuaranteedDiamondSelection?"Lượt milestone kế tiếp: 100% Kim Cương":"Tỷ lệ: 20% Bạc / 40% Vàng / 40% Kim Cương";
         case "core_218": return `Dư Chấn Tối Hậu: ${remaining("ultimateAftershock")}s`;
         case "core_120": return (c.timers.controlOverride??0)>c.time ? `Hồi chiêu: ${remaining("controlOverride")}s` : "Hack tối đa 5 địch thường 12s / 1 Tinh Anh 9s / choáng Boss 2s; hồi 13s sau khi hiệu ứng kết thúc. Theo dõi trạng thái trên biểu tượng Lõi.";
-        case "core_121": return `Phản Vật Chất: ${Math.round((c.stacks.antimatter??0)*100)}% Hỏa Lực / 500% Hỏa Lực`;
+        case "core_121": return `Phản Vật Chất: ${Math.round((c.stacks.antimatter??0)*100)}% Hỏa Lực / 350% Hỏa Lực`;
         case "core_106": return `Loạt Tomahawk tiếp theo sau ${remaining("tomahawk")}s`;
         default: return null;
     }

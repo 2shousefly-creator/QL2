@@ -120,7 +120,7 @@ export function applyCore(state: AircraftCombatState, card: CoreCard, random: ()
           for(const id of removed)state.coreState.encounteredCoreIds.add(id);
           // Only earned permanent stats survive. Bounty rewards already live in modifiers.
           for(const [id,key] of [["core_046","firepowerFlat"],["core_047","armorFlat"],["core_048","maxHpFlat"]] as const)if(removed.includes(id))state.modifiers[key]+=state.coreState.stacks[id]??0;
-          if(removed.includes("core_196"))state.modifiers.criticalDamageMultiplierFlat+=Math.min(.75,(state.coreState.stacks.crimsonCrit??0)*.05);
+          if(removed.includes("core_196"))state.modifiers.criticalDamageMultiplierFlat+=Math.min(.25,(state.coreState.stacks.crimsonCrit??0)*.025);
           onRemove?.(removed);state.selectedCores=state.selectedCores.filter(id=>!removed.includes(id));removeReleaseCoreState(state,removed);syncEffectiveMaxHp(state);
           state.coreState.consumed.add("core_216");
           recordCoreMetric(state,216,"converted",removed.length);
