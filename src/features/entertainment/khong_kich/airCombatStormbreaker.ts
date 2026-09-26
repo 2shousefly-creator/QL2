@@ -14,6 +14,12 @@ const ELITES: EnemyType[] = ["storm_herald", "volt_executioner", "capacitor_prim
 export const isStormObjective = (type: EnemyType) => type === "storm_node" || type === "omega_storm_node" || type === "storm_conductor";
 const point = (x: number, y: number, pad = 24): StormPoint => ({ x: Math.max(RECT.left + pad, Math.min(RECT.right - pad, x)), y: Math.max(RECT.top + pad, Math.min(RECT.bottom - pad, y)) });
 const damage = (e: EnemyEntity) => stageEnemyConfig(e.type, 3).projectileDamage * e.damageScale;
+const escalated = (w: CombatWorld) => !!w.stormbreaker?.boss || !!w.stage.waves[w.waveIndex]?.elite;
+const warningScale = (w: CombatWorld) => escalated(w) ? .35 : 1;
+const durationScale = (w: CombatWorld) => escalated(w) ? 2 : 1;
+const eventLimit = (w: CombatWorld) => escalated(w) ? 384 : 96;
+const hazardLimit = (w: CombatWorld) => escalated(w) ? 128 : 32;
+const bossCadence = (w: CombatWorld) => 1 / (1 + .10 * w.stormbreaker!.conductors.filter(id => !!live(w,id)).length);
 const collision = (e: EnemyEntity) => stageEnemyConfig(e.type, 3).collisionDamage * e.damageScale;
 const live = (w: CombatWorld, id: number) => w.enemies.find(e => e.id === id && e.hp > 0);
 const locked = (w: CombatWorld, e: EnemyEntity) => e.stun > 0 || (e.skillLockedUntil ?? 0) > w.elapsed;
@@ -24,12 +30,12 @@ export function createStormbreakerState(w?: Pick<CombatWorld, "playerX" | "playe
     movement: { x: w?.playerX ?? 180, y: w?.playerY ?? 500, vx: 0, vy: 0 } };
 }
 export function initializeStormEnemy(w: CombatWorld, e: EnemyEntity) {
-  e.stormbreaker = { lastHp: e.hp, lastShield: e.shield, charge: 0, chargeRemainder: 0, attack: 0, nextMajor: w.elapsed + 1.5 + (w.spawnedInWave % 6) * .21,
+  e.stormbreaker = { lastHp: e.hp, lastShield: e.shield, objectiveThresholds: 0, objectiveDamageBank: 0, sourceDamage: 0, charge: 0, chargeRemainder: 0, attack: 0, nextMajor: w.elapsed + (1.5 + (w.spawnedInWave % 6) * .21)*(escalated(w)?.5:1),
     hitAt: 0, links: [], relayUntil: 0, channelUntil: 0, boosted: false, enhanced: false, shieldArmed: false,
     shieldReady: w.elapsed + 2, breakUntil: 0, burst: [], ventReady: 0, slot: w.spawnedInWave, bodyUntil: 0, dischargeCycle: -1 };
   if (isStormObjective(e.type)) { e.auxiliary = true; e.rewardless = true; e.killProcEligible = false; e.noWaveWait = true; e.xp = 0; }
   e.fireCooldown = 1.2 + (e.stormbreaker.slot % 6) * .21;
-  if (e.type === "boss") w.stormbreaker!.boss = { phase: 1, ordinal: 0, next: w.elapsed + 2, partial: w.elapsed + 6.5, partialOrdinal: 0, arraySpawned: false };
+  if (e.type === "boss") w.stormbreaker!.boss = { phase: 1, ordinal: 0, next: w.elapsed + 1, partial: w.elapsed + 3.25, partialOrdinal: 0, arraySpawned: false };
 }
 export function stormFx(w: CombatWorld, key: StormbreakerVfxKey, x: number, y: number, size: number, duration = .4, rotation = 0, delay = 0) {
   const s = w.stormbreaker; if (!s || s.visuals.length >= 110) return;
@@ -38,12 +44,12 @@ export function stormFx(w: CombatWorld, key: StormbreakerVfxKey, x: number, y: n
 export function resetStormbreaker(w: CombatWorld) {
   if (!w.stormbreaker) return;
   w.stormbreaker = createStormbreakerState(w);
-  w.stormbreaker.elite.next = w.elapsed + 2;
+  w.stormbreaker.elite.next = w.elapsed + (escalated(w)?1:2);
   for (const e of w.enemies) if (isStormObjective(e.type)) { e.hp = 0; e.deathHandled = true; }
 }
 function pressureCap(w: CombatWorld) {
   const boss = w.stormbreaker!.boss;
-  return boss ? boss.phase === 1 ? 2 : 3 : [3, 4, 4, 5, 5, 6, 3][w.waveIndex] ?? 3;
+  return boss ? boss.phase === 1 ? 8 : 12 : escalated(w) ? 16 : [3, 4, 4, 5, 5, 6, 3][w.waveIndex] ?? 3;
 }
 // Hard geometry is authored rather than sampled. Corridor owns ALL hard geometry;
 // rails/chains cannot coincide with dash lanes. Two scissor lanes get offset warnings.
@@ -60,17 +66,17 @@ function reserve(w: CombatWorld, e: EnemyEntity, tag: StormTag, duration: number
   if (!prepared && s.clock >= 17 && s.boss?.phase !== 4) return null;
   const hard = ["dash", "chain", "corridor", "rail"].includes(tag);
   const preparedPressure = Math.min(1.5, (s.nodes.length + s.clouds.length) * .2);
-  if (d.casts.length + preparedPressure >= pressureCap(w) || s.hazards.length >= 32 || s.events.length >= 96) return null;
-  if (primary && d.casts.some(c => c.owner === e.id && c.primary)) return null;
+  if (d.casts.length + preparedPressure >= pressureCap(w) || s.hazards.length >= hazardLimit(w) || s.events.length >= eventLimit(w)) return null;
+  if (primary && d.casts.some(c => c.owner === e.id && c.primary && (!escalated(w) || tag === "dash" && c.tag === "dash" || tag === "channel" && c.tag === "channel"))) return null;
   if (d.casts.some(c => CONFLICTS[tag]?.includes(c.tag) || CONFLICTS[c.tag]?.includes(tag))) return null;
   if (hard && d.casts.filter(c => c.hard).length >= 2) return null;
   if (!prepared && now < d.nextCast) return null;
   const cast = { id: w.nextId++, owner: e.id, tag, until: now + duration, hard, primary };
-  d.casts.push(cast); d.nextCast = now + .20; d.ordinal++;
+  d.casts.push(cast); d.nextCast = now + (escalated(w) ? .10 : .20); d.ordinal++;
   return cast;
 }
 function later(w: CombatWorld, e: EnemyEntity, delay: number, action: () => void, committed = true) {
-  if (w.stormbreaker!.events.length < 96) w.stormbreaker!.events.push({ at: w.elapsed + delay, owner: e.id, committed, action });
+  if (w.stormbreaker!.events.length < eventLimit(w)) w.stormbreaker!.events.push({ at: w.elapsed + delay, owner: e.id, committed, action });
 }
 function bullet(w: CombatWorld, e: EnemyEntity, h: StormbreakerHooks, angle: number, factor: number,
   visual: StormbreakerVfxKey = "stormStaticBolt", speed = 155, radius = 3, allegiance = h.allegiance(w, e), origin: StormPoint = e, major = false) {
@@ -83,10 +89,12 @@ function bullet(w: CombatWorld, e: EnemyEntity, h: StormbreakerHooks, angle: num
 }
 function fan(w: CombatWorld, e: EnemyEntity, h: StormbreakerHooks, n: number, factor: number, aim: number,
   key: StormbreakerVfxKey, allegiance = h.allegiance(w, e), origin: StormPoint = e, spread = .18) {
+  if(escalated(w)){spread *= (n-1)/Math.max(1,2*n-1);n*=2;}
   for (let i = 0; i < n; i++) bullet(w, e, h, aim + (i - (n - 1) / 2) * spread, factor, key, 155, 3, allegiance, origin, true);
 }
 function ring(w: CombatWorld, e: EnemyEntity, h: StormbreakerHooks, count: number, factor: number, turn = 0, allegiance = h.allegiance(w, e), gapCentre = Math.PI / 2 + Math.sin(e.stormbreaker!.attack * 1.1) * .7) {
   // 42 degree omitted sector rotates by cast. No extra bolt closes its boundaries.
+  if(escalated(w))count*=2;
   const gap = .733, centre = gapCentre + turn;
   for (let i = 0; i < count; i++) bullet(w, e, h, centre + gap / 2 + i * (TAU - gap) / Math.max(1, count - 1), factor, "stormCapacitorBolt", 120, 3, allegiance, e, true);
 }
@@ -112,10 +120,11 @@ function hazard(w: CombatWorld, e: EnemyEntity, h: StormbreakerHooks, cast: Stor
   warning: number, delay = 0, end?: StormPoint, radius = 16, duration = .12, environmental?: number,
   hits = new Map<number, number>(), decoy = false, allegiance = h.allegiance(w, e)): StormHazard | null {
   const s = w.stormbreaker!;
-  if (s.hazards.length + w.warnings.length >= 40) return null;
+  if (s.hazards.length + w.warnings.length >= (escalated(w) ? 160 : 40)) return null;
+  warning *= warningScale(w);
   const requested = w.elapsed + warning + delay;
   // Every area strike has a deterministic resolution slot, including environmental contributions.
-  const hitAt = Math.max(requested, s.director.nextResolve); s.director.nextResolve = hitAt + .18;
+  const hitAt = Math.max(requested, s.director.nextResolve); s.director.nextResolve = hitAt + (escalated(w)?.09:.18);
   const a: StormHazard = { id: w.nextId++, cast: cast.id, start: { ...at }, end: end && { ...end }, radius,
     warningAt: hitAt - warning, hitAt, until: hitAt + duration, damage: damage(e) * factor,
     sourceEnemyId: e.id, sourceEnemyType: e.type, allegiance, delivery: end ? "beam" : "area_hazard",
@@ -142,20 +151,21 @@ function spawnObjective(w: CombatWorld, e: EnemyEntity, h: StormbreakerHooks, ty
   const at = type === "storm_conductor" ? point(RECT.left + RECT.width * [.18, .5, .82][slot % 3], RECT.top + [155, 210, 155][slot % 3], 36)
     : point(RECT.left + RECT.width * [.24, .76, .5][(slot + s.cycle) % 3], RECT.top + 170 + (slot % 2) * 90, 32);
   obj.x = at.x; obj.y = at.y; obj.baseX = at.x; obj.damageScale = type === "storm_conductor" ? 1 : e.damageScale;
+  obj.stormbreaker!.sourceDamage = damage(e);
   obj.stormbreaker!.slot = slot; obj.fireCooldown = 1.5 + slot * .6;
   if (type === "storm_conductor") s.conductors.push(obj.id); else s.nodes.push(obj.id);
   stormFx(w, type === "storm_conductor" ? "stormConductorSpawn" : "stormNodeSpawn", obj.x, obj.y, 72, .8);
 }
 function genesis(w: CombatWorld, e: EnemyEntity, h: StormbreakerHooks, omega = false): boolean {
   const c = reserve(w, e, "nodes", 1.25); if (!c) return false;
-  stormFx(w, "stormNodeSpawn", e.x, e.y, 80, .9);
+  stormFx(w, "stormNodeSpawn", e.x, e.y, 80, .9*warningScale(w));
   const n = omega ? w.stormbreaker!.boss?.phase === 4 ? 2 : 1 : 2;
-  later(w, e, .9, () => { for (let i = 0; i < n; i++) spawnObjective(w, e, h, omega ? "omega_storm_node" : "storm_node", i); }, false);
+  later(w, e, .9*warningScale(w), () => { for (let i = 0; i < n; i++) spawnObjective(w, e, h, omega ? "omega_storm_node" : "storm_node", i); }, false);
   return true;
 }
 function overload(w: CombatWorld, e: EnemyEntity, h: StormbreakerHooks): boolean {
   if(e.stormbreaker!.overloadPending)return false;
-  const prime = e.type === "capacitor_prime", warning = prime ? 1.35 : 1.2;
+  const prime = e.type === "capacitor_prime", warning = (prime ? 1.35 : 1.2)*warningScale(w);
   const c = reserve(w, e, "ring", warning + .7); if (!c) return false;
   const allegiance = h.allegiance(w, e), s = e.stormbreaker!, gapCentre=Math.PI/2+Math.sin(s.attack*1.1)*.7;
   const extra = s.enhanced ? 2 : 0; s.enhanced = false;
@@ -203,7 +213,7 @@ function updateDash(w: CombatWorld, e: EnemyEntity, dt: number, h: StormbreakerH
   if (d.follow === "scission" || d.follow === "cross") {
     const factor = d.follow === "cross" ? .9 : .65;
     const hits = new Map<number,number>();
-    for (const side of [-1, 1]) {
+    for (const side of (escalated(w)?[-1.06,-.94,.94,1.06]:[-1,1])) {
       const p=bullet(w, e, h, aim + side * .6, factor, "stormLancerBlade", 185, 4, d.allegiance, e, true);
       if(p && d.follow === "cross")p.stormbreakerGrace=hits;
     }
@@ -214,8 +224,8 @@ function updateDash(w: CombatWorld, e: EnemyEntity, dt: number, h: StormbreakerH
   }
   if (d.wake) {
     const c = w.stormbreaker!.director.casts.find(c => c.id === d.cast);
-    if (c) { const a = hazard(w, e, h, c, d.from, .45, .95, 0, d.end, 5, .55, undefined, undefined, false, d.allegiance);
-      if (a) { a.visual = "stormElectricWake"; a.warningAt=d.start-.95; a.hitAt=w.elapsed; a.until=w.elapsed+.55; a.grace=Infinity; } }
+    if (c) { const a = hazard(w, e, h, c, d.from, .45, .95, 0, d.end, 5, .55*durationScale(w), undefined, undefined, false, d.allegiance);
+      if (a) { a.visual = "stormElectricWake"; a.warningAt=d.start-.95*warningScale(w); a.hitAt=w.elapsed; a.until=w.elapsed+.55*durationScale(w); a.grace=Infinity; } }
   }
   if(s.judgment){
     s.judgment.next=w.elapsed+.25;
@@ -232,7 +242,7 @@ function rails(w: CombatWorld, e: EnemyEntity, h: StormbreakerHooks, double = fa
     const from = { x: e.x + (double ? (i ? 24 : -24) : 0), y: e.y }, end = rayEnd(from, point(t.x + (double ? (i ? -22 : 22) : 0), t.y));
     const a = hazard(w, e, h, c, from, 0, double ? 1 : .9, i * .22, end, 4, .05, undefined, hits, true, allegiance);
     if (!a) continue; a.visual = "stormRailWarning";
-    later(w, e, a.hitAt - w.elapsed, () => {
+    for(let shot=0;shot<(escalated(w)?2:1);shot++)later(w, e, a.hitAt - w.elapsed + shot*.06, () => {
       const p = bullet(w, e, h, Math.atan2(end.y - from.y, end.x - from.x), 1.35, "stormIonRail", 680, 4, allegiance, from, true);
       if (p) p.stormbreakerGrace = hits;
     }, false);
@@ -243,19 +253,20 @@ function chain(w: CombatWorld, e: EnemyEntity, h: StormbreakerHooks, pts: StormP
   const c = reserve(w, e, "chain", warning + pts.length * .4, true, prepared); if (!c) return false;
   const interval = e.stormbreaker!.enhanced ? .32 : .4; e.stormbreaker!.enhanced = false;
   const hits = new Map<number, number>();
-  for (let i = 0; i < pts.length - 1; i++) hazard(w, e, h, c, pts[i], factor, warning, i * interval, pts[i + 1], 6, .35, undefined, hits);
+  for (let i = 0; i < pts.length - 1; i++) hazard(w, e, h, c, pts[i], factor, warning, i * interval, pts[i + 1], 6, .35*durationScale(w), undefined, hits);
   return true;
 }
 function halo(w: CombatWorld, e: EnemyEntity, h: StormbreakerHooks): boolean {
   const c = reserve(w, e, "ring", 2.1); if (!c) return false;
   const allegiance = h.allegiance(w, e), aim = aimAt(w, e, h, allegiance);
-  const count = e.stormbreaker!.enhanced ? 8 : 6; e.stormbreaker!.enhanced = false;
+  const baseCount = e.stormbreaker!.enhanced ? 8 : 6, count = baseCount*(escalated(w)?2:1); e.stormbreaker!.enhanced = false;
   for (let i = 0; i < count; i++) {
-    const a = i * TAU / count, release = 1 + i * .12, releaseAngle=a+release*1.6;
+    const a = i * TAU / count, release = warningScale(w) + i * .12, releaseAngle=a+release*1.6;
+    c.until=Math.max(c.until,w.elapsed+release+.1);
     const origin = { x: e.x + Math.cos(releaseAngle) * 32, y: e.y + Math.sin(releaseAngle) * 32 };
     if(w.stormbreaker!.visuals.length<110)w.stormbreaker!.visuals.push({id:w.nextId++,key:"stormHaloBlade",x:origin.x,y:origin.y,size:26,at:w.elapsed,duration:release,rotation:a,
       orbit:{x:e.x,y:e.y,angle:a,radius:32,releaseAt:w.elapsed+release}});
-    later(w, e, 1 + i * .12, () => bullet(w, e, h, aim + (i - (count - 1) / 2) * .16, .65, "stormHaloBlade", 170, 4, allegiance, origin, true), false);
+    later(w, e, release, () => bullet(w, e, h, aim + (i - (count - 1) / 2) * .16*(baseCount-1)/(count-1), .65, "stormHaloBlade", 170, 4, allegiance, origin, true), false);
   }
   return true;
 }
@@ -263,19 +274,21 @@ function seraphSplit(w: CombatWorld, e: EnemyEntity, h: StormbreakerHooks): bool
   const c = reserve(w, e, "ring", 1.4); if (!c) return false;
   const count = e.stormbreaker!.enhanced ? 8 : 6; e.stormbreaker!.enhanced = false;
   const target=h.target(w,e)??point(e.x,e.y+180);
-  const p = bullet(w, e, h, aimAt(w, e, h), .3, "stormSeraphOrb", Math.hypot(target.x-e.x,target.y-e.y)/1.8, 7);
+  for(const offset of (escalated(w)?[-.035,.035]:[0])){
+  const p = bullet(w, e, h, aimAt(w, e, h)+offset, .3, "stormSeraphOrb", Math.hypot(target.x-e.x,target.y-e.y)/1.8, 7);
   if (p) p.stormbreakerSplit = { at: w.elapsed + .9, count, factor: .55 / .3, radial: true };
+  }
   return true;
 }
 function sermon(w: CombatWorld, e: EnemyEntity): boolean {
-  if (!reserve(w, e, "channel", 2.1)) return false;
-  e.stormbreaker!.channelUntil = w.elapsed + 2; e.stormbreaker!.channelKind = "sermon";
-  stormFx(w, "stormChargeCoil", e.x, e.y, e.radius * 3, 2); return true;
+  if (!reserve(w, e, "channel", 2*durationScale(w)+.1)) return false;
+  e.stormbreaker!.channelUntil = w.elapsed + 2*durationScale(w); e.stormbreaker!.channelKind = "sermon";
+  stormFx(w, "stormChargeCoil", e.x, e.y, e.radius * 3, 2*durationScale(w)); return true;
 }
 function relay(w: CombatWorld, e: EnemyEntity): boolean {
   const s = e.stormbreaker!, target = s.links.map(id => live(w, id)).find(Boolean);
-  if (!target || !reserve(w, e, "channel", 1.2)) return false;
-  const prime = e.type === "storm_weaver_prime", duration = prime ? 1.1 : .6;
+  if (!target || !reserve(w, e, "channel", escalated(w)?(e.type === "storm_weaver_prime" ? 2.2 : 1.2)+.1:1.2)) return false;
+  const prime = e.type === "storm_weaver_prime", duration = (prime ? 1.1 : .6)*durationScale(w);
   s.channelUntil = w.elapsed + duration; s.channelKind = "relay";
   const extra = s.enhanced ? 1 : 0; s.enhanced = false;
   later(w, e, duration, () => {
@@ -288,15 +301,64 @@ function relay(w: CombatWorld, e: EnemyEntity): boolean {
 }
 function cloud(w: CombatWorld, e: EnemyEntity, h: StormbreakerHooks): boolean {
   const s = w.stormbreaker!, cap = w.waveIndex >= 5 ? 6 : w.waveIndex >= 3 ? 4 : 2;
-  if (s.clouds.length >= cap || !reserve(w, e, "nodes", .9)) return false;
+  if (s.clouds.length >= cap || !reserve(w, e, "nodes", escalated(w)?12:.9)) return false;
   const points = predict(w, e, h, e.stormbreaker!.enhanced ? 2 : 1);
   e.stormbreaker!.enhanced = false;
   for (const t of points) if (s.clouds.length < cap)
-    s.clouds.push({ ...t, id: w.nextId++, owner: e.id, until: w.elapsed + 6, damage: damage(e), allegiance: h.allegiance(w, e), ready: false });
+    s.clouds.push({ ...t, id: w.nextId++, owner: e.id, until: w.elapsed + 6*durationScale(w), damage: damage(e), allegiance: h.allegiance(w, e), ready: false });
   return true;
 }
-export function onStormEnemyDamage(w: CombatWorld, e: EnemyEntity, hpDamage: number, shieldBefore: number) {
+/** Objective reactions use the spawner's raw damage snapshot, never the zero-damage node config.
+ * Counts here are authored 26.16 values and do not pass through encounter density scaling. */
+function objectiveBolt(w: CombatWorld, e: EnemyEntity, h: StormbreakerHooks, angle: number, origin: StormPoint = e) {
+  h.projectile(w,{owner:"enemy",allegiance:"hostile",sourceEnemyId:e.id,sourceEnemyType:e.type,
+    delivery:"direct_projectile",x:origin.x,y:origin.y,vx:Math.cos(angle)*155,vy:Math.sin(angle)*155,
+    rawDamage:e.stormbreaker!.sourceDamage,radius:3,lifetime:5.5,stormbreakerVisual:"stormStaticBolt",criticalAttack:true});
+}
+function objectiveRadial(w: CombatWorld, e: EnemyEntity, h: StormbreakerHooks, count: number, ordinal: number, safeSector = true, origin: StormPoint = e) {
+  const gap=safeSector?Math.PI/3:0,centre=(e.stormbreaker!.slot*Math.PI*.5+ordinal*Math.PI*2/3)%TAU;
+  for(let i=0;i<count;i++)objectiveBolt(w,e,h,centre+gap/2+i*(TAU-gap)/(safeSector?count-1:count),origin);
+}
+function objectiveStrike(w: CombatWorld, e: EnemyEntity, h: StormbreakerHooks, ordinal: number) {
+  const s=w.stormbreaker!, now=w.elapsed, source={...e,stormbreaker:{...e.stormbreaker!}};
+  // Reserve after existing hard corridors. New corridors observe this marker lease.
+  const warningAt=Math.max(now,...s.director.casts.filter(c=>c.tag==="corridor").map(c=>c.until));
+  const count=ordinal===2?2:1;
+  const cast:StormCast={id:w.nextId++,owner:e.id,tag:"markers",hard:false,primary:false,until:warningAt+.45+(count-1)*.28+.12};
+  s.director.casts.push(cast);
+  for(let i=0;i<count;i++){
+    const target={x:w.playerX,y:w.playerY},hitAt=warningAt+.45+i*.28;
+    s.hazards.push({id:w.nextId++,cast:cast.id,start:target,radius:18,warningAt:hitAt-.45,hitAt,until:hitAt+.12,
+      damage:e.stormbreaker!.sourceDamage,sourceEnemyId:e.id,sourceEnemyType:e.type,allegiance:"hostile",
+      delivery:"area_hazard",majorBossAttack:true,visual:"stormLightningImpact",resolved:false,hits:new Map(),grace:Infinity,
+      // Immutable source/position survive entity recycling after the node dies.
+      afterStrike:()=>objectiveRadial(w,source,h,8,ordinal,false,target)});
+  }
+}
+function objectiveReaction(w: CombatWorld, e: EnemyEntity, h: StormbreakerHooks, hpDamage: number) {
+  const s=e.stormbreaker!;
+  if(e.type==="storm_conductor"){
+    s.objectiveDamageBank+=hpDamage;
+    const threshold=e.maxHp*.10;
+    if(s.objectiveDamageBank>=threshold){
+      s.objectiveDamageBank-=threshold;
+      const aim=Math.atan2(w.playerY-e.y,w.playerX-e.x);
+      for(let i=0;i<6;i++)objectiveBolt(w,e,h,aim+(i-2.5)*.18);
+    }
+    return;
+  }
+  for(let ordinal=0;ordinal<3;ordinal++){
+    const flag=1<<ordinal,threshold=e.maxHp*[.75,.5,.25][ordinal];
+    if(!(s.objectiveThresholds&flag)&&s.lastHp>threshold&&e.hp<=threshold){
+      s.objectiveThresholds|=flag;
+      if(e.type==="storm_node")objectiveRadial(w,e,h,8,ordinal);
+      else objectiveStrike(w,e,h,ordinal);
+    }
+  }
+}
+export function onStormEnemyDamage(w: CombatWorld, e: EnemyEntity, hpDamage: number, shieldBefore: number, h: StormbreakerHooks) {
   const s = e.stormbreaker; if (!s || hpDamage <= 0 && shieldBefore <= 0) return;
+  if(isStormObjective(e.type)&&hpDamage>0)objectiveReaction(w,e,h,hpDamage);
   s.lastHp=e.hp; s.lastShield=e.shield;
   if (e.type === "storm_capacitor" || e.type === "capacitor_prime") {
     const threshold = e.maxHp * (e.type === "capacitor_prime" ? .06 : .08), cap = e.type === "capacitor_prime" ? 8 : 5;
@@ -330,14 +392,16 @@ function updateLinks(w: CombatWorld, h: StormbreakerHooks) {
     if (w.stormbreaker!.phase === "CHARGING" && !s.relay) { s.relay = s.links[0]; s.relayUntil = w.stormbreaker!.cycle; }
   }
 }
-export function stormEnemyDestroyed(w: CombatWorld, e: EnemyEntity) {
+export function stormEnemyDestroyed(w: CombatWorld, e: EnemyEntity, h: StormbreakerHooks) {
   const s = w.stormbreaker; if (!s) return;
-  // Death bursts are consumed by the renderer from the shared bounded visual-event queue.
+  // Death handling is called once by the authoritative enemy-death settlement.
   if (e.type === "storm_node" || e.type === "omega_storm_node") {
+    if(e.type === "omega_storm_node")objectiveRadial(w,e,h,12,0,false);
     const cycle = s.clock >= 17 ? s.cycle + 1 : s.cycle;
-    if (s.fields.length < 4) s.fields.push({ x: e.x, y: e.y, radius: 36, cycle, until: w.elapsed + (cycle - s.cycle) * 20 + 18.5 - s.clock });
+    if (s.fields.length < 4) s.fields.push({ x: e.x, y: e.y, radius: e.type === "omega_storm_node" ? 54 : 36, cycle, until: w.elapsed + (cycle - s.cycle) * 20 + 18.5 - s.clock });
     stormFx(w, "stormNodeBreak", e.x, e.y, 90, .55);
   }
+  if(e.type === "storm_conductor" && s.boss && w.enemies.some(a=>a.type==="boss"&&a.hp>0))s.boss.next+=1.25;
   if (e.type === "storm_weaver_prime") for (const id of e.stormbreaker?.links ?? []) {
     const ally = live(w, id); if (ally?.stormbreaker) ally.stormbreaker.nextMajor = Math.max(ally.stormbreaker.nextMajor, w.elapsed + 2);
   }
@@ -411,7 +475,7 @@ function prepareDischarge(w: CombatWorld, h: StormbreakerHooks) {
     });
     else {
       // Short crossing arc in the upper arena; never a full-screen wall.
-      const a = hazard(w, boss, h, c, point(conductor.x - 75, conductor.y - 35), .65, 1, delay + 1.1, point(conductor.x + 30, conductor.y + 55), 5, .25, s.cycle);
+      const a = hazard(w, boss, h, c, point(conductor.x - 75, conductor.y - 35), .65, 1, delay + 1.1, point(conductor.x + 30, conductor.y + 55), 5, .25*durationScale(w), s.cycle);
       if (a) a.conditionalOwner = id;
     }
   }
@@ -460,18 +524,18 @@ function updateEliteDirector(w: CombatWorld, h: StormbreakerHooks) {
   const combos = wave.elite === 1 ? COUNCIL : EYE, combo = combos[s.elite.ordinal++ % combos.length];
   for (const [type, skill, delay] of combo) {
     const e = w.enemies.find(e => e.type === type && e.hp > 0); if (!e) continue;
-    later(w, e, delay, () => { if (w.elapsed >= e.stormbreaker!.nextMajor) {
-      if (eliteSkill(w, e, h, skill)) e.stormbreaker!.nextMajor = w.elapsed + (type === "storm_weaver_prime" ? 8 : 2);
+    later(w, e, delay*.5, () => { if (w.elapsed >= e.stormbreaker!.nextMajor) {
+      if (eliteSkill(w, e, h, skill)) e.stormbreaker!.nextMajor = w.elapsed + (type === "storm_weaver_prime" ? 4 : 1);
     } }, false);
   }
   const grand = w.enemies.some(e=>e.hp>0&&e.type==="storm_weaver_prime"&&!locked(w,e)&&e.stormbreaker!.links.length>0);
-  s.elite.next = w.elapsed + (wave.elite === 1 ? 6.2 : 7.2) * (grand?.8:1);
+  s.elite.next = w.elapsed + (wave.elite === 1 ? 3.1 : 3.6) * (grand?.8:1);
 }
 
 function barrage(w: CombatWorld, e: EnemyEntity, h: StormbreakerHooks, secondary = false): boolean {
   const c = reserve(w, e, "ring", 2.2, !secondary); if (!c) return false;
   const allegiance = h.allegiance(w, e), aim = aimAt(w, e, h), n = w.stormbreaker!.boss!.phase === 4 ? 4 : 3;
-  for (let i = 0; i < n; i++) later(w, e, .35 + i * .38, () => fan(w, e, h, 7, .42, aim + (i - 1) * .13, "stormStaticBolt", allegiance), false);
+  for (let i = 0; i < n; i++) later(w, e, .35*warningScale(w) + i * .38, () => fan(w, e, h, 7, .42, aim + (i - 1) * .13, "stormStaticBolt", allegiance), false);
   return true;
 }
 function thunderbrand(w: CombatWorld, e: EnemyEntity, h: StormbreakerHooks, secondary = false): boolean {
@@ -488,8 +552,8 @@ function spear(w: CombatWorld, e: EnemyEntity, h: StormbreakerHooks): boolean {
   const c = reserve(w, e, "rail", warning + .4); if (!c) return false;
   const from = { x: e.x, y: e.y }, t = rayEnd(from, h.target(w, e) ?? point(e.x, RECT.bottom)), allegiance = h.allegiance(w, e);
   const a = hazard(w, e, h, c, from, 0, warning, 0, t, 7, .01, undefined, undefined, true); if (!a) return true;
-  a.visual = "stormSpearCharge"; stormFx(w, "stormSpearCharge", e.x, e.y, 85, warning);
-  later(w, e, a.hitAt - w.elapsed, () => bullet(w, e, h, Math.atan2(t.y - from.y, t.x - from.x), 1.75, "stormSpear", 740, 7, allegiance, from, true), false);
+  a.visual = "stormSpearCharge"; stormFx(w, "stormSpearCharge", e.x, e.y, 85, warning*warningScale(w));
+  for(let shot=0;shot<2;shot++)later(w, e, a.hitAt - w.elapsed + shot*.06, () => bullet(w, e, h, Math.atan2(t.y - from.y, t.x - from.x), 1.75, "stormSpear", 740, 7, allegiance, from, true), false);
   return true;
 }
 function crown(w: CombatWorld, e: EnemyEntity, h: StormbreakerHooks, cascade = false): boolean {
@@ -499,10 +563,10 @@ function crown(w: CombatWorld, e: EnemyEntity, h: StormbreakerHooks, cascade = f
   const hits = new Map<number, number>(), allegiance = h.allegiance(w, e);
   if (cascade) {
     const [a, b] = conductors;
-    hazard(w, e, h, c, e, .9, 1, 0, a, 6, .3, undefined, hits);
-    const last = hazard(w, e, h, c, a, .9, 1, .4, b, 6, .3, undefined, hits);
+    hazard(w, e, h, c, e, .9, 1, 0, a, 6, .3*durationScale(w), undefined, hits);
+    const last = hazard(w, e, h, c, a, .9, 1, .4, b, 6, .3*durationScale(w), undefined, hits);
     if (last) later(w, e, last.until - w.elapsed, () => fan(w, e, h, 5, .55, aimAt(w, b, h, allegiance), "stormStaticBolt", allegiance, b), false);
-  } else conductors.forEach((a, i) => hazard(w, e, h, c, e, .9, 1, i * .4, a, 6, .3, undefined, hits));
+  } else conductors.forEach((a, i) => hazard(w, e, h, c, e, .9, 1, i * .4, a, 6, .3*durationScale(w), undefined, hits));
   return true;
 }
 function fractured(w: CombatWorld, e: EnemyEntity, h: StormbreakerHooks): boolean {
@@ -517,7 +581,7 @@ function guillotine(w: CombatWorld, e: EnemyEntity, h: StormbreakerHooks): boole
   const hits = new Map<number, number>();
   for (const [left, right] of [[RECT.left, centre - gap / 2], [centre + gap / 2, RECT.right]]) {
     const a = hazard(w, e, h, c, { x: (left + right) / 2, y: RECT.top }, 1.15, 1.15, 0,
-      { x: (left + right) / 2, y: RECT.bottom }, (right - left) / 2, .7, undefined, hits);
+      { x: (left + right) / 2, y: RECT.bottom }, (right - left) / 2, .7*durationScale(w), undefined, hits);
     if (a) a.visual = "stormCrownCircuit";
   }
   return true;
@@ -538,9 +602,11 @@ function updateBoss(w: CombatWorld, e: EnemyEntity, h: StormbreakerHooks) {
   const phase = ratio > .70 ? 1 : ratio > .35 ? 2 : ratio >= .15 ? 3 : 4;
   if (phase !== b.phase) { b.phase = phase; w.bossPhase = phase; stormFx(w, "stormPhaseTransition", e.x, e.y, 210, 1.3);
     h.message(w, ["", "STATIC DOMINION", "CONDUCTOR ARRAY", "BROKEN CYCLE", "PERMANENT OVERCHARGE"][phase], 2);
-    b.partial = w.elapsed + (phase === 4 ? 5.25 : 6.5); }
+    b.partial = w.elapsed + (phase === 4 ? 2.625 : 3.25)*bossCadence(w); }
   if (phase >= 2 && !b.arraySpawned) {
     b.arraySpawned = true; for (let i = 0; i < 3; i++) spawnObjective(w, e, h, "storm_conductor", i);
+    b.partial = w.elapsed + (phase === 4 ? 2.625 : 3.25)*bossCadence(w);
+    b.next = w.elapsed + Math.max(0,b.next-w.elapsed)*bossCadence(w);
   }
   if (locked(w, e)) return;
   if (e.fireCooldown <= 0) { fan(w, e, h, phase === 1 ? 2 : 3, .24, aimAt(w, e, h), "stormSparkNeedle", undefined, e, .22); e.fireCooldown = phase === 4 ? .8 : 1.15; }
@@ -548,10 +614,10 @@ function updateBoss(w: CombatWorld, e: EnemyEntity, h: StormbreakerHooks) {
     const choice = b.partialOrdinal % 3;
     const success = choice === 0 ? markers(w, e, h, 3, .85, 1, false, undefined, false, false)
       : choice === 1 ? barrage(w, e, h, true) : nodeStrike(w, e, h);
-    if (success) { b.partialOrdinal++; b.partial = w.elapsed + (phase === 4 ? 5.25 : 6.5); }
+    if (success) { b.partialOrdinal++; b.partial = w.elapsed + (phase === 4 ? 2.625 : 3.25)*bossCadence(w); }
     else if (choice === 2 && !s.nodes.length) b.partialOrdinal++;
   }
-  if (b.next > w.elapsed || s.director.casts.some(c => c.owner === e.id && c.primary && c.until > w.elapsed)) return;
+  if (b.next > w.elapsed) return;
   const choices = phase === 1 ? ["brand", "barrage", "node", "dive"]
     : phase === 2 ? ["spear", "crown", "brand", "cascade", "node", "barrage", "dive"]
     : ["fractured", "barrage", "guillotine", "spear", "node", "brand", "cascade"];
@@ -561,20 +627,23 @@ function updateBoss(w: CombatWorld, e: EnemyEntity, h: StormbreakerHooks) {
     : key === "spear" ? spear(w, e, h) : key === "crown" ? crown(w, e, h)
     : key === "cascade" ? crown(w, e, h, true) : key === "fractured" ? fractured(w, e, h) : guillotine(w, e, h);
   if (success) {
-    b.ordinal++; const until = Math.max(w.elapsed, ...s.director.casts.filter(c => c.owner === e.id && c.primary).map(c => c.until));
-    b.next = until + (phase === 4 ? .495 : .55);
+    b.ordinal++;
+    // Start cadence is independent from overlapping persistent-effect reservations.
+    const baseline:Record<string,number>={brand:(phase===4?.95:1.1)+1.8,barrage:2.2,node:1.25,dive:1.95,
+      spear:(phase===4?1.05:1.25)+.4,crown:2.6,cascade:2.6,fractured:1.05+6*.18+.3,guillotine:1.95};
+    b.next = w.elapsed + (baseline[key]*.5 + (phase === 4 ? .2475 : .275))*bossCadence(w);
     if (key === "fractured") {
       later(w, e, .3, () => barrage(w, e, h, true), false);
       later(w, e, .75, () => thunderbrand(w, e, h, true), false);
     }
-  } else if ((key === "cascade" && s.conductors.length < 2) || (key === "crown" && !s.conductors.length)) { b.ordinal++; b.next = w.elapsed + .4; }
+  } else if ((key === "cascade" && s.conductors.length < 2) || (key === "crown" && !s.conductors.length)) { b.ordinal++; b.next = w.elapsed + .2*bossCadence(w); }
 }
 
 export function updateStormbreakerEnemy(w: CombatWorld, e: EnemyEntity, dt: number, h: StormbreakerHooks): boolean {
   if (!w.stormbreaker || !e.stormbreaker) return false;
   if (w.ended || e.hp <= 0) return true;
   const s = e.stormbreaker, world = w.stormbreaker;
-  if(s.lastHp>e.hp || s.lastShield>0&&e.shield<=0&&s.shieldArmed)onStormEnemyDamage(w,e,Math.max(0,s.lastHp-e.hp),s.lastShield);
+  if(s.lastHp>e.hp || s.lastShield>0&&e.shield<=0&&s.shieldArmed)onStormEnemyDamage(w,e,Math.max(0,s.lastHp-e.hp),s.lastShield,h);
   s.lastHp=e.hp;s.lastShield=e.shield;
   if (updateDash(w, e, dt, h)) return true;
   if(s.judgment && w.elapsed>=s.judgment.next){
@@ -585,7 +654,7 @@ export function updateStormbreakerEnemy(w: CombatWorld, e: EnemyEntity, dt: numb
   }
   if (isStormObjective(e.type)) {
     if (e.type === "storm_conductor" && e.fireCooldown <= 0 && !locked(w, e)) {
-      bullet(w, e, h, aimAt(w, e, h), 1, "stormConductorArc", 145, 4); e.fireCooldown = 3;
+      for(const offset of [-.035,.035])bullet(w, e, h, aimAt(w, e, h)+offset, 1, "stormConductorArc", 145, 4); e.fireCooldown = 3;
     }
     return true;
   }
@@ -601,19 +670,19 @@ export function updateStormbreakerEnemy(w: CombatWorld, e: EnemyEntity, dt: numb
   if (locked(w, e)) return true;
   if (e.type !== "storm_capacitor" && e.type !== "capacitor_prime") s.charge = Math.min(5, s.charge + dt * (world.phase === "CHARGING" ? .55 : .14) * chargeMultiplier(w, e));
   if (e.type === "thunder_bastion" && w.elapsed >= s.shieldReady) {
-    e.shield = e.maxHp * .12; e.shieldUntil = w.aircraft.coreState.time + 12; s.shieldArmed = true; s.shieldReady = w.elapsed + 12;
+    e.shield = e.maxHp * .12; e.shieldUntil = w.aircraft.coreState.time + 12*durationScale(w); s.shieldArmed = true; s.shieldReady = w.elapsed + (escalated(w)?6:12);
   }
   if (e.type === "capacitor_prime" && s.ventReady <= w.elapsed && s.burst.filter(b => b.at >= w.elapsed - .65).reduce((sum, b) => sum + b.hp, 0) > e.maxHp * .25) {
     const pts = Array.from({ length: 5 }, (_, i) => point(e.x + Math.cos(i * TAU / 5) * 48, e.y + Math.sin(i * TAU / 5) * 48));
-    if (markers(w, e, h, 5, .75, 1, false, pts)) { s.ventReady = w.elapsed + 5; s.burst = []; }
+    if (markers(w, e, h, 5, .75, 1, false, pts)) { s.ventReady = w.elapsed + (escalated(w)?2.5:5); s.burst = []; }
   }
-  if ((e.type === "capacitor_prime" && s.charge >= 8 || e.type === "storm_capacitor" && s.charge >= 5) && overload(w, e, h)) { s.attack++; s.nextMajor = w.elapsed + 2; }
+  if ((e.type === "capacitor_prime" && s.charge >= 8 || e.type === "storm_capacitor" && s.charge >= 5) && overload(w, e, h)) { s.attack++; s.nextMajor = w.elapsed + (escalated(w)?1:2); }
   // Elite majors belong to the authored encounter director. Basic fire never stops globally.
   if (ELITES.includes(e.type)) {
     if (e.type === "volt_executioner" && e.hp < e.maxHp * .4 && s.nextMajor <= w.elapsed && s.attack % 3 === 0) {
-      if (dash(w, e, h, .85, .8, "none")) { s.nextMajor = w.elapsed + 8; s.attack++; }
+      if (dash(w, e, h, .85, .8, "none")) { s.nextMajor = w.elapsed + 4; s.attack++; }
     }
-    if (e.fireCooldown <= 0) { bullet(w, e, h, aimAt(w, e, h), .4); e.fireCooldown = 3; s.attack++; }
+    if (e.fireCooldown <= 0) { for(const offset of [-.035,.035])bullet(w, e, h, aimAt(w, e, h)+offset, .4); e.fireCooldown = 3; s.attack++; }
     return true;
   }
   const aim = aimAt(w, e, h), allegiance = h.allegiance(w, e);
@@ -701,7 +770,7 @@ export function updateStormbreaker(w: CombatWorld, dt: number, h: StormbreakerHo
   }
   s.nodes = s.nodes.filter(id => !!live(w, id)); s.conductors = s.conductors.filter(id => !!live(w, id));
   s.fields = s.fields.filter(f => f.until > w.elapsed);
-  s.clouds = s.clouds.filter(c => c.until > w.elapsed && !(c.ready && s.clock >= 17));
+  s.clouds = s.clouds.filter(c => c.until > w.elapsed && !(c.ready && s.clock >= 17 && !escalated(w)));
   s.visuals = s.visuals.filter(v => v.at + v.duration > w.elapsed);
   s.director.casts = s.director.casts.filter(c => c.until > w.elapsed);
   updateLinks(w, h);
@@ -747,6 +816,7 @@ export function updateStormbreaker(w: CombatWorld, dt: number, h: StormbreakerHo
   for (const a of s.hazards) {
     if (a.hitAt > w.elapsed || a.until < w.elapsed - dt) continue;
     if (a.conditionalOwner && !live(w, a.conditionalOwner)) { a.until = 0; continue; }
+    const firstStrike=!a.resolved;
     if (!a.resolved) {
       a.resolved = true;
       if (!a.decoy) {
@@ -759,6 +829,7 @@ export function updateStormbreaker(w: CombatWorld, dt: number, h: StormbreakerHo
     if (a.decoy || w.ended) continue;
     const insulated = a.environmental !== undefined && a.delivery === "area_hazard" && s.fields.some(f => f.cycle === a.environmental && Math.hypot(w.playerX - f.x, w.playerY - f.y) <= f.radius);
     h.area(w, a.damage, a, { ...a.start, end: a.end, radius: a.radius }, a.hits, a.grace, insulated);
+    if(firstStrike&&!w.ended){a.afterStrike?.();a.afterStrike=undefined;}
   }
   s.hazards = s.hazards.filter(a => a.until > w.elapsed);
 }

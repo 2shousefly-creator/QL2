@@ -151,7 +151,7 @@ export interface ProjectileEntity extends AttackMetadata {
     salvoId?: number;
     interceptCount?: number;
     /** Additional cannon pierce keeps the existing same-volley attenuation. */
-    stabilizedPierce?: boolean;
+    corePierce?: boolean; stabilizedPierce?: boolean;
     bounceBasis?: number;
     bounceSecondMultiplier?: number;
     telemetryCore?: number;
@@ -718,7 +718,7 @@ function addProjectile(world: CombatWorld, values: Partial<ProjectileEntity> & P
         sourceEnemyId: values.sourceEnemyId, sourceEnemyType: values.sourceEnemyType, attackTag: values.attackTag, majorBossAttack: values.majorBossAttack, payload: values.payload,
         criticalAttack: values.criticalAttack ?? false,
         suppressive: values.suppressive ?? false, allowOffscreenEntry: values.allowOffscreenEntry ?? false, corridorEdge: values.corridorEdge, corridorSide: values.corridorSide,
-        telemetryCore: values.telemetryCore, salvoId: values.salvoId, interceptCount: 0, stabilizedPierce: values.stabilizedPierce,
+        telemetryCore: values.telemetryCore, salvoId: values.salvoId, interceptCount: 0, corePierce: values.corePierce, stabilizedPierce: values.stabilizedPierce,
         bounceBasis: values.bounceBasis, bounceSecondMultiplier: values.bounceSecondMultiplier,
         source: values.source ?? "weapon", skillId: values.skillId, lifetime: values.lifetime ?? 6,
         volleyId: values.volleyId ?? 0, volleyHits: values.volleyHits, initialDamage: values.initialDamage ?? values.rawDamage,
@@ -805,7 +805,7 @@ function fireBasic(world: CombatWorld): void {
             x: world.playerX + (extra?0:offset*4)*playerAirframeScale(state), y: world.playerY - 17*playerAirframeScale(world.aircraft), vx: Math.cos(angle) * bulletSpeed * (sweeping && !extra && (skillRank(state, "sweeping_cannon") >= 3) ? 1 + V.cannonSpeedBonus : 1), vy: Math.sin(angle) * bulletSpeed * (sweeping && !extra && (skillRank(state, "sweeping_cannon") >= 3) ? 1 + V.cannonSpeedBonus : 1), radius: 3.2,
             rawDamage: stats.firepower * multiplier * context.rawMultiplier * (reappearance ? V.reappearanceDamage : 1), volleyId, volleyHits: extra ? undefined : volleyHits,
             penetrationRemaining: (!extra && hasCore(state,206) ? 1 : 0) + (!extra && hasCore(state, 89) ? Infinity : 0) + (!extra && expansionActive(state,"overloadedBarrel") ? 1 : 0) + (sweeping && !extra && (skillRank(state, "sweeping_cannon") >= 3) ? 2 : 0),
-            stabilizedPierce: sweeping && !extra && (skillRank(state, "sweeping_cannon") >= 3), telemetryCore:extra?79:undefined,
+            corePierce: !extra && hasCore(state,89), stabilizedPierce: sweeping && !extra && (skillRank(state, "sweeping_cannon") >= 3), telemetryCore:extra?79:undefined,
             telemetryBonuses: basicTelemetryBonuses(state,sweeping,extra,reappearance),
             extraPierceOrdinal: !extra&&hasCore(state,206)?2+(hasCore(state,89)?3:0)+(sweeping&&(skillRank(state, "sweeping_cannon") >= 3)?2:0):undefined,
             telemetryExtraCores:sweeping&&!extra&&(skillRank(state, "sweeping_cannon") >= 2)&&Math.abs(offset)===4?[36]:undefined,
@@ -2051,7 +2051,7 @@ function tacticalState(world:CombatWorld):TacticalCoreState {
     return world.tactical??={scraps:[],grids:[],openingHits:new Map(),previousStatuses:new Set(),hackTargets:[],hackEnd:0};
 }
 const ordinaryHostileBullet=(p:ProjectileEntity)=>p.owner==="enemy" && p.allegiance!=="friendly_hacked" && p.projectileKind==="bullet" && !p.homing && p.attackTag!=="rail";
-function cBank(state:AircraftCombatState,gain:number):void {state.coreState.stacks.antimatter=Math.min(5,(state.coreState.stacks.antimatter??0)+gain);}
+function cBank(state:AircraftCombatState,gain:number):void {state.coreState.stacks.antimatter=Math.min(3.5,(state.coreState.stacks.antimatter??0)+gain);}
 function recordCrossfire(world:CombatWorld,e:EnemyEntity):void {
     if(!hasCore(world.aircraft,112))return;
     const t=tacticalState(world),last=t.lastWeaponHit;
@@ -2177,7 +2177,7 @@ function damageEnemyAttack(world:CombatWorld,target:EnemyEntity,raw:number,attac
     else {
         damage=calculateDamage(raw*(contact?wingDamageMultiplier(contact.zone):1),target.armor*((target.armorBrokenUntil??0)>world.elapsed?.7:1))*stormDamageTakenMultiplier(world,target);
         const shieldBefore=target.shield,absorbed=Math.min(target.shield,damage);target.shield-=absorbed;damage=Math.min(target.hp,damage-absorbed);target.hp-=damage;
-        if(world.stormbreaker)onStormEnemyDamage(world,target,damage,shieldBefore);
+        if(world.stormbreaker)onStormEnemyDamage(world,target,damage,shieldBefore,stormbreakerHooks);
         accumulateDeathMark(world,target,damage+absorbed);
         emitVisual(world,{kind:"damage_number",x:target.x,y:target.y,size:target.radius,hpDamage:damage,shieldAbsorbed:absorbed,target:"enemy",critical:false,entityId:target.id});
         if(absorbed>0&&target.shield<=0&&target.type==="iron_fortress"&&target.retaliationReady){target.retaliationReady=false;queueEliteSpecial(world,target,"retaliation",.01,false);}
@@ -2790,7 +2790,7 @@ function applyDamageToEnemy(world: CombatWorld, enemy: EnemyEntity, rawDamage: n
     const firstPrimaryHit = primary && !primaryShot!.resolved;
     if(firstPrimaryHit&&(hasCore(state,114)||hasCore(state,116))&&(state.coreState.stacks.sameTargetId!==enemy.id||(state.coreState.timers.sameTarget??0)<time))state.coreState.stacks.sameTargetHits=0;
     const stats=getEffectiveAircraftStats(state);
-    const sameTargetBonus=expansionActive(state,"sameTarget")?1+.04*Math.min(4,Math.floor((state.coreState.stacks.sameTargetHits??0)/5)):1;
+    const sameTargetBonus=expansionActive(state,"sameTarget")?1+.03*Math.min(4,Math.floor((state.coreState.stacks.sameTargetHits??0)/5)):1;
     const marks = enemy.expansionMarks ??= {};
     const preliminary=skillHit&&(marks.preliminary??0)>time;
     const skillPhase=skillHit&&hasCore(state,207)&&(marks.skillPhase??0)>time;
@@ -2801,10 +2801,10 @@ function applyDamageToEnemy(world: CombatWorld, enemy: EnemyEntity, rawDamage: n
     let hitMultiplier = 1, recoilDamage = 0;
     if (skillHit && !procFree) {
         expansionMultiplier *= 1 + (cast?.overclock ?? 0);
-        if (skillId && expansionState(state).primarySkill === skillId) expansionMultiplier *= 1.3;
-        if ((marks.preliminary ?? 0) > time) { hitMultiplier *= 1.30; marks.preliminary = 0; }
+        if (skillId && expansionState(state).primarySkill === skillId) expansionMultiplier *= 1.2;
+        if ((marks.preliminary ?? 0) > time) { hitMultiplier *= 1.20; marks.preliminary = 0; }
         if (hasCore(state,207)) {
-            if ((marks.skillPhase ?? 0) > time) { hitMultiplier *= 1.45; marks.skillPhase = 0; }
+            if ((marks.skillPhase ?? 0) > time) { hitMultiplier *= 1.30; marks.skillPhase = 0; }
             else {marks.gunPhase = time + 5;recordCoreMetric(state,207,"gunPhases",1);}
         }
         if (hasCore(state,187) && (state.coreState.stacks.recoil ?? 0) > 0) {
@@ -2812,28 +2812,28 @@ function applyDamageToEnemy(world: CombatWorld, enemy: EnemyEntity, rawDamage: n
             recordCoreMetric(state,187,"procs",1);
         }
     }
-    if (directPlayer && (marks.shieldBroken ?? 0) > time) expansionMultiplier *= 1.20;
-    if (primary && (marks.gunPhase ?? 0) > time) { hitMultiplier *= 1.45; marks.gunPhase = 0; }
+    if (directPlayer && (marks.shieldBroken ?? 0) > time) expansionMultiplier *= 1.14;
+    if (primary && (marks.gunPhase ?? 0) > time) { hitMultiplier *= 1.30; marks.gunPhase = 0; }
     const canCrit = source !== "core" && source !== "lightning" && (echoScale!==undefined || (!skillId && source !== "skill" && source !== "burn") || canSkillsCrit(state));
     const opening=!procFree && source==="basic" && hasCore(state,117) && (tacticalState(world).openingHits.get(enemy.id) ?? -Infinity) <= time;
     if(opening)tacticalState(world).openingHits.set(enemy.id, Infinity);
     let effectiveStats = opening ? {...stats,criticalChance:1} : canCrit ? stats : { ...stats, criticalChance: 0 };
     const skillEffects = world.skillCores.enemyEffects.get(enemy.id);
-    if(skillId&&hasCore(state,97)&&!isUltimate(skillId))expansionMultiplier*=1.3;
+    if(skillId&&hasCore(state,97)&&!isUltimate(skillId))expansionMultiplier*=1.2;
     if(directPlayer&&source!=="burn"&&source!=="core"&&source!=="lightning")expansionMultiplier*=rankDirectMultiplier(world,enemy,skillId);
-    if(procFree&&skillId){expansionMultiplier*=1+(cast?.overclock??0);if(expansionState(state).primarySkill===skillId)expansionMultiplier*=1.3;}
+    if(procFree&&skillId){expansionMultiplier*=1+(cast?.overclock??0);if(expansionState(state).primarySkill===skillId)expansionMultiplier*=1.2;}
     const skillPen=skillId==="stellar_lance"&&(skillRank(state, "stellar_lance") >= 4)?.30:0;
     const armor = opening ? 0 : resolvedEnemyArmor(world,enemy,Math.min(.4,skillPen+armorPenetration(state)));
-    if (directPlayer && (marks.criticalLock ?? 0) > time) effectiveStats = { ...effectiveStats, criticalDamageMultiplier: effectiveStats.criticalDamageMultiplier + .70 };
-    if(skillHit)effectiveStats={...effectiveStats,criticalDamageMultiplier:effectiveStats.criticalDamageMultiplier+(P[8].crit+(hasCore(state,53)?P[8].synergy:0))*equipmentScale(state,8)};
+    if (directPlayer && (marks.criticalLock ?? 0) > time) effectiveStats = { ...effectiveStats, criticalDamageMultiplier: effectiveStats.criticalDamageMultiplier + .20 };
+    if(skillHit)effectiveStats={...effectiveStats,criticalDamageMultiplier:effectiveStats.criticalDamageMultiplier+(hasCore(state,53)?P[8].synergy:0)*equipmentScale(state,8)};
     effectiveStats={...effectiveStats,criticalDamageMultiplier:Math.min(10,effectiveStats.criticalDamageMultiplier)};
-    if(skillHit&&cast){if(source!=="burn")cast.equipmentBonus??=equipmentConsumeSkillBonus(state);expansionMultiplier*=(cast.compressed?1.2:1)*(cast.capacitor?1.15:1)*(cast.equipmentBonus??1);}
-    if(firstPrimaryHit&&hasCore(state,89))expansionMultiplier*=1.20;
+    if(skillHit&&cast){if(source!=="burn")cast.equipmentBonus??=equipmentConsumeSkillBonus(state);expansionMultiplier*=(cast.compressed?1.14:1)*(cast.capacitor?1.10:1)*(cast.equipmentBonus??1);}
+    if(firstPrimaryHit&&hasCore(state,89))expansionMultiplier*=1.14;
     const whiteHole=source==="basic"&&(state.coreState.timers.whiteHole??0)>time;
     let multiplier = expansionMultiplier * (whiteHole?1.6:1)*outgoingCoreMultiplier(state, target, source, Math.hypot(enemy.x - world.playerX, enemy.y - world.playerY), GAMEPLAY_SAFE_RECT.height);
     if (directPlayer && (source === "basic" || source === "weapon" || source === "skill") && state.aircraftId === "breaker" && (skillEffects?.markUntil || 0)>time) multiplier *= 1 + V.markBonus;
     if (directPlayer && (source === "basic" || source === "weapon" || source === "skill") && state.aircraftId === "phantom" && world.skillCores.syncTarget === enemy.id && world.skillCores.syncUntil>time) multiplier *= 1 + V.syncBonus;
-    if(directPlayer && world.skillCores.bountyTarget===enemy.id && world.skillCores.bountyUntil>world.elapsed)multiplier*=1.20;
+    if(directPlayer && world.skillCores.bountyTarget===enemy.id && world.skillCores.bountyUntil>world.elapsed)multiplier*=1.10;
     const zoneMultiplier=delivery==="direct_projectile"||delivery==="aircraft_collision"?wingDamageMultiplier(contact?.zone):1;
     if(hasCore(state,115) && !world.enemies.some(e=>e.id!==enemy.id && isHostileToPlayer(world,e) && Math.hypot(e.x-enemy.x,e.y-enemy.y)<=80))multiplier*=enemy.type==="boss"?1.2:1.3;
     if((state.coreState.timers.comeback??0)>time)multiplier*=1.25;
@@ -2858,7 +2858,7 @@ function applyDamageToEnemy(world: CombatWorld, enemy: EnemyEntity, rawDamage: n
         damage *= .6;
     const resolvedBeforeShield=damage,shieldBeforeHit=enemy.shield;
     // Extra shield damage is confined to the absorb pool; overflow uses the original HP budget.
-    const shieldFactor = basic && hasCore(state,180) ? 1.30 : 1;
+    const shieldFactor = basic && hasCore(state,180) ? 1.20 : 1;
     const absorbed = Math.min(enemy.shield, damage * shieldFactor);
     enemy.shield -= absorbed;
     if(basic&&hasCore(state,180))recordCoreMetric(state,180,"shieldBonus",absorbed-Math.min(shieldBeforeHit,resolvedBeforeShield));
@@ -2871,11 +2871,11 @@ function applyDamageToEnemy(world: CombatWorld, enemy: EnemyEntity, rawDamage: n
     const potential=damage,hpBefore=enemy.hp;
     damage = Math.min(enemy.hp, damage);
     if(hasCore(state,121) && chargeAntimatter && !procFree){
-        const gain=(target.elite||target.boss?damage*.03:Math.max(0,potential-hpBefore)*.6)/Math.max(Number.EPSILON,stats.firepower);
+        const gain=(target.elite||target.boss?damage*.02:Math.max(0,potential-hpBefore)*.42)/Math.max(Number.EPSILON,stats.firepower);
         cBank(state,gain);
     }
     enemy.hp = Math.max(0, enemy.hp - damage);
-    if (world.stormbreaker) onStormEnemyDamage(world, enemy, damage, shieldBeforeHit);
+    if (world.stormbreaker) onStormEnemyDamage(world, enemy, damage, shieldBeforeHit,stormbreakerHooks);
     if(directPlayer&&damage+absorbed>0)recordDpsDamage(world,damage+absorbed);
     if(procFree&&enemy.hp<=0){enemy.expansionKillingHit=undefined;enemy.killProcEligible=false;}
     if (directPlayer && !procFree && damage + absorbed > 0) {
@@ -2894,7 +2894,7 @@ function applyDamageToEnemy(world: CombatWorld, enemy: EnemyEntity, rawDamage: n
             if (hasCore(state,207) && resolved.critical) {marks.skillPhase = time + 5;recordCoreMetric(state,207,"skillPhases",1);}
         }
         if (hasCore(state,194) && resolved.critical) {marks.criticalLock = time + 4;recordCoreMetric(state,194,"procs",1);if(!marks.criticalCounted){marks.criticalCounted=1;recordCoreMetric(state,194,"targets",1);}}
-        if(hasCore(state,196)&&resolved.critical&&(basic||skillHit)&&source!=="burn"&&(marks.crimsonReady??0)<=time){marks.crimsonReady=time+.5;const c=state.coreState;c.stacks.crimsonProgress=(c.stacks.crimsonProgress??0)+(target.elite||target.boss?2:1);while(c.stacks.crimsonProgress>=5){c.stacks.crimsonProgress-=5;c.stacks.crimsonCrit=Math.min(15,(c.stacks.crimsonCrit??0)+1);recordCoreMetric(state,196,"procs",1);}}
+        if(hasCore(state,196)&&resolved.critical&&(basic||skillHit)&&source!=="burn"&&(marks.crimsonReady??0)<=time){marks.crimsonReady=time+.5;const c=state.coreState;c.stacks.crimsonProgress=(c.stacks.crimsonProgress??0)+(target.elite||target.boss?2:1);while(c.stacks.crimsonProgress>=5){c.stacks.crimsonProgress-=5;c.stacks.crimsonCrit=Math.min(10,(c.stacks.crimsonCrit??0)+1);recordCoreMetric(state,196,"procs",1);}}
         if (enemy.hp <= 0) enemy.expansionKillingHit = { primary, basic, skill: skillHit, critical: resolved.critical, direct: directPlayer && source !== "burn" && source !== "core" && source !== "lightning" && (delivery === "direct_projectile" || skillHit), elite: isElite(enemy.type) };
     }
     if(directPlayer) {
@@ -2916,41 +2916,41 @@ function applyDamageToEnemy(world: CombatWorld, enemy: EnemyEntity, rawDamage: n
         for(const [family,factor] of equipmentDamage.factors)equipmentContribution(family,1-1/factor);
         for(const [family,value] of equipmentDamage.bonuses)equipmentContribution(family,value/Math.max(Number.EPSILON,equipmentBaseRaw+equipmentDamage.bonus+recoilDamage));
         if(equipmentEffect(state,14).until>time)equipmentContribution(14,P[14].firepower*equipmentScale(state,14)*equipmentEffect(state,14).value/Math.max(1,stats.firepower));
-        if(preliminary){recordCoreMetric(state,185,"consumed",1);factor(185,1.30);}
-        if(skillPhase||gunPhase){recordCoreMetric(state,207,"consumed",1);factor(207,1.45);}
-        if(expansionActive(state,"alternating"))factor(175,1.20);
-        if((marks.shieldBroken??0)>time&&shieldBeforeHit===0)factor(180,1.20);
-        if(basic&&expansionActive(state,"confluence"))factor(186,1.45);
-        if(primary)factor(206,1.70);
-        if(skillHit){factor(190,1.30);if(expansionState(state).primarySkill===skillId)factor(202,1.30);if(cast?.overclock)factor(199,1+cast.overclock);}
+        if(preliminary){recordCoreMetric(state,185,"consumed",1);factor(185,1.20);}
+        if(skillPhase||gunPhase){recordCoreMetric(state,207,"consumed",1);factor(207,1.30);}
+        if(expansionActive(state,"alternating"))factor(175,1.14);
+        if((marks.shieldBroken??0)>time&&shieldBeforeHit===0)factor(180,1.14);
+        if(basic&&expansionActive(state,"confluence"))factor(186,1.30);
+        if(primary)factor(206,1.50);
+        if(skillHit){factor(190,1.20);if(expansionState(state).primarySkill===skillId)factor(202,1.20);if(cast?.overclock)factor(199,1+cast.overclock);}
         if(hasAbsorbShield(state))factor(192,1.20);
-        if(activeNegativeStatusTypes(state).size)factor(203,1.35);
-        factor(205,1.40);
-        if(criticalLock&&resolved.critical)factor(194,effectiveStats.criticalDamageMultiplier/(effectiveStats.criticalDamageMultiplier-.70));
+        if(activeNegativeStatusTypes(state).size)factor(203,1.25);
+        factor(205,1.30);
+        if(criticalLock&&resolved.critical)factor(194,effectiveStats.criticalDamageMultiplier/(effectiveStats.criticalDamageMultiplier-.20));
         if(recoilDamage>0)recordCoreMetric(state,187,"damage",bonus(187,recoilDamage/(rawDamage+recoilDamage)));
         if(state.coreState.time-state.coreState.lastKill<=4)factor(66,1+.04*(state.coreState.stacks.combo??0));
-        factor(91,1+Math.min(.8,Math.max(0,1-state.currentHp/stats.maxHp)*.8));
+        factor(91,1+Math.min(.6,Math.max(0,1-state.currentHp/stats.maxHp)*.6));
         if(expansionActive(state,"comeback"))factor(98,1.25);
         if((state.coreState.timers.decoyCounter??0)>time)factor(21,1.3);
         if(target.elite||target.boss)factor(67,1.18);
         if(hpBefore<enemy.maxHp*.30)factor(68,1.30);
         if(hpBefore>enemy.maxHp*.7)factor(69,1.30);
-        for(const [row,value] of [[211,1.10],[212,1.12],[214,1.15],[217,1.10],[203,1.10]])factor(row,value);
-        if(expansionActive(state,"ultimateAftershock"))factor(218,1.35);
-        if(basic){factor(111,1.15);factor(54,state.coreState.stacks.fireRateConversion??1);if(expansionActive(state,"overloadedBarrel"))factor(58,1.50);}
+        for(const [row,value] of [[211,1.10],[212,1.12],[214,1.15],[217,1.10],[203,1.08]])factor(row,value);
+        if(expansionActive(state,"ultimateAftershock"))factor(218,1.25);
+        if(basic){factor(111,1.10);factor(54,state.coreState.stacks.fireRateConversion??1);if(expansionActive(state,"overloadedBarrel"))factor(58,1.35);}
         if(basic||skillHit)factor(116,sameTargetBonus);
-        if(skillHit){factor(119,1.15);if(cast?.capacitor)factor(172,1.15);if(state.currentResource>stats.maxResource*.7)factor(182,1.10);}
-        if(firstPrimaryHit)factor(89,1.20);
+        if(skillHit){factor(119,1.10);if(cast?.capacitor)factor(172,1.10);if(state.currentResource>stats.maxResource*.7)factor(182,1.07);}
+        if(firstPrimaryHit)factor(89,1.14);
         if((target.elite||target.boss)&&target.armor>=80)factor(88,1.10);
         const distance=Math.hypot(enemy.x-world.playerX,enemy.y-world.playerY);
-        if(source==="basic"&&distance<GAMEPLAY_SAFE_RECT.height/3)factor(101,1.20);
-        if(skillHit&&cast?.compressed)factor(102,1.20);
+        if(source==="basic"&&distance<GAMEPLAY_SAFE_RECT.height/3)factor(101,1.14);
+        if(skillHit&&cast?.compressed)factor(102,1.14);
         if(hasCore(state,115)&&!world.enemies.some(e=>e.id!==enemy.id&&isHostileToPlayer(world,e)&&Math.hypot(e.x-enemy.x,e.y-enemy.y)<=80))factor(115,enemy.type==="boss"?1.2:1.3);
         factor(118,1+crowdBonus);
         const direct=source==="basic"||source==="weapon"||source==="skill";
         if(direct&&state.aircraftId==="breaker"&&(skillEffects?.markUntil??0)>time)factor(135,1+V.markBonus);
         if(direct&&state.aircraftId==="phantom"&&world.skillCores.syncTarget===enemy.id&&world.skillCores.syncUntil>world.elapsed)factor(146,1+V.syncBonus);
-        if(world.skillCores.bountyTarget===enemy.id&&world.skillCores.bountyUntil>world.elapsed)factor(149,1.20);
+        if(world.skillCores.bountyTarget===enemy.id&&world.skillCores.bountyUntil>world.elapsed)factor(149,1.10);
         if(skillId==="focus_laser"){
             const total=1+((skillRank(state, "focus_laser") >= 2)?.1:0)+((skillRank(state, "focus_laser") >= 4)?V.laserBonus:0);
             if((skillRank(state, "focus_laser") >= 2))bonus(41,.1/total);if((skillRank(state, "focus_laser") >= 4))bonus(145,V.laserBonus/total);
@@ -2972,7 +2972,7 @@ function applyDamageToEnemy(world: CombatWorld, enemy: EnemyEntity, rawDamage: n
         }
     }
     if(heatMultiplier(state)>1){
-        const without=resolvedBeforeShield/1.25,shield=Math.min(shieldBeforeHit,without*shieldFactor);
+        const without=resolvedBeforeShield/heatMultiplier(state),shield=Math.min(shieldBeforeHit,without*shieldFactor);
         recordCoreMetric(state,219,"bonusDamage",damage+absorbed-shield-Math.min(hpBefore,Math.max(0,without-shield/shieldFactor)));
     }
     recordCoreMetric(state, telemetryCore, "damage", damage+absorbed);
@@ -3047,7 +3047,7 @@ function destroyEnemy(world: CombatWorld, enemyIndex: number): void {
     tactical.hackTargets=tactical.hackTargets.filter(id=>id!==enemy.id);
     if(enemy.killProcEligible !== false && hasCore(world.aircraft,108) && world.random()<.18 && tactical.scraps.length<64)tactical.scraps.push({id:world.nextId++,x:enemy.x,y:enemy.y,until:world.elapsed+4});
     const target = targetMetadata(enemy), config = stageEnemyConfig(enemy.type, world.stageId), state = world.aircraft, c = state.coreState;
-    if (world.stormbreaker) stormEnemyDestroyed(world, enemy);
+    if (world.stormbreaker) stormEnemyDestroyed(world, enemy,stormbreakerHooks);
     if (world.magnetic) {
         magneticFx(world, target.boss ? "bossBurst" : target.elite ? "plasmaImpact" : "smallBurst", enemy.x, enemy.y, enemy.radius * 3, target.boss ? 1.8 : .5);
         if (target.boss) {
@@ -3137,9 +3137,9 @@ function applySecondaryHits(world: CombatWorld, projectile: ProjectileEntity, pr
         const next=nearestEnemy(world,primary.x,primary.y,projectile.hitIds);
         if(next){
             const angle=Math.atan2(next.y-primary.y,next.x-primary.x),speed=460*(hasCore(world.aircraft,111)?3:1)*(hasCore(world.aircraft,206)?.8:1);
-            const bounced=addProjectile(world,{owner:"player",source:"basic",telemetryCore:80,x:primary.x,y:primary.y,vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed,rawDamage:projectile.rawDamage*.60,radius:projectile.radius,homing:true,targetId:next.id,turnRate:7,color:"#c4b5fd"});
+            const bounced=addProjectile(world,{owner:"player",source:"basic",telemetryCore:80,x:primary.x,y:primary.y,vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed,rawDamage:projectile.rawDamage*.42,radius:projectile.radius,homing:true,targetId:next.id,turnRate:7,color:"#c4b5fd"});
             if(bounced)bounced.hitIds.push(...projectile.hitIds);
-        }else applyDamageToEnemy(world,primary,projectile.rawDamage*.25,"#c4b5fd","basic",undefined,undefined,undefined,"direct_projectile",true,true,80);
+        }else applyDamageToEnemy(world,primary,projectile.rawDamage*.18,"#c4b5fd","basic",undefined,undefined,undefined,"direct_projectile",true,true,80);
         recordCoreMetric(world.aircraft,80,"procs",1);
     }
     if (projectile.bounceRemaining <= 0)
@@ -3414,7 +3414,7 @@ function updateProjectileCollisions(world: CombatWorld): void {
             // Evaluate HP immediately before EACH pierced hit; never alter the shot baseline.
             const deathLance=!!p.astraLance && enemy.hp>0 && enemy.hp/enemy.maxHp<.30 && (skillRank(world.aircraft, "stellar_lance") >= 4);
             const aim=p.aimBonus;
-            const raw=(p.stabilizedPierce?p.initialDamage:p.rawDamage)*(deathLance?1.4:1)*(aim?1.6:1);
+            const raw=(p.stabilizedPierce?p.initialDamage:p.rawDamage)*(deathLance?1.4:1)*(aim?1.4:1);
             const bonuses:[number,number][]|undefined=deathLance?[...(p.telemetryBonuses??[]),[159,1-1/1.4]]:p.telemetryBonuses;
             if(deathLance)recordCoreMetric(world.aircraft,159,"procs",1);
             const dealt=p.allegiance==="friendly_hacked"?damageEnemyAttack(world,enemy,p.rawDamage,p,contact):applyDamageToEnemy(world, enemy, raw, p.color, p.source, p.skillId, p.volleyHits, contact, "direct_projectile", true, true, p.telemetryCore, p.stabilizedPierce?p.rawDamage/Math.max(Number.EPSILON,p.initialDamage):1, bonuses, p.expansionCast, p.primaryShot, p.procFree, p.echoScale);
@@ -3439,7 +3439,9 @@ function updateProjectileCollisions(world: CombatWorld): void {
             if(!p.procFree&&p.skillId!=="predator_lock")applySecondaryHits(world, p, enemy);
             if (p.penetrationRemaining > 0) {
                 p.penetrationRemaining--;
-                const fraction = p.twinSide!==undefined ? .6 : p.stabilizedPierce ? ([.75,.45,.7,.5,.3][p.hitIds.length-1] ?? .3) : [.7, .5, .3][p.hitIds.length-1] ?? .3;
+                const coreFractions=p.corePierce?[.6,.42,.25]:[.7,.5,.3];
+                const fractions=p.stabilizedPierce?[.75,.45,...coreFractions]:coreFractions;
+                const fraction = p.twinSide!==undefined ? .6 : fractions[p.hitIds.length-1] ?? coreFractions[2];
                 p.rawDamage = p.initialDamage * fraction;
             }
             else {
@@ -4202,9 +4204,9 @@ const magneticHooks: MagneticHooks = {
 function droneCombatActive(world:CombatWorld):boolean { return world.aircraft.droneActive && world.aircraft.dronePhase==="active"; }
 function basicTelemetryBonuses(state:AircraftCombatState,sweeping:boolean,extra:boolean,reappearance:boolean):[number,number][] {
     const result:[number,number][]=[];
-    if(hasCore(state,59)&&state.basicShotsFired%8===0)result.push([59,1.3/2.3]);
-    if(hasCore(state,60)&&state.coreState.time-state.coreState.lastDamage>=3)result.push([60,.2/1.2]);
-    if((state.coreState.timers.counterActive??0)>state.coreState.time)result.push([83,.45/1.45]);
+    if(hasCore(state,59)&&state.basicShotsFired%8===0)result.push([59,.9/1.9]);
+    if(hasCore(state,60)&&state.coreState.time-state.coreState.lastDamage>=3)result.push([60,.14/1.14]);
+    if((state.coreState.timers.counterActive??0)>state.coreState.time)result.push([83,.30/1.30]);
     if(reappearance)result.push([142,.5]);
     if(sweeping&&!extra&&(skillRank(state, "sweeping_cannon") >= 2))result.push([34,(getSkillRuntimeValues(state,"sweeping_cannon").damageMultiplier-.9)/getSkillRuntimeValues(state,"sweeping_cannon").damageMultiplier]);
     return result;
@@ -4223,7 +4225,7 @@ function addHeat(w:CombatWorld,amount:number,source:"heatCast"|"heatToggle"|"hea
         r.hadActiveSkill=false;r.lastSkillEnd=s.coreState.time;
     }
 }
-function heatMultiplier(s:AircraftCombatState){const heat=releaseState(s).heat;return hasCore(s,219)&&!overheated(s)&&heat>=50&&heat<100?1.25:1;}
+function heatMultiplier(s:AircraftCombatState){const heat=releaseState(s).heat;return hasCore(s,219)&&!overheated(s)&&heat>=50&&heat<100?1.20:1;}
 /** Pure preview and actual resolution share the exact same mitigation path. */
 function releaseDamageBudget(w:CombatWorld,e:EnemyEntity,raw:number,row:220|221){
     const s=w.aircraft,t=s.coreState.time,fx=w.skillCores.enemyEffects.get(e.id);
@@ -4232,8 +4234,8 @@ function releaseDamageBudget(w:CombatWorld,e:EnemyEntity,raw:number,row:220|221)
     if(hasCore(s,115)&&!w.enemies.some(other=>other.id!==e.id&&isHostileToPlayer(w,other)&&Math.hypot(other.x-e.x,other.y-e.y)<=80))multiplier*=e.type==="boss"?1.2:1.3;
     if(expansionActive(s,"comeback"))multiplier*=1.25;
     if(hasCore(s,118))multiplier*=1+crowdDamageBonus(w);
-    if(w.skillCores.bountyTarget===e.id&&w.skillCores.bountyUntil>w.elapsed)multiplier*=1.20;
-    if((e.expansionMarks?.shieldBroken??0)>t)multiplier*=1.20;
+    if(w.skillCores.bountyTarget===e.id&&w.skillCores.bountyUntil>w.elapsed)multiplier*=1.10;
+    if((e.expansionMarks?.shieldBroken??0)>t)multiplier*=1.14;
     multiplier*=equipmentOutgoing(s,e,false,false,false).multiplier;
     return calculateDamage(raw,armor,multiplier)*guardianMultiplier(w,e)*stormDamageTakenMultiplier(w,e)*(e.type==="boss"&&e.hp/e.maxHp>=.15&&e.aegisUntil>t?.6:1);
 }
@@ -4241,7 +4243,7 @@ function resolveReleaseDamage(w:CombatWorld,e:EnemyEntity,raw:number,row:220|221
     if(!isHostileToPlayer(w,e)||raw<=0)return 0;
     const budget=releaseDamageBudget(w,e,raw,row),shieldBefore=e.shield,absorbed=Math.min(e.shield,budget),damage=Math.min(e.hp,Math.max(0,budget-absorbed));
     e.shield-=absorbed;e.hp-=damage;
-    if(w.stormbreaker)onStormEnemyDamage(w,e,damage,shieldBefore);
+    if(w.stormbreaker)onStormEnemyDamage(w,e,damage,shieldBefore,stormbreakerHooks);
     if(absorbed>0&&e.shield<=0&&e.type==="iron_fortress"&&e.retaliationReady){e.retaliationReady=false;queueEliteSpecial(w,e,"retaliation",.01,false);}
     if(e.hp<=0){e.killProcEligible=row!==220;e.expansionKillingHit=row===220?undefined:{primary:false,basic:false,skill:false,direct:false,critical:false,elite:isElite(e.type)};}
     recordDpsDamage(w,damage+absorbed);w.damageDealt+=damage;
@@ -4257,7 +4259,7 @@ function finishDeathMark(w:CombatWorld,early=false){
     const target=w.enemies.find(e=>e.id===mark.target&&isHostileToPlayer(w,e));
     r.mark=undefined;r.markReady=w.elapsed+16;
     if(!target)return;
-    const raw=getEffectiveAircraftStats(s).firepower*2+mark.damage*.60;
+    const raw=getEffectiveAircraftStats(s).firepower*1.4+mark.damage*.42;
     resolveReleaseDamage(w,target,raw,221);
     if(early&&target.hp<=0){r.markReady=w.elapsed+8;recordCoreMetric(s,221,"earlyDetonations",1);recordCoreMetric(s,221,"executes",1);recordCoreMetric(s,221,"cooldown",8);}
     else recordCoreMetric(s,221,"detonations",1);
@@ -4267,7 +4269,7 @@ function accumulateDeathMark(w:CombatWorld,e:EnemyEntity,actual:number,allowEarl
     if(!hasCore(s,221)||!mark||mark.target!==e.id)return;
     mark.damage+=actual;recordCoreMetric(s,221,"accumulated",actual);
     if(e.hp<=0){r.mark=undefined;r.markReady=w.elapsed+16;return;}
-    const raw=getEffectiveAircraftStats(s).firepower*2+mark.damage*.60;
+    const raw=getEffectiveAircraftStats(s).firepower*1.4+mark.damage*.42;
     if(allowEarly&&releaseDamageBudget(w,e,raw,221)>=e.shield+e.hp)finishDeathMark(w,true);
 }
 function tickReleaseCores(w:CombatWorld,dt:number){
@@ -4299,7 +4301,7 @@ function tickReleaseCores(w:CombatWorld,dt:number){
             const angle=Math.atan2(target.y-ghost.y,target.x-ghost.x);ghost.angle=angle+Math.PI/2;
             ghost.fireIn-=dt;
             if(ghost.fireIn<=0){const stats=getEffectiveAircraftStats(s);ghost.fireIn+=1/stats.fireRate;
-                const p=addProjectile(w,{owner:"player",source:"core",telemetryCore:220,x:ghost.x,y:ghost.y,vx:Math.cos(angle)*480,vy:Math.sin(angle)*480,rawDamage:stats.firepower*.60,radius:2.8,color:"#a5f3fc"});
+                const p=addProjectile(w,{owner:"player",source:"core",telemetryCore:220,x:ghost.x,y:ghost.y,vx:Math.cos(angle)*480,vy:Math.sin(angle)*480,rawDamage:stats.firepower*.42,radius:2.8,color:"#a5f3fc"});
                 if(p)recordCoreMetric(s,220,"shots",1);
             }
         }
@@ -4391,12 +4393,12 @@ function resolveEquipmentDamage(w:CombatWorld,e:EnemyEntity,raw:number,family:nu
     if(hasCore(s,115)&&!w.enemies.some(other=>other.id!==e.id&&isHostileToPlayer(w,other)&&Math.hypot(other.x-e.x,other.y-e.y)<=80))coreMultiplier*=e.type==="boss"?1.2:1.3;
     if(expansionActive(s,"comeback"))coreMultiplier*=1.25;
     if(hasCore(s,118))coreMultiplier*=1+crowdDamageBonus(w);
-    if(w.skillCores.bountyTarget===e.id&&w.skillCores.bountyUntil>w.elapsed)coreMultiplier*=1.20;
-    if((e.expansionMarks?.shieldBroken??0)>t)coreMultiplier*=1.20;
+    if(w.skillCores.bountyTarget===e.id&&w.skillCores.bountyUntil>w.elapsed)coreMultiplier*=1.10;
+    if((e.expansionMarks?.shieldBroken??0)>t)coreMultiplier*=1.14;
     const budget=calculateDamage(raw,armor,outgoing.multiplier*coreMultiplier)*guardianMultiplier(w,e)*stormDamageTakenMultiplier(w,e)*(e.type==="boss"&&e.hp/e.maxHp>=.15&&e.aegisUntil>t?.6:1);
     const shieldBefore=e.shield,absorbed=Math.min(e.shield,budget),hpDamage=Math.min(e.hp,Math.max(0,budget-absorbed));
     e.shield-=absorbed;e.hp-=hpDamage;
-    if(w.stormbreaker)onStormEnemyDamage(w,e,hpDamage,shieldBefore);
+    if(w.stormbreaker)onStormEnemyDamage(w,e,hpDamage,shieldBefore,stormbreakerHooks);
     if(absorbed>0&&e.shield<=0&&e.type==="iron_fortress"&&e.retaliationReady){e.retaliationReady=false;queueEliteSpecial(w,e,"retaliation",.01,false);}
     if(e.hp<=0){e.killProcEligible=family!==12&&family!==16;e.expansionKillingHit={primary:false,basic:false,skill:false,direct:false,critical:false,elite:isElite(e.type)};}
     recordDpsDamage(w,hpDamage+absorbed);w.damageDealt+=hpDamage;

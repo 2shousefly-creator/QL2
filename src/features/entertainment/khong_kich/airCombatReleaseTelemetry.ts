@@ -12,9 +12,9 @@ export function releaseTelemetry(state:AircraftCombatState,row:number):string[]{
   const descriptions:Record<number,string>={
     169:state.currentResource/stats.maxResource>.7?"+40 Hỏa Lực":state.currentResource/stats.maxResource<.3?"+2,5 Hồi Máu/s":"+32,5% Tốc Độ Bắn Cộng Thêm",
     172:c.stacks.capacitorCharge?"Đã tích điện":"Chưa tích đủ điện",179:`Sai Số: ${c.stacks.error??0} · +${(c.stacks.error??0)*2}% Tỷ Lệ Chí Mạng`,
-    183:`+${Math.min(60,20+activeNegativeStatusTypes(state).size*20)} Giáp`,187:`Đang tích ${number(c.stacks.recoil??0)} sát thương`,188:"+15% Tỷ Lệ Chí Mạng · +50% Sát Thương Chí Mạng",
+    183:`+${Math.min(60,20+activeNegativeStatusTypes(state).size*20)} Giáp`,187:`Đang tích ${number(c.stacks.recoil??0)} sát thương`,188:"+15% Tỷ Lệ Chí Mạng · +20% Sát Thương Chí Mạng",
     192:hasAbsorbShield(state)?"+20% mọi sát thương":"+25 Giáp",
-    196:`+${number(Math.min(.75,(c.stacks.crimsonCrit??0)*.05)*100)}% Sát Thương Chí Mạng / +75% Sát Thương Chí Mạng`,197:`Nợ còn lại: ${number(expansion.debt.reduce((n,d)=>n+d.amount*d.ticks,0))}`,
+    196:`+${number(Math.min(.25,(c.stacks.crimsonCrit??0)*.025)*100)}% Sát Thương Chí Mạng / +25% Sát Thương Chí Mạng`,197:`Nợ còn lại: ${number(expansion.debt.reduce((n,d)=>n+d.amount*d.ticks,0))}`,
     199:`Cộng dồn quá tải: ${c.stacks.overclock??0}/3`,202:expansion.primarySkill?`Chủ lực: ${SKILL_CONFIGS[expansion.primarySkill].name}`:"Đang chờ chọn kỹ năng",
     204:`Tiến độ Armor/Shield: ${number(c.stacks.armorMeter??0)} / ${number(stats.maxHp*.25)}`,209:c.stacks.lastStand?"Tử Thủ đang hoạt động":"Chưa kích hoạt Tử Thủ",
   };

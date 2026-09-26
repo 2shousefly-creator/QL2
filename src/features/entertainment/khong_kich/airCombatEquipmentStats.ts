@@ -32,5 +32,5 @@ export function applyEquipmentStats(s: AircraftCombatState, stats: EffectiveAirc
     if(mode==="hp")stats.hpRegen*=1+P[28].regen*scale(28);
     if(mode==="resource")stats.resourceRegen*=1+P[28].regen*scale(28);
   }
-  stats.bonusFireRatePct+=P[9].bonusFireRatePct*scale(9);
+  stats.totalFireRateMultiplier*=1+P[9].totalFireRate*scale(9);
 }

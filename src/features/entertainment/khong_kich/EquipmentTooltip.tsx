@@ -2,7 +2,7 @@ import React, { useLayoutEffect, useRef } from "react";
 import { EquipmentIcon } from "./EquipmentIcon";
 import { CoreDescription } from "./CoreDescription";
 import { EQUIPMENT_CATALOG, EQUIPMENT_NAME_COLORS } from "./airCombatEquipmentCatalog";
-import { equipmentTelemetry } from "./airCombatEquipmentPresentation";
+import { equipmentTelemetry, equipmentEffectDescription } from "./airCombatEquipmentPresentation";
 import type { EquipmentRewardId } from "./airCombatEquipmentState";
 import type { AircraftCombatState } from "./airCombatTypes";
 
@@ -63,7 +63,7 @@ export function EquipmentTooltip({ anchor, state, onClose }: { anchor: Equipment
       <header className="equipment-tooltip-heading"><EquipmentIcon id={anchor.id} inventory /><h3>{d?.name ?? "Nam Châm Ma Thuật"}</h3></header>
       {d ? <>
         <div className="equipment-direct-stats">{d.statsText.split(";").map((stat, i) => <div key={i}><CoreDescription text={stat.trim()} /></div>)}</div>
-        <EffectDescription text={d.effect} />
+        <EffectDescription text={equipmentEffectDescription(state,d.id)} />
         {d.recipe && <p className="equipment-tooltip-note">{d.rarity === "legendary" ? `Huyền Thoại của ${EQUIPMENT_CATALOG[d.family!].name} · Không có công thức ghép` : `Công thức: ${d.recipe.map(id => EQUIPMENT_CATALOG[id].name).join(" + ")}`}</p>}
         {equipmentTelemetry(state, d.id).map((line, i) => <p key={i} className="equipment-telemetry"><CoreDescription text={line} /></p>)}
       </> : <p>Kéo vào vùng Trang Bị Đang Mang để tháo toàn bộ trang bị và trả về đúng kho. Tiêu hao 1 Nam Châm khi thành công.</p>}

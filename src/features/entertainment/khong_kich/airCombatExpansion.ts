@@ -44,18 +44,18 @@ export function arsenalBonuses(s: AircraftCombatState) {
     const core = CORE_DEFINITIONS.find(c => c.id === id);
     if (core && core.system !== "skill") counts[core.system]++;
   }
-  return { basic:(counts.attack? .15:0)+(counts.utility?.08:0), skill:(counts.resource?.15:0)+(counts.utility?.08:0), reduction:counts.defense?.10:0, resource:counts.utility?.08:0 };
+  return { basic:(counts.attack? .10:0)+(counts.utility?.06:0), skill:(counts.resource?.10:0)+(counts.utility?.06:0), reduction:counts.defense?.10:0, resource:counts.utility?.08:0 };
 }
 /** Runs after all legacy final stats, before canonical clamps/Fire Rate lock. */
 export function applyExpansionStats(s: AircraftCombatState, stats: EffectiveAircraftStats, temporary: boolean) {
   const c = s.coreState;
-  if (owns(s, 188)) {stats.criticalChance += .15;stats.criticalDamageMultiplier+=.50;}
+  if (owns(s, 188)) {stats.criticalChance += .15;stats.criticalDamageMultiplier+=.20;}
   stats.resourceRegen*=1+arsenalBonuses(s).resource;
   if(temporary&&expansionActive(s,"timeRecovery"))stats.resourceRegen*=1.35;
   if (owns(s, 194)) stats.criticalChance += .15;
   if (owns(s, 207)) stats.criticalChance += .25;
-  if (owns(s, 196)) stats.criticalDamageMultiplier += Math.min(.75, (c.stacks.crimsonCrit ?? 0) * .05);
-  if(owns(s,196))stats.criticalChance+=.10;
+  if (owns(s, 196)) stats.criticalDamageMultiplier += Math.min(.25, (c.stacks.crimsonCrit ?? 0) * .025);
+  if(owns(s,196))stats.criticalChance+=.15;
   if(owns(s,182))stats.maxResource*=1.15;
   if(owns(s,183))stats.armor+=20;
   if(owns(s,208)){stats.hpRegen+=2;stats.resourceRegen*=1.20;}
@@ -89,24 +89,24 @@ export function applyExpansionStats(s: AircraftCombatState, stats: EffectiveAirc
 }
 export function expansionOutgoing(s: AircraftCombatState, basic: boolean, skill: boolean, primary = false): number {
   let value = 1;
-  if(owns(s,219)&&!overheated(s)&&releaseState(s).heat>=50&&releaseState(s).heat<100)value*=1.25;
-  if (expansionActive(s, "alternating")) value *= 1.20;
+  if(owns(s,219)&&!overheated(s)&&releaseState(s).heat>=50&&releaseState(s).heat<100)value*=1.20;
+  if (expansionActive(s, "alternating")) value *= 1.14;
   if (owns(s, 192) && hasAbsorbShield(s)) value *= 1.20;
-  if (owns(s, 203) && activeNegativeStatusTypes(s).size) value *= 1.35;
-  if (owns(s, 205)) value *= 1.40;
+  if (owns(s, 203) && activeNegativeStatusTypes(s).size) value *= 1.25;
+  if (owns(s, 205)) value *= 1.30;
   if (owns(s, 209) && s.coreState.stacks.lastStand) value *= .85;
-  for(const [row,bonus] of [[211,.10],[212,.12],[214,.15],[217,.10],[203,.10]])if(owns(s,row))value*=1+bonus;
-  if(owns(s,218)&&expansionActive(s,"ultimateAftershock"))value*=1.35;
-  if(owns(s,116)&&(basic||skill)&&expansionActive(s,"sameTarget"))value*=1+.04*Math.min(4,Math.floor((s.coreState.stacks.sameTargetHits??0)/5));
-  if(skill&&owns(s,119))value*=1.15;
-  if(skill&&owns(s,182)&&(s.coreState.stacks.resourceRatio??0)>.7)value*=1.10;
+  for(const [row,bonus] of [[211,.10],[212,.12],[214,.15],[217,.10],[203,.08]])if(owns(s,row))value*=1+bonus;
+  if(owns(s,218)&&expansionActive(s,"ultimateAftershock"))value*=1.25;
+  if(owns(s,116)&&(basic||skill)&&expansionActive(s,"sameTarget"))value*=1+.03*Math.min(4,Math.floor((s.coreState.stacks.sameTargetHits??0)/5));
+  if(skill&&owns(s,119))value*=1.10;
+  if(skill&&owns(s,182)&&(s.coreState.stacks.resourceRatio??0)>.7)value*=1.07;
   const arsenal = arsenalBonuses(s);
   if (basic) {
     value *= 1 + arsenal.basic;
-    if (expansionActive(s, "confluence")) value *= 1.45;
-    if (primary && owns(s, 206)) value *= 1.70;
+    if (expansionActive(s, "confluence")) value *= 1.30;
+    if (primary && owns(s, 206)) value *= 1.50;
   }
-  if (skill) { value *= 1 + arsenal.skill; if (owns(s, 190)) value *= 1.30; }
+  if (skill) { value *= 1 + arsenal.skill; if (owns(s, 190)) value *= 1.20; }
   return value;
 }
 export function expansionIncoming(s: AircraftCombatState): number {

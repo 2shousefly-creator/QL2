@@ -26,7 +26,7 @@ export function CombatStatChips({ stats, baseline, healingReceived = 1, onInspec
   const descriptions = [
     "Hỏa Lực thể hiện khả năng gây sát thương của chiến cơ từ bắn thường và kỹ năng.",
     `Giáp giảm ${((1-100/(100+Math.max(-80,stats.armor)))*100).toLocaleString("vi-VN",{maximumFractionDigits:1})}% sát thương nhận vào từ kẻ địch.`,
-    "Số lần khai hỏa đạn thường trong 1 giây.", "Số HP hồi lại mỗi 1 giây.", `Số ${resource} hồi lại mỗi 1 giây.`,
+    "Số lần khai hỏa đạn thường trong 1 giây.", "Số Máu hồi lại mỗi 1 giây.", `Số ${resource} hồi lại mỗi 1 giây.`,
     "Hồi Chiêu = Hồi Chiêu Cơ Bản × 100 / (100 + Điểm Hồi Kỹ Năng).",
     `Chiến cơ có ${Math.round(stats.criticalChance*100)}% Tỷ Lệ Chí Mạng cho mỗi đòn có thể chí mạng.`,
     `Chiến cơ có ${Math.round(stats.criticalDamageMultiplier*100)}% Sát Thương Chí Mạng: đòn chí mạng gây ${Math.round(stats.criticalDamageMultiplier*100)}% sát thương của đòn không chí mạng tương ứng.`,

@@ -538,5 +538,5 @@ export function getCoreDefinition(id: CoreId): CoreDefinition {
 
 /** Concrete Magnetic Storm boss stats, before wave progression. */
 export const TEMPEST_CONFIG: EnemyConfig = { ...ENEMY_CONFIGS.boss, name: "TEMPEST CROWN", baseHp: 175312.5, baseArmor: 168.3, projectileDamage: 188.16, collisionDamage: 672 };
-export const STORMBREAKER_CONFIG: EnemyConfig = { ...ENEMY_CONFIGS.boss, name: "STORMBREAKER Ω", baseHp: 210375, baseArmor: 198.59, speed: 31, radius: 43, projectileDamage: 222.03, collisionDamage: 792.96 };
+export const STORMBREAKER_CONFIG: EnemyConfig = { ...ENEMY_CONFIGS.boss, name: "STORMBREAKER Ω", baseHp: 284006.25, baseArmor: 268.0965, speed: 31, radius: 43, projectileDamage: 222.03, collisionDamage: 792.96 };
 export const stageEnemyConfig = (type: EnemyType, stageId: number): EnemyConfig => type === "boss" && stageId === 3 ? STORMBREAKER_CONFIG : type === "boss" && stageId === 2 ? TEMPEST_CONFIG : ENEMY_CONFIGS[type];
