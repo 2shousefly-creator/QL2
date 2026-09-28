@@ -252,6 +252,9 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
           }
         }
         if (!reducedMotion) this.vfx.spawn("smoke", event.x, event.y, event.size, 0.85, 0xffffff, 18);
+      } else if (event.kind === "ultimate_effect" && (event.ultimateEffect === "ultimateTitanMuzzle" || event.ultimateEffect === "ultimateTitanImpact")) {
+        // Oanh Tạc keeps its dedicated atlas VFX, but firing/impact no longer shakes the camera.
+        continue;
       } else if (event.kind === "bomb") {
         this.vfx.spawn("shockwave", event.x, event.y, event.size, .65, 0xffd590);
         this.vfx.spawn("charge", event.x, event.y, reducedMotion ? 90 : 160, .16, 0xfff4dc);
