@@ -1,0 +1,133 @@
+{
+  "version": "26.17.3",
+  "releaseDate": "28/09/2026",
+  "title": "Lõi Chuyển Đổi & HUD Trang Bị",
+  "displayTitle": "KHÔNG KÍCH 26.17.3 — LÕI CHUYỂN ĐỔI & HUD TRANG BỊ",
+  "summary": "**26.17.3** tập trung làm rõ các lựa chọn Lõi và thông tin Trang Bị ngay trong trận. Bản Đồ Dự Thảo được đưa về đúng vai trò mở rộng lựa chọn thay vì đồng thời tăng sát thương, 5 lựa chọn Lõi chuyển sang bố cục dọc dễ theo dõi hơn, và các Lõi nhận từ Chuyển Đổi giờ được thông báo trực tiếp trên màn hình chơi.\n\nHUD Trang Bị cũng được cải thiện để người chơi có thể kiểm tra nhanh từng món đang mang mà không phải mở Kho Trang Bị.",
+  "sections": [
+    {
+      "id": "s1",
+      "title": "BẢN ĐỒ DỰ THẢO",
+      "icon": { "kind": "core", "id": "core_214" },
+      "intro": [
+        {
+          "text": "Bản Đồ Dự Thảo được tập trung hoàn toàn vào khả năng mở rộng lựa chọn Lõi, đồng thời bố cục 5 lựa chọn được đơn giản hóa để dễ đọc hơn trên mọi kích thước màn hình.",
+          "format": "paragraph",
+          "changeType": "change"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s1-e1",
+          "icon": { "kind": "core", "id": "core_214" },
+          "title": "Bản Đồ Dự Thảo",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Xóa hiệu ứng **+15% mọi sát thương gây ra**.",
+              "format": "bullet",
+              "changeType": "nerf"
+            },
+            {
+              "text": "Các lượt chọn Lõi sau khi sở hữu Bản Đồ Dự Thảo vẫn hiển thị **5 thẻ thay vì 3**, mỗi ô vẫn có lượt Đổi Lại riêng và không ảnh hưởng lượt đang chọn.",
+              "format": "bullet",
+              "changeType": "unchanged"
+            },
+            {
+              "text": "Khi có 5 lựa chọn, các card giờ được xếp thành **một cột dọc** giống bố cục 3 Lõi thông thường thay vì cuộn ngang hoặc chia nhiều cột.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "THÔNG BÁO CHUYỂN ĐỔI",
+      "icon": { "kind": "core", "id": "core_050" },
+      "intro": [
+        {
+          "text": "Các Lõi được cấp trực tiếp từ hiệu ứng Chuyển Đổi giờ có phản hồi rõ ràng trên màn hình chơi để người chơi biết chính xác mình vừa nhận được gì.",
+          "format": "paragraph",
+          "changeType": "new"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s2-e1",
+          "icon": { "kind": "core", "id": "core_050" },
+          "title": "Chuyển Đổi: Vàng / Kim Cương / Hỗn Loạn",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Mỗi Lõi nhận từ **Chuyển Đổi: Vàng**, **Chuyển Đổi: Kim Cương** hoặc **Chuyển Đổi: Hỗn Loạn** giờ hiển thị một thông báo riêng với nguồn Chuyển Đổi và tên Lõi vừa nhận.",
+              "format": "bullet",
+              "changeType": "new"
+            }
+          ]
+        },
+        {
+          "id": "s2-e2",
+          "icon": { "kind": "core", "id": "core_216" },
+          "title": "Hộp Pandora",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Mỗi Lõi Kim Cương được Hộp Pandora cấp lại sau khi chuyển đổi giờ có **một thông báo riêng** trên màn hình chơi.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Nếu Hộp Pandora cấp nhiều Lõi, từng Lõi được thông báo độc lập theo thứ tự nhận thay vì gộp thành một thông báo tổng.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "HUD TRANG BỊ",
+      "icon": { "kind": "equipment", "id": "TH20" },
+      "intro": [
+        {
+          "text": "Trang Bị đang mang trên HUD giờ có thể được kiểm tra trực tiếp mà không cần rời mắt sang Kho Trang Bị.",
+          "format": "paragraph",
+          "changeType": "change"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s3-e1",
+          "icon": { "kind": "equipment", "id": "TH20" },
+          "title": "Tooltip Trang Bị đang mang",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Nhấp vào một trong **6 ô Trang Bị đang mang** trên HUD giờ mở tooltip chi tiết của chính món Trang Bị đó thay vì mở Kho Trang Bị.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "Trong lúc tooltip Trang Bị đang mở, trận đấu được tạm dừng giống các tooltip HUD khác để người chơi có thời gian đọc thông tin.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "Các ô Trang Bị trống không mở tooltip và không mở Kho Trang Bị.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "Nút **Kho Trang Bị** lớn trên HUD giữ nguyên chức năng mở Kho Trang Bị.",
+              "format": "bullet",
+              "changeType": "unchanged"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

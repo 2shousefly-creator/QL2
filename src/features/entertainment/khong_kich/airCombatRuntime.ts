@@ -2947,7 +2947,7 @@ function applyDamageToEnemy(world: CombatWorld, enemy: EnemyEntity, rawDamage: n
         if(target.elite||target.boss)factor(67,1.18);
         if(hpBefore<enemy.maxHp*.30)factor(68,1.30);
         if(hpBefore>enemy.maxHp*.7)factor(69,1.30);
-        for(const [row,value] of [[211,1.10],[212,1.12],[214,1.15],[217,1.10],[203,1.08]])factor(row,value);
+        for(const [row,value] of [[211,1.10],[212,1.12],[217,1.10],[203,1.08]])factor(row,value);
         if(expansionActive(state,"ultimateAftershock"))factor(218,1.25);
         if(basic){factor(111,1.10);factor(54,state.coreState.stacks.fireRateConversion??1);if(expansionActive(state,"overloadedBarrel"))factor(58,1.35);}
         if(basic||skillHit)factor(116,sameTargetBonus);

@@ -1,9 +1,9 @@
-export type ReleaseEntityKind = "core" | "skill" | "aircraft" | "enemy" | "boss" | "projectile" | "vfx" | "system" | "ui" | "wave";
+export type ReleaseEntityKind = "core" | "skill" | "equipment" | "aircraft" | "enemy" | "boss" | "projectile" | "vfx" | "system" | "ui" | "wave";
 export interface ReleaseIconRef { kind: ReleaseEntityKind; id: string }
 export interface ReleaseChangeRow {
   text: string;
   format: "paragraph" | "bullet" | "heading";
-  changeType?: "change" | "new" | "removed" | "unchanged" | "note";
+  changeType?: "change" | "new" | "removed" | "nerf" | "unchanged" | "note";
   label?: string;
   before?: string;
   after?: string;

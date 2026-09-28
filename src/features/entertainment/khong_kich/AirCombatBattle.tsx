@@ -3,6 +3,7 @@ import { AirCombatCoreDetail } from "./AirCombatCoreDetail";
 import { AirCombatCoreTransition } from "./AirCombatCoreTransition";
 import { AirCombatTooltipPortal } from "./AirCombatTooltipPortal";
 import { AirCombatEquipmentInventory } from "./AirCombatEquipmentInventory";
+import { EquipmentTooltip, type EquipmentTooltipAnchor } from "./EquipmentTooltip";
 import { expansionState } from "./airCombatExpansion";
 import { releaseState } from "./airCombatReleaseState";
 import { reserveCap } from "./airCombatSelectionRules";
@@ -149,7 +150,8 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
   // Draft state changes only on a new selection or committed reroll, not on HUD ticks.
   const rerollSources=useMemo(()=>coreChoices?.map((_,slot)=>bestAvailableRerollSource(worldRef.current,slot))??[],[coreChoices]);
   const [hubTooltip, setHubTooltip] = useState<(HubTooltip & {id:string}) | null>(null);
-  const tooltipOwner = useRef<"hub"|"skill"|"status"|null>(null);
+  const [hubEquipmentTooltip, setHubEquipmentTooltip] = useState<EquipmentTooltipAnchor | null>(null);
+  const tooltipOwner = useRef<"hub"|"skill"|"status"|"equipment"|null>(null);
   const [primaryChoice, setPrimaryChoice] = useState<SkillId | null>(null);
   const [showPrimaryChoice, setShowPrimaryChoice] = useState(false);
   const [tooltipSkill, setTooltipSkill] = useState<SkillId | null>(null);
@@ -200,18 +202,19 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
     setPauseState(previous => previous.paused === next.paused && previous.label === next.label ? previous : next);
   }, [resetPlayerControl, resetSkillPress]);
 
-  const activateTooltip = useCallback((owner: "hub"|"skill"|"status") => {
-    if (owner === "skill") resetPlayerControl();
+  const activateTooltip = useCallback((owner: "hub"|"skill"|"status"|"equipment") => {
+    if (owner === "skill" || owner === "equipment") resetPlayerControl();
     tooltipOwner.current = owner;
     setPauseReason("tooltip", true);
     if (owner !== "status") statusStripRef.current?.close();
     if (owner !== "skill") { resetSkillPress(); setTooltipSkill(null); }
     if (owner !== "hub") setHubTooltip(null);
+    if (owner !== "equipment") setHubEquipmentTooltip(null);
   }, [setPauseReason, resetSkillPress, resetPlayerControl]);
   const closeAllTooltips = useCallback(() => {
     tooltipOwner.current = null;
     resetSkillPress();
-    statusStripRef.current?.close(); setTooltipSkill(null); setHubTooltip(null);
+    statusStripRef.current?.close(); setTooltipSkill(null); setHubTooltip(null); setHubEquipmentTooltip(null);
     setPauseReason("tooltip", false);
   }, [setPauseReason, resetSkillPress]);
   const onStatusTooltip = useCallback((open: boolean) => {
@@ -223,6 +226,10 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
   const inspectHub = (id: string, tooltip: HubTooltip) => {
     if (tooltipOwner.current === "hub" && hubTooltip?.id === id) { closeAllTooltips(); return; }
     activateTooltip("hub"); setHubTooltip({ id, ...tooltip });
+  };
+  const inspectEquipment = (id: EquipmentTooltipAnchor["id"], source: HTMLElement) => {
+    if (tooltipOwner.current === "equipment" && hubEquipmentTooltip?.source === source) { closeAllTooltips(); return; }
+    activateTooltip("equipment"); setHubEquipmentTooltip({ id, source });
   };
   useEffect(() => {
     const endTimers = new Set<number>();
@@ -620,6 +627,7 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
       {hpRatio < 0.3 && <div className="pointer-events-none absolute inset-0 z-[5] rounded-2xl" style={{ boxShadow: "inset 0 0 55px rgba(225,29,72," + ((0.3 - hpRatio) * 1.6) + ")" }} />}
       <section className="air-combat-hud absolute inset-x-0 top-0 z-10 border-b border-cyan-300/30 bg-slate-950/95 text-white" style={{ height: AIR_COMBAT_WORLD.hudHeight / 720 * 100 + "%" }} data-hud-region="fixed">
         <AirCombatTacticalHud world={worldRef.current} hud={hud} reducedMotion={reducedMotion} coreChoice={!!coreChoices || showEquipment || showCoreList || showPrimaryChoice || showExitConfirm}
+          onEquipmentInspect={inspectEquipment}
           onEquipment={()=>{setPauseReason("equipment",true);closeAllTooltips();setShowEquipment(true);}}
           onInspect={inspectHub} onCores={()=>{setPauseReason("coreList",true);closeAllTooltips();setShowCoreList(true);}}
           onPause={()=>{setPauseReason("user",true);closeAllTooltips();}}/>
@@ -706,6 +714,9 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
       </div>
 
       {hud.waveState === "countdown" && hud.waveCountdown > 0 && <div className="air-wave-countdown">Đợt tiếp theo sau<strong>{hud.waveCountdown}</strong></div>}
+      {hubEquipmentTooltip && <AirCombatTooltipPortal anchor={stageRef}>
+        <EquipmentTooltip anchor={hubEquipmentTooltip} state={worldRef.current.aircraft} onClose={closeAllTooltips}/>
+      </AirCombatTooltipPortal>}
       <AnimatePresence>
       {hubTooltip && <motion.aside key="hub-tooltip" {...airTooltipMotion} className="air-hub-tooltip" data-combat-tooltip-panel="hub" role="status">
         <div className="air-tooltip-heading"><strong>{hubTooltip.title}</strong><button type="button" aria-label="Đóng thông tin" onClick={closeAllTooltips}><X/></button></div>
@@ -729,7 +740,7 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
 
       {coreChoices && (
         <AppModal key="core-choice" exitDuration={90} archetype="transaction" layer="exclusive-dialog" layout="viewport-safe" closeOnEscape={false}
-          reducedMotion={reducedMotion} labelledBy={detailSlot === null ? "air-core-choice-title" : "air-core-detail-title"} overlayClassName="air-upgrade-overlay" panelClassName={`air-upgrade-panel ${coreChoices.length===5?"air-upgrade-panel--five":""}`}>
+          reducedMotion={reducedMotion} labelledBy={detailSlot === null ? "air-core-choice-title" : "air-core-detail-title"} overlayClassName="air-upgrade-overlay" panelClassName="air-upgrade-panel">
           <h2 id="air-core-choice-title">CHỌN MỘT NÂNG CẤP</h2>
           {worldRef.current.coreSelectionEvent?.context.kind==="normal"&&<div className="air-selection-rules">
             <p className="air-core-once-rule">Mỗi Lõi chỉ xuất hiện một lần trong mỗi lượt chơi. Lõi bị bỏ qua hoặc Đổi Lại sẽ không trở lại.</p>
