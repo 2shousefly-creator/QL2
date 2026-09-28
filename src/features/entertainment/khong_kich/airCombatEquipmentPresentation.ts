@@ -26,7 +26,7 @@ export function equipmentStatuses(w:CombatWorld):StatusPresentation[] {
   const chest=releaseState(s).waitingChest;
   if(chest&&!chest.cancelled)result.push({id:"core_227:chest",group:"buff",name:"Chờ Đợi Xứng Đáng?",icon:{kind:"core",id:"core_227"},description:WAITING_CHEST_DESCRIPTION,source:"Lõi 227",stacks:0,remaining:chest.claimed?Infinity:chest.remaining,duration:500,priority:100,timerKind:"cooldown",showNumericTimer:!chest.claimed,timeLabel:chest.claimed?"Đã mở Rương":undefined,rewardMessage:chest.claimed?`Đã nhận phần thưởng: ${chest.rewardLabel}`:undefined});
   for(const d of activeEquipmentFamilies(s).values()) {
-    const f=Number(d.family!.slice(2)),e=equipmentEffect(s,f),active=e.until>t,cooldown=e.ready>t;
+    const f=Number(d.family!.slice(2)),e=equipmentEffect(s,f),active=(f===25?e.bonusUntil??e.until:e.until)>t,cooldown=!e.cooldownPending&&e.ready>t;
     const dynamic=[2,3,4,5,6,10,11,12,13,14,17,18,19,20,21,23,24,25,26,28,29,30,32,33,34,35].includes(f);
     if(!dynamic)continue;
     const charged=[6,12,13,18,23,24].includes(f),mode=f===28?equipmentGeminiMode(s,stats.maxHp,stats.maxResource):f===33?s.currentHp>=stats.maxHp*.5?"offense":"siphon":undefined;
@@ -34,9 +34,9 @@ export function equipmentStatuses(w:CombatWorld):StatusPresentation[] {
     if(!active&&!cooldown&&!charged&&!mode&&!ready&&!(f===10&&e.stacks>0))continue;
     const cap=f===2?20:f===10?6:f===13?100:f===21?4:f===26?6:0;
     let badge=cap?`${number(f===13?e.value:e.stacks)}/${cap}`:f===6?`${e.count%8}/8`:f===12?`${e.count%5}/5`:f===18?number(e.value):f===23?`${number(e.value/stats.maxHp*100)}%`:f===24?`${number(e.value/stats.maxResource*100)}%`:undefined;
-    const remaining=active?e.until-t:cooldown?e.ready-t:Infinity;
+    const remaining=active?(f===25?e.bonusUntil??e.until:e.until)-t:cooldown?e.ready-t:Infinity;
     const modeLabel=mode==="offense"?"Tấn công":mode==="hp"?"Hồi Máu":mode==="resource"?"Hồi Tài Nguyên":mode==="siphon"?"Hút máu":undefined;
-    result.push({id:`equipment:${d.id}`,group:"buff",name:d.name,icon:{kind:"equipment",id:d.id},description:equipmentEffectDescription(s,d.id),source:`${d.rarity==="legendary"?"Trang Bị Huyền Thoại":"Trang Bị"} · ${d.name}`,stacks:e.stacks,badgeText:badge,badgeKind:charged?"charge":"stack",remaining,duration:active?e.duration:cooldown?Math.max(remaining,1):Infinity,priority:active?58:40,timerKind:active?"active":"cooldown",timeLabel:modeLabel??(remaining===Infinity?"Sẵn sàng":undefined),showNumericTimer:!badge&&Number.isFinite(remaining)});
+    result.push({id:`equipment:${d.id}`,group:"buff",name:d.name,icon:{kind:"equipment",id:d.id},description:equipmentEffectDescription(s,d.id),source:`${d.rarity==="legendary"?"Trang Bị Huyền Thoại":"Trang Bị"} · ${d.name}`,stacks:e.stacks,badgeText:badge,badgeKind:charged?"charge":"stack",remaining,duration:active?(f===25?6:e.duration):cooldown?Math.max(remaining,1):Infinity,priority:active?58:40,timerKind:active?"active":"cooldown",timeLabel:modeLabel??(remaining===Infinity?"Sẵn sàng":undefined),showNumericTimer:!badge&&Number.isFinite(remaining)});
   }
   return result;
 }

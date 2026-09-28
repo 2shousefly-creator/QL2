@@ -20,12 +20,11 @@ export function releaseTelemetry(state:AircraftCombatState,row:number):string[]{
   };
   if(descriptions[row])lines.push(descriptions[row]);
   if(row===201){const counts={attack:0,defense:0,resource:0,utility:0};for(const id of state.selectedCores){const core=getCoreDefinition(id);if(core.system!=="skill")counts[core.system]++;}const b=arsenalBonuses(state);lines.push(...Object.entries(counts).map(([system,count])=>`${CORE_SYSTEM_LABELS[system as keyof typeof counts]}: ${count}`),`+${number(b.basic*100)}% sát thương đạn thường · +${number(b.skill*100)}% sát thương kỹ năng · ${number(b.reduction*100)}% Giảm Sát Thương`);}
-  if(row===208)lines.push(`+${number(stats.dualHpBonus??0)} Hồi Máu/s từ Tế Bào Song Năng`,`+${number(stats.dualResourceBonus??0)} Hồi Tài Nguyên/s từ Tế Bào Song Năng`);
   if(row===216)lines.push("Đã sử dụng · Giữ lại chỉ số vĩnh viễn đã kiếm được từ các Lõi chuyển đổi.");
   if(row===212)lines.push(`Reroll Dự Trữ: ${r.reserve} / 5`);
   if(row===218)lines.push(`Dư Chấn Tối Hậu còn ${number(Math.max(0,(c.timers.ultimateAftershock??0)-c.time))}s`);
   if(row===219)lines.push(`Nhiệt: ${number(r.heat)} / 100`);
-  if(row===220)lines.push(`Bóng đang hoạt động: ${r.ghosts.length} · Sẵn sàng sau ${number(Math.max(0,r.ghostReady-c.time))} giây`);
+  if(row===220)lines.push(r.ghosts.length?`Bóng đang hoạt động: ${r.ghosts.length} · Hồi Chiêu bắt đầu sau khi Bóng kết thúc`:`Sẵn sàng sau ${number(Math.max(0,r.ghostReady-c.time))} giây`);
   if(row===221)lines.push(r.mark?`Dấu đang tích ${number(r.mark.damage)} sát thương thực nhận`:`Hồi lại sau ${number(Math.max(0,r.markReady-c.time))} giây`);
   if(row===222)lines.push(r.mode==="small"?"Thu Nhỏ: kích thước/hitbox ×0,5; +33 Điểm Hồi Kỹ Năng; +50% Hồi Tài Nguyên":"Khổng Lồ: kích thước/hitbox ×1,5; +30% Máu Tối Đa; +30% Hỏa Lực",`Roll kế tiếp: ${number(Math.max(0,r.nextMode-c.time))} giây`);
   return lines;
@@ -36,7 +35,7 @@ export function tickCoreTelemetry(s:AircraftCombatState,dt:number){
   const c=s.coreState,stats=getEffectiveAircraftStats(s),now=c.time;
   const uptime=(row:number,active:boolean)=>{if(active)recordCoreMetric(s,row,"uptime",dt);};
   const timed=(row:number,key:string)=>recordCoreMetric(s,row,"uptime",Math.min(dt,Math.max(0,(c.timers[key]??0)-(now-dt))));
-  uptime(49,now-c.lastMove>=2.5);timed(61,"reactiveArmor");uptime(63,s.currentHp<stats.maxHp*.35);
+  uptime(49,now-c.lastMove>=2);timed(61,"reactiveArmor");uptime(63,s.currentHp<stats.maxHp*.35);
   uptime(66,now-c.lastKill<=4&&(c.stacks.combo??0)>0);timed(71,"tacticalRate");uptime(75,(c.stacks.slaying??0)>0);uptime(91,s.currentHp<stats.maxHp);
   timed(98,"comeback");timed(114,"sameTarget");timed(116,"sameTarget");timed(218,"ultimateAftershock");timed(119,"timeRecovery");timed(170,"earlyArmor");timed(175,"alternating");timed(178,"magneticBrake");timed(181,"skillExhaust");timed(186,"confluence");
   recordCoreMetric(s,100,s.currentHp>stats.maxHp*.7?"firepowerTime":s.currentHp<stats.maxHp*.3?"armorTime":"regenTime",dt);

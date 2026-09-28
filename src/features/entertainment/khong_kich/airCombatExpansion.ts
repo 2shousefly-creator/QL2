@@ -1,3 +1,4 @@
+import { coreCooldownReady, deferCoreCooldown, startCoreCooldown } from "./airCombatCooldowns";
 import { equipmentSkillEnd } from "./airCombatEquipmentRuntime";
 import { releaseState, overheated } from "./airCombatReleaseState";
 import type { AircraftCombatState, EffectiveAircraftStats, SkillId } from "./airCombatTypes";
@@ -5,7 +6,7 @@ import { CORE_DEFINITIONS } from "./airCombatCoreCatalog";
 import { recordCoreMetric } from "./airCombatTelemetry";
 
 const owns = (s: AircraftCombatState, n: number) => s.selectedCores.includes(`core_${n}`);
-export interface ExpansionCast { skillId: SkillId; overclock: number; compressed?: boolean; capacitor?: boolean; equipmentBonus?: number; ended?: boolean }
+export interface ExpansionCast { skillId: SkillId; overclock: number; compressed?: boolean; capacitor?: boolean; equipmentBonus?: number; cannonHealingSpent?: number; ended?: boolean }
 export interface AbsorbShield {
   amount: number; until: number;
   capacity?: number; absorbed?: number; duration?: number; returned?: boolean; settled?: boolean;
@@ -50,21 +51,22 @@ export function arsenalBonuses(s: AircraftCombatState) {
 export function applyExpansionStats(s: AircraftCombatState, stats: EffectiveAircraftStats, temporary: boolean) {
   const c = s.coreState;
   if (owns(s, 188)) {stats.criticalChance += .15;stats.criticalDamageMultiplier+=.20;}
-  stats.resourceRegen*=1+arsenalBonuses(s).resource;
-  if(temporary&&expansionActive(s,"timeRecovery"))stats.resourceRegen*=1.35;
+  stats.bonusResourceRegenPct+=arsenalBonuses(s).resource;
+  stats.permanentResourceRegenPct+=arsenalBonuses(s).resource;
+  if(temporary&&expansionActive(s,"timeRecovery"))stats.bonusResourceRegenPct+=.35;
   if (owns(s, 194)) stats.criticalChance += .15;
   if (owns(s, 207)) stats.criticalChance += .25;
   if (owns(s, 196)) stats.criticalDamageMultiplier += Math.min(.25, (c.stacks.crimsonCrit ?? 0) * .025);
   if(owns(s,196))stats.criticalChance+=.15;
   if(owns(s,182))stats.maxResource*=1.15;
   if(owns(s,183))stats.armor+=20;
-  if(owns(s,208)){stats.hpRegen+=2;stats.resourceRegen*=1.20;}
+  if(owns(s,208)){stats.hpRegen+=2;stats.permanentHpRegenBonus+=2;stats.bonusResourceRegenPct+=.20;stats.permanentResourceRegenPct+=.20;}
   if (temporary) {
     if(owns(s,114)&&expansionActive(s,"sameTarget"))stats.bonusFireRatePct+=Math.min(4,Math.floor((c.stacks.sameTargetHits??0)/5))*.25;
     if(expansionActive(s,"coldArmor"))stats.armor+=25;
-    if(owns(s,174)&&expansionActive(s,"shockPadRegen"))stats.resourceRegen*=1.20;
-    if(owns(s,176)&&c.stacks.breathing)stats.resourceRegen*=1.25;
-    if(owns(s,218)&&expansionActive(s,"ultimateAftershock"))stats.resourceRegen*=1.35;
+    if(owns(s,174)&&expansionActive(s,"shockPadRegen"))stats.bonusResourceRegenPct+=.20;
+    if(owns(s,176)&&c.stacks.breathing)stats.bonusResourceRegenPct+=.25;
+    if(owns(s,218)&&expansionActive(s,"ultimateAftershock"))stats.bonusResourceRegenPct+=.35;
     const negative = activeNegativeStatusTypes(s).size;
     if (owns(s, 169)) {
       const ratio = s.currentResource / stats.maxResource;
@@ -74,13 +76,13 @@ export function applyExpansionStats(s: AircraftCombatState, stats: EffectiveAirc
     }
     if (owns(s, 170) && expansionActive(s, "earlyArmor")) stats.armor += 50;
     if (owns(s, 179)) stats.criticalChance += (c.stacks.error ?? 0) * .02;
-    if (owns(s, 181) && expansionActive(s, "skillExhaust")) stats.resourceRegen *= 1.45;
+    if (owns(s, 181) && expansionActive(s, "skillExhaust")) stats.bonusResourceRegenPct += .45;
     if (owns(s, 183)) stats.armor += Math.min(40, negative * 20);
     if (owns(s, 192) && !hasAbsorbShield(s)) stats.armor += 25;
     if (owns(s, 209)) {
       if (s.currentHp < stats.maxHp * .35) c.stacks.lastStand = 1;
       else if (s.currentHp > stats.maxHp * .35) c.stacks.lastStand = 0;
-      if (c.stacks.lastStand) { stats.armor += 150; stats.resourceRegen *= 1.4; stats.skillHaste -= 25; }
+      if (c.stacks.lastStand) { stats.armor += 150; stats.bonusResourceRegenPct += .4; stats.skillHaste -= 25; }
     }
   }
   // The locked final chance wins over every new flat/conditional contribution.
@@ -130,10 +132,10 @@ export function celestialProtection(s: AircraftCombatState): boolean {
   if (!owns(s, 184)) return false;
   const c = s.coreState;
   if (expansionActive(s, "celestial")) return true;
-  if (c.timers.celestialReady === undefined) { c.timers.celestialReady = c.time + 15; return false; }
-  if (c.time < c.timers.celestialReady) return false;
+  if (c.timers.celestialReady === undefined && !c.stacks["cooldownPending:celestialReady"]) { c.timers.celestialReady = c.time + 15; return false; }
+  if (!coreCooldownReady(s, "celestialReady")) return false;
   c.timers.celestial = c.time + 3;
-  c.timers.celestialReady = c.time + 3 + 15;
+  deferCoreCooldown(s, "celestialReady");
   recordCoreMetric(s,184,"procs",1);
   return true;
 }
@@ -150,8 +152,16 @@ export function finishAbsorbShield(s: AircraftCombatState, sh: AbsorbShield) {
   prepareAbsorbShield(s, sh);
   sh.settled = true;
   const key=Object.entries(s.coreState.shields).find(([,value])=>value===sh)?.[0];
-  if(key==="skill")s.coreState.timers.skillShieldCd=s.coreState.time+10;
-  if(key==="reactive")s.coreState.timers.reactiveShieldCd=s.coreState.time+10;
+  const endedAt = Math.min(s.coreState.time, sh.until);
+  if(key==="skill")startCoreCooldown(s,"skillShieldCd",10,endedAt);
+  if(key==="reactive")startCoreCooldown(s,"reactiveShieldCd",10,endedAt);
+  if(key==="reserve")startCoreCooldown(s,"reserveShieldCd",15,endedAt);
+  if(key==="recycled")startCoreCooldown(s,"recycleShieldCd",6,endedAt);
+  // Only these families end with their shield. Lazarus remains active through its damage buff.
+  if(key==="equipment:4"||key==="equipment:17") {
+    const effect=s.equipment?.effects[key.slice(10)];
+    if(effect?.cooldownPending){effect.cooldownPending=false;effect.until=endedAt;effect.ready=endedAt+(key==="equipment:4"?60:10);}
+  }
   if (Number.isFinite(sh.until)) expansionState(s).endedShields.push(sh);
 }
 export function createAbsorbShield(s: AircraftCombatState, key: string, amount: number, seconds: number) {
