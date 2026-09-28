@@ -5,6 +5,8 @@ import { Activity, Archive, CalendarDays, Clock3, Crosshair, History, Layers3, L
 import aircraftUrl from "../../../../assets/khong-kich/v2/aircraft-atlas.png";
 import fortressUrl from "../../../../assets/khong-kich/v2/fortress-clouds-atlas.png";
 import { CombatUiIcon } from "../CombatUiIcon";
+import { EquipmentIcon } from "../EquipmentIcon";
+import type { EquipmentRewardId } from "../airCombatEquipmentState";
 import { ENEMY_VISUALS } from "../airCombatEnemyArt";
 import { STAGE2_ART_URLS, STAGE2_ENEMY_ART, STAGE2_VFX_ART } from "../airCombatStage2Art";
 import { STAGE3_ART_URLS, STAGE3_VFX_ART, STORMBREAKER_BOSS_ART } from "../airCombatStage3Art";
@@ -36,6 +38,7 @@ function AtlasThumbnail({ frame }: { frame: AtlasFrame }) {
 export function ReleaseNoteEntityIcon({ icon }: { icon: ReleaseIconRef }) {
   if (icon.kind === "core") return <CombatUiIcon kind="core" id={icon.id.startsWith("core_") ? icon.id : `core_${icon.id.padStart(3, "0")}`} fallback="" className="air-release-entity-icon" />;
   if (icon.kind === "skill") return <CombatUiIcon kind="skill" id={icon.id as SkillId} fallback="" className="air-release-entity-icon" />;
+  if (icon.kind === "equipment") return <EquipmentIcon id={icon.id as EquipmentRewardId} className="air-release-entity-icon" />;
   let frame: AtlasFrame | undefined;
   if (icon.kind === "aircraft") {
     const row = AIRCRAFT_ROWS[icon.id as AircraftId];

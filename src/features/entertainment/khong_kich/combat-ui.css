@@ -244,7 +244,7 @@
 .air-release-row--bullet{padding-left:12px;border-left:2px solid #47556977;}
 .air-release-row[data-change="change"]{border-left:2px solid #818cf866;padding-left:12px;background:linear-gradient(90deg,#818cf808,transparent);}
 .air-release-chip{margin-bottom:5px;}
-.air-release-row[data-change="removed"] .air-release-chip{color:#fda4af;border-color:#fb718544;background:#88133733;}
+.air-release-row[data-change="removed"] .air-release-chip,.air-release-row[data-change="nerf"] .air-release-chip{color:#fda4af;border-color:#fb718544;background:#88133733;}
 .air-release-row[data-change="unchanged"] .air-release-chip{color:#cbd5e1;border-color:#64748b66;background:#33415544;}
 .air-release-row[data-change="note"] .air-release-chip{color:#fde68a;border-color:#fbbf2444;background:#78350f33;}
 .air-release-intro{display:flex;gap:12px;align-items:flex-start;}
@@ -562,11 +562,6 @@
 .air-upgrade-description { min-height:0;overflow:hidden;margin:0; }
 .air-core-clamped { display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden; }
 .air-core-pick { flex:1;min-height:36px;background:#164e63;color:#ecfeff;border:1px solid #67e8f9;font-weight:800; }
-.air-upgrade-overlay .app-overlay__panel.air-upgrade-panel--five { width:min(1600px,96vw); }
-.air-upgrade-panel--five .air-upgrade-choices { display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;touch-action:pan-x;padding:3px 7%;gap:12px; }
-.air-upgrade-panel--five .air-upgrade-row { flex:0 0 86%;scroll-snap-align:center;min-width:0; }
-@media(min-width:760px) { .air-upgrade-panel--five .air-upgrade-choices { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));padding:2px;overflow:hidden; } }
-@media(min-width:1450px) { .air-upgrade-panel--five .air-upgrade-choices { grid-template-columns:repeat(5,minmax(0,1fr)); } }
 
 .air-skill-up-vfx::before{content:"";position:absolute;inset:12%;background:radial-gradient(circle at 10% 15%,#fff 0 2px,transparent 3px),radial-gradient(circle at 90% 30%,#fde047 0 2px,transparent 3px),radial-gradient(circle at 70% 85%,#fff 0 2px,transparent 3px);animation:air-rank-ring 2s ease-out both}
 @media(prefers-reduced-motion:reduce){.air-skill-up-vfx::before{display:none}}

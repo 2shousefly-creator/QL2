@@ -98,7 +98,7 @@ export function expansionOutgoing(s: AircraftCombatState, basic: boolean, skill:
   if (owns(s, 203) && activeNegativeStatusTypes(s).size) value *= 1.25;
   if (owns(s, 205)) value *= 1.30;
   if (owns(s, 209) && s.coreState.stacks.lastStand) value *= .85;
-  for(const [row,bonus] of [[211,.10],[212,.12],[214,.15],[217,.10],[203,.08]])if(owns(s,row))value*=1+bonus;
+  for(const [row,bonus] of [[211,.10],[212,.12],[217,.10],[203,.08]])if(owns(s,row))value*=1+bonus;
   if(owns(s,218)&&expansionActive(s,"ultimateAftershock"))value*=1.25;
   if(owns(s,116)&&(basic||skill)&&expansionActive(s,"sameTarget"))value*=1+.03*Math.min(4,Math.floor((s.coreState.stacks.sameTargetHits??0)/5));
   if(skill&&owns(s,119))value*=1.10;

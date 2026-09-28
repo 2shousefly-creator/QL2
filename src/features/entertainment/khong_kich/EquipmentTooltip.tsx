@@ -15,7 +15,7 @@ function EffectDescription({ text }: { text: string }) {
     </p>;
   })}</>;
 }
-/** Lives inside the modal focus boundary, outside its scrolling body. */
+/** Anchors within an inventory modal or a HUD tooltip portal, outside scrolling content. */
 export function EquipmentTooltip({ anchor, state, onClose }: { anchor: EquipmentTooltipAnchor; state: AircraftCombatState; onClose: () => void }) {
   const layer = useRef<HTMLDivElement>(null), panel = useRef<HTMLElement>(null);
   const d = anchor.id === "VP01" ? null : EQUIPMENT_CATALOG[anchor.id];
@@ -57,7 +57,7 @@ export function EquipmentTooltip({ anchor, state, onClose }: { anchor: Equipment
     window.visualViewport?.addEventListener("resize", position); window.visualViewport?.addEventListener("scroll", position);
     return () => { observer.disconnect(); window.removeEventListener("resize", position); window.removeEventListener("scroll", position, true); window.visualViewport?.removeEventListener("resize", position); window.visualViewport?.removeEventListener("scroll", position); };
   }, [anchor]);
-  return <div ref={layer} className="equipment-tooltip-layer"><section ref={panel} className="equipment-tooltip" role="dialog" aria-label="Chi tiết trang bị" style={{ "--equipment-accent": EQUIPMENT_NAME_COLORS[d?.rarity ?? "item"] } as React.CSSProperties}>
+  return <div ref={layer} className="equipment-tooltip-layer"><section ref={panel} className="equipment-tooltip" data-combat-tooltip-panel="equipment" role="dialog" aria-label="Chi tiết trang bị" style={{ "--equipment-accent": EQUIPMENT_NAME_COLORS[d?.rarity ?? "item"] } as React.CSSProperties}>
     <button type="button" className="equipment-tooltip-close" onClick={onClose} aria-label="Đóng chi tiết">×</button>
     <div key={anchor.id} className="equipment-tooltip-content">
       <header className="equipment-tooltip-heading"><EquipmentIcon id={anchor.id} inventory /><h3>{d?.name ?? "Nam Châm Ma Thuật"}</h3></header>

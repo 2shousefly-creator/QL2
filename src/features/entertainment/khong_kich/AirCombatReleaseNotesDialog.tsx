@@ -12,7 +12,7 @@ function Inline({ text }: { text: string }) {
     part.startsWith("`") ? <strong key={i}>{part.slice(1, -1)}</strong> :
     /^[+−-]?\d/.test(part) ? <strong key={i}>{part}</strong> : part)}</>;
 }
-const BADGES = { new: "MỚI", removed: "LOẠI BỎ", unchanged: "KHÔNG ĐỔI", note: "LƯU Ý" } as const;
+const BADGES = { new: "MỚI", removed: "LOẠI BỎ", nerf: "GIẢM SỨC MẠNH", unchanged: "KHÔNG ĐỔI", note: "LƯU Ý" } as const;
 function ChangeRow({ row }: { row: ReleaseChangeRow }) {
   const badge = row.changeType && row.changeType !== "change" ? BADGES[row.changeType] : null;
   return <div className={`air-release-row air-release-row--${row.format}`} data-change={row.changeType}>

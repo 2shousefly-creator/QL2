@@ -1,5 +1,6 @@
 import { EquipmentIcon } from "./EquipmentIcon";
-import { equipmentState } from "./airCombatEquipmentState";
+import { equipmentState, type EquipmentRewardId } from "./airCombatEquipmentState";
+import { EQUIPMENT_CATALOG } from "./airCombatEquipmentCatalog";
 import React, { useEffect, useRef } from "react";
 import { Layers, Pause } from "lucide-react";
 import { AircraftPreview } from "./AircraftPreview";
@@ -10,9 +11,10 @@ import type { CombatWorld } from "./airCombatRuntime";
 import type { AirCombatHudSnapshot } from "./airCombatTypes";
 
 export interface HubTooltip { title: React.ReactNode; text: React.ReactNode }
-export function AirCombatTacticalHud({ world, hud, reducedMotion, onInspect, onCores, onEquipment, onPause, coreChoice }: {
+export function AirCombatTacticalHud({ world, hud, reducedMotion, onInspect, onCores, onEquipment, onEquipmentInspect, onPause, coreChoice }: {
   world: CombatWorld; hud: AirCombatHudSnapshot; reducedMotion: boolean; coreChoice: boolean;
   onInspect: (id: string, tooltip: HubTooltip) => void; onCores: () => void; onEquipment: () => void; onPause: () => void;
+  onEquipmentInspect: (id: EquipmentRewardId, source: HTMLElement) => void;
 }) {
   const state=world.aircraft,aircraft=AIRCRAFT_CONFIGS[state.aircraftId];
   const xp=hud.combatXpRequired>0?Math.max(0,Math.min(1,state.combatXp/hud.combatXpRequired)):1;
@@ -38,7 +40,10 @@ export function AirCombatTacticalHud({ world, hud, reducedMotion, onInspect, onC
       </svg>
       <span className="air-hub-level">{state.level}</span>
     </button>
-    <div className="air-hub-equipment" aria-label="Trang bị đang mang">{equipmentState(state).equipped.map((item,i)=><button key={i} className="air-hub-equipment-slot" type="button" disabled={coreChoice} onClick={onEquipment} aria-label={`Trang bị ${i+1}`}>
+    <div className="air-hub-equipment" aria-label="Trang bị đang mang">{equipmentState(state).equipped.map((item,i)=><button key={i} className="air-hub-equipment-slot" type="button" disabled={coreChoice || !item}
+      data-combat-tooltip-trigger={item ? "equipment" : undefined}
+      onClick={event=>{if(item)onEquipmentInspect(item.definitionId,event.currentTarget);}}
+      aria-label={item ? `Trang bị ${EQUIPMENT_CATALOG[item.definitionId].name}` : `Ô trang bị ${i+1} trống`}>
       {item?<EquipmentIcon id={item.definitionId}/>:<span>{i+1}</span>}</button>)}</div>
     <div className="air-hub-top">
       <button type="button" className="air-hub-number" data-combat-tooltip-trigger="hub" onClick={()=>onInspect("score",{title:<>Điểm Số: <strong className="air-tooltip-value">{integer(hud.score)}</strong></>,text:"Hạ địch có thưởng nhận điểm cơ bản theo loại địch × hệ số chuỗi tại thời điểm hạ. Dưới 10: ×1; 10–24: ×2; 25–49: ×3; từ 50: ×5. Chuỗi về 0 khi mất Máu do địch hoặc sau 4 giây không hạ địch."})}>

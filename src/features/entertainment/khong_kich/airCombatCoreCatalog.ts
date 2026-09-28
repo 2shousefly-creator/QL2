@@ -2838,7 +2838,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 {
   "id": "core_214",
   "name": "Bản Đồ Dự Thảo",
-  "description": "Nhận +15% mọi sát thương. Các lượt chọn Lõi sau khi sở hữu Lõi này hiển thị 5 thẻ thay vì 3, mỗi ô có lượt đổi lại riêng. Không ảnh hưởng lượt đang chọn.",
+  "description": "Các lượt chọn Lõi sau khi sở hữu Lõi này hiển thị 5 thẻ thay vì 3, mỗi ô có lượt đổi lại riêng. Không ảnh hưởng lượt đang chọn.",
   "system": "utility",
   "icon": "core:core_214",
   "category": "weapon",

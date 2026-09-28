@@ -1,11 +1,17 @@
 import { getCoreDefinition } from "./airCombatConfig";
 import { HealthBarPresentation } from "./airCombatFeedback";
 import type { CombatWorld } from "./airCombatRuntime";
-import { equipmentState, type AcquisitionEvent } from "./airCombatEquipmentState";
+import { equipmentState, type AcquisitionEvent, type CoreConversionSource } from "./airCombatEquipmentState";
 import { EQUIPMENT_CATALOG, EQUIPMENT_NAME_COLORS } from "./airCombatEquipmentCatalog";
 import { EQUIPMENT_ART, equipmentIconIndex } from "./airCombatEquipmentArt";
 
 type Acquisition = AcquisitionEvent;
+const CONVERSION_SOURCE_LABELS: Record<CoreConversionSource, string> = {
+  core_050: "CHUYỂN ĐỔI: VÀNG",
+  core_051: "CHUYỂN ĐỔI: KIM CƯƠNG",
+  core_052: "CHUYỂN ĐỔI: HỖN LOẠN",
+  core_216: "HỘP PANDORA",
+};
 interface Toast { node: HTMLDivElement; age: number; y: number; height: number; width: number }
 /** Fixed DOM pool. Explicit acquisition events drive content, never an ownership diff. */
 export class AirCombatOverlayFeedback {
@@ -59,7 +65,11 @@ export class AirCombatOverlayFeedback {
       const event = this.waiting.shift()!, toast = this.free.pop()!;
       toast.age = 0; toast.node.replaceChildren();delete toast.node.dataset.tier;
       if(event.kind==="core"){
-        const core=getCoreDefinition(event.coreId);toast.node.textContent=`Đã nhận lõi: ${core.name}`;toast.node.dataset.tier=core.tiers[0];
+        const core=getCoreDefinition(event.coreId);
+        toast.node.textContent=event.conversionSourceCoreId
+          ? `${CONVERSION_SOURCE_LABELS[event.conversionSourceCoreId]} → NHẬN LÕI ${core.name}`
+          : `Đã nhận lõi: ${core.name}`;
+        toast.node.dataset.tier=core.tiers[0];
       }else{
         const item=event.definitionId==="VP01",definition=item?null:EQUIPMENT_CATALOG[event.definitionId];
         const name=document.createElement("span");name.textContent=definition?.name??"Nam Châm Ma Thuật";name.style.color=EQUIPMENT_NAME_COLORS[definition?.rarity??"item"];
@@ -79,7 +89,7 @@ export class AirCombatOverlayFeedback {
       toast.node.hidden = false;
       toast.node.style.opacity = "0";
       toast.node.style.transition = reducedMotion ? "none" : "transform .18s ease-out";
-      this.active.unshift(toast); changed = true;
+      this.active.push(toast); changed = true;
     }
     const width = this.host.parentElement?.clientWidth || 360;
     if (changed || width !== this.width) {
