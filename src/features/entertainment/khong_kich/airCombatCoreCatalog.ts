@@ -2897,7 +2897,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 {
   "id": "core_219",
   "name": "Nòng Súng Đỏ Rực",
-  "description": "Thi triển kỹ năng cho +20 Nhiệt; kỹ năng duy trì cho +2 Nhiệt mỗi giây; mỗi đòn đánh thường cho +0,025 Nhiệt. Ở 50–99 Nhiệt, gây thêm 20% mọi sát thương. Khi đạt 100 Nhiệt, Quá Nhiệt trong 3 giây rồi đặt lại. Nếu không thi triển kỹ năng trong 10 giây, mất 15 Nhiệt mỗi giây.",
+  "description": "Thi triển kỹ năng cho +20 Nhiệt; kỹ năng duy trì cho +2 Nhiệt mỗi giây; mỗi đòn đánh thường cho +0,025 Nhiệt. Ở 50–99 Nhiệt, gây thêm 20% mọi sát thương. Khi đạt 100 Nhiệt, Quá Nhiệt trong 3 giây rồi đặt lại. Trong Quá Nhiệt, chiến cơ ngừng bắn thường và không thể thi triển kỹ năng mới; các kỹ năng đang hoạt động không bị hủy và tiếp tục hiệu lực. Nếu không thi triển kỹ năng trong 10 giây, mất 15 Nhiệt mỗi giây.",
   "system": "attack",
   "icon": "core:core_219",
   "category": "offense",
