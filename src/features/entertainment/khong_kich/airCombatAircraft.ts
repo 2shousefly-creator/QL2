@@ -439,7 +439,10 @@ export function tickAircraftState(state: AircraftCombatState, deltaSeconds: numb
 }
 export function isPlayerInvisible(state: AircraftCombatState): boolean { return (state.activeEffects.invisibility || 0) > 0; }
 export function canAcquirePlayerTarget(state: AircraftCombatState): boolean { return !isPlayerInvisible(state) && !equipmentUntargetable(state); }
-export function shouldAutoFire(state: AircraftCombatState): boolean { return !overheated(state) && (state.activeEffects.focus_laser || 0) <= 0 && (state.activeEffects.stellar_lance || 0) <= 0; }
+export function shouldAutoFire(state: AircraftCombatState): boolean {
+    const sweepingCannonActive=(state.activeEffects.sweeping_cannon||0)>0;
+    return (!overheated(state)||sweepingCannonActive) && (state.activeEffects.focus_laser || 0) <= 0 && (state.activeEffects.stellar_lance || 0) <= 0;
+}
 export function classifySkillPress(durationMs: number, longPressMs = 400): "tap" | "hold" { return durationMs >= longPressMs ? "hold" : "tap"; }
 export function shouldCastSkillPress(durationMs: number, holdActivated: boolean, cancelled: boolean, longPressMs = 400): boolean {
     return !cancelled && !holdActivated && classifySkillPress(durationMs, longPressMs) === "tap";
