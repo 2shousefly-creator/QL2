@@ -1,5 +1,4 @@
 import { SKILL_RANKS } from "./airCombatSkillRanks";
-import { SKILL_BASE_VALUES as B } from "./airCombatSkillCores";
 import {
   AircraftConfig,
   AircraftId,
@@ -178,15 +177,15 @@ export const AIRCRAFT_ORDER: AircraftId[] = [
 ];
 
 export const SKILL_CONFIGS: Record<SkillId, SkillConfig> = {
-  predator_lock: {id:"predator_lock",aircraftId:"black_eagle",name:"Khóa Săn Mồi",shortName:"Khóa Săn Mồi",description:"Khóa Săn Mồi",icon:"✦",cost:110,cooldown:18,duration:8},
-  gravity_anchor: {id:"gravity_anchor",aircraftId:"breaker",name:"Neo Trọng Lực",shortName:"Neo Trọng Lực",description:"Neo Trọng Lực",icon:"✦",cost:140,cooldown:20,duration:5},
-  electronic_interference: {id:"electronic_interference",aircraftId:"phantom",name:"Nhiễu Điện Tử",shortName:"Nhiễu Điện Tử",description:"Nhiễu Điện Tử",icon:"✦",cost:30,cooldown:30,duration:1.6},
-  twin_reflection: {id:"twin_reflection",aircraftId:"astra",name:"Song Tinh Phản Xạ",shortName:"Song Tinh Phản Xạ",description:"Song Tinh Phản Xạ",icon:"✦",cost:120,cooldown:20,duration:6},
-  orbit_reversal:{id:"orbit_reversal",aircraftId:"astra",name:"Phản Quỹ Đạo",shortName:"Quỹ Đạo",icon:"",cost:170,cooldown:22,duration:2,damageMultiplier:.3,
+  predator_lock: {id:"predator_lock",aircraftId:"black_eagle",name:"Khóa Săn Mồi",shortName:"Khóa Săn Mồi",description:"Khóa Săn Mồi",icon:"✦",cost:80,cooldown:20,duration:8},
+  gravity_anchor: {id:"gravity_anchor",aircraftId:"breaker",name:"Neo Trọng Lực",shortName:"Neo Trọng Lực",description:"Neo Trọng Lực",icon:"✦",cost:130,cooldown:25,duration:5},
+  electronic_interference: {id:"electronic_interference",aircraftId:"phantom",name:"Nhiễu Điện Tử",shortName:"Nhiễu Điện Tử",description:"Nhiễu Điện Tử",icon:"✦",cost:30,cooldown:28,duration:1.6},
+  twin_reflection: {id:"twin_reflection",aircraftId:"astra",name:"Song Tinh Phản Xạ",shortName:"Song Tinh Phản Xạ",description:"Song Tinh Phản Xạ",icon:"✦",cost:115,cooldown:23,duration:6},
+  orbit_reversal:{id:"orbit_reversal",aircraftId:"astra",name:"Phản Quỹ Đạo",shortName:"Quỹ Đạo",icon:"",cost:110,cooldown:32,duration:2,damageMultiplier:.3,
     description:"Tạo vùng 72px theo Astra trong 2 giây, bắt tối đa 16 projectile thù địch. Bấm lại để kết thúc sớm, không tốn thêm Mana. Khi kết thúc, Tinh Đạn lần lượt hội tụ về phía trước Astra rồi phóng lên trong một hành lang 20px, không tự tìm mục tiêu, không homing hay retarget; mỗi viên gây 30% Hỏa Lực lên địch đầu tiên. Không bắt Beam, AoE, Bomb/Mine, va chạm thân và Boss mechanic không thể bắt. Hồi chiêu bắt đầu khi trạng thái bắt giữ kết thúc và Tinh Đạn bắt đầu hội tụ."},
   stellar_lance:{id:"stellar_lance",aircraftId:"astra",name:"Thương Tinh Tú",shortName:"Tinh Tú",icon:"",cost:60,cooldown:3,damageMultiplier:8,
     description:"Tụ 0,6s, vẫn di chuyển nhưng ngừng bắn thường. Phóng thẳng phía trước, xuyên mọi địch: mục tiêu đầu 800% Hỏa Lực, mục tiêu sau 680% Hỏa Lực. Mỗi lần dùng thành công trong 15s tăng cost kế tiếp 60 Mana và +10% sát thương Thương Tinh Tú, cộng dồn theo phép cộng, tối đa 4 stack: 300 Mana / +40% sát thương Thương Tinh Tú. Hết 15s trở về ban đầu. Hồi chiêu sau phát chính."},
-  starfall:{id:"starfall",aircraftId:"astra",name:"Sao Rơi",shortName:"Sao Rơi",icon:"",cost:130,cooldown:110,damageMultiplier:3.55,
+  starfall:{id:"starfall",aircraftId:"astra",name:"Sao Rơi",shortName:"Sao Rơi",icon:"",cost:150,cooldown:90,damageMultiplier:3.55,
     description:SKILL_RANKS.starfall[0].description},
   "decoy": {
     "id": "decoy",
@@ -195,8 +194,8 @@ export const SKILL_CONFIGS: Record<SkillId, SkillConfig> = {
     "shortName": "Mồi Bẫy",
     "description": "3 đợt, cách 0,75s; mỗi đợt 5 mồi mỗi bên. Mồi hút mục tiêu và hấp thụ đạn trong 1,5s.",
     "icon": "✦",
-    "cost": 140,
-    "cooldown": 22,
+    "cost": 90,
+    "cooldown": 32,
     "duration": 1.5,
     "damageMultiplier": 0
   },
@@ -207,8 +206,8 @@ export const SKILL_CONFIGS: Record<SkillId, SkillConfig> = {
     "shortName": "Điên Cuồng",
     "description": "7s: +120% Tốc Độ Bắn Cộng Thêm. Đạn thường nảy thêm 2 mục tiêu: mục tiêu nảy thứ nhất nhận 50% sát thương đạn gốc, mục tiêu nảy thứ hai nhận 25% sát thương đạn gốc.",
     "icon": "➤",
-    "cost": 160,
-    "cooldown": B.afterburnerCooldown,
+    "cost": 110,
+    "cooldown": 30,
     "duration": 7,
     "damageMultiplier": 0
   },
@@ -219,8 +218,8 @@ export const SKILL_CONFIGS: Record<SkillId, SkillConfig> = {
     "shortName": "Tên lửa",
     "description": SKILL_RANKS.missile_swarm[0].description,
     "icon": "▲",
-    "cost": 100,
-    "cooldown": B.swarmCooldown,
+    "cost": 150,
+    "cooldown": 90,
     "duration": 0,
     "damageMultiplier": 3
   },
@@ -231,8 +230,8 @@ export const SKILL_CONFIGS: Record<SkillId, SkillConfig> = {
     "shortName": "Khiên",
     "description": "Giảm 65% sát thương nhận vào sau Giáp trong 6 giây.",
     "icon": "◆",
-    "cost": 170,
-    "cooldown": B.shieldCooldown,
+    "cost": 100,
+    "cooldown": 35,
     "duration": 6,
     "damageMultiplier": 0
   },
@@ -243,8 +242,8 @@ export const SKILL_CONFIGS: Record<SkillId, SkillConfig> = {
     "shortName": "BigBang",
     "description": "Phát nổ sau 3s kể từ khi khai hỏa, hoặc ngay khi va chạm; gây 1400% Hỏa lực lên mọi địch trong màn hình.",
     "icon": "●",
-    "cost": 200,
-    "cooldown": 26,
+    "cost": 155,
+    "cooldown": 38,
     "duration": 0,
     "damageMultiplier": 14
   },
@@ -255,8 +254,8 @@ export const SKILL_CONFIGS: Record<SkillId, SkillConfig> = {
     "shortName": "Oanh Tạc",
     "description": SKILL_RANKS.sweeping_cannon[0].description,
     "icon": "⋔",
-    "cost": 120,
-    "cooldown": B.cannonCooldown,
+    "cost": 100,
+    "cooldown": 70,
     "duration": 18,
     "damageMultiplier": 0.9
   },
@@ -268,7 +267,7 @@ export const SKILL_CONFIGS: Record<SkillId, SkillConfig> = {
     "description": "Tàng hình và để lại phân thân hút đạn trong 2s; lướt theo hướng di chuyển cuối. Không có hướng thì lướt lên.",
     "icon": "◌",
     "cost": 25,
-    "cooldown": 20,
+    "cooldown": 33,
     "duration": 2,
     "damageMultiplier": 0
   },
@@ -280,7 +279,7 @@ export const SKILL_CONFIGS: Record<SkillId, SkillConfig> = {
     "description": "Tụ 2s, bắn xuyên 2s, mỗi 0,25s gây 300% Hỏa lực. Ngừng bắn thường trong toàn bộ kỹ năng.",
     "icon": "┃",
     "cost": 45,
-    "cooldown": 15,
+    "cooldown": 29,
     "duration": 2,
     "damageMultiplier": 3
   },
@@ -292,7 +291,7 @@ export const SKILL_CONFIGS: Record<SkillId, SkillConfig> = {
     "description": SKILL_RANKS.escort_drone[0].description,
     "icon": "◇",
     "cost": 5,
-    "cooldown": 100,
+    "cooldown": 50,
     "duration": 0,
     "damageMultiplier": 0.7
   }

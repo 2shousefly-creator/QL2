@@ -1409,7 +1409,6 @@ export function castWorldSkill(world: CombatWorld, skillId: SkillId): SkillCastR
     }
     release.hadActiveSkill=true;
     addHeat(world,20,"heatCast");
-    if(overheated(world.aircraft))return result;
     const beforeCastHp = world.aircraft.currentHp;
     dispatchCoreEvent("skillCast", coreContext(world, { skillId }));
     if (world.aircraft.currentHp < beforeCastHp) expansionHpLoss(world,beforeCastHp-world.aircraft.currentHp,false);
@@ -4232,10 +4231,6 @@ function addHeat(w:CombatWorld,amount:number,source:"heatCast"|"heatToggle"|"hea
     if(r.heat>=100){
         r.heat=100;r.overheatUntil=s.coreState.time+3;
         recordCoreMetric(s,219,"overheats",1);
-        recordCoreMetric(s,219,"endedSkills",expansionState(s).liveCasts.filter(c=>!c.ended).length);
-        stopAllSkills(w,true);
-        for(const cast of expansionState(s).liveCasts)finishExpansionSkill(s,cast);
-        r.hadActiveSkill=false;r.lastSkillEnd=s.coreState.time;
     }
 }
 function heatMultiplier(s:AircraftCombatState){const heat=releaseState(s).heat;return hasCore(s,219)&&!overheated(s)&&heat>=50&&heat<100?1.20:1;}
