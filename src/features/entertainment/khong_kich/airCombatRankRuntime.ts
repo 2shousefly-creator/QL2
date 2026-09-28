@@ -38,10 +38,29 @@ export interface RankRuntime {
  twinShots:number; interferenceEnergyRestored:number;
 }
 export const rankRuntime=(w:CombatWorld):RankRuntime=>w.rankRuntime??={interference:new Map(),projectileSlows:new Map(),pulses:[],waves:[],twinVolleys:new Map(),twinShots:0,interferenceEnergyRestored:0};
+function densestGravityAnchorPoint(w:CombatWorld,h:RankRuntimeHooks,rank:number):{x:number;y:number}|null {
+ const enemies=w.enemies.filter(e=>h.hostile(w,e));
+ if(!enemies.length)return null;
+ const radius=120*(rank>=2?1.25:1);
+ let best:EnemyEntity|null=null,bestCount=-1,bestDensity=-Infinity,bestDistance=Infinity;
+ for(const candidate of enemies){
+  let count=0,density=0;
+  for(const enemy of enemies){
+   const distance=Math.hypot(enemy.x-candidate.x,enemy.y-candidate.y);
+   if(distance>radius+enemy.radius)continue;
+   count++;density+=1-Math.min(1,distance/Math.max(1,radius+enemy.radius));
+  }
+  const playerDistance=Math.hypot(candidate.x-w.playerX,candidate.y-w.playerY);
+  if(count>bestCount||(count===bestCount&&density>bestDensity)||(count===bestCount&&density===bestDensity&&playerDistance<bestDistance)){
+   best=candidate;bestCount=count;bestDensity=density;bestDistance=playerDistance;
+  }
+ }
+ return best?{x:best.x,y:best.y}:null;
+}
 export function beginRankSkill(w:CombatWorld,id:SkillId,h:RankRuntimeHooks) {
  const r=rankRuntime(w),rank=skillRank(w.aircraft,id),target=h.priority(w);
  if(id==="predator_lock"){r.lock=target?{target:target.id,until:w.elapsed+getSkillRuntimeValues(w.aircraft,id).duration,stacks:0,extended:0,cast:w.nextId++}:undefined;if(!r.lock)endAircraftSkill(w.aircraft,id);}
- if(id==="gravity_anchor")r.anchor={x:target?.x??w.playerX,y:target?.y??w.playerY-140,until:w.elapsed+getSkillRuntimeValues(w.aircraft,id).duration,next:w.elapsed+.5,rank,affected:new Set(),destroyed:0,inner:new Map()};
+ if(id==="gravity_anchor"){const point=densestGravityAnchorPoint(w,h,rank)??(target?{x:target.x,y:target.y}:null);r.anchor={x:point?.x??w.playerX,y:point?.y??w.playerY-140,until:w.elapsed+getSkillRuntimeValues(w.aircraft,id).duration,next:w.elapsed+.5,rank,affected:new Set(),destroyed:0,inner:new Map()};}
  if(id==="electronic_interference") {
   const cast=w.nextId++,times=rank>=5?[0,.8,1.6]:rank>=2?[0,1]:[0];
   const duration=times[times.length-1]+(Math.hypot(GAMEPLAY_SAFE_RECT.width,GAMEPLAY_SAFE_RECT.height)+INTERFERENCE_WAVE_THICKNESS)/INTERFERENCE_WAVE_SPEED;
