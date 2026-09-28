@@ -52,7 +52,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_005",
     "name": "Hệ Tái Tạo Chiến Thuật",
-    "description": "Nhận +1,5 Hồi Máu/s, +12 Điểm Hồi Kỹ Năng, +10% Hồi Tài Nguyên.",
+    "description": "Nhận +1,5 Hồi Máu/s, +12 Điểm Hồi Kỹ Năng, +5% Hồi Tài Nguyên.",
     "system": "defense",
     "icon": "core:core_005",
     "category": "offense",
@@ -121,7 +121,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_011",
     "name": "Tái Tạo Nano",
-    "description": "Nhận +2,5 Hồi Máu/s, +18 Điểm Hồi Kỹ Năng, +17,5% Hồi Tài Nguyên.",
+    "description": "Nhận +2,5 Hồi Máu/s, +18 Điểm Hồi Kỹ Năng, +10% Hồi Tài Nguyên.",
     "system": "defense",
     "icon": "core:core_011",
     "category": "offense",
@@ -190,7 +190,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_017",
     "name": "Tái Tạo Lượng Tử",
-    "description": "Nhận +3,5 Hồi Máu/s, +25 Điểm Hồi Kỹ Năng, +25% Hồi Tài Nguyên.",
+    "description": "Nhận +3,5 Hồi Máu/s, +25 Điểm Hồi Kỹ Năng, +20% Hồi Tài Nguyên.",
     "system": "defense",
     "icon": "core:core_017",
     "category": "offense",
@@ -2767,7 +2767,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 {
   "id": "core_208",
   "name": "Tế Bào Song Năng",
-  "description": "Nhận +2 Hồi Máu/s và +20% Hồi Tài Nguyên. Chuyển 25% Hồi Máu/s cộng thêm thường trực thành Hồi Tài Nguyên/s và 25% Hồi Tài Nguyên cộng thêm thường trực thành Hồi Máu/s. Hai chuyển đổi không kích hoạt lẫn nhau. Các hiệu ứng tăng hồi phục tạm thời không được tính vào chuyển đổi.",
+  "description": "Nhận +2 Hồi Máu/s và +20% Hồi Tài Nguyên. Chuyển 40% Hồi Máu/s cộng thêm thành Hồi Tài Nguyên/s và 40% Hồi Tài Nguyên cộng thêm thành Hồi Máu/s. Hai chuyển đổi không kích hoạt lẫn nhau. Các hiệu ứng tăng hồi phục tạm thời vẫn được tính vào chuyển đổi.",
   "system": "resource",
   "icon": "core:core_208",
   "category": "resource",
@@ -2885,7 +2885,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 {
   "id": "core_218",
   "name": "Dư Chấn Tối Hậu",
-  "description": "Sau khi Kỹ Năng Tối Thượng kết thúc hoàn toàn, nhận +25% mọi sát thương và +35% Hồi Tài Nguyên trong 8 giây. Không giảm Hồi Chiêu Kỹ Năng Tối Thượng. Có thể cùng tồn tại với Tập Trung Chuyên Môn; nếu Kỹ Năng Tối Thượng bị khóa, hiệu ứng này không thể kích hoạt.",
+  "description": "Sau khi Kỹ Năng Tối Thượng kết thúc hoàn toàn, nhận +25% mọi sát thương và +75% Hồi Tài Nguyên trong 15 giây. Không giảm Hồi Chiêu Kỹ Năng Tối Thượng. Có thể cùng tồn tại với Tập Trung Chuyên Môn; nếu Kỹ Năng Tối Thượng bị khóa, hiệu ứng này không thể kích hoạt.",
   "system": "attack",
   "icon": "core:core_218",
   "category": "weapon",
@@ -2933,7 +2933,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 {
   "id": "core_222",
   "name": "Nâng Cấp Bất Ổn",
-  "description": "Nhận ngay một trong hai trạng thái và đổi trạng thái mỗi 60 giây. Thu Nhỏ: -50% kích thước và vùng va chạm, +33 Điểm Hồi Kỹ Năng, +50% Hồi Tài Nguyên. Khổng Lồ: +50% kích thước và vùng va chạm, +30% Máu Tối Đa, +30% Hỏa Lực.",
+  "description": "Nhận ngay một trong hai trạng thái và đổi trạng thái mỗi 60 giây. Thu Nhỏ: -50% kích thước và vùng va chạm, +33 Điểm Hồi Kỹ Năng, +40% Hồi Tài Nguyên. Khổng Lồ: +50% kích thước và vùng va chạm, +30% Máu Tối Đa, +30% Hỏa Lực.",
   "system": "utility",
   "icon": "core:core_222",
   "category": "weapon",

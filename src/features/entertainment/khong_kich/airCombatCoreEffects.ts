@@ -60,7 +60,7 @@ const flat = (row: number, key: keyof EffectiveAircraftStats, amount: number) =>
     FLAT_CORE_STATS[coreId(row)] = {key,amount};
     register(row, { stats: (_s, stats) => { (stats[key] as number) += amount; } });
 };
-for (const [row,fp,rate,hp,armor,regen,haste,resource] of [[1,25,.36,270,25,1.5,12,.10],[7,40,.58,400,40,2.5,18,.175],[13,60,.87,650,60,3.5,25,.25]]) {
+for (const [row,fp,rate,hp,armor,regen,haste,resource] of [[1,25,.36,270,25,1.5,12,.05],[7,40,.58,400,40,2.5,18,.10],[13,60,.87,650,60,3.5,25,.20]]) {
  register(row,{stats:(_s,t)=>{t.firepower+=fp;t.bonusFireRatePct+=rate;}});
  register(row+1,{stats:(_s,t)=>{t.maxHp+=hp;t.armor+=armor;}});
  register(row+4,{stats:(_s,t)=>{t.hpRegen+=regen;t.permanentHpRegenBonus+=regen;t.skillHaste+=haste;t.bonusResourceRegenPct+=resource;t.permanentResourceRegenPct+=resource;}});

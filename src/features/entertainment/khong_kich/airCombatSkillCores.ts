@@ -20,7 +20,7 @@ export const createSkillCoreRuntime = (): SkillCoreRuntime => ({decoyCastId:0,de
 /** Base mechanic values shared by resolution, skill configuration and player copy. */
 export const SKILL_BASE_VALUES = {
   afterburnerCooldown:24, swarmCooldown:120, shieldCooldown:22, cannonCooldown:100,
-  decoysPerVolley:10, decoyVolleyInterval:.75, afterburnerRate:1.2, upgradedAfterburnerRate:2.25,
+  decoysPerVolley:10, decoyVolleyInterval:.75, afterburnerRate:1.2, rankTwoAfterburnerRate:.7, upgradedAfterburnerRate:1.35,
   bounceFirst:.5, bounceSecond:.25, swarmHover:.35, bombFuse:3, laserTick:.25,
 } as const;
 const b=SKILL_BASE_VALUES;
@@ -28,7 +28,7 @@ const b=SKILL_BASE_VALUES;
 /** Shared values retained by the ranked skill mechanics. */
 export const SKILL_CORE_VALUES = {
   manaRefundCap:.35, decoyRefundCap:.35, heatRecovery:.025, decoyPulseRadius:60, decoyPulseDamage:.7,
-  thermalReduction:.2, thermalTail:4, afterburnerCooldownReduction:11, coolingMana:.18, coolingDuration:5,
+  thermalReduction:.2, thermalTail:4, afterburnerCooldownReduction:11, coolingMana:.10, coolingDuration:5,
   bounceFirst:.75, bounceSecond:.5, swarmCooldownReduction:11, interceptLimit:3, dataLimit:8, dataCrit:.05, dataDuration:10,
   shieldConversion:.8, shieldCooldownReduction:10, aftershockDelay:1.2, aftershockDamage:2.8, weakenReduction:.2, weakenDuration:5,
   knockbackNormal:55, knockbackElite:32, knockbackBoss:16, markBonus:.4, markDuration:8,

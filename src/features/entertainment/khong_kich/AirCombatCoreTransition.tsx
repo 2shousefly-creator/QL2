@@ -22,7 +22,7 @@ function CoreFace({card,detail=false,title=false}:{card:CoreCard;detail?:boolean
     <span className="air-upgrade-copy">
       {detail?<h3 id={title?"air-core-detail-title":undefined}>{card.name}</h3>:<strong className="combat-core-name">{card.name}</strong>}
       <CoreSystemTag system={card.system} tier={card.tier}/>
-      {detail?<span className="air-core-detail-description"><CoreDescription text={card.description} statLines/>{card.availability&&<small className="block mt-2"><CoreDescription text={card.availability}/></small>}</span>:<CompactDescription text={card.description}/>}
+      {detail?<span className="air-core-detail-description"><CoreDescription text={card.description} statLines/></span>:<CompactDescription text={card.description}/>}
     </span>
   </>;
 }

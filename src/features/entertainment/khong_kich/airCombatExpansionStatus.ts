@@ -37,7 +37,7 @@ export function expansionStatuses(w: CombatWorld): StatusPresentation[] {
   timed(181,"skillExhaust",4);
   add(182,ratio>.7?"+15% Tài Nguyên Tối Đa · +7% Sát Thương Kỹ Năng":"+15% Tài Nguyên Tối Đa");
   timed(168,"shiftDiscount",5);
-  timed(218,"ultimateAftershock",8);
+  timed(218,"ultimateAftershock",15);
   const negative=activeNegativeStatusTypes(s).size;
   if(negative)add(183,`+${Math.min(60,20+negative*20)} Giáp`,{badgeText:`+${Math.min(60,20+negative*20)}`,badgeKind:"bonus"});
   const immune=remaining("celestial"),ready=remaining("celestialReady");

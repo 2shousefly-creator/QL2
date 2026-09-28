@@ -1,4 +1,5 @@
 import { resolveTooltipValues } from "./airCombatTooltipValues";
+import { getRecoveryReceivedMultiplier } from "./airCombatRecovery";
 import { resolveSkillCooldown } from "./airCombatStatResolvers";
 import { skillRank, SKILL_RANKS, isUltimate, ultimateCastDisabled } from "./airCombatSkillRanks";
 import { astraOrbitProtectionActive } from "./airCombatAstra";
@@ -95,7 +96,7 @@ export function getActiveSkillDuration(world: CombatWorld, id: SkillId) {
   }
   if (id === "missile_swarm" && state.coreState.deferredCooldowns[id]!==undefined) {
     const salvo=world.skillCores.salvos.find(s=>s.pending>0);
-    if(salvo)return {remaining:0,duration:0,progress:1-salvo.pending/salvo.total,timeLabel:"Đang phóng loạt tên lửa chính"};
+    if(salvo)return {remaining:0,duration:0,progress:salvo.pending/salvo.total,timeLabel:"Đang phóng loạt tên lửa chính"};
   }
   if (id === "stellar_lance" && !world.astra?.charge && state.coreState.deferredCooldowns[id]!==undefined)
     return {remaining:0,duration:0,progress:undefined,timeLabel:"Đòn Thương chính đang bay"};
@@ -410,7 +411,7 @@ export function getCoreTelemetryPresentation(state:AircraftCombatState,id:CoreId
   if(row===97)lines.push("Khóa chủ động Kỹ Năng Tối Thượng; 3 kỹ năng thường +20% sát thương, -25% hồi chiêu cơ bản, -20% chi phí.");
   if(row===100){bonus(state.currentHp>stats.maxHp*.7?45:state.currentHp>=stats.maxHp*.3?22:0,"Hỏa Lực");bonus(state.currentHp<stats.maxHp*.3?45:state.currentHp<=stats.maxHp*.7?22:0,"Giáp");}
   const key=({76:"reactive",81:"skill",99:"reserve",104:"overheal"} as Record<number,string>)[row];
-  if(key){const shield=c.shields[key];const amount=shield&&shield.until>c.time?shield.amount:0;lines.push(`Khiên hiện tại: ${Math.round(amount).toLocaleString("vi-VN")}${row===104?` / ${Math.round(stats.maxHp*.15).toLocaleString("vi-VN")}`:""}`);}
+  if(key){const shield=c.shields[key];const amount=shield&&shield.until>c.time?shield.amount:0;lines.push(`Khiên hiện tại: ${Math.round(amount).toLocaleString("vi-VN")}${row===104?` / ${Math.round(stats.maxHp*.15*getRecoveryReceivedMultiplier(state)).toLocaleString("vi-VN")}`:""}`);}
   if(row===121)lines.push(`Kho hiện tại: ${number((c.stacks.antimatter??0)*100)}% Hỏa Lực / 350% Hỏa Lực`);
   if(row===126)bonus(active("activeCooling")?V.coolingMana*100:0,"% Mana Tối Đa hồi dần trong 5s");
   if(row===130){const stacks=active("tacticalData")?c.stacks.tacticalData??0:0;lines.push(`Dữ Liệu đang dùng: ${stacks} / ${V.dataLimit}`);bonus(hasCore(state,95)?0:stacks*V.dataCrit*100,"% Tỷ Lệ Chí Mạng");}

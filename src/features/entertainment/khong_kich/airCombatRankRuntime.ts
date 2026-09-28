@@ -39,7 +39,8 @@ export interface RankRuntime {
 }
 export const rankRuntime=(w:CombatWorld):RankRuntime=>w.rankRuntime??={interference:new Map(),projectileSlows:new Map(),pulses:[],waves:[],twinVolleys:new Map(),twinShots:0,interferenceEnergyRestored:0};
 function densestGravityAnchorPoint(w:CombatWorld,h:RankRuntimeHooks,rank:number):{x:number;y:number}|null {
- const enemies=w.enemies.filter(e=>h.hostile(w,e));
+ const rect=GAMEPLAY_SAFE_RECT;
+ const enemies=w.enemies.filter(e=>e.hp>0&&h.hostile(w,e)&&e.x>=rect.left&&e.x<=rect.right&&e.y>=rect.top&&e.y<=rect.bottom);
  if(!enemies.length)return null;
  const radius=120*(rank>=2?1.25:1);
  let best:EnemyEntity|null=null,bestCount=-1,bestDensity=-Infinity,bestDistance=Infinity;
@@ -51,7 +52,7 @@ function densestGravityAnchorPoint(w:CombatWorld,h:RankRuntimeHooks,rank:number)
    count++;density+=1-Math.min(1,distance/Math.max(1,radius+enemy.radius));
   }
   const playerDistance=Math.hypot(candidate.x-w.playerX,candidate.y-w.playerY);
-  if(count>bestCount||(count===bestCount&&density>bestDensity)||(count===bestCount&&density===bestDensity&&playerDistance<bestDistance)){
+  if(count>bestCount||(count===bestCount&&density>bestDensity)||(count===bestCount&&density===bestDensity&&playerDistance<bestDistance)||(count===bestCount&&density===bestDensity&&playerDistance===bestDistance&&best!==null&&candidate.id<best.id)){
    best=candidate;bestCount=count;bestDensity=density;bestDistance=playerDistance;
   }
  }
@@ -60,7 +61,7 @@ function densestGravityAnchorPoint(w:CombatWorld,h:RankRuntimeHooks,rank:number)
 export function beginRankSkill(w:CombatWorld,id:SkillId,h:RankRuntimeHooks) {
  const r=rankRuntime(w),rank=skillRank(w.aircraft,id),target=h.priority(w);
  if(id==="predator_lock"){r.lock=target?{target:target.id,until:w.elapsed+getSkillRuntimeValues(w.aircraft,id).duration,stacks:0,extended:0,cast:w.nextId++}:undefined;if(!r.lock)endAircraftSkill(w.aircraft,id);}
- if(id==="gravity_anchor"){const point=densestGravityAnchorPoint(w,h,rank)??(target?{x:target.x,y:target.y}:null);r.anchor={x:point?.x??w.playerX,y:point?.y??w.playerY-140,until:w.elapsed+getSkillRuntimeValues(w.aircraft,id).duration,next:w.elapsed+.5,rank,affected:new Set(),destroyed:0,inner:new Map()};}
+ if(id==="gravity_anchor"){const point=densestGravityAnchorPoint(w,h,rank);r.anchor={x:point?.x??w.playerX,y:point?.y??w.playerY-140,until:w.elapsed+getSkillRuntimeValues(w.aircraft,id).duration,next:w.elapsed+.5,rank,affected:new Set(),destroyed:0,inner:new Map()};}
  if(id==="electronic_interference") {
   const cast=w.nextId++,times=rank>=5?[0,.8,1.6]:rank>=2?[0,1]:[0];
   const duration=times[times.length-1]+(Math.hypot(GAMEPLAY_SAFE_RECT.width,GAMEPLAY_SAFE_RECT.height)+INTERFERENCE_WAVE_THICKNESS)/INTERFERENCE_WAVE_SPEED;
@@ -76,10 +77,10 @@ export function beginRankSkill(w:CombatWorld,id:SkillId,h:RankRuntimeHooks) {
 export function collapseAnchor(w:CombatWorld,h:RankRuntimeHooks,natural:boolean) {
  const r=rankRuntime(w),a=r.anchor;if(!a)return;
  const radius=120*(a.rank>=2?1.25:1),power=getEffectiveAircraftStats(w.aircraft).firepower;
- const mass=a.rank>=4?Math.min(4,a.affected.size*.25+a.destroyed*.10):0;
+ const mass=a.rank>=4?Math.min(6,a.affected.size*.55+a.destroyed*.20):0;
  for(const e of w.enemies)if(h.hostile(w,e)&&Math.hypot(e.x-a.x,e.y-a.y)<=radius+e.radius){
   if(natural&&a.rank>=5&&e.type!=="boss")h.displace(w,e,(a.x-e.x)*(h.elite(e)?.45:.8),(a.y-e.y)*(h.elite(e)?.45:.8));
-  h.damage(w,e,power*(2.5+mass)*(a.rank>=5&&(a.inner.get(e.id)??0)>=2?1.5:1),"gravity_anchor");
+  h.damage(w,e,power*((a.rank>=4?2.5:3.5)+mass)*(a.rank>=5&&(a.inner.get(e.id)??0)>=2?1.5:1),"gravity_anchor");
  }
  h.effect(w,a.x,a.y,radius*2,"anchor_collapse");r.anchor=undefined;endAircraftSkill(w.aircraft,"gravity_anchor");
 }
@@ -129,7 +130,7 @@ export function echoTwinShot(w:CombatWorld,main:ProjectileEntity,h:RankRuntimeHo
  if(!rank||(s.activeEffects.twin_reflection??0)<=0)return;
  const empowered=rank>=4&&r.twinShots>0&&r.twinShots%5===0;r.twinShots++;
  const volley=w.nextId++;r.twinVolleys.set(volley,new Map());
- for(const side of [-1,1])h.projectile(w,{owner:"player",source:"basic",skillId:"twin_reflection",x:main.x+side*27,y:main.y+8,vx:main.vx*(empowered?1.4:1),vy:main.vy*(empowered?1.4:1),rawDamage:main.rawDamage,echoScale:(rank>=2?.30:.25)*(empowered?1.75:1),radius:empowered?4.2:2.8,penetrationRemaining:rank>=2?1:0,penetrationMultiplier:.6,color:"#fdba74",twinSide:side,rankVolley:volley,procFree:true});
+ for(const side of [-1,1])h.projectile(w,{owner:"player",source:"basic",skillId:"twin_reflection",x:main.x+side*27,y:main.y+8,vx:main.vx*(empowered?1.4:1),vy:main.vy*(empowered?1.4:1),rawDamage:main.rawDamage,echoScale:getSkillRuntimeValues(s,"twin_reflection").damageMultiplier*(empowered?1.75:1),radius:empowered?4.2:2.8,penetrationRemaining:rank>=2?1:0,penetrationMultiplier:.6,color:"#fdba74",twinSide:side,rankVolley:volley,procFree:true});
 }
 export function tickRankSkills(w:CombatWorld,dt:number,h:RankRuntimeHooks) {
  const r=rankRuntime(w),s=w.aircraft,now=w.elapsed;
@@ -152,7 +153,7 @@ export function tickRankSkills(w:CombatWorld,dt:number,h:RankRuntimeHooks) {
    if(a.rank>=2&&d<=inner&&a.destroyed<20){a.destroyed++;h.remove(w,i);continue;}
    if(d>0){p.vx+=(a.x-p.x)/d*24*dt;p.vy+=(a.y-p.y)/d*24*dt;}
   }
-  while(a.next<=Math.min(now,a.until)+1e-8){a.next+=.5;for(const e of w.enemies)if(h.hostile(w,e)&&Math.hypot(e.x-a.x,e.y-a.y)<=radius+e.radius)h.damage(w,e,getEffectiveAircraftStats(s).firepower*.35,"gravity_anchor");}
+  while(a.next<=Math.min(now,a.until)+1e-8){a.next+=.5;for(const e of w.enemies)if(h.hostile(w,e)&&Math.hypot(e.x-a.x,e.y-a.y)<=radius+e.radius)h.damage(w,e,getEffectiveAircraftStats(s).firepower*getSkillRuntimeValues(s,"gravity_anchor").damageMultiplier,"gravity_anchor");}
   if(now>=a.until)collapseAnchor(w,h,true);
  }
  // Each scheduled main wave captures Phantom's position at emission.

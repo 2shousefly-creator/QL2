@@ -75,9 +75,9 @@
 .combat-stat-chip[data-stat-change="buff"] { color:#fde047; font-weight:900; }
 .combat-stat-chip[data-stat-change="debuff"] { color:#f87171; font-weight:900; }
 .air-skill-icon-wrap { position:relative; display:inline-flex; }
-.air-skill-duration { position:absolute; left:0; right:0; top:-1.1cqw; height:.65cqw; background:#713f1266; z-index:15; pointer-events:none; }
+/* Clear the perimeter clockwise from twelve; the remaining arc stays green. */
+.air-skill-duration { position:absolute;inset:0;z-index:24;padding:2px;pointer-events:none;background:conic-gradient(from 0deg,transparent 0deg calc((1 - var(--skill-duration,1)) * 360deg),#4ade80 0deg 360deg);mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);mask-composite:exclude;-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor; }
 .air-skill-duration[hidden] { display:none; }
-.air-skill-duration > span { display:block; height:100%; width:100%; transform:scaleX(var(--skill-duration,1)); transform-origin:left; background:#fde047; }
 
 /* Tactical geometry stays feature-local and retains the existing HUD footprint. */
 .air-combat-hud-heading > div:nth-child(-n+2), .air-combat-hud-heading button,
@@ -656,11 +656,10 @@
   .air-core-old { animation:air-core-crossfade-out 160ms linear both; }
 }
 
-@property --skill-cooldown-angle { syntax:'<angle>';inherits:false;initial-value:360deg; }
 .air-skill-block-overlay,.air-skill-resource-overlay { position:absolute;inset:0;z-index:21;pointer-events:none;display:flex;align-items:center;justify-content:center; }
-.air-skill-block-overlay { background:#12182055; }
-/* From twelve o'clock, the clockwise remainder shrinks counter-clockwise. Text is a separate layer. */
-.air-skill-cooldown-mask { position:absolute;inset:0;background:conic-gradient(from 0deg,#202a36b3 var(--skill-cooldown-angle),transparent 0deg);transition:--skill-cooldown-angle 90ms linear; }
+.air-skill-block-overlay { background:transparent; }
+/* The top clears first as the actual cooldown remainder shrinks toward the bottom. */
+.air-skill-cooldown-mask { position:absolute;inset:0;background:#fde04766;transform:scaleY(var(--skill-cooldown-progress,0));transform-origin:bottom;transition:transform 90ms linear; }
 .air-skill-cooldown-number { position:relative;color:#fff;font-size:clamp(17px,5.8cqw,27px);line-height:1;font-weight:900;font-variant-numeric:tabular-nums;text-shadow:0 2px 4px #000; }
 .air-skill-resource-overlay { gap:3px;background:#b0f3ff98;color:#09293c;text-shadow:0 0 3px #fff; }
 .air-skill-resource-overlay svg { width:6cqw;height:6cqw;stroke-width:3; }
@@ -668,8 +667,6 @@
 
 @media(max-height:500px) { .modal-design .app-overlay__body.air-core-inventory { overflow-y:auto;grid-template-rows:170px minmax(100px,1fr); } }
 
-/* Completed recovery travels counter-clockwise from twelve; the icon/text stay upright. */
-.air-skill-cooldown-border { position:absolute;inset:0;z-index:23;padding:2px;pointer-events:none;transform:scaleX(-1);background:conic-gradient(from 0deg,#a5f3fc 0deg var(--skill-completed-angle),transparent var(--skill-completed-angle) 360deg);mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);mask-composite:exclude;-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor; }
 .air-skill-lock { position:absolute;z-index:23;right:4px;bottom:4px;pointer-events:none;font-size:12px; }
 .air-core-materialize { position:relative; }
 .air-core-arrival-flash { position:absolute;inset:0;pointer-events:none;opacity:0;background:linear-gradient(115deg,transparent 15%,var(--core-highlight) 48%,#fff 50%,var(--core-highlight) 52%,transparent 85%);mix-blend-mode:screen; }

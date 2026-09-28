@@ -17,7 +17,7 @@ export function equipmentTelemetry(s:AircraftCombatState,id:EquipmentDefinitionI
   if(f===8)result.unshift(`Tương tác hiện tại: +${number(getTempestJewelledCritDamageBonus(s)*100)}% Sát Thương Chí Mạng`);
   if(f===9)result.unshift(`+${number(P[9].totalFireRate*equipmentScale(s,9)*100)}% Tổng Tốc Độ Bắn từ hiệu ứng`);
   if(f===22)result.unshift(`+${number(getEffectiveAircraftStats(s).maxHp*(1-1/(1+P[22].hp*equipmentScale(s,22))))} Máu Tối Đa từ hiệu ứng`);
-  if(f===31)result.unshift(`+${number(P[31].resource*equipmentScale(s,31))} Tài Nguyên Tối Đa từ hiệu ứng`);
+  if(f===31)result.unshift(`+${number(P[31].maxResourcePct*equipmentScale(s,31)*100)}% Tài Nguyên Tối Đa từ hiệu ứng`);
   if(f===36)result.unshift(`+${P[36].crit*100*equipmentScale(s,36)}% Sát Thương Chí Mạng từ hiệu ứng`);
   return result;
 }
@@ -33,7 +33,7 @@ export function equipmentStatuses(w:CombatWorld):StatusPresentation[] {
     const ready=[3,4,5,17,19,25].includes(f);
     if(!active&&!cooldown&&!charged&&!mode&&!ready&&!(f===10&&e.stacks>0))continue;
     const cap=f===2?20:f===10?6:f===13?100:f===21?4:f===26?6:0;
-    let badge=cap?`${number(f===13?e.value:e.stacks)}/${cap}`:f===6?`${e.count%8}/8`:f===12?`${e.count%5}/5`:f===18?number(e.value):f===23?`${number(e.value/stats.maxHp*100)}%`:f===24?`${number(e.value/stats.maxResource*100)}%`:undefined;
+    let badge=cap?`${number(f===13?e.value:e.stacks)}/${cap}`:f===6?`${e.count%20}/20`:f===12?`${e.count%5}/5`:f===18?number(e.value):f===23?`${number(e.value/stats.maxHp*100)}%`:f===24?`${number(e.value/stats.maxResource*100)}%`:undefined;
     const remaining=active?(f===25?e.bonusUntil??e.until:e.until)-t:cooldown?e.ready-t:Infinity;
     const modeLabel=mode==="offense"?"Tấn công":mode==="hp"?"Hồi Máu":mode==="resource"?"Hồi Tài Nguyên":mode==="siphon"?"Hút máu":undefined;
     result.push({id:`equipment:${d.id}`,group:"buff",name:d.name,icon:{kind:"equipment",id:d.id},description:equipmentEffectDescription(s,d.id),source:`${d.rarity==="legendary"?"Trang Bị Huyền Thoại":"Trang Bị"} · ${d.name}`,stacks:e.stacks,badgeText:badge,badgeKind:charged?"charge":"stack",remaining,duration:active?(f===25?6:e.duration):cooldown?Math.max(remaining,1):Infinity,priority:active?58:40,timerKind:active?"active":"cooldown",timeLabel:modeLabel??(remaining===Infinity?"Sẵn sàng":undefined),showNumericTimer:!badge&&Number.isFinite(remaining)});

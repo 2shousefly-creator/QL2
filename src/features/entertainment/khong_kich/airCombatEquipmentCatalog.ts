@@ -135,7 +135,7 @@ const definitions: EquipmentDefinition[] = [
     "name": "Khiên Huyết Tinh",
     "rarity": "completed",
     "statsText": "+20 Hỏa Lực; +225 Máu Tối Đa",
-    "effect": "Khi Máu dưới 60%, tạo Lá Chắn bằng 18% Máu Tối Đa trong 8 giây. Hồi Chiêu: 60 giây sau khi Lá Chắn bị phá hoặc hết hiệu lực.",
+    "effect": "Khi Máu dưới 60%, tạo Lá Chắn bằng 12% Máu Tối Đa trong 5 giây. Hồi Chiêu: 60 giây sau khi Lá Chắn bị phá hoặc hết hiệu lực.",
     "family": "TH04",
     "recipe": [
       "TP01",
@@ -167,7 +167,7 @@ const definitions: EquipmentDefinition[] = [
     "name": "Bình Tụ Aether",
     "rarity": "completed",
     "statsText": "+20 Hỏa Lực; +10% Hồi Tài Nguyên",
-    "effect": "Mỗi 8 đòn đánh thường chính trúng kẻ địch, hồi 3% Tài Nguyên Tối Đa. Kỹ năng kế tiếp được thi triển trong 4 giây sau đó giảm 10% Chi Phí Tài Nguyên. Hồi Chiêu nội tại: 2 giây. Chỉ mỗi đòn thứ 8 mới thử kích hoạt; không tích lượt hồi trong lúc Hồi Chiêu.",
+    "effect": "Mỗi 20 đòn đánh thường chính trúng kẻ địch, hồi 3% Tài Nguyên Tối Đa. Kỹ năng kế tiếp được thi triển trong 4 giây sau đó giảm 10% Chi Phí Tài Nguyên. Hồi Chiêu nội tại: 2 giây. Chỉ mỗi đòn thứ 20 mới thử kích hoạt; không tích lượt hồi trong lúc Hồi Chiêu.",
     "family": "TH06",
     "recipe": [
       "TP01",
@@ -373,7 +373,7 @@ const definitions: EquipmentDefinition[] = [
     "name": "Tụ Phản Lực",
     "rarity": "completed",
     "statsText": "+17 Giáp; +10% Hồi Tài Nguyên",
-    "effect": "Khi mất Máu, hồi 4% Tài Nguyên Tối Đa. Hồi Chiêu: 4 giây. Khi Máu dưới 50%, nhận +17,5% Hồi Tài Nguyên.",
+    "effect": "Khi mất Máu, hồi 3% Tài Nguyên Tối Đa. Hồi Chiêu: 6 giây.",
     "family": "TH19",
     "recipe": [
       "TP03",
@@ -421,7 +421,7 @@ const definitions: EquipmentDefinition[] = [
     "name": "Tim Behemoth",
     "rarity": "completed",
     "statsText": "+450 Máu Tối Đa",
-    "effect": "Nhận +8,5% Máu Tối Đa. Đòn đánh thường gây thêm sát thương bằng 0,5% Máu Tối Đa của chiến cơ.",
+    "effect": "Nhận +8,5% Máu Tối Đa. Tăng 15% sức mạnh Hồi Máu và Lá Chắn nhận vào.",
     "family": "TH22",
     "recipe": [
       "TP04",
@@ -500,7 +500,7 @@ const definitions: EquipmentDefinition[] = [
     "name": "Suối Yggdrasil",
     "rarity": "completed",
     "statsText": "+2 Hồi Máu/s",
-    "effect": "Mỗi giây, hồi thêm 0,5% Máu đã mất.",
+    "effect": "Mỗi giây, hồi thêm 0,35% Máu đã mất.",
     "family": "TH27",
     "recipe": [
       "TP05",
@@ -563,7 +563,7 @@ const definitions: EquipmentDefinition[] = [
     "name": "Lõi Ouroboros",
     "rarity": "completed",
     "statsText": "+20% Hồi Tài Nguyên",
-    "effect": "Nhận +14 Tài Nguyên Tối Đa; giảm 14% Chi Phí Tài Nguyên của kỹ năng. Khi Tài Nguyên trên 80%, nhận +7% Sát Thương Kỹ Năng. Phantom có thể vượt 100 Điện.",
+    "effect": "Nhận +14% Tài Nguyên Tối Đa; giảm 5% Chi Phí Tài Nguyên của kỹ năng. Khi Tài Nguyên trên 80%, nhận +7% Sát Thương Kỹ Năng. Phantom có thể vượt 100 Điện.",
     "family": "TH31",
     "recipe": [
       "TP06",
@@ -703,7 +703,7 @@ const definitions: EquipmentDefinition[] = [
     "name": "Thiên Thuẫn Helios",
     "rarity": "legendary",
     "statsText": "+40 Hỏa Lực; +450 Máu Tối Đa",
-    "effect": "Khi Máu dưới 60%, tạo Lá Chắn bằng 36% Máu Tối Đa trong 8 giây. Hồi Chiêu: 60 giây sau khi Lá Chắn bị phá hoặc hết hiệu lực.",
+    "effect": "Khi Máu dưới 60%, tạo Lá Chắn bằng 24% Máu Tối Đa trong 5 giây. Hồi Chiêu: 60 giây sau khi Lá Chắn bị phá hoặc hết hiệu lực.",
     "family": "TH04",
     "recipe": [
       "TP01",
@@ -735,7 +735,7 @@ const definitions: EquipmentDefinition[] = [
     "name": "Giếng Vô Tận",
     "rarity": "legendary",
     "statsText": "+40 Hỏa Lực; +20% Hồi Tài Nguyên",
-    "effect": "Mỗi 8 đòn đánh thường chính trúng kẻ địch, hồi 6% Tài Nguyên Tối Đa. Kỹ năng kế tiếp được thi triển trong 4 giây sau đó giảm 20% Chi Phí Tài Nguyên. Hồi Chiêu nội tại: 2 giây. Chỉ mỗi đòn thứ 8 mới thử kích hoạt; không tích lượt hồi trong lúc Hồi Chiêu.",
+    "effect": "Mỗi 20 đòn đánh thường chính trúng kẻ địch, hồi 6% Tài Nguyên Tối Đa. Kỹ năng kế tiếp được thi triển trong 4 giây sau đó giảm 20% Chi Phí Tài Nguyên. Hồi Chiêu nội tại: 2 giây. Chỉ mỗi đòn thứ 20 mới thử kích hoạt; không tích lượt hồi trong lúc Hồi Chiêu.",
     "family": "TH06",
     "recipe": [
       "TP01",
@@ -941,7 +941,7 @@ const definitions: EquipmentDefinition[] = [
     "name": "Lò Nghịch Biến",
     "rarity": "legendary",
     "statsText": "+34 Giáp; +20% Hồi Tài Nguyên",
-    "effect": "Khi mất Máu, hồi 8% Tài Nguyên Tối Đa. Hồi Chiêu: 4 giây. Khi Máu dưới 50%, nhận +35% Hồi Tài Nguyên.",
+    "effect": "Khi mất Máu, hồi 6% Tài Nguyên Tối Đa. Hồi Chiêu: 5 giây.",
     "family": "TH19",
     "recipe": [
       "TP03",
@@ -989,7 +989,7 @@ const definitions: EquipmentDefinition[] = [
     "name": "Hạch Behemoth",
     "rarity": "legendary",
     "statsText": "+900 Máu Tối Đa",
-    "effect": "Nhận +17% Máu Tối Đa. Đòn đánh thường gây thêm sát thương bằng 1% Máu Tối Đa của chiến cơ.",
+    "effect": "Nhận +17% Máu Tối Đa. Tăng 30% sức mạnh Hồi Máu và Lá Chắn nhận vào.",
     "family": "TH22",
     "recipe": [
       "TP04",
@@ -1068,7 +1068,7 @@ const definitions: EquipmentDefinition[] = [
     "name": "Mạch Thế Giới",
     "rarity": "legendary",
     "statsText": "+4 Hồi Máu/s",
-    "effect": "Mỗi giây, hồi thêm 1% Máu đã mất.",
+    "effect": "Mỗi giây, hồi thêm 0,7% Máu đã mất.",
     "family": "TH27",
     "recipe": [
       "TP05",
@@ -1131,7 +1131,7 @@ const definitions: EquipmentDefinition[] = [
     "name": "Tâm Vĩnh Cửu",
     "rarity": "legendary",
     "statsText": "+40% Hồi Tài Nguyên",
-    "effect": "Nhận +28 Tài Nguyên Tối Đa; giảm 28% Chi Phí Tài Nguyên của kỹ năng. Khi Tài Nguyên trên 80%, nhận +14% Sát Thương Kỹ Năng. Phantom có thể vượt 100 Điện.",
+    "effect": "Nhận +28% Tài Nguyên Tối Đa; giảm 10% Chi Phí Tài Nguyên của kỹ năng. Khi Tài Nguyên trên 80%, nhận +14% Sát Thương Kỹ Năng. Phantom có thể vượt 100 Điện.",
     "family": "TH31",
     "recipe": [
       "TP06",
