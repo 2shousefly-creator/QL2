@@ -1,5 +1,4 @@
 import { SKILL_RANKS } from "./airCombatSkillRanks";
-import { SKILL_BASE_VALUES as B } from "./airCombatSkillCores";
 import {
   AircraftConfig,
   AircraftId,
