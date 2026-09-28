@@ -171,27 +171,27 @@ export const SKILL_RANKS: Record<SkillId, readonly SkillRankConfig[]> = {
  gravity_anchor:ranks([130,140,150,160,170],[
    [
      "Trường Trọng Lực",
-     "Titan đặt một Neo Trọng Lực tồn tại 5 giây. Neo kéo quái thường về tâm, kéo Tinh Anh yếu hơn và không di chuyển Boss. Kẻ địch trong vùng bị giảm 35% tốc độ; đạn có thể chặn bị giảm 40% tốc độ và cong nhẹ về tâm. Mỗi 0,5 giây, vùng gây 35% Hỏa Lực; khi kết thúc, Neo sụp đổ và gây 250% Hỏa Lực.",
-     "Titan đặt một Neo Trọng Lực tồn tại 5 giây. Neo kéo quái thường về tâm, kéo Tinh Anh yếu hơn và không di chuyển Boss. Kẻ địch trong vùng bị giảm 35% tốc độ; đạn có thể chặn bị giảm 40% tốc độ và cong nhẹ về tâm. Mỗi 0,5 giây, vùng gây 35% Hỏa Lực; khi kết thúc, Neo sụp đổ và gây 250% Hỏa Lực.\nHồi Chiêu Cơ Bản: 25 giây.\nYêu cầu Tài Nguyên: 130 Mana."
+     "Titan đặt một Neo Trọng Lực tồn tại 5 giây. Neo kéo quái thường về tâm, kéo Tinh Anh yếu hơn và không di chuyển Boss. Kẻ địch trong vùng bị giảm 35% tốc độ; đạn có thể chặn bị giảm 40% tốc độ và cong nhẹ về tâm. Mỗi 0,5 giây, vùng gây 35% Hỏa Lực; khi kết thúc, Neo sụp đổ và gây 250% Hỏa Lực. Khi thi triển, Neo ưu tiên đặt tại vị trí có mật độ kẻ địch cao nhất trên màn hình.",
+     "Titan đặt một Neo Trọng Lực tồn tại 5 giây. Neo kéo quái thường về tâm, kéo Tinh Anh yếu hơn và không di chuyển Boss. Kẻ địch trong vùng bị giảm 35% tốc độ; đạn có thể chặn bị giảm 40% tốc độ và cong nhẹ về tâm. Mỗi 0,5 giây, vùng gây 35% Hỏa Lực; khi kết thúc, Neo sụp đổ và gây 250% Hỏa Lực. Khi thi triển, Neo ưu tiên đặt tại vị trí có mật độ kẻ địch cao nhất trên màn hình.\nHồi Chiêu Cơ Bản: 25 giây.\nYêu cầu Tài Nguyên: 130 Mana. Khi thi triển, Neo ưu tiên đặt tại vị trí có mật độ kẻ địch cao nhất trên màn hình."
    ],
    [
      "Chân Trời Sự Kiện",
-     "Titan đặt Neo Trọng Lực trong 5 giây với bán kính tăng 25%. Neo kéo mạnh hơn khi mục tiêu ở gần tâm; quái thường bị kéo mạnh, Tinh Anh bị kéo yếu hơn và Boss không bị kéo. Đạn có thể chặn đi vào vùng lõi bị phá hủy, tối đa 20 viên mỗi lần dùng. Vùng vẫn làm chậm kẻ địch 35%, làm chậm đạn 40%, gây 35% Hỏa Lực mỗi 0,5 giây và sụp đổ gây 250% Hỏa Lực.",
+     "Titan đặt Neo Trọng Lực trong 5 giây với bán kính tăng 25%. Neo kéo mạnh hơn khi mục tiêu ở gần tâm; quái thường bị kéo mạnh, Tinh Anh bị kéo yếu hơn và Boss không bị kéo. Đạn có thể chặn đi vào vùng lõi bị phá hủy, tối đa 20 viên mỗi lần dùng. Vùng vẫn làm chậm kẻ địch 35%, làm chậm đạn 40%, gây 35% Hỏa Lực mỗi 0,5 giây và sụp đổ gây 250% Hỏa Lực. Khi thi triển, Neo ưu tiên đặt tại vị trí có mật độ kẻ địch cao nhất trên màn hình.",
      "Bán kính Neo Trọng Lực tăng 25%.\nLực kéo mạnh hơn khi mục tiêu ở gần tâm.\nĐạn có thể chặn đi vào vùng lõi bị phá hủy, tối đa 20 viên mỗi lần dùng.\nHồi Chiêu Cơ Bản: 25 → 24 giây.\nYêu cầu Tài Nguyên: 130 → 140 Mana."
    ],
    [
      "Áp Suất Nghiền Nát",
-     "Neo Trọng Lực tồn tại 5 giây, có bán kính tăng 25%, kéo mục tiêu về tâm và phá tối đa 20 viên đạn trong vùng lõi. Kẻ địch trong vùng bị giảm 25% Giáp; nếu ở trong lõi, mức giảm tăng thành 35%. Hiệu ứng giảm Giáp kéo dài thêm 1,5 giây sau khi mục tiêu rời vùng. Neo vẫn gây 35% Hỏa Lực mỗi 0,5 giây và sụp đổ gây 250% Hỏa Lực.",
+     "Neo Trọng Lực tồn tại 5 giây, có bán kính tăng 25%, kéo mục tiêu về tâm và phá tối đa 20 viên đạn trong vùng lõi. Kẻ địch trong vùng bị giảm 25% Giáp; nếu ở trong lõi, mức giảm tăng thành 35%. Hiệu ứng giảm Giáp kéo dài thêm 1,5 giây sau khi mục tiêu rời vùng. Neo vẫn gây 35% Hỏa Lực mỗi 0,5 giây và sụp đổ gây 250% Hỏa Lực. Khi thi triển, Neo ưu tiên đặt tại vị trí có mật độ kẻ địch cao nhất trên màn hình.",
      "Kẻ địch trong vùng bị giảm 25% Giáp; trong vùng lõi, mức giảm tăng thành 35%.\nHiệu ứng giảm Giáp kéo dài thêm 1,5 giây sau khi mục tiêu rời vùng.\nHồi Chiêu Cơ Bản: 24 → 23 giây.\nYêu cầu Tài Nguyên: 140 → 150 Mana."
    ],
    [
      "Khối Lượng Tới Hạn",
-     "Neo Trọng Lực tồn tại 5 giây, kéo kẻ địch, làm chậm, giảm Giáp và phá đạn trong vùng lõi. Khi sụp đổ, ngoài 250% Hỏa Lực cơ bản, vụ nổ nhận thêm 25% Hỏa Lực cho mỗi kẻ địch đã bị kéo và 10% Hỏa Lực cho mỗi viên đạn đã bị phá, tối đa thêm 400% Hỏa Lực.",
+     "Neo Trọng Lực tồn tại 5 giây, kéo kẻ địch, làm chậm, giảm Giáp và phá đạn trong vùng lõi. Khi sụp đổ, ngoài 250% Hỏa Lực cơ bản, vụ nổ nhận thêm 25% Hỏa Lực cho mỗi kẻ địch đã bị kéo và 10% Hỏa Lực cho mỗi viên đạn đã bị phá, tối đa thêm 400% Hỏa Lực. Khi thi triển, Neo ưu tiên đặt tại vị trí có mật độ kẻ địch cao nhất trên màn hình.",
      "Khi Neo sụp đổ, nhận thêm 25% Hỏa Lực cho mỗi kẻ địch đã bị kéo và 10% Hỏa Lực cho mỗi viên đạn đã bị phá.\nSát thương cộng thêm tối đa 400% Hỏa Lực.\nHồi Chiêu Cơ Bản: 23 → 22 giây.\nYêu cầu Tài Nguyên: 150 → 160 Mana."
    ],
    [
      "Sụp Đổ Không Gian",
-     "Neo Trọng Lực tồn tại 5 giây, kéo kẻ địch, làm chậm, giảm Giáp và tích Khối Lượng từ mục tiêu bị kéo cùng đạn bị phá. Khi hết thời gian tự nhiên, Neo kéo mạnh quái thường và Tinh Anh về tâm lần cuối rồi sụp đổ. Mục tiêu ở trong lõi ít nhất 2 giây nhận thêm 50% sát thương từ vụ sụp đổ. Có thể tái kích hoạt để cho Neo nổ sớm với lượng Khối Lượng đã tích.",
+     "Neo Trọng Lực tồn tại 5 giây, kéo kẻ địch, làm chậm, giảm Giáp và tích Khối Lượng từ mục tiêu bị kéo cùng đạn bị phá. Khi hết thời gian tự nhiên, Neo kéo mạnh quái thường và Tinh Anh về tâm lần cuối rồi sụp đổ. Mục tiêu ở trong lõi ít nhất 2 giây nhận thêm 50% sát thương từ vụ sụp đổ. Có thể tái kích hoạt để cho Neo nổ sớm với lượng Khối Lượng đã tích. Khi thi triển, Neo ưu tiên đặt tại vị trí có mật độ kẻ địch cao nhất trên màn hình.",
      "Khi hết thời gian tự nhiên, Neo kéo mạnh quái thường và Tinh Anh về tâm thêm một lần cuối.\nMục tiêu ở trong vùng lõi ít nhất 2 giây nhận thêm 50% sát thương từ vụ sụp đổ.\nCó thể tái kích hoạt để cho Neo sụp đổ sớm với lượng Khối Lượng đã tích.\nHồi Chiêu Cơ Bản: 22 → 21 giây.\nYêu cầu Tài Nguyên: 160 → 170 Mana."
    ]
  ]),
@@ -345,23 +345,23 @@ export const SKILL_RANKS: Record<SkillId, readonly SkillRankConfig[]> = {
    ],
    [
      "Tụ Quang Siêu Tốc",
-     "Astra chỉ cần tụ 0,2 giây trước khi phóng Thương Tinh Tú. Mục tiêu đầu tiên nhận 800% Hỏa Lực, các mục tiêu sau nhận 680% Hỏa Lực. Mỗi lần dùng thành công trong vòng 15 giây tăng thêm 10% sát thương cho lần kế tiếp, tối đa 4 cộng dồn. Từ cấp kỹ năng này, chi phí cơ bản và chi phí tăng thêm của mỗi cộng dồn đều là 45 Tài Nguyên. Hồi Chiêu bắt đầu khi đòn Thương chính kết thúc; tia phụ sau đó không trì hoãn Hồi Chiêu.",
-     "Thời gian tụ năng lượng giảm từ 0,6 xuống 0,2 giây.\nChi phí tăng thêm của mỗi cộng dồn giảm từ 60 xuống 45 Tài Nguyên."
+     "Astra chỉ cần tụ 0,2 giây trước khi phóng Thương Tinh Tú. Mục tiêu đầu tiên nhận 800% Hỏa Lực, các mục tiêu sau nhận 680% Hỏa Lực. Mỗi lần dùng thành công trong vòng 15 giây tăng thêm 10% sát thương cho lần kế tiếp, tối đa 4 cộng dồn. Chi phí cơ bản và phần tăng thêm của mỗi cộng dồn vẫn là 60 Tài Nguyên. Hồi Chiêu bắt đầu khi đòn Thương chính kết thúc; tia phụ sau đó không trì hoãn Hồi Chiêu.",
+     "Thời gian tụ năng lượng giảm từ 0,6 xuống 0,2 giây."
    ],
    [
      "Lõi Siêu Mật",
-     "Astra tụ 0,2 giây rồi phóng Thương Tinh Tú. Trước phần sát thương cộng thêm từ chuỗi, mục tiêu đầu tiên nhận 1050% Hỏa Lực và các mục tiêu sau nhận 930% Hỏa Lực. Mỗi lần dùng thành công trong 15 giây tiếp tục tăng 10% sát thương cho lần kế tiếp, tối đa 4 cộng dồn; mỗi cộng dồn tăng thêm 45 Tài Nguyên chi phí. Hồi Chiêu bắt đầu khi đòn Thương chính kết thúc; tia phụ sau đó không trì hoãn Hồi Chiêu.",
+     "Astra tụ 0,2 giây rồi phóng Thương Tinh Tú. Trước phần sát thương cộng thêm từ chuỗi, mục tiêu đầu tiên nhận 1050% Hỏa Lực và các mục tiêu sau nhận 930% Hỏa Lực. Mỗi lần dùng thành công trong 15 giây tiếp tục tăng 10% sát thương cho lần kế tiếp, tối đa 4 cộng dồn; mỗi cộng dồn tăng thêm 60 Tài Nguyên chi phí. Hồi Chiêu bắt đầu khi đòn Thương chính kết thúc; tia phụ sau đó không trì hoãn Hồi Chiêu.",
      "Sát thương lên mục tiêu đầu tiên tăng từ 800% lên 1050% Hỏa Lực.\nSát thương lên các mục tiêu xuyên sau tăng từ 680% lên 930% Hỏa Lực."
    ],
    [
      "Mũi Giáo Xuyên Giáp",
-     "Astra tụ 0,2 giây rồi phóng Thương Tinh Tú, gây 1050% Hỏa Lực lên mục tiêu đầu và 930% lên các mục tiêu sau trước phần cộng thêm từ chuỗi. Thương bỏ qua 30% Giáp; mục tiêu dưới 30% Máu nhận thêm 40% sát thương từ Thương. Mỗi lần dùng liên tiếp thành công trong 15 giây tăng 10% sát thương và 45 Tài Nguyên cho lần kế tiếp, tối đa 4 cộng dồn. Hồi Chiêu bắt đầu khi đòn Thương chính kết thúc; tia phụ sau đó không trì hoãn Hồi Chiêu.",
+     "Astra tụ 0,2 giây rồi phóng Thương Tinh Tú, gây 1050% Hỏa Lực lên mục tiêu đầu và 930% lên các mục tiêu sau trước phần cộng thêm từ chuỗi. Thương bỏ qua 30% Giáp; mục tiêu dưới 30% Máu nhận thêm 40% sát thương từ Thương. Mỗi lần dùng liên tiếp thành công trong 15 giây tăng 10% sát thương và 60 Tài Nguyên cho lần kế tiếp, tối đa 4 cộng dồn. Hồi Chiêu bắt đầu khi đòn Thương chính kết thúc; tia phụ sau đó không trì hoãn Hồi Chiêu.",
      "Thương Tinh Tú bỏ qua 30% Giáp.\nMục tiêu dưới 30% Máu nhận thêm 40% sát thương từ Thương."
    ],
    [
      "Ngọn Giáo Sao Băng",
-     "Astra phóng Thương Tinh Tú sau 0,2 giây tụ, gây 1050% / 930% Hỏa Lực trước phần cộng thêm từ chuỗi, bỏ qua 30% Giáp và gây thêm 40% sát thương lên mục tiêu dưới 30% Máu. Sau khi Thương rời vùng chơi 0,75 giây, một đường cảnh báo xuất hiện trong 0,6 giây theo đúng quỹ đạo rồi phát Laser Sao Băng từ dưới lên. Laser rộng gấp đôi vùng va chạm của Thương, tồn tại 1 giây, xuyên mọi kẻ địch và gây 320% Hỏa Lực đúng một lần lên mỗi mục tiêu; Laser tuân theo quy tắc chí mạng của kỹ năng. Hồi Chiêu bắt đầu khi đòn Thương chính kết thúc; tia phụ sau đó không trì hoãn Hồi Chiêu.",
-     "Sau khi Thương rời vùng chơi 0,75 giây, một đường cảnh báo xuất hiện trong 0,6 giây theo đúng quỹ đạo.\nSau cảnh báo, Laser Sao Băng quét từ dưới lên, rộng gấp đôi vùng va chạm của Thương, tồn tại 1 giây, xuyên mọi kẻ địch và gây 320% Hỏa Lực đúng một lần lên mỗi mục tiêu.\nLaser tuân theo quy tắc chí mạng của kỹ năng.\nYêu cầu Tài Nguyên: 60 → 50 Mana."
+     "Astra phóng Thương Tinh Tú sau 0,2 giây tụ, gây 1050% / 930% Hỏa Lực trước phần cộng thêm từ chuỗi, bỏ qua 30% Giáp và gây thêm 40% sát thương lên mục tiêu dưới 30% Máu. Từ cấp này, chi phí cơ bản và phần tăng thêm của mỗi cộng dồn giảm còn 50 Tài Nguyên. Sau khi Thương rời vùng chơi 0,75 giây, một đường cảnh báo xuất hiện trong 0,6 giây theo đúng quỹ đạo rồi phát Laser Sao Băng từ dưới lên. Laser rộng gấp đôi vùng va chạm của Thương, tồn tại 1 giây, xuyên mọi kẻ địch và gây 320% Hỏa Lực đúng một lần lên mỗi mục tiêu; Laser tuân theo quy tắc chí mạng của kỹ năng. Hồi Chiêu bắt đầu khi đòn Thương chính kết thúc; tia phụ sau đó không trì hoãn Hồi Chiêu.",
+     "Sau khi Thương rời vùng chơi 0,75 giây, một đường cảnh báo xuất hiện trong 0,6 giây theo đúng quỹ đạo.\nSau cảnh báo, Laser Sao Băng quét từ dưới lên, rộng gấp đôi vùng va chạm của Thương, tồn tại 1 giây, xuyên mọi kẻ địch và gây 320% Hỏa Lực đúng một lần lên mỗi mục tiêu.\nLaser tuân theo quy tắc chí mạng của kỹ năng.\nChi phí cơ bản và phần tăng thêm của mỗi cộng dồn giảm từ 60 xuống 50 Tài Nguyên.\nYêu cầu Tài Nguyên: 60 → 50 Mana."
    ]
  ]),
  twin_reflection:ranks([115,125,135,145,155],[
