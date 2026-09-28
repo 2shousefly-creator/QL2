@@ -6,8 +6,13 @@ import type { AirCombatAssets } from "./AirCombatPixiAssets";
 /** Reused roots own all body/engine transforms; smoke is deliberately outside this tree. */
 class MissileVisualNode {
   root=new Container(); body=new Sprite(); reactor=new Sprite();
+  halo=new Sprite(); highlight=new Sprite();
   flames=[new Sprite(),new Sprite()]; glows=[new Sprite(),new Sprite()];
   constructor(assets:AirCombatAssets) {
+    this.halo.texture=this.highlight.texture=assets.effect("charge");
+    this.halo.anchor.set(.5);this.highlight.anchor.set(.5);
+    this.halo.blendMode=this.highlight.blendMode="add";
+    this.root.addChild(this.halo);
     for(let i=0;i<2;i++) {
       this.flames[i].texture=assets.engineFlame;this.flames[i].anchor.set(.5,0);
       this.glows[i].texture=assets.effect("charge");this.glows[i].anchor.set(.5);
@@ -16,22 +21,27 @@ class MissileVisualNode {
     }
     this.body.anchor.set(.5);this.root.addChild(this.body);
     this.reactor.texture=assets.effect("charge");this.reactor.anchor.set(.5);this.reactor.blendMode="add";
-    this.root.addChild(this.reactor);
+    this.root.addChild(this.reactor,this.highlight);
   }
   update(p:ProjectileEntity,assets:AirCombatAssets,reducedMotion:boolean) {
     const visual=getMissileVisual(p)!;
     this.root.visible=true;this.root.position.set(p.x,p.y);this.root.rotation=missileRenderRotation(p.heading);
     this.body.texture=assets.effect(getAmmoVisualKey(p)!);this.body.width=visual.width;this.body.height=visual.height;
+    const friendly=p.owner!=="enemy",tint=visual.engineNozzles[0]?.tint??0xffffff;
+    this.halo.visible=this.highlight.visible=friendly;
+    this.halo.tint=tint;this.halo.width=visual.width*1.7;this.halo.height=visual.height*1.35;
+    this.halo.alpha=reducedMotion?.25:.38;
+    this.highlight.tint=tint;this.highlight.width=visual.width*.5;this.highlight.height=visual.height*.8;this.highlight.alpha=.6;
     const powered=p.missileState==="powered",thrust=.45+.55*Math.min(1,p.speed/Math.max(1,p.cruiseSpeed));
     for(let i=0;i<2;i++) {
       const nozzle=visual.engineNozzles[i],flame=this.flames[i],glow=this.glows[i];
       flame.visible=!!nozzle && powered;glow.visible=!!nozzle;
       if(!nozzle)continue;
       flame.position.set(nozzle.x,nozzle.y);flame.width=nozzle.flameWidth;
-      flame.height=nozzle.flameLength*thrust*(reducedMotion?1:1+Math.sin(p.missileAge*24)*.05);
+      flame.height=nozzle.flameLength*(friendly?1.3:1)*thrust*(reducedMotion?1:1+Math.sin(p.missileAge*24)*.05);
       flame.tint=p.bigBang?0xffffff:nozzle.tint;flame.alpha=.95;
-      glow.position.set(nozzle.x,nozzle.y);glow.width=nozzle.flameWidth*2;glow.height=nozzle.flameWidth*2;
-      glow.tint=nozzle.tint;glow.alpha=powered?.65:.18;
+      glow.position.set(nozzle.x,nozzle.y);glow.width=nozzle.flameWidth*(friendly?2.6:2);glow.height=nozzle.flameWidth*(friendly?3.2:2);
+      glow.tint=nozzle.tint;glow.alpha=powered?(friendly?.8:.65):(friendly?.3:.18);
     }
     this.reactor.visible=p.bigBang;
     this.reactor.position.set(0,-9.4);this.reactor.width=15;this.reactor.height=4;

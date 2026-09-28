@@ -3,8 +3,8 @@ import type { AircraftId } from "./airCombatTypes";
 export const BASIC_AMMO_KEYS = { black_eagle:"viper_basic_ammo", breaker:"titan_basic_ammo", phantom:"phantom_basic_ammo", astra:"astra_basic_ammo" } as const satisfies Record<AircraftId,string>;
 /** Presentation only: never use these dimensions for hit detection. */
 export const PLAYER_BASIC_AMMO_VISUAL_SIZE = { width: 11, height: 30 } as const;
-// The wake overlaps the body by .5px: total local envelope is 11 x 33.5px.
-export const PLAYER_BASIC_AMMO_TRAIL_SIZE = { width: 2, length: 4, alpha: .28 } as const;
+// Presentation-only wake follows the current projectile transform.
+export const PLAYER_BASIC_AMMO_TRAIL_SIZE = { width: 3, length: 13, alpha: .58 } as const;
 const BASIC_AMMO_GLOW = {
   body: "M32 0A32 32 0 1 1 32 64A32 32 0 1 1 32 0Z", alpha: .1,
 } as const;

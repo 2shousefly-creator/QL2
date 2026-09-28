@@ -350,7 +350,7 @@ export function drawLegacyWorld(
   const aircraft = AIRCRAFT_CONFIGS[aircraftId];
   ctx.save();
   const starfallShake=Math.max(0,...(world.astra?.impacts??[]).map(i=>2.2*Math.exp(-(world.elapsed-i.at)*12)));
-  const shake=reducedMotion?0:starfallShake>.02?Math.min(2.8,magneticShake(world)+starfallShake):magneticShake(world);
+  const shake=reducedMotion?0:Math.max(accents.killShake,magneticShake(world),Math.min(2.8,starfallShake));
   ctx.translate(Math.sin(world.elapsed*113)*shake,Math.cos(world.elapsed*97)*shake*.65);
   if(world.stormbreaker){
     ctx.fillStyle="#080f18";ctx.fillRect(0,0,width,height);
@@ -534,8 +534,8 @@ export function drawLegacyWorld(
       drawBasicAmmoTrail(ctx,basic,projectile.x,projectile.y,Math.atan2(projectile.vy,projectile.vx),reducedMotion);
     } else if (!reducedMotion && !missile) {
       const speed = Math.max(1, Math.hypot(projectile.vx, projectile.vy));
-      const length = projectile.owner === "enemy" ? 7 : 13;
-      ctx.globalAlpha = .35; ctx.strokeStyle = projectile.color; ctx.lineWidth = 2;
+      const length = projectile.owner === "enemy" ? 7 : 22;
+      ctx.globalAlpha = projectile.owner === "enemy" ? .35 : .6; ctx.strokeStyle = projectile.color; ctx.lineWidth = 2;
       ctx.beginPath(); ctx.moveTo(projectile.x, projectile.y);
       ctx.lineTo(projectile.x - projectile.vx / speed * length, projectile.y - projectile.vy / speed * length); ctx.stroke();
       ctx.globalAlpha = 1;
@@ -547,16 +547,19 @@ export function drawLegacyWorld(
       ctx.save();ctx.translate(projectile.x,projectile.y);ctx.rotate(missileRenderRotation(projectile.heading));
       for(const nozzle of visual.engineNozzles) {
         if(!powered)continue;
-        const length=nozzle.flameLength*(.45+.55*Math.min(1,projectile.speed/Math.max(1,projectile.cruiseSpeed)));
+        const length=nozzle.flameLength*(projectile.owner==="enemy"?1:1.3)*(.45+.55*Math.min(1,projectile.speed/Math.max(1,projectile.cruiseSpeed)));
         ctx.fillStyle=`#${nozzle.tint.toString(16).padStart(6,"0")}`;ctx.shadowColor=ctx.fillStyle;ctx.shadowBlur=8;
         ctx.beginPath();ctx.moveTo(nozzle.x-nozzle.flameWidth/2,nozzle.y);ctx.quadraticCurveTo(nozzle.x-nozzle.flameWidth*.6,nozzle.y+length*.3,nozzle.x,nozzle.y+length);ctx.quadraticCurveTo(nozzle.x+nozzle.flameWidth*.6,nozzle.y+length*.3,nozzle.x+nozzle.flameWidth/2,nozzle.y);ctx.closePath();ctx.fill();
         ctx.fillStyle="#fff7dc";ctx.beginPath();ctx.moveTo(nozzle.x-nozzle.flameWidth*.25,nozzle.y);ctx.lineTo(nozzle.x,nozzle.y+length*.6);ctx.lineTo(nozzle.x+nozzle.flameWidth*.25,nozzle.y);ctx.closePath();ctx.fill();
       }
-      ctx.shadowBlur=0;drawAmmoLocal(ctx,getAmmoVisualKey(projectile)!);
+      ctx.shadowBlur=projectile.owner==="enemy"?0:9;drawAmmoLocal(ctx,getAmmoVisualKey(projectile)!);
       if(projectile.bigBang){ctx.globalAlpha=reducedMotion?.3:.3+.15*Math.sin(projectile.missileAge*4);ctx.fillStyle="#fff0b3";ctx.fillRect(-7,-10,14,2);}
       ctx.restore();
     } else if(projectile.owner==="enemy" || projectile.ammoVisualKey) {
+      ctx.save();
+      if(projectile.owner!=="enemy"){ctx.shadowColor=basic?.trail.css??projectile.color;ctx.shadowBlur=reducedMotion?5:8;}
       drawAmmo(ctx,getAmmoVisualKey(projectile)!,projectile.x,projectile.y,Math.atan2(projectile.vy,projectile.vx));
+      ctx.restore();
     } else {
       ctx.fillStyle = projectile.color;
       ctx.shadowColor = projectile.color;
@@ -698,13 +701,13 @@ export function drawLegacyWorld(
   paintEquipment(world,(_id,frame,x,y,width,height,rotation,alpha)=>drawMagneticFrame(ctx,frame,x,y,width,height,rotation,alpha),reducedMotion,(x,y,ex,ey,color,alpha,width)=>{
     ctx.save();ctx.globalAlpha=alpha;ctx.strokeStyle=`#${color.toString(16).padStart(6,"0")}`;ctx.lineWidth=width;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(ex,ey);ctx.stroke();ctx.restore();
   });
-  paintRankSkills(world,(_id,key,x,y,width,height,rotation,alpha)=>{
+  paintRankSkills(world,(_id,key,x,y,width,height,rotation,alpha,additive)=>{
     ctx.save();
-    if(key!=="rankAnchor"&&key!=="rankCrystal"&&key!=="rankMicroMissile")ctx.globalCompositeOperation="lighter";
+    if(additive || key!=="rankAnchor"&&key!=="rankCrystal"&&key!=="rankMicroMissile")ctx.globalCompositeOperation="lighter";
     drawMagneticFrame(ctx,RANKED_VFX_FRAMES[key],x,y,width,height,rotation,alpha);ctx.restore();
   },reducedMotion);
-  paintUltimates(world,(_id,key,x,y,width,height,rotation,alpha)=>{
-    ctx.save();if(!ultimateBody(key))ctx.globalCompositeOperation="lighter";
+  paintUltimates(world,(_id,key,x,y,width,height,rotation,alpha,additive)=>{
+    ctx.save();if(additive || !ultimateBody(key))ctx.globalCompositeOperation="lighter";
     drawMagneticFrame(ctx,ULTIMATE_FRAMES[key],x,y,width,height,rotation,alpha);ctx.restore();
   },reducedMotion);
   paintAstra(world,{

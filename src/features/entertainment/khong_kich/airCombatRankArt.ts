@@ -18,7 +18,7 @@ export const RANKED_VFX_FRAMES = {
  rankMicroMissile:shot(0), rankMicroTrail:shot(1), rankTwinShot:shot(2), rankMiniLance:shot(3),
 };
 export type RankVisualKey = keyof typeof RANKED_VFX_FRAMES;
-export type RankSpritePainter = (id:number,key:RankVisualKey,x:number,y:number,width:number,height:number,rotation:number,alpha:number)=>void;
+export type RankSpritePainter = (id:number,key:RankVisualKey,x:number,y:number,width:number,height:number,rotation:number,alpha:number,additive?:boolean)=>void;
 export function rankProjectileVisual(p:ProjectileEntity):RankVisualKey|undefined {
  if(p.skillId==="predator_lock")return "rankMicroMissile";
  if(p.skillId==="twin_reflection"&&p.twinSide!==undefined)return "rankTwinShot";
@@ -82,8 +82,10 @@ export function paintRankSkills(w:CombatWorld,draw:RankSpritePainter,reducedMoti
   const angle=Math.atan2(p.vy,p.vx)+Math.PI/2,speed=Math.max(1,Math.hypot(p.vx,p.vy));
   const micro=key==="rankMicroMissile",mini=key==="rankMiniLance",empowered=!micro&&!mini&&p.radius>4;
   const width=micro?13:mini?13:empowered?12:8,height=micro?28:mini?58:empowered?38:25;
+  draw(p.id*128+82,key,p.x,p.y,width*1.7,height*1.2,angle,reducedMotion?.24:.36,true);
   draw(p.id*128+80,key,p.x,p.y,width,height,angle,1);
-  draw(p.id*128+81,micro?"rankMicroTrail":"rankTwinShot",p.x-p.vx/speed*height*.7,p.y-p.vy/speed*height*.7,width*.75,height*(reducedMotion?.7:1.2),angle,micro?.85:.4);
+  draw(p.id*128+83,key,p.x,p.y,width*.65,height*.85,angle,.48,true);
+  draw(p.id*128+81,micro?"rankMicroTrail":"rankTwinShot",p.x-p.vx/speed*height*.7,p.y-p.vy/speed*height*.7,width,height*(reducedMotion?1:1.65),angle,micro?.95:.65);
  }
  // Visual events already have a bounded runtime history. IDs are recycled by the
  // renderer pool; no per-frame sprite construction, timers or retained ID sets.
