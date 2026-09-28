@@ -1,0 +1,423 @@
+{
+  "version": "26.17.0",
+  "releaseDate": "28/09/2026",
+  "title": "Hồi Phục & Nhịp Hồi Chiêu",
+  "displayTitle": "KHÔNG KÍCH 26.17.0 — HỒI PHỤC & NHỊP HỒI CHIÊU",
+  "summary": "**26.17.0** tái cân bằng các lối chơi Hồi Máu và Hồi Tài Nguyên đang có khả năng tự khuếch đại quá mạnh, đồng thời chuẩn hóa cách Hồi Chiêu vận hành trên toàn bộ Kỹ Năng, Lõi Nâng Cấp và Trang Bị. Từ phiên bản này, một hiệu ứng có thời lượng phải **kết thúc hiệu lực chính trước khi Hồi Chiêu bắt đầu**; các hậu hiệu ứng không kéo dài thời điểm bắt đầu Hồi Chiêu.\n\nHồi Tài Nguyên cộng thêm cũng được chuyển sang một pool cộng dồn thống nhất thay vì nhiều lớp nhân nối tiếp. Các nguồn hồi phục ngoài nguy hiểm vẫn được giữ theo triết lý **Combat Reset**: người chơi có thể hồi phục mạnh khi thật sự tạo được khoảng nghỉ, nhưng các vòng lặp giúp chiến cơ gần như bất tử ngay giữa giao tranh đã được thu hẹp.",
+  "sections": [
+    {
+      "id": "s1",
+      "title": "HỒI CHIÊU THỐNG NHẤT",
+      "icon": { "kind": "system", "id": "ui" },
+      "intro": [
+        {
+          "text": "Kỹ Năng, Lõi Nâng Cấp và Trang Bị giờ dùng cùng một quy tắc: hiệu lực chính kết thúc trước, sau đó mới bắt đầu Hồi Chiêu.",
+          "format": "paragraph",
+          "changeType": "change"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s1-e1",
+          "icon": { "kind": "system", "id": "ui" },
+          "title": "Hiệu lực trước, Hồi Chiêu sau",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Thời gian hiệu lực chính và Hồi Chiêu **không còn chạy song song**. Một hiệu ứng 5 giây với Hồi Chiêu 15 giây giờ có chu kỳ 5 giây hiệu lực rồi 15 giây Hồi Chiêu.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "Nếu hiệu lực chính kết thúc sớm, Hồi Chiêu bắt đầu ngay tại thời điểm đó. Nếu hiệu lực được kéo dài, thời điểm bắt đầu Hồi Chiêu cũng lùi theo.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "Các hậu hiệu ứng như buff, debuff hoặc dấu còn tồn tại sau khi chức năng chính đã hoàn tất **không trì hoãn Hồi Chiêu**.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        },
+        {
+          "id": "s1-e2",
+          "icon": { "kind": "skill", "id": "afterburner" },
+          "title": "Giảm Hồi Chiêu & Điểm Hồi Kỹ Năng",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Các hiệu ứng giảm **Hồi Chiêu Còn Lại** chỉ tác động lên kỹ năng đã thực sự bước vào Hồi Chiêu. Kỹ năng còn đang có hiệu lực không thể nhận giảm trước cho Hồi Chiêu tương lai.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "Điểm Hồi Kỹ Năng tiếp tục chỉ giảm Hồi Chiêu của Kỹ Năng; Hồi Chiêu nội tại của Lõi và Trang Bị không tự động nhận hiệu lực này.",
+              "format": "bullet",
+              "changeType": "unchanged"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "HỒI PHỤC & TÀI NGUYÊN",
+      "icon": { "kind": "core", "id": "core_208" },
+      "intro": [
+        {
+          "text": "26.17.0 giảm sức mạnh của các vòng lặp vừa hồi Máu, vừa tạo Lá Chắn, vừa tự nuôi Tài Nguyên nhưng vẫn giữ khả năng hồi phục mạnh khi người chơi thật sự thoát khỏi áp lực giao tranh.",
+          "format": "paragraph",
+          "changeType": "change"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s2-e1",
+          "icon": { "kind": "system", "id": "ui" },
+          "title": "Hồi Tài Nguyên cộng dồn",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Các nguồn **+X% Hồi Tài Nguyên** giờ được cộng chung vào một pool trước khi áp dụng các modifier tổng và debuff, thay vì nhân nối tiếp thành nhiều tầng.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "Các hiệu ứng đặc biệt như Gemini tăng tốc độ hồi của thanh thấp hơn vẫn được xử lý như modifier tổng sau pool cộng dồn.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        },
+        {
+          "id": "s2-e2",
+          "icon": { "kind": "system", "id": "ui" },
+          "title": "Thành Phần Hồi Phục",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "**Sinh Mạch:** +1,25 → **+1 Hồi Máu/s**.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "**Tụ Bão:** +14% → **+10% Hồi Tài Nguyên**.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        },
+        {
+          "id": "s2-e3",
+          "icon": { "kind": "core", "id": "core_092" },
+          "title": "Combat Reset",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Các nguồn hồi phục yêu cầu người chơi **không nhận sát thương** hoặc **không còn nguy hiểm ở gần** tiếp tục giữ vai trò hồi phục giữa các nhịp giao tranh.",
+              "format": "bullet",
+              "changeType": "unchanged"
+            },
+            {
+              "text": "Tái Tạo Sinh Học, Khoảng Thở và các mechanic reset tương tự không bị giảm chỉ vì có thể giúp hồi phục mạnh khi đã thực sự thoát combat.",
+              "format": "bullet",
+              "changeType": "unchanged"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "TRANG BỊ",
+      "icon": { "kind": "system", "id": "ui" },
+      "intro": [
+        {
+          "text": "Các family tạo Hồi Máu/Tài Nguyên quá đều hoặc quá dễ tự khuếch đại được hạ sức mạnh có chọn lọc; phần lớn Trang Bị còn lại giữ nguyên số liệu.",
+          "format": "paragraph",
+          "changeType": "change"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s3-e1",
+          "icon": { "kind": "system", "id": "ui" },
+          "title": "Aether & Phản Lực",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "**Bình Tụ Aether:** mỗi 8 đòn đánh thường chính hồi 4% → **3% Tài Nguyên Tối Đa**, tối đa một lần mỗi 2 giây.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "**Giếng Vô Tận:** 8% → **6% Tài Nguyên Tối Đa**, tối đa một lần mỗi 2 giây.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "**Tụ Phản Lực / Lò Nghịch Biến:** lượng Tài Nguyên hồi khi mất Máu giảm **5% / 10% → 4% / 8% Tài Nguyên Tối Đa**.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        },
+        {
+          "id": "s3-e2",
+          "icon": { "kind": "system", "id": "ui" },
+          "title": "Elysia, Yggdrasil & Gemini",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "**Chén Elysia:** Ngọc hồi 4% → **3% Máu Tối Đa**; Lá Chắn 7% → **5% Máu Tối Đa**.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "**Thánh Tích Elysia:** Ngọc hồi 8% → **6% Máu Tối Đa**; Lá Chắn 14% → **10% Máu Tối Đa**.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "**Suối Yggdrasil / Mạch Thế Giới:** lượng Máu đã mất hồi thêm mỗi giây giảm **1% / 2% → 0,5% / 1%**.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "**Song Tâm / Song Cực Gemini:** tăng tốc độ hồi của thanh thấp hơn **25% / 50% → 20% / 40%**.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        },
+        {
+          "id": "s3-e3",
+          "icon": { "kind": "system", "id": "ui" },
+          "title": "Janus",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Tỷ lệ hút Máu khi dưới 50% Máu vẫn là **1% / 2% sát thương gây ra**, nhưng giờ bị giới hạn lần lượt ở **0,25% / 0,5% Máu Tối Đa mỗi giây**.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "Sát thương cộng thêm ở trên 50% Máu và giảm sát thương phải nhận ở dưới 50% Máu giữ nguyên.",
+              "format": "bullet",
+              "changeType": "unchanged"
+            }
+          ]
+        },
+        {
+          "id": "s3-e4",
+          "icon": { "kind": "system", "id": "ui" },
+          "title": "Ambrosia / Elysium",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Giá trị hồi 4% / 8% Máu Tối Đa và Lá Chắn hồi dư 3,5% / 7% được giữ nguyên.",
+              "format": "bullet",
+              "changeType": "unchanged"
+            },
+            {
+              "text": "Hồi Chiêu 3 giây giờ chỉ bắt đầu **sau khi cửa sổ hồi Máu 3 giây kết thúc**, tạo downtime thực sự giữa hai lần kích hoạt.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "LÕI NÂNG CẤP",
+      "icon": { "kind": "core", "id": "core_104" },
+      "intro": [
+        {
+          "text": "Một số Lõi hồi phục được chỉnh để không còn tự tạo vòng lặp Lá Chắn, Máu và Tài Nguyên; đồng thời ba Lõi tấn công khó khai thác được tăng nhẹ.",
+          "format": "paragraph",
+          "changeType": "change"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s4-e1",
+          "icon": { "kind": "core", "id": "core_017" },
+          "title": "Các gói Tái Tạo",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "**core_005:** +2 → **+1,5 Hồi Máu/s**; +15% → **+10% Hồi Tài Nguyên**; giữ +12 Điểm Hồi Kỹ Năng.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "**core_011:** +3 → **+2,5 Hồi Máu/s**; +25% → **+17,5% Hồi Tài Nguyên**; giữ +18 Điểm Hồi Kỹ Năng.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "**core_017:** +4,5 → **+3,5 Hồi Máu/s**; +35% → **+25% Hồi Tài Nguyên**; giữ +25 Điểm Hồi Kỹ Năng.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        },
+        {
+          "id": "s4-e2",
+          "icon": { "kind": "core", "id": "core_104" },
+          "title": "Hồi Máu Tràn Trề",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Lá Chắn hồi dư tối đa giảm **20% → 15% Máu Tối Đa** và giờ tồn tại **6 giây** thay vì vô thời hạn.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "Chỉ lượng hồi dư từ **Kỹ Năng, Lõi hoặc Trang Bị** mới tạo Lá Chắn; Hồi Máu/s cơ bản và hồi thụ động từ chỉ số không còn tự nạp Lá Chắn khi đầy Máu.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        },
+        {
+          "id": "s4-e3",
+          "icon": { "kind": "core", "id": "core_173" },
+          "title": "Dây Chằng Khẩn",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Không còn hồi dựa trên toàn bộ sức chứa của Lá Chắn. Khi Lá Chắn bị phá hoặc hết hiệu lực, hồi bằng **25% lượng sát thương Lá Chắn đã thực sự hấp thụ**.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        },
+        {
+          "id": "s4-e4",
+          "icon": { "kind": "core", "id": "core_208" },
+          "title": "Tế Bào Song Năng",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Tỷ lệ chuyển đổi Hồi Máu/s ↔ Hồi Tài Nguyên giảm **60% → 25%**.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "Chuyển đổi chỉ sử dụng các bonus hồi phục **thường trực** từ Lõi và Trang Bị; buff tạm thời, Gemini và các trạng thái theo thời gian không trở thành đầu vào chuyển đổi.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "Tooltip của Lõi giờ hiển thị trực tiếp **Hồi Máu/s và Hồi Tài Nguyên/s hiện đang nhận từ riêng Tế Bào Song Năng** theo build hiện tại.",
+              "format": "bullet",
+              "changeType": "new"
+            }
+          ]
+        },
+        {
+          "id": "s4-e5",
+          "icon": { "kind": "core", "id": "core_107" },
+          "title": "Các nguồn hồi phục khác",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "**Lướt Sát Tử Thần:** mỗi 5 Lướt Đạn hồi 15% → **12% Tài Nguyên Tối Đa**.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "**Thu Gom Mảnh Vỡ:** tỷ lệ rơi 18% → **15%**; mỗi Mảnh Vỡ hồi 5% → **4% Máu Tối Đa**.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        },
+        {
+          "id": "s4-e6",
+          "icon": { "kind": "core", "id": "core_101" },
+          "title": "Các Lõi được tăng sức mạnh",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "**Bất Động Minh Vương:** thời gian đứng yên để kích hoạt giảm **2,5 → 2 giây**.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "**Hỏa Lực Cự Ly Gần:** Sát Thương Đòn Đánh Thường tăng **+14% → +20%** khi đạt điều kiện khoảng cách.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "**Lưới Giao Hỏa:** thời gian tồn tại của Lưới tăng **2 → 2,5 giây**; sát thương giữ nguyên 240% Hỏa Lực.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "KỸ NĂNG CHIẾN CƠ",
+      "icon": { "kind": "aircraft", "id": "breaker" },
+      "intro": [
+        {
+          "text": "Toàn bộ 16 kỹ năng chuyển sang lifecycle Hồi Chiêu mới. 26.17.0 không tự giảm Hồi Chiêu Cơ Bản để bù cho thời gian hiệu lực dài hơn.",
+          "format": "paragraph",
+          "changeType": "change"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s5-e1",
+          "icon": { "kind": "system", "id": "ui" },
+          "title": "Thời điểm bắt đầu Hồi Chiêu",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Mồi Bẫy, Điên Cuồng, Khóa Săn Mồi, Khiên Năng Lượng, BigBang, Neo Trọng Lực, Phân Ảnh, Laser Hủy Diệt, Nhiễu Điện Tử và các kỹ năng còn lại giờ đều chỉ bắt đầu Hồi Chiêu sau khi **hiệu lực chính của lần dùng kết thúc**.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "Các hậu hiệu ứng như clone nổ sau Phân Ảnh, Giáp sau Khiên Năng Lượng hoặc Mark sau BigBang không trì hoãn thời điểm này.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        },
+        {
+          "id": "s5-e2",
+          "icon": { "kind": "skill", "id": "sweeping_cannon" },
+          "title": "Titan — Oanh Tạc Cấp 3",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Giữ hồi Máu bằng **3% sát thương thực tế gây ra**, nhưng tổng lượng hồi từ mỗi lần Oanh Tạc giờ bị giới hạn ở **30% Máu Tối Đa**.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        },
+        {
+          "id": "s5-e3",
+          "icon": { "kind": "system", "id": "ui" },
+          "title": "Các giá trị kỹ năng khác",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Ngoài giới hạn hồi Máu của Oanh Tạc Cấp 3 và lifecycle Hồi Chiêu mới, các giá trị sát thương, Tài Nguyên, số đạn, Rank và mechanic kỹ năng tiếp tục giữ theo 26.16.1.",
+              "format": "bullet",
+              "changeType": "unchanged"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

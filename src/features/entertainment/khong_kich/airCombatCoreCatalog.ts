@@ -52,7 +52,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_005",
     "name": "Hệ Tái Tạo Chiến Thuật",
-    "description": "Nhận +2 Hồi Máu/s, +12 Điểm Hồi Kỹ Năng, +15% Hồi Tài Nguyên.",
+    "description": "Nhận +1,5 Hồi Máu/s, +12 Điểm Hồi Kỹ Năng, +10% Hồi Tài Nguyên.",
     "system": "defense",
     "icon": "core:core_005",
     "category": "offense",
@@ -121,7 +121,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_011",
     "name": "Tái Tạo Nano",
-    "description": "Nhận +3 Hồi Máu/s, +18 Điểm Hồi Kỹ Năng, +25% Hồi Tài Nguyên.",
+    "description": "Nhận +2,5 Hồi Máu/s, +18 Điểm Hồi Kỹ Năng, +17,5% Hồi Tài Nguyên.",
     "system": "defense",
     "icon": "core:core_011",
     "category": "offense",
@@ -190,7 +190,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_017",
     "name": "Tái Tạo Lượng Tử",
-    "description": "Nhận +4,5 Hồi Máu/s, +25 Điểm Hồi Kỹ Năng, +35% Hồi Tài Nguyên.",
+    "description": "Nhận +3,5 Hồi Máu/s, +25 Điểm Hồi Kỹ Năng, +25% Hồi Tài Nguyên.",
     "system": "defense",
     "icon": "core:core_017",
     "category": "offense",
@@ -681,7 +681,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_049",
     "name": "Bất động minh vương",
-    "description": "Sau khi đứng yên 2,5 giây, nhận +60% Giáp và +30% Hỏa Lực. Hiệu ứng mất ngay khi di chuyển.",
+    "description": "Sau khi đứng yên 2 giây, nhận +60% Giáp và +30% Hỏa Lực. Hiệu ứng mất ngay khi di chuyển.",
     "system": "utility",
     "icon": "core:core_049",
     "category": "offense",
@@ -1004,7 +1004,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_076",
     "name": "Lá Chắn Phản Ứng",
-    "description": "Nếu nhận lượng sát thương vượt 10% Máu Tối Đa trong 3 giây, tạo Lá Chắn bằng 15% Máu Tối Đa trong 3 giây. Hồi Chiêu: 10 giây sau khi Lá Chắn kết thúc.",
+    "description": "Nếu nhận lượng sát thương vượt 10% Máu Tối Đa trong 3 giây, tạo Lá Chắn bằng 15% Máu Tối Đa trong 3 giây. Hồi Chiêu: 10 giây sau khi Lá Chắn bị phá hoặc hết hiệu lực.",
     "system": "defense",
     "icon": "core:core_076",
     "category": "defense",
@@ -1064,7 +1064,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_081",
     "name": "Lá chắn kỹ năng",
-    "description": "Thi triển kỹ năng tạo Lá Chắn bằng 12% Máu Tối Đa trong 4 giây. Hồi Chiêu: 10 giây sau khi hiệu ứng kết thúc. Hiệu ứng không cộng dồn; chỉ làm mới thời gian.",
+    "description": "Thi triển kỹ năng tạo Lá Chắn bằng 12% Máu Tối Đa trong 4 giây. Hồi Chiêu: 10 giây sau khi Lá Chắn bị phá hoặc hết hiệu lực. Hiệu ứng không cộng dồn; chỉ làm mới thời gian.",
     "system": "defense",
     "icon": "core:core_081",
     "category": "resource",
@@ -1280,7 +1280,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_099",
     "name": "Kíp Phòng Thủ",
-    "description": "Khi Tài Nguyên còn dưới 15%, tạo Lá Chắn bằng 12% Máu Tối Đa trong 4 giây. Hồi Chiêu: 15 giây. Hiệu ứng không cộng dồn; chỉ làm mới thời gian.",
+    "description": "Khi Tài Nguyên còn dưới 15%, tạo Lá Chắn bằng 12% Máu Tối Đa trong 4 giây. Hồi Chiêu: 15 giây sau khi Lá Chắn bị phá hoặc hết hiệu lực. Hiệu ứng không cộng dồn; chỉ làm mới thời gian.",
     "system": "defense",
     "icon": "core:core_099",
     "category": "defense",
@@ -1304,7 +1304,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_101",
     "name": "Hỏa Lực Cự Ly Gần",
-    "description": "Sát Thương Đòn Đánh Thường tăng 14% ở cự ly gần — dưới 1/3 chiều cao vùng chiến đấu.",
+    "description": "Sát Thương Đòn Đánh Thường tăng 20% ở cự ly gần — dưới 1/3 chiều cao vùng chiến đấu.",
     "system": "attack",
     "icon": "core:core_101",
     "category": "weapon",
@@ -1340,7 +1340,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_104",
     "name": "Hồi Máu Tràn trề",
-    "description": "Khi đầy Máu, lượng hồi máu dư được chuyển thành Lá Chắn, tối đa 20% Máu Tối Đa. Hồi Máu tự nhiên khi đang đầy Máu vẫn có thể tăng Lá Chắn này.",
+    "description": "Khi đang đầy Máu, lượng hồi dư từ Kỹ Năng, Lõi hoặc Trang Bị được chuyển thành Lá Chắn, tối đa 15% Máu Tối Đa. Lá Chắn tồn tại 6 giây; nhận thêm hồi dư hợp lệ làm mới thời gian. Hồi Máu/s cơ bản/thụ động không tạo Lá Chắn này.",
     "system": "defense",
     "icon": "core:core_104",
     "category": "defense",
@@ -1376,7 +1376,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_107",
     "name": "Lướt Sát Tử Thần",
-    "description": "Đạn địch lướt qua trong phạm vi 8 px quanh vùng va chạm mà không trúng bạn được tính là 1 Lướt Đạn. Mỗi 5 Lướt Đạn hồi 15% Tài Nguyên Tối Đa.",
+    "description": "Đạn địch lướt qua trong phạm vi 8 px quanh vùng va chạm mà không trúng bạn được tính là 1 Lướt Đạn. Mỗi 5 Lướt Đạn hồi 12% Tài Nguyên Tối Đa.",
     "system": "resource",
     "icon": "core:core_107",
     "category": "defense",
@@ -1388,7 +1388,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_108",
     "name": "Thu Gom Mảnh Vỡ",
-    "description": "Kẻ địch bị hạ có 18% cơ hội rơi Mảnh Vỡ. Nhặt Mảnh Vỡ hồi 5% Máu Tối Đa. Mảnh Vỡ biến mất sau 4 giây.",
+    "description": "Kẻ địch bị hạ có 15% cơ hội rơi Mảnh Vỡ. Nhặt Mảnh Vỡ hồi 4% Máu Tối Đa. Mảnh Vỡ biến mất sau 4 giây.",
     "system": "defense",
     "icon": "core:core_108",
     "category": "defense",
@@ -1436,7 +1436,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_112",
     "name": "Lưới Giao Hỏa",
-    "description": "Bắn trúng 2 mục tiêu khác nhau trong 0,75 giây tạo Lưới Giao Hỏa trong 2 giây. Kẻ địch khác chạm vào lưới nhận 240% Hỏa Lực; tối đa 2 kẻ địch khác có thể nhận sát thương từ mỗi lưới.",
+    "description": "Bắn trúng 2 mục tiêu khác nhau trong 0,75 giây tạo Lưới Giao Hỏa trong 2,5 giây. Kẻ địch khác chạm vào lưới nhận 240% Hỏa Lực; tối đa 2 kẻ địch khác có thể nhận sát thương từ mỗi lưới.",
     "system": "attack",
     "icon": "core:core_112",
     "category": "offense",
@@ -1989,7 +1989,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 {
   "id": "core_149",
   "name": "Thợ Săn Tiền Thưởng",
-  "description": "Mỗi 20 giây, đánh dấu một mục tiêu ưu tiên trong 5 giây, khiến mục tiêu nhận thêm 10% mọi sát thương. Hạ gục mục tiêu bị đánh dấu nhận ngẫu nhiên 1 phần thưởng vĩnh viễn, mỗi loại có 12,5% cơ hội: +10 Hỏa Lực; +10 Giáp; +60 Máu Tối Đa; +4 Điểm Hồi Kỹ Năng; +0,4 Hồi Máu/s; +4% Tỷ Lệ Chí Mạng; +4% Sát Thương Chí Mạng; hoặc +12% Tốc Độ Bắn Cộng Thêm.",
+  "description": "Đánh dấu một mục tiêu ưu tiên tối đa 5 giây, khiến mục tiêu nhận thêm 10% mọi sát thương. Hạ gục mục tiêu bị đánh dấu nhận ngẫu nhiên 1 phần thưởng vĩnh viễn, mỗi loại có 12,5% cơ hội: +10 Hỏa Lực; +10 Giáp; +60 Máu Tối Đa; +4 Điểm Hồi Kỹ Năng; +0,4 Hồi Máu/s; +4% Tỷ Lệ Chí Mạng; +4% Sát Thương Chí Mạng; hoặc +12% Tốc Độ Bắn Cộng Thêm. Hồi Chiêu: 20 giây sau khi dấu kết thúc hoặc mục tiêu bị hạ/biến mất.",
   "system": "utility",
   "icon": "core:core_149",
   "category": "offense",
@@ -2314,7 +2314,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 {
   "id": "core_170",
   "name": "Báo Động Sớm",
-  "description": "Khi xuất hiện cảnh báo nguy hiểm, nhận +50 Giáp trong 3 giây. Hồi Chiêu: 10 giây.",
+  "description": "Khi xuất hiện cảnh báo nguy hiểm, nhận +50 Giáp trong 3 giây. Hồi Chiêu: 10 giây sau khi hiệu ứng kết thúc.",
   "system": "defense",
   "icon": "core:core_170",
   "category": "defense",
@@ -2350,7 +2350,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 {
   "id": "core_173",
   "name": "Dây Chằng Khẩn",
-  "description": "Khi Lá Chắn hết hiệu lực hoặc bị phá, hồi Máu bằng 35% giá trị của Lá Chắn đó.",
+  "description": "Khi Lá Chắn bị phá hoặc hết hiệu lực, hồi Máu bằng 25% lượng sát thương Lá Chắn đó thực sự đã hấp thụ.",
   "system": "defense",
   "icon": "core:core_173",
   "category": "defense",
@@ -2362,7 +2362,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 {
   "id": "core_174",
   "name": "Đệm Xung",
-  "description": "Nếu mất hơn 8% Máu Tối Đa trong 2 giây, hồi 12% Tài Nguyên Tối Đa và nhận +20% Hồi Tài Nguyên trong 4 giây. Hồi Chiêu: 15 giây.",
+  "description": "Nếu mất hơn 8% Máu Tối Đa trong 2 giây, hồi 12% Tài Nguyên Tối Đa và nhận +20% Hồi Tài Nguyên trong 4 giây. Hồi Chiêu: 15 giây sau khi hiệu ứng tăng Hồi Tài Nguyên kết thúc.",
   "system": "resource",
   "icon": "core:core_174",
   "category": "resource",
@@ -2374,7 +2374,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 {
   "id": "core_175",
   "name": "Tần Số Xen Kẽ",
-  "description": "Sau khi thi triển một kỹ năng, nếu thi triển thêm ít nhất một kỹ năng khác trong vòng 5 giây, gây thêm 14% mọi sát thương trong 5 giây. Hồi Chiêu: 20 giây.",
+  "description": "Sau khi thi triển một kỹ năng, nếu thi triển thêm ít nhất một kỹ năng khác trong vòng 5 giây, gây thêm 14% mọi sát thương trong 5 giây. Hồi Chiêu: 20 giây sau khi hiệu ứng kết thúc.",
   "system": "attack",
   "icon": "core:core_175",
   "category": "offense",
@@ -2410,7 +2410,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 {
   "id": "core_178",
   "name": "Phanh Từ",
-  "description": "Mỗi 20 giây, phát một xung điện trong bán kính 150 px quanh chiến cơ, giảm 50% tốc độ của toàn bộ đạn đạo và tên lửa tự dẫn của kẻ địch trong 3 giây.",
+  "description": "Phát một xung điện trong bán kính 150 px quanh chiến cơ, giảm 50% tốc độ của toàn bộ đạn đạo và tên lửa tự dẫn của kẻ địch trong 3 giây. Hồi Chiêu: 20 giây sau khi hiệu ứng kết thúc.",
   "system": "utility",
   "icon": "core:core_178",
   "category": "weapon",
@@ -2494,7 +2494,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 {
   "id": "core_185",
   "name": "Đánh Dấu Sơ Bộ",
-  "description": "Đòn đánh thường chính đầu tiên trúng mục tiêu sẽ đánh dấu mục tiêu trong 4 giây. Kỹ năng kế tiếp gây sát thương lên mục tiêu gây thêm 20% Sát Thương Kỹ Năng và tiêu dấu. Mỗi mục tiêu có Hồi Chiêu riêng 10 giây.",
+  "description": "Đòn đánh thường chính đầu tiên trúng mục tiêu sẽ đánh dấu mục tiêu tối đa 4 giây. Kỹ năng kế tiếp gây sát thương lên mục tiêu gây thêm 20% Sát Thương Kỹ Năng và tiêu dấu. Hồi Chiêu riêng của mục tiêu: 10 giây sau khi dấu bị tiêu hoặc kết thúc.",
   "system": "attack",
   "icon": "core:core_185",
   "category": "offense",
@@ -2506,7 +2506,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 {
   "id": "core_186",
   "name": "Hợp Lưu Hỏa Lực",
-  "description": "Thi triển 2 kỹ năng khác nhau trong 4 giây nhận +30% Sát Thương Đòn Đánh Thường trong 8 giây. Hồi Chiêu: 16 giây.",
+  "description": "Thi triển 2 kỹ năng khác nhau trong 4 giây nhận +30% Sát Thương Đòn Đánh Thường trong 8 giây. Hồi Chiêu: 16 giây sau khi hiệu ứng kết thúc.",
   "system": "attack",
   "icon": "core:core_186",
   "category": "offense",
@@ -2671,7 +2671,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 {
   "id": "core_200",
   "name": "Tái Chế Lá Chắn",
-  "description": "Nhận +50% sức mạnh Lá Chắn. Nếu thi triển kỹ năng khi không có Lá Chắn tạm thời, tạo Lá Chắn bằng 8% Máu Tối Đa trong 4 giây. Hồi Chiêu: 6 giây. Khi Lá Chắn bị phá hoặc hết hạn, nó phát nổ trong bán kính 120 px, gây sát thương bằng 160% tổng sát thương mà Lá Chắn đó đã hấp thụ.",
+  "description": "Nhận +50% sức mạnh Lá Chắn. Nếu thi triển kỹ năng khi không có Lá Chắn tạm thời, tạo Lá Chắn bằng 8% Máu Tối Đa trong 4 giây. Hồi Chiêu: 6 giây sau khi Lá Chắn bị phá hoặc hết hiệu lực. Khi Lá Chắn bị phá hoặc hết hạn, nó phát nổ trong bán kính 120 px, gây sát thương bằng 160% tổng sát thương mà Lá Chắn đó đã hấp thụ.",
   "system": "utility",
   "icon": "core:core_200",
   "category": "weapon",
@@ -2767,7 +2767,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 {
   "id": "core_208",
   "name": "Tế Bào Song Năng",
-  "description": "Nhận +2 Hồi Máu/s và +20% Hồi Tài Nguyên cơ bản. Mỗi Hồi Máu/s cộng thêm chuyển 60% giá trị sang Hồi Tài Nguyên; mỗi Hồi Tài Nguyên cộng thêm chuyển 60% giá trị sang Hồi Máu/s. Hai hiệu ứng chuyển đổi không kích hoạt lẫn nhau.",
+  "description": "Nhận +2 Hồi Máu/s và +20% Hồi Tài Nguyên. Chuyển 25% Hồi Máu/s cộng thêm thường trực thành Hồi Tài Nguyên/s và 25% Hồi Tài Nguyên cộng thêm thường trực thành Hồi Máu/s. Hai chuyển đổi không kích hoạt lẫn nhau. Các hiệu ứng tăng hồi phục tạm thời không được tính vào chuyển đổi.",
   "system": "resource",
   "icon": "core:core_208",
   "category": "resource",
@@ -2909,7 +2909,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 {
   "id": "core_220",
   "name": "Bóng Sống Ngắn",
-  "description": "Mỗi 10 giây, lần thi triển kỹ năng kế tiếp để lại một Bóng trong 3,5 giây. Bóng bắn theo Tốc Độ Bắn hiệu lực hiện tại; mỗi viên gây 42% Hỏa Lực. Bóng không thể chí mạng, kích hoạt hiệu ứng, thi triển kỹ năng, khóa mục tiêu hoặc chặn đạn.",
+  "description": "Khi sẵn sàng, lần thi triển kỹ năng kế tiếp để lại một Bóng trong 3,5 giây. Bóng bắn theo Tốc Độ Bắn hiệu lực hiện tại; mỗi viên gây 42% Hỏa Lực. Bóng không thể chí mạng, kích hoạt hiệu ứng, thi triển kỹ năng, khóa mục tiêu hoặc chặn đạn. Hồi Chiêu: 10 giây sau khi Bóng kết thúc.",
   "system": "attack",
   "icon": "core:core_220",
   "category": "offense",
@@ -2921,7 +2921,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 {
   "id": "core_221",
   "name": "Dấu Ấn Tử Thần",
-  "description": "Mỗi 16 giây, đánh dấu một mục tiêu trong 4 giây. Khi dấu kết thúc, mục tiêu phát nổ, chịu sát thương thô bằng 140% Hỏa Lực + 42% tổng sát thương thực tế đã nhận trong thời gian bị đánh dấu. Nếu vụ nổ đủ để kết liễu, nó kích nổ sớm và Hồi Chiêu kế tiếp của Lõi giảm 50%.",
+  "description": "Đánh dấu một mục tiêu trong 4 giây. Khi dấu kết thúc, mục tiêu phát nổ, chịu sát thương thô bằng 140% Hỏa Lực + 42% tổng sát thương thực tế đã nhận trong thời gian bị đánh dấu. Hồi Chiêu: 16 giây sau khi dấu kết thúc. Nếu vụ nổ đủ để kết liễu, nó kích nổ sớm và Hồi Chiêu kế tiếp của Lõi giảm 50%.",
   "system": "attack",
   "icon": "core:core_221",
   "category": "offense",

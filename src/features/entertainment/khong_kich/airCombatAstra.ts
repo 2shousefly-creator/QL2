@@ -144,7 +144,9 @@ export function updateAstra(w:CombatWorld,_dt:number,h:AstraHooks) {
        const mini=h.projectile(w,{owner:"player",source:"skill",skillId:"stellar_lance",procFree:true,expansionCast:r.charge.expansionCast,x:x+side*27,y:y+8,vx:0,vy:-speed,radius:3,rawDamage:first*.3,penetrationRemaining:Infinity,ammoVisualKey:"astra_lance",color:"#fff0bb",lifetime:2});
        if(mini)mini.astraLance={later:later*.3};
       }
-      r.charge=undefined;endAircraftSkill(s,"stellar_lance");
+      r.charge=undefined;
+      delete s.activeEffects.stellar_lance;
+      if(!w.projectiles.some(p=>p.skillId==="stellar_lance"&&p.astraLance&&!p.procFree))endAircraftSkill(s,"stellar_lance");
     }
   }
   // Each cast owns its path and hit set; expired events are removed every combat tick.

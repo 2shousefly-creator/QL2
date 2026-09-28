@@ -1,8 +1,8 @@
-/** 26.16.0 Appendix A. Legendary power is twice each explicit completed value. */
+/** 26.17.0 sustain balance. Legendary power is twice each explicit completed value. */
 export const EQUIPMENT_POWER = {
   1: { damage: .125 }, 2: { bonusFireRatePct: .0125, basic: .14 },
   3: { heal: .10, damage: .10 }, 4: { shield: .18 },
-  5: { hit: 2.1, area: 1.4, skill: .175 }, 6: { resource: .04, discount: .10 },
+  5: { hit: 2.1, area: 1.4, skill: .175 }, 6: { resource: .03, discount: .10 },
   7: { skill: .10, vulnerability: .10 }, 8: { synergy: .125 },
   9: { totalFireRate: .10, currentHp: .01, eliteCap: .25 },
   10: { armor: 42, bonusFireRatePct: .25, regen: 1, damage: .14 },
@@ -10,14 +10,14 @@ export const EQUIPMENT_POWER = {
   13: { damage: 1, returnRatio: .35 }, 14: { bonusFireRatePct: .30, firepower: 25, skill: .105 },
   15: { armor: 5, vulnerability: .075 }, 16: { reduction: .085, damage: 2.1 },
   17: { shield: .085, damage: .07 }, 18: { stored: .25, cap: .125, heal: .525, damage: .07 },
-  19: { resource: .05, regen: .175 }, 20: { armor: 32, reduction: .07 },
+  19: { resource: .04, regen: .175 }, 20: { armor: 32, reduction: .07 },
   21: { reduction: .02, damage: .05 }, 22: { hp: .085, damage: .005 },
-  23: { heal: .04, shield: .07, damage: .07 }, 24: { damage: 2.1, slow: .21, resource: .04 },
+  23: { heal: .03, shield: .05, damage: .07 }, 24: { damage: 2.1, slow: .21, resource: .04 },
   25: { cooldown: 3.5, shield: .105, damage: .105 }, 26: { damage: .015, crit: .10 },
-  27: { regen: .01 }, 28: { damage: .105, regen: .25 },
+  27: { regen: .005 }, 28: { damage: .105, regen: .20 },
   29: { heal: .04, shield: .035 }, 30: { heal: .00125, cap: .00375 },
   31: { resource: 14, discount: .14, skill: .07 }, 32: { regen: .28, skill: .07 },
-  33: { damage: .075, heal: .01, reduction: .05 }, 34: { skill: .10, cooldown: 1 },
+  33: { damage: .075, heal: .01, cap: .0025, reduction: .05 }, 34: { skill: .10, cooldown: 1 },
   35: { cooldown: .09, critical: .3, cap: .6, skill: .05 },
   36: { crit: .20, bleed: .20, vulnerability: .04 },
 } as const;

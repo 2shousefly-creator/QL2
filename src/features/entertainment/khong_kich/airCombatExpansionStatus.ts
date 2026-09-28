@@ -29,7 +29,7 @@ export function expansionStatuses(w: CombatWorld): StatusPresentation[] {
   const charge=c.stacks.capacitorCharge??0,charging=r.fullSince===undefined?0:Math.min(2,c.time-r.fullSince);
   add(172,charge?"Đã tích Tụ Điện":`Tích điện: ${charging.toFixed(1)} / 2s`,{badgeText:`${charge}/1`,badgeKind:"charge",progress:charge?1:charging/2});
   timed(174,"shockPadRegen",4,"shockPadCd",15);
-  timed(175,"alternating",5);
+  timed(175,"alternating",5,"alternatingCd",20);
   timed(119,"timeRecovery",4);
   if(c.stacks.breathing)add(176,"Đang hồi 1% Máu Tối Đa/s");
   timed(178,"magneticBrake",3,"magneticBrakeCd",20);
@@ -45,7 +45,7 @@ export function expansionStatuses(w: CombatWorld): StatusPresentation[] {
   timed(186,"confluence",8,"confluenceCd",16);
   add(187,`Đã tích ${Math.round(c.stacks.recoil??0)} sát thương`,{badgeText:String(Math.round(c.stacks.recoil??0)),badgeKind:"charge",progress:(c.stacks.recoil??0)/Math.max(1,stats.firepower*3)});
   add(192,hasAbsorbShield(s)?"Có Lá chắn: +20% mọi sát thương":"Không có Lá chắn: +25 Giáp",{badgeText:hasAbsorbShield(s)?"+20%":"+25"});
-  timed(195,"blackBox",4,"blackBoxCd",22);
+  timed(195,"blackBox",4,"blackBoxCd",18);
   add(196,`+${Math.min(25,(c.stacks.crimsonCrit??0)*2.5)}% Sát Thương Chí Mạng / +25% Sát Thương Chí Mạng`,{badgeText:`+${Math.min(25,(c.stacks.crimsonCrit??0)*2.5)}%`,badgeKind:"bonus",progress:Math.min(1,(c.stacks.crimsonCrit??0)/10)});
   const debt=r.debt.reduce((sum,d)=>sum+d.amount*d.ticks,0);
   if(debt>0)add(197,`Sát Thương Trì Hoãn còn nợ: ${Math.ceil(debt)}. Hạ quái thường: ${c.stacks.debtKills??0}/15.`,{group:"debuff",badgeText:String(Math.ceil(debt)),badgeKind:"shield",remaining:Math.max(...r.debt.map(d=>d.next+(d.ticks-1)-c.time)),duration:4,priority:120});

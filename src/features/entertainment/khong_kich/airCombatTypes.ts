@@ -186,6 +186,11 @@ export interface EffectiveAircraftStats extends CombatStats {
   fireRateGrowthPct: number;
   bonusFireRatePct: number;
   totalFireRateMultiplier: number;
+  bonusResourceRegenPct: number;
+  permanentResourceRegenPct: number;
+  permanentHpRegenBonus: number;
+  totalResourceRegenMultiplier: number;
+  totalHpRegenMultiplier: number;
   dualHpBonus?: number;
   dualResourceBonus?: number;
   currentHp: number;

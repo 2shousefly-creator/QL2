@@ -648,7 +648,7 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
           const values = getSkillRuntimeValues(worldRef.current.aircraft, skillId);
           const availability=getWorldSkillAvailability(worldRef.current,skillId);
           const {cooldown,borrow,free}=availability;
-          const active = skillId === "escort_drone" ? hud.droneActive : (worldRef.current.aircraft.activeEffects[skillId] || 0) > 0 || (skillId==="missile_swarm"&&worldRef.current.aircraft.coreState.deferredCooldowns[skillId]!==undefined);
+          const active = skillId === "escort_drone" ? hud.droneActive : (worldRef.current.aircraft.activeEffects[skillId] || 0) > 0 || worldRef.current.aircraft.coreState.deferredCooldowns[skillId]!==undefined;
           const state=worldRef.current.aircraft, rank=skillRank(state,skillId), allocatable=canAllocateSkill(state,skillId);
           const locked = rank===0 || ultimateCastDisabled(state,skillId) || playerSkillLocked(state);
           const manualDetonate=availability.manualAction==="detonate";

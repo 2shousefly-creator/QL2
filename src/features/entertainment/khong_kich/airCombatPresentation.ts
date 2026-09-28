@@ -11,7 +11,7 @@ import { expansionState } from "./airCombatExpansion";
 import { BOUNTY_REWARDS, CORE_METRICS, CORE_METRIC_LABELS } from "./airCombatTelemetry";
 import { FLAT_CORE_STATS } from "./airCombatCoreEffects";
 import { SKILL_BASE_VALUES as B, SKILL_CORE_VALUES as V } from "./airCombatSkillCores";
-import { getEffectiveAircraftStats, getSkillRuntimeValues } from "./airCombatAircraft";
+import { getEffectiveAircraftStats, getSkillRuntimeValues, getCore208Contribution } from "./airCombatAircraft";
 import { AIRCRAFT_CONFIGS, SKILL_CONFIGS, getCoreDefinition } from "./airCombatConfig";
 import { coreId, coreStackLabel, hasCore, negativeStatusDuration } from "./airCombatCoreEffects";
 import type { AircraftCombatState, CoreId, SkillId } from "./airCombatTypes";
@@ -89,6 +89,16 @@ export function getActiveSkillDuration(world: CombatWorld, id: SkillId) {
       world.decoyVolleys > 0 ? world.decoyVolleyCd + (world.decoyVolleys - 1) * B.decoyVolleyInterval + .45 + v.duration : 0);
   }
   if (id === "focus_laser") remaining = world.laserCharge + world.laserRemaining;
+  if (id === "heavy_bomb") {
+    const bomb=world.projectiles.find(p=>p.bigBang&&p.skillId===id);
+    if(bomb){remaining=bomb.lifetime;duration=3;}
+  }
+  if (id === "missile_swarm" && state.coreState.deferredCooldowns[id]!==undefined) {
+    const salvo=world.skillCores.salvos.find(s=>s.pending>0);
+    if(salvo)return {remaining:0,duration:0,progress:1-salvo.pending/salvo.total,timeLabel:"Đang phóng loạt tên lửa chính"};
+  }
+  if (id === "stellar_lance" && !world.astra?.charge && state.coreState.deferredCooldowns[id]!==undefined)
+    return {remaining:0,duration:0,progress:undefined,timeLabel:"Đòn Thương chính đang bay"};
   return remaining > 0 && duration > 0 && Number.isFinite(duration)
     ? { remaining, duration: Math.max(duration, remaining), progress: Math.min(1, remaining / duration), timeLabel: undefined } : null;
 }
@@ -125,12 +135,13 @@ const TIMED_STATUSES = [
 
 // Read canonical runtime timers only. Core 106 deliberately has no entry.
 const CORE_COOLDOWN_PRESENTATIONS: readonly {row:number;timer:string;duration:number;shield?:string;active?:string;activeDuration?:number;charge?:string}[] = [
-  {row:61,timer:"reactiveArmorCd",duration:15,active:"reactiveArmor",activeDuration:5},
-  {row:76,timer:"reactiveShieldCd",duration:13,shield:"reactive"},
-  {row:81,timer:"skillShieldCd",duration:14,shield:"skill"},
-  {row:83,timer:"counterCd",duration:20,active:"counterActive",activeDuration:5},
+  {row:61,timer:"reactiveArmorCd",duration:10,active:"reactiveArmor",activeDuration:5},
+  {row:76,timer:"reactiveShieldCd",duration:10,shield:"reactive"},
+  {row:81,timer:"skillShieldCd",duration:10,shield:"skill"},
+  {row:83,timer:"counterCd",duration:15,active:"counterActive",activeDuration:5},
   {row:149,timer:"bountyCooldown",duration:20,active:"bountyMark",activeDuration:5},
   {row:99,timer:"reserveShieldCd",duration:15,shield:"reserve"},
+  {row:200,timer:"recycleShieldCd",duration:6,shield:"recycled"},
 ];
 const seconds = (value:number) => `${Math.max(0,value).toFixed(1).replace(".",",")}s`;
 function coreCooldownStatuses(world:CombatWorld):StatusPresentation[] {
@@ -149,10 +160,10 @@ function coreCooldownStatuses(world:CombatWorld):StatusPresentation[] {
     const charges=entry.charge?(c.stacks[entry.charge]??0):0;
     if(!cooldown&&!active&&!shieldActive&&!charges)continue;
     const label=active?`Đang hoạt động: ${seconds(active)}`:shieldActive?"Khiên đang hoạt động (lượng khiên ở biểu tượng Lá chắn)":charges?`Còn ${charges} phát bắn cường hóa`:"";
-    const recovery=active?"Hồi nội tại bắt đầu sau hiệu ứng":cooldown?`Hồi nội tại: ${seconds(cooldown)}`:"Nội tại đã sẵn sàng";
+    const recovery=active||shieldActive?"Hồi nội tại bắt đầu sau hiệu ứng":cooldown?`Hồi nội tại: ${seconds(cooldown)}`:"Nội tại đã sẵn sàng";
     add(entry.row,`${label}${label?". ":""}${recovery}.`,{
-      remaining:active||cooldown||Infinity,duration:active?(entry.activeDuration??active):entry.duration,
-      timerKind:active?"active":cooldown?"cooldown":undefined,showNumericTimer:Boolean(active||cooldown),
+      remaining:active||(shieldActive?shield!.until-c.time:cooldown)||Infinity,duration:active?(entry.activeDuration??active):shieldActive?(shield!.duration??4):entry.duration,
+      timerKind:active||shieldActive?"active":cooldown?"cooldown":undefined,showNumericTimer:Boolean(active||shieldActive||cooldown),
       badgeText:charges?String(charges):undefined,badgeKind:charges?"charge":undefined,
       timeLabel:active?label:recovery,priority:active||shieldActive||charges?80:55,
     });
@@ -191,6 +202,10 @@ function coreCooldownStatuses(world:CombatWorld):StatusPresentation[] {
 export function getStatusPresentations(world: CombatWorld): StatusPresentation[] {
   const s = world.aircraft, c = s.coreState, result: StatusPresentation[] = [];
   result.push(...coreCooldownStatuses(world), ...skillCoreStatuses(world), ...expansionStatuses(world), ...equipmentStatuses(world));
+  if(hasCore(s,208)){
+    const core=getCoreDefinition("core_208");
+    result.push({id:core.id,group:"buff",name:core.name,icon:{kind:"core",id:core.id},description:`${core.description} ${core208LiveLabel(s)}`,source:"Lõi",stacks:1,remaining:Infinity,duration:Infinity,priority:45});
+  }
   const maxHp = getEffectiveAircraftStats(s).maxHp;
   for (const id of AIRCRAFT_CONFIGS[s.aircraftId].skillIds) {
     const timer = getActiveSkillDuration(world, id);
@@ -231,10 +246,10 @@ export function getStatusPresentations(world: CombatWorld): StatusPresentation[]
     result.push({ id: core.id, group: "buff", name: core.name, icon: { kind: "core", id: core.id },
       description: `${core.description} Đang tồn tại: ${live.length}.`, source: "Lõi", stacks: live.length,
       badgeText: `×${live.length}`, badgeKind: "stack", remaining: Math.min(...live.map(v => v.until)) - world.elapsed,
-      duration: 2, priority: 80 });
+      duration: 2.5, priority: 80 });
   }
   const conditional = [
-    { row: 49, on: c.time - c.lastMove >= 2.5 },
+    { row: 49, on: c.time - c.lastMove >= 2 },
     { row: 60, on: c.time - c.lastDamage >= 4 },
     { row: 62, on: s.status.regenDisabledUntil<=c.time && s.currentHp < maxHp * .2 },
     { row: 63, on: s.currentHp < maxHp * .35 },
@@ -262,8 +277,8 @@ export function getStatusPresentations(world: CombatWorld): StatusPresentation[]
   if(hasCore(s,104) && overheal && overheal.amount>0 && overheal.until>c.time){
     const core=getCoreDefinition(coreId(104));
     result.push({id:core.id,group:"buff",name:core.name,icon:{kind:"core",id:core.id},
-      description:`${core.description} Khiên hiện tại: ${amount(overheal.amount)} / ${amount(maxHp*.20)}`,
-      source:"Lõi",stacks:1,badgeText:String(Math.round(overheal.amount)),badgeKind:"shield",remaining:Infinity,duration:Infinity,showNumericTimer:false,priority:105});
+      description:`${core.description} Khiên hiện tại: ${amount(overheal.amount)} / ${amount(maxHp*.15)}`,
+      source:"Lõi",stacks:1,badgeText:String(Math.round(overheal.amount)),badgeKind:"shield",remaining:overheal.until-c.time,duration:6,timerKind:"active",showNumericTimer:true,priority:105});
   }
   const shields = Object.entries(c.shields).filter(([key])=>key!=="overheal").filter(([, v]) => v.amount > 0 && v.until > c.time);
   if (shields.length) {
@@ -375,7 +390,7 @@ export function getCoreTelemetryPresentation(state:AircraftCombatState,id:CoreId
   if(row===96)bonus(67,"Điểm Hồi Kỹ Năng");
   if(row===105)bonus(25,"% Tỷ Lệ Chí Mạng");
   if(row===91)bonus(Math.min(.6,Math.max(0,1-state.currentHp/stats.maxHp)*.6)*100,"% mọi sát thương");
-  if(row===49){const on=c.time-c.lastMove>=2.5;bonus(on?30:0,"% Hỏa Lực");bonus(on?60:0,"% Giáp");}
+  if(row===49){const on=c.time-c.lastMove>=2;bonus(on?30:0,"% Hỏa Lực");bonus(on?60:0,"% Giáp");}
   if(row===61)bonus(active("reactiveArmor")?45:0,"Giáp");
   if(row===63){const on=state.currentHp<stats.maxHp*.35;bonus(on?50:0,"Hỏa Lực");bonus(on?35:0,"Giáp");}
   if(row===66)lines.push(`Cộng dồn: ${c.time-c.lastKill<=4?c.stacks.combo??0:0} / 5`);
@@ -395,13 +410,20 @@ export function getCoreTelemetryPresentation(state:AircraftCombatState,id:CoreId
   if(row===97)lines.push("Khóa chủ động Kỹ Năng Tối Thượng; 3 kỹ năng thường +20% sát thương, -25% hồi chiêu cơ bản, -20% chi phí.");
   if(row===100){bonus(state.currentHp>stats.maxHp*.7?45:state.currentHp>=stats.maxHp*.3?22:0,"Hỏa Lực");bonus(state.currentHp<stats.maxHp*.3?45:state.currentHp<=stats.maxHp*.7?22:0,"Giáp");}
   const key=({76:"reactive",81:"skill",99:"reserve",104:"overheal"} as Record<number,string>)[row];
-  if(key){const shield=c.shields[key];const amount=shield&&shield.until>c.time?shield.amount:0;lines.push(`Khiên hiện tại: ${Math.round(amount).toLocaleString("vi-VN")}${row===104?` / ${Math.round(stats.maxHp*.20).toLocaleString("vi-VN")}`:""}`);}
+  if(key){const shield=c.shields[key];const amount=shield&&shield.until>c.time?shield.amount:0;lines.push(`Khiên hiện tại: ${Math.round(amount).toLocaleString("vi-VN")}${row===104?` / ${Math.round(stats.maxHp*.15).toLocaleString("vi-VN")}`:""}`);}
   if(row===121)lines.push(`Kho hiện tại: ${number((c.stacks.antimatter??0)*100)}% Hỏa Lực / 350% Hỏa Lực`);
   if(row===126)bonus(active("activeCooling")?V.coolingMana*100:0,"% Mana Tối Đa hồi dần trong 5s");
   if(row===130){const stacks=active("tacticalData")?c.stacks.tacticalData??0:0;lines.push(`Dữ Liệu đang dùng: ${stacks} / ${V.dataLimit}`);bonus(hasCore(state,95)?0:stacks*V.dataCrit*100,"% Tỷ Lệ Chí Mạng");}
+  if(row===208&&hasCore(state,208))lines.push(core208LiveLabel(state));
   lines.push(...releaseTelemetry(state,row));
   const status=coreStackLabel(state,id);
   if(status&&!lines.includes(status))lines.push(status);
   if(!lines.length)lines.push("Đang trang bị. Hiệu ứng áp dụng theo mô tả lõi.");
   return lines.map(line=>line.replace(/([\d,]+) %/g,"$1%"));
+}
+
+function core208LiveLabel(state:AircraftCombatState):string {
+  const contribution=getCore208Contribution(state);
+  const format=(value:number)=>value.toLocaleString("vi-VN",{maximumFractionDigits:1});
+  return `Hiện nhận từ Lõi: +${format(contribution.hpRegen)} Hồi Máu/s · +${format(contribution.resourceRegen)} Hồi Tài Nguyên/s`;
 }
