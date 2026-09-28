@@ -76,7 +76,8 @@
 .combat-stat-chip[data-stat-change="debuff"] { color:#f87171; font-weight:900; }
 .air-skill-icon-wrap { position:relative; display:inline-flex; }
 /* Clear the perimeter clockwise from twelve; the remaining arc stays green. */
-.air-skill-duration { position:absolute;inset:0;z-index:24;padding:2px;pointer-events:none;background:conic-gradient(from 0deg,transparent 0deg calc((1 - var(--skill-duration,1)) * 360deg),#4ade80 0deg 360deg);mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);mask-composite:exclude;-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor; }
+.air-skill-duration { position:absolute;inset:0;z-index:24;pointer-events:none;filter:drop-shadow(0 0 2px #4ade80) drop-shadow(0 0 4px #4ade8080); }
+.air-skill-duration::before { content:"";position:absolute;inset:0;padding:3px;background:conic-gradient(from 0deg,transparent 0deg calc((1 - var(--skill-duration,1)) * 360deg),#4ade80 0deg 360deg);mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);mask-composite:exclude;-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor; }
 .air-skill-duration[hidden] { display:none; }
 
 /* Tactical geometry stays feature-local and retains the existing HUD footprint. */
@@ -659,8 +660,8 @@
 .air-skill-block-overlay,.air-skill-resource-overlay { position:absolute;inset:0;z-index:21;pointer-events:none;display:flex;align-items:center;justify-content:center; }
 .air-skill-block-overlay { background:transparent; }
 /* The top clears first as the actual cooldown remainder shrinks toward the bottom. */
-.air-skill-cooldown-mask { position:absolute;inset:0;background:#fde04766;transform:scaleY(var(--skill-cooldown-progress,0));transform-origin:bottom;transition:transform 90ms linear; }
-.air-skill-cooldown-number { position:relative;color:#fff;font-size:clamp(17px,5.8cqw,27px);line-height:1;font-weight:900;font-variant-numeric:tabular-nums;text-shadow:0 2px 4px #000; }
+.air-skill-cooldown-mask { position:absolute;inset:0;background:rgba(253,224,71,.54);transform:scaleY(var(--skill-cooldown-progress,0));transform-origin:bottom;transition:transform 90ms linear; }
+.air-skill-cooldown-number { position:relative;color:#fff;font-size:clamp(22.1px,7.54cqw,35.1px);line-height:1;font-weight:900;font-variant-numeric:tabular-nums;text-shadow:0 2px 4px #000; }
 .air-skill-resource-overlay { gap:3px;background:#b0f3ff98;color:#09293c;text-shadow:0 0 3px #fff; }
 .air-skill-resource-overlay svg { width:6cqw;height:6cqw;stroke-width:3; }
 .air-skill-resource-overlay strong { font-size:clamp(24px,8cqw,36px);font-weight:950; }

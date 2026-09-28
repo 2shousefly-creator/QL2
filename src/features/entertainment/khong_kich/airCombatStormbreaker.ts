@@ -3,7 +3,7 @@ import { bossMinCenterY } from "./airCombatHudLayout";
 import { clampHitboxToGameplayRect, getEnemyHitbox } from "./airCombatHitboxes";
 import { isElite } from "./airCombatWaves";
 import type { Allegiance } from "./airCombatStatus";
-import type { CombatWorld, EnemyEntity, ProjectileEntity } from "./airCombatRuntime";
+import type { CombatWorld, EnemyEntity, ProjectileEntity, EnemyProjectileSpeedClass } from "./airCombatRuntime";
 import type { EnemyType } from "./airCombatTypes";
 import type { StormbreakerVfxKey } from "./airCombatStage3Art";
 import type { StormbreakerWorldState, StormbreakerEnemyState, StormbreakerHooks, StormPoint, StormTag, StormCast, StormHazard } from "./airCombatStormbreakerTypes";
@@ -79,8 +79,8 @@ function later(w: CombatWorld, e: EnemyEntity, delay: number, action: () => void
   if (w.stormbreaker!.events.length < eventLimit(w)) w.stormbreaker!.events.push({ at: w.elapsed + delay, owner: e.id, committed, action });
 }
 function bullet(w: CombatWorld, e: EnemyEntity, h: StormbreakerHooks, angle: number, factor: number,
-  visual: StormbreakerVfxKey = "stormStaticBolt", speed = 155, radius = 3, allegiance = h.allegiance(w, e), origin: StormPoint = e, major = false) {
-  const p = h.projectile(w, { owner: "enemy", allegiance, sourceEnemyId: e.id, sourceEnemyType: e.type,
+  visual: StormbreakerVfxKey = "stormStaticBolt", speed = 155, radius = 3, allegiance = h.allegiance(w, e), origin: StormPoint = e, major = false, enemySpeedClass: EnemyProjectileSpeedClass = "standard") {
+  const p = h.projectile(w, { owner: "enemy", enemySpeedClass, allegiance, sourceEnemyId: e.id, sourceEnemyType: e.type,
     delivery: "direct_projectile", x: origin.x, y: origin.y, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed,
     rawDamage: damage(e) * factor, radius, lifetime: 5.5, stormbreakerVisual: visual,
     criticalAttack: major || isElite(e.type) || e.type === "boss", suppressive: !major && !isElite(e.type) && e.type !== "boss", color: "#8ed5ff" });
@@ -90,13 +90,13 @@ function bullet(w: CombatWorld, e: EnemyEntity, h: StormbreakerHooks, angle: num
 function fan(w: CombatWorld, e: EnemyEntity, h: StormbreakerHooks, n: number, factor: number, aim: number,
   key: StormbreakerVfxKey, allegiance = h.allegiance(w, e), origin: StormPoint = e, spread = .18) {
   if(escalated(w)){spread *= (n-1)/Math.max(1,2*n-1);n*=2;}
-  for (let i = 0; i < n; i++) bullet(w, e, h, aim + (i - (n - 1) / 2) * spread, factor, key, 155, 3, allegiance, origin, true);
+  for (let i = 0; i < n; i++) bullet(w, e, h, aim + (i - (n - 1) / 2) * spread, factor, key, 155, 3, allegiance, origin, true,"fan");
 }
 function ring(w: CombatWorld, e: EnemyEntity, h: StormbreakerHooks, count: number, factor: number, turn = 0, allegiance = h.allegiance(w, e), gapCentre = Math.PI / 2 + Math.sin(e.stormbreaker!.attack * 1.1) * .7) {
   // 42 degree omitted sector rotates by cast. No extra bolt closes its boundaries.
   if(escalated(w))count*=2;
   const gap = .733, centre = gapCentre + turn;
-  for (let i = 0; i < count; i++) bullet(w, e, h, centre + gap / 2 + i * (TAU - gap) / Math.max(1, count - 1), factor, "stormCapacitorBolt", 120, 3, allegiance, e, true);
+  for (let i = 0; i < count; i++) bullet(w, e, h, centre + gap / 2 + i * (TAU - gap) / Math.max(1, count - 1), factor, "stormCapacitorBolt", 120, 3, allegiance, e, true,"fan");
 }
 function aimAt(w: CombatWorld, e: EnemyEntity, h: StormbreakerHooks, allegiance?: Allegiance) {
   const t = h.target(w, e, allegiance) ?? { x: e.x, y: RECT.bottom };
@@ -214,7 +214,7 @@ function updateDash(w: CombatWorld, e: EnemyEntity, dt: number, h: StormbreakerH
     const factor = d.follow === "cross" ? .9 : .65;
     const hits = new Map<number,number>();
     for (const side of (escalated(w)?[-1.06,-.94,.94,1.06]:[-1,1])) {
-      const p=bullet(w, e, h, aim + side * .6, factor, "stormLancerBlade", 185, 4, d.allegiance, e, true);
+      const p=bullet(w, e, h, aim + side * .6, factor, "stormLancerBlade", 185, 4, d.allegiance, e, true,"fan");
       if(p && d.follow === "cross")p.stormbreakerGrace=hits;
     }
   }
@@ -243,7 +243,7 @@ function rails(w: CombatWorld, e: EnemyEntity, h: StormbreakerHooks, double = fa
     const a = hazard(w, e, h, c, from, 0, double ? 1 : .9, i * .22, end, 4, .05, undefined, hits, true, allegiance);
     if (!a) continue; a.visual = "stormRailWarning";
     for(let shot=0;shot<(escalated(w)?2:1);shot++)later(w, e, a.hitAt - w.elapsed + shot*.06, () => {
-      const p = bullet(w, e, h, Math.atan2(end.y - from.y, end.x - from.x), 1.35, "stormIonRail", 680, 4, allegiance, from, true);
+      const p = bullet(w, e, h, Math.atan2(end.y - from.y, end.x - from.x), 1.35, "stormIonRail", 680, 4, allegiance, from, true,"special");
       if (p) p.stormbreakerGrace = hits;
     }, false);
   }
@@ -266,7 +266,7 @@ function halo(w: CombatWorld, e: EnemyEntity, h: StormbreakerHooks): boolean {
     const origin = { x: e.x + Math.cos(releaseAngle) * 32, y: e.y + Math.sin(releaseAngle) * 32 };
     if(w.stormbreaker!.visuals.length<110)w.stormbreaker!.visuals.push({id:w.nextId++,key:"stormHaloBlade",x:origin.x,y:origin.y,size:26,at:w.elapsed,duration:release,rotation:a,
       orbit:{x:e.x,y:e.y,angle:a,radius:32,releaseAt:w.elapsed+release}});
-    later(w, e, release, () => bullet(w, e, h, aim + (i - (count - 1) / 2) * .16*(baseCount-1)/(count-1), .65, "stormHaloBlade", 170, 4, allegiance, origin, true), false);
+    later(w, e, release, () => bullet(w, e, h, aim + (i - (count - 1) / 2) * .16*(baseCount-1)/(count-1), .65, "stormHaloBlade", 170, 4, allegiance, origin, true,"special"), false);
   }
   return true;
 }
@@ -275,7 +275,7 @@ function seraphSplit(w: CombatWorld, e: EnemyEntity, h: StormbreakerHooks): bool
   const count = e.stormbreaker!.enhanced ? 8 : 6; e.stormbreaker!.enhanced = false;
   const target=h.target(w,e)??point(e.x,e.y+180);
   for(const offset of (escalated(w)?[-.035,.035]:[0])){
-  const p = bullet(w, e, h, aimAt(w, e, h)+offset, .3, "stormSeraphOrb", Math.hypot(target.x-e.x,target.y-e.y)/1.8, 7);
+  const p = bullet(w, e, h, aimAt(w, e, h)+offset, .3, "stormSeraphOrb", Math.hypot(target.x-e.x,target.y-e.y)/1.8, 7,undefined,e,false,"special");
   if (p) p.stormbreakerSplit = { at: w.elapsed + .9, count, factor: .55 / .3, radial: true };
   }
   return true;
@@ -311,7 +311,7 @@ function cloud(w: CombatWorld, e: EnemyEntity, h: StormbreakerHooks): boolean {
 /** Objective reactions use the spawner's raw damage snapshot, never the zero-damage node config.
  * Counts here are authored 26.16 values and do not pass through encounter density scaling. */
 function objectiveBolt(w: CombatWorld, e: EnemyEntity, h: StormbreakerHooks, angle: number, origin: StormPoint = e) {
-  h.projectile(w,{owner:"enemy",allegiance:"hostile",sourceEnemyId:e.id,sourceEnemyType:e.type,
+  h.projectile(w,{owner:"enemy",enemySpeedClass:"fan",allegiance:"hostile",sourceEnemyId:e.id,sourceEnemyType:e.type,
     delivery:"direct_projectile",x:origin.x,y:origin.y,vx:Math.cos(angle)*155,vy:Math.sin(angle)*155,
     rawDamage:e.stormbreaker!.sourceDamage,radius:3,lifetime:5.5,stormbreakerVisual:"stormStaticBolt",criticalAttack:true});
 }
@@ -427,7 +427,7 @@ function dischargeEnemy(w: CombatWorld, e: EnemyEntity, h: StormbreakerHooks): b
   if (e.type === "spark_wasp" && s.charge >= 1) {
     const allegiance = h.allegiance(w, e), delay = .18 * (s.slot % 6);
     const count=s.enhanced?9:7;s.enhanced=false;
-    later(w, e, delay, () => { for (let i = 0; i < count; i++) bullet(w, e, h, i * TAU / count + .2, .30, "stormSparkNeedle", 105, 3, allegiance); }, false);
+    later(w, e, delay, () => { for (let i = 0; i < count; i++) bullet(w, e, h, i * TAU / count + .2, .30, "stormSparkNeedle", 105, 3, allegiance,e,false,"fan"); }, false);
     s.charge = 0; return true;
   } else if ((e.type === "storm_capacitor" || e.type === "capacitor_prime") && s.charge >= 3) {
     const count = Math.floor(s.charge);
@@ -553,7 +553,7 @@ function spear(w: CombatWorld, e: EnemyEntity, h: StormbreakerHooks): boolean {
   const from = { x: e.x, y: e.y }, t = rayEnd(from, h.target(w, e) ?? point(e.x, RECT.bottom)), allegiance = h.allegiance(w, e);
   const a = hazard(w, e, h, c, from, 0, warning, 0, t, 7, .01, undefined, undefined, true); if (!a) return true;
   a.visual = "stormSpearCharge"; stormFx(w, "stormSpearCharge", e.x, e.y, 85, warning*warningScale(w));
-  for(let shot=0;shot<2;shot++)later(w, e, a.hitAt - w.elapsed + shot*.06, () => bullet(w, e, h, Math.atan2(t.y - from.y, t.x - from.x), 1.75, "stormSpear", 740, 7, allegiance, from, true), false);
+  for(let shot=0;shot<2;shot++)later(w, e, a.hitAt - w.elapsed + shot*.06, () => bullet(w, e, h, Math.atan2(t.y - from.y, t.x - from.x), 1.75, "stormSpear", 740, 7, allegiance, from, true,"special"), false);
   return true;
 }
 function crown(w: CombatWorld, e: EnemyEntity, h: StormbreakerHooks, cascade = false): boolean {
@@ -654,7 +654,7 @@ export function updateStormbreakerEnemy(w: CombatWorld, e: EnemyEntity, dt: numb
   }
   if (isStormObjective(e.type)) {
     if (e.type === "storm_conductor" && e.fireCooldown <= 0 && !locked(w, e)) {
-      for(const offset of [-.035,.035])bullet(w, e, h, aimAt(w, e, h)+offset, 1, "stormConductorArc", 145, 4); e.fireCooldown = 3;
+      for(const offset of [-.035,.035])bullet(w, e, h, aimAt(w, e, h)+offset, 1, "stormConductorArc", 145, 4,undefined,e,false,"fan"); e.fireCooldown = 3;
     }
     return true;
   }
@@ -682,7 +682,7 @@ export function updateStormbreakerEnemy(w: CombatWorld, e: EnemyEntity, dt: numb
     if (e.type === "volt_executioner" && e.hp < e.maxHp * .4 && s.nextMajor <= w.elapsed && s.attack % 3 === 0) {
       if (dash(w, e, h, .85, .8, "none")) { s.nextMajor = w.elapsed + 4; s.attack++; }
     }
-    if (e.fireCooldown <= 0) { for(const offset of [-.035,.035])bullet(w, e, h, aimAt(w, e, h)+offset, .4); e.fireCooldown = 3; s.attack++; }
+    if (e.fireCooldown <= 0) { for(const offset of [-.035,.035])bullet(w, e, h, aimAt(w, e, h)+offset, .4,"stormStaticBolt",155,3,undefined,e,false,"fan"); e.fireCooldown = 3; s.attack++; }
     return true;
   }
   const aim = aimAt(w, e, h), allegiance = h.allegiance(w, e);
@@ -703,7 +703,7 @@ export function updateStormbreakerEnemy(w: CombatWorld, e: EnemyEntity, dt: numb
     } else if (e.type === "thunderhead") {
       const salvo = w.nextId++;
       for (let i = 0; i < 3; i++) {
-        const orb = bullet(w, e, h, aim + (i - 1) * .22, .65, "stormThunderOrb", 155, 5, allegiance, e, true);
+        const orb = bullet(w, e, h, aim + (i - 1) * .22, .65, "stormThunderOrb", 155, 5, allegiance, e, true,"fan");
         if (orb) orb.stormbreakerSalvo = salvo;
       }
     }
@@ -714,7 +714,7 @@ export function updateStormbreakerEnemy(w: CombatWorld, e: EnemyEntity, dt: numb
   let cast = false;
   if (e.type === "spark_wasp" && world.phase === "CHARGING") {
     if (reserve(w, e, "ring", 1.4)) {
-      const p = bullet(w, e, h, aim, .3, "stormForkSeed", 85, 5);
+      const p = bullet(w, e, h, aim, .3, "stormForkSeed", 85, 5,undefined,e,false,"special");
       if (p) p.stormbreakerSplit = { at: w.elapsed + .7, count: 3, factor: .45 / .3, radial: false };
       cast = true;
     }
@@ -746,7 +746,7 @@ export function updateStormbreakerProjectile(w: CombatWorld, p: ProjectileEntity
   // Ownership and damage are captured from the travelling seed, not the current caster.
   for (let i = 0; i < split.count; i++) {
     const angle = split.radial ? i * TAU / split.count : Math.atan2(p.vy, p.vx) + (i - 1) * .4;
-    h.projectile(w, { owner: p.owner, allegiance: p.allegiance, sourceEnemyId: p.sourceEnemyId, sourceEnemyType: p.sourceEnemyType,
+    h.projectile(w, { owner: p.owner, enemySpeedClass:"fan", allegiance: p.allegiance, sourceEnemyId: p.sourceEnemyId, sourceEnemyType: p.sourceEnemyType,
       delivery: "direct_projectile", x: p.x, y: p.y, vx: Math.cos(angle) * 155, vy: Math.sin(angle) * 155,
       rawDamage: p.rawDamage * split.factor, radius: 3, lifetime: 4,
       stormbreakerVisual: split.radial ? "stormHaloBlade" : "stormForkShard", criticalAttack: p.criticalAttack });

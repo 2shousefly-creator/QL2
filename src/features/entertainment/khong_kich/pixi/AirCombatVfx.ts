@@ -4,6 +4,7 @@ import type { CombatWorld } from "../airCombatRuntime";
 import { AirCombatSpritePool } from "./AirCombatSpritePool";
 import { Container, Sprite } from "pixi.js";
 import type { AirCombatAssets, VisualKey } from "./AirCombatPixiAssets";
+import { AIR_COMBAT_WORLD } from "../airCombatConfig";
 import { healingCrossPlacement, lightningPath } from "../airCombatProcVisuals";
 
 interface Effect { key?:VisualKey; startX?:number; startY?:number; targetX?:number; targetY?:number; sprite: Sprite; age: number; duration: number; size: number; drift: number; smoke: boolean; aspect: number; important: boolean; opacity: number }
@@ -13,31 +14,33 @@ export class AirCombatVfx {
   private ultimates: AirCombatSpritePool;
   private ranked: AirCombatSpritePool;
   constructor(private root: Container, private assets: AirCombatAssets) {
-    this.ultimates = new AirCombatSpritePool(root, 640);
-    this.ranked = new AirCombatSpritePool(root, 640);
+    // Two extra recycled highlights per projectile; retain the existing body/effect budget.
+    const spriteBudget = 640 + AIR_COMBAT_WORLD.maxPlayerProjectiles * 2;
+    this.ultimates = new AirCombatSpritePool(root, spriteBudget);
+    this.ranked = new AirCombatSpritePool(root, spriteBudget);
   }
   renderRankSkills(world: CombatWorld, reducedMotion: boolean) {
     this.ranked.begin();
-    paintRankSkills(world, (id,key,x,y,width,height,rotation,alpha) => {
+    paintRankSkills(world, (id,key,x,y,width,height,rotation,alpha,additive) => {
       const sprite=this.ranked.get(id,this.assets.effect(key));if(!sprite)return;
       sprite.position.set(x,y);sprite.width=width;sprite.height=height;sprite.rotation=rotation;sprite.alpha=alpha;
-      sprite.blendMode=key==="rankAnchor"||key==="rankCrystal"||key==="rankMicroMissile"?"normal":"add";
+      sprite.blendMode=additive?"add":key==="rankAnchor"||key==="rankCrystal"||key==="rankMicroMissile"?"normal":"add";
     }, reducedMotion);
     this.ranked.end();
     this.ultimates.begin();
-    paintUltimates(world,(id,key,x,y,width,height,rotation,alpha)=>{
+    paintUltimates(world,(id,key,x,y,width,height,rotation,alpha,additive)=>{
       const sprite=this.ultimates.get(id,this.assets.effect(key));if(!sprite)return;
       sprite.position.set(x,y);sprite.width=width;sprite.height=height;sprite.rotation=rotation;sprite.alpha=alpha;
-      sprite.blendMode=ultimateBody(key)?"normal":"add";
+      sprite.blendMode=additive?"add":ultimateBody(key)?"normal":"add";
     },reducedMotion);
     this.ultimates.end();
   }
-  spawn(key: VisualKey, x: number, y: number, size: number, duration = .45, tint = 0xffffff, drift = 0, delay = 0, rotation = 0, aspect = 1, opacity = 1) {
-    const important = key === "shield" || key === "shockwave" || key === "laser" || key.endsWith("Explosion");
+  spawn(key: VisualKey, x: number, y: number, size: number, duration = .45, tint = 0xffffff, drift = 0, delay = 0, rotation = 0, aspect = 1, opacity = 1, primaryImpact = false) {
+    const important = primaryImpact || key === "shield" || key === "shockwave" || key === "laser" || key.endsWith("Explosion");
     if (this.active.length >= 80) {
       if (!important) return;
       let index = this.active.findIndex(effect => !effect.important);
-      if(index<0 && key==="smallExplosion" && duration<=.18) {
+      if(index<0 && (primaryImpact || key==="smallExplosion" && duration<=.18)) {
         // A new direct contact always gets its primary flash, even when every
         // slot is occupied by important effects; recycle the oldest burst.
         index=this.active.findIndex(effect=>effect.key==="smallExplosion" && effect.duration<=.18);
@@ -57,6 +60,15 @@ export class AirCombatVfx {
     sprite.blendMode = smoke ? "normal" : "add";
     sprite.width = size; sprite.height = size * aspect;
     this.root.addChild(sprite); this.active.push(effect);
+  }
+  impact(x:number,y:number,size:number,tint:number,reducedMotion:boolean) {
+    // Always admit the short primary flash; optional layers never evict it.
+    this.spawn("charge",x,y,size*.8,.12,0xfff4e8,0,0,0,1,1,true);
+    if(this.active.length<80)this.spawn("smallExplosion",x,y,size*1.35,.18,tint);
+    if(!reducedMotion && this.active.length<78) {
+      this.spawn("sparks",x,y,size*1.25,.16,tint);
+      this.spawn("shockwave",x,y,size*.95,.14,tint,0,0,0,1,.45);
+    }
   }
   attract(key:VisualKey,x:number,y:number,targetX:number,targetY:number,size:number,duration:number,tint:number) {
     const count=this.active.length;

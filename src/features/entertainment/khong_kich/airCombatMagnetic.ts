@@ -3,7 +3,7 @@ import { bossMinCenterY } from "./airCombatHudLayout";
 import type { StatusPayload, DamageDelivery, Allegiance, AttackMetadata } from "./airCombatStatus";
 import { AIR_COMBAT_WORLD, ENEMY_CONFIGS, STAGE2_POWER_MULTIPLIER, stageEnemyConfig, GAMEPLAY_SAFE_RECT as RECT } from "./airCombatConfig";
 import { circleVsAircraft, getEnemyHitbox, getPlayerHitbox, clampHitboxToGameplayRect, segmentVsAircraft, createHitResult, hitboxProjectionExtent } from "./airCombatHitboxes";
-import type { CombatWorld, EnemyEntity, ProjectileEntity } from "./airCombatRuntime";
+import type { CombatWorld, EnemyEntity, ProjectileEntity, EnemyProjectileSpeedClass } from "./airCombatRuntime";
 import type { EnemyType } from "./airCombatTypes";
 import type { TacticalPainter } from "./airCombatTacticalVisuals";
 import type { MagneticVfxKey } from "./airCombatStage2Art";
@@ -130,11 +130,11 @@ function pushPlayer(w: CombatWorld, x: number, y: number) {
   }))return;
   w.playerX = target.x; w.playerY = Math.min(target.y, AIR_COMBAT_WORLD.height - AIR_COMBAT_WORLD.playerBottomClearance);
 }
-function bullet(w: CombatWorld, e: EnemyEntity, h: MagneticHooks, angle: number, speed = 110, factor = 1, radius = e.type === "boss" ? 6 : 4) {
+function bullet(w: CombatWorld, e: EnemyEntity, h: MagneticHooks, angle: number, speed = 110, factor = 1, radius = e.type === "boss" ? 6 : 4, enemySpeedClass: EnemyProjectileSpeedClass = "standard") {
   const visual: MagneticVfxKey = e.type === "boss" ? "crownBolt" : e.type === "satellite" ? "satelliteOrb"
     : e.type === "prism_manta" ? "prismOrb" : e.type === "arc_reaver" ? "arcBolt"
     : e.type === "micro_drone" ? "microSpark" : "needleBolt";
-  const shot = h.projectile(w, { owner: "enemy", allegiance:e.magnetic?.elite?.allegiance??h.allegiance(w,e), sourceEnemyId: e.id, sourceEnemyType: e.type, x: e.x, y: e.y,
+  const shot = h.projectile(w, { owner: "enemy", enemySpeedClass, allegiance:e.magnetic?.elite?.allegiance??h.allegiance(w,e), sourceEnemyId: e.id, sourceEnemyType: e.type, x: e.x, y: e.y,
     magneticAreaId: e.magnetic?.elite && AREA_SKILLS.includes(e.magnetic.elite.skill) ? e.magnetic.elite.id : undefined,
     vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed, rawDamage: damage(e) * factor * (e.magnetic?.elite ? 1.2 : 1),
     radius, criticalAttack: ELITE_TYPES.includes(e.type), lifetime: e.type === "boss" || e.type === "satellite" ? 4.8 : 6, color: "#67e8f9", magneticVisual: visual });
@@ -144,7 +144,7 @@ function bullet(w: CombatWorld, e: EnemyEntity, h: MagneticHooks, angle: number,
 function disc(w: CombatWorld, e: EnemyEntity, h: MagneticHooks, angle: number, curve = 36, fast = false) {
   const travel = Math.max(280, Math.hypot((h.target(w,e)?.x??e.x) - e.x, (h.target(w,e)?.y??e.y) - e.y) + 75);
   const end = point(e.x + Math.cos(angle) * travel, e.y + Math.sin(angle) * travel, 12);
-  const p = bullet(w, e, h, angle, 0, 1, 8);
+  const p = bullet(w, e, h, angle, 0, 1, 8,"special");
   if (p) {
     p.magneticVisual = "returningDisc"; p.lifetime = 8; p.color = "#67e8f9";
     p.magnetic = { kind: "disc", age: 0, originX: e.x, originY: e.y, endX: end.x, endY: end.y,
@@ -211,7 +211,7 @@ export function updateMagneticEnemy(w: CombatWorld, e: EnemyEntity, dt: number, 
     else s.angle += dt * .65 * direction;
     drift(e, point(s.anchorX + Math.cos(s.angle) * 112, s.anchorY + Math.sin(s.angle) * 78), 76, dt);
     if (canFire && cycle > 2.5 && cycle < 5.8 && e.fireCooldown <= 0) {
-      for (const offset of e.wave >= 3 ? [-.18, 0, .18] : [-.08, .08]) bullet(w, e, h, aim + offset, 125, .75);
+      for (const offset of e.wave >= 3 ? [-.18, 0, .18] : [-.08, .08]) bullet(w, e, h, aim + offset, 125, .75,4,"fan");
       s.attack++; e.fireCooldown = s.attack % 3 ? .32 : 2.2;
     }
     return true;
@@ -254,7 +254,7 @@ export function updateMagneticEnemy(w: CombatWorld, e: EnemyEntity, dt: number, 
     s.release = e.wave >= 5 ? 2 : e.wave >= 2 ? 1 : 0; s.releaseClock = .65;
   }
   if (e.type === "prism_manta") {
-    const p = bullet(w, e, h, aim, 85, 1, 10);
+    const p = bullet(w, e, h, aim, 85, 1, 10,"special");
     if (p) { p.color = "#c084fc"; p.magnetic = { kind: "orb", age: 0, originX: e.x, originY: e.y, endX: 0, endY: 0, curve: 0, outbound: 1.55, turn: .55, returnDuration: 0, phase: "outbound", baseAngle: aim }; }
   }
   if (e.type === "swarm_carrier") {
@@ -286,7 +286,7 @@ export function updateMagneticProjectile(w: CombatWorld, p: ProjectileEntity, dt
       magneticFx(w, "plasmaImpact", p.x, p.y, 30, .24);
       for (const side of (m.splitElite || w.waveIndex >= 3 ? [-1, 0, 1] : [-1, 1])) {
         const angle = m.baseAngle + side * (m.splitElite ? Math.PI / 18 : Math.PI / 6);
-        h.projectile(w, { owner: p.owner, allegiance: p.allegiance, sourceEnemyId: p.sourceEnemyId, sourceEnemyType: p.sourceEnemyType,
+        h.projectile(w, { owner: p.owner, enemySpeedClass:"fan", allegiance: p.allegiance, sourceEnemyId: p.sourceEnemyId, sourceEnemyType: p.sourceEnemyType,
           magneticAreaId:p.magneticAreaId, criticalAttack:p.criticalAttack, x: p.x, y: p.y, vx: Math.cos(angle) * (m.splitElite ? 165 : 132), vy: Math.sin(angle) * (m.splitElite ? 165 : 132), rawDamage: p.rawDamage * (m.splitElite ? .45 : .75), radius: 4, color: "#e9d5ff", magneticVisual: "prismShard" });
       }
       p.lifetime = 0;
@@ -550,7 +550,7 @@ function updateTempest(w:CombatWorld, boss:EnemyEntity, dt:number, h:MagneticHoo
       addMine(w,boss,h,point(w.playerX+dx,w.playerY+dy,10),.1,magneticAuthoredDamage(125.44),.6);
       d.nextEmission+=phase>=3?.2:.3;
     } else if(skill==="acid" && (d.acidEmissions??0)<20) {
-      h.projectile(w,{owner:"enemy",sourceEnemyId:boss.id,sourceEnemyType:"boss",x:RECT.left+10+w.random()*(RECT.width-20),y:RECT.top,
+      h.projectile(w,{owner:"enemy",enemySpeedClass:"special",sourceEnemyId:boss.id,sourceEnemyType:"boss",x:RECT.left+10+w.random()*(RECT.width-20),y:RECT.top,
         vx:0,vy:390,radius:6,rawDamage:magneticAuthoredDamage(phase>=3?118.5408:87.808)*boss.damageScale,color:"#b4ff4b",magneticVisual:"acidDrop",lifetime:3,
         payload:{healingReduction:4,healingReceivedMultiplier:phase>=3?0:.4}});
       d.acidEmissions=(d.acidEmissions??0)+1;d.nextEmission=d.acidEmissions*.25;
@@ -580,7 +580,7 @@ function updateSatellite(w:CombatWorld,e:EnemyEntity,dt:number,h:MagneticHooks) 
 function fan(w:CombatWorld,e:EnemyEntity,h:MagneticHooks,count:number,spacing:number,raw:number,speed:number,aim:number,radius=4,visual?:MagneticVfxKey) {
   for(let i=0;i<count;i++) {
     const a=aim+(i-(count-1)/2)*spacing*Math.PI/180;
-    const shot=bullet(w,e,h,a,speed,raw/stageEnemyConfig(e.type,2).projectileDamage,radius);
+    const shot=bullet(w,e,h,a,speed,raw/stageEnemyConfig(e.type,2).projectileDamage,radius,count>1?"fan":"standard");
     if(shot&&visual)shot.magneticVisual=visual;
   }
 }
@@ -634,7 +634,7 @@ function updateEliteDirector(w:CombatWorld,dt:number,h:MagneticHooks) {
 }
 function returning(w:CombatWorld,e:EnemyEntity,h:MagneticHooks,angle:number,raw:number,travel:number,curve:number,origin:Point=e,end?:Point) {
   if(w.projectiles.filter(p=>p.magnetic?.kind==="disc"&&p.lifetime>0).length>=48)return;
-  const p=bullet(w,e,h,angle,0,raw/stageEnemyConfig(e.type,2).projectileDamage,8);
+  const p=bullet(w,e,h,angle,0,raw/stageEnemyConfig(e.type,2).projectileDamage,8,"special");
   if(!p)return;
   const target=end??point(origin.x+Math.cos(angle)*300,origin.y+Math.sin(angle)*300,16);
   p.x=p.previousX=origin.x;p.y=p.previousY=origin.y;p.magneticVisual="returningDisc";p.lifetime=travel*2+.55+.1;
@@ -713,7 +713,7 @@ function updateEliteSkill(w:CombatWorld,e:EnemyEntity,dt:number,h:MagneticHooks,
       break;
     case "curtain":
       for(let i=0;i<11;i++) {
-        const a=q.aim+(i-5)*10*Math.PI/180,p=bullet(w,e,h,a,115,1,9);
+        const a=q.aim+(i-5)*10*Math.PI/180,p=bullet(w,e,h,a,115,1,9,"fan");
         if(p){p.magneticVisual="prismOrb";p.magnetic={kind:"orb",splitElite:true,age:0,originX:e.x,originY:e.y,endX:0,endY:0,curve:0,outbound:1.1,turn:0,returnDuration:0,phase:"outbound",baseAngle:a};}
       }
       break;
@@ -721,7 +721,7 @@ function updateEliteSkill(w:CombatWorld,e:EnemyEntity,dt:number,h:MagneticHooks,
       // Fans cross in the upper field, then diverge outside the lower 88px
       // corridor. Their fixed vectors never retarget the player.
       for(const ray of crossPrismRays()) {
-        const p=bullet(w,e,h,ray.angle,165,.45,4);
+        const p=bullet(w,e,h,ray.angle,165,.45,4,"fan");
         if(p){p.x=p.previousX=ray.from.x;p.y=p.previousY=ray.from.y;p.magneticVisual="prismShard";p.lifetime=2.4;}
       }
       break;
@@ -737,7 +737,7 @@ function updateEliteSkill(w:CombatWorld,e:EnemyEntity,dt:number,h:MagneticHooks,
     case "repulse": {
       const dx=(h.target(w,e)?.x??e.x)-e.x,dy=(h.target(w,e)?.y??e.y)-e.y,len=Math.max(1,Math.hypot(dx,dy));
       const victim=h.target(w,e);if(q.allegiance==="hostile")pushPlayer(w,dx/len*28,dy/len*28);else if(victim){victim.x+=dx/len*28;victim.y+=dy/len*28;}
-      for(let i=0;i<18;i++)bullet(w,e,h,q.aim+Math.PI/6+(i+.5)*(TAU-Math.PI/3)/18,145,.55,4);
+      for(let i=0;i<18;i++)bullet(w,e,h,q.aim+Math.PI/6+(i+.5)*(TAU-Math.PI/3)/18,145,.55,4,"fan");
       magneticFx(w,"pulseRing",e.x,e.y,180,.5);break;
     }
     case "swarm":

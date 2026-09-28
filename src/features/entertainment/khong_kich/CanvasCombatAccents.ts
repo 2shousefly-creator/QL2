@@ -9,21 +9,24 @@ export class CanvasCombatAccents {
   private active: Accent[] = [];
   private free: Accent[] = [];
   private lastEvent = 0;
+  killShake = 0;
   update(world: CombatWorld, delta: number) {
     this.titanShield.update(world,delta);
+    this.killShake *= Math.exp(-delta * 12);
     for (let i = this.active.length - 1; i >= 0; i--) {
       const accent = this.active[i]; accent.age += delta;
-      if (accent.age >= (accent.event.kind==="bullet_impact"?.16:accent.event.kind==="lightning"?.23:accent.event.kind==="player_heal"?.7:.55)) { this.active.splice(i, 1); this.free.push(accent); }
+      if (accent.age >= (accent.event.kind==="bullet_impact"||accent.event.kind==="player_hit"?.18:accent.event.kind==="lightning"?.23:accent.event.kind==="player_heal"?.7:.55)) { this.active.splice(i, 1); this.free.push(accent); }
     }
     for (const event of world.visualEvents) if (event.id > this.lastEvent) {
       this.lastEvent = event.id;
+      if(event.kind==="explosion" && event.killTier)this.killShake=Math.max(this.killShake,event.killTier==="boss"?5:event.killTier==="elite"?2.8:1.2);
       if(event.kind==="rank_effect" || event.kind==="astra_lance_impact" || event.kind==="astra_starfall_impact")continue; // Shared asset painters own these contacts.
       if (event.kind === "explosion" && event.magneticDeath) continue;
-      if (event.directContact && (event.kind==="hit" || event.kind==="player_hit"))continue;
+      if (event.directContact && event.kind==="hit")continue;
       if (event.kind === "damage_number" && event.shieldAbsorbed <= 0) continue;
       if (this.active.length >= 40) {
-        if(event.kind!=="bullet_impact" && event.kind!=="player_heal" && event.kind!=="lightning")continue;
-        const index=this.active.findIndex(a=>a.event.kind!=="bullet_impact");
+        if(event.kind!=="bullet_impact" && event.kind!=="player_hit" && event.kind!=="player_heal" && event.kind!=="lightning")continue;
+        const index=this.active.findIndex(a=>a.event.kind!=="bullet_impact" && a.event.kind!=="player_hit");
         const removed=this.active.splice(index<0?0:index,1)[0];this.free.push(removed);
       }
       const accent = this.free.pop() || { event, age: 0 };
@@ -35,7 +38,7 @@ export class CanvasCombatAccents {
     ctx.beginPath(); ctx.rect(0, 104, 360, 524); ctx.clip();
     for (const { event, age } of this.active) {
       const t = age / .55;
-      if(this.titanShield.active && (event.kind==="player_hit" || event.kind==="damage_number" && event.target==="player" || event.kind==="shield_ripple" && event.attachedToPlayer))continue;
+      if(this.titanShield.active && (event.kind==="damage_number" && event.target==="player" || event.kind==="shield_ripple" && event.attachedToPlayer))continue;
       if (event.kind === "player_heal") {
         ctx.save();
         ctx.globalCompositeOperation = "lighter";
@@ -68,11 +71,19 @@ export class CanvasCombatAccents {
         ctx.restore();
         continue;
       }
-      if(event.kind==="bullet_impact") {
-        const t=age/.16;ctx.globalAlpha=1-t;ctx.fillStyle=t<.3?"#fffbea":"#ffc978";
-        ctx.beginPath();ctx.arc(event.x,event.y,(event.size/2)*(.35+.65*t),0,Math.PI*2);ctx.fill();
-        if(!reducedMotion){ctx.strokeStyle="#ffeabd";ctx.lineWidth=1;for(let i=0;i<3;i++){const a=i*Math.PI*2/3+event.id;ctx.beginPath();ctx.moveTo(event.x+Math.cos(a)*3,event.y+Math.sin(a)*3);ctx.lineTo(event.x+Math.cos(a)*event.size*t,event.y+Math.sin(a)*event.size*t);ctx.stroke();}}
-        continue;
+      if(event.kind==="bullet_impact" || event.kind==="player_hit") {
+        const t=age/.18,strong=event.basicImpact || event.kind==="player_hit";
+        const size=event.size*(event.kind==="player_hit"?.7:1),tint=event.tint??"#ffb36b";
+        ctx.save();ctx.globalCompositeOperation="lighter";ctx.globalAlpha=1-t;
+        ctx.fillStyle=tint;ctx.shadowColor=tint;ctx.shadowBlur=strong?7:0;
+        ctx.beginPath();ctx.arc(event.x,event.y,size*(strong?1.35:1)/2*(.35+.65*t),0,Math.PI*2);ctx.fill();
+        if(strong && age<.12){ctx.fillStyle="#fff4e8";ctx.beginPath();ctx.arc(event.x,event.y,size*.3*(1-age/.12),0,Math.PI*2);ctx.fill();}
+        if(!reducedMotion){
+          ctx.strokeStyle=tint;ctx.lineWidth=1;ctx.shadowBlur=0;
+          for(let i=0;i<3;i++){const a=i*Math.PI*2/3+event.id;ctx.beginPath();ctx.moveTo(event.x+Math.cos(a)*3,event.y+Math.sin(a)*3);ctx.lineTo(event.x+Math.cos(a)*size*t*1.25,event.y+Math.sin(a)*size*t*1.25);ctx.stroke();}
+          if(strong){ctx.globalAlpha=(1-t)*.45;ctx.beginPath();ctx.arc(event.x,event.y,size*(.25+t*.5),0,Math.PI*2);ctx.stroke();}
+        }
+        ctx.restore();continue;
       }
       if(event.kind==="missile_impact" && event.missileFamily==="bigbang") {
         ctx.globalAlpha=(1-t)*.8;ctx.fillStyle=t<.15?"#fffef3":"#ffac32";
@@ -95,5 +106,5 @@ export class CanvasCombatAccents {
     }
     ctx.restore();
   }
-  clear() { this.active.length = 0; this.free.length = 0; }
+  clear() { this.active.length = 0; this.free.length = 0; this.killShake = 0; }
 }

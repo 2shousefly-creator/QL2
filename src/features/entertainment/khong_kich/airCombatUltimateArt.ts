@@ -14,7 +14,7 @@ export const ULTIMATE_FRAMES={
  ultimateDoomImpact:frame(24),ultimateInterferenceBand:frame(25),ultimateDisintegrate:frame(26),
 };
 export type UltimateVisualKey=keyof typeof ULTIMATE_FRAMES;
-export type UltimatePainter=(id:number,key:UltimateVisualKey,x:number,y:number,width:number,height:number,rotation:number,alpha:number)=>void;
+export type UltimatePainter=(id:number,key:UltimateVisualKey,x:number,y:number,width:number,height:number,rotation:number,alpha:number,additive?:boolean)=>void;
 export const ultimateBody=(key:UltimateVisualKey)=>["ultimateViperMissile","ultimateTitanShell","ultimateHawk","ultimateHawkBolt","ultimateMeteor","ultimateDoom"].includes(key);
 export function ultimateProjectileVisual(p:ProjectileEntity):UltimateVisualKey|undefined {
  if(p.skillId==="missile_swarm"&&p.projectileKind==="missile")return "ultimateViperMissile";
@@ -32,9 +32,11 @@ export function paintUltimates(w:CombatWorld,draw:UltimatePainter,reduced:boolea
   const dx=Math.sin(angle),dy=-Math.cos(angle),width=missile?17:titan?12:11,height=missile?37:titan?30:26,id=p.id*8;
   const trail:UltimateVisualKey=missile?"ultimateViperExhaust":titan?"ultimateTitanTrail":"ultimateHawkEngine";
   const length=missile?(p.missileState==="powered"?48:20):titan?38:27;
-  draw(id+1,trail,p.x-dx*height*.65,p.y-dy*height*.65,width*(missile?.8:1),length*(reduced?.65:1),angle,.8);
+  draw(id+1,trail,p.x-dx*height*.65,p.y-dy*height*.65,width*(missile?.8:1),length*(reduced?.85:1.3),angle,.95);
   if(!reduced&&missile&&p.missileState==="powered")draw(id+2,trail,p.x-dx*48,p.y-dy*48,12,62,angle,.25);
+  draw(id+3,key,p.x,p.y,width*1.65,height*1.2,angle,reduced?.22:.34,true);
   draw(id,key,p.x,p.y,width,height,angle,1);
+  draw(id+4,key,p.x,p.y,width*.65,height*.85,angle,.45,true);
  }
  if(s.droneActive){
   const rage=(s.coreState.timers.hawkRage??0)>s.coreState.time;
@@ -61,9 +63,11 @@ export function paintUltimates(w:CombatWorld,draw:UltimatePainter,reduced:boolea
   const size=m.doom?104:43,radius=m.doom?110:skillRank(s,"starfall")>=2?65:45;
   draw(id,m.doom?"ultimateDoomTarget":"ultimateMeteorTarget",m.x,m.y,radius*2,radius*2,0,.45+t*.45);
   const x=m.x-80*(1-t),y=m.y-150*(1-t),angle=-Math.atan2(80,150),dx=80/170,dy=150/170;
-  draw(id+1,"ultimateMeteorTrail",x-dx*size*.65,y-dy*size*.65,size*.65,size*(reduced?1.1:2.1),angle,.9);
+  draw(id+1,"ultimateMeteorTrail",x-dx*size*.65,y-dy*size*.65,size*.75,size*(reduced?1.2:2.35),angle,.95);
   if(m.doom&&!reduced){draw(id+2,"ultimateMeteorTrail",x-dx*size,y-dy*size,size*.9,size*2.2,angle-.05,.4);draw(id+3,"ultimateMeteorTrail",x-dx*size,y-dy*size,size*.7,size*2.4,angle+.07,.45);}
+  draw(id+5,m.doom?"ultimateDoom":"ultimateMeteor",x,y,size*1.2,size*1.2,angle,reduced?.2:.3,true);
   draw(id+4,m.doom?"ultimateDoom":"ultimateMeteor",x,y,size,size,angle,.6+t*.4);
+  draw(id+6,m.doom?"ultimateDoom":"ultimateMeteor",x,y,size*.65,size*.65,angle,.4,true);
  }
  for(const impact of w.astra?.impacts??[]){
   const age=now-impact.at,t=age/.75;if(t<0||t>=1)continue;

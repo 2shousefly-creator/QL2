@@ -134,7 +134,11 @@ export interface EnemyEntity {
         damage: number;
     }[];
 }
+export type EnemyProjectileSpeedClass = "standard" | "fan" | "special";
+const ENEMY_PROJECTILE_SPEED_MULTIPLIERS = { standard: 1.5, fan: 1.35, special: 1 } as const;
+const PLAYER_BASIC_PROJECTILE_SPEED_MULTIPLIER = 2;
 export interface ProjectileEntity extends AttackMetadata {
+    enemySpeedClass?: EnemyProjectileSpeedClass;
     rankCast?: number; rankVolley?: number; twinSide?: number; procFree?: boolean; aimBonus?: boolean; echoScale?: number;
     aimCorrectionUntil?: number;
     mainBasicMiss?: boolean;
@@ -279,6 +283,9 @@ interface RuntimePools {
     decoys: DecoyEntity[];
 }
 interface VisualEventBase {
+    basicImpact?: boolean;
+    tint?: string;
+    killTier?: "normal" | "elite" | "boss";
     ultimateEffect?:UltimateVisualKey;
     rankEffect?: RankEffect;
     at?:number;
@@ -704,6 +711,8 @@ function addProjectile(world: CombatWorld, values: Partial<ProjectileEntity> & P
         if (replace < 0 && !(values.owner==="player" && values.skillId==="orbit_reversal")) return null;
         if (replace >= 0) recycleProjectile(world, replace);
     }
+    // Call sites classify the authored volley; special shots opt out by default.
+    const speedMultiplier = values.owner === "enemy" ? ENEMY_PROJECTILE_SPEED_MULTIPLIERS[values.enemySpeedClass ?? "special"] : 1;
     const projectile = acquireProjectile(world);
     Object.assign(projectile, {
         ...MISSILE_DEFAULTS,
@@ -727,8 +736,9 @@ function addProjectile(world: CombatWorld, values: Partial<ProjectileEntity> & P
         previousX: values.x, previousY: values.y, bigBang: values.bigBang ?? false,
         x: values.x,
         y: values.y,
-        vx: values.vx,
-        vy: values.vy,
+        enemySpeedClass: values.enemySpeedClass,
+        vx: values.vx * speedMultiplier,
+        vy: values.vy * speedMultiplier,
         radius: (values.radius ?? 3) * (values.owner === "enemy" && world.stageId === 2 ? 1.4 : 1),
         rawDamage: values.rawDamage,
         homing: values.homing ?? false,
@@ -791,7 +801,7 @@ function fireBasic(world: CombatWorld): void {
     const reappearance = (state.coreState.timers.reappearanceBuff || 0) > state.coreState.time;
     if(reappearance)recordCoreMetric(state,142,"shots",1);
     const primaryShot = { resolved: false };
-    const bulletSpeed=(hasCore(state,206)?.80:1)*(hasCore(state,111)?1440:480) * (reappearance ? 1 + V.reappearanceSpeedBonus : 1);
+    const bulletSpeed=PLAYER_BASIC_PROJECTILE_SPEED_MULTIPLIER*(hasCore(state,206)?.80:1)*(hasCore(state,111)?1440:480) * (reappearance ? 1 + V.reappearanceSpeedBonus : 1);
     const context = coreContext(world);
     dispatchCoreEvent("basic", context);
     const sweeping = (state.activeEffects.sweeping_cannon || 0) > 0;
@@ -870,11 +880,11 @@ function targetPosition(world: CombatWorld, targetId: number | null): {
     const decoy = world.decoys.find((candidate) => candidate.id === targetId && candidate.active);
     return decoy ? { x: decoy.x, y: decoy.y } : null;
 }
-function fireEnemyBullet(world: CombatWorld, enemy: EnemyEntity, angle: number, speed: number, rawDamage: number, homing = false, tag: AttackTag = "basic", allegiance?:Allegiance): void {
+function fireEnemyBullet(world: CombatWorld, enemy: EnemyEntity, angle: number, speed: number, rawDamage: number, homing = false, tag: AttackTag = "basic", allegiance?:Allegiance, speedClass: EnemyProjectileSpeedClass = "standard"): void {
     const adjustedSpeed = speed;
     const facing=enemy.hackedFacing ?? Math.PI;
     addProjectile(world, {
-        owner: "enemy",
+        owner: "enemy", enemySpeedClass: homing ? "special" : speedClass,
         allegiance, sourceEnemyId: enemy.id, sourceEnemyType: enemy.type, attackTag: tag, majorBossAttack: enemy.type === "boss" && tag !== "boss_wing" && tag !== "basic",
         appearance: enemy.type === "boss" ? "boss" : homing ? "dangerous" : undefined,
         criticalAttack: enemy.type === "boss" || isElite(enemy.type) || homing,
@@ -1080,16 +1090,16 @@ function tryNormalSpecial(world: CombatWorld, enemy: EnemyEntity, damage: number
     if (enemy.type === "scout") {
         if (enemy.wave === 5 && world.random() < .4) {
             for (let i=0;i<3;i++) scheduleAttack(world, enemy, "needle", i*.12, {angle: aim});
-        } else for (const offset of [-.07,.07]) fireEnemyBullet(world,enemy,aim+offset,285,damage*.65,false,"needle_pair");
+        } else for (const offset of [-.07,.07]) fireEnemyBullet(world,enemy,aim+offset,285,damage*.65,false,"needle_pair",undefined,"fan");
     } else if (enemy.type === "fighter") {
         for (const side of [-1,1]) {
             const x=enemy.x+side*30, y=enemy.y+12, angle=Math.atan2(target.y-y,target.x-x);
-            addProjectile(world,{owner:"enemy",x,y,vx:Math.cos(angle)*220,vy:Math.sin(angle)*220,rawDamage:damage*.8,
+            addProjectile(world,{owner:"enemy",enemySpeedClass:"standard",x,y,vx:Math.cos(angle)*220,vy:Math.sin(angle)*220,rawDamage:damage*.8,
                 sourceEnemyId:enemy.id,sourceEnemyType:enemy.type,attackTag:"scissor",color:"#ff475f",radius:3});
         }
     } else if (enemy.type === "attacker") {
         const gap=1+Math.floor(world.random()*5);
-        for(let i=0;i<7;i++) if(i!==gap) fireEnemyBullet(world,enemy,aim+(i-3)*.22,160,damage*.75,false,"suppressive_gate");
+        for(let i=0;i<7;i++) if(i!==gap) fireEnemyBullet(world,enemy,aim+(i-3)*.22,160,damage*.75,false,"suppressive_gate",undefined,"fan");
     } else if (enemy.type === "bomber") {
         const count=enemy.wave===5?5:enemy.wave===4?3:2;
         for(let i=0;i<count;i++) {
@@ -1271,7 +1281,7 @@ function reserveBossVolley(world:CombatWorld,count:number):boolean {
 function fireFan(world: CombatWorld, enemy: EnemyEntity, count: number, damage: number, angle = Math.PI / 2, spacing = .19, speed = 145, tag: AttackTag = enemy.type === "boss" ? "boss_fan" : "burst", allegiance?:Allegiance): boolean {
     if(enemy.type==="boss" && !reserveBossVolley(world,count))return false;
     for (let i = 0; i < count; i++)
-        fireEnemyBullet(world, enemy, angle + (i - (count - 1) / 2) * spacing, speed, damage, false, tag, allegiance);
+        fireEnemyBullet(world, enemy, angle + (i - (count - 1) / 2) * spacing, speed, damage, false, tag, allegiance, count > 1 ? "fan" : "standard");
     return true;
 }
 function addLineWarning(world: CombatWorld, enemy: EnemyEntity, kind: "rail" | "dash", x: number, y: number, duration: number, damage: number): void {
@@ -1890,7 +1900,7 @@ function launchBossMissile(world: CombatWorld, enemy: EnemyEntity): void {
     const state = enemy.bossAttack!, tuning = state.missileTuning;
     const side = state.missileIndex % 2 ? 1 : -1;
     const heading = Math.PI / 2 - side * .65;
-    const p = addProjectile(world, { owner: "enemy", appearance: "boss", criticalAttack: true, x: enemy.x + side * 30, y: enemy.y + 20,
+    const p = addProjectile(world, { owner: "enemy", enemySpeedClass:"special", appearance: "boss", criticalAttack: true, x: enemy.x + side * 30, y: enemy.y + 20,
         vx: 0, vy: 0, rawDamage: tuning.missile, radius: 5, homing: true,
         targetId: chooseEnemyTarget(world, true), turnRate: side<0?(world.bossPhase>=3?1.2:1.15):(world.bossPhase>=3?.7:.75), lifetime: 4.5, color: "#ff526e", sourceEnemyId: enemy.id, sourceEnemyType: "boss", attackTag: "boss_missile", majorBossAttack: true });
     if (!p) return;
@@ -1921,7 +1931,7 @@ function fireCrossfire(world: CombatWorld, enemy: EnemyEntity): void {
         for(let i=0;i<count;i++) {
             // Parallel diagonal rows form the curtain; no random aim or CC payload.
             const angle=Math.PI/2+side*(.28+i*.055), speed=155+i*3;
-            addProjectile(world,{owner:"enemy",appearance:"boss",criticalAttack:true,sourceEnemyId:enemy.id,sourceEnemyType:"boss",attackTag:"boss_crossfire",majorBossAttack:true,
+            addProjectile(world,{owner:"enemy",enemySpeedClass:"fan",appearance:"boss",criticalAttack:true,sourceEnemyId:enemy.id,sourceEnemyType:"boss",attackTag:"boss_crossfire",majorBossAttack:true,
                 x:wingX,y:enemy.y+18-i*6,vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed,radius:3.5,rawDamage:tuning.fan*.8,lifetime:3.2,corridorEdge:edge,corridorSide:side});
         }
     }
@@ -1938,7 +1948,7 @@ function fireSuppressiveWing(world: CombatWorld, enemy: EnemyEntity, side: numbe
     const x=enemy.x+side*38,y=enemy.y+20, aim=Math.atan2(target.y-y,target.x-x);
     for(let i=0;i<count && live<tuning.suppressiveBudget;i++,live++) {
         const angle=aim+(i-(count-1)/2)*.18;
-        addProjectile(world,{owner:"enemy",appearance:"boss",suppressive:true,x,y,vx:Math.cos(angle)*150,vy:Math.sin(angle)*150,radius:3,
+        addProjectile(world,{owner:"enemy",enemySpeedClass:count>1?"fan":"standard",appearance:"boss",suppressive:true,x,y,vx:Math.cos(angle)*150,vy:Math.sin(angle)*150,radius:3,
             rawDamage:tuning.wing*.55,sourceEnemyId:enemy.id,sourceEnemyType:"boss",attackTag:"boss_suppressive",lifetime:5});
     }
 }
@@ -3063,7 +3073,7 @@ function destroyEnemy(world: CombatWorld, enemyIndex: number): void {
             for (let i = 0; i < 4; i++) magneticFx(world, "bossBurst", enemy.x + (i % 2 ? 30 : -30), enemy.y + (i < 2 ? -25 : 25), 80, .65, 0, .12 + i * .16);
         }
     }
-    emitVisual(world, { kind: "explosion", x: enemy.x, y: enemy.y, size: enemy.radius * 3, boss: target.boss, magneticDeath: !!world.magnetic || !!world.stormbreaker });
+    emitVisual(world, { kind: "explosion", x: enemy.x, y: enemy.y, size: enemy.radius * 3, boss: target.boss, killTier: target.boss ? "boss" : target.elite ? "elite" : "normal", magneticDeath: !!world.magnetic || !!world.stormbreaker });
     if (!enemy.rewardless) {
         world.score += config.score * getComboMultiplier(world.comboKills);
         world.comboKills++; world.comboTimer = 4;
@@ -3144,7 +3154,7 @@ function applySecondaryHits(world: CombatWorld, projectile: ProjectileEntity, pr
         projectile.coreRicochet=false;
         const next=nearestEnemy(world,primary.x,primary.y,projectile.hitIds);
         if(next){
-            const angle=Math.atan2(next.y-primary.y,next.x-primary.x),speed=460*(hasCore(world.aircraft,111)?3:1)*(hasCore(world.aircraft,206)?.8:1);
+            const angle=Math.atan2(next.y-primary.y,next.x-primary.x),speed=PLAYER_BASIC_PROJECTILE_SPEED_MULTIPLIER*460*(hasCore(world.aircraft,111)?3:1)*(hasCore(world.aircraft,206)?.8:1);
             const bounced=addProjectile(world,{owner:"player",source:"basic",telemetryCore:80,x:primary.x,y:primary.y,vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed,rawDamage:projectile.rawDamage*.42,radius:projectile.radius,homing:true,targetId:next.id,turnRate:7,color:"#c4b5fd"});
             if(bounced)bounced.hitIds.push(...projectile.hitIds);
         }else applyDamageToEnemy(world,primary,projectile.rawDamage*.18,"#c4b5fd","basic",undefined,undefined,undefined,"direct_projectile",true,true,80);
@@ -3156,7 +3166,7 @@ function applySecondaryHits(world: CombatWorld, projectile: ProjectileEntity, pr
     if (!next)
         return;
     const angle = Math.atan2(next.y - primary.y, next.x - primary.x);
-    const bounceSpeed=(projectile.source==="basic"&&hasCore(world.aircraft,111)?1380:460)*(projectile.source==="basic"&&hasCore(world.aircraft,206)?.8:1);
+    const bounceSpeed=(projectile.source==="basic"?PLAYER_BASIC_PROJECTILE_SPEED_MULTIPLIER:1)*(projectile.source==="basic"&&hasCore(world.aircraft,111)?1380:460)*(projectile.source==="basic"&&hasCore(world.aircraft,206)?.8:1);
     const bounced = addProjectile(world, { owner: projectile.owner, expansionCast: projectile.expansionCast, allegiance:projectile.allegiance, source: projectile.source, telemetryCore: projectile.telemetryCore, ammoVisualKey: projectile.ammoVisualKey, skillId: projectile.skillId,
         x: primary.x, y: primary.y, vx: Math.cos(angle) * bounceSpeed, vy: Math.sin(angle) * bounceSpeed, radius: projectile.radius,
         rawDamage: projectile.bounceSecondMultiplier !== undefined && projectile.bounceRemaining === 1 ? (projectile.bounceBasis || 0) * projectile.bounceSecondMultiplier : projectile.rawDamage * projectile.bounceMultiplier,
@@ -3299,9 +3309,6 @@ function hitPlayer(world: CombatWorld, rawDamage: number, kind: "projectile" | "
             emitVisual(world, { kind: "damage_number", x: world.playerX, y: world.playerY, size: 36, hpDamage: 0, shieldAbsorbed: absorbed, target: "player", critical: false });
         return;
     }
-    if(world.stormbreaker && kind==="projectile" && attack.stormbreakerVisual && contact) stormFx(world,attack.stormbreakerVisual==="stormSpear"?"stormSpearImpact":"stormRailImpact",contact.x,contact.y,attack.stormbreakerVisual==="stormSpear"?66:26,.35);
-    if(kind==="projectile" && attack.projectileKind==="bullet" && contact && !((state.activeEffects.armor_shield??0)>0 && state.aircraftId==="breaker"))
-        emitVisual(world,{kind:"bullet_impact",x:contact.x,y:contact.y,size:14});
     let survived = false;
     if (damage >= state.currentHp && hasCore(state, 90) && !c.consumed.has(coreId(90))) {
         c.consumed.add(coreId(90));
@@ -3324,7 +3331,7 @@ function hitPlayer(world: CombatWorld, rawDamage: number, kind: "projectile" | "
     c.lastDamage = c.time;
     dispatchCoreEvent("damageTaken", coreContext(world, { damage }));
     emitVisual(world, { kind: "damage_number", x: world.playerX, y: world.playerY, size: 36, hpDamage: damage, shieldAbsorbed: absorbed, target: "player", critical: false });
-    emitVisual(world, { kind: "player_hit", x: contact?.x??world.playerX, y: contact?.y??world.playerY, size: 36, directContact:!!contact });
+    if (damage > 0) emitVisual(world, { kind: "player_hit", x: contact?.x ?? (Number.isFinite(attack.x) ? attack.x! : world.playerX), y: contact?.y ?? (Number.isFinite(attack.y) ? attack.y! : world.playerY), size: 36, directContact:!!contact });
     world.damageTaken += damage;
     world.hitsReceived++;
     world.comboKills = 0;
@@ -3429,7 +3436,7 @@ function updateProjectileCollisions(world: CombatWorld): void {
                 const salvo=world.skillCores.salvos.find(s=>s.id===p.salvoId);if(salvo)salvo.data=Math.min(V.dataLimit,salvo.data+1);
             }
             if(dealt>0||enemy.shield<shieldBefore)rankProjectileHit(world,p,enemy,rankHooks);
-            if((dealt>0 || enemy.shield<shieldBefore) && p.projectileKind==="bullet" && p.skillId!=="sweeping_cannon" && !p.astraLance)emitVisual(world,{kind:"bullet_impact",x:contact.x,y:contact.y,size:enemy.type==="boss"||isElite(enemy.type)?16:enemy.type==="scout"||enemy.type==="kamikaze"?10:12});
+            if((dealt>0 || enemy.shield<shieldBefore) && p.projectileKind==="bullet" && !p.astraLance)emitVisual(world,{kind:"bullet_impact",basicImpact:p.source==="basic" && dealt>0,tint:dealt>0?p.color:"#c9f3ff",x:contact.x,y:contact.y,size:enemy.type==="boss"||isElite(enemy.type)?16:enemy.type==="scout"||enemy.type==="kamikaze"?10:12});
             if(enemy.shield<shieldBefore)emitVisual(world,{kind:"shield_ripple",x:contact.x,y:contact.y,size:23});
             if(p.extraPierceOrdinal===p.hitIds.length){recordCoreMetric(world.aircraft,206,"extraPierce",1);recordCoreMetric(world.aircraft,206,"extraPierceDamage",dealt+shieldBefore-enemy.shield);}
             for(const row of p.telemetryExtraCores??[])recordCoreMetric(world.aircraft,row,"damage",dealt);
@@ -3522,7 +3529,7 @@ function fireEliteBarrageVolley(world:CombatWorld,w:WarningZone):void {
     const angle=barrage.angles[barrage.index++];
     for(let i=0;i<7;i++){
         const a=angle+(i-3)*.14;
-        addProjectile(world,{owner:"enemy",allegiance:w.allegiance,sourceEnemyId:w.sourceEnemyId,sourceEnemyType:w.sourceEnemyType,
+        addProjectile(world,{owner:"enemy",enemySpeedClass:"fan",allegiance:w.allegiance,sourceEnemyId:w.sourceEnemyId,sourceEnemyType:w.sourceEnemyType,
             attackTag:w.attackTag,criticalAttack:true,x:w.fromX??w.x,y:w.fromY??w.y,
             vx:Math.cos(a)*180,vy:Math.sin(a)*180,rawDamage:w.rawDamage,radius:4,color:"#fb7185"});
     }
@@ -3541,7 +3548,7 @@ function detonateWarning(world: CombatWorld, w: WarningZone): void {
     if (w.kind === "retaliation") {
         if (enemy) {
             const safe=Math.floor(world.random()*12);
-            for(let i=0;i<12;i++) if(i!==safe && i!==(safe+6)%12) fireEnemyBullet(world,enemy,i*Math.PI/6,155,w.rawDamage,false,"burst",w.allegiance);
+            for(let i=0;i<12;i++) if(i!==safe && i!==(safe+6)%12) fireEnemyBullet(world,enemy,i*Math.PI/6,155,w.rawDamage,false,"burst",w.allegiance,"fan");
         }
         return;
     }
@@ -3549,7 +3556,7 @@ function detonateWarning(world: CombatWorld, w: WarningZone): void {
         if (!enemy)
             return;
         const angle = Math.atan2(w.y - (w.fromY ?? enemy.y), w.x - (w.fromX ?? enemy.x));
-        addProjectile(world, { owner: "enemy", allegiance:w.allegiance, appearance: "dangerous", criticalAttack: true, x: w.fromX ?? enemy.x, y: w.fromY ?? enemy.y,
+        addProjectile(world, { owner: "enemy", enemySpeedClass:"special", allegiance:w.allegiance, appearance: "dangerous", criticalAttack: true, x: w.fromX ?? enemy.x, y: w.fromY ?? enemy.y,
             vx: Math.cos(angle) * 650, vy: Math.sin(angle) * 650, rawDamage: w.rawDamage, radius: 4, sourceEnemyId: enemy.id, sourceEnemyType: enemy.type, attackTag: "rail" });
         return;
     }
