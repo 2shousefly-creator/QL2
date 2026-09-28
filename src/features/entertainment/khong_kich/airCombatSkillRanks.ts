@@ -51,22 +51,22 @@ export const SKILL_RANKS: Record<SkillId, readonly SkillRankConfig[]> = {
   ],
   [
     "Cuồng Nộ Kéo Dài",
-    "Viper duy trì Điên Cuồng trong 10 giây, nhận +120% Tốc Độ Bắn Cộng Thêm. Đạn đánh thường nảy sang thêm 2 mục tiêu, lần lượt gây 50% và 25% sát thương của viên đạn gốc. Hồi Chiêu bắt đầu khi Điên Cuồng kết thúc, không chờ hồi Tài Nguyên sau đó.",
-    "Thời gian Điên Cuồng tăng từ 7 lên 10 giây.\nHồi Chiêu Cơ Bản: 30 → 29 giây.\nYêu cầu Tài Nguyên: 110 → 120 Mana."
+    "Viper duy trì Điên Cuồng trong 10 giây, nhận +70% Tốc Độ Bắn Cộng Thêm. Đạn đánh thường nảy sang thêm 2 mục tiêu, lần lượt gây 50% và 25% sát thương của viên đạn gốc. Hồi Chiêu bắt đầu khi Điên Cuồng kết thúc, không chờ hồi Tài Nguyên sau đó.",
+    "Thời gian Điên Cuồng tăng từ 7 lên 10 giây.\nTốc Độ Bắn Cộng Thêm đổi từ +120% thành +70%.\nHồi Chiêu Cơ Bản: 30 → 29 giây.\nYêu cầu Tài Nguyên: 110 → 120 Mana."
   ],
   [
     "Quá Tải",
-    "Viper duy trì Điên Cuồng trong 10 giây và nhận +225% Tốc Độ Bắn Cộng Thêm. Đạn đánh thường tiếp tục nảy sang thêm 2 mục tiêu, lần lượt gây 50% và 25% sát thương của viên đạn gốc. Hồi Chiêu bắt đầu khi Điên Cuồng kết thúc, không chờ hồi Tài Nguyên sau đó.",
-    "Tốc Độ Bắn Cộng Thêm trong Điên Cuồng tăng từ +120% lên +225%.\nHồi Chiêu Cơ Bản: 29 → 28 giây.\nYêu cầu Tài Nguyên: 120 → 130 Mana."
+    "Viper duy trì Điên Cuồng trong 10 giây và nhận +135% Tốc Độ Bắn Cộng Thêm. Đạn đánh thường tiếp tục nảy sang thêm 2 mục tiêu, lần lượt gây 50% và 25% sát thương của viên đạn gốc. Hồi Chiêu bắt đầu khi Điên Cuồng kết thúc, không chờ hồi Tài Nguyên sau đó.",
+    "Tốc Độ Bắn Cộng Thêm trong Điên Cuồng tăng từ +70% lên +135%.\nHồi Chiêu Cơ Bản: 29 → 28 giây.\nYêu cầu Tài Nguyên: 120 → 130 Mana."
   ],
   [
     "Đạn Nảy Tăng Áp",
-    "Viper duy trì Điên Cuồng trong 10 giây, nhận +225% Tốc Độ Bắn Cộng Thêm. Đạn đánh thường nảy sang thêm 2 mục tiêu, lần lượt gây 75% và 50% sát thương của viên đạn gốc. Khi Điên Cuồng kết thúc, Viper hồi tổng cộng 18% Tài Nguyên Tối Đa trong 5 giây. Hồi Chiêu bắt đầu khi Điên Cuồng kết thúc, không chờ hồi Tài Nguyên sau đó.",
-    "Sát thương nảy sang 2 mục tiêu tăng từ 50% / 25% lên 75% / 50%.\nKhi Điên Cuồng kết thúc, hồi tổng cộng 18% Tài Nguyên Tối Đa trong 5 giây.\nHồi Chiêu Cơ Bản: 28 → 27 giây.\nYêu cầu Tài Nguyên: 130 → 140 Mana."
+    "Viper duy trì Điên Cuồng trong 10 giây, nhận +135% Tốc Độ Bắn Cộng Thêm. Đạn đánh thường nảy sang thêm 2 mục tiêu, lần lượt gây 75% và 50% sát thương của viên đạn gốc. Khi Điên Cuồng kết thúc, Viper hồi tổng cộng 10% Tài Nguyên Tối Đa trong 5 giây. Hồi Chiêu bắt đầu khi Điên Cuồng kết thúc, không chờ hồi Tài Nguyên sau đó.",
+    "Sát thương nảy sang 2 mục tiêu tăng từ 50% / 25% lên 75% / 50%.\nKhi Điên Cuồng kết thúc, hồi tổng cộng 10% Tài Nguyên Tối Đa trong 5 giây.\nHồi Chiêu Cơ Bản: 28 → 27 giây.\nYêu cầu Tài Nguyên: 130 → 140 Mana."
   ],
   [
     "Không Thể Ngăn Cản",
-    "Viper duy trì Điên Cuồng trong 10 giây, nhận +225% Tốc Độ Bắn Cộng Thêm; đạn đánh thường nảy sang thêm 2 mục tiêu và gây 75% / 50% sát thương viên đạn gốc. Trong thời gian Điên Cuồng, Viper miễn nhiễm khống chế cứng và giảm 15% sát thương phải nhận. Khi hiệu ứng kết thúc, hồi tổng cộng 18% Tài Nguyên Tối Đa trong 5 giây. Hồi Chiêu Cơ Bản là 26 giây. Hồi Chiêu bắt đầu khi Điên Cuồng kết thúc, không chờ hồi Tài Nguyên sau đó.",
+    "Viper duy trì Điên Cuồng trong 10 giây, nhận +135% Tốc Độ Bắn Cộng Thêm; đạn đánh thường nảy sang thêm 2 mục tiêu và gây 75% / 50% sát thương viên đạn gốc. Trong thời gian Điên Cuồng, Viper miễn nhiễm khống chế cứng và giảm 15% sát thương phải nhận. Khi hiệu ứng kết thúc, hồi tổng cộng 10% Tài Nguyên Tối Đa trong 5 giây. Hồi Chiêu Cơ Bản là 26 giây. Hồi Chiêu bắt đầu khi Điên Cuồng kết thúc, không chờ hồi Tài Nguyên sau đó.",
     "Miễn nhiễm khống chế cứng trong thời gian Điên Cuồng.\nGiảm 15% sát thương phải nhận trong thời gian Điên Cuồng.\nHồi Chiêu Cơ Bản: 27 → 26 giây.\nYêu cầu Tài Nguyên: 140 → 150 Mana."
   ]
 ]),
@@ -171,45 +171,45 @@ export const SKILL_RANKS: Record<SkillId, readonly SkillRankConfig[]> = {
  gravity_anchor:ranks([130,140,150,160,170],[
   [
     "Trường Trọng Lực",
-    "Titan đặt một Neo Trọng Lực tồn tại 5 giây. Neo kéo quái thường về tâm, kéo Tinh Anh yếu hơn và không di chuyển Boss. Kẻ địch trong vùng bị giảm 35% tốc độ; đạn có thể chặn bị giảm 40% tốc độ và cong nhẹ về tâm. Mỗi 0,5 giây, vùng gây 35% Hỏa Lực; khi kết thúc, Neo sụp đổ và gây 250% Hỏa Lực. Khi thi triển, Neo ưu tiên đặt tại vị trí có mật độ kẻ địch cao nhất trên màn hình.",
-    "Titan đặt một Neo Trọng Lực tồn tại 5 giây. Neo kéo quái thường về tâm, kéo Tinh Anh yếu hơn và không di chuyển Boss. Kẻ địch trong vùng bị giảm 35% tốc độ; đạn có thể chặn bị giảm 40% tốc độ và cong nhẹ về tâm. Mỗi 0,5 giây, vùng gây 35% Hỏa Lực; khi kết thúc, Neo sụp đổ và gây 250% Hỏa Lực.\nKhi thi triển, Neo ưu tiên đặt tại vị trí có mật độ kẻ địch cao nhất trên màn hình.\nHồi Chiêu Cơ Bản: 25 giây.\nYêu cầu Tài Nguyên: 130 Mana."
+    "Titan đặt một Neo Trọng Lực tồn tại 5 giây. Neo kéo quái thường về tâm, kéo Tinh Anh yếu hơn và không di chuyển Boss. Kẻ địch trong vùng bị giảm 35% tốc độ; đạn có thể chặn bị giảm 40% tốc độ và cong nhẹ về tâm. Mỗi 0,5 giây, vùng gây 65% Hỏa Lực; khi kết thúc, Neo sụp đổ và gây 350% Hỏa Lực. Khi thi triển, Neo ưu tiên đặt tại vị trí có mật độ kẻ địch cao nhất trên màn hình.",
+    "Titan đặt một Neo Trọng Lực tồn tại 5 giây. Neo kéo quái thường về tâm, kéo Tinh Anh yếu hơn và không di chuyển Boss. Kẻ địch trong vùng bị giảm 35% tốc độ; đạn có thể chặn bị giảm 40% tốc độ và cong nhẹ về tâm. Mỗi 0,5 giây, vùng gây 65% Hỏa Lực; khi kết thúc, Neo sụp đổ và gây 350% Hỏa Lực.\nKhi thi triển, Neo ưu tiên đặt tại vị trí có mật độ kẻ địch cao nhất trên màn hình.\nHồi Chiêu Cơ Bản: 25 giây.\nYêu cầu Tài Nguyên: 130 Mana."
   ],
   [
     "Chân Trời Sự Kiện",
-    "Titan đặt Neo Trọng Lực trong 5 giây với bán kính tăng 25%. Neo kéo mạnh hơn khi mục tiêu ở gần tâm; quái thường bị kéo mạnh, Tinh Anh bị kéo yếu hơn và Boss không bị kéo. Đạn có thể chặn đi vào vùng lõi bị phá hủy, tối đa 20 viên mỗi lần dùng. Vùng vẫn làm chậm kẻ địch 35%, làm chậm đạn 40%, gây 35% Hỏa Lực mỗi 0,5 giây và sụp đổ gây 250% Hỏa Lực. Khi thi triển, Neo ưu tiên đặt tại vị trí có mật độ kẻ địch cao nhất trên màn hình.",
+    "Titan đặt Neo Trọng Lực trong 5 giây với bán kính tăng 25%. Neo kéo mạnh hơn khi mục tiêu ở gần tâm; quái thường bị kéo mạnh, Tinh Anh bị kéo yếu hơn và Boss không bị kéo. Đạn có thể chặn đi vào vùng lõi bị phá hủy, tối đa 20 viên mỗi lần dùng. Vùng vẫn làm chậm kẻ địch 35%, làm chậm đạn 40%, gây 65% Hỏa Lực mỗi 0,5 giây và sụp đổ gây 350% Hỏa Lực. Khi thi triển, Neo ưu tiên đặt tại vị trí có mật độ kẻ địch cao nhất trên màn hình.",
     "Bán kính Neo Trọng Lực tăng 25%.\nLực kéo mạnh hơn khi mục tiêu ở gần tâm.\nĐạn có thể chặn đi vào vùng lõi bị phá hủy, tối đa 20 viên mỗi lần dùng.\nHồi Chiêu Cơ Bản: 25 → 24 giây.\nYêu cầu Tài Nguyên: 130 → 140 Mana."
   ],
   [
     "Áp Suất Nghiền Nát",
-    "Neo Trọng Lực tồn tại 5 giây, có bán kính tăng 25%, kéo mục tiêu về tâm và phá tối đa 20 viên đạn trong vùng lõi. Kẻ địch trong vùng bị giảm 25% Giáp; nếu ở trong lõi, mức giảm tăng thành 35%. Hiệu ứng giảm Giáp kéo dài thêm 1,5 giây sau khi mục tiêu rời vùng. Neo vẫn gây 35% Hỏa Lực mỗi 0,5 giây và sụp đổ gây 250% Hỏa Lực. Khi thi triển, Neo ưu tiên đặt tại vị trí có mật độ kẻ địch cao nhất trên màn hình.",
+    "Neo Trọng Lực tồn tại 5 giây, có bán kính tăng 25%, kéo mục tiêu về tâm và phá tối đa 20 viên đạn trong vùng lõi. Kẻ địch trong vùng bị giảm 25% Giáp; nếu ở trong lõi, mức giảm tăng thành 35%. Hiệu ứng giảm Giáp kéo dài thêm 1,5 giây sau khi mục tiêu rời vùng. Neo vẫn gây 65% Hỏa Lực mỗi 0,5 giây và sụp đổ gây 350% Hỏa Lực. Khi thi triển, Neo ưu tiên đặt tại vị trí có mật độ kẻ địch cao nhất trên màn hình.",
     "Kẻ địch trong vùng bị giảm 25% Giáp; trong vùng lõi, mức giảm tăng thành 35%.\nHiệu ứng giảm Giáp kéo dài thêm 1,5 giây sau khi mục tiêu rời vùng.\nHồi Chiêu Cơ Bản: 24 → 23 giây.\nYêu cầu Tài Nguyên: 140 → 150 Mana."
   ],
   [
     "Khối Lượng Tới Hạn",
-    "Neo Trọng Lực tồn tại 5 giây, kéo kẻ địch, làm chậm, giảm Giáp và phá đạn trong vùng lõi. Khi sụp đổ, ngoài 250% Hỏa Lực cơ bản, vụ nổ nhận thêm 25% Hỏa Lực cho mỗi kẻ địch đã bị kéo và 10% Hỏa Lực cho mỗi viên đạn đã bị phá, tối đa thêm 400% Hỏa Lực. Khi thi triển, Neo ưu tiên đặt tại vị trí có mật độ kẻ địch cao nhất trên màn hình.",
-    "Khi Neo sụp đổ, nhận thêm 25% Hỏa Lực cho mỗi kẻ địch đã bị kéo và 10% Hỏa Lực cho mỗi viên đạn đã bị phá.\nSát thương cộng thêm tối đa 400% Hỏa Lực.\nHồi Chiêu Cơ Bản: 23 → 22 giây.\nYêu cầu Tài Nguyên: 150 → 160 Mana."
+    "Neo Trọng Lực tồn tại 5 giây, kéo kẻ địch, làm chậm, giảm Giáp và phá đạn trong vùng lõi. Mỗi 0,5 giây, vùng gây 65% Hỏa Lực. Khi sụp đổ, ngoài 250% Hỏa Lực cơ bản, vụ nổ nhận thêm 55% Hỏa Lực cho mỗi kẻ địch đã bị kéo và 20% Hỏa Lực cho mỗi viên đạn đã bị phá, tối đa thêm 600% Hỏa Lực. Khi thi triển, Neo ưu tiên đặt tại vị trí có mật độ kẻ địch cao nhất trên màn hình.",
+    "Sát thương sụp đổ cơ bản đổi từ 350% thành 250% Hỏa Lực.\nKhi Neo sụp đổ, nhận thêm 55% Hỏa Lực cho mỗi kẻ địch đã bị kéo và 20% Hỏa Lực cho mỗi viên đạn đã bị phá.\nSát thương cộng thêm tối đa 600% Hỏa Lực.\nHồi Chiêu Cơ Bản: 23 → 22 giây.\nYêu cầu Tài Nguyên: 150 → 160 Mana."
   ],
   [
     "Sụp Đổ Không Gian",
-    "Neo Trọng Lực tồn tại 5 giây, kéo kẻ địch, làm chậm, giảm Giáp và tích Khối Lượng từ mục tiêu bị kéo cùng đạn bị phá. Khi hết thời gian tự nhiên, Neo kéo mạnh quái thường và Tinh Anh về tâm lần cuối rồi sụp đổ. Mục tiêu ở trong lõi ít nhất 2 giây nhận thêm 50% sát thương từ vụ sụp đổ. Có thể tái kích hoạt để cho Neo nổ sớm với lượng Khối Lượng đã tích. Khi thi triển, Neo ưu tiên đặt tại vị trí có mật độ kẻ địch cao nhất trên màn hình.",
+    "Neo Trọng Lực tồn tại 5 giây, kéo kẻ địch, làm chậm, giảm Giáp và tích Khối Lượng từ mục tiêu bị kéo cùng đạn bị phá. Mỗi 0,5 giây, vùng gây 65% Hỏa Lực; sụp đổ gây 250% Hỏa Lực cơ bản, thêm 55% mỗi kẻ địch đã bị kéo và 20% mỗi viên đạn đã bị phá, tối đa thêm 600% Hỏa Lực. Khi hết thời gian tự nhiên, Neo kéo mạnh quái thường và Tinh Anh về tâm lần cuối rồi sụp đổ. Mục tiêu ở trong lõi ít nhất 2 giây nhận thêm 50% sát thương từ vụ sụp đổ. Có thể tái kích hoạt để cho Neo nổ sớm với lượng Khối Lượng đã tích. Khi thi triển, Neo ưu tiên đặt tại vị trí có mật độ kẻ địch cao nhất trên màn hình.",
     "Khi hết thời gian tự nhiên, Neo kéo mạnh quái thường và Tinh Anh về tâm thêm một lần cuối.\nMục tiêu ở trong vùng lõi ít nhất 2 giây nhận thêm 50% sát thương từ vụ sụp đổ.\nCó thể tái kích hoạt để cho Neo sụp đổ sớm với lượng Khối Lượng đã tích.\nHồi Chiêu Cơ Bản: 22 → 21 giây.\nYêu cầu Tài Nguyên: 160 → 170 Mana."
   ]
 ]),
  sweeping_cannon:ranks([100,120,140],[
   [
     "Oanh Tạc",
-    "Titan bước vào trạng thái Oanh Tạc trong 18 giây và không thể kết thúc sớm. Mỗi loạt bắn tạo quạt 7 tia, mỗi tia gây 90% Hỏa Lực; các tia phụ trong cùng loạt trúng lại cùng một mục tiêu chỉ gây 15% sát thương của tia đầu. Hồi Chiêu Cơ Bản là 70 giây và bắt đầu sau khi Oanh Tạc kết thúc.",
-    "Titan bước vào trạng thái Oanh Tạc trong 18 giây và không thể kết thúc sớm. Mỗi loạt bắn tạo quạt 7 tia, mỗi tia gây 90% Hỏa Lực; các tia phụ trong cùng loạt trúng lại cùng một mục tiêu chỉ gây 15% sát thương của tia đầu.\nHồi Chiêu Cơ Bản: 70 giây.\nYêu cầu Tài Nguyên: 100 Mana."
+    "Titan bước vào trạng thái Oanh Tạc trong 18 giây và không thể kết thúc sớm. Mỗi loạt bắn tạo quạt 7 tia, mỗi tia gây 70% Hỏa Lực; các tia phụ trong cùng loạt trúng lại cùng một mục tiêu chỉ gây 15% sát thương của tia đầu. Hồi Chiêu Cơ Bản là 70 giây và bắt đầu sau khi Oanh Tạc kết thúc.",
+    "Titan bước vào trạng thái Oanh Tạc trong 18 giây và không thể kết thúc sớm. Mỗi loạt bắn tạo quạt 7 tia, mỗi tia gây 70% Hỏa Lực; các tia phụ trong cùng loạt trúng lại cùng một mục tiêu chỉ gây 15% sát thương của tia đầu.\nHồi Chiêu Cơ Bản: 70 giây.\nYêu cầu Tài Nguyên: 100 Mana."
   ],
   [
     "Pháo Đài Hỏa Lực",
-    "Titan Oanh Tạc trong 18 giây bằng quạt 9 tia, mỗi tia gây 100% Hỏa Lực; các tia phụ cùng loạt trúng lại cùng mục tiêu gây 15% sát thương tia đầu. Trong Oanh Tạc, Titan nhận +40% Giáp và không thể kết thúc kỹ năng sớm. Hồi Chiêu Cơ Bản là 70 giây.",
-    "Số tia mỗi loạt tăng từ 7 lên 9.\nSát thương mỗi tia tăng từ 90% lên 100% Hỏa Lực.\nTitan nhận +40 Giáp trong thời gian Oanh Tạc.\nYêu cầu Tài Nguyên: 100 → 120 Mana."
+    "Titan Oanh Tạc trong 18 giây bằng quạt 9 tia, mỗi tia gây 80% Hỏa Lực; các tia phụ cùng loạt trúng lại cùng mục tiêu gây 15% sát thương tia đầu. Trong Oanh Tạc, Titan nhận +40% Giáp và không thể kết thúc kỹ năng sớm. Hồi Chiêu Cơ Bản là 70 giây.",
+    "Số tia mỗi loạt tăng từ 7 lên 9.\nSát thương mỗi tia tăng từ 70% lên 80% Hỏa Lực.\nTitan nhận +40% Giáp trong thời gian Oanh Tạc.\nYêu cầu Tài Nguyên: 100 → 120 Mana."
   ],
   [
     "Pháo Đài Di Động",
-    "Titan Oanh Tạc trong 18 giây bằng quạt 9 tia, mỗi tia gây 125% Hỏa Lực với góc 3,5°. Đạn bay nhanh hơn 60% và xuyên thêm 2 mục tiêu; mục tiêu xuyên thứ nhất nhận 75%, mục tiêu thứ hai nhận 45% sát thương. Titan nhận +40% Giáp và hồi Máu bằng 3% sát thương thực tế gây ra trong Oanh Tạc, tối đa 30% Máu Tối Đa mỗi lần thi triển. Kỹ năng không thể kết thúc sớm. Hồi Chiêu Cơ Bản là 70 giây.",
-    "Sát thương mỗi tia tăng từ 100% lên 125% Hỏa Lực.\nGóc giữa các tia giảm còn 3,5° và tốc độ đạn tăng 60%.\nĐạn xuyên thêm 2 mục tiêu; hai mục tiêu xuyên lần lượt nhận 75% / 45% sát thương của tia gốc.\nTitan hồi Máu bằng 3% sát thương thực tế do Oanh Tạc gây ra, tối đa 30% Máu Tối Đa mỗi lần thi triển.\nYêu cầu Tài Nguyên: 120 → 140 Mana."
+    "Titan Oanh Tạc trong 18 giây bằng quạt 9 tia, mỗi tia gây 90% Hỏa Lực với góc 3,5°. Đạn bay nhanh hơn 60% và xuyên thêm 2 mục tiêu; mục tiêu xuyên thứ nhất nhận 75%, mục tiêu thứ hai nhận 45% sát thương. Titan nhận +40% Giáp và hồi Máu bằng 3% sát thương thực tế gây ra trong Oanh Tạc, tối đa 30% Máu Tối Đa mỗi lần thi triển. Kỹ năng không thể kết thúc sớm. Hồi Chiêu Cơ Bản là 70 giây.",
+    "Sát thương mỗi tia tăng từ 80% lên 90% Hỏa Lực.\nGóc giữa các tia giảm còn 3,5° và tốc độ đạn tăng 60%.\nĐạn xuyên thêm 2 mục tiêu; hai mục tiêu xuyên lần lượt nhận 75% / 45% sát thương của tia gốc.\nTitan hồi Máu bằng 3% sát thương thực tế do Oanh Tạc gây ra, tối đa 30% Máu Tối Đa mỗi lần thi triển.\nYêu cầu Tài Nguyên: 120 → 140 Mana."
   ]
 ]),
  invisibility:ranks([25,10,10,10,10],[
@@ -367,27 +367,27 @@ export const SKILL_RANKS: Record<SkillId, readonly SkillRankConfig[]> = {
  twin_reflection:ranks([115,125,135,145,155],[
   [
     "Song Tinh",
-    "Astra triệu hồi 2 tinh thể Song Tinh bên cạnh trong 6 giây. Các tinh thể phản chiếu hình học đường đạn của Astra nhưng không tự tấn công. Mỗi đạn đánh thường chính của Astra khiến từng tinh thể bắn một Tinh Đạn Phản Chiếu gây 25% Sát Thương Đòn Đánh Thường.",
-    "Astra triệu hồi 2 tinh thể Song Tinh bên cạnh trong 6 giây. Các tinh thể phản chiếu hình học đường đạn của Astra nhưng không tự tấn công. Mỗi đạn đánh thường chính của Astra khiến từng tinh thể bắn một Tinh Đạn Phản Chiếu gây 25% Sát Thương Đòn Đánh Thường.\nHồi Chiêu Cơ Bản: 23 giây.\nYêu cầu Tài Nguyên: 115 Mana."
+    "Astra triệu hồi 2 tinh thể Song Tinh bên cạnh trong 9 giây. Các tinh thể phản chiếu hình học đường đạn của Astra nhưng không tự tấn công. Mỗi đạn đánh thường chính của Astra khiến từng tinh thể bắn một Tinh Đạn Phản Chiếu gây 35% Sát Thương Đòn Đánh Thường.",
+    "Astra triệu hồi 2 tinh thể Song Tinh bên cạnh trong 9 giây. Các tinh thể phản chiếu hình học đường đạn của Astra nhưng không tự tấn công. Mỗi đạn đánh thường chính của Astra khiến từng tinh thể bắn một Tinh Đạn Phản Chiếu gây 35% Sát Thương Đòn Đánh Thường.\nHồi Chiêu Cơ Bản: 23 giây.\nYêu cầu Tài Nguyên: 115 Mana."
   ],
   [
     "Khúc Xạ Xuyên Thấu",
-    "Astra triệu hồi 2 tinh thể Song Tinh trong 6 giây. Mỗi đạn đánh thường chính khiến từng tinh thể bắn một Tinh Đạn Phản Chiếu gây 30% Sát Thương Đòn Đánh Thường. Tinh Đạn xuyên thêm 1 kẻ địch; mục tiêu thứ hai nhận 60% sát thương của Tinh Đạn.",
-    "Sát thương Tinh Đạn tăng từ 25% lên 30% Sát Thương Đòn Đánh Thường.\nTinh Đạn xuyên thêm 1 mục tiêu; mục tiêu thứ hai nhận 60% sát thương của Tinh Đạn.\nHồi Chiêu Cơ Bản: 23 → 22 giây.\nYêu cầu Tài Nguyên: 115 → 125 Mana."
+    "Astra triệu hồi 2 tinh thể Song Tinh trong 9 giây. Mỗi đạn đánh thường chính khiến từng tinh thể bắn một Tinh Đạn Phản Chiếu gây 50% Sát Thương Đòn Đánh Thường. Tinh Đạn xuyên thêm 1 kẻ địch; mục tiêu thứ hai nhận 60% sát thương của Tinh Đạn.",
+    "Sát thương Tinh Đạn tăng từ 35% lên 50% Sát Thương Đòn Đánh Thường.\nTinh Đạn xuyên thêm 1 mục tiêu; mục tiêu thứ hai nhận 60% sát thương của Tinh Đạn.\nHồi Chiêu Cơ Bản: 23 → 22 giây.\nYêu cầu Tài Nguyên: 115 → 125 Mana."
   ],
   [
     "Điểm Hội Tụ",
-    "Astra triệu hồi 2 tinh thể Song Tinh trong 6 giây. Mỗi đạn đánh thường chính khiến từng tinh thể bắn Tinh Đạn gây 30% Sát Thương Đòn Đánh Thường và xuyên thêm 1 mục tiêu với 60% sát thương. Nếu cả hai tinh thể trúng cùng một kẻ địch trong cửa sổ hội tụ ngắn, chúng gây thêm 120% Hỏa Lực; mỗi loạt phản chiếu chỉ kích hoạt hiệu ứng này một lần trên mỗi mục tiêu.",
-    "Nếu cả hai tinh thể trúng cùng một kẻ địch trong cửa sổ hội tụ ngắn, chúng gây thêm 120% Hỏa Lực.\nMỗi loạt phản chiếu chỉ kích hoạt hiệu ứng này một lần trên mỗi mục tiêu.\nHồi Chiêu Cơ Bản: 22 → 21 giây.\nYêu cầu Tài Nguyên: 125 → 135 Mana."
+    "Astra triệu hồi 2 tinh thể Song Tinh trong 9 giây. Mỗi đạn đánh thường chính khiến từng tinh thể bắn Tinh Đạn gây 30% Sát Thương Đòn Đánh Thường và xuyên thêm 1 mục tiêu với 60% sát thương. Nếu cả hai tinh thể trúng cùng một kẻ địch trong cửa sổ hội tụ ngắn, chúng gây thêm 120% Hỏa Lực; mỗi loạt phản chiếu chỉ kích hoạt hiệu ứng này một lần trên mỗi mục tiêu.",
+    "Sát thương Tinh Đạn đổi từ 50% thành 30% Sát Thương Đòn Đánh Thường.\nNếu cả hai tinh thể trúng cùng một kẻ địch trong cửa sổ hội tụ ngắn, chúng gây thêm 120% Hỏa Lực.\nMỗi loạt phản chiếu chỉ kích hoạt hiệu ứng này một lần trên mỗi mục tiêu.\nHồi Chiêu Cơ Bản: 22 → 21 giây.\nYêu cầu Tài Nguyên: 125 → 135 Mana."
   ],
   [
     "Cộng Hưởng Quỹ Đạo",
-    "Astra triệu hồi 2 tinh thể Song Tinh trong 6 giây. Mỗi đạn đánh thường chính khiến từng tinh thể bắn Tinh Đạn gây 30% Sát Thương Đòn Đánh Thường, xuyên thêm 1 mục tiêu và có thể tạo Hội Tụ 120% Hỏa Lực. Cứ mỗi 5 đạn đánh thường chính của Astra, loạt phản chiếu kế tiếp gây thêm 75% sát thương, có kích thước lớn hơn và bay nhanh hơn. Các tinh thể không tự bắn nếu Astra không khai hỏa.",
-    "Cứ mỗi 5 đạn đánh thường chính của Astra, loạt phản chiếu kế tiếp gây thêm 75% sát thương, có kích thước lớn hơn và bay nhanh hơn.\nHồi Chiêu Cơ Bản: 21 → 20 giây.\nYêu cầu Tài Nguyên: 135 → 145 Mana."
+    "Astra triệu hồi 2 tinh thể Song Tinh trong 9 giây. Mỗi đạn đánh thường chính khiến từng tinh thể bắn Tinh Đạn gây 50% Sát Thương Đòn Đánh Thường, xuyên thêm 1 mục tiêu và có thể tạo Hội Tụ 120% Hỏa Lực. Cứ mỗi 5 đạn đánh thường chính của Astra, loạt phản chiếu kế tiếp gây thêm 75% sát thương, có kích thước lớn hơn và bay nhanh hơn. Các tinh thể không tự bắn nếu Astra không khai hỏa.",
+    "Sát thương Tinh Đạn tăng từ 30% lên 50% Sát Thương Đòn Đánh Thường.\nCứ mỗi 5 đạn đánh thường chính của Astra, loạt phản chiếu kế tiếp gây thêm 75% sát thương, có kích thước lớn hơn và bay nhanh hơn.\nHồi Chiêu Cơ Bản: 21 → 20 giây.\nYêu cầu Tài Nguyên: 135 → 145 Mana."
   ],
   [
     "Phản Xạ Tinh Tú",
-    "Astra triệu hồi 2 tinh thể Song Tinh trong 6 giây, phản chiếu các đòn đánh thường và giữ toàn bộ hiệu ứng xuyên, Hội Tụ cùng cường hóa mỗi 5 phát. Trong thời gian Song Tinh, khi Astra dùng Thương Tinh Tú, mỗi tinh thể phóng một Tiểu Thương song song gây 30% sát thương hiệu dụng của Thương chính. Tiểu Thương không tăng cộng dồn Thương Tinh Tú và không kích hoạt lại chuỗi hiệu ứng Trang Bị/Lõi của lần dùng chính.",
+    "Astra triệu hồi 2 tinh thể Song Tinh trong 9 giây, phản chiếu các đòn đánh thường với 50% Sát Thương Đòn Đánh Thường mỗi tinh thể và giữ toàn bộ hiệu ứng xuyên, Hội Tụ cùng cường hóa mỗi 5 phát. Trong thời gian Song Tinh, khi Astra dùng Thương Tinh Tú, mỗi tinh thể phóng một Tiểu Thương song song gây 30% sát thương hiệu dụng của Thương chính. Tiểu Thương không tăng cộng dồn Thương Tinh Tú và không kích hoạt lại chuỗi hiệu ứng Trang Bị/Lõi của lần dùng chính.",
     "Trong thời gian Song Tinh, khi Astra dùng Thương Tinh Tú, mỗi tinh thể phóng một Tiểu Thương song song gây 30% sát thương hiệu dụng của Thương chính.\nTiểu Thương không tăng cộng dồn Thương Tinh Tú và không kích hoạt lại chuỗi hiệu ứng Trang Bị/Lõi của lần dùng chính.\nHồi Chiêu Cơ Bản: 20 → 19 giây.\nYêu cầu Tài Nguyên: 145 → 155 Mana."
   ]
 ]),
@@ -430,7 +430,7 @@ export function rankValues(s:AircraftCombatState,id:SkillId) {
   missile_swarm:{cost,cooldown:90,count:[14,18,22][r-1],damageMultiplier:[3,3.4,3.8][r-1]},
   armor_shield:{cost,cooldown:[35,34,33,32,31][r-1],duration:r>=2?9:6,damageTakenMultiplier:r>=3?.15:.35},
   heavy_bomb:{cost,cooldown:[38,36,34,30,28][r-1],damageMultiplier:r>=2?19:14},
-  sweeping_cannon:{cost,cooldown:70,duration:18,count:r>=2?9:7,damageMultiplier:[.9,1,1.25][r-1]},
+  sweeping_cannon:{cost,cooldown:70,duration:18,count:r>=2?9:7,damageMultiplier:[.7,.8,.9][r-1]},
   invisibility:{cost,cooldown:[33,32,31,30,29][r-1],duration:r>=3?3.5:r>=2?3:2},
   focus_laser:{cost,cooldown:[29,28,27,26,25][r-1],charge:r>=2?.2:2,duration:r>=3?3:2,damageMultiplier:(r>=3?3.3:3)*(r>=4?1.32:1)},
   escort_drone:{cost,cooldown:50,upkeepPerSecond:r>=2?3:4,damageMultiplier:r>=2?.9:.7},
@@ -438,9 +438,9 @@ export function rankValues(s:AircraftCombatState,id:SkillId) {
   stellar_lance:{cost:cost*(1+((s.coreState.timers.lanceChain??0)>s.coreState.time?(s.coreState.stacks.lanceStack??0):0)),cooldown:3,charge:r>=2?.2:.6,damageMultiplier:(r>=3?10.5:8)*(1+.1*((s.coreState.timers.lanceChain??0)>s.coreState.time?(s.coreState.stacks.lanceStack??0):0))},
   starfall:{cost,cooldown:90,count:[12,14,16][r-1],damageMultiplier:[3.55,3.95,4.35][r-1]},
   predator_lock:{cost,cooldown:[20,19,18,17,16][r-1],duration:8,damageMultiplier:r>=2?2.4:2},
-  gravity_anchor:{cost,cooldown:[25,24,23,22,21][r-1],duration:5,radiusMultiplier:r>=2?1.25:1,damageMultiplier:.35},
+  gravity_anchor:{cost,cooldown:[25,24,23,22,21][r-1],duration:5,radiusMultiplier:r>=2?1.25:1,damageMultiplier:.65},
   electronic_interference:{cost,cooldown:[28,27,26,25,24][r-1],duration:r>=5?1.6:r>=2?1:0,damageMultiplier:1},
-  twin_reflection:{cost,cooldown:[23,22,21,20,19][r-1],duration:6,damageMultiplier:r>=2?.3:.25},
+  twin_reflection:{cost,cooldown:[23,22,21,20,19][r-1],duration:9,damageMultiplier:[.35,.5,.3,.5,.5][r-1]},
  };
  return all[id];
 }

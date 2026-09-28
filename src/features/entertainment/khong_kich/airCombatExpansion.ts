@@ -1,4 +1,5 @@
 import { coreCooldownReady, deferCoreCooldown, startCoreCooldown } from "./airCombatCooldowns";
+import { getRecoveryReceivedMultiplier, getShieldReceivedMultiplier } from "./airCombatRecovery";
 import { equipmentSkillEnd } from "./airCombatEquipmentRuntime";
 import { releaseState, overheated } from "./airCombatReleaseState";
 import type { AircraftCombatState, EffectiveAircraftStats, SkillId } from "./airCombatTypes";
@@ -66,7 +67,7 @@ export function applyExpansionStats(s: AircraftCombatState, stats: EffectiveAirc
     if(expansionActive(s,"coldArmor"))stats.armor+=25;
     if(owns(s,174)&&expansionActive(s,"shockPadRegen"))stats.bonusResourceRegenPct+=.20;
     if(owns(s,176)&&c.stacks.breathing)stats.bonusResourceRegenPct+=.25;
-    if(owns(s,218)&&expansionActive(s,"ultimateAftershock"))stats.bonusResourceRegenPct+=.35;
+    if(owns(s,218)&&expansionActive(s,"ultimateAftershock"))stats.bonusResourceRegenPct+=.75;
     const negative = activeNegativeStatusTypes(s).size;
     if (owns(s, 169)) {
       const ratio = s.currentResource / stats.maxResource;
@@ -143,7 +144,8 @@ export function celestialProtection(s: AircraftCombatState): boolean {
 export function prepareAbsorbShield(s: AircraftCombatState, sh: AbsorbShield) {
   if (sh.capacity !== undefined) return;
   const temporary = Number.isFinite(sh.until);
-  if (temporary && owns(s, 200)) {recordCoreMetric(s,200,"shieldCreated",sh.amount*.5);sh.amount *= 1.5;}
+  if (temporary && owns(s, 200)) recordCoreMetric(s,200,"shieldCreated",sh.amount * getRecoveryReceivedMultiplier(s) * .5);
+  sh.amount *= getShieldReceivedMultiplier(s, temporary);
   sh.capacity = sh.amount; sh.absorbed = 0;
   sh.duration = temporary ? Math.max(0, sh.until - s.coreState.time) : Infinity;
 }

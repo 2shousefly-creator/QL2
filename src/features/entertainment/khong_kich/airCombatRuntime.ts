@@ -9,6 +9,7 @@ import { equipmentState, equipmentScale, equipmentEffect, equipmentMetric } from
 import { canSkillsCrit, equipmentUntargetable } from "./airCombatEquipmentStats";
 import { advanceWaitingChest, claimWaitingChest } from "./airCombatEquipmentRewards";
 import { tickEquipment, flushEquipmentDrops, equipmentOnHit, equipmentOnCast, equipmentOnDamage, equipmentOnKill, equipmentPreventedDamage, equipmentConsumeSkillBonus, equipmentOutgoing, equipmentArmor, equipmentIncoming, equipmentSlow, equipmentFx, type EquipmentHooks } from "./airCombatEquipmentRuntime";
+import { getHealingReceivedMultiplier } from "./airCombatRecovery";
 import { releaseState, playerAirframeScale, overheated } from "./airCombatReleaseState";
 import { closeCoreSelection, spendReroll, rollUnstableMode, type RerollSource } from "./airCombatSelectionRules";
 import { syncEffectiveMaxHp, getSkillAvailability, startDeferredSkillCooldown } from "./airCombatAircraft";
@@ -2980,7 +2981,7 @@ function applyDamageToEnemy(world: CombatWorld, enemy: EnemyEntity, rawDamage: n
     if (damage + absorbed > 0) recordCoreMetric(state, telemetryCore, "hits", 1);
     if(damage>0&&skillId==="sweeping_cannon")emitVisual(world,{kind:"ultimate_effect",ultimateEffect:"ultimateTitanImpact",x:contact?.x??enemy.x,y:contact?.y??enemy.y,size:28});
     if (damage > 0 && skillId === "sweeping_cannon" && skillRank(state, "sweeping_cannon") >= 3 && cast) {
-        const received=state.status.healingReceivedUntil>time?state.status.healingReceivedMultiplier:1;
+        const received=getHealingReceivedMultiplier(state);
         // Spend healing entitlement, including overheal, before Core104 can convert it.
         const amount=Math.min(damage*V.cannonHeal,Math.max(0,stats.maxHp*.30-(cast.cannonHealingSpent??0))/Math.max(Number.EPSILON,received));
         cast.cannonHealingSpent=(cast.cannonHealingSpent??0)+amount*received;
@@ -4220,7 +4221,7 @@ function basicTelemetryBonuses(state:AircraftCombatState,sweeping:boolean,extra:
     if(hasCore(state,60)&&state.coreState.time-state.coreState.lastDamage>=3)result.push([60,.14/1.14]);
     if((state.coreState.timers.counterActive??0)>state.coreState.time)result.push([83,.30/1.30]);
     if(reappearance)result.push([142,.5]);
-    if(sweeping&&!extra&&(skillRank(state, "sweeping_cannon") >= 2))result.push([34,(getSkillRuntimeValues(state,"sweeping_cannon").damageMultiplier-.9)/getSkillRuntimeValues(state,"sweeping_cannon").damageMultiplier]);
+    if(sweeping&&!extra&&(skillRank(state, "sweeping_cannon") >= 2))result.push([34,(getSkillRuntimeValues(state,"sweeping_cannon").damageMultiplier-.7)/getSkillRuntimeValues(state,"sweeping_cannon").damageMultiplier]);
     return result;
 }
 

@@ -17,7 +17,7 @@ export function applyEquipmentStats(s: AircraftCombatState, stats: EffectiveAirc
   }
   stats.bonusResourceRegenPct+=regen;stats.permanentResourceRegenPct+=regen;
   const scale=(id:number)=>id===omittedEffect?0:equipmentScale(s,id),active=(id:number)=>equipmentEffect(s,id).until>s.coreState.time;
-  stats.maxHp*=1+P[22].hp*scale(22);stats.maxResource+=P[31].resource*scale(31);
+  stats.maxHp*=1+P[22].hp*scale(22);stats.maxResource*=1+P[31].maxResourcePct*scale(31);
   stats.criticalDamageMultiplier+=P[36].crit*scale(36);
   if(temporary) {
     if(active(2))stats.bonusFireRatePct+=equipmentEffect(s,2).stacks*P[2].bonusFireRatePct*scale(2);
@@ -27,7 +27,6 @@ export function applyEquipmentStats(s: AircraftCombatState, stats: EffectiveAirc
     if(active(20))stats.armor+=P[20].armor*scale(20);
     if(active(32))stats.bonusResourceRegenPct+=P[32].regen*scale(32)*equipmentEffect(s,32).value;
     if(active(26)&&equipmentEffect(s,26).stacks===6)stats.criticalDamageMultiplier+=P[26].crit*scale(26);
-    if(s.currentHp<stats.maxHp*.5)stats.bonusResourceRegenPct+=P[19].regen*scale(19);
     const mode=equipmentGeminiMode(s,stats.maxHp,stats.maxResource);
     if(mode==="hp")stats.totalHpRegenMultiplier*=1+P[28].regen*scale(28);
     if(mode==="resource")stats.totalResourceRegenMultiplier*=1+P[28].regen*scale(28);

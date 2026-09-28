@@ -26,7 +26,7 @@ export function releaseTelemetry(state:AircraftCombatState,row:number):string[]{
   if(row===219)lines.push(`Nhiệt: ${number(r.heat)} / 100`);
   if(row===220)lines.push(r.ghosts.length?`Bóng đang hoạt động: ${r.ghosts.length} · Hồi Chiêu bắt đầu sau khi Bóng kết thúc`:`Sẵn sàng sau ${number(Math.max(0,r.ghostReady-c.time))} giây`);
   if(row===221)lines.push(r.mark?`Dấu đang tích ${number(r.mark.damage)} sát thương thực nhận`:`Hồi lại sau ${number(Math.max(0,r.markReady-c.time))} giây`);
-  if(row===222)lines.push(r.mode==="small"?"Thu Nhỏ: kích thước/hitbox ×0,5; +33 Điểm Hồi Kỹ Năng; +50% Hồi Tài Nguyên":"Khổng Lồ: kích thước/hitbox ×1,5; +30% Máu Tối Đa; +30% Hỏa Lực",`Roll kế tiếp: ${number(Math.max(0,r.nextMode-c.time))} giây`);
+  if(row===222)lines.push(r.mode==="small"?"Thu Nhỏ: kích thước/hitbox ×0,5; +33 Điểm Hồi Kỹ Năng; +40% Hồi Tài Nguyên":"Khổng Lồ: kích thước/hitbox ×1,5; +30% Máu Tối Đa; +30% Hỏa Lực",`Roll kế tiếp: ${number(Math.max(0,r.nextMode-c.time))} giây`);
   return lines;
 }
 
