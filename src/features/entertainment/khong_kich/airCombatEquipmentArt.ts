@@ -1,7 +1,7 @@
 import { lightningPath } from "./airCombatProcVisuals";
 import { getEffectiveAircraftStats } from "./airCombatAircraft";
 import { equipmentGeminiMode } from "./airCombatEquipmentStats";
-import equipmentIcons from "../../../assets/khong-kich/v2/equipment-icons.svg";
+import equipmentIcons from "../../../assets/khong-kich/v2/equipment-icons.png";
 import equipmentVfx from "../../../assets/khong-kich/v2/equipment-vfx.svg";
 import type { EquipmentRewardId } from "./airCombatEquipmentState";
 import { equipmentState, activeEquipmentFamilies, equipmentEffect } from "./airCombatEquipmentState";

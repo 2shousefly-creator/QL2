@@ -1,0 +1,154 @@
+{
+  "version": "26.17.4",
+  "releaseDate": "29/09/2026",
+  "title": "Sprite Trang Bị & Nhận Diện Sức Mạnh",
+  "displayTitle": "KHÔNG KÍCH 26.17.4 — SPRITE TRANG BỊ & NHẬN DIỆN SỨC MẠNH",
+  "summary": "**26.17.4** làm mới toàn bộ hệ thống hình minh họa Trang Bị. Tất cả 80 Trang Bị được đổi sang tên mới dễ nhận diện hơn và sở hữu sprite riêng theo phong cách cơ khí viễn tưởng pha fantasy, giúp người chơi nhìn nhanh đã có thể cảm nhận được thiên hướng sức mạnh của từng món.\n\nMàu sắc của Trang Bị giờ bám sát công năng chính — từ sát thương, đấu sĩ, phòng thủ cho tới hồi Máu, Tài Nguyên và Hồi Chiêu — trong khi nền theo bậc Trang Bị vẫn giữ nguyên để không làm mất nhận diện độ hiếm.",
+  "sections": [
+    {
+      "id": "s1",
+      "title": "MINH HỌA TRANG BỊ",
+      "icon": {
+        "kind": "equipment",
+        "id": "HL01"
+      },
+      "intro": [
+        {
+          "text": "Toàn bộ Trang Bị được nâng cấp hình minh họa để mỗi món có silhouette riêng, dễ phân biệt hơn trong Kho Trang Bị, HUD và tooltip.",
+          "format": "paragraph",
+          "changeType": "new"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s1-e1",
+          "icon": {
+            "kind": "equipment",
+            "id": "HL01"
+          },
+          "title": "Sprite Trang Bị mới",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Cả **80 Trang Bị** giờ sử dụng hình minh họa sprite mới theo phong cách **cơ khí viễn tưởng pha fantasy** thay cho bộ hình minh họa cũ.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Mỗi Trang Bị có một **silhouette riêng** để Cung, Súng, Đại Bác, Găng, Khiên, Trượng, Bình, Drone và các loại vật thể khác không còn khó phân biệt khi hiển thị ở kích thước nhỏ.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Mỗi sprite có **glow phát sáng** giúp vật thể nổi rõ trên nền Trang Bị; glow của Trang Bị Huyền Thoại mạnh hơn Thành Phần và Hoàn Chỉnh.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Màu nền nhận diện của từng **bậc Trang Bị** được giữ nguyên.",
+              "format": "bullet",
+              "changeType": "unchanged"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "NGÔN NGỮ MÀU SỨC MẠNH",
+      "icon": {
+        "kind": "equipment",
+        "id": "TH10"
+      },
+      "intro": [
+        {
+          "text": "Màu năng lượng trên mỗi Trang Bị giờ phản ánh trực tiếp công năng chính để người chơi có thể đọc nhanh vai trò của món đồ ngay từ hình minh họa.",
+          "format": "paragraph",
+          "changeType": "change"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s2-e1",
+          "icon": {
+            "kind": "equipment",
+            "id": "TH01"
+          },
+          "title": "Màu theo thiên hướng sức mạnh",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "**Đỏ** đại diện cho sát thương, Tốc Độ Bắn, đòn đánh thường và Chí Mạng; **Vàng** đại diện cho lối chơi đấu sĩ công-thủ.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "**Xanh lam** đại diện cho Giáp và phòng thủ; **Xanh lá** đại diện cho Máu và hồi phục; **Tím** đại diện cho Tài Nguyên; **Trắng** đại diện cho Hồi Chiêu và nhịp kỹ năng.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Trang Bị lai sử dụng màu của công năng chính làm chủ đạo và công năng phụ làm điểm nhấn.",
+              "format": "bullet",
+              "changeType": "new"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "TÊN & FAMILY TRANG BỊ",
+      "icon": {
+        "kind": "equipment",
+        "id": "HL34"
+      },
+      "intro": [
+        {
+          "text": "Tên gọi Trang Bị được viết lại để phản ánh rõ hơn vật thể được minh họa và thiên hướng gameplay của từng món.",
+          "format": "paragraph",
+          "changeType": "change"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s3-e1",
+          "icon": {
+            "kind": "equipment",
+            "id": "TP02"
+          },
+          "title": "Tên Trang Bị mới",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Toàn bộ **8 Thành Phần, 36 Hoàn Chỉnh và 36 Huyền Thoại** được đổi sang tên mới, ưu tiên những hình thái trực quan như Cung, Súng, Đại Bác, Găng, Khiên, Trượng, Đồng Hồ Cát, Bình và Drone.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "Các Trang Bị Hoàn Chỉnh và Huyền Thoại cùng family giữ một phần ADN tạo hình chung, nhưng vẫn có silhouette riêng để không trở thành các phiên bản chỉ khác màu hoặc kích thước.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        },
+        {
+          "id": "s3-e2",
+          "icon": {
+            "kind": "equipment",
+            "id": "TH20"
+          },
+          "title": "Gameplay giữ nguyên",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Chỉ số, hiệu ứng, công thức ghép, bậc Trang Bị, tỷ lệ xuất hiện và cơ chế chiến đấu của toàn bộ Trang Bị **không thay đổi** trong 26.17.4.",
+              "format": "bullet",
+              "changeType": "unchanged"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
