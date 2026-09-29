@@ -21,6 +21,7 @@ export const RANKED_VFX_FRAMES = {
 export type RankVisualKey = keyof typeof RANKED_VFX_FRAMES;
 export type RankSpritePainter = (id:number,key:RankVisualKey,x:number,y:number,width:number,height:number,rotation:number,alpha:number,additive?:boolean)=>void;
 export function rankProjectileVisual(p:ProjectileEntity):RankVisualKey|undefined {
+ if(p.mirrorBorrowed)return undefined;
  if(p.skillId==="predator_lock")return "rankMicroMissile";
  if(p.skillId==="twin_reflection"&&p.twinSide!==undefined)return "rankTwinShot";
  if(p.skillId==="stellar_lance"&&p.procFree&&p.astraLance)return "rankMiniLance";

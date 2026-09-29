@@ -1,3 +1,4 @@
+import { MIRAGE_WAVES } from "./airCombatMirageWaves";
 import { STORMBREAKER_WAVES } from "./airCombatStormbreakerWaves";
 import { COMBAT_WAVES, type WaveDefinition } from "./airCombatWaves";
 import type { AirCombatCampaignProgress, EnemyType } from "./airCombatTypes";
@@ -6,7 +7,7 @@ export interface AirCombatStageDefinition {
   id: number; key: string; displayName: string; localizedName: string;
   shortDescription: string; bossName: string; unlockAfterStage: number | null;
   theme: string; accent: string; available: boolean;
-  runtime: "leviathan" | "magnetic" | "stormbreaker";
+  runtime: "leviathan" | "magnetic" | "stormbreaker" | "mirage";
   waves: readonly WaveDefinition[];
 }
 // Authored introductions followed by bounded mixed groups. Counts below own
@@ -65,6 +66,10 @@ export const AIR_COMBAT_STAGES: readonly AirCombatStageDefinition[] = [
   { id: 3, key: "stormbreaker", displayName: "STORMBREAKER", localizedName: "TÂM BÃO LÔI ĐIỆN",
     shortDescription: "Đọc nhịp tích điện, phá chuỗi dẫn sét và sống sót giữa tâm bão.", bossName: "STORMBREAKER Ω", unlockAfterStage: 2,
     theme: "CHARGE · DISCHARGE · PRIORITY", accent: "#fbbf24", available: true, runtime: "stormbreaker", waves: STORMBREAKER_WAVES },
+  { id: 4, key: "mirage_fracture", displayName: "MIRAGE FRACTURE", localizedName: "ẢO CẢNH PHÂN MẢNH",
+    shortDescription: "Phân biệt thật - giả, đối đầu chính bản thân và phá vỡ nguồn phát của Ảo Cảnh.",
+    bossName: "PARALLAX ZERO", unlockAfterStage: 3, theme: "DECEPTION · MIRROR · REACTION", accent: "#f472b6",
+    available: true, runtime: "mirage", waves: MIRAGE_WAVES },
 ];
 export const getAirCombatStage = (id: number) => AIR_COMBAT_STAGES.find(stage => stage.id === id);
 export const isStageUnlocked = (id: number, progress: AirCombatCampaignProgress) => {

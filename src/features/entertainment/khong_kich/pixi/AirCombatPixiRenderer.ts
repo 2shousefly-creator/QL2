@@ -1,3 +1,5 @@
+import { paintMirage } from "../airCombatMirageVisuals";
+import { mirageEnemyFrame } from "../airCombatStage4Art";
 import { paintStormbreaker, StormbreakerPresentation } from "../airCombatStormbreakerVisuals";
 import { stormEnemyFrame } from "../airCombatStage3Art";
 import { ultimateProjectileVisual } from "../airCombatUltimateArt";
@@ -60,6 +62,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
   private resourceText = new Text({ text: "", style: { fontFamily: "Arial", fontSize: 6.4, fontWeight: "bold", fill: 0xffffff, stroke: { color: 0x06101f, width: 1 } } });
   private damageText = new AirCombatDamageText();
   private sky: AirCombatSky;
+  private mirageSprites: AirCombatSpritePool;
   private stormbreakerSprites: AirCombatSpritePool;
   private stormbreakerPresentation = new StormbreakerPresentation();
   private stormbreakerRoot = new Container();
@@ -135,6 +138,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     host.appendChild(app.canvas);
     app.canvas.addEventListener("webglcontextlost", this.onLost);
     this.sky = new AirCombatSky(assets);
+    this.mirageSprites = new AirCombatSpritePool(this.stormbreakerLayer, 2048);
     this.stormbreakerSprites = new AirCombatSpritePool(this.stormbreakerLayer, 2048);
     this.stormbreakerRoot.addChild(this.stormbreakerLayer, this.stormbreakerWarnings);
     this.stormbreakerMask.rect(GAMEPLAY_SAFE_RECT.left, GAMEPLAY_SAFE_RECT.top, GAMEPLAY_SAFE_RECT.width, GAMEPLAY_SAFE_RECT.height).fill(0xffffff);
@@ -342,24 +346,32 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
       }
     },reducedMotion,this.stormbreakerPresentation);
     this.stormbreakerSprites.end();
+    this.mirageSprites.begin();
+    let mirageId = 0;
+    paintMirage(world,(frame,x,y,width,height,rotation,alpha,tint=0xffffff,anchorX=.5)=>{
+      const sprite=this.mirageSprites.get(mirageId++,this.assets.texture(frame));if(!sprite)return;
+      sprite.anchor.set(anchorX,.5);sprite.position.set(x,y);sprite.width=width;sprite.height=height;sprite.rotation=rotation;sprite.alpha=alpha;sprite.tint=tint;sprite.blendMode="normal";
+    },reducedMotion);
+    this.mirageSprites.end();
     for(let i=labelCount;i<this.enemyStatusLabels.length;i++)this.enemyStatusLabels[i].visible=false;
     this.enemies.begin();
     this.engines.begin();
     for (const enemy of world.enemies) {
+      if (enemy.aircraftTarget) continue;
       const magnetic = !!world.magnetic;
       const exposed = magnetic && enemy.type === "boss" && !guardianSlots(world, enemy.id).some(Boolean);
-      const frame = world.stormbreaker ? stormEnemyFrame(enemy,world.bossPhase) : exposed ? TEMPEST_WEAKPOINT_ART : magnetic ? (STAGE2_ENEMY_ART[enemy.type] ?? ENEMY_VISUALS[enemy.type]) : ENEMY_VISUALS[enemy.type];
+      const frame = world.mirage ? mirageEnemyFrame(enemy,world.bossPhase) : world.stormbreaker ? stormEnemyFrame(enemy,world.bossPhase) : exposed ? TEMPEST_WEAKPOINT_ART : magnetic ? (STAGE2_ENEMY_ART[enemy.type] ?? ENEMY_VISUALS[enemy.type]) : ENEMY_VISUALS[enemy.type];
       const sprite = this.enemies.get(enemy.id, this.assets.texture(frame));
       if (!sprite) continue;
       sprite.position.set(enemy.x, enemy.y);
       sprite.visible = enemy.hp > 0;
-      sprite.width = enemy.radius * (world.stormbreaker ? enemy.type === "boss" ? 3.2 : 2.8 : enemy.type === "boss" && !magnetic ? BOSS_VISUAL_WIDTH_SCALE : 2.8);
-      sprite.height = sprite.width * (magnetic || world.stormbreaker ? 1 : enemy.type === "boss" ? BOSS_VISUAL_ASPECT : sprite.texture.height / sprite.texture.width);
-      sprite.rotation = enemyAirframeRotation(enemy);
+      sprite.width = enemy.radius * ((world.stormbreaker || world.mirage) ? enemy.type === "boss" ? 3.2 : 2.8 : enemy.type === "boss" && !magnetic ? BOSS_VISUAL_WIDTH_SCALE : 2.8);
+      sprite.height = sprite.width * (magnetic || world.stormbreaker || world.mirage ? 1 : enemy.type === "boss" ? BOSS_VISUAL_ASPECT : sprite.texture.height / sprite.texture.width);
+      sprite.rotation = enemyAirframeRotation(enemy) - (world.mirage ? Math.PI : 0);
       sprite.tint = enemyAllegiance(world,enemy)==="friendly_hacked" ? 0x67e8f9 : this.flashUntil.has(enemy.id) ? 0xffe1b3 : enemy.type === "acid_bomber" ? 0xa3e635 : enemy.type === "jammer" ? 0x2dd4bf : enemy.type === "sniper" ? 0xe879f9 : enemy.type === "radar_hunter" ? 0x38bdf8 : 0xffffff;
-      if(!magnetic && (enemy.shield>0 || enemy.aegisUntil>world.aircraft.coreState.time))this.telegraphs.circle(enemy.x,enemy.y,enemy.radius+7).fill({color:0x38bdf8,alpha:.12}).stroke({color:0x7dd3fc,width:2,alpha:.85});
-      if(enemy.stun>0)this.telegraphs.circle(enemy.x,enemy.y-enemy.radius-7,5).stroke({color:0xfde047,width:2});
-      if(enemy.burn>0&&!reducedMotion&&damageSmoke)this.vfx.spawn("fire",enemy.x,enemy.y,24,.3);
+      if(!world.mirage && !magnetic && (enemy.shield>0 || enemy.aegisUntil>world.aircraft.coreState.time))this.telegraphs.circle(enemy.x,enemy.y,enemy.radius+7).fill({color:0x38bdf8,alpha:.12}).stroke({color:0x7dd3fc,width:2,alpha:.85});
+      if(!world.mirage && enemy.stun>0)this.telegraphs.circle(enemy.x,enemy.y-enemy.radius-7,5).stroke({color:0xfde047,width:2});
+      if(!world.mirage&&enemy.burn>0&&!reducedMotion&&damageSmoke)this.vfx.spawn("fire",enemy.x,enemy.y,24,.3);
       if (!world.ended && enemy.hp>0 && enemy.type === "kamikaze" && (enemy.kamikazeState === "charge" || enemy.kamikazeState === "dash")) {
         const transform=getEnemyExhaustTransform(enemy);
         const flame=this.engines.get(enemy.id+4,this.assets.engineFlame);
@@ -367,8 +379,8 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
         const committed = enemy.kamikazeState === "dash" && enemy.dashCommitted;
         this.telegraphs.moveTo(committed ? enemy.dashStartX : enemy.x, committed ? enemy.dashStartY : enemy.y).lineTo(enemy.dashEndX,enemy.dashEndY).stroke({color:enemyAllegiance(world,enemy)==="friendly_hacked"?0x67e8f9:0xfbbf24,width:1.5,alpha:.7});
       }
-      sprite.rotation=enemyAirframeRotation(enemy);
-      if(enemy.hackedFacing!==undefined&&enemy.type!=="kamikaze"){
+      sprite.rotation=enemyAirframeRotation(enemy) - (world.mirage ? Math.PI : 0);
+      if(!world.mirage&&enemy.hackedFacing!==undefined&&enemy.type!=="kamikaze"){
         const transform=getEnemyExhaustTransform(enemy),flame=this.engines.get(enemy.id+4,this.assets.engineFlame);
         if(flame){flame.anchor.set(.5,0);flame.position.set(transform.x,transform.y);flame.rotation=transform.rotation;flame.width=transform.width;flame.height=transform.length;flame.alpha=.65;}
       }
@@ -380,7 +392,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
           this.telegraphs.moveTo(edge,enemy.y+20).lineTo(edge,GAMEPLAY_SAFE_RECT.bottom).stroke({color:0x67e8f9,width:1.5,alpha:.65});
         }
       }
-      if (enemy.type === "boss" && !magnetic && !world.stormbreaker) {
+      if (enemy.type === "boss" && !magnetic && !world.stormbreaker && !world.mirage) {
         const entrance = reducedMotion ? 1 : Math.min(1, enemy.age / 0.8);
         sprite.width *= 0.8 + entrance * 0.2;
         sprite.height *= 0.8 + entrance * 0.2;
@@ -433,6 +445,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     this.missiles.begin();
     for (const p of world.projectiles) {
       if (rankProjectileVisual(p)||ultimateProjectileVisual(p)) continue; // Dedicated ranked sprite pool owns body and wake.
+      if (p.mirageVisual || p.mirrorBorrowed) continue;
       if (world.stormbreaker && p.stormbreakerVisual) continue;
       if (world.magnetic && p.owner === "enemy" && p.magneticVisual) continue; // Shared atlas painter owns magnetic rounds.
       const missile = getMissileVisual(p)!==null;
@@ -666,7 +679,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
       this.telegraphs.circle(world.playerX,world.playerY-24*playerAirframeScale(world.aircraft),9).fill({color:0xf3e8ff,alpha:.75});
       if(!reducedMotion)for(let i=0;i<6;i++){const y=GAMEPLAY_SAFE_RECT.top+(i*this.laser.height/6+this.clock*210)%this.laser.height,x=world.playerX+(i%2?10:-10);this.telegraphs.moveTo(x,y).lineTo(x+(i%2?-2:2),Math.max(GAMEPLAY_SAFE_RECT.top,y-25)).stroke({color:0xe0ffff,width:1.5,alpha:.65});}
     }
-    if(world.aircraft.status.stunnedUntil>world.aircraft.coreState.time)this.telegraphs.circle(world.playerX,world.playerY,23).stroke({color:0x67e8f9,width:1.5,alpha:.65});
+    if(!world.mirage&&world.aircraft.status.stunnedUntil>world.aircraft.coreState.time)this.telegraphs.circle(world.playerX,world.playerY,23).stroke({color:0x67e8f9,width:1.5,alpha:.65});
     this.hitbox.clear();
 
     const stats = getEffectiveAircraftStats(world.aircraft);
@@ -717,6 +730,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     this.healthBars.clear();
     this.app.canvas.removeEventListener("webglcontextlost", this.onLost);
     this.magneticSprites.destroy();
+    this.mirageSprites.destroy();
     this.stormbreakerSprites.destroy();
     this.stormbreakerPresentation.clear();
     this.astraSprites.destroy();

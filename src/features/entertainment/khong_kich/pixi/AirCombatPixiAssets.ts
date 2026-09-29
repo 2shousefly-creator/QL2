@@ -1,3 +1,4 @@
+import { STAGE4_ART_URLS, STAGE4_VFX_ART, PARALLAX_BOSS_ART, MIRAGE_HELPER_ART } from "../airCombatStage4Art";
 import { STAGE3_ART_URLS, STAGE3_ENEMY_ART, STAGE3_EMISSIVE_ART, STAGE3_VFX_ART, STORMBREAKER_BOSS_ART } from "../airCombatStage3Art";
 import { ULTIMATE_ART, ULTIMATE_FRAMES } from "../airCombatUltimateArt";
 import { RANKED_ART, RANKED_VFX_FRAMES } from "../airCombatRankArt";
@@ -65,7 +66,8 @@ export async function loadAirCombatAssets() {
   const [rankedVfx,rankedProjectiles]=await Promise.all([Assets.load<Texture>(RANKED_ART.vfx),Assets.load<Texture>(RANKED_ART.projectiles)]);
   const ultimateVfx=await Assets.load<Texture>(ULTIMATE_ART);
   const [stage3Enemy,stage3Boss,stage3Vfx,stormbreakerSky,stage3Emissive] = await Promise.all([Assets.load<Texture>(STAGE3_ART_URLS.enemy),Assets.load<Texture>(STAGE3_ART_URLS.boss),Assets.load<Texture>(STAGE3_ART_URLS.vfx),Assets.load<Texture>(STAGE3_ART_URLS.sky),Assets.load<Texture>(STAGE3_ART_URLS.emissive)]);
-  const sources = { stage3Enemy,stage3Boss,stage3Vfx,stage3Emissive, ultimateVfx,rankedVfx,rankedProjectiles, equipmentIcons,equipmentVfx,astraVfx,astraAircraft,astraEffects,aircraft, fortress, vfx, ammo, basicAmmo, healingCross, stage2Enemy, stage2Vfx, stage2Elite };
+  const [stage4Enemy,stage4Boss,stage4Vfx,mirageSky] = await Promise.all([Assets.load<Texture>(STAGE4_ART_URLS.enemy),Assets.load<Texture>(STAGE4_ART_URLS.boss),Assets.load<Texture>(STAGE4_ART_URLS.vfx),Assets.load<Texture>(STAGE4_ART_URLS.sky)]);
+  const sources = { stage4Enemy,stage4Boss,stage4Vfx, stage3Enemy,stage3Boss,stage3Vfx,stage3Emissive, ultimateVfx,rankedVfx,rankedProjectiles, equipmentIcons,equipmentVfx,astraVfx,astraAircraft,astraEffects,aircraft, fortress, vfx, ammo, basicAmmo, healingCross, stage2Enemy, stage2Vfx, stage2Elite };
   const frames = new Map<AtlasFrame, Texture>();
   const texture = (definition: AtlasFrame) => {
     const cached = frames.get(definition);
@@ -87,7 +89,7 @@ export async function loadAirCombatAssets() {
   texture(TEMPEST_WEAKPOINT_ART);
   Object.values(STAGE3_ENEMY_ART).forEach(texture);
   Object.values(STAGE3_EMISSIVE_ART).forEach(texture);
-  STORMBREAKER_BOSS_ART.forEach(texture);
-  return { texture, magneticStorm, stormbreakerSky, engineFlame, phantomBeam, effect: (key: VisualKey) => key === "bigbang_missile" ? bigbang : texture(VFX_VISUALS[key]), destroy: () => { frames.forEach(t => t.destroy(false)); frames.clear(); } };
+  STORMBREAKER_BOSS_ART.forEach(texture); PARALLAX_BOSS_ART.forEach(texture); texture(MIRAGE_HELPER_ART); Object.values(STAGE4_VFX_ART).forEach(texture);
+  return { texture, mirageSky, magneticStorm, stormbreakerSky, engineFlame, phantomBeam, effect: (key: VisualKey) => key === "bigbang_missile" ? bigbang : texture(VFX_VISUALS[key]), destroy: () => { frames.forEach(t => t.destroy(false)); frames.clear(); } };
 }
 export type AirCombatAssets = Awaited<ReturnType<typeof loadAirCombatAssets>>;
