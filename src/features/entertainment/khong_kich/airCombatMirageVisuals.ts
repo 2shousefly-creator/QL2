@@ -1,47 +1,15 @@
 import type { CombatWorld } from "./airCombatRuntime";
 import type { AtlasFrame } from "./pixi/airCombatPixiTypes";
-import { AIRCRAFT_VISUALS } from "./pixi/AirCombatPixiAssets";
-import { STAGE4_VFX_ART as FX, STAGE4_ENEMY_ART, PARALLAX_BOSS_ART, MIRAGE_HELPER_ART } from "./airCombatStage4Art";
-import { GAMEPLAY_SAFE_RECT as R } from "./airCombatConfig";
-import { playerAirframeScale } from "./airCombatReleaseState";
-import { paintRankSkills, rankProjectileVisual, type RankVisualKey } from "./airCombatRankArt";
-import { paintUltimates, ultimateProjectileVisual, type UltimateVisualKey } from "./airCombatUltimateArt";
-import { paintAstra, type AstraVisualKey } from "./airCombatAstraArt";
-import { paintEquipment } from "./airCombatEquipmentArt";
-import { paintTacticalCores, type TacticalPainter } from "./airCombatTacticalVisuals";
-import type { MirageVisualKey } from "./airCombatStage4Art";
-import { equipmentUntargetable } from "./airCombatEquipmentStats";
-
-// Explicit presentation adapters: preserve authoritative skill geometry/timing,
-// replace every newly introduced opponent effect with a painted raster frame.
-const rankArt: Record<RankVisualKey, MirageVisualKey> = {
-  rankDestructiveBand:"realityWall",rankDisintegrate:"illusionDissolve",rankLock:"veilMarkerReal",rankLockPips:"realCorePulse",
-  rankMicroImpact:"impact",rankAnchor:"lockOrb",rankAnchorRings:"zeroTruthAura",rankCompression:"distortion",rankImplosion:"mirageBreak",
-  rankCrystal:"lockOrb",rankConvergence:"impact",rankSignalBand:"realityWall",rankRelay:"realCorePulse",rankGlitch:"distortion",
-  rankNoise:"smoke",rankDebris:"impact",rankCrystalCharge:"echoRailCharge",rankInterferenceMark:"skillLock",
-  rankMicroMissile:"parallaxBarrage",rankMicroTrail:"exhaust",rankTwinShot:"parallaxNeedle",rankMiniLance:"echoRailShot",
-};
-const ultimateArt: Record<UltimateVisualKey, MirageVisualKey> = {
-  ultimateViperMissile:"parallaxBarrage",ultimateViperExhaust:"exhaust",ultimateViperLaunch:"impact",ultimateViperIntercept:"impact",
-  ultimateViperImpact:"explosion",ultimateViperBurn:"smoke",ultimateViperData:"realCorePulse",ultimateTitanShell:"parallaxBarrage",
-  ultimateTitanTrail:"exhaust",ultimateTitanMuzzle:"impact",ultimateTitanImpact:"explosion",ultimateHawk:"lockOrb",
-  ultimateHawkGate:"mirageSpawn",ultimateHawkDock:"mirageFade",ultimateHawkEngine:"exhaust",ultimateHawkBolt:"parallaxNeedle",
-  ultimateHawkRage:"zeroTruthAura",ultimateHawkSync:"veilMarkerReal",ultimateMeteor:"parallaxBarrage",ultimateMeteorTrail:"exhaust",
-  ultimateMeteorTarget:"veilMarkerReal",ultimateMeteorImpact:"explosion",ultimateDoom:"lockOrb",ultimateDoomTarget:"falseFutureMarkerReal",
-  ultimateDoomImpact:"bossFracture",ultimateInterferenceBand:"realityWall",ultimateDisintegrate:"illusionDissolve",
-};
-const astraArt: Record<AstraVisualKey, MirageVisualKey> = {
-  astra_guard:"shieldPanel",astra_spearBeam:"echoRailShot",astra_spearTip:"parallaxNeedle",astra_meteor:"parallaxBarrage",
-  astra_meteor1:"parallaxBarrage",astra_meteor2:"parallaxBarrage",astra_meteor3:"parallaxBarrage",astra_reticle:"veilMarkerReal",
-  astra_segments:"realCorePulse",astra_scorch:"smoke",astra_flame:"explosion",astra_flame1:"explosion",astra_corona:"zeroTruthAura",
-  astra_trail:"exhaust",astra_debris:"impact",astra_flash:"realCorePulse",astra_explosion0:"explosion",astra_explosion1:"explosion",
-  astra_explosion2:"explosion",astra_fire:"exhaust",astra_smoke:"smoke",astra_sparks:"impact",astra_shockwave:"bossFracture",
-};
+import { STAGE4_VFX_ART as FX, STAGE4_ENEMY_ART, PARALLAX_BOSS_ART, MIRAGE_HELPER_ART, STAGE4_EXPLOSION_FRAMES, STAGE4_ENEMY_EXPLOSION_SCALE } from "./airCombatStage4Art";
 
 export type MiragePainter = (frame: AtlasFrame, x: number, y: number, width: number, height: number,
   rotation: number, alpha: number, tint?: number, anchorX?: number) => void;
-const color = (hex: string) => Number.parseInt(hex.replace("#", ""), 16);
-const mirrorPoint = (x: number, y: number) => ({ x: R.left + R.right - x, y: R.top + R.bottom - y });
+function paintNativeExplosion(draw: MiragePainter, x: number, y: number, size: number, phase: number, rotation = 0) {
+  const t = Math.max(0, Math.min(1, phase));
+  const frame = STAGE4_EXPLOSION_FRAMES[Math.min(3, Math.floor(t * 4))];
+  const diameter = size * STAGE4_ENEMY_EXPLOSION_SCALE;
+  draw(frame, x, y, diameter, diameter, rotation, (1 - t) * .95);
+}
 /** Both production renderers use the same raster-only visual description. */
 export function paintMirage(w: CombatWorld, draw: MiragePainter, reduced: boolean) {
   const s = w.mirage; if (!s) return;
@@ -52,7 +20,9 @@ export function paintMirage(w: CombatWorld, draw: MiragePainter, reduced: boolea
     const height = a.end ? Math.hypot(a.end.x - a.start.x, a.end.y - a.start.y) : width;
     const x = a.end ? (a.end.x + a.start.x) / 2 : a.start.x, y = a.end ? (a.end.y + a.start.y) / 2 : a.start.y;
     const rotation = a.end ? Math.atan2(a.end.y - a.start.y, a.end.x - a.start.x) - Math.PI / 2 : 0;
-    draw(FX[key], x, y, width, height, rotation, active ? .95 : .65);
+    if (active && a.real && !a.end && a.active === "impact")
+      paintNativeExplosion(draw, x, y, width, (w.elapsed - a.hitAt) / Math.max(.001, a.until - a.hitAt));
+    else draw(FX[key], x, y, width, height, rotation, active ? .95 : .65);
     // The stable real white core survives reduced motion and every pulse phase.
     const pulse = a.real ? 1.2 - Math.min(1, phase) * .3 : .8 + Math.min(1, phase) * .4;
     draw(FX[a.real ? "realCorePulse" : "fakeCorePulse"], x, y, 17 * pulse, 17 * pulse, 0, .95);
@@ -86,58 +56,10 @@ export function paintMirage(w: CombatWorld, draw: MiragePainter, reduced: boolea
   for (const p of w.projectiles) if (p.mirageVisual) draw(FX[p.mirageVisual], p.x, p.y, p.radius * 4, p.radius * 7, Math.atan2(p.vy, p.vx) + Math.PI / 2, .95);
   for (const v of s.visuals) {
     const t = Math.max(0, Math.min(1, (w.elapsed - v.at) / v.duration));
-    draw(FX[v.key], v.x, v.y, v.size, v.size, v.rotation, 1 - t);
+    if (v.key === "explosion") paintNativeExplosion(draw, v.x, v.y, v.size, t, v.rotation);
+    else draw(FX[v.key], v.x, v.y, v.size, v.size, v.rotation, 1 - t);
   }
-  const mirror = s.mirror;
-  if (mirror) {
-    const actor = mirror.context.world, state = mirror.state, visual = AIRCRAFT_VISUALS[state.aircraftId];
-    const p = mirrorPoint(actor.playerX, actor.playerY), size = visual.size * playerAirframeScale(state);
-    const ship = (x: number, y: number, alpha: number) => draw(visual.neutral, x, y, size * visual.artwork.neutral.scaleX, size, Math.PI, alpha, 0xffffff, visual.artwork.neutral.anchorX);
-    if (!reduced && Math.hypot(mirror.ai.vx, mirror.ai.vy) > 100) ship(p.x - mirror.ai.vx * .035, p.y - mirror.ai.vy * .035, .18);
-    const invisible=(state.activeEffects.invisibility??0)>0||equipmentUntargetable(state);
-    ship(p.x, p.y, invisible?.1:1);
-    draw(FX.exhaust, p.x, p.y - size * .33, 12, 27, Math.PI, invisible?.14:.85, visual.tint);
-    if (state.status.stunnedUntil > state.coreState.time) draw(FX.stun, p.x, p.y - 20, 24, 24, 0, 1);
-    for (const bullet of actor.projectiles) {
-      if (bullet.owner === "enemy" || rankProjectileVisual(bullet) || ultimateProjectileVisual(bullet)) continue;
-      const at = mirrorPoint(bullet.x, bullet.y);
-      draw(FX[bullet.projectileKind === "bullet" ? "parallaxNeedle" : "parallaxBarrage"], at.x, at.y,
-        bullet.radius * 4, bullet.radius * 7, Math.atan2(-bullet.vy, -bullet.vx) + Math.PI / 2, 1, color(bullet.color));
-    }
-    for (const a of actor.warnings) {
-      const at = mirrorPoint(a.x, a.y);
-      draw(FX.veilMarkerReal, at.x, at.y, a.radius * 2, a.radius * 2, 0, .8, visual.tint);
-    }
-    for (const v of actor.visualEvents) if (v.kind !== "damage_number") {
-      const at = mirrorPoint(v.x, v.y);
-      draw(FX[v.kind === "explosion" || v.kind === "bomb" ? "explosion" : v.kind === "player_hit" ? "mirrorAircraftHit" : "impact"], at.x, at.y, v.size, v.size, 0, .65 * Math.max(0, 1 - (actor.elapsed - (v.at ?? actor.elapsed))), visual.tint);
-    }
-    for (const d of actor.decoys) if (d.active) { const at = mirrorPoint(d.x, d.y); ship(at.x, at.y, .4); }
-    if (actor.laserCharge > 0) draw(FX.echoRailCharge, p.x, p.y + 18, 42, 42, Math.PI, .9, visual.tint);
-    else if (actor.laserRemaining > 0) draw(FX.echoRailShot, p.x, (p.y + R.bottom) / 2, 32, R.bottom - p.y, 0, .85, visual.tint);
-    for (const [id, remaining] of Object.entries(state.activeEffects)) if ((remaining ?? 0) > 0) {
-      const defensive = ["armor_shield", "orbit_reversal", "invisibility"].includes(id);
-      draw(FX[defensive ? "shieldPanel" : "distortion"], p.x, p.y, size * 1.6, size * 1.6, w.elapsed * (reduced ? 0 : .5), .5, visual.tint);
-    }
-    const effect = (key: MirageVisualKey, x: number, y: number, width: number, height: number, rotation: number, alpha: number, tint = visual.tint) => {
-      const at = mirrorPoint(x, y); draw(FX[key], at.x, at.y, width, height, rotation + Math.PI, alpha, tint);
-    };
-    const painter: TacticalPainter = {
-      circle:(x,y,r,tint,alpha,fill)=>effect(fill ? "realCorePulse" : "zeroTruthAura",x,y,r*2,r*2,0,alpha,tint),
-      line:(ax,ay,bx,by,tint,alpha,width)=>effect("echoRailShot",(ax+bx)/2,(ay+by)/2,width*2,Math.hypot(bx-ax,by-ay),Math.atan2(by-ay,bx-ax)-Math.PI/2,alpha,tint),
-    };
-    paintRankSkills(actor,(_id,key,x,y,width,height,rotation,alpha)=>effect(rankArt[key],x,y,width,height,rotation,alpha),reduced);
-    paintUltimates(actor,(_id,key,x,y,width,height,rotation,alpha)=>{
-      if(key==="ultimateHawk") { const at=mirrorPoint(x,y);draw(MIRAGE_HELPER_ART,at.x,at.y,width,height,rotation+Math.PI,alpha,visual.tint); }
-      else effect(ultimateArt[key],x,y,width,height,rotation,alpha);
-    },reduced);
-    paintAstra(actor,{...painter,impactFallback:true,sprite:(_id,key,x,y,width,height,rotation,alpha)=>effect(astraArt[key],x,y,width,height,rotation,alpha)},reduced);
-    paintTacticalCores(actor,painter,reduced);
-    paintEquipment(actor,(_id,frame,x,y,width,height,rotation,alpha)=>{
-      const family=Math.round(frame.rect[1]*40)+1;
-      effect([2,3,4,17,18,21,39].includes(family)?"shieldPanel":[9,13,40].includes(family)?"echoRailShot":"distortion",x,y,width,height,rotation,alpha);
-    },reduced,painter.line);
-  }
+  // The Mirror is drawn by the ordinary player renderer in a rotated scene.
   const status = w.aircraft.status, time = w.aircraft.coreState.time;
   if (status.stunnedUntil > time) draw(FX.stun, w.playerX, w.playerY - 22, 26, 26, 0, .9);
   if (status.skillLockedUntil > time) draw(FX.skillLock, w.playerX, w.playerY, 55, 55, 0, .45);

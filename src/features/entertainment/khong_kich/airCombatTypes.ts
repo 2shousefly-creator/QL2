@@ -311,6 +311,10 @@ export interface AirCombatProfile {
   xpRewardedToday: number;
 }
 
+export interface CombatAnnouncement {
+  serial: number; text: string; durationMs: number; expiresAtMs: number;
+}
+
 export interface AirCombatHudSnapshot {
   dps: number;
   stats: EffectiveAircraftStats;
@@ -333,6 +337,7 @@ export interface AirCombatHudSnapshot {
   cooldowns: Partial<Record<SkillId, number>>;
   droneActive: boolean;
   latestMessage: string | null;
+  announcement: CombatAnnouncement;
 }
 
 /** Run-local event state; no persistent profile/schema changes. Timers use combat time. */

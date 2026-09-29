@@ -1,3 +1,4 @@
+import { mirrorPoint, mirrorVector } from "./airCombatMirrorTransform";
 import { createMirageState, initializeMirageEnemy, updateMirageEnemy, updateMirageProjectile, updateMirage, resetMirage, resolveMirageContacts, mirageEnemyDestroyed, mirageShieldBlocks, mirageFx, type MirageWorldState, type MirageEnemyState } from "./airCombatMirage";
 import type { MirageVisualKey } from "./airCombatStage4Art";
 import { createMirrorState, createMirrorAI, syncMirrorBuild, type MirrorCombatant } from "./airCombatMirrorCombatant";
@@ -39,7 +40,7 @@ import { BASIC_AMMO_KEYS } from "./airCombatAmmo";
 import type { AmmoVisualKey } from "./airCombatAmmo";
 import { getMissileVisual, isImmediateMissile, missileRenderRotation } from "./airCombatAmmo";
 import { clearMissilePose } from "./airCombatMissilePresentation";
-import { applyPlayerStatus, addStatusMark, playerStunned, playerSkillLocked } from "./airCombatStatus";
+import { clearAircraftNegativeStatuses, applyPlayerStatus, addStatusMark, playerStunned, playerSkillLocked } from "./airCombatStatus";
 import type { AttackMetadata, AttackTag, StatusPayload } from "./airCombatStatus";
 import { bossMinCenterY } from "./airCombatHudLayout";
 import { BOSS_DAMAGE_MULTIPLIER, getBossTuning, SONIC_RING_SPEED, SONIC_RING_THICKNESS, SONIC_ACTIVE_SECONDS, LANE_ACTIVE_SECONDS } from "./airCombatBoss";
@@ -50,7 +51,7 @@ import type { CoreContext, CoreTarget, DamageSource } from "./airCombatCoreEffec
 import { calculateDamage, endAircraftSkill, healAircraft } from "./airCombatAircraft";
 import { AIR_COMBAT_WORLD, ENEMY_CONFIGS, GAMEPLAY_SAFE_RECT, SKILL_CONFIGS, } from "./airCombatConfig";
 import { applyCore, applyDamageToAircraft, resolvePlayerDamage, calculateRunRank, canAcquirePlayerTarget, castSkill, clampCircleToGameplayRect, createAircraftCombatState, gainCombatXp, generateCoreChoices, getComboMultiplier, getEffectiveAircraftStats, getSkillRuntimeValues, getTargetPriority, requiredCombatXp, resolveBasicProjectileMultipliers, shouldAutoFire, tickAircraftState, } from "./airCombatEngine";
-import { AirCombatHudSnapshot, AirCombatRunSummary, AircraftCombatState, AircraftId, CoreCard, EnemyType, SkillCastResult, SkillId, } from "./airCombatTypes";
+import { CombatAnnouncement, AirCombatHudSnapshot, AirCombatRunSummary, AircraftCombatState, AircraftId, CoreCard, EnemyType, SkillCastResult, SkillId, } from "./airCombatTypes";
 export interface EnemyEntity {
     /** Target adapter only. The aircraft owns HP, Skills, Core/Equipment and AI. */
     aircraftTarget?: { world: CombatWorld; rotated: boolean };
@@ -143,9 +144,6 @@ export interface EnemyEntity {
     }[];
 }
 
-const mirrorPoint = (x: number, y: number) => ({ x: GAMEPLAY_SAFE_RECT.left + GAMEPLAY_SAFE_RECT.right - x,
-    y: GAMEPLAY_SAFE_RECT.top + GAMEPLAY_SAFE_RECT.bottom - y });
-
 /** A target view adapts the existing target resolver; it never owns aircraft HP,
  * damage formulas, Skills or rewards. Enemy-only hack/kill effects have no PvP
  * meaning and are deliberately disabled instead of granting either side a buff. */
@@ -158,9 +156,9 @@ function aircraftTargetView(host: CombatWorld, actor: CombatWorld): EnemyEntity 
     const stats = () => getEffectiveAircraftStats(actor.aircraft);
     Object.defineProperties(adapter, {
         x: { configurable: true, get: () => mirrorPoint(actor.playerX, actor.playerY).x,
-            set: (value: number) => { actor.playerX = GAMEPLAY_SAFE_RECT.left + GAMEPLAY_SAFE_RECT.right - value; } },
+            set: (value: number) => { actor.playerX = mirrorPoint(value, 0).x; } },
         y: { configurable: true, get: () => mirrorPoint(actor.playerX, actor.playerY).y,
-            set: (value: number) => { actor.playerY = GAMEPLAY_SAFE_RECT.top + GAMEPLAY_SAFE_RECT.bottom - value; } },
+            set: (value: number) => { actor.playerY = mirrorPoint(0, value).y; } },
         hp: { configurable: true, get: () => actor.aircraft.currentHp,
             set: (value: number) => { const amount = actor.aircraft.currentHp - value;
                 if (amount > 0) receiveAircraftTargetDamage(adapter, amount, "area_hazard"); } },
@@ -199,6 +197,7 @@ function receiveAircraftTargetDamage(target: EnemyEntity, amount: number, delive
 }
 
 function spawnMirror(world: CombatWorld): MirrorCombatant {
+    prepareMirrorDuel(world);
     const context = createCombatWorld(world.aircraft.aircraftId, createCombatRandom((world.nextId * 2654435761) >>> 0), 4);
     context.mirage = undefined; context.mirrorContext = true; context.initialCoreQueued = true;
     context.spawnQueue = []; context.waveState = "combat"; context.waveIndex = 7;
@@ -208,21 +207,10 @@ function spawnMirror(world: CombatWorld): MirrorCombatant {
     context.playerX = spawn.x; context.playerY = spawn.y;
     const target = aircraftTargetView(world, context), playerTarget = aircraftTargetView(context, world);
     const mirror: MirrorCombatant = { state: context.aircraft, context: { world: context, allegiance: "hostile", facing: 180 },
-        ai: createMirrorAI(target.x, target.y), target, playerTarget, buildSignature: "", cooldownLeases: {}, incoming: new Map(), outgoing: new Map() };
+        ai: createMirrorAI(target.x, target.y), target, playerTarget, buildSignature: "", incoming: new Map(), outgoing: new Map() };
     syncMirrorBuild(world.aircraft, mirror, true);
     mirror.ai.lastPlayer={x:world.playerX,y:world.playerY};
     mirror.ai.lastHp=mirror.state.currentHp;mirror.ai.lastPlayerHp=world.aircraft.currentHp;
-    // Only snapshot the remaining deferred lease, never the player's live effects.
-    for (const id of Object.keys(mirror.cooldownLeases) as SkillId[]) {
-        let remaining = world.aircraft.activeEffects[id] ?? 0;
-        if (id === "decoy") remaining = Math.max(0, ...world.decoys.filter(d => !d.clone).map(d => d.remaining + (d.active ? 0 : Math.max(0, .45 - d.flightAge))), world.decoyVolleys > 0 ? world.decoyVolleyCd + (world.decoyVolleys - 1) * B.decoyVolleyInterval + .45 + getSkillRuntimeValues(world.aircraft, id).duration : 0);
-        if (id === "focus_laser") remaining = world.laserCharge + world.laserRemaining;
-        if (id === "missile_swarm") remaining = Math.max(0, ...world.projectiles.filter(p => p.salvoId !== undefined && p.missileState !== "powered").map(p => Math.max(0, B.swarmHover - p.missileAge)));
-        if (id === "heavy_bomb" || id === "stellar_lance") remaining = Math.max(remaining, 0, ...world.projectiles.filter(p => p.skillId === id && !p.procFree).map(p => p.lifetime));
-        // A toggle has no active effect on the clean actor, so its lease ends now.
-        if (id === "escort_drone") remaining = 0;
-        mirror.cooldownLeases[id] = context.aircraft.coreState.time + remaining;
-    }
     mirageFx(world, "mirrorAircraftSpawn", target.x, target.y, 85, .8);
     return mirror;
 }
@@ -276,13 +264,10 @@ function updateMirrorEncounter(world: CombatWorld, dt: number): void {
             else actor.projectiles[index].mirrorSlow=rankProjectileSpeed(world,view,rankHooks)*slowExpansionProjectile(world,view);
         }
         world.projectiles=world.projectiles.filter(p=>!p.mirrorBorrowed);
-        for (const id of Object.keys(mirror.cooldownLeases) as SkillId[]) if (mirror.cooldownLeases[id]! <= actor.aircraft.coreState.time) {
-            startDeferredSkillCooldown(actor.aircraft, id); delete mirror.cooldownLeases[id];
-        }
         const opponent = mirrorPoint(world.playerX, world.playerY);
         mirror.playerTarget.x = opponent.x; mirror.playerTarget.y = opponent.y;
         const current = mirrorPoint(actor.playerX, actor.playerY);
-        const decision = updateMirrorAI(world, mirror.ai, mirror.state, current, dt);
+        const decision = updateMirrorAI(world, mirror.ai, mirror.state, current, dt, actor);
         if (!playerStunned(mirror.state) && actor.dashRemaining <= 0) {
             const moved = mirrorPoint(decision.x, decision.y);
             actor.moveDirectionX = -mirror.ai.vx / Math.max(1, Math.hypot(mirror.ai.vx, mirror.ai.vy));
@@ -301,24 +286,15 @@ function updateMirrorEncounter(world: CombatWorld, dt: number): void {
             let view = mirror.incoming.get(p.id);
             if (!view) { view = { ...p, id: actor.nextId++, hitIds: [], mirrorBorrowed: true }; mirror.incoming.set(p.id, view); }
             const position = mirrorPoint(p.x,p.y), previous = mirrorPoint(p.previousX,p.previousY);
-            Object.assign(view,{...position,previousX:previous.x,previousY:previous.y,vx:-p.vx,vy:-p.vy,owner:"enemy",allegiance:"hostile",targetId:PLAYER_TARGET_ID,
+            Object.assign(view,{...position,previousX:previous.x,previousY:previous.y,vx:mirrorVector(p.vx,p.vy).x,vy:mirrorVector(p.vx,p.vy).y,owner:"enemy",allegiance:"hostile",targetId:PLAYER_TARGET_ID,
                 sourceEnemyId:mirror.playerTarget.id,lifetime:p.lifetime,rawDamage:p.rawDamage,homing:p.homing,expansionSlowUntil:p.expansionSlowUntil});
             actor.projectiles.push(view);
         }
         if (decision.skill && castWorldSkill(actor, decision.skill).cast) {
             mirror.ai.lastCast = decision.skill;
-            mirageFx(world,"distortion",current.x,current.y,68,.3);
+            mirror.ai.lastCastAt = world.elapsed;
         }
-        // A clean actor has no cloned active objects that can own these leases.
-        // Hide their settlement tokens from ordinary empty-object cleanup only
-        // during this tick; the AI still sees the copied deferred cooldown gate.
-        const leased: Partial<Record<SkillId,number>> = {};
-        for(const id of Object.keys(mirror.cooldownLeases) as SkillId[]) {
-            leased[id]=actor.aircraft.coreState.deferredCooldowns[id];
-            delete actor.aircraft.coreState.deferredCooldowns[id];
-        }
-        try { tickMirrorActor(actor, dt); }
-        finally { Object.assign(actor.aircraft.coreState.deferredCooldowns, leased); }
+        tickMirrorActor(actor, dt);
         const retained = new Set(actor.projectiles);
         for (const original of visible) {
             const view=mirror.incoming.get(original.id)!;
@@ -336,7 +312,7 @@ function updateMirrorEncounter(world: CombatWorld, dt: number): void {
             let view=mirror.outgoing.get(p.id);
             if(!view){view={...p,id:world.nextId++,hitIds:[],mirrorBorrowed:true};mirror.outgoing.set(p.id,view);}
             const position=mirrorPoint(p.x,p.y),previous=mirrorPoint(p.previousX,p.previousY);
-            Object.assign(view,{...position,previousX:previous.x,previousY:previous.y,vx:-p.vx,vy:-p.vy,owner:"enemy",allegiance:"hostile",targetId:PLAYER_TARGET_ID,sourceEnemyId:mirror.target.id,lifetime:p.lifetime,rawDamage:p.rawDamage,homing:p.homing});
+            Object.assign(view,{...position,previousX:previous.x,previousY:previous.y,vx:mirrorVector(p.vx,p.vy).x,vy:mirrorVector(p.vx,p.vy).y,owner:"enemy",allegiance:"hostile",targetId:PLAYER_TARGET_ID,sourceEnemyId:mirror.target.id,lifetime:p.lifetime,rawDamage:p.rawDamage,homing:p.homing});
             if(!world.projectiles.includes(view))world.projectiles.push(view);
         }
         const p = mirrorPoint(actor.playerX, actor.playerY); mirror.target.x = p.x; mirror.target.y = p.y;
@@ -381,7 +357,7 @@ function interceptAircraftDefenses(attacker:CombatWorld):void {
         if(!view){view={...p,id:defender.nextId++,hitIds:[],mirrorBorrowed:true};mapping.set(p.id,view);}
         const id=view.id,slow=view.expansionSlowUntil,position=mirrorPoint(p.x,p.y),previous=mirrorPoint(p.previousX,p.previousY);
         Object.assign(view,p,{id,hitIds:[],mirrorBorrowed:true,...position,previousX:previous.x,previousY:previous.y,
-            vx:-p.vx,vy:-p.vy,owner:"enemy",allegiance:"hostile",sourceEnemyId:target.id,targetId:PLAYER_TARGET_ID,
+            vx:mirrorVector(p.vx,p.vy).x,vy:mirrorVector(p.vx,p.vy).y,owner:"enemy",allegiance:"hostile",sourceEnemyId:target.id,targetId:PLAYER_TARGET_ID,
             expansionSlowUntil:Math.max(slow??0,p.expansionSlowUntil??0)});
         if(!defender.projectiles.includes(view))defender.projectiles.push(view);
         views.push(view);
@@ -731,6 +707,7 @@ export interface CombatWorld {
     currentCoreChoices: CoreCard[] | null;
     latestMessage: string | null;
     messageUntil: number;
+    announcement: CombatAnnouncement;
     ended: boolean;
     pools: RuntimePools;
     random: () => number;
@@ -756,6 +733,7 @@ function circleHit(ax: number, ay: number, ar: number, bx: number, by: number, b
 function setMessage(world: CombatWorld, message: string, seconds = 1.6): void {
     world.latestMessage = message;
     world.messageUntil = world.elapsed + seconds;
+    world.announcement = { serial: world.announcement.serial + 1, text: message, durationMs: seconds * 1000, expiresAtMs: performance.now() + seconds * 1000 };
 }
 function createCombatRandom(seed = Date.now() >>> 0): () => number {
     return () => { seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0; return seed / 0x100000000; };
@@ -828,6 +806,7 @@ export function createCombatWorld(aircraftId: AircraftId, random: () => number =
         currentCoreChoices: null,
         latestMessage: "ĐỢT 1",
         messageUntil: 1.5,
+        announcement: { serial: 1, text: "ĐỢT 1", durationMs: 1500, expiresAtMs: performance.now() + 1500 },
         ended: false,
         pools: { enemies: [], projectiles: [], particles: [], decoys: [] },
         random,
@@ -1848,6 +1827,7 @@ export function movePlayerByDelta(world: CombatWorld, dx: number, dy: number): v
             }
             if (p.owner === "enemy" && p.allegiance!=="friendly_hacked" && segmentVsAircraft(p.x,p.y,p.x,p.y,p.radius,getPlayerHitbox(world),projectileContact).hit) {
                 if(p.projectileKind==="boss_missile")emitVisual(world,{kind:"missile_impact",x:p.x,y:p.y,size:42,missileFamily:"boss"});
+                if (p.mirageVisual && !p.mirrorBorrowed) mirageFx(world, "explosion", p.x, p.y, 24, .4);
                 p.playerContact=true;
                 if (!p.stormbreakerGrace || (p.stormbreakerGrace.get(-1) ?? -Infinity) + .3 <= world.elapsed) {
                     p.stormbreakerGrace?.set(-1, world.elapsed);
@@ -2027,11 +2007,55 @@ function clearHostileObjects(world: CombatWorld): void {
     for (let i = world.warnings.length - 1; i >= 0; i--)
         if (world.warnings[i].owner === "enemy") world.warnings.splice(i, 1);
 }
+/** Cancel through the normal lifecycle, then remove every Wave-7 damage owner.
+ * Called at clear and again immediately before snapshot (countdown permits casts). */
+function clearDuelTransients(world: CombatWorld): void {
+    stopAllSkills(world);
+    clearHostileObjects(world);
+    while (world.projectiles.length) recycleProjectile(world, world.projectiles.length - 1);
+    while (world.particles.length) recycleParticle(world, world.particles.length - 1);
+    world.warnings.length = world.effectQueue.length = world.visualEvents.length = 0;
+    world.rankRuntime = undefined;
+    // Includes released Orbit bullets and pending Starfall/meteor followups.
+    if (world.astra) world.astra = { metrics: world.astra.metrics, flashes: [], burns: [], impacts: [] };
+    world.tactical = undefined;
+    world.skillCores = createSkillCoreRuntime();
+    world.droneTargetId = null;
+    world.droneHp = world.droneMaxHp = world.droneInvulnerability = 0;
+    world.playerInvulnerability = world.playerDamageGraceUntil = 0;
+    world.playerFireCooldown = world.droneFireCooldown = world.laserTickCooldown = world.decoyVolleyCd = 0;
+    const equipment = equipmentState(world.aircraft);
+    equipment.orb = undefined; equipment.fireCast = undefined;
+    equipment.meteors.length = equipment.visuals.length = equipment.endedSkills.length = 0;
+    equipment.marks = {}; equipment.effects = {}; equipment.presentationGate = {};
+}
+function prepareMirrorDuel(world: CombatWorld): void {
+    clearDuelTransients(world);
+    const state = world.aircraft, c = state.coreState;
+    // Acquisition progress, consumed one-shot Cores and permanent build survive.
+    const permanent = ["core_046", "core_047", "core_048", "crimsonCrit"];
+    c.stacks = Object.fromEntries(permanent.filter(key => key in c.stacks).map(key => [key, c.stacks[key]]));
+    c.timers = {}; c.shields = {}; c.emergencyRepair = undefined;
+    c.killTimes = []; c.lastKill = -Infinity; c.lastDamage = c.lastMove = c.time;
+    const expansion = expansionState(state);
+    c.expansion = { sequence: [], casts: {}, liveCasts: [], hpLoss: [], debt: [], charges: [], returns: [], endedShields: [],
+        primarySkill: expansion.primarySkill, primaryPending: expansion.primaryPending };
+    const release = releaseState(state);
+    Object.assign(release, { heat: 0, overheatUntil: 0, ghosts: [], ghostReady: hasCore(state,220) ? c.time + 10 : Infinity,
+        mark: undefined, markReady: hasCore(state,221) ? c.time + 16 : Infinity, hadActiveSkill: false, lastSkillEnd: c.time,
+        aimShots: 0, aimBonusReady: false, misses: 0, aimReady: false, mode: undefined, nextMode: hasCore(state,222) ? c.time + 60 : Infinity });
+    clearAircraftNegativeStatuses(state);
+    state.cooldowns = {}; c.skillCooldownDurations = {}; c.deferredCooldowns = {};
+    const stats = getEffectiveAircraftStats(state);
+    c.syncedMaxHp = stats.maxHp;
+    state.currentHp = stats.maxHp; state.currentResource = stats.maxResource;
+}
 function enterCountdownIfClear(world: CombatWorld): void {
     if (world.ended || world.waveState !== "combat" || world.spawnQueue.length || world.enemies.length)
         return;
     if (world.mirage && world.waveIndex === 7) return;
-    if (!(world.mirage && world.waveIndex === 6)) clearHostileObjects(world);
+    if (world.mirage && world.waveIndex === 6) clearDuelTransients(world);
+    else clearHostileObjects(world);
     world.waveState = "countdown";
     world.waveTimer = 3;
     world.latestMessage = null;
@@ -3752,6 +3776,7 @@ function updateProjectileCollisions(world: CombatWorld): void {
             if(p.mirrorBorrowed)continue;
             if (!equipmentUntargetable(world.aircraft) && segmentVsAircraft(p.previousX,p.previousY,p.x,p.y,p.radius,getPlayerHitbox(world),projectileContact).hit) {
                 if(p.projectileKind==="boss_missile")emitVisual(world,{kind:"missile_impact",x:p.x,y:p.y,size:42,missileFamily:"boss"});
+                if (p.mirageVisual && !p.mirrorBorrowed) mirageFx(world, "explosion", p.x, p.y, 24, .4);
                 p.playerContact=true;
                 if (!p.stormbreakerGrace || (p.stormbreakerGrace.get(-1) ?? -Infinity) + .3 <= world.elapsed) {
                     p.stormbreakerGrace?.set(-1, world.elapsed);
@@ -4358,6 +4383,7 @@ export function makeHudSnapshot(world: CombatWorld, paused: boolean, pauseLabel:
         cooldowns: { ...world.aircraft.cooldowns },
         droneActive: world.aircraft.droneActive,
         latestMessage: world.latestMessage,
+        announcement: world.announcement,
     };
 }
 export function summarizeCombatWorld(world: CombatWorld): AirCombatRunSummary {

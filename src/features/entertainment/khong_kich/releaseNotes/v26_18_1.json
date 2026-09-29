@@ -1,0 +1,206 @@
+{
+  "version": "26.18.1",
+  "releaseDate": "29/09/2026",
+  "title": "Hoàn Thiện Ảo Ảnh & Khả Năng Đọc Trận",
+  "displayTitle": "KHÔNG KÍCH 26.18.1 — HOÀN THIỆN ẢO ẢNH & KHẢ NĂNG ĐỌC TRẬN",
+  "summary": "**26.18.1** hoàn thiện những điểm còn thiếu sau khi MIRAGE FRACTURE ra mắt. Trận đấu với Chiến Cơ Ảo Ảnh giờ bắt đầu trong điều kiện đầy đủ hơn, đồng thời toàn bộ hình ảnh chiến đấu của Ảo Ảnh được đồng bộ trực tiếp với chiến cơ người chơi.\\n\\nBản cập nhật cũng tăng khả năng sống sót đầu trận của cả bốn Chiến Cơ, làm nền Màn 4 dễ đọc hơn, tăng độ rõ của VFX nổ từ quái vật và khắc phục các lỗi giao diện khiến thông báo hoặc nền HUB hiển thị không đúng.",
+  "sections": [
+    {
+      "id": "s1",
+      "title": "THE OTHER SELF · CHIẾN CƠ ẢO ẢNH",
+      "icon": { "kind": "aircraft", "id": "black_eagle" },
+      "intro": [
+        {
+          "text": "Trận đấu với Chiến Cơ Ảo Ảnh được tinh chỉnh để hai phía bước vào cuộc đối đầu với cùng bộ công cụ và cùng ngôn ngữ hình ảnh chiến đấu.",
+          "format": "paragraph",
+          "changeType": "change"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s1-e1",
+          "icon": { "kind": "aircraft", "id": "black_eagle" },
+          "title": "Hình ảnh chiến đấu giống hệt người chơi",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Chiến Cơ Ảo Ảnh giờ sử dụng đúng **sprite, màu sắc, đạn thường, đạn kỹ năng, Ultimate, VFX Lõi và VFX Trang Bị** của chính chiến cơ người chơi thay vì thay chúng bằng hiệu ứng riêng của MIRAGE FRACTURE.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "Hiệu ứng Ảo Ảnh riêng chỉ còn được sử dụng cho lúc xuất hiện, tan vỡ và chuyển cảnh của trận đấu.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        },
+        {
+          "id": "s1-e2",
+          "icon": { "kind": "system", "id": "rules" },
+          "title": "Khởi đầu trận 1v1 trong trạng thái đầy đủ",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Trước khi Chiến Cơ Ảo Ảnh xuất hiện, người chơi được hồi **100% Máu + 100% Tài Nguyên**, xóa hiệu ứng bất lợi và đưa toàn bộ Kỹ Năng về trạng thái sẵn sàng.",
+              "format": "bullet",
+              "changeType": "buff"
+            },
+            {
+              "text": "Projectile, hazard và các đòn đánh còn sót lại từ Wave 7 được dọn sạch trước khi trận 1v1 bắt đầu.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        },
+        {
+          "id": "s1-e3",
+          "icon": { "kind": "system", "id": "rules" },
+          "title": "AI Ảo Ảnh ổn định hơn",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "AI được tinh chỉnh khả năng đọc projectile, chọn vị trí, ghi nhớ combo và sử dụng kỹ năng theo tình huống để di chuyển mượt và quyết định chính xác hơn mà không đọc trước hành động tương lai của người chơi.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "SỨC MẠNH CHIẾN CƠ",
+      "icon": { "kind": "system", "id": "aircraft" },
+      "intro": [
+        {
+          "text": "Máu và Giáp cơ bản của cả bốn Chiến Cơ được tăng để giai đoạn đầu trận dễ thở hơn, trong khi tốc độ tăng trưởng theo cấp vẫn được giữ nguyên.",
+          "format": "paragraph",
+          "changeType": "buff"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s2-e1",
+          "icon": { "kind": "aircraft", "id": "black_eagle" },
+          "title": "Viper",
+          "rationale": "",
+          "changes": [
+            { "text": "Máu Lv1: **1694 → 1997**.", "format": "bullet", "changeType": "buff" },
+            { "text": "Giáp Lv1: **38 → 45**.", "format": "bullet", "changeType": "buff" }
+          ]
+        },
+        {
+          "id": "s2-e2",
+          "icon": { "kind": "aircraft", "id": "breaker" },
+          "title": "Titan",
+          "rationale": "",
+          "changes": [
+            { "text": "Máu Lv1: **2067 → 2307**.", "format": "bullet", "changeType": "buff" },
+            { "text": "Giáp Lv1: **46 → 54**.", "format": "bullet", "changeType": "buff" }
+          ]
+        },
+        {
+          "id": "s2-e3",
+          "icon": { "kind": "aircraft", "id": "phantom" },
+          "title": "Phantom",
+          "rationale": "",
+          "changes": [
+            { "text": "Máu Lv1: **1839 → 2134**.", "format": "bullet", "changeType": "buff" },
+            { "text": "Giáp Lv1: **41 → 49**.", "format": "bullet", "changeType": "buff" }
+          ]
+        },
+        {
+          "id": "s2-e4",
+          "icon": { "kind": "aircraft", "id": "astra" },
+          "title": "Astra",
+          "rationale": "",
+          "changes": [
+            { "text": "Máu Lv1: **1760 → 2052**.", "format": "bullet", "changeType": "buff" },
+            { "text": "Giáp Lv1: **39 → 46**.", "format": "bullet", "changeType": "buff" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "MIRAGE FRACTURE · KHẢ NĂNG ĐỌC TRẬN",
+      "icon": { "kind": "system", "id": "stage" },
+      "intro": [
+        {
+          "text": "Hình ảnh Màn 4 được cân chỉnh lại để projectile, warning và các đòn tấn công quan trọng luôn nổi bật hơn background.",
+          "format": "paragraph",
+          "changeType": "change"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s3-e1",
+          "icon": { "kind": "system", "id": "stage" },
+          "title": "Background gọn và tối hơn",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Giảm chi tiết nhỏ, độ chói và tương phản cục bộ của nền MIRAGE FRACTURE để hạn chế mảnh gương và vùng sáng cạnh tranh với đạn đạo.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        },
+        {
+          "id": "s3-e2",
+          "icon": { "kind": "system", "id": "vfx" },
+          "title": "VFX nổ của quái rõ hơn",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Hiệu ứng nổ từ kỹ năng của quái thường, Tinh Anh và PARALLAX ZERO được làm rõ và tăng khoảng **2× kích thước hiển thị**, nhưng vùng sát thương, hitbox và hiệu ứng khống chế **không thay đổi**.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "SỬA LỖI GIAO DIỆN",
+      "icon": { "kind": "system", "id": "rules" },
+      "intro": [
+        {
+          "text": "Một số lỗi hiển thị trong trận chiến được xử lý để HUD và thông báo hoạt động ổn định hơn trên desktop lẫn mobile.",
+          "format": "paragraph",
+          "changeType": "change"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s4-e1",
+          "icon": { "kind": "system", "id": "rules" },
+          "title": "Thông báo không còn mắc kẹt",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Tên Kỹ Năng, tên Wave và các combat announcement giờ tự kết thúc theo thời gian hiển thị của giao diện, không bị giữ lại khi simulation tạm dừng.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        },
+        {
+          "id": "s4-e2",
+          "icon": { "kind": "system", "id": "rules" },
+          "title": "HUB ổn định khi rung màn hình",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Screen shake giờ chỉ tác động lên lớp chiến đấu cần rung; nền HUB và các lớp giao diện cố định không còn bị mất hoặc chớp trong lúc camera rung.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "version": "26.18.1",
+  "generator": "built-in image_gen",
+  "assets": [
+    {
+      "path": "mirage-sky.png",
+      "prompt": "Edit target: attached mirage-sky.png. Production raster background for portrait top-down bullet hell Stage 4 MIRAGE FRACTURE. Preserve dark painted cosmic fractured-mirror art direction and portrait 1024x1536 aspect. Re-author to remove roughly half the small shards; only 3–5 large mirror masses mostly at outer edges. Greatly calm center gameplay lane with very soft dark navy cloud void, low local contrast; distant fragments soft. Lower cyan/magenta saturation, remove white bright highlights/suns and tiny stars and projectile-like streaks. Edge mirrors subtly reflect distant landscapes, subdued brightness. No text, UI, actors, projectiles. Output full opaque background. Save generated image file."
+    },
+    {
+      "path": "stage4-vfx-atlas.png",
+      "prompt": "Edit target transparent game VFX atlas. Keep exact 8 columns x 6 rows grid, existing 4:3 aspect ratio and every cell location centered. Edit ONLY four cells, using zero-based indices: row 5 col 4 (index44 impact) = crisp hot blue-white core flash; row5 col5 (index45 explosion)=powerful clear round cyan-white main explosion surrounded by glass fragments with soft translucent edge; row4 col2 (index34 bossFracture)=wide fractured-glass outward shock ring/debris; row5 col2 (index42 smoke)=soft fading blue-gray smoke remnant. These form readable explosion phases in dark fantasy mirror bullet hell. Center every effect within its same cell with 10% transparent margin, no crop or spill. Preserve all other 44 cells, colors, orientation and arrangement. True transparent background; no labels, text or grid lines. Bright readable large cohesive energy explosions, not a solid rock. Save PNG.",
+      "packing": {
+        "cellSize": 181,
+        "columns": 8,
+        "rows": 6,
+        "generatedToDestinationCells": [
+          [
+            35,
+            44
+          ],
+          [
+            36,
+            45
+          ],
+          [
+            34,
+            34
+          ],
+          [
+            33,
+            42
+          ]
+        ],
+        "method": "Exact RGBA cell copy; other cells retained from original atlas"
+      }
+    }
+  ]
+}

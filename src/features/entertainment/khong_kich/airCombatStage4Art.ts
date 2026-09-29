@@ -32,3 +32,7 @@ export const STAGE4_VFX_ART = {
   shieldPanel: fx(41), smoke: fx(42), exhaust: fx(43), impact: fx(44), explosion: fx(45), distortion: fx(46), lockOrb: fx(47),
 };
 export type MirageVisualKey = keyof typeof STAGE4_VFX_ART;
+
+/** Presentation-only native Stage-4 explosion phases. No collision dimensions. */
+export const STAGE4_EXPLOSION_FRAMES = [STAGE4_VFX_ART.impact, STAGE4_VFX_ART.explosion, STAGE4_VFX_ART.bossFracture, STAGE4_VFX_ART.smoke] as const;
+export const STAGE4_ENEMY_EXPLOSION_SCALE = 2;
