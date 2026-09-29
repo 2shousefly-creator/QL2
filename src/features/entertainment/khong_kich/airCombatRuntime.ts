@@ -33,7 +33,8 @@ import type { Allegiance, DamageDelivery } from "./airCombatStatus";
 import type { HitResult, AircraftHitbox } from "./airCombatHitboxes";
 import { BASIC_AMMO_KEYS } from "./airCombatAmmo";
 import type { AmmoVisualKey } from "./airCombatAmmo";
-import { getMissileVisual, missileRenderRotation } from "./airCombatAmmo";
+import { getMissileVisual, isImmediateMissile, missileRenderRotation } from "./airCombatAmmo";
+import { clearMissilePose } from "./airCombatMissilePresentation";
 import { applyPlayerStatus, addStatusMark, playerStunned, playerSkillLocked } from "./airCombatStatus";
 import type { AttackMetadata, AttackTag, StatusPayload } from "./airCombatStatus";
 import { bossMinCenterY } from "./airCombatHudLayout";
@@ -187,6 +188,7 @@ export interface ProjectileEntity extends AttackMetadata {
     missileAge: number;
     heading: number;
     angularVelocity: number;
+    missileLaunchHeading: number | null;
     speed: number;
     cruiseSpeed: number;
     angularAcceleration: number;
@@ -442,7 +444,7 @@ const MISSILE_DEFAULTS = {
     ammoVisualKey: undefined,
     fuseStarted: false, fuseRemaining: 0,
     projectileKind: "bullet" as const, missileState: null, missileAge: 0,
-    heading: 0, angularVelocity: 0, speed: 0, cruiseSpeed: 0,
+    heading: 0, angularVelocity: 0, missileLaunchHeading: null, speed: 0, cruiseSpeed: 0,
     angularAcceleration: 0, acceleration: 0, anchorX: 0, anchorY: 0, smokeDistanceAccumulator: 0, secondarySmokeDistanceAccumulator: 0,
 };
 function circleHit(ax: number, ay: number, ar: number, bx: number, by: number, br: number): boolean {
@@ -593,6 +595,7 @@ function acquireProjectile(world: CombatWorld): ProjectileEntity {
 }
 function recycleProjectile(world: CombatWorld, index: number): void {
     const [projectile] = world.projectiles.splice(index, 1);
+    if(projectile)clearMissilePose(projectile);
     if(projectile?.astraLance && !projectile.procFree && projectile.skillId==="stellar_lance")endAircraftSkill(world.aircraft,"stellar_lance");
     if (projectile?.salvoId) world.skillCores.salvos.find(s => s.id === projectile.salvoId)?.live.delete(projectile.id);
     // Award only when the projectile is retired: it can no longer hit later.
@@ -766,6 +769,12 @@ function addProjectile(world: CombatWorld, values: Partial<ProjectileEntity> & P
             vx: 0, vy: 0,
         });
     }
+    // Predator Lock / Radar Lock keep their immediate launch and bullet collision
+    // classification, but share finite steering and presentation with other missiles.
+    if(isImmediateMissile(projectile))Object.assign(projectile,{
+        heading:Math.atan2(projectile.vy,projectile.vx),angularAcceleration:values.skillId==="predator_lock"?12:4,missileState:"powered",
+        speed:Math.hypot(projectile.vx,projectile.vy),cruiseSpeed:Math.hypot(projectile.vx,projectile.vy),
+    });
     projectile.hitIds.length = 0;
     if(projectile.allegiance==="friendly_hacked")projectile.color="#67e8f9";
     world.projectiles.push(projectile);
@@ -1905,7 +1914,7 @@ function launchBossMissile(world: CombatWorld, enemy: EnemyEntity): void {
         targetId: chooseEnemyTarget(world, true), turnRate: side<0?(world.bossPhase>=3?1.2:1.15):(world.bossPhase>=3?.7:.75), lifetime: 4.5, color: "#ff526e", sourceEnemyId: enemy.id, sourceEnemyType: "boss", attackTag: "boss_missile", majorBossAttack: true });
     if (!p) return;
     Object.assign(p, { projectileKind: "boss_missile", missileState: "loiter", heading,
-        cruiseSpeed: (side<0?tuning.missileSpeed:world.bossPhase>=3?245:225) * tuning.speedScale, speed: 0, acceleration: 220 });
+        cruiseSpeed: (side<0?tuning.missileSpeed:world.bossPhase>=3?245:225) * tuning.speedScale, speed: 0, acceleration: 220, angularAcceleration: 4 });
     state.missileIndex++;
     state.missilesPending--;
     state.missileCooldown = .26 * tuning.cadence;
@@ -2479,6 +2488,14 @@ function segmentDistance(px: number, py: number, ax: number, ay: number, bx: num
 const shortestAngle = (angle: number) => Math.atan2(Math.sin(angle), Math.cos(angle));
 const approach = (value: number, target: number, step: number) => value + Math.max(-step, Math.min(step, target - value));
 
+function steerMissileHeading(p:ProjectileEntity,desired:number,dt:number):void {
+    const error=shortestAngle(desired-p.heading);
+    const velocity=Math.max(-p.turnRate,Math.min(p.turnRate,error*4));
+    p.angularVelocity=approach(p.angularVelocity,velocity,p.angularAcceleration*dt);
+    // Keep a continuous angle through +/- PI; all comparisons use shortestAngle.
+    p.heading+=p.angularVelocity*dt;
+}
+
 function followMissileAnchor(world: CombatWorld, p: ProjectileEntity, dt: number): void {
     const heavy = p.projectileKind === "bigbang";
     const bob = Math.sin(p.missileAge * 4 + p.id * 1.7) * (heavy ? .7 : 1.8);
@@ -2524,8 +2541,13 @@ function addMissileSmoke(world: CombatWorld, p: ProjectileEntity, previousHeadin
                 if(oldest<0)break;recycleParticle(world,oldest);
             }
             const t=sample/nozzleDistance, particle=acquireParticle(world);
-            Object.assign(particle,{id:world.nextVisualId++,kind:"missile_smoke",x:ax+(bx-ax)*t,y:ay+(by-ay)*t,
-                vx:-Math.cos(p.heading)*smoke.drift+(world.visualRandom()-.5)*3,vy:-Math.sin(p.heading)*smoke.drift+(world.visualRandom()-.5)*3,
+            const heading=previousHeading+shortestAngle(p.heading-previousHeading)*t;
+            const sampleRotation=missileRenderRotation(heading),c=Math.cos(sampleRotation),s=Math.sin(sampleRotation);
+            const lateral=(world.visualRandom()-.5)*1.5,drift=p.speed*.12-smoke.drift;
+            Object.assign(particle,{id:world.nextVisualId++,kind:"missile_smoke",
+                x:p.previousX+(p.x-p.previousX)*t+nozzle.x*c-nozzle.y*s,
+                y:p.previousY+(p.y-p.previousY)*t+nozzle.x*s+nozzle.y*c,
+                vx:Math.cos(heading)*drift-Math.sin(heading)*lateral,vy:Math.sin(heading)*drift+Math.cos(heading)*lateral,
                 life:smoke.life,maxLife:smoke.life,size:smoke.size,color:smoke.color});
             world.particles.push(particle);
         }
@@ -2559,14 +2581,12 @@ function updateMissile(world: CombatWorld, p: ProjectileEntity, dt: number, spee
     const previousHeading = p.heading;
     // With no remaining target in powered flight, arc back toward the playfield.
     const desired = Math.atan2((target?.y ?? world.playerY - 100) - p.y, (target?.x ?? world.playerX) - p.x);
-    const error = shortestAngle(desired - p.heading);
-    const desiredAngularVelocity = Math.max(-p.turnRate, Math.min(p.turnRate, error * 4));
-    p.angularVelocity = approach(p.angularVelocity, desiredAngularVelocity, p.angularAcceleration * dt);
-    if(!p.bigBang || !powered)p.heading = shortestAngle(p.heading + p.angularVelocity * dt);
+    // BigBang still locks its launch aim; only the old ignition snap is eased out.
+    steerMissileHeading(p,p.bigBang&&powered?(p.missileLaunchHeading??p.heading):desired,dt);
     if (!powered) {
         if ((Math.abs(shortestAngle(desired - p.heading)) <= Math.PI / 9 && Math.abs(p.angularVelocity) <= p.turnRate * .6) || (p.skillId === "missile_swarm" && p.missileAge >= 1.85)) {
             p.missileState = "powered";
-            if (p.bigBang) { p.heading=desired;p.angularVelocity=0;p.targetId=null;p.fuseStarted = true; p.fuseRemaining = B.bombFuse; }
+            if (p.bigBang) { p.missileLaunchHeading=desired;p.targetId=null;p.fuseStarted = true; p.fuseRemaining = B.bombFuse; }
             // Anchor movement is staging, so it must not become a swept damage segment.
             p.previousX = p.x;
             p.previousY = p.y;
@@ -2613,6 +2633,12 @@ function updateHoming(world: CombatWorld, projectile: ProjectileEntity, dt: numb
             target = { x: enemy.x, y: enemy.y };
         }
     }
+    if(projectile.projectileKind==="boss_missile" || isImmediateMissile(projectile)) {
+        steerMissileHeading(projectile,target?Math.atan2(target.y-projectile.y,target.x-projectile.x):projectile.heading,dt);
+        const speed=Math.max(1,Math.hypot(projectile.vx,projectile.vy));
+        projectile.vx=Math.cos(projectile.heading)*speed;projectile.vy=Math.sin(projectile.heading)*speed;
+        return;
+    }
     if (!target)
         return;
     const desired = Math.atan2(target.y - projectile.y, target.x - projectile.x);
@@ -2639,7 +2665,6 @@ function updateBossMissile(world: CombatWorld, p: ProjectileEntity, dt: number, 
     if (p.lifetime <= 0) return false;
     const previousHeading = p.heading;
     updateHoming(world, p, dt);
-    p.heading = Math.atan2(p.vy, p.vx);
     p.speed = approach(p.speed, p.cruiseSpeed, p.acceleration * dt);
     p.vx = Math.cos(p.heading) * p.speed;
     p.vy = Math.sin(p.heading) * p.speed;
@@ -3735,9 +3760,12 @@ function updateProjectiles(world: CombatWorld, dt: number): void {
         if((p.aimCorrectionUntil??0)>world.elapsed && !p.hitIds.length){
             const target=nearestEnemy(world,p.x,p.y);if(target){const speed=Math.hypot(p.vx,p.vy),angle=Math.atan2(p.vy,p.vx),turn=shortestAngle(Math.atan2(target.y-p.y,target.x-p.x)-angle),next=angle+Math.max(-1.5*dt,Math.min(1.5*dt,turn));p.vx=Math.cos(next)*speed;p.vy=Math.sin(next)*speed;}
         }
+        const previousMissileHeading=p.heading;
+        if(isImmediateMissile(p))p.missileAge+=dt;
         updateHoming(world, p, dt);
         p.x += p.vx * motionDt;
         p.y += p.vy * motionDt;
+        if(isImmediateMissile(p) && p.lifetime>0)addMissileSmoke(world,p,previousMissileHeading);
         if (p.corridorEdge !== undefined && p.corridorSide !== undefined) {
             const boundary=p.corridorEdge+p.corridorSide*p.radius;
             if((p.x-boundary)*p.corridorSide<0) {

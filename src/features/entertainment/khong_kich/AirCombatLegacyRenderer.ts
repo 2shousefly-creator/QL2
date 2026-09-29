@@ -27,6 +27,7 @@ import { BOSS_VISUAL_WIDTH_SCALE, BOSS_VISUAL_ASPECT } from "./airCombatHudLayou
 import { getEnemyExhaustTransform } from "./airCombatHitboxes";
 import { paintTitanShield, type ShieldPainter } from "./airCombatTitanShield";
 import { AMMO_VISUALS, getAmmoVisualKey, getBasicAmmoVisual, getMissileVisual, missileRenderRotation } from "./airCombatAmmo";
+import { getMissilePose, paintMissileExhausts } from "./airCombatMissilePresentation";
 import type { AmmoVisualKey } from "./airCombatAmmo";
 import { angularBarPolygon } from "./airCombatHudLayout";
 import { SONIC_RING_THICKNESS } from "./airCombatBoss";
@@ -515,16 +516,25 @@ export function drawLegacyWorld(
   for (const particle of world.particles) {
     if (particle.kind !== "missile_smoke") continue;
     const age = 1 - Math.max(0, particle.life / particle.maxLife);
-    ctx.globalAlpha = Math.min(1, (1 - age) ** 1.4 * (reducedMotion ? .25 : .45) * 1.7);
-    ctx.fillStyle = particle.color;
-    ctx.beginPath(); ctx.arc(particle.x, particle.y, particle.size * (.65 + age * .9) / 2, 0, Math.PI * 2); ctx.fill();
+    ctx.globalAlpha = (1 - age) ** 1.35 * (reducedMotion ? .55 : .85);
+    const radius=particle.size*(.7+age*1.1)/2;
+    const gradient=ctx.createRadialGradient(particle.x,particle.y,0,particle.x,particle.y,radius);
+    gradient.addColorStop(0,particle.color);gradient.addColorStop(.35,particle.color+"b3");gradient.addColorStop(1,particle.color+"00");
+    ctx.fillStyle = gradient;
+    ctx.beginPath(); ctx.arc(particle.x, particle.y, radius, 0, Math.PI * 2); ctx.fill();
   }
+  ctx.restore();
+  ctx.save();ctx.globalCompositeOperation="lighter";ctx.lineCap="round";ctx.lineJoin="round";ctx.shadowBlur=0;
+  paintMissileExhausts(world,(ax,ay,cx,cy,bx,by,width,alpha,tint)=>{
+    ctx.strokeStyle=`#${tint.toString(16).padStart(6,"0")}`;ctx.lineWidth=width;ctx.globalAlpha=alpha;
+    ctx.beginPath();ctx.moveTo(ax,ay);ctx.quadraticCurveTo(cx,cy,bx,by);ctx.stroke();
+  },reducedMotion);
   ctx.restore();
   for (const projectile of world.projectiles) {
     if (rankProjectileVisual(projectile)||ultimateProjectileVisual(projectile)) continue;
     if(world.stormbreaker&&projectile.stormbreakerVisual)continue;
     if (world.magnetic && projectile.owner === "enemy" && projectile.magneticVisual) continue;
-    const missile = projectile.projectileKind !== "bullet";
+    const missile = getMissileVisual(projectile)!==null;
     const basic = !missile ? getBasicAmmoVisual(projectile.ammoVisualKey) : null;
     if (projectile.owner === "enemy" && projectile.appearance === "boss" && (missile ? projectile.missileAge < .15 : projectile.lifetime > 5.88)) {
       ctx.save(); ctx.fillStyle = "rgba(255,82,110,.55)";
@@ -543,15 +553,7 @@ export function drawLegacyWorld(
     if(projectile.allegiance==="friendly_hacked"&&!missile){
       ctx.save();ctx.translate(projectile.x,projectile.y);ctx.rotate(Math.atan2(projectile.vy,projectile.vx));ctx.strokeStyle="#67e8f9";ctx.lineWidth=projectile.radius*2;ctx.lineCap="round";ctx.beginPath();ctx.moveTo(-projectile.radius*2,0);ctx.lineTo(projectile.radius*2,0);ctx.stroke();ctx.strokeStyle="#ecfeff";ctx.lineWidth=1;ctx.stroke();ctx.restore();
     } else if (missile) {
-      const visual=getMissileVisual(projectile)!,powered=projectile.missileState==="powered";
-      ctx.save();ctx.translate(projectile.x,projectile.y);ctx.rotate(missileRenderRotation(projectile.heading));
-      for(const nozzle of visual.engineNozzles) {
-        if(!powered)continue;
-        const length=nozzle.flameLength*(projectile.owner==="enemy"?1:1.3)*(.45+.55*Math.min(1,projectile.speed/Math.max(1,projectile.cruiseSpeed)));
-        ctx.fillStyle=`#${nozzle.tint.toString(16).padStart(6,"0")}`;ctx.shadowColor=ctx.fillStyle;ctx.shadowBlur=8;
-        ctx.beginPath();ctx.moveTo(nozzle.x-nozzle.flameWidth/2,nozzle.y);ctx.quadraticCurveTo(nozzle.x-nozzle.flameWidth*.6,nozzle.y+length*.3,nozzle.x,nozzle.y+length);ctx.quadraticCurveTo(nozzle.x+nozzle.flameWidth*.6,nozzle.y+length*.3,nozzle.x+nozzle.flameWidth/2,nozzle.y);ctx.closePath();ctx.fill();
-        ctx.fillStyle="#fff7dc";ctx.beginPath();ctx.moveTo(nozzle.x-nozzle.flameWidth*.25,nozzle.y);ctx.lineTo(nozzle.x,nozzle.y+length*.6);ctx.lineTo(nozzle.x+nozzle.flameWidth*.25,nozzle.y);ctx.closePath();ctx.fill();
-      }
+      ctx.save();ctx.translate(projectile.x,projectile.y);ctx.rotate(missileRenderRotation(getMissilePose(projectile,reducedMotion).heading));
       ctx.shadowBlur=projectile.owner==="enemy"?0:9;drawAmmoLocal(ctx,getAmmoVisualKey(projectile)!);
       if(projectile.bigBang){ctx.globalAlpha=reducedMotion?.3:.3+.15*Math.sin(projectile.missileAge*4);ctx.fillStyle="#fff0b3";ctx.fillRect(-7,-10,14,2);}
       ctx.restore();
