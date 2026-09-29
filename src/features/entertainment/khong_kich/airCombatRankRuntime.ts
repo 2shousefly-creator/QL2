@@ -110,7 +110,7 @@ export function predatorBasicHit(w:CombatWorld,e:EnemyEntity,h:RankRuntimeHooks,
  l.stacks+=rank>=4&&belowThreshold?2:1;
  if(l.stacks<(rank>=5?4:5))return;l.stacks=0;l.flashUntil=w.elapsed+.22;h.effect(w,e.x,e.y,(e.radius+12)*2,"lock_complete");
  const power=getEffectiveAircraftStats(w.aircraft).firepower*(rank>=2?2.4:2);
- for(let i=0;i<(rank>=3?2:1);i++)h.projectile(w,{owner:"player",source:"skill",skillId:"predator_lock",x:w.playerX+(i?12:-12),y:w.playerY-20,vx:0,vy:-320,rawDamage:power*(i?.7:1),radius:4.5,homing:true,targetId:e.id,turnRate:8,color:"#7dd3fc",rankCast:l.cast});
+ for(let i=0;i<(rank>=3?2:1);i++)h.projectile(w,{owner:"player",source:"skill",skillId:"predator_lock",x:w.playerX+(i?12:-12),y:w.playerY-20,vx:0,vy:-320,rawDamage:power*(i?.7:1),radius:4.5,homing:true,targetId:e.id,turnRate:8,lifetime:12,color:"#7dd3fc",rankCast:l.cast});
 }
 export function rankProjectileHit(w:CombatWorld,p:ProjectileEntity,e:EnemyEntity,h:RankRuntimeHooks) {
  const r=rankRuntime(w),l=r.lock;
