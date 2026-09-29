@@ -1,0 +1,213 @@
+{
+  "version": "26.18.0",
+  "releaseDate": "29/09/2026",
+  "title": "MIRAGE FRACTURE · Ảo Cảnh Phân Mảnh",
+  "displayTitle": "KHÔNG KÍCH 26.18.0 — MIRAGE FRACTURE · ẢO CẢNH PHÂN MẢNH",
+  "summary": "**26.18.0** mở khóa Màn 4 — **MIRAGE FRACTURE**, chiến trường nơi thật và giả liên tục chồng lấn. Đây là thử thách có nhịp chiến đấu khắc nghiệt hơn, nhiều khống chế hơn và yêu cầu người chơi chủ động sử dụng kỹ năng thay vì chỉ phản ứng với hỏa lực thông thường.\n\nMàn chơi mới gồm 8 Wave, hai đợt Tinh Anh, trận 1v1 đặc biệt với chính Chiến Cơ Ảo Ảnh của người chơi và cuối cùng là **PARALLAX ZERO** — Boss điều khiển ảo ảnh, không gian phản chiếu và những chuỗi tấn công đánh vào chính thói quen di chuyển của người chơi.",
+  "sections": [
+    {
+      "id": "s1",
+      "title": "MÀN 4 · MIRAGE FRACTURE",
+      "icon": { "kind": "system", "id": "stage" },
+      "intro": [
+        {
+          "text": "MIRAGE FRACTURE được mở khóa sau khi hoàn thành Màn 3. Màn chơi tập trung vào khả năng đọc tín hiệu thật - giả, né khống chế và xử lý nhiều lớp nguy hiểm trong thời gian ngắn.",
+          "format": "paragraph",
+          "changeType": "new"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s1-e1",
+          "icon": { "kind": "system", "id": "stage" },
+          "title": "8 Wave mới",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Bảy Wave đầu gồm tổng cộng **359 kẻ địch chính**, với hai Wave Tinh Anh riêng biệt và mật độ chiến đấu cao hơn các màn trước.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Quái Màn 4 có chỉ số cơ bản cao hơn khoảng **10–15%** so với archetype tương ứng ở Màn 3, đồng thời sử dụng nhiều đòn khống chế, bẫy thật - giả và warning ngắn hơn.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        },
+        {
+          "id": "s1-e2",
+          "icon": { "kind": "system", "id": "stage" },
+          "title": "Thật và giả có thể được đọc",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Ảo ảnh, đạn giả và vùng nguy hiểm giả có ngôn ngữ hình ảnh riêng. Người chơi tinh ý có thể nhận biết mục tiêu thật qua lõi sáng và nhịp hiệu ứng ổn định thay vì phải đoán ngẫu nhiên.",
+              "format": "bullet",
+              "changeType": "new"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "KẺ ĐỊCH & TINH ANH MỚI",
+      "icon": { "kind": "system", "id": "enemy" },
+      "intro": [
+        {
+          "text": "MIRAGE FRACTURE giới thiệu một roster riêng được xây quanh ảo ảnh, khóa kỹ năng, stun, rail dự đoán và áp lực định vị.",
+          "format": "paragraph",
+          "changeType": "new"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s2-e1",
+          "icon": { "kind": "system", "id": "enemy" },
+          "title": "6 quái thường mới",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "**Mirage Wisp, Parallax Lancer, Holo Bastion, Veil Weaver, Echo Hunter và Phantom Carrier** tạo ra các lớp hỏa lực thật - giả, lao áp sát, tường phản chiếu và projectile dự đoán.",
+              "format": "bullet",
+              "changeType": "new"
+            }
+          ]
+        },
+        {
+          "id": "s2-e2",
+          "icon": { "kind": "system", "id": "enemy" },
+          "title": "9 Tinh Anh mới",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Hai Wave Tinh Anh đưa các biến thể cao cấp của mechanic ảo ảnh vào cùng một trận chiến, buộc người chơi đọc battlefield thay vì tập trung vào một mục tiêu duy nhất.",
+              "format": "bullet",
+              "changeType": "new"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "THE OTHER SELF · BẢN NGÃ PHẢN CHIẾU",
+      "icon": { "kind": "aircraft", "id": "black_eagle" },
+      "intro": [
+        {
+          "text": "Wave 8 bắt đầu bằng trận đấu 1v1 với Chiến Cơ Ảo Ảnh — một đối thủ sử dụng chính chiến cơ và build hiện tại của người chơi.",
+          "format": "paragraph",
+          "changeType": "new"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s3-e1",
+          "icon": { "kind": "aircraft", "id": "black_eagle" },
+          "title": "Đối đầu chính build của mình",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Chiến Cơ Ảo Ảnh có cùng chiến cơ, chỉ số, Skill Rank, Lõi và Trang Bị với người chơi, đồng thời xuất hiện với **100% Máu Tối Đa**.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Nếu người chơi thay Trang Bị, tăng Skill Rank hoặc nhận thêm nâng cấp permanent trong trận đấu, Chiến Cơ Ảo Ảnh cũng đồng bộ thay đổi đó.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Ảo Ảnh được AI điều khiển độc lập: biết né projectile, chọn vị trí, quản lý Tài Nguyên và phối hợp kỹ năng theo tình huống thay vì sao chép input của người chơi.",
+              "format": "bullet",
+              "changeType": "new"
+            }
+          ]
+        },
+        {
+          "id": "s3-e2",
+          "icon": { "kind": "system", "id": "rules" },
+          "title": "Không có reset trước trận 1v1",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Khi Wave 8 bắt đầu, người chơi **không được hồi Máu, Tài Nguyên hoặc reset Hồi Chiêu**. Trạng thái còn lại từ các Wave trước tiếp tục được tính.",
+              "format": "bullet",
+              "changeType": "unchanged"
+            },
+            {
+              "text": "Sau khi đánh bại Ảo Ảnh, người chơi hồi thêm **50% Máu Tối Đa + 50% Tài Nguyên Tối Đa**, Hồi Chiêu tiếp tục chạy bình thường và Boss xuất hiện sau **3 giây**.",
+              "format": "bullet",
+              "changeType": "new"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "BOSS · PARALLAX ZERO",
+      "icon": { "kind": "system", "id": "boss" },
+      "intro": [
+        {
+          "text": "PARALLAX ZERO là nguồn phát trung tâm của Ảo Cảnh, sở hữu chỉ số cao hơn STORMBREAKER Ω và một bộ kỹ năng dựa trên phân thân, tường phản chiếu, đường đi đã qua và chuỗi tấn công thật - giả.",
+          "format": "paragraph",
+          "changeType": "new"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s4-e1",
+          "icon": { "kind": "system", "id": "boss" },
+          "title": "Boss mạnh hơn Màn 3",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Máu, Giáp, tốc độ và sức mạnh tấn công cơ bản của PARALLAX ZERO được đặt khoảng **15% cao hơn STORMBREAKER Ω**.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Bốn giai đoạn chiến đấu lần lượt mở rộng từ Mirage Split và False Horizon sang Reality Cage, Echo Replay, False Future và trạng thái cuối **ZERO TRUTH**.",
+              "format": "bullet",
+              "changeType": "new"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "SPRITE & VFX MÀN 4",
+      "icon": { "kind": "system", "id": "vfx" },
+      "intro": [
+        {
+          "text": "Toàn bộ nhận diện Màn 4 được xây bằng sprite ảnh raster để giữ chất lượng hình ảnh nhất quán với hướng nghệ thuật mới của Không Kích.",
+          "format": "paragraph",
+          "changeType": "new"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s5-e1",
+          "icon": { "kind": "system", "id": "vfx" },
+          "title": "Hình ảnh chiến đấu riêng",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Quái vật, Boss, đạn đạo, hiệu ứng kỹ năng, telegraph, impact và VFX ảo ảnh mới đều sử dụng **raster sprite art** thay cho hình khối cơ bản.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Chiến Cơ Ảo Ảnh giữ nguyên **sprite và màu sắc hiện tại của chính chiến cơ người chơi**, chỉ bổ sung các lớp hiệu ứng phản chiếu rất nhẹ để giữ đúng cảm giác đang đối đầu với chính mình.",
+              "format": "bullet",
+              "changeType": "new"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

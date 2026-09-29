@@ -1,3 +1,5 @@
+import { paintMirage } from "./airCombatMirageVisuals";
+import { STAGE4_ART_URLS, mirageEnemyFrame } from "./airCombatStage4Art";
 import { STAGE3_ART_URLS, STAGE3_VFX_ART, stormEnemyFrame, stormbreakerSkyTile } from "./airCombatStage3Art";
 import { paintStormbreaker, type StormbreakerPresentation } from "./airCombatStormbreakerVisuals";
 import { ULTIMATE_ART, ULTIMATE_FRAMES, paintUltimates, ultimateBody, ultimateProjectileVisual } from "./airCombatUltimateArt";
@@ -64,15 +66,31 @@ async function loadCanvasTextures(urls:string[]) {
   }));
 }
 export const loadAstraCanvasAssets=()=>loadCanvasTextures([ULTIMATE_ART,RANKED_ART.vfx,RANKED_ART.projectiles,EQUIPMENT_ART.icons,EQUIPMENT_ART.vfx,ASTRA_ART.aircraft,ASTRA_ART.effects,ASTRA_ART.combatVfx,sharedVfxUrl]);
+export const loadMirageCanvasAssets=()=>loadCanvasTextures([...Object.values(STAGE4_ART_URLS),aircraftAtlasUrl,ASTRA_ART.aircraft]);
 export const loadStormbreakerCanvasAssets=()=>loadCanvasTextures(Object.values(STAGE3_ART_URLS));
 export const loadMagneticCanvasAssets=()=>loadCanvasTextures([STAGE2_ART_URLS.enemy,STAGE2_ART_URLS.vfx,STAGE2_ART_URLS.storm,STAGE2_ART_URLS.elite]);
+const mirageTintCache = new Map<string,HTMLCanvasElement>();
 function drawMagneticFrame(ctx: CanvasRenderingContext2D, frame: AtlasFrame, x: number, y: number,
-  width: number, height: number, rotation = 0, alpha = 1) {
-  const image = magneticImage(frame.atlas === "stage3Enemy" ? STAGE3_ART_URLS.enemy : frame.atlas === "stage3Boss" ? STAGE3_ART_URLS.boss : frame.atlas === "stage3Vfx" ? STAGE3_ART_URLS.vfx : frame.atlas === "stage3Emissive" ? STAGE3_ART_URLS.emissive : frame.atlas === "ultimateVfx" ? ULTIMATE_ART : frame.atlas === "rankedVfx" ? RANKED_ART.vfx : frame.atlas === "rankedProjectiles" ? RANKED_ART.projectiles : frame.atlas === "equipmentIcons" ? EQUIPMENT_ART.icons : frame.atlas === "equipmentVfx" ? EQUIPMENT_ART.vfx : frame.atlas === "astraVfx" ? ASTRA_ART.combatVfx : frame.atlas === "vfx" ? sharedVfxUrl : frame.atlas === "astraEffects" ? ASTRA_ART.effects : frame.atlas === "stage2Elite" ? STAGE2_ART_URLS.elite : frame.atlas === "stage2Enemy" ? STAGE2_ART_URLS.enemy : STAGE2_ART_URLS.vfx);
+  width: number, height: number, rotation = 0, alpha = 1, tint = 0xffffff, anchorX = .5) {
+  const image = magneticImage(frame.atlas === "aircraft" ? aircraftAtlasUrl : frame.atlas === "astraAircraft" ? ASTRA_ART.aircraft : frame.atlas === "stage4Enemy" ? STAGE4_ART_URLS.enemy : frame.atlas === "stage4Boss" ? STAGE4_ART_URLS.boss : frame.atlas === "stage4Vfx" ? STAGE4_ART_URLS.vfx : frame.atlas === "stage3Enemy" ? STAGE3_ART_URLS.enemy : frame.atlas === "stage3Boss" ? STAGE3_ART_URLS.boss : frame.atlas === "stage3Vfx" ? STAGE3_ART_URLS.vfx : frame.atlas === "stage3Emissive" ? STAGE3_ART_URLS.emissive : frame.atlas === "ultimateVfx" ? ULTIMATE_ART : frame.atlas === "rankedVfx" ? RANKED_ART.vfx : frame.atlas === "rankedProjectiles" ? RANKED_ART.projectiles : frame.atlas === "equipmentIcons" ? EQUIPMENT_ART.icons : frame.atlas === "equipmentVfx" ? EQUIPMENT_ART.vfx : frame.atlas === "astraVfx" ? ASTRA_ART.combatVfx : frame.atlas === "vfx" ? sharedVfxUrl : frame.atlas === "astraEffects" ? ASTRA_ART.effects : frame.atlas === "stage2Elite" ? STAGE2_ART_URLS.elite : frame.atlas === "stage2Enemy" ? STAGE2_ART_URLS.enemy : STAGE2_ART_URLS.vfx);
   if (!image) return;
   const [sx,sy,sw,sh] = frame.rect;
   ctx.save(); ctx.globalAlpha = alpha; ctx.translate(x,y); ctx.rotate(rotation);
-  ctx.drawImage(image, sx*image.naturalWidth, sy*image.naturalHeight, sw*image.naturalWidth, sh*image.naturalHeight, -width/2, -height/2, width, height);
+  if(tint===0xffffff)ctx.drawImage(image,sx*image.naturalWidth,sy*image.naturalHeight,sw*image.naturalWidth,sh*image.naturalHeight,-width*anchorX,-height/2,width,height);
+  else {
+    // Raster modulation, equivalent to Sprite.tint; rectangles are texture masks,
+    // never replacement geometry for a ship, projectile or telegraph.
+    const key=`${image.src}|${frame.rect.join(",")}|${tint}`;
+    let tile=mirageTintCache.get(key);
+    if(!tile){
+      tile=document.createElement("canvas");tile.width=Math.max(1,Math.round(sw*image.naturalWidth));tile.height=Math.max(1,Math.round(sh*image.naturalHeight));
+      const c=tile.getContext("2d")!;c.drawImage(image,sx*image.naturalWidth,sy*image.naturalHeight,sw*image.naturalWidth,sh*image.naturalHeight,0,0,tile.width,tile.height);
+      c.globalCompositeOperation="multiply";c.fillStyle=`#${tint.toString(16).padStart(6,"0")}`;c.fillRect(0,0,tile.width,tile.height);
+      c.globalCompositeOperation="destination-in";c.drawImage(image,sx*image.naturalWidth,sy*image.naturalHeight,sw*image.naturalWidth,sh*image.naturalHeight,0,0,tile.width,tile.height);
+      if(mirageTintCache.size>=256)mirageTintCache.delete(mirageTintCache.keys().next().value!);mirageTintCache.set(key,tile);
+    }
+    ctx.drawImage(tile,-width*anchorX,-height/2,width,height);
+  }
   ctx.restore();
 }
 function traceProfile(ctx:CanvasRenderingContext2D,p:AircraftHitboxProfile,size:number) {
@@ -353,7 +371,10 @@ export function drawLegacyWorld(
   const starfallShake=Math.max(0,...(world.astra?.impacts??[]).map(i=>2.2*Math.exp(-(world.elapsed-i.at)*12)));
   const shake=reducedMotion?0:Math.max(accents.killShake,magneticShake(world),Math.min(2.8,starfallShake));
   ctx.translate(Math.sin(world.elapsed*113)*shake,Math.cos(world.elapsed*97)*shake*.65);
-  if(world.stormbreaker){
+  if(world.mirage){
+    const image=magneticImage(STAGE4_ART_URLS.sky);
+    if(image)for(let i=0;i<2;i++){const tile=stormbreakerSkyTile(world.elapsed*(reducedMotion?.25:.7),false,i);ctx.save();ctx.translate(tile.x,tile.y);ctx.scale(1,tile.flipped?-1:1);ctx.drawImage(image,-204,-351,408,702);ctx.restore();}
+  } else if(world.stormbreaker){
     ctx.fillStyle="#080f18";ctx.fillRect(0,0,width,height);
     const image=magneticImage(STAGE3_ART_URLS.sky);
     if(image)for(let i=0;i<2;i++){const tile=stormbreakerSkyTile(world.elapsed,reducedMotion,i);ctx.save();ctx.translate(tile.x,tile.y);ctx.scale(1,tile.flipped?-1:1);ctx.drawImage(image,-204,-351,408,702);ctx.restore();}
@@ -532,6 +553,7 @@ export function drawLegacyWorld(
   ctx.restore();
   for (const projectile of world.projectiles) {
     if (rankProjectileVisual(projectile)||ultimateProjectileVisual(projectile)) continue;
+    if(projectile.mirageVisual || projectile.mirrorBorrowed)continue;
     if(world.stormbreaker&&projectile.stormbreakerVisual)continue;
     if (world.magnetic && projectile.owner === "enemy" && projectile.magneticVisual) continue;
     const missile = getMissileVisual(projectile)!==null;
@@ -580,6 +602,7 @@ export function drawLegacyWorld(
   ctx.shadowBlur = 0;
 
   for (const enemy of world.enemies) {
+    if (enemy.aircraftTarget) continue;
     if (enemy.hp <= 0) continue;
     if (!world.ended && enemy.hp>0 && enemy.type === "kamikaze" && (enemy.kamikazeState === "charge" || enemy.kamikazeState === "dash")) {
       ctx.strokeStyle = enemyAllegiance(world,enemy)==="friendly_hacked"?"#67e8f9":`rgba(250,204,21,${reducedMotion ? .6 : 0.55 + Math.sin(world.elapsed * 15) * 0.15})`;
@@ -595,7 +618,10 @@ export function drawLegacyWorld(
     }
     ctx.save();ctx.translate(enemy.x,enemy.y);
     ctx.rotate(enemyAirframeRotation(enemy)-Math.PI);
-    if(world.stormbreaker){
+    if(world.mirage){
+      const size=enemy.radius*(enemy.type==="boss"?3.2:2.8);
+      drawMagneticFrame(ctx,mirageEnemyFrame(enemy,world.bossPhase),0,0,size,size,0,1);
+    } else if(world.stormbreaker){
       const size=enemy.radius*(enemy.type==="boss"?3.2:2.8);
       drawMagneticFrame(ctx,stormEnemyFrame(enemy,world.bossPhase),0,0,size,size,Math.PI,1);
     } else if (world.magnetic) {
@@ -605,12 +631,12 @@ export function drawLegacyWorld(
       else drawEnemyGlyph(ctx, enemy.type, 0, 0, enemy.radius);
     } else drawEnemyGlyph(ctx, enemy.type, 0, 0, enemy.radius);
     ctx.restore();
-    if(!world.magnetic && (enemy.shield>0||enemy.aegisUntil>world.aircraft.coreState.time)){ctx.strokeStyle="#7dd3fc";ctx.lineWidth=2;ctx.beginPath();ctx.arc(enemy.x,enemy.y,enemy.radius+7,0,Math.PI*2);ctx.stroke();}
-    if(enemy.hackedFacing!==undefined&&enemy.type!=="kamikaze"){
+    if(!world.mirage && !world.magnetic && (enemy.shield>0||enemy.aegisUntil>world.aircraft.coreState.time)){ctx.strokeStyle="#7dd3fc";ctx.lineWidth=2;ctx.beginPath();ctx.arc(enemy.x,enemy.y,enemy.radius+7,0,Math.PI*2);ctx.stroke();}
+    if(!world.mirage&&enemy.hackedFacing!==undefined&&enemy.type!=="kamikaze"){
       const exhaust=getEnemyExhaustTransform(enemy);ctx.save();ctx.translate(exhaust.x,exhaust.y);ctx.rotate(exhaust.rotation);
       ctx.fillStyle="#67e8f9";ctx.globalAlpha=.65;ctx.beginPath();ctx.moveTo(-exhaust.width/2,0);ctx.quadraticCurveTo(-exhaust.width/2,exhaust.length*.4,0,exhaust.length);ctx.quadraticCurveTo(exhaust.width/2,exhaust.length*.4,exhaust.width/2,0);ctx.fill();ctx.restore();
     }
-    if(enemy.stun>0){ctx.strokeStyle="#fde047";ctx.beginPath();ctx.arc(enemy.x,enemy.y-enemy.radius-7,5,0,Math.PI*2);ctx.stroke();}
+    if(!world.mirage && enemy.stun>0){ctx.strokeStyle="#fde047";ctx.beginPath();ctx.arc(enemy.x,enemy.y-enemy.radius-7,5,0,Math.PI*2);ctx.stroke();}
     if(!world.ended&&enemy.hp>0&&enemy.type==="kamikaze"&&(enemy.kamikazeState==="charge"||enemy.kamikazeState==="dash")){
       const transform=getEnemyExhaustTransform(enemy);
       ctx.save();ctx.translate(transform.x,transform.y);ctx.rotate(transform.rotation);
@@ -788,6 +814,7 @@ export function drawLegacyWorld(
   ctx.restore();
 
   ctx.save(); ctx.beginPath(); ctx.rect(GAMEPLAY_SAFE_RECT.left, GAMEPLAY_SAFE_RECT.top, GAMEPLAY_SAFE_RECT.width, GAMEPLAY_SAFE_RECT.height); ctx.clip();
+  paintMirage(world,(frame,x,y,width,height,rotation,alpha,tint,anchorX)=>drawMagneticFrame(ctx,frame,x,y,width,height,rotation,alpha,tint,anchorX),reducedMotion);
   paintStormbreaker(world,{...tacticalPainter,
     sprite:(_id,key,x,y,width,height,rotation=0,alpha=1,additive=false)=>{ctx.save();ctx.globalCompositeOperation=additive?"lighter":"source-over";drawMagneticFrame(ctx,STAGE3_VFX_ART[key],x,y,width,height,rotation,alpha);ctx.restore();},
     frame:(_id,frame,x,y,size,rotation,alpha)=>{ctx.save();ctx.globalCompositeOperation="lighter";drawMagneticFrame(ctx,frame,x,y,size,size,rotation,alpha);ctx.restore();}

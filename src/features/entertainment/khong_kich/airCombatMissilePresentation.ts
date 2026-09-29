@@ -48,6 +48,7 @@ export function clearMissilePose(p:ProjectileEntity):void { poses.delete(p); }
 export type MissileExhaustPainter=(ax:number,ay:number,cx:number,cy:number,bx:number,by:number,width:number,alpha:number,tint:number)=>void;
 export function paintMissileExhausts(world:CombatWorld,draw:MissileExhaustPainter,reduced:boolean):void {
   for(const p of world.projectiles) {
+    if(p.mirrorBorrowed)continue;
     const visual=getMissileVisual(p);if(!visual)continue;
     const pose=getMissilePose(p,reduced),powered=p.missileState==="powered";
     for(const nozzle of visual.engineNozzles) {

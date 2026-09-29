@@ -19,6 +19,7 @@ export type UltimateVisualKey=keyof typeof ULTIMATE_FRAMES;
 export type UltimatePainter=(id:number,key:UltimateVisualKey,x:number,y:number,width:number,height:number,rotation:number,alpha:number,additive?:boolean)=>void;
 export const ultimateBody=(key:UltimateVisualKey)=>["ultimateViperMissile","ultimateTitanShell","ultimateHawk","ultimateHawkBolt","ultimateMeteor","ultimateDoom"].includes(key);
 export function ultimateProjectileVisual(p:ProjectileEntity):UltimateVisualKey|undefined {
+ if(p.mirrorBorrowed)return undefined;
  if(p.skillId==="missile_swarm"&&p.projectileKind==="missile")return "ultimateViperMissile";
  if(p.skillId==="sweeping_cannon")return "ultimateTitanShell";
  if(p.owner==="drone"&&p.skillId==="escort_drone")return "ultimateHawkBolt";

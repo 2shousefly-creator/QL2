@@ -11,21 +11,22 @@ export type DamageDelivery = "direct_projectile" | "aircraft_collision" | "explo
 export interface AttackMetadata { capturable?:boolean; allegiance?:Allegiance; delivery?:DamageDelivery; sourceEnemyId?: number; sourceEnemyType?: import("./airCombatTypes").EnemyType; attackTag?: AttackTag; majorBossAttack?: boolean; payload?: StatusPayload }
 export type MarkName = "hunterMark" | "suppression" | "corrosion" | "targetLock" | "hunted";
 export interface PlayerCombatStatus {
+  fractureResolve?: boolean; fractureStunUntil?: number;
   stunnedUntil: number; skillLockedUntil: number; resourceJammedUntil: number;
   armorBrokenUntil: number; regenDisabledUntil: number; durations: Record<string,number>;
   healingReceivedUntil: number; healingReceivedMultiplier: number;
   jams: { until: number; multiplier: number }[];
   marks: Partial<Record<MarkName, { count: number; until: number; hits:number[]; window:number; sourceEnemyId?: number }>>;
 }
-export const createPlayerStatus = (): PlayerCombatStatus => ({ stunnedUntil: 0, skillLockedUntil: 0, resourceJammedUntil: 0, armorBrokenUntil: 0, regenDisabledUntil: 0, healingReceivedUntil: 0, healingReceivedMultiplier: 1, durations: {}, jams: [], marks: {} });
+export const createPlayerStatus = (fractureResolve = false): PlayerCombatStatus => ({ fractureResolve, stunnedUntil: 0, skillLockedUntil: 0, resourceJammedUntil: 0, armorBrokenUntil: 0, regenDisabledUntil: 0, healingReceivedUntil: 0, healingReceivedMultiplier: 1, durations: {}, jams: [], marks: {} });
 export function applyPlayerStatus(state: AircraftCombatState, payload: StatusPayload): void {
   if (Object.values(payload).some(value => typeof value === "number" && value > 0) && celestialProtection(state)) {recordCoreMetric(state,184,"controlBlocked",1);return;}
   const s = state.status, now = state.coreState.time;
   for (const [key, seconds] of [["stunnedUntil", payload.stun], ["skillLockedUntil", payload.skillLock], ["armorBrokenUntil", payload.armorBreak], ["regenDisabledUntil", payload.regenDisable]] as const) {
-    if(key==="stunnedUntil"&&hardControlImmune(state))continue;
+    if(key==="stunnedUntil" && (hardControlImmune(state) || s.fractureResolve && (s.fractureStunUntil ?? 0) > 0 && now < s.fractureStunUntil! + 1.25))continue;
     recordStatusMitigation(state,seconds??0,s[key]);
     const duration = negativeStatusDuration(state, seconds ?? 0);
-    if (duration > 0) { s[key] = Math.max(s[key], now + duration); s.durations[key] = s[key]-now; }
+    if (duration > 0) { s[key] = Math.max(s[key], now + duration); s.durations[key] = s[key]-now; if (key === "stunnedUntil" && s.fractureResolve) s.fractureStunUntil = s[key]; }
   }
   recordStatusMitigation(state,payload.healingReduction??0,now);
   const healingDuration = negativeStatusDuration(state, payload.healingReduction ?? 0);

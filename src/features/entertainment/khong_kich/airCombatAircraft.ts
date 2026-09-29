@@ -31,9 +31,9 @@ export interface RuntimeSkillValues {
     damageTakenMultiplier: number;
     charge: number;
 }
-export function createAircraftCombatState(aircraftId: AircraftId): AircraftCombatState {
+export function createAircraftCombatState(aircraftId: AircraftId, fractureResolve = false): AircraftCombatState {
     const config = AIRCRAFT_CONFIGS[aircraftId];
-    return { status: createPlayerStatus(), aircraftId, level: 1, combatXp: 0, skillRanks: {}, skillPoints: 1, skillUpAt: {}, currentHp: config.baseStats.maxHp, currentResource: config.baseStats.maxResource,
+    return { status: createPlayerStatus(fractureResolve), aircraftId, level: 1, combatXp: 0, skillRanks: {}, skillPoints: 1, skillUpAt: {}, currentHp: config.baseStats.maxHp, currentResource: config.baseStats.maxResource,
         modifiers: { criticalChanceFlat: 0, criticalDamageMultiplierFlat: 0, maxHpFlat: 0, armorFlat: 0, firepowerFlat: 0, bonusFireRatePct: 0, hpRegen: 0,
             skillHaste: 0, maxResourceFlat: 0, resourceRegenFlat: 0, weapon: { ...DEFAULT_WEAPON } },
         cooldowns: {}, selectedCores: [], activeEffects: {}, droneActive: false, basicShotsFired: 0, pendingMilestones: [],
@@ -140,7 +140,12 @@ const XP_CURVES = [1,2].map(stage => {
  const cumulative=Array.from({length:18},(_,i)=>{const x=i*29/17,lo=Math.floor(x);return Math.round(old[lo]+(old[Math.min(29,lo+1)]-old[lo])*(x-lo));});
  return cumulative.slice(1).map((value,i)=>value-cumulative[i]);
 });
-export function requiredCombatXp(level:number,stageId=1):number {return level>=COMBAT_LEVEL_CAP?0:XP_CURVES[stageId===2||stageId===3?1:0][Math.max(0,level-1)];}
+// Stage 4 reaches its final milestone at the end of its authored 3,455 XP ledger.
+const MIRAGE_XP_CURVE = XP_CURVES[1].map((_value,index) => {
+ const before=XP_CURVES[1].slice(0,index).reduce((sum,value)=>sum+value,0);
+ return Math.round((before+XP_CURVES[1][index])*3455/2668)-Math.round(before*3455/2668);
+});
+export function requiredCombatXp(level:number,stageId=1):number {return level>=COMBAT_LEVEL_CAP?0:(stageId===4?MIRAGE_XP_CURVE:XP_CURVES[stageId===2||stageId===3?1:0])[Math.max(0,level-1)];}
 export function gainCombatXp(state: AircraftCombatState, amount: number, stageId = 1): LevelUpResult {
     let remaining = Math.max(0, amount), levelsGained = 0, coreSelectionsDue = 0;
     while (remaining > 0 && state.level < COMBAT_LEVEL_CAP) {

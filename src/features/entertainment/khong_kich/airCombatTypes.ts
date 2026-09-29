@@ -18,6 +18,21 @@ export type SkillId =
   | "orbit_reversal" | "stellar_lance" | "starfall";
 
 export type EnemyType =
+  | "mirage_wisp"
+  | "parallax_lancer"
+  | "holo_bastion"
+  | "veil_weaver"
+  | "echo_hunter"
+  | "phantom_carrier"
+  | "mirror_arbiter"
+  | "null_jailer"
+  | "refraction_ace"
+  | "glass_monarch"
+  | "phantom_executioner"
+  | "veil_architect"
+  | "echo_bastion_prime"
+  | "parallax_seraph"
+  | "fracture_sovereign"
   | "scout"
   | "fighter"
   | "attacker"
@@ -310,6 +325,7 @@ export interface AirCombatHudSnapshot {
   waveCountdown: number;
   combatXpRequired: number;
   bossHp: number;
+  mirror?: { hp:number; maxHp:number; resource:number; maxResource:number };
   bossMaxHp: number;
   bossPhase: number;
   paused: boolean;

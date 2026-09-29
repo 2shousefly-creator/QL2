@@ -1,3 +1,4 @@
+import { STAGE4_ENEMY_ART } from "./airCombatStage4Art";
 import { STAGE3_ENEMY_ART } from "./airCombatStage3Art";
 // Shared static frames for the battle renderer and release-note thumbnails.
 import { STAGE2_ENEMY_ART } from "./airCombatStage2Art";
@@ -5,6 +6,7 @@ import type { EnemyType } from "./airCombatTypes";
 import type { AtlasFrame } from "./pixi/airCombatPixiTypes";
 const cell = (atlas: AtlasFrame["atlas"], x: number, y: number): AtlasFrame => ({ atlas, rect: [x / 4, y / 4, .25, .25] });
 export const ENEMY_VISUALS: Record<EnemyType, AtlasFrame> = {
+  ...STAGE4_ENEMY_ART,
   ...STAGE3_ENEMY_ART,
   prism_sovereign: STAGE2_ENEMY_ART.prism_sovereign!,
   mine_warden: STAGE2_ENEMY_ART.mine_warden!,

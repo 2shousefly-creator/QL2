@@ -641,13 +641,17 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
           <div className="air-boss-health relative mt-1 h-1.5 overflow-hidden bg-black">
             <div ref={bossShieldRef} className="absolute inset-y-0 left-0 bg-slate-200" />
             <div ref={bossChipRef} className="absolute inset-y-0 left-0 bg-white" />
-            {(stageId === 2 ? [.75,.5,.25,.1] : [.7,.35,.15]).map(mark => <i key={mark} className="air-boss-phase-marker" style={{left:`${mark*100}%`}} />)}
+            {(stageId === 2 ? [.75,.5,.25,.1] : stageId === 4 ? [.7,.4,.15] : [.7,.35,.15]).map(mark => <i key={mark} className="air-boss-phase-marker" style={{left:`${mark*100}%`}} />)}
             <div ref={bossHpRef} className="absolute inset-y-0 left-0 bg-gradient-to-r from-red-700 via-rose-500 to-orange-300" />
           </div>
         </div>
       )}
 
-      <AirCombatStatusStrip ref={statusStripRef} onTooltipChange={onStatusTooltip} top={AIR_COMBAT_WORLD.hudHeight + (hud.bossMaxHp > 0 ? BOSS_HUD_HEIGHT : 0)} />
+      {hud.mirror && <div className="air-boss-hud" style={{top:`${AIR_COMBAT_WORLD.hudHeight/720*100}%`,height:`${BOSS_HUD_HEIGHT/720*100}%`}}>
+        <div className="flex justify-between text-[7px] font-black text-slate-100"><span>THE OTHER SELF</span><span>HP {Math.ceil(hud.mirror.hp).toLocaleString("vi-VN")} · {resourceLabel} {Math.floor(hud.mirror.resource)}</span></div>
+        <progress className="mt-1 h-1.5 w-full accent-slate-100" aria-label="Máu Chiến Cơ Ảo Ảnh" value={hud.mirror.hp} max={hud.mirror.maxHp} />
+      </div>}
+      <AirCombatStatusStrip ref={statusStripRef} onTooltipChange={onStatusTooltip} top={AIR_COMBAT_WORLD.hudHeight + (hud.bossMaxHp > 0 || hud.mirror ? BOSS_HUD_HEIGHT : 0)} />
 
       <div className="absolute inset-x-0 bottom-0 z-20 grid h-[11.1111%] grid-cols-4 gap-1 border-t border-cyan-900/50 bg-slate-950 p-1.5" data-skill-rail="bottom">
         {worldRef.current.aircraft.skillPoints > 0 && <span className="air-skill-points" aria-live="polite">Điểm kỹ năng: {worldRef.current.aircraft.skillPoints}</span>}
