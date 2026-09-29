@@ -75,6 +75,7 @@ export function getAmmoVisualKey(p:ProjectileEntity):AmmoVisualKey|null {
 /** Source art points UP (-Y); flame art starts at its top nozzle and extends DOWN (+Y).
  * The exact same rotation/coordinates drive Pixi, Canvas, and historical smoke. */
 export const missileRenderRotation = (heading: number) => heading + Math.PI / 2;
+export const VIPER_ULTIMATE_SIZE = { width:10.2, height:22.2 } as const;
 export interface EngineNozzle { x:number; y:number; flameWidth:number; flameLength:number; tint:number }
 export interface MissileVisualDefinition {
     width:number; height:number; body:string; detail:string;
@@ -82,12 +83,22 @@ export interface MissileVisualDefinition {
     smoke:{ spacing:number; size:number; life:number; color:string; drift:number };
 }
 export const MISSILE_VISUALS:Record<"viper_missile"|"tomahawk_missile"|"bigbang_missile"|"boss_missile",MissileVisualDefinition>={
-    viper_missile:{...AMMO_VISUALS.viper_missile,engineNozzles:[{x:0,y:6.65,flameWidth:3.1,flameLength:18,tint:0xffdb99}],smoke:{spacing:8,size:6,life:.75,color:"#e4e4e7",drift:7}},
-    tomahawk_missile:{...AMMO_VISUALS.tomahawk_missile,engineNozzles:[{x:0,y:8.05,flameWidth:2.8,flameLength:19,tint:0x9befff}],smoke:{spacing:9,size:8,life:.75,color:"#a9cbd6",drift:7}},
-    bigbang_missile:{...AMMO_VISUALS.bigbang_missile,engineNozzles:[{x:-4.22,y:28.55,flameWidth:4.2,flameLength:30,tint:0xffb44d},{x:4.22,y:28.55,flameWidth:4.2,flameLength:30,tint:0xffb44d}],smoke:{spacing:7,size:17,life:1.1,color:"#665f58",drift:4}},
-    boss_missile:{...AMMO_VISUALS.boss_missile,engineNozzles:[{x:0,y:14.5,flameWidth:3.5,flameLength:23,tint:0xff526e}],smoke:{spacing:10,size:10,life:.75,color:"#77404c",drift:7}},
+    viper_missile:{...AMMO_VISUALS.viper_missile,...VIPER_ULTIMATE_SIZE,engineNozzles:[{x:0,y:VIPER_ULTIMATE_SIZE.height*53/128,flameWidth:2.2,flameLength:18,tint:0xffdb99}],smoke:{spacing:6,size:7.2,life:.9375,color:"#e4e4e7",drift:4.55}},
+    tomahawk_missile:{...AMMO_VISUALS.tomahawk_missile,engineNozzles:[{x:0,y:8.05,flameWidth:2.8,flameLength:19,tint:0x9befff}],smoke:{spacing:6.75,size:9.6,life:.9375,color:"#a9cbd6",drift:4.55}},
+    bigbang_missile:{...AMMO_VISUALS.bigbang_missile,engineNozzles:[{x:-4.22,y:28.55,flameWidth:4.2,flameLength:30,tint:0xffb44d},{x:4.22,y:28.55,flameWidth:4.2,flameLength:30,tint:0xffb44d}],smoke:{spacing:5.25,size:20.4,life:1.375,color:"#665f58",drift:2.6}},
+    boss_missile:{...AMMO_VISUALS.boss_missile,engineNozzles:[{x:0,y:14.5,flameWidth:3.5,flameLength:23,tint:0xff526e}],smoke:{spacing:7.5,size:12,life:.9375,color:"#77404c",drift:4.55}},
 };
+const MICRO_MISSILE_VISUAL:MissileVisualDefinition={...MISSILE_VISUALS.tomahawk_missile,width:13,height:28,
+    engineNozzles:[{x:0,y:10,flameWidth:2.4,flameLength:18,tint:0x7dd3fc}]};
+const RADAR_MISSILE_VISUAL:MissileVisualDefinition={...MISSILE_VISUALS.tomahawk_missile,...AMMO_VISUALS.radar_hunter_ammo,
+    engineNozzles:[{x:0,y:10.1,flameWidth:2.4,flameLength:18,tint:0xb0f5ff}]};
+/** Authored missiles that intentionally retain bullet collision/interception rules. */
+export function isImmediateMissile(p:Pick<ProjectileEntity,"skillId"|"attackTag">):boolean {
+    return p.skillId==="predator_lock" || p.attackTag==="radar_lock";
+}
 export function getMissileVisual(p:ProjectileEntity):MissileVisualDefinition|null {
+    if(p.skillId==="predator_lock")return MICRO_MISSILE_VISUAL;
+    if(p.attackTag==="radar_lock")return RADAR_MISSILE_VISUAL;
     if(p.projectileKind==="bullet")return null;
     return MISSILE_VISUALS[p.bigBang?"bigbang_missile":p.projectileKind==="boss_missile"?"boss_missile":p.skillId==="missile_swarm"?"viper_missile":"tomahawk_missile"];
 }

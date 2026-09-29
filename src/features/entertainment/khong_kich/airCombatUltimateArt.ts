@@ -2,6 +2,8 @@ import atlas from "../../../assets/khong-kich/v2/ultimate-vfx-atlas.svg";
 import type { AtlasFrame } from "./pixi/airCombatPixiTypes";
 import type { CombatWorld, ProjectileEntity } from "./airCombatRuntime";
 import { skillRank } from "./airCombatSkillRanks";
+import { VIPER_ULTIMATE_SIZE } from "./airCombatAmmo";
+import { getMissilePose } from "./airCombatMissilePresentation";
 export const ULTIMATE_ART = atlas;
 const frame=(index:number):AtlasFrame=>({atlas:"ultimateVfx",rect:[index%4/4,Math.floor(index/4)/7,1/4,1/7]});
 export const ULTIMATE_FRAMES={
@@ -28,12 +30,12 @@ export function paintUltimates(w:CombatWorld,draw:UltimatePainter,reduced:boolea
  for(const p of w.projectiles){
   const key=ultimateProjectileVisual(p);if(!key)continue;
   const missile=key==="ultimateViperMissile",titan=key==="ultimateTitanShell";
-  const angle=missile?p.heading+Math.PI/2:Math.atan2(p.vy,p.vx)+Math.PI/2;
-  const dx=Math.sin(angle),dy=-Math.cos(angle),width=missile?17:titan?12:11,height=missile?37:titan?30:26,id=p.id*8;
+  const angle=missile?getMissilePose(p,reduced).heading+Math.PI/2:Math.atan2(p.vy,p.vx)+Math.PI/2;
+  const dx=Math.sin(angle),dy=-Math.cos(angle),width=missile?VIPER_ULTIMATE_SIZE.width:titan?12:11,height=missile?VIPER_ULTIMATE_SIZE.height:titan?30:26,id=p.id*8;
   const trail:UltimateVisualKey=missile?"ultimateViperExhaust":titan?"ultimateTitanTrail":"ultimateHawkEngine";
   const length=missile?(p.missileState==="powered"?48:20):titan?38:27;
-  draw(id+1,trail,p.x-dx*height*.65,p.y-dy*height*.65,width*(missile?.8:1),length*(reduced?.85:1.3),angle,.95);
-  if(!reduced&&missile&&p.missileState==="powered")draw(id+2,trail,p.x-dx*48,p.y-dy*48,12,62,angle,.25);
+  // Missile wake is world-space shared history; this dedicated pool owns its body.
+  if(!missile)draw(id+1,trail,p.x-dx*height*.65,p.y-dy*height*.65,width,length*(reduced?.85:1.3),angle,.95);
   draw(id+3,key,p.x,p.y,width*1.65,height*1.2,angle,reduced?.22:.34,true);
   draw(id,key,p.x,p.y,width,height,angle,1);
   draw(id+4,key,p.x,p.y,width*.65,height*.85,angle,.45,true);

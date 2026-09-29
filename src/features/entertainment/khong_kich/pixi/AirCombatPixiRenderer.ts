@@ -19,7 +19,8 @@ import { getEnemyExhaustTransform } from "../airCombatHitboxes";
 import { paintTitanShield, type ShieldPainter } from "../airCombatTitanShield";
 import { TitanShieldPresentation } from "../airCombatTitanShield";
 import { AirCombatMissilePool } from "./AirCombatMissilePool";
-import { AMMO_VISUALS, getAmmoVisualKey, getBasicAmmoVisual } from "../airCombatAmmo";
+import { paintMissileExhausts, type MissileExhaustPainter } from "../airCombatMissilePresentation";
+import { AMMO_VISUALS, getAmmoVisualKey, getBasicAmmoVisual, getMissileVisual } from "../airCombatAmmo";
 import { angularBarPolygon, BOSS_VISUAL_WIDTH_SCALE, BOSS_VISUAL_ASPECT } from "../airCombatHudLayout";
 import { SONIC_RING_THICKNESS } from "../airCombatBoss";
 import { isElite } from "../airCombatWaves";
@@ -41,6 +42,10 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
   private actors = new Container();
   private effects = new Container();
   private smokeLayer = new Container();
+  private missileExhaust = new Graphics();
+  private paintMissileSegment:MissileExhaustPainter=(ax,ay,cx,cy,bx,by,width,alpha,tint)=>{
+    this.missileExhaust.moveTo(ax,ay).quadraticCurveTo(cx,cy,bx,by).stroke({width,color:tint,alpha,cap:"round",join:"round"});
+  };
   private missileSmoke: AirCombatSpritePool;
   private telegraphs = new Graphics();
   private enemyForegroundMarks = new Graphics();
@@ -138,7 +143,8 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     this.astraSprites = new AirCombatSpritePool(this.magneticLayer, 192);
     this.equipmentSprites = new AirCombatSpritePool(this.magneticLayer, 640);
     app.stage.addChild(this.root);
-    this.root.addChild(this.sky.root, this.telegraphs, this.smokeLayer, this.actors, this.effects, this.magneticLayer, this.magneticWarnings, this.stormbreakerRoot, this.stormbreakerMask, this.enemyForegroundMarks, this.globalVfx, this.enemyStatusLayer, this.hitbox, this.damageText.root);
+    this.root.addChild(this.sky.root, this.telegraphs, this.smokeLayer, this.missileExhaust, this.actors, this.effects, this.magneticLayer, this.magneticWarnings, this.stormbreakerRoot, this.stormbreakerMask, this.enemyForegroundMarks, this.globalVfx, this.enemyStatusLayer, this.hitbox, this.damageText.root);
+    this.missileExhaust.blendMode="add";
     // Separate stage branch: neither recoil nor camera shake can move status bars.
     app.stage.addChild(this.stableHud);
     this.stableHud.addChild(this.trackingBars, this.hpText, this.resourceText);
@@ -417,17 +423,19 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
       if (!smoke) continue;
       const age = 1 - Math.max(0, particle.life / particle.maxLife);
       smoke.position.set(particle.x, particle.y);
-      smoke.width = smoke.height = particle.size * (.65 + age * .9);
-      smoke.alpha = Math.min(1, (1 - age) ** 1.4 * (reducedMotion ? .4 : .7) * 1.7);
+      smoke.width = smoke.height = particle.size * (.7 + age * 1.1);
+      smoke.alpha = (1 - age) ** 1.35 * (reducedMotion ? .55 : .85);
       smoke.tint = particle.color;
     }
     this.missileSmoke.end();
+    this.missileExhaust.clear();
+    paintMissileExhausts(world,this.paintMissileSegment,reducedMotion);
     this.missiles.begin();
     for (const p of world.projectiles) {
       if (rankProjectileVisual(p)||ultimateProjectileVisual(p)) continue; // Dedicated ranked sprite pool owns body and wake.
       if (world.stormbreaker && p.stormbreakerVisual) continue;
       if (world.magnetic && p.owner === "enemy" && p.magneticVisual) continue; // Shared atlas painter owns magnetic rounds.
-      const missile = p.projectileKind !== "bullet";
+      const missile = getMissileVisual(p)!==null;
       if (missile) this.missiles.render(p,reducedMotion);
       else {
         const round=p.owner==="enemy"?"charge":world.aircraft.aircraftId==="breaker"?"enemyTracer":p.owner==="drone"||world.aircraft.aircraftId==="phantom"?"laser":"tracer";
