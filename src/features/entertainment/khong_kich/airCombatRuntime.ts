@@ -905,6 +905,7 @@ function fireEnemyBullet(world: CombatWorld, enemy: EnemyEntity, angle: number, 
         rawDamage,
         radius: homing ? 5 : 4,
         homing,
+        lifetime: homing && tag === "radar_lock" ? 12 : undefined,
         targetId: chooseEnemyTarget(world, homing, enemy),
         turnRate: homing ? 1.1 : 0,
         color: homing ? "#fbbf24" : "#fb7185",
@@ -1305,7 +1306,7 @@ function launchNextMissile(world: CombatWorld, salvo: MissileSalvo): boolean {
     const launch = clampCircleToGameplayRect(world.playerX + side * 32*playerAirframeScale(world.aircraft), world.playerY - 12*playerAirframeScale(world.aircraft), 4.5);
     const p = addProjectile(world, {owner:"player",source:"skill",skillId:"missile_swarm",salvoId:salvo.id,expansionCast:salvo.expansionCast,
         x:launch.x,y:launch.y,vx:0,vy:-260,radius:4.5,rawDamage:getEffectiveAircraftStats(world.aircraft).firepower*values.damageMultiplier,
-        lifetime:6,projectileKind:"missile",anchorX:side*32,anchorY:-12,turnRate:3.2,color:"#fb923c"});
+        lifetime:12,projectileKind:"missile",anchorX:side*32,anchorY:-12,turnRate:3.2,color:"#fb923c"});
     if (!p) return false;
     if(salvo.launchIndex>=14)recordCoreMetric(world.aircraft,25,"extraProjectiles",1);
     salvo.live.add(p.id); salvo.pairIds.push(p.id); salvo.pending--; salvo.launchIndex++;
@@ -1911,7 +1912,7 @@ function launchBossMissile(world: CombatWorld, enemy: EnemyEntity): void {
     const heading = Math.PI / 2 - side * .65;
     const p = addProjectile(world, { owner: "enemy", enemySpeedClass:"special", appearance: "boss", criticalAttack: true, x: enemy.x + side * 30, y: enemy.y + 20,
         vx: 0, vy: 0, rawDamage: tuning.missile, radius: 5, homing: true,
-        targetId: chooseEnemyTarget(world, true), turnRate: side<0?(world.bossPhase>=3?1.2:1.15):(world.bossPhase>=3?.7:.75), lifetime: 4.5, color: "#ff526e", sourceEnemyId: enemy.id, sourceEnemyType: "boss", attackTag: "boss_missile", majorBossAttack: true });
+        targetId: chooseEnemyTarget(world, true), turnRate: side<0?(world.bossPhase>=3?1.2:1.15):(world.bossPhase>=3?.7:.75), lifetime: 9, color: "#ff526e", sourceEnemyId: enemy.id, sourceEnemyType: "boss", attackTag: "boss_missile", majorBossAttack: true });
     if (!p) return;
     Object.assign(p, { projectileKind: "boss_missile", missileState: "loiter", heading,
         cruiseSpeed: (side<0?tuning.missileSpeed:world.bossPhase>=3?245:225) * tuning.speedScale, speed: 0, acceleration: 220, angularAcceleration: 4 });
@@ -2509,7 +2510,13 @@ function acquireMissileTarget(world: CombatWorld, p: ProjectileEntity): EnemyEnt
     const current = world.enemies.find(e => e.id === p.targetId && isHostileToPlayer(world,e));
     if (current) return current;
     if(p.skillId==="missile_swarm") {
-        if(p.targetId!==null && p.missileState==="powered" && skillRank(world.aircraft,"missile_swarm")<2)return null;
+        // Every rank reacquires from the missile, including after a targetless search.
+        // Keep the authored initial lock preference only before launch turning.
+        if(p.targetId!==null || p.missileState!=="loiter") {
+            const target=nearestEnemy(world,p.x,p.y,p.hitIds,false);
+            p.targetId=target?.id??null;
+            return target;
+        }
         const preferredId=world.rankRuntime?.lock?.target??world.playerTargetId;
         const preferred=world.enemies.find(e=>e.id===preferredId&&isHostileToPlayer(world,e)&&!p.hitIds.includes(e.id));
         if(preferred){p.targetId=preferred.id;return preferred;}
@@ -2579,8 +2586,14 @@ function updateMissile(world: CombatWorld, p: ProjectileEntity, dt: number, spee
         return true;
     }
     const previousHeading = p.heading;
-    // With no remaining target in powered flight, arc back toward the playfield.
-    const desired = Math.atan2((target?.y ?? world.playerY - 100) - p.y, (target?.x ?? world.playerX) - p.x);
+    // A deterministic virtual steering point keeps searching Viper missiles near
+    // combat without a fake target, combat RNG, or a reset of motion/lifetime.
+    const searchPhase=p.id*2.399963229728653+p.missileAge*.55;
+    const searchX=p.skillId==="missile_swarm"
+        ? (GAMEPLAY_SAFE_RECT.left+GAMEPLAY_SAFE_RECT.right)/2+Math.cos(searchPhase)*GAMEPLAY_SAFE_RECT.width*.18 : world.playerX;
+    const searchY=p.skillId==="missile_swarm"
+        ? (GAMEPLAY_SAFE_RECT.top+GAMEPLAY_SAFE_RECT.bottom)/2+Math.sin(searchPhase)*GAMEPLAY_SAFE_RECT.height*.18 : world.playerY-100;
+    const desired = Math.atan2((target?.y ?? searchY) - p.y, (target?.x ?? searchX) - p.x);
     // BigBang still locks its launch aim; only the old ignition snap is eased out.
     steerMissileHeading(p,p.bigBang&&powered?(p.missileLaunchHeading??p.heading):desired,dt);
     if (!powered) {
@@ -2707,7 +2720,7 @@ function coreContext(world: CombatWorld, extra: Partial<CoreContext> = {}): Core
             const count = Math.min(3, world.enemies.reduce((n, e) => n + (isHostileToPlayer(world,e) ? 1 : 0), 0));
             const volleyId = world.nextId;
             for (let i = 0; i < count; i++) {
-                const missile = addProjectile(world, { owner: "player", source: "weapon", telemetryCore: 106, projectileKind: "missile", volleyId, turnRate: 4, lifetime: 6,
+                const missile = addProjectile(world, { owner: "player", source: "weapon", telemetryCore: 106, projectileKind: "missile", volleyId, turnRate: 4, lifetime: 12,
                     anchorX: (i - 1) * 25, anchorY: -24,
                     x: world.playerX + (i - 1) * 10, y: world.playerY - 15, vx: (i - 1) * 65, vy: -230, radius: 4.5,
                     rawDamage: getEffectiveAircraftStats(world.aircraft).firepower * 3.6, color: "#67e8f9" });
