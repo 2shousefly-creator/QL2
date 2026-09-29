@@ -5,7 +5,7 @@ export interface EquipmentDefinition { readonly id: EquipmentDefinitionId; reado
 const definitions: EquipmentDefinition[] = [
   {
     "id": "TP01",
-    "name": "Tinh Thiết",
+    "name": "Nòng Pháo Raxon",
     "rarity": "component",
     "statsText": "+20 Hỏa Lực",
     "effect": "",
@@ -15,7 +15,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "TP02",
-    "name": "Phong Luân",
+    "name": "Cung Phong Tốc Lora",
     "rarity": "component",
     "statsText": "+22,5% Tốc Độ Bắn Cộng Thêm",
     "effect": "",
@@ -25,7 +25,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "TP03",
-    "name": "Hắc Giáp",
+    "name": "Phiến Giáp Kovar",
     "rarity": "component",
     "statsText": "+17 Giáp",
     "effect": "",
@@ -35,7 +35,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "TP04",
-    "name": "Cốt Titan",
+    "name": "Khung Sinh Mệnh Teral",
     "rarity": "component",
     "statsText": "+225 Máu Tối Đa",
     "effect": "",
@@ -45,7 +45,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "TP05",
-    "name": "Sinh Mạch",
+    "name": "Ống Tiếp Sinh Neria",
     "rarity": "component",
     "statsText": "+1 Hồi Máu/s",
     "effect": "",
@@ -55,7 +55,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "TP06",
-    "name": "Tụ Bão",
+    "name": "Pin Năng Lượng Volen",
     "rarity": "component",
     "statsText": "+10% Hồi Tài Nguyên",
     "effect": "",
@@ -65,7 +65,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "TP07",
-    "name": "Thời Phiến",
+    "name": "Đồng Hồ Cát Kirae",
     "rarity": "component",
     "statsText": "+8 Điểm Hồi Kỹ Năng",
     "effect": "",
@@ -75,7 +75,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "TP08",
-    "name": "Tinh Nhãn",
+    "name": "Kính Ngắm Vexor",
     "rarity": "component",
     "statsText": "+10% Tỷ Lệ Chí Mạng",
     "effect": "",
@@ -85,7 +85,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "TH01",
-    "name": "Pháo Hắc Tinh",
+    "name": "Súng Trường Demaro",
     "rarity": "completed",
     "statsText": "+40 Hỏa Lực",
     "effect": "Gây thêm 12,5% sát thương trực tiếp.",
@@ -100,7 +100,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "TH02",
-    "name": "Luân Cuồng Phong",
+    "name": "Cuồng Cung Amora",
     "rarity": "completed",
     "statsText": "+20 Hỏa Lực; +22,5% Tốc Độ Bắn Cộng Thêm",
     "effect": "Đòn đánh thường trúng cho 1 cộng dồn; thi triển kỹ năng cho 5 cộng dồn. Mỗi cộng dồn cho +1,25% Tốc Độ Bắn Cộng Thêm trong 4 giây, tối đa 20 cộng dồn. Khi nhận sát thương, mất 5 cộng dồn. Ở 20 cộng dồn, nhận thêm 14% Sát Thương Đòn Đánh Thường.",
@@ -116,7 +116,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "TH03",
-    "name": "Màn Hư Không",
+    "name": "Găng Xuyên Ảnh Veyra",
     "rarity": "completed",
     "statsText": "+20 Hỏa Lực; +17 Giáp",
     "effect": "Khi Máu dưới 40%, trở nên không thể bị chỉ định trong 1,5 giây và hồi 10% Máu đã mất. Khi hiệu ứng kết thúc, gây thêm 10% mọi sát thương trong 4 giây. Hồi Chiêu: 40 giây sau khi thời gian không thể bị chỉ định kết thúc.",
@@ -132,7 +132,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "TH04",
-    "name": "Khiên Huyết Tinh",
+    "name": "Búa Hộ Tâm Drokal",
     "rarity": "completed",
     "statsText": "+20 Hỏa Lực; +225 Máu Tối Đa",
     "effect": "Khi Máu dưới 60%, tạo Lá Chắn bằng 12% Máu Tối Đa trong 5 giây. Hồi Chiêu: 60 giây sau khi Lá Chắn bị phá hoặc hết hiệu lực.",
@@ -148,7 +148,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "TH05",
-    "name": "Lò Prometheus",
+    "name": "Hỏa Thương Kelar",
     "rarity": "completed",
     "statsText": "+20 Hỏa Lực; +1 Hồi Máu/s",
     "effect": "Kỹ năng gây sát thương đặt Hỏa Ấn trong 8 giây. Sau 4 đòn đánh thường trúng mục tiêu có Hỏa Ấn, kích nổ gây 210% Hỏa Lực lên mục tiêu và 140% Hỏa Lực trong bán kính 100 px. Sau khi kích nổ, kỹ năng gây sát thương kế tiếp trong 4 giây gây thêm 17,5% Sát Thương Kỹ Năng.",
@@ -164,7 +164,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "TH06",
-    "name": "Bình Tụ Aether",
+    "name": "Trượng Tụ Năng Evaro",
     "rarity": "completed",
     "statsText": "+20 Hỏa Lực; +10% Hồi Tài Nguyên",
     "effect": "Mỗi 20 đòn đánh thường chính trúng kẻ địch, hồi 3% Tài Nguyên Tối Đa. Kỹ năng kế tiếp được thi triển trong 4 giây sau đó giảm 10% Chi Phí Tài Nguyên. Hồi Chiêu nội tại: 2 giây. Chỉ mỗi đòn thứ 20 mới thử kích hoạt; không tích lượt hồi trong lúc Hồi Chiêu.",
@@ -180,7 +180,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "TH07",
-    "name": "Ấn Hắc Nguyệt",
+    "name": "Gậy Hắc Tốc Noxel",
     "rarity": "completed",
     "statsText": "+20 Hỏa Lực; +8 Điểm Hồi Kỹ Năng",
     "effect": "Nhận +10% Sát Thương Kỹ Năng. Kỹ năng trúng mục tiêu khiến mục tiêu đó nhận thêm 10% mọi sát thương trong 4 giây.",
@@ -196,7 +196,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "TH08",
-    "name": "Mắt Tempest",
+    "name": "Kính Xạ Kỹ Tervi",
     "rarity": "completed",
     "statsText": "+20 Hỏa Lực; +10% Tỷ Lệ Chí Mạng",
     "effect": "Kỹ năng có thể chí mạng. Khi có Găng Bảo Thạch, nhận thêm 12,5% Sát Thương Chí Mạng. Hiệu ứng kết hợp chỉ được áp dụng một lần.",
@@ -212,7 +212,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "TH09",
-    "name": "Nanh Lôi Ảnh",
+    "name": "Cung Tia Chớp Zeyra",
     "rarity": "completed",
     "statsText": "+45% Tốc Độ Bắn Cộng Thêm",
     "effect": "+10% Tổng Tốc Độ Bắn. Đòn đánh thường gây thêm sát thương bằng 1% Máu hiện tại của mục tiêu; với Tinh Anh/Boss, sát thương cộng thêm tối đa bằng 25% Hỏa Lực mỗi khi trúng.",
@@ -227,7 +227,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "TH10",
-    "name": "Giáp Colossus",
+    "name": "Nắm Đấm Phản Kích Brakka",
     "rarity": "completed",
     "statsText": "+22,5% Tốc Độ Bắn Cộng Thêm; +17 Giáp",
     "effect": "Mỗi lần nhận sát thương cho 1 cộng dồn, tối đa 6. Khi đạt 6 cộng dồn, kích hoạt Colossus trong 8 giây, nhận +42 Giáp, +25% Tốc Độ Bắn Cộng Thêm, +1 Hồi Máu/s và +14% mọi sát thương. Trong Colossus, không thể tích thêm cộng dồn; mỗi lần trúng đòn kéo dài 0,5 giây, tối đa thêm 3 giây.",
@@ -243,7 +243,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "TH11",
-    "name": "Cánh Valkyrie",
+    "name": "Song Đao Tốc Chiến Sarel",
     "rarity": "completed",
     "statsText": "+22,5% Tốc Độ Bắn Cộng Thêm; +225 Máu Tối Đa",
     "effect": "Khi thi triển kỹ năng, nhận +30% Tốc Độ Bắn Cộng Thêm và +10,5% Sát Thương Đòn Đánh Thường trong 6 giây. Hiệu ứng không cộng dồn; chỉ làm mới thời gian.",
@@ -259,7 +259,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "TH12",
-    "name": "Tâm Cơ Giới",
+    "name": "Drone Song Ảnh Miron",
     "rarity": "completed",
     "statsText": "+22,5% Tốc Độ Bắn Cộng Thêm; +1 Hồi Máu/s",
     "effect": "Mỗi đòn đánh thường thứ 5 tạo 2 Tàn Ảnh. Mỗi Tàn Ảnh gây 55% Hỏa Lực lên mục tiêu phụ. Nếu không có mục tiêu phụ, cả hai hợp nhất vào mục tiêu chính và gây tổng 100% Hỏa Lực.",
@@ -275,7 +275,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "TH13",
-    "name": "Luân Plasma",
+    "name": "Roi Điện Kestra",
     "rarity": "completed",
     "statsText": "+22,5% Tốc Độ Bắn Cộng Thêm; +10% Hồi Tài Nguyên",
     "effect": "Di chuyển và đòn đánh thường tích Điện Năng. Khi đạt 100 Điện Năng, đòn đánh thường kế tiếp tạo chuỗi sét tối đa 4 lần, mỗi lần gây 100% Hỏa Lực. Nếu không còn mục tiêu phụ, các lần nảy còn lại quay về mục tiêu chính và gây 35% sát thương.",
@@ -291,7 +291,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "TH14",
-    "name": "Tù Và Ares",
+    "name": "Kèn Xung Trận Ravor",
     "rarity": "completed",
     "statsText": "+22,5% Tốc Độ Bắn Cộng Thêm; +8 Điểm Hồi Kỹ Năng",
     "effect": "Khi kỹ năng hạ gục kẻ địch, nhận +30% Tốc Độ Bắn Cộng Thêm, +25 Hỏa Lực và +10,5% Sát Thương Kỹ Năng trong 8 giây. Kỹ năng trực tiếp trúng Tinh Anh/Boss cũng kích hoạt hiệu ứng với 50% sức mạnh. Hiệu ứng không cộng dồn; chỉ làm mới thời gian.",
@@ -307,7 +307,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "TH15",
-    "name": "Nanh Fenrir",
+    "name": "Lưỡi Cưa Phá Giáp Feros",
     "rarity": "completed",
     "statsText": "+22,5% Tốc Độ Bắn Cộng Thêm; +10% Tỷ Lệ Chí Mạng",
     "effect": "Đòn chí mạng giảm 5 Giáp mục tiêu trong 5 giây, tối đa 4 cộng dồn. Ở 4 cộng dồn, mục tiêu nhận thêm 7,5% mọi sát thương từ chiến cơ.",
@@ -323,7 +323,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "TH16",
-    "name": "Giáp Gorgon",
+    "name": "Khiên Tháp Garan",
     "rarity": "completed",
     "statsText": "+34 Giáp",
     "effect": "Giảm 8,5% sát thương phải nhận. Tích trữ lượng sát thương đã ngăn chặn; mỗi khi tích đủ 12% Máu Tối Đa, phát sóng xung kích gây 210% Hỏa Lực. Giữ phần tiến độ vượt ngưỡng.",
@@ -338,7 +338,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "TH17",
-    "name": "Khiên Atlas",
+    "name": "Giáp Vai Hộ Mệnh Torga",
     "rarity": "completed",
     "statsText": "+17 Giáp; +225 Máu Tối Đa",
     "effect": "Khi mất Máu, tạo một Lá Chắn bằng 8,5% Máu Tối Đa trong 5 giây. Trong khi Lá Chắn còn tồn tại, gây thêm 7% mọi sát thương. Hồi Chiêu: 10 giây sau khi Lá Chắn bị phá hoặc hết hiệu lực.",
@@ -354,7 +354,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "TH18",
-    "name": "Giáp Gaia",
+    "name": "Hộp Cứu Thương Velia",
     "rarity": "completed",
     "statsText": "+17 Giáp; +1 Hồi Máu/s",
     "effect": "25% lượng Máu đã mất được lưu vào Bộ Đệm, tối đa 12,5% Máu Tối Đa. Sau 2,5 giây không mất Máu, hồi 52,5% lượng đang lưu; sau khi hồi, gây thêm 7% mọi sát thương trong 4 giây.",
@@ -370,7 +370,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "TH19",
-    "name": "Tụ Phản Lực",
+    "name": "Bình Nghịch Năng Orven",
     "rarity": "completed",
     "statsText": "+17 Giáp; +10% Hồi Tài Nguyên",
     "effect": "Khi mất Máu, hồi 3% Tài Nguyên Tối Đa. Hồi Chiêu: 6 giây.",
@@ -386,7 +386,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "TH20",
-    "name": "Khung Hộ Vệ",
+    "name": "Găng Hộ Vệ Kardo",
     "rarity": "completed",
     "statsText": "+17 Giáp; +8 Điểm Hồi Kỹ Năng",
     "effect": "Khi thi triển kỹ năng, nhận +32 Giáp và giảm 7% sát thương phải nhận trong 5 giây. Hiệu ứng không cộng dồn; chỉ làm mới thời gian.",
@@ -402,7 +402,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "TH21",
-    "name": "Lăng Kính Aegis",
+    "name": "Huy Hiệu Phản Quang Leris",
     "rarity": "completed",
     "statsText": "+17 Giáp; +10% Tỷ Lệ Chí Mạng",
     "effect": "Đòn chí mạng cho +2% Giảm Sát Thương trong 3,5 giây, tối đa 4 cộng dồn. Ở 4 cộng dồn, gây thêm 5% mọi sát thương.",
@@ -418,7 +418,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "TH22",
-    "name": "Tim Behemoth",
+    "name": "Tim Thép Borum",
     "rarity": "completed",
     "statsText": "+450 Máu Tối Đa",
     "effect": "Nhận +8,5% Máu Tối Đa. Tăng 15% sức mạnh Hồi Máu và Lá Chắn nhận vào.",
@@ -433,7 +433,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "TH23",
-    "name": "Chén Elysia",
+    "name": "Đèn Sinh Mệnh Nalia",
     "rarity": "completed",
     "statsText": "+225 Máu Tối Đa; +1 Hồi Máu/s",
     "effect": "Mỗi khi tổng lượng Máu đã mất đạt 10% Máu Tối Đa, tạo 1 ngọc: hồi 3% Máu Tối Đa hoặc tạo Lá Chắn 5% Máu Tối Đa trong 5 giây. Nhặt ngọc giúp gây thêm 7% mọi sát thương trong 4 giây.",
@@ -449,7 +449,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "TH24",
-    "name": "Lõi Tinh Vân",
+    "name": "Chùy Thiên Thạch Coren",
     "rarity": "completed",
     "statsText": "+225 Máu Tối Đa; +10% Hồi Tài Nguyên",
     "effect": "Mỗi khi tiêu tổng cộng 30% Tài Nguyên Tối Đa, gọi một thiên thạch gây 210% Hỏa Lực trong bán kính 80 px và làm chậm 21% trong 2 giây. Nếu trúng ít nhất 1 mục tiêu, hồi 4% Tài Nguyên Tối Đa.",
@@ -465,7 +465,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "TH25",
-    "name": "Đồng Hồ Lazarus",
+    "name": "Đồng Hồ Cát Varen",
     "rarity": "completed",
     "statsText": "+225 Máu Tối Đa; +8 Điểm Hồi Kỹ Năng",
     "effect": "Khi Máu dưới 35%, giảm 3,5 giây Hồi Chiêu Còn Lại của cả 4 kỹ năng; tạo Lá Chắn 10,5% Máu Tối Đa trong 5 giây; đồng thời gây thêm 10,5% mọi sát thương trong 6 giây. Hồi Chiêu: 25 giây sau khi hiệu ứng tăng sát thương 6 giây kết thúc.",
@@ -481,7 +481,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "TH26",
-    "name": "Trống Khaos",
+    "name": "Móng Vuốt Khaen",
     "rarity": "completed",
     "statsText": "+225 Máu Tối Đa; +10% Tỷ Lệ Chí Mạng",
     "effect": "Mỗi đòn chí mạng cho +1,5% mọi sát thương trong 6 giây, tối đa 6 cộng dồn. Ở 6 cộng dồn, nhận thêm 10% Sát Thương Chí Mạng.",
@@ -497,7 +497,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "TH27",
-    "name": "Suối Yggdrasil",
+    "name": "Bình Hồi Mạch Erena",
     "rarity": "completed",
     "statsText": "+2 Hồi Máu/s",
     "effect": "Mỗi giây, hồi thêm 0,35% Máu đã mất.",
@@ -512,7 +512,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "TH28",
-    "name": "Song Tâm Gemini",
+    "name": "Con Lắc Song Năng Dovia",
     "rarity": "completed",
     "statsText": "+1 Hồi Máu/s; +10% Hồi Tài Nguyên",
     "effect": "Khi cả Máu và Tài Nguyên đều trên 50%, gây thêm 10,5% mọi sát thương. Nếu không, tăng 20% tốc độ hồi của thanh đang có tỷ lệ thấp hơn.",
@@ -528,7 +528,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "TH29",
-    "name": "Bình Ambrosia",
+    "name": "Chuông Hồi Tức Avela",
     "rarity": "completed",
     "statsText": "+1 Hồi Máu/s; +8 Điểm Hồi Kỹ Năng",
     "effect": "Khi hiệu ứng của kỹ năng kết thúc, hồi 4% Máu Tối Đa trong 3 giây; phần hồi dư chuyển thành Lá Chắn tối đa 3,5% Máu Tối Đa. Hồi Chiêu: 3 giây sau khi thời gian hồi Máu 3 giây kết thúc.",
@@ -544,7 +544,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "TH30",
-    "name": "Vuốt Morana",
+    "name": "Liềm Huyết Risha",
     "rarity": "completed",
     "statsText": "+1 Hồi Máu/s; +10% Tỷ Lệ Chí Mạng",
     "effect": "Đòn chí mạng hồi 0,125% Máu Tối Đa, giới hạn 0,375% mỗi giây. Khi Máu dưới 30%, giới hạn hồi tăng thành 0,75% mỗi giây.",
@@ -560,7 +560,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "TH31",
-    "name": "Lõi Ouroboros",
+    "name": "Bình Chứa Vô Hạn Orel",
     "rarity": "completed",
     "statsText": "+20% Hồi Tài Nguyên",
     "effect": "Nhận +14% Tài Nguyên Tối Đa; giảm 5% Chi Phí Tài Nguyên của kỹ năng. Khi Tài Nguyên trên 80%, nhận +7% Sát Thương Kỹ Năng. Phantom có thể vượt 100 Điện.",
@@ -575,7 +575,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "TH32",
-    "name": "Miện Hư Không",
+    "name": "Gậy Khuếch Năng Zevan",
     "rarity": "completed",
     "statsText": "+10% Hồi Tài Nguyên; +8 Điểm Hồi Kỹ Năng",
     "effect": "Hạ gục kẻ địch cho +28% Hồi Tài Nguyên trong 6 giây. Kỹ năng trực tiếp trúng Tinh Anh/Boss cho +14% trong 6 giây. Trong khi hiệu ứng tăng cường đang hoạt động, nhận +7% Sát Thương Kỹ Năng.",
@@ -591,7 +591,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "TH33",
-    "name": "Mặt Nạ Janus",
+    "name": "Mặt Nạ Lưỡng Cực Varon",
     "rarity": "completed",
     "statsText": "+10% Hồi Tài Nguyên; +10% Tỷ Lệ Chí Mạng",
     "effect": "Khi Máu từ 50% trở lên, gây thêm 7,5% mọi sát thương. Khi Máu dưới 50%, hồi Máu bằng 1% sát thương gây ra và giảm 5% sát thương phải nhận. Lượng Máu hồi thực tế tối đa 0,25% Máu Tối Đa mỗi giây.",
@@ -607,7 +607,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "TH34",
-    "name": "Đồng Hồ Chronos",
+    "name": "Đồng Hồ Kỹ Thuật Creno",
     "rarity": "completed",
     "statsText": "+21 Điểm Hồi Kỹ Năng",
     "effect": "Nhận +10% Sát Thương Kỹ Năng. Mỗi khi thi triển kỹ năng, giảm 1 giây Hồi Chiêu Còn Lại của 3 kỹ năng còn lại.",
@@ -622,7 +622,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "TH35",
-    "name": "Nanh Thời Gian",
+    "name": "Dao Găm Xé Nhịp Talix",
     "rarity": "completed",
     "statsText": "+8 Điểm Hồi Kỹ Năng; +10% Tỷ Lệ Chí Mạng",
     "effect": "Đòn đánh thường trúng giảm 0,09 giây Hồi Chiêu dài nhất; chí mạng giảm 0,3 giây. Tổng mức giảm tối đa 0,6 giây mỗi giây. Sau mỗi 4 giây Hồi Chiêu đã giảm, kỹ năng gây sát thương kế tiếp nhận +5% Sát Thương Kỹ Năng.",
@@ -638,7 +638,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "TH36",
-    "name": "Mắt Huyết Nguyệt",
+    "name": "Kiếm Răng Cưa Roxel",
     "rarity": "completed",
     "statsText": "+20% Tỷ Lệ Chí Mạng",
     "effect": "Nhận +20% Sát Thương Chí Mạng. Đòn chí mạng gây Chảy Máu, gây 20% Hỏa Lực mỗi giây trong 4 giây, tối đa 3 cộng dồn. Mục tiêu có đủ 3 cộng dồn nhận thêm 4% mọi sát thương.",
@@ -653,7 +653,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "HL01",
-    "name": "Tinh Vong Pháo",
+    "name": "Đại Bác Moha",
     "rarity": "legendary",
     "statsText": "+80 Hỏa Lực",
     "effect": "Gây thêm 25% sát thương trực tiếp.",
@@ -668,7 +668,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "HL02",
-    "name": "Luân Thiên Bạo",
+    "name": "Song Súng Bão Tốc Auron",
     "rarity": "legendary",
     "statsText": "+40 Hỏa Lực; +45% Tốc Độ Bắn Cộng Thêm",
     "effect": "Đòn đánh thường trúng cho 1 cộng dồn; thi triển kỹ năng cho 5 cộng dồn. Mỗi cộng dồn cho +2,5% Tốc Độ Bắn Cộng Thêm trong 4 giây, tối đa 20 cộng dồn. Khi nhận sát thương, mất 5 cộng dồn. Ở 20 cộng dồn, nhận thêm 28% Sát Thương Đòn Đánh Thường.",
@@ -684,7 +684,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "HL03",
-    "name": "Áo Choàng Nyx",
+    "name": "Áo Choàng Bóng Ảnh Nyra",
     "rarity": "legendary",
     "statsText": "+40 Hỏa Lực; +34 Giáp",
     "effect": "Khi Máu dưới 40%, trở nên không thể bị chỉ định trong 1,5 giây và hồi 20% Máu đã mất. Khi hiệu ứng kết thúc, gây thêm 20% mọi sát thương trong 4 giây. Hồi Chiêu: 40 giây sau khi thời gian không thể bị chỉ định kết thúc.",
@@ -700,7 +700,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "HL04",
-    "name": "Thiên Thuẫn Helios",
+    "name": "Giáp Khiên Solvar",
     "rarity": "legendary",
     "statsText": "+40 Hỏa Lực; +450 Máu Tối Đa",
     "effect": "Khi Máu dưới 60%, tạo Lá Chắn bằng 24% Máu Tối Đa trong 5 giây. Hồi Chiêu: 60 giây sau khi Lá Chắn bị phá hoặc hết hiệu lực.",
@@ -716,7 +716,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "HL05",
-    "name": "Tim Phượng Hoàng",
+    "name": "Súng Phun Hỏa Pyrel",
     "rarity": "legendary",
     "statsText": "+40 Hỏa Lực; +2 Hồi Máu/s",
     "effect": "Kỹ năng gây sát thương đặt Hỏa Ấn trong 8 giây. Sau 4 đòn đánh thường trúng mục tiêu có Hỏa Ấn, kích nổ gây 420% Hỏa Lực lên mục tiêu và 280% Hỏa Lực trong bán kính 100 px. Sau khi kích nổ, kỹ năng gây sát thương kế tiếp trong 4 giây gây thêm 35% Sát Thương Kỹ Năng.",
@@ -732,7 +732,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "HL06",
-    "name": "Giếng Vô Tận",
+    "name": "Lò Tụ Năng Edrin",
     "rarity": "legendary",
     "statsText": "+40 Hỏa Lực; +20% Hồi Tài Nguyên",
     "effect": "Mỗi 20 đòn đánh thường chính trúng kẻ địch, hồi 6% Tài Nguyên Tối Đa. Kỹ năng kế tiếp được thi triển trong 4 giây sau đó giảm 20% Chi Phí Tài Nguyên. Hồi Chiêu nội tại: 2 giây. Chỉ mỗi đòn thứ 20 mới thử kích hoạt; không tích lượt hồi trong lúc Hồi Chiêu.",
@@ -748,7 +748,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "HL07",
-    "name": "Vương Ấn Erebus",
+    "name": "Trượng Xung Kỹ Vaskor",
     "rarity": "legendary",
     "statsText": "+40 Hỏa Lực; +16 Điểm Hồi Kỹ Năng",
     "effect": "Nhận +20% Sát Thương Kỹ Năng. Kỹ năng trúng mục tiêu khiến mục tiêu đó nhận thêm 20% mọi sát thương trong 4 giây.",
@@ -764,7 +764,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "HL08",
-    "name": "Thiên Nhãn Raijin",
+    "name": "Mặt Nạ Xạ Kích Rael",
     "rarity": "legendary",
     "statsText": "+40 Hỏa Lực; +20% Tỷ Lệ Chí Mạng",
     "effect": "Kỹ năng có thể chí mạng. Khi có Găng Bảo Thạch, nhận thêm 25% Sát Thương Chí Mạng. Hiệu ứng kết hợp chỉ được áp dụng một lần.",
@@ -780,7 +780,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "HL09",
-    "name": "Nanh Thiên Lôi",
+    "name": "Đại Liên Xạ Tenzar",
     "rarity": "legendary",
     "statsText": "+90% Tốc Độ Bắn Cộng Thêm",
     "effect": "+20% Tổng Tốc Độ Bắn. Đòn đánh thường gây thêm sát thương bằng 2% Máu hiện tại của mục tiêu; với Tinh Anh/Boss, sát thương cộng thêm tối đa bằng 50% Hỏa Lực mỗi khi trúng.",
@@ -795,7 +795,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "HL10",
-    "name": "Vương Giáp Colossus",
+    "name": "Giáp Quyền Korven",
     "rarity": "legendary",
     "statsText": "+45% Tốc Độ Bắn Cộng Thêm; +34 Giáp",
     "effect": "Mỗi lần nhận sát thương cho 1 cộng dồn, tối đa 6. Khi đạt 6 cộng dồn, kích hoạt Colossus trong 8 giây, nhận +84 Giáp, +50% Tốc Độ Bắn Cộng Thêm, +2 Hồi Máu/s và +28% mọi sát thương. Trong Colossus, không thể tích thêm cộng dồn; mỗi lần trúng đòn kéo dài 0,5 giây, tối đa thêm 3 giây.",
@@ -811,7 +811,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "HL11",
-    "name": "Thiên Dực Valkyrie",
+    "name": "Giày Phản Lực Velora",
     "rarity": "legendary",
     "statsText": "+45% Tốc Độ Bắn Cộng Thêm; +450 Máu Tối Đa",
     "effect": "Khi thi triển kỹ năng, nhận +60% Tốc Độ Bắn Cộng Thêm và +21% Sát Thương Đòn Đánh Thường trong 6 giây. Hiệu ứng không cộng dồn; chỉ làm mới thời gian.",
@@ -827,7 +827,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "HL12",
-    "name": "Trái Tim Titan",
+    "name": "Tháp Pháo Song Ảnh Madox",
     "rarity": "legendary",
     "statsText": "+45% Tốc Độ Bắn Cộng Thêm; +2 Hồi Máu/s",
     "effect": "Mỗi đòn đánh thường thứ 5 tạo 2 Tàn Ảnh. Mỗi Tàn Ảnh gây 110% Hỏa Lực lên mục tiêu phụ. Nếu không có mục tiêu phụ, cả hai hợp nhất vào mục tiêu chính và gây tổng 200% Hỏa Lực.",
@@ -843,7 +843,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "HL13",
-    "name": "Vòng Möbius",
+    "name": "Pháo Sét Kervan",
     "rarity": "legendary",
     "statsText": "+45% Tốc Độ Bắn Cộng Thêm; +20% Hồi Tài Nguyên",
     "effect": "Di chuyển và đòn đánh thường tích Điện Năng. Khi đạt 100 Điện Năng, đòn đánh thường kế tiếp tạo chuỗi sét tối đa 4 lần, mỗi lần gây 200% Hỏa Lực. Nếu không còn mục tiêu phụ, các lần nảy còn lại quay về mục tiêu chính và gây 70% sát thương.",
@@ -859,7 +859,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "HL14",
-    "name": "Kèn Ngày Tận",
+    "name": "Trống Cuồng Chiến Ragan",
     "rarity": "legendary",
     "statsText": "+45% Tốc Độ Bắn Cộng Thêm; +16 Điểm Hồi Kỹ Năng",
     "effect": "Khi kỹ năng hạ gục kẻ địch, nhận +60% Tốc Độ Bắn Cộng Thêm, +50 Hỏa Lực và +21% Sát Thương Kỹ Năng trong 8 giây. Kỹ năng trực tiếp trúng Tinh Anh/Boss cũng kích hoạt hiệu ứng với 50% sức mạnh. Hiệu ứng không cộng dồn; chỉ làm mới thời gian.",
@@ -875,7 +875,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "HL15",
-    "name": "Hàm Sói Fenrir",
+    "name": "Vuốt Xé Giáp Fendra",
     "rarity": "legendary",
     "statsText": "+45% Tốc Độ Bắn Cộng Thêm; +20% Tỷ Lệ Chí Mạng",
     "effect": "Đòn chí mạng giảm 10 Giáp mục tiêu trong 5 giây, tối đa 4 cộng dồn. Ở 4 cộng dồn, mục tiêu nhận thêm 15% mọi sát thương từ chiến cơ.",
@@ -891,7 +891,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "HL16",
-    "name": "Vương Giáp Gorgon",
+    "name": "Giáp Thành Trì Gorven",
     "rarity": "legendary",
     "statsText": "+68 Giáp",
     "effect": "Giảm 17% sát thương phải nhận. Tích trữ lượng sát thương đã ngăn chặn; mỗi khi tích đủ 12% Máu Tối Đa, phát sóng xung kích gây 420% Hỏa Lực. Giữ phần tiến độ vượt ngưỡng.",
@@ -906,7 +906,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "HL17",
-    "name": "Thành Trì Atlas",
+    "name": "Máy Chiếu Khiên Atrel",
     "rarity": "legendary",
     "statsText": "+34 Giáp; +450 Máu Tối Đa",
     "effect": "Khi mất Máu, tạo một Lá Chắn bằng 17% Máu Tối Đa trong 5 giây. Trong khi Lá Chắn còn tồn tại, gây thêm 14% mọi sát thương. Hồi Chiêu: 10 giây sau khi Lá Chắn bị phá hoặc hết hiệu lực.",
@@ -922,7 +922,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "HL18",
-    "name": "Thánh Giáp Gaia",
+    "name": "Buồng Tái Sinh Galia",
     "rarity": "legendary",
     "statsText": "+34 Giáp; +2 Hồi Máu/s",
     "effect": "50% lượng Máu đã mất được lưu vào Bộ Đệm, tối đa 25% Máu Tối Đa. Sau 2,5 giây không mất Máu, hồi 105% lượng đang lưu; sau khi hồi, gây thêm 14% mọi sát thương trong 4 giây.",
@@ -938,7 +938,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "HL19",
-    "name": "Lò Nghịch Biến",
+    "name": "Lò Đảo Năng Nexor",
     "rarity": "legendary",
     "statsText": "+34 Giáp; +20% Hồi Tài Nguyên",
     "effect": "Khi mất Máu, hồi 6% Tài Nguyên Tối Đa. Hồi Chiêu: 5 giây.",
@@ -954,7 +954,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "HL20",
-    "name": "Pháo Đài Argus",
+    "name": "Drone Hộ Thành Argor",
     "rarity": "legendary",
     "statsText": "+34 Giáp; +16 Điểm Hồi Kỹ Năng",
     "effect": "Khi thi triển kỹ năng, nhận +64 Giáp và giảm 14% sát thương phải nhận trong 5 giây. Hiệu ứng không cộng dồn; chỉ làm mới thời gian.",
@@ -970,7 +970,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "HL21",
-    "name": "Thánh Kính Aegis",
+    "name": "Gương Chiến Quang Aevor",
     "rarity": "legendary",
     "statsText": "+34 Giáp; +20% Tỷ Lệ Chí Mạng",
     "effect": "Đòn chí mạng cho +4% Giảm Sát Thương trong 3,5 giây, tối đa 4 cộng dồn. Ở 4 cộng dồn, gây thêm 10% mọi sát thương.",
@@ -986,7 +986,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "HL22",
-    "name": "Hạch Behemoth",
+    "name": "Giáp Sinh Lực Bevon",
     "rarity": "legendary",
     "statsText": "+900 Máu Tối Đa",
     "effect": "Nhận +17% Máu Tối Đa. Tăng 30% sức mạnh Hồi Máu và Lá Chắn nhận vào.",
@@ -1001,7 +1001,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "HL23",
-    "name": "Thánh Tích Elysia",
+    "name": "Bình Thánh Dược Elyra",
     "rarity": "legendary",
     "statsText": "+450 Máu Tối Đa; +2 Hồi Máu/s",
     "effect": "Mỗi khi tổng lượng Máu đã mất đạt 10% Máu Tối Đa, tạo 1 ngọc: hồi 6% Máu Tối Đa hoặc tạo Lá Chắn 10% Máu Tối Đa trong 5 giây. Nhặt ngọc giúp gây thêm 14% mọi sát thương trong 4 giây.",
@@ -1017,7 +1017,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "HL24",
-    "name": "Hạch Thiên Hà",
+    "name": "Pháo Quỹ Đạo Nevrax",
     "rarity": "legendary",
     "statsText": "+450 Máu Tối Đa; +20% Hồi Tài Nguyên",
     "effect": "Mỗi khi tiêu tổng cộng 30% Tài Nguyên Tối Đa, gọi một thiên thạch gây 420% Hỏa Lực trong bán kính 80 px và làm chậm 42% trong 2 giây. Nếu trúng ít nhất 1 mục tiêu, hồi 8% Tài Nguyên Tối Đa.",
@@ -1033,7 +1033,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "HL25",
-    "name": "Thời Khắc Lazarus",
+    "name": "La Bàn Thời Gian Oris",
     "rarity": "legendary",
     "statsText": "+450 Máu Tối Đa; +16 Điểm Hồi Kỹ Năng",
     "effect": "Khi Máu dưới 35%, giảm 7 giây Hồi Chiêu Còn Lại của cả 4 kỹ năng; tạo Lá Chắn 21% Máu Tối Đa trong 5 giây; đồng thời gây thêm 21% mọi sát thương trong 6 giây. Hồi Chiêu: 25 giây sau khi hiệu ứng tăng sát thương 6 giây kết thúc.",
@@ -1049,7 +1049,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "HL26",
-    "name": "Trống Tận Thế",
+    "name": "Đại Đao Bạo Kích Khaor",
     "rarity": "legendary",
     "statsText": "+450 Máu Tối Đa; +20% Tỷ Lệ Chí Mạng",
     "effect": "Mỗi đòn chí mạng cho +3% mọi sát thương trong 6 giây, tối đa 6 cộng dồn. Ở 6 cộng dồn, nhận thêm 20% Sát Thương Chí Mạng.",
@@ -1065,7 +1065,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "HL27",
-    "name": "Mạch Thế Giới",
+    "name": "Trượng Sinh Mạch Yvera",
     "rarity": "legendary",
     "statsText": "+4 Hồi Máu/s",
     "effect": "Mỗi giây, hồi thêm 0,7% Máu đã mất.",
@@ -1080,7 +1080,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "HL28",
-    "name": "Song Cực Gemini",
+    "name": "Lõi Kép Cân Bằng Daxel",
     "rarity": "legendary",
     "statsText": "+2 Hồi Máu/s; +20% Hồi Tài Nguyên",
     "effect": "Khi cả Máu và Tài Nguyên đều trên 50%, gây thêm 21% mọi sát thương. Nếu không, tăng 40% tốc độ hồi của thanh đang có tỷ lệ thấp hơn.",
@@ -1096,7 +1096,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "HL29",
-    "name": "Chén Elysium",
+    "name": "Trượng Tái Sinh Meria",
     "rarity": "legendary",
     "statsText": "+2 Hồi Máu/s; +16 Điểm Hồi Kỹ Năng",
     "effect": "Khi hiệu ứng của kỹ năng kết thúc, hồi 8% Máu Tối Đa trong 3 giây; phần hồi dư chuyển thành Lá Chắn tối đa 7% Máu Tối Đa. Hồi Chiêu: 3 giây sau khi thời gian hồi Máu 3 giây kết thúc.",
@@ -1112,7 +1112,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "HL30",
-    "name": "Nanh Huyết Thần",
+    "name": "Găng Huyết Thực Varka",
     "rarity": "legendary",
     "statsText": "+2 Hồi Máu/s; +20% Tỷ Lệ Chí Mạng",
     "effect": "Đòn chí mạng hồi 0,25% Máu Tối Đa, giới hạn 0,75% mỗi giây. Khi Máu dưới 30%, giới hạn hồi tăng thành 1,5% mỗi giây.",
@@ -1128,7 +1128,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "HL31",
-    "name": "Tâm Vĩnh Cửu",
+    "name": "Trượng Vĩnh Năng Ovron",
     "rarity": "legendary",
     "statsText": "+40% Hồi Tài Nguyên",
     "effect": "Nhận +28% Tài Nguyên Tối Đa; giảm 10% Chi Phí Tài Nguyên của kỹ năng. Khi Tài Nguyên trên 80%, nhận +14% Sát Thương Kỹ Năng. Phantom có thể vượt 100 Điện.",
@@ -1143,7 +1143,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "HL32",
-    "name": "Thánh Miện Aether",
+    "name": "Sách Xung Năng Kelor",
     "rarity": "legendary",
     "statsText": "+20% Hồi Tài Nguyên; +16 Điểm Hồi Kỹ Năng",
     "effect": "Hạ gục kẻ địch cho +56% Hồi Tài Nguyên trong 6 giây. Kỹ năng trực tiếp trúng Tinh Anh/Boss cho +28% trong 6 giây. Trong khi hiệu ứng tăng cường đang hoạt động, nhận +14% Sát Thương Kỹ Năng.",
@@ -1159,7 +1159,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "HL33",
-    "name": "Thánh Diện Janus",
+    "name": "Nhẫn Lưỡng Sinh Javor",
     "rarity": "legendary",
     "statsText": "+20% Hồi Tài Nguyên; +20% Tỷ Lệ Chí Mạng",
     "effect": "Khi Máu từ 50% trở lên, gây thêm 15% mọi sát thương. Khi Máu dưới 50%, hồi Máu bằng 2% sát thương gây ra và giảm 10% sát thương phải nhận. Lượng Máu hồi thực tế tối đa 0,5% Máu Tối Đa mỗi giây.",
@@ -1175,7 +1175,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "HL34",
-    "name": "Vương Miện Chronos",
+    "name": "Trượng Tốc Hành Cress",
     "rarity": "legendary",
     "statsText": "+42 Điểm Hồi Kỹ Năng",
     "effect": "Nhận +20% Sát Thương Kỹ Năng. Mỗi khi thi triển kỹ năng, giảm 2 giây Hồi Chiêu Còn Lại của 3 kỹ năng còn lại.",
@@ -1190,7 +1190,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "HL35",
-    "name": "Thương Xé Thời",
+    "name": "Thương Xé Nhịp Tavir",
     "rarity": "legendary",
     "statsText": "+16 Điểm Hồi Kỹ Năng; +20% Tỷ Lệ Chí Mạng",
     "effect": "Đòn đánh thường trúng giảm 0,18 giây Hồi Chiêu dài nhất; chí mạng giảm 0,6 giây. Tổng mức giảm tối đa 1,2 giây mỗi giây. Sau mỗi 4 giây Hồi Chiêu đã giảm, kỹ năng gây sát thương kế tiếp nhận +10% Sát Thương Kỹ Năng.",
@@ -1206,7 +1206,7 @@ const definitions: EquipmentDefinition[] = [
   },
   {
     "id": "HL36",
-    "name": "Nguyệt Thực Huyết",
+    "name": "Đại Liềm Huyết Nguyệt Noxen",
     "rarity": "legendary",
     "statsText": "+40% Tỷ Lệ Chí Mạng",
     "effect": "Nhận +40% Sát Thương Chí Mạng. Đòn chí mạng gây Chảy Máu, gây 40% Hỏa Lực mỗi giây trong 4 giây, tối đa 3 cộng dồn. Mục tiêu có đủ 3 cộng dồn nhận thêm 8% mọi sát thương.",

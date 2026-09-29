@@ -729,7 +729,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_053",
     "name": "Găng bảo thạch",
-    "description": "Nhận +25% Tỷ Lệ Chí Mạng và cho phép kỹ năng gây chí mạng. Nếu có Mắt Tempest, nhận thêm +12,5% Sát Thương Chí Mạng; nếu có Thiên Nhãn Raijin, nhận thêm +25% Sát Thương Chí Mạng.",
+    "description": "Nhận +25% Tỷ Lệ Chí Mạng và cho phép kỹ năng gây chí mạng. Nếu có Kính Xạ Kỹ Tervi, nhận thêm +12,5% Sát Thương Chí Mạng; nếu có Mặt Nạ Xạ Kích Rael, nhận thêm +25% Sát Thương Chí Mạng.",
     "system": "attack",
     "icon": "core:core_053",
     "category": "offense",
