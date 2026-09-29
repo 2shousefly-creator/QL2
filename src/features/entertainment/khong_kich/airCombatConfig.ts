@@ -56,7 +56,7 @@ export const AIRCRAFT_CONFIGS: Record<AircraftId, AircraftConfig> = {
     id:"astra", name:"Astra", code:"AS-04", role:"Precision Control · Mana",
     description:"Kiểm soát projectile, xuyên tuyến bằng Thương Tinh Tú và không kích thiên thạch.",
     color:"#ff8b35", accent:"#fff4d8", resourceKind:"mana", hpRegen:{base:3.3,growth:.13},
-    baseStats:{maxHp:1760,armor:39,firepower:124,fireRate:4.06,criticalChance:.05,criticalDamageMultiplier:1.7,maxResource:330,resourceRegen:1.5},
+    baseStats:{maxHp:2052,armor:46,firepower:124,fireRate:4.06,criticalChance:.05,criticalDamageMultiplier:1.7,maxResource:330,resourceRegen:1.5},
     growth:{maxHp:34,armor:1.6,firepower:4,criticalChance:0,criticalDamageMultiplier:0,maxResource:15,resourceRegen:.24},
     skillIds:["orbit_reversal","stellar_lance","twin_reflection","starfall"],
     fireRateRatio: 0.337, fireRateGrowthPct: .05,
@@ -74,8 +74,8 @@ export const AIRCRAFT_CONFIGS: Record<AircraftId, AircraftConfig> = {
     baseStats: {
       criticalChance: 0.05,
       criticalDamageMultiplier: 1.70,
-      maxHp: 1694,
-      armor: 38,
+      maxHp: 1997,
+      armor: 45,
       firepower: 118,
       fireRate: 4.15,
       maxResource: 340,
@@ -106,8 +106,8 @@ export const AIRCRAFT_CONFIGS: Record<AircraftId, AircraftConfig> = {
     baseStats: {
       criticalChance: 0.05,
       criticalDamageMultiplier: 1.70,
-      maxHp: 2067,
-      armor: 46,
+      maxHp: 2307,
+      armor: 54,
       firepower: 104,
       fireRate: 3.95,
       maxResource: 320,
@@ -138,8 +138,8 @@ export const AIRCRAFT_CONFIGS: Record<AircraftId, AircraftConfig> = {
     baseStats: {
       criticalChance: 0.05,
       criticalDamageMultiplier: 1.70,
-      maxHp: 1839,
-      armor: 41,
+      maxHp: 2134,
+      armor: 49,
       firepower: 112,
       fireRate: 4.04,
       maxResource: 100,
@@ -160,7 +160,7 @@ export const AIRCRAFT_CONFIGS: Record<AircraftId, AircraftConfig> = {
 };
 
 
-const LEVEL_18_TARGETS = {"black_eagle": [2884.2, 89.65, 257.4, 7.348, 852.5, 9.625], "breaker": [3613.5, 117.59, 178.2, 9.702, 920, 8.5], "phantom": [3203.2, 102.52, 218.9, 8.525, 100, 2], "astra": [3020.6, 93.94, 264, 7.777, 841.5, 9.306]} as const;
+const LEVEL_18_TARGETS = {"black_eagle": [3187.2, 96.65, 257.4, 7.348, 852.5, 9.625], "breaker": [3853.5, 125.59, 178.2, 9.702, 920, 8.5], "phantom": [3498.2, 110.52, 218.9, 8.525, 100, 2], "astra": [3312.6, 100.94, 264, 7.777, 841.5, 9.306]} as const;
 for (const id of Object.keys(LEVEL_18_TARGETS) as AircraftId[]) {
  const c=AIRCRAFT_CONFIGS[id], t=LEVEL_18_TARGETS[id];
  const keys=["maxHp","armor","firepower","maxResource","resourceRegen"] as const;

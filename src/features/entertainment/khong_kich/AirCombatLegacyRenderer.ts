@@ -1,3 +1,4 @@
+import { MIRROR_TRANSFORM } from "./airCombatMirrorTransform";
 import { paintMirage } from "./airCombatMirageVisuals";
 import { STAGE4_ART_URLS, mirageEnemyFrame } from "./airCombatStage4Art";
 import { STAGE3_ART_URLS, STAGE3_VFX_ART, stormEnemyFrame, stormbreakerSkyTile } from "./airCombatStage3Art";
@@ -34,7 +35,7 @@ import type { AmmoVisualKey } from "./airCombatAmmo";
 import { angularBarPolygon } from "./airCombatHudLayout";
 import { SONIC_RING_THICKNESS } from "./airCombatBoss";
 import { getTerrainWorld, TERRAIN_HEIGHT, type TerrainShape } from "./airCombatTerrain";
-import type { CanvasCombatAccents } from "./CanvasCombatAccents";
+import { CanvasCombatAccents } from "./CanvasCombatAccents";
 import { isElite } from "./airCombatWaves";
 import { AIR_COMBAT_WORLD, AIRCRAFT_CONFIGS, ENEMY_CONFIGS, GAMEPLAY_SAFE_RECT } from "./airCombatConfig";
 import type { CombatWorld } from "./airCombatRuntime";
@@ -354,6 +355,8 @@ function drawEnemyGlyph(
   ctx.restore();
 }
 
+const mirrorPresentations = new WeakMap<CombatWorld, { accents: CanvasCombatAccents; bars: HealthBarPresentation; time: number }>();
+
 export function drawLegacyWorld(
   ctx: CanvasRenderingContext2D,
   world: CombatWorld,
@@ -363,17 +366,20 @@ export function drawLegacyWorld(
   healthBars: HealthBarPresentation,
   accents: CanvasCombatAccents,
   presentationTime = world.elapsed,
-  stormbreakerPresentation?: StormbreakerPresentation
+  stormbreakerPresentation?: StormbreakerPresentation,
+  combatOnly = false
 ): void {
   const { width, height, hudHeight } = AIR_COMBAT_WORLD;
   const aircraft = AIRCRAFT_CONFIGS[aircraftId];
   ctx.save();
   const starfallShake=Math.max(0,...(world.astra?.impacts??[]).map(i=>2.2*Math.exp(-(world.elapsed-i.at)*12)));
   const shake=reducedMotion?0:Math.max(accents.killShake,magneticShake(world),Math.min(2.8,starfallShake));
-  ctx.translate(Math.sin(world.elapsed*113)*shake,Math.cos(world.elapsed*97)*shake*.65);
+  if (!combatOnly) {
   if(world.mirage){
+    ctx.fillStyle="#06111e";ctx.fillRect(0,0,width,height);
     const image=magneticImage(STAGE4_ART_URLS.sky);
     if(image)for(let i=0;i<2;i++){const tile=stormbreakerSkyTile(world.elapsed*(reducedMotion?.25:.7),false,i);ctx.save();ctx.translate(tile.x,tile.y);ctx.scale(1,tile.flipped?-1:1);ctx.drawImage(image,-204,-351,408,702);ctx.restore();}
+    ctx.fillStyle="rgba(6,17,30,.14)";ctx.fillRect(0,0,width,height);
   } else if(world.stormbreaker){
     ctx.fillStyle="#080f18";ctx.fillRect(0,0,width,height);
     const image=magneticImage(STAGE3_ART_URLS.sky);
@@ -409,6 +415,7 @@ export function drawLegacyWorld(
   ctx.fillRect(0, hudHeight - 2, width, 2);
   ctx.fillStyle = "rgba(0,0,0,.96)";
   ctx.fillRect(0, hudHeight, width, GAMEPLAY_SAFE_RECT.top - hudHeight);
+  }
 
   ctx.save();
   ctx.beginPath();
@@ -419,7 +426,10 @@ export function drawLegacyWorld(
     GAMEPLAY_SAFE_RECT.height
   );
   ctx.clip();
+  ctx.save();
+  if (!combatOnly) ctx.translate(Math.sin(world.elapsed*113)*shake,Math.cos(world.elapsed*97)*shake*.65);
 
+  if (!combatOnly && !world.mirage) {
   for (let index = 0; index < 18; index++) {
     const x = GAMEPLAY_SAFE_RECT.left + ((index * 83 + 19) % GAMEPLAY_SAFE_RECT.width);
     const speed = 0.28 + (index % 5) * 0.14;
@@ -437,6 +447,8 @@ export function drawLegacyWorld(
     haze.addColorStop(1, "rgba(2,6,23,0)");
     ctx.fillStyle = haze;
     ctx.fillRect(0, GAMEPLAY_SAFE_RECT.top, width, GAMEPLAY_SAFE_RECT.height);
+  }
+
   }
 
   const tacticalPainter:TacticalPainter={
@@ -647,21 +659,7 @@ export function drawLegacyWorld(
       ctx.strokeStyle=enemyAllegiance(world,enemy)==="friendly_hacked"?"#67e8f9":"rgba(251,191,36,.65)";ctx.lineWidth=1.5;ctx.beginPath();
       ctx.moveTo(committed?enemy.dashStartX:enemy.x,committed?enemy.dashStartY:enemy.y);ctx.lineTo(enemy.dashEndX,enemy.dashEndY);ctx.stroke();
     }
-    if (enemy.type !== "boss") {
-      const health = healthBars.get(enemy.id, enemy.hp, enemy.maxHp, enemy.shieldUntil > world.aircraft.coreState.time ? enemy.shield : 0);
-      const w = Math.max(24, Math.min(70, enemy.radius * 2.2));
-      const x = Math.max(GAMEPLAY_SAFE_RECT.left, Math.min(GAMEPLAY_SAFE_RECT.right - w, enemy.x - w / 2));
-      const y = Math.min(GAMEPLAY_SAFE_RECT.bottom - 5, enemy.y + enemy.radius * 1.4 + 5);
-      const barHeight=isElite(enemy.type)?5:3;
-      const fill=(bx:number,by:number,bw:number,bh:number,ratio:number,color:string,stroke=false)=>{
-        const points=angularBarPolygon(bx,by,bw,bh,ratio);if(!points.length)return;
-        ctx.beginPath();ctx.moveTo(points[0],points[1]);for(let i=2;i<points.length;i+=2)ctx.lineTo(points[i],points[i+1]);ctx.closePath();ctx.fillStyle=color;ctx.fill();
-        if(stroke){ctx.strokeStyle=isElite(enemy.type)?"#ffad43":"#d05a69";ctx.lineWidth=.8;ctx.stroke();}
-      };
-      fill(x-2,y-2,w+4,barHeight+4,1,"#071223",true);fill(x,y,w,barHeight,1,"#172638");
-      fill(x,y,w,barHeight,health.shieldEnd,"#d8e4ee");fill(x,y,w,barHeight,health.chipRatio,"#ef4444");fill(x,y,w,barHeight,health.hpRatio,isElite(enemy.type)?"#fbbf24":"#fb7185");
 
-    }
   }
 
   if (world.laserCharge > 0) {
@@ -811,9 +809,6 @@ export function drawLegacyWorld(
     ctx.restore();
   }
 
-  ctx.restore();
-
-  ctx.save(); ctx.beginPath(); ctx.rect(GAMEPLAY_SAFE_RECT.left, GAMEPLAY_SAFE_RECT.top, GAMEPLAY_SAFE_RECT.width, GAMEPLAY_SAFE_RECT.height); ctx.clip();
   paintMirage(world,(frame,x,y,width,height,rotation,alpha,tint,anchorX)=>drawMagneticFrame(ctx,frame,x,y,width,height,rotation,alpha,tint,anchorX),reducedMotion);
   paintStormbreaker(world,{...tacticalPainter,
     sprite:(_id,key,x,y,width,height,rotation=0,alpha=1,additive=false)=>{ctx.save();ctx.globalCompositeOperation=additive?"lighter":"source-over";drawMagneticFrame(ctx,STAGE3_VFX_ART[key],x,y,width,height,rotation,alpha);ctx.restore();},
@@ -823,8 +818,39 @@ export function drawLegacyWorld(
     sprite: (_id,key,x,y,w,h,rotation=0,alpha=1) => drawMagneticFrame(ctx, STAGE2_VFX_ART[key], x,y,w,h,rotation,alpha)
   }, reducedMotion, presentationTime);
   paintEnemyForegroundMarks(world,tacticalPainter);
-  ctx.restore();
   accents.draw(ctx, world, reducedMotion);
+  const mirror = world.mirage?.mirror?.context.world;
+  if (mirror) {
+    let view = mirrorPresentations.get(mirror);
+    if (!view) { view = { accents: new CanvasCombatAccents(), bars: new HealthBarPresentation(), time: presentationTime }; mirrorPresentations.set(mirror, view); }
+    const delta = Math.max(0, Math.min(.12, presentationTime - view.time)); view.time = presentationTime;
+    view.accents.update(mirror, delta); view.bars.begin(delta);
+    ctx.save(); ctx.translate(MIRROR_TRANSFORM.x, MIRROR_TRANSFORM.y); ctx.rotate(MIRROR_TRANSFORM.rotation);
+    drawLegacyWorld(ctx, mirror, mirror.aircraft.aircraftId, reducedMotion, [], view.bars, view.accents, presentationTime, undefined, true);
+    ctx.restore(); view.bars.end();
+  }
+  ctx.restore(); // Shake transform.
+  ctx.restore(); // Fixed gameplay clip.
+  if (combatOnly) { ctx.restore(); return; }
+
+  for (const enemy of world.enemies) {
+    if (enemy.aircraftTarget || enemy.hp <= 0) continue;
+    if (enemy.type !== "boss") {
+      const health = healthBars.get(enemy.id, enemy.hp, enemy.maxHp, enemy.shieldUntil > world.aircraft.coreState.time ? enemy.shield : 0);
+      const w = Math.max(24, Math.min(70, enemy.radius * 2.2));
+      const x = Math.max(GAMEPLAY_SAFE_RECT.left, Math.min(GAMEPLAY_SAFE_RECT.right - w, enemy.x - w / 2));
+      const y = Math.min(GAMEPLAY_SAFE_RECT.bottom - 5, enemy.y + enemy.radius * 1.4 + 5);
+      const barHeight=isElite(enemy.type)?5:3;
+      const fill=(bx:number,by:number,bw:number,bh:number,ratio:number,color:string,stroke=false)=>{
+        const points=angularBarPolygon(bx,by,bw,bh,ratio);if(!points.length)return;
+        ctx.beginPath();ctx.moveTo(points[0],points[1]);for(let i=2;i<points.length;i+=2)ctx.lineTo(points[i],points[i+1]);ctx.closePath();ctx.fillStyle=color;ctx.fill();
+        if(stroke){ctx.strokeStyle=isElite(enemy.type)?"#ffad43":"#d05a69";ctx.lineWidth=.8;ctx.stroke();}
+      };
+      fill(x-2,y-2,w+4,barHeight+4,1,"#071223",true);fill(x,y,w,barHeight,1,"#172638");
+      fill(x,y,w,barHeight,health.shieldEnd,"#d8e4ee");fill(x,y,w,barHeight,health.chipRatio,"#ef4444");fill(x,y,w,barHeight,health.hpRatio,isElite(enemy.type)?"#fbbf24":"#fb7185");
+
+    }
+  }
   const stats = getEffectiveAircraftStats(world.aircraft);
   const displayWidth = PLAYER_AIRFRAME_SIZE[aircraftId]*playerAirframeScale(world.aircraft);
   const barWidth = trackingBarWidth(displayWidth);

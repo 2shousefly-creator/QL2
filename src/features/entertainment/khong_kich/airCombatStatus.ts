@@ -79,3 +79,9 @@ function recordStatusMitigation(state:AircraftCombatState,seconds:number,priorUn
   const now=state.coreState.time,without=seconds*(hasCore(state,203)?1.2:1),withCore=negativeStatusDuration(state,seconds);
   recordCoreMetric(state,98,"debuffSaved",Math.max(priorUntil,now+without)-Math.max(priorUntil,now+withCore));
 }
+
+/** Fresh duel: retain stage capability, clear every hostile status and expiry. */
+export function clearAircraftNegativeStatuses(state: AircraftCombatState): void {
+  state.status = createPlayerStatus(state.status.fractureResolve);
+  for (const key of ["acidArmor", "skillExhaust"]) delete state.coreState.timers[key];
+}

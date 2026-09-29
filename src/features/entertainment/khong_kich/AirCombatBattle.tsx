@@ -134,7 +134,7 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
   const coreSelectingRef = useRef(false);
   const pressRef = useRef<SkillPressState | null>(null);
   const lowHpWarnedRef = useRef(false);
-  const announcementRef = useRef<string | null>(null);
+  const announcementRef = useRef(0);
   const [pauseState, setPauseState] = useState({ paused: false, label: null as string | null });
   const toastHostRef = useRef<HTMLDivElement>(null);
   const bossHpRef = useRef<HTMLDivElement>(null);
@@ -158,7 +158,9 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
   const [showExitConfirm, setShowExitConfirm] = useState(false);
   const [showCoreList, setShowCoreList] = useState(false);
   const [showEquipment,setShowEquipment]=useState(false);
-  const skillFeedbackUntil = useRef(0);
+  const skillFeedbackTimer = useRef<number | null>(null);
+  const [announcement, setAnnouncement] = useState<string | null>(null);
+  useEffect(() => () => { if (skillFeedbackTimer.current !== null) window.clearTimeout(skillFeedbackTimer.current); }, []);
   const [skillFeedback, setSkillFeedback] = useState<string | null>(null);
 
   const aircraft = AIRCRAFT_CONFIGS[aircraftId];
@@ -372,9 +374,6 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
           if (!usingLegacy) void fallback();
           else { presentation.destroy(); presentation = null; setRendererState("failed"); setPauseReason("loading", true); }
         }
-        if (skillFeedbackUntil.current > 0 && world.elapsed >= skillFeedbackUntil.current) {
-          skillFeedbackUntil.current = 0; setSkillFeedback(null);
-        }
         if (now - lastHudUpdate >= 90 || publishedWaveState !== world.waveState || publishedWaveIndex !== world.waveIndex) {
           publishedWaveState = world.waveState; publishedWaveIndex = world.waveIndex;
           setHud(makeHudSnapshot(world, worldRef.current.pauseReasons.size > 0, pauseLabel(worldRef.current.pauseReasons)));
@@ -495,7 +494,8 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
     if (!result.cast) {
       soundManager.playError();
       soundManager.triggerHaptic("light");
-      skillFeedbackUntil.current = worldRef.current.elapsed + 1.3;
+      if (skillFeedbackTimer.current !== null) window.clearTimeout(skillFeedbackTimer.current);
+      skillFeedbackTimer.current = window.setTimeout(() => { setSkillFeedback(null); skillFeedbackTimer.current = null; }, 1300);
       setSkillFeedback(result.reason === "resource" ? "Không đủ tài nguyên" : "Kỹ năng đang hồi");
     } else {
       soundManager.playClick();
@@ -562,9 +562,16 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
   const tooltipModel = tooltipSkill ? getSkillTooltipModel(worldRef.current.aircraft, tooltipSkill) : null;
 
   useEffect(() => {
-    const message = hud.latestMessage;
-    if (!message || message === announcementRef.current) return;
-    announcementRef.current = message;
+    const event = hud.announcement;
+    const remaining = event.expiresAtMs - performance.now();
+    if (remaining <= 0) { setAnnouncement(null); return; }
+    setAnnouncement(event.text);
+    setSkillFeedback(null);
+    if (skillFeedbackTimer.current !== null) { window.clearTimeout(skillFeedbackTimer.current); skillFeedbackTimer.current = null; }
+    const timer = window.setTimeout(() => setAnnouncement(null), remaining);
+    const message = event.text;
+    if (event.serial === announcementRef.current) return () => window.clearTimeout(timer);
+    announcementRef.current = event.serial;
     if (/RADAR|TRÙM|GIAI ĐOẠN|PHÁO ĐÀI/.test(message)) {
       soundManager.playSignalTone(8, 9);
       soundManager.triggerHaptic("heavy");
@@ -572,7 +579,8 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
       soundManager.playBubblePop();
       soundManager.triggerHaptic("medium");
     }
-  }, [hud.latestMessage]);
+    return () => window.clearTimeout(timer);
+  }, [hud.announcement]);
 
   useEffect(() => {
     if (hpRatio <= 0.25 && !lowHpWarnedRef.current) {
@@ -737,8 +745,8 @@ export const AirCombatBattle: React.FC<AirCombatBattleProps> = ({
       )}
 
       <div key="core-toasts" ref={toastHostRef} className="air-core-toasts" aria-live="polite" aria-label="Lõi vừa nhận" />
-      {(hud.latestMessage || skillFeedback) && !coreChoices && (
-        <div key="combat-message" className="pointer-events-none absolute left-1/2 top-[21%] z-10 w-max max-w-[94%] -translate-x-1/2 whitespace-normal text-center rounded-full border border-cyan-300/40 bg-black/90 px-3 py-1.5 text-[9px] font-black uppercase tracking-wider text-cyan-100 shadow-lg shadow-cyan-950/30">{skillFeedback || hud.latestMessage}</div>
+      {(announcement || skillFeedback) && !coreChoices && (
+        <div key="combat-message" className="pointer-events-none absolute left-1/2 top-[21%] z-10 w-max max-w-[94%] -translate-x-1/2 whitespace-normal text-center rounded-full border border-cyan-300/40 bg-black/90 px-3 py-1.5 text-[9px] font-black uppercase tracking-wider text-cyan-100 shadow-lg shadow-cyan-950/30">{skillFeedback || announcement}</div>
       )}
 
 

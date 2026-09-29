@@ -24,6 +24,7 @@ function paint(graphics: Graphics, shapes: TerrainShape[]) {
 
 export class AirCombatSky {
   readonly root = new Container();
+  private mirageShade = new Graphics().rect(0,0,360,640).fill({color:0x06111e,alpha:.14});
   private mirage: Sprite;
   private mirageNext: Sprite;
   private stormbreaker: Sprite;
@@ -55,7 +56,7 @@ export class AirCombatSky {
     }
     this.atmosphere.tint = 0x244c69;
     this.atmosphere.alpha = .24;
-    this.root.addChild(this.atmosphere, this.storm, this.stormNext, this.stormShade, this.stormbreaker, this.stormbreakerNext, this.mirage, this.mirageNext);
+    this.root.addChild(this.atmosphere, this.storm, this.stormNext, this.stormShade, this.stormbreaker, this.stormbreakerNext, this.mirage, this.mirageNext, this.mirageShade);
     for (let layer = 0; layer < 3; layer++) {
       for (let i = 0; i < 4; i++) {
         const sprite = new Sprite(assets.effect(i % 2 ? "haze" : "cloud"));
@@ -76,7 +77,7 @@ export class AirCombatSky {
     this.root.addChild(this.wind, this.stormWind);
   }
   update(delta: number, world: CombatWorld, reducedMotion: boolean) {
-    this.mirage.visible=this.mirageNext.visible=!!world.mirage;
+    this.mirageShade.visible=this.mirage.visible=this.mirageNext.visible=!!world.mirage;
     if(world.mirage){
       this.storm.visible=this.stormNext.visible=this.stormWind.visible=this.stormShade.visible=this.wind.visible=this.atmosphere.visible=this.stormbreaker.visible=this.stormbreakerNext.visible=false;
       for(const view of this.terrain)view.root.visible=false;

@@ -1,3 +1,4 @@
+import { MIRROR_TRANSFORM } from "../airCombatMirrorTransform";
 import { paintMirage } from "../airCombatMirageVisuals";
 import { mirageEnemyFrame } from "../airCombatStage4Art";
 import { paintStormbreaker, StormbreakerPresentation } from "../airCombatStormbreakerVisuals";
@@ -41,6 +42,10 @@ import type { AirCombatPresentation } from "./airCombatPixiTypes";
 /** A dedicated manually rendered WebGL application. Runtime is read-only here. */
 export class AirCombatPixiRenderer implements AirCombatPresentation {
   private root = new Container();
+  private worldMask = new Graphics();
+  private mirrorLayer = new Container();
+  private mirrorRenderer?: AirCombatPixiRenderer;
+  private mirrorWorld?: CombatWorld;
   private actors = new Container();
   private effects = new Container();
   private smokeLayer = new Container();
@@ -61,7 +66,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
   private hpText = new Text({ text: "", style: { fontFamily: "Arial", fontSize: 6.4, fontWeight: "bold", fill: 0xffffff, stroke: { color: 0x06101f, width: 1 } } });
   private resourceText = new Text({ text: "", style: { fontFamily: "Arial", fontSize: 6.4, fontWeight: "bold", fill: 0xffffff, stroke: { color: 0x06101f, width: 1 } } });
   private damageText = new AirCombatDamageText();
-  private sky: AirCombatSky;
+  private sky?: AirCombatSky;
   private mirageSprites: AirCombatSpritePool;
   private stormbreakerSprites: AirCombatSpritePool;
   private stormbreakerPresentation = new StormbreakerPresentation();
@@ -112,7 +117,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
   private shake = 0;
   private smokeClock = 0;
   private trailClock = 0;
-  private observer: ResizeObserver;
+  private observer?: ResizeObserver;
   private lost = false;
   private destroyed = false;
   private onLost = (event: Event) => { event.preventDefault(); this.lost = true; };
@@ -133,11 +138,13 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     }
   }
 
-  private constructor(private app: Application, private assets: AirCombatAssets, host: HTMLDivElement) {
-    app.canvas.style.cssText = "width:100%;height:100%;display:block;pointer-events:none";
-    host.appendChild(app.canvas);
-    app.canvas.addEventListener("webglcontextlost", this.onLost);
-    this.sky = new AirCombatSky(assets);
+  private constructor(private app: Application, private assets: AirCombatAssets, host?: HTMLDivElement, private sceneParent?: Container) {
+    if (host) {
+      app.canvas.style.cssText = "width:100%;height:100%;display:block;pointer-events:none";
+      host.appendChild(app.canvas);
+      app.canvas.addEventListener("webglcontextlost", this.onLost);
+    }
+    if (!sceneParent) this.sky = new AirCombatSky(assets);
     this.mirageSprites = new AirCombatSpritePool(this.stormbreakerLayer, 2048);
     this.stormbreakerSprites = new AirCombatSpritePool(this.stormbreakerLayer, 2048);
     this.stormbreakerRoot.addChild(this.stormbreakerLayer, this.stormbreakerWarnings);
@@ -146,11 +153,19 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     this.magneticSprites = new AirCombatSpritePool(this.magneticLayer, 512);
     this.astraSprites = new AirCombatSpritePool(this.magneticLayer, 192);
     this.equipmentSprites = new AirCombatSpritePool(this.magneticLayer, 640);
-    app.stage.addChild(this.root);
-    this.root.addChild(this.sky.root, this.telegraphs, this.smokeLayer, this.missileExhaust, this.actors, this.effects, this.magneticLayer, this.magneticWarnings, this.stormbreakerRoot, this.stormbreakerMask, this.enemyForegroundMarks, this.globalVfx, this.enemyStatusLayer, this.hitbox, this.damageText.root);
+    if (this.sky) app.stage.addChild(this.sky.root);
+    (sceneParent ?? app.stage).addChild(this.root);
+    if (!sceneParent) {
+      this.worldMask.rect(GAMEPLAY_SAFE_RECT.left, GAMEPLAY_SAFE_RECT.top, GAMEPLAY_SAFE_RECT.width, GAMEPLAY_SAFE_RECT.height).fill(0xffffff);
+      app.stage.addChild(this.worldMask); this.root.mask = this.worldMask;
+    }
+    this.mirrorLayer.position.set(MIRROR_TRANSFORM.x, MIRROR_TRANSFORM.y);
+    this.mirrorLayer.rotation = MIRROR_TRANSFORM.rotation;
+    this.root.addChild(this.telegraphs, this.smokeLayer, this.missileExhaust, this.actors, this.effects, this.magneticLayer, this.magneticWarnings, this.stormbreakerRoot, this.stormbreakerMask, this.enemyForegroundMarks, this.globalVfx, this.enemyStatusLayer, this.hitbox, this.damageText.root, this.mirrorLayer);
     this.missileExhaust.blendMode="add";
     // Separate stage branch: neither recoil nor camera shake can move status bars.
-    app.stage.addChild(this.stableHud);
+    if (!sceneParent) app.stage.addChild(this.stableHud);
+    else this.damageText.root.visible = false;
     this.stableHud.addChild(this.trackingBars, this.hpText, this.resourceText);
     this.hpText.anchor.set(.5); this.resourceText.anchor.set(.5);
     this.enemies = new AirCombatSpritePool(this.actors, 44);
@@ -173,12 +188,14 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
       sprite.anchor.set(0.5); this.actors.addChild(sprite);
     }
     this.actors.addChild(this.titanBubble);
-    this.observer = new ResizeObserver(() => {
-      const width = Math.max(1, host.clientWidth), height = Math.max(1, host.clientHeight);
-      app.renderer.resize(width, height);
-      app.stage.scale.set(width / 360, height / 640);
-    });
-    this.observer.observe(host);
+    if (host) {
+      this.observer = new ResizeObserver(() => {
+        const width = Math.max(1, host.clientWidth), height = Math.max(1, host.clientHeight);
+        app.renderer.resize(width, height);
+        app.stage.scale.set(width / 360, height / 640);
+      });
+      this.observer.observe(host);
+    }
   }
 
   render(world: CombatWorld, delta: number, reducedMotion: boolean) {
@@ -190,7 +207,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     const visual = AIRCRAFT_VISUALS[world.aircraft.aircraftId];
     this.recoil *= Math.exp(-delta * 24);
     this.shake = Math.max(this.shake * Math.exp(-delta * 12), magneticShake(world));
-    this.sky.update(delta, world, reducedMotion);
+    this.sky?.update(delta, world, reducedMotion);
     this.vfx.update(delta);
     this.smokeClock += delta;
     const damageSmoke = this.smokeClock > (reducedMotion ? 0.4 : 0.15);
@@ -287,7 +304,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     }
     const starfallShake=Math.max(0,...(world.astra?.impacts??[]).map(i=>2.2*Math.exp(-(world.elapsed-i.at)*12)));
     const combined=Math.max(this.shake,Math.min(2.8,starfallShake));
-    this.root.position.set(reducedMotion?0:Math.sin(this.clock*113)*combined,reducedMotion?0:Math.cos(this.clock*97)*combined*.65);
+    this.root.position.set(this.sceneParent||reducedMotion?0:Math.sin(this.clock*113)*combined,this.sceneParent||reducedMotion?0:Math.cos(this.clock*97)*combined*.65);
     for (const [id, until] of this.flashUntil) if (until < this.clock) this.flashUntil.delete(id);
 
     this.telegraphs.clear();
@@ -719,16 +736,25 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     },reducedMotion,(x,y,ex,ey,color,alpha,width)=>{this.enemyForegroundMarks.moveTo(x,y).lineTo(ex,ey).stroke({color,alpha,width});});
     this.equipmentSprites.end();
     this.vfx.renderRankSkills(world,reducedMotion);
-    this.app.render();
+    if (!this.sceneParent) {
+      const actor = world.mirage?.mirror?.context.world;
+      if (actor !== this.mirrorWorld) {
+        this.mirrorRenderer?.destroy(); this.mirrorRenderer = undefined; this.mirrorWorld = actor;
+        if (actor) this.mirrorRenderer = new AirCombatPixiRenderer(this.app, this.assets, undefined, this.mirrorLayer);
+      }
+      if (actor) this.mirrorRenderer?.render(actor, delta, reducedMotion);
+      this.app.render();
+    }
   }
 
   destroy() {
     if (this.destroyed) return;
     this.destroyed = true;
-    this.observer.disconnect();
+    this.mirrorRenderer?.destroy();
+    this.observer?.disconnect();
     this.damageText.destroy();
     this.healthBars.clear();
-    this.app.canvas.removeEventListener("webglcontextlost", this.onLost);
+    if (!this.sceneParent) this.app.canvas.removeEventListener("webglcontextlost", this.onLost);
     this.magneticSprites.destroy();
     this.mirageSprites.destroy();
     this.stormbreakerSprites.destroy();
@@ -736,6 +762,12 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     this.astraSprites.destroy();
     this.equipmentSprites.destroy();
     this.enemies.destroy(); this.missileSmoke.destroy(); this.projectiles.destroy(); this.missiles.destroy(); this.projectileGlows.destroy(); this.afterimages.destroy(); this.companions.destroy(); this.warnings.destroy(); this.engines.destroy(); this.vfx.destroy();
+    if (this.sceneParent) {
+      this.root.destroy({ children: true });
+      this.stableHud.destroy({ children: true });
+      this.worldMask.destroy();
+      return;
+    }
     this.app.destroy(true, { children: true, texture: false, textureSource: false });
     this.assets.destroy();
   }
