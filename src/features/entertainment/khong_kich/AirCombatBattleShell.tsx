@@ -84,7 +84,7 @@ export interface AirCombatBattleRuntime {
   getWorld(): CombatWorld;
   getPhase(): string;
   canMove(): boolean;
-  announcement(deltaMs: number, visible: boolean): { id: number; text: string } | null;
+  takeAnnouncements(): { text: string; durationMs: number }[];
   advance(delta: number): void;
   move(dx: number, dy: number): void;
   cast(skill: SkillId): ReturnType<typeof castWorldSkill>;
@@ -181,7 +181,6 @@ export const AirCombatBattleShell: React.FC<AirCombatBattleProps> = ({
   const [showCoreList, setShowCoreList] = useState(false);
   const [showEquipment,setShowEquipment]=useState(false);
   const skillFeedbackTimer = useRef<number | null>(null);
-  const [aiAnnouncement, setAiAnnouncement] = useState<{ id: number; text: string } | null>(null);
   const [announcement, setAnnouncement] = useState<string | null>(null);
   useEffect(() => () => { if (skillFeedbackTimer.current !== null) window.clearTimeout(skillFeedbackTimer.current); }, []);
   const [skillFeedback, setSkillFeedback] = useState<string | null>(null);
@@ -391,8 +390,6 @@ export const AirCombatBattleShell: React.FC<AirCombatBattleProps> = ({
       if (!document.hidden && presentation) {
         if (runtime) {
           if (!paused) { runtime.advance(elapsed); syncRuleset(); }
-          const message = runtime.announcement(wallDelta, !world.pauseReasons.size);
-          setAiAnnouncement(previous => previous?.id === message?.id ? previous : message);
           if (runtime.finished() && !completedRef.current) {
             completedRef.current = true; runtime.complete(); return;
           }
@@ -412,7 +409,7 @@ export const AirCombatBattleShell: React.FC<AirCombatBattleProps> = ({
         const presentationPaused = [...world.pauseReasons].some(reason => reason !== "result");
         const visualDelta = presentationPaused ? 0 : elapsed;
         overlayFeedback?.render(world, visualDelta, presentationPaused, reducedMotion,
-          bossHpRef.current, bossChipRef.current, bossShieldRef.current);
+          bossHpRef.current, bossChipRef.current, bossShieldRef.current, runtime?.takeAnnouncements(), wallDelta / 1000);
         // Selection may have paused the world earlier in this frame. Freeze the
         // snapshot for every pause reason and refresh on the first resumed tick.
         if (world.pauseReasons.size > 0) lastStatusUiUpdate = -Infinity;
@@ -805,9 +802,9 @@ export const AirCombatBattleShell: React.FC<AirCombatBattleProps> = ({
         </motion.aside></AirCombatTooltipPortal>
       )}
 
-      <div key="core-toasts" ref={toastHostRef} className="air-core-toasts" aria-live="polite" aria-label="Lõi vừa nhận" />
-      {(aiAnnouncement || announcement || skillFeedback) && !coreChoices && (
-        <div key={aiAnnouncement?.id ?? "combat-message"} className="pointer-events-none absolute left-1/2 top-[21%] z-10 w-max max-w-[94%] -translate-x-1/2 whitespace-normal text-center rounded-full border border-cyan-300/40 bg-black/90 px-3 py-1.5 text-[9px] font-black uppercase tracking-wider text-cyan-100 shadow-lg shadow-cyan-950/30">{aiAnnouncement?.text || skillFeedback || announcement}</div>
+      <div key="core-toasts" ref={toastHostRef} className="air-core-toasts" aria-live="polite" aria-label="Lõi và trang bị vừa nhận" />
+      {(announcement || skillFeedback) && !coreChoices && (
+        <div key="combat-message" className="pointer-events-none absolute left-1/2 top-[21%] z-10 w-max max-w-[94%] -translate-x-1/2 whitespace-normal text-center rounded-full border border-cyan-300/40 bg-black/90 px-3 py-1.5 text-[9px] font-black uppercase tracking-wider text-cyan-100 shadow-lg shadow-cyan-950/30">{skillFeedback || announcement}</div>
       )}
 
 

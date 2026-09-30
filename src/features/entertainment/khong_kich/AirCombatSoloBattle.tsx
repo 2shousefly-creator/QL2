@@ -21,22 +21,9 @@ function SoloRoundOverlay({ match }: { match: SoloMatch }) {
 export function AirCombatSoloBattle({ match, reducedMotion, onComplete, onMenu }: { match: SoloMatch; reducedMotion: boolean; onComplete: () => void; onMenu: () => void }) {
   const done = useRef(onComplete); done.current = onComplete;
   const runtime = useMemo<AirCombatBattleRuntime>(() => {
-    let current: SoloMatch["acquisitionQueue"][number] | null = null;
-    let remainingMs = 0;
     return ({
       getWorld: () => match.world,
-      announcement: (deltaMs, visible) => {
-        if (!visible || match.phase === "core_selection") return null;
-        if (current) {
-          remainingMs -= deltaMs;
-          if (remainingMs <= 0) current = null;
-        }
-        if (!current) {
-          current = match.acquisitionQueue.shift() ?? null;
-          remainingMs = current?.durationMs ?? 0;
-        }
-        return current;
-      },
+      takeAnnouncements: () => match.acquisitionQueue.splice(0),
       getPhase: () => match.phase,
       canMove: () => ["countdown", "combat", "sudden_death"].includes(match.phase),
       advance: delta => {
