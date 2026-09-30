@@ -169,9 +169,14 @@ export function updateAstra(w:CombatWorld,_dt:number,h:AstraHooks) {
   if(f) {
     // World RNG selects only live opposing units; a cast never reassigns an existing marker.
     if(!f.stopped&&f.locks<f.count&&now+1e-8>=f.next) {
-      const pool=w.enemies.filter(e=>h.hostile(w,e)&&canTargetEnemy(w,e));
-      if(!pool.length)f.stopped=true;
-      else {
+      const hostiles = w.enemies.filter(e => e.hp > 0 && h.hostile(w, e));
+      const pool = hostiles.filter(e => canTargetEnemy(w, e));
+      if (!pool.length) {
+        // A temporary loss of targetability must not cancel uncalled meteors.
+        // Keep the remaining count and retry at the normal cadence, without a catch-up burst.
+        if (hostiles.length) f.next = now + .5;
+        else f.stopped = true;
+      } else {
         const fresh=pool.filter(e=>!f.marked.has(e.id)),targets=fresh.length?fresh:pool;
         const e=targets[Math.min(targets.length-1,Math.floor(w.random()*targets.length))];
         astraMetric(w,f.marked.has(e.id)?"starfall.repeatedMarks":"starfall.uniqueTargets");
