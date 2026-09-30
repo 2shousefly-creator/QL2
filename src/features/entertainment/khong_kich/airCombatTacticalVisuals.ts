@@ -12,12 +12,12 @@ export interface TacticalPainter {
 export function paintTacticalCores(world:CombatWorld,p:TacticalPainter,reducedMotion:boolean):void {
   if(world.ended)return;
   const t=world.tactical,now=world.elapsed,c=world.aircraft.coreState;
-  if ((c.timers.celestial??0)>now) {
+  if (!world.destruction && (c.timers.celestial??0)>now) {
     p.circle(world.playerX,world.playerY,36,0xffd36a,.15,true);
     p.circle(world.playerX,world.playerY,36,0xffd36a,.95,false,3);
     p.polygon?.([world.playerX,world.playerY-31,world.playerX+27,world.playerY-18,world.playerX+22,world.playerY+19,world.playerX,world.playerY+33,world.playerX-22,world.playerY+19,world.playerX-27,world.playerY-18],0xffe5a3,.15);
   }
-  for (const orb of satellitePositions(world)) { p.circle(orb.x,orb.y,8,0x67e8f9,.25,true); p.circle(orb.x,orb.y,5,0xffdf8a,1,true); p.circle(orb.x,orb.y,3,0xffffff,1,true); }
+  for (const orb of world.destruction ? [] : satellitePositions(world)) { p.circle(orb.x,orb.y,8,0x67e8f9,.25,true); p.circle(orb.x,orb.y,5,0xffdf8a,1,true); p.circle(orb.x,orb.y,3,0xffffff,1,true); }
   for(const e of world.enemies){
     if(e.hp<=0)continue;
     const effect=world.skillCores.enemyEffects.get(e.id),large=e.type==="boss"||e.eliteWave>0;
@@ -43,8 +43,8 @@ export function paintTacticalCores(world:CombatWorld,p:TacticalPainter,reducedMo
   for(const scrap of t?.scraps??[]){const alpha=Math.max(0,Math.min(1,2*(scrap.until-now)));p.circle(scrap.x,scrap.y,5,0xfde68a,alpha,true);p.line(scrap.x-3,scrap.y,scrap.x+3,scrap.y,0xffffff,alpha,1);p.line(scrap.x,scrap.y-3,scrap.x,scrap.y+3,0xffffff,alpha,1);}
   for(const g of t?.grids??[]){const a=world.enemies.find(e=>e.id===g.a&&isHostileToPlayer(world,e)),b=world.enemies.find(e=>e.id===g.b&&isHostileToPlayer(world,e));if(a&&b&&g.until>now){p.line(a.x,a.y,b.x,b.y,0x22d3ee,.25,8);p.line(a.x,a.y,b.x,b.y,0xa5f3fc,.9,2);}}
   const wave=(c.timers.antimatterWave??0)-c.time;
-  if(wave>0)p.circle(world.playerX,world.playerY,reducedMotion?160:900*(1-wave/.65),0xa5f3fc,Math.min(.8,wave*2));
-  for(const side of [-1,1]){const remaining=(c.timers[`wing:${side<0?"left_wing":"right_wing"}`]??0)-c.time,scale=playerAirframeScale(world.aircraft);if(remaining>11.6)p.circle(world.playerX+side*11*scale,world.playerY+5*scale,7*scale,0xbae6fd,(remaining-11.6)*2,true);}
+  if(!world.destruction&&wave>0)p.circle(world.playerX,world.playerY,reducedMotion?160:900*(1-wave/.65),0xa5f3fc,Math.min(.8,wave*2));
+  if(!world.destruction)for(const side of [-1,1]){const remaining=(c.timers[`wing:${side<0?"left_wing":"right_wing"}`]??0)-c.time,scale=playerAirframeScale(world.aircraft);if(remaining>11.6)p.circle(world.playerX+side*11*scale,world.playerY+5*scale,7*scale,0xbae6fd,(remaining-11.6)*2,true);}
 }
 
 /** Target-attached marks are painted after airframes and defensive auras. */

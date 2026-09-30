@@ -1,3 +1,4 @@
+import { canTargetEnemy, preferredDuelDecoy } from "./airCombatTargetability";
 import { GAMEPLAY_SAFE_RECT } from "./airCombatConfig";
 import type { CombatWorld, EnemyEntity, ProjectileEntity } from "./airCombatRuntime";
 import type { SkillId } from "./airCombatTypes";
@@ -28,7 +29,7 @@ export interface InterferenceWave {
  enemyDistances:Map<number,number>; projectileDistances:Map<number,number>;
 }
 export interface RankRuntime {
- lock?:{target:number;until:number;stacks:number;extended:number;cast:number;flashUntil?:number;killed?:boolean};
+ lock?:{decoy?:{world:CombatWorld;id:number};target:number;until:number;stacks:number;extended:number;cast:number;flashUntil?:number;killed?:boolean};
  anchor?:{x:number;y:number;until:number;next:number;rank:number;affected:Set<number>;destroyed:number;inner:Map<number,number>};
  interference:Map<number,Interference>;
  projectileSlows:Map<number,{until:number;multiplier:number}>;
@@ -40,7 +41,7 @@ export interface RankRuntime {
 export const rankRuntime=(w:CombatWorld):RankRuntime=>w.rankRuntime??={interference:new Map(),projectileSlows:new Map(),pulses:[],waves:[],twinVolleys:new Map(),twinShots:0,interferenceEnergyRestored:0};
 function densestGravityAnchorPoint(w:CombatWorld,h:RankRuntimeHooks,rank:number):{x:number;y:number}|null {
  const rect=GAMEPLAY_SAFE_RECT;
- const enemies=w.enemies.filter(e=>e.hp>0&&h.hostile(w,e)&&e.x>=rect.left&&e.x<=rect.right&&e.y>=rect.top&&e.y<=rect.bottom);
+ const enemies=w.enemies.filter(e=>e.hp>0&&h.hostile(w,e)&&canTargetEnemy(w,e)&&e.x>=rect.left&&e.x<=rect.right&&e.y>=rect.top&&e.y<=rect.bottom);
  if(!enemies.length)return null;
  const radius=120*(rank>=2?1.25:1);
  let best:EnemyEntity|null=null,bestCount=-1,bestDensity=-Infinity,bestDistance=Infinity;
@@ -60,7 +61,7 @@ function densestGravityAnchorPoint(w:CombatWorld,h:RankRuntimeHooks,rank:number)
 }
 export function beginRankSkill(w:CombatWorld,id:SkillId,h:RankRuntimeHooks) {
  const r=rankRuntime(w),rank=skillRank(w.aircraft,id),target=h.priority(w);
- if(id==="predator_lock"){r.lock=target?{target:target.id,until:w.elapsed+getSkillRuntimeValues(w.aircraft,id).duration,stacks:0,extended:0,cast:w.nextId++}:undefined;if(!r.lock)endAircraftSkill(w.aircraft,id);}
+ if(id==="predator_lock"){const decoy=preferredDuelDecoy(w);r.lock=decoy||target?{decoy:decoy??undefined,target:decoy?-2:target!.id,until:w.elapsed+getSkillRuntimeValues(w.aircraft,id).duration,stacks:0,extended:0,cast:w.nextId++}:undefined;if(!r.lock)endAircraftSkill(w.aircraft,id);}
  if(id==="gravity_anchor"){const point=densestGravityAnchorPoint(w,h,rank);r.anchor={x:point?.x??w.playerX,y:point?.y??w.playerY-140,until:w.elapsed+getSkillRuntimeValues(w.aircraft,id).duration,next:w.elapsed+.5,rank,affected:new Set(),destroyed:0,inner:new Map()};}
  if(id==="electronic_interference") {
   const cast=w.nextId++,times=rank>=5?[0,.8,1.6]:rank>=2?[0,1]:[0];
@@ -96,7 +97,7 @@ export function rankProjectileSpeed(w:CombatWorld,p:ProjectileEntity,h:RankRunti
 }
 export function rankDirectMultiplier(w:CombatWorld,e:EnemyEntity,id?:SkillId) {
  const l=rankRuntime(w).lock,s=w.aircraft;
- let m=l&&l.target===e.id&&l.until>w.elapsed&&skillRank(s,"predator_lock")>=2?1.15:1;
+ let m=l&&!l.decoy&&l.target===e.id&&canTargetEnemy(w,e,"hard_lock")&&l.until>w.elapsed&&skillRank(s,"predator_lock")>=2?1.15:1;
  if(id==="predator_lock"&&skillRank(s,id)>=4&&e.hp<e.maxHp*.4)m*=1.5;
  return m;
 }
@@ -106,7 +107,7 @@ export function rankArmorMultiplier(w:CombatWorld,e:EnemyEntity) {
 }
 export function predatorBasicHit(w:CombatWorld,e:EnemyEntity,h:RankRuntimeHooks,belowThreshold:boolean) {
  const l=rankRuntime(w).lock,rank=skillRank(w.aircraft,"predator_lock");
- if(!l||l.until<=w.elapsed||l.target!==e.id||!h.hostile(w,e))return;
+ if(!l||l.until<=w.elapsed||l.target!==e.id||!h.hostile(w,e)||!canTargetEnemy(w,e,"hard_lock"))return;
  l.stacks+=rank>=4&&belowThreshold?2:1;
  if(l.stacks<(rank>=5?4:5))return;l.stacks=0;l.flashUntil=w.elapsed+.22;h.effect(w,e.x,e.y,(e.radius+12)*2,"lock_complete");
  const power=getEffectiveAircraftStats(w.aircraft).firepower*(rank>=2?2.4:2);
@@ -134,7 +135,7 @@ export function echoTwinShot(w:CombatWorld,main:ProjectileEntity,h:RankRuntimeHo
 }
 export function tickRankSkills(w:CombatWorld,dt:number,h:RankRuntimeHooks) {
  const r=rankRuntime(w),s=w.aircraft,now=w.elapsed;
- if(r.lock){const l=r.lock,target=w.enemies.find(e=>e.id===l.target&&h.hostile(w,e));
+ if(r.lock){const l=r.lock,target=l.decoy?preferredDuelDecoy(w,l.decoy):w.enemies.find(e=>e.id===l.target&&h.hostile(w,e)&&canTargetEnemy(w,e,"hard_lock"));
   if(l.until<=now)r.lock=undefined;
   else if(!target){const next=l.killed&&skillRank(s,"predator_lock")>=5?h.priority(w):null;if(next){l.target=next.id;l.until+=3;l.stacks=0;l.killed=false;}else r.lock=undefined;}
   if(r.lock)s.activeEffects.predator_lock=Math.max(.001,r.lock.until-now);else endAircraftSkill(s,"predator_lock");

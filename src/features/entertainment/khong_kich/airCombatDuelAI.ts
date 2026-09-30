@@ -1,3 +1,4 @@
+import { aircraftTargetability } from "./airCombatTargetability";
 import { GAMEPLAY_SAFE_RECT as R, AIRCRAFT_CONFIGS } from "./airCombatConfig";
 import { meteorSpearEndpoints } from "./airCombatAstra";
 import { getEffectiveAircraftStats, getSkillRuntimeValues } from "./airCombatAircraft";
@@ -12,13 +13,14 @@ type Intent = "evade" | "kite" | "pressure" | "reposition" | "hold-angle" | "com
 export type DuelThreatKind = "ballistic" | "homing" | "beam" | "lane" | "aoe" | "persistent_zone" | "dash" | "full_screen";
 interface Bullet extends Point { vx:number; vy:number; damage:number; homing:boolean; radius:number; turnRate:number }
 interface Hazard extends Point { kind:DuelThreatKind; radius:number; cc:boolean; end?:Point }
-interface Perception { at:number; player:Point; playerHp:number; velocity:Point; bullets:Bullet[]; hazards:Hazard[]; lastDefensiveCast:number; lastBurst:number }
+interface Perception { targetVisible:boolean; at:number; player:Point; playerHp:number; velocity:Point; bullets:Bullet[]; hazards:Hazard[]; lastDefensiveCast:number; lastBurst:number }
 interface DuelTacticalPlan { kind:string; startedAt:number; expiresAt:number; nextSkill?:SkillId; reservedResource?:number }
 export interface MirrorAI {
   nextSense:number; nextDecision:number; history:Perception[]; observedCasts:Partial<Record<SkillId,number>>;
   lastPlayer:Point; goal:Point; vx:number; vy:number; intent:Intent; intentUntil:number;
   threat:number; incoming:number; lastHp:number; lastPlayerHp:number; losing:boolean;
   lastCast?:SkillId; lastCastAt?:number; lastSampleAt?:number; lastSampleWallMs?:number;
+  targetLostAt?:number; lastKnownVelocity?:Point;
   readySince:Partial<Record<SkillId,number>>; plan?:DuelTacticalPlan;
   dodgeUntil:number; dodge?:Point; needsVerticalRecovery:boolean;
 }
@@ -112,6 +114,7 @@ function skillUtility(id: SkillId, s: AircraftCombatState, ai: MirrorAI, p: Poin
     }
     return -Infinity;
   }
+  if (!seen.targetVisible && ["predator_lock", "missile_swarm", "focus_laser", "stellar_lance", "starfall"].includes(id)) return -Infinity;
   if (["focus_laser", "sweeping_cannon", "stellar_lance"].includes(id) && (!ahead || firing < .3)) return -Infinity;
   const combo = (setup: SkillId) => ai.lastCast === setup && ai.lastCastAt !== undefined && actor.elapsed - ai.lastCastAt <= 2;
   const stats = getEffectiveAircraftStats(s), values = getSkillRuntimeValues(s, id), hp = s.currentHp / stats.maxHp;
@@ -159,10 +162,16 @@ function skillUtility(id: SkillId, s: AircraftCombatState, ai: MirrorAI, p: Poin
 }
 
 function perceive(w:CombatWorld,ai:MirrorAI,p:Point) {
-  const player={x:w.playerX,y:w.playerY},wall=performance.now(),sampleDt=ai.lastSampleAt===undefined?0:w.elapsed-ai.lastSampleAt;
+  const targetVisible = aircraftTargetability(w.aircraft).canTrackExactPosition && !w.destruction;
+  const player = targetVisible ? {x:w.playerX,y:w.playerY} : {...ai.lastPlayer};
+  const reacquired = targetVisible && ai.targetLostAt !== undefined;
+  if (!targetVisible) ai.targetLostAt ??= w.elapsed;
+  else ai.targetLostAt = undefined;
+  const wall=performance.now(),sampleDt=ai.lastSampleAt===undefined?0:w.elapsed-ai.lastSampleAt;
   const reseed=sampleDt<=0||sampleDt>.3||ai.lastSampleWallMs===undefined||wall-ai.lastSampleWallMs>300;
   if(reseed){ai.history=[];ai.vx=ai.vy=0;ai.dodge=undefined;ai.plan=undefined;}
-  const velocity=reseed?{x:0,y:0}:{x:(player.x-ai.lastPlayer.x)/sampleDt,y:(player.y-ai.lastPlayer.y)/sampleDt};
+  const velocity = !targetVisible ? ai.lastKnownVelocity ?? {x:0,y:0} : reseed || reacquired ? {x:0,y:0} : {x:(player.x-ai.lastPlayer.x)/sampleDt,y:(player.y-ai.lastPlayer.y)/sampleDt};
+  if (targetVisible) { ai.lastPlayer = player; ai.lastKnownVelocity = velocity; }
   const latest=(ids:SkillId[])=>Math.max(-Infinity,...ids.map(id=>ai.observedCasts[id]??-Infinity));
   // Spawned attacks only. Scan the already runtime-bounded pool; shortlist before path work.
   const visible=w.projectiles.filter(b=>b.owner!=="enemy"&&!b.mirrorBorrowed&&b.lifetime>0).sort((a,b)=>distance(a,p)-distance(b,p));
@@ -183,9 +192,9 @@ function perceive(w:CombatWorld,ai:MirrorAI,p:Point) {
   }
   if(w.astra?.charge)hazards.push({kind:"beam",x:w.playerX,y:w.playerY,end:{x:w.playerX,y:R.top},radius:22,cc:false});
   for(const b of visible.filter(b=>b.skillId==="stellar_lance").slice(0,2))hazards.push({kind:"beam",x:b.x,y:b.y,end:{x:b.x+b.vx*.6,y:b.y+b.vy*.6},radius:b.radius,cc:false});
-  ai.history.push({at:w.elapsed,player,playerHp:w.aircraft.currentHp,velocity,bullets,hazards:hazards.slice(0,24),
+  ai.history.push({targetVisible,at:w.elapsed,player,playerHp:targetVisible?w.aircraft.currentHp:ai.lastPlayerHp,velocity,bullets,hazards:hazards.slice(0,24),
     lastDefensiveCast:latest(["decoy","invisibility","armor_shield","orbit_reversal"]),lastBurst:latest(["missile_swarm","sweeping_cannon","focus_laser","starfall"])});
-  ai.history=ai.history.slice(-10);ai.lastPlayer=player;ai.lastSampleAt=w.elapsed;ai.lastSampleWallMs=wall;ai.nextSense=w.elapsed+1/30;
+  ai.history=ai.history.slice(-10);ai.lastSampleAt=w.elapsed;ai.lastSampleWallMs=wall;ai.nextSense=w.elapsed+1/30;
 }
 function roleThreshold(id:SkillId,actor:CombatWorld,ai:MirrorAI) {
   if(getWorldSkillAvailability(actor,id).manualAction)return .2;
@@ -265,5 +274,7 @@ export function updateMirrorAI(w:CombatWorld,ai:MirrorAI,s:AircraftCombatState,p
   ai.vx+=dvx*turn;ai.vy+=dvy*turn;
   // Cast-lock is authoritative; the pilot does not slide while channeling a fixed beam.
   if(actor.laserCharge>0||actor.laserRemaining>0){ai.vx=ai.vy=0;}
+  if (skill && !aircraftTargetability(w.aircraft).canAcquire && ["predator_lock","missile_swarm","focus_laser","stellar_lance","starfall"].includes(skill)) skill = undefined;
+  if (actor.aftermath || actor.destruction || s.currentHp <= 0) return {...p};
   return {...bounded({x:p.x+ai.vx*dt,y:p.y+ai.vy*dt}),skill};
 }

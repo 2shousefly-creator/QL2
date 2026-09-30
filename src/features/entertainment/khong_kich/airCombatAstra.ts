@@ -1,3 +1,4 @@
+import { canTargetEnemy } from "./airCombatTargetability";
 import { skillRank } from "./airCombatSkillRanks";
 import { AIR_COMBAT_WORLD, GAMEPLAY_SAFE_RECT } from "./airCombatConfig";
 import { playerAirframeScale } from "./airCombatReleaseState";
@@ -168,7 +169,7 @@ export function updateAstra(w:CombatWorld,_dt:number,h:AstraHooks) {
   if(f) {
     // World RNG selects only live opposing units; a cast never reassigns an existing marker.
     if(!f.stopped&&f.locks<f.count&&now+1e-8>=f.next) {
-      const pool=w.enemies.filter(e=>h.hostile(w,e));
+      const pool=w.enemies.filter(e=>h.hostile(w,e)&&canTargetEnemy(w,e));
       if(!pool.length)f.stopped=true;
       else {
         const fresh=pool.filter(e=>!f.marked.has(e.id)),targets=fresh.length?fresh:pool;
@@ -181,7 +182,7 @@ export function updateAstra(w:CombatWorld,_dt:number,h:AstraHooks) {
     }
     for(let i=f.pending.length-1;i>=0;i--) {
       const m=f.pending[i],target=w.enemies.find(e=>e.id===m.target);
-      if(!m.frozen){if(target){m.x=target.x;m.y=target.y;}if(!target||target.hp<=0)m.frozen=true;}
+      if(!m.frozen){if(target&&canTargetEnemy(w,target)){m.x=target.x;m.y=target.y;}else m.frozen=true;}
       if(now+1e-8<m.at)continue;
       f.pending.splice(i,1);const radius=m.doom?110:f.rank>=2?65:45;
       h.impact(w,m.x,m.y,radius,m.doom);

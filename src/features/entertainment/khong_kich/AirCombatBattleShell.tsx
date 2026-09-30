@@ -84,6 +84,7 @@ export interface AirCombatBattleRuntime {
   getWorld(): CombatWorld;
   getPhase(): string;
   canMove(): boolean;
+  announcement(deltaMs: number, visible: boolean): { id: number; text: string } | null;
   advance(delta: number): void;
   move(dx: number, dy: number): void;
   cast(skill: SkillId): ReturnType<typeof castWorldSkill>;
@@ -180,6 +181,7 @@ export const AirCombatBattleShell: React.FC<AirCombatBattleProps> = ({
   const [showCoreList, setShowCoreList] = useState(false);
   const [showEquipment,setShowEquipment]=useState(false);
   const skillFeedbackTimer = useRef<number | null>(null);
+  const [aiAnnouncement, setAiAnnouncement] = useState<{ id: number; text: string } | null>(null);
   const [announcement, setAnnouncement] = useState<string | null>(null);
   useEffect(() => () => { if (skillFeedbackTimer.current !== null) window.clearTimeout(skillFeedbackTimer.current); }, []);
   const [skillFeedback, setSkillFeedback] = useState<string | null>(null);
@@ -379,21 +381,24 @@ export const AirCombatBattleShell: React.FC<AirCombatBattleProps> = ({
     const frame = (now: number) => {
       if (cancelled) return;
       syncRuleset();
-      const elapsed = Math.min(0.12, Math.max(0, (now - lastTime) / 1000));
+      const wallDelta = Math.max(0, now - lastTime);
+      const elapsed = Math.min(0.12, wallDelta / 1000);
       lastTime = now;
-      if ([...world.pauseReasons].some(reason => reason !== "tooltip")) {
+      if (world.destruction || world.aftermath || [...world.pauseReasons].some(reason => reason !== "tooltip")) {
         resetPlayerControl(); resetSkillPress();
       } else if (!playerControlRef.current) setPlayerInputActive(world, false);
       const paused = world.pauseReasons.size > 0;
       if (!document.hidden && presentation) {
         if (runtime) {
           if (!paused) { runtime.advance(elapsed); syncRuleset(); }
+          const message = runtime.announcement(wallDelta, !world.pauseReasons.size);
+          setAiAnnouncement(previous => previous?.id === message?.id ? previous : message);
           if (runtime.finished() && !completedRef.current) {
             completedRef.current = true; runtime.complete(); return;
           }
         } else if (!paused && !world.ended) {
           let remaining = elapsed;
-          while (remaining > 0 && !world.ended && !world.pendingCoreSelections) {
+          while (remaining > 0 && !world.ended && (world.aftermath || !world.pendingCoreSelections)) {
             const step = Math.min(AIR_COMBAT_WORLD.maxDeltaSeconds, remaining);
             updateCombatWorld(world, step); remaining -= step;
           }
@@ -432,7 +437,7 @@ export const AirCombatBattleShell: React.FC<AirCombatBattleProps> = ({
         // Present the final explosion after gameplay ends without advancing runtime time.
         if (!runtime && world.ended && !presentationPaused && presentation) {
           endedAt ??= now;
-          if (now - endedAt >= (reducedMotion ? 180 : 850) && !completedRef.current) {
+          if (now - endedAt >= (world.destruction ? 0 : reducedMotion ? 180 : 850) && !completedRef.current) {
             completedRef.current = true;
             onCompleteRef.current(summarizeCombatWorld(world)); return;
           }
@@ -491,7 +496,7 @@ export const AirCombatBattleShell: React.FC<AirCombatBattleProps> = ({
     if (runtime && !runtime.canMove()) return;
     const owner = playerControlRef.current;
     if (!owner || !activePointers.current.has(owner.pointerId) || !owner.target.hasPointerCapture(owner.pointerId)) resetPlayerControl();
-    if (event.button !== 0 || suppressedPointers.current.has(event.pointerId) || worldRef.current.pauseReasons.size > 0 || playerControlRef.current || worldRef.current.ended) return;
+    if (event.button !== 0 || suppressedPointers.current.has(event.pointerId) || worldRef.current.pauseReasons.size > 0 || playerControlRef.current || worldRef.current.ended || worldRef.current.destruction || worldRef.current.aftermath) return;
     event.preventDefault();
     const point = pointFromEvent(event);
     draggingRef.current = true;
@@ -510,7 +515,7 @@ export const AirCombatBattleShell: React.FC<AirCombatBattleProps> = ({
     event: React.PointerEvent<HTMLButtonElement>,
     skillId: SkillId
   ) => {
-    if (suppressedPointers.current.has(event.pointerId) || [...worldRef.current.pauseReasons].some(reason=>reason!=="tooltip") || worldRef.current.ended || pressRef.current) return;
+    if (suppressedPointers.current.has(event.pointerId) || [...worldRef.current.pauseReasons].some(reason=>reason!=="tooltip") || worldRef.current.ended || worldRef.current.destruction || worldRef.current.aftermath || pressRef.current) return;
     event.preventDefault();
     try { event.currentTarget.setPointerCapture(event.pointerId); } catch { return; }
     const press: SkillPressState = {
@@ -543,7 +548,7 @@ export const AirCombatBattleShell: React.FC<AirCombatBattleProps> = ({
     if (press.held || classification === "hold") {
       return;
     }
-    if (!shouldCastSkillPress(durationMs, press.held, cancelled) || worldRef.current.pauseReasons.size > 0 || worldRef.current.ended) return;
+    if (!shouldCastSkillPress(durationMs, press.held, cancelled) || worldRef.current.pauseReasons.size > 0 || worldRef.current.ended || worldRef.current.destruction || worldRef.current.aftermath) return;
     const result = runtime ? runtime.cast(press.skillId) : castWorldSkill(worldRef.current, press.skillId);
     if (!result.cast) {
       soundManager.playError();
@@ -801,8 +806,8 @@ export const AirCombatBattleShell: React.FC<AirCombatBattleProps> = ({
       )}
 
       <div key="core-toasts" ref={toastHostRef} className="air-core-toasts" aria-live="polite" aria-label="Lõi vừa nhận" />
-      {(announcement || skillFeedback) && !coreChoices && (
-        <div key="combat-message" className="pointer-events-none absolute left-1/2 top-[21%] z-10 w-max max-w-[94%] -translate-x-1/2 whitespace-normal text-center rounded-full border border-cyan-300/40 bg-black/90 px-3 py-1.5 text-[9px] font-black uppercase tracking-wider text-cyan-100 shadow-lg shadow-cyan-950/30">{skillFeedback || announcement}</div>
+      {(aiAnnouncement || announcement || skillFeedback) && !coreChoices && (
+        <div key={aiAnnouncement?.id ?? "combat-message"} className="pointer-events-none absolute left-1/2 top-[21%] z-10 w-max max-w-[94%] -translate-x-1/2 whitespace-normal text-center rounded-full border border-cyan-300/40 bg-black/90 px-3 py-1.5 text-[9px] font-black uppercase tracking-wider text-cyan-100 shadow-lg shadow-cyan-950/30">{aiAnnouncement?.text || skillFeedback || announcement}</div>
       )}
 
 

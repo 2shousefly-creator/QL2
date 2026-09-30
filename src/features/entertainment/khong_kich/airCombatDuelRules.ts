@@ -1,5 +1,5 @@
 export type SoloRule = "random" | "copy";
-export type SoloPhase = "reveal" | "round_setup" | "core_selection" | "countdown" | "combat" | "round_result" | "sudden_death" | "match_result";
+export type SoloPhase = "reveal" | "round_setup" | "core_selection" | "countdown" | "combat" | "knockout_aftermath" | "round_result" | "sudden_death" | "match_result";
 export const DUEL_LEVELS = [1, 6, 11, 16, 18, 18, 18, 18, 18] as const;
 export const DUEL_CORE_CONTEXTS = [1, 7, 11, 15] as const;
 export const DUEL_PREP_SECONDS = 7;

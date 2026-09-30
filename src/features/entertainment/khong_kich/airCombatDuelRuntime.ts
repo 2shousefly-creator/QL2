@@ -1,10 +1,11 @@
-import { AIRCRAFT_ORDER, CORE_DEFINITIONS, GAMEPLAY_SAFE_RECT as R } from "./airCombatConfig";
+import { equipmentState } from "./airCombatEquipmentState";
+import { EQUIPMENT_CATALOG } from "./airCombatEquipmentCatalog";
+import { AIRCRAFT_CONFIGS, getCoreDefinition, AIRCRAFT_ORDER, CORE_DEFINITIONS, GAMEPLAY_SAFE_RECT as R } from "./airCombatConfig";
 import { isCoreEligible } from "./airCombatCoreEligibility";
 import { getEffectiveAircraftStats } from "./airCombatAircraft";
-import { createCombatRandom } from "./airCombatRuntime";
 import { createMirrorAI, type MirrorCombatant } from "./airCombatMirrorCombatant";
 import { mirrorPoint } from "./airCombatMirrorTransform";
-import { createDuelCombatWorld, aircraftTargetView, prepareMirrorDuel, tickDuelActor, tickDuelOpponent,
+import { latchAircraftDestruction, updateCombatAftermath, AIRCRAFT_AFTERMATH_SECONDS, createCombatRandom, createDuelCombatWorld, aircraftTargetView, prepareMirrorDuel, tickDuelActor, tickDuelOpponent,
   movePlayerByDelta, castWorldSkill, selectCore, rerollCore, type CombatWorld } from "./airCombatRuntime";
 import { updateMirrorAI } from "./airCombatDuelAI";
 import { advanceDuelAircraftToLevel, allocateDuelSkill, grantDuelEquipment } from "./airCombatDuelProgression";
@@ -16,7 +17,10 @@ import type { RerollSource } from "./airCombatSelectionRules";
 import type { AircraftId, CoreCard, SkillId, SkillCastResult } from "./airCombatTypes";
 
 export interface SoloSetup { aircraft: AircraftId; opponent: AircraftId | "secret"; rule: SoloRule }
+export interface SoloAcquisitionAnnouncement { id: number; text: string; durationMs: number }
 export interface SoloMatch {
+  acquisitionQueue: SoloAcquisitionAnnouncement[]; nextAcquisitionId: number;
+  roundOutcomeLocked: boolean; aftermathRemaining: number;
   setup: SoloSetup; world: CombatWorld; opponent: CombatWorld; mirror: MirrorCombatant;
   phase: SoloPhase; round: number; playerWins: number; opponentWins: number;
   countdownRemaining: number; roundElapsed: number; phaseRemaining: number;
@@ -41,7 +45,7 @@ export function createSoloMatch(setup: SoloSetup): SoloMatch {
   const id = setup.opponent === "secret" ? AIRCRAFT_ORDER[Math.floor(random() * AIRCRAFT_ORDER.length)] : setup.opponent;
   const world = createDuelCombatWorld(setup.aircraft, createCombatRandom(Math.floor(random() * 0x100000000)));
   const opponent = createDuelCombatWorld(id, createCombatRandom(Math.floor(random() * 0x100000000)));
-  return { setup: { ...setup }, world, opponent, mirror: attachPair(world, opponent), phase: "reveal", round: 1,
+  return { acquisitionQueue: [], nextAcquisitionId: 1, roundOutcomeLocked: false, aftermathRemaining: 0, setup: { ...setup }, world, opponent, mirror: attachPair(world, opponent), phase: "reveal", round: 1,
     playerWins: 0, opponentWins: 0, countdownRemaining: 7, roundElapsed: 0, phaseRemaining: 2,
     suddenDeath: false, restartAtOneHp: false, random };
 }
@@ -81,7 +85,8 @@ function resetDuelCombat(match: SoloMatch, oneHp = false) {
     if (match.phase !== "sudden_death") return;
     if (match.restartAtOneHp) {
       if (hpLoss > 0) match.firstRestartHpLoss ??= w === match.world ? "player" : "opponent";
-    } else resolveRound(match);
+    }
+    // Outcome arbitration runs after both actors complete the authoritative tick.
   };
 }
 function setCombatGate(match: SoloMatch, enabled: boolean) {
@@ -104,14 +109,23 @@ function beginCountdown(match: SoloMatch) {
 }
 function setupRound(match: SoloMatch) {
   match.phase = "round_setup"; match.suddenDeath = false; match.restartAtOneHp = false;
-  match.roundElapsed = 0; match.roundWinner = undefined;
+  match.roundElapsed = 0; match.roundWinner = undefined; match.roundOutcomeLocked = false; match.aftermathRemaining = 0;
   resetDuelCombat(match);
   const player = match.world.aircraft, opponent = match.opponent.aircraft;
   for (const s of [player, opponent]) advanceDuelAircraftToLevel(s, DUEL_LEVELS[match.round - 1]);
+  const previousEquipment = equipmentState(opponent).equipped.map(item=>item?.definitionId);
   grantDuelEquipment(player, opponent, match.round, match.setup.rule, match.random);
+  for (const [slot, item] of equipmentState(opponent).equipped.entries()) if (item && item.definitionId !== previousEquipment[slot]) {
+    const definition = EQUIPMENT_CATALOG[item.definitionId];
+    enqueueAcquisition(match, `${definition.rarity === "legendary" ? "Trang Bị Huyền Thoại" : "Trang Bị Hoàn Chỉnh"} ${definition.name}`);
+  }
   if (match.round <= 4) {
     setDuelCoreContext(player, opponent, DUEL_CORE_CONTEXTS[match.round - 1], match.setup.rule);
-    if (match.setup.rule === "random") chooseDuelAICore(match.opponent, player, match.round);
+    if (match.setup.rule === "random") {
+      const serial = opponent.coreState.nextAcquisitionId;
+      chooseDuelAICore(match.opponent, player, match.round);
+      enqueueCoreAcquisitions(match, serial);
+    }
     const choices = offerDuelCores(match.world, match.round);
     if (match.setup.rule === "copy") syncDuelEncounters(player, opponent);
     if (choices.length) { match.phase = "core_selection"; return; }
@@ -136,7 +150,9 @@ export function selectSoloCore(match: SoloMatch, card: CoreCard) {
     match.opponent.currentCoreChoices = sharedChoices; match.opponent.coreSelectionEvent = sharedEvent;
     releaseState(match.opponent.aircraft).reserve = sharedReserve;
     match.opponent.random = () => rolls[i++] ?? .5;
+    const serial = match.opponent.aircraft.coreState.nextAcquisitionId;
     try { selectCore(match.opponent, card); } finally { match.opponent.random = otherRandom; }
+    enqueueCoreAcquisitions(match, serial);
     syncDuelEncounters(match.world.aircraft, match.opponent.aircraft);
   } else if (!selectCore(match.world, card)) return false;
   if (!releaseState(match.world.aircraft).followups.length) beginCountdown(match);
@@ -168,16 +184,31 @@ export function castSoloSkill(match: SoloMatch, skill: SkillId): SkillCastResult
   if (match.phase === "combat" || match.phase === "sudden_death") return castWorldSkill(match.world, skill);
   return { cast: false, reason: "invalid", resourceSpent: 0 };
 }
+function enqueueAcquisition(match: SoloMatch, reward: string) {
+  match.acquisitionQueue.push({id:match.nextAcquisitionId++,text:`${AIRCRAFT_CONFIGS[match.opponent.aircraft.aircraftId].name} AI đã nhận được ${reward}`,durationMs:1600});
+}
+function enqueueCoreAcquisitions(match: SoloMatch, firstSerial: number) {
+  for (const event of match.opponent.aircraft.coreState.acquisitions) if (event.id >= firstSerial && event.kind === "core") {
+    enqueueAcquisition(match, `Lõi Nâng Cấp ${getCoreDefinition(event.coreId).name}`);
+  }
+}
+function showRoundResult(match: SoloMatch) { match.phase = "round_result"; match.phaseRemaining = 2.5; }
 function finishRound(match: SoloMatch, winner: "player" | "opponent") {
-  if (match.phase !== "combat" && match.phase !== "sudden_death") return;
-  match.roundWinner = winner;
+  if (match.roundOutcomeLocked || (match.phase !== "combat" && match.phase !== "sudden_death")) return;
+  match.roundOutcomeLocked = true; match.roundWinner = winner;
   if (winner === "player") match.playerWins++; else match.opponentWins++;
   setCombatGate(match, false);
-  if (match.playerWins >= DUEL_WINS || match.opponentWins >= DUEL_WINS) {
-    match.winner = winner; match.phase = "match_result";
-  } else { match.phase = "round_result"; match.phaseRemaining = 2.5; }
+  if (match.playerWins >= DUEL_WINS || match.opponentWins >= DUEL_WINS) match.winner = winner;
+  if (match.world.aircraft.currentHp <= 0 || match.opponent.aircraft.currentHp <= 0) {
+    for (const world of [match.world, match.opponent]) {
+      latchAircraftDestruction(world); world.aftermath = {remaining:AIRCRAFT_AFTERMATH_SECONDS};
+    }
+    match.phase = "knockout_aftermath"; match.aftermathRemaining = AIRCRAFT_AFTERMATH_SECONDS;
+  } else if (match.winner) match.phase = "match_result";
+  else showRoundResult(match);
 }
 function resolveRound(match: SoloMatch) {
+  if (match.roundOutcomeLocked) return;
   const a = match.world.aircraft, b = match.opponent.aircraft;
   const aDead = a.currentHp <= 0, bDead = b.currentHp <= 0;
   if (aDead !== bDead) { finishRound(match, aDead ? "opponent" : "player"); return; }
@@ -197,9 +228,17 @@ function resolveRound(match: SoloMatch) {
 }
 export function updateSoloMatch(match: SoloMatch, dt: number) {
   if (dt <= 0 || match.phase === "match_result" || match.phase === "core_selection") return;
+  if (match.phase === "knockout_aftermath") {
+    const step = Math.min(dt, match.aftermathRemaining);
+    updateCombatAftermath(match.world, step); updateCombatAftermath(match.opponent, step);
+    match.aftermathRemaining = Math.max(0, match.aftermathRemaining - step);
+    if (match.aftermathRemaining <= 0) showRoundResult(match);
+    return;
+  }
   if (match.phase === "reveal" || match.phase === "round_result") {
     match.phaseRemaining -= dt;
     if (match.phaseRemaining <= 0) {
+      if (match.phase === "round_result" && match.winner) { match.phase = "match_result"; return; }
       if (match.phase === "round_result") match.round++;
       setupRound(match);
     }
@@ -223,6 +262,10 @@ export function updateSoloMatch(match: SoloMatch, dt: number) {
     return;
   }
   if (match.phase !== "combat" && match.phase !== "sudden_death") return;
+  // A contact resolved by the shared movement handler is authoritative before another tick.
+  if (match.world.aircraft.currentHp <= 0 || match.opponent.aircraft.currentHp <= 0) {
+    resolveRound(match); if (match.roundOutcomeLocked) return;
+  }
   match.roundElapsed += dt;
   setCombatGate(match, true);
   match.world.elapsed += dt;

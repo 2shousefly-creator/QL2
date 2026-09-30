@@ -1,3 +1,4 @@
+import { preferredDuelDecoy } from "./airCombatTargetability";
 import { ULTIMATE_FRAMES } from "./airCombatUltimateArt";
 import type { CombatWorld, ProjectileEntity } from "./airCombatRuntime";
 import { getMissilePose } from "./airCombatMissilePresentation";
@@ -32,7 +33,7 @@ export function rankProjectileVisual(p:ProjectileEntity):RankVisualKey|undefined
 export function paintRankSkills(w:CombatWorld,draw:RankSpritePainter,reducedMotion:boolean) {
  const r=w.rankRuntime,t=w.elapsed;
  if(r?.lock){
-  const lock=r.lock,e=w.enemies.find(e=>e.id===lock.target&&e.hp>0);
+  const lock=r.lock,decoy=lock.decoy?preferredDuelDecoy(w,lock.decoy):null,e=decoy?{...decoy,radius:18}:w.enemies.find(e=>e.id===lock.target&&e.hp>0);
   if(e){
    const threshold=skillRank(w.aircraft,"predator_lock")>=5?4:5,ratio=lock.stacks/threshold;
    const size=(e.radius+15)*2,flash=(lock.flashUntil??0)>t;

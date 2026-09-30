@@ -1,3 +1,4 @@
+import { canTargetEnemy } from "./airCombatTargetability";
 import { getHealingReceivedMultiplier, getRecoveryReceivedMultiplier, getShieldReceivedMultiplier } from "./airCombatRecovery";
 import { EQUIPMENT_POWER as P } from "./airCombatEquipmentBalance";
 import { advanceWaitingChest } from "./airCombatEquipmentRewards";
@@ -87,13 +88,13 @@ const EFFECTS:Readonly<Record<number,EquipmentEffectHooks>>={
     e.stacks=Math.min(6,e.stacks+1);peak(c,e.stacks);if(e.stacks===6){activate(c,8,0);e.value=0;}
   }},
   11:{cast(c){activate(c,6);}},
-  12:{hit(c,h){if(!h.primary||++equipmentEffect(c.s,12).count%5)return;metric(c,"echoes",2);const targets=nearby(c,c.w.playerX,c.w.playerY).filter(e=>e!==h.enemy).slice(0,2);
-    if(!targets.length){metric(c,"merged");damage(c,h.enemy,power(c)*P[12].merged*c.k,{x:c.w.playerX,y:c.w.playerY});}
-    else for(let i=0;i<2;i++)damage(c,targets[i%targets.length],power(c)*P[12].echo*c.k,{x:c.w.playerX+(i?28:-28),y:c.w.playerY});
+  12:{hit(c,h){if(!h.primary||++equipmentEffect(c.s,12).count%5)return;metric(c,"echoes",2);const targets=nearby(c,c.w.playerX,c.w.playerY).filter(e=>e!==h.enemy&&canTargetEnemy(c.w,e)).slice(0,2);
+    if(!targets.length&&canTargetEnemy(c.w,h.enemy)){metric(c,"merged");damage(c,h.enemy,power(c)*P[12].merged*c.k,{x:c.w.playerX,y:c.w.playerY});}
+    else if(targets.length)for(let i=0;i<2;i++)damage(c,targets[i%targets.length],power(c)*P[12].echo*c.k,{x:c.w.playerX+(i?28:-28),y:c.w.playerY});
   }},
   13:{hit(c,h){if(!h.primary)return;const e=equipmentEffect(c.s,13);
     if(e.value>=100){e.value=0;metric(c,"chains");const used=new Set<number>();let next:EnemyEntity|undefined=h.enemy,from={x:c.w.playerX,y:c.w.playerY};
-      for(let i=0;i<4;i++){const target=next??h.enemy;damage(c,target,power(c)*P[13].damage*c.k*(next?1:P[13].returnRatio*c.k),from);used.add(target.id);from={x:target.x,y:target.y};next=nearby(c,from.x,from.y).find(e=>!used.has(e.id));}}
+      for(let i=0;i<4;i++){const target=next??h.enemy;if(!canTargetEnemy(c.w,target))break;damage(c,target,power(c)*P[13].damage*c.k*(next?1:P[13].returnRatio*c.k),from);used.add(target.id);from={x:target.x,y:target.y};next=nearby(c,from.x,from.y).find(e=>!used.has(e.id)&&canTargetEnemy(c.w,e));}}
     else {const before=e.value;e.value=Math.min(100,e.value+8);if(before<100&&e.value===100)metric(c,"charged");}
   }},
   14:{kill(c,e){if(e.expansionKillingHit?.skill){activate(c,8);equipmentEffect(c.s,14).value=1;}},hit(c,h){if(h.skill&&h.direct&&(h.enemy.type==="boss"||c.h.elite(h.enemy))){const e=equipmentEffect(c.s,14);e.value=e.until>c.t?Math.max(.5,e.value):.5;activate(c,8);}}},
@@ -111,7 +112,7 @@ const EFFECTS:Readonly<Record<number,EquipmentEffectHooks>>={
       if(c.w.playerY+dy<GAMEPLAY_SAFE_RECT.top+12||c.w.playerY+dy>GAMEPLAY_SAFE_RECT.bottom-12)dy=-dy;
       q.orb={x:c.w.playerX+dx,y:c.w.playerY+dy,until:c.t+7,shield:c.w.random()<.5,scale:c.k};e.value-=hp(c)*.10;metric(c,"orbs");}
   }},
-  24:{tick(c){const e=equipmentEffect(c.s,24),targets=nearby(c,c.w.playerX,c.w.playerY).sort((a,b)=>b.hp-a.hp);if(e.value>=getEffectiveAircraftStats(c.s).maxResource*.30&&targets.length){e.value-=getEffectiveAircraftStats(c.s).maxResource*.30;const target=targets[0];equipmentState(c.s).meteors.push({x:target.x,y:target.y,at:c.t+.6,scale:c.k});equipmentFx(c.w,24,target.x,target.y,140,.6);metric(c,"meteors");}}},
+  24:{tick(c){const e=equipmentEffect(c.s,24),targets=nearby(c,c.w.playerX,c.w.playerY).filter(target=>canTargetEnemy(c.w,target)).sort((a,b)=>b.hp-a.hp);if(e.value>=getEffectiveAircraftStats(c.s).maxResource*.30&&targets.length){e.value-=getEffectiveAircraftStats(c.s).maxResource*.30;const target=targets[0];equipmentState(c.s).meteors.push({x:target.x,y:target.y,at:c.t+.6,scale:c.k});equipmentFx(c.w,24,target.x,target.y,140,.6);metric(c,"meteors");}}},
   25:{damaged(c){if(c.s.currentHp<hp(c)*.35&&ready(c)){reduceCooldown(c,P[25].cooldown*c.k,AIRCRAFT_CONFIGS[c.s.aircraftId].skillIds);shield(c,hp(c)*P[25].shield*c.k,5);const e=equipmentEffect(c.s,25);deferEquipmentCooldown(c.s,25);e.bonusUntil=c.t+6;}}},
   26:{hit(c,h){if(h.critical)stack(c,1,6,6);}},
   27:{tick(c,dt){heal(c,Math.max(0,hp(c)-c.s.currentHp)*P[27].regen*c.k*dt);}},
