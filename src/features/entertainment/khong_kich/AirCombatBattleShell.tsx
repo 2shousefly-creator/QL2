@@ -335,15 +335,24 @@ export const AirCombatBattleShell: React.FC<AirCombatBattleProps> = ({
     if (!host) return;
     let world = worldRef.current;
     let phase = runtime?.getPhase();
+    let movementAllowed = runtime?.canMove() ?? false;
     const syncRuleset = () => {
       if (!runtime) return;
       const next = runtime.getWorld(), nextPhase = runtime.getPhase();
-      if (world !== next || phase !== nextPhase) {
-        setPlayerInputActive(world, false);
-        resetPlayerControl(); resetSkillPress();
-        activePointers.current.clear(); suppressedPointers.current.clear();
+      const nextMovementAllowed = runtime.canMove();
+      if (world !== next || phase !== nextPhase || movementAllowed !== nextMovementAllowed) {
+        // Keep the captured drag and its last pointer position across countdown -> combat.
+        // A new world or a phase that blocks movement still ends the gesture.
+        const preserveMovement = world === next && movementAllowed && nextMovementAllowed;
+        if (!preserveMovement) {
+          setPlayerInputActive(world, false);
+          resetPlayerControl();
+          activePointers.current.clear(); suppressedPointers.current.clear();
+          setPlayerInputActive(next, false);
+        }
+        resetSkillPress();
         world = next; worldRef.current = next; phase = nextPhase;
-        setPlayerInputActive(next, false);
+        movementAllowed = nextMovementAllowed;
       }
       setCoreChoices(previous => previous === next.currentCoreChoices ? previous : next.currentCoreChoices);
       setPauseReason("core", !!next.currentCoreChoices);
