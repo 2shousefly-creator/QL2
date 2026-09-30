@@ -1,5 +1,5 @@
 import soloArenaUrl from "../../../assets/khong-kich/solo/solo-duel-arena.png";
-import { MIRROR_TRANSFORM } from "./airCombatMirrorTransform";
+import { MIRROR_TRANSFORM, mirrorPoint } from "./airCombatMirrorTransform";
 import { paintMirage } from "./airCombatMirageVisuals";
 import { STAGE4_ART_URLS, mirageEnemyFrame } from "./airCombatStage4Art";
 import { STAGE3_ART_URLS, STAGE3_VFX_ART, stormEnemyFrame, stormbreakerSkyTile } from "./airCombatStage3Art";
@@ -42,7 +42,7 @@ import { AIR_COMBAT_WORLD, AIRCRAFT_CONFIGS, ENEMY_CONFIGS, GAMEPLAY_SAFE_RECT }
 import type { CombatWorld } from "./airCombatRuntime";
 import type { AircraftId, EnemyType } from "./airCombatTypes";
 import { getEffectiveAircraftStats } from "./airCombatEngine";
-import { HealthBarPresentation, activeShieldAmount, statusBarText, DAMAGE_LABEL_SECONDS, trackingBarWidth, trackingBarX, trackingBarY, type DamageLabel } from "./airCombatFeedback";
+import { HealthBarPresentation, DamageLabelPool, activeShieldAmount, statusBarText, DAMAGE_LABEL_SECONDS, trackingBarWidth, trackingBarX, trackingBarY, type DamageLabel } from "./airCombatFeedback";
 
 // Canvas uses the same local neutral art and transforms as Pixi. When image
 // decoding is unavailable, authored capsule silhouettes remain a vector fallback.
@@ -357,7 +357,7 @@ function drawEnemyGlyph(
   ctx.restore();
 }
 
-const mirrorPresentations = new WeakMap<CombatWorld, { accents: CanvasCombatAccents; bars: HealthBarPresentation; time: number }>();
+const mirrorPresentations = new WeakMap<CombatWorld, { accents: CanvasCombatAccents; bars: HealthBarPresentation; labels: DamageLabelPool; time: number }>();
 
 export function drawLegacyWorld(
   ctx: CanvasRenderingContext2D,
@@ -828,12 +828,12 @@ export function drawLegacyWorld(
   const mirror = (world.duelOpponent ?? world.mirage?.mirror)?.context.world;
   if (mirror) {
     let view = mirrorPresentations.get(mirror);
-    if (!view) { view = { accents: new CanvasCombatAccents(), bars: new HealthBarPresentation(), time: presentationTime }; mirrorPresentations.set(mirror, view); }
+    if (!view) { view = { accents: new CanvasCombatAccents(), bars: new HealthBarPresentation(), labels: new DamageLabelPool(), time: presentationTime }; mirrorPresentations.set(mirror, view); }
     const delta = Math.max(0, Math.min(.12, presentationTime - view.time)); view.time = presentationTime;
-    view.accents.update(mirror, delta); view.bars.begin(delta);
+    view.accents.update(mirror, delta); view.bars.begin(delta); view.labels.update(mirror, delta);
     ctx.save(); ctx.translate(MIRROR_TRANSFORM.x, MIRROR_TRANSFORM.y); ctx.rotate(MIRROR_TRANSFORM.rotation);
     drawLegacyWorld(ctx, mirror, mirror.aircraft.aircraftId, reducedMotion, [], view.bars, view.accents, presentationTime, undefined, true);
-    ctx.restore(); view.bars.end();
+    ctx.restore();
   }
   ctx.restore(); // Shake transform.
   ctx.restore(); // Fixed gameplay clip.
@@ -857,11 +857,32 @@ export function drawLegacyWorld(
 
     }
   }
+  drawAircraftTrackingHud(ctx, world, healthBars);
+  if (mirror) {
+    const view = mirrorPresentations.get(mirror)!;
+    drawAircraftTrackingHud(ctx, mirror, view.bars, true);
+    view.bars.end();
+    drawAircraftDamageLabels(ctx, view.labels.labels, reducedMotion, true);
+  }
+
+  drawAircraftDamageLabels(ctx, damageLabels, reducedMotion);
+
+  ctx.strokeStyle = "rgba(34,211,238,.52)";
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(GAMEPLAY_SAFE_RECT.left, GAMEPLAY_SAFE_RECT.top);
+  ctx.lineTo(GAMEPLAY_SAFE_RECT.right, GAMEPLAY_SAFE_RECT.top);
+  ctx.stroke();
+  ctx.restore();
+}
+
+function drawAircraftTrackingHud(ctx: CanvasRenderingContext2D, world: CombatWorld, healthBars: HealthBarPresentation, rotated = false) {
   const stats = getEffectiveAircraftStats(world.aircraft);
-  const displayWidth = PLAYER_AIRFRAME_SIZE[aircraftId]*playerAirframeScale(world.aircraft);
+  const displayWidth = PLAYER_AIRFRAME_SIZE[world.aircraft.aircraftId]*playerAirframeScale(world.aircraft);
   const barWidth = trackingBarWidth(displayWidth);
-  const barX = trackingBarX(world.playerX, barWidth);
-  const barY = trackingBarY(world.playerY, displayWidth);
+  const position = rotated ? mirrorPoint(world.playerX, world.playerY) : { x: world.playerX, y: world.playerY };
+  const barX = trackingBarX(position.x, barWidth);
+  const barY = trackingBarY(position.y, displayWidth);
   const health = healthBars.get(-1, world.aircraft.currentHp, stats.maxHp, activeShieldAmount(world.aircraft));
   const hp = health.hpRatio;
   const barPath = (y: number, ratio = 1) => {
@@ -886,6 +907,9 @@ export function drawLegacyWorld(
   ctx.strokeText(resourceText, barX + barWidth / 2, barY + 18); ctx.fillText(resourceText, barX + barWidth / 2, barY + 18);
   ctx.restore();
 
+}
+
+function drawAircraftDamageLabels(ctx: CanvasRenderingContext2D, damageLabels: readonly DamageLabel[], reducedMotion: boolean, rotated = false) {
   ctx.save();
   ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.lineJoin = "round";
   for (const label of damageLabels) {
@@ -896,17 +920,11 @@ export function drawLegacyWorld(
     ctx.globalAlpha = Math.min(1, (1 - progress) * 2);
     ctx.fillStyle = label.critical ? "#ff4d55" : label.damageKind === "shield" ? "#ffffff" : "#fde047";
     ctx.strokeStyle = label.damageKind === "shield" ? "#325777" : "#151c29"; ctx.lineWidth = 3;
-    const x = label.x + label.offset * (reducedMotion ? 0.4 : 0.4 + progress);
-    const y = label.y - progress * (reducedMotion ? 7 : 24);
+    const position = rotated ? mirrorPoint(label.x, label.y) : label;
+    const x = position.x + label.offset * (reducedMotion ? 0.4 : 0.4 + progress);
+    const y = position.y - progress * (reducedMotion ? 7 : 24);
     ctx.strokeText(label.text, x, y); ctx.fillText(label.text, x, y);
   }
   ctx.restore();
 
-  ctx.strokeStyle = "rgba(34,211,238,.52)";
-  ctx.lineWidth = 1;
-  ctx.beginPath();
-  ctx.moveTo(GAMEPLAY_SAFE_RECT.left, GAMEPLAY_SAFE_RECT.top);
-  ctx.lineTo(GAMEPLAY_SAFE_RECT.right, GAMEPLAY_SAFE_RECT.top);
-  ctx.stroke();
-  ctx.restore();
 }

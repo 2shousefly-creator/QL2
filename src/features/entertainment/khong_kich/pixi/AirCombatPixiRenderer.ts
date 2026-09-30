@@ -1,4 +1,4 @@
-import { MIRROR_TRANSFORM } from "../airCombatMirrorTransform";
+import { MIRROR_TRANSFORM, mirrorPoint } from "../airCombatMirrorTransform";
 import { paintMirage } from "../airCombatMirageVisuals";
 import { mirageEnemyFrame } from "../airCombatStage4Art";
 import { paintStormbreaker, StormbreakerPresentation } from "../airCombatStormbreakerVisuals";
@@ -109,6 +109,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
   private laser = new Sprite();
   private charge = new Sprite();
   private vfx: AirCombatVfx;
+  private renderedWorld?: CombatWorld;
   private lastEvent = 0;
   private lastProjectile = 0;
   private flashUntil = new Map<number, number>();
@@ -164,8 +165,9 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     this.root.addChild(this.telegraphs, this.smokeLayer, this.missileExhaust, this.actors, this.effects, this.magneticLayer, this.magneticWarnings, this.stormbreakerRoot, this.stormbreakerMask, this.enemyForegroundMarks, this.globalVfx, this.enemyStatusLayer, this.hitbox, this.damageText.root, this.mirrorLayer);
     this.missileExhaust.blendMode="add";
     // Separate stage branch: neither recoil nor camera shake can move status bars.
-    if (!sceneParent) app.stage.addChild(this.stableHud);
-    else this.damageText.root.visible = false;
+    app.stage.addChild(this.stableHud);
+    // A nested aircraft uses root coordinates for all readable presentation.
+    if (sceneParent) this.stableHud.addChild(this.damageText.root);
     this.stableHud.addChild(this.trackingBars, this.hpText, this.resourceText);
     this.hpText.anchor.set(.5); this.resourceText.anchor.set(.5);
     this.enemies = new AirCombatSpritePool(this.actors, 44);
@@ -201,6 +203,10 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
   render(world: CombatWorld, delta: number, reducedMotion: boolean) {
     if (this.lost) throw new Error("Không Kích WebGL context lost");
     if (this.destroyed || document.hidden) return;
+    if (world !== this.renderedWorld) {
+      this.renderedWorld = world; this.lastEvent = 0; this.lastProjectile = 0;
+      this.healthBars.clear(); this.flashUntil.clear(); this.shake = this.recoil = 0;
+    }
     this.clock += delta;
     this.healthBars.begin(delta);
     this.trackingBars.clear();
@@ -704,8 +710,9 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     const hp = health.hpRatio;
     const resource = Math.max(0, Math.min(1, world.aircraft.currentResource / stats.maxResource));
     const barWidth = trackingBarWidth(visual.size*playerAirframeScale(world.aircraft));
-    const barX = trackingBarX(world.playerX, barWidth);
-    const barY = trackingBarY(world.playerY, visual.size*playerAirframeScale(world.aircraft));
+    const trackingPosition = this.sceneParent ? mirrorPoint(world.playerX, world.playerY) : { x: world.playerX, y: world.playerY };
+    const barX = trackingBarX(trackingPosition.x, barWidth);
+    const barY = trackingBarY(trackingPosition.y, visual.size*playerAirframeScale(world.aircraft));
     const layer = (y: number, ratio: number, color: number) => {
       if (ratio > 0) this.trackingBars.poly(angularBarPolygon(barX, y, barWidth, 10, ratio)).fill(color);
     };
@@ -723,7 +730,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     this.hpText.position.set(barX + barWidth / 2, barY + 5);
     this.resourceText.position.set(barX + barWidth / 2, barY + 18);
     this.healthBars.end();
-    this.damageText.update(world, delta, reducedMotion);
+    this.damageText.update(world, delta, reducedMotion, !!this.sceneParent);
     if (damageSmoke) {
       if (hp < 0.4) this.vfx.spawn("damageSmoke", world.playerX + 5, world.playerY + 15, 31, 0.8, 0xffffff, 25);
       if (hp < 0.2) this.vfx.spawn("fire", world.playerX - 7, world.playerY + 13, 24, 0.35);

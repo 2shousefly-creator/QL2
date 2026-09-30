@@ -11,7 +11,8 @@ import type { CombatWorld } from "./airCombatRuntime";
 import type { AirCombatHudSnapshot } from "./airCombatTypes";
 
 export interface HubTooltip { title: React.ReactNode; text: React.ReactNode }
-export function AirCombatTacticalHud({ world, hud, reducedMotion, onInspect, onCores, onEquipment, onEquipmentInspect, onPause, coreChoice }: {
+export function AirCombatTacticalHud({ world, hud, reducedMotion, onInspect, onCores, onEquipment, onEquipmentInspect, onPause, coreChoice, soloScore }: {
+  soloScore?: { playerWins: number; opponentWins: number };
   world: CombatWorld; hud: AirCombatHudSnapshot; reducedMotion: boolean; coreChoice: boolean;
   onInspect: (id: string, tooltip: HubTooltip) => void; onCores: () => void; onEquipment: () => void; onPause: () => void;
   onEquipmentInspect: (id: EquipmentRewardId, source: HTMLElement) => void;
@@ -28,6 +29,7 @@ export function AirCombatTacticalHud({ world, hud, reducedMotion, onInspect, onC
     previous.current=displayedDps;
   },[displayedDps,reducedMotion]);
   useEffect(()=>()=>animation.current?.cancel(),[]);
+  const scoreText = soloScore ? `PLAYER ${soloScore.playerWins} — ${soloScore.opponentWins} AI` : null;
   const integer=(value:number)=>Math.round(value).toLocaleString("vi-VN");
   return <>
     <button type="button" className="air-hub-avatar" data-combat-tooltip-trigger="hub" aria-label={`Thông tin ${aircraft.name}, Cấp ${state.level}`}
@@ -46,8 +48,8 @@ export function AirCombatTacticalHud({ world, hud, reducedMotion, onInspect, onC
       aria-label={item ? `Trang bị ${EQUIPMENT_CATALOG[item.definitionId].name}` : `Ô trang bị ${i+1} trống`}>
       {item?<EquipmentIcon id={item.definitionId}/>:<span>{i+1}</span>}</button>)}</div>
     <div className="air-hub-top">
-      <button type="button" className="air-hub-number" data-combat-tooltip-trigger="hub" onClick={()=>onInspect("score",{title:<>Điểm Số: <strong className="air-tooltip-value">{integer(hud.score)}</strong></>,text:"Hạ địch có thưởng nhận điểm cơ bản theo loại địch × hệ số chuỗi tại thời điểm hạ. Dưới 10: ×1; 10–24: ×2; 25–49: ×3; từ 50: ×5. Chuỗi về 0 khi mất Máu do địch hoặc sau 4 giây không hạ địch."})}>
-        <span>ĐIỂM SỐ</span><strong data-hud-score={hud.score}>{integer(hud.score)}</strong>
+      <button type="button" className="air-hub-number" data-combat-tooltip-trigger="hub" onClick={()=>onInspect("score",soloScore ? { title: scoreText, text: "Tỷ số số hiệp thắng hiện tại trong BO9. Bên đầu tiên đạt 5 hiệp thắng sẽ thắng Match." } : {title:<>Điểm Số: <strong className="air-tooltip-value">{integer(hud.score)}</strong></>,text:"Hạ địch có thưởng nhận điểm cơ bản theo loại địch × hệ số chuỗi tại thời điểm hạ. Dưới 10: ×1; 10–24: ×2; 25–49: ×3; từ 50: ×5. Chuỗi về 0 khi mất Máu do địch hoặc sau 4 giây không hạ địch."})}>
+        <span>{soloScore ? "TỶ SỐ" : "ĐIỂM SỐ"}</span><strong data-hud-score={soloScore ? undefined : hud.score} data-solo-score={!!soloScore} aria-label={scoreText ?? undefined}>{soloScore ? `P ${soloScore.playerWins} — ${soloScore.opponentWins} AI` : integer(hud.score)}</strong>
       </button>
       <button type="button" className="air-hub-number" data-combat-tooltip-trigger="hub" onClick={()=>onInspect("dps",{title:<>DPS: <strong className="air-tooltip-value">{integer(hud.dps)}</strong></>,text:"DPS là sát thương trung bình mỗi giây trong 5 giây gần nhất. Tính HP và Lá chắn thực tế bị mất do người chơi, kỹ năng và Lõi gây ra; không tính sát thương vượt Máu còn lại (overkill). Tổng trong 5 giây chiến đấu chia 5; cửa sổ đứng yên khi tạm dừng."})}>
         <span>DPS</span><strong ref={dpsNode}>{integer(hud.dps)}</strong>

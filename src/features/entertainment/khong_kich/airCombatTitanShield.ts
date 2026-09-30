@@ -6,7 +6,12 @@ export class TitanShieldPresentation {
   opacity=0; scale=.7; age=0; active=false; lastEvent=0;
   impacts=Array.from({length:8},()=>({x:0,y:0,age:1}));
   private nextImpact=0;
+  private world?: CombatWorld;
   update(world:CombatWorld,dt:number) {
+    if (this.world !== world) {
+      this.world = world; this.opacity = 0; this.scale = .7; this.age = 0; this.active = false; this.lastEvent = 0; this.nextImpact = 0;
+      for (const impact of this.impacts) impact.age = 1;
+    }
     const active=world.aircraft.aircraftId==="breaker" && (world.aircraft.activeEffects.armor_shield??0)>0;
     if(active&&!this.active){this.age=0;this.scale=.7;}
     this.active=active;this.age+=dt;

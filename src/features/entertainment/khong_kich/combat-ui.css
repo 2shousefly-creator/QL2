@@ -687,9 +687,9 @@
 /* SOLO session: fixed navigation, quiet arena and the existing aircraft/Core art. */
 .air-solo-fullscreen{background:#080d15;color:#e2e8f0;overflow:auto;overscroll-behavior:contain;padding:max(8px,env(safe-area-inset-top)) max(8px,env(safe-area-inset-right)) max(8px,env(safe-area-inset-bottom)) max(8px,env(safe-area-inset-left))}
 .air-solo-setup{width:min(100%,620px);min-height:100%;margin:auto;display:flex;flex-direction:column;gap:18px;padding:12px 4px 24px}
-.air-solo-setup nav,.air-solo-battle nav{display:flex;align-items:center;justify-content:space-between;gap:8px;position:sticky;top:0;z-index:4;background:#080d15;padding:6px 0}
-.air-solo-setup button,.air-solo-battle button,.air-solo-core-cards button{border:1px solid #475569;border-radius:10px;background:#17202e;color:#f1f5f9;padding:10px;font-weight:800}
-.air-solo-setup button:focus-visible,.air-solo-battle button:focus-visible{outline:2px solid #f8fafc;outline-offset:2px}
+.air-solo-setup nav{display:flex;align-items:center;justify-content:space-between;gap:8px;position:sticky;top:0;z-index:4;background:#080d15;padding:6px 0}
+.air-solo-setup button{border:1px solid #475569;border-radius:10px;background:#17202e;color:#f1f5f9;padding:10px;font-weight:800}
+.air-solo-setup button:focus-visible{outline:2px solid #f8fafc;outline-offset:2px}
 .air-solo-setup header{text-align:center;padding:12px 0}
 .air-solo-setup header span{font-size:11px;letter-spacing:.16em;color:#94a3b8}
 .air-solo-setup h1{font-size:clamp(22px,5vw,32px);font-weight:900;letter-spacing:.06em}
@@ -708,36 +708,15 @@
 .air-solo-result nav{position:static}
 .air-solo-score{text-align:center;font-weight:900;letter-spacing:.09em;font-size:15px}
 .air-solo-result .air-solo-score{font-size:28px;padding:24px 0}
-.air-solo-battle{height:100%;width:min(100%,440px);margin:auto;display:flex;flex-direction:column;gap:4px;min-height:430px;user-select:none}
-.air-solo-battle nav{font-size:11px;flex-shrink:0}
-.air-solo-battle nav button{padding:7px 9px;font-size:10px}
-.air-solo-health{display:grid;grid-template-columns:1fr 1fr;gap:12px;flex-shrink:0}
-.air-solo-health>div{display:grid;font-size:9px;gap:1px}
-.air-solo-health meter{width:100%;height:10px}
-.air-solo-health small{color:#94a3b8;text-align:center}
-.air-solo-arena{position:relative;flex:1;min-height:0;width:100%;touch-action:none;overflow:hidden;container-type:size}
-.air-solo-renderer{position:absolute;height:100%;width:min(100%,56.25cqh);left:50%;transform:translateX(-50%)}
 .air-solo-announcement{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;pointer-events:none;text-shadow:0 2px 12px #000;background:#05090e26;padding:12px}
 .air-solo-announcement button{pointer-events:auto}
 .air-solo-announcement strong{font-size:clamp(22px,5vh,38px);font-weight:900}
 .air-solo-announcement small{font-size:11px}
 .air-solo-midline{position:absolute;top:calc((112px + (616px - 112px)/2)/640*100%);left:0;right:0;border-top:1px dashed #e2e8f04d;pointer-events:none}
-.air-solo-escalation{position:absolute;top:3px;left:0;right:0;font-size:10px;text-align:center;font-weight:900;color:#fed7aa;background:#341d14d9;padding:5px;pointer-events:none}
-.air-solo-build-buttons{display:flex;align-items:center;justify-content:space-between;font-size:9px;gap:4px;flex-shrink:0}
-.air-solo-build-buttons button{padding:5px;font-size:9px}
-.air-solo-skills{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;flex-shrink:0}
-.air-solo-skills>div{display:grid;gap:3px;min-width:0}
-.air-solo-skills>div>div{display:flex;gap:3px}
-.air-solo-skills>div>div button{padding:3px 8px;flex:1}
-.air-solo-skills .air-solo-skill{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:0;padding:5px 2px;border-radius:8px}
-.air-solo-skill strong{font-size:9px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.air-solo-skill small{font-size:8px}
-.air-solo-battle button:disabled{opacity:.45}
-.air-solo-equipment{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:5px;margin:8px 0}
-.air-solo-equipment>span{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:44px;border:1px solid #475569;border-radius:7px;background:#0b1320}
-.air-solo-equipment small{font-size:9px;color:#cbd5e1}
-.air-solo-core-cards{display:grid;gap:12px}
-.air-solo-core-cards article{border:1px solid #64748b;border-radius:12px;padding:12px;background:#111b29;overflow:hidden}
-.air-solo-core-cards article>div{display:flex;justify-content:space-between;gap:10px;margin-top:10px}
-.air-solo-core-cards .air-core-transition{display:block;min-height:140px}
+.air-solo-escalation{position:absolute;top:24%;left:0;right:0;font-size:10px;text-align:center;font-weight:900;color:#fed7aa;background:#341d14d9;padding:5px;pointer-events:none}
 @media(prefers-reduced-motion:reduce){.air-solo-fullscreen *{scroll-behavior:auto}}
+
+/* SOLO adds ruleset labels inside the shared Campaign viewport, never sizing it. */
+.air-solo-round-overlay{position:absolute;inset:0 0 11.1111%;pointer-events:none;z-index:10}
+.air-solo-round-clock{position:absolute;top:19%;left:0;right:0;display:flex;justify-content:center;gap:18px;font-size:11px;color:#e2e8f0;text-shadow:0 1px 4px #000}
+.air-hub-number strong[data-solo-score=true]{font-size:clamp(7px,2vw,11px);white-space:nowrap}

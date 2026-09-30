@@ -1,6 +1,7 @@
 import { CanvasCombatAccents } from "../CanvasCombatAccents";
 import { StormbreakerPresentation } from "../airCombatStormbreakerVisuals";
 import React from "react";
+import type { CombatWorld } from "../airCombatRuntime";
 import type { AirCombatPresentation } from "./airCombatPixiTypes";
 import { DamageLabelPool, HealthBarPresentation } from "../airCombatFeedback";
 
@@ -14,6 +15,7 @@ export async function createLegacyPresentation(host: HTMLDivElement, stageId = 1
   const { drawLegacyWorld, loadSoloCanvasAssets, loadMirageCanvasAssets, loadStormbreakerCanvasAssets, loadMagneticCanvasAssets, loadAstraCanvasAssets } = await import("../AirCombatLegacyRenderer");
   await Promise.all([loadAstraCanvasAssets(),...(stageId===0?[loadSoloCanvasAssets(),loadMirageCanvasAssets()]:[]),...(stageId===2?[loadMagneticCanvasAssets()]:stageId===3?[loadStormbreakerCanvasAssets()]:stageId===4?[loadMirageCanvasAssets()]:[])]);
   let magneticEndAge = 0;
+  let renderedWorld: CombatWorld | undefined;
   const canvas = document.createElement("canvas");
   const ratio = Math.min(2, window.devicePixelRatio || 1);
   canvas.width = 360 * ratio; canvas.height = 640 * ratio;
@@ -28,6 +30,7 @@ export async function createLegacyPresentation(host: HTMLDivElement, stageId = 1
   return {
     render(world, delta, reducedMotion) {
       if (document.hidden) return;
+      if (renderedWorld !== world) { renderedWorld = world; healthBars.clear(); magneticEndAge = 0; }
       context.setTransform(ratio, 0, 0, ratio, 0, 0);
       damageLabels.update(world, delta);
       healthBars.begin(delta);

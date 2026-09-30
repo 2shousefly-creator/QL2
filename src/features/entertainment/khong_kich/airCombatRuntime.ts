@@ -1,3 +1,4 @@
+import { activeShieldAmount } from "./airCombatFeedback";
 import { mirrorPoint, mirrorVector } from "./airCombatMirrorTransform";
 import { createMirageState, initializeMirageEnemy, updateMirageEnemy, updateMirageProjectile, updateMirage, resetMirage, resolveMirageContacts, mirageEnemyDestroyed, mirageShieldBlocks, mirageFx, type MirageWorldState, type MirageEnemyState } from "./airCombatMirage";
 import type { MirageVisualKey } from "./airCombatStage4Art";
@@ -54,7 +55,7 @@ import { applyCore, applyDamageToAircraft, resolvePlayerDamage, calculateRunRank
 import { CombatAnnouncement, AirCombatHudSnapshot, AirCombatRunSummary, AircraftCombatState, AircraftId, CoreCard, EnemyType, SkillCastResult, SkillId, } from "./airCombatTypes";
 export interface EnemyEntity {
     /** Target adapter only. The aircraft owns HP, Skills, Core/Equipment and AI. */
-    aircraftTarget?: { world: CombatWorld; rotated: boolean };
+    aircraftTarget?: { world: CombatWorld; attackerWorld: CombatWorld; rotated: boolean };
     mirage?: MirageEnemyState;
     hackedFacing?: number;
     hackedTargetId?: number;
@@ -152,7 +153,7 @@ export function aircraftTargetView(host: CombatWorld, actor: CombatWorld): Enemy
     const adapter = host.duel ? acquireEnemy(host) : spawnEnemy(host, "scout", true)!;
     if(host.duel){adapter.id=host.nextId++;adapter.auxiliary=true;host.enemies.push(adapter);}
     adapter.mirage = undefined; adapter.stormbreaker = undefined; adapter.magnetic = undefined;
-    adapter.aircraftTarget = { world: actor, rotated: true };
+    adapter.aircraftTarget = { world: actor, attackerWorld: host, rotated: true };
     adapter.noWaveWait = true; adapter.rewardless = true; adapter.killProcEligible = false; adapter.xp = 0;
     adapter.radius = 17;
     const stats = () => getEffectiveAircraftStats(actor.aircraft);
@@ -166,36 +167,56 @@ export function aircraftTargetView(host: CombatWorld, actor: CombatWorld): Enemy
                 if (amount > 0) receiveAircraftTargetDamage(adapter, amount, "area_hazard"); } },
         maxHp: { configurable: true, get: () => stats().maxHp },
         armor: { configurable: true, get: () => stats().armor },
-        shield: { configurable: true, get: () => 0, set: (_value: number) => {} },
+        // Queries see real shield capacity; only the incoming resolver may consume it.
+        shield: { configurable: true, get: () => activeShieldAmount(actor.aircraft), set: (_value: number) => {} },
+        shieldUntil: { configurable: true, get: () => activeShieldAmount(actor.aircraft) > 0 ? Infinity : 0, set: (_value: number) => {} },
         hackedUntil: { configurable: true, get: () => 0, set: (_value: number) => {} },
-        skillLockedUntil: { configurable: true, get: () => actor.aircraft.status.skillLockedUntil,
-            set: (value: number) => { if (value > actor.elapsed) applyPlayerStatus(actor.aircraft, { skillLock: value - actor.elapsed }); } },
+        skillLockedUntil: { configurable: true, get: () => host.elapsed + Math.max(0, actor.aircraft.status.skillLockedUntil - actor.aircraft.coreState.time),
+            set: (value: number) => { if (value > host.elapsed) applyPlayerStatus(actor.aircraft, { skillLock: value - host.elapsed }); } },
         stun: { configurable: true, get: () => Math.max(0, actor.aircraft.status.stunnedUntil - actor.aircraft.coreState.time),
             set: (value: number) => { if (value > 0) applyPlayerStatus(actor.aircraft, { stun: value }); } },
-        armorBrokenUntil: { configurable: true, get: () => 0,
-            set: (value: number) => { if (value > actor.elapsed) applyPlayerStatus(actor.aircraft, { armorBreak: value - actor.elapsed }); } },
+        armorBrokenUntil: { configurable: true, get: () => host.elapsed + Math.max(0, actor.aircraft.status.armorBrokenUntil - actor.aircraft.coreState.time),
+            set: (value: number) => { if (value > host.elapsed) applyPlayerStatus(actor.aircraft, { armorBreak: value - host.elapsed }); } },
     });
     const p = mirrorPoint(actor.playerX, actor.playerY); adapter.x = p.x; adapter.y = p.y;
     return adapter;
 }
 
-/** Outgoing armor/crit resolves once in the attacker; incoming mitigation, shields,
- * statuses and defensive procs remain owned by the defending aircraft. */
-function receiveAircraftTargetDamage(target: EnemyEntity, amount: number, delivery: DamageDelivery,
-    zone?: AirframeHitZone, resolvedArmor = 0, shieldFactor = 1, homing = false): { damage: number; absorbed: number } {
-    const actor = target.aircraftTarget!.world, state = actor.aircraft;
-    const hp = state.currentHp;
-    const shield = () => Object.values(state.coreState.shields).reduce((n, s) => n + (s.until > state.coreState.time ? s.amount : 0), 0);
-    const before = shield(), opponent = actor.enemies.find(e => !!e.aircraftTarget);
-    // Defensive reflections cannot recursively reflect another reflected proc.
-    if ((actor.aircraftDamageDepth ?? 0) >= 2) return { damage: 0, absorbed: 0 };
+export interface DuelDamageResolution { damage: number; absorbed: number }
+export interface DuelDamageRequest {
+    attackerWorld: CombatWorld;
+    defenderWorld: CombatWorld;
+    /** Attacker-side armor, penetration, crit and hit-zone have already resolved once. */
+    damageAfterArmor: number;
+    delivery: DamageDelivery;
+    zone?: AirframeHitZone;
+    resolvedArmor?: number;
+    shieldFactor?: number;
+    homing?: boolean;
+}
+
+/** Canonical aircraft-vs-aircraft incoming contract, shared by both allegiances.
+ * The defender owns mitigation, invulnerability, shields, feedback and death;
+ * the explicit owner receives actual HP loss + shield depletion, never overkill.
+ * Per-delivery cadence lives at the caller, independently of PvE contact grace. */
+export function resolveDuelDamage({ attackerWorld, defenderWorld: actor, damageAfterArmor: amount,
+    delivery, zone, resolvedArmor = 0, shieldFactor = 1, homing = false }: DuelDamageRequest): DuelDamageResolution {
+    if (attackerWorld === actor || (actor.aircraftDamageDepth ?? 0) >= 2) return { damage: 0, absorbed: 0 };
+    const opponent = actor.enemies.find(e => e.aircraftTarget?.world === attackerWorld);
     actor.aircraftDamageDepth = (actor.aircraftDamageDepth ?? 0) + 1;
     try {
         const kind = delivery === "direct_projectile" ? "projectile" : delivery === "aircraft_collision" ? "collision" : "hazard";
-        hitPlayer(actor, amount, kind, { armorResolved: true, armorPrevented: Math.max(0,amount*resolvedArmor/100), shieldFactor, homing, zoneResolved: true, delivery, sourceEnemyId: opponent?.id },
+        return hitPlayer(actor, amount, kind, { damageOwner: attackerWorld, aircraftDelivery: true,
+            armorResolved: true, armorPrevented: Math.max(0,amount*resolvedArmor/100), shieldFactor, homing,
+            zoneResolved: true, delivery, sourceEnemyId: opponent?.id },
             zone ? { ...createHitResult(), hit: true, zone, x: actor.playerX, y: actor.playerY } : undefined);
     } finally { actor.aircraftDamageDepth--; }
-    return { damage: Math.max(0, hp - state.currentHp), absorbed: Math.max(0, before - shield()) };
+}
+function receiveAircraftTargetDamage(target: EnemyEntity, amount: number, delivery: DamageDelivery,
+    zone?: AirframeHitZone, resolvedArmor = 0, shieldFactor = 1, homing = false): DuelDamageResolution {
+    const targetState = target.aircraftTarget!;
+    return resolveDuelDamage({ attackerWorld: targetState.attackerWorld, defenderWorld: targetState.world,
+        damageAfterArmor: amount, delivery, zone, resolvedArmor, shieldFactor, homing });
 }
 
 function spawnMirror(world: CombatWorld): MirrorCombatant {
@@ -3143,7 +3164,11 @@ function repayExpansionDebt(world: CombatWorld, amount: number) {
     damage = Math.min(state.currentHp,damage);
     state.currentHp -= damage; world.damageTaken += damage;
     // Debt already contains the outgoing multiplier; only actual repayment is attributed.
-    if(world.duel?.opponent?.duel)world.duel.opponent.duel.damageDealt += damage + absorbed;
+    if(world.duel?.opponent?.duel) {
+        const owner = world.duel.opponent;
+        owner.duel!.damageDealt += damage + absorbed;
+        owner.damageDealt += damage; recordDpsDamage(owner, damage + absorbed);
+    }
     if(damage+absorbed>0)equipmentOnDamage(world,equipmentHooks,damage,damage+absorbed);
     // Any HP loss cancels a pending shield return, including debt repayment.
     if (damage > 0) expansionState(state).returns.length = 0;
@@ -3276,9 +3301,9 @@ function applyDamageToEnemy(world: CombatWorld, enemy: EnemyEntity, rawDamage: n
     const resolvedBeforeShield=damage,shieldBeforeHit=enemy.shield;
     // Extra shield damage is confined to the absorb pool; overflow uses the original HP budget.
     const shieldFactor = basic && hasCore(state,180) ? 1.20 : 1;
-    let absorbed = Math.min(enemy.shield, damage * shieldFactor);
-    enemy.shield -= absorbed;
-    if(basic&&hasCore(state,180))recordCoreMetric(state,180,"shieldBonus",absorbed-Math.min(shieldBeforeHit,resolvedBeforeShield));
+    let absorbed = enemy.aircraftTarget ? 0 : Math.min(enemy.shield, damage * shieldFactor);
+    if (!enemy.aircraftTarget) enemy.shield -= absorbed;
+    if(!enemy.aircraftTarget&&basic&&hasCore(state,180))recordCoreMetric(state,180,"shieldBonus",absorbed-Math.min(shieldBeforeHit,resolvedBeforeShield));
     if (absorbed > 0 && enemy.shield <= 0 && enemy.type === "iron_fortress" && enemy.retaliationReady) {
         enemy.retaliationReady = false;
         queueEliteSpecial(world, enemy, "retaliation", .01, false);
@@ -3588,18 +3613,19 @@ function applySecondaryHits(world: CombatWorld, projectile: ProjectileEntity, pr
         bounced.hitIds.push(...projectile.hitIds);
     }
 }
-function hitPlayer(world: CombatWorld, rawDamage: number, kind: "projectile" | "collision" | "hazard" = "projectile", attack: AttackMetadata & { armorResolved?: boolean; armorPrevented?: number; shieldFactor?: number; zoneResolved?: boolean; stormbreakerVisual?: StormbreakerVfxKey; homing?: boolean; x?:number; y?:number; previousX?:number; previousY?:number; projectileKind?:ProjectileEntity["projectileKind"] } = {}, contact?:HitResult): void {
-    if(world.duel && !world.duel.combatEnabled)return;
+function hitPlayer(world: CombatWorld, rawDamage: number, kind: "projectile" | "collision" | "hazard" = "projectile", attack: AttackMetadata & { damageOwner?: CombatWorld; aircraftDelivery?: boolean; armorResolved?: boolean; armorPrevented?: number; shieldFactor?: number; zoneResolved?: boolean; stormbreakerVisual?: StormbreakerVfxKey; homing?: boolean; x?:number; y?:number; previousX?:number; previousY?:number; projectileKind?:ProjectileEntity["projectileKind"] } = {}, contact?:HitResult): DuelDamageResolution {
+    if(world.duel && !world.duel.combatEnabled)return { damage: 0, absorbed: 0 };
     const state = world.aircraft, c = state.coreState, stats = getEffectiveAircraftStats(state);
-    if(world.duel)rawDamage *= world.duel.opponent?.duel?.multiplier ?? 1;
+    const damageOwner = attack.damageOwner ?? world.duel?.opponent;
+    if(world.duel)rawDamage *= damageOwner?.duel?.multiplier ?? 1;
     const defenseArmor = attack.armorResolved ? 0 : stats.armor;
     // Tempest beams own a 0.20s tick schedule. Ordinary contact grace must not
     // turn that into 0.62s DPS; independently granted invulnerability still wins.
-    if(equipmentUntargetable(state))return;
+    if(equipmentUntargetable(state))return { damage: 0, absorbed: 0 };
     const scheduledBeam = world.stageId === 2 && attack.sourceEnemyType === "boss" && attack.delivery === "beam";
     const contactGrace = world.playerInvulnerability <= Math.max(0,world.playerDamageGraceUntil-world.elapsed)+1e-8;
-    if (attack.allegiance==="friendly_hacked" || world.ended || (world.playerInvulnerability > 0 && (!scheduledBeam || !contactGrace)) || state.currentHp <= 0 || rawDamage <= 0 || world.waveState !== "combat")
-        return;
+    if (attack.allegiance==="friendly_hacked" || world.ended || (world.playerInvulnerability > 0 && (!(scheduledBeam || attack.aircraftDelivery) || !contactGrace)) || state.currentHp <= 0 || rawDamage <= 0 || world.waveState !== "combat")
+        return { damage: 0, absorbed: 0 };
     const celestial=celestialProtection(state);
     // All hostile projectile, body, dash and hazard impacts converge here.
     // Config/tuning already contain concrete stage damage; retain only the existing boss impact rule.
@@ -3638,7 +3664,7 @@ function hitPlayer(world: CombatWorld, rawDamage: number, kind: "projectile" | "
         const capacity=state.currentHp+Object.values(c.shields).filter(sh=>sh.until>c.time).reduce((n,sh)=>n+sh.amount,0);
         recordCoreMetric(state,184,"prevented",Math.min(capacity,calculateDamage(rawDamage*zoneMultiplier,defenseArmor,multiplier)));
         if(attack.payload||attack.attackTag==="emp"||attack.attackTag==="boss_emp")recordCoreMetric(state,184,"controlBlocked",1);
-        return;
+        return { damage: 0, absorbed: 0 };
     }
     if(cold){c.stacks.coldCharges--;if(!c.stacks.coldCharges){c.timers.coldArmor=c.time+3;c.timers.coldRecharge=c.time+3;}recordCoreMetric(state,72,"procs",1);}
     if(kind==="collision"&&hasCore(state,65))c.timers.collisionCounter=c.time+3;
@@ -3719,11 +3745,11 @@ function hitPlayer(world: CombatWorld, rawDamage: number, kind: "projectile" | "
         emitVisual(world,{kind:"shield_ripple",x:world.playerX+localX,y:world.playerY+localY,fromX:localX,fromY:localY,attachedToPlayer:true,size:18});
     }
     if (damage <= 0) {
-        if(world.duel?.opponent?.duel)world.duel.opponent.duel.damageDealt += absorbed;
+        if(damageOwner?.duel)damageOwner.duel.damageDealt += absorbed;
         if(absorbed>0)equipmentOnDamage(world,equipmentHooks,0,absorbed);
         if (absorbed > 0)
             emitVisual(world, { kind: "damage_number", x: world.playerX, y: world.playerY, size: 36, hpDamage: 0, shieldAbsorbed: absorbed, target: "player", critical: false });
-        return;
+        return { damage: 0, absorbed };
     }
     const hpBeforeResolution = state.currentHp;
     let survived = false;
@@ -3742,7 +3768,7 @@ function hitPlayer(world: CombatWorld, rawDamage: number, kind: "projectile" | "
         damage = Math.min(state.currentHp, damage);
         state.currentHp = Math.max(0, state.currentHp - damage);
     }
-    if(world.duel?.opponent?.duel)world.duel.opponent.duel.damageDealt += (survived ? Math.max(0,hpBeforeResolution-1) : damage) + absorbed;
+    if(damageOwner?.duel)damageOwner.duel.damageDealt += (survived ? Math.max(0,hpBeforeResolution-1) : damage) + absorbed;
     if(damage+absorbed>0)equipmentOnDamage(world,equipmentHooks,damage,damage+absorbed);
     if (damage > 0) expansionHpLoss(world, damage);
     if (damage > 0) { onHostileDamage(world, attack);observeComeback(world); }
@@ -3754,7 +3780,7 @@ function hitPlayer(world: CombatWorld, rawDamage: number, kind: "projectile" | "
     world.hitsReceived++;
     world.comboKills = 0;
     world.comboTimer = 0;
-    if (!survived) {
+    if (!survived && !attack.aircraftDelivery) {
         world.playerInvulnerability = AIR_COMBAT_WORLD.playerInvulnerabilitySeconds;
         world.playerDamageGraceUntil = world.elapsed + AIR_COMBAT_WORLD.playerInvulnerabilitySeconds;
     }
@@ -3765,6 +3791,7 @@ function hitPlayer(world: CombatWorld, rawDamage: number, kind: "projectile" | "
         world.pauseReasons.add("result");
     }
     world.duel?.onResolution?.(survived ? Math.max(0,hpBeforeResolution-1) : damage);
+    return { damage: survived ? Math.max(0,hpBeforeResolution-1) : damage, absorbed };
 }
 function hitDrone(world: CombatWorld, rawDamage: number): void {
     if (!droneCombatActive(world) || world.droneInvulnerability > 0)
@@ -3937,7 +3964,7 @@ function detonateBigBang(world: CombatWorld, projectile: ProjectileEntity): void
     emitVisual(world,{kind:"missile_impact",x:projectile.x,y:projectile.y,size:90,missileFamily:"bigbang"});
     emitVisual(world, { kind: "bomb", x: projectile.x, y: projectile.y, size: 360 });
     for (const enemy of world.enemies) {
-        if (!isHostileToPlayer(world,enemy) || enemy.x + enemy.radius < 0 || enemy.x - enemy.radius > AIR_COMBAT_WORLD.width || enemy.y + enemy.radius < 0 || enemy.y - enemy.radius > AIR_COMBAT_WORLD.height)
+        if (!isHostileToPlayer(world,enemy) || (!enemy.aircraftTarget && (enemy.x + enemy.radius < 0 || enemy.x - enemy.radius > AIR_COMBAT_WORLD.width || enemy.y + enemy.radius < 0 || enemy.y - enemy.radius > AIR_COMBAT_WORLD.height)))
             continue;
         applyDamageToEnemy(world, enemy, projectile.rawDamage, "#fbbf24", "skill", "heavy_bomb", undefined, undefined, "area_hazard", true, true, undefined, 1, [], projectile.expansionCast);
         if ((skillRank(world.aircraft, "heavy_bomb") >= 4) && enemy.hp>0) skillEnemyEffects(world,enemy.id).markUntil=world.elapsed+V.markDuration;
@@ -4572,7 +4599,7 @@ function updateSkillCoreEffects(world:CombatWorld,dt:number):void {
         if(a.at>now)return true;
         emitVisual(world,{kind:"bomb",x:a.x,y:a.y,size:360});
         for(const e of world.enemies){
-            if(!isHostileToPlayer(world,e) || e.x+e.radius<0 || e.x-e.radius>AIR_COMBAT_WORLD.width || e.y+e.radius<0 || e.y-e.radius>AIR_COMBAT_WORLD.height)continue;
+            if(!isHostileToPlayer(world,e) || (!e.aircraftTarget && (e.x+e.radius<0 || e.x-e.radius>AIR_COMBAT_WORLD.width || e.y+e.radius<0 || e.y-e.radius>AIR_COMBAT_WORLD.height)))continue;
             applyDamageToEnemy(world,e,getEffectiveAircraftStats(state).firepower*V.aftershockDamage,"#fbbf24","skill","heavy_bomb",undefined,undefined,"area_hazard",true,true,134,1,[],a.expansionCast);
             if(e.hp<=0)continue;
             skillEnemyEffects(world,e.id).weakenUntil=now+V.weakenDuration;
@@ -4695,11 +4722,11 @@ function releaseDamageBudget(w:CombatWorld,e:EnemyEntity,raw:number,row:220|221)
 function resolveReleaseDamage(w:CombatWorld,e:EnemyEntity,raw:number,row:220|221){
     if(!isHostileToPlayer(w,e)||raw<=0)return 0;
     const budget=releaseDamageBudget(w,e,raw,row),shieldBefore=e.shield;let absorbed=Math.min(e.shield,budget),damage=Math.min(e.hp,Math.max(0,budget-absorbed));
-    e.shield-=absorbed;
+    if (!e.aircraftTarget) e.shield-=absorbed;
     if(e.aircraftTarget){const received=receiveAircraftTargetDamage(e,budget,"area_hazard");damage=received.damage;absorbed=received.absorbed;}else e.hp-=damage;
     if(w.stormbreaker)onStormEnemyDamage(w,e,damage,shieldBefore,stormbreakerHooks);
     if(absorbed>0&&e.shield<=0&&e.type==="iron_fortress"&&e.retaliationReady){e.retaliationReady=false;queueEliteSpecial(w,e,"retaliation",.01,false);}
-    if(e.hp<=0){e.killProcEligible=row!==220;e.expansionKillingHit=row===220?undefined:{primary:false,basic:false,skill:false,direct:false,critical:false,elite:isElite(e.type)};}
+    if(e.hp<=0&&!e.aircraftTarget){e.killProcEligible=row!==220;e.expansionKillingHit=row===220?undefined:{primary:false,basic:false,skill:false,direct:false,critical:false,elite:isElite(e.type)};}
     recordDpsDamage(w,damage+absorbed);w.damageDealt+=damage;
     recordCoreMetric(w.aircraft,row,"damage",damage+absorbed);recordCoreMetric(w.aircraft,row,"hits",damage+absorbed>0?1:0);
     emitVisual(w,{kind:"damage_number",x:e.x,y:e.y,size:e.radius,hpDamage:damage,shieldAbsorbed:absorbed,target:"enemy",critical:false,entityId:e.id});
@@ -4851,11 +4878,11 @@ function resolveEquipmentDamage(w:CombatWorld,e:EnemyEntity,raw:number,family:nu
     if((e.expansionMarks?.shieldBroken??0)>t)coreMultiplier*=1.14;
     const budget=calculateDamage(raw,armor,outgoing.multiplier*coreMultiplier)*guardianMultiplier(w,e)*stormDamageTakenMultiplier(w,e)*(e.type==="boss"&&e.hp/e.maxHp>=.15&&e.aegisUntil>t?.6:1);
     const shieldBefore=e.shield;let absorbed=Math.min(e.shield,budget),hpDamage=Math.min(e.hp,Math.max(0,budget-absorbed));
-    e.shield-=absorbed;
+    if (!e.aircraftTarget) e.shield-=absorbed;
     if(e.aircraftTarget){const received=receiveAircraftTargetDamage(e,budget,"area_hazard");hpDamage=received.damage;absorbed=received.absorbed;}else e.hp-=hpDamage;
     if(w.stormbreaker)onStormEnemyDamage(w,e,hpDamage,shieldBefore,stormbreakerHooks);
     if(absorbed>0&&e.shield<=0&&e.type==="iron_fortress"&&e.retaliationReady){e.retaliationReady=false;queueEliteSpecial(w,e,"retaliation",.01,false);}
-    if(e.hp<=0){e.killProcEligible=family!==12&&family!==16;e.expansionKillingHit={primary:false,basic:false,skill:false,direct:false,critical:false,elite:isElite(e.type)};}
+    if(e.hp<=0&&!e.aircraftTarget){e.killProcEligible=family!==12&&family!==16;e.expansionKillingHit={primary:false,basic:false,skill:false,direct:false,critical:false,elite:isElite(e.type)};}
     recordDpsDamage(w,hpDamage+absorbed);w.damageDealt+=hpDamage;
     emitVisual(w,{kind:"damage_number",x:e.x,y:e.y,size:e.radius,hpDamage,shieldAbsorbed:absorbed,target:"enemy",critical:false,entityId:e.id});
     observeBossDamage(w,e,hpDamage);
@@ -4872,7 +4899,7 @@ const equipmentHooks:EquipmentHooks={damage:resolveEquipmentDamage,heal:(w,n)=>w
 /** All percentage Armor reduction is capped before capped penetration. Flat equipment shred remains flat. */
 function resolvedEnemyArmor(w:CombatWorld,e:EnemyEntity,penetration=0):number {
  const t=w.elapsed,fx=w.skillCores.enemyEffects.get(e.id);
- const reduction=((fx?.armorUntil??0)>t?.75:1)*((e.armorBrokenUntil??0)>t?.7:1)*((e.burnArmorUntil??0)>t?.7:1)*(e.weakUntil>t?.92:1)*((e.weakDebuffUntil??0)>t?.85:1)*rankArmorMultiplier(w,e);
+ const reduction=((fx?.armorUntil??0)>t?.75:1)*(!e.aircraftTarget&&(e.armorBrokenUntil??0)>t?.7:1)*((e.burnArmorUntil??0)>t?.7:1)*(e.weakUntil>t?.92:1)*((e.weakDebuffUntil??0)>t?.85:1)*rankArmorMultiplier(w,e);
  return equipmentArmor(w.aircraft,e)*Math.max(.5,reduction)*(1-Math.min(.4,Math.max(0,penetration)));
 }
 const rankHooks:RankRuntimeHooks={hostile:isHostileToPlayer,elite:e=>isElite(e.type),priority:w=>nearestEnemy(w,w.playerX,w.playerY,[],true),projectile:addProjectile,

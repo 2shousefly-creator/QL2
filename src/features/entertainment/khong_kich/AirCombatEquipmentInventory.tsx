@@ -115,7 +115,7 @@ function CraftFlight({ flight, onArrive }: { flight: Flight; onArrive: () => voi
   }, [flight]);
   return createPortal(<div ref={node} className="equipment-craft-flight" style={{ left: flight.from.left, top: flight.from.top, width: flight.from.width }}><EquipmentIcon id={flight.id} inventory /></div>, document.body);
 }
-export function AirCombatEquipmentInventory({ world, onClose, onChange }: { world: CombatWorld; onClose: () => void; onChange: () => void }) {
+export function AirCombatEquipmentInventory({ world, onClose, onChange, readOnly = false }: { readOnly?: boolean; world: CombatWorld; onClose: () => void; onChange: () => void }) {
   const present = useIsPresent();
   const s = world.aircraft, q = equipmentState(s);
   const equippedRegion = useRef<HTMLElement>(null), craftRegion = useRef<HTMLElement>(null), craftSlots = useRef<(HTMLDivElement | null)[]>([]);
@@ -154,25 +154,28 @@ export function AirCombatEquipmentInventory({ world, onClose, onChange }: { worl
   const [feedback, setFeedback] = useState<{ text: string; until: number } | null>(null), [flights, setFlights] = useState<Flight[]>([]), [impact, setImpact] = useState<{ slot: number; until: number } | null>(null);
   const flightId = useRef(0);
   useEffect(() => {
-    if (!present) { setDrag(null); setTooltip(null); setFlights([]); cancelEquipmentCraft(s); }
-  }, [present, s]);
-  const changed = () => { clampEquipmentPages(q); refresh(n => n + 1); syncEffectiveMaxHp(s); s.currentResource = Math.min(s.currentResource, getEffectiveAircraftStats(s).maxResource); onChange(); };
+    if (!present) { setDrag(null); setTooltip(null); setFlights([]); if (!readOnly) cancelEquipmentCraft(s); }
+  }, [present, s, readOnly]);
+  const changed = () => { clampEquipmentPages(q); refresh(n => n + 1); if (readOnly) return; syncEffectiveMaxHp(s); s.currentResource = Math.min(s.currentResource, getEffectiveAircraftStats(s).maxResource); onChange(); };
   useEffect(() => {
+    if (readOnly) return;
     let frame = 0;
     const tick = () => { const now = performance.now() / 1000; tickEquipmentCraft(s, now); setClock(now); frame = requestAnimationFrame(tick); };
     frame = requestAnimationFrame(tick);
     return () => { cancelAnimationFrame(frame); cancelEquipmentCraft(s); };
-  }, [s]);
+  }, [s, readOnly]);
   const inside = (region: HTMLElement | null, d: Drag) => { const r = region?.getBoundingClientRect(); return !!r && d.x >= r.left && d.x <= r.right && d.y >= r.top && d.y <= r.bottom; };
   const inspect = (id: EquipmentRewardId, source: HTMLElement) => setTooltip({ id, source });
-  const dragging = (d: Drag | null) => { if (d) setTooltip(null); setDrag(d); };
+  const dragging = (d: Drag | null) => { if (readOnly) return; if (d) setTooltip(null); setDrag(d); };
   const addToCraft = (item: EquipmentInstance, source?: HTMLElement) => {
+    if (readOnly) return;
     if (q.craftJob || !q.craftSlots.includes(null)) { setFeedback({ text: q.craftJob ? "Đang ghép · Không thể thêm Thành Phần" : "Đã đầy · Craft Full", until: performance.now() / 1000 + 1.2 }); return; }
     const slot = q.craftSlots.indexOf(null), from = source?.getBoundingClientRect(), to = craftSlots.current[slot]?.getBoundingClientRect();
     toggleCraftComponent(s, item.instanceId); setTooltip(null); changed();
     if (from && to) setFlights(current => [...current, { id: item.definitionId, key: ++flightId.current, from, to, slot }]);
   };
   const drop = (d: Drag) => {
+    if (readOnly) return;
     if (inside(craftRegion.current, d)) { const item = q.components.find(i => i.instanceId === d.instanceId); if (item) addToCraft(item); return; }
     if (!inside(equippedRegion.current, d)) return;
     if (d.id === "VP01") { const removed = extractEquipment(s); if (removed.length) { setExtraction(performance.now()); equipmentFx(world, 37, world.playerX, world.playerY, 95, 1); changed(); } }
@@ -180,10 +183,10 @@ export function AirCombatEquipmentInventory({ world, onClose, onChange }: { worl
   };
   const tile = (item: EquipmentInstance, location: TileLocation) => <Tile key={item.instanceId} item={item} location={location} selected={selection === item.instanceId}
     onSelect={() => setSelection(item.instanceId)} onInspect={inspect} onDouble={source => {
-      if (!item.definitionId.startsWith("TP")) return;
+      if (readOnly || !item.definitionId.startsWith("TP")) return;
       if (location === "storage") addToCraft(item, source);
       else if (location === "craft") { toggleCraftComponent(s, item.instanceId); setTooltip(null); changed(); }
-    }} onDrag={dragging} onDrop={drop} locked={location === "craft" && !!q.craftJob} />;
+    }} onDrag={dragging} onDrop={drop} locked={readOnly || location === "craft" && !!q.craftJob} />;
   useEffect(() => {
     if(selection===null||selection===-1)return;
     const completed=[...q.completed].sort((a,b)=>Number(b.definitionId.startsWith("HL"))-Number(a.definitionId.startsWith("HL"))||a.instanceId-b.instanceId);
@@ -198,17 +201,17 @@ export function AirCombatEquipmentInventory({ world, onClose, onChange }: { worl
       {Array.from({ length: EQUIPMENT_PAGE_SIZE }, (_, i) => { const item = list[page * EQUIPMENT_PAGE_SIZE + i]; return <div className="equipment-grid-cell" key={item?.instanceId ?? `empty-${i}`}>{item ? tile(item, "storage") : null}</div>; })}</div>
       <nav className="equipment-pages" aria-label={`Phân trang ${title}`}><button disabled={page === 0} onClick={() => { q[pageKey]--; setTooltip(null); setSelection(null); changed(); }} aria-label="Trang trước">‹</button><span>Trang {page + 1} / {pages}</span><button disabled={page + 1 >= pages} onClick={() => { q[pageKey]++; setTooltip(null); setSelection(null); changed(); }} aria-label="Trang sau">›</button></nav></section>;
   };
-  const close = () => { cancelEquipmentCraft(s); onClose(); };
+  const close = () => { if (!readOnly) cancelEquipmentCraft(s); onClose(); };
   const componentDrag = !!drag?.id.startsWith("TP"), craftInvalid = !!q.craftJob || !q.craftSlots.includes(null), craftHover = !!drag && inside(craftRegion.current, drag);
   const equipValid = !!drag && (drag.id === "VP01" ? q.equipped.some(Boolean) && q.items.VP01 > 0 : q.equipped.includes(null));
   return <AirCombatModal archetype="info" layer="exclusive-dialog" layout="viewport-safe" labelledBy="equipment-title" onClose={close} overlayClassName="equipment-inventory-overlay" panelClassName="equipment-inventory-panel">
-    <OverlayHeader><h2 id="equipment-title" className="modal-title">KHO TRANG BỊ</h2><p className="equipment-subtitle">Chạm để xem · Giữ 0,5 giây để kéo · Nhấp đúp Thành Phần để ghép</p></OverlayHeader>
+    <OverlayHeader><h2 id="equipment-title" className="modal-title">KHO TRANG BỊ</h2><p className="equipment-subtitle">{readOnly ? "Chỉ xem · Loadout SOLO tự động theo từng hiệp" : "Chạm để xem · Giữ 0,5 giây để kéo · Nhấp đúp Thành Phần để ghép"}</p></OverlayHeader>
     <OverlayBody className="equipment-inventory-body" data-compact={layout.compact} data-emergency={layout.emergency} data-magnet-drag={drag?.id === "VP01"} style={{ "--equipment-cell-size": `${layout.cell}px` } as React.CSSProperties}>
       <div ref={dashboard} className="equipment-dashboard">
       <div className="equipment-operations">
       <section ref={equippedRegion} className={`equipment-equipped-region ${equipValid ? "equipment-drop-preview" : ""} ${drag && inside(equippedRegion.current, drag) ? equipValid ? "equipment-drop-ready" : "equipment-drop-invalid" : ""} ${drag?.id === "VP01" ? "equipment-magnet-ready" : ""}`}>
         <h3>Trang Bị Đang Mang</h3><div className="equipment-equipped-slots">{q.equipped.map((item, i) => <div key={i} className="equipment-slot">{item ? tile(item, "equipped") : <span className="equipment-empty">{i + 1}</span>}</div>)}</div>
-        <p className="equipment-drop-label">{drag ? drag.id === "VP01" ? "Thả Nam Châm vào đây để tháo toàn bộ trang bị" : equipValid ? "Thả trang bị vào đây để trang bị cho chiến cơ" : "Trang Bị Đang Mang đã đầy (6/6)" : "6 slot · Dùng Nam Châm Ma Thuật để tháo"}</p>
+        <p className="equipment-drop-label">{readOnly ? "6 slot · Chạm Trang Bị để xem thông tin" : drag ? drag.id === "VP01" ? "Thả Nam Châm vào đây để tháo toàn bộ trang bị" : equipValid ? "Thả trang bị vào đây để trang bị cho chiến cơ" : "Trang Bị Đang Mang đã đầy (6/6)" : "6 slot · Dùng Nam Châm Ma Thuật để tháo"}</p>
         {extraction > 0 && clock * 1000 - extraction < 900 && <div key={extraction} className="equipment-extraction" aria-hidden="true"><span /><span /><span /></div>}
       </section>
       <section ref={craftRegion} className={`equipment-crafting ${componentDrag && !craftInvalid ? "equipment-drop-preview" : ""} ${componentDrag && craftHover ? craftInvalid ? "equipment-drop-invalid" : "equipment-drop-ready" : ""} ${feedback && clock < feedback.until ? "equipment-drop-invalid" : ""}`}><h3>Ghép Trang Bị</h3><div className="equipment-craft-row">
@@ -218,15 +221,15 @@ export function AirCombatEquipmentInventory({ world, onClose, onChange }: { worl
           {result ? <EquipmentIcon id={result} inventory /> : <span className="equipment-empty">?</span>}
           {q.craftJob && <span className="equipment-craft-energy" style={{ clipPath: `inset(${(1 - progress) * 100}% 0 0 0)`, backgroundImage: `url(${EQUIPMENT_ART.vfx})` }} />}
         </button>
-        <button type="button" className="equipment-craft-button" disabled={!result} onClick={() => { q.craftJob ? cancelEquipmentCraft(s) : startEquipmentCraft(s, performance.now() / 1000); changed(); }}>{q.craftJob ? `HỦY · ${Math.round(progress * 100)}%` : "GHÉP"}</button>
+        <button type="button" className="equipment-craft-button" disabled={readOnly || !result} onClick={() => { if (readOnly) return; q.craftJob ? cancelEquipmentCraft(s) : startEquipmentCraft(s, performance.now() / 1000); changed(); }}>{q.craftJob ? `HỦY · ${Math.round(progress * 100)}%` : "GHÉP"}</button>
       </div>
-      <p className="equipment-drop-label" role="status">{feedback && clock < feedback.until ? feedback.text : componentDrag ? craftInvalid ? q.craftJob ? "Đang ghép · Không thể thêm Thành Phần" : "Đã đầy · Craft Full" : "Thả Thành Phần vào đây để ghép" : "2 Thành Phần · Nhấp đúp ô ghép để trả về kho"}</p>
+      <p className="equipment-drop-label" role="status">{readOnly ? "Chỉ xem · Không thể ghép Trang Bị trong SOLO" : feedback && clock < feedback.until ? feedback.text : componentDrag ? craftInvalid ? q.craftJob ? "Đang ghép · Không thể thêm Thành Phần" : "Đã đầy · Craft Full" : "Thả Thành Phần vào đây để ghép" : "2 Thành Phần · Nhấp đúp ô ghép để trả về kho"}</p>
       </section>
       </div>
       <div className="equipment-storage-area">
       <div className="equipment-inventories">{inventory("components", "Kho Trang Bị Thành Phần")}{inventory("completed", "Kho Hoàn Chỉnh/Huyền Thoại")}</div>
       </div>
-      <section className="equipment-item-tray"><h3>Vật Phẩm</h3><div className="equipment-item-grid"><div className="equipment-grid-cell"><Tile id="VP01" location="item" selected={selection === -1} quantity={q.items.VP01 ?? 0} locked={!(q.items.VP01 > 0)} onSelect={() => setSelection(-1)} onInspect={inspect} onDouble={() => {}} onDrag={dragging} onDrop={drop} /></div>{[1,2,3,4].map(i => <div key={i} className="equipment-grid-cell" aria-hidden="true" />)}</div><small>Giữ 0,5 giây để kéo Nam Châm vào vùng đang mang</small></section>
+      <section className="equipment-item-tray"><h3>Vật Phẩm</h3><div className="equipment-item-grid"><div className="equipment-grid-cell"><Tile id="VP01" location="item" selected={selection === -1} quantity={q.items.VP01 ?? 0} locked={readOnly || !(q.items.VP01 > 0)} onSelect={() => setSelection(-1)} onInspect={inspect} onDouble={() => {}} onDrag={dragging} onDrop={drop} /></div>{[1,2,3,4].map(i => <div key={i} className="equipment-grid-cell" aria-hidden="true" />)}</div><small>{readOnly ? "Chỉ xem · Nam Châm không thể thay đổi loadout SOLO" : "Giữ 0,5 giây để kéo Nam Châm vào vùng đang mang"}</small></section>
       </div>
     </OverlayBody>
     <OverlayFooter><ModalButton type="button" variant="primary" onClick={close}>Đóng Kho Trang Bị</ModalButton></OverlayFooter>

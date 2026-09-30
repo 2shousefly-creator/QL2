@@ -16,6 +16,7 @@ interface Toast { node: HTMLDivElement; age: number; y: number; height: number; 
 /** Fixed DOM pool. Explicit acquisition events drive content, never an ownership diff. */
 export class AirCombatOverlayFeedback {
   private lastAcquisition = 0;
+  private world?: CombatWorld;
   private waiting: Acquisition[] = [];
   private active: Toast[] = [];
   private free: Toast[] = [];
@@ -32,6 +33,13 @@ export class AirCombatOverlayFeedback {
   }
   render(world: CombatWorld, delta: number, hidden: boolean, reducedMotion: boolean,
     bossHp: HTMLDivElement | null, bossChip: HTMLDivElement | null, bossShield: HTMLDivElement | null) {
+    if (this.world !== world) {
+      this.world = world; this.lastAcquisition = 0; this.waiting.length = 0; this.health.clear();
+      for (const toast of this.active) { toast.node.hidden = true; this.free.push(toast); }
+      this.active.length = 0; this.pulse?.cancel();
+      for (const flight of this.flights) flight.remove();
+      this.flights.clear();
+    }
     this.health.begin(delta);
     const boss = world.enemies.find(e => e.type === "boss");
     if (boss) {

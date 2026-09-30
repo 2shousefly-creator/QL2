@@ -13,7 +13,7 @@ import { DUEL_LEVELS, DUEL_CORE_CONTEXTS, DUEL_PREP_SECONDS, DUEL_ROUND_SECONDS,
 import { releaseState } from "./airCombatReleaseState";
 import { rollUnstableMode } from "./airCombatSelectionRules";
 import type { RerollSource } from "./airCombatSelectionRules";
-import type { AircraftId, CoreCard, SkillId } from "./airCombatTypes";
+import type { AircraftId, CoreCard, SkillId, SkillCastResult } from "./airCombatTypes";
 
 export interface SoloSetup { aircraft: AircraftId; opponent: AircraftId | "secret"; rule: SoloRule }
 export interface SoloMatch {
@@ -86,6 +86,7 @@ function resetDuelCombat(match: SoloMatch, oneHp = false) {
 }
 function setCombatGate(match: SoloMatch, enabled: boolean) {
   for (const w of [match.world, match.opponent]) {
+    if (!enabled) w.playerInputActive = false;
     w.duel!.combatEnabled = enabled;
     w.duel!.multiplier = duelDamageMultiplier(match.roundElapsed, match.suddenDeath);
     w.aircraft.duel!.healingBlocked = match.suddenDeath;
@@ -148,9 +149,10 @@ export function selectSoloPrimary(match: SoloMatch, slot: number) {
   if (!releaseState(match.world.aircraft).followups.length && !match.world.currentCoreChoices) beginCountdown(match);
 }
 export function rerollSoloCore(match: SoloMatch, slot: number, source: RerollSource) {
-  if (match.phase !== "core_selection") return;
-  rerollCore(match.world, slot, source);
+  if (match.phase !== "core_selection") return null;
+  const choices = rerollCore(match.world, slot, source);
   if (match.setup.rule === "copy") syncDuelEncounters(match.world.aircraft, match.opponent.aircraft);
+  return choices;
 }
 export function upgradeSoloSkill(match: SoloMatch, skill: SkillId) {
   if (!["countdown", "combat", "sudden_death"].includes(match.phase)) return false;
@@ -162,8 +164,9 @@ export function moveSoloPlayer(match: SoloMatch, dx: number, dy: number) {
   match.world.playerInputActive = true;
   movePlayerByDelta(match.world, dx, dy);
 }
-export function castSoloSkill(match: SoloMatch, skill: SkillId) {
-  if (match.phase === "combat" || match.phase === "sudden_death") castWorldSkill(match.world, skill);
+export function castSoloSkill(match: SoloMatch, skill: SkillId): SkillCastResult {
+  if (match.phase === "combat" || match.phase === "sudden_death") return castWorldSkill(match.world, skill);
+  return { cast: false, reason: "invalid", resourceSpent: 0 };
 }
 function finishRound(match: SoloMatch, winner: "player" | "opponent") {
   if (match.phase !== "combat" && match.phase !== "sudden_death") return;
