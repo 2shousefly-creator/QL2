@@ -1,3 +1,8 @@
+import { AirCombatModeSelect } from "./AirCombatModeSelect";
+import { AirCombatSoloSetup } from "./AirCombatSoloSetup";
+import { AirCombatSoloBattle } from "./AirCombatSoloBattle";
+import { AirCombatSoloResult } from "./AirCombatSoloResult";
+import { createSoloMatch, type SoloMatch, type SoloSetup } from "./airCombatDuelRuntime";
 import { AnimatePresence, MotionConfig } from "motion/react";
 import { AirCombatModal as AppModal, AirCombatMotionContext } from "./AirCombatMotion";
 import { AirCombatMainMenu, AirCombatStageSelect } from "./AirCombatCampaign";
@@ -52,7 +57,7 @@ interface KhongKichScreenProps {
   onBack: () => void;
 }
 
-type Phase = "menu" | "stages" | "select" | "playing" | "result";
+type Phase = "mode" | "solo_setup" | "solo_match" | "solo_result" | "menu" | "stages" | "select" | "playing" | "result";
 
 interface AircraftPressState {
   aircraftId: AircraftId;
@@ -71,6 +76,7 @@ const KhongKichContent: React.FC<KhongKichScreenProps> = ({
   onUpdateGameState,
   onBack,
 }) => {
+  const [solo, setSolo] = useState<SoloMatch | null>(null);
   const [phase, commitPhase] = useState<Phase>("menu");
   const [leaving,setLeaving]=useState(false);
   const routeTimer=useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
@@ -196,6 +202,15 @@ const KhongKichContent: React.FC<KhongKichScreenProps> = ({
     setPhase("result");
   };
 
+  const launchSolo = (setup: SoloSetup) => { setSolo(createSoloMatch(setup)); setPhase("solo_match"); };
+  const soloMenu = () => { setSolo(null); setPhase("menu"); };
+  if (phase === "mode" || phase.startsWith("solo_")) return <ExclusiveFullscreenOverlay ariaLabel="Không Kích SOLO" className={motionClass + " air-solo-fullscreen"}>
+    {phase === "mode" && <AirCombatModeSelect onCampaign={() => { setSelectedStage(defaultSelectedStage(profile.campaign)); setPhase("stages"); }} onSolo={() => setPhase("solo_setup")} onBack={() => setPhase("menu")} />}
+    {phase === "solo_setup" && <AirCombatSoloSetup onStart={launchSolo} onBack={() => setPhase("mode")} onMenu={soloMenu} />}
+    {phase === "solo_match" && solo && <AirCombatSoloBattle match={solo} reducedMotion={gameState.settings.reducedMotion} onComplete={() => setPhase("solo_result")} onMenu={soloMenu} />}
+    {phase === "solo_result" && solo && <AirCombatSoloResult match={solo} onRematch={() => launchSolo(solo.setup)} onMenu={soloMenu} />}
+  </ExclusiveFullscreenOverlay>;
+
   if (phase === "playing" && selectedAircraft) {
     return (
       <ExclusiveFullscreenOverlay
@@ -245,7 +260,7 @@ const KhongKichContent: React.FC<KhongKichScreenProps> = ({
     );
   }
 
-  if (phase === "menu") return <ExclusiveFullscreenOverlay ariaLabel="Menu Không Kích" className={`${motionClass} air-campaign-fullscreen`}><AirCombatMainMenu reducedMotion={gameState.settings.reducedMotion} onBack={()=>navigate(onBack)} onStart={() => { setSelectedStage(defaultSelectedStage(profile.campaign)); setPhase("stages"); }} /></ExclusiveFullscreenOverlay>;
+  if (phase === "menu") return <ExclusiveFullscreenOverlay ariaLabel="Menu Không Kích" className={`${motionClass} air-campaign-fullscreen`}><AirCombatMainMenu reducedMotion={gameState.settings.reducedMotion} onBack={()=>navigate(onBack)} onStart={() => setPhase("mode")} /></ExclusiveFullscreenOverlay>;
   if (phase === "stages") return <div key={phase} className={`${motionClass} air-stage-motion`}><AirCombatStageSelect progress={profile.campaign} selected={selectedStage} onSelect={setSelectedStage} onBack={() => setPhase("menu")} onAircraft={id => {
     if (!canLaunchStage(id, loadAirCombatProfile().campaign)) return;
     setSelectedStage(id); setPhase("select");

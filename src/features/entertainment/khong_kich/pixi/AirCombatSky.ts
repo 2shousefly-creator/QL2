@@ -25,6 +25,7 @@ function paint(graphics: Graphics, shapes: TerrainShape[]) {
 export class AirCombatSky {
   readonly root = new Container();
   private mirageShade = new Graphics().rect(0,0,360,640).fill({color:0x06111e,alpha:.14});
+  private solo: Sprite;
   private mirage: Sprite;
   private mirageNext: Sprite;
   private stormbreaker: Sprite;
@@ -75,8 +76,14 @@ export class AirCombatSky {
       this.wind.moveTo(x, y).lineTo(x - 2, y + 18).stroke({ color: 0xd4e7f4, width: 0.6, alpha: 0.055 });
     }
     this.root.addChild(this.wind, this.stormWind);
+    this.solo=new Sprite(assets.soloArena);
+    this.solo.anchor.set(.5);this.solo.position.set(180,320);
+    const scale=Math.max(360/assets.soloArena.width,640/assets.soloArena.height);this.solo.scale.set(scale);
+    this.solo.visible=false;this.root.addChild(this.solo);
   }
   update(delta: number, world: CombatWorld, reducedMotion: boolean) {
+    this.solo.visible=!!world.duel;
+    if(world.duel){for(const child of this.root.children)child.visible=child===this.solo;return;}
     this.mirageShade.visible=this.mirage.visible=this.mirageNext.visible=!!world.mirage;
     if(world.mirage){
       this.storm.visible=this.stormNext.visible=this.stormWind.visible=this.stormShade.visible=this.wind.visible=this.atmosphere.visible=this.stormbreaker.visible=this.stormbreakerNext.visible=false;

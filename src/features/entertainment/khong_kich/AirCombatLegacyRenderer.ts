@@ -1,3 +1,4 @@
+import soloArenaUrl from "../../../assets/khong-kich/solo/solo-duel-arena.png";
 import { MIRROR_TRANSFORM } from "./airCombatMirrorTransform";
 import { paintMirage } from "./airCombatMirageVisuals";
 import { STAGE4_ART_URLS, mirageEnemyFrame } from "./airCombatStage4Art";
@@ -66,6 +67,7 @@ async function loadCanvasTextures(urls:string[]) {
     await magneticImages.get(url)!.decode();
   }));
 }
+export const loadSoloCanvasAssets=()=>loadCanvasTextures([soloArenaUrl]);
 export const loadAstraCanvasAssets=()=>loadCanvasTextures([ULTIMATE_ART,RANKED_ART.vfx,RANKED_ART.projectiles,EQUIPMENT_ART.icons,EQUIPMENT_ART.vfx,ASTRA_ART.aircraft,ASTRA_ART.effects,ASTRA_ART.combatVfx,sharedVfxUrl]);
 export const loadMirageCanvasAssets=()=>loadCanvasTextures([...Object.values(STAGE4_ART_URLS),aircraftAtlasUrl,ASTRA_ART.aircraft]);
 export const loadStormbreakerCanvasAssets=()=>loadCanvasTextures(Object.values(STAGE3_ART_URLS));
@@ -375,7 +377,11 @@ export function drawLegacyWorld(
   const starfallShake=Math.max(0,...(world.astra?.impacts??[]).map(i=>2.2*Math.exp(-(world.elapsed-i.at)*12)));
   const shake=reducedMotion?0:Math.max(accents.killShake,magneticShake(world),Math.min(2.8,starfallShake));
   if (!combatOnly) {
-  if(world.mirage){
+  if(world.duel){
+    ctx.fillStyle="#15191e";ctx.fillRect(0,0,width,height);
+    const image=magneticImage(soloArenaUrl);
+    if(image){const scale=Math.max(width/image.width,height/image.height);ctx.drawImage(image,(width-image.width*scale)/2,(height-image.height*scale)/2,image.width*scale,image.height*scale);}
+  } else if(world.mirage){
     ctx.fillStyle="#06111e";ctx.fillRect(0,0,width,height);
     const image=magneticImage(STAGE4_ART_URLS.sky);
     if(image)for(let i=0;i<2;i++){const tile=stormbreakerSkyTile(world.elapsed*(reducedMotion?.25:.7),false,i);ctx.save();ctx.translate(tile.x,tile.y);ctx.scale(1,tile.flipped?-1:1);ctx.drawImage(image,-204,-351,408,702);ctx.restore();}
@@ -819,7 +825,7 @@ export function drawLegacyWorld(
   }, reducedMotion, presentationTime);
   paintEnemyForegroundMarks(world,tacticalPainter);
   accents.draw(ctx, world, reducedMotion);
-  const mirror = world.mirage?.mirror?.context.world;
+  const mirror = (world.duelOpponent ?? world.mirage?.mirror)?.context.world;
   if (mirror) {
     let view = mirrorPresentations.get(mirror);
     if (!view) { view = { accents: new CanvasCombatAccents(), bars: new HealthBarPresentation(), time: presentationTime }; mirrorPresentations.set(mirror, view); }

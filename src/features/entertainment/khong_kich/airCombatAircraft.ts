@@ -117,7 +117,7 @@ export function getEffectiveAircraftStats(state: AircraftCombatState, includeTem
 export function syncEffectiveMaxHp(state: AircraftCombatState): void {
     const maxHp = getEffectiveAircraftStats(state).maxHp;
     const previous = state.coreState.syncedMaxHp ?? maxHp;
-    state.currentHp = Math.min(maxHp, state.currentHp + Math.max(0, maxHp - previous));
+    state.currentHp = Math.min(maxHp, state.currentHp + (state.duel && (state.duel.healingBlocked || state.currentHp <= 0) ? 0 : Math.max(0, maxHp - previous)));
     state.coreState.syncedMaxHp = maxHp;
 }
 export function calculateDamage(rawDamage: number, targetArmor: number, additionalDamageTakenMultiplier = 1): number {
@@ -323,6 +323,7 @@ export function castSkill(state: AircraftCombatState, skillId: SkillId): SkillCa
     return { cast: true, resourceSpent: cost };
 }
 export function healAircraft(state: AircraftCombatState, amount: number, allowOverhealShield = true): number {
+    if(state.duel && (state.duel.healingBlocked || state.currentHp <= 0))return 0;
     const maxHp = getEffectiveAircraftStats(state).maxHp;
     const healing = Math.max(0, amount) * getHealingReceivedMultiplier(state), effective = Math.min(healing, Math.max(0, maxHp - state.currentHp));
     state.currentHp = Math.min(maxHp, state.currentHp + effective);

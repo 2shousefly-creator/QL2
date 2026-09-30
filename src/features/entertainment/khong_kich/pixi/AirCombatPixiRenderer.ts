@@ -737,7 +737,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     this.equipmentSprites.end();
     this.vfx.renderRankSkills(world,reducedMotion);
     if (!this.sceneParent) {
-      const actor = world.mirage?.mirror?.context.world;
+      const actor = (world.duelOpponent ?? world.mirage?.mirror)?.context.world;
       if (actor !== this.mirrorWorld) {
         this.mirrorRenderer?.destroy(); this.mirrorRenderer = undefined; this.mirrorWorld = actor;
         if (actor) this.mirrorRenderer = new AirCombatPixiRenderer(this.app, this.assets, undefined, this.mirrorLayer);

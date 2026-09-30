@@ -11,8 +11,8 @@ export const AirCombatPixiStage = React.forwardRef<HTMLDivElement, React.HTMLAtt
 );
 
 export async function createLegacyPresentation(host: HTMLDivElement, stageId = 1): Promise<AirCombatPresentation> {
-  const { drawLegacyWorld, loadMirageCanvasAssets, loadStormbreakerCanvasAssets, loadMagneticCanvasAssets, loadAstraCanvasAssets } = await import("../AirCombatLegacyRenderer");
-  await Promise.all([loadAstraCanvasAssets(),...(stageId===2?[loadMagneticCanvasAssets()]:stageId===3?[loadStormbreakerCanvasAssets()]:stageId===4?[loadMirageCanvasAssets()]:[])]);
+  const { drawLegacyWorld, loadSoloCanvasAssets, loadMirageCanvasAssets, loadStormbreakerCanvasAssets, loadMagneticCanvasAssets, loadAstraCanvasAssets } = await import("../AirCombatLegacyRenderer");
+  await Promise.all([loadAstraCanvasAssets(),...(stageId===0?[loadSoloCanvasAssets(),loadMirageCanvasAssets()]:[]),...(stageId===2?[loadMagneticCanvasAssets()]:stageId===3?[loadStormbreakerCanvasAssets()]:stageId===4?[loadMirageCanvasAssets()]:[])]);
   let magneticEndAge = 0;
   const canvas = document.createElement("canvas");
   const ratio = Math.min(2, window.devicePixelRatio || 1);

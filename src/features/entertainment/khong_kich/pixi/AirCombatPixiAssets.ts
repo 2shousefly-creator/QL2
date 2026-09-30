@@ -1,3 +1,4 @@
+import soloArenaUrl from "../../../../assets/khong-kich/solo/solo-duel-arena.png";
 import { STAGE4_ART_URLS, STAGE4_VFX_ART, PARALLAX_BOSS_ART, MIRAGE_HELPER_ART } from "../airCombatStage4Art";
 import { STAGE3_ART_URLS, STAGE3_ENEMY_ART, STAGE3_EMISSIVE_ART, STAGE3_VFX_ART, STORMBREAKER_BOSS_ART } from "../airCombatStage3Art";
 import { ULTIMATE_ART, ULTIMATE_FRAMES } from "../airCombatUltimateArt";
@@ -64,6 +65,7 @@ export async function loadAirCombatAssets() {
   const [astraAircraft,astraEffects,astraVfx]=await Promise.all([Assets.load<Texture>(ASTRA_ART.aircraft),Assets.load<Texture>(ASTRA_ART.effects),Assets.load<Texture>(ASTRA_ART.combatVfx)]);
   const [equipmentIcons,equipmentVfx]=await Promise.all([Assets.load<Texture>(EQUIPMENT_ART.icons),Assets.load<Texture>(EQUIPMENT_ART.vfx)]);
   const [rankedVfx,rankedProjectiles]=await Promise.all([Assets.load<Texture>(RANKED_ART.vfx),Assets.load<Texture>(RANKED_ART.projectiles)]);
+  const soloArena=await Assets.load<Texture>(soloArenaUrl);
   const ultimateVfx=await Assets.load<Texture>(ULTIMATE_ART);
   const [stage3Enemy,stage3Boss,stage3Vfx,stormbreakerSky,stage3Emissive] = await Promise.all([Assets.load<Texture>(STAGE3_ART_URLS.enemy),Assets.load<Texture>(STAGE3_ART_URLS.boss),Assets.load<Texture>(STAGE3_ART_URLS.vfx),Assets.load<Texture>(STAGE3_ART_URLS.sky),Assets.load<Texture>(STAGE3_ART_URLS.emissive)]);
   const [stage4Enemy,stage4Boss,stage4Vfx,mirageSky] = await Promise.all([Assets.load<Texture>(STAGE4_ART_URLS.enemy),Assets.load<Texture>(STAGE4_ART_URLS.boss),Assets.load<Texture>(STAGE4_ART_URLS.vfx),Assets.load<Texture>(STAGE4_ART_URLS.sky)]);
@@ -90,6 +92,6 @@ export async function loadAirCombatAssets() {
   Object.values(STAGE3_ENEMY_ART).forEach(texture);
   Object.values(STAGE3_EMISSIVE_ART).forEach(texture);
   STORMBREAKER_BOSS_ART.forEach(texture); PARALLAX_BOSS_ART.forEach(texture); texture(MIRAGE_HELPER_ART); Object.values(STAGE4_VFX_ART).forEach(texture);
-  return { texture, mirageSky, magneticStorm, stormbreakerSky, engineFlame, phantomBeam, effect: (key: VisualKey) => key === "bigbang_missile" ? bigbang : texture(VFX_VISUALS[key]), destroy: () => { frames.forEach(t => t.destroy(false)); frames.clear(); } };
+  return { texture, soloArena, mirageSky, magneticStorm, stormbreakerSky, engineFlame, phantomBeam, effect: (key: VisualKey) => key === "bigbang_missile" ? bigbang : texture(VFX_VISUALS[key]), destroy: () => { frames.forEach(t => t.destroy(false)); frames.clear(); } };
 }
 export type AirCombatAssets = Awaited<ReturnType<typeof loadAirCombatAssets>>;
