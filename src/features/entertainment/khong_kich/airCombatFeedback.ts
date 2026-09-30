@@ -24,8 +24,13 @@ export class DamageLabelPool {
   }));
   private next = 0;
   private lastEvent = 0;
+  private world?: CombatWorld;
 
   update(world: CombatWorld, delta: number, onSpawn?: (event: DamageNumberEvent) => void) {
+    if (this.world !== world) {
+      this.world = world; this.lastEvent = 0;
+      for (const label of this.labels) label.active = false;
+    }
     for (const label of this.labels) {
       if (!label.active) continue;
       label.age += delta;
@@ -35,6 +40,9 @@ export class DamageLabelPool {
       if (event.id <= this.lastEvent) continue;
       this.lastEvent = event.id;
       if (event.kind !== "damage_number") continue;
+      // Aircraft incoming damage emits in its own world. Ignore the attacker's
+      // duplicate enemy-view number; both renderers draw the defender in root space.
+      if (event.target === "enemy" && world.enemies.some(e => e.id === event.entityId && e.aircraftTarget)) continue;
       for (const damageKind of ["shield", "hp"] as const) {
         const amount = damageKind === "shield" ? event.shieldAbsorbed : event.hpDamage;
         if (!(amount > 0)) continue;

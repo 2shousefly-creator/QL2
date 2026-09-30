@@ -9,8 +9,10 @@ export class CanvasCombatAccents {
   private active: Accent[] = [];
   private free: Accent[] = [];
   private lastEvent = 0;
+  private world?: CombatWorld;
   killShake = 0;
   update(world: CombatWorld, delta: number) {
+    if (this.world !== world) { this.clear(); this.world = world; }
     this.titanShield.update(world,delta);
     this.killShake *= Math.exp(-delta * 12);
     for (let i = this.active.length - 1; i >= 0; i--) {
@@ -106,5 +108,5 @@ export class CanvasCombatAccents {
     }
     ctx.restore();
   }
-  clear() { this.active.length = 0; this.free.length = 0; this.killShake = 0; }
+  clear() { this.active.length = 0; this.free.length = 0; this.killShake = 0; this.lastEvent = 0; }
 }

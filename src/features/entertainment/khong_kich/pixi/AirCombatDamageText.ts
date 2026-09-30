@@ -1,3 +1,4 @@
+import { mirrorPoint } from "../airCombatMirrorTransform";
 import { Container, Text, TextStyle } from "pixi.js";
 import { DamageLabelPool, DAMAGE_LABEL_SECONDS } from "../airCombatFeedback";
 import type { CombatWorld } from "../airCombatRuntime";
@@ -15,7 +16,7 @@ export class AirCombatDamageText {
   });
   private revisions = new Uint32Array(this.sprites.length);
 
-  update(world: CombatWorld, delta: number, reducedMotion: boolean) {
+  update(world: CombatWorld, delta: number, reducedMotion: boolean, rotated = false) {
     this.pool.update(world, delta);
     for (let i = 0; i < this.sprites.length; i++) {
       const label = this.pool.labels[i], text = this.sprites[i];
@@ -27,7 +28,8 @@ export class AirCombatDamageText {
         text.text = label.text;
       }
       const progress = label.age / DAMAGE_LABEL_SECONDS;
-      text.position.set(label.x + label.offset * (reducedMotion ? 0.4 : 0.4 + progress), label.y - progress * (reducedMotion ? 7 : 24));
+      const position = rotated ? mirrorPoint(label.x, label.y) : label;
+      text.position.set(position.x + label.offset * (reducedMotion ? 0.4 : 0.4 + progress), position.y - progress * (reducedMotion ? 7 : 24));
       text.alpha = Math.min(1, (1 - progress) * 2);
       text.scale.set((label.critical ? 1.2 : 1) * (reducedMotion ? 1 : 1 + 0.16 * Math.max(0, 1 - label.age / 0.12)));
     }

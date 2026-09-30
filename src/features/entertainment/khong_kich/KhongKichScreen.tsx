@@ -204,14 +204,13 @@ const KhongKichContent: React.FC<KhongKichScreenProps> = ({
 
   const launchSolo = (setup: SoloSetup) => { setSolo(createSoloMatch(setup)); setPhase("solo_match"); };
   const soloMenu = () => { setSolo(null); setPhase("menu"); };
-  if (phase === "mode" || phase.startsWith("solo_")) return <ExclusiveFullscreenOverlay ariaLabel="Không Kích SOLO" className={motionClass + " air-solo-fullscreen"}>
+  if (phase === "mode" || phase === "solo_setup" || phase === "solo_result") return <ExclusiveFullscreenOverlay ariaLabel="Không Kích SOLO" className={motionClass + " air-solo-fullscreen"}>
     {phase === "mode" && <AirCombatModeSelect onCampaign={() => { setSelectedStage(defaultSelectedStage(profile.campaign)); setPhase("stages"); }} onSolo={() => setPhase("solo_setup")} onBack={() => setPhase("menu")} />}
     {phase === "solo_setup" && <AirCombatSoloSetup onStart={launchSolo} onBack={() => setPhase("mode")} onMenu={soloMenu} />}
-    {phase === "solo_match" && solo && <AirCombatSoloBattle match={solo} reducedMotion={gameState.settings.reducedMotion} onComplete={() => setPhase("solo_result")} onMenu={soloMenu} />}
     {phase === "solo_result" && solo && <AirCombatSoloResult match={solo} onRematch={() => launchSolo(solo.setup)} onMenu={soloMenu} />}
   </ExclusiveFullscreenOverlay>;
 
-  if (phase === "playing" && selectedAircraft) {
+  if ((phase === "playing" && selectedAircraft) || (phase === "solo_match" && solo)) {
     return (
       <ExclusiveFullscreenOverlay
         ariaLabel="Không Kích"
@@ -229,15 +228,15 @@ const KhongKichContent: React.FC<KhongKichScreenProps> = ({
         onContextMenu={(e) => e.preventDefault()}
         data-khong-kich-phase="playing"
       >
-        <AirCombatBattle
+        {phase === "solo_match" && solo ? <AirCombatSoloBattle match={solo} reducedMotion={gameState.settings.reducedMotion} onComplete={() => setPhase("solo_result")} onMenu={soloMenu} /> : <AirCombatBattle
           stageId={selectedStage}
-          aircraftId={selectedAircraft}
+          aircraftId={selectedAircraft!}
           reducedMotion={gameState.settings.reducedMotion}
           onComplete={finishRun}
           onExit={() => {
             setPhase("stages");
           }}
-        />
+        />}
       </ExclusiveFullscreenOverlay>
     );
   }

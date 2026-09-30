@@ -203,6 +203,24 @@ function coreCooldownStatuses(world:CombatWorld):StatusPresentation[] {
 export function getStatusPresentations(world: CombatWorld): StatusPresentation[] {
   const s = world.aircraft, c = s.coreState, result: StatusPresentation[] = [];
   result.push(...coreCooldownStatuses(world), ...skillCoreStatuses(world), ...expansionStatuses(world), ...equipmentStatuses(world));
+  if (world.duel) {
+    const addDuelStatus = (id: string, name: string, description: string, icon: StatusPresentation["icon"], remaining = Infinity, group: "buff" | "debuff" = "debuff") => {
+      result.push({ id, name, description, icon, group, source: "SOLO", stacks: 1, remaining, duration: Number.isFinite(remaining) ? Math.max(3, remaining) : Infinity, priority: 115 });
+    };
+    if (world.duel.multiplier > 1) addDuelStatus("duel:damage", world.duel.multiplier >= 2 ? "TỬ CHIẾN" : "CUỒNG CHIẾN", `Sát thương hai bên tăng ${Math.round((world.duel.multiplier - 1) * 100)}%.`, { kind: "status", id: "mark" }, Infinity, "buff");
+    if (s.duel?.healingBlocked) addDuelStatus("duel:no-heal", "SUDDEN DEATH", "Không thể hồi Máu trong hiệp phụ.", { kind: "status", id: "regen_off" });
+    const opponent = world.duel.opponent;
+    const target = opponent?.enemies.find(e => e.aircraftTarget?.world === world);
+    if (opponent && target) {
+      const interference = opponent.rankRuntime?.interference.get(target.id);
+      if (interference && interference.until > opponent.elapsed) addDuelStatus("duel:interference", "Nhiễu Điện Tử", `Di chuyển -${Math.round((1 - interference.movement) * 100)}% · Tốc độ bắn -${Math.round((1 - interference.firing) * 100)}%.`, { kind: "skill", id: "electronic_interference" }, interference.until - opponent.elapsed);
+      if (target.burn > 0) addDuelStatus("duel:burn", "Thiêu đốt", "Đang nhận sát thương thiêu đốt từ đối thủ.", { kind: "status", id: "burn" }, target.burn);
+      const anchor = opponent.rankRuntime?.anchor;
+      if (anchor && Math.hypot(target.x - anchor.x, target.y - anchor.y) <= 120 * (anchor.rank >= 2 ? 1.25 : 1)) addDuelStatus("duel:anchor", "Neo Trọng Lực", "Giảm tốc độ di chuyển và bị hút về tâm vùng ảnh hưởng.", { kind: "skill", id: "gravity_anchor" }, Math.max(0, anchor.until - opponent.elapsed));
+      const laserArmor = opponent.skillCores.enemyEffects.get(target.id)?.armorUntil ?? 0;
+      if (laserArmor > opponent.elapsed) addDuelStatus("duel:laser-armor", "Giáp bị suy yếu", "Giảm Giáp do Focus Laser của đối thủ.", { kind: "status", id: "armor" }, laserArmor - opponent.elapsed);
+    }
+  }
   if(hasCore(s,208)){
     const core=getCoreDefinition("core_208");
     result.push({id:core.id,group:"buff",name:core.name,icon:{kind:"core",id:core.id},description:`${core.description} ${core208LiveLabel(s)}`,source:"Lõi",stacks:1,remaining:Infinity,duration:Infinity,priority:45});
