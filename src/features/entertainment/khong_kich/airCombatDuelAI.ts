@@ -247,12 +247,19 @@ export function updateMirrorAI(w:CombatWorld,ai:MirrorAI,s:AircraftCombatState,p
       updatePlan(ai,s,w.elapsed);
       if(!emergency){
         ai.intent=ai.needsVerticalRecovery?"recover-up":ai.plan?"combo-setup":ai.losing?"kite":Math.abs(p.x-seen.player.x)>80?"reposition":Math.abs(p.x-seen.player.x)<25?"hold-angle":"pressure";
-        const strafe=Math.sin(w.elapsed*1.8)*45;
-        const desiredX=clamp(seen.player.x+strafe,R.left+35,R.right-35);
+        const aimingLaser = s.aircraftId === "phantom" && actor.laserCharge > 0 && seen.targetVisible;
+        // Aim from the delayed observation, including the remaining charge time.
+        // Hidden targets keep the existing last-known-position movement policy.
+        const leadSeconds = aimingLaser ? clamp(w.elapsed - seen.at + actor.laserCharge, 0, .8) : 0;
+        const strafe = aimingLaser ? 0 : Math.sin(w.elapsed * 1.8) * 45;
+        const desiredX = clamp(seen.player.x + seen.velocity.x * leadSeconds + strafe, R.left + 35, R.right - 35);
         const candidates=ai.intent==="recover-up"?[-85,0,85].map(dx=>bounded({x:p.x+dx,y:Math.min(p.y-100,band.preferred)})):
           [-65,0,65].flatMap(dx=>[-35,0,35].map(dy=>bounded({x:desiredX+dx,y:band.preferred+dy})));
         const legal=candidates.filter(q=>q.y<=band.hard&&(p.y<=band.soft||q.y<=p.y));
-        legal.sort((a,b)=>(trajectoryCost(p,a,seen,radius)*6+positionalCost(a,seen,ai.intent)+distance(a,p)/300)-(trajectoryCost(p,b,seen,radius)*6+positionalCost(b,seen,ai.intent)+distance(b,p)/300));
+        const movementCost = (q: Point) => trajectoryCost(p, q, seen, radius) * 6
+          + positionalCost(q, seen, ai.intent) + distance(q, p) / 300
+          + (aimingLaser ? Math.abs(q.x - desiredX) / 25 : 0);
+        legal.sort((a, b) => movementCost(a) - movementCost(b));
         if(legal[0])ai.goal=legal[0];
         // Never retain a stale bottom goal after a dodge.
         else ai.goal=bounded({x:p.x,y:Math.min(p.y,band.soft)});
@@ -272,8 +279,9 @@ export function updateMirrorAI(w:CombatWorld,ai:MirrorAI,s:AircraftCombatState,p
   const desiredX=dx/Math.max(1,length)*Math.min(speed,length*5),desiredY=dy/Math.max(1,length)*Math.min(speed,length*5);
   const dvx=desiredX-ai.vx,dvy=desiredY-ai.vy,turn=Math.min(1,1400*dt/(Math.hypot(dvx,dvy)||1));
   ai.vx+=dvx*turn;ai.vy+=dvy*turn;
-  // Cast-lock is authoritative; the pilot does not slide while channeling a fixed beam.
-  if(actor.laserCharge>0||actor.laserRemaining>0){ai.vx=ai.vy=0;}
+  // Charging permits repositioning; hold the firing lane only once the beam is active.
+  // laserRemaining is populated at cast time, before the charge has finished.
+  if(actor.laserCharge<=0&&actor.laserRemaining>0){ai.vx=ai.vy=0;}
   if (skill && !aircraftTargetability(w.aircraft).canAcquire && ["predator_lock","missile_swarm","focus_laser","stellar_lance","starfall"].includes(skill)) skill = undefined;
   if (actor.aftermath || actor.destruction || s.currentHp <= 0) return {...p};
   return {...bounded({x:p.x+ai.vx*dt,y:p.y+ai.vy*dt}),skill};
