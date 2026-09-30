@@ -172,6 +172,8 @@ export interface AircraftModifiers {
 }
 
 export interface AircraftCombatState {
+  /** Session-only policy; never persisted in AirCombatProfile. */
+  duel?: { selectionLevel: number; allowedCoreIds?: ReadonlySet<string>; healingBlocked: boolean };
   equipment?: EquipmentState;
   status: PlayerCombatStatus;
   aircraftId: AircraftId;
