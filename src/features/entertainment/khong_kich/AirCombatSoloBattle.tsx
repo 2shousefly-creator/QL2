@@ -20,27 +20,43 @@ function SoloRoundOverlay({ match }: { match: SoloMatch }) {
 
 export function AirCombatSoloBattle({ match, reducedMotion, onComplete, onMenu }: { match: SoloMatch; reducedMotion: boolean; onComplete: () => void; onMenu: () => void }) {
   const done = useRef(onComplete); done.current = onComplete;
-  const runtime = useMemo<AirCombatBattleRuntime>(() => ({
-    getWorld: () => match.world,
-    getPhase: () => match.phase,
-    canMove: () => ["countdown", "combat", "sudden_death"].includes(match.phase),
-    advance: delta => {
-      let remaining = delta;
-      while (remaining > 0 && match.phase !== "match_result" && !match.world.pauseReasons.size) {
-        const step = Math.min(AIR_COMBAT_WORLD.maxDeltaSeconds, remaining);
-        updateSoloMatch(match, step); remaining -= step;
-      }
-    },
-    move: (dx, dy) => moveSoloPlayer(match, dx, dy),
-    cast: skill => castSoloSkill(match, skill),
-    upgrade: skill => upgradeSoloSkill(match, skill),
-    select: card => selectSoloCore(match, card),
-    reroll: (slot, source) => rerollSoloCore(match, slot, source),
-    selectPrimary: skill => selectSoloPrimary(match, AIRCRAFT_CONFIGS[match.world.aircraft.aircraftId].skillIds.indexOf(skill)),
-    score: () => ({ playerWins: match.playerWins, opponentWins: match.opponentWins }),
-    overlay: () => <SoloRoundOverlay match={match} />,
-    finished: () => match.phase === "match_result",
-    complete: () => done.current(),
-  }), [match]);
+  const runtime = useMemo<AirCombatBattleRuntime>(() => {
+    let current: SoloMatch["acquisitionQueue"][number] | null = null;
+    let remainingMs = 0;
+    return ({
+      getWorld: () => match.world,
+      announcement: (deltaMs, visible) => {
+        if (!visible || match.phase === "core_selection") return null;
+        if (current) {
+          remainingMs -= deltaMs;
+          if (remainingMs <= 0) current = null;
+        }
+        if (!current) {
+          current = match.acquisitionQueue.shift() ?? null;
+          remainingMs = current?.durationMs ?? 0;
+        }
+        return current;
+      },
+      getPhase: () => match.phase,
+      canMove: () => ["countdown", "combat", "sudden_death"].includes(match.phase),
+      advance: delta => {
+        let remaining = delta;
+        while (remaining > 0 && match.phase !== "match_result" && !match.world.pauseReasons.size) {
+          const step = Math.min(AIR_COMBAT_WORLD.maxDeltaSeconds, remaining);
+          updateSoloMatch(match, step); remaining -= step;
+        }
+      },
+      move: (dx, dy) => moveSoloPlayer(match, dx, dy),
+      cast: skill => castSoloSkill(match, skill),
+      upgrade: skill => upgradeSoloSkill(match, skill),
+      select: card => selectSoloCore(match, card),
+      reroll: (slot, source) => rerollSoloCore(match, slot, source),
+      selectPrimary: skill => selectSoloPrimary(match, AIRCRAFT_CONFIGS[match.world.aircraft.aircraftId].skillIds.indexOf(skill)),
+      score: () => ({ playerWins: match.playerWins, opponentWins: match.opponentWins }),
+      overlay: () => <SoloRoundOverlay match={match} />,
+      finished: () => match.phase === "match_result",
+      complete: () => done.current(),
+    });
+  }, [match]);
   return <AirCombatBattleShell runtime={runtime} stageId={0} aircraftId={match.world.aircraft.aircraftId} reducedMotion={reducedMotion} onComplete={onComplete} onExit={onMenu} />;
 }

@@ -1,0 +1,165 @@
+{
+  "version": "26.19.2",
+  "releaseDate": "30/09/2026",
+  "title": "Targeting, Thông Báo SOLO & Hiệu Ứng Tiêu Diệt",
+  "displayTitle": "KHÔNG KÍCH 26.19.2 — TARGETING, THÔNG BÁO SOLO & HIỆU ỨNG TIÊU DIỆT",
+  "summary": "**26.19.2** tiếp tục hoàn thiện combat giữa các chiến cơ bằng cách chuẩn hóa lại quy tắc khóa mục tiêu, đặc biệt với Tàng Hình của Phantom. Các Kỹ Năng lock-on và projectile homing giờ phải tôn trọng trạng thái có thể bị nhắm mục tiêu của đối phương, trong khi projectile, beam hoặc vùng sát thương không cần khóa mục tiêu vẫn có thể gây sát thương nếu thực sự va chạm.\\n\\nBản cập nhật cũng bổ sung thông báo khi AI nhận Lõi hoặc Trang Bị mới trong SOLO 1v1 và nâng cấp toàn bộ khoảnh khắc chiến cơ bị tiêu diệt với hiệu ứng nổ, rung màn hình, biến mất khỏi chiến trường và 3 giây hậu chiến trước khi hiển thị kết quả.",
+  "sections": [
+    {
+      "id": "s1",
+      "title": "TARGETING & TÀNG HÌNH",
+      "icon": { "kind": "aircraft", "id": "phantom" },
+      "intro": [
+        {
+          "text": "Logic khóa mục tiêu giữa các chiến cơ được chuẩn hóa để Tàng Hình, Decoy, projectile homing và các Kỹ Năng lock-on tương tác nhất quán hơn.",
+          "format": "paragraph",
+          "changeType": "change"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s1-e1",
+          "icon": { "kind": "aircraft", "id": "phantom" },
+          "title": "Phantom · Tàng Hình",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Khi Phantom kích hoạt Tàng Hình, đối thủ không thể tạo khóa mục tiêu mới hoặc tiếp tục duy trì khóa mục tiêu cũ lên Phantom.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "Projectile homing đang theo Phantom sẽ ưu tiên chuyển sang Decoy nếu có. Nếu không còn mục tiêu hợp lệ, projectile ngừng tracking và tiếp tục theo quỹ đạo hiện tại.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "Tàng Hình không tạo miễn nhiễm sát thương: projectile bay tự do, beam, wave và AoE không cần lock vẫn có thể gây sát thương nếu thực sự chạm Phantom.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        },
+        {
+          "id": "s1-e2",
+          "icon": { "kind": "system", "id": "rules" },
+          "title": "Rà soát toàn bộ Kỹ Năng chiến cơ",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Rà soát lại toàn bộ Kỹ Năng của Viper, Titan, Phantom và Astra để các cơ chế khóa mục tiêu, giữ mục tiêu, Decoy, homing, AoE và target chết giữa chừng sử dụng cùng một quy tắc combat.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "SOLO 1v1 · THÔNG BÁO BUILD AI",
+      "icon": { "kind": "system", "id": "core" },
+      "intro": [
+        {
+          "text": "Người chơi giờ có thể theo dõi rõ hơn quá trình build của đối thủ AI qua từng hiệp.",
+          "format": "paragraph",
+          "changeType": "new"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s2-e1",
+          "icon": { "kind": "system", "id": "core" },
+          "title": "Thông báo Lõi & Trang Bị",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Khi AI nhận **Lõi Nâng Cấp**, **Trang Bị Hoàn Chỉnh** hoặc nâng Trang Bị lên **Huyền Thoại**, màn hình sẽ hiển thị thông báo gồm tên chiến cơ AI, loại phần thưởng và tên chính xác của Lõi hoặc Trang Bị.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Nếu AI nhận nhiều nâng cấp trong cùng một hiệp, các thông báo được xếp hàng và hiển thị nối tiếp thay vì ghi đè lẫn nhau.",
+              "format": "bullet",
+              "changeType": "new"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "SOLO 1v1 · HIỆU ỨNG TIÊU DIỆT",
+      "icon": { "kind": "system", "id": "aircraft" },
+      "intro": [
+        {
+          "text": "Khoảnh khắc kết thúc một hiệp SOLO giờ có thêm giai đoạn hậu chiến để thể hiện rõ chiến cơ bị tiêu diệt trước khi công bố kết quả.",
+          "format": "paragraph",
+          "changeType": "change"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s3-e1",
+          "icon": { "kind": "system", "id": "vfx" },
+          "title": "Nổ tung & biến mất",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Chiến cơ bị tiêu diệt sẽ nổ tung, tạo rung màn hình rồi biến mất cùng thanh Máu/Tài Nguyên bám theo chiến cơ.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "Kết quả hiệp được khóa tại chiến cơ bị tiêu diệt đầu tiên. Battlefield tiếp tục chạy **3 giây** trước khi màn hình kết quả hiệp xuất hiện; projectile hoặc hiệu ứng còn tồn tại trong giai đoạn này không thể đảo ngược người thắng.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "Sau 3 giây hậu chiến, kết quả hiệp tiếp tục được hiển thị khoảng **2,5 giây** trước khi chuyển sang hiệp tiếp theo.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "CHIẾN DỊCH · HIỆU ỨNG TIÊU DIỆT PLAYER",
+      "icon": { "kind": "system", "id": "stage" },
+      "intro": [
+        {
+          "text": "Player bị tiêu diệt trong Chiến Dịch giờ có cùng một death presentation rõ ràng thay vì chuyển sang màn hình kết quả gần như ngay lập tức.",
+          "format": "paragraph",
+          "changeType": "change"
+        }
+      ],
+      "entries": [
+        {
+          "id": "s4-e1",
+          "icon": { "kind": "system", "id": "vfx" },
+          "title": "3 giây hậu chiến",
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Khi chiến cơ player bị tiêu diệt, chiến cơ nổ tung, rung màn hình, biến mất khỏi chiến trường và ẩn thanh Máu/Tài Nguyên bám theo chiến cơ.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "Thế giới trận đấu tiếp tục chạy thêm **3 giây** trước khi màn hình kết quả xuất hiện. Player không thể di chuyển, bắn, sử dụng Kỹ Năng hoặc tiếp tục bị khóa mục tiêu trong thời gian này.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "Ba giây hậu chiến chỉ là thời gian trình diễn và không được cộng thêm vào thời gian sống sót hoặc các thống kê combat của lượt chơi.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

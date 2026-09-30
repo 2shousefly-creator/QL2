@@ -20,7 +20,7 @@ export function paintEquipment(w:CombatWorld,paint:EquipmentPainter,reducedMotio
   const s=w.aircraft,q=equipmentState(s),t=w.elapsed;
   for(const l of q.loot){const bob=l.collection?0:Math.sin(l.age*3)*2;paint(1000000+l.id,equipmentIconFrame(l.definitionId),l.x,l.y+bob,24,24,Math.sin(l.age*2)*.06,1);if(l.collection)paint(1100000+l.id,equipmentVfxFrame(6,l.collection.age/.45),l.x,l.y,38,50,0,.55);}
   if(q.orb){const o=q.orb;paint(2000001,equipmentVfxFrame(o.shield?39:38,(t%1.2)/1.2),o.x,o.y,35,35,0,Math.min(1,(o.until-t)*2));}
-  for(const v of q.visuals){const age=t-v.start,phase=Math.max(0,Math.min(1,age/v.duration)),target=v.target!==undefined?w.enemies.find(e=>e.id===v.target&&e.hp>0):undefined;
+  for(const v of q.visuals){if(w.destruction&&v.player)continue;const age=t-v.start,phase=Math.max(0,Math.min(1,age/v.duration)),target=v.target!==undefined?w.enemies.find(e=>e.id===v.target&&e.hp>0):undefined;
     if(v.target!==undefined&&v.target!==-1&&!target&&v.duration>1)continue;
     const x=v.player?w.playerX:target?.x??v.x,y=v.player?w.playerY:target?.y??v.y;
     const alpha=Math.min(1,age/.07,(v.duration-age)/.15)*(v.legendary?1:.85);
@@ -49,6 +49,7 @@ export function paintEquipment(w:CombatWorld,paint:EquipmentPainter,reducedMotio
     }else paint(3000001+v.id*2,frame,x,y,v.size,v.size,0,alpha);
   }
   for(const d of activeEquipmentFamilies(s).values()){
+    if(w.destruction)break;
     const f=Number(d.family!.slice(2)),e=equipmentEffect(s,f);
     const shield=s.coreState.shields[`equipment:${f}`];
     const modeActive=f===28||f===33||(f===27&&s.currentHp<getEffectiveAircraftStats(s).maxHp);

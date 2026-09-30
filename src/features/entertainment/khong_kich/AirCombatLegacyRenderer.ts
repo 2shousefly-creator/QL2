@@ -758,63 +758,65 @@ export function drawLegacyWorld(
     ctx.save();ctx.translate(ghost.x,ghost.y);ctx.rotate(ghost.angle);
     drawAircraft(ctx,aircraftId,0,0,aircraft.color,"#a5f3fc",.38*Math.min(1,(ghost.until-world.elapsed)*3),.82*playerAirframeScale(world.aircraft));ctx.restore();
   }
-  const hitBlink = world.playerInvulnerability > 0 && Math.floor(world.elapsed * 16) % 2 === 0;
-  const exhaust=getPlayerExhaust(world,PLAYER_AIRFRAME_SIZE[aircraftId]*playerAirframeScale(world.aircraft),reducedMotion);
-  ctx.save();ctx.globalCompositeOperation="lighter";
-  for(const mount of exhaust.mounts)for(let layer=0;layer<3;layer++){
-    const x=world.playerX+mount.x,y=world.playerY+mount.y,width=mount.width*(layer===0?2.6:layer===1?1:.48),length=exhaust.length*(layer===0?1.08:layer===1?1:.64);
-    ctx.globalAlpha=(invisible?.16:1)*(layer===0?exhaust.glow:layer===1?.9:1);
-    const gradient=ctx.createLinearGradient(x,y,x,y+length);gradient.addColorStop(0,layer===2?"#fff8e7":aircraft.accent);gradient.addColorStop(1,"transparent");ctx.fillStyle=gradient;
-    ctx.beginPath();ctx.moveTo(x-width/2,y);ctx.quadraticCurveTo(x-width*.55,y+length*.25,x,y+length);ctx.quadraticCurveTo(x+width*.55,y+length*.25,x+width/2,y);ctx.closePath();ctx.fill();
-  }
-  ctx.restore();
-  drawAircraft(
-    ctx,
-    aircraftId,
-    world.playerX,
-    world.playerY,
-    aircraft.color,
-    aircraft.accent,
-    invisible ? 0.1 : hitBlink ? 0.25 : 1,
-    0.82
-  );
-
-  if (!accents.titanShield.active && accents.titanShield.opacity < .01 && ((world.aircraft.activeEffects.armor_shield || 0) > 0 || Object.values(world.aircraft.coreState.shields).some(s=>s.amount>0&&s.until>world.aircraft.coreState.time))) {
-    const pulse = 1 + Math.sin(world.elapsed * 8) * 0.045;
-    const shieldRadius = 25 * pulse * playerAirframeScale(world.aircraft);
-    ctx.save();
-    const glow = ctx.createRadialGradient(world.playerX, world.playerY, 10, world.playerX, world.playerY, shieldRadius);
-    glow.addColorStop(0, "rgba(125,211,252,.06)");
-    glow.addColorStop(0.72, "rgba(56,189,248,.16)");
-    glow.addColorStop(1, "rgba(14,165,233,.32)");
-    ctx.fillStyle = glow;
-    ctx.beginPath();
-    ctx.arc(world.playerX, world.playerY, shieldRadius, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.strokeStyle = "rgba(186,230,253,.9)";
-    ctx.lineWidth = 2.2;
-    ctx.shadowColor = "#38bdf8";
-    ctx.shadowBlur = 13;
-    ctx.beginPath();
-    for (let side = 0; side < 6; side++) {
-      const angle = -Math.PI / 2 + side * Math.PI / 3;
-      const px = world.playerX + Math.cos(angle) * shieldRadius;
-      const py = world.playerY + Math.sin(angle) * shieldRadius;
-      if (side === 0) ctx.moveTo(px, py);
-      else ctx.lineTo(px, py);
+  if (!world.destruction && world.aircraft.currentHp > 0) {
+    const hitBlink = world.playerInvulnerability > 0 && Math.floor(world.elapsed * 16) % 2 === 0;
+    const exhaust=getPlayerExhaust(world,PLAYER_AIRFRAME_SIZE[aircraftId]*playerAirframeScale(world.aircraft),reducedMotion);
+    ctx.save();ctx.globalCompositeOperation="lighter";
+    for(const mount of exhaust.mounts)for(let layer=0;layer<3;layer++){
+      const x=world.playerX+mount.x,y=world.playerY+mount.y,width=mount.width*(layer===0?2.6:layer===1?1:.48),length=exhaust.length*(layer===0?1.08:layer===1?1:.64);
+      ctx.globalAlpha=(invisible?.16:1)*(layer===0?exhaust.glow:layer===1?.9:1);
+      const gradient=ctx.createLinearGradient(x,y,x,y+length);gradient.addColorStop(0,layer===2?"#fff8e7":aircraft.accent);gradient.addColorStop(1,"transparent");ctx.fillStyle=gradient;
+      ctx.beginPath();ctx.moveTo(x-width/2,y);ctx.quadraticCurveTo(x-width*.55,y+length*.25,x,y+length);ctx.quadraticCurveTo(x+width*.55,y+length*.25,x+width/2,y);ctx.closePath();ctx.fill();
     }
-    ctx.closePath();
-    ctx.stroke();
     ctx.restore();
-  }
+    drawAircraft(
+      ctx,
+      aircraftId,
+      world.playerX,
+      world.playerY,
+      aircraft.color,
+      aircraft.accent,
+      invisible ? 0.1 : hitBlink ? 0.25 : 1,
+      0.82
+    );
 
-  const bubble=accents.titanShield;
-  if(bubble.opacity>.01) {
-    ctx.save();ctx.translate(world.playerX,world.playerY);ctx.scale(bubble.scale*playerAirframeScale(world.aircraft),bubble.scale*playerAirframeScale(world.aircraft));ctx.globalAlpha=bubble.opacity;
-    paintTitanShield(shieldPainter(ctx),bubble,reducedMotion,(skillRank(world.aircraft, "armor_shield") >= 3));
-    ctx.restore();
-  }
+    if (!accents.titanShield.active && accents.titanShield.opacity < .01 && ((world.aircraft.activeEffects.armor_shield || 0) > 0 || Object.values(world.aircraft.coreState.shields).some(s=>s.amount>0&&s.until>world.aircraft.coreState.time))) {
+      const pulse = 1 + Math.sin(world.elapsed * 8) * 0.045;
+      const shieldRadius = 25 * pulse * playerAirframeScale(world.aircraft);
+      ctx.save();
+      const glow = ctx.createRadialGradient(world.playerX, world.playerY, 10, world.playerX, world.playerY, shieldRadius);
+      glow.addColorStop(0, "rgba(125,211,252,.06)");
+      glow.addColorStop(0.72, "rgba(56,189,248,.16)");
+      glow.addColorStop(1, "rgba(14,165,233,.32)");
+      ctx.fillStyle = glow;
+      ctx.beginPath();
+      ctx.arc(world.playerX, world.playerY, shieldRadius, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = "rgba(186,230,253,.9)";
+      ctx.lineWidth = 2.2;
+      ctx.shadowColor = "#38bdf8";
+      ctx.shadowBlur = 13;
+      ctx.beginPath();
+      for (let side = 0; side < 6; side++) {
+        const angle = -Math.PI / 2 + side * Math.PI / 3;
+        const px = world.playerX + Math.cos(angle) * shieldRadius;
+        const py = world.playerY + Math.sin(angle) * shieldRadius;
+        if (side === 0) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+      }
+      ctx.closePath();
+      ctx.stroke();
+      ctx.restore();
+    }
 
+    const bubble=accents.titanShield;
+    if(bubble.opacity>.01) {
+      ctx.save();ctx.translate(world.playerX,world.playerY);ctx.scale(bubble.scale*playerAirframeScale(world.aircraft),bubble.scale*playerAirframeScale(world.aircraft));ctx.globalAlpha=bubble.opacity;
+      paintTitanShield(shieldPainter(ctx),bubble,reducedMotion,(skillRank(world.aircraft, "armor_shield") >= 3));
+      ctx.restore();
+    }
+
+  }
   paintMirage(world,(frame,x,y,width,height,rotation,alpha,tint,anchorX)=>drawMagneticFrame(ctx,frame,x,y,width,height,rotation,alpha,tint,anchorX),reducedMotion);
   paintStormbreaker(world,{...tacticalPainter,
     sprite:(_id,key,x,y,width,height,rotation=0,alpha=1,additive=false)=>{ctx.save();ctx.globalCompositeOperation=additive?"lighter":"source-over";drawMagneticFrame(ctx,STAGE3_VFX_ART[key],x,y,width,height,rotation,alpha);ctx.restore();},
@@ -825,6 +827,16 @@ export function drawLegacyWorld(
   }, reducedMotion, presentationTime);
   paintEnemyForegroundMarks(world,tacticalPainter);
   accents.draw(ctx, world, reducedMotion);
+  if (!combatOnly) accents.drawDestruction((event, age) => {
+    const layers = [[2,1,.75,1.4],[1,3,.18,.65],[3,3,.65,2.1],[0,2,.5,1],[1,2,1.2,1.1]];
+    for (const [col,row,duration,scale] of layers) {
+      if (age >= duration) continue;
+      const t=age/duration,size=event.size*scale*(reducedMotion?1:.65+t*.65);
+      ctx.save();ctx.globalCompositeOperation=row===2&&col===1?"source-over":"lighter";
+      drawMagneticFrame(ctx,{atlas:"vfx",rect:[col/4,row/4,.25,.25]},event.x,event.y-(row===2&&col===1?age*18:0),size,size,0,Math.max(0,1-t));
+      ctx.restore();
+    }
+  });
   const mirror = (world.duelOpponent ?? world.mirage?.mirror)?.context.world;
   if (mirror) {
     let view = mirrorPresentations.get(mirror);
@@ -877,6 +889,7 @@ export function drawLegacyWorld(
 }
 
 function drawAircraftTrackingHud(ctx: CanvasRenderingContext2D, world: CombatWorld, healthBars: HealthBarPresentation, rotated = false) {
+  if (world.destruction || world.aircraft.currentHp <= 0) return;
   const stats = getEffectiveAircraftStats(world.aircraft);
   const displayWidth = PLAYER_AIRFRAME_SIZE[world.aircraft.aircraftId]*playerAirframeScale(world.aircraft);
   const barWidth = trackingBarWidth(displayWidth);

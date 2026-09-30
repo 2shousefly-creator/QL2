@@ -17,17 +17,21 @@ export class CanvasCombatAccents {
     this.killShake *= Math.exp(-delta * 12);
     for (let i = this.active.length - 1; i >= 0; i--) {
       const accent = this.active[i]; accent.age += delta;
-      if (accent.age >= (accent.event.kind==="bullet_impact"||accent.event.kind==="player_hit"?.18:accent.event.kind==="lightning"?.23:accent.event.kind==="player_heal"?.7:.55)) { this.active.splice(i, 1); this.free.push(accent); }
+      if (accent.age >= (accent.event.kind==="aircraft_destroyed"?1.2:accent.event.kind==="bullet_impact"||accent.event.kind==="player_hit"?.18:accent.event.kind==="lightning"?.23:accent.event.kind==="player_heal"?.7:.55)) { this.active.splice(i, 1); this.free.push(accent); }
     }
     for (const event of world.visualEvents) if (event.id > this.lastEvent) {
       this.lastEvent = event.id;
+      if (event.kind === "aircraft_destroyed") {
+        if (world.mirrorContext) continue;
+        this.killShake = Math.max(this.killShake,6);
+      }
       if(event.kind==="explosion" && event.killTier)this.killShake=Math.max(this.killShake,event.killTier==="boss"?5:event.killTier==="elite"?2.8:1.2);
       if(event.kind==="rank_effect" || event.kind==="astra_lance_impact" || event.kind==="astra_starfall_impact")continue; // Shared asset painters own these contacts.
       if (event.kind === "explosion" && event.magneticDeath) continue;
       if (event.directContact && event.kind==="hit")continue;
       if (event.kind === "damage_number" && event.shieldAbsorbed <= 0) continue;
       if (this.active.length >= 40) {
-        if(event.kind!=="bullet_impact" && event.kind!=="player_hit" && event.kind!=="player_heal" && event.kind!=="lightning")continue;
+        if(event.kind!=="aircraft_destroyed" && event.kind!=="bullet_impact" && event.kind!=="player_hit" && event.kind!=="player_heal" && event.kind!=="lightning")continue;
         const index=this.active.findIndex(a=>a.event.kind!=="bullet_impact" && a.event.kind!=="player_hit");
         const removed=this.active.splice(index<0?0:index,1)[0];this.free.push(removed);
       }
@@ -39,6 +43,7 @@ export class CanvasCombatAccents {
     ctx.save();
     ctx.beginPath(); ctx.rect(0, 104, 360, 524); ctx.clip();
     for (const { event, age } of this.active) {
+      if (event.kind === "aircraft_destroyed" || (world.destruction && (event.attachedToPlayer || event.kind === "player_heal"))) continue;
       const t = age / .55;
       if(this.titanShield.active && (event.kind==="damage_number" && event.target==="player" || event.kind==="shield_ripple" && event.attachedToPlayer))continue;
       if (event.kind === "player_heal") {
@@ -107,6 +112,9 @@ export class CanvasCombatAccents {
       }
     }
     ctx.restore();
+  }
+  drawDestruction(draw: (event: CombatVisualEvent, age: number) => void) {
+    for (const {event,age} of this.active) if(event.kind === "aircraft_destroyed") draw(event,age);
   }
   clear() { this.active.length = 0; this.free.length = 0; this.killShake = 0; this.lastEvent = 0; }
 }

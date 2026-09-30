@@ -1,9 +1,10 @@
+import { aircraftTargetability } from "./airCombatTargetability";
 import { settleCoreCooldowns, coreCooldownReady, deferCoreCooldown } from "./airCombatCooldowns";
 import { getHealingReceivedMultiplier, getRecoveryReceivedMultiplier } from "./airCombatRecovery";
 import { resolveFireRate, resolveSkillCooldown } from "./airCombatStatResolvers";
 import { EQUIPMENT_POWER as P } from "./airCombatEquipmentBalance";
 import { skillRank, rankValues, isUltimate, ultimateCastDisabled, COMBAT_LEVEL_CAP, CORE_MILESTONES } from "./airCombatSkillRanks";
-import { applyEquipmentStats, equipmentUntargetable } from "./airCombatEquipmentStats";
+import { applyEquipmentStats } from "./airCombatEquipmentStats";
 import { equipmentState, equipmentScale, equipmentEffect, equipmentMetric } from "./airCombatEquipmentState";
 import { equipmentResourceSpent } from "./airCombatEquipmentRuntime";
 import { applyExpansionStats, expansionState, expansionActive, expansionSkillCost, finishExpansionSkill, finishAbsorbShield, createAbsorbShield, observeExpansionResource } from "./airCombatExpansion";
@@ -323,7 +324,7 @@ export function castSkill(state: AircraftCombatState, skillId: SkillId): SkillCa
     return { cast: true, resourceSpent: cost };
 }
 export function healAircraft(state: AircraftCombatState, amount: number, allowOverhealShield = true): number {
-    if(state.duel && (state.duel.healingBlocked || state.currentHp <= 0))return 0;
+    if(state.currentHp <= 0 || state.duel?.healingBlocked)return 0;
     const maxHp = getEffectiveAircraftStats(state).maxHp;
     const healing = Math.max(0, amount) * getHealingReceivedMultiplier(state), effective = Math.min(healing, Math.max(0, maxHp - state.currentHp));
     state.currentHp = Math.min(maxHp, state.currentHp + effective);
@@ -450,7 +451,7 @@ export function tickAircraftState(state: AircraftCombatState, deltaSeconds: numb
         endAircraftSkill(state, "escort_drone");
 }
 export function isPlayerInvisible(state: AircraftCombatState): boolean { return (state.activeEffects.invisibility || 0) > 0; }
-export function canAcquirePlayerTarget(state: AircraftCombatState): boolean { return !isPlayerInvisible(state) && !equipmentUntargetable(state); }
+export function canAcquirePlayerTarget(state: AircraftCombatState): boolean { return aircraftTargetability(state).canAcquire; }
 export function shouldAutoFire(state: AircraftCombatState): boolean {
     const sweepingCannonActive=(state.activeEffects.sweeping_cannon||0)>0;
     return (!overheated(state)||sweepingCannonActive) && (state.activeEffects.focus_laser || 0) <= 0 && (state.activeEffects.stellar_lance || 0) <= 0;
