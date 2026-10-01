@@ -3,33 +3,21 @@ import { AirCombatSoloSetup } from "./AirCombatSoloSetup";
 import { AirCombatSoloBattle } from "./AirCombatSoloBattle";
 import { AirCombatSoloResult } from "./AirCombatSoloResult";
 import { createSoloMatch, type SoloMatch, type SoloSetup } from "./airCombatDuelRuntime";
-import { AnimatePresence, MotionConfig } from "motion/react";
-import { AirCombatModal as AppModal, AirCombatMotionContext } from "./AirCombatMotion";
+import { MotionConfig } from "motion/react";
+import { AirCombatMotionContext } from "./AirCombatMotion";
 import { AirCombatMainMenu, AirCombatStageSelect } from "./AirCombatCampaign";
 import { canLaunchStage, defaultSelectedStage, getAirCombatStage } from "./airCombatStages";
 import React, { useEffect, useRef, useState } from "react";
 import {
   ArrowLeft,
-  ChevronRight,
   Crosshair,
   Trophy,
-  X,
 } from "lucide-react";
 import { soundManager } from "../../../game/audio";
 import { gameConfig } from "../../../game/config";
 import { GameState } from "../../../game/types";
 import { applyEarnedXpCapped } from "../../../game/xpEngine";
 import { createDefaultFarmState } from "../../tang_gia/farmEngine";
-import {
-  AIR_COMBAT_WORLD,
-  AIRCRAFT_CONFIGS,
-  AIRCRAFT_ORDER,
-  SKILL_CONFIGS,
-} from "./airCombatConfig";
-import {
-  createAircraftCombatState,
-  getEffectiveAircraftStats,
-} from "./airCombatEngine";
 import {
   settleAirCombatRun,
   loadAirCombatProfile,
@@ -43,13 +31,9 @@ import {
 } from "./airCombatTypes";
 import { AirCombatBattle } from "./AirCombatBattle";
 import { AirCombatResult } from "./AirCombatResult";
-import { AircraftPreview } from "./AircraftPreview";
-import { CoreDescription } from "./CoreDescription";
-import { getSkillTooltipModel } from "./airCombatPresentation";
-import { CombatUiIcon } from "./CombatUiIcon";
-import { AircraftSelectionStats } from "./CombatStatReadout";
+import { AircraftSelection } from "./AircraftSelection";
 import "./combat-ui.css";
-import { ExclusiveFullscreenOverlay, ModalButton, OverlayBody, OverlayHeader } from "../../../components/overlay/AppOverlay";
+import { ExclusiveFullscreenOverlay } from "../../../components/overlay/AppOverlay";
 
 interface KhongKichScreenProps {
   gameState: GameState;
@@ -58,18 +42,6 @@ interface KhongKichScreenProps {
 }
 
 type Phase = "mode" | "solo_setup" | "solo_match" | "solo_result" | "menu" | "stages" | "select" | "playing" | "result";
-
-interface AircraftPressState {
-  aircraftId: AircraftId;
-  pointerId: number;
-  startedAt: number;
-  startX: number;
-  startY: number;
-  timer: number | null;
-  held: boolean;
-  cancelled: boolean;
-}
-
 
 const KhongKichContent: React.FC<KhongKichScreenProps> = ({
   gameState,
@@ -92,8 +64,6 @@ const KhongKichContent: React.FC<KhongKichScreenProps> = ({
   const [selectedStage, setSelectedStage] = useState(() => defaultSelectedStage(profile.campaign));
   const stage = getAirCombatStage(selectedStage)!;
   const [selectedAircraft, setSelectedAircraft] = useState<AircraftId | null>(null);
-  const [previewAircraft, setPreviewAircraft] = useState<AircraftId | null>(null);
-  const aircraftPressRef = useRef<AircraftPressState | null>(null);
   const [completedRun, setCompletedRun] = useState<{
     summary: AirCombatRunSummary;
     reward: AirCombatReward;
@@ -123,62 +93,6 @@ const KhongKichContent: React.FC<KhongKichScreenProps> = ({
   const chooseAircraft = (aircraftId: AircraftId) => {
     soundManager.playClick();
     setSelectedAircraft(aircraftId);
-  };
-
-  const beginAircraftPress = (
-    event: React.PointerEvent<HTMLButtonElement>,
-    aircraftId: AircraftId
-  ) => {
-    const previousPress = aircraftPressRef.current;
-    if (previousPress?.timer !== null && previousPress?.timer !== undefined) {
-      window.clearTimeout(previousPress.timer);
-      previousPress.cancelled = true;
-    }
-    event.currentTarget.setPointerCapture(event.pointerId);
-    const press: AircraftPressState = {
-      aircraftId,
-      pointerId: event.pointerId,
-      startedAt: performance.now(),
-      startX: event.clientX,
-      startY: event.clientY,
-      timer: null,
-      held: false,
-      cancelled: false,
-    };
-    press.timer = window.setTimeout(() => {
-      if (aircraftPressRef.current !== press || press.cancelled) return;
-      press.held = true;
-      setPreviewAircraft(aircraftId);
-      soundManager.triggerHaptic("light");
-    }, AIR_COMBAT_WORLD.longPressMs);
-    aircraftPressRef.current = press;
-  };
-
-  const moveAircraftPress = (event: React.PointerEvent<HTMLButtonElement>) => {
-    const press = aircraftPressRef.current;
-    if (!press || press.pointerId !== event.pointerId || press.cancelled) return;
-    if (Math.hypot(event.clientX - press.startX, event.clientY - press.startY) <= 12) return;
-    press.cancelled = true;
-    if (press.timer !== null) window.clearTimeout(press.timer);
-  };
-
-  const finishAircraftPress = (
-    event: React.PointerEvent<HTMLButtonElement>,
-    cancelled = false
-  ) => {
-    const press = aircraftPressRef.current;
-    if (!press || press.pointerId !== event.pointerId) return;
-    if (press.timer !== null) window.clearTimeout(press.timer);
-    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
-      event.currentTarget.releasePointerCapture(event.pointerId);
-    }
-    aircraftPressRef.current = null;
-    if (cancelled || press.cancelled) return;
-    if (press.held || performance.now() - press.startedAt >= AIR_COMBAT_WORLD.longPressMs) {
-      setPreviewAircraft(press.aircraftId);
-      return;
-    }
-    chooseAircraft(press.aircraftId);
   };
 
   const finishRun = (summary: AirCombatRunSummary) => {
@@ -241,8 +155,6 @@ const KhongKichContent: React.FC<KhongKichScreenProps> = ({
     );
   }
 
-  const previewConfig = previewAircraft ? AIRCRAFT_CONFIGS[previewAircraft] : null;
-
   if (phase === "result" && completedRun) {
     return (
       <ExclusiveFullscreenOverlay
@@ -267,7 +179,7 @@ const KhongKichContent: React.FC<KhongKichScreenProps> = ({
 
   return (
     <div
-      className={`${motionClass} command-screen tactical-battle-screen mx-auto w-full max-w-lg flex flex-col justify-start flex-1 min-h-0 px-2.5 sm:px-4 py-[clamp(6px,1.4dvh,16px)] select-none`}
+      className={`${motionClass} command-screen tactical-battle-screen air-campaign-selection mx-auto w-full max-w-lg flex flex-col justify-start flex-1 min-h-0 px-2.5 sm:px-4 py-[clamp(6px,1.4dvh,16px)] select-none`}
       key={phase}
       data-khong-kich-phase="select"
     >
@@ -302,185 +214,7 @@ const KhongKichContent: React.FC<KhongKichScreenProps> = ({
       </div>
 
       <h2 className="text-center text-sm font-black text-white">CHỌN CHIẾN CƠ</h2>
-      {/* Aircraft Cards Container */}
-      <div className="aircraft-selection-grid">
-        {AIRCRAFT_ORDER.map((aircraftId) => {
-          const config = AIRCRAFT_CONFIGS[aircraftId];
-          const stats = getEffectiveAircraftStats(createAircraftCombatState(aircraftId));
-          const selected = selectedAircraft === aircraftId;
-          return (
-            <button
-              key={aircraftId}
-              type="button"
-              onPointerDown={(event) => beginAircraftPress(event, aircraftId)}
-              onPointerMove={moveAircraftPress}
-              onPointerUp={(event) => finishAircraftPress(event)}
-              onPointerCancel={(event) => finishAircraftPress(event, true)}
-              onClick={(event) => {
-                if (event.detail === 0) chooseAircraft(aircraftId);
-              }}
-              onContextMenu={(event) => event.preventDefault()}
-              data-aircraft-option={aircraftId}
-              aria-pressed={selected}
-              style={{"--aircraft-color":config.color,"--aircraft-accent":config.accent} as React.CSSProperties}
-              className={`tactical-card air-aircraft-choice relative w-full touch-pan-y select-none overflow-hidden rounded-xl border p-[clamp(7px,1.3dvh,14px)] text-left transition-all active:scale-[.99] ${
-                selected
-                  ? "air-aircraft-choice-selected"
-                  : "border-slate-800 bg-slate-900/80 hover:bg-slate-900"
-              }`}
-            >
-              <div
-                className="pointer-events-none absolute -left-4 -top-4 h-20 w-20 rounded-full blur-2xl"
-                style={{ backgroundColor: `${config.color}18` }}
-              />
-              <div className="aircraft-selection-card-body">
-                <div className="flex flex-col items-center">
-                  <AircraftPreview
-                    aircraftId={aircraftId}
-                    className="h-[clamp(46px,6.8dvh,64px)] w-[clamp(46px,6.8dvh,64px)]"
-                  />
-                  <span
-                    className="status-tag rounded-full border px-[clamp(5px,0.8vw,8px)] py-[clamp(1px,0.2dvh,2.5px)] text-[clamp(7px,1dvh,8.5px)] font-black leading-tight mt-[clamp(2px,0.4dvh,4px)]"
-                    style={{
-                      color: config.color,
-                      borderColor: `${config.color}55`,
-                      backgroundColor: `${config.color}12`,
-                    }}
-                  >
-                    {config.role}
-                  </span>
-                </div>
-                <div className="min-w-0">
-                  <div className="flex items-center justify-between gap-1">
-                    <div className="min-w-0">
-                      <div
-                        className="text-[clamp(7.5px,1.05dvh,9px)] font-black uppercase tracking-wider leading-none"
-                        style={{ color: config.color }}
-                      >
-                        {config.code}
-                      </div>
-                      <h3
-                        className="text-[clamp(12.5px,1.7dvh,15px)] font-black leading-tight truncate"
-                        style={{ color: selected ? config.accent : "#e2e8f0" }}
-                      >
-                        {config.name}
-                      </h3>
-                    </div>
-                    {selected && (
-                      <span style={{backgroundColor:config.accent}} className="shrink-0 rounded-full px-[clamp(5px,0.8vw,8px)] py-[clamp(1.5px,0.3dvh,3px)] text-[clamp(7px,1dvh,8.5px)] font-black uppercase text-slate-950">
-                        Đã chọn
-                      </span>
-                    )}
-                  </div>
-                  <p className="mt-[clamp(1px,0.3dvh,3px)] line-clamp-1 text-[clamp(7.5px,1.05dvh,9.5px)] leading-tight text-slate-400">
-                    {config.description}
-                  </p>
-
-                </div>
-              </div>
-              <AircraftSelectionStats stats={stats} />
-              <div className="relative mt-[clamp(4px,0.8dvh,8px)] grid grid-cols-3 gap-[clamp(3px,0.6vw,6px)] border-t border-slate-700/60 pt-[clamp(4px,0.8dvh,8px)]">
-                {config.skillIds.map((skillId) => {
-                  const skill = SKILL_CONFIGS[skillId];
-                  return (
-                    <div
-                      key={skillId}
-                      className="min-w-0 rounded-md bg-slate-950/60 px-[clamp(3px,0.6vw,6px)] py-[clamp(1.5px,0.35dvh,4px)] text-center"
-                    >
-                      <CombatUiIcon kind="skill" id={skillId} fallback={skill.icon} className="!h-7 !w-7" />
-                      <div className="mt-[clamp(1px,0.2dvh,2px)] truncate text-[clamp(7px,0.95dvh,8.5px)] font-black text-slate-300">
-                        {skill.shortName}
-                      </div>
-                      <div className="text-[clamp(6px,0.85dvh,7.5px)] font-bold text-sky-400">
-                        {skill.id === "escort_drone" ? "≥5" : skill.cost} · {skill.cooldown}s
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </button>
-          );
-        })}
-      </div>
-
-      {/* Action Button: XUẤT KÍCH */}
-      <button
-        type="button"
-        onClick={startRun}
-        disabled={!selectedAircraft}
-        data-start-air-combat={selectedAircraft ?? "none"}
-        style={selectedAircraft ? {background:`linear-gradient(110deg, ${AIRCRAFT_CONFIGS[selectedAircraft].color}, ${AIRCRAFT_CONFIGS[selectedAircraft].accent})`,boxShadow:`0 5px 24px ${AIRCRAFT_CONFIGS[selectedAircraft].color}55`} : undefined}
-        className={`mt-[clamp(6px,1.2dvh,14px)] flex h-[clamp(42px,5.8dvh,54px)] w-full items-center justify-center gap-1.5 rounded-xl text-[clamp(13px,1.7dvh,16px)] font-black transition active:scale-[.98] ${
-          selectedAircraft
-            ? "text-slate-950"
-            : "cursor-not-allowed border border-slate-800 bg-slate-900/90 text-slate-500"
-        }`}
-      >
-        <span>{selectedAircraft ? "XUẤT KÍCH" : "Chọn chiến cơ để xuất kích"}</span>
-        <ChevronRight className="h-[clamp(14px,1.9dvh,18px)] w-[clamp(14px,1.9dvh,18px)]" />
-      </button>
-
-      {/* Skill Preview Modal */}
-      <AnimatePresence>{previewConfig && (
-        <AppModal key="preview" archetype="info"
-          onClose={() => setPreviewAircraft(null)}
-          labelledBy="aircraft-preview-title"
-          panelProps={{ "data-aircraft-preview": previewConfig.id } as React.HTMLAttributes<HTMLElement>}
-        >
-            <OverlayHeader className="flex items-start justify-between">
-              <div>
-                <div className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--modal-info)]">
-                  Xem trước kỹ năng · {previewConfig.code}
-                </div>
-                <h3 id="aircraft-preview-title" className="modal-title">{previewConfig.name}</h3>
-              </div>
-              <ModalButton variant="icon"
-                type="button"
-                aria-label="Đóng xem trước kỹ năng"
-                onClick={() => setPreviewAircraft(null)}
-              >
-                <X className="h-4 w-4" />
-              </ModalButton>
-            </OverlayHeader>
-            <OverlayBody>
-              <p className="text-xs leading-relaxed text-[var(--modal-muted)]">
-                {previewConfig.description}
-              </p>
-            <AircraftSelectionStats stats={getEffectiveAircraftStats(createAircraftCombatState(previewConfig.id))} />
-            <div className="mt-3 space-y-1.5">
-              {previewConfig.skillIds.map((skillId, index) => {
-                const skill = SKILL_CONFIGS[skillId];
-                return (
-                  <article
-                    key={skillId}
-                    data-aircraft-preview-skill={skillId}
-                    className="rounded-xl border border-slate-800 bg-slate-900/80 p-2.5"
-                  >
-                    <div className="flex items-center gap-2">
-                      <span className="grid h-8 w-8 place-items-center rounded-lg bg-sky-400/10 text-lg">
-                        <CombatUiIcon kind="skill" id={skillId} fallback={skill.icon} className="!h-8 !w-8" />
-                      </span>
-                      <div className="min-w-0">
-                        <div className="text-xs font-semibold uppercase text-[var(--modal-info)]">
-                          Skill {index + 1}
-                        </div>
-                        <div className="font-semibold text-xs text-[var(--modal-text)]">{skill.name}</div>
-                      </div>
-                      <div className="ml-auto text-right text-xs font-bold text-[var(--modal-muted)]">
-                        <div>{skill.id === "escort_drone" ? "Cần ≥5 Điện · bật không trừ phí" : `${skill.cost} ${previewConfig.resourceKind === "mana" ? "Mana" : "Điện"}`}</div>
-                        <div>{skill.cooldown}s hồi chiêu</div>
-                      </div>
-                    </div>
-                    <p className="mt-1 text-[9.5px] leading-relaxed text-[var(--modal-text)]">
-                      <CoreDescription text={getSkillTooltipModel(createAircraftCombatState(previewConfig.id),skillId).description}/>
-                    </p>
-                  </article>
-                );
-              })}
-            </div>
-            </OverlayBody>
-        </AppModal>
-      )}</AnimatePresence>
+      <AircraftSelection side="player" selected={selectedAircraft} onSelect={chooseAircraft} onConfirm={startRun} />
 
       <p className="mt-2 text-center text-[10px] text-slate-400">Giữ và kéo trên chiến trường để lái · thả tay để đứng yên.<br />Dùng ngón tay thứ hai để kích hoạt kỹ năng.</p>
 

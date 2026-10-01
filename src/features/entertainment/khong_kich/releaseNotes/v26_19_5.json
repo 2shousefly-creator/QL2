@@ -1,9 +1,9 @@
 {
   "version": "26.19.5",
   "releaseDate": "01/10/2026",
-  "title": "Sao Rơi & Thông Báo Trận Đấu",
-  "displayTitle": "KHÔNG KÍCH 26.19.5 — SAO RƠI & THÔNG BÁO TRẬN ĐẤU",
-  "summary": "Sao Rơi nhắm mục tiêu mỗi 0,5 giây. Thông báo kỹ năng, trạng thái, nhận lõi và trang bị dùng chung một vùng hiển thị trong tối đa 3 giây; thông báo mới thay ngay thông báo cũ.",
+  "title": "Sao Rơi, Thông Báo & Chọn Chiến Cơ",
+  "displayTitle": "KHÔNG KÍCH 26.19.5 — SAO RƠI, THÔNG BÁO & CHỌN CHIẾN CƠ",
+  "summary": "Sao Rơi nhắm mục tiêu mỗi 0,5 giây. Thông báo trận đấu dùng chung một vùng hiển thị trong tối đa 3 giây. Màn hình chọn chiến cơ dùng ô sprite và bảng sức mạnh bằng thanh màu, áp dụng khi đi màn và SOLO.",
   "sections": [
     {
       "id": "s1",
@@ -69,6 +69,90 @@
               "format": "bullet",
               "changeType": "change",
               "text": "Tạm dừng hoặc che thông báo không kéo dài thời gian tồn tại."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "GIAO DIỆN · CHỌN CHIẾN CƠ",
+      "icon": {
+        "kind": "system",
+        "id": "stage"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "s3-e1",
+          "icon": {
+            "kind": "aircraft",
+            "id": "black_eagle"
+          },
+          "title": "Chọn chiến cơ bằng sprite",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Màn hình chọn chiến cơ dùng các ô sprite gọn hơn, áp dụng khi đi màn và khi chọn chiến cơ Người Chơi hoặc đối thủ AI trong SOLO."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Chạm một chiến cơ để xem tên, mã, vai trò, mô tả và bộ bốn kỹ năng trong khu vực thông tin bên dưới."
+            }
+          ]
+        },
+        {
+          "id": "s3-e2",
+          "icon": {
+            "kind": "aircraft",
+            "id": "breaker"
+          },
+          "title": "Bảng sức mạnh trực quan",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Thêm bốn thanh sức mạnh trên nền đen: Sát thương màu đỏ, Chống chịu màu xanh lam, Tốc độ bắn màu vàng và Độ khó màu tím."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mỗi chiến cơ có độ dài thanh riêng. Các thanh chỉ hiển thị tên chỉ số và phần màu, không hiển thị điểm, phần trăm hoặc chú thích."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Các thanh tăng dần khi chọn chiến cơ. Khi bật giảm chuyển động, các thanh hiển thị ngay mức tương ứng."
+            }
+          ]
+        },
+        {
+          "id": "s3-e3",
+          "icon": {
+            "kind": "aircraft",
+            "id": "phantom"
+          },
+          "title": "Xác nhận Player và AI",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Nút xác nhận nằm dưới phần thông tin và kỹ năng, phân biệt rõ chọn chiến cơ Player hoặc AI theo bước thiết lập."
+            },
+            {
+              "format": "bullet",
+              "changeType": "unchanged",
+              "text": "SOLO giữ lựa chọn Bí Mật cho đối thủ AI; lựa chọn này không hiển thị thông tin hay thanh sức mạnh của một chiến cơ cụ thể."
+            },
+            {
+              "format": "bullet",
+              "changeType": "unchanged",
+              "text": "Bảng sức mạnh phục vụ giới thiệu chiến cơ; các chỉ số và hiệu ứng chiến đấu không thay đổi."
             }
           ]
         }
