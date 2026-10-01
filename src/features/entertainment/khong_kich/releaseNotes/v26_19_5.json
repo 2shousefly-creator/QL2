@@ -1,0 +1,78 @@
+{
+  "version": "26.19.5",
+  "releaseDate": "01/10/2026",
+  "title": "Sao Rơi & Thông Báo Trận Đấu",
+  "displayTitle": "KHÔNG KÍCH 26.19.5 — SAO RƠI & THÔNG BÁO TRẬN ĐẤU",
+  "summary": "Sao Rơi nhắm mục tiêu mỗi 0,5 giây. Thông báo kỹ năng, trạng thái, nhận lõi và trang bị dùng chung một vùng hiển thị trong tối đa 3 giây; thông báo mới thay ngay thông báo cũ.",
+  "sections": [
+    {
+      "id": "s1",
+      "title": "ASTRA · SAO RƠI",
+      "icon": {
+        "kind": "aircraft",
+        "id": "astra"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "s1-e1",
+          "icon": {
+            "kind": "skill",
+            "id": "starfall"
+          },
+          "title": "Tăng nhịp nhắm",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Giảm thời gian giữa các đợt nhắm từ 1 giây xuống 0,5 giây."
+            },
+            {
+              "format": "bullet",
+              "changeType": "unchanged",
+              "text": "Giữ pha nhắm 1 giây, pha rơi 0,2 giây và khả năng nhắm phân thân Phantom hợp lệ. Khi bắt đầu rơi, dấu ấn ngừng bám mục tiêu."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "GIAO DIỆN · THÔNG BÁO",
+      "icon": {
+        "kind": "system",
+        "id": "stage"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "s2-e1",
+          "icon": {
+            "kind": "system",
+            "id": "stage"
+          },
+          "title": "Một thông báo tại một thời điểm",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Thông báo sử dụng kỹ năng, trạng thái, lỗi sử dụng kỹ năng, nhận lõi và trang bị tồn tại tối đa 3 giây theo thời gian thực."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Thông báo mới thay ngay thông báo cũ. Không xếp chồng hoặc giữ hàng đợi để phát lại thông báo cũ."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Tạm dừng hoặc che thông báo không kéo dài thời gian tồn tại."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

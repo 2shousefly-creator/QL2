@@ -1,3 +1,4 @@
+import { createCombatNotice, publishCombatNotice, COMBAT_NOTICE_DURATION_MS } from "./airCombatNotices";
 import { canTargetEnemy, preferredDuelDecoy } from "./airCombatTargetability";
 import { activeShieldAmount } from "./airCombatFeedback";
 import { mirrorPoint, mirrorVector } from "./airCombatMirrorTransform";
@@ -770,10 +771,9 @@ function circleHit(ax: number, ay: number, ar: number, bx: number, by: number, b
     const radius = ar + br;
     return dx * dx + dy * dy <= radius * radius;
 }
-function setMessage(world: CombatWorld, message: string, seconds = 1.6): void {
-    world.latestMessage = message;
-    world.messageUntil = world.elapsed + seconds;
-    world.announcement = { serial: world.announcement.serial + 1, text: message, durationMs: seconds * 1000, expiresAtMs: performance.now() + seconds * 1000 };
+function setMessage(world: CombatWorld, message: string, _seconds = 3): void {
+    // Keep hook signatures compatible; every transient notice now has one duration.
+    publishCombatNotice(world, message);
 }
 export function createCombatRandom(seed = Date.now() >>> 0): () => number {
     return () => { seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0; return seed / 0x100000000; };
@@ -856,8 +856,8 @@ function createAircraftWorld(aircraftId: AircraftId, random: () => number, stage
         coreSelectionCount: 0,
         currentCoreChoices: null,
         latestMessage: "ĐỢT 1",
-        messageUntil: 1.5,
-        announcement: { serial: 1, text: "ĐỢT 1", durationMs: 1500, expiresAtMs: performance.now() + 1500 },
+        messageUntil: COMBAT_NOTICE_DURATION_MS / 1000,
+        announcement: createCombatNotice(1, "ĐỢT 1"),
         ended: false,
         pools: { enemies: [], projectiles: [], particles: [], decoys: [] },
         random,

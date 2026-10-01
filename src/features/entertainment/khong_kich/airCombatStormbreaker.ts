@@ -1,3 +1,4 @@
+import { publishCombatNotice } from "./airCombatNotices";
 import { GAMEPLAY_SAFE_RECT as RECT, stageEnemyConfig } from "./airCombatConfig";
 import { bossMinCenterY } from "./airCombatHudLayout";
 import { clampHitboxToGameplayRect, getEnemyHitbox } from "./airCombatHitboxes";
@@ -369,7 +370,7 @@ export function onStormEnemyDamage(w: CombatWorld, e: EnemyEntity, hpDamage: num
   }
   if (e.type === "thunder_bastion" && s.shieldArmed && shieldBefore > 0 && e.shield <= 0) {
     s.shieldArmed = false; s.breakUntil = w.elapsed + 3; stormFx(w, "stormNodeBreak", e.x, e.y, 100, .6);
-    w.latestMessage="CONDUCTOR BREAK";w.messageUntil=w.elapsed+1.2;
+    publishCombatNotice(w, "CONDUCTOR BREAK");
   }
   if (w.elapsed >= s.hitAt) { stormFx(w, "stormRailImpact", e.x, e.y, e.radius * 1.3, .18); s.hitAt = w.elapsed + .12; }
 }

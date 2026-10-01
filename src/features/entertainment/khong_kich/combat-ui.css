@@ -749,3 +749,7 @@
 .air-solo-lineup [data-side=player] span{color:#67e8f9}
 .air-solo-lineup [data-side=ai] span{color:#fda4af}
 .air-solo-lineup [data-current=true]{border-color:var(--solo-side-accent)}
+
+/* Skill/status and acquisition messages share one node: the next replaces the last. */
+.air-core-toasts[data-notice=combat]{left:50%;top:21%;transform:translateX(-50%);z-index:10}
+.air-core-toasts[data-notice=combat] .air-core-toast{position:relative;white-space:normal;text-align:center;border:1px solid #67e8f966;border-radius:999px;background:#000e;padding:6px 12px;color:#cffafe;font-size:9px;font-weight:900;letter-spacing:.05em;text-transform:uppercase;box-shadow:0 4px 12px #0833444d}

@@ -97,7 +97,7 @@ export function applyCore(state: AircraftCombatState, card: CoreCard, random: ()
         state.coreState.encounteredCoreIds.add(core.id);
         state.selectedCores.push(core.id);
         if("owner" in item)recordCoreMetric(state,item.owner,"converted",1);
-        state.coreState.acquisitions.push({ id: state.coreState.nextAcquisitionId++, kind: "core", coreId: core.id, conversionSourceCoreId:item.conversionSourceCoreId });
+        state.coreState.acquisitions.push({ id: state.coreState.nextAcquisitionId++, createdAtMs: performance.now(), kind: "core", coreId: core.id, conversionSourceCoreId:item.conversionSourceCoreId });
         if(core.id==="core_223"||core.id==="core_224"||core.id==="core_225"||core.id==="core_226"){
           const count=core.id==="core_223"?2:core.id==="core_224"?1:core.id==="core_225"?3:6;
           if(!equipmentRewardsLocked(state)){

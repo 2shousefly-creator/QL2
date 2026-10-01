@@ -1,3 +1,4 @@
+import { publishCombatNotice } from "./airCombatNotices";
 import { rankEnemyFireRate } from "./airCombatRankRuntime";
 import { bossMinCenterY } from "./airCombatHudLayout";
 import type { StatusPayload, DamageDelivery, Allegiance, AttackMetadata } from "./airCombatStatus";
@@ -177,7 +178,7 @@ export function guardianDestroyed(w: CombatWorld, e: EnemyEntity) {
   w.magnetic!.guardBroken = true;
   magneticImpact(w, boss.x, boss.y, 5);
   magneticFx(w, "shieldFlare", boss.x, boss.y, 220, .65);
-  w.latestMessage = "MAGNETIC GUARD BROKEN"; w.messageUntil = w.elapsed + 2;
+  publishCombatNotice(w, "MAGNETIC GUARD BROKEN");
 }
 export function updateMagneticEnemy(w: CombatWorld, e: EnemyEntity, dt: number, h: MagneticHooks): boolean {
   if (!w.magnetic || e.type === "kamikaze") return false;

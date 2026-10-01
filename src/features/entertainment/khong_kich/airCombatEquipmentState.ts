@@ -8,7 +8,7 @@ export const EQUIPMENT_PAGE_SIZE = EQUIPMENT_GRID_COLUMNS * EQUIPMENT_GRID_ROWS;
 export interface EquipmentInstance { instanceId: number; definitionId: EquipmentDefinitionId }
 export type EquipmentRewardId = EquipmentDefinitionId | "VP01";
 export type CoreConversionSource = "core_050" | "core_051" | "core_052" | "core_216";
-export type AcquisitionEvent = { id: number; kind: "core"; coreId: string; conversionSourceCoreId?: CoreConversionSource } | { id: number; kind: "equipment" | "item"; definitionId: EquipmentRewardId; source: string; x?: number; y?: number };
+export type AcquisitionEvent = ({ id: number; kind: "core"; coreId: string; conversionSourceCoreId?: CoreConversionSource } | { id: number; kind: "equipment" | "item"; definitionId: EquipmentRewardId; source: string; x?: number; y?: number }) & { createdAtMs?: number };
 export interface EquipmentEffectState { cooldownPending?: boolean; bonusUntil?: number; progress?: number; empowered?: boolean; stacks: number; until: number; ready: number; value: number; tick: number; count: number; duration: number }
 export interface EquipmentMark { until: number; stacks: number; tick: number }
 export interface EquipmentVisual { id: number; family: number; x: number; y: number; fromX?: number; fromY?: number; size: number; start: number; duration: number; target?: number; player?: boolean; legendary?: boolean }
@@ -78,7 +78,7 @@ function receiveEquipmentReward(s: AircraftCombatState, id: EquipmentRewardId, s
     const item={instanceId:e.nextInstanceId++,definitionId:id};
     (EQUIPMENT_CATALOG[id].rarity === "component" ? e.components : e.completed).push(item);
   }
-  s.coreState.acquisitions.push({id:s.coreState.nextAcquisitionId++,kind:id === "VP01" ? "item" : "equipment",definitionId:id,source,...position});
+  s.coreState.acquisitions.push({id:s.coreState.nextAcquisitionId++,createdAtMs:performance.now(),kind:id === "VP01" ? "item" : "equipment",definitionId:id,source,...position});
   clampEquipmentPages(e);
   return true;
 }

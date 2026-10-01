@@ -12,7 +12,7 @@ import {
   SkillId,
 } from "./airCombatTypes";
 
-export const STARFALL_TIMING = { aim: 1, fall: .2, interval: 1 } as const;
+export const STARFALL_TIMING = { aim: 1, fall: .2, interval: .5 } as const;
 
 export const AIR_COMBAT_WORLD = {
   width: 360,

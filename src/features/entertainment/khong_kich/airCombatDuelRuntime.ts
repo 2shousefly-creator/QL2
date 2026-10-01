@@ -1,3 +1,4 @@
+import { COMBAT_NOTICE_DURATION_MS } from "./airCombatNotices";
 import { equipmentState } from "./airCombatEquipmentState";
 import { EQUIPMENT_CATALOG } from "./airCombatEquipmentCatalog";
 import { AIRCRAFT_CONFIGS, getCoreDefinition, AIRCRAFT_ORDER, CORE_DEFINITIONS, GAMEPLAY_SAFE_RECT as R } from "./airCombatConfig";
@@ -17,7 +18,7 @@ import type { RerollSource } from "./airCombatSelectionRules";
 import type { AircraftId, CoreCard, SkillId, SkillCastResult } from "./airCombatTypes";
 
 export interface SoloSetup { aircraft: AircraftId; opponent: AircraftId | "secret"; rule: SoloRule }
-export interface SoloAcquisitionAnnouncement { id: number; text: string; durationMs: number }
+export interface SoloAcquisitionAnnouncement { id: number; text: string; durationMs: number; createdAtMs: number }
 export interface SoloMatch {
   acquisitionQueue: SoloAcquisitionAnnouncement[]; nextAcquisitionId: number;
   roundOutcomeLocked: boolean; aftermathRemaining: number;
@@ -185,7 +186,7 @@ export function castSoloSkill(match: SoloMatch, skill: SkillId): SkillCastResult
   return { cast: false, reason: "invalid", resourceSpent: 0 };
 }
 function enqueueAcquisition(match: SoloMatch, reward: string) {
-  match.acquisitionQueue.push({id:match.nextAcquisitionId++,text:`${AIRCRAFT_CONFIGS[match.opponent.aircraft.aircraftId].name} AI đã nhận được ${reward}`,durationMs:1600});
+  match.acquisitionQueue.push({id:match.nextAcquisitionId++,createdAtMs:performance.now(),text:`${AIRCRAFT_CONFIGS[match.opponent.aircraft.aircraftId].name} AI đã nhận được ${reward}`,durationMs:COMBAT_NOTICE_DURATION_MS});
 }
 function enqueueCoreAcquisitions(match: SoloMatch, firstSerial: number) {
   for (const event of match.opponent.aircraft.coreState.acquisitions) if (event.id >= firstSerial && event.kind === "core") {
