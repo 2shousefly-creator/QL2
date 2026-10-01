@@ -23,6 +23,7 @@ export function AirCombatSoloBattle({ match, reducedMotion, onComplete, onMenu }
   const runtime = useMemo<AirCombatBattleRuntime>(() => {
     return ({
       getWorld: () => match.world,
+      getOpponentWorld: () => match.opponent,
       takeAnnouncements: () => match.acquisitionQueue.splice(0),
       getPhase: () => match.phase,
       canMove: () => ["countdown", "combat", "sudden_death"].includes(match.phase),

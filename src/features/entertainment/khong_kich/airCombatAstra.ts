@@ -1,4 +1,4 @@
-import { canTargetEnemy } from "./airCombatTargetability";
+import { canTargetEnemy, duelDecoyTargets } from "./airCombatTargetability";
 import { skillRank } from "./airCombatSkillRanks";
 import { AIR_COMBAT_WORLD, GAMEPLAY_SAFE_RECT, STARFALL_TIMING } from "./airCombatConfig";
 import { playerAirframeScale } from "./airCombatReleaseState";
@@ -11,7 +11,7 @@ import type { CombatWorld, EnemyEntity, ProjectileEntity } from "./airCombatRunt
 import type { SkillId } from "./airCombatTypes";
 
 export const isAstraSkill = (id:SkillId) => id === "orbit_reversal" || id === "stellar_lance" || id === "starfall";
-export interface AstraMeteor { id:number; target:number; x:number; y:number; at:number; fallDuration:number; doom:boolean; frozen:boolean }
+export interface AstraMeteor { id:number; target:number; decoy?:{world:CombatWorld;id:number}; x:number; y:number; at:number; fallDuration:number; doom:boolean; frozen:boolean }
 export interface OrbitReleaseBullet { id:number; x:number; y:number; lane:number; launchAt:number; fired:boolean }
 export interface OrbitRelease { expansionCast?: ExpansionCast; at:number; damage:number; bullets:OrbitReleaseBullet[] }
 /** Shared phase even in Reduced Motion: suppress trails, never move the capture snapshot. */
@@ -57,7 +57,7 @@ export interface AstraRuntime {
   orbit?:{expansionCast?:ExpansionCast;until:number;captured:number;refunded:number};
   orbitReleases?:OrbitRelease[];
   charge?:{expansionCast?:ExpansionCast;at:number;startedAt:number;duration:number;stack:number};
-  starfall?:{expansionCast?:ExpansionCast;next:number;locks:number;count:number;rank:number;stopped:boolean;marked:Set<number>;pending:AstraMeteor[];refunded:number};
+  starfall?:{expansionCast?:ExpansionCast;next:number;locks:number;count:number;rank:number;stopped:boolean;marked:Set<string>;pending:AstraMeteor[];refunded:number};
   burns:{expansionCast?:ExpansionCast;id:number;x:number;y:number;radius:number;until:number;next:number}[];
   impacts:{id:number;x:number;y:number;radius:number;at:number;doom:boolean}[];
 }
@@ -167,29 +167,37 @@ export function updateAstra(w:CombatWorld,_dt:number,h:AstraHooks) {
   r.meteorSpears=r.meteorSpears?.filter(beam=>now<beam.beamEndsAt);
   const f=r.starfall;
   if(f) {
+    const decoys = duelDecoyTargets(w);
     // World RNG selects only live opposing units; a cast never reassigns an existing marker.
     if(!f.stopped&&f.locks<f.count&&now+1e-8>=f.next) {
       const hostiles = w.enemies.filter(e => e.hp > 0 && h.hostile(w, e));
-      const pool = hostiles.filter(e => canTargetEnemy(w, e));
+      const pool: { id:number; x:number; y:number; key:string; decoy?:{world:CombatWorld;id:number} }[] = [
+        ...hostiles.filter(e => canTargetEnemy(w, e)).map(e => ({id:e.id,x:e.x,y:e.y,key:"enemy:"+e.id})),
+        ...decoys.filter(d=>hostiles.some(e=>e.id===d.ownerId)).map(d => ({
+          id:d.ownerId,x:d.x,y:d.y,key:"decoy:"+d.ownerId+":"+d.id,decoy:{world:d.world,id:d.id},
+        })),
+      ];
       if (!pool.length) {
         // A temporary loss of targetability must not cancel uncalled meteors.
         // Keep the remaining count and retry at the normal cadence, without a catch-up burst.
         if (hostiles.length) f.next = now + STARFALL_TIMING.interval;
         else f.stopped = true;
       } else {
-        const fresh=pool.filter(e=>!f.marked.has(e.id)),targets=fresh.length?fresh:pool;
+        const fresh=pool.filter(e=>!f.marked.has(e.key)),targets=fresh.length?fresh:pool;
         const e=targets[Math.min(targets.length-1,Math.floor(w.random()*targets.length))];
-        astraMetric(w,f.marked.has(e.id)?"starfall.repeatedMarks":"starfall.uniqueTargets");
+        astraMetric(w,f.marked.has(e.key)?"starfall.repeatedMarks":"starfall.uniqueTargets");
         const doom=f.rank>=3&&f.locks===f.count-1,fallDuration=STARFALL_TIMING.fall;
-        f.marked.add(e.id);f.pending.push({id:w.nextId++,target:e.id,x:e.x,y:e.y,at:now+STARFALL_TIMING.aim+fallDuration,fallDuration,doom,frozen:false});
+        f.marked.add(e.key);f.pending.push({id:w.nextId++,target:e.id,decoy:e.decoy,x:e.x,y:e.y,at:now+STARFALL_TIMING.aim+fallDuration,fallDuration,doom,frozen:false});
         f.locks++;f.next=now+STARFALL_TIMING.interval;astraMetric(w,"starfall.locks");
       }
     }
     for(let i=f.pending.length-1;i>=0;i--) {
-      const m=f.pending[i],target=w.enemies.find(e=>e.id===m.target);
+      const m=f.pending[i],target=m.decoy
+        ? decoys.find(d=>d.world===m.decoy!.world&&d.id===m.decoy!.id)
+        : w.enemies.find(e=>e.id===m.target&&canTargetEnemy(w,e));
       // The final aim sample commits a ground point. Never follow the target in flight.
       if(!m.frozen){
-        if(target&&canTargetEnemy(w,target)){m.x=target.x;m.y=target.y;}else m.frozen=true;
+        if(target){m.x=target.x;m.y=target.y;}else m.frozen=true;
         if(now+1e-8>=m.at-m.fallDuration)m.frozen=true;
       }
       if(now+1e-8<m.at)continue;
@@ -219,5 +227,5 @@ export function updateAstra(w:CombatWorld,_dt:number,h:AstraHooks) {
 }
 /** Freeze before pooled enemy entities are recycled. */
 export function freezeAstraTarget(w:CombatWorld,e:EnemyEntity) {
-  for(const m of w.astra?.starfall?.pending??[])if(m.target===e.id&&!m.frozen){m.x=e.x;m.y=e.y;m.frozen=true;}
+  for(const m of w.astra?.starfall?.pending??[])if(!m.decoy&&m.target===e.id&&!m.frozen){m.x=e.x;m.y=e.y;m.frozen=true;}
 }

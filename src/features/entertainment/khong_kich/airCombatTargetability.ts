@@ -19,6 +19,16 @@ export const canMaintainDuelTarget = canAcquireDuelTarget;
 export function canTargetEnemy(world: CombatWorld, enemy: EnemyEntity, mode: AircraftTargetingMode = "aimed") {
   return !world.aftermath && enemy.hp > 0 && (!enemy.aircraftTarget || canAcquireDuelTarget(world, enemy.aircraftTarget.world, mode));
 }
+/** All active opposing decoys, including Phantom clones; never the caster's own. */
+export function duelDecoyTargets(world: CombatWorld) {
+  if (world.aftermath) return [];
+  return world.enemies.flatMap(enemy => {
+    const defender = enemy.aircraftTarget?.world;
+    if (!defender || enemy.hp <= 0 || defender.destruction || defender.aircraft.currentHp <= 0) return [];
+    return defender.decoys.filter(d => d.active && d.remaining > 0)
+      .map(d => ({ ...mirrorPoint(d.x, d.y), id: d.id, ownerId: enemy.id, world: defender }));
+  });
+}
 /** Opposing decoys keep their own identity and are projected into the attacker's coordinates.
  * Collision/absorption remains owned by the existing mirrored interception path. */
 export function preferredDuelDecoy(world: CombatWorld, retained?: { world: CombatWorld; id: number }) {

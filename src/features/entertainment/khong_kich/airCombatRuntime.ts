@@ -4327,7 +4327,7 @@ export function revalidateAircraftTargets(world: CombatWorld): void {
             if(!decoy)projectile.angularVelocity=0;
         }
     }
-    for (const meteor of world.astra?.starfall?.pending ?? []) if (!legal(meteor.target)) meteor.frozen = true;
+    for (const meteor of world.astra?.starfall?.pending ?? []) if (!meteor.decoy && !legal(meteor.target)) meteor.frozen = true;
 }
 
 export const AIRCRAFT_AFTERMATH_SECONDS = 3;

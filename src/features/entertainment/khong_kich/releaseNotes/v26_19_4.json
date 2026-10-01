@@ -1,0 +1,99 @@
+{
+  "version": "26.19.4",
+  "releaseDate": "01/10/2026",
+  "title": "Sao Rơi & Giao Diện SOLO",
+  "displayTitle": "KHÔNG KÍCH 26.19.4 — SAO RƠI & GIAO DIỆN SOLO",
+  "summary": "Sao Rơi nhắm mục tiêu mỗi 1 giây và có thể chọn cả mồi, phân thân Phantom hợp lệ của đối phương. SOLO bổ sung tab Người Chơi/AI trong danh sách lõi và Kho Trang Bị, ảnh nền cho các màn chọn và phân biệt rõ chiến cơ của bạn với đối thủ AI.",
+  "sections": [
+    {
+      "id": "s1",
+      "title": "ASTRA · SAO RƠI",
+      "icon": {
+        "kind": "aircraft",
+        "id": "astra"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "s1-e1",
+          "icon": {
+            "kind": "skill",
+            "id": "starfall"
+          },
+          "title": "Nhịp nhắm & mục tiêu hợp lệ",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Giảm thời gian giữa các đợt nhắm từ 1,5 giây xuống 1 giây."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Sao Rơi có thể nhắm mọi mục tiêu hợp lệ, kể cả mồi và phân thân Phantom đang hoạt động của đối phương. Dấu ấn bám đúng phân thân được chọn, không chuyển sang chiến cơ thật."
+            },
+            {
+              "format": "bullet",
+              "changeType": "unchanged",
+              "text": "Giữ pha nhắm 1 giây và pha rơi 0,2 giây. Khi bắt đầu rơi hoặc mất mục tiêu hợp lệ, dấu ấn cố định tại vị trí cuối cùng và tồn tại đến va chạm."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "SOLO 1v1 · GIAO DIỆN",
+      "icon": {
+        "kind": "system",
+        "id": "aircraft"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "s2-e1",
+          "icon": {
+            "kind": "system",
+            "id": "core"
+          },
+          "title": "Danh sách lõi & Kho Trang Bị",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Thêm hai tab Người Chơi và AI vào danh sách lõi đã chọn và Kho Trang Bị. Mỗi tab hiển thị đúng dữ liệu, chi tiết và thống kê của chiến cơ tương ứng bằng giao diện hiện tại."
+            },
+            {
+              "format": "bullet",
+              "changeType": "unchanged",
+              "text": "Kho Trang Bị SOLO tiếp tục chỉ xem; quy luật nhận và sử dụng trang bị không thay đổi."
+            }
+          ]
+        },
+        {
+          "id": "s2-e2",
+          "icon": {
+            "kind": "system",
+            "id": "stage"
+          },
+          "title": "Màn chọn chế độ & chiến cơ",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Bổ sung ảnh nền cho màn chọn Chiến Dịch/SOLO 1v1, chọn chiến cơ SOLO và chọn quy luật Ngẫu Nhiên/Sao Chép."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Phân biệt rõ bước chọn Người Chơi và Đối Thủ AI bằng tiêu đề, nhãn hai bên, màu nhận diện và nút xác nhận riêng. Luôn hiển thị chiến cơ đã chọn của mỗi bên trong quá trình thiết lập."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

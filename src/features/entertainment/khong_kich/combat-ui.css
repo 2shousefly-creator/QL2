@@ -720,3 +720,32 @@
 .air-solo-round-overlay{position:absolute;inset:0 0 11.1111%;pointer-events:none;z-index:10}
 .air-solo-round-clock{position:absolute;top:19%;left:0;right:0;display:flex;justify-content:center;gap:18px;font-size:11px;color:#e2e8f0;text-shadow:0 1px 4px #000}
 .air-hub-number strong[data-solo-score=true]{font-size:clamp(7px,2vw,11px);white-space:nowrap}
+
+/* SOLO inspection reuses the existing panels; only this owner selector is new. */
+.air-combat-side-tabs{display:flex;gap:6px;width:100%;margin-top:8px;flex-shrink:0}
+.air-combat-side-tabs button{flex:1;min-height:34px;padding:6px 12px;border:1px solid #475569;border-radius:6px;background:#101b2b;color:#cbd5e1;font-size:12px;font-weight:700}
+.air-combat-side-tabs button[aria-selected=true]{border-color:#67e8f9;background:#164e63;color:#ecfeff}
+.air-combat-side-tabs button:focus-visible{outline:2px solid #f8fafc;outline-offset:2px}
+
+/* Existing raster environments support all three SOLO setup steps and mode selection. */
+.air-solo-fullscreen.air-solo-selection-surface{background:linear-gradient(180deg,#050d1d70,#050d1dcc),url('../../../assets/khong-kich/stage2/main-menu-sky.png') center/cover no-repeat}
+.air-solo-fullscreen.air-solo-selection-surface[data-solo-screen=solo_setup]{background-image:linear-gradient(180deg,#050d1d88,#050d1de0),url('../../../assets/khong-kich/solo/solo-duel-arena.png')}
+.air-solo-selection-surface .air-solo-setup nav{background:#080d15ed;border-radius:10px;padding:6px}
+.air-solo-selection-surface .air-solo-setup header{text-shadow:0 2px 12px #000}
+.air-solo-setup[data-selection-side]{--solo-side-accent:#67e8f9}
+.air-solo-setup[data-selection-side=ai]{--solo-side-accent:#fda4af}
+.air-solo-setup[data-selection-side=rules]{--solo-side-accent:#c4b5fd}
+.air-solo-setup[data-selection-side] button[aria-pressed=true]{border-color:var(--solo-side-accent);box-shadow:0 0 0 1px var(--solo-side-accent) inset;background:#263345}
+.air-solo-selection-hint{font-size:13px;line-height:1.5;margin-top:8px;color:#e2e8f0}
+.air-solo-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;list-style:none;padding:0;margin:0}
+.air-solo-steps li{display:flex;align-items:center;justify-content:center;gap:6px;padding:8px 4px;border-bottom:2px solid #475569;background:#0b1424cf;color:#94a3b8;font-size:11px;font-weight:700}
+.air-solo-steps li span{display:grid;place-items:center;flex-shrink:0;width:20px;height:20px;border:1px solid currentColor;border-radius:50%}
+.air-solo-steps li[aria-current=step]{color:var(--solo-side-accent);border-color:var(--solo-side-accent)}
+.air-solo-steps li[data-complete=true]{color:#e2e8f0}
+.air-solo-lineup{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.air-solo-lineup>div{min-width:0;padding:10px 12px;border:1px solid #475569;border-radius:10px;background:#0b1424e8}
+.air-solo-lineup span{display:block;font-size:10px;font-weight:800;letter-spacing:.04em}
+.air-solo-lineup strong{display:block;font-size:16px;margin-top:4px}
+.air-solo-lineup [data-side=player] span{color:#67e8f9}
+.air-solo-lineup [data-side=ai] span{color:#fda4af}
+.air-solo-lineup [data-current=true]{border-color:var(--solo-side-accent)}

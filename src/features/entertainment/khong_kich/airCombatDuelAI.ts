@@ -14,7 +14,7 @@ type Intent = "evade" | "kite" | "pressure" | "reposition" | "hold-angle" | "com
 export type DuelThreatKind = "ballistic" | "homing" | "beam" | "lane" | "aoe" | "persistent_zone" | "dash" | "full_screen" | "wave";
 interface Bullet extends Point { vx:number; vy:number; damage:number; homing:boolean; radius:number; turnRate:number; lifetime:number; capturable:boolean }
 interface Hazard extends Point { kind:DuelThreatKind; radius:number; cc:boolean; end?:Point; startsAt:number; endsAt:number; tracksUntil?:number; velocity?:Point; wave?:{radius:number;at:number} }
-interface Perception { targetProtected:boolean; targetVisible:boolean; at:number; player:Point; playerHp:number; velocity:Point; bullets:Bullet[]; hazards:Hazard[]; lastBurst:number }
+interface Perception { hasStarfallTarget:boolean; targetProtected:boolean; targetVisible:boolean; at:number; player:Point; playerHp:number; velocity:Point; bullets:Bullet[]; hazards:Hazard[]; lastBurst:number }
 interface DuelTacticalPlan { kind:string; startedAt:number; expiresAt:number; nextSkill?:SkillId }
 export interface MirrorAI {
   nextSense:number; nextDecision:number; history:Perception[]; observedCasts:Partial<Record<SkillId,number>>;
@@ -145,7 +145,7 @@ function skillUtility(id: SkillId, s: AircraftCombatState, ai: MirrorAI, p: Poin
     return -Infinity;
   }
   const defensive = ["decoy", "armor_shield", "invisibility", "electronic_interference", "orbit_reversal"].includes(id);
-  if (!seen.targetVisible && !defensive) return -Infinity;
+  if (!seen.targetVisible && !defensive && !(id==="starfall"&&seen.hasStarfallTarget)) return -Infinity;
   if (["focus_laser", "sweeping_cannon", "stellar_lance"].includes(id) && (!ahead || firing < .5)) return -Infinity;
   const combo = (setup: SkillId) => ai.lastCast === setup && ai.lastCastAt !== undefined && actor.elapsed - ai.lastCastAt <= 2;
   const stats = getEffectiveAircraftStats(s), values = getSkillRuntimeValues(s, id), hp = s.currentHp / stats.maxHp;
@@ -231,7 +231,7 @@ function perceive(w:CombatWorld,ai:MirrorAI,p:Point,actor:CombatWorld) {
   // BigBang's visible traveling missile is a full-arena threat, not a local circle.
   for(const bomb of visible.filter(b=>b.bigBang).slice(0,2))hazards.push({kind:"full_screen",x:p.x,y:p.y,radius:Infinity,cc:true,startsAt:w.elapsed+Math.max(0,1-bomb.missileAge),endsAt:w.elapsed+bomb.lifetime});
   for(const m of (w.astra?.starfall?.pending??[]).slice(0,4)){
-    const followsPilot=!m.frozen&&w.enemies.some(e=>e.id===m.target&&e.aircraftTarget?.world===actor);
+    const followsPilot=!m.decoy&&!m.frozen&&w.enemies.some(e=>e.id===m.target&&e.aircraftTarget?.world===actor);
     hazards.push({kind:"aoe",x:m.x,y:m.y,radius:m.doom?110:skillRank(w.aircraft,"starfall")>=2?65:45,cc:false,
       startsAt:m.at,endsAt:m.at+.08,tracksUntil:followsPilot?m.at-m.fallDuration:undefined,velocity:followsPilot?{x:ai.vx,y:ai.vy}:undefined});
   }
@@ -246,7 +246,7 @@ function perceive(w:CombatWorld,ai:MirrorAI,p:Point,actor:CombatWorld) {
   }
   if(w.astra?.charge)hazards.push({kind:"beam",x:w.playerX,y:w.playerY,end:{x:w.playerX,y:R.top},radius:6,cc:false,startsAt:w.astra.charge.at,endsAt:w.astra.charge.at+.6});
   for(const b of visible.filter(b=>b.skillId==="stellar_lance").slice(0,2))hazards.push({kind:"beam",x:b.x,y:b.y,end:{x:b.x+b.vx*.6,y:b.y+b.vy*.6},radius:b.radius,cc:false,startsAt:w.elapsed,endsAt:w.elapsed+Math.min(.6,b.lifetime)});
-  ai.history.push({targetProtected:(w.aircraft.activeEffects.armor_shield??0)>.4||(skillRank(w.aircraft,"orbit_reversal")>=4&&(w.aircraft.activeEffects.orbit_reversal??0)>.4),targetVisible,at:w.elapsed,player,playerHp:targetVisible?w.aircraft.currentHp:ai.lastPlayerHp,velocity,bullets,hazards:hazards.slice(0,24),
+  ai.history.push({hasStarfallTarget:targetVisible||w.decoys.some(d=>d.active&&d.remaining>0),targetProtected:(w.aircraft.activeEffects.armor_shield??0)>.4||(skillRank(w.aircraft,"orbit_reversal")>=4&&(w.aircraft.activeEffects.orbit_reversal??0)>.4),targetVisible,at:w.elapsed,player,playerHp:targetVisible?w.aircraft.currentHp:ai.lastPlayerHp,velocity,bullets,hazards:hazards.slice(0,24),
     lastBurst:latest(["missile_swarm","sweeping_cannon","focus_laser","starfall"])});
   ai.history=ai.history.slice(-10);ai.lastSampleAt=w.elapsed;ai.lastSampleWallMs=wall;ai.nextSense=w.elapsed+1/30;
 }
@@ -336,7 +336,8 @@ export function updateMirrorAI(w:CombatWorld,ai:MirrorAI,s:AircraftCombatState,p
   const dvx=desiredX-ai.vx,dvy=desiredY-ai.vy,turn=Math.min(1,1400*dt/(Math.hypot(dvx,dvy)||1));
   ai.vx+=dvx*turn;ai.vy+=dvy*turn;
   // Skill execution never locks the pilot. Runtime stun/dash rules still own movement.
-  if (skill && !aircraftTargetability(w.aircraft).canAcquire && ["predator_lock","missile_swarm","focus_laser","stellar_lance","starfall"].includes(skill)) skill = undefined;
+  if (skill && !aircraftTargetability(w.aircraft).canAcquire && ["predator_lock","missile_swarm","focus_laser","stellar_lance"].includes(skill)) skill = undefined;
+  if (skill==="starfall"&&!aircraftTargetability(w.aircraft).canAcquire&&!w.decoys.some(d=>d.active&&d.remaining>0)) skill=undefined;
   if (actor.aftermath || actor.destruction || s.currentHp <= 0) return {...p};
   return {...bounded({x:p.x+ai.vx*dt,y:p.y+ai.vy*dt}),skill};
 }

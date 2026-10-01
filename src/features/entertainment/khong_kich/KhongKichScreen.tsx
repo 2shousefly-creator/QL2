@@ -204,7 +204,7 @@ const KhongKichContent: React.FC<KhongKichScreenProps> = ({
 
   const launchSolo = (setup: SoloSetup) => { setSolo(createSoloMatch(setup)); setPhase("solo_match"); };
   const soloMenu = () => { setSolo(null); setPhase("menu"); };
-  if (phase === "mode" || phase === "solo_setup" || phase === "solo_result") return <ExclusiveFullscreenOverlay ariaLabel="Không Kích SOLO" className={motionClass + " air-solo-fullscreen"}>
+  if (phase === "mode" || phase === "solo_setup" || phase === "solo_result") return <ExclusiveFullscreenOverlay ariaLabel="Không Kích SOLO" className={motionClass + " air-solo-fullscreen" + (phase !== "solo_result" ? " air-solo-selection-surface" : "")} data-solo-screen={phase}>
     {phase === "mode" && <AirCombatModeSelect onCampaign={() => { setSelectedStage(defaultSelectedStage(profile.campaign)); setPhase("stages"); }} onSolo={() => setPhase("solo_setup")} onBack={() => setPhase("menu")} />}
     {phase === "solo_setup" && <AirCombatSoloSetup onStart={launchSolo} onBack={() => setPhase("mode")} onMenu={soloMenu} />}
     {phase === "solo_result" && solo && <AirCombatSoloResult match={solo} onRematch={() => launchSolo(solo.setup)} onMenu={soloMenu} />}

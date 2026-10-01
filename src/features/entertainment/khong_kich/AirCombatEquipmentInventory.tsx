@@ -1,3 +1,4 @@
+import { AirCombatSideTabs, type CombatInspectionSide } from "./AirCombatSideTabs";
 import { useIsPresent } from "motion/react";
 import { createPortal } from "react-dom";
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
@@ -115,7 +116,14 @@ function CraftFlight({ flight, onArrive }: { flight: Flight; onArrive: () => voi
   }, [flight]);
   return createPortal(<div ref={node} className="equipment-craft-flight" style={{ left: flight.from.left, top: flight.from.top, width: flight.from.width }}><EquipmentIcon id={flight.id} inventory /></div>, document.body);
 }
-export function AirCombatEquipmentInventory({ world, onClose, onChange, readOnly = false }: { readOnly?: boolean; world: CombatWorld; onClose: () => void; onChange: () => void }) {
+interface EquipmentInventoryProps { readOnly?: boolean; world: CombatWorld; onClose: () => void; onChange: () => void }
+export function AirCombatEquipmentInventory({ opponentWorld, ...props }: EquipmentInventoryProps & { opponentWorld?: CombatWorld }) {
+  const [side, setSide] = useState<CombatInspectionSide>("player");
+  return <EquipmentInventoryContent {...props} world={side === "ai" && opponentWorld ? opponentWorld : props.world}
+    readOnly={!!opponentWorld || props.readOnly} side={opponentWorld ? side : undefined}
+    tabs={opponentWorld ? <AirCombatSideTabs value={side} onChange={setSide} panelId="air-equipment-side-panel" /> : undefined} />;
+}
+function EquipmentInventoryContent({ world, onClose, onChange, readOnly = false, tabs, side }: EquipmentInventoryProps & { tabs?: React.ReactNode; side?: CombatInspectionSide }) {
   const present = useIsPresent();
   const s = world.aircraft, q = equipmentState(s);
   const equippedRegion = useRef<HTMLElement>(null), craftRegion = useRef<HTMLElement>(null), craftSlots = useRef<(HTMLDivElement | null)[]>([]);
@@ -153,6 +161,10 @@ export function AirCombatEquipmentInventory({ world, onClose, onChange, readOnly
   const [drag, setDrag] = useState<Drag | null>(null), [clock, setClock] = useState(() => performance.now() / 1000), [extraction, setExtraction] = useState(0), [, refresh] = useState(0);
   const [feedback, setFeedback] = useState<{ text: string; until: number } | null>(null), [flights, setFlights] = useState<Flight[]>([]), [impact, setImpact] = useState<{ slot: number; until: number } | null>(null);
   const flightId = useRef(0);
+  useLayoutEffect(() => {
+    setSelection(null); setTooltip(null); setDrag(null); setFlights([]);
+    setFeedback(null); setImpact(null); setExtraction(0);
+  }, [s]);
   useEffect(() => {
     if (!present) { setDrag(null); setTooltip(null); setFlights([]); if (!readOnly) cancelEquipmentCraft(s); }
   }, [present, s, readOnly]);
@@ -181,7 +193,7 @@ export function AirCombatEquipmentInventory({ world, onClose, onChange, readOnly
     if (d.id === "VP01") { const removed = extractEquipment(s); if (removed.length) { setExtraction(performance.now()); equipmentFx(world, 37, world.playerX, world.playerY, 95, 1); changed(); } }
     else if (equipEquipment(s, d.instanceId)) changed();
   };
-  const tile = (item: EquipmentInstance, location: TileLocation) => <Tile key={item.instanceId} item={item} location={location} selected={selection === item.instanceId}
+  const tile = (item: EquipmentInstance, location: TileLocation) => <Tile key={(side ?? "player") + "-" + item.instanceId} item={item} location={location} selected={selection === item.instanceId}
     onSelect={() => setSelection(item.instanceId)} onInspect={inspect} onDouble={source => {
       if (readOnly || !item.definitionId.startsWith("TP")) return;
       if (location === "storage") addToCraft(item, source);
@@ -205,8 +217,8 @@ export function AirCombatEquipmentInventory({ world, onClose, onChange, readOnly
   const componentDrag = !!drag?.id.startsWith("TP"), craftInvalid = !!q.craftJob || !q.craftSlots.includes(null), craftHover = !!drag && inside(craftRegion.current, drag);
   const equipValid = !!drag && (drag.id === "VP01" ? q.equipped.some(Boolean) && q.items.VP01 > 0 : q.equipped.includes(null));
   return <AirCombatModal archetype="info" layer="exclusive-dialog" layout="viewport-safe" labelledBy="equipment-title" onClose={close} overlayClassName="equipment-inventory-overlay" panelClassName="equipment-inventory-panel">
-    <OverlayHeader><h2 id="equipment-title" className="modal-title">KHO TRANG BỊ</h2><p className="equipment-subtitle">{readOnly ? "Chỉ xem · Loadout SOLO tự động theo từng hiệp" : "Chạm để xem · Giữ 0,5 giây để kéo · Nhấp đúp Thành Phần để ghép"}</p></OverlayHeader>
-    <OverlayBody className="equipment-inventory-body" data-compact={layout.compact} data-emergency={layout.emergency} data-magnet-drag={drag?.id === "VP01"} style={{ "--equipment-cell-size": `${layout.cell}px` } as React.CSSProperties}>
+    <OverlayHeader><h2 id="equipment-title" className="modal-title">KHO TRANG BỊ</h2><p className="equipment-subtitle">{readOnly ? "Chỉ xem · Loadout SOLO tự động theo từng hiệp" : "Chạm để xem · Giữ 0,5 giây để kéo · Nhấp đúp Thành Phần để ghép"}</p>{tabs}</OverlayHeader>
+    <OverlayBody id={side ? "air-equipment-side-panel" : undefined} role={side ? "tabpanel" : undefined} aria-labelledby={side ? "air-equipment-side-panel-" + side : undefined} className="equipment-inventory-body" data-compact={layout.compact} data-emergency={layout.emergency} data-magnet-drag={drag?.id === "VP01"} style={{ "--equipment-cell-size": `${layout.cell}px` } as React.CSSProperties}>
       <div ref={dashboard} className="equipment-dashboard">
       <div className="equipment-operations">
       <section ref={equippedRegion} className={`equipment-equipped-region ${equipValid ? "equipment-drop-preview" : ""} ${drag && inside(equippedRegion.current, drag) ? equipValid ? "equipment-drop-ready" : "equipment-drop-invalid" : ""} ${drag?.id === "VP01" ? "equipment-magnet-ready" : ""}`}>

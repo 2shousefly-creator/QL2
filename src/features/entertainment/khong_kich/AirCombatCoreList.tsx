@@ -1,6 +1,7 @@
+import { AirCombatSideTabs, type CombatInspectionSide } from "./AirCombatSideTabs";
 import { CoreSystemTag } from "./CoreSystemTag";
 import { AirCombatModal as AppModal } from "./AirCombatMotion";
-import React, { useState } from "react";
+import React, { useLayoutEffect, useState } from "react";
 import { ModalButton, OverlayBody, OverlayFooter, OverlayHeader } from "../../../components/overlay/AppOverlay";
 import { CORE_DEFINITIONS, CORE_TIER_LABELS, SKILL_CONFIGS } from "./airCombatConfig";
 
@@ -9,12 +10,18 @@ import { getCoreTelemetryPresentation } from "./airCombatPresentation";
 import { CoreDescription } from "./CoreDescription";
 import type { AircraftCombatState } from "./airCombatTypes";
 
-export function AirCombatCoreList({ state, onClose }: { state: AircraftCombatState; onClose: () => void }) {
+export function AirCombatCoreList({ state, opponentState, onClose }: { state: AircraftCombatState; opponentState?: AircraftCombatState; onClose: () => void }) {
+  const [side, setSide] = useState<CombatInspectionSide>("player");
+  return <CoreListContent state={side === "ai" && opponentState ? opponentState : state} onClose={onClose}
+    side={opponentState ? side : undefined} tabs={opponentState ? <AirCombatSideTabs value={side} onChange={setSide} panelId="air-core-side-panel" /> : undefined} />;
+}
+function CoreListContent({ state, onClose, tabs, side }: { state: AircraftCombatState; onClose: () => void; tabs?: React.ReactNode; side?: CombatInspectionSide }) {
   const owned = state.selectedCores.filter(id=>!["core_050","core_051","core_052"].includes(id)).flatMap(id => {
     const core = CORE_DEFINITIONS.find(c => c.id === id);
     return core ? [core] : [];
   });
   const [selectedId, setSelectedId] = useState(owned[0]?.id);
+  useLayoutEffect(() => { setSelectedId(undefined); }, [state]);
   const visible=owned;
   const selected=visible.find(c=>c.id===selectedId)??visible[0];
   const converted=new Map(state.coreState.acquisitions.flatMap(event=>event.kind==="core"?[[event.coreId,Boolean(event.conversionSourceCoreId)] as const]:[]));
@@ -23,8 +30,9 @@ export function AirCombatCoreList({ state, onClose }: { state: AircraftCombatSta
     <OverlayHeader className="air-core-list-header">
       <h2 id="air-core-list-title" className="modal-title">Danh sách lõi · {owned.length}</h2>
       <p className="mt-1 text-xs text-[var(--modal-muted)]">Trận đấu đang tạm dừng · Chạm lõi để xem chi tiết</p>
+      {tabs}
     </OverlayHeader>
-    <OverlayBody className="air-core-inventory" data-core-list="open">
+    <OverlayBody className="air-core-inventory" data-core-list="open" id={side ? "air-core-side-panel" : undefined} role={side ? "tabpanel" : undefined} aria-labelledby={side ? "air-core-side-panel-" + side : undefined}>
       <div className="air-core-retained">
       <div className="air-core-grid" role="group" aria-label="Lõi đã nhận">
         {Array.from({ length: Math.max(6,visible.length) }, (_, index) => {
