@@ -157,6 +157,75 @@
           ]
         }
       ]
+    },
+    {
+      "id": "s4",
+      "title": "LÕI NÂNG CẤP · NHẬN DIỆN ĐỐI THỦ",
+      "icon": {
+        "kind": "core",
+        "id": "core_176"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "s4-e1",
+          "icon": {
+            "kind": "core",
+            "id": "core_176"
+          },
+          "title": "Khoảng Thở và Báo Động Sớm",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Khoảng Thở nhận diện thân chiến cơ và hỏa lực của đối thủ trong SOLO và trận gặp Chiến Cơ Ảo Ảnh, bao gồm laser, vùng kỹ năng và đòn Thương Thiên Thạch."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Điều kiện an toàn được cập nhật trước khi hồi máu và hồi tài nguyên. Báo Động Sớm dùng chung nhận diện nguy hiểm, bao gồm các vùng sát thương thật của Màn 3 và Màn 4."
+            },
+            {
+              "format": "bullet",
+              "changeType": "unchanged",
+              "text": "Giữ bán kính 150 px, hồi 1% Máu Tối Đa mỗi giây và +25% Hồi Tài Nguyên của Khoảng Thở khi vùng an toàn."
+            }
+          ]
+        },
+        {
+          "id": "s4-e2",
+          "icon": {
+            "kind": "core",
+            "id": "core_107"
+          },
+          "title": "Lướt Sát Tử Thần",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Đạn chiến cơ đối thủ được tính lướt đạn trong SOLO và trận gặp Chiến Cơ Ảo Ảnh. Mỗi viên đạn chỉ được tính một lần khi kết thúc và không được tính nếu đã chạm chủ lõi."
+            }
+          ]
+        },
+        {
+          "id": "s4-e3",
+          "icon": {
+            "kind": "core",
+            "id": "core_120"
+          },
+          "title": "Đoạt Quyền Điều Khiển",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Không chọn chiến cơ đối thủ làm mục tiêu chiếm quyền trong trận gặp Chiến Cơ Ảo Ảnh; giữ quy tắc áp dụng cho địch thường, Tinh Anh và Boss."
+            }
+          ]
+        }
+      ]
     }
   ]
 }

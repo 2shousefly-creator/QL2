@@ -97,7 +97,14 @@ export function expansionKill(w: CombatWorld, enemy: EnemyEntity, h: ExpansionHo
 // Runtime supplies explicit elite identity on the killing hit, including Stage 2.
 const hElite = (e: EnemyEntity) => !!e.expansionKillingHit?.elite;
 
+/** Refresh before resource regeneration as well as healing; never reuse last tick's safe zone. */
+export function refreshBreathingRoom(w: CombatWorld, h: ExpansionHooks) {
+  const s = w.aircraft;
+  s.coreState.stacks.breathing = hasCore(s, 176) && s.currentHp > 0 && !h.threat(w, 150, true) ? 1 : 0;
+}
+
 export function tickExpansion(w: CombatWorld, dt: number, h: ExpansionHooks) {
+  refreshBreathingRoom(w, h);
   const s = w.aircraft, c = s.coreState, r = expansionState(s), now = c.time, stats = getEffectiveAircraftStats(s);
   for(const enemy of w.enemies){
     const marks=enemy.expansionMarks,until=marks?.preliminary??0;
@@ -119,7 +126,6 @@ export function tickExpansion(w: CombatWorld, dt: number, h: ExpansionHooks) {
     } else r.fullSince = undefined;
   }
   if (hasCore(s, 176)) {
-    c.stacks.breathing = h.threat(w, 150, true) ? 0 : 1;
     if (c.stacks.breathing) {h.heal(w, stats.maxHp * .01 * dt, 176);recordCoreMetric(s,176,"uptime",dt);}
   }
   if(hasCore(s,178)&&coreCooldownReady(s,"magneticBrakeCd")){deferCoreCooldown(s,"magneticBrakeCd");timer(w,"magneticBrake",3);for(const p of w.projectiles)if(p.owner==="enemy"&&p.allegiance!=="friendly_hacked"&&Math.hypot(p.x-w.playerX,p.y-w.playerY)<=150){p.expansionSlowUntil=now+3;recordCoreMetric(s,178,"targets",1);}}
