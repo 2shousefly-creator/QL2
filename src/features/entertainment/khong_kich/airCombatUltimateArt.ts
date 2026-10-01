@@ -62,22 +62,39 @@ export function paintUltimates(w:CombatWorld,draw:UltimatePainter,reduced:boolea
   const size=e.radius*2+12;draw(e.id*8+3,"ultimateViperBurn",e.x,e.y,size,size,0,.6);
  }
  for(const m of w.astra?.starfall?.pending??[]){
-  const t=Math.max(0,Math.min(1,1-(m.at-now)/m.fallDuration)),id=m.id*8;
+  const fallAt=m.at-m.fallDuration,t=Math.max(0,Math.min(1,(now-fallAt)/m.fallDuration)),id=m.id*8;
   const size=m.doom?104:43,radius=m.doom?110:skillRank(s,"starfall")>=2?65:45;
-  draw(id,m.doom?"ultimateDoomTarget":"ultimateMeteorTarget",m.x,m.y,radius*2,radius*2,0,.45+t*.45);
-  const x=m.x-80*(1-t),y=m.y-150*(1-t),angle=-Math.atan2(80,150),dx=80/170,dy=150/170;
-  draw(id+1,"ultimateMeteorTrail",x-dx*size*.65,y-dy*size*.65,size*.75,size*(reduced?1.2:2.35),angle,.95);
-  if(m.doom&&!reduced){draw(id+2,"ultimateMeteorTrail",x-dx*size,y-dy*size,size*.9,size*2.2,angle-.05,.4);draw(id+3,"ultimateMeteorTrail",x-dx*size,y-dy*size,size*.7,size*2.4,angle+.07,.45);}
-  draw(id+5,m.doom?"ultimateDoom":"ultimateMeteor",x,y,size*1.2,size*1.2,angle,reduced?.2:.3,true);
-  draw(id+4,m.doom?"ultimateDoom":"ultimateMeteor",x,y,size,size,angle,.6+t*.4);
-  draw(id+6,m.doom?"ultimateDoom":"ultimateMeteor",x,y,size*.65,size*.65,angle,.4,true);
+  const target=m.doom?"ultimateDoomTarget":"ultimateMeteorTarget";
+  // Reticle survives the flight, but only the runtime may move its ground point.
+  draw(id,target,m.x,m.y,radius*2,radius*2,0,now<fallAt?.65:.95);
+  if(now+1e-8<fallAt)continue;
+  // A 200ms light-speed streak. The star does not exist during the aiming phase.
+  const travel=1-t*t,x=m.x-140*travel,y=m.y-520*travel,angle=-Math.atan2(140,520);
+  const dx=140/Math.hypot(140,520),dy=520/Math.hypot(140,520),trail=reduced?size*1.5:Math.max(230,size*3.5);
+  draw(id+1,"ultimateMeteorTrail",x-dx*trail*.4,y-dy*trail*.4,size*.75,trail,angle,.95,true);
+  if(!reduced){
+   draw(id+2,"ultimateMeteorTrail",x-dx*trail*.5-7,y-dy*trail*.5,size*.22,trail*1.5,angle,.65,true);
+   draw(id+3,"ultimateMeteorTrail",x-dx*trail*.5+7,y-dy*trail*.5,size*.16,trail*1.8,angle,.8,true);
+  }
+  const body=m.doom?"ultimateDoom":"ultimateMeteor";
+  draw(id+5,body,x,y,size*1.65,size*1.65,angle,reduced?.18:.48,true);
+  draw(id+4,body,x,y,size,size,angle,1);
+  draw(id+6,body,x,y,size*.65,size*.65,angle,.85,true);
  }
  for(const impact of w.astra?.impacts??[]){
   const age=now-impact.at,t=age/.75;if(t<0||t>=1)continue;
   const size=impact.radius*2,key=impact.doom?"ultimateDoomImpact":"ultimateMeteorImpact",id=impact.id*8;
-  draw(id,key,impact.x,impact.y,size*(.5+Math.min(1,t*3)*.5),size*(.5+Math.min(1,t*3)*.5),0,1-t);
-  if(impact.doom&&age>.1)draw(id+1,"ultimateDoomTarget",impact.x,impact.y,size*(.75+t*.3),size*(.75+t*.3),0,(1-t)*.75);
-  if(!reduced&&age>.08)draw(id+2,key,impact.x,impact.y,size*(.7+t*.5),size*(.7+t*.5),.45,(1-t)*.4);
+  const blast=.35+Math.min(1,age/.12)*.8,fade=(1-t)*(1-t);
+  draw(id,key,impact.x,impact.y,size*blast,size*blast,0,1-t);
+  // Hot impact core, expanding shock front, then a slower dissipating corona.
+  draw(id+1,key,impact.x,impact.y,size*.6,size*.6,0,Math.max(0,1-age/.22)*(reduced?.3:.95),true);
+  if(!reduced){
+   const ring=.65+Math.sqrt(t)*1.15;
+   draw(id+2,impact.doom?"ultimateDoomTarget":"ultimateMeteorTarget",impact.x,impact.y,size*ring,size*ring,0,fade*.85,true);
+   draw(id+3,key,impact.x,impact.y,size*(.9+t*.6),size*(.9+t*.6),.45,fade*.6,true);
+   draw(id+4,"ultimateMeteorTrail",impact.x,impact.y-size*.3,size*.28,size*(1.5-t),0,Math.max(0,1-age/.3)*.65,true);
+   draw(id+5,"ultimateMeteorTrail",impact.x,impact.y,size*.12,size*1.9,Math.PI/2,Math.max(0,1-age/.18)*.85,true);
+  }
  }
  for(const e of w.visualEvents){
   if(e.kind!=="ultimate_effect"||!e.ultimateEffect)continue;

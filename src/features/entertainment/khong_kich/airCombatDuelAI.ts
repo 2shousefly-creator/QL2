@@ -1,5 +1,6 @@
 import { aircraftTargetability } from "./airCombatTargetability";
 import { GAMEPLAY_SAFE_RECT as R, AIRCRAFT_CONFIGS } from "./airCombatConfig";
+import { INTERFERENCE_WAVE_SPEED, INTERFERENCE_WAVE_THICKNESS } from "./airCombatRankRuntime";
 import { meteorSpearEndpoints } from "./airCombatAstra";
 import { getEffectiveAircraftStats, getSkillRuntimeValues } from "./airCombatAircraft";
 import { getWorldSkillAvailability, type CombatWorld } from "./airCombatRuntime";
@@ -10,21 +11,21 @@ import type { AircraftCombatState, SkillId } from "./airCombatTypes";
 
 type Point = { x: number; y: number };
 type Intent = "evade" | "kite" | "pressure" | "reposition" | "hold-angle" | "combo-setup" | "recover-up";
-export type DuelThreatKind = "ballistic" | "homing" | "beam" | "lane" | "aoe" | "persistent_zone" | "dash" | "full_screen";
-interface Bullet extends Point { vx:number; vy:number; damage:number; homing:boolean; radius:number; turnRate:number }
-interface Hazard extends Point { kind:DuelThreatKind; radius:number; cc:boolean; end?:Point }
-interface Perception { targetVisible:boolean; at:number; player:Point; playerHp:number; velocity:Point; bullets:Bullet[]; hazards:Hazard[]; lastDefensiveCast:number; lastBurst:number }
-interface DuelTacticalPlan { kind:string; startedAt:number; expiresAt:number; nextSkill?:SkillId; reservedResource?:number }
+export type DuelThreatKind = "ballistic" | "homing" | "beam" | "lane" | "aoe" | "persistent_zone" | "dash" | "full_screen" | "wave";
+interface Bullet extends Point { vx:number; vy:number; damage:number; homing:boolean; radius:number; turnRate:number; lifetime:number; capturable:boolean }
+interface Hazard extends Point { kind:DuelThreatKind; radius:number; cc:boolean; end?:Point; startsAt:number; endsAt:number; tracksUntil?:number; velocity?:Point; wave?:{radius:number;at:number} }
+interface Perception { targetProtected:boolean; targetVisible:boolean; at:number; player:Point; playerHp:number; velocity:Point; bullets:Bullet[]; hazards:Hazard[]; lastBurst:number }
+interface DuelTacticalPlan { kind:string; startedAt:number; expiresAt:number; nextSkill?:SkillId }
 export interface MirrorAI {
   nextSense:number; nextDecision:number; history:Perception[]; observedCasts:Partial<Record<SkillId,number>>;
   lastPlayer:Point; goal:Point; vx:number; vy:number; intent:Intent; intentUntil:number;
   threat:number; incoming:number; lastHp:number; lastPlayerHp:number; losing:boolean;
   lastCast?:SkillId; lastCastAt?:number; lastSampleAt?:number; lastSampleWallMs?:number;
   targetLostAt?:number; lastKnownVelocity?:Point;
-  readySince:Partial<Record<SkillId,number>>; plan?:DuelTacticalPlan;
+  escapeRisk:number; plan?:DuelTacticalPlan;
   dodgeUntil:number; dodge?:Point; needsVerticalRecovery:boolean;
 }
-export const createMirrorAI = (x:number,y:number):MirrorAI => ({nextSense:0,nextDecision:0,history:[],observedCasts:{},lastPlayer:{x,y},goal:{x,y},vx:0,vy:0,intent:"hold-angle",intentUntil:0,threat:0,incoming:0,lastHp:0,lastPlayerHp:0,losing:false,readySince:{},dodgeUntil:0,needsVerticalRecovery:false});
+export const createMirrorAI = (x:number,y:number):MirrorAI => ({nextSense:0,nextDecision:0,history:[],observedCasts:{},lastPlayer:{x,y},goal:{x,y},vx:0,vy:0,intent:"hold-angle",intentUntil:0,threat:0,incoming:0,lastHp:0,lastPlayerHp:0,losing:false,escapeRisk:0,dodgeUntil:0,needsVerticalRecovery:false});
 export function observeMirrorCast(ai:MirrorAI,id:SkillId,at:number){ai.observedCasts[id]=at;}
 const clamp=(n:number,a:number,b:number)=>Math.max(a,Math.min(b,n));
 const distance=(a:Point,b:Point)=>Math.hypot(a.x-b.x,a.y-b.y);
@@ -56,22 +57,51 @@ function threatApproach(p:Point,velocity:Point,b:Bullet) {
   }
   return closest;
 }
-function hazardCost(p:Point,h:Hazard,radius:number) {
-  if(h.kind==="full_screen")return 0; // Defense policy, never pretend there is a dodge corridor.
+function hazardCost(p:Point,h:Hazard,radius:number,at:number,previous=at) {
+  if(at<h.startsAt-.1 || previous>h.endsAt)return 0;
+  if(h.kind==="full_screen")return 0; // No imaginary dodge corridor for arena-wide attacks.
+  if(h.wave){
+    const gap=distance(p,h),before=gap-h.wave.radius-(previous-h.wave.at)*INTERFERENCE_WAVE_SPEED,after=gap-h.wave.radius-(at-h.wave.at)*INTERFERENCE_WAVE_SPEED;
+    const d=before*after<=0?0:Math.min(Math.abs(before),Math.abs(after));
+    return Math.max(0,1-d/(radius+INTERFERENCE_WAVE_THICKNESS/2+12))*7;
+  }
   const d=h.end?segmentDistance(p,h,h.end):h.kind==="lane"?Math.abs(p.x-h.x):distance(p,h);
   return Math.max(0,1-d/(h.radius+radius+12))*(h.cc?7:5);
 }
-function trajectoryCost(from:Point,to:Point,seen:Perception,radius:number) {
-  let danger=0;
-  for(let i=1;i<=7;i++){
-    const t=i/7*.55,p={x:from.x+(to.x-from.x)*i/7,y:from.y+(to.y-from.y)*i/7};
+/** Advance only the delayed public observation. This is prediction, not live aim-reading. */
+function projectPerception(seen:Perception,now:number,p:Point):Perception {
+  const age=Math.max(0,now-seen.at);
+  return {...seen,at:now,player:seen.targetVisible?bounded({x:seen.player.x+seen.velocity.x*age,y:seen.player.y+seen.velocity.y*age}):seen.player,
+    bullets:seen.bullets.filter(b=>b.lifetime>age).map(b=>{
+      const at=b.homing?homingAt(b,p,age):{x:b.x+b.vx*age,y:b.y+b.vy*age};
+      const speed=Math.hypot(b.vx,b.vy),angle=Math.atan2(p.y-at.y,p.x-at.x),old=Math.atan2(b.vy,b.vx);
+      const turn=b.homing?clamp(Math.atan2(Math.sin(angle-old),Math.cos(angle-old)),-b.turnRate*age,b.turnRate*age):0;
+      return {...b,...at,vx:Math.cos(old+turn)*speed,vy:Math.sin(old+turn)*speed,lifetime:b.lifetime-age};
+    }),
+    hazards:seen.hazards.filter(h=>h.endsAt>=now).map(h=>{
+      const tracking=Math.max(0,Math.min(age,(h.tracksUntil??seen.at)-seen.at));
+      return {...h,x:h.x+(h.velocity?.x??0)*tracking,y:h.y+(h.velocity?.y??0)*tracking};
+    })};
+}
+/** Score reachable, accelerated paths and swept contacts, not just destination points. */
+function trajectoryCost(from:Point,to:Point,seen:Perception,radius:number,velocity:Point,speed:number) {
+  let danger=0,p={...from},v={...velocity};
+  const step=.08;
+  for(let i=1;i<=8;i++){
+    const previous={...p},t=i*step,dx=to.x-p.x,dy=to.y-p.y,length=Math.hypot(dx,dy);
+    const pace=Math.min(speed,length*5),dvx=dx/Math.max(1,length)*pace-v.x,dvy=dy/Math.max(1,length)*pace-v.y;
+    const turn=Math.min(1,1400*step/(Math.hypot(dvx,dvy)||1));
+    v.x+=dvx*turn;v.y+=dvy*turn;p=bounded({x:p.x+v.x*step,y:p.y+v.y*step});
     for(const b of seen.bullets){
+      if(b.lifetime<(i-1)*step)continue;
+      const before=b.homing?homingAt(b,previous,t-step):{x:b.x+b.vx*(t-step),y:b.y+b.vy*(t-step)};
       const at=b.homing?homingAt(b,p,t):{x:b.x+b.vx*t,y:b.y+b.vy*t};
-      danger+=Math.max(0,1-distance(p,at)/(radius+b.radius+(b.homing?22:10)))*(b.homing?2.5:1.5);
+      const gap=segmentDistance({x:0,y:0},{x:previous.x-before.x,y:previous.y-before.y},{x:p.x-at.x,y:p.y-at.y});
+      danger+=Math.max(0,1-gap/(radius+b.radius+(b.homing?18:10)))*(b.homing?2.5:1.5);
     }
-    for(const h of seen.hazards)danger+=hazardCost(p,h,radius);
+    for(const h of seen.hazards)danger+=hazardCost(p,h,radius,seen.at+t,seen.at+t-step);
   }
-  return danger/7;
+  return danger/8;
 }
 function verticalBands(player:Point) {
   return {preferred:clamp(player.y-180,R.top+35,R.bottom-180),soft:Math.max(R.top+35,player.y-100),hard:Math.max(R.top+45,player.y-60)};
@@ -95,7 +125,7 @@ function skillUtility(id: SkillId, s: AircraftCombatState, ai: MirrorAI, p: Poin
   if (ready.manualAction) {
     if (id === "orbit_reversal") {
       const orbit = actor.astra?.orbit;
-      return orbit && orbit.captured > 0 && firing > .45
+      return orbit && orbit.captured > 0 && firing > .45 && (ai.incoming <= 0 || orbit.until - actor.elapsed < .35)
         ? (orbit.captured >= 6 || orbit.until - actor.elapsed < .6 ? 1.8 : .4) : -Infinity;
     }
     if (id === "gravity_anchor") {
@@ -110,58 +140,72 @@ function skillUtility(id: SkillId, s: AircraftCombatState, ai: MirrorAI, p: Poin
       // Rank 5 and the 1-second arm gate come from getWorldSkillAvailability.
       // Current BigBang affects the whole gameplay area, not a new local radius.
       const targetInArea = seen.player.x >= R.left && seen.player.x <= R.right && seen.player.y >= R.top && seen.player.y <= R.bottom;
-      return targetInArea ? 1.6 : -Infinity;
+      return targetInArea && !seen.targetProtected ? 1.6 : -Infinity;
     }
     return -Infinity;
   }
-  if (!seen.targetVisible && ["predator_lock", "missile_swarm", "focus_laser", "stellar_lance", "starfall"].includes(id)) return -Infinity;
-  if (["focus_laser", "sweeping_cannon", "stellar_lance"].includes(id) && (!ahead || firing < .3)) return -Infinity;
+  const defensive = ["decoy", "armor_shield", "invisibility", "electronic_interference", "orbit_reversal"].includes(id);
+  if (!seen.targetVisible && !defensive) return -Infinity;
+  if (["focus_laser", "sweeping_cannon", "stellar_lance"].includes(id) && (!ahead || firing < .5)) return -Infinity;
   const combo = (setup: SkillId) => ai.lastCast === setup && ai.lastCastAt !== undefined && actor.elapsed - ai.lastCastAt <= 2;
   const stats = getEffectiveAircraftStats(s), values = getSkillRuntimeValues(s, id), hp = s.currentHp / stats.maxHp;
-  const safe = 1 / (1 + ai.threat), line = clamp(1 - Math.abs(p.x - seen.player.x) / 90, 0, 1);
+  const safe = 1 / (1 + ai.escapeRisk), line = clamp(1 - Math.abs(p.x - seen.player.x) / 90, 0, 1);
   const edge = Math.min(seen.player.x - R.left, R.right - seen.player.x) < 55 ? 1 : .2;
-  const steady = 1 / (1 + Math.abs(seen.velocity.x) / 130), danger = clamp(ai.incoming / stats.maxHp / .12, 0, 2);
-  const recentlyDefended = seen.at - seen.lastDefensiveCast < 2 ? 1 : .15;
-  const committed = seen.at - seen.lastBurst < 1 ? 1 : .2;
-  const density = Math.min(2, seen.bullets.reduce((n,b)=>n+(b.homing?3:1),0)/12);
+  const steady = 1 / (1 + Math.abs(seen.velocity.x) / 130), danger = clamp(ai.incoming / stats.maxHp / .1, 0, 3);
+  const committed = seen.at - seen.lastBurst < 1 ? 1 : 0;
+  const nearby=seen.bullets.filter(b=>{
+    const approach=threatApproach(p,{x:ai.vx,y:ai.vy},b);
+    return approach.time<Math.min(.75,b.lifetime)&&approach.distance<70+b.radius;
+  });
+  const density=Math.min(2,nearby.length/6),homing=nearby.filter(b=>b.homing).length;
+  const capturable=nearby.filter(b=>b.capturable).length;
+  const fullScreen=seen.hazards.some(h=>h.kind==="full_screen"&&h.startsAt<=seen.at+.65)?1:0;
+  const areaDanger=seen.hazards.reduce((n,h)=>n+hazardCost(p,h,17*playerAirframeScale(s),seen.at+.4,seen.at),0);
+  const needsDefense=danger>.12||density>=.5||areaDanger>1||fullScreen>0;
+  const protectedNow=(s.activeEffects.armor_shield??0)>.6 || (skillRank(s,"orbit_reversal")>=4&&(s.activeEffects.orbit_reversal??0)>.6);
+  // Hidden hulls can still be hit by beams/AoE; do not treat invisibility as immunity.
+  if(defensive&&(!needsDefense || protectedNow&&danger<1.2&&areaDanger<3))return -Infinity;
+  if(defensive&&ai.escapeRisk<.12&&danger<.9&&areaDanger<1&&!fullScreen&&!(id==="orbit_reversal"&&capturable>=3))return -Infinity;
+  if(id==="decoy" && (nearby.length===0 || actor.decoys.some(d=>d.active&&d.remaining>.45)&&danger<1))return -Infinity;
+  if(id==="orbit_reversal" && capturable===0 && !(skillRank(s,id)>=4&&(areaDanger>1||fullScreen)))return -Infinity;
+  if(id==="electronic_interference" && nearby.length<2 && homing===0 && areaDanger<=1)return -Infinity;
+  if(id==="invisibility" && homing===0 && areaDanger<=1 && danger<.35)return -Infinity;
+  const sinceCast=actor.elapsed-(ai.lastCastAt??-Infinity),planned=ai.plan?.nextSkill===id;
+  // Emergency defense may interrupt the offensive cadence, but casts do not cascade every decision.
+  if(sinceCast<(defensive?.2:planned?.4:.85))return -Infinity;
   const defense = ({black_eagle:"decoy",breaker:"armor_shield",phantom:"invisibility",astra:"orbit_reversal"} as const)[s.aircraftId];
-  const defenseReady = (s.skillRanks[defense]??0)>0 && (s.cooldowns[defense]??0)<1.5;
-  const reserveCost = defenseReady && danger>.25 && id!==defense ? getSkillRuntimeValues(s,defense).cost : 0;
-  const plannedCost = ai.plan?.nextSkill && ai.plan.nextSkill!==id && safe>.6 ? (ai.plan.reservedResource??0)*.4 : 0;
-  const reserve = Math.max(0, values.cost + Math.max(reserveCost,plannedCost) - s.currentResource) / stats.maxResource;
-  const fullScreen = seen.hazards.some(h=>h.kind==="full_screen") ? 1.5 : 0;
+  const defenseReady=skillRank(s,defense)>0&&(s.cooldowns[defense]??0)<3&&(s.activeEffects[defense]??0)<=0;
+  const reserveCost=!defensive&&defenseReady?Math.min(getSkillRuntimeValues(s,defense).cost,Math.max(0,stats.maxResource-values.cost)):0;
+  const lethalWindow=seen.playerHp>0&&seen.playerHp<stats.firepower*Math.max(1,values.damageMultiplier)&&firing>.7;
+  if(!defensive&&s.currentResource-values.cost<reserveCost&&!lethalWindow&&hp>.25)return -Infinity;
+  if(!defensive&&seen.targetProtected&&!["gravity_anchor","twin_reflection","escort_drone"].includes(id))return -Infinity;
   const opportunity: Record<SkillId, number> = {
-    decoy: danger + density * .35 + committed * .3,
-    afterburner: ahead ? line * safe * (combo("predator_lock") ? 1.5 : 1) + (skillRank(s,id)>=5 ? danger*.25 : 0) : 0,
-    predator_lock: line * safe * steady * (s.currentResource > stats.maxResource * .35 ? 1.3 : .2),
-    missile_swarm: ahead ? .5 + safe * (recentlyDefended + edge * .5) : .15,
-    armor_shield: danger + fullScreen + (ai.plan?.nextSkill === "sweeping_cannon" ? .55 : 0),
-    gravity_anchor: .4 + edge*.4 + committed * .35,
-    heavy_bomb: combo("gravity_anchor") ? 1.5 * line : (.45 + edge*.3) * steady,
-    sweeping_cannon: firing * safe * steady * 1.3,
-    invisibility: danger + fullScreen + (ai.intent === "combo-setup" ? .8 : .15),
-    focus_laser: firing * steady * safe * (combo("invisibility") ? 1.7 : 1),
-    electronic_interference: density * .6 + seen.bullets.filter(b => b.homing).length * .18,
-    escort_drone: s.droneActive ? 0 : safe * (stats.resourceRegen > values.upkeepPerSecond ? 1.2 : .45),
-    orbit_reversal: density * .8 + danger * .5 + (skillRank(s,id)>=4 ? fullScreen : 0),
-    stellar_lance: firing * steady * safe * 1.3,
-    twin_reflection: safe * 1.1,
-    starfall: .4 + safe * (edge*.5 + committed * .4),
+    decoy: danger + density*.65 + homing*.3,
+    afterburner: ahead ? line*safe*(combo("predator_lock")?1.5:1) : 0,
+    predator_lock: ahead ? line*safe*steady*1.3 : 0,
+    missile_swarm: ahead ? safe*(.65+edge*.35+committed*.4+steady*.25) : 0,
+    armor_shield: danger + fullScreen*1.8 + areaDanger*.5,
+    gravity_anchor: ahead ? .35+edge*.45+committed*.5+(steady>.7?.4:0) : 0,
+    heavy_bomb: combo("gravity_anchor") ? 1.5 : .5+committed*.5+edge*.3,
+    sweeping_cannon: firing*safe*steady*1.5,
+    invisibility: danger + homing*.35 + areaDanger*.4,
+    focus_laser: firing*steady*safe*(combo("invisibility")?1.7:1.4),
+    electronic_interference: density*.8+homing*.25+areaDanger*.2,
+    escort_drone: s.droneActive?0: safe*(stats.resourceRegen>=values.upkeepPerSecond || s.currentResource-values.cost-reserveCost>values.upkeepPerSecond*6?1.1:0),
+    orbit_reversal: Math.min(2,capturable/3)+danger*.5+(skillRank(s,id)>=4?fullScreen*1.5+areaDanger*.4:0),
+    stellar_lance: firing*steady*safe*1.5,
+    twin_reflection: ahead&&line>.6 ? safe*(steady+.35) : 0,
+    starfall: safe*(.35+edge*.4+committed*.45+steady*.5),
   };
-  const ultimate = ["missile_swarm", "sweeping_cannon", "escort_drone", "starfall"].includes(id);
-  const defensive = ["decoy", "armor_shield", "invisibility", "electronic_interference", "orbit_reversal"].includes(id);
-  const phaseFit = hp < .3 && ultimate ? 1.3 : hp <= .6 && ai.losing && defensive ? 1.2 : 1;
-  const waste = !defensive && values.damageMultiplier * stats.firepower > ai.lastPlayerHp * 2 ? .3 : 0;
-  const castLockRisk = !defensive && ["focus_laser", "sweeping_cannon", "stellar_lance"].includes(id) ? danger * .8 : 0;
-  const viable = opportunity[id] > .12;
-  if (!viable) return -Infinity;
-  const readyAge = Math.max(0, actor.elapsed - (ai.readySince[id] ?? actor.elapsed) - 1);
-  const spendBonus = s.currentResource >= stats.maxResource * .82 ? .35 : 0;
-  const planned = ai.plan?.nextSkill===id ? .4 : 0;
-  return opportunity[id] * phaseFit + Math.min(.45,readyAge*.06) + spendBonus + planned - reserve * 2 - waste - castLockRisk;
+  const ultimate=["missile_swarm","sweeping_cannon","escort_drone","starfall"].includes(id);
+  const phaseFit=hp<.3&&ultimate?1.2:hp<=.6&&ai.losing&&defensive?1.2:1;
+  // Readiness age and a full resource bar never create an opportunity on their own.
+  if(opportunity[id]<.3)return -Infinity;
+  const waste=!defensive&&!lethalWindow&&values.damageMultiplier*stats.firepower>seen.playerHp*2?.3:0;
+  return opportunity[id]*phaseFit+(planned&&!defensive?.2:0)+(defensive&&ai.escapeRisk>.4?.5:0)-waste;
 }
 
-function perceive(w:CombatWorld,ai:MirrorAI,p:Point) {
+function perceive(w:CombatWorld,ai:MirrorAI,p:Point,actor:CombatWorld) {
   const targetVisible = aircraftTargetability(w.aircraft).canTrackExactPosition && !w.destruction;
   const player = targetVisible ? {x:w.playerX,y:w.playerY} : {...ai.lastPlayer};
   const reacquired = targetVisible && ai.targetLostAt !== undefined;
@@ -176,68 +220,81 @@ function perceive(w:CombatWorld,ai:MirrorAI,p:Point) {
   // Spawned attacks only. Scan the already runtime-bounded pool; shortlist before path work.
   const visible=w.projectiles.filter(b=>b.owner!=="enemy"&&!b.mirrorBorrowed&&b.lifetime>0).sort((a,b)=>distance(a,p)-distance(b,p));
   let homing=0;
-  const bullets=visible.filter(b=>!b.homing||homing++<16).slice(0,64).map(b=>({x:b.x,y:b.y,vx:b.vx,vy:b.vy,damage:b.rawDamage,homing:b.homing,radius:b.radius,turnRate:b.turnRate}));
+  const bullets=visible.filter(b=>!b.homing||homing++<16).slice(0,64).map(b=>({x:b.x,y:b.y,vx:b.vx,vy:b.vy,damage:b.rawDamage,homing:b.homing,radius:b.radius,turnRate:b.turnRate,lifetime:b.lifetime,capturable:b.capturable}));
   const hazards:Hazard[]=w.warnings.filter(z=>z.owner==="player").slice(0,16).map(z=>({x:z.x,y:z.y,radius:z.radius,cc:!!z.payload?.stun,
     kind:z.kind==="lane_laser"?"lane":z.kind==="rail"?"beam":z.kind==="dash"?"dash":"aoe",
-    end:z.kind==="rail"||z.kind==="dash"?{x:z.fromX??z.x,y:z.fromY??z.y}:undefined}));
-  if(w.laserCharge>0||w.laserRemaining>0)hazards.push({kind:"beam",x:w.playerX,y:w.playerY,end:{x:w.playerX,y:R.top},radius:30,cc:false});
-  if(w.rankRuntime?.anchor)hazards.push({kind:"persistent_zone",x:w.rankRuntime.anchor.x,y:w.rankRuntime.anchor.y,radius:120,cc:true});
-  for(const burn of (w.astra?.burns??[]).slice(0,4))hazards.push({kind:"persistent_zone",x:burn.x,y:burn.y,radius:burn.radius,cc:false});
+    end:z.kind==="rail"||z.kind==="dash"?{x:z.fromX??z.x,y:z.fromY??z.y}:undefined,
+    startsAt:w.elapsed+(z.stage==="active"?0:z.remaining),endsAt:w.elapsed+z.remaining+(z.stage==="active"?0:z.activeDuration??.15)}));
+  if(w.laserCharge>0||w.laserRemaining>0)hazards.push({kind:"beam",x:w.playerX,y:w.playerY,end:{x:w.playerX,y:R.top},radius:16,cc:false,startsAt:w.elapsed+w.laserCharge,endsAt:w.elapsed+w.laserCharge+w.laserRemaining});
+  if(w.rankRuntime?.anchor)hazards.push({kind:"persistent_zone",x:w.rankRuntime.anchor.x,y:w.rankRuntime.anchor.y,radius:120*(w.rankRuntime.anchor.rank>=2?1.25:1),cc:true,startsAt:w.elapsed,endsAt:w.rankRuntime.anchor.until});
+  for(const burn of (w.astra?.burns??[]).slice(0,4))hazards.push({kind:"persistent_zone",x:burn.x,y:burn.y,radius:burn.radius,cc:false,startsAt:w.elapsed,endsAt:burn.until});
   // BigBang's visible traveling missile is a full-arena threat, not a local circle.
-  if(visible.some(b=>b.bigBang))hazards.push({kind:"full_screen",x:p.x,y:p.y,radius:Infinity,cc:true});
-  for(const m of (w.astra?.starfall?.pending??[]).slice(0,4))hazards.push({kind:"aoe",x:m.x,y:m.y,radius:m.doom?110:skillRank(w.aircraft,"starfall")>=2?65:45,cc:false});
+  for(const bomb of visible.filter(b=>b.bigBang).slice(0,2))hazards.push({kind:"full_screen",x:p.x,y:p.y,radius:Infinity,cc:true,startsAt:w.elapsed+Math.max(0,1-bomb.missileAge),endsAt:w.elapsed+bomb.lifetime});
+  for(const m of (w.astra?.starfall?.pending??[]).slice(0,4)){
+    const followsPilot=!m.frozen&&w.enemies.some(e=>e.id===m.target&&e.aircraftTarget?.world===actor);
+    hazards.push({kind:"aoe",x:m.x,y:m.y,radius:m.doom?110:skillRank(w.aircraft,"starfall")>=2?65:45,cc:false,
+      startsAt:m.at,endsAt:m.at+.08,tracksUntil:followsPilot?m.at-m.fallDuration:undefined,velocity:followsPilot?{x:ai.vx,y:ai.vy}:undefined});
+  }
   for(const beam of (w.astra?.meteorSpears??[]).filter(b=>w.elapsed>=b.warningStartsAt&&w.elapsed<b.beamEndsAt).slice(0,2)){
     const path=meteorSpearEndpoints(beam);
-    hazards.push({kind:"beam",...path.start,end:path.end,radius:beam.projectileHitboxWidth/2,cc:false});
+    hazards.push({kind:"beam",...path.start,end:path.end,radius:beam.projectileHitboxWidth,cc:false,startsAt:beam.beamStartsAt,endsAt:beam.beamEndsAt});
   }
-  if(w.astra?.charge)hazards.push({kind:"beam",x:w.playerX,y:w.playerY,end:{x:w.playerX,y:R.top},radius:22,cc:false});
-  for(const b of visible.filter(b=>b.skillId==="stellar_lance").slice(0,2))hazards.push({kind:"beam",x:b.x,y:b.y,end:{x:b.x+b.vx*.6,y:b.y+b.vy*.6},radius:b.radius,cc:false});
-  ai.history.push({targetVisible,at:w.elapsed,player,playerHp:targetVisible?w.aircraft.currentHp:ai.lastPlayerHp,velocity,bullets,hazards:hazards.slice(0,24),
-    lastDefensiveCast:latest(["decoy","invisibility","armor_shield","orbit_reversal"]),lastBurst:latest(["missile_swarm","sweeping_cannon","focus_laser","starfall"])});
+  for(const wave of (w.rankRuntime?.waves??[]).slice(0,3)){
+    if(w.enemies.some(e=>e.aircraftTarget?.world===actor&&wave.hitEnemies.has(e.id)))continue;
+    hazards.push({kind:"wave",x:wave.originX,y:wave.originY,radius:0,cc:true,wave:{radius:wave.radius,at:w.elapsed},
+      startsAt:w.elapsed,endsAt:w.elapsed+(wave.maxRadius-wave.radius)/INTERFERENCE_WAVE_SPEED});
+  }
+  if(w.astra?.charge)hazards.push({kind:"beam",x:w.playerX,y:w.playerY,end:{x:w.playerX,y:R.top},radius:6,cc:false,startsAt:w.astra.charge.at,endsAt:w.astra.charge.at+.6});
+  for(const b of visible.filter(b=>b.skillId==="stellar_lance").slice(0,2))hazards.push({kind:"beam",x:b.x,y:b.y,end:{x:b.x+b.vx*.6,y:b.y+b.vy*.6},radius:b.radius,cc:false,startsAt:w.elapsed,endsAt:w.elapsed+Math.min(.6,b.lifetime)});
+  ai.history.push({targetProtected:(w.aircraft.activeEffects.armor_shield??0)>.4||(skillRank(w.aircraft,"orbit_reversal")>=4&&(w.aircraft.activeEffects.orbit_reversal??0)>.4),targetVisible,at:w.elapsed,player,playerHp:targetVisible?w.aircraft.currentHp:ai.lastPlayerHp,velocity,bullets,hazards:hazards.slice(0,24),
+    lastBurst:latest(["missile_swarm","sweeping_cannon","focus_laser","starfall"])});
   ai.history=ai.history.slice(-10);ai.lastSampleAt=w.elapsed;ai.lastSampleWallMs=wall;ai.nextSense=w.elapsed+1/30;
 }
 function roleThreshold(id:SkillId,actor:CombatWorld,ai:MirrorAI) {
   if(getWorldSkillAvailability(actor,id).manualAction)return .2;
-  if(["decoy","armor_shield","invisibility","orbit_reversal","electronic_interference"].includes(id))return ai.threat>1?.25:.30;
-  if(["missile_swarm","sweeping_cannon","escort_drone","starfall"].includes(id))return .42;
-  return .35;
+  if(["decoy","armor_shield","invisibility","orbit_reversal","electronic_interference"].includes(id))return ai.threat>1?.55:.85;
+  if(["missile_swarm","sweeping_cannon","escort_drone","starfall"].includes(id))return .85;
+  return .7;
 }
 function updatePlan(ai:MirrorAI,s:AircraftCombatState,now:number) {
-  if(ai.plan&&ai.plan.expiresAt<=now)ai.plan=undefined;
+  if(ai.plan&&(ai.plan.expiresAt<=now||ai.lastCast===ai.plan.nextSkill))ai.plan=undefined;
   const follow:Partial<Record<SkillId,SkillId>>={predator_lock:"afterburner",gravity_anchor:"heavy_bomb",armor_shield:"sweeping_cannon",invisibility:"focus_laser",twin_reflection:"stellar_lance",orbit_reversal:"starfall"};
   if(ai.lastCast&&ai.lastCastAt!==undefined&&now-ai.lastCastAt<2){
     const next=follow[ai.lastCast];
-    if(next&&(!ai.plan||ai.plan.startedAt<ai.lastCastAt))ai.plan={kind:`${ai.lastCast}:${next}`,startedAt:ai.lastCastAt,expiresAt:ai.lastCastAt+3,nextSkill:next,reservedResource:getSkillRuntimeValues(s,next).cost};
+    if(next&&skillRank(s,next)>0&&(!ai.plan||ai.plan.startedAt<ai.lastCastAt))ai.plan={kind:`${ai.lastCast}:${next}`,startedAt:ai.lastCastAt,expiresAt:ai.lastCastAt+3,nextSkill:next};
   }
 }
 /** The 160ms inbox gates both pilot and tactical reactions; own movement is current. */
 export function updateMirrorAI(w:CombatWorld,ai:MirrorAI,s:AircraftCombatState,p:Point,dt:number,actor:CombatWorld):{x:number;y:number;skill?:SkillId} {
-  if(w.elapsed>=ai.nextSense)perceive(w,ai,p);
-  const seen=[...ai.history].reverse().find(snapshot=>snapshot.at<=w.elapsed-.16);
+  if(w.elapsed>=ai.nextSense)perceive(w,ai,p,actor);
+  const observation=[...ai.history].reverse().find(snapshot=>snapshot.at<=w.elapsed-.16);
+  const seen=observation?projectPerception(observation,w.elapsed,p):undefined;
   let skill:SkillId|undefined,emergency=false;
   if(seen){
     const radius=17*playerAirframeScale(s),band=verticalBands(seen.player);
     // Refresh projectile positions from delayed observations only, never unspawned input.
-    const danger=seen.bullets.map(b=>({b,...threatApproach(p,{x:ai.vx,y:ai.vy},b)})).filter(t=>t.distance<radius+t.b.radius+12);
+    const danger=seen.bullets.map(b=>({b,...threatApproach(p,{x:ai.vx,y:ai.vy},b)})).filter(t=>t.time<t.b.lifetime&&t.distance<radius+t.b.radius+12);
     const first=danger.sort((a,b)=>a.time-b.time)[0];
     ai.incoming=danger.reduce((n,t)=>n+t.b.damage*(t.time<.25?1:t.time<.5?.75:.35),0);
-    ai.threat=danger.reduce((n,t)=>n+(t.time<.25?3:t.time<.5?2:1),0)+seen.hazards.reduce((n,h)=>n+hazardCost(p,h,radius),0);
+    ai.threat=danger.reduce((n,t)=>n+(t.time<.25?3:t.time<.5?2:1),0)+seen.hazards.reduce((n,h)=>n+hazardCost(p,h,radius,w.elapsed+.35,w.elapsed),0);
     emergency=ai.threat>1;
     ai.needsVerticalRecovery=p.y>band.soft||(ai.needsVerticalRecovery&&p.y>band.preferred+20);
     if(emergency){
       ai.intent="evade";
       const heading=first?Math.atan2(first.b.vy,first.b.vx):Math.atan2(ai.vy,ai.vx);
       const candidates=[heading+Math.PI/2,heading-Math.PI/2,-Math.PI/2,-Math.PI/4,-3*Math.PI/4,0,Math.PI,Math.PI/2]
-        .map(a=>bounded({x:p.x+Math.cos(a)*120,y:p.y+Math.sin(a)*120}));
-      const route=(q:Point)=>trajectoryCost(p,q,seen,radius);
-      const safestUp=Math.min(...candidates.filter(q=>q.y<=p.y+1).map(route));
-      const scored=candidates.map(q=>({q,risk:route(q)})).filter(({q,risk})=>p.y<band.hard||q.y<=p.y+1||risk+.5<safestUp)
+        .flatMap(a=>[65,150].map(reach=>bounded({x:p.x+Math.cos(a)*reach,y:p.y+Math.sin(a)*reach})));
+      const route=(q:Point)=>trajectoryCost(p,q,seen,radius,{x:ai.vx,y:ai.vy},310);
+      const routes=candidates.map(q=>({q,risk:route(q)}));
+      const safestUp=Math.min(...routes.filter(({q})=>q.y<=p.y+1).map(({risk})=>risk));
+      const scored=routes.filter(({q,risk})=>p.y<band.hard||q.y<=p.y+1||risk+.5<safestUp)
         .map(({q,risk})=>({q,score:risk*12+positionalCost(q,seen,"evade")})).sort((a,b)=>a.score-b.score);
       const best=scored[0];
       if(best){
         const old=ai.dodge?route(ai.dodge)*12+positionalCost(ai.dodge,seen,"evade"):Infinity;
         if(!ai.dodge||w.elapsed>=ai.dodgeUntil||old>best.score+4){ai.dodge=best.q;ai.dodgeUntil=w.elapsed+.32;}
         ai.goal=ai.dodge!;
+        ai.escapeRisk=route(ai.goal);
         if(ai.goal.y>band.soft)ai.needsVerticalRecovery=true;
       }
     }
@@ -247,27 +304,26 @@ export function updateMirrorAI(w:CombatWorld,ai:MirrorAI,s:AircraftCombatState,p
       updatePlan(ai,s,w.elapsed);
       if(!emergency){
         ai.intent=ai.needsVerticalRecovery?"recover-up":ai.plan?"combo-setup":ai.losing?"kite":Math.abs(p.x-seen.player.x)>80?"reposition":Math.abs(p.x-seen.player.x)<25?"hold-angle":"pressure";
-        const aimingLaser = s.aircraftId === "phantom" && actor.laserCharge > 0 && seen.targetVisible;
+        const aimingLaser = (actor.laserCharge > 0 || actor.laserRemaining > 0 || !!actor.astra?.charge || (s.activeEffects.sweeping_cannon??0)>0) && seen.targetVisible;
         // Aim from the delayed observation, including the remaining charge time.
         // Hidden targets keep the existing last-known-position movement policy.
-        const leadSeconds = aimingLaser ? clamp(w.elapsed - seen.at + actor.laserCharge, 0, .8) : 0;
+        const leadSeconds = aimingLaser ? clamp(actor.laserCharge || (actor.astra?.charge?.at??w.elapsed)-w.elapsed, 0, .8) : 0;
         const strafe = aimingLaser ? 0 : Math.sin(w.elapsed * 1.8) * 45;
         const desiredX = clamp(seen.player.x + seen.velocity.x * leadSeconds + strafe, R.left + 35, R.right - 35);
         const candidates=ai.intent==="recover-up"?[-85,0,85].map(dx=>bounded({x:p.x+dx,y:Math.min(p.y-100,band.preferred)})):
           [-65,0,65].flatMap(dx=>[-35,0,35].map(dy=>bounded({x:desiredX+dx,y:band.preferred+dy})));
         const legal=candidates.filter(q=>q.y<=band.hard&&(p.y<=band.soft||q.y<=p.y));
-        const movementCost = (q: Point) => trajectoryCost(p, q, seen, radius) * 6
+        const movementCost = (q: Point) => trajectoryCost(p, q, seen, radius, {x:ai.vx,y:ai.vy}, 250) * 6
           + positionalCost(q, seen, ai.intent) + distance(q, p) / 300
           + (aimingLaser ? Math.abs(q.x - desiredX) / 25 : 0);
-        legal.sort((a, b) => movementCost(a) - movementCost(b));
-        if(legal[0])ai.goal=legal[0];
+        const scored=legal.map(q=>({q,cost:movementCost(q)})).sort((a,b)=>a.cost-b.cost);
+        if(scored[0])ai.goal=scored[0].q;
         // Never retain a stale bottom goal after a dodge.
         else ai.goal=bounded({x:p.x,y:Math.min(p.y,band.soft)});
       }
+      ai.escapeRisk=trajectoryCost(p,ai.goal,seen,radius,{x:ai.vx,y:ai.vy},emergency?310:250);
       let bestUtility=0;
       for(const id of AIRCRAFT_CONFIGS[s.aircraftId].skillIds){
-        const available=getWorldSkillAvailability(actor,id);
-        if(available.available)ai.readySince[id]??=w.elapsed;else delete ai.readySince[id];
         const utility=skillUtility(id,s,ai,p,seen,actor)-roleThreshold(id,actor,ai);
         if(utility>bestUtility){bestUtility=utility;skill=id;}
       }
@@ -279,9 +335,7 @@ export function updateMirrorAI(w:CombatWorld,ai:MirrorAI,s:AircraftCombatState,p
   const desiredX=dx/Math.max(1,length)*Math.min(speed,length*5),desiredY=dy/Math.max(1,length)*Math.min(speed,length*5);
   const dvx=desiredX-ai.vx,dvy=desiredY-ai.vy,turn=Math.min(1,1400*dt/(Math.hypot(dvx,dvy)||1));
   ai.vx+=dvx*turn;ai.vy+=dvy*turn;
-  // Charging permits repositioning; hold the firing lane only once the beam is active.
-  // laserRemaining is populated at cast time, before the charge has finished.
-  if(actor.laserCharge<=0&&actor.laserRemaining>0){ai.vx=ai.vy=0;}
+  // Skill execution never locks the pilot. Runtime stun/dash rules still own movement.
   if (skill && !aircraftTargetability(w.aircraft).canAcquire && ["predator_lock","missile_swarm","focus_laser","stellar_lance","starfall"].includes(skill)) skill = undefined;
   if (actor.aftermath || actor.destruction || s.currentHp <= 0) return {...p};
   return {...bounded({x:p.x+ai.vx*dt,y:p.y+ai.vy*dt}),skill};

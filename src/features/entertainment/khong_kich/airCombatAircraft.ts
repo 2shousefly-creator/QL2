@@ -12,7 +12,7 @@ import { recordCoreMetric } from "./airCombatTelemetry";
 import { releaseState, overheated } from "./airCombatReleaseState";
 import { SKILL_BASE_VALUES as B, SKILL_CORE_VALUES as V } from "./airCombatSkillCores";
 import { createPlayerStatus, playerSkillLocked, tickPlayerStatus } from "./airCombatStatus";
-import { AIRCRAFT_CONFIGS, SKILL_CONFIGS } from "./airCombatConfig";
+import { AIRCRAFT_CONFIGS, SKILL_CONFIGS, STARFALL_TIMING } from "./airCombatConfig";
 import { applyCoreStatEffects, applyFireRateLock, hasCore } from "./airCombatCoreEffects";
 import type { AircraftCombatState, AircraftId, EffectiveAircraftStats, LevelUpResult, SkillCastResult, SkillId, WeaponModifiers } from "./airCombatTypes";
 const isAstraSkill=(id:SkillId)=>id==="orbit_reversal"||id==="stellar_lance"||id==="starfall";
@@ -286,7 +286,7 @@ export function castSkill(state: AircraftCombatState, skillId: SkillId): SkillCa
     observeExpansionResource(state, getEffectiveAircraftStats(state).maxResource);
     state.coreState.skillCasts++;
     if(isAstraSkill(skillId)) {
-        state.activeEffects[skillId]=skillId==="orbit_reversal"?v.duration:skillId==="stellar_lance"?v.charge:(v.count-1)*.5+(skillRank(state,skillId)>=3?2:1);
+        state.activeEffects[skillId]=skillId==="orbit_reversal"?v.duration:skillId==="stellar_lance"?v.charge:(v.count-1)*STARFALL_TIMING.interval+STARFALL_TIMING.aim+STARFALL_TIMING.fall;
         (state.activeEffectDurations??={})[skillId]=state.activeEffects[skillId];
     }
     if(skillId==="stellar_lance"){

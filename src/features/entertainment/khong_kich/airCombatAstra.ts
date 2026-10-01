@@ -1,6 +1,6 @@
 import { canTargetEnemy } from "./airCombatTargetability";
 import { skillRank } from "./airCombatSkillRanks";
-import { AIR_COMBAT_WORLD, GAMEPLAY_SAFE_RECT } from "./airCombatConfig";
+import { AIR_COMBAT_WORLD, GAMEPLAY_SAFE_RECT, STARFALL_TIMING } from "./airCombatConfig";
 import { playerAirframeScale } from "./airCombatReleaseState";
 import { expansionState, type ExpansionCast } from "./airCombatExpansion";
 import { endAircraftSkill, getEffectiveAircraftStats, getSkillRuntimeValues } from "./airCombatAircraft";
@@ -174,20 +174,24 @@ export function updateAstra(w:CombatWorld,_dt:number,h:AstraHooks) {
       if (!pool.length) {
         // A temporary loss of targetability must not cancel uncalled meteors.
         // Keep the remaining count and retry at the normal cadence, without a catch-up burst.
-        if (hostiles.length) f.next = now + .5;
+        if (hostiles.length) f.next = now + STARFALL_TIMING.interval;
         else f.stopped = true;
       } else {
         const fresh=pool.filter(e=>!f.marked.has(e.id)),targets=fresh.length?fresh:pool;
         const e=targets[Math.min(targets.length-1,Math.floor(w.random()*targets.length))];
         astraMetric(w,f.marked.has(e.id)?"starfall.repeatedMarks":"starfall.uniqueTargets");
-        const doom=f.rank>=3&&f.locks===f.count-1,fallDuration=doom?2:1;
-        f.marked.add(e.id);f.pending.push({id:w.nextId++,target:e.id,x:e.x,y:e.y,at:f.next+fallDuration,fallDuration,doom,frozen:false});
-        f.locks++;f.next+=.5;astraMetric(w,"starfall.locks");
+        const doom=f.rank>=3&&f.locks===f.count-1,fallDuration=STARFALL_TIMING.fall;
+        f.marked.add(e.id);f.pending.push({id:w.nextId++,target:e.id,x:e.x,y:e.y,at:now+STARFALL_TIMING.aim+fallDuration,fallDuration,doom,frozen:false});
+        f.locks++;f.next=now+STARFALL_TIMING.interval;astraMetric(w,"starfall.locks");
       }
     }
     for(let i=f.pending.length-1;i>=0;i--) {
       const m=f.pending[i],target=w.enemies.find(e=>e.id===m.target);
-      if(!m.frozen){if(target&&canTargetEnemy(w,target)){m.x=target.x;m.y=target.y;}else m.frozen=true;}
+      // The final aim sample commits a ground point. Never follow the target in flight.
+      if(!m.frozen){
+        if(target&&canTargetEnemy(w,target)){m.x=target.x;m.y=target.y;}else m.frozen=true;
+        if(now+1e-8>=m.at-m.fallDuration)m.frozen=true;
+      }
       if(now+1e-8<m.at)continue;
       f.pending.splice(i,1);const radius=m.doom?110:f.rank>=2?65:45;
       h.impact(w,m.x,m.y,radius,m.doom);
@@ -199,7 +203,7 @@ export function updateAstra(w:CombatWorld,_dt:number,h:AstraHooks) {
         if(e.hp<=0&&dealt>0){astraMetric(w,"starfall.kills");if(f.rank>=2){const fraction=Math.max(0,Math.min(.06,.36-f.refunded));f.refunded+=fraction;refund(w,fraction,164,"starfall.manaRestored");}}
       }
     }
-    s.activeEffects.starfall=Math.max(.0001,...f.pending.map(m=>m.at-now),f.stopped||f.locks>=f.count?0:f.next-now+(f.count-f.locks-1)*.5+(f.rank>=3?2:1));
+    s.activeEffects.starfall=Math.max(.0001,...f.pending.map(m=>m.at-now),f.stopped||f.locks>=f.count?0:f.next-now+(f.count-f.locks-1)*STARFALL_TIMING.interval+STARFALL_TIMING.aim+STARFALL_TIMING.fall);
     if((f.stopped||f.locks===f.count)&&!f.pending.length){r.starfall=undefined;endAircraftSkill(s,"starfall");}
   }
   // The newest containing active zone owns damage even if an older zone's tick is due.
