@@ -1,4 +1,5 @@
-import React, { useContext, useId, useMemo, useState } from "react";
+import React, { useContext, useId, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useReducedMotion } from "motion/react";
 import { X } from "lucide-react";
 import { ModalButton, OverlayBody, OverlayHeader } from "../../../components/overlay/AppOverlay";
 import { AirCombatModal, AirCombatMotionContext } from "./AirCombatMotion";
@@ -41,7 +42,7 @@ export function AircraftSelection({ side, selected, onSelect, onSelectSecret, on
     <div className="air-selection-panel" aria-live="polite" aria-atomic="true">
       {!selected ? <p className="air-selection-empty">Chọn một chiến cơ để xem thông tin</p>
         : selected === "secret" ? <div className="air-selection-empty"><h3>BÍ MẬT</h3><p>Chiến cơ đối thủ sẽ lộ diện trong đấu trường</p></div>
-        : <AircraftSelectionDetails key={`${side}:${selected}`} aircraftId={selected} />}
+        : <AircraftSelectionDetails side={side} aircraftId={selected} />}
     </div>
     <button type="button" className="air-selection-confirm" disabled={!selected} onClick={onConfirm}>
       {side === "player" ? "XÁC NHẬN CHỌN CHIẾN CƠ PLAYER" : "XÁC NHẬN CHỌN CHIẾN CƠ AI"}
@@ -49,10 +50,58 @@ export function AircraftSelection({ side, selected, onSelect, onSelectSecret, on
   </div>;
 }
 
-function AircraftSelectionDetails({ aircraftId }: { aircraftId: AircraftId }) {
+function AircraftSelectionDetails({ aircraftId, side }: { aircraftId: AircraftId; side: SelectionProps["side"] }) {
   const config = AIRCRAFT_CONFIGS[aircraftId];
   const profile = AIRCRAFT_SELECTION_PROFILES[aircraftId];
-  const reducedMotion = useContext(AirCombatMotionContext);
+
+  return <>
+    <div className="air-selection-identity">
+      <AircraftPreview key={aircraftId} aircraftId={aircraftId} className="air-selection-portrait" />
+      <div><span className="air-selection-code">{config.code}</span><h3>{config.name}</h3><p className="air-selection-role">{profile.role}</p></div>
+    </div>
+    <p className="air-selection-description">{profile.description}</p>
+    <AircraftSelectionPower power={profile.power} />
+    <AircraftSelectionSkills key={`${side}:${aircraftId}`} aircraftId={aircraftId} />
+  </>;
+}
+
+function AircraftSelectionPower({ power }: { power: readonly [number, number, number, number] }) {
+  const container = useRef<HTMLDivElement>(null);
+  const gameReducedMotion = useContext(AirCombatMotionContext);
+  const systemReducedMotion = useReducedMotion();
+  const reducedMotion = gameReducedMotion || !!systemReducedMotion;
+
+  useLayoutEffect(() => {
+    const fills = Array.from(container.current!.querySelectorAll<HTMLDivElement>(".air-selection-power-fill"));
+    const animations = fills.map((fill, index) => {
+      // The previous cleanup freezes the in-flight fill before cancelling it.
+      // Retarget all four persistent elements together for a full 450 ms.
+      const from = getComputedStyle(fill).transform;
+      const to = `scaleX(${power[index] / 100})`;
+      fill.style.transform = to;
+      return reducedMotion ? null : fill.animate([{ transform: from }, { transform: to }], {
+        duration: 450,
+        easing: "ease-out",
+      });
+    });
+    return () => {
+      fills.forEach((fill, index) => {
+        fill.style.transform = getComputedStyle(fill).transform;
+        animations[index]?.cancel();
+      });
+    };
+  }, [power, reducedMotion]);
+
+  return <div ref={container} className="air-selection-power">
+    {AIRCRAFT_POWER_BARS.map(bar => <div className="air-selection-power-row" key={bar.label}>
+      <span>{bar.label}</span>
+      <div className="air-selection-power-track" aria-hidden="true"><div className="air-selection-power-fill" style={{ backgroundColor: bar.color }} /></div>
+    </div>)}
+  </div>;
+}
+
+function AircraftSelectionSkills({ aircraftId }: { aircraftId: AircraftId }) {
+  const config = AIRCRAFT_CONFIGS[aircraftId];
   const [detailSkill, setDetailSkill] = useState<SkillId | null>(null);
   const titleId = useId();
   // A detached level-one preview; it never enters a run or a saved profile.
@@ -64,19 +113,6 @@ function AircraftSelectionDetails({ aircraftId }: { aircraftId: AircraftId }) {
   const model = detailSkill ? getSkillTooltipModel(preview, detailSkill) : null;
 
   return <>
-    <div className="air-selection-identity">
-      <AircraftPreview aircraftId={aircraftId} className="air-selection-portrait" />
-      <div><span className="air-selection-code">{config.code}</span><h3>{config.name}</h3><p className="air-selection-role">{profile.role}</p></div>
-    </div>
-    <p className="air-selection-description">{profile.description}</p>
-    <div className="air-selection-power" data-reduced-motion={reducedMotion}>
-      {AIRCRAFT_POWER_BARS.map((bar, index) => <div className="air-selection-power-row" key={bar.label}>
-        <span>{bar.label}</span>
-        <div className="air-selection-power-track" aria-hidden="true"><div className="air-selection-power-fill" style={{
-          backgroundColor: bar.color, "--power-scale": profile.power[index] / 100, animationDelay: `${index * 50}ms`,
-        } as React.CSSProperties} /></div>
-      </div>)}
-    </div>
     <div className="air-selection-skills">
       {config.skillIds.map(id => <button type="button" key={id} className="air-selection-skill" onClick={() => setDetailSkill(id)}
         aria-label={`Xem chi tiết ${isUltimate(id) ? "kỹ năng tối thượng" : "kỹ năng"} ${SKILL_CONFIGS[id].name}`}>
