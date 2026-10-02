@@ -1,0 +1,612 @@
+{
+  "version": "26.20.0",
+  "releaseDate": "02/10/2026",
+  "title": "Cinder & Kỹ Năng Nội Tại",
+  "displayTitle": "KHÔNG KÍCH 26.20.0 — CINDER & KỸ NĂNG NỘI TẠI",
+  "summary": "Cinder gia nhập đội hình với Khiên Lửa, vùng nhiên liệu, Quầng Nhiệt và luồng Hỏa Quang Hủy Diệt. Bổ sung kỹ năng Nội Tại cho cả năm chiến cơ, ô nội tại trong HUD Kỹ Năng và bộ sprite, hiệu ứng chiến đấu mới.",
+  "sections": [
+    {
+      "id": "s1",
+      "title": "CHIẾN CƠ MỚI · CINDER",
+      "icon": {
+        "kind": "aircraft",
+        "id": "cinder"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "s1-e1",
+          "icon": {
+            "kind": "aircraft",
+            "id": "cinder"
+          },
+          "title": "Thiêu đốt và duy trì sát thương",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Thêm Cinder vào đội hình chiến cơ, sử dụng được trong Chiến Dịch và Solo 1v1 cho cả Player và AI."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Cinder bắn đạn hỏa nhiệt thẳng phía trước, duy trì Cháy để gây sát thương chuẩn và dùng lá chắn tăng theo Hỏa Lực để trụ vững."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Chỉ số cấp 1 → cấp 18: Máu tối đa 2.100 → 3.460; Giáp 48 → 107,5; Hỏa Lực 110 → 229; tốc độ bắn thường khoảng 4,08 → 5,25 phát/giây khi chưa có trang bị, lõi hoặc hiệu ứng kỹ năng."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mana tối đa 340 → 850; hồi Mana 1,5 → 9,15 mỗi giây; hồi Máu 3,3 → 8,4 mỗi giây. Tỷ lệ chí mạng cơ bản 5%, sát thương chí mạng 170%."
+            }
+          ]
+        },
+        {
+          "id": "s1-e2",
+          "icon": {
+            "kind": "vfx",
+            "id": "cinder_burn"
+          },
+          "title": "Hiệu ứng Cháy",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mỗi cộng dồn Cháy gây 10% Hỏa Lực sát thương chuẩn mỗi giây, chia thành các lần sát thương mỗi 0,5 giây. Sát thương Cháy không thể chí mạng."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Cháy tồn tại 6 giây và cộng dồn tối đa 6 lần. Thêm Cháy làm mới thời gian của toàn bộ cộng dồn thành 6 giây; khi đã đủ 6 cộng dồn, chỉ làm mới thời gian."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Làm mới Cháy không làm đặt lại nhịp sát thương. Cháy bỏ qua Giáp và giảm sát thương, vẫn bị lá chắn hấp thụ và không xuyên trạng thái bất khả xâm phạm."
+            }
+          ]
+        },
+        {
+          "id": "s1-e3",
+          "icon": {
+            "kind": "skill",
+            "id": "cinder_thermal_round"
+          },
+          "title": "Nội tại — Đạn Hỏa Nhiệt",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Đòn bắn thường chính đầu tiên trúng mỗi kẻ địch và đòn đầu tiên trúng sau khi hết hồi chiêu gây thêm sát thương, đồng thời đặt 1 cộng dồn Cháy. Hồi chiêu riêng 3 giây trên từng mục tiêu."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Sát thương cộng thêm: 25%/35%/45%/55% Hỏa Lực ở cấp chiến cơ 1/6/11/16. Phần cộng thêm gây sát thương thông thường, không thể chí mạng; phần đòn thường vẫn chí mạng bình thường."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mỗi lần nội tại đặt Cháy làm mới thời gian thành 6 giây. Đòn trúng trong hồi chiêu không gây thêm sát thương, không đặt thêm hoặc làm mới Cháy từ nội tại."
+            }
+          ]
+        },
+        {
+          "id": "s1-e4",
+          "icon": {
+            "kind": "skill",
+            "id": "cinder_fire_shield"
+          },
+          "title": "Skill 1 — Khiên Lửa",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Tạo lá chắn hấp thụ sát thương, chỉ tăng theo Hỏa Lực. Lượng khiên theo cấp kỹ năng: 100%/150%/200%/250%/300% Hỏa Lực; thời gian tồn tại: 5/5/6/6/7 giây."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Cấp 3 — Phản Nhiệt: khi khiên hấp thụ sát thương, phát quầng lửa bán kính 80 đặt 1 Cháy lên mục tiêu trúng. Hiệu ứng có hồi chiêu riêng 1 giây và không gây sát thương trực tiếp."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Cấp 4 — Thu Hồi Nhiệt: Phản Nhiệt trúng ít nhất một mục tiêu đã có Cháy thì hồi 2% Mana tối đa; tối đa 10% Mana tối đa trong một lần tạo khiên."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Cấp 5 — Vỏ Lửa Gia Cố: mục tiêu có ít nhất 3 Cháy gây ít hơn 35% sát thương thông thường lên Khiên Lửa. Không giảm sát thương chuẩn hoặc phần sát thương tràn vào Máu sau khi khiên vỡ."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mana: 80/85/90/95/100. Hồi chiêu: 30/29/28/27/26 giây, bắt đầu khi khiên hết thời gian hoặc bị phá vỡ."
+            }
+          ]
+        },
+        {
+          "id": "s1-e5",
+          "icon": {
+            "kind": "skill",
+            "id": "cinder_fuel_barrage"
+          },
+          "title": "Skill 2 — Rải Nhiên Liệu",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Bắn 4 khối nhiên liệu vào vùng đông kẻ địch nhất phía trước. Sau 0,6 giây, chúng tạo 4 vùng cháy cố định trên một hàng ngang, khoảng cách tâm vùng 84."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Vùng cháy gây sát thương thông thường mỗi 0,5 giây. Kẻ địch khi vào vùng nhận 1 Cháy, sau đó thêm 1 Cháy mỗi 0,5 giây nếu tiếp tục đứng trong vùng. Vùng giao nhau không nhân sát thương hoặc tốc độ cộng Cháy."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Cấp 1: mỗi vùng có bán kính 36, tồn tại 4 giây và gây 45% Hỏa Lực mỗi 0,5 giây."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Cấp 2: bán kính tăng lên 40, sát thương tăng lên 55% Hỏa Lực mỗi 0,5 giây."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Cấp 3: vùng cháy tồn tại 5 giây và gây thêm 25% sát thương trực tiếp lên mục tiêu có 6 Cháy."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Cấp 4 — Bùng Nhiên Liệu: Quầng Nhiệt hoặc luồng Ultimate đi qua vùng cháy khiến vùng bùng lên, gây 180% Hỏa Lực sát thương thông thường và đặt 1 Cháy. Vùng cháy tiếp tục tồn tại; mỗi mục tiêu chỉ nhận một lần bùng từ các vùng trong cùng đợt kích hoạt."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Cấp 5 — Tường Lửa: nối khoảng trống giữa 4 vùng thành dải lửa liên tục; bán kính vùng tăng lên 44 và sát thương tăng lên 65% Hỏa Lực mỗi 0,5 giây."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mana: 100/110/120/130/140. Hồi chiêu: 24/23/22/21/20 giây, bắt đầu khi các vùng cháy kết thúc."
+            }
+          ]
+        },
+        {
+          "id": "s1-e6",
+          "icon": {
+            "kind": "skill",
+            "id": "cinder_heat_wave"
+          },
+          "title": "Skill 3 — Quầng Nhiệt",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Tỏa một quầng nhiệt ra toàn màn hình trong khoảng 0,8 giây, gây sát thương thông thường một lần lên mỗi mục tiêu nó đi qua."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Sát thương theo cấp kỹ năng: 40%/50%/60%/70%/80% Hỏa Lực. Mục tiêu đã Cháy nhận thêm 30%/30%/35%/35%/40% Hỏa Lực cho mỗi cộng dồn có trước khi trúng quầng."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mục tiêu chưa Cháy nhận 1 Cháy và không bị làm chậm ở mọi cấp kỹ năng. Mục tiêu đã Cháy nhận thêm 1 Cháy ở cấp 1–3, thêm 2 Cháy ở cấp 4–5 và được làm mới thời gian Cháy thành 6 giây."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mục tiêu đã Cháy bị làm chậm 15% + 3% cho mỗi cộng dồn trước khi trúng quầng, tối đa 33%. Làm chậm kéo dài 3 giây ở cấp 1–3 và 4 giây ở cấp 4–5."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Cấp 3 — Trói Nhiệt: mục tiêu có sẵn 6 Cháy bị trói chân 0,75 giây rồi tiếp tục chịu làm chậm. Trói chân không ngăn tấn công hoặc dùng kỹ năng; Boss không bị trói chân."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Cấp 5 — Cháy Lan: mục tiêu có 6 Cháy sau khi trúng quầng phát 4 xung nhiệt trong 4 giây. Mỗi xung gây 60% Hỏa Lực sát thương thông thường lên nguồn và kẻ địch trong bán kính 55; kẻ địch xung quanh nhận 1 Cháy."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Cháy Lan không tự thêm hoặc làm mới Cháy lên nguồn, không tạo nguồn lan mới và kết thúc khi nguồn bị hạ gục. Xung giao nhau trong cùng lần dùng kỹ năng không nhân sát thương hoặc số cộng dồn trên một mục tiêu trong cùng giây."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mana: 90/100/110/120/130. Hồi chiêu: 22/21/20/19/18 giây, bắt đầu khi quầng chính quét xong."
+            }
+          ]
+        },
+        {
+          "id": "s1-e7",
+          "icon": {
+            "kind": "skill",
+            "id": "cinder_inferno_beam"
+          },
+          "title": "Ultimate — Hỏa Quang Hủy Diệt",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Tụ năng lượng rồi phóng một luồng hỏa năng hình trụ thẳng phía trước, xuyên toàn bộ kẻ địch trên đường đi. Trong lúc tụ vẫn di chuyển được; khi khai hỏa đứng yên 0,45 giây. Tạm dừng bắn thường trong cả hai giai đoạn."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Sát thương luồng chính theo cấp Ultimate: 2.400%/3.000%/3.600% Hỏa Lực. Thời gian tụ: 2/1,75/1,5 giây; bề rộng luồng: 84/84/96; bán kính kích nổ: 45/55/65."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mục tiêu chưa Cháy nhận 1 Cháy khi trúng luồng. Mục tiêu đã Cháy phát nổ, gây 120% + 100% × số cộng dồn Cháy trước khi trúng, tính theo Hỏa Lực, lên bản thân và kẻ địch xung quanh."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Kích nổ gây sát thương thông thường, không tiêu hao Cháy; mục tiêu nguồn nhận thêm 1 Cháy và được làm mới thời gian thành 6 giây. Mỗi nguồn chỉ nổ một lần; vụ nổ không tạo chuỗi kích nổ mới."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Tổng sát thương vụ nổ từ các mục tiêu khác lên một mục tiêu giới hạn ở 720% Hỏa Lực trong một lần dùng Ultimate; vụ nổ của chính mục tiêu được tính riêng."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Cấp 2: kẻ địch xung quanh trúng vụ nổ nhận 1 Cháy, tối đa một cộng dồn từ các vụ nổ xung quanh trong cùng Ultimate."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Cấp 3 — Vệt Hỏa Năng: để lại đường nóng cố định trong 3 giây, gây 60% Hỏa Lực sát thương thông thường mỗi 0,5 giây và đặt 1 Cháy mỗi giây. Vệt không kích nổ lại mục tiêu hoặc kích hoạt lại Bùng Nhiên Liệu."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Trong lúc tụ được dùng Khiên Lửa, tạm khóa Rải Nhiên Liệu và Quầng Nhiệt. Trong lúc khai hỏa tạm khóa di chuyển và các kỹ năng khác."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Ultimate mở các cấp tại cấp chiến cơ 6/11/16. Mana: 150/200/250. Hồi chiêu 90 giây, bắt đầu khi kết thúc khai hỏa."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "KỸ NĂNG NỘI TẠI · ĐỘI HÌNH CHIẾN CƠ",
+      "icon": {
+        "kind": "system",
+        "id": "rules"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "s2-e1",
+          "icon": {
+            "kind": "system",
+            "id": "rules"
+          },
+          "title": "Nội tại theo cấp chiến cơ",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Cả năm chiến cơ có nội tại tự hoạt động từ cấp 1, không dùng điểm kỹ năng và không tiêu hao tài nguyên. Các hệ số có bốn bậc tăng theo cấp chiến cơ 1/6/11/16."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Nội tại áp dụng cho cả Player và AI trong Chiến Dịch và Solo 1v1. Nội tại không thay thế hoặc chiếm vị trí nâng cấp của bốn kỹ năng chủ động."
+            }
+          ]
+        },
+        {
+          "id": "s2-e2",
+          "icon": {
+            "kind": "skill",
+            "id": "viper_follow_up"
+          },
+          "title": "Viper — Bắn Bồi",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Viper nhận thêm 10 điểm phần trăm tỷ lệ chí mạng. Khi đòn bắn thường chính chí mạng, phóng một viên đạn bồi truy đuổi chính mục tiêu đó."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Đạn bồi gây 20%/30%/40%/50% sát thương đòn thường trước chí mạng ở cấp chiến cơ 1/6/11/16. Hồi chiêu riêng 0,5 giây."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Đạn bồi gây sát thương thông thường, không chí mạng và không tự kích hoạt Bắn Bồi. Đạn phụ, đạn nảy và kỹ năng không kích hoạt nội tại; đạn bồi không đổi sang mục tiêu khác khi mục tiêu ban đầu bị hạ gục."
+            }
+          ]
+        },
+        {
+          "id": "s2-e3",
+          "icon": {
+            "kind": "skill",
+            "id": "titan_alloy_rounds"
+          },
+          "title": "Titan — Đạn Hợp Kim",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mỗi đòn bắn thường chính được cộng sát thương cơ bản bằng 21%/24%/27%/30% Giáp hiện tại của Titan ở cấp chiến cơ 1/6/11/16."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Phần cộng thêm gây sát thương thông thường, không chí mạng. Giáp từ trang bị, lõi và hiệu ứng hợp lệ được tính vào nội tại; phần đòn thường gốc vẫn chí mạng bình thường."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Nội tại không cộng vào đạn phụ hoặc kỹ năng. Trong Oanh Tạc, chỉ đạn chính ở giữa được hưởng phần sát thương cộng thêm."
+            }
+          ]
+        },
+        {
+          "id": "s2-e4",
+          "icon": {
+            "kind": "skill",
+            "id": "phantom_backup_battery"
+          },
+          "title": "Phantom — Pin Dự Phòng",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Pin Dự Phòng sạc thêm 1,5 điểm phần trăm dung lượng mỗi giây. Khi đạt 100%, pin chuyển sang sẵn sàng và tự kích hoạt lúc Điện hiện tại dưới 10% Điện tối đa."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Khi kích hoạt, pin tiêu hao 20 điểm phần trăm dung lượng mỗi giây trong 5 giây để nạp 8 Điện cố định mỗi giây, tổng cộng tối đa 40 Điện. Lượng nạp không tăng theo Điện tối đa."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Sau khi nạp xong, pin chờ nguội 5 giây rồi sạc lại. Pin không sạc trong giai đoạn nạp hoặc chờ nguội; đã kích hoạt thì tiếp tục nạp hết 5 giây."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Điện không vượt giới hạn tối đa. Hồi Điện thường, chi phí kỹ năng và tiêu hao drone vẫn hoạt động trong lúc nạp. Pin bắt đầu ở 0% trong trận hoặc vòng đấu mới."
+            }
+          ]
+        },
+        {
+          "id": "s2-e5",
+          "icon": {
+            "kind": "skill",
+            "id": "astra_stellar_mark"
+          },
+          "title": "Astra — Ấn Tinh Tú",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Đòn bắn thường chính trúng kẻ địch đặt một Ấn Tinh Tú trong 4 giây. Mỗi mục tiêu chỉ có một ấn; đòn chính trúng tiếp làm mới thời gian."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Kỹ năng Astra gây sát thương trực tiếp lên mục tiêu có ấn sẽ tiêu hao ấn và gây thêm 50%/70%/90%/110% Hỏa Lực sát thương thông thường ở cấp chiến cơ 1/6/11/16."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mỗi mục tiêu chỉ bị kích nổ ấn một lần mỗi 6 giây; trong thời gian này mục tiêu không thể nhận ấn mới. Sát thương cộng thêm không chí mạng và không tự đặt hoặc kích hoạt ấn."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Song Tinh và các đòn kỹ năng phản chiếu có thể kích nổ ấn nhưng không tự đặt ấn. Sát thương kéo dài từ lõi hoặc trang bị không kích nổ ấn."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "GIAO DIỆN · NỘI TẠI & CHỌN CHIẾN CƠ",
+      "icon": {
+        "kind": "system",
+        "id": "ui"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "s3-e1",
+          "icon": {
+            "kind": "system",
+            "id": "ui"
+          },
+          "title": "Ô nội tại trong HUD Kỹ Năng",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Thêm ô nội tại bên trái ngoài cùng, trước Skill 1, Skill 2, Skill 3 và Ultimate. Chiều rộng và chiều cao ô nội tại bằng 60% ô kỹ năng chính."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Chạm ô nội tại để xem tooltip, bậc hiện tại và hệ số theo cấp chiến cơ. Nội tại có sprite minh họa cùng phong cách kỹ năng chính và không có nút phân điểm nâng cấp."
+            }
+          ]
+        },
+        {
+          "id": "s3-e2",
+          "icon": {
+            "kind": "skill",
+            "id": "phantom_backup_battery"
+          },
+          "title": "Theo dõi trạng thái nội tại",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Bắn Bồi hiển thị hồi chiêu riêng; Đạn Hợp Kim luôn hoạt động và hiển thị lượng sát thương cộng thêm theo Giáp hiện tại."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Pin Dự Phòng có thanh sạc, trạng thái sẵn sàng, thời gian nạp và thời gian chờ nguội. Ấn Tinh Tú và Đạn Hỏa Nhiệt theo dõi hiệu ứng, hồi chiêu riêng trên từng mục tiêu."
+            }
+          ]
+        },
+        {
+          "id": "s3-e3",
+          "icon": {
+            "kind": "aircraft",
+            "id": "cinder"
+          },
+          "title": "Cinder trong màn chọn chiến cơ",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Thêm ô sprite Cinder và thông tin đầy đủ gồm vai trò, nội tại cùng bốn kỹ năng trong màn chọn chiến cơ của các chế độ."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Bốn thanh sức mạnh giữ nền đen và màu riêng cho Sát thương, Chống chịu, Tốc độ bắn, Độ khó; không hiển thị điểm, phần trăm hoặc chú thích."
+            }
+          ]
+        },
+        {
+          "id": "s3-e4",
+          "icon": {
+            "kind": "system",
+            "id": "motion"
+          },
+          "title": "Chuyển thanh sức mạnh liền mạch",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "unchanged",
+              "text": "Khi đổi chiến cơ, bốn thanh tăng hoặc giảm trực tiếp từ mức đang hiển thị sang mức mới trong 450 ms, không chạy lại từ đầu. Đổi lựa chọn nhanh vẫn chuyển tiếp từ trạng thái đang hiển thị."
+            },
+            {
+              "format": "bullet",
+              "changeType": "unchanged",
+              "text": "Khi bật giảm chuyển động, thanh hiển thị ngay mức tương ứng."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "ĐỒ HỌA · SPRITE & HIỆU ỨNG CHIẾN ĐẤU",
+      "icon": {
+        "kind": "system",
+        "id": "vfx"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "s4-e1",
+          "icon": {
+            "kind": "aircraft",
+            "id": "cinder"
+          },
+          "title": "Diện mạo và hỏa lực Cinder",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Cinder có thân kim loại graphite, giáp đỏ burgundy, khe nhiệt cam và lõi trắng vàng; cánh swept-back, pháo hỏa nhiệt phía mũi cùng hai động cơ phía sau."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Bổ sung sprite chiến cơ, đạn thường, đạn hỏa nhiệt và hình minh họa cho bốn kỹ năng Cinder cùng năm nội tại."
+            }
+          ]
+        },
+        {
+          "id": "s4-e2",
+          "icon": {
+            "kind": "vfx",
+            "id": "cinder_inferno_beam"
+          },
+          "title": "VFX Cinder nhiều lớp",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Khiên Lửa có lớp flame, phản ứng khi hấp thụ và hiệu ứng vỡ khiên. Các khối nhiên liệu có vệt bay, vùng cháy, bùng nhiên liệu và phần nối Tường Lửa."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Quầng Nhiệt thể hiện sóng nhiệt lan, trạng thái Cháy, Trói Nhiệt và xung Cháy Lan. Ultimate có hiệu ứng tụ năng lượng, lõi luồng hỏa năng, kích nổ và Vệt Hỏa Năng riêng."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Hiệu ứng sử dụng sprite có chi tiết, nhiều lớp ánh sáng, plasma và tàn lửa; giữ rõ kẻ địch, đạn và vùng nguy hiểm trong giao tranh."
+            }
+          ]
+        },
+        {
+          "id": "s4-e3",
+          "icon": {
+            "kind": "skill",
+            "id": "astra_stellar_mark"
+          },
+          "title": "Dấu hiệu kích hoạt nội tại",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Bắn Bồi có đạn truy đuổi riêng; Đạn Hợp Kim thể hiện lớp gia cố; Pin Dự Phòng có dòng nạp Điện; Ấn Tinh Tú có dấu ấn và hiệu ứng kích nổ; Đạn Hỏa Nhiệt có impact thiêu đốt."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

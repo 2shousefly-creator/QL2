@@ -1,3 +1,4 @@
+import { CINDER_SKILLS, CINDER_NAMES, cinderValues, cinderDescription } from "./airCombatCinderConfig";
 import { SKILL_RANKS } from "./airCombatSkillRanks";
 import {
   AircraftConfig,
@@ -54,6 +55,7 @@ export const AIR_COMBAT_LIMITS = {
 } as const;
 
 export const AIRCRAFT_CONFIGS: Record<AircraftId, AircraftConfig> = {
+ cinder:{id:'cinder',code:'CI-05',name:'Cinder',role:'Thiêu đốt · Duy trì sát thương',description:'Duy trì Cháy để gây sát thương chuẩn, dùng Khiên Lửa để trụ vững và phối hợp vùng nhiên liệu với quầng nhiệt cùng luồng hỏa năng.',color:'#FF6418',accent:'#FFF1AF',resourceKind:'mana',hpRegen:{base:3.3,growth:.3},baseStats:{maxHp:2100,armor:48,firepower:110,fireRate:4.08,maxResource:340,resourceRegen:1.5,criticalChance:.05,criticalDamageMultiplier:1.7},growth:{maxHp:80,armor:3.5,firepower:7,maxResource:30,resourceRegen:.45,criticalChance:0,criticalDamageMultiplier:0},fireRateRatio:.337,fireRateGrowthPct:.05,skillIds:["cinder_fire_shield","cinder_fuel_barrage","cinder_heat_wave","cinder_inferno_beam"]},
   astra: {
     id:"astra", name:"Astra", code:"AS-04", role:"Precision Control · Mana",
     description:"Kiểm soát projectile, xuyên tuyến bằng Thương Tinh Tú và không kích thiên thạch.",
@@ -162,7 +164,7 @@ export const AIRCRAFT_CONFIGS: Record<AircraftId, AircraftConfig> = {
 };
 
 
-const LEVEL_18_TARGETS = {"black_eagle": [3187.2, 96.65, 257.4, 7.348, 852.5, 9.625], "breaker": [3853.5, 125.59, 178.2, 9.702, 920, 8.5], "phantom": [3498.2, 110.52, 218.9, 8.525, 100, 2], "astra": [3312.6, 100.94, 264, 7.777, 841.5, 9.306]} as const;
+const LEVEL_18_TARGETS = {"cinder":[3460,107.5,229,8.4,850,9.15],"black_eagle": [3187.2, 96.65, 257.4, 7.348, 852.5, 9.625], "breaker": [3853.5, 125.59, 178.2, 9.702, 920, 8.5], "phantom": [3498.2, 110.52, 218.9, 8.525, 100, 2], "astra": [3312.6, 100.94, 264, 7.777, 841.5, 9.306]} as const;
 for (const id of Object.keys(LEVEL_18_TARGETS) as AircraftId[]) {
  const c=AIRCRAFT_CONFIGS[id], t=LEVEL_18_TARGETS[id];
  const keys=["maxHp","armor","firepower","maxResource","resourceRegen"] as const;
@@ -176,9 +178,11 @@ export const AIRCRAFT_ORDER: AircraftId[] = [
   "breaker",
   "phantom",
   "astra",
+  "cinder",
 ];
 
 export const SKILL_CONFIGS: Record<SkillId, SkillConfig> = {
+ ...Object.fromEntries(CINDER_SKILLS.map((id,i)=>[id,{id,aircraftId:'cinder',name:CINDER_NAMES[i],shortName:CINDER_NAMES[i],description:cinderDescription(id,1),icon:'',...cinderValues(id,1)}])) as Record<typeof CINDER_SKILLS[number],SkillConfig>,
   predator_lock: {id:"predator_lock",aircraftId:"black_eagle",name:"Khóa Săn Mồi",shortName:"Khóa Săn Mồi",description:"Khóa Săn Mồi",icon:"✦",cost:80,cooldown:20,duration:8},
   gravity_anchor: {id:"gravity_anchor",aircraftId:"breaker",name:"Neo Trọng Lực",shortName:"Neo Trọng Lực",description:"Neo Trọng Lực",icon:"✦",cost:130,cooldown:25,duration:5,damageMultiplier:.65},
   electronic_interference: {id:"electronic_interference",aircraftId:"phantom",name:"Nhiễu Điện Tử",shortName:"Nhiễu Điện Tử",description:"Nhiễu Điện Tử",icon:"✦",cost:30,cooldown:28,duration:1.6},

@@ -3,9 +3,9 @@ import type { EquipmentRewardId } from "./airCombatEquipmentState";
 import { SkillIcon } from "./SkillIcon";
 import { CoreSemanticIcon } from "./CoreSemanticIcon";
 import React from "react";
-import type { CoreId, SkillId } from "./airCombatTypes";
+import type { CoreId, SkillId, PassiveId } from "./airCombatTypes";
 
-type IconProps = ({ kind: "skill"; id: SkillId } | { kind: "core"; id: CoreId } | { kind: "equipment" | "item"; id: EquipmentRewardId }) & {
+type IconProps = ({ kind: "skill"; id: SkillId | PassiveId } | { kind: "core"; id: CoreId } | { kind: "equipment" | "item"; id: EquipmentRewardId }) & {
   fallback: string;
   className?: string;
 };

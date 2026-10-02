@@ -1,3 +1,4 @@
+import { isCinderSkill } from './airCombatCinderConfig';
 import { aircraftTargetability } from "./airCombatTargetability";
 import { settleCoreCooldowns, coreCooldownReady, deferCoreCooldown } from "./airCombatCooldowns";
 import { getHealingReceivedMultiplier, getRecoveryReceivedMultiplier } from "./airCombatRecovery";
@@ -51,7 +52,7 @@ export function getEffectiveAircraftStats(state: AircraftCombatState, includeTem
         fireRate: config.baseStats.fireRate,
         baseFireRate: config.baseStats.fireRate, fireRateRatio: config.fireRateRatio, fireRateGrowthPct: config.fireRateGrowthPct,
         bonusFireRatePct: n * config.fireRateGrowthPct + m.bonusFireRatePct, totalFireRateMultiplier: 1,
-        criticalChance: config.baseStats.criticalChance + m.criticalChanceFlat,
+        criticalChance: config.baseStats.criticalChance + m.criticalChanceFlat + (state.aircraftId === "black_eagle" ? .10 : 0),
         criticalDamageMultiplier: config.baseStats.criticalDamageMultiplier + m.criticalDamageMultiplierFlat,
         maxResource: config.baseStats.maxResource + config.growth.maxResource * n + m.maxResourceFlat,
         resourceRegen: config.baseStats.resourceRegen + config.growth.resourceRegen * n + m.resourceRegenFlat,
@@ -391,7 +392,7 @@ export function tickAircraftState(state: AircraftCombatState, deltaSeconds: numb
         }
     }
     for (const key of Object.keys(state.activeEffects) as SkillId[]) {
-        if(isAstraSkill(key)||key==="predator_lock"||key==="gravity_anchor"||key==="electronic_interference"||key==="focus_laser")continue; // World-owned completion includes delayed impacts.
+        if(isCinderSkill(key)||isAstraSkill(key)||key==="predator_lock"||key==="gravity_anchor"||key==="electronic_interference"||key==="focus_laser")continue; // World-owned completion includes delayed impacts.
         const next = (state.activeEffects[key] || 0) - dt;
         if (next <= 0)
             endAircraftSkill(state, key);
@@ -454,7 +455,7 @@ export function isPlayerInvisible(state: AircraftCombatState): boolean { return 
 export function canAcquirePlayerTarget(state: AircraftCombatState): boolean { return aircraftTargetability(state).canAcquire; }
 export function shouldAutoFire(state: AircraftCombatState): boolean {
     const sweepingCannonActive=(state.activeEffects.sweeping_cannon||0)>0;
-    return (!overheated(state)||sweepingCannonActive) && (state.activeEffects.focus_laser || 0) <= 0 && (state.activeEffects.stellar_lance || 0) <= 0;
+    return (state.activeEffects.cinder_inferno_beam || 0) <= 0 && (!overheated(state)||sweepingCannonActive) && (state.activeEffects.focus_laser || 0) <= 0 && (state.activeEffects.stellar_lance || 0) <= 0;
 }
 export function classifySkillPress(durationMs: number, longPressMs = 400): "tap" | "hold" { return durationMs >= longPressMs ? "hold" : "tap"; }
 export function shouldCastSkillPress(durationMs: number, holdActivated: boolean, cancelled: boolean, longPressMs = 400): boolean {

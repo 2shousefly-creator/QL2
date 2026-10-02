@@ -6,6 +6,7 @@ export const AIRCRAFT_SELECTION_PROFILES: Record<AircraftId, {
   description: string;
   power: readonly [number, number, number, number];
 }> = {
+  cinder:{role:'Thiêu đốt · Duy trì sát thương',description:'Duy trì Cháy để gây sát thương chuẩn, dùng Khiên Lửa để trụ vững và phối hợp vùng nhiên liệu với quầng nhiệt cùng luồng hỏa năng.',power:[85,79,66,74]},
   black_eagle: {
     role: "Tốc xạ · Dồn sát thương",
     description: "Tốc xạ, sát thương bùng nổ và bầy tên lửa; dùng Mana để nối chuỗi kỹ năng.",

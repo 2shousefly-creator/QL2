@@ -1,3 +1,4 @@
+import { paintCinder } from '../airCombatCinderArt';
 import { MIRROR_TRANSFORM, mirrorPoint } from "../airCombatMirrorTransform";
 import { paintMirage } from "../airCombatMirageVisuals";
 import { mirageEnemyFrame } from "../airCombatStage4Art";
@@ -79,6 +80,8 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
   private magneticLayer = new Container();
   private magneticSprites: AirCombatSpritePool;
   private astraSprites: AirCombatSpritePool;
+  private cinderSprites: AirCombatSpritePool;
+  private cinderLabels = new Map<number,Text>();
   private equipmentSprites: AirCombatSpritePool;
   private enemies: AirCombatSpritePool;
   private projectiles: AirCombatSpritePool;
@@ -153,6 +156,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     this.stormbreakerRoot.mask = this.stormbreakerMask;
     this.magneticSprites = new AirCombatSpritePool(this.magneticLayer, 512);
     this.astraSprites = new AirCombatSpritePool(this.magneticLayer, 192);
+    this.cinderSprites = new AirCombatSpritePool(this.magneticLayer, 320);
     this.equipmentSprites = new AirCombatSpritePool(this.magneticLayer, 640);
     if (this.sky) app.stage.addChild(this.sky.root);
     (sceneParent ?? app.stage).addChild(this.root);
@@ -362,6 +366,10 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
       sprite.position.set(x,y);sprite.width=width;sprite.height=height;sprite.rotation=rotation;sprite.alpha=alpha;sprite.tint=0xffffff;
     }},reducedMotion);
     this.astraSprites.end();
+    this.cinderSprites.begin();for(const label of this.cinderLabels.values())label.visible=false;
+    paintCinder(world,(id,key,x,y,width,height,rotation,alpha)=>{const sprite=this.cinderSprites.get(id,this.assets.effect(key));if(!sprite)return;sprite.position.set(x,y);sprite.width=width;sprite.height=height;sprite.rotation=rotation;sprite.alpha=alpha;sprite.blendMode='normal';},reducedMotion,(id,text,x,y)=>{
+      let label=this.cinderLabels.get(id);if(!label){if(this.cinderLabels.size>=48){const [old,view]=this.cinderLabels.entries().next().value!;view.destroy();this.cinderLabels.delete(old);}label=new Text({text,style:{fontFamily:'sans-serif',fontSize:10,fontWeight:'bold',fill:0xfff1af,stroke:{color:0x1c2026,width:3}}});this.cinderLabels.set(id,label);this.enemyStatusLayer.addChild(label);}label.text=text;label.position.set(x,y);label.visible=true;
+    });this.cinderSprites.end();
     this.magneticSprites.end();
     this.stormbreakerSprites.begin(); this.stormbreakerWarnings.clear();
     this.stormbreakerPresentation.update(world, delta);
@@ -782,7 +790,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     this.mirageSprites.destroy();
     this.stormbreakerSprites.destroy();
     this.stormbreakerPresentation.clear();
-    this.astraSprites.destroy();
+    this.astraSprites.destroy();this.cinderSprites.destroy();for(const label of this.cinderLabels.values())label.destroy();this.cinderLabels.clear();
     this.equipmentSprites.destroy();
     this.enemies.destroy(); this.missileSmoke.destroy(); this.projectiles.destroy(); this.missiles.destroy(); this.projectileGlows.destroy(); this.afterimages.destroy(); this.companions.destroy(); this.warnings.destroy(); this.engines.destroy(); this.vfx.destroy();
     if (this.sceneParent) {

@@ -1,3 +1,4 @@
+import { PassiveCell, PassiveDetails } from './AirCombatPassive';
 import { publishCombatNotice } from "./airCombatNotices";
 import { skillRank, SKILL_RANKS, isUltimate, canAllocateSkill, allocateSkillPoint, ultimateCastDisabled } from "./airCombatSkillRanks";
 import { AirCombatCoreDetail } from "./AirCombatCoreDetail";
@@ -175,9 +176,10 @@ export const AirCombatBattleShell: React.FC<AirCombatBattleProps> = ({
   const rerollSources=useMemo(()=>coreChoices?.map((_,slot)=>bestAvailableRerollSource(worldRef.current,slot))??[],[coreChoices]);
   const [hubTooltip, setHubTooltip] = useState<(HubTooltip & {id:string}) | null>(null);
   const [hubEquipmentTooltip, setHubEquipmentTooltip] = useState<EquipmentTooltipAnchor | null>(null);
-  const tooltipOwner = useRef<"hub"|"skill"|"status"|"equipment"|null>(null);
+  const tooltipOwner = useRef<"hub"|"skill"|"status"|"equipment"|"passive"|null>(null);
   const [primaryChoice, setPrimaryChoice] = useState<SkillId | null>(null);
   const [showPrimaryChoice, setShowPrimaryChoice] = useState(false);
+  const [tooltipPassive,setTooltipPassive]=useState(false);
   const [tooltipSkill, setTooltipSkill] = useState<SkillId | null>(null);
   const [showExitConfirm, setShowExitConfirm] = useState(false);
   const [showCoreList, setShowCoreList] = useState(false);
@@ -226,9 +228,10 @@ export const AirCombatBattleShell: React.FC<AirCombatBattleProps> = ({
     setPauseState(previous => previous.paused === next.paused && previous.label === next.label ? previous : next);
   }, [resetPlayerControl, resetSkillPress]);
 
-  const activateTooltip = useCallback((owner: "hub"|"skill"|"status"|"equipment") => {
-    if (owner === "skill" || owner === "equipment") resetPlayerControl();
+  const activateTooltip = useCallback((owner: "hub"|"skill"|"status"|"equipment"|"passive") => {
+    if (owner !== "hub" && owner !== "status") resetPlayerControl();
     tooltipOwner.current = owner;
+    if(owner!=="passive")setTooltipPassive(false);
     setPauseReason("tooltip", true);
     if (owner !== "status") statusStripRef.current?.close();
     if (owner !== "skill") { resetSkillPress(); setTooltipSkill(null); }
@@ -236,7 +239,7 @@ export const AirCombatBattleShell: React.FC<AirCombatBattleProps> = ({
     if (owner !== "equipment") setHubEquipmentTooltip(null);
   }, [setPauseReason, resetSkillPress, resetPlayerControl]);
   const closeAllTooltips = useCallback(() => {
-    tooltipOwner.current = null;
+    tooltipOwner.current = null;setTooltipPassive(false);
     resetSkillPress();
     statusStripRef.current?.close(); setTooltipSkill(null); setHubTooltip(null); setHubEquipmentTooltip(null);
     setPauseReason("tooltip", false);
@@ -717,6 +720,7 @@ export const AirCombatBattleShell: React.FC<AirCombatBattleProps> = ({
       <AirCombatStatusStrip ref={statusStripRef} onTooltipChange={onStatusTooltip} top={AIR_COMBAT_WORLD.hudHeight + (hud.bossMaxHp > 0 || (!runtime && hud.mirror) ? BOSS_HUD_HEIGHT : 0)} />
 
       <div className="absolute inset-x-0 bottom-0 z-20 grid h-[11.1111%] grid-cols-4 gap-1 border-t border-cyan-900/50 bg-slate-950 p-1.5" data-skill-rail="bottom">
+        <PassiveCell world={worldRef.current} onInspect={()=>{if(tooltipPassive){closeAllTooltips();return;}activateTooltip("passive");setTooltipPassive(true);}}/>
         {worldRef.current.aircraft.skillPoints > 0 && <span className="air-skill-points" aria-live="polite">Điểm kỹ năng: {worldRef.current.aircraft.skillPoints}</span>}
         {skillIds.map((skillId) => {
           const skill = SKILL_CONFIGS[skillId];
@@ -790,6 +794,7 @@ export const AirCombatBattleShell: React.FC<AirCombatBattleProps> = ({
         <div className="air-tooltip-heading"><strong>{hubTooltip.title}</strong><button type="button" aria-label="Đóng thông tin" onClick={closeAllTooltips}><X/></button></div>
         <p>{hubTooltip.text}</p>
       </motion.aside>}
+      {tooltipPassive&&<AirCombatTooltipPortal anchor={stageRef}><motion.aside {...airTooltipMotion} className="air-skill-tooltip" data-combat-tooltip-panel="passive" onPointerDown={e=>e.stopPropagation()}><div className="air-tooltip-heading"><strong>Nội Tại</strong><button type="button" onClick={closeAllTooltips} aria-label="Đóng nội tại"><X/></button></div><PassiveDetails state={worldRef.current.aircraft} world={worldRef.current}/></motion.aside></AirCombatTooltipPortal>}
       {tooltipSkill && tooltipModel && (
         <AirCombatTooltipPortal key="skill-tooltip" anchor={stageRef}><motion.aside {...airTooltipMotion} transition={{...airTooltipMotion.transition,duration:reducedMotion?.1:.28}} className="air-skill-tooltip" data-combat-tooltip-panel="skill" data-skill-tooltip={tooltipSkill} onPointerDown={event => event.stopPropagation()} onPointerMove={event => event.stopPropagation()}>
           <div className="air-tooltip-heading"><h3>{tooltipModel.title}</h3><strong className="air-tooltip-cooldown">{formatCooldownSeconds(tooltipModel.cooldown)}</strong></div>

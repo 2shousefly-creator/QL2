@@ -1,6 +1,6 @@
 import type { ProjectileEntity } from "./airCombatRuntime";
 import type { AircraftId } from "./airCombatTypes";
-export const BASIC_AMMO_KEYS = { black_eagle:"viper_basic_ammo", breaker:"titan_basic_ammo", phantom:"phantom_basic_ammo", astra:"astra_basic_ammo" } as const satisfies Record<AircraftId,string>;
+export const BASIC_AMMO_KEYS = { cinder:"cinder_basic_ammo", black_eagle:"viper_basic_ammo", breaker:"titan_basic_ammo", phantom:"phantom_basic_ammo", astra:"astra_basic_ammo" } as const satisfies Record<AircraftId,string>;
 /** Presentation only: never use these dimensions for hit detection. */
 export const PLAYER_BASIC_AMMO_VISUAL_SIZE = { width: 11, height: 30 } as const;
 // Presentation-only wake follows the current projectile transform.
@@ -9,6 +9,7 @@ const BASIC_AMMO_GLOW = {
   body: "M32 0A32 32 0 1 1 32 64A32 32 0 1 1 32 0Z", alpha: .1,
 } as const;
 export const AMMO_VISUALS={
+ cinder_basic_ammo:{...PLAYER_BASIC_AMMO_VISUAL_SIZE,cell:[2,0] as const,body:'',detail:'',color:'#ff6418',highlight:'#fff1af',trail:{...PLAYER_BASIC_AMMO_TRAIL_SIZE,color:0xff6418,css:'#ff6418'}},
   astra_basic_ammo:{...PLAYER_BASIC_AMMO_VISUAL_SIZE,cell:[0,0] as const,body:"M32 1Q43 15 37 35L32 64L27 35Q21 15 32 1Z",detail:"M32 2L35 18L32 48L29 18Z",color:"#ff8d2f",highlight:"#fff4c7",trail:{...PLAYER_BASIC_AMMO_TRAIL_SIZE,color:0xff9a3b,css:"#ff9a3b"}},
   astra_lance:{width:16.5,height:45,cell:[1,0] as const,body:"M32 0L44 18L35 23L32 64L29 23L20 18Z",detail:"M32 0L35 19L32 58L29 19Z",color:"#ffa54c",highlight:"#fff9dc"},
   // Equal 64x64 source cells. All identity (including rings/shards) stays inside each cell.
@@ -58,7 +59,7 @@ export const AMMO_VISUALS={
 } as const;
 export type AmmoVisualKey=keyof typeof AMMO_VISUALS;
 export function getBasicAmmoVisual(key: AmmoVisualKey | null | undefined) {
-  return key === "astra_basic_ammo" || key === "viper_basic_ammo" || key === "titan_basic_ammo" || key === "phantom_basic_ammo" ? AMMO_VISUALS[key] : null;
+  return key === "cinder_basic_ammo" || key === "astra_basic_ammo" || key === "viper_basic_ammo" || key === "titan_basic_ammo" || key === "phantom_basic_ammo" ? AMMO_VISUALS[key] : null;
 }
 export function getAmmoVisualKey(p:ProjectileEntity):AmmoVisualKey|null {
  if(p.ammoVisualKey && p.projectileKind==="bullet")return p.ammoVisualKey;

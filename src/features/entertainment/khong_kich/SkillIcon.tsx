@@ -1,3 +1,5 @@
+import { CINDER_ART, NEW_ICON_CELLS } from './airCombatCinderArt';
+import type { PassiveId } from './airCombatTypes';
 import React from "react";
 import { TriangleAlert } from "lucide-react";
 import rankedSkillAtlas from "../../../assets/khong-kich/v2/ranked-skill-icons.svg";
@@ -13,11 +15,13 @@ export const SKILL_ICON_CELLS: Partial<Record<SkillId, readonly [number, number]
   orbit_reversal: [0, 3], stellar_lance: [1, 3], starfall: [2, 3],
 };
 
-export function SkillIcon({ id, className }: { id: SkillId; className?: string }) {
+export function SkillIcon({ id, className }: { id: SkillId | PassiveId; className?: string }) {
+  const newCell=NEW_ICON_CELLS[id];
+  if(newCell)return <SpriteAtlasIcon atlas={CINDER_ART.icons} columns={3} rows={3} column={newCell[0]} row={newCell[1]} className={className} fallback={<TriangleAlert/>}/>;
   const rankedCells: Partial<Record<SkillId, number>> = { predator_lock: 0, gravity_anchor: 1, electronic_interference: 2, twin_reflection: 3 };
-  const rankedCell = rankedCells[id];
+  const rankedCell = rankedCells[id as SkillId];
   if (rankedCell !== undefined) return <SpriteAtlasIcon atlas={rankedSkillAtlas} columns={4} rows={1} column={rankedCell} row={0} className={className} fallback={<TriangleAlert />} />;
-  const cell = SKILL_ICON_CELLS[id];
+  const cell = SKILL_ICON_CELLS[id as SkillId];
   if (!cell) return <span className={`combat-ui-icon ${className ?? ""}`} aria-hidden="true"><TriangleAlert /></span>;
   return <SpriteAtlasIcon atlas={skillAtlas} columns={3} rows={4} column={cell[0]} row={cell[1]} className={className} fallback={<TriangleAlert />} />;
 }

@@ -1,3 +1,6 @@
+import { PassiveDetails } from './AirCombatPassive';
+import { PASSIVES } from './airCombatPassives';
+import { SkillIcon } from './SkillIcon';
 import React, { useContext, useId, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { useReducedMotion } from "motion/react";
 import { X } from "lucide-react";
@@ -102,6 +105,7 @@ function AircraftSelectionPower({ power }: { power: readonly [number, number, nu
 
 function AircraftSelectionSkills({ aircraftId }: { aircraftId: AircraftId }) {
   const config = AIRCRAFT_CONFIGS[aircraftId];
+  const [passiveOpen,setPassiveOpen]=useState(false);
   const [detailSkill, setDetailSkill] = useState<SkillId | null>(null);
   const titleId = useId();
   // A detached level-one preview; it never enters a run or a saved profile.
@@ -113,6 +117,8 @@ function AircraftSelectionSkills({ aircraftId }: { aircraftId: AircraftId }) {
   const model = detailSkill ? getSkillTooltipModel(preview, detailSkill) : null;
 
   return <>
+    <button type="button" className="air-selection-skill air-selection-passive" onClick={()=>setPassiveOpen(true)}><SkillIcon id={PASSIVES[aircraftId].id} className="!h-9 !w-9"/><span><small>Nội Tại</small><strong>{PASSIVES[aircraftId].name}</strong></span></button>
+    {passiveOpen&&<AirCombatModal archetype="info" layer="exclusive-dialog" onClose={()=>setPassiveOpen(false)} labelledBy={titleId}><OverlayHeader><h3 id={titleId}>Nội Tại · {config.name}</h3><ModalButton onClick={()=>setPassiveOpen(false)}>Đóng</ModalButton></OverlayHeader><OverlayBody><PassiveDetails state={preview}/></OverlayBody></AirCombatModal>}
     <div className="air-selection-skills">
       {config.skillIds.map(id => <button type="button" key={id} className="air-selection-skill" onClick={() => setDetailSkill(id)}
         aria-label={`Xem chi tiết ${isUltimate(id) ? "kỹ năng tối thượng" : "kỹ năng"} ${SKILL_CONFIGS[id].name}`}>

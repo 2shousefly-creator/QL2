@@ -1,10 +1,13 @@
 import type { EquipmentState, AcquisitionEvent } from "./airCombatEquipmentState";
 import type { PlayerCombatStatus } from "./airCombatStatus";
-export type AircraftId = "black_eagle" | "breaker" | "phantom" | "astra";
+export type AircraftId = "black_eagle" | "breaker" | "phantom" | "astra" | "cinder";
 
 export type ResourceKind = "mana" | "energy";
 
+export type PassiveId = "viper_follow_up" | "titan_alloy_rounds" | "phantom_backup_battery" | "astra_stellar_mark" | "cinder_thermal_round";
+
 export type SkillId =
+  | "cinder_fire_shield" | "cinder_fuel_barrage" | "cinder_heat_wave" | "cinder_inferno_beam"
   | "predator_lock" | "gravity_anchor" | "electronic_interference" | "twin_reflection"
   | "decoy"
   | "afterburner"
