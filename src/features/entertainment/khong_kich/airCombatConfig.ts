@@ -187,11 +187,11 @@ export const SKILL_CONFIGS: Record<SkillId, SkillConfig> = {
   gravity_anchor: {id:"gravity_anchor",aircraftId:"breaker",name:"Neo Trọng Lực",shortName:"Neo Trọng Lực",description:"Neo Trọng Lực",icon:"✦",cost:130,cooldown:25,duration:5,damageMultiplier:.65},
   electronic_interference: {id:"electronic_interference",aircraftId:"phantom",name:"Nhiễu Điện Tử",shortName:"Nhiễu Điện Tử",description:"Nhiễu Điện Tử",icon:"✦",cost:30,cooldown:28,duration:1.6},
   twin_reflection: {id:"twin_reflection",aircraftId:"astra",name:"Song Tinh Phản Xạ",shortName:"Song Tinh Phản Xạ",description:"Song Tinh Phản Xạ",icon:"✦",cost:115,cooldown:23,duration:9,damageMultiplier:.35},
-  orbit_reversal:{id:"orbit_reversal",aircraftId:"astra",name:"Phản Quỹ Đạo",shortName:"Quỹ Đạo",icon:"",cost:110,cooldown:32,duration:2,damageMultiplier:.3,
+  orbit_reversal:{id:"orbit_reversal",aircraftId:"astra",name:"Phản Quỹ Đạo",shortName:"Quỹ Đạo",icon:"",cost:80,cooldown:32,duration:2,damageMultiplier:.3,
     description:"Tạo vùng 72px theo Astra trong 2 giây, bắt tối đa 16 projectile thù địch. Bấm lại để kết thúc sớm, không tốn thêm Mana. Khi kết thúc, Tinh Đạn lần lượt hội tụ về phía trước Astra rồi phóng lên trong một hành lang 20px, không tự tìm mục tiêu, không homing hay retarget; mỗi viên gây 30% Hỏa Lực lên địch đầu tiên. Không bắt Beam, AoE, Bomb/Mine, va chạm thân và Boss mechanic không thể bắt. Hồi chiêu bắt đầu khi trạng thái bắt giữ kết thúc và Tinh Đạn bắt đầu hội tụ."},
-  stellar_lance:{id:"stellar_lance",aircraftId:"astra",name:"Thương Tinh Tú",shortName:"Tinh Tú",icon:"",cost:60,cooldown:3,damageMultiplier:8,
-    description:"Tụ 0,6s, vẫn di chuyển nhưng ngừng bắn thường. Phóng thẳng phía trước, xuyên mọi địch: mục tiêu đầu 800% Hỏa Lực, mục tiêu sau 680% Hỏa Lực. Mỗi lần dùng thành công trong 15s tăng cost kế tiếp 60 Mana và +10% sát thương Thương Tinh Tú, cộng dồn theo phép cộng, tối đa 4 stack: 300 Mana / +40% sát thương Thương Tinh Tú. Hết 15s trở về ban đầu. Hồi chiêu sau phát chính."},
-  starfall:{id:"starfall",aircraftId:"astra",name:"Sao Rơi",shortName:"Sao Rơi",icon:"",cost:150,cooldown:90,damageMultiplier:3.55,
+  stellar_lance:{id:"stellar_lance",aircraftId:"astra",name:"Thương Tinh Tú",shortName:"Tinh Tú",icon:"",cost:60,cooldown:3,damageMultiplier:9,
+    description:SKILL_RANKS.stellar_lance[0].description},
+  starfall:{id:"starfall",aircraftId:"astra",name:"Sao Rơi",shortName:"Sao Rơi",icon:"",cost:150,cooldown:90,damageMultiplier:2.75,
     description:SKILL_RANKS.starfall[0].description},
   "decoy": {
     "id": "decoy",
@@ -210,11 +210,11 @@ export const SKILL_CONFIGS: Record<SkillId, SkillConfig> = {
     "aircraftId": "black_eagle",
     "name": "Điên Cuồng",
     "shortName": "Điên Cuồng",
-    "description": "7s: +120% Tốc Độ Bắn Cộng Thêm. Đạn thường nảy thêm 2 mục tiêu: mục tiêu nảy thứ nhất nhận 50% sát thương đạn gốc, mục tiêu nảy thứ hai nhận 25% sát thương đạn gốc.",
+    "description": SKILL_RANKS.afterburner[0].description,
     "icon": "➤",
     "cost": 110,
     "cooldown": 30,
-    "duration": 7,
+    "duration": 6,
     "damageMultiplier": 0
   },
   "missile_swarm": {
@@ -227,14 +227,14 @@ export const SKILL_CONFIGS: Record<SkillId, SkillConfig> = {
     "cost": 150,
     "cooldown": 90,
     "duration": 0,
-    "damageMultiplier": 3
+    "damageMultiplier": 2
   },
   "armor_shield": {
     "id": "armor_shield",
     "aircraftId": "breaker",
     "name": "Khiên Năng Lượng",
     "shortName": "Khiên",
-    "description": "Giảm 65% sát thương nhận vào sau Giáp trong 6 giây.",
+    "description": SKILL_RANKS.armor_shield[0].description,
     "icon": "◆",
     "cost": 100,
     "cooldown": 35,
@@ -270,9 +270,9 @@ export const SKILL_CONFIGS: Record<SkillId, SkillConfig> = {
     "aircraftId": "phantom",
     "name": "Phân Ảnh",
     "shortName": "Phân Ảnh",
-    "description": "Tàng hình và để lại phân thân hút đạn trong 2s; lướt theo hướng di chuyển cuối. Không có hướng thì lướt lên.",
+    "description": SKILL_RANKS.invisibility[0].description,
     "icon": "◌",
-    "cost": 25,
+    "cost": 27,
     "cooldown": 33,
     "duration": 2,
     "damageMultiplier": 0
@@ -282,12 +282,12 @@ export const SKILL_CONFIGS: Record<SkillId, SkillConfig> = {
     "aircraftId": "phantom",
     "name": "Laser Hủy Diệt",
     "shortName": "Laser",
-    "description": "Tụ 2s, bắn xuyên 2s, mỗi 0,25s gây 300% Hỏa lực. Ngừng bắn thường trong toàn bộ kỹ năng.",
+    "description": SKILL_RANKS.focus_laser[0].description,
     "icon": "┃",
     "cost": 45,
     "cooldown": 29,
     "duration": 2,
-    "damageMultiplier": 3
+    "damageMultiplier": 1
   },
   "escort_drone": {
     "id": "escort_drone",

@@ -1,17 +1,17 @@
 import { isCinderSkill } from './airCombatCinderConfig';
 import { aircraftTargetability } from "./airCombatTargetability";
-import { settleCoreCooldowns, coreCooldownReady, deferCoreCooldown } from "./airCombatCooldowns";
+import { settleCoreCooldowns } from "./airCombatCooldowns";
 import { getHealingReceivedMultiplier, getRecoveryReceivedMultiplier } from "./airCombatRecovery";
 import { resolveFireRate, resolveSkillCooldown } from "./airCombatStatResolvers";
 import { EQUIPMENT_POWER as P } from "./airCombatEquipmentBalance";
-import { skillRank, rankValues, isUltimate, ultimateCastDisabled, COMBAT_LEVEL_CAP, CORE_MILESTONES } from "./airCombatSkillRanks";
+import { AFTERBURNER_FIRE_RATE_BONUSES, skillRank, rankValues, isUltimate, ultimateCastDisabled, COMBAT_LEVEL_CAP, CORE_MILESTONES } from "./airCombatSkillRanks";
 import { applyEquipmentStats } from "./airCombatEquipmentStats";
 import { equipmentState, equipmentScale, equipmentEffect, equipmentMetric } from "./airCombatEquipmentState";
 import { equipmentResourceSpent } from "./airCombatEquipmentRuntime";
 import { applyExpansionStats, expansionState, expansionActive, expansionSkillCost, finishExpansionSkill, finishAbsorbShield, createAbsorbShield, observeExpansionResource } from "./airCombatExpansion";
 import { recordCoreMetric } from "./airCombatTelemetry";
 import { releaseState, overheated } from "./airCombatReleaseState";
-import { SKILL_BASE_VALUES as B, SKILL_CORE_VALUES as V } from "./airCombatSkillCores";
+import { SKILL_CORE_VALUES as V } from "./airCombatSkillCores";
 import { createPlayerStatus, playerSkillLocked, tickPlayerStatus } from "./airCombatStatus";
 import { AIRCRAFT_CONFIGS, SKILL_CONFIGS, STARFALL_TIMING } from "./airCombatConfig";
 import { applyCoreStatEffects, applyFireRateLock, hasCore } from "./airCombatCoreEffects";
@@ -43,7 +43,7 @@ export function createAircraftCombatState(aircraftId: AircraftId, fractureResolv
             encounteredCoreIds: new Set(), skillCooldownDurations: {}, consumed: new Set(), criticalBudget: .75, criticalWindow: 0, deferredCooldowns: {} },
     };
 }
-export function getEffectiveAircraftStats(state: AircraftCombatState, includeTemporary = true, omittedEquipmentEffect?: number, omitHawkRage = false): EffectiveAircraftStats {
+export function getEffectiveAircraftStats(state: AircraftCombatState, includeTemporary = true, omittedEquipmentEffect?: number, hawkEyeStats = false): EffectiveAircraftStats {
     const config = AIRCRAFT_CONFIGS[state.aircraftId], n = Math.min(17, Math.max(0, state.level - 1)), m = state.modifiers;
     const stats: EffectiveAircraftStats = {
         maxHp: config.baseStats.maxHp + config.growth.maxHp * n + m.maxHpFlat,
@@ -64,9 +64,9 @@ export function getEffectiveAircraftStats(state: AircraftCombatState, includeTem
     applyCoreStatEffects(state, stats, includeTemporary);
     const c = state.coreState;
     if (includeTemporary && (state.activeEffects.afterburner || 0) > 0)
-        stats.bonusFireRatePct += skillRank(state, "afterburner") >= 3 ? B.upgradedAfterburnerRate : skillRank(state, "afterburner") === 2 ? B.rankTwoAfterburnerRate : B.afterburnerRate;
-    if (includeTemporary && !omitHawkRage && (c.timers.hawkRage || 0) > c.time)
-        stats.bonusFireRatePct += 1.05;
+        stats.bonusFireRatePct += AFTERBURNER_FIRE_RATE_BONUSES[Math.max(1,skillRank(state,"afterburner"))-1];
+    if (includeTemporary && (c.timers.hawkRage || 0) > c.time)
+        stats.bonusFireRatePct += hawkEyeStats ? 1.2 : .6;
     if (includeTemporary && (c.timers.shieldArmor || 0) > c.time)
         stats.armor *= 1.6;
     if (includeTemporary && (state.activeEffects.sweeping_cannon || 0) > 0 && (skillRank(state, "sweeping_cannon") >= 2))
@@ -253,7 +253,6 @@ export function endAircraftSkill(state: AircraftCombatState, skillId: SkillId): 
     if (!wasActive && state.coreState.deferredCooldowns[skillId] === undefined)
         return;
     if (!["decoy", "missile_swarm", "heavy_bomb"].includes(skillId)) finishExpansionSkill(state, expansionState(state).casts[skillId]);
-    if (skillId === "afterburner" && (skillRank(state, "afterburner") >= 4)) state.coreState.timers.activeCooling = state.coreState.time + V.coolingDuration;
     if (skillId === "armor_shield" && (skillRank(state, "armor_shield") >= 5)) state.coreState.stacks.shieldEmpPending = 1;
     if (skillId === "invisibility") {
         state.coreState.stacks.cloneEndPending = 1;
@@ -302,7 +301,7 @@ export function castSkill(state: AircraftCombatState, skillId: SkillId): SkillCa
         if(hasCore(state,190))recordCoreMetric(state,190,"extraResource",cost-cost/1.10);
         if(expansionState(state).primarySkill===skillId)recordCoreMetric(state,202,"saved",cost/.8-cost);
     }
-    if(skillId==="focus_laser")recordCoreMetric(state,41,"chargeSaved",1.8);
+    if(skillId==="focus_laser")recordCoreMetric(state,41,"chargeSaved",2-v.charge);
     state.coreState.deferredCooldowns[skillId] = free ? 1.1 : 1;
     state.cooldowns[skillId] = 0;
     delete state.coreState.skillCooldownDurations[skillId];
@@ -350,8 +349,9 @@ export function tickAircraftState(state: AircraftCombatState, deltaSeconds: numb
     if (!gameplayRunning || deltaSeconds <= 0)
         return;
     const dt = deltaSeconds;
-    for(const [row,key,extra] of [[22,"afterburner",10-(SKILL_CONFIGS.afterburner.duration??0)],[29,"armor_shield",9-(SKILL_CONFIGS.armor_shield.duration??0)],[37,"invisibility",3.5-(SKILL_CONFIGS.invisibility.duration??0)]] as const){
-        const remaining=state.activeEffects[key]??0;if(remaining<=extra)recordCoreMetric(state,row,"extraTime",Math.min(dt,remaining));
+    for(const [row,key,base] of [[22,"afterburner",6],[29,"armor_shield",6],[37,"invisibility",2]] as const){
+        const remaining=state.activeEffects[key]??0;
+        if(remaining>0 && remaining<=(rankValues(state,key).duration??base)-base)recordCoreMetric(state,row,"extraTime",Math.min(dt,remaining));
     }
     recordCoreMetric(state,30,"uptime",Math.min(dt,Math.max(0,(state.coreState.timers.shieldArmor??0)-state.coreState.time)));
     if(state.coreState.time-state.coreState.lastDamage>=4)recordCoreMetric(state,82,"uptime",dt);
@@ -364,12 +364,6 @@ export function tickAircraftState(state: AircraftCombatState, deltaSeconds: numb
         recordCoreMetric(state,113,"debtPaid",debt-remaining);
         if(remaining>0)state.coreState.stacks[debtKey]=remaining;
         else delete state.coreState.stacks[debtKey];
-    }
-    const coolingStep = Math.max(0, Math.min(dt, (state.coreState.timers.activeCooling || 0) - state.coreState.time));
-    if (coolingStep > 0) {
-        const max = getEffectiveAircraftStats(state).maxResource;
-        const gain = Math.min(max - state.currentResource, max * V.coolingMana * coolingStep / V.coolingDuration);
-        state.currentResource += gain; recordCoreMetric(state, 126, "resource", gain);
     }
     state.coreState.time += dt;
     settleCoreCooldowns(state);
@@ -401,10 +395,12 @@ export function tickAircraftState(state: AircraftCombatState, deltaSeconds: numb
     }
     if (state.droneActive && state.dronePhase === "active" && (skillRank(state, "escort_drone") >= 3)) {
         const c=state.coreState;
-        if(c.timers.hawkRageReady===undefined&&!c.stacks["cooldownPending:hawkRageReady"])c.timers.hawkRageReady=c.time+7;
-        if(coreCooldownReady(state,"hawkRageReady") && (c.timers.hawkRage??0)<=c.time){
-            c.timers.hawkRage=c.time+3;
-            deferCoreCooldown(state,"hawkRageReady");
+        c.timers.hawkRageReady ??= c.time+7;
+        if(c.time>=c.timers.hawkRageReady){
+            // Start-to-start cadence: 7, 14, 21... seconds of active deployment.
+            const startedAt=c.timers.hawkRageReady;
+            c.timers.hawkRage=startedAt+3;
+            c.timers.hawkRageReady=startedAt+7;
             recordCoreMetric(state,44,"procs",1);
         }
     }
@@ -432,7 +428,7 @@ export function tickAircraftState(state: AircraftCombatState, deltaSeconds: numb
     const spent = Math.min(available, upkeep * dt);
     equipmentResourceSpent(state,spent);
     equipmentMetric(state,31,"saved",Math.min(available,upkeep/(1-P[31].discount*equipmentScale(state,31))*dt)-spent);
-    if(upkeep>0)recordCoreMetric(state,43,"saved",Math.min(available,4*dt)-spent);
+    if(upkeep>0)recordCoreMetric(state,43,"saved",Math.min(available,5*dt)-spent);
     const resourceBefore = state.currentResource;
     state.currentResource = Math.max(0, Math.min(stats.maxResource, available - spent));
     for(const [row,regen] of resourceWithout){
@@ -454,6 +450,7 @@ export function tickAircraftState(state: AircraftCombatState, deltaSeconds: numb
 export function isPlayerInvisible(state: AircraftCombatState): boolean { return (state.activeEffects.invisibility || 0) > 0; }
 export function canAcquirePlayerTarget(state: AircraftCombatState): boolean { return aircraftTargetability(state).canAcquire; }
 export function shouldAutoFire(state: AircraftCombatState): boolean {
+    // Invisibility neither blocks basic fire nor ends when a basic shot is emitted.
     const sweepingCannonActive=(state.activeEffects.sweeping_cannon||0)>0;
     return (state.activeEffects.cinder_inferno_beam || 0) <= 0 && (!overheated(state)||sweepingCannonActive) && (state.activeEffects.focus_laser || 0) <= 0 && (state.activeEffects.stellar_lance || 0) <= 0;
 }

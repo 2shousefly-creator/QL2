@@ -1,6 +1,10 @@
 import { CINDER_SKILLS, CINDER_NAMES, isCinderSkill, cinderValues, cinderDescription } from "./airCombatCinderConfig";
 import type { AircraftCombatState, SkillId } from "./airCombatTypes";
 
+export const AFTERBURNER_FIRE_RATE_BONUSES = [.6,.8,1,1.2,1.4] as const;
+export const STELLAR_LANCE_FIRST_DAMAGE = [9,9.5,10,10.5,11] as const;
+export const STELLAR_LANCE_LATER_DAMAGE = [4,4.5,5,5.5,6] as const;
+export const STARFALL_DAMAGE = [2.75,3,3.25] as const;
 export const COMBAT_LEVEL_CAP = 18;
 export const CORE_MILESTONES = [1, 7, 11, 15] as const;
 export const BASIC_RANK_GATES = [1, 3, 5, 7, 9] as const;
@@ -48,28 +52,28 @@ export const SKILL_RANKS: Record<SkillId, readonly SkillRankConfig[]> = {
  afterburner:ranks([110,120,130,140,150],[
   [
     "Điên Cuồng",
-    "Viper bước vào trạng thái Điên Cuồng trong 7 giây, nhận +120% Tốc Độ Bắn Cộng Thêm. Trong thời gian này, đạn đánh thường nảy sang thêm 2 mục tiêu; mục tiêu nảy thứ nhất nhận 50% và mục tiêu nảy thứ hai nhận 25% sát thương của viên đạn gốc. Hồi Chiêu bắt đầu khi Điên Cuồng kết thúc, không chờ hồi Tài Nguyên sau đó.",
-    "Viper bước vào trạng thái Điên Cuồng trong 7 giây, nhận +120% Tốc Độ Bắn Cộng Thêm. Trong thời gian này, đạn đánh thường nảy sang thêm 2 mục tiêu; mục tiêu thứ nhất nhận 50% và mục tiêu thứ hai nhận 25% sát thương của viên đạn gốc. Hồi Chiêu bắt đầu khi Điên Cuồng kết thúc, không chờ hồi Tài Nguyên sau đó.\nHồi Chiêu Cơ Bản: 30 giây.\nYêu cầu Tài Nguyên: 110 Mana."
+    "Viper bước vào Điên Cuồng trong 6 giây, nhận +60% Tốc Độ Bắn Cộng Thêm. Đạn đánh thường nảy thêm tối đa 2 lần, gây 50% / 25% sát thương viên đạn gốc. Mỗi lần nảy nhắm một lần về mục tiêu gần nhất chưa trúng rồi bay thẳng, không khóa hoặc đuổi mục tiêu. Chỉ khi va chạm mới nảy tiếp; đạn trượt bay khỏi màn hình rồi biến mất, không bật lại ở mép. Hồi Chiêu bắt đầu khi Điên Cuồng kết thúc.",
+    "Viper bước vào Điên Cuồng trong 6 giây, nhận +60% Tốc Độ Bắn Cộng Thêm. Đạn đánh thường nảy thêm tối đa 2 lần, gây 50% / 25% sát thương viên đạn gốc. Mỗi lần nảy nhắm một lần về mục tiêu gần nhất chưa trúng rồi bay thẳng, không khóa hoặc đuổi mục tiêu. Chỉ khi va chạm mới nảy tiếp; đạn trượt bay khỏi màn hình rồi biến mất, không bật lại ở mép. Hồi Chiêu bắt đầu khi Điên Cuồng kết thúc.\nHồi Chiêu Cơ Bản: 30 giây.\nYêu cầu Tài Nguyên: 110 Mana."
   ],
   [
     "Cuồng Nộ Kéo Dài",
-    "Viper duy trì Điên Cuồng trong 10 giây, nhận +70% Tốc Độ Bắn Cộng Thêm. Đạn đánh thường nảy sang thêm 2 mục tiêu, lần lượt gây 50% và 25% sát thương của viên đạn gốc. Hồi Chiêu bắt đầu khi Điên Cuồng kết thúc, không chờ hồi Tài Nguyên sau đó.",
-    "Thời gian Điên Cuồng tăng từ 7 lên 10 giây.\nTốc Độ Bắn Cộng Thêm đổi từ +120% thành +70%.\nHồi Chiêu Cơ Bản: 30 → 29 giây.\nYêu cầu Tài Nguyên: 110 → 120 Mana."
+    "Viper bước vào Điên Cuồng trong 7 giây, nhận +80% Tốc Độ Bắn Cộng Thêm. Đạn đánh thường nảy thêm tối đa 2 lần, gây 50% / 25% sát thương viên đạn gốc. Mỗi lần nảy nhắm một lần về mục tiêu gần nhất chưa trúng rồi bay thẳng, không khóa hoặc đuổi mục tiêu. Chỉ khi va chạm mới nảy tiếp; đạn trượt bay khỏi màn hình rồi biến mất, không bật lại ở mép. Hồi Chiêu bắt đầu khi Điên Cuồng kết thúc.",
+    "Thời gian Điên Cuồng: 6 → 7 giây.\nTốc Độ Bắn Cộng Thêm: +60% → +80%.\nHồi Chiêu Cơ Bản: 30 → 29 giây.\nYêu cầu Tài Nguyên: 110 → 120 Mana."
   ],
   [
     "Quá Tải",
-    "Viper duy trì Điên Cuồng trong 10 giây và nhận +135% Tốc Độ Bắn Cộng Thêm. Đạn đánh thường tiếp tục nảy sang thêm 2 mục tiêu, lần lượt gây 50% và 25% sát thương của viên đạn gốc. Hồi Chiêu bắt đầu khi Điên Cuồng kết thúc, không chờ hồi Tài Nguyên sau đó.",
-    "Tốc Độ Bắn Cộng Thêm trong Điên Cuồng tăng từ +70% lên +135%.\nHồi Chiêu Cơ Bản: 29 → 28 giây.\nYêu cầu Tài Nguyên: 120 → 130 Mana."
+    "Viper bước vào Điên Cuồng trong 8 giây, nhận +100% Tốc Độ Bắn Cộng Thêm. Đạn đánh thường nảy thêm tối đa 2 lần, gây 50% / 25% sát thương viên đạn gốc. Mỗi lần nảy nhắm một lần về mục tiêu gần nhất chưa trúng rồi bay thẳng, không khóa hoặc đuổi mục tiêu. Chỉ khi va chạm mới nảy tiếp; đạn trượt bay khỏi màn hình rồi biến mất, không bật lại ở mép. Hồi Chiêu bắt đầu khi Điên Cuồng kết thúc.",
+    "Thời gian Điên Cuồng: 7 → 8 giây.\nTốc Độ Bắn Cộng Thêm: +80% → +100%.\nHồi Chiêu Cơ Bản: 29 → 28 giây.\nYêu cầu Tài Nguyên: 120 → 130 Mana."
   ],
   [
     "Đạn Nảy Tăng Áp",
-    "Viper duy trì Điên Cuồng trong 10 giây, nhận +135% Tốc Độ Bắn Cộng Thêm. Đạn đánh thường nảy sang thêm 2 mục tiêu, lần lượt gây 75% và 50% sát thương của viên đạn gốc. Khi Điên Cuồng kết thúc, Viper hồi tổng cộng 10% Tài Nguyên Tối Đa trong 5 giây. Hồi Chiêu bắt đầu khi Điên Cuồng kết thúc, không chờ hồi Tài Nguyên sau đó.",
-    "Sát thương nảy sang 2 mục tiêu tăng từ 50% / 25% lên 75% / 50%.\nKhi Điên Cuồng kết thúc, hồi tổng cộng 10% Tài Nguyên Tối Đa trong 5 giây.\nHồi Chiêu Cơ Bản: 28 → 27 giây.\nYêu cầu Tài Nguyên: 130 → 140 Mana."
+    "Viper bước vào Điên Cuồng trong 9 giây, nhận +120% Tốc Độ Bắn Cộng Thêm. Đạn đánh thường nảy thêm tối đa 2 lần, gây 75% / 50% sát thương viên đạn gốc. Mỗi lần nảy nhắm một lần về mục tiêu gần nhất chưa trúng rồi bay thẳng, không khóa hoặc đuổi mục tiêu. Chỉ khi va chạm mới nảy tiếp; đạn trượt bay khỏi màn hình rồi biến mất, không bật lại ở mép. Hồi Chiêu bắt đầu khi Điên Cuồng kết thúc.",
+    "Thời gian Điên Cuồng: 8 → 9 giây.\nTốc Độ Bắn Cộng Thêm: +100% → +120%.\nSát thương 2 lần nảy: 50% / 25% → 75% / 50%.\nHồi Chiêu Cơ Bản: 28 → 27 giây.\nYêu cầu Tài Nguyên: 130 → 140 Mana."
   ],
   [
     "Không Thể Ngăn Cản",
-    "Viper duy trì Điên Cuồng trong 10 giây, nhận +135% Tốc Độ Bắn Cộng Thêm; đạn đánh thường nảy sang thêm 2 mục tiêu và gây 75% / 50% sát thương viên đạn gốc. Trong thời gian Điên Cuồng, Viper miễn nhiễm khống chế cứng và giảm 15% sát thương phải nhận. Khi hiệu ứng kết thúc, hồi tổng cộng 10% Tài Nguyên Tối Đa trong 5 giây. Hồi Chiêu Cơ Bản là 26 giây. Hồi Chiêu bắt đầu khi Điên Cuồng kết thúc, không chờ hồi Tài Nguyên sau đó.",
-    "Miễn nhiễm khống chế cứng trong thời gian Điên Cuồng.\nGiảm 15% sát thương phải nhận trong thời gian Điên Cuồng.\nHồi Chiêu Cơ Bản: 27 → 26 giây.\nYêu cầu Tài Nguyên: 140 → 150 Mana."
+    "Viper bước vào Điên Cuồng trong 10 giây, nhận +140% Tốc Độ Bắn Cộng Thêm. Đạn đánh thường nảy thêm tối đa 2 lần, gây 75% / 50% sát thương viên đạn gốc. Mỗi lần nảy nhắm một lần về mục tiêu gần nhất chưa trúng rồi bay thẳng, không khóa hoặc đuổi mục tiêu. Chỉ khi va chạm mới nảy tiếp; đạn trượt bay khỏi màn hình rồi biến mất, không bật lại ở mép. Trong Điên Cuồng, Viper miễn nhiễm khống chế cứng và giảm 15% sát thương phải nhận. Hồi Chiêu bắt đầu khi Điên Cuồng kết thúc.",
+    "Thời gian Điên Cuồng: 9 → 10 giây.\nTốc Độ Bắn Cộng Thêm: +120% → +140%.\nMiễn nhiễm khống chế cứng và giảm 15% sát thương phải nhận trong Điên Cuồng.\nHồi Chiêu Cơ Bản: 27 → 26 giây.\nYêu cầu Tài Nguyên: 140 → 150 Mana."
   ]
 ]),
  predator_lock:ranks([80,95,110,125,140],[
@@ -102,45 +106,45 @@ export const SKILL_RANKS: Record<SkillId, readonly SkillRankConfig[]> = {
  missile_swarm:ranks([150,200,250],[
   [
     "Mưa Tên Lửa",
-    "Viper phóng 14 tên lửa theo từng cặp, mỗi tên lửa gây 300% Hỏa Lực. Hồi Chiêu Cơ Bản là 90 giây và chỉ bắt đầu sau khi tên lửa cuối cùng được phóng.",
+    "Viper phóng 14 tên lửa theo từng cặp, mỗi tên lửa gây 200% Hỏa Lực. Hồi Chiêu Cơ Bản là 90 giây và chỉ bắt đầu sau khi tên lửa cuối cùng được phóng. Tốc độ bay và thời gian tồn tại của tên lửa tăng gấp đôi.",
     "Hồi Chiêu Cơ Bản: 90 giây.\nYêu cầu Tài Nguyên: 150 Mana."
   ],
   [
     "Kho Tên Lửa Hủy Diệt",
-    "Viper phóng 18 tên lửa theo từng cặp, mỗi tên lửa gây 340% Hỏa Lực. Tên lửa đang bay sẽ tự chọn mục tiêu mới nếu mục tiêu hiện tại bị tiêu diệt. Mỗi tên lửa có thể phá tối đa 3 viên đạn có thể chặn mà vẫn tiếp tục truy đuổi. Hồi Chiêu Cơ Bản là 90 giây và bắt đầu sau khi tên lửa cuối cùng được phóng.",
-    "Số tên lửa tăng từ 14 lên 18.\nSát thương mỗi tên lửa tăng từ 300% lên 340% Hỏa Lực.\nTên lửa tự chọn mục tiêu mới nếu mục tiêu hiện tại bị tiêu diệt.\nMỗi tên lửa có thể phá tối đa 3 viên đạn có thể chặn mà vẫn tiếp tục truy đuổi.\nYêu cầu Tài Nguyên: 150 → 200 Mana."
+    "Viper phóng 18 tên lửa theo từng cặp, mỗi tên lửa gây 230% Hỏa Lực. Tên lửa đang bay sẽ tự chọn mục tiêu mới nếu mục tiêu hiện tại bị tiêu diệt. Mỗi tên lửa có thể phá tối đa 3 viên đạn có thể chặn mà vẫn tiếp tục truy đuổi. Hồi Chiêu Cơ Bản là 90 giây và bắt đầu sau khi tên lửa cuối cùng được phóng. Tốc độ bay và thời gian tồn tại của tên lửa tăng gấp đôi.",
+    "Số tên lửa tăng từ 14 lên 18.\nSát thương mỗi tên lửa tăng từ 200% lên 230% Hỏa Lực.\nTên lửa tự chọn mục tiêu mới nếu mục tiêu hiện tại bị tiêu diệt.\nMỗi tên lửa có thể phá tối đa 3 viên đạn có thể chặn mà vẫn tiếp tục truy đuổi.\nYêu cầu Tài Nguyên: 150 → 200 Mana."
   ],
   [
     "Mưa Tận Diệt",
-    "Viper phóng 22 tên lửa theo từng cặp, mỗi tên lửa gây 380% Hỏa Lực, có thể đổi mục tiêu khi mục tiêu cũ bị tiêu diệt và phá tối đa 3 viên đạn có thể chặn trên đường bay. Mỗi lần trúng làm mới Thiêu Đốt gây 90% Hỏa Lực mỗi giây trong 5 giây và giảm 30% Giáp mục tiêu trong 6 giây; các hiệu ứng này không cộng dồn. Mỗi lần trúng còn cho 1 Dữ Liệu, tối đa 8. Khi toàn bộ loạt tên lửa kết thúc, mỗi Dữ Liệu cho +5% Tỷ Lệ Chí Mạng trong 10 giây, tối đa +40%. Hồi Chiêu Cơ Bản là 90 giây.",
-    "Số tên lửa tăng từ 18 lên 22.\nSát thương mỗi tên lửa tăng từ 340% lên 380% Hỏa Lực.\nMỗi lần trúng làm mới Thiêu Đốt gây 90% Hỏa Lực mỗi giây trong 5 giây và giảm 30% Giáp mục tiêu trong 6 giây. Các hiệu ứng này không cộng dồn.\nMỗi lần trúng cho 1 Dữ Liệu, tối đa 8. Khi toàn bộ loạt tên lửa kết thúc, mỗi Dữ Liệu cho +5% Tỷ Lệ Chí Mạng trong 10 giây, tối đa +40%.\nYêu cầu Tài Nguyên: 200 → 250 Mana."
+    "Viper phóng 22 tên lửa theo từng cặp, mỗi tên lửa gây 260% Hỏa Lực, có thể đổi mục tiêu khi mục tiêu cũ bị tiêu diệt và phá tối đa 3 viên đạn có thể chặn trên đường bay. Mỗi lần trúng làm mới Thiêu Đốt gây 90% Hỏa Lực mỗi giây trong 5 giây và giảm 30% Giáp mục tiêu trong 6 giây; các hiệu ứng này không cộng dồn. Mỗi lần trúng còn cho 1 Dữ Liệu, tối đa 8. Khi toàn bộ loạt tên lửa kết thúc, mỗi Dữ Liệu cho +5% Tỷ Lệ Chí Mạng trong 10 giây, tối đa +40%. Hồi Chiêu Cơ Bản là 90 giây. Tốc độ bay và thời gian tồn tại của tên lửa tăng gấp đôi.",
+    "Số tên lửa tăng từ 18 lên 22.\nSát thương mỗi tên lửa tăng từ 230% lên 260% Hỏa Lực.\nMỗi lần trúng làm mới Thiêu Đốt gây 90% Hỏa Lực mỗi giây trong 5 giây và giảm 30% Giáp mục tiêu trong 6 giây. Các hiệu ứng này không cộng dồn.\nMỗi lần trúng cho 1 Dữ Liệu, tối đa 8. Khi toàn bộ loạt tên lửa kết thúc, mỗi Dữ Liệu cho +5% Tỷ Lệ Chí Mạng trong 10 giây, tối đa +40%.\nYêu cầu Tài Nguyên: 200 → 250 Mana."
   ]
 ]),
  armor_shield:ranks([100,110,120,130,140],[
   [
     "Khiên Năng Lượng",
-    "Titan kích hoạt Khiên Năng Lượng trong 6 giây, giảm 65% sát thương phải nhận. Hồi Chiêu bắt đầu khi Khiên Năng Lượng kết thúc, không chờ buff Giáp sau đó.",
-    "Titan kích hoạt Khiên Năng Lượng trong 6 giây, giảm 65% sát thương phải nhận. Hồi Chiêu bắt đầu khi Khiên Năng Lượng kết thúc, không chờ buff Giáp sau đó.\nHồi Chiêu Cơ Bản: 35 giây.\nYêu cầu Tài Nguyên: 100 Mana."
+    "Titan kích hoạt Khiên Năng Lượng trong 6 giây, giảm 55% sát thương phải nhận. Hồi Chiêu bắt đầu khi Khiên Năng Lượng kết thúc, không chờ buff Giáp sau đó.",
+    "Titan kích hoạt Khiên Năng Lượng trong 6 giây, giảm 55% sát thương phải nhận. Hồi Chiêu bắt đầu khi Khiên Năng Lượng kết thúc, không chờ buff Giáp sau đó.\nHồi Chiêu Cơ Bản: 35 giây.\nYêu cầu Tài Nguyên: 100 Mana."
   ],
   [
     "Trường Lực Bền Bỉ",
-    "Titan kích hoạt Khiên Năng Lượng trong 9 giây, giảm 65% sát thương phải nhận. Hồi Chiêu bắt đầu khi Khiên Năng Lượng kết thúc, không chờ buff Giáp sau đó.",
-    "Thời gian Khiên Năng Lượng tăng từ 6 lên 9 giây.\nHồi Chiêu Cơ Bản: 35 → 34 giây.\nYêu cầu Tài Nguyên: 100 → 110 Mana."
+    "Titan kích hoạt Khiên Năng Lượng trong 6,5 giây, giảm 60% sát thương phải nhận. Hồi Chiêu bắt đầu khi Khiên Năng Lượng kết thúc, không chờ buff Giáp sau đó.",
+    "Thời gian Khiên: 6 → 6,5 giây.\nGiảm sát thương: 55% → 60%.\nHồi Chiêu Cơ Bản: 35 → 34 giây.\nYêu cầu Tài Nguyên: 100 → 110 Mana."
   ],
   [
     "Bất Tử Hộ Thân",
-    "Titan kích hoạt Khiên Năng Lượng trong 9 giây, giảm 85% sát thương phải nhận. Hồi Chiêu bắt đầu khi Khiên Năng Lượng kết thúc, không chờ buff Giáp sau đó.",
-    "Mức giảm sát thương phải nhận tăng từ 65% lên 85%.\nHồi Chiêu Cơ Bản: 34 → 33 giây.\nYêu cầu Tài Nguyên: 110 → 120 Mana."
+    "Titan kích hoạt Khiên Năng Lượng trong 7 giây, giảm 65% sát thương phải nhận. Hồi Chiêu bắt đầu khi Khiên Năng Lượng kết thúc, không chờ buff Giáp sau đó.",
+    "Thời gian Khiên: 6,5 → 7 giây.\nGiảm sát thương: 60% → 65%.\nHồi Chiêu Cơ Bản: 34 → 33 giây.\nYêu cầu Tài Nguyên: 110 → 120 Mana."
   ],
   [
     "Thu Hồi Năng Lượng",
-    "Titan kích hoạt Khiên Năng Lượng trong 9 giây, giảm 85% sát thương phải nhận. 80% lượng sát thương mà Khiên ngăn chặn được chuyển thành Tài Nguyên cho Titan, tối đa hồi 35% Tài Nguyên Tối Đa mỗi lần dùng kỹ năng. Hồi Chiêu bắt đầu khi Khiên Năng Lượng kết thúc, không chờ buff Giáp sau đó.",
-    "80% lượng sát thương mà Khiên ngăn chặn được chuyển thành Tài Nguyên cho Titan.\nTối đa hồi 35% Tài Nguyên Tối Đa mỗi lần dùng kỹ năng.\nHồi Chiêu Cơ Bản: 33 → 32 giây.\nYêu cầu Tài Nguyên: 120 → 130 Mana."
+    "Titan kích hoạt Khiên Năng Lượng trong 7,5 giây, giảm 70% sát thương phải nhận. 80% lượng sát thương mà Khiên ngăn chặn được chuyển thành Tài Nguyên cho Titan, tối đa hồi 35% Tài Nguyên Tối Đa mỗi lần dùng kỹ năng. Hồi Chiêu bắt đầu khi Khiên Năng Lượng kết thúc, không chờ buff Giáp sau đó.",
+    "Thời gian Khiên: 7 → 7,5 giây.\nGiảm sát thương: 65% → 70%.\n80% lượng sát thương mà Khiên ngăn chặn được chuyển thành Tài Nguyên cho Titan.\nTối đa hồi 35% Tài Nguyên Tối Đa mỗi lần dùng kỹ năng.\nHồi Chiêu Cơ Bản: 33 → 32 giây.\nYêu cầu Tài Nguyên: 120 → 130 Mana."
   ],
   [
     "Phước Lành Hộ Vệ",
-    "Titan kích hoạt Khiên Năng Lượng trong 9 giây, giảm 85% sát thương phải nhận và chuyển 80% lượng sát thương mà Khiên ngăn chặn thành Tài Nguyên, tối đa 35% Tài Nguyên Tối Đa mỗi lần dùng. Khi Khiên kết thúc, phá toàn bộ đạn thù địch thông thường có thể chặn trên màn hình và Titan nhận +60% Giáp trong 6 giây. Hồi Chiêu Cơ Bản là 31 giây. Hồi Chiêu bắt đầu khi Khiên Năng Lượng kết thúc, không chờ buff Giáp sau đó.",
-    "Khi Khiên kết thúc, phá toàn bộ đạn thù địch thông thường có thể chặn trên màn hình.\nTitan nhận +60 Giáp trong 6 giây.\nHồi Chiêu Cơ Bản: 32 → 31 giây.\nYêu cầu Tài Nguyên: 130 → 140 Mana."
+    "Titan kích hoạt Khiên Năng Lượng trong 8 giây, giảm 75% sát thương phải nhận và chuyển 80% lượng sát thương mà Khiên ngăn chặn thành Tài Nguyên, tối đa 35% Tài Nguyên Tối Đa mỗi lần dùng. Khi Khiên kết thúc, phá toàn bộ đạn thù địch thông thường có thể chặn trên màn hình và Titan nhận +60% Giáp trong 6 giây. Hồi Chiêu Cơ Bản là 31 giây. Hồi Chiêu bắt đầu khi Khiên Năng Lượng kết thúc, không chờ buff Giáp sau đó.",
+    "Thời gian Khiên: 7,5 → 8 giây.\nGiảm sát thương: 70% → 75%.\nKhi Khiên kết thúc, phá toàn bộ đạn thù địch thông thường có thể chặn trên màn hình.\nTitan nhận +60% Giáp trong 6 giây.\nHồi Chiêu Cơ Bản: 32 → 31 giây.\nYêu cầu Tài Nguyên: 130 → 140 Mana."
   ]
 ]),
  heavy_bomb:ranks([120,130,140,150,160],[
@@ -214,58 +218,58 @@ export const SKILL_RANKS: Record<SkillId, readonly SkillRankConfig[]> = {
     "Sát thương mỗi tia tăng từ 80% lên 90% Hỏa Lực.\nGóc giữa các tia giảm còn 3,5° và tốc độ đạn tăng 60%.\nĐạn xuyên thêm 2 mục tiêu; hai mục tiêu xuyên lần lượt nhận 75% / 45% sát thương của tia gốc.\nTitan hồi Máu bằng 3% sát thương thực tế do Oanh Tạc gây ra, tối đa 30% Máu Tối Đa mỗi lần thi triển.\nYêu cầu Tài Nguyên: 120 → 140 Mana."
   ]
 ]),
- invisibility:ranks([25,10,10,10,10],[
+ invisibility:ranks([27,24,21,18,15],[
   [
     "Phân Ảnh",
-    "Phantom lướt theo hướng di chuyển gần nhất và tàng hình trong 2 giây, đồng thời để lại một phân thân thu hút hỏa lực. Nếu Phantom chưa di chuyển trước khi kích hoạt, cú lướt mặc định hướng lên trên. Hồi Chiêu bắt đầu khi Phantom tái xuất; phân ảnh và buff tái xuất không trì hoãn Hồi Chiêu.",
-    "Phantom lướt theo hướng di chuyển gần nhất và tàng hình trong 2 giây, đồng thời để lại một phân thân thu hút hỏa lực. Nếu Phantom chưa di chuyển trước khi kích hoạt, cú lướt mặc định hướng lên trên. Hồi Chiêu bắt đầu khi Phantom tái xuất; phân ảnh và buff tái xuất không trì hoãn Hồi Chiêu.\nHồi Chiêu Cơ Bản: 33 giây."
+    "Phantom lướt theo hướng di chuyển gần nhất (mặc định hướng lên trên) và tàng hình trong 2 giây, để lại phân thân thu hút hỏa lực trong cùng thời gian. Phantom vẫn bắn thường khi tàng hình mà không bị hiện hình. Hồi Chiêu bắt đầu khi Phantom hiện hình; phân thân và buff sau đó không trì hoãn Hồi Chiêu.",
+    "Phantom lướt theo hướng di chuyển gần nhất (mặc định hướng lên trên) và tàng hình trong 2 giây, để lại phân thân thu hút hỏa lực trong cùng thời gian. Phantom vẫn bắn thường khi tàng hình mà không bị hiện hình. Hồi Chiêu bắt đầu khi Phantom hiện hình; phân thân và buff sau đó không trì hoãn Hồi Chiêu.\nHồi Chiêu Cơ Bản: 33 giây.\nYêu cầu Tài Nguyên: 27 Điện."
   ],
   [
     "Thanh Thoát",
-    "Phantom lướt và tàng hình trong 3 giây, để lại phân thân thu hút hỏa lực trong cùng thời gian. Chi phí kỹ năng giảm còn 10 Điện. Nếu Phantom chưa có hướng di chuyển, cú lướt mặc định hướng lên trên. Hồi Chiêu bắt đầu khi Phantom tái xuất; phân ảnh và buff tái xuất không trì hoãn Hồi Chiêu.",
-    "Thời gian tàng hình và tồn tại ban đầu của phân thân tăng từ 2 lên 3 giây.\nHồi Chiêu Cơ Bản: 33 → 32 giây."
+    "Phantom lướt theo hướng di chuyển gần nhất (mặc định hướng lên trên) và tàng hình trong 2,1 giây, để lại phân thân thu hút hỏa lực trong cùng thời gian. Phantom vẫn bắn thường khi tàng hình mà không bị hiện hình. Hồi Chiêu bắt đầu khi Phantom hiện hình; phân thân và buff sau đó không trì hoãn Hồi Chiêu.",
+    "Thời gian tàng hình và tồn tại ban đầu của phân thân: 2 → 2,1 giây.\nHồi Chiêu Cơ Bản: 33 → 32 giây.\nYêu cầu Tài Nguyên: 27 → 24 Điện."
   ],
   [
     "Sửa Chữa Khẩn Cấp",
-    "Phantom lướt và tàng hình trong 3,5 giây, để lại phân thân thu hút hỏa lực. Trong thời gian tàng hình, Phantom hồi tổng cộng 25% lượng Máu đã mất tại thời điểm kích hoạt. Chi phí kỹ năng là 10 Điện. Hồi Chiêu bắt đầu khi Phantom tái xuất; phân ảnh và buff tái xuất không trì hoãn Hồi Chiêu.",
-    "Thời gian tàng hình tăng từ 3 lên 3,5 giây.\nTrong thời gian tàng hình, Phantom hồi tổng cộng 25% lượng Máu đã mất tại thời điểm kích hoạt.\nHồi Chiêu Cơ Bản: 32 → 31 giây."
+    "Phantom lướt theo hướng di chuyển gần nhất (mặc định hướng lên trên) và tàng hình trong 2,2 giây, để lại phân thân thu hút hỏa lực trong cùng thời gian. Phantom vẫn bắn thường khi tàng hình mà không bị hiện hình. Trong thời gian tàng hình, hồi tổng cộng 25% Máu đã mất tại thời điểm kích hoạt. Hồi Chiêu bắt đầu khi Phantom hiện hình; phân thân và buff sau đó không trì hoãn Hồi Chiêu.",
+    "Thời gian tàng hình và tồn tại ban đầu của phân thân: 2,1 → 2,2 giây.\nHồi tổng cộng 25% Máu đã mất tại thời điểm kích hoạt trong thời gian tàng hình.\nHồi Chiêu Cơ Bản: 32 → 31 giây.\nYêu cầu Tài Nguyên: 24 → 21 Điện."
   ],
   [
     "Dư Ảnh Phản Kích",
-    "Phantom lướt và tàng hình trong 3,5 giây, đồng thời hồi 25% lượng Máu đã mất tại thời điểm kích hoạt. Sau khi Phantom hiện hình, phân thân tiếp tục thu hút đạn thêm tối đa 5 giây, sau đó lao tới kẻ địch gần nhất và phát nổ trong bán kính lớn, gây 420% Hỏa Lực. Nếu không có mục tiêu, phân thân phát nổ tại chỗ. Hồi Chiêu bắt đầu khi Phantom tái xuất; phân ảnh và buff tái xuất không trì hoãn Hồi Chiêu.",
-    "Sau khi Phantom hiện hình, phân thân tiếp tục thu hút đạn thêm tối đa 5 giây, sau đó lao tới kẻ địch gần nhất và phát nổ trong bán kính lớn, gây 420% Hỏa Lực.\nNếu không còn mục tiêu, phân thân phát nổ tại chỗ.\nHồi Chiêu Cơ Bản: 31 → 30 giây."
+    "Phantom lướt theo hướng di chuyển gần nhất (mặc định hướng lên trên) và tàng hình trong 2,3 giây, để lại phân thân thu hút hỏa lực trong cùng thời gian. Phantom vẫn bắn thường khi tàng hình mà không bị hiện hình. Trong thời gian tàng hình, hồi tổng cộng 25% Máu đã mất tại thời điểm kích hoạt. Sau khi Phantom hiện hình, phân thân tiếp tục thu hút đạn thêm tối đa 5 giây rồi lao tới kẻ địch gần nhất và nổ trong bán kính 150 px, gây 420% Hỏa Lực; nếu không có mục tiêu thì nổ tại chỗ. Hồi Chiêu bắt đầu khi Phantom hiện hình; phân thân và buff sau đó không trì hoãn Hồi Chiêu.",
+    "Thời gian tàng hình và tồn tại ban đầu của phân thân: 2,2 → 2,3 giây.\nPhân thân thu hút đạn thêm tối đa 5 giây sau khi hiện hình, rồi lao tới mục tiêu gần nhất và nổ 420% Hỏa Lực trong bán kính 150 px; không có mục tiêu thì nổ tại chỗ.\nHồi Chiêu Cơ Bản: 31 → 30 giây.\nYêu cầu Tài Nguyên: 21 → 18 Điện."
   ],
   [
     "Đòn Xuất Hiện",
-    "Phantom lướt và tàng hình trong 3,5 giây, hồi 25% lượng Máu đã mất và để lại phân thân phản kích gây 420% Hỏa Lực. Sau khi hiện hình, Phantom được cường hóa trong 3,5 giây: đạn đánh thường gây gấp đôi sát thương và bay nhanh hơn 30%. Hồi Chiêu bắt đầu khi Phantom tái xuất; phân ảnh và buff tái xuất không trì hoãn Hồi Chiêu.",
-    "Sau khi hiện hình, Phantom được cường hóa trong 3,5 giây.\nĐạn đánh thường gây gấp đôi sát thương và bay nhanh hơn 30%.\nHồi Chiêu Cơ Bản: 30 → 29 giây."
+    "Phantom lướt theo hướng di chuyển gần nhất (mặc định hướng lên trên) và tàng hình trong 2,4 giây, để lại phân thân thu hút hỏa lực trong cùng thời gian. Phantom vẫn bắn thường khi tàng hình mà không bị hiện hình. Trong thời gian tàng hình, hồi tổng cộng 25% Máu đã mất tại thời điểm kích hoạt. Sau khi Phantom hiện hình, phân thân tiếp tục thu hút đạn thêm tối đa 5 giây rồi lao tới kẻ địch gần nhất và nổ trong bán kính 150 px, gây 420% Hỏa Lực; nếu không có mục tiêu thì nổ tại chỗ. Sau khi hiện hình, trong 3 giây đạn đánh thường gây thêm 60% sát thương và bay nhanh hơn 30%. Hồi Chiêu bắt đầu khi Phantom hiện hình; phân thân và buff sau đó không trì hoãn Hồi Chiêu.",
+    "Thời gian tàng hình và tồn tại ban đầu của phân thân: 2,3 → 2,4 giây.\nSau khi hiện hình, trong 3 giây đạn đánh thường gây thêm 60% sát thương và bay nhanh hơn 30%.\nHồi Chiêu Cơ Bản: 30 → 29 giây.\nYêu cầu Tài Nguyên: 18 → 15 Điện."
   ]
 ]),
- focus_laser:ranks([45,20,20,20,20],[
+ focus_laser:ranks([45,40,35,30,25],[
   [
     "Laser Hủy Diệt",
-    "Phantom tụ năng lượng trong 2 giây rồi bắn Laser Hủy Diệt liên tục trong 2 giây. Laser gây 300% Hỏa Lực mỗi 0,25 giây. Phantom ngừng bắn đạn đánh thường trong toàn bộ thời gian tụ và khai hỏa. Hồi Chiêu bắt đầu sau khi tích lực và bắn hết tia laser.",
-    "Phantom tụ năng lượng trong 2 giây rồi bắn Laser Hủy Diệt liên tục trong 2 giây. Laser gây 300% Hỏa Lực mỗi 0,25 giây. Phantom ngừng bắn đạn đánh thường trong toàn bộ thời gian tụ và khai hỏa. Hồi Chiêu bắt đầu sau khi tích lực và bắn hết tia laser.\nHồi Chiêu Cơ Bản: 29 giây."
+    "Phantom tụ năng lượng trong 2 giây rồi bắn Laser Hủy Diệt trong 2 giây, gây 100% Hỏa Lực mỗi 0,25 giây. Phantom ngừng bắn thường trong suốt thời gian tụ và khai hỏa. Hồi Chiêu bắt đầu sau khi tụ và bắn hết tia laser.",
+    "Phantom tụ năng lượng trong 2 giây rồi bắn Laser Hủy Diệt trong 2 giây, gây 100% Hỏa Lực mỗi 0,25 giây. Phantom ngừng bắn thường trong suốt thời gian tụ và khai hỏa. Hồi Chiêu bắt đầu sau khi tụ và bắn hết tia laser.\nHồi Chiêu Cơ Bản: 29 giây.\nYêu cầu Tài Nguyên: 45 Điện."
   ],
   [
     "Hội Tụ Năng Lượng",
-    "Phantom chỉ cần tụ 0,2 giây trước khi bắn Laser Hủy Diệt trong 2 giây, gây 300% Hỏa Lực mỗi 0,25 giây. Phantom ngừng bắn đạn đánh thường trong suốt kỹ năng. Chi phí giảm còn 20 Điện. Hồi Chiêu bắt đầu sau khi tích lực và bắn hết tia laser.",
-    "Thời gian tụ năng lượng giảm từ 2 xuống 0,2 giây.\nHồi Chiêu Cơ Bản: 29 → 28 giây."
+    "Phantom tụ năng lượng trong 1,8 giây rồi bắn Laser Hủy Diệt trong 2,25 giây, gây 115% Hỏa Lực mỗi 0,25 giây. Phantom ngừng bắn thường trong suốt thời gian tụ và khai hỏa. Hồi Chiêu bắt đầu sau khi tụ và bắn hết tia laser.",
+    "Thời gian tụ: 2 → 1,8 giây.\nThời gian bắn: 2 → 2,25 giây.\nSát thương mỗi 0,25 giây: 100% → 115% Hỏa Lực.\nHồi Chiêu Cơ Bản: 29 → 28 giây.\nYêu cầu Tài Nguyên: 45 → 40 Điện."
   ],
   [
     "Thống Khổ Kéo Dài",
-    "Phantom tụ 0,2 giây rồi bắn Laser Hủy Diệt trong 3 giây. Mỗi 0,25 giây, Laser gây 330% Hỏa Lực. Phantom ngừng bắn đạn đánh thường trong suốt thời gian tụ và khai hỏa. Chi phí là 20 Điện. Hồi Chiêu bắt đầu sau khi tích lực và bắn hết tia laser.",
-    "Thời gian bắn Laser tăng từ 2 lên 3 giây.\nSát thương mỗi nhịp tăng từ 300% lên 330% Hỏa Lực.\nHồi Chiêu Cơ Bản: 28 → 27 giây."
+    "Phantom tụ năng lượng trong 1,6 giây rồi bắn Laser Hủy Diệt trong 2,5 giây, gây 130% Hỏa Lực mỗi 0,25 giây. Phantom ngừng bắn thường trong suốt thời gian tụ và khai hỏa. Hồi Chiêu bắt đầu sau khi tụ và bắn hết tia laser.",
+    "Thời gian tụ: 1,8 → 1,6 giây.\nThời gian bắn: 2,25 → 2,5 giây.\nSát thương mỗi 0,25 giây: 115% → 130% Hỏa Lực.\nHồi Chiêu Cơ Bản: 28 → 27 giây.\nYêu cầu Tài Nguyên: 40 → 35 Điện."
   ],
   [
     "Phá Giáp",
-    "Phantom tụ 0,2 giây rồi bắn Laser Hủy Diệt trong 3 giây. Mỗi nhịp Laser gây sát thương bằng 330% Hỏa Lực ×1,32. Mỗi lần trúng giảm 25% Giáp mục tiêu trong 8 giây; hiệu ứng chỉ làm mới thời gian, không cộng dồn. Phantom ngừng bắn đạn đánh thường trong suốt kỹ năng. Hồi Chiêu bắt đầu sau khi tích lực và bắn hết tia laser.",
-    "Sát thương Laser mỗi nhịp tăng thêm 32%, từ 330% lên 435,6% Hỏa Lực.\nMỗi lần Laser trúng giảm 25% Giáp mục tiêu trong 8 giây. Hiệu ứng không cộng dồn; trúng lại chỉ làm mới thời gian.\nHồi Chiêu Cơ Bản: 27 → 26 giây."
+    "Phantom tụ năng lượng trong 1,4 giây rồi bắn Laser Hủy Diệt trong 2,75 giây, gây 145% Hỏa Lực mỗi 0,25 giây. Phantom ngừng bắn thường trong suốt thời gian tụ và khai hỏa. Mỗi lần trúng giảm 25% Giáp mục tiêu trong 8 giây; chỉ làm mới thời gian, không cộng dồn. Hồi Chiêu bắt đầu sau khi tụ và bắn hết tia laser.",
+    "Thời gian tụ: 1,6 → 1,4 giây.\nThời gian bắn: 2,5 → 2,75 giây.\nSát thương mỗi 0,25 giây: 130% → 145% Hỏa Lực.\nMỗi lần trúng giảm 25% Giáp mục tiêu trong 8 giây; chỉ làm mới thời gian, không cộng dồn.\nHồi Chiêu Cơ Bản: 27 → 26 giây.\nYêu cầu Tài Nguyên: 35 → 30 Điện."
   ],
   [
     "Lưỡi Hái Tử Thần",
-    "Phantom bắn Laser Hủy Diệt trong 3 giây sau 0,2 giây tụ năng lượng. Laser gây sát thương mỗi 0,25 giây, giảm 25% Giáp mục tiêu trong 8 giây và có khả năng kết liễu: quái thường dưới 12% Máu, Tinh Anh dưới 10% Máu và Boss dưới 8% Máu bị tiêu diệt ngay khi trúng. Hồi Chiêu bắt đầu sau khi tích lực và bắn hết tia laser.",
-    "Laser kết liễu ngay quái thường dưới 12% Máu, Tinh Anh dưới 10% Máu và Boss dưới 8% Máu.\nHồi Chiêu Cơ Bản: 26 → 25 giây."
+    "Phantom tụ năng lượng trong 1,2 giây rồi bắn Laser Hủy Diệt trong 3 giây, gây 160% Hỏa Lực mỗi 0,25 giây. Phantom ngừng bắn thường trong suốt thời gian tụ và khai hỏa. Mỗi lần trúng giảm 25% Giáp mục tiêu trong 8 giây; chỉ làm mới thời gian, không cộng dồn. Laser kết liễu quái thường dưới 12% Máu, Tinh Anh dưới 10% Máu và Boss dưới 8% Máu khi trúng. Hồi Chiêu bắt đầu sau khi tụ và bắn hết tia laser.",
+    "Thời gian tụ: 1,4 → 1,2 giây.\nThời gian bắn: 2,75 → 3 giây.\nSát thương mỗi 0,25 giây: 145% → 160% Hỏa Lực.\nKết liễu quái thường dưới 12% Máu, Tinh Anh dưới 10% Máu và Boss dưới 8% Máu.\nHồi Chiêu Cơ Bản: 26 → 25 giây.\nYêu cầu Tài Nguyên: 30 → 25 Điện."
   ]
 ]),
  electronic_interference:ranks([30,32,34,36,38],[
@@ -298,72 +302,72 @@ export const SKILL_RANKS: Record<SkillId, readonly SkillRankConfig[]> = {
  escort_drone:ranks([5,10,15],[
   [
     "HawkEye",
-    "Phantom triệu hồi HawkEye nếu có ít nhất 5 Điện; lượng Điện này chỉ là yêu cầu kích hoạt và không bị tiêu hao khi triệu hồi. HawkEye duy trì bằng 4 Điện mỗi giây, kế thừa 70% chỉ số của Phantom và tồn tại không giới hạn thời gian. Có thể tái kích hoạt để thu hồi HawkEye. Hồi Chiêu Cơ Bản là 50 giây và bắt đầu sau khi HawkEye kết thúc hoặc được thu hồi.",
+    "Phantom triệu hồi HawkEye nếu có ít nhất 5 Điện; lượng Điện này chỉ là yêu cầu kích hoạt và không bị tiêu hao khi triệu hồi. HawkEye duy trì bằng 5 Điện mỗi giây, kế thừa 70% chỉ số của Phantom và tồn tại không giới hạn thời gian. Có thể tái kích hoạt để thu hồi HawkEye. Hồi Chiêu Cơ Bản là 50 giây và bắt đầu sau khi HawkEye kết thúc hoặc được thu hồi.",
     "Hồi Chiêu Cơ Bản: 50 giây."
   ],
   [
     "Liên Kết Bền Chặt",
-    "Phantom triệu hồi HawkEye nếu có ít nhất 10 Điện; không tiêu hao Điện khi triệu hồi. HawkEye duy trì bằng 3 Điện mỗi giây, kế thừa 90% chỉ số của Phantom và tồn tại cho đến khi hết Điện hoặc được thu hồi. Thu hồi HawkEye không hoàn lại Điện. Hồi Chiêu Cơ Bản là 50 giây.",
-    "Mức tiêu hao duy trì giảm từ 4 xuống 3 Điện mỗi giây.\nChỉ số HawkEye kế thừa tăng từ 70% lên 90%."
+    "Phantom triệu hồi HawkEye nếu có ít nhất 10 Điện; không tiêu hao Điện khi triệu hồi. HawkEye duy trì bằng 4,5 Điện mỗi giây, kế thừa 80% chỉ số của Phantom và tồn tại cho đến khi hết Điện hoặc được thu hồi. Thu hồi HawkEye không hoàn lại Điện. Hồi Chiêu Cơ Bản là 50 giây.",
+    "Mức tiêu hao duy trì giảm từ 5 xuống 4,5 Điện mỗi giây.\nChỉ số HawkEye kế thừa tăng từ 70% lên 80%."
   ],
   [
     "HawkEye Hiếu Chiến",
-    "Phantom triệu hồi HawkEye nếu có ít nhất 15 Điện; không tiêu hao Điện khi triệu hồi. HawkEye duy trì bằng 3 Điện mỗi giây và kế thừa 90% chỉ số của Phantom. Sau mỗi 7 giây hoạt động, HawkEye bước vào Cuồng Nộ trong 3 giây: HawkEye tăng 120% tốc độ bắn riêng, còn Phantom nhận +105% Tốc Độ Bắn Cộng Thêm; chu kỳ 7 giây chỉ bắt đầu lại sau khi Cuồng Nộ kết thúc. Khi Phantom và HawkEye cùng gây sát thương trực tiếp lên một kẻ địch trong vòng 1 giây, chúng tạo Đồng Bộ trong 4 giây, khiến cả hai gây thêm 30% sát thương lên mục tiêu đó. Chỉ một mục tiêu có thể Đồng Bộ cùng lúc; hiệu ứng này có Hồi Chiêu riêng 12 giây sau khi kết thúc. Hồi Chiêu Cơ Bản là 50 giây.",
-    "Sau mỗi 7 giây hoạt động, HawkEye bước vào Cuồng Nộ trong 3 giây: HawkEye tăng 120% tốc độ bắn riêng, còn Phantom nhận +105% Tốc Độ Bắn Cộng Thêm. Chu kỳ 7 giây chỉ bắt đầu lại sau khi Cuồng Nộ kết thúc.\nKhi Phantom và HawkEye cùng gây sát thương trực tiếp lên một kẻ địch trong vòng 1 giây, chúng tạo Đồng Bộ trong 4 giây, khiến cả hai gây thêm 30% sát thương lên mục tiêu đó. Chỉ một mục tiêu có thể Đồng Bộ cùng lúc; hiệu ứng có Hồi Chiêu riêng 12 giây sau khi kết thúc."
+    "Phantom triệu hồi HawkEye nếu có ít nhất 15 Điện; không tiêu hao Điện khi triệu hồi. HawkEye duy trì bằng 4 Điện mỗi giây và kế thừa 90% chỉ số của Phantom. Sau mỗi 7 giây hoạt động, HawkEye bước vào Cuồng Nộ trong 3 giây: HawkEye tăng +120% Tốc Độ Bắn Cộng Thêm, còn Phantom nhận +60% Tốc Độ Bắn Cộng Thêm. Khi Phantom và HawkEye cùng gây sát thương trực tiếp lên một kẻ địch trong vòng 1 giây, chúng tạo Đồng Bộ trong 4 giây, khiến cả hai gây thêm 30% sát thương lên mục tiêu đó. Chỉ một mục tiêu có thể Đồng Bộ cùng lúc; hiệu ứng này có Hồi Chiêu riêng 12 giây sau khi kết thúc. Hồi Chiêu Cơ Bản là 50 giây.",
+    "Điện duy trì: 4,5 → 4 Điện/giây.\nChỉ số kế thừa: 80% → 90%.\nSau mỗi 7 giây hoạt động, HawkEye bước vào Cuồng Nộ trong 3 giây: HawkEye tăng +120% Tốc Độ Bắn Cộng Thêm, còn Phantom nhận +60% Tốc Độ Bắn Cộng Thêm.\nKhi Phantom và HawkEye cùng gây sát thương trực tiếp lên một kẻ địch trong vòng 1 giây, chúng tạo Đồng Bộ trong 4 giây, khiến cả hai gây thêm 30% sát thương lên mục tiêu đó. Chỉ một mục tiêu có thể Đồng Bộ cùng lúc; hiệu ứng có Hồi Chiêu riêng 12 giây sau khi kết thúc."
   ]
 ]),
- orbit_reversal:ranks([110,120,130,140,150],[
+ orbit_reversal:ranks([80,90,100,110,120],[
   [
     "Phản Quỹ Đạo",
     "Astra tạo một vùng Phản Quỹ Đạo bán kính 72 px bám theo chiến cơ trong 2 giây, bắt tối đa 16 viên đạn có thể chặn. Có thể tái kích hoạt để kết thúc sớm mà không tốn thêm Tài Nguyên. Khi giải phóng, các Tinh Đạn phản xạ gây 30% Hỏa Lực, giữ nguyên hướng bay ban đầu và không tự tìm mục tiêu.",
-    "Astra tạo một vùng Phản Quỹ Đạo bán kính 72 px bám theo chiến cơ trong 2 giây, bắt tối đa 16 viên đạn có thể chặn. Có thể tái kích hoạt để kết thúc sớm mà không tốn thêm Tài Nguyên. Khi giải phóng, các Tinh Đạn phản xạ gây 30% Hỏa Lực, giữ nguyên hướng bay ban đầu và không tự tìm mục tiêu.\nHồi Chiêu Cơ Bản: 32 giây.\nYêu cầu Tài Nguyên: 110 Mana."
+    "Astra tạo một vùng Phản Quỹ Đạo bán kính 72 px bám theo chiến cơ trong 2 giây, bắt tối đa 16 viên đạn có thể chặn. Có thể tái kích hoạt để kết thúc sớm mà không tốn thêm Tài Nguyên. Khi giải phóng, các Tinh Đạn phản xạ gây 30% Hỏa Lực, giữ nguyên hướng bay ban đầu và không tự tìm mục tiêu.\nHồi Chiêu Cơ Bản: 32 giây.\nYêu cầu Tài Nguyên: 80 Mana."
   ],
   [
     "Vành Đai Mở Rộng",
     "Astra tạo vùng Phản Quỹ Đạo bán kính 92 px bám theo chiến cơ trong 2 giây và bắt tối đa 22 viên đạn có thể chặn. Có thể tái kích hoạt để kết thúc sớm miễn phí. Khi giải phóng, Tinh Đạn phản xạ gây 30% Hỏa Lực, giữ nguyên hướng bay và không tự tìm mục tiêu.",
-    "Bán kính Phản Quỹ Đạo tăng từ 72 lên 92 px.\nSố đạn có thể bắt tăng từ 16 lên 22.\nHồi Chiêu Cơ Bản: 32 → 31 giây.\nYêu cầu Tài Nguyên: 110 → 120 Mana."
+    "Bán kính Phản Quỹ Đạo tăng từ 72 lên 92 px.\nSố đạn có thể bắt tăng từ 16 lên 22.\nHồi Chiêu Cơ Bản: 32 → 31 giây.\nYêu cầu Tài Nguyên: 80 → 90 Mana."
   ],
   [
     "Phản Xạ Cường Hóa",
     "Astra tạo vùng Phản Quỹ Đạo bán kính 92 px trong 2 giây, bắt tối đa 22 viên đạn có thể chặn. Khi giải phóng, mỗi Tinh Đạn phản xạ gây 70% Hỏa Lực, giữ nguyên hướng bay ban đầu và không tự tìm mục tiêu. Có thể tái kích hoạt để kết thúc sớm miễn phí.",
-    "Sát thương mỗi Tinh Đạn phản xạ tăng từ 30% lên 70% Hỏa Lực.\nHồi Chiêu Cơ Bản: 31 → 30 giây.\nYêu cầu Tài Nguyên: 120 → 130 Mana."
+    "Sát thương mỗi Tinh Đạn phản xạ tăng từ 30% lên 70% Hỏa Lực.\nHồi Chiêu Cơ Bản: 31 → 30 giây.\nYêu cầu Tài Nguyên: 90 → 100 Mana."
   ],
   [
     "Thu Hồi Thiên Năng",
-    "Astra tạo vùng Phản Quỹ Đạo bán kính 92 px trong 2 giây, bắt tối đa 22 viên đạn; mỗi lần bắt hồi 2,5% Tài Nguyên Tối Đa, tối đa 30% mỗi lần dùng. Khi giải phóng, Tinh Đạn phản xạ gây 70% Hỏa Lực. Astra giảm 60% sát thương phải nhận trong toàn bộ quá trình bắt giữ, hội tụ và giải phóng cho đến khi viên Tinh Đạn cuối cùng được phóng.",
-    "Mỗi viên đạn bắt được hồi 2,5% Tài Nguyên Tối Đa, tối đa 30% mỗi lần dùng.\nAstra giảm 60% sát thương phải nhận trong toàn bộ quá trình bắt giữ, hội tụ và giải phóng cho đến khi viên Tinh Đạn cuối cùng được phóng.\nHồi Chiêu Cơ Bản: 30 → 29 giây.\nYêu cầu Tài Nguyên: 130 → 140 Mana."
+    "Astra tạo vùng Phản Quỹ Đạo bán kính 92 px trong 2 giây, bắt tối đa 22 viên đạn; mỗi lần bắt hồi 2,5% Tài Nguyên Tối Đa, tối đa 30% mỗi lần dùng. Khi giải phóng, Tinh Đạn phản xạ gây 70% Hỏa Lực. Astra giảm 35% sát thương phải nhận trong toàn bộ quá trình bắt giữ, hội tụ và giải phóng cho đến khi viên Tinh Đạn cuối cùng được phóng.",
+    "Mỗi viên đạn bắt được hồi 2,5% Tài Nguyên Tối Đa, tối đa 30% mỗi lần dùng.\nAstra giảm 35% sát thương phải nhận trong toàn bộ quá trình bắt giữ, hội tụ và giải phóng cho đến khi viên Tinh Đạn cuối cùng được phóng.\nHồi Chiêu Cơ Bản: 30 → 29 giây.\nYêu cầu Tài Nguyên: 100 → 110 Mana."
   ],
   [
     "Hố Trắng",
-    "Astra tạo vùng Phản Quỹ Đạo bán kính 92 px trong 2 giây, bắt tối đa 22 viên đạn; mỗi lần bắt hồi 2,5% Tài Nguyên Tối Đa, tối đa 30%. Tinh Đạn phản xạ gây 70% Hỏa Lực và Astra giảm 60% sát thương phải nhận cho đến khi viên cuối được phóng. Nếu bắt được ít nhất một viên đạn, sau khi phóng hết Tinh Đạn Astra nhận +60% Sát Thương Đòn Đánh Thường trong 5 giây. Hồi Chiêu Cơ Bản là 28 giây.",
-    "Nếu bắt được ít nhất một viên đạn, sau khi phóng hết Tinh Đạn Astra nhận +60% Sát Thương Đòn Đánh Thường trong 5 giây.\nHồi Chiêu Cơ Bản: 29 → 28 giây.\nYêu cầu Tài Nguyên: 140 → 150 Mana."
+    "Astra tạo vùng Phản Quỹ Đạo bán kính 92 px trong 2 giây, bắt tối đa 22 viên đạn; mỗi lần bắt hồi 2,5% Tài Nguyên Tối Đa, tối đa 30%. Tinh Đạn phản xạ gây 70% Hỏa Lực và Astra giảm 35% sát thương phải nhận cho đến khi viên cuối được phóng. Nếu bắt được ít nhất một viên đạn, sau khi phóng hết Tinh Đạn Astra nhận +60% Sát Thương Đòn Đánh Thường trong 5 giây. Hồi Chiêu Cơ Bản là 28 giây.",
+    "Nếu bắt được ít nhất một viên đạn, sau khi phóng hết Tinh Đạn Astra nhận +60% Sát Thương Đòn Đánh Thường trong 5 giây.\nHồi Chiêu Cơ Bản: 29 → 28 giây.\nYêu cầu Tài Nguyên: 110 → 120 Mana."
   ]
 ]),
  stellar_lance:ranks([60,60,60,60,50],[
   [
     "Thương Tinh Tú",
-    "Astra tụ năng lượng trong 0,6 giây rồi phóng Thương Tinh Tú xuyên theo đường thẳng. Mục tiêu đầu tiên nhận 800% Hỏa Lực, các mục tiêu sau nhận 680% Hỏa Lực. Mỗi lần dùng thành công trong vòng 15 giây tăng thêm 10% sát thương và tăng 60 Tài Nguyên cho lần dùng kế tiếp, tối đa 4 cộng dồn. Hồi Chiêu bắt đầu khi đòn Thương chính kết thúc; tia phụ sau đó không trì hoãn Hồi Chiêu.",
-    "Astra tụ năng lượng trong 0,6 giây rồi phóng Thương Tinh Tú xuyên theo đường thẳng. Mục tiêu đầu tiên nhận 800% Hỏa Lực, các mục tiêu sau nhận 680% Hỏa Lực. Mỗi lần dùng thành công trong vòng 15 giây tăng thêm 10% sát thương và tăng 60 Tài Nguyên cho lần dùng kế tiếp, tối đa 4 cộng dồn. Hồi Chiêu bắt đầu khi đòn Thương chính kết thúc; tia phụ sau đó không trì hoãn Hồi Chiêu.\nHồi Chiêu Cơ Bản: 3 giây.\nYêu cầu Tài Nguyên: 60 Mana."
+    "Astra tụ năng lượng trong 0,8 giây rồi phóng Thương Tinh Tú xuyên theo đường thẳng. Mục tiêu đầu tiên nhận 900% Hỏa Lực, các mục tiêu sau nhận 400% Hỏa Lực. Mỗi lần dùng thành công trong vòng 15 giây tăng thêm 10% sát thương và tăng 60 Tài Nguyên cho lần dùng kế tiếp, tối đa 4 cộng dồn. Hồi Chiêu bắt đầu khi đòn Thương chính kết thúc; tia phụ sau đó không trì hoãn Hồi Chiêu.",
+    "Astra tụ năng lượng trong 0,8 giây rồi phóng Thương Tinh Tú xuyên theo đường thẳng. Mục tiêu đầu tiên nhận 900% Hỏa Lực, các mục tiêu sau nhận 400% Hỏa Lực. Mỗi lần dùng thành công trong vòng 15 giây tăng thêm 10% sát thương và tăng 60 Tài Nguyên cho lần dùng kế tiếp, tối đa 4 cộng dồn. Hồi Chiêu bắt đầu khi đòn Thương chính kết thúc; tia phụ sau đó không trì hoãn Hồi Chiêu.\nHồi Chiêu Cơ Bản: 3 giây.\nYêu cầu Tài Nguyên: 60 Mana."
   ],
   [
     "Tụ Quang Siêu Tốc",
-    "Astra chỉ cần tụ 0,2 giây trước khi phóng Thương Tinh Tú. Mục tiêu đầu tiên nhận 800% Hỏa Lực, các mục tiêu sau nhận 680% Hỏa Lực. Mỗi lần dùng thành công trong vòng 15 giây tăng thêm 10% sát thương cho lần kế tiếp, tối đa 4 cộng dồn. Chi phí cơ bản và phần tăng thêm của mỗi cộng dồn vẫn là 60 Tài Nguyên. Hồi Chiêu bắt đầu khi đòn Thương chính kết thúc; tia phụ sau đó không trì hoãn Hồi Chiêu.",
-    "Thời gian tụ năng lượng giảm từ 0,6 xuống 0,2 giây."
+    "Astra chỉ cần tụ 0,7 giây trước khi phóng Thương Tinh Tú. Mục tiêu đầu tiên nhận 950% Hỏa Lực, các mục tiêu sau nhận 450% Hỏa Lực. Mỗi lần dùng thành công trong vòng 15 giây tăng thêm 10% sát thương cho lần kế tiếp, tối đa 4 cộng dồn. Chi phí cơ bản và phần tăng thêm của mỗi cộng dồn vẫn là 60 Tài Nguyên. Hồi Chiêu bắt đầu khi đòn Thương chính kết thúc; tia phụ sau đó không trì hoãn Hồi Chiêu.",
+    "Thời gian tụ: 0,8 → 0,7 giây.\nSát thương mục tiêu đầu: 900% → 950% Hỏa Lực.\nSát thương mục tiêu sau: 400% → 450% Hỏa Lực."
   ],
   [
     "Lõi Siêu Mật",
-    "Astra tụ 0,2 giây rồi phóng Thương Tinh Tú. Trước phần sát thương cộng thêm từ chuỗi, mục tiêu đầu tiên nhận 1050% Hỏa Lực và các mục tiêu sau nhận 930% Hỏa Lực. Mỗi lần dùng thành công trong 15 giây tiếp tục tăng 10% sát thương cho lần kế tiếp, tối đa 4 cộng dồn; mỗi cộng dồn tăng thêm 60 Tài Nguyên chi phí. Hồi Chiêu bắt đầu khi đòn Thương chính kết thúc; tia phụ sau đó không trì hoãn Hồi Chiêu.",
-    "Sát thương lên mục tiêu đầu tiên tăng từ 800% lên 1050% Hỏa Lực.\nSát thương lên các mục tiêu xuyên sau tăng từ 680% lên 930% Hỏa Lực."
+    "Astra tụ 0,6 giây rồi phóng Thương Tinh Tú. Trước phần sát thương cộng thêm từ chuỗi, mục tiêu đầu tiên nhận 1000% Hỏa Lực và các mục tiêu sau nhận 500% Hỏa Lực. Mỗi lần dùng thành công trong 15 giây tiếp tục tăng 10% sát thương cho lần kế tiếp, tối đa 4 cộng dồn; mỗi cộng dồn tăng thêm 60 Tài Nguyên chi phí. Hồi Chiêu bắt đầu khi đòn Thương chính kết thúc; tia phụ sau đó không trì hoãn Hồi Chiêu.",
+    "Thời gian tụ: 0,7 → 0,6 giây.\nSát thương mục tiêu đầu: 950% → 1000% Hỏa Lực.\nSát thương mục tiêu sau: 450% → 500% Hỏa Lực."
   ],
   [
     "Mũi Giáo Xuyên Giáp",
-    "Astra tụ 0,2 giây rồi phóng Thương Tinh Tú, gây 1050% Hỏa Lực lên mục tiêu đầu và 930% lên các mục tiêu sau trước phần cộng thêm từ chuỗi. Thương bỏ qua 30% Giáp; mục tiêu dưới 30% Máu nhận thêm 40% sát thương từ Thương. Mỗi lần dùng liên tiếp thành công trong 15 giây tăng 10% sát thương và 60 Tài Nguyên cho lần kế tiếp, tối đa 4 cộng dồn. Hồi Chiêu bắt đầu khi đòn Thương chính kết thúc; tia phụ sau đó không trì hoãn Hồi Chiêu.",
-    "Thương Tinh Tú bỏ qua 30% Giáp.\nMục tiêu dưới 30% Máu nhận thêm 40% sát thương từ Thương."
+    "Astra tụ 0,5 giây rồi phóng Thương Tinh Tú, gây 1050% Hỏa Lực lên mục tiêu đầu và 550% lên các mục tiêu sau trước phần cộng thêm từ chuỗi. Thương bỏ qua 30% Giáp; mục tiêu dưới 30% Máu nhận thêm 40% sát thương từ Thương. Mỗi lần dùng liên tiếp thành công trong 15 giây tăng 10% sát thương và 60 Tài Nguyên cho lần kế tiếp, tối đa 4 cộng dồn. Hồi Chiêu bắt đầu khi đòn Thương chính kết thúc; tia phụ sau đó không trì hoãn Hồi Chiêu.",
+    "Thời gian tụ: 0,6 → 0,5 giây.\nSát thương mục tiêu đầu: 1000% → 1050% Hỏa Lực.\nSát thương mục tiêu sau: 500% → 550% Hỏa Lực.\nThương Tinh Tú bỏ qua 30% Giáp.\nMục tiêu dưới 30% Máu nhận thêm 40% sát thương từ Thương."
   ],
   [
     "Ngọn Giáo Sao Băng",
-    "Astra phóng Thương Tinh Tú sau 0,2 giây tụ, gây 1050% / 930% Hỏa Lực trước phần cộng thêm từ chuỗi, bỏ qua 30% Giáp và gây thêm 40% sát thương lên mục tiêu dưới 30% Máu. Từ cấp này, chi phí cơ bản và phần tăng thêm của mỗi cộng dồn giảm còn 50 Tài Nguyên. Sau khi Thương rời vùng chơi 0,75 giây, một đường cảnh báo xuất hiện trong 0,6 giây theo đúng quỹ đạo rồi phát Laser Sao Băng từ dưới lên. Laser rộng gấp đôi vùng va chạm của Thương, tồn tại 1 giây, xuyên mọi kẻ địch và gây 320% Hỏa Lực đúng một lần lên mỗi mục tiêu; Laser tuân theo quy tắc chí mạng của kỹ năng. Hồi Chiêu bắt đầu khi đòn Thương chính kết thúc; tia phụ sau đó không trì hoãn Hồi Chiêu.",
-    "Sau khi Thương rời vùng chơi 0,75 giây, một đường cảnh báo xuất hiện trong 0,6 giây theo đúng quỹ đạo.\nSau cảnh báo, Laser Sao Băng quét từ dưới lên, rộng gấp đôi vùng va chạm của Thương, tồn tại 1 giây, xuyên mọi kẻ địch và gây 320% Hỏa Lực đúng một lần lên mỗi mục tiêu.\nLaser tuân theo quy tắc chí mạng của kỹ năng.\nChi phí cơ bản và phần tăng thêm của mỗi cộng dồn giảm từ 60 xuống 50 Tài Nguyên.\nYêu cầu Tài Nguyên: 60 → 50 Mana."
+    "Astra phóng Thương Tinh Tú sau 0,4 giây tụ, gây 1100% / 600% Hỏa Lực trước phần cộng thêm từ chuỗi, bỏ qua 30% Giáp và gây thêm 40% sát thương lên mục tiêu dưới 30% Máu. Từ cấp này, chi phí cơ bản và phần tăng thêm của mỗi cộng dồn giảm còn 50 Tài Nguyên. Sau khi Thương rời vùng chơi 0,75 giây, một đường cảnh báo xuất hiện trong 0,6 giây theo đúng quỹ đạo rồi phát Laser Sao Băng từ dưới lên. Laser rộng gấp đôi vùng va chạm của Thương, tồn tại 1 giây, xuyên mọi kẻ địch và gây 320% Hỏa Lực đúng một lần lên mỗi mục tiêu; Laser tuân theo quy tắc chí mạng của kỹ năng. Hồi Chiêu bắt đầu khi đòn Thương chính kết thúc; tia phụ sau đó không trì hoãn Hồi Chiêu.",
+    "Thời gian tụ: 0,5 → 0,4 giây.\nSát thương mục tiêu đầu: 1050% → 1100% Hỏa Lực.\nSát thương mục tiêu sau: 550% → 600% Hỏa Lực.\nSau khi Thương rời vùng chơi 0,75 giây, một đường cảnh báo xuất hiện trong 0,6 giây theo đúng quỹ đạo.\nSau cảnh báo, Laser Sao Băng quét từ dưới lên, rộng gấp đôi vùng va chạm của Thương, tồn tại 1 giây, xuyên mọi kẻ địch và gây 320% Hỏa Lực đúng một lần lên mỗi mục tiêu.\nLaser tuân theo quy tắc chí mạng của kỹ năng.\nChi phí cơ bản và phần tăng thêm của mỗi cộng dồn giảm từ 60 xuống 50 Tài Nguyên.\nYêu cầu Tài Nguyên: 60 → 50 Mana."
   ]
 ]),
  twin_reflection:ranks([115,125,135,145,155],[
@@ -396,18 +400,18 @@ export const SKILL_RANKS: Record<SkillId, readonly SkillRankConfig[]> = {
  starfall:ranks([150,200,250],[
   [
     "Sao Rơi",
-    "Astra gọi 12 thiên thạch xuống chiến trường. Mỗi đợt nhắm cách nhau 0,5 giây, chọn trong mọi mục tiêu hợp lệ, kể cả mồi và phân thân Phantom của đối phương; ưu tiên mục tiêu chưa được đánh dấu. Dấu ấn bám mục tiêu trong 1 giây, sau đó cố định vị trí; thiên thạch xuất hiện và rơi trúng dấu ấn sau 0,2 giây, gây 355% Hỏa Lực trong bán kính 45 px. Hồi Chiêu Cơ Bản là 90 giây và chỉ bắt đầu sau khi thiên thạch cuối cùng va chạm.",
-    "Astra gọi 12 thiên thạch xuống chiến trường. Mỗi đợt nhắm cách nhau 0,5 giây, chọn trong mọi mục tiêu hợp lệ, kể cả mồi và phân thân Phantom của đối phương; ưu tiên mục tiêu chưa được đánh dấu. Dấu ấn bám mục tiêu trong 1 giây, sau đó cố định vị trí; thiên thạch xuất hiện và rơi trúng dấu ấn sau 0,2 giây, gây 355% Hỏa Lực trong bán kính 45 px.\nHồi Chiêu Cơ Bản: 90 giây.\nYêu cầu Tài Nguyên: 150 Mana."
+    "Astra gọi 12 thiên thạch xuống chiến trường. Mỗi đợt nhắm cách nhau 0,5 giây, chọn trong mọi mục tiêu hợp lệ, kể cả mồi và phân thân Phantom của đối phương; ưu tiên mục tiêu chưa được đánh dấu. Dấu ấn bám mục tiêu trong 1 giây, sau đó cố định vị trí; thiên thạch xuất hiện và rơi trúng dấu ấn sau 0,2 giây, gây 275% Hỏa Lực trong bán kính 45 px. Hồi Chiêu Cơ Bản là 90 giây và chỉ bắt đầu sau khi thiên thạch cuối cùng va chạm.",
+    "Astra gọi 12 thiên thạch xuống chiến trường. Mỗi đợt nhắm cách nhau 0,5 giây, chọn trong mọi mục tiêu hợp lệ, kể cả mồi và phân thân Phantom của đối phương; ưu tiên mục tiêu chưa được đánh dấu. Dấu ấn bám mục tiêu trong 1 giây, sau đó cố định vị trí; thiên thạch xuất hiện và rơi trúng dấu ấn sau 0,2 giây, gây 275% Hỏa Lực trong bán kính 45 px.\nHồi Chiêu Cơ Bản: 90 giây.\nYêu cầu Tài Nguyên: 150 Mana."
   ],
   [
     "Sao Neutron",
-    "Astra gọi 14 thiên thạch, mỗi thiên thạch gây 395% Hỏa Lực trong bán kính 65 px. Mỗi đợt nhắm cách nhau 0,5 giây, chọn trong mọi mục tiêu hợp lệ, kể cả mồi và phân thân Phantom của đối phương; ưu tiên mục tiêu chưa được đánh dấu. Dấu ấn bám mục tiêu trong 1 giây, sau đó cố định vị trí; thiên thạch xuất hiện và rơi trúng dấu ấn sau 0,2 giây. Mỗi kẻ địch bị Sao Rơi tiêu diệt hồi 6% Tài Nguyên Tối Đa cho Astra, tối đa 36% mỗi lần dùng. Hồi Chiêu Cơ Bản là 90 giây.",
-    "Số thiên thạch tăng từ 12 lên 14.\nSát thương mỗi thiên thạch tăng từ 355% lên 395% Hỏa Lực.\nBán kính tăng từ 45 lên 65 px.\nMỗi kẻ địch bị Sao Rơi tiêu diệt hồi 6% Tài Nguyên Tối Đa cho Astra, tối đa 36% mỗi lần dùng.\nYêu cầu Tài Nguyên: 150 → 200 Mana."
+    "Astra gọi 14 thiên thạch, mỗi thiên thạch gây 300% Hỏa Lực trong bán kính 65 px. Mỗi đợt nhắm cách nhau 0,5 giây, chọn trong mọi mục tiêu hợp lệ, kể cả mồi và phân thân Phantom của đối phương; ưu tiên mục tiêu chưa được đánh dấu. Dấu ấn bám mục tiêu trong 1 giây, sau đó cố định vị trí; thiên thạch xuất hiện và rơi trúng dấu ấn sau 0,2 giây. Mỗi kẻ địch bị Sao Rơi tiêu diệt hồi 6% Tài Nguyên Tối Đa cho Astra, tối đa 36% mỗi lần dùng. Hồi Chiêu Cơ Bản là 90 giây.",
+    "Số thiên thạch tăng từ 12 lên 14.\nSát thương mỗi thiên thạch tăng từ 275% lên 300% Hỏa Lực.\nBán kính tăng từ 45 lên 65 px.\nMỗi kẻ địch bị Sao Rơi tiêu diệt hồi 6% Tài Nguyên Tối Đa cho Astra, tối đa 36% mỗi lần dùng.\nYêu cầu Tài Nguyên: 150 → 200 Mana."
   ],
   [
     "Vết Nứt Thiên Sao",
-    "Astra gọi tổng cộng 16 thiên thạch. 15 thiên thạch đầu gây 435% Hỏa Lực trong bán kính 65 px; thiên thạch cuối là Thiên Thạch Tận Thế, gây 1200% Hỏa Lực trong bán kính 110 px, có kích thước lớn hơn gấp đôi. Mỗi đợt nhắm cách nhau 0,5 giây, chọn trong mọi mục tiêu hợp lệ, kể cả mồi và phân thân Phantom của đối phương; ưu tiên mục tiêu chưa được đánh dấu. Mọi thiên thạch, kể cả Thiên Thạch Tận Thế, nhắm trong 1 giây rồi rơi trong 0,2 giây vào vị trí đã cố định; dấu ấn tồn tại đến khi va chạm. Mỗi kẻ địch bị Sao Rơi tiêu diệt hồi 6% Tài Nguyên Tối Đa, tối đa 36% mỗi lần dùng. Hồi Chiêu Cơ Bản là 90 giây và bắt đầu sau cú va chạm cuối cùng.",
-    "Tổng số thiên thạch tăng từ 14 lên 16.\n15 thiên thạch đầu tăng sát thương từ 395% lên 435% Hỏa Lực.\nThiên thạch cuối trở thành Thiên Thạch Tận Thế, gây 1200% Hỏa Lực trong bán kính 110 px, có kích thước lớn hơn gấp đôi. Mỗi đợt nhắm cách nhau 0,5 giây, chọn trong mọi mục tiêu hợp lệ, kể cả mồi và phân thân Phantom của đối phương; ưu tiên mục tiêu chưa được đánh dấu. Mọi thiên thạch, kể cả Thiên Thạch Tận Thế, nhắm trong 1 giây rồi rơi trong 0,2 giây vào vị trí đã cố định; dấu ấn tồn tại đến khi va chạm.\nYêu cầu Tài Nguyên: 200 → 250 Mana."
+    "Astra gọi tổng cộng 16 thiên thạch. 15 thiên thạch đầu gây 325% Hỏa Lực trong bán kính 65 px; thiên thạch cuối là Thiên Thạch Tận Thế, gây 1200% Hỏa Lực trong bán kính 110 px, có kích thước lớn hơn gấp đôi. Mỗi đợt nhắm cách nhau 0,5 giây, chọn trong mọi mục tiêu hợp lệ, kể cả mồi và phân thân Phantom của đối phương; ưu tiên mục tiêu chưa được đánh dấu. Mọi thiên thạch, kể cả Thiên Thạch Tận Thế, nhắm trong 1 giây rồi rơi trong 0,2 giây vào vị trí đã cố định; dấu ấn tồn tại đến khi va chạm. Mỗi kẻ địch bị Sao Rơi tiêu diệt hồi 6% Tài Nguyên Tối Đa, tối đa 36% mỗi lần dùng. Hồi Chiêu Cơ Bản là 90 giây và bắt đầu sau cú va chạm cuối cùng.",
+    "Tổng số thiên thạch tăng từ 14 lên 16.\n15 thiên thạch đầu tăng sát thương từ 300% lên 325% Hỏa Lực.\nThiên thạch cuối trở thành Thiên Thạch Tận Thế, gây 1200% Hỏa Lực trong bán kính 110 px, có kích thước lớn hơn gấp đôi. Mỗi đợt nhắm cách nhau 0,5 giây, chọn trong mọi mục tiêu hợp lệ, kể cả mồi và phân thân Phantom của đối phương; ưu tiên mục tiêu chưa được đánh dấu. Mọi thiên thạch, kể cả Thiên Thạch Tận Thế, nhắm trong 1 giây rồi rơi trong 0,2 giây vào vị trí đã cố định; dấu ấn tồn tại đến khi va chạm.\nYêu cầu Tài Nguyên: 200 → 250 Mana."
   ]
 ]),
 };
@@ -429,17 +433,17 @@ export function rankValues(s:AircraftCombatState,id:SkillId) {
  const cost=SKILL_RANKS[id][r-1].cost;
  const all={
   decoy:{cost,cooldown:[32,31,30,29,28][r-1],duration:r>=2?2.5:1.5,count:r>=2?4:3},
-  afterburner:{cost,cooldown:[30,29,28,27,26][r-1],duration:r>=2?10:7},
-  missile_swarm:{cost,cooldown:90,count:[14,18,22][r-1],damageMultiplier:[3,3.4,3.8][r-1]},
-  armor_shield:{cost,cooldown:[35,34,33,32,31][r-1],duration:r>=2?9:6,damageTakenMultiplier:r>=3?.15:.35},
+  afterburner:{cost,cooldown:[30,29,28,27,26][r-1],duration:[6,7,8,9,10][r-1]},
+  missile_swarm:{cost,cooldown:90,count:[14,18,22][r-1],damageMultiplier:[2,2.3,2.6][r-1]},
+  armor_shield:{cost,cooldown:[35,34,33,32,31][r-1],duration:[6,6.5,7,7.5,8][r-1],damageTakenMultiplier:[.45,.4,.35,.3,.25][r-1]},
   heavy_bomb:{cost,cooldown:[30,29,28,27,26][r-1],damageMultiplier:[5,6,7,8,9][r-1]},
   sweeping_cannon:{cost,cooldown:70,duration:18,count:r>=2?9:7,damageMultiplier:[.7,.8,.9][r-1]},
-  invisibility:{cost,cooldown:[33,32,31,30,29][r-1],duration:r>=3?3.5:r>=2?3:2},
-  focus_laser:{cost,cooldown:[29,28,27,26,25][r-1],charge:r>=2?.2:2,duration:r>=3?3:2,damageMultiplier:(r>=3?3.3:3)*(r>=4?1.32:1)},
-  escort_drone:{cost,cooldown:50,upkeepPerSecond:r>=2?3:4,damageMultiplier:r>=2?.9:.7},
+  invisibility:{cost,cooldown:[33,32,31,30,29][r-1],duration:[2,2.1,2.2,2.3,2.4][r-1]},
+  focus_laser:{cost,cooldown:[29,28,27,26,25][r-1],charge:[2,1.8,1.6,1.4,1.2][r-1],duration:[2,2.25,2.5,2.75,3][r-1],damageMultiplier:[1,1.15,1.3,1.45,1.6][r-1]},
+  escort_drone:{cost,cooldown:50,upkeepPerSecond:[5,4.5,4][r-1],damageMultiplier:[.7,.8,.9][r-1]},
   orbit_reversal:{cost,cooldown:[32,31,30,29,28][r-1],duration:2,count:r>=2?22:16,radiusMultiplier:r>=2?92/72:1,damageMultiplier:r>=3?.7:.3},
-  stellar_lance:{cost:cost*(1+((s.coreState.timers.lanceChain??0)>s.coreState.time?(s.coreState.stacks.lanceStack??0):0)),cooldown:3,charge:r>=2?.2:.6,damageMultiplier:(r>=3?10.5:8)*(1+.1*((s.coreState.timers.lanceChain??0)>s.coreState.time?(s.coreState.stacks.lanceStack??0):0))},
-  starfall:{cost,cooldown:90,count:[12,14,16][r-1],damageMultiplier:[3.55,3.95,4.35][r-1]},
+  stellar_lance:{cost:cost*(1+((s.coreState.timers.lanceChain??0)>s.coreState.time?(s.coreState.stacks.lanceStack??0):0)),cooldown:3,charge:[.8,.7,.6,.5,.4][r-1],damageMultiplier:STELLAR_LANCE_FIRST_DAMAGE[r-1]*(1+.1*((s.coreState.timers.lanceChain??0)>s.coreState.time?(s.coreState.stacks.lanceStack??0):0))},
+  starfall:{cost,cooldown:90,count:[12,14,16][r-1],damageMultiplier:STARFALL_DAMAGE[r-1]},
   predator_lock:{cost,cooldown:[20,19,18,17,16][r-1],duration:8,damageMultiplier:r>=2?2.4:2},
   gravity_anchor:{cost,cooldown:[25,24,23,22,21][r-1],duration:5,radiusMultiplier:r>=2?1.25:1,damageMultiplier:.65},
   electronic_interference:{cost,cooldown:[28,27,26,25,24][r-1],duration:r>=5?1.6:r>=2?1:0,damageMultiplier:1},

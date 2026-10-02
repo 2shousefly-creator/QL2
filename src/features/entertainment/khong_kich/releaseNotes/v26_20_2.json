@@ -1,0 +1,252 @@
+{
+  "version": "26.20.2",
+  "releaseDate": "02/10/2026",
+  "title": "Cân Bằng Kỹ Năng Chiến Cơ",
+  "displayTitle": "KHÔNG KÍCH 26.20.2 — CÂN BẰNG KỸ NĂNG CHIẾN CƠ",
+  "summary": "Điều chỉnh sức mạnh kỹ năng Viper, Titan, Phantom và Astra; sửa quỹ đạo đạn nảy Điên Cuồng và chuyển Cuồng Nộ HawkEye sang tốc độ bắn cộng thêm mỗi 7 giây. Các hiệu ứng không được đề cập giữ nguyên.",
+  "sections": [
+    {
+      "id": "s1",
+      "title": "VIPER",
+      "icon": {
+        "kind": "aircraft",
+        "id": "black_eagle"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "s1-e1",
+          "title": "Điên Cuồng",
+          "icon": {
+            "kind": "skill",
+            "id": "afterburner"
+          },
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Thời gian duy trì theo cấp: 6 / 7 / 8 / 9 / 10 giây. Tốc Độ Bắn Cộng Thêm: 60% / 80% / 100% / 120% / 140%."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Gỡ hiệu ứng hồi tổng 10% Mana tối đa trong 5 giây ở cấp 4."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Đạn nảy nhắm một lần về mục tiêu gần nhất rồi bay thẳng. Chỉ nảy tiếp khi va chạm; nếu trượt, đạn ra khỏi màn hình rồi biến mất, không bật ngược ở mép."
+            }
+          ]
+        },
+        {
+          "id": "s1-e2",
+          "title": "Mưa Tên Lửa",
+          "icon": {
+            "kind": "skill",
+            "id": "missile_swarm"
+          },
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Sát thương mỗi tên lửa: 200% / 230% / 260% Hỏa Lực."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Tốc độ bay tăng 100% và thời gian tồn tại tăng 100% ở mọi cấp kỹ năng."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "TITAN",
+      "icon": {
+        "kind": "aircraft",
+        "id": "breaker"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "s2-e1",
+          "title": "Khiên Năng Lượng",
+          "icon": {
+            "kind": "skill",
+            "id": "armor_shield"
+          },
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Giảm sát thương nhận vào: 55% / 60% / 65% / 70% / 75%."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Thời gian tồn tại: 6 / 6,5 / 7 / 7,5 / 8 giây."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "PHANTOM",
+      "icon": {
+        "kind": "aircraft",
+        "id": "phantom"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "s3-e1",
+          "title": "Phân Ảnh",
+          "icon": {
+            "kind": "skill",
+            "id": "invisibility"
+          },
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Chi phí: 27 / 24 / 21 / 18 / 15 Điện. Thời gian tàng hình: 2 / 2,1 / 2,2 / 2,3 / 2,4 giây."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Phantom được bắn thường khi tàng hình mà không bị hiện hình."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Cấp 5: sau khi hiện hình, trong 3 giây đạn đánh thường gây thêm 60% sát thương và bay nhanh hơn 30%."
+            }
+          ]
+        },
+        {
+          "id": "s3-e2",
+          "title": "Laser Hủy Diệt",
+          "icon": {
+            "kind": "skill",
+            "id": "focus_laser"
+          },
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Chi phí: 45 / 40 / 35 / 30 / 25 Điện. Thời gian tụ: 2 / 1,8 / 1,6 / 1,4 / 1,2 giây."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Thời gian bắn: 2 / 2,25 / 2,5 / 2,75 / 3 giây. Sát thương mỗi 0,25 giây: 100% / 115% / 130% / 145% / 160% Hỏa Lực."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Bỏ hệ số sát thương ×1,32 ở cấp 4; giữ hiệu ứng giảm Giáp và kết liễu."
+            }
+          ]
+        },
+        {
+          "id": "s3-e3",
+          "title": "HawkEye",
+          "icon": {
+            "kind": "skill",
+            "id": "escort_drone"
+          },
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Điện duy trì: 5 / 4,5 / 4 Điện mỗi giây. Kế thừa chỉ số: 70% / 80% / 90%."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Cấp 3: sau mỗi 7 giây hoạt động, Cuồng Nộ trong 3 giây. HawkEye nhận +120% Tốc Độ Bắn Cộng Thêm; Phantom nhận +60% Tốc Độ Bắn Cộng Thêm. Nhịp kích hoạt tính từ đầu lần Cuồng Nộ trước."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "ASTRA",
+      "icon": {
+        "kind": "aircraft",
+        "id": "astra"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "s4-e1",
+          "title": "Phản Quỹ Đạo",
+          "icon": {
+            "kind": "skill",
+            "id": "orbit_reversal"
+          },
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Chi phí: 80 / 90 / 100 / 110 / 120 Mana."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Từ cấp 4, giảm 35% sát thương nhận vào trong quá trình bắt giữ, hội tụ và giải phóng Tinh Đạn."
+            }
+          ]
+        },
+        {
+          "id": "s4-e2",
+          "title": "Thương Tinh Tú",
+          "icon": {
+            "kind": "skill",
+            "id": "stellar_lance"
+          },
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Thời gian tụ: 0,8 / 0,7 / 0,6 / 0,5 / 0,4 giây."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Sát thương mục tiêu đầu: 900% / 950% / 1000% / 1050% / 1100% Hỏa Lực. Sát thương mục tiêu sau: 400% / 450% / 500% / 550% / 600% Hỏa Lực."
+            }
+          ]
+        },
+        {
+          "id": "s4-e3",
+          "title": "Sao Rơi",
+          "icon": {
+            "kind": "skill",
+            "id": "starfall"
+          },
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Sát thương mỗi thiên thạch thường: 275% / 300% / 325% Hỏa Lực. Giữ nguyên Thiên Thạch Tận Thế ở cấp 3 và các hiệu ứng khác."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

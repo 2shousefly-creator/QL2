@@ -349,12 +349,10 @@ function skillCoreStatuses(world:CombatWorld):StatusPresentation[] {
     result.push({id:`skill-rank:${row}`,group:"buff",name:model.title,icon:{kind:"skill",id},description:model.description,source:"Kỹ năng",
       stacks:1,remaining:Infinity,duration:Infinity,priority:85,showNumericTimer:false,...values});
   };
-  if(astraOrbitProtectionActive(world))add(153,{badgeText:"−60%",badgeKind:"percent",timeLabel:world.astra?.orbit?"Bảo hộ · bắt giữ Tinh Đạn":"Bảo hộ · hội tụ và bắn trả"});
+  if(astraOrbitProtectionActive(world))add(153,{badgeText:"−35%",badgeKind:"percent",timeLabel:world.astra?.orbit?"Bảo hộ · bắt giữ Tinh Đạn":"Bảo hộ · hội tụ và bắn trả"});
   const activeDecoys=world.decoys.some(d=>!d.clone&&d.active&&d.remaining>0);
   const cover=(c.timers.thermalCover||0)-c.time;
   if((skillRank(s, "decoy") >= 4)&&(activeDecoys||cover>0))add(124,{remaining:activeDecoys?Infinity:cover,duration:V.thermalTail,badgeText:`−${V.thermalReduction*100}%`,badgeKind:"percent",showNumericTimer:!activeDecoys,timeLabel:activeDecoys?"Duy trì bởi mồi đang hoạt động":undefined});
-  const cooling=(c.timers.activeCooling||0)-c.time;
-  if((skillRank(s, "afterburner") >= 4)&&cooling>0)add(126,{remaining:cooling,duration:V.coolingDuration,badgeText:`+${V.coolingMana*100}%`,badgeKind:"percent",showNumericTimer:true});
   if((skillRank(s, "decoy") >= 3))for(const [id,cast] of r.decoyCasts)add(122,{id:`core_122:${id}`,badgeText:`${number(cast.restored/getEffectiveAircraftStats(s).maxResource*100)}%`,badgeKind:"progress",progress:cast.restored/(getEffectiveAircraftStats(s).maxResource*V.decoyRefundCap),timeLabel:`Hồi Mana / giới hạn ${V.decoyRefundCap*100}% mỗi lần dùng`});
   if((skillRank(s, "armor_shield") >= 4)&&(s.activeEffects.armor_shield||0)>0)add(132,{remaining:s.activeEffects.armor_shield!,duration:getSkillRuntimeValues(s,"armor_shield").duration,
     badgeText:`${number((c.stacks.shieldRefund||0)/getEffectiveAircraftStats(s).maxResource*100)}%`,badgeKind:"progress",showNumericTimer:true});

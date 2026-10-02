@@ -277,7 +277,7 @@ export function tickDuelActor(actor: CombatWorld, dt: number): void {
     if (droneCombatActive(actor) && actor.droneFireCooldown <= 0) {
         fireDrone(actor);
         const ratio = getSkillRuntimeValues(actor.aircraft, "escort_drone").damageMultiplier;
-        actor.droneFireCooldown = 1 / (getEffectiveAircraftStats(actor.aircraft, true, undefined, true).fireRate * ratio * ((actor.aircraft.coreState.timers.hawkRage || 0) > actor.aircraft.coreState.time ? 2.2 : 1));
+        actor.droneFireCooldown = 1 / (getEffectiveAircraftStats(actor.aircraft, true, undefined, true).fireRate * ratio);
     }
     updateProjectiles(actor, dt); interceptAircraftDefenses(actor); interceptMissiles(actor); captureAstraProjectiles(actor, astraHooks);
     updateProjectileCollisions(actor); settleMissileSalvos(actor); resolveDeathsAndEffects(actor);
@@ -1122,7 +1122,7 @@ function addProjectile(world: CombatWorld, values: Partial<ProjectileEntity> & P
             heading: Math.atan2(values.vy, values.vx), cruiseSpeed: Math.hypot(values.vx, values.vy),
             turnRate: values.turnRate ?? 3.2,
             angularAcceleration: values.skillId === "missile_swarm" ? 12 : 10,
-            acceleration: 300,
+            acceleration: values.skillId === "missile_swarm" ? 600 : 300,
             anchorX: values.anchorX ?? values.x - world.playerX,
             anchorY: values.anchorY ?? values.y - world.playerY,
             vx: 0, vy: 0,
@@ -1666,8 +1666,8 @@ function launchNextMissile(world: CombatWorld, salvo: MissileSalvo): boolean {
     const values = getSkillRuntimeValues(world.aircraft, "missile_swarm"), side = salvo.launchIndex % 2 === 0 ? -1 : 1;
     const launch = clampCircleToGameplayRect(world.playerX + side * 32*playerAirframeScale(world.aircraft), world.playerY - 12*playerAirframeScale(world.aircraft), 4.5);
     const p = addProjectile(world, {owner:"player",source:"skill",skillId:"missile_swarm",salvoId:salvo.id,expansionCast:salvo.expansionCast,
-        x:launch.x,y:launch.y,vx:0,vy:-260,radius:4.5,rawDamage:getEffectiveAircraftStats(world.aircraft).firepower*values.damageMultiplier,
-        lifetime:12,projectileKind:"missile",anchorX:side*32,anchorY:-12,turnRate:3.2,color:"#fb923c"});
+        x:launch.x,y:launch.y,vx:0,vy:-520,radius:4.5,rawDamage:getEffectiveAircraftStats(world.aircraft).firepower*values.damageMultiplier,
+        lifetime:24,projectileKind:"missile",anchorX:side*32,anchorY:-12,turnRate:3.2,color:"#fb923c"});
     if (!p) return false;
     if(salvo.launchIndex>=14)recordCoreMetric(world.aircraft,25,"extraProjectiles",1);
     salvo.live.add(p.id); salvo.pairIds.push(p.id); salvo.pending--; salvo.launchIndex++;
@@ -3187,8 +3187,8 @@ function repayExpansionDebt(world: CombatWorld, amount: number) {
     reduction *= equipmentIncoming(state);
     if(astraOrbitProtectionActive(world)) {
         const capacity=state.currentHp+Object.values(c.shields).filter(sh=>sh.until>c.time).reduce((n,sh)=>n+sh.amount,0);
-        recordCoreMetric(state,153,"prevented",Math.min(capacity,amount*reduction)-Math.min(capacity,amount*reduction*.4));
-        reduction*=.4;
+        recordCoreMetric(state,153,"prevented",Math.min(capacity,amount*reduction)-Math.min(capacity,amount*reduction*.65));
+        reduction*=.65;
     }
     let damage = amount * reduction, absorbed = 0;
     for (const [key,shield] of Object.entries(c.shields)) {
@@ -3481,14 +3481,11 @@ function applyDamageToEnemy(world: CombatWorld, enemy: EnemyEntity, rawDamage: n
         if(direct&&state.aircraftId==="breaker"&&(skillEffects?.markUntil??0)>time)factor(135,1+V.markBonus);
         if(direct&&state.aircraftId==="phantom"&&world.skillCores.syncTarget===enemy.id&&world.skillCores.syncUntil>world.elapsed)factor(146,1+V.syncBonus);
         if(world.skillCores.bountyTarget===enemy.id&&world.skillCores.bountyUntil>world.elapsed)factor(149,1.10);
-        if(skillId==="focus_laser"){
-            const total=1+((skillRank(state, "focus_laser") >= 2)?.1:0)+((skillRank(state, "focus_laser") >= 4)?V.laserBonus:0);
-            if((skillRank(state, "focus_laser") >= 2))bonus(41,.1/total);if((skillRank(state, "focus_laser") >= 4))bonus(145,V.laserBonus/total);
-        }
+        if(skillId==="focus_laser")factor(41,getSkillRuntimeValues(state,"focus_laser").damageMultiplier);
         if(skillId==="orbit_reversal")factor(151,.70/.30);
-        if(skillId==="starfall"&&source!=="burn")factor(162,getSkillRuntimeValues(state,"starfall").damageMultiplier/3.55);
-        if(skillId==="escort_drone"&&(skillRank(state, "escort_drone") >= 2))bonus(45,.2/.9);
-        if(skillId==="missile_swarm"&&source!=="burn")factor(26,getSkillRuntimeValues(state,"missile_swarm").damageMultiplier/3);
+        if(skillId==="starfall"&&source!=="burn")factor(162,getSkillRuntimeValues(state,"starfall").damageMultiplier/2.75);
+        if(skillId==="escort_drone"&&(skillRank(state, "escort_drone") >= 2))factor(45,getSkillRuntimeValues(state,"escort_drone").damageMultiplier/.7);
+        if(skillId==="missile_swarm"&&source!=="burn")factor(26,getSkillRuntimeValues(state,"missile_swarm").damageMultiplier/2);
         if(skillId==="heavy_bomb"&&!telemetryCore)factor(32,19/(SKILL_CONFIGS.heavy_bomb.damageMultiplier??1));
         if(resolved.critical){
             if(skillId||source==="skill"){recordCoreMetric(state,53,"procs",1);bonus(53,1-1/resolved.multiplier);}
@@ -3690,6 +3687,7 @@ function applySecondaryHits(world: CombatWorld, projectile: ProjectileEntity, pr
     const next = nearestEnemy(world, primary.x, primary.y, projectile.hitIds);
     if (!next)
         return;
+    // A bounce picks its direction once; misses leave the screen as ordinary bullets.
     const angle = Math.atan2(next.y - primary.y, next.x - primary.x);
     const bounceSpeed=(projectile.source==="basic"?PLAYER_BASIC_PROJECTILE_SPEED_MULTIPLIER:1)*(projectile.source==="basic"&&hasCore(world.aircraft,111)?1380:460)*(projectile.source==="basic"&&hasCore(world.aircraft,206)?.8:1);
     const bounced = addProjectile(world, { owner: projectile.owner, expansionCast: projectile.expansionCast, allegiance:projectile.allegiance, source: projectile.source, telemetryCore: projectile.telemetryCore, ammoVisualKey: projectile.ammoVisualKey, skillId: projectile.skillId,
@@ -3697,7 +3695,7 @@ function applySecondaryHits(world: CombatWorld, projectile: ProjectileEntity, pr
         rawDamage: projectile.bounceSecondMultiplier !== undefined && projectile.bounceRemaining === 1 ? (projectile.bounceBasis || 0) * projectile.bounceSecondMultiplier : projectile.rawDamage * projectile.bounceMultiplier,
         telemetryBonuses: [...(projectile.telemetryBonuses??[]),...(projectile.bounceSecondMultiplier!==undefined&&(skillRank(world.aircraft, "afterburner") >= 4)?[[127,projectile.bounceRemaining===1?1-B.bounceSecond/V.bounceSecond:1-B.bounceFirst/V.bounceFirst] as [number,number]]:[])],
         telemetryExtraCores:projectile.telemetryExtraCores,
-        bounceBasis: projectile.bounceBasis, bounceSecondMultiplier: projectile.bounceSecondMultiplier, homing: true, targetId: next.id, turnRate: 7,
+        bounceBasis: projectile.bounceBasis, bounceSecondMultiplier: projectile.bounceSecondMultiplier, homing: false, targetId: null, turnRate: 0,
         bounceRemaining: projectile.bounceRemaining - 1, bounceMultiplier: projectile.bounceMultiplier, color: "#c4b5fd" });
     if (bounced){
         bounced.hitIds.push(...projectile.hitIds);
@@ -3744,7 +3742,7 @@ function hitPlayer(world: CombatWorld, rawDamage: number, kind: "projectile" | "
     if(cold)multiplier*=.30;
     if ((c.timers.thermalCover || 0)>c.time) multiplier *= 1 - V.thermalReduction;
     const orbitProtection=astraOrbitProtectionActive(world);
-    if(orbitProtection)multiplier*=.4;
+    if(orbitProtection)multiplier*=.65;
     multiplier *= expansionIncoming(state);
     const electric=hasCore(state,177)&&(attack.homing||attack.delivery==="beam"||attack.attackTag==="emp"||attack.attackTag==="boss_emp");
     const latch=expansionActive(state,"safetyLatch");
@@ -3780,7 +3778,7 @@ function hitPlayer(world: CombatWorld, rawDamage: number, kind: "projectile" | "
     equipmentPreventedDamage(world,equipmentHooks,Math.max(0,damage/gorgon-damage));
     equipmentMetric(state,21,"prevented",Math.min(incomingCapacity,damage/aegisEquipment)-Math.min(incomingCapacity,damage));
     const exactPrevented=(row:number,factor:number)=>recordCoreMetric(state,row,"prevented",Math.min(incomingCapacity,damage/factor)-Math.min(incomingCapacity,damage));
-    if(orbitProtection){exactPrevented(153,.4);recordCoreMetric(state,153,"protectedHits",1);}
+    if(orbitProtection){exactPrevented(153,.65);recordCoreMetric(state,153,"protectedHits",1);}
     if(wingProtection){recordCoreMetric(state,109,"hits",1);exactPrevented(109,.5);}
     if(electric){recordCoreMetric(state,177,"hits",1);exactPrevented(177,.55);}
     if(latch){recordCoreMetric(state,171,"procs",1);exactPrevented(171,.60);}
@@ -3796,7 +3794,7 @@ function hitPlayer(world: CombatWorld, rawDamage: number, kind: "projectile" | "
     if((state.activeEffects.afterburner??0)>0)prevented(24,.9);
     if(cold)prevented(72,.30);
     if((c.timers.thermalCover??0)>c.time)prevented(124,1-V.thermalReduction);
-    if((state.activeEffects.armor_shield??0)>0)recordCoreMetric(state,28,"prevented",damage*(.35/.15-1));
+    if((state.activeEffects.armor_shield??0)>0)recordCoreMetric(state,28,"prevented",damage*(.45/getSkillRuntimeValues(state,"armor_shield").damageTakenMultiplier-1));
     if((state.activeEffects.sweeping_cannon??0)>0 && (skillRank(state, "sweeping_cannon") >= 2))recordCoreMetric(state,35,"prevented",Math.max(0,calculateDamage(rawDamage*zoneMultiplier,stats.armor/1.4,multiplier)-damage));
     for (const [key, shield] of Object.entries(c.shields)) {
         if (shield.until <= c.time)
@@ -3981,7 +3979,7 @@ function updateProjectileCollisions(world: CombatWorld): void {
             if(p.astraLance){
                 emitVisual(world,{kind:"astra_lance_impact",skillId:"stellar_lance",x:contact.x,y:contact.y,size:enemy.type==="boss"||isElite(enemy.type)?28:23});
                 astraMetric(world,`lance.${p.hitIds.length===1?"firstHits":"penetratedHits"}`);astraMetric(world,"lance.damage",dealt);
-                p.rawDamage=p.astraLance.later;p.telemetryBonuses=(skillRank(world.aircraft, "stellar_lance") >= 3)?[[157,1-6.8/9.3]]:undefined;continue;
+                p.rawDamage=p.astraLance.later;p.telemetryBonuses=(skillRank(world.aircraft, "stellar_lance") >= 3)?[[157,1-4/(4+.5*(skillRank(world.aircraft,"stellar_lance")-1))]]:undefined;continue;
             }
             if(!p.procFree&&p.skillId!=="predator_lock")applySecondaryHits(world, p, enemy);
             if (p.penetrationRemaining > 0) {
@@ -4629,8 +4627,7 @@ export function updateCombatWorld(world: CombatWorld, deltaSeconds: number): voi
     if (droneCombatActive(world) && world.droneFireCooldown <= 0) {
         fireDrone(world);
         const state = world.aircraft, stats = getEffectiveAircraftStats(state,true,undefined,true), ratio = getSkillRuntimeValues(state, "escort_drone").damageMultiplier;
-        const rage = (state.coreState.timers.hawkRage || 0) > state.coreState.time;
-        world.droneFireCooldown = 1 / (stats.fireRate * ratio * (rage ? 2.2 : 1));
+        world.droneFireCooldown = 1 / (stats.fireRate * ratio);
     }
     updateProjectiles(world, dt);
     interceptAircraftDefenses(world);
@@ -4971,7 +4968,7 @@ function basicTelemetryBonuses(state:AircraftCombatState,sweeping:boolean,extra:
     if(hasCore(state,59)&&state.basicShotsFired%8===0)result.push([59,.9/1.9]);
     if(hasCore(state,60)&&state.coreState.time-state.coreState.lastDamage>=3)result.push([60,.14/1.14]);
     if((state.coreState.timers.counterActive??0)>state.coreState.time)result.push([83,.30/1.30]);
-    if(reappearance)result.push([142,.5]);
+    if(reappearance)result.push([142,1-1/V.reappearanceDamage]);
     if(sweeping&&!extra&&(skillRank(state, "sweeping_cannon") >= 2))result.push([34,(getSkillRuntimeValues(state,"sweeping_cannon").damageMultiplier-.7)/getSkillRuntimeValues(state,"sweeping_cannon").damageMultiplier]);
     return result;
 }

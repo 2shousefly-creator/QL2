@@ -11,7 +11,6 @@ export const CORE_ACTIVE_COOLDOWNS = [
   ["celestialReady", "celestial", 15],
   ["confluenceCd", "confluence", 16],
   ["blackBoxCd", "blackBox", 18],
-  ["hawkRageReady", "hawkRage", 7],
 ] as const;
 
 export function deferCoreCooldown(s: AircraftCombatState, key: string) {

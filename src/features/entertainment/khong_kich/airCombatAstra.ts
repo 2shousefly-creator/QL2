@@ -1,5 +1,5 @@
 import { canTargetEnemy, duelDecoyTargets } from "./airCombatTargetability";
-import { skillRank } from "./airCombatSkillRanks";
+import { skillRank, STELLAR_LANCE_FIRST_DAMAGE, STELLAR_LANCE_LATER_DAMAGE, STARFALL_DAMAGE } from "./airCombatSkillRanks";
 import { AIR_COMBAT_WORLD, GAMEPLAY_SAFE_RECT, STARFALL_TIMING } from "./airCombatConfig";
 import { playerAirframeScale } from "./airCombatReleaseState";
 import { expansionState, type ExpansionCast } from "./airCombatExpansion";
@@ -89,7 +89,7 @@ export function releaseOrbit(w:CombatWorld,h:AstraHooks,manual=false) {
   r.releaseAt=w.elapsed;r.orbit=undefined;endAircraftSkill(s,"orbit_reversal");
 }
 function lance(w:CombatWorld,h:AstraHooks,x:number,y:number,first:number,later:number,speed:number,radius:number,cast?:ExpansionCast) {
-  const p=h.projectile(w,{owner:"player",source:"skill",skillId:"stellar_lance",expansionCast:cast,x,y,vx:0,vy:-speed,radius,rawDamage:first,penetrationRemaining:Infinity,ammoVisualKey:"astra_lance",color:"#fff0bb",lifetime:2,telemetryBonuses:(skillRank(w.aircraft, "stellar_lance") >= 3)?[[157,1-8/10.5]]:undefined});
+  const p=h.projectile(w,{owner:"player",source:"skill",skillId:"stellar_lance",expansionCast:cast,x,y,vx:0,vy:-speed,radius,rawDamage:first,penetrationRemaining:Infinity,ammoVisualKey:"astra_lance",color:"#fff0bb",lifetime:2,telemetryBonuses:(skillRank(w.aircraft, "stellar_lance") >= 3)?[[157,1-9/STELLAR_LANCE_FIRST_DAMAGE[Math.max(1,skillRank(w.aircraft,"stellar_lance"))-1]]]:undefined});
   if(p)p.astraLance={later,followup:(skillRank(w.aircraft, "stellar_lance") >= 5)?{
     origin:{x,y},axis:{x:0,y:-1},projectileHitboxWidth:p.radius*2,
     rawDamageBasis:getEffectiveAircraftStats(w.aircraft).firepower*3.2,expansionCast:cast,
@@ -138,7 +138,7 @@ export function updateAstra(w:CombatWorld,_dt:number,h:AstraHooks) {
   if(r.charge) {
     s.activeEffects.stellar_lance=Math.max(.0001,r.charge.at-now);
     if(now>=r.charge.at) {
-      const k=1+.1*r.charge.stack,first=stats.firepower*((skillRank(s, "stellar_lance") >= 3)?10.5:8)*k,later=stats.firepower*((skillRank(s, "stellar_lance") >= 3)?9.3:6.8)*k;
+      const k=1+.1*r.charge.stack,first=stats.firepower*STELLAR_LANCE_FIRST_DAMAGE[Math.max(1,skillRank(s,"stellar_lance"))-1]*k,later=stats.firepower*STELLAR_LANCE_LATER_DAMAGE[Math.max(1,skillRank(s,"stellar_lance"))-1]*k;
       const speed=1000,radius=6,x=w.playerX,y=w.playerY-20*playerAirframeScale(w.aircraft);
       lance(w,h,x,y,first,later,speed,radius,r.charge.expansionCast);
       if(skillRank(s,"twin_reflection")>=5&&(s.activeEffects.twin_reflection??0)>0)for(const side of [-1,1]){
@@ -206,7 +206,7 @@ export function updateAstra(w:CombatWorld,_dt:number,h:AstraHooks) {
       r.impacts.push({id:w.nextId++,x:m.x,y:m.y,radius,at:now,doom:m.doom});astraMetric(w,"starfall.impacts");
       for(const e of w.enemies)if(h.hostile(w,e)&&circleVsAircraft(m.x,m.y,radius,getEnemyHitbox(e))) {
         if((skillRank(s, "starfall") >= 2)&&!circleVsAircraft(m.x,m.y,45,getEnemyHitbox(e)))recordCoreMetric(s,163,"hits",1);
-        const dealt=h.damage(w,e,stats.firepower*(m.doom?12:[3.55,3.95,4.35][f.rank-1]),"starfall",false,f.expansionCast);
+        const dealt=h.damage(w,e,stats.firepower*(m.doom?12:STARFALL_DAMAGE[f.rank-1]),"starfall",false,f.expansionCast);
         astraMetric(w,"starfall.impactHits");astraMetric(w,"starfall.impactDamage",dealt);
         if(e.hp<=0&&dealt>0){astraMetric(w,"starfall.kills");if(f.rank>=2){const fraction=Math.max(0,Math.min(.06,.36-f.refunded));f.refunded+=fraction;refund(w,fraction,164,"starfall.manaRestored");}}
       }
