@@ -1,3 +1,4 @@
+import { cinderWaveRadius } from './airCombatCinderRuntime';
 import { cinderState, cinderStacks } from './airCombatCinderRuntime';
 import { cinderValues } from './airCombatCinderConfig';
 import { aircraftTargetability } from "./airCombatTargetability";
@@ -138,12 +139,7 @@ function skillUtility(id: SkillId, s: AircraftCombatState, ai: MirrorAI, p: Poin
       const charged = anchor.destroyed >= 4 || [...anchor.inner.values()].some(seconds => seconds >= 2);
       return inside && (charged || anchor.until - actor.elapsed < .65) ? 1.7 : -Infinity;
     }
-    if (id === "heavy_bomb") {
-      // Rank 5 and the 1-second arm gate come from getWorldSkillAvailability.
-      // Current BigBang affects the whole gameplay area, not a new local radius.
-      const targetInArea = seen.player.x >= R.left && seen.player.x <= R.right && seen.player.y >= R.top && seen.player.y <= R.bottom;
-      return targetInArea && !seen.targetProtected ? 1.6 : -Infinity;
-    }
+
     return -Infinity;
   }
   const defensive = ["cinder_fire_shield", "decoy", "armor_shield", "invisibility", "electronic_interference", "orbit_reversal"].includes(id);
@@ -237,12 +233,11 @@ function perceive(w:CombatWorld,ai:MirrorAI,p:Point,actor:CombatWorld) {
   if(fuel){const v=cinderValues('cinder_fuel_barrage',fuel.rank);for(const dx of [-126,-42,42,126])hazards.push({kind:'persistent_zone',x:fuel.x+dx,y:fuel.y,radius:v.radius,cc:false,startsAt:fuel.land,endsAt:fuel.until});if(fuel.rank>=5)for(const dx of [-84,0,84])hazards.push({kind:'persistent_zone',x:fuel.x+dx,y:fuel.y,radius:v.radius,cc:false,startsAt:fuel.land,endsAt:fuel.until});}
   if(beam){const x=beam.fired?beam.x:w.playerX,y=beam.fired?beam.y:w.playerY-20;hazards.push({kind:'beam',x,y,end:{x,y:R.top},radius:cinderValues('cinder_inferno_beam',beam.rank).width/2,cc:false,startsAt:beam.fire,endsAt:beam.until});}
   for(const lane of cinder.lanes)hazards.push({kind:'beam',x:lane.x,y:lane.y,end:{x:lane.x,y:R.top},radius:cinderValues('cinder_inferno_beam',lane.rank).width/2,cc:false,startsAt:lane.at,endsAt:lane.until});
-  if(cinder.wave){const wave=cinder.wave,travel=Math.hypot(p.x-wave.x,p.y-wave.y)/Math.hypot(360,640)*.8;hazards.push({kind:'aoe',x:p.x,y:p.y,radius:20,cc:true,startsAt:wave.at+travel,endsAt:wave.at+travel+.05});}
+  if(cinder.wave){const wave=cinder.wave,travel=Math.hypot(p.x-wave.x,p.y-wave.y)/cinderWaveRadius(wave.x,wave.y)*.8;hazards.push({kind:'aoe',x:p.x,y:p.y,radius:20,cc:true,startsAt:wave.at+travel,endsAt:wave.at+travel+.05});}
   if(w.laserCharge>0||w.laserRemaining>0)hazards.push({kind:"beam",x:w.playerX,y:w.playerY,end:{x:w.playerX,y:R.top},radius:16,cc:false,startsAt:w.elapsed+w.laserCharge,endsAt:w.elapsed+w.laserCharge+w.laserRemaining});
   if(w.rankRuntime?.anchor)hazards.push({kind:"persistent_zone",x:w.rankRuntime.anchor.x,y:w.rankRuntime.anchor.y,radius:120*(w.rankRuntime.anchor.rank>=2?1.25:1),cc:true,startsAt:w.elapsed,endsAt:w.rankRuntime.anchor.until});
   for(const burn of (w.astra?.burns??[]).slice(0,4))hazards.push({kind:"persistent_zone",x:burn.x,y:burn.y,radius:burn.radius,cc:false,startsAt:w.elapsed,endsAt:burn.until});
-  // BigBang's visible traveling missile is a full-arena threat, not a local circle.
-  for(const bomb of visible.filter(b=>b.bigBang).slice(0,2))hazards.push({kind:"full_screen",x:p.x,y:p.y,radius:Infinity,cc:true,startsAt:w.elapsed+Math.max(0,1-bomb.missileAge),endsAt:w.elapsed+bomb.lifetime});
+  if(w.bigBang&&!w.bigBang.resolved)hazards.push({kind:"full_screen",x:p.x,y:p.y,radius:Infinity,cc:false,startsAt:w.bigBang.impactAt,endsAt:w.bigBang.impactAt+.01});
   for(const m of (w.astra?.starfall?.pending??[]).slice(0,4)){
     const followsPilot=!m.decoy&&!m.frozen&&w.enemies.some(e=>e.id===m.target&&e.aircraftTarget?.world===actor);
     hazards.push({kind:"aoe",x:m.x,y:m.y,radius:m.doom?110:skillRank(w.aircraft,"starfall")>=2?65:45,cc:false,

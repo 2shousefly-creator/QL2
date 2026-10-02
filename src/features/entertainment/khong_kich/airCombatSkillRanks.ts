@@ -143,31 +143,31 @@ export const SKILL_RANKS: Record<SkillId, readonly SkillRankConfig[]> = {
     "Khi Khiên kết thúc, phá toàn bộ đạn thù địch thông thường có thể chặn trên màn hình.\nTitan nhận +60 Giáp trong 6 giây.\nHồi Chiêu Cơ Bản: 32 → 31 giây.\nYêu cầu Tài Nguyên: 130 → 140 Mana."
   ]
 ]),
- heavy_bomb:ranks([155,165,175,185,195],[
+ heavy_bomb:ranks([120,130,140,150,160],[
   [
     "BigBang",
-    "Titan phóng BigBang. Quả bom phát nổ sau 3 giây hoặc ngay khi va chạm, gây 1400% Hỏa Lực lên toàn bộ chiến trường. Hồi Chiêu bắt đầu ngay sau vụ nổ BigBang, không chờ dư chấn hoặc dấu còn lại.",
-    "Titan phóng BigBang. Quả bom phát nổ sau 3 giây hoặc ngay khi va chạm, gây 1400% Hỏa Lực lên toàn bộ chiến trường. Hồi Chiêu bắt đầu ngay sau vụ nổ BigBang, không chờ dư chấn hoặc dấu còn lại.\nHồi Chiêu Cơ Bản: 38 giây.\nYêu cầu Tài Nguyên: 155 Mana."
+    "Titan tạo dấu ấn tại tâm vùng chơi. Sau 2,75 giây, BigBang giáng xuống trong 0,25 giây và nổ đúng mốc 3 giây, gây 500% Hỏa Lực toàn màn hình. Không nổ do va chạm hoặc tái kích hoạt. Hồi Chiêu bắt đầu ngay sau vụ nổ chính.",
+    "Titan tạo dấu ấn tại tâm vùng chơi. Sau 2,75 giây, BigBang giáng xuống trong 0,25 giây và nổ đúng mốc 3 giây, gây 500% Hỏa Lực toàn màn hình. Không nổ do va chạm hoặc tái kích hoạt. Hồi Chiêu bắt đầu ngay sau vụ nổ chính.\nHồi Chiêu Cơ Bản: 30 giây.\nYêu cầu Tài Nguyên: 120 Mana."
   ],
   [
     "Tận Diệt",
-    "Titan phóng BigBang. Quả bom phát nổ sau 3 giây hoặc khi va chạm, gây 1900% Hỏa Lực lên toàn bộ chiến trường. Hồi Chiêu bắt đầu ngay sau vụ nổ BigBang, không chờ dư chấn hoặc dấu còn lại.",
-    "Sát thương BigBang tăng từ 1400% lên 1900% Hỏa Lực.\nHồi Chiêu Cơ Bản: 38 → 36 giây.\nYêu cầu Tài Nguyên: 155 → 165 Mana."
+    "Titan tạo dấu ấn tại tâm vùng chơi. Sau 2,75 giây, BigBang giáng xuống trong 0,25 giây và nổ đúng mốc 3 giây, gây 600% Hỏa Lực toàn màn hình. Không nổ do va chạm hoặc tái kích hoạt. Hồi Chiêu bắt đầu ngay sau vụ nổ chính.",
+    "Titan tạo dấu ấn tại tâm vùng chơi. Sau 2,75 giây, BigBang giáng xuống trong 0,25 giây và nổ đúng mốc 3 giây, gây 600% Hỏa Lực toàn màn hình. Không nổ do va chạm hoặc tái kích hoạt. Hồi Chiêu bắt đầu ngay sau vụ nổ chính.\nHồi Chiêu Cơ Bản: 29 giây.\nYêu cầu Tài Nguyên: 130 Mana."
   ],
   [
     "Dư Chấn",
-    "BigBang phát nổ sau 3 giây hoặc khi va chạm, gây 1900% Hỏa Lực toàn màn hình. Sau 1,2 giây, vụ nổ tạo Dư Chấn gây thêm 280% Hỏa Lực toàn màn hình, giảm 20% sát thương kẻ địch gây ra trong 5 giây và đẩy lùi chúng theo loại mục tiêu. Hồi Chiêu bắt đầu ngay sau vụ nổ BigBang, không chờ dư chấn hoặc dấu còn lại.",
-    "Sau vụ nổ 1,2 giây, BigBang tạo Dư Chấn gây thêm 280% Hỏa Lực toàn màn hình.\nKẻ địch trúng Dư Chấn gây ít hơn 20% sát thương trong 5 giây và bị đẩy lùi tùy loại mục tiêu.\nHồi Chiêu Cơ Bản: 36 → 34 giây.\nYêu cầu Tài Nguyên: 165 → 175 Mana."
+    "Titan tạo dấu ấn tại tâm vùng chơi. Sau 2,75 giây, BigBang giáng xuống trong 0,25 giây và nổ đúng mốc 3 giây, gây 700% Hỏa Lực toàn màn hình. Không nổ do va chạm hoặc tái kích hoạt. Hồi Chiêu bắt đầu ngay sau vụ nổ chính. Sau 1,2 giây, Dư Chấn gây 280% Hỏa Lực toàn màn hình, giảm 20% sát thương địch gây ra trong 5 giây và đẩy lùi theo loại mục tiêu.",
+    "Titan tạo dấu ấn tại tâm vùng chơi. Sau 2,75 giây, BigBang giáng xuống trong 0,25 giây và nổ đúng mốc 3 giây, gây 700% Hỏa Lực toàn màn hình. Không nổ do va chạm hoặc tái kích hoạt. Hồi Chiêu bắt đầu ngay sau vụ nổ chính. Sau 1,2 giây, Dư Chấn gây 280% Hỏa Lực toàn màn hình, giảm 20% sát thương địch gây ra trong 5 giây và đẩy lùi theo loại mục tiêu.\nHồi Chiêu Cơ Bản: 28 giây.\nYêu cầu Tài Nguyên: 140 Mana."
   ],
   [
     "Dấu Ấn Trọng Pháo",
-    "BigBang gây 1900% Hỏa Lực toàn màn hình, sau 1,2 giây tạo Dư Chấn gây thêm 280% Hỏa Lực, giảm 20% sát thương kẻ địch gây ra trong 5 giây và đẩy lùi theo loại mục tiêu. Kẻ địch sống sót sau vụ nổ bị đánh dấu trong 8 giây và nhận thêm 40% sát thương trực tiếp từ Titan. Hồi Chiêu bắt đầu ngay sau vụ nổ BigBang, không chờ dư chấn hoặc dấu còn lại.",
-    "Kẻ địch sống sót sau BigBang bị đánh dấu trong 8 giây và nhận thêm 40% sát thương trực tiếp từ Titan.\nHồi Chiêu Cơ Bản: 34 → 30 giây.\nYêu cầu Tài Nguyên: 175 → 185 Mana."
+    "Titan tạo dấu ấn tại tâm vùng chơi. Sau 2,75 giây, BigBang giáng xuống trong 0,25 giây và nổ đúng mốc 3 giây, gây 800% Hỏa Lực toàn màn hình. Không nổ do va chạm hoặc tái kích hoạt. Hồi Chiêu bắt đầu ngay sau vụ nổ chính. Sau 1,2 giây, Dư Chấn gây 280% Hỏa Lực toàn màn hình, giảm 20% sát thương địch gây ra trong 5 giây và đẩy lùi theo loại mục tiêu. Mục tiêu sống sót sau vụ nổ chính bị đánh dấu 8 giây và nhận thêm 40% sát thương trực tiếp từ Titan.",
+    "Titan tạo dấu ấn tại tâm vùng chơi. Sau 2,75 giây, BigBang giáng xuống trong 0,25 giây và nổ đúng mốc 3 giây, gây 800% Hỏa Lực toàn màn hình. Không nổ do va chạm hoặc tái kích hoạt. Hồi Chiêu bắt đầu ngay sau vụ nổ chính. Sau 1,2 giây, Dư Chấn gây 280% Hỏa Lực toàn màn hình, giảm 20% sát thương địch gây ra trong 5 giây và đẩy lùi theo loại mục tiêu. Mục tiêu sống sót sau vụ nổ chính bị đánh dấu 8 giây và nhận thêm 40% sát thương trực tiếp từ Titan.\nHồi Chiêu Cơ Bản: 27 giây.\nYêu cầu Tài Nguyên: 150 Mana."
   ],
   [
-    "Tử Thần Cận Kề",
-    "BigBang gây 1900% Hỏa Lực toàn màn hình, sau đó tạo Dư Chấn 280% Hỏa Lực, giảm 20% sát thương kẻ địch gây ra trong 5 giây và đánh dấu kẻ sống sót để chúng nhận thêm 40% sát thương trực tiếp từ Titan trong 8 giây. Sau khi bom đã bay ít nhất 1 giây, có thể tái kích hoạt để cho nổ ngay với đầy đủ hiệu ứng. Hồi Chiêu Cơ Bản là 28 giây. Hồi Chiêu bắt đầu ngay sau vụ nổ BigBang, không chờ dư chấn hoặc dấu còn lại.",
-    "Sau khi BigBang đã bay ít nhất 1 giây, có thể tái kích hoạt để cho nổ ngay với đầy đủ hiệu ứng.\nHồi Chiêu Cơ Bản: 30 → 28 giây.\nYêu cầu Tài Nguyên: 185 → 195 Mana."
+    "Quét Sạch Hỏa Lực",
+    "Titan tạo dấu ấn tại tâm vùng chơi. Sau 2,75 giây, BigBang giáng xuống trong 0,25 giây và nổ đúng mốc 3 giây, gây 900% Hỏa Lực toàn màn hình. Không nổ do va chạm hoặc tái kích hoạt. Hồi Chiêu bắt đầu ngay sau vụ nổ chính. Sau 1,2 giây, Dư Chấn gây 280% Hỏa Lực toàn màn hình, giảm 20% sát thương địch gây ra trong 5 giây và đẩy lùi theo loại mục tiêu. Mục tiêu sống sót sau vụ nổ chính bị đánh dấu 8 giây và nhận thêm 40% sát thương trực tiếp từ Titan. Quét Sạch Hỏa Lực: vụ nổ chính phá hủy mọi đạn đạo thù địch, kể cả Boss, đã phóng và đang trên màn hình; không hủy các phát chưa phóng, laser hoặc vùng sát thương.",
+    "Titan tạo dấu ấn tại tâm vùng chơi. Sau 2,75 giây, BigBang giáng xuống trong 0,25 giây và nổ đúng mốc 3 giây, gây 900% Hỏa Lực toàn màn hình. Không nổ do va chạm hoặc tái kích hoạt. Hồi Chiêu bắt đầu ngay sau vụ nổ chính. Sau 1,2 giây, Dư Chấn gây 280% Hỏa Lực toàn màn hình, giảm 20% sát thương địch gây ra trong 5 giây và đẩy lùi theo loại mục tiêu. Mục tiêu sống sót sau vụ nổ chính bị đánh dấu 8 giây và nhận thêm 40% sát thương trực tiếp từ Titan. Quét Sạch Hỏa Lực: vụ nổ chính phá hủy mọi đạn đạo thù địch, kể cả Boss, đã phóng và đang trên màn hình; không hủy các phát chưa phóng, laser hoặc vùng sát thương.\nHồi Chiêu Cơ Bản: 26 giây.\nYêu cầu Tài Nguyên: 160 Mana."
   ]
 ]),
  gravity_anchor:ranks([130,140,150,160,170],[
@@ -432,7 +432,7 @@ export function rankValues(s:AircraftCombatState,id:SkillId) {
   afterburner:{cost,cooldown:[30,29,28,27,26][r-1],duration:r>=2?10:7},
   missile_swarm:{cost,cooldown:90,count:[14,18,22][r-1],damageMultiplier:[3,3.4,3.8][r-1]},
   armor_shield:{cost,cooldown:[35,34,33,32,31][r-1],duration:r>=2?9:6,damageTakenMultiplier:r>=3?.15:.35},
-  heavy_bomb:{cost,cooldown:[38,36,34,30,28][r-1],damageMultiplier:r>=2?19:14},
+  heavy_bomb:{cost,cooldown:[30,29,28,27,26][r-1],damageMultiplier:[5,6,7,8,9][r-1]},
   sweeping_cannon:{cost,cooldown:70,duration:18,count:r>=2?9:7,damageMultiplier:[.7,.8,.9][r-1]},
   invisibility:{cost,cooldown:[33,32,31,30,29][r-1],duration:r>=3?3.5:r>=2?3:2},
   focus_laser:{cost,cooldown:[29,28,27,26,25][r-1],charge:r>=2?.2:2,duration:r>=3?3:2,damageMultiplier:(r>=3?3.3:3)*(r>=4?1.32:1)},

@@ -21,6 +21,7 @@ export class AirCombatSpritePool {
     sprite.visible = true;
     sprite.alpha = 1;
     sprite.tint = 0xffffff;
+    sprite.blendMode = "normal";
     sprite.rotation = 0;
     return sprite;
   }

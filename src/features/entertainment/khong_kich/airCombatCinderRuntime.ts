@@ -1,3 +1,4 @@
+import { DAMAGE_LABEL_SECONDS } from './airCombatFeedback';
 import type { CombatWorld, EnemyEntity } from './airCombatRuntime';
 import type { SkillId } from './airCombatTypes';
 import { getEffectiveAircraftStats, endAircraftSkill } from './airCombatAircraft';
@@ -10,28 +11,31 @@ import { celestialProtection, createAbsorbShield } from './airCombatExpansion';
 import { negativeStatusDuration } from './airCombatCoreEffects';
 import { canTargetEnemy } from './airCombatTargetability';
 
-export interface IntrinsicDamage { trueDamage:boolean; castId:number; rawBudget?:{remaining:number} }
+export interface IntrinsicDamage { trueDamage:boolean; castId:number; source?:"cinder_burn"; ownerId?:number; burnSession?:number; rawBudget?:{remaining:number} }
 export interface CinderHooks {
  hostile:(w:CombatWorld,e:EnemyEntity)=>boolean;
  damage:(w:CombatWorld,e:EnemyEntity,raw:number,skill:SkillId|undefined,provenance:IntrinsicDamage)=>number;
 }
-interface TargetState { burn:number; until:number; nextTick:number; passiveReady:number; markUntil:number; markReady:number; slowUntil:number; slow:number; rootUntil:number }
+interface TargetState { entity:EnemyEntity; session:number; burn:number; until:number; nextTick:number; passiveReady:number; markUntil:number; markReady:number; slowUntil:number; slow:number; rootUntil:number }
 interface Fuel { id:number; rank:number; x:number; y:number; fromX:number; fromY:number; at:number; land:number; until:number; nextTick:number; entered:Map<number,number>; detonated:Map<number,Set<number>> }
+export const cinderWaveRadius=(x:number,y:number)=>Math.hypot(Math.max(x-R.left,R.right-x),Math.max(y-R.top,R.bottom-y));
 interface Wave { id:number; rank:number; x:number; y:number; at:number; until:number; hits:Set<number> }
 interface Beam { id:number; rank:number; at:number; fire:number; until:number; x:number; y:number; fired:boolean }
 interface Lane { id:number; rank:number; x:number;y:number;at:number;until:number;nextTick:number;nextBurn:number }
 interface Spread { id:number; sources:{id:number;next:number;remaining:number}[]; recipients:Map<number,{damageAt:number;burnAt:number}> }
 export interface CinderEffect { id:number;kind:'ring'|'burst'|'impact'|'mark'|'alloy'|'followup'|'muzzle'|'splash'|'charge'|'battery';x:number;y:number;at:number;life:number;size:number }
+export interface CinderBurnTotal { session:number;entity:EnemyEntity;entityId:number;total:number;x:number;y:number;endedAt?:number }
 export interface CinderRuntime {
- targets:Map<number,TargetState>; followReady:number;
+ ownerId:number; nextBurnSession:number; targets:Map<number,TargetState>; burnTotals:Map<number,CinderBurnTotal>; followReady:number;
  battery:{charge:number;phase:'charging'|'ready'|'feeding'|'cooling';remaining:number};
  followups:{id:number;target:number;x:number;y:number;previousX:number;previousY:number;raw:number;until:number;angle:number}[];
  shield?:{id:number;rank:number;until:number;ready:number;refund:number};
- fuel?:Fuel; wave?:Wave; beam?:Beam; lanes:Lane[]; spreads:Spread[]; effects:CinderEffect[];
+ fuel?:Fuel; wave?:Wave; waveAfterglow?:Wave & {hideAt:number}; beam?:Beam; lanes:Lane[]; spreads:Spread[]; effects:CinderEffect[];
 }
+let nextOwnerId=1;
 const states=new WeakMap<CombatWorld,CinderRuntime>();
-export function cinderState(w:CombatWorld):CinderRuntime {let s=states.get(w);if(!s){s={targets:new Map(),followReady:0,battery:{charge:0,phase:'charging',remaining:0},followups:[],lanes:[],spreads:[],effects:[]};states.set(w,s);}return s;}
-const targetState=(w:CombatWorld,id:number)=>{const s=cinderState(w);let t=s.targets.get(id);if(!t){t={burn:0,until:0,nextTick:0,passiveReady:0,markUntil:0,markReady:0,slowUntil:0,slow:1,rootUntil:0};s.targets.set(id,t);}return t;};
+export function cinderState(w:CombatWorld):CinderRuntime {let s=states.get(w);if(!s){s={ownerId:nextOwnerId++,nextBurnSession:0,targets:new Map(),burnTotals:new Map(),followReady:0,battery:{charge:0,phase:'charging',remaining:0},followups:[],lanes:[],spreads:[],effects:[]};states.set(w,s);}return s;}
+const targetState=(w:CombatWorld,id:number)=>{const s=cinderState(w),entity=w.enemies.find(e=>e.id===id)!;let t=s.targets.get(id);if(!t||t.entity!==entity){t={entity,session:0,burn:0,until:0,nextTick:0,passiveReady:0,markUntil:0,markReady:0,slowUntil:0,slow:1,rootUntil:0};s.targets.set(id,t);}return t;};
 export const cinderStacks=(w:CombatWorld,id:number,at=w.elapsed)=>{const t=cinderState(w).targets.get(id);return t&&t.until>=at?t.burn:0;};
 export function cinderMovement(w:CombatWorld,e:EnemyEntity){const t=cinderState(w).targets.get(e.id);return !t?1:t.rootUntil>w.elapsed?0:t.slowUntil>w.elapsed?t.slow:1;}
 export const cinderMovementLocked=(w:CombatWorld)=>{const b=cinderState(w).beam;return !!b&&b.fired&&w.elapsed<b.until;};
@@ -40,7 +44,7 @@ function fx(w:CombatWorld,kind:CinderEffect['kind'],x:number,y:number,size:numbe
 function valid(w:CombatWorld,e:EnemyEntity,h:CinderHooks){return e.hp>0&&h.hostile(w,e)&&e.x+e.radius>=0&&e.x-e.radius<=AIR_COMBAT_WORLD.width&&e.y+e.radius>=R.top&&e.y-e.radius<=R.bottom;}
 export function addCinderBurn(w:CombatWorld,e:EnemyEntity,count:number,h:CinderHooks,at=w.elapsed){
  if(!valid(w,e,h))return;
- const t=targetState(w,e.id);if(t.until<at||t.burn===0){t.burn=0;t.nextTick=at+CINDER_BURN.interval;}
+ const t=targetState(w,e.id);if(t.until<at||t.burn===0){t.burn=0;t.nextTick=at+CINDER_BURN.interval;t.session=++cinderState(w).nextBurnSession;cinderState(w).burnTotals.set(e.id,{session:t.session,entity:e,entityId:e.id,total:0,x:e.x,y:e.y});}
  t.burn=Math.min(CINDER_BURN.cap,t.burn+count);t.until=at+CINDER_BURN.duration;
 }
 function deal(w:CombatWorld,e:EnemyEntity,ratio:number,skill:SkillId|undefined,id:number,h:CinderHooks,trueDamage=false){return h.damage(w,e,getEffectiveAircraftStats(w.aircraft).firepower*ratio,skill,{trueDamage,castId:id});}
@@ -64,7 +68,7 @@ export function beginCinderSkill(w:CombatWorld,id:CinderSkillId,h:CinderHooks){
  if(id==='cinder_fire_shield'){
   const amount=getEffectiveAircraftStats(w.aircraft).firepower*v.shieldMultiplier;
   createAbsorbShield(w.aircraft,'cinder',amount,v.duration);
-  s.shield={id:cast,rank,until:now+v.duration,ready:now,refund:0};active(w,id,v.duration);fx(w,'ring',w.playerX,w.playerY,80,.35);
+  s.shield={id:cast,rank,until:now+v.duration,ready:now,refund:0};active(w,id,v.duration);
  }else if(id==='cinder_fuel_barrage'){
   const targets=w.enemies.filter(e=>valid(w,e,h)&&e.y<w.playerY&&canTargetEnemy(w,e));
   let center={x:w.playerX,y:Math.max(R.top+v.radius,w.playerY-180)},score=-1;
@@ -77,7 +81,7 @@ export function beginCinderSkill(w:CombatWorld,id:CinderSkillId,h:CinderHooks){
 }
 export function cinderShieldFactor(w:CombatWorld,sourceId:number|undefined,trueDamage:boolean){const sh=cinderState(w).shield;return sh&&sh.rank>=5&&!trueDamage&&sourceId!==undefined&&cinderStacks(w,sourceId)>=3?.65:1;}
 export function cinderShieldAbsorbed(w:CombatWorld,amount:number,h:CinderHooks){const s=cinderState(w),sh=s.shield;if(!sh||amount<=0)return;
- fx(w,'ring',w.playerX,w.playerY,76,.25);
+ fx(w,'impact',w.playerX,w.playerY-22,28,.18);
  if(sh.rank>=3&&w.elapsed>=sh.ready){sh.ready=w.elapsed+1;let burning=false;
   for(const e of w.enemies)if(valid(w,e,h)&&circleVsAircraft(w.playerX,w.playerY,80,getEnemyHitbox(e))){burning ||= cinderStacks(w,e.id)>0;addCinderBurn(w,e,1,h);}
   fx(w,'ring',w.playerX,w.playerY,160,.5);
@@ -119,10 +123,20 @@ function tickBattery(w:CombatWorld,dt:number){const b=cinderState(w).battery;if(
 export function tickCinder(w:CombatWorld,dt:number,h:CinderHooks){
  const s=cinderState(w),now=w.elapsed;if(w.aircraft.currentHp<=0||w.destruction||w.aftermath){cancelCinder(w);return;}
  tickBattery(w,dt);s.effects=s.effects.filter(e=>e.at+e.life>now);
- for(const [id,t] of s.targets){const e=w.enemies.find(e=>e.id===id);if(!e||e.hp<=0||!h.hostile(w,e)){s.targets.delete(id);continue;}
-  for(let guard=0;t.burn>0&&t.nextTick<=Math.min(now,t.until)+1e-8&&guard<12;guard++){deal(w,e,CINDER_BURN.tick*t.burn,undefined,id,h,true);t.nextTick+=CINDER_BURN.interval;}
+ for(const [id,t] of s.targets){const e=w.enemies.find(e=>e.id===id);if(!e||e!==t.entity||e.hp<=0||!h.hostile(w,e)){s.targets.delete(id);continue;}
+  for(let guard=0;t.burn>0&&e.hp>0&&t.nextTick<=Math.min(now,t.until)+1e-8&&guard<12;guard++){
+   const hp=h.damage(w,e,getEffectiveAircraftStats(w.aircraft).firepower*CINDER_BURN.tick*t.burn,undefined,{trueDamage:true,castId:t.session,source:'cinder_burn',ownerId:s.ownerId,burnSession:t.session});
+   const total=s.burnTotals.get(id);if(total&&total.session===t.session)total.total+=Math.max(0,hp);
+   t.nextTick+=CINDER_BURN.interval;
+  }
   if(t.until<now)t.burn=0;
   if(!t.burn&&t.markUntil<=now&&t.markReady<=now&&t.passiveReady<=now&&t.slowUntil<=now&&t.rootUntil<=now)s.targets.delete(id);
+ }
+ for(const [id,total] of s.burnTotals){
+  const t=s.targets.get(id),e=total.entity,live=e.id===id&&e.hp>0&&w.enemies.includes(e)&&h.hostile(w,e);
+  if(live){total.x=e.x;total.y=e.y;}
+  if(total.endedAt===undefined&&(!live||!t||!t.burn||t.session!==total.session))total.endedAt=live&&t?Math.min(now,t.until):now;
+  if(total.endedAt!==undefined&&now-total.endedAt>=DAMAGE_LABEL_SECONDS)s.burnTotals.delete(id);
  }
  s.followups=s.followups.filter(p=>{const e=w.enemies.find(e=>e.id===p.target);if(!e||!valid(w,e,h)||!canTargetEnemy(w,e,'homing')||p.until<=now)return false;
   p.previousX=p.x;p.previousY=p.y;const dx=e.x-p.x,dy=e.y-p.y,d=Math.hypot(dx,dy),step=Math.min(d,600*dt);p.angle=Math.atan2(dy,dx);p.x+=Math.cos(p.angle)*step;p.y+=Math.sin(p.angle)*step;
@@ -134,15 +148,15 @@ export function tickCinder(w:CombatWorld,dt:number,h:CinderHooks){
    if(now-dt<f.land)for(const p of fuelCenters(f))fx(w,'splash',p.x,p.y,v.radius*2,.45);
    for(const e of w.enemies)if(valid(w,e,h)&&inFuel(f,e)&&!f.entered.has(e.id)){const entered=Math.max(f.land,now-dt);f.entered.set(e.id,entered+.5);addCinderBurn(w,e,1,h,entered);}
    // Damage uses one shared cast cadence; stacks use the target's first-entry cadence.
-   for(let guard=0;f.nextTick<=Math.min(now,f.until)+1e-8&&guard<10;guard++,f.nextTick+=.5)for(const e of w.enemies)if(valid(w,e,h)&&inFuel(f,e))deal(w,e,v.damageMultiplier*(f.rank>=3&&cinderStacks(w,e.id,f.nextTick)>=6?1.25:1),'cinder_fuel_barrage',f.id,h);
+   for(let guard=0;f.nextTick<=Math.min(now,f.until)+1e-8&&guard<14;guard++,f.nextTick+=.5)for(const e of w.enemies)if(valid(w,e,h)&&inFuel(f,e))deal(w,e,v.damageMultiplier*(f.rank>=3&&cinderStacks(w,e.id,f.nextTick)>=6?1.25:1),'cinder_fuel_barrage',f.id,h);
    for(const [id,next] of f.entered){const e=w.enemies.find(e=>e.id===id);if(!e||e.hp<=0){f.entered.delete(id);continue;}let at=next;
-    for(let guard=0;at<=Math.min(now,f.until)+1e-8&&guard<10;guard++,at+=.5)if(valid(w,e,h)&&inFuel(f,e))addCinderBurn(w,e,1,h,at);
+    for(let guard=0;at<=Math.min(now,f.until)+1e-8&&guard<14;guard++,at+=.5)if(valid(w,e,h)&&inFuel(f,e))addCinderBurn(w,e,1,h,at);
     f.entered.set(id,at);
    }
   }
   if(now>=f.until){s.fuel=undefined;endAircraftSkill(w.aircraft,'cinder_fuel_barrage');}else w.aircraft.activeEffects.cinder_fuel_barrage=f.until-now;
  }
- const wave=s.wave;if(wave){const v=cinderValues('cinder_heat_wave',wave.rank),radius=Math.hypot(AIR_COMBAT_WORLD.width,AIR_COMBAT_WORLD.height)*Math.min(1,(now-wave.at)/.8);
+ const wave=s.wave;if(wave){const v=cinderValues('cinder_heat_wave',wave.rank),radius=cinderWaveRadius(wave.x,wave.y)*Math.min(1,(now-wave.at)/.8);
   for(const e of w.enemies)if(valid(w,e,h)&&!wave.hits.has(e.id)&&circleVsAircraft(wave.x,wave.y,radius,getEnemyHitbox(e))){wave.hits.add(e.id);const n=cinderStacks(w,e.id),t=targetState(w,e.id);
    deal(w,e,v.damageMultiplier+v.perStack*n,'cinder_heat_wave',wave.id,h);addCinderBurn(w,e,n>0&&wave.rank>=4?2:1,h);
    if(n>0){const actor=e.aircraftTarget?.world,immune=actor&&(celestialProtection(actor.aircraft)||(skillRank(actor.aircraft,'afterburner')>=5&&(actor.aircraft.activeEffects.afterburner??0)>0));
@@ -151,7 +165,7 @@ export function tickCinder(w:CombatWorld,dt:number,h:CinderHooks){
    if(wave.rank>=5&&cinderStacks(w,e.id)>=6&&e.hp>0){let spread=s.spreads.find(p=>p.id===wave.id);if(!spread){spread={id:wave.id,sources:[],recipients:new Map()};s.spreads.push(spread);}spread.sources.push({id:e.id,next:now+1,remaining:4});}
   }
   igniteFuel(w,wave.id,(x,y,r)=>Math.hypot(x-wave.x,y-wave.y)<=radius+r,h);
-  if(now>=wave.until){s.wave=undefined;endAircraftSkill(w.aircraft,'cinder_heat_wave');}else w.aircraft.activeEffects.cinder_heat_wave=wave.until-now;
+  if(now>=wave.until){s.waveAfterglow={...wave,hideAt:now+.08};s.wave=undefined;endAircraftSkill(w.aircraft,'cinder_heat_wave');}else w.aircraft.activeEffects.cinder_heat_wave=wave.until-now;
  }
  for(const spread of s.spreads){
   const events=spread.sources.flatMap(source=>{const e=w.enemies.find(e=>e.id===source.id);if(!e||!valid(w,e,h)){source.remaining=0;return [];}
@@ -176,6 +190,6 @@ export function cinderThreatNearby(w:CombatWorld,x:number,y:number,r:number){con
  if(b?.fired&&now<b.until&&x+r>=b.x-cinderValues('cinder_inferno_beam',b.rank).width/2&&x-r<=b.x+cinderValues('cinder_inferno_beam',b.rank).width/2&&y+r>=R.top&&y-r<=b.y)return true;
  if(s.lanes.some(l=>now<l.until&&Math.abs(x-l.x)<=cinderValues('cinder_inferno_beam',l.rank).width/2+r&&y+r>=R.top&&y-r<=l.y))return true;
  if(s.followups.some(p=>p.until>now&&Math.hypot(x-p.x,y-p.y)<=r+2.5))return true;
- const wave=s.wave;if(wave){const radius=Math.hypot(AIR_COMBAT_WORLD.width,AIR_COMBAT_WORLD.height)*Math.min(1,(now-wave.at)/.8);if(Math.abs(Math.hypot(x-wave.x,y-wave.y)-radius)<=r+8)return true;}
+ const wave=s.wave;if(wave){const radius=cinderWaveRadius(wave.x,wave.y)*Math.min(1,(now-wave.at)/.8);if(Math.abs(Math.hypot(x-wave.x,y-wave.y)-radius)<=r+8)return true;}
  return false;
 }

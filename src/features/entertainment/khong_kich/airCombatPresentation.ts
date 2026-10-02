@@ -91,8 +91,8 @@ export function getActiveSkillDuration(world: CombatWorld, id: SkillId) {
   }
   if (id === "focus_laser") remaining = world.laserCharge + world.laserRemaining;
   if (id === "heavy_bomb") {
-    const bomb=world.projectiles.find(p=>p.bigBang&&p.skillId===id);
-    if(bomb){remaining=bomb.lifetime;duration=3;}
+    const bomb=world.bigBang;
+    if(bomb&&!bomb.resolved){remaining=Math.max(0,bomb.impactAt-world.elapsed);duration=3;}
   }
   if (id === "missile_swarm" && state.coreState.deferredCooldowns[id]!==undefined) {
     const salvo=world.skillCores.salvos.find(s=>s.pending>0);

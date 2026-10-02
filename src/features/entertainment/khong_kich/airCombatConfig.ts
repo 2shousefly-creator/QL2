@@ -246,12 +246,12 @@ export const SKILL_CONFIGS: Record<SkillId, SkillConfig> = {
     "aircraftId": "breaker",
     "name": "BigBang",
     "shortName": "BigBang",
-    "description": "Phát nổ sau 3s kể từ khi khai hỏa, hoặc ngay khi va chạm; gây 1400% Hỏa lực lên mọi địch trong màn hình.",
+    "description": SKILL_RANKS.heavy_bomb[0].description,
     "icon": "●",
-    "cost": 155,
-    "cooldown": 38,
+    "cost": 120,
+    "cooldown": 30,
     "duration": 0,
-    "damageMultiplier": 14
+    "damageMultiplier": 5
   },
   "sweeping_cannon": {
     "id": "sweeping_cannon",

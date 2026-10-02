@@ -1,3 +1,5 @@
+import { BIGBANG_ART, BIGBANG_FRAMES, paintBigBang } from './airCombatBigBangArt';
+import { cinderBurnLabels, CINDER_TOTAL_FONT_SIZE, CINDER_STACK_FONT_SIZE, NORMAL_DAMAGE_FONT_SIZE } from './airCombatFeedback';
 import { CINDER_ART, CINDER_FRAMES, paintCinder } from './airCombatCinderArt';
 import soloArenaUrl from "../../../assets/khong-kich/solo/solo-duel-arena.png";
 import { MIRROR_TRANSFORM, mirrorPoint } from "./airCombatMirrorTransform";
@@ -69,14 +71,14 @@ async function loadCanvasTextures(urls:string[]) {
   }));
 }
 export const loadSoloCanvasAssets=()=>loadCanvasTextures([soloArenaUrl]);
-export const loadAstraCanvasAssets=()=>loadCanvasTextures([...Object.values(CINDER_ART),ULTIMATE_ART,RANKED_ART.vfx,RANKED_ART.projectiles,EQUIPMENT_ART.icons,EQUIPMENT_ART.vfx,ASTRA_ART.aircraft,ASTRA_ART.effects,ASTRA_ART.combatVfx,sharedVfxUrl]);
+export const loadAstraCanvasAssets=()=>loadCanvasTextures([BIGBANG_ART,...Object.values(CINDER_ART),ULTIMATE_ART,RANKED_ART.vfx,RANKED_ART.projectiles,EQUIPMENT_ART.icons,EQUIPMENT_ART.vfx,ASTRA_ART.aircraft,ASTRA_ART.effects,ASTRA_ART.combatVfx,sharedVfxUrl]);
 export const loadMirageCanvasAssets=()=>loadCanvasTextures([...Object.values(STAGE4_ART_URLS),aircraftAtlasUrl,ASTRA_ART.aircraft]);
 export const loadStormbreakerCanvasAssets=()=>loadCanvasTextures(Object.values(STAGE3_ART_URLS));
 export const loadMagneticCanvasAssets=()=>loadCanvasTextures([STAGE2_ART_URLS.enemy,STAGE2_ART_URLS.vfx,STAGE2_ART_URLS.storm,STAGE2_ART_URLS.elite]);
 const mirageTintCache = new Map<string,HTMLCanvasElement>();
 function drawMagneticFrame(ctx: CanvasRenderingContext2D, frame: AtlasFrame, x: number, y: number,
   width: number, height: number, rotation = 0, alpha = 1, tint = 0xffffff, anchorX = .5) {
-  const image = magneticImage(frame.atlas === "cinderFeedback" ? CINDER_ART.feedback : frame.atlas === "cinderAircraft" ? CINDER_ART.aircraft : frame.atlas === "cinderVfx" ? CINDER_ART.vfx : frame.atlas === "cinderProjectiles" ? CINDER_ART.projectiles : frame.atlas === "aircraft" ? aircraftAtlasUrl : frame.atlas === "astraAircraft" ? ASTRA_ART.aircraft : frame.atlas === "stage4Enemy" ? STAGE4_ART_URLS.enemy : frame.atlas === "stage4Boss" ? STAGE4_ART_URLS.boss : frame.atlas === "stage4Vfx" ? STAGE4_ART_URLS.vfx : frame.atlas === "stage3Enemy" ? STAGE3_ART_URLS.enemy : frame.atlas === "stage3Boss" ? STAGE3_ART_URLS.boss : frame.atlas === "stage3Vfx" ? STAGE3_ART_URLS.vfx : frame.atlas === "stage3Emissive" ? STAGE3_ART_URLS.emissive : frame.atlas === "ultimateVfx" ? ULTIMATE_ART : frame.atlas === "rankedVfx" ? RANKED_ART.vfx : frame.atlas === "rankedProjectiles" ? RANKED_ART.projectiles : frame.atlas === "equipmentIcons" ? EQUIPMENT_ART.icons : frame.atlas === "equipmentVfx" ? EQUIPMENT_ART.vfx : frame.atlas === "astraVfx" ? ASTRA_ART.combatVfx : frame.atlas === "vfx" ? sharedVfxUrl : frame.atlas === "astraEffects" ? ASTRA_ART.effects : frame.atlas === "stage2Elite" ? STAGE2_ART_URLS.elite : frame.atlas === "stage2Enemy" ? STAGE2_ART_URLS.enemy : STAGE2_ART_URLS.vfx);
+  const image = magneticImage(frame.atlas === "bigBangVfx" ? BIGBANG_ART : frame.atlas === "cinderFeedback" ? CINDER_ART.feedback : frame.atlas === "cinderAircraft" ? CINDER_ART.aircraft : frame.atlas === "cinderVfx" ? CINDER_ART.vfx : frame.atlas === "cinderProjectiles" ? CINDER_ART.projectiles : frame.atlas === "aircraft" ? aircraftAtlasUrl : frame.atlas === "astraAircraft" ? ASTRA_ART.aircraft : frame.atlas === "stage4Enemy" ? STAGE4_ART_URLS.enemy : frame.atlas === "stage4Boss" ? STAGE4_ART_URLS.boss : frame.atlas === "stage4Vfx" ? STAGE4_ART_URLS.vfx : frame.atlas === "stage3Enemy" ? STAGE3_ART_URLS.enemy : frame.atlas === "stage3Boss" ? STAGE3_ART_URLS.boss : frame.atlas === "stage3Vfx" ? STAGE3_ART_URLS.vfx : frame.atlas === "stage3Emissive" ? STAGE3_ART_URLS.emissive : frame.atlas === "ultimateVfx" ? ULTIMATE_ART : frame.atlas === "rankedVfx" ? RANKED_ART.vfx : frame.atlas === "rankedProjectiles" ? RANKED_ART.projectiles : frame.atlas === "equipmentIcons" ? EQUIPMENT_ART.icons : frame.atlas === "equipmentVfx" ? EQUIPMENT_ART.vfx : frame.atlas === "astraVfx" ? ASTRA_ART.combatVfx : frame.atlas === "vfx" ? sharedVfxUrl : frame.atlas === "astraEffects" ? ASTRA_ART.effects : frame.atlas === "stage2Elite" ? STAGE2_ART_URLS.elite : frame.atlas === "stage2Enemy" ? STAGE2_ART_URLS.enemy : STAGE2_ART_URLS.vfx);
   if (!image) return;
   const [sx,sy,sw,sh] = frame.rect;
   ctx.save(); ctx.globalAlpha = alpha; ctx.translate(x,y); ctx.rotate(rotation);
@@ -652,7 +654,7 @@ export function drawLegacyWorld(
       else drawEnemyGlyph(ctx, enemy.type, 0, 0, enemy.radius);
     } else drawEnemyGlyph(ctx, enemy.type, 0, 0, enemy.radius);
     ctx.restore();
-    if(!world.mirage && !world.magnetic && (enemy.shield>0||enemy.aegisUntil>world.aircraft.coreState.time)){ctx.strokeStyle="#7dd3fc";ctx.lineWidth=2;ctx.beginPath();ctx.arc(enemy.x,enemy.y,enemy.radius+7,0,Math.PI*2);ctx.stroke();}
+    if(!enemy.aircraftTarget && !world.mirage && !world.magnetic && (enemy.shield>0||enemy.aegisUntil>world.aircraft.coreState.time)){ctx.strokeStyle="#7dd3fc";ctx.lineWidth=2;ctx.beginPath();ctx.arc(enemy.x,enemy.y,enemy.radius+7,0,Math.PI*2);ctx.stroke();}
     if(!world.mirage&&enemy.hackedFacing!==undefined&&enemy.type!=="kamikaze"){
       const exhaust=getEnemyExhaustTransform(enemy);ctx.save();ctx.translate(exhaust.x,exhaust.y);ctx.rotate(exhaust.rotation);
       ctx.fillStyle="#67e8f9";ctx.globalAlpha=.65;ctx.beginPath();ctx.moveTo(-exhaust.width/2,0);ctx.quadraticCurveTo(-exhaust.width/2,exhaust.length*.4,0,exhaust.length);ctx.quadraticCurveTo(exhaust.width/2,exhaust.length*.4,exhaust.width/2,0);ctx.fill();ctx.restore();
@@ -756,7 +758,8 @@ export function drawLegacyWorld(
       ctx.restore();
     }
   },reducedMotion);
-  paintCinder(world,(_id,key,x,y,width,height,rotation,alpha)=>drawMagneticFrame(ctx,CINDER_FRAMES[key],x,y,width,height,rotation,alpha),reducedMotion,(_id,text,x,y)=>{ctx.save();ctx.font='bold 10px sans-serif';ctx.lineWidth=3;ctx.strokeStyle='#1c2026';ctx.fillStyle='#fff1af';ctx.strokeText(text,x,y);ctx.fillText(text,x,y);ctx.restore();});
+  paintBigBang(world,(_id,key,x,y,width,height,alpha,additive)=>{ctx.save();ctx.globalCompositeOperation=additive?"lighter":"source-over";drawMagneticFrame(ctx,BIGBANG_FRAMES[key],x,y,width,height,0,alpha);ctx.restore();},reducedMotion);
+  paintCinder(world,(_id,key,x,y,width,height,rotation,alpha)=>drawMagneticFrame(ctx,CINDER_FRAMES[key],x,y,width,height,rotation,alpha),reducedMotion,(_id,text,x,y)=>{ctx.save();ctx.translate(x,y);if(world.mirrorContext)ctx.rotate(Math.PI);ctx.font='bold '+CINDER_STACK_FONT_SIZE+'px sans-serif';ctx.lineWidth=1.2;ctx.strokeStyle='#1c2026';ctx.fillStyle='#fff1af';ctx.strokeText(text,0,0);ctx.fillText(text,0,0);ctx.restore();});
   const invisible = (world.aircraft.activeEffects.invisibility || 0) > 0 || equipmentUntargetable(world.aircraft);
   for(const ghost of releaseState(world.aircraft).ghosts){
     ctx.save();ctx.translate(ghost.x,ghost.y);ctx.rotate(ghost.angle);
@@ -784,7 +787,7 @@ export function drawLegacyWorld(
       0.82
     );
 
-    if (!accents.titanShield.active && accents.titanShield.opacity < .01 && ((world.aircraft.activeEffects.armor_shield || 0) > 0 || Object.values(world.aircraft.coreState.shields).some(s=>s.amount>0&&s.until>world.aircraft.coreState.time))) {
+    if (!accents.titanShield.active && accents.titanShield.opacity < .01 && ((world.aircraft.activeEffects.armor_shield || 0) > 0 || activeShieldAmount(world.aircraft,true)>0)) {
       const pulse = 1 + Math.sin(world.elapsed * 8) * 0.045;
       const shieldRadius = 25 * pulse * playerAirframeScale(world.aircraft);
       ctx.save();
@@ -879,9 +882,11 @@ export function drawLegacyWorld(
     drawAircraftTrackingHud(ctx, mirror, view.bars, true);
     view.bars.end();
     drawAircraftDamageLabels(ctx, view.labels.labels, reducedMotion, true);
+    drawCinderTotals(ctx,mirror,true);
   }
 
   drawAircraftDamageLabels(ctx, damageLabels, reducedMotion);
+  drawCinderTotals(ctx,world);
 
   ctx.strokeStyle = "rgba(34,211,238,.52)";
   ctx.lineWidth = 1;
@@ -926,6 +931,16 @@ function drawAircraftTrackingHud(ctx: CanvasRenderingContext2D, world: CombatWor
 
 }
 
+function drawCinderTotals(ctx:CanvasRenderingContext2D,world:CombatWorld,rotated=false){
+  ctx.save();ctx.textBaseline='middle';ctx.lineJoin='round';ctx.font='500 '+CINDER_TOTAL_FONT_SIZE+'px Arial';ctx.lineWidth=1.2;ctx.fillStyle='#ffd179';ctx.strokeStyle='#382013';
+  for(const label of cinderBurnLabels(world,rotated)){
+    const numberWidth=ctx.measureText(label.text).width,iconWidth=ctx.measureText('🔥').width,gap=2;
+    const x=Math.max(GAMEPLAY_SAFE_RECT.left+numberWidth/2+iconWidth+gap+1,Math.min(GAMEPLAY_SAFE_RECT.right-numberWidth/2-1,label.x));
+    ctx.globalAlpha=label.alpha;ctx.textAlign='center';ctx.strokeText(label.text,x,label.y);ctx.fillText(label.text,x,label.y);
+    ctx.textAlign='right';ctx.fillText('🔥',x-numberWidth/2-gap,label.y);
+  }ctx.restore();
+}
+
 function drawAircraftDamageLabels(ctx: CanvasRenderingContext2D, damageLabels: readonly DamageLabel[], reducedMotion: boolean, rotated = false) {
   ctx.save();
   ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.lineJoin = "round";
@@ -933,13 +948,13 @@ function drawAircraftDamageLabels(ctx: CanvasRenderingContext2D, damageLabels: r
     if (!label.active) continue;
     const progress = label.age / DAMAGE_LABEL_SECONDS;
     const pop = reducedMotion ? 1 : 1 + 0.16 * Math.max(0, 1 - label.age / 0.12);
-    ctx.font = `${label.critical ? 800 : 500} ${13 * (label.critical ? 1.2 : 1) * pop}px Arial`;
+    ctx.font = `${label.critical ? 800 : 500} ${NORMAL_DAMAGE_FONT_SIZE * (label.critical ? 1.2 : 1) * pop}px Arial`;
     ctx.globalAlpha = Math.min(1, (1 - progress) * 2);
     ctx.fillStyle = label.critical ? "#ff4d55" : label.damageKind === "shield" ? "#ffffff" : "#fde047";
     ctx.strokeStyle = label.damageKind === "shield" ? "#325777" : "#151c29"; ctx.lineWidth = 3;
     const position = rotated ? mirrorPoint(label.x, label.y) : label;
     const x = position.x + label.offset * (reducedMotion ? 0.4 : 0.4 + progress);
-    const y = position.y - progress * (reducedMotion ? 7 : 24);
+    const y = position.y - (rotated?20:0) - progress * (reducedMotion ? 7 : 24);
     ctx.strokeText(label.text, x, y); ctx.fillText(label.text, x, y);
   }
   ctx.restore();

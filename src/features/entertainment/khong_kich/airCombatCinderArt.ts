@@ -5,7 +5,7 @@ import projectiles from '../../../assets/khong-kich/cinder/projectiles.png';
 import feedback from '../../../assets/khong-kich/cinder/feedback.png';
 import type { AtlasFrame } from './pixi/airCombatPixiTypes';
 import type { CombatWorld } from './airCombatRuntime';
-import { cinderState } from './airCombatCinderRuntime';
+import { cinderState, cinderWaveRadius } from './airCombatCinderRuntime';
 import { cinderValues } from './airCombatCinderConfig';
 import { GAMEPLAY_SAFE_RECT as R, AIR_COMBAT_WORLD } from './airCombatConfig';
 export const CINDER_ART={aircraft,icons,vfx,projectiles,feedback};
@@ -37,19 +37,19 @@ export function paintCinder(w:CombatWorld,paint:CinderPainter,reduced:boolean,la
  for(const p of s.followups){draw('passive_viper',p.x,p.y,12,26,p.angle+Math.PI/2);if(!reduced)draw('passive_viper',(p.x+p.previousX)/2,(p.y+p.previousY)/2,7,22,p.angle+Math.PI/2,.25);}
  for(const p of w.projectiles)if(p.owner==='player'&&p.primaryShot&&w.aircraft.aircraftId==='breaker')draw('passive_titan',p.x,p.y,11,29,Math.atan2(p.vy,p.vx)+Math.PI/2,.9);
  if(s.battery.phase==='feeding'){draw('passive_battery',w.playerX-13,w.playerY+7,23,36,0,.85);draw(Math.floor(now*10)%2?'battery_arc1':'battery_arc0',w.playerX-5,w.playerY+3,30,22,-.35,reduced?.3:.55);if(!reduced)draw('passive_battery',w.playerX+10,w.playerY,12,30,0,.3);}
- if(s.shield){draw(anim('ring'),w.playerX,w.playerY,79,79,0,.7);draw(anim('ring',now+.2),w.playerX,w.playerY,68,68,-now*.15,.3);}
+ if(s.shield)draw(anim('ring'),w.playerX,w.playerY,79,79,0,.95);
  const f=s.fuel;if(f){const v=cinderValues('cinder_fuel_barrage',f.rank);for(let i=0;i<4;i++){const x=f.x+(i-1.5)*84;
   if(now<f.land){const p=Math.min(1,(now-f.at)/.6),px=f.fromX+(x-f.fromX)*p,py=f.fromY+(f.y-f.fromY)*p;draw('cinder_canister',px,py,22,32,(p-.5)*.2);draw('cinder_ember',px,py+15,15,30,0,.65);}
-  else {if(!reduced)draw('fuel_vapor',x,f.y-7,v.radius*2,v.radius*2,now*.1,.13);draw(anim('fuel',now+i*.12),x,f.y,v.radius*2,v.radius*2,0,.62);draw('cinder_ember',x,f.y-5,v.radius,v.radius*1.5,0,.5);if(f.rank>=5&&i<3)draw(anim('fuel',now+i*.1),x+42,f.y,84,v.radius*1.5,0,.58);}
+  else {if(!reduced)draw('fuel_vapor',x,f.y-7,v.radius*2,v.radius*2,now*.1,.13);draw(anim('fuel',now+i*.12),x,f.y,v.radius*2,v.radius*2,0,.85);draw('cinder_ember',x,f.y-5,v.radius,v.radius*1.5,0,.5);if(f.rank>=5&&i<3)draw(anim('fuel',now+i*.1),x+42,f.y,84,v.radius*1.5,0,.8);}
  }}
- const wave=s.wave;if(wave){const diameter=2*Math.hypot(AIR_COMBAT_WORLD.width,AIR_COMBAT_WORLD.height)*Math.min(1,(now-wave.at)/.8);draw(anim('ring'),wave.x,wave.y,diameter,diameter,0,.6);if(!reduced)draw(anim('ring',now+.2),wave.x,wave.y,diameter*.95,diameter*.95,0,.2);}
+ const wave=s.wave??(s.waveAfterglow&&now<s.waveAfterglow.hideAt?s.waveAfterglow:undefined);if(wave){const diameter=2*cinderWaveRadius(wave.x,wave.y)*Math.min(1,(now-wave.at)/.8)/.64;draw('cinder_ring0',wave.x,wave.y,diameter,diameter,0,.85);}
  const beam=s.beam;if(beam){const v=cinderValues('cinder_inferno_beam',beam.rank),x=beam.fired?beam.x:w.playerX,y=beam.fired?beam.y:w.playerY-20;
-  if(!beam.fired){const p=Math.min(1,(now-beam.at)/v.charge);draw('cinder_burst0',x,y,25+40*p,25+40*p,0,.5+.4*p);draw(anim('ring'),x,y,45+15*(1-p),45+15*(1-p),-now,.5);draw(anim('beam'),x,(R.top+y)/2,v.width,y-R.top,0,.10+.13*p);}
-  else {draw(anim('beam'),x,(R.top+y)/2,v.width,y-R.top,0,.95);draw(anim('beam',now+.15),x,(R.top+y)/2,v.width*.6,y-R.top,0,.45);draw('cinder_burst0',x,y,v.width*1.2,v.width*.9,0,.8);}
+  if(!beam.fired){const p=Math.min(1,(now-beam.at)/v.charge);draw('cinder_burst0',x,y,25+40*p,25+40*p,0,.5+.4*p);draw(anim('ring'),x,y,45+15*(1-p),45+15*(1-p),-now,.5);draw(anim('beam'),x,(R.top+y)/2,v.width/.5,(y-R.top)/.9,0,.10+.13*p);}
+  else {draw(anim('beam'),x,(R.top+y)/2,v.width/.5,(y-R.top)/.9,0,.95);draw(anim('beam',now+.15),x,(R.top+y)/2,v.width*.6/.5,(y-R.top)/.9,0,.45);draw('cinder_burst0',x,y,v.width*1.2,v.width*.9,0,.8);}
  }
- for(const l of s.lanes){const v=cinderValues('cinder_inferno_beam',l.rank);draw(anim('beam'),l.x,(R.top+l.y)/2,v.width,l.y-R.top,0,.25*Math.min(1,(l.until-now)*2));if(!reduced)draw('cinder_ember',l.x,l.y-70,25,65,0,.4);}
+ for(const l of s.lanes){const v=cinderValues('cinder_inferno_beam',l.rank);draw(anim('beam'),l.x,(R.top+l.y)/2,v.width/.5,(l.y-R.top)/.9,0,.48*Math.min(1,(l.until-now)*2));if(!reduced)draw('cinder_ember',l.x,l.y-70,25,65,0,.4);}
  for(const e of s.effects){
-  const p=(now-e.at)/e.life,key=e.kind==='mark'?(e.size>40?'astra_mark_burst':'passive_mark'):e.kind==='muzzle'?'viper_muzzle':e.kind==='followup'?'viper_impact':e.kind==='alloy'?'titan_impact':e.kind==='splash'?'fuel_splash':e.kind==='ring'?anim('ring'):('cinder_burst'+Math.min(3,Math.floor(p*4))) as CinderVisualKey;
+  const p=(now-e.at)/e.life,key=e.kind==='mark'?(e.size>40?'astra_mark_burst':'passive_mark'):e.kind==='muzzle'?'viper_muzzle':e.kind==='followup'?'viper_impact':e.kind==='alloy'?'titan_impact':e.kind==='splash'?'cinder_burst1':e.kind==='ring'?anim('ring'):('cinder_burst'+Math.min(3,Math.floor(p*4))) as CinderVisualKey;
   const scale=e.kind==='ring'?.4+p*.6:1;
   draw(key,e.x,e.y,e.size*scale,e.size*scale,e.kind==='muzzle'?-Math.PI/2:0,(1-p)*(reduced?.6:.9));
   if(e.kind==='burst'||e.kind==='splash'){draw(anim('ring',now),e.x,e.y,e.size*(.5+p*.6),e.size*(.5+p*.6),0,(1-p)*.35);if(!reduced)for(let i=0;i<3;i++){const angle=i*Math.PI*2/3;draw('cinder_ember',e.x+Math.cos(angle)*e.size*p*.3,e.y+Math.sin(angle)*e.size*p*.3,8,15,angle,(1-p)*.65);}}

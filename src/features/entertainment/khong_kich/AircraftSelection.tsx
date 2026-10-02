@@ -118,7 +118,7 @@ function AircraftSelectionSkills({ aircraftId }: { aircraftId: AircraftId }) {
 
   return <>
     <button type="button" className="air-selection-skill air-selection-passive" onClick={()=>setPassiveOpen(true)}><SkillIcon id={PASSIVES[aircraftId].id} className="!h-9 !w-9"/><span><small>Nội Tại</small><strong>{PASSIVES[aircraftId].name}</strong></span></button>
-    {passiveOpen&&<AirCombatModal archetype="info" layer="exclusive-dialog" onClose={()=>setPassiveOpen(false)} labelledBy={titleId}><OverlayHeader><h3 id={titleId}>Nội Tại · {config.name}</h3><ModalButton onClick={()=>setPassiveOpen(false)}>Đóng</ModalButton></OverlayHeader><OverlayBody><PassiveDetails state={preview}/></OverlayBody></AirCombatModal>}
+    {passiveOpen&&<AirCombatModal archetype="info" layer="exclusive-dialog" onClose={()=>setPassiveOpen(false)} labelledBy={titleId}><OverlayHeader className="flex items-start justify-between gap-3"><div><p className="text-xs text-[var(--modal-muted)]">{config.name} · Nội Tại · Cấp chiến cơ {preview.level}</p><h3 id={titleId} className="modal-title">{PASSIVES[aircraftId].name}</h3></div><ModalButton variant="icon" aria-label="Đóng chi tiết nội tại" onClick={()=>setPassiveOpen(false)}><X className="h-4 w-4"/></ModalButton></OverlayHeader><OverlayBody><div className="space-y-3 text-sm leading-relaxed text-[var(--modal-text)]"><PassiveDetails state={preview} heading={false}/></div></OverlayBody></AirCombatModal>}
     <div className="air-selection-skills">
       {config.skillIds.map(id => <button type="button" key={id} className="air-selection-skill" onClick={() => setDetailSkill(id)}
         aria-label={`Xem chi tiết ${isUltimate(id) ? "kỹ năng tối thượng" : "kỹ năng"} ${SKILL_CONFIGS[id].name}`}>

@@ -1,3 +1,4 @@
+import { PASSIVES } from './airCombatPassives';
 import { PassiveCell, PassiveDetails } from './AirCombatPassive';
 import { publishCombatNotice } from "./airCombatNotices";
 import { skillRank, SKILL_RANKS, isUltimate, canAllocateSkill, allocateSkillPoint, ultimateCastDisabled } from "./airCombatSkillRanks";
@@ -794,7 +795,7 @@ export const AirCombatBattleShell: React.FC<AirCombatBattleProps> = ({
         <div className="air-tooltip-heading"><strong>{hubTooltip.title}</strong><button type="button" aria-label="Đóng thông tin" onClick={closeAllTooltips}><X/></button></div>
         <p>{hubTooltip.text}</p>
       </motion.aside>}
-      {tooltipPassive&&<AirCombatTooltipPortal anchor={stageRef}><motion.aside {...airTooltipMotion} className="air-skill-tooltip" data-combat-tooltip-panel="passive" onPointerDown={e=>e.stopPropagation()}><div className="air-tooltip-heading"><strong>Nội Tại</strong><button type="button" onClick={closeAllTooltips} aria-label="Đóng nội tại"><X/></button></div><PassiveDetails state={worldRef.current.aircraft} world={worldRef.current}/></motion.aside></AirCombatTooltipPortal>}
+      {tooltipPassive&&<AirCombatTooltipPortal anchor={stageRef}><motion.aside {...airTooltipMotion} className="air-skill-tooltip" data-combat-tooltip-panel="passive" onPointerMove={e=>e.stopPropagation()} onPointerDown={e=>e.stopPropagation()} onPointerUp={e=>e.stopPropagation()} onPointerCancel={e=>e.stopPropagation()}><div className="air-tooltip-heading"><h3>{PASSIVES[worldRef.current.aircraft.aircraftId].name}</h3><button type="button" onClick={closeAllTooltips} aria-label="Đóng nội tại"><X/></button></div><PassiveDetails state={worldRef.current.aircraft} world={worldRef.current} heading={false}/></motion.aside></AirCombatTooltipPortal>}
       {tooltipSkill && tooltipModel && (
         <AirCombatTooltipPortal key="skill-tooltip" anchor={stageRef}><motion.aside {...airTooltipMotion} transition={{...airTooltipMotion.transition,duration:reducedMotion?.1:.28}} className="air-skill-tooltip" data-combat-tooltip-panel="skill" data-skill-tooltip={tooltipSkill} onPointerDown={event => event.stopPropagation()} onPointerMove={event => event.stopPropagation()}>
           <div className="air-tooltip-heading"><h3>{tooltipModel.title}</h3><strong className="air-tooltip-cooldown">{formatCooldownSeconds(tooltipModel.cooldown)}</strong></div>

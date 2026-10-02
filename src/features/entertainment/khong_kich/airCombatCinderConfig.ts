@@ -8,9 +8,9 @@ export const cinderValues = (id:CinderSkillId, rank:number) => {
  const common={cost:0,cooldown:0,duration:0,damageMultiplier:0,radius:0,charge:0,width:0,perStack:0,shieldMultiplier:0};
  switch(id){
  case 'cinder_fire_shield':return {...common,cost:[80,85,90,95,100][i],cooldown:[30,29,28,27,26][i],duration:[5,5,6,6,7][i],shieldMultiplier:[1,1.5,2,2.5,3][i],radius:80};
- case 'cinder_fuel_barrage':return {...common,cost:[100,110,120,130,140][i],cooldown:[24,23,22,21,20][i],duration:r>=3?5:4,damageMultiplier:[.45,.55,.55,.55,.65][i],radius:[36,40,40,40,44][i]};
+ case 'cinder_fuel_barrage':return {...common,cost:[100,110,120,130,140][i],cooldown:[24,23,22,21,20][i],duration:[5,5.5,6,6.5,7][i],damageMultiplier:[.45,.55,.55,.55,.65][i],radius:[36,40,40,40,44][i]};
  case 'cinder_heat_wave':return {...common,cost:[90,100,110,120,130][i],cooldown:[22,21,20,19,18][i],duration:.8,damageMultiplier:[.4,.5,.6,.7,.8][i],perStack:[.3,.3,.35,.35,.4][i]};
- case 'cinder_inferno_beam':return {...common,cost:[150,200,250][i],cooldown:90,duration:[2,1.75,1.5][i]+.45,charge:[2,1.75,1.5][i],damageMultiplier:[24,30,36][i],width:[84,84,96][i],radius:[45,55,65][i]};
+ case 'cinder_inferno_beam':return {...common,cost:[150,200,250][i],cooldown:90,duration:[1,.75,.5][i]+.45,charge:[1,.75,.5][i],damageMultiplier:[24,30,36][i],width:200,radius:120};
  }
 };
 export const CINDER_NAMES = ['Khiên Lửa','Rải Nhiên Liệu','Quầng Nhiệt','Hỏa Quang Hủy Diệt'] as const;

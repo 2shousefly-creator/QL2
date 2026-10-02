@@ -810,7 +810,7 @@
 .air-passive-mask{position:absolute;inset:0 0 auto;background:#000a;}
 .air-passive-progress{position:absolute;bottom:0;left:0;height:3px;background:#bd8eff;}
 .air-passive-caption{position:absolute;bottom:0;font-size:8px;line-height:1;color:#e2e8f0;white-space:nowrap;}
-.air-passive-details{display:grid;gap:10px;font-size:13px;line-height:1.5;}.air-passive-details [data-current=true]{color:#fff1af;font-weight:800;}
+.air-passive-details{font:inherit;color:inherit;}
 .air-selection-passive{margin-top:16px;width:100%;}
 .air-selection-grid{grid-template-columns:repeat(5,minmax(0,1fr));}
 @media(max-width:520px){.air-selection-grid{grid-template-columns:repeat(3,minmax(0,1fr));}}

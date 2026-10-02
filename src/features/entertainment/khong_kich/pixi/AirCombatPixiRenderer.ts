@@ -1,3 +1,5 @@
+import { CINDER_STACK_FONT_SIZE } from '../airCombatFeedback';
+import { paintBigBang } from '../airCombatBigBangArt';
 import { paintCinder } from '../airCombatCinderArt';
 import { MIRROR_TRANSFORM, mirrorPoint } from "../airCombatMirrorTransform";
 import { paintMirage } from "../airCombatMirageVisuals";
@@ -238,7 +240,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
           this.shake = Math.max(this.shake, reducedMotion ? 0 : 6);
         }
       } else if (event.kind === "damage_number") {
-        if (event.shieldAbsorbed > 0 && event.target !== "player") this.vfx.spawn("shield", event.x, event.y, 40, .25, 0xc9f3ff);
+        if ((event.genericShieldAbsorbed??event.shieldAbsorbed) > 0 && event.target !== "player") this.vfx.spawn("shield", event.x, event.y, 40, .25, 0xc9f3ff);
         if (event.target === "enemy" && event.hpDamage > 0 && event.critical) {
           if (event.entityId !== undefined) this.flashUntil.set(event.entityId, this.clock + 0.14);
           this.vfx.spawn(world.magnetic ? "electricImpact" : "sparks", event.x, event.y, reducedMotion ? 18 : 25, 0.22, world.magnetic ? 0xffffff : 0xff8080);
@@ -309,6 +311,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
         // Oanh Tạc keeps its dedicated atlas VFX, but firing/impact no longer shakes the camera.
         continue;
       } else if (event.kind === "bomb") {
+        if(event.skillId==="heavy_bomb"){this.shake=Math.max(this.shake,reducedMotion?0:4);continue;}
         this.vfx.spawn("shockwave", event.x, event.y, event.size, .65, 0xffd590);
         this.vfx.spawn("charge", event.x, event.y, reducedMotion ? 90 : 160, .16, 0xfff4dc);
         this.vfx.spawn("largeExplosion", event.x, event.y, 130, .55);
@@ -367,9 +370,11 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     }},reducedMotion);
     this.astraSprites.end();
     this.cinderSprites.begin();for(const label of this.cinderLabels.values())label.visible=false;
-    paintCinder(world,(id,key,x,y,width,height,rotation,alpha)=>{const sprite=this.cinderSprites.get(id,this.assets.effect(key));if(!sprite)return;sprite.position.set(x,y);sprite.width=width;sprite.height=height;sprite.rotation=rotation;sprite.alpha=alpha;sprite.blendMode='normal';},reducedMotion,(id,text,x,y)=>{
-      let label=this.cinderLabels.get(id);if(!label){if(this.cinderLabels.size>=48){const [old,view]=this.cinderLabels.entries().next().value!;view.destroy();this.cinderLabels.delete(old);}label=new Text({text,style:{fontFamily:'sans-serif',fontSize:10,fontWeight:'bold',fill:0xfff1af,stroke:{color:0x1c2026,width:3}}});this.cinderLabels.set(id,label);this.enemyStatusLayer.addChild(label);}label.text=text;label.position.set(x,y);label.visible=true;
-    });this.cinderSprites.end();
+    paintCinder(world,(id,key,x,y,width,height,rotation,alpha)=>{const sprite=this.cinderSprites.get(id,this.assets.effect(key));if(!sprite)return;sprite.position.set(x,y);sprite.width=width;sprite.height=height;sprite.rotation=rotation;sprite.alpha=alpha;sprite.tint=0xffffff;sprite.blendMode='normal';},reducedMotion,(id,text,x,y)=>{
+      let label=this.cinderLabels.get(id);if(!label){if(this.cinderLabels.size>=48){const [old,view]=this.cinderLabels.entries().next().value!;view.destroy();this.cinderLabels.delete(old);}label=new Text({text,style:{fontFamily:'sans-serif',fontSize:CINDER_STACK_FONT_SIZE,fontWeight:'bold',fill:0xfff1af,stroke:{color:0x1c2026,width:1.2}}});this.cinderLabels.set(id,label);this.enemyStatusLayer.addChild(label);}label.text=text;label.position.set(x,y);label.rotation=this.sceneParent?Math.PI:0;label.visible=true;
+    });
+    paintBigBang(world,(id,key,x,y,width,height,alpha,additive)=>{const sprite=this.cinderSprites.get(id,this.assets.effect(key));if(!sprite)return;sprite.position.set(x,y);sprite.width=width;sprite.height=height;sprite.rotation=0;sprite.alpha=alpha;sprite.tint=0xffffff;sprite.blendMode=additive?'add':'normal';},reducedMotion);
+    this.cinderSprites.end();
     this.magneticSprites.end();
     this.stormbreakerSprites.begin(); this.stormbreakerWarnings.clear();
     this.stormbreakerPresentation.update(world, delta);
@@ -410,7 +415,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
       sprite.height = sprite.width * (magnetic || world.stormbreaker || world.mirage ? 1 : enemy.type === "boss" ? BOSS_VISUAL_ASPECT : sprite.texture.height / sprite.texture.width);
       sprite.rotation = enemyAirframeRotation(enemy) - (world.mirage ? Math.PI : 0);
       sprite.tint = enemyAllegiance(world,enemy)==="friendly_hacked" ? 0x67e8f9 : this.flashUntil.has(enemy.id) ? 0xffe1b3 : enemy.type === "acid_bomber" ? 0xa3e635 : enemy.type === "jammer" ? 0x2dd4bf : enemy.type === "sniper" ? 0xe879f9 : enemy.type === "radar_hunter" ? 0x38bdf8 : 0xffffff;
-      if(!world.mirage && !magnetic && (enemy.shield>0 || enemy.aegisUntil>world.aircraft.coreState.time))this.telegraphs.circle(enemy.x,enemy.y,enemy.radius+7).fill({color:0x38bdf8,alpha:.12}).stroke({color:0x7dd3fc,width:2,alpha:.85});
+      if(!enemy.aircraftTarget && !world.mirage && !magnetic && (enemy.shield>0 || enemy.aegisUntil>world.aircraft.coreState.time))this.telegraphs.circle(enemy.x,enemy.y,enemy.radius+7).fill({color:0x38bdf8,alpha:.12}).stroke({color:0x7dd3fc,width:2,alpha:.85});
       if(!world.mirage && enemy.stun>0)this.telegraphs.circle(enemy.x,enemy.y-enemy.radius-7,5).stroke({color:0xfde047,width:2});
       if(!world.mirage&&enemy.burn>0&&!reducedMotion&&damageSmoke)this.vfx.spawn("fire",enemy.x,enemy.y,24,.3);
       if (!world.ended && enemy.hp>0 && enemy.type === "kamikaze" && (enemy.kamikazeState === "charge" || enemy.kamikazeState === "dash")) {
@@ -663,7 +668,8 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
       sprite.tint=layer===2?0xfff8e7:visual.tint;
       sprite.alpha=(invisible?.16:1)*(layer===0?exhaust.glow:layer===1?.9:1);
     }
-    const shieldActive = (world.aircraft.activeEffects.armor_shield || 0) > 0 || invisible || activeShieldAmount(world.aircraft) > 0;
+    const shieldActive = (world.aircraft.activeEffects.armor_shield || 0) > 0 || invisible || activeShieldAmount(world.aircraft,true) > 0;
+    if(!shieldActive&&(world.aircraft.coreState.shields.cinder?.amount??0)>0)this.shieldOpacity=0;
     this.shieldOpacity += ((shieldActive ? 1 : 0) - this.shieldOpacity) * (1 - Math.exp(-delta * 15));
     this.shield.visible = alive && this.shieldOpacity > .01 && !this.titanShield.active && this.titanShield.opacity < .01;
     this.shield.position.set(world.playerX, world.playerY);

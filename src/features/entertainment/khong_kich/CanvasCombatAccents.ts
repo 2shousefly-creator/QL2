@@ -25,11 +25,12 @@ export class CanvasCombatAccents {
         if (world.mirrorContext) continue;
         this.killShake = Math.max(this.killShake,6);
       }
+      if(event.kind==="bomb"&&event.skillId==="heavy_bomb"){this.killShake=Math.max(this.killShake,4);continue;}
       if(event.kind==="explosion" && event.killTier)this.killShake=Math.max(this.killShake,event.killTier==="boss"?5:event.killTier==="elite"?2.8:1.2);
       if(event.kind==="rank_effect" || event.kind==="astra_lance_impact" || event.kind==="astra_starfall_impact")continue; // Shared asset painters own these contacts.
       if (event.kind === "explosion" && event.magneticDeath) continue;
       if (event.directContact && event.kind==="hit")continue;
-      if (event.kind === "damage_number" && event.shieldAbsorbed <= 0) continue;
+      if (event.kind === "damage_number" && (event.genericShieldAbsorbed??event.shieldAbsorbed) <= 0) continue;
       if (this.active.length >= 40) {
         if(event.kind!=="aircraft_destroyed" && event.kind!=="bullet_impact" && event.kind!=="player_hit" && event.kind!=="player_heal" && event.kind!=="lightning")continue;
         const index=this.active.findIndex(a=>a.event.kind!=="bullet_impact" && a.event.kind!=="player_hit");

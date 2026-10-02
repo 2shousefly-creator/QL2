@@ -1,3 +1,4 @@
+import { BIGBANG_ART } from './airCombatBigBangArt';
 import { CINDER_ART, NEW_ICON_CELLS } from './airCombatCinderArt';
 import type { PassiveId } from './airCombatTypes';
 import React from "react";
@@ -16,6 +17,7 @@ export const SKILL_ICON_CELLS: Partial<Record<SkillId, readonly [number, number]
 };
 
 export function SkillIcon({ id, className }: { id: SkillId | PassiveId; className?: string }) {
+  if(id==="heavy_bomb")return <SpriteAtlasIcon atlas={BIGBANG_ART} columns={2} rows={2} column={1} row={0} className={className} fallback={<TriangleAlert/>}/>;
   const newCell=NEW_ICON_CELLS[id];
   if(newCell)return <SpriteAtlasIcon atlas={CINDER_ART.icons} columns={3} rows={3} column={newCell[0]} row={newCell[1]} className={className} fallback={<TriangleAlert/>}/>;
   const rankedCells: Partial<Record<SkillId, number>> = { predator_lock: 0, gravity_anchor: 1, electronic_interference: 2, twin_reflection: 3 };

@@ -7,7 +7,7 @@ export interface AirCombatPresentation {
 }
 
 export interface AtlasFrame {
-  atlas: "cinderAircraft" | "cinderVfx" | "cinderProjectiles" | "cinderIcons" | "cinderFeedback" | "stage4Enemy" | "stage4Boss" | "stage4Vfx" | "stage3Enemy" | "stage3Boss" | "stage3Vfx" | "stage3Emissive" | "ultimateVfx" | "rankedVfx" | "rankedProjectiles" | "equipmentIcons" | "equipmentVfx" | "astraVfx" | "astraAircraft" | "astraEffects" | "aircraft" | "fortress" | "vfx" | "ammo" | "basicAmmo" | "healingCross" | "stage2Enemy" | "stage2Vfx" | "stage2Elite";
+  atlas: "bigBangVfx" | "cinderAircraft" | "cinderVfx" | "cinderProjectiles" | "cinderIcons" | "cinderFeedback" | "stage4Enemy" | "stage4Boss" | "stage4Vfx" | "stage3Enemy" | "stage3Boss" | "stage3Vfx" | "stage3Emissive" | "ultimateVfx" | "rankedVfx" | "rankedProjectiles" | "equipmentIcons" | "equipmentVfx" | "astraVfx" | "astraAircraft" | "astraEffects" | "aircraft" | "fortress" | "vfx" | "ammo" | "basicAmmo" | "healingCross" | "stage2Enemy" | "stage2Vfx" | "stage2Elite";
   /** Normalized source rectangle, independent of generator output resolution. */
   rect: readonly [number, number, number, number];
 }

@@ -153,7 +153,7 @@ export function tickExpansion(w: CombatWorld, dt: number, h: ExpansionHooks) {
     const id = cast.skillId;
     if (id === "decoy" && !(w.decoyVolleys && r.casts.decoy === cast) && !w.decoys.some(d => !d.clone && d.expansionCast === cast)) { finishExpansionSkill(s, cast); startDeferredSkillCooldown(s,id); }
     if (id === "missile_swarm" && !w.skillCores.salvos.some(salvo => salvo.expansionCast === cast && (salvo.pending))) { finishExpansionSkill(s, cast); startDeferredSkillCooldown(s,id); }
-    if (id === "heavy_bomb" && !w.projectiles.some(p => p.expansionCast === cast)) { finishExpansionSkill(s, cast); startDeferredSkillCooldown(s,id); }
+    if (id === "heavy_bomb" && (!w.bigBang || w.bigBang.resolved || w.bigBang.expansionCast !== cast)) { finishExpansionSkill(s, cast); startDeferredSkillCooldown(s,id); }
   }
   r.liveCasts = r.liveCasts.filter(cast => !cast.ended);
 }

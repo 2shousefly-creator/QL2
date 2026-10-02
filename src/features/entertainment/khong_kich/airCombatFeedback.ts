@@ -2,6 +2,11 @@ import { AIR_COMBAT_WORLD, GAMEPLAY_SAFE_RECT } from "./airCombatConfig";
 import type { CombatWorld, DamageNumberEvent } from "./airCombatRuntime";
 import type { AircraftCombatState } from "./airCombatTypes";
 
+import { cinderState } from './airCombatCinderRuntime';
+import { mirrorPoint } from './airCombatMirrorTransform';
+export const NORMAL_DAMAGE_FONT_SIZE = 13;
+export const CINDER_TOTAL_FONT_SIZE = NORMAL_DAMAGE_FONT_SIZE * .6;
+export const CINDER_STACK_FONT_SIZE = 10 * .6;
 export const DAMAGE_LABEL_LIMIT = 52;
 export const DAMAGE_LABEL_SECONDS = 0.68;
 
@@ -73,11 +78,25 @@ export function trackingBarY(playerY: number, displayWidth: number): number {
   return Math.min(AIR_COMBAT_WORLD.height - 26, playerY + displayWidth * 0.65 + 4);
 }
 
+/** Each source world owns exactly one total; incoming duplicate damage events cannot add it again. */
+export function cinderBurnLabels(world:CombatWorld,rotated=false){
+  const labels:{key:number;text:string;x:number;y:number;alpha:number}[]=[];
+  for(const total of cinderState(world).burnTotals.values()){
+    if(!(total.total>0))continue;
+    const live=total.endedAt===undefined&&total.entity.id===total.entityId&&total.entity.hp>0;
+    const point=live?total.entity:total;
+    const pos=rotated?mirrorPoint(point.x,point.y):point;
+    const alpha=total.endedAt===undefined?1:Math.max(0,1-(world.elapsed-total.endedAt)/DAMAGE_LABEL_SECONDS);
+    if(alpha>0)labels.push({key:total.session,text:String(Math.round(total.total)),x:pos.x,y:Math.max(GAMEPLAY_SAFE_RECT.top+8,Math.min(GAMEPLAY_SAFE_RECT.bottom-8,pos.y+7)),alpha});
+  }
+  return labels;
+}
 export const HP_CHIP_SECONDS = 0.1;
 const ratio = (value: number) => Math.max(0, Math.min(1, value));
-export function activeShieldAmount(state: AircraftCombatState): number {
+export function activeShieldAmount(state: AircraftCombatState, genericOnly = false): number {
   let amount = 0;
   for (const key in state.coreState.shields) {
+    if(genericOnly && key === "cinder")continue;
     const shield = state.coreState.shields[key];
     if (shield.until > state.coreState.time) amount += Math.max(0, shield.amount);
   }

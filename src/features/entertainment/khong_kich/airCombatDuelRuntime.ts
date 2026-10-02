@@ -1,3 +1,6 @@
+import { cancelCinder } from './airCombatCinderRuntime';
+import { bigBangStep } from './airCombatBigBang';
+import { resolveScheduledBigBang } from './airCombatRuntime';
 import { COMBAT_NOTICE_DURATION_MS } from "./airCombatNotices";
 import { equipmentState } from "./airCombatEquipmentState";
 import { EQUIPMENT_CATALOG } from "./airCombatEquipmentCatalog";
@@ -199,6 +202,7 @@ function finishRound(match: SoloMatch, winner: "player" | "opponent") {
   match.roundOutcomeLocked = true; match.roundWinner = winner;
   if (winner === "player") match.playerWins++; else match.opponentWins++;
   setCombatGate(match, false);
+  for(const w of [match.world,match.opponent]){cancelCinder(w);w.bigBang=undefined;w.skillCores.aftershocks.length=0;}
   if (match.playerWins >= DUEL_WINS || match.opponentWins >= DUEL_WINS) match.winner = winner;
   if (match.world.aircraft.currentHp <= 0 || match.opponent.aircraft.currentHp <= 0) {
     for (const world of [match.world, match.opponent]) {
@@ -267,11 +271,14 @@ export function updateSoloMatch(match: SoloMatch, dt: number) {
   if (match.world.aircraft.currentHp <= 0 || match.opponent.aircraft.currentHp <= 0) {
     resolveRound(match); if (match.roundOutcomeLocked) return;
   }
+  const step=bigBangStep([match.world,match.opponent],dt);
+  if(step<dt-1e-8){updateSoloMatch(match,step);updateSoloMatch(match,dt-step);return;}
   match.roundElapsed += dt;
   setCombatGate(match, true);
   match.world.elapsed += dt;
   // Both actors finish this tick before KO resolution, including already-owned delayed attacks.
   tickDuelOpponent(match.world, match.mirror, dt);
   if(match.phase === "combat" || match.phase === "sudden_death")tickDuelActor(match.world, dt);
+  resolveScheduledBigBang(match.opponent);resolveScheduledBigBang(match.world);
   if(match.phase === "combat" || match.phase === "sudden_death")resolveRound(match);
 }
