@@ -1,3 +1,4 @@
+import { externalNegativeStatusTypes } from './airCombatNegativeStatuses';
 import { coreCooldownReady, deferCoreCooldown, startCoreCooldown } from "./airCombatCooldowns";
 import { getRecoveryReceivedMultiplier, getShieldReceivedMultiplier } from "./airCombatRecovery";
 import { equipmentSkillEnd } from "./airCombatEquipmentRuntime";
@@ -32,11 +33,12 @@ export const expansionState = (s: AircraftCombatState): ExpansionState => s.core
 };
 export const expansionActive = (s: AircraftCombatState, key: string) => (s.coreState.timers[key] ?? 0) > s.coreState.time;
 export function activeNegativeStatusTypes(s: AircraftCombatState): Set<string> {
-  const status = s.status, now = s.coreState.time, result = new Set<string>();
+  const status = s.status, now = s.coreState.time, result = externalNegativeStatusTypes(s);
   for (const key of ["stunnedUntil", "skillLockedUntil", "resourceJammedUntil", "armorBrokenUntil", "regenDisabledUntil", "healingReceivedUntil"] as const)
-    if (status[key] > now) result.add(key);
+    if (status[key] > now && (key !== "healingReceivedUntil" || status.healingReceivedMultiplier < 1)
+      && (key !== "resourceJammedUntil" || status.jams.some(j => j.until > now && j.multiplier < 1))) result.add(key);
   for (const [key, mark] of Object.entries(status.marks)) if (mark && mark.until > now) result.add(key);
-  if (expansionActive(s, "acidArmor")) result.add("acidArmor");
+  if (expansionActive(s, "acidArmor")) result.add("armorBrokenUntil");
   return result;
 }
 export const hasAbsorbShield = (s: AircraftCombatState) => Object.values(s.coreState.shields).some(sh => sh.amount > 0 && sh.until > s.coreState.time);

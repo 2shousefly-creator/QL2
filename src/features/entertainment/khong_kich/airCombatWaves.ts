@@ -6,6 +6,8 @@ export interface WaveDefinition {
     elite: number;
     interval: number;
     cap: number;
+    /** Linear stage baseline multiplier; absent for elite, Boss and duel waves. */
+    normalPower?: number;
     hp: number;
     damage: number;
     armor: number;
@@ -41,4 +43,15 @@ export function createWaveQueue(index: number, random: () => number, waves: read
             [queue[i], queue[j]] = [queue[j], queue[i]];
         }
     return queue;
+}
+
+/** Count actual normal waves, excluding elite/Boss waves and the aircraft duel. */
+export function withNormalWavePower(waves: readonly WaveDefinition[]): readonly WaveDefinition[] {
+    const normal = waves.filter(w => !w.elite && !w.counts.boss && Object.values(w.counts).some(n => n > 0));
+    return waves.map(w => {
+        const index = normal.indexOf(w);
+        if (index < 0) return w;
+        const power = normal.length > 1 ? .5 + 1.5 * index / (normal.length - 1) : .5;
+        return { ...w, normalPower: power, hp: power, armor: power, damage: power };
+    });
 }

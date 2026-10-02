@@ -1,3 +1,4 @@
+import { registerNegativeStatusSource } from './airCombatNegativeStatuses';
 import { bigBangStep, type BigBangCast } from './airCombatBigBang';
 import { beginCinderSkill, tickCinder, passiveHit, cinderMovement, cinderMovementLocked, cinderSkillAllowed, cinderShieldFactor, cinderShieldAbsorbed, cancelCinder, cinderState, cinderThreatNearby, type CinderHooks, type IntrinsicDamage } from './airCombatCinderRuntime';
 import { isCinderSkill } from './airCombatCinderConfig';
@@ -184,7 +185,50 @@ export function aircraftTargetView(host: CombatWorld, actor: CombatWorld): Enemy
             set: (value: number) => { if (value > host.elapsed) applyPlayerStatus(actor.aircraft, { armorBreak: value - host.elapsed }); } },
     });
     const p = mirrorPoint(actor.playerX, actor.playerY); adapter.x = p.x; adapter.y = p.y;
+    const targetId = adapter.id;
+    registerNegativeStatusSource(actor.aircraft, host, () =>
+        adapter.id === targetId && adapter.aircraftTarget?.world === actor && host.enemies.includes(adapter)
+            ? targetNegativeStatusTypes(host, adapter) : []);
     return adapter;
+}
+
+/** Debuffs and CC share semantic types: multiple burns/slows count once.
+ * Read only effect state here: querying derived aircraft stats would recurse. */
+function targetNegativeStatusTypes(w: CombatWorld, e: EnemyEntity): Set<string> {
+    const result = new Set<string>(), now = w.elapsed, cinder = cinderState(w).targets.get(e.id);
+    if (e.hp <= 0) return result;
+    if (e.burn > 0 || cinder && cinder.entity === e && cinder.burn > 0 && cinder.until > now) result.add('burn');
+    if (cinder?.entity === e) {
+        if (cinder.slowUntil > now) result.add('slow');
+        if (cinder.rootUntil > now) result.add('root');
+        if (cinder.blazeUntil > now) result.add('blaze');
+        if (cinder.markUntil > now) result.add('stellarMark');
+    }
+    const ranks = w.rankRuntime, interference = ranks?.interference.get(e.id), anchor = ranks?.anchor;
+    if (interference && interference.until > now) {
+        if (interference.movement < 1) result.add('slow');
+        if (interference.firing < 1) result.add('fireRateReduction');
+        if (interference.projectile < 1) result.add('projectileSlow');
+    }
+    if (anchor && anchor.until > now && Math.hypot(e.x-anchor.x,e.y-anchor.y) <= 120*(anchor.rank>=2?1.25:1)) result.add('slow');
+    const marks = equipmentState(w.aircraft).marks[e.id], time = w.aircraft.coreState.time;
+    if (marks?.[24]?.until > time) result.add('slow');
+    if (marks?.[36]?.until > time && marks[36].stacks > 0) result.add('bleed');
+    if (marks?.[5]?.until > time) result.add('fuelMark');
+    if (marks?.[7]?.until > time) result.add('vulnerability');
+    const fx = w.skillCores.enemyEffects.get(e.id);
+    if ((fx?.weakenUntil ?? 0) > now) result.add('weaken');
+    if ((fx?.markUntil ?? 0) > now) result.add('titanMark');
+    if ((fx?.armorUntil ?? 0) > now || (e.burnArmorUntil ?? 0) > now || e.weakUntil > now
+        || (e.weakDebuffUntil ?? 0) > now || (e.expansionMarks?.gravityArmorUntil ?? 0) > now
+        || marks?.[15]?.until > time && marks[15].stacks > 0) result.add('armorBrokenUntil');
+    // Only active marks count; their proc counters and cooldowns never do.
+    for (const key of ['preliminary','skillPhase','gunPhase','criticalLock','shieldBroken'])
+        if ((e.expansionMarks?.[key] ?? 0) > time) result.add(key);
+    const deathMark = w.aircraft.coreState.release?.mark;
+    if (deathMark?.target === e.id && deathMark.until > time) result.add('deathMark');
+    if (w.astra?.burns.some(z => z.until > now && circleVsAircraft(z.x,z.y,z.radius,getEnemyHitbox(e)))) result.add('burn');
+    return result;
 }
 
 export interface DuelDamageResolution { damage: number; absorbed: number }
@@ -1016,7 +1060,7 @@ function spawnEnemy(world: CombatWorld, type: EnemyType, auxiliary = false): Ene
     const config = stageEnemyConfig(type, world.stageId), wave = world.stage.waves[world.waveIndex], enemy = acquireEnemy(world);
     const exactMagneticDurability = world.stageId === 2 && (isElite(type) || type === "satellite" || (auxiliary && type === "kamikaze"));
     const exactDurability = (world.stage.runtime === "mirage" && (isElite(type) || type === "boss")) || exactMagneticDurability || world.stage.runtime === "stormbreaker" && (isElite(type) || type === "boss" || type === "omega_storm_node" || type === "storm_conductor");
-    const hpScale = exactDurability ? 1 : wave.hp, armorScale = exactDurability ? 1 : wave.armor;
+    const hpScale = wave.normalPower ?? (exactDurability ? 1 : wave.hp), armorScale = wave.normalPower ?? (exactDurability ? 1 : wave.armor);
     // Stage 2 rewards are exact per kill, independent of archetype weights.
     const xp = auxiliary || type === "boss" || type === "satellite" || type === "micro_drone" ? 0
         : wave.xpPerKill ?? (world.spawnQueue.length === 1 ? world.xpBudgetRemaining
@@ -4845,7 +4889,10 @@ function interceptMissiles(world:CombatWorld):void {
 function displaceEnemy(world:CombatWorld,e:EnemyEntity,dx:number,dy:number):void {
     const point=clampHitboxToGameplayRect(e.x+dx,e.y+dy,getEnemyHitbox(e));
     const appliedX=point.x-e.x,appliedY=point.y-e.y;
+    const defender=e.aircraftTarget?.world;
+    if (defender && (appliedX !== 0 || appliedY !== 0)) tacticalState(defender).previousStatuses.add('displacement');
     e.x=point.x;e.y=point.y;e.baseX+=appliedX;
+    if (defender && (appliedX !== 0 || appliedY !== 0)) observeComeback(defender);
     // Keep committed dash trajectories attached to the translated airframe.
     if(e.dashRemaining>0 || e.kamikazeState==="dash"){
         e.dashStartX+=appliedX;e.dashStartY+=appliedY;e.dashEndX+=appliedX;e.dashEndY+=appliedY;

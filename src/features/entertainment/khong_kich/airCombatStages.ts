@@ -1,6 +1,6 @@
 import { MIRAGE_WAVES } from "./airCombatMirageWaves";
 import { STORMBREAKER_WAVES } from "./airCombatStormbreakerWaves";
-import { COMBAT_WAVES, type WaveDefinition } from "./airCombatWaves";
+import { COMBAT_WAVES, withNormalWavePower, type WaveDefinition } from "./airCombatWaves";
 import type { AirCombatCampaignProgress, EnemyType } from "./airCombatTypes";
 
 export interface AirCombatStageDefinition {
@@ -58,18 +58,18 @@ export const AIR_COMBAT_STAGES: readonly AirCombatStageDefinition[] = [
   { id: 1, key: "leviathan_front", displayName: "LEVIATHAN FRONT", localizedName: "PHÒNG TUYẾN LEVIATHAN",
     shortDescription: "Né hỏa lực trực diện. Đánh bại pháo đài bay Leviathan.", bossName: "Leviathan",
     unlockAfterStage: null, theme: "FRONTLINE · FIREPOWER", accent: "#38bdf8", available: true,
-    runtime: "leviathan", waves: COMBAT_WAVES },
+    runtime: "leviathan", waves: withNormalWavePower(COMBAT_WAVES) },
   { id: 2, key: "magnetic_storm", displayName: "MAGNETIC STORM", localizedName: "BÃO TỪ",
     shortDescription: "Làm chủ quỹ đạo, đạn quay trở lại và vùng không gian bị kiểm soát bởi từ trường.",
     bossName: "Tempest Crown", unlockAfterStage: 1, theme: "ORBIT · RETURN · CONTROL", accent: "#a78bfa", available: true,
-    runtime: "magnetic", waves: MAGNETIC_WAVES },
+    runtime: "magnetic", waves: withNormalWavePower(MAGNETIC_WAVES) },
   { id: 3, key: "stormbreaker", displayName: "STORMBREAKER", localizedName: "TÂM BÃO LÔI ĐIỆN",
     shortDescription: "Đọc nhịp tích điện, phá chuỗi dẫn sét và sống sót giữa tâm bão.", bossName: "STORMBREAKER Ω", unlockAfterStage: 2,
-    theme: "CHARGE · DISCHARGE · PRIORITY", accent: "#fbbf24", available: true, runtime: "stormbreaker", waves: STORMBREAKER_WAVES },
+    theme: "CHARGE · DISCHARGE · PRIORITY", accent: "#fbbf24", available: true, runtime: "stormbreaker", waves: withNormalWavePower(STORMBREAKER_WAVES) },
   { id: 4, key: "mirage_fracture", displayName: "MIRAGE FRACTURE", localizedName: "ẢO CẢNH PHÂN MẢNH",
     shortDescription: "Phân biệt thật - giả, đối đầu chính bản thân và phá vỡ nguồn phát của Ảo Cảnh.",
     bossName: "PARALLAX ZERO", unlockAfterStage: 3, theme: "DECEPTION · MIRROR · REACTION", accent: "#f472b6",
-    available: true, runtime: "mirage", waves: MIRAGE_WAVES },
+    available: true, runtime: "mirage", waves: withNormalWavePower(MIRAGE_WAVES) },
 ];
 export const getAirCombatStage = (id: number) => AIR_COMBAT_STAGES.find(stage => stage.id === id);
 export const isStageUnlocked = (id: number, progress: AirCombatCampaignProgress) => {

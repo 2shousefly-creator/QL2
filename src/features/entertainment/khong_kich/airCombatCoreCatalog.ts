@@ -1268,7 +1268,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_098",
     "name": "Bộ Lọc Nhiễu",
-    "description": "Nhận +20 Giáp và giảm 30% thời gian chịu hiệu ứng bất lợi. Khi một hiệu ứng bất lợi kết thúc, gây thêm 25% mọi sát thương trong 4 giây. Hiệu ứng không cộng dồn; chỉ làm mới thời gian.",
+    "description": "Nhận +20 Giáp và giảm 30% thời gian chịu hiệu ứng bất lợi (debuff và khống chế). Khi một hiệu ứng bất lợi kết thúc, gây thêm 25% mọi sát thương trong 4 giây. Hiệu ứng không cộng dồn; chỉ làm mới thời gian.",
     "system": "defense",
     "icon": "core:core_098",
     "category": "defense",
@@ -2470,7 +2470,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 {
   "id": "core_183",
   "name": "Giáp Độ Sâu",
-  "description": "Nhận +20 Giáp. Với mỗi loại hiệu ứng bất lợi đang có trên người, nhận thêm +20 Giáp, tối đa +60 Giáp từ Lõi này.",
+  "description": "Nhận +20 Giáp. Với mỗi loại hiệu ứng bất lợi (debuff hoặc khống chế) đang có trên người, nhận thêm +20 Giáp, tối đa +60 Giáp từ Lõi này.",
   "system": "defense",
   "icon": "core:core_183",
   "category": "defense",
@@ -2707,7 +2707,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 {
   "id": "core_203",
   "name": "Nhiễu Chủ Động",
-  "description": "Nhận +8% mọi sát thương. Các hiệu ứng bất lợi trên bạn kéo dài thêm 20%, nhưng bạn vẫn có thể bắn và thi triển kỹ năng khi bị khống chế cứng; chỉ di chuyển bị khóa. Khi đang chịu ít nhất 1 hiệu ứng bất lợi, giảm 25% sát thương phải nhận và gây thêm 25% mọi sát thương.",
+  "description": "Nhận +8% mọi sát thương. Các hiệu ứng bất lợi (debuff và khống chế) trên bạn kéo dài thêm 20%, nhưng bạn vẫn có thể bắn và thi triển kỹ năng khi bị khống chế cứng; chỉ di chuyển bị khóa. Khi đang chịu ít nhất 1 hiệu ứng bất lợi, giảm 25% sát thương phải nhận và gây thêm 25% mọi sát thương.",
   "system": "utility",
   "icon": "core:core_203",
   "category": "weapon",

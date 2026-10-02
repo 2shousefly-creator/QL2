@@ -5,8 +5,9 @@ import { GAMEPLAY_SAFE_RECT as R } from './airCombatConfig';
 
 export const BIGBANG_ART = atlas;
 const frame = (x: number, y: number): AtlasFrame => ({atlas: 'bigBangVfx', rect: [x / 2, y / 2, .5, .5]});
+// The authored sigil is offset inside the nominal quadrant. Center its own bounds.
 export const BIGBANG_FRAMES = {
-  bigbang_sigil: frame(0, 0), bigbang_descent: frame(1, 0),
+  bigbang_sigil: {atlas:'bigBangVfx',rect:[.014,.014,.516,.488]} as AtlasFrame, bigbang_descent: frame(1, 0),
   bigbang_impact: frame(0, 1), bigbang_shockwave: frame(1, 1),
 };
 export type BigBangVisualKey = keyof typeof BIGBANG_FRAMES;
@@ -16,10 +17,8 @@ export function paintBigBang(w: CombatWorld, draw: (id: number, key: BigBangVisu
   const radius = Math.hypot(Math.max(b.x-R.left,R.right-b.x),Math.max(b.y-R.top,R.bottom-b.y));
   const age = w.elapsed - b.at;
   if (!b.resolved) {
-    const progress = Math.min(1, age / 3), diameter = radius * 2 / .70;
+    const progress = Math.min(1, age / 3), diameter = 400;
     draw(910000,'bigbang_sigil',b.x,b.y,diameter,diameter,.22 + progress * .3,false);
-    // A readable center retains the artillery detail when the outer sigil is clipped.
-    draw(910001,'bigbang_sigil',b.x,b.y,88,88,.65 + progress * .25,false);
     if (w.elapsed >= b.fallAt) {
       const t = Math.min(1,(w.elapsed-b.fallAt)/.25), tipY = R.top - 90 + (b.y-R.top+90)*t;
       // Atlas bomb tip is near the bottom edge; align that tip, not its center.

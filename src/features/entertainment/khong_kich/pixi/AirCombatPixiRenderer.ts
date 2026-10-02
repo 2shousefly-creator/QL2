@@ -63,6 +63,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
   private enemyStatusLabels: Text[] = [];
   private enemyStatusLayer = new Container();
   private hitbox = new Graphics();
+  private cinderGeometry = new Graphics();
   private trackingBars = new Graphics();
   private stableHud = new Container();
   private healthBars = new HealthBarPresentation();
@@ -168,7 +169,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     }
     this.mirrorLayer.position.set(MIRROR_TRANSFORM.x, MIRROR_TRANSFORM.y);
     this.mirrorLayer.rotation = MIRROR_TRANSFORM.rotation;
-    this.root.addChild(this.telegraphs, this.smokeLayer, this.missileExhaust, this.actors, this.effects, this.magneticLayer, this.magneticWarnings, this.stormbreakerRoot, this.stormbreakerMask, this.enemyForegroundMarks, this.globalVfx, this.enemyStatusLayer, this.hitbox, this.damageText.root, this.mirrorLayer);
+    this.root.addChild(this.telegraphs, this.smokeLayer, this.missileExhaust, this.actors, this.effects, this.cinderGeometry, this.magneticLayer, this.magneticWarnings, this.stormbreakerRoot, this.stormbreakerMask, this.enemyForegroundMarks, this.globalVfx, this.enemyStatusLayer, this.hitbox, this.damageText.root, this.mirrorLayer);
     this.missileExhaust.blendMode="add";
     // Separate stage branch: neither recoil nor camera shake can move status bars.
     app.stage.addChild(this.stableHud);
@@ -369,9 +370,12 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
       sprite.position.set(x,y);sprite.width=width;sprite.height=height;sprite.rotation=rotation;sprite.alpha=alpha;sprite.tint=0xffffff;
     }},reducedMotion);
     this.astraSprites.end();
-    this.cinderSprites.begin();for(const label of this.cinderLabels.values())label.visible=false;
+    this.cinderGeometry.clear();this.cinderSprites.begin();for(const label of this.cinderLabels.values())label.visible=false;
     paintCinder(world,(id,key,x,y,width,height,rotation,alpha)=>{const sprite=this.cinderSprites.get(id,this.assets.effect(key));if(!sprite)return;sprite.position.set(x,y);sprite.width=width;sprite.height=height;sprite.rotation=rotation;sprite.alpha=alpha;sprite.tint=0xffffff;sprite.blendMode='normal';},reducedMotion,(id,text,x,y)=>{
       let label=this.cinderLabels.get(id);if(!label){if(this.cinderLabels.size>=48){const [old,view]=this.cinderLabels.entries().next().value!;view.destroy();this.cinderLabels.delete(old);}label=new Text({text,style:{fontFamily:'sans-serif',fontSize:CINDER_STACK_FONT_SIZE,fontWeight:'bold',fill:0xfff1af,stroke:{color:0x1c2026,width:1.2}}});this.cinderLabels.set(id,label);this.enemyStatusLayer.addChild(label);}label.text=text;label.position.set(x,y);label.rotation=this.sceneParent?Math.PI:0;label.visible=true;
+    },{
+      rect:(x,y,width,height,fillAlpha,lineAlpha)=>{this.cinderGeometry.rect(x,y,width,height).fill({color:0xff6565,alpha:fillAlpha}).stroke({color:0xff7979,width:1.5,alpha:lineAlpha});},
+      line:(x,y,endX,endY,alpha)=>{this.cinderGeometry.moveTo(x,y).lineTo(endX,endY).stroke({color:0xffaaaa,width:1.5,alpha});}
     });
     paintBigBang(world,(id,key,x,y,width,height,alpha,additive)=>{const sprite=this.cinderSprites.get(id,this.assets.effect(key));if(!sprite)return;sprite.position.set(x,y);sprite.width=width;sprite.height=height;sprite.rotation=0;sprite.alpha=alpha;sprite.tint=0xffffff;sprite.blendMode=additive?'add':'normal';},reducedMotion);
     this.cinderSprites.end();
