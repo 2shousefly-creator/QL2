@@ -17,7 +17,7 @@ const names=Object.entries(COMBAT_STAT_SEMANTICS).flatMap(([key,value])=>value.n
 const value=String.raw`[+−-]?\d+(?:[.,]\d+)*(?:%|s)?`;
 const stat=names.map(v=>v.name === "Điện" ? String.raw`Điện(?!\s+Năng)` : v.name).join("|");
 const bareStat=names.filter(v=>v.name !== "Điện").map(v=>v.name).join("|");
-const units=String.raw`(?:\s+điểm\s+phần\s+trăm|\s+giây)?`;
+const units=String.raw`(?:\s+giây)?`;
 // Stat-only mentions and aliases share exactly the same icon/color vocabulary.
 const pattern=new RegExp(`(${value}${units}\\s+(?:tổng\\s+)?(?:${stat})|(?:${bareStat})(?:\\s*:\\s*${value})?|${value})`,"giu");
 export function combatTextTokens(text:string): {text:string;semantic?:Semantic;number?:boolean;value?:string;label?:string}[] {
@@ -26,7 +26,7 @@ export function combatTextTokens(text:string): {text:string;semantic?:Semantic;n
     const match=names.find(v=>part.toLocaleLowerCase("vi").includes(v.name.toLocaleLowerCase("vi")));
     if (!match) return {text:part,number:/\d/.test(part)};
     const amount=part.match(new RegExp(value))?.[0] ?? "";
-    const unit=/điểm\s+phần\s+trăm/i.test(part)?" điểm phần trăm":/\d\s+giây/i.test(part)?"s":"";
+    const unit=/\d\s+giây/i.test(part)?"s":"";
     let label:string=match.name;
     if(match.key==="firepower")label="Hỏa Lực";
     else if(match.key==="crit")label="Tỷ Lệ Chí Mạng";

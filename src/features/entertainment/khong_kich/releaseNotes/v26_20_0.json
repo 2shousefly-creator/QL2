@@ -335,7 +335,7 @@
             {
               "format": "bullet",
               "changeType": "new",
-              "text": "Viper nhận thêm 10 điểm phần trăm tỷ lệ chí mạng. Khi đòn bắn thường chính chí mạng, phóng một viên đạn bồi truy đuổi chính mục tiêu đó."
+              "text": "Viper nhận +10% tỷ lệ chí mạng. Khi đòn bắn thường chính chí mạng, phóng một viên đạn bồi truy đuổi chính mục tiêu đó."
             },
             {
               "format": "bullet",
@@ -387,12 +387,12 @@
             {
               "format": "bullet",
               "changeType": "new",
-              "text": "Pin Dự Phòng sạc thêm 1,5 điểm phần trăm dung lượng mỗi giây. Khi đạt 100%, pin chuyển sang sẵn sàng và tự kích hoạt lúc Điện hiện tại dưới 10% Điện tối đa."
+              "text": "Pin Dự Phòng sạc +1,5% dung lượng mỗi giây. Khi đạt 100%, pin chuyển sang sẵn sàng và tự kích hoạt lúc Điện hiện tại dưới 10% Điện tối đa."
             },
             {
               "format": "bullet",
               "changeType": "new",
-              "text": "Khi kích hoạt, pin tiêu hao 20 điểm phần trăm dung lượng mỗi giây trong 5 giây để nạp 8 Điện cố định mỗi giây, tổng cộng tối đa 40 Điện. Lượng nạp không tăng theo Điện tối đa."
+              "text": "Khi kích hoạt, pin tiêu hao 20% dung lượng mỗi giây trong 5 giây để nạp 8 Điện cố định mỗi giây, tổng cộng tối đa 40 Điện. Lượng nạp không tăng theo Điện tối đa."
             },
             {
               "format": "bullet",
