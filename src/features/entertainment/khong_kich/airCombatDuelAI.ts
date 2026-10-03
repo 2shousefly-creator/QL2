@@ -1,3 +1,4 @@
+import { gravityAnchorValues } from "./airCombatGravityAnchor";
 import { cinderWaveRadius } from './airCombatCinderRuntime';
 import { cinderState, cinderStacks } from './airCombatCinderRuntime';
 import { cinderValues } from './airCombatCinderConfig';
@@ -135,7 +136,7 @@ function skillUtility(id: SkillId, s: AircraftCombatState, ai: MirrorAI, p: Poin
       const anchor = actor.rankRuntime?.anchor;
       if (!anchor) return -Infinity;
       const at = mirrorPoint(anchor.x, anchor.y);
-      const inside = distance(at, seen.player) < 120 * (anchor.rank >= 2 ? 1.25 : 1);
+      const inside = distance(at, seen.player) < gravityAnchorValues(anchor.rank).radius;
       const charged = anchor.destroyed >= 4 || [...anchor.inner.values()].some(seconds => seconds >= 2);
       return inside && (charged || anchor.until - actor.elapsed < .65) ? 1.7 : -Infinity;
     }
@@ -235,7 +236,7 @@ function perceive(w:CombatWorld,ai:MirrorAI,p:Point,actor:CombatWorld) {
   for(const lane of cinder.lanes)hazards.push({kind:'beam',x:lane.x,y:lane.y,end:{x:lane.x,y:R.top},radius:cinderValues('cinder_inferno_beam',lane.rank).width/2,cc:false,startsAt:lane.at,endsAt:lane.until});
   if(cinder.wave){const wave=cinder.wave,travel=Math.hypot(p.x-wave.x,p.y-wave.y)/cinderWaveRadius(wave.x,wave.y)*.8;hazards.push({kind:'aoe',x:p.x,y:p.y,radius:20,cc:true,startsAt:wave.at+travel,endsAt:wave.at+travel+.05});}
   if(w.laserCharge>0||w.laserRemaining>0)hazards.push({kind:"beam",x:w.playerX,y:w.playerY,end:{x:w.playerX,y:R.top},radius:16,cc:false,startsAt:w.elapsed+w.laserCharge,endsAt:w.elapsed+w.laserCharge+w.laserRemaining});
-  if(w.rankRuntime?.anchor)hazards.push({kind:"persistent_zone",x:w.rankRuntime.anchor.x,y:w.rankRuntime.anchor.y,radius:120*(w.rankRuntime.anchor.rank>=2?1.25:1),cc:true,startsAt:w.elapsed,endsAt:w.rankRuntime.anchor.until});
+  if(w.rankRuntime?.anchor)hazards.push({kind:"persistent_zone",x:w.rankRuntime.anchor.x,y:w.rankRuntime.anchor.y,radius:gravityAnchorValues(w.rankRuntime.anchor.rank).radius,cc:true,startsAt:w.elapsed,endsAt:w.rankRuntime.anchor.until});
   for(const burn of (w.astra?.burns??[]).slice(0,4))hazards.push({kind:"persistent_zone",x:burn.x,y:burn.y,radius:burn.radius,cc:false,startsAt:w.elapsed,endsAt:burn.until});
   if(w.bigBang&&!w.bigBang.resolved)hazards.push({kind:"full_screen",x:p.x,y:p.y,radius:Infinity,cc:false,startsAt:w.bigBang.impactAt,endsAt:w.bigBang.impactAt+.01});
   for(const m of (w.astra?.starfall?.pending??[]).slice(0,4)){

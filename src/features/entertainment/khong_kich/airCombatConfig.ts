@@ -184,7 +184,7 @@ export const AIRCRAFT_ORDER: AircraftId[] = [
 export const SKILL_CONFIGS: Record<SkillId, SkillConfig> = {
  ...Object.fromEntries(CINDER_SKILLS.map((id,i)=>[id,{id,aircraftId:'cinder',name:CINDER_NAMES[i],shortName:CINDER_NAMES[i],description:cinderDescription(id,1),icon:'',...cinderValues(id,1)}])) as Record<typeof CINDER_SKILLS[number],SkillConfig>,
   predator_lock: {id:"predator_lock",aircraftId:"black_eagle",name:"Khóa Săn Mồi",shortName:"Khóa Săn Mồi",description:"Khóa Săn Mồi",icon:"✦",cost:80,cooldown:20,duration:8},
-  gravity_anchor: {id:"gravity_anchor",aircraftId:"breaker",name:"Neo Trọng Lực",shortName:"Neo Trọng Lực",description:"Neo Trọng Lực",icon:"✦",cost:130,cooldown:25,duration:5,damageMultiplier:.65},
+  gravity_anchor: {id:"gravity_anchor",aircraftId:"breaker",name:"Neo Trọng Lực",shortName:"Neo Trọng Lực",description:"Neo Trọng Lực",icon:"✦",cost:130,cooldown:25,duration:5,damageMultiplier:.4},
   electronic_interference: {id:"electronic_interference",aircraftId:"phantom",name:"Nhiễu Điện Tử",shortName:"Nhiễu Điện Tử",description:"Nhiễu Điện Tử",icon:"✦",cost:30,cooldown:28,duration:1.6},
   twin_reflection: {id:"twin_reflection",aircraftId:"astra",name:"Song Tinh Phản Xạ",shortName:"Song Tinh Phản Xạ",description:"Song Tinh Phản Xạ",icon:"✦",cost:115,cooldown:23,duration:9,damageMultiplier:.35},
   orbit_reversal:{id:"orbit_reversal",aircraftId:"astra",name:"Phản Quỹ Đạo",shortName:"Quỹ Đạo",icon:"",cost:80,cooldown:32,duration:2,damageMultiplier:.3,

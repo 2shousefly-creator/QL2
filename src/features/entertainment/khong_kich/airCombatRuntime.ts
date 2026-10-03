@@ -1,3 +1,5 @@
+import { recordPassiveDamage } from "./airCombatPassives";
+import { gravityAnchorValues } from "./airCombatGravityAnchor";
 import { registerNegativeStatusSource } from './airCombatNegativeStatuses';
 import { bigBangStep, type BigBangCast } from './airCombatBigBang';
 import { beginCinderSkill, tickCinder, passiveHit, cinderMovement, cinderMovementLocked, cinderSkillAllowed, cinderShieldFactor, cinderShieldAbsorbed, cancelCinder, cinderState, cinderThreatNearby, type CinderHooks, type IntrinsicDamage } from './airCombatCinderRuntime';
@@ -210,7 +212,7 @@ function targetNegativeStatusTypes(w: CombatWorld, e: EnemyEntity): Set<string> 
         if (interference.firing < 1) result.add('fireRateReduction');
         if (interference.projectile < 1) result.add('projectileSlow');
     }
-    if (anchor && anchor.until > now && Math.hypot(e.x-anchor.x,e.y-anchor.y) <= 120*(anchor.rank>=2?1.25:1)) result.add('slow');
+    if (anchor && anchor.until > now && Math.hypot(e.x-anchor.x,e.y-anchor.y) <= gravityAnchorValues(anchor.rank).radius) result.add('slow');
     const marks = equipmentState(w.aircraft).marks[e.id], time = w.aircraft.coreState.time;
     if (marks?.[24]?.until > time) result.add('slow');
     if (marks?.[36]?.until > time && marks[36].stacks > 0) result.add('bleed');
@@ -3288,7 +3290,7 @@ function opposingAircraftThreatNearby(world: CombatWorld, radius: number, bodies
     if (opponent.laserCharge <= 0 && opponent.laserTicksRemaining > 0
         && segmentDistance(x,y,opponent.playerX,GAMEPLAY_SAFE_RECT.top,opponent.playerX,opponent.playerY)<=radius+16) return true;
     const anchor = opponent.rankRuntime?.anchor;
-    if (anchor && anchor.until>now && Math.hypot(x-anchor.x,y-anchor.y)<=radius+120*(anchor.rank>=2?1.25:1)) return true;
+    if (anchor && anchor.until>now && Math.hypot(x-anchor.x,y-anchor.y)<=radius+gravityAnchorValues(anchor.rank).radius) return true;
     if (opponent.rankRuntime?.waves.some(w=>w.startsAt<=now && w.radius<=w.maxRadius
         && Math.abs(Math.hypot(x-w.originX,y-w.originY)-w.radius)<=radius+INTERFERENCE_WAVE_THICKNESS/2)) return true;
     const astra = opponent.astra;
@@ -3451,6 +3453,7 @@ function applyDamageToEnemy(world: CombatWorld, enemy: EnemyEntity, rawDamage: n
     } else enemy.hp = Math.max(0, enemy.hp - damage);
     if (world.stormbreaker) onStormEnemyDamage(world, enemy, damage, shieldBeforeHit,stormbreakerHooks);
     if(directPlayer&&damage+absorbed>0)recordDpsDamage(world,damage+absorbed);
+    if(intrinsic?.passive || intrinsic?.source==="cinder_burn")recordPassiveDamage(state,damage,absorbed,intrinsic.source==="cinder_burn");
     if(procFree&&enemy.hp<=0){enemy.expansionKillingHit=undefined;enemy.killProcEligible=false;}
     if (directPlayer && !procFree && damage + absorbed > 0) {
         if(basic||skillHit)world.playerTargetId=enemy.id;

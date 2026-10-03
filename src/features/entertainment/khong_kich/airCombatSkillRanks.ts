@@ -1,3 +1,4 @@
+import { gravityAnchorValues } from "./airCombatGravityAnchor";
 import { CINDER_SKILLS, CINDER_NAMES, isCinderSkill, cinderValues, cinderDescription } from "./airCombatCinderConfig";
 import type { AircraftCombatState, SkillId } from "./airCombatTypes";
 
@@ -177,28 +178,28 @@ export const SKILL_RANKS: Record<SkillId, readonly SkillRankConfig[]> = {
  gravity_anchor:ranks([130,140,150,160,170],[
   [
     "Trường Trọng Lực",
-    "Titan đặt một Neo Trọng Lực tồn tại 5 giây. Neo kéo quái thường về tâm, kéo Tinh Anh yếu hơn và không di chuyển Boss. Kẻ địch trong vùng bị giảm 35% tốc độ; đạn có thể chặn bị giảm 40% tốc độ và cong nhẹ về tâm. Mỗi 0,5 giây, vùng gây 65% Hỏa Lực; khi kết thúc, Neo sụp đổ và gây 350% Hỏa Lực. Khi thi triển, Neo ưu tiên đặt tại vị trí có mật độ kẻ địch cao nhất trên màn hình.",
-    "Titan đặt một Neo Trọng Lực tồn tại 5 giây. Neo kéo quái thường về tâm, kéo Tinh Anh yếu hơn và không di chuyển Boss. Kẻ địch trong vùng bị giảm 35% tốc độ; đạn có thể chặn bị giảm 40% tốc độ và cong nhẹ về tâm. Mỗi 0,5 giây, vùng gây 65% Hỏa Lực; khi kết thúc, Neo sụp đổ và gây 350% Hỏa Lực.\nKhi thi triển, Neo ưu tiên đặt tại vị trí có mật độ kẻ địch cao nhất trên màn hình.\nHồi Chiêu Cơ Bản: 25 giây.\nYêu cầu Tài Nguyên: 130 Mana."
+    "Titan đặt một Neo Trọng Lực tồn tại 5 giây, bán kính 70 px. Neo kéo quái thường về tâm, kéo Tinh Anh yếu hơn và không di chuyển Boss. Kẻ địch trong vùng bị giảm 35% tốc độ; đạn có thể chặn bị giảm 40% tốc độ và cong nhẹ về tâm. Mỗi 0,5 giây, vùng gây 40% Hỏa Lực; khi kết thúc, Neo sụp đổ và gây 150% Hỏa Lực. Khi thi triển, Neo ưu tiên đặt tại vị trí có mật độ kẻ địch cao nhất trên màn hình.",
+    "Titan đặt một Neo Trọng Lực tồn tại 5 giây, bán kính 70 px. Neo kéo quái thường về tâm, kéo Tinh Anh yếu hơn và không di chuyển Boss. Kẻ địch trong vùng bị giảm 35% tốc độ; đạn có thể chặn bị giảm 40% tốc độ và cong nhẹ về tâm. Mỗi 0,5 giây, vùng gây 40% Hỏa Lực; khi kết thúc, Neo sụp đổ và gây 150% Hỏa Lực.\nKhi thi triển, Neo ưu tiên đặt tại vị trí có mật độ kẻ địch cao nhất trên màn hình.\nHồi Chiêu Cơ Bản: 25 giây.\nYêu cầu Tài Nguyên: 130 Mana."
   ],
   [
     "Chân Trời Sự Kiện",
-    "Titan đặt Neo Trọng Lực trong 5 giây với bán kính tăng 25%. Neo kéo mạnh hơn khi mục tiêu ở gần tâm; quái thường bị kéo mạnh, Tinh Anh bị kéo yếu hơn và Boss không bị kéo. Đạn có thể chặn đi vào vùng lõi bị phá hủy, tối đa 20 viên mỗi lần dùng. Vùng vẫn làm chậm kẻ địch 35%, làm chậm đạn 40%, gây 65% Hỏa Lực mỗi 0,5 giây và sụp đổ gây 350% Hỏa Lực. Khi thi triển, Neo ưu tiên đặt tại vị trí có mật độ kẻ địch cao nhất trên màn hình.",
-    "Bán kính Neo Trọng Lực tăng 25%.\nLực kéo mạnh hơn khi mục tiêu ở gần tâm.\nĐạn có thể chặn đi vào vùng lõi bị phá hủy, tối đa 20 viên mỗi lần dùng.\nHồi Chiêu Cơ Bản: 25 → 24 giây.\nYêu cầu Tài Nguyên: 130 → 140 Mana."
+    "Titan đặt Neo Trọng Lực trong 5 giây với bán kính 80 px. Neo kéo mạnh hơn khi mục tiêu ở gần tâm; quái thường bị kéo mạnh, Tinh Anh bị kéo yếu hơn và Boss không bị kéo. Đạn có thể chặn đi vào vùng lõi bị phá hủy, tối đa 10 viên mỗi lần dùng. Vùng vẫn làm chậm kẻ địch 35%, làm chậm đạn 40%, gây 40% Hỏa Lực mỗi 0,5 giây và sụp đổ gây 175% Hỏa Lực. Khi thi triển, Neo ưu tiên đặt tại vị trí có mật độ kẻ địch cao nhất trên màn hình.",
+    "Bán kính Neo Trọng Lực: 70 → 80 px.\nSát thương sụp đổ: 150% → 175% Hỏa Lực.\nLực kéo mạnh hơn khi mục tiêu ở gần tâm.\nĐạn có thể chặn đi vào vùng lõi bị phá hủy, tối đa 10 viên mỗi lần dùng.\nHồi Chiêu Cơ Bản: 25 → 24 giây.\nYêu cầu Tài Nguyên: 130 → 140 Mana."
   ],
   [
     "Áp Suất Nghiền Nát",
-    "Neo Trọng Lực tồn tại 5 giây, có bán kính tăng 25%, kéo mục tiêu về tâm và phá tối đa 20 viên đạn trong vùng lõi. Kẻ địch trong vùng bị giảm 25% Giáp; nếu ở trong lõi, mức giảm tăng thành 35%. Hiệu ứng giảm Giáp kéo dài thêm 1,5 giây sau khi mục tiêu rời vùng. Neo vẫn gây 65% Hỏa Lực mỗi 0,5 giây và sụp đổ gây 350% Hỏa Lực. Khi thi triển, Neo ưu tiên đặt tại vị trí có mật độ kẻ địch cao nhất trên màn hình.",
-    "Kẻ địch trong vùng bị giảm 25% Giáp; trong vùng lõi, mức giảm tăng thành 35%.\nHiệu ứng giảm Giáp kéo dài thêm 1,5 giây sau khi mục tiêu rời vùng.\nHồi Chiêu Cơ Bản: 24 → 23 giây.\nYêu cầu Tài Nguyên: 140 → 150 Mana."
+    "Neo Trọng Lực tồn tại 5 giây, có bán kính 90 px, kéo mục tiêu về tâm và phá tối đa 10 viên đạn trong vùng lõi. Kẻ địch trong vùng bị giảm 25% Giáp; nếu ở trong lõi, mức giảm tăng thành 35%. Hiệu ứng giảm Giáp kéo dài thêm 1,5 giây sau khi mục tiêu rời vùng. Neo vẫn gây 40% Hỏa Lực mỗi 0,5 giây và sụp đổ gây 200% Hỏa Lực. Khi thi triển, Neo ưu tiên đặt tại vị trí có mật độ kẻ địch cao nhất trên màn hình.",
+    "Bán kính: 80 → 90 px.\nSát thương sụp đổ: 175% → 200% Hỏa Lực.\nKẻ địch trong vùng bị giảm 25% Giáp; trong vùng lõi, mức giảm tăng thành 35%.\nHiệu ứng giảm Giáp kéo dài thêm 1,5 giây sau khi mục tiêu rời vùng.\nHồi Chiêu Cơ Bản: 24 → 23 giây.\nYêu cầu Tài Nguyên: 140 → 150 Mana."
   ],
   [
     "Khối Lượng Tới Hạn",
-    "Neo Trọng Lực tồn tại 5 giây, kéo kẻ địch, làm chậm, giảm Giáp và phá đạn trong vùng lõi. Mỗi 0,5 giây, vùng gây 65% Hỏa Lực. Khi sụp đổ, ngoài 250% Hỏa Lực cơ bản, vụ nổ nhận thêm 55% Hỏa Lực cho mỗi kẻ địch đã bị kéo và 20% Hỏa Lực cho mỗi viên đạn đã bị phá, tối đa thêm 600% Hỏa Lực. Khi thi triển, Neo ưu tiên đặt tại vị trí có mật độ kẻ địch cao nhất trên màn hình.",
-    "Sát thương sụp đổ cơ bản đổi từ 350% thành 250% Hỏa Lực.\nKhi Neo sụp đổ, nhận thêm 55% Hỏa Lực cho mỗi kẻ địch đã bị kéo và 20% Hỏa Lực cho mỗi viên đạn đã bị phá.\nSát thương cộng thêm tối đa 600% Hỏa Lực.\nHồi Chiêu Cơ Bản: 23 → 22 giây.\nYêu cầu Tài Nguyên: 150 → 160 Mana."
+    "Neo Trọng Lực tồn tại 5 giây, bán kính 100 px, phá tối đa 10 viên đạn trong lõi, kéo kẻ địch, làm chậm, giảm Giáp và phá đạn trong vùng lõi. Mỗi 0,5 giây, vùng gây 40% Hỏa Lực. Khi sụp đổ, ngoài 225% Hỏa Lực cơ bản, vụ nổ nhận thêm 55% Hỏa Lực cho mỗi kẻ địch đã bị kéo và 20% Hỏa Lực cho mỗi viên đạn đã bị phá, tối đa thêm 600% Hỏa Lực. Khi thi triển, Neo ưu tiên đặt tại vị trí có mật độ kẻ địch cao nhất trên màn hình.",
+    "Bán kính: 90 → 100 px.\nSát thương sụp đổ: 200% → 225% Hỏa Lực.\nKhi Neo sụp đổ, nhận thêm 55% Hỏa Lực cho mỗi kẻ địch đã bị kéo và 20% Hỏa Lực cho mỗi viên đạn đã bị phá.\nSát thương cộng thêm tối đa 600% Hỏa Lực.\nHồi Chiêu Cơ Bản: 23 → 22 giây.\nYêu cầu Tài Nguyên: 150 → 160 Mana."
   ],
   [
     "Sụp Đổ Không Gian",
-    "Neo Trọng Lực tồn tại 5 giây, kéo kẻ địch, làm chậm, giảm Giáp và tích Khối Lượng từ mục tiêu bị kéo cùng đạn bị phá. Mỗi 0,5 giây, vùng gây 65% Hỏa Lực; sụp đổ gây 250% Hỏa Lực cơ bản, thêm 55% mỗi kẻ địch đã bị kéo và 20% mỗi viên đạn đã bị phá, tối đa thêm 600% Hỏa Lực. Khi hết thời gian tự nhiên, Neo kéo mạnh quái thường và Tinh Anh về tâm lần cuối rồi sụp đổ. Mục tiêu ở trong lõi ít nhất 2 giây nhận thêm 50% sát thương từ vụ sụp đổ. Có thể tái kích hoạt để cho Neo nổ sớm với lượng Khối Lượng đã tích. Khi thi triển, Neo ưu tiên đặt tại vị trí có mật độ kẻ địch cao nhất trên màn hình.",
-    "Khi hết thời gian tự nhiên, Neo kéo mạnh quái thường và Tinh Anh về tâm thêm một lần cuối.\nMục tiêu ở trong vùng lõi ít nhất 2 giây nhận thêm 50% sát thương từ vụ sụp đổ.\nCó thể tái kích hoạt để cho Neo sụp đổ sớm với lượng Khối Lượng đã tích.\nHồi Chiêu Cơ Bản: 22 → 21 giây.\nYêu cầu Tài Nguyên: 160 → 170 Mana."
+    "Neo Trọng Lực tồn tại 5 giây, bán kính 110 px, phá tối đa 10 viên đạn trong lõi, kéo kẻ địch, làm chậm, giảm Giáp và tích Khối Lượng từ mục tiêu bị kéo cùng đạn bị phá. Mỗi 0,5 giây, vùng gây 40% Hỏa Lực; sụp đổ gây 250% Hỏa Lực cơ bản, thêm 55% mỗi kẻ địch đã bị kéo và 20% mỗi viên đạn đã bị phá, tối đa thêm 600% Hỏa Lực. Khi hết thời gian tự nhiên, Neo kéo mạnh quái thường và Tinh Anh về tâm lần cuối rồi sụp đổ. Mục tiêu ở trong lõi ít nhất 2 giây nhận thêm 50% sát thương từ vụ sụp đổ. Có thể tái kích hoạt để cho Neo nổ sớm với lượng Khối Lượng đã tích. Khi thi triển, Neo ưu tiên đặt tại vị trí có mật độ kẻ địch cao nhất trên màn hình.",
+    "Bán kính: 100 → 110 px.\nSát thương sụp đổ: 225% → 250% Hỏa Lực.\nKhi hết thời gian tự nhiên, Neo kéo mạnh quái thường và Tinh Anh về tâm thêm một lần cuối.\nMục tiêu ở trong vùng lõi ít nhất 2 giây nhận thêm 50% sát thương từ vụ sụp đổ.\nCó thể tái kích hoạt để cho Neo sụp đổ sớm với lượng Khối Lượng đã tích.\nHồi Chiêu Cơ Bản: 22 → 21 giây.\nYêu cầu Tài Nguyên: 160 → 170 Mana."
   ]
 ]),
  sweeping_cannon:ranks([100,120,140],[
@@ -445,7 +446,7 @@ export function rankValues(s:AircraftCombatState,id:SkillId) {
   stellar_lance:{cost:cost*(1+((s.coreState.timers.lanceChain??0)>s.coreState.time?(s.coreState.stacks.lanceStack??0):0)),cooldown:3,charge:[.8,.7,.6,.5,.4][r-1],damageMultiplier:STELLAR_LANCE_FIRST_DAMAGE[r-1]*(1+.1*((s.coreState.timers.lanceChain??0)>s.coreState.time?(s.coreState.stacks.lanceStack??0):0))},
   starfall:{cost,cooldown:90,count:[12,14,16][r-1],damageMultiplier:STARFALL_DAMAGE[r-1]},
   predator_lock:{cost,cooldown:[20,19,18,17,16][r-1],duration:8,damageMultiplier:r>=2?2.4:2},
-  gravity_anchor:{cost,cooldown:[25,24,23,22,21][r-1],duration:5,radiusMultiplier:r>=2?1.25:1,damageMultiplier:.65},
+  gravity_anchor:{cost,cooldown:[25,24,23,22,21][r-1],duration:5,radiusMultiplier:gravityAnchorValues(r).radius/120,damageMultiplier:gravityAnchorValues(r).tickDamage},
   electronic_interference:{cost,cooldown:[28,27,26,25,24][r-1],duration:r>=5?1.6:r>=2?1:0,damageMultiplier:1},
   twin_reflection:{cost,cooldown:[23,22,21,20,19][r-1],duration:9,damageMultiplier:[.35,.5,.3,.5,.5][r-1]},
  };

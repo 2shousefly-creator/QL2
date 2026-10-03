@@ -1,0 +1,120 @@
+{
+  "version": "26.20.4",
+  "releaseDate": "03/10/2026",
+  "title": "Cân Bằng Chiến Cơ & Diện Mạo Kỹ Năng",
+  "displayTitle": "KHÔNG KÍCH 26.20.4 — CÂN BẰNG CHIẾN CƠ & DIỆN MẠO KỸ NĂNG",
+  "summary": "Điều chỉnh ultimate Cinder và Neo Trọng Lực Titan; bổ sung thống kê nội tại, quy đổi sức mạnh trong tooltip, lá chắn tràn vào thanh Máu và sprite kỹ năng mới.",
+  "sections": [
+    {
+      "id": "cinder",
+      "title": "CINDER",
+      "icon": {
+        "kind": "aircraft",
+        "id": "cinder"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "inferno",
+          "title": "Hỏa Quang Hủy Diệt",
+          "icon": {
+            "kind": "skill",
+            "id": "cinder_inferno_beam"
+          },
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Bề rộng luồng và hitbox: 110. Bán kính kích nổ: 90. Thời gian tụ: 1,25 giây ở mọi cấp, kèm sprite tụ năng lượng tại mũi chiến cơ."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Sát thương luồng chính: 2000% / 2500% / 3000% Hỏa Lực theo cấp kỹ năng."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "titan",
+      "title": "TITAN",
+      "icon": {
+        "kind": "aircraft",
+        "id": "breaker"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "anchor",
+          "title": "Neo Trọng Lực",
+          "icon": {
+            "kind": "skill",
+            "id": "gravity_anchor"
+          },
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Bán kính: 70 / 80 / 90 / 100 / 110 theo cấp kỹ năng. Từ cấp 2, lõi phá tối đa 10 viên đạn mỗi lần dùng."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Sát thương sụp đổ cơ bản: 150% / 175% / 200% / 225% / 250% Hỏa Lực. Mỗi 0,5 giây gây 40% Hỏa Lực ở mọi cấp."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "experience",
+      "title": "TRẢI NGHIỆM & HÌNH ẢNH",
+      "icon": {
+        "kind": "skill",
+        "id": "cinder_fire_shield"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "tooltips",
+          "icon": { "kind": "skill", "id": "gravity_anchor" },
+          "title": "Tooltip kỹ năng",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Nội tại hiển thị tổng sát thương thực tế lên Máu, Lá Chắn hoặc Điện đã hồi trong trận/vòng hiện tại. Cinder có thống kê Cháy riêng."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Mô tả chính dùng hệ số cấp hiện tại; hiển thị giá trị quy đổi trước tỷ lệ sức mạnh. Bảng cấp phía dưới vẫn giữ chi tiết nâng cấp."
+            }
+          ]
+        },
+        {
+          "id": "art",
+          "icon": { "kind": "core", "id": "core_184" },
+          "title": "Lá chắn & sprite",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Lá chắn hấp thụ tràn vào bên trong thanh Máu khi thiếu chỗ hoặc đầy Máu."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Bảo Hộ Linh Hồn có sprite linh hồn bảo vệ. Toàn bộ 25 hình nội tại và kỹ năng của 5 chiến cơ được thay bằng sprite lowpoly theo màu chiến cơ."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

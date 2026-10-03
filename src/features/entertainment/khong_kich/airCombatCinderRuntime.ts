@@ -4,14 +4,14 @@ import type { SkillId } from './airCombatTypes';
 import { getEffectiveAircraftStats, endAircraftSkill } from './airCombatAircraft';
 import { GAMEPLAY_SAFE_RECT as R, AIR_COMBAT_WORLD } from './airCombatConfig';
 import { cinderValues, CINDER_BURN, type CinderSkillId } from './airCombatCinderConfig';
-import { passiveCoefficient, passiveTier } from './airCombatPassives';
+import { passiveCoefficient, passiveTier, passiveMetrics } from './airCombatPassives';
 import { skillRank } from './airCombatSkillRanks';
 import { circleVsAircraft, getEnemyHitbox, rectVsAircraft, segmentVsAircraft, createHitResult } from './airCombatHitboxes';
 import { celestialProtection, createAbsorbShield } from './airCombatExpansion';
 import { negativeStatusDuration } from './airCombatCoreEffects';
 import { canTargetEnemy } from './airCombatTargetability';
 
-export interface IntrinsicDamage { trueDamage:boolean; castId:number; source?:"cinder_burn"; ownerId?:number; burnSession?:number; rawBudget?:{remaining:number} }
+export interface IntrinsicDamage { trueDamage:boolean; castId:number; passive?:boolean; source?:"cinder_burn"; ownerId?:number; burnSession?:number; rawBudget?:{remaining:number} }
 export interface CinderHooks {
  hostile:(w:CombatWorld,e:EnemyEntity)=>boolean;
  damage:(w:CombatWorld,e:EnemyEntity,raw:number,skill:SkillId|undefined,provenance:IntrinsicDamage)=>number;
@@ -48,17 +48,18 @@ export function addCinderBurn(w:CombatWorld,e:EnemyEntity,count:number,h:CinderH
  t.burn=Math.min(CINDER_BURN.cap,t.burn+count);t.until=at+CINDER_BURN.duration;
 }
 function deal(w:CombatWorld,e:EnemyEntity,ratio:number,skill:SkillId|undefined,id:number,h:CinderHooks,trueDamage=false){
- const damage=h.damage(w,e,getEffectiveAircraftStats(w.aircraft).firepower*ratio,skill,{trueDamage,castId:id});
+ const damage=h.damage(w,e,getEffectiveAircraftStats(w.aircraft).firepower*ratio,skill,{trueDamage,castId:id,passive:skill===undefined});
  if(skill==='cinder_inferno_beam')applyBlaze(w,e);
  return damage;
 }
 export function passiveHit(w:CombatWorld,e:EnemyEntity,hit:{primary:boolean;skillDirect:boolean;critical:boolean;beforeCrit:number},h:CinderHooks){
  const s=cinderState(w),a=w.aircraft,t=targetState(w,e.id),now=w.elapsed,k=passiveCoefficient(a);
  if(hit.primary){
+  passiveMetrics(a).lastPrimaryBeforeCrit=hit.beforeCrit;
   if(a.aircraftId==='black_eagle'&&hit.critical&&now>=s.followReady&&e.hp>0&&canTargetEnemy(w,e,'homing')){
    s.followReady=now+.5;s.followups.push({id:w.nextId++,target:e.id,x:w.playerX,y:w.playerY-20,previousX:w.playerX,previousY:w.playerY-20,raw:hit.beforeCrit*k,until:now+4,angle:-Math.PI/2});fx(w,'muzzle',w.playerX,w.playerY-20,18,.18);
   }else if(a.aircraftId==='breaker'){
-   h.damage(w,e,getEffectiveAircraftStats(a).armor*k,undefined,{trueDamage:false,castId:w.nextId++});fx(w,'alloy',e.x,e.y,22,.2);
+   h.damage(w,e,getEffectiveAircraftStats(a).armor*k,undefined,{trueDamage:false,castId:w.nextId++,passive:true});fx(w,'alloy',e.x,e.y,22,.2);
   }else if(a.aircraftId==='astra'&&now>=t.markReady&&e.hp>0){t.markUntil=now+4;fx(w,'mark',e.x,e.y,24,.25);
   }else if(a.aircraftId==='cinder'&&now>=t.passiveReady){t.passiveReady=now+3;deal(w,e,k,undefined,w.nextId++,h);addCinderBurn(w,e,1,h);fx(w,'impact',e.x,e.y,32,.3);}
  }
@@ -123,7 +124,7 @@ function tickBattery(w:CombatWorld,dt:number){const b=cinderState(w).battery;if(
  for(let guard=0;left>1e-8&&guard<12;guard++){
   if(b.phase==='charging'){const step=Math.min(left,(100-b.charge)/1.5);b.charge=Math.min(100,b.charge+step*1.5);left-=step;if(b.charge>=100-1e-8){b.charge=100;b.phase='ready';}else break;}
   else if(b.phase==='ready'){if(w.aircraft.currentResource<getEffectiveAircraftStats(w.aircraft).maxResource*.1){b.phase='feeding';b.remaining=5;}else break;}
-  else if(b.phase==='feeding'){const step=Math.min(left,b.remaining);b.remaining-=step;b.charge=Math.max(0,b.charge-step*20);w.aircraft.currentResource=Math.min(getEffectiveAircraftStats(w.aircraft).maxResource,w.aircraft.currentResource+step*8);left-=step;if(b.remaining<=1e-8){b.phase='cooling';b.remaining=5;b.charge=0;}}
+  else if(b.phase==='feeding'){const step=Math.min(left,b.remaining);b.remaining-=step;b.charge=Math.max(0,b.charge-step*20);const before=w.aircraft.currentResource;w.aircraft.currentResource=Math.min(getEffectiveAircraftStats(w.aircraft).maxResource,before+step*8);passiveMetrics(w.aircraft).resource+=Math.max(0,w.aircraft.currentResource-before);left-=step;if(b.remaining<=1e-8){b.phase='cooling';b.remaining=5;b.charge=0;}}
   else {const step=Math.min(left,b.remaining);b.remaining-=step;left-=step;if(b.remaining<=1e-8)b.phase='charging';}
  }
 }
@@ -147,7 +148,7 @@ export function tickCinder(w:CombatWorld,dt:number,h:CinderHooks){
  }
  s.followups=s.followups.filter(p=>{const e=w.enemies.find(e=>e.id===p.target);if(!e||!valid(w,e,h)||!canTargetEnemy(w,e,'homing')||p.until<=now)return false;
   p.previousX=p.x;p.previousY=p.y;const dx=e.x-p.x,dy=e.y-p.y,d=Math.hypot(dx,dy),step=Math.min(d,600*dt);p.angle=Math.atan2(dy,dx);p.x+=Math.cos(p.angle)*step;p.y+=Math.sin(p.angle)*step;
-  if(segmentVsAircraft(p.previousX,p.previousY,p.x,p.y,2.5,getEnemyHitbox(e),createHitResult()).hit){h.damage(w,e,p.raw,undefined,{trueDamage:false,castId:p.id});fx(w,'followup',p.x,p.y,20,.2);return false;}return true;
+  if(segmentVsAircraft(p.previousX,p.previousY,p.x,p.y,2.5,getEnemyHitbox(e),createHitResult()).hit){h.damage(w,e,p.raw,undefined,{trueDamage:false,castId:p.id,passive:true});fx(w,'followup',p.x,p.y,20,.2);return false;}return true;
  });
  const sh=s.shield;if(sh){if(now>=sh.until||(w.aircraft.coreState.shields.cinder?.amount??0)<=0){fx(w,'burst',w.playerX,w.playerY,80,.4);s.shield=undefined;delete w.aircraft.coreState.shields.cinder;endAircraftSkill(w.aircraft,'cinder_fire_shield');}else w.aircraft.activeEffects.cinder_fire_shield=sh.until-now;}
  const f=s.fuel;if(f){const v=cinderValues('cinder_fuel_barrage',f.rank);

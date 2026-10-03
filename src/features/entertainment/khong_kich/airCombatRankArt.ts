@@ -1,3 +1,4 @@
+import { gravityAnchorValues } from "./airCombatGravityAnchor";
 import { preferredDuelDecoy } from "./airCombatTargetability";
 import { ULTIMATE_FRAMES } from "./airCombatUltimateArt";
 import type { CombatWorld, ProjectileEntity } from "./airCombatRuntime";
@@ -43,7 +44,7 @@ export function paintRankSkills(w:CombatWorld,draw:RankSpritePainter,reducedMoti
   }
  }
  if(r?.anchor){
-  const a=r.anchor,radius=120*(a.rank>=2?1.25:1),mass=a.rank>=4?Math.min(4,a.affected.size*.25+a.destroyed*.1)/4:0;
+  const a=r.anchor,radius=gravityAnchorValues(a.rank).radius,mass=a.rank>=4?Math.min(4,a.affected.size*.25+a.destroyed*.1)/4:0;
   draw(-10,"rankAnchorRings",a.x,a.y,radius*2,radius*2,reducedMotion?0:t*.3,.55+mass*.4);
   draw(-11,"rankCompression",a.x,a.y,radius*1.7,radius*1.7,reducedMotion?0:-t*.45,a.rank>=3?.8:.4);
   draw(-12,"rankAnchor",a.x,a.y,48+mass*12,48+mass*12,reducedMotion?0:Math.sin(t)*.035,1);

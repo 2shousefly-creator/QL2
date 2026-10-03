@@ -78,7 +78,7 @@ export class AirCombatOverlayFeedback {
         if(frame)frame.dataset.aegisActive=String(boss.hp/boss.maxHp>=.15 && boss.aegisUntil>world.aircraft.coreState.time);
       }
       if (bossChip) bossChip.style.width = bar.chipRatio * 100 + "%";
-      if (bossShield) bossShield.style.width = bar.shieldEnd * 100 + "%";
+      if (bossShield) {bossShield.style.left=bar.shieldStart*100+"%";bossShield.style.width=(bar.shieldEnd-bar.shieldStart)*100+"%";}
     }
     this.health.end();
     const now = performance.now(), pending: Notice[] = [];

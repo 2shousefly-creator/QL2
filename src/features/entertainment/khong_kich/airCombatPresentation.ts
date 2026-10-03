@@ -1,3 +1,4 @@
+import { gravityAnchorValues } from "./airCombatGravityAnchor";
 import { resolveTooltipValues } from "./airCombatTooltipValues";
 import { getRecoveryReceivedMultiplier } from "./airCombatRecovery";
 import { resolveSkillCooldown } from "./airCombatStatResolvers";
@@ -52,7 +53,8 @@ export function getSkillTooltipModel(state: AircraftCombatState, id: SkillId) {
  const cooldown=resolveSkillCooldown(v.cooldown,stats.skillHaste,castMultiplier);
  const resource=AIRCRAFT_CONFIGS[state.aircraftId].resourceKind==="mana"?"Mana":"Điện";
  const detailRows=[isUltimate(id)?"Kỹ Năng Tối Thượng":"Kỹ Năng Cơ Bản",
-  `Yêu cầu Tài Nguyên: ${number(id==="escort_drone"?v.cost:free?0:v.cost)} ${resource}`];
+  `Yêu cầu Tài Nguyên: ${number(id==="escort_drone"?v.cost:free?0:v.cost)} ${resource}`,
+  "Giá trị quy đổi theo chỉ số hiện tại, trước chí mạng, Giáp mục tiêu và các hệ số sát thương theo tình huống."];
  const coreRows:string[]=[];
  if(ultimateCastDisabled(state,id))coreRows.push("Tập Trung Chuyên Môn: khóa dùng chủ động Kỹ Năng Tối Thượng; cấp và nội tại vẫn giữ nguyên.");
  if(hasCore(state,97)&&!isUltimate(id))coreRows.push("Tập Trung Chuyên Môn: +20% Sát Thương Kỹ Năng; chi phí đã giảm 20%, hồi chiêu cơ bản đã giảm 25%.");
@@ -216,7 +218,7 @@ export function getStatusPresentations(world: CombatWorld): StatusPresentation[]
       if (interference && interference.until > opponent.elapsed) addDuelStatus("duel:interference", "Nhiễu Điện Tử", `Di chuyển -${Math.round((1 - interference.movement) * 100)}% · Tốc độ bắn -${Math.round((1 - interference.firing) * 100)}%.`, { kind: "skill", id: "electronic_interference" }, interference.until - opponent.elapsed);
       if (target.burn > 0) addDuelStatus("duel:burn", "Thiêu đốt", "Đang nhận sát thương thiêu đốt từ đối thủ.", { kind: "status", id: "burn" }, target.burn);
       const anchor = opponent.rankRuntime?.anchor;
-      if (anchor && Math.hypot(target.x - anchor.x, target.y - anchor.y) <= 120 * (anchor.rank >= 2 ? 1.25 : 1)) addDuelStatus("duel:anchor", "Neo Trọng Lực", "Giảm tốc độ di chuyển và bị hút về tâm vùng ảnh hưởng.", { kind: "skill", id: "gravity_anchor" }, Math.max(0, anchor.until - opponent.elapsed));
+      if (anchor && Math.hypot(target.x - anchor.x, target.y - anchor.y) <= gravityAnchorValues(anchor.rank).radius) addDuelStatus("duel:anchor", "Neo Trọng Lực", "Giảm tốc độ di chuyển và bị hút về tâm vùng ảnh hưởng.", { kind: "skill", id: "gravity_anchor" }, Math.max(0, anchor.until - opponent.elapsed));
       const laserArmor = opponent.skillCores.enemyEffects.get(target.id)?.armorUntil ?? 0;
       if (laserArmor > opponent.elapsed) addDuelStatus("duel:laser-armor", "Giáp bị suy yếu", "Giảm Giáp do Focus Laser của đối thủ.", { kind: "status", id: "armor" }, laserArmor - opponent.elapsed);
     }

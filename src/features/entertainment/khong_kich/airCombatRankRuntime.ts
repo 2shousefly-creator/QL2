@@ -1,3 +1,4 @@
+import { gravityAnchorValues } from "./airCombatGravityAnchor";
 import { canTargetEnemy, preferredDuelDecoy } from "./airCombatTargetability";
 import { GAMEPLAY_SAFE_RECT } from "./airCombatConfig";
 import type { CombatWorld, EnemyEntity, ProjectileEntity } from "./airCombatRuntime";
@@ -43,7 +44,7 @@ function densestGravityAnchorPoint(w:CombatWorld,h:RankRuntimeHooks,rank:number)
  const rect=GAMEPLAY_SAFE_RECT;
  const enemies=w.enemies.filter(e=>e.hp>0&&h.hostile(w,e)&&canTargetEnemy(w,e)&&e.x>=rect.left&&e.x<=rect.right&&e.y>=rect.top&&e.y<=rect.bottom);
  if(!enemies.length)return null;
- const radius=120*(rank>=2?1.25:1);
+ const radius=gravityAnchorValues(rank).radius;
  let best:EnemyEntity|null=null,bestCount=-1,bestDensity=-Infinity,bestDistance=Infinity;
  for(const candidate of enemies){
   let count=0,density=0;
@@ -77,23 +78,23 @@ export function beginRankSkill(w:CombatWorld,id:SkillId,h:RankRuntimeHooks) {
 }
 export function collapseAnchor(w:CombatWorld,h:RankRuntimeHooks,natural:boolean) {
  const r=rankRuntime(w),a=r.anchor;if(!a)return;
- const radius=120*(a.rank>=2?1.25:1),power=getEffectiveAircraftStats(w.aircraft).firepower;
+ const radius=gravityAnchorValues(a.rank).radius,power=getEffectiveAircraftStats(w.aircraft).firepower;
  const mass=a.rank>=4?Math.min(6,a.affected.size*.55+a.destroyed*.20):0;
  for(const e of w.enemies)if(h.hostile(w,e)&&Math.hypot(e.x-a.x,e.y-a.y)<=radius+e.radius){
   if(natural&&a.rank>=5&&e.type!=="boss")h.displace(w,e,(a.x-e.x)*(h.elite(e)?.45:.8),(a.y-e.y)*(h.elite(e)?.45:.8));
-  h.damage(w,e,power*((a.rank>=4?2.5:3.5)+mass)*(a.rank>=5&&(a.inner.get(e.id)??0)>=2?1.5:1),"gravity_anchor");
+  h.damage(w,e,power*(gravityAnchorValues(a.rank).collapse+mass)*(a.rank>=5&&(a.inner.get(e.id)??0)>=2?1.5:1),"gravity_anchor");
  }
  h.effect(w,a.x,a.y,radius*2,"anchor_collapse");r.anchor=undefined;endAircraftSkill(w.aircraft,"gravity_anchor");
 }
 export function rankEnemyMovement(w:CombatWorld,e:EnemyEntity) {
  const r=rankRuntime(w),i=r.interference.get(e.id),a=r.anchor;
- return Math.min(i&&i.until>w.elapsed?i.movement:1,a&&Math.hypot(e.x-a.x,e.y-a.y)<=120*(a.rank>=2?1.25:1)?.65:1);
+ return Math.min(i&&i.until>w.elapsed?i.movement:1,a&&Math.hypot(e.x-a.x,e.y-a.y)<=gravityAnchorValues(a.rank).radius ? .65 : 1);
 }
 export function rankEnemyFireRate(w:CombatWorld,e:EnemyEntity) {const i=rankRuntime(w).interference.get(e.id);return i&&i.until>w.elapsed?i.firing:1;}
 export function rankProjectileSpeed(w:CombatWorld,p:ProjectileEntity,h:RankRuntimeHooks) {
  if(p.owner!=="enemy"||p.allegiance==="friendly_hacked")return 1;
  const r=rankRuntime(w),i=p.sourceEnemyId===undefined?undefined:r.interference.get(p.sourceEnemyId),slow=r.projectileSlows.get(p.id),a=r.anchor;
- return Math.min(i&&i.until>w.elapsed?i.projectile:1,slow&&slow.until>w.elapsed?slow.multiplier:1,a&&h.blockable(p)&&Math.hypot(p.x-a.x,p.y-a.y)<=120*(a.rank>=2?1.25:1)?.6:1);
+ return Math.min(i&&i.until>w.elapsed?i.projectile:1,slow&&slow.until>w.elapsed?slow.multiplier:1,a&&h.blockable(p)&&Math.hypot(p.x-a.x,p.y-a.y)<=gravityAnchorValues(a.rank).radius ? .6 : 1);
 }
 export function rankDirectMultiplier(w:CombatWorld,e:EnemyEntity,id?:SkillId) {
  const l=rankRuntime(w).lock,s=w.aircraft;
@@ -143,7 +144,7 @@ export function tickRankSkills(w:CombatWorld,dt:number,h:RankRuntimeHooks) {
  const a=r.anchor;
  if(a){
   s.activeEffects.gravity_anchor=Math.max(.001,a.until-now);
-  const radius=120*(a.rank>=2?1.25:1),inner=radius*.3;
+  const radius=gravityAnchorValues(a.rank).radius,inner=radius*.3;
   for(const e of w.enemies)if(h.hostile(w,e)){
    const d=Math.hypot(e.x-a.x,e.y-a.y);if(d>radius+e.radius)continue;
    if(d<=inner) a.inner.set(e.id,(a.inner.get(e.id)??0)+dt);
@@ -151,7 +152,7 @@ export function tickRankSkills(w:CombatWorld,dt:number,h:RankRuntimeHooks) {
    if(e.type!=="boss"&&d>.01){a.affected.add(e.id);const force=(a.rank>=2?40+100*(1-d/radius):35)*(h.elite(e)?.3:1)*dt,step=Math.min(d,force);h.displace(w,e,(a.x-e.x)/d*step,(a.y-e.y)/d*step);}
   }
   for(let i=w.projectiles.length-1;i>=0;i--){const p=w.projectiles[i],d=Math.hypot(p.x-a.x,p.y-a.y);if(!h.blockable(p)||d>radius)continue;
-   if(a.rank>=2&&d<=inner&&a.destroyed<20){a.destroyed++;h.remove(w,i);continue;}
+   if(a.rank>=2&&d<=inner&&a.destroyed<gravityAnchorValues(a.rank).projectileLimit){a.destroyed++;h.remove(w,i);continue;}
    if(d>0){p.vx+=(a.x-p.x)/d*24*dt;p.vy+=(a.y-p.y)/d*24*dt;}
   }
   while(a.next<=Math.min(now,a.until)+1e-8){a.next+=.5;for(const e of w.enemies)if(h.hostile(w,e)&&Math.hypot(e.x-a.x,e.y-a.y)<=radius+e.radius)h.damage(w,e,getEffectiveAircraftStats(s).firepower*getSkillRuntimeValues(s,"gravity_anchor").damageMultiplier,"gravity_anchor");}

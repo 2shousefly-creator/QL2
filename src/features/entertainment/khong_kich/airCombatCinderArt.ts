@@ -1,3 +1,5 @@
+import guardianVfx from '../../../assets/khong-kich/v2/guardian-charge-vfx.png';
+import { playerAirframeScale } from './airCombatReleaseState';
 import aircraft from '../../../assets/khong-kich/cinder/aircraft.png';
 import icons from '../../../assets/khong-kich/cinder/icons.png';
 import vfx from '../../../assets/khong-kich/cinder/vfx.png';
@@ -8,10 +10,12 @@ import type { CombatWorld } from './airCombatRuntime';
 import { cinderState, cinderWaveRadius } from './airCombatCinderRuntime';
 import { cinderValues } from './airCombatCinderConfig';
 import { GAMEPLAY_SAFE_RECT as R, AIR_COMBAT_WORLD } from './airCombatConfig';
-export const CINDER_ART={aircraft,icons,vfx,projectiles,feedback};
+export const CINDER_ART={aircraft,icons,vfx,projectiles,feedback,guardianVfx};
 export const NEW_ICON_CELLS:Record<string,readonly [number,number]>={viper_follow_up:[0,0],titan_alloy_rounds:[1,0],phantom_backup_battery:[2,0],astra_stellar_mark:[0,1],cinder_thermal_round:[1,1],cinder_fire_shield:[2,1],cinder_fuel_barrage:[0,2],cinder_heat_wave:[1,2],cinder_inferno_beam:[2,2]};
 const frame=(atlas:AtlasFrame['atlas'],x:number,y:number,rows=4):AtlasFrame=>({atlas,rect:[x/4,y/rows,1/4,1/rows]});
 export const CINDER_FRAMES={
+ guardian0:frame("guardianVfx",0,0,2),guardian1:frame("guardianVfx",1,0,2),guardian2:frame("guardianVfx",2,0,2),guardian3:frame("guardianVfx",3,0,2),
+ charge0:frame("guardianVfx",0,1,2),charge1:frame("guardianVfx",1,1,2),charge2:frame("guardianVfx",2,1,2),charge3:frame("guardianVfx",3,1,2),
  viper_muzzle:frame('cinderFeedback',0,0,2),viper_impact:frame('cinderFeedback',1,0,2),titan_impact:frame('cinderFeedback',2,0,2),astra_mark_burst:frame('cinderFeedback',3,0,2),
  battery_arc0:frame('cinderFeedback',0,1,2),battery_arc1:frame('cinderFeedback',1,1,2),fuel_splash:frame('cinderFeedback',2,1,2),fuel_vapor:frame('cinderFeedback',3,1,2),
  cinder_ring0:frame('cinderVfx',0,0),cinder_ring1:frame('cinderVfx',1,0),cinder_ring2:frame('cinderVfx',2,0),cinder_ring3:frame('cinderVfx',3,0),
@@ -31,6 +35,11 @@ export interface CinderGeometryPainter {
 export function paintCinder(w:CombatWorld,paint:CinderPainter,reduced:boolean,label?:(id:number,text:string,x:number,y:number)=>void,geometry?:CinderGeometryPainter){
  const s=cinderState(w),now=w.elapsed;let index=0;
  const draw=(key:CinderVisualKey,x:number,y:number,width:number,height=width,rotation=0,alpha=1)=>paint(900000+index++,key,x,y,width,height,rotation,alpha);
+ const protection=(w.aircraft.coreState.timers.celestial??0)-w.aircraft.coreState.time;
+ if(protection>0&&!w.ended&&!w.destruction&&w.aircraft.currentHp>0){
+  const age=3-protection,phase=reduced?2:Math.min(3,Math.floor(age*5)%4),size=96*playerAirframeScale(w.aircraft);
+  draw(('guardian'+phase) as CinderVisualKey,w.playerX,w.playerY,size,size,0,Math.min(1,protection/.25)*.9);
+ }
  const anim=(kind:'ring'|'fuel'|'beam'|'burst',phase=now)=>('cinder_'+kind+Math.floor(Math.max(0,phase)*(reduced?4:10))%4) as CinderVisualKey;
  for(const [id,t] of s.targets){const e=w.enemies.find(e=>e.id===id&&e.hp>0);if(!e)continue;
   if(t.burn&&t.until>=now){draw(anim('fuel'),e.x,e.y+e.radius*.5,e.radius*2,e.radius*1.8,0,.42);draw('cinder_ember',e.x,e.y-5,25,34,0,reduced?.35:.6);label?.(id,String(t.burn),e.x+e.radius+3,e.y);}
@@ -62,7 +71,7 @@ export function paintCinder(w:CombatWorld,paint:CinderPainter,reduced:boolean,la
    if(height>24)for(let i=0;i<3;i++){const trackY=R.top+12+((i/3+(reduced?0:p*.35))%1)*(height-24);
     geometry?.line(x-24,trackY+7,x,trackY-7,.3+.3*p);geometry?.line(x,trackY-7,x+24,trackY+7,.3+.3*p);
    }
-   draw('cinder_burst0',x,y,25+40*p,25+40*p,0,.5+.4*p);
+   draw(('charge'+Math.min(3,Math.floor(p*4))) as CinderVisualKey,x,y,36+42*p,36+42*p,0,.65+.35*p);
   }
   else {draw(anim('beam'),x,(R.top+y)/2,v.width/.5,(y-R.top)/.9,0,.95);draw(anim('beam',now+.15),x,(R.top+y)/2,v.width*.6/.5,(y-R.top)/.9,0,.45);draw('cinder_burst0',x,y,v.width*1.2,v.width*.9,0,.8);}
  }

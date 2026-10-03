@@ -27,7 +27,7 @@ import { TitanShieldPresentation } from "../airCombatTitanShield";
 import { AirCombatMissilePool } from "./AirCombatMissilePool";
 import { paintMissileExhausts, type MissileExhaustPainter } from "../airCombatMissilePresentation";
 import { AMMO_VISUALS, getAmmoVisualKey, getBasicAmmoVisual, getMissileVisual } from "../airCombatAmmo";
-import { angularBarPolygon, BOSS_VISUAL_WIDTH_SCALE, BOSS_VISUAL_ASPECT } from "../airCombatHudLayout";
+import { angularBarSegmentPolygon, angularBarPolygon, BOSS_VISUAL_WIDTH_SCALE, BOSS_VISUAL_ASPECT } from "../airCombatHudLayout";
 import { SONIC_RING_THICKNESS } from "../airCombatBoss";
 import { isElite } from "../airCombatWaves";
 import { Application, Container, Graphics, Sprite, Text } from "pixi.js";
@@ -466,8 +466,9 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
         const h=isElite(enemy.type)?5:3;
         this.trackingBars.poly(angularBarPolygon(x-2,y-2,w+4,h+4)).fill({color:0x071223,alpha:.95}).stroke({color:isElite(enemy.type)?0xffad43:0xd05a69,width:isElite(enemy.type)?1.2:.6,alpha:.9});
         this.trackingBars.poly(angularBarPolygon(x,y,w,h)).fill(0x172638);
-        for(const [ratio,color] of [[health.shieldEnd,0xd8e4ee],[health.chipRatio,0xef4444],[health.hpRatio,isElite(enemy.type)?0xfbbf24:0xfb7185]])
+        for(const [ratio,color] of [[health.chipRatio,0xef4444],[health.hpRatio,isElite(enemy.type)?0xfbbf24:0xfb7185]])
           if(ratio>0)this.trackingBars.poly(angularBarPolygon(x,y,w,h,ratio)).fill(color);
+        if(health.shieldEnd>health.shieldStart)this.trackingBars.poly(angularBarSegmentPolygon(x,y,w,h,health.shieldStart,health.shieldEnd)).fill(0xd8e4ee);
 
       }
     }
@@ -749,9 +750,9 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     };
     if (alive) {
       for (const y of [barY, barY + 13]) this.trackingBars.poly(angularBarPolygon(barX, y, barWidth, 10)).fill({ color: 0x020617, alpha: .92 });
-      layer(barY, health.shieldEnd, 0xd8e4ee);
       layer(barY, health.chipRatio, 0xef4444);
       layer(barY, hp, hp < .25 ? 0xf87171 : hp < .5 ? 0xfbbf24 : 0x4ade80);
+      if(health.shieldEnd>health.shieldStart)this.trackingBars.poly(angularBarSegmentPolygon(barX,barY,barWidth,10,health.shieldStart,health.shieldEnd)).fill(0xd8e4ee);
       layer(barY + 13, resource, stats.resourceKind === "energy" ? 0xa78bfa : 0x38bdf8);
       for (const y of [barY, barY + 13]) this.trackingBars.poly(angularBarPolygon(barX, y, barWidth, 10)).stroke({ color: 0xcbd5e1, width: .39, alpha: .8 });
     }

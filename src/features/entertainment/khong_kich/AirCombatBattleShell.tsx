@@ -706,7 +706,7 @@ export const AirCombatBattleShell: React.FC<AirCombatBattleProps> = ({
           <div className="flex justify-between text-[7px] font-black uppercase text-rose-200"><span>{getAirCombatStage(stageId)?.bossName} · Giai đoạn {hud.bossPhase}</span><span>{Math.round(hud.bossHp).toLocaleString("vi-VN")}</span></div>
           {stageId === 2 && <div className="air-guardian-hud"><span>VỆ TINH: {hud.guardianSlots.map((alive,slot)=><i key={slot} data-alive={alive}>●</i>)}</span><span>{hud.guardianSlots.some(Boolean) ? "BẢO HỘ: -35% SÁT THƯƠNG" : "BẢO HỘ ĐÃ PHÁ"}</span></div>}
           <div className="air-boss-health relative mt-1 h-1.5 overflow-hidden bg-black">
-            <div ref={bossShieldRef} className="absolute inset-y-0 left-0 bg-slate-200" />
+            <div ref={bossShieldRef} className="absolute inset-y-0 left-0 z-[1] bg-slate-200" />
             <div ref={bossChipRef} className="absolute inset-y-0 left-0 bg-white" />
             {(stageId === 2 ? [.75,.5,.25,.1] : stageId === 4 ? [.7,.4,.15] : [.7,.35,.15]).map(mark => <i key={mark} className="air-boss-phase-marker" style={{left:`${mark*100}%`}} />)}
             <div ref={bossHpRef} className="absolute inset-y-0 left-0 bg-gradient-to-r from-red-700 via-rose-500 to-orange-300" />

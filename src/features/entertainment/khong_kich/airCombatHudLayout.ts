@@ -17,3 +17,20 @@ export function angularBarPolygon(x: number, y: number, width: number, height: n
   const cut=Math.min(3,fillWidth*.45,height*.5),right=x+fillWidth,bottom=y+height;
   return [x+cut,y,right,y,right,bottom-cut,right-cut,bottom,x,bottom,x,y+cut];
 }
+
+/** Clip the same angular bar to a shield interval, including overflow over full HP. */
+export function angularBarSegmentPolygon(x:number,y:number,width:number,height:number,start:number,end:number):number[]{
+ const polygon=angularBarPolygon(x,y,width,height);
+ let points:Array<[number,number]>=[];
+ for(let i=0;i<polygon.length;i+=2)points.push([polygon[i],polygon[i+1]]);
+ for(const [edge,left] of [[x+width*start,true],[x+width*end,false]] as const){
+  const clipped:Array<[number,number]>=[];
+  for(let i=0;i<points.length;i++){
+   const a=points[i],b=points[(i+1)%points.length],insideA=left?a[0]>=edge:a[0]<=edge,insideB=left?b[0]>=edge:b[0]<=edge;
+   if(insideA)clipped.push(a);
+   if(insideA!==insideB)clipped.push([edge,a[1]+(b[1]-a[1])*(edge-a[0])/(b[0]-a[0])]);
+  }
+  points=clipped;
+ }
+ return points.flat();
+}

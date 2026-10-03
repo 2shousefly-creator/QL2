@@ -76,7 +76,8 @@ export async function loadAirCombatAssets() {
   const [stage4Enemy,stage4Boss,stage4Vfx,mirageSky] = await Promise.all([Assets.load<Texture>(STAGE4_ART_URLS.enemy),Assets.load<Texture>(STAGE4_ART_URLS.boss),Assets.load<Texture>(STAGE4_ART_URLS.vfx),Assets.load<Texture>(STAGE4_ART_URLS.sky)]);
   const [cinderAircraft,cinderVfx,cinderProjectiles,cinderIcons,cinderFeedback]=await Promise.all([CINDER_ART.aircraft,CINDER_ART.vfx,CINDER_ART.projectiles,CINDER_ART.icons,CINDER_ART.feedback].map(url=>Assets.load<Texture>(url)));
   const bigBangVfx=await Assets.load<Texture>(BIGBANG_ART);
-  const sources = { bigBangVfx,cinderFeedback,cinderAircraft,cinderVfx,cinderProjectiles,cinderIcons, stage4Enemy,stage4Boss,stage4Vfx, stage3Enemy,stage3Boss,stage3Vfx,stage3Emissive, ultimateVfx,rankedVfx,rankedProjectiles, equipmentIcons,equipmentVfx,astraVfx,astraAircraft,astraEffects,aircraft, fortress, vfx, ammo, basicAmmo, healingCross, stage2Enemy, stage2Vfx, stage2Elite };
+  const guardianVfx=await Assets.load<Texture>(CINDER_ART.guardianVfx);
+  const sources = { guardianVfx,bigBangVfx,cinderFeedback,cinderAircraft,cinderVfx,cinderProjectiles,cinderIcons, stage4Enemy,stage4Boss,stage4Vfx, stage3Enemy,stage3Boss,stage3Vfx,stage3Emissive, ultimateVfx,rankedVfx,rankedProjectiles, equipmentIcons,equipmentVfx,astraVfx,astraAircraft,astraEffects,aircraft, fortress, vfx, ammo, basicAmmo, healingCross, stage2Enemy, stage2Vfx, stage2Elite };
   const frames = new Map<AtlasFrame, Texture>();
   const texture = (definition: AtlasFrame) => {
     const cached = frames.get(definition);

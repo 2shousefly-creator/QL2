@@ -36,7 +36,7 @@ import { paintTitanShield, type ShieldPainter } from "./airCombatTitanShield";
 import { AMMO_VISUALS, getAmmoVisualKey, getBasicAmmoVisual, getMissileVisual, missileRenderRotation } from "./airCombatAmmo";
 import { getMissilePose, paintMissileExhausts } from "./airCombatMissilePresentation";
 import type { AmmoVisualKey } from "./airCombatAmmo";
-import { angularBarPolygon } from "./airCombatHudLayout";
+import { angularBarPolygon, angularBarSegmentPolygon } from "./airCombatHudLayout";
 import { SONIC_RING_THICKNESS } from "./airCombatBoss";
 import { getTerrainWorld, TERRAIN_HEIGHT, type TerrainShape } from "./airCombatTerrain";
 import { CanvasCombatAccents } from "./CanvasCombatAccents";
@@ -78,7 +78,7 @@ export const loadMagneticCanvasAssets=()=>loadCanvasTextures([STAGE2_ART_URLS.en
 const mirageTintCache = new Map<string,HTMLCanvasElement>();
 function drawMagneticFrame(ctx: CanvasRenderingContext2D, frame: AtlasFrame, x: number, y: number,
   width: number, height: number, rotation = 0, alpha = 1, tint = 0xffffff, anchorX = .5) {
-  const image = magneticImage(frame.atlas === "bigBangVfx" ? BIGBANG_ART : frame.atlas === "cinderFeedback" ? CINDER_ART.feedback : frame.atlas === "cinderAircraft" ? CINDER_ART.aircraft : frame.atlas === "cinderVfx" ? CINDER_ART.vfx : frame.atlas === "cinderProjectiles" ? CINDER_ART.projectiles : frame.atlas === "aircraft" ? aircraftAtlasUrl : frame.atlas === "astraAircraft" ? ASTRA_ART.aircraft : frame.atlas === "stage4Enemy" ? STAGE4_ART_URLS.enemy : frame.atlas === "stage4Boss" ? STAGE4_ART_URLS.boss : frame.atlas === "stage4Vfx" ? STAGE4_ART_URLS.vfx : frame.atlas === "stage3Enemy" ? STAGE3_ART_URLS.enemy : frame.atlas === "stage3Boss" ? STAGE3_ART_URLS.boss : frame.atlas === "stage3Vfx" ? STAGE3_ART_URLS.vfx : frame.atlas === "stage3Emissive" ? STAGE3_ART_URLS.emissive : frame.atlas === "ultimateVfx" ? ULTIMATE_ART : frame.atlas === "rankedVfx" ? RANKED_ART.vfx : frame.atlas === "rankedProjectiles" ? RANKED_ART.projectiles : frame.atlas === "equipmentIcons" ? EQUIPMENT_ART.icons : frame.atlas === "equipmentVfx" ? EQUIPMENT_ART.vfx : frame.atlas === "astraVfx" ? ASTRA_ART.combatVfx : frame.atlas === "vfx" ? sharedVfxUrl : frame.atlas === "astraEffects" ? ASTRA_ART.effects : frame.atlas === "stage2Elite" ? STAGE2_ART_URLS.elite : frame.atlas === "stage2Enemy" ? STAGE2_ART_URLS.enemy : STAGE2_ART_URLS.vfx);
+  const image = magneticImage(frame.atlas === "guardianVfx" ? CINDER_ART.guardianVfx : frame.atlas === "bigBangVfx" ? BIGBANG_ART : frame.atlas === "cinderFeedback" ? CINDER_ART.feedback : frame.atlas === "cinderAircraft" ? CINDER_ART.aircraft : frame.atlas === "cinderVfx" ? CINDER_ART.vfx : frame.atlas === "cinderProjectiles" ? CINDER_ART.projectiles : frame.atlas === "aircraft" ? aircraftAtlasUrl : frame.atlas === "astraAircraft" ? ASTRA_ART.aircraft : frame.atlas === "stage4Enemy" ? STAGE4_ART_URLS.enemy : frame.atlas === "stage4Boss" ? STAGE4_ART_URLS.boss : frame.atlas === "stage4Vfx" ? STAGE4_ART_URLS.vfx : frame.atlas === "stage3Enemy" ? STAGE3_ART_URLS.enemy : frame.atlas === "stage3Boss" ? STAGE3_ART_URLS.boss : frame.atlas === "stage3Vfx" ? STAGE3_ART_URLS.vfx : frame.atlas === "stage3Emissive" ? STAGE3_ART_URLS.emissive : frame.atlas === "ultimateVfx" ? ULTIMATE_ART : frame.atlas === "rankedVfx" ? RANKED_ART.vfx : frame.atlas === "rankedProjectiles" ? RANKED_ART.projectiles : frame.atlas === "equipmentIcons" ? EQUIPMENT_ART.icons : frame.atlas === "equipmentVfx" ? EQUIPMENT_ART.vfx : frame.atlas === "astraVfx" ? ASTRA_ART.combatVfx : frame.atlas === "vfx" ? sharedVfxUrl : frame.atlas === "astraEffects" ? ASTRA_ART.effects : frame.atlas === "stage2Elite" ? STAGE2_ART_URLS.elite : frame.atlas === "stage2Enemy" ? STAGE2_ART_URLS.enemy : STAGE2_ART_URLS.vfx);
   if (!image) return;
   const [sx,sy,sw,sh] = frame.rect;
   ctx.save(); ctx.globalAlpha = alpha; ctx.translate(x,y); ctx.rotate(rotation);
@@ -875,7 +875,11 @@ export function drawLegacyWorld(
         if(stroke){ctx.strokeStyle=isElite(enemy.type)?"#ffad43":"#d05a69";ctx.lineWidth=.8;ctx.stroke();}
       };
       fill(x-2,y-2,w+4,barHeight+4,1,"#071223",true);fill(x,y,w,barHeight,1,"#172638");
-      fill(x,y,w,barHeight,health.shieldEnd,"#d8e4ee");fill(x,y,w,barHeight,health.chipRatio,"#ef4444");fill(x,y,w,barHeight,health.hpRatio,isElite(enemy.type)?"#fbbf24":"#fb7185");
+      fill(x,y,w,barHeight,health.chipRatio,"#ef4444");fill(x,y,w,barHeight,health.hpRatio,isElite(enemy.type)?"#fbbf24":"#fb7185");
+      if(health.shieldEnd>health.shieldStart){
+        const points=angularBarSegmentPolygon(x,y,w,barHeight,health.shieldStart,health.shieldEnd);
+        if(points.length){ctx.beginPath();ctx.moveTo(points[0],points[1]);for(let i=2;i<points.length;i+=2)ctx.lineTo(points[i],points[i+1]);ctx.closePath();ctx.fillStyle="#d8e4ee";ctx.fill();}
+      }
 
     }
   }
@@ -919,8 +923,9 @@ function drawAircraftTrackingHud(ctx: CanvasRenderingContext2D, world: CombatWor
   const fillBar = (y: number, ratio: number, color: string) => { if (ratio > 0) { barPath(y, ratio); ctx.fillStyle = color; ctx.fill(); } };
   ctx.save(); ctx.shadowBlur = 0;
   fillBar(barY, 1, "rgba(2,6,23,.92)"); fillBar(barY + 13, 1, "rgba(2,6,23,.92)");
-  fillBar(barY, health.shieldEnd, "#d8e4ee"); fillBar(barY, health.chipRatio, "#ef4444");
+  fillBar(barY, health.chipRatio, "#ef4444");
   fillBar(barY, hp, hp < .25 ? "#f87171" : hp < .5 ? "#fbbf24" : "#4ade80");
+  if(health.shieldEnd>health.shieldStart){ctx.save();barPath(barY);ctx.clip();ctx.fillStyle="#d8e4ee";ctx.fillRect(barX+barWidth*health.shieldStart,barY,barWidth*(health.shieldEnd-health.shieldStart),10);ctx.restore();}
   fillBar(barY + 13, stats.currentResource / stats.maxResource, stats.resourceKind === "energy" ? "#a78bfa" : "#38bdf8");
   ctx.strokeStyle = "rgba(203,213,225,.8)"; ctx.lineWidth = .39;
   barPath(barY); ctx.stroke(); barPath(barY + 13); ctx.stroke(); ctx.restore();

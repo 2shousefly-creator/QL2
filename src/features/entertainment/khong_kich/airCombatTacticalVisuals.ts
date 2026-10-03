@@ -12,11 +12,6 @@ export interface TacticalPainter {
 export function paintTacticalCores(world:CombatWorld,p:TacticalPainter,reducedMotion:boolean):void {
   if(world.ended)return;
   const t=world.tactical,now=world.elapsed,c=world.aircraft.coreState;
-  if (!world.destruction && (c.timers.celestial??0)>now) {
-    p.circle(world.playerX,world.playerY,36,0xffd36a,.15,true);
-    p.circle(world.playerX,world.playerY,36,0xffd36a,.95,false,3);
-    p.polygon?.([world.playerX,world.playerY-31,world.playerX+27,world.playerY-18,world.playerX+22,world.playerY+19,world.playerX,world.playerY+33,world.playerX-22,world.playerY+19,world.playerX-27,world.playerY-18],0xffe5a3,.15);
-  }
   for (const orb of world.destruction ? [] : satellitePositions(world)) { p.circle(orb.x,orb.y,8,0x67e8f9,.25,true); p.circle(orb.x,orb.y,5,0xffdf8a,1,true); p.circle(orb.x,orb.y,3,0xffffff,1,true); }
   for(const e of world.enemies){
     if(e.hp<=0)continue;

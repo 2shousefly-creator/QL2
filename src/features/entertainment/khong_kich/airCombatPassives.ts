@@ -9,3 +9,16 @@ export const PASSIVES:Record<AircraftId,{id:PassiveId;name:string;coefficients:r
  cinder:{id:'cinder_thermal_round',name:'Đạn Hỏa Nhiệt',coefficients:[.25,.35,.45,.55],description:'Đòn chính đầu tiên và sau mỗi hồi chiêu riêng 3 giây trên từng mục tiêu gây thêm 25/35/45/55% Hỏa Lực thông thường không chí mạng và +1 Cháy. Trong hồi chiêu riêng, nội tại không gây sát thương cộng thêm, không thêm hoặc làm mới Cháy. Cháy: tổng 35/40/45/50% Hỏa Lực mỗi giây khi đủ 6 cộng dồn ở cấp chiến cơ 1/6/11/16; mỗi cộng dồn bằng 1/6 mức đó, gây sát thương mỗi 0,5 giây; tối đa 6 cộng dồn, tồn tại 6 giây; sát thương chuẩn vẫn bị khiên hấp thụ và không xuyên bất khả xâm phạm.'}
 };
 export const passiveCoefficient=(s:AircraftCombatState)=>PASSIVES[s.aircraftId].coefficients[passiveTier(s.level)];
+
+export interface PassiveMetrics { damage:number; shieldDamage:number; burnDamage:number; burnShieldDamage:number; resource:number; hits:number; lastPrimaryBeforeCrit?:number }
+const metrics = new WeakMap<AircraftCombatState, PassiveMetrics>();
+export function passiveMetrics(state:AircraftCombatState):PassiveMetrics {
+ let value=metrics.get(state);
+ if(!value){value={damage:0,shieldDamage:0,burnDamage:0,burnShieldDamage:0,resource:0,hits:0};metrics.set(state,value);}
+ return value;
+}
+export function recordPassiveDamage(state:AircraftCombatState,hp:number,shield:number,burn=false){
+ const m=passiveMetrics(state);
+ if(burn){m.burnDamage+=Math.max(0,hp);m.burnShieldDamage+=Math.max(0,shield);}
+ else {m.damage+=Math.max(0,hp);m.shieldDamage+=Math.max(0,shield);if(hp+shield>0)m.hits++;}
+}
