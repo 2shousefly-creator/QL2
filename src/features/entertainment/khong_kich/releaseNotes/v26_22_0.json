@@ -1,0 +1,705 @@
+{
+  "version": "26.22.0",
+  "releaseDate": "05/10/2026",
+  "title": "Argent — Ngân Dực Kiếm Trận",
+  "displayTitle": "KHÔNG KÍCH 26.22.0 — ARGENT · NGÂN DỰC KIẾM TRẬN",
+  "summary": "Argent — Ngân Dực gia nhập đội hình với Phiến Kim, Thế Đỡ, Phóng Nhận, Thu Nhận và Thiên La Kiếm Trận. Đỡ từng đợt tấn công, tôi luyện kiếm rồi căn đường thu để phản công, cùng sprite bạc và VFX Kim sáng, sắc nét.",
+  "sections": [
+    {
+      "id": "s1",
+      "title": "CHIẾN CƠ MỚI · ARGENT — NGÂN DỰC",
+      "icon": {
+        "kind": "aircraft",
+        "id": "argent"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "s1-e1",
+          "icon": {
+            "kind": "aircraft",
+            "id": "argent"
+          },
+          "title": "Argent — Kiếm trận, thu hồi và phản công",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Thêm Argent — Ngân Dực, chiến cơ hành Kim sử dụng Mana, vào đội hình Chiến Dịch và Solo 1v1 cho cả người chơi và AI."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Argent tạo Phiến Kim trên chiến trường, căn vị trí để thu kiếm xuyên địch, đỡ từng đợt tấn công và phản công bằng đại kiếm."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Bắn thường mặc định một đạn kim loại hình mũi kiếm, bay thẳng phía trước. Mũi bạc trắng, quầng sáng gọn và vệt sáng mờ dần phía sau giúp nhìn rõ hướng bay."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Chỉ số cấp 1 → cấp 18 khi chưa có trang bị, lõi hoặc buff: Máu tối đa 2.100 → 3.290; Giáp 48 → 99; Hỏa Lực 112 → 231; tốc độ bắn khoảng 4,00 → 5,16 phát/giây."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mana tối đa 360 → 904; hồi Mana 1,6 → 9,42 mỗi giây; hồi Máu tự nhiên 3,2 → 7,79 mỗi giây. Tỷ lệ chí mạng cơ bản 5%, sát thương chí mạng 170%."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Có sprite chiến cơ, hình minh họa, icon nội tại và bộ kỹ năng riêng, cùng thông tin trong màn chọn chiến cơ."
+            }
+          ]
+        },
+        {
+          "id": "s1-e2",
+          "icon": {
+            "kind": "projectile",
+            "id": "argent_metal_blade"
+          },
+          "title": "Phiến Kim — Phóng, lưu và thu kiếm",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Phiến Kim trải qua ba trạng thái: đang phóng, đang chờ tại vị trí cố định trên chiến trường và đang thu về Argent."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mỗi Argent giữ tối đa 12 Phiến đang chờ. Khi vượt giới hạn, Phiến chờ cũ nhất biến mất; không tự thu hoặc gây sát thương."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Phiến đang chờ tồn tại 6 giây tính từ lúc dừng; riêng Phiến của Phóng Nhận từ cấp kỹ năng 4 trở lên tồn tại 8 giây."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Phiến đang chờ không gây sát thương, không chặn đạn và không đi theo chiến cơ. Hết thời gian sẽ biến mất."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mỗi Phiến có thể gây sát thương lên cùng mục tiêu một lần lúc phóng và một lần lúc thu. Đường thu hướng về vị trí hiện tại của Argent, cho phép đổi vị trí để căn đường kiếm."
+            }
+          ]
+        },
+        {
+          "id": "s1-e3",
+          "icon": {
+            "kind": "skill",
+            "id": "argent_blade_genesis"
+          },
+          "title": "Nội tại — Sinh Nhận",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Sau mỗi 4 loạt bắn thường chính trúng địch, tạo thêm một Phiến Kim xuyên mục tiêu, bay thẳng phía trước rồi dừng trên chiến trường."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Sát thương Phiến lúc phóng: 40%/50%/60%/70% Hỏa Lực tại cấp chiến cơ 1/6/11/16."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Một loạt bắn trúng nhiều mục tiêu vẫn chỉ được tính một lần. Hai lần sinh Phiến cách nhau tối thiểu 1 giây."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Nếu đã đủ bốn loạt trong thời gian giới hạn, giữ tiến độ và kích hoạt ở lần trúng loạt bắn chính tiếp theo khi đủ thời gian; không tích nhiều lần sinh chờ."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Phiến Kim, kỹ năng, đạn phụ và các hiệu ứng gây sát thương phụ không tự tích Sinh Nhận. Nội tại tự mở từ cấp 1 và không tốn Mana."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "ARGENT · THẾ ĐỠ",
+      "icon": {
+        "kind": "skill",
+        "id": "argent_guard_stance"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "s2-e1",
+          "icon": {
+            "kind": "skill",
+            "id": "argent_guard_stance"
+          },
+          "title": "S1 — Thế Đỡ",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Kích hoạt thế phòng thủ tối đa 8 giây ở mọi cấp. Số lượt đỡ: 2/2/3/3/4 theo cấp kỹ năng."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Đòn trực tiếp hợp lệ đầu tiên tiêu hao một lượt và mở nhịp đỡ 0,75 giây, giảm 99% sát thương của chính đòn kích hoạt và các đòn trực tiếp hợp lệ trong nhịp."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Các đòn trong cùng nhịp không tiêu hao thêm lượt và không kéo dài nhịp. Hết nhịp, đòn hợp lệ tiếp theo lập tức mở nhịp mới nếu còn lượt; không có khoảng hở bắt buộc."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Kỹ năng kết thúc sau nhịp đỡ cuối hoặc khi đủ 8 giây. Nhịp đang diễn ra bị cắt nếu chạm giới hạn 8 giây."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mana: 90/100/110/120/130. Hồi chiêu: 32/31/30/29/28 giây, bắt đầu khi thế phòng thủ kết thúc."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Đỡ được đạn, tên lửa, va chạm và sát thương kỹ năng trực tiếp, gồm các nhịp laser. Cháy, sát thương theo thời gian và sát thương chuẩn không được đỡ và không tiêu lượt."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Thế Đỡ không phải lá chắn có lượng Máu, không giảm sát thương liên tục trong toàn bộ 8 giây và không tạo miễn nhiễm khống chế."
+            }
+          ]
+        },
+        {
+          "id": "s2-e2",
+          "icon": {
+            "kind": "skill",
+            "id": "argent_guard_stance"
+          },
+          "title": "Cấp 2 — Phản Nhận",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Nhịp đỡ đầu tiên phóng một Phiến Kim về phía nguồn tấn công, gây 100% Hỏa Lực, xuyên mục tiêu và bay tối đa 240 đơn vị."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Phiến sau đó dừng trên chiến trường, tồn tại 6 giây và có thể được Thu Nhận. Nếu không xác định được nguồn tấn công, Phiến bay thẳng phía trước."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Chỉ kích hoạt một lần mỗi lần dùng Thế Đỡ; bấm kỹ năng mà chưa đỡ đòn không tạo Phiến."
+            }
+          ]
+        },
+        {
+          "id": "s2-e3",
+          "icon": {
+            "kind": "skill",
+            "id": "argent_guard_stance"
+          },
+          "title": "Cấp 3 — Tam Thủ",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Tăng số lượt đỡ từ 2 lên 3. Mỗi nhịp vẫn kéo dài 0,75 giây và giảm 99% sát thương hợp lệ."
+            }
+          ]
+        },
+        {
+          "id": "s2-e4",
+          "icon": {
+            "kind": "skill",
+            "id": "argent_guard_stance"
+          },
+          "title": "Cấp 4 — Tôi Kim",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mỗi nhịp đỡ mới được kích hoạt tích một tầng Tôi Kim, tối đa 3 tầng; tồn tại 6 giây tính từ nhịp đỡ gần nhất."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Lần Thu Nhận tiếp theo tiêu hao các tầng. Phiến đầu tiên của lần thu trúng từng mục tiêu gây thêm 40% Hỏa Lực mỗi tầng, tối đa 120% Hỏa Lực."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mỗi mục tiêu chỉ nhận phần sát thương bổ sung một lần trong lần thu. Các đòn cùng một nhịp đỡ không tích thêm tầng."
+            }
+          ]
+        },
+        {
+          "id": "s2-e5",
+          "icon": {
+            "kind": "skill",
+            "id": "argent_guard_stance"
+          },
+          "title": "Cấp 5 — Phá Thế",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Tăng số lượt đỡ từ 3 lên 4."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Nếu đã dùng đủ bốn lượt, khi thế phòng thủ kết thúc Argent phóng một đại kiếm thẳng phía trước, gây 250% Hỏa Lực, tầm 360 đơn vị và xuyên mục tiêu."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mỗi mục tiêu trúng một lần; đại kiếm không để lại Phiến. Hết 8 giây mà chưa dùng đủ bốn lượt thì không kích hoạt Phá Thế."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "ARGENT · PHÓNG NHẬN",
+      "icon": {
+        "kind": "skill",
+        "id": "argent_blade_cast"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "s3-e1",
+          "icon": {
+            "kind": "skill",
+            "id": "argent_blade_cast"
+          },
+          "title": "S2 — Phóng Nhận",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Phóng 5 Phiến Kim thành hình quạt 40° phía trước, tầm bay 360 đơn vị. Sau khi phóng, Phiến dừng lại để có thể thu về."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Sát thương mỗi Phiến lúc phóng: 110%/130%/150%/170%/190% Hỏa Lực theo cấp kỹ năng."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Ở cấp 1–2, mỗi Phiến gây đầy đủ sát thương lên mục tiêu đầu và 75% sát thương lên các mục tiêu xuyên tiếp theo."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mana: 100/110/120/130/140. Hồi chiêu: 24/23/22/21/20 giây, bắt đầu khi lượt phóng hoàn tất; không chờ Phiến hết thời gian tồn tại hoặc được thu về."
+            }
+          ]
+        },
+        {
+          "id": "s3-e2",
+          "icon": {
+            "kind": "skill",
+            "id": "argent_blade_cast"
+          },
+          "title": "Nâng cấp Phóng Nhận",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Cấp 2 — Sắc Nhận: tăng sát thương mỗi Phiến theo bảng cấp kỹ năng."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Cấp 3 — Xuyên Tuyến: Phiến gây đầy đủ sát thương lên mọi mục tiêu xuyên qua."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Cấp 4 — Lưu Nhận: Phiến do Phóng Nhận tạo ra tồn tại 8 giây sau khi dừng, thay vì 6 giây."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Cấp 5 — Đan Nhận: mỗi địch trúng ít nhất hai Phiến lúc phóng của cùng lần dùng nhận thêm 100% Hỏa Lực, tối đa một lần trên mỗi mục tiêu trong lần dùng đó."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "ARGENT · THU NHẬN",
+      "icon": {
+        "kind": "skill",
+        "id": "argent_blade_recall"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "s4-e1",
+          "icon": {
+            "kind": "skill",
+            "id": "argent_blade_recall"
+          },
+          "title": "S3 — Thu Nhận",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Thu các Phiến đang chờ lúc kích hoạt về vị trí hiện tại của Argent, gây sát thương xuyên địch trên đường bay. Phiến được tạo hoặc dừng sau đó không tham gia lần thu đang diễn ra."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Không có Phiến đang chờ thì không thể dùng kỹ năng, không tiêu Mana hoặc tầng Tôi Kim và không bắt đầu hồi chiêu."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Sát thương cơ sở mỗi Phiến lúc thu: 140%/170%/200%/230%/260% Hỏa Lực theo cấp kỹ năng."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Ở cấp 1–4, xét riêng trên từng mục tiêu trong cùng lần thu: Phiến thứ 1–3 gây 100%, thứ 4–6 gây 50%, thứ 7–12 gây 25% sát thương cơ sở."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mana: 90/100/110/120/130. Hồi chiêu: 22/21/20/19/18 giây, bắt đầu khi toàn bộ lượt thu kết thúc."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Phiến thu hướng về vị trí hiện tại của Argent; đường kiếm cập nhật khi người chơi vuốt đổi vị trí."
+            }
+          ]
+        },
+        {
+          "id": "s4-e2",
+          "icon": {
+            "kind": "skill",
+            "id": "argent_blade_recall"
+          },
+          "title": "Nâng cấp Thu Nhận",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Cấp 2 — Tốc Thu: tăng tốc độ bay về của Phiến thêm 20%."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Cấp 3 — Ghim Chặt: địch trúng ba Phiến thu trong cùng lần dùng bị Trói 0,8 giây; Tinh Anh 0,4 giây. Boss bị làm chậm 15% trong 1 giây. Mỗi mục tiêu kích hoạt một lần trong lần thu."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Cấp 4 — Kim Lực Tuần Hoàn: mỗi Phiến thu gây sát thương thực tế lên ít nhất một địch hồi 1,5% Mana tối đa, một lần trên mỗi Phiến; tổng tối đa 12% Mana tối đa mỗi lần dùng."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Cấp 5 — Vạn Nhận Xuyên Tâm: sát thương Phiến thứ 1–3/4–6/7–12 lên cùng mục tiêu đổi thành 100%/60%/30% sát thương cơ sở."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Ở cấp 5, nếu cùng mục tiêu trúng 3/6/12 Phiến thì tổng cơ sở lần lượt là 780%/1248%/1716% Hỏa Lực, trước Giáp, Tôi Kim và các hiệu ứng khác."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "ARGENT · THIÊN LA KIẾM TRẬN",
+      "icon": {
+        "kind": "skill",
+        "id": "argent_heavenly_blade_array"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "s5-e1",
+          "icon": {
+            "kind": "skill",
+            "id": "argent_heavenly_blade_array"
+          },
+          "title": "Ultimate — Thiên La Kiếm Trận",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Tạo kiếm trận cố định bán kính 120, với sáu đại kiếm chém theo ba cặp từ những hướng khác nhau."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Tự chọn cụm đông địch nhất trong phạm vi 400 đơn vị phía trước Argent. Nếu số lượng bằng nhau, ưu tiên cụm có Boss, sau đó Tinh Anh."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Nếu vùng chọn không có địch hợp lệ, vẫn đặt tâm trận cách Argent 240 đơn vị phía trước, giới hạn trong sân đấu; vẫn tiêu Mana và hồi chiêu như bình thường."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Vị trí trận cố định ngay khi chọn. Báo trước 0,4 giây; ba cặp bắt đầu chém cách nhau 0,45 giây. Argent vẫn có thể di chuyển, bắn thường và dùng kỹ năng khác."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Sát thương mỗi đại kiếm: 400%/500%/600% Hỏa Lực theo cấp ultimate. Mỗi kiếm xuyên mục tiêu và gây một lần lên từng mục tiêu trên đường chém."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Sau khi chém, mỗi đại kiếm để lại một Phiến đang chờ, tồn tại 6 giây, tính vào giới hạn 12 và có thể được Thu Nhận."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mana: 150/200/250. Hồi chiêu: 90 giây ở mọi cấp, bắt đầu khi lượt chém cuối hoàn tất; không đợi Phiến hết hạn hoặc thu về."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Dùng Thu Nhận sớm chỉ thu những kiếm đã chuyển sang chờ. Ultimate không tự kích hoạt Thu Nhận."
+            }
+          ]
+        },
+        {
+          "id": "s5-e2",
+          "icon": {
+            "kind": "skill",
+            "id": "argent_heavenly_blade_array"
+          },
+          "title": "Nâng cấp Thiên La Kiếm Trận",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Cấp 2 — Khóa Trận: địch trúng cả hai kiếm của một cặp bị làm chậm 30% trong 2 giây; Boss 15%. Áp dụng lại làm mới thời gian, không cộng dồn phần trăm."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Cấp 3 — Trảm Tâm: địch trúng ít nhất một kiếm từ mỗi trong ba cặp nhận thêm 300% Hỏa Lực sau lượt chém cuối, một lần trên mỗi mục tiêu trong lần dùng."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Nếu trúng đủ sáu kiếm, tổng sát thương chiều chém là 2400%/3000%/3600% Hỏa Lực; ở cấp 3 có Trảm Tâm thành 3900%, trước Giáp và các hiệu ứng khác. Sát thương thu kiếm được tính riêng theo Thu Nhận."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s6",
+      "title": "ARGENT · HÌNH ẢNH VÀ GIAO DIỆN",
+      "icon": {
+        "kind": "vfx",
+        "id": "argent_blade_array"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "s6-e1",
+          "icon": {
+            "kind": "aircraft",
+            "id": "argent"
+          },
+          "title": "Ngân Dực — Sprite và hình minh họa riêng",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Chiến cơ bạc có thân thon, mũi kiếm và hai cánh ghép từ các phiến kim loại. Màu bạc trắng kết hợp vàng champagne và viền xám than."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Các phiến cánh mở khi phóng kiếm, khép khi vào Thế Đỡ và nhận lại kiếm khi Thu Nhận. Chuyển động hình ảnh giữ nguyên điều khiển và vùng va chạm chiến cơ."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Bổ sung hình minh họa chiến cơ, icon nội tại, kỹ năng và nâng cấp theo cùng thiết kế Kim."
+            }
+          ]
+        },
+        {
+          "id": "s6-e2",
+          "icon": {
+            "kind": "vfx",
+            "id": "argent_metal_light"
+          },
+          "title": "Hiệu ứng Kim — Sáng, rõ và sắc nét",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Đạn thường có mũi bạc trắng, quầng sáng và vệt sáng theo hướng bay; điểm trúng phát tia kim loại ngắn."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Phiến Kim phân biệt rõ trạng thái phóng, chờ và thu. Thân kiếm, cạnh sáng và vệt bạc giúp theo dõi đường kiếm khi đổi vị trí."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Thế Đỡ ghép các mặt giáp sáng trong từng nhịp; Phản Nhận bật Phiến khỏi giáp, Tôi Kim làm sáng sống kiếm và Phá Thế hội tụ giáp thành đại kiếm."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Phóng Nhận hiển thị rõ năm đường kiếm và dấu chém X của Đan Nhận. Thu Nhận có vệt hội tụ, phản hồi Ghim Chặt và hạt sáng hoàn Mana."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Thiên La Kiếm Trận có vùng báo trước rõ, sáu đại kiếm sáng và ba cặp chém phân biệt; Trảm Tâm có dấu ấn cùng nhát xuyên tâm riêng."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Ánh sáng tập trung ở thân kiếm, cạnh chém và điểm va chạm; quầng sáng giữ gọn để vẫn nhìn rõ đạn địch."
+            }
+          ]
+        },
+        {
+          "id": "s6-e3",
+          "icon": {
+            "kind": "system",
+            "id": "ui"
+          },
+          "title": "HUD, âm thanh và phản hồi kỹ năng",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Số Phiến đang chờ hiển thị ngay trên nút Thu Nhận dưới dạng n/12. Nút thể hiện khi không có Phiến để thu."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Thế Đỡ hiển thị lượt còn lại và nhịp đang bảo vệ; Tôi Kim có dấu hiệu tối đa ba tầng và thông tin trong tooltip."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Bổ sung phản hồi âm thanh kim loại cho ghép giáp, phóng kiếm, thu kiếm và các đòn đại kiếm, theo thiết lập âm thanh hiện hành."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Rung màn hình nhẹ và ngắn chỉ ở Phá Thế và các cặp chém ultimate. Giảm chuyển động tắt rung; các đòn thường và kỹ năng còn lại không rung."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Thông tin cấp kỹ năng, nâng cấp, Mana và hồi chiêu được hiển thị cùng icon riêng trong tooltip."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s7",
+      "title": "HỆ THỐNG · TÍCH HỢP ARGENT",
+      "icon": {
+        "kind": "system",
+        "id": "rules"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "s7-e1",
+          "icon": {
+            "kind": "system",
+            "id": "core"
+          },
+          "title": "Lõi chung và các quy tắc được giữ",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Argent sử dụng các lõi chung và trang bị tương thích theo hệ thống hiện hành; bản này chưa bổ sung lõi dành riêng cho Argent."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Nâng cấp Phản Nhận, Tam Thủ, Tôi Kim và Phá Thế mở theo cấp Thế Đỡ; các nâng cấp kỹ năng khác cũng theo cấp kỹ năng tương ứng."
+            }
+          ]
+        },
+        {
+          "id": "s7-e2",
+          "icon": {
+            "kind": "system",
+            "id": "rules"
+          },
+          "title": "Lên cấp và điều khiển",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "unchanged",
+              "text": "Giữ cấp chiến cơ tối đa 18, kỹ năng thường tối đa 5 cấp và ultimate tối đa 3 cấp, mở/nâng ở cấp chiến cơ 6/11/16."
+            },
+            {
+              "format": "bullet",
+              "changeType": "unchanged",
+              "text": "Giữ các mốc chọn lõi 1/7/11/15, ba ô trang bị và quy tắc chọn/reroll lõi hiện hành."
+            },
+            {
+              "format": "bullet",
+              "changeType": "unchanged",
+              "text": "Giữ điều khiển vuốt/joystick. Bộ kỹ năng Argent không bổ sung tăng tốc độ di chuyển."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

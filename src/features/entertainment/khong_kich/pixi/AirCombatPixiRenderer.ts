@@ -1,3 +1,4 @@
+import { ARGENT_ART, ARGENT_FRAMES, argentPose, argentShake, paintArgent, ARGENT_SPRITE_BUDGET } from '../airCombatArgentArt';
 import { paintRiptide, RIPTIDE_SPRITE_BUDGET } from '../airCombatRiptideArt';
 import { CINDER_STACK_FONT_SIZE } from '../airCombatFeedback';
 import { paintBigBang } from '../airCombatBigBangArt';
@@ -85,6 +86,9 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
   private magneticSprites: AirCombatSpritePool;
   private astraSprites: AirCombatSpritePool;
   private cinderSprites: AirCombatSpritePool;
+  private argentLayer = new Container();
+  private argentMask = new Graphics();
+  private argentSprites: AirCombatSpritePool;
   private riptideSprites: AirCombatSpritePool;
   private cinderLabels = new Map<number,Text>();
   private equipmentSprites: AirCombatSpritePool;
@@ -162,6 +166,9 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     this.magneticSprites = new AirCombatSpritePool(this.magneticLayer, 512);
     this.astraSprites = new AirCombatSpritePool(this.magneticLayer, 192);
     this.cinderSprites = new AirCombatSpritePool(this.magneticLayer, 320);
+    this.argentMask.rect(GAMEPLAY_SAFE_RECT.left,GAMEPLAY_SAFE_RECT.top,GAMEPLAY_SAFE_RECT.width,GAMEPLAY_SAFE_RECT.height).fill(0xffffff);
+    this.magneticLayer.addChild(this.argentLayer,this.argentMask);this.argentLayer.mask=this.argentMask;
+    this.argentSprites = new AirCombatSpritePool(this.argentLayer, ARGENT_SPRITE_BUDGET);
     this.riptideSprites = new AirCombatSpritePool(this.magneticLayer, RIPTIDE_SPRITE_BUDGET);
     this.equipmentSprites = new AirCombatSpritePool(this.magneticLayer, 640);
     if (this.sky) app.stage.addChild(this.sky.root);
@@ -330,7 +337,8 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
       }
     }
     const starfallShake=Math.max(0,...(world.astra?.impacts??[]).map(i=>2.2*Math.exp(-(world.elapsed-i.at)*12)));
-    const combined=Math.max(this.shake,Math.min(2.8,starfallShake));
+    const argentImpact=Math.max(argentShake(world),argentShake(world.duel?.opponent??world));
+    const combined=world.aircraft.aircraftId==='argent'?argentImpact:Math.max(argentImpact,this.shake,Math.min(2.8,starfallShake));
     this.root.position.set(this.sceneParent||reducedMotion?0:Math.sin(this.clock*113)*combined,this.sceneParent||reducedMotion?0:Math.cos(this.clock*97)*combined*.65);
     for (const [id, until] of this.flashUntil) if (until < this.clock) this.flashUntil.delete(id);
 
@@ -381,6 +389,9 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
       line:(x,y,endX,endY,alpha)=>{this.cinderGeometry.moveTo(x,y).lineTo(endX,endY).stroke({color:0xffaaaa,width:1.5,alpha});}
     });
     paintBigBang(world,(id,key,x,y,width,height,alpha,additive)=>{const sprite=this.cinderSprites.get(id,this.assets.effect(key));if(!sprite)return;sprite.position.set(x,y);sprite.width=width;sprite.height=height;sprite.rotation=0;sprite.alpha=alpha;sprite.tint=0xffffff;sprite.blendMode=additive?'add':'normal';},reducedMotion);
+    this.argentSprites.begin();
+    paintArgent(world,(id,key,x,y,width,height,rotation,alpha,additive)=>{const sprite=this.argentSprites.get(id,this.assets.effect(key));if(!sprite)return;sprite.position.set(x,y);sprite.width=width;sprite.height=height;sprite.rotation=rotation;sprite.alpha=alpha;sprite.tint=0xffffff;sprite.blendMode=additive?'add':'normal';},reducedMotion);
+    this.argentSprites.end();
     this.riptideSprites.begin();
     paintRiptide(world,(id,key,x,y,width,height,rotation,alpha,additive)=>{const sprite=this.riptideSprites.get(id,this.assets.effect(key));if(!sprite)return;sprite.position.set(x,y);sprite.width=width;sprite.height=height;sprite.rotation=rotation;sprite.alpha=alpha;sprite.tint=0xffffff;sprite.blendMode=additive?'add':'normal';},reducedMotion);
     this.riptideSprites.end();
@@ -660,7 +671,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     const alive = !world.destruction && world.aircraft.currentHp > 0;
     this.player.visible = alive;
     const invisible = (world.aircraft.activeEffects.invisibility || 0) > 0 || equipmentUntargetable(world.aircraft);
-    this.player.texture = this.assets.texture(visual.neutral);
+    this.player.texture = this.assets.texture(world.aircraft.aircraftId==='argent'?argentPose(world):visual.neutral);
     this.player.rotation = 0;
     this.player.position.set(world.playerX, world.playerY + (reducedMotion ? 0 : this.recoil));
     this.player.width = this.player.height = visual.size*playerAirframeScale(world.aircraft);
@@ -807,7 +818,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     this.mirageSprites.destroy();
     this.stormbreakerSprites.destroy();
     this.stormbreakerPresentation.clear();
-    this.astraSprites.destroy();this.cinderSprites.destroy();this.riptideSprites.destroy();for(const label of this.cinderLabels.values())label.destroy();this.cinderLabels.clear();
+    this.astraSprites.destroy();this.cinderSprites.destroy();this.riptideSprites.destroy();this.argentSprites.destroy();for(const label of this.cinderLabels.values())label.destroy();this.cinderLabels.clear();
     this.equipmentSprites.destroy();
     this.enemies.destroy(); this.missileSmoke.destroy(); this.projectiles.destroy(); this.missiles.destroy(); this.projectileGlows.destroy(); this.afterimages.destroy(); this.companions.destroy(); this.warnings.destroy(); this.engines.destroy(); this.vfx.destroy();
     if (this.sceneParent) {

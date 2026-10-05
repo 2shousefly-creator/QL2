@@ -1,3 +1,4 @@
+import { ARGENT_UPGRADE_ICONS } from './airCombatArgentArt';
 import { PassiveDetails } from './AirCombatPassive';
 import { PASSIVES } from './airCombatPassives';
 import { SkillIcon } from './SkillIcon';
@@ -60,7 +61,7 @@ function AircraftSelectionDetails({ aircraftId, side }: { aircraftId: AircraftId
   return <>
     <div className="air-selection-identity">
       <AircraftPreview key={aircraftId} aircraftId={aircraftId} className="air-selection-portrait" />
-      <div><span className="air-selection-code">{config.code}{aircraftId==='riptide'?' · Hành Thủy':''}</span><h3>{config.name}</h3><p className="air-selection-role">{profile.role}</p></div>
+      <div><span className="air-selection-code">{config.code}{aircraftId==='argent'?' · Ngân Dực · Hành Kim':aircraftId==='riptide'?' · Hành Thủy':''}</span><h3>{config.name}</h3><p className="air-selection-role">{profile.role}</p></div>
     </div>
     <p className="air-selection-description">{profile.description}</p>
     <AircraftSelectionPower power={profile.power} />
@@ -135,7 +136,7 @@ function AircraftSelectionSkills({ aircraftId }: { aircraftId: AircraftId }) {
         <div className="space-y-3 text-sm leading-relaxed text-[var(--modal-text)]">
           <p><CoreDescription text={model.description} /></p>
           <div>{model.detailRows.map(row => <p key={row}><CoreDescription text={row} /></p>)}<p>Hồi chiêu: {formatCooldownSeconds(model.cooldown)}</p></div>
-          {model.rankRows.map(row => <section key={row.rank}><h4 className="font-bold">Cấp {row.rank} — {row.name}</h4><p className="whitespace-pre-line"><CoreDescription text={row.displayDescription} /></p></section>)}
+          {model.rankRows.map(row => <section key={row.rank}><h4 className="font-bold">{ARGENT_UPGRADE_ICONS[detailSkill as keyof typeof ARGENT_UPGRADE_ICONS]&&<SkillIcon id={ARGENT_UPGRADE_ICONS[detailSkill as keyof typeof ARGENT_UPGRADE_ICONS][row.rank-1]} className="air-argent-upgrade-icon"/>}Cấp {row.rank} — {row.name}</h4><p className="whitespace-pre-line"><CoreDescription text={row.displayDescription} /></p></section>)}
         </div>
       </OverlayBody>
     </AirCombatModal>}

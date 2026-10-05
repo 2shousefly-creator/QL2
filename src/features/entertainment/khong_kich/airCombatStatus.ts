@@ -8,7 +8,7 @@ export type AttackTag = "crimson_barrage" | "iron_suppression" | "radar_bombardm
 export interface StatusPayload { stun?: number; skillLock?: number; resourceJam?: number; resourceMultiplier?: number; armorBreak?: number; regenDisable?: number; healingReduction?: number; healingReceivedMultiplier?: number }
 export type Allegiance = "player" | "hostile" | "friendly_hacked";
 export type DamageDelivery = "direct_projectile" | "aircraft_collision" | "explosive_aoe" | "area_hazard" | "beam" | "shockwave";
-export interface AttackMetadata { capturable?:boolean; allegiance?:Allegiance; delivery?:DamageDelivery; sourceEnemyId?: number; sourceEnemyType?: import("./airCombatTypes").EnemyType; attackTag?: AttackTag; majorBossAttack?: boolean; payload?: StatusPayload }
+export interface AttackMetadata { damageOverTime?:boolean; capturable?:boolean; allegiance?:Allegiance; delivery?:DamageDelivery; sourceEnemyId?: number; sourceEnemyType?: import("./airCombatTypes").EnemyType; attackTag?: AttackTag; majorBossAttack?: boolean; payload?: StatusPayload }
 export type MarkName = "hunterMark" | "suppression" | "corrosion" | "targetLock" | "hunted";
 export interface PlayerCombatStatus {
   fractureResolve?: boolean; fractureStunUntil?: number;
@@ -59,7 +59,7 @@ export function addStatusMark(state: AircraftCombatState, name: MarkName, durati
   state.status.marks[name] = { count, hits, window:seconds, until: now + seconds, sourceEnemyId };
   return count;
 }
-const hardControlImmune = (state:AircraftCombatState) => skillRank(state,"afterburner")>=5&&(state.activeEffects.afterburner??0)>0;
+export const hardControlImmune = (state:AircraftCombatState) => skillRank(state,"afterburner")>=5&&(state.activeEffects.afterburner??0)>0;
 export const playerStunned = (state: AircraftCombatState) => !hardControlImmune(state)&&state.status.stunnedUntil > state.coreState.time;
 export const playerSkillLocked = (state: AircraftCombatState) => (playerStunned(state) && !hasCore(state,203)) || state.status.skillLockedUntil > state.coreState.time;
 

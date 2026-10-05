@@ -1,3 +1,4 @@
+import { isArgentSkill } from './airCombatArgentConfig';
 import { isRiptideSkill } from './airCombatRiptideConfig';
 import { isCinderSkill } from './airCombatCinderConfig';
 import { aircraftTargetability } from "./airCombatTargetability";
@@ -392,7 +393,7 @@ export function tickAircraftState(state: AircraftCombatState, deltaSeconds: numb
         }
     }
     for (const key of Object.keys(state.activeEffects) as SkillId[]) {
-        if(isRiptideSkill(key)||isCinderSkill(key)||isAstraSkill(key)||key==="predator_lock"||key==="gravity_anchor"||key==="electronic_interference"||key==="focus_laser")continue; // World-owned completion includes delayed impacts.
+        if(isArgentSkill(key)||isRiptideSkill(key)||isCinderSkill(key)||isAstraSkill(key)||key==="predator_lock"||key==="gravity_anchor"||key==="electronic_interference"||key==="focus_laser")continue; // World-owned completion includes delayed impacts.
         const next = (state.activeEffects[key] || 0) - dt;
         if (next <= 0)
             endAircraftSkill(state, key);

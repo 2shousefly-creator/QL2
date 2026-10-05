@@ -4,6 +4,13 @@ class SoundManager {
   private waterNoise:AudioBuffer|null=null;
   private waterVoices=new Set<AudioBufferSourceNode>();
 
+  private metalVoices=new Set<OscillatorNode>();
+  public stopMetal(){for(const voice of this.metalVoices){try{voice.stop();}catch{}}this.metalVoices.clear();}
+  public playMetal(kind:'guard'|'slash'|'recall'|'heavy'){
+    if(!this.enabled)return;this.initCtx();const ctx=this.ctx;if(!ctx||this.metalVoices.size>=6)return;
+    const now=ctx.currentTime,duration=kind==='heavy'?.12:.085,base=kind==='guard'?1250:kind==='slash'?2100:kind==='recall'?1650:520;
+    for(const partial of [1,2.76]){const voice=ctx.createOscillator(),gain=ctx.createGain();voice.type='sine';voice.frequency.setValueAtTime(base*partial,now);voice.frequency.exponentialRampToValueAtTime(base*partial*.65,now+duration);gain.gain.setValueAtTime(.001,now);gain.gain.linearRampToValueAtTime(.035/partial,now+.003);gain.gain.exponentialRampToValueAtTime(.001,now+duration);voice.connect(gain);gain.connect(ctx.destination);this.metalVoices.add(voice);voice.onended=()=>{this.metalVoices.delete(voice);voice.disconnect();gain.disconnect();};voice.start();voice.stop(now+duration);}
+  }
   public stopWater() {
     for(const voice of this.waterVoices){try{voice.stop();}catch{}}
     this.waterVoices.clear();
@@ -33,12 +40,12 @@ class SoundManager {
 
   public setEnabled(enabled: boolean) {
     this.enabled = enabled;
-    if(!enabled)this.stopWater();
+    if(!enabled){this.stopWater();this.stopMetal();}
   }
 
   public toggleMute(): boolean {
     this.enabled = !this.enabled;
-    if(!this.enabled)this.stopWater();
+    if(!this.enabled){this.stopWater();this.stopMetal();}
     return this.enabled;
   }
 

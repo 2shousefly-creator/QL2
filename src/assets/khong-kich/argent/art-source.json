@@ -1,0 +1,33 @@
+{
+  "version": "26.22.0",
+  "authoring": "scripts/air-combat/create-argent-art.mjs",
+  "palette": [
+    "#DCE4EC",
+    "#F7FBFF",
+    "#FFFFFF",
+    "#E8C878",
+    "#B58A39",
+    "#26313D"
+  ],
+  "aircraft": {
+    "cell": 256,
+    "poses": [
+      "idle",
+      "left",
+      "right",
+      "open",
+      "guard"
+    ]
+  },
+  "icons": {
+    "cell": 128,
+    "columns": 5,
+    "rows": 4
+  },
+  "vfx": {
+    "cell": 128,
+    "columns": 4,
+    "rows": 4
+  },
+  "direction": "Silver detached sword wings, champagne spine, charcoal diamond cockpit. Shared Canvas/Pixi alpha raster frames."
+}

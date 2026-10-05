@@ -1,3 +1,5 @@
+import { argentState, argentRecallOpportunity } from './airCombatArgentRuntime';
+import { isArgentSkill } from './airCombatArgentConfig';
 import { riptideState } from './airCombatRiptideRuntime';
 import { RIPTIDE, isRiptideSkill, riptideValues } from './airCombatRiptideConfig';
 import { gravityAnchorValues } from "./airCombatGravityAnchor";
@@ -149,6 +151,16 @@ function skillUtility(id: SkillId, s: AircraftCombatState, ai: MirrorAI, p: Poin
 
     return -Infinity;
   }
+  if(isArgentSkill(id)) {
+    const since=actor.elapsed-(ai.lastCastAt??-Infinity),danger=ai.incoming>0||ai.escapeRisk>.5;
+    if(since<(id==='argent_guard_stance'?.2:.65))return -Infinity;
+    if(id==='argent_guard_stance')return danger?1.8:-Infinity;
+    if(!seen.targetVisible||seen.targetProtected)return -Infinity;
+    const target=mirrorPoint(seen.player.x,seen.player.y);
+    if(id==='argent_blade_recall')return argentRecallOpportunity(actor,target.x,target.y)?1.7:-Infinity;
+    if(id==='argent_blade_cast')return ahead&&distance(p,seen.player)<380?1.3:-Infinity;
+    return ahead&&distance(p,seen.player)<=400?1.6:-Infinity;
+  }
   if(isRiptideSkill(id)) {
     const stats=getEffectiveAircraftStats(s),hp=s.currentHp/stats.maxHp,near=distance(p,seen.player),since=actor.elapsed-(ai.lastCastAt??-Infinity);
     if(since<(id==='riptide_wellspring'?.25:.65))return -Infinity;
@@ -189,7 +201,7 @@ function skillUtility(id: SkillId, s: AircraftCombatState, ai: MirrorAI, p: Poin
   const sinceCast=actor.elapsed-(ai.lastCastAt??-Infinity),planned=ai.plan?.nextSkill===id;
   // Emergency defense may interrupt the offensive cadence, but casts do not cascade every decision.
   if(sinceCast<(defensive?.2:planned?.4:.85))return -Infinity;
-  const defense = ({riptide:"riptide_wellspring",cinder:"cinder_fire_shield",black_eagle:"decoy",breaker:"armor_shield",phantom:"invisibility",astra:"orbit_reversal"} as const)[s.aircraftId];
+  const defense = ({argent:"argent_guard_stance",riptide:"riptide_wellspring",cinder:"cinder_fire_shield",black_eagle:"decoy",breaker:"armor_shield",phantom:"invisibility",astra:"orbit_reversal"} as const)[s.aircraftId];
   const defenseReady=skillRank(s,defense)>0&&(s.cooldowns[defense]??0)<3&&(s.activeEffects[defense]??0)<=0;
   const reserveCost=!defensive&&defenseReady?Math.min(getSkillRuntimeValues(s,defense).cost,Math.max(0,stats.maxResource-values.cost)):0;
   const lethalWindow=seen.playerHp>0&&seen.playerHp<stats.firepower*Math.max(1,values.damageMultiplier)&&firing>.7;
@@ -197,6 +209,7 @@ function skillUtility(id: SkillId, s: AircraftCombatState, ai: MirrorAI, p: Poin
   if(!defensive&&seen.targetProtected&&!["gravity_anchor","twin_reflection","escort_drone"].includes(id))return -Infinity;
   const burn=Math.max(0,...actor.enemies.filter(e=>e.hp>0).map(e=>cinderStacks(actor,e.id)));
   const opportunity: Record<SkillId, number> = {
+    argent_guard_stance:0,argent_blade_cast:0,argent_blade_recall:0,argent_heavenly_blade_array:0,
     riptide_wellspring:0,riptide_tidal_blades:0,riptide_confluence:0,riptide_waterform:0,
     cinder_fire_shield:danger+fullScreen*1.8+areaDanger*.5,
     cinder_fuel_barrage:ahead?safe*(.6+steady*.5+committed*.4):0,
@@ -247,6 +260,9 @@ function perceive(w:CombatWorld,ai:MirrorAI,p:Point,actor:CombatWorld) {
     kind:z.kind==="lane_laser"?"lane":z.kind==="rail"?"beam":z.kind==="dash"?"dash":"aoe",
     end:z.kind==="rail"||z.kind==="dash"?{x:z.fromX??z.x,y:z.fromY??z.y}:undefined,
     startsAt:w.elapsed+(z.stage==="active"?0:z.remaining),endsAt:w.elapsed+z.remaining+(z.stage==="active"?0:z.activeDuration??.15)}));
+  const argent=argentState(w);
+  for(const b of argent.blades)if(b.phase!=='wait')bullets.push({x:b.x,y:b.y,vx:Math.cos(b.angle)*b.speed,vy:Math.sin(b.angle)*b.speed,damage:b.ratio*getEffectiveAircraftStats(w.aircraft).firepower,homing:b.phase==='recall',radius:b.width/2,turnRate:0,lifetime:b.phase==='recall'?2:b.distance/b.speed,capturable:false});
+  if(argent.array){const a=argent.array;for(let pair=a.pair;pair<3;pair++){const angle=pair*Math.PI/3;hazards.push({kind:'beam',x:a.x-Math.cos(angle)*120,y:a.y-Math.sin(angle)*120,end:{x:a.x+Math.cos(angle)*120,y:a.y+Math.sin(angle)*120},radius:12,cc:a.rank>=2,startsAt:a.at+.4+pair*.45,endsAt:a.at+.7+pair*.45});}}
   const water=riptideState(w);
   if(water.waterform)hazards.push({kind:'persistent_zone',x:w.playerX,y:w.playerY,radius:190,cc:false,startsAt:water.waterform.at,endsAt:water.waterform.until});
   if(water.confluence)hazards.push({kind:'aoe',x:w.playerX,y:w.playerY,radius:water.confluence.exploded?340:170,cc:!water.confluence.exploded,startsAt:water.confluence.exploded?water.confluence.until:water.confluence.at+1.5,endsAt:water.confluence.until});

@@ -1,3 +1,4 @@
+import { ARGENT_ART } from './airCombatArgentArt';
 import { RIPTIDE_ART } from './airCombatRiptideArt';
 import { CINDER_ART } from './airCombatCinderArt';
 import { ASTRA_ART } from "./airCombatAstraArt";
@@ -12,6 +13,7 @@ export function AircraftPreview({ aircraftId, className = "" }: { aircraftId: Ai
   const [failed, setFailed] = useState(false);
   const config = AIRCRAFT_CONFIGS[aircraftId];
   const row = aircraftId === "black_eagle" ? 0 : aircraftId === "breaker" ? 1 : 2;
+  if(aircraftId==='argent')return <span className={'relative block overflow-hidden '+className}><img src={className.includes('portrait')?ARGENT_ART.portrait:ARGENT_ART.aircraft} alt="Argent — Ngân Dực" draggable={false} className="pointer-events-none absolute max-w-none" style={{width:className.includes('portrait')?'100%':'500%',height:'100%',left:0,top:0}}/></span>;
   return <span className={`relative block overflow-hidden ${className}`}>
     {aircraftId!=="riptide" && aircraftId!=="cinder" && (!loaded || failed) && <AircraftGlyph color={config.color} accent={config.accent} className="absolute inset-0 h-full w-full" />}
     {!failed && <img src={aircraftId==="riptide"?RIPTIDE_ART.aircraft:aircraftId==="cinder"?CINDER_ART.aircraft:aircraftId==="astra"?ASTRA_ART.aircraft:aircraftUrl} alt={`Chiến cơ ${config.name}`} draggable={false}

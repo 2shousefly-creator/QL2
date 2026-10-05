@@ -1,3 +1,4 @@
+import { argentState, argentMovement } from './airCombatArgentRuntime';
 import { riptideState, riptideMovement, riptideSuppressed } from './airCombatRiptideRuntime';
 import { gravityAnchorValues } from "./airCombatGravityAnchor";
 import { resolveTooltipValues } from "./airCombatTooltipValues";
@@ -83,6 +84,12 @@ export function getActiveSkillDuration(world: CombatWorld, id: SkillId) {
     return { remaining: energy.remaining ?? 0, duration: energy.remaining ?? 0, progress: energy.progress,
       timeLabel: hawkEyeTimeLabel(energy.remaining) };
   }
+  if(id==='argent_guard_stance'){
+    const g=argentState(world).guard;if(!g)return null;
+    const active=g.beatUntil>world.elapsed;
+    return {remaining:active?g.beatUntil-world.elapsed:0,duration:.75,progress:active?(g.beatUntil-world.elapsed)/.75:0,timeLabel:active?'Nhịp đỡ 99%':'Thế chờ đòn · '+g.remaining+' lượt'};
+  }
+  if(id==='argent_blade_recall'&&argentState(world).recall)return {remaining:0,duration:0,progress:undefined,timeLabel:'Đang thu Phiến'};
   const v = getSkillRuntimeValues(state, id);
   let remaining = state.activeEffects[id] || 0;
   let duration = state.activeEffectDurations?.[id] ?? v.duration + (id === "focus_laser" ? v.charge : 0);
@@ -205,11 +212,17 @@ function coreCooldownStatuses(world:CombatWorld):StatusPresentation[] {
 
 export function getStatusPresentations(world: CombatWorld): StatusPresentation[] {
   const s = world.aircraft, c = s.coreState, result: StatusPresentation[] = [];
+  const argent=argentState(world),guard=argent.guard;
+  if(guard)result.push({id:'argent:guard',group:'buff',name:guard.beatUntil>world.elapsed?'Nhịp đỡ 99%':'Thế Đỡ · Chờ đòn',description:'Đòn hợp lệ mở một nhịp 0,75 giây; không giảm damage liên tục toàn bộ thế. Còn '+guard.remaining+' lượt. Không đỡ DoT/sát thương chuẩn và không miễn khống chế.',icon:{kind:'skill',id:'argent_guard_stance'},source:'Thế Đỡ',stacks:guard.remaining,badgeText:guard.remaining+' lượt',remaining:guard.until-world.elapsed,duration:8,priority:110});
+  if(argent.temper>0&&argent.temperUntil>world.elapsed)result.push({id:'argent:temper',group:'buff',name:'Tôi Kim',description:'S3 hợp lệ kế tiếp tiêu toàn bộ tầng; Phiến đầu trúng mỗi mục tiêu thêm 40% Hỏa Lực mỗi tầng, tối đa 120%.',icon:{kind:'skill',id:'argent_guard_stance'},source:'Thế Đỡ',stacks:argent.temper,badgeText:argent.temper+'/3',remaining:argent.temperUntil-world.elapsed,duration:6,priority:109});
   const water=riptideState(world).waterform;
   if(water)result.push({id:'riptide:charge',group:'buff',name:'Thủy áp',description:'Nhịp gây sát thương hợp lệ tích sức mạnh nổ; trần hồi Máu 35% Máu tối đa mỗi cast.',icon:{kind:'skill',id:'riptide_waterform'},source:'Thủy Thể',stacks:water.charge,badgeText:water.charge+'/16',remaining:water.until-world.elapsed,duration:8,priority:110});
   const rival=world.duel?.opponent??world.mirage?.mirror?.context.world??world.duelOpponent?.context.world;
   const target=rival?.enemies.find(e=>e.aircraftTarget?.world===world);
   if(rival&&target){
+   const metal=argentState(rival).controls.get(target.id);
+   if(metal&&argentMovement(rival,target)<1){const root=metal.rootUntil>rival.elapsed;result.push({id:'argent:control',group:'debuff',name:root?'Ghim Chặt':'Khóa Trận',description:root?'Tạm giữ vị trí; vẫn có thể bắn và dùng kỹ năng theo luật chung.':'Giảm '+Math.round((1-metal.slow)*100)+'% tốc độ di chuyển.',icon:{kind:'skill',id:root?'argent_blade_recall':'argent_heavenly_blade_array'},source:'Argent đối phương',stacks:1,remaining:(root?metal.rootUntil:metal.slowUntil)-rival.elapsed,duration:root?.8:2,priority:110});}
+
    const slow=riptideState(rival).slows.get(target.id);
    if(slow&&riptideMovement(rival,target)<1)for(const [id,value] of slow.sources)if(value.until>rival.elapsed)result.push({id:'riptide:slow:'+id,group:'debuff',name:'Dòng nước làm chậm',description:'Giảm '+Math.round((1-value.multiplier)*100)+'% tốc độ di chuyển; áp dụng slow mạnh nhất, không cộng dồn.',icon:{kind:'skill',id},source:'Riptide đối phương',stacks:1,remaining:value.until-rival.elapsed,duration:2,priority:100});
    if(riptideSuppressed(rival,target))result.push({id:'riptide:pressure',group:'debuff',name:'Áp Chế Thủy Lực',description:'Gây ít hơn 25% sát thương lên Riptide sở hữu Hội Thủy khi còn trong bán kính 170.',icon:{kind:'skill',id:'riptide_confluence'},source:'Riptide đối phương',stacks:1,remaining:riptideState(rival).confluence!.until-rival.elapsed,duration:2.3,priority:100});

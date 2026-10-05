@@ -1,3 +1,4 @@
+import { ARGENT_ART, ARGENT_ICON_CELLS } from './airCombatArgentArt';
 import { RIPTIDE_ART, RIPTIDE_ICON_CELLS } from './airCombatRiptideArt';
 import type { PassiveId } from './airCombatTypes';
 import React from "react";
@@ -9,6 +10,7 @@ import { SpriteAtlasIcon } from "./SpriteAtlasIcon";
 // Explicit IDs keep HUD, Core cards, selection and tooltips on the same artwork.
 export const SKILL_ICON_CELLS: Record<SkillId | PassiveId, readonly [number, number]> = {
   ...RIPTIDE_ICON_CELLS,
+  ...ARGENT_ICON_CELLS,
   viper_follow_up:[0,0], decoy:[1,0], afterburner:[2,0], predator_lock:[3,0], missile_swarm:[4,0],
   titan_alloy_rounds:[0,1], armor_shield:[1,1], heavy_bomb:[2,1], gravity_anchor:[3,1], sweeping_cannon:[4,1],
   phantom_backup_battery:[0,2], invisibility:[1,2], focus_laser:[2,2], electronic_interference:[3,2], escort_drone:[4,2],
@@ -16,10 +18,12 @@ export const SKILL_ICON_CELLS: Record<SkillId | PassiveId, readonly [number, num
   cinder_thermal_round:[0,4], cinder_fire_shield:[1,4], cinder_fuel_barrage:[2,4], cinder_heat_wave:[3,4], cinder_inferno_beam:[4,4],
 };
 
-export function SkillIcon({ id, className }: { id: SkillId | PassiveId; className?: string }) {
+export function SkillIcon({ id, className }: { id: SkillId | PassiveId | keyof typeof ARGENT_ICON_CELLS; className?: string }) {
+  const argent=ARGENT_ICON_CELLS[id as keyof typeof ARGENT_ICON_CELLS];
+  if(argent)return <SpriteAtlasIcon atlas={ARGENT_ART.icons} columns={5} rows={4} column={argent[0]} row={argent[1]} className={className} fallback={<TriangleAlert/>}/>;
   const riptide=RIPTIDE_ICON_CELLS[id as keyof typeof RIPTIDE_ICON_CELLS];
   if(riptide)return <SpriteAtlasIcon atlas={RIPTIDE_ART.icons} columns={3} rows={2} column={riptide[0]} row={riptide[1]} className={className} fallback={<TriangleAlert />} />;
-  const cell = SKILL_ICON_CELLS[id];
+  const cell = SKILL_ICON_CELLS[id as SkillId | PassiveId];
   if (!cell) return <span className={`combat-ui-icon ${className ?? ""}`} aria-hidden="true"><TriangleAlert /></span>;
   return <SpriteAtlasIcon atlas={skillAtlas} columns={5} rows={5} column={cell[0]} row={cell[1]} className={className} fallback={<TriangleAlert />} />;
 }

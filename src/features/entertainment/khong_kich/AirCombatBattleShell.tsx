@@ -1,3 +1,7 @@
+import { SkillIcon } from './SkillIcon';
+import { ARGENT_UPGRADE_ICONS } from './airCombatArgentArt';
+import { argentState, argentWaiting } from './airCombatArgentRuntime';
+import { playArgentAudio } from './airCombatArgentAudio';
 import { PASSIVES } from './airCombatPassives';
 import { PassiveCell, PassiveDetails } from './AirCombatPassive';
 import { publishCombatNotice } from "./airCombatNotices";
@@ -421,8 +425,10 @@ export const AirCombatBattleShell: React.FC<AirCombatBattleProps> = ({
         }
         // The result reason stops runtime; the final explosion still finishes visually.
         const presentationPaused = [...world.pauseReasons].some(reason => reason !== "result");
+        playArgentAudio(world,presentationPaused||document.hidden||world.ended);
         playRiptideAudio(world,presentationPaused||document.hidden||world.ended);
         const waterOpponent=world.duel?.opponent??world.mirage?.mirror?.context.world;
+        if(waterOpponent)playArgentAudio(waterOpponent,presentationPaused||document.hidden||world.ended);
         if(waterOpponent)playRiptideAudio(waterOpponent,presentationPaused||document.hidden||world.ended);
         const visualDelta = presentationPaused ? 0 : elapsed;
         overlayFeedback?.render(world, visualDelta, presentationPaused, reducedMotion,
@@ -745,6 +751,8 @@ export const AirCombatBattleShell: React.FC<AirCombatBattleProps> = ({
           const statusLabel=locked ? rank===0?(isUltimate(skillId)&&state.level<6?"Khóa đến Lv6":"Chưa học"):"Đã khóa" : manualDetonate ? "Kích nổ" : active ? "Đang bật" : borrow&&availability.available ? "Có thể vay dùng ngay" : blockingCooldown ? `Đang hồi ${formatCooldownSeconds(cooldown)}` : missingResource ? `Thiếu ${resourceLabel}` : unavailable ? "Chưa thể dùng" : "Sẵn sàng";
           return (
             <div className="air-ranked-skill" key={skillId}>
+            {skillId==='argent_blade_recall'&&<span className="air-argent-count" data-ready={availability.available}>{argentWaiting(worldRef.current)}/12</span>}
+            {skillId==='argent_guard_stance'&&<span className="air-argent-guard">{argentState(worldRef.current).guard?argentState(worldRef.current).guard!.remaining+' lượt · '+(argentState(worldRef.current).guard!.beatUntil>worldRef.current.elapsed?'ĐỠ':'Chờ đòn')+' · '+Math.max(0,argentState(worldRef.current).guard!.until-worldRef.current.elapsed).toFixed(1)+'s':''}{argentState(worldRef.current).temper>0?' · Tôi Kim '+argentState(worldRef.current).temper+'/3':''}</span>}
             <button
               key={skillId}
               type="button"
@@ -809,7 +817,7 @@ export const AirCombatBattleShell: React.FC<AirCombatBattleProps> = ({
           <p><CoreDescription text={tooltipModel.description}/></p>
           <div className="air-tooltip-details">{tooltipModel.detailRows.map(row => <div key={row}><CoreDescription text={row}/></div>)}</div>
           {tooltipModel.coreRows.map(row=><p key={row} style={{color:"#fde047"}}><CoreDescription text={row}/></p>)}
-          <div className="air-rank-preview">{tooltipModel.rankRows.map(row=><section key={row.rank} data-unlocked={row.rank<=tooltipModel.rank} data-current={row.rank===tooltipModel.rank}><strong>◆ Cấp {row.rank} — {row.name}</strong><p style={{whiteSpace:"pre-line"}}><CoreDescription text={row.displayDescription}/></p></section>)}</div>
+          <div className="air-rank-preview">{tooltipModel.rankRows.map(row=><section key={row.rank} data-unlocked={row.rank<=tooltipModel.rank} data-current={row.rank===tooltipModel.rank}><strong>{ARGENT_UPGRADE_ICONS[tooltipSkill as keyof typeof ARGENT_UPGRADE_ICONS]&&<SkillIcon id={ARGENT_UPGRADE_ICONS[tooltipSkill as keyof typeof ARGENT_UPGRADE_ICONS][row.rank-1]} className="air-argent-upgrade-icon"/>}◆ Cấp {row.rank} — {row.name}</strong><p style={{whiteSpace:"pre-line"}}><CoreDescription text={row.displayDescription}/></p></section>)}</div>
         </motion.aside></AirCombatTooltipPortal>
       )}
 
