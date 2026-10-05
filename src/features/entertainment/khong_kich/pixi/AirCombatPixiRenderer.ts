@@ -1,4 +1,4 @@
-import { paintRiptide } from '../airCombatRiptideArt';
+import { paintRiptide, RIPTIDE_SPRITE_BUDGET } from '../airCombatRiptideArt';
 import { CINDER_STACK_FONT_SIZE } from '../airCombatFeedback';
 import { paintBigBang } from '../airCombatBigBangArt';
 import { paintCinder } from '../airCombatCinderArt';
@@ -85,6 +85,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
   private magneticSprites: AirCombatSpritePool;
   private astraSprites: AirCombatSpritePool;
   private cinderSprites: AirCombatSpritePool;
+  private riptideSprites: AirCombatSpritePool;
   private cinderLabels = new Map<number,Text>();
   private equipmentSprites: AirCombatSpritePool;
   private enemies: AirCombatSpritePool;
@@ -161,6 +162,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     this.magneticSprites = new AirCombatSpritePool(this.magneticLayer, 512);
     this.astraSprites = new AirCombatSpritePool(this.magneticLayer, 192);
     this.cinderSprites = new AirCombatSpritePool(this.magneticLayer, 320);
+    this.riptideSprites = new AirCombatSpritePool(this.magneticLayer, RIPTIDE_SPRITE_BUDGET);
     this.equipmentSprites = new AirCombatSpritePool(this.magneticLayer, 640);
     if (this.sky) app.stage.addChild(this.sky.root);
     (sceneParent ?? app.stage).addChild(this.root);
@@ -379,7 +381,9 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
       line:(x,y,endX,endY,alpha)=>{this.cinderGeometry.moveTo(x,y).lineTo(endX,endY).stroke({color:0xffaaaa,width:1.5,alpha});}
     });
     paintBigBang(world,(id,key,x,y,width,height,alpha,additive)=>{const sprite=this.cinderSprites.get(id,this.assets.effect(key));if(!sprite)return;sprite.position.set(x,y);sprite.width=width;sprite.height=height;sprite.rotation=0;sprite.alpha=alpha;sprite.tint=0xffffff;sprite.blendMode=additive?'add':'normal';},reducedMotion);
-    paintRiptide(world,(id,key,x,y,width,height,rotation,alpha)=>{const sprite=this.cinderSprites.get(id,this.assets.effect(key));if(!sprite)return;sprite.position.set(x,y);sprite.width=width;sprite.height=height;sprite.rotation=rotation;sprite.alpha=alpha;sprite.tint=0xffffff;sprite.blendMode='normal';},reducedMotion);
+    this.riptideSprites.begin();
+    paintRiptide(world,(id,key,x,y,width,height,rotation,alpha,additive)=>{const sprite=this.riptideSprites.get(id,this.assets.effect(key));if(!sprite)return;sprite.position.set(x,y);sprite.width=width;sprite.height=height;sprite.rotation=rotation;sprite.alpha=alpha;sprite.tint=0xffffff;sprite.blendMode=additive?'add':'normal';},reducedMotion);
+    this.riptideSprites.end();
     this.cinderSprites.end();
     this.magneticSprites.end();
     this.stormbreakerSprites.begin(); this.stormbreakerWarnings.clear();
@@ -803,7 +807,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     this.mirageSprites.destroy();
     this.stormbreakerSprites.destroy();
     this.stormbreakerPresentation.clear();
-    this.astraSprites.destroy();this.cinderSprites.destroy();for(const label of this.cinderLabels.values())label.destroy();this.cinderLabels.clear();
+    this.astraSprites.destroy();this.cinderSprites.destroy();this.riptideSprites.destroy();for(const label of this.cinderLabels.values())label.destroy();this.cinderLabels.clear();
     this.equipmentSprites.destroy();
     this.enemies.destroy(); this.missileSmoke.destroy(); this.projectiles.destroy(); this.missiles.destroy(); this.projectileGlows.destroy(); this.afterimages.destroy(); this.companions.destroy(); this.warnings.destroy(); this.engines.destroy(); this.vfx.destroy();
     if (this.sceneParent) {

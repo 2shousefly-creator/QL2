@@ -762,7 +762,7 @@ export function drawLegacyWorld(
     }
   },reducedMotion);
   paintBigBang(world,(_id,key,x,y,width,height,alpha,additive)=>{ctx.save();ctx.globalCompositeOperation=additive?"lighter":"source-over";drawMagneticFrame(ctx,BIGBANG_FRAMES[key],x,y,width,height,0,alpha);ctx.restore();},reducedMotion);
-  paintRiptide(world,(_id,key,x,y,width,height,rotation,alpha)=>drawMagneticFrame(ctx,RIPTIDE_FRAMES[key],x,y,width,height,rotation,alpha),reducedMotion);
+  paintRiptide(world,(_id,key,x,y,width,height,rotation,alpha,additive)=>{ctx.save();ctx.globalCompositeOperation=additive?'lighter':'source-over';drawMagneticFrame(ctx,RIPTIDE_FRAMES[key],x,y,width,height,rotation,alpha);ctx.restore();},reducedMotion);
   paintCinder(world,(_id,key,x,y,width,height,rotation,alpha)=>drawMagneticFrame(ctx,CINDER_FRAMES[key],x,y,width,height,rotation,alpha),reducedMotion,(_id,text,x,y)=>{ctx.save();ctx.translate(x,y);if(world.mirrorContext)ctx.rotate(Math.PI);ctx.font='bold '+CINDER_STACK_FONT_SIZE+'px sans-serif';ctx.lineWidth=1.2;ctx.strokeStyle='#1c2026';ctx.fillStyle='#fff1af';ctx.strokeText(text,0,0);ctx.fillText(text,0,0);ctx.restore();},{
     rect:(x,y,width,height,fillAlpha,lineAlpha)=>{ctx.save();ctx.fillStyle='#ff6565';ctx.globalAlpha=fillAlpha;ctx.fillRect(x,y,width,height);ctx.globalAlpha=lineAlpha;ctx.strokeStyle='#ff7979';ctx.lineWidth=1.5;ctx.strokeRect(x,y,width,height);ctx.restore();},
     line:(x,y,endX,endY,alpha)=>{ctx.save();ctx.strokeStyle='#ffaaaa';ctx.globalAlpha=alpha;ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(endX,endY);ctx.stroke();ctx.restore();}
