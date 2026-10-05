@@ -2,6 +2,7 @@ import type { AircraftId, PassiveId, AircraftCombatState } from './airCombatType
 export const PASSIVE_LEVELS=[1,6,11,16] as const;
 export const passiveTier=(level:number)=>level>=16?3:level>=11?2:level>=6?1:0;
 export const PASSIVES:Record<AircraftId,{id:PassiveId;name:string;coefficients:readonly number[];description:string}>={
+ riptide:{id:'riptide_afterwash',name:'Dư Ba',coefficients:[.2,.25,.3,.35],description:'Đạn thường chính trúng địch gây nước vỡ bán kính 45, gây 20/25/30/35% sát thương đòn chính trước chí mạng và giảm trừ lên địch khác. Mỗi địch phụ áp dụng Giáp riêng, tối đa một lần mỗi loạt bắn; không chí mạng, không hồi chiêu, đạn phụ/nảy/phản chiếu/drone/kỹ năng/trang bị/lõi không kích hoạt.'},
  black_eagle:{id:'viper_follow_up',name:'Bắn Bồi',coefficients:[.2,.3,.4,.5],description:'+10% chí mạng. Đòn chính chí mạng phóng đạn bồi vào chính mục tiêu: 20/30/40/50% sát thương trước chí mạng; hồi chiêu riêng 0,5 giây, không chí mạng, không đổi mục tiêu hoặc tự kích hoạt lại.'},
  breaker:{id:'titan_alloy_rounds',name:'Đạn Hợp Kim',coefficients:[.21,.24,.27,.3],description:'Đòn bắn chính cộng 21/24/27/30% Giáp hiện tại thành sát thương thông thường không chí mạng. Oanh Tạc chỉ đạn giữa nhận sát thương cộng thêm; không thêm vào kỹ năng hoặc đạn phụ.'},
  phantom:{id:'phantom_backup_battery',name:'Pin Dự Phòng',coefficients:[8,8,8,8],description:'Pin riêng sạc +1,5%/giây; đầy và Điện dưới 10% thì tiêu hao 20% pin/giây trong 5 giây, nạp 8 Điện cố định/giây (tối đa 40). Chờ nguội 5 giây rồi sạc lại. Khởi đầu mỗi trận/vòng: 0%.'},

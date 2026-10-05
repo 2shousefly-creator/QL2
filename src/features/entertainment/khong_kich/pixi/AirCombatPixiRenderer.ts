@@ -1,3 +1,4 @@
+import { paintRiptide } from '../airCombatRiptideArt';
 import { CINDER_STACK_FONT_SIZE } from '../airCombatFeedback';
 import { paintBigBang } from '../airCombatBigBangArt';
 import { paintCinder } from '../airCombatCinderArt';
@@ -378,6 +379,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
       line:(x,y,endX,endY,alpha)=>{this.cinderGeometry.moveTo(x,y).lineTo(endX,endY).stroke({color:0xffaaaa,width:1.5,alpha});}
     });
     paintBigBang(world,(id,key,x,y,width,height,alpha,additive)=>{const sprite=this.cinderSprites.get(id,this.assets.effect(key));if(!sprite)return;sprite.position.set(x,y);sprite.width=width;sprite.height=height;sprite.rotation=0;sprite.alpha=alpha;sprite.tint=0xffffff;sprite.blendMode=additive?'add':'normal';},reducedMotion);
+    paintRiptide(world,(id,key,x,y,width,height,rotation,alpha)=>{const sprite=this.cinderSprites.get(id,this.assets.effect(key));if(!sprite)return;sprite.position.set(x,y);sprite.width=width;sprite.height=height;sprite.rotation=rotation;sprite.alpha=alpha;sprite.tint=0xffffff;sprite.blendMode='normal';},reducedMotion);
     this.cinderSprites.end();
     this.magneticSprites.end();
     this.stormbreakerSprites.begin(); this.stormbreakerWarnings.clear();

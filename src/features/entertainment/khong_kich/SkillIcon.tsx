@@ -1,3 +1,4 @@
+import { RIPTIDE_ART, RIPTIDE_ICON_CELLS } from './airCombatRiptideArt';
 import type { PassiveId } from './airCombatTypes';
 import React from "react";
 import { TriangleAlert } from "lucide-react";
@@ -7,6 +8,7 @@ import { SpriteAtlasIcon } from "./SpriteAtlasIcon";
 
 // Explicit IDs keep HUD, Core cards, selection and tooltips on the same artwork.
 export const SKILL_ICON_CELLS: Record<SkillId | PassiveId, readonly [number, number]> = {
+  ...RIPTIDE_ICON_CELLS,
   viper_follow_up:[0,0], decoy:[1,0], afterburner:[2,0], predator_lock:[3,0], missile_swarm:[4,0],
   titan_alloy_rounds:[0,1], armor_shield:[1,1], heavy_bomb:[2,1], gravity_anchor:[3,1], sweeping_cannon:[4,1],
   phantom_backup_battery:[0,2], invisibility:[1,2], focus_laser:[2,2], electronic_interference:[3,2], escort_drone:[4,2],
@@ -15,6 +17,8 @@ export const SKILL_ICON_CELLS: Record<SkillId | PassiveId, readonly [number, num
 };
 
 export function SkillIcon({ id, className }: { id: SkillId | PassiveId; className?: string }) {
+  const riptide=RIPTIDE_ICON_CELLS[id as keyof typeof RIPTIDE_ICON_CELLS];
+  if(riptide)return <SpriteAtlasIcon atlas={RIPTIDE_ART.icons} columns={3} rows={2} column={riptide[0]} row={riptide[1]} className={className} fallback={<TriangleAlert />} />;
   const cell = SKILL_ICON_CELLS[id];
   if (!cell) return <span className={`combat-ui-icon ${className ?? ""}`} aria-hidden="true"><TriangleAlert /></span>;
   return <SpriteAtlasIcon atlas={skillAtlas} columns={5} rows={5} column={cell[0]} row={cell[1]} className={className} fallback={<TriangleAlert />} />;

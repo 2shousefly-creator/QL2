@@ -6,6 +6,7 @@ export const AIRCRAFT_SELECTION_PROFILES: Record<AircraftId, {
   description: string;
   power: readonly [number, number, number, number];
 }> = {
+  riptide:{role:'Cận chiến · Hội tụ · Hồi phục',description:'Áp sát bằng những lưỡi nước xoay quanh thân, gom địch bằng Hội Thủy và duy trì Thủy Thể để gây sát thương, hồi Máu rồi giải phóng thủy áp.',power:[84,88,60,82]},
   cinder:{role:'Thiêu đốt · Duy trì sát thương',description:'Duy trì Cháy để gây sát thương chuẩn, dùng Khiên Lửa để trụ vững và phối hợp vùng nhiên liệu với quầng nhiệt cùng luồng hỏa năng.',power:[85,79,66,74]},
   black_eagle: {
     role: "Tốc xạ · Dồn sát thương",

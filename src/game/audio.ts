@@ -1,6 +1,31 @@
 class SoundManager {
   private ctx: AudioContext | null = null;
   private enabled: boolean = true;
+  private waterNoise:AudioBuffer|null=null;
+  private waterVoices=new Set<AudioBufferSourceNode>();
+
+  public stopWater() {
+    for(const voice of this.waterVoices){try{voice.stop();}catch{}}
+    this.waterVoices.clear();
+  }
+
+  public playWater(kind:'shot'|'impact'|'slash'|'pull'|'burst'|'body'|'heal',phase=0) {
+    if(!this.enabled)return;
+    this.initCtx();const ctx=this.ctx;if(!ctx||this.waterVoices.size>=8)return;
+    try {
+      if(!this.waterNoise){this.waterNoise=ctx.createBuffer(1,Math.ceil(ctx.sampleRate*.15),ctx.sampleRate);const data=this.waterNoise.getChannelData(0);
+        // Audio-only deterministic noise; never consumes combat randomness.
+        let seed=0x21a7;for(let i=0;i<data.length;i++){seed=(seed*1664525+1013904223)>>>0;data[i]=(seed/4294967296*2-1)*.7;}}
+      const voice=ctx.createBufferSource(),filter=ctx.createBiquadFilter(),gain=ctx.createGain();voice.buffer=this.waterNoise;
+      const now=ctx.currentTime,duration=kind==='shot'?.055:kind==='impact'?.075:.12;
+      const frequency=kind==='body'?170:kind==='pull'?250+phase*1300:kind==='heal'?1250:kind==='burst'?450:kind==='slash'?2200:1800;
+      filter.type='bandpass';filter.Q.value=kind==='body'?2.5:.65;filter.frequency.setValueAtTime(frequency,now);
+      filter.frequency.exponentialRampToValueAtTime(kind==='pull'?frequency*1.12:Math.max(90,frequency*.35),now+duration);
+      gain.gain.setValueAtTime(.001,now);gain.gain.linearRampToValueAtTime(kind==='body'?.025:kind==='pull'?.04:kind==='burst'?.12:.07,now+.008);gain.gain.exponentialRampToValueAtTime(.001,now+duration);
+      voice.connect(filter);filter.connect(gain);gain.connect(ctx.destination);this.waterVoices.add(voice);
+      voice.onended=()=>{this.waterVoices.delete(voice);voice.disconnect();filter.disconnect();gain.disconnect();};voice.start();voice.stop(now+duration);
+    }catch{}
+  }
 
   constructor() {
     // Lazy init audio context on user interaction
@@ -8,10 +33,12 @@ class SoundManager {
 
   public setEnabled(enabled: boolean) {
     this.enabled = enabled;
+    if(!enabled)this.stopWater();
   }
 
   public toggleMute(): boolean {
     this.enabled = !this.enabled;
+    if(!this.enabled)this.stopWater();
     return this.enabled;
   }
 

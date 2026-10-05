@@ -1,0 +1,10 @@
+{
+  "aircraft": "riptide",
+  "version": "26.21.0",
+  "source": "Original raster artwork generated with the built-in image generation tool; alpha extraction and atlas packing with Sharp.",
+  "design": "Mechanical pressure-water manta; deep blue, teal, aqua and pearl metal. Shared aircraft design for combat, selection and release thumbnails.",
+  "aircraft.png": { "width": 768, "height": 768, "pivot": [0.5, 0.5] },
+  "icons.png": { "width": 768, "height": 512, "columns": 3, "rows": 2, "order": ["afterwash", "wellspring", "tidal_blades", "confluence", "waterform", "pressure"] },
+  "vfx.png": { "width": 1024, "height": 1024, "columns": 2, "rows": 2, "order": ["ring", "slash", "compressed_drop", "splash"] },
+  "rendering": "Preloaded shared raster frames in Pixi and Canvas; bounded effects follow gameplay time. No collision geometry derives from artwork."
+}

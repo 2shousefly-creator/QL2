@@ -60,7 +60,7 @@ function AircraftSelectionDetails({ aircraftId, side }: { aircraftId: AircraftId
   return <>
     <div className="air-selection-identity">
       <AircraftPreview key={aircraftId} aircraftId={aircraftId} className="air-selection-portrait" />
-      <div><span className="air-selection-code">{config.code}</span><h3>{config.name}</h3><p className="air-selection-role">{profile.role}</p></div>
+      <div><span className="air-selection-code">{config.code}{aircraftId==='riptide'?' · Hành Thủy':''}</span><h3>{config.name}</h3><p className="air-selection-role">{profile.role}</p></div>
     </div>
     <p className="air-selection-description">{profile.description}</p>
     <AircraftSelectionPower power={profile.power} />

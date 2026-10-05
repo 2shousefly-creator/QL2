@@ -1,3 +1,5 @@
+import { riptideState } from './airCombatRiptideRuntime';
+import { RIPTIDE, isRiptideSkill, riptideValues } from './airCombatRiptideConfig';
 import { gravityAnchorValues } from "./airCombatGravityAnchor";
 import { cinderWaveRadius } from './airCombatCinderRuntime';
 import { cinderState, cinderStacks } from './airCombatCinderRuntime';
@@ -107,10 +109,12 @@ function trajectoryCost(from:Point,to:Point,seen:Perception,radius:number,veloci
   }
   return danger/8;
 }
-function verticalBands(player:Point) {
+function verticalBands(player:Point,close=false) {
+  if(close)return {preferred:clamp(player.y-110,R.top+35,R.bottom-65),soft:Math.max(R.top+35,player.y-65),hard:Math.max(R.top+35,player.y-45)};
   return {preferred:clamp(player.y-180,R.top+35,R.bottom-180),soft:Math.max(R.top+35,player.y-100),hard:Math.max(R.top+45,player.y-60)};
 }
-function positionalCost(p:Point,seen:Perception,intent:Intent) {
+function positionalCost(p:Point,seen:Perception,intent:Intent,close=false) {
+  if(close){const edge=Math.min(p.x-R.left,R.right-p.x,p.y-R.top,R.bottom-p.y);return Math.max(0,28-edge)/8+Math.abs(distance(p,seen.player)-115)/45+Math.max(0,p.y-seen.player.y)/20;}
   const band=verticalBands(seen.player),edge=Math.min(p.x-R.left,R.right-p.x,p.y-R.top,R.bottom-p.y);
   const trap=Math.max(0,p.y-band.soft)/12+Math.max(0,p.y-band.hard)/5+Math.max(0,p.y-(R.top+R.height*.65))/18;
   const escape=Math.max(0,40-edge)/8;
@@ -127,6 +131,8 @@ function skillUtility(id: SkillId, s: AircraftCombatState, ai: MirrorAI, p: Poin
   const predictedX = clamp(seen.player.x + seen.velocity.x * leadSeconds, R.left, R.right);
   const firing = ahead ? clamp(1 - Math.abs(p.x - predictedX) / 65, 0, 1) : 0;
   if (ready.manualAction) {
+    if(id==='riptide_waterform'){const water=riptideState(actor).waterform,near=distance(p,seen.player)<=RIPTIDE.waterRadius;
+      return water&&ready.manualAction==='detonate'&&water.charge>0&&near&&(water.until-actor.elapsed<.55||seen.playerHp<water.charge*riptideValues('riptide_waterform',water.rank).chargeRatio*getEffectiveAircraftStats(s).firepower*.65||distance(p,seen.player)>165)?1.8:-Infinity;}
     if (id === "orbit_reversal") {
       const orbit = actor.astra?.orbit;
       return orbit && orbit.captured > 0 && firing > .45 && (ai.incoming <= 0 || orbit.until - actor.elapsed < .35)
@@ -142,6 +148,17 @@ function skillUtility(id: SkillId, s: AircraftCombatState, ai: MirrorAI, p: Poin
     }
 
     return -Infinity;
+  }
+  if(isRiptideSkill(id)) {
+    const stats=getEffectiveAircraftStats(s),hp=s.currentHp/stats.maxHp,near=distance(p,seen.player),since=actor.elapsed-(ai.lastCastAt??-Infinity);
+    if(since<(id==='riptide_wellspring'?.25:.65))return -Infinity;
+    if(id==='riptide_wellspring')return hp<.78?1+(1-hp)*2:-Infinity;
+    if(!seen.targetVisible||seen.targetProtected)return -Infinity;
+    const reserve=hp<.65?getSkillRuntimeValues(s,'riptide_wellspring').cost:0;
+    if(s.currentResource-getSkillRuntimeValues(s,id).cost<reserve)return -Infinity;
+    if(id==='riptide_tidal_blades')return near<165?1.4:-Infinity;
+    if(id==='riptide_confluence')return near<170?(riptideState(actor).waterform?1.9:1.3):-Infinity;
+    return near<180&&ai.escapeRisk<1.2?1.5:-Infinity;
   }
   const defensive = ["cinder_fire_shield", "decoy", "armor_shield", "invisibility", "electronic_interference", "orbit_reversal"].includes(id);
   if (!seen.targetVisible && !defensive && !(id==="starfall"&&seen.hasStarfallTarget)) return -Infinity;
@@ -172,7 +189,7 @@ function skillUtility(id: SkillId, s: AircraftCombatState, ai: MirrorAI, p: Poin
   const sinceCast=actor.elapsed-(ai.lastCastAt??-Infinity),planned=ai.plan?.nextSkill===id;
   // Emergency defense may interrupt the offensive cadence, but casts do not cascade every decision.
   if(sinceCast<(defensive?.2:planned?.4:.85))return -Infinity;
-  const defense = ({cinder:"cinder_fire_shield",black_eagle:"decoy",breaker:"armor_shield",phantom:"invisibility",astra:"orbit_reversal"} as const)[s.aircraftId];
+  const defense = ({riptide:"riptide_wellspring",cinder:"cinder_fire_shield",black_eagle:"decoy",breaker:"armor_shield",phantom:"invisibility",astra:"orbit_reversal"} as const)[s.aircraftId];
   const defenseReady=skillRank(s,defense)>0&&(s.cooldowns[defense]??0)<3&&(s.activeEffects[defense]??0)<=0;
   const reserveCost=!defensive&&defenseReady?Math.min(getSkillRuntimeValues(s,defense).cost,Math.max(0,stats.maxResource-values.cost)):0;
   const lethalWindow=seen.playerHp>0&&seen.playerHp<stats.firepower*Math.max(1,values.damageMultiplier)&&firing>.7;
@@ -180,6 +197,7 @@ function skillUtility(id: SkillId, s: AircraftCombatState, ai: MirrorAI, p: Poin
   if(!defensive&&seen.targetProtected&&!["gravity_anchor","twin_reflection","escort_drone"].includes(id))return -Infinity;
   const burn=Math.max(0,...actor.enemies.filter(e=>e.hp>0).map(e=>cinderStacks(actor,e.id)));
   const opportunity: Record<SkillId, number> = {
+    riptide_wellspring:0,riptide_tidal_blades:0,riptide_confluence:0,riptide_waterform:0,
     cinder_fire_shield:danger+fullScreen*1.8+areaDanger*.5,
     cinder_fuel_barrage:ahead?safe*(.6+steady*.5+committed*.4):0,
     cinder_heat_wave:safe*(burn>0?.8+burn*.15:.35),
@@ -229,6 +247,10 @@ function perceive(w:CombatWorld,ai:MirrorAI,p:Point,actor:CombatWorld) {
     kind:z.kind==="lane_laser"?"lane":z.kind==="rail"?"beam":z.kind==="dash"?"dash":"aoe",
     end:z.kind==="rail"||z.kind==="dash"?{x:z.fromX??z.x,y:z.fromY??z.y}:undefined,
     startsAt:w.elapsed+(z.stage==="active"?0:z.remaining),endsAt:w.elapsed+z.remaining+(z.stage==="active"?0:z.activeDuration??.15)}));
+  const water=riptideState(w);
+  if(water.waterform)hazards.push({kind:'persistent_zone',x:w.playerX,y:w.playerY,radius:190,cc:false,startsAt:water.waterform.at,endsAt:water.waterform.until});
+  if(water.confluence)hazards.push({kind:'aoe',x:w.playerX,y:w.playerY,radius:water.confluence.exploded?340:170,cc:!water.confluence.exploded,startsAt:water.confluence.exploded?water.confluence.until:water.confluence.at+1.5,endsAt:water.confluence.until});
+  if(water.blades)hazards.push({kind:'persistent_zone',x:w.playerX,y:w.playerY,radius:170,cc:water.blades.rank>=4,startsAt:water.blades.at,endsAt:water.blades.until});
   const cinder=cinderState(w),fuel=cinder.fuel,beam=cinder.beam;
   for(const shot of cinder.followups.slice(0,8))bullets.push({x:shot.x,y:shot.y,vx:Math.cos(shot.angle)*600,vy:Math.sin(shot.angle)*600,damage:shot.raw,homing:true,radius:2.5,turnRate:8,lifetime:shot.until-w.elapsed,capturable:false});
   if(fuel){const v=cinderValues('cinder_fuel_barrage',fuel.rank);for(const dx of [-126,-42,42,126])hazards.push({kind:'persistent_zone',x:fuel.x+dx,y:fuel.y,radius:v.radius,cc:false,startsAt:fuel.land,endsAt:fuel.until});if(fuel.rank>=5)for(const dx of [-84,0,84])hazards.push({kind:'persistent_zone',x:fuel.x+dx,y:fuel.y,radius:v.radius,cc:false,startsAt:fuel.land,endsAt:fuel.until});}
@@ -267,7 +289,7 @@ function roleThreshold(id:SkillId,actor:CombatWorld,ai:MirrorAI) {
 }
 function updatePlan(ai:MirrorAI,s:AircraftCombatState,now:number) {
   if(ai.plan&&(ai.plan.expiresAt<=now||ai.lastCast===ai.plan.nextSkill))ai.plan=undefined;
-  const follow:Partial<Record<SkillId,SkillId>>={cinder_fuel_barrage:"cinder_heat_wave",cinder_heat_wave:"cinder_inferno_beam",predator_lock:"afterburner",gravity_anchor:"heavy_bomb",armor_shield:"sweeping_cannon",invisibility:"focus_laser",twin_reflection:"stellar_lance",orbit_reversal:"starfall"};
+  const follow:Partial<Record<SkillId,SkillId>>={riptide_confluence:"riptide_waterform",riptide_waterform:"riptide_tidal_blades",cinder_fuel_barrage:"cinder_heat_wave",cinder_heat_wave:"cinder_inferno_beam",predator_lock:"afterburner",gravity_anchor:"heavy_bomb",armor_shield:"sweeping_cannon",invisibility:"focus_laser",twin_reflection:"stellar_lance",orbit_reversal:"starfall"};
   if(ai.lastCast&&ai.lastCastAt!==undefined&&now-ai.lastCastAt<2){
     const next=follow[ai.lastCast];
     if(next&&skillRank(s,next)>0&&(!ai.plan||ai.plan.startedAt<ai.lastCastAt))ai.plan={kind:`${ai.lastCast}:${next}`,startedAt:ai.lastCastAt,expiresAt:ai.lastCastAt+3,nextSkill:next};
@@ -280,7 +302,7 @@ export function updateMirrorAI(w:CombatWorld,ai:MirrorAI,s:AircraftCombatState,p
   const seen=observation?projectPerception(observation,w.elapsed,p):undefined;
   let skill:SkillId|undefined,emergency=false;
   if(seen){
-    const radius=17*playerAirframeScale(s),band=verticalBands(seen.player);
+    const radius=17*playerAirframeScale(s),band=verticalBands(seen.player,s.aircraftId==='riptide');
     // Refresh projectile positions from delayed observations only, never unspawned input.
     const danger=seen.bullets.map(b=>({b,...threatApproach(p,{x:ai.vx,y:ai.vy},b)})).filter(t=>t.time<t.b.lifetime&&t.distance<radius+t.b.radius+12);
     const first=danger.sort((a,b)=>a.time-b.time)[0];
@@ -297,10 +319,10 @@ export function updateMirrorAI(w:CombatWorld,ai:MirrorAI,s:AircraftCombatState,p
       const routes=candidates.map(q=>({q,risk:route(q)}));
       const safestUp=Math.min(...routes.filter(({q})=>q.y<=p.y+1).map(({risk})=>risk));
       const scored=routes.filter(({q,risk})=>p.y<band.hard||q.y<=p.y+1||risk+.5<safestUp)
-        .map(({q,risk})=>({q,score:risk*12+positionalCost(q,seen,"evade")})).sort((a,b)=>a.score-b.score);
+        .map(({q,risk})=>({q,score:risk*12+positionalCost(q,seen,"evade",s.aircraftId==='riptide')})).sort((a,b)=>a.score-b.score);
       const best=scored[0];
       if(best){
-        const old=ai.dodge?route(ai.dodge)*12+positionalCost(ai.dodge,seen,"evade"):Infinity;
+        const old=ai.dodge?route(ai.dodge)*12+positionalCost(ai.dodge,seen,"evade",s.aircraftId==='riptide'):Infinity;
         if(!ai.dodge||w.elapsed>=ai.dodgeUntil||old>best.score+4){ai.dodge=best.q;ai.dodgeUntil=w.elapsed+.32;}
         ai.goal=ai.dodge!;
         ai.escapeRisk=route(ai.goal);
@@ -323,7 +345,7 @@ export function updateMirrorAI(w:CombatWorld,ai:MirrorAI,s:AircraftCombatState,p
           [-65,0,65].flatMap(dx=>[-35,0,35].map(dy=>bounded({x:desiredX+dx,y:band.preferred+dy})));
         const legal=candidates.filter(q=>q.y<=band.hard&&(p.y<=band.soft||q.y<=p.y));
         const movementCost = (q: Point) => trajectoryCost(p, q, seen, radius, {x:ai.vx,y:ai.vy}, 250) * 6
-          + positionalCost(q, seen, ai.intent) + distance(q, p) / 300
+          + positionalCost(q, seen, ai.intent,s.aircraftId==='riptide') + distance(q, p) / 300
           + (aimingLaser ? Math.abs(q.x - desiredX) / 25 : 0);
         const scored=legal.map(q=>({q,cost:movementCost(q)})).sort((a,b)=>a.cost-b.cost);
         if(scored[0])ai.goal=scored[0].q;

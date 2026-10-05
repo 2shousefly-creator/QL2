@@ -1,3 +1,4 @@
+import { RIPTIDE_ART, RIPTIDE_FRAMES } from '../airCombatRiptideArt';
 import { BIGBANG_ART, BIGBANG_FRAMES } from '../airCombatBigBangArt';
 import { CINDER_ART, CINDER_FRAMES } from '../airCombatCinderArt';
 import soloArenaUrl from "../../../../assets/khong-kich/solo/solo-duel-arena.png";
@@ -28,6 +29,7 @@ import type { AircraftVisualDefinition, AtlasFrame } from "./airCombatPixiTypes"
 
 const cell = (atlas: AtlasFrame["atlas"], x: number, y: number): AtlasFrame => ({ atlas, rect: [x / 4, y / 4, 0.25, 0.25] });
 export const AIRCRAFT_VISUALS: Record<AircraftId, AircraftVisualDefinition> = {
+  riptide:{neutral:RIPTIDE_FRAMES.riptide_body,left:RIPTIDE_FRAMES.riptide_body,right:RIPTIDE_FRAMES.riptide_body,size:PLAYER_STANDARD_AIRFRAME_SIZE,artwork:PLAYER_ARTWORK.riptide,tint:0x63e3d6},
   cinder:{neutral:{atlas:'cinderAircraft',rect:[0,0,1/3,1]},left:{atlas:'cinderAircraft',rect:[1/3,0,1/3,1]},right:{atlas:'cinderAircraft',rect:[2/3,0,1/3,1]},size:PLAYER_STANDARD_AIRFRAME_SIZE,artwork:PLAYER_ARTWORK.cinder,tint:0xff6418},
   astra:{neutral:{atlas:"astraAircraft",rect:[0,0,1/3,1]},left:{atlas:"astraAircraft",rect:[1/3,0,1/3,1]},right:{atlas:"astraAircraft",rect:[2/3,0,1/3,1]},size:PLAYER_STANDARD_AIRFRAME_SIZE,artwork:PLAYER_ARTWORK.astra,tint:0xffa64d},
   black_eagle: { neutral: cell("aircraft", 0, 0), left: cell("aircraft", 1, 0), right: cell("aircraft", 2, 0), size: PLAYER_STANDARD_AIRFRAME_SIZE, artwork: PLAYER_ARTWORK.black_eagle, tint: 0x67e8f9 },
@@ -46,6 +48,7 @@ export const VFX_VISUALS = {
   ...ammoFrames,
   ...BIGBANG_FRAMES,
   ...CINDER_FRAMES,
+  ...RIPTIDE_FRAMES,
   astra_basic_ammo:{atlas:"astraEffects",rect:[0,0,1/3,1]} as AtlasFrame,
   astra_lance:{atlas:"astraEffects",rect:[1/3,0,1/3,1]} as AtlasFrame,
   basicAmmoTrail: { atlas: "basicAmmo", rect: [0, 1/2, 1/3, 1/2] } as AtlasFrame,
@@ -77,7 +80,8 @@ export async function loadAirCombatAssets() {
   const [cinderAircraft,cinderVfx,cinderProjectiles,cinderIcons,cinderFeedback]=await Promise.all([CINDER_ART.aircraft,CINDER_ART.vfx,CINDER_ART.projectiles,CINDER_ART.icons,CINDER_ART.feedback].map(url=>Assets.load<Texture>(url)));
   const bigBangVfx=await Assets.load<Texture>(BIGBANG_ART);
   const guardianVfx=await Assets.load<Texture>(CINDER_ART.guardianVfx);
-  const sources = { guardianVfx,bigBangVfx,cinderFeedback,cinderAircraft,cinderVfx,cinderProjectiles,cinderIcons, stage4Enemy,stage4Boss,stage4Vfx, stage3Enemy,stage3Boss,stage3Vfx,stage3Emissive, ultimateVfx,rankedVfx,rankedProjectiles, equipmentIcons,equipmentVfx,astraVfx,astraAircraft,astraEffects,aircraft, fortress, vfx, ammo, basicAmmo, healingCross, stage2Enemy, stage2Vfx, stage2Elite };
+  const [riptideAircraft,riptideIcons,riptideVfx]=await Promise.all([RIPTIDE_ART.aircraft,RIPTIDE_ART.icons,RIPTIDE_ART.vfx].map(url=>Assets.load<Texture>(url)));
+  const sources = { riptideAircraft,riptideIcons,riptideVfx, guardianVfx,bigBangVfx,cinderFeedback,cinderAircraft,cinderVfx,cinderProjectiles,cinderIcons, stage4Enemy,stage4Boss,stage4Vfx, stage3Enemy,stage3Boss,stage3Vfx,stage3Emissive, ultimateVfx,rankedVfx,rankedProjectiles, equipmentIcons,equipmentVfx,astraVfx,astraAircraft,astraEffects,aircraft, fortress, vfx, ammo, basicAmmo, healingCross, stage2Enemy, stage2Vfx, stage2Elite };
   const frames = new Map<AtlasFrame, Texture>();
   const texture = (definition: AtlasFrame) => {
     const cached = frames.get(definition);

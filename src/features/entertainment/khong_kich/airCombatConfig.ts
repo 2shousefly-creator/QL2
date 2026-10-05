@@ -1,3 +1,4 @@
+import { RIPTIDE_SKILLS, RIPTIDE_NAMES, riptideValues, riptideDescription } from './airCombatRiptideConfig';
 import { CINDER_SKILLS, CINDER_NAMES, cinderValues, cinderDescription } from "./airCombatCinderConfig";
 import { SKILL_RANKS } from "./airCombatSkillRanks";
 import {
@@ -55,6 +56,7 @@ export const AIR_COMBAT_LIMITS = {
 } as const;
 
 export const AIRCRAFT_CONFIGS: Record<AircraftId, AircraftConfig> = {
+ riptide:{id:'riptide',code:'RI-06',name:'Riptide',role:'Cận chiến · Hội tụ · Hồi phục',description:'Áp sát bằng những lưỡi nước xoay quanh thân, gom địch bằng Hội Thủy và duy trì Thủy Thể để gây sát thương, hồi Máu rồi giải phóng thủy áp.',color:'#168F98',accent:'#63E3D6',resourceKind:'mana',hpRegen:{base:3.5,growth:.35},baseStats:{maxHp:2300,armor:55,firepower:100,fireRate:3.6,maxResource:380,resourceRegen:2,criticalChance:.05,criticalDamageMultiplier:1.7},growth:{maxHp:90,armor:4,firepower:6.5,maxResource:35,resourceRegen:.5,criticalChance:0,criticalDamageMultiplier:0},fireRateRatio:.34,fireRateGrowthPct:.05,skillIds:[...RIPTIDE_SKILLS]},
  cinder:{id:'cinder',code:'CI-05',name:'Cinder',role:'Thiêu đốt · Duy trì sát thương',description:'Duy trì Cháy để gây sát thương chuẩn, dùng Khiên Lửa để trụ vững và phối hợp vùng nhiên liệu với quầng nhiệt cùng luồng hỏa năng.',color:'#FF6418',accent:'#FFF1AF',resourceKind:'mana',hpRegen:{base:3.3,growth:.3},baseStats:{maxHp:2100,armor:48,firepower:110,fireRate:4.08,maxResource:340,resourceRegen:1.5,criticalChance:.05,criticalDamageMultiplier:1.7},growth:{maxHp:80,armor:3.5,firepower:7,maxResource:30,resourceRegen:.45,criticalChance:0,criticalDamageMultiplier:0},fireRateRatio:.337,fireRateGrowthPct:.05,skillIds:["cinder_fire_shield","cinder_fuel_barrage","cinder_heat_wave","cinder_inferno_beam"]},
   astra: {
     id:"astra", name:"Astra", code:"AS-04", role:"Precision Control · Mana",
@@ -164,7 +166,7 @@ export const AIRCRAFT_CONFIGS: Record<AircraftId, AircraftConfig> = {
 };
 
 
-const LEVEL_18_TARGETS = {"cinder":[3460,107.5,229,8.4,850,9.15],"black_eagle": [3187.2, 96.65, 257.4, 7.348, 852.5, 9.625], "breaker": [3853.5, 125.59, 178.2, 9.702, 920, 8.5], "phantom": [3498.2, 110.52, 218.9, 8.525, 100, 2], "astra": [3312.6, 100.94, 264, 7.777, 841.5, 9.306]} as const;
+const LEVEL_18_TARGETS = {"riptide":[3830,123,210.5,9.45,975,10.5],"cinder":[3460,107.5,229,8.4,850,9.15],"black_eagle": [3187.2, 96.65, 257.4, 7.348, 852.5, 9.625], "breaker": [3853.5, 125.59, 178.2, 9.702, 920, 8.5], "phantom": [3498.2, 110.52, 218.9, 8.525, 100, 2], "astra": [3312.6, 100.94, 264, 7.777, 841.5, 9.306]} as const;
 for (const id of Object.keys(LEVEL_18_TARGETS) as AircraftId[]) {
  const c=AIRCRAFT_CONFIGS[id], t=LEVEL_18_TARGETS[id];
  const keys=["maxHp","armor","firepower","maxResource","resourceRegen"] as const;
@@ -179,9 +181,11 @@ export const AIRCRAFT_ORDER: AircraftId[] = [
   "phantom",
   "astra",
   "cinder",
+  "riptide",
 ];
 
 export const SKILL_CONFIGS: Record<SkillId, SkillConfig> = {
+ ...Object.fromEntries(RIPTIDE_SKILLS.map((id,i)=>[id,{id,aircraftId:'riptide',name:RIPTIDE_NAMES[i],shortName:RIPTIDE_NAMES[i],description:riptideDescription(id,1),icon:'',...riptideValues(id,1)}])) as Record<typeof RIPTIDE_SKILLS[number],SkillConfig>,
  ...Object.fromEntries(CINDER_SKILLS.map((id,i)=>[id,{id,aircraftId:'cinder',name:CINDER_NAMES[i],shortName:CINDER_NAMES[i],description:cinderDescription(id,1),icon:'',...cinderValues(id,1)}])) as Record<typeof CINDER_SKILLS[number],SkillConfig>,
   predator_lock: {id:"predator_lock",aircraftId:"black_eagle",name:"Khóa Săn Mồi",shortName:"Khóa Săn Mồi",description:"Khóa Săn Mồi",icon:"✦",cost:80,cooldown:20,duration:8},
   gravity_anchor: {id:"gravity_anchor",aircraftId:"breaker",name:"Neo Trọng Lực",shortName:"Neo Trọng Lực",description:"Neo Trọng Lực",icon:"✦",cost:130,cooldown:25,duration:5,damageMultiplier:.4},

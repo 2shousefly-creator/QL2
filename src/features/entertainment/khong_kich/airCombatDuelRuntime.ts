@@ -1,3 +1,4 @@
+import { cancelRiptide } from './airCombatRiptideRuntime';
 import { cancelCinder } from './airCombatCinderRuntime';
 import { bigBangStep } from './airCombatBigBang';
 import { resolveScheduledBigBang } from './airCombatRuntime';
@@ -202,7 +203,7 @@ function finishRound(match: SoloMatch, winner: "player" | "opponent") {
   match.roundOutcomeLocked = true; match.roundWinner = winner;
   if (winner === "player") match.playerWins++; else match.opponentWins++;
   setCombatGate(match, false);
-  for(const w of [match.world,match.opponent]){cancelCinder(w);w.bigBang=undefined;w.skillCores.aftershocks.length=0;}
+  for(const w of [match.world,match.opponent]){cancelRiptide(w);cancelCinder(w);w.bigBang=undefined;w.skillCores.aftershocks.length=0;}
   if (match.playerWins >= DUEL_WINS || match.opponentWins >= DUEL_WINS) match.winner = winner;
   if (match.world.aircraft.currentHp <= 0 || match.opponent.aircraft.currentHp <= 0) {
     for (const world of [match.world, match.opponent]) {

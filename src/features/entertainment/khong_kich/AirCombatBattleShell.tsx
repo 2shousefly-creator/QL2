@@ -36,6 +36,7 @@ import { CombatUiIcon } from "./CombatUiIcon";
 import "./combat-ui.css";
 import { ArrowLeft, Pause, Play, X, Droplet, Zap } from "lucide-react";
 import { soundManager } from "../../../game/audio";
+import { playRiptideAudio } from './airCombatRiptideAudio';
 import { ModalButton, OverlayBody, OverlayFooter, OverlayHeader } from "../../../components/overlay/AppOverlay";
 import {
   AIR_COMBAT_WORLD,
@@ -305,6 +306,7 @@ export const AirCombatBattleShell: React.FC<AirCombatBattleProps> = ({
     };
     const visibility = () => {
       resetPointers();
+      if(document.hidden)soundManager.stopWater();
       setPauseReason("hidden", document.hidden);
     };
     const escape = (event: KeyboardEvent) => { if (event.key === "Escape") closeAllTooltips(); };
@@ -398,6 +400,7 @@ export const AirCombatBattleShell: React.FC<AirCombatBattleProps> = ({
         resetPlayerControl(); resetSkillPress();
       } else if (!playerControlRef.current) setPlayerInputActive(world, false);
       const paused = world.pauseReasons.size > 0;
+      if(paused||document.hidden)soundManager.stopWater();
       if (!document.hidden && presentation) {
         if (runtime) {
           if (!paused) { runtime.advance(elapsed); syncRuleset(); }
@@ -418,6 +421,9 @@ export const AirCombatBattleShell: React.FC<AirCombatBattleProps> = ({
         }
         // The result reason stops runtime; the final explosion still finishes visually.
         const presentationPaused = [...world.pauseReasons].some(reason => reason !== "result");
+        playRiptideAudio(world,presentationPaused||document.hidden||world.ended);
+        const waterOpponent=world.duel?.opponent??world.mirage?.mirror?.context.world;
+        if(waterOpponent)playRiptideAudio(waterOpponent,presentationPaused||document.hidden||world.ended);
         const visualDelta = presentationPaused ? 0 : elapsed;
         overlayFeedback?.render(world, visualDelta, presentationPaused, reducedMotion,
           bossHpRef.current, bossChipRef.current, bossShieldRef.current, runtime?.takeAnnouncements());
@@ -466,6 +472,7 @@ export const AirCombatBattleShell: React.FC<AirCombatBattleProps> = ({
     })();
     return () => {
       cancelled = true;
+      soundManager.stopWater();
       overlayFeedback?.destroy(); cancelAnimationFrame(animationFrame); presentation?.destroy();
       document.removeEventListener("visibilitychange", resetClock);
       resetPlayerControl(); resetSkillPress();
@@ -747,7 +754,7 @@ export const AirCombatBattleShell: React.FC<AirCombatBattleProps> = ({
               data-skill-cost={values.cost}
               data-borrow-ready={borrow && availability.available}
               data-reduced-motion={reducedMotion}
-              aria-label={`${skill.name}, ${skillId === "escort_drone" ? `yêu cầu triệu hồi ${values.cost} Điện, không tiêu hao khi triệu hồi` : `tốn ${free ? 0 : Math.round(values.cost)} ${resourceLabel}`}, ${statusLabel}`}
+              aria-label={`${skill.name}, ${skillId === "escort_drone" ? `yêu cầu triệu hồi ${values.cost} Điện, không tiêu hao khi triệu hồi` : `tốn ${manualDetonate || free ? 0 : Math.round(values.cost)} ${resourceLabel}`}, ${statusLabel}`}
               aria-disabled={unavailable}
               aria-pressed={active}
               onPointerDown={(event) => onSkillPointerDown(event, skillId)}

@@ -1,0 +1,490 @@
+{
+  "version": "26.21.0",
+  "releaseDate": "05/10/2026",
+  "title": "Riptide — Thủy Áp Cận Chiến",
+  "displayTitle": "KHÔNG KÍCH 26.21.0 — RIPTIDE · THỦY ÁP CẬN CHIẾN",
+  "summary": "Riptide gia nhập đội hình với nội tại Dư Ba, Mạch Nguồn, Song Nhận Thủy Triều, Hội Thủy và Ultimate Thủy Thể. Gom địch quanh chiến cơ, gây sát thương ở cự ly gần và duy trì hồi phục cùng Giáp tăng thêm khi hóa thành thủy thể.",
+  "sections": [
+    {
+      "id": "s1",
+      "title": "CHIẾN CƠ MỚI · RIPTIDE",
+      "icon": {
+        "kind": "aircraft",
+        "id": "riptide"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "s1-e1",
+          "icon": {
+            "kind": "aircraft",
+            "id": "riptide"
+          },
+          "title": "Riptide — Cận chiến, hội tụ và hồi phục",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Thêm Riptide vào đội hình chiến cơ, sử dụng được trong Chiến Dịch và Solo 1v1 cho cả người chơi và AI."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Riptide sử dụng Mana, bắn đạn nước nén thẳng phía trước. Bộ kỹ năng tập trung vào giao tranh cự ly gần, gom địch và hồi phục; đạn thường vẫn có thể tấn công từ xa."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Chỉ số cấp 1 → cấp 18 khi chưa có trang bị, lõi hoặc buff: Máu tối đa 2.300 → 3.830; Giáp 55 → 123; Hỏa Lực 100 → 210,5; tốc độ bắn khoảng 3,60 → 4,64 phát/giây."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mana tối đa 380 → 975; hồi Mana 2 → 10,5 mỗi giây; hồi Máu 3,5 → 9,45 mỗi giây. Tỷ lệ chí mạng cơ bản 5%, sát thương chí mạng 170%."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Riptide có thông tin chiến cơ, nội tại, kỹ năng và hình minh họa riêng trong màn lựa chọn."
+            }
+          ]
+        },
+        {
+          "id": "s1-e2",
+          "icon": {
+            "kind": "skill",
+            "id": "riptide_afterwash"
+          },
+          "title": "Nội tại — Dư Ba",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Đòn bắn thường chính trúng mục tiêu tạo nước vỡ, gây sát thương lên những kẻ địch khác trong bán kính 45 quanh điểm va chạm."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Sát thương lan bằng 20%/25%/30%/35% sát thương đạn thường chính trước chí mạng và giảm trừ, theo cấp chiến cơ 1/6/11/16. Mỗi mục tiêu phụ áp dụng Giáp của chính nó."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mục tiêu bị viên đạn chính đánh trúng không nhận thêm Dư Ba từ chính viên đạn đó. Mỗi mục tiêu phụ chỉ nhận một lần Dư Ba trong cùng một loạt bắn thường."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Dư Ba không chí mạng và không tự sinh thêm Dư Ba. Đạn phụ, đạn nảy, phản chiếu và kỹ năng không kích hoạt nội tại."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Nội tại tự hoạt động từ cấp 1, không dùng điểm kỹ năng và không tốn Mana."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "KỸ NĂNG · MẠCH NGUỒN",
+      "icon": {
+        "kind": "skill",
+        "id": "riptide_wellspring"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "s2-e1",
+          "icon": {
+            "kind": "skill",
+            "id": "riptide_wellspring"
+          },
+          "title": "S1 — Mạch Nguồn",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Hồi ngay 5%/7%/9%/11%/13% Máu tối đa theo cấp kỹ năng. Sau đó hồi 50%/60%/70%/80%/90% Hỏa Lực mỗi giây trong 4 giây, tại các mốc 1/2/3/4 giây."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mana: 100/115/130/145/160. Hồi chiêu: 33/32/31/30/29 giây, bắt đầu sau nhịp hồi cuối."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Cấp 2 — Nguồn Tuôn: tăng lượng hồi Máu tức thời và hồi mỗi giây theo cấp."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Cấp 3 — Thanh Lưu: khi kích hoạt, xóa các hiệu ứng giảm tốc độ di chuyển đang có. Không xóa Choáng, Trói hoặc Cháy và không miễn nhiễm với hiệu ứng áp dụng sau đó."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Cấp 4 — Thủy Hộ: giảm 25% sát thương nhận vào trong 4 giây hồi phục của Mạch Nguồn."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Cấp 5 — Mạch Sinh Tồn: sau khi nâng lên cấp 5, mọi nguồn hồi Máu nhận được tăng 50% khi Máu hiện tại dưới 15%, kể cả khi Mạch Nguồn không hoạt động. Từ 15% Máu trở lên không nhận bonus này."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mạch Sinh Tồn xét Máu ngay trước từng lần hồi; không giữ bonus cho những lần hồi sau nếu Máu đã lên từ 15% trở lên. Hồi dư vượt Máu tối đa mất đi."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Riptide vẫn di chuyển, bắn thường và dùng các kỹ năng khác trong thời gian hồi phục."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "KỸ NĂNG · SONG NHẬN THỦY TRIỀU",
+      "icon": {
+        "kind": "skill",
+        "id": "riptide_tidal_blades"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "s3-e1",
+          "icon": {
+            "kind": "skill",
+            "id": "riptide_tidal_blades"
+          },
+          "title": "S2 — Song Nhận Thủy Triều",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Hai lưỡi nước xoay quanh thân Riptide, tạo hai lượt chém trong 1,2 giây. Phạm vi chém đi theo chiến cơ, bán kính 170 ở mọi cấp."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mỗi lượt gây 250%/300%/350%/400%/450% Hỏa Lực theo cấp kỹ năng. Mỗi mục tiêu nhận tối đa một lần sát thương mỗi lượt, dù cả hai lưỡi nước cùng chạm."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mana: 90/100/110/120/130. Hồi chiêu: 25/24/23/22/21 giây, bắt đầu khi lượt chém thứ hai kết thúc."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Cấp 2 — Sắc Nhận: tăng sát thương hai lượt chém."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Cấp 3 — Trùng Trảm: mục tiêu đã trúng lượt đầu nhận thêm 20% sát thương lượt thứ hai trong cùng lần dùng."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Cấp 4 — Triều Hãm: lượt thứ hai làm chậm di chuyển 25% trong 2 giây; Boss chịu làm chậm 10%."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Cấp 5 — Hồi Lưu: mỗi kẻ địch trúng đủ hai lượt hồi 5% Mana tối đa, giới hạn 30% Mana tối đa mỗi lần dùng. Mỗi kẻ địch chỉ được tính một lần."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Tổng sát thương khi cùng mục tiêu trúng hai lượt ở cấp kỹ năng 1/2/3/4/5 là 500%/600%/770%/880%/990% Hỏa Lực, trước Giáp và các hệ số sát thương khác."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Riptide vẫn di chuyển, bắn thường và dùng các kỹ năng khác khi chém."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "KỸ NĂNG · HỘI THỦY",
+      "icon": {
+        "kind": "skill",
+        "id": "riptide_confluence"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "s4-e1",
+          "icon": {
+            "kind": "skill",
+            "id": "riptide_confluence"
+          },
+          "title": "S3 — Hội Thủy",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Vòng nước lấy Riptide làm tâm, liên tục đi theo chiến cơ và hút kẻ địch trong 1,5 giây, sau đó co lại và nổ."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Bán kính hút và nổ chính đều là 170 ở mọi cấp. Vụ nổ gây 200%/225%/250%/275%/300% Hỏa Lực theo cấp kỹ năng. Không có lõi bên trong hoặc thưởng sát thương ở tâm."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Quái thường chịu đầy đủ lực kéo; Tinh Anh chịu 50% lực kéo; Boss miễn kéo. Mục tiêu bị hút vẫn được tấn công và dùng kỹ năng."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mana: 100/110/120/130/140. Hồi chiêu: 24/23/22/21/20 giây, bắt đầu sau vụ nổ cuối."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Cấp 2 — Cường Lưu: tăng lực kéo thêm 30% so với cấp 1."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Cấp 3 — Nghịch Lưu: địch trong vùng hút bị làm chậm di chuyển 50%; Tinh Anh và Boss chịu làm chậm 15%. Hiệu ứng kéo dài 2 giây, được làm mới khi tiếp tục trong vùng hút."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Cấp 4 — Áp Chế Thủy Lực: khi Hội Thủy đang hoạt động, kẻ địch trong phạm vi 170 gây ít hơn 25% sát thương lên Riptide. Hiệu ứng không lưu lại khi địch ra khỏi vùng hoặc kỹ năng kết thúc."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Cấp 5 — Trùng Triều: sau vụ nổ chính 0,8 giây, nổ lần hai với bán kính 340, gây 225% Hỏa Lực. Tâm nổ là vị trí hiện tại của Riptide; không hút lần nữa."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Nổ lần hai không mở rộng phạm vi hút hoặc phạm vi Áp Chế Thủy Lực. Mỗi mục tiêu nhận tối đa một lần sát thương mỗi vụ nổ; ở cấp 5 trúng cả hai vụ nổ nhận tổng 525% Hỏa Lực."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Các vụ nổ không đẩy mục tiêu văng ra. Riptide vẫn di chuyển, bắn thường và dùng kỹ năng khác."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "ULTIMATE · THỦY THỂ",
+      "icon": {
+        "kind": "skill",
+        "id": "riptide_waterform"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "s5-e1",
+          "icon": {
+            "kind": "skill",
+            "id": "riptide_waterform"
+          },
+          "title": "Thủy Thể — Duy trì giao tranh quanh thân",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Riptide hóa thành thủy thể trong tối đa 8 giây. Vùng nước bán kính 190 đi theo chiến cơ, gây sát thương mỗi 0,5 giây; tối đa 16 nhịp."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Sát thương mỗi nhịp theo cấp Ultimate: 75%/90%/115% Hỏa Lực. Tổng sát thương vùng nếu một mục tiêu trúng đủ 16 nhịp là 1.200%/1.440%/1.840% Hỏa Lực."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Khi Thủy Thể hoạt động, Riptide nhận thêm 40%/80%/120% Giáp theo cấp Ultimate. Buff bắt đầu ngay khi kích hoạt và kết thúc khi trạng thái Thủy Thể kết thúc; đây là tăng Giáp, không phải giảm sát thương trực tiếp cùng tỷ lệ."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Riptide hồi Máu bằng 2%/2,5%/3% sát thương thực tế của vùng nước theo cấp Ultimate; tổng hồi giới hạn 35% Máu tối đa mỗi lần dùng trên toàn bộ mục tiêu."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mạch Sinh Tồn có thể tăng hồi Máu từ Thủy Thể khi Máu dưới 15%, nhưng không tăng trần hồi của Ultimate vượt 35% Máu tối đa."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mana: 150/200/250. Hồi chiêu 85 giây ở mọi cấp, bắt đầu sau vụ nổ kết thúc. Các cấp Ultimate mở tại cấp chiến cơ 6/11/16."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Cấp 2 — Triều Dâng: mỗi nhịp gây 90% Hỏa Lực, tích 50% Hỏa Lực cho vụ nổ mỗi nhịp hợp lệ, hồi 2,5% sát thương vùng thực tế và tăng 80% Giáp."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Cấp 3 — Hải Uy: mỗi nhịp gây 115% Hỏa Lực, tích 60% Hỏa Lực cho vụ nổ mỗi nhịp hợp lệ, hồi 3% sát thương vùng thực tế và tăng 120% Giáp."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Riptide vẫn di chuyển, bắn thường và dùng Mạch Nguồn, Song Nhận Thủy Triều, Hội Thủy trong trạng thái Thủy Thể."
+            }
+          ]
+        },
+        {
+          "id": "s5-e2",
+          "icon": {
+            "kind": "skill",
+            "id": "riptide_waterform"
+          },
+          "title": "Tích thủy áp và chủ động kích nổ",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mỗi nhịp vùng nước gây sát thương lên ít nhất một địch tích thêm 40%/50%/60% Hỏa Lực cho vụ nổ cuối, theo cấp Ultimate. Nhiều địch trúng cùng nhịp vẫn chỉ tích một lần; tối đa 16 lần."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Sau ít nhất 2 giây có thể tái kích hoạt miễn phí để nổ và kết thúc sớm. Hết 8 giây, nhịp sát thương cuối được xử lý trước khi tự nổ."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Vụ nổ có bán kính 190, lấy vị trí hiện tại của Riptide làm tâm. Sát thương tối đa theo cấp Ultimate là 640%/800%/960% Hỏa Lực."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Song Nhận, Hội Thủy, đạn thường và Dư Ba không tích thêm sức mạnh cho vụ nổ Ultimate. Vụ nổ cuối không tạo hồi Máu từ cơ chế Thủy Thể."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Tổng sát thương tối đa lên cùng một mục tiêu trúng đủ vùng và vụ nổ là 1.840%/2.240%/2.800% Hỏa Lực, trước Giáp và các hệ số sát thương khác."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s6",
+      "title": "ĐỒ HỌA · GIAO DIỆN CHIẾN CƠ",
+      "icon": {
+        "kind": "system",
+        "id": "vfx"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "s6-e1",
+          "icon": {
+            "kind": "aircraft",
+            "id": "riptide"
+          },
+          "title": "Diện mạo và hiệu ứng Riptide",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Riptide có hình dáng cá đuối cơ khí: thân chắc, cánh cong, buồng thủy áp và hai cụm nén nước. Giáp xanh biển sâu, xanh ngọc và bạc ngọc trai; nước có viền sáng cùng bọt trắng."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Bổ sung sprite chiến cơ, đạn nước, icon nội tại và bốn kỹ năng cùng hiệu ứng riêng cho từng nâng cấp."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mạch Nguồn thể hiện dòng nước chữa lành và Thủy Hộ; Song Nhận có hai lượt chém rõ ràng; Hội Thủy có dòng hút theo chiến cơ và hai vụ nổ ở cấp 5."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Thủy Thể có lớp nước bao thân, phiến thủy áp thể hiện Giáp tăng thêm, nhịp sát thương và lõi sáng dần theo sức mạnh vụ nổ đã tích."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Hiệu ứng giữ vùng giữa trong suốt để thấy chiến cơ, kẻ địch, đạn và cảnh báo nguy hiểm khi nhiều kỹ năng hoạt động cùng lúc."
+            }
+          ]
+        },
+        {
+          "id": "s6-e2",
+          "icon": {
+            "kind": "system",
+            "id": "ui"
+          },
+          "title": "Thông tin kỹ năng và trạng thái chiến đấu",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Dư Ba xuất hiện ở ô nội tại trước ba kỹ năng thường và Ultimate. Tooltip thể hiện bậc nội tại theo cấp chiến cơ và đầy đủ tên nâng cấp kỹ năng."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "HUD thể hiện thời gian kỹ năng đang hoạt động, hồi chiêu và thời điểm Thủy Thể có thể tái kích hoạt sau 2 giây."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Các trạng thái hồi phục, giảm sát thương, Giáp tăng thêm và hiệu ứng lên địch có thông tin theo dõi tương ứng."
+            }
+          ]
+        },
+        {
+          "id": "s6-e3",
+          "icon": {
+            "kind": "system",
+            "id": "motion"
+          },
+          "title": "Giữ chuyển thanh sức mạnh liền mạch",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "unchanged",
+              "text": "Khi đổi chiến cơ, bốn thanh sức mạnh chuyển trực tiếp từ mức đang hiển thị sang mức mới trong 450 ms, không chạy lại từ 0. Đổi lựa chọn nhanh vẫn tiếp tục từ trạng thái đang hiển thị."
+            },
+            {
+              "format": "bullet",
+              "changeType": "unchanged",
+              "text": "Khi bật giảm chuyển động, thanh hiển thị ngay mức tương ứng."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

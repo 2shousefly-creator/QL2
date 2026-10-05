@@ -1,3 +1,5 @@
+import { beginRiptideSkill, tickRiptide, riptideAfterwash, riptideMovement, riptideIncoming, riptideRecastReady, endRiptideWaterform, cancelRiptide, riptideState, riptideThreatNearby, clearRiptideSlow, type RiptideHooks } from './airCombatRiptideRuntime';
+import { isRiptideSkill } from './airCombatRiptideConfig';
 import { recordPassiveDamage } from "./airCombatPassives";
 import { gravityAnchorValues } from "./airCombatGravityAnchor";
 import { registerNegativeStatusSource } from './airCombatNegativeStatuses';
@@ -199,6 +201,7 @@ export function aircraftTargetView(host: CombatWorld, actor: CombatWorld): Enemy
 function targetNegativeStatusTypes(w: CombatWorld, e: EnemyEntity): Set<string> {
     const result = new Set<string>(), now = w.elapsed, cinder = cinderState(w).targets.get(e.id);
     if (e.hp <= 0) return result;
+    if (riptideMovement(w,e)<1) result.add('slow');
     if (e.burn > 0 || cinder && cinder.entity === e && cinder.burn > 0 && cinder.until > now) result.add('burn');
     if (cinder?.entity === e) {
         if (cinder.slowUntil > now) result.add('slow');
@@ -296,7 +299,7 @@ export function tickDuelActor(actor: CombatWorld, dt: number): void {
     if (actor.ended || (actor.duel && !actor.duel.combatEnabled)) return;
     revalidateAircraftTargets(actor);
     if (actor.aircraft.currentHp <= 0) {
-        cancelCinder(actor); actor.bigBang=undefined;
+        cancelRiptide(actor); cancelCinder(actor); actor.bigBang=undefined;
         // Finish already committed attacks before same-tick KO arbitration.
         updateSkillCoreEffects(actor,dt); updateWarnings(actor,dt); updateLaser(actor,dt);
         updateProjectiles(actor,dt); updateProjectileCollisions(actor); updateParticles(actor,dt); return;
@@ -313,7 +316,7 @@ export function tickDuelActor(actor: CombatWorld, dt: number): void {
     updateCrossfireGrids(actor); updateDroneMovement(actor, dt); updateDecoys(actor, dt);
     updateDecoySalvo(actor, dt); updateSkillCoreEffects(actor, dt); updateWarnings(actor, dt);
     updateLaser(actor, dt); updateMissileSalvo(actor, dt);
-    tickCinder(actor, dt, cinderHooks);
+    tickCinder(actor, dt, cinderHooks); tickRiptide(actor, dt, riptideHooks);
     actor.playerFireCooldown -= dt * aircraftFireRateMultiplier(actor);
     if (actor.aircraft.currentHp > 0 && (!playerStunned(actor.aircraft) || hasCore(actor.aircraft, 203)) && shouldAutoFire(actor.aircraft)
         && actor.laserCharge <= 0 && actor.laserTicksRemaining <= 0 && actor.playerFireCooldown <= 0) {
@@ -367,7 +370,7 @@ export function tickDuelOpponent(world: CombatWorld, mirror: MirrorCombatant, dt
             const moved = mirrorPoint(decision.x, decision.y);
             actor.moveDirectionX = -mirror.ai.vx / Math.max(1, Math.hypot(mirror.ai.vx, mirror.ai.vy));
             actor.moveDirectionY = -mirror.ai.vy / Math.max(1, Math.hypot(mirror.ai.vx, mirror.ai.vy));
-            const slow = (cinderMovementLocked(actor)?0:1)*cinderMovement(world,mirror.target)*rankEnemyMovement(world, mirror.target) * equipmentSlow(world.aircraft, mirror.target);
+            const slow = (cinderMovementLocked(actor)?0:1)*Math.min(riptideMovement(world,mirror.target),cinderMovement(world,mirror.target)*rankEnemyMovement(world, mirror.target) * equipmentSlow(world.aircraft, mirror.target));
             const bounded = clampHitboxToGameplayRect(actor.playerX + (moved.x - actor.playerX) * slow, actor.playerY + (moved.y - actor.playerY) * slow, getPlayerHitbox(actor));
             actor.playerX = bounded.x; actor.playerY = bounded.y;
             if (Math.hypot(mirror.ai.vx, mirror.ai.vy) > 1) actor.aircraft.coreState.lastMove = actor.aircraft.coreState.time;
@@ -421,13 +424,14 @@ function finishMirrorDuel(world: CombatWorld): void {
     world.projectiles=world.projectiles.filter(p=>!p.mirrorBorrowed);
     for(const projectile of world.projectiles)projectile.mirrorSlow=undefined;
     actor.projectiles.length=actor.warnings.length=actor.decoys.length=actor.effectQueue.length=actor.particles.length=0;
-    actor.bigBang=undefined;cancelCinder(actor);
+    actor.bigBang=undefined;cancelRiptide(actor); cancelCinder(actor);
     actor.enemies.length=0;actor.rankRuntime=undefined;actor.astra=undefined;actor.tactical=undefined;
     mirror.incoming.clear();mirror.outgoing.clear();mirror.ai.history.length=0;
     s.mirror=undefined;s.mirrorPhase="boss_delay";s.bossAt=world.elapsed+3;
     mirageFx(world,"bossFracture",GAMEPLAY_SAFE_RECT.left+GAMEPLAY_SAFE_RECT.width/2,GAMEPLAY_SAFE_RECT.top+GAMEPLAY_SAFE_RECT.height/2,640,3);
     const stats=getEffectiveAircraftStats(world.aircraft);
-    world.aircraft.currentHp=Math.min(stats.maxHp,world.aircraft.currentHp+stats.maxHp*.5);
+    if(world.aircraft.aircraftId==='riptide')healAircraft(world.aircraft,stats.maxHp*.5);
+    else world.aircraft.currentHp=Math.min(stats.maxHp,world.aircraft.currentHp+stats.maxHp*.5);
     world.aircraft.currentResource=Math.min(stats.maxResource,world.aircraft.currentResource+stats.maxResource*.5);
     setMessage(world,"ẢO ẢNH TAN VỠ · PARALLAX ZERO",3);
 }
@@ -513,7 +517,7 @@ export interface ProjectileEntity extends AttackMetadata {
     mainBasicMiss?: boolean;
     extraPierceOrdinal?: number;
     expansionCast?: ExpansionCast; expansionSlowUntil?: number;
-    primaryShot?: { resolved: boolean };
+    primaryShot?: { resolved: boolean; afterwashHits?:Set<number> };
     astraLance?:{later:number;followup?:StellarLancePath};
     mirageVisual?: MirageVisualKey;
     stormbreakerVisual?: StormbreakerVfxKey;
@@ -1228,7 +1232,7 @@ function fireBasic(world: CombatWorld): void {
         const target=extra?nearestEnemy(world,world.playerX,world.playerY,[],true):null;
         const angle = extra ? target?Math.atan2(target.y-(world.playerY-17*playerAirframeScale(world.aircraft)),target.x-world.playerX):-Math.PI/2 : -Math.PI / 2 + offset * (sweeping ? ((skillRank(state, "sweeping_cannon") >= 3)?3.5*Math.PI/180:Math.PI/36) : 0.06);
         const ricochet = hasCore(state, 80) && world.random() < .50;
-        const spawned=addProjectile(world, { owner: "player", primaryShot: extra || offset!==0 ? undefined : primaryShot, source: extra ? "basic" : source, ammoVisualKey: BASIC_AMMO_KEYS[state.aircraftId], skillId: sweeping && !extra ? "sweeping_cannon" : undefined,
+        const spawned=addProjectile(world, { owner: "player", primaryShot: extra || (offset!==0 && state.aircraftId!=='riptide') ? undefined : primaryShot, source: extra ? "basic" : source, ammoVisualKey: BASIC_AMMO_KEYS[state.aircraftId], skillId: sweeping && !extra ? "sweeping_cannon" : undefined,
             x: world.playerX + (extra?0:offset*4)*playerAirframeScale(state), y: world.playerY - 17*playerAirframeScale(world.aircraft), vx: Math.cos(angle) * bulletSpeed * (sweeping && !extra && (skillRank(state, "sweeping_cannon") >= 3) ? 1 + V.cannonSpeedBonus : 1), vy: Math.sin(angle) * bulletSpeed * (sweeping && !extra && (skillRank(state, "sweeping_cannon") >= 3) ? 1 + V.cannonSpeedBonus : 1), radius: 3.2,
             rawDamage: stats.firepower * multiplier * context.rawMultiplier * (reappearance ? V.reappearanceDamage : 1), volleyId, volleyHits: extra ? undefined : volleyHits,
             penetrationRemaining: (!extra && hasCore(state,206) ? 1 : 0) + (!extra && hasCore(state, 89) ? Infinity : 0) + (!extra && expansionActive(state,"overloadedBarrel") ? 1 : 0) + (sweeping && !extra && (skillRank(state, "sweeping_cannon") >= 3) ? 2 : 0),
@@ -1767,6 +1771,7 @@ function updateDecoySalvo(world: CombatWorld, dt: number): void {
 function stopAllSkills(world: CombatWorld, preserveControl = false): void {
     world.bigBang=undefined;
     world.aircraft.coreState.stacks.cancellingSkills=1;
+    cancelRiptide(world);
     for (const id of SKILL_IDS)
         endAircraftSkill(world.aircraft, id);
     world.rankRuntime=undefined;
@@ -1799,6 +1804,7 @@ const SKILL_IDS = Object.keys(SKILL_CONFIGS) as SkillId[];
 export function getWorldSkillAvailability(world: CombatWorld, skillId: SkillId) {
     let manual: "toggle" | "detonate" | "pending" | undefined;
 
+    if(skillId==='riptide_waterform'&&riptideState(world).waterform)manual=riptideRecastReady(world)?'detonate':'pending';
     if(skillId==="gravity_anchor"&&world.rankRuntime?.anchor&&skillRank(world.aircraft,skillId)>=5)manual="detonate";
     if(skillId==="orbit_reversal"&&world.astra?.orbit)manual="toggle";
     const availability=getSkillAvailability(world.aircraft,skillId,manual);
@@ -1815,6 +1821,7 @@ export function castWorldSkill(world: CombatWorld, skillId: SkillId): SkillCastR
       if(availability.reason==="resource"&&skillId==="stellar_lance")astraMetric(world,"lance.insufficientMana");
       return {cast:false,reason:availability.reason,resourceSpent:0};
     }
+    if(skillId==='riptide_waterform'&&riptideRecastReady(world)){endRiptideWaterform(world,riptideHooks);return {cast:true,resourceSpent:0,toggledOff:true};}
     if(skillId==="gravity_anchor"&&world.rankRuntime?.anchor&&skillRank(world.aircraft,skillId)>=5){collapseAnchor(world,rankHooks,false);return {cast:true,resourceSpent:0,toggledOff:true};}
     if(skillId==="orbit_reversal"&&world.astra?.orbit){releaseOrbit(world,astraHooks,true);return {cast:true,resourceSpent:0,toggledOff:true};}
     if (skillId === "predator_lock" && !preferredDuelDecoy(world) && !nearestEnemy(world, world.playerX, world.playerY, [], true)) return { cast: false, reason: "invalid", resourceSpent: 0 };
@@ -1852,6 +1859,7 @@ export function castWorldSkill(world: CombatWorld, skillId: SkillId): SkillCastR
                 world.aircraft.cooldowns[id] = Math.max(0, before - rankValues(world.aircraft,id).cooldown * (isUltimate(id)?.05:.15));
                 recordCoreMetric(world.aircraft,93,"cooldown",before-world.aircraft.cooldowns[id]!);
             }
+    if(isRiptideSkill(skillId))beginRiptideSkill(world,skillId,riptideHooks);
     if(isCinderSkill(skillId))beginCinderSkill(world,skillId,cinderHooks);
     if(isAstraSkill(skillId))beginAstraSkill(world,skillId,result.resourceSpent,astraHooks);
     switch (skillId) {
@@ -1924,7 +1932,7 @@ export function movePlayerByDelta(world: CombatWorld, dx: number, dy: number): v
         !Number.isFinite(dx) || !Number.isFinite(dy))
         return;
     const mirror=(world.duelOpponent ?? world.mirage?.mirror);
-    if(mirror){const actor=mirror.context.world,factor=cinderMovement(actor,mirror.playerTarget)*rankEnemyMovement(actor,mirror.playerTarget)*equipmentSlow(actor.aircraft,mirror.playerTarget);dx*=factor;dy*=factor;}
+    if(mirror){const actor=mirror.context.world,factor=Math.min(riptideMovement(actor,mirror.playerTarget),cinderMovement(actor,mirror.playerTarget)*rankEnemyMovement(actor,mirror.playerTarget)*equipmentSlow(actor.aircraft,mirror.playerTarget));dx*=factor;dy*=factor;}
     const startX = world.playerX;
     const startY = world.playerY;
     const end = clampHitboxToGameplayRect(startX + dx, startY + dy, getPlayerHitbox(world));
@@ -2146,7 +2154,7 @@ function clearHostileObjects(world: CombatWorld): void {
 /** Cancel through the normal lifecycle, then remove every Wave-7 damage owner.
  * Called at clear and again immediately before snapshot (countdown permits casts). */
 function clearDuelTransients(world: CombatWorld): void {
-    cancelCinder(world); world.bigBang=undefined;
+    cancelRiptide(world); cancelCinder(world); world.bigBang=undefined;
     stopAllSkills(world);
     clearHostileObjects(world);
     while (world.projectiles.length) recycleProjectile(world, world.projectiles.length - 1);
@@ -2167,7 +2175,7 @@ function clearDuelTransients(world: CombatWorld): void {
     equipment.marks = {}; equipment.effects = {}; equipment.presentationGate = {};
 }
 export function prepareMirrorDuel(world: CombatWorld): void {
-    cancelCinder(world); world.bigBang=undefined;
+    cancelRiptide(world); cancelCinder(world); world.bigBang=undefined;
     clearDuelTransients(world);
     const state = world.aircraft, c = state.coreState;
     // Acquisition progress, consumed one-shot Cores and permanent build survive.
@@ -2952,7 +2960,7 @@ function updateEnemies(world: CombatWorld, dt: number): void {
     }
     for (let i = world.enemies.length-1; i >= 0; i--) if (world.enemies[i].deathHandled && world.enemies[i].hp <= 0) recycleEnemy(world, i);
     resolveDeathsAndEffects(world);
-    for(const enemy of world.enemies){if(enemy.stormbreaker||enemy.mirage||enemy.aircraftTarget)continue;const start=equipmentPositions.get(enemy.id),factor=cinderMovement(world,enemy)*equipmentSlow(world.aircraft,enemy)*rankEnemyMovement(world,enemy);if(start&&factor<1){enemy.x=start.x+(enemy.x-start.x)*factor;enemy.y=start.y+(enemy.y-start.y)*factor;}}
+    for(const enemy of world.enemies){if(enemy.stormbreaker||enemy.mirage||enemy.aircraftTarget)continue;const start=equipmentPositions.get(enemy.id),factor=Math.min(riptideMovement(world,enemy),cinderMovement(world,enemy)*equipmentSlow(world.aircraft,enemy)*rankEnemyMovement(world,enemy));if(start&&factor<1){enemy.x=start.x+(enemy.x-start.x)*factor;enemy.y=start.y+(enemy.y-start.y)*factor;}}
 
 }
 function segmentDistance(px: number, py: number, ax: number, ay: number, bx: number, by: number): number {
@@ -3281,7 +3289,7 @@ function opposingAircraftThreatNearby(world: CombatWorld, radius: number, bodies
     if (!opponent) return false;
     const { x, y } = mirrorPoint(world.playerX, world.playerY), now = opponent.elapsed;
     if(opponent.bigBang&&!opponent.bigBang.resolved&&opponent.bigBang.impactAt-opponent.elapsed<=.65)return true;
-    if(cinderThreatNearby(opponent,x,y,radius))return true;
+    if(riptideThreatNearby(opponent,x,y,radius)||cinderThreatNearby(opponent,x,y,radius))return true;
     if (opponent.aircraft.currentHp > 0 && (bodies || opponent.dashRemaining > 0)
         && circleVsAircraft(x,y,radius,getPlayerHitbox(opponent))) return true;
     if (opponent.projectiles.some(p=>p.owner!=="enemy" && !p.mirrorBorrowed && p.lifetime>0 && p.rawDamage>0
@@ -3331,6 +3339,19 @@ function expansionThreatNearby(world: CombatWorld, radius: number, bodies: boole
     if (m?.mines.some(mine=>mine.allegiance!=="friendly_hacked" && !mine.exploded && mine.damage>0 && Math.hypot(x-mine.x,y-mine.y)<=radius+40)) return true;
     return false;
 }
+const riptideHooks:RiptideHooks={
+ hostile:isHostileToPlayer,elite:e=>isElite(e.type),displace:displaceEnemy,
+ damage:(w,e,raw,skill,castId)=>{const receipt={hp:0,total:0};
+  applyDamageToEnemy(w,e,raw,'#63e3d6',skill?'skill':'core',skill,undefined,undefined,'area_hazard',true,true,undefined,1,[],skill?expansionState(w.aircraft).casts[skill]:undefined,undefined,!skill,undefined,skill?undefined:{trueDamage:false,castId,passive:true},receipt);
+  return receipt;},
+ heal:(w,raw,cap)=>{const healed=healAircraft(w.aircraft,raw,false,cap);if(healed>0)emitPlayerHealing(w,healed,'skill_core',false);return healed;},
+ cleanseSlow:w=>{const opponent=w.duel?.opponent??w.mirage?.mirror?.context.world??w.duelOpponent?.context.world;
+  if(!opponent)return;const e=opponent.enemies.find(e=>e.aircraftTarget?.world===w);if(!e)return;
+  clearRiptideSlow(opponent,e);const c=cinderState(opponent).targets.get(e.id);if(c)c.slowUntil=0;
+  const interference=opponent.rankRuntime?.interference.get(e.id);if(interference)interference.movement=1;
+  const marks=equipmentState(opponent.aircraft).marks[e.id];if(marks)delete marks[24];
+ }
+};
 const cinderHooks:CinderHooks={hostile:isHostileToPlayer,damage:(w,e,raw,skill,provenance)=>applyDamageToEnemy(w,e,raw,provenance.trueDamage?'#fff1af':'#ff9b45',provenance.trueDamage?'burn':skill?'skill':'core',skill,undefined,undefined,'area_hazard',false,true,undefined,1,[],undefined,undefined,true,undefined,provenance)};
 const expansionHooks: ExpansionHooks = {
     hostile: isHostileToPlayer, threat: expansionThreatNearby, debt: repayExpansionDebt,
@@ -3347,7 +3368,7 @@ const expansionHooks: ExpansionHooks = {
         if(projectile)recordCoreMetric(w.aircraft,row,"launched",1);
     },
 };
-function applyDamageToEnemy(world: CombatWorld, enemy: EnemyEntity, rawDamage: number, color = "#fde68a", source: DamageSource = "weapon", skillId?: SkillId, volleyHits?: Map<number, number>, contact?:{x:number;y:number;zone?:AirframeHitZone}, delivery:DamageDelivery=contact?"direct_projectile":"area_hazard", chargeAntimatter=true, directPlayer=true, telemetryCore?: number, penetrationScale=1, shotBonuses:readonly [number,number][] = [], cast?: ExpansionCast, primaryShot?: { resolved: boolean }, procFree=false, echoScale?:number, intrinsic?:IntrinsicDamage): number {
+function applyDamageToEnemy(world: CombatWorld, enemy: EnemyEntity, rawDamage: number, color = "#fde68a", source: DamageSource = "weapon", skillId?: SkillId, volleyHits?: Map<number, number>, contact?:{x:number;y:number;zone?:AirframeHitZone}, delivery:DamageDelivery=contact?"direct_projectile":"area_hazard", chargeAntimatter=true, directPlayer=true, telemetryCore?: number, penetrationScale=1, shotBonuses:readonly [number,number][] = [], cast?: ExpansionCast, primaryShot?: { resolved: boolean; afterwashHits?:Set<number> }, procFree=false, echoScale?:number, intrinsic?:IntrinsicDamage, receipt?:{hp:number;total:number}): number {
     if (world.aftermath || world.destruction) return 0;
     if (!isHostileToPlayer(world,enemy) || rawDamage <= 0 || world.bossDefeated)
         return 0;
@@ -3451,6 +3472,8 @@ function applyDamageToEnemy(world: CombatWorld, enemy: EnemyEntity, rawDamage: n
         damage = received.damage; absorbed += received.absorbed;
         if(basic&&hasCore(state,180)&&absorbed>0&&!hasAbsorbShield(enemy.aircraftTarget.world.aircraft)){marks.shieldBroken=time+4;recordCoreMetric(state,180,"shieldBreaks",1);}
     } else enemy.hp = Math.max(0, enemy.hp - damage);
+    // Capture this delivery before secondary equipment/Core effects can change the target.
+    if(receipt){receipt.hp=damage;receipt.total=damage+absorbed;}
     if (world.stormbreaker) onStormEnemyDamage(world, enemy, damage, shieldBeforeHit,stormbreakerHooks);
     if(directPlayer&&damage+absorbed>0)recordDpsDamage(world,damage+absorbed);
     if(intrinsic?.passive || intrinsic?.source==="cinder_burn")recordPassiveDamage(state,damage,absorbed,intrinsic.source==="cinder_burn");
@@ -3591,6 +3614,8 @@ function applyDamageToEnemy(world: CombatWorld, enemy: EnemyEntity, rawDamage: n
       skillDirect:!!skillId&&source!=="burn"&&source!=="core"&&source!=="lightning",
       critical:resolved.critical,beforeCrit:rawDamage*multiplier*hitMultiplier*zoneMultiplier
     },cinderHooks);
+    if(!intrinsic && primary && !procFree && damage+absorbed>0 && primaryShot)
+      riptideAfterwash(world,enemy,rawDamage*multiplier*hitMultiplier,primaryShot,contact?.x??enemy.x,contact?.y??enemy.y,riptideHooks);
     observeBossDamage(world,enemy,damage);
     if(!procFree)accumulateDeathMark(world,enemy,damage+absorbed);
     return damage;
@@ -3790,6 +3815,7 @@ function hitPlayer(world: CombatWorld, rawDamage: number, kind: "projectile" | "
     if ((c.timers.thermalCover || 0)>c.time) multiplier *= 1 - V.thermalReduction;
     const orbitProtection=astraOrbitProtectionActive(world);
     if(orbitProtection)multiplier*=.65;
+    multiplier *= riptideIncoming(world,attack.sourceEnemyId);
     multiplier *= expansionIncoming(state);
     const electric=hasCore(state,177)&&(attack.homing||attack.delivery==="beam"||attack.attackTag==="emp"||attack.attackTag==="boss_emp");
     const latch=expansionActive(state,"safetyLatch");
@@ -3812,7 +3838,7 @@ function hitPlayer(world: CombatWorld, rawDamage: number, kind: "projectile" | "
     const equipmentIncomingFactor=equipmentIncoming(state);
     const equipmentPreDamage=calculateDamage(rawDamage*zoneMultiplier,defenseArmor,multiplier);
     multiplier*=equipmentIncomingFactor;
-    let damage = attack.trueDamage ? rawDamage : calculateDamage(rawDamage*zoneMultiplier, defenseArmor, multiplier), absorbed = 0, temporaryAbsorbed=0, genericShieldAbsorbed=0;
+    let damage = attack.trueDamage ? rawDamage*riptideIncoming(world,attack.sourceEnemyId) : calculateDamage(rawDamage*zoneMultiplier, defenseArmor, multiplier), absorbed = 0, temporaryAbsorbed=0, genericShieldAbsorbed=0;
     const mitigationWithoutTitan=multiplier/shieldMultiplier;
     const armorPrevented=attack.trueDamage?0:(attack.armorPrevented??Math.max(0,rawDamage*zoneMultiplier-calculateDamage(rawDamage*zoneMultiplier,defenseArmor)))*mitigationWithoutTitan;
     const titanPrevented=!attack.trueDamage&&state.aircraftId==="breaker"?calculateDamage(rawDamage*zoneMultiplier,defenseArmor)*mitigationWithoutTitan*(1-shieldMultiplier):0;
@@ -4434,7 +4460,7 @@ function updatePlayerDash(world: CombatWorld, dt: number): void {
         return;
     const opponent=world.duel?.opponent ?? (world.duelOpponent??world.mirage?.mirror)?.context.world ?? world.enemies.find(e=>e.aircraftTarget)?.aircraftTarget?.world;
     const target=opponent?.enemies.find(e=>e.aircraftTarget?.world===world);
-    const movement=(cinderMovementLocked(world)?0:1)*(opponent&&target?cinderMovement(opponent,target):1);
+    const movement=(cinderMovementLocked(world)?0:1)*(opponent&&target?Math.min(riptideMovement(opponent,target),cinderMovement(opponent,target)):1);
     if(movement===0){world.dashRemaining=0;return;}
     world.dashRemaining = Math.max(0, world.dashRemaining - dt);
     const t = 1 - world.dashRemaining / .16;
@@ -4490,7 +4516,7 @@ export const AIRCRAFT_AFTERMATH_SECONDS = 3;
 /** SOLO calls only after same-tick KO arbitration; Campaign calls at the lethal hit. */
 export function latchAircraftDestruction(world: CombatWorld): void {
     if (world.destruction || world.aircraft.currentHp > 0) return;
-    cancelCinder(world); world.bigBang=undefined;
+    cancelRiptide(world); cancelCinder(world); world.bigBang=undefined;
     world.playerInputActive = false;
     world.destruction = { at: world.elapsed, x: world.playerX, y: world.playerY };
     if (!world.duel) {
@@ -4664,7 +4690,7 @@ export function updateCombatWorld(world: CombatWorld, deltaSeconds: number): voi
         return;
     }
     updateMissileSalvo(world, dt);
-    tickCinder(world, dt, cinderHooks);
+    tickCinder(world, dt, cinderHooks); tickRiptide(world, dt, riptideHooks);
     world.playerFireCooldown -= dt * aircraftFireRateMultiplier(world);
     if ((!playerStunned(world.aircraft) || hasCore(world.aircraft,203)) && shouldAutoFire(world.aircraft) && world.laserCharge <= 0 && world.laserTicksRemaining <= 0 && world.playerFireCooldown <= 0) {
         fireBasic(world);
@@ -4970,7 +4996,7 @@ function resolveStormbreakerContacts(w: CombatWorld) {
     }
 }
 const stormbreakerHooks: StormbreakerHooks = {
-    movement:(w,e)=>cinderMovement(w,e)*equipmentSlow(w.aircraft,e)*rankEnemyMovement(w,e),
+    movement:(w,e)=>Math.min(riptideMovement(w,e),cinderMovement(w,e)*equipmentSlow(w.aircraft,e)*rankEnemyMovement(w,e)),
     spawn: spawnEnemy, projectile: addProjectile, allegiance: enemyAllegiance, message: setMessage,
     target: (w,e,allegiance) => {
         if ((allegiance ?? enemyAllegiance(w,e)) === "hostile") return {x:w.playerX,y:w.playerY};

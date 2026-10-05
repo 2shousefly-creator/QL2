@@ -1,3 +1,4 @@
+import { isRiptideSkill } from './airCombatRiptideConfig';
 import { isCinderSkill } from './airCombatCinderConfig';
 import { aircraftTargetability } from "./airCombatTargetability";
 import { settleCoreCooldowns } from "./airCombatCooldowns";
@@ -79,6 +80,8 @@ export function getEffectiveAircraftStats(state: AircraftCombatState, includeTem
     }
     applyExpansionStats(state, stats, includeTemporary);
     applyEquipmentStats(state, stats, includeTemporary, omittedEquipmentEffect);
+    if(includeTemporary && state.aircraftId==='riptide' && (state.activeEffects.riptide_waterform??0)>0)
+        stats.armor *= 1+(c.stacks.riptideArmor??0);
     // Snapshot live bonuses above the natural aircraft baseline before either conversion.
     // Temporary recovery multipliers contribute to the input without feeding conversion back.
     if (hasCore(state, 208)) {
@@ -323,10 +326,13 @@ export function castSkill(state: AircraftCombatState, skillId: SkillId): SkillCa
     }
     return { cast: true, resourceSpent: cost };
 }
-export function healAircraft(state: AircraftCombatState, amount: number, allowOverhealShield = true): number {
+export function healAircraft(state: AircraftCombatState, amount: number, allowOverhealShield = true, receiptCap = Infinity): number {
     if(state.currentHp <= 0 || state.duel?.healingBlocked)return 0;
     const maxHp = getEffectiveAircraftStats(state).maxHp;
-    const healing = Math.max(0, amount) * getHealingReceivedMultiplier(state), effective = Math.min(healing, Math.max(0, maxHp - state.currentHp));
+    const survival = state.aircraftId==='riptide' && skillRank(state,'riptide_wellspring')>=5 && state.currentHp < maxHp*.15;
+    const healing = Math.min(Math.max(0,receiptCap),Math.max(0, amount) * getHealingReceivedMultiplier(state,maxHp));
+    const effective = Math.min(healing, Math.max(0, maxHp - state.currentHp));
+    if(survival && effective>0)state.coreState.timers.riptideSurvivalCue=state.coreState.time+.3;
     state.currentHp = Math.min(maxHp, state.currentHp + effective);
     state.coreState.healingTotal += effective;
     if (allowOverhealShield && hasCore(state, 104) && healing > effective) {
@@ -386,7 +392,7 @@ export function tickAircraftState(state: AircraftCombatState, deltaSeconds: numb
         }
     }
     for (const key of Object.keys(state.activeEffects) as SkillId[]) {
-        if(isCinderSkill(key)||isAstraSkill(key)||key==="predator_lock"||key==="gravity_anchor"||key==="electronic_interference"||key==="focus_laser")continue; // World-owned completion includes delayed impacts.
+        if(isRiptideSkill(key)||isCinderSkill(key)||isAstraSkill(key)||key==="predator_lock"||key==="gravity_anchor"||key==="electronic_interference"||key==="focus_laser")continue; // World-owned completion includes delayed impacts.
         const next = (state.activeEffects[key] || 0) - dt;
         if (next <= 0)
             endAircraftSkill(state, key);
@@ -420,8 +426,8 @@ export function tickAircraftState(state: AircraftCombatState, deltaSeconds: numb
     const equipmentRegenWithout = new Map<number, EffectiveAircraftStats>();
     for(const family of [28,32])if(equipmentScale(state,family))equipmentRegenWithout.set(family,getEffectiveAircraftStats(state,true,family));
     const missingHp = Math.max(0, stats.maxHp - state.currentHp);
-    const healed = healAircraft(state, stats.hpRegen * dt, false);
     const healingMultiplier = getHealingReceivedMultiplier(state);
+    const healed = healAircraft(state, stats.hpRegen * dt, false);
     recordCoreMetric(state, 208, "healed", healed - Math.min(missingHp, Math.max(0, hpWithoutDual) * dt * healingMultiplier));
     const upkeep = state.droneActive && state.dronePhase === "active" ? getSkillRuntimeValues(state, "escort_drone").upkeepPerSecond : 0;
     const available = Math.max(0, state.currentResource + stats.resourceRegen * dt);

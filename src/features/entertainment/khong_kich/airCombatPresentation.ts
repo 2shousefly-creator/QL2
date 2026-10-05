@@ -1,3 +1,4 @@
+import { riptideState, riptideMovement, riptideSuppressed } from './airCombatRiptideRuntime';
 import { gravityAnchorValues } from "./airCombatGravityAnchor";
 import { resolveTooltipValues } from "./airCombatTooltipValues";
 import { getRecoveryReceivedMultiplier } from "./airCombatRecovery";
@@ -204,6 +205,15 @@ function coreCooldownStatuses(world:CombatWorld):StatusPresentation[] {
 
 export function getStatusPresentations(world: CombatWorld): StatusPresentation[] {
   const s = world.aircraft, c = s.coreState, result: StatusPresentation[] = [];
+  const water=riptideState(world).waterform;
+  if(water)result.push({id:'riptide:charge',group:'buff',name:'Thủy áp',description:'Nhịp gây sát thương hợp lệ tích sức mạnh nổ; trần hồi Máu 35% Máu tối đa mỗi cast.',icon:{kind:'skill',id:'riptide_waterform'},source:'Thủy Thể',stacks:water.charge,badgeText:water.charge+'/16',remaining:water.until-world.elapsed,duration:8,priority:110});
+  const rival=world.duel?.opponent??world.mirage?.mirror?.context.world??world.duelOpponent?.context.world;
+  const target=rival?.enemies.find(e=>e.aircraftTarget?.world===world);
+  if(rival&&target){
+   const slow=riptideState(rival).slows.get(target.id);
+   if(slow&&riptideMovement(rival,target)<1)for(const [id,value] of slow.sources)if(value.until>rival.elapsed)result.push({id:'riptide:slow:'+id,group:'debuff',name:'Dòng nước làm chậm',description:'Giảm '+Math.round((1-value.multiplier)*100)+'% tốc độ di chuyển; áp dụng slow mạnh nhất, không cộng dồn.',icon:{kind:'skill',id},source:'Riptide đối phương',stacks:1,remaining:value.until-rival.elapsed,duration:2,priority:100});
+   if(riptideSuppressed(rival,target))result.push({id:'riptide:pressure',group:'debuff',name:'Áp Chế Thủy Lực',description:'Gây ít hơn 25% sát thương lên Riptide sở hữu Hội Thủy khi còn trong bán kính 170.',icon:{kind:'skill',id:'riptide_confluence'},source:'Riptide đối phương',stacks:1,remaining:riptideState(rival).confluence!.until-rival.elapsed,duration:2.3,priority:100});
+  }
   result.push(...coreCooldownStatuses(world), ...skillCoreStatuses(world), ...expansionStatuses(world), ...equipmentStatuses(world));
   if (world.duel) {
     const addDuelStatus = (id: string, name: string, description: string, icon: StatusPresentation["icon"], remaining = Infinity, group: "buff" | "debuff" = "debuff") => {
