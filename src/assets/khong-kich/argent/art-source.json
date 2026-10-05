@@ -1,6 +1,9 @@
 {
-  "version": "26.22.0",
-  "authoring": "scripts/air-combat/create-argent-art.mjs",
+  "version": "26.22.1",
+  "source": "OpenAI built-in image generation",
+  "authoring": "Image-generated Argent master referenced by each separately generated pose, portrait, skill icon and VFX texture; raster-only resize/alpha/padding/atlas packing.",
+  "packing": "scripts/air-combat/create-argent-art.mjs",
+  "reference": "Riptide raster aircraft: mechanical material quality and painted depth only; Argent has a separate silver/champagne identity.",
   "palette": [
     "#DCE4EC",
     "#F7FBFF",
@@ -9,25 +12,270 @@
     "#B58A39",
     "#26313D"
   ],
+  "pivot": [
+    0.5,
+    0.5
+  ],
   "aircraft": {
-    "cell": 256,
+    "cell": 384,
+    "columns": 5,
+    "rows": 1,
+    "padding": 32,
     "poses": [
       "idle",
       "left",
       "right",
       "open",
       "guard"
+    ],
+    "bounds": [
+      [
+        384,
+        32,
+        351
+      ],
+      [
+        384,
+        37,
+        345
+      ],
+      [
+        384,
+        33,
+        349
+      ],
+      [
+        384,
+        32,
+        351
+      ],
+      [
+        384,
+        87,
+        295
+      ]
     ]
   },
   "icons": {
-    "cell": 128,
+    "cell": 192,
     "columns": 5,
-    "rows": 4
+    "rows": 4,
+    "padding": 4
   },
   "vfx": {
-    "cell": 128,
+    "cell": 256,
     "columns": 4,
-    "rows": 4
+    "rows": 5,
+    "padding": 20
   },
-  "direction": "Silver detached sword wings, champagne spine, charcoal diamond cockpit. Shared Canvas/Pixi alpha raster frames."
+  "vfxOrder": [
+    "basic",
+    "blade",
+    "return",
+    "trail",
+    "impact",
+    "guard",
+    "emitter",
+    "cross",
+    "root",
+    "slow",
+    "mark",
+    "refund",
+    "guard_hit",
+    "expire",
+    "greatsword",
+    "join",
+    "summon",
+    "muzzle",
+    "core",
+    "ultimate_blade"
+  ],
+  "provenance": {
+    "aircraft": [
+      {
+        "image": "exec-66384254-491e-4f85-aa72-252290e8498f.png",
+        "sha256": "08dba47277a2beb600ad979dcc1685fd59e7fb58b893ca8f58ff6d0be21904fb"
+      },
+      {
+        "image": "exec-a530e511-0d81-4d4f-a4a0-b3cde3d646b2.png",
+        "sha256": "f5a684f8740f8ccf890ec95a5d2b53ce0570c2889f7221817159020f405aa78a"
+      },
+      {
+        "image": "exec-7a2f5e7d-abaa-406b-a37d-cdda55e09e5f.png",
+        "sha256": "0e54b885b61861f77e95a7de14e78bdca6cb8139fd7220fb6ff917351628c2ae"
+      },
+      {
+        "image": "exec-5ca42e90-b9e2-4e94-9b0f-b1cb08f90990.png",
+        "sha256": "ee9edb975271c03778d58b83ce7db305a37aed8f2fb8c4cfbbb96e67f3c98878"
+      },
+      {
+        "image": "exec-2e861f58-3f34-451c-9284-18905837eda4.png",
+        "sha256": "3a58b3e1f1d26f64e93c627c789019cdcb601ce1ea65cead7b5c5e17a8b63d0d"
+      }
+    ],
+    "icons": [
+      {
+        "image": "exec-46779f42-2110-43c9-b801-66f19658713e.png",
+        "sha256": "a3cda78359e42fc972a7efb9f012db861a75512091633bd966e639ea99d60ab1"
+      },
+      {
+        "image": "exec-a7cb1d79-55c0-4944-91ca-9ef677c87e8e.png",
+        "sha256": "9ed2f5092ef619bea7a144e0e2aebeac758dbc931e06c35533c3655e0cc9bd3c"
+      },
+      {
+        "image": "exec-726168fc-8e15-4c69-b0bf-d9d494ce4c85.png",
+        "sha256": "8e30219f2b8d0d855405513bf34c495c9e8797c78313a9ec893f1be7991d2f39"
+      },
+      {
+        "image": "exec-b73f905c-0d14-4c1a-9099-88467f152503.png",
+        "sha256": "1b4b2ba711c81cc6dfc3f669fddf38aef9ee7e2b3e9411c70927be51583d1c9d"
+      },
+      {
+        "image": "exec-d83d2dd0-8116-4f2a-a76e-7eba456ce28d.png",
+        "sha256": "728b75d2cf3ddcbc5305eb8de82b94c93b81bc059d17abe890f115535eaf122e"
+      },
+      {
+        "image": "exec-b0124eaf-1a26-460a-8931-4b70413d1e9e.png",
+        "sha256": "986a7d9ba762dd3d6a896acbb477916da4a54e681fb05a7c49721e2001ee93a4"
+      },
+      {
+        "image": "exec-6d889912-1586-4cd6-ab56-b59a9b63b0a2.png",
+        "sha256": "51afd4fd53f549b44a64f5aafbc1ebbea3735f992483153f7032dc5f0bfbc879"
+      },
+      {
+        "image": "exec-275648bc-841b-48da-8460-7c6f2ec2ee5d.png",
+        "sha256": "fef7d523d0af1d771710c1e82d6133b9fd34b425d2790c4c3d86c1b8f4977370"
+      },
+      {
+        "image": "exec-9bf957e0-d0ff-4902-8d56-e7da0dbd848d.png",
+        "sha256": "70e0ba42f6b385030234b680b3c461dd9ed5b04fe9b4255f68c8815b284fe43c"
+      },
+      {
+        "image": "exec-358f8904-2a2d-41a7-a768-0b97c9a57cce.png",
+        "sha256": "f02d2ac2acc459ed6a87d1e5335617f1fd66d1d941ba8568b2690b21709c5b68"
+      },
+      {
+        "image": "exec-ea17625a-5fc1-47b0-9e6a-3a065db88bee.png",
+        "sha256": "d78d62ee8d8a106935e289901897263be86858286911c184c619a7095390c3a4"
+      },
+      {
+        "image": "exec-72f0cf88-9e27-48f2-95b2-5cb913eb7400.png",
+        "sha256": "fa427b51a65ff354d39cd06a893a278dabea5dab00066d5a7816b3fe2b060c80"
+      },
+      {
+        "image": "exec-56e5244a-4dd8-48fd-973f-ebe0b03ffc77.png",
+        "sha256": "b8a40aa8a5b8054be87b9dc1ae4d8d9263e63254c89419181bfb329ae8ce04af"
+      },
+      {
+        "image": "exec-2e42ce4a-bde6-49c3-a5fc-b65a7346ea95.png",
+        "sha256": "046659ec83ea82d148e8502829eacc48995a459012db5dc532a71fedccd03db8"
+      },
+      {
+        "image": "exec-6ae7dab9-6a8e-4ec2-a553-4cfdeea7f626.png",
+        "sha256": "d8af55e20924f01dd4000af202770107a5d901594f48d32bb7a09f0e67097d55"
+      },
+      {
+        "image": "exec-0787c493-7cf7-426f-b1e0-a9ef152b21a3.png",
+        "sha256": "10dc4d5158fbaa4597c0ee9f89a05f72da1cddd4b15cc84ba901148672e788f2"
+      },
+      {
+        "image": "exec-26232a49-629e-4fa6-b2c8-6ac1c315a945.png",
+        "sha256": "f030f2c2e14806ce749bf038f144d074f41e30c44e90f21a4114ff910e19e312"
+      },
+      {
+        "image": "exec-fc65cf85-ff11-416b-8e19-0995032c3f94.png",
+        "sha256": "891cf88f35d772f1f35bf3d2f3a8bebb7f024c6d7b33809156c0e0e0b592aa7b"
+      },
+      {
+        "image": "exec-96de8d55-7394-4bed-bdb4-51984b90f53c.png",
+        "sha256": "f6e3471f9563e0186ef79d1d66158404431ca9d61d708fccd3b17ec26f575a05"
+      }
+    ],
+    "vfx": [
+      {
+        "image": "exec-a6a5ecf2-b577-4813-9310-793829ffa836.png",
+        "sha256": "fa758a90bff6f9932492669a0bca704c674158c0e6a4c6d217315462b99e6072"
+      },
+      {
+        "image": "exec-d94c8b92-c84b-4d84-8965-329048fb73b7.png",
+        "sha256": "2118e58cfefa6838d5dbe99544d122f9f39a638684d62d88f8ed785fa209e498"
+      },
+      {
+        "image": "exec-5cfd1800-6cd0-4d9b-9028-f9e9289c58fb.png",
+        "sha256": "f38a363ba27521e1ffcda9ac4776e6612f3a0a357bda70526bae76fdcda31542"
+      },
+      {
+        "image": "exec-2772a7b8-8f72-45c7-af3a-41104afbd93a.png",
+        "sha256": "efec868bb3706a8abc2d068a0708457edeb65f795d5ccb1db3d6b874fda5bd35"
+      },
+      {
+        "image": "exec-20231df8-fddf-46f1-aafc-6ca190986cca.png",
+        "sha256": "13a7b2fa154b9eaee9f7e49bd972931839fd84f1ea2e2e44fc8e148abacaa5df"
+      },
+      {
+        "image": "exec-220e5cdb-aec4-4015-8cff-45b8d19f80bf.png",
+        "sha256": "2f38626985402bbeab4153145f64b311ac02eb0c1e23aae9918956ad2a1ea1d5"
+      },
+      {
+        "image": "exec-8e89ae8c-93b6-4d91-aa4f-8a705ed919ec.png",
+        "sha256": "52a4028cce4377ff4bd34a779cff156ce4f146b978a5a5bc95760a0e58fd6042"
+      },
+      {
+        "image": "exec-6b09c049-f6de-4f61-b85e-f4ea645be7c2.png",
+        "sha256": "20763f563ccb90ea3a88443b1cef884525dfdd22c47ce2520810a6ad23376d7d"
+      },
+      {
+        "image": "exec-d0fe28b7-bd25-412b-a495-fedcdad071f8.png",
+        "sha256": "3b603f63b91db9f6e225aa66ea640360261874f8b909171d86f3279ea124edae"
+      },
+      {
+        "image": "exec-872c57fe-add9-4b16-b8cd-f9b0b4692ac4.png",
+        "sha256": "6793d6f065025b4705d9e50fb8f5a041772714b59524c9f6f949e8daedd82f99"
+      },
+      {
+        "image": "exec-78e4493d-8b46-45de-ae2f-1f4ce8407305.png",
+        "sha256": "1da549bc8d0a548abf8d297ad378e273c2326756f2b9aff7693e8fd13acbd082"
+      },
+      {
+        "image": "exec-bc5bf242-ab4c-40ad-aaf2-2f9d9163ea6a.png",
+        "sha256": "6235469225fdf0222e8c9f8db4fc71de1e7cb6edb144db2fd5376fb3079632b7"
+      },
+      {
+        "image": "exec-9eb793e4-2295-42b5-88c7-d24c7b60e3f9.png",
+        "sha256": "76f8c52f869de985da0c35736aba18b25ab17be1ea41689db044902af6e11f58"
+      },
+      {
+        "image": "exec-b1394f13-1b9f-4bc6-a20e-5c0ecb11d34e.png",
+        "sha256": "888816ad491c0ef5ff82284c4d052436e3eee5246e69ae712b91f98f85318a14"
+      },
+      {
+        "image": "exec-d44a9483-9947-46b6-b992-29780c8f9aa2.png",
+        "sha256": "91ba7602379a784b97d1561b00e1a0bd97ddc58f9ad15879dadd7a58273e48c4"
+      },
+      {
+        "image": "exec-3db3bfef-00eb-4138-a2ed-d82aa47d758d.png",
+        "sha256": "d3a4df5058a159870beb027e7cac619845d83cecd2ba0ceb1f27a18dfef9afc9"
+      },
+      {
+        "image": "exec-f65da20a-564f-454c-b287-961ce57dfc50.png",
+        "sha256": "30d8791bfa939e49ec5c8779530fa6b17ae135fc7c964db0a6a47ebd01e12761"
+      },
+      {
+        "image": "exec-157caf2b-1ba3-4713-8d2d-8d07d7c98aea.png",
+        "sha256": "04ecf5b61da37c3dc83f5a90d86c415d97051e0e037e7b20b2d18d6c3e994fb6"
+      },
+      {
+        "image": "exec-6196d1da-b8c5-4755-a89f-8ea325890e98.png",
+        "sha256": "f5cccba4e06f1d01c35d6ee4a8f2a31559c57332c0dd8f1e3ba5ba51e76f6104"
+      },
+      {
+        "image": "exec-88a3ffe0-9eee-4d37-93f8-e1913c24e018.png",
+        "sha256": "9a04bd984b840d4c15abc67ff092efda2a52c3f5d16077f1beb2b085a2ddd99f"
+      }
+    ],
+    "portrait": {
+      "image": "exec-911bd259-43e6-43c1-ab8c-4cecf4940e9b.png",
+      "sha256": "1c0d641ab6e97e41abe07947a39f0a522c46b9f9d71280bc48fb6687669a873d"
+    }
+  }
 }

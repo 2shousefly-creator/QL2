@@ -239,7 +239,7 @@ function drawAircraft(
     const row=aircraftId==="astra"?0:aircraftId==="black_eagle"?0:aircraftId==="breaker"?1:2;
     const top=Math.round(row*img.naturalHeight/4),height=Math.round((row+1)*img.naturalHeight/4)-top;
     const art=PLAYER_ARTWORK[aircraftId].neutral,width=size*art.scaleX;
-    if(aircraftId==='argent'){ctx.drawImage(img,(argentFrame?.rect[0]??0)*img.naturalWidth,0,img.naturalWidth/5,img.naturalHeight,-width*art.anchorX,-size/2,width,size);ctx.restore();return;}
+    if(aircraftId==='argent'){const [fx,fy,fw,fh]=(argentFrame??ARGENT_FRAMES.argent_body).rect;ctx.drawImage(img,fx*img.naturalWidth,fy*img.naturalHeight,fw*img.naturalWidth,fh*img.naturalHeight,-width*art.anchorX,-size/2,width,size);ctx.restore();return;}
     if(aircraftId==='riptide'){ctx.drawImage(img,0,0,img.naturalWidth,img.naturalHeight,-width*art.anchorX,-size/2,width,size);ctx.restore();return;}
     ctx.drawImage(img,0,(aircraftId==="astra"||aircraftId==="cinder")?0:top,Math.round(img.naturalWidth/((aircraftId==="astra"||aircraftId==="cinder")?3:4)),(aircraftId==="astra"||aircraftId==="cinder")?img.naturalHeight:height,-width*art.anchorX,-size/2,width,size);
     ctx.restore();return;
@@ -594,7 +594,10 @@ export function drawLegacyWorld(
       ctx.beginPath(); ctx.arc(projectile.x, projectile.y, missile ? 10 : 6, 0, Math.PI * 2); ctx.fill(); ctx.restore();
     }
     if (basic) {
-      drawBasicAmmoTrail(ctx,basic,projectile.x,projectile.y,Math.atan2(projectile.vy,projectile.vx),reducedMotion);
+      if(projectile.ammoVisualKey==='argent_basic_ammo'){
+        const angle=Math.atan2(projectile.vy,projectile.vx),length=basic.trail.length*(reducedMotion?.6:1),rear=basic.height/2+length/2-.5;
+        ctx.save();ctx.globalCompositeOperation='lighter';drawMagneticFrame(ctx,ARGENT_FRAMES.argent_trail,projectile.x-Math.cos(angle)*rear,projectile.y-Math.sin(angle)*rear,basic.trail.width,length,angle+Math.PI/2,basic.trail.alpha*(reducedMotion?.55:1));ctx.restore();
+      }else drawBasicAmmoTrail(ctx,basic,projectile.x,projectile.y,Math.atan2(projectile.vy,projectile.vx),reducedMotion);
     } else if (!reducedMotion && !missile) {
       const speed = Math.max(1, Math.hypot(projectile.vx, projectile.vy));
       const length = projectile.owner === "enemy" ? 7 : 22;

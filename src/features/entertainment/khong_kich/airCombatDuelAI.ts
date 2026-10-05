@@ -1,3 +1,4 @@
+import { shouldAutoFire } from './airCombatAircraft';
 import { argentState, argentRecallOpportunity } from './airCombatArgentRuntime';
 import { isArgentSkill } from './airCombatArgentConfig';
 import { riptideState } from './airCombatRiptideRuntime';
@@ -159,7 +160,7 @@ function skillUtility(id: SkillId, s: AircraftCombatState, ai: MirrorAI, p: Poin
     const target=mirrorPoint(seen.player.x,seen.player.y);
     if(id==='argent_blade_recall')return argentRecallOpportunity(actor,target.x,target.y)?1.7:-Infinity;
     if(id==='argent_blade_cast')return ahead&&distance(p,seen.player)<380?1.3:-Infinity;
-    return ahead&&distance(p,seen.player)<=400?1.6:-Infinity;
+    return shouldAutoFire(s)&&!argentState(actor).array?1.6:-Infinity;
   }
   if(isRiptideSkill(id)) {
     const stats=getEffectiveAircraftStats(s),hp=s.currentHp/stats.maxHp,near=distance(p,seen.player),since=actor.elapsed-(ai.lastCastAt??-Infinity);
@@ -262,7 +263,7 @@ function perceive(w:CombatWorld,ai:MirrorAI,p:Point,actor:CombatWorld) {
     startsAt:w.elapsed+(z.stage==="active"?0:z.remaining),endsAt:w.elapsed+z.remaining+(z.stage==="active"?0:z.activeDuration??.15)}));
   const argent=argentState(w);
   for(const b of argent.blades)if(b.phase!=='wait')bullets.push({x:b.x,y:b.y,vx:Math.cos(b.angle)*b.speed,vy:Math.sin(b.angle)*b.speed,damage:b.ratio*getEffectiveAircraftStats(w.aircraft).firepower,homing:b.phase==='recall',radius:b.width/2,turnRate:0,lifetime:b.phase==='recall'?2:b.distance/b.speed,capturable:false});
-  if(argent.array){const a=argent.array;for(let pair=a.pair;pair<3;pair++){const angle=pair*Math.PI/3;hazards.push({kind:'beam',x:a.x-Math.cos(angle)*120,y:a.y-Math.sin(angle)*120,end:{x:a.x+Math.cos(angle)*120,y:a.y+Math.sin(angle)*120},radius:12,cc:a.rank>=2,startsAt:a.at+.4+pair*.45,endsAt:a.at+.7+pair*.45});}}
+  // The anchored array has no scheduled area strike; live blades above carry its threats.
   const water=riptideState(w);
   if(water.waterform)hazards.push({kind:'persistent_zone',x:w.playerX,y:w.playerY,radius:190,cc:false,startsAt:water.waterform.at,endsAt:water.waterform.until});
   if(water.confluence)hazards.push({kind:'aoe',x:w.playerX,y:w.playerY,radius:water.confluence.exploded?340:170,cc:!water.confluence.exploded,startsAt:water.confluence.exploded?water.confluence.until:water.confluence.at+1.5,endsAt:water.confluence.until});

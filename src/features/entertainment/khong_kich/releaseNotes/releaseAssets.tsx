@@ -1,4 +1,5 @@
-import { ARGENT_ART, ARGENT_FRAMES } from '../airCombatArgentArt';
+import { ARGENT_ART, ARGENT_FRAMES, ARGENT_ICON_CELLS } from '../airCombatArgentArt';
+import { SkillIcon } from '../SkillIcon';
 import { RIPTIDE_ART, RIPTIDE_FRAMES } from '../airCombatRiptideArt';
 import { BIGBANG_ART, BIGBANG_FRAMES } from '../airCombatBigBangArt';
 import { CINDER_ART, CINDER_FRAMES } from '../airCombatCinderArt';
@@ -43,6 +44,7 @@ function AtlasThumbnail({ frame }: { frame: AtlasFrame }) {
 /** All markers are converted to these semantic references in authored data.
  * The UI never accepts or displays authoring marker strings. */
 export function ReleaseNoteEntityIcon({ icon }: { icon: ReleaseIconRef }) {
+  if (icon.kind === 'skill' && icon.id in ARGENT_ICON_CELLS) return <SkillIcon id={icon.id as keyof typeof ARGENT_ICON_CELLS} className="air-release-entity-icon" />;
   if (icon.kind === "core") return <CombatUiIcon kind="core" id={icon.id.startsWith("core_") ? icon.id : `core_${icon.id.padStart(3, "0")}`} fallback="" className="air-release-entity-icon" />;
   if (icon.kind === "skill") return <CombatUiIcon kind="skill" id={icon.id as SkillId | PassiveId} fallback="" className="air-release-entity-icon" />;
   if (icon.kind === "equipment") return <EquipmentIcon id={icon.id as EquipmentRewardId} className="air-release-entity-icon" />;

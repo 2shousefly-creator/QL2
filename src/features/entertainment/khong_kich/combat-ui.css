@@ -815,6 +815,6 @@
 .air-selection-grid{grid-template-columns:repeat(5,minmax(0,1fr));}
 @media(max-width:520px){.air-selection-grid{grid-template-columns:repeat(3,minmax(0,1fr));}}
 
-.air-argent-count,.air-argent-guard{position:absolute;bottom:100%;left:50%;transform:translateX(-50%);white-space:nowrap;background:#151b23;color:#e8c878;padding:2px 5px;border:1px solid #b58a39;font-size:11px;z-index:12}.air-argent-count[data-ready="true"]{color:#fff;box-shadow:0 0 8px #e8c87880}.air-argent-guard{font-size:9px}
+.air-argent-count,.air-argent-guard,.air-argent-temper,.air-argent-array{position:absolute;bottom:100%;left:50%;transform:translateX(-50%);white-space:nowrap;background:#151b23;color:#e8c878;padding:2px 5px;border:1px solid #b58a39;border-radius:3px;font-family:inherit;font-weight:700;line-height:1.2;font-variant-numeric:tabular-nums;font-size:clamp(8px,2.2cqw,11px);z-index:12;pointer-events:none}.air-argent-count[data-ready="true"]{color:#fff;box-shadow:0 0 8px #e8c87880}.air-argent-guard{font-size:clamp(7px,1.9cqw,10px)}.air-argent-temper{bottom:calc(100% + 20px);font-size:clamp(7px,1.9cqw,10px)}
 
 .air-argent-upgrade-icon{width:28px;height:28px;display:inline-block;vertical-align:middle;margin-right:6px}

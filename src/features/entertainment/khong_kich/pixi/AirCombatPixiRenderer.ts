@@ -528,7 +528,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
         sprite.position.set(p.x,p.y);sprite.rotation=Math.atan2(p.vy,p.vx)+Math.PI/2;
         sprite.width=ammo?.width??p.radius*2.8;sprite.height=ammo?.height??p.radius*6;
         const basic=getBasicAmmoVisual(ammoKey);
-        const glow=this.projectileGlows.get(p.id*2,this.assets.effect(basic?"basicAmmoTrail":p.owner==="enemy"?"charge":"laser"));
+        const glow=this.projectileGlows.get(p.id*2,this.assets.effect(ammoKey==='argent_basic_ammo'?'argent_trail':basic?"basicAmmoTrail":p.owner==="enemy"?"charge":"laser"));
         if(glow){
           if(basic){
             // Current velocity owns the wake, so bounces never leave a stale heading.

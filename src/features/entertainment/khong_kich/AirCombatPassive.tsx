@@ -1,4 +1,4 @@
-import { argentState } from './airCombatArgentRuntime';
+import { argentArrayActive, argentState } from './airCombatArgentRuntime';
 import React from 'react';
 import { CoreDescription } from './CoreDescription';
 import { PASSIVES, PASSIVE_LEVELS, passiveTier, passiveMetrics } from './airCombatPassives';
@@ -32,7 +32,7 @@ export function PassiveDetails({state,world,heading=true}:{state:AircraftCombatS
  </div>}
  <div className='air-tooltip-details'>Tự mở theo cấp chiến cơ, không cần điểm kỹ năng hoặc tài nguyên.</div>
  <div className='air-rank-preview'>{PASSIVE_LEVELS.map((level,i)=><section key={level} data-unlocked={i<=tier} data-current={i===tier}><strong>◆ Cấp chiến cơ {level}</strong><p><CoreDescription text={resolveTooltipValues(state.aircraftId==='phantom'?'8 Điện/giây, tối đa 40 Điện':Math.round(p.coefficients[i]*100)+'% '+(state.aircraftId==='breaker'?'Giáp hiện tại':(state.aircraftId==='black_eagle'||state.aircraftId==='riptide')?'đòn chính trước chí mạng và giảm trừ':'Hỏa Lực')+(state.aircraftId==='cinder'?`; Cháy đủ 6 cộng dồn: ${[35,40,45,50][i]}% Hỏa Lực mỗi giây.`:''),{stats,currentHp:state.currentHp})}/></p></section>)}</div>
- {world&&state.aircraftId==='argent'&&<p>Sinh Nhận: {argentState(world).progress}/4 loạt trúng.</p>}
+ {world&&state.aircraftId==='argent'&&<p>Sinh Nhận: {argentState(world).progress}/4 loạt trúng{argentArrayActive(world)?' · Tạm ngừng trong kiếm trận':''}.</p>}
  {runtime&&state.aircraftId==='phantom'&&<p>Pin {runtime.battery.charge.toFixed(1)}% · {batteryLabel(runtime.battery.phase)} {runtime.battery.remaining>0?runtime.battery.remaining.toFixed(1)+' giây':''}. Điện hiện tại: {state.currentResource.toFixed(1)}.</p>}
  {(state.aircraftId==='astra'||state.aircraftId==='cinder')&&<p>Hồi chiêu được tính độc lập trên từng mục tiêu; xem dấu ấn/Cháy tại mục tiêu.</p>}
  </div>;
@@ -43,5 +43,5 @@ export function PassiveCell({world,onInspect}:{world:CombatWorld;onInspect:()=>v
  const battery=a.aircraftId==='phantom',progress=b.phase==='feeding'?b.remaining/5:b.phase==='cooling'?1-b.remaining/5:b.charge/100;
  return <button type='button' className='air-passive-trigger' data-combat-tooltip-trigger='passive' aria-label={p.name+' · Xem nội tại'} onPointerDown={e=>e.stopPropagation()} onPointerUp={e=>e.stopPropagation()} onClick={onInspect}>
  <span className='air-passive-frame'><SkillIcon id={p.id} className='air-passive-icon'/>{a.aircraftId==='black_eagle'&&cd>0&&<span className='air-passive-mask' style={{height:cd/.5*100+'%'}}/>}{battery&&<span className='air-passive-progress' style={{width:progress*100+'%'}}/>}</span>
- <span className='air-passive-caption'>{a.aircraftId==='argent'?argentState(world).progress+'/4':battery?(b.phase==='charging'?Math.floor(b.charge)+'%':b.phase==='ready'?'Sẵn sàng':b.phase==='feeding'?'Nạp Điện':'Chờ nguội'):'Nội Tại'}</span></button>;
+ <span className='air-passive-caption'>{a.aircraftId==='argent'?(argentArrayActive(world)?'Tạm ngừng · ':'')+argentState(world).progress+'/4':battery?(b.phase==='charging'?Math.floor(b.charge)+'%':b.phase==='ready'?'Sẵn sàng':b.phase==='feeding'?'Nạp Điện':'Chờ nguội'):'Nội Tại'}</span></button>;
 }

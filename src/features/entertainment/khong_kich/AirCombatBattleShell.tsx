@@ -1,6 +1,6 @@
 import { SkillIcon } from './SkillIcon';
 import { ARGENT_UPGRADE_ICONS } from './airCombatArgentArt';
-import { argentState, argentWaiting } from './airCombatArgentRuntime';
+import { argentHud, argentWaiting } from './airCombatArgentRuntime';
 import { playArgentAudio } from './airCombatArgentAudio';
 import { PASSIVES } from './airCombatPassives';
 import { PassiveCell, PassiveDetails } from './AirCombatPassive';
@@ -737,6 +737,7 @@ export const AirCombatBattleShell: React.FC<AirCombatBattleProps> = ({
         <PassiveCell world={worldRef.current} onInspect={()=>{if(tooltipPassive){closeAllTooltips();return;}activateTooltip("passive");setTooltipPassive(true);}}/>
         {worldRef.current.aircraft.skillPoints > 0 && <span className="air-skill-points" aria-live="polite">Điểm kỹ năng: {worldRef.current.aircraft.skillPoints}</span>}
         {skillIds.map((skillId) => {
+          const metal = argentHud(worldRef.current);
           const skill = SKILL_CONFIGS[skillId];
           const values = getSkillRuntimeValues(worldRef.current.aircraft, skillId);
           const availability=getWorldSkillAvailability(worldRef.current,skillId);
@@ -752,7 +753,9 @@ export const AirCombatBattleShell: React.FC<AirCombatBattleProps> = ({
           return (
             <div className="air-ranked-skill" key={skillId}>
             {skillId==='argent_blade_recall'&&<span className="air-argent-count" data-ready={availability.available}>{argentWaiting(worldRef.current)}/12</span>}
-            {skillId==='argent_guard_stance'&&<span className="air-argent-guard">{argentState(worldRef.current).guard?argentState(worldRef.current).guard!.remaining+' lượt · '+(argentState(worldRef.current).guard!.beatUntil>worldRef.current.elapsed?'ĐỠ':'Chờ đòn')+' · '+Math.max(0,argentState(worldRef.current).guard!.until-worldRef.current.elapsed).toFixed(1)+'s':''}{argentState(worldRef.current).temper>0?' · Tôi Kim '+argentState(worldRef.current).temper+'/3':''}</span>}
+            {skillId==='argent_guard_stance'&&metal.guard&&<span className="air-argent-guard">{metal.guard.remaining} lượt · {metal.defending?'Đỡ 99%':'Chờ đòn'} · {metal.guardSeconds.toFixed(1)}s</span>}
+            {skillId==='argent_blade_recall'&&metal.temper>0&&<span className="air-argent-temper">Tôi Kim {metal.temper}/3</span>}
+            {skillId==='argent_heavenly_blade_array'&&metal.array&&<span className="air-argent-array">{metal.array.fireCount}/4 · {Math.max(0,metal.array.until-worldRef.current.elapsed).toFixed(1)}s</span>}
             <button
               key={skillId}
               type="button"

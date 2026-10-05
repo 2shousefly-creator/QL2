@@ -1,4 +1,4 @@
-import { argentThreatNearby, argentState, argentWaiting, argentIncoming, argentPrimaryHit, beginArgentSkill, tickArgent, cancelArgent, argentMovement, clearArgentSlow, type ArgentHooks } from './airCombatArgentRuntime';
+import { argentArrayActive, argentPrimaryFired, argentArmorMultiplier, argentThreatNearby, argentState, argentWaiting, argentIncoming, argentPrimaryHit, beginArgentSkill, tickArgent, cancelArgent, argentMovement, clearArgentSlow, type ArgentHooks } from './airCombatArgentRuntime';
 import { isArgentSkill } from './airCombatArgentConfig';
 import { beginRiptideSkill, tickRiptide, riptideAfterwash, riptideMovement, riptideIncoming, riptideRecastReady, endRiptideWaterform, cancelRiptide, riptideState, riptideThreatNearby, clearRiptideSlow, type RiptideHooks } from './airCombatRiptideRuntime';
 import { isRiptideSkill } from './airCombatRiptideConfig';
@@ -203,6 +203,7 @@ export function aircraftTargetView(host: CombatWorld, actor: CombatWorld): Enemy
 function targetNegativeStatusTypes(w: CombatWorld, e: EnemyEntity): Set<string> {
     const result = new Set<string>(), now = w.elapsed, cinder = cinderState(w).targets.get(e.id);
     if (e.hp <= 0) return result;
+    if(argentArmorMultiplier(w,e)<1)result.add('armorBrokenUntil');
     const metal=argentState(w).controls.get(e.id);
     if(metal?.entity===e){if(metal.rootUntil>now)result.add('root');if(metal.slowUntil>now)result.add('slow');}
     if (riptideMovement(w,e)<1) result.add('slow');
@@ -521,7 +522,7 @@ export interface ProjectileEntity extends AttackMetadata {
     mainBasicMiss?: boolean;
     extraPierceOrdinal?: number;
     expansionCast?: ExpansionCast; expansionSlowUntil?: number;
-    primaryShot?: { resolved: boolean; afterwashHits?:Set<number> };
+    primaryShot?: { resolved: boolean; afterwashHits?:Set<number>; argentGenesisEligible?:boolean };
     astraLance?:{later:number;followup?:StellarLancePath};
     mirageVisual?: MirageVisualKey;
     stormbreakerVisual?: StormbreakerVfxKey;
@@ -1223,7 +1224,8 @@ function fireBasic(world: CombatWorld): void {
     state.basicShotsFired++;
     const reappearance = (state.coreState.timers.reappearanceBuff || 0) > state.coreState.time;
     if(reappearance)recordCoreMetric(state,142,"shots",1);
-    const primaryShot = { resolved: false };
+    const primaryShot = { resolved: false, argentGenesisEligible: !argentArrayActive(world) };
+    let mainSpawned = false;
     const bulletSpeed=PLAYER_BASIC_PROJECTILE_SPEED_MULTIPLIER*(hasCore(state,206)?.80:1)*(hasCore(state,111)?1440:480) * (reappearance ? 1 + V.reappearanceSpeedBonus : 1);
     const context = coreContext(world);
     dispatchCoreEvent("basic", context);
@@ -1249,6 +1251,7 @@ function fireBasic(world: CombatWorld): void {
             coreRicochet: ricochet, bounceRemaining: afterburner ? 2 : 0, bounceMultiplier: afterburner ? (skillRank(state, "afterburner") >= 4) ? V.bounceFirst : B.bounceFirst : .60,
             color: playerProjectileColor(state.aircraftId, multiplier > 1.1) });
         if(spawned){
+            if(!extra)mainSpawned=true;
             if(!extra)echoTwinShot(world,spawned,rankHooks);
             if(!extra && offset === 0 && hasCore(state,210)) {
                 spawned.mainBasicMiss=true;spawned.aimCorrectionUntil=world.elapsed+.6;
@@ -1262,6 +1265,7 @@ function fireBasic(world: CombatWorld): void {
         }
     };
     multipliers.forEach((multiplier, i) => spawn(multiplier, i - (multipliers.length - 1) / 2));
+    if (mainSpawned) argentPrimaryFired(world,primaryShot,argentHooks);
     if (context.extraShot)
         spawn(context.extraShot, 1, true);
     addHeat(world,.025,"heatBasic");
@@ -3379,7 +3383,7 @@ const expansionHooks: ExpansionHooks = {
         if(projectile)recordCoreMetric(w.aircraft,row,"launched",1);
     },
 };
-function applyDamageToEnemy(world: CombatWorld, enemy: EnemyEntity, rawDamage: number, color = "#fde68a", source: DamageSource = "weapon", skillId?: SkillId, volleyHits?: Map<number, number>, contact?:{x:number;y:number;zone?:AirframeHitZone}, delivery:DamageDelivery=contact?"direct_projectile":"area_hazard", chargeAntimatter=true, directPlayer=true, telemetryCore?: number, penetrationScale=1, shotBonuses:readonly [number,number][] = [], cast?: ExpansionCast, primaryShot?: { resolved: boolean; afterwashHits?:Set<number> }, procFree=false, echoScale?:number, intrinsic?:IntrinsicDamage, receipt?:{hp:number;total:number}): number {
+function applyDamageToEnemy(world: CombatWorld, enemy: EnemyEntity, rawDamage: number, color = "#fde68a", source: DamageSource = "weapon", skillId?: SkillId, volleyHits?: Map<number, number>, contact?:{x:number;y:number;zone?:AirframeHitZone}, delivery:DamageDelivery=contact?"direct_projectile":"area_hazard", chargeAntimatter=true, directPlayer=true, telemetryCore?: number, penetrationScale=1, shotBonuses:readonly [number,number][] = [], cast?: ExpansionCast, primaryShot?: { resolved: boolean; afterwashHits?:Set<number>; argentGenesisEligible?:boolean }, procFree=false, echoScale?:number, intrinsic?:IntrinsicDamage, receipt?:{hp:number;total:number}): number {
     if (world.aftermath || world.destruction) return 0;
     if (!isHostileToPlayer(world,enemy) || rawDamage <= 0 || world.bossDefeated)
         return 0;
@@ -3493,7 +3497,7 @@ function applyDamageToEnemy(world: CombatWorld, enemy: EnemyEntity, rawDamage: n
         if(basic||skillHit)world.playerTargetId=enemy.id;
         if (firstPrimaryHit) {
             predatorBasicHit(world,enemy,rankHooks,hpBefore<enemy.maxHp*.4);
-            argentPrimaryHit(world,primaryShot!);
+            argentPrimaryHit(world,primaryShot!,enemy.x,enemy.y);
             primaryShot!.resolved = true;
             const c=state.coreState;
             if(hasCore(state,114)||hasCore(state,116)){const before=c.stacks.sameTargetHits??0;c.stacks.sameTargetId=enemy.id;c.stacks.sameTargetHits=Math.min(20,before+1);c.timers.sameTarget=time+3;if(Math.floor(c.stacks.sameTargetHits/5)>Math.floor(before/5)){recordCoreMetric(state,114,"stacks",1);recordCoreMetric(state,116,"stacks",1);}}
@@ -5267,7 +5271,7 @@ const equipmentHooks:EquipmentHooks={damage:resolveEquipmentDamage,heal:(w,n)=>w
 /** All percentage Armor reduction is capped before capped penetration. Flat equipment shred remains flat. */
 function resolvedEnemyArmor(w:CombatWorld,e:EnemyEntity,penetration=0):number {
  const t=w.elapsed,fx=w.skillCores.enemyEffects.get(e.id);
- const reduction=((fx?.armorUntil??0)>t?.75:1)*(!e.aircraftTarget&&(e.armorBrokenUntil??0)>t?.7:1)*((e.burnArmorUntil??0)>t?.7:1)*(e.weakUntil>t?.92:1)*((e.weakDebuffUntil??0)>t?.85:1)*rankArmorMultiplier(w,e);
+ const reduction=argentArmorMultiplier(w,e)*((fx?.armorUntil??0)>t?.75:1)*(!e.aircraftTarget&&(e.armorBrokenUntil??0)>t?.7:1)*((e.burnArmorUntil??0)>t?.7:1)*(e.weakUntil>t?.92:1)*((e.weakDebuffUntil??0)>t?.85:1)*rankArmorMultiplier(w,e);
  return equipmentArmor(w.aircraft,e)*Math.max(.5,reduction)*(1-Math.min(.4,Math.max(0,penetration)));
 }
 const rankHooks:RankRuntimeHooks={hostile:isHostileToPlayer,elite:e=>isElite(e.type),priority:w=>nearestEnemy(w,w.playerX,w.playerY,[],true),projectile:addProjectile,
