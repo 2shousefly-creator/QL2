@@ -1,3 +1,4 @@
+import { sylvaFireRate } from './airCombatSylvaRuntime';
 import { publishCombatNotice } from "./airCombatNotices";
 import { rankEnemyFireRate } from "./airCombatRankRuntime";
 import { bossMinCenterY } from "./airCombatHudLayout";
@@ -483,7 +484,7 @@ function updateTempest(w:CombatWorld, boss:EnemyEntity, dt:number, h:MagneticHoo
   const m=w.magnetic!, s=state(boss), d=m.scheduler??=createScheduler();
   initializeTempestGuardians(w,boss,h);
   if(!h.hostile(w,boss)||(boss.skillLockedUntil??0)>w.elapsed)return;
-  d.clock+=dt*rankEnemyFireRate(w,boss);
+  d.clock+=dt*rankEnemyFireRate(w,boss)*sylvaFireRate(w,boss);
   if(d.phase!==w.bossPhase) {
     for(const skill of TEMPEST_SKILLS) if(SKILL_PHASE[skill]>d.phase && SKILL_PHASE[skill]<=w.bossPhase)
       d.readyAt[skill]=Math.max(d.readyAt[skill],d.clock+.5);

@@ -1,12 +1,13 @@
 import type { EquipmentState, AcquisitionEvent } from "./airCombatEquipmentState";
 import type { PlayerCombatStatus } from "./airCombatStatus";
-export type AircraftId = "black_eagle" | "breaker" | "phantom" | "astra" | "cinder" | "riptide" | "argent";
+export type AircraftId = "sylva" | "black_eagle" | "breaker" | "phantom" | "astra" | "cinder" | "riptide" | "argent";
 
 export type ResourceKind = "mana" | "energy";
 
-export type PassiveId = "viper_follow_up" | "titan_alloy_rounds" | "phantom_backup_battery" | "astra_stellar_mark" | "cinder_thermal_round" | "riptide_afterwash" | "argent_blade_genesis";
+export type PassiveId = "sylva_acid_rounds" | "viper_follow_up" | "titan_alloy_rounds" | "phantom_backup_battery" | "astra_stellar_mark" | "cinder_thermal_round" | "riptide_afterwash" | "argent_blade_genesis";
 
 export type SkillId =
+  | "sylva_symbiosis" | "sylva_acid_burst" | "sylva_parasitic_seed" | "sylva_deathbloom"
   | "argent_guard_stance" | "argent_blade_cast" | "argent_blade_recall" | "argent_heavenly_blade_array"
   | "riptide_wellspring" | "riptide_tidal_blades" | "riptide_confluence" | "riptide_waterform"
   | "cinder_fire_shield" | "cinder_fuel_barrage" | "cinder_heat_wave" | "cinder_inferno_beam"
@@ -323,6 +324,7 @@ export interface CombatAnnouncement {
 }
 
 export interface AirCombatHudSnapshot {
+  grayHealth:number;
   dps: number;
   stats: EffectiveAircraftStats;
   score: number;
@@ -336,7 +338,7 @@ export interface AirCombatHudSnapshot {
   waveCountdown: number;
   combatXpRequired: number;
   bossHp: number;
-  mirror?: { hp:number; maxHp:number; resource:number; maxResource:number };
+  mirror?: { grayHealth:number; hp:number; maxHp:number; resource:number; maxResource:number };
   bossMaxHp: number;
   bossPhase: number;
   paused: boolean;

@@ -1,3 +1,4 @@
+import { sylvaState } from './airCombatSylvaRuntime';
 import { argentArrayActive, argentState } from './airCombatArgentRuntime';
 import React from 'react';
 import { CoreDescription } from './CoreDescription';
@@ -12,7 +13,7 @@ export function PassiveDetails({state,world,heading=true}:{state:AircraftCombatS
  const p=PASSIVES[state.aircraftId],tier=passiveTier(state.level),runtime=world?cinderState(world):undefined;
  const stats=getEffectiveAircraftStats(state),metrics=passiveMetrics(state),number=(n:number)=>n.toLocaleString('vi-VN',{maximumFractionDigits:1});
  // Only tier progressions are collapsed; distinct bounce hits and formula operands are preserved.
- const currentDescription=p.description.replace(/\d+(?:,\d+)?(?:\/\d+(?:,\d+)?)+%/g,values=>values.slice(0,-1).split('/')[tier]+'%')
+ const currentDescription=p.description.replace('1/2/3/4 Giáp',String(tier+1)+' Giáp').replace(/\d+(?:,\d+)?(?:\/\d+(?:,\d+)?)+%/g,values=>values.slice(0,-1).split('/')[tier]+'%')
    .replace(' ở cấp chiến cơ 1/6/11/16','');
  const primaryBasis=metrics.lastPrimaryBeforeCrit??stats.firepower;
  const followupFactor=state.selectedCores.includes("core_229")?.55:1;
@@ -24,7 +25,7 @@ export function PassiveDetails({state,world,heading=true}:{state:AircraftCombatS
  {state.aircraftId==='black_eagle'&&<p>Quy đổi Bắn Bồi theo {metrics.lastPrimaryBeforeCrit===undefined?'đạn cơ bản hiện tại':'đòn chính trúng gần nhất'}, trước Giáp của mục tiêu.</p>}
  {world&&<div className='air-tooltip-details'>
   <strong>Thống kê trận / vòng hiện tại</strong>
-  {state.aircraftId==='phantom'?<p>Điện đã hồi: {number(metrics.resource)}</p>:<>
+  {state.aircraftId==='sylva'?<p>Giảm {tier+1} Giáp mỗi viên trúng · Cộng dồn được làm mới về 5 giây. Nội tại không tự gây sát thương.</p>:state.aircraftId==='phantom'?<p>Điện đã hồi: {number(metrics.resource)}</p>:<>
    <p>Sát thương nội tại lên Máu: {number(metrics.damage)} · lên Lá Chắn: {number(metrics.shieldDamage)}</p>
    <p>Số lần gây sát thương nội tại: {metrics.hits}</p>
    {state.aircraftId==='cinder'&&<p>Sát thương Cháy lên Máu: {number(metrics.burnDamage)} · lên Lá Chắn: {number(metrics.burnShieldDamage)}. Tính Cháy từ đòn đánh và kỹ năng.</p>}
@@ -32,7 +33,7 @@ export function PassiveDetails({state,world,heading=true}:{state:AircraftCombatS
   </>}
  </div>}
  <div className='air-tooltip-details'>Tự mở theo cấp chiến cơ, không cần điểm kỹ năng hoặc tài nguyên.</div>
- <div className='air-rank-preview'>{PASSIVE_LEVELS.map((level,i)=><section key={level} data-unlocked={i<=tier} data-current={i===tier}><strong>◆ Cấp chiến cơ {level}</strong><p><CoreDescription text={resolveTooltipValues(state.aircraftId==='phantom'?'8 Điện/giây, tối đa 40 Điện':Math.round(p.coefficients[i]*100)+'% '+(state.aircraftId==='breaker'?'Giáp hiện tại':(state.aircraftId==='black_eagle'||state.aircraftId==='riptide')?'đòn chính trước chí mạng và giảm trừ':'Hỏa Lực')+(state.aircraftId==='cinder'?`; Cháy đủ 6 cộng dồn: ${[35,40,45,50][i]}% Hỏa Lực mỗi giây.`:''),{stats,currentHp:state.currentHp})}/></p></section>)}</div>
+ <div className='air-rank-preview'>{PASSIVE_LEVELS.map((level,i)=><section key={level} data-unlocked={i<=tier} data-current={i===tier}><strong>◆ Cấp chiến cơ {level}</strong><p><CoreDescription text={resolveTooltipValues(state.aircraftId==='sylva'?`${p.coefficients[i]} Giáp mỗi lần trúng; làm mới toàn bộ cộng dồn về 5 giây; Tinh Anh tối đa 120, Boss 80 Giáp.`:state.aircraftId==='phantom'?'8 Điện/giây, tối đa 40 Điện':Math.round(p.coefficients[i]*100)+'% '+(state.aircraftId==='breaker'?'Giáp hiện tại':(state.aircraftId==='black_eagle'||state.aircraftId==='riptide')?'đòn chính trước chí mạng và giảm trừ':'Hỏa Lực')+(state.aircraftId==='cinder'?`; Cháy đủ 6 cộng dồn: ${[35,40,45,50][i]}% Hỏa Lực mỗi giây.`:''),{stats,currentHp:state.currentHp})}/></p></section>)}</div>
  {world&&state.aircraftId==='argent'&&<p>Sinh Nhận: {argentState(world).progress}/4 loạt trúng{argentArrayActive(world)?' · Tạm ngừng trong kiếm trận':''}.</p>}
  {runtime&&state.aircraftId==='phantom'&&<p>Pin {runtime.battery.charge.toFixed(1)}% · {batteryLabel(runtime.battery.phase)} {runtime.battery.remaining>0?runtime.battery.remaining.toFixed(1)+' giây':''}. Điện hiện tại: {state.currentResource.toFixed(1)}.</p>}
  {(state.aircraftId==='astra'||state.aircraftId==='cinder')&&<p>Hồi chiêu được tính độc lập trên từng mục tiêu; xem dấu ấn/Cháy tại mục tiêu.</p>}

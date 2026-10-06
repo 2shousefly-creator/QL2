@@ -1,3 +1,4 @@
+import { isSylvaSkill } from './airCombatSylvaConfig';
 import { isArgentSkill } from './airCombatArgentConfig';
 import { isRiptideSkill } from './airCombatRiptideConfig';
 import { isCinderSkill } from './airCombatCinderConfig';
@@ -103,8 +104,10 @@ export function getEffectiveAircraftStats(state: AircraftCombatState, includeTem
         stats.resourceRegen *= Math.min(1, ...status.jams.filter(j => j.until > c.time).map(j => j.multiplier));
     }
     if (includeTemporary && (c.timers.tacticalData || 0) > c.time && !hasCore(state, 95)) stats.criticalChance += (c.stacks.tacticalData || 0) * V.dataCrit;
+    if(includeTemporary && (c.timers.sylvaArmor??0)>c.time)stats.armor*=1.3;
     stats.fireRate = resolveFireRate(stats, hasCore(state,229));
     applyFireRateLock(state, stats);
+    if(includeTemporary && (c.timers.sylvaFireSlow??0)>c.time){stats.totalFireRateMultiplier*=.75;stats.fireRate*=.75;}
     if(hasCore(state,95))stats.criticalChance=.25;
     stats.criticalChance = Math.max(0, Math.min(1, stats.criticalChance));
     stats.criticalDamageMultiplier = Math.max(1.7, Math.min(10, stats.criticalDamageMultiplier));
@@ -212,7 +215,7 @@ export function getSkillAvailability(state: AircraftCombatState, skillId: SkillI
     const borrow=canBorrowSkill(state,skillId);
     const toggle=skillId==="escort_drone"&&state.droneActive;
     let reason: SkillCastResult["reason"];
-    if(!skill||skill.aircraftId!==state.aircraftId||overheated(state)||skillRank(state,skillId)===0||ultimateCastDisabled(state,skillId)||playerSkillLocked(state))reason="invalid";
+    if(!skill||skill.aircraftId!==state.aircraftId||overheated(state)||skillRank(state,skillId)===0||ultimateCastDisabled(state,skillId)||(playerSkillLocked(state)&&!(skillId==='sylva_symbiosis'&&manualAction==='detonate'&&(state.coreState.stacks.sylvaSymbiosisRank??0)>=3&&state.status.skillLockedUntil<=state.coreState.time)))reason="invalid";
     else if(manualAction==="pending")reason="invalid";
     else if(manualAction)reason=undefined;
     else if(toggle){if(skillId==="escort_drone"&&state.dronePhase==="returning")reason="invalid";}
@@ -241,6 +244,8 @@ export function startDeferredSkillCooldown(state:AircraftCombatState,skillId:Ski
     delete state.coreState.deferredCooldowns[skillId];
     if(isUltimate(skillId)&&hasCore(state,218)&&!ultimateCastDisabled(state,skillId)&&!state.coreState.stacks.cancellingSkills){state.coreState.timers.ultimateAftershock=state.coreState.time+15;recordCoreMetric(state,218,"procs",1);}
     if(state.coreState.stacks[`debt:${skillId}`])beginDebt(state,skillId);
+    const sylvaCredit=state.coreState.stacks[`sylvaCycle:${skillId}`]??0;
+    if(sylvaCredit){state.cooldowns[skillId]=Math.max(0,(state.cooldowns[skillId]??0)-sylvaCredit);delete state.coreState.stacks[`sylvaCycle:${skillId}`];}
 }
 export function endAircraftSkill(state: AircraftCombatState, skillId: SkillId): void {
     if (skillId === "invisibility") delete state.coreState.emergencyRepair;
@@ -393,7 +398,7 @@ export function tickAircraftState(state: AircraftCombatState, deltaSeconds: numb
         }
     }
     for (const key of Object.keys(state.activeEffects) as SkillId[]) {
-        if(isArgentSkill(key)||isRiptideSkill(key)||isCinderSkill(key)||isAstraSkill(key)||key==="predator_lock"||key==="gravity_anchor"||key==="electronic_interference"||key==="focus_laser")continue; // World-owned completion includes delayed impacts.
+        if(isSylvaSkill(key)||isArgentSkill(key)||isRiptideSkill(key)||isCinderSkill(key)||isAstraSkill(key)||key==="predator_lock"||key==="gravity_anchor"||key==="electronic_interference"||key==="focus_laser")continue; // World-owned completion includes delayed impacts.
         const next = (state.activeEffects[key] || 0) - dt;
         if (next <= 0)
             endAircraftSkill(state, key);

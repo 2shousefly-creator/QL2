@@ -1,3 +1,4 @@
+import { sylvaFireRate, sylvaMovement } from './airCombatSylvaRuntime';
 import { GAMEPLAY_SAFE_RECT as R, stageEnemyConfig } from "./airCombatConfig";
 import { getEnemyHitbox, clampHitboxToGameplayRect } from "./airCombatHitboxes";
 import { isElite } from "./airCombatWaves";
@@ -207,6 +208,11 @@ function bossAttack(w: CombatWorld, e: EnemyEntity, h: MirageHooks) {
 }
 export function updateMirageEnemy(w: CombatWorld, e: EnemyEntity, dt: number, h: MirageHooks): boolean {
   const s = e.mirage; if (!w.mirage || !s) return false;
+  const firingDelay=dt*(1-sylvaFireRate(w,e)),movement=sylvaMovement(w,e);
+  if(s.next>w.elapsed-dt)s.next+=firingDelay;
+  if(e.type==='boss'&&w.mirage.boss&&w.mirage.boss.next>w.elapsed-dt)w.mirage.boss.next+=firingDelay;
+  if(s.swap&&movement===0)s.swap.at+=dt;
+  if(s.dash&&w.elapsed>=s.dash.at)s.dash.at+=Math.min(dt,w.elapsed-s.dash.at)*(1-movement);
   if (s.swap && w.elapsed >= s.swap.at) {
     const old={x:e.x,y:e.y},destination=s.swap.to;
     const clone=w.mirage.projections.find(p=>p.ownerId===e.id&&Math.hypot(p.x-destination.x,p.y-destination.y)<1);

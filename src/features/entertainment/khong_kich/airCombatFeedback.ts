@@ -105,6 +105,7 @@ export function activeShieldAmount(state: AircraftCombatState, genericOnly = fal
 export const statusBarText = (current: number, max: number) => `${Math.max(0, Math.round(current))} / ${Math.max(1, Math.round(max))}`;
 
 export interface HealthBarState {
+  grayStart:number; grayEnd:number;
   hp: number; maxHp: number; hpRatio: number; shieldEnd: number; shieldStart: number;
   chipRatio: number; chipUntil: number; seen: number;
 }
@@ -115,7 +116,7 @@ export class HealthBarPresentation {
   private frame = 0;
   clock = 0;
   begin(delta: number) { this.clock += Math.max(0, delta); this.frame++; }
-  get(id: number, hp: number, maxHp: number, shield = 0): HealthBarState {
+  get(id: number, hp: number, maxHp: number, shield = 0, gray = 0): HealthBarState {
     maxHp = Math.max(1, maxHp);
     const hpRatio = ratio(hp / maxHp);
     let state = this.states.get(id);
@@ -132,6 +133,7 @@ export class HealthBarPresentation {
     } else if (maxHp !== state.maxHp) {
       state.chipRatio = hpRatio; state.chipUntil = 0;
     }
+    state.grayStart=hpRatio;state.grayEnd=ratio((Math.max(0,hp)+Math.min(Math.max(0,gray),Math.max(0,maxHp-hp)))/maxHp);
     state.hp = hp; state.maxHp = maxHp; state.hpRatio = hpRatio;
     state.shieldEnd = ratio((Math.max(0, hp) + Math.max(0, shield)) / maxHp);
     state.shieldStart = Math.max(0,state.shieldEnd-ratio(shield/maxHp));

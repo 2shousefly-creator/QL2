@@ -1,3 +1,5 @@
+import { sylvaHud } from './airCombatSylvaRuntime';
+import { SYLVA_UPGRADE_ICONS } from './airCombatSylvaArt';
 import { SkillIcon } from './SkillIcon';
 import { ARGENT_UPGRADE_ICONS } from './airCombatArgentArt';
 import { argentHud, argentWaiting } from './airCombatArgentRuntime';
@@ -729,7 +731,10 @@ export const AirCombatBattleShell: React.FC<AirCombatBattleProps> = ({
 
       {!runtime && hud.mirror && <div className="air-boss-hud" style={{top:`${AIR_COMBAT_WORLD.hudHeight/720*100}%`,height:`${BOSS_HUD_HEIGHT/720*100}%`}}>
         <div className="flex justify-between text-[7px] font-black text-slate-100"><span>THE OTHER SELF</span><span>HP {Math.ceil(hud.mirror.hp).toLocaleString("vi-VN")} · {resourceLabel} {Math.floor(hud.mirror.resource)}</span></div>
-        <progress className="mt-1 h-1.5 w-full accent-slate-100" aria-label="Máu Chiến Cơ Ảo Ảnh" value={hud.mirror.hp} max={hud.mirror.maxHp} />
+        <div className="relative mt-1 h-1.5 overflow-hidden rounded bg-slate-800" role="progressbar" aria-label="Máu Chiến Cơ Ảo Ảnh" aria-valuenow={hud.mirror.hp} aria-valuemax={hud.mirror.maxHp}>
+          <div className="absolute inset-y-0 left-0 bg-slate-100" style={{width:`${Math.min(100,hud.mirror.hp/Math.max(1,hud.mirror.maxHp)*100)}%`}} />
+          {!!hud.mirror.grayHealth&&<div className="absolute inset-y-0 bg-slate-300/80" style={{left:`${hud.mirror.hp/Math.max(1,hud.mirror.maxHp)*100}%`,width:`${Math.max(0,Math.min(hud.mirror.grayHealth,hud.mirror.maxHp-hud.mirror.hp))/Math.max(1,hud.mirror.maxHp)*100}%`}} />}
+        </div>
       </div>}
       <AirCombatStatusStrip ref={statusStripRef} onTooltipChange={onStatusTooltip} top={AIR_COMBAT_WORLD.hudHeight + (hud.bossMaxHp > 0 || (!runtime && hud.mirror) ? BOSS_HUD_HEIGHT : 0)} />
 
@@ -738,6 +743,7 @@ export const AirCombatBattleShell: React.FC<AirCombatBattleProps> = ({
         {worldRef.current.aircraft.skillPoints > 0 && <span className="air-skill-points" aria-live="polite">Điểm kỹ năng: {worldRef.current.aircraft.skillPoints}</span>}
         {skillIds.map((skillId) => {
           const metal = argentHud(worldRef.current);
+          const sylvaLife=sylvaHud(worldRef.current);
           const skill = SKILL_CONFIGS[skillId];
           const values = getSkillRuntimeValues(worldRef.current.aircraft, skillId);
           const availability=getWorldSkillAvailability(worldRef.current,skillId);
@@ -752,6 +758,7 @@ export const AirCombatBattleShell: React.FC<AirCombatBattleProps> = ({
           const statusLabel=locked ? rank===0?(isUltimate(skillId)&&state.level<6?"Khóa đến Lv6":"Chưa học"):"Đã khóa" : manualDetonate ? "Kích nổ" : active ? "Đang bật" : borrow&&availability.available ? "Có thể vay dùng ngay" : blockingCooldown ? `Đang hồi ${formatCooldownSeconds(cooldown)}` : missingResource ? `Thiếu ${resourceLabel}` : unavailable ? "Chưa thể dùng" : "Sẵn sàng";
           return (
             <div className="air-ranked-skill" key={skillId}>
+            {skillId==='sylva_symbiosis'&&sylvaLife&&<span className="air-sylva-vitality">Sinh Lực: {Math.round(sylvaLife.storedVitality)} · Hồi phục: {Math.round(sylvaLife.heal)}</span>}
             {skillId==='argent_blade_recall'&&<span className="air-argent-count" data-ready={availability.available}>{argentWaiting(worldRef.current)}/12</span>}
             {skillId==='argent_guard_stance'&&metal.guard&&<span className="air-argent-guard">{metal.guard.remaining} lượt · {metal.defending?'Đỡ 99%':'Chờ đòn'} · {metal.guardSeconds.toFixed(1)}s</span>}
             {skillId==='argent_blade_recall'&&metal.temper>0&&<span className="air-argent-temper">Tôi Kim {metal.temper}/3</span>}
@@ -820,7 +827,7 @@ export const AirCombatBattleShell: React.FC<AirCombatBattleProps> = ({
           <p><CoreDescription text={tooltipModel.description}/></p>
           <div className="air-tooltip-details">{tooltipModel.detailRows.map(row => <div key={row}><CoreDescription text={row}/></div>)}</div>
           {tooltipModel.coreRows.map(row=><p key={row} style={{color:"#fde047"}}><CoreDescription text={row}/></p>)}
-          <div className="air-rank-preview">{tooltipModel.rankRows.map(row=><section key={row.rank} data-unlocked={row.rank<=tooltipModel.rank} data-current={row.rank===tooltipModel.rank}><strong>{ARGENT_UPGRADE_ICONS[tooltipSkill as keyof typeof ARGENT_UPGRADE_ICONS]&&<SkillIcon id={ARGENT_UPGRADE_ICONS[tooltipSkill as keyof typeof ARGENT_UPGRADE_ICONS][row.rank-1]} className="air-argent-upgrade-icon"/>}◆ Cấp {row.rank} — {row.name}</strong><p style={{whiteSpace:"pre-line"}}><CoreDescription text={row.displayDescription}/></p></section>)}</div>
+          <div className="air-rank-preview">{tooltipModel.rankRows.map(row=><section key={row.rank} data-unlocked={row.rank<=tooltipModel.rank} data-current={row.rank===tooltipModel.rank}><strong>{({...ARGENT_UPGRADE_ICONS,...SYLVA_UPGRADE_ICONS})[tooltipSkill as string]&&<SkillIcon id={({...ARGENT_UPGRADE_ICONS,...SYLVA_UPGRADE_ICONS})[tooltipSkill as string][row.rank-1]} className="air-argent-upgrade-icon"/>}◆ Cấp {row.rank} — {row.name}</strong><p style={{whiteSpace:"pre-line"}}><CoreDescription text={row.displayDescription}/></p></section>)}</div>
         </motion.aside></AirCombatTooltipPortal>
       )}
 

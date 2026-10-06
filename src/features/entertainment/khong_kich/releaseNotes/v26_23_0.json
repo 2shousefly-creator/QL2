@@ -1,0 +1,937 @@
+{
+  "version": "26.23.0",
+  "releaseDate": "06/10/2026",
+  "title": "Sylva — Chiến Cơ Hành Mộc",
+  "displayTitle": "KHÔNG KÍCH 26.23.0 — SYLVA · ĂN MÒN · DIỆT SINH",
+  "summary": "Bổ sung Sylva, chiến cơ hành Mộc chuyên ăn mòn Giáp và dồn sát thương bằng combo. Cộng Sinh tích trữ sinh lực với thanh Máu Xám, Nổ Axit tạo vùng độc, Ký Sinh khuếch đại sát thương và Đại Thụ Diệt Sinh ghi nhận tổn thương để kết liễu mục tiêu. Sylva có bộ hình ảnh, minh họa kỹ năng và hiệu ứng riêng.",
+  "sections": [
+    {
+      "id": "sylva-introduction",
+      "title": "SYLVA · CHIẾN CƠ MỚI",
+      "icon": {
+        "kind": "aircraft",
+        "id": "sylva"
+      },
+      "intro": [
+        {
+          "format": "paragraph",
+          "changeType": "new",
+          "text": "Sylva dùng axit ăn mòn lớp Giáp của kẻ địch, gieo Ký Sinh để tăng sát thương chúng phải nhận và kết thúc combo bằng những đại thụ gai. Cộng Sinh cho phép căn thời điểm hồi phục trong giao tranh."
+        }
+      ],
+      "entries": [
+        {
+          "id": "sylva-aircraft",
+          "icon": {
+            "kind": "aircraft",
+            "id": "sylva"
+          },
+          "title": "Sylva — Hành Mộc",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Vai trò: Sát thủ · Ăn mòn · Combo. Sylva sử dụng Mana để nối chuỗi kỹ năng, bào mòn Giáp và khuếch đại sát thương trước khi kết liễu mục tiêu."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Hỏa Lực cơ bản cao, tốc độ bắn trung bình và Mana vừa phải; Máu cùng Giáp tương đương Viper để cân bằng lối chơi sát thủ."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Đạn thường bay về phía trước, mang lõi axit phát sáng và vệt sáng thể hiện chuyển động."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Sylva có thể được lựa chọn trong các chế độ hỗ trợ chọn chiến cơ, gồm Solo 1v1."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Thanh đánh giá: Sát thương 95 · Chống chịu 66 · Tốc độ bắn 64 · Độ khó 93."
+            }
+          ]
+        },
+        {
+          "id": "sylva-base-stats",
+          "icon": {
+            "kind": "aircraft",
+            "id": "sylva"
+          },
+          "title": "Chỉ Số Chiến Cơ",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Máu tối đa: 2.000 ở cấp 1, tăng 70 mỗi cấp, đạt 3.190 ở cấp 18."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Giáp: 45 ở cấp 1, tăng 3,1 mỗi cấp, đạt 97,7 ở cấp 18."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Hỏa Lực: 132 ở cấp 1, tăng 8 mỗi cấp, đạt 268 ở cấp 18."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Tốc độ bắn tự nhiên: 3,9 phát/giây ở cấp 1, khoảng 4,99 phát/giây ở cấp 18, trước hiệu ứng tăng hoặc giảm tốc độ bắn."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mana tối đa: 300 ở cấp 1, tăng 30 mỗi cấp, đạt 810 ở cấp 18."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Hồi Mana: 1,4 mỗi giây ở cấp 1, tăng 0,35 mỗi cấp, đạt 7,35 mỗi giây ở cấp 18."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Hồi Máu: 2,8 mỗi giây ở cấp 1, tăng 0,25 mỗi cấp, đạt 7,05 mỗi giây ở cấp 18."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Tỷ lệ chí mạng cơ bản: 5%. Sát thương chí mạng cơ bản: 170%."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sylva-passive",
+      "title": "SYLVA · NỘI TẠI",
+      "icon": {
+        "kind": "skill",
+        "id": "sylva_acid_rounds"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "sylva-acid-rounds",
+          "icon": {
+            "kind": "skill",
+            "id": "sylva_acid_rounds"
+          },
+          "title": "Nội Tại — Đạn Axit",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Đạn thường chính và đạn phụ phát sinh từ bắn thường giảm Giáp của mục tiêu mỗi lần trúng."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Giáp giảm mỗi lần trúng: 1/2/3/4, tương ứng cấp chiến cơ 1/6/11/16."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Lượng ăn mòn tồn tại 5 giây. Mỗi lần trúng làm mới thời gian của toàn bộ cộng dồn về 5 giây."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Tối đa giảm 120 Giáp lên Tinh Anh và 80 Giáp lên Boss. Các mục tiêu khác, gồm chiến cơ địch trong Solo, có thể bị ăn mòn đến 0 Giáp."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Không thể giảm thêm khi Giáp hiện tại đã bằng 0. Khi đạt giới hạn, đạn trúng vẫn làm mới thời gian ăn mòn."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Khi kết hợp với Nổ Axit, giảm Giáp theo phần trăm được tính trước, rồi mới trừ lượng Giáp bị Đạn Axit ăn mòn. Ví dụ: 200 Giáp chịu giảm 25% và ăn mòn 80 Giáp sẽ còn 70 Giáp."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sylva-symbiosis",
+      "title": "SYLVA · CỘNG SINH",
+      "icon": {
+        "kind": "skill",
+        "id": "sylva_symbiosis"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "sylva-symbiosis-base",
+          "icon": {
+            "kind": "skill",
+            "id": "sylva_symbiosis"
+          },
+          "title": "S1 — Cộng Sinh",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Sylva bước vào trạng thái Cộng Sinh trong tối đa 6 giây, ghi nhận một phần Máu thực tế mất do sát thương nhận vào thành Sinh Lực Tích Trữ."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Tỷ lệ ghi nhận theo cấp kỹ năng: 60%/65%/70%/75%/80%."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Sau 0,5 giây, Sylva có thể tái kích hoạt để kết thúc Cộng Sinh, hồi Máu bằng 50% Hỏa Lực cộng toàn bộ Sinh Lực Tích Trữ."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Khi hết thời gian, Cộng Sinh tự kết thúc và hồi phục theo cùng công thức; không bắt buộc tái kích hoạt để nhận đủ lượng hồi."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Sát thương vẫn trừ Máu ngay. Cộng Sinh không trì hoãn tổn thương và không tự gây mất Máu dần."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Chỉ ghi lượng Máu thực tế mất sau các hiệu ứng phòng thủ. Sát thương bị Khiên hấp thụ không tạo Sinh Lực Tích Trữ."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mana: 90/100/110/120/130. Hồi chiêu cơ bản: 32/31/30/29/28 giây, bắt đầu khi Cộng Sinh kết thúc."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Tái kích hoạt không tiêu hao thêm Mana. Sylva bị hạ gục trước khi kết thúc sẽ mất lượng Sinh Lực Tích Trữ và không được hồi phục."
+            }
+          ]
+        },
+        {
+          "id": "sylva-gray-health",
+          "icon": {
+            "kind": "skill",
+            "id": "sylva_symbiosis"
+          },
+          "title": "Thanh Máu Xám",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Sinh Lực Tích Trữ được hiển thị bằng một đoạn Máu Xám ngay sau phần Máu hiện tại trên cùng thanh Máu."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Máu Xám biểu thị lượng có thể hồi khi Cộng Sinh kết thúc; không được tính vào Máu hiện tại để chống chịu."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Khi nhận hồi Máu từ nguồn khác, đoạn xám chỉ hiển thị trong khoảng Máu còn thiếu; lượng Sinh Lực đã tích trữ vẫn được giữ."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Phần hồi thêm 50% Hỏa Lực không cộng vào đoạn Máu Xám. Tổng hồi phục tuân theo giới hạn Máu tối đa và các hiệu ứng hồi phục đang có."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Khi kỹ năng kết thúc, đoạn xám biến mất đồng thời với hồi phục. Khi Sylva bị hạ gục, đoạn xám được xóa."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Trong Solo 1v1, Sylva ở phía đối thủ cũng hiển thị Máu Xám khi đang tích trữ sinh lực."
+            }
+          ]
+        },
+        {
+          "id": "sylva-symbiosis-r2",
+          "icon": {
+            "kind": "skill",
+            "id": "sylva_symbiosis_r2"
+          },
+          "title": "Cấp 2 — Dưỡng Sinh",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Tỷ lệ ghi nhận Sinh Lực tăng từ 60% lên 65%. Mana tăng từ 90 lên 100; Hồi chiêu cơ bản giảm từ 32 xuống 31 giây."
+            }
+          ]
+        },
+        {
+          "id": "sylva-symbiosis-r3",
+          "icon": {
+            "kind": "skill",
+            "id": "sylva_symbiosis_r3"
+          },
+          "title": "Cấp 3 — Ý Chí Sinh Tồn",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Có thể tái kích hoạt Cộng Sinh khi đang bị khống chế cứng, gồm Choáng, Đẩy Lùi hoặc Trói. Vẫn cần chờ 0,5 giây sau khi kích hoạt và không xóa khống chế."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Tỷ lệ ghi nhận Sinh Lực tăng từ 65% lên 70%. Mana tăng từ 100 lên 110; Hồi chiêu cơ bản giảm từ 31 xuống 30 giây."
+            }
+          ]
+        },
+        {
+          "id": "sylva-symbiosis-r4",
+          "icon": {
+            "kind": "skill",
+            "id": "sylva_symbiosis_r4"
+          },
+          "title": "Cấp 4 — Mộc Giáp",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Sylva tăng 30% Giáp trong thời gian Cộng Sinh hoạt động."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Tỷ lệ ghi nhận Sinh Lực tăng từ 70% lên 75%. Mana tăng từ 110 lên 120; Hồi chiêu cơ bản giảm từ 30 xuống 29 giây."
+            }
+          ]
+        },
+        {
+          "id": "sylva-symbiosis-r5",
+          "icon": {
+            "kind": "skill",
+            "id": "sylva_symbiosis_r5"
+          },
+          "title": "Cấp 5 — Sinh Lực Bùng Nở",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Sylva gây thêm 25% toàn bộ sát thương trong thời gian Cộng Sinh và 4 giây sau khi kết thúc."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Tỷ lệ ghi nhận Sinh Lực tăng từ 75% lên 80%. Mana tăng từ 120 lên 130; Hồi chiêu cơ bản giảm từ 29 xuống 28 giây."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sylva-acid-burst",
+      "title": "SYLVA · NỔ AXIT",
+      "icon": {
+        "kind": "skill",
+        "id": "sylva_acid_burst"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "sylva-acid-burst-base",
+          "icon": {
+            "kind": "skill",
+            "id": "sylva_acid_burst"
+          },
+          "title": "S2 — Nổ Axit",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Sylva phóng một tên lửa hóa học tới cụm đông kẻ địch nhất, phát nổ trong bán kính 170 và tạo vùng axit cố định trong 5 giây."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Sát thương nổ theo cấp kỹ năng: 200%/225%/250%/275%/300% Hỏa Lực."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Sát thương vùng mỗi giây: 40%/50%/60%/70%/80% Hỏa Lực. Vùng gây sát thương mỗi 0,5 giây, tối đa 10 nhịp; mỗi nhịp gây một nửa lượng sát thương mỗi giây."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mục tiêu trúng vụ nổ hoặc tiếp xúc vùng bị giảm 25% Giáp trong 5 giây. Tiếp tục ở trong vùng làm mới thời gian, không cộng dồn mức giảm Giáp."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mana: 100/110/120/130/140. Hồi chiêu cơ bản: 25/24/23/22/21 giây, bắt đầu khi vùng axit kết thúc."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Tên lửa và vụ nổ có hiệu ứng axit riêng; đầu lâu độc bay lên tại điểm nổ để dễ nhận biết kỹ năng."
+            }
+          ]
+        },
+        {
+          "id": "sylva-acid-burst-r2",
+          "icon": {
+            "kind": "skill",
+            "id": "sylva_acid_burst_r2"
+          },
+          "title": "Cấp 2 — Độc Tố Cô Đặc",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Sát thương nổ tăng từ 200% lên 225% Hỏa Lực; sát thương vùng tăng từ 40% lên 50% Hỏa Lực mỗi giây."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mana tăng từ 100 lên 110; Hồi chiêu cơ bản giảm từ 25 xuống 24 giây."
+            }
+          ]
+        },
+        {
+          "id": "sylva-acid-burst-r3",
+          "icon": {
+            "kind": "skill",
+            "id": "sylva_acid_burst_r3"
+          },
+          "title": "Cấp 3 — Độc Trệ",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Vùng axit làm chậm mọi mục tiêu 30%, riêng Tinh Anh 15% và Boss 10%. Chiến cơ địch trong Solo chịu mức 30%."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Làm chậm kéo dài thêm 1 giây sau khi rời vùng."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Sát thương nổ tăng từ 225% lên 250% Hỏa Lực; sát thương vùng tăng từ 50% lên 60% Hỏa Lực mỗi giây."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mana tăng từ 110 lên 120; Hồi chiêu cơ bản giảm từ 24 xuống 23 giây."
+            }
+          ]
+        },
+        {
+          "id": "sylva-acid-burst-r4",
+          "icon": {
+            "kind": "skill",
+            "id": "sylva_acid_burst_r4"
+          },
+          "title": "Cấp 4 — Độc Lực Tăng Cường",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Sát thương nổ tăng từ 250% lên 275% Hỏa Lực; sát thương vùng tăng từ 60% lên 70% Hỏa Lực mỗi giây."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mana tăng từ 120 lên 130; Hồi chiêu cơ bản giảm từ 23 xuống 22 giây."
+            }
+          ]
+        },
+        {
+          "id": "sylva-acid-burst-r5",
+          "icon": {
+            "kind": "skill",
+            "id": "sylva_acid_burst_r5"
+          },
+          "title": "Cấp 5 — Axit Bám Dính",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mục tiêu trúng vụ nổ ban đầu tiếp tục chịu sát thương axit trong 2 giây sau khi rời vùng hoặc vùng kết thúc."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Sát thương bám dính bằng sát thương vùng cùng cấp, theo nhịp 0,5 giây; không cộng dồn với sát thương vùng khi mục tiêu còn ở trong vùng."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Sát thương nổ tăng từ 275% lên 300% Hỏa Lực; sát thương vùng tăng từ 70% lên 80% Hỏa Lực mỗi giây."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mana tăng từ 130 lên 140; Hồi chiêu cơ bản giảm từ 22 xuống 21 giây."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sylva-parasitic-seed",
+      "title": "SYLVA · KÝ SINH",
+      "icon": {
+        "kind": "skill",
+        "id": "sylva_parasitic_seed"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "sylva-parasitic-seed-base",
+          "icon": {
+            "kind": "skill",
+            "id": "sylva_parasitic_seed"
+          },
+          "title": "S3 — Ký Sinh",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Sylva phóng hạt ký sinh vào cụm địch, gây sát thương trong bán kính 170, Trói mục tiêu và đặt Dấu Ký Sinh trong 5 giây."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Sát thương ban đầu theo cấp kỹ năng: 250%/300%/350%/400%/450% Hỏa Lực."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mục tiêu mang dấu nhận thêm 12%/14%/16%/18%/20% toàn bộ sát thương từ Sylva, gồm bắn thường, kỹ năng, sát thương kéo dài và hiệu ứng phụ."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Thời gian Trói: 1/1,25/1,5/1,75/2 giây. Tinh Anh chịu 75% thời gian và Boss chịu 50%; chiến cơ địch trong Solo chịu đủ thời gian cơ bản."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Trói chặn di chuyển, không tự ngăn mục tiêu bắn hoặc sử dụng mọi kỹ năng."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Dấu được đặt sau sát thương ban đầu của Ký Sinh. Làm mới dấu không cộng dồn mức tăng sát thương."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mana: 90/100/110/120/130. Hồi chiêu cơ bản: 23/22/21/20/19 giây, bắt đầu khi hạt phát nổ."
+            }
+          ]
+        },
+        {
+          "id": "sylva-parasitic-seed-r2",
+          "icon": {
+            "kind": "skill",
+            "id": "sylva_parasitic_seed_r2"
+          },
+          "title": "Cấp 2 — Hạt Giống Độc",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Sát thương ban đầu tăng từ 250% lên 300% Hỏa Lực; sát thương mục tiêu nhận thêm từ Sylva tăng từ 12% lên 14%."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Thời gian Trói tăng từ 1 lên 1,25 giây."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mana tăng từ 90 lên 100; Hồi chiêu cơ bản giảm từ 23 xuống 22 giây."
+            }
+          ]
+        },
+        {
+          "id": "sylva-parasitic-seed-r3",
+          "icon": {
+            "kind": "skill",
+            "id": "sylva_parasitic_seed_r3"
+          },
+          "title": "Cấp 3 — Rễ Siết",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Thời gian Trói tăng từ 1,25 lên 1,5 giây. Tinh Anh tiếp tục chịu 75% thời gian và Boss chịu 50%."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Sát thương ban đầu tăng từ 300% lên 350% Hỏa Lực; sát thương mục tiêu nhận thêm từ Sylva tăng từ 14% lên 16%."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mana tăng từ 100 lên 110; Hồi chiêu cơ bản giảm từ 22 xuống 21 giây."
+            }
+          ]
+        },
+        {
+          "id": "sylva-parasitic-seed-r4",
+          "icon": {
+            "kind": "skill",
+            "id": "sylva_parasitic_seed_r4"
+          },
+          "title": "Cấp 4 — Mầm Độc Trưởng Thành",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Sát thương ban đầu tăng từ 350% lên 400% Hỏa Lực; sát thương mục tiêu nhận thêm từ Sylva tăng từ 16% lên 18%."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Thời gian Trói tăng từ 1,5 lên 1,75 giây."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mana tăng từ 110 lên 120; Hồi chiêu cơ bản giảm từ 21 xuống 20 giây."
+            }
+          ]
+        },
+        {
+          "id": "sylva-parasitic-seed-r5",
+          "icon": {
+            "kind": "skill",
+            "id": "sylva_parasitic_seed_r5"
+          },
+          "title": "Cấp 5 — Bộc Mầm",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Lần đầu Nổ Axit hoặc vụ nổ Đại Thụ Diệt Sinh gây sát thương lên mục tiêu mang Dấu Ký Sinh, Bộc Mầm gây thêm 200% Hỏa Lực lên chính mục tiêu đó."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mỗi lần đặt dấu chỉ kích hoạt Bộc Mầm một lần trên từng mục tiêu. Bộc Mầm không tiêu hao dấu Ký Sinh."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Sát thương ban đầu tăng từ 400% lên 450% Hỏa Lực; sát thương mục tiêu nhận thêm từ Sylva tăng từ 18% lên 20%."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Thời gian Trói tăng từ 1,75 lên 2 giây."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mana tăng từ 120 lên 130; Hồi chiêu cơ bản giảm từ 20 xuống 19 giây."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sylva-deathbloom",
+      "title": "SYLVA · ĐẠI THỤ DIỆT SINH",
+      "icon": {
+        "kind": "skill",
+        "id": "sylva_deathbloom"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "sylva-deathbloom-base",
+          "icon": {
+            "kind": "skill",
+            "id": "sylva_deathbloom"
+          },
+          "title": "Ultimate — Đại Thụ Diệt Sinh",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Sylva gieo Mầm Diệt Sinh lên địch trong bán kính 200 quanh vị trí mục tiêu hiện tại. Cần có mục tiêu hợp lệ để kích hoạt; nếu không có, không tiêu hao Mana hoặc bắt đầu Hồi chiêu."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Trong tối đa 6 giây, mỗi mầm ghi nhận toàn bộ Máu thực tế mục tiêu mất do mọi nguồn sát thương từ Sylva, gồm bắn thường, kỹ năng và hiệu ứng phụ."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Khi kết thúc, mầm hóa thành đại thụ gai và bùng nổ trên mục tiêu mang nó."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Sát thương nổ cơ bản theo cấp ultimate: 700%/900%/1100% Hỏa Lực."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Sát thương cộng thêm: 40%/50%/60% lượng Máu mục tiêu đã mất do Sylva trong thời gian mầm bám. Không có trần cơ bản trên mỗi mục tiêu."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Cả sát thương cơ bản và phần cộng thêm đều chịu Giáp và các hiệu ứng phòng thủ. Sát thương vào Khiên không được ghi nhận."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mỗi mầm tự nổ sớm nếu sát thương vụ nổ thực tế đủ hạ gục mục tiêu. Không thể tái kích hoạt để ép nổ sớm."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mục tiêu rời vùng gieo vẫn giữ mầm. Các mầm hoạt động độc lập; một mầm nổ không ép những mầm khác nổ theo."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Nếu Sylva bị hạ gục, mọi Mầm Diệt Sinh của Sylva biến mất ngay và không gây sát thương."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mana: 150/200/250. Hồi chiêu cơ bản: 90/85/80 giây, bắt đầu khi mầm cuối cùng của lượt kỹ năng kết thúc."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Ví dụ ultimate cấp 3 ghi nhận 1.000 Máu: vụ nổ gây 1100% Hỏa Lực + 600 sát thương trước khi tính Giáp và các hiệu ứng phòng thủ."
+            }
+          ]
+        },
+        {
+          "id": "sylva-deathbloom-r2",
+          "icon": {
+            "kind": "skill",
+            "id": "sylva_deathbloom_r2"
+          },
+          "title": "Cấp 2 — Sinh Trưởng Áp Chế",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Khi được gieo Mầm Diệt Sinh, mục tiêu bị giảm 50% tốc độ di chuyển và 25% tổng tốc độ bắn trong 3 giây."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Hiệu ứng áp dụng cả Tinh Anh, Boss và chiến cơ địch trong Solo. Sát thương về sau không làm mới thời gian 3 giây này."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Sát thương nổ cơ bản tăng từ 700% lên 900% Hỏa Lực; tỷ lệ sát thương cộng thêm từ lượng ghi nhận tăng từ 40% lên 50%."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mana tăng từ 150 lên 200; Hồi chiêu cơ bản giảm từ 90 xuống 85 giây."
+            }
+          ]
+        },
+        {
+          "id": "sylva-deathbloom-r3",
+          "icon": {
+            "kind": "skill",
+            "id": "sylva_deathbloom_r3"
+          },
+          "title": "Cấp 3 — Sinh Diệt Tuần Hoàn",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Khi mầm cuối cùng của lượt Đại Thụ Diệt Sinh kết thúc, giảm 8 giây Hồi chiêu còn lại của Nổ Axit và Ký Sinh."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Chỉ kích hoạt một lần mỗi lượt ultimate, không yêu cầu hạ gục và không giảm riêng theo số mầm."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Nếu Nổ Axit hoặc Ký Sinh đang trong lượt sử dụng chưa bắt đầu Hồi chiêu, mức giảm được áp dụng cho Hồi chiêu của chính lượt đó khi bắt đầu."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Kỹ năng đã sẵn sàng không tích mức giảm cho lần sử dụng tiếp theo. Không nhận hiệu ứng này khi Sylva đã bị hạ gục."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Sát thương nổ cơ bản tăng từ 900% lên 1100% Hỏa Lực; tỷ lệ sát thương cộng thêm từ lượng ghi nhận tăng từ 50% lên 60%."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mana tăng từ 200 lên 250; Hồi chiêu cơ bản giảm từ 85 xuống 80 giây."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sylva-art-and-ui",
+      "title": "SYLVA · HÌNH ẢNH VÀ HIỆU ỨNG",
+      "icon": {
+        "kind": "aircraft",
+        "id": "sylva"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "sylva-aircraft-art",
+          "icon": {
+            "kind": "aircraft",
+            "id": "sylva"
+          },
+          "title": "Hình Ảnh Chiến Cơ",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Sylva có sprite chiến cơ và ảnh chọn chiến cơ riêng: thân sát thủ gọn, cánh dạng phiến lá, giáp hữu cơ kết hợp kim loại và buồng axit phát sáng."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Phong cách minh họa có chất liệu và ánh sáng, đồng nhất với các chiến cơ Riptide và Argent; màu chủ đạo xanh rừng, xanh ngọc và axit xanh vàng."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Thân chiến cơ ổn định khi đổi hướng di chuyển, giữ hình dáng và vị trí hiển thị nhất quán."
+            }
+          ]
+        },
+        {
+          "id": "sylva-skill-art",
+          "icon": {
+            "kind": "skill",
+            "id": "sylva_deathbloom"
+          },
+          "title": "Minh Họa Và Hiệu Ứng Kỹ Năng",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Nội tại, bốn kỹ năng và các nâng cấp có minh họa riêng theo chủ đề Mộc, axit và ký sinh."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Đạn axit có lõi sáng, vệt sáng khi bay và hiệu ứng bắn trúng."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Cộng Sinh hiển thị mạch sinh lực quanh thân, hạt tích trữ và hiệu ứng hồi phục khi kết thúc."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Nổ Axit có tên lửa hóa học, vụ nổ chất lỏng, đầu lâu độc bay lên và vùng axit có viền sáng dễ nhìn."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Ký Sinh có hạt giống, rễ Trói, dấu hoa độc và vụ Bộc Mầm trên mục tiêu."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Đại Thụ Diệt Sinh có mầm phát triển trên từng mục tiêu và đại thụ gai bùng nổ khi kết liễu; mầm tan đi khi Sylva bị hạ gục."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Hiệu ứng chính được làm sáng và rõ, đồng thời giữ độ trong cần thiết để người chơi quan sát đạn và mục tiêu trên chiến trường."
+            }
+          ]
+        },
+        {
+          "id": "sylva-tooltip-and-selection",
+          "icon": {
+            "kind": "aircraft",
+            "id": "sylva"
+          },
+          "title": "Giao Diện Và Mô Tả",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Bổ sung đầy đủ chỉ số, thanh sức mạnh, nội tại, kỹ năng và nâng cấp của Sylva trên màn chọn chiến cơ."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Tooltip thể hiện phạm vi, sát thương, thời gian, Mana, Hồi chiêu và điều kiện theo cấp kỹ năng hiện tại."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mô tả nâng cấp nêu rõ thay đổi so với cấp trước, gồm những ngoại lệ dành cho Tinh Anh, Boss và chiến cơ địch."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Trạng thái Cộng Sinh, Sinh Lực Tích Trữ, Máu Xám và khả năng tái kích hoạt được đồng bộ trên giao diện chiến đấu."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1045 @@
+{
+  "tool": "built-in image_gen",
+  "version": "26.23.0",
+  "palette": [
+    "#173F2B",
+    "#2F9564",
+    "#BDFB67",
+    "#EEFFD0"
+  ],
+  "reference": "Original Sylva master; Riptide/Argent used only as illustration quality references.",
+  "prompts": {
+    "aircraft": "Original SYLVA wood-element assassin fighter, orthographic overhead nose up, symmetrical leaf-shaped organic metal armor, translucent acid chambers, forest green emerald and lime biological veins, pale reactor, twin engines. Rich painted materials and lighting, genuine transparent alpha. No text, scenery, SVG, pixel art or lowpoly.",
+    "portrait": "Cinematic three-quarter overhead illustration preserving Sylva master design in dark forest mist and luminous pollen. Entire aircraft, painted metal and lime acid chambers, no text.",
+    "icons": "5x4 atlas of detailed painted concrete actions: acid rounds, symbiosis, acid missile/skull, parasitic seed, death tree; nurturing leaf, resilient chamber, leaf armor, offensive bloom, concentrated acid; slow sludge, powerful acid burst, adhesive drops, poison seed, strangling roots; mature bud, thorn burst, suppressing tree, life/death cycle, corroded armor. No text.",
+    "acid": "4x3 transparent atlas: acid bullet, muzzle, vertical light trail, liquid impact; chemical missile, exhaust, explosion, rising toxic skull; bubbling pool, bubbles/light, adhesive droplets, corroded armor. Separate padded cells with painted liquid and lime cores.",
+    "life": "4x3 transparent atlas: leaf tissue with empty center, vitality particles, healing bloom, leaf armor; offensive bud, parasitic seed, pollen trail, root wrap; parasitic mark, thorn bloom burst, root marker, slow marker. Original illustrated organic textures, no text.",
+    "death": "4x2 transparent atlas: death seed and three growth states; erupting thorn tree, leaf/spike explosion, quietly withering seed, biological light tendril. Painted dark bark and acid lime cores, no text."
+  },
+  "aircraft": {
+    "file": "aircraft.png",
+    "width": 768,
+    "height": 768,
+    "columns": 1,
+    "rows": 1,
+    "frames": [
+      {
+        "rect": [
+          0,
+          0,
+          768,
+          768
+        ],
+        "bounds": [
+          61,
+          66,
+          706,
+          701
+        ],
+        "anchor": [
+          0.5,
+          0.5
+        ]
+      }
+    ]
+  },
+  "portrait": {
+    "file": "portrait.png",
+    "width": 768,
+    "height": 768,
+    "columns": 1,
+    "rows": 1,
+    "frames": [
+      {
+        "rect": [
+          0,
+          0,
+          768,
+          768
+        ],
+        "bounds": [
+          0,
+          0,
+          768,
+          768
+        ],
+        "anchor": [
+          0.5,
+          0.5
+        ]
+      }
+    ]
+  },
+  "icons": {
+    "file": "icons.png",
+    "width": 1280,
+    "height": 1024,
+    "columns": 5,
+    "rows": 4,
+    "frames": [
+      {
+        "rect": [
+          0,
+          0,
+          256,
+          256
+        ],
+        "bounds": [
+          0,
+          0,
+          256,
+          256
+        ],
+        "anchor": [
+          0.5,
+          0.5
+        ]
+      },
+      {
+        "rect": [
+          256,
+          0,
+          256,
+          256
+        ],
+        "bounds": [
+          0,
+          0,
+          256,
+          256
+        ],
+        "anchor": [
+          0.5,
+          0.5
+        ]
+      },
+      {
+        "rect": [
+          512,
+          0,
+          256,
+          256
+        ],
+        "bounds": [
+          0,
+          0,
+          256,
+          256
+        ],
+        "anchor": [
+          0.5,
+          0.5
+        ]
+      },
+      {
+        "rect": [
+          768,
+          0,
+          256,
+          256
+        ],
+        "bounds": [
+          0,
+          0,
+          256,
+          256
+        ],
+        "anchor": [
+          0.5,
+          0.5
+        ]
+      },
+      {
+        "rect": [
+          1024,
+          0,
+          256,
+          256
+        ],
+        "bounds": [
+          0,
+          0,
+          256,
+          256
+        ],
+        "anchor": [
+          0.5,
+          0.5
+        ]
+      },
+      {
+        "rect": [
+          0,
+          256,
+          256,
+          256
+        ],
+        "bounds": [
+          0,
+          0,
+          256,
+          256
+        ],
+        "anchor": [
+          0.5,
+          0.5
+        ]
+      },
+      {
+        "rect": [
+          256,
+          256,
+          256,
+          256
+        ],
+        "bounds": [
+          0,
+          0,
+          256,
+          256
+        ],
+        "anchor": [
+          0.5,
+          0.5
+        ]
+      },
+      {
+        "rect": [
+          512,
+          256,
+          256,
+          256
+        ],
+        "bounds": [
+          0,
+          0,
+          256,
+          256
+        ],
+        "anchor": [
+          0.5,
+          0.5
+        ]
+      },
+      {
+        "rect": [
+          768,
+          256,
+          256,
+          256
+        ],
+        "bounds": [
+          0,
+          0,
+          256,
+          256
+        ],
+        "anchor": [
+          0.5,
+          0.5
+        ]
+      },
+      {
+        "rect": [
+          1024,
+          256,
+          256,
+          256
+        ],
+        "bounds": [
+          0,
+          0,
+          256,
+          256
+        ],
+        "anchor": [
+          0.5,
+          0.5
+        ]
+      },
+      {
+        "rect": [
+          0,
+          512,
+          256,
+          256
+        ],
+        "bounds": [
+          0,
+          0,
+          256,
+          256
+        ],
+        "anchor": [
+          0.5,
+          0.5
+        ]
+      },
+      {
+        "rect": [
+          256,
+          512,
+          256,
+          256
+        ],
+        "bounds": [
+          0,
+          0,
+          256,
+          256
+        ],
+        "anchor": [
+          0.5,
+          0.5
+        ]
+      },
+      {
+        "rect": [
+          512,
+          512,
+          256,
+          256
+        ],
+        "bounds": [
+          0,
+          0,
+          256,
+          256
+        ],
+        "anchor": [
+          0.5,
+          0.5
+        ]
+      },
+      {
+        "rect": [
+          768,
+          512,
+          256,
+          256
+        ],
+        "bounds": [
+          0,
+          0,
+          256,
+          256
+        ],
+        "anchor": [
+          0.5,
+          0.5
+        ]
+      },
+      {
+        "rect": [
+          1024,
+          512,
+          256,
+          256
+        ],
+        "bounds": [
+          0,
+          0,
+          256,
+          256
+        ],
+        "anchor": [
+          0.5,
+          0.5
+        ]
+      },
+      {
+        "rect": [
+          0,
+          768,
+          256,
+          256
+        ],
+        "bounds": [
+          0,
+          0,
+          256,
+          256
+        ],
+        "anchor": [
+          0.5,
+          0.5
+        ]
+      },
+      {
+        "rect": [
+          256,
+          768,
+          256,
+          256
+        ],
+        "bounds": [
+          0,
+          0,
+          256,
+          256
+        ],
+        "anchor": [
+          0.5,
+          0.5
+        ]
+      },
+      {
+        "rect": [
+          512,
+          768,
+          256,
+          256
+        ],
+        "bounds": [
+          0,
+          0,
+          256,
+          256
+        ],
+        "anchor": [
+          0.5,
+          0.5
+        ]
+      },
+      {
+        "rect": [
+          768,
+          768,
+          256,
+          256
+        ],
+        "bounds": [
+          0,
+          0,
+          256,
+          256
+        ],
+        "anchor": [
+          0.5,
+          0.5
+        ]
+      },
+      {
+        "rect": [
+          1024,
+          768,
+          256,
+          256
+        ],
+        "bounds": [
+          0,
+          0,
+          256,
+          256
+        ],
+        "anchor": [
+          0.5,
+          0.5
+        ]
+      }
+    ]
+  },
+  "acid": {
+    "file": "acid.png",
+    "width": 1024,
+    "height": 768,
+    "columns": 4,
+    "rows": 3,
+    "frames": [
+      {
+        "rect": [
+          0,
+          0,
+          256,
+          256
+        ],
+        "bounds": [
+          74,
+          20,
+          181,
+          235
+        ],
+        "anchor": [
+          0.5,
+          0.5
+        ]
+      },
+      {
+        "rect": [
+          256,
+          0,
+          256,
+          256
+        ],
+        "bounds": [
+          23,
+          21,
+          232,
+          234
+        ],
+        "anchor": [
+          0.5,
+          0.5
+        ]
+      },
+      {
+        "rect": [
+          512,
+          0,
+          256,
+          256
+        ],
+        "bounds": [
+          98,
+          20,
+          158,
+          235
+        ],
+        "anchor": [
+          0.5,
+          0.5
+        ]
+      },
+      {
+        "rect": [
+          768,
+          0,
+          256,
+          256
+        ],
+        "bounds": [
+          20,
+          38,
+          235,
+          217
+        ],
+        "anchor": [
+          0.5,
+          0.5
+        ]
+      },
+      {
+        "rect": [
+          0,
+          256,
+          256,
+          256
+        ],
+        "bounds": [
+          77,
+          20,
+          179,
+          235
+        ],
+        "anchor": [
+          0.5,
+          0.5
+        ]
+      },
+      {
+        "rect": [
+          256,
+          256,
+          256,
+          256
+        ],
+        "bounds": [
+          53,
+          20,
+          203,
+          235
+        ],
+        "anchor": [
+          0.5,
+          0.5
+        ]
+      },
+      {
+        "rect": [
+          512,
+          256,
+          256,
+          256
+        ],
+        "bounds": [
+          28,
+          20,
+          228,
+          235
+        ],
+        "anchor": [
+          0.5,
+          0.5
+        ]
+      },
+      {
+        "rect": [
+          768,
+          256,
+          256,
+          256
+        ],
+        "bounds": [
+          33,
+          20,
+          223,
+          235
+        ],
+        "anchor": [
+          0.5,
+          0.5
+        ]
+      },
+      {
+        "rect": [
+          0,
+          512,
+          256,
+          256
+        ],
+        "bounds": [
+          20,
+          20,
+          235,
+          235
+        ],
+        "anchor": [
+          0.5,
+          0.5
+        ]
+      },
+      {
+        "rect": [
+          256,
+          512,
+          256,
+          256
+        ],
+        "bounds": [
+          36,
+          20,
+          219,
+          235
+        ],
+        "anchor": [
+          0.5,
+          0.5
+        ]
+      },
+      {
+        "rect": [
+          512,
+          512,
+          256,
+          256
+        ],
+        "bounds": [
+          35,
+          20,
+          221,
+          235
+        ],
+        "anchor": [
+          0.5,
+          0.5
+        ]
+      },
+      {
+        "rect": [
+          768,
+          512,
+          256,
+          256
+        ],
+        "bounds": [
+          38,
+          20,
+          218,
+          235
+        ],
+        "anchor": [
+          0.5,
+          0.5
+        ]
+      }
+    ]
+  },
+  "life": {
+    "file": "life.png",
+    "width": 1024,
+    "height": 768,
+    "columns": 4,
+    "rows": 3,
+    "frames": [
+      {
+        "rect": [
+          0,
+          0,
+          256,
+          256
+        ],
+        "bounds": [
+          23,
+          20,
+          233,
+          235
+        ],
+        "anchor": [
+          0.5,
+          0.5
+        ]
+      },
+      {
+        "rect": [
+          256,
+          0,
+          256,
+          256
+        ],
+        "bounds": [
+          20,
+          27,
+          235,
+          228
+        ],
+        "anchor": [
+          0.5,
+          0.5
+        ]
+      },
+      {
+        "rect": [
+          512,
+          0,
+          256,
+          256
+        ],
+        "bounds": [
+          20,
+          20,
+          235,
+          235
+        ],
+        "anchor": [
+          0.5,
+          0.5
+        ]
+      },
+      {
+        "rect": [
+          768,
+          0,
+          256,
+          256
+        ],
+        "bounds": [
+          24,
+          20,
+          232,
+          235
+        ],
+        "anchor": [
+          0.5,
+          0.5
+        ]
+      },
+      {
+        "rect": [
+          0,
+          256,
+          256,
+          256
+        ],
+        "bounds": [
+          28,
+          20,
+          228,
+          235
+        ],
+        "anchor": [
+          0.5,
+          0.5
+        ]
+      },
+      {
+        "rect": [
+          256,
+          256,
+          256,
+          256
+        ],
+        "bounds": [
+          37,
+          20,
+          219,
+          235
+        ],
+        "anchor": [
+          0.5,
+          0.5
+        ]
+      },
+      {
+        "rect": [
+          512,
+          256,
+          256,
+          256
+        ],
+        "bounds": [
+          31,
+          20,
+          225,
+          235
+        ],
+        "anchor": [
+          0.5,
+          0.5
+        ]
+      },
+      {
+        "rect": [
+          768,
+          256,
+          256,
+          256
+        ],
+        "bounds": [
+          27,
+          20,
+          229,
+          235
+        ],
+        "anchor": [
+          0.5,
+          0.5
+        ]
+      },
+      {
+        "rect": [
+          0,
+          512,
+          256,
+          256
+        ],
+        "bounds": [
+          22,
+          20,
+          233,
+          235
+        ],
+        "anchor": [
+          0.5,
+          0.5
+        ]
+      },
+      {
+        "rect": [
+          256,
+          512,
+          256,
+          256
+        ],
+        "bounds": [
+          21,
+          20,
+          234,
+          235
+        ],
+        "anchor": [
+          0.5,
+          0.5
+        ]
+      },
+      {
+        "rect": [
+          512,
+          512,
+          256,
+          256
+        ],
+        "bounds": [
+          20,
+          26,
+          235,
+          230
+        ],
+        "anchor": [
+          0.5,
+          0.5
+        ]
+      },
+      {
+        "rect": [
+          768,
+          512,
+          256,
+          256
+        ],
+        "bounds": [
+          28,
+          20,
+          228,
+          235
+        ],
+        "anchor": [
+          0.5,
+          0.5
+        ]
+      }
+    ]
+  },
+  "death": {
+    "file": "death.png",
+    "width": 1024,
+    "height": 512,
+    "columns": 4,
+    "rows": 2,
+    "frames": [
+      {
+        "rect": [
+          0,
+          0,
+          256,
+          256
+        ],
+        "bounds": [
+          27,
+          20,
+          228,
+          235
+        ],
+        "anchor": [
+          0.5,
+          0.5
+        ]
+      },
+      {
+        "rect": [
+          256,
+          0,
+          256,
+          256
+        ],
+        "bounds": [
+          20,
+          45,
+          235,
+          210
+        ],
+        "anchor": [
+          0.5,
+          0.5
+        ]
+      },
+      {
+        "rect": [
+          512,
+          0,
+          256,
+          256
+        ],
+        "bounds": [
+          22,
+          20,
+          234,
+          235
+        ],
+        "anchor": [
+          0.5,
+          0.5
+        ]
+      },
+      {
+        "rect": [
+          768,
+          0,
+          256,
+          256
+        ],
+        "bounds": [
+          26,
+          20,
+          230,
+          235
+        ],
+        "anchor": [
+          0.5,
+          0.5
+        ]
+      },
+      {
+        "rect": [
+          0,
+          256,
+          256,
+          256
+        ],
+        "bounds": [
+          21,
+          20,
+          235,
+          235
+        ],
+        "anchor": [
+          0.5,
+          0.5
+        ]
+      },
+      {
+        "rect": [
+          256,
+          256,
+          256,
+          256
+        ],
+        "bounds": [
+          20,
+          29,
+          235,
+          227
+        ],
+        "anchor": [
+          0.5,
+          0.5
+        ]
+      },
+      {
+        "rect": [
+          512,
+          256,
+          256,
+          256
+        ],
+        "bounds": [
+          20,
+          29,
+          235,
+          226
+        ],
+        "anchor": [
+          0.5,
+          0.5
+        ]
+      },
+      {
+        "rect": [
+          768,
+          256,
+          256,
+          256
+        ],
+        "bounds": [
+          22,
+          20,
+          234,
+          235
+        ],
+        "anchor": [
+          0.5,
+          0.5
+        ]
+      }
+    ]
+  }
+}

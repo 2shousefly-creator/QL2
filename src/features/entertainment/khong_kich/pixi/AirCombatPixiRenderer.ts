@@ -1,3 +1,5 @@
+import { sylvaGrayHealth } from '../airCombatSylvaRuntime';
+import { SYLVA_ART, SYLVA_SOURCES, SYLVA_FRAMES, SYLVA_ICON_CELLS, paintSylva, SYLVA_SPRITE_BUDGET } from '../airCombatSylvaArt';
 import { ARGENT_ART, ARGENT_FRAMES, argentPose, argentShake, paintArgent, ARGENT_SPRITE_BUDGET } from '../airCombatArgentArt';
 import { paintRiptide, RIPTIDE_SPRITE_BUDGET } from '../airCombatRiptideArt';
 import { CINDER_STACK_FONT_SIZE } from '../airCombatFeedback';
@@ -89,6 +91,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
   private argentLayer = new Container();
   private argentMask = new Graphics();
   private argentSprites: AirCombatSpritePool;
+  private sylvaSprites: AirCombatSpritePool;
   private riptideSprites: AirCombatSpritePool;
   private cinderLabels = new Map<number,Text>();
   private equipmentSprites: AirCombatSpritePool;
@@ -169,6 +172,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     this.argentMask.rect(GAMEPLAY_SAFE_RECT.left,GAMEPLAY_SAFE_RECT.top,GAMEPLAY_SAFE_RECT.width,GAMEPLAY_SAFE_RECT.height).fill(0xffffff);
     this.magneticLayer.addChild(this.argentLayer,this.argentMask);this.argentLayer.mask=this.argentMask;
     this.argentSprites = new AirCombatSpritePool(this.argentLayer, ARGENT_SPRITE_BUDGET);
+    this.sylvaSprites = new AirCombatSpritePool(this.argentLayer, SYLVA_SPRITE_BUDGET);
     this.riptideSprites = new AirCombatSpritePool(this.magneticLayer, RIPTIDE_SPRITE_BUDGET);
     this.equipmentSprites = new AirCombatSpritePool(this.magneticLayer, 640);
     if (this.sky) app.stage.addChild(this.sky.root);
@@ -392,6 +396,9 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     this.argentSprites.begin();
     paintArgent(world,(id,key,x,y,width,height,rotation,alpha,additive)=>{const sprite=this.argentSprites.get(id,this.assets.effect(key));if(!sprite)return;sprite.position.set(x,y);sprite.width=width;sprite.height=height;sprite.rotation=rotation;sprite.alpha=alpha;sprite.tint=0xffffff;sprite.blendMode=additive?'add':'normal';},reducedMotion);
     this.argentSprites.end();
+    this.sylvaSprites.begin();
+    paintSylva(world,(id,key,x,y,width,height,rotation,alpha,additive)=>{const sprite=this.sylvaSprites.get(id,this.assets.effect(key));if(!sprite)return;sprite.position.set(x,y);sprite.width=width;sprite.height=height;sprite.rotation=rotation;sprite.alpha=alpha;sprite.tint=0xffffff;sprite.blendMode=additive?'add':'normal';},reducedMotion);
+    this.sylvaSprites.end();
     this.riptideSprites.begin();
     paintRiptide(world,(id,key,x,y,width,height,rotation,alpha,additive)=>{const sprite=this.riptideSprites.get(id,this.assets.effect(key));if(!sprite)return;sprite.position.set(x,y);sprite.width=width;sprite.height=height;sprite.rotation=rotation;sprite.alpha=alpha;sprite.tint=0xffffff;sprite.blendMode=additive?'add':'normal';},reducedMotion);
     this.riptideSprites.end();
@@ -528,7 +535,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
         sprite.position.set(p.x,p.y);sprite.rotation=Math.atan2(p.vy,p.vx)+Math.PI/2;
         sprite.width=ammo?.width??p.radius*2.8;sprite.height=ammo?.height??p.radius*6;
         const basic=getBasicAmmoVisual(ammoKey);
-        const glow=this.projectileGlows.get(p.id*2,this.assets.effect(ammoKey==='argent_basic_ammo'?'argent_trail':basic?"basicAmmoTrail":p.owner==="enemy"?"charge":"laser"));
+        const glow=this.projectileGlows.get(p.id*2,this.assets.effect(ammoKey==='sylva_basic_ammo'?'sylva_trail':ammoKey==='argent_basic_ammo'?'argent_trail':basic?"basicAmmoTrail":p.owner==="enemy"?"charge":"laser"));
         if(glow){
           if(basic){
             // Current velocity owns the wake, so bounces never leave a stale heading.
@@ -755,7 +762,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     this.hitbox.clear();
 
     const stats = getEffectiveAircraftStats(world.aircraft);
-    const health = this.healthBars.get(-1, world.aircraft.currentHp, stats.maxHp, activeShieldAmount(world.aircraft));
+    const health = this.healthBars.get(-1, world.aircraft.currentHp, stats.maxHp, activeShieldAmount(world.aircraft), sylvaGrayHealth(world));
     const hp = health.hpRatio;
     const resource = Math.max(0, Math.min(1, world.aircraft.currentResource / stats.maxResource));
     const barWidth = trackingBarWidth(visual.size*playerAirframeScale(world.aircraft));
@@ -770,6 +777,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
       layer(barY, health.chipRatio, 0xef4444);
       layer(barY, hp, hp < .25 ? 0xf87171 : hp < .5 ? 0xfbbf24 : 0x4ade80);
       if(health.shieldEnd>health.shieldStart)this.trackingBars.poly(angularBarSegmentPolygon(barX,barY,barWidth,10,health.shieldStart,health.shieldEnd)).fill(0xd8e4ee);
+      if(health.grayEnd>health.grayStart)this.trackingBars.poly(angularBarSegmentPolygon(barX,barY,barWidth,10,health.grayStart,health.grayEnd)).fill(0xb8bec8);
       layer(barY + 13, resource, stats.resourceKind === "energy" ? 0xa78bfa : 0x38bdf8);
       for (const y of [barY, barY + 13]) this.trackingBars.poly(angularBarPolygon(barX, y, barWidth, 10)).stroke({ color: 0xcbd5e1, width: .39, alpha: .8 });
     }
@@ -818,7 +826,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     this.mirageSprites.destroy();
     this.stormbreakerSprites.destroy();
     this.stormbreakerPresentation.clear();
-    this.astraSprites.destroy();this.cinderSprites.destroy();this.riptideSprites.destroy();this.argentSprites.destroy();for(const label of this.cinderLabels.values())label.destroy();this.cinderLabels.clear();
+    this.astraSprites.destroy();this.cinderSprites.destroy();this.sylvaSprites.destroy();this.riptideSprites.destroy();this.argentSprites.destroy();for(const label of this.cinderLabels.values())label.destroy();this.cinderLabels.clear();
     this.equipmentSprites.destroy();
     this.enemies.destroy(); this.missileSmoke.destroy(); this.projectiles.destroy(); this.missiles.destroy(); this.projectileGlows.destroy(); this.afterimages.destroy(); this.companions.destroy(); this.warnings.destroy(); this.engines.destroy(); this.vfx.destroy();
     if (this.sceneParent) {

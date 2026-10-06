@@ -84,7 +84,7 @@ export function beginCinderSkill(w:CombatWorld,id:CinderSkillId,h:CinderHooks){
   s.wave={id:cast,rank,x:w.playerX,y:w.playerY,at:now,until:now+.8,hits:new Set()};active(w,id,.8);
  }else {s.beam={id:cast,rank,at:now,fire:now+v.charge,until:now+v.charge+.45,x:w.playerX,y:w.playerY-20,fired:false};active(w,id,v.charge+.45);}
 }
-export function cinderShieldFactor(w:CombatWorld,sourceId:number|undefined,trueDamage:boolean){const sh=cinderState(w).shield;return sh&&sh.rank>=5&&!trueDamage&&sourceId!==undefined&&cinderStacks(w,sourceId)>=3?.65:1;}
+export function cinderShieldFactor(w:CombatWorld,sourceId:number|undefined,trueDamage:boolean){const sh=states.get(w)?.shield;return sh&&sh.rank>=5&&!trueDamage&&sourceId!==undefined&&cinderStacks(w,sourceId)>=3?.65:1;}
 export function cinderShieldAbsorbed(w:CombatWorld,amount:number,h:CinderHooks){const s=cinderState(w),sh=s.shield;if(!sh||amount<=0)return;
  fx(w,'impact',w.playerX,w.playerY-22,28,.18);
  if(sh.rank>=3&&w.elapsed>=sh.ready){sh.ready=w.elapsed+1;let burning=false;

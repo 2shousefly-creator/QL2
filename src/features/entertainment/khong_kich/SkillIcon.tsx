@@ -1,3 +1,4 @@
+import { SYLVA_ART, SYLVA_ICON_CELLS } from './airCombatSylvaArt';
 import { ARGENT_ART, ARGENT_ICON_CELLS } from './airCombatArgentArt';
 import { RIPTIDE_ART, RIPTIDE_ICON_CELLS } from './airCombatRiptideArt';
 import type { PassiveId } from './airCombatTypes';
@@ -11,6 +12,7 @@ import { SpriteAtlasIcon } from "./SpriteAtlasIcon";
 
 // Explicit IDs keep HUD, Core cards, selection and tooltips on the same artwork.
 export const SKILL_ICON_CELLS: Record<SkillId | PassiveId, readonly [number, number]> = {
+  sylva_acid_rounds:[0,0],sylva_symbiosis:[1,0],sylva_acid_burst:[2,0],sylva_parasitic_seed:[3,0],sylva_deathbloom:[4,0],
   ...RIPTIDE_ICON_CELLS,
   ...ARGENT_ICON_CELLS,
   viper_follow_up:[0,0], decoy:[1,0], afterburner:[2,0], predator_lock:[3,0], missile_swarm:[4,0],
@@ -20,8 +22,10 @@ export const SKILL_ICON_CELLS: Record<SkillId | PassiveId, readonly [number, num
   cinder_thermal_round:[0,4], cinder_fire_shield:[1,4], cinder_fuel_barrage:[2,4], cinder_heat_wave:[3,4], cinder_inferno_beam:[4,4],
 };
 
-export function SkillIcon({ id, className }: { id: SkillId | PassiveId | keyof typeof ARGENT_ICON_CELLS; className?: string }) {
+export function SkillIcon({ id, className }: { id: string; className?: string }) {
   if(id === "argent_myriad" || id === "argent_array_return") return <SpriteAtlasIcon atlas={id === "argent_myriad" ? myriad : arrayReturn} columns={1} rows={1} column={0} row={0} className={className} fallback={<TriangleAlert/>}/>;
+  const sylva=SYLVA_ICON_CELLS[id];
+  if(sylva)return <SpriteAtlasIcon atlas={SYLVA_ART.icons} columns={5} rows={4} column={sylva[0]} row={sylva[1]} className={className} fallback={<TriangleAlert/>}/>;
   const argent=ARGENT_ICON_CELLS[id as keyof typeof ARGENT_ICON_CELLS];
   if(argent)return <SpriteAtlasIcon atlas={ARGENT_ART.icons} columns={5} rows={4} column={argent[0]} row={argent[1]} className={className} fallback={<TriangleAlert/>}/>;
   const riptide=RIPTIDE_ICON_CELLS[id as keyof typeof RIPTIDE_ICON_CELLS];

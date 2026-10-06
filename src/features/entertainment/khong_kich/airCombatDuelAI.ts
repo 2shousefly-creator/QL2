@@ -1,3 +1,5 @@
+import { isSylvaSkill } from './airCombatSylvaConfig';
+import { sylvaHud, sylvaState } from './airCombatSylvaRuntime';
 import { shouldAutoFire } from './airCombatAircraft';
 import { argentState, argentRecallOpportunity } from './airCombatArgentRuntime';
 import { isArgentSkill } from './airCombatArgentConfig';
@@ -134,6 +136,7 @@ function skillUtility(id: SkillId, s: AircraftCombatState, ai: MirrorAI, p: Poin
   const predictedX = clamp(seen.player.x + seen.velocity.x * leadSeconds, R.left, R.right);
   const firing = ahead ? clamp(1 - Math.abs(p.x - predictedX) / 65, 0, 1) : 0;
   if (ready.manualAction) {
+    if(id==='sylva_symbiosis'){const life=sylvaHud(actor),stats=getEffectiveAircraftStats(s);return life&&life.storedVitality>0&&(s.currentHp<stats.maxHp*.4||life.remaining<.6)?2.5:-Infinity;}
     if(id==='riptide_waterform'){const water=riptideState(actor).waterform,near=distance(p,seen.player)<=RIPTIDE.waterRadius;
       return water&&ready.manualAction==='detonate'&&water.charge>0&&near&&(water.until-actor.elapsed<.55||seen.playerHp<water.charge*riptideValues('riptide_waterform',water.rank).chargeRatio*getEffectiveAircraftStats(s).firepower*.65||distance(p,seen.player)>165)?1.8:-Infinity;}
     if (id === "orbit_reversal") {
@@ -151,6 +154,15 @@ function skillUtility(id: SkillId, s: AircraftCombatState, ai: MirrorAI, p: Poin
     }
 
     return -Infinity;
+  }
+  if(isSylvaSkill(id)) {
+    const stats=getEffectiveAircraftStats(s),hp=s.currentHp/stats.maxHp;
+    if(actor.elapsed-(ai.lastCastAt??-Infinity)<.3)return -Infinity;
+    if(id==='sylva_symbiosis')return (ai.incoming>0||hp<.65)?1.8:-Infinity;
+    if(!seen.targetVisible||seen.targetProtected)return -Infinity;
+    if(id==='sylva_parasitic_seed')return 2;
+    if(id==='sylva_deathbloom')return 1.9;
+    return 1.7;
   }
   if(isArgentSkill(id)) {
     const since=actor.elapsed-(ai.lastCastAt??-Infinity),danger=ai.incoming>0||ai.escapeRisk>.5;
@@ -202,7 +214,7 @@ function skillUtility(id: SkillId, s: AircraftCombatState, ai: MirrorAI, p: Poin
   const sinceCast=actor.elapsed-(ai.lastCastAt??-Infinity),planned=ai.plan?.nextSkill===id;
   // Emergency defense may interrupt the offensive cadence, but casts do not cascade every decision.
   if(sinceCast<(defensive?.2:planned?.4:.85))return -Infinity;
-  const defense = ({argent:"argent_guard_stance",riptide:"riptide_wellspring",cinder:"cinder_fire_shield",black_eagle:"decoy",breaker:"armor_shield",phantom:"invisibility",astra:"orbit_reversal"} as const)[s.aircraftId];
+  const defense = ({sylva:"sylva_symbiosis",argent:"argent_guard_stance",riptide:"riptide_wellspring",cinder:"cinder_fire_shield",black_eagle:"decoy",breaker:"armor_shield",phantom:"invisibility",astra:"orbit_reversal"} as const)[s.aircraftId];
   const defenseReady=skillRank(s,defense)>0&&(s.cooldowns[defense]??0)<3&&(s.activeEffects[defense]??0)<=0;
   const reserveCost=!defensive&&defenseReady?Math.min(getSkillRuntimeValues(s,defense).cost,Math.max(0,stats.maxResource-values.cost)):0;
   const lethalWindow=seen.playerHp>0&&seen.playerHp<stats.firepower*Math.max(1,values.damageMultiplier)&&firing>.7;
@@ -210,6 +222,7 @@ function skillUtility(id: SkillId, s: AircraftCombatState, ai: MirrorAI, p: Poin
   if(!defensive&&seen.targetProtected&&!["gravity_anchor","twin_reflection","escort_drone"].includes(id))return -Infinity;
   const burn=Math.max(0,...actor.enemies.filter(e=>e.hp>0).map(e=>cinderStacks(actor,e.id)));
   const opportunity: Record<SkillId, number> = {
+    sylva_symbiosis:0,sylva_acid_burst:0,sylva_parasitic_seed:0,sylva_deathbloom:0,
     argent_guard_stance:0,argent_blade_cast:0,argent_blade_recall:0,argent_heavenly_blade_array:0,
     riptide_wellspring:0,riptide_tidal_blades:0,riptide_confluence:0,riptide_waterform:0,
     cinder_fire_shield:danger+fullScreen*1.8+areaDanger*.5,
@@ -261,6 +274,9 @@ function perceive(w:CombatWorld,ai:MirrorAI,p:Point,actor:CombatWorld) {
     kind:z.kind==="lane_laser"?"lane":z.kind==="rail"?"beam":z.kind==="dash"?"dash":"aoe",
     end:z.kind==="rail"||z.kind==="dash"?{x:z.fromX??z.x,y:z.fromY??z.y}:undefined,
     startsAt:w.elapsed+(z.stage==="active"?0:z.remaining),endsAt:w.elapsed+z.remaining+(z.stage==="active"?0:z.activeDuration??.15)}));
+  const sylva=sylvaState(w);
+  for(const zone of sylva.zones)if(!zone.ended)hazards.push({kind:'persistent_zone',x:zone.x,y:zone.y,radius:170,cc:zone.rank>=3,startsAt:zone.at,endsAt:zone.until});
+  for(const flight of sylva.flights)hazards.push({kind:'aoe',x:flight.x,y:flight.y,radius:170,cc:flight.skill==='sylva_parasitic_seed',startsAt:flight.hitAt,endsAt:flight.hitAt+.2});
   const argent=argentState(w);
   for(const b of argent.blades)if(b.phase!=='wait')bullets.push({x:b.x,y:b.y,vx:Math.cos(b.angle)*b.speed,vy:Math.sin(b.angle)*b.speed,damage:b.ratio*getEffectiveAircraftStats(w.aircraft).firepower,homing:b.phase==='recall',radius:b.width/2,turnRate:0,lifetime:b.phase==='recall'?2:b.distance/b.speed,capturable:false});
   // The anchored array has no scheduled area strike; live blades above carry its threats.

@@ -1,3 +1,4 @@
+import { sylvaFireRate } from './airCombatSylvaRuntime';
 import { publishCombatNotice } from "./airCombatNotices";
 import { GAMEPLAY_SAFE_RECT as RECT, stageEnemyConfig } from "./airCombatConfig";
 import { bossMinCenterY } from "./airCombatHudLayout";
@@ -644,6 +645,9 @@ export function updateStormbreakerEnemy(w: CombatWorld, e: EnemyEntity, dt: numb
   if (!w.stormbreaker || !e.stormbreaker) return false;
   if (w.ended || e.hp <= 0) return true;
   const s = e.stormbreaker, world = w.stormbreaker;
+  const firingDelay=dt*(1-sylvaFireRate(w,e));
+  if(s.nextMajor>w.elapsed-dt)s.nextMajor+=firingDelay;
+  if(e.type==='boss'&&world.boss&&world.boss.next>w.elapsed-dt)world.boss.next+=firingDelay;
   if(s.lastHp>e.hp || s.lastShield>0&&e.shield<=0&&s.shieldArmed)onStormEnemyDamage(w,e,Math.max(0,s.lastHp-e.hp),s.lastShield,h);
   s.lastHp=e.hp;s.lastShield=e.shield;
   if (updateDash(w, e, dt, h)) return true;

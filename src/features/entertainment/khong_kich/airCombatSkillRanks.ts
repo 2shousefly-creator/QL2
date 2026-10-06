@@ -1,3 +1,4 @@
+import { SYLVA_SKILLS, SYLVA_UPGRADES, isSylvaSkill, sylvaValues, sylvaDescription, sylvaUpgradeDescription } from './airCombatSylvaConfig';
 import { ARGENT_SKILLS, ARGENT_NAMES, ARGENT_UPGRADES, isArgentSkill, argentValues, argentDescription, argentUpgradeDescription } from './airCombatArgentConfig';
 import { RIPTIDE_SKILLS, RIPTIDE_UPGRADES, isRiptideSkill, riptideValues, riptideDescription, riptideUpgradeDescription } from './airCombatRiptideConfig';
 import { gravityAnchorValues } from "./airCombatGravityAnchor";
@@ -24,6 +25,7 @@ export interface SkillRankConfig {
 type RankRow = readonly [name: string, description: string, upgradeDescription: string];
 const ranks = (costs: number[], rows: readonly RankRow[]): readonly SkillRankConfig[] => rows.map(([name, description, upgradeDescription], i) => ({rank:i+1,name,description,upgradeDescription,cost:costs[i]}));
 export const SKILL_RANKS: Record<SkillId, readonly SkillRankConfig[]> = {
+ ...Object.fromEntries(SYLVA_SKILLS.map((id,i)=>[id,SYLVA_UPGRADES[i].map((name,n)=>({rank:n+1,name,cost:sylvaValues(id,n+1).cost,description:sylvaDescription(id,n+1),upgradeDescription:sylvaUpgradeDescription(id,n+1)}))])) as Record<typeof SYLVA_SKILLS[number],readonly SkillRankConfig[]>,
  ...Object.fromEntries(ARGENT_SKILLS.map((id,i)=>[id,ARGENT_UPGRADES[i].map((name,n)=>({rank:n+1,name,cost:argentValues(id,n+1).cost,description:argentDescription(id,n+1),upgradeDescription:argentUpgradeDescription(id,n+1)}))])) as Record<typeof ARGENT_SKILLS[number],readonly SkillRankConfig[]>,
  ...Object.fromEntries(RIPTIDE_SKILLS.map((id,i)=>[id,RIPTIDE_UPGRADES[i].map((name,n)=>({rank:n+1,name,cost:riptideValues(id,n+1).cost,description:riptideDescription(id,n+1),upgradeDescription:riptideUpgradeDescription(id,n+1)}))])) as Record<typeof RIPTIDE_SKILLS[number],readonly SkillRankConfig[]>,
  ...Object.fromEntries(CINDER_SKILLS.map((id,i)=>[id,Array.from({length:i===3?3:5},(_,n)=>({rank:n+1,name:CINDER_NAMES[i],cost:cinderValues(id,n+1).cost,description:cinderDescription(id,n+1),upgradeDescription:cinderUpgradeDescription(id,n+1)}))])) as Record<typeof CINDER_SKILLS[number],readonly SkillRankConfig[]>,
@@ -279,7 +281,7 @@ export const SKILL_RANKS: Record<SkillId, readonly SkillRankConfig[]> = {
 export const isUltimate = (id: SkillId) => SKILL_RANKS[id].length === 3;
 export const skillRank = (s: AircraftCombatState, id: SkillId) => s.skillRanks[id] ?? 0;
 export const rankGates = (id: SkillId): readonly number[] => isUltimate(id) ? ULTIMATE_RANK_GATES : BASIC_RANK_GATES;
-const SKILL_OWNERS: Record<string, readonly SkillId[]> = {argent:ARGENT_SKILLS,riptide:RIPTIDE_SKILLS,cinder:CINDER_SKILLS,black_eagle:["decoy","afterburner","predator_lock","missile_swarm"],breaker:["armor_shield","heavy_bomb","gravity_anchor","sweeping_cannon"],phantom:["invisibility","focus_laser","electronic_interference","escort_drone"],astra:["orbit_reversal","stellar_lance","twin_reflection","starfall"]};
+const SKILL_OWNERS: Record<string, readonly SkillId[]> = {sylva:SYLVA_SKILLS,argent:ARGENT_SKILLS,riptide:RIPTIDE_SKILLS,cinder:CINDER_SKILLS,black_eagle:["decoy","afterburner","predator_lock","missile_swarm"],breaker:["armor_shield","heavy_bomb","gravity_anchor","sweeping_cannon"],phantom:["invisibility","focus_laser","electronic_interference","escort_drone"],astra:["orbit_reversal","stellar_lance","twin_reflection","starfall"]};
 export const canAllocateSkill = (s: AircraftCombatState, id: SkillId) => SKILL_OWNERS[s.aircraftId]?.includes(id) && s.skillPoints > 0 && skillRank(s,id) < SKILL_RANKS[id].length && s.level >= rankGates(id)[skillRank(s,id)];
 export function allocateSkillPoint(s: AircraftCombatState, id: SkillId): boolean {
  if (!canAllocateSkill(s,id)) return false;
@@ -290,6 +292,7 @@ export const ultimateCastDisabled = (s: AircraftCombatState, id: SkillId) => isU
 /** Effective numeric values, shared by combat, resource charging and presentation. */
 export function rankValues(s:AircraftCombatState,id:SkillId) {
  const r=Math.max(1,skillRank(s,id));
+ if(isSylvaSkill(id))return sylvaValues(id,r);
  if(isArgentSkill(id))return argentValues(id,r);
  if(isRiptideSkill(id))return riptideValues(id,r);
  if(isCinderSkill(id))return cinderValues(id,r);

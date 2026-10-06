@@ -1,3 +1,4 @@
+import { sylvaHud, sylvaState, sylvaMovement } from './airCombatSylvaRuntime';
 import { ARGENT } from './airCombatArgentConfig';
 import { RIPTIDE } from './airCombatRiptideConfig';
 import { argentRecallSnapshot } from './airCombatArgentRuntime';
@@ -91,6 +92,7 @@ export function getActiveSkillDuration(world: CombatWorld, id: SkillId) {
     return { remaining: energy.remaining ?? 0, duration: energy.remaining ?? 0, progress: energy.progress,
       timeLabel: hawkEyeTimeLabel(energy.remaining) };
   }
+  if(id==='sylva_symbiosis'){const a=sylvaHud(world);return a?{remaining:a.remaining,duration:6,progress:a.remaining/6,timeLabel:'Sinh Lực: '+Math.round(a.storedVitality)+' · Hồi phục: '+Math.round(a.heal)}:null;}
   if(id==='argent_guard_stance'){
     const g=argentHud(world).guard;if(!g)return null;
     const active=g.beatUntil>world.elapsed;
@@ -220,6 +222,10 @@ function coreCooldownStatuses(world:CombatWorld):StatusPresentation[] {
 
 export function getStatusPresentations(world: CombatWorld): StatusPresentation[] {
   const s = world.aircraft, c = s.coreState, result: StatusPresentation[] = [];
+  const life=sylvaHud(world);
+  if(life)result.push({id:'sylva:symbiosis',group:'buff',name:'Cộng Sinh · Sinh Lực: '+Math.round(life.storedVitality),description:'Máu Xám là Sinh Lực Tích Trữ; sát thương vẫn trừ Máu ngay. Hồi phục cơ sở: '+Math.round(life.heal)+'. Tái kích hoạt sau 0,5 giây hoặc tự kết thúc sau 6 giây.',icon:{kind:'skill',id:'sylva_symbiosis'},source:'Sylva',stacks:1,badgeText:String(Math.round(life.storedVitality)),remaining:life.remaining,duration:6,priority:112});
+  const sylva=sylvaState(world);
+  if(sylva.outgoingUntil>world.elapsed)result.push({id:'sylva:outgoing',group:'buff',name:'Sinh Lực Bùng Nở',description:'Tăng 25% toàn bộ sát thương Sylva gây ra.',icon:{kind:'skill',id:'sylva_symbiosis'},source:'Cộng Sinh cấp 5',stacks:1,remaining:sylva.outgoingUntil-world.elapsed,duration:life?6:4,priority:105});
   const argent=argentState(world),guard=argentHud(world).guard;
   if(guard)result.push({id:'argent:guard',group:'buff',name:guard.beatUntil>world.elapsed?'Nhịp đỡ 99%':'Thế Đỡ · Chờ đòn',description:'Đòn hợp lệ mở một nhịp 0,75 giây; không giảm damage liên tục toàn bộ thế. Còn '+guard.remaining+' lượt. Không đỡ DoT/sát thương chuẩn và không miễn khống chế.',icon:{kind:'skill',id:'argent_guard_stance'},source:'Thế Đỡ',stacks:guard.remaining,badgeText:guard.remaining+' lượt',remaining:guard.until-world.elapsed,duration:8,priority:110});
   if(argent.temper>0&&argent.temperUntil>world.elapsed)result.push({id:'argent:temper',group:'buff',name:'Tôi Kim',description:'S3 hợp lệ kế tiếp tiêu toàn bộ tầng; Phiến đầu trúng mỗi mục tiêu thêm 40% Hỏa Lực mỗi tầng, tối đa 120%.',icon:{kind:'skill',id:'argent_guard_stance'},source:'Thế Đỡ',stacks:argent.temper,badgeText:argent.temper+'/3',remaining:argent.temperUntil-world.elapsed,duration:6,priority:109});
@@ -228,6 +234,15 @@ export function getStatusPresentations(world: CombatWorld): StatusPresentation[]
   const rival=world.duel?.opponent??world.mirage?.mirror?.context.world??world.duelOpponent?.context.world;
   const target=rival?.enemies.find(e=>e.aircraftTarget?.world===world);
   if(rival&&target){
+   const d=sylvaState(rival).targets.get(target.id),now=rival.elapsed;
+   if(d?.entity===target){
+    if(d.flatUntil>now||d.acidUntil>now)result.push({id:'sylva:acid',group:'debuff',name:'Ăn mòn Giáp',description:(d.acidUntil>now?'Giảm 25% Giáp, sau đó ':'')+'trừ '+(d.flatUntil>now?d.flat:0)+' Giáp; không dưới 0.',icon:{kind:'skill',id:'sylva_acid_rounds'},source:'Sylva đối phương',stacks:1,remaining:Math.max(d.flatUntil,d.acidUntil)-now,duration:5,priority:111});
+    if(d.markUntil>now)result.push({id:'sylva:mark',group:'debuff',name:'Dấu Ký Sinh',description:'Nhận thêm '+(10+2*d.markRank)+'% toàn bộ sát thương từ Sylva đặt dấu.',icon:{kind:'skill',id:'sylva_parasitic_seed'},source:'Sylva đối phương',stacks:1,remaining:d.markUntil-now,duration:5,priority:110});
+    if(d.rootUntil>now)result.push({id:'sylva:root',group:'debuff',name:'Trói',description:'Không thể di chuyển hoặc dash; vẫn bắn và dùng kỹ năng theo luật chung.',icon:{kind:'skill',id:'sylva_parasitic_seed'},source:'Ký Sinh',stacks:1,remaining:d.rootUntil-now,duration:2,priority:112});
+    if(d.slowUntil>now)result.push({id:'sylva:slow',group:'debuff',name:'Độc Trệ',description:'Giảm '+Math.round((1-d.slow)*100)+'% tốc độ di chuyển; kéo dài thêm 1 giây sau khi rời vùng.',icon:{kind:'skill',id:'sylva_acid_burst'},source:'Nổ Axit',stacks:1,remaining:d.slowUntil-now,duration:1,priority:108});
+    if(d.suppressUntil>now)result.push({id:'sylva:suppress',group:'debuff',name:'Sinh Trưởng Áp Chế',description:'Giảm 50% tốc độ di chuyển và 25% tổng tốc độ bắn.',icon:{kind:'skill',id:'sylva_deathbloom'},source:'Đại Thụ Diệt Sinh',stacks:1,remaining:d.suppressUntil-now,duration:3,priority:110});
+   }
+
    const mark=argentState(rival).armorMarks.get(target.id);
    if(mark&&argentArmorMultiplier(rival,target)<1)result.push({id:'argent:mark',group:'debuff',name:'Kim Ấn',description:'Giảm 15% Giáp trong 4 giây; đợt đủ ba Phiến làm mới thời gian, không cộng dồn.',icon:{kind:'skill',id:'argent_heavenly_blade_array'},source:'Ngũ Kiếm Đồng Tâm',stacks:1,remaining:mark.until-rival.elapsed,duration:4,priority:110});
    const metal=argentState(rival).controls.get(target.id);

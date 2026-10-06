@@ -1,6 +1,6 @@
 import type { ProjectileEntity } from "./airCombatRuntime";
 import type { AircraftId } from "./airCombatTypes";
-export const BASIC_AMMO_KEYS = { argent:"argent_basic_ammo", riptide:"riptide_basic_ammo", cinder:"cinder_basic_ammo", black_eagle:"viper_basic_ammo", breaker:"titan_basic_ammo", phantom:"phantom_basic_ammo", astra:"astra_basic_ammo" } as const satisfies Record<AircraftId,string>;
+export const BASIC_AMMO_KEYS = { sylva:"sylva_basic_ammo", argent:"argent_basic_ammo", riptide:"riptide_basic_ammo", cinder:"cinder_basic_ammo", black_eagle:"viper_basic_ammo", breaker:"titan_basic_ammo", phantom:"phantom_basic_ammo", astra:"astra_basic_ammo" } as const satisfies Record<AircraftId,string>;
 /** Presentation only: never use these dimensions for hit detection. */
 export const PLAYER_BASIC_AMMO_VISUAL_SIZE = { width: 11, height: 30 } as const;
 // Presentation-only wake follows the current projectile transform.
@@ -9,6 +9,7 @@ const BASIC_AMMO_GLOW = {
   body: "M32 0A32 32 0 1 1 32 64A32 32 0 1 1 32 0Z", alpha: .1,
 } as const;
 export const AMMO_VISUALS={
+ sylva_basic_ammo:{...PLAYER_BASIC_AMMO_VISUAL_SIZE,cell:[0,0] as const,body:'',detail:'',color:'#BDFB67',highlight:'#EEFFD0',trail:{...PLAYER_BASIC_AMMO_TRAIL_SIZE,color:0xbdfb67,css:'#BDFB67'}},
  argent_basic_ammo:{...PLAYER_BASIC_AMMO_VISUAL_SIZE,cell:[0,0] as const,body:"",detail:"",color:"#DCE4EC",highlight:"#FFFFFF",trail:{...PLAYER_BASIC_AMMO_TRAIL_SIZE,color:0xe8c878,css:"#E8C878"}},
  riptide_basic_ammo:{...PLAYER_BASIC_AMMO_VISUAL_SIZE,cell:[0,1] as const,body:'',detail:'',color:'#168f98',highlight:'#f2ffff',trail:{...PLAYER_BASIC_AMMO_TRAIL_SIZE,color:0x63e3d6,css:'#63e3d6'}},
  cinder_basic_ammo:{...PLAYER_BASIC_AMMO_VISUAL_SIZE,cell:[2,0] as const,body:'',detail:'',color:'#ff6418',highlight:'#fff1af',trail:{...PLAYER_BASIC_AMMO_TRAIL_SIZE,color:0xff6418,css:'#ff6418'}},

@@ -1,3 +1,4 @@
+import sylvaMetadata from '../../../assets/khong-kich/sylva/art-source.json';
 import { playerAirframeScale } from "./airCombatReleaseState";
 import argentMetadata from '../../../assets/khong-kich/argent/art-source.json';
 import type { CombatWorld } from "./airCombatRuntime";
@@ -13,8 +14,10 @@ export interface AirframeArtwork {
 // aircraft-atlas.png: 1254 x 1254. Match the renderer's rounded cell edges.
 // Bounds use alpha > 16/255 to exclude almost-invisible export speckles.
 // [cell width, visible left, visible right (inclusive)] for all nine poses.
+const sylvaBounds = [sylvaMetadata.aircraft.width,sylvaMetadata.aircraft.frames[0].bounds[0],sylvaMetadata.aircraft.frames[0].bounds[2]-1] as const;
 const argentBounds = argentMetadata.aircraft.bounds[0] as [number, number, number];
 const bounds: Record<AircraftId, Record<AirframePose, readonly [number, number, number]>> = {
+  sylva: {neutral:sylvaBounds,left:sylvaBounds,right:sylvaBounds},
   argent: {neutral:argentBounds,left:argentBounds,right:argentBounds},
   riptide: {neutral:[768,17,751],left:[768,17,751],right:[768,17,751]},
   cinder: {neutral:[724,40,696],left:[724,24,682],right:[724,30,691]},
@@ -34,6 +37,7 @@ const poses = (id: AircraftId): Record<AirframePose, AirframeArtwork> => ({
 /** Fixed reference visible width for every pose; no frame-dependent size pumping.
  * Never import this artwork compensation into collision or movement code. */
 export const PLAYER_ARTWORK: Record<AircraftId, Record<AirframePose, AirframeArtwork>> = {
+  sylva:poses("sylva"),
   argent:Object.fromEntries(['neutral','left','right'].map(p=>[p,{...normalize(argentBounds),anchorX:.5}])) as Record<AirframePose,AirframeArtwork>,
   riptide:poses("riptide"),
   cinder:poses("cinder"),
@@ -45,6 +49,7 @@ export const PLAYER_ARTWORK: Record<AircraftId, Record<AirframePose, AirframeArt
  * Titan and Phantom have two outlets; their midpoint follows the fuselage axis.
  * These are visual transforms only, deliberately separate from airframe hitboxes. */
 export const PLAYER_ENGINE_MOUNTS: Record<AircraftId, readonly {engineMountX:number;engineMountY:number;width:number}[]> = {
+  sylva:[{engineMountX:.43,engineMountY:.82,width:3},{engineMountX:.57,engineMountY:.82,width:3}],
   argent:[{engineMountX:.455,engineMountY:.79,width:3},{engineMountX:.545,engineMountY:.79,width:3}],
   riptide:[{engineMountX:.46,engineMountY:.83,width:3.5},{engineMountX:.54,engineMountY:.83,width:3.5}],
   cinder:[{engineMountX:.42,engineMountY:.72,width:3.5},{engineMountX:.60,engineMountY:.72,width:3.5}],

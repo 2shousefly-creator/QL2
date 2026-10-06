@@ -1,3 +1,5 @@
+import { sylvaGrayHealth } from './airCombatSylvaRuntime';
+import { SYLVA_ART, SYLVA_SOURCES, SYLVA_FRAMES, SYLVA_ICON_CELLS, paintSylva, SYLVA_SPRITE_BUDGET } from './airCombatSylvaArt';
 import { ARGENT_ART, ARGENT_FRAMES, argentPose, argentShake, paintArgent, ARGENT_SPRITE_BUDGET } from './airCombatArgentArt';
 import { RIPTIDE_ART, RIPTIDE_FRAMES, paintRiptide } from './airCombatRiptideArt';
 import { BIGBANG_ART, BIGBANG_FRAMES, paintBigBang } from './airCombatBigBangArt';
@@ -73,14 +75,14 @@ async function loadCanvasTextures(urls:string[]) {
   }));
 }
 export const loadSoloCanvasAssets=()=>loadCanvasTextures([soloArenaUrl]);
-export const loadAstraCanvasAssets=()=>loadCanvasTextures([...Object.values(ARGENT_ART),...Object.values(RIPTIDE_ART),BIGBANG_ART,...Object.values(CINDER_ART),ULTIMATE_ART,RANKED_ART.vfx,RANKED_ART.projectiles,EQUIPMENT_ART.icons,EQUIPMENT_ART.vfx,ASTRA_ART.aircraft,ASTRA_ART.effects,ASTRA_ART.combatVfx,sharedVfxUrl]);
+export const loadAstraCanvasAssets=()=>loadCanvasTextures([...Object.values(SYLVA_ART),...Object.values(ARGENT_ART),...Object.values(RIPTIDE_ART),BIGBANG_ART,...Object.values(CINDER_ART),ULTIMATE_ART,RANKED_ART.vfx,RANKED_ART.projectiles,EQUIPMENT_ART.icons,EQUIPMENT_ART.vfx,ASTRA_ART.aircraft,ASTRA_ART.effects,ASTRA_ART.combatVfx,sharedVfxUrl]);
 export const loadMirageCanvasAssets=()=>loadCanvasTextures([...Object.values(STAGE4_ART_URLS),aircraftAtlasUrl,ASTRA_ART.aircraft]);
 export const loadStormbreakerCanvasAssets=()=>loadCanvasTextures(Object.values(STAGE3_ART_URLS));
 export const loadMagneticCanvasAssets=()=>loadCanvasTextures([STAGE2_ART_URLS.enemy,STAGE2_ART_URLS.vfx,STAGE2_ART_URLS.storm,STAGE2_ART_URLS.elite]);
 const mirageTintCache = new Map<string,HTMLCanvasElement>();
 function drawMagneticFrame(ctx: CanvasRenderingContext2D, frame: AtlasFrame, x: number, y: number,
   width: number, height: number, rotation = 0, alpha = 1, tint = 0xffffff, anchorX = .5) {
-  const image = magneticImage(frame.atlas === 'argentAircraft' ? ARGENT_ART.aircraft : frame.atlas === 'argentIcons' ? ARGENT_ART.icons : frame.atlas === 'argentVfx' ? ARGENT_ART.vfx : frame.atlas === 'argentPortrait' ? ARGENT_ART.portrait : frame.atlas === 'riptideAircraft' ? RIPTIDE_ART.aircraft : frame.atlas === 'riptideIcons' ? RIPTIDE_ART.icons : frame.atlas === 'riptideVfx' ? RIPTIDE_ART.vfx : frame.atlas === "guardianVfx" ? CINDER_ART.guardianVfx : frame.atlas === "bigBangVfx" ? BIGBANG_ART : frame.atlas === "cinderFeedback" ? CINDER_ART.feedback : frame.atlas === "cinderAircraft" ? CINDER_ART.aircraft : frame.atlas === "cinderVfx" ? CINDER_ART.vfx : frame.atlas === "cinderProjectiles" ? CINDER_ART.projectiles : frame.atlas === "aircraft" ? aircraftAtlasUrl : frame.atlas === "astraAircraft" ? ASTRA_ART.aircraft : frame.atlas === "stage4Enemy" ? STAGE4_ART_URLS.enemy : frame.atlas === "stage4Boss" ? STAGE4_ART_URLS.boss : frame.atlas === "stage4Vfx" ? STAGE4_ART_URLS.vfx : frame.atlas === "stage3Enemy" ? STAGE3_ART_URLS.enemy : frame.atlas === "stage3Boss" ? STAGE3_ART_URLS.boss : frame.atlas === "stage3Vfx" ? STAGE3_ART_URLS.vfx : frame.atlas === "stage3Emissive" ? STAGE3_ART_URLS.emissive : frame.atlas === "ultimateVfx" ? ULTIMATE_ART : frame.atlas === "rankedVfx" ? RANKED_ART.vfx : frame.atlas === "rankedProjectiles" ? RANKED_ART.projectiles : frame.atlas === "equipmentIcons" ? EQUIPMENT_ART.icons : frame.atlas === "equipmentVfx" ? EQUIPMENT_ART.vfx : frame.atlas === "astraVfx" ? ASTRA_ART.combatVfx : frame.atlas === "vfx" ? sharedVfxUrl : frame.atlas === "astraEffects" ? ASTRA_ART.effects : frame.atlas === "stage2Elite" ? STAGE2_ART_URLS.elite : frame.atlas === "stage2Enemy" ? STAGE2_ART_URLS.enemy : STAGE2_ART_URLS.vfx);
+  const image = magneticImage(frame.atlas in SYLVA_SOURCES ? SYLVA_SOURCES[frame.atlas as keyof typeof SYLVA_SOURCES] : frame.atlas === 'argentAircraft' ? ARGENT_ART.aircraft : frame.atlas === 'argentIcons' ? ARGENT_ART.icons : frame.atlas === 'argentVfx' ? ARGENT_ART.vfx : frame.atlas === 'argentPortrait' ? ARGENT_ART.portrait : frame.atlas === 'riptideAircraft' ? RIPTIDE_ART.aircraft : frame.atlas === 'riptideIcons' ? RIPTIDE_ART.icons : frame.atlas === 'riptideVfx' ? RIPTIDE_ART.vfx : frame.atlas === "guardianVfx" ? CINDER_ART.guardianVfx : frame.atlas === "bigBangVfx" ? BIGBANG_ART : frame.atlas === "cinderFeedback" ? CINDER_ART.feedback : frame.atlas === "cinderAircraft" ? CINDER_ART.aircraft : frame.atlas === "cinderVfx" ? CINDER_ART.vfx : frame.atlas === "cinderProjectiles" ? CINDER_ART.projectiles : frame.atlas === "aircraft" ? aircraftAtlasUrl : frame.atlas === "astraAircraft" ? ASTRA_ART.aircraft : frame.atlas === "stage4Enemy" ? STAGE4_ART_URLS.enemy : frame.atlas === "stage4Boss" ? STAGE4_ART_URLS.boss : frame.atlas === "stage4Vfx" ? STAGE4_ART_URLS.vfx : frame.atlas === "stage3Enemy" ? STAGE3_ART_URLS.enemy : frame.atlas === "stage3Boss" ? STAGE3_ART_URLS.boss : frame.atlas === "stage3Vfx" ? STAGE3_ART_URLS.vfx : frame.atlas === "stage3Emissive" ? STAGE3_ART_URLS.emissive : frame.atlas === "ultimateVfx" ? ULTIMATE_ART : frame.atlas === "rankedVfx" ? RANKED_ART.vfx : frame.atlas === "rankedProjectiles" ? RANKED_ART.projectiles : frame.atlas === "equipmentIcons" ? EQUIPMENT_ART.icons : frame.atlas === "equipmentVfx" ? EQUIPMENT_ART.vfx : frame.atlas === "astraVfx" ? ASTRA_ART.combatVfx : frame.atlas === "vfx" ? sharedVfxUrl : frame.atlas === "astraEffects" ? ASTRA_ART.effects : frame.atlas === "stage2Elite" ? STAGE2_ART_URLS.elite : frame.atlas === "stage2Enemy" ? STAGE2_ART_URLS.enemy : STAGE2_ART_URLS.vfx);
   if (!image) return;
   const [sx,sy,sw,sh] = frame.rect;
   ctx.save(); ctx.globalAlpha = alpha; ctx.translate(x,y); ctx.rotate(rotation);
@@ -118,6 +120,7 @@ function shieldPainter(ctx:CanvasRenderingContext2D):ShieldPainter {
 const ammoPaths = new Map<AmmoVisualKey, { body: Path2D; detail: Path2D; glow?: Path2D; accents?: Path2D }>();
 function drawAmmoLocal(ctx:CanvasRenderingContext2D,key:AmmoVisualKey) {
  const art=AMMO_VISUALS[key];let paths=ammoPaths.get(key);
+ if(key==='sylva_basic_ammo'){drawMagneticFrame(ctx,SYLVA_FRAMES.sylva_basic_ammo,0,0,art.width,art.height);return;}
  if(key==='argent_basic_ammo'){drawMagneticFrame(ctx,ARGENT_FRAMES.argent_basic_ammo,0,0,art.width,art.height);return;}
  if(key==='riptide_basic_ammo'){drawMagneticFrame(ctx,RIPTIDE_FRAMES.riptide_basic_ammo,0,0,art.width,art.height);return;}
  if(key==="cinder_basic_ammo"){drawMagneticFrame(ctx,CINDER_FRAMES.cinder_basic_ammo,0,0,art.width,art.height);return;}
@@ -234,17 +237,17 @@ function drawAircraft(
   ctx.globalAlpha = alpha;
   ctx.translate(x, y);
   ctx.scale(scale, scale);
-  const img=aircraftId==='argent'?magneticImage(ARGENT_ART.aircraft):aircraftId==='riptide'?magneticImage(RIPTIDE_ART.aircraft):aircraftId==="cinder"?magneticImage(CINDER_ART.aircraft):aircraftId==="astra"?magneticImage(ASTRA_ART.aircraft):airframeImage(false),size=PLAYER_AIRFRAME_SIZE[aircraftId]/.82;
+  const img=aircraftId==='sylva'?magneticImage(SYLVA_ART.aircraft):aircraftId==='argent'?magneticImage(ARGENT_ART.aircraft):aircraftId==='riptide'?magneticImage(RIPTIDE_ART.aircraft):aircraftId==="cinder"?magneticImage(CINDER_ART.aircraft):aircraftId==="astra"?magneticImage(ASTRA_ART.aircraft):airframeImage(false),size=PLAYER_AIRFRAME_SIZE[aircraftId]/.82;
   if(img){
     const row=aircraftId==="astra"?0:aircraftId==="black_eagle"?0:aircraftId==="breaker"?1:2;
     const top=Math.round(row*img.naturalHeight/4),height=Math.round((row+1)*img.naturalHeight/4)-top;
     const art=PLAYER_ARTWORK[aircraftId].neutral,width=size*art.scaleX;
     if(aircraftId==='argent'){const [fx,fy,fw,fh]=(argentFrame??ARGENT_FRAMES.argent_body).rect;ctx.drawImage(img,fx*img.naturalWidth,fy*img.naturalHeight,fw*img.naturalWidth,fh*img.naturalHeight,-width*art.anchorX,-size/2,width,size);ctx.restore();return;}
-    if(aircraftId==='riptide'){ctx.drawImage(img,0,0,img.naturalWidth,img.naturalHeight,-width*art.anchorX,-size/2,width,size);ctx.restore();return;}
+    if(aircraftId==='sylva'||aircraftId==='riptide'){ctx.drawImage(img,0,0,img.naturalWidth,img.naturalHeight,-width*art.anchorX,-size/2,width,size);ctx.restore();return;}
     ctx.drawImage(img,0,(aircraftId==="astra"||aircraftId==="cinder")?0:top,Math.round(img.naturalWidth/((aircraftId==="astra"||aircraftId==="cinder")?3:4)),(aircraftId==="astra"||aircraftId==="cinder")?img.naturalHeight:height,-width*art.anchorX,-size/2,width,size);
     ctx.restore();return;
   }
-  if(aircraftId==="riptide"||aircraftId==="cinder"){ctx.restore();return;}
+  if(aircraftId==="sylva"||aircraftId==="riptide"||aircraftId==="cinder"){ctx.restore();return;}
   ctx.shadowColor = color;
   ctx.shadowBlur = 14;
   ctx.fillStyle = color;
@@ -594,9 +597,9 @@ export function drawLegacyWorld(
       ctx.beginPath(); ctx.arc(projectile.x, projectile.y, missile ? 10 : 6, 0, Math.PI * 2); ctx.fill(); ctx.restore();
     }
     if (basic) {
-      if(projectile.ammoVisualKey==='argent_basic_ammo'){
+      if(projectile.ammoVisualKey==='argent_basic_ammo'||projectile.ammoVisualKey==='sylva_basic_ammo'){
         const angle=Math.atan2(projectile.vy,projectile.vx),length=basic.trail.length*(reducedMotion?.6:1),rear=basic.height/2+length/2-.5;
-        ctx.save();ctx.globalCompositeOperation='lighter';drawMagneticFrame(ctx,ARGENT_FRAMES.argent_trail,projectile.x-Math.cos(angle)*rear,projectile.y-Math.sin(angle)*rear,basic.trail.width,length,angle+Math.PI/2,basic.trail.alpha*(reducedMotion?.55:1));ctx.restore();
+        ctx.save();ctx.globalCompositeOperation='lighter';drawMagneticFrame(ctx,projectile.ammoVisualKey==='sylva_basic_ammo'?SYLVA_FRAMES.sylva_trail:ARGENT_FRAMES.argent_trail,projectile.x-Math.cos(angle)*rear,projectile.y-Math.sin(angle)*rear,basic.trail.width,length,angle+Math.PI/2,basic.trail.alpha*(reducedMotion?.55:1));ctx.restore();
       }else drawBasicAmmoTrail(ctx,basic,projectile.x,projectile.y,Math.atan2(projectile.vy,projectile.vx),reducedMotion);
     } else if (!reducedMotion && !missile) {
       const speed = Math.max(1, Math.hypot(projectile.vx, projectile.vy));
@@ -773,6 +776,7 @@ export function drawLegacyWorld(
   ctx.save();ctx.beginPath();ctx.rect(GAMEPLAY_SAFE_RECT.left,GAMEPLAY_SAFE_RECT.top,GAMEPLAY_SAFE_RECT.width,GAMEPLAY_SAFE_RECT.height);ctx.clip();
   paintArgent(world,(_id,key,x,y,width,height,rotation,alpha,additive)=>{ctx.save();ctx.globalCompositeOperation=additive?'lighter':'source-over';drawMagneticFrame(ctx,ARGENT_FRAMES[key],x,y,width,height,rotation,alpha);ctx.restore();},reducedMotion);
   ctx.restore();
+  paintSylva(world,(_id,key,x,y,width,height,rotation,alpha,additive)=>{ctx.save();ctx.globalCompositeOperation=additive?'lighter':'source-over';drawMagneticFrame(ctx,SYLVA_FRAMES[key],x,y,width,height,rotation,alpha);ctx.restore();},reducedMotion);
   paintRiptide(world,(_id,key,x,y,width,height,rotation,alpha,additive)=>{ctx.save();ctx.globalCompositeOperation=additive?'lighter':'source-over';drawMagneticFrame(ctx,RIPTIDE_FRAMES[key],x,y,width,height,rotation,alpha);ctx.restore();},reducedMotion);
   paintCinder(world,(_id,key,x,y,width,height,rotation,alpha)=>drawMagneticFrame(ctx,CINDER_FRAMES[key],x,y,width,height,rotation,alpha),reducedMotion,(_id,text,x,y)=>{ctx.save();ctx.translate(x,y);if(world.mirrorContext)ctx.rotate(Math.PI);ctx.font='bold '+CINDER_STACK_FONT_SIZE+'px sans-serif';ctx.lineWidth=1.2;ctx.strokeStyle='#1c2026';ctx.fillStyle='#fff1af';ctx.strokeText(text,0,0);ctx.fillText(text,0,0);ctx.restore();},{
     rect:(x,y,width,height,fillAlpha,lineAlpha)=>{ctx.save();ctx.fillStyle='#ff6565';ctx.globalAlpha=fillAlpha;ctx.fillRect(x,y,width,height);ctx.globalAlpha=lineAlpha;ctx.strokeStyle='#ff7979';ctx.lineWidth=1.5;ctx.strokeRect(x,y,width,height);ctx.restore();},
@@ -928,7 +932,7 @@ function drawAircraftTrackingHud(ctx: CanvasRenderingContext2D, world: CombatWor
   const position = rotated ? mirrorPoint(world.playerX, world.playerY) : { x: world.playerX, y: world.playerY };
   const barX = trackingBarX(position.x, barWidth);
   const barY = trackingBarY(position.y, displayWidth);
-  const health = healthBars.get(-1, world.aircraft.currentHp, stats.maxHp, activeShieldAmount(world.aircraft));
+  const health = healthBars.get(-1, world.aircraft.currentHp, stats.maxHp, activeShieldAmount(world.aircraft), sylvaGrayHealth(world));
   const hp = health.hpRatio;
   const barPath = (y: number, ratio = 1) => {
     const points = angularBarPolygon(barX, y, barWidth, 10, ratio);
@@ -942,6 +946,7 @@ function drawAircraftTrackingHud(ctx: CanvasRenderingContext2D, world: CombatWor
   fillBar(barY, health.chipRatio, "#ef4444");
   fillBar(barY, hp, hp < .25 ? "#f87171" : hp < .5 ? "#fbbf24" : "#4ade80");
   if(health.shieldEnd>health.shieldStart){ctx.save();barPath(barY);ctx.clip();ctx.fillStyle="#d8e4ee";ctx.fillRect(barX+barWidth*health.shieldStart,barY,barWidth*(health.shieldEnd-health.shieldStart),10);ctx.restore();}
+  if(health.grayEnd>health.grayStart){ctx.save();barPath(barY);ctx.clip();ctx.fillStyle="#b8bec8";ctx.fillRect(barX+barWidth*health.grayStart,barY,barWidth*(health.grayEnd-health.grayStart),10);ctx.restore();}
   fillBar(barY + 13, stats.currentResource / stats.maxResource, stats.resourceKind === "energy" ? "#a78bfa" : "#38bdf8");
   ctx.strokeStyle = "rgba(203,213,225,.8)"; ctx.lineWidth = .39;
   barPath(barY); ctx.stroke(); barPath(barY + 13); ctx.stroke(); ctx.restore();

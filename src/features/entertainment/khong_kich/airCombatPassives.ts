@@ -1,8 +1,10 @@
+import { SYLVA_PASSIVE } from './airCombatSylvaConfig';
 import { ARGENT } from './airCombatArgentConfig';
 import type { AircraftId, PassiveId, AircraftCombatState } from './airCombatTypes';
 export const PASSIVE_LEVELS=[1,6,11,16] as const;
 export const passiveTier=(level:number)=>level>=16?3:level>=11?2:level>=6?1:0;
 export const PASSIVES:Record<AircraftId,{id:PassiveId;name:string;coefficients:readonly number[];description:string}>={
+ sylva:{id:'sylva_acid_rounds',name:'Đạn Axit',coefficients:[1,2,3,4],description:SYLVA_PASSIVE},
  argent:{id:'argent_blade_genesis',name:'Sinh Nhận',coefficients:ARGENT.genesis,description:'Argent phóng Phiến Kim xuyên kẻ địch sau mỗi 4 loạt bắn thường chính trúng địch, gây 40/50/60/70% Hỏa lực ở cấp chiến cơ 1/6/11/16, tầm 360, tốc độ 600, rộng 12, chờ 6 giây. Mỗi loạt chỉ tính một lần. Hai lần sinh cách tối thiểu 1 giây; đủ 4 thì giữ tiến độ, cần đòn chính trúng mới khi hết giới hạn. Đạn phụ/nảy/phản chiếu/máy bay hỗ trợ/Phiến/kỹ năng/hiệu ứng phát sinh không tích. Trong Thiên La Kiếm Trận, Sinh Nhận tạm ngừng và giữ tiến độ; đạn bắn trong trận không tích kể cả trúng sau khi trận kết thúc.'},
  riptide:{id:'riptide_afterwash',name:'Dư Ba',coefficients:[.2,.25,.3,.35],description:'Riptide tạo vụ nước vỡ khi đạn thường chính trúng địch, bán kính 45, gây 20/25/30/35% sát thương đòn chính trước chí mạng và giảm trừ lên địch khác. Mỗi địch phụ áp dụng Giáp riêng, tối đa một lần mỗi loạt bắn; không chí mạng, không hồi chiêu, đạn phụ/nảy/phản chiếu/máy bay hỗ trợ/kỹ năng/trang bị/lõi không kích hoạt.'},
  black_eagle:{id:'viper_follow_up',name:'Bắn Bồi',coefficients:[.2,.3,.4,.5],description:'Viper phóng một đạn bồi vào mục tiêu vừa trúng đòn chính chí mạng, gây 20/30/40/50% sát thương trước chí mạng; Viper luôn nhận thêm 10% tỷ lệ chí mạng. Hai đạn bồi cách nhau ít nhất 0,5 giây, không chí mạng, không đổi mục tiêu hoặc tự kích hoạt lại.'},

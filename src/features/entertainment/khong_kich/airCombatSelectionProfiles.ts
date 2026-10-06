@@ -1,3 +1,4 @@
+import { SYLVA_DESCRIPTION } from './airCombatSylvaConfig';
 import type { AircraftId } from "./airCombatTypes";
 
 // Presentation profiles only: never used to calculate combat stats.
@@ -6,6 +7,7 @@ export const AIRCRAFT_SELECTION_PROFILES: Record<AircraftId, {
   description: string;
   power: readonly [number, number, number, number];
 }> = {
+  sylva:{role:'Sát thủ · Ăn mòn · Combo',description:SYLVA_DESCRIPTION,power:[95,66,64,93]},
   argent:{role:'Kiếm trận · Thu hồi · Phản công',description:'Tạo Phiến Kim trên chiến trường, căn vị trí để thu kiếm xuyên địch, đỡ từng đợt tấn công rồi phản công bằng đại kiếm và Thiên La Kiếm Trận.',power:[90,65,65,86]},
   riptide:{role:'Cận chiến · Hội tụ · Hồi phục',description:'Áp sát bằng những lưỡi nước xoay quanh thân, gom địch bằng Hội Thủy và duy trì Thủy Thể để gây sát thương, hồi Máu rồi giải phóng thủy áp.',power:[84,88,60,82]},
   cinder:{role:'Thiêu đốt · Duy trì sát thương',description:'Duy trì Cháy để gây sát thương chuẩn, dùng Khiên Lửa để trụ vững và phối hợp vùng nhiên liệu với quầng nhiệt cùng luồng hỏa năng.',power:[85,79,66,74]},
