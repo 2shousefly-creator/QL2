@@ -818,3 +818,23 @@
 .air-argent-count,.air-argent-guard,.air-argent-temper,.air-argent-array{position:absolute;bottom:100%;left:50%;transform:translateX(-50%);white-space:nowrap;background:#151b23;color:#e8c878;padding:2px 5px;border:1px solid #b58a39;border-radius:3px;font-family:inherit;font-weight:700;line-height:1.2;font-variant-numeric:tabular-nums;font-size:clamp(8px,2.2cqw,11px);z-index:12;pointer-events:none}.air-argent-count[data-ready="true"]{color:#fff;box-shadow:0 0 8px #e8c87880}.air-argent-guard{font-size:clamp(7px,1.9cqw,10px)}.air-argent-temper{bottom:calc(100% + 20px);font-size:clamp(7px,1.9cqw,10px)}
 
 .air-argent-upgrade-icon{width:28px;height:28px;display:inline-block;vertical-align:middle;margin-right:6px}
+
+/* Stable footprints within each selection breakpoint, including empty/secret panels. */
+.air-selection-panel{display:grid;grid-template-rows:104px 86px 112px 64px 208px;gap:12px;}
+.air-selection-identity{min-height:0;overflow:auto;}
+.air-selection-description{margin:0;min-height:0;overflow-y:auto;touch-action:pan-y;overscroll-behavior-y:auto;}
+.air-selection-power{min-height:0;align-content:center;}
+.air-selection .air-selection-passive{margin:0;min-height:0;}
+.air-selection-skills{margin:0;min-height:0;grid-auto-rows:minmax(0,1fr);}
+.air-selection .air-selection-skill{height:100%;min-height:0;overflow-y:auto;touch-action:pan-y;}
+.air-selection-empty{grid-row:1/-1;align-self:center;margin:0;}
+@container(max-width:280px){
+ .air-selection-panel{grid-template-rows:96px 108px 112px 70px 400px;}
+}
+.air-core-toasts[data-notice=acquisition]{top:27%;width:min(94%,420px);max-width:94%;}
+.air-core-toasts[data-notice=acquisition] .air-core-toast{position:relative;width:100%;white-space:normal;overflow:visible;line-height:1.4;padding:8px;border:1px solid #64748b88;border-radius:10px;background:#07101bea;}
+.air-receipt{display:grid;gap:6px;}
+.air-receipt-row{display:flex;align-items:center;gap:7px;overflow-wrap:anywhere;}
+.air-receipt-icon{width:26px!important;height:26px!important;flex-shrink:0;}
+.air-receipt-row[data-tier=diamond]{color:#a5f3fc;}
+.air-receipt-row[data-tier=gold]{color:#fde68a;}

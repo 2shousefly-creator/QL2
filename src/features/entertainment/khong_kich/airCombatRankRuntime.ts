@@ -132,7 +132,7 @@ export function echoTwinShot(w:CombatWorld,main:ProjectileEntity,h:RankRuntimeHo
  if(!rank||(s.activeEffects.twin_reflection??0)<=0)return;
  const empowered=rank>=4&&r.twinShots>0&&r.twinShots%5===0;r.twinShots++;
  const volley=w.nextId++;r.twinVolleys.set(volley,new Map());
- for(const side of [-1,1])h.projectile(w,{owner:"player",source:"basic",skillId:"twin_reflection",x:main.x+side*27,y:main.y+8,vx:main.vx*(empowered?1.4:1),vy:main.vy*(empowered?1.4:1),rawDamage:main.rawDamage,echoScale:getSkillRuntimeValues(s,"twin_reflection").damageMultiplier*(empowered?1.75:1),radius:empowered?4.2:2.8,penetrationRemaining:rank>=2?1:0,penetrationMultiplier:.6,color:"#fdba74",twinSide:side,rankVolley:volley,procFree:true});
+ for(const side of [-1,1])h.projectile(w,{owner:"player",source:"basic",weaponFraction:main.weaponFraction,firedAt:main.firedAt,skillId:"twin_reflection",x:main.x+side*27,y:main.y+8,vx:main.vx*(empowered?1.4:1),vy:main.vy*(empowered?1.4:1),rawDamage:main.rawDamage,echoScale:getSkillRuntimeValues(s,"twin_reflection").damageMultiplier*(empowered?1.75:1),radius:empowered?4.2:2.8,penetrationRemaining:rank>=2?1:0,penetrationMultiplier:.6,color:"#fdba74",twinSide:side,rankVolley:volley,procFree:true});
 }
 export function tickRankSkills(w:CombatWorld,dt:number,h:RankRuntimeHooks) {
  const r=rankRuntime(w),s=w.aircraft,now=w.elapsed;

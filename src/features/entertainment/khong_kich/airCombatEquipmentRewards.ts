@@ -22,9 +22,9 @@ export function claimWaitingChest(s:AircraftCombatState,random:()=>number):strin
   let roll=random();
   const reward=WAITING_CHEST_REWARDS.find(r=>(roll-=r.chance)<0)??WAITING_CHEST_REWARDS[4];
   chest.claimed=true;
-  const names:string[]=[];
-  for(const [prefix,count] of [["TH",reward.completed],["HL",reward.legendary]] as const)for(let i=0;i<count;i++){const id=randomEquipmentId(prefix,random);grantEquipmentReward(s,id,"core_227");names.push(EQUIPMENT_CATALOG[id].name);}
+  const names:string[]=[],transactionId=s.coreState.nextAcquisitionId;
+  for(const [prefix,count] of [["TH",reward.completed],["HL",reward.legendary]] as const)for(let i=0;i<count;i++){const id=randomEquipmentId(prefix,random);if(grantEquipmentReward(s,id,"core_227",undefined,transactionId))names.push(EQUIPMENT_CATALOG[id].name);}
   chest.rewardLabel=`${reward.label} (${names.join(", ")})`;
-  if(reward.magnet)grantEquipmentReward(s,"VP01","core_227");
+  if(reward.magnet)grantEquipmentReward(s,"VP01","core_227",undefined,transactionId);
   return `Đã nhận phần thưởng: ${chest.rewardLabel}`;
 }

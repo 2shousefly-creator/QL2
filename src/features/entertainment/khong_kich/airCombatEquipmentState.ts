@@ -8,7 +8,7 @@ export const EQUIPMENT_PAGE_SIZE = EQUIPMENT_GRID_COLUMNS * EQUIPMENT_GRID_ROWS;
 export interface EquipmentInstance { instanceId: number; definitionId: EquipmentDefinitionId }
 export type EquipmentRewardId = EquipmentDefinitionId | "VP01";
 export type CoreConversionSource = "core_050" | "core_051" | "core_052" | "core_216";
-export type AcquisitionEvent = ({ id: number; kind: "core"; coreId: string; conversionSourceCoreId?: CoreConversionSource } | { id: number; kind: "equipment" | "item"; definitionId: EquipmentRewardId; source: string; x?: number; y?: number }) & { createdAtMs?: number };
+export type AcquisitionEvent = ({ id:number; kind:"reward"; name:string; coreId:string; source:string } | { id: number; kind: "core"; coreId: string; conversionSourceCoreId?: CoreConversionSource } | { id: number; kind: "equipment" | "item"; definitionId: EquipmentRewardId; source: string; x?: number; y?: number }) & { createdAtMs?: number; transactionId?: number; quantity?: number };
 export interface EquipmentEffectState { cooldownPending?: boolean; bonusUntil?: number; progress?: number; empowered?: boolean; stacks: number; until: number; ready: number; value: number; tick: number; count: number; duration: number }
 export interface EquipmentMark { until: number; stacks: number; tick: number }
 export interface EquipmentVisual { id: number; family: number; x: number; y: number; fromX?: number; fromY?: number; size: number; start: number; duration: number; target?: number; player?: boolean; legendary?: boolean }
@@ -67,18 +67,18 @@ export function clampEquipmentPages(e: EquipmentState) {
   e.completedPage=Math.max(0,Math.min(e.completedPage,Math.ceil(e.completed.length/EQUIPMENT_PAGE_SIZE)-1));
 }
 /** All reward sources share instance allocation and an explicit acquisition event. */
-export function grantEquipmentReward(s: AircraftCombatState, id: EquipmentRewardId, source: string, position?: {x:number;y:number}) {
+export function grantEquipmentReward(s: AircraftCombatState, id: EquipmentRewardId, source: string, position?: {x:number;y:number}, transactionId?:number) {
   if(!canGrantEquipmentReward(s,id))return false;
-  return receiveEquipmentReward(s,id,source,position);
+  return receiveEquipmentReward(s,id,source,position,transactionId);
 }
-function receiveEquipmentReward(s: AircraftCombatState, id: EquipmentRewardId, source: string, position?: {x:number;y:number}) {
+function receiveEquipmentReward(s: AircraftCombatState, id: EquipmentRewardId, source: string, position?: {x:number;y:number}, transactionId?:number) {
   const e=equipmentState(s);
   if(id === "VP01") e.items.VP01=(e.items.VP01??0)+1;
   else {
     const item={instanceId:e.nextInstanceId++,definitionId:id};
     (EQUIPMENT_CATALOG[id].rarity === "component" ? e.components : e.completed).push(item);
   }
-  s.coreState.acquisitions.push({id:s.coreState.nextAcquisitionId++,createdAtMs:performance.now(),kind:id === "VP01" ? "item" : "equipment",definitionId:id,source,...position});
+  s.coreState.acquisitions.push({transactionId:transactionId??s.coreState.nextAcquisitionId,id:s.coreState.nextAcquisitionId++,createdAtMs:performance.now(),kind:id === "VP01" ? "item" : "equipment",definitionId:id,source,...position});
   clampEquipmentPages(e);
   return true;
 }
@@ -126,7 +126,7 @@ export function tickEquipmentCraft(s: AircraftCombatState, uiTime:number) {
 export const equipmentRewardsLocked = (s: AircraftCombatState) => equipmentState(s).rewardsLocked;
 export const canGrantEquipmentReward = (s: AircraftCombatState, id: EquipmentRewardId) => id === "VP01" || !equipmentRewardsLocked(s);
 /** The only bypass is private receipt of Core228's own Legendary, after the atomic wipe. */
-export function sacrificeEquipment(s: AircraftCombatState, random:()=>number) {
+export function sacrificeEquipment(s: AircraftCombatState, random:()=>number, transactionId=s.coreState.nextAcquisitionId) {
   const e=equipmentState(s);
   e.equipped=[null,null,null,null,null,null];e.components=[];e.completed=[];e.craftSlots=[null,null];delete e.craftJob;
   e.loot=e.loot.filter(l=>l.definitionId==="VP01");
@@ -139,7 +139,7 @@ export function sacrificeEquipment(s: AircraftCombatState, random:()=>number) {
   for(let i=0;i<3;i++){
     const index=Math.min(families.length-1,Math.max(0,Math.floor(random()*families.length)));
     const [family]=families.splice(index,1);
-    receiveEquipmentReward(s,`HL${String(family).padStart(2,"0")}`,"core_228");
+    receiveEquipmentReward(s,`HL${String(family).padStart(2,"0")}`,"core_228",undefined,transactionId);
   }
   e.rewardsLocked=true;
 }

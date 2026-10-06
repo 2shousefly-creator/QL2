@@ -103,7 +103,7 @@ export function getEffectiveAircraftStats(state: AircraftCombatState, includeTem
         stats.resourceRegen *= Math.min(1, ...status.jams.filter(j => j.until > c.time).map(j => j.multiplier));
     }
     if (includeTemporary && (c.timers.tacticalData || 0) > c.time && !hasCore(state, 95)) stats.criticalChance += (c.stacks.tacticalData || 0) * V.dataCrit;
-    stats.fireRate = resolveFireRate(stats);
+    stats.fireRate = resolveFireRate(stats, hasCore(state,229));
     applyFireRateLock(state, stats);
     if(hasCore(state,95))stats.criticalChance=.25;
     stats.criticalChance = Math.max(0, Math.min(1, stats.criticalChance));

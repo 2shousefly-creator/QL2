@@ -12,8 +12,9 @@ export const ARGENT_RENDER = {
 export function argentInset(angle: number, heavy = false) {
   const { width, height } = heavy ? ARGENT_RENDER.heavy : ARGENT_RENDER.blade;
   const theta = angle + Math.PI / 2, c = Math.abs(Math.cos(theta)), s = Math.abs(Math.sin(theta));
-  const x = c * width / 2 + s * height / 2 + ARGENT_RENDER.sampling;
-  const y = s * width / 2 + c * height / 2 + ARGENT_RENDER.sampling;
+  const pad = Math.hypot(width, height) / 2 + ARGENT_RENDER.sampling;
+  const x = heavy ? c * width / 2 + s * height / 2 + ARGENT_RENDER.sampling : pad;
+  const y = heavy ? s * width / 2 + c * height / 2 + ARGENT_RENDER.sampling : pad;
   return { left: R.left + x, right: R.right - x, top: R.top + y, bottom: R.bottom - y };
 }
 

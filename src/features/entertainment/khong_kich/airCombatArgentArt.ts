@@ -16,11 +16,9 @@ export const ARGENT_FRAMES={
 } as const satisfies Record<string,AtlasFrame>;
 export const ARGENT_ICON_CELLS={argent_blade_genesis:[0,0],argent_guard_stance:[1,0],argent_blade_cast:[2,0],argent_blade_recall:[3,0],argent_heavenly_blade_array:[4,0],argent_counter:[0,1],argent_triple_guard:[1,1],argent_temper:[2,1],argent_break:[3,1],argent_sharp:[4,1],argent_pierce:[0,2],argent_linger:[1,2],argent_weave:[2,2],argent_fast_recall:[3,2],argent_pin:[4,2],argent_cycle:[0,3],argent_myriad:[1,3],argent_lock:[2,3],argent_heart_cut:[3,3],argent_array_concord:[2,3],argent_array_return:[3,3]} as const;
 export const ARGENT_UPGRADE_ICONS={argent_guard_stance:['argent_guard_stance','argent_counter','argent_triple_guard','argent_temper','argent_break'],argent_blade_cast:['argent_blade_cast','argent_sharp','argent_pierce','argent_linger','argent_weave'],argent_blade_recall:['argent_blade_recall','argent_fast_recall','argent_pin','argent_cycle','argent_myriad'],argent_heavenly_blade_array:['argent_heavenly_blade_array','argent_array_concord','argent_array_return']} as const;
-const poses=new WeakMap<CombatWorld,{x:number;at:number;lean:number}>();
 export function argentPose(w:CombatWorld){
- const s=argentState(w);let pose=poses.get(w);if(!pose){pose={x:w.playerX,at:w.elapsed,lean:0};poses.set(w,pose);}
- if(w.elapsed>pose.at){pose.lean=w.playerX-pose.x;pose.x=w.playerX;pose.at=w.elapsed;}
- return s.guard?ARGENT_FRAMES.argent_closed:s.launch||s.recall||s.array?ARGENT_FRAMES.argent_open:pose.lean<-.1?ARGENT_FRAMES.argent_left:pose.lean>.1?ARGENT_FRAMES.argent_right:ARGENT_FRAMES.argent_body;
+ const s=argentState(w);
+ return s.guard?ARGENT_FRAMES.argent_closed:s.launch||s.recall||s.array?ARGENT_FRAMES.argent_open:ARGENT_FRAMES.argent_body;
 }
 export const ARGENT_SPRITE_BUDGET=640;
 export type ArgentVisualKey=keyof typeof ARGENT_FRAMES;
@@ -36,7 +34,7 @@ export function paintArgent(w:CombatWorld,paint:Painter,reduced:boolean){
   if(!waiting){for(let i=1;i<b.trail.length;i++)trail(b.trail[i-1].x,b.trail[i-1].y,b.trail[i].x,b.trail[i].y,(i/b.trail.length)*.75,returning?10:7);const last=b.trail.at(-1);if(last)trail(last.x,last.y,b.x,b.y,.8,heavy?15:8);}
   const size=heavy?ARGENT_RENDER.heavy:ARGENT_RENDER.blade;
   draw(heavy?'argent_greatsword':b.ultimateRank===3?'argent_array_blade':returning?'argent_return':'argent_metal_blade',b.x,b.y,size.width,size.height,angle,alpha);
-  if(b.ultimateRank===3&&returning)draw('argent_trail',b.x,b.y,8,40,angle,.85,true);
+  if(returning&&b.recall!.critMultiplier>1)draw('argent_trail',b.x,b.y,8,40,angle,.85,true);
   if(returning&&b.recall!.temper>0)draw('argent_trail',b.x,b.y,8,34,angle,.9,true);
  }
  const g=hud.guard;

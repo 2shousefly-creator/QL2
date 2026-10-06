@@ -304,7 +304,7 @@ export function tickDuelActor(actor: CombatWorld, dt: number): void {
     if (actor.ended || (actor.duel && !actor.duel.combatEnabled)) return;
     revalidateAircraftTargets(actor);
     if (actor.aircraft.currentHp <= 0) {
-        cancelRiptide(actor); cancelCinder(actor); actor.bigBang=undefined;
+        cancelArgent(actor); cancelRiptide(actor); cancelCinder(actor); actor.bigBang=undefined;
         // Finish already committed attacks before same-tick KO arbitration.
         updateSkillCoreEffects(actor,dt); updateWarnings(actor,dt); updateLaser(actor,dt);
         updateProjectiles(actor,dt); updateProjectileCollisions(actor); updateParticles(actor,dt); return;
@@ -321,12 +321,8 @@ export function tickDuelActor(actor: CombatWorld, dt: number): void {
     updateCrossfireGrids(actor); updateDroneMovement(actor, dt); updateDecoys(actor, dt);
     updateDecoySalvo(actor, dt); updateSkillCoreEffects(actor, dt); updateWarnings(actor, dt);
     updateLaser(actor, dt); updateMissileSalvo(actor, dt);
-    tickCinder(actor, dt, cinderHooks); tickRiptide(actor, dt, riptideHooks); tickArgent(actor, dt, argentHooks);
-    actor.playerFireCooldown -= dt * aircraftFireRateMultiplier(actor);
-    if (actor.aircraft.currentHp > 0 && (!playerStunned(actor.aircraft) || hasCore(actor.aircraft, 203)) && shouldAutoFire(actor.aircraft)
-        && actor.laserCharge <= 0 && actor.laserTicksRemaining <= 0 && actor.playerFireCooldown <= 0) {
-        fireBasic(actor); actor.playerFireCooldown = 1 / getEffectiveAircraftStats(actor.aircraft).fireRate;
-    }
+    tickCinder(actor, dt, cinderHooks); tickRiptide(actor, dt, riptideHooks);
+    tickBasicFire(actor,dt); tickArgent(actor, dt, argentHooks);
     actor.droneFireCooldown -= dt;
     if (droneCombatActive(actor) && actor.droneFireCooldown <= 0) {
         fireDrone(actor);
@@ -522,6 +518,9 @@ export interface ProjectileEntity extends AttackMetadata {
     mainBasicMiss?: boolean;
     extraPierceOrdinal?: number;
     expansionCast?: ExpansionCast; expansionSlowUntil?: number;
+    /** Weapon share of pre-Gatling raw damage; inherited by basic derivatives. */
+    weaponFraction?: number;
+    firedAt?: number;
     primaryShot?: { resolved: boolean; afterwashHits?:Set<number>; argentGenesisEligible?:boolean };
     astraLance?:{later:number;followup?:StellarLancePath};
     mirageVisual?: MirageVisualKey;
@@ -1138,7 +1137,7 @@ function addProjectile(world: CombatWorld, values: Partial<ProjectileEntity> & P
         owner: values.owner,
         allegiance: values.allegiance ?? (values.owner === "enemy" ? enemyAllegiance(world,world.enemies.find(e=>e.id===values.sourceEnemyId)) : "player"),
         // Capability follows delivery, never Boss origin; capture checks live allegiance.
-        expansionCast: values.expansionCast ?? (values.skillId ? expansionState(world.aircraft).casts[values.skillId] : undefined), expansionSlowUntil: undefined, primaryShot: values.primaryShot,
+        expansionCast: values.expansionCast ?? (values.skillId ? expansionState(world.aircraft).casts[values.skillId] : undefined), expansionSlowUntil: undefined, primaryShot: values.primaryShot, weaponFraction:values.weaponFraction, firedAt:values.firedAt,
         rankCast:values.rankCast, rankVolley:values.rankVolley, twinSide:values.twinSide, procFree:values.procFree, aimBonus:false, echoScale:values.echoScale,
         mainBasicMiss:false, aimCorrectionUntil:undefined, extraPierceOrdinal:undefined, astraLance:undefined, capturable:values.capturable??((values.delivery??"direct_projectile")==="direct_projectile"),
         delivery:values.delivery??"direct_projectile", grazeCandidate:false, playerContact:false, duelGraze:undefined,
@@ -1219,12 +1218,13 @@ function playerProjectileColor(aircraftId: AircraftId, empowered: boolean): stri
         return empowered ? "#ddd6fe" : "#a78bfa";
     return empowered ? "#bae6fd" : "#22d3ee";
 }
-function fireBasic(world: CombatWorld): void {
+function fireBasic(world: CombatWorld, firedAt = world.elapsed): boolean {
+    if(world.projectiles.filter(p=>p.owner!=="enemy").length>=AIR_COMBAT_WORLD.maxPlayerProjectiles)return false;
     const state = world.aircraft, stats = getEffectiveAircraftStats(state);
     state.basicShotsFired++;
     const reappearance = (state.coreState.timers.reappearanceBuff || 0) > state.coreState.time;
     if(reappearance)recordCoreMetric(state,142,"shots",1);
-    const primaryShot = { resolved: false, argentGenesisEligible: !argentArrayActive(world) };
+    const primaryShot = { resolved: false, argentGenesisEligible: !argentArrayActive(world,firedAt) };
     let mainSpawned = false;
     const bulletSpeed=PLAYER_BASIC_PROJECTILE_SPEED_MULTIPLIER*(hasCore(state,206)?.80:1)*(hasCore(state,111)?1440:480) * (reappearance ? 1 + V.reappearanceSpeedBonus : 1);
     const context = coreContext(world);
@@ -1240,6 +1240,7 @@ function fireBasic(world: CombatWorld): void {
         const ricochet = hasCore(state, 80) && world.random() < .50;
         const spawned=addProjectile(world, { owner: "player", primaryShot: extra || (offset!==0 && state.aircraftId!=='riptide' && state.aircraftId!=='argent') ? undefined : primaryShot, source: extra ? "basic" : source, ammoVisualKey: BASIC_AMMO_KEYS[state.aircraftId], skillId: sweeping && !extra ? "sweeping_cannon" : undefined,
             x: world.playerX + (extra?0:offset*4)*playerAirframeScale(state), y: world.playerY - 17*playerAirframeScale(world.aircraft), vx: Math.cos(angle) * bulletSpeed * (sweeping && !extra && (skillRank(state, "sweeping_cannon") >= 3) ? 1 + V.cannonSpeedBonus : 1), vy: Math.sin(angle) * bulletSpeed * (sweeping && !extra && (skillRank(state, "sweeping_cannon") >= 3) ? 1 + V.cannonSpeedBonus : 1), radius: 3.2,
+            weaponFraction: 1 / Math.max(Number.EPSILON, context.rawMultiplier * (reappearance ? V.reappearanceDamage : 1)), firedAt,
             rawDamage: stats.firepower * multiplier * context.rawMultiplier * (reappearance ? V.reappearanceDamage : 1), volleyId, volleyHits: extra ? undefined : volleyHits,
             penetrationRemaining: (!extra && hasCore(state,206) ? 1 : 0) + (!extra && hasCore(state, 89) ? Infinity : 0) + (!extra && expansionActive(state,"overloadedBarrel") ? 1 : 0) + (sweeping && !extra && (skillRank(state, "sweeping_cannon") >= 3) ? 2 : 0),
             corePierce: !extra && hasCore(state,89), stabilizedPierce: sweeping && !extra && (skillRank(state, "sweeping_cannon") >= 3), telemetryCore:extra?79:undefined,
@@ -1265,10 +1266,27 @@ function fireBasic(world: CombatWorld): void {
         }
     };
     multipliers.forEach((multiplier, i) => spawn(multiplier, i - (multipliers.length - 1) / 2));
-    if (mainSpawned) argentPrimaryFired(world,primaryShot,argentHooks);
+    if (mainSpawned) recordCoreMetric(state,229,"shots",1);
+    if (mainSpawned) argentPrimaryFired(world,primaryShot,argentHooks,firedAt);
     if (context.extraShot)
         spawn(context.extraShot, 1, true);
     addHeat(world,.025,"heatBasic");
+    return mainSpawned;
+}
+function tickBasicFire(world:CombatWorld,dt:number):void {
+    const state=world.aircraft;
+    const allowed=state.currentHp>0&&(!playerStunned(state)||hasCore(state,203))&&shouldAutoFire(state)&&world.laserCharge<=0&&world.laserTicksRemaining<=0;
+    if(!allowed){world.playerFireCooldown=Math.max(0,world.playerFireCooldown);return;}
+    const rate=getEffectiveAircraftStats(state).fireRate, speed=aircraftFireRateMultiplier(world);
+    if(!Number.isFinite(rate)||rate<=0||!Number.isFinite(speed)||speed<=0)return;
+    const interval=1/rate;
+    world.playerFireCooldown=Math.max(0,world.playerFireCooldown)-dt*speed;
+    while(world.playerFireCooldown<=0){
+        const at=Math.max(world.elapsed-dt,world.elapsed+world.playerFireCooldown/speed);
+        const fired=fireBasic(world,at);
+        world.playerFireCooldown+=interval;
+        if(!fired){world.playerFireCooldown=interval;break;}
+    }
 }
 function fireDrone(world: CombatWorld): void {
     const target = preferredDuelDecoy(world) ?? world.enemies.find(e => e.id === world.droneTargetId && isHostileToPlayer(world,e) && canTargetEnemy(world,e)) ?? nearestEnemy(world, world.droneX, world.droneY, [], true);
@@ -3383,7 +3401,8 @@ const expansionHooks: ExpansionHooks = {
         if(projectile)recordCoreMetric(w.aircraft,row,"launched",1);
     },
 };
-function applyDamageToEnemy(world: CombatWorld, enemy: EnemyEntity, rawDamage: number, color = "#fde68a", source: DamageSource = "weapon", skillId?: SkillId, volleyHits?: Map<number, number>, contact?:{x:number;y:number;zone?:AirframeHitZone}, delivery:DamageDelivery=contact?"direct_projectile":"area_hazard", chargeAntimatter=true, directPlayer=true, telemetryCore?: number, penetrationScale=1, shotBonuses:readonly [number,number][] = [], cast?: ExpansionCast, primaryShot?: { resolved: boolean; afterwashHits?:Set<number>; argentGenesisEligible?:boolean }, procFree=false, echoScale?:number, intrinsic?:IntrinsicDamage, receipt?:{hp:number;total:number}): number {
+const volleyWeaponComponents=new WeakMap<Map<number,number>,Map<number,number>>();
+function applyDamageToEnemy(world: CombatWorld, enemy: EnemyEntity, rawDamage: number, color = "#fde68a", source: DamageSource = "weapon", skillId?: SkillId, volleyHits?: Map<number, number>, contact?:{x:number;y:number;zone?:AirframeHitZone}, delivery:DamageDelivery=contact?"direct_projectile":"area_hazard", chargeAntimatter=true, directPlayer=true, telemetryCore?: number, penetrationScale=1, shotBonuses:readonly [number,number][] = [], cast?: ExpansionCast, primaryShot?: { resolved: boolean; afterwashHits?:Set<number>; argentGenesisEligible?:boolean }, procFree=false, echoScale?:number, intrinsic?:IntrinsicDamage, receipt?:{hp:number;total:number}, weaponFraction?:number): number {
     if (world.aftermath || world.destruction) return 0;
     if (!isHostileToPlayer(world,enemy) || rawDamage <= 0 || world.bossDefeated)
         return 0;
@@ -3451,19 +3470,29 @@ function applyDamageToEnemy(world: CombatWorld, enemy: EnemyEntity, rawDamage: n
     multiplier*=equipmentDamage.multiplier*(echoScale??1);
     if(intrinsic && (!skillId || intrinsic.trueDamage)){multiplier=1;hitMultiplier=1;recoilDamage=0;}
     const firstVolleyDamage = volleyHits?.get(enemy.id);
+    const gatling=hasCore(state,229)&&(weaponFraction!==undefined||intrinsic?.weapon===true);
+    const weaponRaw=intrinsic?.weapon?rawDamage:equipmentBaseRaw*(weaponFraction??0);
+    const weaponBeforeCrit=weaponRaw*(echoScale??1)*Math.min(1,multiplier/Math.max(Number.EPSILON,echoScale??1)*hitMultiplier);
+    const unpenalizedBeforeCrit=(rawDamage+recoilDamage)*multiplier*hitMultiplier;
+    const penalizedBeforeCrit=unpenalizedBeforeCrit-(gatling?.45*weaponBeforeCrit:0);
+    const firstVolleyWeapon=volleyHits?volleyWeaponComponents.get(volleyHits)?.get(enemy.id)??0:0;
     // Preserve the fan's 15% baseline without copying consumed, one-hit Core bonuses.
     // Each hit resolves its own mark/capacitor once, including later fan projectiles.
     const resolved = firstVolleyDamage === undefined
-        ? resolvePlayerDamage((rawDamage + recoilDamage) * multiplier * hitMultiplier * zoneMultiplier, armor, effectiveStats, world.random)
-        : { actualDamage: calculateDamage((firstVolleyDamage * .15 + recoilDamage * multiplier) * hitMultiplier * zoneMultiplier, armor), critical: false, multiplier: 1 };
+        ? resolvePlayerDamage(penalizedBeforeCrit * zoneMultiplier, armor, effectiveStats, world.random)
+        : { actualDamage: calculateDamage(((firstVolleyDamage-(gatling?.45*firstVolleyWeapon:0)) * .15 + recoilDamage * multiplier) * hitMultiplier * zoneMultiplier, armor), critical: false, multiplier: 1 };
     if(intrinsic?.rawBudget){const raw=(rawDamage+recoilDamage)*multiplier*hitMultiplier*zoneMultiplier*resolved.multiplier;const allowed=Math.min(raw,Math.max(0,intrinsic.rawBudget.remaining));intrinsic.rawBudget.remaining-=allowed;resolved.actualDamage=calculateDamage(allowed,armor);}
-    if (volleyHits && firstVolleyDamage === undefined)
+    if (volleyHits && firstVolleyDamage === undefined){
         volleyHits.set(enemy.id, rawDamage * multiplier * resolved.multiplier);
+        let parts=volleyWeaponComponents.get(volleyHits);if(!parts){parts=new Map();volleyWeaponComponents.set(volleyHits,parts);}
+        parts.set(enemy.id,weaponBeforeCrit/Math.max(Number.EPSILON,hitMultiplier)*resolved.multiplier);
+    }
     let damage = resolved.actualDamage * penetrationScale * guardianMultiplier(world, enemy) * stormDamageTakenMultiplier(world, enemy);
     const aegis = enemy.type === "boss" && enemy.hp / enemy.maxHp >= .15 && enemy.aegisUntil > time;
     if (aegis && !intrinsic?.trueDamage)
         damage *= .6;
     if(intrinsic?.trueDamage && guardianMultiplier(world,enemy)>0 && stormDamageTakenMultiplier(world,enemy)>0)damage=rawDamage;
+    if(gatling)recordCoreMetric(state,229,"weaponDamageReduced",calculateDamage(.45*(firstVolleyDamage===undefined?weaponBeforeCrit*resolved.multiplier:firstVolleyWeapon*.15*hitMultiplier)*zoneMultiplier,armor)*penetrationScale*guardianMultiplier(world,enemy)*stormDamageTakenMultiplier(world,enemy)*(aegis?.6:1));
     const resolvedBeforeShield=damage,shieldBeforeHit=enemy.shield;
     // Extra shield damage is confined to the absorb pool; overflow uses the original HP budget.
     const shieldFactor = basic && hasCore(state,180) ? 1.20 : 1;
@@ -3521,16 +3550,19 @@ function applyDamageToEnemy(world: CombatWorld, enemy: EnemyEntity, rawDamage: n
             const contribution=damage+absorbed-shield-Math.min(hpBefore,Math.max(0,budget-shield/shieldFactor));
             recordCoreMetric(state,row,"bonusDamage",contribution);return Math.max(0,contribution);
         };
-        const factor=(row:number,value:number)=>{if(hasCore(state,row))bonus(row,1-1/value);};
-        if(whiteHole){bonus(155,.6/1.6);astraMetric(world,"orbit.whiteHoleBonusDamage",damage-Math.min(hpBefore,Math.max(0,resolvedBeforeShield/1.6-shieldBeforeHit)));}
+        // Effect components retain their pre-Gatling amount. Attribute their share
+        // against the reduced total, using this hit's existing crit/mitigation.
+        const effectShare=(fraction:number)=>fraction*(gatling?unpenalizedBeforeCrit/Math.max(Number.EPSILON,penalizedBeforeCrit):1);
+        const factor=(row:number,value:number)=>{if(hasCore(state,row))bonus(row,effectShare(1-1/value));};
+        if(whiteHole){const contribution=bonus(155,effectShare(.6/1.6));astraMetric(world,"orbit.whiteHoleBonusDamage",contribution);}
         if(skillPen)bonus(158,Math.max(0,1-(100+Math.max(-80,armor))/(100+Math.max(-80,armor/(1-skillPen)))));
-        for(const [row,fraction] of shotBonuses)bonus(row,fraction);
+        for(const [row,fraction] of shotBonuses)bonus(row,effectShare(fraction));
         const equipmentContribution=(family:number,fraction:number,key="bonusDamage")=>{
           const budget=resolvedBeforeShield*(1-Math.max(0,Math.min(1,fraction))),shield=Math.min(shieldBeforeHit,budget*shieldFactor);
           equipmentMetric(state,family,key,damage+absorbed-shield-Math.min(hpBefore,Math.max(0,budget-shield/shieldFactor)));
         };
-        for(const [family,factor] of equipmentDamage.factors)equipmentContribution(family,1-1/factor);
-        for(const [family,value] of equipmentDamage.bonuses)equipmentContribution(family,value/Math.max(Number.EPSILON,equipmentBaseRaw+equipmentDamage.bonus+recoilDamage));
+        for(const [family,factor] of equipmentDamage.factors)equipmentContribution(family,effectShare(1-1/factor));
+        for(const [family,value] of equipmentDamage.bonuses)equipmentContribution(family,value*multiplier*hitMultiplier/Math.max(Number.EPSILON,penalizedBeforeCrit));
         if(equipmentEffect(state,14).until>time)equipmentContribution(14,P[14].firepower*equipmentScale(state,14)*equipmentEffect(state,14).value/Math.max(1,stats.firepower));
         if(preliminary){recordCoreMetric(state,185,"consumed",1);factor(185,1.20);}
         if(skillPhase||gunPhase){recordCoreMetric(state,207,"consumed",1);factor(207,1.30);}
@@ -3542,7 +3574,7 @@ function applyDamageToEnemy(world: CombatWorld, enemy: EnemyEntity, rawDamage: n
         if(hasAbsorbShield(state))factor(192,1.20);
         if(activeNegativeStatusTypes(state).size)factor(203,1.25);
         factor(205,1.30);
-        if(criticalLock&&resolved.critical)factor(194,effectiveStats.criticalDamageMultiplier/(effectiveStats.criticalDamageMultiplier-.20));
+        if(criticalLock&&resolved.critical)bonus(194,.20/effectiveStats.criticalDamageMultiplier);
         if(recoilDamage>0)recordCoreMetric(state,187,"damage",bonus(187,recoilDamage/(rawDamage+recoilDamage)));
         if(state.coreState.time-state.coreState.lastKill<=4)factor(66,1+.04*(state.coreState.stacks.combo??0));
         factor(91,1+Math.min(.6,Math.max(0,1-state.currentHp/stats.maxHp)*.6));
@@ -3553,7 +3585,7 @@ function applyDamageToEnemy(world: CombatWorld, enemy: EnemyEntity, rawDamage: n
         if(hpBefore>enemy.maxHp*.7)factor(69,1.30);
         for(const [row,value] of [[211,1.10],[212,1.12],[217,1.10],[203,1.08]])factor(row,value);
         if(expansionActive(state,"ultimateAftershock"))factor(218,1.25);
-        if(basic){factor(111,1.10);factor(54,state.coreState.stacks.fireRateConversion??1);if(expansionActive(state,"overloadedBarrel"))factor(58,1.35);}
+        if(basic){factor(111,1.10);if(hasCore(state,54)){const conversion=state.coreState.stacks.fireRateConversion??1;bonus(54,unpenalizedBeforeCrit*(1-1/conversion)/Math.max(Number.EPSILON,penalizedBeforeCrit));}if(expansionActive(state,"overloadedBarrel"))factor(58,1.35);}
         if(basic||skillHit)factor(116,sameTargetBonus);
         if(skillHit){factor(119,1.10);if(cast?.capacitor)factor(172,1.10);if(state.currentResource>stats.maxResource*.7)factor(182,1.07);}
         if(firstPrimaryHit)factor(89,1.14);
@@ -3765,7 +3797,7 @@ function applySecondaryHits(world: CombatWorld, projectile: ProjectileEntity, pr
         const next=nearestEnemy(world,primary.x,primary.y,projectile.hitIds);
         if(next){
             const angle=Math.atan2(next.y-primary.y,next.x-primary.x),speed=PLAYER_BASIC_PROJECTILE_SPEED_MULTIPLIER*460*(hasCore(world.aircraft,111)?3:1)*(hasCore(world.aircraft,206)?.8:1);
-            const bounced=addProjectile(world,{owner:"player",source:"basic",telemetryCore:80,x:primary.x,y:primary.y,vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed,rawDamage:projectile.rawDamage*.42,radius:projectile.radius,homing:true,targetId:next.id,turnRate:7,color:"#c4b5fd"});
+            const bounced=addProjectile(world,{owner:"player",source:"basic",weaponFraction:projectile.weaponFraction,telemetryCore:80,x:primary.x,y:primary.y,vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed,rawDamage:projectile.rawDamage*.42,radius:projectile.radius,homing:true,targetId:next.id,turnRate:7,color:"#c4b5fd"});
             if(bounced)bounced.hitIds.push(...projectile.hitIds);
         }else applyDamageToEnemy(world,primary,projectile.rawDamage*.18,"#c4b5fd","basic",undefined,undefined,undefined,"direct_projectile",true,true,80);
         recordCoreMetric(world.aircraft,80,"procs",1);
@@ -3778,7 +3810,7 @@ function applySecondaryHits(world: CombatWorld, projectile: ProjectileEntity, pr
     // A bounce picks its direction once; misses leave the screen as ordinary bullets.
     const angle = Math.atan2(next.y - primary.y, next.x - primary.x);
     const bounceSpeed=(projectile.source==="basic"?PLAYER_BASIC_PROJECTILE_SPEED_MULTIPLIER:1)*(projectile.source==="basic"&&hasCore(world.aircraft,111)?1380:460)*(projectile.source==="basic"&&hasCore(world.aircraft,206)?.8:1);
-    const bounced = addProjectile(world, { owner: projectile.owner, expansionCast: projectile.expansionCast, allegiance:projectile.allegiance, source: projectile.source, telemetryCore: projectile.telemetryCore, ammoVisualKey: projectile.ammoVisualKey, skillId: projectile.skillId,
+    const bounced = addProjectile(world, { owner: projectile.owner, weaponFraction:projectile.weaponFraction, expansionCast: projectile.expansionCast, allegiance:projectile.allegiance, source: projectile.source, telemetryCore: projectile.telemetryCore, ammoVisualKey: projectile.ammoVisualKey, skillId: projectile.skillId,
         x: primary.x, y: primary.y, vx: Math.cos(angle) * bounceSpeed, vy: Math.sin(angle) * bounceSpeed, radius: projectile.radius,
         rawDamage: projectile.bounceSecondMultiplier !== undefined && projectile.bounceRemaining === 1 ? (projectile.bounceBasis || 0) * projectile.bounceSecondMultiplier : projectile.rawDamage * projectile.bounceMultiplier,
         telemetryBonuses: [...(projectile.telemetryBonuses??[]),...(projectile.bounceSecondMultiplier!==undefined&&(skillRank(world.aircraft, "afterburner") >= 4)?[[127,projectile.bounceRemaining===1?1-B.bounceSecond/V.bounceSecond:1-B.bounceFirst/V.bounceFirst] as [number,number]]:[])],
@@ -4052,7 +4084,7 @@ function updateProjectileCollisions(world: CombatWorld): void {
             const raw=(p.stabilizedPierce?p.initialDamage:p.rawDamage)*(deathLance?1.4:1)*(aim?1.4:1);
             const bonuses:[number,number][]|undefined=deathLance?[...(p.telemetryBonuses??[]),[159,1-1/1.4]]:p.telemetryBonuses;
             if(deathLance)recordCoreMetric(world.aircraft,159,"procs",1);
-            const dealt=p.allegiance==="friendly_hacked"?damageEnemyAttack(world,enemy,p.rawDamage,p,contact):applyDamageToEnemy(world, enemy, raw, p.color, p.source, p.skillId, p.volleyHits, contact, "direct_projectile", true, true, p.telemetryCore, p.stabilizedPierce?p.rawDamage/Math.max(Number.EPSILON,p.initialDamage):1, bonuses, p.expansionCast, p.primaryShot, p.procFree, p.echoScale);
+            const dealt=p.allegiance==="friendly_hacked"?damageEnemyAttack(world,enemy,p.rawDamage,p,contact):applyDamageToEnemy(world, enemy, raw, p.color, p.source, p.skillId, p.volleyHits, contact, "direct_projectile", true, true, p.telemetryCore, p.stabilizedPierce?p.rawDamage/Math.max(Number.EPSILON,p.initialDamage):1, bonuses, p.expansionCast, p.primaryShot, p.procFree, p.echoScale, undefined, undefined, p.weaponFraction===undefined?undefined:p.weaponFraction/(aim?1.4:1));
             if(p.salvoId&&(dealt>0||enemy.shield<shieldBefore)){
                 const salvo=world.skillCores.salvos.find(s=>s.id===p.salvoId);if(salvo)salvo.data=Math.min(V.dataLimit,salvo.data+1);
             }
@@ -4371,7 +4403,7 @@ function updateProjectiles(world: CombatWorld, dt: number): void {
     for (let i = world.projectiles.length - 1; i >= 0; i--) {
         const p = world.projectiles[i];
         if(p.mirrorBorrowed)continue;
-        const motionDt = dt * (p.mirrorSlow ?? 1) * slowExpansionProjectile(world, p) * rankProjectileSpeed(world,p,rankHooks);
+        const motionDt = Math.min(dt,p.firedAt===undefined?dt:Math.max(0,world.elapsed-p.firedAt)) * (p.mirrorSlow ?? 1) * slowExpansionProjectile(world, p) * rankProjectileSpeed(world,p,rankHooks);
         if (p.lifetime <= 0) { recycleProjectile(world, i); continue; }
         p.previousX = p.x;
         p.previousY = p.y;
@@ -4707,12 +4739,8 @@ export function updateCombatWorld(world: CombatWorld, deltaSeconds: number): voi
         return;
     }
     updateMissileSalvo(world, dt);
-    tickCinder(world, dt, cinderHooks); tickRiptide(world, dt, riptideHooks); tickArgent(world, dt, argentHooks);
-    world.playerFireCooldown -= dt * aircraftFireRateMultiplier(world);
-    if ((!playerStunned(world.aircraft) || hasCore(world.aircraft,203)) && shouldAutoFire(world.aircraft) && world.laserCharge <= 0 && world.laserTicksRemaining <= 0 && world.playerFireCooldown <= 0) {
-        fireBasic(world);
-        world.playerFireCooldown = 1 / getEffectiveAircraftStats(world.aircraft).fireRate;
-    }
+    tickCinder(world, dt, cinderHooks); tickRiptide(world, dt, riptideHooks);
+    tickBasicFire(world,dt); tickArgent(world, dt, argentHooks);
     world.droneFireCooldown -= dt;
     if (droneCombatActive(world) && world.droneFireCooldown <= 0) {
         fireDrone(world);
@@ -4743,8 +4771,7 @@ export function updateCombatWorld(world: CombatWorld, deltaSeconds: number): voi
       refreshBreathingRoom(world, expansionHooks);
       if (!world.destruction) {
         flushEquipmentDrops(world);
-        const reward=claimWaitingChest(world.aircraft,world.random);
-        if(reward)setMessage(world,reward,5);
+        claimWaitingChest(world.aircraft,world.random);
       }
     }
 }
@@ -5224,6 +5251,7 @@ function settleBountyKill(world:CombatWorld,enemy:EnemyEntity) {
     if(world.elapsed<r.bountyUntil && !enemy.auxiliary&&!enemy.rewardless&&enemy.killProcEligible!==false) {
         const index=Math.min(7,Math.floor(world.random()*8));
         const reward=BOUNTY_REWARDS[index];state.modifiers[reward.key]+=reward.amount;
+        state.coreState.acquisitions.push({id:state.coreState.nextAcquisitionId++,createdAtMs:performance.now(),kind:'reward',coreId:'core_149',source:'Truy Nã',name:'+'+(reward.amount*('percent' in reward?100:1)).toLocaleString('vi-VN')+('percent' in reward?'%':'')+' '+reward.label});
         const key=`bountyReward:${index}`;state.coreState.stacks[key]=(state.coreState.stacks[key]??0)+1;
         syncEffectiveMaxHp(state);
         recordCoreMetric(state,149,"successes",1);recordCoreMetric(state,149,"rewards",1);

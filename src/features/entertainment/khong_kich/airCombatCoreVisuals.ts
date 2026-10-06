@@ -156,4 +156,5 @@ export const CORE_VISUAL_SEMANTIC_BY_ID = {
   "core_226": "loot",
   "core_227": "loot",
   "core_228": "conversion",
+  "core_229": "rapid_fire",
 } as const;

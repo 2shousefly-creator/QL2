@@ -2,6 +2,8 @@ import { ARGENT_ART, ARGENT_ICON_CELLS } from './airCombatArgentArt';
 import { RIPTIDE_ART, RIPTIDE_ICON_CELLS } from './airCombatRiptideArt';
 import type { PassiveId } from './airCombatTypes';
 import React from "react";
+import myriad from "../../../assets/khong-kich/argent/myriad-26-22-2.png";
+import arrayReturn from "../../../assets/khong-kich/argent/array-return-26-22-2.png";
 import { TriangleAlert } from "lucide-react";
 import skillAtlas from "../../../assets/khong-kich/v2/aircraft-skills-lowpoly.png";
 import type { SkillId } from "./airCombatTypes";
@@ -19,6 +21,7 @@ export const SKILL_ICON_CELLS: Record<SkillId | PassiveId, readonly [number, num
 };
 
 export function SkillIcon({ id, className }: { id: SkillId | PassiveId | keyof typeof ARGENT_ICON_CELLS; className?: string }) {
+  if(id === "argent_myriad" || id === "argent_array_return") return <SpriteAtlasIcon atlas={id === "argent_myriad" ? myriad : arrayReturn} columns={1} rows={1} column={0} row={0} className={className} fallback={<TriangleAlert/>}/>;
   const argent=ARGENT_ICON_CELLS[id as keyof typeof ARGENT_ICON_CELLS];
   if(argent)return <SpriteAtlasIcon atlas={ARGENT_ART.icons} columns={5} rows={4} column={argent[0]} row={argent[1]} className={className} fallback={<TriangleAlert/>}/>;
   const riptide=RIPTIDE_ICON_CELLS[id as keyof typeof RIPTIDE_ICON_CELLS];

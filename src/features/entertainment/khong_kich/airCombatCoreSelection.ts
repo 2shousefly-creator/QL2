@@ -71,6 +71,7 @@ export function applyCore(state: AircraftCombatState, card: CoreCard, random: ()
     } | {
         tier?: CoreTier; owner?:number; conversionSourceCoreId?:CoreConversionSource;
     };
+    const transactionId=state.coreState.nextAcquisitionId;
     const work: Work[] = [{ core: first }];
     const reserved=new Set<string>();
     const queueBatch=(batch:CoreDefinition[],owner?:number,conversionSourceCoreId?:CoreConversionSource)=>{for(const c of batch){reserved.add(c.id);state.coreState.encounteredCoreIds.add(c.id);}work.push(...batch.slice().reverse().map(core=>({core,owner,conversionSourceCoreId})));};
@@ -97,19 +98,19 @@ export function applyCore(state: AircraftCombatState, card: CoreCard, random: ()
         state.coreState.encounteredCoreIds.add(core.id);
         state.selectedCores.push(core.id);
         if("owner" in item)recordCoreMetric(state,item.owner,"converted",1);
-        state.coreState.acquisitions.push({ id: state.coreState.nextAcquisitionId++, createdAtMs: performance.now(), kind: "core", coreId: core.id, conversionSourceCoreId:item.conversionSourceCoreId });
+        state.coreState.acquisitions.push({ transactionId, id: state.coreState.nextAcquisitionId++, createdAtMs: performance.now(), kind: "core", coreId: core.id, conversionSourceCoreId:item.conversionSourceCoreId });
         if(core.id==="core_223"||core.id==="core_224"||core.id==="core_225"||core.id==="core_226"){
           const count=core.id==="core_223"?2:core.id==="core_224"?1:core.id==="core_225"?3:6;
           if(!equipmentRewardsLocked(state)){
-            for(let i=0;i<count;i++)grantEquipmentReward(state,randomEquipmentId("TP",random),core.id);
-            if(core.id==="core_226")grantEquipmentReward(state,"VP01",core.id);
+            for(let i=0;i<count;i++)grantEquipmentReward(state,randomEquipmentId("TP",random),core.id,undefined,transactionId);
+            if(core.id==="core_226")grantEquipmentReward(state,"VP01",core.id,undefined,transactionId);
             recordCoreMetric(state,Number(core.id.slice(5)),"itemsReceived",count+(core.id==="core_226"?1:0));
           }
         }
         if(core.id==="core_227"&&!equipmentRewardsLocked(state))releaseState(state).waitingChest={remaining:500,claimed:false,cancelled:false};
         if(core.id==="core_228"){
           const chest=releaseState(state).waitingChest;if(chest&&!chest.claimed)chest.cancelled=true;
-          sacrificeEquipment(state,random);
+          sacrificeEquipment(state,random,transactionId);
         }
         initializeReleaseCore(state, core.id, random);
         syncEffectiveMaxHp(state);

@@ -1,0 +1,18 @@
+{
+  "version": "26.22.2",
+  "generator": "Built-in image_gen",
+  "size": [
+    256,
+    256
+  ],
+  "assets": {
+    "argent_myriad": {
+      "file": "myriad-26-22-2.png",
+      "prompt": "Silver and champagne blades converging on a critical strike star; charcoal background, warm edges, no text or border."
+    },
+    "argent_array_return": {
+      "file": "array-return-26-22-2.png",
+      "prompt": "Five silver blades returning to a winged emblem with a circular return arrow and hourglass for shorter cooldown; charcoal background, no text or border."
+    }
+  }
+}

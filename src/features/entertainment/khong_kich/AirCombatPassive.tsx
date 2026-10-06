@@ -15,7 +15,8 @@ export function PassiveDetails({state,world,heading=true}:{state:AircraftCombatS
  const currentDescription=p.description.replace(/\d+(?:,\d+)?(?:\/\d+(?:,\d+)?)+%/g,values=>values.slice(0,-1).split('/')[tier]+'%')
    .replace(' ở cấp chiến cơ 1/6/11/16','');
  const primaryBasis=metrics.lastPrimaryBeforeCrit??stats.firepower;
- const description=resolveTooltipValues(currentDescription.replace(/(\d+)% sát thương trước chí mạng/,(_,percent:string)=>`${number(primaryBasis*Number(percent)/100)} (${percent}% sát thương trước chí mạng)`),{stats,currentHp:state.currentHp});
+ const followupFactor=state.selectedCores.includes("core_229")?.55:1;
+ const description=resolveTooltipValues(currentDescription.replace(/(\d+)% sát thương trước chí mạng/,(_,percent:string)=>`${number(primaryBasis*Number(percent)/100*followupFactor)} (${percent}% sát thương trước chí mạng)`),{stats,currentHp:state.currentHp});
  return <div className='air-passive-details'>
  {heading&&<div className='air-tooltip-heading'><h3>{p.name}</h3></div>}
  <p>Nội Tại · Bậc {tier+1} · Cấp chiến cơ {state.level}</p>

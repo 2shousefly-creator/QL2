@@ -1,0 +1,537 @@
+{
+  "version": "26.22.2",
+  "releaseDate": "06/10/2026",
+  "title": "Thủy Thể, Thu Nhận Và Lõi Gatlingun",
+  "displayTitle": "KHÔNG KÍCH 26.22.2 — THỦY THỂ · THU NHẬN · GATLINGUN",
+  "summary": "Điều chỉnh Thủy Thể của Riptide và bộ kiếm Argent, thay hai nâng cấp Thu Nhận và Thiên La Kiếm Trận. Bổ sung lõi Kim Cương Gatlingun, làm rõ mô tả kỹ năng, ổn định màn chọn chiến cơ và cải thiện thông báo nhận vật phẩm, lõi cùng phần thưởng.",
+  "sections": [
+    {
+      "id": "riptide",
+      "title": "RIPTIDE · CÂN BẰNG SỨC MẠNH",
+      "icon": {
+        "kind": "aircraft",
+        "id": "riptide"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "riptide-waterform",
+          "icon": {
+            "kind": "skill",
+            "id": "riptide_waterform"
+          },
+          "title": "Ultimate — Thủy Thể",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Tăng thời gian duy trì ở mọi cấp kỹ năng từ 8 lên 12 giây.",
+              "label": "Thời gian duy trì",
+              "before": "8 giây",
+              "after": "12 giây"
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Vùng nước gây sát thương mỗi 0,5 giây xuyên suốt thời gian hoạt động, tối đa 24 nhịp.",
+              "label": "Số nhịp sát thương tối đa",
+              "before": "16 nhịp",
+              "after": "24 nhịp"
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Mỗi nhịp gây sát thương hợp lệ tích một lần cho vụ nước vỡ, tối đa 24 lần; trúng nhiều mục tiêu trong cùng nhịp vẫn chỉ tích một lần.",
+              "label": "Số lần tích nổ tối đa",
+              "before": "16 lần",
+              "after": "24 lần"
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Khi hết thời gian, nhịp sát thương thứ 24 được xử lý trước vụ nước vỡ kết thúc."
+            },
+            {
+              "format": "bullet",
+              "changeType": "unchanged",
+              "text": "Giữ sát thương mỗi nhịp 75%/90%/115% Hỏa lực, lượng tích nổ mỗi nhịp 40%/50%/60% Hỏa lực và Giáp tăng thêm 40%/80%/120%."
+            },
+            {
+              "format": "bullet",
+              "changeType": "unchanged",
+              "text": "Giữ trần hồi Máu 35% Máu tối đa mỗi lần dùng, bán kính 190, Mana 150/200/250 và quyền tái kích hoạt sau ít nhất 2 giây để kết thúc sớm."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "argent-balance",
+      "title": "ARGENT · CÂN BẰNG SỨC MẠNH",
+      "icon": {
+        "kind": "aircraft",
+        "id": "argent"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "argent-recall",
+          "icon": {
+            "kind": "skill",
+            "id": "argent_blade_recall"
+          },
+          "title": "S3 — Thu Nhận",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Giảm sát thương cơ sở mỗi Phiến theo cấp kỹ năng.",
+              "label": "Sát thương mỗi Phiến",
+              "before": "140%/170%/200%/230%/260% Hỏa lực",
+              "after": "110%/130%/150%/170%/190% Hỏa lực"
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Gỡ cơ chế giảm sát thương theo số Phiến cùng trúng một mục tiêu, áp dụng cho Phiến từ mọi nguồn ở mọi cấp Thu Nhận.",
+              "label": "Sát thương nhiều Phiến cùng trúng một mục tiêu",
+              "before": "Giảm theo thứ tự Phiến trúng",
+              "after": "Mỗi Phiến gây đầy đủ sát thương"
+            },
+            {
+              "format": "bullet",
+              "changeType": "unchanged",
+              "text": "Mỗi Phiến vẫn chỉ gây sát thương một lần lên mỗi mục tiêu trong lượt thu; kỹ năng chỉ thu các Phiến đang chờ khi kích hoạt."
+            },
+            {
+              "format": "bullet",
+              "changeType": "unchanged",
+              "text": "Giữ Mana 90/100/110/120/130, hồi chiêu cơ bản 22/21/20/19/18 giây sau khi lượt thu kết thúc và giới hạn 12 Phiến đang chờ."
+            },
+            {
+              "format": "bullet",
+              "changeType": "unchanged",
+              "text": "Giữ Tốc Thu, Ghim Chặt, Kim Lực Tuần Hoàn và tương tác Tôi Kim; hoàn Mana vẫn tối đa 12% Mana tối đa mỗi lần dùng."
+            }
+          ]
+        },
+        {
+          "id": "argent-array",
+          "icon": {
+            "kind": "skill",
+            "id": "argent_heavenly_blade_array"
+          },
+          "title": "Ultimate — Thiên La Kiếm Trận",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Tăng thời gian tồn tại của năm kiếm trận cố định ở đáy sân lên 15 giây ở mọi cấp kỹ năng.",
+              "label": "Thời gian kiếm trận",
+              "before": "10 giây",
+              "after": "15 giây"
+            },
+            {
+              "format": "bullet",
+              "changeType": "nerf",
+              "text": "Giảm sát thương mỗi Phiến do kiếm trận phóng ra theo cấp ultimate; không thay hệ số sát thương khi Phiến được Thu Nhận thu về.",
+              "label": "Sát thương mỗi Phiến chiều đi",
+              "before": "70%/90%/110% Hỏa lực",
+              "after": "60%/80%/100% Hỏa lực"
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Phiến kiếm trận bay nhanh gấp 2,5 lần Phiến thường, tăng từ 1.200 lên 1.500 đơn vị/giây; tốc độ thu của S3 giữ nguyên.",
+              "label": "Tốc độ Phiến chiều đi",
+              "before": "+100% so với Phiến thường",
+              "after": "+150% so với Phiến thường"
+            },
+            {
+              "format": "bullet",
+              "changeType": "unchanged",
+              "text": "Giữ năm kiếm cách đều trên một hàng ngang, mỗi bốn lần bắn thường chính khai hỏa phóng đồng thời năm Phiến; không yêu cầu đạn thường trúng mục tiêu."
+            },
+            {
+              "format": "bullet",
+              "changeType": "unchanged",
+              "text": "Giữ hướng bay thẳng được chốt khi phóng, xuyên tất cả kẻ địch trên đường và dừng chờ tại mép sân đầu tiên theo quỹ đạo."
+            },
+            {
+              "format": "bullet",
+              "changeType": "unchanged",
+              "text": "Giữ Mana 150/200/250 và hồi chiêu 90/85/80 giây, bắt đầu sau khi kiếm trận kết thúc; không chờ các Phiến còn lại biến mất."
+            },
+            {
+              "format": "bullet",
+              "changeType": "unchanged",
+              "text": "Sinh Nhận tạm ngừng trong kiếm trận và giữ tiến độ cũ. Khi trận kết thúc, các Phiến đã tạo tiếp tục hoạt động; không tự thu kiếm."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "argent-upgrades",
+      "title": "ARGENT · NÂNG CẤP KỸ NĂNG",
+      "icon": {
+        "kind": "aircraft",
+        "id": "argent"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "argent-myriad",
+          "icon": {
+            "kind": "skill",
+            "id": "argent_myriad"
+          },
+          "title": "S3 cấp 5 — Vạn Nhận Xuyên Tâm",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "removed",
+              "text": "Gỡ hiệu ứng nâng hệ số sát thương của các Phiến trúng sau; Thu Nhận ở mọi cấp đã gây đầy đủ sát thương mỗi Phiến."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Hiệu ứng mới: mỗi 1% tỷ lệ chí mạng hiện tại tăng 0,75% sát thương cho mỗi Phiến của Thu Nhận, tối đa tăng 75% ở 100% chí mạng."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Tỷ lệ chí mạng được chốt ngay khi kích hoạt Thu Nhận; mọi Phiến trong lần thu dùng chung giá trị đó, kể cả chỉ số chí mạng thay đổi trong lúc thu."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Mức tăng được nhân vào sát thương cơ sở mỗi Phiến. Ở 50% chí mạng, mỗi Phiến cấp 5 gây 261,25% Hỏa lực; ở 100% chí mạng, gây 332,5% Hỏa lực, trước Giáp và hiệu ứng khác."
+            },
+            {
+              "format": "bullet",
+              "changeType": "unchanged",
+              "text": "Nâng cấp này không tự cho phép Thu Nhận chí mạng. Sát thương cộng thêm từ Tôi Kim giữ cách tính riêng và chỉ áp dụng một lần lên mỗi mục tiêu trong lần thu."
+            }
+          ]
+        },
+        {
+          "id": "argent-reunion",
+          "icon": {
+            "kind": "skill",
+            "id": "argent_array_return"
+          },
+          "title": "Ultimate cấp 3 — Vạn Kiếm Quy Tông",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "removed",
+              "text": "Gỡ hiệu ứng giữ tối thiểu 60% hệ số sát thương thu cho Phiến từ ultimate cấp 3."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Hiệu ứng mới: Thu Nhận kích hoạt trong Thiên La Kiếm Trận cấp 3 được giảm 50% thời gian hồi chiêu."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Quyền giảm hồi chiêu được chốt lúc kích hoạt Thu Nhận. Lần dùng hợp lệ vẫn hưởng mức giảm nếu kiếm trận kết thúc trước khi lượt thu hoàn tất."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Hồi chiêu vẫn bắt đầu sau khi lượt thu kết thúc. Mức cơ bản được giảm từ 22/21/20/19/18 xuống 11/10,5/10/9,5/9 giây, trước các hiệu ứng hồi chiêu khác."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Không giảm hồi chiêu Thu Nhận đang có khi triệu hồi kiếm trận, không tự làm mới kỹ năng và không cộng dồn mức giảm qua nhiều lần cập nhật."
+            },
+            {
+              "format": "bullet",
+              "changeType": "unchanged",
+              "text": "Ngũ Kiếm Đồng Tâm cấp 2 giữ nguyên: ba Phiến khác nhau cùng đợt trúng một mục tiêu tạo Kim Ấn giảm 15% Giáp trong 4 giây, làm mới thời gian và không cộng dồn."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "argent-visual",
+      "title": "ARGENT · HÌNH ẢNH VÀ HIỆU ỨNG",
+      "icon": {
+        "kind": "aircraft",
+        "id": "argent"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "argent-body",
+          "icon": {
+            "kind": "aircraft",
+            "id": "argent"
+          },
+          "title": "Ngân Dực — Thân chiến cơ ổn định",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Sửa thân Argent lắc lư, nghiêng trái/phải khi đổi hướng di chuyển. Thân chiến cơ giữ hướng ổn định như các chiến cơ còn lại."
+            },
+            {
+              "format": "bullet",
+              "changeType": "unchanged",
+              "text": "Giữ artwork mới, ánh kim bạc vàng, trạng thái cánh mở/khép khi dùng kỹ năng và light effect của đạn thường; không đổi vùng va chạm."
+            }
+          ]
+        },
+        {
+          "id": "argent-wait",
+          "icon": {
+            "kind": "projectile",
+            "id": "argent_metal_blade"
+          },
+          "title": "Phiến Kim — Hướng về chiến cơ khi chờ",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Phiến Kim đang chờ giữ nguyên vị trí và liên tục xoay mũi về vị trí hiện tại của Argent, thay cho giữ hướng phóng ban đầu."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Điều chỉnh khoảng đệm sát mép sân để Phiến vẫn hiển thị trọn hình khi xoay; đồng bộ hình ảnh trong các chế độ hiển thị và Solo."
+            },
+            {
+              "format": "bullet",
+              "changeType": "unchanged",
+              "text": "Xoay trong lúc chờ không gây sát thương, không làm Phiến di chuyển và không kéo dài thời gian chờ. Giữ quỹ đạo chiều đi và cơ chế thu hiện hành."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tooltips-ui",
+      "title": "HỆ THỐNG · TOOLTIP VÀ UI",
+      "icon": {
+        "kind": "system",
+        "id": "ui"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "all-tooltips",
+          "icon": {
+            "kind": "system",
+            "id": "ui"
+          },
+          "title": "Mô tả kỹ năng và nâng cấp — Rõ ràng, thống nhất",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Biên tập lại mô tả nội tại, kỹ năng và nâng cấp của Viper, Titan, Phantom, Astra, Cinder, Riptide và Argent theo cách trình bày rõ hành động, mục tiêu, hiệu quả và điều kiện kích hoạt."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Mô tả kỹ năng hiện tại thể hiện đầy đủ hiệu ứng ở cấp đang có; mô tả nâng cấp nêu hiệu ứng mới và thay đổi so với cấp trước."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Thống nhất thuật ngữ tiếng Việt cho Hỏa lực, Giáp, chí mạng, hồi Máu, tài nguyên, khống chế và các loại sát thương; giảm chữ viết tắt và thuật ngữ kỹ thuật khó hiểu."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Giữ rõ giới hạn kích hoạt, trần hồi phục/hoàn tài nguyên, ngoại lệ Boss và thời điểm bắt đầu hồi chiêu. Thông số hiển thị đọc từ dữ liệu kỹ năng hiện hành."
+            },
+            {
+              "format": "bullet",
+              "changeType": "unchanged",
+              "text": "Việc biên tập tooltip không thay cơ chế hoặc thông số của các kỹ năng ngoài các điều chỉnh được nêu trong bản này."
+            }
+          ]
+        },
+        {
+          "id": "aircraft-select",
+          "icon": {
+            "kind": "system",
+            "id": "aircraft_select"
+          },
+          "title": "Chọn chiến cơ — Khung thông tin cố định",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Sửa các thanh sức mạnh và nội dung bên dưới nhảy lên xuống khi đổi chiến cơ do tên, mô tả hoặc ô kỹ năng có chiều cao khác nhau."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Cố định vùng chân dung, tên/vai trò, mô tả, thanh sức mạnh, nội tại và các ô kỹ năng theo bố cục từng kích thước màn hình."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Nội dung dài được bố trí trong vùng cuộn phù hợp để vẫn đọc đầy đủ; vị trí thanh sức mạnh và nút xác nhận ổn định khi chuyển chiến cơ."
+            },
+            {
+              "format": "bullet",
+              "changeType": "unchanged",
+              "text": "Giữ hoạt ảnh chuyển mức thanh sức mạnh 450 ms và cách hiển thị hiện hành."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "rewards",
+      "title": "HỆ THỐNG · THÔNG BÁO NHẬN THƯỞNG",
+      "icon": {
+        "kind": "system",
+        "id": "core"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "reward-notices",
+          "icon": {
+            "kind": "system",
+            "id": "core"
+          },
+          "title": "Vật phẩm, lõi và phần thưởng — Thông báo đầy đủ",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Hiển thị thông báo khi thực sự nhận lõi nâng cấp, trang bị, vật phẩm hoặc phần thưởng từ các nguồn hiện có."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Lõi nhận ngẫu nhiên và qua chuyển đổi cũng có thông báo; vật phẩm nhận từ chế tạo, rương hoặc phần thưởng được ghi nhận sau khi cấp thành công."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Thông báo thể hiện tên, hình minh họa, bậc và số lượng khi có. Nhiều phần thưởng trong cùng một lần nhận được gom để dễ đọc."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Cải thiện thứ tự hiển thị để thông báo mới không làm mất phần thưởng chưa được đọc; phần thưởng nhận trong cửa sổ chọn lõi hoặc kho vẫn được thông báo rõ."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Không thông báo nhận thưởng khi chỉ xem trước, thao tác thất bại hoặc phần thưởng chưa được cấp; tránh lặp cùng một lần nhận."
+            },
+            {
+              "format": "bullet",
+              "changeType": "unchanged",
+              "text": "Giữ luật nhận thưởng, giới hạn kho, tỷ lệ rơi và các hạn chế của lõi/trang bị hiện hành."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "gatlingun",
+      "title": "LÕI NÂNG CẤP · GATLINGUN",
+      "icon": {
+        "kind": "core",
+        "id": "core_229"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "gatlingun-new",
+          "icon": {
+            "kind": "core",
+            "id": "core_229"
+          },
+          "title": "Gatlingun — Kim Cương · Tấn Công",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Bổ sung lõi Gatlingun, bậc Kim Cương, hệ Tấn Công; dùng chung cho các chiến cơ đủ điều kiện chọn lõi."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Nhân đôi tổng tốc độ bắn sau khi tính các hiệu ứng và bỏ giới hạn tốc độ bắn tối đa chung. Ví dụ 5,6 phát/giây trở thành 11,2 phát/giây."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Đổi lại, phần sát thương bắn thường và các viên đạn phụ phát sinh từ nó chỉ còn 55% so với bình thường."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Sát thương cộng thêm từ hiệu ứng phụ giữ nguyên, gồm sát thương từ Giáp của Đạn Hợp Kim trên Titan. Sát thương kỹ năng và hiệu ứng gây sát thương riêng không bị giảm."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Ví dụ một đòn có 100 sát thương bắn thường cộng 30 sát thương từ Giáp sẽ còn 55 + 30 = 85 sát thương trước giảm trừ."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Gatlingun tăng tổng tốc độ bắn bằng phép nhân ×2, không phải cộng 100% vào nhóm tốc độ bắn cộng thêm."
+            }
+          ]
+        },
+        {
+          "id": "gatlingun-conversion",
+          "icon": {
+            "kind": "core",
+            "id": "core_054"
+          },
+          "title": "Gatlingun và Chậm mà chắc — Cho phép kết hợp",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Cho phép sở hữu Gatlingun cùng Chậm mà chắc; không thêm luật loại trừ giữa hai lõi."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Gatlingun nhân đôi tổng tốc độ bắn trước bước chuyển đổi. Chậm mà chắc vẫn khóa tốc độ bắn thực tế ở 1,8 phát/giây và chuyển phần vượt mức thành sát thương theo hệ số 70% hiện hành."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Khi có Gatlingun, tốc độ bắn dùng để tính chuyển đổi không bị cắt ở trần chung 12. Nếu không có Gatlingun, Chậm mà chắc giữ quy tắc hiện hành."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Phần sát thương của viên đạn vẫn chịu mức 55%; phần sát thương cộng thêm từ chuyển đổi của Chậm mà chắc được giữ nguyên như các hiệu ứng phụ khác."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

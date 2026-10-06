@@ -131,10 +131,20 @@ function burst(w:CombatWorld,c:Cast,ratio:number,radius:number,id:RiptideSkillId
  if(ratio>0)for(const e of w.enemies)if(valid(w,e,h)&&within(w,e,radius))damage(w,e,ratio,id,c,h);
  fx(w,'burst',w.playerX,w.playerY,radius,strength,.5);
 }
+function tickWaterform(w:CombatWorld,water:Waterform,to:number,h:RiptideHooks) {
+  const v=riptideValues('riptide_waterform',water.rank);
+  for(;water.tick<=RIPTIDE.maxCharge&&water.at+water.tick*RIPTIDE.waterInterval<=Math.min(to,water.until)+1e-8;water.tick++) {
+   let dealt=0,validDamage=0;const droplets:{x:number;y:number}[]=[];
+   for(const e of w.enemies)if(valid(w,e,h)&&within(w,e,RIPTIDE.waterRadius)){const hit=damage(w,e,v.damageMultiplier,'riptide_waterform',water,h);dealt+=hit.hp;validDamage+=hit.total;if(hit.hp>0&&droplets.length<3)droplets.push({x:e.x,y:e.y});}
+   if(validDamage>0){water.charge=Math.min(RIPTIDE.maxCharge,water.charge+1);const cap=Math.max(0,getEffectiveAircraftStats(w.aircraft).maxHp*RIPTIDE.healCap-water.healed),healed=h.heal(w,dealt*v.lifesteal,cap);water.healed+=healed;if(healed>0)for(const p of droplets)fx(w,'leech',p.x,p.y,8,1,.35);}
+   fx(w,'pulse',w.playerX,w.playerY,RIPTIDE.waterRadius,water.charge/RIPTIDE.maxCharge,.25);
+  }
+}
 export function endRiptideWaterform(w:CombatWorld,h:RiptideHooks) {
  const s=riptideState(w),c=s.waterform;if(!c)return;
+ tickWaterform(w,c,Math.min(w.elapsed,c.until),h);
  s.waterform=undefined; // Clear before damage/procs so input + expiry can only end once.
- burst(w,c,c.charge*riptideValues('riptide_waterform',c.rank).chargeRatio,RIPTIDE.waterRadius,'riptide_waterform',h,c.charge/16);
+ burst(w,c,c.charge*riptideValues('riptide_waterform',c.rank).chargeRatio,RIPTIDE.waterRadius,'riptide_waterform',h,c.charge/RIPTIDE.maxCharge);
  delete w.aircraft.coreState.stacks.riptideArmor;
  endAircraftSkill(w.aircraft,'riptide_waterform');
 }
@@ -161,13 +171,7 @@ export function tickRiptide(w:CombatWorld,dt:number,h:RiptideHooks) {
   if(now>=con.until){if(con.rank>=5)burst(w,con,RIPTIDE.secondDamage,RIPTIDE.secondRadius,'riptide_confluence',h);s.confluence=undefined;endAircraftSkill(w.aircraft,'riptide_confluence');}else w.aircraft.activeEffects.riptide_confluence=con.until-now;
  }
  const water=s.waterform;if(water) {
-  const v=riptideValues('riptide_waterform',water.rank);
-  for(;water.tick<=RIPTIDE.maxCharge&&water.at+water.tick*RIPTIDE.waterInterval<=now+1e-8;water.tick++) {
-   let dealt=0,validDamage=0;const droplets:{x:number;y:number}[]=[];
-   for(const e of w.enemies)if(valid(w,e,h)&&within(w,e,RIPTIDE.waterRadius)){const hit=damage(w,e,v.damageMultiplier,'riptide_waterform',water,h);dealt+=hit.hp;validDamage+=hit.total;if(hit.hp>0&&droplets.length<3)droplets.push({x:e.x,y:e.y});}
-   if(validDamage>0){water.charge=Math.min(16,water.charge+1);const cap=Math.max(0,getEffectiveAircraftStats(w.aircraft).maxHp*RIPTIDE.healCap-water.healed),healed=h.heal(w,dealt*v.lifesteal,cap);water.healed+=healed;if(healed>0)for(const p of droplets)fx(w,'leech',p.x,p.y,8,1,.35);}
-   fx(w,'pulse',w.playerX,w.playerY,RIPTIDE.waterRadius,water.charge/16,.25);
-  }
+  tickWaterform(w,water,now,h);
   if(now>=water.until)endRiptideWaterform(w,h);else w.aircraft.activeEffects.riptide_waterform=water.until-now;
  }
 }

@@ -741,7 +741,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
   {
     "id": "core_054",
     "name": "Chậm mà chắc",
-    "description": "Tốc Độ Bắn thường bị giới hạn ở 1,8 phát/giây. Phần Tốc Độ Bắn hiệu lực vượt 1,8, tối đa tính đến 12, được chuyển thành Sát Thương Đòn Đánh Thường với 70% hiệu lực. Mỗi 0,1 Tốc Độ Bắn vượt giới hạn tương đương khoảng +3,89% Sát Thương Đòn Đánh Thường.",
+    "description": "Tốc Độ Bắn thường bị giới hạn ở 1,8 phát/giây. Phần Tốc Độ Bắn hiệu lực vượt 1,8, tối đa tính đến 12, được chuyển thành Sát Thương Đòn Đánh Thường với 70% hiệu lực. Mỗi 0,1 Tốc Độ Bắn vượt giới hạn tương đương khoảng +3,89% Sát Thương Đòn Đánh Thường. Khi có Gatlingun, nhân đôi tổng tốc độ bắn trước chuyển đổi và bỏ trần đầu vào 12; tốc độ bắn thực tế vẫn khóa 1,8. Sát thương cộng thêm từ chuyển đổi giữ nguyên.",
     "system": "utility",
     "icon": "core:core_054",
     "category": "offense",
@@ -3013,5 +3013,17 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
     "diamond"
   ],
   "availability": "Lv1 / Lv7 / Lv11 / Lv15 · One-time encounter: đã từng được offer (kể cả bị reroll/bỏ qua) thì không xuất hiện lại trong run. Không được nằm cùng một conversion/random-grant batch với Core223–227."
+},
+{
+  "id": "core_229",
+  "name": "Gatlingun",
+  "description": "Nhân đôi tổng tốc độ bắn và bỏ giới hạn tốc độ bắn tối đa chung. Đổi lại, sát thương bắn thường và các viên đạn phụ phát sinh từ nó chỉ còn 55%. Sát thương cộng thêm từ hiệu ứng phụ và sát thương kỹ năng giữ nguyên. Khi có Chậm mà chắc, nhân đôi trước chuyển đổi; tốc độ bắn thực tế vẫn tối đa 1,8 phát/giây. Đầu vào chuyển đổi không bị cắt ở 12 và sát thương cộng thêm từ chuyển đổi giữ nguyên.",
+  "system": "attack",
+  "icon": "core:core_229",
+  "category": "weapon",
+  "tiers": [
+    "diamond"
+  ],
+  "availability": "Cấp 1 / 7 / 11 / 15. Chỉ được đề nghị một lần mỗi trận; dùng chung cho các chiến cơ. Có thể kết hợp Chậm mà chắc."
 }
 ];

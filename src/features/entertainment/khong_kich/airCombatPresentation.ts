@@ -1,3 +1,6 @@
+import { ARGENT } from './airCombatArgentConfig';
+import { RIPTIDE } from './airCombatRiptideConfig';
+import { argentRecallSnapshot } from './airCombatArgentRuntime';
 import { argentHud, argentArmorMultiplier, argentState, argentMovement } from './airCombatArgentRuntime';
 import { riptideState, riptideMovement, riptideSuppressed } from './airCombatRiptideRuntime';
 import { gravityAnchorValues } from "./airCombatGravityAnchor";
@@ -57,6 +60,10 @@ export function getSkillTooltipModel(state: AircraftCombatState, id: SkillId) {
  const detailRows=[isUltimate(id)?"Kỹ Năng Tối Thượng":"Kỹ Năng Cơ Bản",
   `Yêu cầu Tài Nguyên: ${number(id==="escort_drone"?v.cost:free?0:v.cost)} ${resource}`,
   "Giá trị quy đổi theo chỉ số hiện tại, trước chí mạng, Giáp mục tiêu và các hệ số sát thương theo tình huống."];
+ if(id==='argent_blade_recall'&&rank>=5){
+  const cast=argentRecallSnapshot(state),crit=cast?.critSnapshot??stats.criticalChance,multiplier=cast?.critMultiplier??(1+.75*crit);
+  detailRows.push((cast?'Lượt thu hiện tại':'Dự kiến khi kích hoạt')+': tỷ lệ chí mạng '+number(crit*100)+'%; tăng '+number((multiplier-1)*100)+'% sát thương mỗi Phiến; '+number(v.damageMultiplier*multiplier*100)+'% Hỏa lực ('+number(stats.firepower*v.damageMultiplier*multiplier)+' sát thương trước giảm trừ).');
+ }
  const coreRows:string[]=[];
  if(ultimateCastDisabled(state,id))coreRows.push("Tập Trung Chuyên Môn: khóa dùng chủ động Kỹ Năng Tối Thượng; cấp và nội tại vẫn giữ nguyên.");
  if(hasCore(state,97)&&!isUltimate(id))coreRows.push("Tập Trung Chuyên Môn: +20% Sát Thương Kỹ Năng; chi phí đã giảm 20%, hồi chiêu cơ bản đã giảm 25%.");
@@ -89,7 +96,7 @@ export function getActiveSkillDuration(world: CombatWorld, id: SkillId) {
     const active=g.beatUntil>world.elapsed;
     return {remaining:active?g.beatUntil-world.elapsed:0,duration:.75,progress:active?(g.beatUntil-world.elapsed)/.75:0,timeLabel:active?'Nhịp đỡ 99%':'Thế chờ đòn · '+g.remaining+' lượt'};
   }
-  if(id==='argent_heavenly_blade_array'){const a=argentHud(world).array;return a?{remaining:a.until-world.elapsed,duration:10,progress:(a.until-world.elapsed)/10,timeLabel:'Kiếm trận · '+a.fireCount+'/4'}:null;}
+  if(id==='argent_heavenly_blade_array'){const a=argentHud(world).array;return a?{remaining:a.until-world.elapsed,duration:ARGENT.arrayDuration,progress:(a.until-world.elapsed)/ARGENT.arrayDuration,timeLabel:'Kiếm trận · '+a.fireCount+'/4'}:null;}
   if(id==='argent_blade_recall'&&argentState(world).recall)return {remaining:0,duration:0,progress:undefined,timeLabel:'Đang thu Phiến'};
   const v = getSkillRuntimeValues(state, id);
   let remaining = state.activeEffects[id] || 0;
@@ -217,7 +224,7 @@ export function getStatusPresentations(world: CombatWorld): StatusPresentation[]
   if(guard)result.push({id:'argent:guard',group:'buff',name:guard.beatUntil>world.elapsed?'Nhịp đỡ 99%':'Thế Đỡ · Chờ đòn',description:'Đòn hợp lệ mở một nhịp 0,75 giây; không giảm damage liên tục toàn bộ thế. Còn '+guard.remaining+' lượt. Không đỡ DoT/sát thương chuẩn và không miễn khống chế.',icon:{kind:'skill',id:'argent_guard_stance'},source:'Thế Đỡ',stacks:guard.remaining,badgeText:guard.remaining+' lượt',remaining:guard.until-world.elapsed,duration:8,priority:110});
   if(argent.temper>0&&argent.temperUntil>world.elapsed)result.push({id:'argent:temper',group:'buff',name:'Tôi Kim',description:'S3 hợp lệ kế tiếp tiêu toàn bộ tầng; Phiến đầu trúng mỗi mục tiêu thêm 40% Hỏa Lực mỗi tầng, tối đa 120%.',icon:{kind:'skill',id:'argent_guard_stance'},source:'Thế Đỡ',stacks:argent.temper,badgeText:argent.temper+'/3',remaining:argent.temperUntil-world.elapsed,duration:6,priority:109});
   const water=riptideState(world).waterform;
-  if(water)result.push({id:'riptide:charge',group:'buff',name:'Thủy áp',description:'Nhịp gây sát thương hợp lệ tích sức mạnh nổ; trần hồi Máu 35% Máu tối đa mỗi cast.',icon:{kind:'skill',id:'riptide_waterform'},source:'Thủy Thể',stacks:water.charge,badgeText:water.charge+'/16',remaining:water.until-world.elapsed,duration:8,priority:110});
+  if(water)result.push({id:'riptide:charge',group:'buff',name:'Thủy áp',description:'Nhịp gây sát thương hợp lệ tích sức mạnh nổ; trần hồi Máu 35% Máu tối đa mỗi lần dùng.',icon:{kind:'skill',id:'riptide_waterform'},source:'Thủy Thể',stacks:water.charge,badgeText:water.charge+'/'+RIPTIDE.maxCharge,remaining:water.until-world.elapsed,duration:RIPTIDE.waterDuration,priority:110});
   const rival=world.duel?.opponent??world.mirage?.mirror?.context.world??world.duelOpponent?.context.world;
   const target=rival?.enemies.find(e=>e.aircraftTarget?.world===world);
   if(rival&&target){

@@ -83,6 +83,8 @@ register(49, { finalStats: (s, stats) => { if (s.coreState.time - s.coreState.la
     } } });
 flat(53, "criticalChance", .25);
 // Applied after the central Fire Rate resolver, including its global cap.
+// Gatlingun resolves once in the shared fire-rate resolver and damage components.
+register(229, {});
 register(54, { finalStats: (s, stats) => { s.coreState.stacks.fireRateConversion = 1+Math.max(0,stats.fireRate/1.8-1)*.7; stats.fireRate = Math.min(stats.fireRate,1.8); } });
 register(55,{stats:(_s,t)=>{t.criticalChance+=.10;t.criticalDamageMultiplier+=.10;}});
 register(56, { stats: (_s, stats) => { stats.criticalChance += .03; stats.criticalDamageMultiplier += .22; } });
@@ -266,6 +268,7 @@ export function coreStackLabel(state: AircraftCombatState, id: CoreId): string |
         return `Khiên hiện tại: ${Math.round(amount)}${cooldown ? amount > 0 ? " · Hồi Chiêu bắt đầu khi Lá Chắn kết thúc" : ` · Hồi lại sau ${remaining(cooldown)}s` : ""}`;
     };
     switch (id) {
+        case "core_229": return "Tổng tốc độ bắn ×2 · Đạn thường/đạn phụ 55% · Hiệu ứng cộng thêm giữ nguyên";
         case "core_049": return c.time - c.lastMove >= 2 ? "Đang tăng Hỏa lực và Giáp" : `Kích hoạt sau ${Math.max(0, 2 - c.time + c.lastMove).toFixed(1).replace(".", ",")}s đứng yên`;
         case "core_059": return `Tiến độ đòn cường hóa: ${state.basicShotsFired % 8} / 8`;
         case "core_060": return c.time-c.lastDamage>=3?"+14% Sát Thương Đòn Đánh Thường":`Còn ${Math.max(0,3-c.time+c.lastDamage).toFixed(1)}s`;

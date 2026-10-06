@@ -1,3 +1,4 @@
+import type { AircraftCombatState } from './airCombatTypes';
 import type { CombatWorld, EnemyEntity } from './airCombatRuntime';
 import { argentInset, argentEmitterPositions } from './airCombatArgentGeometry';
 import { endAircraftSkill, getEffectiveAircraftStats } from './airCombatAircraft';
@@ -17,7 +18,7 @@ export interface ArgentHooks {
  damage(w:CombatWorld,e:EnemyEntity,raw:number,skill:ArgentSkillId|undefined,castId:number):{hp:number;total:number};
 }
 interface Cast {id:number;rank:number;at:number;hits:Map<number,number>}
-interface Recall extends Cast {temper:number;refund:number}
+interface Recall extends Cast {temper:number;refund:number;critSnapshot:number;critMultiplier:number;cooldownMultiplier:number}
 interface ArrayCast extends Cast {until:number;fireCount:number;emitters:ReturnType<typeof argentEmitterPositions>;seen:WeakSet<object>}
 interface ArrayWave {id:number;castId:number;rank:number;hits:Map<number,Set<number>>}
 export interface ArgentBlade {
@@ -32,6 +33,8 @@ export interface ArgentState {
  launch?:Cast;recall?:Recall;array?:ArrayCast;effects:ArgentEffect[];armorMarks:Map<number,{entity:EnemyEntity;until:number}>;
  controls:Map<number,{entity:EnemyEntity;rootUntil:number;slowUntil:number;slow:number}>;updated:number;
 }
+const recallSnapshots=new WeakMap<AircraftCombatState,Recall>();
+export const argentRecallSnapshot=(state:AircraftCombatState)=>recallSnapshots.get(state);
 const states=new WeakMap<CombatWorld,ArgentState>();
 export function argentState(w:CombatWorld):ArgentState {let s=states.get(w);if(!s){s={blades:[],temper:0,temperUntil:0,progress:0,genesisReady:0,seen:new WeakSet(),effects:[],armorMarks:new Map(),controls:new Map(),updated:w.elapsed};states.set(w,s);}return s;}
 export const argentWaiting=(w:CombatWorld)=>states.get(w)?.blades.filter(b=>b.phase==='wait').length??0;
@@ -96,7 +99,7 @@ export function argentPrimaryHit(w:CombatWorld,shot:object & {argentGenesisEligi
  s.progress=0;s.genesisReady=w.elapsed+A.genesisGap;
  blade(w,'genesis',{id:w.nextId++,rank:1,at:w.elapsed,hits:new Map()},w.playerX,w.playerY,-Math.PI/2,A.range,A.genesis[passiveTier(w.aircraft.level)]);fx(w,'launch',w.playerX,w.playerY);
 }
-export function argentArrayActive(w:CombatWorld){const a=states.get(w)?.array;return !!a&&live(w)&&w.elapsed<a.until;}
+export function argentArrayActive(w:CombatWorld,at=w.elapsed){const a=states.get(w)?.array;return !!a&&live(w)&&at<a.until;}
 function closeArray(w:CombatWorld,at:number){
  const s=argentState(w),a=s.array;if(!a)return;s.array=undefined;
  for(const e of a.emitters)fx(w,'expire',e.x,e.y,at,48,.45);
@@ -107,17 +110,17 @@ export function argentArrayTarget(w:CombatWorld,h:ArgentHooks){
  return targets.find(e=>e.id===w.playerTargetId)??targets.sort((a,b)=>Math.hypot(a.x-w.playerX,a.y-w.playerY)-Math.hypot(b.x-w.playerX,b.y-w.playerY)||a.id-b.id)[0];
 }
 /** Called once after a real main volley has spawned, even when every shot misses. */
-export function argentPrimaryFired(w:CombatWorld,shot:object,h:ArgentHooks){
+export function argentPrimaryFired(w:CombatWorld,shot:object,h:ArgentHooks,at=w.elapsed){
  if(w.aircraft.aircraftId!=='argent'||!live(w))return;
  const s=argentState(w),a=s.array;if(!a)return;
- if(w.elapsed>=a.until){closeArray(w,a.until);return;}
+ if(at>=a.until){closeArray(w,a.until);return;}
  if(a.seen.has(shot))return;a.seen.add(shot);
  if(++a.fireCount<A.arrayShots)return;a.fireCount=0;
  const target=argentArrayTarget(w,h),wave:ArrayWave={id:w.nextId++,castId:a.id,rank:a.rank,hits:new Map()};
  for(const emitter of a.emitters){
-  emitter.angle=target?Math.atan2(target.y-emitter.y,target.x-emitter.x):-Math.PI/2;emitter.firedAt=w.elapsed;
-  blade(w,ARGENT_SKILLS[3],a,emitter.x,emitter.y,emitter.angle,Math.hypot(R.right-R.left,R.bottom-R.top)*2,argentValues(ARGENT_SKILLS[3],a.rank).damageMultiplier,w.elapsed,wave,emitter.id);
-  fx(w,'wave',emitter.x+Math.cos(emitter.angle)*24,emitter.y+Math.sin(emitter.angle)*24,w.elapsed,26,.16);
+  emitter.angle=target?Math.atan2(target.y-emitter.y,target.x-emitter.x):-Math.PI/2;emitter.firedAt=at;
+  blade(w,ARGENT_SKILLS[3],a,emitter.x,emitter.y,emitter.angle,Math.hypot(R.right-R.left,R.bottom-R.top)*2,argentValues(ARGENT_SKILLS[3],a.rank).damageMultiplier,at,wave,emitter.id);
+  fx(w,'wave',emitter.x+Math.cos(emitter.angle)*24,emitter.y+Math.sin(emitter.angle)*24,at,26,.16);
  }
 }
 export function argentArmorMultiplier(w:CombatWorld,e:EnemyEntity){const mark=states.get(w)?.armorMarks.get(e.id);return mark?.entity===e&&mark.until>w.elapsed?A.markArmor:1;}
@@ -131,8 +134,15 @@ export function beginArgentSkill(w:CombatWorld,id:ArgentSkillId,h:ArgentHooks){
  w.aircraft.activeEffects[id]=v.duration;(w.aircraft.activeEffectDurations??={})[id]=v.duration;
  if(id===ARGENT_SKILLS[0]){s.guard={...c,until:w.elapsed+A.guardDuration,beatUntil:0,remaining:v.count,used:0};fx(w,'stance',w.playerX,w.playerY);}
  else if(id===ARGENT_SKILLS[1]){s.launch=c;for(const degrees of A.fan)blade(w,id,c,w.playerX,w.playerY,-Math.PI/2+degrees*Math.PI/180,A.range,v.damageMultiplier);fx(w,'launch',w.playerX,w.playerY);}
- else if(id===ARGENT_SKILLS[2]){const recall:Recall={...c,temper:s.temperUntil>w.elapsed?s.temper:0,refund:0};s.recall=recall;s.temper=0;s.temperUntil=0;
-  for(const b of s.blades)if(b.phase==='wait'){b.phase='recall';b.recall=recall;b.at=w.elapsed;b.speed=A.recallSpeed*(rank>=2?A.recallUpgrade:1);b.width=A.width;fx(w,b.ultimateRank===3?'reunion':'recall',b.x,b.y);}}
+ else if(id===ARGENT_SKILLS[2]){
+  const critSnapshot=clamp(getEffectiveAircraftStats(w.aircraft).criticalChance,0,1);
+  const cooldownMultiplier=s.array&&s.array.rank>=3&&w.elapsed<s.array.until?.5:1;
+  const recall:Recall={...c,temper:s.temperUntil>w.elapsed?s.temper:0,refund:0,critSnapshot,critMultiplier:rank>=5?1+.75*critSnapshot:1,cooldownMultiplier};
+  // Capture eligibility once, before deferred settlement; borrowed debt stays separate.
+  const deferred=w.aircraft.coreState.deferredCooldowns[id];
+  if(deferred!==undefined)w.aircraft.coreState.deferredCooldowns[id]=deferred*cooldownMultiplier;
+  s.recall=recall;recallSnapshots.set(w.aircraft,recall);s.temper=0;s.temperUntil=0;
+  for(const b of s.blades)if(b.phase==='wait'){b.phase='recall';b.recall=recall;b.at=w.elapsed;b.speed=A.recallSpeed*(rank>=2?A.recallUpgrade:1);b.width=A.width;fx(w,recall.critMultiplier>1?'reunion':'recall',b.x,b.y);}}
  else {s.array={...c,until:w.elapsed+v.duration,fireCount:0,emitters:argentEmitterPositions(),seen:new WeakSet()};for(const e of s.array.emitters)fx(w,'summon',e.x,e.y,w.elapsed,60,.4);}
 }
 function control(w:CombatWorld,e:EnemyEntity,root:number,slow:number,duration:number,at:number){
@@ -150,7 +160,7 @@ function hit(w:CombatWorld,b:ArgentBlade,e:EnemyEntity,at:number,h:ArgentHooks){
  const recall=b.phase==='recall'?b.recall:undefined,hitset=recall?b.returnHits:b.hits;if(hitset.has(e.id)||!valid(w,e,h))return;hitset.add(e.id);
  const c=recall??b.cast,n=(c.hits.get(e.id)??0)+1;c.hits.set(e.id,n);
  let ratio=b.ratio,id=b.source==='genesis'?undefined:b.source==='break'?ARGENT_SKILLS[0]:b.source;
- if(recall){id=ARGENT_SKILLS[2];ratio=argentValues(id,recall.rank).damageMultiplier*Math.max(b.ultimateRank===3?A.recallFloor:0,n<=3?1:n<=6?(recall.rank>=5?.6:.5):(recall.rank>=5?.3:.25));}
+ if(recall){id=ARGENT_SKILLS[2];ratio=argentValues(id,recall.rank).damageMultiplier*recall.critMultiplier;}
  else if(b.source===ARGENT_SKILLS[1]&&b.cast.rank<3&&b.hits.size>1)ratio*=.75;
  const result=deal(w,e,ratio,id,c,h);fx(w,'impact',e.x,e.y,at,24);
  if(recall){
@@ -165,7 +175,11 @@ function hit(w:CombatWorld,b:ArgentBlade,e:EnemyEntity,at:number,h:ArgentHooks){
 }
 function travel(w:CombatWorld,from:number,to:number,h:ArgentHooks){
  const s=argentState(w),events:{b:ArgentBlade;e:EnemyEntity;at:number}[]=[],ends:{b:ArgentBlade;at:number}[]=[];
- for(const b of s.blades){if(b.phase==='wait')continue;const start=Math.max(from,b.at),dt=to-start;if(dt<=0)continue;
+ for(const b of s.blades){if(b.phase==='wait'){
+   const dx=w.playerX-b.x,dy=w.playerY-b.y;
+   if(Math.hypot(dx,dy)>1e-8)b.angle=Math.atan2(dy,dx);
+   continue;
+  }const start=Math.max(from,b.at),dt=to-start;if(dt<=0)continue;
   const recall=b.phase==='recall',dx=w.playerX-b.x,dy=w.playerY-b.y,d=Math.hypot(dx,dy);if(recall)b.angle=Math.atan2(dy,dx);
   const remaining=recall?d:b.distance,step=Math.min(remaining,b.speed*dt),ox=b.x,oy=b.y;
   const target=argentClip(ox,oy,ox+Math.cos(b.angle)*step,oy+Math.sin(b.angle)*step)?.to??point(ox,oy),actual=Math.hypot(target.x-ox,target.y-oy),duration=actual/b.speed;
@@ -178,7 +192,7 @@ function travel(w:CombatWorld,from:number,to:number,h:ArgentHooks){
  events.sort((a,b)=>a.at-b.at||a.b.id-b.b.id||a.e.id-b.e.id);for(const event of events)hit(w,event.b,event.e,event.at,h);
  for(const {b,at} of ends){if(b.phase==='recall'){s.blades=s.blades.filter(v=>v!==b);fx(w,'join',w.playerX,w.playerY,at,28);}else wait(w,b,at);}
  if(s.launch&&!s.blades.some(b=>b.phase==='out'&&b.cast===s.launch)){const ended=Math.max(from,...ends.filter(e=>e.b.cast===s.launch).map(e=>e.at));s.launch=undefined;finish(w,ARGENT_SKILLS[1],ended);}
- if(s.recall&&!s.blades.some(b=>b.phase==='recall'&&b.recall===s.recall)){const ended=Math.max(from,...ends.filter(e=>e.b.recall===s.recall).map(e=>e.at));s.recall=undefined;finish(w,ARGENT_SKILLS[2],ended);}
+ if(s.recall&&!s.blades.some(b=>b.phase==='recall'&&b.recall===s.recall)){const ended=Math.max(from,...ends.filter(e=>e.b.recall===s.recall).map(e=>e.at));s.recall=undefined;recallSnapshots.delete(w.aircraft);finish(w,ARGENT_SKILLS[2],ended);}
 }
 export function tickArgent(w:CombatWorld,dt:number,h:ArgentHooks){
  const s=states.get(w);if(!s)return;if(!live(w)){cancelArgent(w);return;}
@@ -199,7 +213,7 @@ export function tickArgent(w:CombatWorld,dt:number,h:ArgentHooks){
  if(s.array)w.aircraft.activeEffects[ARGENT_SKILLS[3]]=Math.max(.00001,s.array.until-now);
  if(s.guard)w.aircraft.activeEffects[ARGENT_SKILLS[0]]=Math.max(.00001,s.guard.until-now);
 }
-export function cancelArgent(w:CombatWorld){if(!states.has(w))return;states.delete(w);const c=w.aircraft.coreState,prior=c.stacks.cancellingSkills;c.stacks.cancellingSkills=1;for(const id of ARGENT_SKILLS)endAircraftSkill(w.aircraft,id);if(prior===undefined)delete c.stacks.cancellingSkills;else c.stacks.cancellingSkills=prior;}
+export function cancelArgent(w:CombatWorld){recallSnapshots.delete(w.aircraft);if(!states.has(w))return;states.delete(w);const c=w.aircraft.coreState,prior=c.stacks.cancellingSkills;c.stacks.cancellingSkills=1;for(const id of ARGENT_SKILLS)endAircraftSkill(w.aircraft,id);if(prior===undefined)delete c.stacks.cancellingSkills;else c.stacks.cancellingSkills=prior;}
 export function argentRecallOpportunity(w:CombatWorld,x:number,y:number,radius=30){return states.get(w)?.blades.some(b=>b.phase==='wait'&&segmentDistance(x,y,b.x,b.y,w.playerX,w.playerY)<radius)??false;}
 export function argentThreatNearby(w:CombatWorld,x:number,y:number,radius:number){
  const s=states.get(w);if(!s)return false;

@@ -1,4 +1,5 @@
 import React from "react";
+import gatlingun from "../../../assets/khong-kich/v2/gatlingun.png";
 import { TriangleAlert } from "lucide-react";
 import coreAtlas from "../../../assets/khong-kich/v2/core-semantic-icons.svg";
 import { SpriteAtlasIcon } from "./SpriteAtlasIcon";
@@ -19,6 +20,7 @@ const cores = new Map(CORE_DEFINITIONS.map(core => [core.id, core]));
 /** Skill binding wins; non-skill art comes exclusively from the locked ID map. */
 export function CoreSemanticIcon({ id, className = "" }: { id: string; className?: string }) {
   const core = cores.get(id);
+  if(id === "core_229") return <SpriteAtlasIcon atlas={gatlingun} columns={1} rows={1} column={0} row={0} className={className} fallback={<TriangleAlert/>}/>;
   if (core?.skillId) return <SkillIcon id={core.skillId} className={className} />;
   const semantic = CORE_VISUAL_SEMANTIC_BY_ID[id as keyof typeof CORE_VISUAL_SEMANTIC_BY_ID];
   if (!core || !semantic) return <span className={`combat-ui-icon ${className}`} aria-hidden="true"><TriangleAlert /></span>;

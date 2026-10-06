@@ -1,73 +1,87 @@
+import { createElement } from "react";
+import { createRoot, type Root } from "react-dom/client";
+import { flushSync } from "react-dom";
 import { getCoreDefinition } from "./airCombatConfig";
+import { CoreSemanticIcon } from "./CoreSemanticIcon";
+import { EquipmentIcon } from "./EquipmentIcon";
 import { HealthBarPresentation } from "./airCombatFeedback";
 import { COMBAT_NOTICE_DURATION_MS } from "./airCombatNotices";
 import type { CombatWorld } from "./airCombatRuntime";
 import type { CombatAnnouncement } from "./airCombatTypes";
-import { equipmentState, type AcquisitionEvent, type CoreConversionSource } from "./airCombatEquipmentState";
+import { equipmentState, type AcquisitionEvent } from "./airCombatEquipmentState";
 import { EQUIPMENT_CATALOG, EQUIPMENT_NAME_COLORS } from "./airCombatEquipmentCatalog";
 import { EQUIPMENT_ART, equipmentIconIndex } from "./airCombatEquipmentArt";
 
-interface SoloAcquisitionToast { text: string; durationMs: number; createdAtMs?: number }
-type Notice = (AcquisitionEvent | (SoloAcquisitionToast & { kind: "solo_ai" }) | { kind: "message"; text: string }) & { createdAtMs: number };
-const CONVERSION_SOURCE_LABELS: Record<CoreConversionSource, string> = {
-  core_050: "CHUYỂN ĐỔI: VÀNG", core_051: "CHUYỂN ĐỔI: KIM CƯƠNG",
-  core_052: "CHUYỂN ĐỔI: HỖN LOẠN", core_216: "HỘP PANDORA",
-};
-/** One DOM notice for every source. No backlog, stacking or suspended lifetimes. */
+interface SoloAcquisitionToast { text:string; durationMs:number; createdAtMs?:number }
+type ReceiptEntry={event:AcquisitionEvent;quantity:number}|{text:string;quantity:number};
+interface Receipt {transactionId:string;entries:Map<string,ReceiptEntry>}
+interface ReceiptState {owner:CombatWorld['aircraft']['coreState'];lastId:number;queue:Receipt[];seenAI:WeakSet<object>}
+// Session-only receipts outlive a renderer remount, never a new run or saved profile.
+const receipts=new WeakMap<CombatWorld,ReceiptState>();
+const tierLabel:Record<string,string>={silver:'Bạc',gold:'Vàng',diamond:'Kim Cương',component:'Thành phần',completed:'Hoàn chỉnh',legendary:'Huyền thoại',item:'Vật phẩm'};
 export class AirCombatOverlayFeedback {
-  private lastAcquisition = 0;
-  private world?: CombatWorld;
-  private announcement?: CombatAnnouncement;
-  private node: HTMLDivElement;
-  private latestAt = -Infinity;
-  private expiresAt = 0;
-  private expiryTimer: ReturnType<typeof setTimeout> | undefined;
-  private health = new HealthBarPresentation();
-  private flights = new Set<HTMLElement>();
-  private pulse: Animation | null = null;
-  constructor(private host: HTMLDivElement) {
-    this.node = document.createElement("div");
-    this.node.className = "air-core-toast"; this.node.hidden = true;
-    host.appendChild(this.node);
+ private world?:CombatWorld;
+ private receipt?:ReceiptState;
+ private announcement?:CombatAnnouncement;
+ private node:HTMLDivElement;
+ private root:Root;
+ private expiresAt=0;
+ private activeReward=false;
+ private pageKeys:string[]=[];
+ private hidden=true;
+ private expiryTimer:ReturnType<typeof setTimeout>|undefined;
+ private health=new HealthBarPresentation();
+ private flights=new Set<HTMLElement>();
+ private pulse:Animation|null=null;
+ private visibility=()=>{if(document.hidden&&this.activeReward)this.clear();};
+ constructor(private host:HTMLDivElement){
+  this.node=document.createElement('div');this.node.className='air-core-toast';this.node.hidden=true;
+  this.node.setAttribute('role','status');this.node.setAttribute('aria-live','polite');this.node.setAttribute('aria-atomic','true');
+  host.appendChild(this.node);this.root=createRoot(this.node);document.addEventListener('visibilitychange',this.visibility);
+ }
+ private clear(){clearTimeout(this.expiryTimer);this.expiryTimer=undefined;this.node.hidden=true;this.expiresAt=0;this.activeReward=false;this.pageKeys=[];}
+ private expire(){
+  if(this.activeReward&&!this.hidden&&!document.hidden){
+   const receipt=this.receipt?.queue[0];
+   if(receipt){for(const key of this.pageKeys)receipt.entries.delete(key);if(!receipt.entries.size)this.receipt!.queue.shift();}
   }
-  private clear() {
-    clearTimeout(this.expiryTimer); this.expiryTimer = undefined;
-    this.node.hidden = true; this.expiresAt = 0;
-  }
-  private show(event: Notice, now: number) {
-    if (event.createdAtMs < this.latestAt) return;
-    this.latestAt = event.createdAtMs;
-    this.clear();
-    const expiresAt = event.createdAtMs + COMBAT_NOTICE_DURATION_MS;
-    if (expiresAt <= now) return;
-    this.node.replaceChildren(); delete this.node.dataset.tier;
-    this.host.dataset.notice = event.kind === "message" ? "combat" : "acquisition";
-    if (event.kind === "message" || event.kind === "solo_ai") this.node.textContent = event.text;
-    else if (event.kind === "core") {
-      const core = getCoreDefinition(event.coreId);
-      this.node.textContent = event.conversionSourceCoreId
-        ? CONVERSION_SOURCE_LABELS[event.conversionSourceCoreId] + " → NHẬN LÕI " + core.name
-        : "Đã nhận lõi: " + core.name;
-      this.node.dataset.tier = core.tiers[0];
-    } else {
-      const item = event.definitionId === "VP01", definition = item ? null : EQUIPMENT_CATALOG[event.definitionId];
-      const name = document.createElement("span");
-      name.textContent = definition?.name ?? "Nam Châm Ma Thuật";
-      name.style.color = EQUIPMENT_NAME_COLORS[definition?.rarity ?? "item"];
-      this.node.append(document.createTextNode(item ? "Đã nhận vật phẩm " : "Đã nhận trang bị "), name);
+  this.clear();
+ }
+ private arm(until:number){this.expiresAt=until;this.node.hidden=false;this.node.style.opacity='1';this.expiryTimer=setTimeout(()=>this.expire(),Math.max(0,until-performance.now()));}
+ private enqueue(transactionId:string,key:string,entry:ReceiptEntry){
+  const queue=this.receipt!.queue;
+  let receipt=queue.find(r=>r.transactionId===transactionId);
+  // Merge overflow into a bounded summary, retaining every distinct name and quantity.
+  if(!receipt){receipt=queue.length>=24?queue[queue.length-1]:{transactionId,entries:new Map()};if(!queue.includes(receipt))queue.push(receipt);}
+  const existing=receipt.entries.get(key);if(existing)existing.quantity+=entry.quantity;else receipt.entries.set(key,entry);
+ }
+ private showReceipt(now:number){
+  const receipt=this.receipt?.queue[0];if(!receipt)return;
+  this.clear();this.activeReward=true;this.host.dataset.notice='acquisition';
+  const page=[...receipt.entries.entries()].slice(0,6);this.pageKeys=page.map(([key])=>key);
+  flushSync(()=>this.root.render(createElement('div',{className:'air-receipt'},
+   createElement('strong',null,'Đã nhận'+(receipt.entries.size>6?' · Còn '+(receipt.entries.size-6)+' loại thưởng tiếp theo':'')),
+   ...page.map(([key,entry])=>{
+    if(!('event' in entry))return createElement('div',{key,className:'air-receipt-row'},entry.text);
+    const e=entry.event;
+    if(e.kind==='reward')return createElement('div',{key,className:'air-receipt-row'},createElement(CoreSemanticIcon,{id:e.coreId,className:'air-receipt-icon'}),createElement('span',null,e.name+' ×'+entry.quantity+' · '+e.source));
+    if(e.kind==='core'){
+     const core=getCoreDefinition(e.coreId),source=e.conversionSourceCoreId?getCoreDefinition(e.conversionSourceCoreId).name:null;
+     return createElement('div',{key,className:'air-receipt-row','data-tier':core.tiers[0]},createElement(CoreSemanticIcon,{id:e.coreId,className:'air-receipt-icon'}),createElement('span',null,core.name+' ×'+entry.quantity+' · '+tierLabel[core.tiers[0]]+(source?' · '+source:'')));
     }
-    this.expiresAt = expiresAt; this.node.hidden = false; this.node.style.opacity = "1";
-    this.expiryTimer = setTimeout(() => this.clear(), Math.max(0, expiresAt - performance.now()));
+    const d=e.definitionId==='VP01'?undefined:EQUIPMENT_CATALOG[e.definitionId],tier=d?.rarity??'item';
+    const source=e.source==='craft'?'Chế tạo':e.source.startsWith('core_')?getCoreDefinition(e.source).name:'';
+    return createElement('div',{key,className:'air-receipt-row'},createElement(EquipmentIcon,{id:e.definitionId,className:'air-receipt-icon'}),createElement('span',{style:{color:EQUIPMENT_NAME_COLORS[tier]}},(d?.name??'Nam Châm Ma Thuật')+' ×'+entry.quantity+' · '+(tierLabel[tier]??tier)+(source?' · '+source:'')));
+   }))));
+  this.arm(performance.now()+COMBAT_NOTICE_DURATION_MS);
+ }
+ render(world:CombatWorld,delta:number,hidden:boolean,reducedMotion:boolean,bossHp:HTMLDivElement|null,bossChip:HTMLDivElement|null,bossShield:HTMLDivElement|null,announcements:readonly SoloAcquisitionToast[]=[]){
+  if(this.world!==world||this.receipt?.owner!==world.aircraft.coreState){this.clear();this.world=world;this.announcement=undefined;
+   this.receipt=receipts.get(world);if(!this.receipt||this.receipt.owner!==world.aircraft.coreState){this.receipt={owner:world.aircraft.coreState,lastId:0,queue:[],seenAI:new WeakSet()};receipts.set(world,this.receipt);}
+   this.health.clear();this.pulse?.cancel();for(const flight of this.flights)flight.remove();this.flights.clear();
   }
-  render(world: CombatWorld, delta: number, hidden: boolean, reducedMotion: boolean,
-    bossHp: HTMLDivElement | null, bossChip: HTMLDivElement | null, bossShield: HTMLDivElement | null,
-    announcements: readonly SoloAcquisitionToast[] = []) {
-    if (this.world !== world) {
-      this.world = world; this.lastAcquisition = 0; this.announcement = undefined; this.latestAt = -Infinity;
-      this.clear(); this.health.clear(); this.pulse?.cancel();
-      for (const flight of this.flights) flight.remove();
-      this.flights.clear();
-    }
+  this.hidden=hidden||document.hidden;
+  if(this.hidden&&this.activeReward)this.clear();
     this.health.begin(delta);
     const boss = world.enemies.find(e => e.type === "boss");
     if (boss) {
@@ -81,32 +95,34 @@ export class AirCombatOverlayFeedback {
       if (bossShield) {bossShield.style.left=bar.shieldStart*100+"%";bossShield.style.width=(bar.shieldEnd-bar.shieldStart)*100+"%";}
     }
     this.health.end();
-    const now = performance.now(), pending: Notice[] = [];
-    if (this.announcement !== world.announcement) {
-      this.announcement = world.announcement;
-      pending.push({ kind: "message", text: world.announcement.text,
-        createdAtMs: world.announcement.expiresAtMs - world.announcement.durationMs });
-    }
-    for (const event of world.aircraft.coreState.acquisitions) if (event.id > this.lastAcquisition) {
-      pending.push({ ...event, createdAtMs: event.createdAtMs ?? now }); this.lastAcquisition = event.id;
-    }
-    world.aircraft.coreState.acquisitions = world.aircraft.coreState.acquisitions.filter(e=>e.id>this.lastAcquisition);
-    pending.push(...announcements.map(event => ({ ...event, kind: "solo_ai" as const, createdAtMs: event.createdAtMs ?? now })));
+
+  const now=performance.now();
     const button=this.host.closest(".air-combat-surface")?.querySelector<HTMLElement>("[data-equipment-target]") ?? null;
     if(button){const b=button.getBoundingClientRect(),surface=this.host.closest(".air-combat-surface")?.getBoundingClientRect();if(surface&&surface.width&&surface.height)equipmentState(world.aircraft).hubTarget={x:(b.left+b.width/2-surface.left)/surface.width*360,y:(b.top+b.height/2-surface.top)/surface.height*640};}
-    // A newer skill/status notice wins over older rewards even if they arrive in this frame.
-    pending.sort((a,b)=>a.createdAtMs-b.createdAtMs);
-    for (const event of pending) {
-      if (!hidden && now < event.createdAtMs + COMBAT_NOTICE_DURATION_MS && (event.kind === "equipment" || event.kind === "item"))
-        this.equipmentFlight(world,event,button,reducedMotion);
-      this.show(event,now);
-    }
-    this.host.style.visibility = hidden ? "hidden" : "visible";
-    if (this.expiresAt && now >= this.expiresAt) this.clear();
-    else if (this.expiresAt) this.node.style.opacity = String(reducedMotion ? 1 : Math.min(1,(this.expiresAt-now)/300));
+
+  for(const event of world.aircraft.coreState.acquisitions)if(event.id>this.receipt!.lastId){
+   const key=event.kind==='reward'?'reward:'+event.name+':'+event.source:event.kind==='core'?'core:'+event.coreId+':'+(event.conversionSourceCoreId??''):event.kind+':'+event.definitionId+':'+event.source;
+   this.enqueue(String(event.transactionId??event.id),key,{event,quantity:event.quantity??1});this.receipt!.lastId=event.id;
+   if(!this.hidden&&(event.kind==='equipment'||event.kind==='item'))this.equipmentFlight(world,event,button,reducedMotion);
   }
+  // Transfer only after the session queue owns the complete receipt.
+  world.aircraft.coreState.acquisitions=world.aircraft.coreState.acquisitions.filter(e=>e.id>this.receipt!.lastId);
+  for(const event of announcements)if(!this.receipt!.seenAI.has(event)){
+   this.receipt!.seenAI.add(event);this.enqueue('ai:'+event.createdAtMs,'ai:'+event.text,{text:event.text,quantity:1});
+  }
+  if(this.announcement!==world.announcement){
+   this.announcement=world.announcement;
+   if(world.announcement.expiresAtMs>now&&world.announcement.text){
+    this.clear();this.host.dataset.notice='combat';this.root.render(world.announcement.text);this.arm(world.announcement.expiresAtMs);
+   }
+  }
+  if(this.expiresAt&&now>=this.expiresAt)this.expire();
+  if(!this.expiresAt&&!this.hidden)this.showReceipt(now);
+  this.host.style.visibility=this.hidden?'hidden':'visible';
+  if(this.expiresAt)this.node.style.opacity=String(reducedMotion?1:Math.min(1,(this.expiresAt-now)/300));
+ }
   private equipmentFlight(world: CombatWorld, event: Extract<AcquisitionEvent, { kind: "equipment" | "item" }>, button: HTMLElement | null, reducedMotion: boolean) {
-    if(button){
+    if(button&&this.flights.size<4){
       this.pulse?.cancel();this.pulse=button.animate(reducedMotion?[{boxShadow:"0 0 15px #a9f6ff"},{boxShadow:"0 0 0 transparent"}]:[{transform:"scale(1)",boxShadow:"0 0 0 transparent"},{transform:"scale(1.09)",boxShadow:"0 0 18px #a9f6ff",offset:.2},{transform:"scale(1)",boxShadow:"0 0 0 transparent"}],{duration:1500,easing:"ease-out"});
       const target=button.getBoundingClientRect(),surface=this.host.closest(".air-combat-surface")?.getBoundingClientRect();
       const x=surface?surface.left+(event.x??world.playerX)/360*surface.width:target.left,y=surface?surface.top+(event.y??world.playerY)/640*surface.height:target.top;
@@ -118,9 +134,6 @@ export class AirCombatOverlayFeedback {
       animation.onfinish=()=>{node.remove();this.flights.delete(node);};
     }
   }
-  destroy() {
-    this.clear(); this.pulse?.cancel();
-    for(const node of this.flights)node.remove();
-    this.flights.clear(); this.node.remove(); this.health.clear();
-  }
+
+ destroy(){this.clear();document.removeEventListener('visibilitychange',this.visibility);this.pulse?.cancel();for(const node of this.flights)node.remove();this.flights.clear();this.root.unmount();this.node.remove();this.health.clear();}
 }

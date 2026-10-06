@@ -11,7 +11,7 @@ import { celestialProtection, createAbsorbShield } from './airCombatExpansion';
 import { negativeStatusDuration } from './airCombatCoreEffects';
 import { canTargetEnemy } from './airCombatTargetability';
 
-export interface IntrinsicDamage { trueDamage:boolean; castId:number; passive?:boolean; source?:"cinder_burn"; ownerId?:number; burnSession?:number; rawBudget?:{remaining:number} }
+export interface IntrinsicDamage { weapon?:boolean; trueDamage:boolean; castId:number; passive?:boolean; source?:"cinder_burn"; ownerId?:number; burnSession?:number; rawBudget?:{remaining:number} }
 export interface CinderHooks {
  hostile:(w:CombatWorld,e:EnemyEntity)=>boolean;
  damage:(w:CombatWorld,e:EnemyEntity,raw:number,skill:SkillId|undefined,provenance:IntrinsicDamage)=>number;
@@ -148,7 +148,7 @@ export function tickCinder(w:CombatWorld,dt:number,h:CinderHooks){
  }
  s.followups=s.followups.filter(p=>{const e=w.enemies.find(e=>e.id===p.target);if(!e||!valid(w,e,h)||!canTargetEnemy(w,e,'homing')||p.until<=now)return false;
   p.previousX=p.x;p.previousY=p.y;const dx=e.x-p.x,dy=e.y-p.y,d=Math.hypot(dx,dy),step=Math.min(d,600*dt);p.angle=Math.atan2(dy,dx);p.x+=Math.cos(p.angle)*step;p.y+=Math.sin(p.angle)*step;
-  if(segmentVsAircraft(p.previousX,p.previousY,p.x,p.y,2.5,getEnemyHitbox(e),createHitResult()).hit){h.damage(w,e,p.raw,undefined,{trueDamage:false,castId:p.id,passive:true});fx(w,'followup',p.x,p.y,20,.2);return false;}return true;
+  if(segmentVsAircraft(p.previousX,p.previousY,p.x,p.y,2.5,getEnemyHitbox(e),createHitResult()).hit){h.damage(w,e,p.raw,undefined,{trueDamage:false,castId:p.id,passive:true,weapon:true});fx(w,'followup',p.x,p.y,20,.2);return false;}return true;
  });
  const sh=s.shield;if(sh){if(now>=sh.until||(w.aircraft.coreState.shields.cinder?.amount??0)<=0){fx(w,'burst',w.playerX,w.playerY,80,.4);s.shield=undefined;delete w.aircraft.coreState.shields.cinder;endAircraftSkill(w.aircraft,'cinder_fire_shield');}else w.aircraft.activeEffects.cinder_fire_shield=sh.until-now;}
  const f=s.fuel;if(f){const v=cinderValues('cinder_fuel_barrage',f.rank);
