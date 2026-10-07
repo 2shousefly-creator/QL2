@@ -1,6 +1,6 @@
 import { skillRank } from "./airCombatSkillRanks";
 import { playerAirframeScale } from "./airCombatReleaseState";
-import aircraft from "../../../assets/khong-kich/astra/aircraft.svg";
+import aircraft from "../../../assets/khong-kich/astra/aircraft.png";
 import effects from "../../../assets/khong-kich/astra/effects.svg";
 import combatVfx from "../../../assets/khong-kich/astra/combat-vfx.svg";
 import type { CombatWorld } from "./airCombatRuntime";

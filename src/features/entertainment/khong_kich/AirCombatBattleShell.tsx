@@ -1,8 +1,5 @@
-import { TERRA_UPGRADE_ICONS } from './airCombatTerraArt';
+import { SkillUpgradeIcon } from './SkillUpgradeIcon';
 import { sylvaHud } from './airCombatSylvaRuntime';
-import { SYLVA_UPGRADE_ICONS } from './airCombatSylvaArt';
-import { SkillIcon } from './SkillIcon';
-import { ARGENT_UPGRADE_ICONS } from './airCombatArgentArt';
 import { argentHud, argentWaiting } from './airCombatArgentRuntime';
 import { playArgentAudio } from './airCombatArgentAudio';
 import { PASSIVES } from './airCombatPassives';
@@ -828,7 +825,7 @@ export const AirCombatBattleShell: React.FC<AirCombatBattleProps> = ({
           <p><CoreDescription text={tooltipModel.description}/></p>
           <div className="air-tooltip-details">{tooltipModel.detailRows.map(row => <div key={row}><CoreDescription text={row}/></div>)}</div>
           {tooltipModel.coreRows.map(row=><p key={row} style={{color:"#fde047"}}><CoreDescription text={row}/></p>)}
-          <div className="air-rank-preview">{tooltipModel.rankRows.map(row=><section key={row.rank} data-unlocked={row.rank<=tooltipModel.rank} data-current={row.rank===tooltipModel.rank}><strong>{({...TERRA_UPGRADE_ICONS,...ARGENT_UPGRADE_ICONS,...SYLVA_UPGRADE_ICONS})[tooltipSkill as string]&&<SkillIcon id={({...TERRA_UPGRADE_ICONS,...ARGENT_UPGRADE_ICONS,...SYLVA_UPGRADE_ICONS})[tooltipSkill as string][row.rank-1]} className="air-argent-upgrade-icon"/>}◆ Cấp {row.rank} — {row.name}</strong><p style={{whiteSpace:"pre-line"}}><CoreDescription text={row.displayDescription}/></p></section>)}</div>
+          <div className="air-rank-preview">{tooltipModel.rankRows.map(row=><section key={row.rank} data-unlocked={row.rank<=tooltipModel.rank} data-current={row.rank===tooltipModel.rank}><strong><SkillUpgradeIcon skillId={tooltipSkill} rank={row.rank}/>Cấp {row.rank} — {row.name}</strong><p style={{whiteSpace:"pre-line"}}><CoreDescription text={row.displayDescription}/></p></section>)}</div>
         </motion.aside></AirCombatTooltipPortal>
       )}
 

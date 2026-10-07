@@ -817,7 +817,7 @@
 
 .air-argent-count,.air-argent-guard,.air-argent-temper,.air-argent-array{position:absolute;bottom:100%;left:50%;transform:translateX(-50%);white-space:nowrap;background:#151b23;color:#e8c878;padding:2px 5px;border:1px solid #b58a39;border-radius:3px;font-family:inherit;font-weight:700;line-height:1.2;font-variant-numeric:tabular-nums;font-size:clamp(8px,2.2cqw,11px);z-index:12;pointer-events:none}.air-argent-count[data-ready="true"]{color:#fff;box-shadow:0 0 8px #e8c87880}.air-argent-guard{font-size:clamp(7px,1.9cqw,10px)}.air-argent-temper{bottom:calc(100% + 20px);font-size:clamp(7px,1.9cqw,10px)}
 
-.air-argent-upgrade-icon{width:28px;height:28px;display:inline-block;vertical-align:middle;margin-right:6px}
+.air-skill-upgrade-icon{width:28px!important;height:28px!important;display:inline-block;vertical-align:middle;margin-right:6px;flex-shrink:0}
 
 /* Stable footprints within each selection breakpoint, including empty/secret panels. */
 .air-selection-panel{display:grid;grid-template-rows:104px 86px 112px 64px 208px;gap:12px;}

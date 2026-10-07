@@ -1,3 +1,4 @@
+import astraMetadata from '../../../assets/khong-kich/astra/art-source.json';
 import terraMetadata from '../../../assets/khong-kich/terra/art-source.json';
 import sylvaMetadata from '../../../assets/khong-kich/sylva/art-source.json';
 import { playerAirframeScale } from "./airCombatReleaseState";
@@ -15,6 +16,7 @@ export interface AirframeArtwork {
 // aircraft-atlas.png: 1254 x 1254. Match the renderer's rounded cell edges.
 // Bounds use alpha > 16/255 to exclude almost-invisible export speckles.
 // [cell width, visible left, visible right (inclusive)] for all nine poses.
+const astraBounds=astraMetadata.frames.map(f=>[f.rect[2],f.bounds[0],f.bounds[2]-1] as const);
 const terraBounds=[512,terraMetadata.assets.aircraft.frames[0].bounds[0],terraMetadata.assets.aircraft.frames[0].bounds[2]-1] as const;
 const sylvaBounds = [sylvaMetadata.aircraft.width,sylvaMetadata.aircraft.frames[0].bounds[0],sylvaMetadata.aircraft.frames[0].bounds[2]-1] as const;
 const argentBounds = argentMetadata.aircraft.bounds[0] as [number, number, number];
@@ -24,7 +26,7 @@ const bounds: Record<AircraftId, Record<AirframePose, readonly [number, number, 
   argent: {neutral:argentBounds,left:argentBounds,right:argentBounds},
   riptide: {neutral:[768,17,751],left:[768,17,751],right:[768,17,751]},
   cinder: {neutral:[724,40,696],left:[724,24,682],right:[724,30,691]},
-  astra: {neutral:[256,26,230],left:[256,44,212],right:[256,44,212]},
+  astra: {neutral:astraBounds[0],left:astraBounds[1],right:astraBounds[2]},
   black_eagle: { neutral: [314, 58, 255], left: [313, 97, 272], right: [314, 41, 215] },
   breaker: { neutral: [314, 17, 297], left: [313, 41, 299], right: [314, 13, 271] },
   phantom: { neutral: [314, 29, 285], left: [313, 46, 287], right: [314, 25, 266] },
@@ -58,7 +60,7 @@ export const PLAYER_ENGINE_MOUNTS: Record<AircraftId, readonly {engineMountX:num
   argent:[{engineMountX:.455,engineMountY:.79,width:3},{engineMountX:.545,engineMountY:.79,width:3}],
   riptide:[{engineMountX:.46,engineMountY:.83,width:3.5},{engineMountX:.54,engineMountY:.83,width:3.5}],
   cinder:[{engineMountX:.42,engineMountY:.72,width:3.5},{engineMountX:.60,engineMountY:.72,width:3.5}],
-  astra:[{engineMountX:116/256,engineMountY:216/256,width:3.5},{engineMountX:139/256,engineMountY:216/256,width:3.5}],
+  astra:[{engineMountX:.414,engineMountY:.864,width:3.5},{engineMountX:.573,engineMountY:.864,width:3.5}],
   black_eagle:[{engineMountX:157/314,engineMountY:252/314,width:6}],
   breaker:[{engineMountX:114/314,engineMountY:260/314,width:4.8},{engineMountX:199/314,engineMountY:260/314,width:4.8}],
   phantom:[{engineMountX:134/314,engineMountY:231/314,width:4.2},{engineMountX:178/314,engineMountY:231/314,width:4.2}],

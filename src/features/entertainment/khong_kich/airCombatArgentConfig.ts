@@ -13,7 +13,7 @@ export function argentValues(id:ArgentSkillId,rank:number){
  case 'argent_guard_stance':return {...base,cost:90+i*10,cooldown:32-i,duration:ARGENT.guardDuration,count:[2,2,3,3,4][i]};
  case 'argent_blade_cast':return {...base,cost:100+i*10,cooldown:24-i,duration:ARGENT.range/ARGENT.speed,damageMultiplier:[1.1,1.3,1.5,1.7,1.9][i],count:5};
  case 'argent_blade_recall':return {...base,cost:90+i*10,cooldown:22-i,duration:1,damageMultiplier:[1.1,1.3,1.5,1.7,1.9][i]};
- case 'argent_heavenly_blade_array':return {...base,cost:150+i*50,cooldown:90-i*5,duration:ARGENT.arrayDuration,damageMultiplier:[.6,.8,1][i],count:ARGENT.arrayCount};
+ case 'argent_heavenly_blade_array':return {...base,cost:150+i*50,cooldown:90-i*5,duration:ARGENT.arrayDuration,damageMultiplier:[1.1,1.3,1.5][i],count:ARGENT.arrayCount};
  }
 }
 export function argentDescription(id:ArgentSkillId,rank:number){

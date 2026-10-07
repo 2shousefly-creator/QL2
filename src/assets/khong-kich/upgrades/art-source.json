@@ -1,0 +1,560 @@
+{
+  "generator": "image_gen.imagegen",
+  "columns": 4,
+  "rows": 4,
+  "layout": "Original generated raster pixels, four equal columns and rows. First fourteen cells map to upgrades; final two cells reserved.",
+  "assets": {
+    "viper": {
+      "name": "viper",
+      "prompt": "Use case: stylized-concept. Production game UI raster upgrade-icon atlas for a premium top-down sci-fi aircraft game. Exactly FOUR columns by FOUR rows, sixteen equal square cells, evenly spaced full grid, no labels, letters, numbers, borders, watermark or text. Each cell is a distinct centered hand-painted detailed game skill illustration with a clean readable silhouette, polished metal and luminous energy shading, dark navy background, generous inset margin, consistent contrast and soft vignette within each cell. Not vector glyphs, no simplistic geometric diagrams. Aircraft theme: viper. In strict row-major order from top left, the sixteen subjects are: 1: expanded squadron of blue decoy flares; 2: blue decoy capturing heat into a mana cell; 3: decoy releasing a concentric blue countershock; 4: decoy flares opening to a powerful retaliatory gun; 5: blue engine with extended burning trail; 6: overcharged blue gun coils; 7: two bouncing blue bullets ricocheting between targets; 8: unstoppable armored blue afterburner; 9: crosshair exposing a cracked armor weak point; 10: paired small blue guided missiles; 11: predator radar detecting a fleeing target; 12: execution crosshair with a piercing blue missile; 13: large cluster of many blue missiles; 14: apocalyptic blue missile rain with burning critical target; 15: spare abstract energy core matching the aircraft; 16: spare wing insignia matching the aircraft. Keep every illustration fully contained in its own equal cell; make the first fourteen images clearly different and match each description.",
+      "frames": [
+        {
+          "skillId": "decoy",
+          "rank": 2,
+          "column": 0,
+          "row": 0
+        },
+        {
+          "skillId": "decoy",
+          "rank": 3,
+          "column": 1,
+          "row": 0
+        },
+        {
+          "skillId": "decoy",
+          "rank": 4,
+          "column": 2,
+          "row": 0
+        },
+        {
+          "skillId": "decoy",
+          "rank": 5,
+          "column": 3,
+          "row": 0
+        },
+        {
+          "skillId": "afterburner",
+          "rank": 2,
+          "column": 0,
+          "row": 1
+        },
+        {
+          "skillId": "afterburner",
+          "rank": 3,
+          "column": 1,
+          "row": 1
+        },
+        {
+          "skillId": "afterburner",
+          "rank": 4,
+          "column": 2,
+          "row": 1
+        },
+        {
+          "skillId": "afterburner",
+          "rank": 5,
+          "column": 3,
+          "row": 1
+        },
+        {
+          "skillId": "predator_lock",
+          "rank": 2,
+          "column": 0,
+          "row": 2
+        },
+        {
+          "skillId": "predator_lock",
+          "rank": 3,
+          "column": 1,
+          "row": 2
+        },
+        {
+          "skillId": "predator_lock",
+          "rank": 4,
+          "column": 2,
+          "row": 2
+        },
+        {
+          "skillId": "predator_lock",
+          "rank": 5,
+          "column": 3,
+          "row": 2
+        },
+        {
+          "skillId": "missile_swarm",
+          "rank": 2,
+          "column": 0,
+          "row": 3
+        },
+        {
+          "skillId": "missile_swarm",
+          "rank": 3,
+          "column": 1,
+          "row": 3
+        }
+      ],
+      "outputFileId": "exec-8af526b4-31f7-4042-8272-347c1bdcd586.png",
+      "seed": null
+    },
+    "titan": {
+      "name": "titan",
+      "prompt": "Use case: stylized-concept. Production game UI raster upgrade-icon atlas for a premium top-down sci-fi aircraft game. Exactly FOUR columns by FOUR rows, sixteen equal square cells, evenly spaced full grid, no labels, letters, numbers, borders, watermark or text. Each cell is a distinct centered hand-painted detailed game skill illustration with a clean readable silhouette, polished metal and luminous energy shading, dark navy background, generous inset margin, consistent contrast and soft vignette within each cell. Not vector glyphs, no simplistic geometric diagrams. Aircraft theme: titan. In strict row-major order from top left, the sixteen subjects are: 1: durable golden force field around heavy fighter; 2: reinforced radiant golden shield; 3: golden shield converting an impact into blue energy; 4: guardian shield releasing a protective pulse; 5: massive nuclear bomb with blazing golden blast; 6: heavy bomb shockwaves radiating outward; 7: heavy artillery marking a damaged target; 8: explosion sweeping incoming bullets away; 9: gravity well with expanded golden orbit; 10: heavy gravitational compression crushing armor; 11: dense black gravitational core gathering debris; 12: collapsing singularity; 13: armored fortress twin cannons; 14: mobile armored fortress firing while moving; 15: spare abstract energy core matching the aircraft; 16: spare wing insignia matching the aircraft. Keep every illustration fully contained in its own equal cell; make the first fourteen images clearly different and match each description.",
+      "frames": [
+        {
+          "skillId": "armor_shield",
+          "rank": 2,
+          "column": 0,
+          "row": 0
+        },
+        {
+          "skillId": "armor_shield",
+          "rank": 3,
+          "column": 1,
+          "row": 0
+        },
+        {
+          "skillId": "armor_shield",
+          "rank": 4,
+          "column": 2,
+          "row": 0
+        },
+        {
+          "skillId": "armor_shield",
+          "rank": 5,
+          "column": 3,
+          "row": 0
+        },
+        {
+          "skillId": "heavy_bomb",
+          "rank": 2,
+          "column": 0,
+          "row": 1
+        },
+        {
+          "skillId": "heavy_bomb",
+          "rank": 3,
+          "column": 1,
+          "row": 1
+        },
+        {
+          "skillId": "heavy_bomb",
+          "rank": 4,
+          "column": 2,
+          "row": 1
+        },
+        {
+          "skillId": "heavy_bomb",
+          "rank": 5,
+          "column": 3,
+          "row": 1
+        },
+        {
+          "skillId": "gravity_anchor",
+          "rank": 2,
+          "column": 0,
+          "row": 2
+        },
+        {
+          "skillId": "gravity_anchor",
+          "rank": 3,
+          "column": 1,
+          "row": 2
+        },
+        {
+          "skillId": "gravity_anchor",
+          "rank": 4,
+          "column": 2,
+          "row": 2
+        },
+        {
+          "skillId": "gravity_anchor",
+          "rank": 5,
+          "column": 3,
+          "row": 2
+        },
+        {
+          "skillId": "sweeping_cannon",
+          "rank": 2,
+          "column": 0,
+          "row": 3
+        },
+        {
+          "skillId": "sweeping_cannon",
+          "rank": 3,
+          "column": 1,
+          "row": 3
+        }
+      ],
+      "outputFileId": "exec-a70b3696-146b-4e45-b93d-e58f883219dc.png",
+      "seed": null
+    },
+    "phantom": {
+      "name": "phantom",
+      "prompt": "Use case: stylized-concept. Production game UI raster upgrade-icon atlas for a premium top-down sci-fi aircraft game. Exactly FOUR columns by FOUR rows, sixteen equal square cells, evenly spaced full grid, no labels, letters, numbers, borders, watermark or text. Each cell is a distinct centered hand-painted detailed game skill illustration with a clean readable silhouette, polished metal and luminous energy shading, dark navy background, generous inset margin, consistent contrast and soft vignette within each cell. Not vector glyphs, no simplistic geometric diagrams. Aircraft theme: phantom. In strict row-major order from top left, the sixteen subjects are: 1: sleek violet ghost aircraft slipping through danger; 2: violet hologram repairing a fighter with luminous repair cross; 3: violet decoy detonating in a counterattack; 4: fighter reappearing from violet stealth with empowered cannon; 5: concentrated violet laser lens; 6: long sustained violet laser beam; 7: violet laser piercing cracked metal armor; 8: violet death-scythe beam cutting through a target; 9: outward violet signal wave and return wave; 10: overlapping violet electromagnetic resonance waves; 11: violet antenna relay linking waves; 12: wide-spectrum violet interference disruption; 13: small violet escort drone linked to main fighter; 14: aggressive violet eye-shaped assault drone firing; 15: spare abstract energy core matching the aircraft; 16: spare wing insignia matching the aircraft. Keep every illustration fully contained in its own equal cell; make the first fourteen images clearly different and match each description.",
+      "frames": [
+        {
+          "skillId": "invisibility",
+          "rank": 2,
+          "column": 0,
+          "row": 0
+        },
+        {
+          "skillId": "invisibility",
+          "rank": 3,
+          "column": 1,
+          "row": 0
+        },
+        {
+          "skillId": "invisibility",
+          "rank": 4,
+          "column": 2,
+          "row": 0
+        },
+        {
+          "skillId": "invisibility",
+          "rank": 5,
+          "column": 3,
+          "row": 0
+        },
+        {
+          "skillId": "focus_laser",
+          "rank": 2,
+          "column": 0,
+          "row": 1
+        },
+        {
+          "skillId": "focus_laser",
+          "rank": 3,
+          "column": 1,
+          "row": 1
+        },
+        {
+          "skillId": "focus_laser",
+          "rank": 4,
+          "column": 2,
+          "row": 1
+        },
+        {
+          "skillId": "focus_laser",
+          "rank": 5,
+          "column": 3,
+          "row": 1
+        },
+        {
+          "skillId": "electronic_interference",
+          "rank": 2,
+          "column": 0,
+          "row": 2
+        },
+        {
+          "skillId": "electronic_interference",
+          "rank": 3,
+          "column": 1,
+          "row": 2
+        },
+        {
+          "skillId": "electronic_interference",
+          "rank": 4,
+          "column": 2,
+          "row": 2
+        },
+        {
+          "skillId": "electronic_interference",
+          "rank": 5,
+          "column": 3,
+          "row": 2
+        },
+        {
+          "skillId": "escort_drone",
+          "rank": 2,
+          "column": 0,
+          "row": 3
+        },
+        {
+          "skillId": "escort_drone",
+          "rank": 3,
+          "column": 1,
+          "row": 3
+        }
+      ],
+      "outputFileId": "exec-a37b04b1-b72c-42ef-b013-a5887c7c080b.png",
+      "seed": null
+    },
+    "astra": {
+      "name": "astra",
+      "prompt": "Use case: stylized-concept. Production game UI raster upgrade-icon atlas for a premium top-down sci-fi aircraft game. Exactly FOUR columns by FOUR rows, sixteen equal square cells, evenly spaced full grid, no labels, letters, numbers, borders, watermark or text. Each cell is a distinct centered hand-painted detailed game skill illustration with a clean readable silhouette, polished metal and luminous energy shading, dark navy background, generous inset margin, consistent contrast and soft vignette within each cell. Not vector glyphs, no simplistic geometric diagrams. Aircraft theme: astra. In strict row-major order from top left, the sixteen subjects are: 1: expanded amber orbital ring catching bullets; 2: amber orbit reflecting energized bullets; 3: star energy returning to an amber mana core; 4: white hole releasing bright amber starlight; 5: rapidly charging amber lance crystal; 6: ultradense amber star core; 7: spear of starlight piercing metal armor; 8: falling meteor spear; 9: two amber crystalline rays piercing targets; 10: twin rays converging into a star; 11: two satellites in resonating amber orbits; 12: twin crystal star reflections producing a lance; 13: dense neutron-star meteor; 14: meteor opening a glowing stellar fissure; 15: spare abstract energy core matching the aircraft; 16: spare wing insignia matching the aircraft. Keep every illustration fully contained in its own equal cell; make the first fourteen images clearly different and match each description.",
+      "frames": [
+        {
+          "skillId": "orbit_reversal",
+          "rank": 2,
+          "column": 0,
+          "row": 0
+        },
+        {
+          "skillId": "orbit_reversal",
+          "rank": 3,
+          "column": 1,
+          "row": 0
+        },
+        {
+          "skillId": "orbit_reversal",
+          "rank": 4,
+          "column": 2,
+          "row": 0
+        },
+        {
+          "skillId": "orbit_reversal",
+          "rank": 5,
+          "column": 3,
+          "row": 0
+        },
+        {
+          "skillId": "stellar_lance",
+          "rank": 2,
+          "column": 0,
+          "row": 1
+        },
+        {
+          "skillId": "stellar_lance",
+          "rank": 3,
+          "column": 1,
+          "row": 1
+        },
+        {
+          "skillId": "stellar_lance",
+          "rank": 4,
+          "column": 2,
+          "row": 1
+        },
+        {
+          "skillId": "stellar_lance",
+          "rank": 5,
+          "column": 3,
+          "row": 1
+        },
+        {
+          "skillId": "twin_reflection",
+          "rank": 2,
+          "column": 0,
+          "row": 2
+        },
+        {
+          "skillId": "twin_reflection",
+          "rank": 3,
+          "column": 1,
+          "row": 2
+        },
+        {
+          "skillId": "twin_reflection",
+          "rank": 4,
+          "column": 2,
+          "row": 2
+        },
+        {
+          "skillId": "twin_reflection",
+          "rank": 5,
+          "column": 3,
+          "row": 2
+        },
+        {
+          "skillId": "starfall",
+          "rank": 2,
+          "column": 0,
+          "row": 3
+        },
+        {
+          "skillId": "starfall",
+          "rank": 3,
+          "column": 1,
+          "row": 3
+        }
+      ],
+      "outputFileId": "exec-13f4dee5-cd7e-4834-b737-21e657058176.png",
+      "seed": null
+    },
+    "cinder": {
+      "name": "cinder",
+      "prompt": "Use case: stylized-concept. Production game UI raster upgrade-icon atlas for a premium top-down sci-fi aircraft game. Exactly FOUR columns by FOUR rows, sixteen equal square cells, evenly spaced full grid, no labels, letters, numbers, borders, watermark or text. Each cell is a distinct centered hand-painted detailed game skill illustration with a clean readable silhouette, polished metal and luminous energy shading, dark navy background, generous inset margin, consistent contrast and soft vignette within each cell. Not vector glyphs, no simplistic geometric diagrams. Aircraft theme: cinder. In strict row-major order from top left, the sixteen subjects are: 1: reinforced burning orange shield; 2: fire shield emitting a counterheat ring; 3: heat being recovered from burning enemy into mana; 4: thick layered fiery armor resisting burning attacker; 5: four enlarged burning fuel tanks; 6: saturated burning fuel erupting around a six-ember target; 7: fuel detonating when a heat wave reaches it; 8: continuous wall of fire linking four fuel zones; 9: stronger spreading orange heat wave; 10: burning roots binding a scorched target; 11: double ember heat wave slowing a target; 12: burning target spreading four flame pulses; 13: inferno beam igniting clustered secondary explosions; 14: inferno beam leaving a persistent scorching fire trail; 15: spare abstract energy core matching the aircraft; 16: spare wing insignia matching the aircraft. Keep every illustration fully contained in its own equal cell; make the first fourteen images clearly different and match each description.",
+      "frames": [
+        {
+          "skillId": "cinder_fire_shield",
+          "rank": 2,
+          "column": 0,
+          "row": 0
+        },
+        {
+          "skillId": "cinder_fire_shield",
+          "rank": 3,
+          "column": 1,
+          "row": 0
+        },
+        {
+          "skillId": "cinder_fire_shield",
+          "rank": 4,
+          "column": 2,
+          "row": 0
+        },
+        {
+          "skillId": "cinder_fire_shield",
+          "rank": 5,
+          "column": 3,
+          "row": 0
+        },
+        {
+          "skillId": "cinder_fuel_barrage",
+          "rank": 2,
+          "column": 0,
+          "row": 1
+        },
+        {
+          "skillId": "cinder_fuel_barrage",
+          "rank": 3,
+          "column": 1,
+          "row": 1
+        },
+        {
+          "skillId": "cinder_fuel_barrage",
+          "rank": 4,
+          "column": 2,
+          "row": 1
+        },
+        {
+          "skillId": "cinder_fuel_barrage",
+          "rank": 5,
+          "column": 3,
+          "row": 1
+        },
+        {
+          "skillId": "cinder_heat_wave",
+          "rank": 2,
+          "column": 0,
+          "row": 2
+        },
+        {
+          "skillId": "cinder_heat_wave",
+          "rank": 3,
+          "column": 1,
+          "row": 2
+        },
+        {
+          "skillId": "cinder_heat_wave",
+          "rank": 4,
+          "column": 2,
+          "row": 2
+        },
+        {
+          "skillId": "cinder_heat_wave",
+          "rank": 5,
+          "column": 3,
+          "row": 2
+        },
+        {
+          "skillId": "cinder_inferno_beam",
+          "rank": 2,
+          "column": 0,
+          "row": 3
+        },
+        {
+          "skillId": "cinder_inferno_beam",
+          "rank": 3,
+          "column": 1,
+          "row": 3
+        }
+      ],
+      "outputFileId": "exec-f74536d6-f764-47ac-a7d3-a5328a51fc6d.png",
+      "seed": null
+    },
+    "riptide": {
+      "name": "riptide",
+      "prompt": "Use case: stylized-concept. Production game UI raster upgrade-icon atlas for a premium top-down sci-fi aircraft game. Exactly FOUR columns by FOUR rows, sixteen equal square cells, evenly spaced full grid, no labels, letters, numbers, borders, watermark or text. Each cell is a distinct centered hand-painted detailed game skill illustration with a clean readable silhouette, polished metal and luminous energy shading, dark navy background, generous inset margin, consistent contrast and soft vignette within each cell. Not vector glyphs, no simplistic geometric diagrams. Aircraft theme: riptide. In strict row-major order from top left, the sixteen subjects are: 1: stronger turquoise healing spring; 2: clear flowing water washing away a slow effect; 3: turquoise water shield protecting fighter; 4: life-saving turquoise healing pulse around a wounded fighter; 5: sharpened twin water blades; 6: two consecutive turquoise slashes crossing one enemy; 7: water blades trapping and slowing a target; 8: water blades returning blue mana; 9: stronger turquoise inward current; 10: reverse current slowing trapped targets; 11: compressing turquoise water reducing enemy firepower; 12: two successive tidal explosions; 13: rising protective tidal water form; 14: majestic dense ocean-energy fighter form; 15: spare abstract energy core matching the aircraft; 16: spare wing insignia matching the aircraft. Keep every illustration fully contained in its own equal cell; make the first fourteen images clearly different and match each description.",
+      "frames": [
+        {
+          "skillId": "riptide_wellspring",
+          "rank": 2,
+          "column": 0,
+          "row": 0
+        },
+        {
+          "skillId": "riptide_wellspring",
+          "rank": 3,
+          "column": 1,
+          "row": 0
+        },
+        {
+          "skillId": "riptide_wellspring",
+          "rank": 4,
+          "column": 2,
+          "row": 0
+        },
+        {
+          "skillId": "riptide_wellspring",
+          "rank": 5,
+          "column": 3,
+          "row": 0
+        },
+        {
+          "skillId": "riptide_tidal_blades",
+          "rank": 2,
+          "column": 0,
+          "row": 1
+        },
+        {
+          "skillId": "riptide_tidal_blades",
+          "rank": 3,
+          "column": 1,
+          "row": 1
+        },
+        {
+          "skillId": "riptide_tidal_blades",
+          "rank": 4,
+          "column": 2,
+          "row": 1
+        },
+        {
+          "skillId": "riptide_tidal_blades",
+          "rank": 5,
+          "column": 3,
+          "row": 1
+        },
+        {
+          "skillId": "riptide_confluence",
+          "rank": 2,
+          "column": 0,
+          "row": 2
+        },
+        {
+          "skillId": "riptide_confluence",
+          "rank": 3,
+          "column": 1,
+          "row": 2
+        },
+        {
+          "skillId": "riptide_confluence",
+          "rank": 4,
+          "column": 2,
+          "row": 2
+        },
+        {
+          "skillId": "riptide_confluence",
+          "rank": 5,
+          "column": 3,
+          "row": 2
+        },
+        {
+          "skillId": "riptide_waterform",
+          "rank": 2,
+          "column": 0,
+          "row": 3
+        },
+        {
+          "skillId": "riptide_waterform",
+          "rank": 3,
+          "column": 1,
+          "row": 3
+        }
+      ],
+      "outputFileId": "exec-cca61db9-e0e2-424d-af2b-2567a5ea6b33.png",
+      "seed": null
+    }
+  }
+}

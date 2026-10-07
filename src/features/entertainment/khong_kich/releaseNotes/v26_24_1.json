@@ -1,0 +1,107 @@
+{
+  "version": "26.24.1",
+  "releaseDate": "07/10/2026",
+  "title": "Astra Và Minh Họa Nâng Cấp",
+  "displayTitle": "KHÔNG KÍCH 26.24.1 — ASTRA · NÂNG CẤP · ARGENT",
+  "summary": "Làm mới hình chiến cơ Astra, bổ sung hình minh họa cho từng nâng cấp kỹ năng, rút gọn cách hiển thị tên chiến cơ và tăng sát thương Thiên La Kiếm Trận của Argent.",
+  "sections": [
+    {
+      "id": "aircraft-presentation",
+      "title": "HÌNH ẢNH VÀ TOOLTIP",
+      "icon": {
+        "kind": "aircraft",
+        "id": "astra"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "astra-sprite",
+          "icon": {
+            "kind": "aircraft",
+            "id": "astra"
+          },
+          "title": "Astra — Sprite mới",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Astra có sprite raster tạo sinh mới với ba tư thế bay, giáp bạc và năng lượng tinh tú màu cam. Hình mới được dùng trong chiến đấu, màn chọn, HUD và báo cáo nhiệm vụ."
+            }
+          ]
+        },
+        {
+          "id": "skill-upgrade-art",
+          "icon": {
+            "kind": "skill",
+            "id": "stellar_lance"
+          },
+          "title": "Minh họa từng nâng cấp kỹ năng",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Bổ sung 84 hình minh họa nâng cấp cho Viper, Titan, Phantom, Astra, Cinder và Riptide. Mỗi nâng cấp có icon tương ứng trước tên trong tooltip màn chọn chiến cơ và trong trận."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Argent, Sylva và Terra dùng cùng cách trình bày với bộ icon nâng cấp hiện có. Các mốc nâng nội tại cũng hiển thị icon nội tại."
+            }
+          ]
+        },
+        {
+          "id": "aircraft-names",
+          "icon": {
+            "kind": "aircraft",
+            "id": "terra"
+          },
+          "title": "Tên chiến cơ gọn hơn",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Thống nhất tên ngắn: Viper, Titan, Phantom, Astra, Cinder, Riptide, Argent, Sylva và Terra. Bỏ nhãn hành và biệt danh phụ trên thẻ chọn chiến cơ."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "argent-balance",
+      "title": "ARGENT",
+      "icon": {
+        "kind": "aircraft",
+        "id": "argent"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "argent-array-damage",
+          "icon": {
+            "kind": "skill",
+            "id": "argent_heavenly_blade_array"
+          },
+          "title": "Thiên La Kiếm Trận",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Sát thương mỗi Phiến tăng theo cấp kỹ năng.",
+              "before": "60% / 80% / 100% Hỏa Lực",
+              "after": "110% / 130% / 150% Hỏa Lực"
+            },
+            {
+              "format": "bullet",
+              "changeType": "unchanged",
+              "text": "Giữ nguyên số kiếm trận, nhịp phóng, thời gian tồn tại, chi phí Mana, hồi chiêu và các hiệu ứng nâng cấp khác."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

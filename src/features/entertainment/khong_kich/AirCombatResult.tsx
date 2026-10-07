@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 import { AIRCRAFT_CONFIGS } from "./airCombatConfig";
 import { AirCombatReward, AirCombatRunSummary } from "./airCombatTypes";
-import { AircraftGlyph } from "./AircraftGlyph";
+import { AircraftPreview } from "./AircraftPreview";
 import { GameResultScreen, ModalActions, ModalButton, OverlayBody, ResultHero } from "../../../components/overlay/AppOverlay";
 
 interface AirCombatResultProps {
@@ -72,7 +72,7 @@ export const AirCombatResult: React.FC<AirCombatResultProps> = ({
       <ResultHero>
 
         <div className="relative mx-auto w-fit">
-          <AircraftGlyph color={aircraft.color} accent={aircraft.accent} className="h-12 w-12" />
+          <AircraftPreview aircraftId={summary.aircraftId} className="h-12 w-12" />
           <span className="absolute -right-5 -top-2 grid h-12 w-12 place-items-center rounded-2xl border border-cyan-300/50 bg-cyan-950 text-2xl font-semibold text-[var(--modal-info)] shadow-lg">{summary.rank}</span>
         </div>
         <p className="mt-1 text-xs font-semibold uppercase tracking-[0.22em] text-[var(--modal-info)]">Báo cáo nhiệm vụ</p>

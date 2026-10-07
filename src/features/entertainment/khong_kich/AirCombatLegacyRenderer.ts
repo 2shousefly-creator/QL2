@@ -250,7 +250,7 @@ function drawAircraft(
     ctx.drawImage(img,0,(aircraftId==="astra"||aircraftId==="cinder")?0:top,Math.round(img.naturalWidth/((aircraftId==="astra"||aircraftId==="cinder")?3:4)),(aircraftId==="astra"||aircraftId==="cinder")?img.naturalHeight:height,-width*art.anchorX,-size/2,width,size);
     ctx.restore();return;
   }
-  if(aircraftId==="terra"||aircraftId==="sylva"||aircraftId==="riptide"||aircraftId==="cinder"){ctx.restore();return;}
+  if(aircraftId==="astra"||aircraftId==="terra"||aircraftId==="sylva"||aircraftId==="riptide"||aircraftId==="cinder"){ctx.restore();return;}
   ctx.shadowColor = color;
   ctx.shadowBlur = 14;
   ctx.fillStyle = color;
