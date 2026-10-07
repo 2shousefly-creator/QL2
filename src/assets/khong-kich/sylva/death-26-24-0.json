@@ -1,0 +1,124 @@
+{
+  "tool": "image_gen.imagegen",
+  "outputFileId": "exec-d06d6ae5-59f5-46c1-aa83-e38949c4e594.png",
+  "prompt": "Redesign supplied Sylva death atlas as 3 by 2 transparent raster: four coherent thorn bud growth stages with bright lime core dark serrated thorns roots pale rim, appearance flare and harmless wither. Equal stable footprint.",
+  "width": 768,
+  "height": 512,
+  "frames": [
+    {
+      "name": "death0",
+      "rect": [
+        0,
+        0,
+        256,
+        256
+      ],
+      "bounds": [
+        24,
+        32,
+        232,
+        223
+      ],
+      "anchor": [
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "name": "death1",
+      "rect": [
+        256,
+        0,
+        256,
+        256
+      ],
+      "bounds": [
+        24,
+        24,
+        232,
+        232
+      ],
+      "anchor": [
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "name": "death2",
+      "rect": [
+        512,
+        0,
+        256,
+        256
+      ],
+      "bounds": [
+        26,
+        24,
+        229,
+        232
+      ],
+      "anchor": [
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "name": "death3",
+      "rect": [
+        0,
+        256,
+        256,
+        256
+      ],
+      "bounds": [
+        24,
+        25,
+        232,
+        231
+      ],
+      "anchor": [
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "name": "appearance",
+      "rect": [
+        256,
+        256,
+        256,
+        256
+      ],
+      "bounds": [
+        28,
+        24,
+        228,
+        232
+      ],
+      "anchor": [
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "name": "wither",
+      "rect": [
+        512,
+        256,
+        256,
+        256
+      ],
+      "bounds": [
+        24,
+        25,
+        232,
+        231
+      ],
+      "anchor": [
+        0.5,
+        0.5
+      ]
+    }
+  ],
+  "presentation": "Stable 1.8x per-axis render scale relative to 26.23.0, bounded boss scaling; alpha padding normalized to 24px per 256px cell."
+}

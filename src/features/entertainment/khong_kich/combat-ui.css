@@ -840,3 +840,6 @@
 .air-receipt-row[data-tier=gold]{color:#fde68a;}
 
 .air-sylva-vitality{position:absolute;left:2px;right:2px;bottom:1px;color:#e5e7eb;background:#102619dd;font-size:7px;line-height:1.2;text-align:center;pointer-events:none}
+
+.air-terra-pressure{position:absolute;left:1.6cqw;right:1.6cqw;bottom:-4.6cqw;height:4.4cqw;z-index:4;display:flex;align-items:center;gap:2cqw;padding:.4cqw 1.4cqw;background:#221b12ed;border:1px solid #a47332;border-radius:0 0 1cqw 1cqw;color:#ffdda0;font-family:system-ui,sans-serif;font-size:2.2cqw;pointer-events:none}
+.air-terra-pressure>span{white-space:nowrap}.air-terra-pressure>div{position:relative;flex:1;height:1.5cqw;overflow:hidden;background:#3d2d1b;border-radius:.4cqw}.air-terra-pressure b{display:block;height:100%;background:linear-gradient(90deg,#b87820,#ffc856)}.air-terra-pressure i{position:absolute;top:0;bottom:0;width:1px;background:#fff2bc}

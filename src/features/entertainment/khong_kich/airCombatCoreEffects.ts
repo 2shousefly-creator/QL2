@@ -255,7 +255,7 @@ export function armorPenetration(state: AircraftCombatState): number {
     return Math.min(.40, (hasCore(state, 57) ? .20 : 0) + (hasCore(state, 88) ? .40 : 0));
 }
 export function negativeStatusDuration(state: AircraftCombatState, seconds: number): number {
-    return seconds * (hasCore(state, 203) ? 1.20 : 1) * (hasCore(state, 98) ? .70 : 1);
+    return seconds * ((state.coreState.timers.terraUltimate??0)>state.coreState.time&&(state.coreState.stacks.terraUltimateRank??0)>=2?.7:1) * (hasCore(state, 203) ? 1.20 : 1) * (hasCore(state, 98) ? .70 : 1);
 }
 export function coreStackLabel(state: AircraftCombatState, id: CoreId): string | null {
     const c = state.coreState;

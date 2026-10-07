@@ -1,3 +1,5 @@
+import { terraHud, terraState } from './airCombatTerraRuntime';
+import { isTerraSkill } from './airCombatTerraConfig';
 import { isSylvaSkill } from './airCombatSylvaConfig';
 import { sylvaHud, sylvaState } from './airCombatSylvaRuntime';
 import { shouldAutoFire } from './airCombatAircraft';
@@ -155,6 +157,15 @@ function skillUtility(id: SkillId, s: AircraftCombatState, ai: MirrorAI, p: Poin
 
     return -Infinity;
   }
+  if(isTerraSkill(id)) {
+    if(actor.elapsed-(ai.lastCastAt??-Infinity)<.4)return -Infinity;
+    const t=terraHud(actor),hp=s.currentHp/getEffectiveAircraftStats(s).maxHp;
+    if(id==='terra_reactive_rock_armor')return ai.incoming>0||ai.escapeRisk>.5?2:-Infinity;
+    if(id==='terra_geocore_overdrive')return hp<.65||ai.incoming>0&&hp<.85?2.4:-Infinity;
+    if(!seen.targetVisible||seen.targetProtected)return -Infinity;
+    if(id==='terra_strata_clamp')return ahead&&distance(p,seen.player)<340?1.8:-Infinity;
+    return ahead&&distance(p,seen.player)<300&&firing>.4?(t&&t.pressure>=t.cap*.5?2.3:1.2):-Infinity;
+  }
   if(isSylvaSkill(id)) {
     const stats=getEffectiveAircraftStats(s),hp=s.currentHp/stats.maxHp;
     if(actor.elapsed-(ai.lastCastAt??-Infinity)<.3)return -Infinity;
@@ -214,7 +225,7 @@ function skillUtility(id: SkillId, s: AircraftCombatState, ai: MirrorAI, p: Poin
   const sinceCast=actor.elapsed-(ai.lastCastAt??-Infinity),planned=ai.plan?.nextSkill===id;
   // Emergency defense may interrupt the offensive cadence, but casts do not cascade every decision.
   if(sinceCast<(defensive?.2:planned?.4:.85))return -Infinity;
-  const defense = ({sylva:"sylva_symbiosis",argent:"argent_guard_stance",riptide:"riptide_wellspring",cinder:"cinder_fire_shield",black_eagle:"decoy",breaker:"armor_shield",phantom:"invisibility",astra:"orbit_reversal"} as const)[s.aircraftId];
+  const defense = ({terra:"terra_reactive_rock_armor",sylva:"sylva_symbiosis",argent:"argent_guard_stance",riptide:"riptide_wellspring",cinder:"cinder_fire_shield",black_eagle:"decoy",breaker:"armor_shield",phantom:"invisibility",astra:"orbit_reversal"} as const)[s.aircraftId];
   const defenseReady=skillRank(s,defense)>0&&(s.cooldowns[defense]??0)<3&&(s.activeEffects[defense]??0)<=0;
   const reserveCost=!defensive&&defenseReady?Math.min(getSkillRuntimeValues(s,defense).cost,Math.max(0,stats.maxResource-values.cost)):0;
   const lethalWindow=seen.playerHp>0&&seen.playerHp<stats.firepower*Math.max(1,values.damageMultiplier)&&firing>.7;
@@ -222,6 +233,7 @@ function skillUtility(id: SkillId, s: AircraftCombatState, ai: MirrorAI, p: Poin
   if(!defensive&&seen.targetProtected&&!["gravity_anchor","twin_reflection","escort_drone"].includes(id))return -Infinity;
   const burn=Math.max(0,...actor.enemies.filter(e=>e.hp>0).map(e=>cinderStacks(actor,e.id)));
   const opportunity: Record<SkillId, number> = {
+    terra_reactive_rock_armor:0,terra_seismic_cannon:0,terra_strata_clamp:0,terra_geocore_overdrive:0,
     sylva_symbiosis:0,sylva_acid_burst:0,sylva_parasitic_seed:0,sylva_deathbloom:0,
     argent_guard_stance:0,argent_blade_cast:0,argent_blade_recall:0,argent_heavenly_blade_array:0,
     riptide_wellspring:0,riptide_tidal_blades:0,riptide_confluence:0,riptide_waterform:0,
@@ -322,7 +334,7 @@ function roleThreshold(id:SkillId,actor:CombatWorld,ai:MirrorAI) {
 }
 function updatePlan(ai:MirrorAI,s:AircraftCombatState,now:number) {
   if(ai.plan&&(ai.plan.expiresAt<=now||ai.lastCast===ai.plan.nextSkill))ai.plan=undefined;
-  const follow:Partial<Record<SkillId,SkillId>>={riptide_confluence:"riptide_waterform",riptide_waterform:"riptide_tidal_blades",cinder_fuel_barrage:"cinder_heat_wave",cinder_heat_wave:"cinder_inferno_beam",predator_lock:"afterburner",gravity_anchor:"heavy_bomb",armor_shield:"sweeping_cannon",invisibility:"focus_laser",twin_reflection:"stellar_lance",orbit_reversal:"starfall"};
+  const follow:Partial<Record<SkillId,SkillId>>={terra_strata_clamp:"terra_seismic_cannon",riptide_confluence:"riptide_waterform",riptide_waterform:"riptide_tidal_blades",cinder_fuel_barrage:"cinder_heat_wave",cinder_heat_wave:"cinder_inferno_beam",predator_lock:"afterburner",gravity_anchor:"heavy_bomb",armor_shield:"sweeping_cannon",invisibility:"focus_laser",twin_reflection:"stellar_lance",orbit_reversal:"starfall"};
   if(ai.lastCast&&ai.lastCastAt!==undefined&&now-ai.lastCastAt<2){
     const next=follow[ai.lastCast];
     if(next&&skillRank(s,next)>0&&(!ai.plan||ai.plan.startedAt<ai.lastCastAt))ai.plan={kind:`${ai.lastCast}:${next}`,startedAt:ai.lastCastAt,expiresAt:ai.lastCastAt+3,nextSkill:next};

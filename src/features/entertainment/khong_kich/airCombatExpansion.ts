@@ -11,7 +11,7 @@ const owns = (s: AircraftCombatState, n: number) => s.selectedCores.includes(`co
 export interface ExpansionCast { skillId: SkillId; overclock: number; compressed?: boolean; capacitor?: boolean; equipmentBonus?: number; cannonHealingSpent?: number; ended?: boolean }
 export interface AbsorbShield {
   amount: number; until: number;
-  capacity?: number; absorbed?: number; duration?: number; returned?: boolean; settled?: boolean;
+  capacity?: number; absorbed?: number; reflectedAbsorbed?: number; duration?: number; returned?: boolean; settled?: boolean;
 }
 export interface ExpansionState {
   lastSkill?: { id: SkillId; at: number };
@@ -19,7 +19,7 @@ export interface ExpansionState {
   casts: Partial<Record<SkillId, ExpansionCast>>;
   liveCasts: ExpansionCast[];
   hpLoss: { at: number; amount: number }[];
-  debt: { amount: number; next: number; ticks: number }[];
+  debt: { amount: number; next: number; ticks: number; sourceEnemyId?:number; reflection?:boolean }[];
   charges: { target: number; x: number; y: number; at: number }[];
   returns: { at: number; capacity: number; duration: number }[];
   endedShields: AbsorbShield[];
@@ -41,7 +41,7 @@ export function activeNegativeStatusTypes(s: AircraftCombatState): Set<string> {
   if (expansionActive(s, "acidArmor")) result.add("armorBrokenUntil");
   return result;
 }
-export const hasAbsorbShield = (s: AircraftCombatState) => Object.values(s.coreState.shields).some(sh => sh.amount > 0 && sh.until > s.coreState.time);
+export const hasAbsorbShield = (s: AircraftCombatState) => ((s.coreState.timers.terraArmor??0)>s.coreState.time&&(s.coreState.stacks.terraReserve??0)>0)||Object.values(s.coreState.shields).some(sh => sh.amount > 0 && sh.until > s.coreState.time);
 export function arsenalBonuses(s: AircraftCombatState) {
   const counts = { attack: 0, defense: 0, resource: 0, utility: 0, skill: 0 };
   if (owns(s, 201)) for (const id of new Set(s.selectedCores)) {

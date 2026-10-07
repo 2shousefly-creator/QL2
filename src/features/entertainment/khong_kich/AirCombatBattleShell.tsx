@@ -1,3 +1,4 @@
+import { TERRA_UPGRADE_ICONS } from './airCombatTerraArt';
 import { sylvaHud } from './airCombatSylvaRuntime';
 import { SYLVA_UPGRADE_ICONS } from './airCombatSylvaArt';
 import { SkillIcon } from './SkillIcon';
@@ -717,7 +718,7 @@ export const AirCombatBattleShell: React.FC<AirCombatBattleProps> = ({
       </section>
 
       {hud.bossMaxHp > 0 && (
-        <div className="air-boss-hud" style={{ top: `${AIR_COMBAT_WORLD.hudHeight / 720 * 100}%`, height: `${BOSS_HUD_HEIGHT / 720 * 100}%` }} data-boss-phase={hud.bossPhase}>
+        <div className="air-boss-hud" style={{ top: `${(AIR_COMBAT_WORLD.hudHeight+(aircraftId==='terra'?17:0)) / 720 * 100}%`, height: `${BOSS_HUD_HEIGHT / 720 * 100}%` }} data-boss-phase={hud.bossPhase}>
           <div className="flex justify-between text-[7px] font-black uppercase text-rose-200"><span>{getAirCombatStage(stageId)?.bossName} · Giai đoạn {hud.bossPhase}</span><span>{Math.round(hud.bossHp).toLocaleString("vi-VN")}</span></div>
           {stageId === 2 && <div className="air-guardian-hud"><span>VỆ TINH: {hud.guardianSlots.map((alive,slot)=><i key={slot} data-alive={alive}>●</i>)}</span><span>{hud.guardianSlots.some(Boolean) ? "BẢO HỘ: -35% SÁT THƯƠNG" : "BẢO HỘ ĐÃ PHÁ"}</span></div>}
           <div className="air-boss-health relative mt-1 h-1.5 overflow-hidden bg-black">
@@ -729,14 +730,14 @@ export const AirCombatBattleShell: React.FC<AirCombatBattleProps> = ({
         </div>
       )}
 
-      {!runtime && hud.mirror && <div className="air-boss-hud" style={{top:`${AIR_COMBAT_WORLD.hudHeight/720*100}%`,height:`${BOSS_HUD_HEIGHT/720*100}%`}}>
+      {!runtime && hud.mirror && <div className="air-boss-hud" style={{top:`${(AIR_COMBAT_WORLD.hudHeight+(aircraftId==='terra'?17:0))/720*100}%`,height:`${BOSS_HUD_HEIGHT/720*100}%`}}>
         <div className="flex justify-between text-[7px] font-black text-slate-100"><span>THE OTHER SELF</span><span>HP {Math.ceil(hud.mirror.hp).toLocaleString("vi-VN")} · {resourceLabel} {Math.floor(hud.mirror.resource)}</span></div>
         <div className="relative mt-1 h-1.5 overflow-hidden rounded bg-slate-800" role="progressbar" aria-label="Máu Chiến Cơ Ảo Ảnh" aria-valuenow={hud.mirror.hp} aria-valuemax={hud.mirror.maxHp}>
           <div className="absolute inset-y-0 left-0 bg-slate-100" style={{width:`${Math.min(100,hud.mirror.hp/Math.max(1,hud.mirror.maxHp)*100)}%`}} />
           {!!hud.mirror.grayHealth&&<div className="absolute inset-y-0 bg-slate-300/80" style={{left:`${hud.mirror.hp/Math.max(1,hud.mirror.maxHp)*100}%`,width:`${Math.max(0,Math.min(hud.mirror.grayHealth,hud.mirror.maxHp-hud.mirror.hp))/Math.max(1,hud.mirror.maxHp)*100}%`}} />}
         </div>
       </div>}
-      <AirCombatStatusStrip ref={statusStripRef} onTooltipChange={onStatusTooltip} top={AIR_COMBAT_WORLD.hudHeight + (hud.bossMaxHp > 0 || (!runtime && hud.mirror) ? BOSS_HUD_HEIGHT : 0)} />
+      <AirCombatStatusStrip ref={statusStripRef} onTooltipChange={onStatusTooltip} top={AIR_COMBAT_WORLD.hudHeight + (aircraftId==='terra'?17:0) + (hud.bossMaxHp > 0 || (!runtime && hud.mirror) ? BOSS_HUD_HEIGHT : 0)} />
 
       <div className="absolute inset-x-0 bottom-0 z-20 grid h-[11.1111%] grid-cols-4 gap-1 border-t border-cyan-900/50 bg-slate-950 p-1.5" data-skill-rail="bottom">
         <PassiveCell world={worldRef.current} onInspect={()=>{if(tooltipPassive){closeAllTooltips();return;}activateTooltip("passive");setTooltipPassive(true);}}/>
@@ -750,7 +751,7 @@ export const AirCombatBattleShell: React.FC<AirCombatBattleProps> = ({
           const {cooldown,borrow,free}=availability;
           const active = skillId === "escort_drone" ? hud.droneActive : (worldRef.current.aircraft.activeEffects[skillId] || 0) > 0 || worldRef.current.aircraft.coreState.deferredCooldowns[skillId]!==undefined;
           const state=worldRef.current.aircraft, rank=skillRank(state,skillId), allocatable=canAllocateSkill(state,skillId);
-          const locked = rank===0 || ultimateCastDisabled(state,skillId) || playerSkillLocked(state);
+          const locked = rank===0 || ultimateCastDisabled(state,skillId) || (playerSkillLocked(state)&&!(skillId==='terra_geocore_overdrive'&&rank>=2));
           const manualDetonate=availability.manualAction==="detonate";
           const unavailable=!availability.available;
           const blockingCooldown=availability.reason==="cooldown"&&cooldown>0;
@@ -827,7 +828,7 @@ export const AirCombatBattleShell: React.FC<AirCombatBattleProps> = ({
           <p><CoreDescription text={tooltipModel.description}/></p>
           <div className="air-tooltip-details">{tooltipModel.detailRows.map(row => <div key={row}><CoreDescription text={row}/></div>)}</div>
           {tooltipModel.coreRows.map(row=><p key={row} style={{color:"#fde047"}}><CoreDescription text={row}/></p>)}
-          <div className="air-rank-preview">{tooltipModel.rankRows.map(row=><section key={row.rank} data-unlocked={row.rank<=tooltipModel.rank} data-current={row.rank===tooltipModel.rank}><strong>{({...ARGENT_UPGRADE_ICONS,...SYLVA_UPGRADE_ICONS})[tooltipSkill as string]&&<SkillIcon id={({...ARGENT_UPGRADE_ICONS,...SYLVA_UPGRADE_ICONS})[tooltipSkill as string][row.rank-1]} className="air-argent-upgrade-icon"/>}◆ Cấp {row.rank} — {row.name}</strong><p style={{whiteSpace:"pre-line"}}><CoreDescription text={row.displayDescription}/></p></section>)}</div>
+          <div className="air-rank-preview">{tooltipModel.rankRows.map(row=><section key={row.rank} data-unlocked={row.rank<=tooltipModel.rank} data-current={row.rank===tooltipModel.rank}><strong>{({...TERRA_UPGRADE_ICONS,...ARGENT_UPGRADE_ICONS,...SYLVA_UPGRADE_ICONS})[tooltipSkill as string]&&<SkillIcon id={({...TERRA_UPGRADE_ICONS,...ARGENT_UPGRADE_ICONS,...SYLVA_UPGRADE_ICONS})[tooltipSkill as string][row.rank-1]} className="air-argent-upgrade-icon"/>}◆ Cấp {row.rank} — {row.name}</strong><p style={{whiteSpace:"pre-line"}}><CoreDescription text={row.displayDescription}/></p></section>)}</div>
         </motion.aside></AirCombatTooltipPortal>
       )}
 

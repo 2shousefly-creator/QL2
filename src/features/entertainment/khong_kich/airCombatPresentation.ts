@@ -1,3 +1,4 @@
+import { terraHud, terraState } from './airCombatTerraRuntime';
 import { sylvaHud, sylvaState, sylvaMovement } from './airCombatSylvaRuntime';
 import { ARGENT } from './airCombatArgentConfig';
 import { RIPTIDE } from './airCombatRiptideConfig';
@@ -92,6 +93,7 @@ export function getActiveSkillDuration(world: CombatWorld, id: SkillId) {
     return { remaining: energy.remaining ?? 0, duration: energy.remaining ?? 0, progress: energy.progress,
       timeLabel: hawkEyeTimeLabel(energy.remaining) };
   }
+  if(id.startsWith('terra_')){const t=terraHud(world),remaining=state.activeEffects[id]??0;if(!t||remaining<=0)return null;const duration=state.activeEffectDurations?.[id]??remaining;return {remaining,duration,progress:remaining/duration,timeLabel:id==='terra_reactive_rock_armor'?'Dự trữ '+Math.ceil(t.reserve)+' / '+Math.ceil(t.initialReserve):id==='terra_seismic_cannon'?'Lập thế · '+remaining.toFixed(1)+'s':id==='terra_geocore_overdrive'?'Cường hóa · '+Math.ceil(remaining)+'s':'Kẹp Sơn · Đang ép'};}
   if(id==='sylva_symbiosis'){const a=sylvaHud(world);return a?{remaining:a.remaining,duration:6,progress:a.remaining/6,timeLabel:'Sinh Lực: '+Math.round(a.storedVitality)+' · Hồi phục: '+Math.round(a.heal)}:null;}
   if(id==='argent_guard_stance'){
     const g=argentHud(world).guard;if(!g)return null;
@@ -222,6 +224,13 @@ function coreCooldownStatuses(world:CombatWorld):StatusPresentation[] {
 
 export function getStatusPresentations(world: CombatWorld): StatusPresentation[] {
   const s = world.aircraft, c = s.coreState, result: StatusPresentation[] = [];
+  const terra=terraHud(world);
+  if(terra){
+   const add=(id:string,name:string,description:string,remaining:number,duration:number)=>{if(remaining>0)result.push({id:'terra:'+id,group:'buff',name,description,icon:{kind:'skill',id},source:'Terra',stacks:1,remaining,duration,priority:112});};
+   add('terra_reactive_rock_armor','Nham Giáp · '+Math.ceil(terra.reserve)+' / '+Math.ceil(terra.initialReserve),'Dự trữ hấp thu một phần sát thương; hồi chiêu bắt đầu khi giáp kết thúc.',terra.armorRemaining,6);
+   add('terra_seismic_cannon','Pháo Địa Chấn · Lập thế','Địa Áp và Khiên đã chốt. Địa Áp mới được giữ cho phát tiếp theo.',terra.windup,1);
+   add('terra_geocore_overdrive','Cường Hóa Địa Tâm','Hồi Máu mỗi 0,5 giây, giữ Địa Áp và cường hóa Pháo Địa Chấn.',terra.ultimate,20);
+  }
   const life=sylvaHud(world);
   if(life)result.push({id:'sylva:symbiosis',group:'buff',name:'Cộng Sinh · Sinh Lực: '+Math.round(life.storedVitality),description:'Máu Xám là Sinh Lực Tích Trữ; sát thương vẫn trừ Máu ngay. Hồi phục cơ sở: '+Math.round(life.heal)+'. Tái kích hoạt sau 0,5 giây hoặc tự kết thúc sau 6 giây.',icon:{kind:'skill',id:'sylva_symbiosis'},source:'Sylva',stacks:1,badgeText:String(Math.round(life.storedVitality)),remaining:life.remaining,duration:6,priority:112});
   const sylva=sylvaState(world);
@@ -234,6 +243,9 @@ export function getStatusPresentations(world: CombatWorld): StatusPresentation[]
   const rival=world.duel?.opponent??world.mirage?.mirror?.context.world??world.duelOpponent?.context.world;
   const target=rival?.enemies.find(e=>e.aircraftTarget?.world===world);
   if(rival&&target){
+   const earth=terraState(rival).targets.get(target.id);
+   if(earth?.entity===target)for(const [key,name,text,duration] of [['rootUntil','Trói','Bị Kẹp Sơn giữ vị trí.',2],['stunUntil','Choáng','Không thể di chuyển hoặc hành động theo luật khống chế.',2],['suppressUntil','Trấn Sơn','Giảm 20% toàn bộ sát thương gây ra.',5],['markUntil','Rạn Địa','Pháo Địa Chấn của Terra đặt dấu trúng sẽ tiêu dấu và hồi Máu cho Terra.',3]] as const){const remaining=earth[key]-rival.elapsed;if(remaining>0)result.push({id:'terra:'+key,group:'debuff',name,description:text,icon:{kind:'skill',id:'terra_strata_clamp'},source:'Terra đối phương',stacks:1,remaining,duration,priority:112});}
+
    const d=sylvaState(rival).targets.get(target.id),now=rival.elapsed;
    if(d?.entity===target){
     if(d.flatUntil>now||d.acidUntil>now)result.push({id:'sylva:acid',group:'debuff',name:'Ăn mòn Giáp',description:(d.acidUntil>now?'Giảm 25% Giáp, sau đó ':'')+'trừ '+(d.flatUntil>now?d.flat:0)+' Giáp; không dưới 0.',icon:{kind:'skill',id:'sylva_acid_rounds'},source:'Sylva đối phương',stacks:1,remaining:Math.max(d.flatUntil,d.acidUntil)-now,duration:5,priority:111});

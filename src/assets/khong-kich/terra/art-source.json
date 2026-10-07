@@ -1,0 +1,1252 @@
+{
+  "generator": "Built-in image_gen.imagegen",
+  "release": "26.24.0",
+  "seed": null,
+  "layout": "RGBA, normalized UV frame rectangles, pixel bounds exclusive, center anchors; 24px alpha padding and 2px hidden RGB extrusion; no runtime AI calls",
+  "assets": {
+    "armor": {
+      "tool": "image_gen.imagegen",
+      "outputFileId": "exec-3864d4b1-02bd-413c-8fbe-760949880d87.png",
+      "prompt": "4 by 4 transparent raster VFX atlas: mineral ammo muzzle trail impact, segmented armor hit cracked regenerate, homing shard trail impact dissolve, four pressure geocores. Hand painted basalt sandstone amber.",
+      "width": 1024,
+      "height": 1024,
+      "frames": [
+        {
+          "name": "ammo",
+          "rect": [
+            0,
+            0,
+            256,
+            256
+          ],
+          "bounds": [
+            92,
+            24,
+            163,
+            232
+          ],
+          "anchor": [
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "name": "muzzle",
+          "rect": [
+            256,
+            0,
+            256,
+            256
+          ],
+          "bounds": [
+            24,
+            28,
+            232,
+            228
+          ],
+          "anchor": [
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "name": "trail",
+          "rect": [
+            512,
+            0,
+            256,
+            256
+          ],
+          "bounds": [
+            94,
+            24,
+            162,
+            232
+          ],
+          "anchor": [
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "name": "impact",
+          "rect": [
+            768,
+            0,
+            256,
+            256
+          ],
+          "bounds": [
+            24,
+            25,
+            232,
+            231
+          ],
+          "anchor": [
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "name": "armor",
+          "rect": [
+            0,
+            256,
+            256,
+            256
+          ],
+          "bounds": [
+            33,
+            24,
+            222,
+            232
+          ],
+          "anchor": [
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "name": "armorHit",
+          "rect": [
+            256,
+            256,
+            256,
+            256
+          ],
+          "bounds": [
+            24,
+            25,
+            232,
+            231
+          ],
+          "anchor": [
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "name": "armorCrack",
+          "rect": [
+            512,
+            256,
+            256,
+            256
+          ],
+          "bounds": [
+            33,
+            24,
+            222,
+            232
+          ],
+          "anchor": [
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "name": "regenerate",
+          "rect": [
+            768,
+            256,
+            256,
+            256
+          ],
+          "bounds": [
+            38,
+            24,
+            217,
+            232
+          ],
+          "anchor": [
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "name": "shard",
+          "rect": [
+            0,
+            512,
+            256,
+            256
+          ],
+          "bounds": [
+            32,
+            24,
+            224,
+            232
+          ],
+          "anchor": [
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "name": "shardTrail",
+          "rect": [
+            256,
+            512,
+            256,
+            256
+          ],
+          "bounds": [
+            26,
+            24,
+            230,
+            232
+          ],
+          "anchor": [
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "name": "shardImpact",
+          "rect": [
+            512,
+            512,
+            256,
+            256
+          ],
+          "bounds": [
+            29,
+            24,
+            227,
+            232
+          ],
+          "anchor": [
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "name": "armorDissolve",
+          "rect": [
+            768,
+            512,
+            256,
+            256
+          ],
+          "bounds": [
+            39,
+            24,
+            217,
+            232
+          ],
+          "anchor": [
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "name": "pressure0",
+          "rect": [
+            0,
+            768,
+            256,
+            256
+          ],
+          "bounds": [
+            24,
+            31,
+            232,
+            224
+          ],
+          "anchor": [
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "name": "pressure1",
+          "rect": [
+            256,
+            768,
+            256,
+            256
+          ],
+          "bounds": [
+            26,
+            24,
+            229,
+            232
+          ],
+          "anchor": [
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "name": "pressure2",
+          "rect": [
+            512,
+            768,
+            256,
+            256
+          ],
+          "bounds": [
+            29,
+            24,
+            227,
+            232
+          ],
+          "anchor": [
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "name": "pressure3",
+          "rect": [
+            768,
+            768,
+            256,
+            256
+          ],
+          "bounds": [
+            31,
+            24,
+            225,
+            232
+          ],
+          "anchor": [
+            0.5,
+            0.5
+          ]
+        }
+      ]
+    },
+    "cannon": {
+      "tool": "image_gen.imagegen",
+      "outputFileId": "exec-ec5e72d1-ad2d-42e6-9132-553a43bfa161.png",
+      "prompt": "4 by 3 transparent raster VFX atlas: charge ready shield upward seismic cannon bright center left right shoulders impact stun knockback shield hit shield fade. Basalt sandstone amber.",
+      "width": 1024,
+      "height": 768,
+      "frames": [
+        {
+          "name": "charge",
+          "rect": [
+            0,
+            0,
+            256,
+            256
+          ],
+          "bounds": [
+            24,
+            38,
+            232,
+            218
+          ],
+          "anchor": [
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "name": "chargeReady",
+          "rect": [
+            256,
+            0,
+            256,
+            256
+          ],
+          "bounds": [
+            24,
+            42,
+            232,
+            214
+          ],
+          "anchor": [
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "name": "shield",
+          "rect": [
+            512,
+            0,
+            256,
+            256
+          ],
+          "bounds": [
+            24,
+            26,
+            232,
+            229
+          ],
+          "anchor": [
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "name": "cannon",
+          "rect": [
+            768,
+            0,
+            256,
+            256
+          ],
+          "bounds": [
+            25,
+            24,
+            230,
+            232
+          ],
+          "anchor": [
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "name": "cannonCenter",
+          "rect": [
+            0,
+            256,
+            256,
+            256
+          ],
+          "bounds": [
+            51,
+            24,
+            204,
+            232
+          ],
+          "anchor": [
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "name": "leftWave",
+          "rect": [
+            256,
+            256,
+            256,
+            256
+          ],
+          "bounds": [
+            24,
+            39,
+            232,
+            217
+          ],
+          "anchor": [
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "name": "rightWave",
+          "rect": [
+            512,
+            256,
+            256,
+            256
+          ],
+          "bounds": [
+            24,
+            24,
+            232,
+            232
+          ],
+          "anchor": [
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "name": "cannonImpact",
+          "rect": [
+            768,
+            256,
+            256,
+            256
+          ],
+          "bounds": [
+            24,
+            24,
+            232,
+            232
+          ],
+          "anchor": [
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "name": "stun",
+          "rect": [
+            0,
+            512,
+            256,
+            256
+          ],
+          "bounds": [
+            26,
+            24,
+            230,
+            232
+          ],
+          "anchor": [
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "name": "knockback",
+          "rect": [
+            256,
+            512,
+            256,
+            256
+          ],
+          "bounds": [
+            37,
+            24,
+            219,
+            232
+          ],
+          "anchor": [
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "name": "shieldHit",
+          "rect": [
+            512,
+            512,
+            256,
+            256
+          ],
+          "bounds": [
+            24,
+            27,
+            232,
+            229
+          ],
+          "anchor": [
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "name": "shieldEnd",
+          "rect": [
+            768,
+            512,
+            256,
+            256
+          ],
+          "bounds": [
+            24,
+            37,
+            232,
+            219
+          ],
+          "anchor": [
+            0.5,
+            0.5
+          ]
+        }
+      ]
+    },
+    "clamp": {
+      "tool": "image_gen.imagegen",
+      "outputFileId": "exec-32375e5d-e992-4cd5-b08b-79d1bfabf29d.png",
+      "prompt": "4 by 3 transparent raster VFX atlas: left and right strata telegraph collision binding roots stun suppression fissure healing tether heal dissolve enhanced crush. Basalt sandstone amber.",
+      "width": 1024,
+      "height": 768,
+      "frames": [
+        {
+          "name": "strataLeft",
+          "rect": [
+            0,
+            0,
+            256,
+            256
+          ],
+          "bounds": [
+            54,
+            24,
+            202,
+            232
+          ],
+          "anchor": [
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "name": "strataRight",
+          "rect": [
+            256,
+            0,
+            256,
+            256
+          ],
+          "bounds": [
+            54,
+            24,
+            202,
+            232
+          ],
+          "anchor": [
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "name": "telegraph",
+          "rect": [
+            512,
+            0,
+            256,
+            256
+          ],
+          "bounds": [
+            24,
+            30,
+            232,
+            226
+          ],
+          "anchor": [
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "name": "clampImpact",
+          "rect": [
+            768,
+            0,
+            256,
+            256
+          ],
+          "bounds": [
+            24,
+            27,
+            232,
+            228
+          ],
+          "anchor": [
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "name": "root",
+          "rect": [
+            0,
+            256,
+            256,
+            256
+          ],
+          "bounds": [
+            47,
+            24,
+            208,
+            232
+          ],
+          "anchor": [
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "name": "clampStun",
+          "rect": [
+            256,
+            256,
+            256,
+            256
+          ],
+          "bounds": [
+            45,
+            24,
+            211,
+            232
+          ],
+          "anchor": [
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "name": "suppression",
+          "rect": [
+            512,
+            256,
+            256,
+            256
+          ],
+          "bounds": [
+            24,
+            32,
+            232,
+            223
+          ],
+          "anchor": [
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "name": "fissure",
+          "rect": [
+            768,
+            256,
+            256,
+            256
+          ],
+          "bounds": [
+            42,
+            24,
+            214,
+            232
+          ],
+          "anchor": [
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "name": "healLink",
+          "rect": [
+            0,
+            512,
+            256,
+            256
+          ],
+          "bounds": [
+            95,
+            24,
+            161,
+            232
+          ],
+          "anchor": [
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "name": "clampHeal",
+          "rect": [
+            256,
+            512,
+            256,
+            256
+          ],
+          "bounds": [
+            33,
+            24,
+            222,
+            232
+          ],
+          "anchor": [
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "name": "clampEnd",
+          "rect": [
+            512,
+            512,
+            256,
+            256
+          ],
+          "bounds": [
+            44,
+            24,
+            211,
+            232
+          ],
+          "anchor": [
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "name": "crush",
+          "rect": [
+            768,
+            512,
+            256,
+            256
+          ],
+          "bounds": [
+            25,
+            24,
+            231,
+            232
+          ],
+          "anchor": [
+            0.5,
+            0.5
+          ]
+        }
+      ]
+    },
+    "ultimate": {
+      "tool": "image_gen.imagegen",
+      "outputFileId": "exec-1dfe45a0-59cb-4221-a8c1-af826f0b1ef6.png",
+      "prompt": "4 by 2 transparent raster VFX atlas: opened geocore luminous cracks mineral field heal pulse cleansing resistance enhanced accumulation harmless ending. Basalt sandstone amber.",
+      "width": 1024,
+      "height": 512,
+      "frames": [
+        {
+          "name": "coreOpen",
+          "rect": [
+            0,
+            0,
+            256,
+            256
+          ],
+          "bounds": [
+            26,
+            24,
+            229,
+            232
+          ],
+          "anchor": [
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "name": "coreCracks",
+          "rect": [
+            256,
+            0,
+            256,
+            256
+          ],
+          "bounds": [
+            24,
+            32,
+            232,
+            223
+          ],
+          "anchor": [
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "name": "coreField",
+          "rect": [
+            512,
+            0,
+            256,
+            256
+          ],
+          "bounds": [
+            24,
+            32,
+            232,
+            224
+          ],
+          "anchor": [
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "name": "heal",
+          "rect": [
+            768,
+            0,
+            256,
+            256
+          ],
+          "bounds": [
+            29,
+            24,
+            226,
+            232
+          ],
+          "anchor": [
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "name": "cleanse",
+          "rect": [
+            0,
+            256,
+            256,
+            256
+          ],
+          "bounds": [
+            24,
+            32,
+            232,
+            224
+          ],
+          "anchor": [
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "name": "resistance",
+          "rect": [
+            256,
+            256,
+            256,
+            256
+          ],
+          "bounds": [
+            24,
+            30,
+            232,
+            225
+          ],
+          "anchor": [
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "name": "capture",
+          "rect": [
+            512,
+            256,
+            256,
+            256
+          ],
+          "bounds": [
+            24,
+            32,
+            232,
+            223
+          ],
+          "anchor": [
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "name": "coreEnd",
+          "rect": [
+            768,
+            256,
+            256,
+            256
+          ],
+          "bounds": [
+            26,
+            24,
+            230,
+            232
+          ],
+          "anchor": [
+            0.5,
+            0.5
+          ]
+        }
+      ]
+    },
+    "aircraft": {
+      "tool": "image_gen.imagegen",
+      "outputFileId": "exec-37ead9bf-67f9-4751-833b-3ff58b3e1f77.png",
+      "prompt": "TERRA TE-09 top-down orthographic nose-up basalt sandstone aircraft, twin rock cannon pods and amber geocore; identical neutral and ultimate emissive silhouettes; no humanoid parts, no text; transparent background.",
+      "width": 512,
+      "height": 512,
+      "frames": [
+        {
+          "name": "aircraft",
+          "rect": [
+            0,
+            0,
+            512,
+            512
+          ],
+          "bounds": [
+            46,
+            60,
+            466,
+            451
+          ],
+          "anchor": [
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "name": "emissive",
+          "rect": [
+            0,
+            0,
+            512,
+            512
+          ],
+          "bounds": [
+            46,
+            60,
+            466,
+            451
+          ],
+          "anchor": [
+            0.5,
+            0.5
+          ]
+        }
+      ]
+    },
+    "icons": {
+      "tool": "image_gen.imagegen",
+      "outputFileId": "exec-217c0d61-7812-436b-8f84-64c62da52295.png",
+      "prompt": "5 by 4 painterly icon atlas. Nineteen distinct Terra passive and skill rank subjects in order, final cell aircraft portrait. Basalt ochre sandstone amber mineral energy, dark brown backgrounds, no text or geometric placeholders.",
+      "width": 1280,
+      "height": 1024,
+      "frames": [
+        {
+          "rect": [
+            0,
+            0,
+            256,
+            256
+          ],
+          "anchor": [
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "rect": [
+            256,
+            0,
+            256,
+            256
+          ],
+          "anchor": [
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "rect": [
+            512,
+            0,
+            256,
+            256
+          ],
+          "anchor": [
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "rect": [
+            768,
+            0,
+            256,
+            256
+          ],
+          "anchor": [
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "rect": [
+            1024,
+            0,
+            256,
+            256
+          ],
+          "anchor": [
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "rect": [
+            0,
+            256,
+            256,
+            256
+          ],
+          "anchor": [
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "rect": [
+            256,
+            256,
+            256,
+            256
+          ],
+          "anchor": [
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "rect": [
+            512,
+            256,
+            256,
+            256
+          ],
+          "anchor": [
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "rect": [
+            768,
+            256,
+            256,
+            256
+          ],
+          "anchor": [
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "rect": [
+            1024,
+            256,
+            256,
+            256
+          ],
+          "anchor": [
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "rect": [
+            0,
+            512,
+            256,
+            256
+          ],
+          "anchor": [
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "rect": [
+            256,
+            512,
+            256,
+            256
+          ],
+          "anchor": [
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "rect": [
+            512,
+            512,
+            256,
+            256
+          ],
+          "anchor": [
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "rect": [
+            768,
+            512,
+            256,
+            256
+          ],
+          "anchor": [
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "rect": [
+            1024,
+            512,
+            256,
+            256
+          ],
+          "anchor": [
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "rect": [
+            0,
+            768,
+            256,
+            256
+          ],
+          "anchor": [
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "rect": [
+            256,
+            768,
+            256,
+            256
+          ],
+          "anchor": [
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "rect": [
+            512,
+            768,
+            256,
+            256
+          ],
+          "anchor": [
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "rect": [
+            768,
+            768,
+            256,
+            256
+          ],
+          "anchor": [
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "rect": [
+            1024,
+            768,
+            256,
+            256
+          ],
+          "anchor": [
+            0.5,
+            0.5
+          ]
+        }
+      ]
+    }
+  }
+}

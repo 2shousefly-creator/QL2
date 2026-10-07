@@ -11,7 +11,7 @@ import { celestialProtection, createAbsorbShield } from './airCombatExpansion';
 import { negativeStatusDuration } from './airCombatCoreEffects';
 import { canTargetEnemy } from './airCombatTargetability';
 
-export interface IntrinsicDamage { weapon?:boolean; trueDamage:boolean; castId:number; passive?:boolean; source?:"cinder_burn"; ownerId?:number; burnSession?:number; rawBudget?:{remaining:number} }
+export interface IntrinsicDamage { reflection?:boolean; noCrit?:boolean; preserveModifiers?:boolean; weapon?:boolean; trueDamage:boolean; castId:number; passive?:boolean; source?:"cinder_burn"; ownerId?:number; burnSession?:number; rawBudget?:{remaining:number} }
 export interface CinderHooks {
  hostile:(w:CombatWorld,e:EnemyEntity)=>boolean;
  damage:(w:CombatWorld,e:EnemyEntity,raw:number,skill:SkillId|undefined,provenance:IntrinsicDamage)=>number;

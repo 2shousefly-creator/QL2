@@ -1,3 +1,6 @@
+import { isTerraSkill } from './airCombatTerraConfig';
+import { beginTerraSkill, tickTerra, cancelTerra, terraAllowed, terraIncomingHp, terraAbsorb, terraState, terraMovement, terraSuppression, terraKnockbackImmune, clearTerraTarget, terraFx, terraHud, type TerraHooks } from './airCombatTerraRuntime';
+import { clearSylvaTarget } from './airCombatSylvaRuntime';
 import { isSylvaSkill } from './airCombatSylvaConfig';
 import { sylvaState, sylvaGrayHealth, sylvaAllowed, sylvaRecastReady, sylvaHud, sylvaIncomingHp, sylvaArmor, sylvaOutgoing, sylvaMovement, sylvaFireRate, sylvaAcidHit, sylvaMuzzle, sylvaDealt, beginSylvaSkill, tickSylva, cancelSylva, endSylvaSymbiosis, clearSylvaSlow, type SylvaHooks } from './airCombatSylvaRuntime';
 import { argentArrayActive, argentPrimaryFired, argentArmorMultiplier, argentThreatNearby, argentState, argentHud, argentWaiting, argentIncoming, argentPrimaryHit, beginArgentSkill, tickArgent, cancelArgent, argentMovement, clearArgentSlow, type ArgentHooks } from './airCombatArgentRuntime';
@@ -55,7 +58,7 @@ import { BASIC_AMMO_KEYS } from "./airCombatAmmo";
 import type { AmmoVisualKey } from "./airCombatAmmo";
 import { getMissileVisual, isImmediateMissile, missileRenderRotation } from "./airCombatAmmo";
 import { clearMissilePose } from "./airCombatMissilePresentation";
-import { clearAircraftNegativeStatuses, applyPlayerStatus, addStatusMark, playerStunned, playerSkillLocked } from "./airCombatStatus";
+import { hardControlImmune, clearAircraftNegativeStatuses, applyPlayerStatus, addStatusMark, playerStunned, playerSkillLocked } from "./airCombatStatus";
 import type { AttackMetadata, AttackTag, StatusPayload } from "./airCombatStatus";
 import { bossMinCenterY } from "./airCombatHudLayout";
 import { BOSS_DAMAGE_MULTIPLIER, getBossTuning, SONIC_RING_SPEED, SONIC_RING_THICKNESS, SONIC_ACTIVE_SECONDS, LANE_ACTIVE_SECONDS } from "./airCombatBoss";
@@ -205,6 +208,7 @@ export function aircraftTargetView(host: CombatWorld, actor: CombatWorld): Enemy
 function targetNegativeStatusTypes(w: CombatWorld, e: EnemyEntity): Set<string> {
     const result = new Set<string>(), now = w.elapsed, cinder = cinderState(w).targets.get(e.id);
     if (e.hp <= 0) return result;
+    const terra=terraState(w).targets.get(e.id);if(terra?.entity===e){if(terra.rootUntil>now)result.add('root');if(terra.stunUntil>now)result.add('stunnedUntil');if(terra.suppressUntil>now)result.add('weaken');if(terra.markUntil>now)result.add('fissure');}
     const sylva=sylvaState(w).targets.get(e.id);
     if(sylva?.entity===e){if(sylva.flatUntil>now||sylva.acidUntil>now)result.add('armorBrokenUntil');if(sylva.rootUntil>now)result.add('root');if(sylva.slowUntil>now||sylva.suppressUntil>now)result.add('slow');if(sylva.markUntil>now)result.add('vulnerability');}
     if(argentArmorMultiplier(w,e)<1)result.add('armorBrokenUntil');
@@ -256,7 +260,7 @@ export interface DuelDamageRequest {
     resolvedArmor?: number;
     shieldFactor?: number;
     homing?: boolean;
-    damageOverTime?: boolean; trueDamage?: boolean;
+    damageOverTime?: boolean; trueDamage?: boolean; reflection?: boolean;
 }
 
 /** Canonical aircraft-vs-aircraft incoming contract, shared by both allegiances.
@@ -264,23 +268,23 @@ export interface DuelDamageRequest {
  * the explicit owner receives actual HP loss + shield depletion, never overkill.
  * Per-delivery cadence lives at the caller, independently of PvE contact grace. */
 export function resolveDuelDamage({ attackerWorld, defenderWorld: actor, damageAfterArmor: amount,
-    delivery, zone, resolvedArmor = 0, shieldFactor = 1, homing = false, trueDamage = false, damageOverTime = false }: DuelDamageRequest): DuelDamageResolution {
+    delivery, zone, resolvedArmor = 0, shieldFactor = 1, homing = false, trueDamage = false, damageOverTime = false, reflection = false }: DuelDamageRequest): DuelDamageResolution {
     if (attackerWorld.aftermath || actor.aftermath || actor.destruction || attackerWorld === actor || (actor.aircraftDamageDepth ?? 0) >= 2) return { damage: 0, absorbed: 0 };
     const opponent = actor.enemies.find(e => e.aircraftTarget?.world === attackerWorld);
     actor.aircraftDamageDepth = (actor.aircraftDamageDepth ?? 0) + 1;
     try {
         const kind = delivery === "direct_projectile" ? "projectile" : delivery === "aircraft_collision" ? "collision" : "hazard";
-        return hitPlayer(actor, amount, kind, { damageOwner: attackerWorld, aircraftDelivery: true, trueDamage, damageOverTime,
+        return hitPlayer(actor, amount, kind, { damageOwner: attackerWorld, aircraftDelivery: true, trueDamage, damageOverTime, reflection,
             armorResolved: true, armorPrevented: Math.max(0,amount*resolvedArmor/100), shieldFactor, homing,
             zoneResolved: true, delivery, sourceEnemyId: opponent?.id },
             zone ? { ...createHitResult(), hit: true, zone, x: actor.playerX, y: actor.playerY } : undefined);
     } finally { actor.aircraftDamageDepth--; }
 }
 function receiveAircraftTargetDamage(target: EnemyEntity, amount: number, delivery: DamageDelivery,
-    zone?: AirframeHitZone, resolvedArmor = 0, shieldFactor = 1, homing = false, trueDamage = false, damageOverTime = false): DuelDamageResolution {
+    zone?: AirframeHitZone, resolvedArmor = 0, shieldFactor = 1, homing = false, trueDamage = false, damageOverTime = false, reflection = false): DuelDamageResolution {
     const targetState = target.aircraftTarget!;
     return resolveDuelDamage({ attackerWorld: targetState.attackerWorld, defenderWorld: targetState.world,
-        damageAfterArmor: amount, delivery, zone, resolvedArmor, shieldFactor, homing, trueDamage, damageOverTime });
+        damageAfterArmor: amount, delivery, zone, resolvedArmor, shieldFactor, homing, trueDamage, damageOverTime, reflection });
 }
 
 function spawnMirror(world: CombatWorld): MirrorCombatant {
@@ -308,7 +312,7 @@ export function tickDuelActor(actor: CombatWorld, dt: number): void {
     if (actor.ended || (actor.duel && !actor.duel.combatEnabled)) return;
     revalidateAircraftTargets(actor);
     if (actor.aircraft.currentHp <= 0) {
-        cancelSylva(actor); cancelArgent(actor); cancelRiptide(actor); cancelCinder(actor); actor.bigBang=undefined;
+        cancelTerra(actor); cancelSylva(actor); cancelArgent(actor); cancelRiptide(actor); cancelCinder(actor); actor.bigBang=undefined;
         // Finish already committed attacks before same-tick KO arbitration.
         updateSkillCoreEffects(actor,dt); updateWarnings(actor,dt); updateLaser(actor,dt);
         updateProjectiles(actor,dt); updateProjectileCollisions(actor); updateParticles(actor,dt); return;
@@ -326,7 +330,7 @@ export function tickDuelActor(actor: CombatWorld, dt: number): void {
     updateDecoySalvo(actor, dt); updateSkillCoreEffects(actor, dt); updateWarnings(actor, dt);
     updateLaser(actor, dt); updateMissileSalvo(actor, dt);
     tickCinder(actor, dt, cinderHooks); tickRiptide(actor, dt, riptideHooks);
-    tickBasicFire(actor,dt); tickArgent(actor, dt, argentHooks); tickSylva(actor, dt, sylvaHooks);
+    tickBasicFire(actor,dt); tickArgent(actor, dt, argentHooks); tickSylva(actor, dt, sylvaHooks); tickTerra(actor, dt, terraHooks);
     actor.droneFireCooldown -= dt;
     if (droneCombatActive(actor) && actor.droneFireCooldown <= 0) {
         fireDrone(actor);
@@ -429,7 +433,7 @@ function finishMirrorDuel(world: CombatWorld): void {
     world.projectiles=world.projectiles.filter(p=>!p.mirrorBorrowed);
     for(const projectile of world.projectiles)projectile.mirrorSlow=undefined;
     actor.projectiles.length=actor.warnings.length=actor.decoys.length=actor.effectQueue.length=actor.particles.length=0;
-    actor.bigBang=undefined;cancelSylva(actor);cancelRiptide(actor); cancelCinder(actor);
+    actor.bigBang=undefined;cancelTerra(actor); cancelSylva(actor);cancelRiptide(actor); cancelCinder(actor);
     actor.enemies.length=0;actor.rankRuntime=undefined;actor.astra=undefined;actor.tactical=undefined;
     mirror.incoming.clear();mirror.outgoing.clear();mirror.ai.history.length=0;
     s.mirror=undefined;s.mirrorPhase="boss_delay";s.bossAt=world.elapsed+3;
@@ -1272,7 +1276,7 @@ function fireBasic(world: CombatWorld, firedAt = world.elapsed): boolean {
     };
     multipliers.forEach((multiplier, i) => spawn(multiplier, i - (multipliers.length - 1) / 2));
     if (mainSpawned) recordCoreMetric(state,229,"shots",1);
-    if (mainSpawned) sylvaMuzzle(world);
+    if (mainSpawned) {sylvaMuzzle(world);if(state.aircraftId==='terra')terraFx(world,'muzzle',world.playerX,world.playerY-20,25,.13);}
     if (mainSpawned) argentPrimaryFired(world,primaryShot,argentHooks,firedAt);
     if (context.extraShot)
         spawn(context.extraShot, 1, true);
@@ -1803,7 +1807,7 @@ function updateDecoySalvo(world: CombatWorld, dt: number): void {
 function stopAllSkills(world: CombatWorld, preserveControl = false): void {
     world.bigBang=undefined;
     world.aircraft.coreState.stacks.cancellingSkills=1;
-    cancelSylva(world); cancelArgent(world); cancelRiptide(world);
+    cancelTerra(world); cancelSylva(world); cancelArgent(world); cancelRiptide(world);
     for (const id of SKILL_IDS)
         endAircraftSkill(world.aircraft, id);
     world.rankRuntime=undefined;
@@ -1843,6 +1847,7 @@ export function getWorldSkillAvailability(world: CombatWorld, skillId: SkillId) 
     const availability=getSkillAvailability(world.aircraft,skillId,manual);
     if(skillId==="heavy_bomb"&&world.bigBang&&!world.bigBang.resolved)return {...availability,available:false,reason:"invalid" as const};
     if(skillId==='argent_blade_recall'&&argentWaiting(world)===0)return {...availability,available:false,reason:'invalid' as const};
+    if(!terraAllowed(world,skillId,terraHooks))return {...availability,available:false,reason:'invalid' as const};
     if(!sylvaAllowed(world,skillId,sylvaHooks))return {...availability,available:false,reason:'invalid' as const};
     if(!cinderSkillAllowed(world,skillId))return {...availability,available:false,reason:"invalid" as const};
     if(world.aftermath||world.destruction||(world.duel && !world.duel.combatEnabled)||world.aircraft.currentHp<=0||world.ended||world.pauseReasons.size||world.pendingCoreSelections||world.currentCoreChoices)
@@ -1874,6 +1879,7 @@ export function castWorldSkill(world: CombatWorld, skillId: SkillId): SkillCastR
     if (observer) observeMirrorCast(observer.ai, skillId, world.elapsed);
     const values = getSkillRuntimeValues(world.aircraft, skillId);
     castExpansion(world, skillId, result.resourceSpent, expansionHooks);
+    if(isTerraSkill(skillId))beginTerraSkill(world,skillId,terraHooks);
     equipmentOnCast(world,equipmentHooks,skillId);
     beginRankSkill(world,skillId,rankHooks);
     const release=releaseState(world.aircraft);
@@ -2192,7 +2198,7 @@ function clearHostileObjects(world: CombatWorld): void {
 /** Cancel through the normal lifecycle, then remove every Wave-7 damage owner.
  * Called at clear and again immediately before snapshot (countdown permits casts). */
 function clearDuelTransients(world: CombatWorld): void {
-    cancelSylva(world); cancelArgent(world); cancelRiptide(world); cancelCinder(world); world.bigBang=undefined;
+    cancelTerra(world); cancelSylva(world); cancelArgent(world); cancelRiptide(world); cancelCinder(world); world.bigBang=undefined;
     stopAllSkills(world);
     clearHostileObjects(world);
     while (world.projectiles.length) recycleProjectile(world, world.projectiles.length - 1);
@@ -2213,7 +2219,7 @@ function clearDuelTransients(world: CombatWorld): void {
     equipment.marks = {}; equipment.effects = {}; equipment.presentationGate = {};
 }
 export function prepareMirrorDuel(world: CombatWorld): void {
-    cancelSylva(world); cancelArgent(world); cancelRiptide(world); cancelCinder(world); world.bigBang=undefined;
+    cancelTerra(world); cancelSylva(world); cancelArgent(world); cancelRiptide(world); cancelCinder(world); world.bigBang=undefined;
     clearDuelTransients(world);
     const state = world.aircraft, c = state.coreState;
     // Acquisition progress, consumed one-shot Cores and permanent build survive.
@@ -3267,7 +3273,7 @@ function rollingDps(world: CombatWorld): number {
 }
 /** Debt is already post-armor HP damage. Only current reduction/shields apply again;
  * no hostile payload, grace, combo, lastDamage or damageTaken event is dispatched. */
-function repayExpansionDebt(world: CombatWorld, amount: number) {
+function repayExpansionDebt(world: CombatWorld, amount: number, sourceEnemyId?:number, reflection=false) {
     if(world.duel && !world.duel.combatEnabled)return;
     const state = world.aircraft, c = state.coreState, stats = getEffectiveAircraftStats(state);
     let reduction = expansionIncoming(state);
@@ -3288,12 +3294,16 @@ function repayExpansionDebt(world: CombatWorld, amount: number) {
         prepareAbsorbShield(state,shield);
         const part = Math.min(shield.amount,damage);
         shield.amount -= part; shield.absorbed = (shield.absorbed ?? 0) + part;
+        if(reflection)shield.reflectedAbsorbed=(shield.reflectedAbsorbed??0)+part;
         absorbed += part; damage -= part;
         if(key.startsWith("equipment:"))equipmentMetric(state,Number(key.slice(10)),"shieldAbsorbed",part);
         if (shield.amount <= 0) finishAbsorbShield(state,shield);
     }
+    const debtSource=world.enemies.find(e=>e.aircraftTarget?.world===(world.duel?.opponent??world.mirage?.mirror?.context.world??world.duelOpponent?.context.world));
+    const terraAbsorbed=terraAbsorb(world,damage,sourceEnemyId??debtSource?.id,reflection);damage-=terraAbsorbed;absorbed+=terraAbsorbed;
     damage = Math.min(state.currentHp,damage);
     state.currentHp -= damage; world.damageTaken += damage;
+    terraIncomingHp(world,damage,reflection);
     sylvaIncomingHp(world,damage);
     const sylvaDebtOwner=world.duel?.opponent??world.mirage?.mirror?.context.world??world.duelOpponent?.context.world;
     const sylvaDebtTarget=sylvaDebtOwner?.enemies.find(e=>e.aircraftTarget?.world===world);
@@ -3442,8 +3452,33 @@ function sylvaDetonationLethal(w:CombatWorld,e:EnemyEntity,raw:number):boolean {
  if(guard&&actor.elapsed<guard.until&&(guard.remaining>0||actor.elapsed<guard.beatUntil))factor*=.01;
  damage=calculateDamage(damage,0,factor);
  for(const [key,shield] of Object.entries(c.shields))if(shield.until>c.time&&shield.amount>0){const shieldFactor=key==='cinder'?cinderShieldFactor(actor,source?.id,false):1;const capacity=shield.amount*(shield.capacity===undefined?getShieldReceivedMultiplier(state,Number.isFinite(shield.until)):1);damage-=Math.min(capacity,damage*shieldFactor)/shieldFactor;}
+ const terra=terraState(actor).armor;if(terra&&actor.elapsed<terra.until)damage-=Math.min(terra.reserve,damage*(.4+.05*(terra.rank-1)));
  if(hasCore(state,197))damage*=.65;
  return damage>=state.currentHp;
+}
+const terraHooks:TerraHooks={
+ hostile:isHostileToPlayer,elite:e=>isElite(e.type),displace:displaceEnemy,
+ damage:(w,e,raw,id,castId,trueDamage,reflection=false)=>{const receipt={hp:0,total:0};applyDamageToEnemy(w,e,raw,'#F4B544','skill',id,undefined,undefined,'area_hazard',!reflection,true,undefined,1,[],expansionState(w.aircraft).casts[id],undefined,reflection,undefined,{trueDamage,castId,reflection,noCrit:reflection,preserveModifiers:true},receipt);return receipt;},
+ heal:(w,raw)=>{const n=healAircraft(w.aircraft,raw);if(n>0)emitPlayerHealing(w,n,'skill_core',false);return n;},cleanse:cleanseTerra,
+ controlled:(w,e)=>e.stun>0||terraMovement(w,e)===0||sylvaMovement(w,e)===0||argentMovement(w,e)===0||cinderMovement(w,e)===0||!!e.aircraftTarget&&playerStunned(e.aircraftTarget.world.aircraft),
+};
+function cleanseTerra(w:CombatWorld){
+ const a=w.aircraft,skillExhaust=a.coreState.timers.skillExhaust;clearAircraftNegativeStatuses(a);
+ // Mana strain is a self cost, not a hostile status.
+ if(skillExhaust!==undefined)a.coreState.timers.skillExhaust=skillExhaust;
+ for(const key of ['sylvaFireSlow'])delete a.coreState.timers[key];
+ const owners=new Set<CombatWorld>();for(const e of w.enemies)if(e.aircraftTarget)owners.add(e.aircraftTarget.world);
+ for(const owner of [w.duel?.opponent,w.duelOpponent?.context.world,w.mirage?.mirror?.context.world])if(owner)owners.add(owner);
+ for(const owner of owners)for(const e of owner.enemies)if(e.aircraftTarget?.world===w){
+  clearSylvaTarget(owner,e);clearTerraTarget(owner,e);argentState(owner).controls.delete(e.id);argentState(owner).armorMarks.delete(e.id);clearRiptideSlow(owner,e);cinderState(owner).targets.delete(e.id);
+  owner.rankRuntime?.interference.delete(e.id);owner.rankRuntime?.anchor?.inner.delete(e.id);
+  if(owner.rankRuntime?.lock?.target===e.id){owner.rankRuntime.lock=undefined;endAircraftSkill(owner.aircraft,"predator_lock");}
+  if(owner.skillCores.syncTarget===e.id){owner.skillCores.syncTarget=null;owner.skillCores.syncUntil=0;}
+  if(owner.skillCores.bountyTarget===e.id){owner.skillCores.bountyTarget=null;owner.skillCores.bountyUntil=0;}
+  owner.skillCores.enemyEffects.delete(e.id);delete equipmentState(owner.aircraft).marks[e.id];
+  e.burn=0;e.burnDamage=0;e.burnArmorUntil=0;e.stun=0;e.weakUntil=0;e.weakDebuffUntil=0;e.armorBrokenUntil=0;e.expansionMarks={};
+  const release=releaseState(owner.aircraft);if(release.mark?.target===e.id)release.mark=undefined;
+ }
 }
 const sylvaHooks:SylvaHooks={
  hostile:isHostileToPlayer,elite:e=>isElite(e.type),armor:(w,e)=>resolvedEnemyArmor(w,e),
@@ -3458,7 +3493,7 @@ const argentHooks:ArgentHooks={hostile:isHostileToPlayer,elite:e=>isElite(e.type
  return receipt;
 }};
 const riptideHooks:RiptideHooks={
- hostile:isHostileToPlayer,elite:e=>isElite(e.type),displace:displaceEnemy,
+ hostile:isHostileToPlayer,elite:e=>isElite(e.type),displace:(w,e,dx,dy)=>displaceEnemy(w,e,dx,dy,false),
  damage:(w,e,raw,skill,castId)=>{const receipt={hp:0,total:0};
   applyDamageToEnemy(w,e,raw,'#63e3d6',skill?'skill':'core',skill,undefined,undefined,'area_hazard',true,true,undefined,1,[],skill?expansionState(w.aircraft).casts[skill]:undefined,undefined,!skill,undefined,skill?undefined:{trueDamage:false,castId,passive:true},receipt);
   return receipt;},
@@ -3524,7 +3559,7 @@ function applyDamageToEnemy(world: CombatWorld, enemy: EnemyEntity, rawDamage: n
     }
     if (directPlayer && (marks.shieldBroken ?? 0) > time) expansionMultiplier *= 1.14;
     if (primary && (marks.gunPhase ?? 0) > time) { hitMultiplier *= 1.30; marks.gunPhase = 0; }
-    const canCrit = (!intrinsic || (!!skillId && !intrinsic.trueDamage)) && source !== "core" && source !== "lightning" && (echoScale!==undefined || (!skillId && source !== "skill" && source !== "burn") || canSkillsCrit(state));
+    const canCrit = !intrinsic?.noCrit && (!intrinsic || (!!skillId && !intrinsic.trueDamage)) && source !== "core" && source !== "lightning" && (echoScale!==undefined || (!skillId && source !== "skill" && source !== "burn") || canSkillsCrit(state));
     const opening=!procFree && source==="basic" && hasCore(state,117) && (tacticalState(world).openingHits.get(enemy.id) ?? -Infinity) <= time;
     if(opening)tacticalState(world).openingHits.set(enemy.id, Infinity);
     let effectiveStats = opening ? {...stats,criticalChance:1} : canCrit ? stats : { ...stats, criticalChance: 0 };
@@ -3554,7 +3589,7 @@ function applyDamageToEnemy(world: CombatWorld, enemy: EnemyEntity, rawDamage: n
     const equipmentBaseRaw=rawDamage;
     if(!intrinsic)rawDamage+=equipmentDamage.bonus;
     multiplier*=equipmentDamage.multiplier*(echoScale??1);
-    if(intrinsic && (!skillId || intrinsic.trueDamage)){multiplier=1;hitMultiplier=1;recoilDamage=0;}
+    if(intrinsic && !intrinsic.preserveModifiers && (!skillId || intrinsic.trueDamage)){multiplier=1;hitMultiplier=1;recoilDamage=0;}
     const firstVolleyDamage = volleyHits?.get(enemy.id);
     const gatling=hasCore(state,229)&&(weaponFraction!==undefined||intrinsic?.weapon===true);
     const weaponRaw=intrinsic?.weapon?rawDamage:equipmentBaseRaw*(weaponFraction??0);
@@ -3577,7 +3612,7 @@ function applyDamageToEnemy(world: CombatWorld, enemy: EnemyEntity, rawDamage: n
     const aegis = enemy.type === "boss" && enemy.hp / enemy.maxHp >= .15 && enemy.aegisUntil > time;
     if (aegis && !intrinsic?.trueDamage)
         damage *= .6;
-    if(intrinsic?.trueDamage && guardianMultiplier(world,enemy)>0 && stormDamageTakenMultiplier(world,enemy)>0)damage=rawDamage*sylvaOutgoing(world,enemy);
+    if(intrinsic?.trueDamage && !intrinsic.preserveModifiers && guardianMultiplier(world,enemy)>0 && stormDamageTakenMultiplier(world,enemy)>0)damage=rawDamage*sylvaOutgoing(world,enemy);
     if(deathbloomBudget!==undefined)damage=deathbloomBudget*resolved.multiplier;
     if(gatling)recordCoreMetric(state,229,"weaponDamageReduced",calculateDamage(.45*(firstVolleyDamage===undefined?weaponBeforeCrit*resolved.multiplier:firstVolleyWeapon*.15*hitMultiplier)*zoneMultiplier,armor)*penetrationScale*guardianMultiplier(world,enemy)*stormDamageTakenMultiplier(world,enemy)*(aegis?.6:1));
     const resolvedBeforeShield=damage,shieldBeforeHit=enemy.shield;
@@ -3599,11 +3634,12 @@ function applyDamageToEnemy(world: CombatWorld, enemy: EnemyEntity, rawDamage: n
         cBank(state,gain);
     }
     if (enemy.aircraftTarget) {
-        const received = receiveAircraftTargetDamage(enemy, potential, delivery, contact?.zone, armor, shieldFactor, skillId==="missile_swarm"||skillId==="predator_lock", intrinsic?.trueDamage,source==="burn");
+        const received = receiveAircraftTargetDamage(enemy, potential, delivery, contact?.zone, armor, shieldFactor, skillId==="missile_swarm"||skillId==="predator_lock", intrinsic?.trueDamage,source==="burn",!!intrinsic?.reflection);
         damage = received.damage; absorbed += received.absorbed;
         if(basic&&hasCore(state,180)&&absorbed>0&&!hasAbsorbShield(enemy.aircraftTarget.world.aircraft)){marks.shieldBroken=time+4;recordCoreMetric(state,180,"shieldBreaks",1);}
     } else enemy.hp = Math.max(0, enemy.hp - damage);
     if(sylvaBasic && damage+absorbed>0)sylvaAcidHit(world,enemy,sylvaHooks);
+    if(basic&&state.aircraftId==='terra'&&damage+absorbed>0)terraFx(world,'impact',enemy.x,enemy.y,26,.22);
     sylvaDealt(world,enemy,damage,damage+absorbed,skillId,sylvaHooks,sylvaBonus);
     // Capture this delivery before secondary equipment/Core effects can change the target.
     if(receipt){receipt.hp=damage;receipt.total=damage+absorbed;}
@@ -3929,6 +3965,7 @@ function hitPlayer(world: CombatWorld, rawDamage: number, kind: "projectile" | "
     const sourceType = attack.sourceEnemyType ?? world.enemies.find(e => e.id === attack.sourceEnemyId)?.type;
     if (sourceType === "boss" && world.stageId === 1) rawDamage *= BOSS_DAMAGE_MULTIPLIER;
     if(!attack.trueDamage)rawDamage *= enemyOutputMultiplier(world,attack.sourceEnemyId);
+    else {const source=world.enemies.find(e=>e.id===attack.sourceEnemyId);if(source)rawDamage*=terraSuppression(world,source);}
     if(kind==="collision"&&!contact){const source=world.enemies.find(e=>e.id===attack.sourceEnemyId);if(source)contact={...sweepAircraft(getEnemyHitbox(source),0,0,getPlayerHitbox(world),bodyContact)};}
     const hitZoneMultiplier=(kind==="projectile"||kind==="collision")?wingDamageMultiplier(contact?.zone):1;
     let zoneMultiplier=attack.zoneResolved?1:hitZoneMultiplier;
@@ -3986,7 +4023,7 @@ function hitPlayer(world: CombatWorld, rawDamage: number, kind: "projectile" | "
     const shieldCapacity=incomingShields.reduce((n,sh)=>n+sh.amount,0);
     const incomingCapacity=state.currentHp+shieldCapacity;
     const gorgon=1-P[16].reduction*equipmentScale(state,16),aegisEquipment=equipmentIncomingFactor/gorgon;
-    equipmentPreventedDamage(world,equipmentHooks,Math.max(0,damage/gorgon-damage));
+    if(!attack.reflection)equipmentPreventedDamage(world,equipmentHooks,Math.max(0,damage/gorgon-damage));
     equipmentMetric(state,21,"prevented",Math.min(incomingCapacity,damage/aegisEquipment)-Math.min(incomingCapacity,damage));
     const exactPrevented=(row:number,factor:number)=>recordCoreMetric(state,row,"prevented",Math.min(incomingCapacity,damage/factor)-Math.min(incomingCapacity,damage));
     if(orbitProtection){exactPrevented(153,.65);recordCoreMetric(state,153,"protectedHits",1);}
@@ -4019,6 +4056,8 @@ function hitPlayer(world: CombatWorld, rawDamage: number, kind: "projectile" | "
         if(key==="cinder")cinderShieldAbsorbed(world,amount,cinderHooks);else genericShieldAbsorbed+=amount;
         if(Number.isFinite(shield.until))temporaryAbsorbed+=amount;
         shield.absorbed = (shield.absorbed ?? 0) + amount;
+        if(attack.reflection)shield.reflectedAbsorbed=(shield.reflectedAbsorbed??0)+amount;
+        if(key==="terraSeismic"&&amount>0)terraFx(world,shield.amount>0?"shieldHit":"shieldEnd",world.playerX,world.playerY,78,.35);
         if(key.startsWith("equipment:"))equipmentMetric(state,Number(key.slice(10)),"shieldAbsorbed",amount);
         if (shield.amount <= 0) {
           finishAbsorbShield(state, shield);
@@ -4027,9 +4066,10 @@ function hitPlayer(world: CombatWorld, rawDamage: number, kind: "projectile" | "
         if(Number.isFinite(shield.until))recordCoreMetric(state,200,"shieldAbsorbed",amount);
         if(shield.returned)recordCoreMetric(state,204,"shieldAbsorbed",amount);
     }
-    if(hasCore(state,204)){const prevented=armorPrevented+titanPrevented+temporaryAbsorbed;c.stacks.armorMeter=(c.stacks.armorMeter??0)+prevented;recordCoreMetric(state,204,"prevented",prevented);const threshold=stats.maxHp*.25;if(c.stacks.armorMeter>=threshold){c.stacks.armorMeter-=threshold;recordCoreMetric(state,204,"procs",1);expansionHooks.area(world,world.playerX,world.playerY,150,stats.firepower*2.5,204);const gained=Math.min(stats.maxResource-state.currentResource,stats.maxResource*.05);state.currentResource+=gained;recordCoreMetric(state,204,"resource",gained);}}
+    const terraAbsorbed=terraAbsorb(world,damage,attack.sourceEnemyId,!!attack.reflection);damage-=terraAbsorbed;absorbed+=terraAbsorbed;temporaryAbsorbed+=terraAbsorbed;
+    if(hasCore(state,204)&&!attack.reflection){const prevented=armorPrevented+titanPrevented+temporaryAbsorbed;c.stacks.armorMeter=(c.stacks.armorMeter??0)+prevented;recordCoreMetric(state,204,"prevented",prevented);const threshold=stats.maxHp*.25;if(c.stacks.armorMeter>=threshold){c.stacks.armorMeter-=threshold;recordCoreMetric(state,204,"procs",1);expansionHooks.area(world,world.playerX,world.playerY,150,stats.firepower*2.5,204);const gained=Math.min(stats.maxResource-state.currentResource,stats.maxResource*.05);state.currentResource+=gained;recordCoreMetric(state,204,"resource",gained);}}
     settleExpansionShields(world, expansionHooks);
-    if(!attack.trueDamage)damage = deferExpansionDamage(world, damage);
+    if(!attack.trueDamage)damage = deferExpansionDamage(world, damage,attack.sourceEnemyId,!!attack.reflection);
     if(hasCore(state,205)){
         const withoutBudget=incomingBudget/1.20,withoutShield=Math.min(shieldCapacity,withoutBudget);
         const withoutHp=Math.max(0,withoutBudget-withoutShield)*(hasCore(state,197)?.65:1);
@@ -4045,6 +4085,7 @@ function hitPlayer(world: CombatWorld, rawDamage: number, kind: "projectile" | "
         emitVisual(world,{kind:"shield_ripple",x:world.playerX+localX,y:world.playerY+localY,fromX:localX,fromY:localY,attachedToPlayer:true,size:18});
     }
     if (damage <= 0) {
+        terraIncomingHp(world,0,!!attack.reflection);
         if(damageOwner?.duel)damageOwner.duel.damageDealt += absorbed;
         if(absorbed>0)equipmentOnDamage(world,equipmentHooks,0,absorbed);
         if (absorbed > 0)
@@ -4068,13 +4109,14 @@ function hitPlayer(world: CombatWorld, rawDamage: number, kind: "projectile" | "
         damage = Math.min(state.currentHp, damage);
         state.currentHp = Math.max(0, state.currentHp - damage);
     }
+    terraIncomingHp(world,survived?Math.max(0,hpBeforeResolution-1):damage,!!attack.reflection);
     sylvaIncomingHp(world,survived?Math.max(0,hpBeforeResolution-1):damage);
     if(damageOwner?.duel)damageOwner.duel.damageDealt += (survived ? Math.max(0,hpBeforeResolution-1) : damage) + absorbed;
     if(damage+absorbed>0)equipmentOnDamage(world,equipmentHooks,damage,damage+absorbed);
     if (damage > 0) expansionHpLoss(world, damage);
     if (damage > 0) { onHostileDamage(world, attack);observeComeback(world); }
     c.lastDamage = c.time;
-    dispatchCoreEvent("damageTaken", coreContext(world, { damage }));
+    if(!attack.reflection)dispatchCoreEvent("damageTaken", coreContext(world, { damage }));
     emitVisual(world, { kind: "damage_number", x: world.playerX, y: world.playerY, size: 36, hpDamage: damage, shieldAbsorbed: absorbed, genericShieldAbsorbed, target: "player", critical: false });
     if (damage > 0) emitVisual(world, { kind: "player_hit", x: contact?.x ?? (Number.isFinite(attack.x) ? attack.x! : world.playerX), y: contact?.y ?? (Number.isFinite(attack.y) ? attack.y! : world.playerY), size: 36, directContact:!!contact });
     world.damageTaken += damage;
@@ -4655,7 +4697,7 @@ export const AIRCRAFT_AFTERMATH_SECONDS = 3;
 /** SOLO calls only after same-tick KO arbitration; Campaign calls at the lethal hit. */
 export function latchAircraftDestruction(world: CombatWorld): void {
     if (world.destruction || world.aircraft.currentHp > 0) return;
-    cancelSylva(world); cancelArgent(world); cancelRiptide(world); cancelCinder(world); world.bigBang=undefined;
+    cancelTerra(world); cancelSylva(world); cancelArgent(world); cancelRiptide(world); cancelCinder(world); world.bigBang=undefined;
     world.playerInputActive = false;
     world.destruction = { at: world.elapsed, x: world.playerX, y: world.playerY };
     if (!world.duel) {
@@ -4830,7 +4872,7 @@ export function updateCombatWorld(world: CombatWorld, deltaSeconds: number): voi
     }
     updateMissileSalvo(world, dt);
     tickCinder(world, dt, cinderHooks); tickRiptide(world, dt, riptideHooks);
-    tickBasicFire(world,dt); tickArgent(world, dt, argentHooks); tickSylva(world, dt, sylvaHooks);
+    tickBasicFire(world,dt); tickArgent(world, dt, argentHooks); tickSylva(world, dt, sylvaHooks); tickTerra(world, dt, terraHooks);
     world.droneFireCooldown -= dt;
     if (droneCombatActive(world) && world.droneFireCooldown <= 0) {
         fireDrone(world);
@@ -4983,7 +5025,7 @@ function skillEnemyEffects(world:CombatWorld,id:number) {
     return entry;
 }
 function enemyOutputMultiplier(world:CombatWorld,id?:number):number {
-    return id !== undefined && (world.skillCores.enemyEffects.get(id)?.weakenUntil || 0)>world.elapsed ? 1-V.weakenReduction : 1;
+    const e=world.enemies.find(e=>e.id===id);return (e?terraSuppression(world,e):1)*(id !== undefined && (world.skillCores.enemyEffects.get(id)?.weakenUntil || 0)>world.elapsed ? 1-V.weakenReduction : 1);
 }
 function refundResource(world:CombatWorld,amount:number,restored:number,coreRow:number):number {
     const state=world.aircraft,max=getEffectiveAircraftStats(state).maxResource;
@@ -5050,7 +5092,8 @@ function interceptMissiles(world:CombatWorld):void {
     }
     for(let i=world.projectiles.length-1;i>=0;i--)if(removed.has(world.projectiles[i].id))recycleProjectile(world,i);
 }
-function displaceEnemy(world:CombatWorld,e:EnemyEntity,dx:number,dy:number):void {
+function displaceEnemy(world:CombatWorld,e:EnemyEntity,dx:number,dy:number,knockback=true):void {
+    if(e.aircraftTarget&&((knockback&&terraKnockbackImmune(e.aircraftTarget.world.aircraft))||celestialProtection(e.aircraftTarget.world.aircraft)||hardControlImmune(e.aircraftTarget.world.aircraft)))return;
     const point=clampHitboxToGameplayRect(e.x+dx,e.y+dy,getEnemyHitbox(e));
     const appliedX=point.x-e.x,appliedY=point.y-e.y;
     const defender=e.aircraftTarget?.world;

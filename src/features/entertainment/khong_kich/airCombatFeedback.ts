@@ -96,7 +96,7 @@ const ratio = (value: number) => Math.max(0, Math.min(1, value));
 export function activeShieldAmount(state: AircraftCombatState, genericOnly = false): number {
   let amount = 0;
   for (const key in state.coreState.shields) {
-    if(genericOnly && key === "cinder")continue;
+    if(genericOnly && (key === "cinder" || key === "terraSeismic"))continue;
     const shield = state.coreState.shields[key];
     if (shield.until > state.coreState.time) amount += Math.max(0, shield.amount);
   }

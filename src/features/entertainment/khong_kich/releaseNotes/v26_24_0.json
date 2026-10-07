@@ -1,0 +1,951 @@
+{
+  "version": "26.24.0",
+  "releaseDate": "07/10/2026",
+  "title": "Terra — Chiến Cơ Hành Thổ",
+  "displayTitle": "KHÔNG KÍCH 26.24.0 — TERRA · ĐỊA ÁP · PHẢN CÔNG",
+  "summary": "Bổ sung Terra, chiến cơ hành Thổ tích Địa Áp từ tổn thương và phản công bằng Pháo Địa Chấn. Nham Giáp, Kẹp Sơn và Cường Hóa Địa Tâm hỗ trợ chịu đòn, khống chế và hồi phục. Sylva được điều chỉnh Nổ Axit, chuyển sức mạnh Đại Thụ Diệt Sinh sang sát thương đã ghi nhận và có mầm ultimate nổi bật hơn.",
+  "sections": [
+    {
+      "id": "terra-introduction",
+      "title": "TERRA · CHIẾN CƠ MỚI",
+      "icon": {
+        "kind": "aircraft",
+        "id": "terra"
+      },
+      "intro": [
+        {
+          "format": "paragraph",
+          "changeType": "new",
+          "text": "Terra gia nhập đội hình chiến cơ với sức mạnh hành Thổ. Chịu đòn để tích Địa Áp, căn tuyến bắn và giải phóng Pháo Địa Chấn là trọng tâm lối chơi của chiến cơ mới."
+        }
+      ],
+      "entries": [
+        {
+          "id": "terra-aircraft",
+          "icon": {
+            "kind": "aircraft",
+            "id": "terra"
+          },
+          "title": "Terra — Hành Thổ",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Vai trò: Đỡ đòn · Phản kích · Pháo Địa Chấn. Terra sử dụng Mana, tích Địa Áp từ tổn thương và phản công bằng phát pháo nham thạch."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Nham Giáp giúp chịu đòn và bắn trả; Kẹp Sơn giữ địch trong tuyến pháo; Cường Hóa Địa Tâm duy trì hồi phục và tăng sức mạnh Pháo Địa Chấn."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Terra có thể được lựa chọn trong các chế độ hỗ trợ chọn chiến cơ, gồm Solo 1v1."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Thanh sức mạnh: Sát thương 80 · Chống chịu 94 · Tốc độ bắn 59 · Độ khó 92."
+            }
+          ]
+        },
+        {
+          "id": "terra-stats",
+          "icon": {
+            "kind": "aircraft",
+            "id": "terra"
+          },
+          "title": "Chỉ Số Chiến Cơ",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Máu tối đa: 2.450 ở cấp 1, tăng 92 mỗi cấp, đạt 4.014 ở cấp 18."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Giáp: 51 ở cấp 1, tăng 3 mỗi cấp, đạt 102 ở cấp 18."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Hỏa Lực: 94 ở cấp 1, tăng 4 mỗi cấp, đạt 162 ở cấp 18."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Hồi Máu: 3,6 mỗi giây ở cấp 1, tăng 0,4 mỗi cấp, đạt 10,4 mỗi giây ở cấp 18."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Tốc độ bắn tự nhiên: 3,2 phát/giây ở cấp 1, khoảng 4,07 phát/giây ở cấp 18."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mana tối đa: 340 ở cấp 1, tăng 30 mỗi cấp, đạt 850 ở cấp 18."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Hồi Mana: 1,5 mỗi giây ở cấp 1, tăng 0,4 mỗi cấp, đạt 8,3 mỗi giây ở cấp 18."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Tỷ lệ chí mạng cơ bản: 5%. Sát thương chí mạng cơ bản: 170%."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "terra-passive",
+      "title": "TERRA · LÕI ĐỊA ÁP",
+      "icon": {
+        "kind": "skill",
+        "id": "terra_geopressure_core"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "terra-geopressure",
+          "icon": {
+            "kind": "skill",
+            "id": "terra_geopressure_core"
+          },
+          "title": "Nội Tại — Lõi Địa Áp",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Terra ghi nhận 100% lượng Máu thực tế mất do sát thương nhận vào thành Địa Áp, tối đa bằng 25%/30%/35%/40% Máu tối đa ở cấp chiến cơ 1/6/11/16. Sau 4 giây không mất Máu do sát thương, Địa Áp giảm mỗi giây một lượng bằng 20% trần tích lũy. Sát thương được Khiên hoặc Nham Giáp hấp thu không tạo Địa Áp. Hồi Máu không làm mất lượng Địa Áp đã tích."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Thanh Địa Áp riêng hiển thị lượng đang có, trần tích lũy và các mốc 50%/75% để căn điều kiện kỹ năng."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Trong Cường Hóa Địa Tâm, Địa Áp không tự suy giảm. Ultimate cấp 3 tăng lượng tích từ Máu thực tế mất lên 125%, giữ nguyên trần."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "terra_reactive_rock_armor",
+      "title": "TERRA · NHAM GIÁP PHẢN KÍCH",
+      "icon": {
+        "kind": "skill",
+        "id": "terra_reactive_rock_armor"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "terra_reactive_rock_armor-base",
+          "icon": {
+            "kind": "skill",
+            "id": "terra_reactive_rock_armor"
+          },
+          "title": "S1 — Nham Giáp Phản Kích",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Duy trì tối đa 6 giây. Kết thúc sớm khi hết Dự Trữ Nham Giáp; hồi chiêu bắt đầu khi kỹ năng kết thúc."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Dự trữ Nham Giáp: 15%/17,5%/20%/22,5%/25% Máu tối đa theo cấp kỹ năng."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Hấp thu 40%/45%/50%/55%/60% phần sát thương đi tới Nham Giáp; phần còn lại làm mất Máu."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Khi hấp thu sát thương từ địch, phóng Mảnh Nham truy đuổi nguồn đó, gây 35% Hỏa Lực + 60%/70%/80%/90%/100% Giáp sát thương."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mỗi nguồn địch chỉ kích hoạt một Mảnh Nham mỗi 0,75 giây. Mảnh Nham không chí mạng và chịu Giáp của mục tiêu."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mana: 90/100/110/120/130. Hồi chiêu: 32/31/30/29/28 giây."
+            }
+          ],
+          "group": true
+        },
+        {
+          "id": "terra_reactive_rock_armor-rank-2",
+          "icon": {
+            "kind": "skill",
+            "id": "terra_reactive_rock_armor_r2"
+          },
+          "title": "Cấp 2 — Nham Tầng Gia Cố",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Dự trữ Nham Giáp: 15% → 17,5% Máu tối đa."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Tỷ lệ hấp thu: 40% → 45%."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Hệ số Giáp của Mảnh Nham: 60% → 70%; giữ phần 35% Hỏa Lực."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mana: 90 → 100. Hồi chiêu cơ bản: 32 → 31 giây."
+            }
+          ]
+        },
+        {
+          "id": "terra_reactive_rock_armor-rank-3",
+          "icon": {
+            "kind": "skill",
+            "id": "terra_reactive_rock_armor_r3"
+          },
+          "title": "Cấp 3 — Ổn Định Địa Tầng",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Dự trữ Nham Giáp: 17,5% → 20% Máu tối đa."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Tỷ lệ hấp thu: 45% → 50%."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Hệ số Giáp của Mảnh Nham: 70% → 80%; giữ phần 35% Hỏa Lực."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Miễn nhiễm Đẩy Lùi trong thời gian Nham Giáp hoạt động."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mana: 100 → 110. Hồi chiêu cơ bản: 31 → 30 giây."
+            }
+          ]
+        },
+        {
+          "id": "terra_reactive_rock_armor-rank-4",
+          "icon": {
+            "kind": "skill",
+            "id": "terra_reactive_rock_armor_r4"
+          },
+          "title": "Cấp 4 — Nham Nhận Trấn Áp",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Dự trữ Nham Giáp: 20% → 22,5% Máu tối đa."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Tỷ lệ hấp thu: 50% → 55%."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Hệ số Giáp của Mảnh Nham: 80% → 90%; giữ phần 35% Hỏa Lực."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mảnh Nham gây thêm 25% sát thương lên mục tiêu đang chịu khống chế cứng."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mana: 110 → 120. Hồi chiêu cơ bản: 30 → 29 giây."
+            }
+          ]
+        },
+        {
+          "id": "terra_reactive_rock_armor-rank-5",
+          "icon": {
+            "kind": "skill",
+            "id": "terra_reactive_rock_armor_r5"
+          },
+          "title": "Cấp 5 — Tầng Giáp Cuối Cùng",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Dự trữ Nham Giáp: 22,5% → 25% Máu tối đa."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Tỷ lệ hấp thu: 55% → 60%."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Hệ số Giáp của Mảnh Nham: 90% → 100%; giữ phần 35% Hỏa Lực."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Khi Máu dưới 30% trong thời gian kỹ năng, phục hồi 20% dự trữ ban đầu, một lần mỗi lần dùng; không vượt dự trữ tối đa hoặc kéo dài thời gian."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mana: 120 → 130. Hồi chiêu cơ bản: 29 → 28 giây."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "terra_seismic_cannon",
+      "title": "TERRA · PHÁO ĐỊA CHẤN",
+      "icon": {
+        "kind": "skill",
+        "id": "terra_seismic_cannon"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "terra_seismic_cannon-base",
+          "icon": {
+            "kind": "skill",
+            "id": "terra_seismic_cannon"
+          },
+          "title": "S2 — Pháo Địa Chấn",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Ngay khi kích hoạt, tiêu toàn bộ Địa Áp hiện có và tạo Khiên bằng 50%/55%/60%/65%/70% lượng đã tiêu, duy trì 2,5 giây."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Lập thế 1 giây rồi phóng pháo về phía trước. Terra vẫn có thể di chuyển trong lúc lập thế; Địa Áp tích mới được giữ cho lần dùng sau."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Tầm đánh 300, bề rộng 160, dải chính giữa rộng 60. Dải giữa gây sát thương chuẩn; hai bên gây sát thương thông thường."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Sát thương: 200%/250%/300%/350%/400% Hỏa Lực + 35%/45%/55%/65%/75% Địa Áp đã tiêu."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Không có Địa Áp vẫn gây phần sát thương cơ bản, nhưng không tạo Khiên từ Địa Áp."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mana: 80/85/90/95/100. Hồi chiêu: 24/22/20/18/16 giây, bắt đầu khi khai hỏa."
+            }
+          ],
+          "group": true
+        },
+        {
+          "id": "terra_seismic_cannon-rank-2",
+          "icon": {
+            "kind": "skill",
+            "id": "terra_seismic_cannon_r2"
+          },
+          "title": "Cấp 2 — Nén Áp Tăng Cường",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Sát thương cơ bản: 200% → 250% Hỏa Lực."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Sát thương từ Địa Áp: 35% → 45% lượng đã tiêu."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Khiên: 50% → 55% Địa Áp đã tiêu."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mana: 80 → 85. Hồi chiêu cơ bản: 24 → 22 giây."
+            }
+          ]
+        },
+        {
+          "id": "terra_seismic_cannon-rank-3",
+          "icon": {
+            "kind": "skill",
+            "id": "terra_seismic_cannon_r3"
+          },
+          "title": "Cấp 3 — Xuyên Sơn",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Sát thương cơ bản: 250% → 300% Hỏa Lực."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Sát thương từ Địa Áp: 45% → 55% lượng đã tiêu."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Khiên: 55% → 60% Địa Áp đã tiêu."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Bề rộng dải sát thương chuẩn: 60 → 90."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mana: 85 → 90. Hồi chiêu cơ bản: 22 → 20 giây."
+            }
+          ]
+        },
+        {
+          "id": "terra_seismic_cannon-rank-4",
+          "icon": {
+            "kind": "skill",
+            "id": "terra_seismic_cannon_r4"
+          },
+          "title": "Cấp 4 — Sơn Thể",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Sát thương cơ bản: 300% → 350% Hỏa Lực."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Sát thương từ Địa Áp: 55% → 65% lượng đã tiêu."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Khiên: 60% → 65% Địa Áp đã tiêu."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Thời gian Khiên: 2,5 → 4 giây."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mana: 90 → 95. Hồi chiêu cơ bản: 20 → 18 giây."
+            }
+          ]
+        },
+        {
+          "id": "terra_seismic_cannon-rank-5",
+          "icon": {
+            "kind": "skill",
+            "id": "terra_seismic_cannon_r5"
+          },
+          "title": "Cấp 5 — Thiên Băng Địa Liệt",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Sát thương cơ bản: 350% → 400% Hỏa Lực."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Sát thương từ Địa Áp: 65% → 75% lượng đã tiêu."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Khiên: 65% → 70% Địa Áp đã tiêu."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Tiêu ít nhất 75% trần Địa Áp khiến phát pháo Choáng mục tiêu trong dải giữa 2 giây và Đẩy Lùi; Tinh Anh chịu 75%, Boss chịu 50% thời gian Choáng. Boss không bị cưỡng ép di chuyển."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mana: 95 → 100. Hồi chiêu cơ bản: 18 → 16 giây."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "terra_strata_clamp",
+      "title": "TERRA · KẸP SƠN",
+      "icon": {
+        "kind": "skill",
+        "id": "terra_strata_clamp"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "terra_strata_clamp-base",
+          "icon": {
+            "kind": "skill",
+            "id": "terra_strata_clamp"
+          },
+          "title": "S3 — Kẹp Sơn",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Dựng hai khối địa tầng ở hai bên cụm mục tiêu trong bán kính 160. Sau 0,5 giây báo trước, ép mục tiêu vào trục giữa."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Sát thương: 100%/130%/160%/190%/220% Hỏa Lực. Trói: 1/1,25/1,5/1,75/2 giây."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Thời gian Trói/Choáng còn 75% với Tinh Anh, 50% với Boss. Boss không bị cưỡng ép di chuyển."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mana: 120/130/140/150/160. Hồi chiêu: 27/26/25/24/23 giây, bắt đầu khi địa tầng khép lại."
+            }
+          ],
+          "group": true
+        },
+        {
+          "id": "terra_strata_clamp-rank-2",
+          "icon": {
+            "kind": "skill",
+            "id": "terra_strata_clamp_r2"
+          },
+          "title": "Cấp 2 — Địa Tầng Hội Tụ",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Sát thương: 100% → 130% Hỏa Lực."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Thời gian Trói/Choáng: 1 → 1,25 giây."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Tăng lực ép mục tiêu thêm 20%."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mana: 120 → 130. Hồi chiêu cơ bản: 27 → 26 giây."
+            }
+          ]
+        },
+        {
+          "id": "terra_strata_clamp-rank-3",
+          "icon": {
+            "kind": "skill",
+            "id": "terra_strata_clamp_r3"
+          },
+          "title": "Cấp 3 — Sơn Áp",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Sát thương: 130% → 160% Hỏa Lực."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Thời gian Trói/Choáng: 1,25 → 1,5 giây."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Địa Áp khi kích hoạt đạt ít nhất 50% trần: thay Trói bằng Choáng cùng thời gian, không tiêu Địa Áp."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mana: 130 → 140. Hồi chiêu cơ bản: 26 → 25 giây."
+            }
+          ]
+        },
+        {
+          "id": "terra_strata_clamp-rank-4",
+          "icon": {
+            "kind": "skill",
+            "id": "terra_strata_clamp_r4"
+          },
+          "title": "Cấp 4 — Trấn Sơn",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Sát thương: 160% → 190% Hỏa Lực."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Thời gian Trói/Choáng: 1,5 → 1,75 giây."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mục tiêu trúng kỹ năng gây ít hơn 20% toàn bộ sát thương trong 5 giây."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mana: 140 → 150. Hồi chiêu cơ bản: 25 → 24 giây."
+            }
+          ]
+        },
+        {
+          "id": "terra_strata_clamp-rank-5",
+          "icon": {
+            "kind": "skill",
+            "id": "terra_strata_clamp_r5"
+          },
+          "title": "Cấp 5 — Rạn Địa",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Sát thương: 190% → 220% Hỏa Lực."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Thời gian Trói/Choáng: 1,75 → 2 giây."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Đặt Rạn Địa trong 3 giây. Phát Pháo Địa Chấn tiếp theo trúng mỗi mục tiêu mang dấu hồi 80% Hỏa Lực cho Terra và tiêu dấu đó."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mana: 150 → 160. Hồi chiêu cơ bản: 24 → 23 giây."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "terra_geocore_overdrive",
+      "title": "TERRA · CƯỜNG HÓA ĐỊA TÂM",
+      "icon": {
+        "kind": "skill",
+        "id": "terra_geocore_overdrive"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "terra_geocore_overdrive-base",
+          "icon": {
+            "kind": "skill",
+            "id": "terra_geocore_overdrive"
+          },
+          "title": "Ultimate — Cường Hóa Địa Tâm",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mở khóa lõi Địa Tâm trong 20 giây, liên tục hồi Máu và giữ Địa Áp không tự suy giảm."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Hồi Máu mỗi giây: 2%/3%/4% Máu tối đa, theo nhịp 0,5 giây. Tổng hồi cơ bản trong 20 giây: 40%/60%/80% Máu tối đa."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Pháo Địa Chấn gây thêm 20%/35%/50% toàn bộ sát thương, kể cả sát thương chuẩn; không tăng lượng Khiên từ phát pháo."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Khi kích hoạt, giảm 50% hồi chiêu còn lại của Pháo Địa Chấn một lần. S2 dùng trong thời gian hiệu lực nhận hồi chiêu ×0,5 và giữ mức này sau khi ultimate kết thúc."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mana: 175/225/275. Hồi chiêu: 90/85/80 giây, tính sau khi Cường Hóa Địa Tâm kết thúc."
+            }
+          ],
+          "group": true
+        },
+        {
+          "id": "terra_geocore_overdrive-rank-2",
+          "icon": {
+            "kind": "skill",
+            "id": "terra_geocore_overdrive_r2"
+          },
+          "title": "Cấp 2 — Địa Tâm Thanh Tẩy",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Hồi Máu mỗi giây: 2% → 3% Máu tối đa."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Tăng sát thương Pháo Địa Chấn: 20% → 35%, gồm sát thương chuẩn."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Nhận 30% kháng hiệu ứng trong thời gian cường hóa. Khi kích hoạt, thanh tẩy toàn bộ hiệu ứng xấu; có thể dùng khi đang bị khống chế hoặc khóa kỹ năng."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mana: 175 → 225. Hồi chiêu cơ bản: 90 → 85 giây."
+            }
+          ]
+        },
+        {
+          "id": "terra_geocore_overdrive-rank-3",
+          "icon": {
+            "kind": "skill",
+            "id": "terra_geocore_overdrive_r3"
+          },
+          "title": "Cấp 3 — Địa Áp Cuộn Trào",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Hồi Máu mỗi giây: 3% → 4% Máu tối đa."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Tăng sát thương Pháo Địa Chấn: 35% → 50%, gồm sát thương chuẩn."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Tỷ lệ tích Địa Áp từ Máu thực tế mất: 100% → 125% trong thời gian cường hóa; trần tích lũy giữ nguyên."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mana: 225 → 275. Hồi chiêu cơ bản: 85 → 80 giây."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sylva-balance",
+      "title": "SYLVA · CÂN BẰNG SỨC MẠNH",
+      "icon": {
+        "kind": "aircraft",
+        "id": "sylva"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "sylva-acid-burst-balance",
+          "icon": {
+            "kind": "skill",
+            "id": "sylva_acid_burst"
+          },
+          "title": "S2 — Nổ Axit",
+          "rationale": "Điều chỉnh sát thương ban đầu của Nổ Axit; vùng axit tiếp tục đảm nhiệm vai trò ăn mòn và gây sát thương duy trì.",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "nerf",
+              "text": "Sát thương vụ nổ: 200%/225%/250%/275%/300% → 150%/170%/190%/210%/230% Hỏa Lực.",
+              "label": "Sát thương vụ nổ",
+              "before": "200%/225%/250%/275%/300% Hỏa Lực",
+              "after": "150%/170%/190%/210%/230% Hỏa Lực"
+            },
+            {
+              "format": "bullet",
+              "changeType": "unchanged",
+              "text": "Sát thương vùng axit, thời gian tồn tại, giảm Giáp và các hiệu ứng nâng cấp giữ nguyên."
+            }
+          ]
+        },
+        {
+          "id": "sylva-deathbloom-balance",
+          "icon": {
+            "kind": "skill",
+            "id": "sylva_deathbloom"
+          },
+          "title": "Ultimate — Đại Thụ Diệt Sinh",
+          "rationale": "Giảm phần sát thương có sẵn và tăng sức mạnh từ combo trong thời gian mầm bám. Lượng sát thương Sylva tích lũy trên mục tiêu quyết định nhiều hơn sức mạnh vụ nổ.",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "nerf",
+              "text": "Sát thương nổ cơ bản: 700%/900%/1100% → 100%/150%/200% Hỏa Lực.",
+              "label": "Sát thương nổ cơ bản",
+              "before": "700%/900%/1100% Hỏa Lực",
+              "after": "100%/150%/200% Hỏa Lực"
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Sát thương cộng thêm từ lượng Máu đã ghi nhận: 40%/50%/60% → 90%/120%/150%.",
+              "label": "Sát thương từ lượng ghi nhận",
+              "before": "40%/50%/60%",
+              "after": "90%/120%/150%"
+            },
+            {
+              "format": "bullet",
+              "changeType": "unchanged",
+              "text": "Mầm vẫn ghi nhận Máu thực tế mục tiêu mất do Sylva trong 6 giây; không ghi nhận sát thương vào Khiên. Cả hai phần sát thương nổ đều chịu Giáp."
+            },
+            {
+              "format": "bullet",
+              "changeType": "unchanged",
+              "text": "Giữ cơ chế tự nổ sớm khi đủ kết liễu, không tái kích hoạt bằng tay và mầm biến mất nếu Sylva bị hạ gục."
+            },
+            {
+              "format": "bullet",
+              "changeType": "unchanged",
+              "text": "Phạm vi, Mana, hồi chiêu và hai nâng cấp của Đại Thụ Diệt Sinh giữ nguyên."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "art-and-effects",
+      "title": "HÌNH ẢNH · HIỆU ỨNG",
+      "icon": {
+        "kind": "aircraft",
+        "id": "terra"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "terra-art",
+          "icon": {
+            "kind": "aircraft",
+            "id": "terra"
+          },
+          "title": "Terra — Giáp Nham Và Lõi Địa Tâm",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Bổ sung bộ hình ảnh riêng cho Terra: chiến cơ giáp địa tầng, portrait, nội tại, kỹ năng và từng cấp nâng cấp, với vật liệu bazan, sa thạch và ánh sáng hổ phách."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Đạn và Mảnh Nham có ánh sáng, vệt bay và hiệu ứng va chạm rõ hướng."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Nham Giáp thể hiện dự trữ và tái tạo; Pháo Địa Chấn làm rõ thời gian lập thế cùng dải sát thương chuẩn ở giữa."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Kẹp Sơn thể hiện hai địa tầng ép vào trục giữa, khống chế và dấu Rạn Địa; Cường Hóa Địa Tâm làm nổi bật lõi mở, hồi phục và thanh tẩy."
+            }
+          ]
+        },
+        {
+          "id": "sylva-deathbloom-visual",
+          "icon": {
+            "kind": "skill",
+            "id": "sylva_deathbloom"
+          },
+          "title": "Sylva — Mầm Diệt Sinh",
+          "rationale": "Làm rõ hiểm họa đang bám trên mục tiêu, tương xứng vai trò chiêu cuối của Sylva.",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Nâng cấp hình ảnh mầm bám mục tiêu với độ nổi bật ít nhất gấp đôi so với trước: lõi lục sáng, gai sắc, rễ bám rõ và viền tương phản."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Mầm dễ nhận biết ngay khi xuất hiện, thể hiện quá trình tăng trưởng và luôn bám theo vị trí mục tiêu."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Hiệu ứng giữ đạn và thân mục tiêu dễ quan sát; mầm bị xóa hoặc mất nguồn tan đi đúng trạng thái."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

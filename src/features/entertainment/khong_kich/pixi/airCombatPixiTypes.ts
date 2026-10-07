@@ -7,7 +7,7 @@ export interface AirCombatPresentation {
 }
 
 export interface AtlasFrame {
-  atlas: "sylvaAircraft" | "sylvaPortrait" | "sylvaIcons" | "sylvaAcid" | "sylvaLife" | "sylvaDeath" | "argentAircraft" | "argentIcons" | "argentVfx" | "argentPortrait" | "riptideAircraft" | "riptideIcons" | "riptideVfx" | "guardianVfx" | "bigBangVfx" | "cinderAircraft" | "cinderVfx" | "cinderProjectiles" | "cinderIcons" | "cinderFeedback" | "stage4Enemy" | "stage4Boss" | "stage4Vfx" | "stage3Enemy" | "stage3Boss" | "stage3Vfx" | "stage3Emissive" | "ultimateVfx" | "rankedVfx" | "rankedProjectiles" | "equipmentIcons" | "equipmentVfx" | "astraVfx" | "astraAircraft" | "astraEffects" | "aircraft" | "fortress" | "vfx" | "ammo" | "basicAmmo" | "healingCross" | "stage2Enemy" | "stage2Vfx" | "stage2Elite";
+  atlas: "terraAircraft" | "terraEmissive" | "terraPortrait" | "terraIcons" | "terraArmor" | "terraCannon" | "terraClamp" | "terraUltimate" | "sylvaDeathNew" | "sylvaAircraft" | "sylvaPortrait" | "sylvaIcons" | "sylvaAcid" | "sylvaLife" | "sylvaDeath" | "argentAircraft" | "argentIcons" | "argentVfx" | "argentPortrait" | "riptideAircraft" | "riptideIcons" | "riptideVfx" | "guardianVfx" | "bigBangVfx" | "cinderAircraft" | "cinderVfx" | "cinderProjectiles" | "cinderIcons" | "cinderFeedback" | "stage4Enemy" | "stage4Boss" | "stage4Vfx" | "stage3Enemy" | "stage3Boss" | "stage3Vfx" | "stage3Emissive" | "ultimateVfx" | "rankedVfx" | "rankedProjectiles" | "equipmentIcons" | "equipmentVfx" | "astraVfx" | "astraAircraft" | "astraEffects" | "aircraft" | "fortress" | "vfx" | "ammo" | "basicAmmo" | "healingCross" | "stage2Enemy" | "stage2Vfx" | "stage2Elite";
   /** Normalized source rectangle, independent of generator output resolution. */
   rect: readonly [number, number, number, number];
 }

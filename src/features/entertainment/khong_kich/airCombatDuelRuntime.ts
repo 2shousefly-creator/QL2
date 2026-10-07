@@ -1,3 +1,5 @@
+import { cancelTerra } from './airCombatTerraRuntime';
+import { cancelSylva } from './airCombatSylvaRuntime';
 import { cancelArgent } from './airCombatArgentRuntime';
 import { cancelRiptide } from './airCombatRiptideRuntime';
 import { cancelCinder } from './airCombatCinderRuntime';
@@ -204,7 +206,7 @@ function finishRound(match: SoloMatch, winner: "player" | "opponent") {
   match.roundOutcomeLocked = true; match.roundWinner = winner;
   if (winner === "player") match.playerWins++; else match.opponentWins++;
   setCombatGate(match, false);
-  for(const w of [match.world,match.opponent]){cancelArgent(w);cancelRiptide(w);cancelCinder(w);w.bigBang=undefined;w.skillCores.aftershocks.length=0;}
+  for(const w of [match.world,match.opponent]){cancelTerra(w);cancelSylva(w);cancelArgent(w);cancelRiptide(w);cancelCinder(w);w.bigBang=undefined;w.skillCores.aftershocks.length=0;}
   if (match.playerWins >= DUEL_WINS || match.opponentWins >= DUEL_WINS) match.winner = winner;
   if (match.world.aircraft.currentHp <= 0 || match.opponent.aircraft.currentHp <= 0) {
     for (const world of [match.world, match.opponent]) {

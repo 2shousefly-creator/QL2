@@ -1,12 +1,13 @@
 import type { EquipmentState, AcquisitionEvent } from "./airCombatEquipmentState";
 import type { PlayerCombatStatus } from "./airCombatStatus";
-export type AircraftId = "sylva" | "black_eagle" | "breaker" | "phantom" | "astra" | "cinder" | "riptide" | "argent";
+export type AircraftId = "terra" | "sylva" | "black_eagle" | "breaker" | "phantom" | "astra" | "cinder" | "riptide" | "argent";
 
 export type ResourceKind = "mana" | "energy";
 
-export type PassiveId = "sylva_acid_rounds" | "viper_follow_up" | "titan_alloy_rounds" | "phantom_backup_battery" | "astra_stellar_mark" | "cinder_thermal_round" | "riptide_afterwash" | "argent_blade_genesis";
+export type PassiveId = "terra_geopressure_core" | "sylva_acid_rounds" | "viper_follow_up" | "titan_alloy_rounds" | "phantom_backup_battery" | "astra_stellar_mark" | "cinder_thermal_round" | "riptide_afterwash" | "argent_blade_genesis";
 
 export type SkillId =
+  | "terra_reactive_rock_armor" | "terra_seismic_cannon" | "terra_strata_clamp" | "terra_geocore_overdrive"
   | "sylva_symbiosis" | "sylva_acid_burst" | "sylva_parasitic_seed" | "sylva_deathbloom"
   | "argent_guard_stance" | "argent_blade_cast" | "argent_blade_recall" | "argent_heavenly_blade_array"
   | "riptide_wellspring" | "riptide_tidal_blades" | "riptide_confluence" | "riptide_waterform"

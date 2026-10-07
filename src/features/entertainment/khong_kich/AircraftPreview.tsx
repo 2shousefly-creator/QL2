@@ -1,3 +1,4 @@
+import { TERRA_ART } from './airCombatTerraArt';
 import { SYLVA_ART, SYLVA_SOURCES, SYLVA_FRAMES, SYLVA_ICON_CELLS, paintSylva, SYLVA_SPRITE_BUDGET } from './airCombatSylvaArt';
 import { ARGENT_ART } from './airCombatArgentArt';
 import { RIPTIDE_ART } from './airCombatRiptideArt';
@@ -14,6 +15,7 @@ export function AircraftPreview({ aircraftId, className = "" }: { aircraftId: Ai
   const [failed, setFailed] = useState(false);
   const config = AIRCRAFT_CONFIGS[aircraftId];
   const row = aircraftId === "black_eagle" ? 0 : aircraftId === "breaker" ? 1 : 2;
+  if(aircraftId==='terra')return <span className={'relative block overflow-hidden '+className}><img src={className.includes('portrait')?TERRA_ART.portrait:TERRA_ART.aircraft} alt="Terra — Hành Thổ" draggable={false} className="pointer-events-none absolute inset-0 h-full w-full object-contain"/></span>;
   if(aircraftId==='sylva')return <span className={'relative block overflow-hidden '+className}><img src={className.includes('portrait')?SYLVA_ART.portrait:SYLVA_ART.aircraft} alt="Sylva — Hành Mộc" draggable={false} className="pointer-events-none absolute inset-0 h-full w-full object-contain"/></span>;
   if(aircraftId==='argent')return <span className={'relative block overflow-hidden '+className}><img src={className.includes('portrait')?ARGENT_ART.portrait:ARGENT_ART.aircraft} alt="Argent — Ngân Dực" draggable={false} className="pointer-events-none absolute max-w-none" style={{width:className.includes('portrait')?'100%':'500%',height:'100%',left:0,top:0}}/></span>;
   return <span className={`relative block overflow-hidden ${className}`}>

@@ -13,7 +13,7 @@ export interface ExpansionHooks {
   shard(w: CombatWorld, x: number, y: number, raw: number, row: number): void;
   heal(w: CombatWorld, amount: number, row: number): void;
   threat(w: CombatWorld, radius: number, bodies: boolean): boolean;
-  debt(w: CombatWorld, amount: number): void;
+  debt(w: CombatWorld, amount: number, sourceEnemyId?:number, reflection?:boolean): void;
 }
 const timer = (w: CombatWorld, key: string, seconds: number) => { w.aircraft.coreState.timers[key] = w.elapsed + seconds; };
 const resource = (w: CombatWorld, amount: number, row: number) => { const s = w.aircraft,before=s.currentResource; s.currentResource = Math.min(getEffectiveAircraftStats(s).maxResource, s.currentResource + amount);recordCoreMetric(s,row,"resource",s.currentResource-before); };
@@ -72,9 +72,9 @@ export function expansionHpLoss(w: CombatWorld, amount: number, receivedDamage =
     recordCoreMetric(s,195,"procs",1);
   }
 }
-export function deferExpansionDamage(w: CombatWorld, damage: number): number {
+export function deferExpansionDamage(w: CombatWorld, damage: number, sourceEnemyId?:number, reflection=false): number {
   if (!hasCore(w.aircraft, 197) || damage <= 0) return damage;
-  expansionState(w.aircraft).debt.push({ amount: damage * .35 / 4, next: w.elapsed + 1, ticks: 4 });
+  expansionState(w.aircraft).debt.push({ amount: damage * .35 / 4, next: w.elapsed + 1, ticks: 4, sourceEnemyId, reflection });
   recordCoreMetric(w.aircraft,197,"accumulated",damage*.35);
   const entry=w.aircraft.coreState.telemetry.core_197??={};entry.peak=Math.max(entry.peak??0,expansionState(w.aircraft).debt.reduce((n,d)=>n+d.amount*d.ticks,0));
   return damage * .65;
@@ -144,7 +144,7 @@ export function tickExpansion(w: CombatWorld, dt: number, h: ExpansionHooks) {
   }
   settleExpansionShields(w, h);
   for (const debt of r.debt) while (debt.ticks > 0 && now + 1e-8 >= debt.next && s.currentHp > 0) {
-    debt.ticks--; debt.next += 1; h.debt(w, debt.amount);
+    debt.ticks--; debt.next += 1; h.debt(w, debt.amount, debt.sourceEnemyId, debt.reflection);
   }
   r.debt = r.debt.filter(debt => debt.ticks > 0);
   // Projectile/discrete skill lifetimes are world-owned rather than cooldown-owned.
@@ -161,7 +161,7 @@ export function settleExpansionShields(w: CombatWorld, h: ExpansionHooks) {
   const s = w.aircraft, r = expansionState(s), stats = getEffectiveAircraftStats(s);
   for (const sh of r.endedShields.splice(0)) {
     if (hasCore(s, 173)) {recordCoreMetric(s,173,"procs",1);h.heal(w, (sh.absorbed??0) * .25, 173);}
-    if (hasCore(s, 200) && (sh.absorbed ?? 0) > 0) {recordCoreMetric(s,200,"detonations",1);h.area(w, w.playerX, w.playerY, 120, sh.absorbed! * 1.60, 200);}
+    if (hasCore(s, 200) && (sh.absorbed ?? 0) > (sh.reflectedAbsorbed??0)) {recordCoreMetric(s,200,"detonations",1);h.area(w, w.playerX, w.playerY, 120, (sh.absorbed!-(sh.reflectedAbsorbed??0)) * 1.60, 200);}
   }
 }
 export function satellitePositions(w: CombatWorld) {

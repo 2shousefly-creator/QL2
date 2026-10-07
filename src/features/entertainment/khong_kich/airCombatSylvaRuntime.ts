@@ -1,3 +1,4 @@
+import { terraMovement } from './airCombatTerraRuntime';
 import { getHealingReceivedMultiplier } from './airCombatRecovery';
 import type { CombatWorld, EnemyEntity } from './airCombatRuntime';
 import type { SkillId } from './airCombatTypes';
@@ -65,7 +66,7 @@ export function sylvaIncomingHp(w:CombatWorld,hpLost:number){
 }
 export function sylvaArmor(w:CombatWorld,e:EnemyEntity,armor:number){const d=states.get(w)?.targets.get(e.id);if(!d||d.entity!==e)return armor;const now=w.elapsed;return d.acidUntil>now||d.flatUntil>now?Math.max(0,armor*(d.acidUntil>now?.75:1)-(d.flatUntil>now?d.flat:0)):armor;}
 export function sylvaOutgoing(w:CombatWorld,e:EnemyEntity){const s=states.get(w),d=s?.targets.get(e.id);return ((s?.outgoingUntil??0)>w.elapsed?1.25:1)*(d?.entity===e&&d.markUntil>w.elapsed?1+sylvaValues(SYLVA_SKILLS[2],d.markRank).amplification:1);}
-export function sylvaMovement(w:CombatWorld,e:EnemyEntity){const d=states.get(w)?.targets.get(e.id);if(!d||d.entity!==e||immune(e))return 1;const now=w.elapsed;if(d.rootUntil>now&&(!e.aircraftTarget||!hardControlImmune(e.aircraftTarget.world.aircraft)))return 0;return Math.min(d.slowUntil>now?d.slow:1,d.suppressMoveUntil>now?.5:1);}
+export function sylvaMovement(w:CombatWorld,e:EnemyEntity){const d=states.get(w)?.targets.get(e.id);if(!d||d.entity!==e||immune(e))return terraMovement(w,e);const now=w.elapsed;if(d.rootUntil>now&&(!e.aircraftTarget||!hardControlImmune(e.aircraftTarget.world.aircraft)))return 0;return Math.min(terraMovement(w,e),d.slowUntil>now?d.slow:1,d.suppressMoveUntil>now?.5:1);}
 export function sylvaFireRate(w:CombatWorld,e:EnemyEntity){const d=states.get(w)?.targets.get(e.id);return d?.entity===e&&d.suppressUntil>w.elapsed&&!immune(e)?.75:1;}
 export function clearSylvaSlow(w:CombatWorld,e:EnemyEntity){const d=states.get(w)?.targets.get(e.id);if(d){d.slowUntil=0;d.slow=1;/* Suppression also slows fire, so only its movement component is cleansed. */d.suppressMoveUntil=0;} }
 export function sylvaAcidHit(w:CombatWorld,e:EnemyEntity,h:SylvaHooks){
@@ -85,7 +86,7 @@ function settleBloom(w:CombatWorld,at=w.elapsed){
 }
 function checkBloom(w:CombatWorld,h:SylvaHooks){
  const a=states.get(w)?.bloom;if(!a||a.checking)return;if(!live(w)){cancelSylva(w);return;}a.checking=true;
- try{for(const [id,seed] of a.seeds){const e=seed.entity;if(!exists(w,e)){a.seeds.delete(id);fx(w,'wither',e.x,e.y,35,.4);continue;}
+ try{for(const [id,seed] of a.seeds){const e=seed.entity;if(!exists(w,e)){a.seeds.delete(id);fx(w,'wither',e.x,e.y,65,.4);continue;}
   const v=sylvaValues(SYLVA_SKILLS[3],a.rank),raw=getEffectiveAircraftStats(w.aircraft).firepower*v.damageMultiplier+seed.recordedHpLoss*v.record;
   if(w.elapsed>=a.until||h.lethal(w,e,raw)){
    a.seeds.delete(id);fx(w,'tree',e.x,e.y,110,.75);h.damage(w,e,raw,SYLVA_SKILLS[3]);
@@ -152,9 +153,16 @@ export function tickSylva(w:CombatWorld,dt:number,h:SylvaHooks){
  for(const [id,d] of s.targets)if(!exists(w,d.entity)||Math.max(d.flatUntil,d.acidUntil,d.markUntil,d.rootUntil,d.slowUntil,d.suppressUntil)<=now)s.targets.delete(id);
  s.effects=s.effects.filter(e=>e.at+e.life>now);
 }
+/** Remove hostile effects at their owner without detonating the retired seed. */
+export function clearSylvaTarget(w:CombatWorld,e:EnemyEntity){
+ const s=states.get(w);if(!s)return;s.targets.delete(e.id);
+ for(const z of s.zones){z.tails.delete(e);z.inside.delete(e);z.initial.delete(e);}
+ const seed=s.bloom?.seeds.get(e.id);if(seed?.entity===e){s.bloom!.seeds.delete(e.id);fx(w,'wither',e.x,e.y,65,.5);settleBloom(w);}
+ if(e.aircraftTarget)delete e.aircraftTarget.world.aircraft.coreState.timers.sylvaFireSlow;
+}
 export function cancelSylva(w:CombatWorld){
  const s=states.get(w);if(!s)return;
- for(const seed of s.bloom?.seeds.values()??[])fx(w,'wither',seed.entity.x,seed.entity.y,35,.35);
+ for(const seed of s.bloom?.seeds.values()??[])fx(w,'wither',seed.entity.x,seed.entity.y,65,.35);
  for(const d of s.targets.values())if(d.entity.aircraftTarget){const c=d.entity.aircraftTarget.world.aircraft.coreState;if(c.timers.sylvaFireSlow===d.suppressUntil)delete c.timers.sylvaFireSlow;}s.targets.clear();
  s.symbiosis=undefined;s.bloom=undefined;s.flights=[];s.zones=[];s.outgoingUntil=0;
  delete w.aircraft.coreState.timers.sylvaArmor;delete w.aircraft.coreState.stacks.sylvaSymbiosisRank;
