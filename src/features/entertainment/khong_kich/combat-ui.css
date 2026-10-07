@@ -35,7 +35,7 @@
 .air-core-owned-detail { overflow-y:auto; min-height:0; border:1px solid #64748b66; border-radius:10px; padding:10px; background:#0b172b; color:#f1f5f9; overscroll-behavior:contain; }
 .air-core-number { color:#fff4b3; font-weight:750; text-shadow:0 1px 2px #000; }
 .air-core-toasts { pointer-events:none; position:absolute; left:2%; top:31.25%; width:max-content; max-width:94%; z-index:9; }
-.air-core-toast { pointer-events:none; position:absolute; inset:0 auto auto 0; width:max-content; max-width:94cqw; padding:0; border:0; border-radius:0; background:none; color:#eef7ff; font-size:clamp(8px,2.5cqw,13px); line-height:1.15; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; text-shadow:0 1px 3px #020617,0 0 2px #020617; transition:transform .18s ease-out; }
+.air-core-toast { pointer-events:none; position:absolute; inset:0 auto auto 0; width:max-content; max-width:94cqw; padding:0; border:0; border-radius:0; background:none; color:#eef7ff; font-size:clamp(8px,2.5cqw,13px); line-height:1.15; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; text-shadow:0 1px 3px #020617,0 0 2px #020617; transform:scale(.85); transform-origin:top left; transition:transform .18s ease-out; }
 .air-core-toast[data-tier="gold"] { color:#fde68a; }
 .air-core-toast[data-tier="diamond"] { color:#a5f3fc; }
 .air-wave-countdown { pointer-events:none; position:absolute; top:24%; left:50%; transform:translateX(-50%); z-index:10; padding:6px 12px; border:1px solid #a5f3fc88; border-radius:12px; background:#0c2036df; color:#e0f2fe; text-align:center; font-size:2.5cqw; }
@@ -799,7 +799,7 @@
 
 /* Skill/status and acquisition messages share one node: the next replaces the last. */
 .air-core-toasts[data-notice=combat]{left:50%;top:21%;transform:translateX(-50%);z-index:10}
-.air-core-toasts[data-notice=combat] .air-core-toast{position:relative;white-space:normal;text-align:center;border:1px solid #67e8f966;border-radius:999px;background:#000e;padding:6px 12px;color:#cffafe;font-size:9px;font-weight:900;letter-spacing:.05em;text-transform:uppercase;box-shadow:0 4px 12px #0833444d}
+.air-core-toasts[data-notice=combat] .air-core-toast{position:relative;white-space:normal;text-align:center;border:0;border-radius:0;background:none;padding:6px 12px;color:#cffafe;font-size:9px;font-weight:900;letter-spacing:.05em;text-transform:uppercase;box-shadow:none;transform-origin:top center}
 
 /* Passive frame is 0.6 times BOTH active-cell dimensions. Its own column owns taps. */
 [data-skill-rail=bottom]{grid-template-columns:minmax(0,.6fr) repeat(4,minmax(0,1fr));}
@@ -832,7 +832,7 @@
  .air-selection-panel{grid-template-rows:96px 108px 112px 70px 400px;}
 }
 .air-core-toasts[data-notice=acquisition]{top:27%;width:min(94%,420px);max-width:94%;}
-.air-core-toasts[data-notice=acquisition] .air-core-toast{position:relative;width:100%;white-space:normal;overflow:visible;line-height:1.4;padding:8px;border:1px solid #64748b88;border-radius:10px;background:#07101bea;}
+.air-core-toasts[data-notice=acquisition] .air-core-toast{position:relative;width:100%;white-space:normal;overflow:visible;line-height:1.4;padding:8px;border:0;border-radius:0;background:none;}
 .air-receipt{display:grid;gap:6px;}
 .air-receipt-row{display:flex;align-items:center;gap:7px;overflow-wrap:anywhere;}
 .air-receipt-icon{width:26px!important;height:26px!important;flex-shrink:0;}
