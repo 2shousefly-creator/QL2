@@ -1,3 +1,4 @@
+import { generatedPortrait } from './airCombatGeneratedArt';
 import { TERRA_ART, TERRA_ICON_CELLS } from './airCombatTerraArt';
 import { SYLVA_ART, SYLVA_ICON_CELLS } from './airCombatSylvaArt';
 import { ARGENT_ART, ARGENT_ICON_CELLS } from './airCombatArgentArt';
@@ -25,6 +26,8 @@ export const SKILL_ICON_CELLS: Record<SkillId | PassiveId, readonly [number, num
 };
 
 export function SkillIcon({ id, className }: { id: string; className?: string }) {
+  const portrait=generatedPortrait(id);
+  if(portrait)return <span className={'combat-ui-icon '+(className??'')} aria-hidden="true"><img src={portrait} alt="" draggable={false} className="h-full w-full object-contain" /></span>;
   if(id === "argent_myriad" || id === "argent_array_return") return <SpriteAtlasIcon atlas={id === "argent_myriad" ? myriad : arrayReturn} columns={1} rows={1} column={0} row={0} className={className} fallback={<TriangleAlert/>}/>;
   const terra=TERRA_ICON_CELLS[id];
   if(terra)return <SpriteAtlasIcon atlas={TERRA_ART.icons} columns={5} rows={4} column={terra[0]} row={terra[1]} className={className} fallback={<TriangleAlert/>}/>;

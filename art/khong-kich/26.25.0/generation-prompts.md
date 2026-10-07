@@ -1,4 +1,4 @@
-# Aircraft body source generation
+# Raster production briefs and provenance
 
 Tool: built-in `image_gen`, one request per aircraft, `transparent_background: true`.
 Date: 2026-10-07. These are concise production briefs and reference mappings;
@@ -24,5 +24,10 @@ watermark, checkerboard, atlas grid, flat vector geometry or motion blur.
 
 Only repository-owned art was supplied as image reference. No external game art,
 API key, license key, signed download URL or paid API service was used.
-The produced images remain authoring sources; a full source image must not be
-misrepresented as a multi-part Spine rig.
+The original PNGs are preserved under source-images. `generation-jobs.json` and
+`extra-generation-jobs.json` record the individual reference and production brief
+for each enemy, boss, helper, active skill, ammunition and shared effect. Paths are
+repository-relative. These are asset production metadata, not the user's execution
+prompt. Packing creates core, port, starboard and painted-light layers, atlas UVs,
+pivots and flat Canvas fallbacks. Animation is authored in GeneratedRigPool.ts and
+fed by the existing skill/entity painters. No skeletal export is claimed.

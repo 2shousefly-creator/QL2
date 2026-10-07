@@ -1,3 +1,7 @@
+import { paintGeneratedMechanisms } from '../airCombatGeneratedMechanisms';
+import { combatGraphicsQuality } from '../airCombatGraphics';
+import { generatedFrame, generatedEnemyId } from '../airCombatGeneratedArt';
+import { GeneratedRigPool, setGeneratedRigPose } from './GeneratedRigPool';
 import { TERRA_FRAMES, paintTerra, TERRA_SPRITE_BUDGET } from '../airCombatTerraArt';
 import { sylvaGrayHealth } from '../airCombatSylvaRuntime';
 import { SYLVA_ART, SYLVA_SOURCES, SYLVA_FRAMES, SYLVA_ICON_CELLS, paintSylva, paintSylvaSeeds, SYLVA_SPRITE_BUDGET } from '../airCombatSylvaArt';
@@ -120,7 +124,9 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
   private companions: AirCombatSpritePool;
   private warnings: AirCombatSpritePool;
   private engines: AirCombatSpritePool;
+  private mechanisms = new AirCombatSpritePool(this.actors,8);
   private player = new Sprite();
+  private playerRig = new GeneratedRigPool(this.actors,1);
   private playerExhaust = Array.from({length:6},()=>new Sprite());
   private shield = new Sprite();
   private titanBubble = new Graphics();
@@ -142,8 +148,8 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
   private destroyed = false;
   private onLost = (event: Event) => { event.preventDefault(); this.lost = true; };
 
-  static async create(host: HTMLDivElement): Promise<AirCombatPixiRenderer> {
-    const assets = await loadAirCombatAssets();
+  static async create(host: HTMLDivElement, world?:CombatWorld): Promise<AirCombatPixiRenderer> {
+    const assets = await loadAirCombatAssets(world);
     const app = new Application();
     try {
       await app.init({ width: 360, height: 640, preference: ["webgl"], autoDensity: true,
@@ -230,6 +236,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
   render(world: CombatWorld, delta: number, reducedMotion: boolean) {
     if (this.lost) throw new Error("Không Kích WebGL context lost");
     if (this.destroyed || document.hidden) return;
+    reducedMotion=reducedMotion||combatGraphicsQuality()==='low';
     if (world !== this.renderedWorld) {
       this.renderedWorld = world; this.lastEvent = 0; this.lastProjectile = 0;
       this.healthBars.clear(); this.flashUntil.clear(); this.shake = this.recoil = 0;
@@ -314,6 +321,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
         this.vfx.spawn("muzzle", event.x, event.y, 12, .08, 0xfff3c9);
         if (!reducedMotion) this.vfx.spawn("sparks", event.x, event.y, 22, .22);
       } else if (event.kind === "explosion") {
+        if(event.killTier)this.enemies.shatterAt(event.x,event.y,this.clock,reducedMotion);
         if(event.killTier)this.shake=Math.max(this.shake,event.killTier==="boss"?5:event.killTier==="elite"?2.8:1.2);
         if (event.magneticDeath) continue;
         this.vfx.spawn(event.boss ? "bossExplosion" : event.size > 65 ? "largeExplosion" : event.size > 40 ? "mediumExplosion" : "smallExplosion", event.x, event.y, event.size * 1.5, event.boss ? 1.1 : 0.5);
@@ -371,7 +379,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
       line:(ax,ay,bx,by,color,alpha,width)=>{this.enemyForegroundMarks.moveTo(ax,ay).lineTo(bx,by).stroke({color,alpha,width});},
     });
     if (world.ended) this.magneticEndAge += delta;
-    this.magneticSprites.begin();
+    this.magneticSprites.begin(this.clock,reducedMotion);
     this.magneticWarnings.clear();
     paintMagnetic(world, { label: tacticalPainter.label,
       polygon:(points,color,alpha)=>{this.magneticWarnings.poly([...points]).fill({color,alpha});},
@@ -384,14 +392,14 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
         sprite.rotation=rotation; sprite.alpha=alpha; sprite.tint=tint;
       }
     }, reducedMotion, world.elapsed + this.magneticEndAge);
-    this.astraSprites.begin();
+    this.astraSprites.begin(this.clock,reducedMotion);
     paintAstra(world,{...tacticalPainter,sprite:(id,key,x,y,width,height,rotation,alpha)=>{
       const sprite=this.astraSprites.get(id,this.assets.effect(key));if(!sprite)return;
       sprite.blendMode=key==="astra_trail"||key==="astra_corona"||key==="astra_segments"||key==="astra_flash"?"add":"normal";
       sprite.position.set(x,y);sprite.width=width;sprite.height=height;sprite.rotation=rotation;sprite.alpha=alpha;sprite.tint=0xffffff;
     }},reducedMotion);
     this.astraSprites.end();
-    this.cinderGeometry.clear();this.cinderSprites.begin();for(const label of this.cinderLabels.values())label.visible=false;
+    this.cinderGeometry.clear();this.cinderSprites.begin(this.clock,reducedMotion);for(const label of this.cinderLabels.values())label.visible=false;
     paintCinder(world,(id,key,x,y,width,height,rotation,alpha)=>{const sprite=this.cinderSprites.get(id,this.assets.effect(key));if(!sprite)return;sprite.position.set(x,y);sprite.width=width;sprite.height=height;sprite.rotation=rotation;sprite.alpha=alpha;sprite.tint=0xffffff;sprite.blendMode='normal';},reducedMotion,(id,text,x,y)=>{
       let label=this.cinderLabels.get(id);if(!label){if(this.cinderLabels.size>=48){const [old,view]=this.cinderLabels.entries().next().value!;view.destroy();this.cinderLabels.delete(old);}label=new Text({text,style:{fontFamily:'sans-serif',fontSize:CINDER_STACK_FONT_SIZE,fontWeight:'bold',fill:0xfff1af,stroke:{color:0x1c2026,width:1.2}}});this.cinderLabels.set(id,label);this.enemyStatusLayer.addChild(label);}label.text=text;label.position.set(x,y);label.rotation=this.sceneParent?Math.PI:0;label.visible=true;
     },{
@@ -399,21 +407,21 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
       line:(x,y,endX,endY,alpha)=>{this.cinderGeometry.moveTo(x,y).lineTo(endX,endY).stroke({color:0xffaaaa,width:1.5,alpha});}
     });
     paintBigBang(world,(id,key,x,y,width,height,alpha,additive)=>{const sprite=this.cinderSprites.get(id,this.assets.effect(key));if(!sprite)return;sprite.position.set(x,y);sprite.width=width;sprite.height=height;sprite.rotation=0;sprite.alpha=alpha;sprite.tint=0xffffff;sprite.blendMode=additive?'add':'normal';},reducedMotion);
-    this.argentSprites.begin();
+    this.argentSprites.begin(this.clock,reducedMotion);
     paintArgent(world,(id,key,x,y,width,height,rotation,alpha,additive)=>{const sprite=this.argentSprites.get(id,this.assets.effect(key));if(!sprite)return;sprite.position.set(x,y);sprite.width=width;sprite.height=height;sprite.rotation=rotation;sprite.alpha=alpha;sprite.tint=0xffffff;sprite.blendMode=additive?'add':'normal';},reducedMotion);
     this.argentSprites.end();
-    this.terraSprites.begin();
+    this.terraSprites.begin(this.clock,reducedMotion);
     paintTerra(world,(id,key,x,y,width,height,rotation,alpha,additive)=>{const sprite=this.terraSprites.get(id,this.assets.effect(key));if(!sprite)return;sprite.position.set(x,y);sprite.width=width;sprite.height=height;sprite.rotation=rotation;sprite.alpha=alpha;sprite.tint=0xffffff;sprite.blendMode=additive?'add':'normal';},reducedMotion);
     this.terraSprites.end();
-    this.sylvaSprites.begin();
+    this.sylvaSprites.begin(this.clock,reducedMotion);
     paintSylva(world,(id,key,x,y,width,height,rotation,alpha,additive)=>{const sprite=this.sylvaSprites.get(id,this.assets.effect(key));if(!sprite)return;sprite.position.set(x,y);sprite.width=width;sprite.height=height;sprite.rotation=rotation;sprite.alpha=alpha;sprite.tint=0xffffff;sprite.blendMode=additive?'add':'normal';},reducedMotion);
     this.sylvaSprites.end();
-    this.riptideSprites.begin();
+    this.riptideSprites.begin(this.clock,reducedMotion);
     paintRiptide(world,(id,key,x,y,width,height,rotation,alpha,additive)=>{const sprite=this.riptideSprites.get(id,this.assets.effect(key));if(!sprite)return;sprite.position.set(x,y);sprite.width=width;sprite.height=height;sprite.rotation=rotation;sprite.alpha=alpha;sprite.tint=0xffffff;sprite.blendMode=additive?'add':'normal';},reducedMotion);
     this.riptideSprites.end();
     this.cinderSprites.end();
     this.magneticSprites.end();
-    this.stormbreakerSprites.begin(); this.stormbreakerWarnings.clear();
+    this.stormbreakerSprites.begin(this.clock,reducedMotion); this.stormbreakerWarnings.clear();
     this.stormbreakerPresentation.update(world, delta);
     let stormSpriteId=0;
     paintStormbreaker(world, {
@@ -429,7 +437,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
       }
     },reducedMotion,this.stormbreakerPresentation);
     this.stormbreakerSprites.end();
-    this.mirageSprites.begin();
+    this.mirageSprites.begin(this.clock,reducedMotion);
     let mirageId = 0;
     paintMirage(world,(frame,x,y,width,height,rotation,alpha,tint=0xffffff,anchorX=.5)=>{
       const sprite=this.mirageSprites.get(mirageId++,this.assets.texture(frame));if(!sprite)return;
@@ -437,21 +445,22 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     },reducedMotion);
     this.mirageSprites.end();
     for(let i=labelCount;i<this.enemyStatusLabels.length;i++)this.enemyStatusLabels[i].visible=false;
-    this.enemies.begin();
-    this.engines.begin();
+    this.enemies.begin(this.clock,reducedMotion);
+    this.engines.begin(this.clock,reducedMotion);
     for (const enemy of world.enemies) {
       if (enemy.aircraftTarget) continue;
       const magnetic = !!world.magnetic;
       const exposed = magnetic && enemy.type === "boss" && !guardianSlots(world, enemy.id).some(Boolean);
-      const frame = world.mirage ? mirageEnemyFrame(enemy,world.bossPhase) : world.stormbreaker ? stormEnemyFrame(enemy,world.bossPhase) : exposed ? TEMPEST_WEAKPOINT_ART : magnetic ? (STAGE2_ENEMY_ART[enemy.type] ?? ENEMY_VISUALS[enemy.type]) : ENEMY_VISUALS[enemy.type];
+      const frame = generatedFrame(exposed?'tempest_weakpoint':generatedEnemyId(enemy.type,world));
       const sprite = this.enemies.get(enemy.id, this.assets.texture(frame));
       if (!sprite) continue;
       sprite.position.set(enemy.x, enemy.y);
       sprite.visible = enemy.hp > 0;
+      setGeneratedRigPose(sprite,{charge:enemy.dashCharge>0||enemy.mirage?.barrage||enemy.magnetic?.clampWarned?1:enemy.stormbreaker?Math.min(1,enemy.stormbreaker.charge/100):enemy.bossAttack?.majorAttack?Math.min(1,enemy.bossAttack.majorAge/.5):Math.max(0,1-enemy.fireCooldown/.35),recoil:enemy.fireCooldown>.7?.25:0,phase:enemy.type==='boss'?world.bossPhase:1,hit:this.flashUntil.has(enemy.id)?1:0});
       sprite.width = enemy.radius * ((world.stormbreaker || world.mirage) ? enemy.type === "boss" ? 3.2 : 2.8 : enemy.type === "boss" && !magnetic ? BOSS_VISUAL_WIDTH_SCALE : 2.8);
       sprite.height = sprite.width * (magnetic || world.stormbreaker || world.mirage ? 1 : enemy.type === "boss" ? BOSS_VISUAL_ASPECT : sprite.texture.height / sprite.texture.width);
-      sprite.rotation = enemyAirframeRotation(enemy) - (world.mirage ? Math.PI : 0);
-      sprite.tint = enemyAllegiance(world,enemy)==="friendly_hacked" ? 0x67e8f9 : this.flashUntil.has(enemy.id) ? 0xffe1b3 : enemy.type === "acid_bomber" ? 0xa3e635 : enemy.type === "jammer" ? 0x2dd4bf : enemy.type === "sniper" ? 0xe879f9 : enemy.type === "radar_hunter" ? 0x38bdf8 : 0xffffff;
+      sprite.rotation = enemyAirframeRotation(enemy);
+      sprite.tint = enemyAllegiance(world,enemy)==="friendly_hacked" ? 0x67e8f9 : this.flashUntil.has(enemy.id) ? 0xffe1b3 : 0xffffff;
       if(!enemy.aircraftTarget && !world.mirage && !magnetic && (enemy.shield>0 || enemy.aegisUntil>world.aircraft.coreState.time))this.telegraphs.circle(enemy.x,enemy.y,enemy.radius+7).fill({color:0x38bdf8,alpha:.12}).stroke({color:0x7dd3fc,width:2,alpha:.85});
       if(!world.mirage && enemy.stun>0)this.telegraphs.circle(enemy.x,enemy.y-enemy.radius-7,5).stroke({color:0xfde047,width:2});
       if(!world.mirage&&enemy.burn>0&&!reducedMotion&&damageSmoke)this.vfx.spawn("fire",enemy.x,enemy.y,24,.3);
@@ -462,7 +471,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
         const committed = enemy.kamikazeState === "dash" && enemy.dashCommitted;
         this.telegraphs.moveTo(committed ? enemy.dashStartX : enemy.x, committed ? enemy.dashStartY : enemy.y).lineTo(enemy.dashEndX,enemy.dashEndY).stroke({color:enemyAllegiance(world,enemy)==="friendly_hacked"?0x67e8f9:0xfbbf24,width:1.5,alpha:.7});
       }
-      sprite.rotation=enemyAirframeRotation(enemy) - (world.mirage ? Math.PI : 0);
+      sprite.rotation=enemyAirframeRotation(enemy);
       if(!world.mirage&&enemy.hackedFacing!==undefined&&enemy.type!=="kamikaze"){
         const transform=getEnemyExhaustTransform(enemy),flame=this.engines.get(enemy.id+4,this.assets.engineFlame);
         if(flame){flame.anchor.set(.5,0);flame.position.set(transform.x,transform.y);flame.rotation=transform.rotation;flame.width=transform.width;flame.height=transform.length;flame.alpha=.65;}
@@ -507,12 +516,12 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     }
     this.enemies.end();
     this.engines.end();
-    this.projectiles.begin();
-    this.projectileGlows.begin();
+    this.projectiles.begin(this.clock,reducedMotion);
+    this.projectileGlows.begin(this.clock,reducedMotion);
     this.trailClock += delta;
     const trail = this.trailClock > (reducedMotion ? 0.2 : 0.055);
     if (trail) this.trailClock = 0;
-    this.missileSmoke.begin();
+    this.missileSmoke.begin(this.clock,reducedMotion);
     for (const particle of world.particles) {
       if (particle.kind !== "missile_smoke") continue;
       const smoke = this.missileSmoke.get(particle.id, this.assets.effect("smoke"));
@@ -586,9 +595,9 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     this.projectiles.end();
     this.projectileGlows.end();
 
-    this.companions.begin();
+    this.companions.begin(this.clock,reducedMotion);
     for (const decoy of world.decoys) {
-      const sprite = this.companions.get(decoy.id, decoy.clone ? this.assets.texture(visual.neutral) : this.assets.effect("charge"));
+      const sprite = this.companions.get(decoy.id, decoy.clone ? this.assets.texture(visual.neutral) : (this.assets.generated('decoy')??this.assets.effect('charge')));
       if (!sprite) continue;
       sprite.position.set(decoy.x, decoy.y); sprite.width = sprite.height = decoy.clone ? 48 : decoy.active ? (reducedMotion ? 23 : 23+Math.sin(this.clock*12+decoy.id)*2) : 13; sprite.alpha = decoy.clone ? .48 : Math.min(1,decoy.remaining/.35);
       sprite.anchor.x = decoy.clone ? visual.artwork.neutral.anchorX : .5;
@@ -611,7 +620,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
       sprite.tint=0xa5f3fc;sprite.alpha=.38*Math.min(1,(ghost.until-world.elapsed)*3);
     }
     this.companions.end();
-    this.warnings.begin();
+    this.warnings.begin(this.clock,reducedMotion);
     for (const warning of world.warnings) {
       if(paintElitePatternWarning(warning,tacticalPainter))continue;
       if(warning.allegiance==="friendly_hacked"){
@@ -687,14 +696,24 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     const alive = !world.destruction && world.aircraft.currentHp > 0;
     this.player.visible = alive;
     const invisible = (world.aircraft.activeEffects.invisibility || 0) > 0 || equipmentUntargetable(world.aircraft);
-    this.player.texture = this.assets.texture(world.aircraft.aircraftId==='terra'&&(world.aircraft.activeEffects.terra_geocore_overdrive??0)>0?TERRA_FRAMES.terra_emissive:world.aircraft.aircraftId==='argent'?argentPose(world):visual.neutral);
+    this.player.texture = this.assets.texture(visual.neutral);
     this.player.rotation = 0;
-    this.player.position.set(world.playerX, world.playerY + (reducedMotion ? 0 : this.recoil));
+    this.player.position.set(world.playerX, world.playerY);
     this.player.width = this.player.height = visual.size*playerAirframeScale(world.aircraft);
     this.player.anchor.x = visual.artwork.neutral.anchorX;
     this.player.width *= visual.artwork.neutral.scaleX;
     this.player.alpha = invisible ? 0.1 : 1;
     this.player.tint = world.playerInvulnerability > 0 ? 0xffb1b1 : 0xffffff;
+    this.player.renderable=true;this.playerRig.begin(this.clock,reducedMotion);
+    setGeneratedRigPose(this.player,{charge:world.laserCharge>0?1:Object.values(world.aircraft.activeEffects).some(v=>(v??0)>0)?.55:0,recoil:Math.min(1,this.recoil/1.4),hit:world.playerInvulnerability>0?.5:0});
+    this.playerRig.draw(-1,this.player,this.clock,reducedMotion);this.playerRig.end();
+    this.mechanisms.begin(this.clock,reducedMotion);
+    paintGeneratedMechanisms(world,(id,asset,x,y,width,height,alpha,charge)=>{
+      const texture=this.assets.generated(asset);if(!texture)return;
+      const sprite=this.mechanisms.get(id,texture);if(!sprite)return;
+      sprite.position.set(x,y);sprite.width=width;sprite.height=height;sprite.alpha=alpha;
+      setGeneratedRigPose(sprite,{charge,recoil:Math.min(1,this.recoil/1.4)});
+    },reducedMotion);this.mechanisms.end();
     const exhaust=getPlayerExhaust(world,visual.size*playerAirframeScale(world.aircraft),reducedMotion);
     for(let i=0;i<this.playerExhaust.length;i++){
       const sprite=this.playerExhaust[i],mount=exhaust.mounts[Math.floor(i/3)],layer=i%3;
@@ -717,7 +736,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     const bubble=this.titanBubble, shieldState=this.titanShield;
     bubble.clear();bubble.visible=alive&&shieldState.opacity>.01;
     if(bubble.visible) {
-      bubble.position.set(world.playerX,world.playerY);bubble.scale.set(shieldState.scale*playerAirframeScale(world.aircraft));bubble.alpha=shieldState.opacity;
+      bubble.position.set(world.playerX,world.playerY);bubble.scale.set(shieldState.scale*playerAirframeScale(world.aircraft));bubble.alpha=shieldState.opacity*.25;
       paintTitanShield(this.techShieldPainter,shieldState,reducedMotion,(skillRank(world.aircraft, "armor_shield") >= 3));
 
     }
@@ -726,7 +745,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     this.aura.position.set(world.playerX, world.playerY); this.aura.width = this.aura.height = visual.size*playerAirframeScale(world.aircraft) * 1.4;
     this.aura.tint = visual.tint; this.aura.alpha = reducedMotion ? .2 : .22 + Math.sin(this.clock * 6) * .06;
     if (!alive) this.dashTail = 0;
-    this.afterimages.begin();
+    this.afterimages.begin(this.clock,reducedMotion);
     if (world.dashRemaining > 0) {
       this.dashTail = .24; this.dashX = world.dashStartX; this.dashY = world.dashStartY;
       this.dashEndX = world.playerX; this.dashEndY = world.playerY;
@@ -804,7 +823,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
       if (hp < 0.4) this.vfx.spawn("damageSmoke", world.playerX + 5, world.playerY + 15, 31, 0.8, 0xffffff, 25);
       if (hp < 0.2) this.vfx.spawn("fire", world.playerX - 7, world.playerY + 13, 24, 0.35);
     }
-    this.equipmentSprites.begin();
+    this.equipmentSprites.begin(this.clock,reducedMotion);
     paintEquipment(world,(id,frame,x,y,width,height,rotation,alpha)=>{
       const sprite=this.equipmentSprites.get(id,this.assets.texture(frame));if(!sprite)return;
       sprite.position.set(x,y);sprite.width=width;sprite.height=height;sprite.rotation=rotation;sprite.alpha=alpha;
@@ -819,7 +838,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
         if (actor) this.mirrorRenderer = new AirCombatPixiRenderer(this.app, this.assets, undefined, this.mirrorLayer);
       }
       if (actor) this.mirrorRenderer?.render(actor, delta, reducedMotion);
-      this.seedSprites.begin();
+      this.seedSprites.begin(this.clock,reducedMotion);
       for(const [owner,mirrored] of [[world,false],[actor,true]] as const){
         if(!owner)continue;
         paintSylvaSeeds(owner,(id,key,x,y,width,height,rotation,alpha,additive)=>{const sprite=this.seedSprites.get(id-(mirrored?1000:0),this.assets.effect(key));if(!sprite)return;const point=mirrored?mirrorPoint(x,y):{x,y};sprite.position.set(point.x,point.y);sprite.width=width;sprite.height=height;sprite.rotation=rotation+(mirrored?Math.PI:0);sprite.alpha=alpha;sprite.tint=0xffffff;sprite.blendMode=additive?'add':'normal';},reducedMotion);
@@ -843,7 +862,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     this.stormbreakerPresentation.clear();
     this.astraSprites.destroy();this.cinderSprites.destroy();this.terraSprites.destroy();this.sylvaSprites.destroy();this.seedSprites.destroy();this.riptideSprites.destroy();this.argentSprites.destroy();for(const label of this.cinderLabels.values())label.destroy();this.cinderLabels.clear();
     this.equipmentSprites.destroy();
-    this.enemies.destroy(); this.missileSmoke.destroy(); this.projectiles.destroy(); this.missiles.destroy(); this.projectileGlows.destroy(); this.afterimages.destroy(); this.companions.destroy(); this.warnings.destroy(); this.engines.destroy(); this.vfx.destroy();
+    this.mechanisms.destroy();this.playerRig.destroy();this.enemies.destroy(); this.missileSmoke.destroy(); this.projectiles.destroy(); this.missiles.destroy(); this.projectileGlows.destroy(); this.afterimages.destroy(); this.companions.destroy(); this.warnings.destroy(); this.engines.destroy(); this.vfx.destroy();
     if (this.sceneParent) {
       this.root.destroy({ children: true });
       this.stableHud.destroy({ children: true });

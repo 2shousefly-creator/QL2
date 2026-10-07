@@ -6,8 +6,8 @@ import { getMissilePose } from "./airCombatMissilePresentation";
 import { INTERFERENCE_WAVE_THICKNESS } from "./airCombatRankRuntime";
 import { skillRank } from "./airCombatSkillRanks";
 import type { AtlasFrame } from "./pixi/airCombatPixiTypes";
-import vfx from "../../../assets/khong-kich/v2/ranked-skill-vfx-atlas.svg";
-import projectiles from "../../../assets/khong-kich/v2/ranked-skill-projectiles.svg";
+import vfx from "../../../assets/khong-kich/26.25.0/compat/v2-ranked-skill-vfx-atlas.png";
+import projectiles from "../../../assets/khong-kich/26.25.0/compat/v2-ranked-skill-projectiles.png";
 
 export const RANKED_ART = { vfx, projectiles };
 const cell = (index:number):AtlasFrame => ({atlas:"rankedVfx",rect:[index%4/4,Math.floor(index/4)/4,1/4,1/4]});

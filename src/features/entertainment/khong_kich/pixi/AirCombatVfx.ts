@@ -1,3 +1,4 @@
+import { combatGraphicsQuality } from '../airCombatGraphics';
 import { paintUltimates, ultimateBody } from "../airCombatUltimateArt";
 import { paintRankSkills } from "../airCombatRankArt";
 import type { CombatWorld } from "../airCombatRuntime";
@@ -20,14 +21,14 @@ export class AirCombatVfx {
     this.ranked = new AirCombatSpritePool(root, spriteBudget);
   }
   renderRankSkills(world: CombatWorld, reducedMotion: boolean) {
-    this.ranked.begin();
+    this.ranked.begin(world.elapsed,reducedMotion);
     paintRankSkills(world, (id,key,x,y,width,height,rotation,alpha,additive) => {
       const sprite=this.ranked.get(id,this.assets.effect(key));if(!sprite)return;
       sprite.position.set(x,y);sprite.width=width;sprite.height=height;sprite.rotation=rotation;sprite.alpha=alpha;
       sprite.blendMode=additive?"add":key==="rankAnchor"||key==="rankCrystal"||key==="rankMicroMissile"?"normal":"add";
     }, reducedMotion);
     this.ranked.end();
-    this.ultimates.begin();
+    this.ultimates.begin(world.elapsed,reducedMotion);
     paintUltimates(world,(id,key,x,y,width,height,rotation,alpha,additive)=>{
       const sprite=this.ultimates.get(id,this.assets.effect(key));if(!sprite)return;
       sprite.position.set(x,y);sprite.width=width;sprite.height=height;sprite.rotation=rotation;sprite.alpha=alpha;
@@ -37,6 +38,8 @@ export class AirCombatVfx {
   }
   spawn(key: VisualKey, x: number, y: number, size: number, duration = .45, tint = 0xffffff, drift = 0, delay = 0, rotation = 0, aspect = 1, opacity = 1, primaryImpact = false) {
     const important = primaryImpact || key === "shield" || key === "shockwave" || key === "laser" || key.endsWith("Explosion");
+    const decorativeLimit=combatGraphicsQuality()==='low'?24:combatGraphicsQuality()==='high'?80:52;
+    if(!important&&this.active.length>=decorativeLimit)return;
     if (this.active.length >= 80) {
       if (!important) return;
       let index = this.active.findIndex(effect => !effect.important);

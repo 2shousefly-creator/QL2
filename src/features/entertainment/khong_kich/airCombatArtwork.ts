@@ -1,3 +1,4 @@
+import { GENERATED_ART } from './airCombatGeneratedArt';
 import astraMetadata from '../../../assets/khong-kich/astra/art-source.json';
 import terraMetadata from '../../../assets/khong-kich/terra/art-source.json';
 import sylvaMetadata from '../../../assets/khong-kich/sylva/art-source.json';
@@ -50,6 +51,13 @@ export const PLAYER_ARTWORK: Record<AircraftId, Record<AirframePose, AirframeArt
   astra:poses("astra"),
   black_eagle: poses("black_eagle"), breaker: poses("breaker"), phantom: poses("phantom"),
 };
+
+// All poses share authored alpha bounds and a fixed center; mesh animation cannot resize the hull.
+for(const id of Object.keys(PLAYER_ARTWORK) as AircraftId[]) {
+ const item=GENERATED_ART.items[id],b=item.bounds;
+ const pose={scaleX:referenceWidthRatio*item.size/(b[2]-b[0]),anchorX:(b[0]+b[2])/(2*item.size)};
+ PLAYER_ARTWORK[id]={neutral:pose,left:pose,right:pose};
+}
 
 /** Nozzle locations in the neutral atlas cell, measured in source-art pixels.
  * Titan and Phantom have two outlets; their midpoint follows the fuselage axis.

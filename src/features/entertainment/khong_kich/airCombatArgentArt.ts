@@ -30,7 +30,7 @@ export function paintArgent(w:CombatWorld,paint:Painter,reduced:boolean){
  const trail=(ax:number,ay:number,bx:number,by:number,alpha:number,width=7)=>{const d=Math.hypot(bx-ax,by-ay);if(d>.1)draw('argent_trail',(ax+bx)/2,(ay+by)/2,width,d,Math.atan2(by-ay,bx-ax)+Math.PI/2,alpha,true);};
  for(const b of s.blades){
   const waiting=b.phase==='wait',returning=b.phase==='recall',heavy=b.source==='break';
-  const alpha=waiting?Math.min(1,(b.waitAt+b.ttl-now)/.8):1,angle=b.angle+Math.PI/2;
+  const alpha=waiting?Math.min(1,(b.waitAt+b.ttl-now)/.8):1,angle=(waiting?Math.atan2(w.playerY-b.y,w.playerX-b.x):b.angle)+Math.PI/2;
   if(!waiting){for(let i=1;i<b.trail.length;i++)trail(b.trail[i-1].x,b.trail[i-1].y,b.trail[i].x,b.trail[i].y,(i/b.trail.length)*.75,returning?10:7);const last=b.trail.at(-1);if(last)trail(last.x,last.y,b.x,b.y,.8,heavy?15:8);}
   const size=heavy?ARGENT_RENDER.heavy:ARGENT_RENDER.blade;
   draw(heavy?'argent_greatsword':b.ultimateRank===3?'argent_array_blade':returning?'argent_return':'argent_metal_blade',b.x,b.y,size.width,size.height,angle,alpha);
@@ -44,7 +44,10 @@ export function paintArgent(w:CombatWorld,paint:Painter,reduced:boolean){
  if(hud.array){const a=hud.array;
   for(const emitter of a.emitters){
    const angle=emitter.angle+Math.PI/2,appear=reduced?1:Math.min(1,(now-a.at)/.15);
-   draw('argent_array_emitter',emitter.x,emitter.y,ARGENT_RENDER.emitter.width,ARGENT_RENDER.emitter.height,angle,appear);
+   const visualWidth=ARGENT_RENDER.emitter.width;
+   // Inset only the painted launcher; runtime muzzle and all five anchors stay unchanged.
+   const insetX=Math.max(visualWidth*.5+5,Math.min(360-visualWidth*.5-5,emitter.x));
+   draw('argent_array_emitter',insetX,emitter.y,visualWidth,ARGENT_RENDER.emitter.height,angle,appear);
    draw('argent_core',emitter.x-Math.cos(emitter.angle)*15,emitter.y-Math.sin(emitter.angle)*15,12,12,0,.2+a.fireCount*.24,true);
   }
  }

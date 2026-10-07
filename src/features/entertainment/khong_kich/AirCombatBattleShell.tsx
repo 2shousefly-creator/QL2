@@ -1,3 +1,4 @@
+import { CombatGraphicsControl } from './CombatGraphicsControl';
 import { SkillUpgradeIcon } from './SkillUpgradeIcon';
 import { sylvaHud } from './airCombatSylvaRuntime';
 import { argentHud, argentWaiting } from './airCombatArgentRuntime';
@@ -387,7 +388,7 @@ export const AirCombatBattleShell: React.FC<AirCombatBattleProps> = ({
       usingLegacy = true;
       setPauseReason("loading", true);
       try {
-        const legacy = await createLegacyPresentation(host, world.stageId);
+        const legacy = await createLegacyPresentation(host, world.stageId,world);
         if (cancelled) { legacy.destroy(); return; }
         presentation = legacy;
         setRendererState("legacy"); setPauseReason("loading", false);
@@ -469,7 +470,7 @@ export const AirCombatBattleShell: React.FC<AirCombatBattleProps> = ({
       try {
         const { AirCombatPixiRenderer } = await import("./pixi/AirCombatPixiRenderer");
         if (cancelled) return;
-        const renderer = await AirCombatPixiRenderer.create(host);
+        const renderer = await AirCombatPixiRenderer.create(host,worldRef.current);
         if (cancelled) { renderer.destroy(); return; }
         presentation = renderer;
         setRendererState("pixi"); setPauseReason("loading", false);
@@ -894,7 +895,7 @@ export const AirCombatBattleShell: React.FC<AirCombatBattleProps> = ({
       {worldRef.current.pauseReasons.has("user") && !coreChoices && !showExitConfirm && !showCoreList && !showPrimaryChoice && !showEquipment && (
         <ConfirmationDialog key="pause" status="warning" layer="exclusive-dialog" layout="viewport-safe" onClose={() => setPauseReason("user", false)} labelledBy="air-paused-title" panelClassName="text-center">
           <OverlayHeader><Pause className="mx-auto h-8 w-8 text-[var(--modal-info)]" /><h2 id="air-paused-title" className="modal-title">Đã tạm dừng</h2></OverlayHeader>
-          <OverlayBody data-pause-overlay="user"><p className="text-xs text-[var(--modal-text)]">Hồi tài nguyên, hồi chiêu và thời gian trận đều đứng yên.</p></OverlayBody>
+          <OverlayBody data-pause-overlay="user"><p className="text-xs text-[var(--modal-text)]">Hồi tài nguyên, hồi chiêu và thời gian trận đều đứng yên.</p><CombatGraphicsControl /></OverlayBody>
           <OverlayFooter data-stack-actions="true"><ModalButton variant="primary" type="button" onClick={() => setPauseReason("user", false)} className="w-full"><Play className="h-4 w-4" /> Tiếp tục</ModalButton><ModalButton variant="ghost" type="button" className="text-rose-300" onClick={openExit}>Thoát Game</ModalButton></OverlayFooter>
         </ConfirmationDialog>
       )}

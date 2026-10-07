@@ -9,6 +9,8 @@ import { RIPTIDE } from './airCombatRiptideConfig';
 export const RIPTIDE_ART={aircraft,icons,vfx};
 export const RIPTIDE_ICON_CELLS={riptide_afterwash:[0,0],riptide_wellspring:[1,0],riptide_tidal_blades:[2,0],riptide_confluence:[0,1],riptide_waterform:[1,1]} as const;
 export const RIPTIDE_FRAMES={
+ riptide_wellspring_effect:{atlas:'generated',generated:'riptide_wellspring',rect:[0,0,1,1]},
+ riptide_water_shell:{atlas:'generated',generated:'riptide_waterform',rect:[0,0,1,1]},
  riptide_body:{atlas:'riptideAircraft',rect:[0,0,1,1]},
  riptide_ring:{atlas:'riptideVfx',rect:[0,0,.5,.5]},
  riptide_slash:{atlas:'riptideVfx',rect:[.5,0,.5,.5]},
@@ -51,6 +53,7 @@ export function paintRiptide(w:CombatWorld,paint:RiptidePainter,reduced:boolean)
   if((w.aircraft.coreState.timers.riptideSurvivalCue??0)>w.aircraft.coreState.time)ring(w.playerX,w.playerY,27,reduced?.35:.65,-now);
  }
  const well=s.wellspring;if(well) {
+  draw('riptide_wellspring_effect',w.playerX,w.playerY,60,70,0,.58);
   const phase=(now-well.at)%1;
   for(let i=0;i<2;i++){const angle=i*Math.PI+now*.7,r=30-phase*18;draw('riptide_basic_ammo',w.playerX+Math.cos(angle)*r,w.playerY+Math.sin(angle)*r,8,18,angle-Math.PI/2,.55);}
   if(well.rank>=4)for(const side of [-1,1])draw('riptide_slash',w.playerX+side*14,w.playerY,24,42,side*Math.PI/2,.65);
@@ -80,9 +83,6 @@ export function paintRiptide(w:CombatWorld,paint:RiptidePainter,reduced:boolean)
    for(let i=0;i<lanes;i++)current(i,lanes,time,RIPTIDE.confluenceRadius,true,s.waterform?.65:.9);
    for(let i=0;i<3;i++){const angle=i*Math.PI*2/3+time*.9,phase=(time*1.1+i/3)%1,r=30+(1-phase)*110;
     draw('riptide_slash',w.playerX+Math.cos(angle)*r,w.playerY+Math.sin(angle)*r,38,62,angle+Math.PI/2,.72);}
-   const coreRadius=22+(1-(now-con.at)/RIPTIDE.pullDuration)*20;
-   ring(w.playerX,w.playerY,coreRadius,.78,-time);
-   ring(w.playerX,w.playerY,coreRadius,reduced?.2:.38,-time,true);
   }else crest(w.playerX,w.playerY,20,28,reduced?0:Math.sin(time*10)*.08,.98);
  }
  const water=s.waterform;if(water) {
@@ -91,8 +91,8 @@ export function paintRiptide(w:CombatWorld,paint:RiptidePainter,reduced:boolean)
   ring(w.playerX,w.playerY,RIPTIDE.waterRadius,(reduced?.18:.32)*overlap,time*.2,true);
   const lanes=reduced?3:5+water.rank;
   for(let i=0;i<lanes;i++)current(i,lanes,time,RIPTIDE.waterRadius,false,.8*overlap);
-  draw('riptide_body',w.playerX,w.playerY,88+water.rank*5,88+water.rank*5,0,.22+water.rank*.05);
-  draw('riptide_body',w.playerX,w.playerY,88+water.rank*5,88+water.rank*5,0,(reduced?.08:.13)+water.rank*.025,true);
+  draw('riptide_water_shell',w.playerX,w.playerY,88+water.rank*5,88+water.rank*5,0,.22+water.rank*.05);
+  draw('riptide_water_shell',w.playerX,w.playerY,88+water.rank*5,88+water.rank*5,0,(reduced?.08:.13)+water.rank*.025,true);
   for(let i=0;i<water.rank+1;i++){const angle=(i/(water.rank+1))*Math.PI*2+time*.55,x=w.playerX+Math.cos(angle)*24,y=w.playerY+Math.sin(angle)*24;
    draw('riptide_slash',x,y,25,43,angle,.9);draw('riptide_slash',x,y,25,43,angle,reduced?.2:.38,true);}
   for(let i=0;i<4;i++)if(water.charge>i*4)crest(w.playerX+(i-1.5)*5,w.playerY,5,13,0,Math.min(1,(water.charge-i*4)/4));

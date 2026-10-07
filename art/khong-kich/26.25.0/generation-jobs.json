@@ -1,0 +1,893 @@
+[
+  {
+    "id": "mirage_wisp",
+    "group": "enemies",
+    "owner": null,
+    "stage": 4,
+    "reference": "art/khong-kich/26.25.0/references/mirage_wisp.png",
+    "output": "art/khong-kich/26.25.0/source-images/enemies/mirage_wisp.png",
+    "prompt": "Use case: stylized-concept. Enemy unit mirage wisp, called MIRAGE WISP. Faction: dark violet alloy, magenta cyan refractive crystal facets. Its equipment must visually express its specific role: mirage wisp. This is a distinct design, not a recolor of another enemy. Mechanical armor, role-specific weapons, readable engine sockets.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "parallax_lancer",
+    "group": "enemies",
+    "owner": null,
+    "stage": 4,
+    "reference": "art/khong-kich/26.25.0/references/parallax_lancer.png",
+    "output": "art/khong-kich/26.25.0/source-images/enemies/parallax_lancer.png",
+    "prompt": "Use case: stylized-concept. Enemy unit parallax lancer, called PARALLAX LANCER. Faction: dark violet alloy, magenta cyan refractive crystal facets. Its equipment must visually express its specific role: parallax lancer. This is a distinct design, not a recolor of another enemy. Mechanical armor, role-specific weapons, readable engine sockets.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "holo_bastion",
+    "group": "enemies",
+    "owner": null,
+    "stage": 4,
+    "reference": "art/khong-kich/26.25.0/references/holo_bastion.png",
+    "output": "art/khong-kich/26.25.0/source-images/enemies/holo_bastion.png",
+    "prompt": "Use case: stylized-concept. Enemy unit holo bastion, called HOLO BASTION. Faction: dark violet alloy, magenta cyan refractive crystal facets. Its equipment must visually express its specific role: holo bastion. This is a distinct design, not a recolor of another enemy. Mechanical armor, role-specific weapons, readable engine sockets.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "veil_weaver",
+    "group": "enemies",
+    "owner": null,
+    "stage": 4,
+    "reference": "art/khong-kich/26.25.0/references/veil_weaver.png",
+    "output": "art/khong-kich/26.25.0/source-images/enemies/veil_weaver.png",
+    "prompt": "Use case: stylized-concept. Enemy unit veil weaver, called VEIL WEAVER. Faction: dark violet alloy, magenta cyan refractive crystal facets. Its equipment must visually express its specific role: veil weaver. This is a distinct design, not a recolor of another enemy. Mechanical armor, role-specific weapons, readable engine sockets.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "echo_hunter",
+    "group": "enemies",
+    "owner": null,
+    "stage": 4,
+    "reference": "art/khong-kich/26.25.0/references/echo_hunter.png",
+    "output": "art/khong-kich/26.25.0/source-images/enemies/echo_hunter.png",
+    "prompt": "Use case: stylized-concept. Enemy unit echo hunter, called ECHO HUNTER. Faction: dark violet alloy, magenta cyan refractive crystal facets. Its equipment must visually express its specific role: echo hunter. This is a distinct design, not a recolor of another enemy. Mechanical armor, role-specific weapons, readable engine sockets.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "phantom_carrier",
+    "group": "enemies",
+    "owner": null,
+    "stage": 4,
+    "reference": "art/khong-kich/26.25.0/references/phantom_carrier.png",
+    "output": "art/khong-kich/26.25.0/source-images/enemies/phantom_carrier.png",
+    "prompt": "Use case: stylized-concept. Enemy unit phantom carrier, called PHANTOM CARRIER. Faction: dark violet alloy, magenta cyan refractive crystal facets. Its equipment must visually express its specific role: phantom carrier. This is a distinct design, not a recolor of another enemy. Mechanical armor, role-specific weapons, readable engine sockets.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "mirror_arbiter",
+    "group": "enemies",
+    "owner": null,
+    "stage": 4,
+    "reference": "art/khong-kich/26.25.0/references/mirror_arbiter.png",
+    "output": "art/khong-kich/26.25.0/source-images/enemies/mirror_arbiter.png",
+    "prompt": "Use case: stylized-concept. Enemy unit mirror arbiter, called MIRROR ARBITER. Faction: dark violet alloy, magenta cyan refractive crystal facets. Its equipment must visually express its specific role: mirror arbiter. This is a distinct design, not a recolor of another enemy. Mechanical armor, role-specific weapons, readable engine sockets.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "null_jailer",
+    "group": "enemies",
+    "owner": null,
+    "stage": 4,
+    "reference": "art/khong-kich/26.25.0/references/null_jailer.png",
+    "output": "art/khong-kich/26.25.0/source-images/enemies/null_jailer.png",
+    "prompt": "Use case: stylized-concept. Enemy unit null jailer, called NULL JAILER. Faction: dark violet alloy, magenta cyan refractive crystal facets. Its equipment must visually express its specific role: null jailer. This is a distinct design, not a recolor of another enemy. Mechanical armor, role-specific weapons, readable engine sockets.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "refraction_ace",
+    "group": "enemies",
+    "owner": null,
+    "stage": 4,
+    "reference": "art/khong-kich/26.25.0/references/refraction_ace.png",
+    "output": "art/khong-kich/26.25.0/source-images/enemies/refraction_ace.png",
+    "prompt": "Use case: stylized-concept. Enemy unit refraction ace, called REFRACTION ACE. Faction: dark violet alloy, magenta cyan refractive crystal facets. Its equipment must visually express its specific role: refraction ace. This is a distinct design, not a recolor of another enemy. Mechanical armor, role-specific weapons, readable engine sockets.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "glass_monarch",
+    "group": "enemies",
+    "owner": null,
+    "stage": 4,
+    "reference": "art/khong-kich/26.25.0/references/glass_monarch.png",
+    "output": "art/khong-kich/26.25.0/source-images/enemies/glass_monarch.png",
+    "prompt": "Use case: stylized-concept. Enemy unit glass monarch, called GLASS MONARCH. Faction: dark violet alloy, magenta cyan refractive crystal facets. Its equipment must visually express its specific role: glass monarch. This is a distinct design, not a recolor of another enemy. Mechanical armor, role-specific weapons, readable engine sockets.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "phantom_executioner",
+    "group": "enemies",
+    "owner": null,
+    "stage": 4,
+    "reference": "art/khong-kich/26.25.0/references/phantom_executioner.png",
+    "output": "art/khong-kich/26.25.0/source-images/enemies/phantom_executioner.png",
+    "prompt": "Use case: stylized-concept. Enemy unit phantom executioner, called PHANTOM EXECUTIONER. Faction: dark violet alloy, magenta cyan refractive crystal facets. Its equipment must visually express its specific role: phantom executioner. This is a distinct design, not a recolor of another enemy. Mechanical armor, role-specific weapons, readable engine sockets.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "veil_architect",
+    "group": "enemies",
+    "owner": null,
+    "stage": 4,
+    "reference": "art/khong-kich/26.25.0/references/veil_architect.png",
+    "output": "art/khong-kich/26.25.0/source-images/enemies/veil_architect.png",
+    "prompt": "Use case: stylized-concept. Enemy unit veil architect, called VEIL ARCHITECT. Faction: dark violet alloy, magenta cyan refractive crystal facets. Its equipment must visually express its specific role: veil architect. This is a distinct design, not a recolor of another enemy. Mechanical armor, role-specific weapons, readable engine sockets.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "echo_bastion_prime",
+    "group": "enemies",
+    "owner": null,
+    "stage": 4,
+    "reference": "art/khong-kich/26.25.0/references/echo_bastion_prime.png",
+    "output": "art/khong-kich/26.25.0/source-images/enemies/echo_bastion_prime.png",
+    "prompt": "Use case: stylized-concept. Enemy unit echo bastion prime, called ECHO BASTION PRIME. Faction: dark violet alloy, magenta cyan refractive crystal facets. Its equipment must visually express its specific role: echo bastion prime. This is a distinct design, not a recolor of another enemy. Mechanical armor, role-specific weapons, readable engine sockets.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "parallax_seraph",
+    "group": "enemies",
+    "owner": null,
+    "stage": 4,
+    "reference": "art/khong-kich/26.25.0/references/parallax_seraph.png",
+    "output": "art/khong-kich/26.25.0/source-images/enemies/parallax_seraph.png",
+    "prompt": "Use case: stylized-concept. Enemy unit parallax seraph, called PARALLAX SERAPH. Faction: dark violet alloy, magenta cyan refractive crystal facets. Its equipment must visually express its specific role: parallax seraph. This is a distinct design, not a recolor of another enemy. Mechanical armor, role-specific weapons, readable engine sockets.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "fracture_sovereign",
+    "group": "enemies",
+    "owner": null,
+    "stage": 4,
+    "reference": "art/khong-kich/26.25.0/references/fracture_sovereign.png",
+    "output": "art/khong-kich/26.25.0/source-images/enemies/fracture_sovereign.png",
+    "prompt": "Use case: stylized-concept. Enemy unit fracture sovereign, called FRACTURE SOVEREIGN. Faction: dark violet alloy, magenta cyan refractive crystal facets. Its equipment must visually express its specific role: fracture sovereign. This is a distinct design, not a recolor of another enemy. Mechanical armor, role-specific weapons, readable engine sockets.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "spark_wasp",
+    "group": "enemies",
+    "owner": null,
+    "stage": 3,
+    "reference": "art/khong-kich/26.25.0/references/spark_wasp.png",
+    "output": "art/khong-kich/26.25.0/source-images/enemies/spark_wasp.png",
+    "prompt": "Use case: stylized-concept. Enemy unit spark wasp, called SPARK WASP. Faction: navy blue heavy alloy, gold electrical coils and blue lightning cores. Its equipment must visually express its specific role: spark wasp. This is a distinct design, not a recolor of another enemy. Mechanical armor, role-specific weapons, readable engine sockets.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "volt_lancer",
+    "group": "enemies",
+    "owner": null,
+    "stage": 3,
+    "reference": "art/khong-kich/26.25.0/references/volt_lancer.png",
+    "output": "art/khong-kich/26.25.0/source-images/enemies/volt_lancer.png",
+    "prompt": "Use case: stylized-concept. Enemy unit volt lancer, called VOLT LANCER. Faction: navy blue heavy alloy, gold electrical coils and blue lightning cores. Its equipment must visually express its specific role: volt lancer. This is a distinct design, not a recolor of another enemy. Mechanical armor, role-specific weapons, readable engine sockets.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "storm_capacitor",
+    "group": "enemies",
+    "owner": null,
+    "stage": 3,
+    "reference": "art/khong-kich/26.25.0/references/storm_capacitor.png",
+    "output": "art/khong-kich/26.25.0/source-images/enemies/storm_capacitor.png",
+    "prompt": "Use case: stylized-concept. Enemy unit storm capacitor, called STORM CAPACITOR. Faction: navy blue heavy alloy, gold electrical coils and blue lightning cores. Its equipment must visually express its specific role: storm capacitor. This is a distinct design, not a recolor of another enemy. Mechanical armor, role-specific weapons, readable engine sockets.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "storm_weaver",
+    "group": "enemies",
+    "owner": null,
+    "stage": 3,
+    "reference": "art/khong-kich/26.25.0/references/storm_weaver.png",
+    "output": "art/khong-kich/26.25.0/source-images/enemies/storm_weaver.png",
+    "prompt": "Use case: stylized-concept. Enemy unit storm weaver, called STORM WEAVER. Faction: navy blue heavy alloy, gold electrical coils and blue lightning cores. Its equipment must visually express its specific role: storm weaver. This is a distinct design, not a recolor of another enemy. Mechanical armor, role-specific weapons, readable engine sockets.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "ion_hunter",
+    "group": "enemies",
+    "owner": null,
+    "stage": 3,
+    "reference": "art/khong-kich/26.25.0/references/ion_hunter.png",
+    "output": "art/khong-kich/26.25.0/source-images/enemies/ion_hunter.png",
+    "prompt": "Use case: stylized-concept. Enemy unit ion hunter, called ION HUNTER. Faction: navy blue heavy alloy, gold electrical coils and blue lightning cores. Its equipment must visually express its specific role: ion hunter. This is a distinct design, not a recolor of another enemy. Mechanical armor, role-specific weapons, readable engine sockets.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "thunderhead",
+    "group": "enemies",
+    "owner": null,
+    "stage": 3,
+    "reference": "art/khong-kich/26.25.0/references/thunderhead.png",
+    "output": "art/khong-kich/26.25.0/source-images/enemies/thunderhead.png",
+    "prompt": "Use case: stylized-concept. Enemy unit thunderhead, called THUNDERHEAD. Faction: navy blue heavy alloy, gold electrical coils and blue lightning cores. Its equipment must visually express its specific role: thunderhead. This is a distinct design, not a recolor of another enemy. Mechanical armor, role-specific weapons, readable engine sockets.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "storm_herald",
+    "group": "enemies",
+    "owner": null,
+    "stage": 3,
+    "reference": "art/khong-kich/26.25.0/references/storm_herald.png",
+    "output": "art/khong-kich/26.25.0/source-images/enemies/storm_herald.png",
+    "prompt": "Use case: stylized-concept. Enemy unit storm herald, called STORM HERALD. Faction: navy blue heavy alloy, gold electrical coils and blue lightning cores. Its equipment must visually express its specific role: storm herald. This is a distinct design, not a recolor of another enemy. Mechanical armor, role-specific weapons, readable engine sockets.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "volt_executioner",
+    "group": "enemies",
+    "owner": null,
+    "stage": 3,
+    "reference": "art/khong-kich/26.25.0/references/volt_executioner.png",
+    "output": "art/khong-kich/26.25.0/source-images/enemies/volt_executioner.png",
+    "prompt": "Use case: stylized-concept. Enemy unit volt executioner, called VOLT EXECUTIONER. Faction: navy blue heavy alloy, gold electrical coils and blue lightning cores. Its equipment must visually express its specific role: volt executioner. This is a distinct design, not a recolor of another enemy. Mechanical armor, role-specific weapons, readable engine sockets.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "capacitor_prime",
+    "group": "enemies",
+    "owner": null,
+    "stage": 3,
+    "reference": "art/khong-kich/26.25.0/references/capacitor_prime.png",
+    "output": "art/khong-kich/26.25.0/source-images/enemies/capacitor_prime.png",
+    "prompt": "Use case: stylized-concept. Enemy unit capacitor prime, called CAPACITOR PRIME. Faction: navy blue heavy alloy, gold electrical coils and blue lightning cores. Its equipment must visually express its specific role: capacitor prime. This is a distinct design, not a recolor of another enemy. Mechanical armor, role-specific weapons, readable engine sockets.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "ion_arbiter",
+    "group": "enemies",
+    "owner": null,
+    "stage": 3,
+    "reference": "art/khong-kich/26.25.0/references/ion_arbiter.png",
+    "output": "art/khong-kich/26.25.0/source-images/enemies/ion_arbiter.png",
+    "prompt": "Use case: stylized-concept. Enemy unit ion arbiter, called ION ARBITER. Faction: navy blue heavy alloy, gold electrical coils and blue lightning cores. Its equipment must visually express its specific role: ion arbiter. This is a distinct design, not a recolor of another enemy. Mechanical armor, role-specific weapons, readable engine sockets.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "thunder_bastion",
+    "group": "enemies",
+    "owner": null,
+    "stage": 3,
+    "reference": "art/khong-kich/26.25.0/references/thunder_bastion.png",
+    "output": "art/khong-kich/26.25.0/source-images/enemies/thunder_bastion.png",
+    "prompt": "Use case: stylized-concept. Enemy unit thunder bastion, called THUNDER BASTION. Faction: navy blue heavy alloy, gold electrical coils and blue lightning cores. Its equipment must visually express its specific role: thunder bastion. This is a distinct design, not a recolor of another enemy. Mechanical armor, role-specific weapons, readable engine sockets.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "arc_seraph",
+    "group": "enemies",
+    "owner": null,
+    "stage": 3,
+    "reference": "art/khong-kich/26.25.0/references/arc_seraph.png",
+    "output": "art/khong-kich/26.25.0/source-images/enemies/arc_seraph.png",
+    "prompt": "Use case: stylized-concept. Enemy unit arc seraph, called ARC SERAPH. Faction: navy blue heavy alloy, gold electrical coils and blue lightning cores. Its equipment must visually express its specific role: arc seraph. This is a distinct design, not a recolor of another enemy. Mechanical armor, role-specific weapons, readable engine sockets.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "storm_weaver_prime",
+    "group": "enemies",
+    "owner": null,
+    "stage": 3,
+    "reference": "art/khong-kich/26.25.0/references/storm_weaver_prime.png",
+    "output": "art/khong-kich/26.25.0/source-images/enemies/storm_weaver_prime.png",
+    "prompt": "Use case: stylized-concept. Enemy unit storm weaver prime, called STORM WEAVER PRIME. Faction: navy blue heavy alloy, gold electrical coils and blue lightning cores. Its equipment must visually express its specific role: storm weaver prime. This is a distinct design, not a recolor of another enemy. Mechanical armor, role-specific weapons, readable engine sockets.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "storm_node",
+    "group": "enemies",
+    "owner": null,
+    "stage": 3,
+    "reference": "art/khong-kich/26.25.0/references/storm_node.png",
+    "output": "art/khong-kich/26.25.0/source-images/enemies/storm_node.png",
+    "prompt": "Use case: stylized-concept. Enemy unit storm node, called STORM NODE. Faction: navy blue heavy alloy, gold electrical coils and blue lightning cores. Its equipment must visually express its specific role: storm node. This is a distinct design, not a recolor of another enemy. Mechanical armor, role-specific weapons, readable engine sockets.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "omega_storm_node",
+    "group": "enemies",
+    "owner": null,
+    "stage": 3,
+    "reference": "art/khong-kich/26.25.0/references/omega_storm_node.png",
+    "output": "art/khong-kich/26.25.0/source-images/enemies/omega_storm_node.png",
+    "prompt": "Use case: stylized-concept. Enemy unit omega storm node, called OMEGA STORM NODE. Faction: navy blue heavy alloy, gold electrical coils and blue lightning cores. Its equipment must visually express its specific role: omega storm node. This is a distinct design, not a recolor of another enemy. Mechanical armor, role-specific weapons, readable engine sockets.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "storm_conductor",
+    "group": "enemies",
+    "owner": null,
+    "stage": 3,
+    "reference": "art/khong-kich/26.25.0/references/storm_conductor.png",
+    "output": "art/khong-kich/26.25.0/source-images/enemies/storm_conductor.png",
+    "prompt": "Use case: stylized-concept. Enemy unit storm conductor, called STORM CONDUCTOR. Faction: navy blue heavy alloy, gold electrical coils and blue lightning cores. Its equipment must visually express its specific role: storm conductor. This is a distinct design, not a recolor of another enemy. Mechanical armor, role-specific weapons, readable engine sockets.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "prism_sovereign",
+    "group": "enemies",
+    "owner": null,
+    "stage": 2,
+    "reference": "art/khong-kich/26.25.0/references/prism_sovereign.png",
+    "output": "art/khong-kich/26.25.0/source-images/enemies/prism_sovereign.png",
+    "prompt": "Use case: stylized-concept. Enemy unit prism sovereign, called PRISM SOVEREIGN. Faction: teal magnetic alloy, violet and gold electromagnetic cores. Its equipment must visually express its specific role: prism sovereign. This is a distinct design, not a recolor of another enemy. Mechanical armor, role-specific weapons, readable engine sockets.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "mine_warden",
+    "group": "enemies",
+    "owner": null,
+    "stage": 2,
+    "reference": "art/khong-kich/26.25.0/references/mine_warden.png",
+    "output": "art/khong-kich/26.25.0/source-images/enemies/mine_warden.png",
+    "prompt": "Use case: stylized-concept. Enemy unit mine warden, called MINE WARDEN. Faction: teal magnetic alloy, violet and gold electromagnetic cores. Its equipment must visually express its specific role: mine warden. This is a distinct design, not a recolor of another enemy. Mechanical armor, role-specific weapons, readable engine sockets.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "polarity_warden",
+    "group": "enemies",
+    "owner": null,
+    "stage": 2,
+    "reference": "art/khong-kich/26.25.0/references/polarity_warden.png",
+    "output": "art/khong-kich/26.25.0/source-images/enemies/polarity_warden.png",
+    "prompt": "Use case: stylized-concept. Enemy unit polarity warden, called POLARITY WARDEN. Faction: teal magnetic alloy, violet and gold electromagnetic cores. Its equipment must visually express its specific role: polarity warden. This is a distinct design, not a recolor of another enemy. Mechanical armor, role-specific weapons, readable engine sockets.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "swarm_overlord",
+    "group": "enemies",
+    "owner": null,
+    "stage": 2,
+    "reference": "art/khong-kich/26.25.0/references/swarm_overlord.png",
+    "output": "art/khong-kich/26.25.0/source-images/enemies/swarm_overlord.png",
+    "prompt": "Use case: stylized-concept. Enemy unit swarm overlord, called SWARM OVERLORD. Faction: teal magnetic alloy, violet and gold electromagnetic cores. Its equipment must visually express its specific role: swarm overlord. This is a distinct design, not a recolor of another enemy. Mechanical armor, role-specific weapons, readable engine sockets.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "arc_reaver_prime",
+    "group": "enemies",
+    "owner": null,
+    "stage": 2,
+    "reference": "art/khong-kich/26.25.0/references/arc_reaver_prime.png",
+    "output": "art/khong-kich/26.25.0/source-images/enemies/arc_reaver_prime.png",
+    "prompt": "Use case: stylized-concept. Enemy unit arc reaver prime, called ARC REAVER PRIME. Faction: teal magnetic alloy, violet and gold electromagnetic cores. Its equipment must visually express its specific role: arc reaver prime. This is a distinct design, not a recolor of another enemy. Mechanical armor, role-specific weapons, readable engine sockets.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "orbit_wasp",
+    "group": "enemies",
+    "owner": null,
+    "stage": 2,
+    "reference": "art/khong-kich/26.25.0/references/orbit_wasp.png",
+    "output": "art/khong-kich/26.25.0/source-images/enemies/orbit_wasp.png",
+    "prompt": "Use case: stylized-concept. Enemy unit orbit wasp, called ORBIT WASP · ONG QUỸ ĐẠO. Faction: teal magnetic alloy, violet and gold electromagnetic cores. Its equipment must visually express its specific role: orbit wasp. This is a distinct design, not a recolor of another enemy. Mechanical armor, role-specific weapons, readable engine sockets.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "arc_reaver",
+    "group": "enemies",
+    "owner": null,
+    "stage": 2,
+    "reference": "art/khong-kich/26.25.0/references/arc_reaver.png",
+    "output": "art/khong-kich/26.25.0/source-images/enemies/arc_reaver.png",
+    "prompt": "Use case: stylized-concept. Enemy unit arc reaver, called ARC REAVER · KẺ SĂN BOOMERANG. Faction: teal magnetic alloy, violet and gold electromagnetic cores. Its equipment must visually express its specific role: arc reaver. This is a distinct design, not a recolor of another enemy. Mechanical armor, role-specific weapons, readable engine sockets.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "mine_seeder",
+    "group": "enemies",
+    "owner": null,
+    "stage": 2,
+    "reference": "art/khong-kich/26.25.0/references/mine_seeder.png",
+    "output": "art/khong-kich/26.25.0/source-images/enemies/mine_seeder.png",
+    "prompt": "Use case: stylized-concept. Enemy unit mine seeder, called MINE SEEDER · MÁY RẢI MÌN. Faction: teal magnetic alloy, violet and gold electromagnetic cores. Its equipment must visually express its specific role: mine seeder. This is a distinct design, not a recolor of another enemy. Mechanical armor, role-specific weapons, readable engine sockets.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "magnetic_leech",
+    "group": "enemies",
+    "owner": null,
+    "stage": 2,
+    "reference": "art/khong-kich/26.25.0/references/magnetic_leech.png",
+    "output": "art/khong-kich/26.25.0/source-images/enemies/magnetic_leech.png",
+    "prompt": "Use case: stylized-concept. Enemy unit magnetic leech, called MAGNETIC LEECH · ĐỈA TỪ. Faction: teal magnetic alloy, violet and gold electromagnetic cores. Its equipment must visually express its specific role: magnetic leech. This is a distinct design, not a recolor of another enemy. Mechanical armor, role-specific weapons, readable engine sockets.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "prism_manta",
+    "group": "enemies",
+    "owner": null,
+    "stage": 2,
+    "reference": "art/khong-kich/26.25.0/references/prism_manta.png",
+    "output": "art/khong-kich/26.25.0/source-images/enemies/prism_manta.png",
+    "prompt": "Use case: stylized-concept. Enemy unit prism manta, called PRISM MANTA · CÁ ĐUỐI LĂNG KÍNH. Faction: teal magnetic alloy, violet and gold electromagnetic cores. Its equipment must visually express its specific role: prism manta. This is a distinct design, not a recolor of another enemy. Mechanical armor, role-specific weapons, readable engine sockets.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "swarm_carrier",
+    "group": "enemies",
+    "owner": null,
+    "stage": 2,
+    "reference": "art/khong-kich/26.25.0/references/swarm_carrier.png",
+    "output": "art/khong-kich/26.25.0/source-images/enemies/swarm_carrier.png",
+    "prompt": "Use case: stylized-concept. Enemy unit swarm carrier, called SWARM CARRIER · TÀU MẸ BẦY ĐÀN. Faction: teal magnetic alloy, violet and gold electromagnetic cores. Its equipment must visually express its specific role: swarm carrier. This is a distinct design, not a recolor of another enemy. Mechanical armor, role-specific weapons, readable engine sockets.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "micro_drone",
+    "group": "enemies",
+    "owner": null,
+    "stage": 2,
+    "reference": "art/khong-kich/26.25.0/references/micro_drone.png",
+    "output": "art/khong-kich/26.25.0/source-images/enemies/micro_drone.png",
+    "prompt": "Use case: stylized-concept. Enemy unit micro drone, called MICRO DRONE. Faction: teal magnetic alloy, violet and gold electromagnetic cores. Its equipment must visually express its specific role: micro drone. This is a distinct design, not a recolor of another enemy. Mechanical armor, role-specific weapons, readable engine sockets.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "cyclone_ace",
+    "group": "enemies",
+    "owner": null,
+    "stage": 2,
+    "reference": "art/khong-kich/26.25.0/references/cyclone_ace.png",
+    "output": "art/khong-kich/26.25.0/source-images/enemies/cyclone_ace.png",
+    "prompt": "Use case: stylized-concept. Enemy unit cyclone ace, called CYCLONE ACE · BẬC THẦY QUỸ ĐẠO. Faction: teal magnetic alloy, violet and gold electromagnetic cores. Its equipment must visually express its specific role: cyclone ace. This is a distinct design, not a recolor of another enemy. Mechanical armor, role-specific weapons, readable engine sockets.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "grid_architect",
+    "group": "enemies",
+    "owner": null,
+    "stage": 2,
+    "reference": "art/khong-kich/26.25.0/references/grid_architect.png",
+    "output": "art/khong-kich/26.25.0/source-images/enemies/grid_architect.png",
+    "prompt": "Use case: stylized-concept. Enemy unit grid architect, called GRID ARCHITECT · KIẾN TRÚC SƯ TỪ TRƯỜNG. Faction: teal magnetic alloy, violet and gold electromagnetic cores. Its equipment must visually express its specific role: grid architect. This is a distinct design, not a recolor of another enemy. Mechanical armor, role-specific weapons, readable engine sockets.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "satellite",
+    "group": "enemies",
+    "owner": null,
+    "stage": 2,
+    "reference": "art/khong-kich/26.25.0/references/satellite.png",
+    "output": "art/khong-kich/26.25.0/source-images/enemies/satellite.png",
+    "prompt": "Use case: stylized-concept. Enemy unit satellite, called MAGNETIC SATELLITE. Faction: teal magnetic alloy, violet and gold electromagnetic cores. Its equipment must visually express its specific role: satellite. This is a distinct design, not a recolor of another enemy. Mechanical armor, role-specific weapons, readable engine sockets.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "scout",
+    "group": "enemies",
+    "owner": null,
+    "stage": 1,
+    "reference": "art/khong-kich/26.25.0/references/scout.png",
+    "output": "art/khong-kich/26.25.0/source-images/enemies/scout.png",
+    "prompt": "Use case: stylized-concept. Enemy unit scout, called Scout Drone. Faction: crimson armor and charcoal steel, amber engines. Its equipment must visually express its specific role: scout. This is a distinct design, not a recolor of another enemy. Mechanical armor, role-specific weapons, readable engine sockets.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "fighter",
+    "group": "enemies",
+    "owner": null,
+    "stage": 1,
+    "reference": "art/khong-kich/26.25.0/references/fighter.png",
+    "output": "art/khong-kich/26.25.0/source-images/enemies/fighter.png",
+    "prompt": "Use case: stylized-concept. Enemy unit fighter, called Interceptor. Faction: crimson armor and charcoal steel, amber engines. Its equipment must visually express its specific role: fighter. This is a distinct design, not a recolor of another enemy. Mechanical armor, role-specific weapons, readable engine sockets.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "attacker",
+    "group": "enemies",
+    "owner": null,
+    "stage": 1,
+    "reference": "art/khong-kich/26.25.0/references/attacker.png",
+    "output": "art/khong-kich/26.25.0/source-images/enemies/attacker.png",
+    "prompt": "Use case: stylized-concept. Enemy unit attacker, called Heavy Gunship. Faction: crimson armor and charcoal steel, amber engines. Its equipment must visually express its specific role: attacker. This is a distinct design, not a recolor of another enemy. Mechanical armor, role-specific weapons, readable engine sockets.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "kamikaze",
+    "group": "enemies",
+    "owner": null,
+    "stage": 1,
+    "reference": "art/khong-kich/26.25.0/references/kamikaze.png",
+    "output": "art/khong-kich/26.25.0/source-images/enemies/kamikaze.png",
+    "prompt": "Use case: stylized-concept. Enemy unit kamikaze, called Kamikaze Drone. Faction: crimson armor and charcoal steel, amber engines. Its equipment must visually express its specific role: kamikaze. This is a distinct design, not a recolor of another enemy. Mechanical armor, role-specific weapons, readable engine sockets.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "bomber",
+    "group": "enemies",
+    "owner": null,
+    "stage": 1,
+    "reference": "art/khong-kich/26.25.0/references/bomber.png",
+    "output": "art/khong-kich/26.25.0/source-images/enemies/bomber.png",
+    "prompt": "Use case: stylized-concept. Enemy unit bomber, called Bomber. Faction: crimson armor and charcoal steel, amber engines. Its equipment must visually express its specific role: bomber. This is a distinct design, not a recolor of another enemy. Mechanical armor, role-specific weapons, readable engine sockets.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "sniper",
+    "group": "enemies",
+    "owner": null,
+    "stage": 1,
+    "reference": "art/khong-kich/26.25.0/references/sniper.png",
+    "output": "art/khong-kich/26.25.0/source-images/enemies/sniper.png",
+    "prompt": "Use case: stylized-concept. Enemy unit sniper, called Sniper Aircraft. Faction: crimson armor and charcoal steel, amber engines. Its equipment must visually express its specific role: sniper. This is a distinct design, not a recolor of another enemy. Mechanical armor, role-specific weapons, readable engine sockets.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "jammer",
+    "group": "enemies",
+    "owner": null,
+    "stage": 1,
+    "reference": "art/khong-kich/26.25.0/references/jammer.png",
+    "output": "art/khong-kich/26.25.0/source-images/enemies/jammer.png",
+    "prompt": "Use case: stylized-concept. Enemy unit jammer, called Jammer Drone. Faction: crimson armor and charcoal steel, amber engines. Its equipment must visually express its specific role: jammer. This is a distinct design, not a recolor of another enemy. Mechanical armor, role-specific weapons, readable engine sockets.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "elite",
+    "group": "enemies",
+    "owner": null,
+    "stage": 1,
+    "reference": "art/khong-kich/26.25.0/references/elite.png",
+    "output": "art/khong-kich/26.25.0/source-images/enemies/elite.png",
+    "prompt": "Use case: stylized-concept. Enemy unit elite, called Crimson Ace. Faction: crimson armor and charcoal steel, amber engines. Its equipment must visually express its specific role: elite. This is a distinct design, not a recolor of another enemy. Mechanical armor, role-specific weapons, readable engine sockets.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "iron_fortress",
+    "group": "enemies",
+    "owner": null,
+    "stage": 1,
+    "reference": "art/khong-kich/26.25.0/references/iron_fortress.png",
+    "output": "art/khong-kich/26.25.0/source-images/enemies/iron_fortress.png",
+    "prompt": "Use case: stylized-concept. Enemy unit iron fortress, called Iron Fortress. Faction: crimson armor and charcoal steel, amber engines. Its equipment must visually express its specific role: iron fortress. This is a distinct design, not a recolor of another enemy. Mechanical armor, role-specific weapons, readable engine sockets.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "acid_bomber",
+    "group": "enemies",
+    "owner": null,
+    "stage": 1,
+    "reference": "art/khong-kich/26.25.0/references/acid_bomber.png",
+    "output": "art/khong-kich/26.25.0/source-images/enemies/acid_bomber.png",
+    "prompt": "Use case: stylized-concept. Enemy unit acid bomber, called Acid Bomber. Faction: crimson armor and charcoal steel, amber engines. Its equipment must visually express its specific role: acid bomber. This is a distinct design, not a recolor of another enemy. Mechanical armor, role-specific weapons, readable engine sockets.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "radar_hunter",
+    "group": "enemies",
+    "owner": null,
+    "stage": 1,
+    "reference": "art/khong-kich/26.25.0/references/radar_hunter.png",
+    "output": "art/khong-kich/26.25.0/source-images/enemies/radar_hunter.png",
+    "prompt": "Use case: stylized-concept. Enemy unit radar hunter, called Radar Hunter. Faction: crimson armor and charcoal steel, amber engines. Its equipment must visually express its specific role: radar hunter. This is a distinct design, not a recolor of another enemy. Mechanical armor, role-specific weapons, readable engine sockets.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "leviathan",
+    "group": "bosses",
+    "owner": null,
+    "stage": 1,
+    "reference": "art/khong-kich/26.25.0/references/leviathan.png",
+    "output": "art/khong-kich/26.25.0/source-images/bosses/leviathan.png",
+    "prompt": "Use case: stylized-concept. Principal boss leviathan: wide armored flying fortress, layered wing armor, four articulated artillery batteries, missile bay doors and central reactor. crimson armor and charcoal steel, amber engines. Strong asymmetric surface details on a coherent balanced silhouette, visible overlapping joints for articulated animation.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "tempest_crown",
+    "group": "bosses",
+    "owner": null,
+    "stage": 2,
+    "reference": "art/khong-kich/26.25.0/references/tempest_crown.png",
+    "output": "art/khong-kich/26.25.0/source-images/bosses/tempest_crown.png",
+    "prompt": "Use case: stylized-concept. Principal boss tempest crown: magnetic crown reactor surrounded by articulated floating vanes, concentric alloy crown mechanisms and satellite emitter mounts. teal magnetic alloy, violet and gold electromagnetic cores. Strong asymmetric surface details on a coherent balanced silhouette, visible overlapping joints for articulated animation.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "stormbreaker_omega",
+    "group": "bosses",
+    "owner": null,
+    "stage": 3,
+    "reference": "art/khong-kich/26.25.0/references/stormbreaker_omega.png",
+    "output": "art/khong-kich/26.25.0/source-images/bosses/stormbreaker_omega.png",
+    "prompt": "Use case: stylized-concept. Principal boss stormbreaker omega: heavy electrical fortress with thick armor panels, openable core shutters, large electrical coils and lightning emitter cannons. navy blue heavy alloy, gold electrical coils and blue lightning cores. Strong asymmetric surface details on a coherent balanced silhouette, visible overlapping joints for articulated animation.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "parallax_zero",
+    "group": "bosses",
+    "owner": null,
+    "stage": 4,
+    "reference": "art/khong-kich/26.25.0/references/parallax_zero.png",
+    "output": "art/khong-kich/26.25.0/source-images/bosses/parallax_zero.png",
+    "prompt": "Use case: stylized-concept. Principal boss parallax zero: refractive crystal machine with a central void core, segmented crystalline armor shell, floating mirror vanes and fracture seams. dark violet alloy, magenta cyan refractive crystal facets. Strong asymmetric surface details on a coherent balanced silhouette, visible overlapping joints for articulated animation.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "tempest_weakpoint",
+    "group": "helpers",
+    "owner": null,
+    "stage": 2,
+    "reference": "art/khong-kich/26.25.0/references/tempest_weakpoint.png",
+    "output": "art/khong-kich/26.25.0/source-images/helpers/tempest_weakpoint.png",
+    "prompt": "Use case: stylized-concept. Isolated tempest weakpoint enemy support mechanism, complete mechanical body and luminous core.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "mirage_helper",
+    "group": "helpers",
+    "owner": null,
+    "stage": 4,
+    "reference": "art/khong-kich/26.25.0/references/mirage_helper.png",
+    "output": "art/khong-kich/26.25.0/source-images/helpers/mirage_helper.png",
+    "prompt": "Use case: stylized-concept. Isolated mirage helper enemy support mechanism, complete mechanical body and luminous core.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "terra_reactive_rock_armor",
+    "group": "skills",
+    "owner": "terra",
+    "stage": null,
+    "reference": "art/khong-kich/26.25.0/source-images/aircraft/terra.png",
+    "output": "art/khong-kich/26.25.0/source-images/skills/terra_reactive_rock_armor.png",
+    "prompt": "Use case: stylized-concept. Isolated combat VFX source for Nham Giáp Phản Kích, terra: layered dark brown stone armor slabs on metal hinges surrounding an open center, amber seams and fractured rock depth. Use aircraft reference ONLY for material and color, do NOT draw the aircraft. A single neutral deformable subject for layered mesh animation, not a storyboard.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "terra_seismic_cannon",
+    "group": "skills",
+    "owner": "terra",
+    "stage": null,
+    "reference": "art/khong-kich/26.25.0/source-images/aircraft/terra.png",
+    "output": "art/khong-kich/26.25.0/source-images/skills/terra_seismic_cannon.png",
+    "prompt": "Use case: stylized-concept. Isolated combat VFX source for Pháo Địa Chấn, terra: heavy brown stone-armored seismic cannon mechanism, dense central amber barrel and opening side rock plates. Use aircraft reference ONLY for material and color, do NOT draw the aircraft. A single neutral deformable subject for layered mesh animation, not a storyboard.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "terra_strata_clamp",
+    "group": "skills",
+    "owner": "terra",
+    "stage": null,
+    "reference": "art/khong-kich/26.25.0/source-images/aircraft/terra.png",
+    "output": "art/khong-kich/26.25.0/source-images/skills/terra_strata_clamp.png",
+    "prompt": "Use case: stylized-concept. Isolated combat VFX source for Kẹp Sơn, terra: one thick jagged geological stratum wall slab, stacked dark brown rock layers, bright amber compression fractures, not a fist. Use aircraft reference ONLY for material and color, do NOT draw the aircraft. A single neutral deformable subject for layered mesh animation, not a storyboard.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "terra_geocore_overdrive",
+    "group": "skills",
+    "owner": "terra",
+    "stage": null,
+    "reference": "art/khong-kich/26.25.0/source-images/aircraft/terra.png",
+    "output": "art/khong-kich/26.25.0/source-images/skills/terra_geocore_overdrive.png",
+    "prompt": "Use case: stylized-concept. Isolated combat VFX source for Cường Hóa Địa Tâm, terra: opened heavy geological reactor core with articulated brown rock armor panels, glowing amber crystal and fractured metal seams, no explosion aura. Use aircraft reference ONLY for material and color, do NOT draw the aircraft. A single neutral deformable subject for layered mesh animation, not a storyboard.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "sylva_symbiosis",
+    "group": "skills",
+    "owner": "sylva",
+    "stage": null,
+    "reference": "art/khong-kich/26.25.0/source-images/aircraft/sylva.png",
+    "output": "art/khong-kich/26.25.0/source-images/skills/sylva_symbiosis.png",
+    "prompt": "Use case: stylized-concept. Isolated combat VFX source for Cộng Sinh, sylva: dark green living roots and fleshy leaf armor curling around a completely empty transparent center, lime sap veins. Use aircraft reference ONLY for material and color, do NOT draw the aircraft. A single neutral deformable subject for layered mesh animation, not a storyboard.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "sylva_acid_burst",
+    "group": "skills",
+    "owner": "sylva",
+    "stage": null,
+    "reference": "art/khong-kich/26.25.0/source-images/aircraft/sylva.png",
+    "output": "art/khong-kich/26.25.0/source-images/skills/sylva_acid_burst.png",
+    "prompt": "Use case: stylized-concept. Isolated combat VFX source for Nổ Axit, sylva: one detailed chemical missile with dark green armored canister, glass acid chamber and bright green corrosive liquid. Use aircraft reference ONLY for material and color, do NOT draw the aircraft. A single neutral deformable subject for layered mesh animation, not a storyboard.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "sylva_parasitic_seed",
+    "group": "skills",
+    "owner": "sylva",
+    "stage": null,
+    "reference": "art/khong-kich/26.25.0/source-images/aircraft/sylva.png",
+    "output": "art/khong-kich/26.25.0/source-images/skills/sylva_parasitic_seed.png",
+    "prompt": "Use case: stylized-concept. Isolated combat VFX source for Ký Sinh, sylva: one parasitic glowing green seed with unfurling dangerous roots and sharp thorns, readable central seed body. Use aircraft reference ONLY for material and color, do NOT draw the aircraft. A single neutral deformable subject for layered mesh animation, not a storyboard.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "sylva_deathbloom",
+    "group": "skills",
+    "owner": "sylva",
+    "stage": null,
+    "reference": "art/khong-kich/26.25.0/source-images/aircraft/sylva.png",
+    "output": "art/khong-kich/26.25.0/source-images/skills/sylva_deathbloom.png",
+    "prompt": "Use case: stylized-concept. Isolated combat VFX source for Đại Thụ Diệt Sinh, sylva: large bioluminescent deathbloom thorn tree seed with a vivid lime core, dark green woody roots and branching spear thorns. Use aircraft reference ONLY for material and color, do NOT draw the aircraft. A single neutral deformable subject for layered mesh animation, not a storyboard.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "argent_guard_stance",
+    "group": "skills",
+    "owner": "argent",
+    "stage": null,
+    "reference": "art/khong-kich/26.25.0/source-images/aircraft/argent.png",
+    "output": "art/khong-kich/26.25.0/source-images/skills/argent_guard_stance.png",
+    "prompt": "Use case: stylized-concept. Isolated combat VFX source for Thế Đỡ, argent: layered silver metallic parrying blade plates on gold mechanical hinges arranged around a transparent center. Use aircraft reference ONLY for material and color, do NOT draw the aircraft. A single neutral deformable subject for layered mesh animation, not a storyboard.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "argent_blade_cast",
+    "group": "skills",
+    "owner": "argent",
+    "stage": null,
+    "reference": "art/khong-kich/26.25.0/source-images/aircraft/argent.png",
+    "output": "art/khong-kich/26.25.0/source-images/skills/argent_blade_cast.png",
+    "prompt": "Use case: stylized-concept. Isolated combat VFX source for Phóng Nhận, argent: one whole bright silver sword blade with gold spine and sharp complete tip, no cropped point, nose up. Use aircraft reference ONLY for material and color, do NOT draw the aircraft. A single neutral deformable subject for layered mesh animation, not a storyboard.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "argent_blade_recall",
+    "group": "skills",
+    "owner": "argent",
+    "stage": null,
+    "reference": "art/khong-kich/26.25.0/source-images/aircraft/argent.png",
+    "output": "art/khong-kich/26.25.0/source-images/skills/argent_blade_recall.png",
+    "prompt": "Use case: stylized-concept. Isolated combat VFX source for Thu Nhận, argent: one silver-gold recall blade with articulated metallic segments and curved luminous silver trail, complete point up. Use aircraft reference ONLY for material and color, do NOT draw the aircraft. A single neutral deformable subject for layered mesh animation, not a storyboard.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "argent_heavenly_blade_array",
+    "group": "skills",
+    "owner": "argent",
+    "stage": null,
+    "reference": "art/khong-kich/26.25.0/source-images/aircraft/argent.png",
+    "output": "art/khong-kich/26.25.0/source-images/skills/argent_heavenly_blade_array.png",
+    "prompt": "Use case: stylized-concept. Isolated combat VFX source for Thiên La Kiếm Trận, argent: one large ornate silver-gold celestial sword launcher with opening side blade panels, a bright metal core and complete pointed tip up. Use aircraft reference ONLY for material and color, do NOT draw the aircraft. A single neutral deformable subject for layered mesh animation, not a storyboard.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "riptide_wellspring",
+    "group": "skills",
+    "owner": "riptide",
+    "stage": null,
+    "reference": "art/khong-kich/26.25.0/source-images/aircraft/riptide.png",
+    "output": "art/khong-kich/26.25.0/source-images/skills/riptide_wellspring.png",
+    "prompt": "Use case: stylized-concept. Isolated combat VFX source for Mạch Nguồn, riptide: one long curling ribbon of translucent teal healing water, white foam edge and clear fluid volume. Use aircraft reference ONLY for material and color, do NOT draw the aircraft. A single neutral deformable subject for layered mesh animation, not a storyboard.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "riptide_tidal_blades",
+    "group": "skills",
+    "owner": "riptide",
+    "stage": null,
+    "reference": "art/khong-kich/26.25.0/source-images/aircraft/riptide.png",
+    "output": "art/khong-kich/26.25.0/source-images/skills/riptide_tidal_blades.png",
+    "prompt": "Use case: stylized-concept. Isolated combat VFX source for Song Nhận Thủy Triều, riptide: one large crescent blade made of transparent turquoise water, sharp white foamy cutting edge and flowing curved body. Use aircraft reference ONLY for material and color, do NOT draw the aircraft. A single neutral deformable subject for layered mesh animation, not a storyboard.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "riptide_confluence",
+    "group": "skills",
+    "owner": "riptide",
+    "stage": null,
+    "reference": "art/khong-kich/26.25.0/source-images/aircraft/riptide.png",
+    "output": "art/khong-kich/26.25.0/source-images/skills/riptide_confluence.png",
+    "prompt": "Use case: stylized-concept. Isolated combat VFX source for Hội Thủy, riptide: thin annular water vortex spiralling inward, open completely transparent center without a central core, teal depth and white foam. Use aircraft reference ONLY for material and color, do NOT draw the aircraft. A single neutral deformable subject for layered mesh animation, not a storyboard.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "riptide_waterform",
+    "group": "skills",
+    "owner": "riptide",
+    "stage": null,
+    "reference": "art/khong-kich/26.25.0/source-images/aircraft/riptide.png",
+    "output": "art/khong-kich/26.25.0/source-images/skills/riptide_waterform.png",
+    "prompt": "Use case: stylized-concept. Isolated combat VFX source for Thủy Thể, riptide: hollow translucent water shell with several circulating curved water ribbons, foam highlights and empty transparent center, no forward beam. Use aircraft reference ONLY for material and color, do NOT draw the aircraft. A single neutral deformable subject for layered mesh animation, not a storyboard.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "cinder_fire_shield",
+    "group": "skills",
+    "owner": "cinder",
+    "stage": null,
+    "reference": "art/khong-kich/26.25.0/source-images/aircraft/cinder.png",
+    "output": "art/khong-kich/26.25.0/source-images/skills/cinder_fire_shield.png",
+    "prompt": "Use case: stylized-concept. Isolated combat VFX source for Khiên Lửa, cinder: thin annular orange-red flame shield with empty transparent center, curling detailed tongues of fire, yellow hot edge. Use aircraft reference ONLY for material and color, do NOT draw the aircraft. A single neutral deformable subject for layered mesh animation, not a storyboard.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "cinder_fuel_barrage",
+    "group": "skills",
+    "owner": "cinder",
+    "stage": null,
+    "reference": "art/khong-kich/26.25.0/source-images/aircraft/cinder.png",
+    "output": "art/khong-kich/26.25.0/source-images/skills/cinder_fuel_barrage.png",
+    "prompt": "Use case: stylized-concept. Isolated combat VFX source for Rải Nhiên Liệu, cinder: one cylindrical red-black mechanical fuel canister with open dispersal fins and burning orange liquid fuel droplets. Use aircraft reference ONLY for material and color, do NOT draw the aircraft. A single neutral deformable subject for layered mesh animation, not a storyboard.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "cinder_heat_wave",
+    "group": "skills",
+    "owner": "cinder",
+    "stage": null,
+    "reference": "art/khong-kich/26.25.0/source-images/aircraft/cinder.png",
+    "output": "art/khong-kich/26.25.0/source-images/skills/cinder_heat_wave.png",
+    "prompt": "Use case: stylized-concept. Isolated combat VFX source for Quầng Nhiệt, cinder: one broad crescent of orange fire, bright yellow edge and twisting red-orange flame filaments with clear transparent center. Use aircraft reference ONLY for material and color, do NOT draw the aircraft. A single neutral deformable subject for layered mesh animation, not a storyboard.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "cinder_inferno_beam",
+    "group": "skills",
+    "owner": "cinder",
+    "stage": null,
+    "reference": "art/khong-kich/26.25.0/source-images/aircraft/cinder.png",
+    "output": "art/khong-kich/26.25.0/source-images/skills/cinder_inferno_beam.png",
+    "prompt": "Use case: stylized-concept. Isolated combat VFX source for Hỏa Quang Hủy Diệt, cinder: vertical straight destructive inferno beam with dense bright golden center, dark orange lava fire edges and flowing heat filaments. Use aircraft reference ONLY for material and color, do NOT draw the aircraft. A single neutral deformable subject for layered mesh animation, not a storyboard.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "predator_lock",
+    "group": "skills",
+    "owner": "black_eagle",
+    "stage": null,
+    "reference": "art/khong-kich/26.25.0/source-images/aircraft/black_eagle.png",
+    "output": "art/khong-kich/26.25.0/source-images/skills/predator_lock.png",
+    "prompt": "Use case: stylized-concept. Isolated combat VFX source for Khóa Săn Mồi, black_eagle: four articulated blue-metal targeting jaws surrounding a completely empty transparent circular center, miniature missile tube details. Use aircraft reference ONLY for material and color, do NOT draw the aircraft. A single neutral deformable subject for layered mesh animation, not a storyboard.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "gravity_anchor",
+    "group": "skills",
+    "owner": "breaker",
+    "stage": null,
+    "reference": "art/khong-kich/26.25.0/source-images/aircraft/breaker.png",
+    "output": "art/khong-kich/26.25.0/source-images/skills/gravity_anchor.png",
+    "prompt": "Use case: stylized-concept. Isolated combat VFX source for Neo Trọng Lực, breaker: heavy amber gravity anchor with hinged radial plates and a deep imploding blue-gold reactor, sparse orbiting rock debris. Use aircraft reference ONLY for material and color, do NOT draw the aircraft. A single neutral deformable subject for layered mesh animation, not a storyboard.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "electronic_interference",
+    "group": "skills",
+    "owner": "phantom",
+    "stage": null,
+    "reference": "art/khong-kich/26.25.0/source-images/aircraft/phantom.png",
+    "output": "art/khong-kich/26.25.0/source-images/skills/electronic_interference.png",
+    "prompt": "Use case: stylized-concept. Isolated combat VFX source for Nhiễu Điện Tử, phantom: violet interference wave: thin broken annular plasma waveform with transparent center and electronic filament edge. Use aircraft reference ONLY for material and color, do NOT draw the aircraft. A single neutral deformable subject for layered mesh animation, not a storyboard.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "twin_reflection",
+    "group": "skills",
+    "owner": "astra",
+    "stage": null,
+    "reference": "art/khong-kich/26.25.0/source-images/aircraft/astra.png",
+    "output": "art/khong-kich/26.25.0/source-images/skills/twin_reflection.png",
+    "prompt": "Use case: stylized-concept. Isolated combat VFX source for Song Tinh Phản Xạ, astra: one silver orange reflective stellar crystal on an articulated mechanical emitter base. Use aircraft reference ONLY for material and color, do NOT draw the aircraft. A single neutral deformable subject for layered mesh animation, not a storyboard.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "orbit_reversal",
+    "group": "skills",
+    "owner": "astra",
+    "stage": null,
+    "reference": "art/khong-kich/26.25.0/source-images/aircraft/astra.png",
+    "output": "art/khong-kich/26.25.0/source-images/skills/orbit_reversal.png",
+    "prompt": "Use case: stylized-concept. Isolated combat VFX source for Phản Quỹ Đạo, astra: orange stellar orbit: three layered thin curved orange energy ribbons around a transparent circular center, metallic emitter shards. Use aircraft reference ONLY for material and color, do NOT draw the aircraft. A single neutral deformable subject for layered mesh animation, not a storyboard.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "stellar_lance",
+    "group": "skills",
+    "owner": "astra",
+    "stage": null,
+    "reference": "art/khong-kich/26.25.0/source-images/aircraft/astra.png",
+    "output": "art/khong-kich/26.25.0/source-images/skills/stellar_lance.png",
+    "prompt": "Use case: stylized-concept. Isolated combat VFX source for Thương Tinh Tú, astra: long pointed orange stellar spear assembled from silver crystal segments, luminous bright tip and slender energy shaft pointing up. Use aircraft reference ONLY for material and color, do NOT draw the aircraft. A single neutral deformable subject for layered mesh animation, not a storyboard.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "starfall",
+    "group": "skills",
+    "owner": "astra",
+    "stage": null,
+    "reference": "art/khong-kich/26.25.0/source-images/aircraft/astra.png",
+    "output": "art/khong-kich/26.25.0/source-images/skills/starfall.png",
+    "prompt": "Use case: stylized-concept. Isolated combat VFX source for Sao Rơi, astra: one jagged orange molten meteor core with dark rocky plates and a short fiery tail, nose up. Use aircraft reference ONLY for material and color, do NOT draw the aircraft. A single neutral deformable subject for layered mesh animation, not a storyboard.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "decoy",
+    "group": "skills",
+    "owner": "black_eagle",
+    "stage": null,
+    "reference": "art/khong-kich/26.25.0/source-images/aircraft/black_eagle.png",
+    "output": "art/khong-kich/26.25.0/source-images/skills/decoy.png",
+    "prompt": "Use case: stylized-concept. Isolated combat VFX source for Mồi Bẫy, black_eagle: tactical blue steel decoy flare pod with opening armored petals and a hot luminous decoy core. Use aircraft reference ONLY for material and color, do NOT draw the aircraft. A single neutral deformable subject for layered mesh animation, not a storyboard.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "afterburner",
+    "group": "skills",
+    "owner": "black_eagle",
+    "stage": null,
+    "reference": "art/khong-kich/26.25.0/source-images/aircraft/black_eagle.png",
+    "output": "art/khong-kich/26.25.0/source-images/skills/afterburner.png",
+    "prompt": "Use case: stylized-concept. Isolated combat VFX source for Điên Cuồng, black_eagle: paired blue tactical machinegun deployment mechanism with sliding gun sleeves, cold blue capacitor and central cooling vents; no movement-speed flames. Use aircraft reference ONLY for material and color, do NOT draw the aircraft. A single neutral deformable subject for layered mesh animation, not a storyboard.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "missile_swarm",
+    "group": "skills",
+    "owner": "black_eagle",
+    "stage": null,
+    "reference": "art/khong-kich/26.25.0/source-images/aircraft/black_eagle.png",
+    "output": "art/khong-kich/26.25.0/source-images/skills/missile_swarm.png",
+    "prompt": "Use case: stylized-concept. Isolated combat VFX source for Mưa Tên Lửa, black_eagle: blue steel deployable missile rack with several distinct missile bodies seated in opening launch cells. Use aircraft reference ONLY for material and color, do NOT draw the aircraft. A single neutral deformable subject for layered mesh animation, not a storyboard.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "armor_shield",
+    "group": "skills",
+    "owner": "breaker",
+    "stage": null,
+    "reference": "art/khong-kich/26.25.0/source-images/aircraft/breaker.png",
+    "output": "art/khong-kich/26.25.0/source-images/skills/armor_shield.png",
+    "prompt": "Use case: stylized-concept. Isolated combat VFX source for Khiên Năng Lượng, breaker: amber armored shield emitter with layered translucent honeycomb energy shell, open transparent interior. Use aircraft reference ONLY for material and color, do NOT draw the aircraft. A single neutral deformable subject for layered mesh animation, not a storyboard.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "heavy_bomb",
+    "group": "skills",
+    "owner": "breaker",
+    "stage": null,
+    "reference": "art/khong-kich/26.25.0/source-images/aircraft/breaker.png",
+    "output": "art/khong-kich/26.25.0/source-images/skills/heavy_bomb.png",
+    "prompt": "Use case: stylized-concept. Isolated combat VFX source for BigBang, breaker: large heavy BigBang bomb, amber armored casing with expanding metal fins, dark explosive core and charged golden seam. Use aircraft reference ONLY for material and color, do NOT draw the aircraft. A single neutral deformable subject for layered mesh animation, not a storyboard.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "sweeping_cannon",
+    "group": "skills",
+    "owner": "breaker",
+    "stage": null,
+    "reference": "art/khong-kich/26.25.0/source-images/aircraft/breaker.png",
+    "output": "art/khong-kich/26.25.0/source-images/skills/sweeping_cannon.png",
+    "prompt": "Use case: stylized-concept. Isolated combat VFX source for Oanh Tạc, breaker: heavy amber multi-barrel artillery turret with deployable side armor and glowing cannon breeches. Use aircraft reference ONLY for material and color, do NOT draw the aircraft. A single neutral deformable subject for layered mesh animation, not a storyboard.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "invisibility",
+    "group": "skills",
+    "owner": "phantom",
+    "stage": null,
+    "reference": "art/khong-kich/26.25.0/source-images/aircraft/phantom.png",
+    "output": "art/khong-kich/26.25.0/source-images/skills/invisibility.png",
+    "prompt": "Use case: stylized-concept. Isolated combat VFX source for Phân Ảnh, phantom: violet phase projector device, translucent segmented refractive shroud around an empty transparent center. Use aircraft reference ONLY for material and color, do NOT draw the aircraft. A single neutral deformable subject for layered mesh animation, not a storyboard.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "focus_laser",
+    "group": "skills",
+    "owner": "phantom",
+    "stage": null,
+    "reference": "art/khong-kich/26.25.0/source-images/aircraft/phantom.png",
+    "output": "art/khong-kich/26.25.0/source-images/skills/focus_laser.png",
+    "prompt": "Use case: stylized-concept. Isolated combat VFX source for Laser Hủy Diệt, phantom: long narrow straight purple plasma laser shaft with a sharply defined bright inner ray, textured filaments and soft edge falloff, beam aligned vertically. Use aircraft reference ONLY for material and color, do NOT draw the aircraft. A single neutral deformable subject for layered mesh animation, not a storyboard.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  },
+  {
+    "id": "escort_drone",
+    "group": "skills",
+    "owner": "phantom",
+    "stage": null,
+    "reference": "art/khong-kich/26.25.0/source-images/aircraft/phantom.png",
+    "output": "art/khong-kich/26.25.0/source-images/skills/escort_drone.png",
+    "prompt": "Use case: stylized-concept. Isolated combat VFX source for Giúp Nào HawkEye!, phantom: Phantom HawkEye escort combat drone with violet armored body, articulated wings, two laser cannons and twin engines. Use aircraft reference ONLY for material and color, do NOT draw the aircraft. A single neutral deformable subject for layered mesh animation, not a storyboard.  Production painted raster game sprite with layered material depth, strong readable silhouette, overhead camera, nose oriented UP. One complete subject only, centered in a square canvas with 12 percent transparent margin beyond every tip. True transparent RGBA background. No text, symbols used as labels, numbers, UI, watermark, scenery, ground, shadow plane, grid, checkerboard, geometric vector placeholder or blur. Restrained emissive details, no huge halo. Preserve palette and faction from the reference while upgrading design and dimensional detail."
+  }
+]

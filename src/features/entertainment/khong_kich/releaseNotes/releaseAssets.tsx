@@ -1,3 +1,6 @@
+import { GENERATED_ART, generatedFrameId, GENERATED_BOSSES } from '../airCombatGeneratedArt';
+import { GeneratedThumbnail } from '../GeneratedThumbnail';
+import { AircraftPreview } from '../AircraftPreview';
 import { TERRA_SOURCES, TERRA_FRAMES, TERRA_ICON_CELLS } from '../airCombatTerraArt';
 import { SYLVA_SOURCES, SYLVA_FRAMES, SYLVA_ICON_CELLS } from '../airCombatSylvaArt';
 import { ARGENT_ART, ARGENT_FRAMES, ARGENT_ICON_CELLS } from '../airCombatArgentArt';
@@ -40,6 +43,7 @@ const ATLAS_URLS: Partial<Record<AtlasFrame["atlas"], string>> = {
 const AIRCRAFT_ROWS: Record<AircraftId, number> = { terra:0,sylva:0,argent:0,riptide:0,cinder:0, black_eagle: 0, breaker: 1, phantom: 2,astra:0 };
 
 function AtlasThumbnail({ frame }: { frame: AtlasFrame }) {
+  const id=generatedFrameId(frame);if(id&&GENERATED_ART.items[id])return <GeneratedThumbnail id={id} className="air-release-atlas" />;
   const [x, y, width, height] = frame.rect;
   return <span className="air-release-atlas" aria-hidden="true"><img src={ATLAS_URLS[frame.atlas]} alt="" draggable={false} loading="lazy"
     style={{ width: `${100 / width}%`, height: `${100 / height}%`, left: `${-x / width * 100}%`, top: `${-y / height * 100}%` }} /></span>;
@@ -48,11 +52,15 @@ function AtlasThumbnail({ frame }: { frame: AtlasFrame }) {
 /** All markers are converted to these semantic references in authored data.
  * The UI never accepts or displays authoring marker strings. */
 export function ReleaseNoteEntityIcon({ icon }: { icon: ReleaseIconRef }) {
-  if (icon.kind === 'skill' && icon.id in TERRA_ICON_CELLS) return <SkillIcon id={icon.id} className="air-release-entity-icon" />;
-  if (icon.kind === 'skill' && icon.id in SYLVA_ICON_CELLS) return <SkillIcon id={icon.id} className="air-release-entity-icon" />;
-  if (icon.kind === 'skill' && icon.id in ARGENT_ICON_CELLS) return <SkillIcon id={icon.id as keyof typeof ARGENT_ICON_CELLS} className="air-release-entity-icon" />;
+  if(icon.kind==='aircraft'&&GENERATED_ART.items[icon.id])return <AircraftPreview aircraftId={icon.id as AircraftId} className="air-release-entity-icon" />;
+  if(icon.kind==='skill')return <SkillIcon id={icon.id} className="air-release-entity-icon" />;
+  if(icon.kind==='boss'||icon.kind==='enemy') {
+    const stage=Number(icon.id.replace('boss_stage',''));
+    const id=stage>=1&&stage<=4?GENERATED_BOSSES[stage-1]:icon.id==='boss'?'leviathan':icon.id;
+    if(GENERATED_ART.items[id])return <GeneratedThumbnail id={id} className="air-release-entity-icon" />;
+  }
+
   if (icon.kind === "core") return <CombatUiIcon kind="core" id={icon.id.startsWith("core_") ? icon.id : `core_${icon.id.padStart(3, "0")}`} fallback="" className="air-release-entity-icon" />;
-  if (icon.kind === "skill") return <CombatUiIcon kind="skill" id={icon.id as SkillId | PassiveId} fallback="" className="air-release-entity-icon" />;
   if (icon.kind === "equipment") return <EquipmentIcon id={icon.id as EquipmentRewardId} className="air-release-entity-icon" />;
   let frame: AtlasFrame | undefined;
   if (icon.kind === "aircraft") {

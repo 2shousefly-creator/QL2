@@ -1,0 +1,170 @@
+[
+  {
+    "id": "viper_basic_ammo",
+    "owner": "black_eagle",
+    "group": "ammunition",
+    "output": "art/khong-kich/26.25.0/source-images/ammunition/viper_basic_ammo.png",
+    "reference": "art/khong-kich/26.25.0/source-images/aircraft/black_eagle.png",
+    "prompt": "Use case: stylized-concept. One isolated production painted raster projectile: slender blue-white jacketed tactical tracer bullet, polished steel pointed tip and a short cool-blue light tail. Reference aircraft is palette and material reference ONLY, do not draw the aircraft. Vertical projectile points UP, complete tip and short tail inside transparent margin. True transparent background. Convincing material depth, readable silhouette at small size. No text, UI, grid, scenery, watermark, checkerboard, vector geometry or multiple bullets."
+  },
+  {
+    "id": "titan_basic_ammo",
+    "owner": "breaker",
+    "group": "ammunition",
+    "output": "art/khong-kich/26.25.0/source-images/ammunition/titan_basic_ammo.png",
+    "reference": "art/khong-kich/26.25.0/source-images/aircraft/breaker.png",
+    "prompt": "Use case: stylized-concept. One isolated production painted raster projectile: heavy amber alloy armor-piercing shell with a golden metal blunt pointed tip and hot dense inner core. Reference aircraft is palette and material reference ONLY, do not draw the aircraft. Vertical projectile points UP, complete tip and short tail inside transparent margin. True transparent background. Convincing material depth, readable silhouette at small size. No text, UI, grid, scenery, watermark, checkerboard, vector geometry or multiple bullets."
+  },
+  {
+    "id": "phantom_basic_ammo",
+    "owner": "phantom",
+    "group": "ammunition",
+    "output": "art/khong-kich/26.25.0/source-images/ammunition/phantom_basic_ammo.png",
+    "reference": "art/khong-kich/26.25.0/source-images/aircraft/phantom.png",
+    "prompt": "Use case: stylized-concept. One isolated production painted raster projectile: narrow violet plasma bolt, sharply defined bright purple core, layered electric filaments. Reference aircraft is palette and material reference ONLY, do not draw the aircraft. Vertical projectile points UP, complete tip and short tail inside transparent margin. True transparent background. Convincing material depth, readable silhouette at small size. No text, UI, grid, scenery, watermark, checkerboard, vector geometry or multiple bullets."
+  },
+  {
+    "id": "astra_basic_ammo",
+    "owner": "astra",
+    "group": "ammunition",
+    "output": "art/khong-kich/26.25.0/source-images/ammunition/astra_basic_ammo.png",
+    "reference": "art/khong-kich/26.25.0/source-images/aircraft/astra.png",
+    "prompt": "Use case: stylized-concept. One isolated production painted raster projectile: orange stellar shard projectile, silver crystal point with hot orange starlight core. Reference aircraft is palette and material reference ONLY, do not draw the aircraft. Vertical projectile points UP, complete tip and short tail inside transparent margin. True transparent background. Convincing material depth, readable silhouette at small size. No text, UI, grid, scenery, watermark, checkerboard, vector geometry or multiple bullets."
+  },
+  {
+    "id": "cinder_basic_ammo",
+    "owner": "cinder",
+    "group": "ammunition",
+    "output": "art/khong-kich/26.25.0/source-images/ammunition/cinder_basic_ammo.png",
+    "reference": "art/khong-kich/26.25.0/source-images/aircraft/cinder.png",
+    "prompt": "Use case: stylized-concept. One isolated production painted raster projectile: orange-red thermal projectile, hot yellow molten core surrounded by detailed red fire filaments. Reference aircraft is palette and material reference ONLY, do not draw the aircraft. Vertical projectile points UP, complete tip and short tail inside transparent margin. True transparent background. Convincing material depth, readable silhouette at small size. No text, UI, grid, scenery, watermark, checkerboard, vector geometry or multiple bullets."
+  },
+  {
+    "id": "riptide_basic_ammo",
+    "owner": "riptide",
+    "group": "ammunition",
+    "output": "art/khong-kich/26.25.0/source-images/ammunition/riptide_basic_ammo.png",
+    "reference": "art/khong-kich/26.25.0/source-images/aircraft/riptide.png",
+    "prompt": "Use case: stylized-concept. One isolated production painted raster projectile: long translucent turquoise water droplet projectile, bright foamy tip and fluid light trail. Reference aircraft is palette and material reference ONLY, do not draw the aircraft. Vertical projectile points UP, complete tip and short tail inside transparent margin. True transparent background. Convincing material depth, readable silhouette at small size. No text, UI, grid, scenery, watermark, checkerboard, vector geometry or multiple bullets."
+  },
+  {
+    "id": "argent_basic_ammo",
+    "owner": "argent",
+    "group": "ammunition",
+    "output": "art/khong-kich/26.25.0/source-images/ammunition/argent_basic_ammo.png",
+    "reference": "art/khong-kich/26.25.0/source-images/aircraft/argent.png",
+    "prompt": "Use case: stylized-concept. One isolated production painted raster projectile: slender silver sword-tip projectile with gold spine, complete sharp metal point and short silver light tail. Reference aircraft is palette and material reference ONLY, do not draw the aircraft. Vertical projectile points UP, complete tip and short tail inside transparent margin. True transparent background. Convincing material depth, readable silhouette at small size. No text, UI, grid, scenery, watermark, checkerboard, vector geometry or multiple bullets."
+  },
+  {
+    "id": "sylva_basic_ammo",
+    "owner": "sylva",
+    "group": "ammunition",
+    "output": "art/khong-kich/26.25.0/source-images/ammunition/sylva_basic_ammo.png",
+    "reference": "art/khong-kich/26.25.0/source-images/aircraft/sylva.png",
+    "prompt": "Use case: stylized-concept. One isolated production painted raster projectile: acidic green biological projectile, luminous lime viscous core and barbed dark green shell. Reference aircraft is palette and material reference ONLY, do not draw the aircraft. Vertical projectile points UP, complete tip and short tail inside transparent margin. True transparent background. Convincing material depth, readable silhouette at small size. No text, UI, grid, scenery, watermark, checkerboard, vector geometry or multiple bullets."
+  },
+  {
+    "id": "terra_basic_ammo",
+    "owner": "terra",
+    "group": "ammunition",
+    "output": "art/khong-kich/26.25.0/source-images/ammunition/terra_basic_ammo.png",
+    "reference": "art/khong-kich/26.25.0/source-images/aircraft/terra.png",
+    "prompt": "Use case: stylized-concept. One isolated production painted raster projectile: pointed heavy brown geological shard projectile, dark rock texture and amber mineral fissures. Reference aircraft is palette and material reference ONLY, do not draw the aircraft. Vertical projectile points UP, complete tip and short tail inside transparent margin. True transparent background. Convincing material depth, readable silhouette at small size. No text, UI, grid, scenery, watermark, checkerboard, vector geometry or multiple bullets."
+  },
+  {
+    "id": "shared_impact",
+    "group": "shared",
+    "output": "art/khong-kich/26.25.0/source-images/shared/shared_impact.png",
+    "prompt": "Use case: stylized-concept. Paint ONE isolated raster combat VFX element: compact white gold hot impact burst with distinct fine flying metal sparks and smoky translucent edges. Highly detailed game effect neutral source shape for mesh deformation. Complete shape with generous transparent margin. True transparent RGBA. No background, scenery, text, numbers, watermark, UI, grid, checkerboard or flat vector art."
+  },
+  {
+    "id": "shared_explosion",
+    "group": "shared",
+    "output": "art/khong-kich/26.25.0/source-images/shared/shared_explosion.png",
+    "prompt": "Use case: stylized-concept. Paint ONE isolated raster combat VFX element: detailed orange hot explosion with bright yellow center, curling dark fire petals and transparent smoke edges. Highly detailed game effect neutral source shape for mesh deformation. Complete shape with generous transparent margin. True transparent RGBA. No background, scenery, text, numbers, watermark, UI, grid, checkerboard or flat vector art."
+  },
+  {
+    "id": "shared_smoke",
+    "group": "shared",
+    "output": "art/khong-kich/26.25.0/source-images/shared/shared_smoke.png",
+    "prompt": "Use case: stylized-concept. Paint ONE isolated raster combat VFX element: a single soft gray drifting smoke plume with layered volumetric curls and natural transparent fading. Highly detailed game effect neutral source shape for mesh deformation. Complete shape with generous transparent margin. True transparent RGBA. No background, scenery, text, numbers, watermark, UI, grid, checkerboard or flat vector art."
+  },
+  {
+    "id": "shared_flame",
+    "group": "shared",
+    "output": "art/khong-kich/26.25.0/source-images/shared/shared_flame.png",
+    "prompt": "Use case: stylized-concept. Paint ONE isolated raster combat VFX element: a single narrow white-orange engine flame plume, bright root at TOP tapering down into transparent fiery filaments. Highly detailed game effect neutral source shape for mesh deformation. Complete shape with generous transparent margin. True transparent RGBA. No background, scenery, text, numbers, watermark, UI, grid, checkerboard or flat vector art."
+  },
+  {
+    "id": "shared_trail",
+    "group": "shared",
+    "output": "art/khong-kich/26.25.0/source-images/shared/shared_trail.png",
+    "prompt": "Use case: stylized-concept. Paint ONE isolated raster combat VFX element: long narrow silver-white plasma filament trail, bright at TOP tapering softly downward to transparent. Highly detailed game effect neutral source shape for mesh deformation. Complete shape with generous transparent margin. True transparent RGBA. No background, scenery, text, numbers, watermark, UI, grid, checkerboard or flat vector art."
+  },
+  {
+    "id": "shared_muzzle",
+    "group": "shared",
+    "output": "art/khong-kich/26.25.0/source-images/shared/shared_muzzle.png",
+    "prompt": "Use case: stylized-concept. Paint ONE isolated raster combat VFX element: small orange-white muzzle flash, mechanical spark streaks and clear hot star-shaped burst. Highly detailed game effect neutral source shape for mesh deformation. Complete shape with generous transparent margin. True transparent RGBA. No background, scenery, text, numbers, watermark, UI, grid, checkerboard or flat vector art."
+  },
+  {
+    "id": "shared_shield",
+    "group": "shared",
+    "output": "art/khong-kich/26.25.0/source-images/shared/shared_shield.png",
+    "prompt": "Use case: stylized-concept. Paint ONE isolated raster combat VFX element: thin translucent pale cyan protective energy shell with textured faceted luminous edge and fully transparent open center. Highly detailed game effect neutral source shape for mesh deformation. Complete shape with generous transparent margin. True transparent RGBA. No background, scenery, text, numbers, watermark, UI, grid, checkerboard or flat vector art."
+  },
+  {
+    "id": "shared_heal",
+    "group": "shared",
+    "output": "art/khong-kich/26.25.0/source-images/shared/shared_heal.png",
+    "prompt": "Use case: stylized-concept. Paint ONE isolated raster combat VFX element: bright green medical healing cross made of translucent luminous crystal, soft small particles and real transparent background. Highly detailed game effect neutral source shape for mesh deformation. Complete shape with generous transparent margin. True transparent RGBA. No background, scenery, text, numbers, watermark, UI, grid, checkerboard or flat vector art."
+  },
+  {
+    "id": "shared_skull",
+    "group": "shared",
+    "output": "art/khong-kich/26.25.0/source-images/shared/shared_skull.png",
+    "prompt": "Use case: stylized-concept. Paint ONE isolated raster combat VFX element: a single vivid lime green acid skull made of corrosive vapor, clearly readable hollow eye sockets and jaw silhouette. Highly detailed game effect neutral source shape for mesh deformation. Complete shape with generous transparent margin. True transparent RGBA. No background, scenery, text, numbers, watermark, UI, grid, checkerboard or flat vector art."
+  },
+  {
+    "id": "shared_acid_pool",
+    "group": "shared",
+    "output": "art/khong-kich/26.25.0/source-images/shared/shared_acid_pool.png",
+    "prompt": "Use case: stylized-concept. Paint ONE isolated raster combat VFX element: top-down irregular pool of translucent lime-green corrosive acid, detailed liquid surface, foamy edge and a few bubbles. Highly detailed game effect neutral source shape for mesh deformation. Complete shape with generous transparent margin. True transparent RGBA. No background, scenery, text, numbers, watermark, UI, grid, checkerboard or flat vector art."
+  },
+  {
+    "id": "shared_root",
+    "group": "shared",
+    "output": "art/khong-kich/26.25.0/source-images/shared/shared_root.png",
+    "prompt": "Use case: stylized-concept. Paint ONE isolated raster combat VFX element: a small bundle of twisting dangerous dark green thorn roots curving around an empty transparent center. Highly detailed game effect neutral source shape for mesh deformation. Complete shape with generous transparent margin. True transparent RGBA. No background, scenery, text, numbers, watermark, UI, grid, checkerboard or flat vector art."
+  },
+  {
+    "id": "shared_mark",
+    "group": "shared",
+    "output": "art/khong-kich/26.25.0/source-images/shared/shared_mark.png",
+    "prompt": "Use case: stylized-concept. Paint ONE isolated raster combat VFX element: four sharp metallic golden targeting brackets with luminous detailed engraved surfaces around an empty transparent center. Highly detailed game effect neutral source shape for mesh deformation. Complete shape with generous transparent margin. True transparent RGBA. No background, scenery, text, numbers, watermark, UI, grid, checkerboard or flat vector art."
+  },
+  {
+    "id": "shared_spark",
+    "group": "shared",
+    "output": "art/khong-kich/26.25.0/source-images/shared/shared_spark.png",
+    "prompt": "Use case: stylized-concept. Paint ONE isolated raster combat VFX element: one narrow branching pale blue electrical arc with bright filaments and transparent edges. Highly detailed game effect neutral source shape for mesh deformation. Complete shape with generous transparent margin. True transparent RGBA. No background, scenery, text, numbers, watermark, UI, grid, checkerboard or flat vector art."
+  },
+  {
+    "id": "shared_rock",
+    "group": "shared",
+    "output": "art/khong-kich/26.25.0/source-images/shared/shared_rock.png",
+    "prompt": "Use case: stylized-concept. Paint ONE isolated raster combat VFX element: one irregular brown rock fragment with layered geological texture and bright amber fracture vein. Highly detailed game effect neutral source shape for mesh deformation. Complete shape with generous transparent margin. True transparent RGBA. No background, scenery, text, numbers, watermark, UI, grid, checkerboard or flat vector art."
+  },
+  {
+    "id": "shared_missile",
+    "group": "shared",
+    "output": "art/khong-kich/26.25.0/source-images/shared/shared_missile.png",
+    "prompt": "Use case: stylized-concept. Paint ONE isolated raster combat VFX element: one complete gray-blue guided tactical missile, pointed nose UP, visible fins and detailed engine outlet, no long plume. Highly detailed game effect neutral source shape for mesh deformation. Complete shape with generous transparent margin. True transparent RGBA. No background, scenery, text, numbers, watermark, UI, grid, checkerboard or flat vector art."
+  },
+  {
+    "id": "shared_wave",
+    "group": "shared",
+    "output": "art/khong-kich/26.25.0/source-images/shared/shared_wave.png",
+    "prompt": "Use case: stylized-concept. Paint ONE isolated raster combat VFX element: thin silver-white annular energy shockwave, subtle luminous textured filament edge and completely transparent center. Highly detailed game effect neutral source shape for mesh deformation. Complete shape with generous transparent margin. True transparent RGBA. No background, scenery, text, numbers, watermark, UI, grid, checkerboard or flat vector art."
+  }
+]

@@ -1,4 +1,4 @@
-import eliteUrl from "../../../assets/khong-kich/stage2/stage2-elite-atlas.svg";
+import eliteUrl from "../../../assets/khong-kich/26.25.0/compat/stage2-stage2-elite-atlas.png";
 import enemyUrl from "../../../assets/khong-kich/stage2/stage2-enemy-atlas.png";
 import vfxUrl from "../../../assets/khong-kich/stage2/stage2-vfx-atlas.png";
 import stormUrl from "../../../assets/khong-kich/stage2/magnetic-storm.png";

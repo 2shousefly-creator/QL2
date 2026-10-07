@@ -2,7 +2,7 @@ import enemyUrl from "../../../assets/khong-kich/stage3/stage3-enemy-atlas.png";
 import bossUrl from "../../../assets/khong-kich/stage3/stage3-boss-atlas.png";
 import vfxUrl from "../../../assets/khong-kich/stage3/stage3-vfx-atlas.png";
 import skyUrl from "../../../assets/khong-kich/stage3/stormbreaker-sky.png";
-import emissiveUrl from "../../../assets/khong-kich/stage3/stage3-emissive-atlas.svg";
+import emissiveUrl from "../../../assets/khong-kich/26.25.0/compat/stage3-stage3-emissive-atlas.png";
 import type { AtlasFrame } from "./pixi/airCombatPixiTypes";
 import type { EnemyEntity } from "./airCombatRuntime";
 export const STAGE3_ART_URLS = { enemy: enemyUrl, boss: bossUrl, vfx: vfxUrl, sky: skyUrl, emissive: emissiveUrl };

@@ -1,3 +1,6 @@
+import { generatedFrame, generatedFrameId, generatedEffectId } from '../airCombatGeneratedArt';
+import { loadGeneratedTextures } from './GeneratedArtTextures';
+import type { CombatWorld } from '../airCombatRuntime';
 import { TERRA_SOURCES, TERRA_FRAMES } from '../airCombatTerraArt';
 import { SYLVA_SOURCES, SYLVA_FRAMES } from '../airCombatSylvaArt';
 import { ARGENT_ART, ARGENT_FRAMES, argentPose, argentShake, paintArgent, ARGENT_SPRITE_BUDGET } from '../airCombatArgentArt';
@@ -15,12 +18,12 @@ import { ENEMY_VISUALS } from "../airCombatEnemyArt";
 import { STAGE2_ART_URLS, STAGE2_ENEMY_ART, STAGE2_VFX_ART, TEMPEST_WEAKPOINT_ART } from "../airCombatStage2Art";
 import { PLAYER_STANDARD_AIRFRAME_SIZE } from "../airCombatHitboxes";
 import { PLAYER_ARTWORK } from "../airCombatArtwork";
-import phantomBeamUrl from "../../../../assets/khong-kich/v2/phantom-firing-beam.svg";
-import basicAmmoUrl from "../../../../assets/khong-kich/v2/player-basic-ammo-atlas.svg";
-import healingCrossUrl from "../../../../assets/khong-kich/v2/healing-cross.svg";
-import bigbangUrl from "../../../../assets/khong-kich/v2/bigbang-missile.svg";
-import flameUrl from "../../../../assets/khong-kich/v2/missile-engine-flame.svg";
-import ammoUrl from "../../../../assets/khong-kich/v2/hardcore-ammo-atlas.svg";
+import phantomBeamUrl from "../../../../assets/khong-kich/26.25.0/compat/v2-phantom-firing-beam.png";
+import basicAmmoUrl from "../../../../assets/khong-kich/26.25.0/compat/v2-player-basic-ammo-atlas.png";
+import healingCrossUrl from "../../../../assets/khong-kich/26.25.0/compat/v2-healing-cross.png";
+import bigbangUrl from "../../../../assets/khong-kich/26.25.0/compat/v2-bigbang-missile.png";
+import flameUrl from "../../../../assets/khong-kich/26.25.0/compat/v2-missile-engine-flame.png";
+import ammoUrl from "../../../../assets/khong-kich/26.25.0/compat/v2-hardcore-ammo-atlas.png";
 import { AMMO_VISUALS } from "../airCombatAmmo";
 import type { AmmoVisualKey } from "../airCombatAmmo";
 import { Assets, Rectangle, Texture } from "pixi.js";
@@ -42,6 +45,7 @@ export const AIRCRAFT_VISUALS: Record<AircraftId, AircraftVisualDefinition> = {
   breaker: { neutral: cell("aircraft", 0, 1), left: cell("aircraft", 1, 1), right: cell("aircraft", 2, 1), size: PLAYER_STANDARD_AIRFRAME_SIZE, artwork: PLAYER_ARTWORK.breaker, tint: 0xfbbf24 },
   phantom: { neutral: cell("aircraft", 0, 2), left: cell("aircraft", 1, 2), right: cell("aircraft", 2, 2), size: PLAYER_STANDARD_AIRFRAME_SIZE, artwork: PLAYER_ARTWORK.phantom, tint: 0xc4b5fd },
 };
+for (const [id, visual] of Object.entries(AIRCRAFT_VISUALS)) { visual.neutral=generatedFrame(id);visual.left=visual.neutral;visual.right=visual.neutral; }
 export { ENEMY_VISUALS } from "../airCombatEnemyArt";
 const ammoFrames = Object.fromEntries(Object.entries(AMMO_VISUALS).map(([key,v]) => [key,key.endsWith("_basic_ammo")?{atlas:"basicAmmo",rect:[v.cell[0]/3,0,1/3,1/2]}:cell("ammo",v.cell[0],v.cell[1])])) as Record<AmmoVisualKey,AtlasFrame>;
 export const VFX_VISUALS = {
@@ -72,7 +76,8 @@ export const VFX_VISUALS = {
 export type VisualKey = keyof typeof VFX_VISUALS;
 
 /** Each renderer owns its frame views. Assets owns cached shared source textures. */
-export async function loadAirCombatAssets() {
+export async function loadAirCombatAssets(world?:CombatWorld) {
+  const generated = await loadGeneratedTextures(world);
   const [aircraft, fortress, vfx, ammo, bigbang, engineFlame, basicAmmo, phantomBeam, healingCross, stage2Enemy, stage2Vfx, magneticStorm, stage2Elite] = await Promise.all([
     Assets.load<Texture>(aircraftUrl), Assets.load<Texture>(fortressUrl), Assets.load<Texture>(vfxUrl), Assets.load<Texture>(ammoUrl), Assets.load<Texture>(bigbangUrl), Assets.load<Texture>(flameUrl), Assets.load<Texture>(basicAmmoUrl),
     Assets.load<Texture>(phantomBeamUrl),
@@ -96,9 +101,11 @@ export async function loadAirCombatAssets() {
   const sources = {...terraSources,sylvaAircraft,sylvaPortrait,sylvaIcons,sylvaAcid,sylvaLife,sylvaDeath,sylvaDeathNew,argentAircraft,argentIcons,argentVfx,argentPortrait, riptideAircraft,riptideIcons,riptideVfx, guardianVfx,bigBangVfx,cinderFeedback,cinderAircraft,cinderVfx,cinderProjectiles,cinderIcons, stage4Enemy,stage4Boss,stage4Vfx, stage3Enemy,stage3Boss,stage3Vfx,stage3Emissive, ultimateVfx,rankedVfx,rankedProjectiles, equipmentIcons,equipmentVfx,astraVfx,astraAircraft,astraEffects,aircraft, fortress, vfx, ammo, basicAmmo, healingCross, stage2Enemy, stage2Vfx, stage2Elite };
   const frames = new Map<AtlasFrame, Texture>();
   const texture = (definition: AtlasFrame) => {
+    const id=generatedFrameId(definition),replacement=id&&generated.texture(id);
+    if(replacement)return replacement;
     const cached = frames.get(definition);
     if (cached) return cached;
-    const source = sources[definition.atlas];
+    const source = sources[definition.atlas as keyof typeof sources];
     if (!source || source.width < 16 || source.height < 16) throw new Error("Missing Không Kích production atlas");
     const [x, y, w, h] = definition.rect;
     const left = Math.round(x * source.width), top = Math.round(y * source.height);
@@ -107,15 +114,6 @@ export async function loadAirCombatAssets() {
     frames.set(definition, result);
     return result;
   };
-  // Resolve every mandatory frame before permitting the V2 renderer to start.
-  Object.values(AIRCRAFT_VISUALS).forEach(v => { texture(v.neutral); texture(v.left); texture(v.right); });
-  Object.values(ENEMY_VISUALS).forEach(texture);
-  Object.values(VFX_VISUALS).forEach(texture);
-  Object.values(STAGE2_ENEMY_ART).forEach(texture);
-  texture(TEMPEST_WEAKPOINT_ART);
-  Object.values(STAGE3_ENEMY_ART).forEach(texture);
-  Object.values(STAGE3_EMISSIVE_ART).forEach(texture);
-  STORMBREAKER_BOSS_ART.forEach(texture); PARALLAX_BOSS_ART.forEach(texture); texture(MIRAGE_HELPER_ART); Object.values(STAGE4_VFX_ART).forEach(texture);
-  return { texture, soloArena, mirageSky, magneticStorm, stormbreakerSky, engineFlame, phantomBeam, effect: (key: VisualKey) => key === "bigbang_missile" ? bigbang : texture(VFX_VISUALS[key]), destroy: () => { frames.forEach(t => t.destroy(false)); frames.clear(); } };
+  return { texture, soloArena, mirageSky, magneticStorm, stormbreakerSky, engineFlame:generated.texture('shared_flame')??engineFlame, phantomBeam:generated.texture('focus_laser')??phantomBeam, generated:(id:string)=>generated.texture(id), effect: (key: VisualKey) => generated.texture(generatedEffectId(key)) ?? (key === "bigbang_missile" ? bigbang : texture(VFX_VISUALS[key])), destroy: () => { frames.forEach(t => t.destroy(false)); frames.clear(); generated.destroy(); } };
 }
 export type AirCombatAssets = Awaited<ReturnType<typeof loadAirCombatAssets>>;

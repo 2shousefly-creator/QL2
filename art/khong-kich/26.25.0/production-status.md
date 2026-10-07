@@ -1,67 +1,13 @@
-# Không Kích 26.25.0 — work in progress
+# Không Kích 26.25.0 — production graphics
 
-This directory is authoring material, not a completed release. No game integration,
-Spine export or release announcement has been made. Do not publish this branch as
-26.25.0 until the entire graphics scope is complete.
+The implementation uses PixiJS 8.20.0 with layered generated raster art. No external animation editor or runtime is required by development, build or deployment.
 
-Base: `2aaef5a156faa107b2dc563fa2dd0f78657007a6`, fetched from `origin/main`
-on 2026-10-07. Work branch: `codex/khong-kich-26.25.0`.
+133 individually generated transparent source images are preserved with their reference metadata. The committed runtime contains 16 atlas pages (at most 2048 pixels per edge), 45 aircraft/skill portraits, exact UV metadata and 14 raster compatibility pages for the older Canvas/specialized consumers. The inventory covers nine aircraft, 36 active skills, nine ammunition sets, 57 ordinary/elite enemy IDs, four stage-specific bosses, two helpers and 16 shared effects. The 58th EnemyType is the stage-dependent `boss` ID. Nine passive icons and 126 distinct rank illustrations are retained and indexed individually.
 
-## Saved work
+The renderer bends the generated core/port/starboard layers using MeshPlane geometry, fixed seams and authored keyframe envelopes. Painted light layers supply local highlights, with a bounded boss shader at high detail. Existing entity transforms, timers, events and particle pools provide launch, sustain, impact and termination. Boss death events can separate the generated layers. This is a Pixi mesh implementation, not an exported skeletal project. Source images and generated layers are raster paintings; specialized pre-existing painted textures remain for precise strips, marks and rank feedback.
 
-Nine individually generated aircraft body PNG sources, made with the built-in
-`image_gen` tool using the current repository artwork as identity references.
-Each image is a neutral nose-up pose. These are source images, not layered rigs,
-runtime atlases, completed skill effects or proof of in-game appearance.
-See `graphics-manifest.json` and `generation-prompts.md`.
+PvE, Solo opponents and stage-4 aircraft mirrors share the registry with independent presentation pools. World state determines stage/owner bundles before rendering. Canvas uses the same generated flat poses. The pause menu exposes low/medium/high graphics; reduced-motion and low detail suppress decorative motion. Player chassis anchors remain stable, while side mechanisms carry recoil. Gameplay code, collision radii, damage, ranks, resource costs, save formats and keys are unchanged.
 
-The original source PNGs are preserved without cropping or rasterizing old vectors.
-They still need production preparation, attachment separation, coordinates and
-integration. No runtime assets are claimed complete in the manifest.
+Authoring entry points live under `scripts/air-combat/`. `art-inputs.json` is the 26.24.1 configuration/UV snapshot used to preserve old coordinates; it is not live game configuration. Pack assets with `build-pixi-art.py`, then `build-raster-compat.py`; update the inventory with `write-graphics-manifest.py`. These commands prepare committed pixels and metadata and never run a battle. Do not regenerate the snapshot against already-rebound 26.25.0 frames.
 
-## Actual Spine blocker
-
-The installed official executable is `SpineTrial.com`. Its `--version` output was:
-
-```text
-Spine Launcher 4.3.08 Trial
-Starting: Spine 4.3.26 Trial
-Spine 4.3.26 Trial
-```
-
-The Trial cannot save projects, pack textures or export animation data.
-The additional installation reported by the user is labelled Spine Pro 3.8.75
-crack; it was not executed and does not establish the licensed Professional
-workflow required for this release. No license, activation code or personal
-installer path is stored here.
-
-A legitimate Professional Editor with export support is required. Confirm its
-actual version and a matching official `@esotericsoftware/spine-pixi-v8` release
-before installing or pinning the runtime. Never relabel a 3.8 skeleton as 4.2/4.3.
-No runtime package has been installed and no skeleton/project/export is fabricated.
-
-References:
-- https://esotericsoftware.com/spine-download
-- https://esotericsoftware.com/spine-pixi
-
-## Remaining production scope
-
-All source preparation and in-game integration remain: nine aircraft bodies,
-36 active skills and their actual rank/state variants, nine passives, nine basic
-ammunition sets, 126 upgrade illustrations, 58 enemy types, stage-specific bosses
-and helpers. Four principal bosses and every active skill require actual Spine
-animation. Preserve the 26.24.1 artwork/icons and all gameplay while integrating.
-
-Read the current runtime, ranks, event lifecycles and stage registries before
-authoring those assets. The inventory in the manifest is an ID inventory, not a
-claim that the missing animation states or helper variants are covered.
-
-No gameplay, save data, balance, dependency, workflow or release archive changed.
-No tests, QA, simulations, browser checks, lint, typecheck, verification scripts
-or benchmarks were run. `npm run build:web` has not been run for a completed
-26.25.0 implementation because that implementation is blocked and incomplete.
-No push, main merge or new deployment was performed.
-
-Continue on this branch when the Editor prerequisite is available. Finish the
-whole scope, run only `npm run build:web`, then publish and follow the deployment
-for the actual new main SHA. Keep the user's execution prompt outside Git.
+Release validation is restricted to `npm run build:web`. No tests, QA, simulations, browser checks, lint/typecheck or benchmarks are part of this change. The GitHub Actions run for the pushed main commit is the authoritative deployment record. Asset generation is an offline authoring step, never a runtime/CI AI request. The user's execution prompt is not included in the repository.

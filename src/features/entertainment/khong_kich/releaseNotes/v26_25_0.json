@@ -1,0 +1,624 @@
+{
+  "version": "26.25.0",
+  "releaseDate": "08/10/2026",
+  "title": "Nâng Cấp Đồ Họa Toàn Diện",
+  "displayTitle": "KHÔNG KÍCH 26.25.0 — DIỆN MẠO MỚI · CHUYỂN ĐỘNG · HIỆU ỨNG",
+  "summary": "Nâng cấp hình ảnh quái, Tinh Anh và Boss trên cả bốn màn; làm mới hoạt ảnh và hiệu ứng kỹ năng của toàn bộ chiến cơ. Đạn, ánh sáng, dấu hiệu chiến đấu và hình minh họa được đồng bộ để trận không chiến sống động, rõ ràng hơn.",
+  "sections": [
+    {
+      "id": "enemy-art",
+      "title": "CHIẾN TRƯỜNG · QUÁI VÀ TINH ANH",
+      "icon": {
+        "kind": "enemy",
+        "id": "elite"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "leviathan-enemies",
+          "icon": {
+            "kind": "enemy",
+            "id": "iron_fortress"
+          },
+          "title": "Phòng Tuyến Leviathan",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Làm mới hình ảnh các loại chiến cơ địch với lớp giáp, cụm vũ khí và động cơ rõ hơn. Quái có vai trò khác nhau được phân biệt bằng hình dáng và trang bị."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Trau chuốt hiệu ứng khai hỏa, trúng đạn và bị hạ gục; giữ vùng nguy hiểm và đường đạn dễ quan sát."
+            }
+          ]
+        },
+        {
+          "id": "magnetic-enemies",
+          "icon": {
+            "kind": "enemy",
+            "id": "prism_sovereign"
+          },
+          "title": "Bão Từ",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Nâng cấp hình ảnh đội hình quỹ đạo, lăng kính, máy rải mìn và tàu mẹ bầy đàn; Tinh Anh có diện mạo riêng và các bộ phận chuyển động rõ hơn."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Đồng bộ hình ảnh drone, vệ tinh, mìn và hiệu ứng từ trường với đội hình mới."
+            }
+          ]
+        },
+        {
+          "id": "stormbreaker-enemies",
+          "icon": {
+            "kind": "enemy",
+            "id": "thunder_bastion"
+          },
+          "title": "Tâm Bão Lôi Điện",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Làm mới giáp, cuộn điện và nguồn năng lượng của các đơn vị lôi điện; phân biệt rõ vai trò của từng loại quái và Tinh Anh."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Các nhịp tích điện, khai hỏa và vỡ lõi được thể hiện rõ ràng hơn; dấu báo trước vẫn giữ đúng thời điểm tác động."
+            }
+          ]
+        },
+        {
+          "id": "mirage-enemies",
+          "icon": {
+            "kind": "enemy",
+            "id": "glass_monarch"
+          },
+          "title": "Ảo Cảnh Phân Mảnh",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Nâng cấp hình ảnh các đơn vị ảo ảnh, cấu trúc phân mảnh và chiến cơ phản chiếu; trau chuốt chuyển động xuất hiện, tấn công và tan biến."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Giữ rõ các dấu hiệu phân biệt thật – giả vốn có trong cơ chế của màn chơi."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "boss-animation",
+      "title": "BOSS · HOẠT ẢNH CHIẾN ĐẤU",
+      "icon": {
+        "kind": "boss",
+        "id": "boss_stage1"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "leviathan-animation",
+          "icon": {
+            "kind": "boss",
+            "id": "boss_stage1"
+          },
+          "title": "Leviathan",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Pháo đài bay có hình ảnh chi tiết hơn cùng các tầng giáp, cụm pháo và cửa phóng chuyển động khi chuẩn bị tấn công."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Bổ sung chuyển động đồng bộ cho quá trình xuất hiện, khai hỏa, chuyển trạng thái và bị hạ gục."
+            }
+          ]
+        },
+        {
+          "id": "tempest-animation",
+          "icon": {
+            "kind": "boss",
+            "id": "boss_stage2"
+          },
+          "title": "Tempest Crown",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Lõi vương miện và các tầng cấu trúc từ trường chuyển động rõ nét hơn khi tích lực và giải phóng hỏa lực."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Vệ tinh và điểm yếu có hình ảnh đồng bộ, giữ dấu hiệu cần thiết để theo dõi trận đấu."
+            }
+          ]
+        },
+        {
+          "id": "stormbreaker-animation",
+          "icon": {
+            "kind": "boss",
+            "id": "boss_stage3"
+          },
+          "title": "STORMBREAKER Ω",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Nâng cấp giáp, cuộn điện và lõi của Boss; thể hiện rõ quá trình tích điện, xả điện và chuyển giai đoạn."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Trau chuốt hiệu ứng chịu đòn và sụp đổ, kết hợp ánh sáng lôi điện với các mảnh giáp."
+            }
+          ]
+        },
+        {
+          "id": "parallax-animation",
+          "icon": {
+            "kind": "boss",
+            "id": "boss_stage4"
+          },
+          "title": "PARALLAX ZERO",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Các mảnh vỏ và lõi của Boss tách, hợp và chuyển động theo từng trạng thái chiến đấu."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Làm mới hiệu ứng chuyển giai đoạn, ảo ảnh và tan vỡ; giữ nguyên các dấu hiệu nhận biết của cơ chế thật – giả."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "aircraft-vfx",
+      "title": "CHIẾN CƠ · KỸ NĂNG VÀ NỘI TẠI",
+      "icon": {
+        "kind": "aircraft",
+        "id": "riptide"
+      },
+      "intro": [
+        {
+          "format": "paragraph",
+          "changeType": "change",
+          "text": "Toàn bộ chiến cơ được trau chuốt hình ảnh, bắn thường, nội tại và bốn kỹ năng. Chuyển động bám đúng thời điểm kích hoạt, tác động và kết thúc."
+        }
+      ],
+      "entries": [
+        {
+          "id": "viper-vfx",
+          "icon": {
+            "kind": "aircraft",
+            "id": "black_eagle"
+          },
+          "title": "Viper",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Mồi Bẫy có chuyển động triển khai và hiệu ứng hấp thụ hỏa lực rõ hơn."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Điên Cuồng làm nổi bật cụm súng đang hoạt động; đạn nảy và đạn Bắn Bồi có vệt bay, điểm trúng riêng."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Khóa Săn Mồi bám rõ mục tiêu; tên lửa vi mô và Mưa Tên Lửa có thân đạn, động cơ, khói và vụ nổ được trau chuốt."
+            }
+          ]
+        },
+        {
+          "id": "titan-vfx",
+          "icon": {
+            "kind": "aircraft",
+            "id": "breaker"
+          },
+          "title": "Titan",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Khiên Năng Lượng có cấu trúc phát trường lực và phản ứng khi chịu đòn; phân biệt rõ với hiệu ứng tăng Giáp sau khi Khiên kết thúc."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "BigBang có chuyển động triển khai, hạ xuống và nổ mạnh mẽ hơn, giữ đúng nhịp báo trước của kỹ năng."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Neo Trọng Lực có chuyển động mở và co sụp; Oanh Tạc làm nổi bật giàn pháo cùng các nhịp khai hỏa."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Đạn Hợp Kim và hiệu ứng trúng đích thể hiện rõ chất liệu nặng của Titan."
+            }
+          ]
+        },
+        {
+          "id": "phantom-vfx",
+          "icon": {
+            "kind": "aircraft",
+            "id": "phantom"
+          },
+          "title": "Phantom",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Phân Ảnh có quá trình chuyển trạng thái và hình ảnh phân thân được nâng cấp."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Laser Hủy Diệt thể hiện rõ cụm phát, nhịp tích điện, tia laser và điểm tác động; Sóng Nhiễu có biên quét và dấu nhiễu rõ hơn."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "HawkEye có chuyển động xuất hiện, triển khai vũ khí, khai hỏa và thu hồi; Pin Dự Phòng có tín hiệu hoạt động đồng bộ với trạng thái thực tế."
+            }
+          ]
+        },
+        {
+          "id": "astra-vfx",
+          "icon": {
+            "kind": "aircraft",
+            "id": "astra"
+          },
+          "title": "Astra",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Giữ diện mạo giáp bạc và năng lượng tinh tú màu cam; đồng bộ đạn, Ấn Tinh Tú và hiệu ứng kỹ năng với hình chiến cơ mới."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Phản Quỹ Đạo có chuyển động mở và hội tụ; Thương Tinh Tú được hình thành từ các lớp năng lượng rõ nét."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Song Tinh chuyển động và phản chiếu hỏa lực rõ hơn; Sao Rơi có vật thể, vệt sáng và hiệu ứng va chạm được trau chuốt."
+            }
+          ]
+        },
+        {
+          "id": "cinder-vfx",
+          "icon": {
+            "kind": "aircraft",
+            "id": "cinder"
+          },
+          "title": "Cinder",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Khiên Lửa có lớp lửa chuyển động theo thân, giữ màu Hỏa thống nhất và đường viền rõ."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Rải Nhiên Liệu và Quầng Nhiệt có hình thể lửa, nhiên liệu và vùng cháy chi tiết hơn."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Hỏa Quang Hủy Diệt có chuyển động triển khai cụm phát, tích lực và khai hỏa nổi bật; hiệu ứng Cháy trên mục tiêu được đồng bộ."
+            }
+          ]
+        },
+        {
+          "id": "riptide-vfx",
+          "icon": {
+            "kind": "aircraft",
+            "id": "riptide"
+          },
+          "title": "Riptide",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Mạch Nguồn tạo các dòng nước hồi phục quanh thân; đạn thường và Dư Ba có vệt nước, bọt và điểm vỡ rõ hơn."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Hai lưỡi Song Nhận Thủy Triều uốn và chém theo từng lượt; Hội Thủy có dòng nước cuộn hút, co lại rồi bùng nổ theo chiến cơ."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Thủy Thể có lớp nước chuyển động liên tục quanh thân và chuyển ngay sang vụ nước vỡ khi kết thúc hợp lệ."
+            }
+          ]
+        },
+        {
+          "id": "argent-vfx",
+          "icon": {
+            "kind": "aircraft",
+            "id": "argent"
+          },
+          "title": "Argent",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Nâng độ rõ của bề mặt kim loại, cạnh kiếm và ánh vàng kim; giữ thân chiến cơ ổn định khi đổi hướng điều khiển."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Đạn thường hình mũi kiếm có ánh sáng và vệt bay. Phiến Kim hiện đầy đủ hình thể, giữ vị trí và xoay đầu về Argent trong thời gian chờ."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Thế Đỡ thể hiện các nhịp đỡ; Phóng Nhận và Thu Nhận có chuyển động triển khai, thu kiếm, đường sáng và điểm trúng rõ hơn."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Năm kiếm trong Thiên La Kiếm Trận có chuyển động mở, ngắm mục tiêu và phóng Phiến đồng thời theo nhịp khai hỏa."
+            }
+          ]
+        },
+        {
+          "id": "sylva-vfx",
+          "icon": {
+            "kind": "aircraft",
+            "id": "sylva"
+          },
+          "title": "Sylva",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Cộng Sinh có lá, rễ và mô sinh lực chuyển động quanh thân; giữ thanh Máu xám để theo dõi Sinh Lực Tích Trữ."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Nổ Axit có tên lửa hóa học, vụ nổ, đầu lâu bay lên và vùng axit chuyển động; Ký Sinh có mầm và rễ bám rõ trên mục tiêu."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Mầm Diệt Sinh xuất hiện nổi bật, phát triển thành đại thụ gai rồi bùng nổ. Hiệu ứng chuyển trạng thái đúng lúc mầm kết liễu sớm hoặc biến mất."
+            }
+          ]
+        },
+        {
+          "id": "terra-vfx",
+          "icon": {
+            "kind": "aircraft",
+            "id": "terra"
+          },
+          "title": "Terra",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Nham Giáp Phản Kích có các tầng giáp chịu lực, hao hụt và phục hồi theo trạng thái; Mảnh Nham có đường bay và điểm trúng riêng."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Pháo Địa Chấn thể hiện Khiên ngay khi kích hoạt, quá trình nén pháo và phát bắn với dải giữa rõ nét."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Hai khối địa tầng của Kẹp Sơn dựng lên rồi ép vào trục giữa; dấu Rạn Địa được thể hiện rõ trên mục tiêu."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Cường Hóa Địa Tâm mở lõi và làm sáng các khe nứt hổ phách; chuyển động giáp và hiệu ứng hồi phục duy trì theo thời gian kỹ năng."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "combat-readability",
+      "title": "HIỆU ỨNG · ĐƯỜNG ĐẠN VÀ ÁNH SÁNG",
+      "icon": {
+        "kind": "system",
+        "id": "projectile"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "projectile-light",
+          "icon": {
+            "kind": "system",
+            "id": "projectile"
+          },
+          "title": "Đạn và vệt bay",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Làm mới đầu đạn, ánh sáng, vệt bay, động cơ tên lửa và hiệu ứng va chạm theo nhận diện của từng chiến cơ."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Đạn phụ, đạn phản chiếu và các hiệu ứng phát sinh giữ hình ảnh thống nhất với nguồn tạo ra chúng."
+            }
+          ]
+        },
+        {
+          "id": "effects-readability",
+          "icon": {
+            "kind": "system",
+            "id": "vfx"
+          },
+          "title": "Độ rõ của trận đấu",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Phân bố ánh sáng ở lõi và cạnh hiệu ứng để làm nổi bật kỹ năng, đồng thời giữ đạn địch và vùng nguy hiểm dễ nhìn."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Trau chuốt dấu trên mục tiêu, hồi phục, chịu đòn và kết thúc trạng thái; giảm hiệu ứng trang trí che khuất thông tin chiến đấu."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ui-art",
+      "title": "GIAO DIỆN · HÌNH MINH HỌA",
+      "icon": {
+        "kind": "system",
+        "id": "ui"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "skill-illustrations",
+          "icon": {
+            "kind": "skill",
+            "id": "terra_seismic_cannon"
+          },
+          "title": "Kỹ năng và nâng cấp",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Đồng bộ hình minh họa kỹ năng, nội tại và từng nâng cấp với chất liệu, màu sắc và hiệu ứng chiến đấu mới."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Giữ tên kỹ năng, font chữ và nội dung thông số rõ ràng; mỗi nâng cấp có hình minh họa phù hợp."
+            }
+          ]
+        },
+        {
+          "id": "aircraft-previews",
+          "icon": {
+            "kind": "aircraft",
+            "id": "astra"
+          },
+          "title": "Hình ảnh chiến cơ",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Đồng bộ hình chiến cơ trên màn chọn, HUD, tooltip và kết quả trận với diện mạo trong chiến đấu."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Giữ vùng preview và khung thông tin ổn định, tránh co giãn hoặc nhảy vị trí khi đổi chiến cơ và trạng thái hoạt ảnh."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "display-options",
+      "title": "HIỂN THỊ · CHẤT LƯỢNG ĐỒ HỌA",
+      "icon": {
+        "kind": "system",
+        "id": "motion"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "visual-quality",
+          "icon": {
+            "kind": "system",
+            "id": "motion"
+          },
+          "title": "Chất lượng hiệu ứng",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Các mức Thấp, Trung bình và Cao điều chỉnh chi tiết hoạt ảnh, hạt và lớp ánh sáng; mọi mức đều giữ hình ảnh mới và các dấu hiệu chiến đấu quan trọng."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Chế độ giảm chuyển động hạn chế rung, lóe sáng mạnh và dao động trang trí mà vẫn giữ báo trước và hướng tác động của kỹ năng."
+            }
+          ]
+        },
+        {
+          "id": "mode-consistency",
+          "icon": {
+            "kind": "aircraft",
+            "id": "argent"
+          },
+          "title": "Đồng bộ các chế độ",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Áp dụng hình ảnh mới trong PvE, Solo 1v1 và các chiến cơ phản chiếu của Ảo Cảnh Phân Mảnh."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Giữ rõ chủ thể của hiệu ứng, đồng bộ các trạng thái xuất hiện, kết thúc và tan biến giữa các chế độ."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,3 +1,5 @@
+import { combatGraphicsQuality } from '../airCombatGraphics';
+import { loadGeneratedCanvas } from '../airCombatGeneratedArt';
 import { CanvasCombatAccents } from "../CanvasCombatAccents";
 import { StormbreakerPresentation } from "../airCombatStormbreakerVisuals";
 import React from "react";
@@ -11,9 +13,9 @@ export const AirCombatPixiStage = React.forwardRef<HTMLDivElement, React.HTMLAtt
   },
 );
 
-export async function createLegacyPresentation(host: HTMLDivElement, stageId = 1): Promise<AirCombatPresentation> {
+export async function createLegacyPresentation(host: HTMLDivElement, stageId = 1, world?:CombatWorld): Promise<AirCombatPresentation> {
   const { drawLegacyWorld, loadSoloCanvasAssets, loadMirageCanvasAssets, loadStormbreakerCanvasAssets, loadMagneticCanvasAssets, loadAstraCanvasAssets } = await import("../AirCombatLegacyRenderer");
-  await Promise.all([loadAstraCanvasAssets(),...(stageId===0?[loadSoloCanvasAssets(),loadMirageCanvasAssets()]:[]),...(stageId===2?[loadMagneticCanvasAssets()]:stageId===3?[loadStormbreakerCanvasAssets()]:stageId===4?[loadMirageCanvasAssets()]:[])]);
+  await Promise.all([loadGeneratedCanvas(world),loadAstraCanvasAssets(),...(stageId===0?[loadSoloCanvasAssets(),loadMirageCanvasAssets()]:[]),...(stageId===2?[loadMagneticCanvasAssets()]:stageId===3?[loadStormbreakerCanvasAssets()]:stageId===4?[loadMirageCanvasAssets()]:[])]);
   let magneticEndAge = 0;
   let renderedWorld: CombatWorld | undefined;
   const canvas = document.createElement("canvas");
@@ -30,6 +32,7 @@ export async function createLegacyPresentation(host: HTMLDivElement, stageId = 1
   return {
     render(world, delta, reducedMotion) {
       if (document.hidden) return;
+      reducedMotion=reducedMotion||combatGraphicsQuality()==='low';
       if (renderedWorld !== world) { renderedWorld = world; healthBars.clear(); magneticEndAge = 0; }
       context.setTransform(ratio, 0, 0, ratio, 0, 0);
       damageLabels.update(world, delta);

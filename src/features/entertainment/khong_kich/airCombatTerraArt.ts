@@ -15,6 +15,7 @@ export const TERRA_SOURCES={terraAircraft:aircraft,terraEmissive:emissive,terraP
 const frame=(atlas:AtlasFrame['atlas'],i:number,rows:number):AtlasFrame=>({atlas,rect:[i%4/4,Math.floor(i/4)/rows,.25,1/rows]});
 const frames=<N extends string>(atlas:AtlasFrame['atlas'],rows:number,names:readonly N[])=>Object.fromEntries(names.map((name,i)=>[`terra_${name}`,frame(atlas,i,rows)])) as Record<`terra_${N}`,AtlasFrame>;
 export const TERRA_FRAMES={
+ terra_mechanism:{atlas:'generated',generated:'terra_seismic_cannon',rect:[0,0,1,1]},
  terra_body:{atlas:'terraAircraft',rect:[0,0,1,1]},terra_emissive:{atlas:'terraEmissive',rect:[0,0,1,1]},terra_portrait:{atlas:'terraPortrait',rect:[0,0,1,1]},
  ...frames('terraArmor',4,['basic_ammo','muzzle','trail','impact','armor','armorHit','armorCrack','regenerate','shard','shardTrail','shardImpact','armorDissolve','pressure0','pressure1','pressure2','pressure3']),
  ...frames('terraCannon',3,['charge','chargeReady','shield','cannon','cannonCenter','leftWave','rightWave','cannonImpact','stun','knockback','shieldHit','shieldEnd']),
@@ -36,7 +37,7 @@ export function paintTerra(w:CombatWorld,paint:Painter,reduced:boolean){
   const p=s.pressure/Math.max(1,terraPressureCap(w));if(p>0)draw('pressure'+(p>=1?3:p>=.75?2:p>=.5?1:0),w.playerX,w.playerY,20,22,0,.6+p*.3,true);
   if(s.armor){const fraction=s.armor.reserve/s.armor.initial;draw(fraction<.3?'armorCrack':'armor',w.playerX,w.playerY,72,76,0,.45+.55*fraction);}
   const shield=w.aircraft.coreState.shields.terraSeismic;if(shield&&shield.amount>0&&shield.until>w.aircraft.coreState.time)draw('shield',w.playerX,w.playerY,78,88,0,.5);
-  if(s.cannon){const c=s.cannon,p=Math.max(0,Math.min(1,now-c.at));draw(p<.65?'charge':'chargeReady',w.playerX,w.playerY-18,50+p*15,50+p*15,0,.65+p*.35,true);draw('cannon',w.playerX,w.playerY-150,160/.8125,300/.8125,0,.1);draw('cannonCenter',w.playerX,w.playerY-150,terraValues(TERRA_SKILLS[1],c.rank).centerWidth/.8125,300/.8125,0,.12+p*.10);if(c.rank>=5&&c.spent>=c.cap*.75)draw('stun',w.playerX,w.playerY-43,27,27,0,.8);}
+  if(s.cannon){draw('mechanism',w.playerX,w.playerY-15,66,80,0,.95);const c=s.cannon,p=Math.max(0,Math.min(1,now-c.at));draw(p<.65?'charge':'chargeReady',w.playerX,w.playerY-18,50+p*15,50+p*15,0,.65+p*.35,true);draw('cannon',w.playerX,w.playerY-150,160/.8125,300/.8125,0,.1);draw('cannonCenter',w.playerX,w.playerY-150,terraValues(TERRA_SKILLS[1],c.rank).centerWidth/.8125,300/.8125,0,.12+p*.10);if(c.rank>=5&&c.spent>=c.cap*.75)draw('stun',w.playerX,w.playerY-43,27,27,0,.8);}
   if(s.ultimate){draw('coreCracks',w.playerX,w.playerY,64,68,0,.65,true);draw('coreField',w.playerX,w.playerY,94,100,0,.3);if(s.ultimate.rank>=2)draw('resistance',w.playerX-27,w.playerY+12,22);if(s.ultimate.rank>=3)draw('capture',w.playerX+27,w.playerY+12,22);}
  }
  if(s.clamp){const c=s.clamp,p=Math.max(0,Math.min(1,(now-c.at-.5)/.5)),distance=145*(1-p);draw('telegraph',c.x,c.y,320,320,0,.27);draw('strataLeft',c.x-distance,c.y,70,300,0,.7);draw('strataRight',c.x+distance,c.y,70,300,0,.7);if(c.rank>=2&&!reduced)draw('crush',c.x,c.y,65,160,0,p*.3);}

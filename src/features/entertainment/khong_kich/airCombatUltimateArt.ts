@@ -1,4 +1,4 @@
-import atlas from "../../../assets/khong-kich/v2/ultimate-vfx-atlas.svg";
+import atlas from "../../../assets/khong-kich/26.25.0/compat/v2-ultimate-vfx-atlas.png";
 import type { AtlasFrame } from "./pixi/airCombatPixiTypes";
 import type { CombatWorld, ProjectileEntity } from "./airCombatRuntime";
 import { skillRank } from "./airCombatSkillRanks";
