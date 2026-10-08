@@ -1,3 +1,5 @@
+import { paintBalanceGuides, paintAircraftDamageSmoke } from './airCombatBalanceVisuals';
+import { phantomLaserBounds, PHANTOM_LASER_VISUAL_WIDTH } from './airCombatPhantom';
 import { terraHud } from './airCombatTerraRuntime';
 import { pressureBarText } from './airCombatFeedback';
 import { paintGeneratedMechanisms } from './airCombatGeneratedMechanisms';
@@ -608,7 +610,8 @@ export function drawLegacyWorld(
   } else if (world.laserRemaining > 0) {
     if (!phantomBeamImage) { phantomBeamImage = new Image(); phantomBeamImage.src = phantomBeamUrl; }
     const pulse = reducedMotion ? 0 : Math.sin(world.elapsed * 22) * 1.5;
-    const width = 44 + pulse, top = GAMEPLAY_SAFE_RECT.top, bottom = world.playerY - 18 * playerAirframeScale(world.aircraft);
+    const beam=phantomLaserBounds(world.playerX,world.playerY);
+    const width = PHANTOM_LASER_VISUAL_WIDTH + pulse, top = beam.top, bottom = beam.bottom;
     ctx.save();
     ctx.globalCompositeOperation = "lighter";
     if (phantomBeamImage.complete && phantomBeamImage.naturalWidth > 0) {
@@ -686,6 +689,15 @@ export function drawLegacyWorld(
   paintArgent(world,(_id,key,x,y,width,height,rotation,alpha,additive)=>{ctx.save();ctx.globalCompositeOperation=additive?'lighter':'source-over';drawMagneticFrame(ctx,ARGENT_FRAMES[key],x,y,width,height,rotation,alpha);ctx.restore();},reducedMotion);
   ctx.restore();
   paintTerra(world,(_id,key,x,y,width,height,rotation,alpha,additive)=>{ctx.save();ctx.globalCompositeOperation=additive?'lighter':'source-over';drawMagneticFrame(ctx,TERRA_FRAMES[key],x,y,width,height,rotation,alpha);ctx.restore();},reducedMotion);
+  ctx.save();ctx.beginPath();ctx.rect(GAMEPLAY_SAFE_RECT.left,GAMEPLAY_SAFE_RECT.top,GAMEPLAY_SAFE_RECT.width,GAMEPLAY_SAFE_RECT.height);ctx.clip();
+  paintBalanceGuides(world,{
+    rect:(x,y,width,height,color,alpha)=>{ctx.fillStyle='#'+color.toString(16).padStart(6,'0');ctx.globalAlpha=alpha;ctx.fillRect(x,y,width,height);},
+    line:(x,y,ex,ey,color,alpha,width)=>{ctx.strokeStyle='#'+color.toString(16).padStart(6,'0');ctx.globalAlpha=alpha;ctx.lineWidth=width;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(ex,ey);ctx.stroke();},
+    circle:(x,y,radius,color,alpha,width)=>{ctx.strokeStyle='#'+color.toString(16).padStart(6,'0');ctx.globalAlpha=alpha;ctx.lineWidth=width;ctx.beginPath();ctx.arc(x,y,radius,0,Math.PI*2);ctx.stroke();}
+  },reducedMotion);ctx.restore();
+  paintAircraftDamageSmoke(world,reducedMotion,(_id,x,y,size,rotation,alpha)=>{
+    drawMagneticFrame(ctx,{atlas:'vfx',rect:[.25,.5,.25,.25]},x,y,size,size,rotation,alpha);
+  });
   paintSylva(world,(_id,key,x,y,width,height,rotation,alpha,additive)=>{ctx.save();ctx.globalCompositeOperation=additive?'lighter':'source-over';drawMagneticFrame(ctx,SYLVA_FRAMES[key],x,y,width,height,rotation,alpha);ctx.restore();},reducedMotion);
   paintRiptide(world,(_id,key,x,y,width,height,rotation,alpha,additive)=>{ctx.save();ctx.globalCompositeOperation=additive?'lighter':'source-over';drawMagneticFrame(ctx,RIPTIDE_FRAMES[key],x,y,width,height,rotation,alpha);ctx.restore();},reducedMotion);
   paintCinder(world,(_id,key,x,y,width,height,rotation,alpha)=>drawMagneticFrame(ctx,CINDER_FRAMES[key],x,y,width,height,rotation,alpha),reducedMotion,(_id,text,x,y)=>{ctx.save();ctx.translate(x,y);if(world.mirrorContext)ctx.rotate(Math.PI);ctx.font='bold '+CINDER_STACK_FONT_SIZE+'px sans-serif';ctx.lineWidth=1.2;ctx.strokeStyle='#1c2026';ctx.fillStyle='#fff1af';ctx.strokeText(text,0,0);ctx.fillText(text,0,0);ctx.restore();},{

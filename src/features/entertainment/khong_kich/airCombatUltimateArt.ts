@@ -32,9 +32,9 @@ export function paintUltimates(w:CombatWorld,draw:UltimatePainter,reduced:boolea
   const key=ultimateProjectileVisual(p);if(!key)continue;
   const missile=key==="ultimateViperMissile",titan=key==="ultimateTitanShell";
   const angle=missile?getMissilePose(p,reduced).heading+Math.PI/2:Math.atan2(p.vy,p.vx)+Math.PI/2;
-  const dx=Math.sin(angle),dy=-Math.cos(angle),width=missile?VIPER_ULTIMATE_SIZE.width:titan?12:11,height=missile?VIPER_ULTIMATE_SIZE.height:titan?30:26,id=p.id*8;
+  const dx=Math.sin(angle),dy=-Math.cos(angle),width=missile?VIPER_ULTIMATE_SIZE.width:titan?12:11*.8,height=missile?VIPER_ULTIMATE_SIZE.height:titan?30:26*.8,id=p.id*8;
   const trail:UltimateVisualKey=missile?"ultimateViperExhaust":titan?"ultimateTitanTrail":"ultimateHawkEngine";
-  const length=missile?(p.missileState==="powered"?48:20):titan?38:27;
+  const length=missile?(p.missileState==="powered"?48:20):titan?38:27*.8;
   // Missile wake is world-space shared history; this dedicated pool owns its body.
   if(!missile)draw(id+1,trail,p.x-dx*height*.65,p.y-dy*height*.65,width,length*(reduced?.85:1.3),angle,.95);
   draw(id+3,key,p.x,p.y,width*1.65,height*1.2,angle,reduced?.22:.34,true);

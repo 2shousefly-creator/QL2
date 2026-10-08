@@ -302,7 +302,7 @@ function perceive(w:CombatWorld,ai:MirrorAI,p:Point,actor:CombatWorld) {
   if(beam){const x=beam.fired?beam.x:w.playerX,y=beam.fired?beam.y:w.playerY-20;hazards.push({kind:'beam',x,y,end:{x,y:R.top},radius:cinderValues('cinder_inferno_beam',beam.rank).width/2,cc:false,startsAt:beam.fire,endsAt:beam.until});}
   for(const lane of cinder.lanes)hazards.push({kind:'beam',x:lane.x,y:lane.y,end:{x:lane.x,y:R.top},radius:cinderValues('cinder_inferno_beam',lane.rank).width/2,cc:false,startsAt:lane.at,endsAt:lane.until});
   if(cinder.wave){const wave=cinder.wave,travel=Math.hypot(p.x-wave.x,p.y-wave.y)/cinderWaveRadius(wave.x,wave.y)*.8;hazards.push({kind:'aoe',x:p.x,y:p.y,radius:20,cc:true,startsAt:wave.at+travel,endsAt:wave.at+travel+.05});}
-  if(w.laserCharge>0||w.laserRemaining>0)hazards.push({kind:"beam",x:w.playerX,y:w.playerY,end:{x:w.playerX,y:R.top},radius:16,cc:false,startsAt:w.elapsed+w.laserCharge,endsAt:w.elapsed+w.laserCharge+w.laserRemaining});
+  if(w.laserCharge>0||w.laserRemaining>0)hazards.push({kind:"beam",x:w.playerX,y:w.playerY,end:{x:w.playerX,y:R.top},radius:24,cc:false,startsAt:w.elapsed+w.laserCharge,endsAt:w.elapsed+w.laserCharge+w.laserRemaining});
   if(w.rankRuntime?.anchor)hazards.push({kind:"persistent_zone",x:w.rankRuntime.anchor.x,y:w.rankRuntime.anchor.y,radius:gravityAnchorValues(w.rankRuntime.anchor.rank).radius,cc:true,startsAt:w.elapsed,endsAt:w.rankRuntime.anchor.until});
   for(const burn of (w.astra?.burns??[]).slice(0,4))hazards.push({kind:"persistent_zone",x:burn.x,y:burn.y,radius:burn.radius,cc:false,startsAt:w.elapsed,endsAt:burn.until});
   if(w.bigBang&&!w.bigBang.resolved)hazards.push({kind:"full_screen",x:p.x,y:p.y,radius:Infinity,cc:false,startsAt:w.bigBang.impactAt,endsAt:w.bigBang.impactAt+.01});

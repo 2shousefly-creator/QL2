@@ -1,3 +1,4 @@
+import { playerBasicProjectileSpeed, phantomLaserBounds, HAWKEYE_PROJECTILE_RADIUS } from './airCombatPhantom';
 import { statusExpiry, extendStatusRemaining, extendStatusExpiry } from './airCombatStatusTiming';
 import { getHealingSummary } from './airCombatHealingSummary';
 import { isTerraSkill } from './airCombatTerraConfig';
@@ -1237,7 +1238,7 @@ function fireBasic(world: CombatWorld, firedAt = world.elapsed): boolean {
     if(reappearance)recordCoreMetric(state,142,"shots",1);
     const primaryShot = { resolved: false, argentGenesisEligible: !argentArrayActive(world,firedAt) };
     let mainSpawned = false;
-    const bulletSpeed=PLAYER_BASIC_PROJECTILE_SPEED_MULTIPLIER*(hasCore(state,206)?.80:1)*(hasCore(state,111)?1440:480) * (reappearance ? 1 + V.reappearanceSpeedBonus : 1);
+    const bulletSpeed = playerBasicProjectileSpeed(state);
     const context = coreContext(world);
     dispatchCoreEvent("basic", context);
     const sweeping = (state.activeEffects.sweeping_cannon || 0) > 0;
@@ -1308,7 +1309,7 @@ function fireDrone(world: CombatWorld): void {
     const stats = getEffectiveAircraftStats(world.aircraft), ratio = getSkillRuntimeValues(world.aircraft, "escort_drone").damageMultiplier;
     const angle = Math.atan2(target.y - world.droneY, target.x - world.droneX);
     addProjectile(world, { owner: "drone", source: "skill", skillId: "escort_drone", x: world.droneX, y: world.droneY,
-        vx: Math.cos(angle) * 390, vy: Math.sin(angle) * 390, rawDamage: stats.firepower * ratio, radius: 2.8, color: "#d8b4fe" });
+        vx: Math.cos(angle) * playerBasicProjectileSpeed(world.aircraft), vy: Math.sin(angle) * playerBasicProjectileSpeed(world.aircraft), rawDamage: stats.firepower * ratio, radius: HAWKEYE_PROJECTILE_RADIUS, color: "#d8b4fe" });
 }
 function chooseEnemyTarget(world: CombatWorld, homing: boolean, attacker?:EnemyEntity): number | null {
     if(attacker && enemyAllegiance(world,attacker)==="friendly_hacked"){
@@ -4513,8 +4514,9 @@ function updateLaser(world: CombatWorld, dt: number): void {
         const extended=(skillRank(world.aircraft, "focus_laser") >= 3)&&world.laserTicksRemaining<Math.round((getSkillRuntimeValues(world.aircraft,"focus_laser").duration-(SKILL_CONFIGS.focus_laser.duration??0))/B.laserTick);
         if(extended)recordCoreMetric(world.aircraft,40,"shots",1);
         const raw = getEffectiveAircraftStats(world.aircraft).firepower * getSkillRuntimeValues(world.aircraft, "focus_laser").damageMultiplier;
+        const beam = phantomLaserBounds(world.playerX, world.playerY);
         for (const enemy of world.enemies)
-            if (isHostileToPlayer(world,enemy) && rectVsAircraft(world.playerX-16,GAMEPLAY_SAFE_RECT.top,world.playerX+16,world.playerY,getEnemyHitbox(enemy))) {
+            if (isHostileToPlayer(world,enemy) && rectVsAircraft(beam.left,beam.top,beam.right,beam.bottom,getEnemyHitbox(enemy))) {
                 const dealt=applyDamageToEnemy(world, enemy, raw, "#c4b5fd", "skill", "focus_laser", undefined, undefined, enemy.aircraftTarget ? "beam" : "area_hazard");
                 if(extended)recordCoreMetric(world.aircraft,40,"damage",dealt);
                 if(enemy.hp>0 && (skillRank(world.aircraft, "focus_laser") >= 4)){const fx=skillEnemyEffects(world,enemy.id);if((fx.armorUntil??0)<=world.elapsed)recordCoreMetric(world.aircraft,144,"targets",1);fx.armorUntil=world.elapsed+V.laserArmorDuration;}

@@ -15,10 +15,8 @@ export function paintBigBang(w: CombatWorld, draw: (id: number, key: BigBangVisu
   const b = w.bigBang;
   if (!b || w.destruction || w.aftermath) return;
   const radius = Math.hypot(Math.max(b.x-R.left,R.right-b.x),Math.max(b.y-R.top,R.bottom-b.y));
-  const age = w.elapsed - b.at;
   if (!b.resolved) {
-    const progress = Math.min(1, age / 3), diameter = 400;
-    draw(910000,'bigbang_sigil',b.x,b.y,diameter,diameter,.22 + progress * .3,false);
+    // The shared balance guide paints a clean fixed reticle and closing ring.
     if (w.elapsed >= b.fallAt) {
       const t = Math.min(1,(w.elapsed-b.fallAt)/.25), tipY = R.top - 90 + (b.y-R.top+90)*t;
       // Atlas bomb tip is near the bottom edge; align that tip, not its center.

@@ -1,3 +1,4 @@
+import { hawkEyeDuration } from './airCombatPresentation';
 import type { CombatWorld } from './airCombatRuntime';
 import type { StatusPresentation } from './airCombatPresentation';
 
@@ -31,10 +32,12 @@ export class AirCombatStatusProgress {
  }
 
  private paint(id:string,border:Border) {
-  const timer=this.timers.get(id),phase=timer?.phase??'indefinite';
+  const liveHawk = id === 'skill:escort_drone' && this.world?.aircraft.droneActive && this.world.aircraft.dronePhase !== 'returning'
+    ? hawkEyeDuration(this.world.aircraft) : null;
+  const timer=liveHawk ? {phase:Number.isFinite(liveHawk.remaining)?'active':'indefinite',remaining:liveHawk.remaining,total:liveHawk.duration} : this.timers.get(id),phase=timer?.phase??'indefinite';
   const elapsed=Math.max(0,(this.world?.elapsed??this.sampledAt)-this.sampledAt);
   const ratio=!this.timers.has(id)?0:!timer||phase==='indefinite'?1:
-   Math.max(0,Math.min(1,(timer.remaining-elapsed)/timer.total));
+   Math.max(0,Math.min(1,(timer.remaining-(liveHawk?0:elapsed))/timer.total));
   if(border.phase===phase&&border.ratio===ratio)return;
   const cooldown=phase==='cooldown',length=cooldown?1-ratio:ratio;
   border.node.setAttribute('stroke-dasharray',`${length} 1`);

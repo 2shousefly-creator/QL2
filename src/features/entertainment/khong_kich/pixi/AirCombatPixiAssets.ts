@@ -114,6 +114,6 @@ export async function loadAirCombatAssets(world?:CombatWorld) {
     frames.set(definition, result);
     return result;
   };
-  return { texture, soloArena, mirageSky, magneticStorm, stormbreakerSky, engineFlame:generated.texture('shared_flame')??engineFlame, phantomBeam:generated.texture('focus_laser')??phantomBeam, generated:(id:string)=>generated.texture(id), effect: (key: VisualKey) => generated.texture(generatedEffectId(key)) ?? (key === "bigbang_missile" ? bigbang : texture(VFX_VISUALS[key])), destroy: () => { frames.forEach(t => t.destroy(false)); frames.clear(); generated.destroy(); } };
+  return { texture, soloArena, mirageSky, magneticStorm, stormbreakerSky, engineFlame:generated.texture('shared_flame')??engineFlame, phantomBeam, generated:(id:string)=>generated.texture(id), effect: (key: VisualKey) => generated.texture(generatedEffectId(key)) ?? (key === "bigbang_missile" ? bigbang : texture(VFX_VISUALS[key])), destroy: () => { frames.forEach(t => t.destroy(false)); frames.clear(); generated.destroy(); } };
 }
 export type AirCombatAssets = Awaited<ReturnType<typeof loadAirCombatAssets>>;

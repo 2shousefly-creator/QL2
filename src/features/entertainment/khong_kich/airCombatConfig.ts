@@ -267,7 +267,7 @@ export const SKILL_CONFIGS: Record<SkillId, SkillConfig> = {
     "cost": 120,
     "cooldown": 30,
     "duration": 0,
-    "damageMultiplier": 5
+    "damageMultiplier": 6.5
   },
   "sweeping_cannon": {
     "id": "sweeping_cannon",
@@ -279,7 +279,7 @@ export const SKILL_CONFIGS: Record<SkillId, SkillConfig> = {
     "cost": 100,
     "cooldown": 70,
     "duration": 18,
-    "damageMultiplier": 0.7
+    "damageMultiplier": 0.85
   },
   "invisibility": {
     "id": "invisibility",

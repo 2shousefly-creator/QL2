@@ -1,0 +1,8 @@
+{
+  "tool": "built-in image_gen",
+  "version": "26.27.0",
+  "file": "skills-26-27-0.png",
+  "columns": 3,
+  "rows": 2,
+  "prompt": "Use case: stylized-concept. Create a production raster game skill icon atlas for Phantom, a sleek dark violet sci-fi stealth aircraft. Exactly 3 columns x 2 rows of equal square cells, seamless grid no gutters, 1536x1024 image. Each cell is a distinct highly readable detailed painted 3D game icon on deep purple-black background, no text, no lettering, no borders, no UI, no watermarks. Strong silhouette readable at 48px. Row 1 left: backup electric battery, luminous violet power cell with electric arcs. Row 1 middle: stealth invisibility, solid purple stealth jet partially dissolving into translucent spectral afterimages. Row 1 right: destruction laser, purple jet firing a thick intensely luminous white-core violet laser straight forward with turbulent plasma aura. Row 2 left: electronic interference, purple aircraft emitting expanding concentric electronic shockwaves disrupting two small enemy drones. Row 2 middle: HawkEye escort, a large purple stealth jet accompanied by one visibly smaller angular hawk-like drone firing paired bright purple bolts, clear drone silhouette. Row 2 right: HawkEye frenzy, one angular escort drone with a brilliant electric violet aura. Rich realistic metallic paneling and painterly energy detail; actual raster illustration, never simple vector geometry. Keep every subject wholly inside its own cell with 10 percent safe padding."
+}

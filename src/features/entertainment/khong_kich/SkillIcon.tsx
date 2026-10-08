@@ -1,3 +1,4 @@
+import phantomSkills from '../../../assets/khong-kich/phantom/skills-26-27-0.png';
 import { generatedPortrait } from './airCombatGeneratedArt';
 import { TERRA_ART, TERRA_ICON_CELLS } from './airCombatTerraArt';
 import { SYLVA_ART, SYLVA_ICON_CELLS } from './airCombatSylvaArt';
@@ -26,6 +27,9 @@ export const SKILL_ICON_CELLS: Record<SkillId | PassiveId, readonly [number, num
 };
 
 export function SkillIcon({ id, className }: { id: string; className?: string }) {
+  const phantomCells:Record<string,readonly [number,number]>={phantom_backup_battery:[0,0],invisibility:[1,0],focus_laser:[2,0],electronic_interference:[0,1],escort_drone:[1,1],hawkRage:[2,1]};
+  const phantom=phantomCells[id];
+  if(phantom)return <SpriteAtlasIcon atlas={phantomSkills} columns={3} rows={2} column={phantom[0]} row={phantom[1]} className={className} fallback={<TriangleAlert/>}/>;
   const portrait=generatedPortrait(id);
   if(portrait)return <span className={'combat-ui-icon '+(className??'')} aria-hidden="true"><img src={portrait} alt="" draggable={false} className="h-full w-full object-contain" /></span>;
   if(id === "argent_myriad" || id === "argent_array_return") return <SpriteAtlasIcon atlas={id === "argent_myriad" ? myriad : arrayReturn} columns={1} rows={1} column={0} row={0} className={className} fallback={<TriangleAlert/>}/>;

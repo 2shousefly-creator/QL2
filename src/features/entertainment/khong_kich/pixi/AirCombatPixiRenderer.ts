@@ -1,3 +1,5 @@
+import { paintBalanceGuides, paintAircraftDamageSmoke } from '../airCombatBalanceVisuals';
+import { phantomLaserBounds, PHANTOM_LASER_VISUAL_WIDTH } from '../airCombatPhantom';
 import { terraHud } from '../airCombatTerraRuntime';
 import { pressureBarText } from '../airCombatFeedback';
 import { paintGeneratedMechanisms } from '../airCombatGeneratedMechanisms';
@@ -416,6 +418,11 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     this.terraSprites.begin(this.clock,reducedMotion);
     paintTerra(world,(id,key,x,y,width,height,rotation,alpha,additive)=>{const sprite=this.terraSprites.get(id,this.assets.effect(key));if(!sprite)return;sprite.position.set(x,y);sprite.width=width;sprite.height=height;sprite.rotation=rotation;sprite.alpha=alpha;sprite.tint=0xffffff;sprite.blendMode=additive?'add':'normal';},reducedMotion);
     this.terraSprites.end();
+    paintBalanceGuides(world,{
+      rect:(x,y,width,height,color,alpha)=>{this.cinderGeometry.rect(x,y,width,height).fill({color,alpha});},
+      line:(x,y,ex,ey,color,alpha,width)=>{this.cinderGeometry.moveTo(x,y).lineTo(ex,ey).stroke({color,alpha,width});},
+      circle:(x,y,radius,color,alpha,width)=>{this.cinderGeometry.circle(x,y,radius).stroke({color,alpha,width});}
+    },reducedMotion);
     this.sylvaSprites.begin(this.clock,reducedMotion);
     paintSylva(world,(id,key,x,y,width,height,rotation,alpha,additive)=>{const sprite=this.sylvaSprites.get(id,this.assets.effect(key));if(!sprite)return;sprite.position.set(x,y);sprite.width=width;sprite.height=height;sprite.rotation=rotation;sprite.alpha=alpha;sprite.tint=0xffffff;sprite.blendMode=additive?'add':'normal';},reducedMotion);
     this.sylvaSprites.end();
@@ -535,6 +542,10 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
       smoke.alpha = (1 - age) ** 1.35 * (reducedMotion ? .55 : .85);
       smoke.tint = particle.color;
     }
+    paintAircraftDamageSmoke(world,reducedMotion,(id,x,y,size,rotation,alpha)=>{
+      const sprite=this.missileSmoke.get(id,this.assets.effect('smoke'));if(!sprite)return;
+      sprite.position.set(x,y);sprite.width=sprite.height=size;sprite.rotation=rotation;sprite.alpha=alpha;sprite.tint=0xffffff;sprite.blendMode='normal';
+    });
     this.missileSmoke.end();
     this.missileExhaust.clear();
     paintMissileExhausts(world,this.paintMissileSegment,reducedMotion);
@@ -771,12 +782,13 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     this.charge.tint = 0xc4b5fd; this.charge.blendMode = "add";
     this.laser.visible = alive && world.laserCharge <= 0 && world.laserRemaining > 0;
     const beamPulse = reducedMotion ? 0 : Math.sin(this.clock * 22) * 1.5;
-    this.laser.width = 44 + beamPulse;
-    this.laser.height = Math.max(1, world.playerY - 18 * playerAirframeScale(world.aircraft) - GAMEPLAY_SAFE_RECT.top);
+    const laserBounds = phantomLaserBounds(world.playerX,world.playerY);
+    this.laser.width = PHANTOM_LASER_VISUAL_WIDTH + beamPulse;
+    this.laser.height = laserBounds.height;
     this.laser.position.set(world.playerX, GAMEPLAY_SAFE_RECT.top + this.laser.height / 2);
     this.laserMuzzle.visible = this.laser.visible;
     this.laserMuzzle.position.set(world.playerX, world.playerY - 24 * playerAirframeScale(world.aircraft));
-    this.laserMuzzle.width = this.laserMuzzle.height = 32 + beamPulse;
+    this.laserMuzzle.width = this.laserMuzzle.height = 48 + beamPulse;
     this.laserMuzzle.tint = 0xcfffff; this.laserMuzzle.alpha = .85;
     if(world.laserCharge>0) {
       const total=getSkillRuntimeValues(world.aircraft,"focus_laser").charge;
@@ -833,7 +845,6 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     this.healthBars.end();
     this.damageText.update(world, delta, reducedMotion, !!this.sceneParent);
     if (damageSmoke && alive) {
-      if (hp < 0.4) this.vfx.spawn("damageSmoke", world.playerX + 5, world.playerY + 15, 31, 0.8, 0xffffff, 25);
       if (hp < 0.2) this.vfx.spawn("fire", world.playerX - 7, world.playerY + 13, 24, 0.35);
     }
     this.equipmentSprites.begin(this.clock,reducedMotion);

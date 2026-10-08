@@ -40,18 +40,19 @@ export function formatSkillCellCooldown(seconds:number):string {
 
 const amount = (value:number) => Math.round(value).toLocaleString("vi-VN");
 const number = (value: number) => value.toLocaleString("vi-VN", { maximumFractionDigits: 2 });
-function hawkEyeDuration(state: AircraftCombatState) {
+export function hawkEyeDuration(state: AircraftCombatState) {
   const stats = getEffectiveAircraftStats(state);
   const netDrain = getSkillRuntimeValues(state, "escort_drone").upkeepPerSecond - stats.resourceRegen;
   const energy = Math.max(0, state.currentResource);
   const estimate = netDrain > 0 ? energy / netDrain : null;
-  return {
-    progress: stats.maxResource > 0 ? Math.max(0, Math.min(1, energy / stats.maxResource)) : 0,
-    remaining: estimate !== null && Number.isFinite(estimate) ? estimate : null,
-  };
+  const deploying = state.dronePhase === 'deploying' ? state.droneTransitionRemaining ?? 0 : 0;
+  const remaining = estimate !== null && Number.isFinite(estimate) ? estimate + deploying : Infinity;
+  const elapsed = Math.max(0, state.coreState.time - (state.droneActivatedAt ?? state.coreState.time));
+  const duration = Number.isFinite(remaining) ? Math.max(.001, elapsed + remaining) : Infinity;
+  return { remaining, duration, progress: Number.isFinite(remaining) ? remaining / duration : 1 };
 }
 function hawkEyeTimeLabel(remaining: number | null) {
-  return remaining === null ? "Duy trì: Không giới hạn với mức hồi Điện hiện tại" : `Duy trì ước tính: ${number(remaining)}s`;
+  return remaining === null || !Number.isFinite(remaining) ? "Duy trì: Không giới hạn với mức hồi Điện hiện tại" : `Duy trì ước tính: ${number(remaining)}s`;
 }
 export function getSkillTooltipModel(state: AircraftCombatState, id: SkillId) {
  const config=SKILL_CONFIGS[id],v=getSkillRuntimeValues(state,id),rank=skillRank(state,id),rows=SKILL_RANKS[id];
@@ -88,10 +89,9 @@ export function getActiveSkillDuration(world: CombatWorld, id: SkillId) {
   const state = world.aircraft;
   if (id === "escort_drone") {
     if (!state.droneActive) return null;
-    if(state.dronePhase!=="active")return {remaining:state.droneTransitionRemaining??0,duration:state.dronePhase==="deploying"?.4:.38,progress:undefined,timeLabel:state.dronePhase==="deploying"?"Đang triển khai HawkEye":"Đang thu hồi · hồi chiêu sau docking"};
+    if(state.dronePhase==="returning")return {remaining:state.droneTransitionRemaining??0,duration:.38,progress:undefined,timeLabel:"Đang thu hồi · hồi chiêu sau docking"};
     const energy = hawkEyeDuration(state);
-    // Time estimates are separate from visual progress for this resource-driven toggle.
-    return { remaining: Infinity, duration: Infinity, progress: energy.progress,
+    return { remaining: energy.remaining, duration: energy.duration, progress: energy.progress,
       timeLabel: hawkEyeTimeLabel(energy.remaining) };
   }
   if(id.startsWith('terra_')){const t=terraHud(world),remaining=state.activeEffects[id]??0;if(!t||remaining<=0)return null;const duration=state.activeEffectDurations?.[id]??remaining;return {remaining,duration,progress:remaining/duration,timeLabel:id==='terra_reactive_rock_armor'?'Dự trữ '+Math.ceil(t.reserve)+' / '+Math.ceil(t.initialReserve):id==='terra_seismic_cannon'?'Lập thế · '+remaining.toFixed(1)+'s':id==='terra_geocore_overdrive'?'Cường hóa · '+Math.ceil(remaining)+'s':'Kẹp Sơn · Đang ép'};}

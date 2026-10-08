@@ -255,6 +255,7 @@ export function endAircraftSkill(state: AircraftCombatState, skillId: SkillId, c
     if (skillId === "escort_drone") {
         state.droneActive = false;
         state.dronePhase = undefined; state.droneTransitionRemaining = 0;
+        state.droneActivatedAt = undefined;
         delete state.coreState.timers.hawkRage;
         delete state.coreState.timers.hawkRageReady;
         delete state.coreState.stacks["cooldownPending:hawkRageReady"];
@@ -331,6 +332,7 @@ export function castSkill(state: AircraftCombatState, skillId: SkillId): SkillCa
     }
     if (skillId === "escort_drone") {
         state.droneActive = true;
+        state.droneActivatedAt = state.coreState.time;
         state.dronePhase="deploying";state.droneTransitionRemaining=.4;
         delete state.coreState.timers.hawkRageReady;
     }
@@ -444,7 +446,7 @@ export function tickAircraftState(state: AircraftCombatState, deltaSeconds: numb
     const spent = Math.min(available, upkeep * dt);
     equipmentResourceSpent(state,spent);
     equipmentMetric(state,31,"saved",Math.min(available,upkeep/(1-P[31].discount*equipmentScale(state,31))*dt)-spent);
-    if(upkeep>0)recordCoreMetric(state,43,"saved",Math.min(available,5*dt)-spent);
+    if(upkeep>0)recordCoreMetric(state,43,"saved",Math.min(available,4.5*dt)-spent);
     const resourceBefore = state.currentResource;
     state.currentResource = Math.max(0, Math.min(stats.maxResource, available - spent));
     for(const [row,regen] of resourceWithout){
