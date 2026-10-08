@@ -1,3 +1,4 @@
+import { statusExpiry } from './airCombatStatusTiming';
 import { DAMAGE_LABEL_SECONDS } from './airCombatFeedback';
 import type { CombatWorld, EnemyEntity } from './airCombatRuntime';
 import type { SkillId } from './airCombatTypes';
@@ -168,7 +169,7 @@ export function tickCinder(w:CombatWorld,dt:number,h:CinderHooks){
   for(const e of w.enemies)if(valid(w,e,h)&&!wave.hits.has(e.id)&&circleVsAircraft(wave.x,wave.y,radius,getEnemyHitbox(e))){wave.hits.add(e.id);const n=cinderStacks(w,e.id),t=targetState(w,e.id);
    deal(w,e,v.damageMultiplier+v.perStack*n,'cinder_heat_wave',wave.id,h);addCinderBurn(w,e,n>0&&wave.rank>=4?2:1,h);
    if(n>0){const actor=e.aircraftTarget?.world,immune=actor&&(celestialProtection(actor.aircraft)||(skillRank(actor.aircraft,'afterburner')>=5&&(actor.aircraft.activeEffects.afterburner??0)>0));
-    if(!immune){t.slow=1-(.15+.03*n);t.slowUntil=now+(actor?negativeStatusDuration(actor.aircraft,wave.rank>=4?4:3):wave.rank>=4?4:3);if(n===6&&wave.rank>=3&&e.type!=='boss')t.rootUntil=now+(actor?negativeStatusDuration(actor.aircraft,.75):.75);}
+    if(!immune){t.slow=1-(.15+.03*n);t.slowUntil=statusExpiry(t,'slowUntil',now,actor?negativeStatusDuration(actor.aircraft,wave.rank>=4?4:3):wave.rank>=4?4:3);if(n===6&&wave.rank>=3&&e.type!=='boss')t.rootUntil=now+(actor?negativeStatusDuration(actor.aircraft,.75):.75);}
    }
    if(wave.rank>=5&&cinderStacks(w,e.id)>=6&&e.hp>0){let spread=s.spreads.find(p=>p.id===wave.id);if(!spread){spread={id:wave.id,sources:[],recipients:new Map()};s.spreads.push(spread);}spread.sources.push({id:e.id,next:now+1,remaining:4});}
   }
@@ -200,4 +201,16 @@ export function cinderThreatNearby(w:CombatWorld,x:number,y:number,r:number){con
  if(s.followups.some(p=>p.until>now&&Math.hypot(x-p.x,y-p.y)<=r+2.5))return true;
  const wave=s.wave;if(wave){const radius=cinderWaveRadius(wave.x,wave.y)*Math.min(1,(now-wave.at)/.8);if(Math.abs(Math.hypot(x-wave.x,y-wave.y)-radius)<=r+8)return true;}
  return false;
+}
+
+/** Read-only presentation of sustained hazards currently containing this target. */
+export function cinderTargetHazards(w:CombatWorld,e:EnemyEntity) {
+ const s=states.get(w),now=w.elapsed,result:{id:string;skill:CinderSkillId;remaining:number;duration:number}[]=[];
+ if(!s)return result;
+ const f=s.fuel;
+ if(f&&now>=f.land&&now<f.until&&inFuel(f,e))result.push({id:'fuel:'+f.id,skill:'cinder_fuel_barrage',remaining:f.until-now,duration:f.until-f.land});
+ for(const lane of s.lanes){const v=cinderValues('cinder_inferno_beam',lane.rank);
+  if(lane.until>now&&rectVsAircraft(lane.x-v.width/2,R.top,lane.x+v.width/2,lane.y,getEnemyHitbox(e)))result.push({id:'lane:'+lane.id,skill:'cinder_inferno_beam',remaining:lane.until-now,duration:lane.until-lane.at});
+ }
+ return result;
 }

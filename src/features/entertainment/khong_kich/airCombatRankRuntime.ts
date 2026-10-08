@@ -30,7 +30,7 @@ export interface InterferenceWave {
  enemyDistances:Map<number,number>; projectileDistances:Map<number,number>;
 }
 export interface RankRuntime {
- lock?:{decoy?:{world:CombatWorld;id:number};target:number;until:number;stacks:number;extended:number;cast:number;flashUntil?:number;killed?:boolean};
+ lock?:{decoy?:{world:CombatWorld;id:number};target:number;until:number;startedAt?:number;stacks:number;extended:number;cast:number;flashUntil?:number;killed?:boolean};
  anchor?:{x:number;y:number;until:number;next:number;rank:number;affected:Set<number>;destroyed:number;inner:Map<number,number>};
  interference:Map<number,Interference>;
  projectileSlows:Map<number,{until:number;multiplier:number}>;
@@ -62,7 +62,7 @@ function densestGravityAnchorPoint(w:CombatWorld,h:RankRuntimeHooks,rank:number)
 }
 export function beginRankSkill(w:CombatWorld,id:SkillId,h:RankRuntimeHooks) {
  const r=rankRuntime(w),rank=skillRank(w.aircraft,id),target=h.priority(w);
- if(id==="predator_lock"){const decoy=preferredDuelDecoy(w);r.lock=decoy||target?{decoy:decoy??undefined,target:decoy?-2:target!.id,until:w.elapsed+getSkillRuntimeValues(w.aircraft,id).duration,stacks:0,extended:0,cast:w.nextId++}:undefined;if(!r.lock)endAircraftSkill(w.aircraft,id);}
+ if(id==="predator_lock"){const decoy=preferredDuelDecoy(w);r.lock=decoy||target?{decoy:decoy??undefined,target:decoy?-2:target!.id,startedAt:w.elapsed,until:w.elapsed+getSkillRuntimeValues(w.aircraft,id).duration,stacks:0,extended:0,cast:w.nextId++}:undefined;if(!r.lock)endAircraftSkill(w.aircraft,id);}
  if(id==="gravity_anchor"){const point=densestGravityAnchorPoint(w,h,rank);r.anchor={x:point?.x??w.playerX,y:point?.y??w.playerY-140,until:w.elapsed+getSkillRuntimeValues(w.aircraft,id).duration,next:w.elapsed+.5,rank,affected:new Set(),destroyed:0,inner:new Map()};}
  if(id==="electronic_interference") {
   const cast=w.nextId++,times=rank>=5?[0,.8,1.6]:rank>=2?[0,1]:[0];

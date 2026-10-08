@@ -51,15 +51,18 @@
 .air-boss-hud { position:absolute; inset-inline:0; z-index:10; padding:.6cqw 2cqw; box-sizing:border-box; border-bottom:1px solid #fb718577; background:linear-gradient(90deg,#4c0519f5,#020617f5,#4c0519f5); }
 .air-boss-hud > div:first-child { font-size:2cqw; line-height:1.15; }
 .air-boss-hud > div:last-child { height:1.65cqw; margin-top:.8cqw; border-radius:0; }
-.air-status-strip { position:absolute; inset-inline:0; z-index:12; height:13.8889cqw; padding:.5556cqw 1.6667cqw; box-sizing:border-box; display:flex; justify-content:space-between; pointer-events:none; }
+.air-status-strip { position:absolute; inset-inline:0; z-index:12; padding:.5556cqw 1.6667cqw; box-sizing:border-box; display:flex; flex-direction:column; gap:1cqw; pointer-events:none; }
+.air-status-player { display:flex; justify-content:space-between; min-height:12.7778cqw; }
+.air-boss-statuses { display:flex; flex-wrap:wrap; align-items:center; gap:.5556cqw; }
+.air-boss-status-label { color:#fda4af; font-size:2cqw; font-weight:800; text-transform:uppercase; padding-right:1cqw; }
 .air-status-group { display:grid; grid-template-columns:repeat(5,6.1111cqw); grid-auto-rows:6.1111cqw; gap:.5556cqw; align-content:start; }
 .air-status-group--debuff { direction:rtl; }
 .air-status-icon, .air-status-overflow { position:relative; width:6.1111cqw; height:6.1111cqw; display:grid; place-items:center; background:#081321ed; border:1px solid #6ee7b780; border-radius:0; color:#bbf7d0; padding:0; pointer-events:auto; direction:ltr; }
-.air-status-group--debuff .air-status-icon { border-color:#fda4af88; color:#fda4af; }
+.air-status-group--debuff .air-status-icon, .air-boss-statuses .air-status-icon { border-color:#fda4af88; color:#fda4af; }
 .air-status-icon > .combat-ui-icon { width:100%; height:100%; }
 .air-status-icon > svg { width:75%; height:75%; }
-.air-status-value-badge { position:absolute; bottom:1px; right:1px; z-index:2; max-width:calc(100% - 2px); box-sizing:border-box; color:#fff; font-size:1.8cqw; font-weight:800; font-variant-numeric:tabular-nums; letter-spacing:-.06em; white-space:nowrap; line-height:1.15; padding:.12cqw .18cqw; background:#020617f2; border-radius:1px; pointer-events:none; }
-.air-status-value-badge[hidden], .air-status-timer[hidden] { display:none; }
+.air-status-value-badge { position:absolute; bottom:1px; right:1px; z-index:5; max-width:calc(100% - 2px); box-sizing:border-box; color:#fff; font-size:1.8cqw; font-weight:800; font-variant-numeric:tabular-nums; letter-spacing:-.06em; white-space:nowrap; line-height:1.15; padding:.12cqw .18cqw; background:none; text-shadow:0 1px 2px #020617,0 0 2px #020617; pointer-events:none; }
+.air-status-value-badge[hidden] { display:none; }
 .air-status-overflow { font-size:2.5cqw; border-color:#94a3b8; }
 .air-status-icon[aria-pressed="true"] { outline:1px solid white; outline-offset:1px; }
 .air-status-tooltip, .air-skill-tooltip { pointer-events:auto; position:absolute; z-index:30; border:1px solid #7dd3fc77; border-radius:2px; background:#07111bf7; color:#e2e8f0; padding:2.5cqw; font-size:2.8cqw; line-height:1.45; box-shadow:0 4px 12px #02061780; overflow-y:auto; overscroll-behavior:contain; }
@@ -104,7 +107,6 @@
 .core-semantic-icon {display:inline-grid;place-items:center;isolation:isolate;background-color:transparent;border:0;color:inherit;}
 .core-semantic-icon > svg {width:68%;height:68%;}
 .air-status-icon {border-radius:2px!important;}
-.air-status-timer {position:absolute;top:1px;bottom:auto;left:1px;right:1px;z-index:3;background:#081526c9;color:#e3f5ff;font-size:1.55cqw;line-height:1;font-variant-numeric:tabular-nums;}
 .air-combat-surface[data-emp-jam="true"] .air-combat-hud {box-shadow:inset 0 -2px #67e8f9; background-image:repeating-linear-gradient(0deg,#67e8f907 0 1px,transparent 1px 5px);}
 @media(prefers-reduced-motion:reduce){.combat-core-card:hover{filter:none;}.combat-core-card{transition:none;}}
 
@@ -118,7 +120,6 @@
 [data-skill-id][data-borrow-ready="true"][data-reduced-motion="true"] { animation: none; box-shadow: inset 0 0 8px #22d3ee66; }
 
 .air-status-icon[data-timer-kind="cooldown"] { color:#fbbf24; border-color:#fbbf2480; }
-.air-status-icon[data-timer-kind="cooldown"] .air-status-timer { color:#fde68a; }
 
 /* Selection shares the dialog's focus trap, but has no surrounding modal frame. */
 .app-overlay.air-upgrade-overlay { background:rgba(2,4,10,.84); padding:16px 8px; animation:air-upgrade-fade 140ms ease-out both; }
@@ -843,10 +844,9 @@
 
 /* Time is rendered from game snapshots; no wall-clock CSS animation. */
 .air-status-icon { border-color:transparent; }
-.air-status-group--debuff .air-status-icon { border-color:transparent; }
+.air-status-group--debuff .air-status-icon, .air-boss-statuses .air-status-icon { border-color:transparent; }
 .air-status-icon > .air-status-border { position:absolute; inset:-1px; width:calc(100% + 2px); height:calc(100% + 2px); pointer-events:none; z-index:4; overflow:visible; fill:none; stroke:#4ade80; stroke-width:1.4; }
 .air-status-border .air-status-border-track { stroke:#07111b; }
 .air-status-icon > .air-status-border[data-phase="cooldown"] { stroke:#facc15; }
 .air-status-icon > .air-status-border[data-phase="indefinite"][data-group="debuff"] { stroke:#f87171; }
-.air-status-icon .air-status-timer { left:2px; right:auto; top:2px; min-width:1.5em; padding:.25cqw; font-size:2cqw; font-weight:800; color:#fff; background:#020617e8; text-align:center; }
 .air-status-value-badge { bottom:2px; right:2px; }

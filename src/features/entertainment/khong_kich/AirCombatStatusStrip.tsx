@@ -4,6 +4,7 @@ import React, { forwardRef, useCallback, useLayoutEffect, useImperativeHandle, u
 import { Flame, FlaskConical, Shield, ShieldMinus, Zap, Lock, BatteryWarning, HeartOff, Crosshair, Radar } from "lucide-react";
 import { CoreDescription } from "./CoreDescription";
 import { CombatUiIcon } from "./CombatUiIcon";
+import { getBossStatusPresentations } from './airCombatBossStatuses';
 import { getStatusPresentations, type StatusPresentation } from "./airCombatPresentation";
 import type { CombatWorld } from "./airCombatRuntime";
 
@@ -71,34 +72,43 @@ export const AirCombatStatusStrip = React.memo(forwardRef<StatusStripHandle, { t
     const changedWorld=snapshotWorld.current!==world;
     if (world.pauseReasons.size > 0 && !changedWorld) return;
     if(changedWorld){snapshotWorld.current=world;close();}
-    const next = getStatusPresentations(world);
+    const next = [...getStatusPresentations(world), ...getBossStatusPresentations(world)];
     const surface=host.current?.closest<HTMLElement>(".air-combat-surface");
     const empJam = String(world.aircraft.status.resourceJammedUntil > world.aircraft.coreState.time);
     if (surface && surface.dataset.empJam !== empJam) surface.dataset.empJam = empJam;
     setItems(previous => sameSnapshot(previous, next) ? previous : next);
   } }), [close]);
-  const active = items.find(s => s.id === selected) ?? overflowStatus(selected, items);
+  const playerItems = items.filter(s => !s.id.startsWith('boss:'));
+  const bossItems = items.filter(s => s.id.startsWith('boss:'));
+  const active = items.find(s => s.id === selected) ?? overflowStatus(selected, playerItems);
   useLayoutEffect(() => {
     if (selected !== null && !active) close();
   }, [selected, active, close]);
+  const renderStatus = (status:StatusPresentation) => {
+    const Generic = status.icon.kind === "status" ? genericIcons[status.icon.id] : null;
+    return <button key={status.id} type="button" data-status-id={status.id} data-timer-kind={status.timer?.phase ?? "indefinite"} className="air-status-icon" data-combat-tooltip-trigger="status"
+      data-status-target={status.id.startsWith('boss:')?'boss':'player'}
+      aria-label={`${status.id.startsWith('boss:')?'Boss · ':''}${status.name}${status.badgeText ? ` · ${status.badgeText}` : ""}`} aria-pressed={selected === status.id}
+      onClick={() => toggle(status.id)}>
+      {status.icon.kind === "status" ? Generic && <Generic aria-hidden="true" /> : <CombatUiIcon {...status.icon} fallback="◆" />}
+      <StatusBorder status={status}/>
+      <b className="air-status-value-badge" data-status-value hidden={!status.badgeText}>{status.badgeText}</b>
+    </button>;
+  };
   return <div ref={host} className="air-status-strip" style={{ top: `${top / 720 * 100}%` }} aria-label="Hiệu ứng chiến đấu">
+    {bossItems.length > 0 && <div className="air-boss-statuses" role="group" aria-label="Debuff đang có hiệu lực trên Boss">
+      <span className="air-boss-status-label">Boss</span>
+      {bossItems.map(renderStatus)}
+    </div>}
+    <div className="air-status-player">
     {(["buff", "debuff"] as const).map(group => {
-      const all = items.filter(s => s.group === group), shown = all.length > 10 ? all.slice(0, 9) : all;
+      const all = playerItems.filter(s => s.group === group), shown = all.length > 10 ? all.slice(0, 9) : all;
       return <div key={group} className={`air-status-group air-status-group--${group}`} aria-label={group === "buff" ? "Buff" : "Debuff"}>
-        {shown.map(status => {
-          const Generic = status.icon.kind === "status" ? genericIcons[status.icon.id] : null;
-          return <button key={status.id} type="button" data-status-id={status.id} data-timer-kind={status.timer?.phase ?? "indefinite"} className="air-status-icon" data-combat-tooltip-trigger="status"
-            aria-label={`${status.name}${status.badgeText ? ` · ${status.badgeText}` : ""}`} aria-pressed={selected === status.id}
-            onClick={() => toggle(status.id)}>
-            {status.icon.kind === "status" ? Generic && <Generic aria-hidden="true" /> : <CombatUiIcon {...status.icon} fallback="◆" />}
-            <StatusBorder status={status}/>
-            <small className="air-status-timer" data-status-timer hidden={!showTimer(status)}>{showTimer(status)?Math.ceil(status.timer!.remaining):""}</small>
-            <b className="air-status-value-badge" data-status-value hidden={!status.badgeText}>{status.badgeText}</b>
-          </button>;
-        })}
+        {shown.map(renderStatus)}
         {all.length > 10 && <button type="button" className="air-status-overflow" data-combat-tooltip-trigger="status" aria-label={`Xem thêm ${all.length-9} hiệu ứng`} aria-pressed={selected === `overflow:${group}`} onClick={() => toggle(`overflow:${group}`)}>+{all.length - 9}</button>}
       </div>;
     })}
+    </div>
     <AnimatePresence>{active && <motion.aside key="status" {...airTooltipMotion} className="air-status-tooltip" data-combat-tooltip-panel="status" role="status">
       <div className="air-tooltip-heading"><strong>{active.name}</strong><span data-status-time>{active.timeLabel ?? timeLabel(active.remaining)}</span></div>
       <p data-status-description><CoreDescription text={active.description} /></p>

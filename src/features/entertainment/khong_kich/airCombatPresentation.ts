@@ -24,7 +24,7 @@ import { SKILL_BASE_VALUES as B, SKILL_CORE_VALUES as V } from "./airCombatSkill
 import { getEffectiveAircraftStats, getSkillRuntimeValues, getCore208Contribution } from "./airCombatAircraft";
 import { AIRCRAFT_CONFIGS, SKILL_CONFIGS, getCoreDefinition } from "./airCombatConfig";
 import { coreId, coreStackLabel, hasCore, negativeStatusDuration } from "./airCombatCoreEffects";
-import type { AircraftCombatState, CoreId, SkillId } from "./airCombatTypes";
+import type { AircraftCombatState, CoreId, SkillId, PassiveId } from "./airCombatTypes";
 import { crowdDamageBonus, isHostileToPlayer, type CombatWorld } from "./airCombatRuntime";
 
 export function formatCooldownSeconds(value: number): string {
@@ -131,7 +131,7 @@ export interface StatusPresentation {
   id: string;
   group: "buff" | "debuff";
   name: string;
-  icon: { kind: "equipment" | "item"; id: EquipmentRewardId } | { kind: "skill"; id: SkillId } | { kind: "core"; id: CoreId } | { kind: "status"; id: "acid" | "burn" | "stun" | "armor" | "shield" | "skill_lock" | "resource_jam" | "regen_off" | "mark" | "radar" };
+  icon: { kind: "equipment" | "item"; id: EquipmentRewardId } | { kind: "skill"; id: SkillId | PassiveId } | { kind: "core"; id: CoreId } | { kind: "status"; id: "acid" | "burn" | "stun" | "armor" | "shield" | "skill_lock" | "resource_jam" | "regen_off" | "mark" | "radar" };
   description: string;
   source: string;
   stacks: number;
@@ -297,9 +297,6 @@ export function getStatusPresentations(world: CombatWorld): StatusPresentation[]
       result.push({ id: `skill:${id}`, group: "buff", name: model.title, icon: { kind: "skill", id },
         description: [model.description, ...model.detailRows.slice(1), ...model.coreRows].join(" "), source: "Kỹ năng", stacks: 1,
         remaining: timer.remaining, duration: timer.duration, progress: timer.progress, timeLabel: timer.timeLabel, priority: 100 });
-    } else if ((s.cooldowns[id]??0)>0) {
-      const model=getSkillTooltipModel(s,id),remaining=s.cooldowns[id]!;
-      result.push({id:`skill:${id}`,group:'buff',name:model.title,icon:{kind:'skill',id},description:model.description,source:'Kỹ năng',stacks:1,remaining,duration:c.skillCooldownDurations[id]??remaining,timerKind:'cooldown',priority:70});
     }
   }
   for (const entry of TIMED_STATUSES) {

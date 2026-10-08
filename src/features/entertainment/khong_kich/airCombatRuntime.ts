@@ -1,4 +1,4 @@
-import { statusExpiry, extendStatusRemaining } from './airCombatStatusTiming';
+import { statusExpiry, extendStatusRemaining, extendStatusExpiry } from './airCombatStatusTiming';
 import { getHealingSummary } from './airCombatHealingSummary';
 import { isTerraSkill } from './airCombatTerraConfig';
 import { beginTerraSkill, tickTerra, cancelTerra, terraAllowed, terraIncomingHp, terraAbsorb, terraState, terraMovement, terraSuppression, terraKnockbackImmune, clearTerraTarget, terraFx, terraHud, type TerraHooks } from './airCombatTerraRuntime';
@@ -2730,17 +2730,17 @@ function damageEnemyAttack(world:CombatWorld,target:EnemyEntity,raw:number,attac
     }
     if(damage<=0)return damage;
     const now=world.elapsed,source=world.enemies.find(e=>e.id===attack.sourceEnemyId),marks=target.combatMarks??={};
-    const mark=(key:string,duration:number,threshold:number)=>{const m=marks[key];const count=m&&m.until>now?m.count+1:1;marks[key]={count,until:now+duration};if(count>=threshold){delete marks[key];return true;}return false;};
+    const mark=(key:string,duration:number,threshold:number)=>{const m=marks[key];const count=m&&m.until>now?m.count+1:1;marks[key]={count,until:now+duration};statusExpiry(marks[key],'until',now,duration);if(count>=threshold){delete marks[key];return true;}return false;};
     const payload=attack.payload;
     if(payload?.stun)target.stun=extendStatusRemaining(target,"stun",target.stun,payload.stun,world.elapsed);
-    if(payload?.skillLock)target.skillLockedUntil=Math.max(target.skillLockedUntil??0,now+payload.skillLock);
-    if(payload?.armorBreak)target.armorBrokenUntil=Math.max(target.armorBrokenUntil??0,now+payload.armorBreak);
-    if(attack.attackTag==="acid"&&mark("corrosion",6,3)){target.armorBrokenUntil=now+4;if(source?.eliteWave===2)queueEliteSpecial(world,source,"acid_cage",1.2,false);}
+    if(payload?.skillLock)target.skillLockedUntil=extendStatusExpiry(target,"skillLockedUntil",target.skillLockedUntil??0,now+payload.skillLock,now);
+    if(payload?.armorBreak)target.armorBrokenUntil=extendStatusExpiry(target,"armorBrokenUntil",target.armorBrokenUntil??0,now+payload.armorBreak,now);
+    if(attack.attackTag==="acid"&&mark("corrosion",6,3)){target.armorBrokenUntil=statusExpiry(target,"armorBrokenUntil",now,4);if(source?.eliteWave===2)queueEliteSpecial(world,source,"acid_cage",1.2,false);}
     if(source?.type==="elite"&&mark("hunterMark",source.eliteWave===2?3.5:4,source.eliteWave===2?2:3))queueEliteSpecial(world,source,"execution",.1,false);
     if(source?.type==="iron_fortress"&&(attack.attackTag==="basic"||attack.attackTag==="burst")&&mark("suppression",4,source.eliteWave===2?3:4))queueEliteSpecial(world,source,"clamp",.1,true);
     if(source?.type==="radar_hunter"){
         if(attack.attackTag==="rail")marks.targetLock={count:1,until:now+4};
-        else if(attack.attackTag==="radar_lock"&&(marks.targetLock?.until??0)>now){delete marks.targetLock;target.stun=extendStatusRemaining(target,"stun",target.stun,1.5,now);target.skillLockedUntil=now+2.2;queueEliteSpecial(world,source,"radar_followup",.6,false);}
+        else if(attack.attackTag==="radar_lock"&&(marks.targetLock?.until??0)>now){delete marks.targetLock;target.stun=extendStatusRemaining(target,"stun",target.stun,1.5,now);target.skillLockedUntil=statusExpiry(target,"skillLockedUntil",now,2.2);queueEliteSpecial(world,source,"radar_followup",.6,false);}
     }
     return damage;
 }

@@ -12,3 +12,9 @@ export function extendStatusRemaining(owner:object,key:string,current:number,nex
  if(next>current)statusExpiry(owner,key,at,next);
  return Math.max(current,next);
 }
+
+/** Preserve the original cycle when a shorter application does not extend it. */
+export function extendStatusExpiry(owner:object,key:string,current:number,next:number,at:number):number {
+ if(next>current)statusExpiry(owner,key,at,next-at);
+ return Math.max(current,next);
+}
