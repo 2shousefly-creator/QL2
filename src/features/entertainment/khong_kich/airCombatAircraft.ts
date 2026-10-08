@@ -249,6 +249,7 @@ export function startDeferredSkillCooldown(state:AircraftCombatState,skillId:Ski
     if(sylvaCredit){state.cooldowns[skillId]=Math.max(0,(state.cooldowns[skillId]??0)-sylvaCredit);delete state.coreState.stacks[`sylvaCycle:${skillId}`];}
 }
 export function endAircraftSkill(state: AircraftCombatState, skillId: SkillId, cooldownSnapshot?:number): void {
+    if (skillId === "focus_laser") delete state.laserPhase;
     if (skillId === "invisibility") delete state.coreState.emergencyRepair;
     const wasActive = skillId === "escort_drone" ? state.droneActive : (state.activeEffects[skillId] || 0) > 0;
     if (skillId === "escort_drone") {
@@ -317,12 +318,14 @@ export function castSkill(state: AircraftCombatState, skillId: SkillId): SkillCa
     delete state.coreState.skillCooldownDurations[skillId];
     if (v.duration > 0 && skillId !== "decoy") {
         state.activeEffects[skillId] = v.duration + (skillId === "focus_laser" ? v.charge : 0);
+        if(skillId === "focus_laser")state.laserPhase=v.charge>0?"charge":"firing";
         (state.activeEffectDurations ??= {})[skillId] = state.activeEffects[skillId];
         if (skillId === "invisibility") {
             delete state.coreState.emergencyRepair;
             if ((skillRank(state, "invisibility") >= 3)) state.coreState.emergencyRepair = {
                 remaining: Math.max(0, getEffectiveAircraftStats(state).maxHp - state.currentHp) * .25,
                 durationRemaining: v.duration,
+                rate: Math.max(0, getEffectiveAircraftStats(state).maxHp - state.currentHp) * .25 / v.duration,
             };
         }
     }
@@ -465,7 +468,7 @@ export function canAcquirePlayerTarget(state: AircraftCombatState): boolean { re
 export function shouldAutoFire(state: AircraftCombatState): boolean {
     // Invisibility neither blocks basic fire nor ends when a basic shot is emitted.
     const sweepingCannonActive=(state.activeEffects.sweeping_cannon||0)>0;
-    return (state.activeEffects.cinder_inferno_beam || 0) <= 0 && (!overheated(state)||sweepingCannonActive) && (state.activeEffects.focus_laser || 0) <= 0 && (state.activeEffects.stellar_lance || 0) <= 0;
+    return (state.activeEffects.cinder_inferno_beam || 0) <= 0 && (!overheated(state)||sweepingCannonActive) && state.laserPhase !== "firing" && (state.activeEffects.stellar_lance || 0) <= 0;
 }
 export function classifySkillPress(durationMs: number, longPressMs = 400): "tap" | "hold" { return durationMs >= longPressMs ? "hold" : "tap"; }
 export function shouldCastSkillPress(durationMs: number, holdActivated: boolean, cancelled: boolean, longPressMs = 400): boolean {

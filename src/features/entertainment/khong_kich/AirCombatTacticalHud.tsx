@@ -1,4 +1,3 @@
-import { terraHud, terraState } from './airCombatTerraRuntime';
 import { EquipmentIcon } from "./EquipmentIcon";
 import { equipmentState, type EquipmentRewardId } from "./airCombatEquipmentState";
 import { EQUIPMENT_CATALOG } from "./airCombatEquipmentCatalog";
@@ -18,7 +17,6 @@ export function AirCombatTacticalHud({ world, hud, reducedMotion, onInspect, onC
   onInspect: (id: string, tooltip: HubTooltip) => void; onCores: () => void; onEquipment: () => void; onPause: () => void;
   onEquipmentInspect: (id: EquipmentRewardId, source: HTMLElement) => void;
 }) {
-  const terra=terraHud(world);
   const state=world.aircraft,aircraft=AIRCRAFT_CONFIGS[state.aircraftId];
   const xp=hud.combatXpRequired>0?Math.max(0,Math.min(1,state.combatXp/hud.combatXpRequired)):1;
   const displayedDps=Math.round(hud.dps),dpsNode=useRef<HTMLElement>(null),previous=useRef(displayedDps);
@@ -34,11 +32,6 @@ export function AirCombatTacticalHud({ world, hud, reducedMotion, onInspect, onC
   const scoreText = soloScore ? `PLAYER ${soloScore.playerWins} — ${soloScore.opponentWins} AI` : null;
   const integer=(value:number)=>Math.round(value).toLocaleString("vi-VN");
   return <>
-    {terra&&<div className="air-terra-pressure" aria-label="Lõi Địa Áp">
-      <span>Địa Áp <strong>{integer(terra.pressure)} / {integer(terra.cap)}</strong></span>
-      <div role="progressbar" aria-label="Địa Áp" aria-valuenow={terra.pressure} aria-valuemin={0} aria-valuemax={terra.cap}><b style={{width:`${terra.pressure/Math.max(1,terra.cap)*100}%`}}/><i style={{left:'50%'}}/><i style={{left:'75%'}}/></div>
-    </div>}
-
     <button type="button" className="air-hub-avatar" data-combat-tooltip-trigger="hub" aria-label={`Thông tin ${aircraft.name}, Cấp ${state.level}`}
       onClick={()=>onInspect("avatar",{title:aircraft.name,text:`Cấp ${state.level} · ${hud.combatXpRequired>0?`EXP ${integer(state.combatXp)} / ${integer(hud.combatXpRequired)} (${Math.round(xp*100)}%)`:"Cấp tối đa · EXP MAX"}`})}>
       <AircraftPreview aircraftId={state.aircraftId} className="air-hub-aircraft"/>
@@ -66,7 +59,7 @@ export function AirCombatTacticalHud({ world, hud, reducedMotion, onInspect, onC
       <button type="button" className="air-hub-action" aria-label="Tạm dừng" onClick={onPause}><Pause aria-hidden="true"/></button>
     </div>
     <CombatStatChips stats={hud.stats} baseline={getEffectiveAircraftStats(state,false)}
-      healingReceived={state.status.healingReceivedUntil>state.coreState.time?state.status.healingReceivedMultiplier:1}
+      healing={hud.healing}
       onInspect={(id,title,text)=>onInspect(id,{title,text})}/>
   </>;
 }

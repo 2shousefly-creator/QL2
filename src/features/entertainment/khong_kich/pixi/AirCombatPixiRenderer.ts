@@ -1,3 +1,5 @@
+import { terraHud } from '../airCombatTerraRuntime';
+import { pressureBarText } from '../airCombatFeedback';
 import { paintGeneratedMechanisms } from '../airCombatGeneratedMechanisms';
 import { combatGraphicsQuality } from '../airCombatGraphics';
 import { generatedFrame, generatedEnemyId } from '../airCombatGeneratedArt';
@@ -79,6 +81,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
   private stableHud = new Container();
   private healthBars = new HealthBarPresentation();
   private hpText = new Text({ text: "", style: { fontFamily: "Arial", fontSize: 6.4, fontWeight: "bold", fill: 0xffffff, stroke: { color: 0x06101f, width: 1 } } });
+  private pressureText = new Text({ text: "", style: { fontFamily: "Arial", fontSize: 6.4, fontWeight: "bold", fill: 0xffffff, stroke: { color: 0x06101f, width: 1 } } });
   private resourceText = new Text({ text: "", style: { fontFamily: "Arial", fontSize: 6.4, fontWeight: "bold", fill: 0xffffff, stroke: { color: 0x06101f, width: 1 } } });
   private damageText = new AirCombatDamageText();
   private sky?: AirCombatSky;
@@ -201,8 +204,8 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     app.stage.addChild(this.stableHud);
     // A nested aircraft uses root coordinates for all readable presentation.
     if (sceneParent) this.stableHud.addChild(this.damageText.root);
-    this.stableHud.addChild(this.trackingBars, this.hpText, this.resourceText);
-    this.hpText.anchor.set(.5); this.resourceText.anchor.set(.5);
+    this.stableHud.addChild(this.trackingBars, this.hpText, this.resourceText, this.pressureText);
+    this.pressureText.anchor.set(.5); this.hpText.anchor.set(.5); this.resourceText.anchor.set(.5);
     this.enemies = new AirCombatSpritePool(this.actors, 44);
     this.missileSmoke = new AirCombatSpritePool(this.smokeLayer, AIR_COMBAT_WORLD.maxParticles);
     this.projectileGlows = new AirCombatSpritePool(this.actors, AIR_COMBAT_WORLD.maxPlayerProjectiles * 2 + AIR_COMBAT_WORLD.maxEnemyProjectiles);
@@ -796,18 +799,24 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     const barWidth = trackingBarWidth(visual.size*playerAirframeScale(world.aircraft));
     const trackingPosition = this.sceneParent ? mirrorPoint(world.playerX, world.playerY) : { x: world.playerX, y: world.playerY };
     const barX = trackingBarX(trackingPosition.x, barWidth);
-    const barY = trackingBarY(trackingPosition.y, visual.size*playerAirframeScale(world.aircraft));
+    const terra = terraHud(world);
+    const barY = trackingBarY(trackingPosition.y, visual.size*playerAirframeScale(world.aircraft), terra ? 3 : 2);
+    const barRows = terra ? [barY, barY + 13, barY + 26] : [barY, barY + 13];
     const layer = (y: number, ratio: number, color: number) => {
       if (ratio > 0) this.trackingBars.poly(angularBarPolygon(barX, y, barWidth, 10, ratio)).fill(color);
     };
     if (alive) {
-      for (const y of [barY, barY + 13]) this.trackingBars.poly(angularBarPolygon(barX, y, barWidth, 10)).fill({ color: 0x020617, alpha: .92 });
+      for (const y of barRows) this.trackingBars.poly(angularBarPolygon(barX, y, barWidth, 10)).fill({ color: 0x020617, alpha: .92 });
       layer(barY, health.chipRatio, 0xef4444);
       layer(barY, hp, hp < .25 ? 0xf87171 : hp < .5 ? 0xfbbf24 : 0x4ade80);
       if(health.shieldEnd>health.shieldStart)this.trackingBars.poly(angularBarSegmentPolygon(barX,barY,barWidth,10,health.shieldStart,health.shieldEnd)).fill(0xd8e4ee);
       if(health.grayEnd>health.grayStart)this.trackingBars.poly(angularBarSegmentPolygon(barX,barY,barWidth,10,health.grayStart,health.grayEnd)).fill(0xb8bec8);
       layer(barY + 13, resource, stats.resourceKind === "energy" ? 0xa78bfa : 0x38bdf8);
-      for (const y of [barY, barY + 13]) this.trackingBars.poly(angularBarPolygon(barX, y, barWidth, 10)).stroke({ color: 0xcbd5e1, width: .39, alpha: .8 });
+      if (terra) {
+        layer(barY + 26, terra.pressure / Math.max(1, terra.cap), 0xf59e0b);
+        for (const mark of [.5,.75]) this.trackingBars.moveTo(barX+barWidth*mark,barY+26).lineTo(barX+barWidth*mark,barY+29).stroke({color:0xffedc2,width:.6});
+      }
+      for (const y of barRows) this.trackingBars.poly(angularBarPolygon(barX, y, barWidth, 10)).stroke({ color: 0xcbd5e1, width: .39, alpha: .8 });
     }
     this.hpText.visible = this.resourceText.visible = alive;
     const playerTextScale = playerAirframeScale(world.aircraft);
@@ -817,6 +826,10 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     this.resourceText.text = statusBarText(world.aircraft.currentResource, stats.maxResource);
     this.hpText.position.set(barX + barWidth / 2, barY + 5);
     this.resourceText.position.set(barX + barWidth / 2, barY + 18);
+    this.pressureText.visible = alive && !!terra;
+    this.pressureText.scale.set(playerTextScale);
+    this.pressureText.text = terra ? pressureBarText(terra.pressure, terra.cap) : '';
+    this.pressureText.position.set(barX + barWidth / 2, barY + 31);
     this.healthBars.end();
     this.damageText.update(world, delta, reducedMotion, !!this.sceneParent);
     if (damageSmoke && alive) {

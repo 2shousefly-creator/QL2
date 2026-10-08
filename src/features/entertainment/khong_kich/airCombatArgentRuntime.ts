@@ -1,3 +1,4 @@
+import { statusExpiry } from './airCombatStatusTiming';
 import type { AircraftCombatState } from './airCombatTypes';
 import type { CombatWorld, EnemyEntity } from './airCombatRuntime';
 import { argentInset, argentEmitterPositions } from './airCombatArgentGeometry';
@@ -30,7 +31,7 @@ export interface ArgentEffect {id:number;kind:'stance'|'guard'|'impact'|'launch'
 export interface ArgentState {
  blades:ArgentBlade[];guard?:{rank:number;at:number;until:number;beatUntil:number;remaining:number;used:number;id:number};
  temper:number;temperUntil:number;progress:number;genesisReady:number;seen:WeakSet<object>;
- launch?:Cast;recall?:Recall;array?:ArrayCast;effects:ArgentEffect[];armorMarks:Map<number,{entity:EnemyEntity;until:number}>;
+ launch?:Cast;recall?:Recall;array?:ArrayCast;effects:ArgentEffect[];armorMarks:Map<number,{entity:EnemyEntity;until:number;duration:number}>;
  controls:Map<number,{entity:EnemyEntity;rootUntil:number;slowUntil:number;slow:number}>;updated:number;
 }
 const recallSnapshots=new WeakMap<AircraftCombatState,Recall>();
@@ -127,7 +128,7 @@ export function argentArmorMultiplier(w:CombatWorld,e:EnemyEntity){const mark=st
 function markArmor(w:CombatWorld,e:EnemyEntity,at:number){
  const actor=e.aircraftTarget?.world;if(actor&&celestialProtection(actor.aircraft))return;
  const duration=actor?negativeStatusDuration(actor.aircraft,A.markDuration):A.markDuration;
- argentState(w).armorMarks.set(e.id,{entity:e,until:at+duration});fx(w,'mark',e.x,e.y,at,38,.5);
+ argentState(w).armorMarks.set(e.id,{entity:e,until:at+duration,duration});fx(w,'mark',e.x,e.y,at,38,.5);
 }
 export function beginArgentSkill(w:CombatWorld,id:ArgentSkillId,h:ArgentHooks){
  const s=argentState(w),rank=skillRank(w.aircraft,id),v=argentValues(id,rank),c:Cast={id:w.nextId++,rank,at:w.elapsed,hits:new Map()};
@@ -150,7 +151,7 @@ function control(w:CombatWorld,e:EnemyEntity,root:number,slow:number,duration:nu
  if(actor&&(celestialProtection(actor.aircraft)||hardControlImmune(actor.aircraft)))return;
  const s=argentState(w),old=s.controls.get(e.id),t=old?.entity===e?old:{entity:e,rootUntil:0,slowUntil:0,slow:1};
  const seconds=actor?negativeStatusDuration(actor.aircraft,root||duration):root||duration;
- if(root)t.rootUntil=Math.max(t.rootUntil,at+seconds);else {t.slow=t.slowUntil>at?Math.min(t.slow,1-slow):1-slow;t.slowUntil=Math.max(t.slowUntil,at+seconds);}
+ if(root){if(at+seconds>t.rootUntil)t.rootUntil=statusExpiry(t,'rootUntil',at,seconds);}else {t.slow=t.slowUntil>at?Math.min(t.slow,1-slow):1-slow;if(at+seconds>t.slowUntil)t.slowUntil=statusExpiry(t,'slowUntil',at,seconds);}
  s.controls.set(e.id,t);fx(w,root?'root':'slow',e.x,e.y,at,32,seconds);
 }
 export function argentMovement(w:CombatWorld,e:EnemyEntity){const t=states.get(w)?.controls.get(e.id);return !t||t.entity!==e||e.aircraftTarget&&hardControlImmune(e.aircraftTarget.world.aircraft)?1:t.rootUntil>w.elapsed?0:t.slowUntil>w.elapsed?t.slow:1;}

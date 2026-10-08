@@ -1,3 +1,4 @@
+import { coreHealingRate } from './airCombatHealingRates';
 import { coreCooldownReady, deferCoreCooldown } from "./airCombatCooldowns";
 import { skillRank } from "./airCombatSkillRanks";
 import { createAbsorbShield } from "./airCombatExpansion";
@@ -103,7 +104,7 @@ register(61, { stats: (s, stats) => { if (active(s, "reactiveArmor"))
             }
         } } });
 register(62, { hooks: { tick: ctx => { if (ctx.state.status.regenDisabledUntil <= ctx.state.coreState.time && ctx.state.currentHp < ctx.stats.maxHp * .22)
-            ctx.heal(Math.min((ctx.stats.maxHp-ctx.state.currentHp) * .01 * (ctx.dt || 0), ctx.stats.maxHp * .22 - ctx.state.currentHp)); } } });
+            ctx.heal(Math.min(coreHealingRate(ctx.state,ctx.stats,62) * (ctx.dt || 0), ctx.stats.maxHp * .22 - ctx.state.currentHp)); } } });
 register(63, { stats: (s, stats) => { if (s.currentHp < stats.maxHp * .35) {
         stats.firepower += 50;
         stats.armor += 35;
@@ -169,7 +170,7 @@ register(86, { finalStats: (_s, stats) => {
     } });
 register(87, { stats: (_s, stats) => { stats.criticalChance += .25; stats.criticalDamageMultiplier += .4; } });
 register(92, { hooks: { tick: ctx => { if (ctx.state.status.regenDisabledUntil <= ctx.state.coreState.time && ctx.state.coreState.time - ctx.state.coreState.lastDamage >= 4)
-            ctx.heal(ctx.stats.maxHp * .015 * (ctx.dt || 0)); } } });
+            ctx.heal(coreHealingRate(ctx.state,ctx.stats,92) * (ctx.dt || 0)); } } });
 register(94, { stats: (_s, stats) => { stats.criticalChance += .25; }, finalStats: (_s, stats) => { stats.maxHp *= .6; stats.firepower *= 1.5; } });
 register(95, { finalStats: (_s, stats) => { stats.criticalChance = .25; stats.criticalDamageMultiplier += 1; } });
 register(96, { stats: (_s, stats) => { stats.skillHaste += 67; }, hooks: { skillCast: ctx => { const before=ctx.state.currentHp;ctx.state.currentHp = Math.max(Number.EPSILON, before * .95);recordCoreMetric(ctx.state,96,"hpPaid",before-ctx.state.currentHp); } } });

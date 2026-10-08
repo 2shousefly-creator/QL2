@@ -1,3 +1,4 @@
+import { statusDuration } from './airCombatStatusTiming';
 import { terraHud, terraState } from './airCombatTerraRuntime';
 import { sylvaHud, sylvaState, sylvaMovement } from './airCombatSylvaRuntime';
 import { ARGENT } from './airCombatArgentConfig';
@@ -90,7 +91,7 @@ export function getActiveSkillDuration(world: CombatWorld, id: SkillId) {
     if(state.dronePhase!=="active")return {remaining:state.droneTransitionRemaining??0,duration:state.dronePhase==="deploying"?.4:.38,progress:undefined,timeLabel:state.dronePhase==="deploying"?"Đang triển khai HawkEye":"Đang thu hồi · hồi chiêu sau docking"};
     const energy = hawkEyeDuration(state);
     // Time estimates are separate from visual progress for this resource-driven toggle.
-    return { remaining: energy.remaining ?? 0, duration: energy.remaining ?? 0, progress: energy.progress,
+    return { remaining: Infinity, duration: Infinity, progress: energy.progress,
       timeLabel: hawkEyeTimeLabel(energy.remaining) };
   }
   if(id.startsWith('terra_')){const t=terraHud(world),remaining=state.activeEffects[id]??0;if(!t||remaining<=0)return null;const duration=state.activeEffectDurations?.[id]??remaining;return {remaining,duration,progress:remaining/duration,timeLabel:id==='terra_reactive_rock_armor'?'Dự trữ '+Math.ceil(t.reserve)+' / '+Math.ceil(t.initialReserve):id==='terra_seismic_cannon'?'Lập thế · '+remaining.toFixed(1)+'s':id==='terra_geocore_overdrive'?'Cường hóa · '+Math.ceil(remaining)+'s':'Kẹp Sơn · Đang ép'};}
@@ -98,10 +99,10 @@ export function getActiveSkillDuration(world: CombatWorld, id: SkillId) {
   if(id==='argent_guard_stance'){
     const g=argentHud(world).guard;if(!g)return null;
     const active=g.beatUntil>world.elapsed;
-    return {remaining:active?g.beatUntil-world.elapsed:0,duration:.75,progress:active?(g.beatUntil-world.elapsed)/.75:0,timeLabel:active?'Nhịp đỡ 99%':'Thế chờ đòn · '+g.remaining+' lượt'};
+    return {remaining:active?g.beatUntil-world.elapsed:Infinity,duration:active?.75:Infinity,progress:active?(g.beatUntil-world.elapsed)/.75:0,timeLabel:active?'Nhịp đỡ 99%':'Thế chờ đòn · '+g.remaining+' lượt'};
   }
   if(id==='argent_heavenly_blade_array'){const a=argentHud(world).array;return a?{remaining:a.until-world.elapsed,duration:ARGENT.arrayDuration,progress:(a.until-world.elapsed)/ARGENT.arrayDuration,timeLabel:'Kiếm trận · '+a.fireCount+'/4'}:null;}
-  if(id==='argent_blade_recall'&&argentState(world).recall)return {remaining:0,duration:0,progress:undefined,timeLabel:'Đang thu Phiến'};
+  if(id==='argent_blade_recall'&&argentState(world).recall)return {remaining:Infinity,duration:Infinity,progress:undefined,timeLabel:'Đang thu Phiến'};
   const v = getSkillRuntimeValues(state, id);
   let remaining = state.activeEffects[id] || 0;
   let duration = state.activeEffectDurations?.[id] ?? v.duration + (id === "focus_laser" ? v.charge : 0);
@@ -118,10 +119,10 @@ export function getActiveSkillDuration(world: CombatWorld, id: SkillId) {
   }
   if (id === "missile_swarm" && state.coreState.deferredCooldowns[id]!==undefined) {
     const salvo=world.skillCores.salvos.find(s=>s.pending>0);
-    if(salvo)return {remaining:0,duration:0,progress:salvo.pending/salvo.total,timeLabel:"Đang phóng loạt tên lửa chính"};
+    if(salvo)return {remaining:Infinity,duration:Infinity,progress:salvo.pending/salvo.total,timeLabel:"Đang phóng loạt tên lửa chính"};
   }
   if (id === "stellar_lance" && !world.astra?.charge && state.coreState.deferredCooldowns[id]!==undefined)
-    return {remaining:0,duration:0,progress:undefined,timeLabel:"Đòn Thương chính đang bay"};
+    return {remaining:Infinity,duration:Infinity,progress:undefined,timeLabel:"Đòn Thương chính đang bay"};
   return remaining > 0 && duration > 0 && Number.isFinite(duration)
     ? { remaining, duration: Math.max(duration, remaining), progress: Math.min(1, remaining / duration), timeLabel: undefined } : null;
 }
@@ -143,6 +144,7 @@ export interface StatusPresentation {
   timeLabel?: string;
   priority: number;
   timerKind?: "active" | "cooldown";
+  timer?: { phase:"active"|"cooldown"|"indefinite"; remaining:number; total:number };
   showNumericTimer?: boolean;
   rewardMessage?: string;
 }
@@ -239,35 +241,35 @@ export function getStatusPresentations(world: CombatWorld): StatusPresentation[]
   if(guard)result.push({id:'argent:guard',group:'buff',name:guard.beatUntil>world.elapsed?'Nhịp đỡ 99%':'Thế Đỡ · Chờ đòn',description:'Đòn hợp lệ mở một nhịp 0,75 giây; không giảm damage liên tục toàn bộ thế. Còn '+guard.remaining+' lượt. Không đỡ DoT/sát thương chuẩn và không miễn khống chế.',icon:{kind:'skill',id:'argent_guard_stance'},source:'Thế Đỡ',stacks:guard.remaining,badgeText:guard.remaining+' lượt',remaining:guard.until-world.elapsed,duration:8,priority:110});
   if(argent.temper>0&&argent.temperUntil>world.elapsed)result.push({id:'argent:temper',group:'buff',name:'Tôi Kim',description:'S3 hợp lệ kế tiếp tiêu toàn bộ tầng; Phiến đầu trúng mỗi mục tiêu thêm 40% Hỏa Lực mỗi tầng, tối đa 120%.',icon:{kind:'skill',id:'argent_guard_stance'},source:'Thế Đỡ',stacks:argent.temper,badgeText:argent.temper+'/3',remaining:argent.temperUntil-world.elapsed,duration:6,priority:109});
   const water=riptideState(world).waterform;
-  if(water)result.push({id:'riptide:charge',group:'buff',name:'Thủy áp',description:'Nhịp gây sát thương hợp lệ tích sức mạnh nổ; trần hồi Máu 35% Máu tối đa mỗi lần dùng.',icon:{kind:'skill',id:'riptide_waterform'},source:'Thủy Thể',stacks:water.charge,badgeText:water.charge+'/'+RIPTIDE.maxCharge,remaining:water.until-world.elapsed,duration:RIPTIDE.waterDuration,priority:110});
+  if(water)result.push({id:'riptide:charge',group:'buff',name:'Thủy áp',description:'Nhịp gây sát thương hợp lệ tích sức mạnh nổ; hồi Máu theo sát thương vùng thực tế lên Máu, không giới hạn tổng hồi theo lần dùng.',icon:{kind:'skill',id:'riptide_waterform'},source:'Thủy Thể',stacks:water.charge,badgeText:water.charge+'/'+RIPTIDE.maxCharge,remaining:water.until-world.elapsed,duration:RIPTIDE.waterDuration,priority:110});
   const rival=world.duel?.opponent??world.mirage?.mirror?.context.world??world.duelOpponent?.context.world;
   const target=rival?.enemies.find(e=>e.aircraftTarget?.world===world);
   if(rival&&target){
    const earth=terraState(rival).targets.get(target.id);
-   if(earth?.entity===target)for(const [key,name,text,duration] of [['rootUntil','Trói','Bị Kẹp Sơn giữ vị trí.',2],['stunUntil','Choáng','Không thể di chuyển hoặc hành động theo luật khống chế.',2],['suppressUntil','Trấn Sơn','Giảm 20% toàn bộ sát thương gây ra.',5],['markUntil','Rạn Địa','Pháo Địa Chấn của Terra đặt dấu trúng sẽ tiêu dấu và hồi Máu cho Terra.',3]] as const){const remaining=earth[key]-rival.elapsed;if(remaining>0)result.push({id:'terra:'+key,group:'debuff',name,description:text,icon:{kind:'skill',id:'terra_strata_clamp'},source:'Terra đối phương',stacks:1,remaining,duration,priority:112});}
+   if(earth?.entity===target)for(const [key,name,text,duration] of [['rootUntil','Trói','Bị Kẹp Sơn giữ vị trí.',2],['stunUntil','Choáng','Không thể di chuyển hoặc hành động theo luật khống chế.',2],['suppressUntil','Trấn Sơn','Giảm 20% toàn bộ sát thương gây ra.',5],['markUntil','Rạn Địa','Pháo Địa Chấn của Terra đặt dấu trúng sẽ tiêu dấu và hồi Máu cho Terra.',3]] as const){const remaining=earth[key]-rival.elapsed;if(remaining>0)result.push({id:'terra:'+key,group:'debuff',name,description:text,icon:{kind:'skill',id:'terra_strata_clamp'},source:'Terra đối phương',stacks:1,remaining,duration:statusDuration(earth,key,duration),priority:112});}
 
    const d=sylvaState(rival).targets.get(target.id),now=rival.elapsed;
    if(d?.entity===target){
-    if(d.flatUntil>now||d.acidUntil>now)result.push({id:'sylva:acid',group:'debuff',name:'Ăn mòn Giáp',description:(d.acidUntil>now?'Giảm 25% Giáp, sau đó ':'')+'trừ '+(d.flatUntil>now?d.flat:0)+' Giáp; không dưới 0.',icon:{kind:'skill',id:'sylva_acid_rounds'},source:'Sylva đối phương',stacks:1,remaining:Math.max(d.flatUntil,d.acidUntil)-now,duration:5,priority:111});
-    if(d.markUntil>now)result.push({id:'sylva:mark',group:'debuff',name:'Dấu Ký Sinh',description:'Nhận thêm '+(10+2*d.markRank)+'% toàn bộ sát thương từ Sylva đặt dấu.',icon:{kind:'skill',id:'sylva_parasitic_seed'},source:'Sylva đối phương',stacks:1,remaining:d.markUntil-now,duration:5,priority:110});
-    if(d.rootUntil>now)result.push({id:'sylva:root',group:'debuff',name:'Trói',description:'Không thể di chuyển hoặc dash; vẫn bắn và dùng kỹ năng theo luật chung.',icon:{kind:'skill',id:'sylva_parasitic_seed'},source:'Ký Sinh',stacks:1,remaining:d.rootUntil-now,duration:2,priority:112});
-    if(d.slowUntil>now)result.push({id:'sylva:slow',group:'debuff',name:'Độc Trệ',description:'Giảm '+Math.round((1-d.slow)*100)+'% tốc độ di chuyển; kéo dài thêm 1 giây sau khi rời vùng.',icon:{kind:'skill',id:'sylva_acid_burst'},source:'Nổ Axit',stacks:1,remaining:d.slowUntil-now,duration:1,priority:108});
-    if(d.suppressUntil>now)result.push({id:'sylva:suppress',group:'debuff',name:'Sinh Trưởng Áp Chế',description:'Giảm 50% tốc độ di chuyển và 25% tổng tốc độ bắn.',icon:{kind:'skill',id:'sylva_deathbloom'},source:'Đại Thụ Diệt Sinh',stacks:1,remaining:d.suppressUntil-now,duration:3,priority:110});
+    if(d.flatUntil>now||d.acidUntil>now)result.push({id:'sylva:acid',group:'debuff',name:'Ăn mòn Giáp',description:(d.acidUntil>now?'Giảm 25% Giáp, sau đó ':'')+'trừ '+(d.flatUntil>now?d.flat:0)+' Giáp; không dưới 0.',icon:{kind:'skill',id:'sylva_acid_rounds'},source:'Sylva đối phương',stacks:1,remaining:Math.max(d.flatUntil,d.acidUntil)-now,duration:statusDuration(d,d.flatUntil>d.acidUntil?'flatUntil':'acidUntil',5),priority:111});
+    if(d.markUntil>now)result.push({id:'sylva:mark',group:'debuff',name:'Dấu Ký Sinh',description:'Nhận thêm '+(10+2*d.markRank)+'% toàn bộ sát thương từ Sylva đặt dấu.',icon:{kind:'skill',id:'sylva_parasitic_seed'},source:'Sylva đối phương',stacks:1,remaining:d.markUntil-now,duration:statusDuration(d,'markUntil',5),priority:110});
+    if(d.rootUntil>now)result.push({id:'sylva:root',group:'debuff',name:'Trói',description:'Không thể di chuyển hoặc dash; vẫn bắn và dùng kỹ năng theo luật chung.',icon:{kind:'skill',id:'sylva_parasitic_seed'},source:'Ký Sinh',stacks:1,remaining:d.rootUntil-now,duration:statusDuration(d,'rootUntil',2),priority:112});
+    if(d.slowUntil>now)result.push({id:'sylva:slow',group:'debuff',name:'Độc Trệ',description:'Giảm '+Math.round((1-d.slow)*100)+'% tốc độ di chuyển; kéo dài thêm 1 giây sau khi rời vùng.',icon:{kind:'skill',id:'sylva_acid_burst'},source:'Nổ Axit',stacks:1,remaining:d.slowUntil-now,duration:statusDuration(d,'slowUntil',1),priority:108});
+    if(d.suppressUntil>now)result.push({id:'sylva:suppress',group:'debuff',name:'Sinh Trưởng Áp Chế',description:'Giảm 50% tốc độ di chuyển và 25% tổng tốc độ bắn.',icon:{kind:'skill',id:'sylva_deathbloom'},source:'Đại Thụ Diệt Sinh',stacks:1,remaining:d.suppressUntil-now,duration:statusDuration(d,'suppressUntil',3),priority:110});
    }
 
    const mark=argentState(rival).armorMarks.get(target.id);
-   if(mark&&argentArmorMultiplier(rival,target)<1)result.push({id:'argent:mark',group:'debuff',name:'Kim Ấn',description:'Giảm 15% Giáp trong 4 giây; đợt đủ ba Phiến làm mới thời gian, không cộng dồn.',icon:{kind:'skill',id:'argent_heavenly_blade_array'},source:'Ngũ Kiếm Đồng Tâm',stacks:1,remaining:mark.until-rival.elapsed,duration:4,priority:110});
+   if(mark&&argentArmorMultiplier(rival,target)<1)result.push({id:'argent:mark',group:'debuff',name:'Kim Ấn',description:'Giảm 15% Giáp trong 4 giây; đợt đủ ba Phiến làm mới thời gian, không cộng dồn.',icon:{kind:'skill',id:'argent_heavenly_blade_array'},source:'Ngũ Kiếm Đồng Tâm',stacks:1,remaining:mark.until-rival.elapsed,duration:mark.duration,priority:110});
    const metal=argentState(rival).controls.get(target.id);
-   if(metal&&argentMovement(rival,target)<1){const root=metal.rootUntil>rival.elapsed;result.push({id:'argent:control',group:'debuff',name:'Ghim Chặt',description:root?'Tạm giữ vị trí; vẫn có thể bắn và dùng kỹ năng theo luật chung.':'Giảm '+Math.round((1-metal.slow)*100)+'% tốc độ di chuyển.',icon:{kind:'skill',id:'argent_blade_recall'},source:'Argent đối phương',stacks:1,remaining:(root?metal.rootUntil:metal.slowUntil)-rival.elapsed,duration:root?.8:1,priority:110});}
+   if(metal&&argentMovement(rival,target)<1){const root=metal.rootUntil>rival.elapsed;result.push({id:'argent:control',group:'debuff',name:'Ghim Chặt',description:root?'Tạm giữ vị trí; vẫn có thể bắn và dùng kỹ năng theo luật chung.':'Giảm '+Math.round((1-metal.slow)*100)+'% tốc độ di chuyển.',icon:{kind:'skill',id:'argent_blade_recall'},source:'Argent đối phương',stacks:1,remaining:(root?metal.rootUntil:metal.slowUntil)-rival.elapsed,duration:statusDuration(metal,root?'rootUntil':'slowUntil',root?.8:1),priority:110});}
 
    const slow=riptideState(rival).slows.get(target.id);
-   if(slow&&riptideMovement(rival,target)<1)for(const [id,value] of slow.sources)if(value.until>rival.elapsed)result.push({id:'riptide:slow:'+id,group:'debuff',name:'Dòng nước làm chậm',description:'Giảm '+Math.round((1-value.multiplier)*100)+'% tốc độ di chuyển; áp dụng slow mạnh nhất, không cộng dồn.',icon:{kind:'skill',id},source:'Riptide đối phương',stacks:1,remaining:value.until-rival.elapsed,duration:2,priority:100});
-   if(riptideSuppressed(rival,target))result.push({id:'riptide:pressure',group:'debuff',name:'Áp Chế Thủy Lực',description:'Gây ít hơn 25% sát thương lên Riptide sở hữu Hội Thủy khi còn trong bán kính 170.',icon:{kind:'skill',id:'riptide_confluence'},source:'Riptide đối phương',stacks:1,remaining:riptideState(rival).confluence!.until-rival.elapsed,duration:2.3,priority:100});
+   if(slow&&riptideMovement(rival,target)<1)for(const [id,value] of slow.sources)if(value.until>rival.elapsed)result.push({id:'riptide:slow:'+id,group:'debuff',name:'Dòng nước làm chậm',description:'Giảm '+Math.round((1-value.multiplier)*100)+'% tốc độ di chuyển; áp dụng slow mạnh nhất, không cộng dồn.',icon:{kind:'skill',id},source:'Riptide đối phương',stacks:1,remaining:value.until-rival.elapsed,duration:value.duration,priority:100});
+   if(riptideSuppressed(rival,target))result.push({id:'riptide:pressure',group:'debuff',name:'Áp Chế Thủy Lực',description:'Gây ít hơn 25% sát thương lên Riptide sở hữu Hội Thủy khi còn trong bán kính 170.',icon:{kind:'skill',id:'riptide_confluence'},source:'Riptide đối phương',stacks:1,remaining:riptideState(rival).confluence!.until-rival.elapsed,duration:riptideState(rival).confluence!.until-riptideState(rival).confluence!.at,priority:100});
   }
   result.push(...coreCooldownStatuses(world), ...skillCoreStatuses(world), ...expansionStatuses(world), ...equipmentStatuses(world));
   if (world.duel) {
-    const addDuelStatus = (id: string, name: string, description: string, icon: StatusPresentation["icon"], remaining = Infinity, group: "buff" | "debuff" = "debuff") => {
-      result.push({ id, name, description, icon, group, source: "SOLO", stacks: 1, remaining, duration: Number.isFinite(remaining) ? Math.max(3, remaining) : Infinity, priority: 115 });
+    const addDuelStatus = (id: string, name: string, description: string, icon: StatusPresentation["icon"], remaining = Infinity, group: "buff" | "debuff" = "debuff", total = Infinity) => {
+      result.push({ id, name, description, icon, group, source: "SOLO", stacks: 1, remaining, duration: total, priority: 115 });
     };
     if (world.duel.multiplier > 1) addDuelStatus("duel:damage", world.duel.multiplier >= 2 ? "TỬ CHIẾN" : "CUỒNG CHIẾN", `Sát thương hai bên tăng ${Math.round((world.duel.multiplier - 1) * 100)}%.`, { kind: "status", id: "mark" }, Infinity, "buff");
     if (s.duel?.healingBlocked) addDuelStatus("duel:no-heal", "SUDDEN DEATH", "Không thể hồi Máu trong hiệp phụ.", { kind: "status", id: "regen_off" });
@@ -275,12 +277,12 @@ export function getStatusPresentations(world: CombatWorld): StatusPresentation[]
     const target = opponent?.enemies.find(e => e.aircraftTarget?.world === world);
     if (opponent && target) {
       const interference = opponent.rankRuntime?.interference.get(target.id);
-      if (interference && interference.until > opponent.elapsed) addDuelStatus("duel:interference", "Nhiễu Điện Tử", `Di chuyển -${Math.round((1 - interference.movement) * 100)}% · Tốc độ bắn -${Math.round((1 - interference.firing) * 100)}%.`, { kind: "skill", id: "electronic_interference" }, interference.until - opponent.elapsed);
-      if (target.burn > 0) addDuelStatus("duel:burn", "Thiêu đốt", "Đang nhận sát thương thiêu đốt từ đối thủ.", { kind: "status", id: "burn" }, target.burn);
+      if (interference && interference.until > opponent.elapsed) addDuelStatus("duel:interference", "Nhiễu Điện Tử", `Di chuyển -${Math.round((1 - interference.movement) * 100)}% · Tốc độ bắn -${Math.round((1 - interference.firing) * 100)}%.`, { kind: "skill", id: "electronic_interference" }, interference.until - opponent.elapsed, "debuff", 3);
+      if (target.burn > 0) addDuelStatus("duel:burn", "Thiêu đốt", "Đang nhận sát thương thiêu đốt từ đối thủ.", { kind: "status", id: "burn" }, target.burn, "debuff", statusDuration(target,"burn",5));
       const anchor = opponent.rankRuntime?.anchor;
-      if (anchor && Math.hypot(target.x - anchor.x, target.y - anchor.y) <= gravityAnchorValues(anchor.rank).radius) addDuelStatus("duel:anchor", "Neo Trọng Lực", "Giảm tốc độ di chuyển và bị hút về tâm vùng ảnh hưởng.", { kind: "skill", id: "gravity_anchor" }, Math.max(0, anchor.until - opponent.elapsed));
+      if (anchor && Math.hypot(target.x - anchor.x, target.y - anchor.y) <= gravityAnchorValues(anchor.rank).radius) addDuelStatus("duel:anchor", "Neo Trọng Lực", "Giảm tốc độ di chuyển và bị hút về tâm vùng ảnh hưởng.", { kind: "skill", id: "gravity_anchor" }, Math.max(0, anchor.until - opponent.elapsed), "debuff", opponent.aircraft.activeEffectDurations?.gravity_anchor ?? 5);
       const laserArmor = opponent.skillCores.enemyEffects.get(target.id)?.armorUntil ?? 0;
-      if (laserArmor > opponent.elapsed) addDuelStatus("duel:laser-armor", "Giáp bị suy yếu", "Giảm Giáp do Focus Laser của đối thủ.", { kind: "status", id: "armor" }, laserArmor - opponent.elapsed);
+      if (laserArmor > opponent.elapsed) addDuelStatus("duel:laser-armor", "Giáp bị suy yếu", "Giảm Giáp do Focus Laser của đối thủ.", { kind: "status", id: "armor" }, laserArmor - opponent.elapsed, "debuff", V.laserArmorDuration);
     }
   }
   if(hasCore(s,208)){
@@ -295,6 +297,9 @@ export function getStatusPresentations(world: CombatWorld): StatusPresentation[]
       result.push({ id: `skill:${id}`, group: "buff", name: model.title, icon: { kind: "skill", id },
         description: [model.description, ...model.detailRows.slice(1), ...model.coreRows].join(" "), source: "Kỹ năng", stacks: 1,
         remaining: timer.remaining, duration: timer.duration, progress: timer.progress, timeLabel: timer.timeLabel, priority: 100 });
+    } else if ((s.cooldowns[id]??0)>0) {
+      const model=getSkillTooltipModel(s,id),remaining=s.cooldowns[id]!;
+      result.push({id:`skill:${id}`,group:'buff',name:model.title,icon:{kind:'skill',id},description:model.description,source:'Kỹ năng',stacks:1,remaining,duration:c.skillCooldownDurations[id]??remaining,timerKind:'cooldown',priority:70});
     }
   }
   for (const entry of TIMED_STATUSES) {
@@ -374,17 +379,18 @@ export function getStatusPresentations(world: CombatWorld): StatusPresentation[]
     duration: negativeStatusDuration(s, 1.1), priority: 110 });
   // Aggregate the same status across live targets; show the earliest expiry, never sum timers.
   const enemyStates = [
-    { id: "burn" as const, name: "Địch bị thiêu đốt", description: "60% Hỏa lực/s trong 4s; trúng mới làm mới thời gian.", duration: 4, read: (e: CombatWorld["enemies"][number]) => e.burn },
-    { id: "armor" as const, name: "Địch bị suy yếu", description: "Giảm 8% Giáp của địch.", duration: 4, read: (e: CombatWorld["enemies"][number]) => e.weakUntil - c.time },
-    { id: "armor" as const, name: "Giáp địch bị nung chảy", description: "Giảm 20% Giáp trong 5s; trúng mới làm mới thời gian.", duration: 5, read: (e: CombatWorld["enemies"][number]) => e.burnArmorUntil - c.time },
-    { id: "armor" as const, name: "Điểm yếu bị khai thác", description: "Giảm 15% Giáp trong 5s.", duration: 5, read: (e: CombatWorld["enemies"][number]) => e.weakDebuffUntil - c.time },
-    { id: "stun" as const, name: "Địch bị choáng", description: "Tạm ngừng hành động của địch.", duration: 4, read: (e: CombatWorld["enemies"][number]) => e.stun },
+    { id: "burn" as const, name: "Địch bị thiêu đốt", description: "90% Hỏa lực/s trong 5s; trúng mới làm mới thời gian.", key:"burn", duration:5, read: (e: CombatWorld["enemies"][number]) => e.burn },
+    { id: "armor" as const, name: "Địch bị suy yếu", description: "Giảm 8% Giáp của địch.", key:"weakUntil", duration:4, read: (e: CombatWorld["enemies"][number]) => e.weakUntil - c.time },
+    { id: "armor" as const, name: "Giáp địch bị nung chảy", description: "Giảm 20% Giáp trong 6s; trúng mới làm mới thời gian.", key:"burnArmorUntil", duration:6, read: (e: CombatWorld["enemies"][number]) => e.burnArmorUntil - c.time },
+    { id: "armor" as const, name: "Điểm yếu bị khai thác", description: "Giảm 15% Giáp trong 5s.", key:"weakDebuffUntil", duration:5, read: (e: CombatWorld["enemies"][number]) => e.weakDebuffUntil - c.time },
+    { id: "stun" as const, name: "Địch bị choáng", description: "Tạm ngừng hành động của địch.", key:"stun", duration:4, read: (e: CombatWorld["enemies"][number]) => e.stun },
   ];
   for (const entry of enemyStates) {
-    const timers = world.enemies.filter(e => e.hp > 0).map(entry.read).filter(t => t > 0);
+    const targets = world.enemies.filter(e=>e.hp>0&&entry.read(e)>0).sort((a,b)=>entry.read(a)-entry.read(b));
+    const timers=targets.map(entry.read);
     if (timers.length) result.push({ id: `enemy:${entry.id}:${entry.name}`, group: "debuff", name: entry.name, icon: { kind: "status", id: entry.id },
       description: `${entry.description} Số địch đang chịu hiệu ứng: ${timers.length}.`, source: "Hiệu ứng trên địch",
-      stacks: timers.length, badgeText: `×${timers.length}`, badgeKind: "stack", remaining: Math.min(...timers), duration: entry.duration, priority: 50 });
+      stacks: timers.length, badgeText: `×${timers.length}`, badgeKind: "stack", remaining: Math.min(...timers), duration: statusDuration(targets[0],entry.key,entry.duration), priority: 50 });
   }
   const status=s.status;
   const timed = [
@@ -400,7 +406,11 @@ export function getStatusPresentations(world: CombatWorld): StatusPresentation[]
   // All five player marks accumulate hits via addStatusMark. Trigger/reset at a
   // threshold (including Hunted at 2) is not a hard single-instance status.
   for(const [key,mark] of Object.entries(status.marks)) if(mark && mark.until>c.time) result.push({id:key,group:"debuff",name:markNames[key as keyof typeof markNames],icon:{kind:"status",id:key==="corrosion"?"acid":key==="targetLock"?"radar":"mark"},description:`Dấu hiện tại: ${mark.count}. Tiếp tục trúng đòn có thể kích hoạt đòn trừng phạt.`,source:"Đòn địch",stacks:mark.count,badgeText:`×${mark.count}`,badgeKind:"stack",remaining:mark.until-c.time,duration:mark.window,priority:100});
-  return result.sort((a, b) => b.priority - a.priority || a.id.localeCompare(b.id));
+  return result.filter(status=>status.remaining>0).map(status=>({ ...status,
+    timer: Number.isFinite(status.remaining)&&Number.isFinite(status.duration)&&status.duration>0
+      ? {phase:status.timerKind??'active',remaining:Math.max(0,status.remaining),total:Math.max(status.remaining,status.duration)}
+      : {phase:'indefinite',remaining:Infinity,total:Infinity},
+  } as StatusPresentation)).sort((a, b) => b.priority - a.priority || a.id.localeCompare(b.id));
 }
 
 function skillCoreStatuses(world:CombatWorld):StatusPresentation[] {

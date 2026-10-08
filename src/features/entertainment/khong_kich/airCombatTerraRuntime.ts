@@ -1,3 +1,4 @@
+import { statusExpiry, extendStatusRemaining } from './airCombatStatusTiming';
 import type { CombatWorld, EnemyEntity } from './airCombatRuntime';
 import type { AircraftCombatState, SkillId } from './airCombatTypes';
 import { endAircraftSkill, getEffectiveAircraftStats, getSkillRuntimeValues } from './airCombatAircraft';
@@ -62,7 +63,7 @@ export function terraAbsorb(w:CombatWorld,remaining:number,sourceId?:number,refl
 /** Actual damage HP loss only: never costs, shields, max-HP changes or heal. */
 export function terraIncomingHp(w:CombatWorld,hpLost:number,reflection=false){
  if(w.aircraft.aircraftId!=='terra')return;const s=terraState(w);
- if(hpLost>0){s.lastHpLoss=w.elapsed;if(!reflection)s.pressure=Math.min(terraPressureCap(w),s.pressure+hpLost*(s.ultimate&&s.ultimate.rank>=3&&w.elapsed<s.ultimate.until?1.25:1));}
+ if(hpLost>0){s.lastHpLoss=w.elapsed;if(!reflection)s.pressure=Math.min(terraPressureCap(w),s.pressure+hpLost*T.pressureGain);}
  if(!live(w)){cancelTerra(w);return;}replenish(w);if(s.armor&&s.armor.reserve<=0)endArmor(w);
 }
 export function terraCluster(w:CombatWorld,h:TerraHooks){const list=w.enemies.filter(e=>valid(w,e,h));return list.find(e=>e.id===w.playerTargetId)??list.map(e=>({e,n:list.filter(t=>Math.hypot(e.x-t.x,e.y-t.y)<=T.clampRadius).length})).sort((a,b)=>b.n-a.n||a.e.id-b.e.id)[0]?.e;}
@@ -81,15 +82,17 @@ export function beginTerraSkill(w:CombatWorld,id:TerraSkillId,h:TerraHooks){
  s.ultimate={...c,tick:1};w.aircraft.coreState.timers.terraUltimate=c.until;w.aircraft.coreState.stacks.terraUltimateRank=rank;
  const pending=s.cannon;
  if(pending){if(!pending.halved){pending.cooldown*=.5;pending.halved=true;}}
- else if((w.aircraft.cooldowns[IDS[1]]??0)>0){w.aircraft.cooldowns[IDS[1]]!*=.5;w.aircraft.coreState.skillCooldownDurations[IDS[1]]=w.aircraft.cooldowns[IDS[1]]!;}
+ else if((w.aircraft.cooldowns[IDS[1]]??0)>0){w.aircraft.cooldowns[IDS[1]]!*=.5;}
  terraFx(w,'coreOpen',w.playerX,w.playerY,75,.6);
  if(rank>=2){h.cleanse(w);terraFx(w,'cleanse',w.playerX,w.playerY,100,.6);}
+ if(rank>=3&&live(w))h.heal(w,Math.max(0,getEffectiveAircraftStats(w.aircraft).maxHp-w.aircraft.currentHp)*.25);
 }
 function target(w:CombatWorld,e:EnemyEntity){const s=terraState(w);let d=s.targets.get(e.id);if(d?.entity!==e){d={entity:e,rootUntil:0,stunUntil:0,suppressUntil:0,markUntil:0};s.targets.set(e.id,d);}return d;}
 function control(w:CombatWorld,e:EnemyEntity,seconds:number,stun:boolean,h:TerraHooks,at:number){
  const actor=e.aircraftTarget?.world;if(immune(e)||actor&&hardControlImmune(actor.aircraft))return;
  const base=seconds*(boss(e)?.5:!actor&&h.elite(e)?.75:1),d=target(w,e),until=at+duration(e,base);
- if(stun){d.stunUntil=Math.max(d.stunUntil,until);if(actor)applyPlayerStatus(actor.aircraft,{stun:Math.max(0,base-Math.max(0,w.elapsed-at))});else e.stun=Math.max(e.stun,until-w.elapsed);}
+ const key=stun?'stunUntil':'rootUntil';if(until>d[key])statusExpiry(d,key,at,duration(e,base));
+ if(stun){d.stunUntil=Math.max(d.stunUntil,until);if(actor)applyPlayerStatus(actor.aircraft,{stun:Math.max(0,base-Math.max(0,w.elapsed-at))});else e.stun=extendStatusRemaining(e,"stun",e.stun,until-w.elapsed,w.elapsed);}
  else d.rootUntil=Math.max(d.rootUntil,until);
 }
 export function terraMovement(w:CombatWorld,e:EnemyEntity){const d=states.get(w)?.targets.get(e.id);return d?.entity===e&&!immune(e)&&!(e.aircraftTarget&&hardControlImmune(e.aircraftTarget.world.aircraft))&&Math.max(d.rootUntil,d.stunUntil)>w.elapsed?0:1;}
@@ -127,7 +130,7 @@ export function tickTerra(w:CombatWorld,dt:number,h:TerraHooks){
    for(const e of [...w.enemies])if(hittable(w,e,h)&&Math.hypot(e.x-c.x,e.y-c.y)<=T.clampRadius){
     const hit=h.damage(w,e,c.firepower*v.damageMultiplier,IDS[2],c.id,false);if(hit.total<=0||e.hp<=0)continue;
     control(w,e,v.control,c.stun,h,c.until);const d=target(w,e);
-    if(c.rank>=4)d.suppressUntil=c.until+duration(e,5);if(c.rank>=5)d.markUntil=c.until+duration(e,3);
+    if(c.rank>=4)d.suppressUntil=statusExpiry(d,'suppressUntil',c.until,duration(e,5));if(c.rank>=5)d.markUntil=statusExpiry(d,'markUntil',c.until,duration(e,3));
    }finish(w,IDS[2],c);s.clamp=undefined;
   }else activate(w,IDS[2],c);
  }
@@ -140,3 +143,5 @@ export function tickTerra(w:CombatWorld,dt:number,h:TerraHooks){
 }
 export function terraHud(w:CombatWorld){if(w.aircraft.aircraftId!=='terra'||!live(w))return;const s=terraState(w);return {pressure:Math.min(s.pressure,terraPressureCap(w)),cap:terraPressureCap(w),reserve:s.armor?.reserve??0,initialReserve:s.armor?.initial??0,armorRemaining:Math.max(0,(s.armor?.until??0)-w.elapsed),windup:Math.max(0,(s.cannon?.until??0)-w.elapsed),ultimate:Math.max(0,(s.ultimate?.until??0)-w.elapsed)};}
 export function cancelTerra(w:CombatWorld){const s=states.get(w);if(!s)return;states.delete(w);for(const id of IDS){delete w.aircraft.activeEffects[id];delete w.aircraft.activeEffectDurations?.[id];delete w.aircraft.coreState.deferredCooldowns[id];}for(const key of ['terraArmor','terraUltimate'])delete w.aircraft.coreState.timers[key];for(const key of ['terraReserve','terraArmorRank','terraUltimateRank'])delete w.aircraft.coreState.stacks[key];delete w.aircraft.coreState.shields.terraSeismic;}
+
+export function terraHealingRate(w:CombatWorld,maxHp:number):number {const u=states.get(w)?.ultimate;return u&&u.until>w.elapsed&&u.tick<=40?maxHp*terraValues(IDS[3],u.rank).healPerSecond:0;}

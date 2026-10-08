@@ -74,8 +74,8 @@ export function trackingBarWidth(displayWidth: number): number { return displayW
 export function trackingBarX(playerX: number, width: number): number {
   return Math.max(4, Math.min(AIR_COMBAT_WORLD.width - width - 4, playerX - width / 2));
 }
-export function trackingBarY(playerY: number, displayWidth: number): number {
-  return Math.min(AIR_COMBAT_WORLD.height - 26, playerY + displayWidth * 0.65 + 4);
+export function trackingBarY(playerY: number, displayWidth: number, rows = 2): number {
+  return Math.min(AIR_COMBAT_WORLD.height - 26 - (rows - 2) * 13, playerY + displayWidth * 0.65 + 4);
 }
 
 /** Each source world owns exactly one total; incoming duplicate damage events cannot add it again. */
@@ -148,3 +148,5 @@ export class HealthBarPresentation {
   }
   clear() { this.states.clear(); this.free.length = 0; this.clock = 0; }
 }
+
+export const pressureBarText = (current:number,cap:number) => `${Math.min(Math.max(0,Math.round(current)),Math.max(0,Math.round(cap)))} / ${Math.max(0,Math.round(cap))}`;

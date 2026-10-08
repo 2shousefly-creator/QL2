@@ -5,14 +5,14 @@ import { Swords, Shield, Gauge, HeartPulse, BatteryCharging, Timer, Crosshair, Z
 import { CoreDescription } from "./CoreDescription";
 import type { EffectiveAircraftStats } from "./airCombatTypes";
 
-export function CombatStatChips({ stats, baseline, healingReceived = 1, onInspect }: { onInspect?: (id: string, title: React.ReactNode, text: React.ReactNode) => void; stats: EffectiveAircraftStats; baseline?: EffectiveAircraftStats; healingReceived?: number }) {
+export function CombatStatChips({ stats, baseline, healing, onInspect }: { onInspect?: (id: string, title: React.ReactNode, text: React.ReactNode) => void; stats: EffectiveAircraftStats; baseline?: EffectiveAircraftStats; healing?: {current:number;baseline:number} }) {
   const keys = ["firepower", "armor", "fireRate", "hpRegen", "resourceRegen", "skillHaste", "criticalChance", "criticalDamageMultiplier"] as const;
   const resource = stats.resourceKind === "mana" ? "Mana" : "Điện";
   const chips = [
     { label: "Hỏa lực", value: stats.firepower.toFixed(0), Icon: Swords },
     { label: "Giáp", value: stats.armor.toFixed(0), Icon: Shield },
     { label: "Tốc độ bắn", value: `${stats.fireRate.toFixed(2).replace(".", ",")}/s`, Icon: Gauge },
-    { label: "Hồi HP", value: `${(stats.hpRegen * healingReceived).toFixed(1)}/s`, Icon: HeartPulse },
+    { label: "Hồi HP", value: `${(healing?.current ?? stats.hpRegen).toFixed(1).replace(".",",")}/s`, Icon: HeartPulse },
     { label: `Hồi ${resource}`, value: `${stats.resourceRegen.toFixed(1)}/s`, Icon: BatteryCharging },
     { label: "Hồi kỹ năng", value: stats.skillHaste.toLocaleString("vi-VN"), Icon: Timer },
     { label: "Tỷ lệ chí mạng", value: `${Math.round(stats.criticalChance * 100)}%`, Icon: Crosshair },
@@ -20,13 +20,13 @@ export function CombatStatChips({ stats, baseline, healingReceived = 1, onInspec
   ];
   const semanticValues = [
     `${stats.firepower.toFixed(0)} Hỏa Lực`, `${stats.armor.toFixed(0)} Giáp`, `${stats.fireRate.toFixed(2).replace(".", ",")} Tốc Độ Bắn`,
-    `${(stats.hpRegen * healingReceived).toFixed(1)} Hồi Máu/s`, `${stats.resourceRegen.toFixed(1)} Hồi Tài Nguyên/s`,
+    `${(healing?.current ?? stats.hpRegen).toFixed(1).replace(".",",")} Hồi Máu/s`, `${stats.resourceRegen.toFixed(1)} Hồi Tài Nguyên/s`,
     `${stats.skillHaste.toLocaleString("vi-VN")} Điểm Hồi Kỹ Năng`, `${Math.round(stats.criticalChance * 100)}% Tỷ Lệ Chí Mạng`, `${Math.round(stats.criticalDamageMultiplier * 100)}% Sát Thương Chí Mạng`,
   ];
   const descriptions = [
     "Hỏa Lực thể hiện khả năng gây sát thương của chiến cơ từ bắn thường và kỹ năng.",
     `Giáp giảm ${((1-100/(100+Math.max(-80,stats.armor)))*100).toLocaleString("vi-VN",{maximumFractionDigits:1})}% sát thương nhận vào từ kẻ địch.`,
-    "Số lần khai hỏa đạn thường trong 1 giây.", "Số Máu hồi lại mỗi 1 giây.", `Số ${resource} hồi lại mỗi 1 giây.`,
+    "Số lần khai hỏa đạn thường trong 1 giây.", "Tổng tốc độ hồi Máu liên tục và định kỳ đang hoạt động, đã tính hiệu ứng tăng/giảm hồi phục. Không bao gồm hồi Máu tức thời hoặc hút Máu từ sát thương.", `Số ${resource} hồi lại mỗi 1 giây.`,
     "Hồi Chiêu = Hồi Chiêu Cơ Bản × 100 / (100 + Điểm Hồi Kỹ Năng).",
     `Chiến cơ có ${Math.round(stats.criticalChance*100)}% Tỷ Lệ Chí Mạng cho mỗi đòn có thể chí mạng.`,
     `Chiến cơ có ${Math.round(stats.criticalDamageMultiplier*100)}% Sát Thương Chí Mạng: đòn chí mạng gây ${Math.round(stats.criticalDamageMultiplier*100)}% sát thương của đòn không chí mạng tương ứng.`,
@@ -45,8 +45,8 @@ export function CombatStatChips({ stats, baseline, healingReceived = 1, onInspec
   };
   return <div className="combat-stat-chips" aria-label="Chỉ số chiến đấu">
     {chips.map(({ label, value, Icon }, index) => {
-      const key = keys[index], delta = baseline ? stats[key] - baseline[key] : 0;
-      const direction = key === "hpRegen" && healingReceived < 1 ? "debuff" : Math.abs(delta) < 1e-5 * Math.max(1, Math.abs(baseline?.[key] ?? 0)) ? "neutral" : delta > 0 ? "buff" : "debuff";
+      const key = keys[index], delta = key === "hpRegen" && healing ? healing.current - healing.baseline : baseline ? stats[key] - baseline[key] : 0;
+      const direction = Math.abs(delta) < 1e-5 * Math.max(1, Math.abs(key === "hpRegen" && healing ? healing.baseline : baseline?.[key] ?? 0)) ? "neutral" : delta > 0 ? "buff" : "debuff";
       const content = <><Icon aria-hidden="true" /><span className="sr-only">{label}: </span><span>{value}</span></>;
       if (onInspect) return <button type="button" key={label} className="combat-stat-chip" data-stat-change={direction} data-combat-tooltip-trigger="hub" aria-label={`${label}: ${value}`}
         onClick={()=>onInspect(key,<CoreDescription text={semanticValues[index]}/>,details[key]?<>{details[key]!.map(line=><span key={line} style={{display:"block"}}>{line}</span>)}</>:<CoreDescription text={descriptions[index]}/>)}>{content}</button>;

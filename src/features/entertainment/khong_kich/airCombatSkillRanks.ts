@@ -25,6 +25,7 @@ export interface SkillRankConfig {
 }
 type RankRow = readonly [name: string, description: string, upgradeDescription: string];
 const ranks = (costs: number[], rows: readonly RankRow[]): readonly SkillRankConfig[] => rows.map(([name, description, upgradeDescription], i) => ({rank:i+1,name,description,upgradeDescription,cost:costs[i]}));
+export const PHANTOM_LASER_DAMAGE = [1.2,1.35,1.5,1.65,1.8] as const;
 export const SKILL_RANKS: Record<SkillId, readonly SkillRankConfig[]> = {
  ...Object.fromEntries(TERRA_SKILLS.map((id,i)=>[id,TERRA_UPGRADES[i].map((name,n)=>({rank:n+1,name,cost:terraValues(id,n+1).cost,description:terraDescription(id,n+1),upgradeDescription:terraUpgradeDescription(id,n+1)}))])) as Record<typeof TERRA_SKILLS[number],readonly SkillRankConfig[]>,
  ...Object.fromEntries(SYLVA_SKILLS.map((id,i)=>[id,SYLVA_UPGRADES[i].map((name,n)=>({rank:n+1,name,cost:sylvaValues(id,n+1).cost,description:sylvaDescription(id,n+1),upgradeDescription:sylvaUpgradeDescription(id,n+1)}))])) as Record<typeof SYLVA_SKILLS[number],readonly SkillRankConfig[]>,
@@ -174,20 +175,20 @@ export const SKILL_RANKS: Record<SkillId, readonly SkillRankConfig[]> = {
 ]),
  focus_laser:ranks([45,40,35,30,25],[
   ["Laser Hủy Diệt",
-    "Phantom tụ năng lượng trong 2 giây rồi bắn Laser Hủy Diệt trong 2 giây, gây 100% Hỏa lực mỗi 0,25 giây. Phantom ngừng bắn thường trong suốt thời gian tụ và khai hỏa. Hồi chiêu bắt đầu sau khi tụ và bắn hết tia laser.",
-    "Phantom tụ năng lượng trong 2 giây rồi bắn Laser Hủy Diệt trong 2 giây, gây 100% Hỏa lực mỗi 0,25 giây. Phantom ngừng bắn thường trong suốt thời gian tụ và khai hỏa. Hồi chiêu bắt đầu sau khi tụ và bắn hết tia laser."],
+    "Phantom tụ năng lượng trong 2 giây rồi bắn Laser Hủy Diệt trong 2 giây, gây 120% Hỏa lực mỗi 0,25 giây. Phantom vẫn có thể bắn thường khi tụ, ngừng bắn thường trong thời gian phóng tia. Hồi chiêu bắt đầu sau khi tụ và bắn hết tia laser.",
+    "Phantom tụ năng lượng trong 2 giây rồi bắn Laser Hủy Diệt trong 2 giây, gây 120% Hỏa lực mỗi 0,25 giây. Phantom vẫn có thể bắn thường khi tụ, ngừng bắn thường trong thời gian phóng tia. Hồi chiêu bắt đầu sau khi tụ và bắn hết tia laser."],
   ["Hội Tụ Năng Lượng",
-    "Phantom tụ năng lượng trong 1,8 giây rồi bắn Laser Hủy Diệt trong 2,25 giây, gây 115% Hỏa lực mỗi 0,25 giây. Phantom ngừng bắn thường trong suốt thời gian tụ và khai hỏa. Hồi chiêu bắt đầu sau khi tụ và bắn hết tia laser.",
-    "Thời gian tụ: 2 → 1,8 giây.\nThời gian bắn: 2 → 2,25 giây.\nSát thương mỗi 0,25 giây: 100% → 115% Hỏa lực.\nHồi chiêu Cơ Bản: 29 → 28 giây.\nYêu cầu tài nguyên: 45 → 40 Điện."],
+    "Phantom tụ năng lượng trong 1,8 giây rồi bắn Laser Hủy Diệt trong 2,25 giây, gây 135% Hỏa lực mỗi 0,25 giây. Phantom vẫn có thể bắn thường khi tụ, ngừng bắn thường trong thời gian phóng tia. Hồi chiêu bắt đầu sau khi tụ và bắn hết tia laser.",
+    "Thời gian tụ: 2 → 1,8 giây.\nThời gian bắn: 2 → 2,25 giây.\nSát thương mỗi 0,25 giây: 120% → 135% Hỏa lực.\nHồi chiêu Cơ Bản: 29 → 28 giây.\nYêu cầu tài nguyên: 45 → 40 Điện."],
   ["Thống Khổ Kéo Dài",
-    "Phantom tụ năng lượng trong 1,6 giây rồi bắn Laser Hủy Diệt trong 2,5 giây, gây 130% Hỏa lực mỗi 0,25 giây. Phantom ngừng bắn thường trong suốt thời gian tụ và khai hỏa. Hồi chiêu bắt đầu sau khi tụ và bắn hết tia laser.",
-    "Thời gian tụ: 1,8 → 1,6 giây.\nThời gian bắn: 2,25 → 2,5 giây.\nSát thương mỗi 0,25 giây: 115% → 130% Hỏa lực.\nHồi chiêu Cơ Bản: 28 → 27 giây.\nYêu cầu tài nguyên: 40 → 35 Điện."],
+    "Phantom tụ năng lượng trong 1,6 giây rồi bắn Laser Hủy Diệt trong 2,5 giây, gây 150% Hỏa lực mỗi 0,25 giây. Phantom vẫn có thể bắn thường khi tụ, ngừng bắn thường trong thời gian phóng tia. Hồi chiêu bắt đầu sau khi tụ và bắn hết tia laser.",
+    "Thời gian tụ: 1,8 → 1,6 giây.\nThời gian bắn: 2,25 → 2,5 giây.\nSát thương mỗi 0,25 giây: 135% → 150% Hỏa lực.\nHồi chiêu Cơ Bản: 28 → 27 giây.\nYêu cầu tài nguyên: 40 → 35 Điện."],
   ["Phá Giáp",
-    "Phantom tụ năng lượng trong 1,4 giây rồi bắn Laser Hủy Diệt trong 2,75 giây, gây 145% Hỏa lực mỗi 0,25 giây. Phantom ngừng bắn thường trong suốt thời gian tụ và khai hỏa. Mỗi lần trúng giảm 25% Giáp mục tiêu trong 8 giây; chỉ làm mới thời gian, không cộng dồn. Hồi chiêu bắt đầu sau khi tụ và bắn hết tia laser.",
-    "Thời gian tụ: 1,6 → 1,4 giây.\nThời gian bắn: 2,5 → 2,75 giây.\nSát thương mỗi 0,25 giây: 130% → 145% Hỏa lực.\nMỗi lần trúng giảm 25% Giáp mục tiêu trong 8 giây; chỉ làm mới thời gian, không cộng dồn.\nHồi chiêu Cơ Bản: 27 → 26 giây.\nYêu cầu tài nguyên: 35 → 30 Điện."],
+    "Phantom tụ năng lượng trong 1,4 giây rồi bắn Laser Hủy Diệt trong 2,75 giây, gây 165% Hỏa lực mỗi 0,25 giây. Phantom vẫn có thể bắn thường khi tụ, ngừng bắn thường trong thời gian phóng tia. Mỗi lần trúng giảm 25% Giáp mục tiêu trong 8 giây; chỉ làm mới thời gian, không cộng dồn. Hồi chiêu bắt đầu sau khi tụ và bắn hết tia laser.",
+    "Thời gian tụ: 1,6 → 1,4 giây.\nThời gian bắn: 2,5 → 2,75 giây.\nSát thương mỗi 0,25 giây: 150% → 165% Hỏa lực.\nMỗi lần trúng giảm 25% Giáp mục tiêu trong 8 giây; chỉ làm mới thời gian, không cộng dồn.\nHồi chiêu Cơ Bản: 27 → 26 giây.\nYêu cầu tài nguyên: 35 → 30 Điện."],
   ["Lưỡi Hái Tử Thần",
-    "Phantom tụ năng lượng trong 1,2 giây rồi bắn Laser Hủy Diệt trong 3 giây, gây 160% Hỏa lực mỗi 0,25 giây. Phantom ngừng bắn thường trong suốt thời gian tụ và khai hỏa. Mỗi lần trúng giảm 25% Giáp mục tiêu trong 8 giây; chỉ làm mới thời gian, không cộng dồn. Laser kết liễu quái thường dưới 12% Máu, Tinh Anh dưới 10% Máu và Boss dưới 8% Máu khi trúng. Hồi chiêu bắt đầu sau khi tụ và bắn hết tia laser.",
-    "Thời gian tụ: 1,4 → 1,2 giây.\nThời gian bắn: 2,75 → 3 giây.\nSát thương mỗi 0,25 giây: 145% → 160% Hỏa lực.\nKết liễu quái thường dưới 12% Máu, Tinh Anh dưới 10% Máu và Boss dưới 8% Máu.\nHồi chiêu Cơ Bản: 26 → 25 giây.\nYêu cầu tài nguyên: 30 → 25 Điện."]
+    "Phantom tụ năng lượng trong 1,2 giây rồi bắn Laser Hủy Diệt trong 3 giây, gây 180% Hỏa lực mỗi 0,25 giây. Phantom vẫn có thể bắn thường khi tụ, ngừng bắn thường trong thời gian phóng tia. Mỗi lần trúng giảm 25% Giáp mục tiêu trong 8 giây; chỉ làm mới thời gian, không cộng dồn. Laser kết liễu quái thường dưới 12% Máu, Tinh Anh dưới 10% Máu và Boss dưới 8% Máu khi trúng. Hồi chiêu bắt đầu sau khi tụ và bắn hết tia laser.",
+    "Thời gian tụ: 1,4 → 1,2 giây.\nThời gian bắn: 2,75 → 3 giây.\nSát thương mỗi 0,25 giây: 165% → 180% Hỏa lực.\nKết liễu quái thường dưới 12% Máu, Tinh Anh dưới 10% Máu và Boss dưới 8% Máu.\nHồi chiêu Cơ Bản: 26 → 25 giây.\nYêu cầu tài nguyên: 30 → 25 Điện."]
 ]),
  electronic_interference:ranks([30,32,34,36,38],[
   ["Sóng Nhiễu",
@@ -308,7 +309,7 @@ export function rankValues(s:AircraftCombatState,id:SkillId) {
   heavy_bomb:{cost,cooldown:[30,29,28,27,26][r-1],damageMultiplier:[5,6,7,8,9][r-1]},
   sweeping_cannon:{cost,cooldown:70,duration:18,count:r>=2?9:7,damageMultiplier:[.7,.8,.9][r-1]},
   invisibility:{cost,cooldown:[33,32,31,30,29][r-1],duration:[2,2.1,2.2,2.3,2.4][r-1]},
-  focus_laser:{cost,cooldown:[29,28,27,26,25][r-1],charge:[2,1.8,1.6,1.4,1.2][r-1],duration:[2,2.25,2.5,2.75,3][r-1],damageMultiplier:[1,1.15,1.3,1.45,1.6][r-1]},
+  focus_laser:{cost,cooldown:[29,28,27,26,25][r-1],charge:[2,1.8,1.6,1.4,1.2][r-1],duration:[2,2.25,2.5,2.75,3][r-1],damageMultiplier:PHANTOM_LASER_DAMAGE[r-1]},
   escort_drone:{cost,cooldown:50,upkeepPerSecond:[5,4.5,4][r-1],damageMultiplier:[.7,.8,.9][r-1]},
   orbit_reversal:{cost,cooldown:[32,31,30,29,28][r-1],duration:2,count:r>=2?22:16,radiusMultiplier:r>=2?92/72:1,damageMultiplier:r>=3?.7:.3},
   stellar_lance:{cost:cost*(1+((s.coreState.timers.lanceChain??0)>s.coreState.time?(s.coreState.stacks.lanceStack??0):0)),cooldown:3,charge:[.8,.7,.6,.5,.4][r-1],damageMultiplier:STELLAR_LANCE_FIRST_DAMAGE[r-1]*(1+.1*((s.coreState.timers.lanceChain??0)>s.coreState.time?(s.coreState.stacks.lanceStack??0):0))},

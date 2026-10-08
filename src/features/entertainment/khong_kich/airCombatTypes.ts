@@ -179,6 +179,7 @@ export interface AircraftModifiers {
 }
 
 export interface AircraftCombatState {
+  laserPhase?: "charge" | "firing";
   /** Session-only policy; never persisted in AirCombatProfile. */
   duel?: { selectionLevel: number; allowedCoreIds?: ReadonlySet<string>; healingBlocked: boolean };
   equipment?: EquipmentState;
@@ -325,6 +326,7 @@ export interface CombatAnnouncement {
 }
 
 export interface AirCombatHudSnapshot {
+  healing: { current:number; baseline:number };
   grayHealth:number;
   dps: number;
   stats: EffectiveAircraftStats;
@@ -364,7 +366,7 @@ export interface CoreRuntimeState {
   healingTotal: number;
   telemetry: Record<CoreId, Partial<Record<import("./airCombatTelemetry").CoreMetric, number>>>;
   /** Runtime-only budget belonging to the current invisibility cast. */
-  emergencyRepair?: { remaining: number; durationRemaining: number };
+  emergencyRepair?: { remaining: number; durationRemaining: number; rate: number };
   time: number;
   lastDamage: number;
   lastMove: number;

@@ -1,3 +1,4 @@
+import { statusExpiry } from './airCombatStatusTiming';
 import { terraMovement } from './airCombatTerraRuntime';
 import { getHealingReceivedMultiplier } from './airCombatRecovery';
 import type { CombatWorld, EnemyEntity } from './airCombatRuntime';
@@ -73,10 +74,10 @@ export function sylvaAcidHit(w:CombatWorld,e:EnemyEntity,h:SylvaHooks){
  if(w.aircraft.aircraftId!=='sylva'||!live(w)||!exists(w,e)||immune(e))return;
  const d=target(w,e),amount=1+Math.min(3,Math.floor((w.aircraft.level-1)/5));if(d.flatUntil<=w.elapsed)d.flat=0;
  const cap=boss(e)?80:!e.aircraftTarget&&h.elite(e)?120:Infinity;
- d.flat+=Math.max(0,Math.min(amount,cap-d.flat,h.armor(w,e)));d.flatUntil=w.elapsed+duration(e,5);fx(w,'impact',e.x,e.y,25,.25);
+ d.flat+=Math.max(0,Math.min(amount,cap-d.flat,h.armor(w,e)));d.flatUntil=statusExpiry(d,'flatUntil',w.elapsed,duration(e,5));fx(w,'impact',e.x,e.y,25,.25);
 }
 export function sylvaMuzzle(w:CombatWorld){if(w.aircraft.aircraftId==='sylva')fx(w,'muzzle',w.playerX,w.playerY-20,22,.13);}
-function acid(w:CombatWorld,e:EnemyEntity,rank:number,h:SylvaHooks,at:number,slow:boolean){if(immune(e))return;const d=target(w,e);d.acidUntil=at+duration(e,5);if(slow&&rank>=3){d.slow=boss(e)?.9:!e.aircraftTarget&&h.elite(e)?.85:.7;d.slowUntil=at+duration(e,1);}}
+function acid(w:CombatWorld,e:EnemyEntity,rank:number,h:SylvaHooks,at:number,slow:boolean){if(immune(e))return;const d=target(w,e);d.acidUntil=statusExpiry(d,'acidUntil',at,duration(e,5));if(slow&&rank>=3){d.slow=boss(e)?.9:!e.aircraftTarget&&h.elite(e)?.85:.7;d.slowUntil=statusExpiry(d,'slowUntil',at,duration(e,1));}}
 function settleBloom(w:CombatWorld,at=w.elapsed){
  const s=states.get(w),a=s?.bloom;if(!s||!a||a.seeds.size)return;s.bloom=undefined;finish(w,SYLVA_SKILLS[3],at);
  if(a.rank===3&&live(w))for(const id of [SYLVA_SKILLS[1],SYLVA_SKILLS[2]]){
@@ -112,7 +113,7 @@ export function beginSylvaSkill(w:CombatWorld,id:SylvaSkillId,h:SylvaHooks){
   s.bloom={...c,seeds:new Map(),checking:false};
   for(const e of w.enemies)if(valid(w,e,h)&&inside(e,center.x,center.y,S.ultimateRadius)){
    s.bloom.seeds.set(e.id,{entity:e,recordedHpLoss:0});fx(w,'link',e.x,e.y,40,.4);Object.assign(s.effects[s.effects.length-1],{fromX:center.x,fromY:center.y});
-   if(rank>=2&&!immune(e)){const d=target(w,e);d.suppressUntil=now+duration(e,3);d.suppressMoveUntil=d.suppressUntil;if(e.aircraftTarget)e.aircraftTarget.world.aircraft.coreState.timers.sylvaFireSlow=d.suppressUntil;}
+   if(rank>=2&&!immune(e)){const d=target(w,e);d.suppressUntil=statusExpiry(d,'suppressUntil',now,duration(e,3));d.suppressMoveUntil=d.suppressUntil;if(e.aircraftTarget)e.aircraftTarget.world.aircraft.coreState.timers.sylvaFireSlow=d.suppressUntil;}
   }checkBloom(w,h);return;
  }
  const center=sylvaCluster(w,h);if(!center){finish(w,id);return;}
@@ -124,7 +125,7 @@ function impact(w:CombatWorld,f:Flight,h:SylvaHooks){
  fx(w,f.skill===SYLVA_SKILLS[1]?'acidExplosion':'root',f.x,f.y,170,.5,f.hitAt);
  for(const e of enemies){h.damage(w,e,getEffectiveAircraftStats(w.aircraft).firepower*v.damageMultiplier,f.skill);if(!exists(w,e)||immune(e))continue;
   if(f.skill===SYLVA_SKILLS[1])acid(w,e,f.rank,h,f.hitAt,false);
-  else {const d=target(w,e);d.markUntil=f.hitAt+duration(e,5);d.markRank=f.rank;d.markUsed=false;const actor=e.aircraftTarget?.world;if(!actor||!hardControlImmune(actor.aircraft))d.rootUntil=f.hitAt+duration(e,v.root*(boss(e)?.5:!actor&&h.elite(e)?.75:1));}
+  else {const d=target(w,e);d.markUntil=statusExpiry(d,'markUntil',f.hitAt,duration(e,5));d.markRank=f.rank;d.markUsed=false;const actor=e.aircraftTarget?.world;if(!actor||!hardControlImmune(actor.aircraft))d.rootUntil=statusExpiry(d,'rootUntil',f.hitAt,duration(e,v.root*(boss(e)?.5:!actor&&h.elite(e)?.75:1)));}
  }
  if(f.skill===SYLVA_SKILLS[1]){s.zones.push({...f,at:f.hitAt,until:f.hitAt+5,next:f.hitAt+.5,initial:new Set(enemies),inside:new Set(enemies),tails:new Map(),ended:false});fx(w,'skull',f.x,f.y,82,.95,f.hitAt);}
  else finish(w,f.skill,f.hitAt);

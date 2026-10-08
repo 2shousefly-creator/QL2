@@ -58,7 +58,6 @@
 .air-status-group--debuff .air-status-icon { border-color:#fda4af88; color:#fda4af; }
 .air-status-icon > .combat-ui-icon { width:100%; height:100%; }
 .air-status-icon > svg { width:75%; height:75%; }
-.air-status-radial { position:absolute; inset:0; pointer-events:none; border-radius:inherit; background:conic-gradient(from 0deg, #020617b8 var(--status-elapsed,0deg), currentColor 0deg); mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0); mask-composite:exclude; padding:1px; }
 .air-status-value-badge { position:absolute; bottom:1px; right:1px; z-index:2; max-width:calc(100% - 2px); box-sizing:border-box; color:#fff; font-size:1.8cqw; font-weight:800; font-variant-numeric:tabular-nums; letter-spacing:-.06em; white-space:nowrap; line-height:1.15; padding:.12cqw .18cqw; background:#020617f2; border-radius:1px; pointer-events:none; }
 .air-status-value-badge[hidden], .air-status-timer[hidden] { display:none; }
 .air-status-overflow { font-size:2.5cqw; border-color:#94a3b8; }
@@ -841,5 +840,13 @@
 
 .air-sylva-vitality{position:absolute;left:2px;right:2px;bottom:1px;color:#e5e7eb;background:#102619dd;font-size:7px;line-height:1.2;text-align:center;pointer-events:none}
 
-.air-terra-pressure{position:absolute;left:1.6cqw;right:1.6cqw;bottom:-4.6cqw;height:4.4cqw;z-index:4;display:flex;align-items:center;gap:2cqw;padding:.4cqw 1.4cqw;background:#221b12ed;border:1px solid #a47332;border-radius:0 0 1cqw 1cqw;color:#ffdda0;font-family:system-ui,sans-serif;font-size:2.2cqw;pointer-events:none}
-.air-terra-pressure>span{white-space:nowrap}.air-terra-pressure>div{position:relative;flex:1;height:1.5cqw;overflow:hidden;background:#3d2d1b;border-radius:.4cqw}.air-terra-pressure b{display:block;height:100%;background:linear-gradient(90deg,#b87820,#ffc856)}.air-terra-pressure i{position:absolute;top:0;bottom:0;width:1px;background:#fff2bc}
+
+/* Time is rendered from game snapshots; no wall-clock CSS animation. */
+.air-status-icon { border-color:transparent; }
+.air-status-group--debuff .air-status-icon { border-color:transparent; }
+.air-status-icon > .air-status-border { position:absolute; inset:-1px; width:calc(100% + 2px); height:calc(100% + 2px); pointer-events:none; z-index:4; overflow:visible; fill:none; stroke:#4ade80; stroke-width:1.4; }
+.air-status-border .air-status-border-track { stroke:#07111b; }
+.air-status-icon > .air-status-border[data-phase="cooldown"] { stroke:#facc15; }
+.air-status-icon > .air-status-border[data-phase="indefinite"][data-group="debuff"] { stroke:#f87171; }
+.air-status-icon .air-status-timer { left:2px; right:auto; top:2px; min-width:1.5em; padding:.25cqw; font-size:2cqw; font-weight:800; color:#fff; background:#020617e8; text-align:center; }
+.air-status-value-badge { bottom:2px; right:2px; }

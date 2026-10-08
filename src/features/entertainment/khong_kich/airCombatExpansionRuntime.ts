@@ -1,3 +1,4 @@
+import { expansionHealingRate } from './airCombatHealingRates';
 import { coreCooldownReady, deferCoreCooldown } from "./airCombatCooldowns";
 import type { CombatWorld, EnemyEntity, ProjectileEntity } from "./airCombatRuntime";
 import type { SkillId } from "./airCombatTypes";
@@ -126,12 +127,12 @@ export function tickExpansion(w: CombatWorld, dt: number, h: ExpansionHooks) {
     } else r.fullSince = undefined;
   }
   if (hasCore(s, 176)) {
-    if (c.stacks.breathing) {h.heal(w, stats.maxHp * .01 * dt, 176);recordCoreMetric(s,176,"uptime",dt);}
+    if (c.stacks.breathing) {h.heal(w, expansionHealingRate(stats,176) * dt, 176);recordCoreMetric(s,176,"uptime",dt);}
   }
   if(hasCore(s,178)&&coreCooldownReady(s,"magneticBrakeCd")){deferCoreCooldown(s,"magneticBrakeCd");timer(w,"magneticBrake",3);for(const p of w.projectiles)if(p.owner==="enemy"&&p.allegiance!=="friendly_hacked"&&Math.hypot(p.x-w.playerX,p.y-w.playerY)<=150){p.expansionSlowUntil=now+3;recordCoreMetric(s,178,"targets",1);}}
   observeExpansionResource(s, stats.maxResource);
   const activeStep = (key: string) => Math.max(0, Math.min(dt, (c.timers[key] ?? 0) - (now - dt)));
-  if (hasCore(s, 195)) h.heal(w, stats.maxHp * .12 / 4 * activeStep("blackBox"), 195);
+  if (hasCore(s, 195)) h.heal(w, expansionHealingRate(stats,195) * activeStep("blackBox"), 195);
   r.hpLoss = r.hpLoss.filter(hit => hit.at >= now - 3);
   if (c.stacks.satellites && !expansionActive(s, "satellites")) {
     for (let i = 0; i < c.stacks.satellites; i++) {h.shard(w, w.playerX, w.playerY, stats.firepower * 1.20, 198);recordCoreMetric(s,198,"shots",1);}

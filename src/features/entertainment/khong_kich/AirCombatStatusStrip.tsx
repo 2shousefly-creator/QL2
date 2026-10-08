@@ -10,18 +10,30 @@ import type { CombatWorld } from "./airCombatRuntime";
 export interface StatusStripHandle { update(world: CombatWorld): void; close(): void }
 const genericIcons = { burn: Flame, acid: FlaskConical, armor: ShieldMinus, shield: Shield, stun: Zap, skill_lock:Lock, resource_jam:BatteryWarning, regen_off:HeartOff, mark:Crosshair, radar:Radar };
 const timeLabel = (value: number) => Number.isFinite(value) ? `${Math.max(0, value).toFixed(1).replace(".", ",")}s` : "Đang hiệu lực";
-const showTimer = (status?: StatusPresentation) => Boolean(status && Number.isFinite(status.remaining) && (status.showNumericTimer ?? !status.badgeText));
-const progressRatio = (status?: StatusPresentation) => {
-  const value = status?.progress ?? (status && status.duration > 0 ? status.remaining / status.duration : 1);
-  return Number.isFinite(value) ? Math.max(0, Math.min(1, value)) : 1;
+const showTimer = (status: StatusPresentation) => !!status.timer && status.timer.phase !== 'indefinite';
+const progressRatio = (status: StatusPresentation) => {
+  const timer=status.timer;
+  return timer && timer.phase !== 'indefinite' ? Math.max(0,Math.min(1,timer.remaining/timer.total)) : 1;
 };
+// Clockwise path starts at twelve. Active removes its head clockwise; cooldown
+// uses only a mirrored stroke layer, filling from twelve counterclockwise.
+const BORDER_PATH = 'M 12 1 H 23 V 23 H 1 V 1 H 12';
+function StatusBorder({status}:{status:StatusPresentation}) {
+ const phase=status.timer?.phase??'indefinite',ratio=progressRatio(status),cooldown=phase==='cooldown';
+ const length=phase==='indefinite'?1:cooldown?1-ratio:ratio;
+ return <svg className="air-status-border" viewBox="0 0 24 24" aria-hidden="true" data-phase={phase} data-group={status.group}>
+   <path d={BORDER_PATH} className="air-status-border-track"/>
+   <path d={BORDER_PATH} pathLength="1" transform={cooldown?'translate(24 0) scale(-1 1)':undefined}
+     strokeDasharray={`${length} 1`} strokeDashoffset={phase==='active'?-(1-ratio):0}/>
+ </svg>;
+}
 
 function overflowStatus(id:string|null, items:StatusPresentation[]):StatusPresentation|undefined {
   if (!id?.startsWith("overflow:")) return;
   const group=id.endsWith("debuff")?"debuff":"buff",all=items.filter(s=>s.group===group);
   if (all.length <= 10) return;
   const hidden=all.slice(9);
-  return {...hidden[0],id,name:"Hiệu ứng bổ sung",description:hidden.map(s=>`${s.name}: ${s.description}`).join("\n\n"),remaining:Infinity,duration:Infinity,badgeText:undefined,timeLabel:`${hidden.length} hiệu ứng`};
+  return {...hidden[0],id,name:"Hiệu ứng bổ sung",description:hidden.map(s=>`${s.name}${s.badgeText?` · ${s.badgeText}`:""}${showTimer(s)?` · ${s.timer!.phase==='cooldown'?'Hồi chiêu':'Còn'} ${Math.ceil(s.timer!.remaining)} giây`:""}: ${s.description}`).join("\n\n"),timer:undefined,remaining:Infinity,duration:Infinity,badgeText:undefined,timeLabel:`${hidden.length} hiệu ứng`};
 }
 function sameSnapshot(previous: StatusPresentation[], next: StatusPresentation[]): boolean {
   return previous.length === next.length && previous.every((status, index) => {
@@ -33,6 +45,7 @@ function sameSnapshot(previous: StatusPresentation[], next: StatusPresentation[]
       && status.badgeKind === other.badgeKind && status.timerKind === other.timerKind
       && status.timeLabel === other.timeLabel && status.showNumericTimer === other.showNumericTimer
       && status.rewardMessage === other.rewardMessage && status.duration === other.duration
+      && status.timer?.phase === other.timer?.phase && status.timer?.total === other.timer?.total
       && status.remaining.toFixed(1) === other.remaining.toFixed(1)
       && Math.round(progressRatio(status) * 360) === Math.round(progressRatio(other) * 360);
   });
@@ -40,6 +53,7 @@ function sameSnapshot(previous: StatusPresentation[], next: StatusPresentation[]
 /** React owns the entire status snapshot; Battle supplies unpaused updates at 10 Hz. */
 export const AirCombatStatusStrip = React.memo(forwardRef<StatusStripHandle, { top: number; onTooltipChange: (open: boolean) => void }>(({ top, onTooltipChange }, ref) => {
   const host = useRef<HTMLDivElement>(null);
+  const snapshotWorld = useRef<CombatWorld|null>(null);
   const [items, setItems] = useState<StatusPresentation[]>([]);
   const [selected, setSelected] = useState<string | null>(null);
   const selectedRef = useRef<string | null>(null);
@@ -54,7 +68,9 @@ export const AirCombatStatusStrip = React.memo(forwardRef<StatusStripHandle, { t
   };
   // Battle owns outside-dismiss, Escape and dismiss-pointer suppression.
   useImperativeHandle(ref, () => ({ close, update(world) {
-    if (world.pauseReasons.size > 0) return;
+    const changedWorld=snapshotWorld.current!==world;
+    if (world.pauseReasons.size > 0 && !changedWorld) return;
+    if(changedWorld){snapshotWorld.current=world;close();}
     const next = getStatusPresentations(world);
     const surface=host.current?.closest<HTMLElement>(".air-combat-surface");
     const empJam = String(world.aircraft.status.resourceJammedUntil > world.aircraft.coreState.time);
@@ -71,13 +87,12 @@ export const AirCombatStatusStrip = React.memo(forwardRef<StatusStripHandle, { t
       return <div key={group} className={`air-status-group air-status-group--${group}`} aria-label={group === "buff" ? "Buff" : "Debuff"}>
         {shown.map(status => {
           const Generic = status.icon.kind === "status" ? genericIcons[status.icon.id] : null;
-          return <button key={status.id} type="button" data-status-id={status.id} data-timer-kind={status.timerKind ?? "active"} className="air-status-icon" data-combat-tooltip-trigger="status"
-            style={{ "--status-elapsed": `${(1 - progressRatio(status)) * 360}deg` } as React.CSSProperties}
+          return <button key={status.id} type="button" data-status-id={status.id} data-timer-kind={status.timer?.phase ?? "indefinite"} className="air-status-icon" data-combat-tooltip-trigger="status"
             aria-label={`${status.name}${status.badgeText ? ` · ${status.badgeText}` : ""}`} aria-pressed={selected === status.id}
             onClick={() => toggle(status.id)}>
             {status.icon.kind === "status" ? Generic && <Generic aria-hidden="true" /> : <CombatUiIcon {...status.icon} fallback="◆" />}
-            <span className="air-status-radial" />
-            <small className="air-status-timer" data-status-timer hidden={!showTimer(status)}>{Number.isFinite(status.remaining)?status.remaining.toFixed(1).replace(".",","):""}</small>
+            <StatusBorder status={status}/>
+            <small className="air-status-timer" data-status-timer hidden={!showTimer(status)}>{showTimer(status)?Math.ceil(status.timer!.remaining):""}</small>
             <b className="air-status-value-badge" data-status-value hidden={!status.badgeText}>{status.badgeText}</b>
           </button>;
         })}

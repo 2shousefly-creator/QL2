@@ -3,7 +3,7 @@ import { SYLVA_SKILLS, SYLVA_NAMES, SYLVA_DESCRIPTION, sylvaValues, sylvaDescrip
 import { ARGENT_SKILLS, ARGENT_NAMES, ARGENT_UPGRADES, isArgentSkill, argentValues, argentDescription } from './airCombatArgentConfig';
 import { RIPTIDE_SKILLS, RIPTIDE_NAMES, riptideValues, riptideDescription } from './airCombatRiptideConfig';
 import { CINDER_SKILLS, CINDER_NAMES, cinderValues, cinderDescription } from "./airCombatCinderConfig";
-import { SKILL_RANKS } from "./airCombatSkillRanks";
+import { SKILL_RANKS, PHANTOM_LASER_DAMAGE } from "./airCombatSkillRanks";
 import {
   AircraftConfig,
   AircraftId,
@@ -303,7 +303,7 @@ export const SKILL_CONFIGS: Record<SkillId, SkillConfig> = {
     "cost": 45,
     "cooldown": 29,
     "duration": 2,
-    "damageMultiplier": 1
+    "damageMultiplier": PHANTOM_LASER_DAMAGE[0]
   },
   "escort_drone": {
     "id": "escort_drone",

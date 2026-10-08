@@ -1,3 +1,4 @@
+import { terraHud } from './airCombatTerraRuntime';
 import { CombatGraphicsControl } from './CombatGraphicsControl';
 import { SkillUpgradeIcon } from './SkillUpgradeIcon';
 import { sylvaHud } from './airCombatSylvaRuntime';
@@ -360,6 +361,7 @@ export const AirCombatBattleShell: React.FC<AirCombatBattleProps> = ({
           setPlayerInputActive(next, false);
         }
         resetSkillPress();
+        if(world!==next)statusStripRef.current?.update(next);
         world = next; worldRef.current = next; phase = nextPhase;
         movementAllowed = nextMovementAllowed;
       }
@@ -713,10 +715,11 @@ export const AirCombatBattleShell: React.FC<AirCombatBattleProps> = ({
           onInspect={inspectHub} onCores={()=>{setPauseReason("coreList",true);closeAllTooltips();setShowCoreList(true);}}
           onPause={()=>{setPauseReason("user",true);closeAllTooltips();}}/>
         <span className="sr-only">HP {Math.round(hud.stats.currentHp)}/{Math.round(hud.stats.maxHp)}; {resourceLabel} {Math.round(hud.stats.currentResource)}/{Math.round(hud.stats.maxResource)}</span>
+        {aircraftId==='terra'&&<span className="sr-only">Địa Áp {Math.round(terraHud(worldRef.current)?.pressure??0)} / {Math.round(terraHud(worldRef.current)?.cap??0)}</span>}
       </section>
 
       {hud.bossMaxHp > 0 && (
-        <div className="air-boss-hud" style={{ top: `${(AIR_COMBAT_WORLD.hudHeight+(aircraftId==='terra'?17:0)) / 720 * 100}%`, height: `${BOSS_HUD_HEIGHT / 720 * 100}%` }} data-boss-phase={hud.bossPhase}>
+        <div className="air-boss-hud" style={{ top: `${(AIR_COMBAT_WORLD.hudHeight) / 720 * 100}%`, height: `${BOSS_HUD_HEIGHT / 720 * 100}%` }} data-boss-phase={hud.bossPhase}>
           <div className="flex justify-between text-[7px] font-black uppercase text-rose-200"><span>{getAirCombatStage(stageId)?.bossName} · Giai đoạn {hud.bossPhase}</span><span>{Math.round(hud.bossHp).toLocaleString("vi-VN")}</span></div>
           {stageId === 2 && <div className="air-guardian-hud"><span>VỆ TINH: {hud.guardianSlots.map((alive,slot)=><i key={slot} data-alive={alive}>●</i>)}</span><span>{hud.guardianSlots.some(Boolean) ? "BẢO HỘ: -35% SÁT THƯƠNG" : "BẢO HỘ ĐÃ PHÁ"}</span></div>}
           <div className="air-boss-health relative mt-1 h-1.5 overflow-hidden bg-black">
@@ -728,14 +731,14 @@ export const AirCombatBattleShell: React.FC<AirCombatBattleProps> = ({
         </div>
       )}
 
-      {!runtime && hud.mirror && <div className="air-boss-hud" style={{top:`${(AIR_COMBAT_WORLD.hudHeight+(aircraftId==='terra'?17:0))/720*100}%`,height:`${BOSS_HUD_HEIGHT/720*100}%`}}>
+      {!runtime && hud.mirror && <div className="air-boss-hud" style={{top:`${(AIR_COMBAT_WORLD.hudHeight)/720*100}%`,height:`${BOSS_HUD_HEIGHT/720*100}%`}}>
         <div className="flex justify-between text-[7px] font-black text-slate-100"><span>THE OTHER SELF</span><span>HP {Math.ceil(hud.mirror.hp).toLocaleString("vi-VN")} · {resourceLabel} {Math.floor(hud.mirror.resource)}</span></div>
         <div className="relative mt-1 h-1.5 overflow-hidden rounded bg-slate-800" role="progressbar" aria-label="Máu Chiến Cơ Ảo Ảnh" aria-valuenow={hud.mirror.hp} aria-valuemax={hud.mirror.maxHp}>
           <div className="absolute inset-y-0 left-0 bg-slate-100" style={{width:`${Math.min(100,hud.mirror.hp/Math.max(1,hud.mirror.maxHp)*100)}%`}} />
           {!!hud.mirror.grayHealth&&<div className="absolute inset-y-0 bg-slate-300/80" style={{left:`${hud.mirror.hp/Math.max(1,hud.mirror.maxHp)*100}%`,width:`${Math.max(0,Math.min(hud.mirror.grayHealth,hud.mirror.maxHp-hud.mirror.hp))/Math.max(1,hud.mirror.maxHp)*100}%`}} />}
         </div>
       </div>}
-      <AirCombatStatusStrip ref={statusStripRef} onTooltipChange={onStatusTooltip} top={AIR_COMBAT_WORLD.hudHeight + (aircraftId==='terra'?17:0) + (hud.bossMaxHp > 0 || (!runtime && hud.mirror) ? BOSS_HUD_HEIGHT : 0)} />
+      <AirCombatStatusStrip ref={statusStripRef} onTooltipChange={onStatusTooltip} top={AIR_COMBAT_WORLD.hudHeight + (hud.bossMaxHp > 0 || (!runtime && hud.mirror) ? BOSS_HUD_HEIGHT : 0)} />
 
       <div className="absolute inset-x-0 bottom-0 z-20 grid h-[11.1111%] grid-cols-4 gap-1 border-t border-cyan-900/50 bg-slate-950 p-1.5" data-skill-rail="bottom">
         <PassiveCell world={worldRef.current} onInspect={()=>{if(tooltipPassive){closeAllTooltips();return;}activateTooltip("passive");setTooltipPassive(true);}}/>

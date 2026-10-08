@@ -1,3 +1,5 @@
+import { terraHud } from './airCombatTerraRuntime';
+import { pressureBarText } from './airCombatFeedback';
 import { paintGeneratedMechanisms } from './airCombatGeneratedMechanisms';
 import { generatedFrameId, generatedEffectId, generatedEnemyId, paintGeneratedCanvas } from './airCombatGeneratedArt';
 import { TERRA_ART, TERRA_SOURCES, TERRA_FRAMES, paintTerra } from './airCombatTerraArt';
@@ -845,7 +847,8 @@ function drawAircraftTrackingHud(ctx: CanvasRenderingContext2D, world: CombatWor
   const barWidth = trackingBarWidth(displayWidth);
   const position = rotated ? mirrorPoint(world.playerX, world.playerY) : { x: world.playerX, y: world.playerY };
   const barX = trackingBarX(position.x, barWidth);
-  const barY = trackingBarY(position.y, displayWidth);
+  const terra = terraHud(world);
+  const barY = trackingBarY(position.y, displayWidth, terra ? 3 : 2);
   const health = healthBars.get(-1, world.aircraft.currentHp, stats.maxHp, activeShieldAmount(world.aircraft), sylvaGrayHealth(world));
   const hp = health.hpRatio;
   const barPath = (y: number, ratio = 1) => {
@@ -862,14 +865,21 @@ function drawAircraftTrackingHud(ctx: CanvasRenderingContext2D, world: CombatWor
   if(health.shieldEnd>health.shieldStart){ctx.save();barPath(barY);ctx.clip();ctx.fillStyle="#d8e4ee";ctx.fillRect(barX+barWidth*health.shieldStart,barY,barWidth*(health.shieldEnd-health.shieldStart),10);ctx.restore();}
   if(health.grayEnd>health.grayStart){ctx.save();barPath(barY);ctx.clip();ctx.fillStyle="#b8bec8";ctx.fillRect(barX+barWidth*health.grayStart,barY,barWidth*(health.grayEnd-health.grayStart),10);ctx.restore();}
   fillBar(barY + 13, stats.currentResource / stats.maxResource, stats.resourceKind === "energy" ? "#a78bfa" : "#38bdf8");
+  if (terra) {
+    fillBar(barY + 26, 1, "rgba(2,6,23,.92)");
+    fillBar(barY + 26, terra.pressure / Math.max(1, terra.cap), "#f59e0b");
+    ctx.strokeStyle="#ffedc2";ctx.lineWidth=.6;
+    for(const mark of [.5,.75]){ctx.beginPath();ctx.moveTo(barX+barWidth*mark,barY+26);ctx.lineTo(barX+barWidth*mark,barY+29);ctx.stroke();}
+  }
   ctx.strokeStyle = "rgba(203,213,225,.8)"; ctx.lineWidth = .39;
-  barPath(barY); ctx.stroke(); barPath(barY + 13); ctx.stroke(); ctx.restore();
+  barPath(barY); ctx.stroke(); barPath(barY + 13); ctx.stroke(); if(terra){barPath(barY+26);ctx.stroke();} ctx.restore();
   ctx.save();
   ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.font = `bold ${6.4 * playerAirframeScale(world.aircraft)}px Arial`;
   ctx.strokeStyle = "#06101f"; ctx.fillStyle = "#fff"; ctx.lineWidth = playerAirframeScale(world.aircraft); ctx.lineJoin = "round"; ctx.shadowBlur *= .5;
   const hpText = statusBarText(world.aircraft.currentHp, stats.maxHp), resourceText = statusBarText(world.aircraft.currentResource, stats.maxResource);
   ctx.strokeText(hpText, barX + barWidth / 2, barY + 5); ctx.fillText(hpText, barX + barWidth / 2, barY + 5);
   ctx.strokeText(resourceText, barX + barWidth / 2, barY + 18); ctx.fillText(resourceText, barX + barWidth / 2, barY + 18);
+  if(terra){const text=pressureBarText(terra.pressure,terra.cap);ctx.strokeText(text,barX+barWidth/2,barY+31);ctx.fillText(text,barX+barWidth/2,barY+31);}
   ctx.restore();
 
 }

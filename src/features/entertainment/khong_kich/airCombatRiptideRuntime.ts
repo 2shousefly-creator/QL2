@@ -13,7 +13,7 @@ export interface RiptideHooks {
  hostile(w:CombatWorld,e:EnemyEntity):boolean;
  elite(e:EnemyEntity):boolean;
  damage(w:CombatWorld,e:EnemyEntity,raw:number,skill:RiptideSkillId|undefined,castId:number):{hp:number;total:number};
- heal(w:CombatWorld,raw:number,cap?:number):number;
+ heal(w:CombatWorld,raw:number):number;
  displace(w:CombatWorld,e:EnemyEntity,dx:number,dy:number):void;
  cleanseSlow(w:CombatWorld):void;
 }
@@ -23,7 +23,7 @@ export interface Waterform extends Cast { tick:number;charge:number;healed:numbe
 export interface RiptideEffect { id:number;kind:'heal'|'cleanse'|'impact'|'burst'|'afterwash'|'refund'|'pulse'|'leech';x:number;y:number;at:number;life:number;radius:number;strength:number }
 export interface RiptideRuntime {
  wellspring?:Cast & {tick:number}; blades?:Blades; confluence?:Cast & {exploded:boolean}; waterform?:Waterform;
- slows:Map<number,{entity:EnemyEntity;sources:Map<SkillId,{until:number;multiplier:number}>}>;
+ slows:Map<number,{entity:EnemyEntity;sources:Map<SkillId,{until:number;multiplier:number;duration:number}>}>;
  effects:RiptideEffect[];
 }
 const states=new WeakMap<CombatWorld,RiptideRuntime>();
@@ -46,7 +46,7 @@ function slow(w:CombatWorld,e:EnemyEntity,id:SkillId,amount:number,h:RiptideHook
  if(actor&&(celestialProtection(actor.aircraft)||(skillRank(actor.aircraft,'afterburner')>=5&&(actor.aircraft.activeEffects.afterburner??0)>0)))return;
  const s=riptideState(w);let t=s.slows.get(e.id);
  if(!t||t.entity!==e){t={entity:e,sources:new Map()};s.slows.set(e.id,t);}
- t.sources.set(id,{until:w.elapsed+(actor?negativeStatusDuration(actor.aircraft,2):2),multiplier:1-amount});
+ t.sources.set(id,{until:w.elapsed+(actor?negativeStatusDuration(actor.aircraft,2):2),multiplier:1-amount,duration:actor?negativeStatusDuration(actor.aircraft,2):2});
 }
 export function riptideMovement(w:CombatWorld,e:EnemyEntity) {
  const t=states.get(w)?.slows.get(e.id);return t?.entity===e?Math.min(1,...[...t.sources.values()].filter(s=>s.until>w.elapsed).map(s=>s.multiplier)):1;
@@ -136,7 +136,7 @@ function tickWaterform(w:CombatWorld,water:Waterform,to:number,h:RiptideHooks) {
   for(;water.tick<=RIPTIDE.maxCharge&&water.at+water.tick*RIPTIDE.waterInterval<=Math.min(to,water.until)+1e-8;water.tick++) {
    let dealt=0,validDamage=0;const droplets:{x:number;y:number}[]=[];
    for(const e of w.enemies)if(valid(w,e,h)&&within(w,e,RIPTIDE.waterRadius)){const hit=damage(w,e,v.damageMultiplier,'riptide_waterform',water,h);dealt+=hit.hp;validDamage+=hit.total;if(hit.hp>0&&droplets.length<3)droplets.push({x:e.x,y:e.y});}
-   if(validDamage>0){water.charge=Math.min(RIPTIDE.maxCharge,water.charge+1);const cap=Math.max(0,getEffectiveAircraftStats(w.aircraft).maxHp*RIPTIDE.healCap-water.healed),healed=h.heal(w,dealt*v.lifesteal,cap);water.healed+=healed;if(healed>0)for(const p of droplets)fx(w,'leech',p.x,p.y,8,1,.35);}
+   if(validDamage>0){water.charge=Math.min(RIPTIDE.maxCharge,water.charge+1);const healed=h.heal(w,dealt*v.lifesteal);water.healed+=healed;if(healed>0)for(const p of droplets)fx(w,'leech',p.x,p.y,8,1,.35);}
    fx(w,'pulse',w.playerX,w.playerY,RIPTIDE.waterRadius,water.charge/RIPTIDE.maxCharge,.25);
   }
 }
@@ -186,3 +186,5 @@ export function riptideThreatNearby(w:CombatWorld,x:number,y:number,r:number) {
  const s=states.get(w);if(!s)return false;const radius=s.waterform?190:s.confluence||s.blades?170:0;
  return radius>0&&Math.hypot(x-w.playerX,y-w.playerY)<=radius+r;
 }
+
+export function riptideHealingRate(w:CombatWorld,firepower:number):number {const a=states.get(w)?.wellspring;return a&&a.until>w.elapsed&&a.tick<=4?firepower*riptideValues('riptide_wellspring',a.rank).tickHeal:0;}

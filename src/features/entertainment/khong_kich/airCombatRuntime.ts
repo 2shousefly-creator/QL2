@@ -1,3 +1,5 @@
+import { statusExpiry, extendStatusRemaining } from './airCombatStatusTiming';
+import { getHealingSummary } from './airCombatHealingSummary';
 import { isTerraSkill } from './airCombatTerraConfig';
 import { beginTerraSkill, tickTerra, cancelTerra, terraAllowed, terraIncomingHp, terraAbsorb, terraState, terraMovement, terraSuppression, terraKnockbackImmune, clearTerraTarget, terraFx, terraHud, type TerraHooks } from './airCombatTerraRuntime';
 import { clearSylvaTarget } from './airCombatSylvaRuntime';
@@ -1285,7 +1287,7 @@ function fireBasic(world: CombatWorld, firedAt = world.elapsed): boolean {
 }
 function tickBasicFire(world:CombatWorld,dt:number):void {
     const state=world.aircraft;
-    const allowed=state.currentHp>0&&(!playerStunned(state)||hasCore(state,203))&&shouldAutoFire(state)&&world.laserCharge<=0&&world.laserTicksRemaining<=0;
+    const allowed=state.currentHp>0&&(!playerStunned(state)||hasCore(state,203))&&shouldAutoFire(state);
     if(!allowed){world.playerFireCooldown=Math.max(0,world.playerFireCooldown);return;}
     const rate=getEffectiveAircraftStats(state).fireRate, speed=aircraftFireRateMultiplier(world);
     if(!Number.isFinite(rate)||rate<=0||!Number.isFinite(speed)||speed<=0)return;
@@ -2682,7 +2684,7 @@ function updateTacticalCores(world:CombatWorld,dt:number):void {
             t.hackTargets=bossWave?[]:cohort.map(e=>e.id);
             // Assign the entire cohort before retargeting any member.
             for(const e of cohort){
-                if(bossWave)e.stun=Math.max(e.stun,2);
+                if(bossWave)e.stun=extendStatusRemaining(e,"stun",e.stun,2,now);
                 else e.hackedUntil=t.hackEnd;
             }
             for(const e of cohort){
@@ -2730,7 +2732,7 @@ function damageEnemyAttack(world:CombatWorld,target:EnemyEntity,raw:number,attac
     const now=world.elapsed,source=world.enemies.find(e=>e.id===attack.sourceEnemyId),marks=target.combatMarks??={};
     const mark=(key:string,duration:number,threshold:number)=>{const m=marks[key];const count=m&&m.until>now?m.count+1:1;marks[key]={count,until:now+duration};if(count>=threshold){delete marks[key];return true;}return false;};
     const payload=attack.payload;
-    if(payload?.stun)target.stun=Math.max(target.stun,payload.stun);
+    if(payload?.stun)target.stun=extendStatusRemaining(target,"stun",target.stun,payload.stun,world.elapsed);
     if(payload?.skillLock)target.skillLockedUntil=Math.max(target.skillLockedUntil??0,now+payload.skillLock);
     if(payload?.armorBreak)target.armorBrokenUntil=Math.max(target.armorBrokenUntil??0,now+payload.armorBreak);
     if(attack.attackTag==="acid"&&mark("corrosion",6,3)){target.armorBrokenUntil=now+4;if(source?.eliteWave===2)queueEliteSpecial(world,source,"acid_cage",1.2,false);}
@@ -2738,7 +2740,7 @@ function damageEnemyAttack(world:CombatWorld,target:EnemyEntity,raw:number,attac
     if(source?.type==="iron_fortress"&&(attack.attackTag==="basic"||attack.attackTag==="burst")&&mark("suppression",4,source.eliteWave===2?3:4))queueEliteSpecial(world,source,"clamp",.1,true);
     if(source?.type==="radar_hunter"){
         if(attack.attackTag==="rail")marks.targetLock={count:1,until:now+4};
-        else if(attack.attackTag==="radar_lock"&&(marks.targetLock?.until??0)>now){delete marks.targetLock;target.stun=Math.max(target.stun,1.5);target.skillLockedUntil=now+2.2;queueEliteSpecial(world,source,"radar_followup",.6,false);}
+        else if(attack.attackTag==="radar_lock"&&(marks.targetLock?.until??0)>now){delete marks.targetLock;target.stun=extendStatusRemaining(target,"stun",target.stun,1.5,now);target.skillLockedUntil=now+2.2;queueEliteSpecial(world,source,"radar_followup",.6,false);}
     }
     return damage;
 }
@@ -3253,7 +3255,7 @@ function coreContext(world: CombatWorld, extra: Partial<CoreContext> = {}): Core
             if (now < (enemy.weakReadyAt || 0)) return;
             if (++enemy.weakHits >= 4) {
                 recordCoreMetric(world.aircraft,58,"procs",1);recordCoreMetric(world.aircraft,58,"targets",1);
-                enemy.weakHits = 0; enemy.weakDebuffUntil = now + 5; enemy.weakReadyAt = enemy.weakDebuffUntil + 15;
+                enemy.weakHits = 0; enemy.weakDebuffUntil = statusExpiry(enemy,"weakDebuffUntil",now,5); enemy.weakReadyAt = enemy.weakDebuffUntil + 15;
             }
         } },
         stopSkills: () => stopAllSkills(world), ...extra };
@@ -3497,7 +3499,7 @@ const riptideHooks:RiptideHooks={
  damage:(w,e,raw,skill,castId)=>{const receipt={hp:0,total:0};
   applyDamageToEnemy(w,e,raw,'#63e3d6',skill?'skill':'core',skill,undefined,undefined,'area_hazard',true,true,undefined,1,[],skill?expansionState(w.aircraft).casts[skill]:undefined,undefined,!skill,undefined,skill?undefined:{trueDamage:false,castId,passive:true},receipt);
   return receipt;},
- heal:(w,raw,cap)=>{const healed=healAircraft(w.aircraft,raw,false,cap);if(healed>0)emitPlayerHealing(w,healed,'skill_core',false);return healed;},
+ heal:(w,raw)=>{const healed=healAircraft(w.aircraft,raw,false);if(healed>0)emitPlayerHealing(w,healed,'skill_core',false);return healed;},
  cleanseSlow:w=>{const opponent=w.duel?.opponent??w.mirage?.mirror?.context.world??w.duelOpponent?.context.world;
   if(!opponent)return;const e=opponent.enemies.find(e=>e.aircraftTarget?.world===w);if(!e)return;
   clearSylvaSlow(opponent,e);clearArgentSlow(opponent,e);clearRiptideSlow(opponent,e);const c=cinderState(opponent).targets.get(e.id);if(c)c.slowUntil=0;
@@ -3775,8 +3777,8 @@ function applyDamageToEnemy(world: CombatWorld, enemy: EnemyEntity, rawDamage: n
     }
     if (skillId === "missile_swarm" && source !== "burn" && (skillRank(state, "missile_swarm") >= 3) && enemy.hp > 0) {
         enemy.burnCast = cast;
-        enemy.burn = 5;
-        enemy.burnArmorUntil = time + 6;
+        enemy.burn = statusExpiry(enemy,"burn",0,5);
+        enemy.burnArmorUntil = statusExpiry(enemy,"burnArmorUntil",time,6);
         enemy.burnDamage = stats.firepower * .9;
         if (enemy.burnTick <= 0)
             enemy.burnTick = 1;
@@ -4495,6 +4497,7 @@ function updateLaser(world: CombatWorld, dt: number): void {
     if(world.laserCharge>0||world.laserTicksRemaining>0)world.aircraft.activeEffects.focus_laser=Math.max(.001,world.laserCharge+world.laserRemaining);
     if (world.laserCharge > 0) {
         world.laserCharge = Math.max(0, world.laserCharge - dt);
+        world.aircraft.laserPhase=world.laserCharge>0?"charge":"firing";
         return;
     }
     if (world.laserTicksRemaining <= 0) {
@@ -4712,6 +4715,7 @@ export function latchAircraftDestruction(world: CombatWorld): void {
     world.aircraft.activeEffects = {}; world.aircraft.droneActive = false;
     world.dashRemaining = 0; world.droneTargetId = null;
     world.laserCharge = world.laserRemaining = world.laserTicksRemaining = 0;
+    delete world.aircraft.laserPhase;
     if (world.astra) { world.astra.charge = undefined; world.astra.orbit = undefined; world.astra.orbitReleases = []; }
     if (world.rankRuntime) world.rankRuntime.lock = undefined;
     for (const enemy of world.enemies) if (enemy.aircraftTarget) revalidateAircraftTargets(enemy.aircraftTarget.world);
@@ -4954,6 +4958,7 @@ export function makeHudSnapshot(world: CombatWorld, paused: boolean, pauseLabel:
     const boss = world.enemies.find((enemy) => enemy.type === "boss");
     const mirror=(world.duelOpponent ?? world.mirage?.mirror), mirrorStats=mirror?getEffectiveAircraftStats(mirror.state):undefined;
     return {
+        healing:getHealingSummary(world),
         grayHealth:sylvaGrayHealth(world),
         mirror:mirror&&mirrorStats?{grayHealth:sylvaGrayHealth(mirror.context.world),hp:mirror.state.currentHp,maxHp:mirrorStats.maxHp,resource:mirror.state.currentResource,maxResource:mirrorStats.maxResource}:undefined,
         stats: sylvaDisplayStats(world),

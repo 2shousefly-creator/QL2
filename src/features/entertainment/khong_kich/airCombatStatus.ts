@@ -26,7 +26,7 @@ export function applyPlayerStatus(state: AircraftCombatState, payload: StatusPay
     if(key==="stunnedUntil" && (hardControlImmune(state) || s.fractureResolve && (s.fractureStunUntil ?? 0) > 0 && now < s.fractureStunUntil! + 1.25))continue;
     recordStatusMitigation(state,seconds??0,s[key]);
     const duration = negativeStatusDuration(state, seconds ?? 0);
-    if (duration > 0) { s[key] = Math.max(s[key], now + duration); s.durations[key] = s[key]-now; if (key === "stunnedUntil" && s.fractureResolve) s.fractureStunUntil = s[key]; }
+    if (duration > 0) { if(now+duration>=s[key])s.durations[key]=duration; s[key] = Math.max(s[key], now + duration); if (key === "stunnedUntil" && s.fractureResolve) s.fractureStunUntil = s[key]; }
   }
   recordStatusMitigation(state,payload.healingReduction??0,now);
   const healingDuration = negativeStatusDuration(state, payload.healingReduction ?? 0);
@@ -43,8 +43,8 @@ export function applyPlayerStatus(state: AircraftCombatState, payload: StatusPay
     const same = s.jams.find(j => j.multiplier === multiplier);
     if (same) same.until = Math.max(same.until, now + duration);
     else s.jams.push({ until: now + duration, multiplier });
+    if(now+duration>=s.resourceJammedUntil)s.durations.resourceJammedUntil=duration;
     s.resourceJammedUntil = Math.max(s.resourceJammedUntil, now + duration);
-    s.durations.resourceJammedUntil=s.resourceJammedUntil-now;
   }
 }
 export function addStatusMark(state: AircraftCombatState, name: MarkName, duration: number, sourceEnemyId?: number): number {
