@@ -443,6 +443,7 @@ export const AirCombatBattleShell: React.FC<AirCombatBattleProps> = ({
           statusStripRef.current?.update(world);
           lastStatusUiUpdate = now;
         }
+        statusStripRef.current?.renderProgress(world);
         for (const id of skillIds) {
           const node = durationNodes.current[id], timer = getActiveSkillDuration(world, id);
           if (node) { node.hidden = !timer; node.style.setProperty("--skill-duration", String(timer ? timer.progress ?? 1 : 0)); }

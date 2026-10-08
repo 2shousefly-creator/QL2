@@ -842,7 +842,7 @@
 .air-sylva-vitality{position:absolute;left:2px;right:2px;bottom:1px;color:#e5e7eb;background:#102619dd;font-size:7px;line-height:1.2;text-align:center;pointer-events:none}
 
 
-/* Time is rendered from game snapshots; no wall-clock CSS animation. */
+/* Borders advance each frame from combat time; no wall-clock CSS animation. */
 .air-status-icon { border-color:transparent; }
 .air-status-group--debuff .air-status-icon, .air-boss-statuses .air-status-icon { border-color:transparent; }
 .air-status-icon > .air-status-border { position:absolute; inset:-1px; width:calc(100% + 2px); height:calc(100% + 2px); pointer-events:none; z-index:4; overflow:visible; fill:none; stroke:#4ade80; stroke-width:1.4; }

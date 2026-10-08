@@ -1,0 +1,46 @@
+{
+  "version": "26.26.2",
+  "releaseDate": "08/10/2026",
+  "title": "Làm Mượt Viền Tiến Trình Buff/Debuff",
+  "displayTitle": "KHÔNG KÍCH 26.26.2 — VIỀN BUFF/DEBUFF MƯỢT HƠN",
+  "summary": "Viền tiến trình Buff/Debuff chuyển động mượt hơn theo từng khung hình, giữ nguyên màu sắc, chiều chạy và thời gian chiến đấu thực tế.",
+  "sections": [
+    {
+      "id": "smooth-status-progress",
+      "title": "HUD · VIỀN TIẾN TRÌNH BUFF/DEBUFF",
+      "icon": {
+        "kind": "ui",
+        "id": "ui"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "frame-progress",
+          "icon": {
+            "kind": "ui",
+            "id": "motion"
+          },
+          "title": "Chuyển động viền mượt hơn",
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Viền tiến trình trên icon Buff/Debuff và debuff Boss cập nhật theo từng khung hình với bước tiến trình nhỏ hơn, giảm cảm giác nhảy từng nấc."
+            },
+            {
+              "format": "bullet",
+              "changeType": "unchanged",
+              "text": "Giữ nguyên màu sắc, chiều chạy, số stack không nền và cách ẩn số giây trên icon của phiên bản 26.26.1."
+            },
+            {
+              "format": "bullet",
+              "changeType": "note",
+              "text": "Viền bám theo thời gian combat và dừng khi trận đấu tạm dừng. Không thay đổi thời gian hiệu lực, hồi chiêu hay cơ chế chiến đấu."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

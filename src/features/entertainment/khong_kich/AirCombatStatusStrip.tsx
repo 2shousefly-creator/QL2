@@ -4,28 +4,23 @@ import React, { forwardRef, useCallback, useLayoutEffect, useImperativeHandle, u
 import { Flame, FlaskConical, Shield, ShieldMinus, Zap, Lock, BatteryWarning, HeartOff, Crosshair, Radar } from "lucide-react";
 import { CoreDescription } from "./CoreDescription";
 import { CombatUiIcon } from "./CombatUiIcon";
+import { AirCombatStatusProgress } from './airCombatStatusProgress';
 import { getBossStatusPresentations } from './airCombatBossStatuses';
 import { getStatusPresentations, type StatusPresentation } from "./airCombatPresentation";
 import type { CombatWorld } from "./airCombatRuntime";
 
-export interface StatusStripHandle { update(world: CombatWorld): void; close(): void }
+export interface StatusStripHandle { update(world: CombatWorld): void; renderProgress(world: CombatWorld): void; close(): void }
 const genericIcons = { burn: Flame, acid: FlaskConical, armor: ShieldMinus, shield: Shield, stun: Zap, skill_lock:Lock, resource_jam:BatteryWarning, regen_off:HeartOff, mark:Crosshair, radar:Radar };
 const timeLabel = (value: number) => Number.isFinite(value) ? `${Math.max(0, value).toFixed(1).replace(".", ",")}s` : "Đang hiệu lực";
 const showTimer = (status: StatusPresentation) => !!status.timer && status.timer.phase !== 'indefinite';
-const progressRatio = (status: StatusPresentation) => {
-  const timer=status.timer;
-  return timer && timer.phase !== 'indefinite' ? Math.max(0,Math.min(1,timer.remaining/timer.total)) : 1;
-};
 // Clockwise path starts at twelve. Active removes its head clockwise; cooldown
 // uses only a mirrored stroke layer, filling from twelve counterclockwise.
 const BORDER_PATH = 'M 12 1 H 23 V 23 H 1 V 1 H 12';
-function StatusBorder({status}:{status:StatusPresentation}) {
- const phase=status.timer?.phase??'indefinite',ratio=progressRatio(status),cooldown=phase==='cooldown';
- const length=phase==='indefinite'?1:cooldown?1-ratio:ratio;
- return <svg className="air-status-border" viewBox="0 0 24 24" aria-hidden="true" data-phase={phase} data-group={status.group}>
+function StatusBorder({status,progress}:{status:StatusPresentation;progress:AirCombatStatusProgress}) {
+ const bind=useCallback((node:SVGPathElement|null)=>progress.bind(status.id,node),[progress,status.id]);
+ return <svg className="air-status-border" viewBox="0 0 24 24" aria-hidden="true" data-group={status.group}>
    <path d={BORDER_PATH} className="air-status-border-track"/>
-   <path d={BORDER_PATH} pathLength="1" transform={cooldown?'translate(24 0) scale(-1 1)':undefined}
-     strokeDasharray={`${length} 1`} strokeDashoffset={phase==='active'?-(1-ratio):0}/>
+   <path ref={bind} d={BORDER_PATH} pathLength="1"/>
  </svg>;
 }
 
@@ -47,13 +42,13 @@ function sameSnapshot(previous: StatusPresentation[], next: StatusPresentation[]
       && status.timeLabel === other.timeLabel && status.showNumericTimer === other.showNumericTimer
       && status.rewardMessage === other.rewardMessage && status.duration === other.duration
       && status.timer?.phase === other.timer?.phase && status.timer?.total === other.timer?.total
-      && status.remaining.toFixed(1) === other.remaining.toFixed(1)
-      && Math.round(progressRatio(status) * 360) === Math.round(progressRatio(other) * 360);
+      && status.remaining.toFixed(1) === other.remaining.toFixed(1);
   });
 }
-/** React owns the entire status snapshot; Battle supplies unpaused updates at 10 Hz. */
+/** Labels use 10 Hz snapshots; Battle paints fractional border progress each frame. */
 export const AirCombatStatusStrip = React.memo(forwardRef<StatusStripHandle, { top: number; onTooltipChange: (open: boolean) => void }>(({ top, onTooltipChange }, ref) => {
   const host = useRef<HTMLDivElement>(null);
+  const [progress] = useState(()=>new AirCombatStatusProgress());
   const snapshotWorld = useRef<CombatWorld|null>(null);
   const [items, setItems] = useState<StatusPresentation[]>([]);
   const [selected, setSelected] = useState<string | null>(null);
@@ -68,16 +63,18 @@ export const AirCombatStatusStrip = React.memo(forwardRef<StatusStripHandle, { t
     if (wasOpen !== (next !== null)) tooltipChange.current(next !== null);
   };
   // Battle owns outside-dismiss, Escape and dismiss-pointer suppression.
-  useImperativeHandle(ref, () => ({ close, update(world) {
+  useImperativeHandle(ref, () => ({ close, renderProgress:world=>progress.render(world), update(world) {
     const changedWorld=snapshotWorld.current!==world;
     if (world.pauseReasons.size > 0 && !changedWorld) return;
     if(changedWorld){snapshotWorld.current=world;close();}
     const next = [...getStatusPresentations(world), ...getBossStatusPresentations(world)];
+    progress.snapshot(world,next);
+    progress.render(world);
     const surface=host.current?.closest<HTMLElement>(".air-combat-surface");
     const empJam = String(world.aircraft.status.resourceJammedUntil > world.aircraft.coreState.time);
     if (surface && surface.dataset.empJam !== empJam) surface.dataset.empJam = empJam;
     setItems(previous => sameSnapshot(previous, next) ? previous : next);
-  } }), [close]);
+  } }), [close,progress]);
   const playerItems = items.filter(s => !s.id.startsWith('boss:'));
   const bossItems = items.filter(s => s.id.startsWith('boss:'));
   const active = items.find(s => s.id === selected) ?? overflowStatus(selected, playerItems);
@@ -91,7 +88,7 @@ export const AirCombatStatusStrip = React.memo(forwardRef<StatusStripHandle, { t
       aria-label={`${status.id.startsWith('boss:')?'Boss · ':''}${status.name}${status.badgeText ? ` · ${status.badgeText}` : ""}`} aria-pressed={selected === status.id}
       onClick={() => toggle(status.id)}>
       {status.icon.kind === "status" ? Generic && <Generic aria-hidden="true" /> : <CombatUiIcon {...status.icon} fallback="◆" />}
-      <StatusBorder status={status}/>
+      <StatusBorder status={status} progress={progress}/>
       <b className="air-status-value-badge" data-status-value hidden={!status.badgeText}>{status.badgeText}</b>
     </button>;
   };
