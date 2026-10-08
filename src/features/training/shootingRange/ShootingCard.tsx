@@ -23,7 +23,7 @@ export const ShootingCard: React.FC<ShootingCardProps> = ({
   const config = SHOOTING_DIFFICULTY_CONFIGS[selectedDifficulty];
 
   return (
-    <div className="bg-slate-900/90 border border-amber-500/30 rounded-3xl p-5 flex flex-col gap-5 shadow-2xl backdrop-blur-md">
+    <div className="training-detail-panel bg-slate-900/90 border border-amber-500/30 rounded-3xl p-5 flex flex-col gap-5 shadow-2xl backdrop-blur-md">
       {/* Title Header */}
       <div className="flex items-start justify-between gap-3 border-b border-slate-800/80 pb-4">
         <div className="flex items-center gap-3.5">
@@ -72,6 +72,7 @@ export const ShootingCard: React.FC<ShootingCardProps> = ({
             return (
               <button
                 key={diff}
+                data-command-selected={isSelected}
                 type="button"
                 onClick={() => {
                   soundManager.playClick();

@@ -24,7 +24,13 @@ export function PixiSceneHost<Props>({ factory, visualProps, reducedMotion, onRe
         runtime.current = value;
         if (value) {
           value.update(latest.current.visualProps, latest.current.reducedMotion);
-          if (host.current?.querySelector("canvas")) { setReady(true); latest.current.onReady?.(); }
+          const reveal = (artReady: boolean) => {
+            if (abort.signal.aborted || !host.current?.querySelector("canvas")) return;
+            if (artReady) { setReady(true); latest.current.onReady?.(); }
+            else unavailable();
+          };
+          if (value.ready) void value.ready.then(reveal).catch(unavailable);
+          else reveal(true);
         }
       }).catch(unavailable);
     return () => { abort.abort(); runtime.current?.destroy(); runtime.current = null; };

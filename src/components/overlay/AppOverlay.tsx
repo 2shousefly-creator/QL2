@@ -11,6 +11,7 @@ import {
   useSyncExternalStore,
 } from "react";
 import { createPortal } from "react-dom";
+import { useCommandMenu } from "../core-visual/CommandMenuContext";
 import type { ModalArchetype, ModalStatus, ModalTheme } from "./ModalContent";
 export { GameResultScreen, ModalActions, ModalButton, ResultHero, ResultStat, ResultStats } from "./ModalContent";
 
@@ -356,6 +357,7 @@ function AppDialog({
   initialFocusRef,
   sheet,
 }: AppDialogProps & { sheet: boolean }) {
+  const commandMenu = useCommandMenu();
   const panelRef = useRef<HTMLElement>(null);
   useBodyScrollLock(true);
   useDialogFocus(panelRef, onClose, closeOnEscape, initialFocusRef, FOCUS_LAYER_PRIORITY[layer], notification);
@@ -374,7 +376,7 @@ function AppDialog({
         data-modal-theme={theme}
         data-modal-status={status}
         data-modal-size={size}
-        data-reduced-motion={reducedMotion ? "true" : undefined}
+        data-reduced-motion={reducedMotion || commandMenu?.reducedMotion ? "true" : undefined}
         onClick={(event) => {
           event.stopPropagation();
           if (closeOnBackdrop && event.target === event.currentTarget) onClose?.();
@@ -389,7 +391,7 @@ function AppDialog({
           aria-label={ariaLabel}
           aria-labelledby={labelledBy}
           aria-describedby={describedBy}
-          className={panelClassName}
+          className={joinClasses(panelClassName, commandMenu && "command-art-dialog", commandMenu?.kind === "logistics" && "command-art-logistics")}
           {...panelProps}
         >
           {children}

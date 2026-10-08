@@ -20,3 +20,10 @@ Import PNGs and JSON metadata with `?url` from each manifest. The registry uses 
 non-eager Vite glob, so only the selected manifest and its image URLs load. Missing
 manifests return null without making requests for nonexistent artwork. See
 [`docs/pixi-core-renderer.md`](../../../../docs/pixi-core-renderer.md) for examples.
+
+Scope A now supplies eight Home packs, Journey, six archive environments and the
+training/entertainment lobbies. `ui/` holds shared material states and navigation
+atlases; `farm-ui/manifest.ts` describes management skins, not world scenery.
+See `art-source.json` for generated-art provenance and packaged dimensions, and
+[`docs/core-command-art-scope-a.md`](../../../../../docs/core-command-art-scope-a.md)
+for consumers, ownership, fallbacks and the build-only validation boundary.

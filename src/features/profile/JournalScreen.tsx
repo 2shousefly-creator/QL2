@@ -184,7 +184,7 @@ export const JournalScreen: React.FC<JournalScreenProps> = ({ state }) => {
           const isActive = selectedFilter === filter.id;
           return (
             <button
-              key={filter.id}
+              key={filter.id} data-command-selected={isActive}
               type="button"
               onClick={() => {
                 soundManager.playClick();

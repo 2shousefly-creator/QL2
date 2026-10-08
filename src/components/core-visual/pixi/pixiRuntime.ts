@@ -79,6 +79,7 @@ export async function createPixiRuntime<Props>(host: HTMLElement, factory: PixiS
     if (destroyed) return null;
     visibility();
     return {
+      ready: controller.ready,
       update(props, nextReduced) {
         if (destroyed) return;
         try {

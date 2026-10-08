@@ -20,6 +20,8 @@ type Pack = {
 
 /** Optional enhancement below procedural/UI layers. Uses the owning scene's clock. */
 export function createCoreArtRuntime(app: Application, parent: Container) {
+  let settleReady: (ready: boolean) => void = () => {};
+  const ready = new Promise<boolean>(resolve => { settleReady = resolve; });
   const plane = new Container(); plane.eventMode = "none"; parent.addChildAt(plane, 0);
   let pack: Pack | undefined, key = "", generation = 0, destroyed = false;
   let width = 1, height = 1, reduced = false, time = 0, themeTint = 0xffffff;
@@ -57,7 +59,8 @@ export function createCoreArtRuntime(app: Application, parent: Container) {
   };
   const load = async (selection: CoreArtSelection, request: number) => {
     const manifest = await loadCoreArtManifest(selection);
-    if (destroyed || request !== generation || !manifest) return;
+    if (destroyed || request !== generation) return;
+    if (!manifest) { settleReady(false); return; }
     const next: Pack = { root: new Container(), layers: [], ambient: [], effects: [], effectsData: new Map(), leases: [], disposed: false };
     next.root.sortableChildren = true; next.root.eventMode = "none";
     dispose(pack); pack = next; plane.addChild(next.root);
@@ -107,8 +110,10 @@ export function createCoreArtRuntime(app: Application, parent: Container) {
     await Promise.allSettled(tasks);
     if (!active()) { dispose(next); return; }
     publish();
+    settleReady(next.layers.length > 0 && next.layers.length === manifest.layers.filter(layer => layer?.src).length);
   };
   return {
+    ready,
     update(selection: CoreArtSelection, tint: number) {
       themeTint = tint;
       const nextKey = `${selection.sceneId}/${selection.themeId}/${selection.variant ?? ""}`;
@@ -116,7 +121,7 @@ export function createCoreArtRuntime(app: Application, parent: Container) {
       key = nextKey; const request = ++generation;
       // Do not show a previous chapter/day's art while the new selection loads.
       dispose(pack); pack = undefined;
-      void load(selection, request).catch(() => { /* Optional manifest cannot fail the scene. */ });
+      void load(selection, request).catch(() => { settleReady(false); });
     },
     resize(w: number, h: number) { width = Math.max(1, w); height = Math.max(1, h); if (pack) layout(pack); },
     setReducedMotion(value: boolean) {
@@ -158,6 +163,6 @@ export function createCoreArtRuntime(app: Application, parent: Container) {
         if (effect.actor.completed || effect.age > 10) { effect.actor.destroy(); pack.effects.splice(i, 1); }
       }
     },
-    destroy() { destroyed = true; generation++; dispose(pack); pack = undefined; plane.destroy({ children: true }); },
+    destroy() { destroyed = true; generation++; settleReady(false); dispose(pack); pack = undefined; plane.destroy({ children: true }); },
   };
 }

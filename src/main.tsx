@@ -6,6 +6,7 @@ import './styles/military-ui.css';
 import './styles/responsive-overlays.css';
 import './styles/modal-design-system.css';
 import './styles/core-visual.css';
+import './styles/command-art.css';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

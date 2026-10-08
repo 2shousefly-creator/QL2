@@ -26,7 +26,7 @@ export const GomokuCard: React.FC<GomokuCardProps> = ({
   onOpenTutorial,
 }) => {
   return (
-    <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 space-y-4 shadow-xl">
+    <div className="training-detail-panel bg-slate-900/90 border border-slate-800 rounded-2xl p-4 space-y-4 shadow-xl">
       {/* Title & Info */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2.5">
@@ -77,6 +77,7 @@ export const GomokuCard: React.FC<GomokuCardProps> = ({
             return (
               <button
                 key={diff}
+                data-command-selected={isSelected}
                 type="button"
                 onClick={() => {
                   soundManager.playClick();
@@ -106,6 +107,7 @@ export const GomokuCard: React.FC<GomokuCardProps> = ({
               soundManager.playClick();
               onSelectMark("X");
             }}
+            data-command-selected={selectedMark === "X"}
             className={`py-2 px-3 rounded-xl border flex items-center justify-center gap-2 transition-all ${
               selectedMark === "X"
                 ? "bg-blue-500/20 border-blue-500/60 text-blue-300 font-extrabold shadow-lg shadow-blue-500/10"
@@ -122,6 +124,7 @@ export const GomokuCard: React.FC<GomokuCardProps> = ({
               soundManager.playClick();
               onSelectMark("O");
             }}
+            data-command-selected={selectedMark === "O"}
             className={`py-2 px-3 rounded-xl border flex items-center justify-center gap-2 transition-all ${
               selectedMark === "O"
                 ? "bg-rose-500/20 border-rose-500/60 text-rose-300 font-extrabold shadow-lg shadow-rose-500/10"

@@ -1,3 +1,8 @@
+import { CommandIcon } from "./core-visual/CommandIcon";
+import { CommandMenuProvider } from "./core-visual/CommandMenuContext";
+import { MenuPixiDecor } from "./core-visual/MenuPixiDecor";
+import navIcons from "../assets/core-art/v1/ui/navigation/icons.png?url";
+import profileIcons from "../assets/core-art/v1/ui/profile-hub/icons.png?url";
 import React, { useState, useEffect } from "react";
 import {
   Home,
@@ -191,17 +196,20 @@ export const HubNavigation: React.FC<HubNavigationProps> = ({
       <nav
         data-core-motion={reducedMotion ? "reduced" : undefined}
         data-app-navigation
+        data-command-shell="navigation"
         aria-label="Điều hướng chính"
         className="core-nav theme-nav-shell command-dock fixed bottom-0 inset-x-0 z-40 bg-slate-950/95 border-t backdrop-blur-md pb-[env(safe-area-inset-bottom)] shadow-2xl select-none"
       >
+        <MenuPixiDecor selector="[data-command-anchor]" reducedMotion={reducedMotion} />
         <div className="hub-navigation-bar max-w-lg mx-auto flex items-center justify-around px-2">
-          {mainTabs.map((tab) => {
+          {mainTabs.map((tab, tabIndex) => {
             const Icon = tab.icon;
             const isActive = tab.isActive;
 
             return (
               <button
                 key={tab.id}
+                data-command-anchor={tab.id}
                 type="button"
                 aria-current={tab.isActive ? "page" : undefined}
                 onClick={tab.onClick}
@@ -221,11 +229,8 @@ export const HubNavigation: React.FC<HubNavigationProps> = ({
                 )}
 
                 <div className="relative">
-                  <Icon
-                    className={`w-5 h-5 transition-transform duration-200 ${
-                      isActive ? "scale-110" : ""
-                    }`}
-                  />
+                  <CommandIcon atlas={{ src: navIcons, columns: 5, rows: 1 }} index={tabIndex}
+                    className={`w-5 h-5 ${isActive ? "scale-110" : ""}`} fallback={<Icon className="w-5 h-5" />} />
                   {tab.hasBadge && (
                     <span className="absolute -top-1 -right-1.5 w-2.5 h-2.5 rounded-full bg-rose-500 ring-2 ring-slate-950 animate-pulse shadow-[0_0_8px_rgba(244,63,94,0.8)]" />
                   )}
@@ -242,7 +247,7 @@ export const HubNavigation: React.FC<HubNavigationProps> = ({
 
       {/* Hồ Sơ Hub Popup Sheet */}
       {isProfileHubOpen && (
-        <AppBottomSheet archetype="info"
+        <CommandMenuProvider reducedMotion={reducedMotion}><AppBottomSheet archetype="info"
           onClose={() => setIsProfileHubOpen(false)}
           closeOnBackdrop
           labelledBy="profile-hub-title"
@@ -308,7 +313,7 @@ export const HubNavigation: React.FC<HubNavigationProps> = ({
                           isSpanningFullWidth ? "shrink-0" : "mb-2"
                         } theme-menu-card__icon`}
                       >
-                        <ItemIcon className="w-5 h-5 sm:w-6 sm:h-6 shrink-0" />
+                        <CommandIcon atlas={{ src: profileIcons, columns: 4, rows: 2 }} index={index} className="w-5 h-5 sm:w-6 sm:h-6" fallback={<ItemIcon className="w-5 h-5" />} />
                       </div>
 
                       {/* Title & Subtitle */}
@@ -325,7 +330,7 @@ export const HubNavigation: React.FC<HubNavigationProps> = ({
                   );
                 })}
               </OverlayBody>
-        </AppBottomSheet>
+        </AppBottomSheet></CommandMenuProvider>
       )}
 
       {/* Tăng Gia (In Development) Modal */}

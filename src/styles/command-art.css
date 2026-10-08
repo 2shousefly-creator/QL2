@@ -1,0 +1,203 @@
+/* Scope A is opt-in. Never target badge SVG/img, tier bars, Uniform or game roots. */
+.command-art-menu, .command-art-dialog, [data-command-shell] {
+  --command-skin-normal: url('../assets/core-art/v1/ui/shared/panel-normal.png');
+  --command-skin-selected: url('../assets/core-art/v1/ui/shared/panel-selected.png');
+  --command-skin-pressed: url('../assets/core-art/v1/ui/shared/panel-pressed.png');
+  --command-skin-disabled: url('../assets/core-art/v1/ui/shared/panel-disabled.png');
+}
+.command-art-fallback, .command-art-fallback > img {
+  position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; user-select: none;
+}
+.command-art-fallback { overflow: hidden; border-radius: inherit; }
+.command-art-fallback > img { object-position: center; }
+.command-lobby-art { position: absolute; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; border-radius: inherit; }
+.command-lobby-art > .core-pixi-host { position: absolute; inset: 0; }
+.command-art-menu.entertainment-command-screen, .command-art-menu.training-command-screen { position: relative; isolation: isolate; }
+.command-art-menu > .core-scene__decor > :is(.core-scene__depth, .core-ambient) { display: none; }
+.command-art-menu > .core-scene__decor > .core-scene__veil { background: #090f1648; }
+.command-art-menu .journey-route > .command-art-fallback { z-index: 0; opacity: .8; }
+.command-art-icon { display: block; position: relative; overflow: hidden; flex-shrink: 0; pointer-events: none; }
+.command-art-icon > img { position: absolute; max-width: none; max-height: none; object-fit: fill; }
+
+/* Border-image paints a 9-slice without changing any border width or layout box. */
+.command-art-menu.command-art-menu :is(.command-header, .command-panel, .tactical-card, .home-personnel-plate,
+  .journal-field-report, .training-program-card, .training-detail-panel, .command-lobby-notice,
+  .logistics-hud, .logistics-action-toolbar, [data-farm-player-xp]),
+.command-art-dialog,
+.command-art-dialog :is(.modal-section, .profile-dossier-card),
+[data-command-shell] {
+  background: #090f16 !important;
+  border-image-source: var(--command-skin-normal) !important;
+  border-image-slice: 32 fill !important;
+  border-image-width: 8px !important;
+  border-image-outset: 0 !important;
+  border-image-repeat: stretch !important;
+  backdrop-filter: none !important;
+}
+.command-art-menu.command-art-menu :is(.command-panel, .command-header, .tactical-card, .identity-credential)::before,
+.command-art-menu.command-art-menu :is(.command-panel, .command-header, .tactical-card, .identity-credential)::after { display: none; }
+.command-art-menu.command-art-menu :is(.military-button, .promotion-command-button, .journal-filter-control, .command-menu-control),
+.command-art-menu .training-detail-panel button,
+.command-art-dialog :is(.modal-button, .modal-control),
+[data-command-shell] [data-command-anchor],
+.command-art-logistics :is(.logistics-hud, .logistics-action-toolbar) button {
+  background: #14212b !important;
+  border-image-source: var(--command-skin-normal) !important;
+  border-image-slice: 32 fill !important;
+  border-image-width: 6px !important;
+  border-image-outset: 0 !important;
+  color: #f1f5f9;
+  transition-property: border-color, background-color, box-shadow;
+  transition-duration: 160ms;
+}
+.command-art-menu.command-art-menu :is(.theme-selected-card, [data-rank-state="current"], [data-command-selected="true"], .theme-menu-card--active),
+.command-art-menu [data-sector-state="current"] > .journey-sector__panel,
+.command-art-menu.command-art-menu :is(.military-button--primary, .promotion-command-button),
+.command-art-dialog :is(.theme-menu-card--active, .modal-button--primary),
+[data-command-shell] [aria-current="page"] {
+  border-image-source: var(--command-skin-selected) !important;
+  border-color: var(--theme-border-strong);
+}
+.command-art-menu.command-art-menu :is([data-rank-state="completed"], [data-sector-state="completed"] > .journey-sector__panel) { border-color: #75afa8; }
+.command-art-menu.command-art-menu :is([data-rank-state="locked"], [data-medal-state="locked"]),
+.command-art-menu.command-art-menu :is(.military-button, .training-program-card, .command-menu-control):disabled,
+.command-art-menu .training-detail-panel button:disabled,
+.command-art-dialog :is(.modal-button, .modal-control):disabled,
+.command-art-logistics :is(.logistics-hud, .logistics-action-toolbar) button:disabled {
+  border-image-source: var(--command-skin-disabled) !important;
+  color: #a5b1bf;
+}
+.command-art-menu.command-art-menu :is(.military-button, .promotion-command-button, .training-program-card, .command-menu-control):not(:disabled):active,
+.command-art-menu .training-detail-panel button:not(:disabled):active,
+.command-art-dialog :is(.modal-button, .modal-control):not(:disabled):active,
+[data-command-shell] [data-command-anchor]:active,
+.command-art-logistics :is(.logistics-hud, .logistics-action-toolbar) button:not(:disabled):active {
+  border-image-source: var(--command-skin-pressed) !important;
+}
+.command-art-menu.command-art-menu :is(.military-button--danger, .command-menu-control--danger),
+.command-art-dialog .modal-button--danger { border-color: #ad6863; background-color: #321d22 !important; }
+.command-art-menu .military-button--ghost, .command-art-dialog .modal-button--ghost { border-image-source: var(--command-skin-disabled) !important; }
+.command-art-menu.command-art-menu :is(.status-tag, .home-rate-readout, .rank-activity-ticker) {
+  background-color: #090f16e8; background-image: var(--command-skin-normal); background-size: 100% 100%;
+}
+.command-art-menu .training-detail-panel button [class*="text-slate-9"] { color: #dce8eb; }
+.command-art-menu .training-detail-panel [data-command-selected="true"] { border-image-source: var(--command-skin-selected) !important; }
+.command-art-menu.training-command-screen > .command-lobby-art,
+.command-art-menu.entertainment-command-screen > .command-lobby-art { opacity: .6; }
+.command-art-menu.training-command-screen::before,
+.command-art-menu.entertainment-command-screen::before { display: none; }
+.command-art-dialog { --modal-panel: #090f16; --modal-surface: #14212b; --modal-text: #f1f5f9; --modal-muted: #a5b1bf; }
+.command-art-dialog > :is(.app-overlay__header, .app-overlay__footer) { background: #0c141de8; border-color: #40505b; }
+.command-art-dialog .profile-dossier-card { box-shadow: none; }
+.command-art-dialog .profile-dossier-card:active { border-image-source: var(--command-skin-pressed) !important; }
+.command-art-dialog .profile-dossier-card:is(:active, .theme-menu-card--active) { transform: none; }
+.command-art-dialog .theme-menu-card__icon { background: #14212b; border-color: #40505b; }
+
+/* Chrome stays in its existing stacking contexts and safe-area geometry. */
+.command-menu-pixi { position: absolute; inset: 0; pointer-events: none; overflow: hidden; border-radius: inherit; z-index: 0; }
+.command-menu-pixi > .core-pixi-host { position: absolute; inset: 0; }
+[data-command-shell] > .hub-navigation-bar { position: relative; z-index: 1; }
+[data-command-shell]:has(> .command-menu-pixi[data-art-ready="true"]) [data-command-anchor]:not(:active) {
+  border-image: none !important; background: transparent !important;
+}
+
+/* Complete the active shop/inventory portal skin without changing its layout. */
+.farm-market .command-art-dialog.command-art-logistics {
+  --modal-surface: #090f16; --modal-surface-soft: #14212b; --modal-text: #f1f5f9;
+  --modal-muted: #a5b1bf; --modal-border: #40505b; --modal-divider: #40505b;
+  --modal-success: #8ab9a0; --modal-warning: #d9c08b; --modal-reward: #d9c08b;
+  --theme-primary: #294547; --theme-on-primary: #f1f5f9;
+  color-scheme: dark; box-shadow: 0 18px 50px #0008;
+}
+.farm-market .command-art-logistics :is(.app-overlay__header, .app-overlay__body, .app-overlay__footer, .farm-market-tabs) {
+  background: #090f16; border-color: #40505b;
+  --modal-text: #f1f5f9; --modal-muted: #a5b1bf; --modal-reward: #d9c08b;
+}
+.farm-market .command-art-logistics :is(.farm-market-card, .farm-market-eggs, .modal-section, .farm-market-owned, input[type="number"], [class*="bg-slate-"], [class*="bg-emerald-"]) {
+  background: #14212b !important; border-color: #40505b; color: #dce8eb; box-shadow: none;
+}
+.farm-market .command-art-logistics :is(.farm-market-card, .farm-market-eggs) {
+  border-image: var(--command-skin-normal) 32 fill / 8px / 0 stretch;
+}
+.farm-market .command-art-logistics :is(.farm-market-card > button, .farm-market-tabs > button, .farm-market-empty > button) {
+  background: #14212b; color: #f1f5f9; border-color: #40505b;
+  border-image: var(--command-skin-normal) 32 fill / 6px / 0 stretch; box-shadow: none;
+}
+.farm-market .command-art-logistics :is(.farm-market-card > button, .farm-market-tabs > button):disabled {
+  border-image-source: var(--command-skin-disabled); color: #a5b1bf;
+}
+.farm-market .command-art-logistics .farm-market-tabs > button[aria-pressed="true"] {
+  border-image-source: var(--command-skin-selected); color: #d9c08b; box-shadow: none;
+}
+.farm-market .command-art-logistics :is(.farm-market-card > button, .farm-market-tabs > button):not(:disabled):active {
+  border-image-source: var(--command-skin-pressed);
+}
+.farm-market .command-art-logistics [class*="text-slate-"] { color: #dce8eb; }
+.farm-market .command-art-logistics [class*="text-amber-"] { color: #d9c08b; }
+.farm-market .command-art-logistics :is(.farm-market-card > div:first-child > div:has(> .farm-market-art), .app-overlay__header div:has(> .farm-market-art), .farm-market-empty > div:first-child) {
+  background: #202d36; border-color: #40505b; box-shadow: none;
+}
+.farm-market .command-art-logistics .farm-market-eggs .space-y-1\.5 > div { background: #202d36; }
+
+.command-art-menu .identity-credential {
+  background: #090f16 !important;
+  border-image: var(--command-skin-normal) 32 fill / 8px / 0 stretch !important;
+}
+.command-art-menu :is(.command-header__action button, .journal-filter-control, .medal-filter-control, .personnel-settings button) {
+  background: #14212b !important; color: #f1f5f9;
+  border-image: var(--command-skin-normal) 32 fill / 6px / 0 stretch;
+}
+.command-art-menu :is(.command-header__action button, .journal-filter-control, .medal-filter-control, .personnel-settings button):active {
+  border-image-source: var(--command-skin-pressed);
+}
+.command-art-menu :is(.journal-filter-control, .medal-filter-control)[data-command-selected="true"] { border-image-source: var(--command-skin-selected); }
+.command-art-menu.personnel-command-screen .command-panel:not(.personnel-record) button {
+  background: #14212b !important; color: #f1f5f9;
+  border-image: var(--command-skin-normal) 32 fill / 6px / 0 stretch;
+}
+.command-art-menu.personnel-command-screen .command-panel:not(.personnel-record) button.theme-badge {
+  border-image-source: var(--command-skin-selected);
+}
+.command-art-menu.personnel-command-screen .command-panel:not(.personnel-record) button:not(:disabled):active {
+  border-image-source: var(--command-skin-pressed);
+}
+.command-art-menu.personnel-command-screen .command-panel:not(.personnel-record) button:disabled {
+  border-image-source: var(--command-skin-disabled); color: #a5b1bf;
+}
+.command-art-menu .training-detail-panel > button:last-child { border-image-source: var(--command-skin-selected) !important; }
+.command-art-dialog .modal-button--danger { box-shadow: inset 0 0 0 3px #ad6863; }
+.command-art-menu .continuous-progress-track { background-color: #090f16; box-shadow: inset 0 1px 3px #0008; }
+.command-art-menu .continuous-progress-fill { background-color: #75afa8; background-image: none; }
+/* Retire old geometric scenery only, leaving the protected hero untouched. */
+.core-home-backdrop .home-environment::after, .core-home-backdrop .core-scene__foreground { display: none; }
+.core-home-backdrop .home-environment { animation: none; }
+.core-home-backdrop .core-scene__depth { background: none !important; }
+[data-command-motion="reduced"] :is(.training-detail-panel button, .command-menu-control),
+[data-reduced-motion="true"] .command-art-dialog :is(.modal-button, .modal-control) { transition: none; }
+[data-command-shell] .theme-active-marker { box-shadow: 0 0 4px var(--theme-glow); }
+
+/* Logistics management only; the farm world and its actor surfaces are excluded. */
+.command-art-logistics.farm-graphics-screen { background: #090f16; color: #f1f5f9; }
+.command-art-logistics.farm-graphics-screen::before { background: none; }
+.command-art-logistics.farm-graphics-screen :is(.logistics-hud, .logistics-action-toolbar, [data-farm-player-xp]) {
+  background: #090f16 !important; color: #f1f5f9; border-image-source: var(--command-skin-normal) !important;
+  border-color: #40505b !important; box-shadow: inset 0 1px #40505b !important;
+}
+.command-art-logistics.farm-graphics-screen :is(.logistics-hud, [data-farm-player-xp]) [class*="text-slate-"] { color: #a5b1bf; }
+.command-art-logistics.farm-graphics-screen :is(.logistics-hud, [data-farm-player-xp]) [class*="text-amber-"] { color: #d9c08b; }
+.command-art-logistics.farm-graphics-screen .logistics-hud > div[title] { background: #14212b; border-color: #40505b; color: #dce8eb; }
+.command-art-logistics.farm-graphics-screen .logistics-hud > div[title] [class*="text-"] { color: #dce8eb; }
+.command-art-logistics.farm-graphics-screen :is(.logistics-hud, .logistics-action-toolbar) button { color: #f1f5f9; box-shadow: none; animation: none; }
+.command-art-logistics.farm-graphics-screen .logistics-action-toolbar[data-farm-selection="selected"] { border-color: #75afa8 !important; }
+.command-art-logistics.farm-graphics-screen [data-farm-player-xp] .xp-command-track { background: #090f16; border-color: #40505b; }
+.command-art-logistics.farm-graphics-screen [data-farm-xp-fill] { background: #75afa8; }
+.command-art-logistics.farm-graphics-screen [data-farm-xp-percent] { color: #d9c08b; }
+.command-art-logistics.farm-graphics-screen .logistics-hud > div:first-child > div:first-child { background: #202d36; color: #d9c08b; }
+.command-art-logistics.command-art-dialog :is(.modal-tab, .modal-control, .modal-section, .modal-button) { background-color: #14212b !important; }
+
+/* Only newly authored material feedback is changed; protected animations are untouched. */
+[data-core-motion="reduced"] .command-menu-pixi,
+[data-reduced-motion="true"] .command-art-dialog :is(.modal-button, .modal-control) { transition: none; }
+@media (prefers-reduced-motion: reduce) {
+  .command-art-menu .command-menu-control, [data-command-shell] [data-command-anchor], .command-art-dialog .modal-control { transition: none; }
+}

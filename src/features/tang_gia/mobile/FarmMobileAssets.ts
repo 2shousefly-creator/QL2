@@ -1,4 +1,5 @@
 import { Rectangle, Texture } from 'pixi.js';
+import { UI_SKIN_URLS } from '../../../components/core-visual/pixi/UiSkinAtlas';
 import { acquirePixiTexture } from '../../../components/core-visual/pixi/pixiAssets';
 import type { PixiAssetLease } from '../../../components/core-visual/pixi/pixiAssets';
 import { animalArt, cropArt, propArt, soilArt, itemArt } from './FarmArtRegistry';
@@ -14,6 +15,7 @@ const sourceUrl = (path: string) => base(path.split('#')[0]);
 export function mobileSources(model: FarmMobileModel): Record<string, string> {
   const sources: Record<string, string> = {};
   const add = (path: string) => { const url = sourceUrl(path); sources[url] = url; };
+  if (model.sheet) Object.values(UI_SKIN_URLS).forEach(add);
   add(propArt('bush'));
   add(soilArt('empty_dry'));
   for (const plot of model.snapshot.plots) if (plot.cropId) add(cropArt(plot.cropId, plot.artStage));

@@ -25,7 +25,7 @@ export const FormationAssemblyCard: React.FC<FormationAssemblyCardProps> = ({
   const currentConfig = FORMATION_CONFIGS[selectedDifficulty];
 
   return (
-    <div className="bg-slate-900/90 border border-slate-800 rounded-3xl p-4 sm:p-5 flex flex-col gap-4 shadow-xl backdrop-blur-md">
+    <div className="training-detail-panel bg-slate-900/90 border border-slate-800 rounded-3xl p-4 sm:p-5 flex flex-col gap-4 shadow-xl backdrop-blur-md">
       {/* Game Header */}
       <div className="flex items-start justify-between border-b border-slate-800/80 pb-3 gap-2">
         <div>
@@ -87,6 +87,7 @@ export const FormationAssemblyCard: React.FC<FormationAssemblyCardProps> = ({
             return (
               <button
                 key={diff}
+                data-command-selected={isSelected}
                 type="button"
                 onClick={() => {
                   soundManager.playClick();

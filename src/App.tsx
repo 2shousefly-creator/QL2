@@ -582,7 +582,7 @@ export default function App() {
 
       {/* Top Gaming HUD Header (Auto-hidden when in Minigames, Challenge, or Trough Info Modal) */}
       {!isTrainingGameActive && !isExclusivePromotionFlow && !isTroughInfoActive && (
-        <header data-app-hud className="theme-header-shell command-status-hud relative z-10 shrink-0 bg-slate-900/70 backdrop-blur-md border-b px-4 pb-2">
+        <header data-app-hud data-command-shell="hud" className="theme-header-shell command-status-hud relative z-10 shrink-0 bg-slate-900/70 backdrop-blur-md border-b px-4 pb-2">
           <div className="max-w-lg mx-auto flex items-center justify-between">
             <div className="flex items-center gap-3">
               <button

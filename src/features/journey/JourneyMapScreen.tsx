@@ -1,3 +1,5 @@
+import { CommandArtFallback } from "../../components/core-visual/CommandArtFallback";
+import { CommandMenuProvider } from "../../components/core-visual/CommandMenuContext";
 import { CoreScene } from "../../components/core-visual/CoreScene";
 import "../../styles/core-journey.css";
 import React, { useEffect, useRef, useState } from "react";
@@ -94,7 +96,8 @@ export const JourneyMapScreen: React.FC<JourneyMapScreenProps> = ({
   };
 
   return (
-    <CoreScene variant="journey" reducedMotion={reducedMotion} density={pixiReady ? "none" : "quiet"} className="command-screen journey-command-screen w-full max-w-lg mx-auto pb-24 px-4 pt-4 text-slate-100 animate-fadeIn">
+    <CommandMenuProvider reducedMotion={reducedMotion}>
+    <CoreScene variant="journey" reducedMotion={reducedMotion} density="none" className="command-art-menu command-screen journey-command-screen w-full max-w-lg mx-auto pb-24 px-4 pt-4 text-slate-100 animate-fadeIn">
       {/* Header Banner */}
       <CommandHeader
         className="mb-6"
@@ -119,6 +122,7 @@ export const JourneyMapScreen: React.FC<JourneyMapScreenProps> = ({
 
       {/* Chapters Vertical Roadmap */}
       <div ref={routeRef} className="journey-route relative space-y-6" data-pixi-ready={pixiReady}>
+        <CommandArtFallback selection={{ sceneId: "journey", themeId: getStageTheme(JOURNEY_CHAPTERS.find(chapter => chapter.id === vm.currentChapterId)?.themeId).id }} />
         {PixiLayer && !pixiFailed && <div className="journey-pixi-layer" aria-hidden="true">
           <PixiLayer routeRef={routeRef} reducedMotion={reducedMotion}
             visualProps={{ theme: getStageTheme(JOURNEY_CHAPTERS.find(chapter => chapter.id === vm.currentChapterId)?.themeId),
@@ -375,5 +379,6 @@ export const JourneyMapScreen: React.FC<JourneyMapScreenProps> = ({
         </AppModal>
       )}
     </CoreScene>
+    </CommandMenuProvider>
   );
 };

@@ -20,7 +20,7 @@ export const RadarTrackingCard: React.FC<Props> = ({
   onOpenTutorial,
 }) => {
   return (
-    <div className="w-full bg-slate-900/90 border border-emerald-500/30 rounded-3xl p-5 shadow-xl flex flex-col gap-5 text-slate-100 backdrop-blur-sm">
+    <div className="training-detail-panel w-full bg-slate-900/90 border border-emerald-500/30 rounded-3xl p-5 shadow-xl flex flex-col gap-5 text-slate-100 backdrop-blur-sm">
       {/* Header */}
       <div className="flex items-center justify-between border-b border-slate-800/80 pb-3">
         <div className="flex items-center gap-3">
@@ -67,6 +67,7 @@ export const RadarTrackingCard: React.FC<Props> = ({
             return (
               <button
                 key={diff.id}
+                data-command-selected={isSelected}
                 type="button"
                 onClick={() => {
                   soundManager.playClick();

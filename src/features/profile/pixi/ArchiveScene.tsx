@@ -1,4 +1,6 @@
 import React from "react";
+import { CommandArtFallback } from "../../../components/core-visual/CommandArtFallback";
+import { CommandMenuProvider } from "../../../components/core-visual/CommandMenuContext";
 import { CoreScene } from "../../../components/core-visual/CoreScene";
 import { useDeferredPixiLayer } from "../../../components/core-visual/pixi/useDeferredPixiLayer";
 import { getJourneyChapterForRank } from "../../../game/etaEngine";
@@ -25,8 +27,12 @@ export function ArchiveScene({ variant, rankIndex, reducedMotion, ...props }: Om
     return () => { resize.disconnect(); mutation.disconnect(); };
   }, [variant, rankIndex]);
   const theme = getStageTheme(getJourneyChapterForRank(rankIndex).themeId);
-  return <CoreScene {...props} variant={variant} reducedMotion={pixi.reducedMotion} density={pixi.ready ? "none" : props.density}
+  const scene = <CoreScene {...props} variant={variant} reducedMotion={pixi.reducedMotion}
+    className={variant === "uniform" ? props.className : `${props.className ?? ""} command-art-menu`}
+    layers={variant === "uniform" ? props.layers : [...(props.layers ?? []), { id: "production-art", depth: "background", node: <CommandArtFallback selection={{ sceneId: "archive", themeId: theme.id, variant }} /> }]}
+    density={variant === "uniform" ? (pixi.ready ? "none" : props.density) : "none"}
     dynamicLayer={<div ref={host} className="core-pixi-plane" aria-hidden="true" data-pixi-ready={pixi.ready}>
       {pixi.Layer && <pixi.Layer visualProps={{ variant, theme, focalY }} reducedMotion={pixi.reducedMotion} onReady={pixi.onReady} onUnavailable={pixi.onUnavailable} />}
     </div>} />;
+  return variant === "uniform" ? scene : <CommandMenuProvider reducedMotion={pixi.reducedMotion}>{scene}</CommandMenuProvider>;
 }

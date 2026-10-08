@@ -30,7 +30,7 @@ export const MarchRhythmCard: React.FC<MarchRhythmCardProps> = ({
   };
 
   return (
-    <div className="w-full bg-slate-900/90 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-xl flex flex-col gap-4">
+    <div className="training-detail-panel w-full bg-slate-900/90 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-xl flex flex-col gap-4">
       {/* Header */}
       <div className="flex items-start justify-between">
         <div className="flex items-center gap-3">
@@ -68,6 +68,7 @@ export const MarchRhythmCard: React.FC<MarchRhythmCardProps> = ({
           return (
             <button
               key={diffKey}
+                data-command-selected={isSelected}
               type="button"
               onClick={() => handleDifficultyClick(diffKey)}
               className={`py-2 px-2 rounded-lg text-xs font-bold transition-all flex flex-col items-center gap-0.5 ${

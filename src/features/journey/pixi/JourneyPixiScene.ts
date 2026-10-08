@@ -33,17 +33,6 @@ export const createJourneyPixiScene: PixiSceneFactory<JourneySceneProps> = (app,
       x: layout.anchorX[i % layout.anchorX.length] * sx,
       y: props.rowCenters[i] ?? ((i + .5) * layout.bandHeight / logicalHeight * height),
     }));
-    const base = new Graphics().rect(0, 0, width, height).fill({ color: palette.surface.color, alpha: .22 });
-    for (let x = 0; x < width; x += 40) base.moveTo(x, 0).lineTo(x, height);
-    for (let y = 0; y < height; y += 48) base.moveTo(0, y).lineTo(width, y);
-    base.stroke({ color: palette.border.color, width: .6, alpha: .09 });
-    for (let i = 0; i < props.chapters.length; i++) {
-      for (let ring = 0; ring < 3; ring++) {
-        base.ellipse(width * (.68 + i % 2 * .12), anchors[i].y, width * (.24 + ring * .08), 80 + ring * 34)
-          .stroke({ color: palette.border.color, width: .7, alpha: .12 });
-      }
-    }
-    root.addChild(base);
     for (let i = 1; i < anchors.length; i++) {
       const from = anchors[i - 1], to = anchors[i], status = props.chapters[i].status;
       const color = status === "upcoming" ? palette.border.color : status === "current" ? palette.progress.color : palette.accent.color;
@@ -59,7 +48,7 @@ export const createJourneyPixiScene: PixiSceneFactory<JourneySceneProps> = (app,
           .stroke({ color, width: status === "current" ? 10 : 7, alpha: .07 })
           .stroke({ color, width: status === "current" ? 2.6 : 1.8, alpha: status === "current" ? .8 : .48 });
         const graphic = new Graphics().circle(0, 0, 2.4).fill({ color, alpha: .65 });
-        graphic.position.set(from.x, from.y);
+        graphic.position.set(from.x, from.y); graphic.visible = false;
         travelers.push({ graphic, from, to, phase: i / anchors.length });
         root.addChild(graphic);
       }
@@ -86,6 +75,7 @@ export const createJourneyPixiScene: PixiSceneFactory<JourneySceneProps> = (app,
     });
   };
   return {
+    ready: art.ready,
     update(next) { props = next; art.update({ sceneId: "journey", themeId: props.theme.id }, pixiThemeAdapter(props.theme).accent.color); rebuild(); },
     resize(w, h) { art.resize(w, h); width = w; height = h; rebuild(); },
     setReducedMotion(value) { art.setReducedMotion(value); reduced = value; },
@@ -93,15 +83,9 @@ export const createJourneyPixiScene: PixiSceneFactory<JourneySceneProps> = (app,
       art.tick(seconds);
       if (reduced) return;
       time += seconds;
-      if (halo) { halo.alpha = .65 + Math.sin(time * .6) * .2; halo.scale.set(1 + Math.sin(time * .6) * .06); }
-      if (radar) radar.rotation = time * .12;
-      for (const traveler of travelers) {
-        const t = (time * .025 + traveler.phase) % 1;
-        // Mutate existing objects only; no geometry or object allocation per tick.
-        traveler.graphic.x = traveler.from.x + (traveler.to.x - traveler.from.x) * (3 * t * t - 2 * t * t * t);
-        traveler.graphic.y = traveler.from.y + (traveler.to.y - traveler.from.y) * t;
-        traveler.graphic.alpha = Math.sin(Math.PI * t) * .8;
-      }
+      if (halo) halo.alpha = .65 + Math.sin(time * 2) * .12;
+      if (radar) radar.alpha = .65;
+      for (const traveler of travelers) traveler.graphic.visible = false;
     },
     destroy() { art.destroy(); travelers.length = 0; root.destroy({ children: true }); },
   };

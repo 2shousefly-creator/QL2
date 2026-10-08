@@ -126,13 +126,13 @@ export const MedalsScreen: React.FC<MedalsScreenProps> = ({ state, onUpdateState
           { id: "farm", label: "Tăng Gia" },
         ].map((cat) => (
           <button
-            key={cat.id}
+            key={cat.id} data-command-selected={selectedCategory === cat.id}
             type="button"
             onClick={() => {
               soundManager.playClick();
               setSelectedCategory(cat.id as any);
             }}
-            className={`py-2 px-1 text-center font-bold rounded-lg transition-all truncate ${
+            className={`medal-filter-control py-2 px-1 text-center font-bold rounded-lg transition-all truncate ${
               selectedCategory === cat.id
                 ? "bg-amber-500 text-slate-950 shadow-md"
                 : "text-slate-400 hover:text-slate-200"

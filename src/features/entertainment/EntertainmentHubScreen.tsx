@@ -1,3 +1,6 @@
+import { CommandIcon } from "../../components/core-visual/CommandIcon";
+import { CommandLobbyArt } from "../../components/core-visual/CommandLobbyArt";
+import gameIcons from "../../assets/core-art/v1/entertainment/game-icons.png?url";
 import React, { lazy, Suspense, useEffect, useState, useRef } from "react";
 import { Dices, Coins, Play, Sparkles } from "lucide-react";
 import { GameState, TabType } from "../../game/types";
@@ -98,7 +101,8 @@ export const EntertainmentHubScreen: React.FC<EntertainmentHubScreenProps> = ({
 
   // Otherwise render Entertainment Hub
   return (
-    <div style={{opacity:airLeaving?0:1,filter:airLeaving&&!gameState.settings.reducedMotion?"blur(2px)":"none",transition:"opacity 180ms ease, filter 180ms ease"}} className="command-screen entertainment-command-screen w-full max-w-lg mx-auto flex-1 flex flex-col min-h-0 px-3.5 sm:px-4 py-3.5 space-y-4 select-none">
+    <div style={{opacity:airLeaving?0:1,filter:"none",transition:"opacity 180ms ease, filter 180ms ease"}} data-command-motion={gameState.settings.reducedMotion ? "reduced" : undefined} className="command-art-menu command-screen entertainment-command-screen w-full max-w-lg mx-auto flex-1 flex flex-col min-h-0 px-3.5 sm:px-4 py-3.5 space-y-4 select-none">
+      <CommandLobbyArt sceneId="entertainment" reducedMotion={gameState.settings.reducedMotion} />
       {/* Hub Top Bar */}
       <CommandHeader
         title="Khu Giải Trí"
@@ -114,7 +118,7 @@ export const EntertainmentHubScreen: React.FC<EntertainmentHubScreenProps> = ({
       />
 
       {/* Notice info banner */}
-      <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-3 flex items-start gap-2.5 text-xs text-slate-300">
+      <div className="command-lobby-notice bg-slate-900/60 border border-slate-800/80 rounded-2xl p-3 flex items-start gap-2.5 text-xs text-slate-300">
         <Sparkles className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
         <p className="leading-relaxed text-[11px] text-slate-400">
           Minigame dùng chung <strong className="text-amber-300">Vàng Tăng Gia</strong>. Trò kỹ năng có thể thưởng một lượng nhỏ Vàng/XP theo giới hạn ngày, nhưng không tích Giờ Chiến Thuật.
@@ -146,7 +150,7 @@ export const EntertainmentHubScreen: React.FC<EntertainmentHubScreenProps> = ({
                 <div className="flex items-center justify-between gap-3">
                   <div className="flex items-center gap-3">
                     <div className="theme-badge w-12 h-12 rounded-2xl border flex items-center justify-center text-2xl shadow-md transition-transform select-none shrink-0">
-                      {game.icon || "🎲"}
+                      <CommandIcon atlas={{ src: gameIcons, columns: 3, rows: 1 }} index={{ khong_kich: 0, bau_cua: 1, big_small: 2 }[game.id]} className="w-8 h-8" fallback={game.icon || "🎲"} />
                     </div>
                     <div className="min-w-0">
                       <div className="flex items-center gap-2">

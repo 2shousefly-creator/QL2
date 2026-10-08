@@ -1,3 +1,4 @@
+import { CommandMenuProvider } from "../../components/core-visual/CommandMenuContext";
 import { CoreVfx } from "../../components/core-visual/CoreVfx";
 import React, { useState, useEffect, useRef } from "react";
 import { Award, Sparkles, Compass } from "lucide-react";
@@ -83,7 +84,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   const etaDetails = getEtaDetailsToFullBar(state, nowMs);
 
   return (
-    <div data-core-motion={state.settings.reducedMotion ? "reduced" : undefined} className="home-screen relative h-full min-h-0 w-full overflow-hidden touch-pan-y select-none">
+    <CommandMenuProvider reducedMotion={state.settings.reducedMotion}>
+    <div data-core-motion={state.settings.reducedMotion ? "reduced" : undefined} className="command-art-menu home-screen relative h-full min-h-0 w-full overflow-hidden touch-pan-y select-none">
       {/* Dynamic Chapter Backdrop */}
       <HomeJourneyBackdrop
         chapterId={currentChapter.id}
@@ -221,7 +223,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               const currentRateText = `${Math.round(currentMult * 1)} XP/phút`;
 
               return (
-                <div className="flex flex-col items-center justify-center text-[11px] sm:text-xs text-slate-400 font-medium text-center space-y-0.5 pt-0.5">
+                <div className="home-rate-readout flex flex-col items-center justify-center text-[11px] sm:text-xs text-slate-400 font-medium text-center space-y-0.5 pt-0.5">
                   <div className="flex items-center justify-center gap-1">
                     <span>⚡️</span>
                     <strong
@@ -311,5 +313,6 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         />
       )}
     </div>
+    </CommandMenuProvider>
   );
 };

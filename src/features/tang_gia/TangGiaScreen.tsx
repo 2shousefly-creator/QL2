@@ -1,3 +1,4 @@
+import { CommandMenuProvider } from "../../components/core-visual/CommandMenuContext";
 import type { FarmVisualEvent } from "./pixi/farmPixiTypes";
 import React, { useState, useEffect, useRef } from "react";
 import { GameState } from "../../game/types";
@@ -932,10 +933,11 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
   };
 
   return (
+    <CommandMenuProvider kind="logistics" reducedMotion={gameState.settings.reducedMotion}>
     <div
       onClick={handleClearSelection}
       data-farm-reduced-motion={gameState.settings.reducedMotion ? "true" : undefined}
-      className={`command-screen logistics-command-screen w-full max-w-5xl mx-auto p-2 sm:p-4 space-y-3 font-sans pb-36 relative ${mobileActive ? 'farm-graphics-screen' : FARM_MOBILE_REQUESTED ? 'overflow-y-auto h-full' : ''}`}
+      className={`command-art-menu command-art-logistics command-screen logistics-command-screen w-full max-w-5xl mx-auto p-2 sm:p-4 space-y-3 font-sans pb-36 relative ${mobileActive ? 'farm-graphics-screen' : FARM_MOBILE_REQUESTED ? 'overflow-y-auto h-full' : ''}`}
     >
       {/* --- HUD HEADER (STICKY) --- */}
       {farmModal?.type !== "trough" && (
@@ -1431,5 +1433,6 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
         />
       )}
     </div>
+    </CommandMenuProvider>
   );
 };

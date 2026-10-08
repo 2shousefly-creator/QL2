@@ -14,6 +14,15 @@ export const ARCHIVE_PIXI_RECIPES: Record<ArchiveVariant, { motes: number; nodes
   uniform: { motes: 5, nodes: 0, grid: false, scan: true, spotlight: true },
 };
 export const createArchivePixiScene: PixiSceneFactory<ArchivePixiVisualProps> = (app, initial) => {
+  // Uniform continues through the original recipe below, unchanged.
+  if (initial.variant !== "uniform") {
+    const art = createCoreArtRuntime(app, app.stage);
+    const update = (value: ArchivePixiVisualProps) => {
+      if (value.variant !== "uniform") art.update({ sceneId: "archive", themeId: value.theme.id, variant: value.variant }, 0xffffff);
+    };
+    update(initial);
+    return { ready: art.ready, update, resize: art.resize, setReducedMotion: art.setReducedMotion, tick: art.tick, destroy: art.destroy };
+  }
   const root = new Container(); root.eventMode = "none"; app.stage.addChild(root);
   const art = createCoreArtRuntime(app, root);
   const updateArt = (value: ArchivePixiVisualProps) => art.update({

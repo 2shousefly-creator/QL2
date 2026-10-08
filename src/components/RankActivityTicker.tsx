@@ -165,7 +165,7 @@ export const RankActivityTicker: React.FC<RankActivityTickerProps> = ({
   return (
     <div
       aria-hidden="true"
-      className={`w-full min-h-[30px] flex items-center justify-center px-3 py-1 select-none ${className}`}
+      className={`rank-activity-ticker w-full min-h-[30px] flex items-center justify-center px-3 py-1 select-none ${className}`}
     >
       {/* Outer transition layer for enter/exit fade-slide */}
       <div className={`w-full flex items-center justify-center ${getTransitionStyle()}`}>

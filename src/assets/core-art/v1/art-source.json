@@ -1,0 +1,405 @@
+{
+  "version": 1,
+  "created": "2026-10-08",
+  "source": "OpenAI built-in image generation",
+  "rights": "Original generated artwork for QL2; no third-party stock assets",
+  "processing": "RGBA conversion, downsampling and icon-cell packing; no artwork drawn by code",
+  "assets": [
+    {
+      "file": "home/training-dawn/base-background.png",
+      "source": "exec-a7585e8e-a318-4245-9886-6bcf13eb6195.png",
+      "dimensions": [
+        768,
+        1152
+      ],
+      "bytes": 1655536
+    },
+    {
+      "file": "home/training-dawn/midground.png",
+      "source": "exec-7dc253af-04c9-4333-9a88-23360d5fa2ba.png",
+      "dimensions": [
+        768,
+        1152
+      ],
+      "bytes": 793415
+    },
+    {
+      "file": "home/training-dawn/foreground.png",
+      "source": "exec-d9bb06f5-a372-4983-8807-df586da431f6.png",
+      "dimensions": [
+        768,
+        1152
+      ],
+      "bytes": 662856
+    },
+    {
+      "file": "home/simple-barracks/base-background.png",
+      "source": "exec-536f7e7c-c9f5-4cca-8047-141f9181d175.png",
+      "dimensions": [
+        768,
+        1152
+      ],
+      "bytes": 1488056
+    },
+    {
+      "file": "home/simple-barracks/midground.png",
+      "source": "exec-09f18184-ca54-4255-bbdf-dbb331acd27c.png",
+      "dimensions": [
+        768,
+        1152
+      ],
+      "bytes": 679306
+    },
+    {
+      "file": "home/simple-barracks/foreground.png",
+      "source": "exec-14cc934f-f0eb-4f19-a2e0-48d3452f7213.png",
+      "dimensions": [
+        768,
+        1152
+      ],
+      "bytes": 597992
+    },
+    {
+      "file": "home/organized-assembly/base-background.png",
+      "source": "exec-7f655140-5f0b-488e-ab3a-3fb152a188ca.png",
+      "dimensions": [
+        768,
+        1152
+      ],
+      "bytes": 1390331
+    },
+    {
+      "file": "home/organized-assembly/midground.png",
+      "source": "exec-65b9ec70-8a52-45d7-a647-780b0f1aba5d.png",
+      "dimensions": [
+        768,
+        1152
+      ],
+      "bytes": 674844
+    },
+    {
+      "file": "home/organized-assembly/foreground.png",
+      "source": "exec-0613e732-cfbe-4e2d-95cd-455f6eb05b99.png",
+      "dimensions": [
+        768,
+        1152
+      ],
+      "bytes": 411503
+    },
+    {
+      "file": "home/map-room/base-background.png",
+      "source": "exec-b32ecbf0-c16a-42ac-84fa-f7423d4e5817.png",
+      "dimensions": [
+        768,
+        1152
+      ],
+      "bytes": 1317209
+    },
+    {
+      "file": "home/map-room/midground.png",
+      "source": "exec-3ce422a3-ed41-4b5c-b23c-7df1dabd5326.png",
+      "dimensions": [
+        768,
+        1152
+      ],
+      "bytes": 858181
+    },
+    {
+      "file": "home/map-room/foreground.png",
+      "source": "exec-3e322a18-37a5-4bae-9de4-510086d433b4.png",
+      "dimensions": [
+        768,
+        1152
+      ],
+      "bytes": 643475
+    },
+    {
+      "file": "home/command-room/base-background.png",
+      "source": "exec-9b0107b8-c1e3-4aea-8c43-d9715663146c.png",
+      "dimensions": [
+        768,
+        1152
+      ],
+      "bytes": 1294436
+    },
+    {
+      "file": "home/command-room/midground.png",
+      "source": "exec-c92f17dd-408d-4d03-bbf3-4528a621235b.png",
+      "dimensions": [
+        768,
+        1152
+      ],
+      "bytes": 659509
+    },
+    {
+      "file": "home/command-room/foreground.png",
+      "source": "exec-186ceb6c-0477-400b-9336-471371a2e333.png",
+      "dimensions": [
+        768,
+        1152
+      ],
+      "bytes": 573022
+    },
+    {
+      "file": "home/ceremonial-abstract/base-background.png",
+      "source": "exec-bab69064-72cb-4e41-9ffb-b3b23365af64.png",
+      "dimensions": [
+        768,
+        1152
+      ],
+      "bytes": 1339961
+    },
+    {
+      "file": "home/ceremonial-abstract/midground.png",
+      "source": "exec-70c474c4-b700-4654-9e23-e862db1509e1.png",
+      "dimensions": [
+        768,
+        1152
+      ],
+      "bytes": 768219
+    },
+    {
+      "file": "home/ceremonial-abstract/foreground.png",
+      "source": "exec-5b27e856-0332-4b2f-aa23-bcb5518fb352.png",
+      "dimensions": [
+        768,
+        1152
+      ],
+      "bytes": 300599
+    },
+    {
+      "file": "home/supreme-obsidian/base-background.png",
+      "source": "exec-d85e04b8-7a93-4424-86e0-a20cfdd25b99.png",
+      "dimensions": [
+        768,
+        1152
+      ],
+      "bytes": 1252352
+    },
+    {
+      "file": "home/supreme-obsidian/midground.png",
+      "source": "exec-9cd93244-b277-4909-92e1-33232f04b160.png",
+      "dimensions": [
+        768,
+        1152
+      ],
+      "bytes": 728829
+    },
+    {
+      "file": "home/supreme-obsidian/foreground.png",
+      "source": "exec-2ac747f6-381a-4361-84cf-084c3600a57c.png",
+      "dimensions": [
+        768,
+        1152
+      ],
+      "bytes": 657536
+    },
+    {
+      "file": "home/supreme-sovereign/base-background.png",
+      "source": "exec-fa0cf1dd-04a9-4729-8e87-3bcff0cb7484.png",
+      "dimensions": [
+        768,
+        1152
+      ],
+      "bytes": 1398190
+    },
+    {
+      "file": "home/supreme-sovereign/midground.png",
+      "source": "exec-edb7ffb7-ef9b-49ce-8b5b-ed2828b90f1c.png",
+      "dimensions": [
+        768,
+        1152
+      ],
+      "bytes": 783978
+    },
+    {
+      "file": "home/supreme-sovereign/foreground.png",
+      "source": "exec-0843b451-2879-4af9-8219-90b0d1b27c2d.png",
+      "dimensions": [
+        768,
+        1152
+      ],
+      "bytes": 616194
+    },
+    {
+      "file": "ui/shared/panel-normal.png",
+      "source": "exec-4cf0982f-6dab-497e-a3d5-b80f30b1b3b8.png",
+      "dimensions": [
+        256,
+        256
+      ],
+      "bytes": 67943
+    },
+    {
+      "file": "archive/dossier/base-background.png",
+      "source": "exec-ef06e5e2-ca96-4798-bc05-d07611f56f81.png",
+      "dimensions": [
+        768,
+        1152
+      ],
+      "bytes": 1407996
+    },
+    {
+      "file": "archive/ranks/base-background.png",
+      "source": "exec-3a8e4f50-2366-4097-936b-7f2934bb77e0.png",
+      "dimensions": [
+        768,
+        1152
+      ],
+      "bytes": 1401716
+    },
+    {
+      "file": "archive/medals/base-background.png",
+      "source": "exec-451bfe05-f585-48c1-92fa-61686dc626d0.png",
+      "dimensions": [
+        768,
+        1152
+      ],
+      "bytes": 1275776
+    },
+    {
+      "file": "archive/mastery/base-background.png",
+      "source": "exec-18380a28-72a9-45bf-9717-df3bacfca462.png",
+      "dimensions": [
+        768,
+        1152
+      ],
+      "bytes": 1378917
+    },
+    {
+      "file": "archive/identity/base-background.png",
+      "source": "exec-17615442-6cc2-4fe8-904b-4d905709d2a2.png",
+      "dimensions": [
+        768,
+        1152
+      ],
+      "bytes": 1251293
+    },
+    {
+      "file": "archive/journal/base-background.png",
+      "source": "exec-afd4199c-579a-4003-a6e6-ba13017968f1.png",
+      "dimensions": [
+        768,
+        1152
+      ],
+      "bytes": 1505427
+    },
+    {
+      "file": "training/base-background.png",
+      "source": "exec-1fd43a0a-2d11-42d8-bdf3-3266b847dfc7.png",
+      "dimensions": [
+        768,
+        1152
+      ],
+      "bytes": 1331106
+    },
+    {
+      "file": "entertainment/base-background.png",
+      "source": "exec-03003e60-b2b0-4011-8177-92d114e9be2e.png",
+      "dimensions": [
+        768,
+        1152
+      ],
+      "bytes": 1306596
+    },
+    {
+      "file": "journey/base-background.png",
+      "source": "exec-77a50838-211f-4bd7-b62a-59c41d33b6a5.png",
+      "dimensions": [
+        768,
+        1152
+      ],
+      "bytes": 1773840
+    },
+    {
+      "file": "journey/terrain-contours.png",
+      "source": "exec-175fc92d-8910-4db6-a55b-d068c2716305.png",
+      "dimensions": [
+        768,
+        1152
+      ],
+      "bytes": 1332869
+    },
+    {
+      "file": "journey/foreground.png",
+      "source": "exec-db3dffa9-fb56-4276-a873-3a921f00aa5e.png",
+      "dimensions": [
+        768,
+        1152
+      ],
+      "bytes": 244827
+    },
+    {
+      "file": "ui/shared/panel-selected.png",
+      "source": "exec-27b3c739-0d3e-4076-9a70-6179f9822076.png",
+      "dimensions": [
+        256,
+        256
+      ],
+      "bytes": 75564
+    },
+    {
+      "file": "ui/shared/panel-pressed.png",
+      "source": "exec-b0df9648-69fb-4da3-a0a3-5720fcb3aeea.png",
+      "dimensions": [
+        256,
+        256
+      ],
+      "bytes": 73199
+    },
+    {
+      "file": "ui/shared/panel-disabled.png",
+      "source": "exec-3a03e613-d53c-4ba5-af25-1617139664b1.png",
+      "dimensions": [
+        256,
+        256
+      ],
+      "bytes": 62596
+    },
+    {
+      "file": "ui/navigation/icons.png",
+      "source": "exec-e930dfd8-e58b-4a60-a598-1156f416e026.png",
+      "dimensions": [
+        640,
+        128
+      ],
+      "bytes": 47213
+    },
+    {
+      "file": "ui/profile-hub/icons.png",
+      "source": "exec-ff5b45cc-ae33-4dbb-bbd6-ce5fe916e99e.png",
+      "dimensions": [
+        512,
+        256
+      ],
+      "bytes": 163166
+    },
+    {
+      "file": "training/program-icons.png",
+      "source": "exec-3a239153-d019-4ca4-a52a-8356cae9194d.png",
+      "dimensions": [
+        384,
+        256
+      ],
+      "bytes": 143600
+    },
+    {
+      "file": "entertainment/game-icons.png",
+      "source": "exec-04907599-9a8b-4460-8b63-bb65fc72b4b1.png",
+      "dimensions": [
+        384,
+        128
+      ],
+      "bytes": 69625
+    },
+    {
+      "file": "farm-ui/tool-icons.png",
+      "source": "exec-574f32cb-c166-4a28-9428-807f27b4591e.png",
+      "dimensions": [
+        512,
+        384
+      ],
+      "bytes": 287279
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 import type { BLEND_MODES, SpritesheetData, Texture } from "pixi.js";
 import type { JourneyStageThemeId } from "../../../game/types";
 
-export type CoreArtSceneId = "home" | "journey" | "farm" | "uniform" | "archive";
+export type CoreArtSceneId = "home" | "journey" | "farm" | "uniform" | "archive" | "training" | "entertainment";
 export type CoreArchiveVariant = "dossier" | "ranks" | "medals" | "mastery" | "journal" | "identity";
 export type CoreArtSelection = { sceneId: CoreArtSceneId; themeId: JourneyStageThemeId; variant?: CoreArchiveVariant | "day" | "night" };
 export type CoreArtPoint = { x: number; y: number };
