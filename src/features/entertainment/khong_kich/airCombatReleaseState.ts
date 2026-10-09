@@ -13,6 +13,7 @@ export interface ReleaseCoreState {
   heat: number;
   overheatUntil: number;
   lastSkillEnd: number;
+  lastCast?: number;
   hadActiveSkill: boolean;
   ghostReady: number;
   ghosts: { id: number; x: number; y: number; angle: number; until: number; fireIn: number }[];

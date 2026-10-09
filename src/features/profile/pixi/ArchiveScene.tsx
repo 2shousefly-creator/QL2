@@ -1,3 +1,4 @@
+import { useUiSkin } from "../../../components/core-visual/UiSkinContext";
 import React from "react";
 import { CommandArtFallback } from "../../../components/core-visual/CommandArtFallback";
 import { CommandMenuProvider } from "../../../components/core-visual/CommandMenuContext";
@@ -7,7 +8,7 @@ import { getJourneyChapterForRank } from "../../../game/etaEngine";
 import { getStageTheme } from "../../../game/stageThemes";
 import type { ArchiveVariant } from "./archivePixiTypes";
 export const loadArchivePixi = () => import("./ArchivePixiLayer");
-export function ArchiveScene({ variant, rankIndex, reducedMotion, ...props }: Omit<React.ComponentProps<typeof CoreScene>, "variant"> & {
+function ArchiveSceneLegacy({ variant, rankIndex, reducedMotion, ...props }: Omit<React.ComponentProps<typeof CoreScene>, "variant"> & {
   variant: ArchiveVariant; rankIndex: number;
 }) {
   const pixi = useDeferredPixiLayer(loadArchivePixi, reducedMotion);
@@ -35,4 +36,9 @@ export function ArchiveScene({ variant, rankIndex, reducedMotion, ...props }: Om
       {pixi.Layer && <pixi.Layer visualProps={{ variant, theme, focalY }} reducedMotion={pixi.reducedMotion} onReady={pixi.onReady} onUnavailable={pixi.onUnavailable} />}
     </div>} />;
   return variant === "uniform" ? scene : <CommandMenuProvider reducedMotion={pixi.reducedMotion}>{scene}</CommandMenuProvider>;
+}
+
+export function ArchiveScene(props:React.ComponentProps<typeof ArchiveSceneLegacy>){
+ const flat=useUiSkin()==="flat"&&props.variant!=="uniform";
+ return flat?<CoreScene {...props}/>:<ArchiveSceneLegacy {...props}/>;
 }

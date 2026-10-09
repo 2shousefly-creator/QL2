@@ -1,3 +1,5 @@
+import { createAbsorbShield } from "./airCombatExpansion";
+import { getEffectiveAircraftStats } from "./airCombatAircraft";
 import { isCoreOfferable, canCommitCoreOffers } from "./airCombatCoreEligibility";
 import type { AircraftCombatState, CoreCard, CoreDefinition, CoreTier } from "./airCombatTypes";
 import { CORE_DEFINITIONS } from "./airCombatCoreCatalog";
@@ -65,17 +67,19 @@ export function closeCoreSelection(state:AircraftCombatState,event:CoreSelection
   if(slot>=3)recordCoreMetric(state,214,"picks",1);
 }
 export function rollUnstableMode(state:AircraftCombatState,random:()=>number){
-  const r=releaseState(state);r.mode=random()<.5?"small":"giant";r.nextMode=state.coreState.time+60;
+  const hpBefore=getEffectiveAircraftStats(state).maxHp,ratio=state.currentHp/hpBefore;
+  const r=releaseState(state),previous=r.mode;r.mode=previous?(previous==="small"?"giant":"small"):(random()<.5?"small":"giant");r.nextMode=state.coreState.time+60;
   recordCoreMetric(state,222,r.mode==="small"?"smallRolls":"giantRolls",1);syncEffectiveMaxHp(state);
+  if(previous){state.currentHp=Math.min(state.coreState.syncedMaxHp??hpBefore,(state.coreState.syncedMaxHp??hpBefore)*ratio);const sh=createAbsorbShield(state,"unstableGuard",getEffectiveAircraftStats(state).maxHp*.10,4);sh.coreRow=222;recordCoreMetric(state,222,"shieldCreated",sh.amount);}
 }
 export function initializeReleaseCore(state:AircraftCombatState,id:string,random:()=>number){
   const r=releaseState(state);
-  if(id==="core_178")state.coreState.timers.magneticBrakeCd=state.coreState.time+20;
+  if(id==="core_178")state.coreState.timers.magneticBrakeCd=state.coreState.time;
   if(id==="core_202"&&!r.followups.includes("primary"))r.followups.push("primary");
   if(id==="core_212"){r.reserve=Math.min(5,r.reserve+1);recordCoreMetric(state,212,"granted",1);}
   if(id==="core_217")r.pendingGuaranteedDiamondSelection=true;
   if(id==="core_219"){r.heat=0;r.overheatUntil=0;r.lastSkillEnd=state.coreState.time;}
-  if(id==="core_220")r.ghostReady=state.coreState.time+10;
+  if(id==="core_220")r.ghostReady=state.coreState.time;
   if(id==="core_221")r.markReady=state.coreState.time+16;
   if(id==="core_222")rollUnstableMode(state,random);
 }

@@ -1,3 +1,4 @@
+import { useUiSkin } from "../core-visual/UiSkinContext";
 import {
   forwardRef,
   type HTMLAttributes,
@@ -358,6 +359,7 @@ function AppDialog({
   sheet,
 }: AppDialogProps & { sheet: boolean }) {
   const commandMenu = useCommandMenu();
+  const uiSkin=useUiSkin();
   const panelRef = useRef<HTMLElement>(null);
   useBodyScrollLock(true);
   useDialogFocus(panelRef, onClose, closeOnEscape, initialFocusRef, FOCUS_LAYER_PRIORITY[layer], notification);
@@ -370,6 +372,7 @@ function AppDialog({
           sheet ? "app-overlay--sheet" : "app-overlay--modal",
           overlayClassName,
         )}
+        data-ui-skin={uiSkin}
         data-overlay-layer={layer}
         data-overlay-layout={layout}
         data-modal-archetype={archetype}
@@ -434,6 +437,7 @@ export function ExclusiveFullscreenOverlay({
   className,
   ...props
 }: ExclusiveFullscreenOverlayProps) {
+  const uiSkin=useUiSkin();
   const contentRef = useRef<HTMLDivElement>(null);
   useBodyScrollLock(true);
   useDialogFocus(contentRef, onEscape, Boolean(onEscape), undefined, FOCUS_LAYER_PRIORITY[layer]);
@@ -442,6 +446,7 @@ export function ExclusiveFullscreenOverlay({
     <OverlayPortal>
       <div
         className="app-exclusive-overlay"
+        data-ui-skin={uiSkin}
         data-overlay-layer={layer}
         role="application"
         aria-label={ariaLabel}

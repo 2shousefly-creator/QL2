@@ -417,7 +417,7 @@ export const FormationAssemblyGame: React.FC<FormationAssemblyGameProps> = ({
             gridTemplateRows: `repeat(${rows}, minmax(0, 1fr))`,
             gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))`,
           }}
-          className="w-full max-w-[340px] aspect-square bg-slate-900/90 border-2 border-slate-800 rounded-3xl p-2 gap-2 shadow-2xl relative"
+          data-game-surface="true" className="w-full max-w-[340px] aspect-square bg-slate-900/90 border-2 border-slate-800 rounded-3xl p-2 gap-2 shadow-2xl relative"
         >
           {Array.from({ length: rows }).flatMap((_, rIdx) =>
             Array.from({ length: cols }).map((__, cIdx) => {

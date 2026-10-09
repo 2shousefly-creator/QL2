@@ -1,10 +1,10 @@
 import type { AircraftCombatState } from "./airCombatTypes";
 
 export const BOUNTY_REWARDS = [
-  {key:"firepowerFlat",amount:10,label:"Hỏa Lực"}, {key:"armorFlat",amount:10,label:"Giáp"},
-  {key:"maxHpFlat",amount:60,label:"Máu Tối Đa"}, {key:"skillHaste",amount:4,label:"Điểm Hồi Kỹ Năng"},
-  {key:"hpRegen",amount:.4,label:"Hồi Máu mỗi giây"}, {key:"criticalChanceFlat",amount:.04,label:"Tỷ Lệ Chí Mạng",percent:true},
-  {key:"criticalDamageMultiplierFlat",amount:.04,label:"Sát Thương Chí Mạng",percent:true}, {key:"bonusFireRatePct",amount:.12,label:"Tốc Độ Bắn Cộng Thêm",percent:true},
+  {key:"firepowerFlat",amount:12,label:"Hỏa Lực"}, {key:"armorFlat",amount:12,label:"Giáp"},
+  {key:"maxHpFlat",amount:80,label:"Máu Tối Đa"}, {key:"skillHaste",amount:6,label:"Điểm Hồi Kỹ Năng"},
+  {key:"hpRegen",amount:.7,label:"Hồi Máu mỗi giây"}, {key:"criticalChanceFlat",amount:.05,label:"Tỷ Lệ Chí Mạng",percent:true},
+  {key:"criticalDamageMultiplierFlat",amount:.05,label:"Sát Thương Chí Mạng",percent:true}, {key:"bonusFireRatePct",amount:.20,label:"Tốc Độ Bắn Cộng Thêm",percent:true},
 ] as const;
 export const CORE_METRIC_LABELS = {
   weaponDamageReduced:"Sát thương viên đạn giảm trước giới hạn Máu/khiên",
@@ -43,6 +43,9 @@ export function recordCoreMetric(state: AircraftCombatState, row: number | undef
   entry[metric] = (entry[metric] ?? 0) + amount;
 }
 export const CORE_METRICS: Record<number, readonly CoreMetric[]> = {
+  1:["procs","bonusDamage"],2:["shieldCreated","shieldAbsorbed"],5:["resource"],
+  7:["procs","damage"],8:["shieldCreated","shieldAbsorbed"],11:["resource","cooldown"],
+  13:["procs","damage"],14:["shieldCreated","shieldAbsorbed","procs","damage"],17:["resource","cooldown"],
   229:["shots","weaponDamageReduced"],54:["bonusDamage"],
   46:["procs"],47:["procs"],48:["procs"],49:["uptime"],59:["shots","bonusDamage"],60:["shots","bonusDamage"],61:["procs","uptime","prevented"],63:["uptime"],66:["stacks","uptime","bonusDamage"],71:["procs","uptime"],75:["stacks","uptime"],91:["uptime","bonusDamage"],96:["hpPaid"],100:["firepowerTime","armorTime","regenTime"],109:["hits","prevented"],113:["procs","extraCooldown","debtPaid"],114:["stacks","uptime"],116:["stacks","uptime","bonusDamage"],130:["stacks"],
   168:["procs","saved"],169:["firepowerTime","regenTime","fireRateTime"],170:["procs","uptime","prevented"],171:["procs","prevented"],172:["procs","consumed","resource","saved"],173:["procs","healed"],174:["procs","resource"],175:["procs","uptime","bonusDamage"],176:["uptime","healed"],177:["hits","prevented"],178:["targets","uptime"],179:["stacks","peak","consumed"],180:["shieldBreaks","shieldBonus","bonusDamage"],181:["procs","uptime","resource"],182:["bonusDamage"],183:["uptime","peak","armorTime","shieldTime"],184:["procs","prevented","controlBlocked"],185:["marks","consumed","bonusDamage"],186:["procs","uptime","bonusDamage"],187:["damageStored","procs","damage","peak"],189:["launched","hits","damage"],190:["bonusDamage","extraResource"],191:["procs","firepowerTime","fireRateTime","bonusDamage"],192:["shieldTime","armorTime","bonusDamage","prevented"],193:["procs","cooldown","resource"],194:["procs","targets","bonusDamage"],195:["procs","healed"],196:["procs"],197:["accumulated","debtCleared","healed","peak"],198:["granted","blocked","shots","damage","hits"],199:["procs","detonations","bonusDamage","damage"],200:["shieldCreated","shieldAbsorbed","detonations","damage"],202:["bonusDamage","saved","cooldown"],203:["uptime","bonusDamage","prevented","controlBlocked"],204:["prevented","procs","damage","resource"],205:["bonusDamage","extraDamage"],206:["bonusDamage","extraPierce","extraPierceDamage"],207:["gunPhases","skillPhases","consumed","bonusDamage"],208:["healed","resource"],209:["procs","uptime","prevented","resource","cooldown"],

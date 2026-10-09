@@ -1,15 +1,15 @@
-import type { AircraftCombatState } from "./airCombatTypes";
+import type { AircraftCombatState, SkillId } from "./airCombatTypes";
 
 /** Pending means the primary effect is active: no cooldown exists yet. */
 export const CORE_ACTIVE_COOLDOWNS = [
-  ["reactiveArmorCd", "reactiveArmor", 10],
+  ["reactiveArmorCd", "reactiveArmor", 8],
   ["counterCd", "counterActive", 15],
   ["earlyArmorCd", "earlyArmor", 10],
   ["shockPadCd", "shockPadRegen", 15],
   ["alternatingCd", "alternating", 20],
-  ["magneticBrakeCd", "magneticBrake", 20],
-  ["celestialReady", "celestial", 15],
-  ["confluenceCd", "confluence", 16],
+  ["magneticBrakeCd", "magneticBrake", 12],
+  ["celestialReady", "celestial", 22],
+  ["confluenceCd", "confluence", 12],
   ["blackBoxCd", "blackBox", 18],
 ] as const;
 
@@ -31,4 +31,13 @@ export function settleCoreCooldowns(s: AircraftCombatState) {
 export function coreCooldownReady(s: AircraftCombatState, key: string) {
   settleCoreCooldowns(s);
   return !s.coreState.stacks[`cooldownPending:${key}`] && (s.coreState.timers[key] ?? 0) <= s.coreState.time;
+}
+
+/** Direct reductions can spend only the ordinary portion; debt expires by combat time. */
+export function reduceRunningSkillCooldown(s:AircraftCombatState,id:SkillId,seconds:number):number {
+ const before=s.cooldowns[id]??0;
+ if(before<=0||s.coreState.deferredCooldowns[id]!==undefined)return 0;
+ const debt=Math.min(before,s.coreState.stacks[`paidDebt:${id}`]??0);
+ s.cooldowns[id]=Math.max(debt,before-Math.max(0,seconds));
+ return before-s.cooldowns[id]!;
 }

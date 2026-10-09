@@ -1,6 +1,6 @@
 import type { CoreConversionSource } from "./airCombatEquipmentState";
 import { isCoreEligible, isCoreOfferable, hasCoreRewardCapacity, canCommitCoreOffers, randomGrantCandidates, pandoraConvertibleCoreIds, planPandoraReplacements } from "./airCombatCoreEligibility";
-import { grantEquipmentReward, randomEquipmentId, equipmentRewardsLocked, sacrificeEquipment } from "./airCombatEquipmentState";
+import { queueEquipmentChoice, grantEquipmentReward, randomEquipmentId, equipmentRewardsLocked, sacrificeEquipment } from "./airCombatEquipmentState";
 import { releaseState } from "./airCombatReleaseState";
 import { initializeReleaseCore, removeReleaseCoreState } from "./airCombatSelectionRules";
 import { CORE_SYSTEM_LABELS } from "./airCombatCoreSystems";
@@ -11,8 +11,8 @@ import { hasCore } from "./airCombatCoreEffects";
 import type { AircraftCombatState, CoreCard, CoreDefinition, CoreTier } from "./airCombatTypes";
 const TIERS: CoreTier[] = ["silver", "gold", "diamond"];
 const pick = <T>(pool: readonly T[], random: () => number): T | undefined => pool[Math.min(pool.length - 1, Math.max(0, Math.floor(random() * pool.length)))];
-function weightedTier(valid: CoreTier[], random: () => number, state?: AircraftCombatState): CoreTier | undefined {
-    const chances = state && hasCore(state,217) ? {silver:.20,gold:.40,diamond:.40} : CORE_TIER_CHANCES;
+function weightedTier(valid: CoreTier[], random: () => number, state?: AircraftCombatState, chaos=false): CoreTier | undefined {
+    const chances = chaos || state && hasCore(state,217) ? {silver:.20,gold:.30,diamond:.50} : CORE_TIER_CHANCES;
     let roll = random() * valid.reduce((n, t) => n + chances[t], 0);
     for (const tier of valid) {
         roll -= chances[tier];
@@ -52,10 +52,10 @@ function rollChaosBatch(state:AircraftCombatState,random:()=>number,reserved:Rea
     const pool=randomGrantCandidates(state,undefined,reserved);
     const pairs=pool.map(first=>({first,seconds:randomGrantCandidates(state,undefined,new Set([...reserved,first.id]))
       .filter(second=>canCommitCoreOffers(state,[first,second],reserved))})).filter(pair=>pair.seconds.length>0);
-    const tier=weightedTier(TIERS.filter(t=>pairs.some(pair=>pair.first.tiers[0]===t)),random,state);
+    const tier=weightedTier(TIERS.filter(t=>pairs.some(pair=>pair.first.tiers[0]===t)),random,state,true);
     const pair=pick(pairs.filter(pair=>pair.first.tiers[0]===tier),random);if(!pair)return [];
     state.coreState.encounteredCoreIds.add(pair.first.id);
-    const secondTier=weightedTier(TIERS.filter(t=>pair.seconds.some(c=>c.tiers[0]===t)),random,state);
+    const secondTier=weightedTier(TIERS.filter(t=>pair.seconds.some(c=>c.tiers[0]===t)),random,state,true);
     const second=pick(pair.seconds.filter(c=>c.tiers[0]===secondTier),random)!;
     state.coreState.encounteredCoreIds.add(second.id);
     // Resolve Pandora before another random reward can increase its conversion count.
@@ -100,14 +100,17 @@ export function applyCore(state: AircraftCombatState, card: CoreCard, random: ()
         if("owner" in item)recordCoreMetric(state,item.owner,"converted",1);
         state.coreState.acquisitions.push({ transactionId, id: state.coreState.nextAcquisitionId++, createdAtMs: performance.now(), kind: "core", coreId: core.id, conversionSourceCoreId:item.conversionSourceCoreId });
         if(core.id==="core_223"||core.id==="core_224"||core.id==="core_225"||core.id==="core_226"){
-          const count=core.id==="core_223"?2:core.id==="core_224"?1:core.id==="core_225"?3:6;
+          const count=core.id==="core_223"?2:core.id==="core_224"?2:core.id==="core_225"?4:6;
           if(!equipmentRewardsLocked(state)){
-            for(let i=0;i<count;i++)grantEquipmentReward(state,randomEquipmentId("TP",random),core.id,undefined,transactionId);
-            if(core.id==="core_226")grantEquipmentReward(state,"VP01",core.id,undefined,transactionId);
+            const choices=core.id==="core_223"?2:core.id==="core_225"?2:core.id==="core_226"?3:0;
+            let finalChoice:ReturnType<typeof queueEquipmentChoice>|undefined;
+            for(let i=0;i<choices;i++)finalChoice=queueEquipmentChoice(state,"TP",3,1,core.id,random,transactionId);
+            for(let i=choices;i<count;i++){const reward=randomEquipmentId("TP",random);if(finalChoice)(finalChoice.afterRewards??=[]).push(reward);else grantEquipmentReward(state,reward,core.id,undefined,transactionId);}
+            if(core.id==="core_226"&&finalChoice)(finalChoice.afterRewards??=[]).push("VP01");
             recordCoreMetric(state,Number(core.id.slice(5)),"itemsReceived",count+(core.id==="core_226"?1:0));
           }
         }
-        if(core.id==="core_227"&&!equipmentRewardsLocked(state))releaseState(state).waitingChest={remaining:500,claimed:false,cancelled:false};
+        if(core.id==="core_227"&&!equipmentRewardsLocked(state)){grantEquipmentReward(state,randomEquipmentId("TP",random),core.id,undefined,transactionId);releaseState(state).waitingChest={remaining:500,claimed:false,cancelled:false};}
         if(core.id==="core_228"){
           const chest=releaseState(state).waitingChest;if(chest&&!chest.claimed)chest.cancelled=true;
           sacrificeEquipment(state,random,transactionId);
@@ -120,8 +123,8 @@ export function applyCore(state: AircraftCombatState, card: CoreCard, random: ()
         if(core.id==="core_216"){
           for(const id of removed)state.coreState.encounteredCoreIds.add(id);
           // Only earned permanent stats survive. Bounty rewards already live in modifiers.
-          for(const [id,key] of [["core_046","firepowerFlat"],["core_047","armorFlat"],["core_048","maxHpFlat"]] as const)if(removed.includes(id))state.modifiers[key]+=state.coreState.stacks[id]??0;
-          if(removed.includes("core_196"))state.modifiers.criticalDamageMultiplierFlat+=Math.min(.25,(state.coreState.stacks.crimsonCrit??0)*.025);
+          for(const [id,key] of [["core_046","firepowerFlat"],["core_047","armorFlat"],["core_048","maxHpFlat"]] as const)if(removed.includes(id)){state.modifiers[key]+=state.coreState.stacks[id]??0;if(id==="core_046")state.modifiers.bonusFireRatePct+=Math.floor((state.coreState.stacks[id]??0)/50)*.1;}
+          if(removed.includes("core_196"))state.modifiers.criticalDamageMultiplierFlat+=Math.min(.50,(state.coreState.stacks.crimsonCrit??0)*.05);
           onRemove?.(removed);state.selectedCores=state.selectedCores.filter(id=>!removed.includes(id));removeReleaseCoreState(state,removed);syncEffectiveMaxHp(state);
           state.coreState.consumed.add("core_216");
           recordCoreMetric(state,216,"converted",removed.length);

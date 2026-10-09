@@ -1,3 +1,4 @@
+import { reduceRunningSkillCooldown } from "./airCombatCooldowns";
 import { statusExpiry } from './airCombatStatusTiming';
 import { terraMovement } from './airCombatTerraRuntime';
 import { getHealingReceivedMultiplier } from './airCombatRecovery';
@@ -18,7 +19,7 @@ export interface SylvaHooks {
  armor(w:CombatWorld,e:EnemyEntity):number;
  damage(w:CombatWorld,e:EnemyEntity,raw:number,id:SylvaSkillId,bonus?:boolean):{hp:number;total:number};
  lethal(w:CombatWorld,e:EnemyEntity,raw:number):boolean;
- heal(w:CombatWorld,raw:number):number;
+ heal(w:CombatWorld,raw:number,skillId:SkillId):number;
 }
 interface Cast {id:number;rank:number;at:number;until:number}
 interface Symbiosis extends Cast {recastAt:number;capture:number;storedVitality:number}
@@ -52,14 +53,14 @@ export function sylvaCluster(w:CombatWorld,h:SylvaHooks){
 }
 export function sylvaAllowed(w:CombatWorld,id:SkillId,h:SylvaHooks){return id==='sylva_deathbloom'?!!sylvaCurrentTarget(w,h):id==='sylva_acid_burst'||id==='sylva_parasitic_seed'?!!sylvaCluster(w,h):true;}
 export function sylvaRecastReady(w:CombatWorld){const a=states.get(w)?.symbiosis;return !!a&&live(w)&&w.elapsed>=a.recastAt;}
-export function sylvaHud(w:CombatWorld){const a=states.get(w)?.symbiosis;return live(w)&&a?{...a,remaining:Math.max(0,a.until-w.elapsed),heal:w.aircraft.duel?.healingBlocked?0:(.5*getEffectiveAircraftStats(w.aircraft).firepower+a.storedVitality)*getHealingReceivedMultiplier(w.aircraft)}:undefined;}
+export function sylvaHud(w:CombatWorld){const a=states.get(w)?.symbiosis;return live(w)&&a?{...a,remaining:Math.max(0,a.until-w.elapsed),heal:w.aircraft.duel?.healingBlocked?0:(.5*getEffectiveAircraftStats(w.aircraft).firepower+a.storedVitality,'sylva_symbiosis')*getHealingReceivedMultiplier(w.aircraft)}:undefined;}
 export function sylvaGrayHealth(w:CombatWorld){return live(w)?states.get(w)?.symbiosis?.storedVitality??0:0;}
 export function endSylvaSymbiosis(w:CombatWorld,h:SylvaHooks,at=w.elapsed){
  const s=states.get(w),a=s?.symbiosis;if(!s||!a)return;
  s.symbiosis=undefined;delete w.aircraft.coreState.timers.sylvaArmor;delete w.aircraft.coreState.stacks.sylvaSymbiosisRank;
  if(a.rank>=5)s.outgoingUntil=at+4;
  finish(w,SYLVA_SKILLS[0],at);
- if(live(w)){const healed=h.heal(w,.5*getEffectiveAircraftStats(w.aircraft).firepower+a.storedVitality);if(healed>0)fx(w,'heal',w.playerX,w.playerY,72,.65,at);}
+ if(live(w)){const healed=h.heal(w,.5*getEffectiveAircraftStats(w.aircraft).firepower+a.storedVitality,'sylva_symbiosis');if(healed>0)fx(w,'heal',w.playerX,w.playerY,72,.65,at);}
 }
 export function sylvaIncomingHp(w:CombatWorld,hpLost:number){
  const a=states.get(w)?.symbiosis;if(a&&hpLost>0&&w.elapsed<=a.until){a.storedVitality+=hpLost*a.capture;fx(w,'storage',w.playerX,w.playerY,24,.35);}
@@ -82,7 +83,7 @@ function settleBloom(w:CombatWorld,at=w.elapsed){
  const s=states.get(w),a=s?.bloom;if(!s||!a||a.seeds.size)return;s.bloom=undefined;finish(w,SYLVA_SKILLS[3],at);
  if(a.rank===3&&live(w))for(const id of [SYLVA_SKILLS[1],SYLVA_SKILLS[2]]){
   if(w.aircraft.coreState.deferredCooldowns[id]!==undefined)w.aircraft.coreState.stacks[`sylvaCycle:${id}`]=(w.aircraft.coreState.stacks[`sylvaCycle:${id}`]??0)+8;
-  else w.aircraft.cooldowns[id]=Math.max(0,(w.aircraft.cooldowns[id]??0)-8);
+  else reduceRunningSkillCooldown(w.aircraft,id,8);
  }
 }
 function checkBloom(w:CombatWorld,h:SylvaHooks){

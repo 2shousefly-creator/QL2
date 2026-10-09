@@ -1,3 +1,5 @@
+import { useUiSkin } from "./core-visual/UiSkinContext";
+import type { ComponentProps } from "react";
 import React, { useEffect, useState } from "react";
 import type HomePixiLayer from "../features/home/pixi/HomePixiLayer";
 import type { JourneyChapterId, JourneyStageThemeId } from "../game/types";
@@ -7,7 +9,7 @@ import { CoreScene } from "./core-visual/CoreScene";
 import { CommandArtFallback } from "./core-visual/CommandArtFallback";
 import "../styles/core-home.css";
 
-export function HomeJourneyBackdrop({ chapterId, reducedMotion }: { chapterId: JourneyChapterId; reducedMotion?: boolean }) {
+function HomeJourneyBackdropLegacy({ chapterId, reducedMotion }: { chapterId: JourneyChapterId; reducedMotion?: boolean }) {
   const [PixiLayer, setPixiLayer] = useState<typeof HomePixiLayer | null>(null);
   const [pixiReady, setPixiReady] = useState(false);
   const [pixiFailed, setPixiFailed] = useState(false);
@@ -56,4 +58,8 @@ export function HomeJourneyBackdrop({ chapterId, reducedMotion }: { chapterId: J
       layers={[{ id: theme.id, depth: "midground", node: <div className="home-environment" data-home-scene={theme.id}><CommandArtFallback selection={{ sceneId: "home", themeId: theme.id }} /></div> }]}>
     </CoreScene>
   );
+}
+
+export function HomeJourneyBackdrop(props:ComponentProps<typeof HomeJourneyBackdropLegacy>){
+ return useUiSkin()==="flat"?null:<HomeJourneyBackdropLegacy {...props}/>;
 }

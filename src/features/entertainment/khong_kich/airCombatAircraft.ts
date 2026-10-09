@@ -4,12 +4,13 @@ import { isArgentSkill } from './airCombatArgentConfig';
 import { isRiptideSkill } from './airCombatRiptideConfig';
 import { isCinderSkill } from './airCombatCinderConfig';
 import { aircraftTargetability } from "./airCombatTargetability";
-import { settleCoreCooldowns } from "./airCombatCooldowns";
+import { settleCoreCooldowns, reduceRunningSkillCooldown } from "./airCombatCooldowns";
 import { getHealingReceivedMultiplier, getRecoveryReceivedMultiplier } from "./airCombatRecovery";
 import { resolveFireRate, resolveSkillCooldown } from "./airCombatStatResolvers";
 import { EQUIPMENT_POWER as P } from "./airCombatEquipmentBalance";
 import { AFTERBURNER_FIRE_RATE_BONUSES, skillRank, rankValues, isUltimate, ultimateCastDisabled, COMBAT_LEVEL_CAP, CORE_MILESTONES } from "./airCombatSkillRanks";
 import { applyEquipmentStats } from "./airCombatEquipmentStats";
+import { EQUIPMENT_CATALOG } from "./airCombatEquipmentCatalog";
 import { equipmentState, equipmentScale, equipmentEffect, equipmentMetric } from "./airCombatEquipmentState";
 import { equipmentResourceSpent } from "./airCombatEquipmentRuntime";
 import { applyExpansionStats, expansionState, expansionActive, expansionSkillCost, finishExpansionSkill, finishAbsorbShield, createAbsorbShield, observeExpansionResource } from "./airCombatExpansion";
@@ -18,7 +19,7 @@ import { releaseState, overheated } from "./airCombatReleaseState";
 import { SKILL_CORE_VALUES as V } from "./airCombatSkillCores";
 import { createPlayerStatus, playerSkillLocked, tickPlayerStatus } from "./airCombatStatus";
 import { AIRCRAFT_CONFIGS, SKILL_CONFIGS, STARFALL_TIMING } from "./airCombatConfig";
-import { applyCoreStatEffects, applyFireRateLock, hasCore } from "./airCombatCoreEffects";
+import { applyCoreStatEffects, applyCoreHpConditions, applyFireRateLock, hasCore } from "./airCombatCoreEffects";
 import type { AircraftCombatState, AircraftId, EffectiveAircraftStats, LevelUpResult, SkillCastResult, SkillId, WeaponModifiers } from "./airCombatTypes";
 const isAstraSkill=(id:SkillId)=>id==="orbit_reversal"||id==="stellar_lance"||id==="starfall";
 const DEFAULT_WEAPON: WeaponModifiers = {
@@ -65,7 +66,8 @@ export function getEffectiveAircraftStats(state: AircraftCombatState, includeTem
         totalResourceRegenMultiplier: 1, totalHpRegenMultiplier: 1,
         currentHp: state.currentHp, currentResource: state.currentResource, weapon: { ...m.weapon },
     };
-    applyCoreStatEffects(state, stats, includeTemporary);
+    const equipmentHp=equipmentState(state).equipped.reduce((sum,item)=>sum+(item?EQUIPMENT_CATALOG[item.definitionId].stats.maxHp??0:0),0);
+    applyCoreStatEffects(state, stats, includeTemporary, hp=>(hp+equipmentHp)*(1+P[22].hp*equipmentScale(state,22)));
     const c = state.coreState;
     if (includeTemporary && (state.activeEffects.afterburner || 0) > 0)
         stats.bonusFireRatePct += AFTERBURNER_FIRE_RATE_BONUSES[Math.max(1,skillRank(state,"afterburner"))-1];
@@ -78,11 +80,11 @@ export function getEffectiveAircraftStats(state: AircraftCombatState, includeTem
     if (includeTemporary && (c.timers.acidArmor || 0) > c.time)
         stats.armor *= .7;
     if (includeTemporary && hasCore(state, 222)) {
-        if (releaseState(state).mode === "small") { stats.skillHaste += 33; stats.bonusResourceRegenPct += .4; }
-        if (releaseState(state).mode === "giant") { stats.maxHp *= 1.3; stats.firepower *= 1.3; }
+        if (releaseState(state).mode === "small") { stats.skillHaste += 45; stats.bonusResourceRegenPct += .6; }
+        if (releaseState(state).mode === "giant") { stats.maxHp *= 1.4; stats.firepower *= 1.4; }
     }
-    applyExpansionStats(state, stats, includeTemporary);
     applyEquipmentStats(state, stats, includeTemporary, omittedEquipmentEffect);
+    applyExpansionStats(state, stats, includeTemporary);
     if(includeTemporary && state.aircraftId==='riptide' && (state.activeEffects.riptide_waterform??0)>0)
         stats.armor *= 1+(c.stacks.riptideArmor??0);
     // Snapshot live bonuses above the natural aircraft baseline before either conversion.
@@ -92,26 +94,27 @@ export function getEffectiveAircraftStats(state: AircraftCombatState, includeTem
         const naturalResource = config.baseStats.resourceRegen + config.growth.resourceRegen * n;
         const hp = Math.max(0, stats.hpRegen * stats.totalHpRegenMultiplier - naturalHp);
         const resource = Math.max(0, stats.resourceRegen * (1 + stats.bonusResourceRegenPct) * stats.totalResourceRegenMultiplier - naturalResource);
-        stats.dualHpBonus = resource * .4;
-        stats.dualResourceBonus = hp * .4;
-        stats.hpRegen += stats.dualHpBonus;
+        stats.dualHpBonus = resource * .5;
+        stats.dualResourceBonus = hp * .5;
+
     }
-    stats.resourceRegen = (stats.resourceRegen * (1 + stats.bonusResourceRegenPct) + (stats.dualResourceBonus ?? 0)) * stats.totalResourceRegenMultiplier;
-    stats.hpRegen *= stats.totalHpRegenMultiplier;
+    stats.resourceRegen = stats.resourceRegen * (1 + stats.bonusResourceRegenPct) * stats.totalResourceRegenMultiplier + (stats.dualResourceBonus ?? 0);
+    stats.hpRegen = stats.hpRegen * stats.totalHpRegenMultiplier + (stats.dualHpBonus ?? 0);
     if (includeTemporary) {
         const status = state.status;
         if (status.armorBrokenUntil > c.time) stats.armor *= .65;
         if (status.regenDisabledUntil > c.time) stats.hpRegen = 0;
         stats.resourceRegen *= Math.min(1, ...status.jams.filter(j => j.until > c.time).map(j => j.multiplier));
     }
-    if (includeTemporary && (c.timers.tacticalData || 0) > c.time && !hasCore(state, 95)) stats.criticalChance += (c.stacks.tacticalData || 0) * V.dataCrit;
+    if (includeTemporary && (c.timers.tacticalData || 0) > c.time) stats.criticalChance += (c.stacks.tacticalData || 0) * V.dataCrit;
     if(includeTemporary && (c.timers.sylvaArmor??0)>c.time)stats.armor*=1.3;
     stats.fireRate = resolveFireRate(stats, hasCore(state,229));
     applyFireRateLock(state, stats);
     if(includeTemporary && (c.timers.sylvaFireSlow??0)>c.time){stats.totalFireRateMultiplier*=.75;stats.fireRate*=.75;}
-    if(hasCore(state,95))stats.criticalChance=.25;
+    if(hasCore(state,53))stats.criticalDamageMultiplier+=P[8].synergy*equipmentScale(state,8);
+    if(hasCore(state,95)){stats.criticalDamageMultiplier+=Math.max(0,stats.criticalChance-config.baseStats.criticalChance);stats.criticalChance=.25;}
     stats.criticalChance = Math.max(0, Math.min(1, stats.criticalChance));
-    stats.criticalDamageMultiplier = Math.max(1.7, Math.min(10, stats.criticalDamageMultiplier));
+    stats.criticalDamageMultiplier = Math.max(1.7, stats.criticalDamageMultiplier);
     stats.skillHaste = Math.max(0, stats.skillHaste);
     stats.armor = Math.max(-80, stats.armor);
     stats.maxHp = Math.max(1, stats.maxHp);
@@ -119,6 +122,7 @@ export function getEffectiveAircraftStats(state: AircraftCombatState, includeTem
     stats.hpRegen = Math.max(0, stats.hpRegen);
     stats.currentHp = Math.min(state.currentHp, stats.maxHp);
     state.coreState.stacks.resourceRatio=state.currentResource/stats.maxResource;
+    state.coreState.stacks.effectiveMaxResource=stats.maxResource;
     stats.currentResource = Math.min(state.currentResource, stats.maxResource);
     if (includeTemporary) c.stacks.effectiveMaxHp = stats.maxHp;
     return stats;
@@ -141,7 +145,7 @@ export function applyDamageToAircraft(state: AircraftCombatState, rawDamage: num
 export function resolvePlayerDamage(rawDamage: number, targetArmor: number, stats: EffectiveAircraftStats, random: () => number) {
     const chance = Math.max(0, Math.min(1, stats.criticalChance));
     const critical = rawDamage > 0 && (chance >= 1 || (chance > 0 && random() < chance));
-    const multiplier = critical ? Math.max(1.7, Math.min(10, stats.criticalDamageMultiplier)) : 1;
+    const multiplier = critical ? Math.max(1.7, stats.criticalDamageMultiplier) : 1;
     return { actualDamage: calculateDamage(rawDamage * multiplier, targetArmor), critical, multiplier };
 }
 // Remap cumulative old XP using interpolation; endpoints remain exactly 9874 / 2668.
@@ -199,17 +203,17 @@ export function getSkillRuntimeValues(state: AircraftCombatState, skillId: Skill
     v.cost*=costMultiplier*shift*aether;
     v.upkeepPerSecond*=costMultiplier;
     if(specialized)v.cooldown*=.75;
-    if(expansionState(state).primarySkill===skillId)v.cooldown*=.8;
+    if(expansionState(state).primarySkill===skillId)v.cooldown*=.75;
     return v;
 }
 export function canBorrowSkill(state: AircraftCombatState, skillId: SkillId): boolean {
     const c=state.coreState;
-    return hasCore(state,113) && (state.cooldowns[skillId]??0)>0 && (c.timers.futureDebt??0)<=c.time && !c.stacks.borrowPending;
+    return hasCore(state,113) && (state.cooldowns[skillId]??0)>0 && (c.timers.futureDebt??0)<=c.time && !c.stacks.borrowPending && !(c.stacks[`paidDebt:${skillId}`]??0) && state.coreState.deferredCooldowns[skillId]===undefined && !(state.activeEffects[skillId]??0);
 }
 /** Read-only cast rules shared by the transaction and Skill HUD. */
 export function getSkillAvailability(state: AircraftCombatState, skillId: SkillId, manualAction?: "toggle" | "detonate" | "pending") {
     const skill=SKILL_CONFIGS[skillId],values=getSkillRuntimeValues(state,skillId);
-    const free=hasCore(state,84)&&(state.coreState.skillCasts+1)%4===0;
+    const free=hasCore(state,84)&&(state.coreState.skillCasts+1)%3===0;
     const cost=skillId==="escort_drone"||free?0:values.cost;
     const cooldown=Math.max(0,state.cooldowns[skillId]??0);
     const duration=state.coreState.skillCooldownDurations[skillId]??resolveSkillCooldown(values.cooldown, getEffectiveAircraftStats(state).skillHaste, state.coreState.deferredCooldowns[skillId] ?? (free ? 1.1 : 1));
@@ -229,11 +233,11 @@ export function getSkillAvailability(state: AircraftCombatState, skillId: SkillI
 }
 function beginDebt(state: AircraftCombatState, skillId: SkillId): void {
     const c=state.coreState;
-    state.cooldowns[skillId]=(state.cooldowns[skillId]??0)+rankValues(state,skillId).cooldown*.5;
+    state.cooldowns[skillId]=(state.cooldowns[skillId]??0)+rankValues(state,skillId).cooldown*.35;
     state.coreState.skillCooldownDurations[skillId]=state.cooldowns[skillId];
-    recordCoreMetric(state,113,"extraCooldown",rankValues(state,skillId).cooldown*.5);
-    c.stacks[`paidDebt:${skillId}`]=(c.stacks[`paidDebt:${skillId}`]??0)+rankValues(state,skillId).cooldown*.5;
-    c.timers.futureDebt=c.time+18;delete c.stacks.borrowPending;delete c.stacks[`debt:${skillId}`];
+    recordCoreMetric(state,113,"extraCooldown",rankValues(state,skillId).cooldown*.35);
+    c.stacks[`paidDebt:${skillId}`]=(c.stacks[`paidDebt:${skillId}`]??0)+rankValues(state,skillId).cooldown*.35;
+    c.timers.futureDebt=c.time+16;delete c.stacks.borrowPending;delete c.stacks[`debt:${skillId}`];
 }
 /** One settlement point for cast modifiers, duration tracking, telemetry and borrowed debt. */
 export function startDeferredSkillCooldown(state:AircraftCombatState,skillId:SkillId,cooldownSnapshot?:number):void {
@@ -246,7 +250,7 @@ export function startDeferredSkillCooldown(state:AircraftCombatState,skillId:Ski
     if(isUltimate(skillId)&&hasCore(state,218)&&!ultimateCastDisabled(state,skillId)&&!state.coreState.stacks.cancellingSkills){state.coreState.timers.ultimateAftershock=state.coreState.time+15;recordCoreMetric(state,218,"procs",1);}
     if(state.coreState.stacks[`debt:${skillId}`])beginDebt(state,skillId);
     const sylvaCredit=state.coreState.stacks[`sylvaCycle:${skillId}`]??0;
-    if(sylvaCredit){state.cooldowns[skillId]=Math.max(0,(state.cooldowns[skillId]??0)-sylvaCredit);delete state.coreState.stacks[`sylvaCycle:${skillId}`];}
+    if(sylvaCredit){reduceRunningSkillCooldown(state,skillId,sylvaCredit);delete state.coreState.stacks[`sylvaCycle:${skillId}`];}
 }
 export function endAircraftSkill(state: AircraftCombatState, skillId: SkillId, cooldownSnapshot?:number): void {
     if (skillId === "focus_laser") delete state.laserPhase;
@@ -289,6 +293,7 @@ export function castSkill(state: AircraftCombatState, skillId: SkillId): SkillCa
     const borrowed=availability.borrow;
     const v = getSkillRuntimeValues(state, skillId);
     const {free,cost}=availability;
+    state.coreState.stacks.castResourceRatio=state.currentResource/getEffectiveAircraftStats(state).maxResource;
     state.currentResource = Math.max(0, state.currentResource - cost);
     equipmentResourceSpent(state,cost);
     if(expansionActive(state,"shiftDiscount")){recordCoreMetric(state,168,"saved",cost/.85-cost);state.coreState.timers.shiftDiscount=0;}
@@ -311,7 +316,7 @@ export function castSkill(state: AircraftCombatState, skillId: SkillId): SkillCa
     if(!free)recordCoreMetric(state,savingRow,"saved",Math.max(0,skill.cost-v.cost));
     if(!free&&skillId!=="escort_drone"){
         if(hasCore(state,190))recordCoreMetric(state,190,"extraResource",cost-cost/1.10);
-        if(expansionState(state).primarySkill===skillId)recordCoreMetric(state,202,"saved",cost/.8-cost);
+        if(expansionState(state).primarySkill===skillId)recordCoreMetric(state,202,"saved",cost/.75-cost);
     }
     if(skillId==="focus_laser")recordCoreMetric(state,41,"chargeSaved",2-v.charge);
     state.coreState.deferredCooldowns[skillId] = free ? 1.1 : 1;
@@ -338,11 +343,11 @@ export function castSkill(state: AircraftCombatState, skillId: SkillId): SkillCa
     }
     return { cast: true, resourceSpent: cost };
 }
-export function healAircraft(state: AircraftCombatState, amount: number, allowOverhealShield = true, receiptCap = Infinity): number {
+export function healAircraft(state: AircraftCombatState, amount: number, allowOverhealShield = true, receiptCap = Infinity, originSkill?: SkillId): number {
     if(state.currentHp <= 0 || state.duel?.healingBlocked)return 0;
     const maxHp = getEffectiveAircraftStats(state).maxHp;
     const survival = state.aircraftId==='riptide' && skillRank(state,'riptide_wellspring')>=5 && state.currentHp < maxHp*.15;
-    const healing = Math.min(Math.max(0,receiptCap),Math.max(0, amount) * getHealingReceivedMultiplier(state,maxHp));
+    const healing = Math.min(Math.max(0,receiptCap),Math.max(0, amount) * getHealingReceivedMultiplier(state,maxHp) * (originSkill && hasCore(state,202) && expansionState(state).primarySkill===originSkill ? 1.25 : 1));
     const effective = Math.min(healing, Math.max(0, maxHp - state.currentHp));
     if(survival && effective>0)state.coreState.timers.riptideSurvivalCue=state.coreState.time+.3;
     state.currentHp = Math.min(maxHp, state.currentHp + effective);
@@ -351,13 +356,14 @@ export function healAircraft(state: AircraftCombatState, amount: number, allowOv
         const old = state.coreState.shields.overheal;
         const current = old && old.until > state.coreState.time && !old.settled ? old.amount : 0;
         if(old && !current)finishAbsorbShield(state,old);
-        const shield = current ? old! : createAbsorbShield(state,"overheal",0,6);
+        const shield = current ? old! : createAbsorbShield(state,"overheal",0,8);
         // Surplus already includes Behemoth's received bonus; do not multiply it twice.
-        const amplification = getRecoveryReceivedMultiplier(state);
-        shield.amount = Math.min(maxHp * .15 * amplification, current + healing - effective);
+        state.coreState.timers.overhealSurplus=state.coreState.time;
+        state.coreState.stacks.overhealPassive=Math.min(current,state.coreState.stacks.overhealPassive??0);
+        shield.amount = Math.min(maxHp * .20, current + healing - effective);
         shield.capacity = Math.max(shield.capacity ?? 0, shield.amount);
-        shield.until = state.coreState.time + 6;
-        shield.duration = 6;
+        shield.until = state.coreState.time + 8;
+        shield.duration = 8;
         recordCoreMetric(state, 104, "shieldCreated", Math.max(0, state.coreState.shields.overheal.amount - current));
     }
     return effective;
@@ -396,7 +402,7 @@ export function tickAircraftState(state: AircraftCombatState, deltaSeconds: numb
             const step = Math.min(dt, active, repair.durationRemaining);
             const planned = step >= repair.durationRemaining - 1e-9
                 ? repair.remaining : repair.remaining * step / repair.durationRemaining;
-            const effective = healAircraft(state, planned);
+            const effective = healAircraft(state, planned, true, Infinity, "invisibility");
             recordCoreMetric(state, 38, "healed", effective);
             repair.remaining = Math.max(0, repair.remaining - planned);
             repair.durationRemaining = Math.max(0, repair.durationRemaining - step);
@@ -455,7 +461,7 @@ export function tickAircraftState(state: AircraftCombatState, deltaSeconds: numb
     }
     if(upkeep>0){
         if(hasCore(state,190))recordCoreMetric(state,190,"extraResource",spent-Math.min(available,upkeep/1.10*dt));
-        if(expansionState(state).primarySkill==="escort_drone")recordCoreMetric(state,202,"saved",Math.min(available,upkeep/.8*dt)-spent);
+        if(expansionState(state).primarySkill==="escort_drone")recordCoreMetric(state,202,"saved",Math.min(available,upkeep/.75*dt)-spent);
     }
     for(const [family,without] of equipmentRegenWithout){
       equipmentMetric(state,family,"extraHealing",healed-Math.min(missingHp,without.hpRegen*dt*healingMultiplier));
@@ -495,7 +501,7 @@ function recordCooldownTelemetry(state:AircraftCombatState,skillId:SkillId,penal
     };
     for(const [row,seconds] of sources[skillId]??[])recordCoreMetric(state,row,"cooldown",cooldown(seconds));
     if(penalty>1)recordCoreMetric(state,84,"extraCooldown",cooldown(getSkillRuntimeValues(state,skillId).cooldown,penalty-1));
-    if(expansionState(state).primarySkill===skillId)recordCoreMetric(state,202,"cooldown",cooldown(getSkillRuntimeValues(state,skillId).cooldown*(1/.8-1)));
+    if(expansionState(state).primarySkill===skillId)recordCoreMetric(state,202,"cooldown",cooldown(getSkillRuntimeValues(state,skillId).cooldown*(1/.75-1)));
     for(const row of [209,222])if(hasCore(state,row)){
         const without=getEffectiveAircraftStats({...state,selectedCores:state.selectedCores.filter(id=>id!==`core_${row}`),coreState:{...state.coreState,stacks:{...state.coreState.stacks}}});
         recordCoreMetric(state,row,"cooldown",Math.abs(resolveSkillCooldown(getSkillRuntimeValues(state,skillId).cooldown,without.skillHaste,penalty)-cooldown(getSkillRuntimeValues(state,skillId).cooldown)));

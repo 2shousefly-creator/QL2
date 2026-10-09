@@ -1,9 +1,11 @@
+import { useUiSkin } from "./UiSkinContext";
+import type { ComponentProps } from "react";
 import { CommandArtFallback } from "./CommandArtFallback";
 import { useDeferredPixiLayer } from "./pixi/useDeferredPixiLayer";
 import type { JourneyStageThemeId } from "../../game/types";
 
 const loadLobby = () => import("./pixi/CommandLobbyLayer");
-export function CommandLobbyArt({ sceneId, reducedMotion = false }: {
+function CommandLobbyArtLegacy({ sceneId, reducedMotion = false }: {
   sceneId: "training" | "entertainment"; reducedMotion?: boolean;
 }) {
   const pixi = useDeferredPixiLayer(loadLobby, reducedMotion);
@@ -13,4 +15,8 @@ export function CommandLobbyArt({ sceneId, reducedMotion = false }: {
     {pixi.Layer && <pixi.Layer selection={selection} reducedMotion={pixi.reducedMotion}
       onReady={pixi.onReady} onUnavailable={pixi.onUnavailable} />}
   </div>;
+}
+
+export function CommandLobbyArt(props:ComponentProps<typeof CommandLobbyArtLegacy>){
+ return useUiSkin()==="flat"?null:<CommandLobbyArtLegacy {...props}/>;
 }

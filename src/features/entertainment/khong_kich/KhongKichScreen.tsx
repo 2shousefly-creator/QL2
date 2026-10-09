@@ -128,7 +128,7 @@ const KhongKichContent: React.FC<KhongKichScreenProps> = ({
     return (
       <ExclusiveFullscreenOverlay
         ariaLabel="Không Kích"
-        className={`${motionClass} tactical-battle-screen air-combat-surface flex select-none touch-none items-center justify-center overflow-hidden bg-slate-950 px-1.5 py-1.5`}
+        data-ui-skin="legacy" className={`${motionClass} tactical-battle-screen air-combat-surface flex select-none touch-none items-center justify-center overflow-hidden bg-slate-950 px-1.5 py-1.5`}
         style={{
           WebkitTouchCallout: "none",
           WebkitUserSelect: "none",
@@ -159,7 +159,7 @@ const KhongKichContent: React.FC<KhongKichScreenProps> = ({
     return (
       <ExclusiveFullscreenOverlay
         ariaLabel="Kết quả Không Kích"
-        className={`${motionClass} bg-slate-950`}
+        data-ui-skin="legacy" className={`${motionClass} bg-slate-950`}
       >
         <AirCombatResult
           {...completedRun}
@@ -171,15 +171,15 @@ const KhongKichContent: React.FC<KhongKichScreenProps> = ({
     );
   }
 
-  if (phase === "menu") return <ExclusiveFullscreenOverlay ariaLabel="Menu Không Kích" className={`${motionClass} air-campaign-fullscreen`}><AirCombatMainMenu reducedMotion={gameState.settings.reducedMotion} onBack={()=>navigate(onBack)} onStart={() => setPhase("mode")} /></ExclusiveFullscreenOverlay>;
-  if (phase === "stages") return <div key={phase} className={`${motionClass} air-stage-motion`}><AirCombatStageSelect progress={profile.campaign} selected={selectedStage} onSelect={setSelectedStage} onBack={() => setPhase("menu")} onAircraft={id => {
+  if (phase === "menu") return <ExclusiveFullscreenOverlay ariaLabel="Menu Không Kích" data-ui-skin="legacy" className={`${motionClass} air-campaign-fullscreen`}><AirCombatMainMenu reducedMotion={gameState.settings.reducedMotion} onBack={()=>navigate(onBack)} onStart={() => setPhase("mode")} /></ExclusiveFullscreenOverlay>;
+  if (phase === "stages") return <div key={phase} data-ui-skin="legacy" className={`${motionClass} air-stage-motion`}><AirCombatStageSelect progress={profile.campaign} selected={selectedStage} onSelect={setSelectedStage} onBack={() => setPhase("menu")} onAircraft={id => {
     if (!canLaunchStage(id, loadAirCombatProfile().campaign)) return;
     setSelectedStage(id); setPhase("select");
   }} /></div>;
 
   return (
     <div
-      className={`${motionClass} command-screen tactical-battle-screen air-campaign-selection mx-auto w-full max-w-lg flex flex-col justify-start flex-1 min-h-0 px-2.5 sm:px-4 py-[clamp(6px,1.4dvh,16px)] select-none`}
+      data-ui-skin="legacy" className={`${motionClass} command-screen tactical-battle-screen air-campaign-selection mx-auto w-full max-w-lg flex flex-col justify-start flex-1 min-h-0 px-2.5 sm:px-4 py-[clamp(6px,1.4dvh,16px)] select-none`}
       key={phase}
       data-khong-kich-phase="select"
     >

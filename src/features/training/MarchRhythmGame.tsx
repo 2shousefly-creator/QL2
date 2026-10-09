@@ -306,7 +306,7 @@ export const MarchRhythmGame: React.FC<MarchRhythmGameProps> = ({
       </div>
 
       {/* Playfield Area */}
-      <div className="flex-1 relative w-full min-h-0 max-w-md mx-auto bg-slate-950 border-x border-slate-800/60 flex flex-col overflow-hidden">
+      <div data-game-surface="true" className="flex-1 relative w-full min-h-0 max-w-md mx-auto bg-slate-950 border-x border-slate-800/60 flex flex-col overflow-hidden">
         {/* Countdown / GO Banner Overlay */}
         {countdownOverlayText !== "" && (
           <div className="absolute inset-0 z-40 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center pointer-events-none transition-all duration-200">

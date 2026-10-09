@@ -546,7 +546,7 @@ export const GomokuGameScreen: React.FC<GomokuGameScreenProps> = ({
 
       {/* Main Interactive Canvas Area */}
       <div ref={containerRef} className="relative flex-1 w-full min-h-0 bg-[#f5efdf] overflow-hidden shadow-inner shadow-[#806744]/10">
-        <canvas ref={canvasRef} className="block w-full h-full cursor-crosshair" aria-label="Bàn cờ Caro: chạm ô trống để đặt quân, kéo để di chuyển" />
+        <canvas data-game-surface="true" ref={canvasRef} className="block w-full h-full cursor-crosshair" aria-label="Bàn cờ Caro: chạm ô trống để đặt quân, kéo để di chuyển" />
 
         {/* Floating Camera Controls */}
         <div className="absolute bottom-3 right-2 sm:bottom-6 sm:right-4 z-30 flex flex-col gap-1.5 sm:gap-2">

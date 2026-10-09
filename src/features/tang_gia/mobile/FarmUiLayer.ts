@@ -1,10 +1,9 @@
 import { Container, Graphics, Sprite, Text } from 'pixi.js';
 import type { Texture } from 'pixi.js';
-import { UI_SKIN_URLS, type UiSkinState } from '../../../components/core-visual/pixi/UiSkinAtlas';
-import { createUiSpriteSkin } from '../../../components/core-visual/pixi/UiSpriteSkin';
+import { type UiSkinState } from '../../../components/core-visual/pixi/UiSkinAtlas';
 import type { MobileAction, MobileHit, MobileRect, MobileSheet } from './mobileTypes';
 
-export const FARM_PALETTE = { cream: 0x090f16, ink: 0xf1f5f9, green: 0x294547, pale: 0x14212b, amber: 0xd9a347, danger: 0x9b3f32 };
+export const FARM_PALETTE = { cream: 0x242d38, ink: 0xf1f5f9, green: 0x294547, pale: 0x1b222b, amber: 0xd8ac56, danger: 0x9b3f32 };
 export function panel(parent: Container, rect: MobileRect, color = FARM_PALETTE.cream, radius = 16) {
   return parent.addChild(new Graphics().roundRect(rect.x, rect.y, rect.width, rect.height, radius).fill(color));
 }
@@ -30,16 +29,15 @@ export class FarmUiLayer {
   constructor(parent: Container, private texture: (path: string) => Texture | undefined) { parent.addChild(this.root); this.root.eventMode = 'none'; }
   clear() { this.root.removeChildren().forEach(node => node.destroy({ children: true })); this.hits = []; this.scrollRegion = null; this.maxScroll = 0; }
   private skin(parent: Container, rect: MobileRect, state: UiSkinState = 'normal') {
-    const texture = this.texture(UI_SKIN_URLS[state]);
-    return texture ? parent.addChild(createUiSpriteSkin(texture, rect.x, rect.y, rect.width, rect.height))
-      : panel(parent, rect, state === 'selected' ? FARM_PALETTE.green : FARM_PALETTE.pale, 12);
+    const color=state==='selected'?0xd8ac56:state==='pressed'?0x2c3744:0x242d38;
+    return panel(parent,rect,color,12);
   }
   button(action: MobileAction, rect: MobileRect, pressed: string | null, parent = this.root, register = true) {
     this.skin(parent, rect, action.reason ? 'disabled' : pressed === action.id ? 'pressed' : action.primary ? 'selected' : 'normal');
     const image = action.icon ? this.texture(action.icon) : undefined;
     const indent = image ? 34 : 8;
     if (image) sprite(parent, image, { x: rect.x + 3, y: rect.y + (rect.height - 30) / 2, width: 30, height: 30 });
-    const text = label(parent, action.label, rect.x + indent, rect.y + 8, rect.width - indent - 6, image || rect.width < 90 ? 12 : 14, action.primary && !action.reason ? 0xffffff : FARM_PALETTE.ink, true);
+    const text = label(parent, action.label, rect.x + indent, rect.y + 8, rect.width - indent - 6, image || rect.width < 90 ? 12 : 14, action.reason?0x84909e:action.primary?0x151a20:FARM_PALETTE.ink, true);
     text.y = rect.y + Math.max(6, (rect.height - text.height) / 2);
     if (register) this.hits.push({ ...rect, action });
   }
@@ -73,7 +71,7 @@ export class FarmUiLayer {
       const image = row.icon ? this.texture(row.icon) : undefined;
       const indent = image ? 54 : 4;
       const title = label(content, row.title, body.x + indent, y + 9, body.width - indent - 8, 15, FARM_PALETTE.ink, true);
-      const detail = row.detail ? label(content, row.detail, body.x + indent, title.y + title.height + 4, body.width - indent - 8, 14, 0xa5b1bf) : null;
+      const detail = row.detail ? label(content, row.detail, body.x + indent, title.y + title.height + 4, body.width - indent - 8, 14, 0xb4bfcc) : null;
       const rowHeight = Math.max(64, title.height + (detail?.height ?? 0) + 26);
       if (image) sprite(content, image, { x: body.x, y: y + 8, width: 48, height: 48 });
       if (row.accent) content.addChild(new Graphics().circle(body.x + body.width - 8, y + 10, 4).fill(row.accent).stroke({ color: 0x586154, width: 1 }));

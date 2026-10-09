@@ -432,7 +432,7 @@ export const SignalCommandGame: React.FC<SignalCommandGameProps> = ({
         </div>
 
         {/* Signal Board Grid */}
-        <div className={`w-full grid ${gridColsClass} gap-3 sm:gap-4 aspect-square max-w-[340px] mx-auto p-2 bg-slate-950/80 rounded-3xl border border-slate-800 shadow-2xl relative`}>
+        <div data-game-surface="true" className={`w-full grid ${gridColsClass} gap-3 sm:gap-4 aspect-square max-w-[340px] mx-auto p-2 bg-slate-950/80 rounded-3xl border border-slate-800 shadow-2xl relative`}>
           {run.scenario.signalIds.map((sid) => {
             const def = SIGNAL_TILE_DEFINITIONS[sid];
             if (!def) return null;

@@ -1,0 +1,144 @@
+/* Opt-in paint layer. No shared theme/font tokens or geometry are changed.
+   Scope limits also protect descendants rendered inside the shared portal host. */
+@layer ql-flat-paint {
+@scope ([data-ui-skin="flat"]) to ([data-ui-skin="legacy"], [data-ui-protected], [data-game-surface], .core-farm-scene, .home-rank-hero, .home-progression-zone, canvas, .farm-mobile-world) {
+  :scope.military-ui, .command-screen, .home-screen, .core-scene {
+    background-color: #12161c !important;
+    background-image: none !important;
+  }
+  :scope.military-ui::before, .command-screen::after,
+  .theme-world-ambient, .theme-corner-glow, .command-art-fallback,
+  .journey-pixi-layer, .core-vfx--dust, .core-vfx--haze, .core-vfx--scan, .core-vfx--glow {
+    display: none;
+  }
+  /* Neutral utility surfaces cover menu chrome without rewriting layout classes. */
+  :is([class*="bg-slate-"], [class*="bg-gray-"], [class*="bg-zinc-"],
+      .personnel-record, .training-program-card, .theme-menu-card,
+      .farm-market-card, .farm-market-eggs, .home-rate-readout, .rank-activity-ticker) {
+    background-color: #1b222b !important;
+    background-image: none !important;
+    border-image: none !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+  }
+  :is([class*="border-slate-"], [class*="border-gray-"]) { border-color: #3a4654 !important; }
+  :is([class*="text-slate-2"], [class*="text-slate-1"]) { color: #f1f5f9 !important; }
+  :is([class*="text-slate-3"], [class*="text-slate-4"]) { color: #b4bfcc !important; }
+  :is(button, [role="tab"], .theme-menu-card, .training-program-card, .farm-market-card) {
+    background-image: none !important;
+    border-image: none !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+  :is(.theme-button-secondary, .training-detail-panel button, .farm-market-tabs button,
+      .logistics-hud button, .logistics-action-toolbar button, [data-command-anchor]) {
+    background: #242d38 !important; border-image: none !important; box-shadow: none !important;
+  }
+  button[class*="from-amber-"], button[class*="from-yellow-"] {
+    background: #d8ac56 !important; color: #151a20 !important;
+  }
+  button[class*="from-red-"], button[class*="from-rose-"] { background: #7f2638 !important; }
+  button[class*="from-emerald-"], button[class*="from-green-"] { background: #27664e !important; }
+  button[class*="from-blue-"], button[class*="from-cyan-"] { background: #24536b !important; }
+  :is(.command-header__icon, .theme-menu-card__icon, .technical-label, .command-header__title,
+      .command-header__subtitle, .theme-card-icon) { box-shadow: none !important; text-shadow: none !important; }
+  :is(.command-header__icon, .theme-menu-card__icon) { background-image: none !important; }
+  :is(.command-header__icon, .theme-menu-card__icon) > svg { filter: none !important; }
+  :is(.tactical-divider, .tactical-divider::before) { background: #3a4654 !important; box-shadow: none !important; }
+  :is(.theme-menu-card, .training-program-card, .personnel-record)::before,
+  :is(.theme-menu-card, .training-program-card, .personnel-record)::after { background: none !important; box-shadow: none !important; }
+  :is(.command-panel, .tactical-card, .core-material, .command-header,
+      .home-personnel-plate, .profile-dossier-card, .rank-archive-card,
+      .medal-cabinet-item, .identity-credential, .journal-field-report, .training-program-card,
+      .journey-sector__panel, .journey-family-node, .training-detail-panel,
+      .command-lobby-notice, .logistics-hud, .logistics-action-toolbar,
+      .data-readout, .modal-section, .modal-control, [data-command-shell]) {
+    background: #1b222b !important;
+    border-image: none !important;
+    border-color: #3a4654 !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+  }
+  :is(.command-panel, .tactical-card, .core-material, .command-header,
+      .identity-credential, .journey-sector__panel)::before,
+  :is(.command-panel, .tactical-card, .core-material, .command-header,
+      .identity-credential, .journey-sector__panel)::after {
+    background: none !important;
+    box-shadow: none !important;
+  }
+  :is(.military-button, .modal-button, .command-menu-control,
+      .promotion-command-button, .journal-filter-control, input, select, textarea) {
+    background: #242d38 !important;
+    border-image: none !important;
+    border-color: #3a4654 !important;
+    color: #f1f5f9;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    backdrop-filter: none !important;
+  }
+  :is(.military-button, .modal-button, .command-menu-control,
+      .promotion-command-button, .journal-filter-control):hover:not(:disabled),
+  :is(.theme-selected-card, .theme-selected-row, .theme-menu-card--active,
+      [data-command-selected="true"], [aria-current="page"], [aria-selected="true"]) {
+    background: #2c3744 !important;
+    border-image: none !important;
+    box-shadow: none !important;
+  }
+  :is(.military-button--primary, .modal-button--primary,
+      .theme-button-primary, .promotion-command-button) {
+    background: #d8ac56 !important;
+    color: #151a20 !important;
+  }
+  :is(.military-button--primary, .modal-button--primary,
+      .theme-button-primary, .promotion-command-button):hover:not(:disabled) {
+    background: #e5bc6c !important;
+  }
+  :is(.military-button--danger, .modal-button--danger) {
+    background: #7f2638 !important;
+    border-color: #be526b;
+    color: #fff1f2 !important;
+  }
+  :is(.military-button, .modal-button, .command-menu-control):disabled {
+    background: #242d38 !important;
+    color: #84909e !important;
+    box-shadow: none !important;
+  }
+  :is(button, input, select, textarea, [role="button"]):focus-visible {
+    outline: 2px solid #d8ac56;
+    outline-offset: 2px;
+  }
+  :is(.command-title, .theme-card-title, .modal-title) {
+    color: #f1f5f9;
+    text-shadow: none !important;
+  }
+  :is(.command-subtitle, .modal-description, .modal-muted) { color: #b4bfcc; }
+  :is(.status-tag, .theme-badge, .theme-bg-soft) {
+    background: #242d38 !important;
+    border-image: none !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+  :is(.theme-node-current, .theme-active-marker, .theme-journey-spine) {
+    background: var(--theme-accent) !important;
+    box-shadow: none !important;
+  }
+  .journey-sector::before { background: #3a4654 !important; box-shadow: none !important; }
+  .journey-sector[data-sector-state="current"]::before { background: var(--theme-accent) !important; }
+  .journey-sector[data-sector-state="completed"]::before { background: #83b9a5 !important; }
+  .journey-sector::after { display: none; }
+  :is(button, [role="tab"]):not(:disabled):active { box-shadow: none !important; background-image: none !important; }
+  .core-nav { background: #1b222b !important; box-shadow: none !important; }
+  :is(.app-overlay__panel, .overlay-panel, .command-art-dialog, [role="dialog"]) {
+    background: #242d38 !important;
+    border-image: none !important;
+    border-color: #3a4654 !important;
+    box-shadow: 0 8px 24px rgb(0 0 0 / .24) !important;
+    backdrop-filter: none !important;
+  }
+  :is(.modal-header, .modal-footer, .overlay-header, .overlay-footer) {
+    background-image: none !important;
+    box-shadow: none !important;
+  }
+}
+
+}

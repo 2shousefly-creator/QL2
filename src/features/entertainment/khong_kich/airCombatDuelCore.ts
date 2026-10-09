@@ -1,3 +1,4 @@
+import { isUltimate } from "./airCombatSkillRanks";
 import { AIRCRAFT_CONFIGS, CORE_DEFINITIONS } from "./airCombatConfig";
 import { isCoreEligible } from "./airCombatCoreEligibility";
 import { generateCoreChoices, createCoreSelectionEvent } from "./airCombatCoreSelection";
@@ -57,13 +58,13 @@ export function chooseDuelAICore(world: CombatWorld, opponent: AircraftCombatSta
   // Core202's own follow-up is a legal build choice, separate from Skill Point allocation.
   if (releaseState(world.aircraft).followups.includes("primary")) {
     const ids = AIRCRAFT_CONFIGS[world.aircraft.aircraftId].skillIds;
-    const slot = ids.reduce((best, id, i) => (world.aircraft.skillRanks[id] ?? 0) > (world.aircraft.skillRanks[ids[best]] ?? 0) ? i : best, 0);
+    const slot = ids.reduce((best, id, i) => !(world.aircraft.selectedCores.includes("core_097")&&isUltimate(id)) && (world.aircraft.skillRanks[id] ?? 0) > (world.aircraft.skillRanks[ids[best]] ?? 0) ? i : best, 0);
     chooseDuelPrimary(world, slot);
   }
 }
 export function chooseDuelPrimary(world: CombatWorld, slot: number) {
   const id = AIRCRAFT_CONFIGS[world.aircraft.aircraftId].skillIds[slot];
-  if (!id || !releaseState(world.aircraft).followups.includes("primary")) return;
+  if (!id || (world.aircraft.selectedCores.includes("core_097")&&isUltimate(id)) || !releaseState(world.aircraft).followups.includes("primary")) return;
   expansionState(world.aircraft).primarySkill = id;
   expansionState(world.aircraft).primaryPending = false;
   releaseState(world.aircraft).followups = releaseState(world.aircraft).followups.filter(x => x !== "primary");

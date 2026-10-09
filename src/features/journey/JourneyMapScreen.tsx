@@ -1,3 +1,4 @@
+import { useUiSkin } from "../../components/core-visual/UiSkinContext";
 import { CommandArtFallback } from "../../components/core-visual/CommandArtFallback";
 import { CommandMenuProvider } from "../../components/core-visual/CommandMenuContext";
 import { CoreScene } from "../../components/core-visual/CoreScene";
@@ -24,6 +25,7 @@ type JourneyMapScreenProps = {
 export const JourneyMapScreen: React.FC<JourneyMapScreenProps> = ({
   gameState,
 }) => {
+  const flat=useUiSkin()==="flat";
   const [nowMs, setNowMs] = useState(() => Date.now());
   const [selectedFamily, setSelectedFamily] = useState<RankFamily | null>(null);
   const [showEtaInfoModal, setShowEtaInfoModal] = useState(false);
@@ -41,6 +43,7 @@ export const JourneyMapScreen: React.FC<JourneyMapScreenProps> = ({
     return () => media.removeEventListener("change", change);
   }, []);
   useEffect(() => {
+    if(flat)return;
     let cancelled = false, secondFrame = 0;
     let idle: number | undefined;
     let timer: ReturnType<typeof setTimeout> | undefined;
@@ -62,7 +65,7 @@ export const JourneyMapScreen: React.FC<JourneyMapScreenProps> = ({
       if (idle !== undefined) window.cancelIdleCallback(idle);
       if (timer !== undefined) clearTimeout(timer);
     };
-  }, []);
+  }, [flat]);
 
   const currentChapterRef = useRef<HTMLDivElement | null>(null);
   const hasAutoScrolledRef = useRef(false);
@@ -123,7 +126,7 @@ export const JourneyMapScreen: React.FC<JourneyMapScreenProps> = ({
       {/* Chapters Vertical Roadmap */}
       <div ref={routeRef} className="journey-route relative space-y-6" data-pixi-ready={pixiReady}>
         <CommandArtFallback selection={{ sceneId: "journey", themeId: getStageTheme(JOURNEY_CHAPTERS.find(chapter => chapter.id === vm.currentChapterId)?.themeId).id }} />
-        {PixiLayer && !pixiFailed && <div className="journey-pixi-layer" aria-hidden="true">
+        {!flat && PixiLayer && !pixiFailed && <div className="journey-pixi-layer" aria-hidden="true">
           <PixiLayer routeRef={routeRef} reducedMotion={reducedMotion}
             visualProps={{ theme: getStageTheme(JOURNEY_CHAPTERS.find(chapter => chapter.id === vm.currentChapterId)?.themeId),
               currentChapterId: vm.currentChapterId,

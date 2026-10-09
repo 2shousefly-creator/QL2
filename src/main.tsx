@@ -7,9 +7,11 @@ import './styles/responsive-overlays.css';
 import './styles/modal-design-system.css';
 import './styles/core-visual.css';
 import './styles/command-art.css';
+import './styles/flat-dark.css';
+import { UiSkinProvider } from './components/core-visual/UiSkinContext';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <App />
+    <UiSkinProvider skin="flat"><App /></UiSkinProvider>
   </StrictMode>,
 );

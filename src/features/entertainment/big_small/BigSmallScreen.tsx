@@ -319,7 +319,7 @@ export const BigSmallScreen: React.FC<BigSmallScreenProps> = ({
       )}
 
       {/* 2. Dice Cup Stage (Shaking / Bowl / Dice Display) */}
-      <div className="relative bg-gradient-to-b from-slate-900 to-slate-950 border border-slate-800 rounded-2xl p-3 sm:p-3.5 shadow-xl overflow-hidden text-center space-y-2 shrink-0">
+      <div data-game-surface="true" className="relative bg-gradient-to-b from-slate-900 to-slate-950 border border-slate-800 rounded-2xl p-3 sm:p-3.5 shadow-xl overflow-hidden text-center space-y-2 shrink-0">
         {/* Stage Header without result text */}
         <div className="flex items-center justify-between text-xs text-slate-400 px-1">
           <span className="font-bold text-slate-300 uppercase tracking-wider text-[10px] sm:text-[11px] flex items-center gap-1">

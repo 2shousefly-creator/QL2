@@ -348,7 +348,7 @@ export const BauCuaScreen: React.FC<BauCuaScreenProps> = ({
       )}
 
       {/* Result Display & Dice Rolling Stage with Suspenseful Cover */}
-      <div className="relative bg-slate-900/90 border border-slate-800/90 rounded-2xl p-3 sm:p-4 shadow-xl flex flex-col items-center justify-center min-h-[140px] sm:min-h-[160px] overflow-hidden">
+      <div data-game-surface="true" className="relative bg-slate-900/90 border border-slate-800/90 rounded-2xl p-3 sm:p-4 shadow-xl flex flex-col items-center justify-center min-h-[140px] sm:min-h-[160px] overflow-hidden">
         {/* Ambient Top Glow */}
         <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-amber-500/30 to-transparent" />
 

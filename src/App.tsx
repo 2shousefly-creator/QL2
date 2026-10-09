@@ -1,3 +1,4 @@
+import { UiSkinProvider } from "./components/core-visual/UiSkinContext";
 import { CoreScreenTransition } from "./components/core-visual/CoreScreenTransition";
 import { FARM_MOBILE_REQUESTED } from "./features/tang_gia/mobile/mobileGate";
 import { ScreenLoadBoundary } from "./components/ScreenLoadBoundary";
@@ -569,6 +570,7 @@ export default function App() {
   return (
     <div
       className="military-ui chapter-theme-root h-screen h-[100dvh] bg-slate-950 text-white font-sans overflow-hidden relative flex flex-col"
+      data-ui-skin={activeTab === "uniform" ? "legacy" : "flat"}
       data-stage-theme={currentStageTheme.id}
       data-farm-mobile={activeTab === 'tang_gia' && FARM_MOBILE_REQUESTED ? 'true' : undefined}
       data-reduced-motion={gameState.settings.reducedMotion ? "true" : "false"}
@@ -715,10 +717,10 @@ export default function App() {
             />
           )}
           {activeTab === "uniform" && (
-            <UniformScreen
+            <UiSkinProvider skin="legacy"><UniformScreen
               state={gameState}
               onBack={() => setActiveTab("profile")}
-            />
+            /></UiSkinProvider>
           )}
           {activeTab === "entertainment" && (
             <EntertainmentHubScreen

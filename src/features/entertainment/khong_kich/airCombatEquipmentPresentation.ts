@@ -24,7 +24,7 @@ export function equipmentTelemetry(s:AircraftCombatState,id:EquipmentDefinitionI
 export function equipmentStatuses(w:CombatWorld):StatusPresentation[] {
   const s=w.aircraft,t=s.coreState.time,stats=getEffectiveAircraftStats(s),result:StatusPresentation[]=[];
   const chest=releaseState(s).waitingChest;
-  if(chest&&!chest.cancelled)result.push({id:"core_227:chest",group:"buff",name:"Chờ Đợi Xứng Đáng?",icon:{kind:"core",id:"core_227"},description:WAITING_CHEST_DESCRIPTION,source:"Lõi 227",stacks:0,remaining:chest.claimed?Infinity:chest.remaining,duration:500,priority:100,timerKind:"cooldown",showNumericTimer:!chest.claimed,timeLabel:chest.claimed?"Đã mở Rương":undefined,rewardMessage:chest.claimed?`Đã nhận phần thưởng: ${chest.rewardLabel}`:undefined});
+  if(chest&&!chest.cancelled)result.push({id:"core_227:chest",group:"buff",name:"Chờ đợi xứng đáng?",icon:{kind:"core",id:"core_227"},description:WAITING_CHEST_DESCRIPTION,source:"Lõi 227",stacks:0,remaining:chest.claimed?Infinity:chest.remaining,duration:500,priority:100,timerKind:"cooldown",showNumericTimer:!chest.claimed,timeLabel:chest.claimed?"Đã mở Rương":undefined,rewardMessage:chest.claimed?`Đã nhận phần thưởng: ${chest.rewardLabel}`:undefined});
   for(const d of activeEquipmentFamilies(s).values()) {
     const f=Number(d.family!.slice(2)),e=equipmentEffect(s,f),active=(f===25?e.bonusUntil??e.until:e.until)>t,cooldown=!e.cooldownPending&&e.ready>t;
     const dynamic=[2,3,4,5,6,10,11,12,13,14,17,18,19,20,21,23,24,25,26,28,29,30,32,33,34,35].includes(f);

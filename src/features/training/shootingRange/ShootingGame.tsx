@@ -574,7 +574,7 @@ export const ShootingGame: React.FC<ShootingGameProps> = ({
           if ((e.target as HTMLElement).closest("button")) return;
           handleFire();
         }}
-        className="relative flex-1 w-full min-h-0 bg-gradient-to-b from-sky-950 via-slate-900 to-amber-950/40 overflow-hidden cursor-crosshair"
+        data-game-surface="true" className="relative flex-1 w-full min-h-0 bg-gradient-to-b from-sky-950 via-slate-900 to-amber-950/40 overflow-hidden cursor-crosshair"
       >
         {/* Background FPS Shooting Range Environment with 3D Grass Field, Mountains & Trees */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">

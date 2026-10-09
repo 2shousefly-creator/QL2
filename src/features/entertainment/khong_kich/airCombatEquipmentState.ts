@@ -13,7 +13,9 @@ export interface EquipmentEffectState { cooldownDuration?: number; cooldownPendi
 export interface EquipmentMark { until: number; stacks: number; tick: number }
 export interface EquipmentVisual { id: number; family: number; x: number; y: number; fromX?: number; fromY?: number; size: number; start: number; duration: number; target?: number; player?: boolean; legendary?: boolean }
 export interface EquipmentLoot { id: number; definitionId: EquipmentRewardId; x: number; y: number; age: number; collection?: { age:number; x:number; y:number; source:string } }
+export interface EquipmentRewardChoice { source:string; options:EquipmentDefinitionId[]; remaining:number; transactionId:number; afterRewards?:EquipmentRewardId[] }
 export interface EquipmentState {
+  rewardChoices?: EquipmentRewardChoice[];
   rewardsLocked: boolean;
   pendingDrops: { x:number; y:number; elite:boolean; wave:number }[];
   nextInstanceId: number;
@@ -135,11 +137,28 @@ export function sacrificeEquipment(s: AircraftCombatState, random:()=>number, tr
   for(const key of Object.keys(s.coreState.shields))if(key.startsWith("equipment:"))delete s.coreState.shields[key];
   e.pendingDrops=[];
   e.componentPage=0;e.completedPage=0;
-  const families=Array.from({length:36},(_,i)=>i+1);
-  for(let i=0;i<3;i++){
-    const index=Math.min(families.length-1,Math.max(0,Math.floor(random()*families.length)));
-    const [family]=families.splice(index,1);
-    receiveEquipmentReward(s,`HL${String(family).padStart(2,"0")}`,"core_228",undefined,transactionId);
-  }
+  e.rewardChoices=[];
+  queueEquipmentChoice(s,"HL",10,3,"core_228",random,transactionId);
   e.rewardsLocked=true;
+}
+
+/** Authoritative reward queue: one offered set, validated before inventory mutation. */
+export function queueEquipmentChoice(s:AircraftCombatState,prefix:"TP"|"HL",count:number,picks:number,source:string,random:()=>number,transactionId:number){
+ const pool=Object.keys(EQUIPMENT_CATALOG).filter(id=>id.startsWith(prefix)) as EquipmentDefinitionId[],options:EquipmentDefinitionId[]=[];
+ while(options.length<count&&pool.length)options.push(pool.splice(Math.min(pool.length-1,Math.floor(random()*pool.length)),1)[0]);
+ const choice:EquipmentRewardChoice={source,options,remaining:picks,transactionId};
+ (equipmentState(s).rewardChoices??=[]).push(choice);
+ return choice;
+}
+export function selectEquipmentReward(s:AircraftCombatState,id:EquipmentDefinitionId):boolean {
+ const e=equipmentState(s),choice=e.rewardChoices?.[0];
+ if(!choice||!choice.options.includes(id)||choice.remaining<=0)return false;
+ if(choice.source!=="core_228"&&equipmentRewardsLocked(s))return false;
+ receiveEquipmentReward(s,id,choice.source,undefined,choice.transactionId);
+ choice.options=choice.options.filter(option=>option!==id);choice.remaining--;
+ if(!choice.remaining){
+   for(const reward of choice.afterRewards??[])grantEquipmentReward(s,reward,choice.source,undefined,choice.transactionId);
+   e.rewardChoices!.shift();
+ }
+ return true;
 }

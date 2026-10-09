@@ -52,7 +52,7 @@ export const RankTierProgress: React.FC<RankTierProgressProps> = ({
 
   return (
     <div
-      className={`relative z-10 mx-auto my-0 ${badgeSize ? "" : "w-full max-w-full"} ${className}`}
+      data-ui-protected="true" className={`relative z-10 mx-auto my-0 ${badgeSize ? "" : "w-full max-w-full"} ${className}`}
       style={widthStyle}
       role="progressbar"
       aria-valuemin={1}

@@ -21,7 +21,7 @@ export const XpProgressBar: React.FC<XpProgressBarProps> = ({
 }) => {
   if (isMaxRank) {
     return (
-      <div className={`w-full max-w-lg mx-auto ${className}`}>
+      <div data-ui-protected="true" className={`w-full max-w-lg mx-auto ${className}`}>
         <div className="relative h-9 rounded-xl bg-slate-900 border border-amber-500/40 p-1 flex items-center justify-center shadow-lg overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-r from-amber-500/20 via-yellow-500/30 to-amber-500/20" />
           <span className="relative z-10 font-bold text-amber-300 text-sm tracking-wide">
@@ -41,7 +41,7 @@ export const XpProgressBar: React.FC<XpProgressBarProps> = ({
   const requiredXpStr = formatXp(requiredTicks);
 
   return (
-    <div className={`w-full max-w-lg mx-auto ${className}`}>
+    <div data-ui-protected="true" className={`w-full max-w-lg mx-auto ${className}`}>
       {/* Label Row */}
       <div className="flex items-center justify-between text-xs sm:text-sm font-semibold mb-1.5 px-1">
         <div className="flex items-center gap-1.5">

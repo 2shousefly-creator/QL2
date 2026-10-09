@@ -1,3 +1,4 @@
+import { useUiSkin } from "./UiSkinContext";
 import React from "react";
 import { CoreAmbientLayer } from "./CoreAmbientLayer";
 import type { CoreSceneLayer, CoreSceneVariant } from "./coreVisualTypes";
@@ -14,10 +15,11 @@ type CoreSceneProps = {
 };
 /** Decoration occupies its own clipped plane; content and overlay semantics stay intact. */
 export const CoreScene: React.FC<CoreSceneProps> = ({ variant, reducedMotion, density = "quiet", className = "", children, layers = [], style, dynamicLayer }: CoreSceneProps) => {
+  const flat=useUiSkin()==="flat"&&variant!=="uniform"&&variant!=="farm";
   return (
     <div className={`core-scene core-scene--${variant} ${className}`} style={style}
       data-core-motion={reducedMotion ? "reduced" : undefined}>
-      <div className="core-scene__decor" aria-hidden="true">
+      {!flat&&<div className="core-scene__decor" aria-hidden="true">
         <div className="core-scene__environment" />
         <div className="core-scene__depth" />
         {layers.map(layer => <div key={layer.id} className={`core-scene__layer core-scene__layer--${layer.depth} ${layer.className ?? ""}`} style={layer.style}>
@@ -29,6 +31,7 @@ export const CoreScene: React.FC<CoreSceneProps> = ({ variant, reducedMotion, de
         <div className="core-scene__veil" />
         <div className="core-scene__vignette" />
       </div>
+      }
       {children}
     </div>
   );

@@ -5,7 +5,7 @@ import { getEffectiveAircraftStats } from './airCombatAircraft';
 
 /** Applied at receipt, independently of Max HP and regeneration stat conversion. */
 export function getRecoveryReceivedMultiplier(state: AircraftCombatState): number {
-  return 1 + P[22].recoveryReceived * equipmentScale(state, 22);
+  return (1 + P[22].recoveryReceived * equipmentScale(state,22)) * (state.selectedCores.includes("core_200")?1.5:1);
 }
 
 export function getHealingReceivedMultiplier(state: AircraftCombatState, maxHp?:number): number {
@@ -17,6 +17,5 @@ export function getHealingReceivedMultiplier(state: AircraftCombatState, maxHp?:
 }
 
 export function getShieldReceivedMultiplier(state: AircraftCombatState, temporary = true): number {
-  return getRecoveryReceivedMultiplier(state) *
-    (temporary && state.selectedCores.includes("core_200") ? 1.5 : 1);
+  return getRecoveryReceivedMultiplier(state);
 }

@@ -34,7 +34,7 @@ export const RankBadge: React.FC<RankBadgeProps> = ({
 
   return (
     <div
-      className={`relative z-0 inline-flex min-w-0 shrink-0 items-center justify-center select-none ${[...classes].join(" ")}`}
+      data-ui-protected="true" className={`relative z-0 inline-flex min-w-0 shrink-0 items-center justify-center select-none ${[...classes].join(" ")}`}
       style={{
         width: `var(--rank-badge-size, ${size}px)`,
         height: `var(--rank-badge-size, ${size}px)`,

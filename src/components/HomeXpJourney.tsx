@@ -74,7 +74,7 @@ export const HomeXpJourney: React.FC<HomeXpJourneyProps> = ({
     : 100;
 
   return (
-    <div className={`w-full relative select-none ${className}`}>
+    <div data-ui-protected="true" className={`w-full relative select-none ${className}`}>
       {/* Centered % Progress Label above the Bar (No "Kinh nghiệm (XP)" text) */}
       <div className="flex items-center justify-center gap-1.5 text-xs sm:text-sm font-bold mb-1 text-center">
         <span className={isFull ? "text-amber-300 font-extrabold" : "theme-text-accent font-extrabold"}>

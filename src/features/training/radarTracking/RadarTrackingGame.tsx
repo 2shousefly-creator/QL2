@@ -688,7 +688,7 @@ export const RadarTrackingGame: React.FC<Props> = ({
       </div>
 
       {/* Main Radar Arena Canvas */}
-      <div className="relative w-full max-w-[340px] sm:max-w-[420px] aspect-square flex items-center justify-center">
+      <div data-game-surface="true" className="relative w-full max-w-[340px] sm:max-w-[420px] aspect-square flex items-center justify-center">
         <canvas
           ref={canvasRef}
           onPointerDown={handlePointerDown}

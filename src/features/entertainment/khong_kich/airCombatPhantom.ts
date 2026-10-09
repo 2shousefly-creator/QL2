@@ -10,7 +10,7 @@ export const HAWKEYE_PROJECTILE_RADIUS = 2.8 * .8;
 /** Phantom and HawkEye resolve all basic-shot speed changes at firing time. */
 export function playerBasicProjectileSpeed(state: AircraftCombatState): number {
   const reappearance = (state.coreState.timers.reappearanceBuff ?? 0) > state.coreState.time;
-  return 2 * (hasCore(state, 206) ? .8 : 1) * (hasCore(state, 111) ? 1440 : 480)
+  return 2 * (hasCore(state,54)?1.5:1) * (hasCore(state, 206) ? .8 : 1) * (hasCore(state, 111) ? 1440 : 480)
     * (reappearance ? 1 + SKILL_CORE_VALUES.reappearanceSpeedBonus : 1);
 }
 

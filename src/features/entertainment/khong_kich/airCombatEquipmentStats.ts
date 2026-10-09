@@ -3,7 +3,7 @@ import type { AircraftCombatState, EffectiveAircraftStats } from "./airCombatTyp
 import { EQUIPMENT_CATALOG } from "./airCombatEquipmentCatalog";
 import { equipmentState, equipmentScale, equipmentEffect } from "./airCombatEquipmentState";
 export function canSkillsCrit(s: AircraftCombatState) { return s.selectedCores.includes("core_053") || equipmentScale(s,8)>0; }
-export function getTempestJewelledCritDamageBonus(s: AircraftCombatState) { return s.selectedCores.includes("core_053") ? P[8].synergy*equipmentScale(s,8) : 0; }
+export function getTempestJewelledCritDamageBonus(s: AircraftCombatState) { return 0; }
 export function equipmentUntargetable(s: AircraftCombatState) {return equipmentScale(s,3)>0 && equipmentEffect(s,3).until>s.coreState.time;}
 export function equipmentGeminiMode(s: AircraftCombatState, hp:number, resource:number) {
   const h=s.currentHp/hp,r=s.currentResource/resource;

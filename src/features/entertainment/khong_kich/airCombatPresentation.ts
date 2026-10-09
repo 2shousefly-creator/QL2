@@ -56,7 +56,7 @@ function hawkEyeTimeLabel(remaining: number | null) {
 }
 export function getSkillTooltipModel(state: AircraftCombatState, id: SkillId) {
  const config=SKILL_CONFIGS[id],v=getSkillRuntimeValues(state,id),rank=skillRank(state,id),rows=SKILL_RANKS[id];
- const free=hasCore(state,84)&&(state.coreState.skillCasts+1)%4===0;
+ const free=hasCore(state,84)&&(state.coreState.skillCasts+1)%3===0;
  const stats=getEffectiveAircraftStats(state);
  const castMultiplier=state.coreState.deferredCooldowns[id]??(free?1.1:1);
  const cooldown=resolveSkillCooldown(v.cooldown,stats.skillHaste,castMultiplier);
@@ -70,10 +70,10 @@ export function getSkillTooltipModel(state: AircraftCombatState, id: SkillId) {
  }
  const coreRows:string[]=[];
  if(ultimateCastDisabled(state,id))coreRows.push("Tập Trung Chuyên Môn: khóa dùng chủ động Kỹ Năng Tối Thượng; cấp và nội tại vẫn giữ nguyên.");
- if(hasCore(state,97)&&!isUltimate(id))coreRows.push("Tập Trung Chuyên Môn: +20% Sát Thương Kỹ Năng; chi phí đã giảm 20%, hồi chiêu cơ bản đã giảm 25%.");
+ if(hasCore(state,97)&&!isUltimate(id))coreRows.push("Tập Trung Chuyên Môn: +35% Sát Thương Kỹ Năng; chi phí đã giảm 20%, hồi chiêu cơ bản đã giảm 25%.");
  if(canSkillsCrit(state))coreRows.push("Kỹ năng có thể chí mạng.");
- if(hasCore(state,190))coreRows.push("Nén Năng Lượng: +20% Sát Thương Kỹ Năng; chi phí đã gồm +10%.");
- if(expansionState(state).primarySkill===id)coreRows.push("Chủ Lực: +20% Sát Thương Kỹ Năng; chi phí và hồi chiêu cơ bản đã giảm 20%.");
+ if(hasCore(state,190))coreRows.push("Nén năng lượng: +25% Sát Thương Kỹ Năng; chi phí đã gồm +10%.");
+ if(expansionState(state).primarySkill===id)coreRows.push("Học thuyết một mũi nhọn: +25% sát thương và sức mạnh hồi máu/lá chắn do kỹ năng tạo; chi phí và hồi chiêu cơ bản đã giảm 25%.");
  const rankRows=rows.map(row=>({...row,displayDescription:resolveTooltipValues(row.upgradeDescription,
   {stats,currentHp:state.currentHp,skillCost:v.cost})}));
  return {title:config.name,description:rank?effectiveSkillDescription(state,id):"Chưa học kỹ năng. Có thể giữ Điểm Kỹ Năng để đầu tư sau.",detailRows,coreRows,rank,rankRows,
@@ -160,9 +160,9 @@ const TIMED_STATUSES = [
 
 // Read canonical runtime timers only. Core 106 deliberately has no entry.
 const CORE_COOLDOWN_PRESENTATIONS: readonly {row:number;timer:string;duration:number;shield?:string;active?:string;activeDuration?:number;charge?:string}[] = [
-  {row:61,timer:"reactiveArmorCd",duration:10,active:"reactiveArmor",activeDuration:5},
-  {row:76,timer:"reactiveShieldCd",duration:10,shield:"reactive"},
-  {row:81,timer:"skillShieldCd",duration:10,shield:"skill"},
+  {row:61,timer:"reactiveArmorCd",duration:8,active:"reactiveArmor",activeDuration:5},
+  {row:76,timer:"reactiveShieldCd",duration:12,shield:"reactive"},
+  {row:81,timer:"skillShieldCd",duration:8,shield:"skill"},
   {row:83,timer:"counterCd",duration:15,active:"counterActive",activeDuration:5},
   {row:149,timer:"bountyCooldown",duration:20,active:"bountyMark",activeDuration:5},
   {row:99,timer:"reserveShieldCd",duration:15,shield:"reserve"},
@@ -310,12 +310,12 @@ export function getStatusPresentations(world: CombatWorld): StatusPresentation[]
   for(const row of [107,114,116,118,121])if(hasCore(s,row)){
     const core=getCoreDefinition(coreId(row)),remaining=[114,116].includes(row)?(c.timers.sameTarget??0)-c.time:Infinity;
     if([114,116].includes(row)&&remaining<=0)continue;
-    const detail=row===121?`Phản Vật Chất: ${Math.round((c.stacks.antimatter??0)*100)}% Hỏa Lực / 350% Hỏa Lực`:row===107?`Graze: ${c.stacks.graze??0}/5`:[114,116].includes(row)?coreStackLabel(s,core.id)??core.description:core.description;
+    const detail=row===121?`Phản Vật Chất: ${Math.round(c.stacks.antimatter??0)} sát thương / 450% Hỏa Lực`:row===107?`Graze: ${c.stacks.graze??0}/4`:[114,116].includes(row)?coreStackLabel(s,core.id)??core.description:core.description;
     let badgeText: string | undefined, badgeKind: StatusPresentation["badgeKind"];
-    if (row === 107) { badgeText = `${c.stacks.graze ?? 0}/5`; badgeKind = "progress"; }
-    if ([114,116].includes(row)) { badgeText = `${Math.min(4,Math.floor((c.stacks.sameTargetHits??0)/5))}/4`; badgeKind = "charge"; }
+    if (row === 107) { badgeText = `${c.stacks.graze ?? 0}/4`; badgeKind = "progress"; }
+    if ([114,116].includes(row)) { badgeText = `${Math.min(4,Math.floor((c.stacks.sameTargetHits??0)/4))}/4`; badgeKind = "charge"; }
     if (row === 118) { badgeText = `+${Math.round(crowdDamageBonus(world) * 100)}%`; badgeKind = "bonus"; }
-    if (row === 121) { badgeText = `${Math.round((c.stacks.antimatter ?? 0) * 100)}%`; badgeKind = "percent"; }
+    if (row === 121) { badgeText = `${Math.round(c.stacks.antimatter ?? 0)}`; badgeKind = "percent"; }
     result.push({id:core.id,group:"buff",name:core.name,icon:{kind:"core",id:core.id},
       description:row===118?`${core.description} Hiện tại: +${number(crowdDamageBonus(world) * 100)}% mọi sát thương.`:detail===core.description?detail:`${core.description} ${detail}`,
       source:"Lõi",stacks:1,badgeText,badgeKind,remaining,duration:[114,116].includes(row)?3:Infinity,priority:[114,116].includes(row)?80:45});
@@ -329,16 +329,16 @@ export function getStatusPresentations(world: CombatWorld): StatusPresentation[]
     result.push({ id: core.id, group: "buff", name: core.name, icon: { kind: "core", id: core.id },
       description: `${core.description} Đang tồn tại: ${live.length}.`, source: "Lõi", stacks: live.length,
       badgeText: `×${live.length}`, badgeKind: "stack", remaining: Math.min(...live.map(v => v.until)) - world.elapsed,
-      duration: 2.5, priority: 80 });
+      duration: 3, priority: 80 });
   }
   const conditional = [
     { row: 49, on: c.time - c.lastMove >= 2 },
-    { row: 60, on: c.time - c.lastDamage >= 4 },
-    { row: 62, on: s.status.regenDisabledUntil<=c.time && s.currentHp < maxHp * .2 },
+    { row: 60, on: c.time - c.lastDamage >= 3 || (c.timers.stableBarrelGrace??0)>c.time },
+    { row: 62, on: s.status.regenDisabledUntil<=c.time && s.currentHp < maxHp * .22 },
     { row: 63, on: s.currentHp < maxHp * .35 },
     { row: 75, on: (c.stacks.slaying || 0) > 0, stacks: c.stacks.slaying },
     { row: 82, on: c.time - c.lastDamage >= 4 },
-    { row: 92, on: s.status.regenDisabledUntil<=c.time && c.time - c.lastDamage >= 5 },
+    { row: 92, on: s.status.regenDisabledUntil<=c.time },
     { row: 100, on: true },
   ];
   for (const entry of conditional) if (entry.on && hasCore(s, entry.row)) {
@@ -367,7 +367,7 @@ export function getStatusPresentations(world: CombatWorld): StatusPresentation[]
   if (shields.length) {
     const first = shields.reduce((a, b) => a[1].until < b[1].until ? a : b);
     result.push({ id: "shield", group: "buff", name: "Lá chắn", icon: { kind: "status", id: "shield" },
-      description: `Lá chắn còn ${Math.round(shields.reduce((n, [, v]) => n + v.amount, 0))} Máu hấp thụ.${hasCore(s,200) ? ` Tái Chế Lá Chắn: dung lượng +50%; các lớp hiện tại đã hấp thụ ${amount(shields.reduce((n,[,v])=>n+(v.absorbed??0),0))} sát thương. Khi từng lớp kết thúc, phát nổ bằng 160% lượng lớp đó đã hấp thụ trong bán kính 120px.` : ""}`, source: "Lõi",
+      description: `Lá chắn còn ${Math.round(shields.reduce((n, [, v]) => n + v.amount, 0))} Máu hấp thụ.${hasCore(s,200) ? ` Lá chắn sinh năng: dung lượng +50%; các lớp hiện tại đã hấp thụ ${amount(shields.reduce((n,[,v])=>n+(v.absorbed??0),0))} sát thương. Khi từng lớp kết thúc, phát nổ bằng 160% lượng lớp đó đã hấp thụ trong bán kính 120px.` : ""}`, source: "Lõi",
       stacks: 1, remaining: first[1].until - c.time, duration: first[1].duration ?? (first[0] === "reserve" ? 4 : 3), priority: 95 });
   }
   const acid = (c.timers.acidArmor || 0) - c.time;
@@ -391,7 +391,7 @@ export function getStatusPresentations(world: CombatWorld): StatusPresentation[]
   }
   const status=s.status;
   const timed = [
-    ["stunnedUntil","Choáng","stun",hasCore(s,203)?"Không thể di chuyển; Nhiễu Chủ Động vẫn cho bắn thường và dùng kỹ năng.":"Không thể di chuyển, dùng kỹ năng hoặc bắn thường."],
+    ["stunnedUntil","Choáng","stun",hasCore(s,203)?"Không thể di chuyển; Ý chí bất khuất vẫn cho bắn thường và dùng kỹ năng.":"Không thể di chuyển, dùng kỹ năng hoặc bắn thường."],
     ["skillLockedUntil","Khóa kỹ năng","skill_lock","Tạm khóa kỹ năng; vẫn di chuyển và bắn thường."],
     ["resourceJammedUntil","Nhiễu tài nguyên","resource_jam","Giảm hồi tài nguyên; giữ nguyên tài nguyên đang có."],
     ["armorBrokenUntil","Vỡ giáp","armor","-35% Giáp."],
@@ -428,7 +428,7 @@ function skillCoreStatuses(world:CombatWorld):StatusPresentation[] {
   if((skillRank(s, "missile_swarm") >= 3)){
     for(const salvo of r.salvos)add(130,{id:`core_130:${salvo.id}`,badgeText:`${salvo.data}/${V.dataLimit}`,badgeKind:"stack",progress:salvo.data/V.dataLimit,timeLabel:"Salvo đang bay",description:`${getSkillTooltipModel(s,"missile_swarm").description} Còn ${salvo.pending+salvo.live.size} tên lửa chưa kết thúc.`});
     const remaining=(c.timers.tacticalData||0)-c.time;
-    if(remaining>0)add(130,{remaining,duration:V.dataDuration,badgeText:`+${number(hasCore(s,95)?0:(c.stacks.tacticalData||0)*V.dataCrit*100)}%`,badgeKind:"percent",showNumericTimer:true,description:getSkillTooltipModel(s,"missile_swarm").description+(hasCore(s,95)?" Nghịch Lý Bạo Kích đang khóa tỷ lệ chí mạng ở 25%.":"")});
+    if(remaining>0)add(130,{remaining,duration:V.dataDuration,badgeText:`+${number(hasCore(s,95)?0:(c.stacks.tacticalData||0)*V.dataCrit*100)}%`,badgeKind:"percent",showNumericTimer:true,description:getSkillTooltipModel(s,"missile_swarm").description+(hasCore(s,95)?" Nghịch lý bạo kích đang khóa tỷ lệ chí mạng ở 25%.":"")});
   }
   const reappearance=(c.timers.reappearanceBuff||0)-c.time;
   if((skillRank(s, "invisibility") >= 5)&&reappearance>0)add(142,{remaining:reappearance,duration:V.reappearanceDuration,showNumericTimer:true,timeLabel:"Cửa sổ bắn cường hóa"});
@@ -441,7 +441,7 @@ function skillCoreStatuses(world:CombatWorld):StatusPresentation[] {
 export function getCoreTelemetryPresentation(state:AircraftCombatState,id:CoreId):string[] {
   const row=Number(id.slice(5)),c=state.coreState,stats=getEffectiveAircraftStats(state);
   if(row===210)return [];
-  if(row===227){const chest=state.coreState.release?.waitingChest;return chest?.claimed?[`Đã nhận phần thưởng: ${chest.rewardLabel}`]:[chest?.cancelled?"Đã hủy bởi Cái Giá Phải Trả":`Còn ${number(chest?.remaining??500)} giây chiến đấu`];}
+  if(row===227){const chest=state.coreState.release?.waitingChest;return chest?.claimed?[`Đã nhận phần thưởng: ${chest.rewardLabel}`]:[chest?.cancelled?"Đã hủy bởi Cái giá phải trả":`Còn ${number(chest?.remaining??500)} giây chiến đấu`];}
   if(row===228)return ["Đã nhận 2 Trang Bị Huyền Thoại thuộc 2 family khác nhau. Mọi nguồn nhận Trang Bị đã khóa tới hết run."];
   if(row>=223){const t=c.telemetry?.[id]??{};return row===224?[`Trang bị rơi thêm: ${t.extraDrops??0}`,`Quái thường: ${t.normalDrops??0} · Tinh Anh: ${t.eliteDrops??0}`]:[`Trang Bị/Vật Phẩm đã nhận: ${t.itemsReceived??0}`];}
   const values=c.telemetry?.[id]??{},lines:string[]=[];
@@ -473,31 +473,31 @@ export function getCoreTelemetryPresentation(state:AircraftCombatState,id:CoreId
   const bonus=(value:number,label:string)=>lines.push(`Đang cung cấp: +${number(value)} ${label}`);
   if(row>=46&&row<=48)bonus(c.stacks[id]??0,row===46?"Hỏa Lực":row===47?"Giáp":"Máu Tối Đa");
   if(row===54)bonus(((c.stacks.fireRateConversion??1)-1)*100,"% Basic Damage từ chuyển đổi Tốc Độ Bắn");
-  if(row===96)bonus(67,"Điểm Hồi Kỹ Năng");
-  if(row===105)bonus(25,"% Tỷ Lệ Chí Mạng");
-  if(row===91)bonus(Math.min(.6,Math.max(0,1-state.currentHp/stats.maxHp)*.6)*100,"% mọi sát thương");
-  if(row===49){const on=c.time-c.lastMove>=2;bonus(on?30:0,"% Hỏa Lực");bonus(on?60:0,"% Giáp");}
-  if(row===61)bonus(active("reactiveArmor")?45:0,"Giáp");
-  if(row===63){const on=state.currentHp<stats.maxHp*.35;bonus(on?50:0,"Hỏa Lực");bonus(on?35:0,"Giáp");}
-  if(row===66)lines.push(`Cộng dồn: ${c.time-c.lastKill<=4?c.stacks.combo??0:0} / 5`);
+  if(row===96)bonus(90,"Điểm Hồi Kỹ Năng");
+  if(row===105)bonus(30,"% Tỷ Lệ Chí Mạng");
+  if(row===91)bonus(Math.min(.8,.1+Math.max(0,1-state.currentHp/stats.maxHp)*.7)*100,"% mọi sát thương");
+  if(row===49){const on=c.time-c.lastMove>=2;bonus(on?40:0,"% Hỏa Lực");bonus(on?60:0,"% Giáp");}
+  if(row===61)bonus(active("reactiveArmor")?65:15,"Giáp");
+  if(row===63){const on=state.currentHp<stats.maxHp*.35;bonus(on?65:15,"Hỏa Lực");bonus(on?45:10,"Giáp");}
+  if(row===66)lines.push(`Cộng dồn: ${c.time-c.lastKill<=6?c.stacks.combo??0:0} / 5`);
   if(row===71)bonus(active("tacticalRate")?36:0,"% Tốc Độ Bắn Cộng Thêm");
-  if(row===75){lines.push(`Cộng dồn: ${c.stacks.slaying??0} / 5`);bonus((c.stacks.slaying??0)*4,"% Hỏa Lực");}
-  if(row===78)bonus(active("reactor")?50:0,"% Hồi Tài Nguyên");
+  if(row===75){lines.push(`Cộng dồn: ${c.stacks.slaying??0} / 5`);bonus((c.stacks.slaying??0)*8,"% Hỏa Lực");}
+  if(row===78)bonus(active("reactor")?50:20,"% Hồi Tài Nguyên");
   if(row===82)bonus(c.time-c.lastDamage>=4?72:0,"% Tốc Độ Bắn Cộng Thêm");
   if(row===56)lines.push("Đang cung cấp: +3% Tỷ Lệ Chí Mạng; +22% Sát Thương Chí Mạng (trước giới hạn).");
   if(row===111)lines.push("Tốc độ đạn thường: 1440 px/s.");
   if(row===149)BOUNTY_REWARDS.forEach((reward,index)=>{const count=c.stacks[`bountyReward:${index}`]??0;if(count)lines.push(`+${number(count*reward.amount*("percent" in reward?100:1))}${"percent" in reward?"%":""} ${reward.label} (${count} lần)`);});
-  if(row===85)lines.push("Đang cung cấp: +70 Hỏa Lực; −45 Giáp.");
-  if(row===86)lines.push("Đang cung cấp: +80% Hồi Tài Nguyên; −50% Tài Nguyên Tối Đa.");
-  if(row===74)lines.push("Đang cung cấp: +15% Tỷ Lệ Chí Mạng; giảm 0,3s hồi chiêu ba Skill cơ bản/đòn chí mạng.");
-  if(row===87)lines.push("Đang cung cấp: +25% Tỷ Lệ Chí Mạng; +40% Sát Thương Chí Mạng.");
-  if(row===94)lines.push("Đang cung cấp: +50% Hỏa Lực; +25% Tỷ Lệ Chí Mạng; −40% Máu Tối Đa.");
-  if(row===95)lines.push("25% Tỷ Lệ Chí Mạng; +100% Sát Thương Chí Mạng.");
-  if(row===97)lines.push("Khóa chủ động Kỹ Năng Tối Thượng; 3 kỹ năng thường +20% sát thương, -25% hồi chiêu cơ bản, -20% chi phí.");
-  if(row===100){bonus(state.currentHp>stats.maxHp*.7?45:state.currentHp>=stats.maxHp*.3?22:0,"Hỏa Lực");bonus(state.currentHp<stats.maxHp*.3?45:state.currentHp<=stats.maxHp*.7?22:0,"Giáp");}
+  if(row===85)lines.push("Đang cung cấp: +100 Hỏa Lực; −50 Giáp.");
+  if(row===86)lines.push("Đang cung cấp: +120% Hồi Tài Nguyên; −50% Tài Nguyên Tối Đa.");
+  if(row===74)lines.push("Đang cung cấp: +15% Tỷ Lệ Chí Mạng; giảm 0,4s hồi chiêu ba Skill cơ bản/đòn chí mạng.");
+  if(row===87)lines.push("Đang cung cấp: +30% Tỷ Lệ Chí Mạng; +60% Sát Thương Chí Mạng.");
+  if(row===94)lines.push("Đang cung cấp: +50% Hỏa Lực; +30% Tỷ Lệ Chí Mạng; −35% Máu Tối Đa.");
+  if(row===95)lines.push("25% Tỷ Lệ Chí Mạng; +120% Sát Thương Chí Mạng.");
+  if(row===97)lines.push("Khóa chủ động Kỹ Năng Tối Thượng; 3 kỹ năng thường +35% sát thương, -25% hồi chiêu cơ bản, -20% chi phí.");
+  if(row===100){bonus(state.currentHp>stats.maxHp*.7?55:state.currentHp<stats.maxHp*.3?15:35,"Hỏa Lực");bonus(state.currentHp<stats.maxHp*.3?55:state.currentHp>stats.maxHp*.7?10:35,"Giáp");}
   const key=({76:"reactive",81:"skill",99:"reserve",104:"overheal"} as Record<number,string>)[row];
-  if(key){const shield=c.shields[key];const amount=shield&&shield.until>c.time?shield.amount:0;lines.push(`Khiên hiện tại: ${Math.round(amount).toLocaleString("vi-VN")}${row===104?` / ${Math.round(stats.maxHp*.15*getRecoveryReceivedMultiplier(state)).toLocaleString("vi-VN")}`:""}`);}
-  if(row===121)lines.push(`Kho hiện tại: ${number((c.stacks.antimatter??0)*100)}% Hỏa Lực / 350% Hỏa Lực`);
+  if(key){const shield=c.shields[key];const amount=shield&&shield.until>c.time?shield.amount:0;lines.push(`Khiên hiện tại: ${Math.round(amount).toLocaleString("vi-VN")}${row===104?` / ${Math.round(stats.maxHp*.20).toLocaleString("vi-VN")}`:""}`);}
+  if(row===121)lines.push(`Kho hiện tại: ${number(c.stacks.antimatter??0)} sát thương / 450% Hỏa Lực`);
   if(row===126)bonus(active("activeCooling")?V.coolingMana*100:0,"% Mana Tối Đa hồi dần trong 5s");
   if(row===130){const stacks=active("tacticalData")?c.stacks.tacticalData??0:0;lines.push(`Dữ Liệu đang dùng: ${stacks} / ${V.dataLimit}`);bonus(hasCore(state,95)?0:stacks*V.dataCrit*100,"% Tỷ Lệ Chí Mạng");}
   if(row===208&&hasCore(state,208))lines.push(core208LiveLabel(state));

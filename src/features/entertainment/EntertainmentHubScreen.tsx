@@ -1,3 +1,4 @@
+import { UiSkinProvider } from "../../components/core-visual/UiSkinContext";
 import { CommandIcon } from "../../components/core-visual/CommandIcon";
 import { CommandLobbyArt } from "../../components/core-visual/CommandLobbyArt";
 import gameIcons from "../../assets/core-art/v1/entertainment/game-icons.png?url";
@@ -60,13 +61,14 @@ export const EntertainmentHubScreen: React.FC<EntertainmentHubScreenProps> = ({
   // If a specific minigame is active, render that minigame's screen
   if (activeGame === "khong_kich") {
     return (
+      <UiSkinProvider skin="legacy">
       <Suspense fallback={<div role="status" className="p-6 text-slate-200">Đang tải trò chơi… <button onClick={() => setActiveGame(null)}>Quay lại</button></div>}>
       <KhongKichScreen
         gameState={gameState}
         onUpdateGameState={onUpdateGameState}
         onBack={() => setActiveGame(null)}
       />
-      </Suspense>
+      </Suspense></UiSkinProvider>
     );
   }
 

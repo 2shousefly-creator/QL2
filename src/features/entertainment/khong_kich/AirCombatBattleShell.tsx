@@ -1,3 +1,6 @@
+import { equipmentState } from "./airCombatEquipmentState";
+import { EQUIPMENT_CATALOG } from "./airCombatEquipmentCatalog";
+import { selectEquipmentReward } from "./airCombatEquipmentState";
 import { terraHud } from './airCombatTerraRuntime';
 import { CombatGraphicsControl } from './CombatGraphicsControl';
 import { SkillUpgradeIcon } from './SkillUpgradeIcon';
@@ -109,7 +112,7 @@ export interface AirCombatBattleRuntime {
   complete(): void;
 }
 
-type PauseReason = "loading" | "user" | "core" | "tooltip" | "exit" | "hidden" | "coreList" | "primarySkill" | "equipment";
+type PauseReason = "loading" | "user" | "core" | "tooltip" | "exit" | "hidden" | "coreList" | "primarySkill" | "equipment" | "equipmentReward";
 const STATUS_UI_INTERVAL_MS = 100;
 
 interface SkillPressState {
@@ -868,15 +871,23 @@ export const AirCombatBattleShell: React.FC<AirCombatBattleProps> = ({
         </AppModal>
       )}
 
+      {!!equipmentState(worldRef.current.aircraft).rewardChoices?.length && !coreChoices && !showExitConfirm && <AppModal archetype="transaction" layer="exclusive-dialog" layout="viewport-safe" closeOnEscape={false} labelledBy="air-equipment-reward-title" reducedMotion={reducedMotion}>
+        <OverlayHeader><h2 id="air-equipment-reward-title" className="modal-title">CHỌN TRANG BỊ</h2><p>Còn {equipmentState(worldRef.current.aircraft).rewardChoices![0].remaining} lựa chọn trong danh sách này</p></OverlayHeader>
+        <OverlayBody><div className="air-primary-choices">{equipmentState(worldRef.current.aircraft).rewardChoices![0].options.map(id=><button key={id} type="button" onClick={()=>{
+          const world=worldRef.current;if(!selectEquipmentReward(world.aircraft,id))return;
+          if(!equipmentState(world.aircraft).rewardChoices?.length){world.pauseReasons.delete("equipmentReward");const next=ensureCoreSelection(world);if(next){setCoreChoices(next);setPauseReason("core",true);}}
+          setHud(makeHudSnapshot(world,true,pauseLabel(world.pauseReasons)));
+        }}><CombatUiIcon kind="equipment" fallback="" id={id}/><strong>{EQUIPMENT_CATALOG[id].name}</strong></button>)}</div></OverlayBody>
+      </AppModal>}
       {showPrimaryChoice && !coreChoices && !showEquipment && !showExitConfirm && <AppModal key="primary-skill" archetype="transaction" layer="exclusive-dialog" layout="viewport-safe" closeOnEscape={false} labelledBy="air-primary-title" panelClassName="air-primary-panel" reducedMotion={reducedMotion}>
         <OverlayHeader><h2 id="air-primary-title" className="modal-title">CHỌN KỸ NĂNG CHỦ LỰC</h2><p>Lựa chọn áp dụng khi còn sở hữu Lõi</p>
           {runtime && <div className="flex justify-center gap-2"><ModalButton onClick={() => { setShowEquipment(true); setPauseReason("equipment", true); }}>Kho Trang Bị</ModalButton><ModalButton onClick={openExit}>Menu Chính</ModalButton></div>}
         </OverlayHeader>
-        <OverlayBody><div className="air-primary-choices">{skillIds.map(id=><button key={id} type="button" aria-pressed={primaryChoice===id} onClick={()=>setPrimaryChoice(id)}>
+        <OverlayBody><div className="air-primary-choices">{skillIds.filter(id=>!worldRef.current.aircraft.selectedCores.includes("core_097")||!isUltimate(id)).map(id=><button key={id} type="button" aria-pressed={primaryChoice===id} onClick={()=>setPrimaryChoice(id)}>
           <CombatUiIcon kind="skill" id={id} fallback={SKILL_CONFIGS[id].icon}/><strong>{SKILL_CONFIGS[id].name}</strong><p>{SKILL_CONFIGS[id].description}</p>
-        </button>)}</div><p>+30% sát thương · -20% chi phí Tài Nguyên · -20% Hồi Chiêu cơ bản</p></OverlayBody>
+        </button>)}</div><p>+25% sát thương · -25% chi phí Tài Nguyên · -25% Hồi Chiêu cơ bản · +25% hồi Máu và lá chắn</p></OverlayBody>
         <OverlayFooter><ModalButton variant="primary" type="button" disabled={!primaryChoice} onClick={()=>{
-          if (!primaryChoice) return;
+          if (!primaryChoice || (worldRef.current.aircraft.selectedCores.includes("core_097")&&isUltimate(primaryChoice))) return;
           if (runtime) {
             runtime.selectPrimary(primaryChoice); setPrimaryChoice(null);
             const pending = !!expansionState(worldRef.current.aircraft).primaryPending;

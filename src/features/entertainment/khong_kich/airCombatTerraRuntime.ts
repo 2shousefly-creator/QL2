@@ -1,3 +1,4 @@
+import { reduceRunningSkillCooldown } from "./airCombatCooldowns";
 import { statusExpiry, extendStatusRemaining } from './airCombatStatusTiming';
 import type { CombatWorld, EnemyEntity } from './airCombatRuntime';
 import type { AircraftCombatState, SkillId } from './airCombatTypes';
@@ -15,7 +16,7 @@ export interface TerraHooks {
  hostile(w:CombatWorld,e:EnemyEntity):boolean;
  elite(e:EnemyEntity):boolean;
  damage(w:CombatWorld,e:EnemyEntity,raw:number,id:TerraSkillId,castId:number,trueDamage:boolean,reflection?:boolean):{hp:number;total:number};
- heal(w:CombatWorld,raw:number):number;
+ heal(w:CombatWorld,raw:number,skillId:SkillId):number;
  displace(w:CombatWorld,e:EnemyEntity,dx:number,dy:number,knockback?:boolean):void;
  cleanse(w:CombatWorld):void;
  controlled(w:CombatWorld,e:EnemyEntity):boolean;
@@ -76,16 +77,16 @@ export function beginTerraSkill(w:CombatWorld,id:TerraSkillId,h:TerraHooks){
  if(id===IDS[1]){
   const cap=terraPressureCap(w),spent=Math.min(cap,s.pressure),ult=s.ultimate&&now<s.ultimate.until?s.ultimate:undefined;
   s.pressure=0;s.cannon={...c,spent,cap,firepower:stats.firepower,multiplier:ult?terraValues(IDS[3],ult.rank).cannonMultiplier:1,halved:!!ult,cooldown:c.cooldown*(ult?.5:1)};
-  if(spent>0)createAbsorbShield(w.aircraft,'terraSeismic',spent*v.shieldRatio,v.shieldDuration);return;
+  if(spent>0)createAbsorbShield(w.aircraft,'terraSeismic',spent*v.shieldRatio,v.shieldDuration,'terra_seismic_cannon');return;
  }
  if(id===IDS[2]){const e=terraCluster(w,h);if(e)s.clamp={...c,x:e.x,y:e.y,firepower:stats.firepower,stun:rank>=3&&s.pressure>=terraPressureCap(w)*.5,closed:false,cleansed:new Set()};return;}
  s.ultimate={...c,tick:1};w.aircraft.coreState.timers.terraUltimate=c.until;w.aircraft.coreState.stacks.terraUltimateRank=rank;
  const pending=s.cannon;
  if(pending){if(!pending.halved){pending.cooldown*=.5;pending.halved=true;}}
- else if((w.aircraft.cooldowns[IDS[1]]??0)>0){w.aircraft.cooldowns[IDS[1]]!*=.5;}
+ else if((w.aircraft.cooldowns[IDS[1]]??0)>0){reduceRunningSkillCooldown(w.aircraft,IDS[1],(w.aircraft.cooldowns[IDS[1]]??0)*.5);}
  terraFx(w,'coreOpen',w.playerX,w.playerY,75,.6);
  if(rank>=2){h.cleanse(w);terraFx(w,'cleanse',w.playerX,w.playerY,100,.6);}
- if(rank>=3&&live(w))h.heal(w,Math.max(0,getEffectiveAircraftStats(w.aircraft).maxHp-w.aircraft.currentHp)*.25);
+ if(rank>=3&&live(w))h.heal(w,Math.max(0,getEffectiveAircraftStats(w.aircraft).maxHp-w.aircraft.currentHp)*.25,IDS[3]);
 }
 function target(w:CombatWorld,e:EnemyEntity){const s=terraState(w);let d=s.targets.get(e.id);if(d?.entity!==e){d={entity:e,rootUntil:0,stunUntil:0,suppressUntil:0,markUntil:0};s.targets.set(e.id,d);}return d;}
 function control(w:CombatWorld,e:EnemyEntity,seconds:number,stun:boolean,h:TerraHooks,at:number){
@@ -106,7 +107,7 @@ function fire(w:CombatWorld,c:Cannon,h:TerraHooks){
   const center=side<=v.centerWidth/2,d=s.targets.get(e.id),marked=d?.entity===e&&d.markUntil>w.elapsed;
   const hit=h.damage(w,e,raw,IDS[1],c.id,center);
   terraFx(w,'cannonImpact',e.x,e.y,60,.4,c.until);
-  if(hit.total>0&&marked){d!.markUntil=0;h.heal(w,.8*getEffectiveAircraftStats(w.aircraft).firepower);Object.assign(terraFx(w,'healLink',w.playerX,w.playerY,12,.45),{fromX:e.x,fromY:e.y});}
+  if(hit.total>0&&marked){d!.markUntil=0;h.heal(w,.8*getEffectiveAircraftStats(w.aircraft).firepower,IDS[2]);Object.assign(terraFx(w,'healLink',w.playerX,w.playerY,12,.45),{fromX:e.x,fromY:e.y});}
   if(center&&c.rank>=5&&c.spent>=c.cap*.75&&hit.total>0&&e.hp>0){control(w,e,2,true,h,c.until);if(!boss(e))h.displace(w,e,0,e.aircraftTarget||!h.elite(e)?-60:-30);terraFx(w,'knockback',e.x,e.y,55,.4);}
  }
  finish(w,IDS[1],c);
@@ -115,7 +116,7 @@ export function tickTerra(w:CombatWorld,dt:number,h:TerraHooks){
  const s=states.get(w);if(!s)return;if(w.aircraft.aircraftId!=='terra'||!live(w)){cancelTerra(w);return;}
  const now=w.elapsed,cap=terraPressureCap(w),start=s.updated;s.updated=now;s.pressure=Math.min(cap,s.pressure);
  const u=s.ultimate;
- if(u){while(u.tick<=40&&u.at+u.tick*T.healTick<=Math.min(now,u.until)+1e-8){h.heal(w,getEffectiveAircraftStats(w.aircraft).maxHp*terraValues(IDS[3],u.rank).healPerSecond*T.healTick);terraFx(w,'heal',w.playerX,w.playerY,52,.4,u.at+u.tick*T.healTick);u.tick++;}
+ if(u){while(u.tick<=40&&u.at+u.tick*T.healTick<=Math.min(now,u.until)+1e-8){h.heal(w,getEffectiveAircraftStats(w.aircraft).maxHp*terraValues(IDS[3],u.rank).healPerSecond*T.healTick,IDS[3]);terraFx(w,'heal',w.playerX,w.playerY,52,.4,u.at+u.tick*T.healTick);u.tick++;}
   if(now>=u.until){s.ultimate=undefined;delete w.aircraft.coreState.timers.terraUltimate;delete w.aircraft.coreState.stacks.terraUltimateRank;finish(w,IDS[3],u);terraFx(w,'coreEnd',w.playerX,w.playerY,65,.5,u.until);}else activate(w,IDS[3],u);
  }
  const decayFrom=Math.max(start,s.lastHpLoss+T.decayDelay,u?u.until:-Infinity);

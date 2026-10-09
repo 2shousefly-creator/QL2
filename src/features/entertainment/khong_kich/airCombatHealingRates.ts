@@ -8,11 +8,11 @@ export function coreHealingRate(s:AircraftCombatState, stats:EffectiveAircraftSt
  const c=s.coreState;
  if(s.status.regenDisabledUntil>c.time)return 0;
  if(row===62)return s.currentHp<stats.maxHp*.22?Math.max(0,stats.maxHp-s.currentHp)*.01:0;
- if(row===92)return c.time-c.lastDamage>=4?stats.maxHp*.015:0;
+ if(row===92)return stats.maxHp*(c.time-c.lastDamage>=3.5?.018:.002);
  return 0;
 }
 export function expansionHealingRate(stats:EffectiveAircraftStats,row:number):number {
- return row===176?stats.maxHp*.01:row===195?stats.maxHp*.12/4:0;
+ return row===176?stats.maxHp*.01:row===76?stats.maxHp*.10/4:0;
 }
 export function equipmentHealingRate(s:AircraftCombatState,stats:EffectiveAircraftStats,family:number):number {
  const scale=equipmentScale(s,family);

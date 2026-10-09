@@ -73,7 +73,7 @@ export function beginCinderSkill(w:CombatWorld,id:CinderSkillId,h:CinderHooks){
  const s=cinderState(w),rank=skillRank(w.aircraft,id),v=cinderValues(id,rank),now=w.elapsed,cast=w.nextId++;
  if(id==='cinder_fire_shield'){
   const amount=getEffectiveAircraftStats(w.aircraft).firepower*v.shieldMultiplier;
-  createAbsorbShield(w.aircraft,'cinder',amount,v.duration);
+  createAbsorbShield(w.aircraft,'cinder',amount,v.duration,'cinder_fire_shield');
   s.shield={id:cast,rank,until:now+v.duration,ready:now,refund:0};active(w,id,v.duration);
  }else if(id==='cinder_fuel_barrage'){
   const targets=w.enemies.filter(e=>valid(w,e,h)&&e.y<w.playerY&&canTargetEnemy(w,e));
