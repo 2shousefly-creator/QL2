@@ -1,0 +1,126 @@
+{
+  "version": "26.29.0",
+  "releaseDate": "09/10/2026",
+  "title": "Hiển Thị Chiến Đấu Và Icon Kỹ Năng",
+  "displayTitle": "KHÔNG KÍCH 26.29.0 — HIỆU ỨNG · ICON KỸ NĂNG",
+  "summary": "Sửa viền hồi chiêu trang bị, làm rõ Laser Sao Băng của Astra và làm mượt khói chiến cơ thấp Máu. Icon ô kỹ năng đổi theo cấp nâng cấp; bổ sung 36 hình minh họa cấp 1 cho 9 chiến cơ.",
+  "sections": [
+    {
+      "id": "fixes",
+      "title": "SỬA LỖI HIỂN THỊ",
+      "icon": {
+        "kind": "system",
+        "id": "ui"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "equipment-cooldown",
+          "title": "Viền hồi chiêu trang bị",
+          "icon": {
+            "kind": "equipment",
+            "id": "TH04"
+          },
+          "rationale": "Giúp nhận biết chính xác thời điểm trang bị sẵn sàng trở lại.",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Sửa viền hồi chiêu màu vàng bị giật hoặc liên tục quay về đầu khi lá chắn trang bị bị phá hay hết hạn. Tổng thời gian hồi chiêu được giữ cố định trong mỗi chu kỳ."
+            }
+          ]
+        },
+        {
+          "id": "astra-meteor-spear",
+          "title": "Astra — Ngọn Giáo Sao Băng",
+          "icon": {
+            "kind": "skill",
+            "id": "stellar_lance"
+          },
+          "rationale": "Tia bắn bồi phải đọc được rõ ràng trên toàn đường bay.",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Sửa Laser Sao Băng sau Thương Tinh Tú bị bóp nhỏ và méo. Tia có lõi trắng sáng, quầng vàng và chạy liên tục từ mép dưới đến mép trên vùng chơi theo đúng quỹ đạo của Thương."
+            },
+            {
+              "format": "bullet",
+              "changeType": "unchanged",
+              "text": "Giữ nguyên sát thương, thời gian cảnh báo, thời gian tồn tại và vùng va chạm."
+            }
+          ]
+        },
+        {
+          "id": "damage-smoke",
+          "title": "Khói chiến cơ thấp Máu",
+          "icon": {
+            "kind": "vfx",
+            "id": "smoke"
+          },
+          "rationale": "Khói thoát ra liên tục và mềm hơn khi chiến cơ di chuyển.",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Khói phát đều từ giữa thân chiến cơ, nở và tan dần. Mỗi cụm giữ vị trí phát theo phương ngang rồi bay thẳng lên, bỏ độ trôi ngang và góc xoay gây cảm giác lệch chéo."
+            },
+            {
+              "format": "bullet",
+              "changeType": "note",
+              "text": "Đồng bộ hiệu ứng trong Pixi, Canvas và chiến cơ đối thủ; chế độ Giảm Chuyển Động dùng ít khói hơn."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "skill-icons",
+      "title": "ICON KỸ NĂNG",
+      "icon": {
+        "kind": "skill",
+        "id": "orbit_reversal"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "ranked-icons",
+          "title": "Hình minh họa theo cấp nâng cấp",
+          "icon": {
+            "kind": "skill",
+            "id": "stellar_lance"
+          },
+          "rationale": "Nhìn ô kỹ năng là nhận ra cấp nâng cấp đang sử dụng.",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Khi nâng cấp kỹ năng, icon trên ô kỹ năng đổi đồng bộ với hình minh họa của cấp tương ứng trong danh sách nâng cấp."
+            }
+          ]
+        },
+        {
+          "id": "level-one-icons",
+          "title": "36 sprite kỹ năng cấp 1",
+          "icon": {
+            "kind": "skill",
+            "id": "missile_swarm"
+          },
+          "rationale": "Mỗi hình minh họa làm rõ đặc trưng tấn công, phòng thủ hoặc hỗ trợ của kỹ năng.",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Thay mới 36 hình minh họa kỹ năng cấp 1 bằng sprite tạo sinh cho Viper, Titan, Phantom, Astra, Cinder, Riptide, Argent, Sylva và Terra."
+            },
+            {
+              "format": "bullet",
+              "changeType": "note",
+              "text": "Bộ icon cấp 1 được dùng chung ở ô kỹ năng, mô tả và các nơi tham chiếu kỹ năng. Giữ nguyên hình minh họa riêng của các cấp nâng cấp cao hơn."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

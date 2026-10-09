@@ -1,0 +1,100 @@
+{
+  "version": "26.29.0",
+  "generator": "image_gen built-in",
+  "useCase": "stylized-concept",
+  "columns": 4,
+  "width": 1448,
+  "height": 1086,
+  "atlases": [
+    {
+      "file": "skills-viper-titan-phantom.png",
+      "rowEdges": [
+        0,
+        346,
+        699,
+        1086
+      ],
+      "skills": [
+        [
+          "decoy",
+          "afterburner",
+          "predator_lock",
+          "missile_swarm"
+        ],
+        [
+          "armor_shield",
+          "heavy_bomb",
+          "gravity_anchor",
+          "sweeping_cannon"
+        ],
+        [
+          "invisibility",
+          "focus_laser",
+          "electronic_interference",
+          "escort_drone"
+        ]
+      ],
+      "prompt": "Use case: stylized-concept. Production raster sprite atlas for a top-down science-fiction aircraft game. One atlas exactly 4 columns by 3 rows, 12 equally sized square cells, landscape 4:3. Each cell contains one richly painted 3D game skill icon, large readable central silhouette, metallic material and glowing energy; consistent dark navy square backgrounds, edge-to-edge cells, no drawn frames, no text, no letters, no numbers, no gutters. Keep each subject inside its own cell with 10% safe margin; distinct readable skill mechanics at 48 pixels. Not SVG, not flat primitive symbols. Follow exact row-major order. Row 1 Viper emerald fighter: (1) a fighter deploying a bright decoy flare away from itself, (2) fighter engines blasting long cyan afterburner flames, (3) a red targeting reticle locking onto an enemy fighter with tracking rays, (4) a dense fan of homing missiles with green smoke trails. Row 2 Titan heavy gunmetal bomber: (1) massive blue energy armor dome encasing a heavy fighter, (2) one heavy metal bomb descending into an orange blast, (3) a purple gravitational anchor pulling small enemies inward, (4) twin heavy rotary cannon barrels unleashing golden bullet streams. Row 3 Phantom violet stealth aircraft: (1) fighter fading into a translucent cloaking silhouette, (2) a brilliant narrow violet continuous laser from a fighter, (3) an electronic jammer emitting concentric violet interference pulses, (4) one small companion drone with a bright gun muzzle beside its aircraft."
+    },
+    {
+      "file": "skills-astra-cinder-riptide.png",
+      "rowEdges": [
+        0,
+        362,
+        710,
+        1086
+      ],
+      "skills": [
+        [
+          "orbit_reversal",
+          "stellar_lance",
+          "twin_reflection",
+          "starfall"
+        ],
+        [
+          "cinder_fire_shield",
+          "cinder_fuel_barrage",
+          "cinder_heat_wave",
+          "cinder_inferno_beam"
+        ],
+        [
+          "riptide_wellspring",
+          "riptide_tidal_blades",
+          "riptide_confluence",
+          "riptide_waterform"
+        ]
+      ],
+      "prompt": "Use case: stylized-concept. Production raster sprite atlas for a top-down science-fiction aircraft game. One atlas exactly 4 columns by 3 rows, 12 equally sized square cells, landscape 4:3. Each cell contains one richly painted 3D game skill icon, large readable central silhouette, metallic material and glowing energy; consistent dark navy square backgrounds, edge-to-edge cells, no drawn frames, no text, no letters, no numbers, no gutters. Keep each subject inside its own cell with 10% safe margin; distinct readable skill mechanics at 48 pixels. Not SVG, not flat primitive symbols. Follow exact row-major order. Row 1 Astra white-gold cosmic aircraft: (1) circular stellar vortex catching incoming orange bullets and reversing them outward, (2) one long radiant white-gold spear of starlight piercing a target, (3) fighter with two large mirrored cyan crystal satellites firing parallel beams, (4) golden meteors falling from a starry sky into a fiery impact. Row 2 Cinder orange-black incendiary aircraft: (1) fiery orange barrier wrapped around a fighter, (2) cannon firing a broad burst of incandescent fuel projectiles, (3) expanding curved wall of searing heat and flame, (4) colossal white-hot orange inferno laser issuing from a fighter. Row 3 Riptide turquoise water aircraft: (1) healing spring fountain swirling around a fighter, (2) sharp crescent blades made of blue water launching forward, (3) two blue water streams converging into a powerful central current, (4) fighter transformed into a luminous translucent wave of water."
+    },
+    {
+      "file": "skills-argent-sylva-terra.png",
+      "rowEdges": [
+        0,
+        348,
+        716,
+        1086
+      ],
+      "skills": [
+        [
+          "argent_guard_stance",
+          "argent_blade_cast",
+          "argent_blade_recall",
+          "argent_heavenly_blade_array"
+        ],
+        [
+          "sylva_symbiosis",
+          "sylva_acid_burst",
+          "sylva_parasitic_seed",
+          "sylva_deathbloom"
+        ],
+        [
+          "terra_reactive_rock_armor",
+          "terra_seismic_cannon",
+          "terra_strata_clamp",
+          "terra_geocore_overdrive"
+        ]
+      ],
+      "prompt": "Use case: stylized-concept. Production raster sprite atlas for a top-down science-fiction aircraft game. One atlas exactly 4 columns by 3 rows, 12 equally sized square cells, landscape 4:3. Each cell contains one richly painted 3D game skill icon, large readable central silhouette, metallic material and glowing energy; consistent dark navy square backgrounds, edge-to-edge cells, no drawn frames, no text, no letters, no numbers, no gutters. Keep each subject inside its own cell with 10% safe margin; distinct readable skill mechanics at 48 pixels. Not SVG, not flat primitive symbols. Follow exact row-major order. Row 1 Argent silver sword aircraft: (1) two silver sword blades guarding a fighter in crossed defensive stance, (2) a radiant silver flying sword being launched forward, (3) a silver flying sword reversing course in a clear curved return trail, (4) majestic array of many silver swords orbiting a radiant central sword. Row 2 Sylva acid green biomechanical aircraft: (1) a living green symbiotic vine protecting and healing a fighter, (2) a cluster of bright acid globules erupting from a cannon and corroding armor, (3) one spiked organic parasitic seed embedding into an enemy hull with green tendrils, (4) a spectacular toxic green blossom detonating with spores. Row 3 Terra rugged stone-armored aircraft: (1) layered floating stone plates enclosing a fighter with amber energy seams, (2) a heavy stone cannon firing a bright seismic shockwave, (3) two massive jagged rock slabs clamping inward on an enemy, (4) an intensely glowing amber geocore inside an armored fighter powering up with orbiting rocks."
+    }
+  ]
+}

@@ -11,7 +11,7 @@ import { getEffectiveAircraftStats } from "./airCombatAircraft";
 import { createAbsorbShield } from "./airCombatExpansion";
 import { AIRCRAFT_CONFIGS } from "./airCombatConfig";
 import { GAMEPLAY_SAFE_RECT } from "./airCombatConfig";
-import { activeEquipmentFamilies, equipmentState, canGrantEquipmentReward, equipmentRewardsLocked, equipmentEffect, equipmentScale, equipmentMetric, grantEquipmentReward, randomEquipmentId, type EquipmentMark } from "./airCombatEquipmentState";
+import { activeEquipmentFamilies, startEquipmentCooldown, equipmentState, canGrantEquipmentReward, equipmentRewardsLocked, equipmentEffect, equipmentScale, equipmentMetric, grantEquipmentReward, randomEquipmentId, type EquipmentMark } from "./airCombatEquipmentState";
 import { equipmentGeminiMode } from "./airCombatEquipmentStats";
 import { recordCoreMetric } from "./airCombatTelemetry";
 
@@ -60,9 +60,7 @@ function settleEquipmentCooldown(s:AircraftCombatState,f:number) {
     if(sh&&sh.amount>0&&sh.until>now)return;
     e.until=Math.min(now,primaryEnd);
   } else if(primaryEnd>now)return;
-  e.cooldownPending=false;
-  e.cooldownDuration=f===3?40:f===4?60:f===17?10:f===25?25:3;
-  e.ready=Math.min(now,primaryEnd)+e.cooldownDuration;
+  startEquipmentCooldown(s,f,Math.min(now,primaryEnd));
 }
 function deferEquipmentCooldown(s:AircraftCombatState,f:number) {
   const e=equipmentEffect(s,f);e.ready=0;e.cooldownPending=true;
@@ -82,7 +80,7 @@ const EFFECTS:Readonly<Record<number,EquipmentEffectHooks>>={
     if(h.skill&&h.direct){if(m.until<=c.t)m.stacks=0;m.until=c.t+8;metric(c,"marks");equipmentFx(c.w,5,h.enemy.x,h.enemy.y,52,8,h.enemy.id);}
     if(h.basic&&m.until>c.t&&++m.stacks>=4){m.until=0;metric(c,"explosions");const x=h.enemy.x,y=h.enemy.y;damage(c,h.enemy,power(c)*P[5].hit*c.k);for(const target of nearby(c,x,y,100))if(target!==h.enemy){damage(c,target,power(c)*P[5].area*c.k);metric(c,"aoeTargets");}e.bonusUntil=c.t+4;equipmentFx(c.w,5,x,y,200,.8);}
   }},
-  6:{hit(c,h){if(h.primary&&++equipmentEffect(c.s,6).count%20===0&&ready(c)){equipmentEffect(c.s,6).cooldownDuration=2;equipmentEffect(c.s,6).ready=c.t+2;resource(c,getEffectiveAircraftStats(c.s).maxResource*P[6].resource*c.k);equipmentEffect(c.s,6).bonusUntil=c.t+4;}}},
+  6:{hit(c,h){if(h.primary&&++equipmentEffect(c.s,6).count%20===0&&ready(c)){startEquipmentCooldown(c.s,6,c.t);resource(c,getEffectiveAircraftStats(c.s).maxResource*P[6].resource*c.k);equipmentEffect(c.s,6).bonusUntil=c.t+4;}}},
   7:{hit(c,h){if(h.skill&&h.direct&&h.enemy.hp>0){mark(c.s,h.enemy,7).until=c.t+4;metric(c,"targets");equipmentFx(c.w,7,h.enemy.x,h.enemy.y,50,4,h.enemy.id);}}},
   8:{hit(c,h){if(h.skill&&h.critical){metric(c,"skillCrits");equipmentFx(c.w,8,h.enemy.x,h.enemy.y,58,.5,h.enemy.id);}}},
   9:{hit(c,h){if(h.basic)equipmentFx(c.w,9,h.enemy.x,h.enemy.y,24,.18,h.enemy.id);}},
@@ -105,7 +103,7 @@ const EFFECTS:Readonly<Record<number,EquipmentEffectHooks>>={
   16:{},
   17:{damaged(c,lost){if(lost>0&&ready(c)){shield(c,hp(c)*P[17].shield*c.k,5);deferEquipmentCooldown(c.s,17);}}},
   18:{damaged(c,lost){if(lost>0){const e=equipmentEffect(c.s,18),before=e.value;e.value=Math.min(hp(c)*P[18].cap*c.k,e.value+lost*P[18].stored*c.k);e.until=c.t+2.5;e.duration=2.5;metric(c,"stored",e.value-before);}},tick(c){const e=equipmentEffect(c.s,18);if(e.value>0&&c.t>=e.until){heal(c,e.value*P[18].heal*c.k);e.value=0;e.bonusUntil=c.t+4;metric(c,"procs");equipmentFx(c.w,18);}}},
-  19:{damaged(c,lost){if(lost>0&&ready(c)){resource(c,getEffectiveAircraftStats(c.s).maxResource*P[19].resource*c.k);equipmentEffect(c.s,19).cooldownDuration=c.k===2?5:6;equipmentEffect(c.s,19).ready=c.t+(c.k===2?5:6);}}},
+  19:{damaged(c,lost){if(lost>0&&ready(c)){resource(c,getEffectiveAircraftStats(c.s).maxResource*P[19].resource*c.k);startEquipmentCooldown(c.s,19,c.t);}}},
   20:{cast(c){activate(c,5);}},
   21:{hit(c,h){if(h.critical)stack(c,1,4,3.5);}},
   22:{},

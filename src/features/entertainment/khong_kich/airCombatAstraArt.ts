@@ -43,9 +43,16 @@ export function paintAstra(w:CombatWorld,p:AstraPainter,reduced:boolean) {
     } else {
       const width=beam.projectileHitboxWidth*2,angle=Math.atan2(dy,dx)+Math.PI/2;
       const alpha=Math.min(1,(beam.beamEndsAt-now)/.15),id=beam.id*32;
-      p.sprite(id,"astra_spearBeam",(start.x+end.x)/2,(start.y+end.y)/2,width,Math.hypot(dx,dy),angle,alpha);
+      // A square spear illustration cannot be stretched into a full-height beam.
+      // Continuous light layers retain the captured trajectory and authored width.
+      const pulse=reduced?1:1+Math.sin((now-beam.beamStartsAt)*22)*.04;
+      p.line(start.x,start.y,end.x,end.y,0xff9a38,alpha*.14,width*2.6*pulse);
+      p.line(start.x,start.y,end.x,end.y,0xffc46b,alpha*.36,width*1.55*pulse);
+      p.line(start.x,start.y,end.x,end.y,0xffe8b5,alpha*.9,width);
+      p.line(start.x,start.y,end.x,end.y,0xffffff,alpha,width*.48);
+      p.sprite(id,"astra_corona",start.x,start.y,width*2.4,width*2.4,angle,alpha*.85);
       const travel=reduced?1:clamp((now-beam.beamStartsAt)/.09);
-      p.sprite(id+1,"astra_spearTip",start.x+dx*travel,start.y+dy*travel,width*1.4,width*2.1,angle,alpha);
+      p.sprite(id+1,"astra_flash",start.x+dx*travel,start.y+dy*travel,width*2,width*2,angle,alpha);
     }
   }
   for(const f of r.flashes){const a=1-(now-f.at)/.2;p.circle(f.x,f.y,7,0xffebbf,a*.6,true);}

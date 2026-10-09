@@ -1,3 +1,4 @@
+import { LEVEL_ONE_SKILL_ART } from "./airCombatLevelOneSkillArt";
 import phantomSkills from '../../../assets/khong-kich/phantom/skills-26-27-0.png';
 import { generatedPortrait } from './airCombatGeneratedArt';
 import { TERRA_ART, TERRA_ICON_CELLS } from './airCombatTerraArt';
@@ -27,6 +28,8 @@ export const SKILL_ICON_CELLS: Record<SkillId | PassiveId, readonly [number, num
 };
 
 export function SkillIcon({ id, className }: { id: string; className?: string }) {
+  const base = LEVEL_ONE_SKILL_ART[id as SkillId];
+  if (base) return <SpriteAtlasIcon atlas={base.atlas} columns={4} rows={3} column={0} row={0} frame={base.rect} className={className} fallback={<TriangleAlert />} />;
   const phantomCells:Record<string,readonly [number,number]>={phantom_backup_battery:[0,0],invisibility:[1,0],focus_laser:[2,0],electronic_interference:[0,1],escort_drone:[1,1],hawkRage:[2,1]};
   const phantom=phantomCells[id];
   if(phantom)return <SpriteAtlasIcon atlas={phantomSkills} columns={3} rows={2} column={phantom[0]} row={phantom[1]} className={className} fallback={<TriangleAlert/>}/>;

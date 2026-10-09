@@ -60,23 +60,38 @@ export function paintBalanceGuides(w:CombatWorld,p:BalancePainter,reduced:boolea
   }
 }
 
-interface SmokePuff { id:number; at:number; x:number; y:number; phase:number }
-const smokeStates=new WeakMap<CombatWorld,{last:number;next:number;serial:number;puffs:SmokePuff[]}>();
-/** Bounded historical puffs rise from the aircraft center using combat time. */
+interface SmokePuff { id:number; at:number; x:number; y:number }
+interface DamageSmokeState { last:number; next:number; serial:number; x:number; y:number; damaged:boolean; puffs:SmokePuff[] }
+const smokeStates=new WeakMap<CombatWorld,DamageSmokeState>();
+const SMOKE_LIFETIME=1.35, SMOKE_LIMIT=28;
+/** Fixed emission cadence; puffs retain their birth position and rise vertically.
+ * Interpolation fills gaps during motion without inheriting aircraft velocity. */
 export function paintAircraftDamageSmoke(w:CombatWorld,reduced:boolean,paint:(id:number,x:number,y:number,size:number,rotation:number,alpha:number)=>void){
-  let s=smokeStates.get(w);
-  if(!s){s={last:w.elapsed,next:w.elapsed,serial:0,puffs:[]};smokeStates.set(w,s);}
   const now=w.elapsed,alive=!w.destruction&&w.aircraft.currentHp>0;
   const damaged=alive&&w.aircraft.currentHp/getEffectiveAircraftStats(w.aircraft).maxHp<.4;
-  if(now>s.last && damaged && now>=s.next){
-    s.puffs.push({id:++s.serial,at:now,x:w.playerX,y:w.playerY,phase:s.serial*2.399});
-    s.next=now+(reduced?.26:.12);
+  let s=smokeStates.get(w);
+  if(!s||now<s.last){s={last:now,next:now,serial:0,x:w.playerX,y:w.playerY,damaged,puffs:[]};smokeStates.set(w,s);}
+  if(now>s.last){
+    const interval=reduced?.16:.055;
+    if(!damaged){s.next=now;}
+    else {
+      if(!s.damaged)s.next=now;
+      // Drop stale catch-up work after a large time jump and keep the pool bounded.
+      s.next=Math.max(s.next,now-SMOKE_LIFETIME);
+      let emitted=0;
+      while(s.next<=now&&emitted<SMOKE_LIMIT){
+        const fraction=Math.max(0,Math.min(1,(s.next-s.last)/(now-s.last)));
+        s.puffs.push({id:++s.serial,at:s.next,x:s.x+(w.playerX-s.x)*fraction,y:s.y+(w.playerY-s.y)*fraction});
+        s.next+=interval;emitted++;
+      }
+    }
+    s.last=now;s.x=w.playerX;s.y=w.playerY;s.damaged=damaged;
   }
-  s.last=now;
-  s.puffs=s.puffs.filter(p=>now-p.at<1.35).slice(-12);
+  s.puffs=s.puffs.filter(p=>now-p.at<SMOKE_LIFETIME).slice(-SMOKE_LIMIT);
   for(const puff of s.puffs){
-    const age=now-puff.at,t=age/1.35,rise=(reduced?24:42)*(age+.2*age*age);
-    const drift=(Math.sin(puff.phase+age*2)-Math.sin(puff.phase))*(reduced?1:3);
-    paint(-1500000-puff.id,puff.x+drift,puff.y+(w.mirrorContext?rise:-rise),20+t*30,Math.sin(puff.phase)*.25+age*.12,Math.min(1,t*9)*(1-t)**1.3*.48);
+    const age=Math.max(0,now-puff.at),t=age/SMOKE_LIFETIME,rise=(reduced?24:42)*age;
+    const fadeIn=Math.min(1,age/.12),alpha=fadeIn*(1-t)**1.6*(reduced?.4:.26);
+    // Mirror actors are rotated 180 degrees; local downward is screen upward.
+    paint(-1500000-puff.id,puff.x,puff.y+(w.mirrorContext?rise:-rise),18+t*32,0,alpha);
   }
 }

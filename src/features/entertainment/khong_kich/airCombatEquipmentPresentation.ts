@@ -3,7 +3,7 @@ import { EQUIPMENT_POWER as P } from "./airCombatEquipmentBalance";
 import { releaseState } from "./airCombatReleaseState";
 import { WAITING_CHEST_DESCRIPTION } from "./airCombatEquipmentRewards";
 import { EQUIPMENT_CATALOG, type EquipmentDefinitionId } from "./airCombatEquipmentCatalog";
-import { activeEquipmentFamilies, equipmentState, equipmentEffect, equipmentScale } from "./airCombatEquipmentState";
+import { activeEquipmentFamilies, equipmentCooldownSeconds, equipmentState, equipmentEffect, equipmentScale } from "./airCombatEquipmentState";
 import { getTempestJewelledCritDamageBonus, equipmentGeminiMode } from "./airCombatEquipmentStats";
 import { getEffectiveAircraftStats } from "./airCombatAircraft";
 import type { AircraftCombatState } from "./airCombatTypes";
@@ -36,7 +36,7 @@ export function equipmentStatuses(w:CombatWorld):StatusPresentation[] {
     let badge=cap?`${number(f===13?e.value:e.stacks)}/${cap}`:f===6?`${e.count%20}/20`:f===12?`${e.count%5}/5`:f===18?number(e.value):f===23?`${number(e.value/stats.maxHp*100)}%`:f===24?`${number(e.value/stats.maxResource*100)}%`:undefined;
     const remaining=active?(f===25?e.bonusUntil??e.until:e.until)-t:cooldown?e.ready-t:Infinity;
     const modeLabel=mode==="offense"?"Tấn công":mode==="hp"?"Hồi Máu":mode==="resource"?"Hồi Tài Nguyên":mode==="siphon"?"Hút máu":undefined;
-    result.push({id:`equipment:${d.id}`,group:"buff",name:d.name,icon:{kind:"equipment",id:d.id},description:equipmentEffectDescription(s,d.id),source:`${d.rarity==="legendary"?"Trang Bị Huyền Thoại":"Trang Bị"} · ${d.name}`,stacks:e.stacks,badgeText:badge,badgeKind:charged?"charge":"stack",remaining,duration:active?(f===25?6:e.duration):cooldown?(e.cooldownDuration??remaining):Infinity,priority:active?58:40,timerKind:active?"active":"cooldown",timeLabel:modeLabel??(remaining===Infinity?"Sẵn sàng":undefined),showNumericTimer:Number.isFinite(remaining)});
+    result.push({id:`equipment:${d.id}`,group:"buff",name:d.name,icon:{kind:"equipment",id:d.id},description:equipmentEffectDescription(s,d.id),source:`${d.rarity==="legendary"?"Trang Bị Huyền Thoại":"Trang Bị"} · ${d.name}`,stacks:e.stacks,badgeText:badge,badgeKind:charged?"charge":"stack",remaining,duration:active?(f===25?6:e.duration):cooldown?(e.cooldownDuration??equipmentCooldownSeconds(s,f)):Infinity,priority:active?58:40,timerKind:active?"active":"cooldown",timeLabel:modeLabel??(remaining===Infinity?"Sẵn sàng":undefined),showNumericTimer:Number.isFinite(remaining)});
   }
   return result;
 }

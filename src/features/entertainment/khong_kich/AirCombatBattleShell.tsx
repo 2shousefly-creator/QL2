@@ -793,7 +793,7 @@ export const AirCombatBattleShell: React.FC<AirCombatBattleProps> = ({
               {skillId === "escort_drone" && active && <span className="absolute right-1 top-1 z-20 text-[6px] font-black text-violet-200">-{values.upkeepPerSecond}/s</span>}
               <span className="air-skill-duration" ref={node => { durationNodes.current[skillId] = node; }} hidden aria-hidden="true"/>
               <span className="air-skill-icon-wrap">
-              <CombatUiIcon kind="skill" id={skillId} fallback={skill.icon} className="combat-skill-icon relative z-10" />
+              <SkillUpgradeIcon skillId={skillId} rank={Math.max(1,rank)} className="combat-skill-icon relative z-10" />
               </span>
               <span className="air-rank-nodes" aria-label={`Cấp ${rank}/${SKILL_RANKS[skillId].length}`}>{SKILL_RANKS[skillId].map(row=><i key={`${row.rank}:${rank}`} data-earned={row.rank<=rank} data-next={allocatable&&row.rank===rank+1} data-new={row.rank===rank&&state.coreState.time-(state.skillUpAt[skillId]??-Infinity)<2}/>)}</span>
               {rank>0&&<span key={`up:${rank}`} className="air-skill-up-vfx" aria-hidden="true"/>}

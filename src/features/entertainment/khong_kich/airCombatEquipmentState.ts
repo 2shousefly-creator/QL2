@@ -59,6 +59,17 @@ export function equipmentScale(s: AircraftCombatState, family: number): number {
 export function equipmentEffect(s: AircraftCombatState, family: number): EquipmentEffectState {
   return equipmentState(s).effects[family] ??= {stacks:0,until:0,ready:0,value:0,tick:0,count:0,duration:0};
 }
+/** Fixed denominator for one cooldown, including shields that break early. */
+export function equipmentCooldownSeconds(s: AircraftCombatState, family: number): number {
+  if (family === 19) return equipmentScale(s, family) === 2 ? 5 : 6;
+  return ({3:40,4:60,6:2,17:10,25:25,29:3} as Record<number,number>)[family] ?? 0;
+}
+export function startEquipmentCooldown(s: AircraftCombatState, family: number, startedAt = s.coreState.time) {
+  const effect = equipmentEffect(s, family);
+  effect.cooldownPending = false;
+  effect.cooldownDuration = equipmentCooldownSeconds(s, family);
+  effect.ready = startedAt + effect.cooldownDuration;
+}
 export function equipmentMetric(s: AircraftCombatState, family: number, key: string, value: number) {
   if(!Number.isFinite(value) || value <= 0) return;
   const t=equipmentState(s).telemetry[`TH${String(family).padStart(2,"0")}`] ??= {};

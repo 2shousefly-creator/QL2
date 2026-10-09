@@ -1,3 +1,4 @@
+import { startEquipmentCooldown } from "./airCombatEquipmentState";
 import { externalNegativeStatusTypes } from './airCombatNegativeStatuses';
 import { coreCooldownReady, deferCoreCooldown, startCoreCooldown } from "./airCombatCooldowns";
 import { getRecoveryReceivedMultiplier, getShieldReceivedMultiplier } from "./airCombatRecovery";
@@ -171,7 +172,7 @@ export function finishAbsorbShield(s: AircraftCombatState, sh: AbsorbShield) {
   // Only these families end with their shield. Lazarus remains active through its damage buff.
   if(key==="equipment:4"||key==="equipment:17") {
     const effect=s.equipment?.effects[key.slice(10)];
-    if(effect?.cooldownPending){effect.cooldownPending=false;effect.until=endedAt;effect.ready=endedAt+(key==="equipment:4"?60:10);}
+    if(effect?.cooldownPending){effect.until=endedAt;startEquipmentCooldown(s,Number(key.slice(10)),endedAt);}
   }
   if (Number.isFinite(sh.until)) expansionState(s).endedShields.push(sh);
 }
