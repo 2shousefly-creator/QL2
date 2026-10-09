@@ -1,3 +1,4 @@
+import { cinderFuelAtlas } from '../airCombatCinderFuel';
 import { generatedFrame, generatedFrameId, generatedEffectId } from '../airCombatGeneratedArt';
 import { loadGeneratedTextures } from './GeneratedArtTextures';
 import type { CombatWorld } from '../airCombatRuntime';
@@ -98,7 +99,8 @@ export async function loadAirCombatAssets(world?:CombatWorld) {
   const [argentAircraft,argentIcons,argentVfx,argentPortrait]=await Promise.all([ARGENT_ART.aircraft,ARGENT_ART.icons,ARGENT_ART.vfx,ARGENT_ART.portrait].map(url=>Assets.load<Texture>(url)));
   const [sylvaAircraft,sylvaPortrait,sylvaIcons,sylvaAcid,sylvaLife,sylvaDeath,sylvaDeathNew]=await Promise.all(Object.values(SYLVA_SOURCES).map(url=>Assets.load<Texture>(url)));
   const terraSources=Object.fromEntries(await Promise.all(Object.entries(TERRA_SOURCES).map(async([key,url])=>[key,await Assets.load<Texture>(url)])));
-  const sources = {...terraSources,sylvaAircraft,sylvaPortrait,sylvaIcons,sylvaAcid,sylvaLife,sylvaDeath,sylvaDeathNew,argentAircraft,argentIcons,argentVfx,argentPortrait, riptideAircraft,riptideIcons,riptideVfx, guardianVfx,bigBangVfx,cinderFeedback,cinderAircraft,cinderVfx,cinderProjectiles,cinderIcons, stage4Enemy,stage4Boss,stage4Vfx, stage3Enemy,stage3Boss,stage3Vfx,stage3Emissive, ultimateVfx,rankedVfx,rankedProjectiles, equipmentIcons,equipmentVfx,astraVfx,astraAircraft,astraEffects,aircraft, fortress, vfx, ammo, basicAmmo, healingCross, stage2Enemy, stage2Vfx, stage2Elite };
+  const cinderFuel=Texture.from(cinderFuelAtlas(false),true),cinderFuelWall=Texture.from(cinderFuelAtlas(true),true);
+  const sources = {cinderFuel,cinderFuelWall,...terraSources,sylvaAircraft,sylvaPortrait,sylvaIcons,sylvaAcid,sylvaLife,sylvaDeath,sylvaDeathNew,argentAircraft,argentIcons,argentVfx,argentPortrait, riptideAircraft,riptideIcons,riptideVfx, guardianVfx,bigBangVfx,cinderFeedback,cinderAircraft,cinderVfx,cinderProjectiles,cinderIcons, stage4Enemy,stage4Boss,stage4Vfx, stage3Enemy,stage3Boss,stage3Vfx,stage3Emissive, ultimateVfx,rankedVfx,rankedProjectiles, equipmentIcons,equipmentVfx,astraVfx,astraAircraft,astraEffects,aircraft, fortress, vfx, ammo, basicAmmo, healingCross, stage2Enemy, stage2Vfx, stage2Elite };
   const frames = new Map<AtlasFrame, Texture>();
   const texture = (definition: AtlasFrame) => {
     const id=generatedFrameId(definition),replacement=id&&generated.texture(id);
@@ -114,6 +116,6 @@ export async function loadAirCombatAssets(world?:CombatWorld) {
     frames.set(definition, result);
     return result;
   };
-  return { texture, soloArena, mirageSky, magneticStorm, stormbreakerSky, engineFlame:generated.texture('shared_flame')??engineFlame, phantomBeam, generated:(id:string)=>generated.texture(id), effect: (key: VisualKey) => generated.texture(generatedEffectId(key)) ?? (key === "bigbang_missile" ? bigbang : texture(VFX_VISUALS[key])), destroy: () => { frames.forEach(t => t.destroy(false)); frames.clear(); generated.destroy(); } };
+  return { texture, soloArena, mirageSky, magneticStorm, stormbreakerSky, engineFlame:generated.texture('shared_flame')??engineFlame, phantomBeam, generated:(id:string)=>generated.texture(id), effect: (key: VisualKey) => generated.texture(generatedEffectId(key)) ?? (key === "bigbang_missile" ? bigbang : texture(VFX_VISUALS[key])), destroy: () => { frames.forEach(t => t.destroy(false)); frames.clear(); cinderFuel.destroy(true); cinderFuelWall.destroy(true); generated.destroy(); } };
 }
 export type AirCombatAssets = Awaited<ReturnType<typeof loadAirCombatAssets>>;

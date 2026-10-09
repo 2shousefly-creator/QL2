@@ -1,3 +1,4 @@
+import { cinderFuelAtlas } from './airCombatCinderFuel';
 import { paintBalanceGuides, paintAircraftDamageSmoke } from './airCombatBalanceVisuals';
 import { phantomLaserBounds, PHANTOM_LASER_VISUAL_WIDTH } from './airCombatPhantom';
 import { terraHud } from './airCombatTerraRuntime';
@@ -89,6 +90,12 @@ export const loadMagneticCanvasAssets=()=>loadCanvasTextures([STAGE2_ART_URLS.en
 const mirageTintCache = new Map<string,HTMLCanvasElement>();
 function drawMagneticFrame(ctx: CanvasRenderingContext2D, frame: AtlasFrame, x: number, y: number,
   width: number, height: number, rotation = 0, alpha = 1, tint = 0xffffff, anchorX = .5) {
+  if(frame.atlas==='cinderFuel'||frame.atlas==='cinderFuelWall'){
+    const image=cinderFuelAtlas(frame.atlas==='cinderFuelWall'),[sx,sy,sw,sh]=frame.rect;
+    ctx.save();ctx.globalAlpha=alpha;ctx.translate(x,y);ctx.rotate(rotation);
+    ctx.drawImage(image,sx*image.width,sy*image.height,sw*image.width,sh*image.height,-width*anchorX,-height/2,width,height);
+    ctx.restore();return;
+  }
   const generated=generatedFrameId(frame);
   if(generated&&paintGeneratedCanvas(ctx,generated,x,y,width,height,rotation,alpha,anchorX,tint))return;
   const image = magneticImage(frame.atlas in TERRA_SOURCES ? TERRA_SOURCES[frame.atlas as keyof typeof TERRA_SOURCES] : frame.atlas in SYLVA_SOURCES ? SYLVA_SOURCES[frame.atlas as keyof typeof SYLVA_SOURCES] : frame.atlas === 'argentAircraft' ? ARGENT_ART.aircraft : frame.atlas === 'argentIcons' ? ARGENT_ART.icons : frame.atlas === 'argentVfx' ? ARGENT_ART.vfx : frame.atlas === 'argentPortrait' ? ARGENT_ART.portrait : frame.atlas === 'riptideAircraft' ? RIPTIDE_ART.aircraft : frame.atlas === 'riptideIcons' ? RIPTIDE_ART.icons : frame.atlas === 'riptideVfx' ? RIPTIDE_ART.vfx : frame.atlas === "guardianVfx" ? CINDER_ART.guardianVfx : frame.atlas === "bigBangVfx" ? BIGBANG_ART : frame.atlas === "cinderFeedback" ? CINDER_ART.feedback : frame.atlas === "cinderAircraft" ? CINDER_ART.aircraft : frame.atlas === "cinderVfx" ? CINDER_ART.vfx : frame.atlas === "cinderProjectiles" ? CINDER_ART.projectiles : frame.atlas === "aircraft" ? aircraftAtlasUrl : frame.atlas === "astraAircraft" ? ASTRA_ART.aircraft : frame.atlas === "stage4Enemy" ? STAGE4_ART_URLS.enemy : frame.atlas === "stage4Boss" ? STAGE4_ART_URLS.boss : frame.atlas === "stage4Vfx" ? STAGE4_ART_URLS.vfx : frame.atlas === "stage3Enemy" ? STAGE3_ART_URLS.enemy : frame.atlas === "stage3Boss" ? STAGE3_ART_URLS.boss : frame.atlas === "stage3Vfx" ? STAGE3_ART_URLS.vfx : frame.atlas === "stage3Emissive" ? STAGE3_ART_URLS.emissive : frame.atlas === "ultimateVfx" ? ULTIMATE_ART : frame.atlas === "rankedVfx" ? RANKED_ART.vfx : frame.atlas === "rankedProjectiles" ? RANKED_ART.projectiles : frame.atlas === "equipmentIcons" ? EQUIPMENT_ART.icons : frame.atlas === "equipmentVfx" ? EQUIPMENT_ART.vfx : frame.atlas === "astraVfx" ? ASTRA_ART.combatVfx : frame.atlas === "vfx" ? sharedVfxUrl : frame.atlas === "astraEffects" ? ASTRA_ART.effects : frame.atlas === "stage2Elite" ? STAGE2_ART_URLS.elite : frame.atlas === "stage2Enemy" ? STAGE2_ART_URLS.enemy : STAGE2_ART_URLS.vfx);

@@ -1,0 +1,88 @@
+{
+  "version": "26.29.2",
+  "releaseDate": "09/10/2026",
+  "title": "Sửa hiển thị Rải Nhiên Liệu",
+  "displayTitle": "KHÔNG KÍCH 26.29.2 — SỬA HIỂN THỊ RẢI NHIÊN LIỆU",
+  "summary": "Vùng nhiên liệu của Cinder trước đây hiển thị nhỏ và nhọn, khiến người chơi khó nhận biết phạm vi gây sát thương. Hiệu ứng nay thể hiện đúng hình dạng và kích thước của vùng tác động.",
+  "sections": [
+    {
+      "id": "cinder-fuel",
+      "title": "CINDER — RẢI NHIÊN LIỆU",
+      "icon": {
+        "kind": "skill",
+        "id": "cinder_fuel_barrage"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "fuel-footprint",
+          "title": "Sửa hiển thị Rải Nhiên Liệu",
+          "icon": {
+            "kind": "skill",
+            "id": "cinder_fuel_barrage"
+          },
+          "rationale": "Vùng nhiên liệu của Cinder trước đây hiển thị nhỏ và nhọn, khiến người chơi khó nhận biết phạm vi gây sát thương. Hiệu ứng nay thể hiện đúng hình dạng và kích thước của vùng tác động.",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Level 1: Hiển thị đúng bốn vùng nhiên liệu hình tròn, bán kính 36, khoảng cách giữa các tâm 84."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Level 2–4: Hiển thị đúng bốn vùng nhiên liệu hình tròn, bán kính 40, khoảng cách giữa các tâm 84."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Level 5 — Tường Lửa: Hiển thị một vùng cháy hình chữ nhật liên tục, kích thước thực tế 332 × 88 sau giới hạn biên chiến trường."
+            },
+            {
+              "format": "bullet",
+              "changeType": "unchanged",
+              "text": "Giữ nguyên sát thương, cộng dồn Cháy và các thông số khác của kỹ năng."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "astra-balance",
+      "title": "ASTRA — SONG TINH PHẢN XẠ",
+      "icon": {
+        "kind": "skill",
+        "id": "twin_reflection"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "reflection-damage",
+          "title": "Cân bằng sát thương Song Tinh Phản Xạ",
+          "icon": {
+            "kind": "skill",
+            "id": "twin_reflection"
+          },
+          "rationale": "Điều chỉnh sức mạnh của Tinh Đạn Phản Chiếu, Hội Tụ và loạt phản chiếu cường hóa.",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "nerf",
+              "text": "Sát thương mỗi Tinh Đạn Phản Chiếu: 15% / 17,5% / 20% / 22,5% / 25% Hỏa lực theo cấp kỹ năng."
+            },
+            {
+              "format": "bullet",
+              "changeType": "nerf",
+              "text": "Sát thương Hội Tụ giảm còn 35% Hỏa lực."
+            },
+            {
+              "format": "bullet",
+              "changeType": "nerf",
+              "text": "Từ cấp 4: Cứ mỗi 5 đạn đánh thường chính của Astra, loạt phản chiếu kế tiếp gây thêm 25% sát thương, có kích thước lớn hơn và bay nhanh hơn."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

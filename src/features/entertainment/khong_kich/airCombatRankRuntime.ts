@@ -133,7 +133,7 @@ export function rankProjectileHit(w:CombatWorld,p:ProjectileEntity,e:EnemyEntity
  if(p.twinSide!==undefined&&p.rankVolley!==undefined&&skillRank(w.aircraft,"twin_reflection")>=3){
   const volley=r.twinVolleys.get(p.rankVolley);if(!volley)return;
   const old=volley.get(e.id);
-  if(old&&!old.done&&old.side!==p.twinSide&&w.elapsed-old.at<=.6){old.done=true;h.damage(w,e,getEffectiveAircraftStats(w.aircraft).firepower*1.2,"twin_reflection",true);h.effect(w,e.x,e.y,42,"twin_convergence");}
+  if(old&&!old.done&&old.side!==p.twinSide&&w.elapsed-old.at<=.6){old.done=true;h.damage(w,e,getEffectiveAircraftStats(w.aircraft).firepower*.35,"twin_reflection",true);h.effect(w,e.x,e.y,42,"twin_convergence");}
   else if(!old)volley.set(e.id,{side:p.twinSide,at:w.elapsed,done:false});
  }
 }
@@ -143,7 +143,7 @@ export function echoTwinShot(w:CombatWorld,main:ProjectileEntity,h:RankRuntimeHo
  const empowered=rank>=4&&r.twinShots>0&&r.twinShots%5===0;r.twinShots++;
  const volley=w.nextId++;r.twinVolleys.set(volley,new Map());
  const target=updateTwinAim(w,h),speed=Math.hypot(main.vx,main.vy)*(empowered?1.4:1);
- const power=getEffectiveAircraftStats(s).firepower,scale=getSkillRuntimeValues(s,"twin_reflection").damageMultiplier*(empowered?1.75:1);
+ const power=getEffectiveAircraftStats(s).firepower,scale=getSkillRuntimeValues(s,"twin_reflection").damageMultiplier*(empowered?1.25:1);
  for(const side of [-1,1]){
   const origin=rank>=3?twinCrystalPosition(w,side):{x:main.x+side*27,y:main.y+8};
   const dx=target?target.x-origin.x:main.vx,dy=target?target.y-origin.y:main.vy;

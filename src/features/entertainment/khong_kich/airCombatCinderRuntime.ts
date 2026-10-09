@@ -1,3 +1,4 @@
+import { cinderFuelCenters as fuelCenters, cinderFuelGeometry, CINDER_FUEL_OFFSETS } from './airCombatCinderFuel';
 import { statusExpiry } from './airCombatStatusTiming';
 import { DAMAGE_LABEL_SECONDS } from './airCombatFeedback';
 import type { CombatWorld, EnemyEntity } from './airCombatRuntime';
@@ -66,8 +67,7 @@ export function passiveHit(w:CombatWorld,e:EnemyEntity,hit:{primary:boolean;skil
  }
  if(a.aircraftId==='astra'&&hit.skillDirect&&t.markUntil>now&&now>=t.markReady){t.markUntil=0;t.markReady=now+6;deal(w,e,k,undefined,w.nextId++,h);fx(w,'mark',e.x,e.y,54,.4);}
 }
-function fuelCenters(f:Fuel){return [-126,-42,42,126].map(dx=>({x:f.x+dx,y:f.y}));}
-function inFuel(f:Fuel,e:EnemyEntity){const r=cinderValues('cinder_fuel_barrage',f.rank).radius,h=getEnemyHitbox(e);return f.rank>=5?rectVsAircraft(Math.max(R.left,f.x-126-r),f.y-r,Math.min(R.right,f.x+126+r),f.y+r,h):fuelCenters(f).some(p=>circleVsAircraft(p.x,p.y,r,h));}
+function inFuel(f:Fuel,e:EnemyEntity){const g=cinderFuelGeometry(f),h=getEnemyHitbox(e);return g.wall?rectVsAircraft(g.left,g.top,g.right,g.bottom,h):g.centers.some(p=>circleVsAircraft(p.x,p.y,g.radius,h));}
 function active(w:CombatWorld,id:CinderSkillId,seconds:number){w.aircraft.activeEffects[id]=Math.max(.00001,seconds);(w.aircraft.activeEffectDurations??={})[id]=seconds;}
 export function beginCinderSkill(w:CombatWorld,id:CinderSkillId,h:CinderHooks){
  const s=cinderState(w),rank=skillRank(w.aircraft,id),v=cinderValues(id,rank),now=w.elapsed,cast=w.nextId++;
@@ -78,8 +78,8 @@ export function beginCinderSkill(w:CombatWorld,id:CinderSkillId,h:CinderHooks){
  }else if(id==='cinder_fuel_barrage'){
   const targets=w.enemies.filter(e=>valid(w,e,h)&&e.y<w.playerY&&canTargetEnemy(w,e));
   let center={x:w.playerX,y:Math.max(R.top+v.radius,w.playerY-180)},score=-1;
-  for(const e of targets){const n=targets.filter(t=>Math.abs(t.y-e.y)<=v.radius+t.radius&&Math.abs(t.x-e.x)<=126+v.radius).length;if(n>score){score=n;center=e;}}
-  const half=126+v.radius, x=half*2>R.width?(R.left+R.right)/2:Math.max(R.left+half,Math.min(R.right-half,center.x));
+  for(const e of targets){const n=targets.filter(t=>Math.abs(t.y-e.y)<=v.radius+t.radius&&Math.abs(t.x-e.x)<=CINDER_FUEL_OFFSETS[3]+v.radius).length;if(n>score){score=n;center=e;}}
+  const half=CINDER_FUEL_OFFSETS[3]+v.radius, x=half*2>R.width?(R.left+R.right)/2:Math.max(R.left+half,Math.min(R.right-half,center.x));
   s.fuel={id:cast,rank,x,y:Math.max(R.top+v.radius,Math.min(R.bottom-v.radius,center.y)),fromX:w.playerX,fromY:w.playerY-20,at:now,land:now+.6,until:now+.6+v.duration,nextTick:now+1.1,entered:new Map(),detonated:new Map()};active(w,id,.6+v.duration);
  }else if(id==='cinder_heat_wave'){
   s.wave={id:cast,rank,x:w.playerX,y:w.playerY,at:now,until:now+.8,hits:new Set()};active(w,id,.8);

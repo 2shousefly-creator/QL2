@@ -1,3 +1,4 @@
+import { cinderFuelGeometry } from './airCombatCinderFuel';
 import guardianVfx from '../../../assets/khong-kich/v2/guardian-charge-vfx.png';
 import { playerAirframeScale } from './airCombatReleaseState';
 import aircraft from '../../../assets/khong-kich/cinder/aircraft.png';
@@ -19,7 +20,9 @@ export const CINDER_FRAMES={
  viper_muzzle:frame('cinderFeedback',0,0,2),viper_impact:frame('cinderFeedback',1,0,2),titan_impact:frame('cinderFeedback',2,0,2),astra_mark_burst:frame('cinderFeedback',3,0,2),
  battery_arc0:frame('cinderFeedback',0,1,2),battery_arc1:frame('cinderFeedback',1,1,2),fuel_splash:frame('cinderFeedback',2,1,2),fuel_vapor:frame('cinderFeedback',3,1,2),
  cinder_ring0:frame('cinderVfx',0,0),cinder_ring1:frame('cinderVfx',1,0),cinder_ring2:frame('cinderVfx',2,0),cinder_ring3:frame('cinderVfx',3,0),
- cinder_fuel0:frame('cinderVfx',0,1),cinder_fuel1:frame('cinderVfx',1,1),cinder_fuel2:frame('cinderVfx',2,1),cinder_fuel3:frame('cinderVfx',3,1),
+ cinder_burn:{...frame('cinderVfx',1,1),generated:'shared_flame'},
+ cinder_fuel0:frame('cinderFuel',0,0,1),cinder_fuel1:frame('cinderFuel',1,0,1),cinder_fuel2:frame('cinderFuel',2,0,1),cinder_fuel3:frame('cinderFuel',3,0,1),
+ cinder_wall0:frame('cinderFuelWall',0,0,1),cinder_wall1:frame('cinderFuelWall',1,0,1),cinder_wall2:frame('cinderFuelWall',2,0,1),cinder_wall3:frame('cinderFuelWall',3,0,1),
  cinder_beam0:frame('cinderVfx',0,2),cinder_beam1:frame('cinderVfx',1,2),cinder_beam2:frame('cinderVfx',2,2),cinder_beam3:frame('cinderVfx',3,2),
  cinder_burst0:frame('cinderVfx',0,3),cinder_burst1:frame('cinderVfx',1,3),cinder_burst2:frame('cinderVfx',2,3),cinder_burst3:frame('cinderVfx',3,3),
  passive_viper:frame('cinderProjectiles',0,0,2),passive_titan:frame('cinderProjectiles',1,0,2),cinder_basic_ammo:frame('cinderProjectiles',2,0,2),cinder_proc:frame('cinderProjectiles',3,0,2),
@@ -40,9 +43,9 @@ export function paintCinder(w:CombatWorld,paint:CinderPainter,reduced:boolean,la
   const age=3-protection,phase=reduced?2:Math.min(3,Math.floor(age*5)%4),size=96*playerAirframeScale(w.aircraft);
   draw(('guardian'+phase) as CinderVisualKey,w.playerX,w.playerY,size,size,0,Math.min(1,protection/.25)*.9);
  }
- const anim=(kind:'ring'|'fuel'|'beam'|'burst',phase=now)=>('cinder_'+kind+Math.floor(Math.max(0,phase)*(reduced?4:10))%4) as CinderVisualKey;
+ const anim=(kind:'ring'|'beam'|'burst',phase=now)=>('cinder_'+kind+Math.floor(Math.max(0,phase)*(reduced?4:10))%4) as CinderVisualKey;
  for(const [id,t] of s.targets){const e=w.enemies.find(e=>e.id===id&&e.hp>0);if(!e)continue;
-  if(t.burn&&t.until>=now){draw(anim('fuel'),e.x,e.y+e.radius*.5,e.radius*2,e.radius*1.8,0,.42);draw('cinder_ember',e.x,e.y-5,25,34,0,reduced?.35:.6);label?.(id,String(t.burn),e.x+e.radius+3,e.y);}
+  if(t.burn&&t.until>=now){draw('cinder_burn',e.x,e.y+e.radius*.5,e.radius*2,e.radius*1.8,0,.42);draw('cinder_ember',e.x,e.y-5,25,34,0,reduced?.35:.6);label?.(id,String(t.burn),e.x+e.radius+3,e.y);}
   if(t.markUntil>now)draw('passive_mark',e.x,e.y-e.radius,28,28,0,.75+(reduced?0:Math.sin(now*3)*.1));
   if(t.blazeUntil>now)draw('cinder_ember',e.x-e.radius,e.y,18,30,0,.9);
   if(t.rootUntil>now)draw(anim('ring'),e.x,e.y,e.radius*2.3,e.radius*2.3,0,.65);
@@ -52,10 +55,15 @@ export function paintCinder(w:CombatWorld,paint:CinderPainter,reduced:boolean,la
  for(const p of w.projectiles)if(p.owner==='player'&&p.primaryShot&&w.aircraft.aircraftId==='breaker')draw('passive_titan',p.x,p.y,11,29,Math.atan2(p.vy,p.vx)+Math.PI/2,.9);
  if(s.battery.phase==='feeding'){draw('passive_battery',w.playerX-13,w.playerY+7,23,36,0,.85);draw(Math.floor(now*10)%2?'battery_arc1':'battery_arc0',w.playerX-5,w.playerY+3,30,22,-.35,reduced?.3:.55);if(!reduced)draw('passive_battery',w.playerX+10,w.playerY,12,30,0,.3);}
  if(s.shield)draw(anim('ring'),w.playerX,w.playerY,79,79,0,.95);
- const f=s.fuel;if(f){const v=cinderValues('cinder_fuel_barrage',f.rank);for(let i=0;i<4;i++){const x=f.x+(i-1.5)*84;
-  if(now<f.land){const p=Math.min(1,(now-f.at)/.6),px=f.fromX+(x-f.fromX)*p,py=f.fromY+(f.y-f.fromY)*p;draw('cinder_canister',px,py,22,32,(p-.5)*.2);draw('cinder_ember',px,py+15,15,30,0,.65);}
-  else {if(!reduced)draw('fuel_vapor',x,f.y-7,v.radius*2,v.radius*2,now*.1,.13);draw(anim('fuel',now+i*.12),x,f.y,v.radius*2,v.radius*2,0,.85);draw('cinder_ember',x,f.y-5,v.radius,v.radius*1.5,0,.5);if(f.rank>=5&&i<3)draw(anim('fuel',now+i*.1),x+42,f.y,84,v.radius*1.5,0,.8);}
- }}
+ const f=s.fuel;if(f){const g=cinderFuelGeometry(f);
+  if(now<f.land){for(const point of g.centers){const p=Math.min(1,(now-f.at)/.6),px=f.fromX+(point.x-f.fromX)*p,py=f.fromY+(f.y-f.fromY)*p;draw('cinder_canister',px,py,22,32,(p-.5)*.2);draw('cinder_ember',px,py+15,15,30,0,.65);}}
+  else if(now<f.until){
+   const phase=reduced?0:Math.floor((now-f.land)*8)%4;
+   // Cell bounds are the visible footprint: no transparent-padding scale correction.
+   if(g.wall)draw(('cinder_wall'+phase) as CinderVisualKey,(g.left+g.right)/2,(g.top+g.bottom)/2,g.right-g.left,g.bottom-g.top,0,.9);
+   else for(const point of g.centers)draw(('cinder_fuel'+phase) as CinderVisualKey,point.x,point.y,g.radius*2,g.radius*2,0,.9);
+  }
+ }
  const wave=s.wave??(s.waveAfterglow&&now<s.waveAfterglow.hideAt?s.waveAfterglow:undefined);if(wave){
   const age=now-wave.at,gameplayDiameter=2*cinderWaveRadius(wave.x,wave.y)/.64;
   // Continue beyond the entire viewport until even the ring's inner edge has left it.
