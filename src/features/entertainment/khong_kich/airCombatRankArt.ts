@@ -3,7 +3,7 @@ import { preferredDuelDecoy } from "./airCombatTargetability";
 import { ULTIMATE_FRAMES } from "./airCombatUltimateArt";
 import type { CombatWorld, ProjectileEntity } from "./airCombatRuntime";
 import { getMissilePose } from "./airCombatMissilePresentation";
-import { INTERFERENCE_WAVE_THICKNESS } from "./airCombatRankRuntime";
+import { INTERFERENCE_WAVE_THICKNESS, twinCrystalPosition } from "./airCombatRankRuntime";
 import { skillRank } from "./airCombatSkillRanks";
 import type { AtlasFrame } from "./pixi/airCombatPixiTypes";
 import vfx from "../../../assets/khong-kich/26.25.0/compat/v2-ranked-skill-vfx-atlas.png";
@@ -76,9 +76,13 @@ export function paintRankSkills(w:CombatWorld,draw:RankSpritePainter,reducedMoti
  if((w.aircraft.activeEffects.twin_reflection??0)>0){
   const charge=skillRank(w.aircraft,"twin_reflection")>=4&&(r?.twinShots??0)>0&&(r?.twinShots??0)%5===0;
   for(let n=0;n<2;n++){
-   const side=n===0?-1:1,x=w.playerX+side*27,y=w.playerY-12+(reducedMotion?0:Math.sin(t*3)*2);
+   const side=n===0?-1:1,position=twinCrystalPosition(w,side),aim=r?.twinAim;
+   const x=position.x,y=position.y+(aim||reducedMotion?0:Math.sin(t*3)*2);
+   const angle=aim?Math.atan2(aim.y-y,aim.x-x)+Math.PI/2:reducedMotion?0:side*.06+Math.sin(t*2)*.03;
    if(charge)draw(-42-n,"rankCrystalCharge",x,y,36,36,0,.8);
-   draw(-40-n,"rankCrystal",x,y,18,31,reducedMotion?0:side*.06+Math.sin(t*2)*.03,1);
+   draw(-40-n,"rankCrystal",x,y,18,31,angle,1);
+   const flash=1-(t-(r?.twinFiredAt??-Infinity))/.12;
+   if(aim&&flash>0)draw(-44-n,"rankCrystalCharge",x+Math.sin(angle)*12,y-Math.cos(angle)*12,22,28,angle,flash*(reducedMotion?.35:.75),true);
   }
  }
  for(const p of w.projectiles){

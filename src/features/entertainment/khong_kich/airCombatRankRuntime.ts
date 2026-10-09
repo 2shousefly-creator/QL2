@@ -38,8 +38,18 @@ export interface RankRuntime {
  waves:InterferenceWave[];
  twinVolleys:Map<number,Map<number,{side:number;at:number;done:boolean}>>;
  twinShots:number; interferenceEnergyRestored:number;
+ twinAim?:{x:number;y:number}; twinFiredAt?:number;
 }
 export const rankRuntime=(w:CombatWorld):RankRuntime=>w.rankRuntime??={interference:new Map(),projectileSlows:new Map(),pulses:[],waves:[],twinVolleys:new Map(),twinShots:0,interferenceEnergyRestored:0};
+export const twinCrystalPosition=(w:CombatWorld,side:number)=>({x:w.playerX+side*27,y:w.playerY-12});
+function updateTwinAim(w:CombatWorld,h:RankRuntimeHooks) {
+ const r=rankRuntime(w);
+ const target=skillRank(w.aircraft,"twin_reflection")>=3&&(w.aircraft.activeEffects.twin_reflection??0)>0
+  ? preferredDuelDecoy(w)??h.priority(w):null;
+ // Both crystals consume one authoritative target sample; fired bullets never home.
+ r.twinAim=target?{x:target.x,y:target.y}:undefined;
+ return r.twinAim;
+}
 function densestGravityAnchorPoint(w:CombatWorld,h:RankRuntimeHooks,rank:number):{x:number;y:number}|null {
  const rect=GAMEPLAY_SAFE_RECT;
  const enemies=w.enemies.filter(e=>e.hp>0&&h.hostile(w,e)&&canTargetEnemy(w,e)&&e.x>=rect.left&&e.x<=rect.right&&e.y>=rect.top&&e.y<=rect.bottom);
@@ -74,7 +84,7 @@ export function beginRankSkill(w:CombatWorld,id:SkillId,h:RankRuntimeHooks) {
    if(delay===0)emitInterferenceWave(w,scheduled);else r.pulses.push(scheduled);
   });
  }
- if(id==="twin_reflection")r.twinShots=0;
+ if(id==="twin_reflection"){r.twinShots=0;r.twinFiredAt=undefined;updateTwinAim(w,h);}
 }
 export function collapseAnchor(w:CombatWorld,h:RankRuntimeHooks,natural:boolean) {
  const r=rankRuntime(w),a=r.anchor;if(!a)return;
@@ -132,10 +142,19 @@ export function echoTwinShot(w:CombatWorld,main:ProjectileEntity,h:RankRuntimeHo
  if(!rank||(s.activeEffects.twin_reflection??0)<=0)return;
  const empowered=rank>=4&&r.twinShots>0&&r.twinShots%5===0;r.twinShots++;
  const volley=w.nextId++;r.twinVolleys.set(volley,new Map());
- for(const side of [-1,1])h.projectile(w,{owner:"player",source:"basic",weaponFraction:main.weaponFraction,firedAt:main.firedAt,skillId:"twin_reflection",x:main.x+side*27,y:main.y+8,vx:main.vx*(empowered?1.4:1),vy:main.vy*(empowered?1.4:1),rawDamage:main.rawDamage,echoScale:getSkillRuntimeValues(s,"twin_reflection").damageMultiplier*(empowered?1.75:1),radius:empowered?4.2:2.8,penetrationRemaining:rank>=2?1:0,penetrationMultiplier:.6,color:"#fdba74",twinSide:side,rankVolley:volley,procFree:true});
+ const target=updateTwinAim(w,h),speed=Math.hypot(main.vx,main.vy)*(empowered?1.4:1);
+ const power=getEffectiveAircraftStats(s).firepower,scale=getSkillRuntimeValues(s,"twin_reflection").damageMultiplier*(empowered?1.75:1);
+ for(const side of [-1,1]){
+  const origin=rank>=3?twinCrystalPosition(w,side):{x:main.x+side*27,y:main.y+8};
+  const dx=target?target.x-origin.x:main.vx,dy=target?target.y-origin.y:main.vy;
+  const angle=Math.hypot(dx,dy)>.001?Math.atan2(dy,dx):Math.atan2(main.vy,main.vx);
+  const shot=h.projectile(w,{owner:"player",source:"basic",weaponFraction:1,firedAt:main.firedAt,skillId:"twin_reflection",...origin,vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed,rawDamage:power,echoScale:scale,radius:empowered?4.2:2.8,penetrationRemaining:rank>=2?1:0,penetrationMultiplier:.6,color:"#fdba74",twinSide:side,rankVolley:volley,procFree:true});
+  if(shot)r.twinFiredAt=w.elapsed;
+ }
 }
 export function tickRankSkills(w:CombatWorld,dt:number,h:RankRuntimeHooks) {
  const r=rankRuntime(w),s=w.aircraft,now=w.elapsed;
+ updateTwinAim(w,h);
  if(r.lock){const l=r.lock,target=l.decoy?preferredDuelDecoy(w,l.decoy):w.enemies.find(e=>e.id===l.target&&h.hostile(w,e)&&canTargetEnemy(w,e,"hard_lock"));
   if(l.until<=now)r.lock=undefined;
   else if(!target){const next=l.killed&&skillRank(s,"predator_lock")>=5?h.priority(w):null;if(next){l.target=next.id;l.until+=3;l.stacks=0;l.killed=false;}else r.lock=undefined;}

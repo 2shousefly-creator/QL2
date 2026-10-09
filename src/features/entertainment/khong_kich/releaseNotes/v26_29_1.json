@@ -1,0 +1,67 @@
+{
+  "version": "26.29.1",
+  "releaseDate": "09/10/2026",
+  "title": "Astra — Song Tinh Hội Tụ",
+  "displayTitle": "KHÔNG KÍCH 26.29.1 — ASTRA · SONG TINH HỘI TỤ",
+  "summary": "Nâng cấp Điểm Hội Tụ cho hai tinh thể cùng ngắm và bắn vào mục tiêu hiện tại. Điều chỉnh sát thương Tinh Đạn Phản Chiếu ở cả 5 cấp.",
+  "sections": [
+    {
+      "id": "astra-twin-reflection",
+      "title": "ASTRA — SONG TINH PHẢN XẠ",
+      "icon": {
+        "kind": "skill",
+        "id": "twin_reflection"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "convergence",
+          "title": "Điểm Hội Tụ — Cấp 3 trở lên",
+          "icon": {
+            "kind": "skill",
+            "id": "twin_reflection"
+          },
+          "rationale": "Hai tinh thể phối hợp ngắm cùng một mục tiêu để thể hiện rõ cơ chế Hội Tụ.",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Từ cấp 3, khi Song Tinh Phản Xạ hoạt động, hai tinh thể xoay về cùng mục tiêu hiện tại. Mỗi loạt Tinh Đạn Phản Chiếu bắn từ hai bên và hội tụ vào vị trí mục tiêu tại thời điểm phóng; đạn đã phóng tiếp tục bay thẳng."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Đồng bộ hướng tinh thể, chớp sáng đầu nòng và hướng bay của Tinh Đạn. Khi không có mục tiêu hợp lệ, tinh thể bắn theo hướng đạn chính."
+            },
+            {
+              "format": "bullet",
+              "changeType": "unchanged",
+              "text": "Giữ hiệu ứng Hội Tụ gây thêm 120% Hỏa lực khi hai tinh thể trúng cùng mục tiêu trong 0,6 giây, tối đa một lần mỗi loạt trên mỗi mục tiêu. Giữ hiệu ứng xuyên, cường hóa mỗi 5 phát và Tiểu Thương cấp 5."
+            }
+          ]
+        },
+        {
+          "id": "damage",
+          "title": "Sát thương Tinh Đạn Phản Chiếu",
+          "icon": {
+            "kind": "skill",
+            "id": "twin_reflection"
+          },
+          "rationale": "Sát thương cơ sở tăng đều theo cấp và được tính trực tiếp từ Hỏa lực.",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Mỗi Tinh Đạn Phản Chiếu gây sát thương cơ sở bằng 25% / 27,5% / 30% / 32,5% / 35% Hỏa lực ở cấp 1 / 2 / 3 / 4 / 5."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Cập nhật mô tả kỹ năng và nội dung nâng cấp của cả 5 cấp theo cơ chế và hệ số sát thương mới."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
