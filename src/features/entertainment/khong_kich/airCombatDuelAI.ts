@@ -228,10 +228,14 @@ function skillUtility(id: SkillId, s: AircraftCombatState, ai: MirrorAI, p: Poin
   const defense = ({terra:"terra_reactive_rock_armor",sylva:"sylva_symbiosis",argent:"argent_guard_stance",riptide:"riptide_wellspring",cinder:"cinder_fire_shield",black_eagle:"decoy",breaker:"armor_shield",phantom:"invisibility",astra:"orbit_reversal"} as const)[s.aircraftId];
   const defenseReady=skillRank(s,defense)>0&&(s.cooldowns[defense]??0)<3&&(s.activeEffects[defense]??0)<=0;
   const reserveCost=!defensive&&defenseReady?Math.min(getSkillRuntimeValues(s,defense).cost,Math.max(0,stats.maxResource-values.cost)):0;
-  const lethalWindow=seen.playerHp>0&&seen.playerHp<stats.firepower*Math.max(1,values.damageMultiplier)&&firing>.7;
+  const burn=Math.max(0,...actor.enemies.filter(e=>e.hp>0).map(e=>cinderStacks(actor,e.id)));
+  const beamValues=cinderValues('cinder_inferno_beam',skillRank(s,'cinder_inferno_beam'));
+  const beamBurn=Math.max(0,...actor.enemies.filter(e=>e.hp>0&&e.aircraftTarget).map(e=>cinderStacks(actor,e.id)));
+  const beamRatio=beamValues.damageMultiplier+beamValues.beamPerBurn*beamBurn;
+  const lethalWindow=seen.playerHp>0&&seen.playerHp<stats.firepower*Math.max(1,id==='cinder_inferno_beam'?beamRatio:values.damageMultiplier)&&firing>.7;
   if(!defensive&&s.currentResource-values.cost<reserveCost&&!lethalWindow&&hp>.25)return -Infinity;
   if(!defensive&&seen.targetProtected&&!["gravity_anchor","twin_reflection","escort_drone"].includes(id))return -Infinity;
-  const burn=Math.max(0,...actor.enemies.filter(e=>e.hp>0).map(e=>cinderStacks(actor,e.id)));
+
   const opportunity: Record<SkillId, number> = {
     terra_reactive_rock_armor:0,terra_seismic_cannon:0,terra_strata_clamp:0,terra_geocore_overdrive:0,
     sylva_symbiosis:0,sylva_acid_burst:0,sylva_parasitic_seed:0,sylva_deathbloom:0,
@@ -240,7 +244,7 @@ function skillUtility(id: SkillId, s: AircraftCombatState, ai: MirrorAI, p: Poin
     cinder_fire_shield:danger+fullScreen*1.8+areaDanger*.5,
     cinder_fuel_barrage:ahead?safe*(.6+steady*.5+committed*.4):0,
     cinder_heat_wave:safe*(burn>0?.8+burn*.15:.35),
-    cinder_inferno_beam:firing*steady*safe*(burn>0?1.6:1.1),
+    cinder_inferno_beam:firing*steady*safe*(.5+1.3*beamRatio/(beamValues.damageMultiplier+6*beamValues.beamPerBurn)+(skillRank(s,'cinder_inferno_beam')>=2&&beamBurn>=3?.3:0)),
     decoy: danger + density*.65 + homing*.3,
     afterburner: ahead ? line*safe*(combo("predator_lock")?1.5:1) : 0,
     predator_lock: ahead ? line*safe*steady*1.3 : 0,
@@ -299,7 +303,7 @@ function perceive(w:CombatWorld,ai:MirrorAI,p:Point,actor:CombatWorld) {
   const cinder=cinderState(w),fuel=cinder.fuel,beam=cinder.beam;
   for(const shot of cinder.followups.slice(0,8))bullets.push({x:shot.x,y:shot.y,vx:Math.cos(shot.angle)*600,vy:Math.sin(shot.angle)*600,damage:shot.raw,homing:true,radius:2.5,turnRate:8,lifetime:shot.until-w.elapsed,capturable:false});
   if(fuel){const v=cinderValues('cinder_fuel_barrage',fuel.rank);for(const dx of [-126,-42,42,126])hazards.push({kind:'persistent_zone',x:fuel.x+dx,y:fuel.y,radius:v.radius,cc:false,startsAt:fuel.land,endsAt:fuel.until});if(fuel.rank>=5)for(const dx of [-84,0,84])hazards.push({kind:'persistent_zone',x:fuel.x+dx,y:fuel.y,radius:v.radius,cc:false,startsAt:fuel.land,endsAt:fuel.until});}
-  if(beam){const x=beam.fired?beam.x:w.playerX,y=beam.fired?beam.y:w.playerY-20;hazards.push({kind:'beam',x,y,end:{x,y:R.top},radius:cinderValues('cinder_inferno_beam',beam.rank).width/2,cc:false,startsAt:beam.fire,endsAt:beam.until});}
+  if(beam){const x=beam.fired?beam.x:w.playerX,y=beam.fired?beam.y:w.playerY-20;hazards.push({kind:'beam',x,y,end:{x,y:R.top},radius:cinderValues('cinder_inferno_beam',beam.rank).width/2,cc:beam.rank>=2&&w.enemies.some(e=>e.aircraftTarget?.world===actor&&cinderStacks(w,e.id)>=3),startsAt:beam.fire,endsAt:beam.until});}
   for(const lane of cinder.lanes)hazards.push({kind:'beam',x:lane.x,y:lane.y,end:{x:lane.x,y:R.top},radius:cinderValues('cinder_inferno_beam',lane.rank).width/2,cc:false,startsAt:lane.at,endsAt:lane.until});
   if(cinder.wave){const wave=cinder.wave,travel=Math.hypot(p.x-wave.x,p.y-wave.y)/cinderWaveRadius(wave.x,wave.y)*.8;hazards.push({kind:'aoe',x:p.x,y:p.y,radius:20,cc:true,startsAt:wave.at+travel,endsAt:wave.at+travel+.05});}
   if(w.laserCharge>0||w.laserRemaining>0)hazards.push({kind:"beam",x:w.playerX,y:w.playerY,end:{x:w.playerX,y:R.top},radius:24,cc:false,startsAt:w.elapsed+w.laserCharge,endsAt:w.elapsed+w.laserCharge+w.laserRemaining});

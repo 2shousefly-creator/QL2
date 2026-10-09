@@ -1,4 +1,3 @@
-import { cinderFuelAtlas } from './airCombatCinderFuel';
 import { paintBalanceGuides, paintAircraftDamageSmoke } from './airCombatBalanceVisuals';
 import { phantomLaserBounds, PHANTOM_LASER_VISUAL_WIDTH } from './airCombatPhantom';
 import { terraHud } from './airCombatTerraRuntime';
@@ -12,7 +11,7 @@ import { ARGENT_ART, ARGENT_FRAMES, argentPose, argentShake, paintArgent, ARGENT
 import { RIPTIDE_ART, RIPTIDE_FRAMES, paintRiptide } from './airCombatRiptideArt';
 import { BIGBANG_ART, BIGBANG_FRAMES, paintBigBang } from './airCombatBigBangArt';
 import { cinderBurnLabels, CINDER_TOTAL_FONT_SIZE, CINDER_STACK_FONT_SIZE, NORMAL_DAMAGE_FONT_SIZE } from './airCombatFeedback';
-import { CINDER_ART, CINDER_FRAMES, paintCinder } from './airCombatCinderArt';
+import { CINDER_ART, CINDER_RASTER_SOURCES, CINDER_FRAMES, paintCinder } from './airCombatCinderArt';
 import soloArenaUrl from "../../../assets/khong-kich/solo/solo-duel-arena.png";
 import { MIRROR_TRANSFORM, mirrorPoint } from "./airCombatMirrorTransform";
 import { paintMirage } from "./airCombatMirageVisuals";
@@ -90,8 +89,9 @@ export const loadMagneticCanvasAssets=()=>loadCanvasTextures([STAGE2_ART_URLS.en
 const mirageTintCache = new Map<string,HTMLCanvasElement>();
 function drawMagneticFrame(ctx: CanvasRenderingContext2D, frame: AtlasFrame, x: number, y: number,
   width: number, height: number, rotation = 0, alpha = 1, tint = 0xffffff, anchorX = .5) {
-  if(frame.atlas==='cinderFuel'||frame.atlas==='cinderFuelWall'){
-    const image=cinderFuelAtlas(frame.atlas==='cinderFuelWall'),[sx,sy,sw,sh]=frame.rect;
+  if(frame.atlas in CINDER_RASTER_SOURCES){
+    const image=magneticImage(CINDER_RASTER_SOURCES[frame.atlas as keyof typeof CINDER_RASTER_SOURCES]),[sx,sy,sw,sh]=frame.rect;
+    if(!image)return;
     ctx.save();ctx.globalAlpha=alpha;ctx.translate(x,y);ctx.rotate(rotation);
     ctx.drawImage(image,sx*image.width,sy*image.height,sw*image.width,sh*image.height,-width*anchorX,-height/2,width,height);
     ctx.restore();return;

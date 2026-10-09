@@ -17,7 +17,7 @@ export function sylvaValues(id:SylvaSkillId,rank:number){
  const n=Math.max(0,Math.min(id==='sylva_deathbloom'?2:4,rank-1)),i=SYLVA_SKILLS.indexOf(id);
  return {cost:i===3?150+50*n:(i===1?100:90)+10*n,cooldown:i===3?90-5*n:[32,25,23][i]-n,
   duration:i===0||i===3?6:i===1?5:1,damageMultiplier:i===0?0:i===1?1.5+.2*n:i===2?2.5+.5*n:1+.5*n,
-  capture:.6+.05*n,dps:.4+.1*n,amplification:.12+.02*n,root:1+.25*n,record:.9+.3*n,
+  capture:.6+.05*n,dps:.4+.1*n,amplification:.12+.02*n,root:1+.25*n,record:i===3?[.6,.8,1][n]:.9+.3*n,
   count:1,upkeepPerSecond:0,sideProjectileMultiplier:1,radiusMultiplier:1,damageTakenMultiplier:1,charge:0};
 }
 export function sylvaDescription(id:SylvaSkillId,rank:number){

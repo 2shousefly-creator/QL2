@@ -3522,7 +3522,17 @@ const riptideHooks:RiptideHooks={
   const marks=equipmentState(opponent.aircraft).marks[e.id];if(marks)delete marks[24];
  }
 };
-const cinderHooks:CinderHooks={hostile:isHostileToPlayer,damage:(w,e,raw,skill,provenance)=>applyDamageToEnemy(w,e,raw,provenance.trueDamage?'#fff1af':'#ff9b45',provenance.trueDamage?'burn':skill?'skill':'core',skill,undefined,undefined,'area_hazard',false,true,undefined,1,[],undefined,undefined,true,undefined,provenance)};
+const cinderHooks:CinderHooks={
+ hostile:isHostileToPlayer,
+ stun:(w,e)=>{
+  if(e.hp<=0||!isHostileToPlayer(w,e))return;
+  // Aircraft use their status adapter directly: immunity and Core duration apply once.
+  const actor=e.aircraftTarget?.world;
+  if(actor)applyPlayerStatus(actor.aircraft,{stun:2});
+  else e.stun=extendStatusRemaining(e,'stun',e.stun,e.type==='boss'?1:isElite(e.type)?1.5:2,w.elapsed);
+ },
+ damage:(w,e,raw,skill,provenance,receipt)=>applyDamageToEnemy(w,e,raw,provenance.trueDamage?'#fff1af':'#ff9b45',provenance.trueDamage?'burn':skill?'skill':'core',skill,undefined,undefined,'area_hazard',false,true,undefined,1,[],undefined,undefined,true,undefined,provenance,receipt),
+};
 const expansionHooks: ExpansionHooks = {
     hostile: isHostileToPlayer, threat: expansionThreatNearby, debt: repayExpansionDebt,
     heal: (w, amount, row) => { if (w.aircraft.currentHp > 0) healPlayerWithFeedback(w,amount,"core",true,row); },
@@ -3621,7 +3631,6 @@ function applyDamageToEnemy(world: CombatWorld, enemy: EnemyEntity, rawDamage: n
     const resolved = firstVolleyDamage === undefined
         ? resolvePlayerDamage(penalizedBeforeCrit * zoneMultiplier * sylvaOutgoing(world,enemy), armor, effectiveStats, world.random)
         : { actualDamage: calculateDamage(((firstVolleyDamage-(gatling?.45*firstVolleyWeapon:0)) * .15 + recoilDamage * multiplier) * hitMultiplier * zoneMultiplier * sylvaOutgoing(world,enemy), armor), critical: false, multiplier: 1 };
-    if(intrinsic?.rawBudget){const raw=(rawDamage+recoilDamage)*multiplier*hitMultiplier*zoneMultiplier*resolved.multiplier;const allowed=Math.min(raw,Math.max(0,intrinsic.rawBudget.remaining));intrinsic.rawBudget.remaining-=allowed;resolved.actualDamage=calculateDamage(allowed*sylvaOutgoing(world,enemy),armor);}
     if (volleyHits && firstVolleyDamage === undefined){
         volleyHits.set(enemy.id, rawDamage * multiplier * resolved.multiplier);
         let parts=volleyWeaponComponents.get(volleyHits);if(!parts){parts=new Map();volleyWeaponComponents.set(volleyHits,parts);}

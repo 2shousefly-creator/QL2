@@ -13,10 +13,11 @@ import { celestialProtection, createAbsorbShield } from './airCombatExpansion';
 import { negativeStatusDuration } from './airCombatCoreEffects';
 import { canTargetEnemy } from './airCombatTargetability';
 
-export interface IntrinsicDamage { reflection?:boolean; noCrit?:boolean; preserveModifiers?:boolean; weapon?:boolean; trueDamage:boolean; castId:number; passive?:boolean; source?:"cinder_burn"; ownerId?:number; burnSession?:number; rawBudget?:{remaining:number} }
+export interface IntrinsicDamage { reflection?:boolean; noCrit?:boolean; preserveModifiers?:boolean; weapon?:boolean; trueDamage:boolean; castId:number; passive?:boolean; source?:"cinder_burn"; ownerId?:number; burnSession?:number }
 export interface CinderHooks {
  hostile:(w:CombatWorld,e:EnemyEntity)=>boolean;
- damage:(w:CombatWorld,e:EnemyEntity,raw:number,skill:SkillId|undefined,provenance:IntrinsicDamage)=>number;
+ stun:(w:CombatWorld,e:EnemyEntity)=>void;
+ damage:(w:CombatWorld,e:EnemyEntity,raw:number,skill:SkillId|undefined,provenance:IntrinsicDamage,receipt?:{hp:number;total:number})=>number;
 }
 interface TargetState { entity:EnemyEntity; session:number; burn:number; until:number; nextTick:number; passiveReady:number; markUntil:number; markReady:number; blazeUntil:number; slowUntil:number; slow:number; rootUntil:number }
 interface Fuel { id:number; rank:number; x:number; y:number; fromX:number; fromY:number; at:number; land:number; until:number; nextTick:number; entered:Map<number,number>; detonated:Map<number,Set<number>> }
@@ -50,9 +51,10 @@ export function addCinderBurn(w:CombatWorld,e:EnemyEntity,count:number,h:CinderH
  t.burn=Math.min(CINDER_BURN.cap,t.burn+count);t.until=at+CINDER_BURN.duration;
 }
 function deal(w:CombatWorld,e:EnemyEntity,ratio:number,skill:SkillId|undefined,id:number,h:CinderHooks,trueDamage=false){
- const damage=h.damage(w,e,getEffectiveAircraftStats(w.aircraft).firepower*ratio,skill,{trueDamage,castId:id,passive:skill===undefined});
- if(skill==='cinder_inferno_beam')applyBlaze(w,e);
- return damage;
+ const receipt={hp:0,total:0};
+ const damage=h.damage(w,e,getEffectiveAircraftStats(w.aircraft).firepower*ratio,skill,{trueDamage,castId:id,passive:skill===undefined},receipt);
+ // Ultimate statuses require an actual damage delivery, including absorption by a shield.
+ return skill==='cinder_inferno_beam'?receipt.total:damage;
 }
 export function passiveHit(w:CombatWorld,e:EnemyEntity,hit:{primary:boolean;skillDirect:boolean;critical:boolean;beforeCrit:number},h:CinderHooks){
  const s=cinderState(w),a=w.aircraft,t=targetState(w,e.id),now=w.elapsed,k=passiveCoefficient(a);
@@ -106,15 +108,14 @@ function applyBlaze(w:CombatWorld,e:EnemyEntity){
 }
 function fireBeam(w:CombatWorld,b:Beam,h:CinderHooks){
  const s=cinderState(w),v=cinderValues('cinder_inferno_beam',b.rank);b.fired=true;b.x=w.playerX;b.y=w.playerY-20;
- const snapshot=w.enemies.filter(e=>valid(w,e,h)&&rectVsAircraft(b.x-v.width/2,R.top,b.x+v.width/2,b.y,getEnemyHitbox(e))).map(e=>({e,id:e.id,x:e.x,y:e.y,n:cinderStacks(w,e.id)}));
- const recipients=w.enemies.filter(e=>valid(w,e,h));const collateral=new Map<number,{remaining:number}>(),stacked=new Set<number>();
- for(const {e} of snapshot){deal(w,e,v.damageMultiplier,'cinder_inferno_beam',b.id,h);addCinderBurn(w,e,1,h);fx(w,'impact',e.x,e.y,52,.35);}
- for(const source of snapshot){if(!source.n)continue;fx(w,'burst',source.x,source.y,v.radius*2,.55);const ratio=1.2+source.n;
-  for(const e of recipients){if(!circleVsAircraft(source.x,source.y,v.radius,getEnemyHitbox(e)))continue;
-   const self=e.id===source.id,firepower=getEffectiveAircraftStats(w.aircraft).firepower;
-   if(self)deal(w,e,ratio,'cinder_inferno_beam',b.id,h);
-   else {const budget=collateral.get(e.id)??{remaining:firepower*7.2};collateral.set(e.id,budget);if(budget.remaining>0){h.damage(w,e,firepower*ratio,'cinder_inferno_beam',{trueDamage:false,castId:b.id,rawBudget:budget});applyBlaze(w,e);}}
-   if(!self&&b.rank>=2&&!stacked.has(e.id)){stacked.add(e.id);addCinderBurn(w,e,1,h);}
+ // Snapshot every target before damage/procs can change anyone's burn stacks.
+ const snapshot=w.enemies.filter(e=>valid(w,e,h)&&rectVsAircraft(b.x-v.width/2,R.top,b.x+v.width/2,b.y,getEnemyHitbox(e))).map(e=>({e,n:cinderStacks(w,e.id)}));
+ for(const {e,n} of snapshot){
+  if(!valid(w,e,h))continue;
+  const hit=deal(w,e,v.damageMultiplier+v.beamPerBurn*n,'cinder_inferno_beam',b.id,h);
+  if(hit>0){
+   if(valid(w,e,h)){if(b.rank>=2&&n>=3)h.stun(w,e);addCinderBurn(w,e,1,h);applyBlaze(w,e);}
+   fx(w,'impact',e.x,e.y,52,.35);
   }
  }
  igniteFuel(w,b.id,(x,y,r)=>x+r>=b.x-v.width/2&&x-r<=b.x+v.width/2&&y+r>=R.top&&y-r<=b.y,h);
@@ -189,7 +190,7 @@ export function tickCinder(w:CombatWorld,dt:number,h:CinderHooks){
  }s.spreads=s.spreads.filter(p=>p.sources.length>0);
  const b=s.beam;if(b){if(!b.fired&&now>=b.fire)fireBeam(w,b,h);if(now>=b.until){s.beam=undefined;endAircraftSkill(w.aircraft,'cinder_inferno_beam');}else w.aircraft.activeEffects.cinder_inferno_beam=b.until-now;}
  for(const lane of s.lanes){const v=cinderValues('cinder_inferno_beam',lane.rank);for(let guard=0;lane.nextTick<=Math.min(now,lane.until)+1e-8&&guard<6;guard++,lane.nextTick+=.5){const burn=lane.nextTick>=lane.nextBurn-1e-8;
-  for(const e of w.enemies)if(valid(w,e,h)&&rectVsAircraft(lane.x-v.width/2,R.top,lane.x+v.width/2,lane.y,getEnemyHitbox(e))){deal(w,e,.6,'cinder_inferno_beam',lane.id,h);if(burn)addCinderBurn(w,e,1,h,lane.nextTick);}if(burn)lane.nextBurn++;
+  for(const e of w.enemies)if(valid(w,e,h)&&rectVsAircraft(lane.x-v.width/2,R.top,lane.x+v.width/2,lane.y,getEnemyHitbox(e))){const hit=deal(w,e,.6,'cinder_inferno_beam',lane.id,h);if(hit>0&&valid(w,e,h)){if(burn)addCinderBurn(w,e,1,h,lane.nextTick);applyBlaze(w,e);}}if(burn)lane.nextBurn++;
  }}s.lanes=s.lanes.filter(l=>l.until>now);
 }
 export function cancelCinder(w:CombatWorld){const s=states.get(w);if(!s)return;states.delete(w);delete w.aircraft.coreState.shields.cinder;for(const id of ['cinder_fire_shield','cinder_fuel_barrage','cinder_heat_wave','cinder_inferno_beam'] as const)endAircraftSkill(w.aircraft,id);}

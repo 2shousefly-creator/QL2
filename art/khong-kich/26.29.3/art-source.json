@@ -1,0 +1,116 @@
+{
+  "version": "26.29.3",
+  "generator": "built-in image_gen",
+  "reference": "fuel-master.png",
+  "sources": [
+    "fuel-master",
+    "fuel-phases",
+    "connector-phases",
+    "smoke-phases"
+  ],
+  "prompts": {
+    "master": "Top-down broad organic burning oily fuel pool, realistic painted orange/gold flames, embers, no smoke; transparent RGBA.",
+    "fuel-phases": "Four phases of the exact reference pool in a 2x2 grid; stable center, footprint, scale, camera and palette; vary internal flames and embers.",
+    "connector-phases": "Four horizontal burning-fuel stream phases matching master, stacked rows; continuous thick hot bed, soft ends, natural flames, no pools; transparent RGBA.",
+    "smoke-phases": "Four 2x2 phases of matching volumetric charcoal/brown smoke, faint orange illumination, soft translucent edges; no flame or backdrop."
+  },
+  "processing": "Common alpha trim per family, Lanczos resize and raster-only composite. Wall dense bed uses central connector crop under three connector segments and four fuel pools. No procedural fire or smoke.",
+  "pivot": [
+    0.5,
+    0.5
+  ],
+  "frames": 4,
+  "layout": "horizontal",
+  "atlases": {
+    "fuel": {
+      "cell": [
+        192,
+        192
+      ],
+      "trim": {
+        "sourceCell": [
+          627,
+          627
+        ],
+        "commonTrim": [
+          0,
+          0,
+          627,
+          627
+        ]
+      }
+    },
+    "connector": {
+      "cell": [
+        768,
+        80
+      ],
+      "trim": {
+        "sourceCell": [
+          1983,
+          198
+        ],
+        "commonTrim": [
+          0,
+          0,
+          1967,
+          198
+        ]
+      }
+    },
+    "smoke": {
+      "cell": [
+        192,
+        192
+      ],
+      "trim": {
+        "sourceCell": [
+          627,
+          627
+        ],
+        "commonTrim": [
+          0,
+          0,
+          627,
+          627
+        ]
+      }
+    },
+    "wall": {
+      "cell": [
+        664,
+        176
+      ],
+      "footprint": [
+        332,
+        88
+      ],
+      "poolCentersX": [
+        40,
+        124,
+        208,
+        292
+      ]
+    }
+  },
+  "animation": "8 fps combat clock; reduced motion freezes fuel/wall and reduces smoke opacity",
+  "beam": {
+    "source": "art/khong-kich/26.25.0/source-images/skills/cinder_inferno_beam.png",
+    "processing": "Alpha crop of existing generated Ultimate raster, no redesign. Dedicated renderer frame avoids legacy generated override padding.",
+    "crop": [
+      39,
+      0,
+      1240,
+      1254
+    ],
+    "size": [
+      192,
+      200
+    ],
+    "pivot": [
+      0.5,
+      0.5
+    ],
+    "worldWidth": 100
+  }
+}
