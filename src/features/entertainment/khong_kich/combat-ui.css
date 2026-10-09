@@ -850,3 +850,50 @@
 .air-status-icon > .air-status-border[data-phase="cooldown"] { stroke:#facc15; }
 .air-status-icon > .air-status-border[data-phase="indefinite"][data-group="debuff"] { stroke:#f87171; }
 .air-status-value-badge { bottom:2px; right:2px; }
+
+/* Mandatory equipment rewards: readable definitions inside one bounded scroll area. */
+.modal-design > .app-overlay__panel.air-equipment-reward-panel {
+  width: min(760px, 100%); max-width: 760px; max-height: 100%; min-height: 0; overflow: hidden;
+}
+.air-equipment-reward-panel .air-equipment-reward-header { padding: 14px 18px; }
+.air-equipment-reward-header p { margin-top: 4px; color: #a8b9ce; font-size: 12px; }
+.air-equipment-reward-panel .air-equipment-reward-body {
+  padding: 14px; min-height: 0; overflow-x: hidden; overflow-y: auto;
+  overscroll-behavior: contain; touch-action: pan-y; scrollbar-gutter: stable;
+}
+.air-equipment-reward-round { min-width: 0; outline: none; }
+.air-equipment-reward-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  align-items: start; gap: 12px;
+}
+.air-equipment-reward-grid[data-components="true"] { grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr)); }
+.modal-design .air-equipment-reward-card {
+  display: flex; flex-direction: column; gap: 10px; width: 100%; min-width: 0; height: auto;
+  padding: 14px; border: 1px solid #38516d; border-radius: 12px;
+  background: linear-gradient(145deg, #15263c, #0b1524); color: #e2e8f0;
+  text-align: left; font-weight: 400; line-height: 1.5; overflow-wrap: anywhere;
+  transition: border-color 160ms ease, background-color 160ms ease, box-shadow 160ms ease;
+}
+.air-equipment-reward-card:hover:not(:disabled), .air-equipment-reward-card:focus-visible {
+  border-color: var(--equipment-accent); outline: 2px solid var(--equipment-accent); outline-offset: 2px;
+}
+.air-equipment-reward-card:disabled { cursor: default; opacity: 1; }
+.air-equipment-reward-card[aria-pressed="true"] {
+  border-color: #fbbf24; background: #30291c; box-shadow: inset 0 0 0 2px #fbbf24, 0 0 18px #fbbf2426;
+}
+.air-equipment-reward-heading { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.air-equipment-reward-heading > .equipment-icon { flex: 0 0 48px; width: 48px; height: 48px; }
+.air-equipment-reward-heading > span:last-child { flex: 1; min-width: 0; }
+.air-equipment-reward-heading small { display: block; margin-bottom: 3px; color: #a8b9ce; font-size: 11px; }
+.air-equipment-reward-heading strong { display: block; color: var(--equipment-accent); font-size: 14px; line-height: 1.4; }
+.air-equipment-reward-details { display: flex; flex-direction: column; gap: 7px; width: 100%; }
+.air-equipment-reward-details .equipment-direct-stats { margin: 0; padding-bottom: 8px; border-bottom: 1px solid #ffffff14; }
+.modal-design .air-equipment-reward-details :is(p, .equipment-direct-stats) { font-size: 12px; line-height: 1.55; }
+.air-equipment-reward-details .equipment-tooltip-note { color: #a8b9ce; }
+.air-equipment-reward-select { display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; padding-top: 8px; border-top: 1px solid #ffffff14; color: #fcd34d; font-weight: 600; font-size: 12px; }
+.modal-design .air-equipment-reward-announcement { margin: 12px 0 0; color: #a8b9ce; font-size: 11px; text-align: center; }
+@media (max-width: 380px), (max-height: 480px) {
+  .air-equipment-reward-panel .air-equipment-reward-header { padding: 8px 12px; }
+  .air-equipment-reward-panel .air-equipment-reward-body { padding: 10px; }
+}
+@media (prefers-reduced-motion: reduce) { .air-equipment-reward-card { transition: none; } }

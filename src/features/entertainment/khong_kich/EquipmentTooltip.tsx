@@ -1,20 +1,13 @@
+import { EquipmentDetails } from "./EquipmentDetails";
 import React, { useLayoutEffect, useRef } from "react";
 import { EquipmentIcon } from "./EquipmentIcon";
 import { CoreDescription } from "./CoreDescription";
 import { EQUIPMENT_CATALOG, EQUIPMENT_NAME_COLORS } from "./airCombatEquipmentCatalog";
-import { equipmentTelemetry, equipmentEffectDescription } from "./airCombatEquipmentPresentation";
+import { equipmentTelemetry } from "./airCombatEquipmentPresentation";
 import type { EquipmentRewardId } from "./airCombatEquipmentState";
 import type { AircraftCombatState } from "./airCombatTypes";
 
 export type EquipmentTooltipAnchor = { id: EquipmentRewardId; source: HTMLElement };
-function EffectDescription({ text }: { text: string }) {
-  return <>{text.split(/\n+/).map((line, i) => {
-    const colon = line.indexOf(":"), note = line.startsWith("Ghi chú");
-    return <p key={i} className={note ? "equipment-tooltip-note" : undefined}>
-      {colon >= 0 && !note ? <><strong>{line.slice(0, colon + 1)}</strong><CoreDescription text={line.slice(colon + 1)} /></> : <CoreDescription text={line} />}
-    </p>;
-  })}</>;
-}
 /** Anchors within an inventory modal or a HUD tooltip portal, outside scrolling content. */
 export function EquipmentTooltip({ anchor, state, onClose }: { anchor: EquipmentTooltipAnchor; state: AircraftCombatState; onClose: () => void }) {
   const layer = useRef<HTMLDivElement>(null), panel = useRef<HTMLElement>(null);
@@ -62,9 +55,7 @@ export function EquipmentTooltip({ anchor, state, onClose }: { anchor: Equipment
     <div key={anchor.id} className="equipment-tooltip-content">
       <header className="equipment-tooltip-heading"><EquipmentIcon id={anchor.id} inventory /><h3>{d?.name ?? "Nam Châm Ma Thuật"}</h3></header>
       {d ? <>
-        <div className="equipment-direct-stats">{d.statsText.split(";").map((stat, i) => <div key={i}><CoreDescription text={stat.trim()} /></div>)}</div>
-        <EffectDescription text={equipmentEffectDescription(state,d.id)} />
-        {d.recipe && <p className="equipment-tooltip-note">{d.rarity === "legendary" ? `Huyền Thoại của ${EQUIPMENT_CATALOG[d.family!].name} · Không có công thức ghép` : `Công thức: ${d.recipe.map(id => EQUIPMENT_CATALOG[id].name).join(" + ")}`}</p>}
+        <EquipmentDetails id={d.id} state={state} />
         {equipmentTelemetry(state, d.id).map((line, i) => <p key={i} className="equipment-telemetry"><CoreDescription text={line} /></p>)}
       </> : <p>Kéo vào vùng Trang Bị Đang Mang để tháo toàn bộ trang bị và trả về đúng kho. Tiêu hao 1 Nam Châm khi thành công.</p>}
     </div>

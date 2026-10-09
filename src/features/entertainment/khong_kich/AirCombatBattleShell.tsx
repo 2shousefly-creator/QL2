@@ -1,5 +1,5 @@
 import { equipmentState } from "./airCombatEquipmentState";
-import { EQUIPMENT_CATALOG } from "./airCombatEquipmentCatalog";
+import { AirCombatEquipmentReward } from "./AirCombatEquipmentReward";
 import { selectEquipmentReward } from "./airCombatEquipmentState";
 import { terraHud } from './airCombatTerraRuntime';
 import { CombatGraphicsControl } from './CombatGraphicsControl';
@@ -871,15 +871,19 @@ export const AirCombatBattleShell: React.FC<AirCombatBattleProps> = ({
         </AppModal>
       )}
 
-      {!!equipmentState(worldRef.current.aircraft).rewardChoices?.length && !coreChoices && !showExitConfirm && <AppModal archetype="transaction" layer="exclusive-dialog" layout="viewport-safe" closeOnEscape={false} labelledBy="air-equipment-reward-title" reducedMotion={reducedMotion}>
-        <OverlayHeader><h2 id="air-equipment-reward-title" className="modal-title">CHỌN TRANG BỊ</h2><p>Còn {equipmentState(worldRef.current.aircraft).rewardChoices![0].remaining} lựa chọn trong danh sách này</p></OverlayHeader>
-        <OverlayBody><div className="air-primary-choices">{equipmentState(worldRef.current.aircraft).rewardChoices![0].options.map(id=><button key={id} type="button" onClick={()=>{
-          const world=worldRef.current;if(!selectEquipmentReward(world.aircraft,id))return;
-          if(!equipmentState(world.aircraft).rewardChoices?.length){world.pauseReasons.delete("equipmentReward");const next=ensureCoreSelection(world);if(next){setCoreChoices(next);setPauseReason("core",true);}}
-          setHud(makeHudSnapshot(world,true,pauseLabel(world.pauseReasons)));
-        }}><CombatUiIcon kind="equipment" fallback="" id={id}/><strong>{EQUIPMENT_CATALOG[id].name}</strong></button>)}</div></OverlayBody>
-      </AppModal>}
-      {showPrimaryChoice && !coreChoices && !showEquipment && !showExitConfirm && <AppModal key="primary-skill" archetype="transaction" layer="exclusive-dialog" layout="viewport-safe" closeOnEscape={false} labelledBy="air-primary-title" panelClassName="air-primary-panel" reducedMotion={reducedMotion}>
+      {!!equipmentState(worldRef.current.aircraft).rewardChoices?.length && !coreChoices && !showExitConfirm && <AirCombatEquipmentReward
+        key="equipment-reward" state={worldRef.current.aircraft} choice={equipmentState(worldRef.current.aircraft).rewardChoices![0]}
+        reducedMotion={reducedMotion} onChoose={(id, offered) => {
+          const world = worldRef.current;
+          if (equipmentState(world.aircraft).rewardChoices?.[0] !== offered || !selectEquipmentReward(world.aircraft, id)) return;
+          if (!equipmentState(world.aircraft).rewardChoices?.length) {
+            world.pauseReasons.delete("equipmentReward");
+            const next = ensureCoreSelection(world);
+            if (next) { setCoreChoices(next); setPauseReason("core", true); }
+          }
+          setHud(makeHudSnapshot(world, true, pauseLabel(world.pauseReasons)));
+        }} />}
+      {showPrimaryChoice && !equipmentState(worldRef.current.aircraft).rewardChoices?.length && !coreChoices && !showEquipment && !showExitConfirm && <AppModal key="primary-skill" archetype="transaction" layer="exclusive-dialog" layout="viewport-safe" closeOnEscape={false} labelledBy="air-primary-title" panelClassName="air-primary-panel" reducedMotion={reducedMotion}>
         <OverlayHeader><h2 id="air-primary-title" className="modal-title">CHỌN KỸ NĂNG CHỦ LỰC</h2><p>Lựa chọn áp dụng khi còn sở hữu Lõi</p>
           {runtime && <div className="flex justify-center gap-2"><ModalButton onClick={() => { setShowEquipment(true); setPauseReason("equipment", true); }}>Kho Trang Bị</ModalButton><ModalButton onClick={openExit}>Menu Chính</ModalButton></div>}
         </OverlayHeader>

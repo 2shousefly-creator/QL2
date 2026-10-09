@@ -142,3 +142,23 @@
 }
 
 }
+
+/* These two readouts live beside the protected XP bar. Paint only their surfaces. */
+@layer ql-flat-paint {
+  [data-ui-skin="flat"] .home-screen .home-progression-zone {
+    background: transparent !important;
+  }
+  [data-ui-skin="flat"] .home-screen :is(.home-rate-readout, .rank-activity-ticker) {
+    background: #1b222b !important;
+    background-image: none !important;
+    border-image: none !important;
+    border-radius: 10px !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+  }
+  [data-ui-skin="flat"] .home-screen :is(.home-rate-readout, .rank-activity-ticker)::before,
+  [data-ui-skin="flat"] .home-screen :is(.home-rate-readout, .rank-activity-ticker)::after {
+    background: none !important;
+    box-shadow: none !important;
+  }
+}

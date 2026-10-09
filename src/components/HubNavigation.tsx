@@ -1,8 +1,5 @@
-import { CommandIcon } from "./core-visual/CommandIcon";
 import { CommandMenuProvider } from "./core-visual/CommandMenuContext";
 import { MenuPixiDecor } from "./core-visual/MenuPixiDecor";
-import navIcons from "../assets/core-art/v1/ui/navigation/icons.png?url";
-import profileIcons from "../assets/core-art/v1/ui/profile-hub/icons.png?url";
 import React, { useState, useEffect } from "react";
 import {
   Home,
@@ -202,7 +199,7 @@ export const HubNavigation: React.FC<HubNavigationProps> = ({
       >
         <MenuPixiDecor selector="[data-command-anchor]" reducedMotion={reducedMotion} />
         <div className="hub-navigation-bar max-w-lg mx-auto flex items-center justify-around px-2">
-          {mainTabs.map((tab, tabIndex) => {
+          {mainTabs.map((tab) => {
             const Icon = tab.icon;
             const isActive = tab.isActive;
 
@@ -229,8 +226,7 @@ export const HubNavigation: React.FC<HubNavigationProps> = ({
                 )}
 
                 <div className="relative">
-                  <CommandIcon atlas={{ src: navIcons, columns: 5, rows: 1 }} index={tabIndex}
-                    className={`w-5 h-5 ${isActive ? "scale-110" : ""}`} fallback={<Icon className="w-5 h-5" />} />
+                  <Icon aria-hidden="true" strokeWidth={1.8} className={`w-5 h-5 ${isActive ? "scale-110" : ""}`} />
                   {tab.hasBadge && (
                     <span className="absolute -top-1 -right-1.5 w-2.5 h-2.5 rounded-full bg-rose-500 ring-2 ring-slate-950 animate-pulse shadow-[0_0_8px_rgba(244,63,94,0.8)]" />
                   )}
@@ -313,7 +309,7 @@ export const HubNavigation: React.FC<HubNavigationProps> = ({
                           isSpanningFullWidth ? "shrink-0" : "mb-2"
                         } theme-menu-card__icon`}
                       >
-                        <CommandIcon atlas={{ src: profileIcons, columns: 4, rows: 2 }} index={index} className="w-5 h-5 sm:w-6 sm:h-6" fallback={<ItemIcon className="w-5 h-5" />} />
+                        <ItemIcon aria-hidden="true" strokeWidth={1.8} className="w-5 h-5 sm:w-6 sm:h-6" />
                       </div>
 
                       {/* Title & Subtitle */}

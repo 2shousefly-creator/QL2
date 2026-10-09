@@ -1,9 +1,7 @@
 import { UiSkinProvider } from "../../components/core-visual/UiSkinContext";
-import { CommandIcon } from "../../components/core-visual/CommandIcon";
 import { CommandLobbyArt } from "../../components/core-visual/CommandLobbyArt";
-import gameIcons from "../../assets/core-art/v1/entertainment/game-icons.png?url";
 import React, { lazy, Suspense, useEffect, useState, useRef } from "react";
-import { Dices, Coins, Play, Sparkles } from "lucide-react";
+import { Dices, Coins, Play, Sparkles, Plane, Fish } from "lucide-react";
 import { GameState, TabType } from "../../game/types";
 import { soundManager } from "../../game/audio";
 import { ENTERTAINMENT_GAMES } from "./entertainmentCatalog";
@@ -152,7 +150,7 @@ export const EntertainmentHubScreen: React.FC<EntertainmentHubScreenProps> = ({
                 <div className="flex items-center justify-between gap-3">
                   <div className="flex items-center gap-3">
                     <div className="theme-badge w-12 h-12 rounded-2xl border flex items-center justify-center text-2xl shadow-md transition-transform select-none shrink-0">
-                      <CommandIcon atlas={{ src: gameIcons, columns: 3, rows: 1 }} index={{ khong_kich: 0, bau_cua: 1, big_small: 2 }[game.id]} className="w-8 h-8" fallback={game.icon || "🎲"} />
+                      {game.id === "khong_kich" ? <Plane aria-hidden="true" strokeWidth={1.8} className="w-8 h-8" /> : game.id === "bau_cua" ? <Fish aria-hidden="true" strokeWidth={1.8} className="w-8 h-8" /> : <Dices aria-hidden="true" strokeWidth={1.8} className="w-8 h-8" />}
                     </div>
                     <div className="min-w-0">
                       <div className="flex items-center gap-2">

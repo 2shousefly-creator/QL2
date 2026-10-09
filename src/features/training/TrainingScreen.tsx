@@ -1,6 +1,4 @@
-import { CommandIcon } from "../../components/core-visual/CommandIcon";
 import { CommandLobbyArt } from "../../components/core-visual/CommandLobbyArt";
-import programIcons from "../../assets/core-art/v1/training/program-icons.png?url";
 import type { MarchRhythmGameResult } from "../../game/training/marchRhythmJudgement";
 import React, { lazy, Suspense, useState, useRef } from "react";
 import { Sliders, Target, Activity, BrainCircuit, Grid3X3, HelpCircle, Swords, Eye, Crown } from "lucide-react";
@@ -633,7 +631,7 @@ export const TrainingScreen: React.FC<TrainingScreenProps> = ({
           >
             <div className="flex items-center justify-between w-full">
               <div className="theme-badge w-6 h-6 rounded-lg border flex items-center justify-center">
-                <CommandIcon atlas={{ src: programIcons, columns: 3, rows: 2 }} index={0} className="w-3.5 h-3.5" fallback={<Activity className="w-3.5 h-3.5" />} />
+                <Activity aria-hidden="true" strokeWidth={1.8} className="w-3.5 h-3.5" />
               </div>
               <span className={`text-[9px] font-extrabold px-1.5 py-0.5 rounded-full ${
                 selectedGameId === "march_rhythm" ? "theme-badge border" : "bg-slate-800 text-slate-400"
@@ -663,7 +661,7 @@ export const TrainingScreen: React.FC<TrainingScreenProps> = ({
           >
             <div className="flex items-center justify-between w-full">
               <div className="w-6 h-6 rounded-lg bg-cyan-500/20 border border-cyan-500/30 flex items-center justify-center text-cyan-400">
-                <CommandIcon atlas={{ src: programIcons, columns: 3, rows: 2 }} index={1} className="w-3.5 h-3.5" fallback={<BrainCircuit className="w-3.5 h-3.5" />} />
+                <BrainCircuit aria-hidden="true" strokeWidth={1.8} className="w-3.5 h-3.5" />
               </div>
               <span className={`text-[9px] font-extrabold px-1.5 py-0.5 rounded-full ${
                 selectedGameId === "signal_command" ? "theme-badge border" : "bg-slate-800 text-slate-400"
@@ -693,7 +691,7 @@ export const TrainingScreen: React.FC<TrainingScreenProps> = ({
           >
             <div className="flex items-center justify-between w-full">
               <div className="w-6 h-6 rounded-lg bg-purple-500/20 border border-purple-500/30 flex items-center justify-center text-purple-400">
-                <CommandIcon atlas={{ src: programIcons, columns: 3, rows: 2 }} index={2} className="w-3.5 h-3.5" fallback={<Grid3X3 className="w-3.5 h-3.5" />} />
+                <Grid3X3 aria-hidden="true" strokeWidth={1.8} className="w-3.5 h-3.5" />
               </div>
               <span className={`text-[9px] font-extrabold px-1.5 py-0.5 rounded-full ${
                 selectedGameId === "formation_assembly" ? "theme-badge border" : "bg-slate-800 text-slate-400"
@@ -723,7 +721,7 @@ export const TrainingScreen: React.FC<TrainingScreenProps> = ({
           >
             <div className="flex items-center justify-between w-full">
               <div className="w-6 h-6 rounded-lg bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
-                <CommandIcon atlas={{ src: programIcons, columns: 3, rows: 2 }} index={3} className="w-3.5 h-3.5" fallback={<Eye className="w-3.5 h-3.5" />} />
+                <Eye aria-hidden="true" strokeWidth={1.8} className="w-3.5 h-3.5" />
               </div>
               <span className={`text-[9px] font-extrabold px-1.5 py-0.5 rounded-full ${
                 selectedGameId === "radar_tracking" ? "theme-badge border" : "bg-slate-800 text-slate-400"
@@ -753,7 +751,7 @@ export const TrainingScreen: React.FC<TrainingScreenProps> = ({
           >
             <div className="flex items-center justify-between w-full">
               <div className="theme-badge w-6 h-6 rounded-lg border flex items-center justify-center">
-                <CommandIcon atlas={{ src: programIcons, columns: 3, rows: 2 }} index={4} className="w-3.5 h-3.5" fallback={<Swords className="w-3.5 h-3.5" />} />
+                <Swords aria-hidden="true" strokeWidth={1.8} className="w-3.5 h-3.5" />
               </div>
               <span className={`text-[9px] font-extrabold px-1.5 py-0.5 rounded-full ${
                 selectedGameId === "gomoku_infinite" ? "theme-badge border" : "bg-slate-800 text-slate-400"
@@ -783,7 +781,7 @@ export const TrainingScreen: React.FC<TrainingScreenProps> = ({
           >
             <div className="flex items-center justify-between w-full">
               <div className="theme-badge w-6 h-6 rounded-lg border flex items-center justify-center">
-                <CommandIcon atlas={{ src: programIcons, columns: 3, rows: 2 }} index={5} className="w-3.5 h-3.5" fallback={<Target className="w-3.5 h-3.5" />} />
+                <Target aria-hidden="true" strokeWidth={1.8} className="w-3.5 h-3.5" />
               </div>
               <span className={`text-[9px] font-extrabold px-1.5 py-0.5 rounded-full ${
                 selectedGameId === "shooting_range" ? "theme-badge border" : "bg-slate-800 text-slate-400"
