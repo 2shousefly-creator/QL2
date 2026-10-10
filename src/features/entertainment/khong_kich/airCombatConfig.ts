@@ -3,7 +3,7 @@ import { SYLVA_SKILLS, SYLVA_NAMES, SYLVA_DESCRIPTION, sylvaValues, sylvaDescrip
 import { ARGENT_SKILLS, ARGENT_NAMES, ARGENT_UPGRADES, isArgentSkill, argentValues, argentDescription } from './airCombatArgentConfig';
 import { RIPTIDE_SKILLS, RIPTIDE_NAMES, riptideValues, riptideDescription } from './airCombatRiptideConfig';
 import { CINDER_SKILLS, CINDER_NAMES, cinderValues, cinderDescription } from "./airCombatCinderConfig";
-import { SKILL_RANKS, PHANTOM_LASER_DAMAGE } from "./airCombatSkillRanks";
+import { SKILL_RANKS, PHANTOM_LASER_DAMAGE, VIPER_MISSILE_DAMAGE, TITAN_BIGBANG_DAMAGE } from "./airCombatSkillRanks";
 import {
   AircraftConfig,
   AircraftId,
@@ -59,7 +59,7 @@ export const AIR_COMBAT_LIMITS = {
 } as const;
 
 export const AIRCRAFT_CONFIGS: Record<AircraftId, AircraftConfig> = {
- terra:{id:'terra',code:'TE-09',name:'Terra',role:'Đỡ đòn · Phản kích · Pháo Địa Chấn',description:TERRA_DESCRIPTION,color:'#59432C',accent:'#F4B544',resourceKind:'mana',hpRegen:{base:3.6,growth:.4},baseStats:{maxHp:2450,armor:51,firepower:94,fireRate:3.2,maxResource:340,resourceRegen:1.5,criticalChance:.05,criticalDamageMultiplier:1.7},growth:{maxHp:92,armor:3,firepower:4,maxResource:30,resourceRegen:.4,criticalChance:0,criticalDamageMultiplier:0},fireRateRatio:.32,fireRateGrowthPct:.05,skillIds:[...TERRA_SKILLS]},
+ terra:{id:'terra',code:'TE-09',name:'Terra',role:'Đỡ đòn · Phản kích · Pháo Địa Chấn',description:TERRA_DESCRIPTION,color:'#59432C',accent:'#F4B544',resourceKind:'mana',hpRegen:{base:3.6,growth:.4},baseStats:{maxHp:2450,armor:51,firepower:94,fireRate:3.82,maxResource:340,resourceRegen:1.5,criticalChance:.05,criticalDamageMultiplier:1.7},growth:{maxHp:103,armor:4,firepower:4.3,maxResource:30,resourceRegen:.4,criticalChance:0,criticalDamageMultiplier:0},fireRateRatio:.32,fireRateGrowthPct:.05,skillIds:[...TERRA_SKILLS]},
  sylva:{id:'sylva',code:'SY-08',name:'Sylva',role:'Sát thủ · Ăn mòn · Combo',description:SYLVA_DESCRIPTION,color:'#173F2B',accent:'#BDFB67',resourceKind:'mana',hpRegen:{base:2.8,growth:.25},baseStats:{maxHp:2000,armor:45,firepower:132,fireRate:3.9,maxResource:300,resourceRegen:1.4,criticalChance:.05,criticalDamageMultiplier:1.7},growth:{maxHp:70,armor:3.1,firepower:8,maxResource:30,resourceRegen:.35,criticalChance:0,criticalDamageMultiplier:0},fireRateRatio:.33,fireRateGrowthPct:.05,skillIds:[...SYLVA_SKILLS]},
  argent:{id:'argent',code:'AG-07',name:'Argent',role:'Kiếm trận · Thu hồi · Phản công',description:'Tạo Phiến Kim trên chiến trường, căn vị trí để thu kiếm xuyên địch, đỡ từng đợt tấn công rồi phản công bằng đại kiếm và Thiên La Kiếm Trận.',color:'#DCE4EC',accent:'#E8C878',resourceKind:'mana',hpRegen:{base:3.2,growth:.27},baseStats:{maxHp:2100,armor:48,firepower:112,fireRate:4,maxResource:360,resourceRegen:1.6,criticalChance:.05,criticalDamageMultiplier:1.7},growth:{maxHp:70,armor:3,firepower:7,maxResource:32,resourceRegen:.46,criticalChance:0,criticalDamageMultiplier:0},fireRateRatio:.34,fireRateGrowthPct:.05,skillIds:[...ARGENT_SKILLS]},
  riptide:{id:'riptide',code:'RI-06',name:'Riptide',role:'Cận chiến · Hội tụ · Hồi phục',description:'Áp sát bằng những lưỡi nước xoay quanh thân, gom địch bằng Hội Thủy và duy trì Thủy Thể để gây sát thương, hồi Máu rồi giải phóng thủy áp.',color:'#168F98',accent:'#63E3D6',resourceKind:'mana',hpRegen:{base:3.5,growth:.35},baseStats:{maxHp:2300,armor:55,firepower:100,fireRate:3.6,maxResource:380,resourceRegen:2,criticalChance:.05,criticalDamageMultiplier:1.7},growth:{maxHp:90,armor:4,firepower:6.5,maxResource:35,resourceRegen:.5,criticalChance:0,criticalDamageMultiplier:0},fireRateRatio:.34,fireRateGrowthPct:.05,skillIds:[...RIPTIDE_SKILLS]},
@@ -121,7 +121,7 @@ export const AIRCRAFT_CONFIGS: Record<AircraftId, AircraftConfig> = {
       maxHp: 2307,
       armor: 54,
       firepower: 104,
-      fireRate: 3.95,
+      fireRate: 3.74,
       maxResource: 320,
       resourceRegen: 1.5,
     },
@@ -172,7 +172,7 @@ export const AIRCRAFT_CONFIGS: Record<AircraftId, AircraftConfig> = {
 };
 
 
-const LEVEL_18_TARGETS = {terra:[4014,102,162,10.4,850,8.3],sylva:[3190,97.7,268,7.05,810,7.35],"argent":[3290,99,231,7.79,904,9.42],"riptide":[3830,123,210.5,9.45,975,10.5],"cinder":[3460,107.5,229,8.4,850,9.15],"black_eagle": [3187.2, 96.65, 257.4, 7.348, 852.5, 9.625], "breaker": [3853.5, 125.59, 178.2, 9.702, 920, 8.5], "phantom": [3498.2, 110.52, 218.9, 8.525, 100, 2], "astra": [3312.6, 100.94, 264, 7.777, 841.5, 9.306]} as const;
+const LEVEL_18_TARGETS = {terra:[4201,119,167.1,10.4,850,8.3],sylva:[3190,97.7,268,7.05,810,7.35],"argent":[3290,99,231,7.79,904,9.42],"riptide":[3830,123,210.5,9.45,975,10.5],"cinder":[3460,107.5,229,8.4,850,9.15],"black_eagle": [3187.2, 96.65, 257.4, 7.348, 852.5, 9.625], "breaker": [3853.5, 125.59, 178.2, 9.702, 920, 8.5], "phantom": [3498.2, 110.52, 218.9, 8.525, 100, 2], "astra": [3312.6, 100.94, 264, 7.777, 841.5, 9.306]} as const;
 for (const id of Object.keys(LEVEL_18_TARGETS) as AircraftId[]) {
  const c=AIRCRAFT_CONFIGS[id], t=LEVEL_18_TARGETS[id];
  const keys=["maxHp","armor","firepower","maxResource","resourceRegen"] as const;
@@ -243,7 +243,7 @@ export const SKILL_CONFIGS: Record<SkillId, SkillConfig> = {
     "cost": 150,
     "cooldown": 90,
     "duration": 0,
-    "damageMultiplier": 2
+    "damageMultiplier": VIPER_MISSILE_DAMAGE[0]
   },
   "armor_shield": {
     "id": "armor_shield",
@@ -267,7 +267,7 @@ export const SKILL_CONFIGS: Record<SkillId, SkillConfig> = {
     "cost": 120,
     "cooldown": 30,
     "duration": 0,
-    "damageMultiplier": 6.5
+    "damageMultiplier": TITAN_BIGBANG_DAMAGE[0]
   },
   "sweeping_cannon": {
     "id": "sweeping_cannon",

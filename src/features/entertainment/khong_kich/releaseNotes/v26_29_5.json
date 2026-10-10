@@ -1,0 +1,180 @@
+{
+  "version": "26.29.5",
+  "releaseDate": "10/10/2026",
+  "title": "Cân bằng chiến cơ",
+  "displayTitle": "KHÔNG KÍCH 26.29.5 — CÂN BẰNG CHIẾN CƠ",
+  "summary": "Tăng sức mạnh Terra, điều chỉnh Titan và Mưa Tên Lửa của Viper, giảm hồi chiêu nội tại Cinder và tăng tốc sạc Pin Dự Phòng của Phantom.",
+  "sections": [
+    {
+      "id": "terra",
+      "title": "TERRA",
+      "icon": {
+        "kind": "aircraft",
+        "id": "terra"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "terra-stats",
+          "title": "Chỉ số chiến cơ",
+          "icon": {
+            "kind": "aircraft",
+            "id": "terra"
+          },
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Máu tối đa tăng mỗi cấp: **92 → 103**."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Giáp tăng mỗi cấp: **3 → 4**."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Hỏa lực tăng mỗi cấp: **4 → 4,3**."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Tốc độ bắn cấp 1: **3,2 → 3,82**."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "breaker",
+      "title": "TITAN",
+      "icon": {
+        "kind": "aircraft",
+        "id": "breaker"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "titan-fire-rate",
+          "title": "Tốc độ bắn",
+          "icon": {
+            "kind": "aircraft",
+            "id": "breaker"
+          },
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "nerf",
+              "text": "Tốc độ bắn cấp 1: **3,95 → 3,74**."
+            }
+          ]
+        },
+        {
+          "id": "titan-bigbang",
+          "title": "BigBang — Sát thương nổ chính",
+          "icon": {
+            "kind": "skill",
+            "id": "heavy_bomb"
+          },
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Sát thương nổ chính theo cấp kỹ năng: **650%/750%/850%/950%/1050% → 750%/800%/850%/900%/950% Hỏa lực**."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "black_eagle",
+      "title": "VIPER",
+      "icon": {
+        "kind": "aircraft",
+        "id": "black_eagle"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "viper-missile-swarm",
+          "title": "Ultimate — Mưa Tên Lửa",
+          "icon": {
+            "kind": "skill",
+            "id": "missile_swarm"
+          },
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "nerf",
+              "text": "Sát thương mỗi tên lửa theo cấp kỹ năng: **200%/230%/260% → 195%/215%/235% Hỏa lực**."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Khả năng uốn hướng của tên lửa khi truy đuổi tăng **70%**."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cinder",
+      "title": "CINDER",
+      "icon": {
+        "kind": "aircraft",
+        "id": "cinder"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "cinder-thermal-round",
+          "title": "Nội tại — Đạn Hỏa Nhiệt",
+          "icon": {
+            "kind": "skill",
+            "id": "cinder_thermal_round"
+          },
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Hồi chiêu riêng trên từng mục tiêu: **3 → 2,5 giây**."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "phantom",
+      "title": "PHANTOM",
+      "icon": {
+        "kind": "aircraft",
+        "id": "phantom"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "phantom-backup-battery",
+          "title": "Nội tại — Pin Dự Phòng",
+          "icon": {
+            "kind": "skill",
+            "id": "phantom_backup_battery"
+          },
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Tốc độ sạc pin: **1,5% → 1,8%/giây**."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

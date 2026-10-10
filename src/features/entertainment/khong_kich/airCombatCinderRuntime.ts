@@ -65,7 +65,7 @@ export function passiveHit(w:CombatWorld,e:EnemyEntity,hit:{primary:boolean;skil
   }else if(a.aircraftId==='breaker'){
    h.damage(w,e,getEffectiveAircraftStats(a).armor*k,undefined,{trueDamage:false,castId:w.nextId++,passive:true});fx(w,'alloy',e.x,e.y,22,.2);
   }else if(a.aircraftId==='astra'&&now>=t.markReady&&e.hp>0){t.markUntil=now+4;fx(w,'mark',e.x,e.y,24,.25);
-  }else if(a.aircraftId==='cinder'&&now>=t.passiveReady){t.passiveReady=now+3;deal(w,e,k,undefined,w.nextId++,h);addCinderBurn(w,e,1,h);fx(w,'impact',e.x,e.y,32,.3);}
+  }else if(a.aircraftId==='cinder'&&now>=t.passiveReady){t.passiveReady=now+2.5;deal(w,e,k,undefined,w.nextId++,h);addCinderBurn(w,e,1,h);fx(w,'impact',e.x,e.y,32,.3);}
  }
  if(a.aircraftId==='astra'&&hit.skillDirect&&t.markUntil>now&&now>=t.markReady){t.markUntil=0;t.markReady=now+6;deal(w,e,k,undefined,w.nextId++,h);fx(w,'mark',e.x,e.y,54,.4);}
 }
@@ -124,7 +124,7 @@ function fireBeam(w:CombatWorld,b:Beam,h:CinderHooks){
 function tickBattery(w:CombatWorld,dt:number){const b=cinderState(w).battery;if(w.aircraft.aircraftId!=='phantom')return;let left=dt;
  // At most a few phase boundaries per frame; elapsed simulation time is conserved.
  for(let guard=0;left>1e-8&&guard<12;guard++){
-  if(b.phase==='charging'){const step=Math.min(left,(100-b.charge)/1.5);b.charge=Math.min(100,b.charge+step*1.5);left-=step;if(b.charge>=100-1e-8){b.charge=100;b.phase='ready';}else break;}
+  if(b.phase==='charging'){const step=Math.min(left,(100-b.charge)/1.8);b.charge=Math.min(100,b.charge+step*1.8);left-=step;if(b.charge>=100-1e-8){b.charge=100;b.phase='ready';}else break;}
   else if(b.phase==='ready'){if(w.aircraft.currentResource<getEffectiveAircraftStats(w.aircraft).maxResource*.1){b.phase='feeding';b.remaining=5;}else break;}
   else if(b.phase==='feeding'){const step=Math.min(left,b.remaining);b.remaining-=step;b.charge=Math.max(0,b.charge-step*20);const before=w.aircraft.currentResource;w.aircraft.currentResource=Math.min(getEffectiveAircraftStats(w.aircraft).maxResource,before+step*8);passiveMetrics(w.aircraft).resource+=Math.max(0,w.aircraft.currentResource-before);left-=step;if(b.remaining<=1e-8){b.phase='cooling';b.remaining=5;b.charge=0;}}
   else {const step=Math.min(left,b.remaining);b.remaining-=step;left-=step;if(b.remaining<=1e-8)b.phase='charging';}

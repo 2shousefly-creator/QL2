@@ -9,6 +9,8 @@ import type { AircraftCombatState, SkillId } from "./airCombatTypes";
 export const AFTERBURNER_FIRE_RATE_BONUSES = [.6,.8,1,1.2,1.4] as const;
 export const STELLAR_LANCE_FIRST_DAMAGE = [9,9.5,10,10.5,11] as const;
 export const STELLAR_LANCE_LATER_DAMAGE = [4,4.5,5,5.5,6] as const;
+export const VIPER_MISSILE_DAMAGE = [1.95,2.15,2.35] as const;
+export const TITAN_BIGBANG_DAMAGE = [7.5,8,8.5,9,9.5] as const;
 export const STARFALL_DAMAGE = [2.75,3,3.25] as const;
 export const COMBAT_LEVEL_CAP = 18;
 export const CORE_MILESTONES = [1, 7, 11, 15] as const;
@@ -85,14 +87,14 @@ export const SKILL_RANKS: Record<SkillId, readonly SkillRankConfig[]> = {
 ]),
  missile_swarm:ranks([150,200,250],[
   ["Mưa Tên Lửa",
-    "Viper phóng 14 tên lửa theo từng cặp, mỗi tên lửa gây 200% Hỏa lực. Hồi chiêu Cơ Bản là 90 giây và chỉ bắt đầu sau khi tên lửa cuối cùng được phóng. Tốc độ bay và thời gian tồn tại của tên lửa tăng gấp đôi.",
-    "Viper phóng 14 tên lửa theo từng cặp, mỗi tên lửa gây 200% Hỏa lực. Hồi chiêu Cơ Bản là 90 giây và chỉ bắt đầu sau khi tên lửa cuối cùng được phóng. Tốc độ bay và thời gian tồn tại của tên lửa tăng gấp đôi."],
+    "Viper phóng 14 tên lửa theo từng cặp, mỗi tên lửa gây 195% Hỏa lực. Hồi chiêu Cơ Bản là 90 giây và chỉ bắt đầu sau khi tên lửa cuối cùng được phóng. Tốc độ bay và thời gian tồn tại của tên lửa tăng gấp đôi.",
+    "Viper phóng 14 tên lửa theo từng cặp, mỗi tên lửa gây 195% Hỏa lực. Hồi chiêu Cơ Bản là 90 giây và chỉ bắt đầu sau khi tên lửa cuối cùng được phóng. Tốc độ bay và thời gian tồn tại của tên lửa tăng gấp đôi."],
   ["Kho Tên Lửa Hủy Diệt",
-    "Viper phóng 18 tên lửa theo từng cặp, mỗi tên lửa gây 230% Hỏa lực. Tên lửa đang bay sẽ tự chọn mục tiêu mới nếu mục tiêu hiện tại bị tiêu diệt. Mỗi tên lửa có thể phá tối đa 3 viên đạn có thể chặn mà vẫn tiếp tục truy đuổi. Hồi chiêu Cơ Bản là 90 giây và bắt đầu sau khi tên lửa cuối cùng được phóng. Tốc độ bay và thời gian tồn tại của tên lửa tăng gấp đôi.",
-    "Số tên lửa tăng từ 14 lên 18.\nSát thương mỗi tên lửa tăng từ 200% lên 230% Hỏa lực.\nTên lửa tự chọn mục tiêu mới nếu mục tiêu hiện tại bị tiêu diệt.\nMỗi tên lửa có thể phá tối đa 3 viên đạn có thể chặn mà vẫn tiếp tục truy đuổi.\nYêu cầu tài nguyên: 150 → 200 Mana."],
+    "Viper phóng 18 tên lửa theo từng cặp, mỗi tên lửa gây 215% Hỏa lực. Tên lửa đang bay sẽ tự chọn mục tiêu mới nếu mục tiêu hiện tại bị tiêu diệt. Mỗi tên lửa có thể phá tối đa 3 viên đạn có thể chặn mà vẫn tiếp tục truy đuổi. Hồi chiêu Cơ Bản là 90 giây và bắt đầu sau khi tên lửa cuối cùng được phóng. Tốc độ bay và thời gian tồn tại của tên lửa tăng gấp đôi.",
+    "Số tên lửa tăng từ 14 lên 18.\nSát thương mỗi tên lửa tăng từ 195% lên 215% Hỏa lực.\nTên lửa tự chọn mục tiêu mới nếu mục tiêu hiện tại bị tiêu diệt.\nMỗi tên lửa có thể phá tối đa 3 viên đạn có thể chặn mà vẫn tiếp tục truy đuổi.\nYêu cầu tài nguyên: 150 → 200 Mana."],
   ["Mưa Tận Diệt",
-    "Viper phóng 22 tên lửa theo từng cặp, mỗi tên lửa gây 260% Hỏa lực, có thể đổi mục tiêu khi mục tiêu cũ bị tiêu diệt và phá tối đa 3 viên đạn có thể chặn trên đường bay. Mỗi lần trúng làm mới Thiêu Đốt gây 90% Hỏa lực mỗi giây trong 5 giây và giảm 30% Giáp mục tiêu trong 6 giây; các hiệu ứng này không cộng dồn. Mỗi lần trúng còn cho 1 Dữ Liệu, tối đa 8. Khi toàn bộ loạt tên lửa kết thúc, mỗi Dữ Liệu cho +5% tỷ lệ chí mạng trong 10 giây, tối đa +40%. Hồi chiêu Cơ Bản là 90 giây. Tốc độ bay và thời gian tồn tại của tên lửa tăng gấp đôi.",
-    "Số tên lửa tăng từ 18 lên 22.\nSát thương mỗi tên lửa tăng từ 230% lên 260% Hỏa lực.\nMỗi lần trúng làm mới Thiêu Đốt gây 90% Hỏa lực mỗi giây trong 5 giây và giảm 30% Giáp mục tiêu trong 6 giây. Các hiệu ứng này không cộng dồn.\nMỗi lần trúng cho 1 Dữ Liệu, tối đa 8. Khi toàn bộ loạt tên lửa kết thúc, mỗi Dữ Liệu cho +5% tỷ lệ chí mạng trong 10 giây, tối đa +40%.\nYêu cầu tài nguyên: 200 → 250 Mana."]
+    "Viper phóng 22 tên lửa theo từng cặp, mỗi tên lửa gây 235% Hỏa lực, có thể đổi mục tiêu khi mục tiêu cũ bị tiêu diệt và phá tối đa 3 viên đạn có thể chặn trên đường bay. Mỗi lần trúng làm mới Thiêu Đốt gây 90% Hỏa lực mỗi giây trong 5 giây và giảm 30% Giáp mục tiêu trong 6 giây; các hiệu ứng này không cộng dồn. Mỗi lần trúng còn cho 1 Dữ Liệu, tối đa 8. Khi toàn bộ loạt tên lửa kết thúc, mỗi Dữ Liệu cho +5% tỷ lệ chí mạng trong 10 giây, tối đa +40%. Hồi chiêu Cơ Bản là 90 giây. Tốc độ bay và thời gian tồn tại của tên lửa tăng gấp đôi.",
+    "Số tên lửa tăng từ 18 lên 22.\nSát thương mỗi tên lửa tăng từ 215% lên 235% Hỏa lực.\nMỗi lần trúng làm mới Thiêu Đốt gây 90% Hỏa lực mỗi giây trong 5 giây và giảm 30% Giáp mục tiêu trong 6 giây. Các hiệu ứng này không cộng dồn.\nMỗi lần trúng cho 1 Dữ Liệu, tối đa 8. Khi toàn bộ loạt tên lửa kết thúc, mỗi Dữ Liệu cho +5% tỷ lệ chí mạng trong 10 giây, tối đa +40%.\nYêu cầu tài nguyên: 200 → 250 Mana."]
 ]),
  armor_shield:ranks([100,110,120,130,140],[
   ["Khiên Năng Lượng",
@@ -113,20 +115,20 @@ export const SKILL_RANKS: Record<SkillId, readonly SkillRankConfig[]> = {
 ]),
  heavy_bomb:ranks([120,130,140,150,160],[
   ["BigBang",
-    "Titan tạo dấu ấn tại tâm vùng chơi. Sau 2,75 giây, BigBang giáng xuống trong 0,25 giây và nổ đúng mốc 3 giây, gây 650% Hỏa lực toàn màn hình. Không nổ do va chạm hoặc tái kích hoạt. Hồi chiêu bắt đầu ngay sau vụ nổ chính.",
-    "Titan tạo dấu ấn tại tâm vùng chơi. Sau 2,75 giây, BigBang giáng xuống trong 0,25 giây và nổ đúng mốc 3 giây, gây 650% Hỏa lực toàn màn hình. Không nổ do va chạm hoặc tái kích hoạt. Hồi chiêu bắt đầu ngay sau vụ nổ chính."],
-  ["Tận Diệt",
     "Titan tạo dấu ấn tại tâm vùng chơi. Sau 2,75 giây, BigBang giáng xuống trong 0,25 giây và nổ đúng mốc 3 giây, gây 750% Hỏa lực toàn màn hình. Không nổ do va chạm hoặc tái kích hoạt. Hồi chiêu bắt đầu ngay sau vụ nổ chính.",
-    "Sát thương vụ nổ chính: 650% → 750% Hỏa lực. \nHồi chiêu cơ bản: 30 → 29 giây. Mana: 120 → 130."],
+    "Titan tạo dấu ấn tại tâm vùng chơi. Sau 2,75 giây, BigBang giáng xuống trong 0,25 giây và nổ đúng mốc 3 giây, gây 750% Hỏa lực toàn màn hình. Không nổ do va chạm hoặc tái kích hoạt. Hồi chiêu bắt đầu ngay sau vụ nổ chính."],
+  ["Tận Diệt",
+    "Titan tạo dấu ấn tại tâm vùng chơi. Sau 2,75 giây, BigBang giáng xuống trong 0,25 giây và nổ đúng mốc 3 giây, gây 800% Hỏa lực toàn màn hình. Không nổ do va chạm hoặc tái kích hoạt. Hồi chiêu bắt đầu ngay sau vụ nổ chính.",
+    "Sát thương vụ nổ chính: 750% → 800% Hỏa lực. \nHồi chiêu cơ bản: 30 → 29 giây. Mana: 120 → 130."],
   ["Dư Chấn",
     "Titan tạo dấu ấn tại tâm vùng chơi. Sau 2,75 giây, BigBang giáng xuống trong 0,25 giây và nổ đúng mốc 3 giây, gây 850% Hỏa lực toàn màn hình. Không nổ do va chạm hoặc tái kích hoạt. Hồi chiêu bắt đầu ngay sau vụ nổ chính. Sau 1,2 giây, Dư Chấn gây 280% Hỏa lực toàn màn hình, giảm 20% sát thương địch gây ra trong 5 giây và đẩy lùi theo loại mục tiêu.",
-    "Sát thương vụ nổ chính: 750% → 850% Hỏa lực. Nhận Dư Chấn: sau vụ nổ chính 1,2 giây, gây 280% Hỏa lực toàn màn hình, giảm 20% sát thương địch gây ra trong 5 giây và đẩy lùi theo loại mục tiêu.\nHồi chiêu cơ bản: 29 → 28 giây. Mana: 130 → 140."],
+    "Sát thương vụ nổ chính: 800% → 850% Hỏa lực. Nhận Dư Chấn: sau vụ nổ chính 1,2 giây, gây 280% Hỏa lực toàn màn hình, giảm 20% sát thương địch gây ra trong 5 giây và đẩy lùi theo loại mục tiêu.\nHồi chiêu cơ bản: 29 → 28 giây. Mana: 130 → 140."],
   ["Dấu Ấn Trọng Pháo",
-    "Titan tạo dấu ấn tại tâm vùng chơi. Sau 2,75 giây, BigBang giáng xuống trong 0,25 giây và nổ đúng mốc 3 giây, gây 950% Hỏa lực toàn màn hình. Không nổ do va chạm hoặc tái kích hoạt. Hồi chiêu bắt đầu ngay sau vụ nổ chính. Sau 1,2 giây, Dư Chấn gây 280% Hỏa lực toàn màn hình, giảm 20% sát thương địch gây ra trong 5 giây và đẩy lùi theo loại mục tiêu. Mục tiêu sống sót sau vụ nổ chính bị đánh dấu 8 giây và nhận thêm 40% sát thương trực tiếp từ Titan.",
-    "Sát thương vụ nổ chính: 850% → 950% Hỏa lực. Mục tiêu sống sót sau vụ nổ chính bị đánh dấu 8 giây, nhận thêm 40% sát thương trực tiếp từ Titan.\nHồi chiêu cơ bản: 28 → 27 giây. Mana: 140 → 150."],
+    "Titan tạo dấu ấn tại tâm vùng chơi. Sau 2,75 giây, BigBang giáng xuống trong 0,25 giây và nổ đúng mốc 3 giây, gây 900% Hỏa lực toàn màn hình. Không nổ do va chạm hoặc tái kích hoạt. Hồi chiêu bắt đầu ngay sau vụ nổ chính. Sau 1,2 giây, Dư Chấn gây 280% Hỏa lực toàn màn hình, giảm 20% sát thương địch gây ra trong 5 giây và đẩy lùi theo loại mục tiêu. Mục tiêu sống sót sau vụ nổ chính bị đánh dấu 8 giây và nhận thêm 40% sát thương trực tiếp từ Titan.",
+    "Sát thương vụ nổ chính: 850% → 900% Hỏa lực. Mục tiêu sống sót sau vụ nổ chính bị đánh dấu 8 giây, nhận thêm 40% sát thương trực tiếp từ Titan.\nHồi chiêu cơ bản: 28 → 27 giây. Mana: 140 → 150."],
   ["Quét Sạch Hỏa lực",
-    "Titan tạo dấu ấn tại tâm vùng chơi. Sau 2,75 giây, BigBang giáng xuống trong 0,25 giây và nổ đúng mốc 3 giây, gây 1050% Hỏa lực toàn màn hình. Không nổ do va chạm hoặc tái kích hoạt. Hồi chiêu bắt đầu ngay sau vụ nổ chính. Sau 1,2 giây, Dư Chấn gây 280% Hỏa lực toàn màn hình, giảm 20% sát thương địch gây ra trong 5 giây và đẩy lùi theo loại mục tiêu. Mục tiêu sống sót sau vụ nổ chính bị đánh dấu 8 giây và nhận thêm 40% sát thương trực tiếp từ Titan. Quét Sạch Hỏa lực: vụ nổ chính phá hủy mọi đạn đạo thù địch, kể cả Boss, đã phóng và đang trên màn hình; không hủy các phát chưa phóng, laser hoặc vùng sát thương.",
-    "Sát thương vụ nổ chính: 950% → 1050% Hỏa lực. Vụ nổ chính phá mọi đạn đạo thù địch đã phóng, kể cả Boss; không hủy các phát chưa phóng, laser hoặc vùng sát thương.\nHồi chiêu cơ bản: 27 → 26 giây. Mana: 150 → 160."]
+    "Titan tạo dấu ấn tại tâm vùng chơi. Sau 2,75 giây, BigBang giáng xuống trong 0,25 giây và nổ đúng mốc 3 giây, gây 950% Hỏa lực toàn màn hình. Không nổ do va chạm hoặc tái kích hoạt. Hồi chiêu bắt đầu ngay sau vụ nổ chính. Sau 1,2 giây, Dư Chấn gây 280% Hỏa lực toàn màn hình, giảm 20% sát thương địch gây ra trong 5 giây và đẩy lùi theo loại mục tiêu. Mục tiêu sống sót sau vụ nổ chính bị đánh dấu 8 giây và nhận thêm 40% sát thương trực tiếp từ Titan. Quét Sạch Hỏa lực: vụ nổ chính phá hủy mọi đạn đạo thù địch, kể cả Boss, đã phóng và đang trên màn hình; không hủy các phát chưa phóng, laser hoặc vùng sát thương.",
+    "Sát thương vụ nổ chính: 900% → 950% Hỏa lực. Vụ nổ chính phá mọi đạn đạo thù địch đã phóng, kể cả Boss; không hủy các phát chưa phóng, laser hoặc vùng sát thương.\nHồi chiêu cơ bản: 27 → 26 giây. Mana: 150 → 160."]
 ]),
  gravity_anchor:ranks([130,140,150,160,170],[
   ["Trường Trọng Lực",
@@ -304,9 +306,9 @@ export function rankValues(s:AircraftCombatState,id:SkillId) {
  const all={
   decoy:{cost,cooldown:[32,31,30,29,28][r-1],duration:r>=2?2.5:1.5,count:r>=2?4:3},
   afterburner:{cost,cooldown:[30,29,28,27,26][r-1],duration:[6,7,8,9,10][r-1]},
-  missile_swarm:{cost,cooldown:90,count:[14,18,22][r-1],damageMultiplier:[2,2.3,2.6][r-1]},
+  missile_swarm:{cost,cooldown:90,count:[14,18,22][r-1],damageMultiplier:VIPER_MISSILE_DAMAGE[r-1]},
   armor_shield:{cost,cooldown:[35,34,33,32,31][r-1],duration:[6,6.5,7,7.5,8][r-1],damageTakenMultiplier:[.45,.4,.35,.3,.25][r-1]},
-  heavy_bomb:{cost,cooldown:[30,29,28,27,26][r-1],damageMultiplier:[6.5,7.5,8.5,9.5,10.5][r-1]},
+  heavy_bomb:{cost,cooldown:[30,29,28,27,26][r-1],damageMultiplier:TITAN_BIGBANG_DAMAGE[r-1]},
   sweeping_cannon:{cost,cooldown:70,duration:18,count:r>=2?9:7,damageMultiplier:[.85,.95,1.05][r-1]},
   invisibility:{cost,cooldown:[33,32,31,30,29][r-1],duration:[2,2.1,2.2,2.3,2.4][r-1]},
   focus_laser:{cost,cooldown:[29,28,27,26,25][r-1],charge:[2,1.8,1.6,1.4,1.2][r-1],duration:[2,2.25,2.5,2.75,3][r-1],damageMultiplier:PHANTOM_LASER_DAMAGE[r-1]},

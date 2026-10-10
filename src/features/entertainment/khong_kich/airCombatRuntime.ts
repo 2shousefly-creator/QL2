@@ -1765,7 +1765,7 @@ function launchNextMissile(world: CombatWorld, salvo: MissileSalvo): boolean {
     const launch = clampCircleToGameplayRect(world.playerX + side * 32*playerAirframeScale(world.aircraft), world.playerY - 12*playerAirframeScale(world.aircraft), 4.5);
     const p = addProjectile(world, {owner:"player",source:"skill",skillId:"missile_swarm",salvoId:salvo.id,expansionCast:salvo.expansionCast,
         x:launch.x,y:launch.y,vx:0,vy:-520,radius:4.5,rawDamage:getEffectiveAircraftStats(world.aircraft).firepower*values.damageMultiplier,
-        lifetime:24,projectileKind:"missile",anchorX:side*32,anchorY:-12,turnRate:3.2,color:"#fb923c"});
+        lifetime:24,projectileKind:"missile",anchorX:side*32,anchorY:-12,turnRate:3.2*1.7,color:"#fb923c"});
     if (!p) return false;
     if(salvo.launchIndex>=14)recordCoreMetric(world.aircraft,25,"extraProjectiles",1);
     salvo.live.add(p.id); salvo.pairIds.push(p.id); salvo.pending--; salvo.launchIndex++;
