@@ -3258,7 +3258,7 @@ function coreContext(world: CombatWorld, extra: Partial<CoreContext> = {}): Core
             const count = Math.min(3, world.enemies.reduce((n, e) => n + (isHostileToPlayer(world,e) ? 1 : 0), 0));
             const volleyId = world.nextId; const volleyTargets=new Set<number>();
             for (let i = 0; i < count; i++) {
-                const missile = addProjectile(world, { owner: "player", source: "weapon", telemetryCore: 106, projectileKind: "missile", volleyId, volleyTargets, turnRate: 4, lifetime: 12,
+                const missile = addProjectile(world, { owner: "player", source: "weapon", telemetryCore: 106, projectileKind: "missile", volleyId, volleyTargets, turnRate: 8, lifetime: 12,
                     anchorX: (i - 1) * 25, anchorY: -24,
                     x: world.playerX + (i - 1) * 10, y: world.playerY - 15, vx: (i - 1) * 65, vy: -230, radius: 4.5,
                     rawDamage: getEffectiveAircraftStats(world.aircraft).firepower * 3.6, color: "#67e8f9" });

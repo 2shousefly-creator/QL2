@@ -2320,7 +2320,7 @@ export const CORE_DEFINITIONS: readonly CoreDefinition[] = [
 {
   "id": "core_184",
   "name": "Bảo hộ linh hồn",
-  "description": "Sau 22 giây, đòn tấn công hoặc hiệu ứng khống chế kế tiếp trúng bạn bị vô hiệu hoàn toàn, sau đó bạn miễn toàn bộ sát thương và khống chế trong 5 giây. Hồi Chiêu bắt đầu sau khi hiệu ứng miễn nhiễm kết thúc. Khi nhận lõi, lần bảo hộ đầu tiên sẵn sàng ngay.",
+  "description": "Sau 22 giây, đòn tấn công hoặc hiệu ứng khống chế kế tiếp trúng bạn bị vô hiệu hoàn toàn, sau đó bạn miễn toàn bộ sát thương và khống chế trong 3,5 giây. Hồi Chiêu bắt đầu sau khi hiệu ứng miễn nhiễm kết thúc. Khi nhận lõi, lần bảo hộ đầu tiên sẵn sàng ngay.",
   "system": "defense",
   "icon": "core:core_184",
   "category": "defense",

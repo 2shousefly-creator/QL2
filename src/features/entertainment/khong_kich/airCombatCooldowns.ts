@@ -1,7 +1,7 @@
 import type { AircraftCombatState, SkillId } from "./airCombatTypes";
 
 /** Shared by Core 184 runtime, HUD and both battlefield renderers. */
-export const CELESTIAL_PROTECTION_TIMING = { duration: 5, cooldown: 22 } as const;
+export const CELESTIAL_PROTECTION_TIMING = { duration: 3.5, cooldown: 22 } as const;
 
 /** Pending means the primary effect is active: no cooldown exists yet. */
 export const CORE_ACTIVE_COOLDOWNS = [
