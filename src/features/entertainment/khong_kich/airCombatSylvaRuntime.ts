@@ -53,7 +53,16 @@ export function sylvaCluster(w:CombatWorld,h:SylvaHooks){
 }
 export function sylvaAllowed(w:CombatWorld,id:SkillId,h:SylvaHooks){return id==='sylva_deathbloom'?!!sylvaCurrentTarget(w,h):id==='sylva_acid_burst'||id==='sylva_parasitic_seed'?!!sylvaCluster(w,h):true;}
 export function sylvaRecastReady(w:CombatWorld){const a=states.get(w)?.symbiosis;return !!a&&live(w)&&w.elapsed>=a.recastAt;}
-export function sylvaHud(w:CombatWorld){const a=states.get(w)?.symbiosis;return live(w)&&a?{...a,remaining:Math.max(0,a.until-w.elapsed),heal:w.aircraft.duel?.healingBlocked?0:(.5*getEffectiveAircraftStats(w.aircraft).firepower+a.storedVitality,'sylva_symbiosis')*getHealingReceivedMultiplier(w.aircraft)}:undefined;}
+export function sylvaHud(w:CombatWorld){
+ const a=states.get(w)?.symbiosis;
+ if(!live(w)||!a)return undefined;
+ return {
+  ...a,
+  remaining:Math.max(0,a.until-w.elapsed),
+  heal:w.aircraft.duel?.healingBlocked?0:
+   (.5*getEffectiveAircraftStats(w.aircraft).firepower+a.storedVitality)*getHealingReceivedMultiplier(w.aircraft),
+ };
+}
 export function sylvaGrayHealth(w:CombatWorld){return live(w)?states.get(w)?.symbiosis?.storedVitality??0:0;}
 export function endSylvaSymbiosis(w:CombatWorld,h:SylvaHooks,at=w.elapsed){
  const s=states.get(w),a=s?.symbiosis;if(!s||!a)return;
