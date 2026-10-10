@@ -1,9 +1,9 @@
 import { cinderFuelGeometry } from './airCombatCinderFuel';
-import fuel from '../../../assets/khong-kich/26.29.3/fuel.png';
+import fuel from '../../../assets/khong-kich/26.29.4/fuel.png';
 import beamRaster from '../../../assets/khong-kich/26.29.3/beam.png';
-import fuelWall from '../../../assets/khong-kich/26.29.3/wall.png';
-import fuelSmoke from '../../../assets/khong-kich/26.29.3/smoke.png';
-import fuelFrames from '../../../assets/khong-kich/26.29.3/frames.json';
+import fuelFlow from '../../../assets/khong-kich/26.29.4/flow.png';
+import fuelSmoke from '../../../assets/khong-kich/26.29.4/smoke.png';
+import fuelFrames from '../../../assets/khong-kich/26.29.4/frames.json';
 import guardianVfx from '../../../assets/khong-kich/v2/guardian-charge-vfx.png';
 import { playerAirframeScale } from './airCombatReleaseState';
 import aircraft from '../../../assets/khong-kich/cinder/aircraft.png';
@@ -16,11 +16,11 @@ import type { CombatWorld } from './airCombatRuntime';
 import { cinderState, cinderWaveRadius } from './airCombatCinderRuntime';
 import { cinderValues } from './airCombatCinderConfig';
 import { GAMEPLAY_SAFE_RECT as R, AIR_COMBAT_WORLD } from './airCombatConfig';
-export const CINDER_ART={aircraft,icons,vfx,projectiles,feedback,guardianVfx,fuel,fuelWall,fuelSmoke,beamRaster};
-export const CINDER_RASTER_SOURCES={cinderBeam:beamRaster,cinderFuel:fuel,cinderFuelWall:fuelWall,cinderFuelSmoke:fuelSmoke};
+export const CINDER_ART={aircraft,icons,vfx,projectiles,feedback,guardianVfx,fuel,fuelFlow,fuelSmoke,beamRaster};
+export const CINDER_RASTER_SOURCES={cinderBeam:beamRaster,cinderFuel:fuel,cinderFuelFlow:fuelFlow,cinderFuelSmoke:fuelSmoke};
 export const NEW_ICON_CELLS:Record<string,readonly [number,number]>={viper_follow_up:[0,0],titan_alloy_rounds:[1,0],phantom_backup_battery:[2,0],astra_stellar_mark:[0,1],cinder_thermal_round:[1,1],cinder_fire_shield:[2,1],cinder_fuel_barrage:[0,2],cinder_heat_wave:[1,2],cinder_inferno_beam:[2,2]};
 const frame=(atlas:AtlasFrame['atlas'],x:number,y:number,rows=4):AtlasFrame=>({atlas,rect:[x/4,y/rows,1/4,1/rows]});
-const fuelFrame=(atlas:'cinderFuel'|'cinderFuelWall'|'cinderFuelSmoke',index:number):AtlasFrame=>({atlas,rect:fuelFrames.atlases[atlas==='cinderFuel'?'fuel':atlas==='cinderFuelWall'?'wall':'smoke'].rects[index] as [number,number,number,number]});
+const fuelFrame=(atlas:'cinderFuel'|'cinderFuelFlow'|'cinderFuelSmoke',index:number):AtlasFrame=>({atlas,rect:fuelFrames.atlases[atlas==='cinderFuel'?'fuel':atlas==='cinderFuelFlow'?'flow':'smoke'].rects[index] as [number,number,number,number]});
 export const CINDER_FRAMES={
  guardian0:frame("guardianVfx",0,0,2),guardian1:frame("guardianVfx",1,0,2),guardian2:frame("guardianVfx",2,0,2),guardian3:frame("guardianVfx",3,0,2),
  charge0:frame("guardianVfx",0,1,2),charge1:frame("guardianVfx",1,1,2),charge2:frame("guardianVfx",2,1,2),charge3:frame("guardianVfx",3,1,2),
@@ -29,7 +29,7 @@ export const CINDER_FRAMES={
  cinder_ring0:frame('cinderVfx',0,0),cinder_ring1:frame('cinderVfx',1,0),cinder_ring2:frame('cinderVfx',2,0),cinder_ring3:frame('cinderVfx',3,0),
  cinder_burn:{...frame('cinderVfx',1,1),generated:'shared_flame'},
  cinder_fuel0:fuelFrame('cinderFuel',0),cinder_fuel1:fuelFrame('cinderFuel',1),cinder_fuel2:fuelFrame('cinderFuel',2),cinder_fuel3:fuelFrame('cinderFuel',3),
- cinder_wall0:fuelFrame('cinderFuelWall',0),cinder_wall1:fuelFrame('cinderFuelWall',1),cinder_wall2:fuelFrame('cinderFuelWall',2),cinder_wall3:fuelFrame('cinderFuelWall',3),
+ cinder_flow0:fuelFrame('cinderFuelFlow',0),cinder_flow1:fuelFrame('cinderFuelFlow',1),cinder_flow2:fuelFrame('cinderFuelFlow',2),cinder_flow3:fuelFrame('cinderFuelFlow',3),
  cinder_smoke0:fuelFrame('cinderFuelSmoke',0), cinder_smoke1:fuelFrame('cinderFuelSmoke',1), cinder_smoke2:fuelFrame('cinderFuelSmoke',2), cinder_smoke3:fuelFrame('cinderFuelSmoke',3),
  cinder_beam26_0:{atlas:'cinderBeam',rect:[0,0,1,1]} as AtlasFrame,cinder_beam26_1:{atlas:'cinderBeam',rect:[0,0,1,1]} as AtlasFrame,cinder_beam26_2:{atlas:'cinderBeam',rect:[0,0,1,1]} as AtlasFrame,cinder_beam26_3:{atlas:'cinderBeam',rect:[0,0,1,1]} as AtlasFrame,
  cinder_burst0:frame('cinderVfx',0,3),cinder_burst1:frame('cinderVfx',1,3),cinder_burst2:frame('cinderVfx',2,3),cinder_burst3:frame('cinderVfx',3,3),
@@ -66,15 +66,41 @@ export function paintCinder(w:CombatWorld,paint:CinderPainter,reduced:boolean,la
  const f=s.fuel;if(f){const g=cinderFuelGeometry(f);
   if(now<f.land){for(const point of g.centers){const p=Math.min(1,(now-f.at)/.6),px=f.fromX+(point.x-f.fromX)*p,py=f.fromY+(f.y-f.fromY)*p;draw('cinder_canister',px,py,22,32,(p-.5)*.2);draw('cinder_ember',px,py+15,15,30,0,.65);}}
   else if(now<f.until){
-   const phase=reduced?0:Math.floor((now-f.land)*8)%4;
-   // Shared trimmed raster frames map to the unchanged world-space footprint.
-   if(g.wall)draw(('cinder_wall'+phase) as CinderVisualKey,(g.left+g.right)/2,(g.top+g.bottom)/2,g.right-g.left,g.bottom-g.top,0,.9);
-   else for(const point of g.centers)draw(('cinder_fuel'+phase) as CinderVisualKey,point.x,point.y,g.radius*2,g.radius*2,0,.9);
-   // Smoke is a separate soft-alpha layer; it never expands or clips the fuel collider.
+   const age=now-f.land;
+   const fade=Math.min(1,age/.12,(f.until-now)/.35);
+   // Ground pivots are independent of texture bounds: tongues and smoke may overhang.
+   // Two cached frames blend without the mid-transition opacity dip of simple fades.
+   const layer=(kind:'fuel'|'flow'|'smoke',phase:number,x:number,y:number,width:number,height:number,alpha:number,rotation=0)=>{
+    const pivot=fuelFrames.atlases[kind].pivot;
+    const dx=(.5-pivot[0])*width,dy=(.5-pivot[1])*height;
+    const cx=x+dx*Math.cos(rotation)-dy*Math.sin(rotation),cy=y+dx*Math.sin(rotation)+dy*Math.cos(rotation);
+    const current=Math.floor(phase)%4,mix=reduced?0:phase-Math.floor(phase),nextAlpha=alpha*mix;
+    draw(('cinder_'+kind+current) as CinderVisualKey,cx,cy,width,height,rotation,alpha*(1-mix)/Math.max(.001,1-nextAlpha));
+    if(!reduced)draw(('cinder_'+kind+(current+1)%4) as CinderVisualKey,cx,cy,width,height,rotation,nextAlpha);
+   };
+   // Rank 5 has three flowing joins, never a rectangle clipped from a fire texture.
+   // Broad generated rivulets overlap both neighboring patches across the wall's depth.
+   if(g.wall)for(let i=0;i<3;i++){
+    const left=g.centers[i],right=g.centers[i+1],seed=((f.id*13+i*29)%97)/97;
+    const phase=reduced?i%4:age*6.5+seed*4;
+    const sway=reduced?0:Math.sin(age*1.4+seed*6.28)*3;
+    layer('flow',phase,(left.x+right.x)/2,f.y+8+sway,right.x-left.x+g.radius*1.55,g.radius*2.65,.86*fade,(seed-.5)*.06);
+   }
    for(let i=0;i<g.centers.length;i++){
-    const point=g.centers[i],smokePhase=reduced?0:(phase+i)%4;
-    const drift=reduced?0:Math.sin((now-f.land)*1.6+i)*3;
-    draw(('cinder_smoke'+smokePhase) as CinderVisualKey,point.x+drift,point.y-g.radius*.22,g.radius*2.3,g.radius*2.5,0,reduced?.12:.22);
+    const point=g.centers[i],seed=((f.id*17+i*31)%101)/101;
+    const phase=reduced?i:age*(7.2+seed*1.1)+seed*4;
+    const flicker=reduced?1:1+.018*Math.sin(age*9+seed*6.28);
+    // Stable per-cast variation breaks the repeated stamp without moving the hitbox.
+    layer('fuel',phase,point.x,point.y,g.radius*2.95*(.96+seed*.08),g.radius*3.2*flicker,.92*fade,(seed-.5)*.10);
+   }
+   // Render smoke after the fire: narrow sources expand, drift upward and fade out.
+   for(let i=0;i<g.centers.length;i++){
+    const point=g.centers[i],seed=((f.id*11+i*23)%89)/89;
+    const cycle=reduced?.35:(age*.48+seed)%1;
+    const drift=reduced?0:Math.sin(age*.85+seed*6.28)*6+cycle*4;
+    const lift=reduced?0:cycle*15;
+    const alpha=(reduced?.15:.28*Math.sin(Math.PI*cycle))*fade;
+    layer('smoke',reduced?i:age*3.2+seed*4,point.x+drift,point.y-8-lift,g.radius*(1.6+cycle*.35),g.radius*(2.55+cycle*.5),alpha);
    }
   }
  }

@@ -1,0 +1,17 @@
+{
+  "version": "26.29.4",
+  "generator": "built-in image_gen",
+  "sources": [
+    "fuel-phases.png",
+    "flow-phases.png",
+    "smoke-phases.png"
+  ],
+  "reference": "fuel-phases.png",
+  "prompts": {
+    "fuel": "Four phases of a raging irregular spilled-fuel fire: asymmetric branching lobes, vigorous upward flames, molten rivulets, detached embers, transparent gaps; no round disk or geometric base. Transparent RGBA, 2x2 sheet.",
+    "flow": "Reference-matched four phases of broad meandering burning-liquid rivulets merging neighboring fires, with soft branching ends, irregular edges and changing eddies; no rectangle or straight bar. Transparent RGBA, 2x2 sheet.",
+    "smoke": "Reference-matched four phases of a rising curling charcoal/brown plume, narrow origin, thinning upper wisps, soft translucent alpha and subtle amber illumination; no round opaque puff. Transparent RGBA, 2x2 sheet."
+  },
+  "packing": "Fixed 2x2 source cells resized into four horizontal frames with 4px transparent gutters. Original alpha preserved. No procedural fire, filled bed, perimeter mask or rectangle composite.",
+  "rendering": "Four independently phased patches plus three overlapping liquid-fuel flows at rank 5. Ground pivots from shared metadata. Flame tips overhang unchanged collision. Cross-fades, smoke drift and flicker use combat elapsed time only; deterministic per-cast phase variation never consumes combat RNG. Reduced Motion keeps complete fire/flow composition."
+}
