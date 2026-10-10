@@ -761,6 +761,9 @@
 .air-selection button.air-selection-tile[aria-pressed=true] { border-color:var(--aircraft-color); background:color-mix(in srgb,var(--aircraft-color) 16%,#0b1424); box-shadow:0 0 0 1px var(--aircraft-accent) inset,0 0 16px color-mix(in srgb,var(--aircraft-color) 22%,transparent); }
 .air-selection button:focus-visible { outline:3px solid #fff; outline-offset:3px; }
 .air-selection-sprite { width:min(100%,86px); aspect-ratio:1; }
+/* Astra's painted bounds are [18,40,198,215] in its 256px source frame.
+   Center the hull inside its tile while retaining the authored sprite scale. */
+.air-selection-tile[data-aircraft-option="astra"] .air-selection-sprite > img { transform:translate(7.8125%,.1953125%); }
 .air-selection .air-selection-secret { font-size:38px; line-height:1; color:#e2e8f0; font-weight:900; }
 .air-selection-panel { min-width:0; border:1px solid color-mix(in srgb,var(--aircraft-color) 45%,#334155); border-radius:16px; padding:16px; background:linear-gradient(135deg,#101d30f5,#080e1cf5); }
 .air-selection-identity { display:flex; align-items:center; gap:14px; }
