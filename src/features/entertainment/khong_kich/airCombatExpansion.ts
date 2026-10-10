@@ -1,6 +1,6 @@
 import { startEquipmentCooldown } from "./airCombatEquipmentState";
 import { externalNegativeStatusTypes } from './airCombatNegativeStatuses';
-import { coreCooldownReady, deferCoreCooldown, startCoreCooldown } from "./airCombatCooldowns";
+import { CELESTIAL_PROTECTION_TIMING, coreCooldownReady, deferCoreCooldown, startCoreCooldown } from "./airCombatCooldowns";
 import { getRecoveryReceivedMultiplier, getShieldReceivedMultiplier } from "./airCombatRecovery";
 import { equipmentSkillEnd } from "./airCombatEquipmentRuntime";
 import { releaseState, overheated } from "./airCombatReleaseState";
@@ -141,7 +141,7 @@ export function celestialProtection(s: AircraftCombatState): boolean {
   if (expansionActive(s, "celestial")) return true;
   if (c.timers.celestialReady === undefined && !c.stacks["cooldownPending:celestialReady"]) { c.timers.celestialReady = c.time; }
   if (!coreCooldownReady(s, "celestialReady")) return false;
-  c.timers.celestial = c.time + 5;
+  c.timers.celestial = c.time + CELESTIAL_PROTECTION_TIMING.duration;
   deferCoreCooldown(s, "celestialReady");
   recordCoreMetric(s,184,"procs",1);
   return true;

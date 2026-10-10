@@ -6,6 +6,7 @@ import { getEffectiveAircraftStats } from "./airCombatAircraft";
 import { activeNegativeStatusTypes, expansionState, hasAbsorbShield } from "./airCombatExpansion";
 import { releaseState, overheated } from "./airCombatReleaseState";
 import { CORE_SYSTEM_LABELS } from "./airCombatCoreSystems";
+import { CELESTIAL_PROTECTION_TIMING } from "./airCombatCooldowns";
 
 export function expansionStatuses(w: CombatWorld): StatusPresentation[] {
   const s=w.aircraft,c=s.coreState,r=expansionState(s),stats=getEffectiveAircraftStats(s),result:StatusPresentation[]=[];
@@ -41,7 +42,7 @@ export function expansionStatuses(w: CombatWorld): StatusPresentation[] {
   const negative=activeNegativeStatusTypes(s).size;
   if(negative)add(183,`+${25+Math.min(60,negative*20)} Giáp`,{badgeText:`+${25+Math.min(60,negative*20)}`,badgeKind:"bonus"});
   const immune=remaining("celestial"),ready=remaining("celestialReady");
-  add(184,immune?"Bảo Hộ Thiên Giới":ready?"Đang hồi nội tại":"Sẵn sàng",{remaining:immune||ready||Infinity,duration:immune?5:22,timerKind:immune?"active":"cooldown",showNumericTimer:!!(immune||ready),timeLabel:immune?"Miễn sát thương và khống chế":ready?undefined:"Sẵn sàng"});
+  add(184,immune?"Bảo Hộ Thiên Giới":ready?"Đang hồi nội tại":"Sẵn sàng",{remaining:immune||ready||Infinity,duration:immune?CELESTIAL_PROTECTION_TIMING.duration:CELESTIAL_PROTECTION_TIMING.cooldown,timerKind:immune?"active":"cooldown",showNumericTimer:!!(immune||ready),timeLabel:immune?"Miễn sát thương và khống chế":ready?undefined:"Sẵn sàng"});
   timed(186,"confluence",8,"confluenceCd",12);
   add(187,`Đã tích ${Math.round(c.stacks.recoil??0)} sát thương`,{badgeText:String(Math.round(c.stacks.recoil??0)),badgeKind:"charge",progress:(c.stacks.recoil??0)/Math.max(1,stats.firepower*5)});
   add(192,hasAbsorbShield(s)?"Có Lá chắn: +25% mọi sát thương":"Không có Lá chắn: +40 Giáp",{badgeText:hasAbsorbShield(s)?"+25%":"+40"});

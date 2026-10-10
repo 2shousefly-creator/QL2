@@ -1,5 +1,8 @@
 import type { AircraftCombatState, SkillId } from "./airCombatTypes";
 
+/** Shared by Core 184 runtime, HUD and both battlefield renderers. */
+export const CELESTIAL_PROTECTION_TIMING = { duration: 5, cooldown: 22 } as const;
+
 /** Pending means the primary effect is active: no cooldown exists yet. */
 export const CORE_ACTIVE_COOLDOWNS = [
   ["reactiveArmorCd", "reactiveArmor", 8],
@@ -8,7 +11,7 @@ export const CORE_ACTIVE_COOLDOWNS = [
   ["shockPadCd", "shockPadRegen", 15],
   ["alternatingCd", "alternating", 20],
   ["magneticBrakeCd", "magneticBrake", 12],
-  ["celestialReady", "celestial", 22],
+  ["celestialReady", "celestial", CELESTIAL_PROTECTION_TIMING.cooldown],
   ["confluenceCd", "confluence", 12],
   ["blackBoxCd", "blackBox", 18],
 ] as const;

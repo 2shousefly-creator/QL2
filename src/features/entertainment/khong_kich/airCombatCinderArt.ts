@@ -1,4 +1,5 @@
 import { cinderFuelGeometry } from './airCombatCinderFuel';
+import { CELESTIAL_PROTECTION_TIMING } from './airCombatCooldowns';
 import fuel from '../../../assets/khong-kich/26.29.4/fuel.png';
 import beamRaster from '../../../assets/khong-kich/26.29.3/beam.png';
 import fuelFlow from '../../../assets/khong-kich/26.29.4/flow.png';
@@ -37,6 +38,7 @@ export const CINDER_FRAMES={
  cinder_canister:frame('cinderProjectiles',0,1,2),passive_mark:frame('cinderProjectiles',1,1,2),passive_battery:frame('cinderProjectiles',2,1,2),cinder_ember:frame('cinderProjectiles',3,1,2),
 };
 export type CinderVisualKey=keyof typeof CINDER_FRAMES;
+const GUARDIAN_FRAME_KEYS = ['guardian0', 'guardian1', 'guardian2', 'guardian3'] as const satisfies readonly CinderVisualKey[];
 export type CinderPainter=(id:number,key:CinderVisualKey,x:number,y:number,width:number,height:number,rotation:number,alpha:number)=>void;
 export interface CinderGeometryPainter {
  rect(x:number,y:number,width:number,height:number,fillAlpha:number,lineAlpha:number):void;
@@ -48,8 +50,10 @@ export function paintCinder(w:CombatWorld,paint:CinderPainter,reduced:boolean,la
  const draw=(key:CinderVisualKey,x:number,y:number,width:number,height=width,rotation=0,alpha=1)=>paint(900000+index++,key,x,y,width,height,rotation,alpha);
  const protection=(w.aircraft.coreState.timers.celestial??0)-w.aircraft.coreState.time;
  if(protection>0&&!w.ended&&!w.destruction&&w.aircraft.currentHp>0){
-  const age=3-protection,phase=reduced?2:Math.min(3,Math.floor(age*5)%4),size=96*playerAirframeScale(w.aircraft);
-  draw(('guardian'+phase) as CinderVisualKey,w.playerX,w.playerY,size,size,0,Math.min(1,protection/.25)*.9);
+  // A negative animation age produces negative remainders and missing atlas keys.
+  const age=Math.max(0,CELESTIAL_PROTECTION_TIMING.duration-protection);
+  const phase=reduced?2:Math.floor(age*5)%GUARDIAN_FRAME_KEYS.length,size=96*playerAirframeScale(w.aircraft);
+  draw(GUARDIAN_FRAME_KEYS[phase],w.playerX,w.playerY,size,size,0,Math.min(1,protection/.25)*.9);
  }
  const anim=(kind:'ring'|'beam'|'burst',phase=now)=>('cinder_'+(kind==='beam'?'beam26_':kind)+Math.floor(Math.max(0,phase)*(reduced?4:10))%4) as CinderVisualKey;
  for(const [id,t] of s.targets){const e=w.enemies.find(e=>e.id===id&&e.hp>0);if(!e)continue;
