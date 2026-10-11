@@ -57,9 +57,9 @@ export class DamageLabelPool {
         label.age = 0;
         label.x = Math.max(24, Math.min(AIR_COMBAT_WORLD.width - 24, event.x));
         label.y = Math.max(GAMEPLAY_SAFE_RECT.top + 18, Math.min(AIR_COMBAT_WORLD.height - 20, event.y - 10));
-        // Separate both parts of a hit so white absorption never hides the HP number.
-        label.offset = ((event.id % 5) - 2) * 4;
-        if (event.hpDamage > 0 && event.shieldAbsorbed > 0) { label.x += damageKind === "shield" ? -16 : 16; if (damageKind === "shield") label.y -= 13; }
+        // Renderers stack measured lines at the impact column, including both
+        // shield and HP parts. Random sideways drift would collapse those gaps.
+        label.offset = 0;
         label.text = String(Math.max(0, Math.round(amount)));
         label.critical = damageKind === "hp" && event.target === "enemy" && event.critical;
         label.damageKind = damageKind;

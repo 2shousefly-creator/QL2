@@ -5,7 +5,7 @@ import type { AircraftCombatState, SkillId } from './airCombatTypes';
 import { endAircraftSkill, getEffectiveAircraftStats, getSkillRuntimeValues } from './airCombatAircraft';
 import { resolveSkillCooldown } from './airCombatStatResolvers';
 import { skillRank } from './airCombatSkillRanks';
-import { TERRA as T, TERRA_SKILLS as IDS, terraValues, type TerraSkillId } from './airCombatTerraConfig';
+import { TERRA as T, TERRA_SKILLS as IDS, terraValues, terraPressureLimit, terraCannonDamage, type TerraSkillId } from './airCombatTerraConfig';
 import { canTargetEnemy } from './airCombatTargetability';
 import { celestialProtection, createAbsorbShield } from './airCombatExpansion';
 import { negativeStatusDuration } from './airCombatCoreEffects';
@@ -38,7 +38,7 @@ const immune=(e:EnemyEntity)=>!!e.aircraftTarget&&celestialProtection(e.aircraft
 const duration=(e:EnemyEntity,n:number)=>e.aircraftTarget?negativeStatusDuration(e.aircraftTarget.world.aircraft,n):n;
 const valid=(w:CombatWorld,e:EnemyEntity,h:TerraHooks)=>exists(w,e)&&h.hostile(w,e)&&canTargetEnemy(w,e)&&e.x+e.radius>=R.left&&e.x-e.radius<=R.right&&e.y+e.radius>=R.top&&e.y-e.radius<=R.bottom;
 const hittable=(w:CombatWorld,e:EnemyEntity,h:TerraHooks)=>exists(w,e)&&h.hostile(w,e)&&canTargetEnemy(w,e,'untargeted')&&!immune(e);
-export const terraPressureCap=(w:CombatWorld)=>getEffectiveAircraftStats(w.aircraft).maxHp*T.pressureCaps[Math.min(3,Math.floor((w.aircraft.level-1)/5))];
+export const terraPressureCap=(w:CombatWorld)=>terraPressureLimit(getEffectiveAircraftStats(w.aircraft).maxHp,w.aircraft.level);
 export const terraKnockbackImmune=(s:AircraftCombatState)=>s.aircraftId==='terra'&&(s.coreState.timers.terraArmor??0)>s.coreState.time&&(s.coreState.stacks.terraArmorRank??0)>=3&&(s.coreState.stacks.terraReserve??0)>0;
 export function terraFx(w:CombatWorld,kind:string,x=w.playerX,y=w.playerY,size=48,life=.4,at=w.elapsed){const s=terraState(w),e={kind,x,y,size,life,at};s.effects.push(e);if(s.effects.length>128)s.effects.splice(0,s.effects.length-128);return e;}
 function activate(w:CombatWorld,id:TerraSkillId,c:Cast){w.aircraft.activeEffects[id]=c.until-w.elapsed;(w.aircraft.activeEffectDurations??={})[id]=c.until-c.at;}
@@ -100,7 +100,7 @@ export function terraMovement(w:CombatWorld,e:EnemyEntity){const d=states.get(w)
 export function terraSuppression(w:CombatWorld,e:EnemyEntity){const d=states.get(w)?.targets.get(e.id);return d?.entity===e&&d.suppressUntil>w.elapsed?.8:1;}
 export function clearTerraTarget(w:CombatWorld,e:EnemyEntity){const s=states.get(w);s?.targets.delete(e.id);if(s?.clamp&&w.elapsed>=s.clamp.at+T.clampTelegraph)s.clamp.cleansed.add(e);}
 function fire(w:CombatWorld,c:Cannon,h:TerraHooks){
- const s=terraState(w),v=terraValues(IDS[1],c.rank),raw=(c.firepower*v.damageMultiplier+c.spent*v.pressureDamage)*c.multiplier;
+ const s=terraState(w),v=terraValues(IDS[1],c.rank),raw=terraCannonDamage(c.firepower,c.spent,c.rank,c.multiplier);
  const beam=terraFx(w,'cannon',w.playerX,w.playerY-T.cannonRange/2,T.cannonWidth,.45,c.until);Object.assign(beam,{height:T.cannonRange,center:v.centerWidth});
  for(const e of [...w.enemies]){
   const ahead=w.playerY-e.y,side=Math.abs(e.x-w.playerX);if(!hittable(w,e,h)||ahead<0||ahead>T.cannonRange||side>T.cannonWidth/2)continue;

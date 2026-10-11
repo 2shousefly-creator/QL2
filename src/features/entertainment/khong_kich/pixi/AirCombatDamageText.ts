@@ -1,3 +1,4 @@
+import { DamageTextLayout } from "../airCombatDamageLayout";
 import { mirrorPoint } from "../airCombatMirrorTransform";
 import { Container, Text, TextStyle } from "pixi.js";
 import { DamageLabelPool, DAMAGE_LABEL_SECONDS, NORMAL_DAMAGE_FONT_SIZE, CINDER_TOTAL_FONT_SIZE, cinderBurnLabels } from "../airCombatFeedback";
@@ -19,7 +20,7 @@ export class AirCombatDamageText {
   });
   private revisions = new Uint32Array(this.sprites.length);
 
-  update(world: CombatWorld, delta: number, reducedMotion: boolean, rotated = false) {
+  update(world: CombatWorld, delta: number, reducedMotion: boolean, rotated = false, layout = new DamageTextLayout()) {
     this.pool.update(world, delta);
     const totals=cinderBurnLabels(world,rotated);
     for(let i=0;i<Math.max(totals.length,this.totals.length);i++){
@@ -35,7 +36,11 @@ export class AirCombatDamageText {
       view.number.text=label.text;
       const half=view.number.width/2,gap=2;
       const x=Math.max(GAMEPLAY_SAFE_RECT.left+half+view.icon.width+gap+1,Math.min(GAMEPLAY_SAFE_RECT.right-half-1,label.x));
-      view.number.position.set(x,label.y);view.icon.position.set(x-half-gap,label.y);
+      const iconSpace=view.icon.width+gap;
+      const placed=layout.place(x-iconSpace/2,label.y,view.number.width+iconSpace+2,Math.max(view.number.height,view.icon.height)+2);
+      if(!placed){view.number.visible=view.icon.visible=false;continue;}
+      const numberX=placed.x+iconSpace/2;
+      view.number.position.set(numberX,placed.y);view.icon.position.set(numberX-half-gap,placed.y);
       view.number.alpha=view.icon.alpha=label.alpha;
     }
     for (let i = 0; i < this.sprites.length; i++) {
@@ -49,9 +54,12 @@ export class AirCombatDamageText {
       }
       const progress = label.age / DAMAGE_LABEL_SECONDS;
       const position = rotated ? mirrorPoint(label.x, label.y) : label;
-      text.position.set(position.x + label.offset * (reducedMotion ? 0.4 : 0.4 + progress), position.y - (rotated?20:0) - progress * (reducedMotion ? 7 : 24));
-      text.alpha = Math.min(1, (1 - progress) * 2);
       text.scale.set((label.critical ? 1.2 : 1) * (reducedMotion ? 1 : 1 + 0.16 * Math.max(0, 1 - label.age / 0.12)));
+      const placed=layout.place(position.x + label.offset * (reducedMotion ? 0.4 : 0.4 + progress),
+        position.y - (rotated?20:0) - progress * (reducedMotion ? 7 : 24),text.width+2,text.height+2);
+      if(!placed){text.visible=false;continue;}
+      text.position.set(placed.x,placed.y);
+      text.alpha = Math.min(1, (1 - progress) * 2);
     }
   }
 

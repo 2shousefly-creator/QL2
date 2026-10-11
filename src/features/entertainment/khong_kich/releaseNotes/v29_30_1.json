@@ -1,0 +1,78 @@
+{
+  "version": "29.30.1",
+  "releaseDate": "11/10/2026",
+  "title": "Tinh chỉnh Terra và chữ sát thương",
+  "displayTitle": "KHÔNG KÍCH 29.30.1 — TERRA & CHỮ SÁT THƯƠNG",
+  "summary": "Pháo Địa Chấn tạm dừng bắn thường, hiển thị sát thương tối đa trong tooltip và thu hẹp dải sát thương chuẩn. Các dòng sát thương được xếp cách nhau để dễ đọc.",
+  "sections": [
+    {
+      "id": "terra-cannon",
+      "title": "TERRA · PHÁO ĐỊA CHẤN",
+      "icon": {
+        "kind": "aircraft",
+        "id": "terra"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "terra-seismic",
+          "title": "Pháo Địa Chấn",
+          "icon": {
+            "kind": "skill",
+            "id": "terra_seismic_cannon"
+          },
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Terra **tạm ngừng bắn thường** từ khi bắt đầu lập thế đến khi Pháo Địa Chấn khai hỏa. Vẫn có thể di chuyển; bắn thường tự tiếp tục sau khi phát pháo hoàn thành."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Tooltip hiển thị **sát thương tối đa khi đầy Địa Áp** theo cấp kỹ năng, cấp chiến cơ và chỉ số hiện tại. Khi Cường Hóa Địa Tâm đang bật, con số đã gồm mức tăng **20%/35%/50%** tương ứng cấp Ultimate, trước chí mạng và các hệ số theo mục tiêu/tình huống."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Bề rộng dải sát thương chuẩn đổi thành **50** ở cấp 1–2 và **60** từ cấp 3. Vùng va chạm, vệt pháo và mô tả cùng sử dụng kích thước mới."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "damage-text",
+      "title": "HIỂN THỊ SÁT THƯƠNG",
+      "icon": {
+        "kind": "ui",
+        "id": "ui"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "damage-spacing",
+          "title": "Các dòng sát thương dễ đọc hơn",
+          "icon": {
+            "kind": "ui",
+            "id": "ui"
+          },
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Các dòng sát thương xếp dọc với khoảng trống giữa từng dòng, tính theo kích thước chữ thực tế kể cả khi chí mạng phóng lớn."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Số sát thương Máu, hấp thu Khiên và tổng thiêu đốt cùng tránh chồng lấn; áp dụng cho cả hai chiến cơ trong SOLO/Mirror. Khi một cột đầy, chữ dùng khoảng trống bên cạnh trong vùng chiến đấu."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

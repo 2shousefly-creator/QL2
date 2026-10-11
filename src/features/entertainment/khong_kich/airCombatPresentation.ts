@@ -1,4 +1,5 @@
 import { statusDuration } from './airCombatStatusTiming';
+import { terraPressureLimit, terraCannonDamage, terraValues } from './airCombatTerraConfig';
 import { terraHud, terraState } from './airCombatTerraRuntime';
 import { sylvaHud, sylvaState, sylvaMovement } from './airCombatSylvaRuntime';
 import { ARGENT } from './airCombatArgentConfig';
@@ -81,8 +82,17 @@ export function getSkillTooltipModel(state: AircraftCombatState, id: SkillId) {
 }
 function effectiveSkillDescription(s:AircraftCombatState,id:SkillId):string {
  const rank=skillRank(s,id), stats=getEffectiveAircraftStats(s);
- return resolveTooltipValues(SKILL_RANKS[id][rank-1].description, {stats,currentHp:s.currentHp,
+ const description=resolveTooltipValues(SKILL_RANKS[id][rank-1].description, {stats,currentHp:s.currentHp,
    skillCost:getSkillRuntimeValues(s,id).cost});
+ if(id!=='terra_seismic_cannon')return description;
+ const cap=terraPressureLimit(stats.maxHp,s.level);
+ const ultimateActive=(s.coreState.timers.terraUltimate??0)>s.coreState.time;
+ const ultimateRank=s.coreState.stacks.terraUltimateRank??skillRank(s,'terra_geocore_overdrive');
+ const multiplier=ultimateActive?terraValues('terra_geocore_overdrive',ultimateRank).cannonMultiplier:1;
+ const maximum=terraCannonDamage(stats.firepower,cap,rank,multiplier);
+ return description+` Sát thương tối đa khi kích hoạt với đầy Địa Áp (${amount(cap)}): ${amount(maximum)}`
+   +(ultimateActive?` (đã gồm +${number((multiplier-1)*100)}% từ Cường Hóa Địa Tâm đang bật)`:'')
+   +'. Giá trị trước chí mạng, Giáp mục tiêu và các hệ số sát thương theo tình huống.';
 }
 
 export function getActiveSkillDuration(world: CombatWorld, id: SkillId) {

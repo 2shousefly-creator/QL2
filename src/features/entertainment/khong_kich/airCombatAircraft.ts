@@ -476,7 +476,7 @@ export function canAcquirePlayerTarget(state: AircraftCombatState): boolean { re
 export function shouldAutoFire(state: AircraftCombatState): boolean {
     // Invisibility neither blocks basic fire nor ends when a basic shot is emitted.
     const sweepingCannonActive=(state.activeEffects.sweeping_cannon||0)>0;
-    return (state.activeEffects.cinder_inferno_beam || 0) <= 0 && (!overheated(state)||sweepingCannonActive) && state.laserPhase !== "firing" && (state.activeEffects.stellar_lance || 0) <= 0;
+    return (state.activeEffects.terra_seismic_cannon || 0) <= 0 && (state.activeEffects.cinder_inferno_beam || 0) <= 0 && (!overheated(state)||sweepingCannonActive) && state.laserPhase !== "firing" && (state.activeEffects.stellar_lance || 0) <= 0;
 }
 export function classifySkillPress(durationMs: number, longPressMs = 400): "tap" | "hold" { return durationMs >= longPressMs ? "hold" : "tap"; }
 export function shouldCastSkillPress(durationMs: number, holdActivated: boolean, cancelled: boolean, longPressMs = 400): boolean {

@@ -1,3 +1,4 @@
+import { DamageTextLayout } from "../airCombatDamageLayout";
 import { paintBalanceGuides, paintAircraftDamageSmoke } from '../airCombatBalanceVisuals';
 import { phantomLaserBounds, PHANTOM_LASER_VISUAL_WIDTH } from '../airCombatPhantom';
 import { terraHud } from '../airCombatTerraRuntime';
@@ -86,6 +87,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
   private pressureText = new Text({ text: "", style: { fontFamily: "Arial", fontSize: 6.4, fontWeight: "bold", fill: 0xffffff, stroke: { color: 0x06101f, width: 1 } } });
   private resourceText = new Text({ text: "", style: { fontFamily: "Arial", fontSize: 6.4, fontWeight: "bold", fill: 0xffffff, stroke: { color: 0x06101f, width: 1 } } });
   private damageText = new AirCombatDamageText();
+  private damageLayout = new DamageTextLayout();
   private sky?: AirCombatSky;
   private mirageSprites: AirCombatSpritePool;
   private stormbreakerSprites: AirCombatSpritePool;
@@ -205,7 +207,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     // Separate stage branch: neither recoil nor camera shake can move status bars.
     app.stage.addChild(this.stableHud);
     // A nested aircraft uses root coordinates for all readable presentation.
-    if (sceneParent) this.stableHud.addChild(this.damageText.root);
+    this.stableHud.addChild(this.damageText.root);
     this.stableHud.addChild(this.trackingBars, this.hpText, this.resourceText, this.pressureText);
     this.pressureText.anchor.set(.5); this.hpText.anchor.set(.5); this.resourceText.anchor.set(.5);
     this.enemies = new AirCombatSpritePool(this.actors, 44);
@@ -238,7 +240,8 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     }
   }
 
-  render(world: CombatWorld, delta: number, reducedMotion: boolean) {
+  render(world: CombatWorld, delta: number, reducedMotion: boolean, damageLayout = this.damageLayout) {
+    if(damageLayout === this.damageLayout)damageLayout.begin();
     if (this.lost) throw new Error("Không Kích WebGL context lost");
     if (this.destroyed || document.hidden) return;
     reducedMotion=reducedMotion||combatGraphicsQuality()==='low';
@@ -843,7 +846,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     this.pressureText.text = terra ? pressureBarText(terra.pressure, terra.cap) : '';
     this.pressureText.position.set(barX + barWidth / 2, barY + 31);
     this.healthBars.end();
-    this.damageText.update(world, delta, reducedMotion, !!this.sceneParent);
+    this.damageText.update(world, delta, reducedMotion, !!this.sceneParent, damageLayout);
     if (damageSmoke && alive) {
       if (hp < 0.2) this.vfx.spawn("fire", world.playerX - 7, world.playerY + 13, 24, 0.35);
     }
@@ -861,7 +864,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
         this.mirrorRenderer?.destroy(); this.mirrorRenderer = undefined; this.mirrorWorld = actor;
         if (actor) this.mirrorRenderer = new AirCombatPixiRenderer(this.app, this.assets, undefined, this.mirrorLayer);
       }
-      if (actor) this.mirrorRenderer?.render(actor, delta, reducedMotion);
+      if (actor) this.mirrorRenderer?.render(actor, delta, reducedMotion, damageLayout);
       this.seedSprites.begin(this.clock,reducedMotion);
       for(const [owner,mirrored] of [[world,false],[actor,true]] as const){
         if(!owner)continue;

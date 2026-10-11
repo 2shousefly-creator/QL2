@@ -1,3 +1,4 @@
+import { DamageTextLayout } from "./airCombatDamageLayout";
 import { paintBalanceGuides, paintAircraftDamageSmoke } from './airCombatBalanceVisuals';
 import { phantomLaserBounds, PHANTOM_LASER_VISUAL_WIDTH } from './airCombatPhantom';
 import { terraHud } from './airCombatTerraRuntime';
@@ -838,17 +839,17 @@ export function drawLegacyWorld(
 
     }
   }
+  const damageLayout = new DamageTextLayout();
+  drawCinderTotals(ctx,world,damageLayout);
+  drawAircraftDamageLabels(ctx,damageLabels,reducedMotion,damageLayout);
   drawAircraftTrackingHud(ctx, world, healthBars);
   if (mirror) {
     const view = mirrorPresentations.get(mirror)!;
     drawAircraftTrackingHud(ctx, mirror, view.bars, true);
     view.bars.end();
-    drawAircraftDamageLabels(ctx, view.labels.labels, reducedMotion, true);
-    drawCinderTotals(ctx,mirror,true);
+    drawCinderTotals(ctx,mirror,damageLayout,true);
+    drawAircraftDamageLabels(ctx, view.labels.labels, reducedMotion, damageLayout, true);
   }
-
-  drawAircraftDamageLabels(ctx, damageLabels, reducedMotion);
-  drawCinderTotals(ctx,world);
 
   ctx.strokeStyle = "rgba(34,211,238,.52)";
   ctx.lineWidth = 1;
@@ -903,17 +904,22 @@ function drawAircraftTrackingHud(ctx: CanvasRenderingContext2D, world: CombatWor
 
 }
 
-function drawCinderTotals(ctx:CanvasRenderingContext2D,world:CombatWorld,rotated=false){
+function drawCinderTotals(ctx:CanvasRenderingContext2D,world:CombatWorld,layout:DamageTextLayout,rotated=false){
   ctx.save();ctx.textBaseline='middle';ctx.lineJoin='round';ctx.font='500 '+CINDER_TOTAL_FONT_SIZE+'px Arial';ctx.lineWidth=1.2;ctx.fillStyle='#ffd179';ctx.strokeStyle='#382013';
   for(const label of cinderBurnLabels(world,rotated)){
     const numberWidth=ctx.measureText(label.text).width,iconWidth=ctx.measureText('🔥').width,gap=2;
     const x=Math.max(GAMEPLAY_SAFE_RECT.left+numberWidth/2+iconWidth+gap+1,Math.min(GAMEPLAY_SAFE_RECT.right-numberWidth/2-1,label.x));
-    ctx.globalAlpha=label.alpha;ctx.textAlign='center';ctx.strokeText(label.text,x,label.y);ctx.fillText(label.text,x,label.y);
-    ctx.textAlign='right';ctx.fillText('🔥',x-numberWidth/2-gap,label.y);
+    const iconSpace=iconWidth+gap;
+    const metrics=ctx.measureText(label.text),icon=ctx.measureText('🔥');
+    const height=Math.max(metrics.actualBoundingBoxAscent+metrics.actualBoundingBoxDescent,icon.actualBoundingBoxAscent+icon.actualBoundingBoxDescent,CINDER_TOTAL_FONT_SIZE)+3;
+    const placed=layout.place(x-iconSpace/2,label.y,numberWidth+iconSpace+3,height);if(!placed)continue;
+    const numberX=placed.x+iconSpace/2;
+    ctx.globalAlpha=label.alpha;ctx.textAlign='center';ctx.strokeText(label.text,numberX,placed.y);ctx.fillText(label.text,numberX,placed.y);
+    ctx.textAlign='right';ctx.fillText('🔥',numberX-numberWidth/2-gap,placed.y);
   }ctx.restore();
 }
 
-function drawAircraftDamageLabels(ctx: CanvasRenderingContext2D, damageLabels: readonly DamageLabel[], reducedMotion: boolean, rotated = false) {
+function drawAircraftDamageLabels(ctx: CanvasRenderingContext2D, damageLabels: readonly DamageLabel[], reducedMotion: boolean, layout:DamageTextLayout, rotated = false) {
   ctx.save();
   ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.lineJoin = "round";
   for (const label of damageLabels) {
@@ -927,7 +933,10 @@ function drawAircraftDamageLabels(ctx: CanvasRenderingContext2D, damageLabels: r
     const position = rotated ? mirrorPoint(label.x, label.y) : label;
     const x = position.x + label.offset * (reducedMotion ? 0.4 : 0.4 + progress);
     const y = position.y - (rotated?20:0) - progress * (reducedMotion ? 7 : 24);
-    ctx.strokeText(label.text, x, y); ctx.fillText(label.text, x, y);
+    const metrics=ctx.measureText(label.text);
+    const height=Math.max(NORMAL_DAMAGE_FONT_SIZE*(label.critical?1.2:1)*pop,metrics.actualBoundingBoxAscent+metrics.actualBoundingBoxDescent)+6;
+    const placed=layout.place(x,y,metrics.width+6,height);if(!placed)continue;
+    ctx.strokeText(label.text, placed.x, placed.y); ctx.fillText(label.text, placed.x, placed.y);
   }
   ctx.restore();
 

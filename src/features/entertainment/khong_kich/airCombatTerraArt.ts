@@ -46,6 +46,6 @@ export function paintTerra(w:CombatWorld,paint:Painter,reduced:boolean){
  for(const e of s.effects){const p=(now-e.at)/e.life;if(p<0||p>=1)continue;
   if(e.kind==='healLink'){tether('healLink',e.fromX??e.x,e.fromY??e.y,e.x,e.y,e.size,1-p);draw('clampHeal',e.x,e.y,50,50,0,1-p,true);continue;}
   draw(e.kind,e.x,e.y,e.size/(e.kind==='cannon'?.8125:1),(e.height??e.size)/(e.kind==='cannon'?.8125:1),0,1-p,['heal','muzzle','coreOpen','cleanse'].includes(e.kind));
-  if(e.kind==='cannon'){draw('cannonCenter',e.x,e.y,(e.center??60)/.8125,(e.height??TERRA.cannonRange)/.8125,0,1-p,true);if(!reduced){draw('leftWave',e.x-e.size*.35,e.y,e.size*.3,e.height??TERRA.cannonRange,0,(1-p)*.7);draw('rightWave',e.x+e.size*.35,e.y,e.size*.3,e.height??TERRA.cannonRange,0,(1-p)*.7);}}
+  if(e.kind==='cannon'){draw('cannonCenter',e.x,e.y,(e.center??terraValues(TERRA_SKILLS[1],1).centerWidth)/.8125,(e.height??TERRA.cannonRange)/.8125,0,1-p,true);if(!reduced){draw('leftWave',e.x-e.size*.35,e.y,e.size*.3,e.height??TERRA.cannonRange,0,(1-p)*.7);draw('rightWave',e.x+e.size*.35,e.y,e.size*.3,e.height??TERRA.cannonRange,0,(1-p)*.7);}}
  }
 }
