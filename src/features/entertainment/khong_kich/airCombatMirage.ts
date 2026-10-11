@@ -5,6 +5,7 @@ import { isElite } from "./airCombatWaves";
 import type { CombatWorld, EnemyEntity, ProjectileEntity } from "./airCombatRuntime";
 import type { MirageWorldState, MirageEnemyState, MirageHooks, MiragePoint, MirageHazard } from "./airCombatMirageTypes";
 import type { MirageVisualKey } from "./airCombatStage4Art";
+import { parallaxPhase, parallaxFan, PARALLAX_SKILL_CYCLES, parallaxCastInterval } from "./airCombatParallaxPatterns";
 import type { StatusPayload } from "./airCombatStatus";
 export type { MirageWorldState, MirageEnemyState, MirageHooks } from "./airCombatMirageTypes";
 
@@ -21,6 +22,10 @@ export function resetMirage(w: CombatWorld) {
   s.projections.length = s.ghosts.length = s.hazards.length = s.history.length = 0;
   s.visuals=w.ended?s.visuals.filter(v=>v.key==="bossDeath"):[];
   s.replay = undefined; s.boss = undefined;
+  for (const e of w.enemies) if (e.mirage) {
+    e.mirage.barrage = undefined; e.mirage.echoVolleys = undefined;
+    e.mirage.dash = undefined; e.mirage.swap = undefined;
+  }
   if (s.mirror) {
     const actor = s.mirror.context.world;
     actor.projectiles.length = actor.enemies.length = actor.decoys.length = actor.warnings.length = actor.particles.length = actor.visualEvents.length = 0;
@@ -46,6 +51,12 @@ export function mirageEnemyDestroyed(w: CombatWorld, e: EnemyEntity) {
   for (const p of s.projections) if (p.ownerId === e.id) mirageFx(w, "illusionDissolve", p.x, p.y, p.size);
   s.projections = s.projections.filter(p => p.ownerId !== e.id);
   s.ghosts = s.ghosts.filter(p => p.ownerId !== e.id);
+  if (e.type === "boss") {
+    s.hazards = s.hazards.filter(a => a.ownerId !== e.id);
+    if (s.replay?.ownerId === e.id) s.replay = undefined;
+    s.boss = undefined;
+  }
+  if (e.mirage) { e.mirage.barrage = undefined; e.mirage.echoVolleys = undefined; e.mirage.dash = undefined; e.mirage.swap = undefined; }
   mirageFx(w, e.type === "boss" ? "bossDeath" : "mirageBreak", e.x, e.y, e.radius * 4, .8);
 }
 function project(w: CombatWorld, e: EnemyEntity, offsets: number[], duration = 1.8, helper = false) {
@@ -63,16 +74,16 @@ function ghost(w: CombatWorld, e: EnemyEntity, origin: MiragePoint, angle: numbe
   s.ghosts.push({ ...origin, id: w.nextId++, ownerId: e.id, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed, until: w.elapsed + 4, rotation: angle + Math.PI / 2 });
 }
 function bullet(w: CombatWorld, e: EnemyEntity, h: MirageHooks, angle: number, factor = 1, speed = 190,
-  key: MirageVisualKey = "parallaxNeedle", origin: MiragePoint = e, payload?: StatusPayload) {
-  return h.projectile(w, { owner: "enemy", enemySpeedClass: "special", allegiance: h.allegiance(w, e),
+  key: MirageVisualKey = "parallaxNeedle", origin: MiragePoint = e, payload?: StatusPayload, allegiance = h.allegiance(w, e)) {
+  return h.projectile(w, { owner: "enemy", enemySpeedClass: "special", allegiance,
     sourceEnemyId: e.id, sourceEnemyType: e.type, delivery: "direct_projectile", payload,
     x: origin.x, y: origin.y, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed,
     rawDamage: damage(e) * factor, radius: key === "lockOrb" ? 5 : 3, lifetime: 5.5,
     mirageVisual: key, color: "#9cecff", criticalAttack: isElite(e.type) || e.type === "boss" });
 }
-function target(w: CombatWorld, e: EnemyEntity, h: MirageHooks) {
-  const t = h.target(w, e) ?? { x: e.x, y: R.bottom };
-  return point(t.x + (h.allegiance(w, e) === "hostile" ? w.mirage!.movement.vx * .18 : 0), t.y + (h.allegiance(w, e) === "hostile" ? w.mirage!.movement.vy * .18 : 0));
+function target(w: CombatWorld, e: EnemyEntity, h: MirageHooks, allegiance = h.allegiance(w, e)) {
+  const t = h.target(w, e, allegiance) ?? { x: e.x, y: R.bottom };
+  return point(t.x + (allegiance === "hostile" ? w.mirage!.movement.vx * .18 : 0), t.y + (allegiance === "hostile" ? w.mirage!.movement.vy * .18 : 0));
 }
 function hazard(w: CombatWorld, e: EnemyEntity, h: MirageHooks, start: MiragePoint, end: MiragePoint | undefined,
   radius: number, warning: number, real: boolean, factor: number, keys: [MirageVisualKey, MirageVisualKey], payload?: StatusPayload, duration = .24): MirageHazard | undefined {
@@ -87,7 +98,7 @@ function hazard(w: CombatWorld, e: EnemyEntity, h: MirageHooks, start: MiragePoi
 // the authored lanes leave > aircraft-width gaps and cages always have a 66 px exit.
 function reserve(w: CombatWorld, duration: number, stun = false) {
   const s = w.mirage!;
-  if (w.elapsed < s.nextHardAttack || s.hazards.some(a => a.real && a.until > w.elapsed) ||
+  if (w.elapsed < s.nextHardAttack || s.replay || s.hazards.some(a => a.real && a.until > w.elapsed) ||
     w.enemies.some(e => !!e.mirage?.dash || !!e.mirage?.swap)) return false;
   const status = w.aircraft.status, now = w.aircraft.coreState.time;
   if(status.stunnedUntil>now)return false;
@@ -144,12 +155,12 @@ function rail(w: CombatWorld, e: EnemyEntity, h: MirageHooks, warning = .6) {
   }
   return true;
 }
-function dash(w: CombatWorld, e: EnemyEntity, h: MirageHooks, warning = .55, remaining = 1, followRail = false, reserved = false) {
+function dash(w: CombatWorld, e: EnemyEntity, h: MirageHooks, warning = .55, remaining = 1, followRail = false, reserved = false, allegiance = h.allegiance(w, e)) {
   if (!reserved && !reserve(w, remaining * (warning + .6), true)) return false;
-  const s = e.mirage!, to = target(w, e, h);
+  const s = e.mirage!, to = target(w, e, h, allegiance);
   s.dash = { from: { x: e.x, y: e.y }, to, at: w.elapsed + warning, duration: remaining === 1 ? .3 : .4,
     raw: stageEnemyConfig(e.type, 4).collisionDamage * e.damageScale * (e.type === "boss" ? .62 : 1),
-    hits: new Map(), allegiance: h.allegiance(w, e), stun: e.type === "boss" ? 0 : .4, remaining, followRail };
+    hits: new Map(), allegiance, stun: e.type === "boss" ? 0 : .4, remaining, followRail };
   project(w, e, e.type === "parallax_lancer" ? [32] : [-36, 36], warning + .65);
   hazard(w, e, h, s.dash.from, to, 8, warning, true, 0, [e.type === "boss" ? "mirrorRushWarning" : "mirrorDashWarning", "mirrorDashTrail"]);
   for (const side of e.type === "parallax_lancer" ? [1] : [-1, 1]) {
@@ -165,6 +176,7 @@ function swap(w: CombatWorld, e: EnemyEntity, h: MirageHooks, followDash = false
   project(w,e,[to.x-e.x],.9);
   const clone=w.mirage!.projections.at(-1);if(clone&&clone.ownerId===e.id){clone.x=to.x;clone.y=to.y;}
   mirageFx(w, "fractureSwap", e.x, e.y, e.radius * 4, .35);
+  if (e.type === "boss") mirageFx(w, "bossNova", e.x, e.y, e.radius * 3, .45);
   mirageFx(w, "realCorePulse", to.x, to.y, e.radius * 2, .35);
   if (followDash) e.mirage!.next = w.elapsed + .7;
   return true;
@@ -173,38 +185,103 @@ function barrage(w: CombatWorld, e: EnemyEntity, h: MirageHooks, split: boolean,
   if (!reserve(w, warning + .35)) return false;
   const t = target(w, e, h), origins = [{ x: e.x, y: e.y }];
   if (split) { project(w, e, [-85, 85], warning + .8); origins.push(point(e.x - 85, e.y), point(e.x + 85, e.y)); }
-  e.mirage!.barrage = { at: w.elapsed + warning, origins, count: 9, angle: Math.atan2(t.y - e.y, t.x - e.x), allegiance: h.allegiance(w, e) };
+  const fan = parallaxFan(parallaxPhase(e.hp / e.maxHp)), boss = e.type === "boss";
+  e.mirage!.barrage = { at: w.elapsed + warning, origins, count: boss ? fan.count : 9,
+    spread: boss ? fan.degrees * Math.PI / 180 : 8 * .19, allReal: boss, factor: 1,
+    angle: Math.atan2(t.y - e.y, t.x - e.x), allegiance: h.allegiance(w, e) };
   for (let i = 0; i < origins.length; i++) mirageFx(w, i ? "fakeCorePulse" : "realCorePulse", origins[i].x, origins[i].y, e.radius * 2, warning);
   return true;
 }
 function replay(w: CombatWorld, e: EnemyEntity, h: MirageHooks, warning = .55) {
-  const s = w.mirage!; if (!reserve(w, warning + 1.7)) return false;
+  const s = w.mirage!;
   const path = s.history.filter(p => p.at >= w.elapsed - 1.6).map(p => ({ x: p.x, y: p.y }));
-  if (!path.length) return false;
+  if (!path.length || !reserve(w, warning + 1.7)) return false;
   s.replay = { ownerId: e.id, path, at: w.elapsed + warning, next: w.elapsed + warning, index: 0, allegiance: h.allegiance(w, e) };
-  for (let i = 0; i < path.length; i += 8) mirageFx(w, "echoReplayTrail", path[i].x, path[i].y, 30, warning);
+  for (let i = 0; i < path.length; i += 8) mirageFx(w, e.type === "boss" ? "bossCharge" : "echoReplayTrail", path[i].x, path[i].y, 30, warning);
+  return true;
+}
+/** A telegraphed projectile cast can accompany one spatial restriction. It never
+ * shortens a warning, adds a wall or replaces the pending spatial skill. */
+function echoVolley(w: CombatWorld, e: EnemyEntity, h: MirageHooks, phase: number) {
+  const pending = e.mirage!.echoVolleys ??= [];
+  if (pending.length >= 4) return false;
+  const warning = phase === 4 ? .5 : .65, fan = parallaxFan(phase);
+  const origin = point(e.x + (e.mirage!.attack % 2 ? -48 : 48), e.y);
+  const t = target(w, e, h);
+  pending.push({ at: w.elapsed + warning, origins: [origin], count: fan.count,
+    spread: fan.degrees * Math.PI / 180, angle: Math.atan2(t.y - origin.y, t.x - origin.x),
+    allegiance: h.allegiance(w, e), allReal: true, factor: .8 });
+  mirageFx(w, "bossCharge", origin.x, origin.y, 64, warning);
+  return true;
+}
+function prismNova(w: CombatWorld, e: EnemyEntity, h: MirageHooks, warning: number) {
+  if (!reserve(w, warning + .65)) return false;
+  const t = target(w, e, h);
+  // Fixed positions after telegraph; staggered small circles leave lateral exits.
+  for (let i = 0; i < 3; i++) {
+    const at = point(t.x + (i - 1) * 70, t.y - (i % 2) * 48, 36);
+    hazard(w, e, h, at, undefined, 27, warning + i * .16, true, 1.25,
+      ["falseFutureMarkerReal", "bossNova"], undefined, .3);
+  }
+  return true;
+}
+function prismSweep(w: CombatWorld, e: EnemyEntity, h: MirageHooks, warning: number) {
+  if (!reserve(w, warning + .85)) return false;
+  const reverse = e.mirage!.attack % 2;
+  for (let i = 0; i < 3; i++) {
+    const lane = reverse ? 2 - i : i, x = R.left + R.width * (lane + 1) / 4;
+    hazard(w, e, h, { x, y: R.top + 8 }, { x, y: R.bottom - 8 }, 6,
+      warning + i * .28, true, 1.2, ["parallaxGridReal", "echoRailShot"], undefined, .24);
+  }
+  return true;
+}
+function crossRail(w: CombatWorld, e: EnemyEntity, h: MirageHooks, warning: number) {
+  if (!reserve(w, warning + .35)) return false;
+  // Parallel slanted rails: unlike a crossing X they never close every exit.
+  for (const side of [-1, 1]) {
+    const x = R.left + R.width * (side < 0 ? .22 : .66);
+    hazard(w, e, h, { x, y: R.top + 8 }, { x: x + R.width * .12, y: R.bottom - 8 },
+      6, warning, true, 1.25, ["echoRailCharge", "echoRailShot"], undefined, .28);
+  }
   return true;
 }
 function bossAttack(w: CombatWorld, e: EnemyEntity, h: MirageHooks) {
-  const b = w.mirage!.boss!, ratio = e.hp / e.maxHp, phase = ratio > .7 ? 1 : ratio > .4 ? 2 : ratio >= .15 ? 3 : 4;
-  if (b.phase !== phase) { b.phase = phase; mirageFx(w, phase === 4 ? "zeroTruthAura" : "bossCoreExpose", e.x, e.y, 160, 1); }
+  const b = w.mirage!.boss;
+  if (!b) return;
+  const phase = parallaxPhase(e.hp / e.maxHp);
+  if (b.phase !== phase) {
+    b.phase = phase; b.ordinal = 0;
+    b.next = Math.min(b.next, w.elapsed + parallaxCastInterval(phase));
+    mirageFx(w, "bossNova", e.x, e.y, 160, .8);
+    mirageFx(w, phase === 4 ? "zeroTruthAura" : "bossCoreExpose", e.x, e.y, 160, 1);
+  }
   w.bossPhase = phase;
-  if (w.elapsed < b.next) return;
-  // Ordered combos preserve a readable escape window; no random full-screen overlaps.
-  const pools = phase === 1 ? ["split", "barrage", "horizon"] : phase === 2 ? ["cage", "rush", "swap", "barrage"] : phase === 3 ? ["replay", "future", "grid", "barrage"] :
-    ["split", "cage", "barrage", "rush", "horizon", "replay", "swap", "grid", "barrage"];
-  const key = pools[b.ordinal % pools.length], enrage = phase === 4;
+  if (w.elapsed < b.next || e.stun > 0 || (e.skillLockedUntil ?? 0) > w.elapsed) return;
+  const pool = PARALLAX_SKILL_CYCLES[phase - 1], key = pool[b.ordinal % pool.length], enrage = phase === 4;
   const success = key === "split" ? barrage(w, e, h, true, enrage ? .5 : .72)
     : key === "barrage" ? barrage(w, e, h, false, enrage ? .46 : .55)
     : key === "horizon" ? lanes(w, e, h, 4, enrage ? .5 : .68, 1.35)
     : key === "cage" ? cage(w, e, h, enrage ? .5 : .6, true)
     : key === "rush" ? dash(w, e, h, enrage ? .46 : .52)
+    : key === "doubleRush" ? dash(w, e, h, .55, 2)
     : key === "swap" ? swap(w, e, h)
     : key === "replay" ? replay(w, e, h, enrage ? .5 : .55)
     : key === "future" ? markers(w, e, h, true, enrage ? .5 : .62)
+    : key === "rail" ? rail(w, e, h, enrage ? .5 : .65)
+    : key === "veil" ? markers(w, e, h, false, .65)
+    : key === "nova" ? prismNova(w, e, h, enrage ? .55 : .7)
+    : key === "sweep" ? prismSweep(w, e, h, enrage ? .55 : .7)
+    : key === "crossrail" ? crossRail(w, e, h, enrage ? .55 : .7)
+    : key === "echo" ? echoVolley(w, e, h, phase)
     : lanes(w, e, h, 6, enrage ? .46 : .5, 1.4, true);
-  if (success) { b.ordinal++; e.mirage!.attack++; b.next = Math.max(w.mirage!.nextHardAttack, w.elapsed + (enrage ? .9 : 1.5)); }
-  else b.next = w.elapsed + .12;
+  // Retain the spatial ordinal when its reservation is busy. A warned fan fills
+  // this beat so doubling cadence is real, rather than just a longer skill list.
+  if (success || echoVolley(w, e, h, phase)) {
+    if (success) b.ordinal++;
+    e.mirage!.attack++;
+    mirageFx(w, "bossCharge", e.x, e.y, e.radius * 2.5, .4);
+    b.next = w.elapsed + parallaxCastInterval(phase);
+  } else b.next = w.elapsed + .12;
 }
 export function updateMirageEnemy(w: CombatWorld, e: EnemyEntity, dt: number, h: MirageHooks): boolean {
   const s = e.mirage; if (!w.mirage || !s) return false;
@@ -218,15 +295,21 @@ export function updateMirageEnemy(w: CombatWorld, e: EnemyEntity, dt: number, h:
     const clone=w.mirage.projections.find(p=>p.ownerId===e.id&&Math.hypot(p.x-destination.x,p.y-destination.y)<1);
     if(clone){clone.x=old.x;clone.y=old.y;}
     e.x=destination.x;e.y=destination.y;s.swap=undefined;mirageFx(w,"fractureSwap",e.x,e.y,e.radius*3,.25);
+    if (e.type === "boss") mirageFx(w, "bossNova", e.x, e.y, e.radius * 3, .45);
   }
-  if (s.barrage && w.elapsed >= s.barrage.at) {
-    const b = s.barrage; s.barrage = undefined;
+  const ready = (s.echoVolleys ?? []).filter(v => w.elapsed >= v.at);
+  s.echoVolleys = s.echoVolleys?.filter(v => w.elapsed < v.at);
+  if (s.barrage && w.elapsed >= s.barrage.at) { ready.push(s.barrage); s.barrage = undefined; }
+  for (const b of ready) {
+    if (e.type === "boss") mirageFx(w, "bossNova", b.origins[0].x, b.origins[0].y, 45, .3);
     for (let k = 0; k < b.origins.length; k++) for (let i = 0; i < b.count; i++) {
-      const a = b.angle + (i - 4) * .19;
-      if (k === 0 && i % 3 !== 1) bullet(w, e, h, a, 1, 205, "parallaxBarrage", b.origins[k]);
+      const a = b.angle + (i / (b.count - 1) - .5) * b.spread;
+      if (k === 0 && (b.allReal || i % 3 !== 1)) bullet(w, e, h, a, b.factor, 205, "parallaxBarrage", b.origins[k], undefined, b.allegiance);
       else ghost(w, e, b.origins[k], a, 205);
     }
   }
+  // Keep the independent cast clock running through committed movement skills.
+  if (e.type === "boss") bossAttack(w, e, h);
   if (s.dash) {
     const d = s.dash;
     if (w.elapsed < d.at) return true;
@@ -235,7 +318,7 @@ export function updateMirageEnemy(w: CombatWorld, e: EnemyEntity, dt: number, h:
     e.airframeRotation = Math.atan2(d.to.y - d.from.y, d.to.x - d.from.x) + Math.PI / 2;
     h.area(w, d.raw, { sourceEnemyId: e.id, sourceEnemyType: e.type, allegiance: d.allegiance, delivery: "aircraft_collision", payload: { stun: d.stun } }, { ...old, end: e, radius: e.radius * .5 }, d.hits, Infinity);
     for (const p of w.mirage.projections) if (p.ownerId === e.id) { p.x += e.x - old.x; p.y += e.y - old.y; }
-    if (t === 1) { s.dash = undefined; if (d.remaining > 1) dash(w, e, h, .55, d.remaining - 1, d.followRail, true); else if (d.followRail) { s.next = w.elapsed + .35; s.attack = 2; } }
+    if (t === 1) { s.dash = undefined; if (d.remaining > 1) dash(w, e, h, .55, d.remaining - 1, d.followRail, true, d.allegiance); else if (d.followRail) { s.next = w.elapsed + .35; s.attack = 2; } }
     return true;
   }
   if (e.stun > 0 || (e.skillLockedUntil ?? 0) > w.elapsed || s.swap) return true;
@@ -245,7 +328,7 @@ export function updateMirageEnemy(w: CombatWorld, e: EnemyEntity, dt: number, h:
   e.x += Math.sin(e.age * .9 + e.phaseSeed) * speed * .32 * dt;
   const bounded = clampHitboxToGameplayRect(e.x, e.y, getEnemyHitbox(e)); e.x = bounded.x; e.y = bounded.y;
   s.shieldAngle = e.age * .8;
-  if (e.type === "boss") { bossAttack(w, e, h); return true; }
+  if (e.type === "boss") return true;
   if (w.elapsed < s.next) return true;
   const t = target(w, e, h), aim = Math.atan2(t.y - e.y, t.x - e.x);
   let success = true;
@@ -334,7 +417,7 @@ export function updateMirage(w: CombatWorld, dt: number, h: MirageHooks) {
   if (r && w.elapsed >= r.next) {
     const e = live(w, r.ownerId), p = r.path[r.index];
     if (!e || !p) s.replay = undefined;
-    else { mirageFx(w, "echoReplayTrail", p.x, p.y, 42, .2); if (r.index % 6 === 0) { const t = h.target(w, e) ?? p; bullet(w, e, h, Math.atan2(t.y - p.y, t.x - p.x), 1.15, 190, "parallaxNeedle", p); } r.index++; r.next += 1 / 60; }
+    else { mirageFx(w, "echoReplayTrail", p.x, p.y, 42, .2); if (r.index % 6 === 0) { const t = h.target(w, e, r.allegiance) ?? p; bullet(w, e, h, Math.atan2(t.y - p.y, t.x - p.x), 1.15, 190, "parallaxNeedle", p, undefined, r.allegiance); } r.index++; r.next += 1 / 60; }
   }
 }
 export function resolveMirageContacts(w: CombatWorld, h: MirageHooks) {

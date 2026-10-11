@@ -2,10 +2,19 @@ import enemy from "../../../assets/khong-kich/stage4/stage4-enemy-atlas.png";
 import boss from "../../../assets/khong-kich/stage4/stage4-boss-atlas.png";
 import vfx from "../../../assets/khong-kich/stage4/stage4-vfx-atlas.png";
 import sky from "../../../assets/khong-kich/stage4/mirage-sky.png";
+import bossSkills from "../../../assets/khong-kich/stage4/parallax-skills-29-30-0.png";
 import type { AtlasFrame } from "./pixi/airCombatPixiTypes";
 import type { EnemyEntity } from "./airCombatRuntime";
 
-export const STAGE4_ART_URLS = { enemy, boss, vfx, sky };
+export const STAGE4_ART_URLS = { enemy, boss, vfx, sky, bossSkills };
+const bossSkillRow = (row: number): readonly AtlasFrame[] => [0, 1, 2, 3].map(column => ({
+  atlas: "stage4BossSkills", rect: [column / 4, row / 4, .25, .25],
+}));
+export const PARALLAX_SKILL_ART = {
+  charge: bossSkillRow(0), beam: bossSkillRow(1), nova: bossSkillRow(2), dash: bossSkillRow(3),
+};
+export const parallaxSkillFrame = (kind: keyof typeof PARALLAX_SKILL_ART, progress: number, reduced = false) =>
+  PARALLAX_SKILL_ART[kind][reduced ? 1 : Math.min(3, Math.max(0, Math.floor(progress * 4)))];
 const ship = (i: number): AtlasFrame => ({ atlas: "stage4Enemy", rect: [i % 4 / 4, Math.floor(i / 4) / 4, .25, .25] });
 export const STAGE4_ENEMY_ART = {
   mirage_wisp: ship(0), parallax_lancer: ship(1), holo_bastion: ship(2), veil_weaver: ship(3),
@@ -19,6 +28,7 @@ export const mirageEnemyFrame = (e: EnemyEntity, phase: number) => e.type === "b
   ? PARALLAX_BOSS_ART[Math.max(0, Math.min(3, phase - 1))] : STAGE4_ENEMY_ART[e.type as keyof typeof STAGE4_ENEMY_ART];
 const fx = (i: number): AtlasFrame => ({ atlas: "stage4Vfx", rect: [i % 8 / 8, Math.floor(i / 8) / 6, 1 / 8, 1 / 6] });
 export const STAGE4_VFX_ART = {
+  bossCharge: PARALLAX_SKILL_ART.charge[0], bossNova: PARALLAX_SKILL_ART.nova[0],
   mirageSpawn: fx(0), mirageFade: fx(1), mirageBreak: fx(2), fractureSwap: fx(3),
   realCorePulse: fx(4), fakeCorePulse: fx(5), parallaxNeedle: fx(6), ghostNeedle: fx(7),
   mirrorDashWarning: fx(8), mirrorDashTrail: fx(9), realityCageWarning: fx(10), realityWall: fx(11),

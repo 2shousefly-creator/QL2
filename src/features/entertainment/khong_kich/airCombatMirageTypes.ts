@@ -17,12 +17,17 @@ export interface MirageHazard extends AttackMetadata {
   warningAt: number; hitAt: number; until: number; real: boolean; raw: number;
   warning: MirageVisualKey; active: MirageVisualKey; hits: Map<number, number>;
 }
+export interface MirageVolley {
+  at: number; origins: MiragePoint[]; count: number; angle: number; spread: number;
+  allegiance: Allegiance; allReal: boolean; factor: number;
+}
 export interface MirageEnemyState {
   next: number; attack: number; split: boolean; shieldUntil: number; shieldAngle: number;
   dash?: { from: MiragePoint; to: MiragePoint; at: number; duration: number; raw: number;
     hits: Map<number, number>; allegiance: Allegiance; stun: number; remaining: number; followRail: boolean };
   swap?: { to: MiragePoint; at: number };
-  barrage?: { at: number; origins: MiragePoint[]; count: number; angle: number; allegiance: Allegiance };
+  barrage?: MirageVolley;
+  echoVolleys?: MirageVolley[];
 }
 export interface MirageWorldState {
   projections: MirageProjection[]; ghosts: MirageGhost[]; hazards: MirageHazard[]; visuals: MirageFx[];

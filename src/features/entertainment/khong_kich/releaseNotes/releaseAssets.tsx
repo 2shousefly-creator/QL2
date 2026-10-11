@@ -19,6 +19,7 @@ import { EquipmentIcon } from "../EquipmentIcon";
 import type { EquipmentRewardId } from "../airCombatEquipmentState";
 import { ENEMY_VISUALS } from "../airCombatEnemyArt";
 import { STAGE2_ART_URLS, STAGE2_ENEMY_ART, STAGE2_VFX_ART } from "../airCombatStage2Art";
+import { STAGE4_ART_URLS, STAGE4_VFX_ART } from "../airCombatStage4Art";
 import { STAGE3_ART_URLS, STAGE3_VFX_ART, STORMBREAKER_BOSS_ART } from "../airCombatStage3Art";
 import type { AircraftId, EnemyType, SkillId, PassiveId } from "../airCombatTypes";
 import type { AtlasFrame } from "../pixi/airCombatPixiTypes";
@@ -31,6 +32,7 @@ const SYSTEM_ICONS = {
   scheduler: Clock3, rules: ListChecks,aircraft_select:PanelTop,aircraft_balance:Activity,allegiance:Shield,explosion:Sparkles,
 };
 const ATLAS_URLS: Partial<Record<AtlasFrame["atlas"], string>> = {
+  stage4BossSkills:STAGE4_ART_URLS.bossSkills,stage4Vfx:STAGE4_ART_URLS.vfx,
   ...TERRA_SOURCES,
   ...SYLVA_SOURCES,
   argentAircraft:ARGENT_ART.aircraft,argentIcons:ARGENT_ART.icons,argentVfx:ARGENT_ART.vfx,argentPortrait:ARGENT_ART.portrait,
@@ -69,7 +71,7 @@ export function ReleaseNoteEntityIcon({ icon }: { icon: ReleaseIconRef }) {
   } else if (icon.kind === "enemy" || icon.kind === "boss") {
     frame = icon.id === "boss_stage3" ? STORMBREAKER_BOSS_ART[0] : icon.id === "boss_stage2" ? STAGE2_ENEMY_ART.boss : ENEMY_VISUALS[(icon.id === "boss_stage1" ? "boss" : icon.id) as EnemyType];
   } else if (icon.kind === "projectile" || icon.kind === "vfx") {
-    frame = TERRA_FRAMES[icon.id] ?? SYLVA_FRAMES[icon.id as keyof typeof SYLVA_FRAMES] ?? ARGENT_FRAMES[icon.id as keyof typeof ARGENT_FRAMES] ?? RIPTIDE_FRAMES[icon.id as keyof typeof RIPTIDE_FRAMES] ?? BIGBANG_FRAMES[icon.id as keyof typeof BIGBANG_FRAMES] ?? (icon.id==="bigbang"?BIGBANG_FRAMES.bigbang_descent:undefined) ?? (icon.id==="cinder_burn"?CINDER_FRAMES.cinder_burn:icon.id==="cinder_inferno_beam"?CINDER_FRAMES.cinder_beam1:STAGE3_VFX_ART[icon.id as keyof typeof STAGE3_VFX_ART] ?? (icon.id==="astra"?ASTRA_VFX_FRAMES.astra_meteor:icon.id==="explosion"?ASTRA_VFX_FRAMES.astra_explosion2:STAGE2_VFX_ART[icon.id as keyof typeof STAGE2_VFX_ART]));
+    frame = (icon.id === "bossNova" || icon.id === "parallaxBarrage" ? STAGE4_VFX_ART[icon.id] : undefined) ?? TERRA_FRAMES[icon.id] ?? SYLVA_FRAMES[icon.id as keyof typeof SYLVA_FRAMES] ?? ARGENT_FRAMES[icon.id as keyof typeof ARGENT_FRAMES] ?? RIPTIDE_FRAMES[icon.id as keyof typeof RIPTIDE_FRAMES] ?? BIGBANG_FRAMES[icon.id as keyof typeof BIGBANG_FRAMES] ?? (icon.id==="bigbang"?BIGBANG_FRAMES.bigbang_descent:undefined) ?? (icon.id==="cinder_burn"?CINDER_FRAMES.cinder_burn:icon.id==="cinder_inferno_beam"?CINDER_FRAMES.cinder_beam1:STAGE3_VFX_ART[icon.id as keyof typeof STAGE3_VFX_ART] ?? (icon.id==="astra"?ASTRA_VFX_FRAMES.astra_meteor:icon.id==="explosion"?ASTRA_VFX_FRAMES.astra_explosion2:STAGE2_VFX_ART[icon.id as keyof typeof STAGE2_VFX_ART]));
   } else if (icon.id === "projectile" || icon.id === "vfx") {
     // The historical copy uses system markers for these asset categories.
     frame = icon.id === "projectile" ? STAGE2_VFX_ART.needleBolt : STAGE2_VFX_ART.magneticBurst;

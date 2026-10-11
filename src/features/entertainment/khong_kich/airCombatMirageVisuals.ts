@@ -1,6 +1,6 @@
 import type { CombatWorld } from "./airCombatRuntime";
 import type { AtlasFrame } from "./pixi/airCombatPixiTypes";
-import { STAGE4_VFX_ART as FX, STAGE4_ENEMY_ART, PARALLAX_BOSS_ART, MIRAGE_HELPER_ART, STAGE4_EXPLOSION_FRAMES, STAGE4_ENEMY_EXPLOSION_SCALE } from "./airCombatStage4Art";
+import { STAGE4_VFX_ART as FX, STAGE4_ENEMY_ART, PARALLAX_BOSS_ART, MIRAGE_HELPER_ART, STAGE4_EXPLOSION_FRAMES, STAGE4_ENEMY_EXPLOSION_SCALE, parallaxSkillFrame } from "./airCombatStage4Art";
 
 export type MiragePainter = (frame: AtlasFrame, x: number, y: number, width: number, height: number,
   rotation: number, alpha: number, tint?: number, anchorX?: number) => void;
@@ -23,6 +23,18 @@ export function paintMirage(w: CombatWorld, draw: MiragePainter, reduced: boolea
     if (active && a.real && !a.end && a.active === "impact")
       paintNativeExplosion(draw, x, y, width, (w.elapsed - a.hitAt) / Math.max(.001, a.until - a.hitAt));
     else draw(FX[key], x, y, width, height, rotation, active ? .95 : .65);
+    if (a.sourceEnemyType === "boss") {
+      const animation = active ? (w.elapsed - a.hitAt) / Math.max(.001, a.until - a.hitAt) : phase;
+      // Keep the authored warning/hitbox core underneath. Decorative light never
+      // changes collision geometry; false lanes stay magenta and less opaque.
+      const kind = active ? a.end ? "beam" : "nova" : "charge";
+      const frame = parallaxSkillFrame(kind, animation, reduced);
+      const tint = a.real ? 0xffffff : 0xf472b6;
+      if (active) draw(frame, x, y, width * (a.end ? 2 : 2.2), a.end ? height : width * 2.2,
+        rotation, a.real ? (reduced ? .6 : .9) : .3, tint);
+      else draw(frame, x, y, a.end ? 42 : width * 1.8, a.end ? 42 : width * 1.8, 0,
+        a.real ? .65 : .3, tint);
+    }
     // The stable real white core survives reduced motion and every pulse phase.
     const pulse = a.real ? 1.2 - Math.min(1, phase) * .3 : .8 + Math.min(1, phase) * .4;
     draw(FX[a.real ? "realCorePulse" : "fakeCorePulse"], x, y, 17 * pulse, 17 * pulse, 0, .95);
@@ -40,7 +52,11 @@ export function paintMirage(w: CombatWorld, draw: MiragePainter, reduced: boolea
         draw(FX[real ? "realCorePulse" : "fakeCorePulse"], e.x + Math.cos(angle) * e.radius, e.y + Math.sin(angle) * e.radius, 12, 12, 0, .9);
       }
     }
-    if (m.dash && w.elapsed >= m.dash.at) draw(FX.mirrorDashTrail, e.x, e.y, e.radius * 2, e.radius * 4, (e.airframeRotation ?? Math.PI) - Math.PI, .75);
+    if (m.dash && w.elapsed >= m.dash.at) {
+      if (e.type === "boss") draw(parallaxSkillFrame("dash", (w.elapsed - m.dash.at) / m.dash.duration, reduced),
+        e.x, e.y, e.radius * 3, e.radius * 5, e.airframeRotation ?? Math.PI, reduced ? .55 : .85);
+      else draw(FX.mirrorDashTrail, e.x, e.y, e.radius * 2, e.radius * 4, (e.airframeRotation ?? Math.PI) - Math.PI, .75);
+    }
     if (e.burn > 0) draw(FX.smoke, e.x, e.y, e.radius * 2, e.radius * 3, 0, reduced ? .3 : .5);
     if (e.stun > 0) draw(FX.stun, e.x, e.y - e.radius, 24, 24, 0, .9);
     if ((e.skillLockedUntil ?? 0) > w.elapsed) draw(FX.skillLock, e.x, e.y, e.radius * 3, e.radius * 3, 0, .45);
@@ -56,7 +72,10 @@ export function paintMirage(w: CombatWorld, draw: MiragePainter, reduced: boolea
   for (const p of w.projectiles) if (p.mirageVisual) draw(FX[p.mirageVisual], p.x, p.y, p.radius * 4, p.radius * 7, Math.atan2(p.vy, p.vx) + Math.PI / 2, .95);
   for (const v of s.visuals) {
     const t = Math.max(0, Math.min(1, (w.elapsed - v.at) / v.duration));
-    if (v.key === "explosion") paintNativeExplosion(draw, v.x, v.y, v.size, t, v.rotation);
+    if (v.key === "bossCharge" || v.key === "bossNova")
+      draw(parallaxSkillFrame(v.key === "bossCharge" ? "charge" : "nova", t, reduced),
+        v.x, v.y, v.size * 1.6, v.size * 1.6, v.rotation, (reduced ? .6 : .95) * (1 - t * .65));
+    else if (v.key === "explosion") paintNativeExplosion(draw, v.x, v.y, v.size, t, v.rotation);
     else draw(FX[v.key], v.x, v.y, v.size, v.size, v.rotation, 1 - t);
   }
   // The Mirror is drawn by the ordinary player renderer in a rotated scene.

@@ -1,0 +1,105 @@
+{
+  "version": "29.30.0",
+  "releaseDate": "11/10/2026",
+  "title": "Parallax bùng nổ",
+  "displayTitle": "KHÔNG KÍCH 29.30.0 — PARALLAX BÙNG NỔ",
+  "summary": "Boss màn 4 tăng mật độ tấn công, mở rộng chuỗi kỹ năng và hiệu ứng lăng kính. Debuff của Boss chuyển sang bên phải dưới HUD.",
+  "sections": [
+    {
+      "id": "parallax-upgrade",
+      "title": "BOSS MÀN 4",
+      "icon": {
+        "kind": "boss",
+        "id": "boss_stage4"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "parallax-fans",
+          "title": "Loạt đạn hình quạt",
+          "icon": {
+            "kind": "projectile",
+            "id": "parallaxBarrage"
+          },
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Các loạt bắn thường có **9/11/13/15 tia thật** theo phase 1–4; góc quạt thu hẹp lần lượt **96°/80°/64°/48°**."
+            }
+          ]
+        },
+        {
+          "id": "parallax-skills",
+          "title": "Chuỗi kỹ năng dồn dập",
+          "icon": {
+            "kind": "boss",
+            "id": "boss_stage4"
+          },
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Chu kỳ kỹ năng tăng từ **3/4/4/9** lên **7/9/9/19 lượt** theo phase. Nhịp tung chiêu nhanh gấp đôi: **0,75 giây** ở phase 1–3 và **0,45 giây** ở phase 4, trước ảnh hưởng khống chế và giảm tốc đánh."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Bổ sung **Tân Tinh Lăng Kính**, **Quét Khúc Xạ**, **Song Tuyến Lăng Kính**, **Loạt Đạn Vọng Ảnh** và biến thể **Lao Kép**; mở rộng các chiêu thật–ảo trong từng phase."
+            },
+            {
+              "format": "bullet",
+              "changeType": "note",
+              "text": "Giữ thời gian báo trước. Khi một chiêu khóa vùng đang diễn ra, Boss xen đạn có báo trước và giữ lại chiêu khóa vùng tiếp theo."
+            }
+          ]
+        },
+        {
+          "id": "parallax-vfx",
+          "title": "Hiệu ứng kỹ năng mới",
+          "icon": {
+            "kind": "vfx",
+            "id": "bossNova"
+          },
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Spritesheet hoạt họa mới cho tụ năng, tia năng lượng, nổ lăng kính và vệt lao. Đòn thật giữ lõi sáng; đòn ảo vẫn có sắc hồng để phân biệt."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "boss-status-layout",
+      "title": "GIAO DIỆN CHIẾN ĐẤU",
+      "icon": {
+        "kind": "ui",
+        "id": "ui"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "boss-debuff-right",
+          "title": "Debuff của Boss",
+          "icon": {
+            "kind": "ui",
+            "id": "ui"
+          },
+          "rationale": "",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Icon debuff Boss được căn **bên phải dưới HUD**, xếp từ phải sang trái. Giữ nguyên tooltip và tiến trình thời gian của từng hiệu ứng."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

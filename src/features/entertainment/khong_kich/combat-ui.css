@@ -53,7 +53,7 @@
 .air-boss-hud > div:last-child { height:1.65cqw; margin-top:.8cqw; border-radius:0; }
 .air-status-strip { position:absolute; inset-inline:0; z-index:12; padding:.5556cqw 1.6667cqw; box-sizing:border-box; display:flex; flex-direction:column; gap:1cqw; pointer-events:none; }
 .air-status-player { display:flex; justify-content:space-between; min-height:12.7778cqw; }
-.air-boss-statuses { display:flex; flex-wrap:wrap; align-items:center; gap:.5556cqw; }
+.air-boss-statuses { display:flex; flex-wrap:wrap; flex-direction:row-reverse; justify-content:flex-start; align-self:flex-end; max-width:100%; align-items:center; gap:.5556cqw; }
 .air-boss-status-label { color:#fda4af; font-size:2cqw; font-weight:800; text-transform:uppercase; padding-right:1cqw; }
 .air-status-group { display:grid; grid-template-columns:repeat(5,6.1111cqw); grid-auto-rows:6.1111cqw; gap:.5556cqw; align-content:start; }
 .air-status-group--debuff { direction:rtl; }

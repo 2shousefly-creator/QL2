@@ -90,7 +90,7 @@ export async function loadAirCombatAssets(world?:CombatWorld) {
   const soloArena=await Assets.load<Texture>(soloArenaUrl);
   const ultimateVfx=await Assets.load<Texture>(ULTIMATE_ART);
   const [stage3Enemy,stage3Boss,stage3Vfx,stormbreakerSky,stage3Emissive] = await Promise.all([Assets.load<Texture>(STAGE3_ART_URLS.enemy),Assets.load<Texture>(STAGE3_ART_URLS.boss),Assets.load<Texture>(STAGE3_ART_URLS.vfx),Assets.load<Texture>(STAGE3_ART_URLS.sky),Assets.load<Texture>(STAGE3_ART_URLS.emissive)]);
-  const [stage4Enemy,stage4Boss,stage4Vfx,mirageSky] = await Promise.all([Assets.load<Texture>(STAGE4_ART_URLS.enemy),Assets.load<Texture>(STAGE4_ART_URLS.boss),Assets.load<Texture>(STAGE4_ART_URLS.vfx),Assets.load<Texture>(STAGE4_ART_URLS.sky)]);
+  const [stage4Enemy,stage4Boss,stage4Vfx,mirageSky,stage4BossSkills] = await Promise.all([Assets.load<Texture>(STAGE4_ART_URLS.enemy),Assets.load<Texture>(STAGE4_ART_URLS.boss),Assets.load<Texture>(STAGE4_ART_URLS.vfx),Assets.load<Texture>(STAGE4_ART_URLS.sky),Assets.load<Texture>(STAGE4_ART_URLS.bossSkills)]);
   const [cinderAircraft,cinderVfx,cinderProjectiles,cinderIcons,cinderFeedback]=await Promise.all([CINDER_ART.aircraft,CINDER_ART.vfx,CINDER_ART.projectiles,CINDER_ART.icons,CINDER_ART.feedback].map(url=>Assets.load<Texture>(url)));
   const bigBangVfx=await Assets.load<Texture>(BIGBANG_ART);
   const guardianVfx=await Assets.load<Texture>(CINDER_ART.guardianVfx);
@@ -99,7 +99,7 @@ export async function loadAirCombatAssets(world?:CombatWorld) {
   const [sylvaAircraft,sylvaPortrait,sylvaIcons,sylvaAcid,sylvaLife,sylvaDeath,sylvaDeathNew]=await Promise.all(Object.values(SYLVA_SOURCES).map(url=>Assets.load<Texture>(url)));
   const terraSources=Object.fromEntries(await Promise.all(Object.entries(TERRA_SOURCES).map(async([key,url])=>[key,await Assets.load<Texture>(url)])));
   const [cinderFuel,cinderFuelFlow,cinderFuelSmoke,cinderBeam]=await Promise.all([CINDER_ART.fuel,CINDER_ART.fuelFlow,CINDER_ART.fuelSmoke,CINDER_ART.beamRaster].map(url=>Assets.load<Texture>(url)));
-  const sources = {cinderBeam,cinderFuel,cinderFuelFlow,cinderFuelSmoke,...terraSources,sylvaAircraft,sylvaPortrait,sylvaIcons,sylvaAcid,sylvaLife,sylvaDeath,sylvaDeathNew,argentAircraft,argentIcons,argentVfx,argentPortrait, riptideAircraft,riptideIcons,riptideVfx, guardianVfx,bigBangVfx,cinderFeedback,cinderAircraft,cinderVfx,cinderProjectiles,cinderIcons, stage4Enemy,stage4Boss,stage4Vfx, stage3Enemy,stage3Boss,stage3Vfx,stage3Emissive, ultimateVfx,rankedVfx,rankedProjectiles, equipmentIcons,equipmentVfx,astraVfx,astraAircraft,astraEffects,aircraft, fortress, vfx, ammo, basicAmmo, healingCross, stage2Enemy, stage2Vfx, stage2Elite };
+  const sources = {cinderBeam,cinderFuel,cinderFuelFlow,cinderFuelSmoke,...terraSources,sylvaAircraft,sylvaPortrait,sylvaIcons,sylvaAcid,sylvaLife,sylvaDeath,sylvaDeathNew,argentAircraft,argentIcons,argentVfx,argentPortrait, riptideAircraft,riptideIcons,riptideVfx, guardianVfx,bigBangVfx,cinderFeedback,cinderAircraft,cinderVfx,cinderProjectiles,cinderIcons, stage4Enemy,stage4Boss,stage4Vfx,stage4BossSkills, stage3Enemy,stage3Boss,stage3Vfx,stage3Emissive, ultimateVfx,rankedVfx,rankedProjectiles, equipmentIcons,equipmentVfx,astraVfx,astraAircraft,astraEffects,aircraft, fortress, vfx, ammo, basicAmmo, healingCross, stage2Enemy, stage2Vfx, stage2Elite };
   const frames = new Map<AtlasFrame, Texture>();
   const texture = (definition: AtlasFrame) => {
     const id=generatedFrameId(definition),replacement=id&&generated.texture(id);
