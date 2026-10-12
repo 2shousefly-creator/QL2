@@ -40,20 +40,25 @@ export function createEquipmentState(): EquipmentState {
   return { rewardsLocked: false, pendingDrops: [], nextInstanceId: 1, components: [], completed: [], equipped: [null,null,null,null,null,null], craftSlots: [null,null], items: {}, componentPage: 0, completedPage: 0, telemetry: {}, effects: {}, marks: {}, eliteDropWave: -1, eliteKillsThisWave: 0, loot: [], visuals: [], nextVisualId: 1, meteors: [], endedSkills: [], presentationGate: {} };
 }
 export const equipmentState = (s: AircraftCombatState): EquipmentState => s.equipment ??= createEquipmentState();
-const familyCache = new WeakMap<EquipmentState, {signature:string; families:Map<EquipmentFamilyId, typeof EQUIPMENT_CATALOG[EquipmentDefinitionId]>}>();
-export function activeEquipmentFamilies(s: AircraftCombatState) {
-  const state=equipmentState(s),signature=state.equipped.map(item=>item?.definitionId??"").join("|");
-  const cached=familyCache.get(state);if(cached?.signature===signature)return cached.families;
+const familyCache = new WeakMap<EquipmentState, {ids:(EquipmentDefinitionId|undefined)[]; families:Map<EquipmentFamilyId, typeof EQUIPMENT_CATALOG[EquipmentDefinitionId]>; bonuses:Partial<Record<keyof typeof EQUIPMENT_CATALOG[EquipmentDefinitionId]['stats'],number>>}>();
+function equipmentLoadout(s: AircraftCombatState) {
+  const state=equipmentState(s),cached=familyCache.get(state);
+  // Six direct comparisons replace transient arrays/strings on every damage/stat query.
+  if(cached){let same=true;for(let i=0;i<6;i++)if(cached.ids[i]!==state.equipped[i]?.definitionId){same=false;break;}if(same)return cached;}
   const result = new Map<EquipmentFamilyId, typeof EQUIPMENT_CATALOG[EquipmentDefinitionId]>();
-  for (const item of equipmentState(s).equipped) if(item) {
+  const bonuses:Partial<Record<keyof typeof EQUIPMENT_CATALOG[EquipmentDefinitionId]['stats'],number>>={};
+  for (const item of state.equipped) if(item) {
     const d=EQUIPMENT_CATALOG[item.definitionId];
     if(d.family && (!result.has(d.family) || d.rarity === "legendary")) result.set(d.family,d);
+    for(const key in d.stats){const stat=key as keyof typeof bonuses;bonuses[stat]=(bonuses[stat]??0)+(d.stats[stat]??0);}
   }
-  familyCache.set(state,{signature,families:result});
-  return result;
+  const next={ids:state.equipped.map(item=>item?.definitionId),families:result,bonuses};familyCache.set(state,next);return next;
 }
+export const activeEquipmentFamilies=(s:AircraftCombatState)=>equipmentLoadout(s).families;
+export const equipmentStatBonuses=(s:AircraftCombatState)=>equipmentLoadout(s).bonuses;
+const familyIds=Array.from({length:37},(_,i)=>`TH${String(i).padStart(2,'0')}` as EquipmentFamilyId);
 export function equipmentScale(s: AircraftCombatState, family: number): number {
-  const d=activeEquipmentFamilies(s).get(`TH${String(family).padStart(2,"0")}`);
+  const d=activeEquipmentFamilies(s).get(familyIds[family]);
   return d ? d.rarity === "legendary" ? 2 : 1 : 0;
 }
 export function equipmentEffect(s: AircraftCombatState, family: number): EquipmentEffectState {

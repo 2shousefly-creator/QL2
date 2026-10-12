@@ -2,15 +2,17 @@ import enemyUrl from '../../../assets/khong-kich/26.31.0/enemies.png';
 import effectUrl from '../../../assets/khong-kich/26.31.0/effects.png';
 import backgroundUrl from '../../../assets/khong-kich/26.31.0/background.png';
 import ammoUrl from '../../../assets/khong-kich/26.31.0/ammunition.png';
+import explosionUrl from '../../../assets/khong-kich/26.31.0/hive-detonation-v2.png';
 import type { CombatWorld } from './airCombatRuntime';
 import type { HiveHazard } from './airCombatHive';
 
-export const HIVE_ART={enemyUrl,effectUrl,backgroundUrl,ammoUrl};
+export const HIVE_ART={enemyUrl,effectUrl,backgroundUrl,ammoUrl,explosionUrl};
 export const HIVE_ENTITY_CELLS=['swarm_needler','razor_glider','aegis_beetle','siege_spitter','signal_weaver','repair_wasp','razor_marshal','aegis_regent','bombard_prelate','disruptor_monarch','forge_matron','brood_ark','crucible_ark','hive_tyrant','stage5_fortress','stage5_core'];
 export interface HiveFrame {url:string;rect:readonly number[]}
 const cell=(url:string,index:number,cols=4,rows=4):HiveFrame=>({url,rect:[index%cols/cols,Math.floor(index/cols)/rows,1/cols,1/rows]});
 const enemies=HIVE_ENTITY_CELLS.map((_,i)=>cell(enemyUrl,i)),ammo=Array.from({length:16},(_,i)=>cell(ammoUrl,i)),effects=Array.from({length:64},(_,i)=>cell(effectUrl,i,8,8));
 const bg:HiveFrame={url:backgroundUrl,rect:[0,0,1,1]};
+const detonations=Array.from({length:16},(_,i)=>cell(explosionUrl,i));
 export interface HivePainter {
  sprite(f:HiveFrame,x:number,y:number,w:number,h:number,rotation?:number,alpha?:number,additive?:boolean):void;
  circle(x:number,y:number,radius:number,color:number,alpha:number,fill?:boolean,width?:number):void;
@@ -63,7 +65,38 @@ export function paintHive(w:CombatWorld,p:HivePainter){
   if(e.hive?.repairTarget){const t=w.enemies.find(n=>n.id===e.hive!.repairTarget);if(t&&e.stun<=0)p.line(e.x,e.y,t.x,t.y,3,0x86efac,.65);}
   if(e.stun>0)p.sprite(effects[48+Math.floor(now*12)%8],e.x,e.y,size,size,0,.7);
  }
- for(const fx of w.hive?.effects??[]){const t=(now-fx.at)/fx.duration;if(t<0||t>=1)continue;if(fx.row===1)p.sprite(ammo[10],fx.x,fx.y,fx.size,fx.size,t*Math.PI*2,Math.sin(t*Math.PI));else p.sprite(effects[fx.row*8+Math.min(7,Math.floor(t*8))],fx.x,fx.y,fx.size,fx.size);}
+ for(const fx of w.hive?.effects??[]){if(fx.blast||fx.row===7||fx.row===6)continue;const t=(now-fx.at)/fx.duration;if(t<0||t>=1)continue;if(fx.row===1)p.sprite(ammo[10],fx.x,fx.y,fx.size,fx.size,t*Math.PI*2,Math.sin(t*Math.PI));else p.sprite(effects[fx.row*8+Math.min(7,Math.floor(t*8))],fx.x,fx.y,fx.size,fx.size);}
+}
+
+/** Generated raster frames use the warning's diameter, never a generic impact size. */
+export function paintHiveExplosions(w:CombatWorld,p:HivePainter){
+ for(const fx of w.hive?.effects??[]){
+  const z=fx.blast,t=(w.elapsed-fx.at)/fx.duration;if((!z&&fx.row!==7&&fx.row!==6)||t<0||t>=1)continue;
+  const frame=detonations[Math.min(15,Math.floor(Math.pow(t,.78)*16))];
+  const diameter=z?z.radius*2:fx.size,alpha=Math.min(1,(1-t)*4);
+  const draw=(x:number,y:number)=>{
+   p.sprite(frame,x,y,diameter,diameter,0,alpha);
+   // A short additive ignition boosts the authored fire texture, without vector flashes.
+   if(t<.26)p.sprite(frame,x,y,diameter,diameter,0,(1-t/.26)*.65,true);
+  };
+  if(z?.kind==='lane'){
+   const length=Math.hypot(z.endX-z.x,z.endY-z.y),count=Math.max(1,Math.ceil(length/(diameter*.8)));
+   for(let i=0;i<=count;i++)draw(z.x+(z.endX-z.x)*i/count,z.y+(z.endY-z.y)*i/count);
+  }else draw(fx.x,fx.y);
+ }
+}
+
+/** Bounded recoil on combat layers only; elapsed time naturally respects pause. */
+export function hiveExplosionShake(w:CombatWorld,reduced:boolean){
+ let strength=0;
+ if(!reduced)for(const fx of w.hive?.effects??[]){
+  const age=w.elapsed-fx.at;
+  if((fx.blast||fx.row===7||fx.row===6)&&age>=0&&age<.34){
+   const impulse=fx.blast?2.4:Math.min(1.4,fx.size/50);
+   strength=Math.max(strength,impulse*(1-age/.34)**2);
+  }
+ }
+ return {x:Math.sin(w.elapsed*113)*strength,y:Math.cos(w.elapsed*97)*strength*.7};
 }
 
 /** Keep hostile rounds and exact damage boundaries readable above aircraft VFX. */
@@ -88,3 +121,4 @@ export function paintHiveThreats(w:CombatWorld,p:HivePainter){
   p.sprite(frame,shot.x,shot.y,size,size*1.6,rotation,mother?.95:.7,true);
  }
 }
+

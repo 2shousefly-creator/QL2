@@ -160,6 +160,8 @@ function capsuleEntry(ax:number,ay:number,bx:number,by:number,cx:number,cy:numbe
 }
 export function segmentVsAircraft(ax:number,ay:number,bx:number,by:number,r:number,h:AircraftHitbox,out:HitResult):HitResult {
   out.hit=false;out.t=Infinity;out.shapeIndex=-1;out.zone=undefined;
+  const reach=h.radius+r;
+  if(Math.max(ax,bx)<h.x-reach||Math.min(ax,bx)>h.x+reach||Math.max(ay,by)<h.y-reach||Math.min(ay,by)>h.y+reach)return out;
   if(circleEntry(ax,ay,bx-ax,by-ay,h.x,h.y,h.radius+r)===Infinity)return out;
   for(let i=0;i<h.shapes.length;i++) {
     const s=h.shapes[i],t=capsuleEntry(ax,ay,bx,by,s.ax,s.ay,s.bx,s.by,s.r+r);
@@ -178,6 +180,8 @@ export const circleVsAircraft=(x:number,y:number,r:number,h:AircraftHitbox)=>seg
 const polyX=new Float64Array(4),polyY=new Float64Array(4);
 export function sweepAircraft(moving:AircraftHitbox,dx:number,dy:number,target:AircraftHitbox,out:HitResult):HitResult {
   out.hit=false;out.t=Infinity;out.shapeIndex=-1;out.zone=undefined;
+  const reach=moving.radius+target.radius;
+  if(Math.max(moving.x,moving.x-dx)<target.x-reach||Math.min(moving.x,moving.x-dx)>target.x+reach||Math.max(moving.y,moving.y-dy)<target.y-reach||Math.min(moving.y,moving.y-dy)>target.y+reach)return out;
   if(circleEntry(moving.x-dx,moving.y-dy,dx,dy,target.x,target.y,moving.radius+target.radius)===Infinity)return out;
   for(const a of moving.shapes)for(let j=0;j<target.shapes.length;j++) {
     const b=target.shapes[j],ax=a.ax-dx,ay=a.ay-dy,bx=a.bx-dx,by=a.by-dy;

@@ -1,7 +1,7 @@
 import { AIRCRAFT_CONFIGS, AIRCRAFT_ORDER, CORE_DEFINITIONS, GAMEPLAY_SAFE_RECT as R, stageEnemyConfig } from './airCombatConfig';
 import { getEffectiveAircraftStats, gainCombatXp, tickAircraftState } from './airCombatAircraft';
 import { allocateSkillPoint, canAllocateSkill, isUltimate } from './airCombatSkillRanks';
-import { equipmentState, equipmentRewardsLocked, grantEquipmentReward, selectEquipmentReward, toggleCraftComponent, startEquipmentCraft, tickEquipmentCraft, equipEquipment, extractEquipment } from './airCombatEquipmentState';
+import { equipmentState, equipmentRewardsLocked, grantEquipmentReward, selectEquipmentReward, toggleCraftComponent, startEquipmentCraft, tickEquipmentCraft, equipEquipment, extractEquipment, type EquipmentInstance } from './airCombatEquipmentState';
 import { EQUIPMENT_CATALOG, type EquipmentDefinitionId } from './airCombatEquipmentCatalog';
 import { advanceWaitingChest, claimWaitingChest } from './airCombatEquipmentRewards';
 import { releaseState } from './airCombatReleaseState';
@@ -9,17 +9,14 @@ import { chooseDuelPrimary } from './airCombatDuelCore';
 import { getPlayerHitbox, getEnemyHitbox, sweepAircraft, segmentVsAircraft, circleVsAircraft, createHitResult } from './airCombatHitboxes';
 import { HIVE_NORMALS,HIVE_MOTHERS } from './airCombatHiveWaves';
 import { isElite } from './airCombatWaves';
-import { argentRecallOpportunity } from './airCombatArgentRuntime';
-import { cinderStacks } from './airCombatCinderRuntime';
-import { sylvaState } from './airCombatSylvaRuntime';
-import { terraHud } from './airCombatTerraRuntime';
-import { castWorldSkill, getWorldSkillAvailability, movePlayerByDelta, ensureCoreSelection, selectCore, rerollCore, bestAvailableRerollSource, type CombatWorld, type EnemyEntity, type ProjectileEntity } from './airCombatRuntime';
+import { ensureCoreSelection, selectCore, rerollCore, bestAvailableRerollSource, type CombatWorld, type EnemyEntity, type ProjectileEntity } from './airCombatRuntime';
 import type { SkillId, CoreCard } from './airCombatTypes';
 
-export interface HiveAlly { world:CombatWorld; slot:number; respawn:number; thinkAt:number; skillAt:number; x:number;y:number; allocation:number; target?:number; seen:Map<number,number> }
+export interface HiveAlly { world:CombatWorld; slot:number; respawn:number; thinkAt:number; skillAt:number; buildAt?:number; x:number;y:number; allocation:number; target?:number; }
 export interface HiveHazard { id:number; enemyId:number; kind:'blast'|'lane'|'dash'|'pulse'; x:number;y:number;endX:number;endY:number;radius:number; start:number; at:number; until:number; damage:number; fired:boolean; cancelled?:boolean; pattern:number }
 export interface HiveEnemy { basicCooldown?:number; coreOpen?:boolean; slot:number; attack:number; exposedUntil:number; shield:number; shieldBroken:boolean; phase:number; support:number; repairTarget?:number; dash?:{x:number;y:number;endX:number;endY:number;start:number;until:number;hits:Set<CombatWorld>} }
-export interface HiveState { allies:HiveAlly[]; hazards:HiveHazard[]; effects:{row:number;x:number;y:number;size:number;at:number;duration:number}[]; majorReady:number; nextHazard:number; lootOwner?:number; ccUntil:number }
+export interface HiveEffect {row:number;x:number;y:number;size:number;at:number;duration:number;blast?:HiveHazard}
+export interface HiveState { allies:HiveAlly[]; hazards:HiveHazard[]; effects:HiveEffect[]; majorReady:number; nextHazard:number; lootOwner?:number; ccUntil:number }
 export interface HiveHooks { spawn:(w:CombatWorld,type:EnemyEntity['type'])=>EnemyEntity|null; movement:(w:CombatWorld,e:EnemyEntity)=>number; projectile:(w:CombatWorld,p:Partial<ProjectileEntity>&Pick<ProjectileEntity,'owner'|'x'|'y'|'vx'|'vy'|'rawDamage'>)=>ProjectileEntity|null; hit:(w:CombatWorld,damage:number,stun?:number)=>void }
 export const hiveRoot=(w:CombatWorld)=>w.hiveHost??w;
 const rosters=new WeakMap<CombatWorld,{hive:HiveState|undefined;actors:CombatWorld[]}>();
@@ -38,11 +35,11 @@ export function createHive(root:CombatWorld,create:(id:CombatWorld['aircraft']['
   w.hiveHost=root;w.stage=root.stage;w.stageId=5;w.aircraft.hiveSquad=true;w.enemies=root.enemies;
   w.nextId=(slot+1)*100000000;w.playerX=R.left+R.width*(slot?.76:.24);w.playerY=R.bottom-90;
   w.initialCoreQueued=true;w.aircraft.pendingMilestones=[1];w.pendingCoreSelections=1;
-  hive.allies.push({world:w,slot,respawn:0,thinkAt:.2+slot*.07,skillAt:1,x:w.playerX,y:w.playerY,allocation:0,seen:new Map()});
+  hive.allies.push({world:w,slot,respawn:0,thinkAt:.2+slot*.07,skillAt:1,x:w.playerX,y:w.playerY,allocation:0});
  }
  return hive;
 }
-export function hiveFx(w:CombatWorld,row:number,x:number,y:number,size:number,duration=.65){const h=hiveRoot(w).hive;if(!h)return;if(h.effects.length>=96)h.effects.shift();h.effects.push({row,x,y,size,at:hiveRoot(w).elapsed,duration});}
+export function hiveFx(w:CombatWorld,row:number,x:number,y:number,size:number,duration=.65,blast?:HiveHazard){const h=hiveRoot(w).hive;if(!h)return;if(h.effects.length>=96)h.effects.shift();h.effects.push({row,x,y,size,at:hiveRoot(w).elapsed,duration,blast});}
 // Keep the earlier skill cadence; ordinary fire is halved again, including escorts.
 const slowedNormal=(w:CombatWorld,e:EnemyEntity)=>HIVE_NORMALS.includes(e.type)&&w.stage.waves[w.waveIndex].normalPower!==undefined;
 const normalSkill=(e:EnemyEntity)=>['razor_glider','siege_spitter','signal_weaver'].includes(e.type);
@@ -82,12 +79,38 @@ export function hiveXp(w:CombatWorld,xp:number){
 }
 
 function equipmentValue(w:CombatWorld,id:EquipmentDefinitionId){
- const d=EQUIPMENT_CATALOG[id],family=Number(id.slice(2));
- const skills=['phantom','astra','cinder','sylva','terra'].includes(w.aircraft.aircraftId);
- const synergy=(skills?[7,8,14,24,31,34,35]:[1,2,9,12,13,26]).includes(family)?3:0;
- const defense=[3,4,16,17,18,25,27,30,33].includes(family)?(w.aircraft.currentHp<getEffectiveAircraftStats(w.aircraft).maxHp*.5?2:1):0;
- const duplicate=equipmentState(w.aircraft).equipped.some(i=>i?.definitionId.slice(2)===id.slice(2))?4:0;
- return (d.rarity==='legendary'?16:d.rarity==='completed'?8:1)+synergy+defense-duplicate;
+ const d=EQUIPMENT_CATALOG[id],s=d.stats,aircraft=w.aircraft.aircraftId;
+ const caster=['phantom','astra','cinder','sylva','terra'].includes(aircraft),tank=aircraft==='terra',melee=aircraft==='riptide'||aircraft==='argent';
+ // Stable preferences avoid burning magnets when current HP fluctuates.
+ return (d.rarity==='legendary'?100:d.rarity==='completed'?20:1)
+  +(s.firepower??0)*.035+(s.skillHaste??0)*(caster?.30:.12)
+  +(s.resourceRegenPct??0)*(aircraft==='phantom'?30:caster?20:10)
+  +(s.bonusFireRatePct??0)*(caster?6:18)+(s.criticalChance??0)*(caster?8:16)
+  +(s.armor??0)*(tank?.22:melee?.12:.06)+(s.maxHp??0)*(tank?.012:melee?.008:.004)
+  +(s.hpRegen??0)*(tank||melee?1.3:.7);
+}
+function equipHiveInventory(w:CombatWorld){
+ const s=w.aircraft,q=equipmentState(s),equipped=q.equipped.filter((i):i is EquipmentInstance=>!!i);
+ if(!q.completed.length)return;
+ const candidates=[...equipped,...q.completed],chosen:EquipmentInstance[]=[],families=new Set<string>();
+ const value=(i:EquipmentInstance,seen:Set<string>)=>equipmentValue(w,i.definitionId)-(seen.has(EQUIPMENT_CATALOG[i.definitionId].family??i.definitionId)?12:0);
+ // Existing instances win ties; a completed/legendary pair has only one family effect.
+ while(chosen.length<6&&candidates.length){
+  let best=0;for(let i=1;i<candidates.length;i++)if(value(candidates[i],families)>value(candidates[best],families))best=i;
+  const item=candidates.splice(best,1)[0];chosen.push(item);families.add(EQUIPMENT_CATALOG[item.definitionId].family??item.definitionId);
+ }
+ if(equipped.length===6){
+  if(!(q.items.VP01>0)||chosen.every(i=>equipped.includes(i)))return;
+  const score=(items:EquipmentInstance[])=>{const seen=new Set<string>();let total=0;for(const item of items){total+=value(item,seen);seen.add(EQUIPMENT_CATALOG[item.definitionId].family??item.definitionId);}return total;};
+  if(score(chosen)<=score(equipped)+1)return;
+  // One real magnet extracts the loadout; re-equip the complete selected plan atomically.
+  if(!extractEquipment(s).length)return;
+ }else{
+  // Fill vacancies without removing existing equipment or spending a magnet.
+  const spare=chosen.filter(i=>!equipped.includes(i));
+  for(const item of spare){if(!q.equipped.includes(null))break;equipEquipment(s,item.instanceId);}return;
+ }
+ for(const item of chosen)equipEquipment(s,item.instanceId);
 }
 function coreValue(w:CombatWorld,card:CoreCard){
  const c=CORE_DEFINITIONS.find(c=>c.id===card.id)!;const s=w.aircraft,stats=getEffectiveAircraftStats(s);
@@ -103,6 +126,8 @@ function coreValue(w:CombatWorld,card:CoreCard){
 }
 export function manageHiveBuild(a:HiveAlly){
  const w=a.world,s=w.aircraft,dead=a.respawn>0||s.currentHp<=0,ids=AIRCRAFT_CONFIGS[s.aircraftId].skillIds;
+ if(w.elapsed<(a.buildAt??0)&&!s.skillPoints&&!s.pendingMilestones.length&&!equipmentState(s).rewardChoices?.length)return;
+ a.buildAt=w.elapsed+.25;
  for(let i=0;i<20&&s.skillPoints>0;i++){
   const available=ids.filter(id=>canAllocateSkill(s,id));
   const ult=available.find(isUltimate),basic=available.filter(id=>!isUltimate(id));
@@ -125,112 +150,12 @@ export function manageHiveBuild(a:HiveAlly){
   const latest=[...q.components].sort((x,y)=>y.instanceId-x.instanceId).slice(0,2);
   for(const item of latest)toggleCraftComponent(s,item.instanceId);startEquipmentCraft(s,w.elapsed);
  }
- const inventory=()=>[...q.completed].sort((x,y)=>equipmentValue(w,y.definitionId)-equipmentValue(w,x.definitionId));
- while(q.equipped.includes(null)&&q.completed.length)equipEquipment(s,inventory()[0].instanceId);
- if(!q.equipped.includes(null)&&q.completed.length&&q.items.VP01>0){
-  const next=inventory()[0],worst=Math.min(...q.equipped.map(i=>equipmentValue(w,i!.definitionId)));
-  if(equipmentValue(w,next.definitionId)>worst+3){extractEquipment(s);while(q.equipped.includes(null)&&q.completed.length)equipEquipment(s,inventory()[0].instanceId);}
- }
+ equipHiveInventory(w);
  if(dead)s.currentHp=0;
 }
 
 const hit=createHitResult();
-function danger(w:CombatWorld,x:number,y:number,a:HiveAlly,horizon=.65){
- const root=hiveRoot(w),dx=x-w.playerX,dy=y-w.playerY,body=getPlayerHitbox(w);let cost=0;
- for(const p of root.projectiles){
-  if(p.owner!=='enemy'||p.allegiance==='friendly_hacked')continue;
-  const seen=a.seen.get(p.id);if(seen===undefined){a.seen.set(p.id,root.elapsed);continue;}if(root.elapsed-seen<.14)continue;
-  // Relative swept trajectory includes travel to the candidate, using real capsule hitboxes.
-  if(segmentVsAircraft(p.x,p.y,p.x+p.vx*horizon-dx,p.y+p.vy*horizon-dy,p.radius+3,body,hit).hit)cost+=80+Math.min(150,p.rawDamage);
- }
- for(const z of root.hive!.hazards){if(z.until<root.elapsed)continue;const starts=z.at-root.elapsed;if(starts>horizon+.2)continue;
-  if(z.kind==='lane'||z.kind==='dash'){if(segmentVsAircraft(z.x-dx,z.y-dy,z.endX-dx,z.endY-dy,z.radius,body,hit).hit)cost+=250;}
-  else if(circleVsAircraft(z.x-dx,z.y-dy,z.radius,body))cost+=220;
- }
- for(const e of root.enemies)if(e.hp>0&&Math.hypot(e.x-x,e.y-y)<e.radius+24)cost+=300;
- for(const actor of hiveActors(root))if(actor!==w&&actor.aircraft.currentHp>0){const d=Math.hypot(actor.playerX-x,actor.playerY-y);if(d<58)cost+=(58-d)*2;}
- return cost;
-}
-function chooseHiveSkill(a:HiveAlly,target:EnemyEntity|undefined,threat:number):SkillId|undefined {
- const w=a.world,s=w.aircraft,root=hiveRoot(w),stats=getEffectiveAircraftStats(s),ids=AIRCRAFT_CONFIGS[s.aircraftId].skillIds;
- if(!target)return;
- const range=Math.hypot(target.x-w.playerX,target.y-w.playerY),line=Math.abs(target.x-w.playerX)<target.radius+18&&target.y<w.playerY;
- const cluster=root.enemies.filter(e=>e.hp>0&&Math.hypot(e.x-target.x,e.y-target.y)<90).length;
- const durable=target.hp>stats.firepower*5,big=target.type==='boss'||HIVE_MOTHERS.includes(target.type)||isElite(target.type);
- const nearby=root.projectiles.filter(p=>p.owner==='enemy'&&Math.hypot(p.x-w.playerX,p.y-w.playerY)<100).length;
- let best:SkillId|undefined,value=0;
- for(const id of ids){
-  if(!getWorldSkillAvailability(w,id).available)continue;
-  const defensive=['decoy','armor_shield','invisibility','cinder_fire_shield','argent_guard_stance','terra_reactive_rock_armor','riptide_wellspring'].includes(id);
-  if(!defensive&&s.currentResource<stats.maxResource*.24&&threat>30)continue;
-  let score=0;
-  switch(id){
-   case 'decoy':case 'armor_shield':case 'invisibility':case 'cinder_fire_shield':case 'argent_guard_stance':case 'terra_reactive_rock_armor':score=threat>35||nearby>5?8:0;break;
-   case 'afterburner':score=threat>120?9:0;break;
-   case 'predator_lock':case 'missile_swarm':score=durable&&line?(big?7:cluster>=3?6:3):0;break;
-   case 'gravity_anchor':score=cluster>=3&&root.hive!.ccUntil<root.elapsed?8:0;break;
-   case 'heavy_bomb':score=durable&&(target.stun>0||cluster>3||nearby>10)?9:0;break;
-   case 'sweeping_cannon':score=line&&(cluster>2||big)?5:0;break;
-   case 'electronic_interference':score=nearby>7&&root.hive!.ccUntil<root.elapsed?8:0;break;
-   case 'focus_laser':score=line&&durable&&threat<30&&s.currentResource>stats.maxResource*.4?7:0;break;
-   case 'escort_drone':score=s.currentResource>stats.maxResource*.65&&durable?5:0;break;
-   case 'twin_reflection':score=line&&big?6:0;break;
-   case 'orbit_reversal':score=nearby>=5||!!w.astra?.orbit?8:0;break;
-   case 'stellar_lance':score=line&&durable&&threat<45?7:0;break;
-   case 'starfall':score=cluster>=3||big?7:0;break;
-   case 'cinder_fuel_barrage':score=line&&(cluster>1||big)?6:0;break;
-   case 'cinder_heat_wave':score=range<150&&durable?7:0;break;
-   case 'cinder_inferno_beam':score=line&&durable&&threat<40&&cinderStacks(w,target.id)>=3?8:0;break;
-   case 'riptide_wellspring':score=s.currentHp<stats.maxHp*.65?8:0;break;
-   case 'riptide_tidal_blades':score=range<125&&durable?7:0;break;
-   case 'riptide_confluence':score=range<150&&cluster>=2&&root.hive!.ccUntil<root.elapsed?8:0;break;
-   case 'riptide_waterform':score=range<150&&(big||cluster>3)?7:0;break;
-   case 'argent_blade_cast':score=line&&durable?6:0;break;
-   case 'argent_blade_recall':score=argentRecallOpportunity(w,target.x,target.y,target.radius)?9:0;break;
-   case 'argent_heavenly_blade_array':score=range<180&&(big||cluster>3)?8:0;break;
-   case 'sylva_acid_burst':case 'sylva_parasitic_seed':score=line&&durable?6:0;break;
-   case 'sylva_symbiosis':{const active=sylvaState(w).symbiosis;score=active?(active.storedVitality>stats.maxHp*.12&&s.currentHp<stats.maxHp*.65?10:0):s.currentHp<stats.maxHp*.7&&durable?7:0;break;}
-   case 'sylva_deathbloom':score=durable&&(sylvaState(w).targets.get(target.id)?.markUntil??0)>w.elapsed?8:0;break;
-   case 'terra_seismic_cannon':score=line&&durable&&threat<50&&(terraHud(w)?.pressure??0)>(terraHud(w)?.cap??1)*.4?8:0;break;
-   case 'terra_strata_clamp':score=range<200&&durable&&root.hive!.ccUntil<root.elapsed?7:0;break;
-   case 'terra_geocore_overdrive':score=big&&durable&&threat<45?7:0;break;
-  }
-  if(isUltimate(id)&&!durable)score=0;
-  if(score>value){value=score;best=id;}
- }
- return best;
-}
-export function thinkHiveAlly(a:HiveAlly,dt:number){
- const w=a.world,root=hiveRoot(w),h=root.hive!;
- if(root.elapsed>=a.thinkAt){
-  a.thinkAt=root.elapsed+.17+root.random()*.09;
-  const focus=root.enemies.find(e=>e.hp>0&&e.id===root.playerTargetId)??root.enemies.find(e=>e.hp>0&&(HIVE_MOTHERS.includes(e.type)||e.type==='boss'));
-  const support=a.slot===0?root.enemies.find(e=>e.hp>0&&(e.type==='repair_wasp'||e.type==='forge_matron'||e.type==='signal_weaver')):undefined;
-  const target=support??focus??root.enemies.filter(e=>e.hp>0).sort((x,y)=>Math.hypot(x.x-w.playerX,x.y-w.playerY)-Math.hypot(y.x-w.playerX,y.y-w.playerY))[0];
-  a.target=target?.id;w.playerTargetId=target?.id;
-  const close=['riptide','argent'].includes(w.aircraft.aircraftId),reach=250*.65;
-  let desiredX=target?.x??R.left+R.width*(a.slot?.72:.28),desiredY=target?Math.min(R.bottom-40,target.y+(close?95:215)):R.bottom-90;
-  const loot=equipmentState(root.aircraft).loot.find(l=>!l.collection);
-  if(loot&&!equipmentRewardsLocked(w.aircraft)){
-   const picker=h.allies.filter(b=>!b.respawn&&!equipmentRewardsLocked(b.world.aircraft)).sort((a,b)=>Math.hypot(a.world.playerX-loot.x,a.world.playerY-loot.y)-Math.hypot(b.world.playerX-loot.x,b.world.playerY-loot.y))[0];
-   if(picker===a&&danger(w,loot.x,loot.y,a)<30&&Math.hypot(loot.x-w.playerX,loot.y-w.playerY)<140){desiredX=loot.x;desiredY=loot.y;}
-  }
-  let best=Infinity,bx=w.playerX,by=w.playerY;
-  for(let i=-1;i<16;i++){
-   const angle=i<0?Math.atan2(desiredY-w.playerY,desiredX-w.playerX):i*Math.PI/8;
-   const length=i<0?Math.min(reach,Math.hypot(desiredX-w.playerX,desiredY-w.playerY)):reach;
-   const x=Math.max(R.left+28,Math.min(R.right-28,w.playerX+Math.cos(angle)*length)),y=Math.max(R.top+30,Math.min(R.bottom-30,w.playerY+Math.sin(angle)*length));
-   const risk=danger(w,x,y,a),cost=risk+Math.abs(x-desiredX)*.17+Math.abs(y-desiredY)*.1+Math.hypot(x-a.x,y-a.y)*.035;
-   if(cost<best){best=cost;bx=x;by=y;}
-  }
-  a.x=bx;a.y=by;
-  if(root.elapsed>=a.skillAt){const id=chooseHiveSkill(a,target,danger(w,w.playerX,w.playerY,a));if(id&&castWorldSkill(w,id).cast){a.skillAt=root.elapsed+.65;if(['gravity_anchor','electronic_interference','riptide_confluence','terra_strata_clamp'].includes(id))h.ccUntil=root.elapsed+1.3;}}
-  if(a.seen.size>1600){const live=new Set(root.projectiles.map(p=>p.id));for(const id of a.seen.keys())if(!live.has(id))a.seen.delete(id);}
- }
- const dx=a.x-w.playerX,dy=a.y-w.playerY,d=Math.hypot(dx,dy),step=Math.min(d,250*dt);
- w.playerInputActive=true;
- if(d>.5)movePlayerByDelta(w,dx/d*step,dy/d*step);
-}
+export { thinkHiveAlly } from './airCombatHiveAI';
 function hazard(w:CombatWorld,e:EnemyEntity,kind:HiveHazard['kind'],x:number,y:number,endX:number,endY:number,radius:number,delay:number,damage:number,pattern=0){
  const h=w.hive!;if(h.hazards.length>=16)return;
  h.hazards.push({id:h.nextHazard++,enemyId:e.id,kind,x,y,endX,endY,radius,start:w.elapsed,at:w.elapsed+delay,until:w.elapsed+delay+(kind==='lane'?.4:.15),damage,fired:false,pattern});
@@ -249,7 +174,8 @@ export function updateHiveEnemy(w:CombatWorld,e:EnemyEntity,dt:number,hooks:Hive
  if(h.dash){const oldX=e.x,oldY=e.y,t=Math.min(1,(w.elapsed-h.dash.start)/(h.dash.until-h.dash.start));e.x=h.dash.x+(h.dash.endX-h.dash.x)*t;e.y=h.dash.y+(h.dash.endY-h.dash.y)*t;for(const actor of actors)if(!h.dash.hits.has(actor)&&sweepAircraft(getEnemyHitbox(e),e.x-oldX,e.y-oldY,getPlayerHitbox(actor),hit).hit){h.dash.hits.add(actor);hooks.hit(actor,stats.collisionDamage*e.damageScale);}if(t===1)h.dash=undefined;}
  else{const d=Math.hypot(x-e.x,y-e.y),step=Math.min(d,stats.speed*hooks.movement(w,e)*dt);if(d>0){e.x+=(x-e.x)/d*step;e.y+=(y-e.y)/d*step;}}
  if((e.type==='repair_wasp'||e.type==='forge_matron')&&e.stun<=0&&(e.skillLockedUntil??0)<=w.elapsed){
-  const repair=w.enemies.filter(n=>n!==e&&n.hp>0&&n.hp<n.maxHp&&Math.hypot(n.x-e.x,n.y-e.y)<190).sort((a,b)=>a.hp/a.maxHp-b.hp/b.maxHp)[0];
+  let repair:EnemyEntity|undefined,lowest=Infinity;
+  for(const n of w.enemies)if(n!==e&&n.hp>0&&n.hp<n.maxHp&&(n.x-e.x)**2+(n.y-e.y)**2<190**2&&n.hp/n.maxHp<lowest){repair=n;lowest=n.hp/n.maxHp;}
   h.repairTarget=repair?.id;if(repair)repair.hp=Math.min(repair.maxHp,repair.hp+repair.maxHp*(elite?.009:.005)*dt);
  }else h.repairTarget=undefined;
  // Signal Weaver used to fire its ordinary fan and lane on one timer. Separate
@@ -300,12 +226,13 @@ export function updateHiveEnemy(w:CombatWorld,e:EnemyEntity,dt:number,hooks:Hive
 }
 export function updateHiveHazards(w:CombatWorld,dt:number,hooks:HiveHooks){
  const h=w.hive;if(!h)return;
- h.effects=h.effects.filter(e=>w.elapsed<e.at+e.duration);
- for(const p of [...w.projectiles])if(p.hiveSplitAt!==undefined&&w.elapsed>=p.hiveSplitAt){p.hiveSplitAt=undefined;p.lifetime=0;const a=Math.atan2(p.vy,p.vx);hiveFx(w,7,p.x,p.y,28,.3);for(let i=-2;i<=2;i++)hooks.projectile(w,{owner:'enemy',x:p.x,y:p.y,vx:Math.cos(a+i*.23)*145,vy:Math.sin(a+i*.23)*145,rawDamage:p.rawDamage*.5,radius:3,sourceEnemyId:p.sourceEnemyId,sourceEnemyType:p.sourceEnemyType,lifetime:5,hiveAmmo:1});}
+ let live=0;for(const fx of h.effects)if(w.elapsed<fx.at+fx.duration)h.effects[live++]=fx;h.effects.length=live;
+ const projectileCount=w.projectiles.length;
+ for(let n=0;n<projectileCount;n++){const p=w.projectiles[n];if(p.hiveSplitAt!==undefined&&w.elapsed>=p.hiveSplitAt){p.hiveSplitAt=undefined;p.lifetime=0;const a=Math.atan2(p.vy,p.vx);hiveFx(w,7,p.x,p.y,28,.3);for(let i=-2;i<=2;i++)hooks.projectile(w,{owner:'enemy',x:p.x,y:p.y,vx:Math.cos(a+i*.23)*145,vy:Math.sin(a+i*.23)*145,rawDamage:p.rawDamage*.5,radius:3,sourceEnemyId:p.sourceEnemyId,sourceEnemyType:p.sourceEnemyType,lifetime:5,hiveAmmo:1});}}
  for(const z of h.hazards){if(z.fired||w.elapsed<z.at)continue;z.fired=true;
   const source=w.enemies.find(e=>e.id===z.enemyId&&e.hp>0);if(!source||source.stun>0||(source.skillLockedUntil??0)>w.elapsed){z.cancelled=true;continue;}
   if(z.kind==='dash'){source.hive!.dash={x:z.x,y:z.y,endX:z.endX,endY:z.endY,start:w.elapsed,until:w.elapsed+.65,hits:new Set()};fan(w,source,hooks,Math.PI/2,7,.27,90,z.damage*.3);continue;}
-  hiveFx(w,z.kind==='pulse'?6:7,z.x,z.y,z.radius*2,.65);
+  hiveFx(w,7,z.x,z.y,z.radius*2,.72,z);
   for(const actor of hiveActors(w))if(actor.aircraft.currentHp>0){const body=getPlayerHitbox(actor),touch=z.kind==='lane'?segmentVsAircraft(z.x,z.y,z.endX,z.endY,z.radius,body,hit).hit:circleVsAircraft(z.x,z.y,z.radius,body);if(touch)hooks.hit(actor,z.damage,z.pattern===1?.5:0);}
   if(z.kind==='blast')for(let i=0;i<6+z.pattern*2;i++){const angle=i*Math.PI*2/(6+z.pattern*2)+z.pattern*.2;hooks.projectile(w,{owner:'enemy',x:z.x,y:z.y,vx:Math.cos(angle)*105,vy:Math.sin(angle)*105,rawDamage:z.damage*.3,radius:3,sourceEnemyId:z.enemyId,sourceEnemyType:source.type,lifetime:5});}
  }
@@ -319,3 +246,4 @@ export function collectHiveLoot(w:CombatWorld,dt:number){
   q.loot.splice(i,1);for(const a of actors)if(!equipmentRewardsLocked(a.aircraft))grantEquipmentReward(a.aircraft,l.definitionId,'hive-shared-drop',l);
  }
 }
+

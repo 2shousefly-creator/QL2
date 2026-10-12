@@ -1,7 +1,9 @@
 import { drawAircraftTrackingHud } from './airCombatCanvasHud';
 import { HealthBarPresentation } from './airCombatFeedback';
 import { AircraftPreview } from "./AircraftPreview";
-import { AIRCRAFT_CONFIGS } from "./airCombatConfig";
+import { AIRCRAFT_CONFIGS, SKILL_CONFIGS } from "./airCombatConfig";
+import { SKILL_RANKS, skillRank } from './airCombatSkillRanks';
+import type { SkillId } from './airCombatTypes';
 import { getEffectiveAircraftStats } from "./airCombatAircraft";
 import { AnimatePresence, motion } from "motion/react";
 import { airTooltipMotion } from "./AirCombatMotion";
@@ -51,7 +53,7 @@ function sameSnapshot(previous: StatusPresentation[], next: StatusPresentation[]
   });
 }
 /** Labels use 10 Hz snapshots; Battle paints fractional border progress each frame. */
-export const AirCombatStatusStrip = React.memo(forwardRef<StatusStripHandle, { top: number; onTooltipChange: (open: boolean) => void }>(({ top, onTooltipChange }, ref) => {
+export const AirCombatStatusStrip = React.memo(forwardRef<StatusStripHandle, { top: number; onTooltipChange: (open: boolean) => void; onInspectSkill?: (world:CombatWorld,id:SkillId)=>void }>(({ top, onTooltipChange, onInspectSkill }, ref) => {
   const host = useRef<HTMLDivElement>(null);
   const allyCanvases = useRef<(HTMLCanvasElement|null)[]>([]);
   const allyHud = useRef<{world:CombatWorld;bars:HealthBarPresentation;time:number}[]>([]);
@@ -69,7 +71,7 @@ export const AirCombatStatusStrip = React.memo(forwardRef<StatusStripHandle, { t
   const [progress] = useState(()=>new AirCombatStatusProgress());
   const snapshotWorld = useRef<CombatWorld|null>(null);
   const [items, setItems] = useState<StatusPresentation[]>([]);
-  const [squad,setSquad]=useState<{id:CombatWorld["aircraft"]["aircraftId"];seconds:number;hp:number;max:number;level:number}[]>([]);
+  const [squad,setSquad]=useState<{world:CombatWorld;id:CombatWorld["aircraft"]["aircraftId"];seconds:number;hp:number;max:number;level:number;skills:{id:SkillId;rank:number;cooldown:number}[]}[]>([]);
   const [selected, setSelected] = useState<string | null>(null);
   const selectedRef = useRef<string | null>(null);
   const tooltipChange = useRef(onTooltipChange); tooltipChange.current = onTooltipChange;
@@ -86,7 +88,9 @@ export const AirCombatStatusStrip = React.memo(forwardRef<StatusStripHandle, { t
     const changedWorld=snapshotWorld.current!==world;
     if (world.pauseReasons.size > 0 && !changedWorld) return;
     if(changedWorld){snapshotWorld.current=world;close();}
-    setSquad((world.hive?.allies??[]).map(a=>({id:a.world.aircraft.aircraftId,seconds:Math.ceil(a.respawn),hp:Math.ceil(a.world.aircraft.currentHp),max:Math.ceil(getEffectiveAircraftStats(a.world.aircraft).maxHp),level:a.world.aircraft.level})));
+    const squadNext=(world.hive?.allies??[]).map(a=>({world:a.world,id:a.world.aircraft.aircraftId,seconds:Math.ceil(a.respawn),hp:Math.ceil(a.world.aircraft.currentHp),max:Math.ceil(getEffectiveAircraftStats(a.world.aircraft).maxHp),level:a.world.aircraft.level,
+      skills:AIRCRAFT_CONFIGS[a.world.aircraft.aircraftId].skillIds.map(id=>({id,rank:skillRank(a.world.aircraft,id),cooldown:Math.ceil(Math.max(0,a.world.aircraft.cooldowns[id]??0))}))}));
+    setSquad(previous=>previous.length===squadNext.length&&previous.every((a,i)=>{const b=squadNext[i];return a.world===b.world&&a.seconds===b.seconds&&a.hp===b.hp&&a.max===b.max&&a.level===b.level&&a.skills.every((s,j)=>s.rank===b.skills[j].rank&&s.cooldown===b.skills[j].cooldown);})?previous:squadNext);
     const next = [...getStatusPresentations(world), ...getBossStatusPresentations(world)];
     progress.snapshot(world,next);
     progress.render(world);
@@ -118,7 +122,21 @@ export const AirCombatStatusStrip = React.memo(forwardRef<StatusStripHandle, { t
       {bossItems.map(renderStatus)}
     </div>}
     <div className="air-status-player">
-    {squad.length>0&&<div className="air-hive-squad" aria-label="Đồng minh AI">{squad.map((a,slot)=><div key={a.id} className="air-hive-ally" data-hive-ally={slot} title={`${AIRCRAFT_CONFIGS[a.id].name} · Cấp ${a.level} · ${a.seconds?`Hồi sinh sau ${a.seconds} giây`:`Máu ${a.hp}/${a.max}`}`}><AircraftPreview aircraftId={a.id}/><strong>{a.seconds?`${a.seconds}s`:`Lv${a.level}`}</strong><canvas ref={node=>{allyCanvases.current[slot]=node;}} width={148} height={a.id==="terra"?76:50} className="air-hive-ally-bars" aria-label="Máu và tài nguyên đồng minh"/>{a.seconds>0&&<span className="air-hive-ally-respawn">HỒI SINH</span>}</div>)}</div>}
+    {squad.length>0&&<div className="air-hive-squad" aria-label="Đồng minh AI">{squad.map((a,slot)=><div key={a.id} className="air-hive-ally" data-hive-ally={slot}>
+      <AircraftPreview aircraftId={a.id}/><strong title={`${AIRCRAFT_CONFIGS[a.id].name} · Máu ${a.hp}/${a.max}`}>{a.seconds?`${a.seconds}s`:`Lv${a.level}`}</strong>
+      <canvas ref={node=>{allyCanvases.current[slot]=node;}} width={148} height={a.id==="terra"?76:50} className="air-hive-ally-bars" aria-label="Máu và tài nguyên đồng minh"/>
+      <div className="air-hive-ally-skills" role="group" aria-label={`Kỹ năng ${AIRCRAFT_CONFIGS[a.id].name}`}>
+        {a.skills.map(skill=><button key={skill.id} type="button" className="air-hive-ally-skill" data-unlearned={skill.rank===0} data-combat-tooltip-trigger="skill"
+          aria-label={`${AIRCRAFT_CONFIGS[a.id].name} · ${SKILL_CONFIGS[skill.id].name} · Cấp ${skill.rank}${skill.cooldown?` · Hồi chiêu ${skill.cooldown}s`:''}`}
+          onPointerDown={event=>event.stopPropagation()} onPointerMove={event=>event.stopPropagation()} onPointerUp={event=>event.stopPropagation()}
+          onClick={()=>onInspectSkill?.(a.world,skill.id)}>
+          <CombatUiIcon kind="skill" id={skill.id} fallback="◆"/>
+          {skill.cooldown>0&&<span className="air-hive-skill-cooldown">{skill.cooldown}s</span>}
+          <span className="air-hive-skill-ranks" aria-hidden="true">{SKILL_RANKS[skill.id].map((_,i)=><i key={i} data-lit={i<skill.rank}/>)}</span>
+        </button>)}
+      </div>
+      {a.seconds>0&&<span className="air-hive-ally-respawn">HỒI SINH</span>}
+    </div>)}</div>}
     {(["buff", "debuff"] as const).map(group => {
       const all = playerItems.filter(s => s.group === group), shown = all.length > 10 ? all.slice(0, 9) : all;
       return <div key={group} className={`air-status-group air-status-group--${group}`} aria-label={group === "buff" ? "Buff" : "Debuff"}>

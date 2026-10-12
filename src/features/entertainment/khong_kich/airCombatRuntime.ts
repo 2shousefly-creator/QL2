@@ -870,6 +870,7 @@ function downHiveAlly(w:CombatWorld){
  delete w.aircraft.coreState.shields.cinder;
  hiveFx(w,0,w.playerX,w.playerY,90,.8);
 }
+const hiveProjectileScratch=new WeakMap<CombatWorld,{borrowed:Set<ProjectileEntity>;retained:Set<ProjectileEntity>}>();
 function tickHiveAllies(root:CombatWorld,dt:number){
  for(const a of root.hive!.allies){
   const w=a.world;w.enemies=root.enemies;w.elapsed=root.elapsed;w.waveIndex=root.waveIndex;w.waveState=root.waveState;
@@ -886,11 +887,12 @@ function tickHiveAllies(root:CombatWorld,dt:number){
    else {tickCinder(w,dt,cinderHooks);tickSylva(w,dt,sylvaHooks);updateAstra(w,dt,astraHooks);updateWarnings(w,dt);updateSkillCoreEffects(w,dt);updateProjectiles(w,dt);updateProjectileCollisions(w);resolveScheduledBigBang(w);resolveDeathsAndEffects(w);w.aircraft.currentHp=0;}
    activateHiveMarks(root);continue;
   }
-  const borrowed=root.projectiles.filter(p=>p.owner==='enemy');
-  const borrowedSet=new Set(borrowed);w.hiveBorrowed=borrowedSet;
-  w.projectiles.push(...borrowed);
+  let scratch=hiveProjectileScratch.get(w);
+  if(!scratch){scratch={borrowed:new Set(),retained:new Set()};hiveProjectileScratch.set(w,scratch);}
+  const borrowedSet=scratch.borrowed,retained=scratch.retained;borrowedSet.clear();retained.clear();w.hiveBorrowed=borrowedSet;
+  for(const p of root.projectiles)if(p.owner==='enemy'){borrowedSet.add(p);w.projectiles.push(p);}
   thinkHiveAlly(a,dt);tickDuelActor(w,dt);resolveScheduledBigBang(w);updateEnemyPlayerCollisions(w);
-  const retained=new Set(w.projectiles);
+  for(const p of w.projectiles)retained.add(p);
   for(let i=root.projectiles.length-1;i>=0;i--){
    const projectile=root.projectiles[i];if(!borrowedSet.has(projectile))continue;
    if(!retained.has(projectile)){
@@ -898,8 +900,9 @@ function tickHiveAllies(root:CombatWorld,dt:number){
     projectile.grazeCandidate=false;projectile.duelGraze=undefined;recycleProjectile(root,i);
    }else if(projectile.owner!=='enemy')root.projectiles.splice(i,1); // Ownership transferred to the ally.
   }
-  w.projectiles=w.projectiles.filter(p=>p.owner!=='enemy');
+  let ownCount=0;for(const p of w.projectiles)if(p.owner!=='enemy')w.projectiles[ownCount++]=p;w.projectiles.length=ownCount;
   w.hiveBorrowed=undefined;
+  borrowedSet.clear();retained.clear();
   if(w.aircraft.currentHp<=0)downHiveAlly(w);
   activateHiveMarks(root);
  }
@@ -4302,10 +4305,12 @@ function updateProjectileCollisions(world: CombatWorld): void {
         if (p.projectileKind !== "bullet" && p.missileState !== "powered" && !p.bigBang)
             continue;
         const touches = (x: number, y: number, radius: number) => p.bigBang && p.missileState!=="powered" ? circleHit(p.x,p.y,p.radius,x,y,radius) : segmentDistance(x, y, p.previousX, p.previousY, p.x, p.y) <= p.radius + radius;
+        const startX=p.bigBang&&p.missileState!=="powered"?p.x:p.previousX,startY=p.bigBang&&p.missileState!=="powered"?p.y:p.previousY;
+        const left=Math.min(startX,p.x)-p.radius,right=Math.max(startX,p.x)+p.radius,top=Math.min(startY,p.y)-p.radius,bottom=Math.max(startY,p.y)+p.radius;
         if (p.owner === "enemy" && p.allegiance!=="friendly_hacked") {
             if (isHostileBallisticProjectile(p) && satellitePositions(world).some(pos => touches(pos.x, pos.y, 8))) {
                 recordCoreMetric(world.aircraft,198,"blocked",1);
-                world.aircraft.coreState.stacks.satellites--;recordCoreMetric(world.aircraft,198,"blocked",1);emitVisual(world,{kind:"absorb",x:p.x,y:p.y,size:20}); recycleProjectile(world,i); continue;
+                world.aircraft.coreState.stacks.satellites--;emitVisual(world,{kind:"absorb",x:p.x,y:p.y,size:20}); recycleProjectile(world,i); continue;
             }
             const ally=world.enemies.find(e=>e.hp>0 && enemyAllegiance(world,e)==="friendly_hacked" && segmentVsAircraft(p.previousX,p.previousY,p.x,p.y,p.radius,getEnemyHitbox(e),projectileContact).hit);
             if(ally){damageEnemyAttack(world,ally,p.rawDamage,p,projectileContact);recycleProjectile(world,i);resolveDeathsAndEffects(world);continue;}
@@ -4342,8 +4347,12 @@ function updateProjectileCollisions(world: CombatWorld): void {
         // Sort along this segment to give piercing hits an unambiguous near-to-far order.
         projectileHits.length=0;
         for(const e of world.enemies) {
+            if(e.hp<=0)continue;
+            const body=getEnemyHitbox(e);
+            // Reject distant targets before allegiance/core checks; exact swept hulls still decide hits.
+            if(left>body.x+body.radius||right<body.x-body.radius||top>body.y+body.radius||bottom<body.y-body.radius)continue;
             if(!isHostileToPlayer(world,e) || p.hitIds.includes(e.id) || (p.skillId==="predator_lock"&&p.targetId!==null&&p.targetId!==e.id))continue;
-            const hit=segmentVsAircraft(p.bigBang&&p.missileState!=="powered"?p.x:p.previousX,p.bigBang&&p.missileState!=="powered"?p.y:p.previousY,p.x,p.y,p.radius,getEnemyHitbox(e),projectileContact);
+            const hit=segmentVsAircraft(startX,startY,p.x,p.y,p.radius,body,projectileContact);
             if(hit.hit){const slot=projectileHitPool[projectileHits.length]??(projectileHitPool[projectileHits.length]={enemy:e,x:0,y:0,t:0});slot.enemy=e;slot.x=hit.x;slot.y=hit.y;slot.t=hit.t;slot.zone=hit.zone;projectileHits.push(slot);}
         }
         projectileHits.sort((a,b)=>a.t-b.t || a.enemy.id-b.enemy.id);

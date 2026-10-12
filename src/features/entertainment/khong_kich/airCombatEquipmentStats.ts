@@ -1,7 +1,6 @@
 import { EQUIPMENT_POWER as P } from "./airCombatEquipmentBalance";
 import type { AircraftCombatState, EffectiveAircraftStats } from "./airCombatTypes";
-import { EQUIPMENT_CATALOG } from "./airCombatEquipmentCatalog";
-import { equipmentState, equipmentScale, equipmentEffect } from "./airCombatEquipmentState";
+import { equipmentStatBonuses, equipmentScale, equipmentEffect } from "./airCombatEquipmentState";
 export function canSkillsCrit(s: AircraftCombatState) { return s.selectedCores.includes("core_053") || equipmentScale(s,8)>0; }
 export function getTempestJewelledCritDamageBonus(s: AircraftCombatState) { return 0; }
 export function equipmentUntargetable(s: AircraftCombatState) {return equipmentScale(s,3)>0 && equipmentEffect(s,3).until>s.coreState.time;}
@@ -10,10 +9,11 @@ export function equipmentGeminiMode(s: AircraftCombatState, hp:number, resource:
   return h>.5&&r>.5 ? "offense" : h<=r ? "hp" : "resource";
 }
 export function applyEquipmentStats(s: AircraftCombatState, stats: EffectiveAircraftStats, temporary: boolean, omittedEffect?: number) {
-  let regen=0;
-  for(const item of equipmentState(s).equipped)if(item)for(const [key,value] of Object.entries(EQUIPMENT_CATALOG[item.definitionId].stats)) {
-    if(key==="resourceRegenPct")regen+=value!;
-    else {stats[key as "firepower"]+=value!;if(key==="hpRegen")stats.permanentHpRegenBonus+=value!;}
+  const bonuses=equipmentStatBonuses(s),regen=bonuses.resourceRegenPct??0;
+  for(const key in bonuses) {
+    if(key==='resourceRegenPct')continue;
+    const value=bonuses[key as keyof typeof bonuses]??0;
+    stats[key as "firepower"]+=value;if(key==="hpRegen")stats.permanentHpRegenBonus+=value;
   }
   stats.bonusResourceRegenPct+=regen;stats.permanentResourceRegenPct+=regen;
   const scale=(id:number)=>id===omittedEffect?0:equipmentScale(s,id),active=(id:number)=>equipmentEffect(s,id).until>s.coreState.time;

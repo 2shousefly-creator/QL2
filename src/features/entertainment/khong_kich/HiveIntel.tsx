@@ -33,7 +33,7 @@ export function HiveIntel(){
     <p>{tactics[type]}</p>
    </article>;})}
    <p>Đòn trúng tâm lõi đang lộ bỏ qua Giáp. Mẹ bị hạ nổ trong bán kính 320: sát thương chuẩn bằng 100% Máu tối đa của mẹ, chỉ lên quái thường khác. Công thuộc người giết mẹ, không nhân chí mạng hoặc kích hoạt thêm proc kết liễu.</p>
-   <p>Các đòn lớn cách nhau ít nhất 1,4 giây. Đồng minh phản ứng sau 0,14 giây khi thấy đạn, tính lại đường đi mỗi 0,17–0,26 giây; không biết trước vị trí đạn chưa xuất hiện.</p>
+   <p>Các đòn lớn cách nhau ít nhất 1,4 giây. Đồng minh tính lại đường né mỗi 0,10–0,11 giây từ đạn và cảnh báo đã xuất hiện, ưu tiên phòng thủ khi nguy hiểm. Terra canh Địa Áp, Phantom giữ Điện cho kỹ năng thoát hiểm.</p>
   </div>
  </details>;
 }

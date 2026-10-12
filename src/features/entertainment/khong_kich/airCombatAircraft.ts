@@ -10,8 +10,7 @@ import { resolveFireRate, resolveSkillCooldown } from "./airCombatStatResolvers"
 import { EQUIPMENT_POWER as P } from "./airCombatEquipmentBalance";
 import { AFTERBURNER_FIRE_RATE_BONUSES, skillRank, rankValues, isUltimate, ultimateCastDisabled, COMBAT_LEVEL_CAP, CORE_MILESTONES } from "./airCombatSkillRanks";
 import { applyEquipmentStats } from "./airCombatEquipmentStats";
-import { EQUIPMENT_CATALOG } from "./airCombatEquipmentCatalog";
-import { equipmentState, equipmentScale, equipmentEffect, equipmentMetric } from "./airCombatEquipmentState";
+import { equipmentState, equipmentScale, equipmentEffect, equipmentMetric, equipmentStatBonuses } from "./airCombatEquipmentState";
 import { equipmentResourceSpent } from "./airCombatEquipmentRuntime";
 import { applyExpansionStats, expansionState, expansionActive, expansionSkillCost, finishExpansionSkill, finishAbsorbShield, createAbsorbShield, observeExpansionResource } from "./airCombatExpansion";
 import { recordCoreMetric } from "./airCombatTelemetry";
@@ -66,7 +65,7 @@ export function getEffectiveAircraftStats(state: AircraftCombatState, includeTem
         totalResourceRegenMultiplier: 1, totalHpRegenMultiplier: 1,
         currentHp: state.currentHp, currentResource: state.currentResource, weapon: { ...m.weapon },
     };
-    const equipmentHp=equipmentState(state).equipped.reduce((sum,item)=>sum+(item?EQUIPMENT_CATALOG[item.definitionId].stats.maxHp??0:0),0);
+    const equipmentHp=equipmentStatBonuses(state).maxHp??0;
     applyCoreStatEffects(state, stats, includeTemporary, hp=>(hp+equipmentHp)*(1+P[22].hp*equipmentScale(state,22)));
     const c = state.coreState;
     if (includeTemporary && (state.activeEffects.afterburner || 0) > 0)
