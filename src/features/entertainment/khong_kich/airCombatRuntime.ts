@@ -1,5 +1,5 @@
 import { hiveCoreDescription } from "./airCombatHiveTooltips";
-import { createHive, hiveActors, hiveRoot, initializeHiveEnemy, updateHiveEnemy, updateHiveHazards, hiveMotherDeath, hiveXp, hiveFx, hiveArmorExposed, hiveShieldAbsorb, collectHiveLoot, manageHiveBuild, thinkHiveAlly, type HiveState, type HiveEnemy, type HiveHooks } from "./airCombatHive";
+import { createHive, hiveActors, hiveRoot, hiveRespawnSeconds, initializeHiveEnemy, updateHiveEnemy, updateHiveHazards, hiveMotherDeath, hiveXp, hiveFx, hiveArmorExposed, hiveShieldAbsorb, collectHiveLoot, manageHiveBuild, thinkHiveAlly, type HiveState, type HiveEnemy, type HiveHooks } from "./airCombatHive";
 import { reduceRunningSkillCooldown, coreCooldownReady, deferCoreCooldown } from "./airCombatCooldowns";
 import { playerBasicProjectileSpeed, phantomLaserBounds, HAWKEYE_PROJECTILE_RADIUS } from './airCombatPhantom';
 import { statusExpiry, extendStatusRemaining, extendStatusExpiry } from './airCombatStatusTiming';
@@ -739,6 +739,8 @@ export interface CombatWorld {
  hive?:HiveState;
  hiveHost?:CombatWorld;
  hiveBorrowed?:Set<ProjectileEntity>;
+ hiveRespawn?:{at:number;until:number;x:number;y:number};
+ hiveReviveProtectedUntil?:number;
     bigBang?: BigBangCast;
     destruction?: { at: number; x: number; y: number };
     aftermath?: { remaining: number };
@@ -858,33 +860,65 @@ const hiveHooks:HiveHooks={
  movement:(w,e)=>Math.min(...hiveActors(w).map(a=>terraMovement(a,e)*sylvaMovement(a,e)*argentMovement(a,e)*cinderMovement(a,e)*equipmentSlow(a.aircraft,e))),
  hit:(w,raw,stun=0)=>{const dealt=hitPlayer(w,raw,'hazard',{delivery:'area_hazard'});if(stun&&dealt.damage>0)applyPlayerStatus(w.aircraft,{stun});}
 };
-function downHiveAlly(w:CombatWorld){
- const a=w.hiveHost?.hive?.allies.find(a=>a.world===w);if(!a||a.respawn>0)return;
- a.respawn=60;w.aircraft.currentHp=0;w.playerInputActive=false;
- // Attached channels end on death; already launched attacks retain this actor.
- cancelTerra(w);cancelArgent(w);cancelRiptide(w);
- for(const id of SKILL_IDS){endAircraftSkill(w.aircraft,id);startDeferredSkillCooldown(w.aircraft,id);}
+function downHiveAircraft(w:CombatWorld){
+ const root=hiveRoot(w),h=root.hive;if(!h||w.aircraft.currentHp>0)return;
+ if(w.hiveRespawn)return;
+ w.elapsed=root.elapsed;
+ const seconds=hiveRespawnSeconds(root.elapsed),s=w.aircraft,c=s.coreState;
+ w.hiveRespawn={at:root.elapsed,until:root.elapsed+seconds,x:w.playerX,y:w.playerY};
+ const a=h.allies.find(a=>a.world===w);if(a)a.respawn=seconds;
+ s.currentHp=0;w.playerInputActive=false;w.moveDirectionX=w.moveDirectionY=0;
+ // Settle deferred cooldowns BEFORE cancellation clears the aircraft runtimes.
+ // Already-running cooldowns are never overwritten by death or revival.
+ const cancelling=c.stacks.cancellingSkills;c.stacks.cancellingSkills=1;
+ for(const id of SKILL_IDS){endAircraftSkill(s,id);startDeferredSkillCooldown(s,id);}
+ cancelTerra(w);cancelSylva(w);cancelArgent(w);cancelRiptide(w);cancelCinder(w);
+ if(cancelling===undefined)delete c.stacks.cancellingSkills;else c.stacks.cancellingSkills=cancelling;
+ delete c.stacks.cloneEndPending;delete c.stacks.shieldEmpPending;
+ for(const key of ['shieldArmor','reappearanceBuff','hawkRage','hawkRageReady'])delete c.timers[key];
  w.missilesPending=0;w.decoyVolleys=0;w.laserCharge=w.laserRemaining=w.laserTicksRemaining=w.dashRemaining=0;
- w.decoys.length=0;w.aircraft.droneActive=false;
+ while(w.decoys.length)w.pools.decoys.push(w.decoys.pop()!);
+ s.droneActive=false;w.droneTargetId=null;
+ s.activeEffects={};s.activeEffectDurations={};c.shields={};
  if(w.astra){w.astra.orbit=undefined;w.astra.charge=undefined;}
- delete w.aircraft.coreState.shields.cinder;
+ if(w.rankRuntime)w.rankRuntime.lock=undefined;
  hiveFx(w,0,w.playerX,w.playerY,90,.8);
+ // Latch the wipe at the lethal hit: a pending respawn cannot undo it later this tick.
+ if(hiveActors(root).every(actor=>actor.aircraft.currentHp<=0||!!actor.hiveRespawn))h.defeated=true;
+}
+function tickHiveRespawn(w:CombatWorld,dt:number){
+ const root=hiveRoot(w),revive=w.hiveRespawn;if(!revive)return false;
+ w.aircraft.currentHp=0;tickAircraftState(w.aircraft,dt,true);w.aircraft.currentHp=0;
+ const ally=root.hive?.allies.find(a=>a.world===w),remaining=Math.max(0,revive.until-root.elapsed);
+ if(ally)ally.respawn=remaining;
+ if(remaining>0||root.hive?.defeated||root.ended)return true;
+ clearAircraftNegativeStatuses(w.aircraft);
+ const stats=getEffectiveAircraftStats(w.aircraft);
+ w.playerX=revive.x;w.playerY=revive.y;w.aircraft.currentHp=stats.maxHp;w.aircraft.currentResource=stats.maxResource;w.aircraft.coreState.syncedMaxHp=stats.maxHp;
+ w.playerInvulnerability=3;w.playerDamageGraceUntil=0;w.hiveReviveProtectedUntil=root.elapsed+3;
+ w.playerInputActive=false;w.moveDirectionX=w.moveDirectionY=0;w.hiveRespawn=undefined;
+ if(ally){ally.x=w.playerX;ally.y=w.playerY;ally.thinkAt=0;}
+ hiveFx(w,1,w.playerX,w.playerY,105,1.1);return true;
+}
+/** Continue attacks already in flight while the downed actor's cooldowns tick. */
+function tickHiveDownedAttacks(w:CombatWorld,dt:number){
+ tickRankSkills(w,dt,rankHooks);updateAstra(w,dt,astraHooks);
+ updateWarnings(w,dt);updateSkillCoreEffects(w,dt);updateProjectiles(w,dt);
+ updateProjectileCollisions(w);settleMissileSalvos(w);resolveScheduledBigBang(w);resolveDeathsAndEffects(w);updateParticles(w,dt);
 }
 const hiveProjectileScratch=new WeakMap<CombatWorld,{borrowed:Set<ProjectileEntity>;retained:Set<ProjectileEntity>}>();
 function tickHiveAllies(root:CombatWorld,dt:number){
  for(const a of root.hive!.allies){
+  if(root.hive!.defeated)break;
   const w=a.world;w.enemies=root.enemies;w.elapsed=root.elapsed;w.waveIndex=root.waveIndex;w.waveState=root.waveState;
-  if(w.aircraft.currentHp<=0&&!a.respawn)downHiveAlly(w);
+  if(w.aircraft.currentHp<=0&&!w.hiveRespawn)downHiveAircraft(w);
   activateHiveMarks(w);
   manageHiveBuild(a);
   // Shared receipt presentation drains ally acquisitions after displaying them.
   if(root.waveState==='combat')advanceWaitingChest(w.aircraft,dt);
   claimWaitingChest(w.aircraft,w.random);
-  if(a.respawn>0){
-   tickAircraftState(w.aircraft,dt,true);w.aircraft.currentHp=0;
-   a.respawn=Math.max(0,a.respawn-dt);
-   if(a.respawn===0){const stats=getEffectiveAircraftStats(w.aircraft);w.aircraft.currentHp=stats.maxHp;w.aircraft.currentResource=stats.maxResource;w.playerInvulnerability=2;w.playerX=GAMEPLAY_SAFE_RECT.left+GAMEPLAY_SAFE_RECT.width*(a.slot?.75:.25);w.playerY=GAMEPLAY_SAFE_RECT.bottom-80;w.ended=false;w.destruction=undefined;w.aftermath=undefined;hiveFx(w,1,w.playerX,w.playerY,105,1.1);}
-   else {tickCinder(w,dt,cinderHooks);tickSylva(w,dt,sylvaHooks);updateAstra(w,dt,astraHooks);updateWarnings(w,dt);updateSkillCoreEffects(w,dt);updateProjectiles(w,dt);updateProjectileCollisions(w);resolveScheduledBigBang(w);resolveDeathsAndEffects(w);w.aircraft.currentHp=0;}
+  if(tickHiveRespawn(w,dt)){
+   if(w.hiveRespawn)tickHiveDownedAttacks(w,dt);
    activateHiveMarks(root);continue;
   }
   let scratch=hiveProjectileScratch.get(w);
@@ -903,7 +937,7 @@ function tickHiveAllies(root:CombatWorld,dt:number){
   let ownCount=0;for(const p of w.projectiles)if(p.owner!=='enemy')w.projectiles[ownCount++]=p;w.projectiles.length=ownCount;
   w.hiveBorrowed=undefined;
   borrowedSet.clear();retained.clear();
-  if(w.aircraft.currentHp<=0)downHiveAlly(w);
+  if(w.aircraft.currentHp<=0)downHiveAircraft(w);
   activateHiveMarks(root);
  }
 }
@@ -3389,6 +3423,7 @@ function rollingDps(world: CombatWorld): number {
  * no hostile payload, grace, combo, lastDamage or damageTaken event is dispatched. */
 function repayExpansionDebt(world: CombatWorld, amount: number, sourceEnemyId?:number, reflection=false) {
     if(world.duel && !world.duel.combatEnabled)return;
+    if(world.hiveRespawn||hiveRoot(world).elapsed<(world.hiveReviveProtectedUntil??0))return;
     const state = world.aircraft, c = state.coreState, stats = getEffectiveAircraftStats(state);
     let reduction = expansionIncoming(state);
     if ((c.timers.celestial ?? 0) > c.time) reduction = 0;
@@ -4083,7 +4118,7 @@ function applySecondaryHits(world: CombatWorld, projectile: ProjectileEntity, pr
     }
 }
 function hitPlayer(world: CombatWorld, rawDamage: number, kind: "projectile" | "collision" | "hazard" = "projectile", attack: AttackMetadata & { trueDamage?: boolean; damageOwner?: CombatWorld; aircraftDelivery?: boolean; armorResolved?: boolean; armorPrevented?: number; shieldFactor?: number; zoneResolved?: boolean; stormbreakerVisual?: StormbreakerVfxKey; homing?: boolean; x?:number; y?:number; previousX?:number; previousY?:number; projectileKind?:ProjectileEntity["projectileKind"] } = {}, contact?:HitResult): DuelDamageResolution {
-    if(world.aftermath || world.destruction || (world.duel && !world.duel.combatEnabled))return { damage: 0, absorbed: 0 };
+    if(world.aftermath || world.destruction || world.hiveRespawn || hiveRoot(world).elapsed<(world.hiveReviveProtectedUntil??0) || (world.duel && !world.duel.combatEnabled))return { damage: 0, absorbed: 0 };
     const state = world.aircraft, c = state.coreState, stats = getEffectiveAircraftStats(state);
     const damageOwner = attack.damageOwner ?? world.duel?.opponent;
     if(world.duel)rawDamage *= damageOwner?.duel?.multiplier ?? 1;
@@ -4308,7 +4343,7 @@ function updateProjectileCollisions(world: CombatWorld): void {
         const startX=p.bigBang&&p.missileState!=="powered"?p.x:p.previousX,startY=p.bigBang&&p.missileState!=="powered"?p.y:p.previousY;
         const left=Math.min(startX,p.x)-p.radius,right=Math.max(startX,p.x)+p.radius,top=Math.min(startY,p.y)-p.radius,bottom=Math.max(startY,p.y)+p.radius;
         if (p.owner === "enemy" && p.allegiance!=="friendly_hacked") {
-            if (isHostileBallisticProjectile(p) && satellitePositions(world).some(pos => touches(pos.x, pos.y, 8))) {
+            if (world.aircraft.currentHp>0 && isHostileBallisticProjectile(p) && satellitePositions(world).some(pos => touches(pos.x, pos.y, 8))) {
                 recordCoreMetric(world.aircraft,198,"blocked",1);
                 world.aircraft.coreState.stacks.satellites--;emitVisual(world,{kind:"absorb",x:p.x,y:p.y,size:20}); recycleProjectile(world,i); continue;
             }
@@ -4330,7 +4365,7 @@ function updateProjectileCollisions(world: CombatWorld): void {
             if(world.hiveHost)continue;
             if(world.hive){const ally=world.hive.allies.find(a=>!a.respawn&&a.world.aircraft.currentHp>0&&segmentVsAircraft(p.previousX,p.previousY,p.x,p.y,p.radius,getPlayerHitbox(a.world),projectileContact).hit);if(ally){hitPlayer(ally.world,p.rawDamage,"projectile",p,projectileContact);recycleProjectile(world,i);continue;}}
             if(p.mirrorBorrowed)continue;
-            if (!equipmentUntargetable(world.aircraft) && segmentVsAircraft(p.previousX,p.previousY,p.x,p.y,p.radius,getPlayerHitbox(world),projectileContact).hit) {
+            if (world.aircraft.currentHp>0 && !world.hiveRespawn && !equipmentUntargetable(world.aircraft) && segmentVsAircraft(p.previousX,p.previousY,p.x,p.y,p.radius,getPlayerHitbox(world),projectileContact).hit) {
                 if(p.projectileKind==="boss_missile")emitVisual(world,{kind:"missile_impact",x:p.x,y:p.y,size:42,missileFamily:"boss"});
                 if (p.mirageVisual && !p.mirrorBorrowed) mirageFx(world, "explosion", p.x, p.y, 24, .4);
                 p.playerContact=true;
@@ -4859,7 +4894,8 @@ export function revalidateAircraftTargets(world: CombatWorld): void {
 export const AIRCRAFT_AFTERMATH_SECONDS = 3;
 /** SOLO calls only after same-tick KO arbitration; Campaign calls at the lethal hit. */
 export function latchAircraftDestruction(world: CombatWorld): void {
-    if(world.hiveHost){downHiveAlly(world);return;}
+    if(world.hiveHost){downHiveAircraft(world);return;}
+    if(world.hive){downHiveAircraft(world);if(!world.hive.defeated)return;}
     if (world.destruction || world.aircraft.currentHp > 0) return;
     cancelTerra(world); cancelSylva(world); cancelArgent(world); cancelRiptide(world); cancelCinder(world); world.bigBang=undefined;
     world.playerInputActive = false;
@@ -4992,6 +5028,17 @@ export function updateCombatWorld(world: CombatWorld, deltaSeconds: number): voi
     world.scroll = (world.scroll + dt * 52) % 80;
     if (world.latestMessage && world.elapsed >= world.messageUntil)
         world.latestMessage = null;
+    if(world.hive&&world.aircraft.currentHp<=0&&!world.hiveRespawn)downHiveAircraft(world);
+    if(world.hive?.defeated)return;
+    if(world.hive&&tickHiveRespawn(world,dt)){
+        // Host remains the encounter owner even while its pilot is down.
+        updateBounty(world);updateEncounter(world,dt);settleControlOverride(world);
+        world.comboTimer=Math.max(0,world.comboTimer-dt);if(world.comboTimer===0)world.comboKills=0;
+        updateEnemies(world,dt);updateHiveHazards(world,dt,hiveHooks);
+        tickHiveAllies(world,dt);collectHiveLoot(world,dt);
+        if(!world.hive.defeated)tickHiveDownedAttacks(world,dt);
+        enterCountdownIfClear(world);return;
+    }
     refreshBreathingRoom(world, expansionHooks);
     tickAircraftState(world.aircraft, dt, true, (effective, source) => emitPlayerHealing(world, effective, source, true));
     tickReleaseCores(world,dt);
@@ -5055,7 +5102,7 @@ export function updateCombatWorld(world: CombatWorld, deltaSeconds: number): voi
     updateEnemyPlayerCollisions(world);
     updateParticles(world, dt);
     if (world.aircraft.currentHp <= 0) latchAircraftDestruction(world);
-    else if (world.bossDefeated) {
+    else if (world.bossDefeated && !world.hive) {
         delete world.aircraft.coreState.emergencyRepair;
         const tactical=tacticalState(world);tactical.grids.length=0;tactical.scraps.length=0;
         world.ended = true;
@@ -5065,8 +5112,17 @@ export function updateCombatWorld(world: CombatWorld, deltaSeconds: number): voi
     enterCountdownIfClear(world);
     } finally {
       if(world.hive){
-        if(world.aircraft.currentHp<=0){world.stageVictory=false;latchAircraftDestruction(world);}
-        else if(world.bossDefeated&&!world.stageVictory){world.stageVictory=true;world.stageFirstClear=persistStageVictory(5);}
+        for(const actor of hiveActors(world)){
+            if(actor.hiveRespawn)actor.aircraft.currentHp=0;
+            if(actor.aircraft.currentHp<=0)downHiveAircraft(actor);
+        }
+        if(world.hive.defeated){world.stageVictory=false;latchAircraftDestruction(world);}
+        else if(world.bossDefeated&&!world.stageVictory){
+            world.stageVictory=true;world.stageFirstClear=persistStageVictory(5);
+            world.ended=true;world.pauseReasons.add('result');
+            delete world.aircraft.coreState.emergencyRepair;
+            const tactical=tacticalState(world);tactical.grids.length=0;tactical.scraps.length=0;
+        }
       }
       if (!world.destruction) finishMirrorDuel(world);
       if (world.ended) resetMirage(world);
@@ -5078,7 +5134,7 @@ export function updateCombatWorld(world: CombatWorld, deltaSeconds: number): voi
     }
 }
 export function ensureCoreSelection(world: CombatWorld): CoreCard[] | null {
-    if (world.destruction || world.aftermath) return null;
+    if (world.ended || world.destruction || world.aftermath) return null;
     if(equipmentState(world.aircraft).rewardChoices?.length){world.pauseReasons.add("equipmentReward");return null;}
     if(!world.initialCoreQueued||releaseState(world.aircraft).followups.length)return null;
     world.pendingCoreSelections = world.aircraft.pendingMilestones.length;
@@ -5107,6 +5163,7 @@ export function selectCore(world: CombatWorld, card: CoreCard): boolean {
     if(world.coreSelectionEvent)closeCoreSelection(world.aircraft,world.coreSelectionEvent,world.currentCoreChoices.findIndex(c=>c.id===card.id));
     if (!applyCore(world.aircraft, card, world.random, id => dispatchCoreEvent("acquire", coreContext(world), id), ids=>removeWorldCores(world,ids)))
         return false;
+    if(world.hiveRespawn)world.aircraft.currentHp=0;
     world.coreSelectionCount++;
     world.aircraft.pendingMilestones.shift();
     world.pendingCoreSelections = world.aircraft.pendingMilestones.length;
@@ -5169,7 +5226,7 @@ export function summarizeCombatWorld(world: CombatWorld): AirCombatRunSummary {
         damageTaken: world.damageTaken,
         hitsReceived: world.hitsReceived,
         bossClearSeconds: world.bossClearSeconds,
-        destroyed: world.aircraft.currentHp <= 0,
+        destroyed: world.hive ? !!world.hive.defeated : world.aircraft.currentHp <= 0,
     };
     return { ...withoutRank, rank: calculateRunRank(withoutRank), astraTelemetry:world.astra?{...world.astra.metrics}:undefined };
 }

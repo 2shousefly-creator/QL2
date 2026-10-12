@@ -130,7 +130,7 @@ export function getEffectiveAircraftStats(state: AircraftCombatState, includeTem
 export function syncEffectiveMaxHp(state: AircraftCombatState): void {
     const maxHp = getEffectiveAircraftStats(state).maxHp;
     const previous = state.coreState.syncedMaxHp ?? maxHp;
-    state.currentHp = Math.min(maxHp, state.currentHp + (state.duel && (state.duel.healingBlocked || state.currentHp <= 0) ? 0 : Math.max(0, maxHp - previous)));
+    state.currentHp = Math.min(maxHp, state.currentHp + ((state.hiveSquad && state.currentHp<=0) || state.duel && (state.duel.healingBlocked || state.currentHp <= 0) ? 0 : Math.max(0, maxHp - previous)));
     state.coreState.syncedMaxHp = maxHp;
 }
 export function calculateDamage(rawDamage: number, targetArmor: number, additionalDamageTakenMultiplier = 1): number {

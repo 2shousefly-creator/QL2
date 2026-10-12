@@ -16,7 +16,8 @@ export interface HiveAlly { world:CombatWorld; slot:number; respawn:number; thin
 export interface HiveHazard { id:number; enemyId:number; kind:'blast'|'lane'|'dash'|'pulse'; x:number;y:number;endX:number;endY:number;radius:number; start:number; at:number; until:number; damage:number; fired:boolean; cancelled?:boolean; pattern:number }
 export interface HiveEnemy { basicCooldown?:number; coreOpen?:boolean; slot:number; attack:number; exposedUntil:number; shield:number; shieldBroken:boolean; phase:number; support:number; repairTarget?:number; dash?:{x:number;y:number;endX:number;endY:number;start:number;until:number;hits:Set<CombatWorld>} }
 export interface HiveEffect {row:number;x:number;y:number;size:number;at:number;duration:number;blast?:HiveHazard}
-export interface HiveState { allies:HiveAlly[]; hazards:HiveHazard[]; effects:HiveEffect[]; majorReady:number; nextHazard:number; lootOwner?:number; ccUntil:number }
+export interface HiveState { allies:HiveAlly[]; hazards:HiveHazard[]; effects:HiveEffect[]; majorReady:number; nextHazard:number; lootOwner?:number; ccUntil:number; defeated?:boolean }
+export const hiveRespawnSeconds=(elapsed:number)=>15+5*Math.floor(Math.max(0,elapsed)/30);
 export interface HiveHooks { spawn:(w:CombatWorld,type:EnemyEntity['type'])=>EnemyEntity|null; movement:(w:CombatWorld,e:EnemyEntity)=>number; projectile:(w:CombatWorld,p:Partial<ProjectileEntity>&Pick<ProjectileEntity,'owner'|'x'|'y'|'vx'|'vy'|'rawDamage'>)=>ProjectileEntity|null; hit:(w:CombatWorld,damage:number,stun?:number)=>void }
 export const hiveRoot=(w:CombatWorld)=>w.hiveHost??w;
 const rosters=new WeakMap<CombatWorld,{hive:HiveState|undefined;actors:CombatWorld[]}>();

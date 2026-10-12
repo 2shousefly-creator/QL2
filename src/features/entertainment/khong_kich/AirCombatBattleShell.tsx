@@ -151,6 +151,7 @@ export const AirCombatBattleShell: React.FC<AirCombatBattleProps> = ({
   onExit,
 }) => {
   const statusStripRef = useRef<StatusStripHandle>(null);
+  const respawnNoticeRef = useRef<HTMLDivElement>(null);
   const durationNodes = useRef<Partial<Record<SkillId, HTMLSpanElement | null>>>({});
   const stageRef = useRef<HTMLDivElement | null>(null);
   const [rendererState, setRendererState] = useState<"loading" | "pixi" | "legacy" | "failed">("loading");
@@ -409,7 +410,8 @@ export const AirCombatBattleShell: React.FC<AirCombatBattleProps> = ({
       lastTime = now;
       if (world.destruction || world.aftermath || [...world.pauseReasons].some(reason => reason !== "tooltip")) {
         resetPlayerControl(); resetSkillPress();
-      } else if (!playerControlRef.current) setPlayerInputActive(world, false);
+      } else if(world.hiveRespawn) resetPlayerControl();
+      else if (!playerControlRef.current) setPlayerInputActive(world, false);
       const paused = world.pauseReasons.size > 0;
       if(paused||document.hidden)soundManager.stopWater();
       if (!document.hidden && presentation) {
@@ -448,6 +450,15 @@ export const AirCombatBattleShell: React.FC<AirCombatBattleProps> = ({
           lastStatusUiUpdate = now;
         }
         statusStripRef.current?.renderProgress(world);
+        const respawnNotice=respawnNoticeRef.current;
+        if(respawnNotice){
+          const revive=world.hiveRespawn,waiting=!!revive&&!world.ended&&!world.destruction;
+          respawnNotice.hidden=!waiting;
+          if(waiting){
+            const message=`Chiến cơ của bạn đã bị hạ gục. Hồi sinh sau ${Math.max(1,Math.ceil(revive.until-world.elapsed))} giây`;
+            if(respawnNotice.textContent!==message)respawnNotice.textContent=message;
+          }
+        }
         for (const id of skillIds) {
           const node = durationNodes.current[id], timer = getActiveSkillDuration(world, id);
           if (node) { node.hidden = !timer; node.style.setProperty("--skill-duration", String(timer ? timer.progress ?? 1 : 0)); }
@@ -525,7 +536,7 @@ export const AirCombatBattleShell: React.FC<AirCombatBattleProps> = ({
     if (runtime && !runtime.canMove()) return;
     const owner = playerControlRef.current;
     if (!owner || !activePointers.current.has(owner.pointerId) || !owner.target.hasPointerCapture(owner.pointerId)) resetPlayerControl();
-    if (event.button !== 0 || suppressedPointers.current.has(event.pointerId) || worldRef.current.pauseReasons.size > 0 || playerControlRef.current || worldRef.current.ended || worldRef.current.destruction || worldRef.current.aftermath) return;
+    if (event.button !== 0 || suppressedPointers.current.has(event.pointerId) || worldRef.current.pauseReasons.size > 0 || playerControlRef.current || worldRef.current.ended || worldRef.current.destruction || worldRef.current.aftermath || worldRef.current.hiveRespawn) return;
     event.preventDefault();
     const point = pointFromEvent(event);
     draggingRef.current = true;
@@ -713,7 +724,8 @@ export const AirCombatBattleShell: React.FC<AirCombatBattleProps> = ({
       {rendererState === "loading" && <div role="status" className="pointer-events-none absolute inset-0 z-30 grid place-items-center bg-slate-950 text-sm text-cyan-100">Đang chuẩn bị chiến trường…</div>}
       {rendererState === "failed" && <div role="alert" className="absolute inset-0 z-30 flex flex-col items-center justify-center gap-4 bg-slate-950 text-sm text-white"><p>Không thể mở chiến trường trên thiết bị này.</p><button type="button" onClick={onExit} className="rounded-xl border border-cyan-300 px-5 py-3">Quay lại</button></div>}
       {rendererState === "legacy" && <span className="pointer-events-none absolute right-2 top-[13%] z-10 text-[8px] text-slate-400">Hiển thị tương thích</span>}
-      {hpRatio < 0.3 && <div className="pointer-events-none absolute inset-0 z-[5] rounded-2xl" style={{ boxShadow: "inset 0 0 55px rgba(225,29,72," + ((0.3 - hpRatio) * 1.6) + ")" }} />}
+      {hpRatio > 0 && hpRatio < 0.3 && <div className="pointer-events-none absolute inset-0 z-[5] rounded-2xl" style={{ boxShadow: "inset 0 0 55px rgba(225,29,72," + ((0.3 - hpRatio) * 1.6) + ")" }} />}
+      <div ref={respawnNoticeRef} hidden className="air-hive-respawn-notice" role="status" aria-live="polite" aria-atomic="true"/>
       <section className="air-combat-hud absolute inset-x-0 top-0 z-10 border-b border-cyan-300/30 bg-slate-950/95 text-white" style={{ height: AIR_COMBAT_WORLD.hudHeight / 720 * 100 + "%" }} data-hud-region="fixed">
         <AirCombatTacticalHud soloScore={runtime?.score()} world={worldRef.current} hud={hud} reducedMotion={reducedMotion} coreChoice={!!coreChoices || showEquipment || showCoreList || showPrimaryChoice || showExitConfirm}
           onEquipmentInspect={inspectEquipment}

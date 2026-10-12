@@ -77,7 +77,7 @@ export const AirCombatResult: React.FC<AirCombatResultProps> = ({
         </div>
         <p className="mt-1 text-xs font-semibold uppercase tracking-[0.22em] text-[var(--modal-info)]">Báo cáo nhiệm vụ</p>
         <h2 className="modal-title">
-          {summary.stageVictory ? `HOÀN THÀNH MÀN ${summary.stageId}` : summary.destroyed ? "Chiến Cơ Bị Hạ" : "Hết Thời Gian Xuất Kích"}
+          {summary.stageVictory ? `HOÀN THÀNH MÀN ${summary.stageId}` : summary.destroyed ? summary.stageId===5?"Tổ Đội Bị Tiêu Diệt":"Chiến Cơ Bị Hạ" : "Hết Thời Gian Xuất Kích"}
         </h2>
         <p className="mt-2 font-bold text-cyan-200">{stage?.displayName}</p>
         <p className="text-sm text-violet-200">{stage?.localizedName}</p>

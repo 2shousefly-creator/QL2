@@ -24,7 +24,7 @@ const tactics:Partial<Record<EnemyType,string>>={
 export function HiveIntel(){
  return <details className="mt-4 text-xs text-slate-300"><summary className="cursor-pointer font-semibold text-amber-200">Hồ sơ chiến trường · cơ chế và chỉ số</summary>
   <div className="mt-2 max-h-72 space-y-3 overflow-y-auto pr-2">
-   <p>Đồng minh hồi sinh sau 60 giây giao chiến, đầy Máu và tài nguyên, bảo vệ 2 giây. Dừng đếm khi trận tạm dừng. Các kỹ năng đang hồi tiếp tục hồi khi đồng minh bị hạ.</p>
+   <p>Cả ba chiến cơ hồi sinh tại vị trí bị hạ, đầy Máu và tài nguyên, miễn sát thương 3 giây. Thời gian chờ chốt lúc bị hạ: 15 giây + 5 giây cho mỗi 30 giây trận đấu đã qua (phút thứ 5: 65 giây). Dừng đếm khi trận tạm dừng. Hồi chiêu tiếp tục trong lúc chờ; kỹ năng bật/tắt tự dừng. Chỉ thua khi cả đội không còn chiến cơ sống.</p>
    <p>580 quái thường và 12 Tinh Anh cấp 7.000 XP chiến đấu; cấp 18 cần tổng 6.900 XP. Lõi ở cấp 1 / 7 / 11 / 15. Các hỗ trợ của Forge Matron và Boss không cấp XP.</p>
    <p>Chỉ số nền quái thường Màn 5 bằng ×2 loại tương ứng ở Màn 4. Quái thường nhân tiếp ×0,5 / ×1 / ×1,5 / ×2 theo wave; Tinh Anh không nhân thêm. Hỏa lực là cơ sở để nhân hệ số của từng đòn.</p>
    {[...HIVE_NORMALS,...HIVE_ELITES,...HIVE_MOTHERS,'boss' as const].map(type=>{const c=stageEnemyConfig(type,5);return <article key={type}>
