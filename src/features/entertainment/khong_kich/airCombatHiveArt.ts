@@ -20,7 +20,6 @@ import { ULTIMATE_ART,ULTIMATE_FRAMES,paintUltimates } from './airCombatUltimate
 import { BIGBANG_ART,BIGBANG_FRAMES,paintBigBang } from './airCombatBigBangArt';
 import { EQUIPMENT_ART,paintEquipment } from './airCombatEquipmentArt';
 import { equipmentState } from './airCombatEquipmentState';
-import { getEffectiveAircraftStats } from './airCombatAircraft';
 import { getPlayerHitbox } from './airCombatHitboxes';
 import { activeShieldAmount } from './airCombatFeedback';
 import { getBasicAmmoVisual } from './airCombatAmmo';
@@ -54,7 +53,6 @@ export function paintHive(w:CombatWorld,p:HivePainter,reduced:boolean){
  p.sprite(bg,180,scroll+320,360,640);p.sprite(bg,180,scroll-320,360,640);
  for(let i=0;i<3;i++){const y=((now*30+i*260)%850)-90;p.sprite(enemies[14],i%2?350:10,y,95,130,0,.55);}
  const line=(x:number,y:number,ex:number,ey:number,width:number,index=6,alpha=1)=>p.sprite(ammo[index],(x+ex)/2,(y+ey)/2,width,Math.hypot(ex-x,ey-y),Math.atan2(ey-y,ex-x)-Math.PI/2,alpha);
- const bar=(x:number,y:number,width:number,value:number,max:number,index=12)=>{p.sprite(ammo[14],x,y,width,10);const ratio=Math.max(0,Math.min(1,value/Math.max(1,max)));if(ratio>0)p.sprite(ammo[index],x-width*(1-ratio)/2,y,width*ratio,10);};
  for(const z of w.hive?.hazards??[]){const alpha=z.fired?1:.45+.25*Math.sin(now*15);
   if(z.kind==='lane'||z.kind==='dash')line(z.x,z.y,z.endX,z.endY,z.radius*2,z.fired?4:5,alpha);
   else p.sprite(effects[24+Math.floor(now*9)%8],z.x,z.y,z.radius*2,z.radius*2,0,alpha);
@@ -66,7 +64,6 @@ export function paintHive(w:CombatWorld,p:HivePainter,reduced:boolean){
   if((e.hive?.exposedUntil??0)>now)p.sprite(effects[40+Math.floor(now*10)%8],e.x,e.y,e.radius*.9,e.radius*.9);
   if(e.hive?.repairTarget){const t=w.enemies.find(n=>n.id===e.hive!.repairTarget);if(t&&e.stun<=0)line(e.x,e.y,t.x,t.y,6);}
   if(e.stun>0)p.sprite(effects[48+Math.floor(now*12)%8],e.x,e.y,size,size,0,.7);
-  bar(e.x,e.y+size*.48,Math.min(80,size),e.hp,e.maxHp);
  }
  for(const actor of hiveActors(w)){
   const s=actor.aircraft,live=s.currentHp>0&&!actor.destruction;
@@ -76,7 +73,6 @@ export function paintHive(w:CombatWorld,p:HivePainter,reduced:boolean){
    p.sprite(exhaust,actor.playerX,actor.playerY+size*.48,size*.22,size*.45,0,.8);
    if(body)p.sprite(body,actor.playerX,actor.playerY,size,size);
    if(actor.playerInvulnerability>0||activeShieldAmount(s)>0)p.sprite(effects[32+Math.floor(now*9)%8],actor.playerX,actor.playerY,size*1.5,size*1.5,0,.65);
-   const stats=getEffectiveAircraftStats(s);bar(actor.playerX,actor.playerY+size*.5,44,s.currentHp,stats.maxHp);bar(actor.playerX,actor.playerY+size*.5+6,44,s.currentResource,stats.maxResource,13);
    if(actor!==w)p.text(`AI ${w.hive!.allies.find(a=>a.world===actor)!.slot+1}`,actor.playerX,actor.playerY-size*.6,7,'#a5f3fc');
   }
   for(const d of actor.decoys){const f=generatedFrame(s.aircraftId);if(f)p.sprite(f,d.x,d.y,30,30,0,.5);}
@@ -105,7 +101,7 @@ export function paintHive(w:CombatWorld,p:HivePainter,reduced:boolean){
   }
   for(const smoke of actor.particles){if(smoke.kind!=='missile_smoke')continue;const f=generatedFrame('shared_smoke')??effects[7];p.sprite(f,smoke.x,smoke.y,smoke.size,smoke.size,0,Math.min(.4,smoke.life/smoke.maxLife));}
   for(const v of actor.visualEvents){const age=now-(v.at??now);if(age<0||age>.65)continue;
-   if(v.kind==='damage_number'){p.text(String(Math.round(v.hpDamage??0)),v.x,v.y-age*24,8,v.target==='enemy'?'#ffefbd':'#ff7890');continue;}
+   if(v.kind==='damage_number')continue; // The shared campaign damage-label renderer owns these events.
    const row=v.kind==='aircraft_destroyed'||v.kind==='explosion'?0:v.kind==='shield_ripple'?4:7;
    p.sprite(effects[row*8+Math.min(7,Math.floor(age/.65*8))],v.x,v.y,v.size,v.size,0,1-age/.65);
   }

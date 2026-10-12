@@ -1,4 +1,4 @@
-import { AirCombatSideTabs, type CombatInspectionSide } from "./AirCombatSideTabs";
+import { AirCombatSideTabs, type CombatInspectionTab, type CombatInspectionSide } from "./AirCombatSideTabs";
 import { useIsPresent } from "motion/react";
 import { createPortal } from "react-dom";
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
@@ -118,12 +118,25 @@ function CraftFlight({ flight, onArrive }: { flight: Flight; onArrive: () => voi
 }
 interface EquipmentInventoryProps { readOnly?: boolean; world: CombatWorld; onClose: () => void; onChange: () => void }
 export function AirCombatEquipmentInventory({ opponentWorld, ...props }: EquipmentInventoryProps & { opponentWorld?: CombatWorld }) {
+  const present = useIsPresent();
   const [side, setSide] = useState<CombatInspectionSide>("player");
-  return <EquipmentInventoryContent {...props} world={side === "ai" && opponentWorld ? opponentWorld : props.world}
-    readOnly={!!opponentWorld || props.readOnly} side={opponentWorld ? side : undefined}
-    tabs={opponentWorld ? <AirCombatSideTabs value={side} onChange={setSide} panelId="air-equipment-side-panel" /> : undefined} />;
+  const allies=props.world.hive?.allies??[],hasSquad=allies.length>0;
+  const squadTabs:CombatInspectionTab[]=[{side:'player',label:'Người Chơi',aircraftId:props.world.aircraft.aircraftId},...allies.map((a,index)=>({side:(index?'ally2':'ally1') as CombatInspectionSide,label:'Đồng minh '+(index+1),aircraftId:a.world.aircraft.aircraftId}))];
+  const selected=side==='ally1'?allies[0]?.world:side==='ally2'?allies[1]?.world:side==='ai'?opponentWorld:props.world;
+  const hasTabs=!!opponentWorld||hasSquad;
+  // Player crafting keeps its existing UI clock while another squad member is inspected.
+  useEffect(()=>{
+    if(!hasSquad||props.readOnly||!present)return;
+    let frame=0;
+    const tick=()=>{tickEquipmentCraft(props.world.aircraft,performance.now()/1000);frame=requestAnimationFrame(tick);};
+    frame=requestAnimationFrame(tick);
+    return ()=>{cancelAnimationFrame(frame);cancelEquipmentCraft(props.world.aircraft);};
+  },[hasSquad,props.world,props.readOnly,present]);
+  return <EquipmentInventoryContent {...props} world={selected??props.world}
+    readOnly={!!opponentWorld||props.readOnly||side==='ally1'||side==='ally2'} side={hasTabs?side:undefined} externalCraftClock={hasSquad}
+    tabs={hasTabs?<AirCombatSideTabs value={side} onChange={setSide} panelId="air-equipment-side-panel" tabs={hasSquad?squadTabs:undefined}/>:undefined}/>;
 }
-function EquipmentInventoryContent({ world, onClose, onChange, readOnly = false, tabs, side }: EquipmentInventoryProps & { tabs?: React.ReactNode; side?: CombatInspectionSide }) {
+function EquipmentInventoryContent({ world, onClose, onChange, readOnly = false, tabs, side, externalCraftClock = false }: EquipmentInventoryProps & { tabs?: React.ReactNode; side?: CombatInspectionSide; externalCraftClock?:boolean }) {
   const present = useIsPresent();
   const s = world.aircraft, q = equipmentState(s);
   const equippedRegion = useRef<HTMLElement>(null), craftRegion = useRef<HTMLElement>(null), craftSlots = useRef<(HTMLDivElement | null)[]>([]);
@@ -172,10 +185,10 @@ function EquipmentInventoryContent({ world, onClose, onChange, readOnly = false,
   useEffect(() => {
     if (readOnly) return;
     let frame = 0;
-    const tick = () => { const now = performance.now() / 1000; tickEquipmentCraft(s, now); setClock(now); frame = requestAnimationFrame(tick); };
+    const tick = () => { const now = performance.now() / 1000; if(!externalCraftClock)tickEquipmentCraft(s, now); setClock(now); frame = requestAnimationFrame(tick); };
     frame = requestAnimationFrame(tick);
-    return () => { cancelAnimationFrame(frame); cancelEquipmentCraft(s); };
-  }, [s, readOnly]);
+    return () => { cancelAnimationFrame(frame); if(!externalCraftClock)cancelEquipmentCraft(s); };
+  }, [s, readOnly, externalCraftClock]);
   const inside = (region: HTMLElement | null, d: Drag) => { const r = region?.getBoundingClientRect(); return !!r && d.x >= r.left && d.x <= r.right && d.y >= r.top && d.y <= r.bottom; };
   const inspect = (id: EquipmentRewardId, source: HTMLElement) => setTooltip({ id, source });
   const dragging = (d: Drag | null) => { if (readOnly) return; if (d) setTooltip(null); setDrag(d); };
@@ -205,7 +218,7 @@ function EquipmentInventoryContent({ world, onClose, onChange, readOnly = false,
     const visible=[...q.equipped,...q.craftSlots,...q.components.slice(q.componentPage*EQUIPMENT_PAGE_SIZE,(q.componentPage+1)*EQUIPMENT_PAGE_SIZE),...completed.slice(q.completedPage*EQUIPMENT_PAGE_SIZE,(q.completedPage+1)*EQUIPMENT_PAGE_SIZE)];
     if(!visible.some(item=>item?.instanceId===selection)){setSelection(null);setTooltip(null);}
   });
-  const [a, b] = q.craftSlots, result = a && b ? equipmentRecipe(a.definitionId, b.definitionId) : null, progress = q.craftJob ? Math.min(1, (clock - q.craftJob.startedUiAt) / 3) : 0;
+  const [a, b] = q.craftSlots, result = a && b ? equipmentRecipe(a.definitionId, b.definitionId) : null, progress = q.craftJob ? Math.min(1, Math.max(0, ((readOnly&&world.hiveHost?world.elapsed:clock) - q.craftJob.startedUiAt) / 3)) : 0;
   const inventory = (kind: "components" | "completed", title: string) => {
     const list = kind === "components" ? q.components : [...q.completed].sort((a, b) => Number(b.definitionId.startsWith("HL")) - Number(a.definitionId.startsWith("HL")) || a.instanceId - b.instanceId);
     const pageKey = kind === "components" ? "componentPage" : "completedPage", page = q[pageKey], pages = Math.max(1, Math.ceil(list.length / EQUIPMENT_PAGE_SIZE));
@@ -217,7 +230,7 @@ function EquipmentInventoryContent({ world, onClose, onChange, readOnly = false,
   const componentDrag = !!drag?.id.startsWith("TP"), craftInvalid = !!q.craftJob || !q.craftSlots.includes(null), craftHover = !!drag && inside(craftRegion.current, drag);
   const equipValid = !!drag && (drag.id === "VP01" ? q.equipped.some(Boolean) && q.items.VP01 > 0 : q.equipped.includes(null));
   return <AirCombatModal archetype="info" layer="exclusive-dialog" layout="viewport-safe" labelledBy="equipment-title" onClose={close} overlayClassName="equipment-inventory-overlay" panelClassName="equipment-inventory-panel">
-    <OverlayHeader><h2 id="equipment-title" className="modal-title">KHO TRANG BỊ</h2><p className="equipment-subtitle">{readOnly ? "Chỉ xem · Loadout SOLO tự động theo từng hiệp" : "Chạm để xem · Giữ 0,5 giây để kéo · Nhấp đúp Thành Phần để ghép"}</p>{tabs}</OverlayHeader>
+    <OverlayHeader><h2 id="equipment-title" className="modal-title">KHO TRANG BỊ</h2><p className="equipment-subtitle">{readOnly ? world.hiveHost ? "Chỉ xem · Đồng minh tự quản lý trang bị" : "Chỉ xem · Loadout SOLO tự động theo từng hiệp" : "Chạm để xem · Giữ 0,5 giây để kéo · Nhấp đúp Thành Phần để ghép"}</p>{tabs}</OverlayHeader>
     <OverlayBody id={side ? "air-equipment-side-panel" : undefined} role={side ? "tabpanel" : undefined} aria-labelledby={side ? "air-equipment-side-panel-" + side : undefined} className="equipment-inventory-body" data-compact={layout.compact} data-emergency={layout.emergency} data-magnet-drag={drag?.id === "VP01"} style={{ "--equipment-cell-size": `${layout.cell}px` } as React.CSSProperties}>
       <div ref={dashboard} className="equipment-dashboard">
       <div className="equipment-operations">
@@ -235,13 +248,13 @@ function EquipmentInventoryContent({ world, onClose, onChange, readOnly = false,
         </button>
         <button type="button" className="equipment-craft-button" disabled={readOnly || !result} onClick={() => { if (readOnly) return; q.craftJob ? cancelEquipmentCraft(s) : startEquipmentCraft(s, performance.now() / 1000); changed(); }}>{q.craftJob ? `HỦY · ${Math.round(progress * 100)}%` : "GHÉP"}</button>
       </div>
-      <p className="equipment-drop-label" role="status">{readOnly ? "Chỉ xem · Không thể ghép Trang Bị trong SOLO" : feedback && clock < feedback.until ? feedback.text : componentDrag ? craftInvalid ? q.craftJob ? "Đang ghép · Không thể thêm Thành Phần" : "Đã đầy · Craft Full" : "Thả Thành Phần vào đây để ghép" : "2 Thành Phần · Nhấp đúp ô ghép để trả về kho"}</p>
+      <p className="equipment-drop-label" role="status">{readOnly ? world.hiveHost ? "Chỉ xem · Đồng minh tự ghép trang bị" : "Chỉ xem · Không thể ghép Trang Bị trong SOLO" : feedback && clock < feedback.until ? feedback.text : componentDrag ? craftInvalid ? q.craftJob ? "Đang ghép · Không thể thêm Thành Phần" : "Đã đầy · Craft Full" : "Thả Thành Phần vào đây để ghép" : "2 Thành Phần · Nhấp đúp ô ghép để trả về kho"}</p>
       </section>
       </div>
       <div className="equipment-storage-area">
       <div className="equipment-inventories">{inventory("components", "Kho Trang Bị Thành Phần")}{inventory("completed", "Kho Hoàn Chỉnh/Huyền Thoại")}</div>
       </div>
-      <section className="equipment-item-tray"><h3>Vật Phẩm</h3><div className="equipment-item-grid"><div className="equipment-grid-cell"><Tile id="VP01" location="item" selected={selection === -1} quantity={q.items.VP01 ?? 0} locked={readOnly || !(q.items.VP01 > 0)} onSelect={() => setSelection(-1)} onInspect={inspect} onDouble={() => {}} onDrag={dragging} onDrop={drop} /></div>{[1,2,3,4].map(i => <div key={i} className="equipment-grid-cell" aria-hidden="true" />)}</div><small>{readOnly ? "Chỉ xem · Nam Châm không thể thay đổi loadout SOLO" : "Giữ 0,5 giây để kéo Nam Châm vào vùng đang mang"}</small></section>
+      <section className="equipment-item-tray"><h3>Vật Phẩm</h3><div className="equipment-item-grid"><div className="equipment-grid-cell"><Tile id="VP01" location="item" selected={selection === -1} quantity={q.items.VP01 ?? 0} locked={readOnly || !(q.items.VP01 > 0)} onSelect={() => setSelection(-1)} onInspect={inspect} onDouble={() => {}} onDrag={dragging} onDrop={drop} /></div>{[1,2,3,4].map(i => <div key={i} className="equipment-grid-cell" aria-hidden="true" />)}</div><small>{readOnly ? world.hiveHost ? "Chỉ xem · Đồng minh tự sử dụng Nam Châm" : "Chỉ xem · Nam Châm không thể thay đổi loadout SOLO" : "Giữ 0,5 giây để kéo Nam Châm vào vùng đang mang"}</small></section>
       </div>
     </OverlayBody>
     <OverlayFooter><ModalButton type="button" variant="primary" onClick={close}>Đóng Kho Trang Bị</ModalButton></OverlayFooter>

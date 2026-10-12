@@ -5,12 +5,12 @@ import { HiveThumbnail } from './HiveThumbnail';
 import type { EnemyType } from './airCombatTypes';
 
 const tactics:Partial<Record<EnemyType,string>>={
- swarm_needler:'Quạt 5 viên lệch trái/phải; chu kỳ 2,8–3,7 giây, vận tốc 100. Mỗi viên bằng 50% Hỏa lực.',
- razor_glider:'Cảnh báo tuyến lao 0,95 giây; lao trong 0,65 giây và rải 7 viên lưỡi liềm. Đổi hướng theo vị trí mục tiêu đã quan sát.',
- aegis_beetle:'Khiên trước bằng 35% Máu tối đa. Phá khiên khiến nó phản kích bằng quạt 9 viên; bắn từ phía sau bỏ qua tấm chắn.',
- siege_spitter:'Đánh dấu vị trí trong 1,25 giây, bán kính nổ 32; nổ gây 65% Hỏa lực, sau đó tỏa 6 viên bằng 30% sát thương vụ nổ.',
- signal_weaver:'Báo trước 1,2 giây, hành lang rộng 24; trúng chịu 70% Hỏa lực và choáng 0,5 giây. Quạt hỗ trợ 5 viên.',
- repair_wasp:'Sửa 0,5% Máu tối đa mỗi giây cho một mục tiêu trong 190 đơn vị. Liên kết ngắt khi bị choáng, khóa kỹ năng hoặc bị hạ.',
+ swarm_needler:'Quạt 5 viên lệch trái/phải; chu kỳ 11,2–14,8 giây trong wave thường, vận tốc 100. Mỗi viên bằng 50% Hỏa lực.',
+ razor_glider:'Cảnh báo tuyến lao 0,95 giây; lao trong 0,65 giây và rải 7 viên lưỡi liềm. Chu kỳ 5,6–7,4 giây trong wave thường; đổi hướng theo vị trí mục tiêu đã quan sát.',
+ aegis_beetle:'Khiên trước bằng 35% Máu tối đa. Phá khiên khiến nó phản kích bằng quạt 9 viên; bắn từ phía sau bỏ qua tấm chắn. Bắn thường mỗi 11,2–14,8 giây trong wave thường.',
+ siege_spitter:'Đánh dấu vị trí trong 1,25 giây, bán kính nổ 32; nổ gây 65% Hỏa lực, sau đó tỏa 6 viên bằng 30% sát thương vụ nổ. Chu kỳ kỹ năng 5,6–7,4 giây trong wave thường.',
+ signal_weaver:'Báo trước 1,2 giây, hành lang rộng 24; trúng chịu 70% Hỏa lực và choáng 0,5 giây. Trong wave thường: hành lang mỗi 5,6–7,4 giây; quạt hỗ trợ 5 viên mỗi 11,2–14,8 giây.',
+ repair_wasp:'Sửa 0,5% Máu tối đa mỗi giây cho một mục tiêu trong 190 đơn vị. Liên kết ngắt khi bị choáng, khóa kỹ năng hoặc bị hạ. Bắn thường mỗi 18 giây trong wave thường.',
  razor_marshal:'Luân phiên truy kích ba thành viên; cảnh báo 0,95 giây, lao 0,65 giây. Chu kỳ kỹ năng lớn 3,4 giây.',
  aegis_regent:'Khiên trước 35% Máu tối đa; quạt 7 viên qua tuyến bảo vệ, tăng thành 9 viên khi khiên vỡ. Chu kỳ 3,4 giây.',
  bombard_prelate:'Ba điểm pháo kích bán kính 48; lần lượt nổ sau 1,25 / 1,6 / 1,95 giây, tỏa 6 / 8 / 10 viên. Chu kỳ 3,4 giây.',

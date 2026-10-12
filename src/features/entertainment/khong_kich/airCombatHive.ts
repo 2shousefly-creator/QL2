@@ -7,7 +7,7 @@ import { advanceWaitingChest, claimWaitingChest } from './airCombatEquipmentRewa
 import { releaseState } from './airCombatReleaseState';
 import { chooseDuelPrimary } from './airCombatDuelCore';
 import { getPlayerHitbox, getEnemyHitbox, sweepAircraft, segmentVsAircraft, circleVsAircraft, createHitResult } from './airCombatHitboxes';
-import { HIVE_MOTHERS } from './airCombatHiveWaves';
+import { HIVE_NORMALS,HIVE_MOTHERS } from './airCombatHiveWaves';
 import { isElite } from './airCombatWaves';
 import { argentRecallOpportunity } from './airCombatArgentRuntime';
 import { cinderStacks } from './airCombatCinderRuntime';
@@ -18,7 +18,7 @@ import type { SkillId, CoreCard } from './airCombatTypes';
 
 export interface HiveAlly { world:CombatWorld; slot:number; respawn:number; thinkAt:number; skillAt:number; x:number;y:number; allocation:number; target?:number; seen:Map<number,number> }
 export interface HiveHazard { id:number; enemyId:number; kind:'blast'|'lane'|'dash'|'pulse'; x:number;y:number;endX:number;endY:number;radius:number; at:number; until:number; damage:number; fired:boolean; pattern:number }
-export interface HiveEnemy { coreOpen?:boolean; slot:number; attack:number; exposedUntil:number; shield:number; shieldBroken:boolean; phase:number; support:number; repairTarget?:number; dash?:{x:number;y:number;endX:number;endY:number;start:number;until:number;hits:Set<CombatWorld>} }
+export interface HiveEnemy { basicCooldown?:number; coreOpen?:boolean; slot:number; attack:number; exposedUntil:number; shield:number; shieldBroken:boolean; phase:number; support:number; repairTarget?:number; dash?:{x:number;y:number;endX:number;endY:number;start:number;until:number;hits:Set<CombatWorld>} }
 export interface HiveState { allies:HiveAlly[]; hazards:HiveHazard[]; effects:{row:number;x:number;y:number;size:number;at:number;duration:number}[]; majorReady:number; nextHazard:number; lootOwner?:number; ccUntil:number }
 export interface HiveHooks { spawn:(w:CombatWorld,type:EnemyEntity['type'])=>EnemyEntity|null; movement:(w:CombatWorld,e:EnemyEntity)=>number; projectile:(w:CombatWorld,p:Partial<ProjectileEntity>&Pick<ProjectileEntity,'owner'|'x'|'y'|'vx'|'vy'|'rawDamage'>)=>ProjectileEntity|null; hit:(w:CombatWorld,damage:number,stun?:number)=>void }
 export const hiveRoot=(w:CombatWorld)=>w.hiveHost??w;
@@ -37,6 +37,10 @@ export function createHive(root:CombatWorld,create:(id:CombatWorld['aircraft']['
  return hive;
 }
 export function hiveFx(w:CombatWorld,row:number,x:number,y:number,size:number,duration=.65){const h=hiveRoot(w).hive;if(!h)return;if(h.effects.length>=96)h.effects.shift();h.effects.push({row,x,y,size,at:hiveRoot(w).elapsed,duration});}
+// Only ordinary units in normal waves are slowed; escorts in Boss/elite waves retain their cadence.
+const slowedNormal=(w:CombatWorld,e:EnemyEntity)=>HIVE_NORMALS.includes(e.type)&&w.stage.waves[w.waveIndex].normalPower!==undefined;
+const normalSkill=(e:EnemyEntity)=>['razor_glider','siege_spitter','signal_weaver'].includes(e.type);
+const attackInterval=(w:CombatWorld,e:EnemyEntity,seconds:number,skill:boolean)=>seconds*(slowedNormal(w,e)?skill?2:4:1);
 export function initializeHiveEnemy(w:CombatWorld,e:EnemyEntity){
  if(w.stageId!==5)return;
  e.hive={slot:w.spawnedInWave,attack:0,exposedUntil:0,shield:0,shieldBroken:false,phase:1,support:0};
@@ -47,7 +51,9 @@ export function initializeHiveEnemy(w:CombatWorld,e:EnemyEntity){
  if(HIVE_MOTHERS.includes(e.type)||e.type==='boss')e.x=R.left+R.width/2;
  const leader=w.enemies.find(n=>n!==e&&n.hp>0&&HIVE_MOTHERS.includes(n.type));
  if(leader&&w.spawnedInWave<7){e.x=leader.x+(w.spawnedInWave%5-2)*38;e.y=leader.y+70;}
- e.fireCooldown=1.8+(w.spawnedInWave%6)*.25;
+ const opening=1.8+(w.spawnedInWave%6)*.25;
+ e.fireCooldown=attackInterval(w,e,opening,normalSkill(e));
+ if(e.type==='signal_weaver'&&slowedNormal(w,e))e.hive.basicCooldown=opening*4;
 }
 export function hiveArmorExposed(w:CombatWorld,e:EnemyEntity,contact?:{x:number;y:number}){
  return !!e.hive&&e.hive.exposedUntil>hiveRoot(w).elapsed&&!!contact&&Math.hypot(contact.x-e.x,contact.y-e.y)<=e.radius*.42;
@@ -242,9 +248,15 @@ export function updateHiveEnemy(w:CombatWorld,e:EnemyEntity,dt:number,hooks:Hive
   const repair=w.enemies.filter(n=>n!==e&&n.hp>0&&n.hp<n.maxHp&&Math.hypot(n.x-e.x,n.y-e.y)<190).sort((a,b)=>a.hp/a.maxHp-b.hp/b.maxHp)[0];
   h.repairTarget=repair?.id;if(repair)repair.hp=Math.min(repair.maxHp,repair.hp+repair.maxHp*(elite?.009:.005)*dt);
  }else h.repairTarget=undefined;
+ // Signal Weaver used to fire its ordinary fan and lane on one timer. Separate
+ // clocks preserve 25% ordinary fire and 50% skill frequency without slowing shots in flight.
+ if(h.basicCooldown!==undefined){
+  if(h.basicCooldown<=0&&(e.skillLockedUntil??0)<=w.elapsed){fan(w,e,hooks,Math.atan2(target.playerY-e.y,target.playerX-e.x),5,.2,105,damage*.35);h.basicCooldown=(2.8+w.random()*.9)*4;}
+ }
  if(e.fireCooldown>0||h.dash||(e.skillLockedUntil??0)>w.elapsed)return true;
  const aim=Math.atan2(target.playerY-e.y,target.playerX-e.x);h.attack++;
- e.fireCooldown=mother?7:boss?Math.max(1.5,3.4-h.phase*.35):elite?3.4:e.type==='repair_wasp'?4.5:2.8+w.random()*.9;
+ const interval=mother?7:boss?Math.max(1.5,3.4-h.phase*.35):elite?3.4:e.type==='repair_wasp'?4.5:2.8+w.random()*.9;
+ e.fireCooldown=attackInterval(w,e,interval,normalSkill(e));
  if(mother||boss||elite){
   if(w.elapsed<w.hive.majorReady){e.fireCooldown=.4;return true;}
   w.hive.majorReady=w.elapsed+1.4;
@@ -260,7 +272,7 @@ export function updateHiveEnemy(w:CombatWorld,e:EnemyEntity,dt:number,hooks:Hive
    if(mother){h.exposedUntil=w.elapsed+3.5;h.coreOpen=true;for(let i=0;i<3;i++){const lx=R.left+R.width*(.2+i*.3);hazard(w,e,'lane',lx,R.top,lx,R.bottom,12,2+i*.4,damage*.45);}}break;
   }
   case 'signal_weaver':case 'disruptor_monarch':{
-   const lx=target.playerX;hazard(w,e,'lane',lx,R.top,lx,R.bottom,elite?22:12,1.2,damage*.7,1);fan(w,e,hooks,aim,5,.2,105,damage*.35);break;
+   const lx=target.playerX;hazard(w,e,'lane',lx,R.top,lx,R.bottom,elite?22:12,1.2,damage*.7,1);if(h.basicCooldown===undefined)fan(w,e,hooks,aim,5,.2,105,damage*.35);break;
   }
   case 'brood_ark':h.exposedUntil=w.elapsed+3;h.coreOpen=true;fan(w,e,hooks,aim,13,.12,85,damage*.22);
    for(let i=-1;i<=1;i++){const a=aim+i*.35,p=hooks.projectile(w,{owner:'enemy',x:e.x,y:e.y,vx:Math.cos(a)*90,vy:Math.sin(a)*90,rawDamage:damage*.35,radius:6,sourceEnemyId:e.id,lifetime:1.6});if(p){p.hiveSplitAt=w.elapsed+1.25;p.hiveAmmo=2;}}break;

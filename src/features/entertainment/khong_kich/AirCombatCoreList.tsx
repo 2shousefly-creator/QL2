@@ -1,4 +1,5 @@
-import { AirCombatSideTabs, type CombatInspectionSide } from "./AirCombatSideTabs";
+import { hiveCoreDescription } from './airCombatHiveTooltips';
+import { AirCombatSideTabs, type CombatInspectionTab, type CombatInspectionSide } from "./AirCombatSideTabs";
 import { CoreSystemTag } from "./CoreSystemTag";
 import { AirCombatModal as AppModal } from "./AirCombatMotion";
 import React, { useLayoutEffect, useState } from "react";
@@ -10,10 +11,13 @@ import { getCoreTelemetryPresentation } from "./airCombatPresentation";
 import { CoreDescription } from "./CoreDescription";
 import type { AircraftCombatState } from "./airCombatTypes";
 
-export function AirCombatCoreList({ state, opponentState, onClose }: { state: AircraftCombatState; opponentState?: AircraftCombatState; onClose: () => void }) {
+export function AirCombatCoreList({ state, opponentState, allies=[], onClose }: { state: AircraftCombatState; opponentState?: AircraftCombatState; allies?:AircraftCombatState[]; onClose: () => void }) {
   const [side, setSide] = useState<CombatInspectionSide>("player");
-  return <CoreListContent state={side === "ai" && opponentState ? opponentState : state} onClose={onClose}
-    side={opponentState ? side : undefined} tabs={opponentState ? <AirCombatSideTabs value={side} onChange={setSide} panelId="air-core-side-panel" /> : undefined} />;
+  const squadTabs:CombatInspectionTab[]=[{side:'player',label:'Người Chơi',aircraftId:state.aircraftId},...allies.slice(0,2).map((a,index)=>({side:(index?'ally2':'ally1') as CombatInspectionSide,label:'Đồng minh '+(index+1),aircraftId:a.aircraftId}))];
+  const selected=side==='ally1'?allies[0]:side==='ally2'?allies[1]:side==='ai'?opponentState:state;
+  const hasTabs=!!opponentState||allies.length>0;
+  return <CoreListContent state={selected??state} onClose={onClose} side={hasTabs?side:undefined}
+    tabs={hasTabs?<AirCombatSideTabs value={side} onChange={setSide} panelId="air-core-side-panel" tabs={allies.length?squadTabs:undefined}/>:undefined}/>;
 }
 function CoreListContent({ state, onClose, tabs, side }: { state: AircraftCombatState; onClose: () => void; tabs?: React.ReactNode; side?: CombatInspectionSide }) {
   const owned = state.selectedCores.filter(id=>!["core_050","core_051","core_052"].includes(id)).flatMap(id => {
@@ -53,7 +57,7 @@ function CoreListContent({ state, onClose, tabs, side }: { state: AircraftCombat
             <div><h3 className="font-semibold">{title(selected)}</h3>
               <p className="text-xs text-slate-200">{CORE_TIER_LABELS[selected.tiers[0]]}</p><CoreSystemTag system={selected.system} tier={selected.tiers[0]} /></div>
           </div>
-          <p className="mt-2 text-sm leading-relaxed"><CoreDescription text={selected.description} />{selected.availability&&<small className="block mt-2"><CoreDescription text={selected.availability}/></small>}</p>
+          <p className="mt-2 text-sm leading-relaxed"><CoreDescription text={hiveCoreDescription(state,selected.id,selected.description)} />{selected.availability&&<small className="block mt-2"><CoreDescription text={selected.availability}/></small>}</p>
           {selected.skillId && <p className="mt-2 text-xs font-semibold">Kỹ năng {selected.skillSlot} · {SKILL_CONFIGS[selected.skillId].name}</p>}
           {selected.skillId && <p className="mt-1 text-xs text-violet-200">Hồi chiêu còn {(state.cooldowns[selected.skillId] || 0).toFixed(1).replace(".", ",")}s · Duy trì còn {(state.activeEffects[selected.skillId] || 0).toFixed(1).replace(".", ",")}s{selected.skillId === "escort_drone" && state.droneActive ? " · HawkEye đang hoạt động" : ""}</p>}
           {selected.id!=="core_210"&&<section className="mt-3 border-t border-white/15 pt-3" aria-label="Thống kê lõi">

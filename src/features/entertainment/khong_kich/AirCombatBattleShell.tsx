@@ -909,7 +909,7 @@ export const AirCombatBattleShell: React.FC<AirCombatBattleProps> = ({
         }}>Xác nhận</ModalButton></OverlayFooter>
       </AppModal>}
       {showEquipment && (!coreChoices || runtime) && <AirCombatEquipmentInventory opponentWorld={runtime?.getOpponentWorld?.()} readOnly={!!runtime} key="equipment" world={worldRef.current} onChange={()=>setHud(makeHudSnapshot(worldRef.current,true,pauseLabel(worldRef.current.pauseReasons)))} onClose={()=>{setShowEquipment(false);setPauseReason("equipment",false);}}/>}
-      {showCoreList && !coreChoices && <AirCombatCoreList opponentState={runtime?.getOpponentWorld?.().aircraft} key="core-list" state={worldRef.current.aircraft} onClose={() => { setShowCoreList(false); setPauseReason("coreList", false); }} />}
+      {showCoreList && !coreChoices && <AirCombatCoreList allies={worldRef.current.hive?.allies.map(a=>a.world.aircraft)} opponentState={runtime?.getOpponentWorld?.().aircraft} key="core-list" state={worldRef.current.aircraft} onClose={() => { setShowCoreList(false); setPauseReason("coreList", false); }} />}
 
       {worldRef.current.pauseReasons.has("user") && !coreChoices && !showExitConfirm && !showCoreList && !showPrimaryChoice && !showEquipment && (
         <ConfirmationDialog key="pause" status="warning" layer="exclusive-dialog" layout="viewport-safe" onClose={() => setPauseReason("user", false)} labelledBy="air-paused-title" panelClassName="text-center">

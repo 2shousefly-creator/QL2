@@ -901,3 +901,7 @@
 }
 @media (prefers-reduced-motion: reduce) { .air-equipment-reward-card { transition: none; } }
 .air-hive-squad{display:flex;gap:5px;align-items:center}.air-hive-ally{position:relative;width:34px;height:44px;background:#102131d9;border:1px solid #62cbe366;border-radius:5px}.air-hive-ally>div,.air-hive-ally>span:first-child{width:30px;height:30px}.air-hive-ally strong{position:absolute;right:0;top:0;font-size:9px;color:#fff2bb;text-shadow:0 1px 3px #000}.air-hive-ally>span:last-child{position:absolute;bottom:0;left:0;right:0;text-align:center;font-size:7px;color:#b4f0ff}
+
+.air-combat-side-tabs button{display:flex;align-items:center;justify-content:center;gap:5px;min-width:0}
+.air-combat-side-tabs .air-inspection-tab-portrait{width:24px;height:24px;flex-shrink:0}
+.air-combat-side-tabs button small{display:block;font-size:9px;font-weight:500;opacity:.8}

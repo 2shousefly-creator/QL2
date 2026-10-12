@@ -2997,6 +2997,7 @@ function updateEnemies(world: CombatWorld, dt: number): void {
         }
         enemy.age += dt;
         enemy.fireCooldown -= dt * rankEnemyFireRate(world,enemy) * sylvaFireRate(world,enemy);
+        if (enemy.hive?.basicCooldown !== undefined) enemy.hive.basicCooldown -= dt * rankEnemyFireRate(world,enemy) * sylvaFireRate(world,enemy);
         if (updateHiveEnemy(world,enemy,dt,hiveHooks)) continue;
         if (updateMirageEnemy(world, enemy, dt, stormbreakerHooks)) continue;
         if (updateStormbreakerEnemy(world, enemy, dt, stormbreakerHooks)) continue;
