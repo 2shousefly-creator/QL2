@@ -18,13 +18,13 @@ export function createHiveHud(host:HTMLDivElement){
   render(world:CombatWorld,delta:number,reduced:boolean,canvasDamage=true){
    ctx.setTransform(ratio,0,0,ratio,0,0);ctx.clearRect(0,0,360,640);layout.begin();
    const actors=hiveActors(world);
-   if(canvasDamage)labels.updateWorlds(actors,delta);
+   if(canvasDamage)labels.update(world,delta);
    for(const actor of actors){
     let view=views.get(actor);
     if(!view){view={bars:new HealthBarPresentation()};views.set(actor,view);}
     view.bars.begin(delta);
     if(actor===world)drawEnemyTrackingHud(ctx,world,view.bars);
-    if(canvasDamage)drawCinderTotals(ctx,actor,layout);
+    if(canvasDamage&&actor===world)drawCinderTotals(ctx,actor,layout);
     drawAircraftTrackingHud(ctx,actor,view.bars);view.bars.end();
    }
    if(canvasDamage)drawAircraftDamageLabels(ctx,labels.labels,reduced,layout);

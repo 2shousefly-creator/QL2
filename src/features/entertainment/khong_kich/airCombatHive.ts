@@ -22,7 +22,13 @@ export interface HiveEnemy { basicCooldown?:number; coreOpen?:boolean; slot:numb
 export interface HiveState { allies:HiveAlly[]; hazards:HiveHazard[]; effects:{row:number;x:number;y:number;size:number;at:number;duration:number}[]; majorReady:number; nextHazard:number; lootOwner?:number; ccUntil:number }
 export interface HiveHooks { spawn:(w:CombatWorld,type:EnemyEntity['type'])=>EnemyEntity|null; movement:(w:CombatWorld,e:EnemyEntity)=>number; projectile:(w:CombatWorld,p:Partial<ProjectileEntity>&Pick<ProjectileEntity,'owner'|'x'|'y'|'vx'|'vy'|'rawDamage'>)=>ProjectileEntity|null; hit:(w:CombatWorld,damage:number,stun?:number)=>void }
 export const hiveRoot=(w:CombatWorld)=>w.hiveHost??w;
-export const hiveActors=(w:CombatWorld)=>[hiveRoot(w),...(hiveRoot(w).hive?.allies.map(a=>a.world)??[])];
+const rosters=new WeakMap<CombatWorld,{hive:HiveState|undefined;actors:CombatWorld[]}>();
+export const hiveActors=(w:CombatWorld)=>{
+ const root=hiveRoot(w),cached=rosters.get(root);
+ if(cached&&cached.hive===root.hive)return cached.actors;
+ const actors=[root,...(root.hive?.allies.map(a=>a.world)??[])];
+ rosters.set(root,{hive:root.hive,actors});return actors;
+};
 export function createHive(root:CombatWorld,create:(id:CombatWorld['aircraft']['aircraftId'])=>CombatWorld):HiveState {
  const pool=AIRCRAFT_ORDER.filter(id=>id!==root.aircraft.aircraftId);
  const hive:HiveState={allies:[],hazards:[],effects:[],majorReady:0,nextHazard:1,ccUntil:0};
@@ -37,10 +43,10 @@ export function createHive(root:CombatWorld,create:(id:CombatWorld['aircraft']['
  return hive;
 }
 export function hiveFx(w:CombatWorld,row:number,x:number,y:number,size:number,duration=.65){const h=hiveRoot(w).hive;if(!h)return;if(h.effects.length>=96)h.effects.shift();h.effects.push({row,x,y,size,at:hiveRoot(w).elapsed,duration});}
-// Only ordinary units in normal waves are slowed; escorts in Boss/elite waves retain their cadence.
+// Keep the earlier skill cadence; ordinary fire is halved again, including escorts.
 const slowedNormal=(w:CombatWorld,e:EnemyEntity)=>HIVE_NORMALS.includes(e.type)&&w.stage.waves[w.waveIndex].normalPower!==undefined;
 const normalSkill=(e:EnemyEntity)=>['razor_glider','siege_spitter','signal_weaver'].includes(e.type);
-const attackInterval=(w:CombatWorld,e:EnemyEntity,seconds:number,skill:boolean)=>seconds*(slowedNormal(w,e)?skill?2:4:1);
+const attackInterval=(w:CombatWorld,e:EnemyEntity,seconds:number,skill:boolean)=>seconds*(skill?(slowedNormal(w,e)?2:1):HIVE_NORMALS.includes(e.type)?(slowedNormal(w,e)?8:2):1);
 export function initializeHiveEnemy(w:CombatWorld,e:EnemyEntity){
  if(w.stageId!==5)return;
  e.hive={slot:w.spawnedInWave,attack:0,exposedUntil:0,shield:0,shieldBroken:false,phase:1,support:0};
@@ -53,7 +59,7 @@ export function initializeHiveEnemy(w:CombatWorld,e:EnemyEntity){
  if(leader&&w.spawnedInWave<7){e.x=leader.x+(w.spawnedInWave%5-2)*38;e.y=leader.y+70;}
  const opening=1.8+(w.spawnedInWave%6)*.25;
  e.fireCooldown=attackInterval(w,e,opening,normalSkill(e));
- if(e.type==='signal_weaver'&&slowedNormal(w,e))e.hive.basicCooldown=opening*4;
+ if(e.type==='signal_weaver')e.hive.basicCooldown=attackInterval(w,e,opening,false);
 }
 export function hiveArmorExposed(w:CombatWorld,e:EnemyEntity,contact?:{x:number;y:number}){
  return !!e.hive&&e.hive.exposedUntil>hiveRoot(w).elapsed&&!!contact&&Math.hypot(contact.x-e.x,contact.y-e.y)<=e.radius*.42;
@@ -249,9 +255,9 @@ export function updateHiveEnemy(w:CombatWorld,e:EnemyEntity,dt:number,hooks:Hive
   h.repairTarget=repair?.id;if(repair)repair.hp=Math.min(repair.maxHp,repair.hp+repair.maxHp*(elite?.009:.005)*dt);
  }else h.repairTarget=undefined;
  // Signal Weaver used to fire its ordinary fan and lane on one timer. Separate
- // clocks preserve 25% ordinary fire and 50% skill frequency without slowing shots in flight.
+ // clocks preserve independent ordinary-fire and skill frequencies.
  if(h.basicCooldown!==undefined){
-  if(h.basicCooldown<=0&&(e.skillLockedUntil??0)<=w.elapsed){fan(w,e,hooks,Math.atan2(target.playerY-e.y,target.playerX-e.x),5,.2,105,damage*.35);h.basicCooldown=(2.8+w.random()*.9)*4;}
+  if(h.basicCooldown<=0&&(e.skillLockedUntil??0)<=w.elapsed){fan(w,e,hooks,Math.atan2(target.playerY-e.y,target.playerX-e.x),5,.2,105,damage*.35);h.basicCooldown=attackInterval(w,e,2.8+w.random()*.9,false);}
  }
  if(e.fireCooldown>0||h.dash||(e.skillLockedUntil??0)>w.elapsed)return true;
  const aim=Math.atan2(target.playerY-e.y,target.playerX-e.x);h.attack++;

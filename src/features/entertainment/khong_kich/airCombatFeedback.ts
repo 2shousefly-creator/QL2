@@ -20,14 +20,15 @@ export interface DamageLabel {
   critical: boolean;
   damageKind: "hp" | "shield";
   revision: number;
+  spawnId: number;
 }
 
 /** Presentation-only ring shared by Pixi and emergency Canvas. Never reads HP deltas. */
 export class DamageLabelPool {
   readonly labels: DamageLabel[];
-  constructor(private options: { limit?:number; mergeWindow?:number } = {}) {
+  constructor(private options: { limit?:number; mergeWindow?:number; preserveLifetime?:boolean } = {}) {
     this.labels = Array.from({ length: options.limit ?? DAMAGE_LABEL_LIMIT }, () => ({
-    active: false, age: 0, x: 0, y: 0, offset: 0, text: "", critical: false, damageKind: "hp", revision: 0,
+    active: false, age: 0, x: 0, y: 0, offset: 0, text: "", critical: false, damageKind: "hp", revision: 0, spawnId: 0,
     }));
   }
   private next = 0;
@@ -66,6 +67,7 @@ export class DamageLabelPool {
         const existing = (this.options.mergeWindow ?? 0) > 0 ? this.labels.find(label => {
           const batch = this.merged.get(label);
           return label.active && label.age < this.options.mergeWindow! && label.damageKind === damageKind && label.critical === critical
+            && Math.hypot(label.x-event.x,label.y-(event.y-10)) <= 18
             && batch?.world === targetWorld && batch.target === event.target && batch.entityId === event.entityId;
         }) : undefined;
         if(existing){
@@ -73,6 +75,11 @@ export class DamageLabelPool {
           existing.text=String(Math.round(batch.amount));existing.revision++;
           // Do not refresh age: continuous hits must never keep a label alive forever.
           continue;
+        }
+        if(this.options.preserveLifetime){
+          let searched=0;
+          while(searched<this.labels.length&&this.labels[this.next].active){this.next=(this.next+1)%this.labels.length;searched++;}
+          if(searched===this.labels.length)continue;
         }
         const label = this.labels[this.next];
         this.next = (this.next + 1) % this.labels.length;
@@ -87,6 +94,7 @@ export class DamageLabelPool {
         label.critical = critical;
         label.damageKind = damageKind;
         label.revision++;
+        label.spawnId++;
         if(this.options.mergeWindow)this.merged.set(label,{world:targetWorld,target:event.target,entityId:event.entityId,amount});
       }
       onSpawn?.(event);

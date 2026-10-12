@@ -1,7 +1,6 @@
 import { createHiveHud } from '../airCombatHiveHud';
 import { AirCombatDamageText } from './AirCombatDamageText';
 import { createHiveDamagePool,createHiveDamageLayout } from '../airCombatHiveDamage';
-import { hiveActors } from '../airCombatHive';
 import { Application,Container,Sprite,Texture,Rectangle,Assets,Text } from 'pixi.js';
 import { hiveArtUrls,paintHive,type HiveFrame,type HivePainter } from '../airCombatHiveArt';
 import type { CombatWorld } from '../airCombatRuntime';
@@ -21,12 +20,12 @@ export async function createHivePresentation(host:HTMLDivElement,world:CombatWor
  }
  const app=new Application();await app.init({width:360,height:640,resolution:Math.min(2,devicePixelRatio||1),autoDensity:true,antialias:false,autoStart:false,backgroundAlpha:0,preference:'webgl'});
  try{await Promise.all(urls.map(url=>Assets.load(url)));}catch(error){app.destroy(true);throw error;}
- const layer=new Container();app.stage.addChild(layer);app.canvas.style.cssText='display:block;width:100%;height:100%;pointer-events:none';host.appendChild(app.canvas);
- const textures=new Map<string,Texture>(),sprites:Sprite[]=[],labels:Text[]=[];let used=0,textUsed=0;
- const texture=(f:HiveFrame)=>{const key=f.url+':'+f.rect.join(',');let t=textures.get(key);if(!t){const source=Assets.get<Texture>(f.url).source,[x,y,w,h]=f.rect,iw=f.pixels?1:source.width,ih=f.pixels?1:source.height;t=new Texture({source,frame:new Rectangle(x*iw,y*ih,w*iw,h*ih)});textures.set(key,t);}return t;};
- const painter:HivePainter={sprite(f,x,y,w,h,r=0,alpha=1){if(used>=2400||w<=0||h<=0||alpha<=0||y+h<0||y-h>640||x+w<0||x-w>360)return;let sprite=sprites[used];if(!sprite){sprite=new Sprite();sprite.anchor.set(.5);sprites.push(sprite);layer.addChild(sprite);}sprite.visible=true;sprite.texture=texture(f);sprite.position.set(x,y);sprite.width=w;sprite.height=h;sprite.rotation=r;sprite.alpha=Math.max(0,Math.min(1,alpha));sprite.zIndex=used++;},text(value,x,y,size,color){if(textUsed>=240)return;let label=labels[textUsed];if(!label){label=new Text({text:'',style:{fontFamily:'Arial',fontSize:8,fontWeight:'bold'}});label.anchor.set(.5);labels.push(label);layer.addChild(label);}textUsed++;label.visible=true;label.text=value;label.position.set(x,y);label.style.fontSize=size;label.style.fill=color;label.zIndex=2500+textUsed;}};
- layer.sortableChildren=true;
+ const layer=new Container(),spriteLayer=new Container(),textLayer=new Container();layer.addChild(spriteLayer,textLayer);app.stage.addChild(layer);app.canvas.style.cssText='display:block;width:100%;height:100%;pointer-events:none';host.appendChild(app.canvas);
+ const textures=new Map<string,Texture>(),frameTextures=new WeakMap<HiveFrame,Texture>(),sprites:Sprite[]=[],labels:Text[]=[];let used=0,textUsed=0;
+ const texture=(f:HiveFrame)=>{const cached=frameTextures.get(f);if(cached)return cached;const key=f.url+':'+f.rect.join(',');let t=textures.get(key);if(!t){const source=Assets.get<Texture>(f.url).source,[x,y,w,h]=f.rect,iw=f.pixels?1:source.width,ih=f.pixels?1:source.height;t=new Texture({source,frame:new Rectangle(x*iw,y*ih,w*iw,h*ih)});textures.set(key,t);}frameTextures.set(f,t);return t;};
+ const painter:HivePainter={sprite(f,x,y,w,h,r=0,alpha=1){if(used>=2400||w<=0||h<=0||alpha<=0||y+h<0||y-h>640||x+w<0||x-w>360)return;let sprite=sprites[used];if(!sprite){sprite=new Sprite();sprite.anchor.set(.5);sprites.push(sprite);spriteLayer.addChild(sprite);}sprite.visible=true;sprite.texture=texture(f);sprite.position.set(x,y);sprite.width=w;sprite.height=h;sprite.rotation=r;sprite.alpha=Math.max(0,Math.min(1,alpha));used++;},text(value,x,y,size,color){if(textUsed>=240)return;let label=labels[textUsed];if(!label){label=new Text({text:'',style:{fontFamily:'Arial',fontSize:8,fontWeight:'bold'}});label.anchor.set(.5);labels.push(label);textLayer.addChild(label);}textUsed++;label.visible=true;if(label.text!==value)label.text=value;label.position.set(x,y);label.style.fontSize=size;label.style.fill=color;}};
+ // Stable pool order keeps the same sprite/text layering without sorting every frame.
  const damageView=new AirCombatDamageText(createHiveDamagePool()),layout=createHiveDamageLayout(),hud=createHiveHud(host);
  app.stage.addChild(damageView.root);
- return {render(w,dt,reduced){if(document.hidden)return;used=0;textUsed=0;paintHive(w,painter,reduced);for(let i=used;i<sprites.length;i++)sprites[i].visible=false;for(let i=textUsed;i<labels.length;i++)labels[i].visible=false;layout.begin();damageView.update(w,dt,reduced,false,layout,hiveActors(w));app.render();hud.render(w,dt,reduced,false);},destroy(){hud.destroy();damageView.destroy();for(const t of textures.values())t.destroy(false);app.destroy(true,{children:true,texture:false,textureSource:false});}};
+ return {render(w,dt,reduced){if(document.hidden)return;used=0;textUsed=0;paintHive(w,painter,reduced);for(let i=used;i<sprites.length;i++)sprites[i].visible=false;for(let i=textUsed;i<labels.length;i++)labels[i].visible=false;layout.begin();damageView.update(w,dt,reduced,false,layout);app.render();hud.render(w,dt,reduced,false);},destroy(){hud.destroy();damageView.destroy();for(const t of textures.values())t.destroy(false);app.destroy(true,{children:true,texture:false,textureSource:false});}};
 }

@@ -59,7 +59,7 @@ export class AirCombatDamageText {
       const progress = label.age / DAMAGE_LABEL_SECONDS;
       const position = rotated ? mirrorPoint(label.x, label.y) : label;
       text.scale.set((label.critical ? 1.2 : 1) * (reducedMotion ? 1 : 1 + 0.16 * Math.max(0, 1 - label.age / 0.12)));
-      const placed=layout.place(position.x + label.offset * (reducedMotion ? 0.4 : 0.4 + progress),
+      const placed=layout.placeFloating(label,label.spawnId,position.x + label.offset * (reducedMotion ? 0.4 : 0.4 + progress),
         position.y - (rotated?20:0) - progress * (reducedMotion ? 7 : 24),text.width+2,text.height+2);
       if(!placed){text.visible=false;continue;}
       text.position.set(placed.x,placed.y);

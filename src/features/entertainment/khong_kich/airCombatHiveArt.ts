@@ -5,7 +5,12 @@ import ammoUrl from '../../../assets/khong-kich/26.31.0/ammunition.png';
 import phantomBeamUrl from '../../../assets/khong-kich/26.25.0/compat/v2-phantom-firing-beam.png';
 import { phantomLaserBounds,PHANTOM_LASER_VISUAL_WIDTH } from './airCombatPhantom';
 import { GAMEPLAY_SAFE_RECT as R } from './airCombatConfig';
-import { getAmmoVisualKey } from './airCombatAmmo';
+import { AMMO_VISUALS,BASIC_AMMO_KEYS,getAmmoVisualKey,getMissileVisual,missileRenderRotation } from './airCombatAmmo';
+import { getMissilePose } from './airCombatMissilePresentation';
+import { releaseState,playerAirframeScale } from './airCombatReleaseState';
+import { satellitePositions } from './airCombatExpansionRuntime';
+import { paintGeneratedMechanisms } from './airCombatGeneratedMechanisms';
+import missileAmmoUrl from '../../../assets/khong-kich/26.25.0/compat/v2-hardcore-ammo-atlas.png';
 import basicUrl from '../../../assets/khong-kich/26.25.0/compat/v2-player-basic-ammo-atlas.png';
 import vfxUrl from '../../../assets/khong-kich/v2/vfx-atlas.png';
 import { GENERATED_ART, generatedFrameId } from './airCombatGeneratedArt';
@@ -19,10 +24,8 @@ import { RANKED_ART,RANKED_VFX_FRAMES,paintRankSkills,rankProjectileVisual } fro
 import { ULTIMATE_ART,ULTIMATE_FRAMES,paintUltimates } from './airCombatUltimateArt';
 import { BIGBANG_ART,BIGBANG_FRAMES,paintBigBang } from './airCombatBigBangArt';
 import { EQUIPMENT_ART,paintEquipment } from './airCombatEquipmentArt';
-import { equipmentState } from './airCombatEquipmentState';
 import { getPlayerHitbox } from './airCombatHitboxes';
 import { activeShieldAmount } from './airCombatFeedback';
-import { getBasicAmmoVisual } from './airCombatAmmo';
 import { hiveActors } from './airCombatHive';
 import type { CombatWorld } from './airCombatRuntime';
 import type { AtlasFrame } from './pixi/airCombatPixiTypes';
@@ -33,6 +36,8 @@ export interface HiveFrame {url:string;rect:readonly number[];pixels?:boolean}
 const cell=(url:string,index:number,cols=4,rows=4):HiveFrame=>({url,rect:[index%cols/cols,Math.floor(index/cols)/rows,1/cols,1/rows]});
 const enemies=HIVE_ENTITY_CELLS.map((_,i)=>cell(enemyUrl,i)),ammo=Array.from({length:16},(_,i)=>cell(ammoUrl,i)),effects=Array.from({length:64},(_,i)=>cell(effectUrl,i,8,8));
 const bg:HiveFrame={url:backgroundUrl,rect:[0,0,1,1]};
+const phantomBeam:HiveFrame={url:phantomBeamUrl,rect:[0,0,1,1]};
+const playerAmmoFrames=new Map(Object.entries(AMMO_VISUALS).map(([key,v])=>[key,{url:key.endsWith('_basic_ammo')?basicUrl:missileAmmoUrl,rect:key.endsWith('_basic_ammo')?[v.cell[0]/3,0,1/3,1/2]:[v.cell[0]/4,v.cell[1]/4,1/4,1/4]} as HiveFrame]));
 const sources:Record<string,string>={...TERRA_SOURCES,...SYLVA_SOURCES,...CINDER_RASTER_SOURCES,
  argentVfx:ARGENT_ART.vfx,argentAircraft:ARGENT_ART.aircraft,riptideVfx:RIPTIDE_ART.vfx,riptideAircraft:RIPTIDE_ART.aircraft,
  cinderVfx:CINDER_ART.vfx,cinderProjectiles:CINDER_ART.projectiles,cinderFeedback:CINDER_ART.feedback,guardianVfx:CINDER_ART.guardianVfx,
@@ -43,7 +48,7 @@ function generatedFrame(id:string):HiveFrame|undefined {let f=generated.get(id);
 function atlas(f:AtlasFrame):HiveFrame|undefined {let result=cached.get(f);if(result)return result;const id=generatedFrameId(f);result=id?generatedFrame(id):undefined;if(!result&&sources[f.atlas])result={url:sources[f.atlas],rect:f.rect};if(result)cached.set(f,result);return result;}
 export interface HivePainter {sprite(f:HiveFrame,x:number,y:number,w:number,h:number,rotation?:number,alpha?:number):void;text(value:string,x:number,y:number,size:number,color:string):void}
 export function hiveArtUrls(w:CombatWorld){
- const urls=new Set([enemyUrl,effectUrl,backgroundUrl,ammoUrl,basicUrl,phantomBeamUrl,...Object.values(sources)]);
+ const urls=new Set([enemyUrl,effectUrl,backgroundUrl,ammoUrl,basicUrl,missileAmmoUrl,phantomBeamUrl,...Object.values(sources)]);
  const owners=new Set(hiveActors(w).map(a=>a.aircraft.aircraftId));
  for(const page of Object.values(GENERATED_ART.pages))if(page.bundle==='shared'||[...owners].some(id=>page.bundle===`aircraft-${id}`))urls.add(page.url);
  return [...urls];
@@ -76,6 +81,12 @@ export function paintHive(w:CombatWorld,p:HivePainter,reduced:boolean){
    if(actor!==w)p.text(`AI ${w.hive!.allies.find(a=>a.world===actor)!.slot+1}`,actor.playerX,actor.playerY-size*.6,7,'#a5f3fc');
   }
   for(const d of actor.decoys){const f=generatedFrame(s.aircraftId);if(f)p.sprite(f,d.x,d.y,30,30,0,.5);}
+  const release=releaseState(s);
+  for(const ghost of release.ghosts){const f=generatedFrame(s.aircraftId);if(f){const size=46.92*playerAirframeScale(s);p.sprite(f,ghost.x,ghost.y,size,size,ghost.angle,.38*Math.min(1,(ghost.until-now)*3));}}
+  if(live)for(const orb of satellitePositions(actor))p.sprite(ammo[10],orb.x,orb.y,16,16,now*2);
+  const mark=release.mark;
+  if(mark&&mark.until>now){const target=actor.enemies.find(e=>e.id===mark.target&&e.hp>0);if(target)p.sprite(generatedFrame('shared_mark')??ammo[10],target.x,target.y,target.radius*2,target.radius*2,0,.9);}
+  paintGeneratedMechanisms(actor,(_id,asset,x,y,width,height,alpha)=>{const f=generatedFrame(asset);if(f)p.sprite(f,x,y,width,height,0,alpha);},reduced);
   if(s.droneActive){const f=generatedFrame('escort_drone')??generatedFrame('phantom');if(f)p.sprite(f,actor.droneX,actor.droneY,24,24);}
   const painted=(frames:Record<string,AtlasFrame>)=>(_id:number,key:string,x:number,y:number,width:number,height:number,r:number,alpha:number)=>{if(frames[key])draw(frames[key],x,y,width,height,r,alpha);};
   paintTerra(actor,painted(TERRA_FRAMES),reduced);paintSylva(actor,painted(SYLVA_FRAMES),reduced);paintSylvaSeeds(actor,painted(SYLVA_FRAMES),reduced);
@@ -87,17 +98,18 @@ export function paintHive(w:CombatWorld,p:HivePainter,reduced:boolean){
   for(const warning of actor.warnings){if(warning.owner!=='player')continue;const radius=warning.radius;const f=generatedFrame(s.aircraftId==='breaker'?'gravity_anchor':'focus_laser')??effects[32+Math.floor(now*9)%8];p.sprite(f,warning.x,warning.y,radius*2,radius*2,0,.6);}
   if(live&&s.status.stunnedUntil>s.coreState.time)p.sprite(effects[48+Math.floor(now*10)%8],actor.playerX,actor.playerY,60,60);
   if(actor.laserCharge>0){const f=generatedFrame('charge')??effects[32+Math.floor(now*9)%8];p.sprite(f,actor.playerX,actor.playerY-22,45,45);}
-  if(actor.laserCharge<=0&&actor.laserRemaining>0){const bounds=phantomLaserBounds(actor.playerX,actor.playerY);p.sprite({url:phantomBeamUrl,rect:[0,0,1,1]},actor.playerX,R.top+bounds.height/2,PHANTOM_LASER_VISUAL_WIDTH,bounds.height);}
+  if(actor.laserCharge<=0&&actor.laserRemaining>0){const bounds=phantomLaserBounds(actor.playerX,actor.playerY);p.sprite(phantomBeam,actor.playerX,R.top+bounds.height/2,PHANTOM_LASER_VISUAL_WIDTH,bounds.height);}
   for(const shot of actor.projectiles){if(actor!==w&&shot.owner==='enemy')continue;
    let f:HiveFrame|undefined;const rank=rankProjectileVisual(shot);if(rank)f=atlas(RANKED_VFX_FRAMES[rank]);
    if(!f&&shot.owner!=='enemy'){
-    const id=getAmmoVisualKey(shot)??({black_eagle:'viper_basic_ammo',breaker:'titan_basic_ammo',phantom:'phantom_basic_ammo'} as Record<string,string>)[s.aircraftId]??`${s.aircraftId}_basic_ammo`;
-    f=generatedFrame(id);
-    if(!f){const visual=getBasicAmmoVisual(shot.ammoVisualKey);if(visual)f={url:basicUrl,rect:[visual.cell[0]/3,0,1/3,1/2]};}
+    const id=getAmmoVisualKey(shot)??BASIC_AMMO_KEYS[s.aircraftId];
+    f=generatedFrame(id)??playerAmmoFrames.get(id);
    }
    f??=ammo[shot.hiveAmmo??(shot.projectileKind==='bullet'?0:2)];
    const size=shot.projectileKind==='bullet'?Math.max(9,shot.radius*3):Math.max(18,shot.radius*3);
-   p.sprite(f,shot.x,shot.y,size,size*1.6,Math.atan2(shot.vy,shot.vx)+Math.PI/2);
+   const missile=getMissileVisual(shot);
+   const rotation=missile?missileRenderRotation(getMissilePose(shot,reduced).heading):Math.atan2(shot.vy,shot.vx)+Math.PI/2;
+   p.sprite(f,shot.x,shot.y,missile?.width??size,missile?.height??size*1.6,rotation);
   }
   for(const smoke of actor.particles){if(smoke.kind!=='missile_smoke')continue;const f=generatedFrame('shared_smoke')??effects[7];p.sprite(f,smoke.x,smoke.y,smoke.size,smoke.size,0,Math.min(.4,smoke.life/smoke.maxLife));}
   for(const v of actor.visualEvents){const age=now-(v.at??now);if(age<0||age>.65)continue;

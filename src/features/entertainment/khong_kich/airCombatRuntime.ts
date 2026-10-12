@@ -333,6 +333,7 @@ export function tickDuelActor(actor: CombatWorld, dt: number): void {
     tickReleaseCores(actor, dt); tickEquipment(actor, dt, equipmentHooks);
     syncEffectiveMaxHp(actor.aircraft); tickExpansion(actor, dt, expansionHooks);
     tickCoreTelemetry(actor.aircraft, dt); updateTacticalCores(actor, dt);
+    if(actor.hiveHost)updateBounty(actor);
     actor.playerInvulnerability = Math.max(0, actor.playerInvulnerability - dt);
     dispatchCoreEvent("tick", coreContext(actor, { dt }));
     if(!actor.hiveHost)updateEnemies(actor, dt); // The Hive host alone owns enemy clocks.
@@ -737,6 +738,7 @@ export interface TacticalCoreState {
 export interface CombatWorld {
  hive?:HiveState;
  hiveHost?:CombatWorld;
+ hiveBorrowed?:Set<ProjectileEntity>;
     bigBang?: BigBangCast;
     destruction?: { at: number; x: number; y: number };
     aftermath?: { remaining: number };
@@ -885,11 +887,19 @@ function tickHiveAllies(root:CombatWorld,dt:number){
    activateHiveMarks(root);continue;
   }
   const borrowed=root.projectiles.filter(p=>p.owner==='enemy');
+  const borrowedSet=new Set(borrowed);w.hiveBorrowed=borrowedSet;
   w.projectiles.push(...borrowed);
   thinkHiveAlly(a,dt);tickDuelActor(w,dt);resolveScheduledBigBang(w);updateEnemyPlayerCollisions(w);
-  const retained=new Set(w.projectiles.filter(p=>p.owner==='enemy'));
-  for(let i=root.projectiles.length-1;i>=0;i--)if(borrowed.includes(root.projectiles[i])&&!retained.has(root.projectiles[i]))root.projectiles.splice(i,1);
+  const retained=new Set(w.projectiles);
+  for(let i=root.projectiles.length-1;i>=0;i--){
+   const projectile=root.projectiles[i];if(!borrowedSet.has(projectile))continue;
+   if(!retained.has(projectile)){
+    // Intercepted ammunition returns to its owner's pool, without awarding a graze.
+    projectile.grazeCandidate=false;projectile.duelGraze=undefined;recycleProjectile(root,i);
+   }else if(projectile.owner!=='enemy')root.projectiles.splice(i,1); // Ownership transferred to the ally.
+  }
   w.projectiles=w.projectiles.filter(p=>p.owner!=='enemy');
+  w.hiveBorrowed=undefined;
   if(w.aircraft.currentHp<=0)downHiveAlly(w);
   activateHiveMarks(root);
  }
@@ -1038,6 +1048,7 @@ function acquireEnemy(world: CombatWorld): EnemyEntity {
 }
 function recycleEnemy(world: CombatWorld, index: number): void {
     freezeAstraTarget(world,world.enemies[index]);
+    for(const ally of world.hive?.allies??[])freezeAstraTarget(ally.world,world.enemies[index]);
     const [enemy] = world.enemies.splice(index, 1);
     if (enemy) {
         world.threats = world.threats.filter(t => t.enemyId !== enemy.id);
@@ -1045,6 +1056,12 @@ function recycleEnemy(world: CombatWorld, index: number): void {
         world.tactical?.openingHits.delete(enemy.id);
         world.skillCores.syncLockouts.delete(enemy.id);
     if(world.skillCores.syncTarget===enemy.id){world.skillCores.syncTarget=null;world.skillCores.syncUntil=0;}
+        for(const ally of world.hive?.allies??[]){
+            const actor=ally.world;
+            actor.skillCores.enemyEffects.delete(enemy.id);actor.skillCores.syncLockouts.delete(enemy.id);
+            actor.tactical?.openingHits.delete(enemy.id);
+            if(actor.skillCores.syncTarget===enemy.id){actor.skillCores.syncTarget=null;actor.skillCores.syncUntil=0;}
+        }
     }
     if (enemy && world.pools.enemies.length < AIR_COMBAT_WORLD.maxEnemies) {
         world.pools.enemies.push(enemy);
@@ -1087,7 +1104,7 @@ function awardProjectileGraze(world: CombatWorld): void {
 }
 function recycleProjectile(world: CombatWorld, index: number): void {
     const [projectile] = world.projectiles.splice(index, 1);
-    if(projectile?.mirrorBorrowed || (projectile && world.hiveHost?.projectiles.includes(projectile)))return;
+    if(projectile?.mirrorBorrowed || (projectile && world.hiveBorrowed?.has(projectile)))return;
     if(projectile)clearMissilePose(projectile);
     if(!world.aftermath && !world.destruction && projectile?.astraLance && !projectile.procFree && projectile.skillId==="stellar_lance")endAircraftSkill(world.aircraft,"stellar_lance");
     if (projectile?.salvoId) world.skillCores.salvos.find(s => s.id === projectile.salvoId)?.live.delete(projectile.id);
@@ -1255,7 +1272,7 @@ function addProjectile(world: CombatWorld, values: Partial<ProjectileEntity> & P
     if (values.projectileKind === "missile") {
         Object.assign(projectile, {
             projectileKind: values.projectileKind, missileState: "loiter", targetId: null, homing: false,
-            heading: Math.atan2(values.vy, values.vx), cruiseSpeed: Math.hypot(values.vx, values.vy),
+            heading: values.telemetryCore===106 ? -Math.PI/2 : Math.atan2(values.vy, values.vx), cruiseSpeed: Math.hypot(values.vx, values.vy),
             turnRate: values.turnRate ?? 3.2,
             angularAcceleration: values.skillId === "missile_swarm" ? 12 : 10,
             acceleration: values.skillId === "missile_swarm" ? 600 : 300,
@@ -3877,7 +3894,7 @@ function applyDamageToEnemyInternal(world: CombatWorld, enemy: EnemyEntity, rawD
                 contact?.x ?? enemy.x, contact?.y ?? enemy.y, enemy.type === "boss" ? 34 : 18, .16);
             enemy.magnetic.hitFxAt = world.elapsed + .12;
         }
-        emitVisual(world, { kind: "damage_number", x: enemy.x, y: enemy.y, size: enemy.radius, hpDamage: damage, shieldAbsorbed: absorbed, target: "enemy", critical: resolved.critical, entityId: enemy.id, provenance:intrinsic?.source==="cinder_burn"?{source:"cinder_burn",ownerId:intrinsic.ownerId!,targetId:enemy.id,session:intrinsic.burnSession!}:undefined, genericShieldAbsorbed:enemy.aircraftTarget?0:absorbed });
+        emitVisual(world, { kind: "damage_number", x: contact?.x??enemy.x, y: contact?.y??enemy.y, size: enemy.radius, hpDamage: damage, shieldAbsorbed: absorbed, target: "enemy", critical: resolved.critical, entityId: enemy.id, provenance:intrinsic?.source==="cinder_burn"?{source:"cinder_burn",ownerId:intrinsic.ownerId!,targetId:enemy.id,session:intrinsic.burnSession!}:undefined, genericShieldAbsorbed:enemy.aircraftTarget?0:absorbed });
         emitVisual(world, { kind: "hit", x: contact?.x??enemy.x, y: contact?.y??enemy.y, size: enemy.radius, entityId: enemy.id, directContact:!!contact, skillId });
         world.damageDealt += damage;
         if(!contact)addParticles(world, enemy.x, enemy.y, color, 2);
@@ -4668,7 +4685,11 @@ function updateProjectiles(world: CombatWorld, dt: number): void {
     for (let i = world.projectiles.length - 1; i >= 0; i--) {
         const p = world.projectiles[i];
         if(p.mirrorBorrowed || (world.hiveHost && p.owner==='enemy'))continue;
-        const motionDt = Math.min(dt,p.firedAt===undefined?dt:Math.max(0,world.elapsed-p.firedAt)) * (p.mirrorSlow ?? 1) * slowExpansionProjectile(world, p) * rankProjectileSpeed(world,p,rankHooks);
+        let coreSlow=slowExpansionProjectile(world,p);
+        if(world.hive&&p.owner==='enemy')for(const ally of world.hive.allies){
+            if(!ally.respawn&&ally.world.aircraft.currentHp>0)coreSlow=Math.min(coreSlow,slowExpansionProjectile(ally.world,p));
+        }
+        const motionDt = Math.min(dt,p.firedAt===undefined?dt:Math.max(0,world.elapsed-p.firedAt)) * (p.mirrorSlow ?? 1) * coreSlow * rankProjectileSpeed(world,p,rankHooks);
         if (p.lifetime <= 0) { recycleProjectile(world, i); continue; }
         p.previousX = p.x;
         p.previousY = p.y;

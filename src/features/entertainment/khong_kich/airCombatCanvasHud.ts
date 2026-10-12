@@ -112,7 +112,7 @@ export function drawAircraftDamageLabels(ctx: CanvasRenderingContext2D, damageLa
     const y = position.y - (rotated?20:0) - progress * (reducedMotion ? 7 : 24);
     const metrics=ctx.measureText(label.text);
     const height=Math.max(NORMAL_DAMAGE_FONT_SIZE*(label.critical?1.2:1)*pop,metrics.actualBoundingBoxAscent+metrics.actualBoundingBoxDescent)+6;
-    const placed=layout.place(x,y,metrics.width+6,height);if(!placed)continue;
+    const placed=layout.placeFloating(label,label.spawnId,x,y,metrics.width+6,height);if(!placed)continue;
     ctx.strokeText(label.text, placed.x, placed.y); ctx.fillText(label.text, placed.x, placed.y);
   }
   ctx.restore();

@@ -299,6 +299,7 @@ function drawEnemyGlyph(
 }
 
 const mirrorPresentations = new WeakMap<CombatWorld, { accents: CanvasCombatAccents; bars: HealthBarPresentation; labels: DamageLabelPool; time: number }>();
+const damageLayouts = new WeakMap<CombatWorld,DamageTextLayout>();
 
 export function drawLegacyWorld(
   ctx: CanvasRenderingContext2D,
@@ -815,7 +816,9 @@ export function drawLegacyWorld(
   if (combatOnly) { ctx.restore(); return; }
 
   drawEnemyTrackingHud(ctx,world,healthBars);
-  const damageLayout = new DamageTextLayout();
+  let damageLayout = damageLayouts.get(world);
+  if(!damageLayout){damageLayout=new DamageTextLayout();damageLayouts.set(world,damageLayout);}
+  damageLayout.begin();
   drawCinderTotals(ctx,world,damageLayout);
   drawAircraftDamageLabels(ctx,damageLabels,reducedMotion,damageLayout);
   drawAircraftTrackingHud(ctx, world, healthBars);
