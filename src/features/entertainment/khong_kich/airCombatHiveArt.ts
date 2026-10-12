@@ -35,9 +35,14 @@ function warningShape(z:HiveHazard,progress:number):HazardShape {
   const ys=outline.filter((_,i)=>i%2===1);
   shape={outline,fill:[],top:Math.min(...ys),bottom:Math.max(...ys)};hazardShapes.set(z,shape);
  }
- // Clip the cached silhouette at a horizontal front, including diagonal capsules.
  const {outline,fill,top,bottom}=shape,cut=top+(bottom-top)*progress;fill.length=0;
  if(progress<=0)return shape;
+ // Circular warnings expand radially and reach the fixed rim when the cast fires.
+ if(z.kind==='blast'||z.kind==='pulse'){
+  for(let i=0;i<outline.length;i+=2)fill.push(z.x+(outline[i]-z.x)*progress,z.y+(outline[i+1]-z.y)*progress);
+  return shape;
+ }
+ // Lane and dash warnings retain their top-to-bottom fill, even when diagonal.
  for(let i=0,j=outline.length-2;i<outline.length;j=i,i+=2){
   const ax=outline[j],ay=outline[j+1],bx=outline[i],by=outline[i+1];
   if((ay<=cut)!==(by<=cut))fill.push(ax+(bx-ax)*(cut-ay)/(by-ay),cut);
