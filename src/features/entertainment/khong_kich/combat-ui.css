@@ -915,6 +915,8 @@
 .air-hive-skill-ranks i{width:.5cqw;height:.5cqw;border-radius:50%;background:#344958;flex-shrink:0}
 .air-hive-skill-ranks i[data-lit=true]{background:#ffe69d;box-shadow:0 0 .6cqw #ffb938}
 .air-hive-ally-skill:focus-visible{outline:1px solid #a5f3fc;outline-offset:1px}
+.air-hive-skill-duration{position:absolute;inset:-1px;width:calc(100% + 2px);height:calc(100% + 2px);z-index:1;pointer-events:none;visibility:hidden;fill:none;stroke:#4ade80;stroke-width:2;stroke-linejoin:round}
+.air-hive-skill-duration[data-active=true]{visibility:visible}
 
 .air-combat-side-tabs button{display:flex;align-items:center;justify-content:center;gap:5px;min-width:0}
 .air-combat-side-tabs .air-inspection-tab-portrait{width:24px;height:24px;flex-shrink:0}

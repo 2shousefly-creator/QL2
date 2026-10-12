@@ -92,7 +92,7 @@ export function hiveExplosionShake(w:CombatWorld,reduced:boolean){
  if(!reduced)for(const fx of w.hive?.effects??[]){
   const age=w.elapsed-fx.at;
   if((fx.blast||fx.row===7||fx.row===6)&&age>=0&&age<.34){
-   const impulse=fx.blast?2.4:Math.min(1.4,fx.size/50);
+   const impulse=(fx.blast?2.4:Math.min(1.4,fx.size/50))*.5;
    strength=Math.max(strength,impulse*(1-age/.34)**2);
   }
  }

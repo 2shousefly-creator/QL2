@@ -12,6 +12,7 @@ import { Flame, FlaskConical, Shield, ShieldMinus, Zap, Lock, BatteryWarning, He
 import { CoreDescription } from "./CoreDescription";
 import { CombatUiIcon } from "./CombatUiIcon";
 import { AirCombatStatusProgress } from './airCombatStatusProgress';
+import { AirCombatAllySkillProgress } from './airCombatAllySkillProgress';
 import { getBossStatusPresentations } from './airCombatBossStatuses';
 import { getStatusPresentations, type StatusPresentation } from "./airCombatPresentation";
 import type { CombatWorld } from "./airCombatRuntime";
@@ -28,6 +29,13 @@ function StatusBorder({status,progress}:{status:StatusPresentation;progress:AirC
  return <svg className="air-status-border" viewBox="0 0 24 24" aria-hidden="true" data-group={status.group}>
    <path d={BORDER_PATH} className="air-status-border-track"/>
    <path ref={bind} d={BORDER_PATH} pathLength="1"/>
+ </svg>;
+}
+function AllySkillBorder({world,id,progress}:{world:CombatWorld;id:SkillId;progress:AirCombatAllySkillProgress}) {
+ const path=useRef<SVGPathElement>(null);
+ useLayoutEffect(()=>{if(path.current)return progress.bind(world,id,path.current);},[world,id,progress]);
+ return <svg className="air-hive-skill-duration" viewBox="0 0 24 24" aria-hidden="true">
+  <path ref={path} d={BORDER_PATH} pathLength="1"/>
  </svg>;
 }
 
@@ -69,6 +77,7 @@ export const AirCombatStatusStrip = React.memo(forwardRef<StatusStripHandle, { t
     }
   };
   const [progress] = useState(()=>new AirCombatStatusProgress());
+  const [allySkillProgress] = useState(()=>new AirCombatAllySkillProgress());
   const snapshotWorld = useRef<CombatWorld|null>(null);
   const [items, setItems] = useState<StatusPresentation[]>([]);
   const [squad,setSquad]=useState<{world:CombatWorld;id:CombatWorld["aircraft"]["aircraftId"];seconds:number;hp:number;max:number;level:number;skills:{id:SkillId;rank:number;cooldown:number}[]}[]>([]);
@@ -84,7 +93,7 @@ export const AirCombatStatusStrip = React.memo(forwardRef<StatusStripHandle, { t
     if (wasOpen !== (next !== null)) tooltipChange.current(next !== null);
   };
   // Battle owns outside-dismiss, Escape and dismiss-pointer suppression.
-  useImperativeHandle(ref, () => ({ close, renderProgress:world=>{progress.render(world);renderAllyHud(world);}, update(world) {
+  useImperativeHandle(ref, () => ({ close, renderProgress:world=>{progress.render(world);renderAllyHud(world);allySkillProgress.render(world);}, update(world) {
     const changedWorld=snapshotWorld.current!==world;
     if (world.pauseReasons.size > 0 && !changedWorld) return;
     if(changedWorld){snapshotWorld.current=world;close();}
@@ -98,7 +107,7 @@ export const AirCombatStatusStrip = React.memo(forwardRef<StatusStripHandle, { t
     const empJam = String(world.aircraft.status.resourceJammedUntil > world.aircraft.coreState.time);
     if (surface && surface.dataset.empJam !== empJam) surface.dataset.empJam = empJam;
     setItems(previous => sameSnapshot(previous, next) ? previous : next);
-  } }), [close,progress]);
+  } }), [close,progress,allySkillProgress]);
   const playerItems = items.filter(s => !s.id.startsWith('boss:'));
   const bossItems = items.filter(s => s.id.startsWith('boss:'));
   const active = items.find(s => s.id === selected) ?? overflowStatus(selected, playerItems);
@@ -132,6 +141,7 @@ export const AirCombatStatusStrip = React.memo(forwardRef<StatusStripHandle, { t
           onClick={()=>onInspectSkill?.(a.world,skill.id)}>
           <CombatUiIcon kind="skill" id={skill.id} fallback="◆"/>
           {skill.cooldown>0&&<span className="air-hive-skill-cooldown">{skill.cooldown}s</span>}
+          <AllySkillBorder world={a.world} id={skill.id} progress={allySkillProgress}/>
           <span className="air-hive-skill-ranks" aria-hidden="true">{SKILL_RANKS[skill.id].map((_,i)=><i key={i} data-lit={i<skill.rank}/>)}</span>
         </button>)}
       </div>
