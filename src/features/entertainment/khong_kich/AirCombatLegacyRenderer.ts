@@ -311,7 +311,8 @@ export function drawLegacyWorld(
   accents: CanvasCombatAccents,
   presentationTime = world.elapsed,
   stormbreakerPresentation?: StormbreakerPresentation,
-  combatOnly = false
+  combatOnly = false,
+  hiveActor = false
 ): void {
   const { width, height, hudHeight } = AIR_COMBAT_WORLD;
   const aircraft = AIRCRAFT_CONFIGS[aircraftId];
@@ -510,6 +511,7 @@ export function drawLegacyWorld(
   },reducedMotion);
   ctx.restore();
   for (const projectile of world.projectiles) {
+    if (hiveActor && projectile.owner === "enemy") continue;
     if (rankProjectileVisual(projectile)||ultimateProjectileVisual(projectile)) continue;
     if(projectile.mirageVisual || projectile.mirrorBorrowed)continue;
     if(world.stormbreaker&&projectile.stormbreakerVisual)continue;
@@ -563,6 +565,7 @@ export function drawLegacyWorld(
   ctx.shadowBlur = 0;
 
   for (const enemy of world.enemies) {
+    if (hiveActor) break;
     if (enemy.aircraftTarget) continue;
     if (enemy.hp <= 0) continue;
     if (!world.ended && enemy.hp>0 && enemy.type === "kamikaze" && (enemy.kamikazeState === "charge" || enemy.kamikazeState === "dash")) {
@@ -785,7 +788,7 @@ export function drawLegacyWorld(
   }, reducedMotion, presentationTime);
   paintEnemyForegroundMarks(world,tacticalPainter);
   accents.draw(ctx, world, reducedMotion);
-  if (!combatOnly) accents.drawDestruction((event, age) => {
+  if (!combatOnly || hiveActor) accents.drawDestruction((event, age) => {
     const layers = [[2,1,.75,1.4],[1,3,.18,.65],[3,3,.65,2.1],[0,2,.5,1],[1,2,1.2,1.1]];
     for (const [col,row,duration,scale] of layers) {
       if (age >= duration) continue;
@@ -805,7 +808,7 @@ export function drawLegacyWorld(
     drawLegacyWorld(ctx, mirror, mirror.aircraft.aircraftId, reducedMotion, [], view.bars, view.accents, presentationTime, undefined, true);
     ctx.restore();
   }
-  if(!combatOnly){
+  if(!combatOnly || hiveActor){
     for(const [owner,mirrored] of [[world,false],[mirror,true]] as const){
       if(!owner)continue;ctx.save();if(mirrored){ctx.translate(MIRROR_TRANSFORM.x,MIRROR_TRANSFORM.y);ctx.rotate(MIRROR_TRANSFORM.rotation);}
       paintSylvaSeeds(owner,(_id,key,x,y,width,height,rotation,alpha,additive)=>{ctx.save();ctx.globalCompositeOperation=additive?'lighter':'source-over';drawMagneticFrame(ctx,SYLVA_FRAMES[key],x,y,width,height,rotation,alpha);ctx.restore();},reducedMotion);ctx.restore();

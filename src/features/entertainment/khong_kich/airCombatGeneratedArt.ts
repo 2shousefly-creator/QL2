@@ -30,6 +30,7 @@ export function generatedBundles(world?:CombatWorld):Set<string> {
   const owners=new Set<AircraftId>(world?[world.aircraft.aircraftId]:Object.keys(GENERATED_ART.items).filter(id=>GENERATED_ART.items[id].kind==='aircraft') as AircraftId[]);
   const opponent=(world?.duelOpponent??world?.mirage?.mirror)?.context.world;
   if(opponent)owners.add(opponent.aircraft.aircraftId);
+  for(const ally of world?.hive?.allies??[])owners.add(ally.world.aircraft.aircraftId);
   // Mirage can summon a different owner later; its roster is preloaded atomically.
   if(world?.mirage)for(const item of Object.values(GENERATED_ART.items))if(item.kind==='aircraft')owners.add(item.id as AircraftId);
   const result=new Set(['shared',...Array.from(owners,id=>`aircraft-${id}`)]);

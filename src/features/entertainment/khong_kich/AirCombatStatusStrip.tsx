@@ -1,3 +1,5 @@
+import { drawAircraftTrackingHud } from './airCombatCanvasHud';
+import { HealthBarPresentation } from './airCombatFeedback';
 import { AircraftPreview } from "./AircraftPreview";
 import { AIRCRAFT_CONFIGS } from "./airCombatConfig";
 import { getEffectiveAircraftStats } from "./airCombatAircraft";
@@ -51,6 +53,19 @@ function sameSnapshot(previous: StatusPresentation[], next: StatusPresentation[]
 /** Labels use 10 Hz snapshots; Battle paints fractional border progress each frame. */
 export const AirCombatStatusStrip = React.memo(forwardRef<StatusStripHandle, { top: number; onTooltipChange: (open: boolean) => void }>(({ top, onTooltipChange }, ref) => {
   const host = useRef<HTMLDivElement>(null);
+  const allyCanvases = useRef<(HTMLCanvasElement|null)[]>([]);
+  const allyHud = useRef<{world:CombatWorld;bars:HealthBarPresentation;time:number}[]>([]);
+  const renderAllyHud = (world:CombatWorld) => {
+    for(const ally of world.hive?.allies??[]) {
+      const canvas=allyCanvases.current[ally.slot],actor=ally.world;
+      const ctx=canvas?.getContext('2d');if(!ctx)continue;
+      let view=allyHud.current[ally.slot];
+      if(!view||view.world!==actor)view=allyHud.current[ally.slot]={world:actor,bars:new HealthBarPresentation(),time:actor.elapsed};
+      const delta=Math.max(0,Math.min(.1,actor.elapsed-view.time));view.time=actor.elapsed;
+      ctx.setTransform(2,0,0,2,0,0);ctx.clearRect(0,0,74,38);
+      view.bars.begin(delta);drawAircraftTrackingHud(ctx,actor,view.bars,false,{x:1,y:1,width:72});view.bars.end();
+    }
+  };
   const [progress] = useState(()=>new AirCombatStatusProgress());
   const snapshotWorld = useRef<CombatWorld|null>(null);
   const [items, setItems] = useState<StatusPresentation[]>([]);
@@ -67,7 +82,7 @@ export const AirCombatStatusStrip = React.memo(forwardRef<StatusStripHandle, { t
     if (wasOpen !== (next !== null)) tooltipChange.current(next !== null);
   };
   // Battle owns outside-dismiss, Escape and dismiss-pointer suppression.
-  useImperativeHandle(ref, () => ({ close, renderProgress:world=>progress.render(world), update(world) {
+  useImperativeHandle(ref, () => ({ close, renderProgress:world=>{progress.render(world);renderAllyHud(world);}, update(world) {
     const changedWorld=snapshotWorld.current!==world;
     if (world.pauseReasons.size > 0 && !changedWorld) return;
     if(changedWorld){snapshotWorld.current=world;close();}
@@ -103,7 +118,7 @@ export const AirCombatStatusStrip = React.memo(forwardRef<StatusStripHandle, { t
       {bossItems.map(renderStatus)}
     </div>}
     <div className="air-status-player">
-    {squad.length>0&&<div className="air-hive-squad" aria-label="Đồng minh AI">{squad.map(a=><div key={a.id} className="air-hive-ally" title={`${AIRCRAFT_CONFIGS[a.id].name} · Cấp ${a.level} · ${a.seconds?`Hồi sinh sau ${a.seconds} giây`:`Máu ${a.hp}/${a.max}`}`}><AircraftPreview aircraftId={a.id}/><strong>{a.seconds?`${a.seconds}s`:`Lv${a.level}`}</strong><span>{a.seconds?"HỒI SINH":`${Math.round(a.hp/a.max*100)}%`}</span></div>)}</div>}
+    {squad.length>0&&<div className="air-hive-squad" aria-label="Đồng minh AI">{squad.map((a,slot)=><div key={a.id} className="air-hive-ally" data-hive-ally={slot} title={`${AIRCRAFT_CONFIGS[a.id].name} · Cấp ${a.level} · ${a.seconds?`Hồi sinh sau ${a.seconds} giây`:`Máu ${a.hp}/${a.max}`}`}><AircraftPreview aircraftId={a.id}/><strong>{a.seconds?`${a.seconds}s`:`Lv${a.level}`}</strong><canvas ref={node=>{allyCanvases.current[slot]=node;}} width={148} height={76} className="air-hive-ally-bars" aria-label="Máu và tài nguyên đồng minh"/>{a.seconds>0&&<span className="air-hive-ally-respawn">HỒI SINH</span>}</div>)}</div>}
     {(["buff", "debuff"] as const).map(group => {
       const all = playerItems.filter(s => s.group === group), shown = all.length > 10 ? all.slice(0, 9) : all;
       return <div key={group} className={`air-status-group air-status-group--${group}`} aria-label={group === "buff" ? "Buff" : "Debuff"}>

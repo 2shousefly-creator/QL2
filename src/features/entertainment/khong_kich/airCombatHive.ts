@@ -17,7 +17,7 @@ import { castWorldSkill, getWorldSkillAvailability, movePlayerByDelta, ensureCor
 import type { SkillId, CoreCard } from './airCombatTypes';
 
 export interface HiveAlly { world:CombatWorld; slot:number; respawn:number; thinkAt:number; skillAt:number; x:number;y:number; allocation:number; target?:number; seen:Map<number,number> }
-export interface HiveHazard { id:number; enemyId:number; kind:'blast'|'lane'|'dash'|'pulse'; x:number;y:number;endX:number;endY:number;radius:number; at:number; until:number; damage:number; fired:boolean; pattern:number }
+export interface HiveHazard { id:number; enemyId:number; kind:'blast'|'lane'|'dash'|'pulse'; x:number;y:number;endX:number;endY:number;radius:number; start:number; at:number; until:number; damage:number; fired:boolean; cancelled?:boolean; pattern:number }
 export interface HiveEnemy { basicCooldown?:number; coreOpen?:boolean; slot:number; attack:number; exposedUntil:number; shield:number; shieldBroken:boolean; phase:number; support:number; repairTarget?:number; dash?:{x:number;y:number;endX:number;endY:number;start:number;until:number;hits:Set<CombatWorld>} }
 export interface HiveState { allies:HiveAlly[]; hazards:HiveHazard[]; effects:{row:number;x:number;y:number;size:number;at:number;duration:number}[]; majorReady:number; nextHazard:number; lootOwner?:number; ccUntil:number }
 export interface HiveHooks { spawn:(w:CombatWorld,type:EnemyEntity['type'])=>EnemyEntity|null; movement:(w:CombatWorld,e:EnemyEntity)=>number; projectile:(w:CombatWorld,p:Partial<ProjectileEntity>&Pick<ProjectileEntity,'owner'|'x'|'y'|'vx'|'vy'|'rawDamage'>)=>ProjectileEntity|null; hit:(w:CombatWorld,damage:number,stun?:number)=>void }
@@ -233,7 +233,7 @@ export function thinkHiveAlly(a:HiveAlly,dt:number){
 }
 function hazard(w:CombatWorld,e:EnemyEntity,kind:HiveHazard['kind'],x:number,y:number,endX:number,endY:number,radius:number,delay:number,damage:number,pattern=0){
  const h=w.hive!;if(h.hazards.length>=16)return;
- h.hazards.push({id:h.nextHazard++,enemyId:e.id,kind,x,y,endX,endY,radius,at:w.elapsed+delay,until:w.elapsed+delay+(kind==='lane'?.4:.15),damage,fired:false,pattern});
+ h.hazards.push({id:h.nextHazard++,enemyId:e.id,kind,x,y,endX,endY,radius,start:w.elapsed,at:w.elapsed+delay,until:w.elapsed+delay+(kind==='lane'?.4:.15),damage,fired:false,pattern});
 }
 function fan(w:CombatWorld,e:EnemyEntity,h:HiveHooks,angle:number,count:number,spacing:number,speed:number,damage:number){
  for(let i=0;i<count;i++){const a=angle+(i-(count-1)/2)*spacing;h.projectile(w,{owner:'enemy',x:e.x,y:e.y,vx:Math.cos(a)*speed,vy:Math.sin(a)*speed,rawDamage:damage,radius:3.2,sourceEnemyId:e.id,sourceEnemyType:e.type,hiveAmmo:e.type==='razor_glider'||e.type==='razor_marshal'?1:0,color:'#ffad38',lifetime:7});}
@@ -281,7 +281,7 @@ export function updateHiveEnemy(w:CombatWorld,e:EnemyEntity,dt:number,hooks:Hive
    const lx=target.playerX;hazard(w,e,'lane',lx,R.top,lx,R.bottom,elite?22:12,1.2,damage*.7,1);if(h.basicCooldown===undefined)fan(w,e,hooks,aim,5,.2,105,damage*.35);break;
   }
   case 'brood_ark':h.exposedUntil=w.elapsed+3;h.coreOpen=true;fan(w,e,hooks,aim,13,.12,85,damage*.22);
-   for(let i=-1;i<=1;i++){const a=aim+i*.35,p=hooks.projectile(w,{owner:'enemy',x:e.x,y:e.y,vx:Math.cos(a)*90,vy:Math.sin(a)*90,rawDamage:damage*.35,radius:6,sourceEnemyId:e.id,lifetime:1.6});if(p){p.hiveSplitAt=w.elapsed+1.25;p.hiveAmmo=2;}}break;
+   for(let i=-1;i<=1;i++){const a=aim+i*.35,p=hooks.projectile(w,{owner:'enemy',x:e.x,y:e.y,vx:Math.cos(a)*90,vy:Math.sin(a)*90,rawDamage:damage*.35,radius:6,sourceEnemyId:e.id,sourceEnemyType:e.type,lifetime:1.6});if(p){p.hiveSplitAt=w.elapsed+1.25;p.hiveAmmo=2;}}break;
   case 'forge_matron':
    if(h.support<2&&w.enemies.filter(n=>n.hp>0).length<30){const helper=hooks.spawn(w,h.support?'swarm_needler':'repair_wasp');if(helper){helper.x=e.x+(h.support?28:-28);helper.y=e.y+35;helper.xp=0;h.support++;}}
    fan(w,e,hooks,aim,7,.18,105,damage*.4);break;
@@ -303,13 +303,13 @@ export function updateHiveEnemy(w:CombatWorld,e:EnemyEntity,dt:number,hooks:Hive
 export function updateHiveHazards(w:CombatWorld,dt:number,hooks:HiveHooks){
  const h=w.hive;if(!h)return;
  h.effects=h.effects.filter(e=>w.elapsed<e.at+e.duration);
- for(const p of [...w.projectiles])if(p.hiveSplitAt!==undefined&&w.elapsed>=p.hiveSplitAt){p.hiveSplitAt=undefined;p.lifetime=0;const a=Math.atan2(p.vy,p.vx);hiveFx(w,7,p.x,p.y,28,.3);for(let i=-2;i<=2;i++)hooks.projectile(w,{owner:'enemy',x:p.x,y:p.y,vx:Math.cos(a+i*.23)*145,vy:Math.sin(a+i*.23)*145,rawDamage:p.rawDamage*.5,radius:3,sourceEnemyId:p.sourceEnemyId,lifetime:5,hiveAmmo:1});}
+ for(const p of [...w.projectiles])if(p.hiveSplitAt!==undefined&&w.elapsed>=p.hiveSplitAt){p.hiveSplitAt=undefined;p.lifetime=0;const a=Math.atan2(p.vy,p.vx);hiveFx(w,7,p.x,p.y,28,.3);for(let i=-2;i<=2;i++)hooks.projectile(w,{owner:'enemy',x:p.x,y:p.y,vx:Math.cos(a+i*.23)*145,vy:Math.sin(a+i*.23)*145,rawDamage:p.rawDamage*.5,radius:3,sourceEnemyId:p.sourceEnemyId,sourceEnemyType:p.sourceEnemyType,lifetime:5,hiveAmmo:1});}
  for(const z of h.hazards){if(z.fired||w.elapsed<z.at)continue;z.fired=true;
-  const source=w.enemies.find(e=>e.id===z.enemyId&&e.hp>0);if(!source||source.stun>0||(source.skillLockedUntil??0)>w.elapsed)continue;
+  const source=w.enemies.find(e=>e.id===z.enemyId&&e.hp>0);if(!source||source.stun>0||(source.skillLockedUntil??0)>w.elapsed){z.cancelled=true;continue;}
   if(z.kind==='dash'){source.hive!.dash={x:z.x,y:z.y,endX:z.endX,endY:z.endY,start:w.elapsed,until:w.elapsed+.65,hits:new Set()};fan(w,source,hooks,Math.PI/2,7,.27,90,z.damage*.3);continue;}
   hiveFx(w,z.kind==='pulse'?6:7,z.x,z.y,z.radius*2,.65);
   for(const actor of hiveActors(w))if(actor.aircraft.currentHp>0){const body=getPlayerHitbox(actor),touch=z.kind==='lane'?segmentVsAircraft(z.x,z.y,z.endX,z.endY,z.radius,body,hit).hit:circleVsAircraft(z.x,z.y,z.radius,body);if(touch)hooks.hit(actor,z.damage,z.pattern===1?.5:0);}
-  if(z.kind==='blast')for(let i=0;i<6+z.pattern*2;i++){const angle=i*Math.PI*2/(6+z.pattern*2)+z.pattern*.2;hooks.projectile(w,{owner:'enemy',x:z.x,y:z.y,vx:Math.cos(angle)*105,vy:Math.sin(angle)*105,rawDamage:z.damage*.3,radius:3,sourceEnemyId:z.enemyId,lifetime:5});}
+  if(z.kind==='blast')for(let i=0;i<6+z.pattern*2;i++){const angle=i*Math.PI*2/(6+z.pattern*2)+z.pattern*.2;hooks.projectile(w,{owner:'enemy',x:z.x,y:z.y,vx:Math.cos(angle)*105,vy:Math.sin(angle)*105,rawDamage:z.damage*.3,radius:3,sourceEnemyId:z.enemyId,sourceEnemyType:source.type,lifetime:5});}
  }
  h.hazards=h.hazards.filter(z=>w.elapsed<z.until);
 }

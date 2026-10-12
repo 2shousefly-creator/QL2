@@ -24,9 +24,9 @@ export class AirCombatDamageText {
     this.revisions = new Uint32Array(this.sprites.length);
   }
 
-  update(world: CombatWorld, delta: number, reducedMotion: boolean, rotated = false, layout = new DamageTextLayout(), worlds:readonly CombatWorld[] = [world]) {
+  update(world: CombatWorld, delta: number, reducedMotion: boolean, rotated = false, layout = new DamageTextLayout(), worlds:readonly CombatWorld[] = [world], burnWorlds:readonly CombatWorld[] = worlds) {
     this.pool.updateWorlds(worlds, delta);
-    const totals=worlds.flatMap(actor=>cinderBurnLabels(actor,rotated));
+    const totals=burnWorlds.flatMap(actor=>cinderBurnLabels(actor,rotated));
     for(let i=0;i<Math.max(totals.length,this.totals.length);i++){
       const label=totals[i];let view=this.totals[i];
       if(!view&&label){

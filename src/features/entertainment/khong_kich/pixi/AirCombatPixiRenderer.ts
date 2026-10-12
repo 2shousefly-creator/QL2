@@ -171,7 +171,12 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     }
   }
 
-  private constructor(private app: Application, private assets: AirCombatAssets, host?: HTMLDivElement, private sceneParent?: Container) {
+  /** Reuse the complete campaign aircraft presentation in an unrotated squad layer. */
+  static attachHiveActor(app:Application, assets:AirCombatAssets, parent:Container) {
+    return new AirCombatPixiRenderer(app,assets,undefined,parent,true);
+  }
+
+  private constructor(private app: Application, private assets: AirCombatAssets, host?: HTMLDivElement, private sceneParent?: Container, private hiveActor = false) {
     if (host) {
       app.canvas.style.cssText = "width:100%;height:100%;display:block;pointer-events:none";
       host.appendChild(app.canvas);
@@ -196,9 +201,9 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     this.equipmentSprites = new AirCombatSpritePool(this.magneticLayer, 640);
     if (this.sky) app.stage.addChild(this.sky.root);
     (sceneParent ?? app.stage).addChild(this.root);
-    if (!sceneParent) {
+    if (!sceneParent || hiveActor) {
       this.worldMask.rect(GAMEPLAY_SAFE_RECT.left, GAMEPLAY_SAFE_RECT.top, GAMEPLAY_SAFE_RECT.width, GAMEPLAY_SAFE_RECT.height).fill(0xffffff);
-      app.stage.addChild(this.worldMask); this.root.mask = this.worldMask;
+      (sceneParent ?? app.stage).addChild(this.worldMask); this.root.mask = this.worldMask;
     }
     this.mirrorLayer.position.set(MIRROR_TRANSFORM.x, MIRROR_TRANSFORM.y);
     this.mirrorLayer.rotation = MIRROR_TRANSFORM.rotation;
@@ -209,6 +214,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     // A nested aircraft uses root coordinates for all readable presentation.
     this.stableHud.addChild(this.damageText.root);
     this.stableHud.addChild(this.trackingBars, this.hpText, this.resourceText, this.pressureText);
+    this.stableHud.visible = !hiveActor;
     this.pressureText.anchor.set(.5); this.hpText.anchor.set(.5); this.resourceText.anchor.set(.5);
     this.enemies = new AirCombatSpritePool(this.actors, 44);
     this.missileSmoke = new AirCombatSpritePool(this.smokeLayer, AIR_COMBAT_WORLD.maxParticles);
@@ -267,7 +273,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
       this.lastEvent = event.id;
       if (world.destruction && (event.attachedToPlayer || event.kind === "player_heal")) continue;
       if (event.kind === "aircraft_destroyed") {
-        if (!this.sceneParent) {
+        if (!this.sceneParent || this.hiveActor) {
           this.vfx.spawn("largeExplosion",event.x,event.y,event.size*1.4,.75);
           this.vfx.spawn("charge",event.x,event.y,event.size*.65,.18,0xfff4d6);
           this.vfx.spawn("shockwave",event.x,event.y,event.size*2.1,.65);
@@ -409,7 +415,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     this.astraSprites.end();
     this.cinderGeometry.clear();this.cinderSprites.begin(this.clock,reducedMotion);for(const label of this.cinderLabels.values())label.visible=false;
     paintCinder(world,(id,key,x,y,width,height,rotation,alpha)=>{const sprite=this.cinderSprites.get(id,this.assets.effect(key));if(!sprite)return;sprite.position.set(x,y);sprite.width=width;sprite.height=height;sprite.rotation=rotation;sprite.alpha=alpha;sprite.tint=0xffffff;sprite.blendMode='normal';},reducedMotion,(id,text,x,y)=>{
-      let label=this.cinderLabels.get(id);if(!label){if(this.cinderLabels.size>=48){const [old,view]=this.cinderLabels.entries().next().value!;view.destroy();this.cinderLabels.delete(old);}label=new Text({text,style:{fontFamily:'sans-serif',fontSize:CINDER_STACK_FONT_SIZE,fontWeight:'bold',fill:0xfff1af,stroke:{color:0x1c2026,width:1.2}}});this.cinderLabels.set(id,label);this.enemyStatusLayer.addChild(label);}label.text=text;label.position.set(x,y);label.rotation=this.sceneParent?Math.PI:0;label.visible=true;
+      let label=this.cinderLabels.get(id);if(!label){if(this.cinderLabels.size>=48){const [old,view]=this.cinderLabels.entries().next().value!;view.destroy();this.cinderLabels.delete(old);}label=new Text({text,style:{fontFamily:'sans-serif',fontSize:CINDER_STACK_FONT_SIZE,fontWeight:'bold',fill:0xfff1af,stroke:{color:0x1c2026,width:1.2}}});this.cinderLabels.set(id,label);this.enemyStatusLayer.addChild(label);}label.text=text;label.position.set(x,y);label.rotation=this.sceneParent&&!this.hiveActor?Math.PI:0;label.visible=true;
     },{
       rect:(x,y,width,height,fillAlpha,lineAlpha)=>{this.cinderGeometry.rect(x,y,width,height).fill({color:0xff6565,alpha:fillAlpha}).stroke({color:0xff7979,width:1.5,alpha:lineAlpha});},
       line:(x,y,endX,endY,alpha)=>{this.cinderGeometry.moveTo(x,y).lineTo(endX,endY).stroke({color:0xffaaaa,width:1.5,alpha});}
@@ -461,6 +467,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     this.enemies.begin(this.clock,reducedMotion);
     this.engines.begin(this.clock,reducedMotion);
     for (const enemy of world.enemies) {
+      if (this.hiveActor) break; // Hive owns the shared enemy layer.
       if (enemy.aircraftTarget) continue;
       const magnetic = !!world.magnetic;
       const exposed = magnetic && enemy.type === "boss" && !guardianSlots(world, enemy.id).some(Boolean);
@@ -554,6 +561,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     paintMissileExhausts(world,this.paintMissileSegment,reducedMotion);
     this.missiles.begin();
     for (const p of world.projectiles) {
+      if (this.hiveActor && p.owner === "enemy") continue;
       if (rankProjectileVisual(p)||ultimateProjectileVisual(p)) continue; // Dedicated ranked sprite pool owns body and wake.
       if (p.mirageVisual || p.mirrorBorrowed) continue;
       if (world.stormbreaker && p.stormbreakerVisual) continue;
@@ -810,9 +818,11 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     const stats = getEffectiveAircraftStats(world.aircraft);
     const health = this.healthBars.get(-1, world.aircraft.currentHp, stats.maxHp, activeShieldAmount(world.aircraft), sylvaGrayHealth(world));
     const hp = health.hpRatio;
+    // Hive draws one campaign HUD per actor at its screen anchor; skip hidden geometry.
+    if (!this.hiveActor) {
     const resource = Math.max(0, Math.min(1, world.aircraft.currentResource / stats.maxResource));
     const barWidth = trackingBarWidth(visual.size*playerAirframeScale(world.aircraft));
-    const trackingPosition = this.sceneParent ? mirrorPoint(world.playerX, world.playerY) : { x: world.playerX, y: world.playerY };
+    const trackingPosition = this.sceneParent && !this.hiveActor ? mirrorPoint(world.playerX, world.playerY) : { x: world.playerX, y: world.playerY };
     const barX = trackingBarX(trackingPosition.x, barWidth);
     const terra = terraHud(world);
     const barY = trackingBarY(trackingPosition.y, visual.size*playerAirframeScale(world.aircraft), terra ? 3 : 2);
@@ -845,8 +855,9 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     this.pressureText.scale.set(playerTextScale);
     this.pressureText.text = terra ? pressureBarText(terra.pressure, terra.cap) : '';
     this.pressureText.position.set(barX + barWidth / 2, barY + 31);
+    }
     this.healthBars.end();
-    this.damageText.update(world, delta, reducedMotion, !!this.sceneParent, damageLayout);
+    if (!this.hiveActor) this.damageText.update(world, delta, reducedMotion, !!this.sceneParent, damageLayout);
     if (damageSmoke && alive) {
       if (hp < 0.2) this.vfx.spawn("fire", world.playerX - 7, world.playerY + 13, 24, 0.35);
     }
@@ -858,7 +869,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     },reducedMotion,(x,y,ex,ey,color,alpha,width)=>{this.enemyForegroundMarks.moveTo(x,y).lineTo(ex,ey).stroke({color,alpha,width});});
     this.equipmentSprites.end();
     this.vfx.renderRankSkills(world,reducedMotion);
-    if (!this.sceneParent) {
+    if (!this.sceneParent || this.hiveActor) {
       const actor = (world.duelOpponent ?? world.mirage?.mirror)?.context.world;
       if (actor !== this.mirrorWorld) {
         this.mirrorRenderer?.destroy(); this.mirrorRenderer = undefined; this.mirrorWorld = actor;
@@ -871,7 +882,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
         paintSylvaSeeds(owner,(id,key,x,y,width,height,rotation,alpha,additive)=>{const sprite=this.seedSprites.get(id-(mirrored?1000:0),this.assets.effect(key));if(!sprite)return;const point=mirrored?mirrorPoint(x,y):{x,y};sprite.position.set(point.x,point.y);sprite.width=width;sprite.height=height;sprite.rotation=rotation+(mirrored?Math.PI:0);sprite.alpha=alpha;sprite.tint=0xffffff;sprite.blendMode=additive?'add':'normal';},reducedMotion);
       }
       this.seedSprites.end();
-      this.app.render();
+      if (!this.hiveActor) this.app.render();
     }
   }
 

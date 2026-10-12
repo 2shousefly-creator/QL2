@@ -37,15 +37,15 @@ export function drawEnemyTrackingHud(ctx:CanvasRenderingContext2D,world:CombatWo
   }
 }
 
-export function drawAircraftTrackingHud(ctx: CanvasRenderingContext2D, world: CombatWorld, healthBars: HealthBarPresentation, rotated = false) {
+export function drawAircraftTrackingHud(ctx: CanvasRenderingContext2D, world: CombatWorld, healthBars: HealthBarPresentation, rotated = false, pinned?:{x:number;y:number;width:number}) {
   if (world.destruction || world.aircraft.currentHp <= 0) return;
   const stats = getEffectiveAircraftStats(world.aircraft);
   const displayWidth = PLAYER_AIRFRAME_SIZE[world.aircraft.aircraftId]*playerAirframeScale(world.aircraft);
-  const barWidth = trackingBarWidth(displayWidth);
+  const barWidth = pinned?.width ?? trackingBarWidth(displayWidth);
   const position = rotated ? mirrorPoint(world.playerX, world.playerY) : { x: world.playerX, y: world.playerY };
-  const barX = trackingBarX(position.x, barWidth);
+  const barX = pinned?.x ?? trackingBarX(position.x, barWidth);
   const terra = terraHud(world);
-  const barY = trackingBarY(position.y, displayWidth, terra ? 3 : 2);
+  const barY = pinned?.y ?? trackingBarY(position.y, displayWidth, terra ? 3 : 2);
   const health = healthBars.get(-1, world.aircraft.currentHp, stats.maxHp, activeShieldAmount(world.aircraft), sylvaGrayHealth(world));
   const hp = health.hpRatio;
   const barPath = (y: number, ratio = 1) => {
@@ -71,7 +71,7 @@ export function drawAircraftTrackingHud(ctx: CanvasRenderingContext2D, world: Co
   ctx.strokeStyle = "rgba(203,213,225,.8)"; ctx.lineWidth = .39;
   barPath(barY); ctx.stroke(); barPath(barY + 13); ctx.stroke(); if(terra){barPath(barY+26);ctx.stroke();} ctx.restore();
   ctx.save();
-  ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.font = `bold ${6.4 * playerAirframeScale(world.aircraft)}px Arial`;
+  ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.font = `bold ${6.4 * (pinned ? 1 : playerAirframeScale(world.aircraft))}px Arial`;
   ctx.strokeStyle = "#06101f"; ctx.fillStyle = "#fff"; ctx.lineWidth = playerAirframeScale(world.aircraft); ctx.lineJoin = "round"; ctx.shadowBlur *= .5;
   const hpText = statusBarText(world.aircraft.currentHp, stats.maxHp), resourceText = statusBarText(world.aircraft.currentResource, stats.maxResource);
   ctx.strokeText(hpText, barX + barWidth / 2, barY + 5); ctx.fillText(hpText, barX + barWidth / 2, barY + 5);

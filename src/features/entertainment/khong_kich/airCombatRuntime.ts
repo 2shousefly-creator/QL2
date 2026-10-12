@@ -876,7 +876,7 @@ function tickHiveAllies(root:CombatWorld,dt:number){
   if(w.aircraft.currentHp<=0&&!a.respawn)downHiveAlly(w);
   activateHiveMarks(w);
   manageHiveBuild(a);
-  w.aircraft.coreState.acquisitions.length=0;
+  // Shared receipt presentation drains ally acquisitions after displaying them.
   if(root.waveState==='combat')advanceWaitingChest(w.aircraft,dt);
   claimWaitingChest(w.aircraft,w.random);
   if(a.respawn>0){

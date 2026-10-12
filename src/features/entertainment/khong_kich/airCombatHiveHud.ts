@@ -24,8 +24,8 @@ export function createHiveHud(host:HTMLDivElement){
     if(!view){view={bars:new HealthBarPresentation()};views.set(actor,view);}
     view.bars.begin(delta);
     if(actor===world)drawEnemyTrackingHud(ctx,world,view.bars);
-    if(canvasDamage&&actor===world)drawCinderTotals(ctx,actor,layout);
-    drawAircraftTrackingHud(ctx,actor,view.bars);view.bars.end();
+    if(canvasDamage)drawCinderTotals(ctx,actor,layout);
+    if(actor===world)drawAircraftTrackingHud(ctx,actor,view.bars);view.bars.end();
    }
    if(canvasDamage)drawAircraftDamageLabels(ctx,labels.labels,reduced,layout);
    for(const [actor,view] of views)if(!actors.includes(actor)){view.bars.clear();views.delete(actor);}

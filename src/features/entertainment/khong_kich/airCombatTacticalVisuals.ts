@@ -17,7 +17,7 @@ export function paintTacticalCores(world:CombatWorld,p:TacticalPainter,reducedMo
     if(e.hp<=0)continue;
     const effect=world.skillCores.enemyEffects.get(e.id),large=e.type==="boss"||e.eliteWave>0;
     const labels:{text:string;color:number}[]=[];
-    const marks=e.expansionMarks;
+    const marks=e.hiveMarkOwner&&e.hiveMarkOwner!==world?e.hiveMarks?.get(world):e.expansionMarks;
     for (const [key,text,color] of [["preliminary","◎ KỸ NĂNG",0x67e8f9],["shieldBroken","◇ PHÁ KHIÊN",0xffd36a],["criticalLock","✦ CHÍ MẠNG",0xfb7185],["skillPhase","PHA KỸ NĂNG",0xc4b5fd],["gunPhase","PHA SÚNG",0xffd36a]] as const) if ((marks?.[key]??0)>now) {
       labels.push({text,color}); p.circle(e.x,e.y,e.radius+5,color,.75);
     }
