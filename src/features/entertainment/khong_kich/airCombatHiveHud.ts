@@ -1,6 +1,6 @@
 import { drawAircraftTrackingHud,drawEnemyTrackingHud,drawCinderTotals,drawAircraftDamageLabels } from './airCombatCanvasHud';
-import { HealthBarPresentation,DamageLabelPool } from './airCombatFeedback';
-import { DamageTextLayout } from './airCombatDamageLayout';
+import { HealthBarPresentation } from './airCombatFeedback';
+import { createHiveDamagePool,createHiveDamageLayout } from './airCombatHiveDamage';
 import { hiveActors } from './airCombatHive';
 import type { CombatWorld } from './airCombatRuntime';
 
@@ -12,20 +12,22 @@ export function createHiveHud(host:HTMLDivElement){
  canvas.setAttribute('aria-hidden','true');
  const ctx=canvas.getContext('2d');if(!ctx)throw new Error('Không thể tải HUD chiến đấu');
  host.appendChild(canvas);
- const views=new Map<CombatWorld,{bars:HealthBarPresentation;labels:DamageLabelPool}>();
- const layout=new DamageTextLayout();
+ const views=new Map<CombatWorld,{bars:HealthBarPresentation}>();
+ const layout=createHiveDamageLayout(),labels=createHiveDamagePool();
  return {
   render(world:CombatWorld,delta:number,reduced:boolean,canvasDamage=true){
    ctx.setTransform(ratio,0,0,ratio,0,0);ctx.clearRect(0,0,360,640);layout.begin();
    const actors=hiveActors(world);
+   if(canvasDamage)labels.updateWorlds(actors,delta);
    for(const actor of actors){
     let view=views.get(actor);
-    if(!view){view={bars:new HealthBarPresentation(),labels:new DamageLabelPool()};views.set(actor,view);}
+    if(!view){view={bars:new HealthBarPresentation()};views.set(actor,view);}
     view.bars.begin(delta);
     if(actor===world)drawEnemyTrackingHud(ctx,world,view.bars);
-    if(canvasDamage){view.labels.update(actor,delta);drawCinderTotals(ctx,actor,layout);drawAircraftDamageLabels(ctx,view.labels.labels,reduced,layout);}
+    if(canvasDamage)drawCinderTotals(ctx,actor,layout);
     drawAircraftTrackingHud(ctx,actor,view.bars);view.bars.end();
    }
+   if(canvasDamage)drawAircraftDamageLabels(ctx,labels.labels,reduced,layout);
    for(const [actor,view] of views)if(!actors.includes(actor)){view.bars.clear();views.delete(actor);}
   },
   destroy(){for(const view of views.values())view.bars.clear();views.clear();canvas.remove();}

@@ -24,16 +24,25 @@ export interface DamageLabel {
 
 /** Presentation-only ring shared by Pixi and emergency Canvas. Never reads HP deltas. */
 export class DamageLabelPool {
-  readonly labels: DamageLabel[] = Array.from({ length: DAMAGE_LABEL_LIMIT }, () => ({
+  readonly labels: DamageLabel[];
+  constructor(private options: { limit?:number; mergeWindow?:number } = {}) {
+    this.labels = Array.from({ length: options.limit ?? DAMAGE_LABEL_LIMIT }, () => ({
     active: false, age: 0, x: 0, y: 0, offset: 0, text: "", critical: false, damageKind: "hp", revision: 0,
-  }));
+    }));
+  }
   private next = 0;
-  private lastEvent = 0;
+  private lastEvents = new WeakMap<CombatWorld,number>();
+  private merged = new WeakMap<DamageLabel,{world:CombatWorld;target:DamageNumberEvent['target'];entityId?:number;amount:number}>();
   private world?: CombatWorld;
 
   update(world: CombatWorld, delta: number, onSpawn?: (event: DamageNumberEvent) => void) {
-    if (this.world !== world) {
-      this.world = world; this.lastEvent = 0;
+    this.updateWorlds([world],delta,onSpawn);
+  }
+
+  /** One presentation budget for a squad; event cursors remain private to each actor. */
+  updateWorlds(worlds: readonly CombatWorld[], delta: number, onSpawn?: (event: DamageNumberEvent) => void) {
+    if (this.world !== worlds[0]) {
+      this.world = worlds[0]; this.lastEvents = new WeakMap(); this.merged = new WeakMap(); this.next = 0;
       for (const label of this.labels) label.active = false;
     }
     for (const label of this.labels) {
@@ -41,16 +50,30 @@ export class DamageLabelPool {
       label.age += delta;
       if (label.age >= DAMAGE_LABEL_SECONDS) label.active = false;
     }
-    for (const event of world.visualEvents) {
-      if (event.id <= this.lastEvent) continue;
-      this.lastEvent = event.id;
+    for (const world of worlds) for (const event of world.visualEvents) {
+      if (event.id <= (this.lastEvents.get(world) ?? 0)) continue;
+      this.lastEvents.set(world,event.id);
       if (event.kind !== "damage_number") continue;
+      if (event.at !== undefined && world.elapsed-event.at >= DAMAGE_LABEL_SECONDS) continue;
       // Aircraft incoming damage emits in its own world. Ignore the attacker's
       // duplicate enemy-view number; both renderers draw the defender in root space.
       if (event.target === "enemy" && world.enemies.some(e => e.id === event.entityId && e.aircraftTarget)) continue;
       for (const damageKind of ["shield", "hp"] as const) {
         const amount = damageKind === "shield" ? event.shieldAbsorbed : event.hpDamage;
         if (!(amount > 0)) continue;
+        const critical = damageKind === "hp" && event.target === "enemy" && event.critical;
+        const targetWorld = event.target === "enemy" ? world.hiveHost ?? world : world;
+        const existing = (this.options.mergeWindow ?? 0) > 0 ? this.labels.find(label => {
+          const batch = this.merged.get(label);
+          return label.active && label.age < this.options.mergeWindow! && label.damageKind === damageKind && label.critical === critical
+            && batch?.world === targetWorld && batch.target === event.target && batch.entityId === event.entityId;
+        }) : undefined;
+        if(existing){
+          const batch=this.merged.get(existing)!;batch.amount+=amount;
+          existing.text=String(Math.round(batch.amount));existing.revision++;
+          // Do not refresh age: continuous hits must never keep a label alive forever.
+          continue;
+        }
         const label = this.labels[this.next];
         this.next = (this.next + 1) % this.labels.length;
         label.active = true;
@@ -61,9 +84,10 @@ export class DamageLabelPool {
         // shield and HP parts. Random sideways drift would collapse those gaps.
         label.offset = 0;
         label.text = String(Math.max(0, Math.round(amount)));
-        label.critical = damageKind === "hp" && event.target === "enemy" && event.critical;
+        label.critical = critical;
         label.damageKind = damageKind;
         label.revision++;
+        if(this.options.mergeWindow)this.merged.set(label,{world:targetWorld,target:event.target,entityId:event.entityId,amount});
       }
       onSpawn?.(event);
     }

@@ -16,8 +16,8 @@ const tactics:Partial<Record<EnemyType,string>>={
  bombard_prelate:'Ba điểm pháo kích bán kính 48; lần lượt nổ sau 1,25 / 1,6 / 1,95 giây, tỏa 6 / 8 / 10 viên. Chu kỳ 3,4 giây.',
  disruptor_monarch:'Hành lang nhiễu rộng 44, báo trước 1,2 giây; 70% Hỏa lực và choáng 0,5 giây. Chu kỳ 3,4 giây.',
  forge_matron:'Sửa 0,9% Máu tối đa mỗi giây trong 190 đơn vị; gọi tối đa 1 Thợ Vá Tổ và 1 Bọ Đạn mỗi đời. Hỗ trợ không cấp XP hoặc loot.',
- brood_ark:'Chỉ số gốc bằng 24 Pháo Bầy, tốc độ 12. Chu kỳ 7 giây: quạt 13 viên và 3 tên lửa tách thành 5 viên sau 1,25 giây. Lõi lộ 3 giây.',
- crucible_ark:'Chỉ số gốc bằng 32 Pháo Bầy, tốc độ 12. Chu kỳ 7 giây: 3 điểm pháo kích và 3 tuyến công thành rộng 24, báo trước 2 / 2,4 / 2,8 giây. Lõi lộ 3,5 giây.',
+ brood_ark:'So với Pháo Bầy cùng wave: Máu ×10, Hỏa lực ×6, Giáp ×8; tốc độ 12. Chu kỳ 7 giây: quạt 13 viên và 3 tên lửa tách thành 5 viên sau 1,25 giây. Lõi lộ 3 giây.',
+ crucible_ark:'So với Pháo Bầy cùng wave: Máu ×10, Hỏa lực ×6, Giáp ×8; tốc độ 12. Chu kỳ 7 giây: 3 điểm pháo kích và 3 tuyến công thành rộng 24, báo trước 2 / 2,4 / 2,8 giây. Lõi lộ 3,5 giây.',
  boss:'Chuyển phase ở 75% / 50% / 25% Máu. Phòng tuyến → Săn tổ đội → Công thành → Lõi quá tải. Phase 2 mở 14 hỗ trợ hữu hạn; phase 4 lộ lõi 1,6 giây mỗi đòn. Chu kỳ 3,05 / 2,7 / 2,35 / 2 giây.',
 };
 

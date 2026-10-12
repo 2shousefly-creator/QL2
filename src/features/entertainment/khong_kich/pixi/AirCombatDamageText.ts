@@ -7,22 +7,26 @@ import type { CombatWorld } from "../airCombatRuntime";
 
 export class AirCombatDamageText {
   readonly root = new Container();
-  private pool = new DamageLabelPool();
   private normal = new TextStyle({ fontFamily: "Arial", fontSize: NORMAL_DAMAGE_FONT_SIZE, fontWeight: "500", fill: 0xfde047, stroke: { color: 0x151c29, width: 3 } });
   private critical = new TextStyle({ fontFamily: "Arial", fontSize: NORMAL_DAMAGE_FONT_SIZE, fontWeight: "800", fill: 0xff4d55, stroke: { color: 0x310d17, width: 3 } });
   private shielded = new TextStyle({ fontFamily: "Arial", fontSize: NORMAL_DAMAGE_FONT_SIZE, fontWeight: "500", fill: 0xffffff, stroke: { color: 0x325777, width: 3 } });
   private burnStyle = new TextStyle({fontFamily:'Arial',fontSize:CINDER_TOTAL_FONT_SIZE,fontWeight:'500',fill:0xffd179,stroke:{color:0x382013,width:1.2}});
   private totals: {number:Text;icon:Text}[] = [];
-  private sprites = this.pool.labels.map(() => {
-    const text = new Text({ text: "", style: this.normal, resolution: 2 });
-    text.anchor.set(0.5); text.visible = false; this.root.addChild(text);
-    return text;
-  });
-  private revisions = new Uint32Array(this.sprites.length);
+  private sprites: Text[];
+  private revisions: Uint32Array;
 
-  update(world: CombatWorld, delta: number, reducedMotion: boolean, rotated = false, layout = new DamageTextLayout()) {
-    this.pool.update(world, delta);
-    const totals=cinderBurnLabels(world,rotated);
+  constructor(private pool = new DamageLabelPool()) {
+    this.sprites = pool.labels.map(() => {
+      const text = new Text({ text: "", style: this.normal, resolution: 2 });
+      text.anchor.set(0.5); text.visible = false; this.root.addChild(text);
+      return text;
+    });
+    this.revisions = new Uint32Array(this.sprites.length);
+  }
+
+  update(world: CombatWorld, delta: number, reducedMotion: boolean, rotated = false, layout = new DamageTextLayout(), worlds:readonly CombatWorld[] = [world]) {
+    this.pool.updateWorlds(worlds, delta);
+    const totals=worlds.flatMap(actor=>cinderBurnLabels(actor,rotated));
     for(let i=0;i<Math.max(totals.length,this.totals.length);i++){
       const label=totals[i];let view=this.totals[i];
       if(!view&&label){
