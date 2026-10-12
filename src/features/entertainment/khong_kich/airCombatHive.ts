@@ -243,11 +243,9 @@ export function updateHiveEnemy(w:CombatWorld,e:EnemyEntity,dt:number,hooks:Hive
  const mother=HIVE_MOTHERS.includes(e.type),boss=e.type==='boss',elite=isElite(e.type),stats=stageEnemyConfig(e.type,5),damage=stats.projectileDamage*e.damageScale;
  if(boss){const phase=Math.min(4,1+Math.floor((1-e.hp/e.maxHp)*4));if(phase!==h.phase){h.phase=phase;w.bossPhase=phase;hiveFx(w,2,e.x,e.y,220,1.1);}}
  h.coreOpen=h.exposedUntil>w.elapsed;
- const leader=w.enemies.find(n=>n.hp>0&&HIVE_MOTHERS.includes(n.type));
+ // Escorts use the same independent movement as ordinary waves.
  let x=R.left+R.width/2+Math.sin(e.age*.27+e.phaseSeed)*(R.width*.32),y=R.top+65+(h.slot%4)*35;
  if(mother||boss){x=R.left+R.width/2+Math.sin(e.age*.22)*40;y=R.top+95;}
- else if(leader&&e.type==='aegis_beetle'){const guards=w.enemies.filter(n=>n.hp>0&&n.type==='aegis_beetle'),slot=guards.indexOf(e)-(guards.length-1)/2;const fire=w.projectiles.find(p=>p.owner==='player'&&Math.abs(p.x-leader.x)<leader.radius+40);x=Math.max(R.left+20,Math.min(R.right-20,(fire?.x??leader.x)+slot*30));y=leader.y+65+Math.abs(slot)*9;}
- else if(leader){x=leader.x+Math.cos(e.age*.3+h.slot)*100;y=leader.y+Math.sin(e.age*.3+h.slot)*50+(e.type==='repair_wasp'?-45:85);}
  if(h.dash){const oldX=e.x,oldY=e.y,t=Math.min(1,(w.elapsed-h.dash.start)/(h.dash.until-h.dash.start));e.x=h.dash.x+(h.dash.endX-h.dash.x)*t;e.y=h.dash.y+(h.dash.endY-h.dash.y)*t;for(const actor of actors)if(!h.dash.hits.has(actor)&&sweepAircraft(getEnemyHitbox(e),e.x-oldX,e.y-oldY,getPlayerHitbox(actor),hit).hit){h.dash.hits.add(actor);hooks.hit(actor,stats.collisionDamage*e.damageScale);}if(t===1)h.dash=undefined;}
  else{const d=Math.hypot(x-e.x,y-e.y),step=Math.min(d,stats.speed*hooks.movement(w,e)*dt);if(d>0){e.x+=(x-e.x)/d*step;e.y+=(y-e.y)/d*step;}}
  if((e.type==='repair_wasp'||e.type==='forge_matron')&&e.stun<=0&&(e.skillLockedUntil??0)<=w.elapsed){

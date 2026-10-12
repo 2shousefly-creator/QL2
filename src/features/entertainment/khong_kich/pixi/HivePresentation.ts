@@ -39,6 +39,7 @@ export async function createHivePresentation(host:HTMLDivElement,world:CombatWor
     ctx.drawImage(image,sx*image.width,sy*image.height,sw*image.width,sh*image.height,-w/2,-h/2,w,h);ctx.restore();
    },
    circle(x,y,r,color,alpha,fill=false,width=1.5){if(r<=0)return;ctx.save();ctx.globalAlpha=alpha;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);if(fill){ctx.fillStyle=cssColor(color);ctx.fill();}else{ctx.strokeStyle=cssColor(color);ctx.lineWidth=width;ctx.stroke();}ctx.restore();},
+   polygon(points,color,alpha,fill=false,width=1){if(points.length<6)return;ctx.save();ctx.globalAlpha=alpha;ctx.beginPath();ctx.moveTo(points[0],points[1]);for(let i=2;i<points.length;i+=2)ctx.lineTo(points[i],points[i+1]);ctx.closePath();if(fill){ctx.fillStyle=cssColor(color);ctx.fill();}else{ctx.strokeStyle=cssColor(color);ctx.lineWidth=width;ctx.lineJoin='round';ctx.stroke();}ctx.restore();},
    line(x,y,ex,ey,width,color,alpha){ctx.save();ctx.globalAlpha=alpha;ctx.strokeStyle=cssColor(color);ctx.lineWidth=width;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(ex,ey);ctx.stroke();ctx.restore();}
   };
   const views=new Map<CombatWorld,{accents:InstanceType<typeof CanvasCombatAccents>;bars:InstanceType<typeof HealthBarPresentation>}>(),hud=createHiveHud(host);
@@ -85,6 +86,7 @@ export async function createHivePresentation(host:HTMLDivElement,world:CombatWor
     sprite.visible=true;sprite.texture=texture(f);sprite.position.set(x,y);sprite.width=w;sprite.height=h;sprite.rotation=r;sprite.alpha=Math.max(0,Math.min(1,alpha));sprite.blendMode=additive?'add':'normal';
    },
    circle(x,y,r,color,alpha,fill=false,width=1.5){if(r<=0)return;geometry.circle(x,y,r);if(fill)geometry.fill({color,alpha});else geometry.stroke({color,alpha,width});},
+   polygon(points,color,alpha,fill=false,width=1){if(points.length<6)return;geometry.poly(points);if(fill)geometry.fill({color,alpha});else geometry.stroke({color,alpha,width,join:'round'});},
    line(x,y,ex,ey,width,color,alpha){geometry.moveTo(x,y).lineTo(ex,ey).stroke({color,alpha,width,cap:'round'});}
   };
   return {painter,begin(){used=0;geometry.clear();},end(){for(let i=used;i<sprites.length;i++)sprites[i].visible=false;if(geometryOnTop)layer.setChildIndex(geometry,layer.children.length-1);}};

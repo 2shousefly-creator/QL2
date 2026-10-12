@@ -37,7 +37,7 @@ export function drawEnemyTrackingHud(ctx:CanvasRenderingContext2D,world:CombatWo
   }
 }
 
-export function drawAircraftTrackingHud(ctx: CanvasRenderingContext2D, world: CombatWorld, healthBars: HealthBarPresentation, rotated = false, pinned?:{x:number;y:number;width:number}) {
+export function drawAircraftTrackingHud(ctx: CanvasRenderingContext2D, world: CombatWorld, healthBars: HealthBarPresentation, rotated = false, pinned?:{x:number;y:number;width:number;showText?:boolean}) {
   if (world.destruction || world.aircraft.currentHp <= 0) return;
   const stats = getEffectiveAircraftStats(world.aircraft);
   const displayWidth = PLAYER_AIRFRAME_SIZE[world.aircraft.aircraftId]*playerAirframeScale(world.aircraft);
@@ -70,6 +70,7 @@ export function drawAircraftTrackingHud(ctx: CanvasRenderingContext2D, world: Co
   }
   ctx.strokeStyle = "rgba(203,213,225,.8)"; ctx.lineWidth = .39;
   barPath(barY); ctx.stroke(); barPath(barY + 13); ctx.stroke(); if(terra){barPath(barY+26);ctx.stroke();} ctx.restore();
+  if (pinned?.showText === false) return;
   ctx.save();
   ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.font = `bold ${6.4 * (pinned ? 1 : playerAirframeScale(world.aircraft))}px Arial`;
   ctx.strokeStyle = "#06101f"; ctx.fillStyle = "#fff"; ctx.lineWidth = playerAirframeScale(world.aircraft); ctx.lineJoin = "round"; ctx.shadowBlur *= .5;

@@ -3,6 +3,7 @@ import effectUrl from '../../../assets/khong-kich/26.31.0/effects.png';
 import backgroundUrl from '../../../assets/khong-kich/26.31.0/background.png';
 import ammoUrl from '../../../assets/khong-kich/26.31.0/ammunition.png';
 import type { CombatWorld } from './airCombatRuntime';
+import type { HiveHazard } from './airCombatHive';
 
 export const HIVE_ART={enemyUrl,effectUrl,backgroundUrl,ammoUrl};
 export const HIVE_ENTITY_CELLS=['swarm_needler','razor_glider','aegis_beetle','siege_spitter','signal_weaver','repair_wasp','razor_marshal','aegis_regent','bombard_prelate','disruptor_monarch','forge_matron','brood_ark','crucible_ark','hive_tyrant','stage5_fortress','stage5_core'];
@@ -14,8 +15,36 @@ export interface HivePainter {
  sprite(f:HiveFrame,x:number,y:number,w:number,h:number,rotation?:number,alpha?:number,additive?:boolean):void;
  circle(x:number,y:number,radius:number,color:number,alpha:number,fill?:boolean,width?:number):void;
  line(x:number,y:number,endX:number,endY:number,width:number,color:number,alpha:number):void;
+ polygon(points:number[],color:number,alpha:number,fill?:boolean,width?:number):void;
 }
 export const hiveArtUrls=()=>Object.values(HIVE_ART);
+
+interface HazardShape {outline:number[];fill:number[];top:number;bottom:number}
+const hazardShapes=new WeakMap<HiveHazard,HazardShape>();
+function warningShape(z:HiveHazard,progress:number):HazardShape {
+ let shape=hazardShapes.get(z);
+ if(!shape){
+  const outline:number[]=[],lane=z.kind==='lane'||z.kind==='dash';
+  const arc=(x:number,y:number,start:number,sweep:number,steps:number)=>{
+   for(let i=0;i<=steps;i++){const a=start+sweep*i/steps;outline.push(x+Math.cos(a)*z.radius,y+Math.sin(a)*z.radius);}
+  };
+  if(lane){
+   const angle=Math.atan2(z.endY-z.y,z.endX-z.x);
+   arc(z.x,z.y,angle+Math.PI/2,Math.PI,32);arc(z.endX,z.endY,angle-Math.PI/2,Math.PI,32);
+  }else arc(z.x,z.y,0,Math.PI*2,64);
+  const ys=outline.filter((_,i)=>i%2===1);
+  shape={outline,fill:[],top:Math.min(...ys),bottom:Math.max(...ys)};hazardShapes.set(z,shape);
+ }
+ // Clip the cached silhouette at a horizontal front, including diagonal capsules.
+ const {outline,fill,top,bottom}=shape,cut=top+(bottom-top)*progress;fill.length=0;
+ if(progress<=0)return shape;
+ for(let i=0,j=outline.length-2;i<outline.length;j=i,i+=2){
+  const ax=outline[j],ay=outline[j+1],bx=outline[i],by=outline[i+1];
+  if((ay<=cut)!==(by<=cut))fill.push(ax+(bx-ax)*(cut-ay)/(by-ay),cut);
+  if(by<=cut)fill.push(bx,by);
+ }
+ return shape;
+}
 
 /** Only Hive scenery and enemies are custom; aircraft use the campaign renderer. */
 export function paintHive(w:CombatWorld,p:HivePainter){
@@ -38,21 +67,12 @@ export function paintHiveThreats(w:CombatWorld,p:HivePainter){
  for(const z of w.hive?.hazards??[]){
   if(z.cancelled)continue;
   const progress=Math.max(0,Math.min(1,(now-z.start)/Math.max(.01,z.at-z.start))),active=z.fired;
-  const color=active?0xffe2a3:0xffa63d;
-  if(z.kind==='lane'||z.kind==='dash'){
-   p.line(z.x,z.y,z.endX,z.endY,z.radius*2,color,active?.3:.12);
-   const angle=Math.atan2(z.endY-z.y,z.endX-z.x),dx=Math.sin(angle)*z.radius,dy=-Math.cos(angle)*z.radius;
-   for(const side of [-1,1])p.line(z.x+side*dx,z.y+side*dy,z.endX+side*dx,z.endY+side*dy,1.5,color,.9);
-   p.circle(z.x,z.y,z.radius,color,.85);p.circle(z.endX,z.endY,z.radius,color,.85);
-   p.line(z.x,z.y,z.x+(z.endX-z.x)*progress,z.y+(z.endY-z.y)*progress,2,0xfff3cb,.95);
-  }else{
-   // The fixed outer radius is the exact AOE hitbox, independent of animation.
-   p.circle(z.x,z.y,z.radius,color,active?.24:.09,true);
-   p.circle(z.x,z.y,z.radius,0x190b08,.85,false,4);
-   p.circle(z.x,z.y,z.radius,color,1,false,2);
-   if(!active)p.circle(z.x,z.y,z.radius*progress,0xffefb2,.75,false,1.5);
-   p.line(z.x-4,z.y,z.x+4,z.y,1.5,color,1);p.line(z.x,z.y-4,z.x,z.y+4,1.5,color,1);
-  }
+  const shape=warningShape(z,active?1:progress),lane=z.kind==='lane'||z.kind==='dash';
+  p.polygon(shape.outline,0xff354b,.035,true);
+  p.polygon(shape.fill,0xff354b,active?.32:.24,true);
+  // Halve border thickness without shrinking the actual damage footprint.
+  if(!lane)p.polygon(shape.outline,0x190b08,.85,false,2);
+  p.polygon(shape.outline,0xff5263,1,false,lane?.75:1);
  }
  for(const shot of w.projectiles){if(shot.owner!=='enemy'||shot.lifetime<=0)continue;
   const mother=shot.sourceEnemyType==='brood_ark'||shot.sourceEnemyType==='crucible_ark';
