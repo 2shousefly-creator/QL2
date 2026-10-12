@@ -1,3 +1,6 @@
+import { AircraftPreview } from "./AircraftPreview";
+import { AIRCRAFT_CONFIGS } from "./airCombatConfig";
+import { getEffectiveAircraftStats } from "./airCombatAircraft";
 import { AnimatePresence, motion } from "motion/react";
 import { airTooltipMotion } from "./AirCombatMotion";
 import React, { forwardRef, useCallback, useLayoutEffect, useImperativeHandle, useRef, useState } from "react";
@@ -51,6 +54,7 @@ export const AirCombatStatusStrip = React.memo(forwardRef<StatusStripHandle, { t
   const [progress] = useState(()=>new AirCombatStatusProgress());
   const snapshotWorld = useRef<CombatWorld|null>(null);
   const [items, setItems] = useState<StatusPresentation[]>([]);
+  const [squad,setSquad]=useState<{id:CombatWorld["aircraft"]["aircraftId"];seconds:number;hp:number;max:number;level:number}[]>([]);
   const [selected, setSelected] = useState<string | null>(null);
   const selectedRef = useRef<string | null>(null);
   const tooltipChange = useRef(onTooltipChange); tooltipChange.current = onTooltipChange;
@@ -67,6 +71,7 @@ export const AirCombatStatusStrip = React.memo(forwardRef<StatusStripHandle, { t
     const changedWorld=snapshotWorld.current!==world;
     if (world.pauseReasons.size > 0 && !changedWorld) return;
     if(changedWorld){snapshotWorld.current=world;close();}
+    setSquad((world.hive?.allies??[]).map(a=>({id:a.world.aircraft.aircraftId,seconds:Math.ceil(a.respawn),hp:Math.ceil(a.world.aircraft.currentHp),max:Math.ceil(getEffectiveAircraftStats(a.world.aircraft).maxHp),level:a.world.aircraft.level})));
     const next = [...getStatusPresentations(world), ...getBossStatusPresentations(world)];
     progress.snapshot(world,next);
     progress.render(world);
@@ -98,6 +103,7 @@ export const AirCombatStatusStrip = React.memo(forwardRef<StatusStripHandle, { t
       {bossItems.map(renderStatus)}
     </div>}
     <div className="air-status-player">
+    {squad.length>0&&<div className="air-hive-squad" aria-label="Đồng minh AI">{squad.map(a=><div key={a.id} className="air-hive-ally" title={`${AIRCRAFT_CONFIGS[a.id].name} · Cấp ${a.level} · ${a.seconds?`Hồi sinh sau ${a.seconds} giây`:`Máu ${a.hp}/${a.max}`}`}><AircraftPreview aircraftId={a.id}/><strong>{a.seconds?`${a.seconds}s`:`Lv${a.level}`}</strong><span>{a.seconds?"HỒI SINH":`${Math.round(a.hp/a.max*100)}%`}</span></div>)}</div>}
     {(["buff", "debuff"] as const).map(group => {
       const all = playerItems.filter(s => s.group === group), shown = all.length > 10 ? all.slice(0, 9) : all;
       return <div key={group} className={`air-status-group air-status-group--${group}`} aria-label={group === "buff" ? "Buff" : "Debuff"}>

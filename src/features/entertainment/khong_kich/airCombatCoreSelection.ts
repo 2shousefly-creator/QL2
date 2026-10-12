@@ -1,3 +1,4 @@
+import { hiveCoreDescription } from "./airCombatHiveTooltips";
 import type { CoreConversionSource } from "./airCombatEquipmentState";
 import { isCoreEligible, isCoreOfferable, hasCoreRewardCapacity, canCommitCoreOffers, randomGrantCandidates, pandoraConvertibleCoreIds, planPandoraReplacements } from "./airCombatCoreEligibility";
 import { queueEquipmentChoice, grantEquipmentReward, randomEquipmentId, equipmentRewardsLocked, sacrificeEquipment } from "./airCombatEquipmentState";
@@ -45,7 +46,7 @@ export function generateCoreChoices(state: AircraftCombatState, selectionNumber:
     }
     if(chosen.length===5)recordCoreMetric(state,214,"procs",1);
     for(const core of chosen)state.coreState.encounteredCoreIds.add(core.id);
-    return chosen.map(makeCoreCard);
+    return chosen.map(c=>{const card=makeCoreCard(c);return {...card,description:hiveCoreDescription(state,c.id,card.description)};});
 }
 
 function rollChaosBatch(state:AircraftCombatState,random:()=>number,reserved:ReadonlySet<string>):CoreDefinition[] {

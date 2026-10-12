@@ -131,8 +131,9 @@ function tickBattery(w:CombatWorld,dt:number){const b=cinderState(w).battery;if(
  }
 }
 export function tickCinder(w:CombatWorld,dt:number,h:CinderHooks){
- const s=cinderState(w),now=w.elapsed;if(w.aircraft.currentHp<=0||w.destruction||w.aftermath){cancelCinder(w);return;}
- tickBattery(w,dt);s.effects=s.effects.filter(e=>e.at+e.life>now);
+ const s=cinderState(w),now=w.elapsed;if(w.destruction||w.aftermath||(w.aircraft.currentHp<=0&&!w.hiveHost)){cancelCinder(w);return;}
+ if(w.aircraft.currentHp<=0){s.beam=undefined;s.shield=undefined;}
+ if(w.aircraft.currentHp>0)tickBattery(w,dt);s.effects=s.effects.filter(e=>e.at+e.life>now);
  for(const [id,t] of s.targets){const e=w.enemies.find(e=>e.id===id);if(!e||e!==t.entity||e.hp<=0||!h.hostile(w,e)){s.targets.delete(id);continue;}
   for(let guard=0;t.burn>0&&e.hp>0&&t.nextTick<=Math.min(now,t.until)+1e-8&&guard<12;guard++){
    const hp=h.damage(w,e,getEffectiveAircraftStats(w.aircraft).firepower*CINDER_BURN.dpsAtCap[passiveTier(w.aircraft.level)]/CINDER_BURN.cap*CINDER_BURN.interval*t.burn*(t.blazeUntil>t.nextTick?1.5:1),undefined,{trueDamage:true,castId:t.session,source:'cinder_burn',ownerId:s.ownerId,burnSession:t.session});

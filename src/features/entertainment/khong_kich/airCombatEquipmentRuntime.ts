@@ -190,9 +190,9 @@ export function equipmentConsumeSkillBonus(s:AircraftCombatState):number {
   return bonus;
 }
 export function equipmentOnKill(w:CombatWorld,h:EquipmentHooks,e:EnemyEntity) {
-  const s=w.aircraft,q=equipmentState(s);
+  const s=w.aircraft,q=equipmentState(w.hiveHost?.aircraft??s);
   if(!e.auxiliary&&!e.rewardless&&e.expiresAt===undefined&&e.type!=="boss"){
-    q.pendingDrops.push({x:e.x,y:e.y,elite:h.elite(e),wave:w.waveIndex});
+    q.pendingDrops.push({x:e.x,y:e.y,elite:h.elite(e),wave:w.waveIndex,killer:w.stageId===5?s:undefined});
     advanceWaitingChest(s,h.elite(e)?8:1);
   }
   if(e.killProcEligible!==false)for(const c of contexts(w,h))EFFECTS[c.f]?.kill?.(c,e);
@@ -218,7 +218,7 @@ export function tickEquipment(w:CombatWorld,dt:number,h:EquipmentHooks) {
     const targets=nearby(c,m.x,m.y,80);for(const e of targets){damage(c,e,power(c)*P[24].damage*m.scale);const slow=mark(s,e,24);slow.until=t+2;slow.stacks=m.scale;metric(c,"slows");}if(targets.length)resource(c,getEffectiveAircraftStats(s).maxResource*P[24].resource*m.scale);equipmentFx(w,24,m.x,m.y,160,.9);}
   if(q.orb){const orb=q.orb,c=cs.find(c=>c.f===23);if(orb.until<=t||!c)q.orb=undefined;
     else if(Math.hypot(w.playerX-orb.x,w.playerY-orb.y)<=EQUIPMENT_PICKUP_RADIUS){if(orb.shield){shield(c,hp(c)*P[23].shield*orb.scale,5);metric(c,"shieldOrbs");}else{heal(c,hp(c)*P[23].heal*orb.scale);metric(c,"lifeOrbs");}equipmentEffect(s,23).bonusUntil=t+4;equipmentFx(w,23,orb.x,orb.y,70,.7);q.orb=undefined;}}
-  for(let i=q.loot.length-1;i>=0;i--){
+  for(let i=w.stageId===5?-1:q.loot.length-1;i>=0;i--){
     const l=q.loot[i];l.age+=dt;
     if(l.collection){
       l.collection.age+=dt;const progress=Math.min(1,l.collection.age/.45),ease=progress*progress*(3-2*progress),target=q.hubTarget??{x:257,y:24};
@@ -242,13 +242,14 @@ export function flushEquipmentDrops(w:CombatWorld) {
     const first=q.eliteKillsThisWave===0&&elites.length?elites[0]:undefined;
     for(const e of kills){
       const chances=e===first?[.10,.35,1,.10]:e.elite?[.05,.35,.10,.02]:[.005,.015,.0025,.0005];
-      const boost=s.selectedCores.includes("core_224")&&!equipmentRewardsLocked(s)?2:1;
+      const killer=e.killer??s;
+      const boost=killer.selectedCores.includes("core_224")&&(w.stageId===5||!equipmentRewardsLocked(killer))?2:1;
       for(const [index,prefix] of (["VP01","TP","TH","HL"] as const).entries()){
         const roll=w.random(),base=chances[index];
-        if(roll>=Math.min(1,base*boost)||!canGrantEquipmentReward(s,prefix==="VP01"?prefix:`${prefix}01`))continue;
+        if(roll>=Math.min(1,base*boost)||(w.stageId!==5&&!canGrantEquipmentReward(s,prefix==="VP01"?prefix:`${prefix}01`)))continue;
         const definitionId=prefix==="VP01"?prefix:randomEquipmentId(prefix,w.random);
         q.loot.push({id:w.nextId++,definitionId,x:e.x+(index-1.5)*9,y:e.y+(index%2)*7,age:0});
-        if(boost>1&&roll>=base){recordCoreMetric(s,224,"extraDrops",1);recordCoreMetric(s,224,e.elite?"eliteDrops":"normalDrops",1);}
+        if(boost>1&&roll>=base){recordCoreMetric(killer,224,"extraDrops",1);recordCoreMetric(killer,224,e.elite?"eliteDrops":"normalDrops",1);}
       }
     }
     q.eliteKillsThisWave+=elites.length;

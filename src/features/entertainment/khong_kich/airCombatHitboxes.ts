@@ -20,6 +20,19 @@ export const PLAYER_AIRFRAME_SIZE:Record<AircraftId,number>={terra:PLAYER_STANDA
 export const PLAYER_STANDARD_HITBOX_PROFILE=profile([cap(0,-.39,0,.27,.055,"body"),cap(-.06,-.04,-.27,.15,.045,"left_wing"),cap(.06,-.04,.27,.15,.045,"right_wing"),cap(-.06,.26,.06,.26,.035,"tail")]);
 export const PLAYER_HITBOX_PROFILES:Record<AircraftId,AircraftHitboxProfile>={terra:PLAYER_STANDARD_HITBOX_PROFILE,sylva:PLAYER_STANDARD_HITBOX_PROFILE,argent:PLAYER_STANDARD_HITBOX_PROFILE,riptide:PLAYER_STANDARD_HITBOX_PROFILE,cinder:PLAYER_STANDARD_HITBOX_PROFILE,black_eagle:PLAYER_STANDARD_HITBOX_PROFILE,breaker:PLAYER_STANDARD_HITBOX_PROFILE,astra:PLAYER_STANDARD_HITBOX_PROFILE,phantom:PLAYER_STANDARD_HITBOX_PROFILE};
 export const ENEMY_HITBOX_PROFILES:Record<EnemyType,AircraftHitboxProfile>={
+swarm_needler:profile([cap(0,-.30,0,.29,.11),cap(-.10,-.08,-.29,.08,.07),cap(.10,-.08,.29,.08,.07)]),
+razor_glider:profile([cap(0,-.30,0,.29,.11),cap(-.10,-.08,-.29,.08,.07),cap(.10,-.08,.29,.08,.07)]),
+aegis_beetle:profile([cap(0,-.30,0,.29,.11),cap(-.10,-.08,-.29,.08,.07),cap(.10,-.08,.29,.08,.07)]),
+siege_spitter:profile([cap(0,-.30,0,.29,.11),cap(-.10,-.08,-.29,.08,.07),cap(.10,-.08,.29,.08,.07)]),
+signal_weaver:profile([cap(0,-.30,0,.29,.11),cap(-.10,-.08,-.29,.08,.07),cap(.10,-.08,.29,.08,.07)]),
+repair_wasp:profile([cap(0,-.30,0,.29,.11),cap(-.10,-.08,-.29,.08,.07),cap(.10,-.08,.29,.08,.07)]),
+razor_marshal:profile([cap(0,-.30,0,.29,.11),cap(-.10,-.08,-.29,.08,.07),cap(.10,-.08,.29,.08,.07)]),
+aegis_regent:profile([cap(0,-.30,0,.29,.11),cap(-.10,-.08,-.29,.08,.07),cap(.10,-.08,.29,.08,.07)]),
+bombard_prelate:profile([cap(0,-.30,0,.29,.11),cap(-.10,-.08,-.29,.08,.07),cap(.10,-.08,.29,.08,.07)]),
+disruptor_monarch:profile([cap(0,-.30,0,.29,.11),cap(-.10,-.08,-.29,.08,.07),cap(.10,-.08,.29,.08,.07)]),
+forge_matron:profile([cap(0,-.30,0,.29,.11),cap(-.10,-.08,-.29,.08,.07),cap(.10,-.08,.29,.08,.07)]),
+brood_ark:profile([cap(0,-.30,0,.29,.11),cap(-.10,-.08,-.29,.08,.07),cap(.10,-.08,.29,.08,.07)]),
+crucible_ark:profile([cap(0,-.30,0,.29,.11),cap(-.10,-.08,-.29,.08,.07),cap(.10,-.08,.29,.08,.07)]),
   mirage_wisp: profile([cap(0,-.26,0,.28,.06),cap(-.09,-.04,-.29,.17,.04),cap(.09,-.04,.29,.17,.04)]),
   parallax_lancer: profile([cap(0,-.37,0,.32,.055),cap(-.08,.03,-.32,.1,.035),cap(.08,.03,.32,.1,.035)]),
   holo_bastion: profile([cap(0,-.31,0,.28,.09),cap(-.20,-.22,-.23,.2,.085),cap(.20,-.22,.23,.2,.085)]),
@@ -111,7 +124,9 @@ export function getEnemyExhaustTransform(e:EnemyEntity) {
 const PARALLAX_HITBOX_PROFILE=profile([cap(0,-.38,0,.36,.06),cap(-.13,-.18,-.2,.25,.055),cap(.13,-.18,.2,.25,.055),cap(-.22,.04,-.35,.22,.035),cap(.22,.04,.35,.22,.035)]);
 const STORMBREAKER_HITBOX_PROFILE=profile([cap(0,-.34,0,.30,.095),cap(-.17,-.18,-.23,.24,.06),cap(.17,-.18,.23,.24,.06),cap(-.2,.02,-.32,.22,.045),cap(.2,.02,.32,.22,.045)]);
 const TEMPEST_HITBOX_PROFILE=profile([cap(0,-.32,0,.32,.13),cap(-.1,-.17,-.22,.2,.075),cap(.1,-.17,.22,.2,.075),cap(-.18,0,-.4,0,.055),cap(.18,0,.4,0,.055)]);
+const HIVE_OPEN_CORE=profile([cap(0,0,0,0,.13,'body'),cap(-.30,-.22,-.30,.24,.075),cap(.30,-.22,.30,.24,.075)]);
 export const getEnemyHitbox=(e:EnemyEntity)=>{
+  if(e.hive)return transform(e,e.hive.coreOpen?HIVE_OPEN_CORE:e.type==='boss'?ENEMY_HITBOX_PROFILES.brood_ark:ENEMY_HITBOX_PROFILES[e.type],e.x,e.y,e.radius*2.8,0);
   if (e.aircraftTarget) { const a=e.aircraftTarget.world; return transform(e,PLAYER_HITBOX_PROFILES[a.aircraft.aircraftId],e.x,e.y,effectivePlayerAirframeSize(a),Math.PI); }
   if (e.type === "boss" && e.mirage) return transform(e,PARALLAX_HITBOX_PROFILE,e.x,e.y,e.radius*3.2,enemyAirframeRotation(e));
   const storm=e.type==="boss" && !!e.stormbreaker;

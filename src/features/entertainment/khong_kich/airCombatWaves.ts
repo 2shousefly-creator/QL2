@@ -26,7 +26,7 @@ export const COMBAT_WAVES: readonly WaveDefinition[] = [
     { label: "Đợt thường 5", normal: 5, elite: 0, interval: .42, cap: 20, hp: 1.9, damage: 1.5, armor: 1.25, xpBudget: 2545, counts: { scout: 4, fighter: 10, kamikaze: 12, attacker: 12, bomber: 14, sniper: 14, jammer: 14 } },
     { label: "LEVIATHAN X-99", normal: 5, elite: 0, interval: 1, cap: 1, hp: 1, damage: 1, armor: 1, xpBudget: 0, counts: { boss: 1 } },
 ];
-export const isElite = (type: EnemyType): boolean => ["mirror_arbiter", "null_jailer", "refraction_ace", "glass_monarch", "phantom_executioner", "veil_architect", "echo_bastion_prime", "parallax_seraph", "fracture_sovereign", "storm_herald", "volt_executioner", "capacitor_prime", "ion_arbiter", "thunder_bastion", "arc_seraph", "storm_weaver_prime", "elite", "iron_fortress", "acid_bomber", "radar_hunter", "cyclone_ace", "grid_architect", "prism_sovereign", "mine_warden", "polarity_warden", "swarm_overlord", "arc_reaver_prime"].includes(type);
+export const isElite = (type: EnemyType): boolean => ["razor_marshal","aegis_regent","bombard_prelate","disruptor_monarch","forge_matron","mirror_arbiter", "null_jailer", "refraction_ace", "glass_monarch", "phantom_executioner", "veil_architect", "echo_bastion_prime", "parallax_seraph", "fracture_sovereign", "storm_herald", "volt_executioner", "capacitor_prime", "ion_arbiter", "thunder_bastion", "arc_seraph", "storm_weaver_prime", "elite", "iron_fortress", "acid_bomber", "radar_hunter", "cyclone_ace", "grid_architect", "prism_sovereign", "mine_warden", "polarity_warden", "swarm_overlord", "arc_reaver_prime"].includes(type);
 export function createWaveQueue(index: number, random: () => number, waves: readonly WaveDefinition[] = COMBAT_WAVES): EnemyType[] {
     const wave = waves[index];
     if (wave?.groups) return wave.groups.flat();
@@ -42,6 +42,9 @@ export function createWaveQueue(index: number, random: () => number, waves: read
             const j = Math.min(i, Math.floor(random() * (i + 1)));
             [queue[i], queue[j]] = [queue[j], queue[i]];
         }
+    const mother=queue.findIndex(t=>t==="brood_ark"||t==="crucible_ark"||t==="boss");
+    if(mother>0&&(wave.counts.brood_ark||wave.counts.crucible_ark||wave.label.startsWith("HIVE")))queue.unshift(queue.splice(mother,1)[0]);
+    if(wave.counts.brood_ark||wave.counts.crucible_ark){for(const type of ['repair_wasp','aegis_beetle','aegis_beetle','aegis_beetle','aegis_beetle'] as EnemyType[]){const index=queue.lastIndexOf(type);if(index>0)queue.splice(1,0,queue.splice(index,1)[0]);}}
     return queue;
 }
 

@@ -1,3 +1,4 @@
+import { hiveCoreDescription } from './airCombatHiveTooltips';
 import { statusDuration } from './airCombatStatusTiming';
 import { terraPressureLimit, terraCannonDamage, terraValues } from './airCombatTerraConfig';
 import { terraHud, terraState } from './airCombatTerraRuntime';
@@ -413,7 +414,7 @@ export function getStatusPresentations(world: CombatWorld): StatusPresentation[]
   // All five player marks accumulate hits via addStatusMark. Trigger/reset at a
   // threshold (including Hunted at 2) is not a hard single-instance status.
   for(const [key,mark] of Object.entries(status.marks)) if(mark && mark.until>c.time) result.push({id:key,group:"debuff",name:markNames[key as keyof typeof markNames],icon:{kind:"status",id:key==="corrosion"?"acid":key==="targetLock"?"radar":"mark"},description:`Dấu hiện tại: ${mark.count}. Tiếp tục trúng đòn có thể kích hoạt đòn trừng phạt.`,source:"Đòn địch",stacks:mark.count,badgeText:`×${mark.count}`,badgeKind:"stack",remaining:mark.until-c.time,duration:mark.window,priority:100});
-  return result.filter(status=>status.remaining>0).map(status=>({ ...status,
+  return result.filter(status=>status.remaining>0).map(status=>({ ...status, description:hiveCoreDescription(world.aircraft,status.icon.id,status.description),
     timer: Number.isFinite(status.remaining)&&Number.isFinite(status.duration)&&status.duration>0
       ? {phase:status.timerKind??'active',remaining:Math.max(0,status.remaining),total:Math.max(status.remaining,status.duration)}
       : {phase:'indefinite',remaining:Infinity,total:Infinity},

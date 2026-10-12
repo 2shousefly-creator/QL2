@@ -159,7 +159,8 @@ const MIRAGE_XP_CURVE = XP_CURVES[1].map((_value,index) => {
  const before=XP_CURVES[1].slice(0,index).reduce((sum,value)=>sum+value,0);
  return Math.round((before+XP_CURVES[1][index])*3455/2668)-Math.round(before*3455/2668);
 });
-export function requiredCombatXp(level:number,stageId=1):number {return level>=COMBAT_LEVEL_CAP?0:(stageId===4?MIRAGE_XP_CURVE:XP_CURVES[stageId===2||stageId===3?1:0])[Math.max(0,level-1)];}
+const HIVE_XP_CURVE=Array.from({length:17},(_,i)=>Math.round(6900*((i+1)/17)**1.35)-Math.round(6900*(i/17)**1.35));
+export function requiredCombatXp(level:number,stageId=1):number {return level>=COMBAT_LEVEL_CAP?0:(stageId===5?HIVE_XP_CURVE:stageId===4?MIRAGE_XP_CURVE:XP_CURVES[stageId===2||stageId===3?1:0])[Math.max(0,level-1)];}
 export function gainCombatXp(state: AircraftCombatState, amount: number, stageId = 1): LevelUpResult {
     let remaining = Math.max(0, amount), levelsGained = 0, coreSelectionsDue = 0;
     while (remaining > 0 && state.level < COMBAT_LEVEL_CAP) {

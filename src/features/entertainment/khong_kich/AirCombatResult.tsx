@@ -67,7 +67,7 @@ export const AirCombatResult: React.FC<AirCombatResultProps> = ({
   const isNewRecord = summary.score > previousHighScore;
 
   return (
-    <GameResultScreen status={summary.bossDefeated ? "success" : summary.destroyed ? "danger" : "warning"} data-air-combat-result="true" data-run-rank={summary.rank}>
+    <GameResultScreen status={summary.stageVictory ? "success" : summary.destroyed ? "danger" : "warning"} data-air-combat-result="true" data-run-rank={summary.rank}>
       <OverlayBody>
       <ResultHero>
 
@@ -101,6 +101,7 @@ export const AirCombatResult: React.FC<AirCombatResultProps> = ({
           <ResultStat icon={<ShieldAlert className="h-3 w-3" />} label="Số lần trúng" value={summary.hitsReceived} />
         </div>
 
+        {summary.squad&&<div className="modal-section mt-2"><p className="text-xs font-semibold text-cyan-200">Sát thương tổ đội</p>{summary.squad.map((member,index)=><div key={member.aircraftId} className="flex items-center justify-between gap-2 py-1 text-xs"><AircraftPreview aircraftId={member.aircraftId} className="h-8 w-8"/><span>{index===0?'Bạn':('AI '+index)} · {AIRCRAFT_CONFIGS[member.aircraftId].name}</span><strong>{Math.round(member.damage).toLocaleString('vi-VN')}</strong></div>)}</div>}
         <div className={`mt-2 rounded-xl border px-3 py-2 text-xs font-semibold ${summary.bossDefeated ? "border-emerald-400/25 bg-emerald-400/10 text-[var(--modal-success)]" : "border-slate-700 bg-slate-900/70 text-[var(--modal-muted)]"}`}>
           Boss: {summary.bossDefeated ? `Đã tiêu diệt · ${summary.bossClearSeconds === null ? "--" : formatTime(summary.bossClearSeconds)}` : "Chưa tiêu diệt"}
         </div>

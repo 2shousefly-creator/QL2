@@ -25,6 +25,7 @@ export type SkillId =
   | "orbit_reversal" | "stellar_lance" | "starfall";
 
 export type EnemyType =
+ | "swarm_needler" | "razor_glider" | "aegis_beetle" | "siege_spitter" | "signal_weaver" | "repair_wasp" | "razor_marshal" | "aegis_regent" | "bombard_prelate" | "disruptor_monarch" | "forge_matron" | "brood_ark" | "crucible_ark"
   | "mirage_wisp"
   | "parallax_lancer"
   | "holo_bastion"
@@ -179,6 +180,7 @@ export interface AircraftModifiers {
 }
 
 export interface AircraftCombatState {
+ hiveSquad?: boolean;
   laserPhase?: "charge" | "firing";
   /** Session-only policy; never persisted in AirCombatProfile. */
   duel?: { selectionLevel: number; allowedCoreIds?: ReadonlySet<string>; healingBlocked: boolean };
@@ -270,6 +272,7 @@ export interface SkillCastResult {
 }
 
 export interface AirCombatRunSummary {
+  squad?: {aircraftId:AircraftId;damage:number}[];
   astraTelemetry?:Record<string,number>;
   stageId: number;
   stageVictory: boolean;

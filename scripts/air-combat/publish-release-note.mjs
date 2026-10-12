@@ -14,10 +14,6 @@ const filename = `v${release.version.replaceAll(".", "_")}.json`;
 const manifestPath = path.join(directory, "history.json");
 const existing = JSON.parse(await readFile(manifestPath, "utf8"));
 const files = [...new Set([filename, ...existing])];
-files.sort((a, b) => {
-  const left = a.match(/\d+/g).map(Number), right = b.match(/\d+/g).map(Number);
-  return right[0] - left[0] || right[1] - left[1] || right[2] - left[2];
-});
 const removed = files.splice(10);
 // File names are validated before resolving any deletion; no recursive deletion.
 for (const file of removed) {

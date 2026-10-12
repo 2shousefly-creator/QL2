@@ -96,7 +96,7 @@ function settleBloom(w:CombatWorld,at=w.elapsed){
  }
 }
 function checkBloom(w:CombatWorld,h:SylvaHooks){
- const a=states.get(w)?.bloom;if(!a||a.checking)return;if(!live(w)){cancelSylva(w);return;}a.checking=true;
+ const a=states.get(w)?.bloom;if(!a||a.checking)return;if(!live(w)&&!w.hiveHost){cancelSylva(w);return;}a.checking=true;
  try{for(const [id,seed] of a.seeds){const e=seed.entity;if(!exists(w,e)){a.seeds.delete(id);fx(w,'wither',e.x,e.y,65,.4);continue;}
   const v=sylvaValues(SYLVA_SKILLS[3],a.rank),raw=getEffectiveAircraftStats(w.aircraft).firepower*v.damageMultiplier+seed.recordedHpLoss*v.record;
   if(w.elapsed>=a.until||h.lethal(w,e,raw)){
@@ -142,7 +142,8 @@ function impact(w:CombatWorld,f:Flight,h:SylvaHooks){
  checkBloom(w,h);
 }
 export function tickSylva(w:CombatWorld,dt:number,h:SylvaHooks){
- const s=states.get(w);if(!s)return;if(!live(w)){cancelSylva(w);return;}const now=w.elapsed;
+ const s=states.get(w);if(!s)return;if(!live(w)&&!w.hiveHost){cancelSylva(w);return;}const now=w.elapsed;
+ if(!live(w))s.symbiosis=undefined;
  if(s.symbiosis){if(now>=s.symbiosis.until)endSylvaSymbiosis(w,h,s.symbiosis.until);else w.aircraft.activeEffects[SYLVA_SKILLS[0]]=s.symbiosis.until-now;}
  const arrived=s.flights.filter(f=>f.hitAt<=now);s.flights=s.flights.filter(f=>f.hitAt>now);for(const f of arrived)impact(w,f,h);
  for(const z of s.zones){

@@ -476,7 +476,7 @@ export const AirCombatBattleShell: React.FC<AirCombatBattleProps> = ({
       try {
         const { AirCombatPixiRenderer } = await import("./pixi/AirCombatPixiRenderer");
         if (cancelled) return;
-        const renderer = await AirCombatPixiRenderer.create(host,worldRef.current);
+        const renderer = worldRef.current.stageId===5 ? await (await import('./pixi/HivePresentation')).createHivePresentation(host,worldRef.current) : await AirCombatPixiRenderer.create(host,worldRef.current);
         if (cancelled) { renderer.destroy(); return; }
         presentation = renderer;
         setRendererState("pixi"); setPauseReason("loading", false);

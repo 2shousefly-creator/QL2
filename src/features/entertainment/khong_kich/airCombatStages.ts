@@ -1,3 +1,4 @@
+import { HIVE_WAVES } from "./airCombatHiveWaves";
 import { MIRAGE_WAVES } from "./airCombatMirageWaves";
 import { STORMBREAKER_WAVES } from "./airCombatStormbreakerWaves";
 import { COMBAT_WAVES, withNormalWavePower, type WaveDefinition } from "./airCombatWaves";
@@ -7,7 +8,7 @@ export interface AirCombatStageDefinition {
   id: number; key: string; displayName: string; localizedName: string;
   shortDescription: string; bossName: string; unlockAfterStage: number | null;
   theme: string; accent: string; available: boolean;
-  runtime: "leviathan" | "magnetic" | "stormbreaker" | "mirage";
+  runtime: "leviathan" | "magnetic" | "stormbreaker" | "mirage" | "hive";
   waves: readonly WaveDefinition[];
 }
 // Authored introductions followed by bounded mixed groups. Counts below own
@@ -54,7 +55,7 @@ export const MAGNETIC_WAVES: readonly WaveDefinition[] = [
   magneticWave("WAVE 6 · TÂM BÃO", { orbit_wasp: 16, arc_reaver: 14, mine_seeder: 12, magnetic_leech: 10, prism_manta: 10, swarm_carrier: 8 }, 14, 20, 5),
   magneticWave("WAVE 7 · TEMPEST CROWN", { boss: 1 }, 0, 1, 5),
 ];
-export const AIR_COMBAT_STAGES: readonly AirCombatStageDefinition[] = [
+export const AIR_COMBAT_STAGES: AirCombatStageDefinition[] = [
   { id: 1, key: "leviathan_front", displayName: "LEVIATHAN FRONT", localizedName: "PHÒNG TUYẾN LEVIATHAN",
     shortDescription: "Né hỏa lực trực diện. Đánh bại pháo đài bay Leviathan.", bossName: "Leviathan",
     unlockAfterStage: null, theme: "FRONTLINE · FIREPOWER", accent: "#38bdf8", available: true,
@@ -71,6 +72,7 @@ export const AIR_COMBAT_STAGES: readonly AirCombatStageDefinition[] = [
     bossName: "PARALLAX ZERO", unlockAfterStage: 3, theme: "DECEPTION · MIRROR · REACTION", accent: "#f472b6",
     available: true, runtime: "mirage", waves: withNormalWavePower(MIRAGE_WAVES) },
 ];
+AIR_COMBAT_STAGES.push({id:5,key:"hive_siege",displayName:"HIVE SIEGE",localizedName:"CÔNG PHÁ TỔ MÁY",shortDescription:"Cùng hai đồng minh AI công phá tổ máy, hạ tàu mẹ và HIVE TYRANT Ω.",bossName:"HIVE TYRANT Ω",unlockAfterStage:4,theme:"SQUAD · ESCORT · SIEGE",accent:"#f59e0b",available:true,runtime:"hive",waves:HIVE_WAVES});
 export const getAirCombatStage = (id: number) => AIR_COMBAT_STAGES.find(stage => stage.id === id);
 export const isStageUnlocked = (id: number, progress: AirCombatCampaignProgress) => {
   const stage = getAirCombatStage(id);

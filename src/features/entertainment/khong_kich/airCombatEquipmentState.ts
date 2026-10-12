@@ -17,7 +17,7 @@ export interface EquipmentRewardChoice { source:string; options:EquipmentDefinit
 export interface EquipmentState {
   rewardChoices?: EquipmentRewardChoice[];
   rewardsLocked: boolean;
-  pendingDrops: { x:number; y:number; elite:boolean; wave:number }[];
+  pendingDrops: { x:number; y:number; elite:boolean; wave:number; killer?:AircraftCombatState }[];
   nextInstanceId: number;
   components: EquipmentInstance[]; completed: EquipmentInstance[];
   equipped: [EquipmentInstance | null, EquipmentInstance | null, EquipmentInstance | null, EquipmentInstance | null, EquipmentInstance | null, EquipmentInstance | null];
@@ -137,16 +137,16 @@ export function tickEquipmentCraft(s: AircraftCombatState, uiTime:number) {
 
 /** Permanent run-local lock; Pandora removing Core228 cannot reopen rewards. */
 export const equipmentRewardsLocked = (s: AircraftCombatState) => equipmentState(s).rewardsLocked;
-export const canGrantEquipmentReward = (s: AircraftCombatState, id: EquipmentRewardId) => id === "VP01" || !equipmentRewardsLocked(s);
+export const canGrantEquipmentReward = (s: AircraftCombatState, id: EquipmentRewardId) => (id === "VP01" && !s.hiveSquad) || !equipmentRewardsLocked(s);
 /** The only bypass is private receipt of Core228's own Legendary, after the atomic wipe. */
 export function sacrificeEquipment(s: AircraftCombatState, random:()=>number, transactionId=s.coreState.nextAcquisitionId) {
   const e=equipmentState(s);
   e.equipped=[null,null,null,null,null,null];e.components=[];e.completed=[];e.craftSlots=[null,null];delete e.craftJob;
-  e.loot=e.loot.filter(l=>l.definitionId==="VP01");
+  if(!s.hiveSquad)e.loot=e.loot.filter(l=>l.definitionId==="VP01");
   e.effects={};e.marks={};e.meteors=[];e.orb=undefined;e.fireCast=undefined;e.endedSkills=[];
   e.visuals=[];e.presentationGate={};e.lastX=undefined;e.lastY=undefined;
   for(const key of Object.keys(s.coreState.shields))if(key.startsWith("equipment:"))delete s.coreState.shields[key];
-  e.pendingDrops=[];
+  if(!s.hiveSquad)e.pendingDrops=[];
   e.componentPage=0;e.completedPage=0;
   e.rewardChoices=[];
   queueEquipmentChoice(s,"HL",10,3,"core_228",random,transactionId);

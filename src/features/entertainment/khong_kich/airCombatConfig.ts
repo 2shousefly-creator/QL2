@@ -324,7 +324,7 @@ for(const id of Object.keys(SKILL_CONFIGS) as SkillId[]){SKILL_CONFIGS[id].cost=
 /** Stage 2 power correction; exact scaled config values below are before wave progression. */
 export const STAGE2_POWER_MULTIPLIER = 1.5;
 
-export const ENEMY_CONFIGS: Record<EnemyType, EnemyConfig> = {
+export const ENEMY_CONFIGS = {
   mirage_wisp: {"type":"mirage_wisp","name":"MIRAGE WISP","baseHp":267.28,"baseArmor":13.02,"speed":85.8,"projectileDamage":86.35,"collisionDamage":188.41,"radius":11,"fireInterval":3,"score":110,"combatXp":1,"color":"#f472b6"},
   parallax_lancer: {"type":"parallax_lancer","name":"PARALLAX LANCER","baseHp":442.23,"baseArmor":23.21,"speed":59.36,"projectileDamage":87.92,"collisionDamage":239.79,"radius":13,"fireInterval":3.6,"score":110,"combatXp":1,"color":"#f472b6"},
   holo_bastion: {"type":"holo_bastion","name":"HOLO BASTION","baseHp":838.3,"baseArmor":30.64,"speed":43.7,"projectileDamage":147.73,"collisionDamage":295.46,"radius":18,"fireInterval":3.2,"score":110,"combatXp":1,"color":"#f472b6"},
@@ -539,7 +539,7 @@ export const ENEMY_CONFIGS: Record<EnemyType, EnemyConfig> = {
     "fireInterval": 1.4,
     "color": "#dc2626"
   }
-};
+} as Record<EnemyType, EnemyConfig>;
 
 export const CORE_TIER_CHANCES: Record<CoreTier, number> = {
   silver: 0.4,
@@ -576,4 +576,19 @@ export function getCoreDefinition(id: CoreId): CoreDefinition {
 export const TEMPEST_CONFIG: EnemyConfig = { ...ENEMY_CONFIGS.boss, name: "TEMPEST CROWN", baseHp: 175312.5, baseArmor: 168.3, projectileDamage: 188.16, collisionDamage: 672 };
 export const STORMBREAKER_CONFIG: EnemyConfig = { ...ENEMY_CONFIGS.boss, name: "STORMBREAKER Ω", baseHp: 284006.25, baseArmor: 268.0965, speed: 31, radius: 43, projectileDamage: 222.03, collisionDamage: 792.96 };
 export const PARALLAX_ZERO_CONFIG: EnemyConfig = { ...STORMBREAKER_CONFIG, name: "PARALLAX ZERO", baseHp: 326607.1875, baseArmor: 308.310975, speed: 35.65, projectileDamage: 255.3345, collisionDamage: 911.904, radius: 43 };
-export const stageEnemyConfig = (type: EnemyType, stageId: number): EnemyConfig => type === "boss" && stageId === 4 ? PARALLAX_ZERO_CONFIG : type === "boss" && stageId === 3 ? STORMBREAKER_CONFIG : type === "boss" && stageId === 2 ? TEMPEST_CONFIG : ENEMY_CONFIGS[type];
+// Mirage actual elite damage includes its wave multiplier exactly once.
+ENEMY_CONFIGS.swarm_needler={...ENEMY_CONFIGS.mirage_wisp,name:"Bọ Đạn — Swarm Needler",baseHp:ENEMY_CONFIGS.mirage_wisp.baseHp*3,baseArmor:ENEMY_CONFIGS.mirage_wisp.baseArmor*3,projectileDamage:ENEMY_CONFIGS.mirage_wisp.projectileDamage*3,collisionDamage:ENEMY_CONFIGS.mirage_wisp.collisionDamage*3};
+ENEMY_CONFIGS.razor_glider={...ENEMY_CONFIGS.parallax_lancer,name:"Liềm Xung Kích — Razor Glider",baseHp:ENEMY_CONFIGS.parallax_lancer.baseHp*3,baseArmor:ENEMY_CONFIGS.parallax_lancer.baseArmor*3,projectileDamage:ENEMY_CONFIGS.parallax_lancer.projectileDamage*3,collisionDamage:ENEMY_CONFIGS.parallax_lancer.collisionDamage*3};
+ENEMY_CONFIGS.aegis_beetle={...ENEMY_CONFIGS.holo_bastion,name:"Giáp Vệ — Aegis Beetle",baseHp:ENEMY_CONFIGS.holo_bastion.baseHp*3,baseArmor:ENEMY_CONFIGS.holo_bastion.baseArmor*3,projectileDamage:ENEMY_CONFIGS.holo_bastion.projectileDamage*3,collisionDamage:ENEMY_CONFIGS.holo_bastion.collisionDamage*3};
+ENEMY_CONFIGS.siege_spitter={...ENEMY_CONFIGS.phantom_carrier,name:"Pháo Bầy — Siege Spitter",baseHp:ENEMY_CONFIGS.phantom_carrier.baseHp*3,baseArmor:ENEMY_CONFIGS.phantom_carrier.baseArmor*3,projectileDamage:ENEMY_CONFIGS.phantom_carrier.projectileDamage*3,collisionDamage:ENEMY_CONFIGS.phantom_carrier.collisionDamage*3};
+ENEMY_CONFIGS.signal_weaver={...ENEMY_CONFIGS.veil_weaver,name:"Dệt Nhiễu — Signal Weaver",baseHp:ENEMY_CONFIGS.veil_weaver.baseHp*3,baseArmor:ENEMY_CONFIGS.veil_weaver.baseArmor*3,projectileDamage:ENEMY_CONFIGS.veil_weaver.projectileDamage*3,collisionDamage:ENEMY_CONFIGS.veil_weaver.collisionDamage*3};
+ENEMY_CONFIGS.repair_wasp={...ENEMY_CONFIGS.echo_hunter,name:"Thợ Vá Tổ — Repair Wasp",baseHp:ENEMY_CONFIGS.echo_hunter.baseHp*3,baseArmor:ENEMY_CONFIGS.echo_hunter.baseArmor*3,projectileDamage:ENEMY_CONFIGS.echo_hunter.projectileDamage*3,collisionDamage:ENEMY_CONFIGS.echo_hunter.collisionDamage*3};
+ENEMY_CONFIGS.razor_marshal={...ENEMY_CONFIGS.refraction_ace,name:"Razor Marshal — Thống Lĩnh Liềm",baseHp:ENEMY_CONFIGS.refraction_ace.baseHp*3,baseArmor:ENEMY_CONFIGS.refraction_ace.baseArmor*3,projectileDamage:ENEMY_CONFIGS.refraction_ace.projectileDamage*3.45,collisionDamage:ENEMY_CONFIGS.refraction_ace.collisionDamage*3.45};
+ENEMY_CONFIGS.aegis_regent={...ENEMY_CONFIGS.glass_monarch,name:"Aegis Regent — Nhiếp Chính Thiết Giáp",baseHp:ENEMY_CONFIGS.glass_monarch.baseHp*3,baseArmor:ENEMY_CONFIGS.glass_monarch.baseArmor*3,projectileDamage:ENEMY_CONFIGS.glass_monarch.projectileDamage*3.45,collisionDamage:ENEMY_CONFIGS.glass_monarch.collisionDamage*3.45};
+ENEMY_CONFIGS.bombard_prelate={...ENEMY_CONFIGS.phantom_executioner,name:"Bombard Prelate — Đại Pháo Giám",baseHp:ENEMY_CONFIGS.phantom_executioner.baseHp*3,baseArmor:ENEMY_CONFIGS.phantom_executioner.baseArmor*3,projectileDamage:ENEMY_CONFIGS.phantom_executioner.projectileDamage*4.35,collisionDamage:ENEMY_CONFIGS.phantom_executioner.collisionDamage*4.35};
+ENEMY_CONFIGS.disruptor_monarch={...ENEMY_CONFIGS.veil_architect,name:"Disruptor Monarch — Vua Nhiễu Xung",baseHp:ENEMY_CONFIGS.veil_architect.baseHp*3,baseArmor:ENEMY_CONFIGS.veil_architect.baseArmor*3,projectileDamage:ENEMY_CONFIGS.veil_architect.projectileDamage*4.35,collisionDamage:ENEMY_CONFIGS.veil_architect.collisionDamage*4.35};
+ENEMY_CONFIGS.forge_matron={...ENEMY_CONFIGS.fracture_sovereign,name:"Forge Matron — Mẫu Hạm Lò Rèn",baseHp:ENEMY_CONFIGS.fracture_sovereign.baseHp*3,baseArmor:ENEMY_CONFIGS.fracture_sovereign.baseArmor*3,projectileDamage:ENEMY_CONFIGS.fracture_sovereign.projectileDamage*4.35,collisionDamage:ENEMY_CONFIGS.fracture_sovereign.collisionDamage*4.35};
+ENEMY_CONFIGS.brood_ark={...ENEMY_CONFIGS.siege_spitter,name:"Brood Ark — Tàu Mẹ Bầy Đàn",baseHp:ENEMY_CONFIGS.siege_spitter.baseHp*24,baseArmor:ENEMY_CONFIGS.siege_spitter.baseArmor*24,projectileDamage:ENEMY_CONFIGS.siege_spitter.projectileDamage*24,collisionDamage:ENEMY_CONFIGS.siege_spitter.collisionDamage*24,speed:12,radius:48};
+ENEMY_CONFIGS.crucible_ark={...ENEMY_CONFIGS.siege_spitter,name:"Crucible Ark — Tàu Mẹ Công Thành",baseHp:ENEMY_CONFIGS.siege_spitter.baseHp*32,baseArmor:ENEMY_CONFIGS.siege_spitter.baseArmor*32,projectileDamage:ENEMY_CONFIGS.siege_spitter.projectileDamage*32,collisionDamage:ENEMY_CONFIGS.siege_spitter.collisionDamage*32,speed:12,radius:48};
+export const HIVE_TYRANT_CONFIG:EnemyConfig={...PARALLAX_ZERO_CONFIG,name:"HIVE TYRANT Ω",baseHp:PARALLAX_ZERO_CONFIG.baseHp*6,baseArmor:PARALLAX_ZERO_CONFIG.baseArmor*3,projectileDamage:PARALLAX_ZERO_CONFIG.projectileDamage*3,collisionDamage:PARALLAX_ZERO_CONFIG.collisionDamage*3,radius:58,speed:16};
+export const stageEnemyConfig = (type: EnemyType, stageId: number): EnemyConfig => type === "boss" && stageId === 5 ? HIVE_TYRANT_CONFIG : type === "boss" && stageId === 4 ? PARALLAX_ZERO_CONFIG : type === "boss" && stageId === 3 ? STORMBREAKER_CONFIG : type === "boss" && stageId === 2 ? TEMPEST_CONFIG : ENEMY_CONFIGS[type];

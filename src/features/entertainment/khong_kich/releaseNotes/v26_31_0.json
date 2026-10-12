@@ -1,0 +1,895 @@
+{
+  "version": "26.31.0",
+  "title": "Màn 5 — Công Phá Tổ Máy",
+  "displayTitle": "KHÔNG KÍCH 26.31.0 — MÀN 5: CÔNG PHÁ TỔ MÁY",
+  "summary": "Xuất kích cùng hai chiến cơ đồng minh do AI điều khiển trong HIVE SIEGE — CÔNG PHÁ TỔ MÁY. Vượt qua tám wave, đánh chặn hai tàu mẹ được hộ tống và đối đầu HIVE TYRANT Ω. Đồng minh tự nâng kỹ năng, chọn lõi, ghép và đeo trang bị; loot từ quái được chia cho các thành viên đủ điều kiện nhận.",
+  "sections": [
+    {
+      "id": "stage5",
+      "title": "MÀN 5 · CÔNG PHÁ TỔ MÁY",
+      "icon": {
+        "kind": "wave",
+        "id": "stage5"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "stage5-launch",
+          "title": "HIVE SIEGE — CÔNG PHÁ TỔ MÁY",
+          "icon": {
+            "kind": "wave",
+            "id": "stage5"
+          },
+          "rationale": "Chiến đấu tổ đội giữa pháo đài công nghiệp và quân đoàn máy bầy đàn.",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "label": "Số chiến trường Campaign",
+              "before": "4 màn",
+              "after": "5 màn",
+              "text": "Số chiến trường Campaign: 4 màn → 5 màn."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Màn 5 mở sau khi hoàn thành **Màn 4 — MIRAGE FRACTURE**."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mỗi lượt xuất kích có **người chơi + 2 chiến cơ đồng minh ngẫu nhiên**. Hai đồng minh khác nhau và không trùng chiến cơ của người chơi."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Cả ba chiến cơ cùng chiến đấu trên một chiến trường. **Người chơi bị hạ thì lượt chơi thất bại**, kể cả khi đồng minh còn sống."
+            }
+          ]
+        },
+        {
+          "id": "stage5-waves",
+          "title": "Tám wave chiến đấu",
+          "icon": {
+            "kind": "wave",
+            "id": "stage5_waves"
+          },
+          "rationale": "Đánh bầy đàn, phá đội hộ tống và đối đầu các đội Tinh Anh.",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Thứ tự wave: **Thường 1 → Thường 2 → Tinh Anh 1 → Thường 3 → Tinh Anh 2 → Thường 4 → Tinh Anh 3 → Boss**."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Tổng số đơn vị trong bốn wave thường lần lượt là **70 / 120 / 170 / 220**. Tối đa **30 quái thường đang sống cùng lúc**, bao gồm quái mẹ và đơn vị tiếp viện."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "**Wave thường 2:** một quái mẹ và **119** quái thường khác. **Wave thường 4:** một quái mẹ và **219** quái thường khác."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Máu, Giáp và Hỏa lực gốc của quái thường Màn 5 bằng **3 lần** mốc quái Màn 4 tương ứng."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Hệ số tăng tiến của bốn wave thường: **×0,5 / ×1 / ×1,5 / ×2**. Sau khi kết hợp nền Màn 5, sức mạnh tương ứng là **×1,5 / ×3 / ×4,5 / ×6** so với chỉ số gốc Màn 4."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Tinh Anh Màn 5 có **Máu, Giáp và Hỏa lực gấp 3 lần** Tinh Anh Màn 4 tương ứng; không dùng thêm hệ số tăng tiến của wave thường."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "squad",
+      "title": "TỔ ĐỘI · ĐỒNG MINH AI",
+      "icon": {
+        "kind": "system",
+        "id": "stage5_squad"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "squad-ai",
+          "title": "Đồng minh biết phối hợp",
+          "icon": {
+            "kind": "system",
+            "id": "stage5_ai"
+          },
+          "rationale": "Mỗi chiến cơ tự xử lý chiến đấu theo bộ kỹ năng của mình.",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "label": "Đồng minh trong Campaign",
+              "before": "Người chơi chiến đấu một mình",
+              "after": "Hai chiến cơ AI đồng hành trong Màn 5",
+              "text": "Đồng minh trong Campaign: Người chơi chiến đấu một mình → Hai chiến cơ AI đồng hành trong Màn 5."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "AI đọc đường đạn và vùng cảnh báo để tìm đường né, giữ tuyến bắn và tránh đứng chồng lên đồng đội."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "AI nhận diện mục tiêu người chơi đang tập trung, phối hợp dồn hỏa lực và có thể tách ra xử lý quái hỗ trợ hoặc mối nguy khẩn cấp."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "AI dùng kỹ năng theo **khả năng trúng, cơ hội combo, tình trạng mục tiêu, mức nguy hiểm và tài nguyên còn lại**. Kỹ năng hồi xong không đồng nghĩa với việc sử dụng ngay."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Đồng minh giữ tài nguyên cho phòng thủ khi cần, tận dụng cửa sổ lộ lõi và hạn chế dùng chồng kỹ năng vào mục tiêu đã sắp bị hạ."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Đồng minh tự hoạt động; **người chơi không cần điều khiển hoặc quyết định nâng cấp thay bot**."
+            }
+          ]
+        },
+        {
+          "id": "squad-roles",
+          "title": "Lối đánh theo từng chiến cơ",
+          "icon": {
+            "kind": "system",
+            "id": "stage5_ai_roles"
+          },
+          "rationale": "Đồng minh tận dụng cơ chế đặc trưng của chiến cơ được chọn.",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "**Viper:** căn tuyến bắn, chọn thời điểm dồn tên lửa và dùng mồi trước áp lực tấn công phù hợp."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "**Titan:** phối hợp khống chế với BigBang, tìm cơ hội đánh nhiều mục tiêu và dọn hỏa lực khi cấp kỹ năng cho phép."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "**Phantom:** tìm tuyến laser, đánh giá an toàn trước khi tụ lực và quản lý Electricity cùng chi phí duy trì drone."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "**Astra:** chọn cơ hội thu đạn, căn đường Thương Tinh Tú và dùng Sao Rơi theo vị trí các mục tiêu."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "**Cinder:** đặt nhiên liệu vào đội hình địch, theo dõi Cháy và phối hợp Quầng Nhiệt với Trụ Hỏa."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "**Riptide:** chọn cơ hội áp sát, gom địch và duy trì khoảng cách phù hợp cho các kỹ năng quanh thân."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "**Argent:** căn vị trí đặt và thu kiếm để đường kiếm xuyên địch, phòng thủ rồi phản công."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "**Sylva:** theo dõi dấu ấn và lượng Máu ghi nhận để giải phóng combo đúng thời điểm."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "**Terra:** quản lý Địa Áp, căn Pháo Địa Chấn vào mục tiêu lớn hoặc đội hình địch và chọn vị trí lập thế an toàn."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Các kỹ năng hồi Máu hoặc tạo Khiên cho bản thân vẫn giữ phạm vi tác dụng của kỹ năng hiện có."
+            }
+          ]
+        },
+        {
+          "id": "squad-progression",
+          "title": "Tự nâng cấp kỹ năng và chọn lõi",
+          "icon": {
+            "kind": "system",
+            "id": "stage5_ai_upgrade"
+          },
+          "rationale": "Ba thành viên đồng cấp, mỗi người xây dựng bộ lõi riêng.",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Ba chiến cơ có **cùng cấp độ chiến đấu với người chơi**. XP từ quái được ghi nhận chung cho đội; mỗi quái chỉ được tính một lần."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Đồng minh tự nâng **Ultimate ngay khi đủ điều kiện** tại các mốc cấp tương ứng."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Các kỹ năng cơ bản được ưu tiên **học kỹ năng chưa học**, sau đó nâng kỹ năng có cấp thấp nhất và đủ điều kiện; các kỹ năng bằng cấp được nâng luân phiên."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Đồng minh tự chọn lõi và dùng reroll hợp lệ để tìm lựa chọn phù hợp với **chiến cơ, bộ lõi, trang bị và tình huống chiến đấu**."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Lựa chọn của bot được xử lý tự động. Người chơi vẫn tự chọn kỹ năng, lõi và trang bị của mình."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Cấp tối đa giữ ở **18**; các mốc chọn lõi giữ ở **1 / 7 / 11 / 15**."
+            }
+          ]
+        },
+        {
+          "id": "squad-respawn",
+          "title": "Hồi sinh đồng minh",
+          "icon": {
+            "kind": "ui",
+            "id": "stage5_respawn"
+          },
+          "rationale": "Đồng minh bị hạ trở lại sau thời gian chờ.",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mỗi đồng minh bị hạ bắt đầu đếm ngược **60 giây**. Chân dung và thời gian chờ hiển thị tại **khu vực icon buff**."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Thời gian hồi sinh chạy theo thời gian trận; tạm dừng khi trận bị pause để chọn nâng cấp, xem giao diện hoặc khi ứng dụng bị ẩn."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Đồng minh hồi sinh giữ **chiến cơ, cấp độ, kỹ năng, lõi và trang bị**, trở lại với đầy Máu và tài nguyên, được bảo vệ trong **2 giây**."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Hồi chiêu tiếp tục chạy khi đồng minh đang chờ hồi sinh; hồi sinh không đặt lại toàn bộ hồi chiêu."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Đồng minh đang chờ hồi sinh vẫn nhận loot chung nếu chưa bị khóa nhận vật phẩm."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Bộ đếm hồi sinh không làm các bộ đếm thời gian trên buff/debuff thông thường xuất hiện trở lại."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "equipment",
+      "title": "LOOT · GHÉP ĐỒ · TRANG BỊ",
+      "icon": {
+        "kind": "equipment",
+        "id": "TP01"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "shared-loot",
+          "title": "Loot từ quái chia cho cả đội",
+          "icon": {
+            "kind": "equipment",
+            "id": "TP01"
+          },
+          "rationale": "Một lần nhặt tạo một bản vật phẩm cho mỗi thành viên đủ điều kiện.",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "label": "Nhận loot trong Màn 5",
+              "before": "Chưa có cơ chế chia loot tổ đội",
+              "after": "Mỗi thành viên hợp lệ nhận cùng loại và số lượng",
+              "text": "Nhận loot trong Màn 5: Chưa có cơ chế chia loot tổ đội → Mỗi thành viên hợp lệ nhận cùng loại và số lượng."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Bất kỳ thành viên đủ điều kiện nào cũng có thể nhặt vật phẩm rơi từ quái. Khi nhặt, **người chơi và hai đồng minh** đều nhận cùng loại và số lượng, trừ người đã bị khóa nhận bởi Cái giá phải trả."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Áp dụng cho **Thành Phần, Hoàn Chỉnh, Huyền Thoại, Nam Châm** và các vật phẩm rơi từ quái được hỗ trợ."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mỗi món dưới đất chỉ được nhặt và chia **một lần**. Bot ưu tiên đường tiếp cận an toàn và tránh cùng đuổi theo một món."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Kho và trang bị thuộc riêng từng người. Các thành viên nhận loot giống nhau nhưng có thể tạo ra build khác nhau."
+            }
+          ]
+        },
+        {
+          "id": "private-rewards",
+          "title": "Phần thưởng từ lõi thuộc riêng chủ sở hữu",
+          "icon": {
+            "kind": "system",
+            "id": "stage5_private_rewards"
+          },
+          "rationale": "Phân biệt loot rơi từ quái với phần thưởng của từng thành viên.",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Trang bị hoặc vật phẩm được lõi cấp chỉ thuộc **người sở hữu lõi**; không chia cho đồng đội."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Áp dụng cả phần thưởng nhận ngay, lựa chọn Thành Phần/Huyền Thoại và rương nhận sau."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Trang bị ghép được cũng thuộc riêng người ghép và tiêu hao Thành Phần trong kho của người đó."
+            }
+          ]
+        },
+        {
+          "id": "auto-equipment",
+          "title": "Đồng minh tự ghép và đeo đồ",
+          "icon": {
+            "kind": "equipment",
+            "id": "TH01"
+          },
+          "rationale": "Bot tự quản lý toàn bộ kho trang bị của mình.",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Khi có ít nhất **2 Trang Bị Thành Phần** chưa sử dụng, bot tự ghép **hai món nhận gần nhất theo thứ tự thời gian**; tiếp tục ghép khi còn đủ nguyên liệu."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Bot tự đeo trang bị **Hoàn Chỉnh hoặc Huyền Thoại**, đánh giá theo chiến cơ và build đang có."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Khi đầy **6 ô trang bị**, bot giữ món mới trong kho. Nếu có Nam Châm và một bộ trang bị tốt hơn, bot tự tháo đồ bằng Nam Châm rồi đeo lại."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Bot tự quyết định các phần thưởng có lựa chọn từ lõi; người chơi không phải xử lý hộp thoại của đồng minh."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "core-interactions",
+      "title": "TƯƠNG TÁC LÕI TRONG MÀN 5",
+      "icon": {
+        "kind": "core",
+        "id": "core_228"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "core228-stage5",
+          "title": "Cái giá phải trả",
+          "icon": {
+            "kind": "core",
+            "id": "core_228"
+          },
+          "rationale": "Khóa nhận đồ riêng cho người sở hữu trong trận tổ đội.",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Phạm vi khóa nhận đồ trong Màn 5",
+              "before": "Chưa có cơ chế phân chia loot tổ đội",
+              "after": "Khóa riêng người sở hữu; đồng đội hợp lệ vẫn nhận",
+              "text": "Phạm vi khóa nhận đồ trong Màn 5: Chưa có cơ chế phân chia loot tổ đội → Khóa riêng người sở hữu; đồng đội hợp lệ vẫn nhận."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Lõi vẫn xuất hiện ở Màn 5. Khi chọn, người sở hữu xóa trang bị của chính mình và nhận **3 Huyền Thoại từ 10 lựa chọn ngẫu nhiên** theo cơ chế của lõi."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Sau đó người sở hữu **không thể nhặt loot dưới đất và không nhận bản chia từ loot đồng đội nhặt**, kể cả Nam Châm mới. Nam Châm đã sở hữu được giữ lại."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Quái vẫn rơi đồ bình thường. Khóa của một thành viên không xóa loot chung hoặc khóa kho của đồng đội."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Các lõi cấp trang bị không còn xuất hiện trong lượt chọn, reroll và nguồn cấp lõi ngẫu nhiên của người bị khóa. Pool lõi của đồng đội khác giữ nguyên."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Hủy phần thưởng trang bị đang chờ từ lõi khác của chính người bị khóa, bao gồm rương chưa mở."
+            },
+            {
+              "format": "bullet",
+              "changeType": "note",
+              "text": "Nếu cả **3 thành viên** đều bị khóa, quái vẫn rơi vật phẩm nhưng không thành viên nào nhận được."
+            },
+            {
+              "format": "bullet",
+              "changeType": "note",
+              "text": "Các quy tắc chia loot tổ đội trên chỉ áp dụng trong **Màn 5**."
+            }
+          ]
+        },
+        {
+          "id": "core224-stage5",
+          "title": "Thích chơi xác suất",
+          "icon": {
+            "kind": "core",
+            "id": "core_224"
+          },
+          "rationale": "Tỷ lệ rơi được xét theo người tung đòn kết liễu.",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "label": "Xét tỷ lệ rơi trong tổ đội",
+              "before": "Chưa có cơ chế xét người kết liễu trong tổ đội",
+              "after": "Xét riêng Core224 của người kết liễu",
+              "text": "Xét tỷ lệ rơi trong tổ đội: Chưa có cơ chế xét người kết liễu trong tổ đội → Xét riêng Core224 của người kết liễu."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Nếu người kết liễu sở hữu lõi này, xác suất rơi được tăng **100%** theo hiệu ứng hiện có. Nếu người kết liễu không sở hữu, dùng tỷ lệ bình thường dù đồng đội có lõi."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Không cộng dồn hệ số từ các đồng đội khác. Sau khi rơi, vật phẩm vẫn chia cho mọi thành viên **đủ điều kiện nhận**."
+            },
+            {
+              "format": "bullet",
+              "changeType": "note",
+              "text": "Phần thưởng Thành Phần khi nhận lõi thuộc riêng chủ sở hữu."
+            },
+            {
+              "format": "bullet",
+              "changeType": "change",
+              "text": "Thiêu đốt, tên lửa và kỹ năng gây sát thương trễ ghi nhận đúng chủ sở hữu khi kết liễu. Quái bị vụ nổ mẹ hạ được quy công cho **thành viên kết liễu mẹ**."
+            },
+            {
+              "format": "bullet",
+              "changeType": "note",
+              "text": "Người sở hữu cả **Thích chơi xác suất + Cái giá phải trả** vẫn tăng tỷ lệ rơi khi tự kết liễu; chỉ đồng đội chưa bị khóa nhận được loot."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "normal-enemies",
+      "title": "QUÁI THƯỜNG MỚI",
+      "icon": {
+        "kind": "enemy",
+        "id": "swarm_needler"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "swarm-needler",
+          "title": "Bọ Đạn — Swarm Needler",
+          "icon": {
+            "kind": "enemy",
+            "id": "swarm_needler"
+          },
+          "rationale": "Bầy địch duy trì hỏa lực quanh đội hộ tống.",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Bay theo cụm, bắn chuỗi đạn đan xen từ hai bên thân. Các cụm luân phiên đổi hướng để lấp khoảng trống quanh quái mẹ."
+            }
+          ]
+        },
+        {
+          "id": "razor-glider",
+          "title": "Liềm Xung Kích — Razor Glider",
+          "icon": {
+            "kind": "enemy",
+            "id": "razor_glider"
+          },
+          "rationale": "Đơn vị cơ động ép tổ đội đổi vị trí.",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Cảnh báo đường lướt chéo, lao qua rồi rải đạn hình lưỡi liềm phía sau."
+            }
+          ]
+        },
+        {
+          "id": "aegis-beetle",
+          "title": "Giáp Vệ — Aegis Beetle",
+          "icon": {
+            "kind": "enemy",
+            "id": "aegis_beetle"
+          },
+          "rationale": "Hộ vệ chắn các tuyến bắn trực tiếp vào mẹ.",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Mang tấm chắn hướng trước có thể bị phá. Khi chắn vỡ, lộ thân và chuyển sang phản kích; ưu tiên bảo vệ phía mẹ đang nhận hỏa lực."
+            }
+          ]
+        },
+        {
+          "id": "siege-spitter",
+          "title": "Pháo Bầy — Siege Spitter",
+          "icon": {
+            "kind": "enemy",
+            "id": "siege_spitter"
+          },
+          "rationale": "Pháo kích những chiến cơ đang giữ vị trí khai hỏa.",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Phóng bom theo loạt vào các vị trí đã đánh dấu. Vụ nổ tạo các cánh đạn tỏa ra, phối hợp với hỏa lực của đội hộ vệ."
+            }
+          ]
+        },
+        {
+          "id": "signal-weaver",
+          "title": "Dệt Nhiễu — Signal Weaver",
+          "icon": {
+            "kind": "enemy",
+            "id": "signal_weaver"
+          },
+          "rationale": "Tạo hành lang gây áp lực lên đường tiếp cận.",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Tạo hành lang nhiễu có cảnh báo; đội hình phối hợp bắn cắt ngang hành lang để chia cắt vị trí của tổ đội."
+            }
+          ]
+        },
+        {
+          "id": "repair-wasp",
+          "title": "Thợ Vá Tổ — Repair Wasp",
+          "icon": {
+            "kind": "enemy",
+            "id": "repair_wasp"
+          },
+          "rationale": "Đơn vị sửa chữa cần được xử lý khi đội đang dồn mục tiêu lớn.",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Kết nối với một mục tiêu để sửa chữa theo nhịp. Kết nối bị ngắt khi đơn vị bị khống chế hoặc bị hạ."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "escort",
+      "title": "HAI WAVE HỘ TỐNG · QUÁI MẸ",
+      "icon": {
+        "kind": "enemy",
+        "id": "brood_ark"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "brood-ark",
+          "title": "Brood Ark — Tàu Mẹ Bầy Đàn",
+          "icon": {
+            "kind": "enemy",
+            "id": "brood_ark"
+          },
+          "rationale": "Mục tiêu trung tâm của wave thường 2.",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Xuất hiện cùng đội hộ vệ trong quota **120 đơn vị**. Hộ vệ bay quanh, bù vào khoảng trống và bảo vệ các tuyến bị tấn công."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Máu, Giáp và Hỏa lực cao hơn quái thường hạng nặng cùng wave **hàng chục lần**; tốc độ bay và nhịp bắn chậm."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Tấn công bằng đại pháo tỏa quạt và loạt tên lửa chia hướng. Khi nạp đại pháo, **lộ lõi** để tổ đội dồn sát thương; đòn trúng lõi đang lộ bỏ qua Giáp."
+            }
+          ]
+        },
+        {
+          "id": "crucible-ark",
+          "title": "Crucible Ark — Tàu Mẹ Công Thành",
+          "icon": {
+            "kind": "enemy",
+            "id": "crucible_ark"
+          },
+          "rationale": "Mục tiêu trung tâm của wave thường 4.",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Xuất hiện cùng đội hộ vệ trong quota **220 đơn vị**. Đội bảo vệ có nhiều lớp, đơn vị sửa chữa và gây nhiễu."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Có sức bền và hỏa lực vượt trội so với quái thường cùng wave, di chuyển và khai hỏa chậm."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Pháo kích nhiều vị trí và triển khai ba tuyến công thành có cảnh báo. Lõi lộ theo nhịp triển khai hoặc kết thúc loạt công thành; đòn trúng lõi đang lộ bỏ qua Giáp."
+            }
+          ]
+        },
+        {
+          "id": "mother-death",
+          "title": "Vụ nổ khi quái mẹ bị hạ",
+          "icon": {
+            "kind": "vfx",
+            "id": "stage5_mother_explosion"
+          },
+          "rationale": "Dồn đúng mục tiêu tạo ra một đợt phá hủy lớn trong đội hộ vệ.",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Khi bị hạ, mẹ phát nổ gây **sát thương chuẩn bằng 100% Máu tối đa của mẹ** lên các quái thường khác trong một vùng rộng lớn."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Vụ nổ không gây sát thương cho đội người chơi; chỉ tác động đến quái đang hiện diện trong vùng ảnh hưởng."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Quái chưa xuất hiện vẫn tiếp tục vào trận theo số lượng còn lại của wave. Hộ vệ sống sót mất đội hình bảo vệ và chuyển sang tấn công độc lập."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Quái bị vụ nổ hạ được ghi nhận một lần và quy công cho thành viên kết liễu mẹ."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "elite-enemies",
+      "title": "TINH ANH MỚI",
+      "icon": {
+        "kind": "enemy",
+        "id": "razor_marshal"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "razor-marshal",
+          "title": "Razor Marshal — Thống Lĩnh Liềm",
+          "icon": {
+            "kind": "enemy",
+            "id": "razor_marshal"
+          },
+          "rationale": "Truy kích nối tiếp các thành viên.",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Đổi tuyến lao sau mỗi lượt truy kích và để lại dải đạn phía sau, ép tổ đội tách vị trí."
+            }
+          ]
+        },
+        {
+          "id": "aegis-regent",
+          "title": "Aegis Regent — Nhiếp Chính Thiết Giáp",
+          "icon": {
+            "kind": "enemy",
+            "id": "aegis_regent"
+          },
+          "rationale": "Dựng phòng tuyến và phản công qua các khe chắn.",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Triển khai tấm chắn có thể phá, căn một đợt pháo phản công qua khoảng giữa các tấm chắn."
+            }
+          ]
+        },
+        {
+          "id": "bombard-prelate",
+          "title": "Bombard Prelate — Đại Pháo Giám",
+          "icon": {
+            "kind": "enemy",
+            "id": "bombard_prelate"
+          },
+          "rationale": "Pháo kích tuần tự nhiều điểm.",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Đánh dấu nhiều vị trí rồi pháo kích theo thứ tự. Các vụ nổ tạo hình đạn khác nhau để phối hợp với đòn của Tinh Anh khác."
+            }
+          ]
+        },
+        {
+          "id": "disruptor-monarch",
+          "title": "Disruptor Monarch — Vua Nhiễu Xung",
+          "icon": {
+            "kind": "enemy",
+            "id": "disruptor_monarch"
+          },
+          "rationale": "Phối hợp vùng nhiễu với tuyến pháo.",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Tạo vùng nhiễu và xung khống chế có cảnh báo, gây áp lực lên đường thoát của tổ đội."
+            }
+          ]
+        },
+        {
+          "id": "forge-matron",
+          "title": "Forge Matron — Mẫu Hạm Lò Rèn",
+          "icon": {
+            "kind": "enemy",
+            "id": "forge_matron"
+          },
+          "rationale": "Duy trì đội Tinh Anh bằng sửa chữa và hỗ trợ.",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Sửa chữa đồng đội qua các liên kết có thể phá và triển khai đội hỗ trợ hữu hạn."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Ba wave Tinh Anh tăng áp lực bằng tổ hợp kỹ năng và mức phối hợp; mỗi Tinh Anh vẫn theo nền **Máu/Giáp/Hỏa lực ×3** mốc Màn 4 tương ứng."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "boss",
+      "title": "BOSS · HIVE TYRANT Ω",
+      "icon": {
+        "kind": "boss",
+        "id": "hive_tyrant"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "hive-tyrant",
+          "title": "HIVE TYRANT Ω — BÁ CHỦ TỔ MÁY",
+          "icon": {
+            "kind": "boss",
+            "id": "hive_tyrant"
+          },
+          "rationale": "Pháo đài di động với nhiều cụm pháo và lõi phản ứng trung tâm.",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "**Phòng tuyến:** đạn vòng xoay, pháo quạt và một tuyến đại pháo mở đầu trận Boss."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "**Săn tổ đội:** đánh dấu riêng các thành viên, khóa vị trí trước khi khai hỏa và triệu tập đội hỗ trợ."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "**Công thành:** pháo kích xen đạn xoáy; các cụm pháo phối hợp chia chiến trường."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "**Lõi quá tải:** hỏa lực tăng mạnh, lõi mở theo nhịp tạo cơ hội dồn sát thương kết thúc trận."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Các đòn đánh dấu ngừng bám vị trí trước khi phát tác. Đồng minh tách khỏi nhau để tránh kéo các tuyến nguy hiểm chồng lên đội."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "graphics",
+      "title": "ĐỒ HỌA · ANIMATION · VFX MÀN 5",
+      "icon": {
+        "kind": "vfx",
+        "id": "stage5_vfx"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "generated-art",
+          "title": "Sprite và spritesheet tạo sinh",
+          "icon": {
+            "kind": "vfx",
+            "id": "stage5_vfx"
+          },
+          "rationale": "Đồ họa đồng bộ cho chiến đấu tổ đội và quân đoàn máy bầy đàn.",
+          "changes": [
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Bối cảnh, quái thường, Tinh Anh, quái mẹ, Boss, đạn, kỹ năng, cảnh báo và hiệu ứng Màn 5 sử dụng **sprite/spritesheet tạo sinh**."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Các trạng thái tụ lực, khai hỏa, va chạm, khống chế, hồi sinh, lộ lõi và phá hủy có hiệu ứng trực quan khớp thời điểm tác dụng."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Quái mẹ phát nổ, đồng minh hồi sinh và Boss chuyển giai đoạn có chuỗi animation riêng."
+            },
+            {
+              "format": "bullet",
+              "changeType": "new",
+              "text": "Hỏa lực dày đặc, nhiều lớp tấn công; màu sắc và cảnh báo giúp nhận diện nguy hiểm giữa hiệu ứng chiến đấu."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "releaseDate": "12/10/2026"
+}
