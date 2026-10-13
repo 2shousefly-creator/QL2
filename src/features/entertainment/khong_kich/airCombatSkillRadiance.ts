@@ -1,8 +1,7 @@
 import { SKILL_VFX_FRAMES as frames } from './airCombatSkillVfxFrames';
 import { getMissileVisual } from './airCombatAmmo';
-import { aircraftBuffPoint } from './airCombatBuffArt';
 export { SKILL_RADIANCE_SOURCES } from './airCombatSkillVfxFrames';
-import { AIRCRAFT_CONFIGS, GAMEPLAY_SAFE_RECT as R } from './airCombatConfig';
+import { GAMEPLAY_SAFE_RECT as R } from './airCombatConfig';
 import { cinderState, cinderWaveRadius } from './airCombatCinderRuntime';
 import { cinderFuelCenters, cinderFuelGeometry } from './airCombatCinderFuel';
 import { riptideState, riptideBladePoints } from './airCombatRiptideRuntime';
@@ -29,12 +28,6 @@ export function paintSkillRadiance(w:CombatWorld,draw:SkillRadiancePainter,reduc
   draw(id,frame,x,y,width,height,rotation,alpha,false);count++;
   if(hot&&!reduced&&count<SKILL_RADIANCE_BUDGET){draw(id+1,frame,x,y,width*.82,height*.82,rotation,Math.min(1,alpha*.8),true);count++;}
  };
- const aura=(id:number,skill:SkillId,_size:number,alpha=.48)=>{
-  for(let slot=0;slot<3;slot++){
-   const point=aircraftBuffPoint(w,slot);
-   sprite(-80000000+id*10+slot*2,skill,point.x,point.y,14*point.scale,20*point.scale,reduced?1:now*6,Math.min(.85,alpha*1.5));
-  }
- };
  // Complete the impact/recast/end phases that previously only had ignition or
  // sustained art. These sprites consume real effect records; no damage is inferred.
  const burst=(id:number,skill:SkillId,x:number,y:number,size:number,at:number,life:number,power=1)=>{
@@ -52,6 +45,7 @@ export function paintSkillRadiance(w:CombatWorld,draw:SkillRadiancePainter,reduc
  for(let i=w.visualEvents.length-1;i>=0;i--){
   const event=w.visualEvents[i],age=now-(event.at??now),skill=event.skillId;if(!skill||age<0)continue;
   if(event.kind==='skill_ignition'&&age<.6&&ignitions++<4){
+   if(['afterburner','sweeping_cannon','armor_shield','invisibility','orbit_reversal','cinder_fire_shield','riptide_wellspring','riptide_waterform','sylva_symbiosis','argent_guard_stance','terra_reactive_rock_armor','terra_geocore_overdrive'].includes(skill))continue;
    const size=isUltimate(skill)?92:66;
    sprite(100000+event.id*4,skill,w.playerX,w.playerY-32,Math.min(32,size),Math.min(38,size),age/.6*4,Math.min(1,(1-age/.6)*2));
   }else if(event.kind==='hit'&&age<.32&&impacts++<14){
@@ -99,12 +93,6 @@ export function paintSkillRadiance(w:CombatWorld,draw:SkillRadiancePainter,reduc
   sprite(300000+p.id*4,p.skillId,p.x-p.vx/speed*12,p.y-p.vy/speed*12,width,length,reduced?1:now*10,.6,angle,false);
  }
  const active=(id:SkillId)=>(s.activeEffects[id]??0)>0;
- for(const [i,id] of AIRCRAFT_CONFIGS[s.aircraftId].skillIds.entries()){
-  if(!active(id))continue;
-  if(['armor_shield','invisibility','orbit_reversal','cinder_fire_shield','riptide_wellspring','sylva_symbiosis','argent_guard_stance','terra_reactive_rock_armor','terra_geocore_overdrive'].includes(id))aura(-10-i*4,id,id==='terra_geocore_overdrive'?90:72,.46);
- }
- if(active('afterburner'))for(const side of [-1,1])sprite(-40+side*4,'afterburner',w.playerX+side*12,w.playerY+28,20,48,reduced?1:now*12,.8,Math.PI);
- if(active('sweeping_cannon'))sprite(-50,'sweeping_cannon',w.playerX,w.playerY-30,18,24,reduced?1:now*8,.65);
  if(w.laserCharge>0)sprite(-54,'focus_laser',w.playerX,w.playerY-34,18,26,reduced?1:now*9,.8);
  if(w.laserRemaining>0&&w.laserCharge<=0)sprite(-58,'focus_laser',w.playerX,(w.playerY+R.top)/2,48,w.playerY-R.top,reduced?2:now*12,.65);
  if(s.droneActive)sprite(-62,'escort_drone',w.droneX,w.droneY+13,34,42,reduced?1:now*8,.7);
@@ -136,8 +124,6 @@ export function paintSkillRadiance(w:CombatWorld,draw:SkillRadiancePainter,reduc
    const points=riptideBladePoints(w.playerX,w.playerY,now-r.blades.at,side);
    for(const i of [3,6]){const p=points[i],prev=points[i-1];sprite(-350-side*16-i*2,'riptide_tidal_blades',p.x,p.y,32,52,reduced?1:now*8,.6,Math.atan2(p.y-prev.y,p.x-prev.x)+Math.PI/2,false);}
   }
-  if(r.confluence)aura(-182,'riptide_confluence',190,.38);
-  if(r.waterform)aura(-186,'riptide_waterform',210,.42);
  }
  if(s.aircraftId==='argent'){
   const a=argentState(w);

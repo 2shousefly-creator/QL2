@@ -1,3 +1,7 @@
+import { activeEquipmentFamilies, equipmentEffect } from './airCombatEquipmentState';
+import { getEffectiveAircraftStats } from './airCombatAircraft';
+import { astraOrbitProtectionActive } from './airCombatAstra';
+import { getStatusPresentations } from './airCombatPresentation';
 import type { CombatWorld } from './airCombatRuntime';
 import { playerAirframeScale } from './airCombatReleaseState';
 
@@ -11,14 +15,31 @@ const nodes:Record<string,number>={
  passive_battery:1,battery_arc0:1,battery_arc1:2,
  pressure0:0,pressure1:0,pressure2:0,pressure3:0,
 };
-/** Small fixed hardpoints instead of a filled overlay across the fuselage. */
-export function aircraftBuffPoint(w:CombatWorld,slot=0){
- const scale=playerAirframeScale(w.aircraft);
- return {x:w.playerX+(slot===0?0:slot===1?-11:11)*scale,y:w.playerY+(slot===0?-27:26)*scale,scale};
+/** Suppress only the former caster hardpoints; target/area art keeps its geometry. */
+export function isAircraftBuffVisual(w:CombatWorld,key:string,x:number,y:number){
+ return nodes[key]!==undefined&&Math.hypot(x-w.playerX,y-w.playerY)<=48*playerAirframeScale(w.aircraft);
 }
-export function compactBuffPlacement(w:CombatWorld,key:string,x:number,y:number,width:number,height:number):[number,number,number,number]{
- const slot=nodes[key];
- if(slot===undefined||Math.hypot(x-w.playerX,y-w.playerY)>48*playerAirframeScale(w.aircraft))return [x,y,width,height];
- const point=aircraftBuffPoint(w,slot);
- return [point.x,point.y,Math.min(width,16*point.scale),Math.min(height,22*point.scale)];
+
+export const AIRCRAFT_BUFF_BRIGHTNESS=1.3;
+const snapshots=new WeakMap<CombatWorld,{at:number;until:number;active:boolean}>();
+/** Reuse live status semantics, excluding cooldown/ready-only badges. Bounded to
+ * 10 reads/sec per actor; combat time freezes on pause and rewinds invalidate it. */
+export function aircraftBuffBrightness(w:CombatWorld){
+ if(w.destruction||w.aircraft.currentHp<=0)return 1;
+ const s=w.aircraft;
+ if(astraOrbitProtectionActive(w)||Object.values(s.activeEffects).some(value=>(value??0)>0)
+  ||Object.values(s.coreState.shields).some(shield=>shield.amount>0&&shield.until>s.coreState.time))return AIRCRAFT_BUFF_BRIGHTNESS;
+ let snapshot=snapshots.get(w);
+ if(!snapshot||w.elapsed<snapshot.at||w.elapsed>=snapshot.until){
+  const equipmentActive=[...activeEquipmentFamilies(s).values()].some(item=>{
+   const family=Number(item.family!.slice(2)),effect=equipmentEffect(s,family);
+   return family===28||family===33||(family===27&&s.currentHp<getEffectiveAircraftStats(s).maxHp)
+    ||(family===10&&effect.stacks>0)||(family===13&&effect.value>0);
+  });
+  const buffs=getStatusPresentations(w).filter(status=>status.group==='buff'&&status.timerKind!=='cooldown'
+   &&status.remaining>0&&(Number.isFinite(status.remaining)||status.priority>=58));
+  snapshot={at:w.elapsed,until:w.elapsed+Math.min(.1,...buffs.map(status=>status.remaining)),active:equipmentActive||buffs.length>0};
+  snapshots.set(w,snapshot);
+ }
+ return snapshot.active?AIRCRAFT_BUFF_BRIGHTNESS:1;
 }

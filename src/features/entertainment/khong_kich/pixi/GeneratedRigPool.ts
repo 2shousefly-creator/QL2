@@ -64,6 +64,7 @@ export class GeneratedRigPool {
     const strength=animated?(fluid?.026:important?.010:.007):0;
     rig.root.visible=true;rig.root.position.copyFrom(sprite.position);rig.root.rotation=sprite.rotation;
     rig.root.blendMode=sprite.blendMode;
+    rig.root.filters=sprite.filters;
     rig.root.scale.set(sprite.width/n,sprite.height/n);rig.root.alpha=sprite.alpha;rig.root.tint=sprite.tint;
     // Fixed authored dimensions and anchors: animation bounds never control scale.
     const offset=(.5-sprite.anchor.x)*n;

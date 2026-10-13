@@ -2,7 +2,7 @@ import bossUrl from '../../../assets/khong-kich/26.31.1/hive-tyrant-idle.png';
 import bossSkillUrl from '../../../assets/khong-kich/26.31.2/hive-boss-skills.png';
 import enemyUrl from '../../../assets/khong-kich/26.31.0/enemies.png';
 import effectUrl from '../../../assets/khong-kich/26.31.0/effects.png';
-import backgroundUrl from '../../../assets/khong-kich/26.31.4/hive-background.png';
+import backgroundUrl from '../../../assets/khong-kich/26.31.5/hive-background.png';
 import normalUrl from '../../../assets/khong-kich/26.31.4/hive-normals.png';
 import eliteUrl from '../../../assets/khong-kich/26.31.4/hive-elites.png';
 import motherUrl from '../../../assets/khong-kich/26.31.4/hive-mothers.png';
@@ -65,7 +65,7 @@ function warningShape(z:HiveHazard,progress:number):HazardShape {
 /** Only Hive scenery and enemies are custom; aircraft use the campaign renderer. */
 export function paintHive(w:CombatWorld,p:HivePainter,reduced=false){
  const now=w.elapsed;
- // A quiet static abyss avoids a visible tile seam and preserves central contrast.
+ // Static abandoned factory scenery keeps the central yard open for combat.
  p.sprite(bg,180,320,360,640);
  for(const e of w.enemies){if(e.hp<=0)continue;const index=e.type==='boss'?13:HIVE_ENTITY_CELLS.indexOf(e.type);if(index<0)continue;
   const size=e.radius*2.8;p.sprite(ammo[7],e.x,e.y-size*.37,size*.23,size*.4,Math.PI,.75);

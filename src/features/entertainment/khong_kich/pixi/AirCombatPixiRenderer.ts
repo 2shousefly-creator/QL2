@@ -1,3 +1,4 @@
+import { aircraftBuffBrightness, AIRCRAFT_BUFF_BRIGHTNESS } from '../airCombatBuffArt';
 import { DamageTextLayout } from "../airCombatDamageLayout";
 import { paintBalanceGuides, paintAircraftDamageSmoke } from '../airCombatBalanceVisuals';
 import { phantomLaserBounds, PHANTOM_LASER_VISUAL_WIDTH } from '../airCombatPhantom';
@@ -36,7 +37,6 @@ import { paintTacticalCores, paintEnemyForegroundMarks, paintElitePatternWarning
 import { enemyAllegiance } from "../airCombatRuntime";
 import { hasCore } from "../airCombatCoreEffects";
 import { getEnemyExhaustTransform } from "../airCombatHitboxes";
-import { paintTitanShield, type ShieldPainter } from "../airCombatTitanShield";
 import { TitanShieldPresentation } from "../airCombatTitanShield";
 import { AirCombatMissilePool } from "./AirCombatMissilePool";
 import { paintMissileExhausts, paintMissileJets, type MissileExhaustPainter } from "../airCombatMissilePresentation";
@@ -45,7 +45,7 @@ import { AMMO_VISUALS, getAmmoVisualKey, getBasicAmmoVisual, getMissileVisual } 
 import { angularBarSegmentPolygon, angularBarPolygon, BOSS_VISUAL_WIDTH_SCALE, BOSS_VISUAL_ASPECT } from "../airCombatHudLayout";
 import { SONIC_RING_THICKNESS } from "../airCombatBoss";
 import { isElite } from "../airCombatWaves";
-import { Application, Container, Graphics, Sprite, Text } from "pixi.js";
+import { Application, ColorMatrixFilter, Container, Graphics, Sprite, Text } from "pixi.js";
 import { AIR_COMBAT_WORLD, GAMEPLAY_SAFE_RECT } from "../airCombatConfig";
 import { getEffectiveAircraftStats, getSkillRuntimeValues } from "../airCombatEngine";
 import type { CombatWorld } from "../airCombatRuntime";
@@ -117,14 +117,9 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
   private missiles: AirCombatMissilePool;
   private projectileGlows: AirCombatSpritePool;
   private afterimages: AirCombatSpritePool;
-  private aura = new Sprite();
+  private buffFilter = new ColorMatrixFilter();
+  private buffFilters = [this.buffFilter];
   private laserMuzzle = new Sprite();
-  private techShieldPainter:ShieldPainter={
-    circle:(x,y,r,color,alpha,fill,width)=>{const g=this.titanBubble.circle(x,y,r);if(fill)g.fill({color,alpha});else g.stroke({color,alpha,width});},
-    arc:(r,a,b,color,alpha,width)=>{this.titanBubble.moveTo(Math.cos(a)*r,Math.sin(a)*r).arc(0,0,r,a,b).stroke({color,alpha,width});},
-    line:(ax,ay,bx,by,color,alpha,width)=>{this.titanBubble.moveTo(ax,ay).lineTo(bx,by).stroke({color,alpha,width});},
-  };
-  private shieldOpacity = 0;
   private dashTail = 0;
   private dashX = 0;
   private dashY = 0;
@@ -137,8 +132,6 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
   private player = new Sprite();
   private playerRig = new GeneratedRigPool(this.actors,1);
   private playerExhaust = Array.from({length:6},()=>new Sprite());
-  private shield = new Sprite();
-  private titanBubble = new Graphics();
   private titanShield = new TitanShieldPresentation();
   private laser = new Sprite();
   private charge = new Sprite();
@@ -230,15 +223,13 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     this.engines = new AirCombatSpritePool(this.effects, AIR_COMBAT_WORLD.maxEnemies + 4);
     this.vfx = new AirCombatVfx(this.globalVfx, assets);
     for(const sprite of this.playerExhaust){sprite.texture=assets.engineFlame;sprite.anchor.set(.5,0);sprite.blendMode="add";this.actors.addChild(sprite);}
-    this.shield.texture = assets.effect("shield");
     this.laser.texture = assets.phantomBeam; this.laser.blendMode = "add";
     this.charge.texture = assets.effect("charge");
-    this.aura.texture = assets.effect("shield"); this.aura.blendMode = "add";
+    this.buffFilter.brightness(AIRCRAFT_BUFF_BRIGHTNESS, false);
     this.laserMuzzle.texture = assets.effect("charge"); this.laserMuzzle.blendMode = "add";
-    for (const sprite of [this.aura, this.player, this.shield, this.laser, this.laserMuzzle, this.charge]) {
+    for (const sprite of [this.player, this.laser, this.laserMuzzle, this.charge]) {
       sprite.anchor.set(0.5); this.actors.addChild(sprite);
     }
-    this.actors.addChild(this.titanBubble);
     if (host) {
       this.observer = new ResizeObserver(() => {
         const width = Math.max(1, host.clientWidth), height = Math.max(1, host.clientHeight);
@@ -740,8 +731,9 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     this.player.width *= visual.artwork.neutral.scaleX;
     this.player.alpha = invisible ? 0.1 : 1;
     this.player.tint = world.playerInvulnerability > 0 ? 0xffb1b1 : 0xffffff;
+    this.player.filters=aircraftBuffBrightness(world)>1?this.buffFilters:null;
     this.player.renderable=true;this.playerRig.begin(this.clock,reducedMotion);
-    setGeneratedRigPose(this.player,{charge:world.laserCharge>0?1:Object.values(world.aircraft.activeEffects).some(v=>(v??0)>0)?.55:0,recoil:Math.min(1,this.recoil/1.4),hit:world.playerInvulnerability>0?.5:0});
+    setGeneratedRigPose(this.player,{charge:world.laserCharge>0?1:0,recoil:Math.min(1,this.recoil/1.4),hit:world.playerInvulnerability>0?.5:0});
     this.playerRig.draw(-1,this.player,this.clock,reducedMotion);this.playerRig.end();
     this.mechanisms.begin(this.clock,reducedMotion);
     paintGeneratedMechanisms(world,(id,asset,x,y,width,height,alpha,charge)=>{
@@ -761,25 +753,6 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
       sprite.tint=layer===2?0xfff8e7:visual.tint;
       sprite.alpha=(invisible?.16:1)*(layer===0?exhaust.glow:layer===1?.9:1);
     }
-    const shieldActive = (world.aircraft.activeEffects.armor_shield || 0) > 0 || invisible || activeShieldAmount(world.aircraft,true) > 0;
-    if(!shieldActive&&(world.aircraft.coreState.shields.cinder?.amount??0)>0)this.shieldOpacity=0;
-    this.shieldOpacity += ((shieldActive ? 1 : 0) - this.shieldOpacity) * (1 - Math.exp(-delta * 15));
-    this.shield.visible = alive && this.shieldOpacity > .01 && !this.titanShield.active && this.titanShield.opacity < .01;
-    this.shield.position.set(world.playerX, world.playerY-27*playerAirframeScale(world.aircraft));
-    this.shield.width = this.shield.height = 18*playerAirframeScale(world.aircraft);
-    this.shield.tint = invisible ? 0xc4b5fd : 0xffffff;
-    this.shield.alpha = this.shieldOpacity * (invisible ? .23 : reducedMotion ? .65 : .6 + Math.sin(this.clock * 3) * .08);
-    const bubble=this.titanBubble, shieldState=this.titanShield;
-    bubble.clear();bubble.visible=alive&&shieldState.opacity>.01;
-    if(bubble.visible) {
-      bubble.position.set(world.playerX,world.playerY-27*playerAirframeScale(world.aircraft));bubble.scale.set(shieldState.scale*playerAirframeScale(world.aircraft)*.24);bubble.alpha=shieldState.opacity*.25;
-      paintTitanShield(this.techShieldPainter,shieldState,reducedMotion,(skillRank(world.aircraft, "armor_shield") >= 3));
-
-    }
-    const sustained = (world.aircraft.activeEffects.afterburner || 0) > 0 || (world.aircraft.activeEffects.sweeping_cannon || 0) > 0;
-    this.aura.visible = alive && sustained;
-    this.aura.position.set(world.playerX, world.playerY+27*playerAirframeScale(world.aircraft)); this.aura.width = this.aura.height = 16*playerAirframeScale(world.aircraft);
-    this.aura.tint = visual.tint; this.aura.alpha = reducedMotion ? .2 : .22 + Math.sin(this.clock * 6) * .06;
     if (!alive) this.dashTail = 0;
     this.afterimages.begin(this.clock,reducedMotion);
     if (world.dashRemaining > 0) {
@@ -899,6 +872,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
 
   destroy() {
     if (this.destroyed) return;
+    this.buffFilter.destroy();
     this.destroyed = true;
     this.mirrorRenderer?.destroy();
     this.observer?.disconnect();

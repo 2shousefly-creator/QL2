@@ -1,0 +1,52 @@
+{
+  "version": "26.31.5",
+  "releaseDate": "13/10/2026",
+  "title": "Nhà Máy Bỏ Hoang & Ánh Sáng Cường Hóa",
+  "displayTitle": "KHÔNG KÍCH 26.31.5 — NHÀ MÁY BỎ HOANG & CƯỜNG HÓA",
+  "summary": "Khôi phục bối cảnh nhà máy bỏ hoang cho Màn 5 và chuyển tín hiệu cường hóa thành ánh sáng nhẹ trên toàn thân chiến cơ.",
+  "sections": [
+    {
+      "id": "visual-update",
+      "title": "HÌNH ẢNH CHIẾN TRƯỜNG",
+      "icon": {
+        "kind": "wave",
+        "id": "stage5"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "background",
+          "title": "Nhà Máy Bỏ Hoang",
+          "icon": {
+            "kind": "system",
+            "id": "background"
+          },
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Màn 5 trở về bối cảnh nhà máy bỏ hoang: mái xưởng xuống cấp, đường ống và sân bê tông tối. Giữ chi tiết thưa, màu trầm và vùng trung tâm thoáng để dễ quan sát chiến đấu.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        },
+        {
+          "id": "buffs",
+          "title": "Ánh Sáng Cường Hóa",
+          "icon": {
+            "kind": "system",
+            "id": "buffs"
+          },
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Các trạng thái cường hóa khiến toàn thân chiến cơ sáng hơn khoảng 30%, thay cho điểm lóe ở mũi hoặc tia lửa động cơ. Nhiều cường hóa cùng lúc vẫn giữ một mức sáng nhẹ, đồng bộ trên Pixi và Canvas, gồm cả chiến cơ đồng đội ở Màn 5.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

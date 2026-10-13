@@ -14,7 +14,7 @@ import type { AirCombatPresentation } from './airCombatPixiTypes';
 function quietBackground(image:HTMLImageElement){
  const canvas=document.createElement('canvas');canvas.width=360;canvas.height=640;
  const ctx=canvas.getContext('2d');if(!ctx)throw new Error('Không thể tải nền Màn 5');
- // The authored 26.31.4 abyss is already dark and sparse; avoid crushing it to black.
+ // The authored factory is already dark; preserve its quiet industrial silhouettes.
  ctx.filter='brightness(85%)';
  ctx.drawImage(image,-1,-1,362,642);return canvas;
 }

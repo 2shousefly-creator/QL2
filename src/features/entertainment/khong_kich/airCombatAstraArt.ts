@@ -30,10 +30,6 @@ const clamp=(t:number)=>Math.max(0,Math.min(1,t));
 /** Shared world state feeds Canvas and Pixi. Sprite bounds never participate in damage. */
 export function paintAstra(w:CombatWorld,p:AstraPainter,reduced:boolean) {
   const r=w.astra;if(!r||w.ended)return;const now=w.elapsed;
-  if(astraOrbitProtectionActive(w)) {
-    const size=92*playerAirframeScale(w.aircraft);
-    for(const side of [-1,1])p.sprite(-30+side,"astra_guard",w.playerX+side*12*playerAirframeScale(w.aircraft),w.playerY+25*playerAirframeScale(w.aircraft),size*.18,size*.23,0,.9);
-  }
   for(const beam of r.meteorSpears??[]) {
     if(now<beam.warningStartsAt||now>=beam.beamEndsAt)continue;
     const {start,end}=meteorSpearEndpoints(beam),dx=end.x-start.x,dy=end.y-start.y;

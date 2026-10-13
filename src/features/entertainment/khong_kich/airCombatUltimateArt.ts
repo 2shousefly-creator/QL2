@@ -5,7 +5,6 @@ import { skillRank } from "./airCombatSkillRanks";
 import { VIPER_ULTIMATE_SIZE } from "./airCombatAmmo";
 import { getMissilePose } from "./airCombatMissilePresentation";
 import { FLIGHT_BODY_FRAMES } from './airCombatFlightArt';
-import { aircraftBuffPoint } from './airCombatBuffArt';
 export const ULTIMATE_ART = atlas;
 const frame=(index:number):AtlasFrame=>({atlas:"ultimateVfx",rect:[index%4/4,Math.floor(index/4)/7,1/4,1/7]});
 export const ULTIMATE_FRAMES={
@@ -49,9 +48,7 @@ export function paintUltimates(w:CombatWorld,draw:UltimatePainter,reduced:boolea
   const dx=Math.sin(angle),dy=-Math.cos(angle);
   draw(-1,"ultimateHawkEngine",w.droneX-dx*23,w.droneY-dy*23,20,rage?42:29,angle,.85);
   if(rage){
-   const point=aircraftBuffPoint(w,1);
    draw(-2,"ultimateHawkRage",w.droneX-dx*17,w.droneY-dy*17,14,20,angle,.9);
-   draw(-3,"ultimateHawkRage",point.x,point.y,14*point.scale,20*point.scale,0,.7);
   }
   if(s.dronePhase!=="active"){
    const deploy=s.dronePhase==="deploying",progress=1-(s.droneTransitionRemaining??0)/(deploy?.4:.38);

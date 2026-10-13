@@ -1,4 +1,4 @@
-import { skillVfxFrame } from './airCombatSkillVfxFrames';
+import { aircraftBuffBrightness } from './airCombatBuffArt';
 import { FLIGHT_ART, flightBodyFrame, missileSmokeFrame } from './airCombatFlightArt';
 import { drawEnemyTrackingHud,drawAircraftTrackingHud,drawCinderTotals,drawAircraftDamageLabels } from './airCombatCanvasHud';
 import { paintSkillRadiance, SKILL_RADIANCE_SOURCES } from './airCombatSkillRadiance';
@@ -45,7 +45,6 @@ import { hasCore } from "./airCombatCoreEffects";
 import { PLAYER_AIRFRAME_SIZE, PLAYER_HITBOX_PROFILES, ENEMY_HITBOX_PROFILES, type AircraftHitboxProfile } from "./airCombatHitboxes";
 import { BOSS_VISUAL_WIDTH_SCALE, BOSS_VISUAL_ASPECT } from "./airCombatHudLayout";
 import { getEnemyExhaustTransform } from "./airCombatHitboxes";
-import { paintTitanShield, type ShieldPainter } from "./airCombatTitanShield";
 import { AMMO_VISUALS, getAmmoVisualKey, getBasicAmmoVisual, getMissileVisual, missileRenderRotation } from "./airCombatAmmo";
 import { getMissilePose, paintMissileExhausts, paintMissileJets } from "./airCombatMissilePresentation";
 import type { AmmoVisualKey } from "./airCombatAmmo";
@@ -125,15 +124,7 @@ function traceProfile(ctx:CanvasRenderingContext2D,p:AircraftHitboxProfile,size:
   for(const s of p.shapes){const a=Math.atan2(s.by-s.ay,s.bx-s.ax),r=s.r*size,ax=s.ax*size,ay=s.ay*size,bx=s.bx*size,by=s.by*size;ctx.moveTo(ax+Math.cos(a-Math.PI/2)*r,ay+Math.sin(a-Math.PI/2)*r);ctx.lineTo(bx+Math.cos(a-Math.PI/2)*r,by+Math.sin(a-Math.PI/2)*r);ctx.arc(bx,by,r,a-Math.PI/2,a+Math.PI/2);ctx.lineTo(ax+Math.cos(a+Math.PI/2)*r,ay+Math.sin(a+Math.PI/2)*r);ctx.arc(ax,ay,r,a+Math.PI/2,a+Math.PI*1.5);ctx.closePath();}
 }
 const enemyArtCells:Partial<Record<EnemyType,readonly[number,number]>>={scout:[3,1],fighter:[3,2],attacker:[0,3],kamikaze:[1,3],bomber:[2,3],elite:[3,3],sniper:[3,2],jammer:[3,1],acid_bomber:[2,3],radar_hunter:[3,3]};
-const shieldPainters=new WeakMap<CanvasRenderingContext2D,ShieldPainter>();
-function shieldPainter(ctx:CanvasRenderingContext2D):ShieldPainter {
-  let p=shieldPainters.get(ctx);if(p)return p;
-  const color=(v:number,a:number)=>`rgba(${v>>16},${v>>8&255},${v&255},${a})`;
-  p={circle:(x,y,r,c,a,fill,w)=>{ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);if(fill){ctx.fillStyle=color(c,a);ctx.fill();}else{ctx.strokeStyle=color(c,a);ctx.lineWidth=w;ctx.stroke();}},
-     arc:(r,start,end,c,a,w)=>{ctx.beginPath();ctx.arc(0,0,r,start,end);ctx.strokeStyle=color(c,a);ctx.lineWidth=w;ctx.stroke();},
-     line:(ax,ay,bx,by,c,a,w)=>{ctx.beginPath();ctx.moveTo(ax,ay);ctx.lineTo(bx,by);ctx.strokeStyle=color(c,a);ctx.lineWidth=w;ctx.stroke();}};
-  shieldPainters.set(ctx,p);return p;
-}
+
 const ammoPaths = new Map<AmmoVisualKey, { body: Path2D; detail: Path2D; glow?: Path2D; accents?: Path2D }>();
 function drawAmmoLocal(ctx:CanvasRenderingContext2D,key:AmmoVisualKey) {
  const art=AMMO_VISUALS[key];
@@ -743,6 +734,7 @@ export function drawLegacyWorld(
       paintGeneratedCanvas(ctx,'shared_flame',x,y+length/2,width,length,0,1,.5,layer===2?0xfff8e7:Number.parseInt(aircraft.accent.slice(1),16));
     }
     ctx.restore();
+    ctx.save();ctx.filter=`brightness(${aircraftBuffBrightness(world)*100}%)`;
     drawAircraft(
       ctx,
       aircraftId,
@@ -754,18 +746,8 @@ export function drawLegacyWorld(
       0.82,
       aircraftId==='argent'?argentPose(world):undefined
     );
+    ctx.restore();
 
-    if (!accents.titanShield.active && accents.titanShield.opacity < .01 && ((world.aircraft.activeEffects.armor_shield || 0) > 0 || activeShieldAmount(world.aircraft,true)>0)) {
-      const scale=playerAirframeScale(world.aircraft);
-      drawMagneticFrame(ctx,skillVfxFrame('armor_shield'),world.playerX,world.playerY-27*scale,18*scale,22*scale,0,.75);
-    }
-
-    const bubble=accents.titanShield;
-    if(bubble.opacity>.01) {
-      ctx.save();ctx.translate(world.playerX,world.playerY-27*playerAirframeScale(world.aircraft));ctx.scale(bubble.scale*playerAirframeScale(world.aircraft)*.24,bubble.scale*playerAirframeScale(world.aircraft)*.24);ctx.globalAlpha=bubble.opacity;
-      paintTitanShield(shieldPainter(ctx),bubble,reducedMotion,(skillRank(world.aircraft, "armor_shield") >= 3));
-      ctx.restore();
-    }
 
   }
   paintMirage(world,(frame,x,y,width,height,rotation,alpha,tint,anchorX)=>drawMagneticFrame(ctx,frame,x,y,width,height,rotation,alpha,tint,anchorX),reducedMotion);

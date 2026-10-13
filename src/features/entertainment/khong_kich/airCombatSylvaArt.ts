@@ -1,4 +1,4 @@
-import { compactBuffPlacement } from './airCombatBuffArt';
+import { isAircraftBuffVisual } from './airCombatBuffArt';
 import deathNew from '../../../assets/khong-kich/sylva/death-26-24-0.png';
 import { GAMEPLAY_SAFE_RECT as R } from './airCombatConfig';
 import aircraft from '../../../assets/khong-kich/sylva/aircraft.png';
@@ -33,7 +33,7 @@ type Painter=(id:number,key:SylvaVisualKey,x:number,y:number,width:number,height
 /** Both renderers consume this bounded texture-only presentation, never collision geometry. */
 export function paintSylva(w:CombatWorld,paint:Painter,reduced:boolean){
  const s=sylvaState(w),now=w.elapsed;let index=0;
- const draw=(key:SylvaVisualKey,x:number,y:number,width:number,height=width,rotation=0,alpha=1,additive=false)=>{[x,y,width,height]=compactBuffPlacement(w,key,x,y,width,height);if(index<SYLVA_SPRITE_BUDGET)paint(-1100000-index++,key,x,y,width,height,rotation,Math.max(0,Math.min(1,alpha)),additive);};
+ const draw=(key:SylvaVisualKey,x:number,y:number,width:number,height=width,rotation=0,alpha=1,additive=false)=>{if(isAircraftBuffVisual(w,key,x,y))return;if(index<SYLVA_SPRITE_BUDGET)paint(-1100000-index++,key,x,y,width,height,rotation,Math.max(0,Math.min(1,alpha)),additive);};
  const trail=(key:SylvaVisualKey,ax:number,ay:number,bx:number,by:number,width:number,alpha:number)=>{const d=Math.hypot(bx-ax,by-ay);if(d>.1)draw(key,(ax+bx)/2,(ay+by)/2,width,d,Math.atan2(by-ay,bx-ax)+Math.PI/2,alpha,true);};
  for(const z of s.zones){if(z.ended)continue;const fade=Math.min(1,(z.until-now)/.4),pulse=reduced?1:.93+.07*Math.sin(now*4);draw('sylva_pool',z.x,z.y,340/.84,340/.84,0,.36*fade);draw('sylva_bubbles',z.x,z.y,310,310,now*.06,.18*pulse*fade,true);}
  for(const f of s.flights){const p=Math.max(0,Math.min(1,(now-f.at)/(f.hitAt-f.at))),x=f.fromX+(f.x-f.fromX)*p,y=f.fromY+(f.y-f.fromY)*p,angle=Math.atan2(f.y-f.fromY,f.x-f.fromX),acid=f.skill==='sylva_acid_burst';draw(acid?'sylva_missile':'sylva_seed',x,y,acid?23:20,acid?43:31,angle+Math.PI/2);trail(acid?'sylva_exhaust':'sylva_pollen',x-Math.cos(angle)*38,y-Math.sin(angle)*38,x,y,14,.8);}
@@ -54,7 +54,7 @@ export function paintSylva(w:CombatWorld,paint:Painter,reduced:boolean){
 /** Foreground pass after both aircraft scenes; seeded targets never cover their seed. */
 export function paintSylvaSeeds(w:CombatWorld,paint:Painter,reduced:boolean){
  const s=sylvaState(w),now=w.elapsed;let index=0;
- const draw=(key:SylvaVisualKey,x:number,y:number,width:number,height=width,rotation=0,alpha=1,additive=false)=>{[x,y,width,height]=compactBuffPlacement(w,key,x,y,width,height);if(index<SYLVA_SPRITE_BUDGET)paint(-1300000-index++,key,x,y,width,height,rotation,Math.max(0,Math.min(1,alpha)),additive);};
+ const draw=(key:SylvaVisualKey,x:number,y:number,width:number,height=width,rotation=0,alpha=1,additive=false)=>{if(isAircraftBuffVisual(w,key,x,y))return;if(index<SYLVA_SPRITE_BUDGET)paint(-1300000-index++,key,x,y,width,height,rotation,Math.max(0,Math.min(1,alpha)),additive);};
  if(s.bloom)for(const seed of s.bloom.seeds.values()){const t=Math.max(0,Math.min(1,(now-s.bloom.at)/6)),charge=seed.recordedHpLoss/(seed.recordedHpLoss+1000),e=seed.entity,scale=e.type==='boss'&&!e.aircraftTarget?Math.min(1.3,1+e.radius/300):1,width=(30+charge*18)*1.8*scale,height=(38+charge*20)*1.8*scale,x=Math.max(R.left+width*.42,Math.min(R.right-width*.42,e.x+12)),y=Math.max(R.top+height*.42,Math.min(R.bottom-height*.42,e.y-12));draw((['sylva_death0','sylva_death1','sylva_death2','sylva_death3'] as const)[Math.min(3,Math.floor(t*4))],x,y,width,height,0,1);if(now-s.bloom.at<.4&&!reduced)draw('sylva_appearance',x,y,width*1.25,height*1.25,0,1-(now-s.bloom.at)/.4,true);}
  for(const e of s.effects){if(e.kind!=='wither')continue;const t=(now-e.at)/e.life;if(t<0||t>=1)continue;const size=e.size*(1+t*.2),x=Math.max(R.left+size*.42,Math.min(R.right-size*.42,e.x+12)),y=Math.max(R.top+size*.42,Math.min(R.bottom-size*.42,e.y-12));draw('sylva_wither',x,y,size,size,0,1-t);}
 }

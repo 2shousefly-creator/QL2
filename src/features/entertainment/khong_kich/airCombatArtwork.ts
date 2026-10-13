@@ -79,8 +79,7 @@ export function getPlayerExhaust(world:CombatWorld,size:number,reducedMotion:boo
   if(!state){state={time:world.elapsed,thrust:0};exhaustStates.set(world,state);}
   const dt=Math.max(0,Math.min(.1,world.elapsed-state.time));state.time=world.elapsed;
   const moving=world.elapsed-world.aircraft.coreState.lastMove<.18 && world.elapsed>.18;
-  const skill=(world.aircraft.activeEffects.afterburner||0)>0 || (world.aircraft.activeEffects.sweeping_cannon||0)>0;
-  const target=moving?1:skill?.65:0;
+  const target=moving?1:0;
   state.thrust+=(target-state.thrust)*(1-Math.exp(-dt*(reducedMotion?3:7)));
   const art=PLAYER_ARTWORK[world.aircraft.aircraftId].neutral;
   const flicker=reducedMotion?1:1+Math.sin(world.elapsed*24)*.045+Math.sin(world.elapsed*37)*.025;

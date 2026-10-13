@@ -1,4 +1,4 @@
-import { compactBuffPlacement } from './airCombatBuffArt';
+import { isAircraftBuffVisual } from './airCombatBuffArt';
 import aircraft from '../../../assets/khong-kich/riptide/aircraft.png';
 import icons from '../../../assets/khong-kich/riptide/icons.png';
 import vfx from '../../../assets/khong-kich/riptide/vfx.png';
@@ -25,7 +25,7 @@ export type RiptidePainter=(id:number,key:RiptideVisualKey,x:number,y:number,wid
 /** Reuses preloaded water textures; time/charge/hit sets come only from the owner runtime. */
 export function paintRiptide(w:CombatWorld,paint:RiptidePainter,reduced:boolean) {
  const s=riptideState(w),now=w.elapsed;let index=0;
- const draw=(key:RiptideVisualKey,x:number,y:number,width:number,height=width,rotation=0,alpha=1,additive=false)=>{[x,y,width,height]=compactBuffPlacement(w,key,x,y,width,height);
+ const draw=(key:RiptideVisualKey,x:number,y:number,width:number,height=width,rotation=0,alpha=1,additive=false)=>{if(isAircraftBuffVisual(w,key,x,y))return;
   if(index<RIPTIDE_SPRITE_BUDGET)paint(-700000-index++,key,x,y,width,height,rotation,Math.min(1,alpha),additive);
  };
  const ring=(x:number,y:number,r:number,alpha:number,angle=0,additive=false)=>draw('riptide_ring',x,y,r*2/.88,r*2/.88,angle,alpha,additive);
