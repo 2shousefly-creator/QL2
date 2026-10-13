@@ -6,7 +6,7 @@ import { HiveThumbnail } from './HiveThumbnail';
 import type { EnemyType } from './airCombatTypes';
 
 const tactics:Partial<Record<EnemyType,string>>={
- swarm_needler:'Quạt 5 viên lệch trái/phải; chu kỳ 22,4–29,6 giây trong wave thường, vận tốc 100. Mỗi viên bằng 50% Hỏa lực.',
+ swarm_needler:'Quạt 5 viên lệch trái/phải; chu kỳ 22,4–29,6 giây trong wave thường, vận tốc 130. Mỗi viên bằng 50% Hỏa lực.',
  razor_glider:'Cảnh báo tuyến lao 0,95 giây; lao trong 0,65 giây và rải 7 viên lưỡi liềm. Chu kỳ 5,6–7,4 giây trong wave thường; đổi hướng theo vị trí mục tiêu đã quan sát.',
  aegis_beetle:'Khiên trước bằng 35% Máu tối đa. Phá Khiên khiến nó phản kích bằng quạt 9 viên; bắn từ phía sau bỏ qua tấm chắn. Bắn thường mỗi 22,4–29,6 giây trong wave thường.',
  siege_spitter:'Đánh dấu vị trí trong 1,25 giây, bán kính nổ 32; nổ gây 65% Hỏa lực, sau đó tỏa 6 viên bằng 30% sát thương vụ nổ. Chu kỳ kỹ năng 5,6–7,4 giây trong wave thường.',
@@ -35,7 +35,7 @@ export function HiveIntel(){
     {type==='boss'&&<ol className="list-decimal pl-4">{HIVE_BOSS_SKILLS.map(skill=><li key={skill.name}><strong>{skill.name}:</strong> {skill.dodge}</li>)}</ol>}
    </article>;})}
    <p>Đòn trúng tâm lõi đang lộ bỏ qua Giáp. Mẹ bị hạ nổ trong bán kính 320: sát thương chuẩn bằng 100% Máu tối đa của mẹ, chỉ lên quái thường khác. Công thuộc người giết mẹ, không nhân chí mạng hoặc kích hoạt thêm proc kết liễu.</p>
-   <p>Các đòn lớn của quái cách nhau ít nhất 1,4 giây; Boss dùng nhịp riêng nhanh gấp đôi. Đồng minh tính lại đường né mỗi 0,10–0,11 giây từ đạn và cảnh báo đã xuất hiện, ưu tiên sống sót và dự trữ tài nguyên cho Ultimate. Cinder canh 6 Cháy, Sylva gieo Ultimate trước chuỗi sát thương, Terra giữ Địa Áp cho pháo cường hóa, Argent canh thu nhiều phiến; Phantom cân đối HawkEye, laser và tàng hình. DPS cạnh mỗi đồng minh là sát thương trung bình trong 5 giây gần nhất.</p>
+   <p>Đạn của mọi quái vật Màn 5, kể cả Boss, đạn tách và homing, bay nhanh hơn 30%. Các đòn lớn của quái cách nhau ít nhất 1,4 giây; Boss dùng nhịp riêng nhanh gấp đôi. Đồng minh tính lại đường né mỗi 0,118–0,127 giây, với cửa sổ dự đoán 0,595 giây từ đạn và cảnh báo đã xuất hiện, ưu tiên sống sót và dự trữ tài nguyên cho Ultimate. Cinder canh 6 Cháy, Sylva gieo Ultimate trước chuỗi sát thương, Terra giữ Địa Áp cho pháo cường hóa, Argent canh thu nhiều phiến; Phantom cân đối HawkEye, laser và tàng hình. DPS cạnh mỗi đồng minh là sát thương trung bình trong 5 giây gần nhất.</p>
   </div>
  </details>;
 }

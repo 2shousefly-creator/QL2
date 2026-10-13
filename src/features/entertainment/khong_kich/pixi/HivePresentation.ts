@@ -53,7 +53,7 @@ export async function createHivePresentation(host:HTMLDivElement,world:CombatWor
      view.accents.update(actor,dt);view.bars.begin(dt);
      drawLegacyWorld(ctx,actor,actor.aircraft.aircraftId,reduced,[],view.bars,view.accents,actor.elapsed,undefined,true,true);view.bars.end();
     }
-    ctx.save();ctx.beginPath();ctx.rect(R.left,R.top,R.width,R.height);ctx.clip();paintHiveExplosions(w,painter);paintHiveThreats(w,painter);ctx.restore();ctx.restore();
+    ctx.save();ctx.beginPath();ctx.rect(R.left,R.top,R.width,R.height);ctx.clip();paintHiveExplosions(w,painter,reduced);paintHiveThreats(w,painter);ctx.restore();ctx.restore();
     hud.render(w,dt,reduced);
     for(const [actor,view] of views)if(!actors.includes(actor)){view.accents.clear();view.bars.clear();views.delete(actor);}
    },
@@ -104,7 +104,7 @@ export async function createHivePresentation(host:HTMLDivElement,world:CombatWor
    const actors=hiveActors(w);
    for(const actor of actors){let view=views.get(actor);if(!view){view=AirCombatPixiRenderer.attachHiveActor(app,assets,aircraft);views.set(actor,view);}view.render(actor,dt,reduced);}
    for(const [actor,view] of views)if(!actors.includes(actor)){view.destroy();views.delete(actor);}
-   blast.begin();paintHiveExplosions(w,blast.painter);blast.end();danger.begin();paintHiveThreats(w,danger.painter);danger.end();
+   blast.begin();paintHiveExplosions(w,blast.painter,reduced);blast.end();danger.begin();paintHiveThreats(w,danger.painter);danger.end();
    layout.begin();damageView.update(w,dt,reduced,false,layout,[w],actors);app.render();hud.render(w,dt,reduced,false);
   },
   destroy(){app.canvas.removeEventListener('webglcontextlost',onLost);for(const view of views.values())view.destroy();views.clear();hud.destroy();damageView.destroy();for(const t of textures.values())t.destroy(false);app.destroy(true,{children:true,texture:false,textureSource:false});background.destroy(true);assets.destroy();}

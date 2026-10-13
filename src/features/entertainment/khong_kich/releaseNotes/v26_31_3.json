@@ -1,0 +1,109 @@
+{
+  "version": "26.31.3",
+  "releaseDate": "13/10/2026",
+  "title": "HIVE · Hỏa Lực Bùng Nổ",
+  "displayTitle": "KHÔNG KÍCH 26.31.3 — NHỊP CHIẾN ĐẤU MỚI",
+  "summary": "Trang bị dễ quan sát hơn, đạn Màn 5 nhanh hơn, đồng minh né bớt hoàn hảo và các pha kỹ năng bùng nổ hơn.",
+  "sections": [
+    {
+      "id": "combat-polish",
+      "title": "CHIẾN TRƯỜNG & HIỆU ỨNG",
+      "icon": {
+        "kind": "wave",
+        "id": "stage5"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "equipment",
+          "title": "Hiệu Ứng Trang Bị",
+          "icon": {
+            "kind": "system",
+            "id": "equipment"
+          },
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Thay các lớp sprite trang bị lớn phủ giữa thân bằng vệt cường hóa ở rìa chiến cơ và dấu ấn nhỏ phía trên mục tiêu; cộng dồn hiển thị bằng vạch nhỏ.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "Thu gọn chớp tiếp xúc và quả cầu trang bị; giữ các đường sét và đường truyền hiệu ứng để dễ theo dõi.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        },
+        {
+          "id": "hive-balance",
+          "title": "Đạn Màn 5 & Đồng Minh",
+          "icon": {
+            "kind": "system",
+            "id": "hive-balance"
+          },
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Tăng 30% tốc độ bay của đạn quái thường, Tinh Anh, quái mẹ và Boss, bao gồm đạn tách và đạn homing.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "Giảm 15% tần suất tính lại hướng né và cửa sổ dự đoán nguy hiểm của AI đồng minh: dự đoán 0,595 giây; suy nghĩ mỗi 0,118–0,127 giây. Giữ tốc độ di chuyển và chiến thuật tài nguyên, phòng thủ, Ultimate.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        },
+        {
+          "id": "skill-vfx",
+          "title": "Hoàn Thiện Các Pha Kỹ Năng",
+          "icon": {
+            "kind": "system",
+            "id": "skill-vfx"
+          },
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Bổ sung hoạt ảnh raster sáng hơn cho pha va chạm, tái kích hoạt và kết thúc chiêu: Hội Thủy/Thủy Thể Riptide; đỡ đòn, thu kiếm và kiếm trận Argent; axit, Ký Sinh và đại thụ Sylva; Nham Giáp, pháo, kẹp và Địa Tâm Terra.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "Tăng độ nổi bật của các điểm nổ tên lửa Viper, Oanh Tạc Titan, Neo Trọng Lực, giao thoa Astra và xung điện Phantom. Các hoạt ảnh dùng spritesheet đã tạo sinh, đồng bộ trên Pixi và Canvas.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        },
+        {
+          "id": "hive-explosions",
+          "title": "Vụ Nổ Màn 5",
+          "icon": {
+            "kind": "system",
+            "id": "hive-explosions"
+          },
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Hoạt ảnh nổ chạy trong 55% thời lượng cũ, tối đa 0,42 giây; thêm lõi sáng nhanh, quầng bung và tia năng lượng raster.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "Tia sáng có thể vươn ra ngoài vùng sát thương để tăng cảm giác bùng nổ. Phần tia và quầng mở rộng chỉ là hình ảnh, không tăng hitbox hoặc sát thương; cảnh báo đỏ vẫn nằm trên các hiệu ứng.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "Giới hạn số sprite và tia sáng; chế độ giảm chuyển động bỏ các lớp lóe sáng, quầng và tia bổ sung.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

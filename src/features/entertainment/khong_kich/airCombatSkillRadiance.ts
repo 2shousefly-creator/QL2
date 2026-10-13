@@ -36,9 +36,21 @@ export function paintSkillRadiance(w:CombatWorld,draw:SkillRadiancePainter,reduc
   if(count>=SKILL_RADIANCE_BUDGET)return;
   const frame=frames[skill][Math.max(0,Math.min(3,Math.floor(phase)%4))];
   draw(id,frame,x,y,width,height,rotation,alpha,false);count++;
-  if(hot&&!reduced&&count<SKILL_RADIANCE_BUDGET){draw(id+1,frame,x,y,width*.92,height*.92,rotation,alpha*.5,true);count++;}
+  if(hot&&!reduced&&count<SKILL_RADIANCE_BUDGET){draw(id+1,frame,x,y,width*.82,height*.82,rotation,Math.min(1,alpha*.8),true);count++;}
  };
  const aura=(id:number,skill:SkillId,size:number,alpha=.48)=>sprite(id,skill,w.playerX,w.playerY,size,size,reduced?1:now*6,alpha);
+ // Complete the impact/recast/end phases that previously only had ignition or
+ // sustained art. These sprites consume real effect records; no damage is inferred.
+ const burst=(id:number,skill:SkillId,x:number,y:number,size:number,at:number,life:number,power=1)=>{
+  const age=now-at,duration=Math.min(.36,life),t=age/duration;
+  if(t<0||t>=1)return;
+  const scale=.55+Math.min(1,t*5)*.6,alpha=(1-t)**.7;
+  sprite(id,skill,x,y,size*scale,size*scale,Math.min(3,t*4),alpha,0,true);
+  if(!reduced&&power>1){
+   // Thin raster energy rays escape the central flash without filling the body.
+   for(let i=0;i<2;i++)sprite(id+2+i*2,skill,x,y,size*.13,size*(1.35+t*.6),Math.min(3,t*4),alpha*.65,i*Math.PI/2+.35,true);
+  }
+ };
  // Every skill has a distinct ignition animation, even when its damage is delayed.
  let ignitions=0,impacts=0;
  for(let i=w.visualEvents.length-1;i>=0;i--){
@@ -50,6 +62,36 @@ export function paintSkillRadiance(w:CombatWorld,draw:SkillRadiancePainter,reduc
    const size=Math.min(58,Math.max(24,event.size*1.6));
    sprite(200000+event.id*4,skill,event.x,event.y,size,size,age/.32*4,(1-age/.32)*.9);
   }
+ }
+ let accents=0;
+ const rankSkills:Record<string,SkillId>={lock_complete:'predator_lock',micro_impact:'predator_lock',anchor_collapse:'gravity_anchor',twin_convergence:'twin_reflection',interference_destroy:'electronic_interference',interference_hit:'electronic_interference'};
+ const ultimateSkills:Record<string,SkillId>={ultimateViperImpact:'missile_swarm',ultimateViperIntercept:'missile_swarm',ultimateTitanImpact:'sweeping_cannon',ultimateHawkDock:'escort_drone'};
+ for(let i=w.visualEvents.length-1;i>=0&&accents<12;i--){
+  const e=w.visualEvents[i],skill=e.kind==='rank_effect'?rankSkills[e.rankEffect??'']:e.kind==='ultimate_effect'?ultimateSkills[e.ultimateEffect??'']:undefined;
+  if(!skill||now-(e.at??now)>.36)continue;
+  burst(-20000000-e.id*8,skill,e.x,e.y,Math.min(210,Math.max(30,e.size*1.3)),e.at??now,.36,e.rankEffect==='anchor_collapse'?2:1);accents++;
+ }
+ if(s.aircraftId==='riptide')for(const e of riptideState(w).effects.slice(-12)){
+  if(!['heal','cleanse','impact','burst'].includes(e.kind))continue;
+  const skill:SkillId=e.skillId??(e.kind==='heal'||e.kind==='cleanse'?'riptide_wellspring':e.kind==='impact'?'riptide_tidal_blades':'riptide_confluence');
+  burst(-30000000-e.id*8,skill,e.x,e.y,Math.min(300,e.radius*2),e.at,e.life,e.kind==='burst'?2:1);
+ }
+ if(s.aircraftId==='argent')for(const e of argentState(w).effects.slice(-12)){
+  if(!['guard','break','cross','reunion','join','summon','wave'].includes(e.kind))continue;
+  const skill:SkillId=e.kind==='guard'||e.kind==='break'?'argent_guard_stance':e.kind==='summon'||e.kind==='wave'?'argent_heavenly_blade_array':'argent_blade_recall';
+  burst(-40000000-e.id*8,skill,e.x,e.y,e.size*1.5,e.at,e.life,e.kind==='cross'||e.kind==='reunion'?2:1);
+ }
+ if(s.aircraftId==='sylva')for(const [i,e] of sylvaState(w).effects.slice(-12).entries()){
+  if(!['heal','acidExplosion','root','bloom','tree'].includes(e.kind))continue;
+  const skill:SkillId=e.kind==='heal'?'sylva_symbiosis':e.kind==='acidExplosion'?'sylva_acid_burst':e.kind==='root'||e.kind==='bloom'?'sylva_parasitic_seed':'sylva_deathbloom';
+  burst(-50000000-i*8,skill,e.x,e.y,e.size*1.35,e.at,e.life,e.kind==='tree'||e.kind==='acidExplosion'?2:1);
+ }
+ if(s.aircraftId==='terra')for(const [i,e] of terraState(w).effects.slice(-12).entries()){
+  if(!['armorHit','armorDissolve','regenerate','coreOpen','coreEnd','cannon','cannonImpact','clampImpact','shardImpact'].includes(e.kind))continue;
+  const skill:SkillId=e.kind==='cannon'||e.kind==='cannonImpact'?'terra_seismic_cannon':e.kind==='clampImpact'?'terra_strata_clamp':e.kind==='coreOpen'||e.kind==='coreEnd'?'terra_geocore_overdrive':'terra_reactive_rock_armor';
+  if(e.kind==='cannon'){
+   const age=now-e.at;if(age>=0&&age<.28)sprite(-60000000-i*8,skill,e.x,e.y,e.size*1.2,e.height??e.size,Math.min(3,age/.28*4),1-age/.28);
+  }else burst(-60000000-i*8,skill,e.x,e.y,e.size*1.35,e.at,e.life,e.kind==='clampImpact'||e.kind==='cannonImpact'?2:1);
  }
  // Skill projectiles retain their original body and exact collision envelope;
  // the animated wake adds luminous detail along their real velocity.

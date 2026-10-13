@@ -20,7 +20,7 @@ export interface RiptideHooks {
 interface Cast { id:number; rank:number; at:number; until:number }
 interface Blades extends Cast { x:number;y:number;previous:number;hits:[Set<number>,Set<number>];refund:number;positions:Map<number,{x:number;y:number}> }
 export interface Waterform extends Cast { tick:number;charge:number;healed:number }
-export interface RiptideEffect { id:number;kind:'heal'|'cleanse'|'impact'|'burst'|'afterwash'|'refund'|'pulse'|'leech';x:number;y:number;at:number;life:number;radius:number;strength:number }
+export interface RiptideEffect { id:number;kind:'heal'|'cleanse'|'impact'|'burst'|'afterwash'|'refund'|'pulse'|'leech';x:number;y:number;at:number;life:number;radius:number;strength:number;skillId?:RiptideSkillId }
 export interface RiptideRuntime {
  wellspring?:Cast & {tick:number}; blades?:Blades; confluence?:Cast & {exploded:boolean}; waterform?:Waterform;
  slows:Map<number,{entity:EnemyEntity;sources:Map<SkillId,{until:number;multiplier:number;duration:number}>}>;
@@ -30,8 +30,8 @@ const states=new WeakMap<CombatWorld,RiptideRuntime>();
 export function riptideState(w:CombatWorld):RiptideRuntime {
  let s=states.get(w);if(!s){s={slows:new Map(),effects:[]};states.set(w,s);}return s;
 }
-function fx(w:CombatWorld,kind:RiptideEffect['kind'],x:number,y:number,radius:number,strength=1,life=.4) {
- const s=riptideState(w);s.effects.push({id:w.nextId++,kind,x,y,radius,strength,at:w.elapsed,life});
+function fx(w:CombatWorld,kind:RiptideEffect['kind'],x:number,y:number,radius:number,strength=1,life=.4,skillId?:RiptideSkillId) {
+ const s=riptideState(w);s.effects.push({id:w.nextId++,kind,x,y,radius,strength,at:w.elapsed,life,skillId});
  if(s.effects.length>64)s.effects.splice(0,s.effects.length-64);
 }
 function valid(w:CombatWorld,e:EnemyEntity,h:RiptideHooks) {
@@ -129,7 +129,7 @@ function sweepBlades(w:CombatWorld,c:Blades,to:number,h:RiptideHooks) {
 }
 function burst(w:CombatWorld,c:Cast,ratio:number,radius:number,id:RiptideSkillId,h:RiptideHooks,strength=1) {
  if(ratio>0)for(const e of w.enemies)if(valid(w,e,h)&&within(w,e,radius))damage(w,e,ratio,id,c,h);
- fx(w,'burst',w.playerX,w.playerY,radius,strength,.5);
+ fx(w,'burst',w.playerX,w.playerY,radius,strength,.5,id);
 }
 function tickWaterform(w:CombatWorld,water:Waterform,to:number,h:RiptideHooks) {
   const v=riptideValues('riptide_waterform',water.rank);

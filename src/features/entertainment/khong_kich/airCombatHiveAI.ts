@@ -27,7 +27,10 @@ import type { SkillId } from './airCombatTypes';
 interface Observation {entity:EnemyEntity;x:number;y:number;at:number;vx:number;vy:number}
 interface PilotMemory {vx:number;vy:number;defendAt:number;enemies:Map<number,Observation>;urgent:boolean;comboTarget?:EnemyEntity;comboSince?:number}
 const pilots=new WeakMap<HiveAlly,PilotMemory>();
-const contact=createHitResult(),SPEED=250,HORIZON=.7;
+// Reduce prediction and decision frequency by 15%, without random misses or
+// changing aircraft movement stats, hitboxes, resource budgets or skill combos.
+const EVASION_FACTOR=.85;
+const contact=createHitResult(),SPEED=250,HORIZON=.7*EVASION_FACTOR;
 function memory(a:HiveAlly){let m=pilots.get(a);if(!m){m={vx:0,vy:0,defendAt:0,enemies:new Map(),urgent:false};pilots.set(a,m);}return m;}
 const clampX=(x:number)=>Math.max(R.left+25,Math.min(R.right-25,x));
 const clampY=(y:number)=>Math.max(R.top+30,Math.min(R.bottom-35,y));
@@ -270,7 +273,7 @@ export function thinkHiveAlly(a:HiveAlly,dt:number){
  const w=a.world,root=hiveRoot(w),m=memory(a);
  if(root.elapsed>=a.thinkAt){
   if(root.elapsed-a.thinkAt>1)m.vx=m.vy=0;
-  a.thinkAt=root.elapsed+.1+a.slot*.008;
+  a.thinkAt=root.elapsed+(.1+a.slot*.008)/EVASION_FACTOR;
   const c=sense(a,m),target=chooseTarget(c,a),threat=risk(c,w.playerX,w.playerY),stats=getEffectiveAircraftStats(w.aircraft),hp=w.aircraft.currentHp/stats.maxHp;
   m.urgent=threat>90;a.target=target?.id;w.playerTargetId=target?.id;
   const close=w.aircraft.aircraftId==='riptide'&&(hp>.55||!!riptideState(w).waterform&&hp>.35)&&threat<90;

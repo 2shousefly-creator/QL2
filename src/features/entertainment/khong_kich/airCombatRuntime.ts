@@ -1264,7 +1264,7 @@ function addProjectile(world: CombatWorld, values: Partial<ProjectileEntity> & P
         if (replace >= 0) recycleProjectile(world, replace);
     }
     // Call sites classify the authored volley; special shots opt out by default.
-    const speedMultiplier = values.owner === "enemy" ? ENEMY_PROJECTILE_SPEED_MULTIPLIERS[values.enemySpeedClass ?? "special"] : 1;
+    const speedMultiplier = values.owner === "enemy" ? ENEMY_PROJECTILE_SPEED_MULTIPLIERS[values.enemySpeedClass ?? "special"] * (world.stageId===5?1.3:1) : 1;
     const projectile = acquireProjectile(world);
     Object.assign(projectile, {
         ...MISSILE_DEFAULTS,

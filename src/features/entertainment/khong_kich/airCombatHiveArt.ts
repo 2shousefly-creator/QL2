@@ -78,21 +78,35 @@ export function paintHive(w:CombatWorld,p:HivePainter,reduced=false){
  for(const fx of w.hive?.effects??[]){if(fx.blast||fx.bossStyle!==undefined||fx.row===7||fx.row===6)continue;const t=(now-fx.at)/fx.duration;if(t<0||t>=1)continue;if(fx.row===1)p.sprite(ammo[10],fx.x,fx.y,fx.size,fx.size,t*Math.PI*2,Math.sin(t*Math.PI));else p.sprite(effects[fx.row*8+Math.min(7,Math.floor(t*8))],fx.x,fx.y,fx.size,fx.size);}
 }
 
-/** Generated raster frames use the warning's diameter, never a generic impact size. */
-export function paintHiveExplosions(w:CombatWorld,p:HivePainter){
+/** Fast raster ignition with decorative overreach. Damage still uses HiveHazard
+ * geometry in the runtime; the corona and rays never create collision shapes. */
+export function paintHiveExplosions(w:CombatWorld,p:HivePainter,reduced=false){
+ let sprites=0,rays=0;
+ const drawSprite=(frame:HiveFrame,x:number,y:number,width:number,height:number,rotation:number,alpha:number,additive=false)=>{
+  if(sprites>=1024||alpha<=0)return;
+  p.sprite(frame,x,y,width,height,rotation,alpha,additive);sprites++;
+ };
  for(const fx of w.hive?.effects??[]){
-  const z=fx.blast,t=(w.elapsed-fx.at)/fx.duration;if((!z&&fx.bossStyle===undefined&&fx.row!==7&&fx.row!==6)||t<0||t>=1)continue;
+  const z=fx.blast,age=w.elapsed-fx.at,duration=Math.min(.42,fx.duration*.55),t=age/duration;
+  if((!z&&fx.bossStyle===undefined&&fx.row!==7&&fx.row!==6)||t<0||t>=1)continue;
   const style=z?.bossStyle??fx.bossStyle;
   const frame=style===undefined?detonations[Math.min(15,Math.floor(Math.pow(t,.78)*16))]:bossEffects[(style%3)*4+Math.min(3,Math.floor(t*4))];
-  const diameter=z?z.radius*2:fx.size,alpha=Math.min(1,(1-t)*4);
-  const draw=(x:number,y:number)=>{
-   p.sprite(frame,x,y,diameter,diameter,0,alpha);
-   // A short additive ignition boosts the authored fire texture, without vector flashes.
-   if(t<.26)p.sprite(frame,x,y,diameter,diameter,0,(1-t/.26)*.65,true);
+  const diameter=z?z.radius*2:fx.size,alpha=(1-t)**.65;
+  const draw=(x:number,y:number,accent=true)=>{
+   drawSprite(frame,x,y,diameter,diameter,0,alpha);
+   if(reduced)return;
+   const flash=Math.max(0,1-age/.12);
+   drawSprite(frame,x,y,diameter*.85,diameter*.85,0,flash*.95,true);
+   drawSprite(frame,x,y,diameter*(1.12+t*.35),diameter*(1.12+t*.35),.25,alpha*.45,true);
+   if(accent&&rays<96&&t<.7){
+    const angle=(fx.at*7+x*.03+y*.02)%Math.PI;
+    for(let i=0;i<2;i++)drawSprite(frame,x,y,diameter*.15,diameter*(1.6+t*.8),angle+i*Math.PI/2,(1-t/.7)*.8,true);
+    rays+=2;
+   }
   };
   if(z?.kind==='lane'){
    const length=Math.hypot(z.endX-z.x,z.endY-z.y),count=Math.max(1,Math.ceil(length/(diameter*.8)));
-   for(let i=0;i<=count;i++)draw(z.x+(z.endX-z.x)*i/count,z.y+(z.endY-z.y)*i/count);
+   for(let i=0;i<=count;i++)draw(z.x+(z.endX-z.x)*i/count,z.y+(z.endY-z.y)*i/count,i%3===0);
   }else draw(fx.x,fx.y);
  }
 }
