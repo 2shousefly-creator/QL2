@@ -1,4 +1,5 @@
 import { combatGraphicsQuality } from '../airCombatGraphics';
+import { paintSkillRadiance, SKILL_RADIANCE_BUDGET } from '../airCombatSkillRadiance';
 import { paintUltimates, ultimateBody } from "../airCombatUltimateArt";
 import { paintRankSkills } from "../airCombatRankArt";
 import type { CombatWorld } from "../airCombatRuntime";
@@ -14,13 +15,22 @@ export class AirCombatVfx {
   private free: Effect[] = [];
   private ultimates: AirCombatSpritePool;
   private ranked: AirCombatSpritePool;
+  private radiance: AirCombatSpritePool;
   constructor(private root: Container, private assets: AirCombatAssets) {
     // Two extra recycled highlights per projectile; retain the existing body/effect budget.
     const spriteBudget = 640 + AIR_COMBAT_WORLD.maxPlayerProjectiles * 2;
     this.ultimates = new AirCombatSpritePool(root, spriteBudget);
     this.ranked = new AirCombatSpritePool(root, spriteBudget);
+    this.radiance = new AirCombatSpritePool(root, SKILL_RADIANCE_BUDGET);
   }
   renderRankSkills(world: CombatWorld, reducedMotion: boolean) {
+    this.radiance.begin(world.elapsed,reducedMotion);
+    paintSkillRadiance(world,(id,frame,x,y,width,height,rotation,alpha,additive)=>{
+      const sprite=this.radiance.get(id,this.assets.texture(frame));if(!sprite)return;
+      sprite.position.set(x,y);sprite.width=width;sprite.height=height;sprite.rotation=rotation;sprite.alpha=alpha;
+      sprite.blendMode=additive?'add':'normal';
+    },reducedMotion);
+    this.radiance.end();
     this.ranked.begin(world.elapsed,reducedMotion);
     paintRankSkills(world, (id,key,x,y,width,height,rotation,alpha,additive) => {
       const sprite=this.ranked.get(id,['rankMicroMissile','rankTwinShot','rankMiniLance'].includes(key)?this.assets.projectile(key):this.assets.effect(key));if(!sprite)return;
@@ -141,7 +151,7 @@ export class AirCombatVfx {
     }
   }
   destroy() {
-    this.ranked.destroy();this.ultimates.destroy();
+    this.ranked.destroy();this.ultimates.destroy();this.radiance.destroy();
     [...this.active, ...this.free].forEach(e => e.sprite.destroy());
     this.active.length = 0; this.free.length = 0;
   }

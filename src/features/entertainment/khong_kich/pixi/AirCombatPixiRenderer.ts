@@ -271,6 +271,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     for (const event of world.visualEvents) {
       if (event.id <= this.lastEvent) continue;
       this.lastEvent = event.id;
+      if(event.kind==='skill_ignition')continue; // Shared raster painter owns cast ignition.
       if (world.destruction && (event.attachedToPlayer || event.kind === "player_heal")) continue;
       if (event.kind === "aircraft_destroyed") {
         if (!this.sceneParent || this.hiveActor) {

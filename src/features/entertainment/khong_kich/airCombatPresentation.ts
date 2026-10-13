@@ -74,8 +74,8 @@ export function getSkillTooltipModel(state: AircraftCombatState, id: SkillId) {
  if(ultimateCastDisabled(state,id))coreRows.push("Tập Trung Chuyên Môn: khóa dùng chủ động Kỹ Năng Tối Thượng; cấp và nội tại vẫn giữ nguyên.");
  if(hasCore(state,97)&&!isUltimate(id))coreRows.push("Tập Trung Chuyên Môn: +35% Sát Thương Kỹ Năng; chi phí đã giảm 20%, hồi chiêu cơ bản đã giảm 25%.");
  if(canSkillsCrit(state))coreRows.push("Kỹ năng có thể chí mạng.");
- if(hasCore(state,190))coreRows.push("Nén năng lượng: +25% Sát Thương Kỹ Năng; chi phí đã gồm +10%.");
- if(expansionState(state).primarySkill===id)coreRows.push("Học thuyết một mũi nhọn: +25% sát thương và sức mạnh hồi máu/lá chắn do kỹ năng tạo; chi phí và hồi chiêu cơ bản đã giảm 25%.");
+ if(hasCore(state,190))coreRows.push("Nén Năng Lượng: +25% Sát Thương Kỹ Năng; chi phí đã gồm +10%.");
+ if(expansionState(state).primarySkill===id)coreRows.push("Học Thuyết Một Mũi Nhọn: +25% sát thương và sức mạnh hồi máu/lá chắn do kỹ năng tạo; chi phí và hồi chiêu cơ bản đã giảm 25%.");
  const rankRows=rows.map(row=>({...row,displayDescription:resolveTooltipValues(row.upgradeDescription,
   {stats,currentHp:state.currentHp,skillCost:v.cost})}));
  return {title:config.name,description:rank?effectiveSkillDescription(state,id):"Chưa học kỹ năng. Có thể giữ Điểm Kỹ Năng để đầu tư sau.",detailRows,coreRows,rank,rankRows,
@@ -245,7 +245,7 @@ export function getStatusPresentations(world: CombatWorld): StatusPresentation[]
    add('terra_geocore_overdrive','Cường Hóa Địa Tâm','Hồi Máu mỗi 0,5 giây, giữ Địa Áp và cường hóa Pháo Địa Chấn.',terra.ultimate,20);
   }
   const life=sylvaHud(world);
-  if(life)result.push({id:'sylva:symbiosis',group:'buff',name:'Cộng Sinh · Sinh Lực: '+Math.round(life.storedVitality),description:'Máu Xám là Sinh Lực Tích Trữ; sát thương vẫn trừ Máu ngay. Hồi phục cơ sở: '+Math.round(life.heal)+'. Tái kích hoạt sau 0,5 giây hoặc tự kết thúc sau 6 giây.',icon:{kind:'skill',id:'sylva_symbiosis'},source:'Sylva',stacks:1,badgeText:String(Math.round(life.storedVitality)),remaining:life.remaining,duration:6,priority:112});
+  if(life)result.push({id:'sylva:symbiosis',group:'buff',name:'Cộng Sinh · Sinh Lực: '+Math.round(life.storedVitality),description:'Máu Xám là Sinh Lực Tích Trữ; sát thương vẫn trừ Máu ngay. Hồi phục cơ sở: '+Math.round(life.heal)+'. Tái Kích Hoạt sau 0,5 giây hoặc tự kết thúc sau 6 giây.',icon:{kind:'skill',id:'sylva_symbiosis'},source:'Sylva',stacks:1,badgeText:String(Math.round(life.storedVitality)),remaining:life.remaining,duration:6,priority:112});
   const sylva=sylvaState(world);
   if(sylva.outgoingUntil>world.elapsed)result.push({id:'sylva:outgoing',group:'buff',name:'Sinh Lực Bùng Nở',description:'Tăng 25% toàn bộ sát thương Sylva gây ra.',icon:{kind:'skill',id:'sylva_symbiosis'},source:'Cộng Sinh cấp 5',stacks:1,remaining:sylva.outgoingUntil-world.elapsed,duration:life?6:4,priority:105});
   const argent=argentState(world),guard=argentHud(world).guard;
@@ -378,7 +378,7 @@ export function getStatusPresentations(world: CombatWorld): StatusPresentation[]
   if (shields.length) {
     const first = shields.reduce((a, b) => a[1].until < b[1].until ? a : b);
     result.push({ id: "shield", group: "buff", name: "Lá chắn", icon: { kind: "status", id: "shield" },
-      description: `Lá chắn còn ${Math.round(shields.reduce((n, [, v]) => n + v.amount, 0))} Máu hấp thụ.${hasCore(s,200) ? ` Lá chắn sinh năng: dung lượng +50%; các lớp hiện tại đã hấp thụ ${amount(shields.reduce((n,[,v])=>n+(v.absorbed??0),0))} sát thương. Khi từng lớp kết thúc, phát nổ bằng 160% lượng lớp đó đã hấp thụ trong bán kính 120px.` : ""}`, source: "Lõi",
+      description: `Lá chắn còn ${Math.round(shields.reduce((n, [, v]) => n + v.amount, 0))} Máu hấp thụ.${hasCore(s,200) ? ` Lá Chắn Sinh Năng: dung lượng +50%; các lớp hiện tại đã hấp thụ ${amount(shields.reduce((n,[,v])=>n+(v.absorbed??0),0))} sát thương. Khi từng lớp kết thúc, phát nổ bằng 160% lượng lớp đó đã hấp thụ trong bán kính 120px.` : ""}`, source: "Lõi",
       stacks: 1, remaining: first[1].until - c.time, duration: first[1].duration ?? (first[0] === "reserve" ? 4 : 3), priority: 95 });
   }
   const acid = (c.timers.acidArmor || 0) - c.time;
@@ -402,7 +402,7 @@ export function getStatusPresentations(world: CombatWorld): StatusPresentation[]
   }
   const status=s.status;
   const timed = [
-    ["stunnedUntil","Choáng","stun",hasCore(s,203)?"Không thể di chuyển; Ý chí bất khuất vẫn cho bắn thường và dùng kỹ năng.":"Không thể di chuyển, dùng kỹ năng hoặc bắn thường."],
+    ["stunnedUntil","Choáng","stun",hasCore(s,203)?"Không thể di chuyển; Ý Chí Bất Khuất vẫn cho bắn thường và dùng kỹ năng.":"Không thể di chuyển, dùng kỹ năng hoặc bắn thường."],
     ["skillLockedUntil","Khóa kỹ năng","skill_lock","Tạm khóa kỹ năng; vẫn di chuyển và bắn thường."],
     ["resourceJammedUntil","Nhiễu tài nguyên","resource_jam","Giảm hồi tài nguyên; giữ nguyên tài nguyên đang có."],
     ["armorBrokenUntil","Vỡ giáp","armor","-35% Giáp."],
@@ -439,7 +439,7 @@ function skillCoreStatuses(world:CombatWorld):StatusPresentation[] {
   if((skillRank(s, "missile_swarm") >= 3)){
     for(const salvo of r.salvos)add(130,{id:`core_130:${salvo.id}`,badgeText:`${salvo.data}/${V.dataLimit}`,badgeKind:"stack",progress:salvo.data/V.dataLimit,timeLabel:"Salvo đang bay",description:`${getSkillTooltipModel(s,"missile_swarm").description} Còn ${salvo.pending+salvo.live.size} tên lửa chưa kết thúc.`});
     const remaining=(c.timers.tacticalData||0)-c.time;
-    if(remaining>0)add(130,{remaining,duration:V.dataDuration,badgeText:`+${number(hasCore(s,95)?0:(c.stacks.tacticalData||0)*V.dataCrit*100)}%`,badgeKind:"percent",showNumericTimer:true,description:getSkillTooltipModel(s,"missile_swarm").description+(hasCore(s,95)?" Nghịch lý bạo kích đang khóa tỷ lệ chí mạng ở 25%.":"")});
+    if(remaining>0)add(130,{remaining,duration:V.dataDuration,badgeText:`+${number(hasCore(s,95)?0:(c.stacks.tacticalData||0)*V.dataCrit*100)}%`,badgeKind:"percent",showNumericTimer:true,description:getSkillTooltipModel(s,"missile_swarm").description+(hasCore(s,95)?" Nghịch Lý Bạo Kích đang khóa tỷ lệ chí mạng ở 25%.":"")});
   }
   const reappearance=(c.timers.reappearanceBuff||0)-c.time;
   if((skillRank(s, "invisibility") >= 5)&&reappearance>0)add(142,{remaining:reappearance,duration:V.reappearanceDuration,showNumericTimer:true,timeLabel:"Cửa sổ bắn cường hóa"});
@@ -452,7 +452,7 @@ function skillCoreStatuses(world:CombatWorld):StatusPresentation[] {
 export function getCoreTelemetryPresentation(state:AircraftCombatState,id:CoreId):string[] {
   const row=Number(id.slice(5)),c=state.coreState,stats=getEffectiveAircraftStats(state);
   if(row===210)return [];
-  if(row===227){const chest=state.coreState.release?.waitingChest;return chest?.claimed?[`Đã nhận phần thưởng: ${chest.rewardLabel}`]:[chest?.cancelled?"Đã hủy bởi Cái giá phải trả":`Còn ${number(chest?.remaining??500)} giây chiến đấu`];}
+  if(row===227){const chest=state.coreState.release?.waitingChest;return chest?.claimed?[`Đã nhận phần thưởng: ${chest.rewardLabel}`]:[chest?.cancelled?"Đã hủy bởi Cái Giá Phải Trả":`Còn ${number(chest?.remaining??500)} giây chiến đấu`];}
   if(row===228)return ["Đã nhận 2 Trang Bị Huyền Thoại thuộc 2 family khác nhau. Mọi nguồn nhận Trang Bị đã khóa tới hết run."];
   if(row>=223){const t=c.telemetry?.[id]??{};return row===224?[`Trang bị rơi thêm: ${t.extraDrops??0}`,`Quái thường: ${t.normalDrops??0} · Tinh Anh: ${t.eliteDrops??0}`]:[`Trang Bị/Vật Phẩm đã nhận: ${t.itemsReceived??0}`];}
   const values=c.telemetry?.[id]??{},lines:string[]=[];

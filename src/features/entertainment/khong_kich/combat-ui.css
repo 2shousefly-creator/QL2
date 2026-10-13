@@ -924,3 +924,4 @@
 .air-combat-side-tabs button{display:flex;align-items:center;justify-content:center;gap:5px;min-width:0}
 .air-combat-side-tabs .air-inspection-tab-portrait{width:24px;height:24px;flex-shrink:0}
 .air-combat-side-tabs button small{display:block;font-size:9px;font-weight:500;opacity:.8}
+.air-hive-ally-dps{position:absolute;left:calc(100% + 1cqw);top:2.1cqw;white-space:nowrap;font-size:2.35cqw;line-height:1.3;color:#d7e7ef;font-variant-numeric:tabular-nums;text-shadow:0 1px 3px #000,0 0 3px #000;pointer-events:none}

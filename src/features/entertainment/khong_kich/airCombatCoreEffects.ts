@@ -84,7 +84,7 @@ register(49, {stats:(_s,t)=>{t.armor+=15;}, hooks:{tick:ctx=>{if(ctx.state.coreS
     } } });
 flat(53, "criticalChance", .30);
 // Applied after the central Fire Rate resolver, including its global cap.
-// Gatling resolves once in the shared fire-rate resolver and damage components.
+// Gatlingun resolves once in the shared fire-rate resolver and damage components.
 register(229, {});
 register(54, { finalStats: (s, stats) => { s.coreState.stacks.fireRateConversion = 1+Math.max(0,stats.fireRate-1.8)*.4; stats.fireRate = Math.min(stats.fireRate,1.8); } });
 register(55,{stats:(_s,t)=>{t.criticalChance+=.12;t.criticalDamageMultiplier+=.15;}});
@@ -316,7 +316,7 @@ export function coreStackLabel(state: AircraftCombatState, id: CoreId): string |
         case "core_196": return `Tiến độ chí mạng: ${c.stacks.crimsonProgress??0}/4 · +${Math.min(50,(c.stacks.crimsonCrit??0)*5)}% Sát Thương Chí Mạng`;
         case "core_204": return `Damage Armor/Shield đã ngăn: ${Math.round(c.stacks.armorMeter??0)}/${Math.round((c.stacks.effectiveMaxHp??1)*.25)}`;
         case "core_217": return state.coreState.release?.pendingGuaranteedDiamondSelection?"Lượt milestone kế tiếp: 100% Kim Cương":"Tỷ lệ: 20% Bạc / 30% Vàng / 50% Kim Cương";
-        case "core_218": return `Dư chấn tối hậu: ${remaining("ultimateAftershock")}s`;
+        case "core_218": return `Dư Chấn Tối Hậu: ${remaining("ultimateAftershock")}s`;
         case "core_120": return (c.timers.controlOverride??0)>c.time ? `Hồi chiêu: ${remaining("controlOverride")}s` : "Hack tối đa 5 địch thường 12s / 1 Tinh Anh 9s / choáng Boss 2s; hồi 13s sau khi hiệu ứng kết thúc. Theo dõi trạng thái trên biểu tượng Lõi.";
         case "core_121": return `Phản Vật Chất: ${Math.round(c.stacks.antimatter??0)} sát thương / 450% Hỏa Lực`;
         case "core_106": return `Loạt Tomahawk tiếp theo sau ${remaining("tomahawk")}s`;

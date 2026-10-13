@@ -15,7 +15,7 @@ import { AirCombatStatusProgress } from './airCombatStatusProgress';
 import { AirCombatAllySkillProgress } from './airCombatAllySkillProgress';
 import { getBossStatusPresentations } from './airCombatBossStatuses';
 import { getStatusPresentations, type StatusPresentation } from "./airCombatPresentation";
-import type { CombatWorld } from "./airCombatRuntime";
+import { rollingDps, type CombatWorld } from "./airCombatRuntime";
 
 export interface StatusStripHandle { update(world: CombatWorld): void; renderProgress(world: CombatWorld): void; close(): void }
 const genericIcons = { burn: Flame, acid: FlaskConical, armor: ShieldMinus, shield: Shield, stun: Zap, skill_lock:Lock, resource_jam:BatteryWarning, regen_off:HeartOff, mark:Crosshair, radar:Radar };
@@ -80,7 +80,7 @@ export const AirCombatStatusStrip = React.memo(forwardRef<StatusStripHandle, { t
   const [allySkillProgress] = useState(()=>new AirCombatAllySkillProgress());
   const snapshotWorld = useRef<CombatWorld|null>(null);
   const [items, setItems] = useState<StatusPresentation[]>([]);
-  const [squad,setSquad]=useState<{world:CombatWorld;id:CombatWorld["aircraft"]["aircraftId"];seconds:number;hp:number;max:number;level:number;skills:{id:SkillId;rank:number;cooldown:number}[]}[]>([]);
+  const [squad,setSquad]=useState<{world:CombatWorld;id:CombatWorld["aircraft"]["aircraftId"];seconds:number;hp:number;max:number;level:number;dps:number;skills:{id:SkillId;rank:number;cooldown:number}[]}[]>([]);
   const [selected, setSelected] = useState<string | null>(null);
   const selectedRef = useRef<string | null>(null);
   const tooltipChange = useRef(onTooltipChange); tooltipChange.current = onTooltipChange;
@@ -97,9 +97,9 @@ export const AirCombatStatusStrip = React.memo(forwardRef<StatusStripHandle, { t
     const changedWorld=snapshotWorld.current!==world;
     if (world.pauseReasons.size > 0 && !changedWorld) return;
     if(changedWorld){snapshotWorld.current=world;close();}
-    const squadNext=(world.hive?.allies??[]).map(a=>({world:a.world,id:a.world.aircraft.aircraftId,seconds:Math.ceil(a.respawn),hp:Math.ceil(a.world.aircraft.currentHp),max:Math.ceil(getEffectiveAircraftStats(a.world.aircraft).maxHp),level:a.world.aircraft.level,
+    const squadNext=(world.hive?.allies??[]).map(a=>({world:a.world,id:a.world.aircraft.aircraftId,seconds:Math.ceil(a.respawn),hp:Math.ceil(a.world.aircraft.currentHp),max:Math.ceil(getEffectiveAircraftStats(a.world.aircraft).maxHp),level:a.world.aircraft.level,dps:Math.round(rollingDps(a.world)),
       skills:AIRCRAFT_CONFIGS[a.world.aircraft.aircraftId].skillIds.map(id=>({id,rank:skillRank(a.world.aircraft,id),cooldown:Math.ceil(Math.max(0,a.world.aircraft.cooldowns[id]??0))}))}));
-    setSquad(previous=>previous.length===squadNext.length&&previous.every((a,i)=>{const b=squadNext[i];return a.world===b.world&&a.seconds===b.seconds&&a.hp===b.hp&&a.max===b.max&&a.level===b.level&&a.skills.every((s,j)=>s.rank===b.skills[j].rank&&s.cooldown===b.skills[j].cooldown);})?previous:squadNext);
+    setSquad(previous=>previous.length===squadNext.length&&previous.every((a,i)=>{const b=squadNext[i];return a.world===b.world&&a.seconds===b.seconds&&a.hp===b.hp&&a.max===b.max&&a.level===b.level&&a.dps===b.dps&&a.skills.every((s,j)=>s.rank===b.skills[j].rank&&s.cooldown===b.skills[j].cooldown);})?previous:squadNext);
     const next = [...getStatusPresentations(world), ...getBossStatusPresentations(world)];
     progress.snapshot(world,next);
     progress.render(world);
@@ -130,6 +130,7 @@ export const AirCombatStatusStrip = React.memo(forwardRef<StatusStripHandle, { t
     <div className="air-status-player">
     {squad.length>0&&<div className="air-hive-squad" aria-label="Đồng minh AI">{squad.map((a,slot)=><div key={a.id} className="air-hive-ally" data-hive-ally={slot}>
       <AircraftPreview aircraftId={a.id}/><strong title={`${AIRCRAFT_CONFIGS[a.id].name} · Máu ${a.hp}/${a.max}`}>{a.seconds?`${a.seconds}s`:`Lv${a.level}`}</strong>
+      <span className="air-hive-ally-dps" title="Sát thương trung bình trong 5 giây gần nhất">DPS: {a.dps}</span>
       <canvas ref={node=>{allyCanvases.current[slot]=node;}} width={148} height={a.id==="terra"?76:50} className="air-hive-ally-bars" aria-label="Máu và tài nguyên đồng minh"/>
       <div className="air-hive-ally-skills" role="group" aria-label={`Kỹ năng ${AIRCRAFT_CONFIGS[a.id].name}`}>
         {a.skills.map(skill=><button key={skill.id} type="button" className="air-hive-ally-skill" data-unlearned={skill.rank===0} data-combat-tooltip-trigger="skill"

@@ -22,7 +22,7 @@ export function releaseTelemetry(state:AircraftCombatState,row:number):string[]{
   if(row===201){const counts={attack:0,defense:0,resource:0,utility:0};for(const id of state.selectedCores){const core=getCoreDefinition(id);if(core.system!=="skill")counts[core.system]++;}const b=arsenalBonuses(state);lines.push(...Object.entries(counts).map(([system,count])=>`${CORE_SYSTEM_LABELS[system as keyof typeof counts]}: ${count}`),`+${number(b.basic*100)}% sát thương đạn thường · +${number(b.skill*100)}% sát thương kỹ năng · ${number(b.reduction*100)}% Giảm Sát Thương`);}
   if(row===216)lines.push("Đã sử dụng · Giữ lại chỉ số vĩnh viễn đã kiếm được từ các Lõi chuyển đổi.");
   if(row===212)lines.push(`Reroll Dự Trữ: ${r.reserve} / 5`);
-  if(row===218)lines.push(`Dư chấn tối hậu còn ${number(Math.max(0,(c.timers.ultimateAftershock??0)-c.time))}s`);
+  if(row===218)lines.push(`Dư Chấn Tối Hậu còn ${number(Math.max(0,(c.timers.ultimateAftershock??0)-c.time))}s`);
   if(row===219)lines.push(`Nhiệt: ${number(r.heat)} / 100`);
   if(row===220)lines.push(r.ghosts.length?`Bóng đang hoạt động: ${r.ghosts.length} · Hồi Chiêu bắt đầu sau khi Bóng kết thúc`:`Sẵn sàng sau ${number(Math.max(0,r.ghostReady-c.time))} giây`);
   if(row===221)lines.push(r.mark?`Dấu đang tích ${number(r.mark.damage)} sát thương thực nhận`:`Hồi lại sau ${number(Math.max(0,r.markReady-c.time))} giây`);

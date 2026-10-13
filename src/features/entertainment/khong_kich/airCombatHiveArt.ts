@@ -1,5 +1,5 @@
 import bossUrl from '../../../assets/khong-kich/26.31.1/hive-tyrant-idle.png';
-import bossSkillUrl from '../../../assets/khong-kich/26.31.1/hive-boss-skills.png';
+import bossSkillUrl from '../../../assets/khong-kich/26.31.2/hive-boss-skills.png';
 import enemyUrl from '../../../assets/khong-kich/26.31.0/enemies.png';
 import effectUrl from '../../../assets/khong-kich/26.31.0/effects.png';
 import backgroundUrl from '../../../assets/khong-kich/26.31.0/background.png';
@@ -68,7 +68,10 @@ export function paintHive(w:CombatWorld,p:HivePainter,reduced=false){
   const bodySize=boss?Math.min(192,Math.max(160,size)):size;
   p.sprite(frame,e.x,e.y,bodySize,bodySize);
   if((e.hive?.shield??0)>0)p.sprite(ammo[11],e.x,e.y+e.radius*.55,size*.8,size*.35,Math.PI/2,.8);
-  if((e.hive?.exposedUntil??0)>now)p.sprite(effects[40+Math.floor(now*10)%8],e.x,e.y,e.radius*.9,e.radius*.9);
+  if((e.hive?.exposedUntil??0)>now){
+   p.sprite(bossEffects[8+(reduced?1:Math.floor(now*8)%4)],e.x,e.y,e.radius*1.5,e.radius*1.5,0,.75,true);
+   p.sprite(effects[40+Math.floor(now*10)%8],e.x,e.y,e.radius*.9,e.radius*.9);
+  }
   if(e.hive?.repairTarget){const t=w.enemies.find(n=>n.id===e.hive!.repairTarget);if(t&&e.stun<=0)p.line(e.x,e.y,t.x,t.y,3,0x86efac,.65);}
   if(e.stun>0)p.sprite(effects[48+Math.floor(now*12)%8],e.x,e.y,size,size,0,.7);
  }
@@ -80,7 +83,7 @@ export function paintHiveExplosions(w:CombatWorld,p:HivePainter){
  for(const fx of w.hive?.effects??[]){
   const z=fx.blast,t=(w.elapsed-fx.at)/fx.duration;if((!z&&fx.bossStyle===undefined&&fx.row!==7&&fx.row!==6)||t<0||t>=1)continue;
   const style=z?.bossStyle??fx.bossStyle;
-  const frame=style===undefined?detonations[Math.min(15,Math.floor(Math.pow(t,.78)*16))]:bossEffects[style*4+Math.min(3,Math.floor(t*4))];
+  const frame=style===undefined?detonations[Math.min(15,Math.floor(Math.pow(t,.78)*16))]:bossEffects[(style%3)*4+Math.min(3,Math.floor(t*4))];
   const diameter=z?z.radius*2:fx.size,alpha=Math.min(1,(1-t)*4);
   const draw=(x:number,y:number)=>{
    p.sprite(frame,x,y,diameter,diameter,0,alpha);
@@ -123,7 +126,7 @@ export function paintHiveThreats(w:CombatWorld,p:HivePainter){
  for(const shot of w.projectiles){if(shot.owner!=='enemy'||shot.lifetime<=0)continue;
   const mother=shot.sourceEnemyType==='brood_ark'||shot.sourceEnemyType==='crucible_ark';
   const size=Math.max(9,shot.radius*3)*(mother?1.5:1),rotation=Math.atan2(shot.vy,shot.vx)+Math.PI/2;
-  const frame=ammo[shot.hiveAmmo??(shot.projectileKind==='bullet'?0:2)];
+  const frame=shot.hiveTargetSlot!==undefined?bossEffects[12+Math.floor(now*10)%4]:ammo[shot.hiveAmmo??(shot.projectileKind==='bullet'?0:2)];
   p.sprite(frame,shot.x,shot.y,size*1.65,size*2.5,rotation,mother?.7:.45,true);
   p.sprite(frame,shot.x,shot.y,size,size*1.6,rotation);
   p.sprite(frame,shot.x,shot.y,size,size*1.6,rotation,mother?.95:.7,true);

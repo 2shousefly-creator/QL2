@@ -2,7 +2,7 @@ import { hiveActors } from './airCombatHive';
 import { createElement } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { flushSync } from "react-dom";
-import { getCoreDefinition } from "./airCombatConfig";
+import { AIRCRAFT_CONFIGS, getCoreDefinition } from "./airCombatConfig";
 import { CoreSemanticIcon } from "./CoreSemanticIcon";
 import { EquipmentIcon } from "./EquipmentIcon";
 import { HealthBarPresentation } from "./airCombatFeedback";
@@ -16,6 +16,7 @@ import { EQUIPMENT_ART, equipmentIconIndex } from "./airCombatEquipmentArt";
 interface SoloAcquisitionToast { text:string; durationMs:number; createdAtMs?:number }
 type ReceiptEntry={event:AcquisitionEvent;quantity:number;owner?:string}|{text:string;quantity:number};
 interface Receipt {transactionId:string;entries:Map<string,ReceiptEntry>}
+const receiptPriority=(entry:ReceiptEntry)=>!('event' in entry)?4:entry.event.kind==='core'&&entry.event.conversionSourceCoreId?0:entry.event.kind==='equipment'||entry.event.kind==='item'?1:entry.event.kind==='core'?2:3;
 interface ReceiptState {owner:CombatWorld['aircraft']['coreState'];lastId:number;queue:Receipt[];seenAI:WeakSet<object>;allyLastIds:WeakMap<object,number>}
 // Session-only receipts outlive a renderer remount, never a new run or saved profile.
 const receipts=new WeakMap<CombatWorld,ReceiptState>();
@@ -24,6 +25,7 @@ export class AirCombatOverlayFeedback {
  private world?:CombatWorld;
  private receipt?:ReceiptState;
  private announcement?:CombatAnnouncement;
+ private pendingCombat?:string;
  private node:HTMLDivElement;
  private root:Root;
  private expiresAt=0;
@@ -57,9 +59,10 @@ export class AirCombatOverlayFeedback {
   const existing=receipt.entries.get(key);if(existing)existing.quantity+=entry.quantity;else receipt.entries.set(key,entry);
  }
  private showReceipt(now:number){
+  this.receipt?.queue.sort((a,b)=>Math.min(...[...a.entries.values()].map(receiptPriority))-Math.min(...[...b.entries.values()].map(receiptPriority)));
   const receipt=this.receipt?.queue[0];if(!receipt)return;
   this.clear();this.activeReward=true;this.host.dataset.notice='acquisition';
-  const page=[...receipt.entries.entries()].slice(0,6);this.pageKeys=page.map(([key])=>key);
+  const page=[...receipt.entries.entries()].sort((a,b)=>receiptPriority(a[1])-receiptPriority(b[1])).slice(0,6);this.pageKeys=page.map(([key])=>key);
   flushSync(()=>this.root.render(createElement('div',{className:'air-receipt'},
    createElement('strong',null,'Đã nhận'+(receipt.entries.size>6?' · Còn '+(receipt.entries.size-6)+' loại thưởng tiếp theo':'')),
    ...page.map(([key,entry])=>{
@@ -68,7 +71,7 @@ export class AirCombatOverlayFeedback {
     if(e.kind==='reward')return createElement('div',{key,className:'air-receipt-row'},createElement(CoreSemanticIcon,{id:e.coreId,className:'air-receipt-icon'}),createElement('span',null,prefix+e.name+' ×'+entry.quantity+' · '+e.source));
     if(e.kind==='core'){
      const core=getCoreDefinition(e.coreId),source=e.conversionSourceCoreId?getCoreDefinition(e.conversionSourceCoreId).name:null;
-     return createElement('div',{key,className:'air-receipt-row','data-tier':core.tiers[0]},createElement(CoreSemanticIcon,{id:e.coreId,className:'air-receipt-icon'}),createElement('span',null,prefix+core.name+' ×'+entry.quantity+' · '+tierLabel[core.tiers[0]]+(source?' · '+source:'')));
+     return createElement('div',{key,className:'air-receipt-row','data-tier':core.tiers[0]},createElement(CoreSemanticIcon,{id:e.coreId,className:'air-receipt-icon'}),createElement('span',null,(entry.owner?entry.owner+' đã nhận lõi: ':'')+core.name+(entry.quantity>1?' ×'+entry.quantity:'')+' · '+tierLabel[core.tiers[0]]+(source?' · '+source:'')));
     }
     const d=e.definitionId==='VP01'?undefined:EQUIPMENT_CATALOG[e.definitionId],tier=d?.rarity??'item';
     const source=e.source==='craft'?'Chế tạo':e.source.startsWith('core_')?getCoreDefinition(e.source).name:'';
@@ -77,7 +80,7 @@ export class AirCombatOverlayFeedback {
   this.arm(performance.now()+COMBAT_NOTICE_DURATION_MS);
  }
  render(world:CombatWorld,delta:number,hidden:boolean,reducedMotion:boolean,bossHp:HTMLDivElement|null,bossChip:HTMLDivElement|null,bossShield:HTMLDivElement|null,announcements:readonly SoloAcquisitionToast[]=[]){
-  if(this.world!==world||this.receipt?.owner!==world.aircraft.coreState){this.clear();this.world=world;this.announcement=undefined;
+  if(this.world!==world||this.receipt?.owner!==world.aircraft.coreState){this.clear();this.world=world;this.announcement=undefined;this.pendingCombat=undefined;
    this.receipt=receipts.get(world);if(!this.receipt||this.receipt.owner!==world.aircraft.coreState){this.receipt={owner:world.aircraft.coreState,lastId:0,queue:[],seenAI:new WeakSet(),allyLastIds:new WeakMap()};receipts.set(world,this.receipt);}
    this.health.clear();this.pulse?.cancel();for(const flight of this.flights)flight.remove();this.flights.clear();
   }
@@ -102,7 +105,7 @@ export class AirCombatOverlayFeedback {
     if(button){const b=button.getBoundingClientRect(),surface=this.host.closest(".air-combat-surface")?.getBoundingClientRect();if(surface&&surface.width&&surface.height)equipmentState(world.aircraft).hubTarget={x:(b.left+b.width/2-surface.left)/surface.width*360,y:(b.top+b.height/2-surface.top)/surface.height*640};}
 
   for(const [index,actor] of hiveActors(world).entries()) {
-   const state=actor.aircraft.coreState,owner=index?'Đồng minh '+index:undefined;
+   const state=actor.aircraft.coreState,owner=index?AIRCRAFT_CONFIGS[actor.aircraft.aircraftId].name+' đồng minh':undefined;
    let lastId=index?(this.receipt!.allyLastIds.get(state)??0):this.receipt!.lastId;
    const target=index?this.host.closest('.air-combat-surface')?.querySelector<HTMLElement>('[data-hive-ally="'+(index-1)+'"]')??button:button;
    for(const event of state.acquisitions)if(event.id>lastId){
@@ -120,11 +123,18 @@ export class AirCombatOverlayFeedback {
   if(this.announcement!==world.announcement){
    this.announcement=world.announcement;
    if(world.announcement.expiresAtMs>now&&world.announcement.text){
-    this.clear();this.host.dataset.notice='combat';this.root.render(world.announcement.text);this.arm(world.announcement.expiresAtMs);
+    this.pendingCombat=world.announcement.text;
+    if(!this.activeReward&&!this.receipt!.queue.length)this.clear();
    }
   }
   if(this.expiresAt&&now>=this.expiresAt)this.expire();
-  if(!this.expiresAt&&!this.hidden)this.showReceipt(now);
+  // Acquisitions preempt ordinary combat notices; a shown reward gets its full
+  // page duration, and the latest other notice follows after all reward pages.
+  if(this.receipt!.queue.length&&!this.activeReward)this.clear();
+  if(!this.expiresAt&&!this.hidden){
+   if(this.receipt!.queue.length)this.showReceipt(now);
+   else if(this.pendingCombat){this.host.dataset.notice='combat';this.root.render(this.pendingCombat);this.pendingCombat=undefined;this.arm(now+COMBAT_NOTICE_DURATION_MS);}
+  }
   this.host.style.visibility=this.hidden?'hidden':'visible';
   if(this.expiresAt)this.node.style.opacity=String(reducedMotion?1:Math.min(1,(this.expiresAt-now)/300));
  }

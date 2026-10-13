@@ -8,6 +8,7 @@ import { mirrorPoint } from './airCombatMirrorTransform';
 import { terraHud } from './airCombatTerraRuntime';
 import { sylvaGrayHealth } from './airCombatSylvaRuntime';
 import { isElite } from './airCombatWaves';
+import { HIVE_MOTHERS } from './airCombatHiveWaves';
 import { angularBarPolygon,angularBarSegmentPolygon } from './airCombatHudLayout';
 import { HealthBarPresentation,activeShieldAmount,statusBarText,pressureBarText,trackingBarWidth,trackingBarX,trackingBarY,cinderBurnLabels,CINDER_TOTAL_FONT_SIZE,NORMAL_DAMAGE_FONT_SIZE,DAMAGE_LABEL_SECONDS,type DamageLabel } from './airCombatFeedback';
 
@@ -20,14 +21,19 @@ export function drawEnemyTrackingHud(ctx:CanvasRenderingContext2D,world:CombatWo
       const w = Math.max(24, Math.min(70, enemy.radius * 2.2));
       const x = Math.max(GAMEPLAY_SAFE_RECT.left, Math.min(GAMEPLAY_SAFE_RECT.right - w, enemy.x - w / 2));
       const y = Math.min(GAMEPLAY_SAFE_RECT.bottom - 5, enemy.y + enemy.radius * 1.4 + 5);
-      const barHeight=isElite(enemy.type)?5:3;
+      const mother=world.stageId===5&&HIVE_MOTHERS.includes(enemy.type);
+      const barHeight=mother?6:isElite(enemy.type)?5:3;
       const fill=(bx:number,by:number,bw:number,bh:number,ratio:number,color:string,stroke=false)=>{
         const points=angularBarPolygon(bx,by,bw,bh,ratio);if(!points.length)return;
         ctx.beginPath();ctx.moveTo(points[0],points[1]);for(let i=2;i<points.length;i+=2)ctx.lineTo(points[i],points[i+1]);ctx.closePath();ctx.fillStyle=color;ctx.fill();
-        if(stroke){ctx.strokeStyle=isElite(enemy.type)?"#ffad43":"#d05a69";ctx.lineWidth=.8;ctx.stroke();}
+        if(stroke){ctx.strokeStyle=mother?"#d8b4fe":isElite(enemy.type)?"#ffad43":"#d05a69";ctx.lineWidth=.8;ctx.stroke();}
       };
       fill(x-2,y-2,w+4,barHeight+4,1,"#071223",true);fill(x,y,w,barHeight,1,"#172638");
-      fill(x,y,w,barHeight,health.chipRatio,"#ef4444");fill(x,y,w,barHeight,health.hpRatio,isElite(enemy.type)?"#fbbf24":"#fb7185");
+      fill(x,y,w,barHeight,health.chipRatio,"#ef4444");fill(x,y,w,barHeight,health.hpRatio,mother?"#b05cff":isElite(enemy.type)?"#fbbf24":"#fb7185");
+      if(mother&&(enemy.hive?.exposedUntil??0)>world.elapsed){
+        ctx.save();ctx.font='bold 8px Arial';ctx.textAlign='center';ctx.textBaseline='bottom';ctx.lineWidth=2;ctx.strokeStyle='#160526';ctx.fillStyle='#f4d7ff';
+        ctx.strokeText('LỘ ĐIỂM YẾU',x+w/2,y-5);ctx.fillText('LỘ ĐIỂM YẾU',x+w/2,y-5);ctx.restore();
+      }
       if(health.shieldEnd>health.shieldStart){
         const points=angularBarSegmentPolygon(x,y,w,barHeight,health.shieldStart,health.shieldEnd);
         if(points.length){ctx.beginPath();ctx.moveTo(points[0],points[1]);for(let i=2;i<points.length;i+=2)ctx.lineTo(points[i],points[i+1]);ctx.closePath();ctx.fillStyle="#d8e4ee";ctx.fill();}

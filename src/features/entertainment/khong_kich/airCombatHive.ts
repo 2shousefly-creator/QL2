@@ -10,15 +10,15 @@ import { chooseDuelPrimary } from './airCombatDuelCore';
 import { getPlayerHitbox, getEnemyHitbox, sweepAircraft, segmentVsAircraft, circleVsAircraft, createHitResult } from './airCombatHitboxes';
 import { HIVE_NORMALS,HIVE_MOTHERS } from './airCombatHiveWaves';
 import { isElite } from './airCombatWaves';
-import { ensureCoreSelection, selectCore, rerollCore, bestAvailableRerollSource, type CombatWorld, type EnemyEntity, type ProjectileEntity } from './airCombatRuntime';
+import { ensureCoreSelection, selectCore, rerollCore, bestAvailableRerollSource, recordDpsDamage, type CombatWorld, type EnemyEntity, type ProjectileEntity } from './airCombatRuntime';
 import type { SkillId, CoreCard } from './airCombatTypes';
 
 export interface HiveAlly { world:CombatWorld; slot:number; respawn:number; thinkAt:number; skillAt:number; buildAt?:number; x:number;y:number; allocation:number; target?:number; }
-export interface HiveHazard { id:number; enemyId:number; kind:'blast'|'lane'|'dash'|'pulse'; x:number;y:number;endX:number;endY:number;radius:number; start:number; at:number; until:number; damage:number; fired:boolean; cancelled?:boolean; pattern:number; bossStyle?:number }
+export interface HiveHazard { id:number; enemyId:number; kind:'blast'|'lane'|'dash'|'pulse'|'homing'; x:number;y:number;endX:number;endY:number;radius:number; start:number; at:number; until:number; damage:number; fired:boolean; cancelled?:boolean; pattern:number; bossStyle?:number }
 export interface HiveEnemy { basicCooldown?:number; coreOpen?:boolean; slot:number; attack:number; exposedUntil:number; shield:number; shieldBroken:boolean; phase:number; support:number; repairTarget?:number; dash?:{x:number;y:number;endX:number;endY:number;start:number;until:number;hits:Set<CombatWorld>} }
 export interface HiveEffect {row:number;x:number;y:number;size:number;at:number;duration:number;blast?:HiveHazard;bossStyle?:number}
 export interface HiveState { allies:HiveAlly[]; hazards:HiveHazard[]; effects:HiveEffect[]; majorReady:number; nextHazard:number; lootOwner?:number; ccUntil:number; defeated?:boolean }
-export const hiveRespawnSeconds=(elapsed:number)=>15+5*Math.floor(Math.max(0,elapsed)/30);
+export const hiveRespawnSeconds=(elapsed:number)=>Math.min(60,15+5*Math.floor(Math.max(0,elapsed)/30));
 export interface HiveHooks { spawn:(w:CombatWorld,type:EnemyEntity['type'])=>EnemyEntity|null; movement:(w:CombatWorld,e:EnemyEntity)=>number; projectile:(w:CombatWorld,p:Partial<ProjectileEntity>&Pick<ProjectileEntity,'owner'|'x'|'y'|'vx'|'vy'|'rawDamage'>)=>ProjectileEntity|null; hit:(w:CombatWorld,damage:number,stun?:number,source?:EnemyEntity,collision?:boolean)=>void }
 export const hiveRoot=(w:CombatWorld)=>w.hiveHost??w;
 const rosters=new WeakMap<CombatWorld,{hive:HiveState|undefined;actors:CombatWorld[]}>();
@@ -73,7 +73,7 @@ export function hiveMotherDeath(w:CombatWorld,e:EnemyEntity){
  if(!HIVE_MOTHERS.includes(e.type))return;
  hiveFx(w,0,e.x,e.y,640,1.25);
  for(const other of w.enemies)if(other!==e&&other.hp>0&&!isElite(other.type)&&other.type!=='boss'&&!HIVE_MOTHERS.includes(other.type)&&Math.hypot(other.x-e.x,other.y-e.y)<=320){
-  const owner=e.hiveKiller??w,damage=Math.min(other.hp,e.maxHp);other.hp-=damage;owner.damageDealt+=damage;other.hiveKiller=owner;other.killProcEligible=false;
+  const owner=e.hiveKiller??w,damage=Math.min(other.hp,e.maxHp);other.hp-=damage;owner.damageDealt+=damage;recordDpsDamage(owner,damage);other.hiveKiller=owner;other.killProcEligible=false;
  }
 }
 export function hiveXp(w:CombatWorld,xp:number){
@@ -159,7 +159,7 @@ export function manageHiveBuild(a:HiveAlly){
 const hit=createHitResult();
 export { thinkHiveAlly } from './airCombatHiveAI';
 function hazard(w:CombatWorld,e:EnemyEntity,kind:HiveHazard['kind'],x:number,y:number,endX:number,endY:number,radius:number,delay:number,damage:number,pattern=0,bossStyle?:number){
- const h=w.hive!;if(h.hazards.length>=40)return;
+ const h=w.hive!;if(h.hazards.length>=96)return;
  h.hazards.push({id:h.nextHazard++,enemyId:e.id,kind,x,y,endX,endY,radius,start:w.elapsed,at:w.elapsed+delay,until:w.elapsed+delay+(kind==='lane'?.4:.15),damage,fired:false,pattern,bossStyle});
 }
 function fan(w:CombatWorld,e:EnemyEntity,h:HiveHooks,angle:number,count:number,spacing:number,speed:number,damage:number){
@@ -190,8 +190,8 @@ export function updateHiveEnemy(w:CombatWorld,e:EnemyEntity,dt:number,hooks:Hive
  const interval=mother?7:boss?HIVE_BOSS_INTERVALS[h.phase-1]:elite?3.4:e.type==='repair_wasp'?4.5:2.8+w.random()*.9;
  e.fireCooldown=attackInterval(w,e,interval,normalSkill(e));
  if(mother||boss||elite){
-  if(w.elapsed<w.hive.majorReady){e.fireCooldown=.4;return true;}
-  w.hive.majorReady=w.elapsed+1.4;
+  if(!boss&&w.elapsed<w.hive.majorReady){e.fireCooldown=.4;return true;}
+  w.hive.majorReady=w.elapsed+(boss?.7:1.4);
  }
  h.attack++;
  switch(e.type){
@@ -216,7 +216,7 @@ export function updateHiveEnemy(w:CombatWorld,e:EnemyEntity,dt:number,hooks:Hive
   case 'boss':{
    if(h.phase===4){h.exposedUntil=w.elapsed+1.6;h.coreOpen=true;}
    const skill=castHiveBoss(w,e,actors,target,hooks,(kind,x,y,ex,ey,r,delay,raw,pattern,style)=>hazard(w,e,kind,x,y,ex,ey,r,delay,raw,pattern,style),damage);
-   hiveFx(w,2,e.x,e.y,e.radius*1.4,.55);w.hive.effects.at(-1)!.bossStyle=skill%4;
+   hiveFx(w,2,e.x,e.y,e.radius*1.4,.55);w.hive.effects.at(-1)!.bossStyle=skill%3;
    break;
   }
   default:fan(w,e,hooks,aim+(h.attack%2?.11:-.11),e.type==='swarm_needler'?5:3,.16,100,damage*.5);
@@ -230,10 +230,23 @@ export function updateHiveHazards(w:CombatWorld,dt:number,hooks:HiveHooks){
  for(let n=0;n<projectileCount;n++){const p=w.projectiles[n];if(p.hiveSplitAt!==undefined&&w.elapsed>=p.hiveSplitAt){p.hiveSplitAt=undefined;p.lifetime=0;const a=Math.atan2(p.vy,p.vx);hiveFx(w,7,p.x,p.y,28,.3);for(let i=-2;i<=2;i++)hooks.projectile(w,{owner:'enemy',x:p.x,y:p.y,vx:Math.cos(a+i*.23)*145,vy:Math.sin(a+i*.23)*145,rawDamage:p.rawDamage*.5,radius:3,sourceEnemyId:p.sourceEnemyId,sourceEnemyType:p.sourceEnemyType,lifetime:5,hiveAmmo:1});}}
  for(const z of h.hazards){if(z.fired||w.elapsed<z.at)continue;z.fired=true;
   const source=w.enemies.find(e=>e.id===z.enemyId&&e.hp>0);if(!source||source.stun>0||(source.skillLockedUntil??0)>w.elapsed){z.cancelled=true;continue;}
+  if(z.kind==='homing'){
+   const actor=hiveActors(w)[z.pattern];
+   if(!actor||actor.aircraft.currentHp<=0){z.cancelled=true;continue;}
+   const aim=Math.atan2(actor.playerY-source.y,actor.playerX-source.x);
+   for(let i=0;i<6;i++){
+    const angle=aim+(i-2.5)*.26;
+    hooks.projectile(w,{owner:'enemy',x:source.x,y:source.y,vx:Math.cos(angle)*135,vy:Math.sin(angle)*135,rawDamage:z.damage,radius:4,sourceEnemyId:source.id,sourceEnemyType:'boss',homing:true,turnRate:1.35,hiveTargetSlot:z.pattern,hiveHomingUntil:w.elapsed+2.2,hiveAmmo:3,criticalAttack:true,lifetime:5.2});
+   }
+   hiveFx(w,2,source.x,source.y,70,.45);continue;
+  }
   if(z.kind==='dash'){source.hive!.dash={x:z.x,y:z.y,endX:z.endX,endY:z.endY,start:w.elapsed,until:w.elapsed+.65,hits:new Set()};fan(w,source,hooks,Math.PI/2,7,.27,90,z.damage*.3);continue;}
   hiveFx(w,7,z.x,z.y,z.radius*2,.72,z);
   for(const actor of hiveActors(w))if(actor.aircraft.currentHp>0){const body=getPlayerHitbox(actor),touch=z.kind==='lane'?segmentVsAircraft(z.x,z.y,z.endX,z.endY,z.radius,body,hit).hit:circleVsAircraft(z.x,z.y,z.radius,body);if(touch)hooks.hit(actor,z.damage,z.pattern===1?.5:0,source);}
-  if(z.kind==='blast')for(let i=0;i<6+z.pattern*2;i++){const angle=i*Math.PI*2/(6+z.pattern*2)+z.pattern*.2;hooks.projectile(w,{owner:'enemy',x:z.x,y:z.y,vx:Math.cos(angle)*105,vy:Math.sin(angle)*105,rawDamage:z.damage*.3,radius:3,sourceEnemyId:z.enemyId,sourceEnemyType:source.type,lifetime:5});}
+  if(z.kind==='blast'){
+   const count=(6+z.pattern*2)*(source.type==='boss'?2:1);
+   for(let i=0;i<count;i++){const angle=i*Math.PI*2/count+z.pattern*.2;hooks.projectile(w,{owner:'enemy',x:z.x,y:z.y,vx:Math.cos(angle)*105,vy:Math.sin(angle)*105,rawDamage:z.damage*.3,radius:3,sourceEnemyId:z.enemyId,sourceEnemyType:source.type,criticalAttack:source.type==='boss',lifetime:5});}
+  }
  }
  h.hazards=h.hazards.filter(z=>w.elapsed<z.until);
 }

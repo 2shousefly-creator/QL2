@@ -1,4 +1,5 @@
 import { generatedFrame, generatedFrameId, generatedEffectId } from '../airCombatGeneratedArt';
+import { SKILL_RADIANCE_SOURCES } from '../airCombatSkillRadiance';
 import { loadGeneratedTextures } from './GeneratedArtTextures';
 import type { CombatWorld } from '../airCombatRuntime';
 import { TERRA_SOURCES, TERRA_FRAMES } from '../airCombatTerraArt';
@@ -98,6 +99,7 @@ export async function loadAirCombatAssets(world?:CombatWorld) {
   const [argentAircraft,argentIcons,argentVfx,argentPortrait]=await Promise.all([ARGENT_ART.aircraft,ARGENT_ART.icons,ARGENT_ART.vfx,ARGENT_ART.portrait].map(url=>Assets.load<Texture>(url)));
   const [sylvaAircraft,sylvaPortrait,sylvaIcons,sylvaAcid,sylvaLife,sylvaDeath,sylvaDeathNew]=await Promise.all(Object.values(SYLVA_SOURCES).map(url=>Assets.load<Texture>(url)));
   const terraSources=Object.fromEntries(await Promise.all(Object.entries(TERRA_SOURCES).map(async([key,url])=>[key,await Assets.load<Texture>(url)])));
+  const radianceSources=Object.fromEntries(await Promise.all(Object.entries(SKILL_RADIANCE_SOURCES).map(async([key,url])=>[key,await Assets.load<Texture>(url)])));
   const [cinderFuel,cinderFuelFlow,cinderFuelSmoke,cinderBeam]=await Promise.all([CINDER_ART.fuel,CINDER_ART.fuelFlow,CINDER_ART.fuelSmoke,CINDER_ART.beamRaster].map(url=>Assets.load<Texture>(url)));
   const sources = {cinderBeam,cinderFuel,cinderFuelFlow,cinderFuelSmoke,...terraSources,sylvaAircraft,sylvaPortrait,sylvaIcons,sylvaAcid,sylvaLife,sylvaDeath,sylvaDeathNew,argentAircraft,argentIcons,argentVfx,argentPortrait, riptideAircraft,riptideIcons,riptideVfx, guardianVfx,bigBangVfx,cinderFeedback,cinderAircraft,cinderVfx,cinderProjectiles,cinderIcons, stage4Enemy,stage4Boss,stage4Vfx,stage4BossSkills, stage3Enemy,stage3Boss,stage3Vfx,stage3Emissive, ultimateVfx,rankedVfx,rankedProjectiles, equipmentIcons,equipmentVfx,astraVfx,astraAircraft,astraEffects,aircraft, fortress, vfx, ammo, basicAmmo, healingCross, stage2Enemy, stage2Vfx, stage2Elite };
   const frames = new Map<AtlasFrame, Texture>();
@@ -106,7 +108,7 @@ export async function loadAirCombatAssets(world?:CombatWorld) {
     if(replacement)return replacement;
     const cached = frames.get(definition);
     if (cached) return cached;
-    const source = sources[definition.atlas as keyof typeof sources];
+    const source = radianceSources[definition.atlas]??sources[definition.atlas as keyof typeof sources];
     if (!source || source.width < 16 || source.height < 16) throw new Error("Missing Không Kích production atlas");
     const [x, y, w, h] = definition.rect;
     const left = Math.round(x * source.width), top = Math.round(y * source.height);

@@ -1,0 +1,30 @@
+{
+  "generator": "Built-in image_gen",
+  "date": "2026-10-13",
+  "assets": [
+    {
+      "file": "hive-boss-skills.png",
+      "columns": 4,
+      "rows": 4,
+      "prompt": "Use case: game-vfx-spritesheet. Create a production raster transparent spritesheet for a top-down sci-fi bullet-hell Hive Tyrant boss. EXACT uniform 4 columns by 4 rows grid, square canvas 1024x1024. Each row is one coherent four-frame animation evolving left to right: row 1 molten orange plasma detonation with white-hot core and jagged sparks; row 2 violet alien-energy rupture with fractured luminous filaments; row 3 cyan electrical reactor implosion then explosion; row 4 crimson bio-mechanical homing projectile with bright leading orb and downward exhaust, pointing UP in every frame. All cells centered at exact equal grid cell centers, identical margins, isolated with transparent padding, every effect entirely inside its cell, no overlap. Rich painted volumetric fire and luminous texture, brilliant crisp readable silhouette on a dark battlefield, animated organic energy. No text, letters, labels, numbers, borders, grid lines, background, mockup, geometric SVG style or opaque squares. True transparent alpha background."
+    },
+    {
+      "file": "skills-viper-titan-phantom.png",
+      "columns": 8,
+      "rows": 6,
+      "prompt": "Use case: game-vfx-spritesheet. Production transparent raster VFX atlas for top-down sci-fi aircraft combat. EXACT uniform 8 columns by 6 rows, landscape canvas 1536x1152. There are 12 separate four-frame animations: each physical row has TWO animations, the left animation in columns 1-4, the right in columns 5-8. Four-frame sequence = ignition, build, brilliant peak, dissipate. Reading these four-cell blocks in row-major order the 12 effects are: 1: Viper cyan holographic decoy shimmer; 2: Viper turquoise afterburner thrust, vertical pointing up; 3: Viper emerald predator targeting energy; 4: Viper orange missile-swarm ignition; 5: Titan golden layered shield aura; 6: Titan orange heavy bomb impact; 7: Titan violet gravity vortex; 8: Titan amber artillery muzzle blast; 9: Phantom purple cloaking distortion; 10: Phantom magenta laser column vertical; 11: Phantom electric violet interference burst; 12: Phantom cyan drone reactor ignition. All 48 cells have effects exactly centered in equal-size cells with generous transparent gutter 15 percent on every edge, consistent center and scale, entirely isolated with NO crossing cells. Pure energy effects only, no aircraft, no icons or UI cards. Luxurious luminous painted volumetric texture, sharp readable white-hot core and richly colored sparks, realistic game VFX, vivid light for dark battlefield. No text, labels, numbers, grid lines, borders, background, SVG, simple flat geometry. Transparent alpha background."
+    },
+    {
+      "file": "skills-astra-cinder-riptide.png",
+      "columns": 8,
+      "rows": 6,
+      "prompt": "Use case: game-vfx-spritesheet. Production transparent raster VFX atlas for top-down sci-fi aircraft combat. EXACT uniform 8 columns by 6 rows, landscape canvas 1536x1152. There are 12 separate four-frame animations: each physical row has TWO animations, the left animation in columns 1-4, the right in columns 5-8. Four-frame sequence = ignition, build, brilliant peak, dissipate. Reading these four-cell blocks in row-major order the 12 effects are: 1: Astra gold orbital shield aura; 2: Astra gold stellar lance vertical; 3: Astra blue twin crystal energy shimmer; 4: Astra gold white meteor impact; 5: Cinder orange fire shield ring; 6: Cinder molten fuel explosion; 7: Cinder red sweeping flame wave; 8: Cinder white orange inferno beam vertical; 9: Riptide blue healing water splash; 10: Riptide silver cyan water blade upward; 11: Riptide aqua confluence vortex; 12: Riptide bright blue waterform spiral. All 48 cells have effects exactly centered in equal-size cells with generous transparent gutter 15 percent on every edge, consistent center and scale, entirely isolated with NO crossing cells. Pure energy effects only, no aircraft, no icons or UI cards. Luxurious luminous painted volumetric texture, sharp readable white-hot core and richly colored sparks, realistic game VFX, vivid light for dark battlefield. No text, labels, numbers, grid lines, borders, background, SVG, simple flat geometry. Transparent alpha background."
+    },
+    {
+      "file": "skills-argent-sylva-terra.png",
+      "columns": 8,
+      "rows": 6,
+      "prompt": "Use case: game-vfx-spritesheet. Production transparent raster VFX atlas for top-down sci-fi aircraft combat. EXACT uniform 8 columns by 6 rows, landscape canvas 1536x1152. There are 12 separate four-frame animations: each physical row has TWO animations, the left animation in columns 1-4, the right in columns 5-8. Four-frame sequence = ignition, build, brilliant peak, dissipate. Reading these four-cell blocks in row-major order the 12 effects are: 1: Argent silver defensive sword aura; 2: Argent white flying blade upward trail; 3: Argent silver recalled blades vortex; 4: Argent white gold heavenly blade shower; 5: Sylva green symbiotic living shield; 6: Sylva acidic green burst; 7: Sylva luminous green parasitic spores; 8: Sylva brilliant emerald deathbloom explosion; 9: Terra amber stone shield fragments; 10: Terra molten seismic cannon vertical plume; 11: Terra amber tectonic crushing rupture; 12: Terra brilliant orange geocore eruption. All 48 cells have effects exactly centered in equal-size cells with generous transparent gutter 15 percent on every edge, consistent center and scale, entirely isolated with NO crossing cells. Pure energy effects only, no aircraft, no icons or UI cards. Luxurious luminous painted volumetric texture, sharp readable white-hot core and richly colored sparks, realistic game VFX, vivid light for dark battlefield. No text, labels, numbers, grid lines, borders, background, SVG, simple flat geometry. Transparent alpha background."
+    }
+  ]
+}

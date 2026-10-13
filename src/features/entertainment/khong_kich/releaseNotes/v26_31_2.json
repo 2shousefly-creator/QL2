@@ -1,0 +1,134 @@
+{
+  "version": "26.31.2",
+  "releaseDate": "2026-10-13",
+  "title": "HIVE TYRANT · Cuồng Nộ",
+  "displayTitle": "KHÔNG KÍCH 26.31.2 — CÔNG PHÁ TỔ MÁY",
+  "summary": "Boss Màn 5 mạnh hơn, đồng minh quản lý tài nguyên theo chiến cơ và VFX kỹ năng mới cho toàn đội hình.",
+  "sections": [
+    {
+      "id": "hive-upgrade",
+      "title": "NÂNG CẤP CHIẾN TRƯỜNG",
+      "icon": {
+        "kind": "wave",
+        "id": "stage5"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "boss",
+          "title": "HIVE TYRANT Ω",
+          "icon": {
+            "kind": "boss",
+            "id": "hive_tyrant"
+          },
+          "changes": [
+            {
+              "text": "Nhịp tung chiêu nhanh gấp đôi: 2,4 / 2 / 1,6 / 1,25 giây theo bốn giai đoạn Máu. Tám chiêu cũ tăng gấp đôi số đạn và vùng nguy hiểm; cảnh báo rút ngắn một nửa.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "Thêm Thiên Phạt Phong Tỏa và Giao Điểm Tử Địa, phủ gần toàn sân và chừa hành lang hoặc ô né hẹp. Bầy Săn Khóa Hồn phóng sáu đạn truy đuổi mỗi chiến cơ, bẻ lái có giới hạn và mất khóa khi mục tiêu tàng hình.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "Spritesheet mới cho nổ plasma, năng lượng tím, điện lò phản ứng và đạn homing. Cảnh báo đỏ tiếp tục khớp vùng sát thương.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ],
+          "rationale": ""
+        },
+        {
+          "id": "squad",
+          "title": "Đồng Minh & Hồi Sinh",
+          "icon": {
+            "kind": "system",
+            "id": "hive_ai"
+          },
+          "changes": [
+            {
+              "text": "Thời gian hồi sinh vẫn tăng 5 giây sau mỗi 30 giây trận đấu, nhưng không vượt quá 60 giây.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "Đồng minh dự trữ tài nguyên cho Ultimate và chiêu phòng thủ, cân nhắc sát thương sắp nhận trước khi dùng kỹ năng.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "Viper tận dụng cửa sổ giảm Giáp và tăng tốc bắn; Titan canh tuyến Oanh Tạc; Astra ưu tiên Sao Rơi vào mục tiêu bền hoặc cụm đông; Phantom cân đối thời gian duy trì HawkEye, laser và năng lượng thoát hiểm.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "Cinder tích tới 6 Cháy và căn hướng trước khi khai hỏa; Riptide giữ các nhịp Thủy Thể; Argent canh nhiều phiến cùng đường thu; Sylva mở Ultimate trước chuỗi sát thương; Terra giữ Địa Áp cho Pháo Địa Chấn cường hóa.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "Hiển thị DPS: XYZ cạnh icon đồng minh, làm tròn sát thương trung bình trong 5 giây gần nhất.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ],
+          "rationale": ""
+        },
+        {
+          "id": "clarity",
+          "title": "Thông Tin Chiến Trường",
+          "icon": {
+            "kind": "wave",
+            "id": "stage5"
+          },
+          "changes": [
+            {
+              "text": "Thanh Máu tàu mẹ dày gấp đôi, màu tím. Lõi đang lộ có hiệu ứng phát sáng và nhãn LỘ ĐIỂM YẾU.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "Ưu tiên thông báo lõi nhận từ Chuyển Đổi/Pandora và vật phẩm, trang bị nhận được trước các thông báo khác.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "Thông báo đồng minh nhận lõi ghi rõ tên chiến cơ và tên lõi.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "Đổi Gatling thành Gatlingun, Bàn Chiến Thuật thành Bản Đồ Dự Thảo. Chuẩn hóa viết hoa chữ cái đầu trong tên lõi, vật phẩm và trang bị.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ],
+          "rationale": ""
+        },
+        {
+          "id": "art",
+          "title": "Hiệu Ứng Của 9 Chiến Cơ",
+          "icon": {
+            "kind": "system",
+            "id": "visual"
+          },
+          "changes": [
+            {
+              "text": "Bổ sung 144 frame raster tạo sinh cho 36 kỹ năng: hoạt ảnh kích hoạt, ánh sáng khi duy trì kỹ năng, vệt đạn và điểm va chạm.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "Pixi và Canvas dùng chung spritesheet và thời gian trận đấu. Hiệu ứng có giới hạn số sprite và giảm chuyển động theo thiết lập; cảnh báo địch vẫn nằm phía trên ở Màn 5.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ],
+          "rationale": ""
+        }
+      ]
+    }
+  ]
+}

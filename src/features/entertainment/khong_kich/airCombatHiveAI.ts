@@ -4,13 +4,16 @@ import { riptideIncoming } from './airCombatRiptideRuntime';
 import { astraOrbitProtectionActive } from './airCombatAstra';
 import { AIRCRAFT_CONFIGS, stageEnemyConfig, GAMEPLAY_SAFE_RECT as R } from './airCombatConfig';
 import { calculateDamage, getEffectiveAircraftStats, getSkillRuntimeValues } from './airCombatAircraft';
-import { skillRank } from './airCombatSkillRanks';
+import { skillRank, isUltimate, ultimateCastDisabled } from './airCombatSkillRanks';
 import { activeShieldAmount } from './airCombatFeedback';
 import { equipmentState, equipmentRewardsLocked } from './airCombatEquipmentState';
 import { canTargetEnemy } from './airCombatTargetability';
-import { argentRecallOpportunity } from './airCombatArgentRuntime';
+import { argentRecallOpportunity, argentState, argentWaiting } from './airCombatArgentRuntime';
+import { CINDER_BURN, cinderValues } from './airCombatCinderConfig';
+import { RIPTIDE, riptideValues } from './airCombatRiptideConfig';
 import { cinderStacks, cinderState } from './airCombatCinderRuntime';
 import { sylvaState } from './airCombatSylvaRuntime';
+import { SYLVA } from './airCombatSylvaConfig';
 import { riptideState } from './airCombatRiptideRuntime';
 import { terraHud, terraState } from './airCombatTerraRuntime';
 import { TERRA, terraValues, terraCannonDamage } from './airCombatTerraConfig';
@@ -22,7 +25,7 @@ import { castWorldSkill, getWorldSkillAvailability, movePlayerByDelta, isHostile
 import type { SkillId } from './airCombatTypes';
 
 interface Observation {entity:EnemyEntity;x:number;y:number;at:number;vx:number;vy:number}
-interface PilotMemory {vx:number;vy:number;defendAt:number;enemies:Map<number,Observation>;urgent:boolean}
+interface PilotMemory {vx:number;vy:number;defendAt:number;enemies:Map<number,Observation>;urgent:boolean;comboTarget?:EnemyEntity;comboSince?:number}
 const pilots=new WeakMap<HiveAlly,PilotMemory>();
 const contact=createHitResult(),SPEED=250,HORIZON=.7;
 function memory(a:HiveAlly){let m=pilots.get(a);if(!m){m={vx:0,vy:0,defendAt:0,enemies:new Map(),urgent:false};pilots.set(a,m);}return m;}
@@ -39,7 +42,7 @@ function sense(a:HiveAlly,m:PilotMemory){
  });
  for(const id of m.enemies.keys())if(!live.has(id))m.enemies.delete(id);
  const shots=root.projectiles.filter(p=>p.owner==='enemy'&&p.allegiance!=='friendly_hacked'&&p.lifetime>0&&Math.hypot(p.x-w.playerX,p.y-w.playerY)<Math.hypot(p.vx,p.vy)*HORIZON+SPEED*HORIZON+body.radius+35);
- const hazards=(root.hive?.hazards??[]).filter(z=>!z.cancelled&&!z.fired&&z.until>root.elapsed&&z.at-root.elapsed<=HORIZON+.25);
+ const hazards=(root.hive?.hazards??[]).filter(z=>z.kind!=='homing'&&!z.cancelled&&!z.fired&&z.until>root.elapsed&&z.at-root.elapsed<=HORIZON+.25);
  return {w,root,body,enemies,shots,hazards,stats:getEffectiveAircraftStats(w.aircraft)};
 }
 type Scene=ReturnType<typeof sense>;
@@ -102,9 +105,20 @@ function chooseSkill(c:Scene,a:HiveAlly,m:PilotMemory,target:EnemyEntity|undefin
  const hardToDodge=escapeDamage>standingDamage*.55&&currentDanger>.06;
  const terra=terraHud(w),shield=activeShieldAmount(s);
  const protectedNow=w.playerInvulnerability>.25||shield>stats.maxHp*.09||(s.activeEffects.invisibility??0)>.3||(terra?.armorRemaining??0)>.5;
- const defend=(threatened||critical||hardToDodge&&hp<.65)&&(!protectedNow||critical||unavoidable>.15),canDefend=now>=m.defendAt,canAttack=now>=a.skillAt;
- const attackCosts=AIRCRAFT_CONFIGS[s.aircraftId].skillIds.filter(id=>!['decoy','armor_shield','invisibility','afterburner','cinder_fire_shield','argent_guard_stance','terra_reactive_rock_armor','riptide_wellspring','sylva_symbiosis','orbit_reversal','electronic_interference'].includes(id)&&skillRank(s,id)>0).map(id=>getSkillRuntimeValues(s,id).cost);
- const attackReserve=(attackCosts.length?Math.min(...attackCosts):stats.maxResource*.12)+stats.maxResource*.08;
+ const defend=(threatened||critical||hardToDodge&&hp<.65)&&(!protectedNow||critical||unavoidable>.15),canDefend=critical||now>=m.defendAt,canAttack=now>=a.skillAt;
+ const ids=AIRCRAFT_CONFIGS[s.aircraftId].skillIds,ultimate=ids.find(isUltimate)!;
+ const ult=getWorldSkillAvailability(w,ultimate),learnedUltimate=skillRank(s,ultimate)>0&&!ultimateCastDisabled(s,ultimate);
+ const regen=s.status.resourceJammedUntil>s.coreState.time?0:stats.resourceRegen;
+ const defenseIds=['decoy','armor_shield','invisibility','cinder_fire_shield','argent_guard_stance','terra_reactive_rock_armor','riptide_wellspring','sylva_symbiosis','orbit_reversal'] as SkillId[];
+ const defensiveCosts=ids.filter(id=>defenseIds.includes(id)&&skillRank(s,id)>0&&(s.cooldowns[id]??0)<3).map(id=>getWorldSkillAvailability(w,id).cost);
+ const defenseReserve=protectedNow?0:Math.min(stats.maxResource*.32,defensiveCosts.length?Math.min(...defensiveCosts):0);
+ // Bank enough to reach Ultimate when its cooldown ends. Active/toggle Ultimates
+ // do not reserve a second cast; emergency defense always bypasses this budget.
+ const ultRunning=(s.activeEffects[ultimate]??0)>0||s.coreState.deferredCooldowns[ultimate]!==undefined||ultimate==='escort_drone'&&s.droneActive;
+ const sylvaFollowup=s.aircraftId==='sylva'?ids.filter(id=>['sylva_parasitic_seed','sylva_acid_burst'].includes(id)&&skillRank(s,id)>0&&(s.cooldowns[id]??0)<6).reduce((n,id)=>n+getWorldSkillAvailability(w,id).cost,0):0;
+ const ultimateReserve=learnedUltimate&&!ultRunning&&!ult.free?Math.max(0,Math.min(stats.maxResource,ult.cost+sylvaFollowup)-regen*Math.min(18,ult.cooldown)):0;
+ if(m.comboTarget!==target){m.comboTarget=target;m.comboSince=now;}
+ const waited=now-(m.comboSince??now);
  const range=target?Math.hypot(target.x-w.playerX,target.y-w.playerY):Infinity;
  const ahead=!!target&&target.y<w.playerY,line=ahead&&Math.abs(target!.x-w.playerX)<target!.radius+20;
  const cluster=target?c.enemies.filter(e=>Math.hypot(e.x-target.x,e.y-target.y)<100).length:0;
@@ -115,11 +129,14 @@ function chooseSkill(c:Scene,a:HiveAlly,m:PilotMemory,target:EnemyEntity|undefin
  let best:SkillChoice|undefined;
  for(const id of AIRCRAFT_CONFIGS[s.aircraftId].skillIds){
   const available=getWorldSkillAvailability(w,id);if(!available.available)continue;
+  const spend=available.manualAction||available.toggle?0:available.cost;
   let score=0,defensive=false;
   const protect=(value=80)=>{if(defend){score=value+(critical?40:0);defensive=true;}};
   switch(id){
    case 'decoy':case 'armor_shield':case 'invisibility':case 'cinder_fire_shield':case 'argent_guard_stance':case 'terra_reactive_rock_armor':protect();break;
-   case 'afterburner':if(defend&&threat>120){score=85;defensive=true;}break;
+   case 'afterburner':
+    // This is Viper's firing-rate buff, not an evasive dash.
+    if(durable&&ahead&&!threatened)score=24+((target?.burnArmorUntil??0)>now?15:0);break;
    case 'riptide_wellspring':if(hp<.45||hp<.7&&defend){score=hp<.3?130:80;defensive=true;}break;
    case 'sylva_symbiosis':{
     const active=sylvaState(w).symbiosis;
@@ -137,7 +154,7 @@ function chooseSkill(c:Scene,a:HiveAlly,m:PilotMemory,target:EnemyEntity|undefin
     const saveForLaser=durable&&line&&skillRank(s,'focus_laser')>0&&laser.cooldown<.5&&s.currentResource<laser.cost+escapeReserve+net*2&&!safeBattery;
     if(s.droneActive){
      if(!target||saveForLaser||s.currentResource<escapeReserve+net*2&&!safeBattery||threatened&&s.currentResource<escapeReserve+12){score=critical?110:60;defensive=true;}
-    }else if(target&&durable&&!threatened&&s.currentResource>=Math.max(55,escapeReserve+net*8)&&!(invis.cooldown===0&&s.currentResource<escapeReserve+20))score=18;
+    }else if(target&&durable&&!threatened&&s.currentResource-available.cost>=Math.max(escapeReserve,net*8)+(safeBattery?0:10))score=48;
     break;
    }
    case 'focus_laser':{
@@ -150,7 +167,7 @@ function chooseSkill(c:Scene,a:HiveAlly,m:PilotMemory,target:EnemyEntity|undefin
    case 'terra_geocore_overdrive':{
     const rank=skillRank(s,id),pressure=terra?terra.pressure/Math.max(1,terra.cap):0;
     if(rank>=2&&s.status.skillLockedUntil>s.coreState.time&&defend||rank>=3&&hp<.45||hp<.3){score=115;defensive=true;}
-    else if(big&&durable&&pressure>=.5&&s.currentResource>=available.cost+getSkillRuntimeValues(s,'terra_seismic_cannon').cost)score=45;
+    else if(big&&durable&&pressure>=.72&&line&&s.currentResource>=available.cost+getWorldSkillAvailability(w,'terra_seismic_cannon').cost)score=65;
     break;
    }
    case 'terra_seismic_cannon':{
@@ -161,44 +178,87 @@ function chooseSkill(c:Scene,a:HiveAlly,m:PilotMemory,target:EnemyEntity|undefin
     const lethal=centered&&terraCannonDamage(stats.firepower,terra.pressure,rank,terra.ultimate>0?terraValues('terra_geocore_overdrive',skillRank(s,'terra_geocore_overdrive')).cannonMultiplier:1)>=target.hp;
     if(ahead&&w.playerY-p.y<TERRA.cannonRange&&aligned&&(centered||decaying||critical)&&
      (pressure>=.72||pressure>=.3&&(decaying||terra.ultimate>0)||pressure>=.15&&lethal||critical&&pressure>=.25)){
-     score=35+(centered?5:0)+(pressure>=.9?8:0);if(critical){score=105;defensive=true;}
+     const overdriveReady=getWorldSkillAvailability(w,'terra_geocore_overdrive').available;
+     score=35+(centered?5:0)+(pressure>=.9?8:0)+(terra.ultimate>0?30:0);
+     if(overdriveReady&&big&&pressure>=.72&&!decaying)score=15;
+     if(critical){score=105;defensive=true;}
     }break;
    }
    case 'terra_strata_clamp':if(target&&(defend||cluster>=2||big)&&(critical||c.root.hive!.ccUntil<now)){score=defend?70:terra&&terra.pressure/terra.cap>=.5?42:22;defensive=defend;}break;
-   case 'riptide_waterform':
-    if(!riptideState(w).waterform&&(defend||range<170&&(big||cluster>=2))){score=defend?100:30;defensive=defend;}
-    break;
-   case 'predator_lock':case 'missile_swarm':if(durable&&ahead)score=big?25:18;break;
+   case 'riptide_waterform':{
+    const water=riptideState(w).waterform;
+    if(!water&&(defend||range<RIPTIDE.waterRadius-20&&(big||cluster>=2))){score=defend?120:62;defensive=defend;}
+    // Preserve the full 24 ticks unless the stored burst can finish the target
+    // or it is moving out of range. Recast is free, never a blind on/off toggle.
+    else if(water&&target&&range<RIPTIDE.waterRadius&&water.charge>0){
+     const burst=calculateDamage(water.charge*riptideValues(id,water.rank).chargeRatio*stats.firepower,target.armor),p=predict(c,target,.5);
+     if(burst>=target.hp||critical||water.until-now<1&&Math.hypot(p.x-w.playerX,p.y-w.playerY)>RIPTIDE.waterRadius){score=critical?140:68;defensive=critical;}
+    }break;
+   }
+   case 'predator_lock':if(durable&&ahead)score=big?29:20;break;
+   case 'missile_swarm':if(ahead&&(big&&durable||c.enemies.length>=4))score=62+((s.coreState.timers.decoyCounter??0)>s.coreState.time?10:0);break;
    case 'gravity_anchor':
     if(!w.rankRuntime?.anchor&&target&&(cluster>=2||defend)&&(critical||c.root.hive!.ccUntil<now)){score=defend?70:28;defensive=defend;}break;
    case 'heavy_bomb':if(target&&(big||cluster>=3))score=22;break;
-   case 'sweeping_cannon':if(line&&(cluster>=2||durable))score=20;break;
+   case 'sweeping_cannon':if(line&&(cluster>=2||big&&durable)){score=62;if(defend&&skillRank(s,id)>=2){score=105;defensive=true;}}break;
    case 'twin_reflection':if(line&&durable)score=20;break;
    case 'stellar_lance':if(line&&durable&&(!threatened||protectedNow))score=22;break;
-   case 'starfall':if(cluster>=2||big)score=25;break;
-   case 'cinder_fuel_barrage':if(line&&target)score=22;break;
-   case 'cinder_heat_wave':if(range<170){score=defend?70:24;defensive=defend;}break;
-   case 'cinder_inferno_beam':if(line&&durable&&!threatened&&target&&cinderStacks(w,target.id)>=2)score=30;break;
-   case 'riptide_tidal_blades':if(range<165&&durable)score=22;break;
+   case 'starfall':if(cluster>=3||big&&durable)score=60+(target?.stun?8:0);break;
+   case 'cinder_fuel_barrage':if(line&&target)score=cinderStacks(w,target.id)<CINDER_BURN.cap?42:22;break;
+   case 'cinder_heat_wave':if(target){score=defend?82:cinderStacks(w,target.id)<CINDER_BURN.cap?40:24;defensive=defend;}break;
+   case 'cinder_inferno_beam':{
+    if(!target||!durable||threatened)break;
+    const v=cinderValues(id,skillRank(s,id)),p=predict(c,target,v.charge),stacks=cinderStacks(w,target.id,now+v.charge);
+    const lethal=calculateDamage(stats.firepower*(v.damageMultiplier+v.beamPerBurn*stacks),target.armor)>=target.hp;
+    const aligned=p.y<w.playerY&&Math.abs(p.x-w.playerX)<v.width/2+target.radius*.5;
+    if(aligned&&(stacks>=CINDER_BURN.cap||stacks>=4&&(lethal||waited>9)))score=76;
+    break;
+   }
+   case 'riptide_tidal_blades':if(range<165&&durable)score=riptideState(w).waterform?42:22;break;
    case 'riptide_confluence':if(range<170&&(cluster>=2||defend)&&(critical||c.root.hive!.ccUntil<now)){score=defend?75:26;defensive=defend;}break;
-   case 'argent_blade_cast':if(line&&durable)score=22;break;
-   case 'argent_blade_recall':if(target&&argentRecallOpportunity(w,target.x,target.y,target.radius))score=35;break;
-   case 'argent_heavenly_blade_array':if(range<180&&(big||cluster>=2))score=26;break;
-   case 'sylva_acid_burst':case 'sylva_parasitic_seed':if(line&&target)score=22;break;
-   case 'sylva_deathbloom':if(target&&(big||durable)&&(sylvaState(w).targets.get(target.id)?.markUntil??0)>now)score=30;break;
+   case 'argent_blade_cast':if(line&&durable&&argentWaiting(w)<8)score=22;break;
+   case 'argent_blade_recall':{
+    const state=argentState(w),waiting=state.blades.filter(b=>b.phase==='wait');
+    if(target&&argentRecallOpportunity(w,target.x,target.y,target.radius)&&
+      (waiting.length>=5||state.temper>=2||waiting.some(b=>b.ttl-(now-b.waitAt)<1.2)))score=state.array?55:42;
+    break;
+   }
+   case 'argent_heavenly_blade_array':if(ahead&&(big&&durable||cluster>=3))score=65;break;
+   case 'sylva_acid_burst':case 'sylva_parasitic_seed':{
+    if(!target)break;
+    const state=sylvaState(w),mark=state.targets.get(target.id),bloom=state.bloom;
+    if(bloom){
+     const seedFlight=Math.max(.12,range/600);
+     if(id==='sylva_parasitic_seed'&&now+seedFlight+SYLVA.markDuration>=bloom.until+.12&&(mark?.markUntil??0)<bloom.until)score=72;
+     if(id==='sylva_acid_burst'&&((mark?.markUntil??0)>now||!getWorldSkillAvailability(w,'sylva_parasitic_seed').available))score=64;
+    }else score=id==='sylva_parasitic_seed'?30:24;
+    break;
+   }
+   case 'sylva_deathbloom':{
+    // Start recording BEFORE the expensive burst/seed combo, then refresh the
+    // five-second mark late enough to amplify the six-second final detonation.
+    const seed=getWorldSkillAvailability(w,'sylva_parasitic_seed'),acid=getWorldSkillAvailability(w,'sylva_acid_burst');
+    const followup=Math.min(...[seed,acid].filter(v=>v.cooldown<3).map(v=>v.cost),stats.maxResource*.2);
+    if(target&&(big&&durable||cluster>=3)&&s.currentResource-available.cost+regen*3>=followup)score=70;
+    break;
+   }
   }
   if(score<=0||(defensive?!canDefend:!canAttack))continue;
   if(defensive&&!critical&&!available.free&&available.cost>0){
    const healing=hp<.45&&['riptide_wellspring','sylva_symbiosis','terra_geocore_overdrive'].includes(id);
-   const resourceLeft=s.currentResource-available.cost;
-   if(!healing&&resourceLeft<attackReserve&&unavoidable<.18)continue;
    // Discount costly prevention when the damage can be safely accepted.
    if(!healing&&available.cost>0&&escapeDamage<stats.maxHp*.04)continue;
   }
   if(!defensive){
    if(!target)continue;
-   const reserve=s.aircraftId==='phantom'?(safeBattery?8:escapeReserve):threatened?stats.maxResource*.16:stats.maxResource*.06;
-   if(s.currentResource-available.cost<reserve&&!available.free)continue;
+   const reserve=s.aircraftId==='phantom'?(safeBattery?8:escapeReserve):defenseReserve;
+   const comboSetup=['cinder_fuel_barrage','cinder_heat_wave','terra_strata_clamp','predator_lock'].includes(id);
+   const bank=isUltimate(id)?0:ultimateReserve;
+   const recovery=comboSetup?regen*3:0;
+   // Casting a setup must leave the ultimate affordable within its short setup
+   // window. Cheap filler can no longer spend down the bank every cooldown.
+   const floor=Math.min(stats.maxResource-spend,Math.max(bank-recovery,reserve));
+   if(spend>0&&s.currentResource-spend<floor&&!available.free)continue;
    if(critical)score*=.2;
   }
   if(!best||score>best.score)best={id,score,defensive};
@@ -213,8 +273,8 @@ export function thinkHiveAlly(a:HiveAlly,dt:number){
   a.thinkAt=root.elapsed+.1+a.slot*.008;
   const c=sense(a,m),target=chooseTarget(c,a),threat=risk(c,w.playerX,w.playerY),stats=getEffectiveAircraftStats(w.aircraft),hp=w.aircraft.currentHp/stats.maxHp;
   m.urgent=threat>90;a.target=target?.id;w.playerTargetId=target?.id;
-  const close=['riptide','argent'].includes(w.aircraft.aircraftId)&&hp>.55&&threat<90;
-  const lead=w.aircraft.aircraftId==='terra'?Math.max(.2,terraHud(w)?.windup||TERRA.windup):w.laserCharge>0?w.laserCharge:.3;
+  const close=w.aircraft.aircraftId==='riptide'&&(hp>.55||!!riptideState(w).waterform&&hp>.35)&&threat<90;
+  const lead=w.aircraft.aircraftId==='terra'?Math.max(.2,terraHud(w)?.windup||TERRA.windup):cinderState(w).beam?Math.max(.1,cinderState(w).beam!.fire-w.elapsed):w.laserCharge>0?w.laserCharge:.3;
   const aim=target?predict(c,target,lead):undefined;
   let desiredX=aim?.x??R.left+R.width*(a.slot?.72:.28),desiredY=target?clampY(target.y+(close?115:hp<.4?265:205)):R.bottom-85;
   const loot=equipmentState(root.aircraft).loot.find(l=>!l.collection);

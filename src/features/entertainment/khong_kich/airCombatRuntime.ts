@@ -526,7 +526,7 @@ export type EnemyProjectileSpeedClass = "standard" | "fan" | "special";
 const ENEMY_PROJECTILE_SPEED_MULTIPLIERS = { standard: 1.5, fan: 1.35, special: 1 } as const;
 const PLAYER_BASIC_PROJECTILE_SPEED_MULTIPLIER = 2;
 export interface ProjectileEntity extends AttackMetadata {
-    hiveSplitAt?:number; hiveAmmo?:number;
+    hiveSplitAt?:number; hiveAmmo?:number; hiveTargetSlot?:number; hiveHomingUntil?:number;
     duelDecoy?: { world: CombatWorld; id: number };
     mirageOrbit?: { ownerId:number; angle:number; radius:number; until:number };
     /** A bounded transformed view, never a second damage authority. */
@@ -538,7 +538,7 @@ export interface ProjectileEntity extends AttackMetadata {
     mainBasicMiss?: boolean;
     extraPierceOrdinal?: number;
     expansionCast?: ExpansionCast; expansionSlowUntil?: number;
-    /** Weapon share of pre-Gatling raw damage; inherited by basic derivatives. */
+    /** Weapon share of pre-Gatlingun raw damage; inherited by basic derivatives. */
     weaponFraction?: number;
     firedAt?: number;
     sylvaAcidRound?: boolean;
@@ -720,7 +720,7 @@ export type CombatVisualEvent = DamageNumberEvent | (VisualEventBase & {
     amount: number;
     healSource: HealSource;
 }) | (VisualEventBase & {
-    kind: "aircraft_destroyed" | "ultimate_effect" | "rank_effect" | "astra_lance_impact" | "astra_starfall_impact" | "bullet_impact" | "hit" | "explosion" | "bomb" | "player_hit" | "absorb" | "lightning" | "drone_hit" | "missile_impact" | "flare_burst" | "emp_pulse" | "shield_ripple";
+    kind: "skill_ignition" | "aircraft_destroyed" | "ultimate_effect" | "rank_effect" | "astra_lance_impact" | "astra_starfall_impact" | "bullet_impact" | "hit" | "explosion" | "bomb" | "player_hit" | "absorb" | "lightning" | "drone_hit" | "missile_impact" | "flare_burst" | "emp_pulse" | "shield_ripple";
 });
 type NewVisualEvent = CombatVisualEvent extends infer E ? E extends CombatVisualEvent ? Omit<E, "id"> : never : never;
 function emitVisual(world: CombatWorld, event: NewVisualEvent): void {
@@ -952,7 +952,7 @@ function activateHiveMarks(w:CombatWorld){
 const PLAYER_TARGET_ID = 0;
 // Applied on every acquisition and recycle, including generic homing/bounce bullets.
 const MISSILE_DEFAULTS = {
-    magnetic: undefined, hiveSplitAt:undefined,hiveAmmo:undefined,
+    magnetic: undefined, hiveSplitAt:undefined,hiveAmmo:undefined,hiveTargetSlot:undefined,hiveHomingUntil:undefined,
     telemetryCore: undefined, salvoId: undefined, interceptCount: 0, stabilizedPierce: false, bounceBasis: undefined, bounceSecondMultiplier: undefined,
     ammoVisualKey: undefined,
     fuseStarted: false, fuseRemaining: 0,
@@ -1250,7 +1250,7 @@ function addProjectile(world: CombatWorld, values: Partial<ProjectileEntity> & P
         return count + (sharesPool ? 1 : 0);
     }, 0);
     const limit = values.owner === "enemy"
-        ? (world.stageId===5?720:AIR_COMBAT_WORLD.maxEnemyProjectiles)
+        ? (world.stageId===5?1440:AIR_COMBAT_WORLD.maxEnemyProjectiles)
         : AIR_COMBAT_WORLD.maxPlayerProjectiles;
     if (ownerCount >= limit) {
         // Preserve rail/homing/boss shots by recycling an ordinary hostile bullet first.
@@ -1279,7 +1279,7 @@ function addProjectile(world: CombatWorld, values: Partial<ProjectileEntity> & P
         mirrorBorrowed: undefined, mirrorSlow: undefined, mirageOrbit: values.mirageOrbit, mirageVisual: values.mirageVisual, stormbreakerVisual: values.stormbreakerVisual, stormbreakerSalvo: values.stormbreakerSalvo, stormbreakerSplit: values.stormbreakerSplit, stormbreakerGrace: values.stormbreakerGrace,
         magneticVisual: values.magneticVisual, magneticAreaId: values.magneticAreaId, appearance: values.appearance, ammoVisualKey: values.ammoVisualKey,
         sourceEnemyId: values.sourceEnemyId, sourceEnemyType: values.sourceEnemyType, attackTag: values.attackTag, majorBossAttack: values.majorBossAttack, payload: values.payload,
-        hiveSplitAt:values.hiveSplitAt,hiveAmmo:values.hiveAmmo,
+        hiveSplitAt:values.hiveSplitAt,hiveAmmo:values.hiveAmmo,hiveTargetSlot:values.hiveTargetSlot,hiveHomingUntil:values.hiveHomingUntil,
         criticalAttack: values.criticalAttack ?? false,
         suppressive: values.suppressive ?? false, allowOffscreenEntry: values.allowOffscreenEntry ?? false, corridorEdge: values.corridorEdge, corridorSide: values.corridorSide,
         telemetryCore: values.telemetryCore, salvoId: values.salvoId, interceptCount: 0, corePierce: values.corePierce, stabilizedPierce: values.stabilizedPierce,
@@ -2097,6 +2097,7 @@ export function castWorldSkill(world: CombatWorld, skillId: SkillId): SkillCastR
             break;
         }
     }
+    emitVisual(world,{kind:'skill_ignition',skillId,x:world.playerX,y:world.playerY,size:64});
     setMessage(world, SKILL_CONFIGS[skillId].name.toUpperCase(), 1.2);
     return result;
 }
@@ -3300,12 +3301,21 @@ function updateHoming(world: CombatWorld, projectile: ProjectileEntity, dt: numb
         y: number;
     } | null = null;
     if (projectile.owner === "enemy" && projectile.allegiance!=="friendly_hacked") {
+        if(projectile.hiveTargetSlot!==undefined){
+            const actor=hiveActors(world)[projectile.hiveTargetSlot];
+            if(world.elapsed>=(projectile.hiveHomingUntil??0)||!actor||actor.aircraft.currentHp<=0||!canAcquirePlayerTarget(actor.aircraft)){
+                projectile.homing=false;projectile.targetId=null;return;
+            }
+            const decoy=actor.decoys.find(d=>d.active);
+            target=decoy??{x:actor.playerX,y:actor.playerY};
+        } else {
         target = targetPosition(world, projectile.targetId);
         const targetUnit=world.enemies.find(e=>e.id===projectile.targetId);
         if(targetUnit&&enemyAllegiance(world,targetUnit)!=="friendly_hacked")target=null;
         if (!target || (projectile.targetId === PLAYER_TARGET_ID && !canAcquirePlayerTarget(world.aircraft))) {
             projectile.targetId = chooseEnemyTarget(world, true);
             target = targetPosition(world, projectile.targetId);
+        }
         }
     }
     else {
@@ -3407,14 +3417,15 @@ function coreContext(world: CombatWorld, extra: Partial<CoreContext> = {}): Core
         stopSkills: () => stopAllSkills(world), ...extra };
     return ctx;
 }
-function recordDpsDamage(world: CombatWorld, amount: number) {
+export function recordDpsDamage(world: CombatWorld, amount: number) {
     if (amount <= 0) return;
     const samples = world.dpsSamples ??= [];
+    while (samples.length && samples[0].at < world.elapsed - 5) samples.shift();
     const last = samples[samples.length - 1];
     if (last?.at === world.elapsed) last.amount += amount;
     else samples.push({ at: world.elapsed, amount });
 }
-function rollingDps(world: CombatWorld): number {
+export function rollingDps(world: CombatWorld): number {
     const samples = world.dpsSamples ??= [];
     while (samples.length && samples[0].at < world.elapsed - 5) samples.shift();
     return samples.reduce((sum, hit) => sum + hit.amount, 0) / 5;
@@ -3846,7 +3857,7 @@ function applyDamageToEnemyInternal(world: CombatWorld, enemy: EnemyEntity, rawD
             const contribution=damage+absorbed-shield-Math.min(hpBefore,Math.max(0,budget-shield/shieldFactor));
             recordCoreMetric(state,row,"bonusDamage",contribution);return Math.max(0,contribution);
         };
-        // Effect components retain their pre-Gatling amount. Attribute their share
+        // Effect components retain their pre-Gatlingun amount. Attribute their share
         // against the reduced total, using this hit's existing crit/mitigation.
         const effectShare=(fraction:number)=>fraction*(gatling?unpenalizedBeforeCrit/Math.max(Number.EPSILON,penalizedBeforeCrit):1);
         const factor=(row:number,value:number)=>{if(hasCore(state,row))bonus(row,effectShare(1-1/value));};
