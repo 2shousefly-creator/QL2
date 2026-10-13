@@ -11,14 +11,15 @@ import type { AtlasFrame } from './pixi/airCombatPixiTypes';
 import type { CombatWorld } from './airCombatRuntime';
 import { sylvaState } from './airCombatSylvaRuntime';
 import { SYLVA_SKILLS } from './airCombatSylvaConfig';
+import { skillVfxFrame } from './airCombatSkillVfxFrames';
 export const SYLVA_ART={aircraft,portrait,icons,acid,life,death,deathNew};
 export const SYLVA_SOURCES={sylvaAircraft:aircraft,sylvaPortrait:portrait,sylvaIcons:icons,sylvaAcid:acid,sylvaLife:life,sylvaDeath:death,sylvaDeathNew:deathNew};
 const frame=(pack:'acid'|'life'|'death',i:number):AtlasFrame=>{const m=metadata[pack],r=m.frames[i].rect;return {atlas:pack==='acid'?'sylvaAcid':pack==='life'?'sylvaLife':'sylvaDeath',rect:[r[0]/m.width,r[1]/m.height,r[2]/m.width,r[3]/m.height]};};
 const newDeath=(i:number):AtlasFrame=>({atlas:'sylvaDeathNew',rect:[i%3/3,Math.floor(i/3)/2,1/3,.5]});
 export const SYLVA_FRAMES={
  sylva_body:{atlas:'sylvaAircraft',rect:[0,0,1,1]},sylva_portrait:{atlas:'sylvaPortrait',rect:[0,0,1,1]},
- sylva_basic_ammo:frame('acid',0),sylva_muzzle:frame('acid',1),sylva_trail:frame('acid',2),sylva_impact:frame('acid',3),sylva_missile:frame('acid',4),sylva_exhaust:frame('acid',5),sylva_explosion:frame('acid',6),sylva_skull:frame('acid',7),sylva_pool:frame('acid',8),sylva_bubbles:frame('acid',9),sylva_adhesive:frame('acid',10),sylva_corrosion:frame('acid',11),
- sylva_tissue:frame('life',0),sylva_storage:frame('life',1),sylva_heal:frame('life',2),sylva_armor:frame('life',3),sylva_buff:frame('life',4),sylva_seed:frame('life',5),sylva_pollen:frame('life',6),sylva_roots:frame('life',7),sylva_mark:frame('life',8),sylva_bloom:frame('life',9),sylva_root_marker:frame('life',10),sylva_slow:frame('life',11),
+ sylva_basic_ammo:frame('acid',0),sylva_muzzle:frame('acid',1),sylva_trail:frame('acid',2),sylva_impact:frame('acid',3),sylva_missile:frame('acid',4),sylva_exhaust:frame('acid',5),sylva_explosion:frame('acid',6),sylva_skull:frame('acid',7),sylva_pool:frame('acid',8),sylva_bubbles:frame('acid',9),sylva_adhesive:frame('acid',10),sylva_corrosion:skillVfxFrame('sylva_acid_burst',0),
+ sylva_tissue:frame('life',0),sylva_storage:frame('life',1),sylva_heal:frame('life',2),sylva_armor:skillVfxFrame('sylva_symbiosis',0),sylva_buff:skillVfxFrame('sylva_symbiosis',1),sylva_seed:frame('life',5),sylva_pollen:frame('life',6),sylva_roots:frame('life',7),sylva_mark:skillVfxFrame('sylva_parasitic_seed',0),sylva_bloom:frame('life',9),sylva_root_marker:skillVfxFrame('sylva_parasitic_seed',1),sylva_slow:skillVfxFrame('sylva_parasitic_seed',3),
  sylva_death0:newDeath(0),sylva_death1:newDeath(1),sylva_death2:newDeath(2),sylva_death3:newDeath(3),sylva_tree:frame('death',4),sylva_tree_burst:frame('death',5),sylva_wither:newDeath(5),sylva_appearance:newDeath(4),sylva_link:frame('death',7),
 } as const satisfies Record<string,AtlasFrame>;
 export const SYLVA_ICON_CELLS:Record<string,readonly [number,number]>={sylva_acid_rounds:[0,0]};

@@ -1,5 +1,6 @@
 import registryData from '../../../assets/khong-kich/26.25.0/registry.json';
 import bindingData from '../../../assets/khong-kich/26.25.0/frame-bindings.json';
+import { CLEAN_SKILL_ART } from './airCombatSkillVfxFrames';
 import type { AircraftId, EnemyType } from './airCombatTypes';
 import type { CombatWorld } from './airCombatRuntime';
 import type { AtlasFrame } from './pixi/airCombatPixiTypes';
@@ -48,14 +49,23 @@ export async function loadGeneratedCanvas(world?:CombatWorld) {
     if(!image){image=new Image();image.src=p.url;canvasPages.set(key,image);}
     await image.decode();
   }));
+  await Promise.all([...new Set(Object.values(CLEAN_SKILL_ART).map(a=>a.url))].map(async url=>{
+    let image=canvasPages.get(url);
+    if(!image){image=new Image();image.src=url;canvasPages.set(url,image);}
+    await image.decode();
+  }));
 }
 /** New raster pose on Canvas; the authoritative caller retains all positions and timing. */
 export function paintGeneratedCanvas(ctx:CanvasRenderingContext2D,id:string,x:number,y:number,width:number,height:number,rotation=0,alpha=1,anchorX=.5,tint=0xffffff) {
-  const f=GENERATED_ART.items[id]?.frames.flat;
-  if(!f)return false;
-  const image=canvasPages.get(f.page);
+  const clean=CLEAN_SKILL_ART[id],f=GENERATED_ART.items[id]?.frames.flat;
+  if(!clean&&!f)return false;
+  const image=canvasPages.get(clean?.url??f.page);
   if(!image?.complete||!image.naturalWidth)return false;
-  const [sx,sy,sw,sh]=f.rect;
+  let [sx,sy,sw,sh]=clean?.rect??f.rect;
+  if(clean){
+    const right=Math.round((sx+sw)*image.naturalWidth),bottom=Math.round((sy+sh)*image.naturalHeight);
+    sx=Math.round(sx*image.naturalWidth);sy=Math.round(sy*image.naturalHeight);sw=right-sx;sh=bottom-sy;
+  }
   ctx.save();ctx.translate(x,y);ctx.rotate(rotation);ctx.globalAlpha*=alpha;
   if(tint===0xffffff)ctx.drawImage(image,sx,sy,sw,sh,-width*anchorX,-height/2,width,height);
   else {

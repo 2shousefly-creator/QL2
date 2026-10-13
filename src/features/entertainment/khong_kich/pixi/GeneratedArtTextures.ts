@@ -1,6 +1,7 @@
 import { Assets, Rectangle, Texture } from 'pixi.js';
 import { GENERATED_ART, generatedBundles, type GeneratedSubject } from '../airCombatGeneratedArt';
 import type { CombatWorld } from '../airCombatRuntime';
+import { CLEAN_SKILL_ART } from '../airCombatSkillVfxFrames';
 
 export interface RigTexture { subject:GeneratedSubject; layers:Record<string,Texture> }
 export const generatedTextureRig=new WeakMap<Texture,RigTexture>();
@@ -12,8 +13,18 @@ export async function loadGeneratedTextures(world?:CombatWorld) {
     pages.set(key,await Assets.load<Texture>(p.url));
   }));
   const subjects=new Map<string,RigTexture>();
+  const cleanSources=new Map<string,Texture>();
+  await Promise.all([...new Set(Object.values(CLEAN_SKILL_ART).map(a=>a.url))].map(async url=>{
+    cleanSources.set(url,await Assets.load<Texture>(url));
+  }));
+  const cleanTextures=new Map<string,Texture>();
+  for(const [id,art] of Object.entries(CLEAN_SKILL_ART)){
+    const source=cleanSources.get(art.url)!,[x,y,w,h]=art.rect;
+    const left=Math.round(x*source.width),top=Math.round(y*source.height);
+    cleanTextures.set(id,new Texture({source:source.source,frame:new Rectangle(left,top,Math.round((x+w)*source.width)-left,Math.round((y+h)*source.height)-top)}));
+  }
   for(const subject of Object.values(GENERATED_ART.items)) {
-    if(!bundles.has(subject.bundle))continue;
+    if(!bundles.has(subject.bundle)||cleanTextures.has(subject.id))continue;
     const layers:Record<string,Texture>={};
     for(const [name,f] of Object.entries(subject.frames)) {
       const [x,y,w,h]=f.rect;
@@ -23,7 +34,7 @@ export async function loadGeneratedTextures(world?:CombatWorld) {
     if(layers.core)generatedTextureRig.set(layers.flat,rig);
   }
   return {
-    texture:(id:string)=>subjects.get(id)?.layers.flat,
-    destroy:()=>{for(const rig of subjects.values())for(const t of Object.values(rig.layers))t.destroy(false);subjects.clear();pages.clear();},
+    texture:(id:string)=>cleanTextures.get(id)??subjects.get(id)?.layers.flat,
+    destroy:()=>{for(const rig of subjects.values())for(const t of Object.values(rig.layers))t.destroy(false);for(const t of cleanTextures.values())t.destroy(false);cleanTextures.clear();cleanSources.clear();subjects.clear();pages.clear();},
   };
 }

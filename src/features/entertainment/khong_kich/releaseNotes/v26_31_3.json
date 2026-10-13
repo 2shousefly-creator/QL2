@@ -74,6 +74,11 @@
               "text": "Tăng độ nổi bật của các điểm nổ tên lửa Viper, Oanh Tạc Titan, Neo Trọng Lực, giao thoa Astra và xung điện Phantom. Các hoạt ảnh dùng spritesheet đã tạo sinh, đồng bộ trên Pixi và Canvas.",
               "format": "bullet",
               "changeType": "change"
+            },
+            {
+              "text": "Loại bỏ hình thân chiến cơ bị vẽ kèm trong ảnh VFX cũ: thay bằng frame năng lượng, lửa, nước, kiếm quang và thực vật; sửa cả lớp kích hoạt, duy trì, dấu ấn và các pha phụ trên Pixi lẫn Canvas.",
+              "format": "bullet",
+              "changeType": "change"
             }
           ]
         },
