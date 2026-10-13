@@ -23,12 +23,27 @@ const bossEffects=Array.from({length:16},(_,i)=>cell(bossSkillUrl,i));
 const bg:HiveFrame={url:backgroundUrl,rect:[0,0,1,1]};
 const detonations=Array.from({length:16},(_,i)=>cell(explosionUrl,i));
 export interface HivePainter {
- sprite(f:HiveFrame,x:number,y:number,w:number,h:number,rotation?:number,alpha?:number,additive?:boolean):void;
+ sprite(f:HiveFrame,x:number,y:number,w:number,h:number,rotation?:number,alpha?:number,additive?:boolean,flipY?:boolean):void;
  circle(x:number,y:number,radius:number,color:number,alpha:number,fill?:boolean,width?:number):void;
  line(x:number,y:number,endX:number,endY:number,width:number,color:number,alpha:number):void;
  polygon(points:number[],color:number,alpha:number,fill?:boolean,width?:number):void;
 }
 export const hiveArtUrls=()=>Object.values(HIVE_ART);
+
+const backgroundScroll=new WeakMap<CombatWorld,{at:number;distance:number}>();
+function paintHiveBackground(w:CombatWorld,p:HivePainter,reduced:boolean){
+ let scroll=backgroundScroll.get(w);
+ if(!scroll||w.elapsed<scroll.at){scroll={at:w.elapsed,distance:0};backgroundScroll.set(w,scroll);}
+ // Accumulate combat time so pause freezes the floor and changing Reduced Motion
+ // changes only speed, never the current position. Keep the repeating phase bounded.
+ scroll.distance=(scroll.distance+Math.max(0,w.elapsed-scroll.at)*(reduced?3:12))%1280;
+ scroll.at=w.elapsed;
+ const offset=scroll.distance%640,flipped=scroll.distance>=640;
+ // Alternate vertical reflections so neighboring edges match in this non-tileable
+ // painting. Small overscan covers subpixel seams and the existing camera shake.
+ p.sprite(bg,180,320+offset,364,644,0,1,false,flipped);
+ p.sprite(bg,180,-320+offset,364,644,0,1,false,!flipped);
+}
 
 interface HazardShape {outline:number[];fill:number[];top:number;bottom:number}
 const hazardShapes=new WeakMap<HiveHazard,HazardShape>();
@@ -65,8 +80,7 @@ function warningShape(z:HiveHazard,progress:number):HazardShape {
 /** Only Hive scenery and enemies are custom; aircraft use the campaign renderer. */
 export function paintHive(w:CombatWorld,p:HivePainter,reduced=false){
  const now=w.elapsed;
- // Static abandoned factory scenery keeps the central yard open for combat.
- p.sprite(bg,180,320,360,640);
+ paintHiveBackground(w,p,reduced);
  for(const e of w.enemies){if(e.hp<=0)continue;const index=e.type==='boss'?13:HIVE_ENTITY_CELLS.indexOf(e.type);if(index<0)continue;
   const size=e.radius*2.8;p.sprite(ammo[7],e.x,e.y-size*.37,size*.23,size*.4,Math.PI,.75);
   // A dedicated full-frame sheet prevents the wide Tyrant being cut by an enemy atlas cell.
@@ -153,4 +167,3 @@ export function paintHiveThreats(w:CombatWorld,p:HivePainter){
   p.sprite(frame,shot.x,shot.y,size,size*1.6,rotation,mother?.95:.7,true);
  }
 }
-

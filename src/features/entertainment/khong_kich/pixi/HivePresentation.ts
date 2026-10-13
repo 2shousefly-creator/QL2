@@ -33,10 +33,11 @@ export async function createHivePresentation(host:HTMLDivElement,world:CombatWor
   const canvas=document.createElement('canvas'),ratio=Math.min(2,devicePixelRatio||1);canvas.width=360*ratio;canvas.height=640*ratio;canvas.style.cssText='display:block;width:100%;height:100%;pointer-events:none';
   const ctx=canvas.getContext('2d');if(!ctx)throw new Error('Không thể tải đồ họa Màn 5');host.appendChild(canvas);
   const painter:HivePainter={
-   sprite(f,x,y,w,h,r=0,alpha=1,additive=false){
+   sprite(f,x,y,w,h,r=0,alpha=1,additive=false,flipY=false){
     if(w<=0||h<=0||alpha<=0||y+h<0||y-h>640||x+w<0||x-w>360)return;
     const image=f.url===HIVE_ART.backgroundUrl?background:images.get(f.url);if(!image)return;
     const [sx,sy,sw,sh]=f.rect;ctx.save();ctx.translate(x,y);ctx.rotate(r);ctx.globalAlpha=Math.max(0,Math.min(1,alpha));ctx.globalCompositeOperation=additive?'lighter':'source-over';
+    if(flipY)ctx.scale(1,-1);
     ctx.drawImage(image,sx*image.width,sy*image.height,sw*image.width,sh*image.height,-w/2,-h/2,w,h);ctx.restore();
    },
    circle(x,y,r,color,alpha,fill=false,width=1.5){if(r<=0)return;ctx.save();ctx.globalAlpha=alpha;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);if(fill){ctx.fillStyle=cssColor(color);ctx.fill();}else{ctx.strokeStyle=cssColor(color);ctx.lineWidth=width;ctx.stroke();}ctx.restore();},
@@ -81,10 +82,11 @@ export async function createHivePresentation(host:HTMLDivElement,world:CombatWor
  const makePainter=(layer:Container,geometryOnTop=false)=>{
   const geometry=new Graphics(),sprites:Sprite[]=[];layer.addChild(geometry);let used=0;
   const painter:HivePainter={
-   sprite(f,x,y,w,h,r=0,alpha=1,additive=false){
+   sprite(f,x,y,w,h,r=0,alpha=1,additive=false,flipY=false){
     if(w<=0||h<=0||alpha<=0||y+h<0||y-h>640||x+w<0||x-w>360)return;
     let sprite=sprites[used++];if(!sprite){sprite=new Sprite();sprite.anchor.set(.5);sprites.push(sprite);layer.addChild(sprite);}
     sprite.visible=true;sprite.texture=texture(f);sprite.position.set(x,y);sprite.width=w;sprite.height=h;sprite.rotation=r;sprite.alpha=Math.max(0,Math.min(1,alpha));sprite.blendMode=additive?'add':'normal';
+    sprite.scale.y=Math.abs(sprite.scale.y)*(flipY?-1:1);
    },
    circle(x,y,r,color,alpha,fill=false,width=1.5){if(r<=0)return;geometry.circle(x,y,r);if(fill)geometry.fill({color,alpha});else geometry.stroke({color,alpha,width});},
    polygon(points,color,alpha,fill=false,width=1){if(points.length<6)return;geometry.poly(points);if(fill)geometry.fill({color,alpha});else geometry.stroke({color,alpha,width,join:'round'});},

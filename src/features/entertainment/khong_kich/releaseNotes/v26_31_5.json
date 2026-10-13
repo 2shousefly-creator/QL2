@@ -27,6 +27,11 @@
               "text": "Màn 5 trở về bối cảnh nhà máy bỏ hoang: mái xưởng xuống cấp, đường ống và sân bê tông tối. Giữ chi tiết thưa, màu trầm và vùng trung tâm thoáng để dễ quan sát chiến đấu.",
               "format": "bullet",
               "changeType": "change"
+            },
+            {
+              "text": "Sửa lỗi nền Màn 5 đứng yên: nhà máy cuộn chậm liên tục theo thời gian trận đấu trên cả Pixi và Canvas, dừng khi tạm dừng và cuộn nhẹ hơn khi bật Giảm chuyển động.",
+              "format": "bullet",
+              "changeType": "change"
             }
           ]
         },
