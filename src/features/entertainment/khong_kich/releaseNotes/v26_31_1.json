@@ -1,0 +1,114 @@
+{
+  "version": "26.31.1",
+  "releaseDate": "2026-10-13",
+  "title": "HIVE TYRANT · Tám kỹ năng",
+  "displayTitle": "KHÔNG KÍCH 26.31.1 — HIVE TYRANT & ĐỒNG MINH",
+  "summary": "Boss Màn 5 với đủ tám kỹ năng, AI giữ năng lượng tốt hơn, Terra tích Địa Áp qua Nham Giáp và chiến trường rõ hơn.",
+  "sections": [
+    {
+      "id": "hive-refinement",
+      "title": "CÔNG PHÁ TỔ MÁY",
+      "icon": {
+        "kind": "wave",
+        "id": "stage5"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "boss",
+          "title": "HIVE TYRANT Ω",
+          "icon": {
+            "kind": "boss",
+            "id": "hive_tyrant"
+          },
+          "rationale": "Học nhịp tấn công và di chuyển chính xác qua tám kiểu kỹ năng.",
+          "changes": [
+            {
+              "text": "Boss dùng spritesheet riêng 16 khung, giữ trọn thân và cánh; chuyển động theo đồng hồ trận đấu.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "Đủ 8 kỹ năng ngay phase 1: Thiên La Hỏa Võng, Truy Sát Tam Điểm, Thảm Pháo Công Thành, Hành Lang Hủy Diệt, Vòng Xoáy Bầy Đàn, Lưới Cắt Giao Thoa, Sóng Quét Lò Phản Ứng, Bàn Cờ Tận Diệt.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "Nhịp tung chiêu theo phase: 4,8 / 4 / 3,2 / 2,5 giây. Cảnh báo giữ màu đỏ và khớp vùng sát thương. Thêm spritesheet VFX cho pháo, điện, sóng lò phản ứng và lưới năng lượng.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        },
+        {
+          "id": "ai",
+          "title": "Đồng minh biết giữ năng lượng",
+          "icon": {
+            "kind": "system",
+            "id": "hive_ai"
+          },
+          "rationale": "Ưu tiên né được đòn thay vì dùng liên tiếp kỹ năng phòng thủ.",
+          "changes": [
+            {
+              "text": "Ước lượng sát thương sắp nhận sau Giáp, giảm sát thương, Khiên và Nham Giáp; so sánh nguy hiểm khi đứng lại với đường né được chọn.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "Chỉ phòng thủ trước nguy cơ mất nhiều Máu hoặc khó né, chừa tài nguyên cho phản công; giãn các lần phòng thủ và ưu tiên hồi phục khi thực sự thiếu Máu.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        },
+        {
+          "id": "terra",
+          "title": "Lõi Địa Áp",
+          "icon": {
+            "kind": "aircraft",
+            "id": "terra"
+          },
+          "rationale": "Nham Giáp và Khiên không ngăn Terra tích áp để phản công.",
+          "changes": [
+            {
+              "text": "Địa Áp bằng 150% sát thương nhận sau Giáp, trước các chỉ số giảm sát thương và hấp thu; không yêu cầu mất Máu thật.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "Giữ trần tích lũy theo cấp; chỉ suy giảm sau 2,5 giây không nhận đòn hợp lệ. Miễn sát thương, phản hồi và phần trả chậm của đòn đã tính không tạo thêm Địa Áp.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        },
+        {
+          "id": "presentation",
+          "title": "Hiển thị chiến trường",
+          "icon": {
+            "kind": "ui",
+            "id": "combat"
+          },
+          "rationale": "Giảm nhiễu nền, làm rõ đồng minh và trạng thái Boss.",
+          "changes": [
+            {
+              "text": "Hai đồng minh xếp dọc ở cạnh trái. Debuff Boss nằm trong dãy debuff chung với nhãn BOSS; hiển thị đầy đủ hiệu ứng từ cả tổ đội.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "Sprite đạn chiến cơ sáng thêm 50%; nền Màn 5 tối thêm 50% so với trước.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "Đồng minh tải đầy đủ tài nguyên kỹ năng dùng chung với các màn cũ. Tia lửa dùng chung spritesheet, vị trí động cơ và nhịp lực đẩy trên Pixi lẫn Canvas.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

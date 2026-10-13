@@ -32,7 +32,7 @@ export function generatedBundles(world?:CombatWorld):Set<string> {
   if(opponent)owners.add(opponent.aircraft.aircraftId);
   for(const ally of world?.hive?.allies??[])owners.add(ally.world.aircraft.aircraftId);
   // Mirage can summon a different owner later; its roster is preloaded atomically.
-  if(world?.mirage)for(const item of Object.values(GENERATED_ART.items))if(item.kind==='aircraft')owners.add(item.id as AircraftId);
+  if(world?.mirage||world?.stageId===5)for(const item of Object.values(GENERATED_ART.items))if(item.kind==='aircraft')owners.add(item.id as AircraftId);
   const result=new Set(['shared',...Array.from(owners,id=>`aircraft-${id}`)]);
   if(world)result.add(`stage-${world.mirage?4:world.stormbreaker?3:world.magnetic?2:1}`);
   else for(let n=1;n<=4;n++)result.add(`stage-${n}`);

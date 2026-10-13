@@ -56,7 +56,8 @@
 .air-boss-statuses { display:flex; flex-wrap:wrap; flex-direction:row-reverse; justify-content:flex-start; align-self:flex-end; max-width:100%; align-items:center; gap:.5556cqw; }
 .air-boss-status-label { color:#fda4af; font-size:2cqw; font-weight:800; text-transform:uppercase; padding-right:1cqw; }
 .air-status-group { display:grid; grid-template-columns:repeat(5,6.1111cqw); grid-auto-rows:6.1111cqw; gap:.5556cqw; align-content:start; }
-.air-status-group--debuff { direction:rtl; }
+.air-status-group--debuff { direction:rtl; grid-template-columns:repeat(3,9.2cqw); justify-items:end; }
+.air-status-boss-label { position:absolute; left:calc(100% + .25cqw); top:50%; transform:translateY(-50%); font-size:1.45cqw; font-weight:900; line-height:1; color:#fda4af; pointer-events:none; }
 .air-status-icon, .air-status-overflow { position:relative; width:6.1111cqw; height:6.1111cqw; display:grid; place-items:center; background:#081321ed; border:1px solid #6ee7b780; border-radius:0; color:#bbf7d0; padding:0; pointer-events:auto; direction:ltr; }
 .air-status-group--debuff .air-status-icon, .air-boss-statuses .air-status-icon { border-color:#fda4af88; color:#fda4af; }
 .air-status-icon > .combat-ui-icon { width:100%; height:100%; }
@@ -900,7 +901,7 @@
   .air-equipment-reward-panel .air-equipment-reward-body { padding: 10px; }
 }
 @media (prefers-reduced-motion: reduce) { .air-equipment-reward-card { transition: none; } }
-.air-hive-squad{display:flex;gap:4px;align-items:flex-start;flex-shrink:0}
+.air-hive-squad{display:flex;flex-direction:column;gap:4px;align-items:flex-start;flex-shrink:0}
 .air-hive-ally{position:relative;width:8.8889cqw;background:#102131d9;border:1px solid #62cbe366;border-radius:3px}
 .air-hive-ally>span:first-child{width:100%;height:auto;aspect-ratio:1;margin:0 auto}
 .air-hive-ally>strong{position:absolute;right:1px;top:0;font-size:2cqw;color:#fff2bb;text-shadow:0 1px 3px #000}

@@ -539,12 +539,13 @@ export function drawLegacyWorld(
       ctx.save();ctx.translate(projectile.x,projectile.y);ctx.rotate(Math.atan2(projectile.vy,projectile.vx));ctx.strokeStyle="#67e8f9";ctx.lineWidth=projectile.radius*2;ctx.lineCap="round";ctx.beginPath();ctx.moveTo(-projectile.radius*2,0);ctx.lineTo(projectile.radius*2,0);ctx.stroke();ctx.strokeStyle="#ecfeff";ctx.lineWidth=1;ctx.stroke();ctx.restore();
     } else if (missile) {
       ctx.save();ctx.translate(projectile.x,projectile.y);ctx.rotate(missileRenderRotation(getMissilePose(projectile,reducedMotion).heading));
-      ctx.shadowBlur=projectile.owner==="enemy"?0:9;drawAmmoLocal(ctx,getAmmoVisualKey(projectile)!);
+      ctx.shadowBlur=projectile.owner==="enemy"?0:9;if(projectile.owner!=="enemy")ctx.filter="brightness(150%)";drawAmmoLocal(ctx,getAmmoVisualKey(projectile)!);
       if(projectile.bigBang){ctx.globalAlpha=reducedMotion?.3:.3+.15*Math.sin(projectile.missileAge*4);ctx.fillStyle="#fff0b3";ctx.fillRect(-7,-10,14,2);}
       ctx.restore();
     } else if(projectile.owner==="enemy" || projectile.ammoVisualKey) {
       ctx.save();
       if(projectile.owner!=="enemy"){ctx.shadowColor=basic?.trail.css??projectile.color;ctx.shadowBlur=reducedMotion?5:8;}
+      if(projectile.owner!=="enemy")ctx.filter="brightness(150%)";
       drawAmmo(ctx,getAmmoVisualKey(projectile)!,projectile.x,projectile.y,Math.atan2(projectile.vy,projectile.vx));
       ctx.restore();
     } else {
@@ -675,10 +676,12 @@ export function drawLegacyWorld(
   paintRankSkills(world,(_id,key,x,y,width,height,rotation,alpha,additive)=>{
     ctx.save();
     if(additive || key!=="rankAnchor"&&key!=="rankCrystal"&&key!=="rankMicroMissile")ctx.globalCompositeOperation="lighter";
+    if(["rankMicroMissile","rankTwinShot","rankMiniLance"].includes(key))ctx.filter="brightness(150%)";
     drawMagneticFrame(ctx,RANKED_VFX_FRAMES[key],x,y,width,height,rotation,alpha);ctx.restore();
   },reducedMotion);
   paintUltimates(world,(_id,key,x,y,width,height,rotation,alpha,additive)=>{
     ctx.save();if(additive || !ultimateBody(key))ctx.globalCompositeOperation="lighter";
+    if(["ultimateViperMissile","ultimateTitanShell","ultimateHawkBolt"].includes(key))ctx.filter="brightness(150%)";
     drawMagneticFrame(ctx,ULTIMATE_FRAMES[key],x,y,width,height,rotation,alpha);ctx.restore();
   },reducedMotion);
   paintAstra(world,{
@@ -725,8 +728,8 @@ export function drawLegacyWorld(
     for(const mount of exhaust.mounts)for(let layer=0;layer<3;layer++){
       const x=world.playerX+mount.x,y=world.playerY+mount.y,width=mount.width*(layer===0?2.6:layer===1?1:.48),length=exhaust.length*(layer===0?1.08:layer===1?1:.64);
       ctx.globalAlpha=(invisible?.16:1)*(layer===0?exhaust.glow:layer===1?.9:1);
-      const gradient=ctx.createLinearGradient(x,y,x,y+length);gradient.addColorStop(0,layer===2?"#fff8e7":aircraft.accent);gradient.addColorStop(1,"transparent");ctx.fillStyle=gradient;
-      ctx.beginPath();ctx.moveTo(x-width/2,y);ctx.quadraticCurveTo(x-width*.55,y+length*.25,x,y+length);ctx.quadraticCurveTo(x+width*.55,y+length*.25,x+width/2,y);ctx.closePath();ctx.fill();
+      // The same generated flame texture, mounts and thrust clock as the Pixi campaign renderer.
+      paintGeneratedCanvas(ctx,'shared_flame',x,y+length/2,width,length,0,1,.5,layer===2?0xfff8e7:Number.parseInt(aircraft.accent.slice(1),16));
     }
     ctx.restore();
     drawAircraft(

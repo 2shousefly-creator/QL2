@@ -1,0 +1,17 @@
+{
+  "tool": "built-in image_gen",
+  "date": "2026-10-13",
+  "assets": [
+    {
+      "file": "hive-tyrant-idle.png",
+      "layout": "4x4; 16 idle frames; 9 fps; alpha",
+      "reference": "../26.31.0/enemies.png row 4 column 2",
+      "prompt": "Complete nose-down bronze insect dreadnought, amber reactor, six bladed wings. Fixed center and scale in every cell, flexing wings and pulsing reactor, transparent gutters, seamless idle loop. No labels or grid."
+    },
+    {
+      "file": "hive-boss-skills.png",
+      "layout": "4x4; four rows of four frames; alpha",
+      "prompt": "Four sequential explosion strips: molten amber plasma; violet ion burst; red-orange reactor shockwave; cyan-white electric burst. Ignition, peak, expansion, dissipation. Top view, centered in equal cells, transparent gutters, no labels or grid."
+    }
+  ]
+}

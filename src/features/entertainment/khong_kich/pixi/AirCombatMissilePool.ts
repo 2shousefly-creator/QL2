@@ -26,7 +26,7 @@ class MissileVisualNode {
   update(p:ProjectileEntity,assets:AirCombatAssets,reducedMotion:boolean) {
     const visual=getMissileVisual(p)!;
     this.root.visible=true;this.root.position.set(p.x,p.y);this.root.rotation=missileRenderRotation(getMissilePose(p,reducedMotion).heading);
-    this.body.texture=assets.effect(getAmmoVisualKey(p)!);this.body.width=visual.width;this.body.height=visual.height;
+    this.body.texture=p.owner==='enemy'?assets.effect(getAmmoVisualKey(p)!):assets.projectile(getAmmoVisualKey(p)!);this.body.width=visual.width;this.body.height=visual.height;
     const friendly=p.owner!=="enemy",tint=visual.engineNozzles[0]?.tint??0xffffff;
     this.halo.visible=this.highlight.visible=friendly;
     this.halo.tint=tint;this.halo.width=visual.width*1.7;this.halo.height=visual.height*1.35;

@@ -571,7 +571,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
       else {
         const round=p.owner==="enemy"?"charge":world.aircraft.aircraftId==="breaker"?"enemyTracer":p.owner==="drone"||world.aircraft.aircraftId==="phantom"?"laser":"tracer";
         const ammoKey=getAmmoVisualKey(p),ammo=ammoKey?AMMO_VISUALS[ammoKey]:null;
-        const sprite=this.projectiles.get(p.id,this.assets.effect(ammoKey??round));
+        const sprite=this.projectiles.get(p.id,p.owner==='enemy'?this.assets.effect(ammoKey??round):this.assets.projectile(ammoKey??round));
         if(!sprite)continue;
         sprite.tint=p.allegiance==="friendly_hacked"?0x67e8f9:0xffffff;
         // Source art points up; read current velocity every frame, including ricochets.

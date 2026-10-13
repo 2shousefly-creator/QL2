@@ -1,3 +1,5 @@
+import bossUrl from '../../../assets/khong-kich/26.31.1/hive-tyrant-idle.png';
+import bossSkillUrl from '../../../assets/khong-kich/26.31.1/hive-boss-skills.png';
 import enemyUrl from '../../../assets/khong-kich/26.31.0/enemies.png';
 import effectUrl from '../../../assets/khong-kich/26.31.0/effects.png';
 import backgroundUrl from '../../../assets/khong-kich/26.31.0/background.png';
@@ -6,11 +8,13 @@ import explosionUrl from '../../../assets/khong-kich/26.31.0/hive-detonation-v2.
 import type { CombatWorld } from './airCombatRuntime';
 import type { HiveHazard } from './airCombatHive';
 
-export const HIVE_ART={enemyUrl,effectUrl,backgroundUrl,ammoUrl,explosionUrl};
+export const HIVE_ART={enemyUrl,effectUrl,backgroundUrl,ammoUrl,explosionUrl,bossUrl,bossSkillUrl};
 export const HIVE_ENTITY_CELLS=['swarm_needler','razor_glider','aegis_beetle','siege_spitter','signal_weaver','repair_wasp','razor_marshal','aegis_regent','bombard_prelate','disruptor_monarch','forge_matron','brood_ark','crucible_ark','hive_tyrant','stage5_fortress','stage5_core'];
 export interface HiveFrame {url:string;rect:readonly number[]}
 const cell=(url:string,index:number,cols=4,rows=4):HiveFrame=>({url,rect:[index%cols/cols,Math.floor(index/cols)/rows,1/cols,1/rows]});
 const enemies=HIVE_ENTITY_CELLS.map((_,i)=>cell(enemyUrl,i)),ammo=Array.from({length:16},(_,i)=>cell(ammoUrl,i)),effects=Array.from({length:64},(_,i)=>cell(effectUrl,i,8,8));
+const bossFrames=Array.from({length:16},(_,i)=>cell(bossUrl,i));
+const bossEffects=Array.from({length:16},(_,i)=>cell(bossSkillUrl,i));
 const bg:HiveFrame={url:backgroundUrl,rect:[0,0,1,1]};
 const detonations=Array.from({length:16},(_,i)=>cell(explosionUrl,i));
 export interface HivePainter {
@@ -54,25 +58,29 @@ function warningShape(z:HiveHazard,progress:number):HazardShape {
 }
 
 /** Only Hive scenery and enemies are custom; aircraft use the campaign renderer. */
-export function paintHive(w:CombatWorld,p:HivePainter){
+export function paintHive(w:CombatWorld,p:HivePainter,reduced=false){
  const now=w.elapsed,scroll=(now*18)%640;
  p.sprite(bg,180,scroll+320,360,640);p.sprite(bg,180,scroll-320,360,640);
  for(const e of w.enemies){if(e.hp<=0)continue;const index=e.type==='boss'?13:HIVE_ENTITY_CELLS.indexOf(e.type);if(index<0)continue;
   const size=e.radius*2.8;p.sprite(ammo[7],e.x,e.y-size*.37,size*.23,size*.4,Math.PI,.75);
-  p.sprite(enemies[index],e.x,e.y,size,size);
+  // A dedicated full-frame sheet prevents the wide Tyrant being cut by an enemy atlas cell.
+  const boss=e.type==='boss',frame=boss?bossFrames[reduced?0:Math.floor(now*9)%16]:enemies[index];
+  const bodySize=boss?Math.min(192,Math.max(160,size)):size;
+  p.sprite(frame,e.x,e.y,bodySize,bodySize);
   if((e.hive?.shield??0)>0)p.sprite(ammo[11],e.x,e.y+e.radius*.55,size*.8,size*.35,Math.PI/2,.8);
   if((e.hive?.exposedUntil??0)>now)p.sprite(effects[40+Math.floor(now*10)%8],e.x,e.y,e.radius*.9,e.radius*.9);
   if(e.hive?.repairTarget){const t=w.enemies.find(n=>n.id===e.hive!.repairTarget);if(t&&e.stun<=0)p.line(e.x,e.y,t.x,t.y,3,0x86efac,.65);}
   if(e.stun>0)p.sprite(effects[48+Math.floor(now*12)%8],e.x,e.y,size,size,0,.7);
  }
- for(const fx of w.hive?.effects??[]){if(fx.blast||fx.row===7||fx.row===6)continue;const t=(now-fx.at)/fx.duration;if(t<0||t>=1)continue;if(fx.row===1)p.sprite(ammo[10],fx.x,fx.y,fx.size,fx.size,t*Math.PI*2,Math.sin(t*Math.PI));else p.sprite(effects[fx.row*8+Math.min(7,Math.floor(t*8))],fx.x,fx.y,fx.size,fx.size);}
+ for(const fx of w.hive?.effects??[]){if(fx.blast||fx.bossStyle!==undefined||fx.row===7||fx.row===6)continue;const t=(now-fx.at)/fx.duration;if(t<0||t>=1)continue;if(fx.row===1)p.sprite(ammo[10],fx.x,fx.y,fx.size,fx.size,t*Math.PI*2,Math.sin(t*Math.PI));else p.sprite(effects[fx.row*8+Math.min(7,Math.floor(t*8))],fx.x,fx.y,fx.size,fx.size);}
 }
 
 /** Generated raster frames use the warning's diameter, never a generic impact size. */
 export function paintHiveExplosions(w:CombatWorld,p:HivePainter){
  for(const fx of w.hive?.effects??[]){
-  const z=fx.blast,t=(w.elapsed-fx.at)/fx.duration;if((!z&&fx.row!==7&&fx.row!==6)||t<0||t>=1)continue;
-  const frame=detonations[Math.min(15,Math.floor(Math.pow(t,.78)*16))];
+  const z=fx.blast,t=(w.elapsed-fx.at)/fx.duration;if((!z&&fx.bossStyle===undefined&&fx.row!==7&&fx.row!==6)||t<0||t>=1)continue;
+  const style=z?.bossStyle??fx.bossStyle;
+  const frame=style===undefined?detonations[Math.min(15,Math.floor(Math.pow(t,.78)*16))]:bossEffects[style*4+Math.min(3,Math.floor(t*4))];
   const diameter=z?z.radius*2:fx.size,alpha=Math.min(1,(1-t)*4);
   const draw=(x:number,y:number)=>{
    p.sprite(frame,x,y,diameter,diameter,0,alpha);

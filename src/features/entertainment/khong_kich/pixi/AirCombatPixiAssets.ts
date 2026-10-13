@@ -115,6 +115,16 @@ export async function loadAirCombatAssets(world?:CombatWorld) {
     frames.set(definition, result);
     return result;
   };
-  return { texture, soloArena, mirageSky, magneticStorm, stormbreakerSky, engineFlame:generated.texture('shared_flame')??engineFlame, phantomBeam, generated:(id:string)=>generated.texture(id), effect: (key: VisualKey) => generated.texture(generatedEffectId(key)) ?? (key === "bigbang_missile" ? bigbang : texture(VFX_VISUALS[key])), destroy: () => { frames.forEach(t => t.destroy(false)); frames.clear(); generated.destroy(); } };
+  // Bake the 1.5x luminance once per projectile frame; no per-sprite WebGL filters.
+  const brightFrames=new Map<Texture,Texture>();
+  const effect=(key:VisualKey)=>generated.texture(generatedEffectId(key))??(key==='bigbang_missile'?bigbang:texture(VFX_VISUALS[key]));
+  const projectile=(key:VisualKey)=>{
+    const original=effect(key),cached=brightFrames.get(original);if(cached)return cached;
+    const f=original.frame,canvas=document.createElement('canvas');canvas.width=Math.ceil(f.width);canvas.height=Math.ceil(f.height);
+    const ctx=canvas.getContext('2d');if(!ctx)return original;
+    ctx.filter='brightness(150%)';ctx.drawImage(original.source.resource as CanvasImageSource,f.x,f.y,f.width,f.height,0,0,canvas.width,canvas.height);
+    const result=Texture.from(canvas);brightFrames.set(original,result);return result;
+  };
+  return { projectile, texture, soloArena, mirageSky, magneticStorm, stormbreakerSky, engineFlame:generated.texture('shared_flame')??engineFlame, phantomBeam, generated:(id:string)=>generated.texture(id), effect, destroy: () => { brightFrames.forEach(t=>t.destroy(true));brightFrames.clear(); frames.forEach(t => t.destroy(false)); frames.clear(); generated.destroy(); } };
 }
 export type AirCombatAssets = Awaited<ReturnType<typeof loadAirCombatAssets>>;

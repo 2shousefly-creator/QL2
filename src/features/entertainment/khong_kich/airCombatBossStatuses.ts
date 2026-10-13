@@ -23,8 +23,17 @@ const percent = (ratio:number) => `${Math.round(ratio*100)}%`;
 /** Per-target snapshots only: never infer application from a learned skill, cast,
  * cooldown, visual event, or a different enemy. Runtime owns immunity and expiry. */
 export function getBossStatusPresentations(world:CombatWorld):StatusPresentation[] {
- return world.enemies.filter(e=>e.type==='boss'&&!e.aircraftTarget&&isHostileToPlayer(world,e))
-  .flatMap(e=>bossStatuses(world,e));
+ const actors=[world,...(world.hive?.allies.map(a=>a.world)??[])];
+ const shared=new Set(['stun','missile-burn','burnArmorUntil','weakUntil','weakDebuffUntil','armorBrokenUntil','skillLockedUntil','gravity-armor']);
+ const result=new Map<string,StatusPresentation>();
+ for(const e of world.enemies.filter(e=>e.type==='boss'&&!e.aircraftTarget&&isHostileToPlayer(world,e)))for(const actor of actors){
+  for(const status of bossStatuses(actor,e)){
+   const key=status.id.slice(('boss:'+e.id+':').length);
+   const id=shared.has(key)||key.startsWith('combat:')?status.id:status.id+':'+actor.aircraft.aircraftId;
+   if(!result.has(id))result.set(id,{...status,id,source:status.source==='Trang bị'?AIRCRAFT_CONFIGS[actor.aircraft.aircraftId].name+' · Trang bị':status.source});
+  }
+ }
+ return [...result.values()];
 }
 function bossStatuses(w:CombatWorld,e:EnemyEntity):StatusPresentation[] {
  const now=w.elapsed,s=w.aircraft,time=s.coreState.time,result:StatusPresentation[]=[];

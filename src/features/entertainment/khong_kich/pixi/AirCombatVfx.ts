@@ -23,14 +23,14 @@ export class AirCombatVfx {
   renderRankSkills(world: CombatWorld, reducedMotion: boolean) {
     this.ranked.begin(world.elapsed,reducedMotion);
     paintRankSkills(world, (id,key,x,y,width,height,rotation,alpha,additive) => {
-      const sprite=this.ranked.get(id,this.assets.effect(key));if(!sprite)return;
+      const sprite=this.ranked.get(id,['rankMicroMissile','rankTwinShot','rankMiniLance'].includes(key)?this.assets.projectile(key):this.assets.effect(key));if(!sprite)return;
       sprite.position.set(x,y);sprite.width=width;sprite.height=height;sprite.rotation=rotation;sprite.alpha=alpha;
       sprite.blendMode=additive?"add":key==="rankAnchor"||key==="rankCrystal"||key==="rankMicroMissile"?"normal":"add";
     }, reducedMotion);
     this.ranked.end();
     this.ultimates.begin(world.elapsed,reducedMotion);
     paintUltimates(world,(id,key,x,y,width,height,rotation,alpha,additive)=>{
-      const sprite=this.ultimates.get(id,this.assets.effect(key));if(!sprite)return;
+      const sprite=this.ultimates.get(id,['ultimateViperMissile','ultimateTitanShell','ultimateHawkBolt'].includes(key)?this.assets.projectile(key):this.assets.effect(key));if(!sprite)return;
       sprite.position.set(x,y);sprite.width=width;sprite.height=height;sprite.rotation=rotation;sprite.alpha=alpha;
       sprite.blendMode=additive?"add":ultimateBody(key)?"normal":"add";
     },reducedMotion);

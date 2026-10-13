@@ -1,3 +1,4 @@
+import { HIVE_BOSS_SKILLS } from './airCombatHiveBoss';
 import React from 'react';
 import { stageEnemyConfig } from './airCombatConfig';
 import { HIVE_NORMALS,HIVE_ELITES,HIVE_MOTHERS } from './airCombatHiveWaves';
@@ -18,7 +19,7 @@ const tactics:Partial<Record<EnemyType,string>>={
  forge_matron:'Sửa 0,9% Máu tối đa mỗi giây trong 190 đơn vị; gọi tối đa 1 Thợ Vá Tổ và 1 Bọ Đạn mỗi đời. Hỗ trợ không cấp XP hoặc loot.',
  brood_ark:'So với Pháo Bầy cùng wave: Máu ×10, Hỏa lực ×6, Giáp ×8; tốc độ 12. Chu kỳ 7 giây: quạt 13 viên và 3 tên lửa tách thành 5 viên sau 1,25 giây. Lõi lộ 3 giây.',
  crucible_ark:'So với Pháo Bầy cùng wave: Máu ×10, Hỏa lực ×6, Giáp ×8; tốc độ 12. Chu kỳ 7 giây: 3 điểm pháo kích và 3 tuyến công thành rộng 24, báo trước 2 / 2,4 / 2,8 giây. Lõi lộ 3,5 giây.',
- boss:'Chuyển phase ở 75% / 50% / 25% Máu. Phòng tuyến → Săn tổ đội → Công thành → Lõi quá tải. Phase 2 mở 14 hỗ trợ hữu hạn; phase 4 lộ lõi 1,6 giây mỗi đòn. Chu kỳ 3,05 / 2,7 / 2,35 / 2 giây.',
+ boss:'Đủ 8 kỹ năng từ phase 1, luân phiên theo chu kỳ; chuyển phase ở 75% / 50% / 25% Máu. Khoảng cách giữa các lần tung chiêu: 4,8 / 4 / 3,2 / 2,5 giây. Phase 2 gọi 14 hỗ trợ hữu hạn; phase 4 lộ lõi 1,6 giây mỗi lần tung chiêu.',
 };
 
 export function HiveIntel(){
@@ -31,9 +32,10 @@ export function HiveIntel(){
     <div className="flex items-center gap-2"><span className="h-9 w-9 shrink-0"><HiveThumbnail id={type==='boss'?'hive_tyrant':type}/></span><strong>{c.name}</strong></div>
     <p className="text-amber-100">Máu {Math.round(c.baseHp).toLocaleString('vi-VN')} · Giáp {c.baseArmor.toFixed(1)} · Hỏa lực {c.projectileDamage.toFixed(1)}</p>
     <p>{tactics[type]}</p>
+    {type==='boss'&&<ol className="list-decimal pl-4">{HIVE_BOSS_SKILLS.map(skill=><li key={skill.name}><strong>{skill.name}:</strong> {skill.dodge}</li>)}</ol>}
    </article>;})}
    <p>Đòn trúng tâm lõi đang lộ bỏ qua Giáp. Mẹ bị hạ nổ trong bán kính 320: sát thương chuẩn bằng 100% Máu tối đa của mẹ, chỉ lên quái thường khác. Công thuộc người giết mẹ, không nhân chí mạng hoặc kích hoạt thêm proc kết liễu.</p>
-   <p>Các đòn lớn cách nhau ít nhất 1,4 giây. Đồng minh tính lại đường né mỗi 0,10–0,11 giây từ đạn và cảnh báo đã xuất hiện, ưu tiên phòng thủ khi nguy hiểm. Terra canh Địa Áp, Phantom giữ Điện cho kỹ năng thoát hiểm.</p>
+   <p>Các đòn lớn cách nhau ít nhất 1,4 giây. Đồng minh tính lại đường né mỗi 0,10–0,11 giây từ đạn và cảnh báo đã xuất hiện, ước lượng sát thương sau phòng ngự và đường né trước khi dùng phòng thủ; giữ tài nguyên cho phản công. Terra canh Địa Áp, Phantom giữ Điện cho kỹ năng thoát hiểm.</p>
   </div>
  </details>;
 }

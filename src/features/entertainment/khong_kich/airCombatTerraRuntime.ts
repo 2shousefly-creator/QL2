@@ -62,9 +62,15 @@ export function terraAbsorb(w:CombatWorld,remaining:number,sourceId?:number,refl
  return absorbed;
 }
 /** Actual damage HP loss only: never costs, shields, max-HP changes or heal. */
-export function terraIncomingHp(w:CombatWorld,hpLost:number,reflection=false){
+/** Count each hostile impact once, after armor and before reductions/absorption. */
+export function terraIncomingPressure(w:CombatWorld,postArmorDamage:number,reflection=false){
+ if(w.aircraft.aircraftId!=='terra'||!live(w)||reflection||postArmorDamage<=0)return;
+ const s=terraState(w);s.lastHpLoss=w.elapsed;
+ s.pressure=Math.min(terraPressureCap(w),s.pressure+postArmorDamage*T.pressureGain);
+}
+/** Finalize armor/low-health effects; deferred repayments never count a hit twice. */
+export function terraIncomingHp(w:CombatWorld,_hpLost:number,_reflection=false){
  if(w.aircraft.aircraftId!=='terra')return;const s=terraState(w);
- if(hpLost>0){s.lastHpLoss=w.elapsed;if(!reflection)s.pressure=Math.min(terraPressureCap(w),s.pressure+hpLost*T.pressureGain);}
  if(!live(w)){cancelTerra(w);return;}replenish(w);if(s.armor&&s.armor.reserve<=0)endArmor(w);
 }
 export function terraCluster(w:CombatWorld,h:TerraHooks){const list=w.enemies.filter(e=>valid(w,e,h));return list.find(e=>e.id===w.playerTargetId)??list.map(e=>({e,n:list.filter(t=>Math.hypot(e.x-t.x,e.y-t.y)<=T.clampRadius).length})).sort((a,b)=>b.n-a.n||a.e.id-b.e.id)[0]?.e;}

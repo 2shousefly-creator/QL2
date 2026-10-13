@@ -14,8 +14,8 @@ import type { AirCombatPresentation } from './airCombatPixiTypes';
 function quietBackground(image:HTMLImageElement){
  const canvas=document.createElement('canvas');canvas.width=360;canvas.height=640;
  const ctx=canvas.getContext('2d');if(!ctx)throw new Error('Không thể tải nền Màn 5');
- // Additional 35% dimming follows the previous filter, preserving that baseline.
- ctx.filter='blur(1.3px) saturate(55%) contrast(75%) brightness(60%) brightness(65%)';
+ // Reduce the current scenery brightness by another 50%, without dimming combat layers.
+ ctx.filter='blur(1.3px) saturate(55%) contrast(75%) brightness(60%) brightness(65%) brightness(50%)';
  ctx.drawImage(image,-1,-1,362,642);return canvas;
 }
 const cssColor=(color:number)=>'#'+color.toString(16).padStart(6,'0');
@@ -46,7 +46,7 @@ export async function createHivePresentation(host:HTMLDivElement,world:CombatWor
   const views=new Map<CombatWorld,{accents:InstanceType<typeof CanvasCombatAccents>;bars:InstanceType<typeof HealthBarPresentation>}>(),hud=createHiveHud(host);
   return {
    render(w,dt,reduced){
-    if(document.hidden)return;ctx.setTransform(ratio,0,0,ratio,0,0);ctx.clearRect(0,0,360,640);ctx.save();const shake=hiveExplosionShake(w,reduced);ctx.translate(shake.x,shake.y);paintHive(w,painter);
+    if(document.hidden)return;ctx.setTransform(ratio,0,0,ratio,0,0);ctx.clearRect(0,0,360,640);ctx.save();const shake=hiveExplosionShake(w,reduced);ctx.translate(shake.x,shake.y);paintHive(w,painter,reduced);
     const actors=hiveActors(w);
     for(const actor of actors){
      let view=views.get(actor);if(!view){view={accents:new CanvasCombatAccents(),bars:new HealthBarPresentation()};views.set(actor,view);}
@@ -100,7 +100,7 @@ export async function createHivePresentation(host:HTMLDivElement,world:CombatWor
   render(w,dt,reduced){
    if(lost)throw new Error('Không Kích WebGL context lost');if(document.hidden)return;
    const shake=hiveExplosionShake(w,reduced);camera.position.set(shake.x,shake.y);
-   scene.begin();paintHive(w,scene.painter);scene.end();
+   scene.begin();paintHive(w,scene.painter,reduced);scene.end();
    const actors=hiveActors(w);
    for(const actor of actors){let view=views.get(actor);if(!view){view=AirCombatPixiRenderer.attachHiveActor(app,assets,aircraft);views.set(actor,view);}view.render(actor,dt,reduced);}
    for(const [actor,view] of views)if(!actors.includes(actor)){view.destroy();views.delete(actor);}

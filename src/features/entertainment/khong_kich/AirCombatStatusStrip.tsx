@@ -121,15 +121,12 @@ export const AirCombatStatusStrip = React.memo(forwardRef<StatusStripHandle, { t
       aria-label={`${status.id.startsWith('boss:')?'Boss · ':''}${status.name}${status.badgeText ? ` · ${status.badgeText}` : ""}`} aria-pressed={selected === status.id}
       onClick={() => toggle(status.id)}>
       {status.icon.kind === "status" ? Generic && <Generic aria-hidden="true" /> : <CombatUiIcon {...status.icon} fallback="◆" />}
+      {status.id.startsWith('boss:')&&<span className="air-status-boss-label">BOSS</span>}
       <StatusBorder status={status} progress={progress}/>
       <b className="air-status-value-badge" data-status-value hidden={!status.badgeText}>{status.badgeText}</b>
     </button>;
   };
   return <div ref={host} className="air-status-strip" style={{ top: `${top / 720 * 100}%` }} aria-label="Hiệu ứng chiến đấu">
-    {bossItems.length > 0 && <div className="air-boss-statuses" role="group" aria-label="Debuff đang có hiệu lực trên Boss">
-      <span className="air-boss-status-label">Boss</span>
-      {bossItems.map(renderStatus)}
-    </div>}
     <div className="air-status-player">
     {squad.length>0&&<div className="air-hive-squad" aria-label="Đồng minh AI">{squad.map((a,slot)=><div key={a.id} className="air-hive-ally" data-hive-ally={slot}>
       <AircraftPreview aircraftId={a.id}/><strong title={`${AIRCRAFT_CONFIGS[a.id].name} · Máu ${a.hp}/${a.max}`}>{a.seconds?`${a.seconds}s`:`Lv${a.level}`}</strong>
@@ -150,6 +147,7 @@ export const AirCombatStatusStrip = React.memo(forwardRef<StatusStripHandle, { t
     {(["buff", "debuff"] as const).map(group => {
       const all = playerItems.filter(s => s.group === group), shown = all.length > 10 ? all.slice(0, 9) : all;
       return <div key={group} className={`air-status-group air-status-group--${group}`} aria-label={group === "buff" ? "Buff" : "Debuff"}>
+        {group==='debuff'&&bossItems.map(renderStatus)}
         {shown.map(renderStatus)}
         {all.length > 10 && <button type="button" className="air-status-overflow" data-combat-tooltip-trigger="status" aria-label={`Xem thêm ${all.length-9} hiệu ứng`} aria-pressed={selected === `overflow:${group}`} onClick={() => toggle(`overflow:${group}`)}>+{all.length - 9}</button>}
       </div>;

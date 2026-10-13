@@ -5,7 +5,7 @@ import { playerBasicProjectileSpeed, phantomLaserBounds, HAWKEYE_PROJECTILE_RADI
 import { statusExpiry, extendStatusRemaining, extendStatusExpiry } from './airCombatStatusTiming';
 import { getHealingSummary } from './airCombatHealingSummary';
 import { isTerraSkill } from './airCombatTerraConfig';
-import { beginTerraSkill, tickTerra, cancelTerra, terraAllowed, terraIncomingHp, terraAbsorb, terraState, terraMovement, terraSuppression, terraKnockbackImmune, clearTerraTarget, terraFx, terraHud, type TerraHooks } from './airCombatTerraRuntime';
+import { beginTerraSkill, tickTerra, cancelTerra, terraAllowed, terraIncomingPressure, terraIncomingHp, terraAbsorb, terraState, terraMovement, terraSuppression, terraKnockbackImmune, clearTerraTarget, terraFx, terraHud, type TerraHooks } from './airCombatTerraRuntime';
 import { clearSylvaTarget } from './airCombatSylvaRuntime';
 import { isSylvaSkill } from './airCombatSylvaConfig';
 import { sylvaState, sylvaGrayHealth, sylvaAllowed, sylvaRecastReady, sylvaHud, sylvaIncomingHp, sylvaArmor, sylvaOutgoing, sylvaMovement, sylvaFireRate, sylvaAcidHit, sylvaMuzzle, sylvaDealt, beginSylvaSkill, tickSylva, cancelSylva, endSylvaSymbiosis, clearSylvaSlow, type SylvaHooks } from './airCombatSylvaRuntime';
@@ -858,7 +858,7 @@ const hiveHooks:HiveHooks={
  projectile:addProjectile,
  spawn:(w,type)=>spawnEnemy(w,type,true),
  movement:(w,e)=>Math.min(...hiveActors(w).map(a=>terraMovement(a,e)*sylvaMovement(a,e)*argentMovement(a,e)*cinderMovement(a,e)*equipmentSlow(a.aircraft,e))),
- hit:(w,raw,stun=0)=>{const dealt=hitPlayer(w,raw,'hazard',{delivery:'area_hazard'});if(stun&&dealt.damage>0)applyPlayerStatus(w.aircraft,{stun});}
+ hit:(w,raw,stun=0,source,collision=false)=>{const dealt=hitPlayer(w,raw,collision?'collision':'hazard',{delivery:collision?'aircraft_collision':'area_hazard',sourceEnemyId:source?.id,sourceEnemyType:source?.type});if(stun&&dealt.damage>0)applyPlayerStatus(w.aircraft,{stun});}
 };
 function downHiveAircraft(w:CombatWorld){
  const root=hiveRoot(w),h=root.hive;if(!h||w.aircraft.currentHp>0)return;
@@ -4179,6 +4179,8 @@ function hitPlayer(world: CombatWorld, rawDamage: number, kind: "projectile" | "
         if(attack.payload||attack.attackTag==="emp"||attack.attackTag==="boss_emp")recordCoreMetric(state,184,"controlBlocked",1);
         return { damage: 0, absorbed: 0 };
     }
+    // Zone geometry remains part of the hit, but defensive reductions and shields do not reduce pressure.
+    terraIncomingPressure(world, attack.trueDamage ? rawDamage : calculateDamage(rawDamage*(attack.zoneResolved?1:hitZoneMultiplier),defenseArmor), !!attack.reflection);
     multiplier *= argentIncoming(world,attack,argentHooks);
     if(coldTrigger){c.stacks.coldCharges=0;c.timers.coldGuard=c.time+2.5;recordCoreMetric(state,72,"procs",1);}
     if(kind==="collision"&&hasCore(state,65))c.timers.collisionCounter=c.time+5;
@@ -5709,3 +5711,4 @@ function core28PrimaryHit(w:CombatWorld,e:EnemyEntity){
   emitVisual(w,{kind:"explosion",x:e.x,y:e.y,size:120});recordCoreMetric(s,206,"procs",1);
  }
 }
+
