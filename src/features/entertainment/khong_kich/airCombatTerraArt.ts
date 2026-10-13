@@ -1,3 +1,4 @@
+import { compactBuffPlacement } from './airCombatBuffArt';
 import aircraft from '../../../assets/khong-kich/terra/aircraft.png';
 import emissive from '../../../assets/khong-kich/terra/emissive.png';
 import portrait from '../../../assets/khong-kich/terra/portrait.png';
@@ -31,7 +32,7 @@ type Painter=(id:number,key:TerraVisualKey,x:number,y:number,width:number,height
 /** Shared texture presentation in each actor's local forward-up coordinates. */
 export function paintTerra(w:CombatWorld,paint:Painter,reduced:boolean){
  const s=terraState(w),now=w.elapsed;let index=0;
- const draw=(key:string,x:number,y:number,width:number,height=width,rotation=0,alpha=1,additive=false)=>{if(index<TERRA_SPRITE_BUDGET)paint(-1200000-index++,('terra_'+key) as TerraVisualKey,x,y,width,height,rotation,Math.max(0,Math.min(1,alpha)),additive);};
+ const draw=(key:string,x:number,y:number,width:number,height=width,rotation=0,alpha=1,additive=false)=>{[x,y,width,height]=compactBuffPlacement(w,key,x,y,width,height);if(index<TERRA_SPRITE_BUDGET)paint(-1200000-index++,('terra_'+key) as TerraVisualKey,x,y,width,height,rotation,Math.max(0,Math.min(1,alpha)),additive);};
  const tether=(key:string,ax:number,ay:number,bx:number,by:number,width:number,alpha=1)=>{const length=Math.hypot(bx-ax,by-ay);if(length>.1)draw(key,(ax+bx)/2,(ay+by)/2,width,length,Math.atan2(by-ay,bx-ax)+Math.PI/2,alpha,true);};
  if(w.aircraft.aircraftId==='terra'&&w.aircraft.currentHp>0){
   const p=s.pressure/Math.max(1,terraPressureCap(w));if(p>0)draw('pressure'+(p>=1?3:p>=.75?2:p>=.5?1:0),w.playerX,w.playerY,20,22,0,.6+p*.3,true);

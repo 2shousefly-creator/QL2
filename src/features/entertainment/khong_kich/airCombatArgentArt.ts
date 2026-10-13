@@ -1,3 +1,4 @@
+import { compactBuffPlacement } from './airCombatBuffArt';
 import aircraft from '../../../assets/khong-kich/argent/aircraft.png';
 import icons from '../../../assets/khong-kich/argent/icons.png';
 import vfx from '../../../assets/khong-kich/argent/vfx.png';
@@ -27,7 +28,7 @@ type Painter=(id:number,key:ArgentVisualKey,x:number,y:number,width:number,heigh
 export function argentShake(w:CombatWorld){return argentState(w).effects.some(e=>(e.kind==='break'||e.kind==='summon')&&e.at<=w.elapsed&&w.elapsed<e.at+.1)?1.6:0;}
 export function paintArgent(w:CombatWorld,paint:Painter,reduced:boolean){
  const s=argentState(w),now=w.elapsed,hud=argentHud(w);let index=0;
- const draw=(key:ArgentVisualKey,x:number,y:number,width:number,height=width,rotation=0,alpha=1,additive=false)=>{if(index<ARGENT_SPRITE_BUDGET)paint(-900000-index++,key,x,y,width,height,rotation,Math.max(0,Math.min(1,alpha)),additive);};
+ const draw=(key:ArgentVisualKey,x:number,y:number,width:number,height=width,rotation=0,alpha=1,additive=false)=>{[x,y,width,height]=compactBuffPlacement(w,key,x,y,width,height);if(index<ARGENT_SPRITE_BUDGET)paint(-900000-index++,key,x,y,width,height,rotation,Math.max(0,Math.min(1,alpha)),additive);};
  const trail=(ax:number,ay:number,bx:number,by:number,alpha:number,width=7)=>{const d=Math.hypot(bx-ax,by-ay);if(d>.1)draw('argent_trail',(ax+bx)/2,(ay+by)/2,width,d,Math.atan2(by-ay,bx-ax)+Math.PI/2,alpha,true);};
  for(const b of s.blades){
   const waiting=b.phase==='wait',returning=b.phase==='recall',heavy=b.source==='break';

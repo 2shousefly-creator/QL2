@@ -1,0 +1,50 @@
+{
+  "generator": "Built-in image_gen",
+  "version": "26.31.4",
+  "date": "2026-10-13",
+  "assets": [
+    {
+      "file": "hive-normals.png",
+      "transparent": true,
+      "prompt": "Use case: stylized-concept. Production game sprite animation atlas, TRUE transparent alpha. Reference image is the old enemy roster for visual identity only. Create EXACT 4 columns x 6 rows uniform grid, portrait 1024x1536. Each row is four distinct looping flight poses of ONE creature, viewed strictly top down, nose facing DOWN in every cell. Row1 reference index0 Swarm Needler, narrow bronze-black wasp with orange needle guns and flapping wings. Row2 index1 Razor Glider, curved crescent blade wings, visibly flex wings. Row3 index2 Aegis Beetle, broad armored beetle, breathing segmented carapace. Row4 index3 Siege Spitter, paired heavy cannons, retract and extend gun mechanisms. Row5 index4 Signal Weaver, thin insect with antennae, swaying antennae and legs. Row6 index5 Repair Wasp, four translucent winglets, flapping winglets and moving graspers. Animation progression columns: wings/limbs tucked, halfway open, fully open, halfway returning, body identity perfectly consistent. Rich painted sci-fi biomechanical metal, subtle luminous amber seams. Each subject centered inside its exact equal cell with at least 12% transparent padding on every side. Entire silhouette fits the cell. No projectile, exhaust cloud, ground, shadows, UI, words, numbers, borders, grid, duplicates inside cell. Only these six enemies, no boss.",
+      "refinement": "Use case: background-extraction. Edit this exact 4 columns by 6 rows creature animation spritesheet. Remove ALL brown background between and around creatures to genuine alpha transparency. Preserve all 24 creature poses, exact cell positions, sizes, outlines, colors and orange glow on the creatures unchanged. No opaque background, no painted checkerboard, no floor, no shadows. Output identical grid on fully transparent alpha.",
+      "grid": [
+        4,
+        6
+      ]
+    },
+    {
+      "file": "hive-elites.png",
+      "transparent": true,
+      "prompt": "Use case: stylized-concept. Production animated game spritesheet TRUE transparent alpha. Reference image old roster identity only. EXACT uniform 4 columns x 5 rows, portrait 1024x1280. Each row is four consecutive distinct looping flight poses of ONE elite biomechanical enemy, strict top down, nose pointing DOWN. Row1 reference index6 Razor Marshal: large bronze-black double-crescent bladed insect, folding and extending curved wings. Row2 index7 Aegis Regent: broad regal beetle with layered carapace, plates visibly breathing open and closed. Row3 index8 Bombard Prelate: heavy elongated artillery insect, cannons subtly retract and deploy. Row4 index9 Disruptor Monarch: crowned skeletal insect with circular antenna crown, antenna appendages moving. Row5 index10 Forge Matron: industrial flying forge with two amber molten vats, mechanical limbs flexing, reactor pulsating. Preserve each silhouette across its 4 animation frames: contracted, partial expansion, full expansion, return. Dark bronze metal with vivid small orange reactor details, polished raster painted game art. Each creature centered within exact grid cell, 12% transparent gutter each side, no overlap. No boss, no background, no ground, no text, labels, gridlines, UI, fire clouds or extra objects.",
+      "grid": [
+        4,
+        5
+      ]
+    },
+    {
+      "file": "hive-mothers.png",
+      "transparent": true,
+      "prompt": "Use case: stylized-concept. Production animated spritesheet, TRUE transparent alpha. Reference image identity only. EXACT 4 columns x 2 rows uniform grid, landscape 1536x768. Four looping flight frames for each mother creature, strict top down, nose facing DOWN. Row1 reference index11 Brood Ark: broad dark bronze armored beetle carrier with six amber egg chambers, articulate side legs and gently open-close shell segments. Row2 reference index12 Crucible Ark: elongated bronze-black heavy carrier insect with four industrial side engines, piston limbs articulate and side vents pulse. Poses contracted, half open, fully open, returning, consistent identity and body center in all4 frames. Vivid amber details in dark gunmetal realistic painted game raster art. Center every subject within exact equal cell with 12% transparent padding on all edges, no overlap. No boss, no background, no words, labels, numbers, gridlines, floor, projectile or large smoke.",
+      "grid": [
+        4,
+        2
+      ]
+    },
+    {
+      "file": "flight-vfx.png",
+      "transparent": true,
+      "prompt": "Use case: stylized-concept. Production game VFX sprite atlas on TRUE transparent alpha. EXACT uniform 4 columns x 4 rows, 1024x1024. Row1 FOUR animation frames of a moving DARK SMOKE WRAITH projectile: dense charcoal-black curled smoke with thin violet rim, luminous tiny violet leading tip at TOP, tapered long dark swirling smoke trail flowing DOWN, no solid body, no aircraft, no face. Row2 FOUR distinct guided MISSILE BODIES, all NOSE UP, metallic polished body, tiny bright emissive seams, NO exhaust baked in: cell1 slim silver Viper missile amber seam; cell2 cyan-lit swept-fin Tomahawk missile; cell3 heavy gunmetal gold Big Bang missile with twin nozzles at bottom; cell4 crimson hostile biomechanical missile. Every missile body nose at 12% cell height, tail/nozzle at 88%, body central width 45%, distinctly a rocket NOT aircraft, no cockpit. Row3 FOUR sequential rocket exhaust jet frames: top center starts with wide white-hot nozzle flame, orange gold turbulent fire plume tapers and flows DOWN; all flame originates at top-center, no missile body, no wings. Row4 FOUR expanding drifting silver-charcoal rocket SMOKE puffs with wispy transparent edges, subtle blue rim light, no fire. Strict cell centers and uniform grid, isolated every cell, 10% transparent margins, no overflow. High contrast bright detailed painted raster VFX, crisp white-hot flame, luxurious billowing smoke, no text, UI, labels, borders, gridlines or background.",
+      "grid": [
+        4,
+        4
+      ]
+    },
+    {
+      "file": "hive-background.png",
+      "transparent": false,
+      "prompt": "Use case: stylized-concept. Game battlefield BACKGROUND only for vertical top-down bullet hell. Portrait 1024x1792, seamless scrolling vertically: top and bottom edges should blend. Extremely dark quiet charcoal navy abyss with very subtle dim smoky maroon organic haze along far left and right edges suggesting a distant alien hive. Central 80 percent nearly empty dark blue-black, low contrast, no recognizable objects, no sharp texture, no bright lights, no stars, no grid, no lines, no structures, no UI, no text, no creatures, no vignette black border. Atmospheric premium painted raster background, softly layered large diffuse haze, deliberately sparse and unobtrusive so orange monsters, bullets and colorful skills remain exceptionally readable. Base colors near #080C14 and #11121C; keep all background details dark and subdued.",
+      "grid": null
+    }
+  ]
+}

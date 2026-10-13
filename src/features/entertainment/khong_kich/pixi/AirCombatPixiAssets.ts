@@ -1,6 +1,7 @@
 import { generatedFrame, generatedFrameId, generatedEffectId } from '../airCombatGeneratedArt';
 import { SKILL_RADIANCE_SOURCES } from '../airCombatSkillRadiance';
 import { loadGeneratedTextures } from './GeneratedArtTextures';
+import { FLIGHT_ART, flightBodyFrame } from '../airCombatFlightArt';
 import type { CombatWorld } from '../airCombatRuntime';
 import { TERRA_SOURCES, TERRA_FRAMES } from '../airCombatTerraArt';
 import { SYLVA_SOURCES, SYLVA_FRAMES } from '../airCombatSylvaArt';
@@ -79,6 +80,7 @@ export type VisualKey = keyof typeof VFX_VISUALS;
 /** Each renderer owns its frame views. Assets owns cached shared source textures. */
 export async function loadAirCombatAssets(world?:CombatWorld) {
   const generated = await loadGeneratedTextures(world);
+  const flightVfx=await Assets.load<Texture>(FLIGHT_ART);
   const [aircraft, fortress, vfx, ammo, bigbang, engineFlame, basicAmmo, phantomBeam, healingCross, stage2Enemy, stage2Vfx, magneticStorm, stage2Elite] = await Promise.all([
     Assets.load<Texture>(aircraftUrl), Assets.load<Texture>(fortressUrl), Assets.load<Texture>(vfxUrl), Assets.load<Texture>(ammoUrl), Assets.load<Texture>(bigbangUrl), Assets.load<Texture>(flameUrl), Assets.load<Texture>(basicAmmoUrl),
     Assets.load<Texture>(phantomBeamUrl),
@@ -108,7 +110,7 @@ export async function loadAirCombatAssets(world?:CombatWorld) {
     if(replacement)return replacement;
     const cached = frames.get(definition);
     if (cached) return cached;
-    const source = radianceSources[definition.atlas]??sources[definition.atlas as keyof typeof sources];
+    const source = definition.atlas==='flightVfx'?flightVfx:radianceSources[definition.atlas]??sources[definition.atlas as keyof typeof sources];
     if (!source || source.width < 16 || source.height < 16) throw new Error("Missing Không Kích production atlas");
     const [x, y, w, h] = definition.rect;
     const left = Math.round(x * source.width), top = Math.round(y * source.height);
@@ -119,7 +121,7 @@ export async function loadAirCombatAssets(world?:CombatWorld) {
   };
   // Bake the 1.5x luminance once per projectile frame; no per-sprite WebGL filters.
   const brightFrames=new Map<Texture,Texture>();
-  const effect=(key:VisualKey)=>generated.texture(generatedEffectId(key))??(key==='bigbang_missile'?bigbang:texture(VFX_VISUALS[key]));
+  const effect=(key:VisualKey)=>flightBodyFrame(key)?texture(flightBodyFrame(key)):generated.texture(generatedEffectId(key))??(key==='bigbang_missile'?bigbang:texture(VFX_VISUALS[key]));
   const projectile=(key:VisualKey)=>{
     const original=effect(key),cached=brightFrames.get(original);if(cached)return cached;
     const f=original.frame,canvas=document.createElement('canvas');canvas.width=Math.ceil(f.width);canvas.height=Math.ceil(f.height);

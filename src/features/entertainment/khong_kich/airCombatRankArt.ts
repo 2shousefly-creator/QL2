@@ -3,6 +3,7 @@ import { preferredDuelDecoy } from "./airCombatTargetability";
 import { ULTIMATE_FRAMES } from "./airCombatUltimateArt";
 import type { CombatWorld, ProjectileEntity } from "./airCombatRuntime";
 import { getMissilePose } from "./airCombatMissilePresentation";
+import { FLIGHT_BODY_FRAMES } from './airCombatFlightArt';
 import { INTERFERENCE_WAVE_THICKNESS, twinCrystalPosition } from "./airCombatRankRuntime";
 import { skillRank } from "./airCombatSkillRanks";
 import type { AtlasFrame } from "./pixi/airCombatPixiTypes";
@@ -18,7 +19,7 @@ export const RANKED_VFX_FRAMES = {
  rankAnchorRings:cell(4), rankCompression:cell(5), rankImplosion:cell(6), rankCrystal:cell(7),
  rankConvergence:cell(8), rankSignalBand:{atlas:"rankedVfx",rect:[1/4,9/16,1/4,1/8]} as AtlasFrame, rankRelay:cell(10), rankGlitch:cell(11),
  rankNoise:cell(12), rankDebris:cell(13), rankCrystalCharge:cell(14), rankInterferenceMark:cell(15),
- rankMicroMissile:shot(0), rankMicroTrail:shot(1), rankTwinShot:shot(2), rankMiniLance:shot(3),
+ rankMicroMissile:FLIGHT_BODY_FRAMES.rankMicroMissile, rankMicroTrail:shot(1), rankTwinShot:shot(2), rankMiniLance:shot(3),
 };
 export type RankVisualKey = keyof typeof RANKED_VFX_FRAMES;
 export type RankSpritePainter = (id:number,key:RankVisualKey,x:number,y:number,width:number,height:number,rotation:number,alpha:number,additive?:boolean)=>void;

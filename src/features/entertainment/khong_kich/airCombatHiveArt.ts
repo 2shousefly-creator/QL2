@@ -2,18 +2,23 @@ import bossUrl from '../../../assets/khong-kich/26.31.1/hive-tyrant-idle.png';
 import bossSkillUrl from '../../../assets/khong-kich/26.31.2/hive-boss-skills.png';
 import enemyUrl from '../../../assets/khong-kich/26.31.0/enemies.png';
 import effectUrl from '../../../assets/khong-kich/26.31.0/effects.png';
-import backgroundUrl from '../../../assets/khong-kich/26.31.0/background.png';
+import backgroundUrl from '../../../assets/khong-kich/26.31.4/hive-background.png';
+import normalUrl from '../../../assets/khong-kich/26.31.4/hive-normals.png';
+import eliteUrl from '../../../assets/khong-kich/26.31.4/hive-elites.png';
+import motherUrl from '../../../assets/khong-kich/26.31.4/hive-mothers.png';
 import ammoUrl from '../../../assets/khong-kich/26.31.0/ammunition.png';
 import explosionUrl from '../../../assets/khong-kich/26.31.0/hive-detonation-v2.png';
 import type { CombatWorld } from './airCombatRuntime';
 import type { HiveHazard } from './airCombatHive';
 
-export const HIVE_ART={enemyUrl,effectUrl,backgroundUrl,ammoUrl,explosionUrl,bossUrl,bossSkillUrl};
+export const HIVE_ART={enemyUrl,effectUrl,backgroundUrl,ammoUrl,explosionUrl,bossUrl,bossSkillUrl,normalUrl,eliteUrl,motherUrl};
 export const HIVE_ENTITY_CELLS=['swarm_needler','razor_glider','aegis_beetle','siege_spitter','signal_weaver','repair_wasp','razor_marshal','aegis_regent','bombard_prelate','disruptor_monarch','forge_matron','brood_ark','crucible_ark','hive_tyrant','stage5_fortress','stage5_core'];
 export interface HiveFrame {url:string;rect:readonly number[]}
 const cell=(url:string,index:number,cols=4,rows=4):HiveFrame=>({url,rect:[index%cols/cols,Math.floor(index/cols)/rows,1/cols,1/rows]});
 const enemies=HIVE_ENTITY_CELLS.map((_,i)=>cell(enemyUrl,i)),ammo=Array.from({length:16},(_,i)=>cell(ammoUrl,i)),effects=Array.from({length:64},(_,i)=>cell(effectUrl,i,8,8));
 const bossFrames=Array.from({length:16},(_,i)=>cell(bossUrl,i));
+const flightFrames=Array.from({length:13},(_,i)=>Array.from({length:4},(_,phase)=>
+ i<6?cell(normalUrl,i*4+phase,4,6):i<11?cell(eliteUrl,(i-6)*4+phase,4,5):cell(motherUrl,(i-11)*4+phase,4,2)));
 const bossEffects=Array.from({length:16},(_,i)=>cell(bossSkillUrl,i));
 const bg:HiveFrame={url:backgroundUrl,rect:[0,0,1,1]};
 const detonations=Array.from({length:16},(_,i)=>cell(explosionUrl,i));
@@ -59,12 +64,14 @@ function warningShape(z:HiveHazard,progress:number):HazardShape {
 
 /** Only Hive scenery and enemies are custom; aircraft use the campaign renderer. */
 export function paintHive(w:CombatWorld,p:HivePainter,reduced=false){
- const now=w.elapsed,scroll=(now*18)%640;
- p.sprite(bg,180,scroll+320,360,640);p.sprite(bg,180,scroll-320,360,640);
+ const now=w.elapsed;
+ // A quiet static abyss avoids a visible tile seam and preserves central contrast.
+ p.sprite(bg,180,320,360,640);
  for(const e of w.enemies){if(e.hp<=0)continue;const index=e.type==='boss'?13:HIVE_ENTITY_CELLS.indexOf(e.type);if(index<0)continue;
   const size=e.radius*2.8;p.sprite(ammo[7],e.x,e.y-size*.37,size*.23,size*.4,Math.PI,.75);
   // A dedicated full-frame sheet prevents the wide Tyrant being cut by an enemy atlas cell.
-  const boss=e.type==='boss',frame=boss?bossFrames[reduced?0:Math.floor(now*9)%16]:enemies[index];
+  const boss=e.type==='boss',phase=reduced||e.stun>0?0:Math.floor(now*(index<6?9:6)+e.id*.73)%4;
+  const frame=boss?bossFrames[reduced?0:Math.floor(now*9)%16]:flightFrames[index]?.[phase]??enemies[index];
   const bodySize=boss?Math.min(192,Math.max(160,size)):size;
   p.sprite(frame,e.x,e.y,bodySize,bodySize);
   if((e.hive?.shield??0)>0)p.sprite(ammo[11],e.x,e.y+e.radius*.55,size*.8,size*.35,Math.PI/2,.8);

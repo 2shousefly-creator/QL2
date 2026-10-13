@@ -1,4 +1,6 @@
 import { SKILL_VFX_FRAMES as frames } from './airCombatSkillVfxFrames';
+import { getMissileVisual } from './airCombatAmmo';
+import { aircraftBuffPoint } from './airCombatBuffArt';
 export { SKILL_RADIANCE_SOURCES } from './airCombatSkillVfxFrames';
 import { AIRCRAFT_CONFIGS, GAMEPLAY_SAFE_RECT as R } from './airCombatConfig';
 import { cinderState, cinderWaveRadius } from './airCombatCinderRuntime';
@@ -27,7 +29,12 @@ export function paintSkillRadiance(w:CombatWorld,draw:SkillRadiancePainter,reduc
   draw(id,frame,x,y,width,height,rotation,alpha,false);count++;
   if(hot&&!reduced&&count<SKILL_RADIANCE_BUDGET){draw(id+1,frame,x,y,width*.82,height*.82,rotation,Math.min(1,alpha*.8),true);count++;}
  };
- const aura=(id:number,skill:SkillId,size:number,alpha=.48)=>sprite(id,skill,w.playerX,w.playerY,size,size,reduced?1:now*6,alpha);
+ const aura=(id:number,skill:SkillId,_size:number,alpha=.48)=>{
+  for(let slot=0;slot<3;slot++){
+   const point=aircraftBuffPoint(w,slot);
+   sprite(-80000000+id*10+slot*2,skill,point.x,point.y,14*point.scale,20*point.scale,reduced?1:now*6,Math.min(.85,alpha*1.5));
+  }
+ };
  // Complete the impact/recast/end phases that previously only had ignition or
  // sustained art. These sprites consume real effect records; no damage is inferred.
  const burst=(id:number,skill:SkillId,x:number,y:number,size:number,at:number,life:number,power=1)=>{
@@ -46,7 +53,7 @@ export function paintSkillRadiance(w:CombatWorld,draw:SkillRadiancePainter,reduc
   const event=w.visualEvents[i],age=now-(event.at??now),skill=event.skillId;if(!skill||age<0)continue;
   if(event.kind==='skill_ignition'&&age<.6&&ignitions++<4){
    const size=isUltimate(skill)?92:66;
-   sprite(100000+event.id*4,skill,w.playerX,w.playerY,size,size,age/.6*4,Math.min(1,(1-age/.6)*2));
+   sprite(100000+event.id*4,skill,w.playerX,w.playerY-32,Math.min(32,size),Math.min(38,size),age/.6*4,Math.min(1,(1-age/.6)*2));
   }else if(event.kind==='hit'&&age<.32&&impacts++<14){
    const size=Math.min(58,Math.max(24,event.size*1.6));
    sprite(200000+event.id*4,skill,event.x,event.y,size,size,age/.32*4,(1-age/.32)*.9);
@@ -86,7 +93,7 @@ export function paintSkillRadiance(w:CombatWorld,draw:SkillRadiancePainter,reduc
  // the animated wake adds luminous detail along their real velocity.
  let trails=0;
  for(const p of w.projectiles){
-  if(!p.skillId||p.owner==='enemy'||p.mirrorBorrowed||p.lifetime<=0||trails++>=28)continue;
+  if(!p.skillId||p.owner==='enemy'||p.mirrorBorrowed||p.lifetime<=0||getMissileVisual(p)||trails++>=28)continue;
   const angle=Math.atan2(p.vy,p.vx)+Math.PI/2,speed=Math.max(1,Math.hypot(p.vx,p.vy));
   const width=Math.max(8,Math.min(20,p.radius*2)),length=reduced?20:38;
   sprite(300000+p.id*4,p.skillId,p.x-p.vx/speed*12,p.y-p.vy/speed*12,width,length,reduced?1:now*10,.6,angle,false);
@@ -97,8 +104,8 @@ export function paintSkillRadiance(w:CombatWorld,draw:SkillRadiancePainter,reduc
   if(['armor_shield','invisibility','orbit_reversal','cinder_fire_shield','riptide_wellspring','sylva_symbiosis','argent_guard_stance','terra_reactive_rock_armor','terra_geocore_overdrive'].includes(id))aura(-10-i*4,id,id==='terra_geocore_overdrive'?90:72,.46);
  }
  if(active('afterburner'))for(const side of [-1,1])sprite(-40+side*4,'afterburner',w.playerX+side*12,w.playerY+28,20,48,reduced?1:now*12,.8,Math.PI);
- if(active('sweeping_cannon'))sprite(-50,'sweeping_cannon',w.playerX,w.playerY-23,54,38,reduced?1:now*8,.65);
- if(w.laserCharge>0)sprite(-54,'focus_laser',w.playerX,w.playerY-21,45,54,reduced?1:now*9,.8);
+ if(active('sweeping_cannon'))sprite(-50,'sweeping_cannon',w.playerX,w.playerY-30,18,24,reduced?1:now*8,.65);
+ if(w.laserCharge>0)sprite(-54,'focus_laser',w.playerX,w.playerY-34,18,26,reduced?1:now*9,.8);
  if(w.laserRemaining>0&&w.laserCharge<=0)sprite(-58,'focus_laser',w.playerX,(w.playerY+R.top)/2,48,w.playerY-R.top,reduced?2:now*12,.65);
  if(s.droneActive)sprite(-62,'escort_drone',w.droneX,w.droneY+13,34,42,reduced?1:now*8,.7);
  for(const d of w.decoys)if(d.active)sprite(400000+d.id*4,s.aircraftId==='phantom'?'invisibility':'decoy',d.x,d.y,32,42,reduced?1:now*8,.5,0,false);
@@ -111,7 +118,7 @@ export function paintSkillRadiance(w:CombatWorld,draw:SkillRadiancePainter,reduc
   sprite(500000+wave.id*32+i*2,'electronic_interference',wave.originX+Math.cos(angle)*wave.radius,wave.originY+Math.sin(angle)*wave.radius,30,30,reduced?1:now*9,.7,angle,false);
  }
  if(active('twin_reflection'))for(const side of [-1,1])sprite(-80+side*4,'twin_reflection',w.playerX+side*27,w.playerY-5,36,44,reduced?1:now*8,.5);
- if(w.astra?.charge)sprite(-90,'stellar_lance',w.playerX,w.playerY-20,36,66,reduced?1:now*10,.8);
+ if(w.astra?.charge)sprite(-90,'stellar_lance',w.playerX,w.playerY-34,18,30,reduced?1:now*10,.8);
  for(const m of w.astra?.starfall?.pending??[])if(now>=m.at-m.fallDuration){
   const t=Math.max(0,Math.min(1,(now-m.at+m.fallDuration)/m.fallDuration));
   sprite(600000+m.id*4,'starfall',m.x-140*(1-t*t),m.y-520*(1-t*t),m.doom?100:48,m.doom?120:66,t*4,.7);
@@ -121,7 +128,7 @@ export function paintSkillRadiance(w:CombatWorld,draw:SkillRadiancePainter,reduc
   const c=cinderState(w);
   if(c.fuel&&now>=c.fuel.land){const f=c.fuel,g=cinderFuelGeometry(f);for(const [i,center] of cinderFuelCenters(f).entries())sprite(-100-i*4,'cinder_fuel_barrage',center.x,center.y,g.radius*2,g.radius*2,reduced?1:now*8,.45);}
   if(c.wave){const radius=(now-c.wave.at)/(c.wave.until-c.wave.at)*cinderWaveRadius(c.wave.x,c.wave.y);for(let i=0;i<8;i++){const a=i*Math.PI/4;sprite(-130-i*4,'cinder_heat_wave',c.wave.x+Math.cos(a)*radius,c.wave.y+Math.sin(a)*radius,52,42,reduced?1:now*8,.65,a,false);}}
-  if(c.beam){const b=c.beam,firing=now>=b.fire;const x=firing?b.x:w.playerX,y=firing?b.y:w.playerY;sprite(-166,'cinder_inferno_beam',x,firing?(y+R.top)/2:y-20,firing?100:60,firing?y-R.top:76,reduced?2:now*12,.65);}
+  if(c.beam){const b=c.beam,firing=now>=b.fire;const x=firing?b.x:w.playerX,y=firing?b.y:w.playerY;sprite(-166,'cinder_inferno_beam',x,firing?(y+R.top)/2:y-35,firing?100:20,firing?y-R.top:30,reduced?2:now*12,.65);}
  }
  if(s.aircraftId==='riptide'){
   const r=riptideState(w);
@@ -148,7 +155,7 @@ export function paintSkillRadiance(w:CombatWorld,draw:SkillRadiancePainter,reduc
  }
  if(s.aircraftId==='terra'){
   const t=terraState(w);
-  if(t.cannon)sprite(-310,'terra_seismic_cannon',w.playerX,w.playerY-25,70,95,reduced?1:now*9,.65);
+  if(t.cannon)sprite(-310,'terra_seismic_cannon',w.playerX,w.playerY-38,24,32,reduced?1:now*9,.65);
   if(t.clamp)sprite(-314,'terra_strata_clamp',t.clamp.x,t.clamp.y,150,130,reduced?1:now*7,.6);
  }
 }

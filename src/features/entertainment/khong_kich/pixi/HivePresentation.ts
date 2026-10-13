@@ -14,8 +14,8 @@ import type { AirCombatPresentation } from './airCombatPixiTypes';
 function quietBackground(image:HTMLImageElement){
  const canvas=document.createElement('canvas');canvas.width=360;canvas.height=640;
  const ctx=canvas.getContext('2d');if(!ctx)throw new Error('Không thể tải nền Màn 5');
- // Reduce the current scenery brightness by another 50%, without dimming combat layers.
- ctx.filter='blur(1.3px) saturate(55%) contrast(75%) brightness(60%) brightness(65%) brightness(50%)';
+ // The authored 26.31.4 abyss is already dark and sparse; avoid crushing it to black.
+ ctx.filter='brightness(85%)';
  ctx.drawImage(image,-1,-1,362,642);return canvas;
 }
 const cssColor=(color:number)=>'#'+color.toString(16).padStart(6,'0');

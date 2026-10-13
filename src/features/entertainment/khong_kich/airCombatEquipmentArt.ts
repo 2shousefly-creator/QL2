@@ -1,6 +1,8 @@
 import { lightningPath } from "./airCombatProcVisuals";
+import { mironSmokeFrame } from './airCombatFlightArt';
+import { aircraftBuffPoint } from './airCombatBuffArt';
+import { skillVfxFrame } from './airCombatSkillVfxFrames';
 import { getEffectiveAircraftStats } from "./airCombatAircraft";
-import { equipmentGeminiMode } from "./airCombatEquipmentStats";
 import equipmentIcons from "../../../assets/khong-kich/v2/equipment-icons.png";
 import equipmentVfx from "../../../assets/khong-kich/26.25.0/compat/v2-equipment-vfx.png";
 import type { EquipmentRewardId } from "./airCombatEquipmentState";
@@ -19,6 +21,11 @@ export type EquipmentLinePainter=(x:number,y:number,ex:number,ey:number,color:nu
 export function paintEquipment(w:CombatWorld,paint:EquipmentPainter,reducedMotion=false,line?:EquipmentLinePainter) {
   const s=w.aircraft,q=equipmentState(s),t=w.elapsed;
   const color=(f:number)=>[5,7,15,24,36].includes(f)?0xf4adff:[3,17,18,20,27,33].includes(f)?0x89ffc8:[4,10,26,28].includes(f)?0x87ddff:0xffd993;
+  const buff=(id:number,f:number,alpha:number)=>{
+    const point=aircraftBuffPoint(w,f%3),c=color(f);
+    const frame=skillVfxFrame(c===0xf4adff?'invisibility':c===0x89ffc8?'sylva_symbiosis':c===0x87ddff?'riptide_wellspring':'orbit_reversal',reducedMotion?1:Math.floor(t*8)%4);
+    paint(id,frame,point.x,point.y,12*point.scale,18*point.scale,0,Math.min(.7,alpha));
+  };
   // Open rim accents leave the silhouette and hitbox center unobscured.
   const rim=(id:number,f:number,x:number,y:number,radius:number,alpha:number,angle=0)=>{
     if(!line){paint(id,equipmentVfxFrame(f,.35),x+radius,y,10,16,angle,alpha*.6);return;}
@@ -35,12 +42,19 @@ export function paintEquipment(w:CombatWorld,paint:EquipmentPainter,reducedMotio
     const x=v.player?w.playerX:target?.x??v.x,y=v.player?w.playerY:target?.y??v.y;
     if(age<0||phase>=1)continue;
     const alpha=Math.max(0,Math.min(1,age/.04,(v.duration-age)/.12))*(v.legendary?.85:.65);
+    if(v.family===12&&v.fromX!==undefined&&v.fromY!==undefined){
+      const dx=x-v.fromX,dy=y-v.fromY,angle=Math.atan2(dy,dx)+Math.PI/2;
+      const headX=v.fromX+dx*phase,headY=v.fromY+dy*phase,width=22,height=reducedMotion?40:58;
+      // Pin the smoke's leading tip to the proc path, keeping its billow behind it.
+      const ox=-width*.13,oy=height*.43,c=Math.cos(angle),sn=Math.sin(angle);
+      paint(3000000+v.id*2,mironSmokeFrame(age,reducedMotion),headX+ox*c-oy*sn,headY+ox*sn+oy*c,width,height,angle,Math.min(1,alpha*1.4));
+      continue; // No old aircraft-like echo frame at the path or destination.
+    }
     const frame=equipmentVfxFrame(v.family===12?40:v.family,v.duration>1?(age%1.2)/1.2:phase);
     if(v.family!==13&&v.fromX!==undefined&&v.fromY!==undefined){
       const dx=x-v.fromX,dy=y-v.fromY;
       // Authored lightning/echo/ribbon sprite, stretched along its trajectory.
-      if(v.family===12){paint(3000000+v.id*2,frame,v.fromX+dx*phase,v.fromY+dy*phase,36,48,Math.atan2(dy,dx)+Math.PI/2,alpha*.65);}
-      else paint(3000000+v.id*2,frame,(v.fromX+x)/2,(v.fromY+y)/2,Math.max(32,Math.hypot(dx,dy)),18,Math.atan2(dy,dx),alpha*.7);
+      paint(3000000+v.id*2,frame,(v.fromX+x)/2,(v.fromY+y)/2,Math.max(32,Math.hypot(dx,dy)),18,Math.atan2(dy,dx),alpha*.7);
     }
     if(line&&v.family===13&&v.fromX!==undefined&&v.fromY!==undefined){
       const points=lightningPath(v.id,v.fromX,v.fromY,x,y,reducedMotion);
@@ -58,7 +72,7 @@ export function paintEquipment(w:CombatWorld,paint:EquipmentPainter,reducedMotio
         line(x-dx*.35,y-dy*.35,x+dx,y+dy,0x8ceaff,alpha,v.legendary?2:1.2);
       }
     }else if(v.player||(v.target===undefined&&Math.hypot(x-w.playerX,y-w.playerY)<8)){
-      rim(3000001+v.id*2,v.family,x,y,25+(reducedMotion?0:phase*8),alpha,v.family*2.4);
+      buff(3000001+v.id*2,v.family,alpha);
     }else if(target){
       rim(3000001+v.id*2,v.family,x,y,target.radius+7,alpha*.8,-Math.PI/2);
     }else {
@@ -74,9 +88,7 @@ export function paintEquipment(w:CombatWorld,paint:EquipmentPainter,reducedMotio
     const dynamic=modeActive || e.until>s.coreState.time || (f===10&&e.stacks>0) || (f===13&&e.value>0);
     if(!dynamic||![2,3,4,10,11,13,14,17,18,20,21,25,26,27,28,29,32,33].includes(f))continue;
     const strength=f===13?e.value/100:f===2?e.stacks/30:f===10?e.stacks/10:shield?shield.amount/Math.max(1,shield.capacity??shield.amount):.7;
-    const stats=modeActive?getEffectiveAircraftStats(s):null,mode=stats&&f===28?equipmentGeminiMode(s,stats.maxHp,stats.maxResource):null;
-    const rotation=mode==="offense"?0:mode==="hp"?Math.PI*.2:mode==="resource"?-Math.PI*.2:f===33&&stats&&s.currentHp<stats.maxHp*.5?Math.PI:0;
-    rim(4000000+f,f,w.playerX,w.playerY,25+(f%3)*3,.25+.3*Math.min(1,strength),f*2.39996+rotation+(reducedMotion?0:Math.sin(t*2)*.08));
+    buff(4000000+f,f,.35+.3*Math.min(1,strength));
   }
   for(const enemy of w.enemies){const marks=q.marks[enemy.id];if(!marks||enemy.hp<=0)continue;
     const visible=[5,7,15,24,36].filter(f=>marks[f]&&marks[f].until>s.coreState.time);

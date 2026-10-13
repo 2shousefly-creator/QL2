@@ -1,9 +1,11 @@
 import { getMissileVisual, missileRenderRotation } from "./airCombatAmmo";
 import type { CombatWorld, ProjectileEntity } from "./airCombatRuntime";
+import { missileFlameFrame } from './airCombatFlightArt';
+import type { AtlasFrame } from './pixi/airCombatPixiTypes';
 
 const shortestAngle = (angle: number) => Math.atan2(Math.sin(angle), Math.cos(angle));
 const SPACING = 5;
-const MAX_LAG = Math.PI / 15; // 12 degrees; presentation never feeds physics.
+
 interface TrailSample { x:number; y:number; heading:number; at:number; speed:number; sequence:number }
 interface MissilePose {
   id:number; heading:number; x:number; y:number; at:number; distance:number; powered:boolean; sequence:number;
@@ -12,17 +14,18 @@ interface MissilePose {
 // Weak keys cannot retain dead projectiles. Recycled runtime objects reset by ID.
 const poses = new WeakMap<ProjectileEntity, MissilePose>();
 export function getMissilePose(p:ProjectileEntity, reduced:boolean):MissilePose {
+  const heading=p.skillId==='missile_swarm'&&p.missileState==='loiter'?-Math.PI/2:p.heading;
   let pose=poses.get(p);
   if(!pose || pose.id!==p.id) {
-    pose={id:p.id,heading:p.heading,x:p.x,y:p.y,at:p.missileAge,distance:0,powered:p.missileState==="powered",sequence:0,samples:[]};
+    pose={id:p.id,heading,x:p.x,y:p.y,at:p.missileAge,distance:0,powered:p.missileState==="powered",sequence:0,samples:[]};
     poses.set(p,pose);
   }
   const limit=reduced?4:8,dt=Math.max(0,p.missileAge-pose.at);
   if(pose.samples.length>limit)pose.samples.splice(0,pose.samples.length-limit);
   if(dt<=0)return pose;
   const previousHeading=pose.heading;
-  pose.heading+=shortestAngle(p.heading-pose.heading)*(1-Math.exp(-dt/.07));
-  pose.heading=p.heading-Math.max(-MAX_LAG,Math.min(MAX_LAG,shortestAngle(p.heading-pose.heading)));
+  // One heading for body, nozzle and jet, including zero-velocity staging.
+  pose.heading=heading;
   const distance=Math.hypot(p.x-pose.x,p.y-pose.y);
   if(p.missileState==="powered" && pose.powered && distance>0) {
     // Skip samples already beyond the bounded tail after a long render gap.
@@ -41,6 +44,27 @@ export function getMissilePose(p:ProjectileEntity, reduced:boolean):MissilePose 
   pose.powered=p.missileState==="powered";
   pose.x=p.x;pose.y=p.y;pose.at=p.missileAge;
   return pose;
+}
+
+export type MissileJetPainter=(id:number,frame:AtlasFrame,x:number,y:number,width:number,height:number,rotation:number,alpha:number,additive:boolean,tint:number)=>void;
+/** Authored fire stays on the local nozzle axis; historical smoke may curve away. */
+export function paintMissileJets(world:CombatWorld,draw:MissileJetPainter,reduced:boolean,skipEnemy=false){
+ let count=0;
+ for(const p of world.projectiles){
+  if(p.mirrorBorrowed||skipEnemy&&p.owner==='enemy')continue;
+  const visual=getMissileVisual(p);if(!visual||count>=384)continue;
+  const pose=getMissilePose(p,reduced),rotation=missileRenderRotation(pose.heading),c=Math.cos(rotation),s=Math.sin(rotation);
+  const powered=p.missileState==='powered',thrust=powered?.75+.25*Math.min(1,p.speed/Math.max(1,p.cruiseSpeed)):.38;
+  for(const [i,nozzle] of visual.engineNozzles.entries()){
+   const length=nozzle.flameLength*1.8*thrust*(reduced?.8:1),width=nozzle.flameWidth*3.1;
+   // Frame starts with a hot tip at 6% height, attached exactly to the nozzle.
+   const localY=nozzle.y+length*.44,x=p.x+nozzle.x*c-localY*s,y=p.y+nozzle.x*s+localY*c,id=p.id*4+i*2;
+   const frame=missileFlameFrame(p.missileAge+p.id*.07,reduced);
+   draw(id,frame,x,y,width,length,rotation,.9,false,nozzle.tint);
+   if(!reduced)draw(id+1,frame,x,y,width*.68,length,rotation,.8,true,0xfff4dd);
+   count+=2;
+  }
+ }
 }
 export function clearMissilePose(p:ProjectileEntity):void { poses.delete(p); }
 

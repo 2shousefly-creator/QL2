@@ -1,3 +1,5 @@
+import { skillVfxFrame } from './airCombatSkillVfxFrames';
+import { FLIGHT_ART, flightBodyFrame, missileSmokeFrame } from './airCombatFlightArt';
 import { drawEnemyTrackingHud,drawAircraftTrackingHud,drawCinderTotals,drawAircraftDamageLabels } from './airCombatCanvasHud';
 import { paintSkillRadiance, SKILL_RADIANCE_SOURCES } from './airCombatSkillRadiance';
 import { DamageTextLayout } from "./airCombatDamageLayout";
@@ -45,7 +47,7 @@ import { BOSS_VISUAL_WIDTH_SCALE, BOSS_VISUAL_ASPECT } from "./airCombatHudLayou
 import { getEnemyExhaustTransform } from "./airCombatHitboxes";
 import { paintTitanShield, type ShieldPainter } from "./airCombatTitanShield";
 import { AMMO_VISUALS, getAmmoVisualKey, getBasicAmmoVisual, getMissileVisual, missileRenderRotation } from "./airCombatAmmo";
-import { getMissilePose, paintMissileExhausts } from "./airCombatMissilePresentation";
+import { getMissilePose, paintMissileExhausts, paintMissileJets } from "./airCombatMissilePresentation";
 import type { AmmoVisualKey } from "./airCombatAmmo";
 import { SONIC_RING_THICKNESS } from "./airCombatBoss";
 import { getTerrainWorld, TERRAIN_HEIGHT, type TerrainShape } from "./airCombatTerrain";
@@ -81,7 +83,7 @@ async function loadCanvasTextures(urls:string[]) {
   }));
 }
 export const loadSoloCanvasAssets=()=>loadCanvasTextures([soloArenaUrl]);
-export const loadAstraCanvasAssets=()=>loadCanvasTextures([...Object.values(SKILL_RADIANCE_SOURCES),...Object.values(TERRA_ART),...Object.values(SYLVA_ART),...Object.values(ARGENT_ART),...Object.values(RIPTIDE_ART),BIGBANG_ART,...Object.values(CINDER_ART),ULTIMATE_ART,RANKED_ART.vfx,RANKED_ART.projectiles,EQUIPMENT_ART.icons,EQUIPMENT_ART.vfx,ASTRA_ART.aircraft,ASTRA_ART.effects,ASTRA_ART.combatVfx,sharedVfxUrl]);
+export const loadAstraCanvasAssets=()=>loadCanvasTextures([FLIGHT_ART,...Object.values(SKILL_RADIANCE_SOURCES),...Object.values(TERRA_ART),...Object.values(SYLVA_ART),...Object.values(ARGENT_ART),...Object.values(RIPTIDE_ART),BIGBANG_ART,...Object.values(CINDER_ART),ULTIMATE_ART,RANKED_ART.vfx,RANKED_ART.projectiles,EQUIPMENT_ART.icons,EQUIPMENT_ART.vfx,ASTRA_ART.aircraft,ASTRA_ART.effects,ASTRA_ART.combatVfx,sharedVfxUrl]);
 export const loadMirageCanvasAssets=()=>loadCanvasTextures([...Object.values(STAGE4_ART_URLS),aircraftAtlasUrl,ASTRA_ART.aircraft]);
 export const loadStormbreakerCanvasAssets=()=>loadCanvasTextures(Object.values(STAGE3_ART_URLS));
 export const loadMagneticCanvasAssets=()=>loadCanvasTextures([STAGE2_ART_URLS.enemy,STAGE2_ART_URLS.vfx,STAGE2_ART_URLS.storm,STAGE2_ART_URLS.elite]);
@@ -97,7 +99,7 @@ function drawMagneticFrame(ctx: CanvasRenderingContext2D, frame: AtlasFrame, x: 
   }
   const generated=generatedFrameId(frame);
   if(generated&&paintGeneratedCanvas(ctx,generated,x,y,width,height,rotation,alpha,anchorX,tint))return;
-  const image = magneticImage(frame.atlas in SKILL_RADIANCE_SOURCES ? SKILL_RADIANCE_SOURCES[frame.atlas as keyof typeof SKILL_RADIANCE_SOURCES] : frame.atlas in TERRA_SOURCES ? TERRA_SOURCES[frame.atlas as keyof typeof TERRA_SOURCES] : frame.atlas in SYLVA_SOURCES ? SYLVA_SOURCES[frame.atlas as keyof typeof SYLVA_SOURCES] : frame.atlas === 'argentAircraft' ? ARGENT_ART.aircraft : frame.atlas === 'argentIcons' ? ARGENT_ART.icons : frame.atlas === 'argentVfx' ? ARGENT_ART.vfx : frame.atlas === 'argentPortrait' ? ARGENT_ART.portrait : frame.atlas === 'riptideAircraft' ? RIPTIDE_ART.aircraft : frame.atlas === 'riptideIcons' ? RIPTIDE_ART.icons : frame.atlas === 'riptideVfx' ? RIPTIDE_ART.vfx : frame.atlas === "guardianVfx" ? CINDER_ART.guardianVfx : frame.atlas === "bigBangVfx" ? BIGBANG_ART : frame.atlas === "cinderFeedback" ? CINDER_ART.feedback : frame.atlas === "cinderAircraft" ? CINDER_ART.aircraft : frame.atlas === "cinderVfx" ? CINDER_ART.vfx : frame.atlas === "cinderProjectiles" ? CINDER_ART.projectiles : frame.atlas === "aircraft" ? aircraftAtlasUrl : frame.atlas === "astraAircraft" ? ASTRA_ART.aircraft : frame.atlas === "stage4Enemy" ? STAGE4_ART_URLS.enemy : frame.atlas === "stage4Boss" ? STAGE4_ART_URLS.boss : frame.atlas === "stage4BossSkills" ? STAGE4_ART_URLS.bossSkills : frame.atlas === "stage4Vfx" ? STAGE4_ART_URLS.vfx : frame.atlas === "stage3Enemy" ? STAGE3_ART_URLS.enemy : frame.atlas === "stage3Boss" ? STAGE3_ART_URLS.boss : frame.atlas === "stage3Vfx" ? STAGE3_ART_URLS.vfx : frame.atlas === "stage3Emissive" ? STAGE3_ART_URLS.emissive : frame.atlas === "ultimateVfx" ? ULTIMATE_ART : frame.atlas === "rankedVfx" ? RANKED_ART.vfx : frame.atlas === "rankedProjectiles" ? RANKED_ART.projectiles : frame.atlas === "equipmentIcons" ? EQUIPMENT_ART.icons : frame.atlas === "equipmentVfx" ? EQUIPMENT_ART.vfx : frame.atlas === "astraVfx" ? ASTRA_ART.combatVfx : frame.atlas === "vfx" ? sharedVfxUrl : frame.atlas === "astraEffects" ? ASTRA_ART.effects : frame.atlas === "stage2Elite" ? STAGE2_ART_URLS.elite : frame.atlas === "stage2Enemy" ? STAGE2_ART_URLS.enemy : STAGE2_ART_URLS.vfx);
+  const image = magneticImage(frame.atlas === 'flightVfx' ? FLIGHT_ART : frame.atlas in SKILL_RADIANCE_SOURCES ? SKILL_RADIANCE_SOURCES[frame.atlas as keyof typeof SKILL_RADIANCE_SOURCES] : frame.atlas in TERRA_SOURCES ? TERRA_SOURCES[frame.atlas as keyof typeof TERRA_SOURCES] : frame.atlas in SYLVA_SOURCES ? SYLVA_SOURCES[frame.atlas as keyof typeof SYLVA_SOURCES] : frame.atlas === 'argentAircraft' ? ARGENT_ART.aircraft : frame.atlas === 'argentIcons' ? ARGENT_ART.icons : frame.atlas === 'argentVfx' ? ARGENT_ART.vfx : frame.atlas === 'argentPortrait' ? ARGENT_ART.portrait : frame.atlas === 'riptideAircraft' ? RIPTIDE_ART.aircraft : frame.atlas === 'riptideIcons' ? RIPTIDE_ART.icons : frame.atlas === 'riptideVfx' ? RIPTIDE_ART.vfx : frame.atlas === "guardianVfx" ? CINDER_ART.guardianVfx : frame.atlas === "bigBangVfx" ? BIGBANG_ART : frame.atlas === "cinderFeedback" ? CINDER_ART.feedback : frame.atlas === "cinderAircraft" ? CINDER_ART.aircraft : frame.atlas === "cinderVfx" ? CINDER_ART.vfx : frame.atlas === "cinderProjectiles" ? CINDER_ART.projectiles : frame.atlas === "aircraft" ? aircraftAtlasUrl : frame.atlas === "astraAircraft" ? ASTRA_ART.aircraft : frame.atlas === "stage4Enemy" ? STAGE4_ART_URLS.enemy : frame.atlas === "stage4Boss" ? STAGE4_ART_URLS.boss : frame.atlas === "stage4BossSkills" ? STAGE4_ART_URLS.bossSkills : frame.atlas === "stage4Vfx" ? STAGE4_ART_URLS.vfx : frame.atlas === "stage3Enemy" ? STAGE3_ART_URLS.enemy : frame.atlas === "stage3Boss" ? STAGE3_ART_URLS.boss : frame.atlas === "stage3Vfx" ? STAGE3_ART_URLS.vfx : frame.atlas === "stage3Emissive" ? STAGE3_ART_URLS.emissive : frame.atlas === "ultimateVfx" ? ULTIMATE_ART : frame.atlas === "rankedVfx" ? RANKED_ART.vfx : frame.atlas === "rankedProjectiles" ? RANKED_ART.projectiles : frame.atlas === "equipmentIcons" ? EQUIPMENT_ART.icons : frame.atlas === "equipmentVfx" ? EQUIPMENT_ART.vfx : frame.atlas === "astraVfx" ? ASTRA_ART.combatVfx : frame.atlas === "vfx" ? sharedVfxUrl : frame.atlas === "astraEffects" ? ASTRA_ART.effects : frame.atlas === "stage2Elite" ? STAGE2_ART_URLS.elite : frame.atlas === "stage2Enemy" ? STAGE2_ART_URLS.enemy : STAGE2_ART_URLS.vfx);
   if (!image) return;
   const [sx,sy,sw,sh] = frame.rect;
   ctx.save(); ctx.globalAlpha = alpha; ctx.translate(x,y); ctx.rotate(rotation);
@@ -135,6 +137,7 @@ function shieldPainter(ctx:CanvasRenderingContext2D):ShieldPainter {
 const ammoPaths = new Map<AmmoVisualKey, { body: Path2D; detail: Path2D; glow?: Path2D; accents?: Path2D }>();
 function drawAmmoLocal(ctx:CanvasRenderingContext2D,key:AmmoVisualKey) {
  const art=AMMO_VISUALS[key];
+ const flight=flightBodyFrame(key);if(flight){drawMagneticFrame(ctx,flight,0,0,art.width,art.height);return;}
  const generated=generatedEffectId(key);if(generated&&paintGeneratedCanvas(ctx,generated,0,0,art.width,art.height))return;
  let paths=ammoPaths.get(key);
  if(key==='terra_basic_ammo'){drawMagneticFrame(ctx,TERRA_FRAMES.terra_basic_ammo,0,0,art.width,art.height);return;}
@@ -500,9 +503,9 @@ export function drawLegacyWorld(
   for (const particle of world.particles) {
     if (particle.kind !== "missile_smoke") continue;
     const age = 1 - Math.max(0, particle.life / particle.maxLife);
-    ctx.globalAlpha = (1 - age) ** 1.35 * (reducedMotion ? .55 : .85);
-    const radius=particle.size*(.7+age*1.1)/2;
-    paintGeneratedCanvas(ctx,'shared_smoke',particle.x,particle.y,radius*2,radius*2);
+    const alpha = (1 - age) ** 1.15 * (reducedMotion ? .55 : .9);
+    const radius=particle.size*(1+age*1.5)/2;
+    drawMagneticFrame(ctx,missileSmokeFrame(age),particle.x,particle.y,radius*2,radius*2,particle.id*.7,alpha,Number.parseInt(particle.color.slice(1),16));
   }
   ctx.restore();
   ctx.save();ctx.globalCompositeOperation="lighter";ctx.lineCap="round";ctx.lineJoin="round";ctx.shadowBlur=0;
@@ -511,6 +514,9 @@ export function drawLegacyWorld(
     ctx.beginPath();ctx.moveTo(ax,ay);ctx.quadraticCurveTo(cx,cy,bx,by);ctx.stroke();
   },reducedMotion);
   ctx.restore();
+  paintMissileJets(world,(_id,frame,x,y,width,height,rotation,alpha,additive,tint)=>{
+    ctx.save();ctx.globalCompositeOperation=additive?'lighter':'source-over';drawMagneticFrame(ctx,frame,x,y,width,height,rotation,alpha,tint);ctx.restore();
+  },reducedMotion,hiveActor);
   for (const projectile of world.projectiles) {
     if (hiveActor && projectile.owner === "enemy") continue;
     if (rankProjectileVisual(projectile)||ultimateProjectileVisual(projectile)) continue;
@@ -540,7 +546,7 @@ export function drawLegacyWorld(
       ctx.save();ctx.translate(projectile.x,projectile.y);ctx.rotate(Math.atan2(projectile.vy,projectile.vx));ctx.strokeStyle="#67e8f9";ctx.lineWidth=projectile.radius*2;ctx.lineCap="round";ctx.beginPath();ctx.moveTo(-projectile.radius*2,0);ctx.lineTo(projectile.radius*2,0);ctx.stroke();ctx.strokeStyle="#ecfeff";ctx.lineWidth=1;ctx.stroke();ctx.restore();
     } else if (missile) {
       ctx.save();ctx.translate(projectile.x,projectile.y);ctx.rotate(missileRenderRotation(getMissilePose(projectile,reducedMotion).heading));
-      ctx.shadowBlur=projectile.owner==="enemy"?0:9;if(projectile.owner!=="enemy")ctx.filter="brightness(150%)";drawAmmoLocal(ctx,getAmmoVisualKey(projectile)!);
+      ctx.shadowBlur=projectile.owner==="enemy"?0:9;ctx.filter="brightness(150%)";drawAmmoLocal(ctx,getAmmoVisualKey(projectile)!);
       if(projectile.bigBang){ctx.globalAlpha=reducedMotion?.3:.3+.15*Math.sin(projectile.missileAge*4);ctx.fillStyle="#fff0b3";ctx.fillRect(-7,-10,14,2);}
       ctx.restore();
     } else if(projectile.owner==="enemy" || projectile.ammoVisualKey) {
@@ -750,37 +756,13 @@ export function drawLegacyWorld(
     );
 
     if (!accents.titanShield.active && accents.titanShield.opacity < .01 && ((world.aircraft.activeEffects.armor_shield || 0) > 0 || activeShieldAmount(world.aircraft,true)>0)) {
-      const pulse = 1 + Math.sin(world.elapsed * 8) * 0.045;
-      const shieldRadius = 25 * pulse * playerAirframeScale(world.aircraft);
-      ctx.save();
-      const glow = ctx.createRadialGradient(world.playerX, world.playerY, 10, world.playerX, world.playerY, shieldRadius);
-      glow.addColorStop(0, "rgba(125,211,252,.06)");
-      glow.addColorStop(0.72, "rgba(56,189,248,.16)");
-      glow.addColorStop(1, "rgba(14,165,233,.32)");
-      ctx.fillStyle = glow;
-      ctx.beginPath();
-      ctx.arc(world.playerX, world.playerY, shieldRadius, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.strokeStyle = "rgba(186,230,253,.9)";
-      ctx.lineWidth = 2.2;
-      ctx.shadowColor = "#38bdf8";
-      ctx.shadowBlur = 13;
-      ctx.beginPath();
-      for (let side = 0; side < 6; side++) {
-        const angle = -Math.PI / 2 + side * Math.PI / 3;
-        const px = world.playerX + Math.cos(angle) * shieldRadius;
-        const py = world.playerY + Math.sin(angle) * shieldRadius;
-        if (side === 0) ctx.moveTo(px, py);
-        else ctx.lineTo(px, py);
-      }
-      ctx.closePath();
-      ctx.stroke();
-      ctx.restore();
+      const scale=playerAirframeScale(world.aircraft);
+      drawMagneticFrame(ctx,skillVfxFrame('armor_shield'),world.playerX,world.playerY-27*scale,18*scale,22*scale,0,.75);
     }
 
     const bubble=accents.titanShield;
     if(bubble.opacity>.01) {
-      ctx.save();ctx.translate(world.playerX,world.playerY);ctx.scale(bubble.scale*playerAirframeScale(world.aircraft),bubble.scale*playerAirframeScale(world.aircraft));ctx.globalAlpha=bubble.opacity;
+      ctx.save();ctx.translate(world.playerX,world.playerY-27*playerAirframeScale(world.aircraft));ctx.scale(bubble.scale*playerAirframeScale(world.aircraft)*.24,bubble.scale*playerAirframeScale(world.aircraft)*.24);ctx.globalAlpha=bubble.opacity;
       paintTitanShield(shieldPainter(ctx),bubble,reducedMotion,(skillRank(world.aircraft, "armor_shield") >= 3));
       ctx.restore();
     }

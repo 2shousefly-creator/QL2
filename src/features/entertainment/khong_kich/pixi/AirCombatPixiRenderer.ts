@@ -39,7 +39,8 @@ import { getEnemyExhaustTransform } from "../airCombatHitboxes";
 import { paintTitanShield, type ShieldPainter } from "../airCombatTitanShield";
 import { TitanShieldPresentation } from "../airCombatTitanShield";
 import { AirCombatMissilePool } from "./AirCombatMissilePool";
-import { paintMissileExhausts, type MissileExhaustPainter } from "../airCombatMissilePresentation";
+import { paintMissileExhausts, paintMissileJets, type MissileExhaustPainter } from "../airCombatMissilePresentation";
+import { missileSmokeFrame } from '../airCombatFlightArt';
 import { AMMO_VISUALS, getAmmoVisualKey, getBasicAmmoVisual, getMissileVisual } from "../airCombatAmmo";
 import { angularBarSegmentPolygon, angularBarPolygon, BOSS_VISUAL_WIDTH_SCALE, BOSS_VISUAL_ASPECT } from "../airCombatHudLayout";
 import { SONIC_RING_THICKNESS } from "../airCombatBoss";
@@ -73,6 +74,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     this.missileExhaust.moveTo(ax,ay).quadraticCurveTo(cx,cy,bx,by).stroke({width,color:tint,alpha,cap:"round",join:"round"});
   };
   private missileSmoke: AirCombatSpritePool;
+  private missileJets: AirCombatSpritePool;
   private telegraphs = new Graphics();
   private enemyForegroundMarks = new Graphics();
   private globalVfx = new Container();
@@ -218,6 +220,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     this.pressureText.anchor.set(.5); this.hpText.anchor.set(.5); this.resourceText.anchor.set(.5);
     this.enemies = new AirCombatSpritePool(this.actors, 44);
     this.missileSmoke = new AirCombatSpritePool(this.smokeLayer, AIR_COMBAT_WORLD.maxParticles);
+    this.missileJets = new AirCombatSpritePool(this.smokeLayer, 384);
     this.projectileGlows = new AirCombatSpritePool(this.actors, AIR_COMBAT_WORLD.maxPlayerProjectiles * 2 + AIR_COMBAT_WORLD.maxEnemyProjectiles);
     this.afterimages = new AirCombatSpritePool(this.actors, 4);
     this.projectiles = new AirCombatSpritePool(this.actors, 768);
@@ -545,12 +548,13 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     this.missileSmoke.begin(this.clock,reducedMotion);
     for (const particle of world.particles) {
       if (particle.kind !== "missile_smoke") continue;
-      const smoke = this.missileSmoke.get(particle.id, this.assets.effect("smoke"));
-      if (!smoke) continue;
       const age = 1 - Math.max(0, particle.life / particle.maxLife);
+      const smoke = this.missileSmoke.get(particle.id, this.assets.texture(missileSmokeFrame(age)));
+      if (!smoke) continue;
       smoke.position.set(particle.x, particle.y);
-      smoke.width = smoke.height = particle.size * (.7 + age * 1.1);
-      smoke.alpha = (1 - age) ** 1.35 * (reducedMotion ? .55 : .85);
+      smoke.width = smoke.height = particle.size * (1 + age * 1.5);
+      smoke.alpha = (1 - age) ** 1.15 * (reducedMotion ? .55 : .9);
+      smoke.rotation=particle.id*.7;smoke.blendMode='normal';
       smoke.tint = particle.color;
     }
     paintAircraftDamageSmoke(world,reducedMotion,(id,x,y,size,rotation,alpha)=>{
@@ -560,6 +564,12 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     this.missileSmoke.end();
     this.missileExhaust.clear();
     paintMissileExhausts(world,this.paintMissileSegment,reducedMotion);
+    this.missileJets.begin(this.clock,reducedMotion);
+    paintMissileJets(world,(id,frame,x,y,width,height,rotation,alpha,additive,tint)=>{
+      const sprite=this.missileJets.get(id,this.assets.texture(frame));if(!sprite)return;
+      sprite.position.set(x,y);sprite.width=width;sprite.height=height;sprite.rotation=rotation;sprite.alpha=alpha;sprite.tint=tint;sprite.blendMode=additive?'add':'normal';
+    },reducedMotion,this.hiveActor);
+    this.missileJets.end();
     this.missiles.begin();
     for (const p of world.projectiles) {
       if (this.hiveActor && p.owner === "enemy") continue;
@@ -755,20 +765,20 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     if(!shieldActive&&(world.aircraft.coreState.shields.cinder?.amount??0)>0)this.shieldOpacity=0;
     this.shieldOpacity += ((shieldActive ? 1 : 0) - this.shieldOpacity) * (1 - Math.exp(-delta * 15));
     this.shield.visible = alive && this.shieldOpacity > .01 && !this.titanShield.active && this.titanShield.opacity < .01;
-    this.shield.position.set(world.playerX, world.playerY);
-    this.shield.width = this.shield.height = 66*playerAirframeScale(world.aircraft);
+    this.shield.position.set(world.playerX, world.playerY-27*playerAirframeScale(world.aircraft));
+    this.shield.width = this.shield.height = 18*playerAirframeScale(world.aircraft);
     this.shield.tint = invisible ? 0xc4b5fd : 0xffffff;
     this.shield.alpha = this.shieldOpacity * (invisible ? .23 : reducedMotion ? .65 : .6 + Math.sin(this.clock * 3) * .08);
     const bubble=this.titanBubble, shieldState=this.titanShield;
     bubble.clear();bubble.visible=alive&&shieldState.opacity>.01;
     if(bubble.visible) {
-      bubble.position.set(world.playerX,world.playerY);bubble.scale.set(shieldState.scale*playerAirframeScale(world.aircraft));bubble.alpha=shieldState.opacity*.25;
+      bubble.position.set(world.playerX,world.playerY-27*playerAirframeScale(world.aircraft));bubble.scale.set(shieldState.scale*playerAirframeScale(world.aircraft)*.24);bubble.alpha=shieldState.opacity*.25;
       paintTitanShield(this.techShieldPainter,shieldState,reducedMotion,(skillRank(world.aircraft, "armor_shield") >= 3));
 
     }
     const sustained = (world.aircraft.activeEffects.afterburner || 0) > 0 || (world.aircraft.activeEffects.sweeping_cannon || 0) > 0;
     this.aura.visible = alive && sustained;
-    this.aura.position.set(world.playerX, world.playerY); this.aura.width = this.aura.height = visual.size*playerAirframeScale(world.aircraft) * 1.4;
+    this.aura.position.set(world.playerX, world.playerY+27*playerAirframeScale(world.aircraft)); this.aura.width = this.aura.height = 16*playerAirframeScale(world.aircraft);
     this.aura.tint = visual.tint; this.aura.alpha = reducedMotion ? .2 : .22 + Math.sin(this.clock * 6) * .06;
     if (!alive) this.dashTail = 0;
     this.afterimages.begin(this.clock,reducedMotion);
@@ -805,7 +815,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     if(world.laserCharge>0) {
       const total=getSkillRuntimeValues(world.aircraft,"focus_laser").charge;
       const t=1-world.laserCharge/Math.max(.1,total), radius=6+(1-t)*32;
-      this.charge.width=this.charge.height=18+t*25+(world.laserCharge<.1?12:0);
+      this.charge.width=this.charge.height=12+t*9;
       for(let ring=0;ring<3;ring++)this.telegraphs.circle(world.playerX,world.playerY-24*playerAirframeScale(world.aircraft),radius+ring*5).stroke({color:ring%2?0x67e8f9:0xc4b5fd,width:1,alpha:.45});
       if(!reducedMotion)for(let i=0;i<12;i++){const a=i*Math.PI/6+this.clock*7,r=radius*(.5+(i%3)*.2);this.telegraphs.circle(world.playerX+Math.cos(a)*r,world.playerY-24*playerAirframeScale(world.aircraft)+Math.sin(a)*r*.7,1.6).fill(i%2?0xc4b5fd:0x67e8f9);}
     }
@@ -901,7 +911,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     this.stormbreakerPresentation.clear();
     this.astraSprites.destroy();this.cinderSprites.destroy();this.terraSprites.destroy();this.sylvaSprites.destroy();this.seedSprites.destroy();this.riptideSprites.destroy();this.argentSprites.destroy();for(const label of this.cinderLabels.values())label.destroy();this.cinderLabels.clear();
     this.equipmentSprites.destroy();
-    this.mechanisms.destroy();this.playerRig.destroy();this.enemies.destroy(); this.missileSmoke.destroy(); this.projectiles.destroy(); this.missiles.destroy(); this.projectileGlows.destroy(); this.afterimages.destroy(); this.companions.destroy(); this.warnings.destroy(); this.engines.destroy(); this.vfx.destroy();
+    this.mechanisms.destroy();this.playerRig.destroy();this.enemies.destroy(); this.missileSmoke.destroy();this.missileJets.destroy(); this.projectiles.destroy(); this.missiles.destroy(); this.projectileGlows.destroy(); this.afterimages.destroy(); this.companions.destroy(); this.warnings.destroy(); this.engines.destroy(); this.vfx.destroy();
     if (this.sceneParent) {
       this.root.destroy({ children: true });
       this.stableHud.destroy({ children: true });

@@ -4,10 +4,12 @@ import type { CombatWorld, ProjectileEntity } from "./airCombatRuntime";
 import { skillRank } from "./airCombatSkillRanks";
 import { VIPER_ULTIMATE_SIZE } from "./airCombatAmmo";
 import { getMissilePose } from "./airCombatMissilePresentation";
+import { FLIGHT_BODY_FRAMES } from './airCombatFlightArt';
+import { aircraftBuffPoint } from './airCombatBuffArt';
 export const ULTIMATE_ART = atlas;
 const frame=(index:number):AtlasFrame=>({atlas:"ultimateVfx",rect:[index%4/4,Math.floor(index/4)/7,1/4,1/7]});
 export const ULTIMATE_FRAMES={
- ultimateViperMissile:frame(0),ultimateViperExhaust:frame(1),ultimateViperLaunch:frame(2),ultimateViperIntercept:frame(3),
+ ultimateViperMissile:FLIGHT_BODY_FRAMES.ultimateViperMissile,ultimateViperExhaust:frame(1),ultimateViperLaunch:frame(2),ultimateViperIntercept:frame(3),
  ultimateViperImpact:frame(4),ultimateViperBurn:frame(5),ultimateViperData:frame(6),ultimateTitanShell:frame(7),
  ultimateTitanTrail:frame(8),ultimateTitanMuzzle:frame(9),ultimateTitanImpact:frame(10),ultimateHawk:frame(11),
  ultimateHawkGate:frame(12),ultimateHawkDock:frame(13),ultimateHawkEngine:frame(14),ultimateHawkBolt:frame(15),
@@ -46,7 +48,11 @@ export function paintUltimates(w:CombatWorld,draw:UltimatePainter,reduced:boolea
   const target=w.enemies.find(e=>e.id===w.droneTargetId&&e.hp>0),angle=target?Math.atan2(target.y-w.droneY,target.x-w.droneX)+Math.PI/2:0;
   const dx=Math.sin(angle),dy=-Math.cos(angle);
   draw(-1,"ultimateHawkEngine",w.droneX-dx*23,w.droneY-dy*23,20,rage?42:29,angle,.85);
-  if(rage){draw(-2,"ultimateHawkRage",w.droneX,w.droneY,60,60,reduced?0:Math.sin(now*3)*.06,.9);draw(-3,"ultimateHawkRage",w.playerX,w.playerY,55,55,0,.5);}
+  if(rage){
+   const point=aircraftBuffPoint(w,1);
+   draw(-2,"ultimateHawkRage",w.droneX-dx*17,w.droneY-dy*17,14,20,angle,.9);
+   draw(-3,"ultimateHawkRage",point.x,point.y,14*point.scale,20*point.scale,0,.7);
+  }
   if(s.dronePhase!=="active"){
    const deploy=s.dronePhase==="deploying",progress=1-(s.droneTransitionRemaining??0)/(deploy?.4:.38);
    draw(-4,deploy?"ultimateHawkGate":"ultimateHawkDock",w.playerX,w.playerY,62,62,0,.5+Math.sin(progress*Math.PI)*.5);

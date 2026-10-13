@@ -30,7 +30,9 @@ const metric=(c:Context,key:string,n=1)=>equipmentMetric(c.s,c.f,key,n);
 function peak(c:Context,value:number) {const t=equipmentState(c.s).telemetry[`TH${String(c.f).padStart(2,"0")}`]??={};t.peak=Math.max(t.peak??0,value);}
 export function equipmentFx(w:CombatWorld,family:number,x=w.playerX,y=w.playerY,size=55,duration=.6,target?:number,from?:{x:number;y:number}) {
   const e=equipmentState(w.aircraft);
-  const gate=`${family}:${target??"player"}`;
+  // Miron's two lanes remain distinct even when both converge on one target.
+  const lane=family===12&&from?(from.x<w.playerX?":left":":right"):"";
+  const gate=`${family}:${target??"player"}${lane}`;
   if(duration<1 && (e.presentationGate[gate]??-Infinity)>w.elapsed)return;
   e.presentationGate[gate]=w.elapsed+.08;
   if(duration>1 && target!==undefined)e.visuals=e.visuals.filter(v=>v.family!==family||v.target!==target);
@@ -90,7 +92,10 @@ const EFFECTS:Readonly<Record<number,EquipmentEffectHooks>>={
   }},
   11:{cast(c){activate(c,6);}},
   12:{hit(c,h){if(!h.primary||++equipmentEffect(c.s,12).count%5)return;metric(c,"echoes",2);const targets=nearby(c,c.w.playerX,c.w.playerY).filter(e=>e!==h.enemy&&canTargetEnemy(c.w,e)).slice(0,2);
-    if(!targets.length&&canTargetEnemy(c.w,h.enemy)){metric(c,"merged");damage(c,h.enemy,power(c)*P[12].merged*c.k,{x:c.w.playerX,y:c.w.playerY});}
+    if(!targets.length&&canTargetEnemy(c.w,h.enemy)){
+      metric(c,"merged");damage(c,h.enemy,power(c)*P[12].merged*c.k,{x:c.w.playerX-28,y:c.w.playerY});
+      equipmentFx(c.w,12,h.enemy.x,h.enemy.y,48,.55,h.enemy.id,{x:c.w.playerX+28,y:c.w.playerY});
+    }
     else if(targets.length)for(let i=0;i<2;i++)damage(c,targets[i%targets.length],power(c)*P[12].echo*c.k,{x:c.w.playerX+(i?28:-28),y:c.w.playerY});
   }},
   13:{hit(c,h){if(!h.primary)return;const e=equipmentEffect(c.s,13);

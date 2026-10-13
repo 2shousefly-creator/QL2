@@ -32,7 +32,7 @@ export function paintAstra(w:CombatWorld,p:AstraPainter,reduced:boolean) {
   const r=w.astra;if(!r||w.ended)return;const now=w.elapsed;
   if(astraOrbitProtectionActive(w)) {
     const size=92*playerAirframeScale(w.aircraft);
-    p.sprite(-30,"astra_guard",w.playerX,w.playerY,size,size,reduced?0:Math.sin(now*.8)*.12,.9);
+    for(const side of [-1,1])p.sprite(-30+side,"astra_guard",w.playerX+side*12*playerAirframeScale(w.aircraft),w.playerY+25*playerAirframeScale(w.aircraft),size*.18,size*.23,0,.9);
   }
   for(const beam of r.meteorSpears??[]) {
     if(now<beam.warningStartsAt||now>=beam.beamEndsAt)continue;

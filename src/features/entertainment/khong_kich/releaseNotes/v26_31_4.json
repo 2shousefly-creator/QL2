@@ -1,0 +1,116 @@
+{
+  "version": "26.31.4",
+  "releaseDate": "13/10/2026",
+  "title": "HIVE · Chuyển Động & Hỏa Tiễn",
+  "displayTitle": "KHÔNG KÍCH 26.31.4 — CHUYỂN ĐỘNG & HỎA TIỄN",
+  "summary": "Tàn ảnh Miron hóa khói, tên lửa rực sáng đúng hướng, quái Màn 5 sống động và chiến trường dễ quan sát hơn.",
+  "sections": [
+    {
+      "id": "flight-polish",
+      "title": "HÌNH ẢNH & CHUYỂN ĐỘNG",
+      "icon": {
+        "kind": "wave",
+        "id": "stage5"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "miron",
+          "title": "Drone Song Ảnh Miron",
+          "icon": {
+            "kind": "system",
+            "id": "miron"
+          },
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Hai tàn ảnh trở thành hai làn khói hắc ám có hoạt ảnh, lao từ hai bên chiến cơ tới mục tiêu. Cả hai làn vẫn hiện khi cùng hội tụ vào một mục tiêu.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        },
+        {
+          "id": "viper",
+          "title": "Ultimate Viper",
+          "icon": {
+            "kind": "system",
+            "id": "viper"
+          },
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Sửa hướng hiển thị hai tên lửa bay song song với Viper. Thân tên lửa, vòi phụt và tia lửa dùng chung trục hướng, kể cả trong giai đoạn chờ phóng.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        },
+        {
+          "id": "missiles",
+          "title": "Hình Ảnh Tên Lửa",
+          "icon": {
+            "kind": "system",
+            "id": "missiles"
+          },
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Nâng cấp thân tên lửa Viper, Tomahawk, Big Bang, tên lửa địch, tên lửa nhỏ khóa mục tiêu và tên lửa Radar bằng sprite mới sáng hơn. Bổ sung tia lửa hoạt ảnh lớn và khói dày hơn.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        },
+        {
+          "id": "monsters",
+          "title": "Quái Vật Màn 5",
+          "icon": {
+            "kind": "system",
+            "id": "monsters"
+          },
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Sáu loại quái thường, năm loại Tinh Anh và hai loại quái mẹ có spritesheet tạo sinh với bốn tư thế chuyển động riêng. Giữ nguyên sprite Boss đã nâng cấp.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        },
+        {
+          "id": "background",
+          "title": "Chiến Trường Màn 5",
+          "icon": {
+            "kind": "system",
+            "id": "background"
+          },
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Thay nền cũ bằng không gian tối, ít chi tiết, trung tâm thoáng hơn để tập trung quan sát đạn và vùng nguy hiểm.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        },
+        {
+          "id": "buffs",
+          "title": "Điểm Sáng Cường Hóa",
+          "icon": {
+            "kind": "system",
+            "id": "buffs"
+          },
+          "rationale": "",
+          "changes": [
+            {
+              "text": "Thu gọn các lớp cường hóa, phòng thủ và tích năng về mũi, động cơ hoặc vòi phụt thay vì phủ giữa thân chiến cơ. Đồng bộ cách hiển thị trên Pixi và Canvas.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
