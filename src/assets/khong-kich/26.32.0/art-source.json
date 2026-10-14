@@ -1,0 +1,380 @@
+{
+  "version": "26.32.0",
+  "generator": "Built-in image_gen",
+  "promptSet": {
+    "creatures": "Top-down dark fantasy forest creatures; distinct identity per species; full wings, legs and tails; genuine sequential biological motion followed by prepare, attack and recover poses; isolated transparent background; no text, aircraft or grid lines.",
+    "boss": "Nyxara ancient giant moth queen, double wings, luminous veins and living silk tails; separate 24-frame idle, pollen fan, scythe strike, spore cast and phase transition sequences; stable pivot and silhouette; transparent.",
+    "vfx": "Sixteen genuine chronological frames per poison honey explosion, corrosive acid splash, pollen burst, living silk cocoon and shadow teleport; isolated transparent effects with no creature or aircraft bodies.",
+    "ammo": "Six rows: amber stinger, luminous pollen, green acid drop, white silk, crescent scythe, spore seed; four animation frames per row; transparent.",
+    "background": "Dark mysterious forest seen from overhead; subdued foliage at edges, winding luminous stream; open readable center; no enemies, UI or text."
+  },
+  "sequences": {
+    "normal": {
+      "idle": [
+        0,
+        15
+      ],
+      "attack": "cast duration",
+      "idleFps": 12
+    },
+    "eliteAndMother": {
+      "idle": [
+        0,
+        15
+      ],
+      "attack": "cast duration",
+      "idleFps": 12
+    },
+    "boss": {
+      "idle": [
+        0,
+        23
+      ],
+      "fan": [
+        0,
+        23
+      ],
+      "slash": [
+        0,
+        23
+      ],
+      "spore": [
+        0,
+        23
+      ],
+      "phase": [
+        0,
+        23
+      ],
+      "idleFps": 12,
+      "cast": "cast duration",
+      "phaseSeconds": 1.6
+    },
+    "vfx": {
+      "frames": [
+        0,
+        15
+      ],
+      "timing": "effect lifetime"
+    },
+    "stingerMoth": {
+      "columns": 8,
+      "rows": 6,
+      "stingerColumns": [
+        0,
+        3
+      ],
+      "mothColumns": [
+        4,
+        7
+      ]
+    }
+  },
+  "packing": "Each generated source cell is cropped once, resized with preserved aspect ratio and native alpha, and inset by six transparent pixels. No pose duplication, mirroring or rotation manufactures animation frames.",
+  "assets": [
+    {
+      "file": "mantis.png",
+      "source": "exec-66abab29-8e41-41f0-9fc7-09d36c325be2.png",
+      "columns": 4,
+      "rows": 6,
+      "cell": 144,
+      "padding": 6,
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "frames": 24
+    },
+    {
+      "file": "acid_bat.png",
+      "source": "exec-c72f359b-a39a-4c91-9c6c-f875d10827d5.png",
+      "columns": 4,
+      "rows": 6,
+      "cell": 144,
+      "padding": 6,
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "frames": 24
+    },
+    {
+      "file": "web_spider.png",
+      "source": "exec-4b4ef399-014e-4833-8755-cea2fc3616a3.png",
+      "columns": 4,
+      "rows": 6,
+      "cell": 144,
+      "padding": 6,
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "frames": 24
+    },
+    {
+      "file": "spirit_firefly.png",
+      "source": "exec-72f63ceb-406a-4f70-bc3e-cc1ab0f4ccef.png",
+      "columns": 4,
+      "rows": 6,
+      "cell": 144,
+      "padding": 6,
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "frames": 24
+    },
+    {
+      "file": "mantis_lord.png",
+      "source": "exec-a579a612-84e6-4cc5-b9aa-9c70e271e2ca.png",
+      "columns": 4,
+      "rows": 8,
+      "cell": 176,
+      "padding": 6,
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "frames": 32
+    },
+    {
+      "file": "moth_queen.png",
+      "source": "exec-42d7b16f-da27-4818-9575-3dc5516715d0.png",
+      "columns": 4,
+      "rows": 8,
+      "cell": 176,
+      "padding": 6,
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "frames": 32
+    },
+    {
+      "file": "bat_lord.png",
+      "source": "exec-0862b726-ed11-4a7a-b00f-376d41d3854f.png",
+      "columns": 4,
+      "rows": 8,
+      "cell": 176,
+      "padding": 6,
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "frames": 32
+    },
+    {
+      "file": "weaver_matriarch.png",
+      "source": "exec-cfd76015-c6a7-4723-9147-17d852a92f11.png",
+      "columns": 4,
+      "rows": 8,
+      "cell": 176,
+      "padding": 6,
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "frames": 32
+    },
+    {
+      "file": "firefly_ancient.png",
+      "source": "exec-0a528b03-496d-4dcd-8b9f-6b9f01b213a2.png",
+      "columns": 4,
+      "rows": 8,
+      "cell": 176,
+      "padding": 6,
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "frames": 32
+    },
+    {
+      "file": "brood_queen.png",
+      "source": "exec-2682f98a-42ed-402b-b60c-9045beb567c5.png",
+      "columns": 4,
+      "rows": 8,
+      "cell": 192,
+      "padding": 6,
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "frames": 32
+    },
+    {
+      "file": "ancient_cocoon.png",
+      "source": "exec-1072b6d1-a226-4565-932d-84e14813d7bb.png",
+      "columns": 4,
+      "rows": 8,
+      "cell": 192,
+      "padding": 6,
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "frames": 32
+    },
+    {
+      "file": "nyxara_idle.png",
+      "source": "exec-06b4c111-7066-4ad2-8b7e-7b29676a518b.png",
+      "columns": 4,
+      "rows": 6,
+      "cell": 256,
+      "padding": 6,
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "frames": 24
+    },
+    {
+      "file": "nyxara_fan.png",
+      "source": "exec-78724470-30ee-4867-b97a-b330ac325e26.png",
+      "columns": 4,
+      "rows": 6,
+      "cell": 256,
+      "padding": 6,
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "frames": 24
+    },
+    {
+      "file": "nyxara_slash.png",
+      "source": "exec-b9c2de90-5e25-4e4e-beb6-0fd933bce5f4.png",
+      "columns": 4,
+      "rows": 6,
+      "cell": 256,
+      "padding": 6,
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "frames": 24
+    },
+    {
+      "file": "nyxara_spore.png",
+      "source": "exec-36e4dce0-0122-4dc6-b0c6-94297ac68612.png",
+      "columns": 4,
+      "rows": 6,
+      "cell": 256,
+      "padding": 6,
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "frames": 24
+    },
+    {
+      "file": "nyxara_phase.png",
+      "source": "exec-b11740c5-0e29-478e-8e91-4d3b43b4902a.png",
+      "columns": 4,
+      "rows": 6,
+      "cell": 256,
+      "padding": 6,
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "frames": 24
+    },
+    {
+      "file": "vfx_explosion.png",
+      "source": "exec-eb850980-1754-40e6-a005-53ae0e87ffec.png",
+      "columns": 4,
+      "rows": 4,
+      "cell": 128,
+      "padding": 6,
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "frames": 16
+    },
+    {
+      "file": "vfx_acid.png",
+      "source": "exec-58f8992f-7d1f-47b8-b9ae-f86504917dc4.png",
+      "columns": 4,
+      "rows": 4,
+      "cell": 128,
+      "padding": 6,
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "frames": 16
+    },
+    {
+      "file": "vfx_pollen.png",
+      "source": "exec-936124e5-287f-4fc9-b268-89322b121249.png",
+      "columns": 4,
+      "rows": 4,
+      "cell": 128,
+      "padding": 6,
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "frames": 16
+    },
+    {
+      "file": "vfx_web.png",
+      "source": "exec-18ed4a21-ee33-4967-aced-db9668f0e1d4.png",
+      "columns": 4,
+      "rows": 4,
+      "cell": 128,
+      "padding": 6,
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "frames": 16
+    },
+    {
+      "file": "vfx_teleport.png",
+      "source": "exec-9a2580cb-efa7-4042-9ab4-65d7ad2e2a98.png",
+      "columns": 4,
+      "rows": 4,
+      "cell": 128,
+      "padding": 6,
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "frames": 16
+    },
+    {
+      "file": "ammo.png",
+      "source": "exec-41f8c2e8-f14d-4f43-b577-3e0c01ef60d6.png",
+      "columns": 4,
+      "rows": 6,
+      "cell": 64,
+      "padding": 6,
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "frames": 24
+    },
+    {
+      "file": "background.png",
+      "source": "exec-84b4bcc9-9e15-49a9-bde7-c5ba7c1b5669.png",
+      "kind": "scrolling forest stream background"
+    },
+    {
+      "file": "stinger-moth.png",
+      "source": "exec-48119433-347f-4ede-95b8-6637ca98d54d.png",
+      "columns": 8,
+      "rows": 6,
+      "cell": 144,
+      "padding": 6,
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "frames": 48
+    }
+  ]
+}

@@ -35,6 +35,7 @@ export const expansionState = (s: AircraftCombatState): ExpansionState => s.core
 export const expansionActive = (s: AircraftCombatState, key: string) => (s.coreState.timers[key] ?? 0) > s.coreState.time;
 export function activeNegativeStatusTypes(s: AircraftCombatState): Set<string> {
   const status = s.status, now = s.coreState.time, result = externalNegativeStatusTypes(s);
+  for(const key of ["forestRootUntil","forestStunUntil","forestArmorUntil"] as const)if((status[key]??0)>now)result.add(key);
   for (const key of ["stunnedUntil", "skillLockedUntil", "resourceJammedUntil", "armorBrokenUntil", "regenDisabledUntil", "healingReceivedUntil"] as const)
     if (status[key] > now && (key !== "healingReceivedUntil" || status.healingReceivedMultiplier < 1)
       && (key !== "resourceJammedUntil" || status.jams.some(j => j.until > now && j.multiplier < 1))) result.add(key);

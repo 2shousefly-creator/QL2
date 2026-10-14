@@ -25,6 +25,7 @@ export type SkillId =
   | "orbit_reversal" | "stellar_lance" | "starfall";
 
 export type EnemyType =
+  "forest_mantis" | "forest_stinger" | "forest_fae_moth" | "forest_acid_bat" | "forest_web_spider" | "forest_spirit_firefly" | "forest_mantis_lord" | "forest_moth_queen" | "forest_bat_lord" | "forest_weaver_matriarch" | "forest_firefly_ancient" | "forest_brood_queen" | "forest_ancient_cocoon" | "forest_web_node" |
  | "swarm_needler" | "razor_glider" | "aegis_beetle" | "siege_spitter" | "signal_weaver" | "repair_wasp" | "razor_marshal" | "aegis_regent" | "bombard_prelate" | "disruptor_monarch" | "forge_matron" | "brood_ark" | "crucible_ark"
   | "mirage_wisp"
   | "parallax_lancer"

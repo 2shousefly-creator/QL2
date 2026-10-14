@@ -1,3 +1,5 @@
+import { playerRooted } from './airCombatStatus';
+import { isSquadMother } from './airCombatForestCatalog';
 import { expansionIncoming, celestialProtection } from './airCombatExpansion';
 import { equipmentIncoming } from './airCombatEquipmentRuntime';
 import { riptideIncoming } from './airCombatRiptideRuntime';
@@ -36,7 +38,7 @@ const clampX=(x:number)=>Math.max(R.left+25,Math.min(R.right-25,x));
 const clampY=(y:number)=>Math.max(R.top+30,Math.min(R.bottom-35,y));
 function sense(a:HiveAlly,m:PilotMemory){
  const w=a.world,root=hiveRoot(w),body=getPlayerHitbox(w),live=new Set<number>();
- const enemies=root.enemies.filter(e=>e.hp>0&&isHostileToPlayer(w,e)).map(e=>{
+ const enemies=root.enemies.filter(e=>e.hp>0&&isHostileToPlayer(w,e)&&canTargetEnemy(w,e)).map(e=>{
   live.add(e.id);const old=m.enemies.get(e.id),dt=old?.entity===e?root.elapsed-old.at:0;
   const vx=e.stun>0?0:dt>0?Math.max(-400,Math.min(400,(e.x-old!.x)/dt)):0;
   const vy=e.stun>0?0:dt>0?Math.max(-500,Math.min(500,(e.y-old!.y)/dt)):0;
@@ -45,7 +47,7 @@ function sense(a:HiveAlly,m:PilotMemory){
  });
  for(const id of m.enemies.keys())if(!live.has(id))m.enemies.delete(id);
  const shots=root.projectiles.filter(p=>p.owner==='enemy'&&p.allegiance!=='friendly_hacked'&&p.lifetime>0&&Math.hypot(p.x-w.playerX,p.y-w.playerY)<Math.hypot(p.vx,p.vy)*HORIZON+SPEED*HORIZON+body.radius+35);
- const hazards=(root.hive?.hazards??[]).filter(z=>z.kind!=='homing'&&!z.cancelled&&!z.fired&&z.until>root.elapsed&&z.at-root.elapsed<=HORIZON+.25);
+ const hazards=(root.hive?.hazards??[]).filter(z=>z.kind!=='homing'&&!z.cancelled&&(!z.fired||!!z.forest?.linger)&&z.until>root.elapsed&&z.at-root.elapsed<=HORIZON+.25);
  return {w,root,body,enemies,shots,hazards,stats:getEffectiveAircraftStats(w.aircraft)};
 }
 type Scene=ReturnType<typeof sense>;
@@ -72,9 +74,9 @@ function risk(c:Scene,x:number,y:number,horizon=HORIZON,estimateDamage=false){
   // sweepAircraft treats its body as the END pose. Reverse the relative path
   // to inspect current -> candidate without mutating the runtime's cached hitbox.
   if(sweepAircraft(body,e.vx*travel-dx,e.vy*travel-dy,e.body,contact).hit||
-   (horizon>travel&&segmentVsAircraft(e.x+e.vx*travel-dx,e.y+e.vy*travel-dy,e.x+e.vx*horizon-dx,e.y+e.vy*horizon-dy,e.body.radius,body,contact).hit)){score+=400;if(estimateDamage)incoming(stageEnemyConfig(e.entity.type,5).collisionDamage*e.entity.damageScale,e.entity.id);}
-  const dash=e.entity.hive?.dash;
-  if(dash&&segmentVsAircraft(e.x-dx,e.y-dy,dash.endX-dx,dash.endY-dy,e.body.radius,body,contact).hit){score+=380;if(estimateDamage)incoming(stageEnemyConfig(e.entity.type,5).collisionDamage*e.entity.damageScale,e.entity.id);}
+   (horizon>travel&&segmentVsAircraft(e.x+e.vx*travel-dx,e.y+e.vy*travel-dy,e.x+e.vx*horizon-dx,e.y+e.vy*horizon-dy,e.body.radius,body,contact).hit)){score+=400;if(estimateDamage)incoming(stageEnemyConfig(e.entity.type,root.stageId).collisionDamage*e.entity.damageScale,e.entity.id);}
+  const dash=e.entity.hive?.dash??e.entity.forest?.dash;
+  if(dash&&segmentVsAircraft(e.x-dx,e.y-dy,dash.endX-dx,dash.endY-dy,e.body.radius,body,contact).hit){score+=380;if(estimateDamage)incoming(stageEnemyConfig(e.entity.type,root.stageId).collisionDamage*e.entity.damageScale,e.entity.id);}
  }
  if(!estimateDamage)return score;
  const s=w.aircraft;
@@ -92,8 +94,8 @@ function chooseTarget(c:Scene,a:HiveAlly){
  let best:EnemyEntity|undefined,value=-Infinity;
  for(const {entity:e} of c.enemies){
   if(!canTargetEnemy(c.w,e)||e.y<R.top-e.radius||e.y>R.bottom+e.radius)continue;
-  const support=['repair_wasp','forge_matron','signal_weaver'].includes(e.type),big=e.type==='boss'||HIVE_MOTHERS.includes(e.type);
-  const score=(e.id===a.target?18:0)+(e.id===c.root.playerTargetId?12:0)+(support?20:0)+(big?10:0)-Math.abs(e.x-c.w.playerX)*.09-Math.hypot(e.x-c.w.playerX,e.y-c.w.playerY)*.025-(e.y>c.w.playerY?45:0);
+  const support=['repair_wasp','forge_matron','signal_weaver','forest_spirit_firefly','forest_firefly_ancient','forest_web_node'].includes(e.type),big=e.type==='boss'||isSquadMother(e.type);
+  const score=(e.id===a.target?18:0)+(e.id===c.root.playerTargetId?12:0)+(support?20:0)+(big?10:0)+((e.hive?.exposedUntil??0)>c.root.elapsed?22:0)-Math.abs(e.x-c.w.playerX)*.09-Math.hypot(e.x-c.w.playerX,e.y-c.w.playerY)*.025-(e.y>c.w.playerY?45:0);
   if(score>value){value=score;best=e;}
  }
  return best;
@@ -111,7 +113,7 @@ function chooseSkill(c:Scene,a:HiveAlly,m:PilotMemory,target:EnemyEntity|undefin
  const defend=(threatened||critical||hardToDodge&&hp<.65)&&(!protectedNow||critical||unavoidable>.15),canDefend=critical||now>=m.defendAt,canAttack=now>=a.skillAt;
  const ids=AIRCRAFT_CONFIGS[s.aircraftId].skillIds,ultimate=ids.find(isUltimate)!;
  const ult=getWorldSkillAvailability(w,ultimate),learnedUltimate=skillRank(s,ultimate)>0&&!ultimateCastDisabled(s,ultimate);
- const regen=s.status.resourceJammedUntil>s.coreState.time?0:stats.resourceRegen;
+ const regen=stats.resourceRegen;
  const defenseIds=['decoy','armor_shield','invisibility','cinder_fire_shield','argent_guard_stance','terra_reactive_rock_armor','riptide_wellspring','sylva_symbiosis','orbit_reversal'] as SkillId[];
  const defensiveCosts=ids.filter(id=>defenseIds.includes(id)&&skillRank(s,id)>0&&(s.cooldowns[id]??0)<3).map(id=>getWorldSkillAvailability(w,id).cost);
  const defenseReserve=protectedNow?0:Math.min(stats.maxResource*.32,defensiveCosts.length?Math.min(...defensiveCosts):0);
@@ -125,7 +127,7 @@ function chooseSkill(c:Scene,a:HiveAlly,m:PilotMemory,target:EnemyEntity|undefin
  const range=target?Math.hypot(target.x-w.playerX,target.y-w.playerY):Infinity;
  const ahead=!!target&&target.y<w.playerY,line=ahead&&Math.abs(target!.x-w.playerX)<target!.radius+20;
  const cluster=target?c.enemies.filter(e=>Math.hypot(e.x-target.x,e.y-target.y)<100).length:0;
- const durable=!!target&&target.hp>stats.firepower*2.5,big=!!target&&(target.type==='boss'||HIVE_MOTHERS.includes(target.type)||isElite(target.type));
+ const durable=!!target&&target.hp>stats.firepower*2.5,big=!!target&&(target.type==='boss'||isSquadMother(target.type)||isElite(target.type));
  const invis=getWorldSkillAvailability(w,'invisibility'),escapeReserve=s.aircraftId==='phantom'&&skillRank(s,'invisibility')>0?getSkillRuntimeValues(s,'invisibility').cost:0;
  const battery=s.aircraftId==='phantom'?cinderState(w).battery:undefined;
  const feeding=battery?.phase==='feeding',safeBattery=!!battery&&(feeding||battery.phase==='ready')&&!threatened&&hp>.65;
@@ -284,6 +286,7 @@ export function thinkHiveAlly(a:HiveAlly,dt:number){
   if(loot&&hp>.6&&threat<30&&!equipmentRewardsLocked(w.aircraft)&&Math.hypot(loot.x-w.playerX,loot.y-w.playerY)<110&&risk(c,loot.x,loot.y)<25){desiredX=loot.x;desiredY=loot.y;}
   let best=Infinity,bx=w.playerX,by=w.playerY;
   const evaluate=(x:number,y:number)=>{
+   if(playerRooted(w.aircraft)){x=w.playerX;y=w.playerY;}
    x=clampX(x);y=clampY(y);
    const distance=Math.hypot(x-w.playerX,y-w.playerY),reach=SPEED*HORIZON;
    if(distance>reach){x=w.playerX+(x-w.playerX)*reach/distance;y=w.playerY+(y-w.playerY)*reach/distance;}
@@ -311,6 +314,6 @@ export function thinkHiveAlly(a:HiveAlly,dt:number){
  const dx=a.x-w.playerX,dy=a.y-w.playerY,d=Math.hypot(dx,dy),speed=Math.min(SPEED,d*9),blend=1-Math.exp(-dt*(m.urgent?32:14));
  m.vx+=((d>.25?dx/d*speed:0)-m.vx)*blend;m.vy+=((d>.25?dy/d*speed:0)-m.vy)*blend;
  w.playerInputActive=true;
- if(w.dashRemaining>0){m.vx=m.vy=0;return;}
+ if(w.dashRemaining>0||playerRooted(w.aircraft)){m.vx=m.vy=0;return;}
  movePlayerByDelta(w,m.vx*dt,m.vy*dt);
 }

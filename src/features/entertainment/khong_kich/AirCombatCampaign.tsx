@@ -1,3 +1,5 @@
+import { ForestIntel } from './ForestIntel';
+import { FOREST_ART } from './airCombatForestArt';
 import { HiveIntel } from './HiveIntel';
 import { HIVE_ART } from "./airCombatHiveArt";
 import { AIR_COMBAT_VERSION } from "./airCombatReleaseNotes";
@@ -59,7 +61,7 @@ export function AirCombatStageSelect({ progress, selected, onSelect, onAircraft,
         const unlocked = isStageUnlocked(stage.id, progress), cleared = isStageCleared(stage.id, progress);
         const previous = getAirCombatStage(stage.unlockAfterStage ?? -1);
         return <article key={stage.id} data-stage={stage.id} className={`air-stage-card ${unlocked ? "" : "air-stage-locked"}`} style={{ "--stage-accent": stage.accent, "--stage-index": stage.id-1 } as React.CSSProperties}>
-          <div className="air-stage-art" aria-hidden="true">{stage.id===5?<img src={HIVE_ART.backgroundUrl} alt="" style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover"}}/>:<><div className="air-stage-orbit" /><Plane size={72} /></>}<span>{String(stage.id).padStart(2, "0")}</span></div>
+          <div className="air-stage-art" aria-hidden="true">{(stage.id===5||stage.id===6)?<img src={stage.id===6?FOREST_ART.background:HIVE_ART.backgroundUrl} alt="" style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover"}}/>:<><div className="air-stage-orbit" /><Plane size={72} /></>}<span>{String(stage.id).padStart(2, "0")}</span></div>
           <div className="p-5">
             <p className="text-xs font-bold tracking-[.3em] text-slate-400">MÀN {String(stage.id).padStart(2, "0")}</p>
             <h2 className="mt-2 text-2xl font-black text-white">{stage.displayName}</h2>
@@ -67,7 +69,7 @@ export function AirCombatStageSelect({ progress, selected, onSelect, onAircraft,
             <p className="mt-4 text-[10px] tracking-[.15em] text-violet-300">{stage.theme}</p>
             <p className="mt-3 min-h-16 text-sm leading-relaxed text-slate-300">{stage.shortDescription}</p>
             {stage.bossName && <p className="my-4 text-xs text-slate-400">BOSS <strong className="ml-2 text-white">{stage.bossName.toUpperCase()}</strong></p>}
-            {stage.id===5&&<HiveIntel/>}<p className="mt-4 flex items-center gap-2 text-xs font-bold text-cyan-200">{cleared ? <><Check size={16} /> ĐÃ HOÀN THÀNH</> : unlocked ? "ĐÃ MỞ KHÓA" : <><LockKeyhole size={15} /> CHƯA MỞ KHÓA</>}</p>
+            {stage.id===5&&<HiveIntel/>}{stage.id===6&&<ForestIntel/>}<p className="mt-4 flex items-center gap-2 text-xs font-bold text-cyan-200">{cleared ? <><Check size={16} /> ĐÃ HOÀN THÀNH</> : unlocked ? "ĐÃ MỞ KHÓA" : <><LockKeyhole size={15} /> CHƯA MỞ KHÓA</>}</p>
             {!unlocked && previous && <p className="mt-2 text-xs text-slate-400">Đánh bại {previous.bossName} ở Màn {previous.id} để mở khóa.</p>}
             <button className="air-campaign-primary mt-5" disabled={!unlocked || !stage.available} onClick={() => onAircraft(stage.id)}>
               {!stage.available ? "SẮP RA MẮT" : unlocked ? "CHỌN CHIẾN CƠ" : "CHƯA MỞ KHÓA"}<ChevronRight size={16} />

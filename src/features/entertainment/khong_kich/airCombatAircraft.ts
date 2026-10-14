@@ -1,3 +1,4 @@
+import { isSquadStage } from './airCombatForestCatalog';
 import { isTerraSkill } from './airCombatTerraConfig';
 import { isSylvaSkill } from './airCombatSylvaConfig';
 import { isArgentSkill } from './airCombatArgentConfig';
@@ -101,7 +102,7 @@ export function getEffectiveAircraftStats(state: AircraftCombatState, includeTem
     stats.hpRegen = stats.hpRegen * stats.totalHpRegenMultiplier + (stats.dualHpBonus ?? 0);
     if (includeTemporary) {
         const status = state.status;
-        if (status.armorBrokenUntil > c.time) stats.armor *= .65;
+        stats.armor *= Math.min(status.armorBrokenUntil > c.time ? .65 : 1,(status.forestArmorUntil??0)>c.time ? .7 : 1);
         if (status.regenDisabledUntil > c.time) stats.hpRegen = 0;
         stats.resourceRegen *= Math.min(1, ...status.jams.filter(j => j.until > c.time).map(j => j.multiplier));
     }
@@ -159,7 +160,7 @@ const MIRAGE_XP_CURVE = XP_CURVES[1].map((_value,index) => {
  return Math.round((before+XP_CURVES[1][index])*3455/2668)-Math.round(before*3455/2668);
 });
 const HIVE_XP_CURVE=Array.from({length:17},(_,i)=>Math.round(6900*((i+1)/17)**1.35)-Math.round(6900*(i/17)**1.35));
-export function requiredCombatXp(level:number,stageId=1):number {return level>=COMBAT_LEVEL_CAP?0:(stageId===5?HIVE_XP_CURVE:stageId===4?MIRAGE_XP_CURVE:XP_CURVES[stageId===2||stageId===3?1:0])[Math.max(0,level-1)];}
+export function requiredCombatXp(level:number,stageId=1):number {return level>=COMBAT_LEVEL_CAP?0:(isSquadStage(stageId ?? 0)?HIVE_XP_CURVE:stageId===4?MIRAGE_XP_CURVE:XP_CURVES[stageId===2||stageId===3?1:0])[Math.max(0,level-1)];}
 export function gainCombatXp(state: AircraftCombatState, amount: number, stageId = 1): LevelUpResult {
     let remaining = Math.max(0, amount), levelsGained = 0, coreSelectionsDue = 0;
     while (remaining > 0 && state.level < COMBAT_LEVEL_CAP) {

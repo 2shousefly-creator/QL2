@@ -1,3 +1,4 @@
+import { FOREST_ART } from '../airCombatForestArt';
 import { createHiveHud } from '../airCombatHiveHud';
 import { AirCombatDamageText } from './AirCombatDamageText';
 import { AirCombatPixiRenderer } from './AirCombatPixiRenderer';
@@ -21,7 +22,7 @@ function quietBackground(image:HTMLImageElement){
 const cssColor=(color:number)=>'#'+color.toString(16).padStart(6,'0');
 
 export async function createHivePresentation(host:HTMLDivElement,world:CombatWorld,webgl=true):Promise<AirCombatPresentation>{
- const urls=hiveArtUrls();
+ const urls=hiveArtUrls(world.stageId),backgroundUrl=world.stageId===6?FOREST_ART.background:HIVE_ART.backgroundUrl;
  if(!webgl){
   const {drawLegacyWorld,loadAstraCanvasAssets}=await import('../AirCombatLegacyRenderer');
   const {loadGeneratedCanvas}=await import('../airCombatGeneratedArt');
@@ -29,13 +30,13 @@ export async function createHivePresentation(host:HTMLDivElement,world:CombatWor
   const {HealthBarPresentation}=await import('../airCombatFeedback');
   const images=new Map<string,HTMLImageElement>();
   await Promise.all([loadAstraCanvasAssets(),loadGeneratedCanvas(world),...urls.map(async url=>{const image=new Image();image.src=url;await image.decode();images.set(url,image);})]);
-  const background=quietBackground(images.get(HIVE_ART.backgroundUrl)!);
+  const background=quietBackground(images.get(backgroundUrl)!);
   const canvas=document.createElement('canvas'),ratio=Math.min(2,devicePixelRatio||1);canvas.width=360*ratio;canvas.height=640*ratio;canvas.style.cssText='display:block;width:100%;height:100%;pointer-events:none';
   const ctx=canvas.getContext('2d');if(!ctx)throw new Error('Không thể tải đồ họa Màn 5');host.appendChild(canvas);
   const painter:HivePainter={
    sprite(f,x,y,w,h,r=0,alpha=1,additive=false,flipY=false){
     if(w<=0||h<=0||alpha<=0||y+h<0||y-h>640||x+w<0||x-w>360)return;
-    const image=f.url===HIVE_ART.backgroundUrl?background:images.get(f.url);if(!image)return;
+    const image=f.url===backgroundUrl?background:images.get(f.url);if(!image)return;
     const [sx,sy,sw,sh]=f.rect;ctx.save();ctx.translate(x,y);ctx.rotate(r);ctx.globalAlpha=Math.max(0,Math.min(1,alpha));ctx.globalCompositeOperation=additive?'lighter':'source-over';
     if(flipY)ctx.scale(1,-1);
     ctx.drawImage(image,sx*image.width,sy*image.height,sw*image.width,sh*image.height,-w/2,-h/2,w,h);ctx.restore();
@@ -65,8 +66,8 @@ export async function createHivePresentation(host:HTMLDivElement,world:CombatWor
  let background:Texture;
  try{
   await app.init({width:360,height:640,resolution:Math.min(2,devicePixelRatio||1),autoDensity:true,antialias:false,autoStart:false,sharedTicker:false,backgroundAlpha:0,preference:'webgl'});
-  const image=new Image();image.src=HIVE_ART.backgroundUrl;
-  await Promise.all([image.decode(),...urls.filter(url=>url!==HIVE_ART.backgroundUrl).map(url=>Assets.load(url))]);
+  const image=new Image();image.src=backgroundUrl;
+  await Promise.all([image.decode(),...urls.filter(url=>url!==backgroundUrl).map(url=>Assets.load(url))]);
   background=Texture.from(quietBackground(image));
  }catch(error){if(app.renderer)app.destroy(true);assets.destroy();throw error;}
  const scenery=new Container(),aircraft=new Container(),explosions=new Container(),threats=new Container(),mask=new Graphics();
@@ -76,7 +77,7 @@ export async function createHivePresentation(host:HTMLDivElement,world:CombatWor
  const textures=new Map<HiveFrame,Texture>();
  const texture=(f:HiveFrame)=>{
   let t=textures.get(f);if(t)return t;
-  const source=f.url===HIVE_ART.backgroundUrl?background.source:Assets.get<Texture>(f.url).source;
+  const source=f.url===backgroundUrl?background.source:Assets.get<Texture>(f.url).source;
   const [x,y,w,h]=f.rect;t=new Texture({source,frame:new Rectangle(x*source.width,y*source.height,w*source.width,h*source.height)});textures.set(f,t);return t;
  };
  const makePainter=(layer:Container,geometryOnTop=false)=>{
@@ -94,7 +95,7 @@ export async function createHivePresentation(host:HTMLDivElement,world:CombatWor
   };
   return {painter,begin(){used=0;geometry.clear();},end(){for(let i=used;i<sprites.length;i++)sprites[i].visible=false;if(geometryOnTop)layer.setChildIndex(geometry,layer.children.length-1);}};
  };
- const scene=makePainter(scenery,true),blast=makePainter(explosions),danger=makePainter(threats),views=new Map<CombatWorld,AirCombatPixiRenderer>();
+ const scene=makePainter(scenery,true),blast=makePainter(explosions),danger=makePainter(threats,world.stageId===6),views=new Map<CombatWorld,AirCombatPixiRenderer>();
  const damageView=new AirCombatDamageText(createHiveDamagePool()),layout=createHiveDamageLayout(),hud=createHiveHud(host);
  app.stage.addChild(damageView.root);
  let lost=false;const onLost=(event:Event)=>{event.preventDefault();lost=true;};app.canvas.addEventListener('webglcontextlost',onLost);

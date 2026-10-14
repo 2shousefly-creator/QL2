@@ -17,7 +17,7 @@ export function canAcquireDuelTarget(attacker: CombatWorld, defender: CombatWorl
 export const canMaintainDuelTarget = canAcquireDuelTarget;
 /** Call only for acquisition/retention, never for an already committed collision or area effect. */
 export function canTargetEnemy(world: CombatWorld, enemy: EnemyEntity, mode: AircraftTargetingMode = "aimed") {
-  return !world.aftermath && enemy.hp > 0 && (!enemy.aircraftTarget || canAcquireDuelTarget(world, enemy.aircraftTarget.world, mode));
+  return !world.aftermath && enemy.hp > 0 && (mode === "untargeted" || (enemy.forest?.hiddenUntil ?? 0) <= world.elapsed) && (!enemy.aircraftTarget || canAcquireDuelTarget(world, enemy.aircraftTarget.world, mode));
 }
 /** All active opposing decoys, including Phantom clones; never the caster's own. */
 export function duelDecoyTargets(world: CombatWorld) {

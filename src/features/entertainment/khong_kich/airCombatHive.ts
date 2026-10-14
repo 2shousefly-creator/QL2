@@ -1,3 +1,7 @@
+import type { ForestHazard } from './airCombatForest';
+import type { StatusPayload } from './airCombatStatus';
+import { isSquadStage, isSquadMother } from './airCombatForestCatalog';
+import { initializeForestEnemy, updateForestEnemy, updateForestHazards } from './airCombatForest';
 import { castHiveBoss, HIVE_BOSS_INTERVALS } from './airCombatHiveBoss';
 import { AIRCRAFT_CONFIGS, AIRCRAFT_ORDER, CORE_DEFINITIONS, GAMEPLAY_SAFE_RECT as R, stageEnemyConfig } from './airCombatConfig';
 import { getEffectiveAircraftStats, gainCombatXp, tickAircraftState } from './airCombatAircraft';
@@ -14,12 +18,12 @@ import { ensureCoreSelection, selectCore, rerollCore, bestAvailableRerollSource,
 import type { SkillId, CoreCard } from './airCombatTypes';
 
 export interface HiveAlly { world:CombatWorld; slot:number; respawn:number; thinkAt:number; skillAt:number; buildAt?:number; x:number;y:number; allocation:number; target?:number; }
-export interface HiveHazard { id:number; enemyId:number; kind:'blast'|'lane'|'dash'|'pulse'|'homing'; x:number;y:number;endX:number;endY:number;radius:number; start:number; at:number; until:number; damage:number; fired:boolean; cancelled?:boolean; pattern:number; bossStyle?:number }
+export interface HiveHazard { forest?:ForestHazard; id:number; enemyId:number; kind:'blast'|'lane'|'dash'|'pulse'|'homing'; x:number;y:number;endX:number;endY:number;radius:number; start:number; at:number; until:number; damage:number; fired:boolean; cancelled?:boolean; pattern:number; bossStyle?:number }
 export interface HiveEnemy { basicCooldown?:number; coreOpen?:boolean; slot:number; attack:number; exposedUntil:number; shield:number; shieldBroken:boolean; phase:number; support:number; repairTarget?:number; dash?:{x:number;y:number;endX:number;endY:number;start:number;until:number;hits:Set<CombatWorld>} }
 export interface HiveEffect {row:number;x:number;y:number;size:number;at:number;duration:number;blast?:HiveHazard;bossStyle?:number}
 export interface HiveState { allies:HiveAlly[]; hazards:HiveHazard[]; effects:HiveEffect[]; majorReady:number; nextHazard:number; lootOwner?:number; ccUntil:number; defeated?:boolean }
 export const hiveRespawnSeconds=(elapsed:number)=>Math.min(60,15+5*Math.floor(Math.max(0,elapsed)/30));
-export interface HiveHooks { spawn:(w:CombatWorld,type:EnemyEntity['type'])=>EnemyEntity|null; movement:(w:CombatWorld,e:EnemyEntity)=>number; projectile:(w:CombatWorld,p:Partial<ProjectileEntity>&Pick<ProjectileEntity,'owner'|'x'|'y'|'vx'|'vy'|'rawDamage'>)=>ProjectileEntity|null; hit:(w:CombatWorld,damage:number,stun?:number,source?:EnemyEntity,collision?:boolean)=>void }
+export interface HiveHooks { spawn:(w:CombatWorld,type:EnemyEntity['type'])=>EnemyEntity|null; movement:(w:CombatWorld,e:EnemyEntity)=>number; projectile:(w:CombatWorld,p:Partial<ProjectileEntity>&Pick<ProjectileEntity,'owner'|'x'|'y'|'vx'|'vy'|'rawDamage'>)=>ProjectileEntity|null; hit:(w:CombatWorld,damage:number,stun?:number,source?:EnemyEntity,collision?:boolean,payload?:StatusPayload)=>void }
 export const hiveRoot=(w:CombatWorld)=>w.hiveHost??w;
 const rosters=new WeakMap<CombatWorld,{hive:HiveState|undefined;actors:CombatWorld[]}>();
 export const hiveActors=(w:CombatWorld)=>{
@@ -34,7 +38,7 @@ export function createHive(root:CombatWorld,create:(id:CombatWorld['aircraft']['
  root.aircraft.hiveSquad=true;
  for(let slot=0;slot<2;slot++){
   const id=pool.splice(Math.min(pool.length-1,Math.floor(root.random()*pool.length)),1)[0],w=create(id);
-  w.hiveHost=root;w.stage=root.stage;w.stageId=5;w.aircraft.hiveSquad=true;w.enemies=root.enemies;
+  w.hiveHost=root;w.stage=root.stage;w.stageId=root.stageId;w.aircraft.hiveSquad=true;w.enemies=root.enemies;
   w.nextId=(slot+1)*100000000;w.playerX=R.left+R.width*(slot?.76:.24);w.playerY=R.bottom-90;
   w.initialCoreQueued=true;w.aircraft.pendingMilestones=[1];w.pendingCoreSelections=1;
   hive.allies.push({world:w,slot,respawn:0,thinkAt:.2+slot*.07,skillAt:1,x:w.playerX,y:w.playerY,allocation:0});
@@ -47,18 +51,19 @@ const slowedNormal=(w:CombatWorld,e:EnemyEntity)=>HIVE_NORMALS.includes(e.type)&
 const normalSkill=(e:EnemyEntity)=>['razor_glider','siege_spitter','signal_weaver'].includes(e.type);
 const attackInterval=(w:CombatWorld,e:EnemyEntity,seconds:number,skill:boolean)=>seconds*(skill?(slowedNormal(w,e)?2:1):HIVE_NORMALS.includes(e.type)?(slowedNormal(w,e)?8:2):1);
 export function initializeHiveEnemy(w:CombatWorld,e:EnemyEntity){
- if(w.stageId!==5)return;
+ if(!isSquadStage(w.stageId))return;
  e.hive={slot:w.spawnedInWave,attack:0,exposedUntil:0,shield:0,shieldBroken:false,phase:1,support:0};
  e.airframeRotation=0; // The generated enemy atlas is authored nose down.
- if(e.type==='boss'){e.hp=e.maxHp=stageEnemyConfig('boss',5).baseHp;e.armor=stageEnemyConfig('boss',5).baseArmor;e.damageScale=1;}
+ if(e.type==='boss'){e.hp=e.maxHp=stageEnemyConfig('boss',w.stageId).baseHp;e.armor=stageEnemyConfig('boss',w.stageId).baseArmor;e.damageScale=1;}
  if(e.type==='aegis_beetle'||e.type==='aegis_regent')e.hive.shield=e.maxHp*.35;
  e.x=R.left+35+(w.spawnedInWave%6)*(R.width-70)/5;
- if(HIVE_MOTHERS.includes(e.type)||e.type==='boss')e.x=R.left+R.width/2;
- const leader=w.enemies.find(n=>n!==e&&n.hp>0&&HIVE_MOTHERS.includes(n.type));
+ if(isSquadMother(e.type)||e.type==='boss')e.x=R.left+R.width/2;
+ const leader=w.enemies.find(n=>n!==e&&n.hp>0&&isSquadMother(n.type));
  if(leader&&w.spawnedInWave<7){e.x=leader.x+(w.spawnedInWave%5-2)*38;e.y=leader.y+70;}
  const opening=1.8+(w.spawnedInWave%6)*.25;
  e.fireCooldown=attackInterval(w,e,opening,normalSkill(e));
  if(e.type==='signal_weaver')e.hive.basicCooldown=attackInterval(w,e,opening,false);
+ if(w.stageId===6)initializeForestEnemy(w,e);
 }
 export function hiveArmorExposed(w:CombatWorld,e:EnemyEntity,contact?:{x:number;y:number}){
  return !!e.hive&&e.hive.exposedUntil>hiveRoot(w).elapsed&&!!contact&&Math.hypot(contact.x-e.x,contact.y-e.y)<=e.radius*.42;
@@ -70,14 +75,14 @@ export function hiveShieldAbsorb(w:CombatWorld,e:EnemyEntity,raw:number,contact?
  return raw-used;
 }
 export function hiveMotherDeath(w:CombatWorld,e:EnemyEntity){
- if(!HIVE_MOTHERS.includes(e.type))return;
+ if(!isSquadMother(e.type))return;
  hiveFx(w,0,e.x,e.y,640,1.25);
- for(const other of w.enemies)if(other!==e&&other.hp>0&&!isElite(other.type)&&other.type!=='boss'&&!HIVE_MOTHERS.includes(other.type)&&Math.hypot(other.x-e.x,other.y-e.y)<=320){
+ for(const other of w.enemies)if(other!==e&&other.hp>0&&!isElite(other.type)&&other.type!=='boss'&&!isSquadMother(other.type)&&Math.hypot(other.x-e.x,other.y-e.y)<=320){
   const owner=e.hiveKiller??w,damage=Math.min(other.hp,e.maxHp);other.hp-=damage;owner.damageDealt+=damage;recordDpsDamage(owner,damage);other.hiveKiller=owner;other.killProcEligible=false;
  }
 }
 export function hiveXp(w:CombatWorld,xp:number){
- for(const a of w.hive?.allies??[]){const dead=a.respawn>0||a.world.aircraft.currentHp<=0;gainCombatXp(a.world.aircraft,xp,5);a.world.pendingCoreSelections=a.world.aircraft.pendingMilestones.length;if(dead)a.world.aircraft.currentHp=0;}
+ for(const a of w.hive?.allies??[]){const dead=a.respawn>0||a.world.aircraft.currentHp<=0;gainCombatXp(a.world.aircraft,xp,w.stageId);a.world.pendingCoreSelections=a.world.aircraft.pendingMilestones.length;if(dead)a.world.aircraft.currentHp=0;}
 }
 
 function equipmentValue(w:CombatWorld,id:EquipmentDefinitionId){
@@ -166,8 +171,9 @@ function fan(w:CombatWorld,e:EnemyEntity,h:HiveHooks,angle:number,count:number,s
  for(let i=0;i<count;i++){const a=angle+(i-(count-1)/2)*spacing;h.projectile(w,{owner:'enemy',x:e.x,y:e.y,vx:Math.cos(a)*speed,vy:Math.sin(a)*speed,rawDamage:damage,radius:3.2,sourceEnemyId:e.id,sourceEnemyType:e.type,hiveAmmo:e.type==='razor_glider'||e.type==='razor_marshal'?1:0,color:'#ffad38',lifetime:7});}
 }
 export function updateHiveEnemy(w:CombatWorld,e:EnemyEntity,dt:number,hooks:HiveHooks):boolean {
+ if(w.stageId===6)return updateForestEnemy(w,e,dt,hooks);
  if(!e.hive||!w.hive)return false;const h=e.hive,actors=hiveActors(w).filter(a=>a.aircraft.currentHp>0&&!a.destruction),target=actors[(h.attack+h.slot)%Math.max(1,actors.length)]??w;
- const mother=HIVE_MOTHERS.includes(e.type),boss=e.type==='boss',elite=isElite(e.type),stats=stageEnemyConfig(e.type,5),damage=stats.projectileDamage*e.damageScale;
+ const mother=isSquadMother(e.type),boss=e.type==='boss',elite=isElite(e.type),stats=stageEnemyConfig(e.type,5),damage=stats.projectileDamage*e.damageScale;
  if(boss){const phase=Math.min(4,1+Math.floor((1-e.hp/e.maxHp)*4));if(phase!==h.phase){h.phase=phase;w.bossPhase=phase;hiveFx(w,2,e.x,e.y,220,1.1);}}
  h.coreOpen=h.exposedUntil>w.elapsed;
  // Escorts use the same independent movement as ordinary waves.

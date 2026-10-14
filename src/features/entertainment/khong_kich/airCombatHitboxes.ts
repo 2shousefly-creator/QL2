@@ -20,6 +20,20 @@ export const PLAYER_AIRFRAME_SIZE:Record<AircraftId,number>={terra:PLAYER_STANDA
 export const PLAYER_STANDARD_HITBOX_PROFILE=profile([cap(0,-.39,0,.27,.055,"body"),cap(-.06,-.04,-.27,.15,.045,"left_wing"),cap(.06,-.04,.27,.15,.045,"right_wing"),cap(-.06,.26,.06,.26,.035,"tail")]);
 export const PLAYER_HITBOX_PROFILES:Record<AircraftId,AircraftHitboxProfile>={terra:PLAYER_STANDARD_HITBOX_PROFILE,sylva:PLAYER_STANDARD_HITBOX_PROFILE,argent:PLAYER_STANDARD_HITBOX_PROFILE,riptide:PLAYER_STANDARD_HITBOX_PROFILE,cinder:PLAYER_STANDARD_HITBOX_PROFILE,black_eagle:PLAYER_STANDARD_HITBOX_PROFILE,breaker:PLAYER_STANDARD_HITBOX_PROFILE,astra:PLAYER_STANDARD_HITBOX_PROFILE,phantom:PLAYER_STANDARD_HITBOX_PROFILE};
 export const ENEMY_HITBOX_PROFILES:Record<EnemyType,AircraftHitboxProfile>={
+ forest_mantis:profile([cap(0,-.30,0,.28,.07),cap(-.10,.02,-.27,.27,.055),cap(.10,.02,.27,.27,.055)]),
+ forest_stinger:profile([cap(0,-.3,0,.29,.085),cap(-.1,-.08,-.27,.08,.055),cap(.1,-.08,.27,.08,.055)]),
+ forest_fae_moth:profile([cap(0,-.26,0,.26,.075),cap(-.1,-.15,-.31,.06,.08),cap(.1,-.15,.31,.06,.08)]),
+ forest_acid_bat:profile([cap(0,-.22,0,.22,.085),cap(-.1,-.08,-.33,.05,.055),cap(.1,-.08,.33,.05,.055)]),
+ forest_web_spider:profile([cap(0,-.22,0,.24,.10),cap(-.12,0,-.28,.12,.045),cap(.12,0,.28,.12,.045)]),
+ forest_spirit_firefly:profile([cap(0,-.29,0,.26,.075),cap(-.1,-.08,-.24,.08,.045),cap(.1,-.08,.24,.08,.045)]),
+ forest_mantis_lord:profile([cap(0,-.30,0,.28,.08),cap(-.1,0,-.3,.25,.07),cap(.1,0,.3,.25,.07)]),
+ forest_moth_queen:profile([cap(0,-.30,0,.28,.09),cap(-.1,-.15,-.32,.14,.08),cap(.1,-.15,.32,.14,.08)]),
+ forest_bat_lord:profile([cap(0,-.28,0,.27,.10),cap(-.1,-.08,-.34,.12,.06),cap(.1,-.08,.34,.12,.06)]),
+ forest_weaver_matriarch:profile([cap(0,-.24,0,.28,.12),cap(-.1,-.1,-.31,.16,.05),cap(.1,-.1,.31,.16,.05)]),
+ forest_firefly_ancient:profile([cap(0,-.30,0,.28,.10),cap(-.1,-.1,-.28,.1,.06),cap(.1,-.1,.28,.1,.06)]),
+ forest_brood_queen:profile([cap(0,-.32,0,.29,.13),cap(-.12,-.12,-.3,.12,.07),cap(.12,-.12,.3,.12,.07)]),
+ forest_ancient_cocoon:profile([cap(0,-.25,0,.25,.18)]),
+ forest_web_node:profile([cap(0,0,0,0,.28)]),
 swarm_needler:profile([cap(0,-.30,0,.29,.11),cap(-.10,-.08,-.29,.08,.07),cap(.10,-.08,.29,.08,.07)]),
 razor_glider:profile([cap(0,-.30,0,.29,.11),cap(-.10,-.08,-.29,.08,.07),cap(.10,-.08,.29,.08,.07)]),
 aegis_beetle:profile([cap(0,-.30,0,.29,.11),cap(-.10,-.08,-.29,.08,.07),cap(.10,-.08,.29,.08,.07)]),
@@ -126,7 +140,7 @@ const STORMBREAKER_HITBOX_PROFILE=profile([cap(0,-.34,0,.30,.095),cap(-.17,-.18,
 const TEMPEST_HITBOX_PROFILE=profile([cap(0,-.32,0,.32,.13),cap(-.1,-.17,-.22,.2,.075),cap(.1,-.17,.22,.2,.075),cap(-.18,0,-.4,0,.055),cap(.18,0,.4,0,.055)]);
 const HIVE_OPEN_CORE=profile([cap(0,0,0,0,.13,'body'),cap(-.30,-.22,-.30,.24,.075),cap(.30,-.22,.30,.24,.075)]);
 export const getEnemyHitbox=(e:EnemyEntity)=>{
-  if(e.hive)return transform(e,e.hive.coreOpen?HIVE_OPEN_CORE:e.type==='boss'?ENEMY_HITBOX_PROFILES.brood_ark:ENEMY_HITBOX_PROFILES[e.type],e.x,e.y,e.radius*2.8,0);
+  if(e.hive)return transform(e,e.hive.coreOpen?HIVE_OPEN_CORE:e.type==='boss'?(e.forest?ENEMY_HITBOX_PROFILES.forest_moth_queen:ENEMY_HITBOX_PROFILES.brood_ark):ENEMY_HITBOX_PROFILES[e.type],e.x,e.y,e.radius*2.8,e.forest?e.airframeRotation??0:0);
   if (e.aircraftTarget) { const a=e.aircraftTarget.world; return transform(e,PLAYER_HITBOX_PROFILES[a.aircraft.aircraftId],e.x,e.y,effectivePlayerAirframeSize(a),Math.PI); }
   if (e.type === "boss" && e.mirage) return transform(e,PARALLAX_HITBOX_PROFILE,e.x,e.y,e.radius*3.2,enemyAirframeRotation(e));
   const storm=e.type==="boss" && !!e.stormbreaker;

@@ -1,0 +1,990 @@
+{
+  "version": "26.32.0",
+  "title": "Màn 6 — Cánh Rừng Bí Ẩn",
+  "displayTitle": "KHÔNG KÍCH 26.32.0 — MÀN 6: CÁNH RỪNG BÍ ẨN",
+  "summary": "Cùng hai đồng minh tiến vào khu rừng tối có suối, đối đầu bầy sinh vật phục kích, năm Tinh Anh và NYXARA Ω với đạn nhiều lớp, debuff và khống chế.",
+  "sections": [
+    {
+      "id": "forest-stage",
+      "title": "MÀN 6 · CÁNH RỪNG BÍ ẨN",
+      "icon": {
+        "kind": "wave",
+        "id": "stage6"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "forest-launch",
+          "icon": {
+            "kind": "wave",
+            "id": "stage6"
+          },
+          "title": "Cánh Rừng Bí Ẩn",
+          "rationale": "Một chiến trường tổ đội mới sau Công Phá Tổ Máy.",
+          "changes": [
+            {
+              "text": "Mở Màn 6 sau khi hoàn thành Màn 5. Tiến vào khu rừng có sinh vật mới, quái mẹ và Boss riêng.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Người chơi đồng hành cùng hai chiến cơ AI ngẫu nhiên, khác nhau và khác chiến cơ đang điều khiển. Đồng minh tự tăng kỹ năng, chọn lõi, ghép và đeo trang bị theo cơ chế tổ đội hiện có.",
+              "format": "bullet",
+              "changeType": "unchanged"
+            },
+            {
+              "text": "Giữ loot chung cho các thành viên đủ điều kiện, phần thưởng riêng từ lõi và tương tác của Cái Giá Phải Trả, Thích Chơi Xác Suất.",
+              "format": "bullet",
+              "changeType": "unchanged"
+            }
+          ]
+        },
+        {
+          "id": "forest-waves",
+          "icon": {
+            "kind": "wave",
+            "id": "stage6"
+          },
+          "title": "Tám Wave Chiến Đấu",
+          "rationale": "Vượt qua bầy đàn, hai wave hộ tống và ba cuộc đối đầu Tinh Anh trước Boss.",
+          "changes": [
+            {
+              "text": "Thứ tự: Thường 1 → Thường 2 → Tinh Anh 1 → Thường 3 → Tinh Anh 2 → Thường 4 → Tinh Anh 3 → Boss.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Bốn wave thường có 70 / 120 / 170 / 220 quái; tối đa 30 quái thường sống cùng lúc, bao gồm quái mẹ và hỗ trợ.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Wave thường 2 gồm một Ong Chúa Mẫu Thể và 119 hộ vệ. Wave thường 4 gồm một Kén Bướm Cổ Đại và 219 hộ vệ.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Ba wave Tinh Anh lần lượt có 3 / 4 / 5 Tinh Anh. Tổng quái chính trước Boss cấp 7.000 XP chiến đấu; cấp 18 cần 6.900 XP.",
+              "format": "bullet",
+              "changeType": "new"
+            }
+          ]
+        },
+        {
+          "id": "forest-power",
+          "icon": {
+            "kind": "enemy",
+            "id": "forest_mantis"
+          },
+          "title": "Sức Mạnh Sinh Vật",
+          "rationale": "Chỉ số cao hơn Màn 5, đi cùng các lối đánh mới.",
+          "changes": [
+            {
+              "text": "Máu, Giáp, Hỏa lực và sát thương tiếp xúc nền tăng 10% so với quái Màn 5 được đối chiếu.",
+              "format": "bullet",
+              "changeType": "new",
+              "label": "Chỉ số chiến đấu nền",
+              "before": "Quái tương ứng Màn 5",
+              "after": "Màn 6: ×1,10"
+            },
+            {
+              "text": "Quái thường giữ hệ số tiến triển ×0,5 / ×1 / ×1,5 / ×2 theo bốn wave.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Tốc độ đạn tương đương Màn 5, gồm cả đạn tách và đạn homing. Tinh Anh và Boss tăng độ khó bằng pattern, chuỗi tấn công và trạng thái bất lợi.",
+              "format": "bullet",
+              "changeType": "new"
+            }
+          ]
+        },
+        {
+          "id": "forest-background",
+          "icon": {
+            "kind": "system",
+            "id": "forest_background"
+          },
+          "title": "Rừng Tối & Dòng Suối",
+          "rationale": "Giữ chiến trường rõ giữa các lớp đạn và hiệu ứng.",
+          "changes": [
+            {
+              "text": "Nền rừng tối có cây, rễ và dây leo tập trung ở hai biên; vùng trung tâm thoáng, có suối uốn nhẹ theo chiều dọc.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Nước xanh xám tối, chuyển động và phản chiếu nhẹ. Đạn sáng và cảnh báo đỏ nổi bật trên nền.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Nền cuộn chậm theo thời gian trận đấu, dừng khi tạm dừng và giảm chuyển động theo thiết lập. Suối là hình ảnh nền, giữ nguyên đường bay và cách điều khiển.",
+              "format": "bullet",
+              "changeType": "new"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "forest-normals",
+      "title": "SÁU LOẠI QUÁI THƯỜNG",
+      "icon": {
+        "kind": "enemy",
+        "id": "forest_fae_moth"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "forest-mantis",
+          "icon": {
+            "kind": "enemy",
+            "id": "forest_mantis"
+          },
+          "title": "Bọ Ngựa Tàng Ảnh",
+          "rationale": "Phục kích bằng tàng hình, dịch chuyển và liềm chém.",
+          "changes": [
+            {
+              "text": "Tàng hình ngắn, khóa vị trí mục tiêu rồi dịch chuyển tới gần để chém bằng đôi liềm.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Vị trí đã khóa có cảnh báo trước đòn chém; hoạt ảnh biến mất và xuất hiện giúp nhận biết nhịp phục kích.",
+              "format": "bullet",
+              "changeType": "new"
+            }
+          ]
+        },
+        {
+          "id": "forest-stinger",
+          "icon": {
+            "kind": "enemy",
+            "id": "forest_stinger"
+          },
+          "title": "Ong Sát Thủ",
+          "rationale": "Ngòi chích và đường lao tạo áp lực áp sát.",
+          "changes": [
+            {
+              "text": "Phóng loạt ngòi nhỏ, sau đó lao chích theo tuyến đã cảnh báo rồi rút về.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Cánh, thân và ngòi chuyển động theo pha chuẩn bị, lao và rút; vùng va chạm theo đường lao thực tế.",
+              "format": "bullet",
+              "changeType": "new"
+            }
+          ]
+        },
+        {
+          "id": "forest-fae-moth",
+          "icon": {
+            "kind": "enemy",
+            "id": "forest_fae_moth"
+          },
+          "title": "Bướm Tinh Vân",
+          "rationale": "Vỗ cánh phủ đạn quạt và hạt phấn.",
+          "changes": [
+            {
+              "text": "Bắn hai hoặc ba lớp quạt lệch góc; một số hạt phấn tách thành đạn nhỏ theo nhịp.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Các khe né thay đổi giữa những lần vỗ cánh; đạn hồng tím có lõi sáng và hình dạng riêng.",
+              "format": "bullet",
+              "changeType": "new"
+            }
+          ]
+        },
+        {
+          "id": "forest-acid-bat",
+          "icon": {
+            "kind": "enemy",
+            "id": "forest_acid_bat"
+          },
+          "title": "Dơi Hủ Thực",
+          "rationale": "Axit gây sát thương và làm suy yếu khả năng chịu đòn.",
+          "changes": [
+            {
+              "text": "Phun giọt axit xanh chanh có đuôi kéo sáng.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Axit trúng gây giảm 30% Giáp và 35% hiệu quả hồi phục trong 3 giây. Trúng thêm làm mới thời gian, mức giảm không cộng dồn.",
+              "format": "bullet",
+              "changeType": "new"
+            }
+          ]
+        },
+        {
+          "id": "forest-web-spider",
+          "icon": {
+            "kind": "enemy",
+            "id": "forest_web_spider"
+          },
+          "title": "Nhện Tơ Quang",
+          "rationale": "Tuyến tơ buộc tổ đội lựa chọn đường đi.",
+          "changes": [
+            {
+              "text": "Giăng tơ giữa các điểm đã cảnh báo, sau đó phát xung gây sát thương dọc tuyến.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Đầu tuyến, điểm nối và nhịp kích hoạt được thể hiện bằng hoạt ảnh tơ sáng để đọc đường đi giữa bầy quái.",
+              "format": "bullet",
+              "changeType": "new"
+            }
+          ]
+        },
+        {
+          "id": "forest-spirit-firefly",
+          "icon": {
+            "kind": "enemy",
+            "id": "forest_spirit_firefly"
+          },
+          "title": "Đom Đóm Tinh Linh",
+          "rationale": "Sinh vật hỗ trợ hồi phục cho bầy đàn.",
+          "changes": [
+            {
+              "text": "Bay phía sau bầy, hồi phục cho đồng loại ở gần và phát vòng đạn ánh sáng.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Ánh sáng truyền tới mục tiêu được hồi giúp nhận diện sinh vật hỗ trợ đang bảo vệ mẹ hoặc Tinh Anh.",
+              "format": "bullet",
+              "changeType": "new"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "forest-elites",
+      "title": "TINH ANH · HỘI ĐỒNG DẠ LÂM",
+      "icon": {
+        "kind": "enemy",
+        "id": "forest_moth_queen"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "forest-mantis-lord",
+          "icon": {
+            "kind": "enemy",
+            "id": "forest_mantis_lord"
+          },
+          "title": "Ảnh Liêm Chúa",
+          "rationale": "Phục kích nhiều nhịp, khóa kỹ năng và kết thúc bằng đòn choáng.",
+          "changes": [
+            {
+              "text": "Dịch chuyển nối tiếp, chém giao nhau, phóng liềm cong và để lại tàn ảnh phát đạn trễ.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Liêm Ảnh Câm Lặng: đòn chém trúng gây Câm Lặng trong 1,2–1,8 giây, tùy đòn.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Tam Liêm Đoạt Mệnh: ba nhịp chém; nhịp cuối gây Choáng trong 0,4–0,6 giây.",
+              "format": "bullet",
+              "changeType": "new"
+            }
+          ]
+        },
+        {
+          "id": "forest-moth-queen",
+          "icon": {
+            "kind": "enemy",
+            "id": "forest_moth_queen"
+          },
+          "title": "Bướm Nữ Hoàng",
+          "rationale": "Màn phấn nhiều lớp gây áp lực lên tài nguyên và hồi phục.",
+          "changes": [
+            {
+              "text": "Quạt đạn từ nhiều cánh, xoáy phấn hai chiều, đạn tách theo nhịp và màn phấn phủ gần toàn sân với khe đi qua.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Phấn Hấp Sinh: hạt phấn đặc biệt gây giảm 50% tốc độ hồi tài nguyên trong 3 giây.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Màn Phấn Độc: cụm đạn tách gây giảm 35% hiệu quả hồi phục trong 3–4 giây, tùy đòn.",
+              "format": "bullet",
+              "changeType": "new"
+            }
+          ]
+        },
+        {
+          "id": "forest-bat-lord",
+          "icon": {
+            "kind": "enemy",
+            "id": "forest_bat_lord"
+          },
+          "title": "Dơi Chúa Hủ Thực",
+          "rationale": "Mưa axit và vùng độc khiến việc chịu đòn kéo dài bất lợi.",
+          "changes": [
+            {
+              "text": "Phun mưa axit theo hàng, giọt nổ tỏa, tuyến phun chéo và vùng axit tồn tại ngắn.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Mưa Axit Ăn Mòn: giảm 30% Giáp trong 3–4 giây, tùy đòn.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Huyết Độc Lan Tràn: giảm 35% hiệu quả hồi phục trong 3–4 giây, tăng áp lực khi tổ đội đang mất Máu.",
+              "format": "bullet",
+              "changeType": "new"
+            }
+          ]
+        },
+        {
+          "id": "forest-weaver-matriarch",
+          "icon": {
+            "kind": "enemy",
+            "id": "forest_weaver_matriarch"
+          },
+          "title": "Nhện Chúa Dệt Mộng",
+          "rationale": "Lưới tơ, trói chân và kén phong ấn chia cắt chiến trường.",
+          "changes": [
+            {
+              "text": "Tạo lưới giao nhau và kích hoạt các tuyến tơ tuần tự. Phá điểm lưới để mở khoảng trống.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Tơ Khóa Chân: trúng tuyến tơ gây Trói Chân trong 0,8–1,2 giây; vẫn có thể bắn và dùng kỹ năng nếu không chịu khóa khác.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Kén Phong Ấn: kén khóa vị trí rồi phát nổ, gây Câm Lặng trong 1,2–1,8 giây.",
+              "format": "bullet",
+              "changeType": "new"
+            }
+          ]
+        },
+        {
+          "id": "forest-firefly-ancient",
+          "icon": {
+            "kind": "enemy",
+            "id": "forest_firefly_ancient"
+          },
+          "title": "Linh Đom Đóm Cổ Đại",
+          "rationale": "Hỗ trợ đồng loại và gây suy yếu bằng xung bào tử.",
+          "changes": [
+            {
+              "text": "Hồi phục đồng loại, phát vòng đạn mở rộng và gọi hỗ trợ hữu hạn.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Xung Hấp Sinh: giảm 50% tốc độ hồi tài nguyên trong 3 giây.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Phong Ấn Sinh Lực: cụm sáng đặc biệt giảm 35% hiệu quả hồi phục trong 3–4 giây.",
+              "format": "bullet",
+              "changeType": "new"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "forest-mothers",
+      "title": "HỘ TỐNG · HAI MẪU THỂ",
+      "icon": {
+        "kind": "enemy",
+        "id": "forest_brood_queen"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "forest-brood-queen",
+          "icon": {
+            "kind": "enemy",
+            "id": "forest_brood_queen"
+          },
+          "title": "Ong Chúa Mẫu Thể",
+          "rationale": "Quái mẹ của Tổ Ong Cổ Đại, được bầy hộ vệ bảo vệ.",
+          "changes": [
+            {
+              "text": "Nằm trong tổng 120 quái của wave thường 2. Bay chậm, phóng loạt ngòi và đòn mạnh có cảnh báo.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Hộ vệ tạo áp lực quanh mẹ; sinh vật hỗ trợ hồi phục. Cửa sổ lộ lõi cho phép đánh trúng tâm điểm yếu để bỏ qua Giáp.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Khi bị hạ, mẹ nổ mật độc trong bán kính 320, gây sát thương chuẩn bằng 100% Máu tối đa của mẹ lên quái thường khác đang sống trong vùng.",
+              "format": "bullet",
+              "changeType": "new"
+            }
+          ]
+        },
+        {
+          "id": "forest-ancient-cocoon",
+          "icon": {
+            "kind": "enemy",
+            "id": "forest_ancient_cocoon"
+          },
+          "title": "Kén Bướm Cổ Đại",
+          "rationale": "Mẫu thể bào tử của wave hộ tống cuối.",
+          "changes": [
+            {
+              "text": "Nằm trong tổng 220 quái của wave thường 4. Kén co giãn, tích năng rồi phát phấn, cụm nổ và tuyến tấn công.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Thanh Máu nổi bật và hoạt ảnh mở lõi giúp nhận diện thời điểm dồn hỏa lực.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Khi bị hạ, kén nổ bào tử theo cùng cơ chế quái mẹ. Vụ nổ chỉ tác động lên quái thường khác trong vùng; công kết liễu thuộc thành viên hạ mẹ.",
+              "format": "bullet",
+              "changeType": "new"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "forest-boss",
+      "title": "NYXARA Ω · NỮ HOÀNG DẠ LÂM",
+      "icon": {
+        "kind": "boss",
+        "id": "nyxara"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "nyxara-overview",
+          "icon": {
+            "kind": "boss",
+            "id": "nyxara"
+          },
+          "title": "NYXARA Ω — Nữ Hoàng Dạ Lâm",
+          "rationale": "Bướm chúa cổ đại với bốn phase và 12 kỹ năng.",
+          "changes": [
+            {
+              "text": "Boss có hai lớp cánh, gân lân quang, lõi bào tử ở ngực và các dải tơ sống. Máu, Giáp, Hỏa lực và sát thương tiếp xúc nền cao hơn Hive Tyrant Ω 10%.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "100–75% Máu: các nhóm đạn và nhịp vỗ cánh tạo áp lực chiến đấu.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "75–50% Máu: thêm phục kích, homing và hỗ trợ hữu hạn.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "50–25% Máu: kết hợp các nhóm kỹ năng, tăng áp lực đổi vị trí.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Dưới 25% Máu: chuỗi tấn công phủ gần toàn sân; sau chuỗi lớn có cửa sổ lộ lõi để phản công.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Đạn dày phối hợp với tám kỹ năng gây debuff hoặc khống chế. Tốc độ đạn tương đương Màn 5; vùng cảnh báo giữ thiết kế đã dùng ở Công Phá Tổ Máy.",
+              "format": "bullet",
+              "changeType": "new"
+            }
+          ],
+          "group": true
+        },
+        {
+          "id": "nyxara-pollen-fan",
+          "icon": {
+            "kind": "vfx",
+            "id": "forest_pollen"
+          },
+          "title": "Thiên La Phấn Tinh",
+          "rationale": "Quạt phấn nhiều lớp từ hai cánh.",
+          "changes": [
+            {
+              "text": "Phóng nhiều lớp quạt lệch góc, tạo các khe né thay đổi theo nhịp.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Hạt phấn lớn có hình dạng riêng gây Câm Lặng trong 1,2–1,8 giây, tùy phase.",
+              "format": "bullet",
+              "changeType": "new"
+            }
+          ]
+        },
+        {
+          "id": "nyxara-spirals",
+          "icon": {
+            "kind": "vfx",
+            "id": "forest_pollen"
+          },
+          "title": "Vòng Xoáy Dạ Lâm",
+          "rationale": "Hai xoáy đạn ngược chiều.",
+          "changes": [
+            {
+              "text": "Các lớp phấn quay ngược chiều, tạo áp lực di chuyển liên tục qua khe giữa những vòng đạn.",
+              "format": "bullet",
+              "changeType": "new"
+            }
+          ]
+        },
+        {
+          "id": "nyxara-stinger-rain",
+          "icon": {
+            "kind": "projectile",
+            "id": "forest_stinger_ammo"
+          },
+          "title": "Mưa Ngòi Độc",
+          "rationale": "Những hàng ngòi chéo phủ chiến trường.",
+          "changes": [
+            {
+              "text": "Phóng ngòi thành nhiều đợt, thay đổi tuyến đi qua sân.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Ngòi đặc biệt gây Nhiễu Sinh Học, giảm 50% tốc độ hồi tài nguyên trong 3 giây.",
+              "format": "bullet",
+              "changeType": "new"
+            }
+          ]
+        },
+        {
+          "id": "nyxara-triple-ambush",
+          "icon": {
+            "kind": "vfx",
+            "id": "forest_slash"
+          },
+          "title": "Liêm Ảnh Tam Liên",
+          "rationale": "Ba nhịp phục kích theo tuyến đã khóa.",
+          "changes": [
+            {
+              "text": "Dịch chuyển và chém nối tiếp; các vị trí/tuyến công kích có cảnh báo trước khi gây sát thương.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Nhịp chém cuối gây Choáng trong 0,4–0,6 giây, tùy phase.",
+              "format": "bullet",
+              "changeType": "new"
+            }
+          ]
+        },
+        {
+          "id": "nyxara-acid-carpet",
+          "icon": {
+            "kind": "vfx",
+            "id": "forest_acid"
+          },
+          "title": "Thảm Axit Hủ Thực",
+          "rationale": "Axit rơi theo hàng, nổ tỏa và tồn tại ngắn.",
+          "changes": [
+            {
+              "text": "Các cụm axit chia sân thành những khu vực cần tránh hoặc rời đi.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Trúng đòn gây giảm 30% Giáp và 35% hiệu quả hồi phục trong 3–4 giây, tùy đòn.",
+              "format": "bullet",
+              "changeType": "new"
+            }
+          ]
+        },
+        {
+          "id": "nyxara-cross-cut",
+          "icon": {
+            "kind": "vfx",
+            "id": "forest_slash"
+          },
+          "title": "Cánh Cắt Giao Thoa",
+          "rationale": "Tuyến chém chéo nối tiếp tuyến ngang.",
+          "changes": [
+            {
+              "text": "Các đường cắt kích hoạt theo nhịp, buộc lựa chọn vị trí phù hợp cho đợt tiếp theo.",
+              "format": "bullet",
+              "changeType": "new"
+            }
+          ]
+        },
+        {
+          "id": "nyxara-root-siege",
+          "icon": {
+            "kind": "vfx",
+            "id": "forest_root"
+          },
+          "title": "Rễ Gai Vây Hãm",
+          "rationale": "Rễ gai tiến từ hai biên.",
+          "changes": [
+            {
+              "text": "Các dải rễ bao sân, chừa lối đi thay đổi theo đợt.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Trúng vùng rễ kích hoạt gây Trói Chân trong 0,8–1,2 giây, tùy phase.",
+              "format": "bullet",
+              "changeType": "new"
+            }
+          ]
+        },
+        {
+          "id": "nyxara-spore-heart",
+          "icon": {
+            "kind": "vfx",
+            "id": "forest_spore"
+          },
+          "title": "Nhịp Tim Bào Tử",
+          "rationale": "Cụm nổ tuần tự cùng các vòng đạn.",
+          "changes": [
+            {
+              "text": "Mỗi cụm phát đạn sau vụ nổ, tạo lớp nguy hiểm kế tiếp.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Xung bào tử đặc biệt gây Nhiễu Sinh Học trong 3 giây.",
+              "format": "bullet",
+              "changeType": "new"
+            }
+          ]
+        },
+        {
+          "id": "nyxara-homing-swarm",
+          "icon": {
+            "kind": "projectile",
+            "id": "forest_stinger_ammo"
+          },
+          "title": "Bầy Săn Ngòi Độc",
+          "rationale": "Loạt ngòi truy đuổi từng chiến cơ.",
+          "changes": [
+            {
+              "text": "Đạn homing bẻ lái trong thời gian hữu hạn rồi tiếp tục đường bay, tạo áp lực đổi hướng và sử dụng phòng thủ đúng lúc.",
+              "format": "bullet",
+              "changeType": "new"
+            }
+          ]
+        },
+        {
+          "id": "nyxara-cocoon-lock",
+          "icon": {
+            "kind": "vfx",
+            "id": "forest_cocoon"
+          },
+          "title": "Kén Khóa Sinh Mệnh",
+          "rationale": "Kén nổ tại vị trí đã ghi nhận.",
+          "changes": [
+            {
+              "text": "Khóa vị trí, báo trước rồi phát nổ thành các lớp phấn.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Trúng vùng kén gây Trói Chân trong 0,8–1,2 giây.",
+              "format": "bullet",
+              "changeType": "new"
+            }
+          ]
+        },
+        {
+          "id": "nyxara-pollen-corridor",
+          "icon": {
+            "kind": "vfx",
+            "id": "forest_pollen"
+          },
+          "title": "Hành Lang Phấn Tử",
+          "rationale": "Phấn phủ phần lớn sân, chừa hành lang đi qua.",
+          "changes": [
+            {
+              "text": "Các đợt phấn tạo áp lực di chuyển trong vùng trống đã được thể hiện qua cảnh báo.",
+              "format": "bullet",
+              "changeType": "new"
+            }
+          ]
+        },
+        {
+          "id": "nyxara-eclipse",
+          "icon": {
+            "kind": "vfx",
+            "id": "forest_eclipse"
+          },
+          "title": "Nhật Thực Dạ Lâm",
+          "rationale": "Chuỗi tơ, phấn và axit ở phase cuối.",
+          "changes": [
+            {
+              "text": "Các nhịp riêng lần lượt gây Trói Chân, Câm Lặng và Ăn Mòn, kết hợp với lớp đạn phủ sân.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Sau chuỗi lớn có cửa sổ lộ lõi để tổ đội phản công.",
+              "format": "bullet",
+              "changeType": "new"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "forest-statuses",
+      "title": "DEBUFF & KHỐNG CHẾ",
+      "icon": {
+        "kind": "vfx",
+        "id": "forest_root"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "forest-corrosion",
+          "icon": {
+            "kind": "vfx",
+            "id": "forest_acid"
+          },
+          "title": "Ăn Mòn",
+          "rationale": "Giảm khả năng chịu đòn bằng Giáp.",
+          "changes": [
+            {
+              "text": "Giảm 30% Giáp trong 3–4 giây, tùy đòn. Mức giảm cùng loại không cộng dồn từ nhiều sinh vật.",
+              "format": "bullet",
+              "changeType": "new"
+            }
+          ]
+        },
+        {
+          "id": "forest-poison",
+          "icon": {
+            "kind": "vfx",
+            "id": "forest_poison"
+          },
+          "title": "Nhiễm Độc",
+          "rationale": "Làm suy yếu khả năng hồi phục.",
+          "changes": [
+            {
+              "text": "Giảm 35% hiệu quả hồi phục trong 3–4 giây, tùy đòn; trúng thêm làm mới thời gian theo cơ chế trạng thái.",
+              "format": "bullet",
+              "changeType": "new"
+            }
+          ]
+        },
+        {
+          "id": "forest-resource-jam",
+          "icon": {
+            "kind": "vfx",
+            "id": "forest_resource_jam"
+          },
+          "title": "Nhiễu Sinh Học",
+          "rationale": "Gây áp lực lên ngân sách kỹ năng.",
+          "changes": [
+            {
+              "text": "Giảm 50% tốc độ hồi tài nguyên trong 3 giây. Tài nguyên đang tích trữ được giữ nguyên.",
+              "format": "bullet",
+              "changeType": "new"
+            }
+          ]
+        },
+        {
+          "id": "forest-silence",
+          "icon": {
+            "kind": "vfx",
+            "id": "forest_silence"
+          },
+          "title": "Câm Lặng",
+          "rationale": "Khóa thời điểm kích hoạt kỹ năng mới.",
+          "changes": [
+            {
+              "text": "Kéo dài 1,2–1,8 giây, tùy đòn hoặc phase. Kỹ năng đang hoạt động tiếp tục xử lý theo cơ chế hiện có.",
+              "format": "bullet",
+              "changeType": "new"
+            }
+          ]
+        },
+        {
+          "id": "forest-rooted",
+          "icon": {
+            "kind": "vfx",
+            "id": "forest_root"
+          },
+          "title": "Trói Chân",
+          "rationale": "Khống chế vị trí nhưng vẫn có cơ hội phòng thủ và phản công.",
+          "changes": [
+            {
+              "text": "Dừng di chuyển trong 0,8–1,2 giây. Vẫn có thể bắn và dùng kỹ năng nếu không chịu trạng thái khóa khác.",
+              "format": "bullet",
+              "changeType": "new"
+            }
+          ]
+        },
+        {
+          "id": "forest-stunned",
+          "icon": {
+            "kind": "vfx",
+            "id": "forest_stun"
+          },
+          "title": "Choáng",
+          "rationale": "Đòn khống chế ngắn cần tránh từ cảnh báo.",
+          "changes": [
+            {
+              "text": "Choáng kéo dài 0,4–0,6 giây; giữ các ngoại lệ miễn/kháng và cơ chế hành động khi choáng hiện có.",
+              "format": "bullet",
+              "changeType": "new"
+            }
+          ]
+        },
+        {
+          "id": "forest-control-rules",
+          "icon": {
+            "kind": "vfx",
+            "id": "forest_control_resist"
+          },
+          "title": "Nhận Diện & Kháng Khống Chế",
+          "rationale": "Debuff và khống chế áp dụng theo đòn trúng thực tế.",
+          "changes": [
+            {
+              "text": "Người chơi và đồng minh nhận trạng thái riêng khi bị đánh trúng. Đạn/đòn gây debuff có hình dạng và tín hiệu riêng.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Trói và Choáng từ quái Màn 6 không được kéo dài liên tục bằng nhiều hit trong cùng một lần bị khống chế.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Sau khi hết khống chế cứng có 1 giây kháng Trói/Choáng từ quái Màn 6; vẫn nhận sát thương và các debuff khác hợp lệ.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Kỹ năng/lõi có miễn, giảm thời lượng hoặc giải hiệu ứng tiếp tục phát huy theo cơ chế hiện có.",
+              "format": "bullet",
+              "changeType": "unchanged"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "forest-presentation",
+      "title": "SPRITESHEET, HIỆU ỨNG & TỔ ĐỘI",
+      "icon": {
+        "kind": "boss",
+        "id": "nyxara"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "forest-animation",
+          "icon": {
+            "kind": "enemy",
+            "id": "forest_moth_queen"
+          },
+          "title": "Sinh Vật Chuyển Động",
+          "rationale": "Animation tạo sinh nhiều frame cho từng pha hành động.",
+          "changes": [
+            {
+              "text": "Quái thường có 12–16 frame chuyển động và 8–12 frame tấn công cho từng chuỗi.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Tinh Anh có 16–24 frame chuyển động và 12–24 frame tụ lực/tung kỹ năng; tạo hình riêng cho từng loại.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Boss có 24–32 frame cho chuỗi chuyển động, tung chiêu và chuyển phase. VFX nổ, axit, phấn, tơ và dịch chuyển có 16–24 frame.",
+              "format": "bullet",
+              "changeType": "new"
+            }
+          ]
+        },
+        {
+          "id": "forest-projectiles-warnings",
+          "icon": {
+            "kind": "projectile",
+            "id": "forest_stinger_ammo"
+          },
+          "title": "Đạn Sáng & Vùng Cảnh Báo",
+          "rationale": "Đọc được các lớp nguy hiểm giữa chiến trường hỗn loạn.",
+          "changes": [
+            {
+              "text": "Ngòi hổ phách, phấn hồng tím, axit xanh chanh, tơ trắng ngà, liềm cam và bào tử vàng lục có hình dạng cùng chuyển động khác nhau.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Quái, đạn và VFX đặc trưng Màn 6 dùng sprite/spritesheet tạo sinh. Hoạt ảnh đồng bộ theo thời gian trận đấu trên Pixi và Canvas.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Cảnh báo giữ viền đỏ, tiến trình kích hoạt và vùng sát thương khớp thiết kế Màn 5; nằm trên các lớp VFX trang trí.",
+              "format": "bullet",
+              "changeType": "unchanged"
+            }
+          ]
+        },
+        {
+          "id": "forest-squad-runtime",
+          "icon": {
+            "kind": "system",
+            "id": "forest_squad"
+          },
+          "title": "Đồng Minh Trong Rừng",
+          "rationale": "AI sử dụng bộ kỹ năng hiện có để đối phó sinh vật và trạng thái mới.",
+          "changes": [
+            {
+              "text": "Đồng minh nhận diện quái hỗ trợ, mục tiêu tàng hình, điểm lưới và cửa sổ lộ lõi của Màn 6.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Khi bị Trói Chân, đồng minh đánh giá nguy hiểm tại chỗ và cân nhắc phòng thủ; Câm Lặng và Nhiễu Sinh Học làm thay đổi thời điểm dùng kỹ năng.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Tái sử dụng sprite chiến cơ, nội tại/kỹ năng, trang bị, HUD, DPS, buff/debuff, hồi sinh và báo cáo tổ đội của Màn 5.",
+              "format": "bullet",
+              "changeType": "unchanged"
+            },
+            {
+              "text": "Cả ba chiến cơ giữ cơ chế hồi sinh hiện tại: thời gian chờ chốt lúc bị hạ là 15 giây + 5 giây mỗi 30 giây trận đấu, tối đa 60 giây; hồi sinh đầy Máu/tài nguyên và bảo vệ 3 giây. Thất bại khi cả đội cùng bị hạ.",
+              "format": "bullet",
+              "changeType": "unchanged"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "releaseDate": "14/10/2026"
+}

@@ -1,3 +1,4 @@
+import { isSquadStage } from './airCombatForestCatalog';
 import { equipmentState } from "./airCombatEquipmentState";
 import { AirCombatEquipmentReward } from "./AirCombatEquipmentReward";
 import { selectEquipmentReward } from "./airCombatEquipmentState";
@@ -488,7 +489,7 @@ export const AirCombatBattleShell: React.FC<AirCombatBattleProps> = ({
       try {
         const { AirCombatPixiRenderer } = await import("./pixi/AirCombatPixiRenderer");
         if (cancelled) return;
-        const renderer = worldRef.current.stageId===5 ? await (await import('./pixi/HivePresentation')).createHivePresentation(host,worldRef.current) : await AirCombatPixiRenderer.create(host,worldRef.current);
+        const renderer = isSquadStage(worldRef.current.stageId ?? 0) ? await (await import('./pixi/HivePresentation')).createHivePresentation(host,worldRef.current) : await AirCombatPixiRenderer.create(host,worldRef.current);
         if (cancelled) { renderer.destroy(); return; }
         presentation = renderer;
         setRendererState("pixi"); setPauseReason("loading", false);
@@ -743,7 +744,7 @@ export const AirCombatBattleShell: React.FC<AirCombatBattleProps> = ({
           <div className="air-boss-health relative mt-1 h-1.5 overflow-hidden bg-black">
             <div ref={bossShieldRef} className="absolute inset-y-0 left-0 z-[1] bg-slate-200" />
             <div ref={bossChipRef} className="absolute inset-y-0 left-0 bg-white" />
-            {(stageId === 2 ? [.75,.5,.25,.1] : stageId === 4 ? [.7,.4,.15] : [.7,.35,.15]).map(mark => <i key={mark} className="air-boss-phase-marker" style={{left:`${mark*100}%`}} />)}
+            {(stageId === 6 ? [.75,.5,.25] : stageId === 2 ? [.75,.5,.25,.1] : stageId === 4 ? [.7,.4,.15] : [.7,.35,.15]).map(mark => <i key={mark} className="air-boss-phase-marker" style={{left:`${mark*100}%`}} />)}
             <div ref={bossHpRef} className="absolute inset-y-0 left-0 bg-gradient-to-r from-red-700 via-rose-500 to-orange-300" />
           </div>
         </div>

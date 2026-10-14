@@ -1,3 +1,4 @@
+import { isSquadStage, isSquadMother } from './airCombatForestCatalog';
 import { DamageTextLayout } from './airCombatDamageLayout';
 import { GAMEPLAY_SAFE_RECT } from './airCombatConfig';
 import type { CombatWorld } from './airCombatRuntime';
@@ -21,7 +22,7 @@ export function drawEnemyTrackingHud(ctx:CanvasRenderingContext2D,world:CombatWo
       const w = Math.max(24, Math.min(70, enemy.radius * 2.2));
       const x = Math.max(GAMEPLAY_SAFE_RECT.left, Math.min(GAMEPLAY_SAFE_RECT.right - w, enemy.x - w / 2));
       const y = Math.min(GAMEPLAY_SAFE_RECT.bottom - 5, enemy.y + enemy.radius * 1.4 + 5);
-      const mother=world.stageId===5&&HIVE_MOTHERS.includes(enemy.type);
+      const mother=isSquadStage(world.stageId)&&isSquadMother(enemy.type);
       const barHeight=mother?6:isElite(enemy.type)?5:3;
       const fill=(bx:number,by:number,bw:number,bh:number,ratio:number,color:string,stroke=false)=>{
         const points=angularBarPolygon(bx,by,bw,bh,ratio);if(!points.length)return;

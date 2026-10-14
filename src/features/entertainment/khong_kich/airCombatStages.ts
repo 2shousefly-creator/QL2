@@ -1,3 +1,4 @@
+import { FOREST_WAVES } from './airCombatForestWaves';
 import { HIVE_WAVES } from "./airCombatHiveWaves";
 import { MIRAGE_WAVES } from "./airCombatMirageWaves";
 import { STORMBREAKER_WAVES } from "./airCombatStormbreakerWaves";
@@ -8,7 +9,7 @@ export interface AirCombatStageDefinition {
   id: number; key: string; displayName: string; localizedName: string;
   shortDescription: string; bossName: string; unlockAfterStage: number | null;
   theme: string; accent: string; available: boolean;
-  runtime: "leviathan" | "magnetic" | "stormbreaker" | "mirage" | "hive";
+  runtime: "leviathan" | "magnetic" | "stormbreaker" | "mirage" | "hive" | "forest";
   waves: readonly WaveDefinition[];
 }
 // Authored introductions followed by bounded mixed groups. Counts below own
@@ -73,6 +74,7 @@ export const AIR_COMBAT_STAGES: AirCombatStageDefinition[] = [
     available: true, runtime: "mirage", waves: withNormalWavePower(MIRAGE_WAVES) },
 ];
 AIR_COMBAT_STAGES.push({id:5,key:"hive_siege",displayName:"HIVE SIEGE",localizedName:"CÔNG PHÁ TỔ MÁY",shortDescription:"Cùng hai đồng minh AI công phá tổ máy, hạ tàu mẹ và HIVE TYRANT Ω.",bossName:"HIVE TYRANT Ω",unlockAfterStage:4,theme:"SQUAD · ESCORT · SIEGE",accent:"#f59e0b",available:true,runtime:"hive",waves:HIVE_WAVES});
+AIR_COMBAT_STAGES.push({id:6,key:"mysterious_forest",displayName:"CÁNH RỪNG BÍ ẨN",localizedName:"CÁNH RỪNG BÍ ẨN",shortDescription:"Cùng hai đồng minh khám phá rừng tối, phá lưới tơ và đối đầu Nữ Hoàng Dạ Lâm.",bossName:"NYXARA Ω — Nữ Hoàng Dạ Lâm",unlockAfterStage:5,theme:"SQUAD · AMBUSH · SPORES",accent:"#b8df6d",available:true,runtime:"forest",waves:FOREST_WAVES});
 export const getAirCombatStage = (id: number) => AIR_COMBAT_STAGES.find(stage => stage.id === id);
 export const isStageUnlocked = (id: number, progress: AirCombatCampaignProgress) => {
   const stage = getAirCombatStage(id);

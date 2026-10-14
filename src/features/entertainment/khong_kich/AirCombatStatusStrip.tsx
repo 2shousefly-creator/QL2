@@ -1,3 +1,4 @@
+import { ForestThumbnail } from './ForestThumbnail';
 import { drawAircraftTrackingHud } from './airCombatCanvasHud';
 import { HealthBarPresentation } from './airCombatFeedback';
 import { AircraftPreview } from "./AircraftPreview";
@@ -120,7 +121,7 @@ export const AirCombatStatusStrip = React.memo(forwardRef<StatusStripHandle, { t
       data-status-target={status.id.startsWith('boss:')?'boss':'player'}
       aria-label={`${status.id.startsWith('boss:')?'Boss · ':''}${status.name}${status.badgeText ? ` · ${status.badgeText}` : ""}`} aria-pressed={selected === status.id}
       onClick={() => toggle(status.id)}>
-      {status.icon.kind === "status" ? Generic && <Generic aria-hidden="true" /> : <CombatUiIcon {...status.icon} fallback="◆" />}
+      {status.icon.kind === "forest" ? <ForestThumbnail id={status.icon.id}/> : status.icon.kind === "status" ? Generic && <Generic aria-hidden="true" /> : <CombatUiIcon {...status.icon} fallback="◆" />}
       {status.id.startsWith('boss:')&&<span className="air-status-boss-label">BOSS</span>}
       <StatusBorder status={status} progress={progress}/>
       <b className="air-status-value-badge" data-status-value hidden={!status.badgeText}>{status.badgeText}</b>

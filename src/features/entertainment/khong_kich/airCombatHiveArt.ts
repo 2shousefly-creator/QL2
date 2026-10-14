@@ -1,3 +1,4 @@
+import { forestArtUrls, paintForest, paintForestAmmo, paintForestEffects } from './airCombatForestArt';
 import bossUrl from '../../../assets/khong-kich/26.31.1/hive-tyrant-idle.png';
 import bossSkillUrl from '../../../assets/khong-kich/26.31.2/hive-boss-skills.png';
 import enemyUrl from '../../../assets/khong-kich/26.31.0/enemies.png';
@@ -28,7 +29,7 @@ export interface HivePainter {
  line(x:number,y:number,endX:number,endY:number,width:number,color:number,alpha:number):void;
  polygon(points:number[],color:number,alpha:number,fill?:boolean,width?:number):void;
 }
-export const hiveArtUrls=()=>Object.values(HIVE_ART);
+export const hiveArtUrls=(stageId=5)=>stageId===6?forestArtUrls():Object.values(HIVE_ART);
 
 const backgroundScroll=new WeakMap<CombatWorld,{at:number;distance:number}>();
 function paintHiveBackground(w:CombatWorld,p:HivePainter,reduced:boolean){
@@ -79,6 +80,7 @@ function warningShape(z:HiveHazard,progress:number):HazardShape {
 
 /** Only Hive scenery and enemies are custom; aircraft use the campaign renderer. */
 export function paintHive(w:CombatWorld,p:HivePainter,reduced=false){
+ if(w.stageId===6){paintForest(w,p,reduced);return;}
  const now=w.elapsed;
  paintHiveBackground(w,p,reduced);
  for(const e of w.enemies){if(e.hp<=0)continue;const index=e.type==='boss'?13:HIVE_ENTITY_CELLS.indexOf(e.type);if(index<0)continue;
@@ -102,6 +104,7 @@ export function paintHive(w:CombatWorld,p:HivePainter,reduced=false){
 /** Fast raster ignition with decorative overreach. Damage still uses HiveHazard
  * geometry in the runtime; the corona and rays never create collision shapes. */
 export function paintHiveExplosions(w:CombatWorld,p:HivePainter,reduced=false){
+ if(w.stageId===6){paintForestEffects(w,p,reduced);return;}
  let sprites=0,rays=0;
  const drawSprite=(frame:HiveFrame,x:number,y:number,width:number,height:number,rotation:number,alpha:number,additive=false)=>{
   if(sprites>=1024||alpha<=0)return;
@@ -158,6 +161,7 @@ export function paintHiveThreats(w:CombatWorld,p:HivePainter){
   if(!lane)p.polygon(shape.outline,0x190b08,.85,false,2);
   p.polygon(shape.outline,0xff5263,1,false,lane?.75:1);
  }
+ if(w.stageId===6){paintForestAmmo(w,p);return;}
  for(const shot of w.projectiles){if(shot.owner!=='enemy'||shot.lifetime<=0)continue;
   const mother=shot.sourceEnemyType==='brood_ark'||shot.sourceEnemyType==='crucible_ark';
   const size=Math.max(9,shot.radius*3)*(mother?1.5:1),rotation=Math.atan2(shot.vy,shot.vx)+Math.PI/2;

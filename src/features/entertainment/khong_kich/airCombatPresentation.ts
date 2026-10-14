@@ -1,3 +1,4 @@
+import { forestStatuses } from './airCombatForestStatus';
 import { hiveCoreDescription } from './airCombatHiveTooltips';
 import { statusDuration } from './airCombatStatusTiming';
 import { terraPressureLimit, terraCannonDamage, terraValues } from './airCombatTerraConfig';
@@ -142,7 +143,7 @@ export interface StatusPresentation {
   id: string;
   group: "buff" | "debuff";
   name: string;
-  icon: { kind: "equipment" | "item"; id: EquipmentRewardId } | { kind: "skill"; id: SkillId | PassiveId } | { kind: "core"; id: CoreId } | { kind: "status"; id: "acid" | "burn" | "stun" | "armor" | "shield" | "skill_lock" | "resource_jam" | "regen_off" | "mark" | "radar" };
+  icon: {kind:"forest";id:string} | { kind: "equipment" | "item"; id: EquipmentRewardId } | { kind: "skill"; id: SkillId | PassiveId } | { kind: "core"; id: CoreId } | { kind: "status"; id: "acid" | "burn" | "stun" | "armor" | "shield" | "skill_lock" | "resource_jam" | "regen_off" | "mark" | "radar" };
   description: string;
   source: string;
   stacks: number;
@@ -408,13 +409,14 @@ export function getStatusPresentations(world: CombatWorld): StatusPresentation[]
     ["armorBrokenUntil","Vỡ giáp","armor","-35% Giáp."],
     ["regenDisabledUntil","Ngừng tái tạo","regen_off","Hồi HP theo thời gian bị vô hiệu."],
   ] as const;
-  if(status.healingReceivedUntil>c.time) result.push({id:status.healingReceivedMultiplier===0?"healing_block":"healing_reduction",group:"debuff",name:status.healingReceivedMultiplier===0?"HỒI MÁU BỊ CHẶN":"HỒI MÁU -60%",icon:{kind:"status",id:"regen_off"},description:"Mưa Axit giảm mọi hồi máu nhận vào, kể cả lượng chuyển thành khiên dư.",source:"Tempest Crown · Mưa Axit",stacks:1,remaining:status.healingReceivedUntil-c.time,duration:status.durations.healingReceivedUntil??4,priority:115});
-  for(const [key,name,icon,description] of timed) if(status[key]>c.time) result.push({id:key,group:"debuff",name,icon:{kind:"status",id:icon},description,source:"Đòn địch",stacks:1,remaining:status[key]-c.time,duration:status.durations[key]??4,priority:110});
+  if(world.stageId!==6&&status.healingReceivedUntil>c.time) result.push({id:status.healingReceivedMultiplier===0?"healing_block":"healing_reduction",group:"debuff",name:status.healingReceivedMultiplier===0?"HỒI MÁU BỊ CHẶN":"HỒI MÁU -60%",icon:{kind:"status",id:"regen_off"},description:"Mưa Axit giảm mọi hồi máu nhận vào, kể cả lượng chuyển thành khiên dư.",source:"Tempest Crown · Mưa Axit",stacks:1,remaining:status.healingReceivedUntil-c.time,duration:status.durations.healingReceivedUntil??4,priority:115});
+  for(const [key,name,icon,description] of timed) if(status[key]>c.time&&!(world.stageId===6&&["skillLockedUntil","resourceJammedUntil"].includes(key))) result.push({id:key,group:"debuff",name,icon:{kind:"status",id:icon},description,source:"Đòn địch",stacks:1,remaining:status[key]-c.time,duration:status.durations[key]??4,priority:110});
   const markNames={hunterMark:"Dấu săn mồi",suppression:"Áp chế",corrosion:"Ăn mòn",targetLock:"Khóa radar",hunted:"Bị truy sát"};
   // All five player marks accumulate hits via addStatusMark. Trigger/reset at a
   // threshold (including Hunted at 2) is not a hard single-instance status.
   for(const [key,mark] of Object.entries(status.marks)) if(mark && mark.until>c.time) result.push({id:key,group:"debuff",name:markNames[key as keyof typeof markNames],icon:{kind:"status",id:key==="corrosion"?"acid":key==="targetLock"?"radar":"mark"},description:`Dấu hiện tại: ${mark.count}. Tiếp tục trúng đòn có thể kích hoạt đòn trừng phạt.`,source:"Đòn địch",stacks:mark.count,badgeText:`×${mark.count}`,badgeKind:"stack",remaining:mark.until-c.time,duration:mark.window,priority:100});
-  return result.filter(status=>status.remaining>0).map(status=>({ ...status, description:hiveCoreDescription(world.aircraft,status.icon.id,status.description),
+  result.push(...forestStatuses(world));
+    return result.filter(status=>status.remaining>0).map(status=>({ ...status, description:hiveCoreDescription(world.aircraft,status.icon.id,status.description),
     timer: Number.isFinite(status.remaining)&&Number.isFinite(status.duration)&&status.duration>0
       ? {phase:status.timerKind??'active',remaining:Math.max(0,status.remaining),total:Math.max(status.remaining,status.duration)}
       : {phase:'indefinite',remaining:Infinity,total:Infinity},

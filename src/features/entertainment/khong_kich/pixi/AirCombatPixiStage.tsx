@@ -1,3 +1,4 @@
+import { isSquadStage } from '../airCombatForestCatalog';
 import { combatGraphicsQuality } from '../airCombatGraphics';
 import { loadGeneratedCanvas } from '../airCombatGeneratedArt';
 import { CanvasCombatAccents } from "../CanvasCombatAccents";
@@ -14,7 +15,7 @@ export const AirCombatPixiStage = React.forwardRef<HTMLDivElement, React.HTMLAtt
 );
 
 export async function createLegacyPresentation(host: HTMLDivElement, stageId = 1, world?:CombatWorld): Promise<AirCombatPresentation> {
-  if(stageId===5&&world)return (await import('./HivePresentation')).createHivePresentation(host,world,false);
+  if(isSquadStage(stageId ?? 0)&&world)return (await import('./HivePresentation')).createHivePresentation(host,world,false);
   const { drawLegacyWorld, loadSoloCanvasAssets, loadMirageCanvasAssets, loadStormbreakerCanvasAssets, loadMagneticCanvasAssets, loadAstraCanvasAssets } = await import("../AirCombatLegacyRenderer");
   await Promise.all([loadGeneratedCanvas(world),loadAstraCanvasAssets(),...(stageId===0?[loadSoloCanvasAssets(),loadMirageCanvasAssets()]:[]),...(stageId===2?[loadMagneticCanvasAssets()]:stageId===3?[loadStormbreakerCanvasAssets()]:stageId===4?[loadMirageCanvasAssets()]:[])]);
   let magneticEndAge = 0;

@@ -5,12 +5,13 @@ import { recordCoreMetric } from "./airCombatTelemetry";
 import { hasCore, negativeStatusDuration } from "./airCombatCoreEffects";
 
 export type AttackTag = "crimson_barrage" | "iron_suppression" | "radar_bombardment" | "basic" | "burst" | "needle_pair" | "scissor" | "suppressive_gate" | "kamikaze_dash" | "carpet_bomb" | "rail" | "emp" | "elite_execution" | "shock_clamp" | "acid" | "radar_lock" | "boss_wing" | "boss_fan" | "boss_sonic" | "boss_lane" | "boss_dash" | "boss_missile" | "boss_emp" | "boss_crossfire" | "boss_suppressive";
-export interface StatusPayload { stun?: number; skillLock?: number; resourceJam?: number; resourceMultiplier?: number; armorBreak?: number; regenDisable?: number; healingReduction?: number; healingReceivedMultiplier?: number }
+export interface StatusPayload { forest?: boolean; root?: number; forestArmor?: number; stun?: number; skillLock?: number; resourceJam?: number; resourceMultiplier?: number; armorBreak?: number; regenDisable?: number; healingReduction?: number; healingReceivedMultiplier?: number }
 export type Allegiance = "player" | "hostile" | "friendly_hacked";
 export type DamageDelivery = "direct_projectile" | "aircraft_collision" | "explosive_aoe" | "area_hazard" | "beam" | "shockwave";
 export interface AttackMetadata { reflection?:boolean; damageOverTime?:boolean; capturable?:boolean; allegiance?:Allegiance; delivery?:DamageDelivery; sourceEnemyId?: number; sourceEnemyType?: import("./airCombatTypes").EnemyType; attackTag?: AttackTag; majorBossAttack?: boolean; payload?: StatusPayload }
 export type MarkName = "hunterMark" | "suppression" | "corrosion" | "targetLock" | "hunted";
 export interface PlayerCombatStatus {
+  forestRootUntil?:number; forestStunUntil?:number; forestControlUntil?:number; forestResistUntil?:number; forestArmorUntil?:number;
   fractureResolve?: boolean; fractureStunUntil?: number;
   stunnedUntil: number; skillLockedUntil: number; resourceJammedUntil: number;
   armorBrokenUntil: number; regenDisabledUntil: number; durations: Record<string,number>;
@@ -22,8 +23,20 @@ export const createPlayerStatus = (fractureResolve = false): PlayerCombatStatus 
 export function applyPlayerStatus(state: AircraftCombatState, payload: StatusPayload): void {
   if (Object.values(payload).some(value => typeof value === "number" && value > 0) && celestialProtection(state)) {recordCoreMetric(state,184,"controlBlocked",1);return;}
   const s = state.status, now = state.coreState.time;
+  if(payload.forest){
+    const hardEnd=Math.max(s.forestRootUntil??0,s.forestStunUntil??0);
+    const resistant=hardEnd>now || (s.forestResistUntil??0)>now || (s.forestControlUntil??0)>0 && now<(s.forestControlUntil??0)+1;
+    if(!resistant&&!hardControlImmune(state)){
+      const key=payload.root?'forestRootUntil':'forestStunUntil',seconds=payload.root??payload.stun??0;
+      recordStatusMitigation(state,seconds,hardEnd);
+      const duration=negativeStatusDuration(state,seconds);
+      if(duration>0){s[key]=now+duration;s.durations[key]=duration;s.forestControlUntil=now+duration;s.forestResistUntil=now+duration+1;}
+    }
+    const duration=negativeStatusDuration(state,payload.forestArmor??0);
+    if(duration>0){s.forestArmorUntil=Math.max(s.forestArmorUntil??0,now+duration);s.durations.forestArmorUntil=duration;}
+  }
   for (const [key, seconds] of [["stunnedUntil", payload.stun], ["skillLockedUntil", payload.skillLock], ["armorBrokenUntil", payload.armorBreak], ["regenDisabledUntil", payload.regenDisable]] as const) {
-    if(key==="stunnedUntil" && (hardControlImmune(state) || s.fractureResolve && (s.fractureStunUntil ?? 0) > 0 && now < s.fractureStunUntil! + 1.25))continue;
+    if(key==="stunnedUntil" && (payload.forest || hardControlImmune(state) || s.fractureResolve && (s.fractureStunUntil ?? 0) > 0 && now < s.fractureStunUntil! + 1.25))continue;
     recordStatusMitigation(state,seconds??0,s[key]);
     const duration = negativeStatusDuration(state, seconds ?? 0);
     if (duration > 0) { if(now+duration>=s[key])s.durations[key]=duration; s[key] = Math.max(s[key], now + duration); if (key === "stunnedUntil" && s.fractureResolve) s.fractureStunUntil = s[key]; }
@@ -32,7 +45,7 @@ export function applyPlayerStatus(state: AircraftCombatState, payload: StatusPay
   const healingDuration = negativeStatusDuration(state, payload.healingReduction ?? 0);
   if (healingDuration > 0) {
     s.healingReceivedMultiplier = Math.min(s.healingReceivedUntil > now ? s.healingReceivedMultiplier : 1, payload.healingReceivedMultiplier ?? 1);
-    s.healingReceivedUntil = now + healingDuration;
+    s.healingReceivedUntil = payload.forest ? Math.max(s.healingReceivedUntil,now+healingDuration) : now + healingDuration;
     s.durations.healingReceivedUntil = healingDuration;
   }
   recordStatusMitigation(state,payload.resourceJam??0,s.jams.find(j=>j.multiplier===(payload.resourceMultiplier??.5))?.until??0);
@@ -60,11 +73,15 @@ export function addStatusMark(state: AircraftCombatState, name: MarkName, durati
   return count;
 }
 export const hardControlImmune = (state:AircraftCombatState) => skillRank(state,"afterburner")>=5&&(state.activeEffects.afterburner??0)>0;
-export const playerStunned = (state: AircraftCombatState) => !hardControlImmune(state)&&state.status.stunnedUntil > state.coreState.time;
+export const playerStunned = (state: AircraftCombatState) => !hardControlImmune(state)&&Math.max(state.status.stunnedUntil,state.status.forestStunUntil??0) > state.coreState.time;
+export const playerRooted = (state: AircraftCombatState) => !hardControlImmune(state)&&(state.status.forestRootUntil??0)>state.coreState.time;
 export const playerSkillLocked = (state: AircraftCombatState) => (playerStunned(state) && !hasCore(state,203)) || state.status.skillLockedUntil > state.coreState.time;
 
 export function tickPlayerStatus(state:AircraftCombatState):void {
  const now=state.coreState.time,s=state.status;
+ if(hardControlImmune(state)&&Math.max(s.forestRootUntil??0,s.forestStunUntil??0)>now){
+  s.forestRootUntil=0;s.forestStunUntil=0;s.forestControlUntil=now;s.forestResistUntil=now+1;
+ }
  s.jams=s.jams.filter(j=>j.until>now);
  for(const [name,mark] of Object.entries(s.marks)) {
   if(!mark || mark.until<=now)delete s.marks[name as MarkName];
@@ -82,6 +99,9 @@ function recordStatusMitigation(state:AircraftCombatState,seconds:number,priorUn
 
 /** Fresh duel: retain stage capability, clear every hostile status and expiry. */
 export function clearAircraftNegativeStatuses(state: AircraftCombatState): void {
+  const now=state.coreState.time,forestActive=Math.max(state.status.forestRootUntil??0,state.status.forestStunUntil??0)>now;
+  const resist=forestActive?now+1:state.status.forestResistUntil??0;
   state.status = createPlayerStatus(state.status.fractureResolve);
+  state.status.forestResistUntil=resist;
   for (const key of ["acidArmor", "skillExhaust"]) delete state.coreState.timers[key];
 }

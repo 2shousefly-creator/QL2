@@ -1,3 +1,4 @@
+import { ForestThumbnail } from '../ForestThumbnail';
 import { HiveThumbnail } from '../HiveThumbnail';
 import { HIVE_ENTITY_CELLS } from '../airCombatHiveArt';
 import { GENERATED_ART, generatedFrameId, GENERATED_BOSSES } from '../airCombatGeneratedArt';
@@ -56,6 +57,7 @@ function AtlasThumbnail({ frame }: { frame: AtlasFrame }) {
 /** All markers are converted to these semantic references in authored data.
  * The UI never accepts or displays authoring marker strings. */
 export function ReleaseNoteEntityIcon({ icon }: { icon: ReleaseIconRef }) {
+  if(icon.id==='stage6'||icon.id==='nyxara'||icon.id.startsWith('forest_'))return <ForestThumbnail id={icon.id} className='air-release-entity-icon'/>;
   if(icon.id.startsWith('stage5')||HIVE_ENTITY_CELLS.includes(icon.id))return <HiveThumbnail id={icon.id} className='air-release-entity-icon'/>;
   if(icon.kind==='aircraft'&&GENERATED_ART.items[icon.id])return <AircraftPreview aircraftId={icon.id as AircraftId} className="air-release-entity-icon" />;
   if(icon.kind==='skill')return <SkillIcon id={icon.id} className="air-release-entity-icon" />;

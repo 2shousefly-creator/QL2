@@ -1,3 +1,5 @@
+import type { ForestEnemyState, ForestAmmo } from './airCombatForest';
+import { isSquadStage } from './airCombatForestCatalog';
 import { hiveCoreDescription } from "./airCombatHiveTooltips";
 import { createHive, hiveActors, hiveRoot, hiveRespawnSeconds, initializeHiveEnemy, updateHiveEnemy, updateHiveHazards, hiveMotherDeath, hiveXp, hiveFx, hiveArmorExposed, hiveShieldAbsorb, collectHiveLoot, manageHiveBuild, thinkHiveAlly, type HiveState, type HiveEnemy, type HiveHooks } from "./airCombatHive";
 import { reduceRunningSkillCooldown, coreCooldownReady, deferCoreCooldown } from "./airCombatCooldowns";
@@ -64,7 +66,7 @@ import { BASIC_AMMO_KEYS } from "./airCombatAmmo";
 import type { AmmoVisualKey } from "./airCombatAmmo";
 import { getMissileVisual, isImmediateMissile, missileRenderRotation } from "./airCombatAmmo";
 import { clearMissilePose } from "./airCombatMissilePresentation";
-import { hardControlImmune, clearAircraftNegativeStatuses, applyPlayerStatus, addStatusMark, playerStunned, playerSkillLocked } from "./airCombatStatus";
+import { hardControlImmune, clearAircraftNegativeStatuses, applyPlayerStatus, addStatusMark, playerRooted, playerStunned, playerSkillLocked } from "./airCombatStatus";
 import type { AttackMetadata, AttackTag, StatusPayload } from "./airCombatStatus";
 import { bossMinCenterY } from "./airCombatHudLayout";
 import { BOSS_DAMAGE_MULTIPLIER, getBossTuning, SONIC_RING_SPEED, SONIC_RING_THICKNESS, SONIC_ACTIVE_SECONDS, LANE_ACTIVE_SECONDS } from "./airCombatBoss";
@@ -77,6 +79,7 @@ import { AIR_COMBAT_WORLD, ENEMY_CONFIGS, GAMEPLAY_SAFE_RECT, SKILL_CONFIGS, } f
 import { applyCore, applyDamageToAircraft, resolvePlayerDamage, calculateRunRank, canAcquirePlayerTarget, castSkill, clampCircleToGameplayRect, createAircraftCombatState, gainCombatXp, generateCoreChoices, getComboMultiplier, getEffectiveAircraftStats, getSkillRuntimeValues, getTargetPriority, requiredCombatXp, resolveBasicProjectileMultipliers, shouldAutoFire, tickAircraftState, } from "./airCombatEngine";
 import { CombatAnnouncement, AirCombatHudSnapshot, AirCombatRunSummary, AircraftCombatState, AircraftId, CoreCard, EnemyType, SkillCastResult, SkillId, } from "./airCombatTypes";
 export interface EnemyEntity {
+    forest?:ForestEnemyState;
  hive?:HiveEnemy;
  hiveKiller?:CombatWorld;
  hiveBurnOwner?:CombatWorld;
@@ -526,7 +529,7 @@ export type EnemyProjectileSpeedClass = "standard" | "fan" | "special";
 const ENEMY_PROJECTILE_SPEED_MULTIPLIERS = { standard: 1.5, fan: 1.35, special: 1 } as const;
 const PLAYER_BASIC_PROJECTILE_SPEED_MULTIPLIER = 2;
 export interface ProjectileEntity extends AttackMetadata {
-    hiveSplitAt?:number; hiveAmmo?:number; hiveTargetSlot?:number; hiveHomingUntil?:number;
+    forestAmmo?:ForestAmmo; hiveSplitAt?:number; hiveAmmo?:number; hiveTargetSlot?:number; hiveHomingUntil?:number;
     duelDecoy?: { world: CombatWorld; id: number };
     mirageOrbit?: { ownerId:number; angle:number; radius:number; until:number };
     /** A bounded transformed view, never a second damage authority. */
@@ -858,7 +861,7 @@ const hiveHooks:HiveHooks={
  projectile:addProjectile,
  spawn:(w,type)=>spawnEnemy(w,type,true),
  movement:(w,e)=>Math.min(...hiveActors(w).map(a=>terraMovement(a,e)*sylvaMovement(a,e)*argentMovement(a,e)*cinderMovement(a,e)*equipmentSlow(a.aircraft,e))),
- hit:(w,raw,stun=0,source,collision=false)=>{const dealt=hitPlayer(w,raw,collision?'collision':'hazard',{delivery:collision?'aircraft_collision':'area_hazard',sourceEnemyId:source?.id,sourceEnemyType:source?.type});if(stun&&dealt.damage>0)applyPlayerStatus(w.aircraft,{stun});}
+ hit:(w,raw,stun=0,source,collision=false,payload)=>{const dealt=hitPlayer(w,raw,collision?'collision':'hazard',{payload,delivery:collision?'aircraft_collision':'area_hazard',sourceEnemyId:source?.id,sourceEnemyType:source?.type});if(stun&&dealt.damage>0)applyPlayerStatus(w.aircraft,{stun});}
 };
 function downHiveAircraft(w:CombatWorld){
  const root=hiveRoot(w),h=root.hive;if(!h||w.aircraft.currentHp>0)return;
@@ -942,7 +945,7 @@ function tickHiveAllies(root:CombatWorld,dt:number){
  }
 }
 function activateHiveMarks(w:CombatWorld){
- if(w.stageId!==5)return;
+ if(!isSquadStage(w.stageId))return;
  for(const e of w.enemies){
   const owner=e.hiveMarkOwner??hiveRoot(w),map=e.hiveMarks??=new Map();
   if(owner===w){e.hiveMarkOwner=w;continue;}
@@ -952,7 +955,7 @@ function activateHiveMarks(w:CombatWorld){
 const PLAYER_TARGET_ID = 0;
 // Applied on every acquisition and recycle, including generic homing/bounce bullets.
 const MISSILE_DEFAULTS = {
-    magnetic: undefined, hiveSplitAt:undefined,hiveAmmo:undefined,hiveTargetSlot:undefined,hiveHomingUntil:undefined,
+    magnetic: undefined, forestAmmo:undefined,hiveSplitAt:undefined,hiveAmmo:undefined,hiveTargetSlot:undefined,hiveHomingUntil:undefined,
     telemetryCore: undefined, salvoId: undefined, interceptCount: 0, stabilizedPierce: false, bounceBasis: undefined, bounceSecondMultiplier: undefined,
     ammoVisualKey: undefined,
     fuseStarted: false, fuseRemaining: 0,
@@ -975,7 +978,7 @@ export function createCombatRandom(seed = Date.now() >>> 0): () => number {
 }
 export function createCombatWorld(aircraftId: AircraftId, random: () => number = createCombatRandom(), stageId: number = 1): CombatWorld {
     const w=createAircraftWorld(aircraftId,random,stageId,false);
-    if(stageId===5)w.hive=createHive(w,id=>createAircraftWorld(id,createCombatRandom(Math.floor(random()*0x100000000)),5,false));
+    if(isSquadStage(stageId ?? 0))w.hive=createHive(w,id=>createAircraftWorld(id,createCombatRandom(Math.floor(random()*0x100000000)),stageId,false));
     return w;
 }
 export function createDuelCombatWorld(aircraftId: AircraftId, random: () => number): CombatWorld {
@@ -1236,7 +1239,7 @@ function spawnEnemy(world: CombatWorld, type: EnemyType, auxiliary = false): Ene
     if (world.magnetic) enemy.magnetic = { clock: 0, attack: 0, anchorX: enemy.x, anchorY: enemy.y, angle: enemy.phaseSeed };
     if (world.stormbreaker) initializeStormEnemy(world, enemy);
     if (world.mirage) initializeMirageEnemy(world, enemy);
-    enemy.hive=undefined;enemy.hiveKiller=undefined;enemy.hiveBurnOwner=undefined;enemy.hiveMarks=undefined;enemy.hiveMarkOwner=undefined;
+    enemy.forest=undefined;enemy.hive=undefined;enemy.hiveKiller=undefined;enemy.hiveBurnOwner=undefined;enemy.hiveMarks=undefined;enemy.hiveMarkOwner=undefined;
     initializeHiveEnemy(world,enemy);
     world.enemies.push(enemy);
     if (world.magnetic && type === "boss") initializeTempestGuardians(world, enemy, magneticHooks);
@@ -1250,7 +1253,7 @@ function addProjectile(world: CombatWorld, values: Partial<ProjectileEntity> & P
         return count + (sharesPool ? 1 : 0);
     }, 0);
     const limit = values.owner === "enemy"
-        ? (world.stageId===5?1440:AIR_COMBAT_WORLD.maxEnemyProjectiles)
+        ? (isSquadStage(world.stageId ?? 0)?1440:AIR_COMBAT_WORLD.maxEnemyProjectiles)
         : AIR_COMBAT_WORLD.maxPlayerProjectiles;
     if (ownerCount >= limit) {
         // Preserve rail/homing/boss shots by recycling an ordinary hostile bullet first.
@@ -1264,7 +1267,7 @@ function addProjectile(world: CombatWorld, values: Partial<ProjectileEntity> & P
         if (replace >= 0) recycleProjectile(world, replace);
     }
     // Call sites classify the authored volley; special shots opt out by default.
-    const speedMultiplier = values.owner === "enemy" ? ENEMY_PROJECTILE_SPEED_MULTIPLIERS[values.enemySpeedClass ?? "special"] * (world.stageId===5?1.3:1) : 1;
+    const speedMultiplier = values.owner === "enemy" ? ENEMY_PROJECTILE_SPEED_MULTIPLIERS[values.enemySpeedClass ?? "special"] * (isSquadStage(world.stageId ?? 0)?1.3:1) : 1;
     const projectile = acquireProjectile(world);
     Object.assign(projectile, {
         ...MISSILE_DEFAULTS,
@@ -1279,7 +1282,7 @@ function addProjectile(world: CombatWorld, values: Partial<ProjectileEntity> & P
         mirrorBorrowed: undefined, mirrorSlow: undefined, mirageOrbit: values.mirageOrbit, mirageVisual: values.mirageVisual, stormbreakerVisual: values.stormbreakerVisual, stormbreakerSalvo: values.stormbreakerSalvo, stormbreakerSplit: values.stormbreakerSplit, stormbreakerGrace: values.stormbreakerGrace,
         magneticVisual: values.magneticVisual, magneticAreaId: values.magneticAreaId, appearance: values.appearance, ammoVisualKey: values.ammoVisualKey,
         sourceEnemyId: values.sourceEnemyId, sourceEnemyType: values.sourceEnemyType, attackTag: values.attackTag, majorBossAttack: values.majorBossAttack, payload: values.payload,
-        hiveSplitAt:values.hiveSplitAt,hiveAmmo:values.hiveAmmo,hiveTargetSlot:values.hiveTargetSlot,hiveHomingUntil:values.hiveHomingUntil,
+        forestAmmo:values.forestAmmo,hiveSplitAt:values.hiveSplitAt,hiveAmmo:values.hiveAmmo,hiveTargetSlot:values.hiveTargetSlot,hiveHomingUntil:values.hiveHomingUntil,
         criticalAttack: values.criticalAttack ?? false,
         suppressive: values.suppressive ?? false, allowOffscreenEntry: values.allowOffscreenEntry ?? false, corridorEdge: values.corridorEdge, corridorSide: values.corridorSide,
         telemetryCore: values.telemetryCore, salvoId: values.salvoId, interceptCount: 0, corePierce: values.corePierce, stabilizedPierce: values.stabilizedPierce,
@@ -2107,7 +2110,7 @@ export function setPlayerInputActive(world: CombatWorld, active: boolean): void 
 // Apply each coalesced pointer segment immediately. Subdivision checks the full
 // displacement without advancing time, limiting speed, or changing invulnerability.
 export function movePlayerByDelta(world: CombatWorld, dx: number, dy: number): void {
-    if(cinderMovementLocked(world))return;
+    if(cinderMovementLocked(world)||playerRooted(world.aircraft)){world.moveDirectionX=world.moveDirectionY=0;return;}
     if (world.destruction || world.aftermath || world.aircraft.currentHp <= 0 || playerStunned(world.aircraft) || !world.playerInputActive || world.pauseReasons.size || world.ended || world.currentCoreChoices || world.pendingCoreSelections > 0 ||
         !Number.isFinite(dx) || !Number.isFinite(dy))
         return;
@@ -2433,7 +2436,7 @@ function updateEncounter(world: CombatWorld, dt: number): void {
         return;
     }
     if(world.hive && world.waveIndex===7 && world.spawnedInWave>0 && (world.enemies.find(e=>e.type==='boss')?.hive?.phase??1)<2)return;
-    if(world.hive && world.spawnedInWave===0 && (wave.counts.brood_ark||wave.counts.crucible_ark)){
+    if(world.hive && world.spawnedInWave===0 && (wave.counts.brood_ark||wave.counts.crucible_ark||wave.counts.forest_brood_queen||wave.counts.forest_ancient_cocoon)){
       for(let i=0;i<7&&world.spawnQueue.length;i++){const escort=spawnEnemy(world,world.spawnQueue[0]);if(!escort)break;world.spawnQueue.shift();world.spawnedInWave++;}
       world.enemySpawnCooldown=wave.interval;return;
     }
@@ -2464,7 +2467,7 @@ function updateEncounter(world: CombatWorld, dt: number): void {
     }
 }
 function updateBossPhase(world: CombatWorld): void {
-    if(world.stageId===5)return;
+    if(isSquadStage(world.stageId ?? 0))return;
     const boss = world.enemies.find(e => e.type === "boss");
     if (!boss)
         return;
@@ -3047,6 +3050,7 @@ function updateEnemies(world: CombatWorld, dt: number): void {
         if (enemy.type === "satellite") positionMagneticGuardian(world, enemy);
         if(enemy.hive)enemy.hive.coreOpen=enemy.hive.exposedUntil>world.elapsed;
         if (enemy.stun > 0) {
+            if(enemy.forest){enemy.forest.jobs.length=0;enemy.forest.dash=undefined;}
             enemy.stun = Math.max(0, enemy.stun - dt);
             continue;
         }
@@ -3694,7 +3698,7 @@ const expansionHooks: ExpansionHooks = {
 const volleyWeaponComponents=new WeakMap<Map<number,number>,Map<number,number>>();
 function applyDamageToEnemy(...args:Parameters<typeof applyDamageToEnemyInternal>):number {
  const [w,e]=args,previous=e.hiveMarkOwner??hiveRoot(w);
- if(w.stageId!==5)return applyDamageToEnemyInternal(...args);
+ if(!isSquadStage(w.stageId))return applyDamageToEnemyInternal(...args);
  activateHiveMarks(w);
  try{return applyDamageToEnemyInternal(...args);}finally{activateHiveMarks(previous);}
 }
@@ -3815,7 +3819,7 @@ function applyDamageToEnemyInternal(world: CombatWorld, enemy: EnemyEntity, rawD
         const received = receiveAircraftTargetDamage(enemy, potential, delivery, contact?.zone, armor, shieldFactor, skillId==="missile_swarm"||skillId==="predator_lock", intrinsic?.trueDamage,source==="burn",!!intrinsic?.reflection);
         damage = received.damage; absorbed += received.absorbed;
         if(basic&&hasCore(state,180)&&absorbed>0&&!hasAbsorbShield(enemy.aircraftTarget.world.aircraft)){marks.shieldBroken=time+6;recordCoreMetric(state,180,"shieldBreaks",1);}
-    } else { enemy.hp = Math.max(0, enemy.hp - damage); if(world.stageId===5&&damage>0)enemy.hiveKiller=world; }
+    } else { enemy.hp = Math.max(0, enemy.hp - damage); if(isSquadStage(world.stageId ?? 0)&&damage>0)enemy.hiveKiller=world; }
     if(sylvaBasic && damage+absorbed>0)sylvaAcidHit(world,enemy,sylvaHooks);
     if(basic&&state.aircraftId==='terra'&&damage+absorbed>0)terraFx(world,'impact',enemy.x,enemy.y,26,.22);
     sylvaDealt(world,enemy,damage,damage+absorbed,skillId,sylvaHooks,sylvaBonus);
@@ -3959,7 +3963,7 @@ function applyDamageToEnemyInternal(world: CombatWorld, enemy: EnemyEntity, rawD
         enemy.burn = statusExpiry(enemy,"burn",0,5);
         enemy.burnArmorUntil = statusExpiry(enemy,"burnArmorUntil",time,6);
         enemy.burnDamage = stats.firepower * .9;
-        if(world.stageId===5)enemy.hiveBurnOwner=world;
+        if(isSquadStage(world.stageId ?? 0))enemy.hiveBurnOwner=world;
         if (enemy.burnTick <= 0)
             enemy.burnTick = 1;
     }
@@ -4465,7 +4469,7 @@ function updateEnemyPlayerCollisions(world: CombatWorld): void {
     if (world.waveState !== "combat")
         return;
     for (const enemy of world.enemies) {
-        if (enemy.aircraftTarget || enemy.mirage?.dash) continue;
+        if (enemy.aircraftTarget || enemy.mirage?.dash || enemy.forest && (enemy.forest.contactSafeUntil>world.elapsed || enemy.forest.hiddenUntil>world.elapsed || enemy.forest.dash || enemy.type==='forest_web_node')) continue;
         if (world.stormbreaker && (isStormObjective(enemy.type) || (enemy.stormbreaker?.bodyUntil ?? 0) > world.elapsed)) continue;
         if ((enemy.type === "micro_drone" && (enemy.magnetic?.clock ?? 0) < (enemy.magnetic?.diveAt ?? 2.8)) || (enemy.type === "satellite" && (enemy.magnetic?.clock ?? 0) < 1.4)) continue;
         if(enemy.hp>0&&enemy.type==="kamikaze"&&enemy.kamikazeState==="dash"&&enemyAllegiance(world,enemy)==="friendly_hacked")updateKamikaze(world,enemy,0);
@@ -4848,7 +4852,7 @@ function updateDecoys(world: CombatWorld, dt: number): void {
     if(world.decoyVolleys<=0&&!world.decoys.some(d=>!d.clone)){finishExpansionSkill(state,expansionState(state).casts.decoy);startDeferredSkillCooldown(state,"decoy");}
 }
 function updatePlayerDash(world: CombatWorld, dt: number): void {
-    if (playerStunned(world.aircraft) || world.dashRemaining <= 0)
+    if (playerStunned(world.aircraft) || playerRooted(world.aircraft) || world.dashRemaining <= 0)
         return;
     const opponent=world.duel?.opponent ?? (world.duelOpponent??world.mirage?.mirror)?.context.world ?? world.enemies.find(e=>e.aircraftTarget)?.aircraftTarget?.world;
     const target=opponent?.enemies.find(e=>e.aircraftTarget?.world===world);
@@ -5131,7 +5135,7 @@ export function updateCombatWorld(world: CombatWorld, deltaSeconds: number): voi
         }
         if(world.hive.defeated){world.stageVictory=false;latchAircraftDestruction(world);}
         else if(world.bossDefeated&&!world.stageVictory){
-            world.stageVictory=true;world.stageFirstClear=persistStageVictory(5);
+            world.stageVictory=true;world.stageFirstClear=persistStageVictory(world.stageId);
             world.ended=true;world.pauseReasons.add('result');
             delete world.aircraft.coreState.emergencyRepair;
             const tactical=tacticalState(world);tactical.grids.length=0;tactical.scraps.length=0;
@@ -5501,7 +5505,7 @@ function resolveReleaseDamage(w:CombatWorld,e:EnemyEntity,raw:number,row:220|221
     if(!isHostileToPlayer(w,e)||raw<=0)return 0;
     const budget=releaseDamageBudget(w,e,raw,row)+settled,shieldBefore=e.shield;let absorbed=Math.min(e.shield,budget),damage=Math.min(e.hp,Math.max(0,budget-absorbed));
     if (!e.aircraftTarget) e.shield-=absorbed;
-    if(e.aircraftTarget){const received=receiveAircraftTargetDamage(e,budget,"area_hazard");damage=received.damage;absorbed=received.absorbed;}else {e.hp-=damage;if(w.stageId===5&&damage>0)e.hiveKiller=w;}
+    if(e.aircraftTarget){const received=receiveAircraftTargetDamage(e,budget,"area_hazard");damage=received.damage;absorbed=received.absorbed;}else {e.hp-=damage;if(isSquadStage(w.stageId ?? 0)&&damage>0)e.hiveKiller=w;}
     sylvaDealt(w,e,damage,damage+absorbed,undefined,sylvaHooks);
     if(w.stormbreaker)onStormEnemyDamage(w,e,damage,shieldBefore,stormbreakerHooks);
     if(absorbed>0&&e.shield<=0&&e.type==="iron_fortress"&&e.retaliationReady){e.retaliationReady=false;queueEliteSpecial(w,e,"retaliation",.01,false);}
@@ -5664,7 +5668,7 @@ function resolveEquipmentDamage(w:CombatWorld,e:EnemyEntity,raw:number,family:nu
     const budget=calculateDamage(raw,armor,outgoing.multiplier*coreMultiplier*sylvaOutgoing(w,e))*guardianMultiplier(w,e)*stormDamageTakenMultiplier(w,e)*(e.type==="boss"&&e.hp/e.maxHp>=.15&&e.aegisUntil>t?.6:1);
     const shieldBefore=e.shield;let absorbed=Math.min(e.shield,budget),hpDamage=Math.min(e.hp,Math.max(0,budget-absorbed));
     if (!e.aircraftTarget) e.shield-=absorbed;
-    if(e.aircraftTarget){const received=receiveAircraftTargetDamage(e,budget,"area_hazard",undefined,0,1,false,false,family===36);hpDamage=received.damage;absorbed=received.absorbed;}else {e.hp-=hpDamage;if(w.stageId===5&&hpDamage>0)e.hiveKiller=w;}
+    if(e.aircraftTarget){const received=receiveAircraftTargetDamage(e,budget,"area_hazard",undefined,0,1,false,false,family===36);hpDamage=received.damage;absorbed=received.absorbed;}else {e.hp-=hpDamage;if(isSquadStage(w.stageId ?? 0)&&hpDamage>0)e.hiveKiller=w;}
     sylvaDealt(w,e,hpDamage,hpDamage+absorbed,undefined,sylvaHooks);
     if(w.stormbreaker)onStormEnemyDamage(w,e,hpDamage,shieldBefore,stormbreakerHooks);
     if(absorbed>0&&e.shield<=0&&e.type==="iron_fortress"&&e.retaliationReady){e.retaliationReady=false;queueEliteSpecial(w,e,"retaliation",.01,false);}
