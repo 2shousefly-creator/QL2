@@ -75,7 +75,7 @@ import { createWaveQueue, isElite } from "./airCombatWaves";
 import { combineArmorPenetration, armorPenetration, coreId, dispatchCoreEvent, hasCore, negativeStatusDuration, outgoingCoreMultiplier } from "./airCombatCoreEffects";
 import type { CoreContext, CoreTarget, DamageSource } from "./airCombatCoreEffects";
 import { calculateDamage, endAircraftSkill, healAircraft } from "./airCombatAircraft";
-import { AIR_COMBAT_WORLD, ENEMY_CONFIGS, GAMEPLAY_SAFE_RECT, SKILL_CONFIGS, } from "./airCombatConfig";
+import { AIRCRAFT_CONFIGS, AIR_COMBAT_WORLD, ENEMY_CONFIGS, GAMEPLAY_SAFE_RECT, SKILL_CONFIGS, } from "./airCombatConfig";
 import { applyCore, applyDamageToAircraft, resolvePlayerDamage, calculateRunRank, canAcquirePlayerTarget, castSkill, clampCircleToGameplayRect, createAircraftCombatState, gainCombatXp, generateCoreChoices, getComboMultiplier, getEffectiveAircraftStats, getSkillRuntimeValues, getTargetPriority, requiredCombatXp, resolveBasicProjectileMultipliers, shouldAutoFire, tickAircraftState, } from "./airCombatEngine";
 import { CombatAnnouncement, AirCombatHudSnapshot, AirCombatRunSummary, AircraftCombatState, AircraftId, CoreCard, EnemyType, SkillCastResult, SkillId, } from "./airCombatTypes";
 export interface EnemyEntity {
@@ -2750,7 +2750,14 @@ function recordCrossfire(world:CombatWorld,e:EnemyEntity):void {
 }
 function activateTacticalCores(world:CombatWorld,usedSkill:SkillId):void {
     const state=world.aircraft,t=tacticalState(world),c=state.coreState;
-    if(hasCore(state,119)){state.coreState.timers.timeRecovery=world.elapsed+4;const other=AIRCRAFT_CONFIGS[state.aircraftId].skillIds.filter(id=>id!==usedSkill&&!isUltimate(id)).sort((a,b)=>(state.cooldowns[b]??0)-(state.cooldowns[a]??0))[0];if(other){const before=state.cooldowns[other]??0;reduceRunningSkillCooldown(state,other,7);recordCoreMetric(state,119,"cooldown",before-state.cooldowns[other]!);}}
+    if(hasCore(state,119)){
+        c.timers.timeRecovery=world.elapsed+4;
+        // An active effect has no running cooldown yet and cannot consume this reduction.
+        const other=AIRCRAFT_CONFIGS[state.aircraftId].skillIds
+            .filter(id=>id!==usedSkill&&!isUltimate(id)&&c.deferredCooldowns[id]===undefined&&(state.cooldowns[id]??0)>0)
+            .sort((a,b)=>(state.cooldowns[b]??0)-(state.cooldowns[a]??0))[0];
+        if(other)recordCoreMetric(state,119,"cooldown",reduceRunningSkillCooldown(state,other,7));
+    }
     const units=c.stacks.antimatter??0;
     if(hasCore(state,121)&&units>0){
         c.stacks.antimatter=0;

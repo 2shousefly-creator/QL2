@@ -1,4 +1,5 @@
 import { drawAircraftTrackingHud,drawEnemyTrackingHud,drawCinderTotals,drawAircraftDamageLabels } from './airCombatCanvasHud';
+import { observeCombatResolution, resizeCombatCanvas } from './airCombatResolution';
 import { HealthBarPresentation } from './airCombatFeedback';
 import { createHiveDamagePool,createHiveDamageLayout } from './airCombatHiveDamage';
 import { hiveActors } from './airCombatHive';
@@ -6,17 +7,17 @@ import type { CombatWorld } from './airCombatRuntime';
 
 /** The existing campaign HUD remains screen-aligned above either Hive renderer. */
 export function createHiveHud(host:HTMLDivElement){
- const canvas=document.createElement('canvas'),ratio=Math.min(2,devicePixelRatio||1);
- canvas.width=360*ratio;canvas.height=640*ratio;
+ const canvas=document.createElement('canvas');
  canvas.style.cssText='position:absolute;inset:0;display:block;width:100%;height:100%;pointer-events:none';
  canvas.setAttribute('aria-hidden','true');
  const ctx=canvas.getContext('2d');if(!ctx)throw new Error('Không thể tải HUD chiến đấu');
  host.appendChild(canvas);
+ const stopResolution=observeCombatResolution(host,ratio=>resizeCombatCanvas(canvas,ratio));
  const views=new Map<CombatWorld,{bars:HealthBarPresentation}>();
  const layout=createHiveDamageLayout(),labels=createHiveDamagePool();
  return {
   render(world:CombatWorld,delta:number,reduced:boolean,canvasDamage=true){
-   ctx.setTransform(ratio,0,0,ratio,0,0);ctx.clearRect(0,0,360,640);layout.begin();
+   ctx.setTransform(canvas.width/360,0,0,canvas.height/640,0,0);ctx.clearRect(0,0,360,640);layout.begin();
    const actors=hiveActors(world);
    if(canvasDamage)labels.update(world,delta);
    for(const actor of actors){
@@ -30,6 +31,6 @@ export function createHiveHud(host:HTMLDivElement){
    if(canvasDamage)drawAircraftDamageLabels(ctx,labels.labels,reduced,layout);
    for(const [actor,view] of views)if(!actors.includes(actor)){view.bars.clear();views.delete(actor);}
   },
-  destroy(){for(const view of views.values())view.bars.clear();views.clear();canvas.remove();}
+  destroy(){stopResolution();for(const view of views.values())view.bars.clear();views.clear();canvas.remove();}
  };
 }

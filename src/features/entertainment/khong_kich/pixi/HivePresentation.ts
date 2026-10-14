@@ -1,4 +1,5 @@
 import { FOREST_ART } from '../airCombatForestArt';
+import { combatResolution, observeCombatResolution, resizeCombatCanvas } from '../airCombatResolution';
 import { createHiveHud } from '../airCombatHiveHud';
 import { AirCombatDamageText } from './AirCombatDamageText';
 import { AirCombatPixiRenderer } from './AirCombatPixiRenderer';
@@ -31,8 +32,9 @@ export async function createHivePresentation(host:HTMLDivElement,world:CombatWor
   const images=new Map<string,HTMLImageElement>();
   await Promise.all([loadAstraCanvasAssets(),loadGeneratedCanvas(world),...urls.map(async url=>{const image=new Image();image.src=url;await image.decode();images.set(url,image);})]);
   const background=quietBackground(images.get(backgroundUrl)!);
-  const canvas=document.createElement('canvas'),ratio=Math.min(2,devicePixelRatio||1);canvas.width=360*ratio;canvas.height=640*ratio;canvas.style.cssText='display:block;width:100%;height:100%;pointer-events:none';
+  const canvas=document.createElement('canvas');canvas.style.cssText='display:block;width:100%;height:100%;pointer-events:none';
   const ctx=canvas.getContext('2d');if(!ctx)throw new Error('Không thể tải đồ họa Màn 5');host.appendChild(canvas);
+  const stopResolution=observeCombatResolution(host,ratio=>resizeCombatCanvas(canvas,ratio));
   const painter:HivePainter={
    sprite(f,x,y,w,h,r=0,alpha=1,additive=false,flipY=false){
     if(w<=0||h<=0||alpha<=0||y+h<0||y-h>640||x+w<0||x-w>360)return;
@@ -48,7 +50,7 @@ export async function createHivePresentation(host:HTMLDivElement,world:CombatWor
   const views=new Map<CombatWorld,{accents:InstanceType<typeof CanvasCombatAccents>;bars:InstanceType<typeof HealthBarPresentation>}>(),hud=createHiveHud(host);
   return {
    render(w,dt,reduced){
-    if(document.hidden)return;ctx.setTransform(ratio,0,0,ratio,0,0);ctx.clearRect(0,0,360,640);ctx.save();const shake=hiveExplosionShake(w,reduced);ctx.translate(shake.x,shake.y);paintHive(w,painter,reduced);
+    if(document.hidden)return;ctx.setTransform(canvas.width/360,0,0,canvas.height/640,0,0);ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';ctx.clearRect(0,0,360,640);ctx.save();const shake=hiveExplosionShake(w,reduced);ctx.translate(shake.x,shake.y);paintHive(w,painter,reduced);
     const actors=hiveActors(w);
     for(const actor of actors){
      let view=views.get(actor);if(!view){view={accents:new CanvasCombatAccents(),bars:new HealthBarPresentation()};views.set(actor,view);}
@@ -59,13 +61,13 @@ export async function createHivePresentation(host:HTMLDivElement,world:CombatWor
     hud.render(w,dt,reduced);
     for(const [actor,view] of views)if(!actors.includes(actor)){view.accents.clear();view.bars.clear();views.delete(actor);}
    },
-   destroy(){for(const view of views.values()){view.accents.clear();view.bars.clear();}views.clear();hud.destroy();canvas.remove();}
+   destroy(){stopResolution();for(const view of views.values()){view.accents.clear();view.bars.clear();}views.clear();hud.destroy();canvas.remove();}
   };
  }
  const assets=await loadAirCombatAssets(world),app=new Application();
  let background:Texture;
  try{
-  await app.init({width:360,height:640,resolution:Math.min(2,devicePixelRatio||1),autoDensity:true,antialias:false,autoStart:false,sharedTicker:false,backgroundAlpha:0,preference:'webgl'});
+  await app.init({width:360,height:640,resolution:combatResolution(host),autoDensity:false,antialias:false,autoStart:false,sharedTicker:false,backgroundAlpha:0,preference:'webgl'});
   const image=new Image();image.src=backgroundUrl;
   await Promise.all([image.decode(),...urls.filter(url=>url!==backgroundUrl).map(url=>Assets.load(url))]);
   background=Texture.from(quietBackground(image));
@@ -74,6 +76,7 @@ export async function createHivePresentation(host:HTMLDivElement,world:CombatWor
  mask.rect(R.left,R.top,R.width,R.height).fill(0xffffff);threats.mask=mask;explosions.mask=mask;
  const camera=new Container();camera.addChild(scenery,aircraft,explosions,threats,mask);app.stage.addChild(camera);
  app.canvas.style.cssText='display:block;width:100%;height:100%;pointer-events:none';host.appendChild(app.canvas);
+ const stopResolution=observeCombatResolution(host,ratio=>app.renderer.resize(360,640,ratio));
  const textures=new Map<HiveFrame,Texture>();
  const texture=(f:HiveFrame)=>{
   let t=textures.get(f);if(t)return t;
@@ -110,6 +113,6 @@ export async function createHivePresentation(host:HTMLDivElement,world:CombatWor
    blast.begin();paintHiveExplosions(w,blast.painter,reduced);blast.end();danger.begin();paintHiveThreats(w,danger.painter);danger.end();
    layout.begin();damageView.update(w,dt,reduced,false,layout,[w],actors);app.render();hud.render(w,dt,reduced,false);
   },
-  destroy(){app.canvas.removeEventListener('webglcontextlost',onLost);for(const view of views.values())view.destroy();views.clear();hud.destroy();damageView.destroy();for(const t of textures.values())t.destroy(false);app.destroy(true,{children:true,texture:false,textureSource:false});background.destroy(true);assets.destroy();}
+  destroy(){stopResolution();app.canvas.removeEventListener('webglcontextlost',onLost);for(const view of views.values())view.destroy();views.clear();hud.destroy();damageView.destroy();for(const t of textures.values())t.destroy(false);app.destroy(true,{children:true,texture:false,textureSource:false});background.destroy(true);assets.destroy();}
  };
 }

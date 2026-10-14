@@ -1,4 +1,5 @@
 import { aircraftBuffBrightness, AIRCRAFT_BUFF_BRIGHTNESS } from '../airCombatBuffArt';
+import { combatResolution, observeCombatResolution } from '../airCombatResolution';
 import { DamageTextLayout } from "../airCombatDamageLayout";
 import { paintBalanceGuides, paintAircraftDamageSmoke } from '../airCombatBalanceVisuals';
 import { phantomLaserBounds, PHANTOM_LASER_VISUAL_WIDTH } from '../airCombatPhantom';
@@ -145,7 +146,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
   private shake = 0;
   private smokeClock = 0;
   private trailClock = 0;
-  private observer?: ResizeObserver;
+  private stopResolution?: () => void;
   private lost = false;
   private destroyed = false;
   private onLost = (event: Event) => { event.preventDefault(); this.lost = true; };
@@ -154,8 +155,8 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     const assets = await loadAirCombatAssets(world);
     const app = new Application();
     try {
-      await app.init({ width: 360, height: 640, preference: ["webgl"], autoDensity: true,
-        resolution: Math.min(2, window.devicePixelRatio || 1), antialias: false,
+      await app.init({ width: 360, height: 640, preference: ["webgl"], autoDensity: false,
+        resolution: combatResolution(host), antialias: false,
         autoStart: false, sharedTicker: false, background: 0x102334 });
       return new AirCombatPixiRenderer(app, assets, host);
     } catch (error) {
@@ -226,17 +227,14 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     this.laser.texture = assets.phantomBeam; this.laser.blendMode = "add";
     this.charge.texture = assets.effect("charge");
     this.buffFilter.brightness(AIRCRAFT_BUFF_BRIGHTNESS, false);
+    // The default 1x filter target downsamples a Retina hull whenever a buff is active.
+    this.buffFilter.resolution = 'inherit';
     this.laserMuzzle.texture = assets.effect("charge"); this.laserMuzzle.blendMode = "add";
     for (const sprite of [this.player, this.laser, this.laserMuzzle, this.charge]) {
       sprite.anchor.set(0.5); this.actors.addChild(sprite);
     }
     if (host) {
-      this.observer = new ResizeObserver(() => {
-        const width = Math.max(1, host.clientWidth), height = Math.max(1, host.clientHeight);
-        app.renderer.resize(width, height);
-        app.stage.scale.set(width / 360, height / 640);
-      });
-      this.observer.observe(host);
+      this.stopResolution = observeCombatResolution(host, ratio => app.renderer.resize(360, 640, ratio));
     }
   }
 
@@ -875,7 +873,7 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     this.buffFilter.destroy();
     this.destroyed = true;
     this.mirrorRenderer?.destroy();
-    this.observer?.disconnect();
+    this.stopResolution?.();
     this.damageText.destroy();
     this.healthBars.clear();
     if (!this.sceneParent) this.app.canvas.removeEventListener("webglcontextlost", this.onLost);

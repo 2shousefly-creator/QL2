@@ -1,0 +1,58 @@
+{
+  "version": "26.32.1",
+  "releaseDate": "14/10/2026",
+  "title": "Sửa kẹt kỹ năng và độ nét chiến cơ",
+  "displayTitle": "KHÔNG KÍCH 26.32.1 — SỬA KẸT KỸ NĂNG VÀ ĐỘ NÉT CHIẾN CƠ",
+  "summary": "Sửa lỗi chiến cơ kẹt kỹ năng khi sở hữu Rút Ngắn Thời Gian và cải thiện độ nét hiển thị trong trận đấu.",
+  "sections": [
+    {
+      "id": "combat-fixes",
+      "title": "SỬA LỖI CHIẾN ĐẤU",
+      "icon": {
+        "kind": "core",
+        "id": "core_119"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "skill-lock",
+          "title": "Rút Ngắn Thời Gian",
+          "icon": {
+            "kind": "core",
+            "id": "core_119"
+          },
+          "rationale": "Thi triển kỹ năng phải hoàn tất khi lõi kích hoạt.",
+          "changes": [
+            {
+              "text": "Sửa lỗi khiến kỹ năng bị kẹt sau khi tiêu hao tài nguyên với Rút Ngắn Thời Gian; khắc phục trường hợp Astra bị giữ ở trạng thái tụ lực và ngừng bắn thường.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "Lõi chỉ chọn kỹ năng cơ bản khác đang thực sự hồi chiêu. Đồng bộ ghi nhận thời gian giảm hồi chiêu của trang bị, bao gồm Đồng Hồ Kỹ Thuật Creno.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        },
+        {
+          "id": "aircraft-clarity",
+          "title": "Độ nét chiến cơ",
+          "icon": {
+            "kind": "aircraft",
+            "id": "astra"
+          },
+          "rationale": "Giữ chi tiết chiến cơ khi nhận buff và khi khung trận đấu đổi kích thước.",
+          "changes": [
+            {
+              "text": "Sửa bộ lọc tăng sáng làm giảm độ phân giải chiến cơ khi có buff. Đồng bộ độ phân giải hiển thị theo mật độ điểm ảnh và kích thước khung trận đấu cho các màn, đồng minh và chế độ Solo.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+

@@ -49,7 +49,9 @@ function stack(c:Context,gain:number,max:number,seconds:number) {const e=equipme
 function heal(c:Context,amount:number,key="healed") {if(c.s.currentHp<=0)return 0;const actual=c.h.heal(c.w,amount);metric(c,key,actual);return actual;}
 function resource(c:Context,amount:number) {const max=getEffectiveAircraftStats(c.s).maxResource,before=c.s.currentResource;c.s.currentResource=Math.min(max,before+amount);metric(c,"resource",c.s.currentResource-before);metric(c,"procs");equipmentFx(c.w,c.f);}
 function shield(c:Context,amount:number,seconds:number) {const sh=createAbsorbShield(c.s,`equipment:${c.f}`,amount,seconds);metric(c,"shieldCreated",sh.amount);metric(c,"shields");activate(c,seconds);}
-function reduceCooldown(c:Context,seconds:number,ids:readonly SkillId[],key="cooldown") {for(const id of ids){const before=c.s.cooldowns[id]??0;reduceRunningSkillCooldown(c.s,id,seconds);metric(c,key,before-c.s.cooldowns[id]!);}}
+function reduceCooldown(c:Context,seconds:number,ids:readonly SkillId[],key="cooldown") {
+  for(const id of ids)metric(c,key,reduceRunningSkillCooldown(c.s,id,seconds));
+}
 function damage(c:Context,e:EnemyEntity,raw:number,from?:{x:number;y:number}) {const actual=c.h.damage(c.w,e,raw,c.f);metric(c,"damage",actual);if(actual>0)metric(c,"hits");equipmentFx(c.w,c.f,e.x,e.y,48,.55,e.id,from);return actual;}
 const nearby=(c:Context,x:number,y:number,r=Infinity)=>c.w.enemies.filter(e=>c.h.hostile(c.w,e)&&Math.hypot(e.x-x,e.y-y)<=r).sort((a,b)=>Math.hypot(a.x-x,a.y-y)-Math.hypot(b.x-x,b.y-y));
 const hp=(c:Context)=>getEffectiveAircraftStats(c.s).maxHp;
