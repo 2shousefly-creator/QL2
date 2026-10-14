@@ -1,4 +1,5 @@
 import { isSquadStage } from './airCombatForestCatalog';
+import { loadAircraftExhaustCanvas } from './airCombatExhaustArt';
 import registryData from '../../../assets/khong-kich/26.25.0/registry.json';
 import bindingData from '../../../assets/khong-kich/26.25.0/frame-bindings.json';
 import { CLEAN_SKILL_ART } from './airCombatSkillVfxFrames';
@@ -45,6 +46,7 @@ const canvasPages=new Map<string,HTMLImageElement>();
 const canvasTints=new Map<string,HTMLCanvasElement>();
 export async function loadGeneratedCanvas(world?:CombatWorld) {
   const bundles=generatedBundles(world);
+  await loadAircraftExhaustCanvas(bundles);
   await Promise.all(Object.entries(GENERATED_ART.pages).filter(([,p])=>bundles.has(p.bundle)).map(async([key,p])=>{
     let image=canvasPages.get(key);
     if(!image){image=new Image();image.src=p.url;canvasPages.set(key,image);}

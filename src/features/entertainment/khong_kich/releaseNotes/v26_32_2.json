@@ -1,0 +1,62 @@
+{
+  "version": "26.32.2",
+  "releaseDate": "14/10/2026",
+  "title": "Tia lửa động cơ riêng cho từng chiến cơ",
+  "displayTitle": "KHÔNG KÍCH 26.32.2 — NÂNG CẤP TIA LỬA ĐỘNG CƠ",
+  "summary": "Căn lại tia lửa theo thân chiến cơ hiện tại và bổ sung 9 spritesheet động cơ, mỗi bộ gồm 16 frame tạo sinh riêng.",
+  "sections": [
+    {
+      "id": "engine-exhaust",
+      "title": "ĐỘNG CƠ CHIẾN CƠ",
+      "icon": {
+        "kind": "aircraft",
+        "id": "black_eagle"
+      },
+      "intro": [],
+      "entries": [
+        {
+          "id": "nozzle-alignment",
+          "title": "Căn đúng miệng động cơ",
+          "icon": {
+            "kind": "aircraft",
+            "id": "astra"
+          },
+          "rationale": "Tia lửa bám theo thân chiến cơ ở đúng vị trí miệng phun.",
+          "changes": [
+            {
+              "text": "Cập nhật tọa độ động cơ theo sprite thân hiện tại của cả 9 chiến cơ. Đồng bộ kích thước thân và tia lửa khi chiến cơ đổi kích thước, bao gồm chế độ hiển thị Canvas dự phòng.",
+              "format": "bullet",
+              "changeType": "change"
+            },
+            {
+              "text": "Đặt gốc lửa sau lớp thân và giữ vùng gắn động cơ ổn định khi cánh chuyển động. Áp dụng cho người chơi, đồng minh và đối thủ Mirror/Solo.",
+              "format": "bullet",
+              "changeType": "change"
+            }
+          ]
+        },
+        {
+          "id": "unique-exhaust",
+          "title": "144 frame tia lửa tạo sinh",
+          "icon": {
+            "kind": "aircraft",
+            "id": "cinder"
+          },
+          "rationale": "Mỗi chiến cơ có một bộ tia lửa mang màu sắc và hình dáng riêng.",
+          "changes": [
+            {
+              "text": "Viper: ion lam; Titan: lò phản lực vàng; Phantom: ion tím; Astra: ánh sao vàng trắng; Terra: địa nhiệt; Sylva: sinh quang lục; Argent: ánh bạc; Riptide: dòng xoáy ngọc lam; Cinder: hỏa lực đỏ cam.",
+              "format": "bullet",
+              "changeType": "new"
+            },
+            {
+              "text": "Mỗi spritesheet có 16 frame với điểm phát lửa được căn riêng. Tia lửa phản hồi khi di chuyển, dừng khi tạm dừng và giảm chuyển động theo thiết lập.",
+              "format": "bullet",
+              "changeType": "new"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

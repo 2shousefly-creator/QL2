@@ -74,7 +74,10 @@ export class GeneratedRigPool {
       for(let i=0;i<points.length;i+=2){
         const x=part.rest[i],y=part.rest[i+1],u=x/n,v=y/n;
         // Each joint line is stationary. Only the material beyond it bends/deploys.
-        const wing=part.side<0?clamp((.375-u)/.375):part.side>0?clamp((u-.625)/.375):0;
+        // Keep the whole central mesh band (including engine sockets) stationary.
+        // Grid columns at .25/.75 bound it, so interpolation cannot move a nozzle.
+        const joint=art.subject.kind==='aircraft'?.25:.375;
+        const wing=part.side<0?clamp((joint-u)/joint):part.side>0?clamp((u-(1-joint))/joint):0;
         const center=part.side===0?Math.sin(clamp((u-.375)/.25)*Math.PI):0;
         const along=Math.sin(v*Math.PI);
         const deployment=charge*(omega?.026:parallax?.033:crown?.024:.016);

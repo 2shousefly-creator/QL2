@@ -39,7 +39,8 @@ import { enemyAllegiance } from "./airCombatRuntime";
 import aircraftAtlasUrl from "../../../assets/khong-kich/v2/aircraft-atlas.png";
 import phantomBeamUrl from "../../../assets/khong-kich/26.25.0/compat/v2-phantom-firing-beam.png";
 import basicAmmoAtlasUrl from "../../../assets/khong-kich/26.25.0/compat/v2-player-basic-ammo-atlas.png";
-import { PLAYER_ARTWORK, getPlayerExhaust } from "./airCombatArtwork";
+import { PLAYER_ARTWORK, getPlayerAirframe, getPlayerExhaust } from "./airCombatArtwork";
+import { paintAircraftExhaust } from './airCombatExhaustArt';
 import fortressAtlasUrl from "../../../assets/khong-kich/v2/fortress-clouds-atlas.png";
 import { hasCore } from "./airCombatCoreEffects";
 import { PLAYER_AIRFRAME_SIZE, PLAYER_HITBOX_PROFILES, ENEMY_HITBOX_PROFILES, type AircraftHitboxProfile } from "./airCombatHitboxes";
@@ -725,27 +726,12 @@ export function drawLegacyWorld(
   }
   if (!world.destruction && world.aircraft.currentHp > 0) {
     const hitBlink = world.playerInvulnerability > 0 && Math.floor(world.elapsed * 16) % 2 === 0;
-    const exhaust=getPlayerExhaust(world,PLAYER_AIRFRAME_SIZE[aircraftId]*playerAirframeScale(world.aircraft),reducedMotion);
-    ctx.save();ctx.globalCompositeOperation="lighter";
-    for(const mount of exhaust.mounts)for(let layer=0;layer<3;layer++){
-      const x=world.playerX+mount.x,y=world.playerY+mount.y,width=mount.width*(layer===0?2.6:layer===1?1:.48),length=exhaust.length*(layer===0?1.08:layer===1?1:.64);
-      ctx.globalAlpha=(invisible?.16:1)*(layer===0?exhaust.glow:layer===1?.9:1);
-      // The same generated flame texture, mounts and thrust clock as the Pixi campaign renderer.
-      paintGeneratedCanvas(ctx,'shared_flame',x,y+length/2,width,length,0,1,.5,layer===2?0xfff8e7:Number.parseInt(aircraft.accent.slice(1),16));
-    }
-    ctx.restore();
+    const airframe=getPlayerAirframe(world);
+    for(const mount of getPlayerExhaust(world,reducedMotion))
+      paintAircraftExhaust(ctx,aircraftId,mount.frame,mount.x,mount.y,mount.width,mount.height,mount.rotation,invisible?.1:1);
     ctx.save();ctx.filter=`brightness(${aircraftBuffBrightness(world)*100}%)`;
-    drawAircraft(
-      ctx,
-      aircraftId,
-      world.playerX,
-      world.playerY,
-      aircraft.color,
-      aircraft.accent,
-      invisible ? 0.1 : hitBlink ? 0.25 : 1,
-      0.82,
-      aircraftId==='argent'?argentPose(world):undefined
-    );
+    paintGeneratedCanvas(ctx,aircraftId,airframe.x,airframe.y,airframe.width,airframe.height,
+      airframe.rotation,invisible?.1:hitBlink?.25:1,airframe.anchorX);
     ctx.restore();
 
 

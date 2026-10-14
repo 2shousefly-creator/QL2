@@ -33,7 +33,8 @@ import { paintAstra } from "../airCombatAstraArt";
 import { magneticShake } from "../airCombatMagnetic";
 import { STAGE2_ENEMY_ART, TEMPEST_WEAKPOINT_ART } from "../airCombatStage2Art";
 import { paintMagnetic, guardianSlots } from "../airCombatMagnetic";
-import { getPlayerExhaust } from "../airCombatArtwork";
+import { getPlayerAirframe, getPlayerExhaust } from "../airCombatArtwork";
+import { exhaustTextureId } from '../airCombatExhaustArt';
 import { paintTacticalCores, paintEnemyForegroundMarks, paintElitePatternWarning, type TacticalPainter } from "../airCombatTacticalVisuals";
 import { enemyAllegiance } from "../airCombatRuntime";
 import { hasCore } from "../airCombatCoreEffects";
@@ -132,7 +133,8 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
   private mechanisms = new AirCombatSpritePool(this.actors,8);
   private player = new Sprite();
   private playerRig = new GeneratedRigPool(this.actors,1);
-  private playerExhaust = Array.from({length:6},()=>new Sprite());
+  private playerExhaustLayer = new Container();
+  private playerExhaust = Array.from({length:2},()=>new Sprite());
   private titanShield = new TitanShieldPresentation();
   private laser = new Sprite();
   private charge = new Sprite();
@@ -223,7 +225,9 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     this.warnings = new AirCombatSpritePool(this.effects, 40);
     this.engines = new AirCombatSpritePool(this.effects, AIR_COMBAT_WORLD.maxEnemies + 4);
     this.vfx = new AirCombatVfx(this.globalVfx, assets);
-    for(const sprite of this.playerExhaust){sprite.texture=assets.engineFlame;sprite.anchor.set(.5,0);sprite.blendMode="add";this.actors.addChild(sprite);}
+    // Below both the generated mesh hull and its flat fallback: the nozzle hides the flame root.
+    this.actors.addChildAt(this.playerExhaustLayer,0);
+    for(const sprite of this.playerExhaust)this.playerExhaustLayer.addChild(sprite);
     this.laser.texture = assets.phantomBeam; this.laser.blendMode = "add";
     this.charge.texture = assets.effect("charge");
     this.buffFilter.brightness(AIRCRAFT_BUFF_BRIGHTNESS, false);
@@ -722,11 +726,11 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
     this.player.visible = alive;
     const invisible = (world.aircraft.activeEffects.invisibility || 0) > 0 || equipmentUntargetable(world.aircraft);
     this.player.texture = this.assets.texture(visual.neutral);
-    this.player.rotation = 0;
-    this.player.position.set(world.playerX, world.playerY);
-    this.player.width = this.player.height = visual.size*playerAirframeScale(world.aircraft);
-    this.player.anchor.x = visual.artwork.neutral.anchorX;
-    this.player.width *= visual.artwork.neutral.scaleX;
+    const airframe=getPlayerAirframe(world);
+    this.player.rotation = airframe.rotation;
+    this.player.position.set(airframe.x, airframe.y);
+    this.player.width = airframe.width; this.player.height = airframe.height;
+    this.player.anchor.set(airframe.anchorX,airframe.anchorY);
     this.player.alpha = invisible ? 0.1 : 1;
     this.player.tint = world.playerInvulnerability > 0 ? 0xffb1b1 : 0xffffff;
     this.player.filters=aircraftBuffBrightness(world)>1?this.buffFilters:null;
@@ -740,16 +744,18 @@ export class AirCombatPixiRenderer implements AirCombatPresentation {
       sprite.position.set(x,y);sprite.width=width;sprite.height=height;sprite.alpha=alpha;
       setGeneratedRigPose(sprite,{charge,recoil:Math.min(1,this.recoil/1.4)});
     },reducedMotion);this.mechanisms.end();
-    const exhaust=getPlayerExhaust(world,visual.size*playerAirframeScale(world.aircraft),reducedMotion);
+    const exhaust=getPlayerExhaust(world,reducedMotion);
     for(let i=0;i<this.playerExhaust.length;i++){
-      const sprite=this.playerExhaust[i],mount=exhaust.mounts[Math.floor(i/3)],layer=i%3;
+      const sprite=this.playerExhaust[i],mount=exhaust[i];
       sprite.visible=alive&&!!mount;
       if(!mount)continue;
-      sprite.position.set(this.player.x+mount.x,this.player.y+mount.y);
-      sprite.width=mount.width*(layer===0?2.6:layer===1?1:.48);
-      sprite.height=exhaust.length*(layer===0?1.08:layer===1?1:.64);
-      sprite.tint=layer===2?0xfff8e7:visual.tint;
-      sprite.alpha=(invisible?.16:1)*(layer===0?exhaust.glow:layer===1?.9:1);
+      const texture=this.assets.generated(exhaustTextureId(world.aircraft.aircraftId,mount.frame.index));
+      if(!texture){sprite.visible=false;continue;}
+      sprite.texture=texture;
+      sprite.anchor.set(mount.frame.anchor[0],mount.frame.anchor[1]);
+      sprite.position.set(mount.x,mount.y);sprite.rotation=mount.rotation;
+      sprite.width=mount.width;sprite.height=mount.height;
+      sprite.tint=0xffffff;sprite.alpha=invisible?.1:1;
     }
     if (!alive) this.dashTail = 0;
     this.afterimages.begin(this.clock,reducedMotion);

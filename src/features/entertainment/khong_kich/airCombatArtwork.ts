@@ -1,3 +1,5 @@
+import { PLAYER_STANDARD_AIRFRAME_SIZE } from './airCombatHitboxes';
+import { exhaustFrame } from './airCombatExhaustArt';
 import { GENERATED_ART } from './airCombatGeneratedArt';
 import astraMetadata from '../../../assets/khong-kich/astra/art-source.json';
 import terraMetadata from '../../../assets/khong-kich/terra/art-source.json';
@@ -59,34 +61,42 @@ for(const id of Object.keys(PLAYER_ARTWORK) as AircraftId[]) {
  PLAYER_ARTWORK[id]={neutral:pose,left:pose,right:pose};
 }
 
-/** Nozzle locations in the neutral atlas cell, measured in source-art pixels.
- * Titan and Phantom have two outlets; their midpoint follows the fuselage axis.
- * These are visual transforms only, deliberately separate from airframe hitboxes. */
-export const PLAYER_ENGINE_MOUNTS: Record<AircraftId, readonly {engineMountX:number;engineMountY:number;width:number}[]> = {
-  terra:[{engineMountX:.44,engineMountY:.83,width:3},{engineMountX:.56,engineMountY:.83,width:3}],
-  sylva:[{engineMountX:.43,engineMountY:.82,width:3},{engineMountX:.57,engineMountY:.82,width:3}],
-  argent:[{engineMountX:.455,engineMountY:.79,width:3},{engineMountX:.545,engineMountY:.79,width:3}],
-  riptide:[{engineMountX:.46,engineMountY:.83,width:3.5},{engineMountX:.54,engineMountY:.83,width:3.5}],
-  cinder:[{engineMountX:.42,engineMountY:.72,width:3.5},{engineMountX:.60,engineMountY:.72,width:3.5}],
-  astra:[{engineMountX:.414,engineMountY:.864,width:3.5},{engineMountX:.573,engineMountY:.864,width:3.5}],
-  black_eagle:[{engineMountX:157/314,engineMountY:252/314,width:6}],
-  breaker:[{engineMountX:114/314,engineMountY:260/314,width:4.8},{engineMountX:199/314,engineMountY:260/314,width:4.8}],
-  phantom:[{engineMountX:134/314,engineMountY:231/314,width:4.2},{engineMountX:178/314,engineMountY:231/314,width:4.2}],
+/** Socket centres measured on the 192px portraits of the current 26.25.0 flat
+ * frames, not the retired aircraft atlases. Width is the visible nozzle opening. */
+const socket = (x:number,y:number,width:number) => ({u:x/192,v:y/192,width:width/192});
+export const PLAYER_ENGINE_MOUNTS: Record<AircraftId, readonly ReturnType<typeof socket>[]> = {
+  black_eagle:[socket(95,168,14)],
+  breaker:[socket(76,161,13),socket(120,161,13)],
+  phantom:[socket(84,155,11),socket(108,155,11)],
+  astra:[socket(67,154,12),socket(95,154,12)],
+  terra:[socket(80,157,12),socket(114,157,12)],
+  sylva:[socket(83,157,10),socket(110,157,10)],
+  argent:[socket(83,151,11),socket(108,151,11)],
+  riptide:[socket(84,152,12),socket(106,152,12)],
+  cinder:[socket(82,139,14),socket(112,139,14)],
 };
+
+/** One presentation transform for the flat/rigged hull and every engine socket. */
+export function getPlayerAirframe(world:CombatWorld) {
+  const scale=playerAirframeScale(world.aircraft),size=PLAYER_STANDARD_AIRFRAME_SIZE*scale;
+  const art=PLAYER_ARTWORK[world.aircraft.aircraftId].neutral;
+  return {x:world.playerX,y:world.playerY,width:size*art.scaleX,height:size,anchorX:art.anchorX,anchorY:.5,rotation:0,scale};
+}
 const exhaustStates=new WeakMap<CombatWorld,{time:number;thrust:number}>();
-export function getPlayerExhaust(world:CombatWorld,size:number,reducedMotion:boolean) {
+export function getPlayerExhaust(world:CombatWorld,reducedMotion:boolean) {
   let state=exhaustStates.get(world);
-  if(!state){state={time:world.elapsed,thrust:0};exhaustStates.set(world,state);}
+  if(!state||world.elapsed<state.time){state={time:world.elapsed,thrust:0};exhaustStates.set(world,state);}
   const dt=Math.max(0,Math.min(.1,world.elapsed-state.time));state.time=world.elapsed;
   const moving=world.elapsed-world.aircraft.coreState.lastMove<.18 && world.elapsed>.18;
-  const target=moving?1:0;
-  state.thrust+=(target-state.thrust)*(1-Math.exp(-dt*(reducedMotion?3:7)));
-  const art=PLAYER_ARTWORK[world.aircraft.aircraftId].neutral;
-  const flicker=reducedMotion?1:1+Math.sin(world.elapsed*24)*.045+Math.sin(world.elapsed*37)*.025;
-  return {length:flicker*(27+state.thrust*(reducedMotion?5:16))*playerAirframeScale(world.aircraft),glow:.25+state.thrust*.12,
-    mounts:PLAYER_ENGINE_MOUNTS[world.aircraft.aircraftId].map(m=>({x:(m.engineMountX-art.anchorX)*size*art.scaleX,y:(m.engineMountY-.5)*size,width:m.width*playerAirframeScale(world.aircraft)}))};
+  state.thrust+=((moving?1:0)-state.thrust)*(1-Math.exp(-dt*(reducedMotion?3:7)));
+  const pose=getPlayerAirframe(world),cos=Math.cos(pose.rotation),sin=Math.sin(pose.rotation);
+  return PLAYER_ENGINE_MOUNTS[world.aircraft.aircraftId].map((mount,nozzle)=>{
+    const localX=(mount.u-pose.anchorX)*pose.width,localY=(mount.v-pose.anchorY)*pose.height;
+    return {x:pose.x+localX*cos-localY*sin,y:pose.y+localX*sin+localY*cos,
+      width:mount.width*pose.width*4.2,height:(22+state.thrust*(reducedMotion?3:10))*pose.scale,
+      rotation:pose.rotation,frame:exhaustFrame(world.aircraft.aircraftId,world.elapsed,reducedMotion,nozzle)};
+  });
 }
-
 /** Normalized engine socket in the HawkEye artwork; presentation only. */
 export const HAWKEYE_EXHAUST_MOUNT = { u: .5, v: .79, width: .18, length: .43 } as const;
 export function hawkEyeExhaustTransform(x:number,y:number,width:number,height:number,anchorX:number,anchorY:number,rotation:number) {
@@ -94,3 +104,4 @@ export function hawkEyeExhaustTransform(x:number,y:number,width:number,height:nu
   return {x:x+localX*Math.cos(rotation)-localY*Math.sin(rotation),y:y+localX*Math.sin(rotation)+localY*Math.cos(rotation),
     width:width*mount.width,length:height*mount.length,rotation};
 }
+
