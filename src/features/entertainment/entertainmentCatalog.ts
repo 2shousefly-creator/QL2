@@ -2,6 +2,15 @@ import { EntertainmentGameMeta } from "./types";
 
 export const ENTERTAINMENT_GAMES: readonly EntertainmentGameMeta[] = [
   {
+    id: "thanh_tri",
+    title: "Thành Trì Cuối Cùng",
+    subtitle: "Roguelite thủ thành",
+    description: "Giữ vững cổng thành qua 20 wave. Xây đội hình từ 10 trợ thủ và 330 lõi nâng cấp Kim Cương.",
+    status: "available",
+    badge: "Mới",
+    icon: "castle",
+  },
+  {
     id: "khong_kich",
     title: "Không Kích",
     subtitle: "Roguelite không chiến",

@@ -1,0 +1,173 @@
+{
+  "tool": "built-in image_gen",
+  "created": "2026-10-15",
+  "style": "Detailed chibi fantasy, slightly overhead, defenders facing up, enemies facing down.",
+  "normalization": "Transparent pixel cleanup, uniform cell packing and fixed animation frame sequences. Source masters remain in local generated_images; production atlas PNGs retain all selected frames.",
+  "assets": [
+    {
+      "id": "fire",
+      "source": "exec-1a84b741-3c75-449a-af1e-618724bbc70d.png",
+      "prompt": "Use case: stylized-concept. Production 2D chibi fantasy game spritesheet, crisp illustrated raster, detailed equipment, warm upper-left light, subtle top-down three-quarter rear view facing UP toward enemy, consistent feet registration and scale. Transparent background, no grid lines, no letters, no text. EXACT evenly spaced 8 columns by 4 rows, 32 independent frames, each in its own equal cell with 12% transparent padding. Row 1 eight idle breathing frames. Rows 2 and 3 sixteen casting/attacking frames anticipation, release, follow-through, recover; genuinely different poses. Row 4 eight magical materialization arrival frames. No cropping, no overlap between cells. Character: red-bandana chibi artillery woman with heavy ornate bronze cannon; orange red scarf and leather armor. Skill: aims cannon upward, lights fuse, cannon recoil and smoke. Keep same cannon shape in all cells."
+    },
+    {
+      "id": "ice",
+      "source": "exec-20932461-d506-4e43-82c1-487658a0faab.png",
+      "prompt": "Use case: stylized-concept. Production 2D chibi fantasy game spritesheet, crisp illustrated raster, detailed equipment, warm upper-left light, subtle top-down three-quarter rear view facing UP toward enemy, consistent feet registration and scale. Transparent background, no grid lines, no letters, no text. EXACT evenly spaced 8 columns by 4 rows, 32 independent frames, each in its own equal cell with 12% transparent padding. Row 1 eight idle breathing frames. Rows 2 and 3 sixteen casting/attacking frames anticipation, release, follow-through, recover; genuinely different poses. Row 4 eight magical materialization arrival frames. No cropping, no overlap between cells. Character: petite blue-white robed ice mage with blue crystal staff and silver hair. Skill: raises staff and casts cyan ice orb forward/up, separate readable staff poses."
+    },
+    {
+      "id": "scythe",
+      "source": "exec-2327d1bd-194e-45e3-b0b9-007149ccc994.png",
+      "prompt": "Use case: stylized-concept. Production 2D chibi fantasy game spritesheet, crisp illustrated raster, detailed equipment, warm upper-left light, subtle top-down three-quarter rear view facing UP toward enemy, consistent feet registration and scale. Transparent background, no grid lines, no letters, no text. EXACT evenly spaced 8 columns by 4 rows, 32 independent frames, each in its own equal cell with 12% transparent padding. Row 1 eight idle breathing frames. Rows 2 and 3 sixteen casting/attacking frames anticipation, release, follow-through, recover; genuinely different poses. Row 4 eight magical materialization arrival frames. No cropping, no overlap between cells. Character: black-red hooded chibi scythe wielder with crescent ring red-violet blade. Skill: winds up and throws curved rotating blade up the screen, catches on return. No blood."
+    },
+    {
+      "id": "background",
+      "source": "exec-074670a0-96b6-413c-afd1-a030605d8a78.png",
+      "prompt": "Use case: stylized-concept. Production game background, portrait 9:16, richly painted clean 2D chibi fantasy defense battlefield at sunset, camera slightly from above looking down. Broad muted stone and earth battlefield covers central 80 percent width, from top to 76 percent height, keep very empty and low contrast for enemies. Sparse dead trees and tattered flags strictly along outer left and right edges, warm gray-brown stone, dusty teal shadows, distant red sunset haze at top. Ancient stone castle rampart spans horizontally at 78 percent height, four open evenly spaced battlements for defenders, inner courtyard and small central archer platform behind it in bottom 18 percent. No people, no enemies, no lettering, no UI, no logos. Flat orthographic-ish perspective consistent with sprites, beautiful finished game environment."
+    },
+    {
+      "id": "archer",
+      "source": "exec-edca3a69-fc8f-4889-97e5-8275ab85665c.png",
+      "prompt": "Production 2D detailed chibi fantasy golden archer, rear three-quarter overhead view looking UP, pale gold cape, walnut bow, leather quiver with mechanical magazine. Transparent game spritesheet EXACT 8 columns x 8 rows equal cells, 64 separate frames, no text/grid/labels, padding 12%, identical feet anchor. Row 1: 8 breathing idle poses. Row 2: 8 bow draw-release-recover attack poses. Rows 3 through 8: 48 sequential distinct reload poses in six phases (8 each): put bow down, reach back to quiver, pull bundle of arrows, align arrows in magazine, lock magazine into bow, raise bow ready. Same figure clothing weapon and feet position each cell, high quality crisp illustrated raster with silhouette clarity, facing UP in all frames. Pose motion must be visible, not merely a shifted static character."
+    },
+    {
+      "id": "crossbow",
+      "source": "exec-108b946e-c768-419b-afab-011372e8a10e.png",
+      "prompt": "Use case: stylized-concept. Production 2D chibi fantasy game spritesheet, crisp illustrated raster, detailed equipment, warm upper-left light, subtle top-down three-quarter rear view facing UP toward enemy, consistent feet registration and scale. Transparent background, no grid lines, no letters, no text. EXACT evenly spaced 8 columns by 4 rows, 32 independent frames, each in its own equal cell with 12% transparent padding. Row 1 eight idle breathing frames. Rows 2 and 3 sixteen casting/attacking frames anticipation, release, follow-through, recover; genuinely different poses. Row 4 eight magical materialization arrival frames. No cropping, no overlap between cells. Character: green leather armored chibi repeating crossbow ranger with brass gears, brown hair. Skill: triple mechanical crossbow shot toward upper screen, snap recoil and winding gear."
+    },
+    {
+      "id": "lightning",
+      "source": "exec-8afc6e60-3f4c-4787-b753-f5d682af8e77.png",
+      "prompt": "Use case: stylized-concept. Production 2D chibi fantasy game spritesheet, crisp illustrated raster, detailed equipment, warm upper-left light, subtle top-down three-quarter rear view facing UP toward enemy, consistent feet registration and scale. Transparent background, no grid lines, no letters, no text. EXACT evenly spaced 8 columns by 4 rows, 32 independent frames, each in its own equal cell with 12% transparent padding. Row 1 eight idle breathing frames. Rows 2 and 3 sixteen casting/attacking frames anticipation, release, follow-through, recover; genuinely different poses. Row 4 eight magical materialization arrival frames. No cropping, no overlap between cells. Character: violet robed chibi lightning mage with spiky white hair and two purple talismans. Skill: charges between both hands, flings branched purple lightning toward upper screen."
+    },
+    {
+      "id": "wind",
+      "source": "exec-88c92a77-dd3c-410a-84c9-7e09bc1464fd.png",
+      "prompt": "Use case: stylized-concept. Production 2D chibi fantasy game spritesheet, crisp illustrated raster, detailed equipment, warm upper-left light, subtle top-down three-quarter rear view facing UP toward enemy, consistent feet registration and scale. Transparent background, no grid lines, no letters, no text. EXACT evenly spaced 8 columns by 4 rows, 32 independent frames, each in its own equal cell with 12% transparent padding. Row 1 eight idle breathing frames. Rows 2 and 3 sixteen casting/attacking frames anticipation, release, follow-through, recover; genuinely different poses. Row 4 eight magical materialization arrival frames. No cropping, no overlap between cells. Character: turquoise chibi swordmaster with long scarf and curved broad blade. Skill: winds up, swings sword in broad fan facing UP, clear slash and recovery poses."
+    },
+    {
+      "id": "earth",
+      "source": "exec-e80bfc51-0c70-4328-96f1-8c9a54faa7da.png",
+      "prompt": "Use case: stylized-concept. Production 2D chibi fantasy game spritesheet, crisp illustrated raster, detailed equipment, warm upper-left light, subtle top-down three-quarter rear view facing UP toward enemy, consistent feet registration and scale. Transparent background, no grid lines, no letters, no text. EXACT evenly spaced 8 columns by 4 rows, 32 independent frames, each in its own equal cell with 12% transparent padding. Row 1 eight idle breathing frames. Rows 2 and 3 sixteen casting/attacking frames anticipation, release, follow-through, recover; genuinely different poses. Row 4 eight magical materialization arrival frames. No cropping, no overlap between cells. Character: stocky chibi earth sage in brown ochre robe with massive stone gauntlet and short staff. Skill: hammers gauntlet into ground, three waves of stone quake forward."
+    },
+    {
+      "id": "poison",
+      "source": "exec-423c199e-5217-4cdb-8b7a-c0bb05c0ef07.png",
+      "prompt": "Use case: stylized-concept. Production 2D chibi fantasy game spritesheet, crisp illustrated raster, detailed equipment, warm upper-left light, subtle top-down three-quarter rear view facing UP toward enemy, consistent feet registration and scale. Transparent background, no grid lines, no letters, no text. EXACT evenly spaced 8 columns by 4 rows, 32 independent frames, each in its own equal cell with 12% transparent padding. Row 1 eight idle breathing frames. Rows 2 and 3 sixteen casting/attacking frames anticipation, release, follow-through, recover; genuinely different poses. Row 4 eight magical materialization arrival frames. No cropping, no overlap between cells. Character: moss-green chibi alchemist with round glasses and belt of luminous green glass bottles. Skill: retrieves vial, winds up and throws bottle toward upper screen."
+    },
+    {
+      "id": "sniper",
+      "source": "exec-6b7da8af-60b8-42a9-9f23-fc1655fa95ee.png",
+      "prompt": "Use case: stylized-concept. Production 2D chibi fantasy game spritesheet, crisp illustrated raster, detailed equipment, warm upper-left light, subtle top-down three-quarter rear view facing UP toward enemy, consistent feet registration and scale. Transparent background, no grid lines, no letters, no text. EXACT evenly spaced 8 columns by 4 rows, 32 independent frames, each in its own equal cell with 12% transparent padding. Row 1 eight idle breathing frames. Rows 2 and 3 sixteen casting/attacking frames anticipation, release, follow-through, recover; genuinely different poses. Row 4 eight magical materialization arrival frames. No cropping, no overlap between cells. Character: silver gray cloaked chibi marksman with very long silver heavy arbalest. Skill: plants feet, steady aim upward, shoots heavy silver arrow, strong recoil."
+    },
+    {
+      "id": "stars",
+      "source": "exec-cd618826-edef-4152-95f3-e2433a6dcffd.png",
+      "prompt": "Use case: stylized-concept. Production 2D chibi fantasy game spritesheet, crisp illustrated raster, detailed equipment, warm upper-left light, subtle top-down three-quarter rear view facing UP toward enemy, consistent feet registration and scale. Transparent background, no grid lines, no letters, no text. EXACT evenly spaced 8 columns by 4 rows, 32 independent frames, each in its own equal cell with 12% transparent padding. Row 1 eight idle breathing frames. Rows 2 and 3 sixteen casting/attacking frames anticipation, release, follow-through, recover; genuinely different poses. Row 4 eight magical materialization arrival frames. No cropping, no overlap between cells. Character: indigo chibi astrologer with crescent moon hat, gold celestial astrolabe and starry robe. Skill: raises golden star chart and summons three shooting stars toward upper screen."
+    },
+    {
+      "id": "enemy0",
+      "source": "exec-8911a67e-565e-4b81-9d87-5fdf96558e2a.png",
+      "prompt": "Use case: stylized-concept. Production transparent 2D fantasy chibi game animation spritesheet. TRUE fully transparent empty background, no painted background, no checkerboard. EXACT 8 columns and 4 rows, 32 cells equally spaced. Row 1 eight walking poses; row 2 eight melee attack poses including anticipation/contact/recover; row 3 four hurt reaction poses then four recover poses; row 4 eight death/collapse/dissolve poses. Front three-quarter overhead view facing DOWN the screen. Detailed painted game sprite, same body/weapon size, consistent foot anchor, padding 15 percent each cell. No text, no cell borders, no cropping. Small ivory skeleton infantry with rusty short sword and tattered blue scarf."
+    },
+    {
+      "id": "enemy1",
+      "source": "exec-fe74490b-0de3-4ed3-b2f3-2eb358afa862.png",
+      "prompt": "Use case: stylized-concept. Production transparent 2D fantasy chibi game animation spritesheet. TRUE fully transparent empty background, no painted background, no checkerboard. EXACT 8 columns and 4 rows, 32 cells equally spaced. Row 1 eight walking poses; row 2 eight melee attack poses including anticipation/contact/recover; row 3 four hurt reaction poses then four recover poses; row 4 eight death/collapse/dissolve poses. Front three-quarter overhead view facing DOWN the screen. Detailed painted game sprite, same body/weapon size, consistent foot anchor, padding 15 percent each cell. No text, no cell borders, no cropping. Small mischievous crimson imp with curved horns and wooden spiked club."
+    },
+    {
+      "id": "enemy2",
+      "source": "exec-3028f015-e69f-4a75-9d1f-253853d52ad4.png",
+      "prompt": "Use case: stylized-concept. Production transparent 2D fantasy chibi game animation spritesheet. TRUE fully transparent empty background, no painted background, no checkerboard. EXACT 8 columns and 4 rows, 32 cells equally spaced. Row 1 eight walking poses; row 2 eight melee attack poses including anticipation/contact/recover; row 3 four hurt reaction poses then four recover poses; row 4 eight death/collapse/dissolve poses. Front three-quarter overhead view facing DOWN the screen. Detailed painted game sprite, same body/weapon size, consistent foot anchor, padding 15 percent each cell. No text, no cell borders, no cropping. Undead rotting armored cavalry rider on tiny skeletal horse, green rotten cloak and short lance."
+    },
+    {
+      "id": "enemy3",
+      "source": "exec-57c5fc32-4b05-4e45-b5f5-0dee8135d4cc.png",
+      "prompt": "Use case: stylized-concept. Production transparent 2D fantasy chibi game animation spritesheet. TRUE fully transparent empty background, no painted background, no checkerboard. EXACT 8 columns and 4 rows, 32 cells equally spaced. Row 1 eight walking poses; row 2 eight melee attack poses including anticipation/contact/recover; row 3 four hurt reaction poses then four recover poses; row 4 eight death/collapse/dissolve poses. Front three-quarter overhead view facing DOWN the screen. Detailed painted game sprite, same body/weapon size, consistent foot anchor, padding 15 percent each cell. No text, no cell borders, no cropping. Heavy black iron armored chibi footsoldier with square shield and iron hammer, glowing amber eyes."
+    },
+    {
+      "id": "fire-clean",
+      "source": "exec-ac57281e-0143-4bde-bb57-af9eb78efe50.png",
+      "prompt": "Edit this exact spritesheet only to completely remove all brown/orange background between characters and make it truly alpha transparent, including the spaces inside silhouettes. Preserve all 32 character poses, their positions, clothing and cannon exactly. Preserve flame/smoke magic with soft transparent edges. Exact layout remains 8 columns x 4 rows, no cropping or added text."
+    },
+    {
+      "id": "enemy4",
+      "source": "exec-8d89c134-9e7e-4b88-8791-1ba7f3de9934.png",
+      "prompt": "Detailed chibi fantasy stone giant game animation atlas on TRUE transparent empty background. EXACT 8 columns x 4 rows equal square cells, consistent ground pivot, generous transparent padding. Row1 8 walking frames. Row2 8 punching ground attack frames with clear windup and impact. Row3 8 stagger hit/recover frames. Row4 8 crumbling death frames. Huge mossy tan rock golem with amber crystal heart, heavy broad stone fists. Front overhead 3/4 view facing down. No text no grid no background. Genuine distinct poses."
+    },
+    {
+      "id": "enemy5",
+      "source": "exec-867d40b6-17e2-4efa-8415-2ebb80fa7fee.png",
+      "prompt": "Detailed chibi fantasy armored guardian BOSS game animation atlas on TRUE transparent empty background. EXACT 8 columns x 7 rows equal square cells, 56 frames, consistent ground pivot and size with clear padding. Rows1-2 16 walking frames. Rows3-5 24 heavy mace attack frames (telegraph slow lift overhead, slam ground, recovery). Row6 8 hurt stagger frames. Row7 8 crumbling death frames. Massive bronze and black iron guardian, blue cape, broad shoulder armor, gigantic flanged mace. Front overhead 3/4 view facing down. No text no grid no background, all poses distinct."
+    },
+    {
+      "id": "enemy6",
+      "source": "exec-fe69cb31-17e4-4451-b892-2701003dfc9e.png",
+      "prompt": "Detailed chibi fantasy siege tyrant FINAL BOSS game animation atlas on TRUE transparent empty background. EXACT 8 columns x 7 rows equal square cells, 56 frames, consistent ground pivot and size, generous padding. Rows1-2 16 walking frames. Rows3-5 24 heavy mace attack frames (telegraph slow lift overhead, slam ground, recovery). Row6 8 hurt stagger frames. Row7 8 dramatic collapse/dissolve death frames. Massive horned dark crimson armored tyrant, spiked gold crown, dark red cape, two-handed enormous siege maul, glowing violet eyes. Front overhead 3/4 view facing down. No text no grid no background, all poses distinct."
+    },
+    {
+      "id": "fx-archer",
+      "source": "exec-c31e2c78-d4fa-4f11-ab96-c28ff2d76c0e.png",
+      "prompt": "Use case: stylized-concept. Production game VFX spritesheet on TRUE alpha transparent background. EXACT 8 columns x 4 rows equal cells with generous padding, no grid/text. 32 genuinely different hand-painted animation frames. Row1 eight anticipation/muzzle flash frames. Row2 eight loopable projectile travel frames with projectile pointing straight UP. Row3 eight impact burst frames expanding then dissipating. Row4 eight lingering residue frames fading away. Crisp illustrated 2D fantasy effects, bright core with readable silhouette, restrained transparent glow; no characters or UI. Pale gold wooden arrow, gold bowstring flash, sharp gold contact sparks, small golden dust."
+    },
+    {
+      "id": "fx-crossbow",
+      "source": "exec-04c18d9e-0940-43cf-86d4-6ef613c17d8d.png",
+      "prompt": "Use case: stylized-concept. Production game VFX spritesheet on TRUE alpha transparent background. EXACT 8 columns x 4 rows equal cells with generous padding, no grid/text. 32 genuinely different hand-painted animation frames. Row1 eight anticipation/muzzle flash frames. Row2 eight loopable projectile travel frames with projectile pointing straight UP. Row3 eight impact burst frames expanding then dissipating. Row4 eight lingering residue frames fading away. Crisp illustrated 2D fantasy effects, bright core with readable silhouette, restrained transparent glow; no characters or UI. Triple brass crossbow bolts with short yellow trails, mechanical muzzle spark, yellow impact shards, thin dissipating streaks."
+    },
+    {
+      "id": "fx-fire",
+      "source": "exec-e3144c8d-52e4-4c1b-ab13-dc3ef4c0f1c9.png",
+      "prompt": "Use case: stylized-concept. Production game VFX spritesheet on TRUE alpha transparent background. EXACT 8 columns x 4 rows equal cells with generous padding, no grid/text. 32 genuinely different hand-painted animation frames. Row1 eight anticipation/muzzle flash frames. Row2 eight loopable projectile travel frames with projectile pointing straight UP. Row3 eight impact burst frames expanding then dissipating. Row4 eight lingering residue frames fading away. Crisp illustrated 2D fantasy effects, bright core with readable silhouette, restrained transparent glow; no characters or UI. Orange red cannon flare, burning spherical cannonball, ring shaped fire explosion with smoke, smoldering low ground flames."
+    },
+    {
+      "id": "fx-ice",
+      "source": "exec-74e9ccdd-80e9-425c-aac7-46e42568d13a.png",
+      "prompt": "Use case: stylized-concept. Production game VFX spritesheet on TRUE alpha transparent background. EXACT 8 columns x 4 rows equal cells with generous padding, no grid/text. 32 genuinely different hand-painted animation frames. Row1 eight anticipation/muzzle flash frames. Row2 eight loopable projectile travel frames with projectile pointing straight UP. Row3 eight impact burst frames expanding then dissipating. Row4 eight lingering residue frames fading away. Crisp illustrated 2D fantasy effects, bright core with readable silhouette, restrained transparent glow; no characters or UI. Cyan snow crystal charge, spinning blue ice sphere, icy crystalline burst in branching shards, low frost circle with snowflakes."
+    },
+    {
+      "id": "fx-lightning",
+      "source": "exec-1a9eb0db-8765-485f-9876-c2ea29c81a21.png",
+      "prompt": "Use case: stylized-concept. Production game VFX spritesheet on TRUE alpha transparent background. EXACT 8 columns x 4 rows equal cells, no grid or text. 32 genuinely different illustrated animation frames, padding. Row1 eight anticipation/muzzle frames. Row2 eight projectile travel frames pointing UP. Row3 eight impact burst frames expanding then dissipating. Row4 eight residue frames fading. Bright core with readable silhouette and restrained glow; no characters or UI. Violet electricity charging talismans, jagged vertical purple lightning bolt, branched lightning impact, tiny electric arcs residue."
+    },
+    {
+      "id": "fx-wind",
+      "source": "exec-651427b4-653f-457c-bf54-db84c1eaf17d.png",
+      "prompt": "Use case: stylized-concept. Production game VFX spritesheet on TRUE alpha transparent background. EXACT 8 columns x 4 rows equal cells, no grid or text. 32 genuinely different illustrated animation frames, padding. Row1 eight anticipation/muzzle frames. Row2 eight projectile travel frames pointing UP. Row3 eight impact burst frames expanding then dissipating. Row4 eight residue frames fading. Bright core with readable silhouette and restrained glow; no characters or UI. Turquoise white wind sword charge, curved crescent wind blade up, broad 70 degree fan sword slash, thin circular gust fading."
+    },
+    {
+      "id": "fx-earth",
+      "source": "exec-a569af13-a8e1-4419-8da6-ab922d8e57a8.png",
+      "prompt": "Use case: stylized-concept. Production game VFX spritesheet on TRUE alpha transparent background. EXACT 8 columns x 4 rows equal cells, no grid or text. 32 genuinely different illustrated animation frames, padding. Row1 eight anticipation/muzzle frames. Row2 eight projectile travel frames pointing UP. Row3 eight impact burst frames expanding then dissipating. Row4 eight residue frames fading. Bright core with readable silhouette and restrained glow; no characters or UI. Golden brown ground rumble, rocky ridge wave moving up, jagged earth fissure with stone pillars erupting, low settling dust and cracks fading."
+    },
+    {
+      "id": "fx-poison",
+      "source": "exec-7527202d-5cc5-4f04-b2b5-ff3f267177a8.png",
+      "prompt": "Use case: stylized-concept. Production game VFX spritesheet on TRUE alpha transparent background. EXACT 8 columns x 4 rows equal cells, no grid or text. 32 genuinely different illustrated animation frames, padding. Row1 eight anticipation/muzzle frames. Row2 eight projectile travel frames pointing UP. Row3 eight impact burst frames expanding then dissipating. Row4 eight residue frames fading. Bright core with readable silhouette and restrained glow; no characters or UI. Green alchemy flask glow, corked green glass bottle spinning up, glass shatter with green splashes, low translucent poison puddle and thin green vapor."
+    },
+    {
+      "id": "fx-sniper",
+      "source": "exec-6bbcd4f9-b2aa-4947-8d82-01e45a2c7ae4.png",
+      "prompt": "Use case: stylized-concept. Production game VFX spritesheet on TRUE alpha transparent background. EXACT 8 columns x 4 rows equal cells, no grid or text. 32 genuinely different illustrated animation frames, padding. Row1 eight anticipation/muzzle frames. Row2 eight projectile travel frames pointing UP. Row3 eight impact burst frames expanding then dissipating. Row4 eight residue frames fading. Bright core with readable silhouette and restrained glow; no characters or UI. Silver crosshair locking, long needle-shaped silver arrow with sharp narrow trail, silver ring piercing impact, fading silver sparks."
+    },
+    {
+      "id": "fx-scythe",
+      "source": "exec-9846f67f-de82-48f1-92cf-d055fe48cf83.png",
+      "prompt": "Use case: stylized-concept. Production game VFX spritesheet on TRUE alpha transparent background. EXACT 8 columns x 4 rows equal cells, no grid or text. 32 genuinely different illustrated animation frames, padding. Row1 eight anticipation/muzzle frames. Row2 eight projectile travel frames pointing UP. Row3 eight impact burst frames expanding then dissipating. Row4 eight residue frames fading. Bright core with readable silhouette and restrained glow; no characters or UI. Crimson violet magic weapon charge, crescent ring scythe blade spinning (distinct rotation poses) with thin red ribbon, curved arc slash impact, fading red magic ring. No blood."
+    },
+    {
+      "id": "fx-stars",
+      "source": "exec-2412088f-6586-4adc-b8be-248dc6bc1020.png",
+      "prompt": "Use case: stylized-concept. Production game VFX spritesheet on TRUE alpha transparent background. EXACT 8 columns x 4 rows equal cells, no grid or text. 32 genuinely different illustrated animation frames, padding. Row1 eight anticipation/muzzle frames. Row2 eight projectile travel frames pointing UP. Row3 eight impact burst frames expanding then dissipating. Row4 eight residue frames fading. Bright core with readable silhouette and restrained glow; no characters or UI. Gold astral targeting rune, indigo-gold meteor with blue-violet tail, gold star-shaped burst and crystal fragments, purple gravity ring fading."
+    },
+    {
+      "id": "fx-wall",
+      "source": "exec-92a3dbfe-1ef0-49a0-aad6-9b97c29fc837.png",
+      "prompt": "Production transparent fantasy defense game VFX atlas EXACT 8 columns x 6 rows, 48 individual animation frames with padding, no labels no text no grid. Each row is a different 8-frame sequence: row1 gold-turquoise summoning magic circle growing then fading; row2 stone wall hit impact dust and pebble burst; row3 cyan hexagonal shield blocks heavy blow then fades; row4 jade repair glowing motes rising from stone cracks; row5 broken wall collapsing into stone rubble; row6 warm red boss attack warning ring slowly brightening. Detailed hand-painted raster, translucent edges, true alpha transparent background, consistent cell sizes, no scenery."
+    },
+    {
+      "id": "icons",
+      "source": "exec-c593f60b-8725-4381-b510-4b5a6185bca9.png",
+      "prompt": "Production fantasy game skill ICON atlas, exact 4 columns x 4 rows of equal square cells, 16 distinct detailed painted icons, elegant dark navy square backgrounds with thin diamond cyan-gold frames, each icon fits with generous margin, no text or numbers. Row1 left to right: pale golden bow and arrow; three brass repeating crossbow arrows; red cannonball in orange fire ring; blue ice crystal bursting into three branches. Row2: purple lightning joining four nodes; turquoise curved sword in wind fan; three earth stone pillars rising from crack; green potion bottle bursting with three poison drops. Row3: long silver arrow piercing a red target; red crescent scythe with outbound and return magical trails; three blue-violet gold shooting stars landing in glowing circles; cyan magical shield before stone wall. Row4: glowing jade repair magic closing stone wall crack; gold summoning circle; gold diamond core crystal; heavy iron boss helmet. Cohesive chibi illustrated 2D fantasy UI, crisp readable objects, strong silhouettes, rich materials, identical tile sizes, no labels."
+    }
+  ]
+}

@@ -1,0 +1,2642 @@
+[
+  {
+    "id": "archer:01",
+    "owner": "archer",
+    "index": 1,
+    "name": "Đầu Tên Cứng",
+    "description": "Sát thương trực tiếp của tên +25%.",
+    "situation": "Sát thương ổn định."
+  },
+  {
+    "id": "archer:02",
+    "owner": "archer",
+    "index": 2,
+    "name": "Song Tiễn",
+    "description": "Mỗi phát tạo thêm một tên phụ gây 25% sát thương, không tốn đạn.",
+    "situation": "Chia sát thương sang mục tiêu cạnh bên; khi chỉ còn một địch, bắn cùng mục tiêu."
+  },
+  {
+    "id": "archer:03",
+    "owner": "archer",
+    "index": 3,
+    "name": "Xuyên Phá",
+    "description": "Tên xuyên thêm một địch; lần chạm thứ hai gây 60% sát thương.",
+    "situation": "Quái xếp nối đuôi."
+  },
+  {
+    "id": "archer:04",
+    "owner": "archer",
+    "index": 4,
+    "name": "Mũi Tên Nổ",
+    "description": "Mục tiêu trúng tên phát nổ nhỏ, gây 35% sát thương tên cho địch lân cận.",
+    "situation": "Dọn đám đông; mục tiêu chính không nhận phần nổ."
+  },
+  {
+    "id": "archer:05",
+    "owner": "archer",
+    "index": 5,
+    "name": "Dư Chấn",
+    "description": "Sau mỗi 4 phát, thêm một tên gây 100% sát thương vào mục tiêu hiện tại.",
+    "situation": "Dồn sát thương theo nhịp."
+  },
+  {
+    "id": "archer:06",
+    "owner": "archer",
+    "index": 6,
+    "name": "Chốt Hạ",
+    "description": "Tên gây thêm 65% sát thương lên mục tiêu còn dưới 50% HP.",
+    "situation": "Kết liễu quái bị các trợ thủ làm yếu."
+  },
+  {
+    "id": "archer:07",
+    "owner": "archer",
+    "index": 7,
+    "name": "Phá Trận",
+    "description": "Tên gây thêm 80% sát thương lên mục tiêu còn trên 60% HP.",
+    "situation": "Đội hình mạnh về dọn quái nhưng thiếu mở giao tranh."
+  },
+  {
+    "id": "archer:08",
+    "owner": "archer",
+    "index": 8,
+    "name": "Săn Cự Thú",
+    "description": "Tên gây thêm 75% sát thương lên boss và tinh anh.",
+    "situation": "Wave 10 và 20."
+  },
+  {
+    "id": "archer:09",
+    "owner": "archer",
+    "index": 9,
+    "name": "Phá Giáp",
+    "description": "Tên bỏ qua 50% giáp; nếu mục tiêu không có giáp, sát thương +15%.",
+    "situation": "Địch bọc giáp, vẫn có giá trị với địch thường."
+  },
+  {
+    "id": "archer:10",
+    "owner": "archer",
+    "index": 10,
+    "name": "Trọng Tiễn",
+    "description": "Sát thương tên +20%; mỗi phát thứ 5 đẩy lùi nhẹ mục tiêu.",
+    "situation": "Giảm áp lực trước tường."
+  },
+  {
+    "id": "archer:11",
+    "owner": "archer",
+    "index": 11,
+    "name": "Hàn Tiễn",
+    "description": "Tên làm chậm 25% trong 1,2 giây; sát thương +10%.",
+    "situation": "Giữ một mục tiêu ở ngoài tầm đánh thành."
+  },
+  {
+    "id": "archer:12",
+    "owner": "archer",
+    "index": 12,
+    "name": "Hỏa Tiễn",
+    "description": "Tên gây thêm thiêu đốt tổng 35% sát thương trong 2 giây.",
+    "situation": "Địch nhiều HP; mỗi cung thủ chỉ có một lớp thiêu đốt trên mỗi địch."
+  },
+  {
+    "id": "archer:13",
+    "owner": "archer",
+    "index": 13,
+    "name": "Độc Tiễn",
+    "description": "Tên gây thêm độc tổng 45% sát thương trong 4 giây.",
+    "situation": "Trận địa kéo dài; làm mới thời gian thay vì cộng vô hạn."
+  },
+  {
+    "id": "archer:14",
+    "owner": "archer",
+    "index": 14,
+    "name": "Dây Sét",
+    "description": "Mỗi phát thứ 3 truyền 75% sát thương sang một địch cạnh bên.",
+    "situation": "Đám quái phân bố thành nhóm nhỏ."
+  },
+  {
+    "id": "archer:15",
+    "owner": "archer",
+    "index": 15,
+    "name": "Nảy Tên",
+    "description": "Tên nảy một lần với 50% sát thương sang địch khác.",
+    "situation": "Địch rải ngang."
+  },
+  {
+    "id": "archer:16",
+    "owner": "archer",
+    "index": 16,
+    "name": "Đạn Vỡ",
+    "description": "Khi mục tiêu của tên chết, giải phóng hai mảnh tên, mỗi mảnh 30% sát thương.",
+    "situation": "Đám quái yếu; một địch có thể nhận tối đa một mảnh."
+  },
+  {
+    "id": "archer:17",
+    "owner": "archer",
+    "index": 17,
+    "name": "Bắn Bồi",
+    "description": "Nếu tên giết mục tiêu, đòn kế tiếp gây thêm 50% sát thương.",
+    "situation": "Dọn từng địch; phần thưởng không tự kích hoạt lại chính nó."
+  },
+  {
+    "id": "archer:18",
+    "owner": "archer",
+    "index": 18,
+    "name": "Truy Kích",
+    "description": "Bắn trúng cùng một địch liên tiếp cộng 8% sát thương, tối đa 40%; đổi địch thì đặt lại.",
+    "situation": "Boss hoặc tinh anh sống lâu."
+  },
+  {
+    "id": "archer:19",
+    "owner": "archer",
+    "index": 19,
+    "name": "Mắt Ưng",
+    "description": "Tên vào địch ở nửa xa tầm bắn gây thêm 40% sát thương.",
+    "situation": "Diệt quái từ sớm."
+  },
+  {
+    "id": "archer:20",
+    "owner": "archer",
+    "index": 20,
+    "name": "Cận Thành",
+    "description": "Tên vào địch trong vùng sát thành gây thêm 40% sát thương.",
+    "situation": "Cứu nguy khi địch áp sát."
+  },
+  {
+    "id": "archer:21",
+    "owner": "archer",
+    "index": 21,
+    "name": "Đầu Băng Vỡ",
+    "description": "Tên vào địch đang bị làm chậm gây thêm 35% sát thương.",
+    "situation": "Chỉ vào pool khi đội hình đã có nguồn làm chậm."
+  },
+  {
+    "id": "archer:22",
+    "owner": "archer",
+    "index": 22,
+    "name": "Điểm Yếu",
+    "description": "Mỗi phát thứ 5 gây thêm 125% sát thương.",
+    "situation": "Chu kỳ sát thương dễ quan sát."
+  },
+  {
+    "id": "archer:23",
+    "owner": "archer",
+    "index": 23,
+    "name": "Mở Màn",
+    "description": "Sáu phát đầu của mỗi băng tên gây thêm 90% sát thương.",
+    "situation": "Bùng nổ ngay sau nạp."
+  },
+  {
+    "id": "archer:24",
+    "owner": "archer",
+    "index": 24,
+    "name": "Tên Cuối",
+    "description": "Sáu phát cuối của mỗi băng tên gây thêm 90% sát thương.",
+    "situation": "Dồn lực trước giai đoạn nghỉ."
+  },
+  {
+    "id": "archer:25",
+    "owner": "archer",
+    "index": 25,
+    "name": "Dư Âm Nạp",
+    "description": "Khi bắt đầu nạp, bắn một loạt 5 tên bóng, mỗi tên 150% sát thương, không tốn đạn.",
+    "situation": "Bù khoảng trống 5 giây; phân phối theo quy tắc chọn mục tiêu."
+  },
+  {
+    "id": "archer:26",
+    "owner": "archer",
+    "index": 26,
+    "name": "Thủ Thành Khi Nạp",
+    "description": "Trong lúc nạp, mỗi giây bắn một tên bóng gây 150% sát thương.",
+    "situation": "Bù sát thương đều trong 5 giây; không thay đổi hoạt cảnh nạp."
+  },
+  {
+    "id": "archer:27",
+    "owner": "archer",
+    "index": 27,
+    "name": "Ngắm Chuẩn",
+    "description": "Ba phát đầu sau nạp luôn gây thêm 250% sát thương.",
+    "situation": "Đánh mạnh sau khi chờ nạp."
+  },
+  {
+    "id": "archer:28",
+    "owner": "archer",
+    "index": 28,
+    "name": "Dấu Ấn Cung Thủ",
+    "description": "Tên đặt dấu ấn 2 giây; sát thương tên của chính cung thủ lên địch đó +30%.",
+    "situation": "Tập trung vào địch nhiều HP."
+  },
+  {
+    "id": "archer:29",
+    "owner": "archer",
+    "index": 29,
+    "name": "Tán Xạ",
+    "description": "Mỗi phát thứ 5 tạo quạt 5 tên phụ, mỗi tên 25% sát thương.",
+    "situation": "Phủ chiều ngang; một địch có thể nhận nhiều nhất hai tên phụ."
+  },
+  {
+    "id": "archer:30",
+    "owner": "archer",
+    "index": 30,
+    "name": "Tinh Thần Tường Thành",
+    "description": "Tên gây thêm 20% sát thương khi thành trên 50% HP, thêm 40% khi thành còn không quá 50%.",
+    "situation": "Đội hình bảo vệ tốt hoặc thế trận khẩn cấp."
+  },
+  {
+    "id": "crossbow:01",
+    "owner": "crossbow",
+    "index": 1,
+    "name": "Dây Nỏ Căng",
+    "description": "Sát thương toàn bộ liên tiễn +25%.",
+    "situation": "Mọi đội hình."
+  },
+  {
+    "id": "crossbow:02",
+    "owner": "crossbow",
+    "index": 2,
+    "name": "Nhịp Bắn Gọn",
+    "description": "Hồi chiêu sau loạt bắn giảm 20%.",
+    "situation": "Bắn liên tục."
+  },
+  {
+    "id": "crossbow:03",
+    "owner": "crossbow",
+    "index": 3,
+    "name": "Mũi Thứ Tư",
+    "description": "Loạt có thêm một tên gây 75% sát thương một tên thường.",
+    "situation": "Tăng số lần chạm."
+  },
+  {
+    "id": "crossbow:04",
+    "owner": "crossbow",
+    "index": 4,
+    "name": "Nỏ Xuyên",
+    "description": "Mỗi tên xuyên thêm một địch với 60% sát thương.",
+    "situation": "Hàng địch nối đuôi."
+  },
+  {
+    "id": "crossbow:05",
+    "owner": "crossbow",
+    "index": 5,
+    "name": "Tên Rẽ Nhánh",
+    "description": "Tên cuối tách hai tên phụ, mỗi tên 40% sát thương một tên thường.",
+    "situation": "Địch rải ngang."
+  },
+  {
+    "id": "crossbow:06",
+    "owner": "crossbow",
+    "index": 6,
+    "name": "Tụ Điểm",
+    "description": "Các tên liên tiếp trong cùng loạt vào cùng địch tăng lần lượt 0%, 25%, 50%.",
+    "situation": "Đánh đơn mục tiêu."
+  },
+  {
+    "id": "crossbow:07",
+    "owner": "crossbow",
+    "index": 7,
+    "name": "Đổi Hướng",
+    "description": "Mục tiêu chết giữa loạt thì tên còn lại chọn địch mới và được +35% sát thương.",
+    "situation": "Giảm lãng phí loạt bắn."
+  },
+  {
+    "id": "crossbow:08",
+    "owner": "crossbow",
+    "index": 8,
+    "name": "Dây Nỏ Lạnh",
+    "description": "Tên cuối làm chậm 35% trong 2 giây; cả loạt +10% sát thương.",
+    "situation": "Giữ quái tầm trung."
+  },
+  {
+    "id": "crossbow:09",
+    "owner": "crossbow",
+    "index": 9,
+    "name": "Đuôi Lửa",
+    "description": "Cả loạt để lại thiêu đốt tổng bằng 30% sát thương loạt.",
+    "situation": "Mục tiêu bền."
+  },
+  {
+    "id": "crossbow:10",
+    "owner": "crossbow",
+    "index": 10,
+    "name": "Mũi Độc",
+    "description": "Tên đầu đặt độc tổng bằng 45% sát thương loạt trong 5 giây.",
+    "situation": "Địch sống lâu."
+  },
+  {
+    "id": "crossbow:11",
+    "owner": "crossbow",
+    "index": 11,
+    "name": "Phá Khiên",
+    "description": "Loạt bỏ qua 50% giáp; địch không giáp chịu thêm 15% sát thương.",
+    "situation": "Địch bọc giáp."
+  },
+  {
+    "id": "crossbow:12",
+    "owner": "crossbow",
+    "index": 12,
+    "name": "Nỏ Công Thành",
+    "description": "Sát thương lên boss và tinh anh +75%.",
+    "situation": "Các wave boss."
+  },
+  {
+    "id": "crossbow:13",
+    "owner": "crossbow",
+    "index": 13,
+    "name": "Quét Bầy",
+    "description": "Sát thương +35% nếu có ít nhất 4 địch trong tầm.",
+    "situation": "Dọn đám đông."
+  },
+  {
+    "id": "crossbow:14",
+    "owner": "crossbow",
+    "index": 14,
+    "name": "Đấu Tay Đôi",
+    "description": "Sát thương +40% nếu chỉ có tối đa 2 địch trong tầm.",
+    "situation": "Đánh boss còn sót."
+  },
+  {
+    "id": "crossbow:15",
+    "owner": "crossbow",
+    "index": 15,
+    "name": "Cự Ly Vàng",
+    "description": "Sát thương +40% trong một phần ba ngoài của tầm bắn.",
+    "situation": "Đánh từ sớm."
+  },
+  {
+    "id": "crossbow:16",
+    "owner": "crossbow",
+    "index": 16,
+    "name": "Chốt Cận Thành",
+    "description": "Sát thương +40% trong vùng sát thành.",
+    "situation": "Phòng thủ cuối."
+  },
+  {
+    "id": "crossbow:17",
+    "owner": "crossbow",
+    "index": 17,
+    "name": "Tầm Nỏ Rộng",
+    "description": "Tầm bắn +25%; sát thương +10%.",
+    "situation": "Can thiệp sớm và phủ góc xa."
+  },
+  {
+    "id": "crossbow:18",
+    "owner": "crossbow",
+    "index": 18,
+    "name": "Truy Nã",
+    "description": "Cùng một mục tiêu qua hai lần dùng kỹ năng thì loạt sau +50% sát thương.",
+    "situation": "Tập trung boss."
+  },
+  {
+    "id": "crossbow:19",
+    "owner": "crossbow",
+    "index": 19,
+    "name": "Kết Liễu",
+    "description": "Tên vào địch dưới 50% HP gây thêm 65% sát thương.",
+    "situation": "Dọn quái bị thương."
+  },
+  {
+    "id": "crossbow:20",
+    "owner": "crossbow",
+    "index": 20,
+    "name": "Mũi Mở",
+    "description": "Tên đầu của mỗi loạt gây thêm 90% sát thương của một tên.",
+    "situation": "Sát thương sớm."
+  },
+  {
+    "id": "crossbow:21",
+    "owner": "crossbow",
+    "index": 21,
+    "name": "Mũi Chốt",
+    "description": "Tên cuối của mỗi loạt gây thêm 90% sát thương của một tên.",
+    "situation": "Sát thương cuối loạt."
+  },
+  {
+    "id": "crossbow:22",
+    "owner": "crossbow",
+    "index": 22,
+    "name": "Bật Nảy",
+    "description": "Tên giữa nảy sang một địch khác với 90% sát thương một tên.",
+    "situation": "Địch tách nhóm."
+  },
+  {
+    "id": "crossbow:23",
+    "owner": "crossbow",
+    "index": 23,
+    "name": "Tiễn Phong",
+    "description": "Tên đầu tạo sóng mỏng gây 70% sát thương một tên cho tối đa 3 địch cạnh mục tiêu.",
+    "situation": "Nhóm nhỏ."
+  },
+  {
+    "id": "crossbow:24",
+    "owner": "crossbow",
+    "index": 24,
+    "name": "Nỏ Ghim",
+    "description": "Tên cuối ghim chân 0,6 giây; cả loạt +10% sát thương.",
+    "situation": "Ngắt nhịp di chuyển."
+  },
+  {
+    "id": "crossbow:25",
+    "owner": "crossbow",
+    "index": 25,
+    "name": "Chấn Tiễn",
+    "description": "Mỗi lần dùng thứ 3, tên cuối làm choáng 0,8 giây và gây thêm 30% sát thương loạt.",
+    "situation": "Ngắt đòn đánh thành."
+  },
+  {
+    "id": "crossbow:26",
+    "owner": "crossbow",
+    "index": 26,
+    "name": "Mảnh Kim Loại",
+    "description": "Mục tiêu chết do loạt bắn phát ra 3 mảnh, mỗi mảnh 30% sát thương một tên.",
+    "situation": "Dây chuyền dọn quái; mảnh không sinh mảnh mới."
+  },
+  {
+    "id": "crossbow:27",
+    "owner": "crossbow",
+    "index": 27,
+    "name": "Chuẩn Bị Sẵn",
+    "description": "Kỹ năng sẵn sàng quá 1 giây thì loạt kế tiếp được +45% sát thương.",
+    "situation": "Đợt địch thưa."
+  },
+  {
+    "id": "crossbow:28",
+    "owner": "crossbow",
+    "index": 28,
+    "name": "Nhịp Tiếp Lực",
+    "description": "Sau mỗi 4 loạt, loạt tiếp theo +100% sát thương.",
+    "situation": "Chiến đấu kéo dài."
+  },
+  {
+    "id": "crossbow:29",
+    "owner": "crossbow",
+    "index": 29,
+    "name": "Liên Nỏ Băng Giá",
+    "description": "Sát thương vào địch đang bị làm chậm +35%.",
+    "situation": "Cần nguồn làm chậm trong đội hình."
+  },
+  {
+    "id": "crossbow:30",
+    "owner": "crossbow",
+    "index": 30,
+    "name": "Cứu Thành",
+    "description": "Khi thành dưới 40% HP, sát thương +50%; ở trên ngưỡng đó +10%.",
+    "situation": "Tình thế nguy cấp."
+  },
+  {
+    "id": "fire:01",
+    "owner": "fire",
+    "index": 1,
+    "name": "Thuốc Nổ Mạnh",
+    "description": "Sát thương vụ nổ +25%.",
+    "situation": "Mọi đội hình."
+  },
+  {
+    "id": "fire:02",
+    "owner": "fire",
+    "index": 2,
+    "name": "Nạp Pháo Gọn",
+    "description": "Hồi chiêu giảm 20%.",
+    "situation": "Sức ép liên tục."
+  },
+  {
+    "id": "fire:03",
+    "owner": "fire",
+    "index": 3,
+    "name": "Vành Nổ Rộng",
+    "description": "Bán kính nổ +25%; sát thương +10%.",
+    "situation": "Địch phân bố rộng."
+  },
+  {
+    "id": "fire:04",
+    "owner": "fire",
+    "index": 4,
+    "name": "Tâm Nổ",
+    "description": "Địch ở nửa bán kính trong chịu thêm 45% sát thương.",
+    "situation": "Địch tụ quanh mục tiêu."
+  },
+  {
+    "id": "fire:05",
+    "owner": "fire",
+    "index": 5,
+    "name": "Vành Lửa",
+    "description": "Vành ngoài của vụ nổ gây thêm 60% sát thương.",
+    "situation": "Nhóm địch rải vừa."
+  },
+  {
+    "id": "fire:06",
+    "owner": "fire",
+    "index": 6,
+    "name": "Mảnh Pháo",
+    "description": "Vụ nổ bắn 4 mảnh, mỗi mảnh 20% sát thương vụ nổ.",
+    "situation": "Địch ở ngoài vòng nổ; mỗi địch nhận tối đa một mảnh."
+  },
+  {
+    "id": "fire:07",
+    "owner": "fire",
+    "index": 7,
+    "name": "Pháo Kép",
+    "description": "Thêm một viên phụ gây 30% sát thương, rơi lệch sang bên có nhiều địch hơn.",
+    "situation": "Phủ hai nhóm."
+  },
+  {
+    "id": "fire:08",
+    "owner": "fire",
+    "index": 8,
+    "name": "Hỏa Địa",
+    "description": "Vụ nổ để lại vùng cháy 2 giây, tổng sát thương 40% vụ nổ.",
+    "situation": "Quái chậm đi qua."
+  },
+  {
+    "id": "fire:09",
+    "owner": "fire",
+    "index": 9,
+    "name": "Than Hồng",
+    "description": "Địch trúng nổ chịu thêm thiêu đốt 35% sát thương trong 3 giây.",
+    "situation": "Mục tiêu bền."
+  },
+  {
+    "id": "fire:10",
+    "owner": "fire",
+    "index": 10,
+    "name": "Bùng Cháy",
+    "description": "Vụ nổ vào địch đang cháy gây thêm 35% sát thương.",
+    "situation": "Cần nguồn thiêu đốt."
+  },
+  {
+    "id": "fire:11",
+    "owner": "fire",
+    "index": 11,
+    "name": "Lửa Lan",
+    "description": "Địch chết khi đang chịu lửa của pháo truyền phần thiêu đốt còn lại sang tối đa 2 địch.",
+    "situation": "Đám đông; mỗi vết cháy chỉ lan một thế hệ."
+  },
+  {
+    "id": "fire:12",
+    "owner": "fire",
+    "index": 12,
+    "name": "Sóng Xung Kích",
+    "description": "Vụ nổ đẩy nhẹ địch; sát thương +10%.",
+    "situation": "Giữ khoảng cách với thành."
+  },
+  {
+    "id": "fire:13",
+    "owner": "fire",
+    "index": 13,
+    "name": "Chấn Địa",
+    "description": "Mỗi vụ nổ thứ 3 làm choáng 0,7 giây; sát thương +10%.",
+    "situation": "Ngắt đòn cận thành."
+  },
+  {
+    "id": "fire:14",
+    "owner": "fire",
+    "index": 14,
+    "name": "Khói Đặc",
+    "description": "Địch trúng nổ chậm 25% trong 2 giây; sát thương +10%.",
+    "situation": "Kéo dài thời gian bắn."
+  },
+  {
+    "id": "fire:15",
+    "owner": "fire",
+    "index": 15,
+    "name": "Phá Giáp Nổ",
+    "description": "Bỏ qua 50% giáp; địch không giáp chịu thêm 15% sát thương.",
+    "situation": "Địch bọc giáp."
+  },
+  {
+    "id": "fire:16",
+    "owner": "fire",
+    "index": 16,
+    "name": "Đạn Diệt Tướng",
+    "description": "Sát thương nổ lên boss và tinh anh +75%.",
+    "situation": "Wave 10 và 20."
+  },
+  {
+    "id": "fire:17",
+    "owner": "fire",
+    "index": 17,
+    "name": "Đạn Phá Bầy",
+    "description": "Sát thương +40% khi vụ nổ chạm ít nhất 5 địch.",
+    "situation": "Đám đông."
+  },
+  {
+    "id": "fire:18",
+    "owner": "fire",
+    "index": 18,
+    "name": "Đạn Tập Trung",
+    "description": "Nếu chỉ chạm một địch, sát thương +60%.",
+    "situation": "Boss hoặc địch rời đàn."
+  },
+  {
+    "id": "fire:19",
+    "owner": "fire",
+    "index": 19,
+    "name": "Tầm Pháo Xa",
+    "description": "Tầm bắn +25%; sát thương +10%.",
+    "situation": "Bắn từ sớm."
+  },
+  {
+    "id": "fire:20",
+    "owner": "fire",
+    "index": 20,
+    "name": "Cứu Viện Gần",
+    "description": "Vụ nổ ở vùng sát thành gây thêm 45% sát thương.",
+    "situation": "Phòng thủ cuối."
+  },
+  {
+    "id": "fire:21",
+    "owner": "fire",
+    "index": 21,
+    "name": "Nổ Tiếp",
+    "description": "Sau 0,8 giây, điểm nổ phát thêm dư chấn 35% sát thương.",
+    "situation": "Địch bị giữ chân."
+  },
+  {
+    "id": "fire:22",
+    "owner": "fire",
+    "index": 22,
+    "name": "Pháo Ba Nhịp",
+    "description": "Mỗi lần dùng thứ 3 tạo thêm một vụ nổ bằng 75% sát thương cơ bản.",
+    "situation": "Nhịp bùng nổ."
+  },
+  {
+    "id": "fire:23",
+    "owner": "fire",
+    "index": 23,
+    "name": "Phát Khai Hỏa",
+    "description": "Lần dùng sau khi kỹ năng sẵn sàng quá 1 giây gây thêm 45% sát thương.",
+    "situation": "Nhóm quái mới tới."
+  },
+  {
+    "id": "fire:24",
+    "owner": "fire",
+    "index": 24,
+    "name": "Trọng Pháo",
+    "description": "Sát thương +55%, hồi chiêu dài thêm 20%.",
+    "situation": "Một phát mạnh, đổi lấy nhịp thưa."
+  },
+  {
+    "id": "fire:25",
+    "owner": "fire",
+    "index": 25,
+    "name": "Pháo Nhanh",
+    "description": "Hồi chiêu giảm 35%, sát thương mỗi lần giảm 15%.",
+    "situation": "Nhiều lần khống chế; không có sàn sát thương âm."
+  },
+  {
+    "id": "fire:26",
+    "owner": "fire",
+    "index": 26,
+    "name": "Đạn Tử Thần",
+    "description": "Địch dưới 50% HP chịu thêm 65% sát thương.",
+    "situation": "Dọn quái sót."
+  },
+  {
+    "id": "fire:27",
+    "owner": "fire",
+    "index": 27,
+    "name": "Dấu Cháy",
+    "description": "Cùng một địch trúng hai lần pháo liên tiếp thì lần sau +45% sát thương.",
+    "situation": "Địch bền."
+  },
+  {
+    "id": "fire:28",
+    "owner": "fire",
+    "index": 28,
+    "name": "Lửa Lạnh",
+    "description": "Địch đang bị làm chậm chịu thêm 35% sát thương nổ.",
+    "situation": "Cần nguồn làm chậm."
+  },
+  {
+    "id": "fire:29",
+    "owner": "fire",
+    "index": 29,
+    "name": "Tàn Phá",
+    "description": "Khi vụ nổ giết ít nhất một địch, lần dùng kế tiếp +35% sát thương.",
+    "situation": "Dọn theo chuỗi."
+  },
+  {
+    "id": "fire:30",
+    "owner": "fire",
+    "index": 30,
+    "name": "Bảo Vệ Thành",
+    "description": "Thành dưới 40% HP: sát thương +50%; còn lại +10%.",
+    "situation": "Cứu nguy."
+  },
+  {
+    "id": "ice:01",
+    "owner": "ice",
+    "index": 1,
+    "name": "Hàn Lực",
+    "description": "Sát thương cầu băng +25%.",
+    "situation": "Mọi đội hình."
+  },
+  {
+    "id": "ice:02",
+    "owner": "ice",
+    "index": 2,
+    "name": "Tuần Hoàn Lạnh",
+    "description": "Hồi chiêu giảm 20%.",
+    "situation": "Duy trì làm chậm."
+  },
+  {
+    "id": "ice:03",
+    "owner": "ice",
+    "index": 3,
+    "name": "Băng Vực",
+    "description": "Bán kính nổ +25%; sát thương +10%.",
+    "situation": "Địch rải ngang."
+  },
+  {
+    "id": "ice:04",
+    "owner": "ice",
+    "index": 4,
+    "name": "Hàn Sâu",
+    "description": "Làm chậm cơ bản tăng thêm 15 điểm phần trăm.",
+    "situation": "Giữ quái thường."
+  },
+  {
+    "id": "ice:05",
+    "owner": "ice",
+    "index": 5,
+    "name": "Băng Bền",
+    "description": "Thời gian làm chậm +70%.",
+    "situation": "Đội hình gây sát thương theo thời gian."
+  },
+  {
+    "id": "ice:06",
+    "owner": "ice",
+    "index": 6,
+    "name": "Kết Tinh",
+    "description": "Địch trúng hai lần cầu băng trong 6 giây bị đóng băng 0,8 giây.",
+    "situation": "Mục tiêu bền."
+  },
+  {
+    "id": "ice:07",
+    "owner": "ice",
+    "index": 7,
+    "name": "Tuyết Vỡ",
+    "description": "Địch đang bị khống chế cứng nhận thêm 50% sát thương cầu băng.",
+    "situation": "Cần nguồn choáng hoặc đóng băng."
+  },
+  {
+    "id": "ice:08",
+    "owner": "ice",
+    "index": 8,
+    "name": "Băng Châm",
+    "description": "Vụ nổ tạo 3 châm băng, mỗi châm gây 25% sát thương cơ bản.",
+    "situation": "Nhóm địch cạnh điểm nổ; một địch nhận tối đa một châm."
+  },
+  {
+    "id": "ice:09",
+    "owner": "ice",
+    "index": 9,
+    "name": "Cầu Băng Kép",
+    "description": "Thêm cầu băng phụ gây 30% sát thương và nửa thời gian làm chậm.",
+    "situation": "Phủ thêm một mục tiêu."
+  },
+  {
+    "id": "ice:10",
+    "owner": "ice",
+    "index": 10,
+    "name": "Vệt Băng",
+    "description": "Để lại vùng băng 2 giây, gây tổng 30% sát thương và làm chậm nhẹ.",
+    "situation": "Đường tiếp cận thành."
+  },
+  {
+    "id": "ice:11",
+    "owner": "ice",
+    "index": 11,
+    "name": "Băng Xuyên",
+    "description": "Cầu băng xuyên một địch trước khi nổ, gây 35% sát thương ở lần xuyên.",
+    "situation": "Địch nối đuôi."
+  },
+  {
+    "id": "ice:12",
+    "owner": "ice",
+    "index": 12,
+    "name": "Băng Nảy",
+    "description": "Mảnh băng nảy sang địch khác với 40% sát thương.",
+    "situation": "Địch thưa."
+  },
+  {
+    "id": "ice:13",
+    "owner": "ice",
+    "index": 13,
+    "name": "Đông Cứng",
+    "description": "Mỗi lần dùng thứ 4 đóng băng địch trúng trong 1 giây.",
+    "situation": "Ngắt nhịp định kỳ."
+  },
+  {
+    "id": "ice:14",
+    "owner": "ice",
+    "index": 14,
+    "name": "Rạn Băng",
+    "description": "Kết thúc đóng băng do trợ thủ này gây ra sẽ gây 60% sát thương cơ bản.",
+    "situation": "Cần nguồn đóng băng của chính trợ thủ."
+  },
+  {
+    "id": "ice:15",
+    "owner": "ice",
+    "index": 15,
+    "name": "Hàn Phá Giáp",
+    "description": "Bỏ qua 50% giáp; địch không giáp chịu thêm 15% sát thương.",
+    "situation": "Địch giáp dày."
+  },
+  {
+    "id": "ice:16",
+    "owner": "ice",
+    "index": 16,
+    "name": "Băng Diệt Tướng",
+    "description": "Sát thương lên boss và tinh anh +75%.",
+    "situation": "Bù giá trị khống chế bị giảm ở boss."
+  },
+  {
+    "id": "ice:17",
+    "owner": "ice",
+    "index": 17,
+    "name": "Tuyết Dày",
+    "description": "Sát thương +35% khi có ít nhất 4 địch trong vùng nổ.",
+    "situation": "Đám đông."
+  },
+  {
+    "id": "ice:18",
+    "owner": "ice",
+    "index": 18,
+    "name": "Băng Đơn",
+    "description": "Nếu chỉ chạm một địch, sát thương +55%.",
+    "situation": "Boss còn sót."
+  },
+  {
+    "id": "ice:19",
+    "owner": "ice",
+    "index": 19,
+    "name": "Hàn Tiễn Xa",
+    "description": "Tầm dùng +25%; sát thương +10%.",
+    "situation": "Khống chế từ sớm."
+  },
+  {
+    "id": "ice:20",
+    "owner": "ice",
+    "index": 20,
+    "name": "Băng Cận Thành",
+    "description": "Sát thương +40% trong vùng sát thành.",
+    "situation": "Phòng thủ cuối."
+  },
+  {
+    "id": "ice:21",
+    "owner": "ice",
+    "index": 21,
+    "name": "Hơi Lạnh",
+    "description": "Mục tiêu chính phát thêm một nhịp lạnh sau 1 giây, gây 35% sát thương.",
+    "situation": "Giữ chân lâu."
+  },
+  {
+    "id": "ice:22",
+    "owner": "ice",
+    "index": 22,
+    "name": "Sương Phủ",
+    "description": "Địch trúng cầu băng mất 20% tốc độ đánh trong 2 giây.",
+    "situation": "Giảm sức ép cận thành; không thay đổi sát thương mỗi đòn."
+  },
+  {
+    "id": "ice:23",
+    "owner": "ice",
+    "index": 23,
+    "name": "Băng Đẩy",
+    "description": "Nổ băng đẩy nhẹ địch và tăng sát thương 10%.",
+    "situation": "Tạo thêm thời gian."
+  },
+  {
+    "id": "ice:24",
+    "owner": "ice",
+    "index": 24,
+    "name": "Truy Băng",
+    "description": "Sát thương vào địch đã bị chính trợ thủ làm chậm +35%.",
+    "situation": "Địch sống qua lần dùng đầu."
+  },
+  {
+    "id": "ice:25",
+    "owner": "ice",
+    "index": 25,
+    "name": "Băng Sắc",
+    "description": "Địch dưới 50% HP nhận thêm 65% sát thương.",
+    "situation": "Dọn quái yếu."
+  },
+  {
+    "id": "ice:26",
+    "owner": "ice",
+    "index": 26,
+    "name": "Hàn Khai",
+    "description": "Lần dùng sau khi sẵn sàng quá 1 giây gây thêm 45% sát thương.",
+    "situation": "Địch mới vào tầm."
+  },
+  {
+    "id": "ice:27",
+    "owner": "ice",
+    "index": 27,
+    "name": "Bão Băng Nhỏ",
+    "description": "Mỗi lần dùng thứ 3 tạo thêm 3 mảnh băng, tổng 75% sát thương cơ bản.",
+    "situation": "Bùng nổ định kỳ."
+  },
+  {
+    "id": "ice:28",
+    "owner": "ice",
+    "index": 28,
+    "name": "Băng Chia Dòng",
+    "description": "Vụ nổ tạo hai vệt lạnh ngắn sang trái và phải, tổng thêm 50% sát thương cơ bản.",
+    "situation": "Phủ ngang; một địch chỉ trúng một vệt."
+  },
+  {
+    "id": "ice:29",
+    "owner": "ice",
+    "index": 29,
+    "name": "Tuyết Đón Lửa",
+    "description": "Sát thương lên địch đang cháy +40%; không xóa thiêu đốt.",
+    "situation": "Cần nguồn thiêu đốt."
+  },
+  {
+    "id": "ice:30",
+    "owner": "ice",
+    "index": 30,
+    "name": "Thành Băng",
+    "description": "Khi thành dưới 40% HP, làm chậm dài thêm 1 giây và sát thương +30%; còn lại sát thương +10%.",
+    "situation": "Tình thế nguy cấp."
+  },
+  {
+    "id": "lightning:01",
+    "owner": "lightning",
+    "index": 1,
+    "name": "Điện Lực",
+    "description": "Sát thương mọi mắt xích +25%.",
+    "situation": "Mọi đội hình."
+  },
+  {
+    "id": "lightning:02",
+    "owner": "lightning",
+    "index": 2,
+    "name": "Tích Điện Nhanh",
+    "description": "Hồi chiêu giảm 20%.",
+    "situation": "Nhiều chuỗi sét."
+  },
+  {
+    "id": "lightning:03",
+    "owner": "lightning",
+    "index": 3,
+    "name": "Thêm Mắt Xích",
+    "description": "Chuỗi thêm 2 mục tiêu, dùng hệ số giảm theo mắt xích hiện hành.",
+    "situation": "Đám đông."
+  },
+  {
+    "id": "lightning:04",
+    "owner": "lightning",
+    "index": 4,
+    "name": "Dẫn Xa",
+    "description": "Khoảng tìm địch kế tiếp +35%; sát thương +10%.",
+    "situation": "Địch phân bố rộng."
+  },
+  {
+    "id": "lightning:05",
+    "owner": "lightning",
+    "index": 5,
+    "name": "Dẫn Bền",
+    "description": "Giảm hao hụt sát thương giữa các mắt xích từ 15% xuống 5%.",
+    "situation": "Chuỗi dài."
+  },
+  {
+    "id": "lightning:06",
+    "owner": "lightning",
+    "index": 6,
+    "name": "Sét Hội Tụ",
+    "description": "Khi không có địch để nối, mục tiêu cuối nhận thêm 35% sát thương cơ bản.",
+    "situation": "Địch thưa."
+  },
+  {
+    "id": "lightning:07",
+    "owner": "lightning",
+    "index": 7,
+    "name": "Sét Kép",
+    "description": "Mục tiêu đầu nhận thêm một nhịp bằng 100% sát thương mắt xích đầu.",
+    "situation": "Đơn mục tiêu."
+  },
+  {
+    "id": "lightning:08",
+    "owner": "lightning",
+    "index": 8,
+    "name": "Nhánh Sét",
+    "description": "Từ mắt xích thứ hai, tách thêm một nhánh gây 70% sát thương mắt xích đầu.",
+    "situation": "Nhóm quái rộng; nhánh không tự tách."
+  },
+  {
+    "id": "lightning:09",
+    "owner": "lightning",
+    "index": 9,
+    "name": "Điện Giật",
+    "description": "Mỗi lần dùng thứ 3 gây choáng 0,6 giây trên các mục tiêu.",
+    "situation": "Ngắt đòn đánh thành."
+  },
+  {
+    "id": "lightning:10",
+    "owner": "lightning",
+    "index": 10,
+    "name": "Tê Liệt",
+    "description": "Địch trúng sét chậm 25% trong 1,5 giây; sát thương +10%.",
+    "situation": "Giữ đám đông."
+  },
+  {
+    "id": "lightning:11",
+    "owner": "lightning",
+    "index": 11,
+    "name": "Quá Tải",
+    "description": "Địch trúng hai chuỗi trong 5 giây nhận thêm 70% sát thương mắt xích đầu.",
+    "situation": "Địch bền."
+  },
+  {
+    "id": "lightning:12",
+    "owner": "lightning",
+    "index": 12,
+    "name": "Tụ Lôi",
+    "description": "Mỗi lần dùng thứ 4 gây thêm 100% sát thương của một chuỗi cơ bản.",
+    "situation": "Nhịp bùng nổ."
+  },
+  {
+    "id": "lightning:13",
+    "owner": "lightning",
+    "index": 13,
+    "name": "Sét Phá Giáp",
+    "description": "Bỏ qua 50% giáp; địch không giáp chịu thêm 15% sát thương.",
+    "situation": "Địch giáp."
+  },
+  {
+    "id": "lightning:14",
+    "owner": "lightning",
+    "index": 14,
+    "name": "Lôi Diệt Tướng",
+    "description": "Sát thương lên boss và tinh anh +75%.",
+    "situation": "Wave boss."
+  },
+  {
+    "id": "lightning:15",
+    "owner": "lightning",
+    "index": 15,
+    "name": "Sét Bầy",
+    "description": "Sát thương +35% khi chuỗi chạm ít nhất 4 địch.",
+    "situation": "Đám đông."
+  },
+  {
+    "id": "lightning:16",
+    "owner": "lightning",
+    "index": 16,
+    "name": "Sét Đơn",
+    "description": "Nếu chỉ có một địch trong tầm, sát thương lên nó +70%.",
+    "situation": "Boss còn sót."
+  },
+  {
+    "id": "lightning:17",
+    "owner": "lightning",
+    "index": 17,
+    "name": "Tầm Lôi",
+    "description": "Tầm dùng +25%; sát thương +10%.",
+    "situation": "Đánh từ sớm."
+  },
+  {
+    "id": "lightning:18",
+    "owner": "lightning",
+    "index": 18,
+    "name": "Cận Lôi",
+    "description": "Sát thương +40% trong vùng sát thành.",
+    "situation": "Phòng thủ cuối."
+  },
+  {
+    "id": "lightning:19",
+    "owner": "lightning",
+    "index": 19,
+    "name": "Sét Kết Liễu",
+    "description": "Địch dưới 50% HP chịu thêm 65% sát thương.",
+    "situation": "Dọn địch bị thương."
+  },
+  {
+    "id": "lightning:20",
+    "owner": "lightning",
+    "index": 20,
+    "name": "Tia Mở Đường",
+    "description": "Địch trên 60% HP chịu thêm 80% sát thương.",
+    "situation": "Làm mềm nhóm mới."
+  },
+  {
+    "id": "lightning:21",
+    "owner": "lightning",
+    "index": 21,
+    "name": "Điện Dư",
+    "description": "Mỗi mục tiêu chịu thêm điện dư tổng 30% sát thương mắt xích đã trúng trong 2 giây.",
+    "situation": "Địch sống lâu."
+  },
+  {
+    "id": "lightning:22",
+    "owner": "lightning",
+    "index": 22,
+    "name": "Bật Điện",
+    "description": "Địch chết do sét phóng một tia bằng 70% mắt xích đầu vào địch cạnh bên.",
+    "situation": "Dọn dây chuyền; tia phụ không sinh tia mới."
+  },
+  {
+    "id": "lightning:23",
+    "owner": "lightning",
+    "index": 23,
+    "name": "Điện Tâm",
+    "description": "Mục tiêu đầu phát xung nhỏ, gây 40% sát thương mắt xích đầu cho địch sát cạnh.",
+    "situation": "Nhóm nhỏ quanh mục tiêu."
+  },
+  {
+    "id": "lightning:24",
+    "owner": "lightning",
+    "index": 24,
+    "name": "Tái Dẫn",
+    "description": "Sau 0,7 giây, mục tiêu cuối nhận thêm 80% sát thương mắt xích đầu.",
+    "situation": "Tập trung cuối chuỗi."
+  },
+  {
+    "id": "lightning:25",
+    "owner": "lightning",
+    "index": 25,
+    "name": "Sẵn Lôi",
+    "description": "Lần dùng sau khi sẵn sàng quá 1 giây gây thêm 45% sát thương.",
+    "situation": "Địch mới vào tầm."
+  },
+  {
+    "id": "lightning:26",
+    "owner": "lightning",
+    "index": 26,
+    "name": "Băng Dẫn Điện",
+    "description": "Sát thương lên địch bị làm chậm +35%.",
+    "situation": "Cần nguồn làm chậm."
+  },
+  {
+    "id": "lightning:27",
+    "owner": "lightning",
+    "index": 27,
+    "name": "Lửa Dẫn Điện",
+    "description": "Sát thương lên địch đang cháy +35%.",
+    "situation": "Cần nguồn thiêu đốt."
+  },
+  {
+    "id": "lightning:28",
+    "owner": "lightning",
+    "index": 28,
+    "name": "Điện Áp Cao",
+    "description": "Sát thương +55%, hồi chiêu dài thêm 20%.",
+    "situation": "Một chuỗi mạnh."
+  },
+  {
+    "id": "lightning:29",
+    "owner": "lightning",
+    "index": 29,
+    "name": "Lôi Liên Tục",
+    "description": "Hồi chiêu giảm 35%, sát thương mỗi lần giảm 15%.",
+    "situation": "Nhiều lần đặt hiệu ứng."
+  },
+  {
+    "id": "lightning:30",
+    "owner": "lightning",
+    "index": 30,
+    "name": "Lôi Hộ Thành",
+    "description": "Thành dưới 40% HP: sát thương +50%; còn lại +10%.",
+    "situation": "Cứu nguy."
+  },
+  {
+    "id": "wind:01",
+    "owner": "wind",
+    "index": 1,
+    "name": "Lưỡi Gió Sắc",
+    "description": "Sát thương kiếm phong +25%.",
+    "situation": "Mọi đội hình."
+  },
+  {
+    "id": "wind:02",
+    "owner": "wind",
+    "index": 2,
+    "name": "Nhịp Kiếm",
+    "description": "Hồi chiêu giảm 20%.",
+    "situation": "Quét liên tục."
+  },
+  {
+    "id": "wind:03",
+    "owner": "wind",
+    "index": 3,
+    "name": "Quạt Gió Rộng",
+    "description": "Góc quét +30%; sát thương +10%.",
+    "situation": "Phủ ngang trước thành."
+  },
+  {
+    "id": "wind:04",
+    "owner": "wind",
+    "index": 4,
+    "name": "Kiếm Vươn",
+    "description": "Tầm quét +25%; sát thương +10%.",
+    "situation": "Đánh sớm hơn."
+  },
+  {
+    "id": "wind:05",
+    "owner": "wind",
+    "index": 5,
+    "name": "Cuồng Phong",
+    "description": "Khoảng đẩy lùi +50%; sát thương +10%.",
+    "situation": "Trì hoãn địch thường."
+  },
+  {
+    "id": "wind:06",
+    "owner": "wind",
+    "index": 6,
+    "name": "Gió Lạnh",
+    "description": "Địch trúng quét chậm 30% trong 2 giây.",
+    "situation": "Giữ khoảng cách sau đẩy lùi."
+  },
+  {
+    "id": "wind:07",
+    "owner": "wind",
+    "index": 7,
+    "name": "Chấn Phong",
+    "description": "Mỗi lần quét thứ 3 gây choáng 0,7 giây.",
+    "situation": "Ngắt đòn."
+  },
+  {
+    "id": "wind:08",
+    "owner": "wind",
+    "index": 8,
+    "name": "Song Phong",
+    "description": "Sau quét chính có quét phụ gây 30% sát thương.",
+    "situation": "Tăng sát thương cùng một nhịp dùng."
+  },
+  {
+    "id": "wind:09",
+    "owner": "wind",
+    "index": 9,
+    "name": "Đường Kiếm",
+    "description": "Tâm quạt tạo đường kiếm thẳng gây thêm 70% sát thương cơ bản.",
+    "situation": "Địch nối hàng; một địch có thể nhận quạt và đường kiếm."
+  },
+  {
+    "id": "wind:10",
+    "owner": "wind",
+    "index": 10,
+    "name": "Phong Nhận Tách",
+    "description": "Hai mép quạt tạo lưỡi gió phụ, mỗi lưỡi 35% sát thương cơ bản.",
+    "situation": "Phủ hai bên."
+  },
+  {
+    "id": "wind:11",
+    "owner": "wind",
+    "index": 11,
+    "name": "Cắt Ngược",
+    "description": "Địch vừa bị kiếm phong đẩy lùi nhận thêm 30% sát thương sau 0,5 giây.",
+    "situation": "Địch bền."
+  },
+  {
+    "id": "wind:12",
+    "owner": "wind",
+    "index": 12,
+    "name": "Gió Xoáy",
+    "description": "Điểm cuối quạt tạo xoáy 1 giây, gây tổng 40% sát thương cơ bản.",
+    "situation": "Địch chậm ở rìa tầm."
+  },
+  {
+    "id": "wind:13",
+    "owner": "wind",
+    "index": 13,
+    "name": "Cắt Giáp",
+    "description": "Bỏ qua 50% giáp; địch không giáp chịu thêm 15% sát thương.",
+    "situation": "Địch bọc giáp."
+  },
+  {
+    "id": "wind:14",
+    "owner": "wind",
+    "index": 14,
+    "name": "Kiếm Trảm Tướng",
+    "description": "Sát thương lên boss và tinh anh +75%.",
+    "situation": "Bù đẩy lùi ít hiệu quả với boss."
+  },
+  {
+    "id": "wind:15",
+    "owner": "wind",
+    "index": 15,
+    "name": "Chém Bầy",
+    "description": "Sát thương +35% khi quét trúng ít nhất 4 địch.",
+    "situation": "Đám đông."
+  },
+  {
+    "id": "wind:16",
+    "owner": "wind",
+    "index": 16,
+    "name": "Độc Kiếm",
+    "description": "Nếu chỉ quét trúng một địch, sát thương +60%.",
+    "situation": "Đơn mục tiêu."
+  },
+  {
+    "id": "wind:17",
+    "owner": "wind",
+    "index": 17,
+    "name": "Thành Phong",
+    "description": "Sát thương +40% trong vùng sát thành.",
+    "situation": "Địch đang gây sức ép."
+  },
+  {
+    "id": "wind:18",
+    "owner": "wind",
+    "index": 18,
+    "name": "Rìa Kiếm",
+    "description": "Địch ở một phần ba ngoài của tầm quét chịu thêm 50% sát thương.",
+    "situation": "Dọn từ rìa tầm."
+  },
+  {
+    "id": "wind:19",
+    "owner": "wind",
+    "index": 19,
+    "name": "Kết Trảm",
+    "description": "Địch dưới 50% HP chịu thêm 65% sát thương.",
+    "situation": "Kết liễu."
+  },
+  {
+    "id": "wind:20",
+    "owner": "wind",
+    "index": 20,
+    "name": "Phá Thế",
+    "description": "Địch trên 60% HP chịu thêm 80% sát thương.",
+    "situation": "Mở giao tranh."
+  },
+  {
+    "id": "wind:21",
+    "owner": "wind",
+    "index": 21,
+    "name": "Gió Giữ Chân",
+    "description": "Địch bị quét hai lần trong 6 giây bị ghim chân 0,8 giây.",
+    "situation": "Địch sống lâu."
+  },
+  {
+    "id": "wind:22",
+    "owner": "wind",
+    "index": 22,
+    "name": "Kiếm Chấn",
+    "description": "Địch đang có hoạt cảnh đánh thành nhận thêm 50% sát thương.",
+    "situation": "Cứu thành đúng lúc."
+  },
+  {
+    "id": "wind:23",
+    "owner": "wind",
+    "index": 23,
+    "name": "Vết Cắt Gió",
+    "description": "Quét gây thêm chảy máu tổng 35% sát thương trong 3 giây.",
+    "situation": "Địch nhiều HP."
+  },
+  {
+    "id": "wind:24",
+    "owner": "wind",
+    "index": 24,
+    "name": "Liên Hoàn Trảm",
+    "description": "Mỗi lần dùng thứ 4 tạo thêm quét bằng 100% sát thương cơ bản.",
+    "situation": "Bùng nổ định kỳ."
+  },
+  {
+    "id": "wind:25",
+    "owner": "wind",
+    "index": 25,
+    "name": "Đón Gió",
+    "description": "Lần dùng sau khi sẵn sàng quá 1 giây được +45% sát thương.",
+    "situation": "Địch mới tới."
+  },
+  {
+    "id": "wind:26",
+    "owner": "wind",
+    "index": 26,
+    "name": "Gió Băng",
+    "description": "Sát thương lên địch bị làm chậm +35%.",
+    "situation": "Cần nguồn làm chậm."
+  },
+  {
+    "id": "wind:27",
+    "owner": "wind",
+    "index": 27,
+    "name": "Gió Lửa",
+    "description": "Sát thương lên địch đang cháy +35%.",
+    "situation": "Cần nguồn thiêu đốt."
+  },
+  {
+    "id": "wind:28",
+    "owner": "wind",
+    "index": 28,
+    "name": "Trọng Kiếm",
+    "description": "Sát thương +55%, hồi chiêu dài thêm 20%.",
+    "situation": "Nhát quét mạnh."
+  },
+  {
+    "id": "wind:29",
+    "owner": "wind",
+    "index": 29,
+    "name": "Khinh Kiếm",
+    "description": "Hồi chiêu giảm 35%, sát thương mỗi lần giảm 15%.",
+    "situation": "Nhiều lần đẩy lùi."
+  },
+  {
+    "id": "wind:30",
+    "owner": "wind",
+    "index": 30,
+    "name": "Phong Hộ Thành",
+    "description": "Thành dưới 40% HP: sát thương +50%; còn lại +10%.",
+    "situation": "Cứu nguy."
+  },
+  {
+    "id": "earth:01",
+    "owner": "earth",
+    "index": 1,
+    "name": "Địa Lực",
+    "description": "Sát thương mọi xung địa chấn +25%.",
+    "situation": "Mọi đội hình."
+  },
+  {
+    "id": "earth:02",
+    "owner": "earth",
+    "index": 2,
+    "name": "Địa Mạch Nhanh",
+    "description": "Hồi chiêu giảm 20%.",
+    "situation": "Duy trì sức ép."
+  },
+  {
+    "id": "earth:03",
+    "owner": "earth",
+    "index": 3,
+    "name": "Địa Chấn Thứ Tư",
+    "description": "Thêm một xung cuối gây 75% sát thương của một xung cơ bản.",
+    "situation": "Địch đứng lâu trên vùng nứt."
+  },
+  {
+    "id": "earth:04",
+    "owner": "earth",
+    "index": 4,
+    "name": "Nứt Rộng",
+    "description": "Bề ngang vùng nứt +30%; sát thương +10%.",
+    "situation": "Địch rải ngang."
+  },
+  {
+    "id": "earth:05",
+    "owner": "earth",
+    "index": 5,
+    "name": "Mạch Vươn",
+    "description": "Chiều dài vùng nứt +25%; sát thương +10%.",
+    "situation": "Đánh sớm."
+  },
+  {
+    "id": "earth:06",
+    "owner": "earth",
+    "index": 6,
+    "name": "Chấn Động Sâu",
+    "description": "Thời gian choáng của kỹ năng +0,35 giây.",
+    "situation": "Ngắt đòn đánh thành."
+  },
+  {
+    "id": "earth:07",
+    "owner": "earth",
+    "index": 7,
+    "name": "Đất Lún",
+    "description": "Địch trúng xung cuối chậm 40% trong 2 giây.",
+    "situation": "Giữ địch sau địa chấn."
+  },
+  {
+    "id": "earth:08",
+    "owner": "earth",
+    "index": 8,
+    "name": "Đá Văng",
+    "description": "Xung đầu bắn 4 mảnh đá, mỗi mảnh gây 15% tổng sát thương kỹ năng.",
+    "situation": "Địch ngoài vùng nứt; mỗi địch trúng tối đa một mảnh."
+  },
+  {
+    "id": "earth:09",
+    "owner": "earth",
+    "index": 9,
+    "name": "Địa Chấn Dội",
+    "description": "Sau xung cuối có dư chấn gây 30% tổng sát thương kỹ năng.",
+    "situation": "Địch sống lâu."
+  },
+  {
+    "id": "earth:10",
+    "owner": "earth",
+    "index": 10,
+    "name": "Nhánh Nứt",
+    "description": "Tạo hai nhánh phụ cạnh vùng chính, mỗi nhánh 35% tổng sát thương kỹ năng.",
+    "situation": "Địch trải ngang; một địch không trúng cả hai nhánh."
+  },
+  {
+    "id": "earth:11",
+    "owner": "earth",
+    "index": 11,
+    "name": "Đất Trồi",
+    "description": "Xung đầu đẩy lùi nhẹ; sát thương toàn kỹ năng +10%.",
+    "situation": "Giảm áp lực trước thành."
+  },
+  {
+    "id": "earth:12",
+    "owner": "earth",
+    "index": 12,
+    "name": "Đá Cứng",
+    "description": "Sát thương +55%, hồi chiêu dài thêm 20%.",
+    "situation": "Một lần chặn mạnh."
+  },
+  {
+    "id": "earth:13",
+    "owner": "earth",
+    "index": 13,
+    "name": "Cát Chảy",
+    "description": "Hồi chiêu giảm 35%, sát thương mỗi lần giảm 15%.",
+    "situation": "Khống chế theo nhịp ngắn."
+  },
+  {
+    "id": "earth:14",
+    "owner": "earth",
+    "index": 14,
+    "name": "Địa Phá Giáp",
+    "description": "Bỏ qua 50% giáp; địch không giáp chịu thêm 15% sát thương.",
+    "situation": "Địch giáp."
+  },
+  {
+    "id": "earth:15",
+    "owner": "earth",
+    "index": 15,
+    "name": "Chấn Cự Thú",
+    "description": "Sát thương lên boss và tinh anh +75%.",
+    "situation": "Boss giảm hiệu lực khống chế."
+  },
+  {
+    "id": "earth:16",
+    "owner": "earth",
+    "index": 16,
+    "name": "Địa Trận",
+    "description": "Sát thương +35% khi có ít nhất 4 địch trong vùng nứt.",
+    "situation": "Đám đông."
+  },
+  {
+    "id": "earth:17",
+    "owner": "earth",
+    "index": 17,
+    "name": "Độc Chấn",
+    "description": "Nếu chỉ chạm một địch, sát thương +60%.",
+    "situation": "Boss còn sót."
+  },
+  {
+    "id": "earth:18",
+    "owner": "earth",
+    "index": 18,
+    "name": "Cận Địa",
+    "description": "Sát thương +40% trong vùng sát thành.",
+    "situation": "Phòng thủ cuối."
+  },
+  {
+    "id": "earth:19",
+    "owner": "earth",
+    "index": 19,
+    "name": "Mũi Mạch",
+    "description": "Một phần ba xa nhất của vùng nứt gây thêm 50% sát thương.",
+    "situation": "Giữ địch ở rìa tầm."
+  },
+  {
+    "id": "earth:20",
+    "owner": "earth",
+    "index": 20,
+    "name": "Địa Kết",
+    "description": "Địch dưới 50% HP chịu thêm 65% sát thương.",
+    "situation": "Dọn địch bị thương."
+  },
+  {
+    "id": "earth:21",
+    "owner": "earth",
+    "index": 21,
+    "name": "Khai Mạch",
+    "description": "Địch trên 60% HP chịu thêm 80% sát thương.",
+    "situation": "Làm mềm nhóm mới."
+  },
+  {
+    "id": "earth:22",
+    "owner": "earth",
+    "index": 22,
+    "name": "Chấn Liên Tiếp",
+    "description": "Mỗi xung sau trên cùng địch tăng thêm 20% sát thương của xung đó.",
+    "situation": "Địch bị giữ trong vùng."
+  },
+  {
+    "id": "earth:23",
+    "owner": "earth",
+    "index": 23,
+    "name": "Dấu Nứt",
+    "description": "Địch trúng hai lần dùng kỹ năng trong 7 giây nhận thêm 40% tổng sát thương cơ bản.",
+    "situation": "Địch bền."
+  },
+  {
+    "id": "earth:24",
+    "owner": "earth",
+    "index": 24,
+    "name": "Đá Giam",
+    "description": "Mỗi lần dùng thứ 4 ghim chân địch trúng trong 1,2 giây.",
+    "situation": "Ngắt di chuyển định kỳ."
+  },
+  {
+    "id": "earth:25",
+    "owner": "earth",
+    "index": 25,
+    "name": "Đá Vỡ",
+    "description": "Địch chết trong vùng nứt gây nổ nhỏ bằng 25% tổng sát thương kỹ năng.",
+    "situation": "Dọn theo chuỗi; nổ phụ không sinh nổ mới."
+  },
+  {
+    "id": "earth:26",
+    "owner": "earth",
+    "index": 26,
+    "name": "Địa Chấn Băng",
+    "description": "Sát thương lên địch bị làm chậm +35%.",
+    "situation": "Cần nguồn làm chậm."
+  },
+  {
+    "id": "earth:27",
+    "owner": "earth",
+    "index": 27,
+    "name": "Dung Nham",
+    "description": "Địch đang cháy nhận thêm 35% sát thương địa chấn.",
+    "situation": "Cần nguồn thiêu đốt."
+  },
+  {
+    "id": "earth:28",
+    "owner": "earth",
+    "index": 28,
+    "name": "Chuẩn Bị Địa Mạch",
+    "description": "Lần dùng sau khi sẵn sàng quá 1 giây được +45% sát thương.",
+    "situation": "Địch mới vào tầm."
+  },
+  {
+    "id": "earth:29",
+    "owner": "earth",
+    "index": 29,
+    "name": "Địa Chấn Hồi Âm",
+    "description": "Mỗi lần dùng thứ 4 gây thêm một xung bằng 75% tổng sát thương cơ bản.",
+    "situation": "Nhịp bùng nổ."
+  },
+  {
+    "id": "earth:30",
+    "owner": "earth",
+    "index": 30,
+    "name": "Địa Hộ Thành",
+    "description": "Thành dưới 40% HP: sát thương +50%; còn lại +10%.",
+    "situation": "Cứu nguy."
+  },
+  {
+    "id": "poison:01",
+    "owner": "poison",
+    "index": 1,
+    "name": "Độc Lực",
+    "description": "Sát thương va chạm và độc +25%.",
+    "situation": "Mọi đội hình."
+  },
+  {
+    "id": "poison:02",
+    "owner": "poison",
+    "index": 2,
+    "name": "Pha Chế Nhanh",
+    "description": "Hồi chiêu giảm 20%.",
+    "situation": "Phủ độc liên tục."
+  },
+  {
+    "id": "poison:03",
+    "owner": "poison",
+    "index": 3,
+    "name": "Bình Rộng",
+    "description": "Bán kính vỡ bình +25%; sát thương va chạm +20%.",
+    "situation": "Địch trải rộng."
+  },
+  {
+    "id": "poison:04",
+    "owner": "poison",
+    "index": 4,
+    "name": "Độc Dai",
+    "description": "Thời gian độc tăng từ 4 lên 6 giây, giữ nguyên sát thương mỗi giây.",
+    "situation": "Địch bền; lợi ích giảm khi làm mới quá sớm."
+  },
+  {
+    "id": "poison:05",
+    "owner": "poison",
+    "index": 5,
+    "name": "Độc Dồn",
+    "description": "Tổng độc không đổi nhưng gây hết trong 2,5 giây; va chạm +20%.",
+    "situation": "Địch ít HP, giảm lãng phí độc chưa kịp gây."
+  },
+  {
+    "id": "poison:06",
+    "owner": "poison",
+    "index": 6,
+    "name": "Hai Lớp Độc",
+    "description": "Độc có thể giữ hai lớp; mỗi lớp gây 65% sát thương độc hiện hành.",
+    "situation": "Địch sống qua nhiều lần ném."
+  },
+  {
+    "id": "poison:07",
+    "owner": "poison",
+    "index": 7,
+    "name": "Cặn Độc",
+    "description": "Điểm vỡ bình để lại vũng 2 giây, gây thêm tổng 40% sát thương kỹ năng cơ bản.",
+    "situation": "Quái chậm."
+  },
+  {
+    "id": "poison:08",
+    "owner": "poison",
+    "index": 8,
+    "name": "Bình Kép",
+    "description": "Thêm bình phụ gây 30% sát thương, gồm va chạm và độc.",
+    "situation": "Phủ hai nhóm."
+  },
+  {
+    "id": "poison:09",
+    "owner": "poison",
+    "index": 9,
+    "name": "Mảnh Bình",
+    "description": "Vụ vỡ phát 4 mảnh, mỗi mảnh 25% sát thương va chạm và áp nửa thời gian độc.",
+    "situation": "Địch ngoài vùng nổ."
+  },
+  {
+    "id": "poison:10",
+    "owner": "poison",
+    "index": 10,
+    "name": "Lây Nhiễm",
+    "description": "Địch chết khi đang nhiễm độc truyền phần độc còn lại sang tối đa 2 địch.",
+    "situation": "Đám đông; mỗi lớp chỉ lan một thế hệ."
+  },
+  {
+    "id": "poison:11",
+    "owner": "poison",
+    "index": 11,
+    "name": "Bộc Độc",
+    "description": "Mỗi lần dùng thứ 3 gây ngay một nhịp bằng 100% sát thương độc mỗi giây lên địch đã nhiễm.",
+    "situation": "Mục tiêu bền."
+  },
+  {
+    "id": "poison:12",
+    "owner": "poison",
+    "index": 12,
+    "name": "Độc Trì",
+    "description": "Địch nhiễm độc chậm 25%; sát thương va chạm +10%.",
+    "situation": "Tăng thời gian chịu độc."
+  },
+  {
+    "id": "poison:13",
+    "owner": "poison",
+    "index": 13,
+    "name": "Mê Dược",
+    "description": "Mỗi lần dùng thứ 4 làm choáng 0,8 giây lên mục tiêu chính.",
+    "situation": "Ngắt đòn."
+  },
+  {
+    "id": "poison:14",
+    "owner": "poison",
+    "index": 14,
+    "name": "Ăn Mòn",
+    "description": "Bỏ qua 50% giáp cho cả va chạm và độc; địch không giáp chịu thêm 15% sát thương.",
+    "situation": "Địch giáp."
+  },
+  {
+    "id": "poison:15",
+    "owner": "poison",
+    "index": 15,
+    "name": "Độc Diệt Tướng",
+    "description": "Sát thương lên boss và tinh anh +75%.",
+    "situation": "Các wave boss."
+  },
+  {
+    "id": "poison:16",
+    "owner": "poison",
+    "index": 16,
+    "name": "Ô Nhiễm Bầy",
+    "description": "Sát thương +35% khi bình vỡ chạm ít nhất 4 địch.",
+    "situation": "Đám đông."
+  },
+  {
+    "id": "poison:17",
+    "owner": "poison",
+    "index": 17,
+    "name": "Độc Dược Đơn",
+    "description": "Nếu chỉ có một địch trong vùng vỡ bình, sát thương lên nó +55%.",
+    "situation": "Boss còn sót."
+  },
+  {
+    "id": "poison:18",
+    "owner": "poison",
+    "index": 18,
+    "name": "Ném Xa",
+    "description": "Tầm dùng +25%; sát thương va chạm +20%.",
+    "situation": "Phủ độc từ sớm."
+  },
+  {
+    "id": "poison:19",
+    "owner": "poison",
+    "index": 19,
+    "name": "Độc Cận Thành",
+    "description": "Sát thương lên địch trong vùng sát thành +40%.",
+    "situation": "Phòng thủ cuối."
+  },
+  {
+    "id": "poison:20",
+    "owner": "poison",
+    "index": 20,
+    "name": "Độc Kết Liễu",
+    "description": "Địch dưới 50% HP chịu thêm 65% sát thương độc.",
+    "situation": "Dọn địch sót."
+  },
+  {
+    "id": "poison:21",
+    "owner": "poison",
+    "index": 21,
+    "name": "Liều Đầu",
+    "description": "Địch chưa có độc của trợ thủ chịu thêm 70% sát thương va chạm.",
+    "situation": "Phủ sang địch mới."
+  },
+  {
+    "id": "poison:22",
+    "owner": "poison",
+    "index": 22,
+    "name": "Tích Độc",
+    "description": "Mỗi giây nhiễm độc liên tục tăng sát thương độc 8%, tối đa 40%.",
+    "situation": "Boss, tinh anh."
+  },
+  {
+    "id": "poison:23",
+    "owner": "poison",
+    "index": 23,
+    "name": "Độc Băng",
+    "description": "Địch bị làm chậm chịu thêm 35% sát thương độc.",
+    "situation": "Cần nguồn làm chậm."
+  },
+  {
+    "id": "poison:24",
+    "owner": "poison",
+    "index": 24,
+    "name": "Độc Hỏa",
+    "description": "Địch đang cháy chịu thêm 35% sát thương độc.",
+    "situation": "Cần nguồn thiêu đốt."
+  },
+  {
+    "id": "poison:25",
+    "owner": "poison",
+    "index": 25,
+    "name": "Phản Ứng Nhiệt",
+    "description": "Bình trúng địch đang cháy gây thêm nổ nhỏ 40% tổng sát thương cơ bản.",
+    "situation": "Cần nguồn thiêu đốt; không tiêu thụ trạng thái cháy."
+  },
+  {
+    "id": "poison:26",
+    "owner": "poison",
+    "index": 26,
+    "name": "Khói Độc",
+    "description": "Địch nhiễm độc giảm 20% tốc độ đánh trong 2 giây đầu.",
+    "situation": "Giảm áp lực thành."
+  },
+  {
+    "id": "poison:27",
+    "owner": "poison",
+    "index": 27,
+    "name": "Chắt Lọc",
+    "description": "Sát thương +55%, hồi chiêu dài thêm 20%.",
+    "situation": "Một lần nhiễm mạnh."
+  },
+  {
+    "id": "poison:28",
+    "owner": "poison",
+    "index": 28,
+    "name": "Liều Nhẹ",
+    "description": "Hồi chiêu giảm 35%, sát thương mỗi lần giảm 15%.",
+    "situation": "Nhiều lần áp trạng thái."
+  },
+  {
+    "id": "poison:29",
+    "owner": "poison",
+    "index": 29,
+    "name": "Bình Đón Địch",
+    "description": "Lần dùng sau khi sẵn sàng quá 1 giây được +45% sát thương.",
+    "situation": "Nhóm quái mới."
+  },
+  {
+    "id": "poison:30",
+    "owner": "poison",
+    "index": 30,
+    "name": "Độc Hộ Thành",
+    "description": "Thành dưới 40% HP: sát thương +50%; còn lại +10%.",
+    "situation": "Cứu nguy."
+  },
+  {
+    "id": "sniper:01",
+    "owner": "sniper",
+    "index": 1,
+    "name": "Đạn Chuẩn",
+    "description": "Sát thương phát xuyên tâm +25%.",
+    "situation": "Mọi đội hình."
+  },
+  {
+    "id": "sniper:02",
+    "owner": "sniper",
+    "index": 2,
+    "name": "Lên Nòng Nhanh",
+    "description": "Hồi chiêu giảm 20%.",
+    "situation": "Đánh đơn mục tiêu liên tục."
+  },
+  {
+    "id": "sniper:03",
+    "owner": "sniper",
+    "index": 3,
+    "name": "Xuyên Hàng",
+    "description": "Đạn xuyên thêm một địch với 65% sát thương.",
+    "situation": "Địch nối đuôi."
+  },
+  {
+    "id": "sniper:04",
+    "owner": "sniper",
+    "index": 4,
+    "name": "Hai Mũi",
+    "description": "Thêm đạn phụ gây 30% sát thương vào một địch khác hoặc cùng địch nếu không có mục tiêu khác.",
+    "situation": "Đánh hai mục tiêu."
+  },
+  {
+    "id": "sniper:05",
+    "owner": "sniper",
+    "index": 5,
+    "name": "Điểm Mở",
+    "description": "Địch trên 60% HP chịu thêm 80% sát thương.",
+    "situation": "Đòn mở đầu mạnh."
+  },
+  {
+    "id": "sniper:06",
+    "owner": "sniper",
+    "index": 6,
+    "name": "Điểm Kết",
+    "description": "Địch dưới 50% HP chịu thêm 65% sát thương.",
+    "situation": "Kết liễu."
+  },
+  {
+    "id": "sniper:07",
+    "owner": "sniper",
+    "index": 7,
+    "name": "Săn Boss",
+    "description": "Sát thương lên boss và tinh anh +75%.",
+    "situation": "Wave 10 và 20."
+  },
+  {
+    "id": "sniper:08",
+    "owner": "sniper",
+    "index": 8,
+    "name": "Phá Giáp Sâu",
+    "description": "Mức bỏ qua giáp của kỹ năng tăng lên 80%; địch không giáp chịu thêm 15% sát thương.",
+    "situation": "Địch giáp."
+  },
+  {
+    "id": "sniper:09",
+    "owner": "sniper",
+    "index": 9,
+    "name": "Ngắm Xa",
+    "description": "Sát thương +40% ở nửa xa tầm bắn.",
+    "situation": "Diệt từ sớm."
+  },
+  {
+    "id": "sniper:10",
+    "owner": "sniper",
+    "index": 10,
+    "name": "Ngắm Gần",
+    "description": "Sát thương +40% trong vùng sát thành.",
+    "situation": "Phòng thủ cuối."
+  },
+  {
+    "id": "sniper:11",
+    "owner": "sniper",
+    "index": 11,
+    "name": "Tầm Quan Sát",
+    "description": "Tầm dùng +20%; sát thương +15%.",
+    "situation": "Phủ góc xa."
+  },
+  {
+    "id": "sniper:12",
+    "owner": "sniper",
+    "index": 12,
+    "name": "Giữ Dấu",
+    "description": "Bắn cùng địch ở hai lần dùng liên tiếp: lần sau +50% sát thương.",
+    "situation": "Boss sống lâu."
+  },
+  {
+    "id": "sniper:13",
+    "owner": "sniper",
+    "index": 13,
+    "name": "Ba Nhịp",
+    "description": "Mỗi phát thứ 3 gây thêm 75% sát thương.",
+    "situation": "Nhịp bùng nổ."
+  },
+  {
+    "id": "sniper:14",
+    "owner": "sniper",
+    "index": 14,
+    "name": "Chờ Thời",
+    "description": "Lần dùng sau khi sẵn sàng quá 1 giây được +45% sát thương.",
+    "situation": "Địch mới vào tầm."
+  },
+  {
+    "id": "sniper:15",
+    "owner": "sniper",
+    "index": 15,
+    "name": "Đạn Trọng",
+    "description": "Sát thương +55%, hồi chiêu dài thêm 20%.",
+    "situation": "Một phát mạnh."
+  },
+  {
+    "id": "sniper:16",
+    "owner": "sniper",
+    "index": 16,
+    "name": "Đạn Nhẹ",
+    "description": "Hồi chiêu giảm 35%, sát thương mỗi lần giảm 15%.",
+    "situation": "Giảm lãng phí vào địch yếu."
+  },
+  {
+    "id": "sniper:17",
+    "owner": "sniper",
+    "index": 17,
+    "name": "Mảnh Xuyên",
+    "description": "Khi đạn giết địch, hai mảnh đạn gây mỗi mảnh 35% sát thương vào địch gần.",
+    "situation": "Dọn quái; một địch nhận tối đa một mảnh."
+  },
+  {
+    "id": "sniper:18",
+    "owner": "sniper",
+    "index": 18,
+    "name": "Sóng Sau Đạn",
+    "description": "Đường đạn để lại sóng hẹp, gây thêm 30% sát thương cho địch trên đường.",
+    "situation": "Địch xếp hàng; mỗi địch nhận một lần sóng."
+  },
+  {
+    "id": "sniper:19",
+    "owner": "sniper",
+    "index": 19,
+    "name": "Đạn Nổ Nhỏ",
+    "description": "Mục tiêu bị bắn phát nổ, gây 35% sát thương lên địch lân cận.",
+    "situation": "Nhóm nhỏ; mục tiêu chính không ăn phần nổ."
+  },
+  {
+    "id": "sniper:20",
+    "owner": "sniper",
+    "index": 20,
+    "name": "Dấu Rạn",
+    "description": "Sau khi trúng đạn 1 giây, mục tiêu nhận thêm 35% sát thương.",
+    "situation": "Địch bền."
+  },
+  {
+    "id": "sniper:21",
+    "owner": "sniper",
+    "index": 21,
+    "name": "Đạn Băng",
+    "description": "Làm chậm 35% trong 2 giây; sát thương +10%.",
+    "situation": "Giữ mục tiêu ưu tiên."
+  },
+  {
+    "id": "sniper:22",
+    "owner": "sniper",
+    "index": 22,
+    "name": "Đạn Chấn",
+    "description": "Mỗi phát thứ 3 gây choáng 1 giây; sát thương +10%.",
+    "situation": "Ngắt đòn đánh thành."
+  },
+  {
+    "id": "sniper:23",
+    "owner": "sniper",
+    "index": 23,
+    "name": "Đạn Đẩy",
+    "description": "Đẩy nhẹ mục tiêu; sát thương +15%.",
+    "situation": "Tạo thời gian."
+  },
+  {
+    "id": "sniper:24",
+    "owner": "sniper",
+    "index": 24,
+    "name": "Đạn Cháy",
+    "description": "Gây thêm thiêu đốt tổng 35% sát thương trong 3 giây.",
+    "situation": "Địch nhiều HP."
+  },
+  {
+    "id": "sniper:25",
+    "owner": "sniper",
+    "index": 25,
+    "name": "Đạn Độc",
+    "description": "Gây thêm độc tổng 45% sát thương trong 5 giây.",
+    "situation": "Boss và tinh anh."
+  },
+  {
+    "id": "sniper:26",
+    "owner": "sniper",
+    "index": 26,
+    "name": "Đạn Phối Băng",
+    "description": "Sát thương lên địch bị làm chậm +35%.",
+    "situation": "Cần nguồn làm chậm."
+  },
+  {
+    "id": "sniper:27",
+    "owner": "sniper",
+    "index": 27,
+    "name": "Đạn Phối Lửa",
+    "description": "Sát thương lên địch đang cháy +35%.",
+    "situation": "Cần nguồn thiêu đốt."
+  },
+  {
+    "id": "sniper:28",
+    "owner": "sniper",
+    "index": 28,
+    "name": "Cô Lập",
+    "description": "Nếu mục tiêu không có địch khác ở gần, sát thương +55%.",
+    "situation": "Địch tách đàn."
+  },
+  {
+    "id": "sniper:29",
+    "owner": "sniper",
+    "index": 29,
+    "name": "Đạn Dư",
+    "description": "Nếu phát bắn giết mục tiêu, chuyển 50% phần sát thương thừa sang một địch trong tầm.",
+    "situation": "Giảm lãng phí sát thương lớn; tối đa một lần chuyển."
+  },
+  {
+    "id": "sniper:30",
+    "owner": "sniper",
+    "index": 30,
+    "name": "Thiện Xạ Hộ Thành",
+    "description": "Thành dưới 40% HP: sát thương +50%; còn lại +10%.",
+    "situation": "Cứu nguy."
+  },
+  {
+    "id": "scythe:01",
+    "owner": "scythe",
+    "index": 1,
+    "name": "Lưỡi Liêm Sắc",
+    "description": "Sát thương cả lượt đi và về +25%.",
+    "situation": "Mọi đội hình."
+  },
+  {
+    "id": "scythe:02",
+    "owner": "scythe",
+    "index": 2,
+    "name": "Thu Liêm Nhanh",
+    "description": "Hồi chiêu giảm 20%.",
+    "situation": "Quét đường liên tục."
+  },
+  {
+    "id": "scythe:03",
+    "owner": "scythe",
+    "index": 3,
+    "name": "Liêm Rộng",
+    "description": "Bề rộng đường liêm +30%; sát thương +10%.",
+    "situation": "Địch rải ngang vừa."
+  },
+  {
+    "id": "scythe:04",
+    "owner": "scythe",
+    "index": 4,
+    "name": "Liêm Xa",
+    "description": "Tầm ném +25%; sát thương +10%.",
+    "situation": "Đánh từ sớm."
+  },
+  {
+    "id": "scythe:05",
+    "owner": "scythe",
+    "index": 5,
+    "name": "Lượt Đi Mạnh",
+    "description": "Lượt đi gây thêm 60% sát thương của lượt đó.",
+    "situation": "Địch sắp chết trước khi liêm quay về."
+  },
+  {
+    "id": "scythe:06",
+    "owner": "scythe",
+    "index": 6,
+    "name": "Lượt Về Mạnh",
+    "description": "Lượt về gây thêm 60% sát thương của lượt đó.",
+    "situation": "Địch bền, đứng trên đường về."
+  },
+  {
+    "id": "scythe:07",
+    "owner": "scythe",
+    "index": 7,
+    "name": "Đường Về Lệch",
+    "description": "Lượt về lệch nhẹ về phía có nhiều địch hơn; sát thương lượt về +20%.",
+    "situation": "Phủ hai đường."
+  },
+  {
+    "id": "scythe:08",
+    "owner": "scythe",
+    "index": 8,
+    "name": "Liêm Phụ",
+    "description": "Tạo một liêm nhỏ trên đường đi, gây 35% tổng sát thương kỹ năng cơ bản.",
+    "situation": "Tăng số lần chạm; tối đa một lần mỗi địch."
+  },
+  {
+    "id": "scythe:09",
+    "owner": "scythe",
+    "index": 9,
+    "name": "Vòng Cuối",
+    "description": "Liêm xoay tại điểm xa nhất 0,5 giây, gây thêm 35% tổng sát thương cơ bản.",
+    "situation": "Địch ở rìa tầm."
+  },
+  {
+    "id": "scythe:10",
+    "owner": "scythe",
+    "index": 10,
+    "name": "Vết Máu",
+    "description": "Trúng liêm gây thêm chảy máu tổng 35% sát thương đã nhận trong 3 giây.",
+    "situation": "Địch bền."
+  },
+  {
+    "id": "scythe:11",
+    "owner": "scythe",
+    "index": 11,
+    "name": "Máu Sâu",
+    "description": "Địch đã chịu chảy máu nhận thêm 35% sát thương liêm.",
+    "situation": "Cần nguồn chảy máu."
+  },
+  {
+    "id": "scythe:12",
+    "owner": "scythe",
+    "index": 12,
+    "name": "Liêm Hút Gió",
+    "description": "Lượt về đẩy địch nhẹ ra xa thành; tổng sát thương +10%.",
+    "situation": "Tăng thời gian phòng thủ; không kéo địch về phía thành."
+  },
+  {
+    "id": "scythe:13",
+    "owner": "scythe",
+    "index": 13,
+    "name": "Liêm Lạnh",
+    "description": "Địch trúng liêm chậm 30% trong 1,8 giây.",
+    "situation": "Giữ trên đường đi–về."
+  },
+  {
+    "id": "scythe:14",
+    "owner": "scythe",
+    "index": 14,
+    "name": "Liêm Chấn",
+    "description": "Địch trúng cả đi lẫn về bị choáng 0,6 giây.",
+    "situation": "Khống chế có điều kiện."
+  },
+  {
+    "id": "scythe:15",
+    "owner": "scythe",
+    "index": 15,
+    "name": "Liêm Phá Giáp",
+    "description": "Bỏ qua 50% giáp; địch không giáp chịu thêm 15% sát thương.",
+    "situation": "Địch giáp."
+  },
+  {
+    "id": "scythe:16",
+    "owner": "scythe",
+    "index": 16,
+    "name": "Liêm Diệt Tướng",
+    "description": "Sát thương lên boss và tinh anh +75%.",
+    "situation": "Wave boss."
+  },
+  {
+    "id": "scythe:17",
+    "owner": "scythe",
+    "index": 17,
+    "name": "Liêm Phá Bầy",
+    "description": "Sát thương +35% khi một lần dùng chạm ít nhất 4 địch khác nhau.",
+    "situation": "Đám đông."
+  },
+  {
+    "id": "scythe:18",
+    "owner": "scythe",
+    "index": 18,
+    "name": "Liêm Đơn",
+    "description": "Nếu trong tầm chỉ có một địch, sát thương +60%.",
+    "situation": "Boss còn sót."
+  },
+  {
+    "id": "scythe:19",
+    "owner": "scythe",
+    "index": 19,
+    "name": "Liêm Cận Thành",
+    "description": "Sát thương +40% trong vùng sát thành.",
+    "situation": "Phòng thủ cuối."
+  },
+  {
+    "id": "scythe:20",
+    "owner": "scythe",
+    "index": 20,
+    "name": "Liêm Rìa",
+    "description": "Sát thương +50% ở một phần ba ngoài của tầm ném.",
+    "situation": "Dọn quái ngoài xa."
+  },
+  {
+    "id": "scythe:21",
+    "owner": "scythe",
+    "index": 21,
+    "name": "Liêm Kết Liễu",
+    "description": "Địch dưới 50% HP chịu thêm 65% sát thương.",
+    "situation": "Kết liễu."
+  },
+  {
+    "id": "scythe:22",
+    "owner": "scythe",
+    "index": 22,
+    "name": "Liêm Khai Chiến",
+    "description": "Địch trên 60% HP chịu thêm 80% sát thương.",
+    "situation": "Mở giao tranh."
+  },
+  {
+    "id": "scythe:23",
+    "owner": "scythe",
+    "index": 23,
+    "name": "Vết Liêm Kép",
+    "description": "Địch trúng cả hai lượt nhận thêm 30% tổng sát thương cơ bản.",
+    "situation": "Địch nhiều HP."
+  },
+  {
+    "id": "scythe:24",
+    "owner": "scythe",
+    "index": 24,
+    "name": "Liêm Tách",
+    "description": "Khi quay đầu, tạo hai mảnh liêm, mỗi mảnh 25% tổng sát thương cơ bản.",
+    "situation": "Phủ hai bên; một địch trúng tối đa một mảnh."
+  },
+  {
+    "id": "scythe:25",
+    "owner": "scythe",
+    "index": 25,
+    "name": "Liêm Hồi Âm",
+    "description": "Mỗi lần dùng thứ 4 tạo thêm một liêm bóng bằng 100% sát thương cơ bản.",
+    "situation": "Bùng nổ định kỳ."
+  },
+  {
+    "id": "scythe:26",
+    "owner": "scythe",
+    "index": 26,
+    "name": "Liêm Đợi Địch",
+    "description": "Lần dùng sau khi sẵn sàng quá 1 giây được +45% sát thương.",
+    "situation": "Địch mới vào tầm."
+  },
+  {
+    "id": "scythe:27",
+    "owner": "scythe",
+    "index": 27,
+    "name": "Liêm Băng",
+    "description": "Sát thương lên địch bị làm chậm +35%.",
+    "situation": "Cần nguồn làm chậm."
+  },
+  {
+    "id": "scythe:28",
+    "owner": "scythe",
+    "index": 28,
+    "name": "Liêm Trọng",
+    "description": "Sát thương +55%, hồi chiêu dài thêm 20%.",
+    "situation": "Quét mạnh."
+  },
+  {
+    "id": "scythe:29",
+    "owner": "scythe",
+    "index": 29,
+    "name": "Liêm Nhẹ",
+    "description": "Hồi chiêu giảm 35%, sát thương mỗi lần giảm 15%.",
+    "situation": "Nhiều lần phủ đường."
+  },
+  {
+    "id": "scythe:30",
+    "owner": "scythe",
+    "index": 30,
+    "name": "Liêm Hộ Thành",
+    "description": "Thành dưới 40% HP: sát thương +50%; còn lại +10%.",
+    "situation": "Cứu nguy."
+  },
+  {
+    "id": "stars:01",
+    "owner": "stars",
+    "index": 1,
+    "name": "Tinh Lực",
+    "description": "Sát thương mọi thiên thạch +25%.",
+    "situation": "Mọi đội hình."
+  },
+  {
+    "id": "stars:02",
+    "owner": "stars",
+    "index": 2,
+    "name": "Chu Kỳ Sao",
+    "description": "Hồi chiêu giảm 20%.",
+    "situation": "Dội liên tục."
+  },
+  {
+    "id": "stars:03",
+    "owner": "stars",
+    "index": 3,
+    "name": "Sao Thứ Tư",
+    "description": "Thêm thiên thạch thứ tư với 75% sát thương một thiên thạch.",
+    "situation": "Tăng số vụ nổ."
+  },
+  {
+    "id": "stars:04",
+    "owner": "stars",
+    "index": 4,
+    "name": "Vành Sao",
+    "description": "Bán kính nổ +25%; sát thương +10%.",
+    "situation": "Địch trải rộng."
+  },
+  {
+    "id": "stars:05",
+    "owner": "stars",
+    "index": 5,
+    "name": "Sao Tập Trung",
+    "description": "Thiên thạch thứ hai và ba được tăng 40% sát thương nếu chỉ có một địch hợp lệ.",
+    "situation": "Boss."
+  },
+  {
+    "id": "stars:06",
+    "owner": "stars",
+    "index": 6,
+    "name": "Sao Rải",
+    "description": "Điểm rơi phụ phủ rộng hơn 30%; sát thương vụ nổ phụ +15%.",
+    "situation": "Đám đông rải ngang."
+  },
+  {
+    "id": "stars:07",
+    "owner": "stars",
+    "index": 7,
+    "name": "Sao Dồn",
+    "description": "Mục tiêu trúng nhiều thiên thạch cùng lần dùng: từ lần trúng thứ hai thêm 35% sát thương.",
+    "situation": "Địch bị giữ chân."
+  },
+  {
+    "id": "stars:08",
+    "owner": "stars",
+    "index": 8,
+    "name": "Dư Quang",
+    "description": "Sau loạt rơi, mục tiêu chính nhận thêm 35% tổng sát thương cơ bản.",
+    "situation": "Địch bền."
+  },
+  {
+    "id": "stars:09",
+    "owner": "stars",
+    "index": 9,
+    "name": "Vệt Cháy Sao",
+    "description": "Mỗi điểm rơi để lại cháy 1,5 giây, tổng 30% sát thương vụ nổ đó.",
+    "situation": "Địch chậm."
+  },
+  {
+    "id": "stars:10",
+    "owner": "stars",
+    "index": 10,
+    "name": "Mảnh Sao",
+    "description": "Mỗi vụ nổ phát 2 mảnh, mỗi mảnh 15% sát thương vụ nổ.",
+    "situation": "Địch quanh vòng nổ; một địch nhận tối đa một mảnh mỗi vụ."
+  },
+  {
+    "id": "stars:11",
+    "owner": "stars",
+    "index": 11,
+    "name": "Chấn Sao",
+    "description": "Thiên thạch cuối làm choáng 0,7 giây lên mục tiêu chính.",
+    "situation": "Ngắt đòn."
+  },
+  {
+    "id": "stars:12",
+    "owner": "stars",
+    "index": 12,
+    "name": "Sao Lạnh",
+    "description": "Địch trúng nổ chậm 30% trong 2 giây.",
+    "situation": "Giữ trong loạt rơi."
+  },
+  {
+    "id": "stars:13",
+    "owner": "stars",
+    "index": 13,
+    "name": "Sao Đẩy",
+    "description": "Thiên thạch đầu đẩy nhẹ; cả loạt +10% sát thương.",
+    "situation": "Tạo khoảng cách."
+  },
+  {
+    "id": "stars:14",
+    "owner": "stars",
+    "index": 14,
+    "name": "Sao Phá Giáp",
+    "description": "Bỏ qua 50% giáp; địch không giáp chịu thêm 15% sát thương.",
+    "situation": "Địch giáp."
+  },
+  {
+    "id": "stars:15",
+    "owner": "stars",
+    "index": 15,
+    "name": "Sao Diệt Tướng",
+    "description": "Sát thương lên boss và tinh anh +75%.",
+    "situation": "Boss wave 10, 20."
+  },
+  {
+    "id": "stars:16",
+    "owner": "stars",
+    "index": 16,
+    "name": "Sao Bầy",
+    "description": "Sát thương +35% khi các điểm rơi chạm ít nhất 5 địch khác nhau.",
+    "situation": "Đám đông."
+  },
+  {
+    "id": "stars:17",
+    "owner": "stars",
+    "index": 17,
+    "name": "Sao Cô Độc",
+    "description": "Mục tiêu không có địch khác ở gần chịu thêm 55% sát thương.",
+    "situation": "Địch tách đàn."
+  },
+  {
+    "id": "stars:18",
+    "owner": "stars",
+    "index": 18,
+    "name": "Tầm Tinh Tượng",
+    "description": "Tầm dùng +25%; sát thương +10%.",
+    "situation": "Đánh từ sớm."
+  },
+  {
+    "id": "stars:19",
+    "owner": "stars",
+    "index": 19,
+    "name": "Sao Cận Thành",
+    "description": "Sát thương +40% trong vùng sát thành.",
+    "situation": "Phòng thủ cuối."
+  },
+  {
+    "id": "stars:20",
+    "owner": "stars",
+    "index": 20,
+    "name": "Sao Kết Liễu",
+    "description": "Địch dưới 50% HP chịu thêm 65% sát thương.",
+    "situation": "Dọn địch bị thương."
+  },
+  {
+    "id": "stars:21",
+    "owner": "stars",
+    "index": 21,
+    "name": "Sao Khai Màn",
+    "description": "Địch trên 60% HP chịu thêm 80% sát thương.",
+    "situation": "Làm mềm nhóm mới."
+  },
+  {
+    "id": "stars:22",
+    "owner": "stars",
+    "index": 22,
+    "name": "Tinh Trọng",
+    "description": "Sát thương +55%, hồi chiêu dài thêm 20%.",
+    "situation": "Một loạt mạnh."
+  },
+  {
+    "id": "stars:23",
+    "owner": "stars",
+    "index": 23,
+    "name": "Tinh Nhẹ",
+    "description": "Hồi chiêu giảm 35%, sát thương mỗi lần giảm 15%.",
+    "situation": "Nhiều loạt giữ địch."
+  },
+  {
+    "id": "stars:24",
+    "owner": "stars",
+    "index": 24,
+    "name": "Sao Hồi Âm",
+    "description": "Mỗi lần dùng thứ 4 thêm loạt sao bóng bằng 75% tổng sát thương cơ bản.",
+    "situation": "Bùng nổ định kỳ."
+  },
+  {
+    "id": "stars:25",
+    "owner": "stars",
+    "index": 25,
+    "name": "Sao Chờ Địch",
+    "description": "Lần dùng sau khi sẵn sàng quá 1 giây được +45% sát thương.",
+    "situation": "Địch mới vào tầm."
+  },
+  {
+    "id": "stars:26",
+    "owner": "stars",
+    "index": 26,
+    "name": "Sao Đón Băng",
+    "description": "Sát thương lên địch bị làm chậm +35%.",
+    "situation": "Cần nguồn làm chậm."
+  },
+  {
+    "id": "stars:27",
+    "owner": "stars",
+    "index": 27,
+    "name": "Sao Đón Lửa",
+    "description": "Sát thương lên địch đang cháy +35%.",
+    "situation": "Cần nguồn thiêu đốt."
+  },
+  {
+    "id": "stars:28",
+    "owner": "stars",
+    "index": 28,
+    "name": "Vòng Trọng Lực",
+    "description": "Sau loạt rơi, vùng nhỏ làm chậm 40% trong 1,5 giây.",
+    "situation": "Giữ địch; không hút toàn màn hình về một cụm."
+  },
+  {
+    "id": "stars:29",
+    "owner": "stars",
+    "index": 29,
+    "name": "Tàn Tinh",
+    "description": "Địch chết do loạt sao gây nổ nhỏ bằng 30% sát thương một thiên thạch.",
+    "situation": "Dọn theo chuỗi; nổ phụ không sinh nổ mới."
+  },
+  {
+    "id": "stars:30",
+    "owner": "stars",
+    "index": 30,
+    "name": "Tinh Hộ Thành",
+    "description": "Thành dưới 40% HP: sát thương +50%; còn lại +10%.",
+    "situation": "Cứu nguy."
+  }
+]

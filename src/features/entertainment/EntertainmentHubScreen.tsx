@@ -1,7 +1,7 @@
 import { UiSkinProvider } from "../../components/core-visual/UiSkinContext";
 import { CommandLobbyArt } from "../../components/core-visual/CommandLobbyArt";
 import React, { lazy, Suspense, useEffect, useState, useRef } from "react";
-import { Dices, Coins, Play, Sparkles, Plane, Fish } from "lucide-react";
+import { Dices, Coins, Play, Sparkles, Plane, Fish, Castle } from "lucide-react";
 import { GameState, TabType } from "../../game/types";
 import { soundManager } from "../../game/audio";
 import { ENTERTAINMENT_GAMES } from "./entertainmentCatalog";
@@ -12,6 +12,7 @@ import { CommandHeader } from "../../components/military/MilitaryUI";
 const BauCuaScreen = lazy(() => import("./bau_cua/BauCuaScreen").then(m => ({ default: m.BauCuaScreen })));
 const BigSmallScreen = lazy(() => import("./big_small/BigSmallScreen").then(m => ({ default: m.BigSmallScreen })));
 const KhongKichScreen = lazy(() => import("./khong_kich/KhongKichScreen").then(m => ({ default: m.KhongKichScreen })));
+const ThanhTriScreen = lazy(() => import("./thanh_tri/ThanhTriScreen").then(m => ({ default: m.ThanhTriScreen })));
 
 interface EntertainmentHubScreenProps {
   gameState: GameState;
@@ -32,7 +33,7 @@ export const EntertainmentHubScreen: React.FC<EntertainmentHubScreenProps> = ({
   const [activeGame, setActiveGame] = useState<EntertainmentGameId | null>(null);
 
   useEffect(() => {
-    onGameActiveChange?.(activeGame === "khong_kich");
+    onGameActiveChange?.(activeGame === "khong_kich" || activeGame === "thanh_tri");
     return () => onGameActiveChange?.(false);
   }, [activeGame, onGameActiveChange]);
 
@@ -57,6 +58,9 @@ export const EntertainmentHubScreen: React.FC<EntertainmentHubScreenProps> = ({
   };
 
   // If a specific minigame is active, render that minigame's screen
+  if (activeGame === "thanh_tri") {
+    return <UiSkinProvider skin="legacy"><Suspense fallback={<div role="status" className="p-6 text-slate-200">Đang tải thành trì… <button onClick={() => setActiveGame(null)}>Quay lại</button></div>}><ThanhTriScreen reducedMotion={gameState.settings.reducedMotion} onBack={() => setActiveGame(null)} /></Suspense></UiSkinProvider>;
+  }
   if (activeGame === "khong_kich") {
     return (
       <UiSkinProvider skin="legacy">
@@ -150,7 +154,7 @@ export const EntertainmentHubScreen: React.FC<EntertainmentHubScreenProps> = ({
                 <div className="flex items-center justify-between gap-3">
                   <div className="flex items-center gap-3">
                     <div className="theme-badge w-12 h-12 rounded-2xl border flex items-center justify-center text-2xl shadow-md transition-transform select-none shrink-0">
-                      {game.id === "khong_kich" ? <Plane aria-hidden="true" strokeWidth={1.8} className="w-8 h-8" /> : game.id === "bau_cua" ? <Fish aria-hidden="true" strokeWidth={1.8} className="w-8 h-8" /> : <Dices aria-hidden="true" strokeWidth={1.8} className="w-8 h-8" />}
+                      {game.id === "thanh_tri" ? <Castle aria-hidden="true" strokeWidth={1.8} className="w-8 h-8" /> : game.id === "khong_kich" ? <Plane aria-hidden="true" strokeWidth={1.8} className="w-8 h-8" /> : game.id === "bau_cua" ? <Fish aria-hidden="true" strokeWidth={1.8} className="w-8 h-8" /> : <Dices aria-hidden="true" strokeWidth={1.8} className="w-8 h-8" />}
                     </div>
                     <div className="min-w-0">
                       <div className="flex items-center gap-2">
