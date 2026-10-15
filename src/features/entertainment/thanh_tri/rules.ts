@@ -77,6 +77,8 @@ export function eligible(w:World,c:Core){
  if(c.kind==='wall')return c.index===1||w.hp<=1600;
  if(c.kind==='summon')return w.actors.length<5&&!w.actors.some(a=>a.owner===c.owner);
  const a=w.actors.find(a=>a.owner===c.owner);if(!a||w.selected.includes(c.id))return false;
+ // Ground fire has no transferable remaining DoT; Fire Spread needs Ember.
+ if(c.owner==='fire'&&c.index===11&&!has(a,9))return false;
  if(c.requires&&!hasSource(w,c.requires,c.ownSource?c.owner as Owner:undefined))return false;
  if(c.index===2&&a.owner!=='archer'&&cooldown(a)<=FIGHTERS[a.owner].cooldown*.45+.0001)return false;
  return true;
