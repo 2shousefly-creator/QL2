@@ -1,26 +1,31 @@
 import {Application,Assets,AnimatedSprite,Container,Graphics,Sprite,Spritesheet,Text,Texture} from 'pixi.js';
 import {FIELD,FIGHTERS,OWNERS,type Owner} from './content';
 import {FortressEngine} from './engine';
+import {enemyAtlas,stageBackground,stageById,stageEnemy} from './campaign';
 import {range} from './rules';
 import type {World} from './types';
 import {soundManager} from '../../../game/audio';
 
 const ROOT='/games/thanh-tri/v1/';
 const UPDATED='/games/thanh-tri/v1.1/';
-const sheetRoot=(name:string)=>OWNERS.includes(name as Owner)||name.startsWith('enemy')||name==='fx-earth'||name==='fx-accent'?UPDATED:ROOT;
+const CAMPAIGN_ROOT='/games/thanh-tri/v1.2/';
+const sheetRoot=(name:string)=>name==='fx-wind'||/^s[2-6]-/.test(name)?CAMPAIGN_ROOT:OWNERS.includes(name as Owner)||name.startsWith('enemy')||name==='fx-earth'||name==='fx-accent'?UPDATED:ROOT;
 const cached=new Map<string,Promise<Spritesheet>>();
 const loaded=new Set<string>();
 let leases=0;
+let releasing:Promise<unknown>=Promise.resolve();
 function sheet(name:string){let p=cached.get(name);if(!p){const url=sheetRoot(name)+name+'.json';loaded.add(url);p=Assets.load<Spritesheet>(url).catch(error=>{cached.delete(name);throw error;});cached.set(name,p);}return p;}
 export function prepareAllies(owners:Owner[]){return Promise.all(owners.map(o=>sheet(o)));}
 export function iconUrl(owner:Owner|'guard'|'repair'){return ROOT+'icon-'+owner+'.png';}
-export const backdropUrl=ROOT+'background.webp';
+export const backdropUrl=stageBackground(1);
 export class FortressScene {
  private app:Application;private engine:FortressEngine;private root=new Container();private fields=new Container();private actors=new Container();private projectiles=new Container();private effects=new Container();private overlay=new Container();private bars=new Graphics();private rings=new Graphics();
  private views=new Map<string,AnimatedSprite>();private pool:AnimatedSprite[]=[];private texts:Text[]=[];private used=new Set<string>();private sheets=new Map<string,Spritesheet>();private destroyed=false;private lastHud=0;private terminalAge=0;private resize:ResizeObserver;private loss:(e:Event)=>void;
  static async create(host:HTMLDivElement,w:World,onHud:()=>void,onError:(message:string)=>void){leases++;const app=new Application();try{
-  const names=['archer',...Array.from({length:7},(_,i)=>'enemy'+i),...OWNERS.map(o=>'fx-'+o),'fx-wall','fx-accent'];
-  const [textures,bg]=await Promise.all([Promise.all(names.map(sheet)),Assets.load<Texture>(backdropUrl)]);loaded.add(backdropUrl);
+  await releasing;
+  const names=[...new Set(['archer',...Array.from({length:7},(_,i)=>enemyAtlas(w.stageId,i)),...OWNERS.map(o=>'fx-'+o),'fx-wall','fx-accent'])];
+  const background=stageBackground(w.stageId);loaded.add(background);
+  const [textures,bg]=await Promise.all([Promise.all(names.map(sheet)),Assets.load<Texture>(background)]);
   await app.init({backgroundAlpha:0,antialias:true,resolution:Math.min(window.devicePixelRatio||1,2),autoDensity:true,autoStart:false,sharedTicker:false,preference:'webgl',width:450,height:800});
   const scene=new FortressScene(app,host,w,onHud,onError);names.forEach((n,i)=>scene.sheets.set(n,textures[i]));const ground=new Sprite(bg);ground.width=450;ground.height=800;scene.root.addChildAt(ground,0);host.appendChild(app.canvas);scene.fit();app.start();return scene;
  }catch(error){try{app.destroy(true,{children:true});}catch{}FortressScene.release();throw error;}}
@@ -35,9 +40,9 @@ export class FortressScene {
  }
  private render(){const w=this.w,time=w.time,clock=time+this.terminalAge;this.used.clear();this.bars.clear();this.rings.clear();
   for(const e of w.enemies){const dead=e.hp<=0,boss=e.kind>=5;let animation='walk',progress=(time+e.id*.1)/(boss?1.3:.85),loop=true;
-   if(dead){animation='death';progress=(clock-e.deadAt)/1.2;loop=false;}else if(e.hardEnd>time){animation='hurt';progress=.3;loop=false;}else if(e.impactAt>0||e.y>=FIELD.wall-18){animation='attack';const duration=boss?1.4:.8;progress=Math.max(0,(time-(e.impactAt?(e.impactAt-(boss?.8:.35)):e.attackAt-ENEMY_PERIOD[e.kind]))/duration);loop=false;}else if(e.hitAt+ .16>time){animation='hurt';progress=(time-e.hitAt)/.16;loop=false;}
-   const size=boss?112:e.kind===4?75:e.kind===2?76:58;this.sprite('e'+e.id,'enemy'+e.kind,animation,progress,loop,this.actors,e.x,e.y,size,size,0,dead?Math.max(0,1-progress*.6):1,.875);
-   if(!dead){if(e.hp<e.maxHp||boss){const bw=boss?70:27;this.bars.roundRect(e.x-bw/2,e.y-size*.91,bw,4,2).fill({color:0x17191e,alpha:.85}).roundRect(e.x-bw/2,e.y-size*.91,bw*e.hp/e.maxHp,4,2).fill(boss?0xf5b766:0xd77073);}
+   if(dead){animation='death';progress=(clock-e.deadAt)/1.2;loop=false;}else if(e.hardEnd>time){animation='hurt';progress=.3;loop=false;}else if(e.impactAt>0||e.y>=FIELD.wall-18){animation='attack';const duration=boss?1.4:.8;progress=Math.max(0,(time-(e.impactAt?(e.impactAt-(boss?.8:.35)):e.attackAt-stageEnemy(w.stageId,e.kind).period))/duration);loop=false;}else if(e.hitAt+ .16>time){animation='hurt';progress=(time-e.hitAt)/.16;loop=false;}
+   const size=boss?112:e.kind===4?75:e.kind===2?76:58;this.sprite('e'+e.id,enemyAtlas(w.stageId,e.kind),animation,progress,loop,this.actors,e.x,e.y,size,size,0,dead?Math.max(0,1-progress*.6):1,.875);
+   if(!dead){if(w.stageId>1&&(e.kind===2||e.kind===4||e.kind===6)){const aura=this.sprite('elite'+e.id,'fx-accent','linger',(time*.7)%1,true,this.fields,e.x,e.y-2,size*.85,size*.33,0,.42);if(aura){aura.tint=stageById(w.stageId).color;aura.blendMode='add';}}if(e.hp<e.maxHp||boss){const bw=boss?70:27;this.bars.roundRect(e.x-bw/2,e.y-size*.91,bw,4,2).fill({color:0x17191e,alpha:.85}).roundRect(e.x-bw/2,e.y-size*.91,bw*e.hp/e.maxHp,4,2).fill(boss?0xf5b766:0xd77073);}
     const states:string[]=[];if(e.hardEnd>time)states.push(e.hardKind==='freeze'?'ice':'earth');else if(e.slowEnd>time)states.push('ice');if(e.dots.some(d=>d.kind==='burn'))states.push('fire');if(e.dots.some(d=>d.kind==='poison'))states.push('poison');if(e.dots.some(d=>d.kind==='bleed'))states.push('scythe');states.slice(0,3).forEach((s,i)=>this.sprite('status'+e.id+':'+s,'fx-'+s,'impact',.3+Math.sin(time*3)*.1,false,this.overlay,e.x-12+i*12,e.y-size*.91-9,14));
    }
   }
@@ -76,7 +81,6 @@ export class FortressScene {
  private playSounds(){const events=this.w.sounds.splice(0);for(const e of events.slice(-4)){if(e.owner==='wall')soundManager.playMetal('heavy');else if(e.owner==='fire'||e.owner==='earth')soundManager.playWater('burst');else if(e.owner==='ice'||e.owner==='poison')soundManager.playWater('impact');else soundManager.playMetal(e.owner==='scythe'||e.owner==='wind'?'slash':e.owner==='stars'?'summon':'volley');}}
  setHidden(hidden:boolean){if(hidden)this.app.stop();else this.app.start();}
  destroy(){if(this.destroyed)return;this.destroyed=true;this.resize.disconnect();this.app.canvas.removeEventListener('webglcontextlost',this.loss);this.app.stop();for(const s of this.pool)s.destroy();this.app.destroy(true,{children:true,texture:false,textureSource:false});FortressScene.release();}
- private static release(){leases=Math.max(0,leases-1);if(!leases){const urls=[...loaded];loaded.clear();cached.clear();void Promise.allSettled(urls.map(url=>Assets.unload(url)));}}
+ private static release(){leases=Math.max(0,leases-1);if(!leases){const urls=[...loaded];loaded.clear();cached.clear();releasing=Promise.allSettled(urls.map(url=>Assets.unload(url)));}}
 }
-const ENEMY_PERIOD=[1.2,1,1.4,1.8,2,2.5,3];
 const distXY=(a:{x:number;y:number},b:{x:number;y:number})=>Math.hypot(a.x-b.x,a.y-b.y);

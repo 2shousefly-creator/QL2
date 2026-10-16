@@ -182,3 +182,46 @@
 .tt-skill-tooltip .tt-live-note { color:#91e1b2;font-size:11px; }
 .tt-skill-tooltip .air-rank-preview { border-color:#81b6c455; }
 .tt-skill-tooltip button:focus-visible { outline:2px solid #e1faff;outline-offset:2px; }
+
+/* V1.2: a DOM legacy boundary excludes the app's flat-paint layer. The solid
+   color remains readable even when a host removes gradient backgrounds. */
+.tt-screen button.tt-primary,.tt-screen button.tt-primary:is(:hover,:active,:focus-visible,:disabled){background-color:#edce8d;color:#152a32;-webkit-text-fill-color:currentColor}
+.tt-screen button.tt-secondary,.tt-screen button.tt-secondary:is(:hover,:active,:focus-visible,:disabled){background-color:#1d303b;color:#edf7f2;-webkit-text-fill-color:currentColor}
+.tt-screen button.tt-primary>*,.tt-screen button.tt-secondary>*{color:inherit;-webkit-text-fill-color:currentColor}
+.tt-screen button.tt-primary:disabled{opacity:.72;cursor:default}
+.tt-screen[data-battle-active]{overscroll-behavior:none}
+.tt-stage,.tt-hud,.tt-screen .tt-hud button{touch-action:none;overscroll-behavior:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+.tt-veil,.tt-library,.tt-library-list,.tt-skill-tooltip{overscroll-behavior:contain;touch-action:pan-y}
+.tt-library nav{touch-action:pan-x}
+.tt-screen .tt-lobby{min-height:0;overscroll-behavior:contain;padding:18px 20px}
+.tt-lobby-copy{margin:24px 0 26px}
+.tt-lobby h1{font-size:clamp(31px,7vw,44px)}
+.tt-lobby-copy p{margin:0}
+.tt-campaign{display:flex;flex-direction:column;gap:10px;text-align:left}
+.tt-campaign-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:9px;color:#bdcdd3}
+.tt-campaign-heading strong{display:flex;align-items:center;gap:6px;color:#e0d4b5;font-size:9px;letter-spacing:.05em}
+.tt-campaign-heading>span{white-space:nowrap}
+.tt-stage-choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.tt-screen .tt-stage-choice{position:relative;isolation:isolate;min-width:0;min-height:80px;padding:10px 8px 9px;display:flex;align-items:flex-end;gap:6px;overflow:hidden;border:1px solid #8da4ac55;border-radius:10px;background:#162630;color:#f3f6ef;text-align:left}
+.tt-stage-choice::after{content:'';position:absolute;inset:0;background:linear-gradient(0deg,#091722f5,#09172299 62%,#09172240);z-index:-1}
+.tt-stage-choice>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 32%;z-index:-2;pointer-events:none}
+.tt-screen .tt-stage-choice[aria-pressed=true]{border:2px solid var(--stage-color);padding:9px 7px 8px;box-shadow:0 0 0 1px #071522,inset 0 0 15px #deeff514}
+.tt-screen .tt-stage-choice:disabled{cursor:not-allowed;opacity:1;color:#c3cdd2}
+.tt-stage-choice:disabled>img{filter:grayscale(.9);opacity:.35}
+.tt-stage-number{font-size:18px;font-weight:950;color:var(--stage-color);line-height:1.1;align-self:flex-start}
+.tt-stage-choice:disabled .tt-stage-number{color:#9da9af}
+.tt-stage-copy{min-width:0}
+.tt-stage-copy strong{display:block;font-size:11px;line-height:1.3;text-wrap:balance}
+.tt-stage-copy small{display:flex;align-items:center;gap:3px;font-size:8px;color:#c6d7dd;margin-top:4px}
+.tt-stage-brief{padding:12px;background:#122432ed;border:1px solid #8faeb047;border-left:3px solid var(--stage-color);border-radius:9px}
+.tt-stage-brief>strong{display:block;font-size:10px;line-height:1.4;color:var(--stage-color)}
+.tt-stage-brief>p{font-size:10px;color:#d0e2e5;margin:5px 0 8px}
+.tt-stage-brief>small{display:block;font-size:9px;line-height:1.6;color:#b9ced4}
+.tt-stage-brief .tt-stage-best{margin-top:4px;color:#c8e9bd}
+.tt-stage-roster{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;padding:0 0 10px}
+.tt-stage-roster>div{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:0}
+.tt-stage-roster img{width:48px;height:48px;object-fit:contain;background:#07182188;border:1px solid #9cbbc329;border-radius:7px}
+.tt-stage-roster span{font-size:8px;text-align:center;line-height:1.35;color:#c3d6dc}
+.tt-save-warning{font-size:11px!important;color:#ffdc9b!important;line-height:1.5;background:#4b361b77;padding:9px;border-radius:7px}
+.tt-wave small{max-width:280px;font-size:clamp(7px,1.8cqw,9px)}
+@media(max-width:350px){.tt-screen .tt-lobby{padding:14px 12px}.tt-stage-number{font-size:15px}.tt-stage-copy strong{font-size:10px}.tt-stage-roster img{width:41px;height:41px}.tt-stage-copy small{font-size:7px}}

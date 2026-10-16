@@ -25,7 +25,7 @@ export function CoreEffectIcon({core,className=''}:{core:Core;className?:string}
 export function CoreOwnerBadge({core}:{core:Core}){return <img className="tt-core-owner" src={coreOwnerIcon(core)} alt="" title={coreOwnerName(core)}/>;}
 export function coreCondition(c:Core){return c.requires?'Điều kiện: '+({slow:'nguồn làm chậm',burn:'nguồn thiêu đốt',poison:'nguồn độc',bleed:'nguồn chảy máu',hard:'nguồn khống chế cứng',freeze:'đóng băng của Băng Pháp Sư'})[c.requires]:'';}
 function card(c:Core,detail=false):CoreCard{return {id:c.id,name:c.name,description:c.description+(detail?`\n\n${c.situation}${c.requires?'\n'+coreCondition(c):''}`:''),tier:'diamond',system:c.kind==='wall'?'defense':'skill',category:'skill',icon:'',valueLabel:''};}
-function presentation(c:Core):CorePresentation{return {icon:<CoreEffectIcon core={c} className="combat-core-icon"/>,owner:<CoreOwnerBadge core={c}/>,tag:<span className="tt-core-tag">{coreOwnerName(c)} · {c.kind==='summon'?'TRIỆU HỒI':c.kind==='wall'?'BẢO VỆ THÀNH':'KIM CƯƠNG'}</span>};}
+function presentation(c:Core):CorePresentation{return {icon:<CoreEffectIcon core={c} className="combat-core-icon"/>,owner:<CoreOwnerBadge core={c}/>,tag:<span className="tt-core-tag">{coreOwnerName(c)}{c.kind==='summon'?' · TRIỆU HỒI':c.kind==='wall'?' · BẢO VỆ THÀNH':''}</span>};}
 
 /** Same modal, animated card face and detail transaction used by Không Kích. */
 export function CoreDraft({choices,level,pending,busy,error,reducedMotion,onPick}:{choices:Core[];level:number;pending:number;busy:boolean;error:string;reducedMotion:boolean;onPick:(c:Core)=>void}){

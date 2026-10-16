@@ -9,7 +9,7 @@ import type {Actor,World} from './types';
 
 export function SkillTooltip({anchor,actor,world,onClose}:{anchor:React.RefObject<HTMLDivElement|null>;actor:Actor;world:World;onClose:()=>void}){
  const f=FIGHTERS[actor.owner];
- return <AirCombatTooltipPortal anchor={anchor}><aside className="air-skill-tooltip tt-skill-tooltip" role="dialog" aria-label={`Kỹ năng ${f.name}`} onPointerDown={e=>e.stopPropagation()} onPointerMove={e=>e.stopPropagation()}>
+ return <AirCombatTooltipPortal anchor={anchor}><aside data-ui-skin="legacy" data-game-surface="thanh-tri-tooltip" className="air-skill-tooltip tt-skill-tooltip" role="dialog" aria-label={`Kỹ năng ${f.name}`} onPointerDown={e=>e.stopPropagation()} onPointerMove={e=>e.stopPropagation()}>
   <div className="tt-tooltip-owner"><img src={iconUrl(actor.owner)} alt=""/><strong>{f.name} · {actor.slot<0?'CHỦ THÀNH':`Ô #${actor.slot+1}`}</strong><button type="button" aria-label="Đóng mô tả kỹ năng" onClick={onClose}><X size={19}/></button></div>
   <div className="air-tooltip-heading"><h3>{f.skill}</h3><strong className="air-tooltip-cooldown">{cooldown(actor).toLocaleString('vi-VN',{maximumFractionDigits:2})}s</strong></div>
   <p><CoreDescription text={f.role}/></p>

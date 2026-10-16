@@ -35,5 +35,5 @@ export const FIELD={width:450,height:800,left:22,right:382,top:106,wall:545,H:50
 // Feet align to the four painted tower decks in the 450 × 800 background.
 export const FORMATION={slots:[75,175,275,375],allyY:568,archerX:225,archerY:716,hpY:740} as const;
 export const slotX=(slot:number)=>FORMATION.slots[slot];
-export const GAME_VERSION='1.1.0';
+export const GAME_VERSION='1.2.0';
 export const coreId=(owner:Owner,n:number)=>owner+':'+String(n).padStart(2,'0');

@@ -1,9 +1,10 @@
 import {BALANCE,LEGACY_DAMAGE} from './balance';
-import {ENEMIES,FIELD,FIGHTERS,type Owner,type Status} from './content';
+import {FIELD,FIGHTERS,type Owner,type Status} from './content';
+import {enemyKind,stageById,stageEnemy} from './campaign';
 import {actor,alive,cooldown,dist,draft,has,ignoreArmor,inCone,modifier,pointOnLine,random,range,SpatialGrid} from './rules';
 import type {Actor,Attack,Cast,Enemy,Point,World} from './types';
 
-export function createWorld():World{return {time:0,phase:'playing',wave:1,spawnIndex:0,spawnDone:false,waveOrder:[],rng:(Date.now()^0x713ac)>>>0||1,id:0,actors:[actor('archer')],enemies:[],attacks:[],zones:[],effects:[],hp:2000,blocks:0,guardEnd:0,level:1,xp:0,totalXp:0,pending:0,choices:[],selected:[],kills:0,bossKills:0,damage:0,wallHit:-10,rangeSlot:null,revision:0,sounds:[]};}
+export function createWorld(stageId=1):World{return {stageId:stageById(stageId).id,time:0,phase:'playing',wave:1,spawnIndex:0,spawnDone:false,waveOrder:[],rng:(Date.now()^0x713ac)>>>0||1,id:0,actors:[actor('archer')],enemies:[],attacks:[],zones:[],effects:[],hp:2000,blocks:0,guardEnd:0,level:1,xp:0,totalXp:0,pending:0,choices:[],selected:[],kills:0,bossKills:0,damage:0,wallHit:-10,rangeSlot:null,revision:0,sounds:[]};}
 const clamp=(n:number,a:number,b:number)=>Math.max(a,Math.min(b,n));
 const copy=(p:Point):Point=>({x:p.x,y:p.y});
 
@@ -14,8 +15,8 @@ export class FortressEngine {
  fx(kind:string,p:Point,size=60,duration=.55,rotation=0,end?:Point){const w=this.w;if(w.effects.length>300){const i=w.effects.findIndex(e=>e.kind==='damage');if(i>=0)w.effects.splice(i,1);else return;}w.effects.push({id:++w.id,kind,x:p.x,y:p.y,size,duration,rotation,born:w.time,end});}
  private spawn(){const w=this.w;while(!w.spawnDone){const count=30+Math.round(20*(w.wave-1)/19);const at=(w.wave-1)*15+w.spawnIndex*15/(count-1);if(at>w.time+.00001)break;
   if(w.spawnIndex===0){w.waveOrder=Array.from({length:10},(_,i)=>i);for(let i=9;i>0;i--){const j=Math.floor(random(w)*(i+1));[w.waveOrder[i],w.waveOrder[j]]=[w.waveOrder[j],w.waveOrder[i]];}}
-  const boss=w.spawnIndex===0&&(w.wave===10||w.wave===20);const roll=random(w);let kind=boss?(w.wave===10?5:6):roll<.4?0:roll<.7?1:w.wave>=12&&roll>.9?4:w.wave>=7&&roll>.8?3:w.wave>=4?2:0;
-  const data=ENEMIES[kind],hp=Math.round(data.hp*(1+(w.wave-1)/19)),x=boss?202:FIELD.left+18+(w.waveOrder[w.spawnIndex%10]+random(w)*.55)*(FIELD.W-36)/10;
+  const boss=w.spawnIndex===0&&(w.wave===10||w.wave===20);const roll=random(w);let kind=boss?(w.wave===10?5:6):enemyKind(w.stageId,w.wave,roll);
+  const data=stageEnemy(w.stageId,kind),hp=Math.round(data.hp*(1+(w.wave-1)/19)),x=boss?202:FIELD.left+18+(w.waveOrder[w.spawnIndex%10]+random(w)*.55)*(FIELD.W-36)/10;
   w.enemies.push({id:++w.id,kind,x,baseX:x,y:FIELD.top-25,hp,maxHp:hp,armor:data.armor,born:w.time,deadAt:0,attackAt:0,impactAt:0,hitAt:-10,slow:0,slowEnd:0,hardEnd:0,hardKind:'hard',immuneEnd:0,attackSlowEnd:0,dots:[],marks:{},casts:{}});
   if(boss)this.fx('warning',{x:202,y:150},160,1.5);w.spawnIndex++;if(w.spawnIndex===count){if(w.wave===20)w.spawnDone=true;else {w.wave++;w.spawnIndex=0;w.revision++;}}
  }}
@@ -26,12 +27,12 @@ export class FortressEngine {
    if(e.freezeCast&&e.hardEnd<=w.time){const c=e.freezeCast;e.freezeCast=undefined;if(has(c,14))this.hit(e,c,60,0,false,true);}
    if(e.hardEnd>w.time)continue;
    if(e.y<FIELD.wall-18){
-    const slow=e.slowEnd>w.time?Math.min(e.kind>=5?.4:.7,e.slow):0;e.y=Math.min(FIELD.wall-18,e.y+ENEMIES[e.kind].speed*FIELD.H*dt*(1-slow));
+    const slow=e.slowEnd>w.time?Math.min(e.kind>=5?.4:.7,e.slow):0;e.y=Math.min(FIELD.wall-18,e.y+stageEnemy(w.stageId,e.kind).speed*FIELD.H*dt*(1-slow));
     e.x=clamp(e.x+Math.sin(w.time*.85+e.id)*dt*1.5,FIELD.left+10,FIELD.right-10);
     // Soft local separation affects presentation spacing, never discards spawns.
     for(const n of this.grid.near(e,18)){if(n.id<=e.id)continue;const dx=e.x-n.x;const push=(18-dist(e,n))*.8*dt;e.x=clamp(e.x+(dx>=0?push:-push),FIELD.left+10,FIELD.right-10);n.x=clamp(n.x+(dx>=0?-push:push),FIELD.left+10,FIELD.right-10);}
-   }else if(!e.impactAt&&e.attackAt<=w.time){e.attackAt=w.time+ENEMIES[e.kind].period/(e.attackSlowEnd>w.time?.8:1);e.impactAt=w.time+(e.kind>=5?.8:.35);if(e.kind>=5)this.fx('warning',{x:e.x,y:FIELD.wall},90,.8);}
-   if(e.impactAt&&e.impactAt<=w.time){e.impactAt=0;this.wallDamage(ENEMIES[e.kind].damage,e.x);}
+   }else if(!e.impactAt&&e.attackAt<=w.time){e.attackAt=w.time+stageEnemy(w.stageId,e.kind).period/(e.attackSlowEnd>w.time?.8:1);e.impactAt=w.time+(e.kind>=5?.8:.35);if(e.kind>=5)this.fx('warning',{x:e.x,y:FIELD.wall},90,.8);}
+   if(e.impactAt&&e.impactAt<=w.time){e.impactAt=0;this.wallDamage(stageEnemy(w.stageId,e.kind).damage,e.x);}
   }
   for(const a of w.actors){if(a.owner==='archer'&&a.reloadEnd>0&&a.ammo===0){if(has(a,26)&&a.reloadTick<=w.time+.00001&&a.reloadTick<=a.reloadEnd+.00001){a.reloadTick+=1;const t=this.grid.target(a,range(a));if(t){const c=this.makeCast(a,t,false);this.projectile(c,t,85,0,0,true,false);}}if(a.reloadEnd>w.time)continue;}
    if(a.owner==='archer'&&a.ammo===0){a.ammo=30;a.reloadEnd=0;a.ready=w.time;a.afterReload=true;}

@@ -1,12 +1,12 @@
-# Thành Trì Cuối Cùng V1.1.0
+# Thành Trì Cuối Cùng V1.2.0
 
-See [RELEASE-1.1.md](RELEASE-1.1.md) for the current formation, shared core/tooltip UI, tactical roles, balance coefficients and asset changes.
+See [RELEASE-1.2.md](RELEASE-1.2.md) for the six-stage campaign, progress migration, input/theme fixes and new assets. [RELEASE-1.1.md](RELEASE-1.1.md) documents the retained formation, shared core/tooltip UI and tactical balance.
 
-Browser-only defense game in Giải Trí. This module has its own combat state and only stores the last result under `ql2.thanh-tri.v1.last-result`. It does not modify Quân Lộ progression, currency, or existing saves.
+Browser-only defense game in Giải Trí. This module has its own combat state, retains the last result under `ql2.thanh-tri.v1.last-result`, and adds sequential campaign completion under `ql2.thanh-tri.campaign.v1`. It does not modify Quân Lộ progression, currency, or unrelated saves.
 
 ## Implemented scope
 
-- Cổng Thành Hoàng Hôn, continuous 15-second spawn schedule, all 800 enemies over 20 waves, bosses at 10 and 20, per-spawn HP multiplier, fixed armor and attack damage.
+- Six sequentially unlocked stages: Cổng Thành Hoàng Hôn, Rừng Gai Độc, Hẻm Núi Tro Tàn, Pháo Đài Băng Giá, Đầm Lầy Oán Linh, Vực Tối Hư Không. Each has a continuous 15-second spawn schedule, all 800 enemies over 20 waves and bosses at 10 and 20. Later stages increase enemy stats and introduce elite waves earlier, with distinct rosters and scenery.
 - Archer with 30-arrow magazine, one regular shot per second and five-second reload; four ally slots filled automatically in order and all ten distinct ally skills. Primary targeting selects the nearest enemy.
 - Kill-only EXP, overflow, queued level choices, levels 1–20, 19 choices, no level-1 draft. Combat, projectiles, status damage, cooldowns, reload and animation use one paused combat clock.
 - 330 upgrade definitions with stable owner/index IDs, ten summons, two repeatable wall cores; weighted groups and equal probability within each eligible group, no duplicate draft cards, status prerequisites, cooldown floor.
@@ -17,9 +17,9 @@ Browser-only defense game in Giải Trí. This module has its own combat state a
 
 ## Art format
 
-`public/games/thanh-tri/v1` contains the environment, portraits and elemental VFX; `v1.1` contains replacement character/enemy atlases, laser/accent VFX and semantic core icons. All atlas cells are 128 px with transparent padding. Low-alpha RGB fringes are cleared before packing. `scripts/pack-thanh-tri-art.cjs` and `scripts/pack-thanh-tri-v1.1.cjs` compile local maps of generated source paths; they are asset production tools and do not run gameplay.
+`public/games/thanh-tri/v1` contains the original environment, portraits and elemental VFX; `v1.1` contains replacement character/enemy atlases, laser/accent VFX and semantic core icons. `v1.2` adds 20 campaign enemy atlases, 24 roster portraits, five backgrounds with the original fortress geometry, and replacement wind VFX. All atlas cells are 128 px with transparent padding. Low-alpha RGB fringes are cleared before packing. The versioned `scripts/pack-thanh-tri-*.cjs` files compile local maps of generated source paths; they are asset production tools and do not run gameplay.
 
-Current authored animation counts: archer 8 idle / 8 attack / 40 reload; each ally 8 idle / 16 action / 8 summon; enemies including bosses 8 walk / 8 attack / 8 reaction / 8 death except skeleton and iron sentinel with 4 death frames; each skill family 8 frames per phase across four phases. Castle effects have six eight-frame sequences. These are authored pose sequences, not a static sprite animated only by transforms. Counts remain below some of the original document's suggested budgets.
+Current authored animation counts: archer 8 idle / 8 attack / 40 reload; each ally 8 idle / 16 action / 8 summon; stage-one enemies 8 walk / 8 attack / 8 reaction / 8 death except skeleton and iron sentinel with 4 death frames. Each of the 20 new campaign monster forms has 4 walk / 4 attack / 4 reaction / 4 death frames. Each skill family has 8 frames per phase across four phases, including newly isolated wind phases. Castle effects have six eight-frame sequences. These are authored pose sequences, not a static sprite animated only by transforms. Counts remain below some of the original document's suggested budgets.
 
 ## Delivery boundary
 
