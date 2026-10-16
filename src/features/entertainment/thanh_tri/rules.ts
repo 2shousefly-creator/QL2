@@ -1,11 +1,12 @@
-import {CORES,SUMMONS,WALL_CORES,FIGHTERS,FIELD,OWNERS,coreId,slotX,type Core,type Owner,type Status} from './content';
+import {CORES,SUMMONS,WALL_CORES,FIGHTERS,FIELD,OWNERS,coreId,slotX,FORMATION,type Core,type Owner,type Status} from './content';
+import {BALANCE} from './balance';
 import type {Actor,Cast,Enemy,World,Point} from './types';
 
 export const has=(a:{cores:number[]},n:number)=>a.cores.includes(n);
 export const dist=(a:Point,b:Point)=>Math.hypot(a.x-b.x,a.y-b.y);
 export const alive=(e:Enemy)=>e.hp>0;
 export function random(w:World){let n=w.rng;n^=n<<13;n^=n>>>17;n^=n<<5;w.rng=n>>>0;return w.rng/4294967296;}
-export function actor(owner:Owner,slot=-1):Actor{return {owner,slot,x:slot<0?218:slotX(slot),y:slot<0?714:623,cores:[],ready:0,actionEnd:0,castAt:-10,summoned:0,uses:0,lastTarget:-1,streak:0,nextBonus:0,ammo:30,reloadEnd:0,reloadTick:0,afterReload:false};}
+export function actor(owner:Owner,slot=-1):Actor{return {owner,slot,x:slot<0?FORMATION.archerX:slotX(slot),y:slot<0?FORMATION.archerY:FORMATION.allyY,cores:[],ready:0,actionEnd:0,castAt:-10,summoned:0,uses:0,lastTarget:-1,streak:0,nextBonus:0,ammo:30,reloadEnd:0,reloadTick:0,afterReload:false};}
 
 // Explicit parameter tables; core copy is never parsed to execute gameplay.
 const rangeCore:Partial<Record<Owner,[number,number]>>={crossbow:[17,.25],fire:[19,.25],ice:[19,.25],lightning:[17,.25],wind:[4,.25],earth:[5,.25],poison:[18,.25],sniper:[11,.2],scythe:[4,.25],stars:[18,.25]};
@@ -23,14 +24,14 @@ const flat:Record<Owner,[number,number][]>= {
  archer:[[1,.25],[10,.2],[11,.1]],crossbow:[[1,.25],[8,.1],[17,.1],[24,.1]],fire:[[1,.25],[3,.1],[12,.1],[13,.1],[14,.1],[19,.1]],ice:[[1,.25],[3,.1],[19,.1],[23,.1]],lightning:[[1,.25],[4,.1],[10,.1],[17,.1]],wind:[[1,.25],[3,.1],[4,.1],[5,.1]],earth:[[1,.25],[4,.1],[5,.1],[11,.1]],poison:[[1,.25]],sniper:[[1,.25],[11,.15],[21,.1],[22,.1],[23,.15]],scythe:[[1,.25],[3,.1],[4,.1],[12,.1]],stars:[[1,.25],[4,.1],[13,.1],[18,.1]],
 };
 export function range(a:{owner:Owner;cores:number[]}){const entry=rangeCore[a.owner];return FIGHTERS[a.owner].range*FIELD.H*(1+(entry&&has(a,entry[0])?entry[1]:0));}
-export function cooldown(a:{owner:Owner;cores:number[]}){if(a.owner==='archer')return 1;return FIGHTERS[a.owner].cooldown*Math.max(.45,1-(has(a,2)?.2:0)-(has(a,fastCore[a.owner]??-1)?.35:0)+(has(a,heavyCore[a.owner]??-1)?.2:0));}
+export function cooldown(a:{owner:Owner;cores:number[]}){if(a.owner==='archer')return 1;return FIGHTERS[a.owner].cooldown*Math.max(BALANCE.cooldownFloor,1-(has(a,2)?.2:0)-(has(a,fastCore[a.owner]??-1)?BALANCE.fastReduction:0)+(has(a,heavyCore[a.owner]??-1)?BALANCE.heavyCooldown:0));}
 export function ignoreArmor(c:Cast){return c.owner==='sniper'?(has(c,8)?.8:.3):(has(c,armorCore[c.owner]??-1)?.5:0);}
 export function modifier(w:World,c:Cast,e:Enemy,index=0,last=false,dot=false){
  const o=c.owner,h=(n:number)=>has(c,n);let b=flat[o].reduce((v,[n,x])=>v+(h(n)?x:0),0)+c.bonus;
- if(h(heavyCore[o]??-1))b+=.55;if(h(fastCore[o]??-1))b-=.15;
- if(h(bossCore[o])&&e.kind>=5)b+=.75;
- if(h(lowCore[o])&&e.hp<e.maxHp*.5&&(o!=='poison'||dot))b+=.65;
- if(h(highCore[o]??-1)&&e.hp>e.maxHp*.6)b+=.8;
+ if(h(heavyCore[o]??-1))b+=BALANCE.heavyBonus;if(h(fastCore[o]??-1))b-=BALANCE.fastPenalty;
+ if(h(bossCore[o])&&e.kind>=5)b+=BALANCE.bossBonus;
+ if(h(lowCore[o])&&e.hp<e.maxHp*.5&&(o!=='poison'||dot))b+=BALANCE.executeBonus;
+ if(h(highCore[o]??-1)&&e.hp>e.maxHp*.6)b+=BALANCE.openingBonus;
  if(h(nearCore[o])&&e.y>FIELD.wall-.15*FIELD.H)b+=o==='fire'?.45:.4;
  if(h(waitCore[o]??-1)&&c.readyWait>1)b+=.45;
  if(h(armorCore[o]??-1)&&e.armor===0)b+=.15;
@@ -45,7 +46,7 @@ export function modifier(w:World,c:Cast,e:Enemy,index=0,last=false,dot=false){
  if(o==='archer'){
   if(h(18))b+=Math.min(.4,c.streak*.08);if(h(19)&&far>=.5)b+=.4;
   if(h(22)&&c.use%5===0)b+=1.25;if(h(23)&&c.ammo>=25)b+=.9;if(h(24)&&c.ammo<=6)b+=.9;
-  if(h(27)&&c.afterReload&&c.ammo>=28)b+=2.5;if(h(28)&&(e.marks.archer??0)>w.time)b+=.3;
+  if(h(27)&&c.afterReload&&c.ammo>=28)b+=1.2;if(h(28)&&(e.marks.archer??0)>w.time)b+=.3;
  }
  if(o==='crossbow'){
   if(h(6))b+=Math.min(2,e.id===c.lastHitId?c.lastHit+1:0)*.25;
@@ -72,7 +73,7 @@ const sourceCores:Record<Status,Partial<Record<Owner,number[]>>>= {
  poison:{archer:[13],crossbow:[10],sniper:[25]},
  bleed:{wind:[23],scythe:[10]},hard:{crossbow:[24,25],fire:[13],ice:[6,13],lightning:[9],wind:[7,21],poison:[13],sniper:[22],scythe:[14],stars:[11]},freeze:{ice:[6,13]},
 };
-function hasSource(w:World,status:Status,owner?:Owner){return w.actors.some(a=>(!owner||owner===a.owner)&&((status==='slow'&&a.owner==='ice')||(status==='poison'&&a.owner==='poison')||(status==='hard'&&a.owner==='earth')||(sourceCores[status][a.owner]??[]).some(n=>has(a,n))));}
+function hasSource(w:World,status:Status,owner?:Owner){return w.actors.some(a=>(!owner||owner===a.owner)&&((status==='slow'&&a.owner==='ice')||(status==='poison'&&a.owner==='poison')||(status==='hard'&&(a.owner==='earth'||a.owner==='ice'))||(status==='freeze'&&a.owner==='ice')||(sourceCores[status][a.owner]??[]).some(n=>has(a,n))));}
 export function eligible(w:World,c:Core){
  if(c.kind==='wall')return c.index===1||w.hp<=1600;
  if(c.kind==='summon')return w.actors.length<5&&!w.actors.some(a=>a.owner===c.owner);
@@ -80,7 +81,7 @@ export function eligible(w:World,c:Core){
  // Ground fire has no transferable remaining DoT; Fire Spread needs Ember.
  if(c.owner==='fire'&&c.index===11&&!has(a,9))return false;
  if(c.requires&&!hasSource(w,c.requires,c.ownSource?c.owner as Owner:undefined))return false;
- if(c.index===2&&a.owner!=='archer'&&cooldown(a)<=FIGHTERS[a.owner].cooldown*.45+.0001)return false;
+ if(c.index===2&&a.owner!=='archer'&&cooldown(a)<=FIGHTERS[a.owner].cooldown*BALANCE.cooldownFloor+.0001)return false;
  return true;
 }
 export function draft(w:World){
@@ -90,13 +91,12 @@ export function draft(w:World){
  w.phase='draft';w.revision++;
 }
 export function choose(w:World,id:string){if(w.phase!=='draft')return;const c=w.choices.find(n=>n.id===id);if(!c||!eligible(w,c))return;
- if(c.kind==='summon'){w.placing=c.owner as Owner;w.phase='placing';w.revision++;return;}
+ if(c.kind==='summon'){const slot=[0,1,2,3].find(n=>!w.actors.some(a=>a.slot===n));if(slot===undefined)return;const a=actor(c.owner as Owner,slot);a.summoned=w.time;a.ready=w.time+.8;w.actors.push(a);w.effects.push({id:++w.id,kind:'summon',x:a.x,y:a.y-20,born:w.time,duration:.85,size:95,rotation:0});w.selected.push(c.id);finishChoice(w);return;}
  if(c.kind==='wall'){if(c.index===1){w.blocks+=5;}else w.hp=Math.min(2000,w.hp+400);w.effects.push({id:++w.id,kind:c.index===1?'guard':'heal',x:218,y:FIELD.wall,born:w.time,duration:1,size:360,rotation:0});}
  else w.actors.find(a=>a.owner===c.owner)!.cores.push(c.index);
  w.selected.push(c.id);finishChoice(w);
 }
-function finishChoice(w:World){w.pending--;w.choices=[];w.placing=null;w.revision++;if(w.pending>0)draft(w);else w.phase='playing';}
-export function place(w:World,slot:number){if(w.phase!=='placing'||!w.placing||slot<0||slot>3||w.actors.some(a=>a.slot===slot))return;const a=actor(w.placing,slot);a.summoned=w.time;a.ready=w.time;w.actors.push(a);w.selected.push('summon:'+a.owner);w.effects.push({id:++w.id,kind:'summon',x:a.x,y:a.y,born:w.time,duration:.85,size:95,rotation:0});finishChoice(w);}
+function finishChoice(w:World){w.pending--;w.choices=[];w.revision++;if(w.pending>0)draft(w);else w.phase='playing';}
 export function selectedCores(w:World,a:Actor){return a.cores.map(n=>CORES.find(c=>c.id===coreId(a.owner,n))!);}
 export function pointOnLine(p:Point,a:Point,b:Point,width:number){const dx=b.x-a.x,dy=b.y-a.y,l=dx*dx+dy*dy;const t=l?((p.x-a.x)*dx+(p.y-a.y)*dy)/l:0;return t>=0&&t<=1&&Math.hypot(p.x-a.x-dx*t,p.y-a.y-dy*t)<=width;}
 export function inCone(p:Point,origin:Point,end:Point,r:number,angle:number){const d=dist(p,origin);if(d>r)return false;const diff=Math.atan2(p.y-origin.y,p.x-origin.x)-Math.atan2(end.y-origin.y,end.x-origin.x);return Math.abs(Math.atan2(Math.sin(diff),Math.cos(diff)))<=angle/2;}
@@ -106,5 +106,5 @@ export class SpatialGrid {
  cells=new Map<string,Enemy[]>();size=80;
  rebuild(enemies:Enemy[]){this.cells.clear();for(const e of enemies){if(!alive(e))continue;const key=Math.floor(e.x/this.size)+','+Math.floor(e.y/this.size);const c=this.cells.get(key);if(c)c.push(e);else this.cells.set(key,[e]);}}
  near(p:Point,r:number){const out:Enemy[]=[];for(let x=Math.floor((p.x-r)/this.size);x<=Math.floor((p.x+r)/this.size);x++)for(let y=Math.floor((p.y-r)/this.size);y<=Math.floor((p.y+r)/this.size);y++)for(const e of this.cells.get(x+','+y)??[])if(alive(e)&&dist(p,e)<=r)out.push(e);return out;}
- target(p:Point,r:number,exclude:number[]=[]){return this.near(p,r).filter(e=>!exclude.includes(e.id)).sort((a,b)=>a.hp-b.hp||dist(a,p)-dist(b,p)||a.id-b.id)[0];}
+ target(p:Point,r:number,exclude:number[]=[]){return this.near(p,r).filter(e=>!exclude.includes(e.id)).sort((a,b)=>dist(a,p)-dist(b,p)||a.id-b.id)[0];}
 }

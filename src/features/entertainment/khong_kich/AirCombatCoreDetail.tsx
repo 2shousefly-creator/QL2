@@ -1,12 +1,13 @@
 import React, { useLayoutEffect, useRef } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import type { CoreCard } from "./airCombatTypes";
-import { AirCombatCoreTransition } from "./AirCombatCoreTransition";
+import { AirCombatCoreTransition, type CorePresentation } from "./AirCombatCoreTransition";
 
 /** A detail layer of the existing mandatory transaction, never another dialog owner. */
-export function AirCombatCoreDetail({ card, previous, busy, bonus, slot, reducedMotion: requestedReducedMotion, canReroll, onClose, onSelect, onReroll }: {
+export function AirCombatCoreDetail({ card, previous, busy, bonus, slot, reducedMotion: requestedReducedMotion, canReroll, onClose, onSelect, onReroll, presentation, hideReroll=false }: {
   card: CoreCard; slot: number; reducedMotion: boolean; canReroll: boolean;
   previous?: CoreCard; busy: boolean; bonus: boolean;
+  presentation?: CorePresentation; hideReroll?:boolean;
   onClose(): void; onSelect(): void; onReroll(): void;
 }) {
   const systemReducedMotion = useReducedMotion();
@@ -37,11 +38,11 @@ export function AirCombatCoreDetail({ card, previous, busy, bonus, slot, reduced
       transition={reducedMotion ? { duration: .12 } : { type: "spring", duration: .28, bounce: .16 }}>
       <button className="air-core-detail-close" type="button" aria-label="Trở lại danh sách Lõi" onClick={onClose}>×</button>
       <div className="air-core-detail-scroll">
-        <AirCombatCoreTransition card={card} previous={previous} detail/>
+        <AirCombatCoreTransition card={card} previous={previous} detail presentation={presentation}/>
       </div>
-      <div className="air-core-detail-actions">
+      <div className="air-core-detail-actions" style={hideReroll?{gridTemplateColumns:'1fr'}:undefined}>
         <button ref={select} type="button" className="air-core-pick" disabled={busy} onClick={onSelect}>CHỌN</button>
-        <button type="button" className="air-core-reroll" data-bonus={bonus} disabled={busy||!canReroll} onClick={onReroll}>ĐỔI LẠI</button>
+        {!hideReroll&&<button type="button" className="air-core-reroll" data-bonus={bonus} disabled={busy||!canReroll} onClick={onReroll}>ĐỔI LẠI</button>}
       </div>
     </motion.div>
   </motion.div>;

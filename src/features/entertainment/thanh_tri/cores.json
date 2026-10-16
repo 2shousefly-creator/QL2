@@ -44,7 +44,7 @@
     "owner": "archer",
     "index": 6,
     "name": "Chốt Hạ",
-    "description": "Tên gây thêm 65% sát thương lên mục tiêu còn dưới 50% HP.",
+    "description": "Tên gây thêm 45% sát thương lên mục tiêu còn dưới 50% HP.",
     "situation": "Kết liễu quái bị các trợ thủ làm yếu."
   },
   {
@@ -52,7 +52,7 @@
     "owner": "archer",
     "index": 7,
     "name": "Phá Trận",
-    "description": "Tên gây thêm 80% sát thương lên mục tiêu còn trên 60% HP.",
+    "description": "Tên gây thêm 50% sát thương lên mục tiêu còn trên 60% HP.",
     "situation": "Đội hình mạnh về dọn quái nhưng thiếu mở giao tranh."
   },
   {
@@ -60,7 +60,7 @@
     "owner": "archer",
     "index": 8,
     "name": "Săn Cự Thú",
-    "description": "Tên gây thêm 75% sát thương lên boss và tinh anh.",
+    "description": "Tên gây thêm 50% sát thương lên boss và tinh anh.",
     "situation": "Wave 10 và 20."
   },
   {
@@ -196,7 +196,7 @@
     "owner": "archer",
     "index": 25,
     "name": "Dư Âm Nạp",
-    "description": "Khi bắt đầu nạp, bắn một loạt 5 tên bóng, mỗi tên 150% sát thương, không tốn đạn.",
+    "description": "Khi bắt đầu nạp, bắn một loạt 5 tên bóng, mỗi tên 85% sát thương, không tốn đạn.",
     "situation": "Bù khoảng trống 5 giây; phân phối theo quy tắc chọn mục tiêu."
   },
   {
@@ -204,7 +204,7 @@
     "owner": "archer",
     "index": 26,
     "name": "Thủ Thành Khi Nạp",
-    "description": "Trong lúc nạp, mỗi giây bắn một tên bóng gây 150% sát thương.",
+    "description": "Trong lúc nạp, mỗi giây bắn một tên bóng gây 85% sát thương.",
     "situation": "Bù sát thương đều trong 5 giây; không thay đổi hoạt cảnh nạp."
   },
   {
@@ -212,7 +212,7 @@
     "owner": "archer",
     "index": 27,
     "name": "Ngắm Chuẩn",
-    "description": "Ba phát đầu sau nạp luôn gây thêm 250% sát thương.",
+    "description": "Ba phát đầu sau nạp luôn gây thêm 120% sát thương.",
     "situation": "Đánh mạnh sau khi chờ nạp."
   },
   {
@@ -332,7 +332,7 @@
     "owner": "crossbow",
     "index": 12,
     "name": "Nỏ Công Thành",
-    "description": "Sát thương lên boss và tinh anh +75%.",
+    "description": "Sát thương lên boss và tinh anh +50%.",
     "situation": "Các wave boss."
   },
   {
@@ -388,7 +388,7 @@
     "owner": "crossbow",
     "index": 19,
     "name": "Kết Liễu",
-    "description": "Tên vào địch dưới 50% HP gây thêm 65% sát thương.",
+    "description": "Tên vào địch dưới 50% HP gây thêm 45% sát thương.",
     "situation": "Dọn quái bị thương."
   },
   {
@@ -604,7 +604,7 @@
     "owner": "fire",
     "index": 16,
     "name": "Đạn Diệt Tướng",
-    "description": "Sát thương nổ lên boss và tinh anh +75%.",
+    "description": "Sát thương nổ lên boss và tinh anh +50%.",
     "situation": "Wave 10 và 20."
   },
   {
@@ -668,7 +668,7 @@
     "owner": "fire",
     "index": 24,
     "name": "Trọng Pháo",
-    "description": "Sát thương +55%, hồi chiêu dài thêm 20%.",
+    "description": "Sát thương +40%, hồi chiêu dài thêm 20%.",
     "situation": "Một phát mạnh, đổi lấy nhịp thưa."
   },
   {
@@ -676,7 +676,7 @@
     "owner": "fire",
     "index": 25,
     "name": "Pháo Nhanh",
-    "description": "Hồi chiêu giảm 35%, sát thương mỗi lần giảm 15%.",
+    "description": "Hồi chiêu giảm 30%, sát thương mỗi lần giảm 20%.",
     "situation": "Nhiều lần khống chế; không có sàn sát thương âm."
   },
   {
@@ -684,7 +684,7 @@
     "owner": "fire",
     "index": 26,
     "name": "Đạn Tử Thần",
-    "description": "Địch dưới 50% HP chịu thêm 65% sát thương.",
+    "description": "Địch dưới 50% HP chịu thêm 45% sát thương.",
     "situation": "Dọn quái sót."
   },
   {
@@ -844,7 +844,7 @@
     "owner": "ice",
     "index": 16,
     "name": "Băng Diệt Tướng",
-    "description": "Sát thương lên boss và tinh anh +75%.",
+    "description": "Sát thương lên boss và tinh anh +50%.",
     "situation": "Bù giá trị khống chế bị giảm ở boss."
   },
   {
@@ -916,7 +916,7 @@
     "owner": "ice",
     "index": 25,
     "name": "Băng Sắc",
-    "description": "Địch dưới 50% HP nhận thêm 65% sát thương.",
+    "description": "Địch dưới 50% HP nhận thêm 45% sát thương.",
     "situation": "Dọn quái yếu."
   },
   {
@@ -1004,7 +1004,7 @@
     "owner": "lightning",
     "index": 6,
     "name": "Sét Hội Tụ",
-    "description": "Khi không có địch để nối, mục tiêu cuối nhận thêm 35% sát thương cơ bản.",
+    "description": "Khi không đủ địch để nối, mục tiêu cuối nhận thêm 35% sát thương cơ bản, cộng với năng lượng các mắt xích chưa dùng.",
     "situation": "Địch thưa."
   },
   {
@@ -1068,7 +1068,7 @@
     "owner": "lightning",
     "index": 14,
     "name": "Lôi Diệt Tướng",
-    "description": "Sát thương lên boss và tinh anh +75%.",
+    "description": "Sát thương lên boss và tinh anh +50%.",
     "situation": "Wave boss."
   },
   {
@@ -1108,7 +1108,7 @@
     "owner": "lightning",
     "index": 19,
     "name": "Sét Kết Liễu",
-    "description": "Địch dưới 50% HP chịu thêm 65% sát thương.",
+    "description": "Địch dưới 50% HP chịu thêm 45% sát thương.",
     "situation": "Dọn địch bị thương."
   },
   {
@@ -1116,7 +1116,7 @@
     "owner": "lightning",
     "index": 20,
     "name": "Tia Mở Đường",
-    "description": "Địch trên 60% HP chịu thêm 80% sát thương.",
+    "description": "Địch trên 60% HP chịu thêm 50% sát thương.",
     "situation": "Làm mềm nhóm mới."
   },
   {
@@ -1180,7 +1180,7 @@
     "owner": "lightning",
     "index": 28,
     "name": "Điện Áp Cao",
-    "description": "Sát thương +55%, hồi chiêu dài thêm 20%.",
+    "description": "Sát thương +40%, hồi chiêu dài thêm 20%.",
     "situation": "Một chuỗi mạnh."
   },
   {
@@ -1188,7 +1188,7 @@
     "owner": "lightning",
     "index": 29,
     "name": "Lôi Liên Tục",
-    "description": "Hồi chiêu giảm 35%, sát thương mỗi lần giảm 15%.",
+    "description": "Hồi chiêu giảm 30%, sát thương mỗi lần giảm 20%.",
     "situation": "Nhiều lần đặt hiệu ứng."
   },
   {
@@ -1308,7 +1308,7 @@
     "owner": "wind",
     "index": 14,
     "name": "Kiếm Trảm Tướng",
-    "description": "Sát thương lên boss và tinh anh +75%.",
+    "description": "Sát thương lên boss và tinh anh +50%.",
     "situation": "Bù đẩy lùi ít hiệu quả với boss."
   },
   {
@@ -1348,7 +1348,7 @@
     "owner": "wind",
     "index": 19,
     "name": "Kết Trảm",
-    "description": "Địch dưới 50% HP chịu thêm 65% sát thương.",
+    "description": "Địch dưới 50% HP chịu thêm 45% sát thương.",
     "situation": "Kết liễu."
   },
   {
@@ -1356,7 +1356,7 @@
     "owner": "wind",
     "index": 20,
     "name": "Phá Thế",
-    "description": "Địch trên 60% HP chịu thêm 80% sát thương.",
+    "description": "Địch trên 60% HP chịu thêm 50% sát thương.",
     "situation": "Mở giao tranh."
   },
   {
@@ -1420,7 +1420,7 @@
     "owner": "wind",
     "index": 28,
     "name": "Trọng Kiếm",
-    "description": "Sát thương +55%, hồi chiêu dài thêm 20%.",
+    "description": "Sát thương +40%, hồi chiêu dài thêm 20%.",
     "situation": "Nhát quét mạnh."
   },
   {
@@ -1428,7 +1428,7 @@
     "owner": "wind",
     "index": 29,
     "name": "Khinh Kiếm",
-    "description": "Hồi chiêu giảm 35%, sát thương mỗi lần giảm 15%.",
+    "description": "Hồi chiêu giảm 30%, sát thương mỗi lần giảm 20%.",
     "situation": "Nhiều lần đẩy lùi."
   },
   {
@@ -1444,7 +1444,7 @@
     "owner": "earth",
     "index": 1,
     "name": "Địa Lực",
-    "description": "Sát thương mọi xung địa chấn +25%.",
+    "description": "Sát thương mọi nhịp laser quang tuyến +25%.",
     "situation": "Mọi đội hình."
   },
   {
@@ -1459,16 +1459,16 @@
     "id": "earth:03",
     "owner": "earth",
     "index": 3,
-    "name": "Địa Chấn Thứ Tư",
-    "description": "Thêm một xung cuối gây 75% sát thương của một xung cơ bản.",
+    "name": "Nhịp Quang Thứ Tư",
+    "description": "Thêm một nhịp laser cuối gây 75% sát thương của một nhịp laser cơ bản.",
     "situation": "Địch đứng lâu trên vùng nứt."
   },
   {
     "id": "earth:04",
     "owner": "earth",
     "index": 4,
-    "name": "Nứt Rộng",
-    "description": "Bề ngang vùng nứt +30%; sát thương +10%.",
+    "name": "Quang Tuyến Rộng",
+    "description": "Bề ngang đường laser +30%; sát thương +10%.",
     "situation": "Địch rải ngang."
   },
   {
@@ -1476,7 +1476,7 @@
     "owner": "earth",
     "index": 5,
     "name": "Mạch Vươn",
-    "description": "Chiều dài vùng nứt +25%; sát thương +10%.",
+    "description": "Chiều dài đường laser +25%; sát thương +10%.",
     "situation": "Đánh sớm."
   },
   {
@@ -1492,7 +1492,7 @@
     "owner": "earth",
     "index": 7,
     "name": "Đất Lún",
-    "description": "Địch trúng xung cuối chậm 40% trong 2 giây.",
+    "description": "Địch trúng nhịp laser cuối chậm 40% trong 2 giây.",
     "situation": "Giữ địch sau địa chấn."
   },
   {
@@ -1508,15 +1508,15 @@
     "owner": "earth",
     "index": 9,
     "name": "Địa Chấn Dội",
-    "description": "Sau xung cuối có dư chấn gây 30% tổng sát thương kỹ năng.",
+    "description": "Sau nhịp laser cuối có dư chấn gây 30% tổng sát thương kỹ năng.",
     "situation": "Địch sống lâu."
   },
   {
     "id": "earth:10",
     "owner": "earth",
     "index": 10,
-    "name": "Nhánh Nứt",
-    "description": "Tạo hai nhánh phụ cạnh vùng chính, mỗi nhánh 35% tổng sát thương kỹ năng.",
+    "name": "Nhánh Quang",
+    "description": "Tạo hai tia laser song song cạnh tia chính, mỗi tia gây 35% tổng sát thương kỹ năng cơ bản.",
     "situation": "Địch trải ngang; một địch không trúng cả hai nhánh."
   },
   {
@@ -1532,7 +1532,7 @@
     "owner": "earth",
     "index": 12,
     "name": "Đá Cứng",
-    "description": "Sát thương +55%, hồi chiêu dài thêm 20%.",
+    "description": "Sát thương +40%, hồi chiêu dài thêm 20%.",
     "situation": "Một lần chặn mạnh."
   },
   {
@@ -1540,7 +1540,7 @@
     "owner": "earth",
     "index": 13,
     "name": "Cát Chảy",
-    "description": "Hồi chiêu giảm 35%, sát thương mỗi lần giảm 15%.",
+    "description": "Hồi chiêu giảm 30%, sát thương mỗi lần giảm 20%.",
     "situation": "Khống chế theo nhịp ngắn."
   },
   {
@@ -1556,7 +1556,7 @@
     "owner": "earth",
     "index": 15,
     "name": "Chấn Cự Thú",
-    "description": "Sát thương lên boss và tinh anh +75%.",
+    "description": "Sát thương lên boss và tinh anh +50%.",
     "situation": "Boss giảm hiệu lực khống chế."
   },
   {
@@ -1564,7 +1564,7 @@
     "owner": "earth",
     "index": 16,
     "name": "Địa Trận",
-    "description": "Sát thương +35% khi có ít nhất 4 địch trong vùng nứt.",
+    "description": "Sát thương +35% khi có ít nhất 4 địch trong đường laser.",
     "situation": "Đám đông."
   },
   {
@@ -1588,7 +1588,7 @@
     "owner": "earth",
     "index": 19,
     "name": "Mũi Mạch",
-    "description": "Một phần ba xa nhất của vùng nứt gây thêm 50% sát thương.",
+    "description": "Một phần ba xa nhất của đường laser gây thêm 50% sát thương.",
     "situation": "Giữ địch ở rìa tầm."
   },
   {
@@ -1596,7 +1596,7 @@
     "owner": "earth",
     "index": 20,
     "name": "Địa Kết",
-    "description": "Địch dưới 50% HP chịu thêm 65% sát thương.",
+    "description": "Địch dưới 50% HP chịu thêm 45% sát thương.",
     "situation": "Dọn địch bị thương."
   },
   {
@@ -1604,7 +1604,7 @@
     "owner": "earth",
     "index": 21,
     "name": "Khai Mạch",
-    "description": "Địch trên 60% HP chịu thêm 80% sát thương.",
+    "description": "Địch trên 60% HP chịu thêm 50% sát thương.",
     "situation": "Làm mềm nhóm mới."
   },
   {
@@ -1612,7 +1612,7 @@
     "owner": "earth",
     "index": 22,
     "name": "Chấn Liên Tiếp",
-    "description": "Mỗi xung sau trên cùng địch tăng thêm 20% sát thương của xung đó.",
+    "description": "Mỗi nhịp laser sau trên cùng địch tăng thêm 20% sát thương của nhịp laser đó.",
     "situation": "Địch bị giữ trong vùng."
   },
   {
@@ -1636,7 +1636,7 @@
     "owner": "earth",
     "index": 25,
     "name": "Đá Vỡ",
-    "description": "Địch chết trong vùng nứt gây nổ nhỏ bằng 25% tổng sát thương kỹ năng.",
+    "description": "Địch chết trong đường laser gây nổ nhỏ bằng 25% tổng sát thương kỹ năng.",
     "situation": "Dọn theo chuỗi; nổ phụ không sinh nổ mới."
   },
   {
@@ -1652,7 +1652,7 @@
     "owner": "earth",
     "index": 27,
     "name": "Dung Nham",
-    "description": "Địch đang cháy nhận thêm 35% sát thương địa chấn.",
+    "description": "Địch đang cháy nhận thêm 35% sát thương quang tuyến.",
     "situation": "Cần nguồn thiêu đốt."
   },
   {
@@ -1667,8 +1667,8 @@
     "id": "earth:29",
     "owner": "earth",
     "index": 29,
-    "name": "Địa Chấn Hồi Âm",
-    "description": "Mỗi lần dùng thứ 4 gây thêm một xung bằng 75% tổng sát thương cơ bản.",
+    "name": "Quang Tuyến Hồi Âm",
+    "description": "Mỗi lần dùng thứ 4 gây thêm một nhịp laser bằng 75% tổng sát thương cơ bản.",
     "situation": "Nhịp bùng nổ."
   },
   {
@@ -1796,7 +1796,7 @@
     "owner": "poison",
     "index": 15,
     "name": "Độc Diệt Tướng",
-    "description": "Sát thương lên boss và tinh anh +75%.",
+    "description": "Sát thương lên boss và tinh anh +50%.",
     "situation": "Các wave boss."
   },
   {
@@ -1836,7 +1836,7 @@
     "owner": "poison",
     "index": 20,
     "name": "Độc Kết Liễu",
-    "description": "Địch dưới 50% HP chịu thêm 65% sát thương độc.",
+    "description": "Địch dưới 50% HP chịu thêm 45% sát thương độc.",
     "situation": "Dọn địch sót."
   },
   {
@@ -1892,7 +1892,7 @@
     "owner": "poison",
     "index": 27,
     "name": "Chắt Lọc",
-    "description": "Sát thương +55%, hồi chiêu dài thêm 20%.",
+    "description": "Sát thương +40%, hồi chiêu dài thêm 20%.",
     "situation": "Một lần nhiễm mạnh."
   },
   {
@@ -1900,7 +1900,7 @@
     "owner": "poison",
     "index": 28,
     "name": "Liều Nhẹ",
-    "description": "Hồi chiêu giảm 35%, sát thương mỗi lần giảm 15%.",
+    "description": "Hồi chiêu giảm 30%, sát thương mỗi lần giảm 20%.",
     "situation": "Nhiều lần áp trạng thái."
   },
   {
@@ -1956,7 +1956,7 @@
     "owner": "sniper",
     "index": 5,
     "name": "Điểm Mở",
-    "description": "Địch trên 60% HP chịu thêm 80% sát thương.",
+    "description": "Địch trên 60% HP chịu thêm 50% sát thương.",
     "situation": "Đòn mở đầu mạnh."
   },
   {
@@ -1964,7 +1964,7 @@
     "owner": "sniper",
     "index": 6,
     "name": "Điểm Kết",
-    "description": "Địch dưới 50% HP chịu thêm 65% sát thương.",
+    "description": "Địch dưới 50% HP chịu thêm 45% sát thương.",
     "situation": "Kết liễu."
   },
   {
@@ -1972,7 +1972,7 @@
     "owner": "sniper",
     "index": 7,
     "name": "Săn Boss",
-    "description": "Sát thương lên boss và tinh anh +75%.",
+    "description": "Sát thương lên boss và tinh anh +50%.",
     "situation": "Wave 10 và 20."
   },
   {
@@ -2036,7 +2036,7 @@
     "owner": "sniper",
     "index": 15,
     "name": "Đạn Trọng",
-    "description": "Sát thương +55%, hồi chiêu dài thêm 20%.",
+    "description": "Sát thương +40%, hồi chiêu dài thêm 20%.",
     "situation": "Một phát mạnh."
   },
   {
@@ -2044,7 +2044,7 @@
     "owner": "sniper",
     "index": 16,
     "name": "Đạn Nhẹ",
-    "description": "Hồi chiêu giảm 35%, sát thương mỗi lần giảm 15%.",
+    "description": "Hồi chiêu giảm 30%, sát thương mỗi lần giảm 20%.",
     "situation": "Giảm lãng phí vào địch yếu."
   },
   {
@@ -2284,7 +2284,7 @@
     "owner": "scythe",
     "index": 16,
     "name": "Liêm Diệt Tướng",
-    "description": "Sát thương lên boss và tinh anh +75%.",
+    "description": "Sát thương lên boss và tinh anh +50%.",
     "situation": "Wave boss."
   },
   {
@@ -2324,7 +2324,7 @@
     "owner": "scythe",
     "index": 21,
     "name": "Liêm Kết Liễu",
-    "description": "Địch dưới 50% HP chịu thêm 65% sát thương.",
+    "description": "Địch dưới 50% HP chịu thêm 45% sát thương.",
     "situation": "Kết liễu."
   },
   {
@@ -2332,7 +2332,7 @@
     "owner": "scythe",
     "index": 22,
     "name": "Liêm Khai Chiến",
-    "description": "Địch trên 60% HP chịu thêm 80% sát thương.",
+    "description": "Địch trên 60% HP chịu thêm 50% sát thương.",
     "situation": "Mở giao tranh."
   },
   {
@@ -2380,7 +2380,7 @@
     "owner": "scythe",
     "index": 28,
     "name": "Liêm Trọng",
-    "description": "Sát thương +55%, hồi chiêu dài thêm 20%.",
+    "description": "Sát thương +40%, hồi chiêu dài thêm 20%.",
     "situation": "Quét mạnh."
   },
   {
@@ -2388,7 +2388,7 @@
     "owner": "scythe",
     "index": 29,
     "name": "Liêm Nhẹ",
-    "description": "Hồi chiêu giảm 35%, sát thương mỗi lần giảm 15%.",
+    "description": "Hồi chiêu giảm 30%, sát thương mỗi lần giảm 20%.",
     "situation": "Nhiều lần phủ đường."
   },
   {
@@ -2516,7 +2516,7 @@
     "owner": "stars",
     "index": 15,
     "name": "Sao Diệt Tướng",
-    "description": "Sát thương lên boss và tinh anh +75%.",
+    "description": "Sát thương lên boss và tinh anh +50%.",
     "situation": "Boss wave 10, 20."
   },
   {
@@ -2556,7 +2556,7 @@
     "owner": "stars",
     "index": 20,
     "name": "Sao Kết Liễu",
-    "description": "Địch dưới 50% HP chịu thêm 65% sát thương.",
+    "description": "Địch dưới 50% HP chịu thêm 45% sát thương.",
     "situation": "Dọn địch bị thương."
   },
   {
@@ -2564,7 +2564,7 @@
     "owner": "stars",
     "index": 21,
     "name": "Sao Khai Màn",
-    "description": "Địch trên 60% HP chịu thêm 80% sát thương.",
+    "description": "Địch trên 60% HP chịu thêm 50% sát thương.",
     "situation": "Làm mềm nhóm mới."
   },
   {
@@ -2572,7 +2572,7 @@
     "owner": "stars",
     "index": 22,
     "name": "Tinh Trọng",
-    "description": "Sát thương +55%, hồi chiêu dài thêm 20%.",
+    "description": "Sát thương +40%, hồi chiêu dài thêm 20%.",
     "situation": "Một loạt mạnh."
   },
   {
@@ -2580,7 +2580,7 @@
     "owner": "stars",
     "index": 23,
     "name": "Tinh Nhẹ",
-    "description": "Hồi chiêu giảm 35%, sát thương mỗi lần giảm 15%.",
+    "description": "Hồi chiêu giảm 30%, sát thương mỗi lần giảm 20%.",
     "situation": "Nhiều loạt giữ địch."
   },
   {

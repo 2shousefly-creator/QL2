@@ -16,22 +16,24 @@ function CompactDescription({text}:{text:string}) {
   return <span ref={box} className="air-upgrade-description"><span className="air-core-clamped" style={{WebkitLineClamp:lines}}><CoreDescription text={text}/></span></span>;
 }
 
-function CoreFace({card,detail=false,title=false}:{card:CoreCard;detail?:boolean;title?:boolean}) {
+/** Optional presentation for other combat games; aircraft defaults remain unchanged. */
+export interface CorePresentation { icon:React.ReactNode; owner:React.ReactNode; tag:React.ReactNode }
+function CoreFace({card,detail=false,title=false,presentation}:{card:CoreCard;detail?:boolean;title?:boolean;presentation?:CorePresentation}) {
   return <>
-    <CombatUiIcon kind="core" id={card.id} fallback={card.icon} className="combat-core-icon" />
+    {presentation?.icon ?? <CombatUiIcon kind="core" id={card.id} fallback={card.icon} className="combat-core-icon" />}
     <span className="air-upgrade-copy">
-      {detail?<h3 id={title?"air-core-detail-title":undefined}>{card.name}</h3>:<strong className="combat-core-name">{card.name}</strong>}
-      <CoreSystemTag system={card.system} tier={card.tier}/>
+      {detail?<h3 id={title?"air-core-detail-title":undefined}>{presentation?.owner}{card.name}</h3>:<strong className="combat-core-name">{presentation?.owner}{card.name}</strong>}
+      {presentation?.tag ?? <CoreSystemTag system={card.system} tier={card.tier}/>}
       {detail?<span className="air-core-detail-description"><CoreDescription text={card.description} statLines/></span>:<CompactDescription text={card.description}/>}
     </span>
   </>;
 }
 
 /** Old content is presentation-only. The replacement already belongs to runtime. */
-export function AirCombatCoreTransition({card,previous,detail=false}:{card:CoreCard;previous?:CoreCard;detail?:boolean}) {
+export function AirCombatCoreTransition({card,previous,detail=false,presentation}:{card:CoreCard;previous?:CoreCard;detail?:boolean;presentation?:CorePresentation}) {
   const faceClass=detail?"air-core-detail-card":"air-core-compact-face";
   return <span className="air-core-transition" data-transition={!!previous} data-detail={detail}>
-    <span key={card.id} className={`${faceClass} air-core-materialize`} data-core-tier={card.tier}><CoreFace card={card} detail={detail} title/>{previous&&<span className="air-core-arrival-flash" aria-hidden="true"/>}</span>
+    <span key={card.id} className={`${faceClass} air-core-materialize`} data-core-tier={card.tier}><CoreFace card={card} detail={detail} title presentation={presentation}/>{previous&&<span className="air-core-arrival-flash" aria-hidden="true"/>}</span>
     {previous&&<span key={previous.id} className="air-core-shatter" data-core-tier={previous.tier} aria-hidden="true">
       <span className={`${faceClass} air-core-old`}><CoreFace card={previous} detail={detail}/></span>
       <svg className="air-core-cracks" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0 20L35 42L48 0M35 42L54 55L100 30M54 55L70 100M54 55L0 85M54 55L100 85M22 0L18 28L35 42M78 0L72 26L100 30M0 52L35 42M0 85L20 68L54 55L77 63L100 58M0 85L30 100M100 85L86 100"/></svg>

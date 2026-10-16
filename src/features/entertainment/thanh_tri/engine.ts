@@ -1,8 +1,9 @@
+import {BALANCE,LEGACY_DAMAGE} from './balance';
 import {ENEMIES,FIELD,FIGHTERS,type Owner,type Status} from './content';
 import {actor,alive,cooldown,dist,draft,has,ignoreArmor,inCone,modifier,pointOnLine,random,range,SpatialGrid} from './rules';
 import type {Actor,Attack,Cast,Enemy,Point,World} from './types';
 
-export function createWorld():World{return {time:0,phase:'playing',wave:1,spawnIndex:0,spawnDone:false,waveOrder:[],rng:(Date.now()^0x713ac)>>>0||1,id:0,actors:[actor('archer')],enemies:[],attacks:[],zones:[],effects:[],hp:2000,blocks:0,guardEnd:0,level:1,xp:0,totalXp:0,pending:0,choices:[],placing:null,selected:[],kills:0,bossKills:0,damage:0,wallHit:-10,rangeSlot:null,revision:0,sounds:[]};}
+export function createWorld():World{return {time:0,phase:'playing',wave:1,spawnIndex:0,spawnDone:false,waveOrder:[],rng:(Date.now()^0x713ac)>>>0||1,id:0,actors:[actor('archer')],enemies:[],attacks:[],zones:[],effects:[],hp:2000,blocks:0,guardEnd:0,level:1,xp:0,totalXp:0,pending:0,choices:[],selected:[],kills:0,bossKills:0,damage:0,wallHit:-10,rangeSlot:null,revision:0,sounds:[]};}
 const clamp=(n:number,a:number,b:number)=>Math.max(a,Math.min(b,n));
 const copy=(p:Point):Point=>({x:p.x,y:p.y});
 
@@ -32,7 +33,7 @@ export class FortressEngine {
    }else if(!e.impactAt&&e.attackAt<=w.time){e.attackAt=w.time+ENEMIES[e.kind].period/(e.attackSlowEnd>w.time?.8:1);e.impactAt=w.time+(e.kind>=5?.8:.35);if(e.kind>=5)this.fx('warning',{x:e.x,y:FIELD.wall},90,.8);}
    if(e.impactAt&&e.impactAt<=w.time){e.impactAt=0;this.wallDamage(ENEMIES[e.kind].damage,e.x);}
   }
-  for(const a of w.actors){if(a.owner==='archer'&&a.reloadEnd>0&&a.ammo===0){if(has(a,26)&&a.reloadTick<=w.time+.00001&&a.reloadTick<=a.reloadEnd+.00001){a.reloadTick+=1;const t=this.grid.target(a,range(a));if(t){const c=this.makeCast(a,t,false);this.projectile(c,t,150,0,0,true,false);}}if(a.reloadEnd>w.time)continue;}
+  for(const a of w.actors){if(a.owner==='archer'&&a.reloadEnd>0&&a.ammo===0){if(has(a,26)&&a.reloadTick<=w.time+.00001&&a.reloadTick<=a.reloadEnd+.00001){a.reloadTick+=1;const t=this.grid.target(a,range(a));if(t){const c=this.makeCast(a,t,false);this.projectile(c,t,85,0,0,true,false);}}if(a.reloadEnd>w.time)continue;}
    if(a.owner==='archer'&&a.ammo===0){a.ammo=30;a.reloadEnd=0;a.ready=w.time;a.afterReload=true;}
    if(a.ready>w.time)continue;const target=this.grid.target(a,range(a));if(target)this.cast(a,target);
   }
@@ -47,8 +48,8 @@ export class FortressEngine {
   else if(w.spawnDone&&!w.enemies.some(alive)){w.phase='won';w.revision++;}
  }
  private wallDamage(amount:number,x:number){const w=this.w;if(w.guardEnd>w.time)return;if(w.blocks>0){w.blocks--;w.guardEnd=w.time+.25;this.fx('guard',{x,y:FIELD.wall},95,.4);}else{w.hp=Math.max(0,w.hp-amount);w.wallHit=w.time;this.fx('wall-hit',{x,y:FIELD.wall},65,.4);}w.sounds.push({owner:'wall',impact:true});}
- private makeCast(a:Actor,t:Enemy,consume=true):Cast {const w=this.w;const h=(n:number)=>has(a,n);const radius=(a.owner==='fire'?.1:a.owner==='stars'?.08:.09)*FIELD.H*(h(a.owner==='stars'?4:3)?1.25:1);
-  const c:Cast={id:++w.id,owner:a.owner,cores:[...a.cores],origin:copy(a),target:t.id,range:range(a),radius:Math.min(100,radius),width:(a.owner==='earth'?FIELD.W*.25:30)*(h(a.owner==='earth'?4:3)?1.3:1),angle:70*Math.PI/180*(a.owner==='wind'&&h(3)?1.3:1),use:consume?a.uses+1:a.uses,readyWait:w.time-a.ready,count:this.grid.near(a,range(a)).length,unique:1,lastTarget:a.lastTarget,streak:a.lastTarget===t.id?a.streak+1:0,bonus:consume?a.nextBonus:0,ammo:a.ammo,afterReload:a.afterReload,hitCounts:new Map(),outbound:new Set(),killProcs:0,killed:false,lastHit:-1,lastHitId:-1,primaryIds:[]};
+ private makeCast(a:Actor,t:Enemy,consume=true):Cast {const w=this.w;const h=(n:number)=>has(a,n);const radius=(a.owner==='fire'?.11:a.owner==='stars'?.08:.09)*FIELD.H*(h(a.owner==='stars'?4:3)?1.25:1);
+  const c:Cast={id:++w.id,owner:a.owner,cores:[...a.cores],origin:{x:a.x,y:a.y-28},target:t.id,range:range(a),radius:Math.min(100,radius),width:(a.owner==='earth'?BALANCE.earthHalfWidth*2:30)*(h(a.owner==='earth'?4:3)?1.3:1),angle:70*Math.PI/180*(a.owner==='wind'&&h(3)?1.3:1),use:consume?a.uses+1:a.uses,readyWait:w.time-a.ready,count:this.grid.near(a,range(a)).length,unique:1,lastTarget:a.lastTarget,streak:a.lastTarget===t.id?a.streak+1:0,bonus:consume?a.nextBonus:0,ammo:a.ammo,afterReload:a.afterReload,hitCounts:new Map(),outbound:new Set(),killProcs:0,killed:false,lastHit:-1,lastHitId:-1,primaryIds:[]};
   if(consume){a.uses++;a.lastTarget=t.id;a.streak=c.streak;a.nextBonus=0;}return c;
  }
  private attack(c:Cast,end:Point,power:number,delay:number,options:Partial<Attack>={}):Attack {const w=this.w;const p:Attack={id:++w.id,cast:c,x:c.origin.x,y:c.origin.y,start:copy(c.origin),end:copy(end),born:w.time+delay,at:w.time+delay+.22,expires:w.time+delay+.3,mode:'point',power,radius:c.radius,width:c.width,angle:c.angle,index:0,last:false,secondary:false,returning:false,visual:c.owner,applyStatus:true,tracking:false,hit:new Set(),arc:0,...options};w.attacks.push(p);return p;}
@@ -57,7 +58,7 @@ export class FortressEngine {
  private line(c:Cast,end:Point,power:number,delay=0,width=22,extra:Partial<Attack>={}){return this.attack(c,end,power,delay,{mode:'line',width,secondary:true,...extra});}
  private zone(c:Cast,p:Point,total:number,duration:number,slow=0,visual=c.owner,radius=c.radius){this.w.zones.push({id:++this.w.id,cast:c,...copy(p),radius,power:total/duration,next:this.w.time+.25,until:this.w.time+duration,slow,visual});this.fx('zone-'+visual,p,radius*2,duration);}
  private cast(a:Actor,t:Enemy){const w=this.w,c=this.makeCast(a,t),h=(n:number)=>has(c,n),f=FIGHTERS[a.owner];a.castAt=w.time;a.actionEnd=w.time+f.action;a.ready=a.owner==='archer'?w.time+1:a.actionEnd+cooldown(a);w.sounds.push({owner:a.owner,impact:false});
-  const lead=f.action*.55,near=(p:Point,r:number)=>this.grid.near(p,r);this.fx('muzzle-'+a.owner,a,50,Math.max(.2,lead));const other=()=>this.grid.target(a,c.range,[t.id])??t;
+  const lead=a.owner==='earth'?.18:f.action*.55,near=(p:Point,r:number)=>this.grid.near(p,r);this.fx('muzzle-'+a.owner,c.origin,a.owner==='archer'?42:76,Math.max(.3,f.action));if(a.owner!=='archer')this.fx('cast-'+a.owner,c.origin,86,.45);const other=()=>this.grid.target(a,c.range,[t.id])??t;
   if(['fire','ice','poison'].includes(a.owner))c.unique=near(t,c.radius).length;
   if(a.owner==='wind')c.unique=near(a,c.range).filter(e=>inCone(e,a,t,c.range,c.angle)).length;
   if(a.owner==='earth'||a.owner==='scythe')c.unique=near(a,c.range).filter(e=>pointOnLine(e,a,t,c.width/2)).length;
@@ -66,8 +67,8 @@ export class FortressEngine {
     this.projectile(c,t,100,lead);a.ammo--;
     if(h(2))this.projectile(c,other(),25,lead+.05,0,true);
     if(h(5)&&c.use%4===0)this.projectile(c,t,100,lead+.1,0,true);
-    if(h(29)&&c.use%5===0){const targets=near(a,c.range).sort((u,v)=>Math.abs(u.x-t.x)-Math.abs(v.x-t.x));const used=new Map<number,number>();for(let i=0;i<5;i++){const e=targets.find(e=>(used.get(e.id)??0)<2);if(!e)break;used.set(e.id,(used.get(e.id)??0)+1);this.projectile(c,e,25,lead+.05*i,0,true);}}
-    if(a.ammo===0){a.reloadEnd=w.time+5;a.reloadTick=w.time+1;if(h(25))for(let i=0;i<5;i++){const e=near(a,c.range).sort((u,v)=>u.hp-v.hp)[i%Math.max(1,c.count)]??t;this.projectile(c,e,150,.08*i,0,true);}}
+    if(h(29)&&c.use%5===0){const targets=near(a,c.range).sort((u,v)=>dist(u,a)-dist(v,a)||u.id-v.id);const used=new Map<number,number>();for(let i=0;i<5;i++){const e=targets.find(e=>(used.get(e.id)??0)<2);if(!e)break;used.set(e.id,(used.get(e.id)??0)+1);this.projectile(c,e,25,lead+.05*i,0,true);}}
+    if(a.ammo===0){a.reloadEnd=w.time+5;a.reloadTick=w.time+1;if(h(25))for(let i=0;i<5;i++){const e=near(a,c.range).sort((u,v)=>dist(u,a)-dist(v,a)||u.id-v.id)[i%Math.max(1,c.count)]??t;this.projectile(c,e,85,.08*i,0,true);}}
     break;
    }
    case 'crossbow': {const n=h(3)?4:3;for(let i=0;i<n;i++)this.projectile(c,t,i===3?45:60,lead+i*.11,i,false,i===n-1,{tag:'retarget'});break;}
@@ -83,7 +84,8 @@ export class FortressEngine {
    }
    case 'lightning': {
     const chain=[t],jump=85*(h(4)?1.35:1);for(let i=1;i<(h(3)?6:4);i++){const last=chain.at(-1)!;const next=near(last,jump).filter(e=>!chain.includes(e)).sort((a,b)=>dist(a,last)-dist(b,last)||a.id-b.id)[0];if(!next)break;chain.push(next);}c.unique=chain.length;
-    chain.forEach((e,i)=>this.projectile(c,e,80*Math.pow(h(5)?.95:.85,i),lead+i*.06,i,false,i===chain.length-1,{mode:'chain',start:copy(i?chain[i-1]:a)}));
+    const unused=(h(3)?6:4)-chain.length;if(unused>0)this.projectile(c,chain.at(-1)!,80*unused*BALANCE.lightningUnusedHopBonus,lead+.32,0,true,false,{mode:'chain'});
+    chain.forEach((e,i)=>this.projectile(c,e,80*Math.pow(h(5)?.95:.85,i),lead+i*.06,i,false,i===chain.length-1,{mode:'chain',start:copy(i?chain[i-1]:c.origin)}));
     if(h(6)&&chain.length<(h(3)?6:4))this.projectile(c,chain.at(-1)!,28,lead+.3,0,true);
     if(h(7))this.projectile(c,t,80,lead+.15,0,true);
     if(h(8)&&chain[1]){const e=near(chain[1],jump).find(e=>!chain.includes(e));if(e)this.projectile(c,e,56,lead+.2,0,true,false,{mode:'chain',start:copy(chain[1])});}
@@ -96,9 +98,9 @@ export class FortressEngine {
     if(h(12))this.zone(c,t,64,1);if(h(24)&&c.use%4===0)this.attack(c,t,160,lead+.35,{mode:'cone',secondary:true});break;
    }
    case 'earth': {
-    const angle=Math.atan2(t.y-a.y,t.x-a.x),end={x:a.x+Math.cos(angle)*c.range,y:a.y+Math.sin(angle)*c.range},n=h(3)?4:3;c.unique=near(a,c.range+40).filter(e=>pointOnLine(e,a,end,c.width/2)).length;
-    for(let i=0;i<n;i++)this.line(c,end,i===3?45:60,lead+i*.267,c.width/2,{index:i,last:i===n-1,secondary:false});
-    if(h(9))this.line(c,end,54,lead+n*.267,c.width/2);if(h(10)){for(const sign of [-1,1])this.line(c,{x:end.x+sign*c.width,y:end.y},63,lead+.15,c.width/3,{start:{x:a.x+sign*c.width,y:a.y}});}
+    const angle=Math.atan2(t.y-c.origin.y,t.x-c.origin.x),end={x:c.origin.x+Math.cos(angle)*c.range,y:c.origin.y+Math.sin(angle)*c.range},n=h(3)?4:3;c.unique=near(a,c.range+40).filter(e=>pointOnLine(e,c.origin,end,c.width/2)).length;
+    for(let i=0;i<n;i++)this.line(c,end,i===3?45:60,lead+i*BALANCE.earthPulseInterval,c.width/2,{index:i,last:i===n-1,secondary:false});
+    if(h(9))this.line(c,end,54,lead+n*BALANCE.earthPulseInterval,c.width/2);if(h(10)){for(const sign of [-1,1]){const dx=-Math.sin(angle)*38*sign,dy=Math.cos(angle)*38*sign;this.line(c,{x:end.x+dx,y:end.y+dy},63,lead+.15,c.width/2,{start:{x:c.origin.x+dx,y:c.origin.y+dy}});}}
     if(h(29)&&c.use%4===0)this.line(c,end,135,lead+.95,c.width/2);break;
    }
    case 'poison': {this.attack(c,t,60,lead,{mode:'circle',arc:55});if(h(8))this.attack(c,other(),18,lead+.15,{mode:'circle',arc:55,secondary:true,tag:'poison-secondary'});break;}
@@ -111,7 +113,7 @@ export class FortressEngine {
     if(h(25)&&c.use%4===0){this.line(c,end,120,lead+.15,c.width/2);this.line(c,end,120,lead+travel+.15,c.width/2);}void outgoing;break;
    }
    case 'stars': {
-    const options=near(t,120*(h(6)?1.3:1)).filter(e=>e.id!==t.id).sort((a,b)=>a.hp-b.hp||a.id-b.id),targets=[t,options[0]??t,options[1]??options[0]??t];if(h(3))targets.push(options[2]??t);if(h(11))targets[targets.length-1]=t;
+    const options=near(t,120*(h(6)?1.3:1)).filter(e=>e.id!==t.id).sort((a,b)=>dist(a,t)-dist(b,t)||a.id-b.id),targets=[t,options[0]??t,options[1]??options[0]??t];if(h(3))targets.push(options[2]??t);if(h(11))targets[targets.length-1]=t;
     c.unique=new Set(targets.flatMap(p=>near(p,c.radius).map(e=>e.id))).size;
     targets.forEach((e,i)=>this.attack(c,e,i===3?52.5:70,lead+i*.25,{mode:'circle',index:i,last:i===targets.length-1,start:{x:e.x-60,y:e.y-150},arc:0}));
     if(h(8))this.projectile(c,t,73.5,lead+targets.length*.25,0,true);
@@ -130,9 +132,11 @@ export class FortressEngine {
   else if(p.mode==='line')victims=this.grid.near(p.start,dist(p.start,p.end)+p.width).filter(e=>pointOnLine(e,p.start,p.end,p.width));
   else if(p.mode==='cone')victims=this.grid.near(p.start,c.range).filter(e=>inCone(e,p.start,p.end,c.range,p.angle));
   if(p.tag==='gravity'){this.zone(c,p.end,0,1.5,.4,'stars',55);return;}
+  if(p.mode==='circle'||p.mode==='cone'||p.mode==='line')w.sounds.push({owner:c.owner,impact:true});
   const direction=Math.atan2(p.end.y-p.start.y,p.end.x-p.start.x);
   const fxPoint=p.mode==='cone'?{x:p.start.x+Math.cos(direction)*c.range*.45,y:p.start.y+Math.sin(direction)*c.range*.45}:p.mode==='line'||p.mode==='chain'?p.start:p.end;
-  this.fx(p.mode==='chain'?'beam-lightning':p.mode==='line'?'line-'+p.visual:p.mode==='cone'?'sweep-wind':'impact-'+p.visual,fxPoint,p.mode==='circle'?p.radius*2:p.mode==='cone'?c.range*1.4:p.mode==='line'?p.width*2:50,.5,direction+Math.PI/2,p.mode==='line'||p.mode==='chain'?p.end:undefined);
+  if(!p.secondary&&c.owner!=='archer'){const center=p.mode==='line'?p.end:p.mode==='cone'?{x:p.start.x+Math.cos(direction)*c.range*.45,y:p.start.y+Math.sin(direction)*c.range*.45}:p.end;this.fx('burst-'+c.owner,center,p.mode==='circle'?p.radius*2.6:82,.6);this.fx('ripple-'+c.owner,center,p.mode==='circle'?p.radius*3:100,.7);}
+  this.fx(p.mode==='chain'?'beam-lightning':p.mode==='line'?'line-'+p.visual:p.mode==='cone'?'sweep-wind':'impact-'+p.visual,fxPoint,p.mode==='circle'?p.radius*2:p.mode==='cone'?c.range*1.4:p.mode==='line'?p.width*2:70,p.mode==='line'?.42:.6,direction+Math.PI/2,p.mode==='line'||p.mode==='chain'?p.end:undefined);
   if(!p.secondary&&p.mode==='circle'){
    if(c.owner==='fire'){if(h(6))this.fragments(c,p.end,4,28,0,undefined,victims.map(e=>e.id));if(h(8))this.zone(c,p.end,56,2);}
    if(c.owner==='ice'){if(h(8))this.fragments(c,p.end,3,25);if(h(10))this.zone(c,p.end,30,2,.2);}
@@ -145,20 +149,20 @@ export class FortressEngine {
   if(c.owner==='earth'&&!p.secondary&&p.index===0&&h(8))this.fragments(c,p.end,4,27,0,undefined,victims.map(e=>e.id));
  }
  private scytheStep(p:Attack){const w=this.w,c=p.cast;const t=clamp((w.time-p.at)/(p.expires-p.at),0,1),previous=copy(p);p.x=p.start.x+(p.end.x-p.start.x)*t;p.y=p.start.y+(p.end.y-p.start.y)*t;if(w.time<=p.at+1/60){previous.x=p.start.x;previous.y=p.start.y;}
-  for(const e of this.grid.near(p,45)){if(p.hit.has(e.id)||!pointOnLine(e,previous,p,c.width/2+12))continue;p.hit.add(e.id);this.hit(e,c,p.power,p.returning?1:0,false,false,p);if(!p.returning)c.outbound.add(e.id);}
+  for(const e of this.grid.near(p,45)){if(p.hit.has(e.id)||!pointOnLine(e,previous,p,c.width/2+12))continue;p.hit.add(e.id);this.hit(e,c,p.power,p.returning?1:0,false,false,p);this.fx('impact-scythe',e,72,.4);if(!p.returning)c.outbound.add(e.id);}
  }
  private slow(e:Enemy,amount:number,duration:number,owner:Owner){if(e.slowEnd<=this.w.time||amount>=e.slow){e.slow=amount;e.slowOwner=owner;}e.slowEnd=Math.max(e.slowEnd,this.w.time+duration);}
  private hard(e:Enemy,duration:number,kind:Status,c:Cast){const w=this.w;if(e.immuneEnd>w.time||e.hardEnd>w.time)return;e.hardEnd=w.time+duration*(e.kind>=5?.35:1);e.immuneEnd=e.hardEnd+.5;e.hardKind=kind;e.impactAt=0;if(kind==='freeze')e.freezeCast=c;this.fx(kind==='freeze'?'freeze':'stun',e,50,duration);}
  private push(e:Enemy,distance:number){e.y=Math.max(FIELD.top,e.y-distance*(e.kind>=5?.1:1));e.impactAt=0;}
- private dot(e:Enemy,c:Cast,kind:Status|'electric',dps:number,duration:number,spread=false,stack=0){const w=this.w,key=c.owner+':'+kind+':'+stack,existing=e.dots.find(d=>d.key===key);const value=dps*modifier(w,c,e,0,false,true)*(1-e.armor*(1-ignoreArmor(c)));
+ private dot(e:Enemy,c:Cast,kind:Status|'electric',dps:number,duration:number,spread=false,stack=0){const w=this.w,key=c.owner+':'+kind+':'+stack,existing=e.dots.find(d=>d.key===key);const value=dps*(FIGHTERS[c.owner].damage/LEGACY_DAMAGE[c.owner])*modifier(w,c,e,0,false,true)*(1-e.armor*(1-ignoreArmor(c)));
   if(existing){existing.dps=Math.max(existing.dps,value);existing.until=w.time+duration;existing.cast=c;existing.spread=existing.spread||spread;}else e.dots.push({key,kind,owner:c.owner,dps:value,until:w.time+duration,start:w.time,next:w.time+.25,cast:c,spread,stack});
  }
- private hit(e:Enemy,c:Cast,power:number,index=0,last=false,secondary=false,p?:Attack){if(!alive(e))return;const w=this.w,h=(n:number)=>has(c,n),o=c.owner;
+ private hit(e:Enemy,c:Cast,power:number,index=0,last=false,secondary=false,p?:Attack){if(!alive(e))return;const w=this.w,h=(n:number)=>has(c,n),o=c.owner;power*=FIGHTERS[o].damage/LEGACY_DAMAGE[o];
   let positional=0;if(o==='fire'&&!secondary&&p){if(h(4)&&dist(e,p.end)<=p.radius/2)positional+=.45;if(h(5)&&dist(e,p.end)>p.radius/2)positional+=.6;}
   if(o==='scythe'&&!secondary&&p){if(h(p.returning?6:5))positional+=.6;if(p.returning&&h(7))positional+=.2;}
   const damage=power*(modifier(w,c,e,index,last)+positional)*(1-e.armor*(1-ignoreArmor(c)));const before=e.hp;
   this.rawDamage(e,damage,c,secondary);e.hitAt=w.time;
-  if(secondary){if(p?.tag==='poison-secondary'||p?.tag==='poison-shard')this.applyPoison(e,c,p.tag==='poison-secondary'?.3:1,p.tag==='poison-shard'?.5:1);if(p?.tag==='half-slow')this.slow(e,.3,1,'ice');return;}
+  if(secondary){if(p?.tag==='poison-secondary'||p?.tag==='poison-shard')this.applyPoison(e,c,p.tag==='poison-secondary'?.3:1,p.tag==='poison-shard'?.5:1);if(p?.tag==='half-slow')this.slow(e,BALANCE.iceSlow,BALANCE.iceSlowSeconds/2,'ice');return;}
   this.hitExtras(e,c,index,last,p);
   if(!alive(e)){this.killEffects(e,c,damage-before);return;}
   if(o==='archer'){
@@ -173,14 +177,14 @@ export class FortressEngine {
    if(h(9))this.dot(e,c,'burn',140*.35/3,3);if(h(12))this.push(e,18);if(h(13)&&c.use%3===0)this.hard(e,.7,'hard',c);if(h(14))this.slow(e,.25,2,o);
   }
   if(o==='ice'){
-   this.slow(e,.3+(h(4)?.15:0),2*(h(5)?1.7:1)+(h(30)&&w.hp<800?1:0),o);
-   if(h(6)&&(e.marks['ice:hit']??-10)>=w.time-6&&e.casts.ice!==c.id)this.hard(e,.8,'freeze',c);
-   if(h(13)&&c.use%4===0)this.hard(e,1,'freeze',c);if(h(22))e.attackSlowEnd=w.time+2;if(h(23))this.push(e,18);
+   this.slow(e,BALANCE.iceSlow+(h(4)?.15:0),BALANCE.iceSlowSeconds*(h(5)?1.7:1)+(h(30)&&w.hp<800?1:0),o);
+   const freeze=Math.max(c.use%BALANCE.iceFreezeEvery===0?BALANCE.iceFreezeSeconds:0,h(6)&&(e.marks['ice:hit']??-10)>=w.time-6&&e.casts.ice!==c.id?.8:0,h(13)&&c.use%4===0?1:0);
+   if(freeze)this.hard(e,freeze,'freeze',c);if(h(22))e.attackSlowEnd=w.time+2;if(h(23))this.push(e,18);
   }
   if(o==='lightning'){
    if(h(9)&&c.use%3===0)this.hard(e,.6,'hard',c);if(h(10))this.slow(e,.25,1.5,o);
    if(h(11)&&(e.marks['lightning:hit']??-10)>=w.time-5&&e.casts.lightning!==c.id)this.hit(e,c,56,0,false,true);
-   if(h(21))this.dot(e,c,'electric',power*.15,2);
+   if(h(21))this.dot(e,c,'electric',power/(FIGHTERS[o].damage/LEGACY_DAMAGE[o])*.15,2);
   }
   if(o==='wind'){
    this.push(e,30*(h(5)?1.5:1));if(h(6))this.slow(e,.3,2,o);if(h(7)&&c.use%3===0)this.hard(e,.7,'hard',c);
@@ -188,7 +192,7 @@ export class FortressEngine {
    if(h(23))this.dot(e,c,'bleed',160*.35/3,3);
   }
   if(o==='earth'){
-   if(index===0)this.hard(e,.3+(h(6)?.35:0),'hard',c);if(h(7)&&last)this.slow(e,.4,2,o);if(h(11)&&index===0)this.push(e,18);
+   if(index===0)this.hard(e,BALANCE.earthStun+(h(6)?.35:0),'hard',c);if(h(7)&&last)this.slow(e,.4,2,o);if(h(11)&&index===0)this.push(e,18);
    if(h(23)&&(e.marks['earth:hit']??-10)>=w.time-7&&e.casts.earth!==c.id)this.hit(e,c,72,0,false,true);
    if(h(24)&&c.use%4===0)this.hard(e,1.2,'hard',c);
   }
@@ -202,7 +206,7 @@ export class FortressEngine {
    if(h(24))this.dot(e,c,'burn',330*.35/3,3);if(h(25))this.dot(e,c,'poison',330*.45/5,5);
   }
   if(o==='scythe'){
-   if(h(10))this.dot(e,c,'bleed',power*.35/3,3);if(h(12)&&p?.returning)this.push(e,18);if(h(13))this.slow(e,.3,1.8,o);
+   if(h(10))this.dot(e,c,'bleed',power/(FIGHTERS[o].damage/LEGACY_DAMAGE[o])*.35/3,3);if(h(12)&&p?.returning)this.push(e,18);if(h(13))this.slow(e,.3,1.8,o);
    if(p?.returning&&c.outbound.has(e.id)){if(h(14))this.hard(e,.6,'hard',c);if(h(23))this.hit(e,c,72,0,false,true);}
   }
   if(o==='stars'){if(h(11)&&last&&e.id===c.target)this.hard(e,.7,'hard',c);if(h(12))this.slow(e,.3,2,o);if(h(13)&&index===0)this.push(e,18);}
