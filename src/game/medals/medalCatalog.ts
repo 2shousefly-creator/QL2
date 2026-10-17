@@ -3,7 +3,7 @@ import { gameConfig } from "../config";
 import { getPlayerRank } from "../selectors";
 import { getAnimalCapacity } from "../../features/tang_gia/farmEngine";
 import { RANK_STEPS } from "../rankBuilder";
-import { getRequiredXpTicksForTransition, getTotalXpTicksToReachRank } from "../xpEngine";
+import { getRequiredXpTicksForTransition, getTotalXpTicksToReachRank } from "../xpProgression";
 
 export type MedalCategory = "journey" | "training" | "farm";
 export type MedalTier = 1 | 2 | 3 | 4;

@@ -466,51 +466,32 @@ export const EGG_INFO_MAP = Object.fromEntries(
   { name: string; sellGold: number; sellXp: number; animalName: string }
 >;
 
+export const FARM_PLOT_COUNT = 24;
 export const FARM_PLOT_UNLOCKS: PlotUnlockDefinition[] = [
   { plotIndex: 0, gold: 0, requiredRank: null, unlockedByDefault: true },
   { plotIndex: 1, gold: 0, requiredRank: null, unlockedByDefault: true },
-  {
-    plotIndex: 2,
-    gold: 15,
-    requiredRank: { familyId: "binh_nhi", tier: 1 },
-    unlockedByDefault: false,
-  },
-  {
-    plotIndex: 3,
-    gold: 75,
-    requiredRank: { familyId: "ha_si", tier: 1 },
-    unlockedByDefault: false,
-  },
-  {
-    plotIndex: 4,
-    gold: 350,
-    requiredRank: { familyId: "thieu_uy", tier: 1 },
-    unlockedByDefault: false,
-  },
-  {
-    plotIndex: 5,
-    gold: 950,
-    requiredRank: { familyId: "dai_uy", tier: 1 },
-    unlockedByDefault: false,
-  },
-  {
-    plotIndex: 6,
-    gold: 1890,
-    requiredRank: { familyId: "thuong_ta", tier: 1 },
-    unlockedByDefault: false,
-  },
-  {
-    plotIndex: 7,
-    gold: 3350,
-    requiredRank: { familyId: "trung_tuong", tier: 1 },
-    unlockedByDefault: false,
-  },
-  {
-    plotIndex: 8,
-    gold: 6550,
-    requiredRank: { familyId: "thong_soai", tier: 1 },
-    unlockedByDefault: false,
-  },
+  { plotIndex: 2, gold: 15, requiredRank: { familyId: "enlisted_3", tier: 3 }, unlockedByDefault: false },
+  { plotIndex: 3, gold: 25, requiredRank: { familyId: "nco_1", tier: 5 }, unlockedByDefault: false },
+  { plotIndex: 4, gold: 40, requiredRank: { familyId: "nco_2", tier: 6 }, unlockedByDefault: false },
+  { plotIndex: 5, gold: 65, requiredRank: { familyId: "junior_1", tier: 1 }, unlockedByDefault: false },
+  { plotIndex: 6, gold: 95, requiredRank: { familyId: "junior_1", tier: 7 }, unlockedByDefault: false },
+  { plotIndex: 7, gold: 135, requiredRank: { familyId: "junior_2", tier: 6 }, unlockedByDefault: false },
+  { plotIndex: 8, gold: 180, requiredRank: { familyId: "junior_3", tier: 4 }, unlockedByDefault: false },
+  { plotIndex: 9, gold: 230, requiredRank: { familyId: "junior_4", tier: 3 }, unlockedByDefault: false },
+  { plotIndex: 10, gold: 285, requiredRank: { familyId: "field_1", tier: 2 }, unlockedByDefault: false },
+  { plotIndex: 11, gold: 350, requiredRank: { familyId: "field_1", tier: 8 }, unlockedByDefault: false },
+  { plotIndex: 12, gold: 425, requiredRank: { familyId: "field_2", tier: 5 }, unlockedByDefault: false },
+  { plotIndex: 13, gold: 500, requiredRank: { familyId: "field_3", tier: 2 }, unlockedByDefault: false },
+  { plotIndex: 14, gold: 585, requiredRank: { familyId: "field_3", tier: 8 }, unlockedByDefault: false },
+  { plotIndex: 15, gold: 680, requiredRank: { familyId: "field_4", tier: 5 }, unlockedByDefault: false },
+  { plotIndex: 16, gold: 780, requiredRank: { familyId: "general_1", tier: 2 }, unlockedByDefault: false },
+  { plotIndex: 17, gold: 885, requiredRank: { familyId: "general_1", tier: 8 }, unlockedByDefault: false },
+  { plotIndex: 18, gold: 995, requiredRank: { familyId: "general_2", tier: 3 }, unlockedByDefault: false },
+  { plotIndex: 19, gold: 1115, requiredRank: { familyId: "general_2", tier: 9 }, unlockedByDefault: false },
+  { plotIndex: 20, gold: 1240, requiredRank: { familyId: "general_3", tier: 4 }, unlockedByDefault: false },
+  { plotIndex: 21, gold: 1375, requiredRank: { familyId: "general_3", tier: 11 }, unlockedByDefault: false },
+  { plotIndex: 22, gold: 1515, requiredRank: { familyId: "general_4", tier: 5 }, unlockedByDefault: false },
+  { plotIndex: 23, gold: 1665, requiredRank: { familyId: "general_4", tier: 12 }, unlockedByDefault: false },
 ];
 
 /**

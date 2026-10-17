@@ -1,0 +1,2113 @@
+{
+  "revision": "2026-10-16",
+  "assets": {
+    "crop-carrot": {
+      "file": "crop-carrot.b65bcbd50966.webp",
+      "png": "crop-carrot.b65bcbd50966.png",
+      "cell": 128,
+      "size": 124,
+      "columns": 8,
+      "anchor": [
+        0.5,
+        0.85
+      ],
+      "padding": 2,
+      "clips": {
+        "seeded": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        },
+        "sprout": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "young": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "growing": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "mature": {
+          "row": 4,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "yield": {
+          "row": 5,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        }
+      }
+    },
+    "crop-cabbage": {
+      "file": "crop-cabbage.6c738cb2186d.webp",
+      "png": "crop-cabbage.6c738cb2186d.png",
+      "cell": 128,
+      "size": 124,
+      "columns": 8,
+      "anchor": [
+        0.5,
+        0.85
+      ],
+      "padding": 2,
+      "clips": {
+        "seeded": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        },
+        "sprout": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "young": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "growing": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "mature": {
+          "row": 4,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "yield": {
+          "row": 5,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        }
+      }
+    },
+    "crop-potato": {
+      "file": "crop-potato.c0a87176c768.webp",
+      "png": "crop-potato.c0a87176c768.png",
+      "cell": 128,
+      "size": 124,
+      "columns": 8,
+      "anchor": [
+        0.5,
+        0.85
+      ],
+      "padding": 2,
+      "clips": {
+        "seeded": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        },
+        "sprout": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "young": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "growing": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "mature": {
+          "row": 4,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "yield": {
+          "row": 5,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        }
+      }
+    },
+    "crop-tomato": {
+      "file": "crop-tomato.5d1af85e1e35.webp",
+      "png": "crop-tomato.5d1af85e1e35.png",
+      "cell": 128,
+      "size": 124,
+      "columns": 8,
+      "anchor": [
+        0.5,
+        0.85
+      ],
+      "padding": 2,
+      "clips": {
+        "seeded": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        },
+        "sprout": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "young": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "growing": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "mature": {
+          "row": 4,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "yield": {
+          "row": 5,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        }
+      }
+    },
+    "crop-strawberry": {
+      "file": "crop-strawberry.2b321de29041.webp",
+      "png": "crop-strawberry.2b321de29041.png",
+      "cell": 128,
+      "size": 124,
+      "columns": 8,
+      "anchor": [
+        0.5,
+        0.85
+      ],
+      "padding": 2,
+      "clips": {
+        "seeded": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        },
+        "sprout": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "young": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "growing": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "mature": {
+          "row": 4,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "yield": {
+          "row": 5,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        }
+      }
+    },
+    "crop-corn": {
+      "file": "crop-corn.c8ebca69944f.webp",
+      "png": "crop-corn.c8ebca69944f.png",
+      "cell": 128,
+      "size": 124,
+      "columns": 8,
+      "anchor": [
+        0.5,
+        0.85
+      ],
+      "padding": 2,
+      "clips": {
+        "seeded": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        },
+        "sprout": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "young": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "growing": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "mature": {
+          "row": 4,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        }
+      }
+    },
+    "crop-pineapple": {
+      "file": "crop-pineapple.c955494b25de.webp",
+      "png": "crop-pineapple.c955494b25de.png",
+      "cell": 128,
+      "size": 124,
+      "columns": 8,
+      "anchor": [
+        0.5,
+        0.85
+      ],
+      "padding": 2,
+      "clips": {
+        "seeded": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        },
+        "sprout": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "young": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "growing": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "mature": {
+          "row": 4,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "yield": {
+          "row": 5,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        }
+      }
+    },
+    "crop-banana": {
+      "file": "crop-banana.ab4a3744dbf5.webp",
+      "png": "crop-banana.ab4a3744dbf5.png",
+      "cell": 128,
+      "size": 124,
+      "columns": 8,
+      "anchor": [
+        0.5,
+        0.85
+      ],
+      "padding": 2,
+      "clips": {
+        "seeded": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        },
+        "sprout": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "young": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "growing": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "mature": {
+          "row": 4,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        }
+      }
+    },
+    "crop-orange": {
+      "file": "crop-orange.c4987ef6381c.webp",
+      "png": "crop-orange.c4987ef6381c.png",
+      "cell": 128,
+      "size": 124,
+      "columns": 8,
+      "anchor": [
+        0.5,
+        0.85
+      ],
+      "padding": 2,
+      "clips": {
+        "seeded": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        },
+        "sprout": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "young": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "growing": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "mature": {
+          "row": 4,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        }
+      }
+    },
+    "crop-mango": {
+      "file": "crop-mango.03596b02b2d2.webp",
+      "png": "crop-mango.03596b02b2d2.png",
+      "cell": 128,
+      "size": 124,
+      "columns": 8,
+      "anchor": [
+        0.5,
+        0.85
+      ],
+      "padding": 2,
+      "clips": {
+        "seeded": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        },
+        "sprout": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "young": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "growing": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "mature": {
+          "row": 4,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        }
+      }
+    },
+    "crop-apple": {
+      "file": "crop-apple.ec7c7fb6c133.webp",
+      "png": "crop-apple.ec7c7fb6c133.png",
+      "cell": 128,
+      "size": 124,
+      "columns": 8,
+      "anchor": [
+        0.5,
+        0.85
+      ],
+      "padding": 2,
+      "clips": {
+        "seeded": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        },
+        "sprout": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "young": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "growing": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "mature": {
+          "row": 4,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        }
+      }
+    },
+    "crop-pear": {
+      "file": "crop-pear.020667f8dd40.webp",
+      "png": "crop-pear.020667f8dd40.png",
+      "cell": 128,
+      "size": 124,
+      "columns": 8,
+      "anchor": [
+        0.5,
+        0.85
+      ],
+      "padding": 2,
+      "clips": {
+        "seeded": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        },
+        "sprout": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "young": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "growing": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "mature": {
+          "row": 4,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        }
+      }
+    },
+    "crop-grape": {
+      "file": "crop-grape.1780d5780346.webp",
+      "png": "crop-grape.1780d5780346.png",
+      "cell": 128,
+      "size": 124,
+      "columns": 8,
+      "anchor": [
+        0.5,
+        0.85
+      ],
+      "padding": 2,
+      "clips": {
+        "seeded": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        },
+        "sprout": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "young": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "growing": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "mature": {
+          "row": 4,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        }
+      }
+    },
+    "crop-dragon_fruit": {
+      "file": "crop-dragon_fruit.6d5e06e14147.webp",
+      "png": "crop-dragon_fruit.6d5e06e14147.png",
+      "cell": 128,
+      "size": 124,
+      "columns": 8,
+      "anchor": [
+        0.5,
+        0.85
+      ],
+      "padding": 2,
+      "clips": {
+        "seeded": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        },
+        "sprout": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "young": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "growing": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "mature": {
+          "row": 4,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        }
+      }
+    },
+    "crop-avocado": {
+      "file": "crop-avocado.2c373c1ba9b9.webp",
+      "png": "crop-avocado.2c373c1ba9b9.png",
+      "cell": 128,
+      "size": 124,
+      "columns": 8,
+      "anchor": [
+        0.5,
+        0.85
+      ],
+      "padding": 2,
+      "clips": {
+        "seeded": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        },
+        "sprout": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "young": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "growing": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "mature": {
+          "row": 4,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        }
+      }
+    },
+    "crop-durian": {
+      "file": "crop-durian.651e87c10faa.webp",
+      "png": "crop-durian.651e87c10faa.png",
+      "cell": 128,
+      "size": 124,
+      "columns": 8,
+      "anchor": [
+        0.5,
+        0.85
+      ],
+      "padding": 2,
+      "clips": {
+        "seeded": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        },
+        "sprout": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "young": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "growing": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "mature": {
+          "row": 4,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        }
+      }
+    },
+    "crop-mangosteen": {
+      "file": "crop-mangosteen.295d7430474d.webp",
+      "png": "crop-mangosteen.295d7430474d.png",
+      "cell": 128,
+      "size": 124,
+      "columns": 8,
+      "anchor": [
+        0.5,
+        0.85
+      ],
+      "padding": 2,
+      "clips": {
+        "seeded": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        },
+        "sprout": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "young": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "growing": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "mature": {
+          "row": 4,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        }
+      }
+    },
+    "animal-chicken": {
+      "file": "animal-chicken.9136fca04a0a.webp",
+      "png": "animal-chicken.9136fca04a0a.png",
+      "cell": 128,
+      "size": 124,
+      "columns": 8,
+      "anchor": [
+        0.5,
+        0.85
+      ],
+      "padding": 2,
+      "clips": {
+        "idle": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "walk": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "eat": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "drink": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "rest": {
+          "row": 4,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "produce_ready": {
+          "row": 5,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "weak": {
+          "row": 6,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "dead": {
+          "row": 7,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        }
+      }
+    },
+    "animal-duck": {
+      "file": "animal-duck.3d7244451384.webp",
+      "png": "animal-duck.3d7244451384.png",
+      "cell": 128,
+      "size": 124,
+      "columns": 8,
+      "anchor": [
+        0.5,
+        0.85
+      ],
+      "padding": 2,
+      "clips": {
+        "idle": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "walk": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "eat": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "drink": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "rest": {
+          "row": 4,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "produce_ready": {
+          "row": 5,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "weak": {
+          "row": 6,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "dead": {
+          "row": 7,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        }
+      }
+    },
+    "animal-quail": {
+      "file": "animal-quail.131f4a61a396.webp",
+      "png": "animal-quail.131f4a61a396.png",
+      "cell": 128,
+      "size": 124,
+      "columns": 8,
+      "anchor": [
+        0.5,
+        0.85
+      ],
+      "padding": 2,
+      "clips": {
+        "idle": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "walk": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "eat": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "drink": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "rest": {
+          "row": 4,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "produce_ready": {
+          "row": 5,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "weak": {
+          "row": 6,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "dead": {
+          "row": 7,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        }
+      }
+    },
+    "environment": {
+      "file": "environment.ef05a1e92c7e.webp",
+      "png": "environment.ef05a1e92c7e.png",
+      "cell": 256,
+      "size": 252,
+      "columns": 4,
+      "anchor": [
+        0.5,
+        0.85
+      ],
+      "padding": 2,
+      "clips": {
+        "prop0": {
+          "row": 0,
+          "column": 0,
+          "frames": 1,
+          "loop": false
+        },
+        "prop1": {
+          "row": 0,
+          "column": 1,
+          "frames": 1,
+          "loop": false
+        },
+        "prop2": {
+          "row": 0,
+          "column": 2,
+          "frames": 1,
+          "loop": false
+        },
+        "prop3": {
+          "row": 0,
+          "column": 3,
+          "frames": 1,
+          "loop": false
+        },
+        "prop4": {
+          "row": 1,
+          "column": 0,
+          "frames": 1,
+          "loop": false
+        },
+        "prop5": {
+          "row": 1,
+          "column": 1,
+          "frames": 1,
+          "loop": false
+        },
+        "prop6": {
+          "row": 1,
+          "column": 2,
+          "frames": 1,
+          "loop": false
+        },
+        "prop7": {
+          "row": 1,
+          "column": 3,
+          "frames": 1,
+          "loop": false
+        },
+        "prop8": {
+          "row": 2,
+          "column": 0,
+          "frames": 1,
+          "loop": false
+        },
+        "prop9": {
+          "row": 2,
+          "column": 1,
+          "frames": 1,
+          "loop": false
+        },
+        "prop10": {
+          "row": 2,
+          "column": 2,
+          "frames": 1,
+          "loop": false
+        },
+        "prop11": {
+          "row": 2,
+          "column": 3,
+          "frames": 1,
+          "loop": false
+        },
+        "prop12": {
+          "row": 3,
+          "column": 0,
+          "frames": 1,
+          "loop": false
+        },
+        "prop13": {
+          "row": 3,
+          "column": 1,
+          "frames": 1,
+          "loop": false
+        },
+        "prop14": {
+          "row": 3,
+          "column": 2,
+          "frames": 1,
+          "loop": false
+        },
+        "prop15": {
+          "row": 3,
+          "column": 3,
+          "frames": 1,
+          "loop": false
+        }
+      }
+    },
+    "animal-goose": {
+      "file": "animal-goose.ac008c1032ad.webp",
+      "png": "animal-goose.ac008c1032ad.png",
+      "cell": 128,
+      "size": 124,
+      "columns": 8,
+      "anchor": [
+        0.5,
+        0.85
+      ],
+      "padding": 2,
+      "clips": {
+        "idle": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "walk": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "eat": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "drink": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "rest": {
+          "row": 4,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "produce_ready": {
+          "row": 5,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "weak": {
+          "row": 6,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "dead": {
+          "row": 7,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        }
+      }
+    },
+    "animal-muscovy_duck": {
+      "file": "animal-muscovy_duck.e138858ba7f1.webp",
+      "png": "animal-muscovy_duck.e138858ba7f1.png",
+      "cell": 128,
+      "size": 124,
+      "columns": 8,
+      "anchor": [
+        0.5,
+        0.85
+      ],
+      "padding": 2,
+      "clips": {
+        "idle": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "walk": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "eat": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "drink": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "rest": {
+          "row": 4,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "produce_ready": {
+          "row": 5,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "weak": {
+          "row": 6,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "dead": {
+          "row": 7,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        }
+      }
+    },
+    "animal-turkey": {
+      "file": "animal-turkey.04b818b64784.webp",
+      "png": "animal-turkey.04b818b64784.png",
+      "cell": 128,
+      "size": 124,
+      "columns": 8,
+      "anchor": [
+        0.5,
+        0.85
+      ],
+      "padding": 2,
+      "clips": {
+        "idle": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "walk": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "eat": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "drink": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "rest": {
+          "row": 4,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "produce_ready": {
+          "row": 5,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "weak": {
+          "row": 6,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "dead": {
+          "row": 7,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        }
+      }
+    },
+    "animal-guinea_fowl": {
+      "file": "animal-guinea_fowl.b7078f54bc9d.webp",
+      "png": "animal-guinea_fowl.b7078f54bc9d.png",
+      "cell": 128,
+      "size": 124,
+      "columns": 8,
+      "anchor": [
+        0.5,
+        0.85
+      ],
+      "padding": 2,
+      "clips": {
+        "idle": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "walk": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "eat": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "drink": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "rest": {
+          "row": 4,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "produce_ready": {
+          "row": 5,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "weak": {
+          "row": 6,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "dead": {
+          "row": 7,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        }
+      }
+    },
+    "animal-pheasant": {
+      "file": "animal-pheasant.df9a2209bc32.webp",
+      "png": "animal-pheasant.df9a2209bc32.png",
+      "cell": 128,
+      "size": 124,
+      "columns": 8,
+      "anchor": [
+        0.5,
+        0.85
+      ],
+      "padding": 2,
+      "clips": {
+        "idle": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "walk": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "eat": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "drink": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "rest": {
+          "row": 4,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "produce_ready": {
+          "row": 5,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "weak": {
+          "row": 6,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "dead": {
+          "row": 7,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        }
+      }
+    },
+    "animal-peafowl": {
+      "file": "animal-peafowl.6ef7d0d5eb22.webp",
+      "png": "animal-peafowl.6ef7d0d5eb22.png",
+      "cell": 128,
+      "size": 124,
+      "columns": 8,
+      "anchor": [
+        0.5,
+        0.85
+      ],
+      "padding": 2,
+      "clips": {
+        "idle": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "walk": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "eat": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "drink": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "rest": {
+          "row": 4,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "produce_ready": {
+          "row": 5,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "weak": {
+          "row": 6,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "dead": {
+          "row": 7,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        }
+      }
+    },
+    "animal-ostrich": {
+      "file": "animal-ostrich.38eae14f8d53.webp",
+      "png": "animal-ostrich.38eae14f8d53.png",
+      "cell": 128,
+      "size": 124,
+      "columns": 8,
+      "anchor": [
+        0.5,
+        0.85
+      ],
+      "padding": 2,
+      "clips": {
+        "idle": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "walk": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "eat": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "drink": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "rest": {
+          "row": 4,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "produce_ready": {
+          "row": 5,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "weak": {
+          "row": 6,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "dead": {
+          "row": 7,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        }
+      }
+    },
+    "crop-pumpkin": {
+      "file": "crop-pumpkin.33a587b7902c.webp",
+      "png": "crop-pumpkin.33a587b7902c.png",
+      "cell": 128,
+      "size": 124,
+      "columns": 8,
+      "anchor": [
+        0.5,
+        0.85
+      ],
+      "padding": 2,
+      "clips": {
+        "seeded": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        },
+        "sprout": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "young": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "growing": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "mature": {
+          "row": 4,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        }
+      }
+    },
+    "crop-watermelon": {
+      "file": "crop-watermelon.726566b8ebc2.webp",
+      "png": "crop-watermelon.726566b8ebc2.png",
+      "cell": 128,
+      "size": 124,
+      "columns": 8,
+      "anchor": [
+        0.5,
+        0.85
+      ],
+      "padding": 2,
+      "clips": {
+        "seeded": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        },
+        "sprout": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "young": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "growing": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "mature": {
+          "row": 4,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        }
+      }
+    },
+    "worker-idle": {
+      "file": "worker-idle.4a008d69313d.webp",
+      "png": "worker-idle.4a008d69313d.png",
+      "cell": 128,
+      "size": 124,
+      "columns": 8,
+      "anchor": [
+        0.5,
+        0.85
+      ],
+      "padding": 2,
+      "clips": {
+        "direction0": {
+          "row": 0,
+          "frames": 6,
+          "fps": 6,
+          "loop": true
+        },
+        "direction1": {
+          "row": 1,
+          "frames": 6,
+          "fps": 6,
+          "loop": true
+        },
+        "direction2": {
+          "row": 2,
+          "frames": 6,
+          "fps": 6,
+          "loop": true
+        },
+        "direction3": {
+          "row": 3,
+          "frames": 6,
+          "fps": 6,
+          "loop": true
+        }
+      }
+    },
+    "worker-walk": {
+      "file": "worker-walk.411432befc51.webp",
+      "png": "worker-walk.411432befc51.png",
+      "cell": 128,
+      "size": 124,
+      "columns": 8,
+      "anchor": [
+        0.5,
+        0.85
+      ],
+      "padding": 2,
+      "clips": {
+        "direction0": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "direction1": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "direction2": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "direction3": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        }
+      }
+    },
+    "worker-plant": {
+      "file": "worker-plant.207d4e737b57.webp",
+      "png": "worker-plant.207d4e737b57.png",
+      "cell": 128,
+      "size": 124,
+      "columns": 8,
+      "anchor": [
+        0.5,
+        0.85
+      ],
+      "padding": 2,
+      "clips": {
+        "direction0": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "direction1": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "direction2": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "direction3": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        }
+      }
+    },
+    "worker-water": {
+      "file": "worker-water.a3bac926cf51.webp",
+      "png": "worker-water.a3bac926cf51.png",
+      "cell": 128,
+      "size": 124,
+      "columns": 8,
+      "anchor": [
+        0.5,
+        0.85
+      ],
+      "padding": 2,
+      "clips": {
+        "direction0": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "direction1": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "direction2": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "direction3": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        }
+      }
+    },
+    "worker-fertilize": {
+      "file": "worker-fertilize.db4f43990a56.webp",
+      "png": "worker-fertilize.db4f43990a56.png",
+      "cell": 128,
+      "size": 124,
+      "columns": 8,
+      "anchor": [
+        0.5,
+        0.85
+      ],
+      "padding": 2,
+      "clips": {
+        "direction0": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "direction1": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "direction2": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "direction3": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        }
+      }
+    },
+    "worker-pest": {
+      "file": "worker-pest.8f00ff0b72bd.webp",
+      "png": "worker-pest.8f00ff0b72bd.png",
+      "cell": 128,
+      "size": 124,
+      "columns": 8,
+      "anchor": [
+        0.5,
+        0.85
+      ],
+      "padding": 2,
+      "clips": {
+        "direction0": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "direction1": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "direction2": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "direction3": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        }
+      }
+    },
+    "worker-harvest": {
+      "file": "worker-harvest.257739afdc14.webp",
+      "png": "worker-harvest.257739afdc14.png",
+      "cell": 128,
+      "size": 124,
+      "columns": 8,
+      "anchor": [
+        0.5,
+        0.85
+      ],
+      "padding": 2,
+      "clips": {
+        "direction0": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "direction1": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "direction2": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "direction3": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        }
+      }
+    },
+    "worker-feed": {
+      "file": "worker-feed.de0c3f8272a2.webp",
+      "png": "worker-feed.de0c3f8272a2.png",
+      "cell": 128,
+      "size": 124,
+      "columns": 8,
+      "anchor": [
+        0.5,
+        0.85
+      ],
+      "padding": 2,
+      "clips": {
+        "direction0": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "direction1": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "direction2": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "direction3": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        }
+      }
+    },
+    "worker-clean_dead": {
+      "file": "worker-clean_dead.71c44bfbec8c.webp",
+      "png": "worker-clean_dead.71c44bfbec8c.png",
+      "cell": 128,
+      "size": 124,
+      "columns": 8,
+      "anchor": [
+        0.5,
+        0.85
+      ],
+      "padding": 2,
+      "clips": {
+        "direction0": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "direction1": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "direction2": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "direction3": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        }
+      }
+    },
+    "worker-replace_animals": {
+      "file": "worker-replace_animals.4d1e12872415.webp",
+      "png": "worker-replace_animals.4d1e12872415.png",
+      "cell": 128,
+      "size": 124,
+      "columns": 8,
+      "anchor": [
+        0.5,
+        0.85
+      ],
+      "padding": 2,
+      "clips": {
+        "direction0": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "direction1": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "direction2": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "direction3": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        }
+      }
+    },
+    "worker-restock": {
+      "file": "worker-restock.a345779b1fa6.webp",
+      "png": "worker-restock.a345779b1fa6.png",
+      "cell": 128,
+      "size": 124,
+      "columns": 8,
+      "anchor": [
+        0.5,
+        0.85
+      ],
+      "padding": 2,
+      "clips": {
+        "direction0": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "direction1": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "direction2": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "direction3": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        }
+      }
+    },
+    "worker-sell_eggs": {
+      "file": "worker-sell_eggs.c1846eaba01d.webp",
+      "png": "worker-sell_eggs.c1846eaba01d.png",
+      "cell": 128,
+      "size": 124,
+      "columns": 8,
+      "anchor": [
+        0.5,
+        0.85
+      ],
+      "padding": 2,
+      "clips": {
+        "direction0": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "direction1": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "direction2": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "direction3": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        }
+      }
+    },
+    "ambient": {
+      "file": "ambient.130c4c441221.webp",
+      "png": "ambient.130c4c441221.png",
+      "cell": 128,
+      "size": 124,
+      "columns": 8,
+      "anchor": [
+        0.5,
+        0.85
+      ],
+      "padding": 2,
+      "clips": {
+        "grass": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "leaves": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "water": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "lamp": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "water_fx": {
+          "row": 4,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "care_fx": {
+          "row": 5,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        }
+      }
+    }
+  }
+}

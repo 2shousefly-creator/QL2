@@ -1,3 +1,4 @@
+import { normalizeCropReward } from "../farmEconomy";
 import React, { useState } from "react";
 import { CROP_CATALOG, FERTILIZER_CATALOG } from "../farmCatalog";
 import { CropId, FertilizerTypeId, FarmInventory } from "../farmTypes";
@@ -6,6 +7,7 @@ import { getCropAsset } from "../tangGiaAssetManifest";
 import { AppModal, ModalButton, OverlayBody, OverlayFooter, OverlayHeader } from "../../../components/overlay/AppOverlay";
 
 interface PlantSeedModalProps {
+  rewardScale?: number;
   isOpen: boolean;
   onClose: () => void;
   inventory: FarmInventory;
@@ -15,6 +17,7 @@ interface PlantSeedModalProps {
 }
 
 export const PlantSeedModal: React.FC<PlantSeedModalProps> = ({
+  rewardScale = 1,
   isOpen,
   onClose,
   inventory,
@@ -58,6 +61,7 @@ export const PlantSeedModal: React.FC<PlantSeedModalProps> = ({
     ? FERTILIZER_CATALOG.find((fertilizer) => fertilizer.id === selectedFertilizerId)
     : null;
 
+  const preview = selectedCrop ? normalizeCropReward(selectedCrop.harvestGold, Math.round(selectedCrop.harvestXp * (1 + (selectedFertilizer?.xpBonusPct ?? 0))), { productivity: rewardScale, inputGold: selectedCrop.seedCostGold + (selectedFertilizer?.purchaseGold ?? 0) }) : null;
   const handleConfirmPlanting = () => {
     if (!selectedCropId) return;
     onSelectSeedWithFertilizer(selectedCropId, selectedFertilizerId);
@@ -109,6 +113,7 @@ export const PlantSeedModal: React.FC<PlantSeedModalProps> = ({
             <X className="w-4 h-4" />
           </ModalButton>
         </OverlayHeader>
+        <p className="px-4 py-2 text-xs text-slate-400">Phần thưởng mỗi ô được cân theo quy mô khu vườn. Phẩm chất, thời tiết và vật tư đã dùng còn ảnh hưởng đến thưởng.</p>
 
         {/* STEP 1: Select Crop */}
         {!selectedCrop ? (
@@ -184,10 +189,10 @@ export const PlantSeedModal: React.FC<PlantSeedModalProps> = ({
                             </h4>
                             <div className="text-xs text-[var(--modal-muted)] mt-0.5 space-y-0.5">
                               <div>
-                                Thu hoạch: <span className="text-[var(--modal-success)] font-bold">🪙{crop.harvestGold.toLocaleString("vi-VN")}</span>
+                                Thu hoạch: <span className="text-[var(--modal-success)] font-bold">🪙{normalizeCropReward(crop.harvestGold, crop.harvestXp, { productivity: rewardScale, inputGold: crop.seedCostGold }).gold.toLocaleString("vi-VN", { maximumFractionDigits: 2 })}</span>
                               </div>
                               <div>
-                                Kinh nghiệm: <span className="text-[var(--modal-reward)] font-bold">⚡{crop.harvestXp.toLocaleString("vi-VN")} XP</span>
+                                Kinh nghiệm: <span className="text-[var(--modal-reward)] font-bold">⚡{(crop.harvestXp * rewardScale).toLocaleString("vi-VN", { maximumFractionDigits: 2 })} XP</span>
                               </div>
                             </div>
                           </div>
@@ -229,6 +234,7 @@ export const PlantSeedModal: React.FC<PlantSeedModalProps> = ({
               </div>
             </div>
 
+            {preview && <p className="rounded-xl bg-slate-800 p-3 text-sm">Dự kiến cơ bản: {preview.gold.toLocaleString("vi-VN", {maximumFractionDigits:2})} vàng · {preview.xp.toLocaleString("vi-VN", {maximumFractionDigits:2})} EXP. Phẩm chất và thời tiết được tính khi thu hoạch.</p>}
             <div className="space-y-2">
               <label className="text-xs font-semibold text-[var(--modal-text)] flex items-center gap-1.5">
                 <Sparkles className="w-4 h-4 text-[var(--modal-reward)]" />
@@ -257,7 +263,7 @@ export const PlantSeedModal: React.FC<PlantSeedModalProps> = ({
 
               {rememberedFertilizer && rememberedFertilizerCount <= 0 && (
                 <div className="rounded-xl border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-xs font-semibold text-[var(--modal-reward)]">
-                  Đã ghi nhớ {rememberedFertilizer.name}, nhưng hiện đã hết. Lần gieo này đang dùng “Không dùng phân bón”; lựa chọn đã ghi nhớ vẫn được giữ cho lần sau.
+                  Đã ghi nhớ {rememberedFertilizer.name}, nhưng hiện đã hết. Lần gieo này đang dùng “Không dùng phân bón”. Xác nhận gieo sẽ ghi nhớ lựa chọn hiện tại.
                 </div>
               )}
 

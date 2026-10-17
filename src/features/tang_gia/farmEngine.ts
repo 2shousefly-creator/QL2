@@ -1,3 +1,4 @@
+import { createCropEconomy, normalizeCropReward, creditCropGold } from "./farmEconomy";
 import { RANK_STEPS } from "../../game/rankBuilder";
 import { RANK_FAMILIES } from "../../game/rankFamilies";
 import { BadgeDefinition, RankStep } from "../../game/types";
@@ -974,9 +975,10 @@ function getPenTransactionTimestamp(
   farm: FarmSaveState,
   requestedAt: number
 ): number {
-  const transactionAt = Number.isFinite(requestedAt)
+  const requested = Number.isFinite(requestedAt)
     ? requestedAt
     : Date.now();
+  const transactionAt = Math.max(requested, Number.isFinite(farm.lastSettledAt) ? farm.lastSettledAt : requested);
   repairPenFutureClockSkew(farm, transactionAt);
   return transactionAt;
 }
@@ -1006,11 +1008,12 @@ function settlePenAnimals(
   farm: FarmSaveState,
   startT: number,
   endT: number,
-  weatherSeed: number
+  weatherSeed: number,
+  managed: boolean = false
 ): AnimalDeathNotificationSummary {
   const result = runPenTimeline(farm, startT, endT, weatherSeed, {
     collectEggs: true,
-    maxEggProgressMs: MAX_OFFLINE_EGG_PRODUCTION_MS,
+    maxEggProgressMs: managed ? Number.POSITIVE_INFINITY : MAX_OFFLINE_EGG_PRODUCTION_MS,
   });
   refreshPenDerivedState(farm, endT, weatherSeed);
   return result.newDeaths;
@@ -1030,6 +1033,7 @@ export function projectPenState(
   now: number
 ): PenPresentationProjection {
   const projected = cloneFarmForPenProjection(farm);
+  const managed = farm.worker?.status === "employed";
   const currentNow = Number.isFinite(now) ? now : farm.lastSettledAt;
   const startT = Number.isFinite(farm.lastSettledAt)
     ? Math.min(farm.lastSettledAt, currentNow)
@@ -1037,7 +1041,7 @@ export function projectPenState(
   const weatherSeed = farm.weatherSeed ?? DEFAULT_FARM_WEATHER_SEED;
   runPenTimeline(projected, startT, currentNow, weatherSeed, {
     collectEggs: false,
-    maxEggProgressMs: MAX_OFFLINE_EGG_PRODUCTION_MS,
+    maxEggProgressMs: managed ? Number.POSITIVE_INFINITY : MAX_OFFLINE_EGG_PRODUCTION_MS,
   });
   const penFeedEmptyAt = refreshPenDerivedState(
     projected,
@@ -1132,9 +1136,11 @@ function completeGrowingPlot(
     soilMoisture: plot.soilMoisture,
     soilMoistureUpdatedAt: completedAt,
     lastFertilizerId: plot.lastFertilizerId,
+    lastCropId: plot.lastCropId,
     cropId: plot.cropId,
     plantedAt: plot.plantedAt,
     growthCompletedAt: completedAt,
+    economy: plot.economy,
     fertilizerId: plot.fertilizerId,
     fertilizerXpBonusPct: plot.fertilizerXpBonusPct,
     growthTimeReductionPct: plot.growthTimeReductionPct,
@@ -1567,7 +1573,7 @@ export function getProjectedCropCompletionAt(
 }
 
 /** Settles the whole Farm to wall-clock `now`. */
-export function settleFarmState(farm: FarmSaveState, now: number): FarmSettlementResult {
+export function settleFarmState(farm: FarmSaveState, now: number, options: { managed?: boolean } = {}): FarmSettlementResult {
   const currentNow = Number.isFinite(now) ? now : Date.now();
   repairPenFutureClockSkew(farm, currentNow);
   const previousSettledAt = Number.isFinite(farm.lastSettledAt)
@@ -1588,7 +1594,7 @@ export function settleFarmState(farm: FarmSaveState, now: number): FarmSettlemen
   // Settle livestock lifecycle, Feed/Danger and eggs along one timestamp timeline.
   const startT = previousSettledAt;
   const endT = currentNow;
-  const newDeaths = settlePenAnimals(farm, startT, endT, weatherSeed);
+  const newDeaths = settlePenAnimals(farm, startT, endT, weatherSeed, options.managed === true);
   const queuedOfflineDeathNotification =
     newDeaths.total > 0 && endT - startT > OFFLINE_DEATH_NOTICE_THRESHOLD_MS;
   if (queuedOfflineDeathNotification) {
@@ -1623,6 +1629,7 @@ export function waterSelectedPlot(
   plotIndex: number,
   now: number
 ): { success: boolean; moistureAdded: number; message: string } {
+  now = Math.max(now, farm.lastSettledAt);
   const plot = farm.plots[plotIndex];
   if (!plot || plot.status === "locked") {
     return { success: false, moistureAdded: 0, message: "Ô đất không hợp lệ!" };
@@ -1655,6 +1662,7 @@ export function treatPestOnSelectedPlot(
   plotIndex: number,
   now: number
 ): { success: boolean; message: string } {
+  now = Math.max(now, farm.lastSettledAt);
   const sourcePlot = farm.plots[plotIndex];
   if (!sourcePlot) {
     return { success: false, message: "Ô đất không hợp lệ!" };
@@ -1691,12 +1699,15 @@ export function plantSeedWithFertilizer(
   plotIndex: number,
   cropId: CropId,
   fertilizerId: FertilizerTypeId | null,
-  now: number
+  now: number,
+  rankIndex: number = 0,
+  origin: "manual" | "worker" = "manual"
 ): { success: boolean; message: string } {
   if (plotIndex < 0 || plotIndex >= farm.plots.length) {
     return { success: false, message: "Ô đất không hợp lệ!" };
   }
 
+  now = Math.max(now, farm.lastSettledAt);
   const plot = farm.plots[plotIndex];
   if (!plot || plot.status !== "empty") {
     return { success: false, message: "Ô đất không trống!" };
@@ -1716,12 +1727,16 @@ export function plantSeedWithFertilizer(
   const cropDef = CROP_CATALOG.find((c) => c.id === cropId);
   if (!cropDef) return { success: false, message: "Loại cây trồng không tồn tại!" };
 
+  const plantingRank = RANK_STEPS[rankIndex];
+  if (!plantingRank || !rankAtLeast(plantingRank, cropDef.requiredRank)) return { success: false, message: "Chưa đủ quân hàm để trồng cây này!" };
+
   const fertilizerDefinition = fertilizerId
     ? FERTILIZER_CATALOG.find((fertilizer) => fertilizer.id === fertilizerId)
     : null;
   if (fertilizerId && !fertilizerDefinition) {
     return { success: false, message: "Loại phân bón không hợp lệ!" };
   }
+  if (fertilizerDefinition && !rankAtLeast(plantingRank, fertilizerDefinition.requiredRank)) return { success: false, message: "Chưa đủ quân hàm để dùng phân này!" };
 
   if (fertilizerId) {
     if (!farm.inventory.fertilizer) {
@@ -1749,7 +1764,9 @@ export function plantSeedWithFertilizer(
     status: "growing",
     soilMoisture: plot.soilMoisture,
     soilMoistureUpdatedAt: now,
-    lastFertilizerId: fertilizerId,
+    lastFertilizerId: origin === "worker" ? plot.lastFertilizerId : fertilizerId,
+    lastCropId: origin === "worker" ? plot.lastCropId : cropId,
+    economy: createCropEconomy(farm, rankIndex, cropDef, fertilizerDefinition),
     cropId,
     plantedAt: now,
     growthWorkTotalMs: effectiveGrowthMs,
@@ -1786,8 +1803,10 @@ export function applyFertilizerToGrowingCrop(
   farm: FarmSaveState,
   plotIndex: number,
   fertilizerId: FertilizerTypeId,
-  now: number
+  now: number,
+  currentRank?: RankStep
 ): { success: boolean; message: string } {
+  now = Math.max(now, farm.lastSettledAt);
   const plot = farm.plots[plotIndex];
   if (!plot || plot.status !== "growing") {
     return { success: false, message: "Chỉ có thể bón phân khi cây đang phát triển!" };
@@ -1797,6 +1816,7 @@ export function applyFertilizerToGrowingCrop(
   }
   const fertilizer = FERTILIZER_CATALOG.find((entry) => entry.id === fertilizerId);
   if (!fertilizer) return { success: false, message: "Loại phân bón không hợp lệ!" };
+  if (currentRank && !rankAtLeast(currentRank, fertilizer.requiredRank)) return { success: false, message: "Chưa đủ quân hàm để dùng phân này!" };
   const ownedCount = farm.inventory.fertilizer?.[fertilizerId] || 0;
   if (ownedCount <= 0) {
     return { success: false, message: "Bạn đã hết loại phân bón này!" };
@@ -1816,6 +1836,7 @@ export function applyFertilizerToGrowingCrop(
   plot.growthLastUpdatedAt = now;
   plot.fertilizerId = fertilizerId;
   plot.lastFertilizerId = fertilizerId;
+  if (plot.economy) plot.economy = { ...plot.economy, inputGold: plot.economy.inputGold + fertilizer.purchaseGold };
   plot.fertilizerXpBonusPct = fertilizer.xpBonusPct;
   plot.growthTimeReductionPct = fertilizer.growthTimeReductionPct;
 
@@ -1881,6 +1902,19 @@ export function getItemOriginalPrice(
     default:
       return 0;
   }
+}
+
+/** Shared atomic purchase for shop clicks and authorized worker restocking. */
+export function buyFarmSupply(farm: FarmSaveState, category: "seeds" | "fertilizer" | "animals" | "feed", id: string, quantity: number, rank: RankStep, reserve = 0, budget = Infinity) {
+  const definition = (category === "seeds" ? CROP_CATALOG : category === "fertilizer" ? FERTILIZER_CATALOG : category === "animals" ? ANIMAL_CATALOG : FEED_CATALOG).find(item => item.id === id);
+  const count = Math.floor(quantity), cost = getItemOriginalPrice(category, id) * count;
+  if (!definition || !Number.isSafeInteger(count) || count < 1 || !Number.isSafeInteger(cost)) return { success: false, cost: 0, message: "Vật tư hoặc số lượng không hợp lệ." };
+  if (!rankAtLeast(rank, definition.requiredRank)) return { success: false, cost: 0, message: "Chưa đủ quân hàm yêu cầu." };
+  if (cost > budget || farm.gold - cost < reserve) return { success: false, cost: 0, message: "Không đủ vàng hoặc hạn mức để mua vật tư." };
+  const inventory = farm.inventory[category] as Record<string, number>;
+  inventory[id] = (inventory[id] ?? 0) + count;
+  farm.gold -= cost;
+  return { success: true, cost, message: `Đã mua ${count} ${definition.name} (-${cost.toLocaleString("vi-VN")} vàng).` };
 }
 
 /**
@@ -2013,18 +2047,18 @@ function calculateCropHarvestReward(
   const pestGoldMultiplier = getPestGoldMultiplier(plot.pestDamageLevel);
   const goldEarned = Math.round(goldAfterDroughtPenalty * pestGoldMultiplier);
   const roundedGoldAfterDroughtPenalty = Math.round(goldAfterDroughtPenalty);
+  const normalized = normalizeCropReward(goldEarned, applyQualityMultiplier(preQualityXp, qualityMultiplier), plot.economy);
 
   return {
     cropName: cropDefinition.name,
-    baseGold: cropDefinition.harvestGold,
-    baseXp: cropDefinition.harvestXp,
-    goldEarned,
-    xpEarned: applyQualityMultiplier(preQualityXp, qualityMultiplier),
-    fertilizerBonusXp,
-    rainBonusGold,
-    droughtPenaltyGold:
-      goldBeforeDroughtPenalty - roundedGoldAfterDroughtPenalty,
-    pestPenaltyGold: roundedGoldAfterDroughtPenalty - goldEarned,
+    baseGold: normalizeCropReward(cropDefinition.harvestGold, 0, plot.economy).gold,
+    baseXp: cropDefinition.harvestXp * (plot.economy?.productivity ?? 1),
+    goldEarned: normalized.gold,
+    xpEarned: normalized.xp,
+    fertilizerBonusXp: fertilizerBonusXp * (plot.economy?.productivity ?? 1),
+    rainBonusGold: rainBonusGold * (plot.economy?.productivity ?? 1),
+    droughtPenaltyGold: (goldBeforeDroughtPenalty - roundedGoldAfterDroughtPenalty) * (plot.economy?.productivity ?? 1),
+    pestPenaltyGold: (roundedGoldAfterDroughtPenalty - goldEarned) * (plot.economy?.productivity ?? 1),
     quality,
     qualityMultiplier,
     hasFertilizer: hasCropFertilizer(plot),
@@ -2066,6 +2100,7 @@ export function harvestPlot(
   hasFertilizer: boolean;
   qualityBreakdown: QualityBreakdown;
 } | null {
+  now = Math.max(now, farm.lastSettledAt);
   const sourcePlot = farm.plots[plotIndex];
   if (!sourcePlot) return null;
   const plot = settlePlotState(
@@ -2079,6 +2114,7 @@ export function harvestPlot(
 
   const reward = calculateCropHarvestReward(plot);
   if (!reward) return null;
+  reward.goldEarned = creditCropGold(farm, reward.goldEarned);
   const preQualityGold = reward.baseGold + reward.rainBonusGold;
   const preQualityXp = reward.baseXp + reward.fertilizerBonusXp;
 
@@ -2100,6 +2136,7 @@ export function harvestPlot(
     soilMoisture: plot.soilMoisture,
     soilMoistureUpdatedAt: plot.soilMoistureUpdatedAt,
     lastFertilizerId: plot.lastFertilizerId,
+    lastCropId: plot.lastCropId,
   };
   farm.gold += reward.goldEarned;
 
@@ -2162,6 +2199,7 @@ export function harvestAllReadyCrops(
   let droughtPenaltyGold = 0;
   let pestPenaltyGold = 0;
   let harvestedCount = 0;
+  now = Math.max(now, farm.lastSettledAt);
   const qualityBreakdown = createEmptyQualityBreakdown();
   const details: Array<{
     plotIndex: number;
@@ -2229,12 +2267,14 @@ export function harvestAllReadyCrops(
           soilMoisture: plot.soilMoisture,
           soilMoistureUpdatedAt: plot.soilMoistureUpdatedAt,
           lastFertilizerId: plot.lastFertilizerId,
+    lastCropId: plot.lastCropId,
         };
       }
     }
   }
 
   if (harvestedCount > 0) {
+    totalGold = creditCropGold(farm, totalGold);
     farm.gold += totalGold;
   }
 
@@ -2287,10 +2327,12 @@ export function feedPenBuff(
   farm: FarmSaveState,
   feedTypeId: FeedTypeId,
   quantity: number = 1,
-  now: number = Date.now()
+  now: number = Date.now(),
+  currentRank?: RankStep
 ): { success: boolean; message: string; quantityFed?: number } {
   const feedDef = FEED_CATALOG.find((f) => f.id === feedTypeId);
   if (!feedDef) return { success: false, message: "Loại thức ăn không hợp lệ!" };
+  if (currentRank && !rankAtLeast(currentRank, feedDef.requiredRank)) return { success: false, message: "Chưa đủ quân hàm để dùng thức ăn này!" };
 
   if (!Number.isInteger(quantity) || quantity <= 0) {
     return { success: false, message: "Số lượng thức ăn phải là số nguyên dương!" };
@@ -2391,7 +2433,8 @@ export function feedPenBuff(
 export function sellEggs(
   farm: FarmSaveState,
   eggTypeId: EggTypeId,
-  count: number
+  count: number,
+  allowedQualities: ItemQuality[] = ["thuong", "tot", "hiem", "hoan_my"]
 ): {
   goldEarned: number;
   xpEarned: number;
@@ -2405,7 +2448,8 @@ export function sellEggs(
   const requestedCount = Number.isFinite(count)
     ? Math.max(0, Math.floor(count))
     : 0;
-  const soldCount = Math.min(currentCount, requestedCount);
+  const availableCount = allowedQualities.reduce((sum, q) => sum + (farm.eggQualityInventory![eggTypeId][q]?.count ?? 0), 0);
+  const soldCount = Math.min(currentCount, availableCount, requestedCount);
 
   if (soldCount <= 0) {
     return {
@@ -2435,6 +2479,7 @@ export function sellEggs(
   const qualityBreakdown = createEmptyQualityBreakdown();
 
   for (const q of qualityTiers) {
+    if (!allowedQualities.includes(q)) continue;
     if (remainingToSell <= 0) break;
     const slot = qualitySlots[q];
     if (slot && slot.count > 0) {
@@ -2583,6 +2628,7 @@ export function clearPlot(farm: FarmSaveState, plotIndex: number): boolean {
     soilMoisture: plot.soilMoisture,
     soilMoistureUpdatedAt: plot.soilMoistureUpdatedAt,
     ...(lastFertilizerId !== undefined ? { lastFertilizerId } : {}),
+    lastCropId: plot.lastCropId ?? ((plot.status === "growing" || plot.status === "ready") ? plot.cropId : undefined),
   };
   return true;
 }
@@ -2621,6 +2667,8 @@ export function addAnimalToPen(
   if (!animalDef) {
     return { success: false, message: "Loại vật nuôi không hợp lệ!" };
   }
+
+  if (currentRank && !rankAtLeast(currentRank, animalDef.requiredRank)) return { success: false, message: "Chưa đủ quân hàm để thả vật nuôi này!" };
 
   // Deduct 1 animal from inventory
   farm.inventory.animals[animalId] = ownedCount - 1;

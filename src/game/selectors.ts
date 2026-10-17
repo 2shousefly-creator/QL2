@@ -7,7 +7,7 @@ import {
   getRequiredXpForTransition,
   isMajorPromotion,
   isXpBarFull,
-} from "./xpEngine";
+} from "./xpProgression";
 import { GameState, RankFamily, RankStep } from "./types";
 import { RANK_STEPS } from "./rankBuilder";
 

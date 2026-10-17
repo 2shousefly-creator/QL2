@@ -2,8 +2,9 @@ import type { GameState, RankStep } from '../../../game/types';
 import type { FarmSaveState } from '../farmTypes';
 import type { FarmPresentationState } from '../farmPresentation';
 import { formatFeedPercentage } from '../farmPresentation';
-import { ANIMAL_CATALOG, CROP_CATALOG } from '../farmCatalog';
-import { getAnimalCapacity, getCropGrowthProgress, getCurrentCropRemainingDurationMs, hasCropFertilizer } from '../farmEngine';
+import { ANIMAL_CATALOG, CROP_CATALOG, FERTILIZER_CATALOG, FARM_PLOT_UNLOCKS } from '../farmCatalog';
+import { getCropHarvestPreview, getRankNameForDisplay, getAnimalCapacity, getCropGrowthProgress, getCurrentCropRemainingDurationMs, hasCropFertilizer } from '../farmEngine';
+import { normalizeCropReward } from '../farmEconomy';
 import { getAnimalVisualScale, getAnimalLifeRemainingRatio, getPenDangerRatio, getStarvationDeadlineAt, isAnimalDead } from '../animalLifecycle';
 import { getCropVisualStage } from '../farmVisualTheme';
 import { getSoilMoistureBand, getSoilMoisturePresentation } from '../soilMoistureEngine';
@@ -33,6 +34,7 @@ export function adaptFarmMobile(game: GameState, farm: FarmSaveState, view: Farm
   rank: RankStep, weather: CanonicalWeatherSlot, now: number): FarmMobileSnapshot {
   const deadline = getStarvationDeadlineAt(view.penStarvationStartedAt);
   return {
+    worker: farm.worker, now,
     gold: farm.gold.toLocaleString('vi-VN'), xp: getFarmPlayerXpPercentage(game),
     weatherLabel: `${getWeatherPresentation(weather.weather, weather.season).name} · ${weather.phase === 'night' ? 'Đêm' : 'Ngày'}`,
     weatherDescription: `${SEASON_METADATA[weather.season].name}. ${getWeatherMoistureDescription(weather.season, weather.phase, weather.weather)}\n${getWeatherPresentation(weather.weather, weather.season).fullDesc}\nĐộ ẩm: ${getSoilMoistureRatePerHour(weather.season, weather.phase, weather.weather)}/giờ\nSlot còn: ${mobileCountdown(weather.remainingMs)}. Chu kỳ UTC+7.`,
@@ -42,7 +44,14 @@ export function adaptFarmMobile(game: GameState, farm: FarmSaveState, view: Farm
       const moisture = plot.status === 'locked' ? 0 : plot.soilMoisture;
       const band = getSoilMoistureBand(moisture);
       const progress = getCropGrowthProgress(plot);
-      return { index, status: plot.status, cropId, stage: getCropVisualStage(getCropGrowthProgress(plot)),
+      const crop = CROP_CATALOG.find(item => item.id === cropId);
+      const reward = plot.status === 'ready' ? getCropHarvestPreview(farm, index, plot) : plot.status === 'growing' && crop ? normalizeCropReward(crop.harvestGold, crop.harvestXp + Math.round(crop.harvestXp * (plot.fertilizerXpBonusPct ?? 0)), plot.economy) : null;
+      const gold = reward && ('goldEarned' in reward ? reward.goldEarned : reward.gold), xp = reward && ('xpEarned' in reward ? reward.xpEarned : reward.xp);
+      const format = (n: number) => n.toLocaleString('vi-VN', {maximumFractionDigits: 2});
+      const unlock = FARM_PLOT_UNLOCKS[index];
+      const detail = plot.status === 'locked' ? `Mở tại ${getRankNameForDisplay(unlock?.requiredRank ?? null)} · ${unlock?.gold ?? 0} vàng` : `Độ ẩm ${Math.floor(moisture)}% · ${plot.status === 'growing' || plot.status === 'ready' ? FERTILIZER_CATALOG.find(f => f.id === plot.fertilizerId)?.name ?? 'Chưa bón phân' : 'Ô trống'}${plot.status === 'growing' || plot.status === 'ready' ? ` · Sâu ${Math.floor(plot.pestPressure)}%` : ''}`;
+      return { index, status: plot.status, cropId, plantedAt: plot.status === 'growing' || plot.status === 'ready' ? plot.plantedAt : undefined, stage: getCropVisualStage(getCropGrowthProgress(plot)),
+        detail, rewardLabel: reward ? `${plot.status === 'ready' ? 'Thưởng dự kiến' : 'Thưởng cơ bản'}: ${format(gold!)} vàng · ${format(xp!)} EXP` : undefined,
         artStage: plot.status === 'ready' ? 'ready' : progress >= .9 ? 'mature' : progress >= .6 ? 'growing' : progress >= .3 ? 'young' : progress >= .06 ? 'sprout' : 'seeded',
         title: cropId ? CROP_CATALOG.find(crop => crop.id === cropId)!.name : `Ô đất ${index + 1}`,
         timer: plot.status === 'ready' ? 'Thu hoạch' : plot.status === 'growing'

@@ -1,3 +1,4 @@
+import { normalizeCropReward } from "../farmEconomy";
 import { FarmMarketArt } from './FarmMarketArt';
 import { animalArt, cropArt, itemArt, propArt } from '../mobile/FarmArtRegistry';
 import './farm-market.css';
@@ -30,6 +31,7 @@ import {
 import { AppModal, ModalButton, OverlayBody, OverlayFooter, OverlayHeader } from "../../../components/overlay/AppOverlay";
 
 interface FarmStoreModalProps {
+  rewardScale?: number;
   isOpen: boolean;
   mobileVisual?: boolean;
   onClose: () => void;
@@ -87,6 +89,7 @@ interface PendingBuyState {
 }
 
 export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
+  rewardScale = 1,
   isOpen,
   mobileVisual = false,
   onClose,
@@ -260,6 +263,7 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
               <X className="w-4 h-4" />
             </ModalButton>
           </OverlayHeader>
+        <p className="px-4 py-2 text-xs text-slate-400">Phần thưởng mỗi ô được cân theo quy mô khu vườn. Phẩm chất, thời tiết và vật tư đã dùng còn ảnh hưởng đến thưởng.</p>
 
           {/* 4 Tabs (Sticky under Header, horizontal scroll on narrow mobile) */}
           <div className="farm-market-tabs farm-market-tabs--four flex sm:grid sm:grid-cols-4 gap-1 p-1.5 bg-slate-900 border-b border-slate-800 text-xs overflow-x-auto no-scrollbar whitespace-nowrap shrink-0">
@@ -355,13 +359,13 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
                             Giá: <span className="font-bold text-[var(--modal-reward)]">{formatPrice(crop.seedCostGold)}</span>
                           </div>
                           <div className="truncate">
-                            Thu: <span className="font-semibold text-[var(--modal-success)]">🪙{crop.harvestGold.toLocaleString("vi-VN")}</span>
+                            Thu: <span className="font-semibold text-[var(--modal-success)]">🪙{normalizeCropReward(crop.harvestGold, crop.harvestXp, { productivity: rewardScale, inputGold: crop.seedCostGold }).gold.toLocaleString("vi-VN", { maximumFractionDigits: 2 })}</span>
                           </div>
                           <div className="truncate">
                             TG: <span className="font-mono font-medium text-[var(--modal-info)]">{formatTimeVN(crop.growthMs)}</span>
                           </div>
                           <div className="truncate">
-                            XP: <span className="font-semibold text-[var(--modal-reward)]">⚡+{crop.harvestXp}</span>
+                            XP: <span className="font-semibold text-[var(--modal-reward)]">⚡+{(crop.harvestXp * rewardScale).toLocaleString("vi-VN", { maximumFractionDigits: 2 })}</span>
                           </div>
                         </div>
 

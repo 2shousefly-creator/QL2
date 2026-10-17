@@ -1,3 +1,5 @@
+import { acquireGameWriter, isGameWriter } from "./storage/gameWriter";
+import { cloneEarningState } from "./game/cloneEarningState";
 import { UiSkinProvider } from "./components/core-visual/UiSkinContext";
 import { CoreScreenTransition } from "./components/core-visual/CoreScreenTransition";
 import { FARM_MOBILE_REQUESTED } from "./features/tang_gia/mobile/mobileGate";
@@ -17,6 +19,7 @@ import {
 } from "./storage/GameRepository";
 import { localGameRepository } from "./storage/LocalGameRepository";
 import { settleEarning } from "./game/xpEngine";
+import { captureDelegationStart, createDelegationReport } from "./game/delegationReport";
 import { ensureEnergyState, getEnergyMultiplier, getEnergyVisuals, isEnergyActive } from "./game/energyEngine";
 import { registerServiceWorker, sendRankUpReadyNotification, isRankAlreadyNotified, markRankAsNotified } from "./game/notifications";
 import { ensurePushRegistration, syncXpFullPushSchedule } from "./game/pushManager";
@@ -60,6 +63,9 @@ function isUserActiveOnline(): boolean {
 export default function App() {
   const [gameState, setGameState] = useState<GameState | null>(null);
   const overlayBusy = useOverlayBusy();
+  const [writerBlocked, setWriterBlocked] = useState(false);
+  const bootStarted = useRef(false);
+  const [offlineLoadingProgress, setOfflineLoadingProgress] = useState<number | null>(null);
   const [pushNotice, setPushNotice] = useState<{ title: string; body: string; destination: string } | null>(null);
   const [pushFarmTarget, setPushFarmTarget] = useState<{ section: 'garden' | 'pen'; nonce: number } | null>(null);
   const lastPushProjectionAt = useRef(0);
@@ -125,6 +131,9 @@ export default function App() {
   // 1. Initial Load & Version Gate
   useEffect(() => {
     async function init() {
+      if (bootStarted.current) return;
+      bootStarted.current = true;
+      if (!await acquireGameWriter()) { setWriterBlocked(true); return; }
       console.log("[UPDATE] bootstrap started");
 
       // Step A: Check and recover from pending update backup if present
@@ -159,7 +168,23 @@ export default function App() {
 
       const now = Date.now();
       // Calculate delegation settlement for elapsed time since last session
-      const { reportData } = settleEarning(state, now, "delegation");
+      const beforeWorker = state.farm?.worker ? { ...state.farm.worker.totals } : null;
+      const offlineFrom = state.time.lastSettledAt;
+      const reportStart = captureDelegationStart(state);
+      do {
+        settleEarning(state, now, "delegation");
+        if (state.time.lastSettledAt < now) {
+          setOfflineLoadingProgress(Math.floor(100 * (state.time.lastSettledAt - offlineFrom) / Math.max(1, now - offlineFrom)));
+          await localGameRepository.save(state);
+          await new Promise(resolve => setTimeout(resolve, 0));
+        }
+      } while (state.time.lastSettledAt < now);
+      setOfflineLoadingProgress(null);
+      const reportData = createDelegationReport(state, reportStart);
+      if (beforeWorker && state.farm?.worker && now - offlineFrom > 60_000) {
+        const w = state.farm.worker, after = w.totals;
+        w.offlineSummary = { from: offlineFrom, to: now, actions: after.actions - beforeWorker.actions, gold: after.gold - beforeWorker.gold, xp: after.xp - beforeWorker.xp, supplies: after.supplies - beforeWorker.supplies, wages: after.wages - beforeWorker.wages, departedAt: w.departedAt };
+      }
       
       // Determine real-time active state upon launch
       const active = isUserActiveOnline();
@@ -179,7 +204,7 @@ export default function App() {
 
   // 2. Real-time Focus, Visibility & Connection State Listeners
   useEffect(() => {
-    if (!gameState) return;
+    if (!gameState || startupGate !== "normal-startup") return;
 
     const handleActivityChange = () => {
       setGameState((prev) => {
@@ -193,9 +218,9 @@ export default function App() {
           return prev;
         }
 
-        const draft = JSON.parse(JSON.stringify(prev)) as GameState;
+        const draft = cloneEarningState(prev);
         const { reportData } = settleEarning(draft, now, prevMode);
-        draft.time.currentEarningMode = targetMode;
+        if (draft.time.lastSettledAt >= now) draft.time.currentEarningMode = targetMode;
         localGameRepository.save(draft);
         void syncXpFullPushSchedule(draft, true);
 
@@ -232,11 +257,11 @@ export default function App() {
       window.removeEventListener("beforeunload", onBeforeUnload);
       window.removeEventListener("pagehide", onPageHide);
     };
-  }, [gameState !== null]);
+  }, [gameState !== null, startupGate]);
 
   // 3. Real-time Ticking Loop
   useEffect(() => {
-    if (!gameState) return;
+    if (!gameState || startupGate !== "normal-startup") return;
 
     const interval = setInterval(() => {
       let pendingReport: DelegationReportData | null = null;
@@ -246,9 +271,11 @@ export default function App() {
         const active = isUserActiveOnline();
         const targetMode: EarningMode = active ? "direct_online" : "delegation";
 
-        const draft = JSON.parse(JSON.stringify(prev)) as GameState;
-        const { reportData } = settleEarning(draft, now, targetMode);
-        localGameRepository.save(draft);
+        const draft = cloneEarningState(prev);
+        const { reportData } = settleEarning(draft, now, prev.time.currentEarningMode);
+        if (draft.time.lastSettledAt >= now) draft.time.currentEarningMode = targetMode;
+        const transactionChanged = (draft.farm?.worker?.revision ?? 0) !== (prev.farm?.worker?.revision ?? 0) || draft.progression.xpIntoCurrentRankTicks !== prev.progression.xpIntoCurrentRankTicks;
+        localGameRepository.save(draft, transactionChanged ? "transaction" : "checkpoint");
 
         if (reportData && active && targetMode === "direct_online") {
           pendingReport = reportData;
@@ -264,7 +291,19 @@ export default function App() {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [gameState !== null]);
+  }, [gameState !== null, startupGate]);
+
+  useEffect(() => {
+    if (!gameState || startupGate !== "normal-startup" || !isGameWriter() || Date.now() - gameState.time.lastSettledAt < 5000) return;
+    const timer = setTimeout(() => setGameState(prev => {
+      if (!prev) return prev;
+      const draft = cloneEarningState(prev);
+      settleEarning(draft, Date.now(), prev.time.currentEarningMode);
+      localGameRepository.save(draft);
+      return draft;
+    }), 0);
+    return () => clearTimeout(timer);
+  }, [gameState?.time.lastSettledAt, startupGate]);
 
   // 3.5. Register Service Worker on Mount & SW waiting listener
   useEffect(() => {
@@ -409,11 +448,19 @@ export default function App() {
 
   // Helper to update state cleanly (supports function updater or direct GameState object)
   const handleUpdateState = useCallback((updater: ((draft: GameState) => void) | GameState) => {
+    let deferred = false;
     queueMicrotask(() => {
       setGameState((prev) => {
         if (!prev) return prev;
         if (typeof updater === "function") {
-          const draft = JSON.parse(JSON.stringify(prev)) as GameState;
+          const draft = structuredClone(prev);
+          const targetAt = Date.now();
+          settleEarning(draft, targetAt, draft.time.currentEarningMode);
+          if (draft.time.lastSettledAt < targetAt) {
+            localGameRepository.save(draft);
+            if (!deferred) { deferred = true; setTimeout(() => handleUpdateState(updater), 0); }
+            return draft;
+          }
           updater(draft);
           localGameRepository.save(draft);
           void syncXpFullPushSchedule(draft, true);
@@ -458,12 +505,8 @@ export default function App() {
       totalQuestions?: number;
     }
   ) => {
-    setGameState((prev) => {
-      if (!prev) return prev;
-      const draft = JSON.parse(JSON.stringify(prev)) as GameState;
-      completePromotionChallenge(draft, completedAtEpochMs, completedChallengeStats);
-      localGameRepository.save(draft);
-      return draft;
+    handleUpdateState(draft => {
+      completePromotionChallenge(draft, Math.max(completedAtEpochMs, draft.time.lastSettledAt), completedChallengeStats);
     });
     setIsChallengeActive(false);
   };
@@ -473,7 +516,7 @@ export default function App() {
     if (reason === "Rớt sát hạch") {
       setGameState((prev) => {
         if (!prev) return prev;
-        const draft = JSON.parse(JSON.stringify(prev)) as GameState;
+        const draft = structuredClone(prev);
         const targetRank = draft.progression.currentRankIndex + 1;
         if (!draft.progression.rankRetries) {
           draft.progression.rankRetries = {};
@@ -488,12 +531,8 @@ export default function App() {
 
   // Dismiss Promotion Ceremony
   const handleDismissCeremony = () => {
-    setGameState((prev) => {
-      if (!prev) return prev;
-      const draft = JSON.parse(JSON.stringify(prev)) as GameState;
-      dismissPromotionCeremony(draft, Date.now());
-      localGameRepository.save(draft);
-      return draft;
+    handleUpdateState(draft => {
+      dismissPromotionCeremony(draft, draft.time.lastSettledAt);
     });
   };
 
@@ -504,7 +543,7 @@ export default function App() {
     setDelegationReport(null);
     setGameState((prev) => {
       if (!prev) return prev;
-      const draft = JSON.parse(JSON.stringify(prev)) as GameState;
+      const draft = structuredClone(prev);
       draft.ui.lastSeenDelegationReportAt = reportId;
       localGameRepository.save(draft);
       return draft;
@@ -518,7 +557,7 @@ export default function App() {
 
     setGameState((prev) => {
       if (!prev) return prev;
-      const draft = JSON.parse(JSON.stringify(prev)) as GameState;
+      const draft = structuredClone(prev);
       draft.ui.lastSeenDelegationReportAt = reportId;
 
       localGameRepository.save(draft);
@@ -540,13 +579,15 @@ export default function App() {
     }
   }, [delegationReport]);
 
+  if (writerBlocked) return <div className="min-h-screen bg-slate-950 text-white p-8" role="status">Quân Lộ đang mở ở tab khác. Đóng tab đó rồi <button onClick={() => location.reload()}>tải lại trang này</button>.</div>;
+
   if (!gameState) {
     return (
       <div className="military-ui min-h-screen bg-slate-950 text-slate-100 flex items-center justify-center">
         <div className="flex flex-col items-center gap-3">
           <div className="w-10 h-10 border-4 border-amber-400 border-t-transparent rounded-full animate-spin" />
           <span className="text-sm font-extrabold text-amber-300 tracking-wider uppercase">
-            Đang tải dữ liệu quân hàm...
+            {offlineLoadingProgress === null ? "Đang tải dữ liệu quân hàm..." : `Đang cập nhật tiến trình vắng mặt · ${offlineLoadingProgress}%`}
           </span>
         </div>
       </div>
@@ -576,6 +617,7 @@ export default function App() {
       data-reduced-motion={gameState.settings.reducedMotion ? "true" : "false"}
       style={chapterThemeStyle}
     >
+      {startupGate === "normal-startup" && Date.now() - gameState.time.lastSettledAt > 5000 && <div className="fixed inset-0 z-[10000] bg-slate-950/95 flex items-center justify-center p-8" role="status" aria-live="polite">Đang cập nhật tiến trình vắng mặt. Các thao tác sẽ tiếp tục khi dữ liệu đã cập nhật.</div>}
       {/* Game World Ambient Glow Backgrounds */}
       <div className="theme-world-ambient fixed inset-0 z-0 pointer-events-none opacity-50" />
 
@@ -619,8 +661,7 @@ export default function App() {
                 const active = isEnergyActive(gameState, gameState.time.currentEarningMode);
                 const energyMult = getEnergyMultiplier(energyPercent, active);
                 const energyVisuals = getEnergyVisuals(energyPercent, active);
-
-                return (
+  return (
                   <div className="command-status-hud__energy flex flex-col items-end gap-1" aria-label={`Năng lượng ${Math.round(energyPercent)} phần trăm`}>
                     <div className="flex items-center gap-1.5 text-xs font-extrabold">
                       <span className="technical-label hidden sm:inline">Năng lượng</span>

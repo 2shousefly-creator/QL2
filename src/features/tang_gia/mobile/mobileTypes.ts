@@ -13,10 +13,12 @@ export type MobilePlot = {
   cropId: CropId | null; stage: CropAssetStage; title: string; timer: string;
   artStage: typeof CROP_FRAMES[number];
   moisture: number; moistureLabel: string; thirsty: boolean; fertilizer: boolean; pest: boolean;
-  quality?: ItemQuality;
+  quality?: ItemQuality; plantedAt?: number; detail?: string; rewardLabel?: string;
 };
 export type MobileAnimal = { id: string; species: AnimalTypeId; title: string; timer: string; lifeRemaining: string; lifeRatio: number; dead: boolean; weak: boolean; scale: number; storedEggs: number };
 export type FarmMobileSnapshot = {
+  worker?: import("../farmWorkerTypes").FarmWorkerState;
+  now: number;
   gold: string; xp: number; weatherLabel: string; weatherDescription: string;
   weather: string; phase: 'day' | 'night'; plots: readonly MobilePlot[];
   animals: readonly MobileAnimal[]; feed: number; feedLabel: string; feedRemaining: string;

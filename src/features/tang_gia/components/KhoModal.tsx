@@ -1,3 +1,4 @@
+import { normalizeCropReward } from "../farmEconomy";
 import { FarmMarketArt } from './FarmMarketArt';
 import { animalArt, cropArt, itemArt, propArt } from '../mobile/FarmArtRegistry';
 import './farm-market.css';
@@ -24,6 +25,7 @@ import { AppModal, ModalButton, OverlayBody, OverlayFooter, OverlayHeader } from
 export type KhoTabType = "crop" | "fertilizer" | "animal" | "feed" | "egg";
 
 interface KhoModalProps {
+  rewardScale?: number;
   isOpen: boolean;
   mobileVisual?: boolean;
   onClose: () => void;
@@ -82,6 +84,7 @@ interface PendingSellState {
 }
 
 export const KhoModal: React.FC<KhoModalProps> = ({
+  rewardScale = 1,
   isOpen,
   mobileVisual = false,
   onClose,
@@ -196,6 +199,7 @@ export const KhoModal: React.FC<KhoModalProps> = ({
             <X className="w-4 h-4" />
           </ModalButton>
         </OverlayHeader>
+        <p className="px-4 py-2 text-xs text-slate-400">Phần thưởng mỗi ô được cân theo quy mô khu vườn. Phẩm chất, thời tiết và vật tư đã dùng còn ảnh hưởng đến thưởng.</p>
 
         {/* 5 Tabs in exact required order: Cây Trồng | Phân Bón | Vật Nuôi | Thức Ăn | Trứng */}
         <div className="farm-market-tabs grid grid-cols-5 gap-1 p-2 bg-slate-900/95 border-b border-slate-800/60 text-xs sm:text-xs">
@@ -343,8 +347,8 @@ export const KhoModal: React.FC<KhoModalProps> = ({
                               <span className="text-xs text-[var(--modal-muted)]">(70% giá gốc)</span>
                             </div>
                             <div className="text-xs text-[var(--modal-muted)]">
-                              Thu hoạch: <span className="text-[var(--modal-success)] font-bold">🪙{crop.harvestGold}</span> |{" "}
-                              <span className="text-[var(--modal-reward)] font-bold">⚡{crop.harvestXp} XP</span>
+                              Thu hoạch: <span className="text-[var(--modal-success)] font-bold">🪙{normalizeCropReward(crop.harvestGold, crop.harvestXp, { productivity: rewardScale, inputGold: crop.seedCostGold }).gold.toLocaleString("vi-VN", { maximumFractionDigits: 2 })}</span> |{" "}
+                              <span className="text-[var(--modal-reward)] font-bold">⚡{(crop.harvestXp * rewardScale).toLocaleString("vi-VN", { maximumFractionDigits: 2 })} XP</span>
                             </div>
                           </div>
                         </div>

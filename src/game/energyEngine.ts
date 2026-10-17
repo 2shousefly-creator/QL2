@@ -1,7 +1,7 @@
 import { EarningMode, GameState, EnergyState } from "./types";
 import { RANK_STEPS } from "./rankBuilder";
 import { gameConfig } from "./config";
-import { getFinalJourneyXpTargetTicks } from "./xpEngine";
+import { getFinalJourneyXpTargetTicks } from "./xpProgression";
 
 /**
  * Returns YYYY-MM-DD for a given timestamp in local time.
@@ -375,7 +375,8 @@ export function settleEnergyAndXp(
   nowEpochMs: number,
   mode: EarningMode
 ): { earnedTicks: number } {
-  const energyState = ensureEnergyState(state, nowEpochMs);
+  // Preserve the preceding day's energy until its interval has been credited.
+  const energyState = ensureEnergyState(state, previousSettledAt);
 
   if (nowEpochMs <= previousSettledAt) {
     energyState.lastUpdatedAt = nowEpochMs;

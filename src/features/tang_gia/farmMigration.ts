@@ -1,3 +1,6 @@
+import { createFarmWorker } from "./farmWorkerConfig";
+import { normalizeFarmWorker } from "./farmWorkerMigration";
+import { FARM_REWARD_SCALE } from "./farmEconomy";
 import {
   ANIMAL_CATALOG,
   CROP_CATALOG,
@@ -33,7 +36,7 @@ import {
 import { clampPestPressure, PEST_OUTBREAK_THRESHOLD } from "./pestEngine";
 import { getNormalTroughDurationMs } from "./animalLifecycle";
 
-export const CURRENT_FARM_SCHEMA_VERSION = 10;
+export const CURRENT_FARM_SCHEMA_VERSION = 11;
 export const DEFAULT_FARM_WEATHER_SEED = 133742;
 
 type MutableFarmRecord = Record<string, any>;
@@ -121,9 +124,10 @@ export function createDefaultFarmState(now: number = Date.now()): FarmSaveState 
   return {
     schemaVersion: CURRENT_FARM_SCHEMA_VERSION,
     gold: 30,
+    worker: createFarmWorker(now), goldRemainder: 0, xpRemainder: 0,
     inventory: createDefaultInventory(),
     unlockedPlotCount: 2,
-    plots: Array.from({ length: 9 }, (_, index): FarmPlotState =>
+    plots: Array.from({ length: 24 }, (_, index): FarmPlotState =>
       index < 2
         ? {
             status: "empty",
@@ -429,6 +433,8 @@ function normalizePlot(
   }
   if (raw.status === "locked") return { status: "locked" };
   const lastFertilizerId = normalizeFertilizerId(raw.lastFertilizerId);
+  const lastCropId = CROP_CATALOG.find(c => c.id === raw.lastCropId)?.id ?? ((raw.status === "growing" || raw.status === "ready") ? CROP_CATALOG.find(c => c.id === raw.cropId)?.id : undefined);
+  const economy = { productivity: isFiniteNumber(raw.economy?.productivity) ? Math.max(0, Math.min(1, raw.economy.productivity)) : 1, inputGold: isFiniteNumber(raw.economy?.inputGold) ? Math.max(0, raw.economy.inputGold) : 0 };
   const soilMoisture = isFiniteNumber(raw.soilMoisture)
     ? clampSoilMoisture(raw.soilMoisture)
     : DEFAULT_SOIL_MOISTURE;
@@ -442,6 +448,7 @@ function normalizePlot(
       soilMoisture,
       soilMoistureUpdatedAt,
       ...(lastFertilizerId !== undefined ? { lastFertilizerId } : {}),
+      lastCropId, economy,
     };
   }
 
@@ -505,6 +512,7 @@ function normalizePlot(
         soilMoisture,
         soilMoistureUpdatedAt,
         ...(lastFertilizerId !== undefined ? { lastFertilizerId } : {}),
+      lastCropId, economy,
         cropId: crop.id,
         plantedAt,
         growthCompletedAt,
@@ -553,6 +561,7 @@ function normalizePlot(
       soilMoisture,
       soilMoistureUpdatedAt,
       ...(lastFertilizerId !== undefined ? { lastFertilizerId } : {}),
+      lastCropId, economy,
       cropId: crop.id,
       plantedAt,
       growthWorkTotalMs,
@@ -727,6 +736,7 @@ export function migrateFarmState(
     else if (version === 7) migrateV7ToV8(farm);
     else if (version === 8) migrateV8ToV9(farm);
     else if (version === 9) migrateV9ToV10(farm, migrationNow);
+    else if (version === 10) { farm.schemaVersion = 11; }
     version = normalizeCount(farm.schemaVersion);
   }
 
@@ -769,13 +779,13 @@ export function migrateFarmState(
     -1
   );
   const unlockedPlotCount = Math.min(
-    9,
+    24,
     Math.max(2, normalizeCount(farm.unlockedPlotCount), highestExistingUnlockedIndex + 1)
   );
   const weatherSeed = isFiniteNumber(farm.weatherSeed)
     ? farm.weatherSeed
     : DEFAULT_FARM_WEATHER_SEED;
-  const plotCount = Math.max(9, rawPlots.length);
+  const plotCount = 24;
   const plots = Array.from({ length: plotCount }, (_, index) =>
     normalizePlot(rawPlots[index], index, unlockedPlotCount, weatherSeed, migrationNow)
   );
@@ -843,6 +853,9 @@ export function migrateFarmState(
   const normalized: FarmSaveState = {
     schemaVersion: CURRENT_FARM_SCHEMA_VERSION,
     gold,
+    worker: normalizeFarmWorker(farm.worker, lastSettledAt),
+    goldRemainder: Math.min(FARM_REWARD_SCALE - 1, normalizeCount(farm.goldRemainder)),
+    xpRemainder: Math.max(0, Math.min(0.999999999, Number(farm.xpRemainder) || 0)),
     inventory,
     unlockedPlotCount,
     plots,

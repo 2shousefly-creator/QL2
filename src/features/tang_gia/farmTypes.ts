@@ -156,7 +156,11 @@ export type WeatherExposureData = {
 
 export type WeatherExposureMs = Record<WeatherType, number>;
 
+export type CropEconomySnapshot = { productivity: number; inputGold: number };
+
 type UnlockedFarmPlotBase = {
+  lastCropId?: CropId;
+  economy?: CropEconomySnapshot;
   soilMoisture: number;
   soilMoistureUpdatedAt: number;
   lastFertilizerId?: FertilizerTypeId | null;
@@ -245,6 +249,9 @@ export type FarmInventory = {
 };
 
 export type FarmSaveState = {
+  worker?: import("./farmWorkerTypes").FarmWorkerState;
+  goldRemainder?: number;
+  xpRemainder?: number;
   schemaVersion: number;
   gold: number;
   inventory: FarmInventory;
@@ -266,7 +273,7 @@ export type FarmSaveState = {
 };
 
 export type PlotUnlockDefinition = {
-  plotIndex: number; // 0..8
+  plotIndex: number; // 0..23
   gold: number;
   requiredRank: RankIdentity | null;
   unlockedByDefault: boolean;

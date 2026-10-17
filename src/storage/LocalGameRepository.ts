@@ -1,3 +1,4 @@
+import { isGameWriter } from "./gameWriter";
 import { GameRepository } from "./GameRepository";
 import { sanitizeAndMigrateState } from "./migrations";
 import { GameState } from "../game/types";
@@ -44,6 +45,7 @@ async function saveToIndexedDB(json: string): Promise<void> {
     const tx = db.transaction(DB_STORE, "readwrite");
     const store = tx.objectStore(DB_STORE);
     store.put(json, DB_KEY);
+    await new Promise<void>((resolve) => { tx.oncomplete = () => { db.close(); resolve(); }; tx.onerror = tx.onabort = () => { db.close(); resolve(); }; });
   } catch (err) {
     console.error("IndexedDB save error:", err);
   }
@@ -72,12 +74,15 @@ async function clearIndexedDB(): Promise<void> {
     const tx = db.transaction(DB_STORE, "readwrite");
     const store = tx.objectStore(DB_STORE);
     store.delete(DB_KEY);
+    await new Promise<void>(resolve => { tx.oncomplete = () => {db.close();resolve();}; tx.onerror = tx.onabort = () => {db.close();resolve();}; });
   } catch (err) {
     console.error("IndexedDB clear error:", err);
   }
 }
 
 export class LocalGameRepository implements GameRepository {
+  private writeQueue: Promise<void> = Promise.resolve();
+  private lastCheckpointAt = 0;
   public async load(): Promise<GameState | null> {
     if (typeof window === "undefined") {
       return null;
@@ -115,7 +120,10 @@ export class LocalGameRepository implements GameRepository {
     }
   }
 
-  public async save(state: GameState): Promise<void> {
+  public async save(state: GameState, reason: "transaction" | "checkpoint" = "transaction"): Promise<void> {
+    if (!isGameWriter()) return;
+    if (reason === "checkpoint" && Date.now() - this.lastCheckpointAt < 30_000) return;
+    this.lastCheckpointAt = Date.now();
     // Keep old in-memory autosave/beforeunload from overwriting an accepted import.
     // Successful interactive imports reload the page; failures release this guard.
     if (importInProgress) return;
@@ -128,7 +136,8 @@ export class LocalGameRepository implements GameRepository {
         localStorage.setItem(STORAGE_KEY, json);
         localStorage.setItem(BACKUP_STORAGE_KEY, json);
       }
-      await saveToIndexedDB(json);
+      this.writeQueue = this.writeQueue.catch(() => {}).then(() => saveToIndexedDB(json));
+      await this.writeQueue;
     } catch (err) {
       console.error("Failed to save game state:", err);
     }
@@ -144,11 +153,13 @@ export class LocalGameRepository implements GameRepository {
   }
 
   public async import(rawJson: string): Promise<GameState> {
+    if (!isGameWriter()) throw new Error('Hãy đóng tab Quân Lộ khác trước khi nhập dữ liệu.');
     const { state, extras } = parseTransfer(rawJson);
     if (importInProgress) throw new Error('Đang nhập dữ liệu, hãy tải lại trang trước khi thử lại.');
     const storage = window.localStorage;
     if (storage.getItem('quan_lo_app_update_pending_v1')) throw new Error('Hãy hoàn tất phục hồi/cập nhật đang chờ trước khi nhập save.');
     importInProgress = true;
+    await this.writeQueue.catch(() => {});
     const keys = [STORAGE_KEY, BACKUP_STORAGE_KEY, 'quan_lo_manual_update_backup', 'quan_lo_app_update_backup_v1', ...EXTRA_SAVE_KEYS];
     const before: Record<string, string | null> = {};
     let previousIdb: string | null = null;
@@ -184,6 +195,8 @@ export class LocalGameRepository implements GameRepository {
   }
 
   public async clear(): Promise<void> {
+    if (!isGameWriter()) return;
+    await this.writeQueue.catch(() => {});
     if (typeof window !== "undefined") {
       if (window.localStorage) {
         localStorage.removeItem(STORAGE_KEY);

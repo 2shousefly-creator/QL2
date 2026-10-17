@@ -1,3 +1,7 @@
+import { FARM_RELEASE } from "./farmReleaseNotes";
+import { EmployeeManagement } from "./components/EmployeeManagement";
+import { confirmFarmAssignment } from "./farmWorkerEngine";
+import { getFarmProductivity } from "./farmEconomy";
 import { CommandMenuProvider } from "../../components/core-visual/CommandMenuContext";
 import type { FarmVisualEvent } from "./pixi/farmPixiTypes";
 import React, { useState, useEffect, useRef } from "react";
@@ -12,7 +16,7 @@ import {
   FEED_CATALOG,
   FERTILIZER_CATALOG,
 } from "./farmCatalog";
-import { addAnimalToPen, applyFertilizerToGrowingCrop, canWaterPlot, clearPlot, consumePendingAnimalDeathNotification, createDefaultFarmState, dismissAnimal, feedPenBuff, getRankNameForDisplay, harvestAllReadyCrops, harvestPlot, hasCropFertilizer, plantSeedWithFertilizer, rankAtLeast, sellAllEggs, sellEggs, sellInventoryItem, settleFarmState, treatPestOnSelectedPlot, waterSelectedPlot } from "./farmEngine";
+import { buyFarmSupply, addAnimalToPen, applyFertilizerToGrowingCrop, canWaterPlot, clearPlot, consumePendingAnimalDeathNotification, createDefaultFarmState, dismissAnimal, feedPenBuff, getRankNameForDisplay, harvestAllReadyCrops, harvestPlot, hasCropFertilizer, plantSeedWithFertilizer, rankAtLeast, sellAllEggs, sellEggs, sellInventoryItem, settleFarmState, treatPestOnSelectedPlot, waterSelectedPlot } from "./farmEngine";
 import { isAnimalDead } from "./animalLifecycle";
 import {
   AnimalTypeId,
@@ -43,7 +47,7 @@ import {
   RewardSummaryModal,
   RewardSummaryData,
 } from "./components/RewardSummaryModal";
-import { ConfirmationDialog, ModalButton, OverlayBody, OverlayFooter, OverlayHeader, OverlayPortal } from "../../components/overlay/AppOverlay";
+import { AppModal, ConfirmationDialog, ModalButton, OverlayBody, OverlayFooter, OverlayHeader, OverlayPortal } from "../../components/overlay/AppOverlay";
 import {
   HARVEST_ALL_CROP_GLOW_DURATION_MS,
   HARVEST_REWARD_FLOAT_DURATION_MS,
@@ -75,6 +79,8 @@ type FarmDialog = {
 };
 type StoreTab = "crop" | "fertilizer" | "animal" | "feed";
 export type FarmPrimaryModal =
+  | { type: "employee" }
+  | { type: "release" }
   | { type: "store"; tab: StoreTab }
   | { type: "inventory"; tab: KhoTabType }
   | { type: "plant"; plotIndex: number }
@@ -104,7 +110,8 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
   pushTarget,
 }) => {
   const currentRank = getCurrentRank(gameState.progression.currentRankIndex);
-  const [mobileActive, setMobileActive] = useState(FARM_MOBILE_REQUESTED);
+  const [mobileActive, setMobileActive] = useState(true);
+  const [workerCamera, setWorkerCamera] = useState<{ nonce: number; follow: boolean } | null>(null);
 
   // Active timestamp
   const [now, setNow] = useState(Date.now());
@@ -221,7 +228,7 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
         if (!draft.farm) {
           draft.farm = createDefaultFarmState(currentNow);
         }
-        const settlement = settleFarmState(draft.farm, currentNow);
+        const settlement = { newDeaths: { total: 0, oldAge: 0, starvation: 0 } };
         const pendingOfflineDeaths = consumePendingAnimalDeathNotification(
           draft.farm
         );
@@ -276,7 +283,7 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
       if (!draft.farm) {
         draft.farm = createDefaultFarmState(transactionNow);
       }
-      const settlement = settleFarmState(draft.farm, transactionNow);
+      const settlement = { newDeaths: { total: 0, oldAge: 0, starvation: 0 } };
       const pendingOfflineDeaths = consumePendingAnimalDeathNotification(
         draft.farm
       );
@@ -353,117 +360,11 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
     openFarmModal({ type: "inventory", tab: tab ?? (contextMode === "pen" ? "animal" : "crop") });
 
   // --- STORE ACTIONS (Support multi-quantity) ---
-  const handleBuyCrop = (cropId: CropId, quantity: number = 1) => {
-    const crop = CROP_CATALOG.find((c) => c.id === cropId);
-    if (!crop) return;
-
-    if (!rankAtLeast(currentRank, crop.requiredRank)) {
-      showToast(
-        `Chưa đủ quân hàm yêu cầu (${getRankNameForDisplay(crop.requiredRank)})!`
-      );
-      return;
-    }
-
-    const buyCount = Math.max(1, quantity);
-    const totalCost = crop.seedCostGold * buyCount;
-
-    if (farmState.gold < totalCost) {
-      showToast("Không đủ Vàng để mua!");
-      return;
-    }
-
-    updateFarm((farm) => {
-      farm.gold -= totalCost;
-      farm.inventory.seeds[cropId] = (farm.inventory.seeds[cropId] || 0) + buyCount;
-    });
-
-    showToast(`Đã mua ${buyCount} Hạt giống ${crop.name} (-${totalCost.toLocaleString("vi-VN")} Vàng)!`);
-  };
-
-  const handleBuyFertilizer = (fertilizerId: FertilizerTypeId, quantity: number = 1) => {
-    const fert = FERTILIZER_CATALOG.find((f) => f.id === fertilizerId);
-    if (!fert) return;
-
-    if (!rankAtLeast(currentRank, fert.requiredRank)) {
-      showToast(
-        `Chưa đủ quân hàm yêu cầu (${getRankNameForDisplay(fert.requiredRank)})!`
-      );
-      return;
-    }
-
-    const buyCount = Math.max(1, quantity);
-    const totalCost = fert.purchaseGold * buyCount;
-
-    if (farmState.gold < totalCost) {
-      showToast("Không đủ Vàng để mua!");
-      return;
-    }
-
-    updateFarm((farm) => {
-      farm.gold -= totalCost;
-      if (!farm.inventory.fertilizer) {
-        farm.inventory.fertilizer = createDefaultFarmState().inventory.fertilizer;
-      }
-      farm.inventory.fertilizer[fertilizerId] =
-        (farm.inventory.fertilizer[fertilizerId] || 0) + buyCount;
-    });
-
-    showToast(`Đã mua ${buyCount} ${fert.name} (-${totalCost.toLocaleString("vi-VN")} Vàng)!`);
-  };
-
-  const handleBuyAnimal = (animalId: AnimalTypeId, quantity: number = 1) => {
-    const animal = ANIMAL_CATALOG.find((a) => a.id === animalId);
-    if (!animal) return;
-
-    if (!rankAtLeast(currentRank, animal.requiredRank)) {
-      showToast(
-        `Chưa đủ quân hàm yêu cầu (${getRankNameForDisplay(animal.requiredRank)})!`
-      );
-      return;
-    }
-
-    const buyCount = Math.max(1, quantity);
-    const totalCost = animal.purchaseGold * buyCount;
-
-    if (farmState.gold < totalCost) {
-      showToast("Không đủ Vàng để mua!");
-      return;
-    }
-
-    updateFarm((farm) => {
-      farm.gold -= totalCost;
-      farm.inventory.animals[animalId] =
-        (farm.inventory.animals[animalId] || 0) + buyCount;
-    });
-
-    showToast(`Đã mua ${buyCount} ${animal.name}! Đã thêm vào Kho / Vật Nuôi.`);
-  };
-
-  const handleBuyFeed = (feedId: FeedTypeId, quantity: number = 1) => {
-    const feedDef = FEED_CATALOG.find((f) => f.id === feedId);
-    if (!feedDef) return;
-
-    if (!rankAtLeast(currentRank, feedDef.requiredRank)) {
-      showToast(
-        `Chưa đủ quân hàm yêu cầu (${getRankNameForDisplay(feedDef.requiredRank)})!`
-      );
-      return;
-    }
-
-    const buyCount = Math.max(1, quantity);
-    const totalCost = feedDef.costGold * buyCount;
-
-    if (farmState.gold < totalCost) {
-      showToast("Không đủ Vàng để mua!");
-      return;
-    }
-
-    updateFarm((farm) => {
-      farm.gold -= totalCost;
-      farm.inventory.feed[feedId] = (farm.inventory.feed[feedId] || 0) + buyCount;
-      return { message: `Đã mua ${buyCount} ${feedDef.name} (-${totalCost.toLocaleString("vi-VN")} Vàng)!` };
-    });
-  };
+  const purchase = (category: 'seeds' | 'fertilizer' | 'animals' | 'feed', id: string, count: number) => updateFarm((farm, draft) => buyFarmSupply(farm, category, id, count, getCurrentRank(draft.progression.currentRankIndex)));
+  const handleBuyCrop = (id: CropId, count = 1) => purchase('seeds', id, count);
+  const handleBuyFertilizer = (id: FertilizerTypeId, count = 1) => purchase('fertilizer', id, count);
+  const handleBuyAnimal = (id: AnimalTypeId, count = 1) => purchase('animals', id, count);
+  const handleBuyFeed = (id: FeedTypeId, count = 1) => purchase('feed', id, count);
 
   // --- KHO SELLING ACTIONS ---
   const handleSellItem = (
@@ -567,7 +468,8 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
         plotIndex,
         cropId,
         fertilizerId,
-        currentNow
+        currentNow,
+        draft.progression.currentRankIndex
       );
       if (res.success && fertilizerId) {
         recordFertilizerUsed(draft, fertilizerId);
@@ -630,7 +532,8 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
         farm,
         plotIndex,
         fertilizerId,
-        currentNow
+        currentNow,
+        getCurrentRank(draft.progression.currentRankIndex)
       );
       if (result.success) recordFertilizerUsed(draft, fertilizerId);
       return { message: result.message, visualEvent: result.success ? {
@@ -735,6 +638,7 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
       return;
     }
 
+    if (plotIndex !== farmState.unlockedPlotCount) { showToast("Hãy mở ô đất trước đó trước."); return; }
     if (farmState.gold < config.gold) {
       showToast(`Cần ${config.gold} Vàng để mở khóa ô đất này!`);
       return;
@@ -748,7 +652,8 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
       confirmLabel: "Mở Khóa",
       onConfirm: () => {
         const unlockedAt = Date.now();
-        updateFarm((farm) => {
+        updateFarm((farm, draft) => {
+          if (farm.plots[plotIndex]?.status !== "locked" || farm.unlockedPlotCount !== plotIndex || farm.gold < config.gold || !rankAtLeast(getCurrentRank(draft.progression.currentRankIndex), config.requiredRank)) return { message: "Không thể mở ô: kiểm tra quân hàm, vàng và ô trước đó." };
           farm.gold -= config.gold;
           farm.unlockedPlotCount = Math.max(
             farm.unlockedPlotCount || 0,
@@ -759,9 +664,8 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
             soilMoisture: 100,
             soilMoistureUpdatedAt: unlockedAt,
           };
-          return { visualEvent: { id: `unlock-${plotIndex}-${unlockedAt}`, plotIndex, kind: 'unlock', startedAt: unlockedAt } };
+          return { message: `Đã mở khóa thành công Ô đất #${plotIndex + 1}!`, visualEvent: { id: `unlock-${plotIndex}-${unlockedAt}`, plotIndex, kind: 'unlock', startedAt: unlockedAt } };
         }, unlockedAt);
-        showToast(`Đã mở khóa thành công Ô đất #${plotIndex + 1}!`);
         closeFarmModal();
       },
     });
@@ -788,7 +692,7 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
   const handleEnterPen = (animalId: AnimalTypeId) => {
     const currentNow = Date.now();
     updateFarm((farm, draft) => {
-      const res = addAnimalToPen(farm, animalId, currentNow, currentRank);
+      const res = addAnimalToPen(farm, animalId, currentNow, getCurrentRank(draft.progression.currentRankIndex));
       if (res.success) {
         evaluateMedalUnlocks(draft);
       }
@@ -799,7 +703,7 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
   const handleFeedPen = (feedId: FeedTypeId, quantity: number = 1) => {
     const currentNow = Date.now();
     updateFarm((farm, draft) => {
-      const res = feedPenBuff(farm, feedId, quantity, currentNow);
+      const res = feedPenBuff(farm, feedId, quantity, currentNow, getCurrentRank(draft.progression.currentRankIndex));
       if (res.success && res.quantityFed) {
         recordFeedBagsUsed(draft, res.quantityFed);
       }
@@ -895,7 +799,12 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
       confirmLabel: dead ? "Dọn" : "Đuổi Thú",
       onConfirm: () => {
         updateFarm((farm) => {
-          dismissAnimal(farm, selectedAnimalId);
+          const removed = farm.penAnimals.find(a => a.instanceId === selectedAnimalId);
+          const intentional = removed && removed.deathAt === null;
+          if (dismissAnimal(farm, selectedAnimalId, farm.lastSettledAt) && intentional && farm.worker) {
+            farm.worker.assignment.animalTargets[removed.animalTypeId] = Math.min(farm.worker.assignment.animalTargets[removed.animalTypeId] ?? 0, farm.penAnimals.filter(a => a.animalTypeId === removed.animalTypeId && a.deathAt === null).length);
+            farm.worker.revision++;
+          }
         });
         setSelectedAnimalId(null);
         setContextMode("none");
@@ -1006,9 +915,15 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
       )}
 
       <FarmXpProgressBar gameState={gameState} />
+      <div className="farm-release-actions"><button className="min-h-11 px-4 text-amber-200" onClick={e => { e.stopPropagation(); openFarmModal({type:"release"}); }}>Nội dung cập nhật</button>
+      <button onClick={e => { e.stopPropagation(); openFarmModal({ type: "employee" }); }}>Thuê Người{farmState.worker?.status === "employed" ? " · Đang thuê" : ""}</button></div>
+      {farmModal?.type === "release" && <AppModal theme="farm" archetype="transaction" onClose={closeFarmModal} closeOnBackdrop labelledBy="farm-release-title"><OverlayHeader><h2 id="farm-release-title">{FARM_RELEASE.title}</h2></OverlayHeader><OverlayBody><ul className="space-y-3 list-disc pl-5">{FARM_RELEASE.items.map(item => <li key={item}>{item}</li>)}</ul></OverlayBody><OverlayFooter><ModalButton onClick={closeFarmModal}>Đã hiểu</ModalButton></OverlayFooter></AppModal>}
+      {farmModal?.type === "employee" && <EmployeeManagement state={gameState} rank={currentRank} now={now} onClose={closeFarmModal} onLocate={follow => { closeFarmModal(); setWorkerCamera({ nonce: Date.now(), follow }); }} onConfirm={assignment => { updateFarm((farm, draft) => confirmFarmAssignment(farm, getCurrentRank(draft.progression.currentRankIndex), assignment, Math.max(Date.now(), draft.time.lastSettledAt))); closeFarmModal(); }} />}
 
       {/* --- MAIN 2D TOP-DOWN SCENE (SINGLE SCREEN) --- */}
       {mobileActive ? (<FarmMobilePresentation
+        workerCamera={workerCamera}
+        onClearSelection={handleClearSelection}
         bridge={{
           snapshot: adaptFarmMobile(gameState, farmState, presentationState, currentRank, currentWeatherSlot, now),
           modal: farmModal, openModal: openFarmModal,
@@ -1327,6 +1242,7 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
       {/* --- ALL GAME MODALS --- */}
       {farmModal?.type === "store" && (
         <FarmStoreModal
+          rewardScale={getFarmProductivity(currentRank.rankIndex, farmState.unlockedPlotCount)}
           mobileVisual={mobileActive}
           isOpen={true}
           onClose={closeFarmModal}
@@ -1343,6 +1259,7 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
 
       {farmModal?.type === "inventory" && (
         <KhoModal
+          rewardScale={getFarmProductivity(currentRank.rankIndex, farmState.unlockedPlotCount)}
           mobileVisual={mobileActive}
           isOpen={true}
           onClose={closeFarmModal}
@@ -1358,6 +1275,7 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
 
       {farmModal?.type === "plant" && (
         <PlantSeedModal
+          rewardScale={getFarmProductivity(currentRank.rankIndex, farmState.unlockedPlotCount)}
           key={farmModal.plotIndex}
           isOpen={true}
           onClose={closeFarmModal}

@@ -1,0 +1,1502 @@
+{
+  "generator": "OpenAI built-in image_gen",
+  "style": "Illustrated isometric farm; warm light, natural foliage, transparent raster poses.",
+  "assets": {
+    "crop-carrot": {
+      "sources": [
+        {
+          "sourceHash": "5c856734bfe55b81a763834bf4e8f71d4f303a11bf2d1fe6115d29821d8abed9",
+          "bounds": [
+            0,
+            167,
+            328,
+            503,
+            708,
+            912,
+            1086
+          ]
+        }
+      ],
+      "prompt": "Generated 8-frame rows for carrot: sow transition, sprout, young, growing, mature, harvested produce. Illustrated isometric farm, warm upper-left light, transparent background, real leaf and stem pose changes, fixed roots.",
+      "sourceRows": 6,
+      "frames": 48,
+      "atlas": "crop-carrot.b65bcbd50966.webp",
+      "rasterMotion": "Distinct generated poses; packing preserves alpha and aligns feet/root anchors."
+    },
+    "crop-cabbage": {
+      "sources": [
+        {
+          "sourceHash": "0ff185eaba561c14118d711246ce697220564afc6ef7aac07946c6b2665af530",
+          "bounds": [
+            0,
+            180,
+            354,
+            537,
+            721,
+            908,
+            1086
+          ]
+        }
+      ],
+      "prompt": "Generated 8-frame rows for cabbage: sow transition, sprout, young, growing, mature, harvested produce. Illustrated isometric farm, warm upper-left light, transparent background, real leaf and stem pose changes, fixed roots.",
+      "sourceRows": 6,
+      "frames": 48,
+      "atlas": "crop-cabbage.6c738cb2186d.webp",
+      "rasterMotion": "Distinct generated poses; packing preserves alpha and aligns feet/root anchors."
+    },
+    "crop-potato": {
+      "sources": [
+        {
+          "sourceHash": "a0381804af6dc7daba89e1d86a2af5354c8909b6e1c027d439f731bda1cfac70",
+          "bounds": [
+            0,
+            188,
+            368,
+            553,
+            741,
+            947,
+            1086
+          ]
+        }
+      ],
+      "prompt": "Generated 8-frame rows for potato: sow transition, sprout, young, growing, mature, harvested produce. Illustrated isometric farm, warm upper-left light, transparent background, real leaf and stem pose changes, fixed roots.",
+      "sourceRows": 6,
+      "frames": 48,
+      "atlas": "crop-potato.c0a87176c768.webp",
+      "rasterMotion": "Distinct generated poses; packing preserves alpha and aligns feet/root anchors."
+    },
+    "crop-tomato": {
+      "sources": [
+        {
+          "sourceHash": "0171b907ece85f43e93dc97e5a839460b944c2cde7bc89eebdb087dae56d592f",
+          "bounds": [
+            0,
+            198,
+            365,
+            543,
+            754,
+            969,
+            1086
+          ]
+        }
+      ],
+      "prompt": "Generated 8-frame rows for tomato: sow transition, sprout, young, growing, mature, harvested produce. Illustrated isometric farm, warm upper-left light, transparent background, real leaf and stem pose changes, fixed roots.",
+      "sourceRows": 6,
+      "frames": 48,
+      "atlas": "crop-tomato.5d1af85e1e35.webp",
+      "rasterMotion": "Distinct generated poses; packing preserves alpha and aligns feet/root anchors."
+    },
+    "crop-strawberry": {
+      "sources": [
+        {
+          "sourceHash": "113c46cc15cb358df2bbe912a683773f01230354375945933296a3c4da40a9d7",
+          "bounds": [
+            0,
+            191,
+            366,
+            557,
+            741,
+            916,
+            1086
+          ]
+        }
+      ],
+      "prompt": "Generated 8-frame rows for strawberry: sow transition, sprout, young, growing, mature, harvested produce. Illustrated isometric farm, warm upper-left light, transparent background, real leaf and stem pose changes, fixed roots.",
+      "sourceRows": 6,
+      "frames": 48,
+      "atlas": "crop-strawberry.2b321de29041.webp",
+      "rasterMotion": "Distinct generated poses; packing preserves alpha and aligns feet/root anchors."
+    },
+    "crop-corn": {
+      "sources": [
+        {
+          "sourceHash": "dd9fcd86134c7cecde5b66325785a2a2ab121a83e5eea6550d07192143db2dbb",
+          "bounds": [
+            0,
+            143,
+            276,
+            459,
+            695,
+            992
+          ]
+        }
+      ],
+      "prompt": "Forty maize plant frames: eight distinct organic wind poses for seeded soil, sprout, young leafy plant, growing corn, mature golden corn cobs. Isometric painted raster, transparent alpha, fixed roots.",
+      "sourceRows": 5,
+      "frames": 40,
+      "atlas": "crop-corn.c8ebca69944f.webp",
+      "rasterMotion": "Distinct generated poses; packing preserves alpha and aligns feet/root anchors."
+    },
+    "crop-pineapple": {
+      "sources": [
+        {
+          "sourceHash": "de98f1466bf2f1b19f7475c63f61e017beaf3121bee15755a98c19789c30674d",
+          "bounds": [
+            0,
+            183,
+            354,
+            525,
+            691,
+            902,
+            1086
+          ]
+        }
+      ],
+      "prompt": "Generated 8-frame rows for pineapple: sow transition, sprout, young, growing, mature, harvested produce. Illustrated isometric farm, warm upper-left light, transparent background, real leaf and stem pose changes, fixed roots.",
+      "sourceRows": 6,
+      "frames": 48,
+      "atlas": "crop-pineapple.c955494b25de.webp",
+      "rasterMotion": "Distinct generated poses; packing preserves alpha and aligns feet/root anchors."
+    },
+    "crop-banana": {
+      "sources": [
+        {
+          "sourceHash": "8ad0858d38edf080fbc1347e2216ec2d31a1c2c85ba147f9b282b725eb87e1f7",
+          "bounds": [
+            0,
+            176,
+            349,
+            551,
+            759,
+            992
+          ]
+        }
+      ],
+      "prompt": "Use case: stylized-concept. Finished game sprite animation sheet of a banana plant, broad leaves and a hanging yellow banana bunch. Transparent PNG. EXACT EIGHT columns and FIVE rows; 40 separate sprites total in a perfectly uniform rectangular grid, no missing cells, no text. Wide 8:5 canvas. All five horizontal rows separated with generous transparent gutters. Illustrated prerendered soft detailed 2.5D isometric farm art, moss greens, earth brown, upper-left daylight, no photographic or vector or pixel style. Row 1: sowing and germination, 8-frame transition on small soil mound. Row 2: tiny sprout idle, 8 sequential leaf movements. Row 3: young plant idle, 8 frames leaves bending individually. Row 4: growing plant, unripe fruit, 8 frames foliage movement. Row 5: mature harvest-ready banana plant, broad leaves and a hanging yellow banana bunch, 8 frames gentle breeze changing leaves and fruit independently. Exact fixed root anchor near bottom center of every cell. Distinct stage sizes. Sprite completely inside cell, transparent margins all sides, never cross cell borders. No duplicate whole-sprite scale/rotate animation. All 40 sprites required.",
+      "sourceRows": 5,
+      "frames": 40,
+      "atlas": "crop-banana.ab4a3744dbf5.webp",
+      "rasterMotion": "Distinct generated poses; packing preserves alpha and aligns feet/root anchors."
+    },
+    "crop-orange": {
+      "sources": [
+        {
+          "sourceHash": "5003215c54f54c5d12cb8fa7932cd0d1fe43a0538b0fe3b970f95cb6c2648625",
+          "bounds": [
+            0,
+            189,
+            360,
+            554,
+            747,
+            992
+          ]
+        }
+      ],
+      "prompt": "Use case: stylized-concept. Finished game sprite animation sheet of a orange tree, dark green leaves and round orange fruits. Transparent PNG. EXACT EIGHT columns and FIVE rows; 40 separate sprites total in a perfectly uniform rectangular grid, no missing cells, no text. Wide 8:5 canvas. All five horizontal rows separated with generous transparent gutters. Illustrated prerendered soft detailed 2.5D isometric farm art, moss greens, earth brown, upper-left daylight, no photographic or vector or pixel style. Row 1: sowing and germination, 8-frame transition on small soil mound. Row 2: tiny sprout idle, 8 sequential leaf movements. Row 3: young plant idle, 8 frames leaves bending individually. Row 4: growing plant, unripe fruit, 8 frames foliage movement. Row 5: mature harvest-ready orange tree, dark green leaves and round orange fruits, 8 frames gentle breeze changing leaves and fruit independently. Exact fixed root anchor near bottom center of every cell. Distinct stage sizes. Sprite completely inside cell, transparent margins all sides, never cross cell borders. No duplicate whole-sprite scale/rotate animation. All 40 sprites required.",
+      "sourceRows": 5,
+      "frames": 40,
+      "atlas": "crop-orange.c4987ef6381c.webp",
+      "rasterMotion": "Distinct generated poses; packing preserves alpha and aligns feet/root anchors."
+    },
+    "crop-mango": {
+      "sources": [
+        {
+          "sourceHash": "d617fb7213a41a7dadd94efd8cdb29d9acb700cd0a71b5ec4f23927f9d49e4e8",
+          "bounds": [
+            0,
+            166,
+            324,
+            509,
+            733,
+            992
+          ]
+        }
+      ],
+      "prompt": "Use case: stylized-concept. Finished game sprite animation sheet of a mango tree, long leaves and red yellow mango fruits. Transparent PNG. EXACT EIGHT columns and FIVE rows; 40 separate sprites total in a perfectly uniform rectangular grid, no missing cells, no text. Wide 8:5 canvas. All five horizontal rows separated with generous transparent gutters. Illustrated prerendered soft detailed 2.5D isometric farm art, moss greens, earth brown, upper-left daylight, no photographic or vector or pixel style. Row 1: sowing and germination, 8-frame transition on small soil mound. Row 2: tiny sprout idle, 8 sequential leaf movements. Row 3: young plant idle, 8 frames leaves bending individually. Row 4: growing plant, unripe fruit, 8 frames foliage movement. Row 5: mature harvest-ready mango tree, long leaves and red yellow mango fruits, 8 frames gentle breeze changing leaves and fruit independently. Exact fixed root anchor near bottom center of every cell. Distinct stage sizes. Sprite completely inside cell, transparent margins all sides, never cross cell borders. No duplicate whole-sprite scale/rotate animation. All 40 sprites required.",
+      "sourceRows": 5,
+      "frames": 40,
+      "atlas": "crop-mango.03596b02b2d2.webp",
+      "rasterMotion": "Distinct generated poses; packing preserves alpha and aligns feet/root anchors."
+    },
+    "crop-apple": {
+      "sources": [
+        {
+          "sourceHash": "a881bf1d5efbe079f55425a4cb6188562691323561202cf37c8051c0a0516999",
+          "bounds": [
+            0,
+            205,
+            367,
+            553,
+            752,
+            992
+          ]
+        }
+      ],
+      "prompt": "Use case: stylized-concept. Complete game animation spritesheet of apple tree bearing red apples. TRANSPARENT PNG. Exactly EIGHT COLUMNS x FIVE ROWS of individual sprites, 40 sprites total, wide 8:5 canvas. Every row fully separate, every sprite complete inside its own equal cell, generous transparent gutters. Soft detailed illustrated/prerendered 2.5D oblique overhead farm art, moss greens, earth brown, warm upper-left daylight. Row 1 sowing/germination from seed on small soil mound to first shoot, 8-frame transition. Row 2 tiny sprout idle, 8 frames leaf motion. Row 3 young plant idle, 8 frames leaves bending individually. Row 4 larger growing plant with unripe fruit, 8 distinct frames. Row 5 mature harvest-ready apple tree bearing red apples, 8 distinct gentle-breeze frames, fruits/leaves move independently. Stable root anchor in bottom center each cell. Different maturity clearly legible. No withered plants. No text, no gridlines, no UI, no pixel art, no flat vector placeholders. Required five stages and eight frames each, do not omit rows.",
+      "sourceRows": 5,
+      "frames": 40,
+      "atlas": "crop-apple.ec7c7fb6c133.webp",
+      "rasterMotion": "Distinct generated poses; packing preserves alpha and aligns feet/root anchors."
+    },
+    "crop-pear": {
+      "sources": [
+        {
+          "sourceHash": "8c4af92f8e237b31962daa8510f37d4b3728887f2ced73ee966f543be569ec6d",
+          "bounds": [
+            0,
+            177,
+            338,
+            520,
+            736,
+            992
+          ]
+        }
+      ],
+      "prompt": "Use case: stylized-concept. Complete game animation spritesheet of pear tree bearing pale yellow pears. TRANSPARENT PNG. Exactly EIGHT COLUMNS x FIVE ROWS of individual sprites, 40 sprites total, wide 8:5 canvas. Every row fully separate, every sprite complete inside its own equal cell, generous transparent gutters. Soft detailed illustrated/prerendered 2.5D oblique overhead farm art, moss greens, earth brown, warm upper-left daylight. Row 1 sowing/germination from seed on small soil mound to first shoot, 8-frame transition. Row 2 tiny sprout idle, 8 frames leaf motion. Row 3 young plant idle, 8 frames leaves bending individually. Row 4 larger growing plant with unripe fruit, 8 distinct frames. Row 5 mature harvest-ready pear tree bearing pale yellow pears, 8 distinct gentle-breeze frames, fruits/leaves move independently. Stable root anchor in bottom center each cell. Different maturity clearly legible. No withered plants. No text, no gridlines, no UI, no pixel art, no flat vector placeholders. Required five stages and eight frames each, do not omit rows.",
+      "sourceRows": 5,
+      "frames": 40,
+      "atlas": "crop-pear.020667f8dd40.webp",
+      "rasterMotion": "Distinct generated poses; packing preserves alpha and aligns feet/root anchors."
+    },
+    "crop-grape": {
+      "sources": [
+        {
+          "sourceHash": "79b8b92abd3624f60790be505fc48f579379aa8c1610634562036ae365a1a89b",
+          "bounds": [
+            0,
+            182,
+            373,
+            565,
+            756,
+            992
+          ]
+        }
+      ],
+      "prompt": "Use case: stylized-concept. Complete game animation spritesheet of grape vine on low wooden trellis, bunches of purple grapes. TRANSPARENT PNG. Exactly EIGHT COLUMNS x FIVE ROWS of individual sprites, 40 sprites total, wide 8:5 canvas. Every row fully separate, every sprite complete inside its own equal cell, generous transparent gutters. Soft detailed illustrated/prerendered 2.5D oblique overhead farm art, moss greens, earth brown, warm upper-left daylight. Row 1 sowing/germination from seed on small soil mound to first shoot, 8-frame transition. Row 2 tiny sprout idle, 8 frames leaf motion. Row 3 young plant idle, 8 frames leaves bending individually. Row 4 larger growing plant with unripe fruit, 8 distinct frames. Row 5 mature harvest-ready grape vine on low wooden trellis, bunches of purple grapes, 8 distinct gentle-breeze frames, fruits/leaves move independently. Stable root anchor in bottom center each cell. Different maturity clearly legible. No withered plants. No text, no gridlines, no UI, no pixel art, no flat vector placeholders. Required five stages and eight frames each, do not omit rows.",
+      "sourceRows": 5,
+      "frames": 40,
+      "atlas": "crop-grape.1780d5780346.webp",
+      "rasterMotion": "Distinct generated poses; packing preserves alpha and aligns feet/root anchors."
+    },
+    "crop-dragon_fruit": {
+      "sources": [
+        {
+          "sourceHash": "12b60f737039f7ade66bcd24a7e14f54a5f4e16f2ee48f392d98b1cd2f97a3c5",
+          "bounds": [
+            0,
+            190,
+            373,
+            551,
+            751,
+            992
+          ]
+        }
+      ],
+      "prompt": "Use case: stylized-concept. Complete game animation spritesheet of rice plant with golden ears of rice grain; NOT dragon fruit. TRANSPARENT PNG. Exactly EIGHT COLUMNS x FIVE ROWS of individual sprites, 40 sprites total, wide 8:5 canvas. Every row fully separate, every sprite complete inside its own equal cell, generous transparent gutters. Soft detailed illustrated/prerendered 2.5D oblique overhead farm art, moss greens, earth brown, warm upper-left daylight. Row 1 sowing/germination from seed on small soil mound to first shoot, 8-frame transition. Row 2 tiny sprout idle, 8 frames leaf motion. Row 3 young plant idle, 8 frames leaves bending individually. Row 4 larger growing plant with unripe fruit, 8 distinct frames. Row 5 mature harvest-ready rice plant with golden ears of rice grain; NOT dragon fruit, 8 distinct gentle-breeze frames, fruits/leaves move independently. Stable root anchor in bottom center each cell. Different maturity clearly legible. No withered plants. No text, no gridlines, no UI, no pixel art, no flat vector placeholders. Required five stages and eight frames each, do not omit rows.",
+      "sourceRows": 5,
+      "frames": 40,
+      "atlas": "crop-dragon_fruit.6d5e06e14147.webp",
+      "rasterMotion": "Distinct generated poses; packing preserves alpha and aligns feet/root anchors."
+    },
+    "crop-avocado": {
+      "sources": [
+        {
+          "sourceHash": "2db4acbce5e8b9a2d01c71033d4944e1b42cf8ce3462c0270c2ebaf73c820936",
+          "bounds": [
+            0,
+            193,
+            371,
+            572,
+            766,
+            992
+          ]
+        }
+      ],
+      "prompt": "Use case: stylized-concept. Complete game animation spritesheet of avocado tree bearing green pear-shaped avocados. TRANSPARENT PNG. Exactly EIGHT COLUMNS x FIVE ROWS of individual sprites, 40 sprites total, wide 8:5 canvas. Every row fully separate, every sprite complete inside its own equal cell, generous transparent gutters. Soft detailed illustrated/prerendered 2.5D oblique overhead farm art, moss greens, earth brown, warm upper-left daylight. Row 1 sowing/germination from seed on small soil mound to first shoot, 8-frame transition. Row 2 tiny sprout idle, 8 frames leaf motion. Row 3 young plant idle, 8 frames leaves bending individually. Row 4 larger growing plant with unripe fruit, 8 distinct frames. Row 5 mature harvest-ready avocado tree bearing green pear-shaped avocados, 8 distinct gentle-breeze frames, fruits/leaves move independently. Stable root anchor in bottom center each cell. Different maturity clearly legible. No withered plants. No text, no gridlines, no UI, no pixel art, no flat vector placeholders. Required five stages and eight frames each, do not omit rows.",
+      "sourceRows": 5,
+      "frames": 40,
+      "atlas": "crop-avocado.2c373c1ba9b9.webp",
+      "rasterMotion": "Distinct generated poses; packing preserves alpha and aligns feet/root anchors."
+    },
+    "crop-durian": {
+      "sources": [
+        {
+          "sourceHash": "e693ac4f5e41e1985414ffd209562ed26aa84a11cc839878596d76dc4e82bd38",
+          "bounds": [
+            0,
+            189,
+            354,
+            541,
+            747,
+            992
+          ]
+        }
+      ],
+      "prompt": "Use case: stylized-concept. Complete game animation spritesheet of durian tree bearing green spiky durians. TRANSPARENT PNG. Exactly EIGHT COLUMNS x FIVE ROWS of individual sprites, 40 sprites total, wide 8:5 canvas. Every row fully separate, every sprite complete inside its own equal cell, generous transparent gutters. Soft detailed illustrated/prerendered 2.5D oblique overhead farm art, moss greens, earth brown, warm upper-left daylight. Row 1 sowing/germination from seed on small soil mound to first shoot, 8-frame transition. Row 2 tiny sprout idle, 8 frames leaf motion. Row 3 young plant idle, 8 frames leaves bending individually. Row 4 larger growing plant with unripe fruit, 8 distinct frames. Row 5 mature harvest-ready durian tree bearing green spiky durians, 8 distinct gentle-breeze frames, fruits/leaves move independently. Stable root anchor in bottom center each cell. Different maturity clearly legible. No withered plants. No text, no gridlines, no UI, no pixel art, no flat vector placeholders. Required five stages and eight frames each, do not omit rows.",
+      "sourceRows": 5,
+      "frames": 40,
+      "atlas": "crop-durian.651e87c10faa.webp",
+      "rasterMotion": "Distinct generated poses; packing preserves alpha and aligns feet/root anchors."
+    },
+    "crop-mangosteen": {
+      "sources": [
+        {
+          "sourceHash": "f6d44376aea9d043354d053d53dbf94c48afca5a285907590fedf11d0caf6a53",
+          "bounds": [
+            0,
+            187,
+            362,
+            547,
+            756,
+            992
+          ]
+        }
+      ],
+      "prompt": "Use case: stylized-concept. Complete game animation spritesheet of mangosteen tree bearing round purple mangosteens. TRANSPARENT PNG. Exactly EIGHT COLUMNS x FIVE ROWS of individual sprites, 40 sprites total, wide 8:5 canvas. Every row fully separate, every sprite complete inside its own equal cell, generous transparent gutters. Soft detailed illustrated/prerendered 2.5D oblique overhead farm art, moss greens, earth brown, warm upper-left daylight. Row 1 sowing/germination from seed on small soil mound to first shoot, 8-frame transition. Row 2 tiny sprout idle, 8 frames leaf motion. Row 3 young plant idle, 8 frames leaves bending individually. Row 4 larger growing plant with unripe fruit, 8 distinct frames. Row 5 mature harvest-ready mangosteen tree bearing round purple mangosteens, 8 distinct gentle-breeze frames, fruits/leaves move independently. Stable root anchor in bottom center each cell. Different maturity clearly legible. No withered plants. No text, no gridlines, no UI, no pixel art, no flat vector placeholders. Required five stages and eight frames each, do not omit rows.",
+      "sourceRows": 5,
+      "frames": 40,
+      "atlas": "crop-mangosteen.295d7430474d.webp",
+      "rasterMotion": "Distinct generated poses; packing preserves alpha and aligns feet/root anchors."
+    },
+    "animal-chicken": {
+      "sourceHash": "fc3215aefc15db56a3442bfd1e2ec235a532171b8349aeac7751603d24320a93",
+      "prompt": "Use case: stylized-concept. Production transparent raster sprite atlas for a polished isometric Vietnamese farm game. Subject: a warm russet brown hen with red comb. Consistent charming hand painted prerendered 3D illustration, natural feather detail, warm light upper left, three-quarter view facing lower left. EXACT 8 columns and 8 rows, 64 separate sprites in an evenly spaced square contact sheet. No labels, no grid strokes, transparent alpha background. Entire animal fits every equal square cell; baseline aligned. Each horizontal row is ONE 8-frame animation with real changes in feet, beak, neck, wings, feathers; never identical shifted copies. Row1 idle breathing and blinking. Row2 walk cycle with alternating steps. Row3 eat, neck lowers pecking loose grain then rises. Row4 drink, beak dips then neck tilts up. Row5 rest, folds feet and settles sleep breathing. Row6 produce_ready, crouches beside one egg then stretches proudly. Row7 weak, drooping head and slow wings. Row8 dead, gentle non-graphic collapse and ends lying still. All EIGHT rows must appear. Same identity and scale all64 poses, no enclosure or ground rectangle, tiny soft contact shadow only.",
+      "sourceRows": 8,
+      "sourceBounds": [
+        0,
+        159,
+        314,
+        471,
+        629,
+        776,
+        940,
+        1089,
+        1254
+      ],
+      "frames": 64,
+      "atlas": "animal-chicken.9136fca04a0a.webp",
+      "rasterMotion": "Distinct generated poses; packing preserves alpha and aligns feet/root anchors."
+    },
+    "animal-duck": {
+      "sourceHash": "511b5d49ee232f5dd7267cb3ae3d260151b4de4b06952a7e79bd401a97a2a0d1",
+      "prompt": "Use case: stylized-concept. Production transparent raster sprite atlas for a polished isometric Vietnamese farm game. Subject: a white domestic duck with orange beak and webbed feet. Consistent charming hand painted prerendered 3D illustration, natural feather detail, warm light upper left, three-quarter view facing lower left. EXACT 8 columns and 8 rows, 64 separate sprites in an evenly spaced square contact sheet. No labels, no grid strokes, transparent alpha background. Entire animal fits every equal square cell; baseline aligned. Each horizontal row is ONE 8-frame animation with real changes in feet, beak, neck, wings, feathers; never identical shifted copies. Row1 idle breathing and blinking. Row2 walk cycle with alternating steps. Row3 eat, neck lowers pecking loose grain then rises. Row4 drink, beak dips then neck tilts up. Row5 rest, folds feet and settles sleep breathing. Row6 produce_ready, crouches beside one egg then stretches proudly. Row7 weak, drooping head and slow wings. Row8 dead, gentle non-graphic collapse and ends lying still. All EIGHT rows must appear. Same identity and scale all64 poses, no enclosure or ground rectangle, tiny soft contact shadow only.",
+      "sourceRows": 8,
+      "sourceBounds": [
+        0,
+        152,
+        303,
+        455,
+        607,
+        750,
+        910,
+        1045,
+        1214
+      ],
+      "frames": 64,
+      "atlas": "animal-duck.3d7244451384.webp",
+      "rasterMotion": "Distinct generated poses; packing preserves alpha and aligns feet/root anchors."
+    },
+    "animal-quail": {
+      "sourceHash": "c876eb2eb5a1daebfa3ef2d5a739a2ed928c1f78c2fec4465e43bc577ad29762",
+      "prompt": "Use case: stylized-concept. Production transparent raster sprite atlas for a polished isometric Vietnamese farm game. Subject: a small speckled brown quail. Consistent charming hand painted prerendered 3D illustration, natural feather detail, warm light upper left, three-quarter view facing lower left. EXACT 8 columns and 8 rows, 64 separate sprites in an evenly spaced square contact sheet. No labels, no grid strokes, transparent alpha background. Entire animal fits every equal square cell; baseline aligned. Each horizontal row is ONE 8-frame animation with real changes in feet, beak, neck, wings, feathers; never identical shifted copies. Row1 idle breathing and blinking. Row2 walk cycle with alternating steps. Row3 eat, neck lowers pecking loose grain then rises. Row4 drink, beak dips then neck tilts up. Row5 rest, folds feet and settles sleep breathing. Row6 produce_ready, crouches beside one egg then stretches proudly. Row7 weak, drooping head and slow wings. Row8 dead, gentle non-graphic collapse and ends lying still. All EIGHT rows must appear. Same identity and scale all64 poses, no enclosure or ground rectangle, tiny soft contact shadow only.",
+      "sourceRows": 8,
+      "sourceBounds": [
+        0,
+        157,
+        313,
+        462,
+        627,
+        759,
+        940,
+        1097,
+        1254
+      ],
+      "frames": 64,
+      "atlas": "animal-quail.131f4a61a396.webp",
+      "rasterMotion": "Distinct generated poses; packing preserves alpha and aligns feet/root anchors."
+    },
+    "environment": {
+      "sourceHash": "fab182a7c294c378c84da759aa523709dd6aa17b8e71dc0e986a043399af1dd2",
+      "prompt": "Illustrated isometric farm props, transparent 4 by 4 grid: barn, store, warehouse, resting hut; feed trough, water trough, egg market, nest; soil bed, grass tile, tree, bush; hay, fence, lamp, flowers. Warm upper-left light, moss green foliage, earth and timber.",
+      "sourceRows": 4,
+      "sourceBounds": [
+        0,
+        326,
+        608,
+        915,
+        1254
+      ],
+      "frames": 16,
+      "atlas": "environment.ef05a1e92c7e.webp",
+      "rasterMotion": "Distinct generated poses; packing preserves alpha and aligns feet/root anchors."
+    },
+    "animal-goose": {
+      "sourceHash": "395aa32fe28fdc0863df8e78e49a8f8a55568cd3437b75098ce29d49dc716186",
+      "prompt": "Use case: stylized-concept. Production transparent raster sprite atlas for a polished isometric Vietnamese farm game. Subject: a white domestic goose, long graceful neck and orange beak. Consistent charming hand painted prerendered 3D illustration, natural feather detail, warm light upper left, three-quarter view facing lower left. EXACT 8 columns and 8 rows, 64 separate sprites in an evenly spaced square contact sheet. No labels, no grid strokes, transparent alpha background. Entire animal fits every equal square cell; baseline aligned. Each horizontal row is ONE 8-frame animation with real changes in feet, beak, neck, wings, feathers; never identical shifted copies. Row1 idle breathing and blinking. Row2 walk cycle with alternating steps. Row3 eat, neck lowers pecking loose grain then rises. Row4 drink, beak dips then neck tilts up. Row5 rest, folds feet and settles sleep breathing. Row6 produce_ready, crouches beside one egg then stretches proudly. Row7 weak, drooping head and slow wings. Row8 dead, gentle non-graphic collapse and ends lying still. All EIGHT rows must appear. Same identity and scale all64 poses, no enclosure or ground rectangle, tiny soft contact shadow only.",
+      "sourceRows": 8,
+      "sourceBounds": [
+        0,
+        157,
+        310,
+        464,
+        627,
+        767,
+        940,
+        1097,
+        1254
+      ],
+      "frames": 64,
+      "atlas": "animal-goose.ac008c1032ad.webp",
+      "rasterMotion": "Distinct generated poses; packing preserves alpha and aligns feet/root anchors."
+    },
+    "animal-muscovy_duck": {
+      "sourceHash": "f280233b276923ae1aefeb7a2a554fe35e5e5cc2505b3a21046276fa2cb20519",
+      "prompt": "Use case: stylized-concept. Production transparent raster sprite atlas for a polished isometric Vietnamese farm game. Subject: a black and white Muscovy duck with distinctive red facial caruncles. Consistent charming hand painted prerendered 3D illustration, natural feather detail, warm light upper left, three-quarter view facing lower left. EXACT 8 columns and 8 rows, 64 separate sprites in an evenly spaced square contact sheet. No labels, no grid strokes, transparent alpha background. Entire animal fits every equal square cell; baseline aligned. Each horizontal row is ONE 8-frame animation with real changes in feet, beak, neck, wings, feathers; never identical shifted copies. Row1 idle breathing and blinking. Row2 walk cycle with alternating steps. Row3 eat, neck lowers pecking loose grain then rises. Row4 drink, beak dips then neck tilts up. Row5 rest, folds feet and settles sleep breathing. Row6 produce_ready, crouches beside one egg then stretches proudly. Row7 weak, drooping head and slow wings. Row8 dead, gentle non-graphic collapse and ends lying still. All EIGHT rows must appear. Same identity and scale all64 poses, no enclosure or ground rectangle, tiny soft contact shadow only.",
+      "sourceRows": 8,
+      "sourceBounds": [
+        0,
+        157,
+        313,
+        464,
+        627,
+        753,
+        929,
+        1069,
+        1254
+      ],
+      "frames": 64,
+      "atlas": "animal-muscovy_duck.e138858ba7f1.webp",
+      "rasterMotion": "Distinct generated poses; packing preserves alpha and aligns feet/root anchors."
+    },
+    "animal-turkey": {
+      "sourceHash": "2e2247dc5fcb127fed95def8e69a01c91611c528fdecb63450aef193515ea41e",
+      "prompt": "Use case: stylized-concept. Production transparent raster sprite atlas for a polished isometric Vietnamese farm game. Subject: a broad bronze turkey with red wattle and fan tail. Consistent charming hand painted prerendered 3D illustration, natural feather detail, warm light upper left, three-quarter view facing lower left. EXACT 8 columns and 8 rows, 64 separate sprites in an evenly spaced square contact sheet. No labels, no grid strokes, transparent alpha background. Entire animal fits every equal square cell; baseline aligned. Each horizontal row is ONE 8-frame animation with real changes in feet, beak, neck, wings, feathers; never identical shifted copies. Row1 idle breathing and blinking. Row2 walk cycle with alternating steps. Row3 eat, neck lowers pecking loose grain then rises. Row4 drink, beak dips then neck tilts up. Row5 rest, folds feet and settles sleep breathing. Row6 produce_ready, crouches beside one egg then stretches proudly. Row7 weak, drooping head and slow wings. Row8 dead, gentle non-graphic collapse and ends lying still. All EIGHT rows must appear. Same identity and scale all64 poses, no enclosure or ground rectangle, tiny soft contact shadow only.",
+      "sourceRows": 8,
+      "sourceBounds": [
+        0,
+        144,
+        292,
+        441,
+        586,
+        728,
+        873,
+        1016,
+        1183
+      ],
+      "frames": 64,
+      "atlas": "animal-turkey.04b818b64784.webp",
+      "rasterMotion": "Distinct generated poses; packing preserves alpha and aligns feet/root anchors."
+    },
+    "animal-guinea_fowl": {
+      "sourceHash": "80af1c1eb28429976fa131c6d34ac096cf90801be556b7c4e16a2a20e96cdf2d",
+      "prompt": "Use case: stylized-concept. Production transparent raster sprite atlas for a polished isometric Vietnamese farm game. Subject: a dark guinea fowl with fine white dots and pale blue head. Consistent charming hand painted prerendered 3D illustration, natural feather detail, warm light upper left, three-quarter view facing lower left. EXACT 8 columns and 8 rows, 64 separate sprites in an evenly spaced square contact sheet. No labels, no grid strokes, transparent alpha background. Entire animal fits every equal square cell; baseline aligned. Each horizontal row is ONE 8-frame animation with real changes in feet, beak, neck, wings, feathers; never identical shifted copies. Row1 idle breathing and blinking. Row2 walk cycle with alternating steps. Row3 eat, neck lowers pecking loose grain then rises. Row4 drink, beak dips then neck tilts up. Row5 rest, folds feet and settles sleep breathing. Row6 produce_ready, crouches beside one egg then stretches proudly. Row7 weak, drooping head and slow wings. Row8 dead, gentle non-graphic collapse and ends lying still. All EIGHT rows must appear. Same identity and scale all64 poses, no enclosure or ground rectangle, tiny soft contact shadow only.",
+      "sourceRows": 8,
+      "sourceBounds": [
+        0,
+        158,
+        308,
+        450,
+        599,
+        717,
+        875,
+        1026,
+        1199
+      ],
+      "frames": 64,
+      "atlas": "animal-guinea_fowl.b7078f54bc9d.webp",
+      "rasterMotion": "Distinct generated poses; packing preserves alpha and aligns feet/root anchors."
+    },
+    "animal-pheasant": {
+      "sourceHash": "af7e46369bf894d034e23eb1d6f337e0a7458fb8824b5999ce8dc1099d5292ca",
+      "prompt": "Use case: stylized-concept. Production transparent raster sprite atlas for a polished isometric Vietnamese farm game. Subject: a handsome golden-brown ring-neck pheasant with long tail. Consistent charming hand painted prerendered 3D illustration, natural feather detail, warm light upper left, three-quarter view facing lower left. EXACT 8 columns and 8 rows, 64 separate sprites in an evenly spaced square contact sheet. No labels, no grid strokes, transparent alpha background. Entire animal fits every equal square cell; baseline aligned. Each horizontal row is ONE 8-frame animation with real changes in feet, beak, neck, wings, feathers; never identical shifted copies. Row1 idle breathing and blinking. Row2 walk cycle with alternating steps. Row3 eat, neck lowers pecking loose grain then rises. Row4 drink, beak dips then neck tilts up. Row5 rest, folds feet and settles sleep breathing. Row6 produce_ready, crouches beside one egg then stretches proudly. Row7 weak, drooping head and slow wings. Row8 dead, gentle non-graphic collapse and ends lying still. All EIGHT rows must appear. Same identity and scale all64 poses, no enclosure or ground rectangle, tiny soft contact shadow only.",
+      "sourceRows": 8,
+      "sourceBounds": [
+        0,
+        157,
+        313,
+        470,
+        627,
+        765,
+        940,
+        1091,
+        1254
+      ],
+      "frames": 64,
+      "atlas": "animal-pheasant.df9a2209bc32.webp",
+      "rasterMotion": "Distinct generated poses; packing preserves alpha and aligns feet/root anchors."
+    },
+    "animal-peafowl": {
+      "sourceHash": "16f91024860543dcde871e225f03593c8ed5ad2773c31ebee1c49c35544df3f9",
+      "prompt": "Use case: stylized-concept. Production transparent raster sprite atlas for a polished isometric Vietnamese farm game. Subject: a blue peafowl with green folded long ornamental tail. Consistent charming hand painted prerendered 3D illustration, natural feather detail, warm light upper left, three-quarter view facing lower left. EXACT 8 columns and 8 rows, 64 separate sprites in an evenly spaced square contact sheet. No labels, no grid strokes, transparent alpha background. Entire animal fits every equal square cell; baseline aligned. Each horizontal row is ONE 8-frame animation with real changes in feet, beak, neck, wings, feathers; never identical shifted copies. Row1 idle breathing and blinking. Row2 walk cycle with alternating steps. Row3 eat, neck lowers pecking loose grain then rises. Row4 drink, beak dips then neck tilts up. Row5 rest, folds feet and settles sleep breathing. Row6 produce_ready, crouches beside one egg then stretches proudly. Row7 weak, drooping head and slow wings. Row8 dead, gentle non-graphic collapse and ends lying still. All EIGHT rows must appear. Same identity and scale all64 poses, no enclosure or ground rectangle, tiny soft contact shadow only.",
+      "sourceRows": 8,
+      "sourceBounds": [
+        0,
+        157,
+        304,
+        456,
+        620,
+        770,
+        940,
+        1086,
+        1254
+      ],
+      "frames": 64,
+      "atlas": "animal-peafowl.6ef7d0d5eb22.webp",
+      "rasterMotion": "Distinct generated poses; packing preserves alpha and aligns feet/root anchors."
+    },
+    "animal-ostrich": {
+      "sourceHash": "d30662d90bc8ec25ad15aef9da3cce5fb9e6530260a7909e40e53f25c3d3f414",
+      "prompt": "Use case: stylized-concept. Production transparent raster sprite atlas for a polished isometric Vietnamese farm game. Subject: a large black-and-white ostrich with long pale neck and legs. Consistent charming hand painted prerendered 3D illustration, natural feather detail, warm light upper left, three-quarter view facing lower left. EXACT 8 columns and 8 rows, 64 separate sprites in an evenly spaced square contact sheet. No labels, no grid strokes, transparent alpha background. Entire animal fits every equal square cell; baseline aligned. Each horizontal row is ONE 8-frame animation with real changes in feet, beak, neck, wings, feathers; never identical shifted copies. Row1 idle breathing and blinking. Row2 walk cycle with alternating steps. Row3 eat, neck lowers pecking loose grain then rises. Row4 drink, beak dips then neck tilts up. Row5 rest, folds feet and settles sleep breathing. Row6 produce_ready, crouches beside one egg then stretches proudly. Row7 weak, drooping head and slow wings. Row8 dead, gentle non-graphic collapse and ends lying still. All EIGHT rows must appear. Same identity and scale all64 poses, no enclosure or ground rectangle, tiny soft contact shadow only.",
+      "sourceRows": 8,
+      "sourceBounds": [
+        0,
+        155,
+        313,
+        466,
+        628,
+        773,
+        940,
+        1096,
+        1254
+      ],
+      "frames": 64,
+      "atlas": "animal-ostrich.38eae14f8d53.webp",
+      "rasterMotion": "Distinct generated poses; packing preserves alpha and aligns feet/root anchors."
+    },
+    "crop-pumpkin": {
+      "sources": [
+        {
+          "sourceHash": "d12cbd245330244f555ecadc3d504d62db2a2f15eeae7fd868eb755a447911eb",
+          "bounds": [
+            0,
+            213,
+            397,
+            654,
+            992
+          ],
+          "map": [
+            0,
+            1,
+            3,
+            4
+          ]
+        },
+        {
+          "sourceHash": "4dfb91af2553a03f0f2561378c578da8cd64bec4ef0ab160d5270889b30a87d8",
+          "bounds": [
+            0,
+            407,
+            793
+          ],
+          "map": [
+            2,
+            -1
+          ],
+          "scale": 0.55
+        }
+      ],
+      "prompt": "Isometric painted transparent pumpkin atlas: eight distinct frames per seeded, sprout, young, growing and mature stage. Separate young vegetative no-fruit eight-frame strip generated for each species; technically packed between sprout and growing, fixed root anchor. Organic leaf motion, no CSS-derived poses.",
+      "sourceRows": 5,
+      "frames": 40,
+      "atlas": "crop-pumpkin.33a587b7902c.webp",
+      "rasterMotion": "Distinct generated poses; packing preserves alpha and aligns feet/root anchors."
+    },
+    "crop-watermelon": {
+      "sources": [
+        {
+          "sourceHash": "ec0827f1b13bf8884d96c62642f9b003e7a8dbd2242008a7bf2605b816c30988",
+          "bounds": [
+            0,
+            211,
+            402,
+            620,
+            992
+          ],
+          "map": [
+            0,
+            1,
+            3,
+            4
+          ]
+        },
+        {
+          "sourceHash": "4dfb91af2553a03f0f2561378c578da8cd64bec4ef0ab160d5270889b30a87d8",
+          "bounds": [
+            0,
+            407,
+            793
+          ],
+          "map": [
+            -1,
+            2
+          ],
+          "scale": 0.55
+        }
+      ],
+      "prompt": "Isometric painted transparent watermelon atlas: eight distinct frames per seeded, sprout, young, growing and mature stage. Separate young vegetative no-fruit eight-frame strip generated for each species; technically packed between sprout and growing, fixed root anchor. Organic leaf motion, no CSS-derived poses.",
+      "sourceRows": 5,
+      "frames": 40,
+      "atlas": "crop-watermelon.726566b8ebc2.webp",
+      "rasterMotion": "Distinct generated poses; packing preserves alpha and aligns feet/root anchors."
+    },
+    "worker-idle": {
+      "sources": [
+        {
+          "sourceHash": "a09dfd3d54854881f1c48f28199a0b3a5f10b5245188f96b52b593f444cfeeb3",
+          "bounds": [
+            0,
+            222,
+            443,
+            665,
+            887
+          ],
+          "columnBounds": [
+            [
+              0,
+              222,
+              443,
+              665,
+              887,
+              1109,
+              1330,
+              1552,
+              1774
+            ],
+            [
+              0,
+              222,
+              443,
+              665,
+              887,
+              1109,
+              1330,
+              1552,
+              1774
+            ],
+            [
+              0,
+              222,
+              443,
+              665,
+              887,
+              1109,
+              1330,
+              1552,
+              1774
+            ],
+            [
+              0,
+              222,
+              443,
+              665,
+              887,
+              1109,
+              1330,
+              1552,
+              1774
+            ]
+          ]
+        }
+      ],
+      "prompt": "Illustrated isometric Vietnamese farmer, straw conical hat, navy indigo shirt, brown trousers and boots, warm upper-left light. Transparent alpha, eight sequential real body poses per row, four rows facing lower-right, lower-left, upper-left, upper-right. Relaxed breathing and looking around.",
+      "sourceRows": 4,
+      "frames": 32,
+      "atlas": "worker-idle.4a008d69313d.webp",
+      "rasterMotion": "Distinct generated poses; packing preserves alpha and aligns feet/root anchors."
+    },
+    "worker-walk": {
+      "sources": [
+        {
+          "sourceHash": "832575d0646f49d8531eff02a204a27eb4d1bc1fe38d04e0fcce7b298f1c0bb5",
+          "bounds": [
+            0,
+            254,
+            504,
+            752,
+            1024
+          ],
+          "columnBounds": [
+            [
+              0,
+              192,
+              384,
+              576,
+              768,
+              960,
+              1152,
+              1344,
+              1536
+            ],
+            [
+              0,
+              192,
+              384,
+              576,
+              768,
+              960,
+              1152,
+              1344,
+              1536
+            ],
+            [
+              0,
+              192,
+              384,
+              576,
+              768,
+              960,
+              1152,
+              1344,
+              1536
+            ],
+            [
+              0,
+              192,
+              384,
+              576,
+              768,
+              960,
+              1152,
+              1344,
+              1536
+            ]
+          ]
+        }
+      ],
+      "prompt": "Illustrated isometric Vietnamese farmer, straw conical hat, navy indigo shirt, brown trousers and boots, warm upper-left light. Transparent alpha, eight sequential real body poses per row, four rows facing lower-right, lower-left, upper-left, upper-right. Walk cycle, alternating planted feet, knees and arms.",
+      "sourceRows": 4,
+      "frames": 32,
+      "atlas": "worker-walk.411432befc51.webp",
+      "rasterMotion": "Distinct generated poses; packing preserves alpha and aligns feet/root anchors."
+    },
+    "worker-plant": {
+      "sources": [
+        {
+          "sourceHash": "d5b10b947128731525accb8e1d69ff1d3655f8d91fe4655e4b360f8fb0d90265",
+          "bounds": [
+            0,
+            229,
+            452,
+            665,
+            887
+          ],
+          "columnBounds": [
+            [
+              0,
+              222,
+              443,
+              665,
+              887,
+              1109,
+              1330,
+              1552,
+              1774
+            ],
+            [
+              0,
+              222,
+              443,
+              665,
+              887,
+              1109,
+              1330,
+              1552,
+              1774
+            ],
+            [
+              0,
+              222,
+              443,
+              665,
+              887,
+              1109,
+              1330,
+              1552,
+              1774
+            ],
+            [
+              0,
+              222,
+              443,
+              665,
+              887,
+              1109,
+              1330,
+              1552,
+              1774
+            ]
+          ]
+        }
+      ],
+      "prompt": "Illustrated isometric Vietnamese farmer, straw conical hat, navy indigo shirt, brown trousers and boots, warm upper-left light. Transparent alpha, eight sequential real body poses per row, four rows facing lower-right, lower-left, upper-left, upper-right. Kneel, plant seeds from pouch, cover soil, stand.",
+      "sourceRows": 4,
+      "frames": 32,
+      "atlas": "worker-plant.207d4e737b57.webp",
+      "rasterMotion": "Distinct generated poses; packing preserves alpha and aligns feet/root anchors."
+    },
+    "worker-water": {
+      "sources": [
+        {
+          "sourceHash": "be0f7addef789d965fae57a4f9f868379cc881fb32677f822e9386b1d93226dd",
+          "bounds": [
+            0,
+            256,
+            510,
+            767,
+            1024
+          ],
+          "columnBounds": [
+            [
+              0,
+              192,
+              392,
+              591,
+              797,
+              984,
+              1176,
+              1359,
+              1536
+            ],
+            [
+              0,
+              185,
+              368,
+              558,
+              753,
+              944,
+              1137,
+              1344,
+              1536
+            ],
+            [
+              0,
+              192,
+              384,
+              592,
+              787,
+              976,
+              1170,
+              1344,
+              1536
+            ],
+            [
+              0,
+              192,
+              401,
+              608,
+              797,
+              986,
+              1178,
+              1344,
+              1536
+            ]
+          ]
+        }
+      ],
+      "prompt": "Illustrated isometric Vietnamese farmer, straw conical hat, navy indigo shirt, brown trousers and boots, warm upper-left light. Transparent alpha, eight sequential real body poses per row, four rows facing lower-right, lower-left, upper-left, upper-right. Lift watering can, tilt, pour droplets, lower.",
+      "sourceRows": 4,
+      "frames": 32,
+      "atlas": "worker-water.a3bac926cf51.webp",
+      "rasterMotion": "Distinct generated poses; packing preserves alpha and aligns feet/root anchors."
+    },
+    "worker-fertilize": {
+      "sources": [
+        {
+          "sourceHash": "5eea269e9c52b43426207fa99992be40f595938d8f3c59d9f656a35694bbee54",
+          "bounds": [
+            0,
+            256,
+            509,
+            751,
+            1024
+          ],
+          "columnBounds": [
+            [
+              0,
+              192,
+              384,
+              576,
+              768,
+              978,
+              1170,
+              1369,
+              1536
+            ],
+            [
+              0,
+              192,
+              384,
+              576,
+              768,
+              960,
+              1152,
+              1344,
+              1536
+            ],
+            [
+              0,
+              192,
+              384,
+              576,
+              768,
+              960,
+              1154,
+              1344,
+              1536
+            ],
+            [
+              0,
+              192,
+              384,
+              576,
+              768,
+              978,
+              1184,
+              1365,
+              1536
+            ]
+          ]
+        }
+      ],
+      "prompt": "Illustrated isometric Vietnamese farmer, straw conical hat, navy indigo shirt, brown trousers and boots, warm upper-left light. Transparent alpha, eight sequential real body poses per row, four rows facing lower-right, lower-left, upper-left, upper-right. Open fertilizer sack, scoop and scatter fertilizer, close sack.",
+      "sourceRows": 4,
+      "frames": 32,
+      "atlas": "worker-fertilize.db4f43990a56.webp",
+      "rasterMotion": "Distinct generated poses; packing preserves alpha and aligns feet/root anchors."
+    },
+    "worker-pest": {
+      "sources": [
+        {
+          "sourceHash": "fa31310afc6384e013e5ff9281f913ef08a9c8660269a9bb6afebd563aba8d73",
+          "bounds": [
+            0,
+            256,
+            512,
+            759,
+            1024
+          ],
+          "columnBounds": [
+            [
+              0,
+              192,
+              355,
+              555,
+              743,
+              991,
+              1104,
+              1316,
+              1536
+            ],
+            [
+              0,
+              181,
+              366,
+              556,
+              755,
+              1003,
+              1201,
+              1344,
+              1536
+            ],
+            [
+              0,
+              214,
+              326,
+              527,
+              721,
+              902,
+              1105,
+              1304,
+              1536
+            ],
+            [
+              0,
+              161,
+              326,
+              527,
+              714,
+              910,
+              1111,
+              1387,
+              1536
+            ]
+          ]
+        }
+      ],
+      "prompt": "Illustrated isometric Vietnamese farmer, straw conical hat, navy indigo shirt, brown trousers and boots, warm upper-left light. Transparent alpha, eight sequential real body poses per row, four rows facing lower-right, lower-left, upper-left, upper-right. Pump garden sprayer, aim nozzle, spray mist, lower tool.",
+      "sourceRows": 4,
+      "frames": 32,
+      "atlas": "worker-pest.8f00ff0b72bd.webp",
+      "rasterMotion": "Distinct generated poses; packing preserves alpha and aligns feet/root anchors."
+    },
+    "worker-harvest": {
+      "sources": [
+        {
+          "sourceHash": "e7477101399f63491c2ed625fe50db102760ceab18dcfd78de40a77048668382",
+          "bounds": [
+            0,
+            254,
+            501,
+            746,
+            1024
+          ],
+          "columnBounds": [
+            [
+              0,
+              192,
+              397,
+              585,
+              773,
+              960,
+              1152,
+              1344,
+              1536
+            ],
+            [
+              0,
+              192,
+              389,
+              590,
+              768,
+              960,
+              1152,
+              1344,
+              1536
+            ],
+            [
+              0,
+              206,
+              436,
+              608,
+              780,
+              960,
+              1156,
+              1344,
+              1536
+            ],
+            [
+              0,
+              210,
+              441,
+              611,
+              788,
+              981,
+              1177,
+              1348,
+              1536
+            ]
+          ]
+        }
+      ],
+      "prompt": "Illustrated isometric Vietnamese farmer, straw conical hat, navy indigo shirt, brown trousers and boots, warm upper-left light. Transparent alpha, eight sequential real body poses per row, four rows facing lower-right, lower-left, upper-left, upper-right. Crouch, grip leaves, pull carrot, raise, transfer to wicker basket, straighten.",
+      "sourceRows": 4,
+      "frames": 32,
+      "atlas": "worker-harvest.257739afdc14.webp",
+      "rasterMotion": "Distinct generated poses; packing preserves alpha and aligns feet/root anchors."
+    },
+    "worker-feed": {
+      "sources": [
+        {
+          "sourceHash": "ce620bc9e705bf966a57080ebee8f9042a322d05afcf0bc646b354088647b759",
+          "bounds": [
+            0,
+            256,
+            512,
+            757,
+            1024
+          ],
+          "columnBounds": [
+            [
+              0,
+              248,
+              409,
+              577,
+              768,
+              960,
+              1150,
+              1331,
+              1536
+            ],
+            [
+              0,
+              222,
+              397,
+              576,
+              768,
+              960,
+              1152,
+              1338,
+              1536
+            ],
+            [
+              0,
+              217,
+              405,
+              576,
+              768,
+              969,
+              1152,
+              1344,
+              1536
+            ],
+            [
+              0,
+              243,
+              410,
+              586,
+              770,
+              964,
+              1152,
+              1344,
+              1536
+            ]
+          ]
+        }
+      ],
+      "prompt": "Illustrated isometric Vietnamese farmer, straw conical hat, navy indigo shirt, brown trousers and boots, warm upper-left light. Transparent alpha, eight sequential real body poses per row, four rows facing lower-right, lower-left, upper-left, upper-right. Grasp burlap grain bag, lift, tilt, pour, shake, lower, straighten.",
+      "sourceRows": 4,
+      "frames": 32,
+      "atlas": "worker-feed.de0c3f8272a2.webp",
+      "rasterMotion": "Distinct generated poses; packing preserves alpha and aligns feet/root anchors."
+    },
+    "worker-clean_dead": {
+      "sources": [
+        {
+          "sourceHash": "c7c915dee546ae08fdf161ad2366b11f15a4249fe95698ade70caeece5c2e860",
+          "bounds": [
+            0,
+            256,
+            510,
+            759,
+            1024
+          ],
+          "columnBounds": [
+            [
+              0,
+              192,
+              384,
+              603,
+              776,
+              971,
+              1155,
+              1344,
+              1536
+            ],
+            [
+              0,
+              192,
+              384,
+              576,
+              768,
+              960,
+              1152,
+              1344,
+              1536
+            ],
+            [
+              0,
+              192,
+              384,
+              581,
+              768,
+              960,
+              1152,
+              1344,
+              1536
+            ],
+            [
+              0,
+              199,
+              401,
+              607,
+              783,
+              980,
+              1163,
+              1357,
+              1536
+            ]
+          ]
+        }
+      ],
+      "prompt": "Illustrated isometric Vietnamese farmer, straw conical hat, navy indigo shirt, brown trousers and boots, warm upper-left light. Transparent alpha, eight sequential real body poses per row, four rows facing lower-right, lower-left, upper-left, upper-right. Tidy pen with short handled scoop and covered wicker basket; bend, gather straw, transfer, close lid, straighten. Non-graphic.",
+      "sourceRows": 4,
+      "frames": 32,
+      "atlas": "worker-clean_dead.71c44bfbec8c.webp",
+      "rasterMotion": "Distinct generated poses; packing preserves alpha and aligns feet/root anchors."
+    },
+    "worker-replace_animals": {
+      "sources": [
+        {
+          "sourceHash": "c130467124f24dec1ca4929ef588bb36670a427fe373d6861a796b9cdf6868fb",
+          "bounds": [
+            0,
+            257,
+            512,
+            762,
+            1024
+          ],
+          "columnBounds": [
+            [
+              0,
+              193,
+              399,
+              576,
+              768,
+              949,
+              1133,
+              1336,
+              1536
+            ],
+            [
+              0,
+              215,
+              392,
+              581,
+              768,
+              960,
+              1146,
+              1344,
+              1536
+            ],
+            [
+              0,
+              192,
+              385,
+              576,
+              768,
+              955,
+              1140,
+              1327,
+              1536
+            ],
+            [
+              0,
+              205,
+              386,
+              576,
+              768,
+              949,
+              1126,
+              1344,
+              1536
+            ]
+          ]
+        }
+      ],
+      "prompt": "Illustrated isometric Vietnamese farmer, straw conical hat, navy indigo shirt, brown trousers and boots, warm upper-left light. Transparent alpha, eight sequential real body poses per row, four rows facing lower-right, lower-left, upper-left, upper-right. Hold carrier, kneel, open, gently cradle chick, lower hands, release chick, close, stand.",
+      "sourceRows": 4,
+      "frames": 32,
+      "atlas": "worker-replace_animals.4d1e12872415.webp",
+      "rasterMotion": "Distinct generated poses; packing preserves alpha and aligns feet/root anchors."
+    },
+    "worker-restock": {
+      "sources": [
+        {
+          "sourceHash": "4587b13dfa67f29edabd4028dc80a9a87d6d796ee512b8480c506a44f602af49",
+          "bounds": [
+            0,
+            257,
+            509,
+            760,
+            1024
+          ],
+          "columnBounds": [
+            [
+              0,
+              192,
+              384,
+              576,
+              768,
+              960,
+              1152,
+              1344,
+              1536
+            ],
+            [
+              0,
+              192,
+              384,
+              576,
+              768,
+              960,
+              1152,
+              1344,
+              1536
+            ],
+            [
+              0,
+              194,
+              389,
+              585,
+              768,
+              960,
+              1152,
+              1350,
+              1536
+            ],
+            [
+              0,
+              192,
+              394,
+              585,
+              768,
+              960,
+              1152,
+              1349,
+              1536
+            ]
+          ]
+        }
+      ],
+      "prompt": "Production raster sprite atlas for a polished isometric Vietnamese farm game. One consistent Vietnamese adult farmer: tan skin, friendly round face, broad straw conical hat, indigo-blue long sleeve shirt, rolled brown trousers, brown boots. Hand painted prerendered 3D illustration, warm upper-left lighting. True transparent alpha background, no backdrop, no labels or gridlines. EXACT 8 columns and 4 rows, 32 separate full-body sprites in equal cells with generous transparent gaps, entire body and tool fit each cell, feet aligned. Row1 facing lower right; row2 facing lower left; row3 back view upper left; row4 back view upper right. Each row is a full eight-frame animation, with distinct arm, elbow, knee and tool poses, same body identity and scale. Action: receiving farm supplies in a small wooden crate containing a grain sack and seed packets. Eight sequential poses: reach for crate, bend knees, lift crate, hold at chest, inspect contents, lower crate, stand upright, reset. Detailed hands elbows and knees change through the cycle, no scenery.",
+      "sourceRows": 4,
+      "frames": 32,
+      "atlas": "worker-restock.a345779b1fa6.webp",
+      "rasterMotion": "Distinct generated poses; packing preserves alpha and aligns feet/root anchors."
+    },
+    "worker-sell_eggs": {
+      "sources": [
+        {
+          "sourceHash": "d59c80a5988f14bf13ed38675d8269524af39231bd9f74c9877bc92ff99b296f",
+          "bounds": [
+            0,
+            223,
+            444,
+            665,
+            887
+          ],
+          "columnBounds": [
+            [
+              0,
+              222,
+              443,
+              665,
+              887,
+              1109,
+              1330,
+              1552,
+              1774
+            ],
+            [
+              0,
+              222,
+              443,
+              665,
+              887,
+              1109,
+              1330,
+              1552,
+              1774
+            ],
+            [
+              0,
+              222,
+              443,
+              665,
+              887,
+              1109,
+              1330,
+              1552,
+              1774
+            ],
+            [
+              0,
+              222,
+              443,
+              665,
+              887,
+              1109,
+              1336,
+              1552,
+              1774
+            ]
+          ]
+        }
+      ],
+      "prompt": "Production raster sprite atlas for a polished isometric Vietnamese farm game. One consistent Vietnamese adult farmer: tan skin, friendly round face, broad straw conical hat, indigo-blue long sleeve shirt, rolled brown trousers, brown boots. Hand painted prerendered 3D illustration, warm upper-left lighting. True transparent alpha background, no backdrop, no labels or gridlines. EXACT 8 columns and 4 rows, 32 separate full-body sprites in equal cells with generous transparent gaps, entire body and tool fit each cell, feet aligned. Row1 facing lower right; row2 facing lower left; row3 back view upper left; row4 back view upper right. Each row is a full eight-frame animation, with distinct arm, elbow, knee and tool poses, same body identity and scale. Action: taking a white egg from a wicker basket and offering it for sale. Eight sequential poses: hold basket, look down, reach for egg, lift egg, extend arm forward with egg, return empty hand, adjust basket, reset. Different arm poses through cycle, no other people or scenery.",
+      "sourceRows": 4,
+      "frames": 32,
+      "atlas": "worker-sell_eggs.c1846eaba01d.webp",
+      "rasterMotion": "Distinct generated poses; packing preserves alpha and aligns feet/root anchors."
+    },
+    "ambient": {
+      "sources": [
+        {
+          "sourceHash": "c4f4f866b7b432d60e5c22a484eacb9e39f1873f7db3805c9351cfbaecac75e9",
+          "bounds": [
+            0,
+            171,
+            341,
+            484,
+            683,
+            848,
+            1024
+          ],
+          "columnBounds": [
+            [
+              0,
+              192,
+              384,
+              576,
+              768,
+              960,
+              1152,
+              1344,
+              1536
+            ],
+            [
+              0,
+              192,
+              384,
+              576,
+              768,
+              960,
+              1152,
+              1344,
+              1536
+            ],
+            [
+              0,
+              192,
+              384,
+              576,
+              768,
+              960,
+              1152,
+              1344,
+              1536
+            ],
+            [
+              0,
+              192,
+              384,
+              576,
+              768,
+              960,
+              1152,
+              1344,
+              1536
+            ],
+            [
+              0,
+              196,
+              387,
+              581,
+              778,
+              964,
+              1152,
+              1344,
+              1536
+            ],
+            [
+              0,
+              192,
+              384,
+              580,
+              770,
+              960,
+              1152,
+              1344,
+              1536
+            ]
+          ]
+        }
+      ],
+      "prompt": "Production transparent raster atlas for isometric painted Vietnamese farm game. EXACTLY 8 columns by 6 rows, 48 isolated frames on true transparent background. Each row one distinct eight-frame looping motion with equal cells and generous gaps: row1 little green grass tuft swaying, row2 tiny branch of green leaves fluttering, row3 turquoise pond water patch with concentric ripple changing shape, row4 small warm amber lantern glowing with flickering flame, row5 small turquoise watering splash expanding and falling with droplets, row6 tiny golden star sparkle puff appearing and fading for harvest and care. Natural painterly 3D raster detail, warm top-left light. No backdrop, no words, no grid lines, no solid rectangles. Every frame wholly inside its cell.",
+      "sourceRows": 6,
+      "frames": 48,
+      "atlas": "ambient.130c4c441221.webp",
+      "rasterMotion": "Distinct generated poses; packing preserves alpha and aligns feet/root anchors."
+    }
+  }
+}
