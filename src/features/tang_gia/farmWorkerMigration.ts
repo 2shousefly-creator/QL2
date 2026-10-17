@@ -33,6 +33,12 @@ export function normalizeFarmWorker(raw: any, cursor: number): FarmWorkerState {
   if (raw.lastCompletion && typeof raw.lastCompletion.id === "string" && FARM_TASKS.some(t => t.id === raw.lastCompletion.task) && Number.isFinite(raw.lastCompletion.at) && point(raw.lastCompletion.anchor)) worker.lastCompletion = structuredClone(raw.lastCompletion);
   const a = raw.action;
   if (worker.status === 'employed' && a && typeof a.id === 'string' && FARM_TASKS.some(t => t.id === a.task) && Array.isArray(a.path) && a.path.length <= 256 && a.path.every(point) && point(a.workAnchor) && [a.departedAt, a.arrivedAt, a.startedAt, a.endsAt].every(Number.isFinite) && a.departedAt <= a.arrivedAt && a.arrivedAt <= a.startedAt && a.startedAt < a.endsAt && a.endsAt >= cursor) worker.action = structuredClone(a);
+  const stroll=raw.stroll;
+  if(worker.status==='employed'&&!worker.action&&stroll&&Array.isArray(stroll.path)&&stroll.path.length>=2&&stroll.path.length<=256&&stroll.path.every(point)&&Number.isFinite(stroll.startedAt)&&stroll.path[0].x===stroll.path[stroll.path.length-1].x&&stroll.path[0].y===stroll.path[stroll.path.length-1].y){
+    const path=stroll.path as Array<{x:number;y:number}>;
+    const duration=path.slice(1).reduce((sum,p,i)=>sum+Math.hypot(p.x-path[i].x,p.y-path[i].y),0)/.8*1000;
+    if(duration>0)worker.stroll={path:structuredClone(path),startedAt:Math.min(cursor,stroll.startedAt),duration};
+  }
   worker.log = Array.isArray(raw.log) ? raw.log.filter((e: any) => e && Number.isFinite(e.at) && typeof e.message === 'string' && Number.isFinite(e.gold)).slice(-48) : [];
   for (const key of Object.keys(worker.totals) as (keyof typeof worker.totals)[]) worker.totals[key] = Math.max(0, finite(raw.totals?.[key]));
   worker.blocked = Array.isArray(raw.blocked) ? raw.blocked.filter((s: any) => typeof s === 'string').slice(0, 12) : [];

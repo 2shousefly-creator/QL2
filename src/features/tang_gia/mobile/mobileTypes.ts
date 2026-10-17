@@ -13,7 +13,7 @@ export type MobilePlot = {
   cropId: CropId | null; stage: CropAssetStage; title: string; timer: string;
   artStage: typeof CROP_FRAMES[number];
   moisture: number; moistureLabel: string; thirsty: boolean; fertilizer: boolean; pest: boolean;
-  quality?: ItemQuality; plantedAt?: number; detail?: string; rewardLabel?: string;
+  quality?: ItemQuality; plantedAt?: number; detail?: string; rewardLabel?: string; growth?: number;
 };
 export type MobileAnimal = { id: string; species: AnimalTypeId; title: string; timer: string; lifeRemaining: string; lifeRatio: number; dead: boolean; weak: boolean; scale: number; storedEggs: number };
 export type FarmMobileSnapshot = {

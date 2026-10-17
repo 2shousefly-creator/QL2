@@ -38,3 +38,25 @@
 .farm-world-pen-status [data-low=true] progress{accent-color:#efa65c}
 .farm-world-pen-status [data-low=true] progress::-webkit-progress-value{background:#efa65c}
 .farm-world-pen-status [data-low=true] progress::-moz-progress-bar{background:#efa65c}
+.farm-world-shell--compact{font-family:var(--font-ui)}
+.farm-world-hud{display:flex;align-items:center;gap:4px;padding:4px 6px;background:#17271f}
+.farm-world-hud button,.farm-world-shell--compact .farm-world-navigation button,.farm-world-shell--compact .farm-world-shortcuts button{position:relative;display:inline-flex;align-items:center;justify-content:center;flex:0 0 44px;width:44px;height:44px;min-height:44px;padding:8px;border:1px solid #617351;border-radius:9px;background:#273b2c;color:#f2e2b1}
+.farm-world-shell--compact button>svg{width:20px;height:20px;flex-shrink:0}
+.farm-world-hud button[aria-pressed=true]{background:#52663a;border-color:#b7cc7d}
+.farm-world-wallet{display:flex;align-items:center;gap:6px;flex:1;min-width:0;color:#efd277;font-variant-numeric:tabular-nums;font-size:14px}
+.farm-world-wallet svg{width:20px;height:20px;flex-shrink:0}
+.farm-world-wallet strong{overflow:hidden;text-overflow:ellipsis}
+.farm-world-hud .farm-icon-badge{position:absolute;right:3px;bottom:3px;width:11px;height:11px;background:#273b2c}
+.farm-world-shell--compact .farm-world-navigation{flex-wrap:nowrap;overflow-x:auto;padding:4px 6px;gap:4px;background:#1b2e22;scrollbar-width:thin}
+.farm-world-shell--compact .farm-world-shortcuts{padding:4px 6px;gap:4px;background:#1b2e22}
+.farm-world-shell--compact .farm-world-pen-status{grid-template-columns:1.3fr 1fr 1fr;padding:4px 6px;gap:4px}
+.farm-world-shell--compact .farm-world-pen-status button{display:flex;align-items:center;justify-content:center;gap:6px;position:relative;padding:7px 8px 11px;min-height:44px;text-align:center}
+.farm-world-shell--compact .farm-world-pen-status progress{position:absolute;bottom:4px;left:8px;width:calc(100% - 16px);height:3px}
+.farm-world-shell--compact [data-warning=true]{color:#ffd18a!important;border-color:#c79857!important}
+.farm-world-shell--compact .farm-world-selection{max-width:min(260px,calc(100% - 16px));font-size:11px;padding:7px 9px}
+.farm-graphics-screen [data-farm-player-xp]{padding:4px 8px;border-radius:9px}
+.farm-graphics-screen .logistics-action-toolbar{gap:4px;padding:5px;border-width:1px;border-radius:12px}
+.farm-graphics-screen .logistics-action-toolbar button{height:44px;min-height:44px;min-width:44px;padding:6px;position:relative}
+.farm-graphics-screen .logistics-action-toolbar button>svg{width:22px;height:22px}
+/* Preserve accessible names while making the contextual toolbar icon-only. */
+.farm-graphics-screen .logistics-action-toolbar button>span{position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap}

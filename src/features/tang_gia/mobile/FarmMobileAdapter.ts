@@ -51,7 +51,7 @@ export function adaptFarmMobile(game: GameState, farm: FarmSaveState, view: Farm
       const unlock = FARM_PLOT_UNLOCKS[index];
       const detail = plot.status === 'locked' ? `Mở tại ${getRankNameForDisplay(unlock?.requiredRank ?? null)} · ${unlock?.gold ?? 0} vàng` : `Độ ẩm ${Math.floor(moisture)}% · ${plot.status === 'growing' || plot.status === 'ready' ? FERTILIZER_CATALOG.find(f => f.id === plot.fertilizerId)?.name ?? 'Chưa bón phân' : 'Ô trống'}${plot.status === 'growing' || plot.status === 'ready' ? ` · Sâu ${Math.floor(plot.pestPressure)}%` : ''}`;
       return { index, status: plot.status, cropId, plantedAt: plot.status === 'growing' || plot.status === 'ready' ? plot.plantedAt : undefined, stage: getCropVisualStage(getCropGrowthProgress(plot)),
-        detail, rewardLabel: reward ? `${plot.status === 'ready' ? 'Thưởng dự kiến' : 'Thưởng cơ bản'}: ${format(gold!)} vàng · ${format(xp!)} EXP` : undefined,
+        detail, growth: progress, rewardLabel: reward ? `${plot.status === 'ready' ? 'Thưởng dự kiến' : 'Thưởng cơ bản'}: ${format(gold!)} vàng · ${format(xp!)} EXP` : undefined,
         artStage: plot.status === 'ready' ? 'ready' : progress >= .9 ? 'mature' : progress >= .6 ? 'growing' : progress >= .3 ? 'young' : progress >= .06 ? 'sprout' : 'seeded',
         title: cropId ? CROP_CATALOG.find(crop => crop.id === cropId)!.name : `Ô đất ${index + 1}`,
         timer: plot.status === 'ready' ? 'Thu hoạch' : plot.status === 'growing'

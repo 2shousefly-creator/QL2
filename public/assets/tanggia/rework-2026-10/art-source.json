@@ -1500,9 +1500,15 @@
     },
     "grass-ground": {
       "generator": "OpenAI built-in image_gen",
-      "file": "grass-ground-v2.png",
-      "sourceSha256": "29308ae309d2d41a41e4d14a2ef746e0e43075d9f3f5d263d5594b905a302290",
-      "prompt": "Use case: stylized-concept. Asset type: seamless repeating ground texture for a Vietnamese isometric farming game. Create one square 1024x1024 fully opaque raster texture of lush natural olive and fresh meadow grass, fine hand-painted illustrated blades and tiny clover, subtle mottled earth between dense short grass. Straight overhead orthographic view, evenly distributed detail and soft diffuse daylight, no perspective and no horizon. All four edges tile seamlessly. Quiet low contrast ground underneath detailed crops and buildings. No objects, flowers, buildings, paths, border, grid, text, logo, vignette, or large patches. Full bleed realistic painted grass material, never flat vector shapes."
+      "file": "grass-calm-v3.png",
+      "sourceSha256": "4399f7e993699dec5da126319d9cd3f142bd206c27c92386f3e4240463b7b72b",
+      "prompt": "Create one seamless tileable square fully opaque raster ground texture for a cozy Vietnamese isometric farm game. Extremely quiet and simple soft sage/olive green short lawn, broad gentle hand-painted color variation with only a few tiny muted blades. Mostly smooth green surface, low contrast, no busy individual blades, no clover, no flowers, no dark speckles, no high-frequency detail. Straight overhead orthographic texture, even diffuse light. Seamless all four edges. Full bleed no border, horizon, objects, path, text, grid, logo or vignette. This background must keep small crop sprites and labels easy to read. 1024x1024."
+    },
+    "village-surroundings": {
+      "generator": "OpenAI built-in image_gen",
+      "file": "village-surroundings-v1.png",
+      "sourceSha256": "17d5b9425cf1350a6208d196e2d69a96256238ebe3957574bb51a70a3dec3a4b",
+      "prompt": "Create a seamless repeating countryside map raster tile for the surroundings of a Vietnamese isometric farming game. Wide aerial orthographic isometric view with small traditional tiled-roof village homes, rice paddies and vegetable fields, winding narrow dirt roads, scattered bamboo and rounded trees, small ponds, open soft sage green meadows. Calm hand-painted production game art, warm natural colors, medium-low contrast, simplified readable large shapes, soft daylight, consistent 2:1 isometric perspective, no horizon or sky. Several small village clusters separated by fields and generous calm green spaces; houses are small parts of a broad landscape. The scene fills every pixel, seamlessly repeats on ALL FOUR edges, paths and terrain join at edges. No floating island, no blank outside area, no solid border, no text, no UI, no characters, no labels, no watermark. Square 1536x1536."
     }
   }
 }

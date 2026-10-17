@@ -51,7 +51,8 @@ and employee management.
 
 ## Raster assets
 
-`public/assets/tanggia/rework-2026-10/` contains 43 versioned PNG/WebP atlases:
+`public/assets/tanggia/rework-2026-10/` contains 43 versioned PNG/WebP atlases
+plus the quiet grass and surrounding village terrain textures:
 19 crop species, 10 animal species, 12 directional farmer clips (idle, walk and
 ten tasks), environment props and ambient/care effects. `dragon_fruit` remains
 the save/catalog ID for Lúa. Crop stages have eight frames; animals have eight
@@ -77,12 +78,26 @@ sprites on the low tier; this is a configuration target, not a measured result.
 The October 17 presentation fix centres soil surfaces separately from crop root
 baselines. The barn stands behind a separate animal yard, with the trough's food
 bar and countdown above the world and a matching accessible DOM status strip.
-Ground uses the generated `grass-ground-v2.png` raster texture. Camera following
+Ground uses the generated `grass-calm-v3.png` raster texture. Camera following
 does not rebuild labels/hit targets every frame; asset requests are coalesced,
 offscreen static props are culled, and overlays suspend optional animation.
 Farm modals share the game's Nunito font, compact spacing and 44px controls.
 Employee settings are grouped into four tabs while preserving the same draft
 until explicit confirmation.
+
+The countryside follow-up replaces the dense grass with `grass-calm-v3.png`
+and fills the entire camera rectangle using a repeating village/field texture,
+independent of farm bounds or zoom. Pen fence edges, gates, navigation and barn
+share `FARM_PEN`; animal waypoints stay in an inset convex yard outside the barn.
+Animal hit areas and selection rings follow their current rendered positions.
+An optional persisted worker `stroll` contains a closed walkable path and start
+time; idle position is sampled analytically, with no extra offline wake events.
+New work interrupts the stroll at that exact position. Existing saves without
+this optional field remain supported; wages and job permissions are unchanged.
+Plot cards show names, remaining time, moisture and growth, with a compact mode
+at overview zoom and an eye toggle. HUD actions use labelled icons. Weather uses
+pooled rain geometry, moving clouds/breeze, sunlight, moon/stars and phase tint;
+reduced motion retains the readable weather state without optional motion.
 
 ## Release boundary
 

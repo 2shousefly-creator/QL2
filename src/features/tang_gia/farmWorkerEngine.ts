@@ -4,7 +4,7 @@ import { buyFarmSupply, addAnimalToPen, applyFertilizerToGrowingCrop, dismissAni
 import { canTreatPest, getPestRatePerHour, PEST_DAMAGE_DELAY_MS } from './pestEngine';
 import { getCanonicalWeatherSlot, getSoilMoistureRatePerHour } from './weatherEngine';
 import { getNormalTroughDurationMs, getStarvationDeadlineAt } from './animalLifecycle';
-import { FARM_ANCHORS, farmPathDuration, findFarmPath, plotWorkAnchor, workerPositionAt } from './farmWorldLayout';
+import { FARM_ANCHORS, createFarmStroll, farmPathDuration, findFarmPath, plotWorkAnchor, workerPositionAt } from './farmWorldLayout';
 import { createFarmWorker, FARM_DAY_MS, FARM_TASKS, FARM_WAGE } from './farmWorkerConfig';
 import { normalizeAssignment } from './farmWorkerMigration';
 import type { FarmAssignment, FarmPoint, FarmTask, FarmWorkerAction, FarmWorkerState, SupplyCategory } from './farmWorkerTypes';
@@ -30,7 +30,7 @@ export function settleFarmPayroll(farm: FarmSaveState, at: number) {
   if (at < w.nextPayrollAt) return;
   const due = Math.floor(w.wageUnits / FARM_DAY_MS);
   if (farm.gold < due) {
-    w.position = workerPositionAt(w, at); w.action = null; w.status = 'departed'; w.departedAt = at; w.unpaidGold = due;
+    w.position = workerPositionAt(w, at); w.action = null; w.stroll = undefined; w.status = 'departed'; w.departedAt = at; w.unpaidGold = due;
     appendWorkerLog(w, { at, kind: 'departed', gold: 0, message: `Đã nghỉ vì thiếu lương ${due} vàng.` });
   } else {
     farm.gold -= due; w.wageUnits -= due * FARM_DAY_MS; w.nextPayrollAt += FARM_DAY_MS; w.totals.wages += due;
@@ -45,7 +45,7 @@ export function confirmFarmAssignment(farm: FarmSaveState, rank: RankStep, assig
   if (w.status !== 'employed') {
     w.status = 'employed'; w.employmentId = `${Math.floor(at)}:${w.sequence + 1}`; w.hiredAt = at;
     w.nextPayrollAt = at + FARM_DAY_MS; w.wageUpdatedAt = at; w.wageUnits = 0;
-    w.lastSettledAt = at; w.action = null; w.position = FARM_ANCHORS.rest; w.departedAt = null; w.unpaidGold = 0;
+    w.lastSettledAt = at; w.action = null; w.stroll = undefined; w.position = FARM_ANCHORS.rest; w.departedAt = null; w.unpaidGold = 0;
     appendWorkerLog(w, { at, kind: 'hired', gold: 0, message: 'Đã tuyển nông dân. Lương đầu tiên đến hạn sau 24 giờ.' });
   } else accrueFarmWages(w, at);
   w.assignment = normalizeAssignment(assignment); w.revision++;
@@ -130,6 +130,8 @@ export function planFarmWorker(farm: FarmSaveState, context: FarmWorkerContext, 
   const w = farm.worker!;
   if (w.status !== 'employed' || w.action) return;
   const jobs = getFarmWorkerJobs(farm, context, at);
+  if(!jobs.length){w.stroll ??= createFarmStroll(w.position,at);return;}
+  w.position=workerPositionAt(w,at);
   const estimate = (j: Job) => (Math.abs(j.anchor.x - w.position.x) + Math.abs(j.anchor.y - w.position.y)) / 1.8 * 1000 + FARM_TASKS.find(t => t.id === j.task)!.duration;
   const score = (j: Job) => {
     const slack = j.deadline - at - estimate(j);
@@ -143,6 +145,7 @@ export function planFarmWorker(farm: FarmSaveState, context: FarmWorkerContext, 
     const arrivedAt = at + Math.ceil(farmPathDuration(path)), duration = FARM_TASKS.find(t => t.id === job.task)!.duration;
     const { anchor, deadline, priority, ...data } = job;
     w.action = { ...data, id: `${w.employmentId}:${++w.sequence}`, path, departedAt: at, arrivedAt, startedAt: arrivedAt, endsAt: arrivedAt + duration, workAnchor: anchor };
+    w.stroll=undefined;
     w.revision++; return;
   }
 }

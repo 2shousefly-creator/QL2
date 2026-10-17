@@ -2110,7 +2110,18 @@
       }
     },
     "grass-ground": {
-      "file": "grass-ground-v2.png",
+      "file": "grass-calm-v3.png",
+      "cell": 1254,
+      "size": 1254,
+      "columns": 1,
+      "anchor": [
+        0,
+        0
+      ],
+      "clips": {}
+    },
+    "village-surroundings": {
+      "file": "village-surroundings-v1.png",
       "cell": 1254,
       "size": 1254,
       "columns": 1,

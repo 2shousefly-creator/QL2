@@ -30,7 +30,7 @@ export function EmployeeManagement({ state, rank, now, onClose, onConfirm, onLoc
   const budgetRemaining = Math.max(0, draft.restock.dailyLimit - (now < worker.budgetWindowAt + FARM_DAY_MS ? worker.budgetSpent : 0));
   const eligible = rankAtLeast(rank, { familyId: 'junior_1', tier: 1 });
   const taskName = FARM_TASKS.find(x => x.id === worker.action?.task)?.name;
-  const status = worker.status === 'departed' ? 'Đã nghỉ' : worker.status === 'unhired' ? 'Chưa tuyển' : worker.action ? now < worker.action.arrivedAt ? 'Di chuyển' : 'Đang làm' : worker.blocked.length ? 'Bị chặn' : worker.assignment.tasks.length ? 'Chờ việc' : 'Chờ giao việc';
+  const status = worker.status === 'departed' ? 'Đã nghỉ' : worker.status === 'unhired' ? 'Chưa tuyển' : worker.action ? now < worker.action.arrivedAt ? 'Di chuyển' : 'Đang làm' : worker.stroll ? 'Đi dạo quanh vườn' : worker.blocked.length ? 'Bị chặn' : worker.assignment.tasks.length ? 'Chờ việc' : 'Chờ giao việc';
   const number = (value: number) => value.toLocaleString('vi-VN', { maximumFractionDigits: 2 });
   const supplies = [ ...CROP_CATALOG.map(x => ({ key: `seeds:${x.id}`, name: `Hạt ${x.name}` })), ...FERTILIZER_CATALOG.map(x => ({ key: `fertilizer:${x.id}`, name: x.name })), ...FEED_CATALOG.map(x => ({ key: `feed:${x.id}`, name: x.name })), ...ANIMAL_CATALOG.map(x => ({ key: `animals:${x.id}`, name: `Con giống ${x.name}` })) ];
   return <AppModal theme="farm" archetype="transaction" onClose={onClose} closeOnBackdrop labelledBy="farm-employee-title">

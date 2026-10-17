@@ -850,7 +850,7 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
       className={`command-art-menu command-art-logistics command-screen logistics-command-screen w-full max-w-5xl mx-auto p-2 sm:p-4 space-y-3 font-sans pb-36 relative ${mobileActive ? 'farm-graphics-screen' : FARM_MOBILE_REQUESTED ? 'overflow-y-auto h-full' : ''}`}
     >
       {/* --- HUD HEADER (STICKY) --- */}
-      {farmModal?.type !== "trough" && (
+      {!mobileActive && farmModal?.type !== "trough" && (
         <div
           onClick={(e) => {
             e.stopPropagation();
@@ -916,8 +916,8 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
       )}
 
       <FarmXpProgressBar gameState={gameState} />
-      <div className="farm-release-actions"><button className="min-h-11 px-4 text-amber-200" onClick={e => { e.stopPropagation(); openFarmModal({type:"release"}); }}>Nội dung cập nhật</button>
-      <button onClick={e => { e.stopPropagation(); openFarmModal({ type: "employee" }); }}>Thuê Người{farmState.worker?.status === "employed" ? " · Đang thuê" : ""}</button></div>
+      {!mobileActive && <div className="farm-release-actions"><button className="min-h-11 px-4 text-amber-200" onClick={e => { e.stopPropagation(); openFarmModal({type:"release"}); }}>Nội dung cập nhật</button>
+      <button onClick={e => { e.stopPropagation(); openFarmModal({ type: "employee" }); }}>Thuê Người{farmState.worker?.status === "employed" ? " · Đang thuê" : ""}</button></div>}
       {farmModal?.type === "release" && <AppModal theme="farm" archetype="transaction" onClose={closeFarmModal} closeOnBackdrop labelledBy="farm-release-title"><OverlayHeader><h2 id="farm-release-title">{FARM_RELEASE.title}</h2></OverlayHeader><OverlayBody><ul className="space-y-3 list-disc pl-5">{FARM_RELEASE.items.map(item => <li key={item}>{item}</li>)}</ul></OverlayBody><OverlayFooter><ModalButton onClick={closeFarmModal}>Đã hiểu</ModalButton></OverlayFooter></AppModal>}
       {farmModal?.type === "employee" && <EmployeeManagement state={gameState} rank={currentRank} now={now} onClose={closeFarmModal} onLocate={follow => { closeFarmModal(); setWorkerCamera({ nonce: Date.now(), follow }); }} onConfirm={assignment => { updateFarm((farm, draft) => confirmFarmAssignment(farm, getCurrentRank(draft.progression.currentRankIndex), assignment, Math.max(Date.now(), draft.time.lastSettledAt))); closeFarmModal(); }} />}
 

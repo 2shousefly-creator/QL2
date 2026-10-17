@@ -22,6 +22,7 @@ export type FarmWorkerState = {
   status: 'unhired' | 'employed' | 'departed'; employmentId: string;
   hiredAt: number; nextPayrollAt: number; wageUpdatedAt: number; wageUnits: number;
   assignment: FarmAssignment; position: FarmPoint; action: FarmWorkerAction | null;
+  stroll?: { path: FarmPoint[]; startedAt: number; duration: number };
   sequence: number; lastSettledAt: number; revision: number;
   lastCompletion?: { id: string; task: FarmTask; at: number; anchor: FarmPoint; plotId?: number };
   budgetWindowAt: number; budgetSpent: number; feedRefilling: boolean;
