@@ -1,0 +1,55 @@
+/* Feature-owned portals: compact content, shared game typography, 44px controls. */
+.app-overlay.modal-design[data-modal-theme="farm"] {
+  --modal-width: 30rem;
+  --modal-pad-x: 12px;
+  --modal-pad-y: 10px;
+  --modal-section-gap: 8px;
+  --modal-title-size: 1rem;
+  --modal-body-size: .8125rem;
+  --modal-meta-size: .75rem;
+  --modal-button-height: 44px;
+  --modal-icon-box-size: 36px;
+  --modal-radius-lg: 14px;
+  font-family: var(--font-ui);
+  line-height: 1.45;
+}
+.app-overlay.modal-design[data-modal-theme="farm"][data-modal-size="compact"] { --modal-width: 23rem; }
+.app-overlay.modal-design[data-modal-theme="farm"] :is(h2,h3,h4,p,span,button,input,select,textarea,label,summary,.font-mono) {
+  font-family: var(--font-ui) !important;
+  letter-spacing: normal;
+}
+.app-overlay.modal-design[data-modal-theme="farm"] :is(.app-overlay__header,.app-overlay__footer) { padding: 9px 12px; gap: 8px; }
+.app-overlay.modal-design[data-modal-theme="farm"] .app-overlay__body { padding: 10px 12px; gap: 8px; line-height: 1.45; }
+.app-overlay.modal-design[data-modal-theme="farm"] .app-overlay__header :is(h2,h3,.modal-title) { font-size: 1rem; line-height: 1.3; }
+.app-overlay.modal-design[data-modal-theme="farm"] :is(.modal-copy,.modal-meta) { font-size: .75rem; line-height: 1.4; }
+.app-overlay.modal-design[data-modal-theme="farm"] .app-overlay__toolbar { padding: 6px 12px; gap: 6px; }
+.app-overlay.modal-design[data-modal-theme="farm"] .app-overlay__body :is(.p-4,.p-5,.p-6,.modal-section) { padding: 10px; }
+.app-overlay.modal-design[data-modal-theme="farm"] .app-overlay__body :is(.space-y-4,.space-y-5,.space-y-6) > :not([hidden]) ~ :not([hidden]) { margin-top: 10px; }
+.app-overlay.modal-design[data-modal-theme="farm"] .app-overlay__body :is(.gap-4,.gap-5,.gap-6) { gap: 10px; }
+.app-overlay.modal-design[data-modal-theme="farm"] :is(input,select) { font-size: 16px; min-height: 44px; }
+.app-overlay.modal-design[data-modal-theme="farm"] .app-overlay__footer { flex-wrap: wrap; }
+.app-overlay.modal-design[data-modal-theme="farm"] .app-overlay__footer > button { min-width: 0; white-space: normal; }
+.app-overlay.modal-design[data-modal-theme="farm"] .farm-market-tabs { gap: 4px; padding: 6px; }
+.app-overlay.modal-design[data-modal-theme="farm"] .farm-market-tabs > button { min-height: 50px; border-radius: 8px; padding: 4px 2px; }
+.app-overlay.modal-design[data-modal-theme="farm"] .farm-market-tabs .farm-market-art { width: 22px; height: 22px; }
+.app-overlay.modal-design[data-modal-theme="farm"] .farm-market-card { padding: 9px; gap: 6px 8px; border-radius: 10px; grid-template-columns: 48px minmax(0,1fr); box-shadow: none; }
+.app-overlay.modal-design[data-modal-theme="farm"] .farm-market-card > div:first-child > div:has(> .farm-market-art) { width: 48px; height: 56px; border-radius: 10px; }
+.app-overlay.modal-design[data-modal-theme="farm"] .farm-market-card .farm-market-art { width: 46px; height: 46px; }
+.app-overlay.modal-design[data-modal-theme="farm"] .farm-market-card h4 { font-size: 13px; }
+.app-overlay.modal-design[data-modal-theme="farm"] .farm-market-card > button { padding: 6px 10px; }
+.app-overlay.modal-design[data-modal-theme="farm"] .app-overlay__header :is(.modal-status-icon,div:has(> .farm-market-art)) { width: 36px; height: 36px; border-radius: 10px; flex-shrink: 0; }
+.app-overlay.modal-design[data-modal-theme="farm"] .app-overlay__header .farm-market-art { width: 34px; height: 34px; }
+.farm-employee-tabs { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 4px; padding: 6px 12px; border-bottom: 1px solid var(--modal-divider); flex-shrink: 0; }
+.farm-employee-tabs button { min-height: 44px; min-width: 0; border: 1px solid var(--modal-border); border-radius: 8px; padding: 4px; font-size: 12px; color: var(--modal-muted); }
+.farm-employee-tabs button[aria-pressed="true"] { background: #37624a; color: #fff2c9; border-color: #9bb77c; }
+.farm-employee fieldset { min-width: 0; padding: 10px 0; border-top: 1px solid var(--modal-divider); }
+.farm-employee legend { padding-right: 8px; }
+.farm-wage-summary { min-height: 44px; padding-block: 10px; cursor: pointer; font-weight: 700; }
+.farm-employee label { font-size: 13px; }
+.farm-employee input[type="checkbox"],.farm-employee input[type="radio"] { min-height: 18px !important; }
+.farm-employee-tabs button:focus-visible,.farm-wage-summary:focus-visible { outline: 2px solid #e7cd82; outline-offset: 2px; }
+@media(max-width:380px) {
+  .app-overlay.modal-design[data-modal-theme="farm"] { --modal-pad-x: 9px; }
+  .app-overlay.modal-design[data-modal-theme="farm"] .app-overlay__body { padding-inline: 9px; }
+  .farm-employee-tabs { padding-inline: 9px; }
+}

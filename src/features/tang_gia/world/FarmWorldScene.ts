@@ -1,6 +1,6 @@
-import { Container, Graphics, Sprite, Text, Texture } from 'pixi.js';
+import { Container, Graphics, Sprite, Text, Texture, TilingSprite } from 'pixi.js';
 import type { PixiSceneFactory } from '../../../components/core-visual/pixi/pixiSceneTypes';
-import type { FarmMobileModel, MobilePlot } from '../mobile/mobileTypes';
+import type { FarmMobileModel } from '../mobile/mobileTypes';
 import { FARM_ANCHORS, farmWalkable, plotWorldPoint, toFarmScreen, workerPositionAt } from '../farmWorldLayout';
 import type { FarmPoint } from '../farmWorkerTypes';
 import { FarmWorldArt } from './FarmWorldArt';
@@ -13,10 +13,15 @@ export type FarmWorldProps = FarmMobileModel & {
 };
 type Actor = { root: Container; sprite: Sprite; label: Text; key: string };
 const COLORS = { thuong: 0xffffff, tot: 0x61adff, hiem: 0xc48bff, hoan_my: 0xffb64f };
+// Ground tiles use their surface centre; upright art uses its soil/root baseline.
+const SOIL_ANCHOR_Y = .53, CROP_ROOT_Y = .78;
+const PEN_BUILDING = { x: 16, y: 8 };
+const animalPoint = (index: number): FarmPoint => ({ x: 11.2 + (index % 3) * 1.45, y: 10.2 + Math.floor(index / 3) * 1.65 });
 export const createFarmWorldScene: PixiSceneFactory<FarmWorldProps> = (app, initial) => {
   let props = initial, disposed = false, reduced = false, width = 1, height = 1, following = false;
   let dataDirty = true, viewDirty = true, lastFrame = -1, pending = 0, lastPush = 0, lastWorkerFocus = 0, lastFailure = false;
   let paint: (() => void) | undefined;
+  let lastSourcesAt = 0, sourcesDirty = true, lastZoom = -1, lastQuality = '', lastFeed = '';
   const root = app.stage.addChild(new Container()); root.eventMode = 'none';
   const background = root.addChild(new Graphics());
   const world = root.addChild(new Container()), ground = world.addChild(new Container()), actors = world.addChild(new Container()); actors.sortableChildren = true;
@@ -33,15 +38,17 @@ export const createFarmWorldScene: PixiSceneFactory<FarmWorldProps> = (app, init
     const container = parent.addChild(new Container());
     const shadow = container.addChild(new Graphics().ellipse(0, 0, 25, 9).fill({ color: 0x142015, alpha: .18 })); shadow.eventMode = 'none';
     const sprite = container.addChild(new Sprite(Texture.EMPTY)); sprite.anchor.set(.5, .85);
-    const label = container.addChild(new Text({ text: '', style: { fontFamily: 'Arial, sans-serif', fontSize: 13, fontWeight: '600', fill: 0xf8f1ce, stroke: { color: 0x172018, width: 4 }, align: 'center' } })); label.anchor.set(.5, 0); label.y = 13;
+    const label = container.addChild(new Text({ text: '', resolution: 1.5, style: { fontFamily: 'Nunito, sans-serif', fontSize: 13, fontWeight: '600', fill: 0xf8f1ce, stroke: { color: 0x172018, width: 4 }, align: 'center' } })); label.anchor.set(.5, 0); label.y = 13;
     return { root: container, sprite, label, key: '' };
   }
   function requestRender(render?: () => void) {
     if (render) paint = render;
-    if (disposed || pending) return;
-    pending = requestAnimationFrame(() => { pending = 0; if (disposed || document.hidden) return; frame(); if (!app.ticker.started) paint?.(); });
+    // The ticker already owns animated frames. Schedule only a stopped scene;
+    // paintScheduled in the shared host calls tick itself before rendering.
+    if (disposed || pending || app.ticker.started) return;
+    pending = requestAnimationFrame(() => { pending = 0; if (disposed || document.hidden || app.ticker.started) return; if (paint) paint(); else { frame(); app.render(); } });
   }
-  const art = new FarmWorldArt(() => { dataDirty = true; requestRender(); });
+  const art = new FarmWorldArt(() => { dataDirty = true; farmer.key = ''; requestRender(); });
   const controls: FarmWorldControls = {
     focus(target) { following = false; const point = target === 'worker' && props.snapshot.worker ? workerPositionAt(props.snapshot.worker, Date.now()) : target === 'pen' ? { x: 13, y: 10 } : target === 'center' ? { x: 8, y: 7 } : { x: 4, y: 6 }; camera.focus(toFarmScreen(point)); viewDirty = true; props.publish(controls, art.failed.size > 0, following); requestRender(); },
     focusPlot(index) { following = false; camera.focus(toFarmScreen(plotWorldPoint(index))); viewDirty = true; props.publish(controls, art.failed.size > 0, following); requestRender(); },
@@ -61,31 +68,42 @@ export const createFarmWorldScene: PixiSceneFactory<FarmWorldProps> = (app, init
   function addProp(index: number, point: FarmPoint, size: number, parent = actors) {
     const sprite = parent.addChild(new Sprite(Texture.EMPTY)), at = toFarmScreen(point); sprite.anchor.set(.5, .85); sprite.position.set(at.x, at.y); sprite.zIndex = at.y; sprite.width = sprite.height = size; staticSprites.push({ sprite, prop: index, size }); return sprite;
   }
-  const grass = ground.addChild(new Graphics());
+  const grass = ground.addChild(new TilingSprite({ texture: Texture.EMPTY, width: 1900, height: 1050 }));
+  grass.position.set(-50, 0); grass.tileScale.set(.28); grass.visible = false;
   const corners = [{x:-1,y:-1},{x:18,y:-1},{x:18,y:15},{x:-1,y:15}].map(toFarmScreen);
-  grass.poly(corners.flatMap(p => [p.x,p.y])).fill(0x66764b);
-  // The visible corridors are the same nodes used by worker navigation.
+  const grassMask = ground.addChild(new Graphics().poly(corners.flatMap(p => [p.x,p.y])).fill(0xffffff));
+  grass.mask = grassMask;
+  // Dirt marks the main corridors; the remaining walkable nodes stay grassy.
   const terrainChunks = new Map<string, Graphics>();
   for (let y = 0; y <= 14; y++) for (let x = 0; x <= 17; x++) if (farmWalkable(x, y)) {
+    if (!(x === 9 || y === 0 || y === 14 || (x <= 8 && y % 2 === 0) || (x >= 9 && y === 6))) continue;
     const p = toFarmScreen({x,y}), cx=Math.floor(p.x/400), cy=Math.floor(p.y/320), key=cx+':'+cy;
     let paths=terrainChunks.get(key);if(!paths){paths=ground.addChild(new Graphics());paths.position.set(cx*400,cy*320);terrainChunks.set(key,paths);}
     const px=p.x-cx*400,py=p.y-cy*320;
-    paths.poly([px,py-25,px+48,py,px,py+25,px-48,py]).fill({color:0x998564,alpha:.8});
+    paths.poly([px,py-15,px+30,py,px,py+15,px-30,py]).fill({color:0x998564,alpha:.6});
   }
   for(const chunk of terrainChunks.values())chunk.cacheAsTexture({resolution:1});
   for (let y = 0; y <= 14; y += 2) { addProp(10,{x:-.8,y},170); addProp(11,{x:18,y},100); }
   for (let x = 0; x < 18; x += 2) { addProp(13,{x,y:14.6},125); addProp(15,{x,y:-.6},95); }
-  addProp(0,{x:14,y:10},320); addProp(1,{x:14,y:2},260); addProp(2,{x:11,y:2},220); addProp(3,{x:12,y:0},190);
-  addProp(4,{x:10,y:8},125); addProp(5,{x:12,y:13},130); addProp(6,{x:16,y:6},210); addProp(7,{x:16,y:10},85); addProp(12,{x:16,y:12},110); addProp(14,{x:9,y:5},120);
+  addProp(0,PEN_BUILDING,270); addProp(1,{x:14,y:2},260); addProp(2,{x:11,y:2},220); addProp(3,{x:12,y:0},190);
+  const trough = addProp(4,FARM_ANCHORS.trough,125);
+  addProp(5,{x:12,y:13},130); addProp(6,{x:16,y:6},170); addProp(7,{x:16,y:10},85); addProp(12,{x:16,y:12},110); addProp(14,{x:9,y:5},120);
+  // Labels sit above the depth-sorted world, so roofs cannot cover food status.
+  const troughHud = world.addChild(new Container()), troughAt = toFarmScreen(FARM_ANCHORS.trough);
+  troughHud.position.set(troughAt.x, troughAt.y + 18);
+  const feedBar = troughHud.addChild(new Graphics());
+  const feedText = troughHud.addChild(new Text({ text: '', resolution: 1.5, style: { fontFamily: 'Nunito, sans-serif', fontSize: 13, fontWeight: '700', fill: 0xffedb5, stroke: { color: 0x172018, width: 4 }, align: 'center' } }));
+  feedText.anchor.set(.5, 0); feedText.y = 10;
   const plotSoils: { sprite: Sprite; index: number }[] = [];
-  for (let i=0;i<24;i++) { const sprite=addProp(8,plotWorldPoint(i),160,ground); plotSoils.push({sprite,index:i}); const actor=makeActor(actors),at=toFarmScreen(plotWorldPoint(i));actor.root.position.set(at.x,at.y);actor.root.zIndex=at.y;plots.set(i,actor); }
+  for (let i=0;i<24;i++) { const sprite=addProp(8,plotWorldPoint(i),172,ground); sprite.anchor.y=SOIL_ANCHOR_Y; plotSoils.push({sprite,index:i}); const actor=makeActor(actors),at=toFarmScreen(plotWorldPoint(i));actor.sprite.anchor.y=CROP_ROOT_Y;actor.label.y=43;actor.root.position.set(at.x,at.y);actor.root.zIndex=at.y;plots.set(i,actor); }
   function visible(point: FarmPoint, margin=220) { const p=camera.screen(point); return p.x>-margin&&p.x<width+margin&&p.y>-margin&&p.y<height+margin; }
   function sources() {
-    const ids = new Set(['environment','ambient']);
+    const ids = new Set(['environment','ambient','grass-ground']);
     for (const p of props.snapshot.plots) if (p.cropId && visible(toFarmScreen(plotWorldPoint(p.index)))) ids.add(`crop-${p.cropId}`);
-    if (visible(toFarmScreen({x:13,y:10}),400)) for (const a of props.snapshot.animals) ids.add(`animal-${a.species}`);
+    props.snapshot.animals.forEach((a,i)=>{if(visible(toFarmScreen(animalPoint(i))))ids.add(`animal-${a.species}`);});
     if (props.snapshot.worker?.status === 'employed') { ids.add('worker-idle');ids.add('worker-walk');if(props.snapshot.worker.action)ids.add(`worker-${props.snapshot.worker.action.task}`); }
     art.request(ids);
+    lastSourcesAt=Date.now();sourcesDirty=false;
   }
   function spriteFrame(actor: Actor, id: string, clip: string, index: number, size: number) {
     const texture=art.frame(id,clip,index);actor.sprite.visible=!!texture;
@@ -93,8 +111,11 @@ export const createFarmWorldScene: PixiSceneFactory<FarmWorldProps> = (app, init
   }
   function reconcile() {
     hits.length=0;
+    const grassTexture=art.texture('grass-ground');if(grassTexture){if(grass.texture!==grassTexture)grass.texture=grassTexture;grass.visible=true;}
     for(const object of staticSprites){const texture=art.prop(object.prop);if(texture && object.sprite.texture!==texture){object.sprite.texture=texture;object.sprite.width=object.sprite.height=object.size;}}
-    for(const {sprite,index} of plotSoils){sprite.tint=props.snapshot.plots[index]?.status==='locked'?0x8c9877:props.snapshot.plots[index]?.moisture!<20?0xd5b79b:0xffffff;}
+    for(const {sprite,index} of plotSoils){sprite.height=132;sprite.tint=props.snapshot.plots[index]?.status==='locked'?0x8c9877:props.snapshot.plots[index]?.moisture!<20?0xd5b79b:0xffffff;}
+    const feed=Math.max(0,Math.min(100,props.snapshot.feed)), feedKey=`${Math.round(feed)}:${props.snapshot.feedLabel}:${props.snapshot.feedRemaining}:${props.snapshot.dangerRemaining}`;
+    if(feedKey!==lastFeed){lastFeed=feedKey;feedBar.clear().roundRect(-51,-2,102,9,4).fill(0x17231d);if(feed>0)feedBar.roundRect(-49,0,Math.max(2,98*feed/100),5,2).fill(feed<=20?0xf7a64b:0x9ed872);feedText.text=`Máng ăn · ${props.snapshot.feedLabel}\n${feed<=0?'Hết thức ăn':props.snapshot.feedRemaining}${props.snapshot.dangerRemaining?`\nNguy hiểm · ${props.snapshot.dangerRemaining}`:''}`;trough.tint=feed<=0?0x8f887c:0xffffff;}
     for (const plot of props.snapshot.plots) {
       const actor=plots.get(plot.index)!; const at=toFarmScreen(plotWorldPoint(plot.index));
       const selected=props.selectedPlot===plot.index;
@@ -109,13 +130,13 @@ export const createFarmWorldScene: PixiSceneFactory<FarmWorldProps> = (app, init
     for(const [id,actor]of animals)if(!animalIds.has(id)){actor.root.destroy({children:true});animals.delete(id);}
     props.snapshot.animals.forEach((animal,i)=>{
       let actor=animals.get(animal.id);if(!actor){actor=makeActor(actors);animals.set(animal.id,actor);}
-      const at=toFarmScreen({x:11.2+(i%4)*1.25,y:8.2+Math.floor(i/4)*1.1});actor.root.position.set(at.x,at.y);actor.root.zIndex=at.y;
+      const at=toFarmScreen(animalPoint(i));actor.root.position.set(at.x,at.y);actor.root.zIndex=at.y;
       const text=props.selectedAnimal===animal.id?`${animal.title}\n${animal.timer}\nCòn sống ${animal.lifeRemaining}`:animal.dead?'Đã chết':animal.weak?'Đói':animal.title;
       if(actor.label.text!==text)actor.label.text=text;actor.label.visible=camera.zoom>=.85||animal.dead||animal.weak||props.selectedAnimal===animal.id;
       hits.push({at,radius:Math.max(38,22/camera.zoom),tap:()=>props.selectAnimal(animal.id)});
     });
     for(const [name,point,radius,run]of [
-      ['store',{x:14,y:2},100,()=>props.openStore()],['warehouse',{x:11,y:2},85,()=>props.openWarehouse()],['employee',FARM_ANCHORS.rest,65,()=>props.openEmployee()],['trough',FARM_ANCHORS.trough,55,()=>props.openTrough()],['market',FARM_ANCHORS.market,80,()=>props.openEggs()],['pen',{x:13,y:10},130,()=>props.openPen()],
+      ['store',{x:14,y:2},100,()=>props.openStore()],['warehouse',{x:11,y:2},85,()=>props.openWarehouse()],['employee',FARM_ANCHORS.rest,65,()=>props.openEmployee()],['trough',FARM_ANCHORS.trough,65,()=>props.openTrough()],['market',FARM_ANCHORS.market,70,()=>props.openEggs()],['pen',PEN_BUILDING,110,()=>props.openPen()],
     ] as const) hits.push({at:toFarmScreen(point),radius,tap:run});
     selection.clear();
     if(props.selectedPlot!==null){const p=toFarmScreen(plotWorldPoint(props.selectedPlot));selection.poly([p.x,p.y-42,p.x+82,p.y,p.x,p.y+42,p.x-82,p.y]).stroke({color:0xffda79,width:3});selection.zIndex=p.y+.5;}
@@ -129,23 +150,33 @@ export const createFarmWorldScene: PixiSceneFactory<FarmWorldProps> = (app, init
     const now=Date.now(), worker=props.snapshot.worker;
     if(props.pushTarget && props.pushTarget.nonce!==lastPush){lastPush=props.pushTarget.nonce;controls.focus(props.pushTarget.section);}
     if(props.workerCamera && props.workerCamera.nonce!==lastWorkerFocus){lastWorkerFocus=props.workerCamera.nonce;controls.focus('worker');following=props.workerCamera.follow;}
-    if(following&&worker){camera.focus(toFarmScreen(workerPositionAt(worker,now)));viewDirty=true;}
-    if(viewDirty){for(const chunk of terrainChunks.values())chunk.visible=visible({x:chunk.x+200,y:chunk.y+160},360);world.scale.set(camera.zoom);world.position.set(width/2-camera.x*camera.zoom,height/2-camera.y*camera.zoom);sources();dataDirty=true;viewDirty=false;}
-    if(dataDirty)reconcile();
+    if(following&&worker){const p=toFarmScreen(workerPositionAt(worker,now));if(Math.abs(camera.x-p.x)>.1||Math.abs(camera.y-p.y)>.1){camera.focus(p);viewDirty=true;}}
+    if(viewDirty){
+      for(const chunk of terrainChunks.values())chunk.visible=visible({x:chunk.x+200,y:chunk.y+160},360);
+      for(const object of staticSprites)object.sprite.visible=visible(object.sprite.position,object.size*camera.zoom);
+      for(const plot of props.snapshot.plots){const actor=plots.get(plot.index)!;actor.root.visible=visible(actor.root.position);if(plot.cropId&&!art.texture(`crop-${plot.cropId}`))actor.sprite.visible=false;}
+      props.snapshot.animals.forEach(animal=>{const actor=animals.get(animal.id);if(actor){actor.root.visible=visible(actor.root.position);if(!art.texture(`animal-${animal.species}`))actor.sprite.visible=false;}});
+      world.scale.set(camera.zoom);world.position.set(width/2-camera.x*camera.zoom,height/2-camera.y*camera.zoom);
+      if(lastZoom!==camera.zoom){lastZoom=camera.zoom;dataDirty=true;}
+      sourcesDirty=true;viewDirty=false;
+    }
+    // Following the farmer must not rebuild labels, hit targets and asset sets at 60 Hz.
+    if(sourcesDirty&&now-lastSourcesAt>=200)sources();
+    if(dataDirty){reconcile();lastFrame=-1;}
     const animationFrame=reduced?0:Math.floor(now/125);
-    if(animationFrame!==lastFrame||reduced){
+    if(animationFrame!==lastFrame){
       lastFrame=animationFrame;
       for(const plot of props.snapshot.plots){const actor=plots.get(plot.index)!;actor.root.visible=visible(actor.root.position);if(!actor.root.visible||!plot.cropId)continue;
         const clip=plot.artStage==='ready'?'mature':plot.artStage;const seeded=clip==='seeded';
         // The sow transition ends; buried seeds do not bob indefinitely.
-        const index=seeded?Math.min(7,Math.max(0,Math.floor((now-(plot.plantedAt??0))/125))):animationFrame+plot.index;spriteFrame(actor,`crop-${plot.cropId}`,clip,index,155);
+        const index=seeded?Math.min(7,Math.max(0,Math.floor((now-(plot.plantedAt??0))/125))):animationFrame+plot.index;spriteFrame(actor,`crop-${plot.cropId}`,clip,index,140);
       }
       props.snapshot.animals.forEach((animal,i)=>{const actor=animals.get(animal.id)!;actor.root.visible=visible(actor.root.position);if(!actor.root.visible)return;
         const phase=Math.floor(now/6000+i)%6, clip=animal.dead?'dead':animal.weak?'weak':props.snapshot.phase==='night'?'rest':phase===0?'walk':phase===1&&props.snapshot.feed>0?'eat':phase===2?'drink':animal.storedEggs>0&&phase===3?'produce_ready':'idle';
         spriteFrame(actor,`animal-${animal.species}`,clip,animal.dead?7:animationFrame+i,80*animal.scale);
         actor.sprite.x=clip==='walk'&&!reduced?Math.sin(now/1600+i)*9:0;
       });
-      weatherFx.clear();if(!reduced&&props.snapshot.weather==='rain')for(let i=0;i<45;i++){const x=(i*73+now*.025)%width,y=(i*97+now*.15)%height;weatherFx.moveTo(x,y).lineTo(x-3,y+12).stroke({color:0xc4dbe5,alpha:.3,width:1});}
+      weatherFx.clear();if(!reduced&&props.snapshot.weather==='rain'){for(let i=0;i<(props.quality==='low'?20:45);i++){const x=(i*73+now*.025)%width,y=(i*97+now*.15)%height;weatherFx.moveTo(x,y).lineTo(x-3,y+12);}weatherFx.stroke({color:0xc4dbe5,alpha:.3,width:1});}
       ambient.forEach((actor,i)=>{actor.root.visible=visible(actor.root.position)&&(!reduced||i<4)&&(props.quality!=='low'||i<8);if(actor.root.visible)spriteFrame(actor,'ambient',['grass','leaves','water','lamp'][i%4],animationFrame+i,65);});
       const recent=props.events.filter(e=>now-e.startedAt<1800&&now>=e.startedAt).slice(-11);
       const completion=worker?.lastCompletion;
@@ -156,11 +187,20 @@ export const createFarmWorldScene: PixiSceneFactory<FarmWorldProps> = (app, init
     if(worker&&farmer.root.visible){const position=workerPositionAt(worker,now),at=toFarmScreen(position),action=worker.action;farmer.root.position.set(at.x,at.y);farmer.root.zIndex=at.y+2;
       let direction=0;if(action){const ahead=workerPositionAt(worker,now+100),delta={x:ahead.x-position.x,y:ahead.y-position.y};direction=Math.abs(delta.x)>Math.abs(delta.y)?delta.x>=0?0:2:delta.y>=0?1:3;}
       if(action&&now>=action.arrivedAt)direction=['feed','clean_dead','replace_animals'].includes(action.task)?0:3;
-      const clip=action?now<action.arrivedAt?'walk':action.task:'idle';spriteFrame(farmer,`worker-${clip}`,`direction${direction}`,reduced?0:Math.floor((now-(action?(now<action.arrivedAt?action.departedAt:action.startedAt):0))/125),115);
+      farmer.root.visible=visible(at);
+      const clip=action?now<action.arrivedAt?'walk':action.task:'idle',pose=reduced?0:Math.floor((now-(action?(now<action.arrivedAt?action.departedAt:action.startedAt):0))/125),key=`${clip}:${direction}:${pose}`;
+      if(farmer.root.visible&&farmer.key!==key){spriteFrame(farmer,`worker-${clip}`,`direction${direction}`,pose,115);farmer.key=key;}
       const text=action?now<action.arrivedAt?'Đang di chuyển':FARM_TASK_LABEL[clip]??'Đang làm':worker.blocked.length?'Chờ điều kiện':worker.assignment.tasks.length?'Chờ việc':'Chờ giao việc';if(farmer.label.text!==text)farmer.label.text=text;
     }
   }
   props.publish(controls,false,false);sources();
-  return {requestRender,update(next){props=next;dataDirty=true;sources();requestRender();},resize(w,h){width=w;height=h;app.renderer.resolution=Math.min(window.devicePixelRatio||1,props.quality==='low'?1:2);camera.width=w;camera.height=h;background.clear().rect(0,0,w,h).fill(0x344536);app.ticker.maxFPS=props.quality==='low'?30:60;viewDirty=true;requestRender();},setReducedMotion(v){reduced=v;dataDirty=true;requestRender();},tick(){frame();},destroy(){disposed=true;cancelAnimationFrame(pending);camera.save();input.destroy();root.destroy({children:true,texture:false,textureSource:false});art.destroy();}};
+  return {requestRender,update(next){props=next;dataDirty=true;sourcesDirty=true;requestRender();},resize(w,h){
+    if(width===w&&height===h&&lastQuality===props.quality)return;
+    width=w;height=h;lastQuality=props.quality;
+    // Bound fill rate on high-DPR displays while retaining a 60 Hz camera/ticker.
+    const resolution=Math.max(.75,Math.min(window.devicePixelRatio||1,props.quality==='low'?1:1.5,Math.sqrt(1500000/(w*h))));
+    app.renderer.resolution=resolution;app.renderer.resize(w,h);
+    camera.width=w;camera.height=h;background.clear().rect(0,0,w,h).fill(0x344536);app.ticker.maxFPS=60;viewDirty=true;dataDirty=true;requestRender();
+  },setReducedMotion(v){if(reduced===v)return;reduced=v;lastFrame=-1;dataDirty=true;requestRender();},tick(){frame();},destroy(){disposed=true;cancelAnimationFrame(pending);camera.save();input.destroy();root.destroy({children:true,texture:false,textureSource:false});art.destroy();}};
 };
 const FARM_TASK_LABEL: Record<string,string>={water:'Tưới nước',plant:'Gieo hạt',fertilize:'Bón phân',pest:'Diệt sâu',harvest:'Thu hoạch',feed:'Cho ăn',clean_dead:'Dọn chuồng',replace_animals:'Thả vật nuôi',restock:'Nhận vật tư',sell_eggs:'Giao trứng'};

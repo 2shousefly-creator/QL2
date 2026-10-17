@@ -38,6 +38,7 @@ export class FarmWorldArt {
     return this.frames.get(key);
   }
   prop(index: number) { return this.frame('environment', `prop${index}`, 0); }
+  texture(id: string) { return this.leases.get(id)?.value ?? undefined; }
   retry() { this.retryEpoch++; this.failed.clear(); this.request(this.wanted); }
   destroy() { this.disposed = true; this.frames.forEach(x => x.destroy(false)); this.frames.clear(); this.leases.forEach(x => x.release()); this.leases.clear(); }
 }

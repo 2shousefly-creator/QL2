@@ -71,8 +71,18 @@ included in the repository.
 World objects and bounded FX pools are retained. Static paths are cached in
 chunks; offscreen crop/animal bundles are released, frame textures are cached,
 and hidden/reduced-motion rendering does not control domain progress. Render
-targets are 60 fps on the normal tier and 30 fps with reduced DPR/ambient on
-the low tier; these are configuration targets, not measured results.
+target is 60 fps on all tiers, with bounded DPR/pixel count and fewer ambient
+sprites on the low tier; this is a configuration target, not a measured result.
+
+The October 17 presentation fix centres soil surfaces separately from crop root
+baselines. The barn stands behind a separate animal yard, with the trough's food
+bar and countdown above the world and a matching accessible DOM status strip.
+Ground uses the generated `grass-ground-v2.png` raster texture. Camera following
+does not rebuild labels/hit targets every frame; asset requests are coalesced,
+offscreen static props are culled, and overlays suspend optional animation.
+Farm modals share the game's Nunito font, compact spacing and 44px controls.
+Employee settings are grouped into four tabs while preserving the same draft
+until explicit confirmation.
 
 ## Release boundary
 

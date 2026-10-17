@@ -1,3 +1,4 @@
+import "./components/farm-modals.css";
 import { FARM_RELEASE } from "./farmReleaseNotes";
 import { EmployeeManagement } from "./components/EmployeeManagement";
 import { confirmFarmAssignment } from "./farmWorkerEngine";

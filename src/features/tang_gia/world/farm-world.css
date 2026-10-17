@@ -26,3 +26,15 @@
 .farm-world-selection{position:absolute;right:8px;bottom:8px;max-width:min(290px,calc(100% - 16px));padding:10px 12px;border:1px solid #8a794e;border-radius:12px;background:#17212bea;color:#eee8d5;font-size:12px;line-height:1.5;z-index:2;pointer-events:auto}
 .farm-world-selection button{min-height:44px;min-width:44px;float:right;color:#e4c97f}
 .farm-graphics-screen button{min-height:44px}
+.farm-world-pen-status{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:6px;padding:6px 8px;background:#19291f;border-top:1px solid #536043;font-family:var(--font-ui)}
+.farm-world-pen-status button{min-height:44px;min-width:0;padding:5px 8px;border:1px solid #526249;border-radius:8px;background:#25372b;color:#f2e7bf;text-align:left;font-size:12px;line-height:1.35}
+.farm-world-pen-status button:first-child{display:grid;grid-template-columns:minmax(0,1fr);gap:2px}
+.farm-world-pen-status span{font-size:11px;color:#cad8bd;overflow-wrap:anywhere}
+.farm-world-pen-status progress{width:100%;height:5px;appearance:none;border:0;border-radius:4px;overflow:hidden;background:#131e17;accent-color:#a2cb76}
+.farm-world-pen-status progress::-webkit-progress-bar{background:#131e17}
+.farm-world-pen-status progress::-webkit-progress-value{background:#a2cb76}
+.farm-world-pen-status progress::-moz-progress-bar{background:#a2cb76}
+.farm-world-pen-status [data-low=true]{border-color:#c99856;color:#ffd391}
+.farm-world-pen-status [data-low=true] progress{accent-color:#efa65c}
+.farm-world-pen-status [data-low=true] progress::-webkit-progress-value{background:#efa65c}
+.farm-world-pen-status [data-low=true] progress::-moz-progress-bar{background:#efa65c}
