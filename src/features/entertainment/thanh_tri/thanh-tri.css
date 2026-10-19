@@ -225,3 +225,8 @@
 .tt-save-warning{font-size:11px!important;color:#ffdc9b!important;line-height:1.5;background:#4b361b77;padding:9px;border-radius:7px}
 .tt-wave small{max-width:280px;font-size:clamp(7px,1.8cqw,9px)}
 @media(max-width:350px){.tt-screen .tt-lobby{padding:14px 12px}.tt-stage-number{font-size:15px}.tt-stage-copy strong{font-size:10px}.tt-stage-roster img{width:41px;height:41px}.tt-stage-copy small{font-size:7px}}
+.tt-records{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 0 16px;padding:12px;border:1px solid #d6be862e;border-radius:12px;background:#152332d9}
+.tt-records span{display:flex;flex-direction:column;font-size:11px;color:#cfdbd9;gap:4px}.tt-records b{font-size:24px;color:#f4d494}
+.tt-book-rules{padding:14px;border:1px solid #afdfcf40;border-radius:12px;background:#17312e;margin-bottom:12px;font-size:12px;line-height:1.6}.tt-book-rules p{margin:6px 0}
+.tt-result-team{flex-wrap:wrap}.tt-result-team>div{display:flex;flex-direction:column;align-items:center;gap:3px;width:78px;font-size:10px}.tt-result-team>div img{width:56px;height:56px;object-fit:contain}.tt-result-team>div b{color:#f0d297}
+.tt-wave strong{font-size:23px}.tt-wave strong span{font-size:14px;color:#f4d494}.tt-library header small{font-size:9px}.tt-library .tt-library-list{min-height:0}.tt-core p{white-space:pre-line}

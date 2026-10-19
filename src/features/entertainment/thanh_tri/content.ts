@@ -1,39 +1,58 @@
-import coreRows from './cores.json';
-
-export const OWNERS = ['archer','crossbow','fire','ice','lightning','wind','earth','poison','sniper','scythe','stars'] as const;
-export type Owner = typeof OWNERS[number];
-export type Status = 'slow'|'burn'|'poison'|'bleed'|'hard'|'freeze';
-export interface Core { id:string; owner:Owner|'wall'; index:number; name:string; description:string; situation:string; kind:'upgrade'|'summon'|'wall'; requires?:Status; ownSource?:boolean }
-export interface Fighter { name:string; skill:string; range:number; cooldown:number; action:number; damage:number; color:string; role:string }
-export const FIGHTERS:Record<Owner,Fighter> = {
- archer:{name:'Cung thủ',skill:'Thủ Thành Tiễn',range:1.25,cooldown:1,action:0.3,damage:100,color:'#f5cf75',role:'Chủ lực ổn định · 100 sát thương/tên, 30 tên, 1 phát/giây; nạp 5 giây.'},
- crossbow:{name:'Liên Nỏ',skill:'Liên Tiễn',range:0.7,cooldown:2.4,action:0.4,damage:75,color:'#d3b351',role:'Dồn đơn mục tiêu · 3 tên × 75 sát thương; tự đổi sang địch gần nhất nếu mục tiêu chết giữa loạt.'},
- fire:{name:'Hỏa Pháo',skill:'Pháo Viêm Bạo',range:0.85,cooldown:4,action:0.5,damage:190,color:'#ff965c',role:'Phá bầy tập trung · 190 sát thương vùng bán kính 0,11H; đạn pháo bay cầu vồng rồi nổ lớn.'},
- ice:{name:'Băng Pháp Sư',skill:'Hàn Ngục',range:0.65,cooldown:3.2,action:0.35,damage:90,color:'#9de7ff',role:'Khống chế diện rộng · 90 sát thương; chậm 40% trong 2,5 giây. Mỗi lần dùng thứ 3 đóng băng 0,65 giây.'},
- lightning:{name:'Lôi Sư',skill:'Lôi Liên Hoàn',range:0.9,cooldown:3.7,action:0.35,damage:105,color:'#c6a5ff',role:'Đánh bầy phân tán · 4 mắt xích, bắt đầu 105 sát thương, giảm 15% mỗi mắt. Mỗi mắt xích không dùng được dồn 20% sát thương cơ bản vào địch cuối.'},
- wind:{name:'Phong Kiếm Sư',skill:'Phong Nhận Trảm',range:0.42,cooldown:3,action:0.4,damage:185,color:'#85efd3',role:'Giữ tuyến sát thành · quạt 70° gây 185 sát thương và đẩy lùi 0,06H; chặn địch đang áp sát.'},
- earth:{name:'Địa Thuật Sư',skill:'Địa Mạch Quang Tuyến',range:0.8,cooldown:3.5,action:1,damage:80,color:'#e8bd7e',role:'Laser xuyên hàng · 3 nhịp × 80 sát thương trên một đường thẳng dài 0,8H, rộng 0,056H; nhịp đầu choáng 0,2 giây. Lõi Nhánh Quang mở thêm hai tia song song.'},
- poison:{name:'Độc Dược Sư',skill:'Bình Độc Vân',range:0.7,cooldown:4.2,action:0.4,damage:84,color:'#bbe885',role:'Bào mòn lâu dài · 84 sát thương va chạm và độc 35 sát thương/giây trong 4 giây; các lần trúng mới làm mới độc.'},
- sniper:{name:'Thiện Xạ',skill:'Xuyên Tâm Tiễn',range:1,cooldown:3.85,action:0.45,damage:400,color:'#e6edf6',role:'Hạ mục tiêu nặng · một phát 400 sát thương, bỏ qua 30% giáp; ưu tiên địch gần nhất trong tầm dài.'},
- scythe:{name:'Huyết Liêm',skill:'Hồi Liêm',range:0.6,cooldown:3.5,action:0.7,damage:135,color:'#f68fab',role:'Đánh hai lượt · lưỡi liêm xuyên hàng gây 135 sát thương lượt đi và 135 lượt về; mỗi địch chỉ trúng một lần mỗi lượt.'},
- stars:{name:'Tinh Tượng Sư',skill:'Tam Tinh Giáng',range:0.9,cooldown:4.4,action:0.6,damage:90,color:'#aab8ff',role:'Phủ nhiều điểm · 3 thiên thạch × 90 sát thương, cách nhau 0,25 giây, nổ bán kính 0,08H; dồn vào một địch khi không có địch khác.'},
+import archerRows from './cores.json';
+export const ELEMENTS=['metal','wood','water','fire','earth'] as const;
+export type Element=typeof ELEMENTS[number];
+export const ELEMENT_INFO:Record<Element,{name:string;symbol:string;color:string}>={metal:{name:'Kim',symbol:'◆',color:'#f4d27b'},wood:{name:'Mộc',symbol:'♣',color:'#91e29a'},water:{name:'Thủy',symbol:'≋',color:'#86ddff'},fire:{name:'Hỏa',symbol:'♨',color:'#ff9a73'},earth:{name:'Thổ',symbol:'▲',color:'#d9b295'}};
+export const BEASTS=['thunder_bull','thunder_dragon','venom_serpent','spirit_deer','frost_fox','water_dragon','flame_tiger','phoenix','stone_rhino','black_tortoise'] as const;
+export type BeastOwner=typeof BEASTS[number];
+export const OWNERS=['archer',...BEASTS] as const;
+export type Owner=typeof OWNERS[number];
+export type Status='slow'|'burn'|'poison'|'root'|'stun'|'paralysis'|'freeze';
+export type CoreGroup='damage'|'cooldown'|'critical'|'width'|'count'|'chain'|'duration'|'healing'|'pierce'|'angle'|'burning'|'shielding';
+export interface Core {id:string;owner:Owner|'wall';index:number;name:string;description:string;situation:string;kind:'upgrade'|'summon'|'wall';group?:CoreGroup;requires?:Status}
+export interface Fighter {name:string;skill:string;element:Element|null;range:number;cooldown:number;action:number;hitAt:number;damage:number;color:string;role:string;groups:readonly CoreGroup[]}
+export const FIGHTERS:Record<Owner,Fighter>={
+ archer:{name:'Cung thủ',skill:'Thủ Thành Tiễn',element:null,range:1.25,cooldown:1,action:.3,hitAt:.16,damage:100,color:'#f5cf75',groups:[],role:'100 sát thương/tên · 1 phát/giây · 30 tên · nạp 5 giây. Tất cả nguồn sát thương đều Vô hệ.'},
+ thunder_bull:{name:'Trâu Sét',skill:'Lôi Liên Hoàn',element:'metal',range:.85,cooldown:4,action:.65,hitAt:.25,damage:300,color:'#f4d27b',groups:['chain','count'],role:'Sét nối tối đa 4 địch, 300 sát thương mỗi địch; tê liệt 1s. Bán kính truyền 0,20H, không giảm sát thương qua mắt xích.'},
+ thunder_dragon:{name:'Rồng Sét',skill:'Thiên Lôi Giáng',element:'metal',range:.85,cooldown:7,action:.8,hitAt:.35,damage:180,color:'#c9acff',groups:['width','count'],role:'Giáng sét vào vùng đường kính 0,20W, 180 sát thương và tê liệt 1s. Các lần giáng cách nhau 0,2s, cùng điểm ngắm.'},
+ venom_serpent:{name:'Rắn Độc',skill:'Độc Nha',element:'wood',range:.75,cooldown:4,action:.65,hitAt:.3,damage:40,color:'#a9e47a',groups:['duration','count'],role:'40 sát thương va chạm + 25 sát thương/giây trong 6s. Mỗi đạn tạo một lớp độc riêng, tăng thời gian giữ nguyên DPS.'},
+ spirit_deer:{name:'Hươu Linh',skill:'Linh Mộc Kết Giới',element:'wood',range:.6,cooldown:6,action:.8,hitAt:.3,damage:45,color:'#a0edb6',groups:['width','healing'],role:'Vùng đường kính 0,20W: 3 nhịp ×45 sát thương, cách 0,25s. Nhịp đầu trói 1,5s. Hồi thành 20 HP một lần khi có địch trúng.'},
+ frost_fox:{name:'Cáo Băng',skill:'Hàn Châm Xuyên Thấu',element:'water',range:.8,cooldown:5,action:.7,hitAt:.3,damage:200,color:'#b5ecff',groups:['pierce','count'],role:'Châm băng rộng 0,035W xuyên tối đa 2 địch, mỗi địch chịu 200 sát thương và đóng băng 1,5s. Không làm chậm sau đóng băng.'},
+ water_dragon:{name:'Thủy Long',skill:'Băng Châm',element:'water',range:.85,cooldown:7,action:.8,hitAt:.4,damage:180,color:'#82d5ff',groups:['width','count'],role:'Cọc băng rơi vào vùng đường kính 0,20W, gây 180 sát thương/đợt và đóng băng 1,5s. Thêm đợt không giảm sát thương, không đẩy lùi.'},
+ flame_tiger:{name:'Hổ Lửa',skill:'Hỏa Tức',element:'fire',range:.4,cooldown:5,action:1.05,hitAt:.2,damage:45,color:'#ffa06d',groups:['angle','burning'],role:'Phun nón 30°, dài 0,40H trong 0,8s: 4 nhịp ×45 sát thương và burn 20/giây trong 3s. Burn cùng nguồn làm mới, không cộng lớp.'},
+ phoenix:{name:'Phượng Hoàng',skill:'Hỏa Vũ Thiên Giáng',element:'fire',range:.9,cooldown:8,action:.85,hitAt:.4,damage:180,color:'#ffc77f',groups:['width','count'],role:'180 sát thương va chạm trong vùng đường kính 0,20W. Mỗi hỏa vũ để lại vùng lửa 4s, 35 sát thương ở +1/+2/+3/+4s; các vùng cộng dồn.'},
+ stone_rhino:{name:'Tê Giác Đá',skill:'Địa Chấn Xung Kích',element:'earth',range:.4,cooldown:5,action:.7,hitAt:.3,damage:220,color:'#dfb88d',groups:['width','count'],role:'220 sát thương trong hành lang dài 0,40H, rộng 0,18W; choáng 1s một lần/địch/cast. Thêm xung không tăng chiều dài.'},
+ black_tortoise:{name:'Huyền Vũ',skill:'Huyền Nham Kết Giới',element:'earth',range:.65,cooldown:8,action:.85,hitAt:.4,damage:120,color:'#b7c7a7',groups:['width','shielding'],role:'Ấn đá đường kính 0,20W gây 120 sát thương. Có địch trúng thì thêm 40 HP khiên một lần/cast, cộng dồn tối đa 400.'},
 };
-const needs:Partial<Record<Owner,Partial<Record<number,Status>>>>={archer:{21:'slow'},crossbow:{29:'slow'},fire:{10:'burn',11:'burn',28:'slow'},ice:{7:'hard',14:'freeze',29:'burn'},lightning:{26:'slow',27:'burn'},wind:{26:'slow',27:'burn'},earth:{26:'slow',27:'burn'},poison:{23:'slow',24:'burn',25:'burn'},sniper:{26:'slow',27:'burn'},scythe:{11:'bleed',27:'slow'},stars:{26:'slow',27:'burn'}};
-export const CORES:Core[]=coreRows.map(row=>({...row,owner:row.owner as Owner,kind:'upgrade',requires:needs[row.owner as Owner]?.[row.index],ownSource:(row.owner==='ice'&&row.index===14)||(row.owner==='fire'&&row.index===11)}));
-export const SUMMONS:Core[]=OWNERS.slice(1).map((owner,index)=>({id:'summon:'+owner,owner,index,kind:'summon',name:'Triệu Hồi '+FIGHTERS[owner].name,description:FIGHTERS[owner].skill+' — '+FIGHTERS[owner].role,situation:'Tự vào ô trống đầu tiên theo thứ tự #1 → #4. Tồn tại đến hết trận.',}));
-export const WALL_CORES:Core[]=[{id:'wall:guard',owner:'wall',index:1,kind:'wall',name:'Bất Hoại',description:'Thêm 5 lớp chặn. Một lớp miễn sát thương thành trong 0,25 giây.',situation:'Cộng dồn lớp; các đòn cùng cửa sổ chỉ tốn một lớp.'},{id:'wall:repair',owner:'wall',index:2,kind:'wall',name:'Tu Bổ',description:'Hồi 400 HP cho thành, tối đa 2.000 HP.',situation:'Chỉ xuất hiện khi thiếu ít nhất 400 HP.'}];
+const names:Record<CoreGroup,string>={damage:'Cường Hóa',cooldown:'Tốc Pháp',critical:'Bạo Kích',width:'Khuếch Vực',count:'Liên Pháp',chain:'Dẫn Điện',duration:'Kịch Độc',healing:'Sinh Cơ',pierce:'Băng Xuyên',angle:'Hỏa Khẩu',burning:'Dư Hỏa',shielding:'Thiết Bích'};
+export const groupsFor=(owner:BeastOwner):readonly CoreGroup[]=>['damage','cooldown','critical',...FIGHTERS[owner].groups];
+export function groupDescription(owner:BeastOwner,group:CoreGroup){switch(group){
+ case 'damage':return '+80% sát thương gốc cho mọi component của kỹ năng; cộng dồn, 4 lõi đạt ×4,2.';
+ case 'cooldown':return 'Giảm 20% hồi chiêu gốc; cộng dồn, 4 lõi còn 20%. Tính từ lúc kích hoạt.';
+ case 'critical':return '+20 điểm % tỷ lệ chí mạng và +25 điểm % sát thương chí mạng. 4 lõi: 80% crit, crit ×2,5; roll riêng mỗi hit/tick.';
+ case 'width':return '+70% bề rộng gốc (đường kính vùng hoặc rộng hành lang). 4 lõi đạt ×3,8; không tăng tầm chọn mục tiêu.';
+ case 'count':return owner==='water_dragon'?'+1 đợt Băng Châm, tối đa 5; giữ nguyên sát thương mỗi đợt.':'+1 tia/đạn/đợt, tối đa 5. Khi có nhóm này, toàn bộ tia/đợt và DoT/vùng của chúng ×0,70 sát thương, chỉ áp một lần.';
+ case 'chain':return '+2 mục tiêu tổng cộng cho mỗi tia sét: 4 → 6 → 8 → 10 → 12. Không giảm sát thương mắt xích.';
+ case 'duration':return '+2 giây độc mỗi lớp: 6 → 8 → 10 → 12 → 14s. Giữ nguyên DPS từng lớp.';
+ case 'healing':return '+80% lượng hồi gốc 20 HP: +16 HP/cast. 4 lõi hồi 84 HP, chỉ một lần khi có địch trúng.';
+ case 'pierce':return '+1 địch xuyên mỗi châm: 2 → 3 → 4 → 5 → 6; mỗi địch nhận đầy đủ sát thương.';
+ case 'angle':return '+70% góc nón gốc 30°: 30 → 51 → 72 → 93 → 114°. Không tăng chiều dài.';
+ case 'burning':return '+80% DPS burn gốc. Cộng cùng nhóm Cường Hóa: 1 + 0,8 × tổng số lõi hai nhóm.';
+ case 'shielding':return '+80% lượng khiên gốc 40 HP: +32 HP/cast. 4 lõi thêm 168 HP; trần khiên vẫn 400.';
+}}
+export const CORES:Core[]=[...archerRows.map(row=>({...row,owner:'archer' as const,kind:'upgrade' as const,requires:row.index===21?'slow' as const:undefined})),...BEASTS.flatMap(owner=>groupsFor(owner).flatMap((group,g)=>[1,2,3,4].map(rank=>({id:`beast:${owner}:${group}:${rank}`,owner,index:g*4+rank,group,kind:'upgrade' as const,name:`${names[group]} ${['I','II','III','IV'][rank-1]}`,description:groupDescription(owner,group),situation:'Bốn thẻ cùng độ mạnh; chọn theo bất kỳ thứ tự nào. Mỗi thẻ chỉ chọn một lần.'}))))];
+export const SUMMONS:Core[]=BEASTS.map((owner,index)=>({id:'summon:'+owner,owner,index,kind:'summon',name:'Triệu Hồi '+FIGHTERS[owner].name,description:FIGHTERS[owner].skill+' — '+FIGHTERS[owner].role,situation:'Vào ô trống đầu tiên #1 → #4. Tốn một lượt lựa chọn; bắt đầu với 0 lõi nâng cấp.'}));
+export const WALL_CORES:Core[]=[{id:'wall:guard',owner:'wall',index:1,kind:'wall',name:'Bất Hoại',description:'Thêm 5 lớp chặn. Một lớp chặn toàn bộ sát thương thành trong 0,25s.',situation:'Có thể chọn lặp, lớp cộng dồn; chặn trước khi trừ khiên HP.'},{id:'wall:repair',owner:'wall',index:2,kind:'wall',name:'Tu Bổ',description:'Hồi 400 HP thành, không vượt 2.000 HP.',situation:'Có thể chọn lặp; chỉ xuất hiện khi thiếu ít nhất 400 HP.'}];
 export const ENEMIES=[
  {name:'Bộ Binh Xương',hp:80,armor:0,damage:12,period:1.2,speed:.022},
  {name:'Tiểu Quỷ',hp:60,armor:0,damage:8,period:1,speed:.025},
  {name:'Kỵ Binh Mục',hp:120,armor:.1,damage:16,period:1.4,speed:.021},
  {name:'Thiết Giáp',hp:160,armor:.25,damage:20,period:1.8,speed:.018},
  {name:'Cự Nhân Đá',hp:260,armor:0,damage:28,period:2,speed:.018},
- {name:'Hộ Vệ Thiết Giáp',hp:2500,armor:.15,damage:80,period:2.5,speed:.014},
- {name:'Bạo Chúa Công Thành',hp:4500,armor:.2,damage:120,period:3,speed:.018},
+ {name:'Hộ Vệ Thiết Giáp',hp:2500,armor:.15,damage:80,period:2.5,speed:.018},
 ];
 export const FIELD={width:450,height:800,left:22,right:382,top:106,wall:545,H:500,W:360};
-// Feet align to the four painted tower decks in the 450 × 800 background.
 export const FORMATION={slots:[75,175,275,375],allyY:568,archerX:225,archerY:716,hpY:740} as const;
 export const slotX=(slot:number)=>FORMATION.slots[slot];
-export const GAME_VERSION='1.2.0';
-export const coreId=(owner:Owner,n:number)=>owner+':'+String(n).padStart(2,'0');
+export const GAME_VERSION='2.0.0';
+export const coreId=(owner:Owner,n:number)=>owner==='archer'?`archer:${String(n).padStart(2,'0')}`:`beast:${owner}:${groupsFor(owner)[Math.floor((n-1)/4)]}:${(n-1)%4+1}`;
+export const elementLabel=(owner:Owner)=>FIGHTERS[owner].element?ELEMENT_INFO[FIGHTERS[owner].element!].name:'Vô hệ';

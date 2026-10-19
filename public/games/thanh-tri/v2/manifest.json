@@ -1,0 +1,293 @@
+{
+  "version": "2.0.0",
+  "actors": [
+    {
+      "owner": "thunder_bull",
+      "atlas": "thunder_bull.json",
+      "portrait": "portrait-thunder_bull.png",
+      "icon": "icon-thunder_bull.png",
+      "vfx": "fx-thunder_bull.json",
+      "idle": {
+        "frames": 8,
+        "duration": 1.2
+      },
+      "cast": {
+        "frames": 16,
+        "duration": 0.65,
+        "hitAt": 0.25
+      },
+      "summon": {
+        "frames": 8,
+        "duration": 0.8
+      },
+      "footAnchor": [
+        0.5,
+        0.875
+      ],
+      "skillSocket": [
+        0.5,
+        0.525
+      ]
+    },
+    {
+      "owner": "thunder_dragon",
+      "atlas": "thunder_dragon.json",
+      "portrait": "portrait-thunder_dragon.png",
+      "icon": "icon-thunder_dragon.png",
+      "vfx": "fx-thunder_dragon.json",
+      "idle": {
+        "frames": 8,
+        "duration": 1.2
+      },
+      "cast": {
+        "frames": 16,
+        "duration": 0.8,
+        "hitAt": 0.35
+      },
+      "summon": {
+        "frames": 8,
+        "duration": 0.8
+      },
+      "footAnchor": [
+        0.5,
+        0.875
+      ],
+      "skillSocket": [
+        0.5,
+        0.525
+      ]
+    },
+    {
+      "owner": "venom_serpent",
+      "atlas": "venom_serpent.json",
+      "portrait": "portrait-venom_serpent.png",
+      "icon": "icon-venom_serpent.png",
+      "vfx": "fx-venom_serpent.json",
+      "idle": {
+        "frames": 8,
+        "duration": 1.2
+      },
+      "cast": {
+        "frames": 16,
+        "duration": 0.65,
+        "hitAt": 0.3
+      },
+      "summon": {
+        "frames": 8,
+        "duration": 0.8
+      },
+      "footAnchor": [
+        0.5,
+        0.875
+      ],
+      "skillSocket": [
+        0.5,
+        0.525
+      ]
+    },
+    {
+      "owner": "spirit_deer",
+      "atlas": "spirit_deer.json",
+      "portrait": "portrait-spirit_deer.png",
+      "icon": "icon-spirit_deer.png",
+      "vfx": "fx-spirit_deer.json",
+      "idle": {
+        "frames": 8,
+        "duration": 1.2
+      },
+      "cast": {
+        "frames": 16,
+        "duration": 0.8,
+        "hitAt": 0.3
+      },
+      "summon": {
+        "frames": 8,
+        "duration": 0.8
+      },
+      "footAnchor": [
+        0.5,
+        0.875
+      ],
+      "skillSocket": [
+        0.5,
+        0.525
+      ]
+    },
+    {
+      "owner": "frost_fox",
+      "atlas": "frost_fox.json",
+      "portrait": "portrait-frost_fox.png",
+      "icon": "icon-frost_fox.png",
+      "vfx": "fx-frost_fox.json",
+      "idle": {
+        "frames": 8,
+        "duration": 1.2
+      },
+      "cast": {
+        "frames": 16,
+        "duration": 0.7,
+        "hitAt": 0.3
+      },
+      "summon": {
+        "frames": 8,
+        "duration": 0.8
+      },
+      "footAnchor": [
+        0.5,
+        0.875
+      ],
+      "skillSocket": [
+        0.5,
+        0.525
+      ]
+    },
+    {
+      "owner": "water_dragon",
+      "atlas": "water_dragon.json",
+      "portrait": "portrait-water_dragon.png",
+      "icon": "icon-water_dragon.png",
+      "vfx": "fx-water_dragon.json",
+      "idle": {
+        "frames": 8,
+        "duration": 1.2
+      },
+      "cast": {
+        "frames": 16,
+        "duration": 0.8,
+        "hitAt": 0.4
+      },
+      "summon": {
+        "frames": 8,
+        "duration": 0.8
+      },
+      "footAnchor": [
+        0.5,
+        0.875
+      ],
+      "skillSocket": [
+        0.5,
+        0.525
+      ]
+    },
+    {
+      "owner": "flame_tiger",
+      "atlas": "flame_tiger.json",
+      "portrait": "portrait-flame_tiger.png",
+      "icon": "icon-flame_tiger.png",
+      "vfx": "fx-flame_tiger.json",
+      "idle": {
+        "frames": 8,
+        "duration": 1.2
+      },
+      "cast": {
+        "frames": 16,
+        "duration": 1.05,
+        "hitAt": 0.2
+      },
+      "summon": {
+        "frames": 8,
+        "duration": 0.8
+      },
+      "footAnchor": [
+        0.5,
+        0.875
+      ],
+      "skillSocket": [
+        0.5,
+        0.525
+      ]
+    },
+    {
+      "owner": "phoenix",
+      "atlas": "phoenix.json",
+      "portrait": "portrait-phoenix.png",
+      "icon": "icon-phoenix.png",
+      "vfx": "fx-phoenix.json",
+      "idle": {
+        "frames": 8,
+        "duration": 1.2
+      },
+      "cast": {
+        "frames": 16,
+        "duration": 0.85,
+        "hitAt": 0.4
+      },
+      "summon": {
+        "frames": 8,
+        "duration": 0.8
+      },
+      "footAnchor": [
+        0.5,
+        0.875
+      ],
+      "skillSocket": [
+        0.5,
+        0.525
+      ]
+    },
+    {
+      "owner": "stone_rhino",
+      "atlas": "stone_rhino.json",
+      "portrait": "portrait-stone_rhino.png",
+      "icon": "icon-stone_rhino.png",
+      "vfx": "fx-stone_rhino.json",
+      "idle": {
+        "frames": 8,
+        "duration": 1.2
+      },
+      "cast": {
+        "frames": 16,
+        "duration": 0.7,
+        "hitAt": 0.3
+      },
+      "summon": {
+        "frames": 8,
+        "duration": 0.8
+      },
+      "footAnchor": [
+        0.5,
+        0.875
+      ],
+      "skillSocket": [
+        0.5,
+        0.525
+      ]
+    },
+    {
+      "owner": "black_tortoise",
+      "atlas": "black_tortoise.json",
+      "portrait": "portrait-black_tortoise.png",
+      "icon": "icon-black_tortoise.png",
+      "vfx": "fx-black_tortoise.json",
+      "idle": {
+        "frames": 8,
+        "duration": 1.2
+      },
+      "cast": {
+        "frames": 16,
+        "duration": 0.85,
+        "hitAt": 0.4
+      },
+      "summon": {
+        "frames": 8,
+        "duration": 0.8
+      },
+      "footAnchor": [
+        0.5,
+        0.875
+      ],
+      "skillSocket": [
+        0.5,
+        0.525
+      ]
+    }
+  ],
+  "statuses": "statuses.json",
+  "clock": "combat",
+  "vfxPhases": {
+    "muzzle": 8,
+    "flight": 8,
+    "impact": 8,
+    "linger": 8
+  }
+}

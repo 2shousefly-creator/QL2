@@ -4,8 +4,8 @@ export const ENTERTAINMENT_GAMES: readonly EntertainmentGameMeta[] = [
   {
     id: "thanh_tri",
     title: "Thành Trì Cuối Cùng",
-    subtitle: "Roguelite thủ thành · V1.2",
-    description: "Chinh phục 6 màn, mỗi màn 20 wave với đạo quân riêng. Xây đội hình từ 10 trợ thủ và 330 lõi nâng cấp.",
+    subtitle: "Thủ thành vô tận · V2.0",
+    description: "Thủ thành vô tận với ngũ hành, 10 linh thú và 242 định nghĩa lõi. Sống lâu hơn, ghi điểm và phá kỷ lục cá nhân.",
     status: "available",
     badge: "Cập nhật",
     icon: "castle",
@@ -38,3 +38,4 @@ export const ENTERTAINMENT_GAMES: readonly EntertainmentGameMeta[] = [
     icon: "🎲",
   },
 ] as const;
+

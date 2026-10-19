@@ -1,244 +1,138 @@
-import {BALANCE,LEGACY_DAMAGE} from './balance';
-import {FIELD,FIGHTERS,type Owner,type Status} from './content';
-import {enemyKind,stageById,stageEnemy} from './campaign';
-import {actor,alive,cooldown,dist,draft,has,ignoreArmor,inCone,modifier,pointOnLine,random,range,SpatialGrid} from './rules';
-import type {Actor,Attack,Cast,Enemy,Point,World} from './types';
+import {BALANCE,hpMultiplier,normalKind,spawnRate,xpRequired} from './balance';
+import {ELEMENTS,ENEMIES,FIELD,FIGHTERS,type Owner,type Element,type Status} from './content';
+import {actor,alive,cooldown,dist,draft,elementalMultiplier,has,ignoreArmor,inCone,modifier,pointOnLine,random,range,skillStats,SpatialGrid,targetOrder} from './rules';
+import type {Actor,Attack,Cast,Enemy,Point,World,Effect} from './types';
 
-export function createWorld(stageId=1):World{return {stageId:stageById(stageId).id,time:0,phase:'playing',wave:1,spawnIndex:0,spawnDone:false,waveOrder:[],rng:(Date.now()^0x713ac)>>>0||1,id:0,actors:[actor('archer')],enemies:[],attacks:[],zones:[],effects:[],hp:2000,blocks:0,guardEnd:0,level:1,xp:0,totalXp:0,pending:0,choices:[],selected:[],kills:0,bossKills:0,damage:0,wallHit:-10,rangeSlot:null,revision:0,sounds:[]};}
-const clamp=(n:number,a:number,b:number)=>Math.max(a,Math.min(b,n));
+export function createWorld():World {const seed=(Date.now()^0x713ac)>>>0||1;return {time:0,phase:'playing',assetLoading:true,nextSpawnAt:0,nextBossAt:150,nextBossElement:null,spawnIndex:0,lanes:[],rng:seed,spawnRng:(seed^0x9e3779b9)>>>0||2,bossRng:(seed^0x85ebca6b)>>>0||3,draftRng:(seed^0xc2b2ae35)>>>0||4,id:0,actors:[actor('archer')],enemies:[],attacks:[],zones:[],effects:[],hp:2000,shieldHP:0,blocks:0,guardEnd:0,level:1,xp:0,totalXp:0,pending:0,choices:[],selected:[],kills:0,normalKills:0,bossKills:0,score:0,damage:0,wallHit:-10,rangeSlot:null,revision:0,sounds:[]};}
+const EPS=1e-7;
 const copy=(p:Point):Point=>({x:p.x,y:p.y});
+const origin=(a:Actor):Point=>({x:a.x,y:a.y-28});
+const clamp=(n:number,a:number,b:number)=>Math.max(a,Math.min(b,n));
+const endpoint=(start:Point,aim:Point,length:number)=>{const d=dist(start,aim)||1;return {x:start.x+(aim.x-start.x)/d*length,y:start.y+(aim.y-start.y)/d*length};};
 
+/** Combat owns hits, clocks, CC and lifetimes. Pixi only consumes this state. */
 export class FortressEngine {
  readonly grid=new SpatialGrid();private accumulator=0;
  constructor(readonly w:World){}
- update(dt:number){if(this.w.phase!=='playing'){this.accumulator=0;return;}this.accumulator+=Math.min(.1,dt);while(this.accumulator>=1/60&&this.w.phase==='playing'){this.step(1/60);this.accumulator-=1/60;}}
- fx(kind:string,p:Point,size=60,duration=.55,rotation=0,end?:Point){const w=this.w;if(w.effects.length>300){const i=w.effects.findIndex(e=>e.kind==='damage');if(i>=0)w.effects.splice(i,1);else return;}w.effects.push({id:++w.id,kind,x:p.x,y:p.y,size,duration,rotation,born:w.time,end});}
- private spawn(){const w=this.w;while(!w.spawnDone){const count=30+Math.round(20*(w.wave-1)/19);const at=(w.wave-1)*15+w.spawnIndex*15/(count-1);if(at>w.time+.00001)break;
-  if(w.spawnIndex===0){w.waveOrder=Array.from({length:10},(_,i)=>i);for(let i=9;i>0;i--){const j=Math.floor(random(w)*(i+1));[w.waveOrder[i],w.waveOrder[j]]=[w.waveOrder[j],w.waveOrder[i]];}}
-  const boss=w.spawnIndex===0&&(w.wave===10||w.wave===20);const roll=random(w);let kind=boss?(w.wave===10?5:6):enemyKind(w.stageId,w.wave,roll);
-  const data=stageEnemy(w.stageId,kind),hp=Math.round(data.hp*(1+(w.wave-1)/19)),x=boss?202:FIELD.left+18+(w.waveOrder[w.spawnIndex%10]+random(w)*.55)*(FIELD.W-36)/10;
-  w.enemies.push({id:++w.id,kind,x,baseX:x,y:FIELD.top-25,hp,maxHp:hp,armor:data.armor,born:w.time,deadAt:0,attackAt:0,impactAt:0,hitAt:-10,slow:0,slowEnd:0,hardEnd:0,hardKind:'hard',immuneEnd:0,attackSlowEnd:0,dots:[],marks:{},casts:{}});
-  if(boss)this.fx('warning',{x:202,y:150},160,1.5);w.spawnIndex++;if(w.spawnIndex===count){if(w.wave===20)w.spawnDone=true;else {w.wave++;w.spawnIndex=0;w.revision++;}}
- }}
+ update(dt:number){if(this.w.phase!=='playing'||this.w.assetLoading){this.accumulator=0;return;}this.accumulator+=Math.max(0,Math.min(.1,dt));while(this.accumulator>=1/60&&this.w.phase==='playing'){this.step(1/60);this.accumulator-=1/60;}}
+ private fx(kind:Effect['kind'],p:Point,size=60,duration=.55,extra:Partial<Effect>={}){const w=this.w;w.effects.push({id:++w.id,kind,...copy(p),size,duration,rotation:0,born:w.time,...extra});}
+ private skill(c:Cast,p:Point,size:number,phase:Effect['phase']='impact',duration=.4,extra:Partial<Effect>={}){this.fx('skill',p,size,duration,{owner:c.owner,phase,...extra});}
+ private spawnEnemy(kind:number,at:number,element:Element){const w=this.w,data=ENEMIES[kind];if(w.spawnIndex%10===0||!w.lanes.length){w.lanes=Array.from({length:10},(_,i)=>i);for(let i=9;i>0;i--){const j=Math.floor(random(w,'spawnRng')*(i+1));[w.lanes[i],w.lanes[j]]=[w.lanes[j],w.lanes[i]];}}
+  const x=FIELD.left+12+(w.lanes[w.spawnIndex%10]+.15+random(w,'spawnRng')*.7)*(FIELD.W-24)/10,hp=data.hp*hpMultiplier(at);w.spawnIndex++;
+  w.enemies.push({id:++w.id,kind,element,x,y:FIELD.top-25,hp,maxHp:hp,armor:data.armor,born:at,deadAt:0,attackAt:0,impactAt:0,hitAt:-10,slow:0,slowEnd:0,hardEnd:0,hardKind:'stun',immuneEnd:0,ccHistory:[],dots:[],marks:{},pushAt:-10});
+  if(kind===5)this.fx('warning',{x,y:150},150,1.2);
+ }
+ private spawn(){const w=this.w;
+  while(w.nextSpawnAt<=w.time+EPS){const at=w.nextSpawnAt;this.spawnEnemy(normalKind(at,random(w,'spawnRng')),at,ELEMENTS[Math.floor(random(w,'spawnRng')*5)]);w.nextSpawnAt+=1/spawnRate(at);}
+  if(w.nextBossElement===null&&w.time+EPS>=w.nextBossAt-BALANCE.bossWarning){w.nextBossElement=ELEMENTS[Math.floor(random(w,'bossRng')*5)];w.revision++;}
+  while(w.nextBossAt<=w.time+EPS){const element=w.nextBossElement??ELEMENTS[Math.floor(random(w,'bossRng')*5)];this.spawnEnemy(5,w.nextBossAt,element);w.nextBossAt+=BALANCE.bossInterval;w.nextBossElement=null;w.revision++;}
+ }
  private step(dt:number){const w=this.w;w.time+=dt;this.spawn();this.grid.rebuild(w.enemies);
   for(const e of w.enemies){if(!alive(e))continue;
-   for(const d of e.dots){if(d.next<=w.time&&d.until>=w.time){d.next+=.25;let power=d.dps*.25;if(d.owner==='poison'&&has(d.cast,22))power*=1+Math.min(.4,Math.floor(w.time-d.start)*.08);this.rawDamage(e,power,d.cast,true);}}
-   e.dots=e.dots.filter(d=>d.until>w.time);if(!alive(e))continue;
-   if(e.freezeCast&&e.hardEnd<=w.time){const c=e.freezeCast;e.freezeCast=undefined;if(has(c,14))this.hit(e,c,60,0,false,true);}
-   if(e.hardEnd>w.time)continue;
-   if(e.y<FIELD.wall-18){
-    const slow=e.slowEnd>w.time?Math.min(e.kind>=5?.4:.7,e.slow):0;e.y=Math.min(FIELD.wall-18,e.y+stageEnemy(w.stageId,e.kind).speed*FIELD.H*dt*(1-slow));
-    e.x=clamp(e.x+Math.sin(w.time*.85+e.id)*dt*1.5,FIELD.left+10,FIELD.right-10);
-    // Soft local separation affects presentation spacing, never discards spawns.
-    for(const n of this.grid.near(e,18)){if(n.id<=e.id)continue;const dx=e.x-n.x;const push=(18-dist(e,n))*.8*dt;e.x=clamp(e.x+(dx>=0?push:-push),FIELD.left+10,FIELD.right-10);n.x=clamp(n.x+(dx>=0?-push:push),FIELD.left+10,FIELD.right-10);}
-   }else if(!e.impactAt&&e.attackAt<=w.time){e.attackAt=w.time+stageEnemy(w.stageId,e.kind).period/(e.attackSlowEnd>w.time?.8:1);e.impactAt=w.time+(e.kind>=5?.8:.35);if(e.kind>=5)this.fx('warning',{x:e.x,y:FIELD.wall},90,.8);}
-   if(e.impactAt&&e.impactAt<=w.time){e.impactAt=0;this.wallDamage(stageEnemy(w.stageId,e.kind).damage,e.x);}
+   for(const d of e.dots){while(alive(e)&&d.next<=w.time+EPS&&d.next<=d.until+EPS){d.next+=1;this.damage(e,d.cast,d.power,true,d.component);}}
+   e.dots=e.dots.filter(d=>d.next<=d.until+EPS);if(!alive(e))continue;
+   e.ccHistory=e.ccHistory.filter(interval=>interval.end>w.time-BALANCE.ccWindow);
+   const controlled=e.hardEnd>w.time,stoppedAttack=controlled&&e.hardKind!=='root';
+   if(stoppedAttack){e.impactAt=0;continue;}
+   const data=ENEMIES[e.kind];if(e.y<FIELD.wall-18){if(!controlled){const slow=e.slowEnd>w.time?Math.min(e.kind===5?.35:.6,e.slow):0;e.y=Math.min(FIELD.wall-18,e.y+data.speed*FIELD.H*dt*(1-slow));e.x=clamp(e.x+Math.sin(w.time*.85+e.id)*dt*1.5,FIELD.left+8,FIELD.right-8);}}
+   else if(!e.impactAt&&e.attackAt<=w.time){e.attackAt=w.time+data.period;e.impactAt=w.time+(e.kind===5?.8:.35);}
+   if(e.impactAt&&e.impactAt<=w.time+EPS){e.impactAt=0;this.wallDamage(data.damage,e.x);if(w.hp<=0)break;}
   }
-  for(const a of w.actors){if(a.owner==='archer'&&a.reloadEnd>0&&a.ammo===0){if(has(a,26)&&a.reloadTick<=w.time+.00001&&a.reloadTick<=a.reloadEnd+.00001){a.reloadTick+=1;const t=this.grid.target(a,range(a));if(t){const c=this.makeCast(a,t,false);this.projectile(c,t,85,0,0,true,false);}}if(a.reloadEnd>w.time)continue;}
-   if(a.owner==='archer'&&a.ammo===0){a.ammo=30;a.reloadEnd=0;a.ready=w.time;a.afterReload=true;}
-   if(a.ready>w.time)continue;const target=this.grid.target(a,range(a));if(target)this.cast(a,target);
+  if(w.hp<=0){w.phase='lost';w.revision++;this.fx('break',{x:210,y:FIELD.wall},390,2);return;}
+  // Rebuild after movement so boundaries and projectile collisions use current positions.
+  this.grid.rebuild(w.enemies);
+  for(const a of w.actors){if(a.owner==='archer'&&a.ammo===0){while(a.reloadTick<=w.time+EPS&&a.reloadTick<=a.reloadEnd+EPS){if(has(a,26)){const t=this.grid.target(origin(a),range(a));if(t)this.projectile(this.makeCast(a,t,false),t,85,0,true);}a.reloadTick+=1;}if(a.reloadEnd>w.time+EPS)continue;a.ammo=30;a.reloadEnd=0;a.ready=w.time;a.afterReload=true;}
+   if(a.ready>w.time+EPS)continue;const target=this.grid.target(origin(a),range(a));if(target)this.cast(a,target);
   }
-  // Process the entire step before any level-choice transition.
-  const attacks=w.attacks.slice();for(const p of attacks){if(p.at>w.time)continue;if(p.mode==='scythe')this.scytheStep(p);else {this.resolve(p);p.expires=-1;}}
-  w.attacks=w.attacks.filter(p=>p.expires>w.time);
-  for(const z of w.zones){if(z.next>w.time||z.until<w.time)continue;z.next+=.25;for(const e of this.grid.near(z,z.radius)){this.hit(e,z.cast,z.power*.25,0,false,true);if(z.slow)this.slow(e,z.slow,.5,z.cast.owner);if(z.visual==='fire'||z.visual==='stars')this.dot(e,z.cast,'burn',0,.5,true);}}
-  w.zones=w.zones.filter(z=>z.until>w.time);w.effects=w.effects.filter(e=>e.born+e.duration>w.time);w.enemies=w.enemies.filter(e=>alive(e)||e.deadAt+1.2>w.time);
-  while(w.level<20&&w.xp>=70+35*(w.level-1)){w.xp-=70+35*(w.level-1);w.level++;w.pending++;w.revision++;}
-  if(w.hp<=0){w.phase='lost';w.revision++;this.fx('break',{x:210,y:FIELD.wall},390,2);}
-  else if(w.pending>0)draft(w);
-  else if(w.spawnDone&&!w.enemies.some(alive)){w.phase='won';w.revision++;}
+  // New proc projectiles remain scheduled for the following step, never recursively resolved.
+  for(const p of w.attacks.slice()){if(p.born>w.time+EPS)continue;if(p.mode==='line'&&p.cast.owner==='frost_fox')this.lineStep(p);else if(p.at<=w.time+EPS){this.resolve(p);p.at=-1;}}
+  w.attacks=w.attacks.filter(p=>p.at>=0);
+  for(const z of w.zones){while(z.ticks<4&&z.next<=w.time+EPS){for(const e of this.grid.near(z,z.radius))this.damage(e,z.cast,z.power,true,'dot');z.ticks++;z.next+=1;}}
+  w.zones=w.zones.filter(z=>z.ticks<4);w.effects=w.effects.filter(e=>e.born+e.duration>w.time);w.enemies=w.enemies.filter(e=>alive(e)||e.deadAt+1.2>w.time);
+  while(w.level<BALANCE.maxLevel&&w.xp>=xpRequired(w.level)){w.xp-=xpRequired(w.level);w.level++;w.pending++;w.revision++;}if(w.level===20)w.xp=0;
+  if(w.pending>0)draft(w);
  }
- private wallDamage(amount:number,x:number){const w=this.w;if(w.guardEnd>w.time)return;if(w.blocks>0){w.blocks--;w.guardEnd=w.time+.25;this.fx('guard',{x,y:FIELD.wall},95,.4);}else{w.hp=Math.max(0,w.hp-amount);w.wallHit=w.time;this.fx('wall-hit',{x,y:FIELD.wall},65,.4);}w.sounds.push({owner:'wall',impact:true});}
- private makeCast(a:Actor,t:Enemy,consume=true):Cast {const w=this.w;const h=(n:number)=>has(a,n);const radius=(a.owner==='fire'?.11:a.owner==='stars'?.08:.09)*FIELD.H*(h(a.owner==='stars'?4:3)?1.25:1);
-  const c:Cast={id:++w.id,owner:a.owner,cores:[...a.cores],origin:{x:a.x,y:a.y-28},target:t.id,range:range(a),radius:Math.min(100,radius),width:(a.owner==='earth'?BALANCE.earthHalfWidth*2:30)*(h(a.owner==='earth'?4:3)?1.3:1),angle:70*Math.PI/180*(a.owner==='wind'&&h(3)?1.3:1),use:consume?a.uses+1:a.uses,readyWait:w.time-a.ready,count:this.grid.near(a,range(a)).length,unique:1,lastTarget:a.lastTarget,streak:a.lastTarget===t.id?a.streak+1:0,bonus:consume?a.nextBonus:0,ammo:a.ammo,afterReload:a.afterReload,hitCounts:new Map(),outbound:new Set(),killProcs:0,killed:false,lastHit:-1,lastHitId:-1,primaryIds:[]};
-  if(consume){a.uses++;a.lastTarget=t.id;a.streak=c.streak;a.nextBonus=0;}return c;
+ private wallDamage(amount:number,x:number){const w=this.w;if(w.guardEnd>w.time)return;if(w.blocks>0){w.blocks--;w.guardEnd=w.time+.25;this.fx('guard',{x,y:FIELD.wall},95,.4);return;}
+  const shield=Math.min(amount,w.shieldHP);w.shieldHP-=shield;w.hp=Math.max(0,w.hp-(amount-shield));w.wallHit=w.time;this.fx(shield?'shield':'wall-hit',{x,y:FIELD.wall},65,.4);w.sounds.push({owner:'wall',impact:true});
  }
- private attack(c:Cast,end:Point,power:number,delay:number,options:Partial<Attack>={}):Attack {const w=this.w;const p:Attack={id:++w.id,cast:c,x:c.origin.x,y:c.origin.y,start:copy(c.origin),end:copy(end),born:w.time+delay,at:w.time+delay+.22,expires:w.time+delay+.3,mode:'point',power,radius:c.radius,width:c.width,angle:c.angle,index:0,last:false,secondary:false,returning:false,visual:c.owner,applyStatus:true,tracking:false,hit:new Set(),arc:0,...options};w.attacks.push(p);return p;}
- private projectile(c:Cast,t:Enemy,power:number,delay=0,index=0,secondary=false,last=false,extra:Partial<Attack>={}){return this.attack(c,t,power,delay,{target:t.id,index,last,secondary,tracking:true,...extra});}
- private pulse(c:Cast,p:Point,power:number,delay=0,radius=c.radius,extra:Partial<Attack>={}){return this.attack(c,p,power,delay,{x:p.x,y:p.y,start:copy(p),mode:'circle',radius,secondary:true,...extra});}
- private line(c:Cast,end:Point,power:number,delay=0,width=22,extra:Partial<Attack>={}){return this.attack(c,end,power,delay,{mode:'line',width,secondary:true,...extra});}
- private zone(c:Cast,p:Point,total:number,duration:number,slow=0,visual=c.owner,radius=c.radius){this.w.zones.push({id:++this.w.id,cast:c,...copy(p),radius,power:total/duration,next:this.w.time+.25,until:this.w.time+duration,slow,visual});this.fx('zone-'+visual,p,radius*2,duration);}
- private cast(a:Actor,t:Enemy){const w=this.w,c=this.makeCast(a,t),h=(n:number)=>has(c,n),f=FIGHTERS[a.owner];a.castAt=w.time;a.actionEnd=w.time+f.action;a.ready=a.owner==='archer'?w.time+1:a.actionEnd+cooldown(a);w.sounds.push({owner:a.owner,impact:false});
-  const lead=a.owner==='earth'?.18:f.action*.55,near=(p:Point,r:number)=>this.grid.near(p,r);this.fx('muzzle-'+a.owner,c.origin,a.owner==='archer'?42:76,Math.max(.3,f.action));if(a.owner!=='archer')this.fx('cast-'+a.owner,c.origin,86,.45);const other=()=>this.grid.target(a,c.range,[t.id])??t;
-  if(['fire','ice','poison'].includes(a.owner))c.unique=near(t,c.radius).length;
-  if(a.owner==='wind')c.unique=near(a,c.range).filter(e=>inCone(e,a,t,c.range,c.angle)).length;
-  if(a.owner==='earth'||a.owner==='scythe')c.unique=near(a,c.range).filter(e=>pointOnLine(e,a,t,c.width/2)).length;
+ private makeCast(a:Actor,t:Enemy,consume=true):Cast {const w=this.w;const c:Cast={id:++w.id,owner:a.owner,element:FIGHTERS[a.owner].element,cores:[...a.cores],stats:skillStats(a),origin:origin(a),aim:copy(t),target:t.id,range:range(a),use:consume?a.uses+1:a.uses,streak:a.lastTarget===t.id?a.streak+1:0,bonus:consume?a.nextBonus:0,ammo:a.ammo,afterReload:a.afterReload,healed:false,shielded:false,stunned:new Set(),killProcs:0,killed:false};if(consume){a.uses++;a.lastTarget=t.id;a.streak=c.streak;a.nextBonus=0;}return c;}
+ private attack(c:Cast,end:Point,power:number,delay:number,extra:Partial<Attack>={}):Attack {const w=this.w;const p:Attack={id:++w.id,cast:c,start:copy(c.origin),end:copy(end),born:w.time+delay,at:w.time+delay,mode:'point',power,radius:FIELD.W*.1*c.stats.width,width:FIELD.W*.18*c.stats.width,angle:c.stats.angle,index:0,secondary:false,tracking:false,hit:new Set(),pierce:c.stats.pierce,previous:0,...extra};w.attacks.push(p);return p;}
+ private projectile(c:Cast,t:Enemy,power:number,delay=0,secondary=false,extra:Partial<Attack>={}){return this.attack(c,t,power,delay,{target:t.id,tracking:true,secondary,at:this.w.time+delay+.22,...extra});}
+ private cast(a:Actor,t:Enemy){const w=this.w,c=this.makeCast(a,t),s=c.stats,f=FIGHTERS[a.owner],lead=f.hitAt,h=(n:number)=>has(c,n);a.castAt=w.time;a.actionEnd=w.time+f.action;a.ready=w.time+cooldown(a);w.sounds.push({owner:a.owner,impact:false});this.skill(c,c.origin,65,'muzzle',lead);
+  const targets=this.grid.near(c.origin,c.range).sort(targetOrder(c.origin));const other=(i:number)=>targets[i%targets.length]??t;
+  const area=(index:number,delay:number)=>this.attack(c,c.aim,f.damage,delay,{mode:'circle',index,born:w.time+Math.max(0,delay-.18),start:{x:c.aim.x,y:c.aim.y-125}});
   switch(a.owner){
-   case 'archer': {
-    this.projectile(c,t,100,lead);a.ammo--;
-    if(h(2))this.projectile(c,other(),25,lead+.05,0,true);
-    if(h(5)&&c.use%4===0)this.projectile(c,t,100,lead+.1,0,true);
-    if(h(29)&&c.use%5===0){const targets=near(a,c.range).sort((u,v)=>dist(u,a)-dist(v,a)||u.id-v.id);const used=new Map<number,number>();for(let i=0;i<5;i++){const e=targets.find(e=>(used.get(e.id)??0)<2);if(!e)break;used.set(e.id,(used.get(e.id)??0)+1);this.projectile(c,e,25,lead+.05*i,0,true);}}
-    if(a.ammo===0){a.reloadEnd=w.time+5;a.reloadTick=w.time+1;if(h(25))for(let i=0;i<5;i++){const e=near(a,c.range).sort((u,v)=>dist(u,a)-dist(v,a)||u.id-v.id)[i%Math.max(1,c.count)]??t;this.projectile(c,e,85,.08*i,0,true);}}
-    break;
+   case 'archer':{
+    this.projectile(c,t,100,lead);a.ammo--;if(h(2))this.projectile(c,other(1),25,lead+.05,true);if(h(5)&&c.use%4===0)this.projectile(c,t,100,lead+.1,true);
+    if(h(29)&&c.use%5===0){const used=new Map<number,number>();for(let i=0;i<5;i++){const e=targets.find(e=>(used.get(e.id)??0)<2);if(!e)break;used.set(e.id,(used.get(e.id)??0)+1);this.projectile(c,e,25,lead+.05*i,true);}}
+    if(a.ammo===0){a.reloadEnd=w.time+5;a.reloadTick=w.time+1;if(h(25))for(let i=0;i<5;i++)this.projectile(c,other(i),85,.08*i,true);}break;
    }
-   case 'crossbow': {const n=h(3)?4:3;for(let i=0;i<n;i++)this.projectile(c,t,i===3?45:60,lead+i*.11,i,false,i===n-1,{tag:'retarget'});break;}
-   case 'fire': {
-    this.attack(c,t,140,lead,{mode:'circle',arc:75});
-    if(h(7)){const points=near(t,130);const side=points.filter(e=>e.x>t.x).length>=points.filter(e=>e.x<t.x).length?1:-1;this.attack(c,{x:clamp(t.x+side*c.radius,FIELD.left,FIELD.right),y:t.y},42,lead+.15,{mode:'circle',arc:70,secondary:true});}
-    if(h(21))this.pulse(c,t,49,lead+.8);if(h(22)&&c.use%3===0)this.pulse(c,t,105,lead+.45);break;
-   }
-   case 'ice': {
-    this.attack(c,t,100,lead,{mode:'circle'});if(h(9))this.attack(c,other(),30,lead+.12,{mode:'circle',secondary:true,tag:'half-slow'});
-    if(h(11)){const before=near(a,c.range).filter(e=>e.id!==t.id&&pointOnLine(e,a,t,18)).sort((u,v)=>dist(a,u)-dist(a,v))[0];if(before)this.projectile(c,before,35,lead,0,true);}
-    if(h(27)&&c.use%3===0)this.fragments(c,t,3,25,lead+.25);if(h(28)){this.line(c,{x:Math.min(FIELD.right,t.x+110),y:t.y},25,lead+.25,18,{start:copy(t),tag:'ice-split'});this.line(c,{x:Math.max(FIELD.left,t.x-110),y:t.y},25,lead+.25,18,{start:copy(t),tag:'ice-split'});}break;
-   }
-   case 'lightning': {
-    const chain=[t],jump=85*(h(4)?1.35:1);for(let i=1;i<(h(3)?6:4);i++){const last=chain.at(-1)!;const next=near(last,jump).filter(e=>!chain.includes(e)).sort((a,b)=>dist(a,last)-dist(b,last)||a.id-b.id)[0];if(!next)break;chain.push(next);}c.unique=chain.length;
-    const unused=(h(3)?6:4)-chain.length;if(unused>0)this.projectile(c,chain.at(-1)!,80*unused*BALANCE.lightningUnusedHopBonus,lead+.32,0,true,false,{mode:'chain'});
-    chain.forEach((e,i)=>this.projectile(c,e,80*Math.pow(h(5)?.95:.85,i),lead+i*.06,i,false,i===chain.length-1,{mode:'chain',start:copy(i?chain[i-1]:c.origin)}));
-    if(h(6)&&chain.length<(h(3)?6:4))this.projectile(c,chain.at(-1)!,28,lead+.3,0,true);
-    if(h(7))this.projectile(c,t,80,lead+.15,0,true);
-    if(h(8)&&chain[1]){const e=near(chain[1],jump).find(e=>!chain.includes(e));if(e)this.projectile(c,e,56,lead+.2,0,true,false,{mode:'chain',start:copy(chain[1])});}
-    if(h(12)&&c.use%4===0)chain.slice(0,4).forEach((e,i)=>this.projectile(c,e,80*Math.pow(.85,i),lead+.5+i*.06,0,true,false,{mode:'chain'}));
-    if(h(23)){const pulse=this.pulse(c,t,32,lead+.1,38);pulse.hit.add(t.id);}if(h(24))this.projectile(c,chain.at(-1)!,64,lead+.7,0,true);break;
-   }
-   case 'wind': {
-    this.attack(c,t,160,lead,{mode:'cone'});if(h(8))this.attack(c,t,48,lead+.2,{mode:'cone',secondary:true});
-    if(h(9))this.line(c,t,112,lead+.1,18);if(h(10)){for(const sign of [-1,1]){const angle=Math.atan2(t.y-a.y,t.x-a.x)+sign*c.angle/2;this.line(c,{x:a.x+Math.cos(angle)*c.range,y:a.y+Math.sin(angle)*c.range},56,lead,20);}}
-    if(h(12))this.zone(c,t,64,1);if(h(24)&&c.use%4===0)this.attack(c,t,160,lead+.35,{mode:'cone',secondary:true});break;
-   }
-   case 'earth': {
-    const angle=Math.atan2(t.y-c.origin.y,t.x-c.origin.x),end={x:c.origin.x+Math.cos(angle)*c.range,y:c.origin.y+Math.sin(angle)*c.range},n=h(3)?4:3;c.unique=near(a,c.range+40).filter(e=>pointOnLine(e,c.origin,end,c.width/2)).length;
-    for(let i=0;i<n;i++)this.line(c,end,i===3?45:60,lead+i*BALANCE.earthPulseInterval,c.width/2,{index:i,last:i===n-1,secondary:false});
-    if(h(9))this.line(c,end,54,lead+n*BALANCE.earthPulseInterval,c.width/2);if(h(10)){for(const sign of [-1,1]){const dx=-Math.sin(angle)*38*sign,dy=Math.cos(angle)*38*sign;this.line(c,{x:end.x+dx,y:end.y+dy},63,lead+.15,c.width/2,{start:{x:c.origin.x+dx,y:c.origin.y+dy}});}}
-    if(h(29)&&c.use%4===0)this.line(c,end,135,lead+.95,c.width/2);break;
-   }
-   case 'poison': {this.attack(c,t,60,lead,{mode:'circle',arc:55});if(h(8))this.attack(c,other(),18,lead+.15,{mode:'circle',arc:55,secondary:true,tag:'poison-secondary'});break;}
-   case 'sniper': {this.projectile(c,t,330,lead);if(h(4))this.projectile(c,other(),99,lead+.1,0,true);if(h(18))this.line(c,t,99,lead+.1,16);break;}
-   case 'scythe': {
-    const end=copy(t),travel=.45;const outgoing=this.attack(c,end,120,lead,{mode:'scythe',at:w.time+lead,expires:w.time+lead+travel,tag:'out'});
-    const side=near(t,110).filter(e=>e.x>t.x).length>=near(t,110).filter(e=>e.x<t.x).length?1:-1;
-    this.attack(c,a,120,lead+travel+(h(9)?.5:0),{start:h(7)?{x:clamp(end.x+side*35,FIELD.left,FIELD.right),y:end.y}:copy(end),mode:'scythe',at:w.time+lead+travel+(h(9)?.5:0),expires:w.time+lead+travel*2+(h(9)?.5:0),returning:true});
-    if(h(8))this.line(c,end,84,lead+.1,c.width/2);if(h(9))this.pulse(c,end,84,lead+travel,50);if(h(24))this.fragments(c,end,2,60,lead+travel);
-    if(h(25)&&c.use%4===0){this.line(c,end,120,lead+.15,c.width/2);this.line(c,end,120,lead+travel+.15,c.width/2);}void outgoing;break;
-   }
-   case 'stars': {
-    const options=near(t,120*(h(6)?1.3:1)).filter(e=>e.id!==t.id).sort((a,b)=>dist(a,t)-dist(b,t)||a.id-b.id),targets=[t,options[0]??t,options[1]??options[0]??t];if(h(3))targets.push(options[2]??t);if(h(11))targets[targets.length-1]=t;
-    c.unique=new Set(targets.flatMap(p=>near(p,c.radius).map(e=>e.id))).size;
-    targets.forEach((e,i)=>this.attack(c,e,i===3?52.5:70,lead+i*.25,{mode:'circle',index:i,last:i===targets.length-1,start:{x:e.x-60,y:e.y-150},arc:0}));
-    if(h(8))this.projectile(c,t,73.5,lead+targets.length*.25,0,true);
-    if(h(24)&&c.use%4===0)targets.slice(0,3).forEach((e,i)=>this.pulse(c,e,52.5,lead+1+i*.25));
-    if(h(28))this.attack(c,t,0,lead+targets.length*.25,{mode:'circle',secondary:true,tag:'gravity'});break;
-   }
+   case 'thunder_bull':for(let i=0;i<s.count;i++)this.attack(c,other(i),f.damage,lead,{mode:'chain',target:other(i).id,index:i});break;
+   case 'venom_serpent':for(let i=0;i<s.count;i++)this.projectile(c,other(i),f.damage,lead+.05*i);break;
+   case 'frost_fox':for(let i=0;i<s.count;i++){const end=endpoint(c.origin,other(i),c.range);this.attack(c,end,f.damage,lead+.04*i,{mode:'line',width:FIELD.W*.035,at:w.time+lead+.04*i+.32,index:i});}break;
+   case 'thunder_dragon':case 'water_dragon':case 'phoenix':for(let i=0;i<s.count;i++)area(i,lead+.2*i);break;
+   case 'spirit_deer':for(let i=0;i<3;i++)area(i,lead+.25*i);break;
+   case 'flame_tiger':for(let i=0;i<4;i++)this.attack(c,endpoint(c.origin,c.aim,c.range),f.damage,lead+.2*i,{mode:'cone',index:i});break;
+   case 'stone_rhino':for(let i=0;i<s.count;i++)this.attack(c,endpoint(c.origin,c.aim,c.range),f.damage,lead+.2*i,{mode:'line',index:i});break;
+   case 'black_tortoise':area(0,lead);break;
   }
  }
- private fragments(c:Cast,p:Point,n:number,power:number,delay=0,tag?:string,exclude:number[]=[]){const candidates=this.grid.near(p,150).filter(e=>!exclude.includes(e.id)).sort((a,b)=>dist(a,p)-dist(b,p)||a.id-b.id);for(const e of candidates.slice(0,n))this.projectile(c,e,power,delay,0,true,false,{start:copy(p),tag});}
- private resolve(p:Attack){const w=this.w,c=p.cast,h=(n:number)=>has(c,n);let target=p.target?w.enemies.find(e=>e.id===p.target&&alive(e)):undefined;
-  if(p.tag==='retarget'&&!target){target=this.grid.target(c.origin,c.range);if(target){p.target=target.id;p.end=copy(target);}}
+ private resolve(p:Attack){const w=this.w,c=p.cast;let target=p.target===undefined?undefined:w.enemies.find(e=>e.id===p.target&&alive(e));
+  if((p.tracking||p.mode==='chain')&&!target){target=this.grid.target(c.origin,c.range);if(target){p.target=target.id;p.end=copy(target);}}
   if(p.tracking&&target)p.end=copy(target);
+  if(p.mode==='chain'){const hit=new Set<number>();let previous=c.origin,current=target;for(let i=0;i<c.stats.chain&&current;i++){const point=copy(current);hit.add(current.id);this.skill(c,previous,18,'flight',.28,{end:point});this.skill(c,point,38,'impact',.3);this.hit(current,p);previous=point;current=this.grid.near(point,.2*FIELD.H).filter(e=>!hit.has(e.id)).sort((a,b)=>dist(a,point)-dist(b,point)||a.id-b.id)[0];}return;}
   let victims:Enemy[]=[];
-  if(p.mode==='point'||p.mode==='chain'){if(target)victims=[target];}
+  if(p.mode==='point'){if(target)victims=[target];}
   else if(p.mode==='circle')victims=this.grid.near(p.end,p.radius);
-  else if(p.mode==='line')victims=this.grid.near(p.start,dist(p.start,p.end)+p.width).filter(e=>pointOnLine(e,p.start,p.end,p.width));
+  else if(p.mode==='line')victims=this.grid.near(p.start,c.range+p.width).filter(e=>pointOnLine(e,p.start,p.end,p.width/2));
   else if(p.mode==='cone')victims=this.grid.near(p.start,c.range).filter(e=>inCone(e,p.start,p.end,c.range,p.angle));
-  if(p.tag==='gravity'){this.zone(c,p.end,0,1.5,.4,'stars',55);return;}
-  if(p.mode==='circle'||p.mode==='cone'||p.mode==='line')w.sounds.push({owner:c.owner,impact:true});
-  const direction=Math.atan2(p.end.y-p.start.y,p.end.x-p.start.x);
-  const fxPoint=p.mode==='cone'?{x:p.start.x+Math.cos(direction)*c.range*.45,y:p.start.y+Math.sin(direction)*c.range*.45}:p.mode==='line'||p.mode==='chain'?p.start:p.end;
-  if(!p.secondary&&c.owner!=='archer'){const center=p.mode==='line'?p.end:p.mode==='cone'?{x:p.start.x+Math.cos(direction)*c.range*.45,y:p.start.y+Math.sin(direction)*c.range*.45}:p.end;this.fx('burst-'+c.owner,center,p.mode==='circle'?p.radius*2.6:82,.6);this.fx('ripple-'+c.owner,center,p.mode==='circle'?p.radius*3:100,.7);}
-  this.fx(p.mode==='chain'?'beam-lightning':p.mode==='line'?'line-'+p.visual:p.mode==='cone'?'sweep-wind':'impact-'+p.visual,fxPoint,p.mode==='circle'?p.radius*2:p.mode==='cone'?c.range*1.4:p.mode==='line'?p.width*2:70,p.mode==='line'?.42:.6,direction+Math.PI/2,p.mode==='line'||p.mode==='chain'?p.end:undefined);
-  if(!p.secondary&&p.mode==='circle'){
-   if(c.owner==='fire'){if(h(6))this.fragments(c,p.end,4,28,0,undefined,victims.map(e=>e.id));if(h(8))this.zone(c,p.end,56,2);}
-   if(c.owner==='ice'){if(h(8))this.fragments(c,p.end,3,25);if(h(10))this.zone(c,p.end,30,2,.2);}
-   if(c.owner==='poison'){if(h(7))this.zone(c,p.end,64,2);if(h(9))this.fragments(c,p.end,4,15,0,'poison-shard',victims.map(e=>e.id));}
-   if(c.owner==='stars'){if(h(9))this.zone(c,p.end,p.power*.3,1.5);if(h(10))this.fragments(c,p.end,2,p.power*.15,0,undefined,victims.map(e=>e.id));}
-  }
-  for(const e of victims.filter(e=>!p.hit.has(e.id))){if(p.tag==='ice-split'){if(c.primaryIds.includes(e.id))continue;c.primaryIds.push(e.id);}let power=p.power;
-   this.hit(e,c,power,p.index,p.last,p.secondary,p);
-  }
-  if(c.owner==='earth'&&!p.secondary&&p.index===0&&h(8))this.fragments(c,p.end,4,27,0,undefined,victims.map(e=>e.id));
+  const angle=Math.atan2(p.end.y-p.start.y,p.end.x-p.start.x)+Math.PI/2;
+  if(p.mode==='line')this.skill(c,p.start,p.width,'impact',.3,{end:p.end});
+  else if(p.mode==='cone'){const middle={x:(p.start.x+p.end.x)/2,y:(p.start.y+p.end.y)/2};this.skill(c,middle,2*c.range*Math.sin(p.angle/2),'impact',.22,{height:c.range,rotation:angle});}
+  else {this.skill(c,p.end,p.mode==='circle'?p.radius*2:35,'impact',.4);if(p.mode==='circle'&&c.owner!=='archer'&&c.owner!=='phoenix')this.skill(c,p.end,p.radius*2,'linger',.45,{born:w.time+.3});}
+  for(const e of victims)if(!p.hit.has(e.id)){p.hit.add(e.id);this.hit(e,p);}
+  if(c.owner==='phoenix'&&!p.secondary){w.zones.push({id:++w.id,cast:c,...copy(p.end),radius:p.radius,power:35,next:w.time+1,until:w.time+4,ticks:0});}
+  if(!p.secondary)w.sounds.push({owner:c.owner,impact:true});
  }
- private scytheStep(p:Attack){const w=this.w,c=p.cast;const t=clamp((w.time-p.at)/(p.expires-p.at),0,1),previous=copy(p);p.x=p.start.x+(p.end.x-p.start.x)*t;p.y=p.start.y+(p.end.y-p.start.y)*t;if(w.time<=p.at+1/60){previous.x=p.start.x;previous.y=p.start.y;}
-  for(const e of this.grid.near(p,45)){if(p.hit.has(e.id)||!pointOnLine(e,previous,p,c.width/2+12))continue;p.hit.add(e.id);this.hit(e,c,p.power,p.returning?1:0,false,false,p);this.fx('impact-scythe',e,72,.4);if(!p.returning)c.outbound.add(e.id);}
+ private lineStep(p:Attack){const w=this.w,t=clamp((w.time-p.born)/(p.at-p.born),0,1);const at=(v:number)=>({x:p.start.x+(p.end.x-p.start.x)*v,y:p.start.y+(p.end.y-p.start.y)*v});const from=at(p.previous),to=at(t);
+  const victims=this.grid.near(p.start,p.cast.range+p.width).filter(e=>!p.hit.has(e.id)&&pointOnLine(e,from,to,p.width/2)).sort((a,b)=>dist(a,p.start)-dist(b,p.start)||a.id-b.id);
+  for(const e of victims){p.hit.add(e.id);this.hit(e,p);this.skill(p.cast,e,35,'impact',.35);if(p.hit.size>=p.pierce){p.at=-1;return;}}
+  p.previous=t;if(t>=1)p.at=-1;
  }
- private slow(e:Enemy,amount:number,duration:number,owner:Owner){if(e.slowEnd<=this.w.time||amount>=e.slow){e.slow=amount;e.slowOwner=owner;}e.slowEnd=Math.max(e.slowEnd,this.w.time+duration);}
- private hard(e:Enemy,duration:number,kind:Status,c:Cast){const w=this.w;if(e.immuneEnd>w.time||e.hardEnd>w.time)return;e.hardEnd=w.time+duration*(e.kind>=5?.35:1);e.immuneEnd=e.hardEnd+.5;e.hardKind=kind;e.impactAt=0;if(kind==='freeze')e.freezeCast=c;this.fx(kind==='freeze'?'freeze':'stun',e,50,duration);}
- private push(e:Enemy,distance:number){e.y=Math.max(FIELD.top,e.y-distance*(e.kind>=5?.1:1));e.impactAt=0;}
- private dot(e:Enemy,c:Cast,kind:Status|'electric',dps:number,duration:number,spread=false,stack=0){const w=this.w,key=c.owner+':'+kind+':'+stack,existing=e.dots.find(d=>d.key===key);const value=dps*(FIGHTERS[c.owner].damage/LEGACY_DAMAGE[c.owner])*modifier(w,c,e,0,false,true)*(1-e.armor*(1-ignoreArmor(c)));
-  if(existing){existing.dps=Math.max(existing.dps,value);existing.until=w.time+duration;existing.cast=c;existing.spread=existing.spread||spread;}else e.dots.push({key,kind,owner:c.owner,dps:value,until:w.time+duration,start:w.time,next:w.time+.25,cast:c,spread,stack});
+ private hard(e:Enemy,duration:number,kind:Status){const w=this.w;if(!alive(e))return;const active=e.hardEnd>w.time;if(!active&&e.immuneEnd>w.time)return;
+  e.ccHistory=e.ccHistory.filter(i=>i.end>w.time-BALANCE.ccWindow);
+  const used=e.ccHistory.reduce((sum,i)=>sum+Math.max(0,i.end-Math.max(i.start,w.time-BALANCE.ccWindow)),0),budget=(e.kind===5?BALANCE.ccBoss:BALANCE.ccNormal)-used;
+  const desired=w.time+duration*(e.kind===5?BALANCE.ccBossScale:1),oldEnd=active?e.hardEnd:w.time,extension=Math.min(Math.max(0,desired-oldEnd),Math.max(0,budget));
+  if(!active&&extension<=EPS)return;
+  if(extension>EPS){e.hardEnd=oldEnd+extension;if(active)e.ccHistory[e.ccHistory.length-1].end=e.hardEnd;else e.ccHistory.push({start:w.time,end:e.hardEnd});e.immuneEnd=e.hardEnd+BALANCE.ccImmunity;}
+  if(!active||e.hardKind==='root'||kind!=='root')e.hardKind=kind;if(e.hardKind!=='root')e.impactAt=0;
  }
- private hit(e:Enemy,c:Cast,power:number,index=0,last=false,secondary=false,p?:Attack){if(!alive(e))return;const w=this.w,h=(n:number)=>has(c,n),o=c.owner;power*=FIGHTERS[o].damage/LEGACY_DAMAGE[o];
-  let positional=0;if(o==='fire'&&!secondary&&p){if(h(4)&&dist(e,p.end)<=p.radius/2)positional+=.45;if(h(5)&&dist(e,p.end)>p.radius/2)positional+=.6;}
-  if(o==='scythe'&&!secondary&&p){if(h(p.returning?6:5))positional+=.6;if(p.returning&&h(7))positional+=.2;}
-  const damage=power*(modifier(w,c,e,index,last)+positional)*(1-e.armor*(1-ignoreArmor(c)));const before=e.hp;
-  this.rawDamage(e,damage,c,secondary);e.hitAt=w.time;
-  if(secondary){if(p?.tag==='poison-secondary'||p?.tag==='poison-shard')this.applyPoison(e,c,p.tag==='poison-secondary'?.3:1,p.tag==='poison-shard'?.5:1);if(p?.tag==='half-slow')this.slow(e,BALANCE.iceSlow,BALANCE.iceSlowSeconds/2,'ice');return;}
-  this.hitExtras(e,c,index,last,p);
-  if(!alive(e)){this.killEffects(e,c,damage-before);return;}
-  if(o==='archer'){
-   if(h(10)&&c.use%5===0)this.push(e,18);if(h(11))this.slow(e,.25,1.2,o);if(h(12))this.dot(e,c,'burn',17.5,2);if(h(13))this.dot(e,c,'poison',11.25,4);
-   if(h(28))e.marks.archer=w.time+2;
-  }
-  if(o==='crossbow'){
-   if(h(8)&&last)this.slow(e,.35,2,o);if(h(9))this.dot(e,c,'burn',18,3);if(h(10)&&index===0)this.dot(e,c,'poison',16.2,5);
-   if(h(24)&&last)this.hard(e,.6,'hard',c);if(h(25)&&last&&c.use%3===0){this.hard(e,.8,'hard',c);this.hit(e,c,54,0,false,true);}
-  }
-  if(o==='fire'){
-   if(h(9))this.dot(e,c,'burn',140*.35/3,3);if(h(12))this.push(e,18);if(h(13)&&c.use%3===0)this.hard(e,.7,'hard',c);if(h(14))this.slow(e,.25,2,o);
-  }
-  if(o==='ice'){
-   this.slow(e,BALANCE.iceSlow+(h(4)?.15:0),BALANCE.iceSlowSeconds*(h(5)?1.7:1)+(h(30)&&w.hp<800?1:0),o);
-   const freeze=Math.max(c.use%BALANCE.iceFreezeEvery===0?BALANCE.iceFreezeSeconds:0,h(6)&&(e.marks['ice:hit']??-10)>=w.time-6&&e.casts.ice!==c.id?.8:0,h(13)&&c.use%4===0?1:0);
-   if(freeze)this.hard(e,freeze,'freeze',c);if(h(22))e.attackSlowEnd=w.time+2;if(h(23))this.push(e,18);
-  }
-  if(o==='lightning'){
-   if(h(9)&&c.use%3===0)this.hard(e,.6,'hard',c);if(h(10))this.slow(e,.25,1.5,o);
-   if(h(11)&&(e.marks['lightning:hit']??-10)>=w.time-5&&e.casts.lightning!==c.id)this.hit(e,c,56,0,false,true);
-   if(h(21))this.dot(e,c,'electric',power/(FIGHTERS[o].damage/LEGACY_DAMAGE[o])*.15,2);
-  }
-  if(o==='wind'){
-   this.push(e,30*(h(5)?1.5:1));if(h(6))this.slow(e,.3,2,o);if(h(7)&&c.use%3===0)this.hard(e,.7,'hard',c);
-   if(h(21)&&(e.marks['wind:hit']??-10)>=w.time-6&&e.casts.wind!==c.id)this.hard(e,.8,'hard',c);
-   if(h(23))this.dot(e,c,'bleed',160*.35/3,3);
-  }
-  if(o==='earth'){
-   if(index===0)this.hard(e,BALANCE.earthStun+(h(6)?.35:0),'hard',c);if(h(7)&&last)this.slow(e,.4,2,o);if(h(11)&&index===0)this.push(e,18);
-   if(h(23)&&(e.marks['earth:hit']??-10)>=w.time-7&&e.casts.earth!==c.id)this.hit(e,c,72,0,false,true);
-   if(h(24)&&c.use%4===0)this.hard(e,1.2,'hard',c);
-  }
-  if(o==='poison'){
-   if(h(11)&&c.use%3===0&&e.dots.some(d=>d.owner===o))this.hit(e,c,25,0,false,true);
-   this.applyPoison(e,c);if(h(13)&&c.use%4===0&&e.id===c.target)this.hard(e,.8,'hard',c);
-   if(h(25)&&e.dots.some(d=>d.kind==='burn'))this.pulse(c,e,64,0,40);
-  }
-  if(o==='sniper'){
-   if(h(21))this.slow(e,.35,2,o);if(h(22)&&c.use%3===0)this.hard(e,1,'hard',c);if(h(23))this.push(e,18);
-   if(h(24))this.dot(e,c,'burn',330*.35/3,3);if(h(25))this.dot(e,c,'poison',330*.45/5,5);
-  }
-  if(o==='scythe'){
-   if(h(10))this.dot(e,c,'bleed',power/(FIGHTERS[o].damage/LEGACY_DAMAGE[o])*.35/3,3);if(h(12)&&p?.returning)this.push(e,18);if(h(13))this.slow(e,.3,1.8,o);
-   if(p?.returning&&c.outbound.has(e.id)){if(h(14))this.hard(e,.6,'hard',c);if(h(23))this.hit(e,c,72,0,false,true);}
-  }
-  if(o==='stars'){if(h(11)&&last&&e.id===c.target)this.hard(e,.7,'hard',c);if(h(12))this.slow(e,.3,2,o);if(h(13)&&index===0)this.push(e,18);}
-  e.marks[o+':hit']=w.time;e.casts[o]=c.id;e.casts[o+':use']=c.use;c.hitCounts.set(e.id,(c.hitCounts.get(e.id)??0)+1);c.lastHit=e.id===c.lastHitId?c.lastHit+1:0;c.lastHitId=e.id;
+ private dot(e:Enemy,c:Cast,kind:'poison'|'burn',power:number,duration:number,unique=false,component:'dot'|'burn'='dot'){if(!alive(e))return;const w=this.w,key=unique?`${c.owner}:${++w.id}`:`${c.owner}:${kind}`,old=e.dots.find(d=>d.key===key);if(old){old.until=w.time+duration;old.power=power;old.cast=c;}else e.dots.push({key,kind,power,until:w.time+duration,next:w.time+1,cast:c,component});}
+ private hit(e:Enemy,p:Attack){if(!alive(e))return;const w=this.w,c=p.cast,o=c.owner,h=(n:number)=>has(c,n);this.damage(e,c,p.power,p.secondary,'direct');
+  if(p.secondary)return;
+  if(o==='archer'){this.archerExtras(e,c,p);if(!alive(e))return;if(h(10)&&c.use%5===0&&w.time-e.pushAt>=2){e.y=Math.max(FIELD.top,e.y-18*(e.kind===5?.1:1));e.pushAt=w.time;e.impactAt=0;}if(h(11)){e.slow=.25;e.slowEnd=w.time+1.2;}if(h(12))this.dot(e,c,'burn',17.5,2);if(h(13))this.dot(e,c,'poison',11.25,4);if(h(28))e.marks.archer=w.time+2;return;}
+  if(o==='thunder_bull'||o==='thunder_dragon')this.hard(e,1,'paralysis');
+  if(o==='venom_serpent')this.dot(e,c,'poison',25,c.stats.duration,true);
+  if(o==='frost_fox'||o==='water_dragon')this.hard(e,1.5,'freeze');
+  if(o==='spirit_deer'){if(p.index===0)this.hard(e,1.5,'root');if(!c.healed&&w.hp>0){c.healed=true;w.hp=Math.min(2000,w.hp+c.stats.healing);this.fx('heal',{x:220,y:FIELD.wall},130,.7);this.skill(c,e,22,'flight',.55,{end:{x:220,y:FIELD.wall}});}}
+  if(o==='flame_tiger')this.dot(e,c,'burn',20,3,false,'burn');
+  if(o==='stone_rhino'&&!c.stunned.has(e.id)){c.stunned.add(e.id);this.hard(e,1,'stun');}
+  if(o==='black_tortoise'&&!c.shielded&&w.hp>0){c.shielded=true;w.shieldHP=Math.min(BALANCE.shieldCap,w.shieldHP+c.stats.shield);this.fx('shield',{x:220,y:FIELD.wall},180,.8);this.skill(c,e,28,'flight',.55,{end:{x:220,y:FIELD.wall}});}
  }
- private hitExtras(e:Enemy,c:Cast,index:number,last:boolean,p?:Attack){const h=(n:number)=>has(c,n),o=c.owner;
-  const bounce=(power:number)=>this.fragments(c,e,1,power,0,undefined,[e.id]);
-  const pierce=(power:number)=>{const dx=e.x-c.origin.x,dy=e.y-c.origin.y,len=Math.hypot(dx,dy)||1;const end={x:e.x+dx/len*150,y:e.y+dy/len*150};const target=this.grid.near(e,150).filter(n=>n.id!==e.id&&pointOnLine(n,e,end,20)).sort((a,b)=>dist(a,e)-dist(b,e))[0];if(target)this.projectile(c,target,power,0,0,true,false,{start:copy(e)});};
-  const splash=(power:number,r=45)=>{const q=this.pulse(c,e,power,0,r);q.hit.add(e.id);q.tag='exclude-primary';};
-  if(o==='archer'){if(h(3))pierce(60);if(h(4))splash(35);if(h(14)&&c.use%3===0)bounce(75);if(h(15))bounce(50);}
-  if(o==='crossbow'){if(h(4))pierce(36);if(h(5)&&last)this.fragments(c,e,2,24,0,undefined,[e.id]);if(h(22)&&index===1)bounce(54);if(h(23)&&index===0)this.fragments(c,e,3,42,0,undefined,[e.id]);}
-  if(o==='ice'){if(h(12)&&e.id===c.target)bounce(40);if(h(21)&&e.id===c.target)this.projectile(c,e,35,1,0,true);}
-  if(o==='wind'&&h(11))this.projectile(c,e,48,.5,0,true);
-  if(o==='sniper'){if(h(3))pierce(214.5);if(h(19))splash(115.5);if(h(20))this.projectile(c,e,115.5,1,0,true);}
+ private archerExtras(e:Enemy,c:Cast,p:Attack){const h=(n:number)=>has(c,n);const bounce=(power:number)=>{const t=this.grid.near(e,150).filter(n=>n.id!==e.id).sort((a,b)=>dist(a,e)-dist(b,e)||a.id-b.id)[0];if(t)this.projectile(c,t,power,0,true,{start:copy(e)});};
+  if(h(3)){const end=endpoint(p.start,e,dist(p.start,e)+150),t=this.grid.near(e,150).filter(n=>n.id!==e.id&&pointOnLine(n,e,end,12)).sort((a,b)=>dist(a,e)-dist(b,e)||a.id-b.id)[0];if(t)this.projectile(c,t,60,0,true,{start:copy(e),tracking:false,tag:'archer-pierce'});}
+  if(h(4))this.attack(c,e,35,0,{mode:'circle',radius:45,secondary:true,hit:new Set([e.id])});if(h(14)&&c.use%3===0)bounce(75);if(h(15))bounce(50);
  }
- private applyPoison(e:Enemy,c:Cast,scale=1,timeScale=1){if(!alive(e))return;const h=(n:number)=>has(c,n);const duration=(h(5)?2.5:h(4)?6:4)*timeScale;const dps=(h(5)?25*(h(4)?6:4)/2.5:25)*scale*(h(6)?.65:1);let stack=0;if(h(6)){const layers=e.dots.filter(d=>d.owner==='poison'&&d.kind==='poison');stack=layers.length===0?0:layers.length===1?1:(layers[0].until<layers[1].until?layers[0].stack:layers[1].stack);}
-  this.dot(e,c,'poison',dps,duration,false,stack);if(h(12))this.slow(e,.25,duration,'poison');if(h(26))e.attackSlowEnd=this.w.time+2;
- }
- private rawDamage(e:Enemy,amount:number,c:Cast,secondary:boolean){if(!alive(e)||amount<=0)return;const w=this.w;const actual=Math.min(e.hp,amount);e.hp=Math.max(0,e.hp-amount);w.damage+=actual;
-  const text=w.effects.find(n=>n.kind==='damage'&&n.value?.startsWith(e.id+':')&&w.time-n.born<.14);if(text){const old=Number(text.value!.split(':')[1]);text.value=e.id+':'+Math.round(old+actual);}else if(w.effects.filter(n=>n.kind==='damage').length<22&&(e.kind>=5||amount>=100)){w.effects.push({id:++w.id,kind:'damage',x:e.x,y:e.y-20,born:w.time,duration:.65,size:amount>=250?20:15,rotation:0,value:e.id+':'+Math.round(actual)});}
-  if(e.hp===0){e.deadAt=w.time;w.kills++;const xp=e.kind>=5?200:10;w.xp+=xp;w.totalXp+=xp;if(e.kind>=5)w.bossKills++;this.fx('death',e,e.kind>=5?105:44,.7);
-   const owner=w.actors.find(a=>a.owner===c.owner);if(owner&&!secondary&&!c.killed){if(c.owner==='archer'&&has(c,17)&&c.bonus===0)owner.nextBonus=.5;if(c.owner==='fire'&&has(c,29))owner.nextBonus=.35;}c.killed=true;
-   this.spreadDots(e);
-  }
- }
- private spreadDots(e:Enemy){for(const d of e.dots){if(d.spread||d.until<=this.w.time)continue;if(!(d.owner==='fire'&&has(d.cast,11)&&d.kind==='burn'||d.owner==='poison'&&has(d.cast,10)&&d.kind==='poison'))continue;if(d.cast.killProcs>=3)break;d.cast.killProcs++;for(const n of this.grid.near(e,100).filter(alive).slice(0,2)){const clone={...d,key:d.key,spread:true,next:this.w.time+.25};const old=n.dots.find(x=>x.key===clone.key);if(old){old.dps=Math.max(old.dps,clone.dps);old.until=Math.max(old.until,clone.until);}else n.dots.push(clone);}}
- }
- private killEffects(e:Enemy,c:Cast,overkill:number){if(c.killProcs>=(c.owner==='archer'?1:3))return;c.killProcs++;const h=(n:number)=>has(c,n);
-  if(c.owner==='archer'&&h(16))this.fragments(c,e,2,30);if(c.owner==='crossbow'&&h(26))this.fragments(c,e,3,18);
-  if(c.owner==='lightning'&&h(22))this.fragments(c,e,1,56);if(c.owner==='earth'&&h(25))this.pulse(c,e,45,0,45);
-  if(c.owner==='sniper'){if(h(17))this.fragments(c,e,2,115.5);if(h(29)&&overkill>0){const t=this.grid.target(c.origin,c.range);if(t){const power=overkill*.5;this.rawDamage(t,power,c,true);this.fx('beam-sniper',e,40,.3,0,t);}}}
-  if(c.owner==='stars'&&h(29))this.pulse(c,e,21,0,40);
+ private damage(e:Enemy,c:Cast,power:number,secondary:boolean,component:'direct'|'dot'|'burn'){if(!alive(e)||power<=0)return;const w=this.w,crit=c.stats.critChance>0&&random(w)<c.stats.critChance,element=elementalMultiplier(c.element,e.element);
+  const amount=power*modifier(w,c,e,component)*c.stats.multi*(crit?c.stats.critMultiplier:1)*element*(1-e.armor*(1-ignoreArmor(c))),actual=Math.min(e.hp,amount);e.hp=Math.max(0,e.hp-amount);e.hitAt=w.time;w.damage=Math.min(Number.MAX_VALUE,w.damage+actual);
+  // Only decorative numbers are bounded; attacks, enemies, zones and status are never dropped.
+  if(w.effects.filter(f=>f.kind==='damage').length<38)this.fx('damage',{x:e.x,y:e.y-35},crit?19:15,.65,{value:String(Math.round(actual)),critical:crit,advantage:element});
+  if(e.hp>0)return;e.deadAt=w.time;w.kills++;const boss=e.kind===5;if(boss)w.bossKills++;else w.normalKills++;w.score=10*w.normalKills+150*w.bossKills;
+  const xp=boss?BALANCE.bossXP:BALANCE.normalXP;if(w.level<20){w.xp+=xp;w.totalXp+=xp;}
+  this.fx('death',e,boss?110:45,.6);
+  if(c.owner==='archer'&&component==='direct'&&!secondary){const a=w.actors.find(a=>a.owner==='archer');if(a&&has(c,17)&&c.bonus===0&&!c.killed)a.nextBonus=.5;
+   if(has(c,16)&&c.killProcs<1){c.killProcs++;const targets=this.grid.near(e,150).sort((a,b)=>dist(a,e)-dist(b,e)||a.id-b.id).slice(0,2);for(const t of targets)this.projectile(c,t,30,0,true,{start:copy(e)});}}
+  c.killed=true;
  }
 }
+

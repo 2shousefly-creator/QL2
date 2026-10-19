@@ -1,0 +1,134 @@
+{
+  "version": "2.0.0",
+  "generator": "Built-in image_gen",
+  "production": {
+    "compiler": "scripts/pack-thanh-tri-v2.cjs",
+    "frameCell": [
+      192,
+      192
+    ],
+    "alpha": "Generated transparent alpha retained; sub-16 alpha fringe cleared.",
+    "normalization": "Regular authored grid cells; consistent scale across actor states and within VFX phases; transparent padding; grounded actor pivot.",
+    "portraits": "First authored idle pose of each corresponding beast atlas."
+  },
+  "retained": [
+    "v1/background.webp",
+    "v1.1/archer.json (8 idle, 8 attack, 40 reload)",
+    "v1.1/enemy0..5.json",
+    "v1/fx-archer.json",
+    "v1/fx-wall.json",
+    "v1.1/fx-accent.json"
+  ],
+  "sources": [
+    {
+      "id": "thunder_bull",
+      "sourceFilename": "exec-d8a47273-ef5b-45fc-8ab2-281fa112b918.png",
+      "prompt": "Use case: stylized-concept. Production game asset: transparent sprite atlas for a Vietnamese chibi 2D tower defense. One character only: THUNDER BULL, a stocky adorable muscular dark blue bull with large metallic gold horns, golden lightning veins and cloven hooves, absolutely no humanoid rider. Clean detailed hand-painted mobile game art, crisp outlines, top-down three-quarter view facing up toward enemies. EXACT uniform 8 columns by 4 rows grid, 32 separate fully visible frames, equal square cells, generous transparent padding, no grid lines or text. Row 1: 8 genuinely different subtle idle poses with breathing, ears and tail moving. Rows 2 and 3: 16 successive casting poses: crouch, charge horns, rear up, thrust horns upward releasing lightning, recover. Row 4: 8 summon poses materializing from sparks and landing. Same character size and foot anchor in each cell. Real pose changes, no repeated identical frames. Entire background transparent alpha, not a checkerboard. Sheet 2048x1024 if possible. No labels, no scenery."
+    },
+    {
+      "id": "thunder_dragon",
+      "sourceFilename": "exec-c39aa133-6594-48e9-97ea-acab5cf9fea6.png",
+      "prompt": "Use case: stylized-concept. Transparent 2D chibi hand-painted tower defense game character spritesheet. THUNDER DRAGON: compact gold and violet Eastern dragon, branching metallic horns, wingless serpentine body coiled upright, electric mane. Casting action: rise, gather purple thundercloud above head, throw both foreclaws skyward, lightning discharge, recover. Detailed clean outlines, warm highlights, three-quarter view, full body, no human. EXACT 8 columns × 4 rows equal square cells, 32 separate frames in regular grid, transparent padding prevents overlap. Row1 eight different idle poses; rows2-3 sixteen successive real casting/action poses; row4 eight summon materialization and landing poses. Same character proportions, size and centered foot anchor each cell. Actual limb and body pose changes. No text, no grid lines, no background or checkerboard. Wide 2:1 sheet."
+    },
+    {
+      "id": "venom_serpent",
+      "sourceFilename": "exec-edbc2cee-0df5-42bf-b39e-0912fae922ce.png",
+      "prompt": "Use case: stylized-concept. Transparent 2D chibi hand-painted tower defense game character spritesheet. VENOM SERPENT: emerald green cobra, purple patterned hood, bright jade eyes, curved fangs, no legs. Casting action: coil down, hood flares, rear neck, spit green venom upward, recoil and settle. Detailed clean outlines, warm highlights, three-quarter view, full body, no human. EXACT 8 columns × 4 rows equal square cells, 32 separate frames in regular grid, transparent padding prevents overlap. Row1 eight different idle poses; rows2-3 sixteen successive real casting/action poses; row4 eight summon materialization and landing poses. Same character proportions, size and centered foot anchor each cell. Actual limb and body pose changes. No text, no grid lines, no background or checkerboard. Wide 2:1 sheet."
+    },
+    {
+      "id": "spirit_deer",
+      "sourceFilename": "exec-a1abfbc0-dec2-4333-a85a-bf8e469282d1.png",
+      "prompt": "Use case: stylized-concept. Transparent 2D chibi hand-painted tower defense game character spritesheet. SPIRIT DEER: small elegant cream white deer with branching living wood antlers with emerald leaves, green magic hoof rings. Casting action: bow antlers, rear, stamp hooves as roots and leaves blossom, settle. Detailed clean outlines, warm highlights, three-quarter view, full body, no human. EXACT 8 columns × 4 rows equal square cells, 32 separate frames in regular grid, transparent padding prevents overlap. Row1 eight different idle poses; rows2-3 sixteen successive real casting/action poses; row4 eight summon materialization and landing poses. Same character proportions, size and centered foot anchor each cell. Actual limb and body pose changes. No text, no grid lines, no background or checkerboard. Wide 2:1 sheet."
+    },
+    {
+      "id": "frost_fox",
+      "sourceFilename": "exec-caca29aa-5f62-4ca2-9351-99b4eaa2a49e.png",
+      "prompt": "Use case: stylized-concept. Transparent 2D chibi hand-painted tower defense game character spritesheet. FROST FOX: small snow white arctic fox, three flowing icy blue tails, crystal ears and paws, ice diamond forehead. Casting action: crouch, fan tails, arch back, exhale narrow long ice needle upward then recoil. Detailed clean outlines, three-quarter view, full body, no human. EXACT 8 columns × 4 rows equal square cells, 32 separate frames in regular grid, transparent padding prevents overlap. Row1 eight different idle poses; rows2-3 sixteen successive real casting/action poses; row4 eight summon materialization and landing poses. Same character proportions, size and centered foot anchor each cell. Actual limb and body pose changes. No text, grid lines, scenery or checkerboard. Wide 2:1 sheet."
+    },
+    {
+      "id": "water_dragon",
+      "sourceFilename": "exec-6306eb1c-2174-42bd-9dfb-957e96f617be.png",
+      "prompt": "Use case: stylized-concept. Transparent 2D chibi hand-painted tower defense game character spritesheet. WATER DRAGON: turquoise and pearl aquatic dragon with wide fin ears, coral antlers, four webbed legs and broad curled tail, pale crystal ice on back; distinct from a coiled thunder serpent. Casting action: spread fins, raise front legs, lift floating ice pillars above head, drive claws downward to call ice rain, recover. Detailed clean outlines, three-quarter view, full body, no human. EXACT 8 columns × 4 rows equal square cells, 32 separate frames in regular grid, transparent padding prevents overlap. Row1 eight different idle poses; rows2-3 sixteen successive real casting/action poses; row4 eight summon materialization and landing poses. Same character proportions, size and centered foot anchor each cell. Actual limb and body pose changes. No text, grid lines, scenery or checkerboard. Wide 2:1 sheet."
+    },
+    {
+      "id": "flame_tiger",
+      "sourceFilename": "exec-6a3eaa16-23c0-4f91-9f48-60a95e00a84d.png",
+      "prompt": "Use case: stylized-concept. Transparent 2D chibi hand-painted tower defense game character spritesheet. FLAME TIGER: orange red tiger cub with black stripes, amber eyes, flame mane and fiery tail. Casting action: crouch, open mouth wide, arch back and breathe fan shaped fire forward/upward, roar and recover. Detailed clean outlines, three-quarter view, full body, no human. EXACT 8 columns × 4 rows equal square cells, 32 separate frames in regular grid, transparent padding prevents overlap. Row1 eight different idle poses; rows2-3 sixteen successive real casting/action poses; row4 eight summon materialization and landing poses. Same character proportions, size and centered foot anchor each cell. Actual limb and body pose changes. No text, grid lines, scenery or checkerboard. Wide 2:1 sheet."
+    },
+    {
+      "id": "phoenix",
+      "sourceFilename": "exec-77e9009f-a3ad-4c40-8e77-5a266a730ce7.png",
+      "prompt": "Use case: stylized-concept. Transparent 2D chibi hand-painted tower defense game character spritesheet. PHOENIX: majestic small vermilion bird with gold crest, broad feathered wings and three long fiery tail feathers. Idle flaps wings; casting action spreads wings, rises, plucks fiery feather, beats both wings downward releasing feather, lands. Detailed clean outlines, three-quarter view, full body, no human. EXACT 8 columns × 4 rows equal square cells, 32 separate frames in regular grid, generous transparent padding prevents overlap. Row1 eight different idle poses; rows2-3 sixteen successive real casting/action poses; row4 eight summon materialization and landing poses. Same character proportions, size and centered foot anchor each cell. Actual limb and body pose changes. No text, grid lines, scenery or checkerboard. Wide 2:1 sheet."
+    },
+    {
+      "id": "stone_rhino",
+      "sourceFilename": "exec-7a2bc13b-6fc4-49ce-a389-6ee5921cd19b.png",
+      "prompt": "Use case: stylized-concept. Transparent 2D chibi hand-painted tower defense game character spritesheet. STONE RHINO: squat gray rhinoceros with rocky armor plates, amber crystal horn and earth cracks, heavy four legs. Casting action: brace, lift front legs, slam forefeet heavily onto ground, rocks rise, recover. Detailed clean outlines, three-quarter view, full body, no human. EXACT 8 columns × 4 rows equal square cells, 32 separate frames in regular grid, generous transparent padding prevents overlap. Row1 eight different idle poses; rows2-3 sixteen successive real casting/action poses; row4 eight summon materialization and landing poses. Same character proportions, size and centered foot anchor each cell. Actual limb and body pose changes. No text, grid lines, scenery or checkerboard. Wide 2:1 sheet."
+    },
+    {
+      "id": "black_tortoise",
+      "sourceFilename": "exec-8b9e36b9-d115-4b29-82a9-474bcd95881f.png",
+      "prompt": "Use case: stylized-concept. Transparent 2D chibi hand-painted tower defense game character spritesheet. BLACK TORTOISE XUANWU: squat black jade tortoise with large hexagonal rocky shell, golden ancient runes, sage green eyes and small serpent tail. Casting action: retract into shell, raise head and forelegs, summon stone seal above shell, stamp down and project shield, recover. Detailed clean outlines, three-quarter view, full body, no human. EXACT 8 columns × 4 rows equal square cells, 32 separate frames in regular grid, generous transparent padding prevents overlap. Row1 eight different idle poses; rows2-3 sixteen successive real casting/action poses; row4 eight summon materialization and landing poses. Same character proportions, size and centered foot anchor each cell. Actual limb and body pose changes. No text, grid lines, scenery or checkerboard. Wide 2:1 sheet."
+    },
+    {
+      "id": "fx-water_dragon",
+      "sourceFilename": "exec-a345989d-0cf5-428c-b080-9cac0072d9d6.png",
+      "prompt": "Use case: stylized-concept. Production transparent VFX spritesheet for hand-painted 2D chibi fantasy tower defense. ICE PILLAR RAIN. Row1 anticipation: glowing cyan circular ground target and gathering frost. Row2 flight: multiple long sharp ice pillars falling vertically downward toward ground, tips DOWN, increasingly lower. Row3 impact: a dense circular crown of tall ice pillars strikes ground and fractures with snowy dust and shards. Row4 aftermath: shattered ice fragments and frost fading on the ground. Never water waves. EXACT regular 8 columns by 4 rows, 32 distinct frames, eight sequential evolving frames per row/phase. Generous transparent margins separating all cells, each effect isolated in its equal square cell. Complete particle evolution, not copies. Crisp luminous detailed painted effect, no scenery, no labels, no text, no grid lines. Wide 2:1 canvas, real transparent alpha."
+    },
+    {
+      "id": "fx-thunder_dragon",
+      "sourceFilename": "exec-5a6cd9ef-5566-49de-87cb-e7490121e498.png",
+      "prompt": "Use case: stylized-concept. Production transparent VFX spritesheet for hand-painted 2D chibi fantasy tower defense. SKY THUNDER STRIKE. Row1 anticipation: violet circular ground sigil and electric clouds forming. Row2 flight: a tall vertical violet white branching lightning bolt descending from sky, top to bottom, no diagonal projectile. Row3 impact: central blinding lightning strike and ground electric ring expands radially. Row4 aftermath: short branching electrical arcs crawling on circular ground and fading. EXACT regular 8 columns by 4 rows, 32 distinct frames, eight sequential evolving frames per row/phase. Generous transparent margins separating all cells, each effect isolated in its equal square cell. Complete particle evolution, not copies. Crisp luminous detailed painted effect, no scenery, no labels, no text, no grid lines. Wide 2:1 canvas, real transparent alpha."
+    },
+    {
+      "id": "fx-thunder_bull",
+      "sourceFilename": "exec-7a3779ba-c622-45ad-9b9b-0977dcbc2fd5.png",
+      "prompt": "Use case: stylized-concept. Production transparent VFX spritesheet for hand-painted 2D chibi fantasy tower defense. CHAIN LIGHTNING. Row1 anticipation: golden electrical charge spark. Row2 flight: thin jagged GOLD lightning link oriented VERTICALLY from bottom to top, branches and fluctuations, to stretch between targets. Row3 impact: small dense crackling electric flash on a struck enemy. Row4 aftermath: electrical paralysis sparks crackle around an empty silhouette space. No monsters or character. EXACT regular 8 columns by 4 rows, 32 distinct frames, eight sequential evolving frames per row/phase. Generous transparent margins separating all cells, each effect isolated in its equal square cell. Complete particle evolution, not copies. Crisp luminous detailed painted effect, no scenery, no labels, no text, no grid lines. Wide 2:1 canvas, real transparent alpha."
+    },
+    {
+      "id": "fx-frost_fox",
+      "sourceFilename": "exec-f25a319b-1120-49db-9ffc-bb9d00e2a9ff.png",
+      "prompt": "Use case: stylized-concept. Production transparent VFX spritesheet for hand-painted 2D chibi fantasy tower defense. ICE NEEDLE. Row1 anticipation: icy point gathering from swirling cold air. Row2 flight: a single LONG NARROW ICE NEEDLE pointing UP with delicate blue trail below, straight and sharp. Row3 impact: needle shatters into small icy fragments with white flashes. Row4 aftermath: frost crystals and cold vapor dissipate. EXACT regular 8 columns by 4 rows, 32 distinct frames, eight sequential evolving frames per row/phase. Generous transparent margins separating all cells, each effect isolated in its equal square cell. Complete particle evolution, not copies. Crisp luminous detailed painted effect, no characters, scenery, labels, text or grid lines. Wide 2:1 canvas, real transparent alpha."
+    },
+    {
+      "id": "fx-flame_tiger",
+      "sourceFilename": "exec-8f488a49-af84-4d70-936d-444167b910fe.png",
+      "prompt": "Use case: stylized-concept. Production transparent VFX spritesheet for hand-painted 2D chibi fantasy tower defense. FIRE BREATH CONE. Row1 anticipation: small orange ember gathering. Row2 flight: flame breath growing upward from narrow BOTTOM CENTER origin, fan shaped cone expanding toward TOP. Row3 impact: full roaring fan-shaped orange flame cone pointed at bottom, wide top, clearly directional triangular fire burst. Row4 aftermath: flickering burning flames and fading embers around an empty target space. No circle explosion as main effect. EXACT regular 8 columns by 4 rows, 32 distinct frames, eight sequential evolving frames per row/phase. Generous transparent margins separating all cells, each effect isolated in its equal square cell. Complete particle evolution, not copies. Crisp luminous detailed painted effect, no characters, scenery, labels, text or grid lines. Wide 2:1 canvas, real transparent alpha."
+    },
+    {
+      "id": "fx-phoenix",
+      "sourceFilename": "exec-7d816102-976d-4020-a609-f1a9bdd0b4bf.png",
+      "prompt": "Use case: stylized-concept. Production transparent VFX spritesheet for hand-painted 2D chibi fantasy tower defense. PHOENIX FIRE FEATHER RAIN. Row1 anticipation: red gold circular ground sigil with feather motif. Row2 flight: one large curved glowing burning feather falling downward, delicate barb detail and trailing sparks. Row3 impact: feather explodes into a circular fire bloom on ground. Row4 aftermath: looping low circular GROUND FIRE pool with dancing tongues of flame, burnt red ground ring and sparks, transparent center enough to see enemies. EXACT regular 8 columns by 4 rows, 32 distinct frames, eight sequential evolving frames per row/phase. Generous transparent margins separating all cells, each effect isolated in its equal square cell. Complete particle evolution, not copies. Crisp luminous detailed painted effect, no characters, scenery, labels, text or grid lines. Wide 2:1 canvas, real transparent alpha."
+    },
+    {
+      "id": "fx-venom_serpent",
+      "sourceFilename": "exec-7fe6a039-99f5-41ce-a5b7-aa1888ea619d.png",
+      "prompt": "Use case: stylized-concept. Production transparent VFX spritesheet for detailed hand-painted 2D chibi fantasy tower defense. VENOM FANG. Row1: emerald toxic energy gathers. Row2: green venom globule with a narrow trailing vapor tail, upward flight. Row3: toxic splash with jagged fangs and droplets at target. Row4: animated poison bubbles and green vapor around empty target space. EXACT regular 8 columns by 4 rows, 32 distinct frames, eight sequential evolving frames per row/phase. Generous transparent margins separating cells; every effect isolated in equal square cell. Real particle evolution, not copies. Crisp luminous painted effect. No characters, scenery, labels, text or grid lines. Wide 2:1 canvas, real transparent alpha."
+    },
+    {
+      "id": "fx-spirit_deer",
+      "sourceFilename": "exec-5bbddcb8-00d6-4972-9045-3b1b37a3f0bc.png",
+      "prompt": "Use case: stylized-concept. Production transparent VFX spritesheet for detailed hand-painted 2D chibi fantasy tower defense. SPIRIT WOOD ROOT SANCTUARY. Row1: jade circular leaf sigil appears. Row2: green glowing leaves and life-energy motes stream upward. Row3: brown woody roots burst from ground in circular region, emerald leaves and blossoms, roots curl to bind enemy feet. Row4: gently glowing roots and swirling leaf particles fade. EXACT regular 8 columns by 4 rows, 32 distinct frames, eight sequential evolving frames per row/phase. Generous transparent margins separating cells; every effect isolated in equal square cell. Real particle evolution, not copies. Crisp luminous painted effect. No characters, scenery, labels, text or grid lines. Wide 2:1 canvas, real transparent alpha."
+    },
+    {
+      "id": "fx-stone_rhino",
+      "sourceFilename": "exec-31b2d471-4c68-4b20-b67b-3af90f500d22.png",
+      "prompt": "Use case: stylized-concept. Production transparent VFX spritesheet for detailed hand-painted 2D chibi fantasy tower defense. EARTHQUAKE CORRIDOR. Row1: amber earth charge and dust circle. Row2: a NARROW VERTICAL strip of ground cracks racing from bottom to top, rocks emerge along this straight corridor. Row3: heavy rocks and spikes slam upward along a RECTANGULAR vertical corridor, tall strip with consistent width, not laser or circular explosion. Row4: crumbling stones, rubble and dust dissipate along corridor. EXACT regular 8 columns by 4 rows, 32 distinct frames, eight sequential evolving frames per row/phase. Generous transparent margins separating cells; every effect isolated in equal square cell. Real particle evolution, not copies. Crisp luminous painted effect. No characters, scenery, labels, text or grid lines. Wide 2:1 canvas, real transparent alpha."
+    },
+    {
+      "id": "fx-black_tortoise",
+      "sourceFilename": "exec-571e5319-482f-4a50-8127-849550425df9.png",
+      "prompt": "Use case: stylized-concept. Production transparent VFX spritesheet for detailed hand-painted 2D chibi fantasy tower defense. BLACK TORTOISE STONE WARD. Row1: gold jade circular tortoise-shell seal forms. Row2: floating hexagonal engraved stone seal rises with jade light. Row3: circular ring of stone slabs erupts with glowing tortoise-shell symbol. Row4: translucent jade hexagonal shell-shaped shield barrier with glowing gold border pulses. EXACT regular 8 columns by 4 rows, 32 distinct frames, eight sequential evolving frames per row/phase. Generous transparent margins separating cells; every effect isolated in equal square cell. Real particle evolution, not copies. Crisp luminous painted effect. No characters, scenery, labels, text or grid lines. Wide 2:1 canvas, real transparent alpha."
+    },
+    {
+      "id": "statuses",
+      "sourceFilename": "exec-f8b2fa96-d475-4699-add4-275cc6df16ee.png",
+      "prompt": "Use case: stylized-concept. Transparent STATUS OVERLAY animation sprite atlas. EXACT 8 columns × 6 rows, 48 separate equal square cells. Each row is an eight-frame loop evolving over time, each effect on transparent background with empty center for a monster. Row1 FREEZE: faceted pale blue ice prison shell with frost and cracks. Row2 PARALYSIS: gold jagged lightning arcs circling target. Row3 ROOT: curling brown roots and green leaves binding feet. Row4 POISON: green venom bubbles and wisps. Row5 BURN: small orange flames licking around feet. Row6 STUN: orbiting gold stars and rocky dust above head. Clear distinct readable silhouettes, generous transparent gutters. No creatures or characters, no letters or words, no borders, real transparent alpha. Detailed hand-painted 2D fantasy game VFX."
+    },
+    {
+      "id": "skill-icons",
+      "sourceFilename": "exec-5ed39ffb-6334-4ebd-be4c-f67dfe42a586.png",
+      "prompt": "Use case: stylized-concept. Production SKILL ICON atlas for a hand-painted chibi fantasy game. EXACT 5 columns × 2 rows, ten different ornate square icons in uniform cells with transparent gutters. ORDER left to right: top row 1 gold bull horn with chain lightning jumping between four nodes, 2 violet thunder dragon claw calling sky lightning, 3 emerald cobra fangs dripping venom, 4 flowering deer antlers and root circle, 5 silver fox tail with long icy needle. Bottom row 6 turquoise water dragon fin above falling ice pillars, 7 orange tiger mouth breathing fan-shaped fire, 8 red phoenix feather over ground fire, 9 gray rhinoceros foot smashing a rocky corridor, 10 black jade tortoise shell and glowing protective stone seal. Detailed painted fantasy game art, crisp clear central symbols, consistent dark navy inset and thin gold rim, readable at small size. No text, no letters, no grid lines. Real transparent background outside individual icons. Wide 5:2 composition."
+    }
+  ]
+}

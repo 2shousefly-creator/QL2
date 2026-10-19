@@ -1,28 +1,23 @@
-# Thành Trì Cuối Cùng V1.2.0
+# Thành Trì Cuối Cùng 2.0.0
 
-See [RELEASE-1.2.md](RELEASE-1.2.md) for the six-stage campaign, progress migration, input/theme fixes and new assets. [RELEASE-1.1.md](RELEASE-1.1.md) documents the retained formation, shared core/tooltip UI and tactical balance.
+The existing Giải Trí game now uses one endless battlefield, ten elemental spirit beasts and 242 core definitions. PixiJS remains at 8.20.0. See [RELEASE-2.0.md](RELEASE-2.0.md) for the release scope.
 
-Browser-only defense game in Giải Trí. This module has its own combat state, retains the last result under `ql2.thanh-tri.v1.last-result`, and adds sequential campaign completion under `ql2.thanh-tri.campaign.v1`. It does not modify Quân Lộ progression, currency, or unrelated saves.
+## Runtime ownership
 
-## Implemented scope
+- `content.ts` defines the ten new beast owners, elements, base skills and 200 beast upgrades (five groups of four independent cards). `cores.json` preserves the 30 archer IDs. Ten summons and two repeatable wall definitions complete the catalog.
+- `balance.ts` centralizes initial spawn rates, HP growth, EXP, boss cadence and CC limits. HP is snapshotted at spawn; only numeric representability is saturated, with no level/time gameplay cap.
+- `engine.ts` owns one combat clock, fixed steps, continuous spawning, independent boss RNG, damage, per-hit critical rolls, armor/element factors, queued attacks, separate poison layers, refreshable burns, four-tick ground zones, CC history and castle defenses. Casts snapshot core stats. Cooldown starts at activation.
+- `rules.ts` owns HP-first targeting, additive core stats and weighted draft eligibility. Spawn, boss, combat and draft random streams are separate. Up to 19 queued choices freeze combat until all have been handled.
+- `scene.ts` consumes typed hit events and clock state. It draws authored animated beasts/VFX, elemental symbols, statuses and exact area footprints. It does not cause damage. No enemy, projectile, zone or damage tick is discarded for rendering budgets.
+- `ThanhTriScreen.tsx`, `CoreUI.tsx` and `presentation.ts` provide the single-mode lobby, live score/time/boss HUD, core previews, skill details, internal scrolling, loading/retry and loss/replay flow.
+- `endlessStorage.ts` writes only `ql2.thanh-tri.endless.v2`. Score and survival records are independent and awarded only for a real loss. Legacy campaign/result keys and unrelated game saves are untouched. Leaving a run grants no record or power.
 
-- Six sequentially unlocked stages: Cổng Thành Hoàng Hôn, Rừng Gai Độc, Hẻm Núi Tro Tàn, Pháo Đài Băng Giá, Đầm Lầy Oán Linh, Vực Tối Hư Không. Each has a continuous 15-second spawn schedule, all 800 enemies over 20 waves and bosses at 10 and 20. Later stages increase enemy stats and introduce elite waves earlier, with distinct rosters and scenery.
-- Archer with 30-arrow magazine, one regular shot per second and five-second reload; four ally slots filled automatically in order and all ten distinct ally skills. Primary targeting selects the nearest enemy.
-- Kill-only EXP, overflow, queued level choices, levels 1–20, 19 choices, no level-1 draft. Combat, projectiles, status damage, cooldowns, reload and animation use one paused combat clock.
-- 330 upgrade definitions with stable owner/index IDs, ten summons, two repeatable wall cores; weighted groups and equal probability within each eligible group, no duplicate draft cards, status prerequisites, cooldown floor.
-- Shared effect primitives for conditional additive damage, armor penetration, projectiles, areas, lines, cones, chains, outgoing/returning scythes, timed fields, damage over time, crowd control, delayed hits and bounded death effects. Core logic lives in `rules.ts` and `engine.ts`, independently of art.
-- Wave/EXP/HP/ammunition/cooldown HUD, 300 ms actor range hold, skill-cell hold tooltips that keep combat running, acquired cores, searchable core book, automatic placement, visibility pause, resume, exit confirmation, retryable asset load, win/loss and replay.
-- PixiJS private Application/ticker; clock-driven AnimatedSprite frames; pooled sprite views; spatial grid queries; bounded decorative effects and aggregated damage text. No enemy spawn is removed to meet a visual budget.
-- Repository-local generated character, enemy, boss, skill and castle VFX atlases, illustrated skill icons, fixed-size frames, animation JSON and prompt provenance. Ally character sheets are loaded when draft cards appear.
+## Art
 
-## Art format
-
-`public/games/thanh-tri/v1` contains the original environment, portraits and elemental VFX; `v1.1` contains replacement character/enemy atlases, laser/accent VFX and semantic core icons. `v1.2` adds 20 campaign enemy atlases, 24 roster portraits, five backgrounds with the original fortress geometry, and replacement wind VFX. All atlas cells are 128 px with transparent padding. Low-alpha RGB fringes are cleared before packing. The versioned `scripts/pack-thanh-tri-*.cjs` files compile local maps of generated source paths; they are asset production tools and do not run gameplay.
-
-Current authored animation counts: archer 8 idle / 8 attack / 40 reload; each ally 8 idle / 16 action / 8 summon; stage-one enemies 8 walk / 8 attack / 8 reaction / 8 death except skeleton and iron sentinel with 4 death frames. Each of the 20 new campaign monster forms has 4 walk / 4 attack / 4 reaction / 4 death frames. Each skill family has 8 frames per phase across four phases, including newly isolated wind phases. Castle effects have six eight-frame sequences. These are authored pose sequences, not a static sprite animated only by transforms. Counts remain below some of the original document's suggested budgets.
+`public/games/thanh-tri/v2` contains ten new beast atlases (8 idle, 16 cast, 8 summon frames each), ten matching portraits, ten distinct skill icons, ten skill VFX atlases (8 authored frames in each of four phases), and six eight-frame animated status overlays. The existing battlefield, archer including 40 reload frames, six enemy forms, wall effects and accent atlas are reused. The new sheets have transparent padded 192px cells, structured animation timing, foot anchors and skill sockets. `manifest.json` records the asset contract; `art-source-v2.json` records the built-in ImageGen prompts and source filenames without private machine paths. `scripts/pack-thanh-tri-v2.cjs` is an asset production utility, not a gameplay verification script.
 
 ## Delivery boundary
 
-Only `npm.cmd run build:web` is authorized for validation. No tests, browser checks, QA, simulations, benchmarks, lint or standalone typecheck are run. A successful bundle/deployment does not establish runtime correctness, visual smoothness, device performance, balance across all core combinations, or the 6–8 minute target. Generated frames can still vary in proportions and motion continuity. Those claims require a separately authorized runtime/art pass.
+Only `npm.cmd run build:web` is used for validation, followed by the existing Firebase Hosting workflow for the exact pushed SHA. No tests, QA, browser play, responsive checks, simulations, benchmarks, lint, standalone typecheck or verification scripts are run. Build/deployment results do not establish runtime behavior, art continuity, performance or balance. The 6–7 minute target and initial coefficients have not been measured through play or simulation.
 
-The supplied design document is not stored in this repository. Its game content is represented by the implementation and the core catalog; no runtime dependency on the external document exists.
+The supplied implementation plan is not included in the repository. Archived campaign code and release notes describe the old mode and are not part of the new playing flow.
