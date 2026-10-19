@@ -26,22 +26,23 @@ export const FIGHTERS:Record<Owner,Fighter>={
 const names:Record<CoreGroup,string>={damage:'Cường Hóa',cooldown:'Tốc Pháp',critical:'Bạo Kích',width:'Khuếch Vực',count:'Liên Pháp',chain:'Dẫn Điện',duration:'Kịch Độc',healing:'Sinh Cơ',pierce:'Băng Xuyên',angle:'Hỏa Khẩu',burning:'Dư Hỏa',shielding:'Thiết Bích'};
 export const groupsFor=(owner:BeastOwner):readonly CoreGroup[]=>['damage','cooldown','critical',...FIGHTERS[owner].groups];
 export function groupDescription(owner:BeastOwner,group:CoreGroup){switch(group){
- case 'damage':return '+80% sát thương gốc cho mọi component của kỹ năng; cộng dồn, 4 lõi đạt ×4,2.';
- case 'cooldown':return 'Giảm 20% hồi chiêu gốc; cộng dồn, 4 lõi còn 20%. Tính từ lúc kích hoạt.';
- case 'critical':return '+20 điểm % tỷ lệ chí mạng và +25 điểm % sát thương chí mạng. 4 lõi: 80% crit, crit ×2,5; roll riêng mỗi hit/tick.';
- case 'width':return '+70% bề rộng gốc (đường kính vùng hoặc rộng hành lang). 4 lõi đạt ×3,8; không tăng tầm chọn mục tiêu.';
- case 'count':return owner==='water_dragon'?'+1 đợt Băng Châm, tối đa 5; giữ nguyên sát thương mỗi đợt.':'+1 tia/đạn/đợt, tối đa 5. Khi có nhóm này, toàn bộ tia/đợt và DoT/vùng của chúng ×0,70 sát thương, chỉ áp một lần.';
- case 'chain':return '+2 mục tiêu tổng cộng cho mỗi tia sét: 4 → 6 → 8 → 10 → 12. Không giảm sát thương mắt xích.';
- case 'duration':return '+2 giây độc mỗi lớp: 6 → 8 → 10 → 12 → 14s. Giữ nguyên DPS từng lớp.';
- case 'healing':return '+80% lượng hồi gốc 20 HP: +16 HP/cast. 4 lõi hồi 84 HP, chỉ một lần khi có địch trúng.';
- case 'pierce':return '+1 địch xuyên mỗi châm: 2 → 3 → 4 → 5 → 6; mỗi địch nhận đầy đủ sát thương.';
- case 'angle':return '+70% góc nón gốc 30°: 30 → 51 → 72 → 93 → 114°. Không tăng chiều dài.';
- case 'burning':return '+80% DPS burn gốc. Cộng cùng nhóm Cường Hóa: 1 + 0,8 × tổng số lõi hai nhóm.';
- case 'shielding':return '+80% lượng khiên gốc 40 HP: +32 HP/cast. 4 lõi thêm 168 HP; trần khiên vẫn 400.';
+ case 'damage':return '+80% sát thương kỹ năng.';
+ case 'cooldown':return 'Giảm 20% hồi chiêu gốc.';
+ case 'critical':return '+20% tỉ lệ chí mạng. +25% sát thương chí mạng.';
+ case 'width':return '+70% bề rộng kỹ năng.';
+ case 'count':return owner==='water_dragon'?'+1 đợt Băng Châm.':'+1 tia/đạn/đợt. Sát thương mỗi tia/đợt còn 70% (áp dụng một lần).';
+ case 'chain':return 'Sét lan thêm 2 mục tiêu.';
+ case 'duration':return '+2 giây duy trì độc.';
+ case 'healing':return '+16 HP hồi thành mỗi lần dùng trúng địch.';
+ case 'pierce':return 'Mỗi châm xuyên thêm 1 địch.';
+ case 'angle':return '+21° góc phun lửa.';
+ case 'burning':return '+80% sát thương thiêu đốt gốc.';
+ case 'shielding':return '+32 khiên thành mỗi lần dùng trúng địch.';
 }}
-export const CORES:Core[]=[...archerRows.map(row=>({...row,owner:'archer' as const,kind:'upgrade' as const,requires:row.index===21?'slow' as const:undefined})),...BEASTS.flatMap(owner=>groupsFor(owner).flatMap((group,g)=>[1,2,3,4].map(rank=>({id:`beast:${owner}:${group}:${rank}`,owner,index:g*4+rank,group,kind:'upgrade' as const,name:`${names[group]} ${['I','II','III','IV'][rank-1]}`,description:groupDescription(owner,group),situation:'Bốn thẻ cùng độ mạnh; chọn theo bất kỳ thứ tự nào. Mỗi thẻ chỉ chọn một lần.'}))))];
-export const SUMMONS:Core[]=BEASTS.map((owner,index)=>({id:'summon:'+owner,owner,index,kind:'summon',name:'Triệu Hồi '+FIGHTERS[owner].name,description:FIGHTERS[owner].skill+' — '+FIGHTERS[owner].role,situation:'Vào ô trống đầu tiên #1 → #4. Tốn một lượt lựa chọn; bắt đầu với 0 lõi nâng cấp.'}));
-export const WALL_CORES:Core[]=[{id:'wall:guard',owner:'wall',index:1,kind:'wall',name:'Bất Hoại',description:'Thêm 5 lớp chặn. Một lớp chặn toàn bộ sát thương thành trong 0,25s.',situation:'Có thể chọn lặp, lớp cộng dồn; chặn trước khi trừ khiên HP.'},{id:'wall:repair',owner:'wall',index:2,kind:'wall',name:'Tu Bổ',description:'Hồi 400 HP thành, không vượt 2.000 HP.',situation:'Có thể chọn lặp; chỉ xuất hiện khi thiếu ít nhất 400 HP.'}];
+export const CORES:Core[]=[...archerRows.map(row=>({...row,owner:'archer' as const,kind:'upgrade' as const,requires:row.index===21?'slow' as const:undefined})),...BEASTS.flatMap(owner=>groupsFor(owner).flatMap((group,g)=>[1,2,3,4].map(rank=>({id:`beast:${owner}:${group}:${rank}`,owner,index:g*4+rank,group,kind:'upgrade' as const,name:`${names[group]} ${['I','II','III','IV'][rank-1]}`,description:groupDescription(owner,group),situation:''}))))];
+const summonEffects:Record<BeastOwner,string>={thunder_bull:'Sét lan 4 địch, gây 300 sát thương và tê liệt 1 giây.',thunder_dragon:'Sét diện rộng: 180 sát thương và tê liệt 1 giây.',venom_serpent:'40 sát thương. Gây độc 25 sát thương/giây trong 6 giây.',spirit_deer:'3 nhịp ×45 sát thương. Trói 1,5 giây. Hồi thành 20 HP.',frost_fox:'200 sát thương, xuyên 2 địch và đóng băng 1,5 giây.',water_dragon:'Băng diện rộng: 180 sát thương và đóng băng 1,5 giây.',flame_tiger:'Phun lửa 4 nhịp ×45 sát thương. Thiêu đốt 20 sát thương/giây trong 3 giây.',phoenix:'180 sát thương. Để lại vùng lửa 35 sát thương/giây trong 4 giây.',stone_rhino:'Sóng chấn động gây 220 sát thương và choáng 1 giây.',black_tortoise:'120 sát thương diện rộng. Tạo 40 khiên thành khi trúng địch.'};
+export const SUMMONS:Core[]=BEASTS.map((owner,index)=>({id:'summon:'+owner,owner,index,kind:'summon',name:'Triệu Hồi '+FIGHTERS[owner].name,description:summonEffects[owner],situation:''}));
+export const WALL_CORES:Core[]=[{id:'wall:guard',owner:'wall',index:1,kind:'wall',name:'Bất Hoại',description:'+5 lớp chặn. Mỗi lớp miễn sát thương thành trong 0,25 giây.',situation:''},{id:'wall:repair',owner:'wall',index:2,kind:'wall',name:'Tu Bổ',description:'Hồi 400 HP thành (tối đa 2.000 HP).',situation:''}];
 export const ENEMIES=[
  {name:'Bộ Binh Xương',hp:80,armor:0,damage:12,period:1.2,speed:.022},
  {name:'Tiểu Quỷ',hp:60,armor:0,damage:8,period:1,speed:.025},
@@ -53,6 +54,6 @@ export const ENEMIES=[
 export const FIELD={width:450,height:800,left:22,right:382,top:106,wall:545,H:500,W:360};
 export const FORMATION={slots:[75,175,275,375],allyY:568,archerX:225,archerY:716,hpY:740} as const;
 export const slotX=(slot:number)=>FORMATION.slots[slot];
-export const GAME_VERSION='2.0.0';
+export const GAME_VERSION='2.0.1';
 export const coreId=(owner:Owner,n:number)=>owner==='archer'?`archer:${String(n).padStart(2,'0')}`:`beast:${owner}:${groupsFor(owner)[Math.floor((n-1)/4)]}:${(n-1)%4+1}`;
 export const elementLabel=(owner:Owner)=>FIGHTERS[owner].element?ELEMENT_INFO[FIGHTERS[owner].element!].name:'Vô hệ';

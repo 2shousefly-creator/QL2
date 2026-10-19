@@ -11,10 +11,12 @@ import {iconUrl,portraitUrl} from './scene';
 import '../khong_kich/combat-ui.css';
 
 const EFFECTS=['damage','cooldown','multi','pierce','aoe','range','slow','stun','burn','poison','chain','execute','armor','repeat','guard','repair'] as const;
+const GROUP_EFFECT:Record<NonNullable<Core['group']>,typeof EFFECTS[number]>={damage:'damage',cooldown:'cooldown',critical:'damage',width:'aoe',count:'multi',chain:'chain',duration:'poison',healing:'repair',pierce:'pierce',angle:'aoe',burning:'burn',shielding:'guard'};
 // Presentation classification only. Gameplay never reads these words or images.
 export function coreEffect(core:Core):typeof EFFECTS[number]{
  if(core.kind==='wall')return core.index===1?'guard':'repair';
  if(core.kind==='summon')return 'multi';
+ if(core.group)return GROUP_EFFECT[core.group];
  const d=core.description.toLocaleLowerCase('vi');
  const patterns:[typeof EFFECTS[number],RegExp][]=[['cooldown',/hồi chiêu/],['armor',/bỏ qua.*giáp/],['stun',/choáng|đóng băng|ghim chân|khống chế/],['slow',/chậm/],['poison',/độc|nhiễm/],['burn',/thiêu đốt|cháy|lửa/],['pierce',/xuyên|laser|đường kiếm/],['chain',/mắt xích|chuỗi|nảy|truyền|nhánh/],['multi',/thêm.*tên|mảnh|thêm.*thiên thạch|bình phụ|quạt 5/],['execute',/boss|dưới 50|giết|chết|trên 60/],['aoe',/nổ|bán kính|vùng|quạt|xoáy/],['range',/tầm|xa|gần|cận/],['repeat',/lần dùng|liên tiếp|nhịp|lượt|sau nạp|bắt đầu nạp|trong lúc nạp/]];
  return patterns.find(([,pattern])=>pattern.test(d))?.[0]??'damage';
@@ -25,8 +27,8 @@ export function CoreEffectIcon({core,className=''}:{core:Core;className?:string}
  return <img className={className} src={core.kind==='summon'&&core.owner!=='wall'?portraitUrl(core.owner):`/games/thanh-tri/v1.1/core-${coreEffect(core)}.png`} alt=""/>;
 }
 export function CoreOwnerBadge({core}:{core:Core}){return <img className="tt-core-owner" src={coreOwnerIcon(core)} alt="" title={coreOwnerName(core)}/>;}
-export function coreCondition(c:Core){return c.requires?'Điều kiện: có nguồn làm chậm; đóng băng không tính là làm chậm.':'';}
-function card(c:Core,w:World,detail=false):CoreCard{return {id:c.id,name:c.name,description:c.description+`\n\n${corePreview(w,c)}`+(detail?`\n\n${c.situation}${c.requires?'\n'+coreCondition(c):''}`:''),tier:'diamond',system:c.kind==='wall'?'defense':'skill',category:'skill',icon:'',valueLabel:''};}
+export function coreCondition(c:Core){return c.requires?'Cần nguồn làm chậm.':'';}
+function card(c:Core,w:World):CoreCard{return {id:c.id,name:c.name,description:[c.description,corePreview(w,c),coreCondition(c)].filter(Boolean).join('\n'),tier:'diamond',system:c.kind==='wall'?'defense':'skill',category:'skill',icon:'',valueLabel:''};}
 function presentation(c:Core):CorePresentation{return {icon:<CoreEffectIcon core={c} className="combat-core-icon"/>,owner:<CoreOwnerBadge core={c}/>,tag:<span className="tt-core-tag">{coreOwnerName(c)}{c.kind==='summon'?' · TRIỆU HỒI':c.kind==='wall'?' · BẢO VỆ THÀNH':''}</span>};}
 
 /** Same modal, animated card face and detail transaction used by Không Kích. */
@@ -43,6 +45,6 @@ export function CoreDraft({world,choices,level,pending,busy,error,reducedMotion,
    </div>)}
   </div>
   {busy&&<p className="tt-draft-caption" role="status">Đang chuẩn bị trợ thủ…</p>}{error&&<p className="tt-error" role="alert">{error}</p>}
-  <AnimatePresence>{selected&&detail!==null&&<AirCombatCoreDetail key={selected.id} card={card(selected,world,true)} presentation={presentation(selected)} slot={detail} reducedMotion={reducedMotion} busy={busy} bonus={false} canReroll={false} hideReroll onClose={()=>!busy&&setDetail(null)} onSelect={()=>onPick(selected)} onReroll={()=>{}}/>}</AnimatePresence>
+  <AnimatePresence>{selected&&detail!==null&&<AirCombatCoreDetail key={selected.id} card={card(selected,world)} presentation={presentation(selected)} slot={detail} reducedMotion={reducedMotion} busy={busy} bonus={false} canReroll={false} hideReroll onClose={()=>!busy&&setDetail(null)} onSelect={()=>onPick(selected)} onReroll={()=>{}}/>}</AnimatePresence>
  </AppModal>;
 }

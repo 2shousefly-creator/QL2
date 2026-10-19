@@ -230,3 +230,70 @@
 .tt-book-rules{padding:14px;border:1px solid #afdfcf40;border-radius:12px;background:#17312e;margin-bottom:12px;font-size:12px;line-height:1.6}.tt-book-rules p{margin:6px 0}
 .tt-result-team{flex-wrap:wrap}.tt-result-team>div{display:flex;flex-direction:column;align-items:center;gap:3px;width:78px;font-size:10px}.tt-result-team>div img{width:56px;height:56px;object-fit:contain}.tt-result-team>div b{color:#f0d297}
 .tt-wave strong{font-size:23px}.tt-wave strong span{font-size:14px;color:#f4d494}.tt-library header small{font-size:9px}.tt-library .tt-library-list{min-height:0}.tt-core p{white-space:pre-line}
+
+/* 2.0.1: calm daylight surfaces, clear controls and fewer decorative layers. */
+.tt-screen{--tt-ink:#24443c;--tt-gold:#a96123;--tt-mint:#267257;color:var(--tt-ink);background:#eaf5e8;border-color:#bed6c3}
+.tt-screen button{color:#24443c}
+.tt-screen button:focus-visible,.tt-screen input:focus-visible{outline-color:#24755b}
+.tt-lobby-copy{text-shadow:none}
+.tt-lobby-copy p,.tt-how,.tt-facts span,.tt-records span,.tt-last{color:#476559}
+.tt-facts b,.tt-records b{color:#805723}
+.tt-back{background:#f8fff0e8;border-color:#a5c9ad}
+.tt-screen button.tt-primary,.tt-screen button.tt-primary:is(:hover,:active,:focus-visible,:disabled){background:#28775a;background-color:#28775a;color:#fffef4;border-color:#216347;box-shadow:none}
+.tt-screen button.tt-secondary,.tt-screen button.tt-secondary:is(:hover,:active,:focus-visible,:disabled){background:#f8fff1;background-color:#f8fff1;color:#285b46;border-color:#aac9ac}
+.tt-records{background:#fffdf0e8;border-color:#ccd8b8}
+.tt-last{background:#eff6e6;border-left-color:#81a679}
+.tt-lobby-bottom>small{color:#5b7768}
+.tt-battle{background:#dfefd9}
+.tt-top{gap:5px;align-items:stretch}
+.tt-top>button,.tt-top-actions>button,.tt-sound{background:#f8fff0f5;border:1px solid #a9c5a4;color:#245344;border-radius:10px;min-width:36px;min-height:36px;padding:7px;display:grid;place-items:center;box-shadow:0 1px 3px #315b4020}
+.tt-top-actions{display:flex;gap:5px;pointer-events:auto;flex-shrink:0}
+.tt-top-actions>.tt-speed{font-size:12px;font-weight:950;letter-spacing:.02em}
+.tt-top-actions>.tt-speed[aria-pressed=true]{color:#fffef0;background:#297655;border-color:#205c41;box-shadow:inset 0 0 0 1px #f5fcd477}
+.tt-wave{flex:1;min-width:0;background:#f8fff0e8;border-radius:10px;padding:4px 2px;text-shadow:none;color:#24443c}
+.tt-wave small{font-size:clamp(6px,1.75cqw,8px);letter-spacing:.045em;color:#6b6332}
+.tt-wave strong{font-size:clamp(15px,4.8cqw,22px);white-space:nowrap}
+.tt-wave strong span{font-size:clamp(8px,2.5cqw,12px);color:#436e54;letter-spacing:0}
+.tt-exp{background:#f7fff0e8;color:#31533f;border-radius:8px;padding:3px 6px}
+.tt-exp>div{background:#d7e8d0;border-color:#94ba9d}
+.tt-exp i{background:#439974}
+.tt-meta{color:#31543c;background:#f7fff0d6;border-radius:6px;padding:2px 5px}
+.tt-skill{background:#edf7e6;border-color:#91b49a;box-shadow:0 1px 3px #315b4030}
+.tt-skill>b{background:#fff7d6;color:#536039;border-color:#aab88a}
+.tt-skill>span{color:#244b3b;background:#f7fff0f5}
+.tt-empty-skill{background:#e9f3dfb0;border-color:#8cae8e;color:#6d8d69}
+.tt-slot-labels span{color:#2e573e;background:#f8fff0e8;border-color:#a8c49b}
+.tt-wall{color:#284e3c;background:#f7fff0f2;border-color:#96b994}
+.tt-wall>small,.tt-wall>small>span{color:#476b50}
+.tt-hp{background:#d8e7d0;border-color:#8baa87}
+.tt-hp>i{background:#4b9e6c}
+.tt-veil{background:#496c5477;backdrop-filter:blur(3px)}
+.tt-panel{color:#24443c;background:#fcfff2;border-color:#aac7a3;box-shadow:0 12px 36px #31543c33}
+.tt-panel>p{color:#526e59}
+.tt-result-grid{background:#edf5df}
+.tt-result-grid span{color:#597059}.tt-result-grid b,.tt-result-team>div b{color:#8b6329}
+.tt-library{color:#24443c;background:#f1f8e9}
+.tt-library header small{color:#59765e}
+.tt-library header button{background:#dcebcf}
+.tt-library nav button{background:#fafff2;border-color:#b5ccab}
+.tt-library nav button.selected{border-color:#438367;background:#d9efce}
+.tt-library input{color:#24443c;background:#fffef4;border-color:#a9c5a0}
+.tt-core{color:#24443c;background:#fcfff2;border-color:#adc6a2;box-shadow:none}
+.tt-core small{color:#497457}.tt-core p{color:#2e5540}
+.tt-core em{color:#7b6225}.tt-core>img{background:#e8f3da;border-color:#b8ceaa}
+.tt-book-rules{color:#34583e;background:#e5f1da;border-color:#b2cca6}
+.tt-save-warning{color:#765322!important;background:#fff0c8}
+.tt-core-overlay{color:#264b3b}
+.tt-core-overlay .app-overlay__panel.air-upgrade-panel{color:#264b3b;background:#f4fae9;border-color:#b1c6a3;box-shadow:0 8px 35px #35583f33}
+.tt-core-overlay .air-upgrade-card.combat-core-card,.tt-core-overlay .air-core-detail[data-core-tier]{--core-border:#a2c1a0;--core-highlight:#d6e9bd;--core-background:#fcfff1;color:#294c39;background:#fcfff1;border-color:#a2c1a0;box-shadow:none;border-radius:12px}
+.tt-core-overlay .combat-core-name,.tt-core-overlay .air-upgrade-description,.tt-core-overlay .air-core-detail-description{color:#294c39}
+.tt-core-overlay .air-upgrade-description strong,.tt-core-overlay .air-core-detail-description strong,.tt-skill-tooltip p strong{color:#206b50!important}
+.tt-core-overlay .tt-core-tag{color:#628055}.tt-core-overlay .tt-draft-caption{color:#3c654e}.tt-core-overlay .tt-draft-caption>span{color:#617b60}
+.tt-core-overlay .air-core-detail-backdrop{background:#47694d99}.tt-core-overlay .air-core-detail::after{display:none}
+.tt-core-overlay button.air-core-pick{color:#fffef1;background:#28775a;border-color:#216347;border-radius:8px}
+.tt-core-overlay button.air-core-detail-close{color:#315e43;background:#e7f3d9;border:0;border-radius:8px}
+.tt-core-overlay .tt-error{color:#9e3b29}
+.tt-skill-tooltip.air-skill-tooltip{color:#294c39;background:#f6fcedf7;border-color:#a4c29f;box-shadow:0 8px 30px #35583f33}
+.tt-skill-tooltip .tt-tooltip-owner{color:#40694b}.tt-skill-tooltip .tt-tooltip-owner>button{color:#325b42;background:#e7f3d9;border-color:#a6c49e}
+.tt-skill-tooltip .air-tooltip-cooldown{color:#8a6326}.tt-skill-tooltip .air-tooltip-details{color:#3e6149;background:#e8f2de}
+.tt-skill-tooltip .tt-live-note{color:#247454}.tt-skill-tooltip .air-rank-preview{border-color:#b5cba6}

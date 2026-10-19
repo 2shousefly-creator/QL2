@@ -4,7 +4,7 @@ export const ENTERTAINMENT_GAMES: readonly EntertainmentGameMeta[] = [
   {
     id: "thanh_tri",
     title: "Thành Trì Cuối Cùng",
-    subtitle: "Thủ thành vô tận · V2.0",
+    subtitle: "Thủ thành vô tận · V2.0.1",
     description: "Thủ thành vô tận với ngũ hành, 10 linh thú và 242 định nghĩa lõi. Sống lâu hơn, ghi điểm và phá kỷ lục cá nhân.",
     status: "available",
     badge: "Cập nhật",

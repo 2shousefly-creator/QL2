@@ -16,4 +16,24 @@ export function skillSummary(a:Actor){const f=FIGHTERS[a.owner],s=skillStats(a);
  if(a.owner==='black_tortoise')lines.push(`Thêm ${num(s.shield)} HP khiên/cast có địch trúng · trần 400.`);
  return lines.join('\n');
 }
-export function corePreview(w:World,c:Core){if(c.kind==='wall')return c.index===1?`Sau khi chọn: ${w.blocks+5} lớp chặn.`:`Sau khi chọn: ${Math.min(2000,w.hp+400)} / 2.000 HP.`;if(c.kind==='summon')return 'Triệu hồi vào ô trống kế tiếp với 0 lõi nâng cấp.';const a=w.actors.find(a=>a.owner===c.owner);return a?'Sau khi chọn:\n'+skillSummary({...a,cores:[...a.cores,c.index]}):'';}
+export function corePreview(w:World,c:Core){
+ if(c.kind==='wall')return c.index===1?`Lớp chặn: ${w.blocks} → ${w.blocks+5}.`:`HP thành: ${num(w.hp)} → ${num(Math.min(2000,w.hp+400))}.`;
+ if(c.kind==='summon')return `Triệu hồi vào ô #${([0,1,2,3].find(slot=>!w.actors.some(a=>a.slot===slot))??0)+1}.`;
+ const a=w.actors.find(a=>a.owner===c.owner);if(!a||!c.group)return '';
+ const before=skillStats(a),after=skillStats({...a,cores:[...a.cores,c.index]});
+ const change=(label:string,old:number,next:number,unit='')=>`${label}: ${num(old)}${unit} → ${num(next)}${unit}.`;
+ switch(c.group){
+  case 'damage':return change('Sát thương',FIGHTERS[a.owner].damage*before.damage*before.multi,FIGHTERS[a.owner].damage*after.damage*after.multi);
+  case 'cooldown':return change('Hồi chiêu',before.cooldown,after.cooldown,'s');
+  case 'critical':return change('Chí mạng',before.critChance*100,after.critChance*100,'%')+' '+change('Hệ số',before.critMultiplier,after.critMultiplier,'×');
+  case 'width':return change('Bề rộng',before.width,after.width,'×');
+  case 'count':return change('Số tia/đạn/đợt',before.count,after.count);
+  case 'chain':return change('Mục tiêu',before.chain,after.chain);
+  case 'duration':return change('Duy trì độc',before.duration,after.duration,'s');
+  case 'healing':return change('Hồi thành',before.healing,after.healing,' HP');
+  case 'pierce':return change('Số địch xuyên',before.pierce,after.pierce);
+  case 'angle':return change('Góc phun',before.angle*180/Math.PI,after.angle*180/Math.PI,'°');
+  case 'burning':return change('Thiêu đốt',20*before.burn,20*after.burn,'/giây');
+  case 'shielding':return change('Khiên tạo ra',before.shield,after.shield,' HP');
+ }
+}

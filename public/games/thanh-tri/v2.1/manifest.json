@@ -1,0 +1,130 @@
+{
+  "version": "2.0.1",
+  "background": "background.webp",
+  "skills": [
+    {
+      "owner": "archer",
+      "atlas": "fx-archer.json",
+      "phases": [
+        "muzzle",
+        "flight",
+        "impact",
+        "linger"
+      ],
+      "framesPerPhase": 8
+    },
+    {
+      "owner": "thunder_bull",
+      "atlas": "fx-thunder_bull.json",
+      "phases": [
+        "muzzle",
+        "flight",
+        "impact",
+        "linger"
+      ],
+      "framesPerPhase": 8
+    },
+    {
+      "owner": "thunder_dragon",
+      "atlas": "fx-thunder_dragon.json",
+      "phases": [
+        "muzzle",
+        "flight",
+        "impact",
+        "linger"
+      ],
+      "framesPerPhase": 8
+    },
+    {
+      "owner": "venom_serpent",
+      "atlas": "fx-venom_serpent.json",
+      "phases": [
+        "muzzle",
+        "flight",
+        "impact",
+        "linger"
+      ],
+      "framesPerPhase": 8
+    },
+    {
+      "owner": "spirit_deer",
+      "atlas": "fx-spirit_deer.json",
+      "phases": [
+        "muzzle",
+        "flight",
+        "impact",
+        "linger"
+      ],
+      "framesPerPhase": 8
+    },
+    {
+      "owner": "frost_fox",
+      "atlas": "fx-frost_fox.json",
+      "phases": [
+        "muzzle",
+        "flight",
+        "impact",
+        "linger"
+      ],
+      "framesPerPhase": 8
+    },
+    {
+      "owner": "water_dragon",
+      "atlas": "fx-water_dragon.json",
+      "phases": [
+        "muzzle",
+        "flight",
+        "impact",
+        "linger"
+      ],
+      "framesPerPhase": 8
+    },
+    {
+      "owner": "flame_tiger",
+      "atlas": "fx-flame_tiger.json",
+      "phases": [
+        "muzzle",
+        "flight",
+        "impact",
+        "linger"
+      ],
+      "framesPerPhase": 8
+    },
+    {
+      "owner": "phoenix",
+      "atlas": "fx-phoenix.json",
+      "phases": [
+        "muzzle",
+        "flight",
+        "impact",
+        "linger"
+      ],
+      "framesPerPhase": 8
+    },
+    {
+      "owner": "stone_rhino",
+      "atlas": "fx-stone_rhino.json",
+      "phases": [
+        "muzzle",
+        "flight",
+        "impact",
+        "linger"
+      ],
+      "framesPerPhase": 8
+    },
+    {
+      "owner": "black_tortoise",
+      "atlas": "fx-black_tortoise.json",
+      "phases": [
+        "muzzle",
+        "flight",
+        "impact",
+        "linger"
+      ],
+      "framesPerPhase": 8
+    }
+  ],
+  "clock": "combat",
+  "renderScale": 2,
+  "padding": 12
+}

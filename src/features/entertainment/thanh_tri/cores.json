@@ -4,240 +4,239 @@
     "owner": "archer",
     "index": 1,
     "name": "Đầu Tên Cứng",
-    "description": "Sát thương trực tiếp của tên +25%.",
-    "situation": "Sát thương ổn định."
+    "description": "+25% sát thương tên trực tiếp.",
+    "situation": ""
   },
   {
     "id": "archer:02",
     "owner": "archer",
     "index": 2,
     "name": "Song Tiễn",
-    "description": "Mỗi phát tạo thêm một tên phụ gây 25% sát thương, không tốn đạn.",
-    "situation": "Chia sát thương sang mục tiêu cạnh bên; khi chỉ còn một địch, bắn cùng mục tiêu."
+    "description": "Mỗi phát thêm 1 tên phụ gây 25% sát thương, không tốn đạn.",
+    "situation": ""
   },
   {
     "id": "archer:03",
     "owner": "archer",
     "index": 3,
     "name": "Xuyên Phá",
-    "description": "Tên xuyên thêm một địch; lần chạm thứ hai gây 60% sát thương.",
-    "situation": "Quái xếp nối đuôi."
+    "description": "Tên xuyên thêm 1 địch với 60% sát thương.",
+    "situation": ""
   },
   {
     "id": "archer:04",
     "owner": "archer",
     "index": 4,
     "name": "Mũi Tên Nổ",
-    "description": "Mục tiêu trúng tên phát nổ nhỏ, gây 35% sát thương tên cho địch lân cận.",
-    "situation": "Dọn đám đông; mục tiêu chính không nhận phần nổ."
+    "description": "Tên phát nổ, gây 35% sát thương lên địch xung quanh.",
+    "situation": ""
   },
   {
     "id": "archer:05",
     "owner": "archer",
     "index": 5,
     "name": "Dư Chấn",
-    "description": "Sau mỗi 4 phát, thêm một tên gây 100% sát thương vào mục tiêu hiện tại.",
-    "situation": "Dồn sát thương theo nhịp."
+    "description": "Mỗi 4 phát thêm 1 tên gây 100% sát thương.",
+    "situation": ""
   },
   {
     "id": "archer:06",
     "owner": "archer",
     "index": 6,
     "name": "Chốt Hạ",
-    "description": "Tên gây thêm 45% sát thương lên mục tiêu còn dưới 50% HP.",
-    "situation": "Kết liễu quái bị các trợ thủ làm yếu."
+    "description": "+45% sát thương lên địch dưới 50% HP.",
+    "situation": ""
   },
   {
     "id": "archer:07",
     "owner": "archer",
     "index": 7,
     "name": "Phá Trận",
-    "description": "Tên gây thêm 50% sát thương lên mục tiêu còn trên 60% HP.",
-    "situation": "Đội hình mạnh về dọn quái nhưng thiếu mở giao tranh."
+    "description": "+50% sát thương lên địch trên 60% HP.",
+    "situation": ""
   },
   {
     "id": "archer:08",
     "owner": "archer",
     "index": 8,
     "name": "Săn Cự Thú",
-    "description": "Tên gây thêm 50% sát thương lên boss và tinh anh.",
-    "situation": "Boss xuất hiện mỗi 150 giây giao tranh."
+    "description": "+50% sát thương lên boss và tinh anh.",
+    "situation": ""
   },
   {
     "id": "archer:09",
     "owner": "archer",
     "index": 9,
     "name": "Phá Giáp",
-    "description": "Tên bỏ qua 50% giáp; nếu mục tiêu không có giáp, sát thương +15%.",
-    "situation": "Địch bọc giáp, vẫn có giá trị với địch thường."
+    "description": "Bỏ qua 50% giáp. +15% sát thương lên địch không giáp.",
+    "situation": ""
   },
   {
     "id": "archer:10",
     "owner": "archer",
     "index": 10,
     "name": "Trọng Tiễn",
-    "description": "Sát thương tên +20%; mỗi phát thứ 5 đẩy lùi nhẹ mục tiêu.",
-    "situation": "Giảm áp lực trước tường."
+    "description": "+20% sát thương. Mỗi phát thứ 5 đẩy lùi mục tiêu.",
+    "situation": ""
   },
   {
     "id": "archer:11",
     "owner": "archer",
     "index": 11,
     "name": "Hàn Tiễn",
-    "description": "Tên làm chậm 25% trong 1,2 giây; sát thương +10%.",
-    "situation": "Giữ một mục tiêu ở ngoài tầm đánh thành."
+    "description": "+10% sát thương. Làm chậm 25% trong 1,2 giây.",
+    "situation": ""
   },
   {
     "id": "archer:12",
     "owner": "archer",
     "index": 12,
     "name": "Hỏa Tiễn",
-    "description": "Tên gây thêm thiêu đốt tổng 35% sát thương trong 2 giây.",
-    "situation": "Địch nhiều HP; mỗi cung thủ chỉ có một lớp thiêu đốt trên mỗi địch."
+    "description": "Thiêu đốt: thêm 35% sát thương trong 2 giây. Làm mới khi trúng.",
+    "situation": ""
   },
   {
     "id": "archer:13",
     "owner": "archer",
     "index": 13,
     "name": "Độc Tiễn",
-    "description": "Tên gây thêm độc tổng 45% sát thương trong 4 giây.",
-    "situation": "Trận địa kéo dài; làm mới thời gian thay vì cộng vô hạn."
+    "description": "Gây độc: thêm 45% sát thương trong 4 giây. Làm mới khi trúng.",
+    "situation": ""
   },
   {
     "id": "archer:14",
     "owner": "archer",
     "index": 14,
     "name": "Dây Sét",
-    "description": "Mỗi phát thứ 3 truyền 75% sát thương sang một địch cạnh bên.",
-    "situation": "Đám quái phân bố thành nhóm nhỏ."
+    "description": "Mỗi phát thứ 3 truyền 75% sát thương sang 1 địch gần đó.",
+    "situation": ""
   },
   {
     "id": "archer:15",
     "owner": "archer",
     "index": 15,
     "name": "Nảy Tên",
-    "description": "Tên nảy một lần với 50% sát thương sang địch khác.",
-    "situation": "Địch rải ngang."
+    "description": "Tên nảy sang 1 địch khác với 50% sát thương.",
+    "situation": ""
   },
   {
     "id": "archer:16",
     "owner": "archer",
     "index": 16,
     "name": "Đạn Vỡ",
-    "description": "Khi mục tiêu của tên chết, giải phóng hai mảnh tên, mỗi mảnh 30% sát thương.",
-    "situation": "Đám quái yếu; một địch có thể nhận tối đa một mảnh."
+    "description": "Hạ địch bằng tên tạo 2 mảnh, mỗi mảnh gây 30% sát thương.",
+    "situation": ""
   },
   {
     "id": "archer:17",
     "owner": "archer",
     "index": 17,
     "name": "Bắn Bồi",
-    "description": "Nếu tên giết mục tiêu, đòn kế tiếp gây thêm 50% sát thương.",
-    "situation": "Dọn từng địch; phần thưởng không tự kích hoạt lại chính nó."
+    "description": "Hạ địch bằng tên: đòn kế tiếp +50% sát thương.",
+    "situation": ""
   },
   {
     "id": "archer:18",
     "owner": "archer",
     "index": 18,
     "name": "Truy Kích",
-    "description": "Bắn trúng cùng một địch liên tiếp cộng 8% sát thương, tối đa 40%; đổi địch thì đặt lại.",
-    "situation": "Boss hoặc tinh anh sống lâu."
+    "description": "Bắn cùng mục tiêu: mỗi phát +8% sát thương, tối đa 40%. Đổi địch sẽ mất cộng dồn.",
+    "situation": ""
   },
   {
     "id": "archer:19",
     "owner": "archer",
     "index": 19,
     "name": "Mắt Ưng",
-    "description": "Tên vào địch ở nửa xa tầm bắn gây thêm 40% sát thương.",
-    "situation": "Diệt quái từ sớm."
+    "description": "+40% sát thương lên địch ở nửa xa tầm bắn.",
+    "situation": ""
   },
   {
     "id": "archer:20",
     "owner": "archer",
     "index": 20,
     "name": "Cận Thành",
-    "description": "Tên vào địch trong vùng sát thành gây thêm 40% sát thương.",
-    "situation": "Cứu nguy khi địch áp sát."
+    "description": "+40% sát thương lên địch sát thành.",
+    "situation": ""
   },
   {
     "id": "archer:21",
     "owner": "archer",
     "index": 21,
     "name": "Đầu Băng Vỡ",
-    "description": "Tên vào địch đang bị làm chậm gây thêm 35% sát thương.",
-    "situation": "Chỉ vào pool khi đội hình đã có nguồn làm chậm."
+    "description": "+35% sát thương lên địch đang bị làm chậm.",
+    "situation": ""
   },
   {
     "id": "archer:22",
     "owner": "archer",
     "index": 22,
     "name": "Điểm Yếu",
-    "description": "Mỗi phát thứ 5 gây thêm 125% sát thương.",
-    "situation": "Chu kỳ sát thương dễ quan sát."
+    "description": "Mỗi phát thứ 5 +125% sát thương.",
+    "situation": ""
   },
   {
     "id": "archer:23",
     "owner": "archer",
     "index": 23,
     "name": "Mở Màn",
-    "description": "Sáu phát đầu của mỗi băng tên gây thêm 90% sát thương.",
-    "situation": "Bùng nổ ngay sau nạp."
+    "description": "6 phát đầu mỗi băng tên +90% sát thương.",
+    "situation": ""
   },
   {
     "id": "archer:24",
     "owner": "archer",
     "index": 24,
     "name": "Tên Cuối",
-    "description": "Sáu phát cuối của mỗi băng tên gây thêm 90% sát thương.",
-    "situation": "Dồn lực trước giai đoạn nghỉ."
+    "description": "6 phát cuối mỗi băng tên +90% sát thương.",
+    "situation": ""
   },
   {
     "id": "archer:25",
     "owner": "archer",
     "index": 25,
     "name": "Dư Âm Nạp",
-    "description": "Khi bắt đầu nạp, bắn một loạt 5 tên bóng, mỗi tên 85% sát thương, không tốn đạn.",
-    "situation": "Bù khoảng trống 5 giây; phân phối theo quy tắc chọn mục tiêu."
+    "description": "Bắt đầu nạp: bắn 5 tên phụ, mỗi tên gây 85% sát thương.",
+    "situation": ""
   },
   {
     "id": "archer:26",
     "owner": "archer",
     "index": 26,
     "name": "Thủ Thành Khi Nạp",
-    "description": "Trong lúc nạp, mỗi giây bắn một tên bóng gây 85% sát thương.",
-    "situation": "Bù sát thương đều trong 5 giây; không thay đổi hoạt cảnh nạp."
+    "description": "Trong lúc nạp: mỗi giây bắn 1 tên phụ gây 85% sát thương.",
+    "situation": ""
   },
   {
     "id": "archer:27",
     "owner": "archer",
     "index": 27,
     "name": "Ngắm Chuẩn",
-    "description": "Ba phát đầu sau nạp luôn gây thêm 120% sát thương.",
-    "situation": "Đánh mạnh sau khi chờ nạp."
+    "description": "3 phát đầu sau nạp +120% sát thương.",
+    "situation": ""
   },
   {
     "id": "archer:28",
     "owner": "archer",
     "index": 28,
     "name": "Dấu Ấn Cung Thủ",
-    "description": "Tên đặt dấu ấn 2 giây; sát thương tên của chính cung thủ lên địch đó +30%.",
-    "situation": "Tập trung vào địch nhiều HP."
+    "description": "Đánh dấu 2 giây. Tên bắn lên địch có dấu +30% sát thương.",
+    "situation": ""
   },
   {
     "id": "archer:29",
     "owner": "archer",
     "index": 29,
     "name": "Tán Xạ",
-    "description": "Mỗi phát thứ 5 tạo quạt 5 tên phụ, mỗi tên 25% sát thương.",
-    "situation": "Phủ chiều ngang; một địch có thể nhận nhiều nhất hai tên phụ."
+    "description": "Mỗi phát thứ 5 thêm 5 tên phụ, mỗi tên gây 25% sát thương (tối đa 2 tên/địch).",
+    "situation": ""
   },
   {
     "id": "archer:30",
     "owner": "archer",
     "index": 30,
     "name": "Tinh Thần Tường Thành",
-    "description": "Tên gây thêm 20% sát thương khi thành trên 50% HP, thêm 40% khi thành còn không quá 50%.",
-    "situation": "Đội hình bảo vệ tốt hoặc thế trận khẩn cấp."
+    "description": "+20% sát thương khi thành trên 50% HP; +40% khi thành còn tối đa 50% HP.",
+    "situation": ""
   }
 ]
-

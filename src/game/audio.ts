@@ -6,17 +6,17 @@ class SoundManager {
 
   private metalVoices=new Set<OscillatorNode>();
   public stopMetal(){for(const voice of this.metalVoices){try{voice.stop();}catch{}}this.metalVoices.clear();}
-  public playMetal(kind:'guard'|'slash'|'recall'|'heavy'|'summon'|'volley'|'mark'|'reunion'){
+  public playMetal(kind:'guard'|'slash'|'recall'|'heavy'|'summon'|'volley'|'mark'|'reunion',rate=1){
     if(!this.enabled)return;this.initCtx();const ctx=this.ctx;if(!ctx||this.metalVoices.size>=6)return;
-    const now=ctx.currentTime,duration=kind==='summon'?.22:kind==='volley'?.13:kind==='reunion'?.18:kind==='heavy'?.12:.085,base=kind==='guard'?1250:kind==='slash'?2100:kind==='recall'?1650:kind==='summon'?620:kind==='volley'?1850:kind==='mark'?2900:kind==='reunion'?1400:520;
-    for(const partial of [1,2.76]){const voice=ctx.createOscillator(),gain=ctx.createGain();voice.type='sine';voice.frequency.setValueAtTime(base*partial,now);voice.frequency.exponentialRampToValueAtTime(base*partial*.65,now+duration);gain.gain.setValueAtTime(.001,now);gain.gain.linearRampToValueAtTime(.035/partial,now+.003);if(kind==='volley')for(let pulse=1;pulse<5;pulse++){gain.gain.setValueAtTime(.009/partial,now+pulse*.018);gain.gain.linearRampToValueAtTime(.026/partial,now+pulse*.018+.003);}gain.gain.exponentialRampToValueAtTime(.001,now+duration);voice.connect(gain);gain.connect(ctx.destination);this.metalVoices.add(voice);voice.onended=()=>{this.metalVoices.delete(voice);voice.disconnect();gain.disconnect();};voice.start();voice.stop(now+duration);}
+    const speed=Math.max(1,Math.min(2,rate)),now=ctx.currentTime,duration=(kind==='summon'?.22:kind==='volley'?.13:kind==='reunion'?.18:kind==='heavy'?.12:.085)/speed,base=kind==='guard'?1250:kind==='slash'?2100:kind==='recall'?1650:kind==='summon'?620:kind==='volley'?1850:kind==='mark'?2900:kind==='reunion'?1400:520;
+    for(const partial of [1,2.76]){const voice=ctx.createOscillator(),gain=ctx.createGain();voice.type='sine';voice.frequency.setValueAtTime(base*partial,now);voice.frequency.exponentialRampToValueAtTime(base*partial*.65,now+duration);gain.gain.setValueAtTime(.001,now);gain.gain.linearRampToValueAtTime(.035/partial,now+.003/speed);if(kind==='volley')for(let pulse=1;pulse<5;pulse++){gain.gain.setValueAtTime(.009/partial,now+pulse*.018/speed);gain.gain.linearRampToValueAtTime(.026/partial,now+(pulse*.018+.003)/speed);}gain.gain.exponentialRampToValueAtTime(.001,now+duration);voice.connect(gain);gain.connect(ctx.destination);this.metalVoices.add(voice);voice.onended=()=>{this.metalVoices.delete(voice);voice.disconnect();gain.disconnect();};voice.start();voice.stop(now+duration);}
   }
   public stopWater() {
     for(const voice of this.waterVoices){try{voice.stop();}catch{}}
     this.waterVoices.clear();
   }
 
-  public playWater(kind:'shot'|'impact'|'slash'|'pull'|'burst'|'body'|'heal',phase=0) {
+  public playWater(kind:'shot'|'impact'|'slash'|'pull'|'burst'|'body'|'heal',phase=0,rate=1) {
     if(!this.enabled)return;
     this.initCtx();const ctx=this.ctx;if(!ctx||this.waterVoices.size>=8)return;
     try {
@@ -24,11 +24,11 @@ class SoundManager {
         // Audio-only deterministic noise; never consumes combat randomness.
         let seed=0x21a7;for(let i=0;i<data.length;i++){seed=(seed*1664525+1013904223)>>>0;data[i]=(seed/4294967296*2-1)*.7;}}
       const voice=ctx.createBufferSource(),filter=ctx.createBiquadFilter(),gain=ctx.createGain();voice.buffer=this.waterNoise;
-      const now=ctx.currentTime,duration=kind==='shot'?.055:kind==='impact'?.075:.12;
+      const speed=Math.max(1,Math.min(2,rate)),now=ctx.currentTime,duration=(kind==='shot'?.055:kind==='impact'?.075:.12)/speed;voice.playbackRate.value=speed;
       const frequency=kind==='body'?170:kind==='pull'?250+phase*1300:kind==='heal'?1250:kind==='burst'?450:kind==='slash'?2200:1800;
       filter.type='bandpass';filter.Q.value=kind==='body'?2.5:.65;filter.frequency.setValueAtTime(frequency,now);
       filter.frequency.exponentialRampToValueAtTime(kind==='pull'?frequency*1.12:Math.max(90,frequency*.35),now+duration);
-      gain.gain.setValueAtTime(.001,now);gain.gain.linearRampToValueAtTime(kind==='body'?.025:kind==='pull'?.04:kind==='burst'?.12:.07,now+.008);gain.gain.exponentialRampToValueAtTime(.001,now+duration);
+      gain.gain.setValueAtTime(.001,now);gain.gain.linearRampToValueAtTime(kind==='body'?.025:kind==='pull'?.04:kind==='burst'?.12:.07,now+.008/speed);gain.gain.exponentialRampToValueAtTime(.001,now+duration);
       voice.connect(filter);filter.connect(gain);gain.connect(ctx.destination);this.waterVoices.add(voice);
       voice.onended=()=>{this.waterVoices.delete(voice);voice.disconnect();filter.disconnect();gain.disconnect();};voice.start();voice.stop(now+duration);
     }catch{}

@@ -44,7 +44,8 @@ export function choose(w:World,id:string){if(w.phase!=='draft'||w.assetLoading)r
 export const selectedCores=(_w:World,a:Actor)=>a.cores.map(n=>CORES.find(c=>c.id===coreId(a.owner,n))!).filter(Boolean);
 export function pointOnLine(p:Point,a:Point,b:Point,halfWidth:number){const dx=b.x-a.x,dy=b.y-a.y,l=dx*dx+dy*dy,t=l?((p.x-a.x)*dx+(p.y-a.y)*dy)/l:0;return t>=0&&t<=1&&Math.hypot(p.x-a.x-dx*t,p.y-a.y-dy*t)<=halfWidth;}
 export function inCone(p:Point,origin:Point,end:Point,r:number,angle:number){if(dist(p,origin)>r)return false;const d=Math.atan2(p.y-origin.y,p.x-origin.x)-Math.atan2(end.y-origin.y,end.x-origin.x);return Math.abs(Math.atan2(Math.sin(d),Math.cos(d)))<=angle/2;}
-export const targetOrder=(p:Point)=>(a:Enemy,b:Enemy)=>a.hp-b.hp||dist(a,p)-dist(b,p)||a.id-b.id;
+/** Every eligible boss precedes normal enemies; distance resolves each group. */
+export const targetOrder=(p:Point)=>(a:Enemy,b:Enemy)=>Number(b.kind===5)-Number(a.kind===5)||dist(a,p)-dist(b,p)||a.id-b.id;
 export class SpatialGrid {
  cells=new Map<string,Enemy[]>();size=80;
  rebuild(enemies:Enemy[]){this.cells.clear();for(const e of enemies){if(!alive(e))continue;const key=Math.floor(e.x/this.size)+','+Math.floor(e.y/this.size),cell=this.cells.get(key);if(cell)cell.push(e);else this.cells.set(key,[e]);}}

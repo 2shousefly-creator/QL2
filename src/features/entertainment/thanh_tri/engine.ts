@@ -3,7 +3,7 @@ import {ELEMENTS,ENEMIES,FIELD,FIGHTERS,type Owner,type Element,type Status} fro
 import {actor,alive,cooldown,dist,draft,elementalMultiplier,has,ignoreArmor,inCone,modifier,pointOnLine,random,range,skillStats,SpatialGrid,targetOrder} from './rules';
 import type {Actor,Attack,Cast,Enemy,Point,World,Effect} from './types';
 
-export function createWorld():World {const seed=(Date.now()^0x713ac)>>>0||1;return {time:0,phase:'playing',assetLoading:true,nextSpawnAt:0,nextBossAt:150,nextBossElement:null,spawnIndex:0,lanes:[],rng:seed,spawnRng:(seed^0x9e3779b9)>>>0||2,bossRng:(seed^0x85ebca6b)>>>0||3,draftRng:(seed^0xc2b2ae35)>>>0||4,id:0,actors:[actor('archer')],enemies:[],attacks:[],zones:[],effects:[],hp:2000,shieldHP:0,blocks:0,guardEnd:0,level:1,xp:0,totalXp:0,pending:0,choices:[],selected:[],kills:0,normalKills:0,bossKills:0,score:0,damage:0,wallHit:-10,rangeSlot:null,revision:0,sounds:[]};}
+export function createWorld():World {const seed=(Date.now()^0x713ac)>>>0||1;return {time:0,speed:1,phase:'playing',assetLoading:true,nextSpawnAt:0,nextBossAt:150,nextBossElement:null,spawnIndex:0,lanes:[],rng:seed,spawnRng:(seed^0x9e3779b9)>>>0||2,bossRng:(seed^0x85ebca6b)>>>0||3,draftRng:(seed^0xc2b2ae35)>>>0||4,id:0,actors:[actor('archer')],enemies:[],attacks:[],zones:[],effects:[],hp:2000,shieldHP:0,blocks:0,guardEnd:0,level:1,xp:0,totalXp:0,pending:0,choices:[],selected:[],kills:0,normalKills:0,bossKills:0,score:0,damage:0,wallHit:-10,rangeSlot:null,revision:0,sounds:[]};}
 const EPS=1e-7;
 const copy=(p:Point):Point=>({x:p.x,y:p.y});
 const origin=(a:Actor):Point=>({x:a.x,y:a.y-28});
@@ -14,7 +14,14 @@ const endpoint=(start:Point,aim:Point,length:number)=>{const d=dist(start,aim)||
 export class FortressEngine {
  readonly grid=new SpatialGrid();private accumulator=0;
  constructor(readonly w:World){}
- update(dt:number){if(this.w.phase!=='playing'||this.w.assetLoading){this.accumulator=0;return;}this.accumulator+=Math.max(0,Math.min(.1,dt));while(this.accumulator>=1/60&&this.w.phase==='playing'){this.step(1/60);this.accumulator-=1/60;}}
+ update(dt:number){
+  if(this.w.phase!=='playing'||this.w.assetLoading){this.accumulator=0;return;}
+  // Scale incoming real time, never the fixed combat step: collisions, proc order,
+  // periodic damage and animation deadlines share exactly the same game clock.
+  this.accumulator+=Math.max(0,Math.min(.1,dt))*this.w.speed;
+  while(this.accumulator>=1/60&&this.w.phase==='playing'){this.step(1/60);this.accumulator-=1/60;}
+  if(this.w.phase!=='playing')this.accumulator=0;
+ }
  private fx(kind:Effect['kind'],p:Point,size=60,duration=.55,extra:Partial<Effect>={}){const w=this.w;w.effects.push({id:++w.id,kind,...copy(p),size,duration,rotation:0,born:w.time,...extra});}
  private skill(c:Cast,p:Point,size:number,phase:Effect['phase']='impact',duration=.4,extra:Partial<Effect>={}){this.fx('skill',p,size,duration,{owner:c.owner,phase,...extra});}
  private spawnEnemy(kind:number,at:number,element:Element){const w=this.w,data=ENEMIES[kind];if(w.spawnIndex%10===0||!w.lanes.length){w.lanes=Array.from({length:10},(_,i)=>i);for(let i=9;i>0;i--){const j=Math.floor(random(w,'spawnRng')*(i+1));[w.lanes[i],w.lanes[j]]=[w.lanes[j],w.lanes[i]];}}
@@ -59,7 +66,7 @@ export class FortressEngine {
  private attack(c:Cast,end:Point,power:number,delay:number,extra:Partial<Attack>={}):Attack {const w=this.w;const p:Attack={id:++w.id,cast:c,start:copy(c.origin),end:copy(end),born:w.time+delay,at:w.time+delay,mode:'point',power,radius:FIELD.W*.1*c.stats.width,width:FIELD.W*.18*c.stats.width,angle:c.stats.angle,index:0,secondary:false,tracking:false,hit:new Set(),pierce:c.stats.pierce,previous:0,...extra};w.attacks.push(p);return p;}
  private projectile(c:Cast,t:Enemy,power:number,delay=0,secondary=false,extra:Partial<Attack>={}){return this.attack(c,t,power,delay,{target:t.id,tracking:true,secondary,at:this.w.time+delay+.22,...extra});}
  private cast(a:Actor,t:Enemy){const w=this.w,c=this.makeCast(a,t),s=c.stats,f=FIGHTERS[a.owner],lead=f.hitAt,h=(n:number)=>has(c,n);a.castAt=w.time;a.actionEnd=w.time+f.action;a.ready=w.time+cooldown(a);w.sounds.push({owner:a.owner,impact:false});this.skill(c,c.origin,65,'muzzle',lead);
-  const targets=this.grid.near(c.origin,c.range).sort(targetOrder(c.origin));const other=(i:number)=>targets[i%targets.length]??t;
+  const targets=this.grid.near(c.origin,c.range).sort(targetOrder(c.origin)),bosses=targets.filter(e=>e.kind===5),aims=bosses.length?bosses:targets;const other=(i:number)=>aims[i%aims.length]??t;
   const area=(index:number,delay:number)=>this.attack(c,c.aim,f.damage,delay,{mode:'circle',index,born:w.time+Math.max(0,delay-.18),start:{x:c.aim.x,y:c.aim.y-125}});
   switch(a.owner){
    case 'archer':{
@@ -80,7 +87,7 @@ export class FortressEngine {
  private resolve(p:Attack){const w=this.w,c=p.cast;let target=p.target===undefined?undefined:w.enemies.find(e=>e.id===p.target&&alive(e));
   if((p.tracking||p.mode==='chain')&&!target){target=this.grid.target(c.origin,c.range);if(target){p.target=target.id;p.end=copy(target);}}
   if(p.tracking&&target)p.end=copy(target);
-  if(p.mode==='chain'){const hit=new Set<number>();let previous=c.origin,current=target;for(let i=0;i<c.stats.chain&&current;i++){const point=copy(current);hit.add(current.id);this.skill(c,previous,18,'flight',.28,{end:point});this.skill(c,point,38,'impact',.3);this.hit(current,p);previous=point;current=this.grid.near(point,.2*FIELD.H).filter(e=>!hit.has(e.id)).sort((a,b)=>dist(a,point)-dist(b,point)||a.id-b.id)[0];}return;}
+  if(p.mode==='chain'){const hit=new Set<number>();let previous=c.origin,current=target;for(let i=0;i<c.stats.chain&&current;i++){const point=copy(current);hit.add(current.id);this.skill(c,previous,18,'flight',.28,{end:point});this.skill(c,point,38,'impact',.3);this.hit(current,p);previous=point;current=this.grid.near(point,.2*FIELD.H).filter(e=>!hit.has(e.id)).sort(targetOrder(point))[0];}return;}
   let victims:Enemy[]=[];
   if(p.mode==='point'){if(target)victims=[target];}
   else if(p.mode==='circle')victims=this.grid.near(p.end,p.radius);
@@ -119,8 +126,8 @@ export class FortressEngine {
   if(o==='stone_rhino'&&!c.stunned.has(e.id)){c.stunned.add(e.id);this.hard(e,1,'stun');}
   if(o==='black_tortoise'&&!c.shielded&&w.hp>0){c.shielded=true;w.shieldHP=Math.min(BALANCE.shieldCap,w.shieldHP+c.stats.shield);this.fx('shield',{x:220,y:FIELD.wall},180,.8);this.skill(c,e,28,'flight',.55,{end:{x:220,y:FIELD.wall}});}
  }
- private archerExtras(e:Enemy,c:Cast,p:Attack){const h=(n:number)=>has(c,n);const bounce=(power:number)=>{const t=this.grid.near(e,150).filter(n=>n.id!==e.id).sort((a,b)=>dist(a,e)-dist(b,e)||a.id-b.id)[0];if(t)this.projectile(c,t,power,0,true,{start:copy(e)});};
-  if(h(3)){const end=endpoint(p.start,e,dist(p.start,e)+150),t=this.grid.near(e,150).filter(n=>n.id!==e.id&&pointOnLine(n,e,end,12)).sort((a,b)=>dist(a,e)-dist(b,e)||a.id-b.id)[0];if(t)this.projectile(c,t,60,0,true,{start:copy(e),tracking:false,tag:'archer-pierce'});}
+ private archerExtras(e:Enemy,c:Cast,p:Attack){const h=(n:number)=>has(c,n);const bounce=(power:number)=>{const t=this.grid.near(e,150).filter(n=>n.id!==e.id).sort(targetOrder(e))[0];if(t)this.projectile(c,t,power,0,true,{start:copy(e)});};
+  if(h(3)){const end=endpoint(p.start,e,dist(p.start,e)+150),t=this.grid.near(e,150).filter(n=>n.id!==e.id&&pointOnLine(n,e,end,12)).sort(targetOrder(e))[0];if(t)this.projectile(c,t,60,0,true,{start:copy(e),tracking:false,tag:'archer-pierce'});}
   if(h(4))this.attack(c,e,35,0,{mode:'circle',radius:45,secondary:true,hit:new Set([e.id])});if(h(14)&&c.use%3===0)bounce(75);if(h(15))bounce(50);
  }
  private damage(e:Enemy,c:Cast,power:number,secondary:boolean,component:'direct'|'dot'|'burn'){if(!alive(e)||power<=0)return;const w=this.w,crit=c.stats.critChance>0&&random(w)<c.stats.critChance,element=elementalMultiplier(c.element,e.element);
@@ -131,7 +138,7 @@ export class FortressEngine {
   const xp=boss?BALANCE.bossXP:BALANCE.normalXP;if(w.level<20){w.xp+=xp;w.totalXp+=xp;}
   this.fx('death',e,boss?110:45,.6);
   if(c.owner==='archer'&&component==='direct'&&!secondary){const a=w.actors.find(a=>a.owner==='archer');if(a&&has(c,17)&&c.bonus===0&&!c.killed)a.nextBonus=.5;
-   if(has(c,16)&&c.killProcs<1){c.killProcs++;const targets=this.grid.near(e,150).sort((a,b)=>dist(a,e)-dist(b,e)||a.id-b.id).slice(0,2);for(const t of targets)this.projectile(c,t,30,0,true,{start:copy(e)});}}
+   if(has(c,16)&&c.killProcs<1){c.killProcs++;const targets=this.grid.near(e,150).sort(targetOrder(e)).slice(0,2);for(const t of targets)this.projectile(c,t,30,0,true,{start:copy(e)});}}
   c.killed=true;
  }
 }
