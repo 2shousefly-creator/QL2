@@ -248,6 +248,54 @@ export type FarmInventory = {
   eggs: Record<EggTypeId, number>;
 };
 
+export type FarmUpgradeId = "well" | "trough" | "warehouse" | "boots";
+
+export type FarmUpgradesState = Record<FarmUpgradeId, number>;
+
+export type FarmLogisticsOrderKind =
+  | "harvest"
+  | "care"
+  | "livestock";
+
+export type FarmLogisticsOrder = {
+  id: string;
+  kind: FarmLogisticsOrderKind;
+  title: string;
+  description: string;
+  target: number;
+  progress: number;
+  rewardGold: number;
+  rewardXp: number;
+  bonusSupply?: {
+    category: "fertilizer" | "feed";
+    id: FertilizerTypeId | FeedTypeId;
+    count: number;
+  };
+  claimed: boolean;
+};
+
+export type FarmLogisticsState = {
+  dateKey: string;
+  rerollsUsed: number;
+  bonusClaimed: boolean;
+  orders: FarmLogisticsOrder[];
+};
+
+export type FarmAlmanacEntry = {
+  count: number;
+  perfectCount: number;
+  goldEarned: number;
+};
+
+export type FarmAlmanacState = {
+  crops: Partial<Record<CropId, FarmAlmanacEntry>>;
+  animals: Partial<Record<AnimalTypeId, FarmAlmanacEntry>>;
+  totalWaters: number;
+  totalPestsTreated: number;
+  totalFertilizersApplied: number;
+  totalOrdersClaimed: number;
+};
+
 export type FarmSaveState = {
   worker?: import("./farmWorkerTypes").FarmWorkerState;
   goldRemainder?: number;
@@ -270,6 +318,9 @@ export type FarmSaveState = {
   lastSettledAt: number;
   weatherSeed?: number; // Deterministic seed for weather generation
   eggQualityInventory?: EggQualityInventory;
+  upgrades?: FarmUpgradesState;
+  logisticsOrders?: FarmLogisticsState;
+  almanac?: FarmAlmanacState;
 };
 
 export type PlotUnlockDefinition = {

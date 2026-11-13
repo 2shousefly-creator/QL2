@@ -1,4 +1,11 @@
 import { createCropEconomy, normalizeCropReward, creditCropGold } from "./farmEconomy";
+import {
+  getSoilMoistureLossMultiplier,
+  getTroughDurationMultiplier,
+  getWarehouseGoldMultiplier,
+  getWarehouseXpMultiplier,
+  getWellWaterBonus,
+} from "./farmUpgrades";
 import { RANK_STEPS } from "../../game/rankBuilder";
 import { RANK_FAMILIES } from "../../game/rankFamilies";
 import { BadgeDefinition, RankStep } from "../../game/types";
@@ -462,7 +469,8 @@ function ensureAnimalEggWork(
 
   if (!Number.isFinite(animal.eggWorkRemainingMs)) {
     const livingCount = getLivingAnimalCount(farm.penAnimals);
-    const troughDurationMs = getNormalTroughDurationMs(livingCount);
+    const troughDurationMs =
+      getNormalTroughDurationMs(livingCount) * getTroughDurationMultiplier(farm);
     const feedValue = Math.max(0, Math.min(100, farm.penFeedBuffValue || 0));
     const feedUpdatedAt = Number.isFinite(farm.penFeedBuffUpdatedAt)
       ? Math.min(farm.penFeedBuffUpdatedAt, upperBoundAt)
@@ -716,7 +724,7 @@ function runPenTimeline(
       (animal) => !isAnimalDead(animal) && animal.addedAt <= cursor
     );
     const troughDurationMs = feedClockActive && feedValue > 0
-      ? getNormalTroughDurationMs(living.length)
+      ? getNormalTroughDurationMs(living.length) * getTroughDurationMultiplier(farm)
       : 0;
     const feedEmptyAt = feedClockActive && feedValue > 0 && troughDurationMs > 0
       ? cursor + (feedValue / 100) * troughDurationMs
@@ -1165,7 +1173,8 @@ type PlotTimelineTarget =
 function advancePlotTimeline(
   sourcePlot: FarmPlotState,
   target: PlotTimelineTarget,
-  weatherSeed: number
+  weatherSeed: number,
+  moistureLossScale: number = 1
 ): FarmPlotState {
   if (sourcePlot.status === "locked") return sourcePlot;
 
@@ -1232,11 +1241,15 @@ function advancePlotTimeline(
     }
 
     const slot = getCanonicalWeatherSlot(cursor, weatherSeed);
-    const moistureRatePerHour = getSoilMoistureRatePerHour(
+    const rawMoistureRatePerHour = getSoilMoistureRatePerHour(
       slot.season,
       slot.phase,
       slot.weather
     );
+    const moistureRatePerHour =
+      rawMoistureRatePerHour < 0
+        ? rawMoistureRatePerHour * moistureLossScale
+        : rawMoistureRatePerHour;
     const cropPlot = plot.status === "growing" || plot.status === "ready"
       ? plot
       : null;
@@ -1502,13 +1515,15 @@ export function settlePlotState(
   sourcePlot: FarmPlotState,
   _plotIndex: number,
   now: number,
-  weatherSeed: number = DEFAULT_FARM_WEATHER_SEED
+  weatherSeed: number = DEFAULT_FARM_WEATHER_SEED,
+  moistureLossScale: number = 1
 ): FarmPlotState {
   const transactionNow = Number.isFinite(now) ? now : Date.now();
   return advancePlotTimeline(
     clampFuturePlotTimestamps(sourcePlot, transactionNow),
     { kind: "timestamp", endAt: transactionNow },
-    weatherSeed
+    weatherSeed,
+    moistureLossScale
   );
 }
 
@@ -1524,14 +1539,16 @@ export function getCropGrowthProgress(plot: FarmPlotState): number {
 export function getCurrentCropRemainingDurationMs(
   plot: FarmPlotState,
   now: number,
-  weatherSeed: number = DEFAULT_FARM_WEATHER_SEED
+  weatherSeed: number = DEFAULT_FARM_WEATHER_SEED,
+  moistureLossScale: number = 1
 ): number | null {
   if (plot.status !== "growing") return 0;
   const transactionNow = Number.isFinite(now) ? now : Date.now();
   const completionAt = getProjectedCropCompletionAt(
     plot,
     transactionNow,
-    weatherSeed
+    weatherSeed,
+    moistureLossScale
   );
   if (completionAt === null || !Number.isFinite(completionAt)) return null;
   return Math.max(0, completionAt - transactionNow);
@@ -1544,7 +1561,8 @@ export function getCurrentCropRemainingDurationMs(
 export function getProjectedCropCompletionAt(
   plot: FarmPlotState,
   now: number,
-  weatherSeed: number = DEFAULT_FARM_WEATHER_SEED
+  weatherSeed: number = DEFAULT_FARM_WEATHER_SEED,
+  moistureLossScale: number = 1
 ): number | null {
   const transactionNow = Number.isFinite(now) ? now : Date.now();
   if (plot.status === "ready") {
@@ -1553,7 +1571,13 @@ export function getProjectedCropCompletionAt(
       : null;
   }
   if (plot.status !== "growing") return null;
-  const currentPlot = settlePlotState(plot, 0, transactionNow, weatherSeed);
+  const currentPlot = settlePlotState(
+    plot,
+    0,
+    transactionNow,
+    weatherSeed,
+    moistureLossScale
+  );
   if (currentPlot.status === "ready") {
     return Number.isFinite(currentPlot.growthCompletedAt)
       ? currentPlot.growthCompletedAt
@@ -1564,7 +1588,8 @@ export function getProjectedCropCompletionAt(
   const projectedPlot = advancePlotTimeline(
     currentPlot,
     { kind: "crop_completion" },
-    weatherSeed
+    weatherSeed,
+    moistureLossScale
   );
   return projectedPlot.status === "ready" &&
     Number.isFinite(projectedPlot.growthCompletedAt)
@@ -1581,13 +1606,15 @@ export function settleFarmState(farm: FarmSaveState, now: number, options: { man
     : currentNow;
   if (!Number.isFinite(farm.weatherSeed)) farm.weatherSeed = DEFAULT_FARM_WEATHER_SEED;
   const weatherSeed = farm.weatherSeed ?? DEFAULT_FARM_WEATHER_SEED;
+  const moistureLossScale = getSoilMoistureLossMultiplier(farm);
 
   for (let plotIndex = 0; plotIndex < farm.plots.length; plotIndex += 1) {
     farm.plots[plotIndex] = settlePlotState(
       farm.plots[plotIndex],
       plotIndex,
       currentNow,
-      weatherSeed
+      weatherSeed,
+      moistureLossScale
     );
   }
 
@@ -1644,7 +1671,8 @@ export function waterSelectedPlot(
   if (before >= 100 - SETTLEMENT_EPSILON) {
     return { success: false, moistureAdded: 0, message: "Đất đã đủ ẩm 100%!" };
   }
-  plot.soilMoisture = clampSoilMoisture(before + MANUAL_WATER_AMOUNT);
+  const waterAmount = MANUAL_WATER_AMOUNT + getWellWaterBonus(farm);
+  plot.soilMoisture = clampSoilMoisture(before + waterAmount);
   plot.soilMoistureUpdatedAt = now;
   if (plot.status === "growing") plot.growthLastUpdatedAt = now;
   if (plot.status === "ready") plot.rolledQuality = resolveCropQuality(plot);
@@ -1672,7 +1700,8 @@ export function treatPestOnSelectedPlot(
     sourcePlot,
     plotIndex,
     now,
-    farm.weatherSeed ?? DEFAULT_FARM_WEATHER_SEED
+    farm.weatherSeed ?? DEFAULT_FARM_WEATHER_SEED,
+    getSoilMoistureLossMultiplier(farm)
   );
   farm.plots[plotIndex] = settledPlot;
   if (
@@ -2065,6 +2094,20 @@ function calculateCropHarvestReward(
   };
 }
 
+function applyWarehouseBonusesToCropReward(
+  farm: FarmSaveState,
+  reward: CropHarvestPreview
+): CropHarvestPreview {
+  const goldMult = getWarehouseGoldMultiplier(farm);
+  const xpMult = getWarehouseXpMultiplier(farm);
+  if (goldMult === 1 && xpMult === 1) return reward;
+  return {
+    ...reward,
+    goldEarned: Math.round(reward.goldEarned * goldMult),
+    xpEarned: Math.round(reward.xpEarned * xpMult),
+  };
+}
+
 /** Pure reward selector used by both the Ready panel and harvest previews. */
 export function getCropHarvestPreview(
   farm: FarmSaveState,
@@ -2074,7 +2117,16 @@ export function getCropHarvestPreview(
   const plot = plotOverride ?? farm.plots[plotIndex];
   if (!plot || plot.status !== "ready") return null;
 
-  return calculateCropHarvestReward(plot);
+  const reward = calculateCropHarvestReward(plot);
+  return reward ? applyWarehouseBonusesToCropReward(farm, reward) : null;
+}
+
+export function getEffectiveCropHarvestPreview(
+  farm: FarmSaveState,
+  plotIndex: number,
+  plotOverride?: FarmPlotState
+): CropHarvestPreview | null {
+  return getCropHarvestPreview(farm, plotIndex, plotOverride);
 }
 
 /**
@@ -2107,13 +2159,15 @@ export function harvestPlot(
     sourcePlot,
     plotIndex,
     now,
-    farm.weatherSeed ?? DEFAULT_FARM_WEATHER_SEED
+    farm.weatherSeed ?? DEFAULT_FARM_WEATHER_SEED,
+    getSoilMoistureLossMultiplier(farm)
   );
   farm.plots[plotIndex] = plot;
   if (!plot || plot.status !== "ready") return null;
 
-  const reward = calculateCropHarvestReward(plot);
-  if (!reward) return null;
+  const rawReward = calculateCropHarvestReward(plot);
+  if (!rawReward) return null;
+  const reward = applyWarehouseBonusesToCropReward(farm, rawReward);
   reward.goldEarned = creditCropGold(farm, reward.goldEarned);
   const preQualityGold = reward.baseGold + reward.rainBonusGold;
   const preQualityXp = reward.baseXp + reward.fertilizerBonusXp;
@@ -2216,17 +2270,20 @@ export function harvestAllReadyCrops(
     weatherExposure?: WeatherExposureData;
   }> = [];
 
+  const moistureLossScale = getSoilMoistureLossMultiplier(farm);
   for (let i = 0; i < farm.plots.length; i++) {
     const plot = settlePlotState(
       farm.plots[i],
       i,
       now,
-      farm.weatherSeed ?? DEFAULT_FARM_WEATHER_SEED
+      farm.weatherSeed ?? DEFAULT_FARM_WEATHER_SEED,
+      moistureLossScale
     );
     farm.plots[i] = plot;
     if (plot.status === "ready") {
-      const reward = calculateCropHarvestReward(plot);
-      if (reward) {
+      const rawReward = calculateCropHarvestReward(plot);
+      if (rawReward) {
+        const reward = applyWarehouseBonusesToCropReward(farm, rawReward);
         const preQualityGold = reward.baseGold + reward.rainBonusGold;
         const preQualityXp = reward.baseXp + reward.fertilizerBonusXp;
 
@@ -2478,6 +2535,8 @@ export function sellEggs(
   };
   const qualityBreakdown = createEmptyQualityBreakdown();
 
+  const whGoldMult = getWarehouseGoldMultiplier(farm);
+  const whXpMult = getWarehouseXpMultiplier(farm);
   for (const q of qualityTiers) {
     if (!allowedQualities.includes(q)) continue;
     if (remainingToSell <= 0) break;
@@ -2494,8 +2553,10 @@ export function sellEggs(
       totalRainBonusGold += rainG;
 
       const preQualityGold = baseG + rainG;
-      const tierGold = applyQualityMultiplier(preQualityGold, mult);
-      const tierXp = applyQualityMultiplier(baseX, mult);
+      const rawTierGold = applyQualityMultiplier(preQualityGold, mult);
+      const rawTierXp = applyQualityMultiplier(baseX, mult);
+      const tierGold = whGoldMult === 1 ? rawTierGold : Math.round(rawTierGold * whGoldMult);
+      const tierXp = whXpMult === 1 ? rawTierXp : Math.round(rawTierXp * whXpMult);
 
       goldEarned += tierGold;
       xpEarned += tierXp;

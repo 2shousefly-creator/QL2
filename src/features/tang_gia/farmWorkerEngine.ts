@@ -7,6 +7,16 @@ import { getNormalTroughDurationMs, getStarvationDeadlineAt } from './animalLife
 import { FARM_ANCHORS, createFarmStroll, farmPathDuration, findFarmPath, plotWorkAnchor, workerPositionAt } from './farmWorldLayout';
 import { createFarmWorker, FARM_DAY_MS, FARM_TASKS, FARM_WAGE } from './farmWorkerConfig';
 import { normalizeAssignment } from './farmWorkerMigration';
+import {
+  getEggAnimalTypeId,
+  getTroughDurationMultiplier,
+  getWorkerDurationMultiplier,
+  getWorkerSpeedMultiplier,
+  recordAlmanacCare,
+  recordAlmanacCropHarvest,
+  recordAlmanacEggSale,
+  recordLogisticsProgress,
+} from './farmEnhancements';
 import type { FarmAssignment, FarmPoint, FarmTask, FarmWorkerAction, FarmWorkerState, SupplyCategory } from './farmWorkerTypes';
 import type { FarmSaveState, ItemQuality } from './farmTypes';
 import { recordCropHarvestForMedals, recordEggSale, recordFarmGoldEarned, recordFeedBagsUsed, recordFertilizerUsed, recordPerfectFarmItemSale, recordWatering } from '../../game/medals/medalEngine';
@@ -102,7 +112,7 @@ export function getFarmWorkerJobs(farm: FarmSaveState, context: FarmWorkerContex
     if (farm.penFeedBuffValue >= 99.99) w.feedRefilling = false;
     const feed = FEED_CATALOG.find(x => x.id === a.feedId)!;
     if (w.feedRefilling && rankAtLeast(context.rank, feed.requiredRank) && need('feed', a.feedId, Math.ceil((100 - farm.penFeedBuffValue) / feed.buffAmount), 0)) {
-      const emptyAt = now + farm.penFeedBuffValue / 100 * getNormalTroughDurationMs(living.length);
+      const emptyAt = now + farm.penFeedBuffValue / 100 * (getNormalTroughDurationMs(living.length) * getTroughDurationMultiplier(farm));
       add({ task: 'feed', target: 'Máng ăn', anchor: FARM_ANCHORS.trough, deadline: getStarvationDeadlineAt(farm.penStarvationStartedAt ?? null) ?? emptyAt + 43_200_000, priority: 0 });
     }
   }
@@ -142,7 +152,9 @@ export function planFarmWorker(farm: FarmSaveState, context: FarmWorkerContext, 
   for (const job of jobs) {
     const path = findFarmPath(w.position, job.anchor);
     if (!path.length) continue;
-    const arrivedAt = at + Math.ceil(farmPathDuration(path)), duration = FARM_TASKS.find(t => t.id === job.task)!.duration;
+    const arrivedAt = at + Math.ceil(farmPathDuration(path, getWorkerSpeedMultiplier(farm)));
+    const baseDuration = FARM_TASKS.find(t => t.id === job.task)!.duration;
+    const duration = Math.max(250, Math.round(baseDuration * getWorkerDurationMultiplier(farm)));
     const { anchor, deadline, priority, ...data } = job;
     w.action = { ...data, id: `${w.employmentId}:${++w.sequence}`, path, departedAt: at, arrivedAt, startedAt: arrivedAt, endsAt: arrivedAt + duration, workAnchor: anchor };
     w.stroll=undefined;
@@ -163,25 +175,72 @@ export function finishFarmWorkerAction(state: GameState, context: FarmWorkerCont
   w.position = action.workAnchor; w.action = null;
   let success = false, gold = 0, xp = 0;
   switch (action.task) {
-    case 'water': success = waterSelectedPlot(farm, action.plotId!, at).success; if (success) recordWatering(state); break;
-    case 'pest': success = treatPestOnSelectedPlot(farm, action.plotId!, at).success; break;
-    case 'plant': success = plantSeedWithFertilizer(farm, action.plotId!, action.cropId!, null, at, context.rank.rankIndex, 'worker').success; break;
-    case 'fertilize': success = applyFertilizerToGrowingCrop(farm, action.plotId!, action.fertilizerId!, at, context.rank).success; if (success) recordFertilizerUsed(state, action.fertilizerId!); break;
+    case 'water':
+      success = waterSelectedPlot(farm, action.plotId!, at).success;
+      if (success) {
+        recordWatering(state);
+        recordAlmanacCare(farm, 'water', 1);
+        recordLogisticsProgress(farm, 'care', 1, at);
+      }
+      break;
+    case 'pest':
+      success = treatPestOnSelectedPlot(farm, action.plotId!, at).success;
+      if (success) {
+        recordAlmanacCare(farm, 'pest', 1);
+        recordLogisticsProgress(farm, 'care', 1, at);
+      }
+      break;
+    case 'plant':
+      success = plantSeedWithFertilizer(farm, action.plotId!, action.cropId!, null, at, context.rank.rankIndex, 'worker').success;
+      break;
+    case 'fertilize':
+      success = applyFertilizerToGrowingCrop(farm, action.plotId!, action.fertilizerId!, at, context.rank).success;
+      if (success) {
+        recordFertilizerUsed(state, action.fertilizerId!);
+        recordAlmanacCare(farm, 'fertilizer', 1);
+        recordLogisticsProgress(farm, 'care', 1, at);
+      }
+      break;
     case 'harvest': {
       if (context.xpFull()) break;
+      const plotBefore = farm.plots[action.plotId!];
+      const harvestedCropId = plotBefore && 'cropId' in plotBefore ? plotBefore.cropId : undefined;
       const result = harvestPlot(farm, action.plotId!, at);
-      if (result) { success = true; gold = result.goldEarned; xp = context.rewardXp(result.xpEarned); recordCropHarvestForMedals(state, result.hasFertilizer); recordPerfectFarmItemSale(state, result.quality === 'hoan_my' ? 1 : 0); }
+      if (result) {
+        success = true;
+        gold = result.goldEarned;
+        xp = context.rewardXp(result.xpEarned);
+        recordCropHarvestForMedals(state, result.hasFertilizer);
+        recordPerfectFarmItemSale(state, result.quality === 'hoan_my' ? 1 : 0);
+        if (harvestedCropId) recordAlmanacCropHarvest(farm, harvestedCropId, result.quality, result.goldEarned);
+        recordLogisticsProgress(farm, 'harvest', 1, at);
+      }
       break;
     }
     case 'sell_eggs': {
       if (context.xpFull()) break;
       const result = sellEggs(farm, action.eggId!, 1, [action.quality!]);
       success = result.soldCount === 1; gold = result.goldEarned; xp = context.rewardXp(result.xpEarned);
-      recordEggSale(state, result.soldCount); recordPerfectFarmItemSale(state, result.soldByQuality.hoan_my); break;
+      recordEggSale(state, result.soldCount); recordPerfectFarmItemSale(state, result.soldByQuality.hoan_my);
+      if (success) {
+        const animalTypeId = getEggAnimalTypeId(action.eggId!);
+        if (animalTypeId) recordAlmanacEggSale(farm, animalTypeId, result.soldCount, result.soldByQuality.hoan_my, result.goldEarned);
+        recordLogisticsProgress(farm, 'livestock', result.soldCount, at);
+      }
+      break;
     }
-    case 'feed': success = feedPenBuff(farm, w.assignment.feedId, 1, at, context.rank).success; if (success) recordFeedBagsUsed(state, 1); break;
+    case 'feed':
+      success = feedPenBuff(farm, w.assignment.feedId, 1, at, context.rank).success;
+      if (success) {
+        recordFeedBagsUsed(state, 1);
+        recordLogisticsProgress(farm, 'livestock', 1, at);
+      }
+      break;
     case 'clean_dead': success = farm.penAnimals.some(x => x.instanceId === action.target && x.deathAt !== null) && dismissAnimal(farm, action.target, at); break;
-    case 'replace_animals': success = addAnimalToPen(farm, action.animalId!, at, context.rank).success; break;
+    case 'replace_animals':
+      success = addAnimalToPen(farm, action.animalId!, at, context.rank).success;
+      if (success) recordLogisticsProgress(farm, 'livestock', 1, at);
+      break;
     case 'restock': {
       const { category, id, count } = action.supply!, cost = getItemOriginalPrice(category, id) * count;
       const purchase = buyFarmSupply(farm, category, id, count, context.rank, w.assignment.restock.reserve, w.assignment.restock.dailyLimit - w.budgetSpent);

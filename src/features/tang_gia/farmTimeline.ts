@@ -5,6 +5,7 @@ import { accrueFarmWages, finishFarmWorkerAction, planFarmWorker, settleFarmPayr
 import { getCanonicalWeatherSlot, getSoilMoistureRatePerHour } from './weatherEngine';
 import { getPestRatePerHour } from './pestEngine';
 import { getNormalTroughDurationMs, getStarvationDeadlineAt } from './animalLifecycle';
+import { getSoilMoistureLossMultiplier, getTroughDurationMultiplier } from './farmUpgrades';
 
 function nextFarmWake(state: GameState, now: number, end: number, context: FarmWorkerContext): number {
   const farm = state.farm!, w = farm.worker!, slot = getCanonicalWeatherSlot(now, farm.weatherSeed);
@@ -17,19 +18,20 @@ function nextFarmWake(state: GameState, now: number, end: number, context: FarmW
     consider(w.action.arrivedAt); consider(w.action.endsAt);
     return Math.max(now + 1, next);
   }
-  const moistureRate = getSoilMoistureRatePerHour(slot.season, slot.phase, slot.weather);
+  const rawMoistureRate = getSoilMoistureRatePerHour(slot.season, slot.phase, slot.weather);
+  const moistureRate = rawMoistureRate < 0 ? rawMoistureRate * getSoilMoistureLossMultiplier(farm) : rawMoistureRate;
   const pestRate = getPestRatePerHour(slot.season, slot.weather);
   for (const p of farm.plots) {
     if (p.status === 'locked') continue;
     if (w.assignment.tasks.includes('water') && moistureRate < 0 && p.soilMoisture > 60) consider(now + (p.soilMoisture - 60) / -moistureRate * 3_600_000);
     if (w.assignment.tasks.includes('plant') && p.status === 'empty' && moistureRate > 0 && p.soilMoisture < 20) consider(now + (20 - p.soilMoisture) / moistureRate * 3_600_000);
-    if (p.status === 'growing') consider(getProjectedCropCompletionAt(p, now, farm.weatherSeed));
+    if (p.status === 'growing') consider(getProjectedCropCompletionAt(p, now, farm.weatherSeed, getSoilMoistureLossMultiplier(farm)));
     if ((p.status === 'growing' || p.status === 'ready') && w.assignment.tasks.includes('pest') && p.pestPressure < 70) consider(now + (70 - p.pestPressure) / pestRate * 3_600_000);
   }
   const living = farm.penAnimals.filter(a => a.deathAt === null);
   for (const a of living) { consider(a.lifeEndsAt); consider(a.nextEggAt); }
   consider(getStarvationDeadlineAt(farm.penStarvationStartedAt ?? null));
-  if (w.assignment.tasks.includes('feed') && living.length && farm.penFeedBuffValue > w.assignment.feedThreshold) consider(now + (farm.penFeedBuffValue - w.assignment.feedThreshold) / 100 * getNormalTroughDurationMs(living.length));
+  if (w.assignment.tasks.includes('feed') && living.length && farm.penFeedBuffValue > w.assignment.feedThreshold) consider(now + (farm.penFeedBuffValue - w.assignment.feedThreshold) / 100 * (getNormalTroughDurationMs(living.length) * getTroughDurationMultiplier(farm)));
   return Math.max(now + 1, next);
 }
 

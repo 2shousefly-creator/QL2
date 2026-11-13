@@ -39,8 +39,9 @@ export function findFarmPath(from: FarmPoint, to: FarmPoint): FarmPoint[] {
   }
   return [];
 }
-export function farmPathDuration(path: FarmPoint[]): number {
-  return path.slice(1).reduce((total, point, index) => total + Math.hypot(point.x - path[index].x, point.y - path[index].y), 0) / FARM_WALK_SPEED * 1000;
+export function farmPathDuration(path: FarmPoint[], speedMultiplier: number = 1): number {
+  const effectiveSpeed = FARM_WALK_SPEED * Math.max(0.5, speedMultiplier);
+  return path.slice(1).reduce((total, point, index) => total + Math.hypot(point.x - path[index].x, point.y - path[index].y), 0) / effectiveSpeed * 1000;
 }
 export function workerPositionAt(worker: FarmWorkerState, now: number): FarmPoint {
   const action = worker.action;
@@ -49,8 +50,10 @@ export function workerPositionAt(worker: FarmWorkerState, now: number): FarmPoin
     if(worker.status!=='employed'||!stroll||stroll.duration<=0)return worker.position;
     return pointAlongFarmPath(stroll.path, (Math.max(0,now-stroll.startedAt)%stroll.duration)/1000*.8);
   }
-  if (now >= action.arrivedAt) return action.workAnchor;
-  return pointAlongFarmPath(action.path, Math.max(0,now-action.departedAt)/1000*FARM_WALK_SPEED);
+  if (now >= action.arrivedAt || action.arrivedAt <= action.departedAt) return action.workAnchor;
+  const totalLen = action.path.slice(1).reduce((total, point, index) => total + Math.hypot(point.x - action.path[index].x, point.y - action.path[index].y), 0);
+  const progress = Math.max(0, Math.min(1, (now - action.departedAt) / (action.arrivedAt - action.departedAt)));
+  return pointAlongFarmPath(action.path, totalLen * progress);
 }
 function pointAlongFarmPath(path: FarmPoint[], distance: number): FarmPoint {
   for (let i = 1; i < path.length; i++) {

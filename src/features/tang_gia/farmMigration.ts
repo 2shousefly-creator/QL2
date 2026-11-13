@@ -16,9 +16,15 @@ import type {
   CropQualityPenalty,
   EggQualityInventory,
   EggTypeId,
+  FarmAlmanacEntry,
+  FarmAlmanacState,
   FarmInventory,
+  FarmLogisticsOrder,
+  FarmLogisticsOrderKind,
+  FarmLogisticsState,
   FarmPlotState,
   FarmSaveState,
+  FarmUpgradesState,
   FeedTypeId,
   FertilizerTypeId,
   ItemQuality,
@@ -714,6 +720,131 @@ function normalizeEggQualityInventory(
   return normalized;
 }
 
+const CROP_ID_SET = new Set<string>(CROP_CATALOG.map((entry) => entry.id));
+const ANIMAL_ID_SET = new Set<string>(ANIMAL_CATALOG.map((entry) => entry.id));
+const FERTILIZER_ID_SET = new Set<string>(FERTILIZER_CATALOG.map((entry) => entry.id));
+const FEED_ID_SET = new Set<string>(FEED_CATALOG.map((entry) => entry.id));
+const MAX_FARM_UPGRADE_LEVEL = 5;
+
+function normalizeUpgrades(raw: unknown): FarmUpgradesState | undefined {
+  if (!isRecord(raw)) return undefined;
+  const clampLevel = (val: unknown) =>
+    Math.min(MAX_FARM_UPGRADE_LEVEL, normalizeCount(val));
+  return {
+    well: clampLevel(raw.well),
+    trough: clampLevel(raw.trough),
+    warehouse: clampLevel(raw.warehouse),
+    boots: clampLevel(raw.boots),
+  };
+}
+
+function normalizeLogisticsOrder(raw: unknown, index: number): FarmLogisticsOrder | null {
+  if (!isRecord(raw)) return null;
+  const kind: FarmLogisticsOrderKind | null =
+    raw.kind === "harvest" || raw.kind === "care" || raw.kind === "livestock"
+      ? raw.kind
+      : null;
+  if (!kind) return null;
+  const target = Math.max(1, normalizeCount(raw.target));
+  const progress = Math.min(target, normalizeCount(raw.progress));
+  let bonusSupply: FarmLogisticsOrder["bonusSupply"] = undefined;
+  if (isRecord(raw.bonusSupply)) {
+    if (
+      raw.bonusSupply.category === "fertilizer" &&
+      typeof raw.bonusSupply.id === "string" &&
+      FERTILIZER_ID_SET.has(raw.bonusSupply.id)
+    ) {
+      bonusSupply = {
+        category: "fertilizer",
+        id: raw.bonusSupply.id as FertilizerTypeId,
+        count: Math.max(1, normalizeCount(raw.bonusSupply.count)),
+      };
+    } else if (
+      raw.bonusSupply.category === "feed" &&
+      typeof raw.bonusSupply.id === "string" &&
+      FEED_ID_SET.has(raw.bonusSupply.id)
+    ) {
+      bonusSupply = {
+        category: "feed",
+        id: raw.bonusSupply.id as FeedTypeId,
+        count: Math.max(1, normalizeCount(raw.bonusSupply.count)),
+      };
+    }
+  }
+  return {
+    id:
+      typeof raw.id === "string" && raw.id.trim()
+        ? raw.id.slice(0, 80)
+        : `order_${index}`,
+    kind,
+    title:
+      typeof raw.title === "string" && raw.title.trim()
+        ? raw.title.slice(0, 120)
+        : "Nhiệm vụ Tăng Gia",
+    description:
+      typeof raw.description === "string" ? raw.description.slice(0, 220) : "",
+    target,
+    progress,
+    rewardGold: normalizeCount(raw.rewardGold),
+    rewardXp: normalizeCount(raw.rewardXp),
+    ...(bonusSupply ? { bonusSupply } : {}),
+    claimed: Boolean(raw.claimed),
+  };
+}
+
+function normalizeLogisticsOrders(raw: unknown): FarmLogisticsState | undefined {
+  if (!isRecord(raw) || typeof raw.dateKey !== "string" || !raw.dateKey.trim()) {
+    return undefined;
+  }
+  const orders = (Array.isArray(raw.orders) ? raw.orders : [])
+    .slice(0, 3)
+    .map((entry, idx) => normalizeLogisticsOrder(entry, idx))
+    .filter((entry): entry is FarmLogisticsOrder => entry !== null);
+  return {
+    dateKey: raw.dateKey.slice(0, 24),
+    rerollsUsed: Math.min(3, normalizeCount(raw.rerollsUsed)),
+    bonusClaimed: Boolean(raw.bonusClaimed),
+    orders,
+  };
+}
+
+function normalizeAlmanacEntry(raw: unknown): FarmAlmanacEntry | null {
+  if (!isRecord(raw)) return null;
+  const count = normalizeCount(raw.count);
+  const perfectCount = Math.min(count, normalizeCount(raw.perfectCount));
+  const goldEarned = normalizeCount(raw.goldEarned);
+  if (count === 0 && goldEarned === 0) return null;
+  return { count, perfectCount, goldEarned };
+}
+
+function normalizeAlmanac(raw: unknown): FarmAlmanacState | undefined {
+  if (!isRecord(raw)) return undefined;
+  const crops: Partial<Record<CropId, FarmAlmanacEntry>> = {};
+  if (isRecord(raw.crops)) {
+    for (const [id, entry] of Object.entries(raw.crops)) {
+      if (!CROP_ID_SET.has(id)) continue;
+      const normalized = normalizeAlmanacEntry(entry);
+      if (normalized) crops[id as CropId] = normalized;
+    }
+  }
+  const animals: Partial<Record<AnimalTypeId, FarmAlmanacEntry>> = {};
+  if (isRecord(raw.animals)) {
+    for (const [id, entry] of Object.entries(raw.animals)) {
+      if (!ANIMAL_ID_SET.has(id)) continue;
+      const normalized = normalizeAlmanacEntry(entry);
+      if (normalized) animals[id as AnimalTypeId] = normalized;
+    }
+  }
+  return {
+    crops,
+    animals,
+    totalWaters: normalizeCount(raw.totalWaters),
+    totalPestsTreated: normalizeCount(raw.totalPestsTreated),
+    totalFertilizersApplied: normalizeCount(raw.totalFertilizersApplied),
+    totalOrdersClaimed: normalizeCount(raw.totalOrdersClaimed),
+  };
+}
+
 /**
  * Versioned, idempotent Farm migration. It only patches missing/legacy fields;
  * it never recreates an existing player's plots, inventory, animals or Feed.
@@ -850,6 +981,10 @@ export function migrateFarmState(
     animal.eggLastUpdatedAt = workUpdatedAt;
   }
 
+  const upgrades = normalizeUpgrades(farm.upgrades);
+  const logisticsOrders = normalizeLogisticsOrders(farm.logisticsOrders);
+  const almanac = normalizeAlmanac(farm.almanac);
+
   const normalized: FarmSaveState = {
     schemaVersion: CURRENT_FARM_SCHEMA_VERSION,
     gold,
@@ -874,6 +1009,9 @@ export function migrateFarmState(
     lastSettledAt,
     weatherSeed,
     eggQualityInventory: createDefaultEggQualityInventory(),
+    ...(upgrades ? { upgrades } : {}),
+    ...(logisticsOrders ? { logisticsOrders } : {}),
+    ...(almanac ? { almanac } : {}),
   };
   normalized.eggQualityInventory = normalizeEggQualityInventory(
     farm.eggQualityInventory,

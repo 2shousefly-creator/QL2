@@ -1,5 +1,6 @@
 import "./components/farm-modals.css";
 import { FARM_RELEASE } from "./farmReleaseNotes";
+import { soundManager } from "../../game/audio";
 import { EmployeeManagement } from "./components/EmployeeManagement";
 import { confirmFarmAssignment } from "./farmWorkerEngine";
 import { getFarmProductivity } from "./farmEconomy";
@@ -18,6 +19,21 @@ import {
   FERTILIZER_CATALOG,
 } from "./farmCatalog";
 import { buyFarmSupply, addAnimalToPen, applyFertilizerToGrowingCrop, canWaterPlot, clearPlot, consumePendingAnimalDeathNotification, createDefaultFarmState, dismissAnimal, feedPenBuff, getRankNameForDisplay, harvestAllReadyCrops, harvestPlot, hasCropFertilizer, plantSeedWithFertilizer, rankAtLeast, sellAllEggs, sellEggs, sellInventoryItem, settleFarmState, treatPestOnSelectedPlot, waterSelectedPlot } from "./farmEngine";
+import {
+  claimLogisticsDailyBonus,
+  claimLogisticsOrder,
+  ensureLogisticsOrders,
+  getEggAnimalTypeId,
+  purchaseFarmUpgrade,
+  recordAlmanacCare,
+  recordAlmanacCropHarvest,
+  recordAlmanacEggSale,
+  recordLogisticsProgress,
+  replantAllRememberedPlots,
+  rerollLogisticsOrder,
+  treatAllPestPlots,
+  waterAllThirstyPlots,
+} from "./farmEnhancements";
 import { isAnimalDead } from "./animalLifecycle";
 import {
   AnimalTypeId,
@@ -26,6 +42,7 @@ import {
   FeedTypeId,
   FertilizerTypeId,
   FarmSaveState,
+  FarmUpgradeId,
   AnimalDeathNotificationSummary,
 } from "./farmTypes";
 import {
@@ -44,6 +61,9 @@ import { TroughInfoModal } from "./components/TroughInfoModal";
 import { WeatherHUD } from "./components/WeatherHUD";
 import { WeatherModal } from "./components/WeatherModal";
 import { ApplyFertilizerModal } from "./components/ApplyFertilizerModal";
+import { FarmLogisticsModal } from "./components/FarmLogisticsModal";
+import { FarmUpgradesModal } from "./components/FarmUpgradesModal";
+import { FarmAlmanacModal } from "./components/FarmAlmanacModal";
 import {
   RewardSummaryModal,
   RewardSummaryData,
@@ -59,7 +79,7 @@ import {
 import { CheckCircle2, Droplets, Egg, Package, Sparkles, Sprout, Store, Trash2, UserX, Wheat } from "lucide-react";
 import { MIN_PLANTING_SOIL_MOISTURE } from "./soilMoistureEngine";
 import { canTreatPest } from "./pestEngine";
-import FarmMobilePresentation from "./mobile/FarmMobilePresentation";
+import FarmMobilePresentation, { type FarmPresentationActions } from "./mobile/FarmMobilePresentation";
 import { adaptFarmMobile } from "./mobile/FarmMobileAdapter";
 import { FARM_MOBILE_REQUESTED } from "./mobile/mobileGate";
 
@@ -86,7 +106,7 @@ export type FarmPrimaryModal =
   | { type: "inventory"; tab: KhoTabType }
   | { type: "plant"; plotIndex: number }
   | { type: "apply-fertilizer"; plotIndex: number }
-  | { type: "enter-pen" | "feed" | "trough" | "weather" }
+  | { type: "enter-pen" | "feed" | "trough" | "weather" | "logistics" | "upgrades" | "almanac" }
   | { type: "reward"; summary: RewardSummaryData }
   | { type: "dialog"; dialog: FarmDialog };
 
@@ -222,6 +242,19 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
   const harvestAllActionMode = getFarmHarvestAllActionMode(
     harvestableCropCount
   );
+  useEffect(() => {
+    soundManager.setEnabled(Boolean(gameState.settings?.soundEnabled ?? true));
+  }, [gameState.settings?.soundEnabled]);
+
+  const handleToggleSound = () => {
+    const nextEnabled = !(gameState.settings?.soundEnabled ?? true);
+    soundManager.setEnabled(nextEnabled);
+    if (nextEnabled) soundManager.playClick();
+    onUpdateGameState((draft) => {
+      draft.settings.soundEnabled = nextEnabled;
+    });
+  };
+
   // The 1-second ticker is presentation-only. Persistence happens at boundaries.
   useEffect(() => {
     const settleAtBoundary = (currentNow: number) => {
@@ -229,6 +262,7 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
         if (!draft.farm) {
           draft.farm = createDefaultFarmState(currentNow);
         }
+        ensureLogisticsOrders(draft.farm, currentNow);
         const settlement = { newDeaths: { total: 0, oldAge: 0, starvation: 0 } };
         const pendingOfflineDeaths = consumePendingAnimalDeathNotification(
           draft.farm
@@ -277,9 +311,12 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
       summaryData?: RewardSummaryData;
       plotRewards?: PlotHarvestPresentation[];
       visualEvent?: FarmVisualEvent;
+      visualEvents?: FarmVisualEvent[];
+      playSound?: () => void;
     } | void,
     transactionNow: number = Date.now()
   ) => {
+    let soundQueued = false;
     onUpdateGameState((draft) => {
       if (!draft.farm) {
         draft.farm = createDefaultFarmState(transactionNow);
@@ -305,10 +342,25 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
       }
 
       if (res) {
-        if (res.visualEvent) {
-          const event = res.visualEvent;
+        const batchVisuals = [
+          ...(res.visualEvent ? [res.visualEvent] : []),
+          ...(res.visualEvents ?? []),
+        ];
+        if (batchVisuals.length > 0) {
           queueMicrotask(() => {
-            if (visualMounted.current) setVisualEvents(current => [...current.filter(item => item.id !== event.id), event].slice(-9));
+            if (visualMounted.current) {
+              setVisualEvents((current) => {
+                const ids = new Set(batchVisuals.map((item) => item.id));
+                return [...current.filter((item) => !ids.has(item.id)), ...batchVisuals].slice(-32);
+              });
+            }
+          });
+        }
+        if (res.playSound && !soundQueued) {
+          soundQueued = true;
+          const play = res.playSound;
+          queueMicrotask(() => {
+            if (visualMounted.current) play();
           });
         }
         let displayedXp = res.summaryData?.xpEarned ?? 0;
@@ -361,7 +413,16 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
     openFarmModal({ type: "inventory", tab: tab ?? (contextMode === "pen" ? "animal" : "crop") });
 
   // --- STORE ACTIONS (Support multi-quantity) ---
-  const purchase = (category: 'seeds' | 'fertilizer' | 'animals' | 'feed', id: string, count: number) => updateFarm((farm, draft) => buyFarmSupply(farm, category, id, count, getCurrentRank(draft.progression.currentRankIndex)));
+  const purchase = (category: 'seeds' | 'fertilizer' | 'animals' | 'feed', id: string, count: number) =>
+    updateFarm((farm, draft) => {
+      const beforeGold = farm.gold;
+      const res = buyFarmSupply(farm, category, id, count, getCurrentRank(draft.progression.currentRankIndex));
+      if (!res) return;
+      return {
+        ...res,
+        playSound: farm.gold < beforeGold ? () => soundManager.playFarmCoin() : undefined,
+      };
+    });
   const handleBuyCrop = (id: CropId, count = 1) => purchase('seeds', id, count);
   const handleBuyFertilizer = (id: FertilizerTypeId, count = 1) => purchase('fertilizer', id, count);
   const handleBuyAnimal = (id: AnimalTypeId, count = 1) => purchase('animals', id, count);
@@ -375,7 +436,10 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
   ) => {
     updateFarm((farm) => {
       const res = sellInventoryItem(farm, category, itemId, count);
-      return { message: res.message };
+      return {
+        message: res.message,
+        playSound: res.goldEarned ? () => soundManager.playFarmCoin() : undefined,
+      };
     });
   };
 
@@ -395,9 +459,12 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
           res.hasFertilizer
         );
         recordPerfectFarmItemSale(draft, res.quality === "hoan_my" ? 1 : 0);
+        recordAlmanacCropHarvest(farm, cropId, res.quality, res.goldEarned);
+        recordLogisticsProgress(farm, "harvest", 1, currentNow);
         return {
           goldEarned: res.goldEarned,
           xpEarned: res.xpEarned,
+          playSound: () => soundManager.playFarmHarvest(res.quality === "hoan_my"),
           plotRewards: [
             {
               id: `harvest-${plotIndex}-${currentNow}`,
@@ -474,6 +541,8 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
       );
       if (res.success && fertilizerId) {
         recordFertilizerUsed(draft, fertilizerId);
+        recordAlmanacCare(farm, "fertilizer", 1);
+        recordLogisticsProgress(farm, "care", 1, currentNow);
       }
       if (
         !res.success &&
@@ -484,41 +553,116 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
         return;
       }
       if (res.message) {
-        return { message: res.message, visualEvent: res.success ? {
-          id: `sow-${plotIndex}-${currentNow}`, plotIndex, kind: 'sow', cropId, startedAt: currentNow,
-        } : undefined };
+        return {
+          message: res.message,
+          playSound: res.success ? () => soundManager.playFarmPlant() : undefined,
+          visualEvent: res.success ? {
+            id: `sow-${plotIndex}-${currentNow}`, plotIndex, kind: 'sow', cropId, startedAt: currentNow,
+          } : undefined,
+        };
       }
+    }, currentNow);
+  };
+
+  const handleQuickReplantSelectedPlot = () => {
+    if (selectedPlotIndex === null) return;
+    const targetPlotIndex = selectedPlotIndex;
+    const currentNow = Date.now();
+    updateFarm((farm, draft) => {
+      const plot = farm.plots[targetPlotIndex];
+      if (!plot || plot.status !== "empty" || !plot.lastCropId) {
+        return { message: "Ô đất chưa có cây giống nhớ từ vụ trước." };
+      }
+      const cropId = plot.lastCropId;
+      const fertId =
+        plot.lastFertilizerId && (farm.inventory.fertilizer?.[plot.lastFertilizerId] || 0) > 0
+          ? plot.lastFertilizerId
+          : null;
+      const res = plantSeedWithFertilizer(
+        farm,
+        targetPlotIndex,
+        cropId,
+        fertId,
+        currentNow,
+        draft.progression.currentRankIndex,
+        "manual"
+      );
+      if (res.success && fertId) {
+        recordFertilizerUsed(draft, fertId);
+        recordAlmanacCare(farm, "fertilizer", 1);
+        recordLogisticsProgress(farm, "care", 1, currentNow);
+      }
+      if (
+        !res.success &&
+        res.message === "Đất đang thiếu nước trầm trọng, hãy tưới nước trước rồi trồng cây sau"
+      ) {
+        setTimeout(showLowMoistureDialog, 0);
+        return;
+      }
+      return {
+        message: res.message,
+        playSound: res.success ? () => soundManager.playFarmPlant() : undefined,
+        visualEvent: res.success ? {
+          id: `resow-${targetPlotIndex}-${currentNow}`,
+          plotIndex: targetPlotIndex,
+          kind: "sow" as const,
+          cropId,
+          startedAt: currentNow,
+        } : undefined,
+      };
     }, currentNow);
   };
 
   const handleWaterPlot = () => {
     if (selectedPlotIndex === null) return;
+    const plotIndex = selectedPlotIndex;
     const currentNow = Date.now();
     updateFarm((farm, draft) => {
       const result = waterSelectedPlot(
         farm,
-        selectedPlotIndex,
+        plotIndex,
         currentNow
       );
-      if (result.success) recordWatering(draft, 1);
-      return { message: result.message, visualEvent: result.success ? {
-        id: `water-${selectedPlotIndex}-${currentNow}`, plotIndex: selectedPlotIndex, kind: "water", startedAt: currentNow,
-      } : undefined };
+      if (result.success) {
+        recordWatering(draft, 1);
+        recordAlmanacCare(farm, "water", 1);
+        recordLogisticsProgress(farm, "care", 1, currentNow);
+      }
+      return {
+        message: result.message,
+        playSound: result.success ? () => soundManager.playFarmWater() : undefined,
+        visualEvent: result.success ? {
+          id: `water-${plotIndex}-${currentNow}`,
+          plotIndex,
+          kind: "water",
+          amount: Math.round(result.moistureAdded),
+          startedAt: currentNow,
+        } : undefined,
+      };
     }, currentNow);
   };
 
   const handleTreatPest = () => {
     if (selectedPlotIndex === null) return;
+    const plotIndex = selectedPlotIndex;
     const currentNow = Date.now();
     updateFarm((farm) => {
       const result = treatPestOnSelectedPlot(
         farm,
-        selectedPlotIndex,
+        plotIndex,
         currentNow
       );
-      return { message: result.message, visualEvent: result.success ? {
-        id: `pest-${selectedPlotIndex}-${currentNow}`, plotIndex: selectedPlotIndex, kind: "pest", startedAt: currentNow,
-      } : undefined };
+      if (result.success) {
+        recordAlmanacCare(farm, "pest", 1);
+        recordLogisticsProgress(farm, "care", 1, currentNow);
+      }
+      return {
+        message: result.message,
+        playSound: result.success ? () => soundManager.playFarmCare() : undefined,
+        visualEvent: result.success ? {
+          id: `pest-${plotIndex}-${currentNow}`, plotIndex, kind: "pest", startedAt: currentNow,
+        } : undefined,
+      };
     }, currentNow);
   };
 
@@ -536,10 +680,90 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
         currentNow,
         getCurrentRank(draft.progression.currentRankIndex)
       );
-      if (result.success) recordFertilizerUsed(draft, fertilizerId);
-      return { message: result.message, visualEvent: result.success ? {
-        id: `fertilizer-${plotIndex}-${currentNow}`, plotIndex, kind: "fertilizer", startedAt: currentNow, fertilizerId,
-      } : undefined };
+      if (result.success) {
+        recordFertilizerUsed(draft, fertilizerId);
+        recordAlmanacCare(farm, "fertilizer", 1);
+        recordLogisticsProgress(farm, "care", 1, currentNow);
+      }
+      return {
+        message: result.message,
+        playSound: result.success ? () => soundManager.playFarmCare() : undefined,
+        visualEvent: result.success ? {
+          id: `fertilizer-${plotIndex}-${currentNow}`, plotIndex, kind: "fertilizer", startedAt: currentNow, fertilizerId,
+        } : undefined,
+      };
+    }, currentNow);
+  };
+
+  const handleWaterAll = () => {
+    const currentNow = Date.now();
+    updateFarm((farm, draft) => {
+      const res = waterAllThirstyPlots(farm, currentNow);
+      if (res.success) {
+        recordWatering(draft, res.wateredCount);
+        return {
+          message: res.message,
+          playSound: () => soundManager.playFarmWater(),
+          visualEvents: res.wateredPlotIndices.map((plotIndex) => ({
+            id: `water-all-${plotIndex}-${currentNow}`,
+            plotIndex,
+            kind: "water" as const,
+            startedAt: currentNow,
+          })),
+        };
+      }
+      return { message: res.message };
+    }, currentNow);
+  };
+
+  const handleTreatAllPests = () => {
+    const currentNow = Date.now();
+    updateFarm((farm) => {
+      const res = treatAllPestPlots(farm, currentNow);
+      if (res.success) {
+        return {
+          message: res.message,
+          playSound: () => soundManager.playFarmCare(),
+          visualEvents: res.treatedPlotIndices.map((plotIndex) => ({
+            id: `pest-all-${plotIndex}-${currentNow}`,
+            plotIndex,
+            kind: "pest" as const,
+            startedAt: currentNow,
+          })),
+        };
+      }
+      return { message: res.message };
+    }, currentNow);
+  };
+
+  const handleReplantAll = () => {
+    const currentNow = Date.now();
+    updateFarm((farm, draft) => {
+      const res = replantAllRememberedPlots(
+        farm,
+        currentNow,
+        draft.progression.currentRankIndex,
+        true
+      );
+      if (res.success) {
+        for (const entry of res.plantedEntries) {
+          if (entry.fertilizerId) {
+            recordFertilizerUsed(draft, entry.fertilizerId);
+          }
+        }
+        return {
+          message: res.message,
+          playSound: () => soundManager.playFarmPlant(),
+          visualEvents: res.plantedEntries.map((entry) => ({
+            id: `sow-all-${entry.plotIndex}-${currentNow}`,
+            plotIndex: entry.plotIndex,
+            kind: "sow" as const,
+            cropId: entry.cropId,
+            startedAt: currentNow,
+          })),
+        };
+      }
+      return { message: res.message };
     }, currentNow);
   };
 
@@ -567,14 +791,23 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
             draft,
             detail.hasFertilizer
           );
+          recordAlmanacCropHarvest(
+            farm,
+            detail.cropId,
+            detail.quality,
+            detail.goldAwarded
+          );
         }
+        recordLogisticsProgress(farm, "harvest", res.harvestedCount, currentNow);
         recordPerfectFarmItemSale(
           draft,
           res.details.filter((detail) => detail.quality === "hoan_my").length,
         );
+        const hasPerfect = res.details.some((detail) => detail.quality === "hoan_my");
         return {
           goldEarned: res.totalGold,
           xpEarned: res.totalXp,
+          playSound: () => soundManager.playFarmHarvest(hasPerfect),
           plotRewards: res.details.map((detail) => ({
             id: `harvest-all-${detail.plotIndex}-${currentNow}`,
             plotIndex: detail.plotIndex,
@@ -665,7 +898,11 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
             soilMoisture: 100,
             soilMoistureUpdatedAt: unlockedAt,
           };
-          return { message: `Đã mở khóa thành công Ô đất #${plotIndex + 1}!`, visualEvent: { id: `unlock-${plotIndex}-${unlockedAt}`, plotIndex, kind: 'unlock', startedAt: unlockedAt } };
+          return {
+            message: `Đã mở khóa thành công Ô đất #${plotIndex + 1}!`,
+            playSound: () => soundManager.playFarmUpgrade(),
+            visualEvent: { id: `unlock-${plotIndex}-${unlockedAt}`, plotIndex, kind: 'unlock', startedAt: unlockedAt },
+          };
         }, unlockedAt);
         closeFarmModal();
       },
@@ -696,8 +933,12 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
       const res = addAnimalToPen(farm, animalId, currentNow, getCurrentRank(draft.progression.currentRankIndex));
       if (res.success) {
         evaluateMedalUnlocks(draft);
+        recordLogisticsProgress(farm, "livestock", 1, currentNow);
       }
-      return { message: res.message };
+      return {
+        message: res.message,
+        playSound: res.success ? () => soundManager.playFarmAnimal(animalId) : undefined,
+      };
     }, currentNow);
   };
 
@@ -705,12 +946,19 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
     const currentNow = Date.now();
     updateFarm((farm, draft) => {
       const res = feedPenBuff(farm, feedId, quantity, currentNow, getCurrentRank(draft.progression.currentRankIndex));
-      if (res.success && res.quantityFed) {
-        recordFeedBagsUsed(draft, res.quantityFed);
+      if (res.success) {
+        if (res.quantityFed) {
+          recordFeedBagsUsed(draft, res.quantityFed);
+        }
+        recordLogisticsProgress(farm, "livestock", res.quantityFed ?? quantity, currentNow);
       }
-      return { message: res.message, visualEvent: res.success ? {
-        id: `feed-${currentNow}`, plotIndex: -1, kind: 'feed', startedAt: currentNow,
-      } : undefined };
+      return {
+        message: res.message,
+        playSound: res.success ? () => soundManager.playFarmCare() : undefined,
+        visualEvent: res.success ? {
+          id: `feed-${currentNow}`, plotIndex: -1, kind: 'feed', startedAt: currentNow,
+        } : undefined,
+      };
     }, currentNow);
   };
 
@@ -720,9 +968,30 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
       if (res.soldCount > 0) {
         recordEggSale(draft, res.soldCount);
         recordPerfectFarmItemSale(draft, res.soldByQuality.hoan_my);
+        const animalTypeId = getEggAnimalTypeId(eggTypeId);
+        if (animalTypeId) {
+          recordAlmanacEggSale(
+            farm,
+            animalTypeId,
+            res.soldCount,
+            res.soldByQuality.hoan_my,
+            res.goldEarned
+          );
+        }
+        const soldNow = Date.now();
+        recordLogisticsProgress(farm, "livestock", res.soldCount, soldNow);
         const eggInfo = EGG_INFO_MAP[eggTypeId];
         return {
-          visualEvent: { id: `egg-${Date.now()}`, plotIndex: -1, kind: "egg", startedAt: Date.now() },
+          playSound: () => soundManager.playFarmCoin(),
+          visualEvent: {
+            id: `egg-${soldNow}`,
+            plotIndex: -1,
+            kind: "egg",
+            gold: res.goldEarned,
+            xp: res.xpEarned,
+            amount: res.soldCount,
+            startedAt: soldNow,
+          },
           goldEarned: res.goldEarned,
           xpEarned: res.xpEarned,
           summaryData: {
@@ -750,12 +1019,45 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
     }
 
     updateFarm((farm, draft) => {
+      const speciesSnapshots = (Object.keys(EGG_INFO_MAP) as EggTypeId[])
+        .map((eggType) => ({
+          eggType,
+          count: farm.inventory.eggs[eggType] || 0,
+          hoanMy: farm.eggQualityInventory?.[eggType]?.hoan_my || 0,
+        }))
+        .filter((entry) => entry.count > 0);
       const res = sellAllEggs(farm);
       if (res.totalCount > 0) {
         recordEggSale(draft, res.totalCount);
         recordPerfectFarmItemSale(draft, res.soldByQuality.hoan_my);
+        for (const entry of speciesSnapshots) {
+          const animalTypeId = getEggAnimalTypeId(entry.eggType);
+          if (animalTypeId) {
+            const proportionalGold = Math.round(
+              (res.totalGold * entry.count) / Math.max(1, res.totalCount)
+            );
+            recordAlmanacEggSale(
+              farm,
+              animalTypeId,
+              entry.count,
+              Math.min(entry.count, entry.hoanMy),
+              proportionalGold
+            );
+          }
+        }
+        const soldNow = Date.now();
+        recordLogisticsProgress(farm, "livestock", res.totalCount, soldNow);
         return {
-          visualEvent: { id: `egg-all-${Date.now()}`, plotIndex: -1, kind: "egg", startedAt: Date.now() },
+          playSound: () => soundManager.playFarmCoin(),
+          visualEvent: {
+            id: `egg-all-${soldNow}`,
+            plotIndex: -1,
+            kind: "egg",
+            gold: res.totalGold,
+            xp: res.totalXp,
+            amount: res.totalCount,
+            startedAt: soldNow,
+          },
           goldEarned: res.totalGold,
           xpEarned: res.totalXp,
           summaryData: {
@@ -773,6 +1075,60 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
           },
         };
       }
+    });
+  };
+
+  // --- LOGISTICS ORDERS & UPGRADES ---
+  const handleClaimLogisticsOrder = (orderId: string) => {
+    const currentNow = Date.now();
+    updateFarm((farm) => {
+      const res = claimLogisticsOrder(farm, orderId, currentNow);
+      if (res.success) {
+        return {
+          goldEarned: res.goldEarned,
+          xpEarned: res.xpEarned,
+          message: res.message,
+          playSound: () => soundManager.playFarmCoin(),
+        };
+      }
+      return { message: res.message };
+    }, currentNow);
+  };
+
+  const handleRerollLogisticsOrder = (orderId: string) => {
+    const currentNow = Date.now();
+    updateFarm((farm) => {
+      const res = rerollLogisticsOrder(farm, orderId, currentNow);
+      return {
+        message: res.message,
+        playSound: res.success ? () => soundManager.playClick() : undefined,
+      };
+    }, currentNow);
+  };
+
+  const handleClaimLogisticsDailyBonus = () => {
+    const currentNow = Date.now();
+    updateFarm((farm) => {
+      const res = claimLogisticsDailyBonus(farm, currentNow);
+      if (res.success) {
+        return {
+          goldEarned: res.goldEarned,
+          xpEarned: res.xpEarned,
+          message: res.message,
+          playSound: () => soundManager.playFarmUpgrade(),
+        };
+      }
+      return { message: res.message };
+    }, currentNow);
+  };
+
+  const handlePurchaseFarmUpgrade = (id: FarmUpgradeId) => {
+    updateFarm((farm, draft) => {
+      const res = purchaseFarmUpgrade(farm, id, draft.progression.currentRankIndex);
+      return {
+        message: res.message,
+        playSound: res.success ? () => soundManager.playFarmUpgrade() : undefined,
+      };
     });
   };
 
@@ -934,8 +1290,40 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
             else handlePlotTap(index);
           }, selectAnimal: handleAnimalTap,
         }}
+        actions={{
+          waterAll: handleWaterAll,
+          treatAll: handleTreatAllPests,
+          replantAll: handleReplantAll,
+          harvestAll: handleHarvestAll,
+          quickReplantPlot: handleQuickReplantSelectedPlot,
+          quickHarvestPlot: handleHarvestSinglePlot,
+          quickWaterPlot: handleWaterPlot,
+          quickTreatPlot: handleTreatPest,
+          quickClearPlot: handleClearPlot,
+          openPlantModal: handleOpenPlantModal,
+          openFertilizeModal: () => {
+            if (selectedPlotIndex !== null) {
+              openFarmModal({ type: "apply-fertilizer", plotIndex: selectedPlotIndex });
+            }
+          },
+          unlockSelectedPlot: () => {
+            if (selectedPlotIndex !== null) {
+              handleUnlockPlot(selectedPlotIndex);
+            }
+          },
+          quickDismissAnimal: handleDismissAnimal,
+          soundEnabled: Boolean(gameState.settings?.soundEnabled ?? true),
+          onToggleSound: handleToggleSound,
+        }}
         toast={toastMessage} events={[...visualEvents, ...harvestPresentations.map(event => ({
-          id: event.id, plotIndex: event.plotIndex, kind: 'harvest' as const, cropId: event.cropId, startedAt: event.startedAt,
+          id: event.id,
+          plotIndex: event.plotIndex,
+          kind: 'harvest' as const,
+          cropId: event.cropId,
+          gold: event.goldAwarded,
+          xp: event.xpAwarded,
+          quality: event.quality,
+          startedAt: event.startedAt,
         }))]} reducedMotion={gameState.settings.reducedMotion}
         onGardenTap={handleGardenTap} onPenTap={handlePenTap}
         pushTarget={pushTarget} onExit={() => { closeFarmModal(); setMobileActive(false); }}
@@ -1349,6 +1737,36 @@ export const TangGiaScreen: React.FC<TangGiaScreenProps> = ({
           isOpen={true}
           onClose={closeFarmModal}
           currentSlot={currentWeatherSlot}
+        />
+      )}
+
+      {farmModal?.type === "logistics" && (
+        <FarmLogisticsModal
+          isOpen={true}
+          farm={farmState}
+          now={now}
+          onClose={closeFarmModal}
+          onClaimOrder={handleClaimLogisticsOrder}
+          onRerollOrder={handleRerollLogisticsOrder}
+          onClaimDailyBonus={handleClaimLogisticsDailyBonus}
+        />
+      )}
+
+      {farmModal?.type === "upgrades" && (
+        <FarmUpgradesModal
+          isOpen={true}
+          farm={farmState}
+          currentRank={currentRank}
+          onClose={closeFarmModal}
+          onUpgrade={handlePurchaseFarmUpgrade}
+        />
+      )}
+
+      {farmModal?.type === "almanac" && (
+        <FarmAlmanacModal
+          isOpen={true}
+          farm={farmState}
+          onClose={closeFarmModal}
         />
       )}
     </div>
