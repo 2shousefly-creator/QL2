@@ -8,6 +8,7 @@ export class FarmAnimalMotion {
   position: FarmPoint;
   moving = false;
   facingLeft = false;
+  walkPhase = 0;
   private seed = 1;
   private start: FarmPoint;
   private target: FarmPoint;
@@ -16,24 +17,56 @@ export class FarmAnimalMotion {
   private nextAt = 0;
   private paused = false;
   constructor(id: string) {
-    for(const char of id)this.seed=(Math.imul(this.seed,31)+char.charCodeAt(0))>>>0;
-    this.position=this.nextPoint();this.start={...this.position};this.target={...this.position};
+    for (const char of id) this.seed = (Math.imul(this.seed, 31) + char.charCodeAt(0)) >>> 0;
+    this.position = this.nextPoint();
+    this.start = { ...this.position };
+    this.target = { ...this.position };
   }
-  private random(){this.seed=(Math.imul(this.seed,1664525)+1013904223)>>>0;return this.seed/4294967296;}
-  private nextPoint(){return {x:YARD.left+this.random()*(YARD.right-YARD.left),y:YARD.top+this.random()*(YARD.bottom-YARD.top)};}
+  private random() {
+    this.seed = (Math.imul(this.seed, 1664525) + 1013904223) >>> 0;
+    return this.seed / 4294967296;
+  }
+  private nextPoint() {
+    return {
+      x: YARD.left + this.random() * (YARD.right - YARD.left),
+      y: YARD.top + this.random() * (YARD.bottom - YARD.top),
+    };
+  }
   update(now: number, pause: boolean) {
-    if(pause){this.paused=true;this.moving=false;return;}
-    if(this.paused){this.paused=false;this.nextAt=now+500;this.duration=0;}
-    if(this.duration>0){
-      const t=Math.min(1,Math.max(0,(now-this.startedAt)/this.duration));
-      this.position.x=this.start.x+(this.target.x-this.start.x)*t;
-      this.position.y=this.start.y+(this.target.y-this.start.y)*t;
-      this.moving=t<1;
-      if(t===1){this.duration=0;this.nextAt=now+1800+this.random()*3200;}
-    } else if(now>=this.nextAt){
-      this.start={...this.position};this.target=this.nextPoint();
-      const dx=this.target.x-this.start.x,dy=this.target.y-this.start.y;
-      this.facingLeft=dx-dy<0;this.duration=Math.max(1200,Math.hypot(dx,dy)/.28*1000);this.startedAt=now;this.moving=true;
+    if (pause) {
+      this.paused = true;
+      this.moving = false;
+      this.walkPhase = 0;
+      return;
+    }
+    if (this.paused) {
+      this.paused = false;
+      this.nextAt = now + 450;
+      this.duration = 0;
+    }
+    if (this.duration > 0) {
+      const rawT = Math.min(1, Math.max(0, (now - this.startedAt) / this.duration));
+      // Smooth ease-in-out curve for natural animal movement
+      const eased = rawT < 0.5 ? 2 * rawT * rawT : 1 - Math.pow(-2 * rawT + 2, 2) / 2;
+      this.position.x = this.start.x + (this.target.x - this.start.x) * eased;
+      this.position.y = this.start.y + (this.target.y - this.start.y) * eased;
+      this.moving = rawT < 1;
+      this.walkPhase = rawT;
+      if (rawT === 1) {
+        this.duration = 0;
+        this.walkPhase = 0;
+        this.nextAt = now + 1500 + this.random() * 2800;
+      }
+    } else if (now >= this.nextAt) {
+      this.start = { ...this.position };
+      this.target = this.nextPoint();
+      const dx = this.target.x - this.start.x;
+      const dy = this.target.y - this.start.y;
+      this.facingLeft = dx - dy < 0;
+      this.duration = Math.max(1100, (Math.hypot(dx, dy) / 0.3) * 1000);
+      this.startedAt = now;
+      this.moving = true;
+      this.walkPhase = 0;
     }
   }
 }

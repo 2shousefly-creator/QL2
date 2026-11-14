@@ -16,6 +16,7 @@ export type FarmWorldControls = {
   focusPlot(index: number): void;
   follow(value: boolean): void;
   zoom(delta: number): void;
+  resetZoom(): void;
   retry(): void;
 };
 
@@ -27,7 +28,12 @@ export type FarmWorldProps = FarmMobileModel & {
   clearSelection(): void;
   showPlotInfo?: boolean;
   workerCamera?: { nonce: number; follow: boolean } | null;
-  publish(controls: FarmWorldControls, failed: boolean, following: boolean): void;
+  publish(
+    controls: FarmWorldControls,
+    failed: boolean,
+    following: boolean,
+    zoomPercent?: number
+  ): void;
 };
 
 type Actor = { root: Container; sprite: Sprite; label: Text; key: string };
@@ -83,6 +89,7 @@ export const createFarmWorldScene: PixiSceneFactory<FarmWorldProps> = (app, init
   let lastSourcesAt = 0;
   let sourcesDirty = true;
   let lastZoom = -1;
+  let lastZoomPercent = 100;
   let lastQuality = '';
   let lastFeed = '';
   let lastSeason: SeasonType | '' = '';
@@ -111,9 +118,11 @@ export const createFarmWorldScene: PixiSceneFactory<FarmWorldProps> = (app, init
 
   const camera = new FarmWorldCamera();
   const glowTexture = createGlowTexture();
-  const pestOrbContext = new GraphicsContext().circle(0, 0, 2.3).fill(0xef4444);
+  const pestOrbContext = new GraphicsContext()
+    .poly([0, -3.2, 3.2, 0, 0, 3.2, -3.2, 0])
+    .fill(0xef4444);
   const sparkleContext = new GraphicsContext()
-    .poly([0, -4, 2.5, 0, 0, 4, -2.5, 0])
+    .poly([0, -4.5, 2.8, 0, 0, 4.5, -2.8, 0])
     .fill(0xfef08a);
 
   const plots = new Map<number, Actor>();
@@ -136,7 +145,9 @@ export const createFarmWorldScene: PixiSceneFactory<FarmWorldProps> = (app, init
   function makeActor(parent: Container): Actor {
     const container = parent.addChild(new Container());
     const shadow = container.addChild(
-      new Graphics().ellipse(0, 0, 25, 9).fill({ color: 0x142015, alpha: 0.22 })
+      new Graphics()
+        .poly([-25, 0, -17, -7, 0, -9, 17, -7, 25, 0, 17, 7, 0, 9, -17, 7])
+        .fill({ color: 0x142015, alpha: 0.24 })
     );
     shadow.eventMode = 'none';
     const sprite = container.addChild(new Sprite(Texture.EMPTY));
@@ -237,25 +248,34 @@ export const createFarmWorldScene: PixiSceneFactory<FarmWorldProps> = (app, init
               : { x: 4, y: 6 };
       camera.focus(toFarmScreen(point), reduced);
       viewDirty = true;
-      props.publish(controls, art.failed.size > 0, following);
+      props.publish(controls, art.failed.size > 0, following, Math.round(camera.zoom * 100));
       requestRender();
     },
     focusPlot(index) {
       following = false;
       camera.focus(toFarmScreen(plotWorldPoint(index)), reduced);
       viewDirty = true;
-      props.publish(controls, art.failed.size > 0, following);
+      props.publish(controls, art.failed.size > 0, following, Math.round(camera.zoom * 100));
       requestRender();
     },
     follow(value) {
       following = value;
-      props.publish(controls, art.failed.size > 0, following);
+      props.publish(controls, art.failed.size > 0, following, Math.round(camera.zoom * 100));
       viewDirty = true;
       requestRender();
     },
     zoom(delta) {
-      camera.smoothZoomBy(delta, reduced);
+      following = false;
+      camera.smoothZoomBy(delta, reduced, { x: width / 2, y: height / 2 });
       viewDirty = true;
+      props.publish(controls, art.failed.size > 0, following, Math.round(camera.zoom * 100));
+      requestRender();
+    },
+    resetZoom() {
+      following = false;
+      camera.resetZoom(reduced);
+      viewDirty = true;
+      props.publish(controls, art.failed.size > 0, following, Math.round(camera.zoom * 100));
       requestRender();
     },
     retry() {
@@ -348,10 +368,15 @@ export const createFarmWorldScene: PixiSceneFactory<FarmWorldProps> = (app, init
       }
       const px = p.x - cx * 400;
       const py = p.y - cy * 320;
-      paths.poly([px, py - 15, px + 30, py, px, py + 15, px - 30, py]).fill({
-        color: 0x998564,
-        alpha: 0.6,
-      });
+      paths
+        .poly([px, py - 15, px + 30, py, px, py + 15, px - 30, py])
+        .fill({ color: 0xa68963, alpha: 0.72 })
+        .poly([px, py - 11, px + 22, py, px, py + 9, px - 22, py])
+        .fill({ color: 0xc8ad82, alpha: 0.65 })
+        .poly([px - 14, py - 2, px - 6, py - 6, px - 2, py - 1, px - 9, py + 3])
+        .fill({ color: 0xe3caa1, alpha: 0.45 })
+        .poly([px + 7, py + 1, px + 15, py - 3, px + 18, py + 2, px + 10, py + 5])
+        .fill({ color: 0x8b6f4e, alpha: 0.45 });
     }
   }
   for (const chunk of terrainChunks.values()) chunk.cacheAsTexture({ resolution: 1 });
@@ -837,6 +862,11 @@ export const createFarmWorldScene: PixiSceneFactory<FarmWorldProps> = (app, init
       if (lastZoom !== camera.zoom) {
         lastZoom = camera.zoom;
         dataDirty = true;
+        const pct = Math.round(camera.zoom * 100);
+        if (pct !== lastZoomPercent) {
+          lastZoomPercent = pct;
+          props.publish(controls, art.failed.size > 0, following, pct);
+        }
       }
       sourcesDirty = true;
       viewDirty = false;
@@ -852,14 +882,29 @@ export const createFarmWorldScene: PixiSceneFactory<FarmWorldProps> = (app, init
       lastFrame = -1;
     }
 
-    for (const animal of props.snapshot.animals) {
+    const tSec = now * 0.001;
+    for (let i = 0; i < props.snapshot.animals.length; i++) {
+      const animal = props.snapshot.animals[i];
       const motion = animalMotion.get(animal.id)!;
       const actor = animals.get(animal.id)!;
       motion.update(now, reduced || animal.dead || animal.weak || props.snapshot.phase === 'night');
       const at = toFarmScreen(motion.position);
+      const hopY =
+        !reduced && motion.moving
+          ? -Math.abs(Math.sin(tSec * 9.5 + i * 1.3)) * 5.5
+          : !reduced && !animal.dead && animal.storedEggs > 0
+            ? -Math.abs(Math.sin(tSec * 4.5 + i)) * 2.5
+            : 0;
       actor.root.position.set(at.x, at.y);
       actor.root.zIndex = at.y;
       actor.root.visible = visible(at);
+      actor.sprite.y = hopY;
+      actor.sprite.rotation =
+        !reduced && motion.moving ? Math.sin(tSec * 9.5 + i * 1.3) * 0.065 : 0;
+      const badge = animalBadges.get(animal.id);
+      if (badge && badge.visible) {
+        badge.y = reduced ? -46 : -46 + Math.sin(tSec * 4.2 + i) * 3.5 + hopY * 0.5;
+      }
       if (props.selectedAnimal === animal.id) {
         selection.position.set(at.x, at.y);
         selection.zIndex = at.y + 0.5;
@@ -917,31 +962,35 @@ export const createFarmWorldScene: PixiSceneFactory<FarmWorldProps> = (app, init
     worldEffects.receive(frameEvents, now, reduced);
     worldEffects.update(now, reduced);
 
-    // Subtle smooth crop wind sway & pest orb orbiting & quality halo breath
+    // Lively low-poly crop wind sway, springy breathing, pest orb orbiting & quality halo breath
     if (!reduced) {
-      const t = now * 0.001;
-      const swayAmp = props.snapshot.weather === 'cool' ? 0.06 : 0.028;
+      const t = tSec;
+      const swayAmp = props.snapshot.weather === 'cool' ? 0.068 : 0.034;
       for (const plot of props.snapshot.plots) {
         const actor = plots.get(plot.index)!;
         if (!actor.root.visible) continue;
         if (plot.cropId) {
           actor.sprite.skew.x =
-            plot.artStage === 'seeded' ? 0 : Math.sin(t * 2.1 + plot.index * 0.65) * swayAmp;
+            plot.artStage === 'seeded' ? 0 : Math.sin(t * 2.3 + plot.index * 0.65) * swayAmp;
+          const isReady = plot.status === 'ready';
+          const breath = Math.sin(t * (isReady ? 3.8 : 2.2) + plot.index * 0.8);
+          actor.sprite.y = isReady ? -Math.abs(breath) * 3.2 : 0;
           const aura = plotAuras.get(plot.index)!;
           if (aura.visible) {
-            const pulse = 1 + Math.sin(t * 3 + plot.index) * 0.05;
+            const pulse = 1 + Math.sin(t * 3.4 + plot.index) * 0.07;
             aura.scale.set(pulse);
-            aura.alpha = 0.72 + Math.sin(t * 3 + plot.index) * 0.2;
+            aura.alpha = 0.74 + Math.sin(t * 3.4 + plot.index) * 0.22;
           }
           const orbs = pestOrbs.get(plot.index)!;
           orbs.forEach((orb, j) => {
             orb.visible = plot.pest;
             if (plot.pest) {
-              const angle = t * 4.2 + j * ((Math.PI * 2) / 3) + plot.index;
+              const angle = t * 4.5 + j * ((Math.PI * 2) / 3) + plot.index;
               orb.position.set(
                 Math.cos(angle) * 20,
                 -22 + Math.sin(angle * 1.4) * 8 + Math.sin(t * 6 + j) * 2
               );
+              orb.rotation = angle;
             }
           });
           const sparkles = fertSparkles.get(plot.index)!;
@@ -949,14 +998,16 @@ export const createFarmWorldScene: PixiSceneFactory<FarmWorldProps> = (app, init
             const active = plot.fertilizer && plot.status === 'growing';
             sp.visible = active;
             if (active) {
-              const phase = (t * 1.3 + j * 0.5 + plot.index * 0.2) % 1;
+              const phase = (t * 1.4 + j * 0.5 + plot.index * 0.2) % 1;
               sp.position.set((j === 0 ? -14 : 15) + Math.sin(t * 2 + j) * 4, -6 - phase * 24);
               sp.alpha = Math.sin(phase * Math.PI);
               sp.scale.set(0.75 + Math.sin(phase * Math.PI) * 0.45);
+              sp.rotation = phase * Math.PI;
             }
           });
         } else {
           actor.sprite.skew.x = 0;
+          actor.sprite.y = 0;
           pestOrbs.get(plot.index)?.forEach((orb) => {
             orb.visible = false;
           });
@@ -967,7 +1018,9 @@ export const createFarmWorldScene: PixiSceneFactory<FarmWorldProps> = (app, init
       }
     } else {
       for (const plot of props.snapshot.plots) {
-        plots.get(plot.index)!.sprite.skew.x = 0;
+        const actor = plots.get(plot.index)!;
+        actor.sprite.skew.x = 0;
+        actor.sprite.y = 0;
         pestOrbs.get(plot.index)?.forEach((orb, j) => {
           orb.visible = plot.pest;
           if (plot.pest) orb.position.set(-14 + j * 14, -24);
@@ -1106,7 +1159,7 @@ export const createFarmWorldScene: PixiSceneFactory<FarmWorldProps> = (app, init
     }
   }
 
-  props.publish(controls, false, false);
+  props.publish(controls, false, false, Math.round(camera.zoom * 100));
   sources();
 
   return {
@@ -1129,9 +1182,10 @@ export const createFarmWorldScene: PixiSceneFactory<FarmWorldProps> = (app, init
         Math.min(window.devicePixelRatio || 1, props.quality === 'low' ? 1 : 1.5, Math.sqrt(1500000 / (w * h)))
       );
       app.renderer.resolution = resolution;
+      app.renderer.resize(w, h);
       camera.width = w;
       camera.height = h;
-      background.clear().rect(0, 0, w, h).fill(0x344536);
+      background.clear().rect(0, 0, w, h).fill(0x283e2b);
       app.ticker.maxFPS = 60;
       viewDirty = true;
       dataDirty = true;

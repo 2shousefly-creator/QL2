@@ -1,12 +1,12 @@
 {
   "design": {
-    "revision": "world-ambient-v6-bright-cartoon",
+    "revision": "lowpoly-v1",
     "frame": [
       96,
       96
     ],
     "layout": "garden then pen; bottom-left plot 1",
-    "rendering": "original SVG paths with gradient shading; no external image source"
+    "rendering": "Friendly Cartoon Low-Poly faceted SVG paths"
   },
   "crops": [
     {
@@ -193,7 +193,7 @@
         "ready-idle-5",
         "yield-idle-5"
       ],
-      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+      "provenance": "Cartoon Low-Poly vector paths in scripts/tanggia/draw-topdown-art.ts"
     },
     {
       "sheet": "crop-cabbage",
@@ -259,7 +259,7 @@
         "ready-idle-5",
         "yield-idle-5"
       ],
-      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+      "provenance": "Cartoon Low-Poly vector paths in scripts/tanggia/draw-topdown-art.ts"
     },
     {
       "sheet": "crop-potato",
@@ -325,7 +325,7 @@
         "ready-idle-5",
         "yield-idle-5"
       ],
-      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+      "provenance": "Cartoon Low-Poly vector paths in scripts/tanggia/draw-topdown-art.ts"
     },
     {
       "sheet": "crop-tomato",
@@ -391,7 +391,7 @@
         "ready-idle-5",
         "yield-idle-5"
       ],
-      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+      "provenance": "Cartoon Low-Poly vector paths in scripts/tanggia/draw-topdown-art.ts"
     },
     {
       "sheet": "crop-strawberry",
@@ -457,7 +457,7 @@
         "ready-idle-5",
         "yield-idle-5"
       ],
-      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+      "provenance": "Cartoon Low-Poly vector paths in scripts/tanggia/draw-topdown-art.ts"
     },
     {
       "sheet": "crop-corn",
@@ -523,7 +523,7 @@
         "ready-idle-5",
         "yield-idle-5"
       ],
-      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+      "provenance": "Cartoon Low-Poly vector paths in scripts/tanggia/draw-topdown-art.ts"
     },
     {
       "sheet": "crop-pumpkin",
@@ -589,7 +589,7 @@
         "ready-idle-5",
         "yield-idle-5"
       ],
-      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+      "provenance": "Cartoon Low-Poly vector paths in scripts/tanggia/draw-topdown-art.ts"
     },
     {
       "sheet": "crop-watermelon",
@@ -655,7 +655,7 @@
         "ready-idle-5",
         "yield-idle-5"
       ],
-      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+      "provenance": "Cartoon Low-Poly vector paths in scripts/tanggia/draw-topdown-art.ts"
     },
     {
       "sheet": "crop-pineapple",
@@ -721,7 +721,7 @@
         "ready-idle-5",
         "yield-idle-5"
       ],
-      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+      "provenance": "Cartoon Low-Poly vector paths in scripts/tanggia/draw-topdown-art.ts"
     },
     {
       "sheet": "crop-banana",
@@ -787,7 +787,7 @@
         "ready-idle-5",
         "yield-idle-5"
       ],
-      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+      "provenance": "Cartoon Low-Poly vector paths in scripts/tanggia/draw-topdown-art.ts"
     },
     {
       "sheet": "crop-orange",
@@ -853,7 +853,7 @@
         "ready-idle-5",
         "yield-idle-5"
       ],
-      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+      "provenance": "Cartoon Low-Poly vector paths in scripts/tanggia/draw-topdown-art.ts"
     },
     {
       "sheet": "crop-mango",
@@ -919,7 +919,7 @@
         "ready-idle-5",
         "yield-idle-5"
       ],
-      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+      "provenance": "Cartoon Low-Poly vector paths in scripts/tanggia/draw-topdown-art.ts"
     },
     {
       "sheet": "crop-apple",
@@ -985,7 +985,7 @@
         "ready-idle-5",
         "yield-idle-5"
       ],
-      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+      "provenance": "Cartoon Low-Poly vector paths in scripts/tanggia/draw-topdown-art.ts"
     },
     {
       "sheet": "crop-pear",
@@ -1051,7 +1051,7 @@
         "ready-idle-5",
         "yield-idle-5"
       ],
-      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+      "provenance": "Cartoon Low-Poly vector paths in scripts/tanggia/draw-topdown-art.ts"
     },
     {
       "sheet": "crop-grape",
@@ -1117,7 +1117,7 @@
         "ready-idle-5",
         "yield-idle-5"
       ],
-      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+      "provenance": "Cartoon Low-Poly vector paths in scripts/tanggia/draw-topdown-art.ts"
     },
     {
       "sheet": "crop-dragon_fruit",
@@ -1183,7 +1183,7 @@
         "ready-idle-5",
         "yield-idle-5"
       ],
-      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+      "provenance": "Cartoon Low-Poly vector paths in scripts/tanggia/draw-topdown-art.ts"
     },
     {
       "sheet": "crop-avocado",
@@ -1249,7 +1249,7 @@
         "ready-idle-5",
         "yield-idle-5"
       ],
-      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+      "provenance": "Cartoon Low-Poly vector paths in scripts/tanggia/draw-topdown-art.ts"
     },
     {
       "sheet": "crop-durian",
@@ -1315,7 +1315,7 @@
         "ready-idle-5",
         "yield-idle-5"
       ],
-      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+      "provenance": "Cartoon Low-Poly vector paths in scripts/tanggia/draw-topdown-art.ts"
     },
     {
       "sheet": "crop-mangosteen",
@@ -1381,7 +1381,7 @@
         "ready-idle-5",
         "yield-idle-5"
       ],
-      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+      "provenance": "Cartoon Low-Poly vector paths in scripts/tanggia/draw-topdown-art.ts"
     },
     {
       "sheet": "animal-chicken",
@@ -1441,7 +1441,7 @@
         "dead-4",
         "dead-5"
       ],
-      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+      "provenance": "Cartoon Low-Poly vector paths in scripts/tanggia/draw-topdown-art.ts"
     },
     {
       "sheet": "item-chicken_egg",
@@ -1454,7 +1454,7 @@
       "frameNames": [
         "icon"
       ],
-      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+      "provenance": "Cartoon Low-Poly vector paths in scripts/tanggia/draw-topdown-art.ts"
     },
     {
       "sheet": "animal-duck",
@@ -1514,7 +1514,7 @@
         "dead-4",
         "dead-5"
       ],
-      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+      "provenance": "Cartoon Low-Poly vector paths in scripts/tanggia/draw-topdown-art.ts"
     },
     {
       "sheet": "item-duck_egg",
@@ -1527,7 +1527,7 @@
       "frameNames": [
         "icon"
       ],
-      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+      "provenance": "Cartoon Low-Poly vector paths in scripts/tanggia/draw-topdown-art.ts"
     },
     {
       "sheet": "animal-quail",
@@ -1587,7 +1587,7 @@
         "dead-4",
         "dead-5"
       ],
-      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+      "provenance": "Cartoon Low-Poly vector paths in scripts/tanggia/draw-topdown-art.ts"
     },
     {
       "sheet": "item-quail_egg",
@@ -1600,7 +1600,7 @@
       "frameNames": [
         "icon"
       ],
-      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+      "provenance": "Cartoon Low-Poly vector paths in scripts/tanggia/draw-topdown-art.ts"
     },
     {
       "sheet": "animal-goose",
@@ -1660,7 +1660,7 @@
         "dead-4",
         "dead-5"
       ],
-      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+      "provenance": "Cartoon Low-Poly vector paths in scripts/tanggia/draw-topdown-art.ts"
     },
     {
       "sheet": "item-goose_egg",
@@ -1673,7 +1673,7 @@
       "frameNames": [
         "icon"
       ],
-      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+      "provenance": "Cartoon Low-Poly vector paths in scripts/tanggia/draw-topdown-art.ts"
     },
     {
       "sheet": "animal-muscovy_duck",
@@ -1733,7 +1733,7 @@
         "dead-4",
         "dead-5"
       ],
-      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+      "provenance": "Cartoon Low-Poly vector paths in scripts/tanggia/draw-topdown-art.ts"
     },
     {
       "sheet": "item-muscovy_duck_egg",
@@ -1746,7 +1746,7 @@
       "frameNames": [
         "icon"
       ],
-      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+      "provenance": "Cartoon Low-Poly vector paths in scripts/tanggia/draw-topdown-art.ts"
     },
     {
       "sheet": "animal-turkey",
@@ -1806,7 +1806,7 @@
         "dead-4",
         "dead-5"
       ],
-      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+      "provenance": "Cartoon Low-Poly vector paths in scripts/tanggia/draw-topdown-art.ts"
     },
     {
       "sheet": "item-turkey_egg",
@@ -1819,7 +1819,7 @@
       "frameNames": [
         "icon"
       ],
-      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+      "provenance": "Cartoon Low-Poly vector paths in scripts/tanggia/draw-topdown-art.ts"
     },
     {
       "sheet": "animal-guinea_fowl",
@@ -1879,7 +1879,7 @@
         "dead-4",
         "dead-5"
       ],
-      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+      "provenance": "Cartoon Low-Poly vector paths in scripts/tanggia/draw-topdown-art.ts"
     },
     {
       "sheet": "item-guinea_fowl_egg",
@@ -1892,7 +1892,7 @@
       "frameNames": [
         "icon"
       ],
-      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+      "provenance": "Cartoon Low-Poly vector paths in scripts/tanggia/draw-topdown-art.ts"
     },
     {
       "sheet": "animal-pheasant",
@@ -1952,7 +1952,7 @@
         "dead-4",
         "dead-5"
       ],
-      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+      "provenance": "Cartoon Low-Poly vector paths in scripts/tanggia/draw-topdown-art.ts"
     },
     {
       "sheet": "item-pheasant_egg",
@@ -1965,7 +1965,7 @@
       "frameNames": [
         "icon"
       ],
-      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+      "provenance": "Cartoon Low-Poly vector paths in scripts/tanggia/draw-topdown-art.ts"
     },
     {
       "sheet": "animal-peafowl",
@@ -2025,7 +2025,7 @@
         "dead-4",
         "dead-5"
       ],
-      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+      "provenance": "Cartoon Low-Poly vector paths in scripts/tanggia/draw-topdown-art.ts"
     },
     {
       "sheet": "item-peafowl_egg",
@@ -2038,7 +2038,7 @@
       "frameNames": [
         "icon"
       ],
-      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+      "provenance": "Cartoon Low-Poly vector paths in scripts/tanggia/draw-topdown-art.ts"
     },
     {
       "sheet": "animal-ostrich",
@@ -2098,7 +2098,7 @@
         "dead-4",
         "dead-5"
       ],
-      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+      "provenance": "Cartoon Low-Poly vector paths in scripts/tanggia/draw-topdown-art.ts"
     },
     {
       "sheet": "item-ostrich_egg",
@@ -2111,7 +2111,7 @@
       "frameNames": [
         "icon"
       ],
-      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+      "provenance": "Cartoon Low-Poly vector paths in scripts/tanggia/draw-topdown-art.ts"
     },
     {
       "sheet": "item-fertilizer_nutrition_normal",
@@ -2124,7 +2124,7 @@
       "frameNames": [
         "icon"
       ],
-      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+      "provenance": "Cartoon Low-Poly vector paths in scripts/tanggia/draw-topdown-art.ts"
     },
     {
       "sheet": "item-fertilizer_growth_normal",
@@ -2137,7 +2137,7 @@
       "frameNames": [
         "icon"
       ],
-      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+      "provenance": "Cartoon Low-Poly vector paths in scripts/tanggia/draw-topdown-art.ts"
     },
     {
       "sheet": "item-fertilizer_nutrition_medium",
@@ -2150,7 +2150,7 @@
       "frameNames": [
         "icon"
       ],
-      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+      "provenance": "Cartoon Low-Poly vector paths in scripts/tanggia/draw-topdown-art.ts"
     },
     {
       "sheet": "item-fertilizer_growth_medium",
@@ -2163,7 +2163,7 @@
       "frameNames": [
         "icon"
       ],
-      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+      "provenance": "Cartoon Low-Poly vector paths in scripts/tanggia/draw-topdown-art.ts"
     },
     {
       "sheet": "item-fertilizer_nutrition_good",
@@ -2176,7 +2176,7 @@
       "frameNames": [
         "icon"
       ],
-      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+      "provenance": "Cartoon Low-Poly vector paths in scripts/tanggia/draw-topdown-art.ts"
     },
     {
       "sheet": "item-fertilizer_growth_good",
@@ -2189,7 +2189,7 @@
       "frameNames": [
         "icon"
       ],
-      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+      "provenance": "Cartoon Low-Poly vector paths in scripts/tanggia/draw-topdown-art.ts"
     },
     {
       "sheet": "item-fertilizer_nutrition_super",
@@ -2202,7 +2202,7 @@
       "frameNames": [
         "icon"
       ],
-      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+      "provenance": "Cartoon Low-Poly vector paths in scripts/tanggia/draw-topdown-art.ts"
     },
     {
       "sheet": "item-fertilizer_growth_super",
@@ -2215,7 +2215,7 @@
       "frameNames": [
         "icon"
       ],
-      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+      "provenance": "Cartoon Low-Poly vector paths in scripts/tanggia/draw-topdown-art.ts"
     },
     {
       "sheet": "item-fertilizer_premium_3",
@@ -2228,7 +2228,7 @@
       "frameNames": [
         "icon"
       ],
-      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+      "provenance": "Cartoon Low-Poly vector paths in scripts/tanggia/draw-topdown-art.ts"
     },
     {
       "sheet": "item-fertilizer_premium_2",
@@ -2241,7 +2241,7 @@
       "frameNames": [
         "icon"
       ],
-      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+      "provenance": "Cartoon Low-Poly vector paths in scripts/tanggia/draw-topdown-art.ts"
     },
     {
       "sheet": "item-fertilizer_premium_1",
@@ -2254,7 +2254,7 @@
       "frameNames": [
         "icon"
       ],
-      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+      "provenance": "Cartoon Low-Poly vector paths in scripts/tanggia/draw-topdown-art.ts"
     },
     {
       "sheet": "item-feed_normal",
@@ -2267,7 +2267,7 @@
       "frameNames": [
         "icon"
       ],
-      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+      "provenance": "Cartoon Low-Poly vector paths in scripts/tanggia/draw-topdown-art.ts"
     },
     {
       "sheet": "item-feed_good",
@@ -2280,7 +2280,7 @@
       "frameNames": [
         "icon"
       ],
-      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+      "provenance": "Cartoon Low-Poly vector paths in scripts/tanggia/draw-topdown-art.ts"
     },
     {
       "sheet": "item-feed_super",
@@ -2293,7 +2293,7 @@
       "frameNames": [
         "icon"
       ],
-      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+      "provenance": "Cartoon Low-Poly vector paths in scripts/tanggia/draw-topdown-art.ts"
     },
     {
       "sheet": "soil",
@@ -2320,7 +2320,7 @@
         "post_harvest_reset",
         "selected"
       ],
-      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+      "provenance": "Cartoon Low-Poly vector paths in scripts/tanggia/draw-topdown-art.ts"
     },
     {
       "sheet": "props",
@@ -2348,7 +2348,7 @@
         "store",
         "herd"
       ],
-      "provenance": "Original vector paths in scripts/tanggia/draw-topdown-art.ts"
+      "provenance": "Cartoon Low-Poly vector paths in scripts/tanggia/draw-topdown-art.ts"
     }
   ]
 }

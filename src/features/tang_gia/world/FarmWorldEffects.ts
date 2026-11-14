@@ -32,7 +32,11 @@ const EVENT_PRUNE_MS = 4500;
 /** Pooled Pixi particle burst + floating reward text manager for the 2.5D world. */
 export class FarmWorldEffects {
   readonly root = new Container();
-  private particleContext = new GraphicsContext().circle(0, 0, 4.5).fill(0xffffff);
+  private particleContext = new GraphicsContext()
+    .poly([0, -5.2, 4.4, 0, 0, 5.2, -4.4, 0])
+    .fill(0xffffff)
+    .poly([0, -5.2, 4.4, 0, 0, 0.5])
+    .fill({ color: 0xffffff, alpha: 0.45 });
   private particles: ActiveParticle[];
   private texts: ActiveFloatText[];
   private seen = new Map<string, number>();
@@ -298,6 +302,7 @@ export class FarmWorldEffects {
         slot.startX + slot.vx * sec,
         slot.startY + slot.vy * sec + 0.5 * slot.gravity * sec * sec
       );
+      slot.graphic.rotation = sec * (slot.vx >= 0 ? 4.8 : -4.8);
       slot.graphic.alpha = 1 - Math.pow(t, 1.5);
       slot.graphic.scale.set(slot.baseScale * (1 - 0.45 * t));
     }

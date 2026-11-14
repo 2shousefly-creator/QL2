@@ -12,14 +12,13 @@ export class FarmWorldWeather {
   readonly root = new Container();
 
   private rainContext = new GraphicsContext()
-    .moveTo(0, 0)
-    .lineTo(-5, 17)
-    .stroke({ color: 0xd4eaf5, alpha: 0.65, width: 1.5 });
+    .poly([0, 0, 1.6, 1, -4.5, 18, -6.1, 17])
+    .fill({ color: 0xd8f3ff, alpha: 0.72 });
   private rippleContext = new GraphicsContext()
-    .ellipse(0, 0, 7, 2.6)
-    .stroke({ color: 0xe0f2fe, alpha: 0.45, width: 1.2 });
+    .poly([0, -3.5, 9, 0, 0, 3.5, -9, 0])
+    .stroke({ color: 0xe0f2fe, alpha: 0.52, width: 1.4 });
   private seasonalContext = new GraphicsContext()
-    .ellipse(0, 0, 3.6, 2.2)
+    .poly([0, -4.2, 3.6, 0, 0, 4.2, -3.6, 0])
     .fill(0xffffff);
 
   private rain = Array.from({ length: 56 }, () =>
@@ -31,47 +30,54 @@ export class FarmWorldWeather {
   private clouds = Array.from({ length: 4 }, () =>
     this.root.addChild(
       new Graphics()
-        .ellipse(0, 0, 150, 24)
-        .ellipse(80, -12, 110, 26)
-        .fill({ color: 0xe4eff4, alpha: 0.09 })
+        .poly([-140, 8, -95, -18, -25, -28, 35, -14, 85, -32, 145, -12, 165, 12, 70, 22, -65, 20])
+        .fill({ color: 0xf1f8fc, alpha: 0.12 })
+        .poly([-140, 8, -65, 20, 70, 22, 165, 12, 95, 28, -80, 26])
+        .fill({ color: 0xcbd5e1, alpha: 0.09 })
     )
   );
   private sunbeams = Array.from({ length: 3 }, (_, i) =>
     this.root.addChild(
       new Graphics()
         .poly([0, 0, 120 + i * 30, 0, -90, 560, -250 - i * 25, 560])
-        .fill({ color: 0xffe49e, alpha: 0.045 })
+        .fill({ color: 0xffe49e, alpha: 0.05 })
     )
   );
   private sun = this.root.addChild(
     new Graphics()
-      .circle(0, 0, 68)
-      .fill({ color: 0xffe2a1, alpha: 0.05 })
-      .circle(0, 0, 39)
-      .fill({ color: 0xffe2a1, alpha: 0.09 })
-      .circle(0, 0, 22)
-      .fill({ color: 0xffe8b0, alpha: 0.65 })
+      .poly([0, -68, 48, -48, 68, 0, 48, 48, 0, 68, -48, 48, -68, 0, -48, -48])
+      .fill({ color: 0xffe2a1, alpha: 0.06 })
+      .poly([0, -40, 28, -28, 40, 0, 28, 28, 0, 40, -28, 28, -40, 0, -28, -28])
+      .fill({ color: 0xffe2a1, alpha: 0.12 })
+      .poly([0, -22, 16, -16, 22, 0, 16, 16, 0, 22, -16, 16, -22, 0, -16, -16])
+      .fill({ color: 0xffec99, alpha: 0.72 })
   );
   private moon = this.root.addChild(
     new Graphics()
-      .circle(0, 0, 30)
-      .fill({ color: 0xd6e7ff, alpha: 0.07 })
-      .circle(0, 0, 16)
-      .fill({ color: 0xd6e7ff, alpha: 0.8 })
-      .circle(7, -5, 13)
-      .fill(0x263c55)
+      .poly([0, -30, 21, -21, 30, 0, 21, 21, 0, 30, -21, 21, -30, 0, -21, -21])
+      .fill({ color: 0xd6e7ff, alpha: 0.08 })
+      .poly([-4, -18, 12, -12, 8, -2, 2, 8, 12, 14, -4, 18, -16, 8, -16, -8])
+      .fill({ color: 0xe2f0ff, alpha: 0.85 })
   );
   private stars = Array.from({ length: 22 }, (_, i) =>
     this.root.addChild(
-      new Graphics().circle(0, 0, i % 4 === 0 ? 2 : 1).fill(0xe2f0ff)
+      new Graphics()
+        .poly(
+          i % 4 === 0
+            ? [0, -3.2, 1.2, -1.2, 3.2, 0, 1.2, 1.2, 0, 3.2, -1.2, 1.2, -3.2, 0, -1.2, -1.2]
+            : [0, -1.8, 1.8, 0, 0, 1.8, -1.8, 0]
+        )
+        .fill(0xe2f0ff)
     )
   );
   private breeze = Array.from({ length: 8 }, () =>
     this.root.addChild(
       new Graphics()
         .moveTo(0, 0)
-        .quadraticCurveTo(24, -9, 48, 0)
-        .stroke({ color: 0xdceebc, alpha: 0.35, width: 1.5 })
+        .lineTo(18, -6)
+        .lineTo(36, -4)
+        .lineTo(54, 2)
+        .stroke({ color: 0xdceebc, alpha: 0.38, width: 1.6 })
     )
   );
   private seasonalParticles = Array.from({ length: 36 }, () =>

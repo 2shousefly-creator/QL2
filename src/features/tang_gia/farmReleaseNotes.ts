@@ -1,14 +1,11 @@
 export const FARM_RELEASE = {
-  id: '2026-11-13-farm-overhaul',
-  title: 'Tăng Gia — Đại Tu Toàn Diện',
+  id: '2026-11-14-lowpoly-rework',
+  title: 'Tăng Gia — Đại Tu Đồ Họa Hoạt Hình Low-Poly',
   items: [
-    'Đồ họa PixiJS 4 mùa (Xuân, Hạ, Thu, Đông): hiệu ứng hoa bay, đom đóm, lá rơi, tuyết, trăng sao và ánh sáng đèn lồng ban đêm.',
-    'Hiệu ứng hạt & chữ thưởng nổi khi gieo hạt, tưới nước, bón phân, diệt sâu và thu hoạch.',
-    'Bản đồ nhanh thu gọn cho phép chạm nhảy ngay tới 24 ô đất hoặc khu chuồng trại.',
-    'Thao tác đồng loạt 1 chạm: Thu hết, Tưới hết, Diệt sâu hết, Gieo lại hạt nhớ và thẻ chọn ô kèm thanh tiến độ trực tiếp.',
-    'Đơn Hàng Hậu Cần hằng ngày (3 nhiệm vụ + đổi đơn miễn phí + thưởng hoàn thành 3/3).',
-    'Nâng Cấp Công Trình (Giếng Nước, Máng Ăn, Kho Bãi, Ủng Nông Dân Cấp 1–5) mở rộng hiệu suất nông trại.',
-    'Sổ Tay Nông Sản & Thành Tích ghi lại số vụ thu hoạch, giống hoàn mỹ và sản lượng trứng đã bán.',
-    'Hiệu ứng âm thanh Web Audio riêng cho nông trại cùng nút bật/tắt tiếng nhanh trên HUD.',
+    'Đồ họa Hoạt Hình Low-Poly toàn diện: thiết kế lại toàn bộ 19 loại cây trồng, 10 loài vật nuôi, hạt giống, nông dân đội nón lá, nhà cửa, giếng đá, máng ăn và cánh đồng.',
+    'Khắc phục & nâng cấp Camera Zoom: hỗ trợ chụm 2 ngón (pinch-to-zoom), cuộn chuột, cụm nút thu phóng nhanh (- / 100% / +) ngay trên màn hình.',
+    'Chuyển động (Animation) sống động: cây đung đưa & nảy nhịp khi chín, vật nuôi nhảy chân sáo, hiệu ứng hạt đa giác xoay tròn và thời tiết 4 mùa Low-Poly.',
+    'Giao diện Mobile Webapp thân thiện: thanh công cụ cảm ứng 1 chạm, bảng chọn ô dạng thẻ nổi đáy màn hình và bản đồ nhanh tối ưu cho điện thoại.',
+    'Thao tác đồng loạt 1 chạm: Thu hết, Tưới hết, Diệt sâu hết, Gieo lại hạt nhớ cùng Đơn Hàng Hậu Cần, Nâng Cấp Hạ Tầng và Sổ Tay Nông Sản.',
   ],
 };

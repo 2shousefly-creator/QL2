@@ -8,7 +8,7 @@ export const SOIL_STATES = ['locked', 'empty_dry', 'empty_moist', 'tilled_dry', 
 export type SoilArtState = typeof SOIL_STATES[number];
 export const PROP_NAMES = ['shelter', 'trough', 'water', 'nest', 'hay', 'bush', 'stone', 'flowers', 'watering', 'granule', 'drop', 'spark', 'coin', 'basket', 'store', 'herd'] as const;
 const root = '/assets/tanggia/topdown-v3';
-export const artFrame = (sheet: string, column = 0, row = 0) => `${root}/${sheet}.svg?rev=world-ambient-v6#frame=${column},${row}`;
+export const artFrame = (sheet: string, column = 0, row = 0) => `${root}/${sheet}.svg?rev=lowpoly-v1#frame=${column},${row}`;
 export const cropArt = (id: CropId, stage: typeof CROP_FRAMES[number], frame = 0) => artFrame(`crop-${id}`, CROP_FRAMES.indexOf(stage), frame % 6);
 export const animalArt = (id: AnimalTypeId, state: AnimalArtState = 'idle', frame = 0) => artFrame(`animal-${id}`, frame % 6, ANIMAL_STATES.indexOf(state));
 export const soilArt = (state: SoilArtState) => artFrame('soil', SOIL_STATES.indexOf(state) % 5, Math.floor(SOIL_STATES.indexOf(state) / 5));

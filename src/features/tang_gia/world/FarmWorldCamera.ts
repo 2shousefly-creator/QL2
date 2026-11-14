@@ -3,8 +3,8 @@ import { FARM_WORLD } from '../farmWorldLayout';
 
 export const farmCameraSession = { x: 540, y: 410, zoom: 1, initialized: false };
 
-const MIN_ZOOM = 0.55;
-const MAX_ZOOM = 1.95;
+export const MIN_FARM_ZOOM = 0.5;
+export const MAX_FARM_ZOOM = 2.2;
 
 export class FarmWorldCamera {
   x = farmCameraSession.x;
@@ -22,6 +22,10 @@ export class FarmWorldCamera {
       x: Math.max(80, Math.min(FARM_WORLD.width - 80, point.x)),
       y: Math.max(70, Math.min(FARM_WORLD.height - 70, point.y)),
     };
+  }
+
+  private clampZoom(scale: number): number {
+    return Math.max(MIN_FARM_ZOOM, Math.min(MAX_FARM_ZOOM, scale));
   }
 
   world(p: FarmPoint): FarmPoint {
@@ -67,7 +71,7 @@ export class FarmWorldCamera {
 
   zoomAt(scale: number, point: FarmPoint) {
     const before = this.world(point);
-    this.zoom = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, scale));
+    this.zoom = this.clampZoom(scale);
     this.targetZoom = this.zoom;
     const after = this.world(point);
     this.x += before.x - after.x;
@@ -77,15 +81,33 @@ export class FarmWorldCamera {
     this.clamp();
   }
 
-  smoothZoomBy(factor: number, instant = false) {
-    const nextZoom = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, this.targetZoom * factor));
+  smoothZoomAt(scale: number, point?: FarmPoint, instant = false) {
+    const anchor = point ?? { x: this.width / 2, y: this.height / 2 };
+    const nextZoom = this.clampZoom(scale);
     if (instant) {
-      this.zoom = nextZoom;
-      this.targetZoom = nextZoom;
-      this.clamp();
+      this.zoomAt(nextZoom, anchor);
       return;
     }
+    const worldFocus = {
+      x: (anchor.x - this.width / 2) / this.targetZoom + this.targetX,
+      y: (anchor.y - this.height / 2) / this.targetZoom + this.targetY,
+    };
     this.targetZoom = nextZoom;
+    this.targetX = worldFocus.x - (anchor.x - this.width / 2) / nextZoom;
+    this.targetY = worldFocus.y - (anchor.y - this.height / 2) / nextZoom;
+    // Apply an immediate responsive step so button/wheel zoom is felt on frame 1
+    this.x += (this.targetX - this.x) * 0.35;
+    this.y += (this.targetY - this.y) * 0.35;
+    this.zoom += (this.targetZoom - this.zoom) * 0.35;
+    this.clamp();
+  }
+
+  smoothZoomBy(factor: number, instant = false, point?: FarmPoint) {
+    this.smoothZoomAt(this.targetZoom * factor, point, instant);
+  }
+
+  resetZoom(instant = false) {
+    this.smoothZoomAt(1, { x: this.width / 2, y: this.height / 2 }, instant);
   }
 
   focus(point: FarmPoint, instant = false) {
@@ -109,14 +131,15 @@ export class FarmWorldCamera {
 
   tick(dtSeconds: number, reducedMotion = false): boolean {
     if (!this.isAnimating()) return false;
-    if (reducedMotion || dtSeconds <= 0) {
+    if (reducedMotion) {
       this.x = this.targetX;
       this.y = this.targetY;
       this.zoom = this.targetZoom;
       this.clamp();
       return true;
     }
-    const factor = 1 - Math.exp(-Math.min(0.1, dtSeconds) * 11);
+    const effectiveDt = dtSeconds > 0 ? Math.min(0.1, dtSeconds) : 1 / 60;
+    const factor = 1 - Math.exp(-effectiveDt * 12);
     this.x += (this.targetX - this.x) * factor;
     this.y += (this.targetY - this.y) * factor;
     this.zoom += (this.targetZoom - this.zoom) * factor;
@@ -142,6 +165,10 @@ export class FarmWorldInput {
     private tap: (point: FarmPoint) => void,
     private manual: () => void
   ) {
+    canvas.style.touchAction = 'none';
+    canvas.style.pointerEvents = 'auto';
+    canvas.style.userSelect = 'none';
+    canvas.style.cursor = 'grab';
     canvas.addEventListener('pointerdown', this.down);
     canvas.addEventListener('pointermove', this.move);
     canvas.addEventListener('pointerup', this.up);
@@ -173,7 +200,12 @@ export class FarmWorldInput {
       this.moved = true;
     }
     this.pointers.set(e.pointerId, p);
-    this.canvas.setPointerCapture(e.pointerId);
+    this.canvas.style.cursor = 'grabbing';
+    try {
+      this.canvas.setPointerCapture(e.pointerId);
+    } catch {
+      // Ignore capture errors on synthetic or non-capturable pointers
+    }
   };
 
   private move = (e: PointerEvent) => {
@@ -181,21 +213,24 @@ export class FarmWorldInput {
     const next = this.point(e);
     const previous = this.pointers.get(e.pointerId)!;
     if (this.pointers.size > 1) {
-      const pair = [...this.pointers.entries()].find(([id]) => id !== e.pointerId)![1];
-      const oldCenter = { x: (previous.x + pair.x) / 2, y: (previous.y + pair.y) / 2 };
-      const center = { x: (next.x + pair.x) / 2, y: (next.y + pair.y) / 2 };
-      const oldDistance = Math.hypot(previous.x - pair.x, previous.y - pair.y);
-      const distance = Math.hypot(next.x - pair.x, next.y - pair.y);
-      this.camera.pan(center.x - oldCenter.x, center.y - oldCenter.y);
-      if (oldDistance > 2) {
-        this.camera.zoomAt((this.camera.zoom * distance) / oldDistance, center);
+      const otherEntry = [...this.pointers.entries()].find(([id]) => id !== e.pointerId);
+      if (otherEntry) {
+        const pair = otherEntry[1];
+        const oldCenter = { x: (previous.x + pair.x) / 2, y: (previous.y + pair.y) / 2 };
+        const center = { x: (next.x + pair.x) / 2, y: (next.y + pair.y) / 2 };
+        const oldDistance = Math.hypot(previous.x - pair.x, previous.y - pair.y);
+        const distance = Math.hypot(next.x - pair.x, next.y - pair.y);
+        this.camera.pan(center.x - oldCenter.x, center.y - oldCenter.y);
+        if (oldDistance > 4 && distance > 4) {
+          this.camera.zoomAt((this.camera.zoom * distance) / oldDistance, center);
+        }
+        this.moved = true;
+        this.manual();
+        this.changed();
       }
-      this.moved = true;
-      this.manual();
-      this.changed();
     } else if (
       this.moved ||
-      (this.origin && Math.hypot(next.x - this.origin.x, next.y - this.origin.y) > 8)
+      (this.origin && Math.hypot(next.x - this.origin.x, next.y - this.origin.y) > 7)
     ) {
       this.moved = true;
       this.camera.pan(next.x - previous.x, next.y - previous.y);
@@ -209,23 +244,38 @@ export class FarmWorldInput {
     if (!this.pointers.has(e.pointerId)) return;
     const tap = !this.blocked && !this.moved && this.pointers.size === 1;
     this.pointers.delete(e.pointerId);
-    if (this.canvas.hasPointerCapture(e.pointerId)) {
-      this.canvas.releasePointerCapture(e.pointerId);
+    try {
+      if (this.canvas.hasPointerCapture(e.pointerId)) {
+        this.canvas.releasePointerCapture(e.pointerId);
+      }
+    } catch {
+      // Ignore release errors
     }
     if (tap) this.tap(this.camera.world(this.point(e)));
-    if (!this.pointers.size) this.origin = null;
+    if (!this.pointers.size) {
+      this.origin = null;
+      this.canvas.style.cursor = 'grab';
+    }
   };
 
   private cancel = (e: PointerEvent) => {
     this.pointers.delete(e.pointerId);
     this.moved = true;
+    if (!this.pointers.size) {
+      this.origin = null;
+      this.canvas.style.cursor = 'grab';
+    }
   };
 
   private wheel = (e: WheelEvent) => {
     if (this.blocked) return;
     e.preventDefault();
     this.manual();
-    this.camera.zoomAt(this.camera.zoom * Math.exp(-e.deltaY * 0.0015), this.point(e));
+    const rawDelta = e.deltaMode === 1 ? e.deltaY * 28 : e.deltaMode === 2 ? e.deltaY * 120 : e.deltaY;
+    const clampedDelta = Math.max(-160, Math.min(160, rawDelta));
+    const speed = e.ctrlKey ? 0.0045 : 0.0018;
+    const factor = Math.exp(-clampedDelta * speed);
+    this.camera.zoomAt(this.camera.zoom * factor, this.point(e));
     this.changed();
   };
 

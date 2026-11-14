@@ -110,9 +110,12 @@ export function FarmWorldCanvas({
   const [failed, setFailed] = useState(false);
   const [assetFailed, setAssetFailed] = useState(false);
   const [following, setFollowing] = useState(false);
+  const [zoomPercent, setZoomPercent] = useState(100);
   const [attempt, setAttempt] = useState(0);
   const [showPlotInfo, setShowPlotInfo] = useState(true);
-  const [minimapOpen, setMinimapOpen] = useState(true);
+  const [minimapOpen, setMinimapOpen] = useState(
+    () => (typeof window !== 'undefined' ? window.innerWidth >= 520 : true)
+  );
 
   const s = model.snapshot;
   const blocked = model.blocked;
@@ -275,14 +278,24 @@ export function FarmWorldCanvas({
         <IconButton
           label="Thu nhỏ"
           disabled={blocked}
-          onClick={() => control.current?.zoom(0.85)}
+          onClick={() => control.current?.zoom(0.84)}
         >
           <ZoomOut aria-hidden="true" />
         </IconButton>
+        <button
+          type="button"
+          className="farm-zoom-readout"
+          aria-label={`Thu phóng ${zoomPercent}% — Chạm để đặt lại 100%`}
+          title="Đặt lại thu phóng 100%"
+          disabled={blocked}
+          onClick={() => control.current?.resetZoom()}
+        >
+          {zoomPercent}%
+        </button>
         <IconButton
           label="Phóng to"
           disabled={blocked}
-          onClick={() => control.current?.zoom(1.18)}
+          onClick={() => control.current?.zoom(1.19)}
         >
           <ZoomIn aria-hidden="true" />
         </IconButton>
@@ -311,11 +324,14 @@ export function FarmWorldCanvas({
               visualProps={{
                 ...model,
                 showPlotInfo,
-                publish: (controls, assetsFailed, isFollowing) => {
+                publish: (controls, assetsFailed, isFollowing, nextZoomPercent) => {
                   control.current = controls;
                   queueMicrotask(() => {
                     setAssetFailed(assetsFailed);
                     setFollowing(isFollowing);
+                    if (typeof nextZoomPercent === 'number') {
+                      setZoomPercent(nextZoomPercent);
+                    }
                   });
                 },
               }}
@@ -323,6 +339,39 @@ export function FarmWorldCanvas({
               onUnavailable={() => setFailed(true)}
             />
           </WorldBoundary>
+        )}
+
+        {!failed && (
+          <div className="farm-world-zoom-pill" aria-label="Điều khiển thu phóng nhanh">
+            <button
+              type="button"
+              disabled={blocked}
+              aria-label="Thu nhỏ khu vườn"
+              title="Thu nhỏ"
+              onClick={() => control.current?.zoom(0.84)}
+            >
+              <ZoomOut className="h-4 w-4" aria-hidden="true" />
+            </button>
+            <button
+              type="button"
+              className="farm-world-zoom-pill__pct"
+              disabled={blocked}
+              aria-label="Đặt lại thu phóng 100%"
+              title="Đặt lại 100%"
+              onClick={() => control.current?.resetZoom()}
+            >
+              {zoomPercent}%
+            </button>
+            <button
+              type="button"
+              disabled={blocked}
+              aria-label="Phóng to khu vườn"
+              title="Phóng to"
+              onClick={() => control.current?.zoom(1.19)}
+            >
+              <ZoomIn className="h-4 w-4" aria-hidden="true" />
+            </button>
+          </div>
         )}
 
         {assetFailed && !failed && (
