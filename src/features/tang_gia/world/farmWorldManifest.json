@@ -1,13 +1,9 @@
 {
-  "version": "2026.11-lowpoly-world",
-  "baseUrl": "/assets/tanggia/rework-2026-10",
-  "atlases": {
+  "revision": "2026-11-14-lowpoly",
+  "assets": {
     "ambient": {
       "file": "ambient.0106f94a.webp",
-      "fallback": "ambient.0106f94a.png",
-      "bytes": 51592,
-      "width": 1024,
-      "height": 768,
+      "png": "ambient.0106f94a.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -17,74 +13,47 @@
         0.85
       ],
       "clips": {
-        "grass": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7
-        ],
-        "leaves": [
-          8,
-          9,
-          10,
-          11,
-          12,
-          13,
-          14,
-          15
-        ],
-        "water": [
-          16,
-          17,
-          18,
-          19,
-          20,
-          21,
-          22,
-          23
-        ],
-        "lamp": [
-          24,
-          25,
-          26,
-          27,
-          28,
-          29,
-          30,
-          31
-        ],
-        "water_fx": [
-          32,
-          33,
-          34,
-          35,
-          36,
-          37,
-          38,
-          39
-        ],
-        "care_fx": [
-          40,
-          41,
-          42,
-          43,
-          44,
-          45,
-          46,
-          47
-        ]
+        "grass": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "leaves": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "water": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "lamp": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "water_fx": {
+          "row": 4,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "care_fx": {
+          "row": 5,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        }
       }
     },
     "animal-chicken": {
       "file": "animal-chicken.29570df8.webp",
-      "fallback": "animal-chicken.29570df8.png",
-      "bytes": 167314,
-      "width": 1024,
-      "height": 1024,
+      "png": "animal-chicken.29570df8.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -94,94 +63,59 @@
         0.85
       ],
       "clips": {
-        "idle": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7
-        ],
-        "walk": [
-          8,
-          9,
-          10,
-          11,
-          12,
-          13,
-          14,
-          15
-        ],
-        "eat": [
-          16,
-          17,
-          18,
-          19,
-          20,
-          21,
-          22,
-          23
-        ],
-        "drink": [
-          24,
-          25,
-          26,
-          27,
-          28,
-          29,
-          30,
-          31
-        ],
-        "rest": [
-          32,
-          33,
-          34,
-          35,
-          36,
-          37,
-          38,
-          39
-        ],
-        "produce_ready": [
-          40,
-          41,
-          42,
-          43,
-          44,
-          45,
-          46,
-          47
-        ],
-        "weak": [
-          48,
-          49,
-          50,
-          51,
-          52,
-          53,
-          54,
-          55
-        ],
-        "dead": [
-          56,
-          57,
-          58,
-          59,
-          60,
-          61,
-          62,
-          63
-        ]
+        "idle": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "walk": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "eat": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "drink": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "rest": {
+          "row": 4,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "produce_ready": {
+          "row": 5,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "weak": {
+          "row": 6,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "dead": {
+          "row": 7,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        }
       }
     },
     "animal-duck": {
       "file": "animal-duck.6d4d09c4.webp",
-      "fallback": "animal-duck.6d4d09c4.png",
-      "bytes": 150506,
-      "width": 1024,
-      "height": 1024,
+      "png": "animal-duck.6d4d09c4.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -191,94 +125,59 @@
         0.85
       ],
       "clips": {
-        "idle": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7
-        ],
-        "walk": [
-          8,
-          9,
-          10,
-          11,
-          12,
-          13,
-          14,
-          15
-        ],
-        "eat": [
-          16,
-          17,
-          18,
-          19,
-          20,
-          21,
-          22,
-          23
-        ],
-        "drink": [
-          24,
-          25,
-          26,
-          27,
-          28,
-          29,
-          30,
-          31
-        ],
-        "rest": [
-          32,
-          33,
-          34,
-          35,
-          36,
-          37,
-          38,
-          39
-        ],
-        "produce_ready": [
-          40,
-          41,
-          42,
-          43,
-          44,
-          45,
-          46,
-          47
-        ],
-        "weak": [
-          48,
-          49,
-          50,
-          51,
-          52,
-          53,
-          54,
-          55
-        ],
-        "dead": [
-          56,
-          57,
-          58,
-          59,
-          60,
-          61,
-          62,
-          63
-        ]
+        "idle": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "walk": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "eat": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "drink": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "rest": {
+          "row": 4,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "produce_ready": {
+          "row": 5,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "weak": {
+          "row": 6,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "dead": {
+          "row": 7,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        }
       }
     },
     "animal-goose": {
       "file": "animal-goose.c2a68411.webp",
-      "fallback": "animal-goose.c2a68411.png",
-      "bytes": 159146,
-      "width": 1024,
-      "height": 1024,
+      "png": "animal-goose.c2a68411.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -288,94 +187,59 @@
         0.85
       ],
       "clips": {
-        "idle": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7
-        ],
-        "walk": [
-          8,
-          9,
-          10,
-          11,
-          12,
-          13,
-          14,
-          15
-        ],
-        "eat": [
-          16,
-          17,
-          18,
-          19,
-          20,
-          21,
-          22,
-          23
-        ],
-        "drink": [
-          24,
-          25,
-          26,
-          27,
-          28,
-          29,
-          30,
-          31
-        ],
-        "rest": [
-          32,
-          33,
-          34,
-          35,
-          36,
-          37,
-          38,
-          39
-        ],
-        "produce_ready": [
-          40,
-          41,
-          42,
-          43,
-          44,
-          45,
-          46,
-          47
-        ],
-        "weak": [
-          48,
-          49,
-          50,
-          51,
-          52,
-          53,
-          54,
-          55
-        ],
-        "dead": [
-          56,
-          57,
-          58,
-          59,
-          60,
-          61,
-          62,
-          63
-        ]
+        "idle": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "walk": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "eat": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "drink": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "rest": {
+          "row": 4,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "produce_ready": {
+          "row": 5,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "weak": {
+          "row": 6,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "dead": {
+          "row": 7,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        }
       }
     },
     "animal-guinea_fowl": {
       "file": "animal-guinea_fowl.9ecc0b7c.webp",
-      "fallback": "animal-guinea_fowl.9ecc0b7c.png",
-      "bytes": 147108,
-      "width": 1024,
-      "height": 1024,
+      "png": "animal-guinea_fowl.9ecc0b7c.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -385,94 +249,59 @@
         0.85
       ],
       "clips": {
-        "idle": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7
-        ],
-        "walk": [
-          8,
-          9,
-          10,
-          11,
-          12,
-          13,
-          14,
-          15
-        ],
-        "eat": [
-          16,
-          17,
-          18,
-          19,
-          20,
-          21,
-          22,
-          23
-        ],
-        "drink": [
-          24,
-          25,
-          26,
-          27,
-          28,
-          29,
-          30,
-          31
-        ],
-        "rest": [
-          32,
-          33,
-          34,
-          35,
-          36,
-          37,
-          38,
-          39
-        ],
-        "produce_ready": [
-          40,
-          41,
-          42,
-          43,
-          44,
-          45,
-          46,
-          47
-        ],
-        "weak": [
-          48,
-          49,
-          50,
-          51,
-          52,
-          53,
-          54,
-          55
-        ],
-        "dead": [
-          56,
-          57,
-          58,
-          59,
-          60,
-          61,
-          62,
-          63
-        ]
+        "idle": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "walk": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "eat": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "drink": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "rest": {
+          "row": 4,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "produce_ready": {
+          "row": 5,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "weak": {
+          "row": 6,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "dead": {
+          "row": 7,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        }
       }
     },
     "animal-muscovy_duck": {
       "file": "animal-muscovy_duck.ec0f5108.webp",
-      "fallback": "animal-muscovy_duck.ec0f5108.png",
-      "bytes": 143382,
-      "width": 1024,
-      "height": 1024,
+      "png": "animal-muscovy_duck.ec0f5108.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -482,94 +311,59 @@
         0.85
       ],
       "clips": {
-        "idle": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7
-        ],
-        "walk": [
-          8,
-          9,
-          10,
-          11,
-          12,
-          13,
-          14,
-          15
-        ],
-        "eat": [
-          16,
-          17,
-          18,
-          19,
-          20,
-          21,
-          22,
-          23
-        ],
-        "drink": [
-          24,
-          25,
-          26,
-          27,
-          28,
-          29,
-          30,
-          31
-        ],
-        "rest": [
-          32,
-          33,
-          34,
-          35,
-          36,
-          37,
-          38,
-          39
-        ],
-        "produce_ready": [
-          40,
-          41,
-          42,
-          43,
-          44,
-          45,
-          46,
-          47
-        ],
-        "weak": [
-          48,
-          49,
-          50,
-          51,
-          52,
-          53,
-          54,
-          55
-        ],
-        "dead": [
-          56,
-          57,
-          58,
-          59,
-          60,
-          61,
-          62,
-          63
-        ]
+        "idle": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "walk": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "eat": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "drink": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "rest": {
+          "row": 4,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "produce_ready": {
+          "row": 5,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "weak": {
+          "row": 6,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "dead": {
+          "row": 7,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        }
       }
     },
     "animal-ostrich": {
       "file": "animal-ostrich.90c9c893.webp",
-      "fallback": "animal-ostrich.90c9c893.png",
-      "bytes": 160426,
-      "width": 1024,
-      "height": 1024,
+      "png": "animal-ostrich.90c9c893.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -579,94 +373,59 @@
         0.85
       ],
       "clips": {
-        "idle": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7
-        ],
-        "walk": [
-          8,
-          9,
-          10,
-          11,
-          12,
-          13,
-          14,
-          15
-        ],
-        "eat": [
-          16,
-          17,
-          18,
-          19,
-          20,
-          21,
-          22,
-          23
-        ],
-        "drink": [
-          24,
-          25,
-          26,
-          27,
-          28,
-          29,
-          30,
-          31
-        ],
-        "rest": [
-          32,
-          33,
-          34,
-          35,
-          36,
-          37,
-          38,
-          39
-        ],
-        "produce_ready": [
-          40,
-          41,
-          42,
-          43,
-          44,
-          45,
-          46,
-          47
-        ],
-        "weak": [
-          48,
-          49,
-          50,
-          51,
-          52,
-          53,
-          54,
-          55
-        ],
-        "dead": [
-          56,
-          57,
-          58,
-          59,
-          60,
-          61,
-          62,
-          63
-        ]
+        "idle": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "walk": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "eat": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "drink": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "rest": {
+          "row": 4,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "produce_ready": {
+          "row": 5,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "weak": {
+          "row": 6,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "dead": {
+          "row": 7,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        }
       }
     },
     "animal-peafowl": {
       "file": "animal-peafowl.934c3b28.webp",
-      "fallback": "animal-peafowl.934c3b28.png",
-      "bytes": 239512,
-      "width": 1024,
-      "height": 1024,
+      "png": "animal-peafowl.934c3b28.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -676,94 +435,59 @@
         0.85
       ],
       "clips": {
-        "idle": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7
-        ],
-        "walk": [
-          8,
-          9,
-          10,
-          11,
-          12,
-          13,
-          14,
-          15
-        ],
-        "eat": [
-          16,
-          17,
-          18,
-          19,
-          20,
-          21,
-          22,
-          23
-        ],
-        "drink": [
-          24,
-          25,
-          26,
-          27,
-          28,
-          29,
-          30,
-          31
-        ],
-        "rest": [
-          32,
-          33,
-          34,
-          35,
-          36,
-          37,
-          38,
-          39
-        ],
-        "produce_ready": [
-          40,
-          41,
-          42,
-          43,
-          44,
-          45,
-          46,
-          47
-        ],
-        "weak": [
-          48,
-          49,
-          50,
-          51,
-          52,
-          53,
-          54,
-          55
-        ],
-        "dead": [
-          56,
-          57,
-          58,
-          59,
-          60,
-          61,
-          62,
-          63
-        ]
+        "idle": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "walk": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "eat": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "drink": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "rest": {
+          "row": 4,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "produce_ready": {
+          "row": 5,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "weak": {
+          "row": 6,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "dead": {
+          "row": 7,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        }
       }
     },
     "animal-pheasant": {
       "file": "animal-pheasant.f4d3883d.webp",
-      "fallback": "animal-pheasant.f4d3883d.png",
-      "bytes": 157128,
-      "width": 1024,
-      "height": 1024,
+      "png": "animal-pheasant.f4d3883d.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -773,94 +497,59 @@
         0.85
       ],
       "clips": {
-        "idle": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7
-        ],
-        "walk": [
-          8,
-          9,
-          10,
-          11,
-          12,
-          13,
-          14,
-          15
-        ],
-        "eat": [
-          16,
-          17,
-          18,
-          19,
-          20,
-          21,
-          22,
-          23
-        ],
-        "drink": [
-          24,
-          25,
-          26,
-          27,
-          28,
-          29,
-          30,
-          31
-        ],
-        "rest": [
-          32,
-          33,
-          34,
-          35,
-          36,
-          37,
-          38,
-          39
-        ],
-        "produce_ready": [
-          40,
-          41,
-          42,
-          43,
-          44,
-          45,
-          46,
-          47
-        ],
-        "weak": [
-          48,
-          49,
-          50,
-          51,
-          52,
-          53,
-          54,
-          55
-        ],
-        "dead": [
-          56,
-          57,
-          58,
-          59,
-          60,
-          61,
-          62,
-          63
-        ]
+        "idle": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "walk": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "eat": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "drink": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "rest": {
+          "row": 4,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "produce_ready": {
+          "row": 5,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "weak": {
+          "row": 6,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "dead": {
+          "row": 7,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        }
       }
     },
     "animal-quail": {
       "file": "animal-quail.c315f699.webp",
-      "fallback": "animal-quail.c315f699.png",
-      "bytes": 133384,
-      "width": 1024,
-      "height": 1024,
+      "png": "animal-quail.c315f699.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -870,94 +559,59 @@
         0.85
       ],
       "clips": {
-        "idle": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7
-        ],
-        "walk": [
-          8,
-          9,
-          10,
-          11,
-          12,
-          13,
-          14,
-          15
-        ],
-        "eat": [
-          16,
-          17,
-          18,
-          19,
-          20,
-          21,
-          22,
-          23
-        ],
-        "drink": [
-          24,
-          25,
-          26,
-          27,
-          28,
-          29,
-          30,
-          31
-        ],
-        "rest": [
-          32,
-          33,
-          34,
-          35,
-          36,
-          37,
-          38,
-          39
-        ],
-        "produce_ready": [
-          40,
-          41,
-          42,
-          43,
-          44,
-          45,
-          46,
-          47
-        ],
-        "weak": [
-          48,
-          49,
-          50,
-          51,
-          52,
-          53,
-          54,
-          55
-        ],
-        "dead": [
-          56,
-          57,
-          58,
-          59,
-          60,
-          61,
-          62,
-          63
-        ]
+        "idle": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "walk": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "eat": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "drink": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "rest": {
+          "row": 4,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "produce_ready": {
+          "row": 5,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "weak": {
+          "row": 6,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "dead": {
+          "row": 7,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        }
       }
     },
     "animal-turkey": {
       "file": "animal-turkey.66f9ef87.webp",
-      "fallback": "animal-turkey.66f9ef87.png",
-      "bytes": 188256,
-      "width": 1024,
-      "height": 1024,
+      "png": "animal-turkey.66f9ef87.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -967,94 +621,59 @@
         0.85
       ],
       "clips": {
-        "idle": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7
-        ],
-        "walk": [
-          8,
-          9,
-          10,
-          11,
-          12,
-          13,
-          14,
-          15
-        ],
-        "eat": [
-          16,
-          17,
-          18,
-          19,
-          20,
-          21,
-          22,
-          23
-        ],
-        "drink": [
-          24,
-          25,
-          26,
-          27,
-          28,
-          29,
-          30,
-          31
-        ],
-        "rest": [
-          32,
-          33,
-          34,
-          35,
-          36,
-          37,
-          38,
-          39
-        ],
-        "produce_ready": [
-          40,
-          41,
-          42,
-          43,
-          44,
-          45,
-          46,
-          47
-        ],
-        "weak": [
-          48,
-          49,
-          50,
-          51,
-          52,
-          53,
-          54,
-          55
-        ],
-        "dead": [
-          56,
-          57,
-          58,
-          59,
-          60,
-          61,
-          62,
-          63
-        ]
+        "idle": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "walk": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "eat": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "drink": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "rest": {
+          "row": 4,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "produce_ready": {
+          "row": 5,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "weak": {
+          "row": 6,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "dead": {
+          "row": 7,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        }
       }
     },
     "crop-apple": {
       "file": "crop-apple.184331fc.webp",
-      "fallback": "crop-apple.184331fc.png",
-      "bytes": 89092,
-      "width": 1024,
-      "height": 768,
+      "png": "crop-apple.184331fc.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -1064,74 +683,47 @@
         0.85
       ],
       "clips": {
-        "seeded": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7
-        ],
-        "sprout": [
-          8,
-          9,
-          10,
-          11,
-          12,
-          13,
-          14,
-          15
-        ],
-        "young": [
-          16,
-          17,
-          18,
-          19,
-          20,
-          21,
-          22,
-          23
-        ],
-        "growing": [
-          24,
-          25,
-          26,
-          27,
-          28,
-          29,
-          30,
-          31
-        ],
-        "mature": [
-          32,
-          33,
-          34,
-          35,
-          36,
-          37,
-          38,
-          39
-        ],
-        "yield": [
-          40,
-          41,
-          42,
-          43,
-          44,
-          45,
-          46,
-          47
-        ]
+        "seeded": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        },
+        "sprout": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "young": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "growing": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "mature": {
+          "row": 4,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "yield": {
+          "row": 5,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        }
       }
     },
     "crop-avocado": {
       "file": "crop-avocado.75b43b8c.webp",
-      "fallback": "crop-avocado.75b43b8c.png",
-      "bytes": 87550,
-      "width": 1024,
-      "height": 768,
+      "png": "crop-avocado.75b43b8c.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -1141,74 +733,47 @@
         0.85
       ],
       "clips": {
-        "seeded": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7
-        ],
-        "sprout": [
-          8,
-          9,
-          10,
-          11,
-          12,
-          13,
-          14,
-          15
-        ],
-        "young": [
-          16,
-          17,
-          18,
-          19,
-          20,
-          21,
-          22,
-          23
-        ],
-        "growing": [
-          24,
-          25,
-          26,
-          27,
-          28,
-          29,
-          30,
-          31
-        ],
-        "mature": [
-          32,
-          33,
-          34,
-          35,
-          36,
-          37,
-          38,
-          39
-        ],
-        "yield": [
-          40,
-          41,
-          42,
-          43,
-          44,
-          45,
-          46,
-          47
-        ]
+        "seeded": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        },
+        "sprout": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "young": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "growing": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "mature": {
+          "row": 4,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "yield": {
+          "row": 5,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        }
       }
     },
     "crop-banana": {
       "file": "crop-banana.d5410612.webp",
-      "fallback": "crop-banana.d5410612.png",
-      "bytes": 99346,
-      "width": 1024,
-      "height": 768,
+      "png": "crop-banana.d5410612.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -1218,74 +783,47 @@
         0.85
       ],
       "clips": {
-        "seeded": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7
-        ],
-        "sprout": [
-          8,
-          9,
-          10,
-          11,
-          12,
-          13,
-          14,
-          15
-        ],
-        "young": [
-          16,
-          17,
-          18,
-          19,
-          20,
-          21,
-          22,
-          23
-        ],
-        "growing": [
-          24,
-          25,
-          26,
-          27,
-          28,
-          29,
-          30,
-          31
-        ],
-        "mature": [
-          32,
-          33,
-          34,
-          35,
-          36,
-          37,
-          38,
-          39
-        ],
-        "yield": [
-          40,
-          41,
-          42,
-          43,
-          44,
-          45,
-          46,
-          47
-        ]
+        "seeded": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        },
+        "sprout": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "young": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "growing": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "mature": {
+          "row": 4,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "yield": {
+          "row": 5,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        }
       }
     },
     "crop-cabbage": {
       "file": "crop-cabbage.3ab0fc3c.webp",
-      "fallback": "crop-cabbage.3ab0fc3c.png",
-      "bytes": 106924,
-      "width": 1024,
-      "height": 768,
+      "png": "crop-cabbage.3ab0fc3c.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -1295,74 +833,47 @@
         0.85
       ],
       "clips": {
-        "seeded": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7
-        ],
-        "sprout": [
-          8,
-          9,
-          10,
-          11,
-          12,
-          13,
-          14,
-          15
-        ],
-        "young": [
-          16,
-          17,
-          18,
-          19,
-          20,
-          21,
-          22,
-          23
-        ],
-        "growing": [
-          24,
-          25,
-          26,
-          27,
-          28,
-          29,
-          30,
-          31
-        ],
-        "mature": [
-          32,
-          33,
-          34,
-          35,
-          36,
-          37,
-          38,
-          39
-        ],
-        "yield": [
-          40,
-          41,
-          42,
-          43,
-          44,
-          45,
-          46,
-          47
-        ]
+        "seeded": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        },
+        "sprout": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "young": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "growing": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "mature": {
+          "row": 4,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "yield": {
+          "row": 5,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        }
       }
     },
     "crop-carrot": {
       "file": "crop-carrot.a266c6f4.webp",
-      "fallback": "crop-carrot.a266c6f4.png",
-      "bytes": 105720,
-      "width": 1024,
-      "height": 768,
+      "png": "crop-carrot.a266c6f4.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -1372,74 +883,47 @@
         0.85
       ],
       "clips": {
-        "seeded": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7
-        ],
-        "sprout": [
-          8,
-          9,
-          10,
-          11,
-          12,
-          13,
-          14,
-          15
-        ],
-        "young": [
-          16,
-          17,
-          18,
-          19,
-          20,
-          21,
-          22,
-          23
-        ],
-        "growing": [
-          24,
-          25,
-          26,
-          27,
-          28,
-          29,
-          30,
-          31
-        ],
-        "mature": [
-          32,
-          33,
-          34,
-          35,
-          36,
-          37,
-          38,
-          39
-        ],
-        "yield": [
-          40,
-          41,
-          42,
-          43,
-          44,
-          45,
-          46,
-          47
-        ]
+        "seeded": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        },
+        "sprout": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "young": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "growing": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "mature": {
+          "row": 4,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "yield": {
+          "row": 5,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        }
       }
     },
     "crop-corn": {
       "file": "crop-corn.d58a437d.webp",
-      "fallback": "crop-corn.d58a437d.png",
-      "bytes": 130222,
-      "width": 1024,
-      "height": 768,
+      "png": "crop-corn.d58a437d.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -1449,74 +933,47 @@
         0.85
       ],
       "clips": {
-        "seeded": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7
-        ],
-        "sprout": [
-          8,
-          9,
-          10,
-          11,
-          12,
-          13,
-          14,
-          15
-        ],
-        "young": [
-          16,
-          17,
-          18,
-          19,
-          20,
-          21,
-          22,
-          23
-        ],
-        "growing": [
-          24,
-          25,
-          26,
-          27,
-          28,
-          29,
-          30,
-          31
-        ],
-        "mature": [
-          32,
-          33,
-          34,
-          35,
-          36,
-          37,
-          38,
-          39
-        ],
-        "yield": [
-          40,
-          41,
-          42,
-          43,
-          44,
-          45,
-          46,
-          47
-        ]
+        "seeded": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        },
+        "sprout": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "young": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "growing": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "mature": {
+          "row": 4,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "yield": {
+          "row": 5,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        }
       }
     },
     "crop-dragon_fruit": {
       "file": "crop-dragon_fruit.9f1eccfb.webp",
-      "fallback": "crop-dragon_fruit.9f1eccfb.png",
-      "bytes": 115116,
-      "width": 1024,
-      "height": 768,
+      "png": "crop-dragon_fruit.9f1eccfb.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -1526,74 +983,47 @@
         0.85
       ],
       "clips": {
-        "seeded": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7
-        ],
-        "sprout": [
-          8,
-          9,
-          10,
-          11,
-          12,
-          13,
-          14,
-          15
-        ],
-        "young": [
-          16,
-          17,
-          18,
-          19,
-          20,
-          21,
-          22,
-          23
-        ],
-        "growing": [
-          24,
-          25,
-          26,
-          27,
-          28,
-          29,
-          30,
-          31
-        ],
-        "mature": [
-          32,
-          33,
-          34,
-          35,
-          36,
-          37,
-          38,
-          39
-        ],
-        "yield": [
-          40,
-          41,
-          42,
-          43,
-          44,
-          45,
-          46,
-          47
-        ]
+        "seeded": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        },
+        "sprout": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "young": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "growing": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "mature": {
+          "row": 4,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "yield": {
+          "row": 5,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        }
       }
     },
     "crop-durian": {
       "file": "crop-durian.a075b218.webp",
-      "fallback": "crop-durian.a075b218.png",
-      "bytes": 93332,
-      "width": 1024,
-      "height": 768,
+      "png": "crop-durian.a075b218.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -1603,74 +1033,47 @@
         0.85
       ],
       "clips": {
-        "seeded": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7
-        ],
-        "sprout": [
-          8,
-          9,
-          10,
-          11,
-          12,
-          13,
-          14,
-          15
-        ],
-        "young": [
-          16,
-          17,
-          18,
-          19,
-          20,
-          21,
-          22,
-          23
-        ],
-        "growing": [
-          24,
-          25,
-          26,
-          27,
-          28,
-          29,
-          30,
-          31
-        ],
-        "mature": [
-          32,
-          33,
-          34,
-          35,
-          36,
-          37,
-          38,
-          39
-        ],
-        "yield": [
-          40,
-          41,
-          42,
-          43,
-          44,
-          45,
-          46,
-          47
-        ]
+        "seeded": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        },
+        "sprout": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "young": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "growing": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "mature": {
+          "row": 4,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "yield": {
+          "row": 5,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        }
       }
     },
     "crop-grape": {
       "file": "crop-grape.1acc84e4.webp",
-      "fallback": "crop-grape.1acc84e4.png",
-      "bytes": 127906,
-      "width": 1024,
-      "height": 768,
+      "png": "crop-grape.1acc84e4.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -1680,74 +1083,47 @@
         0.85
       ],
       "clips": {
-        "seeded": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7
-        ],
-        "sprout": [
-          8,
-          9,
-          10,
-          11,
-          12,
-          13,
-          14,
-          15
-        ],
-        "young": [
-          16,
-          17,
-          18,
-          19,
-          20,
-          21,
-          22,
-          23
-        ],
-        "growing": [
-          24,
-          25,
-          26,
-          27,
-          28,
-          29,
-          30,
-          31
-        ],
-        "mature": [
-          32,
-          33,
-          34,
-          35,
-          36,
-          37,
-          38,
-          39
-        ],
-        "yield": [
-          40,
-          41,
-          42,
-          43,
-          44,
-          45,
-          46,
-          47
-        ]
+        "seeded": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        },
+        "sprout": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "young": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "growing": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "mature": {
+          "row": 4,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "yield": {
+          "row": 5,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        }
       }
     },
     "crop-mango": {
       "file": "crop-mango.f0c32dd7.webp",
-      "fallback": "crop-mango.f0c32dd7.png",
-      "bytes": 88402,
-      "width": 1024,
-      "height": 768,
+      "png": "crop-mango.f0c32dd7.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -1757,74 +1133,47 @@
         0.85
       ],
       "clips": {
-        "seeded": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7
-        ],
-        "sprout": [
-          8,
-          9,
-          10,
-          11,
-          12,
-          13,
-          14,
-          15
-        ],
-        "young": [
-          16,
-          17,
-          18,
-          19,
-          20,
-          21,
-          22,
-          23
-        ],
-        "growing": [
-          24,
-          25,
-          26,
-          27,
-          28,
-          29,
-          30,
-          31
-        ],
-        "mature": [
-          32,
-          33,
-          34,
-          35,
-          36,
-          37,
-          38,
-          39
-        ],
-        "yield": [
-          40,
-          41,
-          42,
-          43,
-          44,
-          45,
-          46,
-          47
-        ]
+        "seeded": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        },
+        "sprout": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "young": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "growing": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "mature": {
+          "row": 4,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "yield": {
+          "row": 5,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        }
       }
     },
     "crop-mangosteen": {
       "file": "crop-mangosteen.fd4abb6a.webp",
-      "fallback": "crop-mangosteen.fd4abb6a.png",
-      "bytes": 91938,
-      "width": 1024,
-      "height": 768,
+      "png": "crop-mangosteen.fd4abb6a.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -1834,74 +1183,47 @@
         0.85
       ],
       "clips": {
-        "seeded": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7
-        ],
-        "sprout": [
-          8,
-          9,
-          10,
-          11,
-          12,
-          13,
-          14,
-          15
-        ],
-        "young": [
-          16,
-          17,
-          18,
-          19,
-          20,
-          21,
-          22,
-          23
-        ],
-        "growing": [
-          24,
-          25,
-          26,
-          27,
-          28,
-          29,
-          30,
-          31
-        ],
-        "mature": [
-          32,
-          33,
-          34,
-          35,
-          36,
-          37,
-          38,
-          39
-        ],
-        "yield": [
-          40,
-          41,
-          42,
-          43,
-          44,
-          45,
-          46,
-          47
-        ]
+        "seeded": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        },
+        "sprout": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "young": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "growing": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "mature": {
+          "row": 4,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "yield": {
+          "row": 5,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        }
       }
     },
     "crop-orange": {
       "file": "crop-orange.23c5bcda.webp",
-      "fallback": "crop-orange.23c5bcda.png",
-      "bytes": 90268,
-      "width": 1024,
-      "height": 768,
+      "png": "crop-orange.23c5bcda.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -1911,74 +1233,47 @@
         0.85
       ],
       "clips": {
-        "seeded": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7
-        ],
-        "sprout": [
-          8,
-          9,
-          10,
-          11,
-          12,
-          13,
-          14,
-          15
-        ],
-        "young": [
-          16,
-          17,
-          18,
-          19,
-          20,
-          21,
-          22,
-          23
-        ],
-        "growing": [
-          24,
-          25,
-          26,
-          27,
-          28,
-          29,
-          30,
-          31
-        ],
-        "mature": [
-          32,
-          33,
-          34,
-          35,
-          36,
-          37,
-          38,
-          39
-        ],
-        "yield": [
-          40,
-          41,
-          42,
-          43,
-          44,
-          45,
-          46,
-          47
-        ]
+        "seeded": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        },
+        "sprout": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "young": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "growing": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "mature": {
+          "row": 4,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "yield": {
+          "row": 5,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        }
       }
     },
     "crop-pear": {
       "file": "crop-pear.a431b558.webp",
-      "fallback": "crop-pear.a431b558.png",
-      "bytes": 89428,
-      "width": 1024,
-      "height": 768,
+      "png": "crop-pear.a431b558.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -1988,74 +1283,47 @@
         0.85
       ],
       "clips": {
-        "seeded": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7
-        ],
-        "sprout": [
-          8,
-          9,
-          10,
-          11,
-          12,
-          13,
-          14,
-          15
-        ],
-        "young": [
-          16,
-          17,
-          18,
-          19,
-          20,
-          21,
-          22,
-          23
-        ],
-        "growing": [
-          24,
-          25,
-          26,
-          27,
-          28,
-          29,
-          30,
-          31
-        ],
-        "mature": [
-          32,
-          33,
-          34,
-          35,
-          36,
-          37,
-          38,
-          39
-        ],
-        "yield": [
-          40,
-          41,
-          42,
-          43,
-          44,
-          45,
-          46,
-          47
-        ]
+        "seeded": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        },
+        "sprout": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "young": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "growing": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "mature": {
+          "row": 4,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "yield": {
+          "row": 5,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        }
       }
     },
     "crop-pineapple": {
       "file": "crop-pineapple.877c99f6.webp",
-      "fallback": "crop-pineapple.877c99f6.png",
-      "bytes": 92618,
-      "width": 1024,
-      "height": 768,
+      "png": "crop-pineapple.877c99f6.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -2065,74 +1333,47 @@
         0.85
       ],
       "clips": {
-        "seeded": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7
-        ],
-        "sprout": [
-          8,
-          9,
-          10,
-          11,
-          12,
-          13,
-          14,
-          15
-        ],
-        "young": [
-          16,
-          17,
-          18,
-          19,
-          20,
-          21,
-          22,
-          23
-        ],
-        "growing": [
-          24,
-          25,
-          26,
-          27,
-          28,
-          29,
-          30,
-          31
-        ],
-        "mature": [
-          32,
-          33,
-          34,
-          35,
-          36,
-          37,
-          38,
-          39
-        ],
-        "yield": [
-          40,
-          41,
-          42,
-          43,
-          44,
-          45,
-          46,
-          47
-        ]
+        "seeded": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        },
+        "sprout": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "young": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "growing": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "mature": {
+          "row": 4,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "yield": {
+          "row": 5,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        }
       }
     },
     "crop-potato": {
       "file": "crop-potato.9dc82a9f.webp",
-      "fallback": "crop-potato.9dc82a9f.png",
-      "bytes": 112436,
-      "width": 1024,
-      "height": 768,
+      "png": "crop-potato.9dc82a9f.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -2142,74 +1383,47 @@
         0.85
       ],
       "clips": {
-        "seeded": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7
-        ],
-        "sprout": [
-          8,
-          9,
-          10,
-          11,
-          12,
-          13,
-          14,
-          15
-        ],
-        "young": [
-          16,
-          17,
-          18,
-          19,
-          20,
-          21,
-          22,
-          23
-        ],
-        "growing": [
-          24,
-          25,
-          26,
-          27,
-          28,
-          29,
-          30,
-          31
-        ],
-        "mature": [
-          32,
-          33,
-          34,
-          35,
-          36,
-          37,
-          38,
-          39
-        ],
-        "yield": [
-          40,
-          41,
-          42,
-          43,
-          44,
-          45,
-          46,
-          47
-        ]
+        "seeded": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        },
+        "sprout": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "young": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "growing": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "mature": {
+          "row": 4,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "yield": {
+          "row": 5,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        }
       }
     },
     "crop-pumpkin": {
       "file": "crop-pumpkin.3d486de5.webp",
-      "fallback": "crop-pumpkin.3d486de5.png",
-      "bytes": 124250,
-      "width": 1024,
-      "height": 768,
+      "png": "crop-pumpkin.3d486de5.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -2219,74 +1433,47 @@
         0.85
       ],
       "clips": {
-        "seeded": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7
-        ],
-        "sprout": [
-          8,
-          9,
-          10,
-          11,
-          12,
-          13,
-          14,
-          15
-        ],
-        "young": [
-          16,
-          17,
-          18,
-          19,
-          20,
-          21,
-          22,
-          23
-        ],
-        "growing": [
-          24,
-          25,
-          26,
-          27,
-          28,
-          29,
-          30,
-          31
-        ],
-        "mature": [
-          32,
-          33,
-          34,
-          35,
-          36,
-          37,
-          38,
-          39
-        ],
-        "yield": [
-          40,
-          41,
-          42,
-          43,
-          44,
-          45,
-          46,
-          47
-        ]
+        "seeded": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        },
+        "sprout": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "young": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "growing": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "mature": {
+          "row": 4,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "yield": {
+          "row": 5,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        }
       }
     },
     "crop-strawberry": {
       "file": "crop-strawberry.7101fb6a.webp",
-      "fallback": "crop-strawberry.7101fb6a.png",
-      "bytes": 112710,
-      "width": 1024,
-      "height": 768,
+      "png": "crop-strawberry.7101fb6a.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -2296,74 +1483,47 @@
         0.85
       ],
       "clips": {
-        "seeded": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7
-        ],
-        "sprout": [
-          8,
-          9,
-          10,
-          11,
-          12,
-          13,
-          14,
-          15
-        ],
-        "young": [
-          16,
-          17,
-          18,
-          19,
-          20,
-          21,
-          22,
-          23
-        ],
-        "growing": [
-          24,
-          25,
-          26,
-          27,
-          28,
-          29,
-          30,
-          31
-        ],
-        "mature": [
-          32,
-          33,
-          34,
-          35,
-          36,
-          37,
-          38,
-          39
-        ],
-        "yield": [
-          40,
-          41,
-          42,
-          43,
-          44,
-          45,
-          46,
-          47
-        ]
+        "seeded": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        },
+        "sprout": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "young": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "growing": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "mature": {
+          "row": 4,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "yield": {
+          "row": 5,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        }
       }
     },
     "crop-tomato": {
       "file": "crop-tomato.9ca4b16d.webp",
-      "fallback": "crop-tomato.9ca4b16d.png",
-      "bytes": 110164,
-      "width": 1024,
-      "height": 768,
+      "png": "crop-tomato.9ca4b16d.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -2373,74 +1533,47 @@
         0.85
       ],
       "clips": {
-        "seeded": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7
-        ],
-        "sprout": [
-          8,
-          9,
-          10,
-          11,
-          12,
-          13,
-          14,
-          15
-        ],
-        "young": [
-          16,
-          17,
-          18,
-          19,
-          20,
-          21,
-          22,
-          23
-        ],
-        "growing": [
-          24,
-          25,
-          26,
-          27,
-          28,
-          29,
-          30,
-          31
-        ],
-        "mature": [
-          32,
-          33,
-          34,
-          35,
-          36,
-          37,
-          38,
-          39
-        ],
-        "yield": [
-          40,
-          41,
-          42,
-          43,
-          44,
-          45,
-          46,
-          47
-        ]
+        "seeded": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        },
+        "sprout": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "young": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "growing": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "mature": {
+          "row": 4,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "yield": {
+          "row": 5,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        }
       }
     },
     "crop-watermelon": {
       "file": "crop-watermelon.b1a63a1c.webp",
-      "fallback": "crop-watermelon.b1a63a1c.png",
-      "bytes": 119646,
-      "width": 1024,
-      "height": 768,
+      "png": "crop-watermelon.b1a63a1c.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -2450,74 +1583,47 @@
         0.85
       ],
       "clips": {
-        "seeded": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7
-        ],
-        "sprout": [
-          8,
-          9,
-          10,
-          11,
-          12,
-          13,
-          14,
-          15
-        ],
-        "young": [
-          16,
-          17,
-          18,
-          19,
-          20,
-          21,
-          22,
-          23
-        ],
-        "growing": [
-          24,
-          25,
-          26,
-          27,
-          28,
-          29,
-          30,
-          31
-        ],
-        "mature": [
-          32,
-          33,
-          34,
-          35,
-          36,
-          37,
-          38,
-          39
-        ],
-        "yield": [
-          40,
-          41,
-          42,
-          43,
-          44,
-          45,
-          46,
-          47
-        ]
+        "seeded": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        },
+        "sprout": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "young": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "growing": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "mature": {
+          "row": 4,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "yield": {
+          "row": 5,
+          "frames": 8,
+          "fps": 8,
+          "loop": false
+        }
       }
     },
     "environment": {
       "file": "environment.716f4143.webp",
-      "fallback": "environment.716f4143.png",
-      "bytes": 69652,
-      "width": 1024,
-      "height": 1024,
+      "png": "environment.716f4143.png",
       "cell": 256,
       "size": 252,
       "columns": 4,
@@ -2527,76 +1633,131 @@
         0.85
       ],
       "clips": {
-        "prop0": [
-          0
-        ],
-        "prop1": [
-          1
-        ],
-        "prop2": [
-          2
-        ],
-        "prop3": [
-          3
-        ],
-        "prop4": [
-          4
-        ],
-        "prop5": [
-          5
-        ],
-        "prop6": [
-          6
-        ],
-        "prop7": [
-          7
-        ],
-        "prop8": [
-          8
-        ],
-        "prop9": [
-          9
-        ],
-        "prop10": [
-          10
-        ],
-        "prop11": [
-          11
-        ],
-        "prop12": [
-          12
-        ],
-        "prop13": [
-          13
-        ],
-        "prop14": [
-          14
-        ],
-        "prop15": [
-          15
-        ]
+        "prop0": {
+          "row": 0,
+          "column": 0,
+          "frames": 1,
+          "loop": false
+        },
+        "prop1": {
+          "row": 0,
+          "column": 1,
+          "frames": 1,
+          "loop": false
+        },
+        "prop2": {
+          "row": 0,
+          "column": 2,
+          "frames": 1,
+          "loop": false
+        },
+        "prop3": {
+          "row": 0,
+          "column": 3,
+          "frames": 1,
+          "loop": false
+        },
+        "prop4": {
+          "row": 1,
+          "column": 0,
+          "frames": 1,
+          "loop": false
+        },
+        "prop5": {
+          "row": 1,
+          "column": 1,
+          "frames": 1,
+          "loop": false
+        },
+        "prop6": {
+          "row": 1,
+          "column": 2,
+          "frames": 1,
+          "loop": false
+        },
+        "prop7": {
+          "row": 1,
+          "column": 3,
+          "frames": 1,
+          "loop": false
+        },
+        "prop8": {
+          "row": 2,
+          "column": 0,
+          "frames": 1,
+          "loop": false
+        },
+        "prop9": {
+          "row": 2,
+          "column": 1,
+          "frames": 1,
+          "loop": false
+        },
+        "prop10": {
+          "row": 2,
+          "column": 2,
+          "frames": 1,
+          "loop": false
+        },
+        "prop11": {
+          "row": 2,
+          "column": 3,
+          "frames": 1,
+          "loop": false
+        },
+        "prop12": {
+          "row": 3,
+          "column": 0,
+          "frames": 1,
+          "loop": false
+        },
+        "prop13": {
+          "row": 3,
+          "column": 1,
+          "frames": 1,
+          "loop": false
+        },
+        "prop14": {
+          "row": 3,
+          "column": 2,
+          "frames": 1,
+          "loop": false
+        },
+        "prop15": {
+          "row": 3,
+          "column": 3,
+          "frames": 1,
+          "loop": false
+        }
       }
     },
     "grass-ground": {
       "file": "grass-ground.14387407.webp",
-      "fallback": "grass-ground.14387407.png",
-      "bytes": 60244,
-      "width": 1024,
-      "height": 1024
+      "png": "grass-ground.14387407.png",
+      "cell": 1024,
+      "size": 1024,
+      "columns": 1,
+      "anchor": [
+        0,
+        0
+      ],
+      "clips": {}
     },
     "village-surroundings": {
       "file": "village-surroundings.f7945b9c.webp",
-      "fallback": "village-surroundings.f7945b9c.png",
-      "bytes": 96780,
-      "width": 1536,
-      "height": 1536
+      "png": "village-surroundings.f7945b9c.png",
+      "cell": 1536,
+      "size": 1536,
+      "columns": 1,
+      "anchor": [
+        0,
+        0
+      ],
+      "clips": {}
     },
     "worker-clean_dead": {
       "file": "worker-clean_dead.d8aa86e9.webp",
-      "fallback": "worker-clean_dead.d8aa86e9.png",
-      "bytes": 75510,
-      "width": 1024,
-      "height": 512,
+      "png": "worker-clean_dead.d8aa86e9.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -2606,54 +1767,35 @@
         0.85
       ],
       "clips": {
-        "direction0": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7
-        ],
-        "direction1": [
-          8,
-          9,
-          10,
-          11,
-          12,
-          13,
-          14,
-          15
-        ],
-        "direction2": [
-          16,
-          17,
-          18,
-          19,
-          20,
-          21,
-          22,
-          23
-        ],
-        "direction3": [
-          24,
-          25,
-          26,
-          27,
-          28,
-          29,
-          30,
-          31
-        ]
+        "direction0": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "direction1": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "direction2": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "direction3": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        }
       }
     },
     "worker-feed": {
       "file": "worker-feed.a91cabde.webp",
-      "fallback": "worker-feed.a91cabde.png",
-      "bytes": 76986,
-      "width": 1024,
-      "height": 512,
+      "png": "worker-feed.a91cabde.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -2663,54 +1805,35 @@
         0.85
       ],
       "clips": {
-        "direction0": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7
-        ],
-        "direction1": [
-          8,
-          9,
-          10,
-          11,
-          12,
-          13,
-          14,
-          15
-        ],
-        "direction2": [
-          16,
-          17,
-          18,
-          19,
-          20,
-          21,
-          22,
-          23
-        ],
-        "direction3": [
-          24,
-          25,
-          26,
-          27,
-          28,
-          29,
-          30,
-          31
-        ]
+        "direction0": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "direction1": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "direction2": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "direction3": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        }
       }
     },
     "worker-fertilize": {
       "file": "worker-fertilize.d355441b.webp",
-      "fallback": "worker-fertilize.d355441b.png",
-      "bytes": 75438,
-      "width": 1024,
-      "height": 512,
+      "png": "worker-fertilize.d355441b.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -2720,54 +1843,35 @@
         0.85
       ],
       "clips": {
-        "direction0": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7
-        ],
-        "direction1": [
-          8,
-          9,
-          10,
-          11,
-          12,
-          13,
-          14,
-          15
-        ],
-        "direction2": [
-          16,
-          17,
-          18,
-          19,
-          20,
-          21,
-          22,
-          23
-        ],
-        "direction3": [
-          24,
-          25,
-          26,
-          27,
-          28,
-          29,
-          30,
-          31
-        ]
+        "direction0": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "direction1": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "direction2": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "direction3": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        }
       }
     },
     "worker-harvest": {
       "file": "worker-harvest.d8aa86e9.webp",
-      "fallback": "worker-harvest.d8aa86e9.png",
-      "bytes": 75510,
-      "width": 1024,
-      "height": 512,
+      "png": "worker-harvest.d8aa86e9.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -2777,54 +1881,35 @@
         0.85
       ],
       "clips": {
-        "direction0": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7
-        ],
-        "direction1": [
-          8,
-          9,
-          10,
-          11,
-          12,
-          13,
-          14,
-          15
-        ],
-        "direction2": [
-          16,
-          17,
-          18,
-          19,
-          20,
-          21,
-          22,
-          23
-        ],
-        "direction3": [
-          24,
-          25,
-          26,
-          27,
-          28,
-          29,
-          30,
-          31
-        ]
+        "direction0": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "direction1": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "direction2": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "direction3": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        }
       }
     },
     "worker-idle": {
       "file": "worker-idle.4662cf5e.webp",
-      "fallback": "worker-idle.4662cf5e.png",
-      "bytes": 65338,
-      "width": 1024,
-      "height": 512,
+      "png": "worker-idle.4662cf5e.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -2834,54 +1919,35 @@
         0.85
       ],
       "clips": {
-        "direction0": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7
-        ],
-        "direction1": [
-          8,
-          9,
-          10,
-          11,
-          12,
-          13,
-          14,
-          15
-        ],
-        "direction2": [
-          16,
-          17,
-          18,
-          19,
-          20,
-          21,
-          22,
-          23
-        ],
-        "direction3": [
-          24,
-          25,
-          26,
-          27,
-          28,
-          29,
-          30,
-          31
-        ]
+        "direction0": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "direction1": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "direction2": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "direction3": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        }
       }
     },
     "worker-pest": {
       "file": "worker-pest.e23b83ad.webp",
-      "fallback": "worker-pest.e23b83ad.png",
-      "bytes": 80810,
-      "width": 1024,
-      "height": 512,
+      "png": "worker-pest.e23b83ad.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -2891,54 +1957,35 @@
         0.85
       ],
       "clips": {
-        "direction0": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7
-        ],
-        "direction1": [
-          8,
-          9,
-          10,
-          11,
-          12,
-          13,
-          14,
-          15
-        ],
-        "direction2": [
-          16,
-          17,
-          18,
-          19,
-          20,
-          21,
-          22,
-          23
-        ],
-        "direction3": [
-          24,
-          25,
-          26,
-          27,
-          28,
-          29,
-          30,
-          31
-        ]
+        "direction0": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "direction1": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "direction2": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "direction3": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        }
       }
     },
     "worker-plant": {
       "file": "worker-plant.a91cabde.webp",
-      "fallback": "worker-plant.a91cabde.png",
-      "bytes": 76986,
-      "width": 1024,
-      "height": 512,
+      "png": "worker-plant.a91cabde.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -2948,54 +1995,35 @@
         0.85
       ],
       "clips": {
-        "direction0": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7
-        ],
-        "direction1": [
-          8,
-          9,
-          10,
-          11,
-          12,
-          13,
-          14,
-          15
-        ],
-        "direction2": [
-          16,
-          17,
-          18,
-          19,
-          20,
-          21,
-          22,
-          23
-        ],
-        "direction3": [
-          24,
-          25,
-          26,
-          27,
-          28,
-          29,
-          30,
-          31
-        ]
+        "direction0": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "direction1": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "direction2": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "direction3": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        }
       }
     },
     "worker-replace_animals": {
       "file": "worker-replace_animals.d4775571.webp",
-      "fallback": "worker-replace_animals.d4775571.png",
-      "bytes": 74544,
-      "width": 1024,
-      "height": 512,
+      "png": "worker-replace_animals.d4775571.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -3005,54 +2033,35 @@
         0.85
       ],
       "clips": {
-        "direction0": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7
-        ],
-        "direction1": [
-          8,
-          9,
-          10,
-          11,
-          12,
-          13,
-          14,
-          15
-        ],
-        "direction2": [
-          16,
-          17,
-          18,
-          19,
-          20,
-          21,
-          22,
-          23
-        ],
-        "direction3": [
-          24,
-          25,
-          26,
-          27,
-          28,
-          29,
-          30,
-          31
-        ]
+        "direction0": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "direction1": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "direction2": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "direction3": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        }
       }
     },
     "worker-restock": {
       "file": "worker-restock.7df02d7b.webp",
-      "fallback": "worker-restock.7df02d7b.png",
-      "bytes": 74348,
-      "width": 1024,
-      "height": 512,
+      "png": "worker-restock.7df02d7b.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -3062,54 +2071,35 @@
         0.85
       ],
       "clips": {
-        "direction0": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7
-        ],
-        "direction1": [
-          8,
-          9,
-          10,
-          11,
-          12,
-          13,
-          14,
-          15
-        ],
-        "direction2": [
-          16,
-          17,
-          18,
-          19,
-          20,
-          21,
-          22,
-          23
-        ],
-        "direction3": [
-          24,
-          25,
-          26,
-          27,
-          28,
-          29,
-          30,
-          31
-        ]
+        "direction0": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "direction1": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "direction2": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "direction3": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        }
       }
     },
     "worker-sell_eggs": {
       "file": "worker-sell_eggs.7df02d7b.webp",
-      "fallback": "worker-sell_eggs.7df02d7b.png",
-      "bytes": 74348,
-      "width": 1024,
-      "height": 512,
+      "png": "worker-sell_eggs.7df02d7b.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -3119,54 +2109,35 @@
         0.85
       ],
       "clips": {
-        "direction0": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7
-        ],
-        "direction1": [
-          8,
-          9,
-          10,
-          11,
-          12,
-          13,
-          14,
-          15
-        ],
-        "direction2": [
-          16,
-          17,
-          18,
-          19,
-          20,
-          21,
-          22,
-          23
-        ],
-        "direction3": [
-          24,
-          25,
-          26,
-          27,
-          28,
-          29,
-          30,
-          31
-        ]
+        "direction0": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "direction1": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "direction2": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "direction3": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        }
       }
     },
     "worker-walk": {
       "file": "worker-walk.227a151c.webp",
-      "fallback": "worker-walk.227a151c.png",
-      "bytes": 59370,
-      "width": 1024,
-      "height": 512,
+      "png": "worker-walk.227a151c.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -3176,54 +2147,35 @@
         0.85
       ],
       "clips": {
-        "direction0": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7
-        ],
-        "direction1": [
-          8,
-          9,
-          10,
-          11,
-          12,
-          13,
-          14,
-          15
-        ],
-        "direction2": [
-          16,
-          17,
-          18,
-          19,
-          20,
-          21,
-          22,
-          23
-        ],
-        "direction3": [
-          24,
-          25,
-          26,
-          27,
-          28,
-          29,
-          30,
-          31
-        ]
+        "direction0": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "direction1": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "direction2": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "direction3": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        }
       }
     },
     "worker-water": {
       "file": "worker-water.326ad9c1.webp",
-      "fallback": "worker-water.326ad9c1.png",
-      "bytes": 82572,
-      "width": 1024,
-      "height": 512,
+      "png": "worker-water.326ad9c1.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -3233,46 +2185,30 @@
         0.85
       ],
       "clips": {
-        "direction0": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7
-        ],
-        "direction1": [
-          8,
-          9,
-          10,
-          11,
-          12,
-          13,
-          14,
-          15
-        ],
-        "direction2": [
-          16,
-          17,
-          18,
-          19,
-          20,
-          21,
-          22,
-          23
-        ],
-        "direction3": [
-          24,
-          25,
-          26,
-          27,
-          28,
-          29,
-          30,
-          31
-        ]
+        "direction0": {
+          "row": 0,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "direction1": {
+          "row": 1,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "direction2": {
+          "row": 2,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        },
+        "direction3": {
+          "row": 3,
+          "frames": 8,
+          "fps": 8,
+          "loop": true
+        }
       }
     }
   }

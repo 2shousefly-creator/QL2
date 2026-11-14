@@ -2,7 +2,7 @@ import { Rectangle, Texture } from 'pixi.js';
 import { acquirePixiTexture, type PixiAssetLease } from '../../../components/core-visual/pixi/pixiAssets';
 import rawManifest from './farmWorldManifest.json';
 export type FarmArtClip = { row: number; column?: number; frames: number; loop?: boolean; fps?: number };
-type Atlas = { file: string; cell: number; size: number; columns: number; anchor: number[]; clips: Record<string, FarmArtClip> };
+type Atlas = { file: string; png?: string; cell: number; size: number; columns: number; anchor: number[]; clips: Record<string, FarmArtClip> };
 export const farmArtManifest = rawManifest as { revision: string; assets: Record<string, Atlas> };
 export class FarmWorldArt {
   private leases = new Map<string, PixiAssetLease<Texture>>();
@@ -15,13 +15,23 @@ export class FarmWorldArt {
   constructor(private changed: () => void) {}
   request(ids: Set<string>) {
     this.wanted = ids;
+    const assets = farmArtManifest.assets ?? {};
     for (const [id, lease] of this.leases) if (!ids.has(id)) { for (const [key, texture] of this.frames) if (key.startsWith(id + ':')) { texture.destroy(false); this.frames.delete(key); } this.leases.delete(id); lease.release(); }
     for (const id of ids) {
       if (this.leases.has(id) || this.pending.has(id) || this.failed.has(id)) continue;
-      const atlas = farmArtManifest.assets[id]; if (!atlas) { this.failed.add(id); continue; }
+      const atlas = assets[id]; if (!atlas) { this.failed.add(id); continue; }
       this.pending.add(id);
-      acquirePixiTexture(`${import.meta.env.BASE_URL}assets/tanggia/rework-2026-10/${atlas.file}${this.retryEpoch ? `?retry=${this.retryEpoch}` : ""}`).then(lease => {
+      const q = this.retryEpoch ? `?retry=${this.retryEpoch}` : '';
+      const base = `${import.meta.env.BASE_URL}assets/tanggia/rework-2026-10/`;
+      acquirePixiTexture(`${base}${atlas.file}${q}`).then(async lease => {
         if (this.disposed || !this.wanted.has(id)) { lease.release(); return; }
+        if (!lease.value && atlas.png) {
+          lease.release();
+          const pngLease = await acquirePixiTexture(`${base}${atlas.png}${q}`);
+          if (this.disposed || !this.wanted.has(id)) { pngLease.release(); return; }
+          if (pngLease.value) { this.leases.set(id, pngLease); this.changed(); return; }
+          pngLease.release();
+        }
         if (!lease.value) { this.failed.add(id); lease.release(); }
         else this.leases.set(id, lease);
         this.changed();
@@ -29,9 +39,10 @@ export class FarmWorldArt {
     }
   }
   frame(id: string, clip: string, index: number): Texture | undefined {
-    const atlas = farmArtManifest.assets[id], source = this.leases.get(id)?.value;
+    const assets = farmArtManifest.assets ?? {};
+    const atlas = assets[id], source = this.leases.get(id)?.value;
     if (!atlas || !source) return;
-    const definition = atlas.clips[clip]; if (!definition) return;
+    const definition = atlas.clips?.[clip]; if (!definition) return;
     const column = definition.loop === false ? Math.min(definition.frames - 1, Math.max(0, index)) : Math.max(0, index) % definition.frames;
     const key = `${id}:${clip}:${column}`;
     if (!this.frames.has(key)) this.frames.set(key, new Texture({ source: source.source, frame: new Rectangle((column + (definition.column ?? 0)) * atlas.cell + 2, definition.row * atlas.cell + 2, atlas.size, atlas.size) }));

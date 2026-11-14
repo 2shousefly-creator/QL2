@@ -1974,19 +1974,23 @@ await writeFile(
 // 2. Generate 2.5D PixiJS World Atlases (`public/assets/tanggia/rework-2026-10`)
 // ============================================================================
 
-type AtlasClipMap = Record<string, number[]>;
+type FarmArtClipDef = {
+  row: number;
+  column?: number;
+  frames: number;
+  fps?: number;
+  loop?: boolean;
+};
+type AtlasClipMap = Record<string, FarmArtClipDef>;
 type ManifestAtlasEntry = {
   file: string;
-  fallback: string;
-  bytes: number;
-  width: number;
-  height: number;
-  cell?: number;
-  size?: number;
-  columns?: number;
+  png: string;
+  cell: number;
+  size: number;
+  columns: number;
   padding?: number;
-  anchor?: [number, number];
-  clips?: AtlasClipMap;
+  anchor: [number, number];
+  clips: AtlasClipMap;
 };
 
 const manifestAtlases: Record<string, ManifestAtlasEntry> = {};
@@ -2020,7 +2024,7 @@ async function saveAtlas(
   svg: string,
   width: number,
   height: number,
-  meta?: Omit<ManifestAtlasEntry, 'file' | 'fallback' | 'bytes' | 'width' | 'height'>
+  meta: Omit<ManifestAtlasEntry, 'file' | 'png'>
 ) {
   const buf = Buffer.from(svg);
   const webpBuffer = await sharp(buf).webp({ quality: 90, effort: 4 }).toBuffer();
@@ -2032,10 +2036,7 @@ async function saveAtlas(
   await writeFile(path.join(WORLD_OUT, pngName), pngBuffer);
   manifestAtlases[id] = {
     file: webpName,
-    fallback: pngName,
-    bytes: webpBuffer.length,
-    width,
-    height,
+    png: pngName,
     ...meta,
   };
 }
@@ -2575,12 +2576,12 @@ const tasks: (() => Promise<void>)[] = [];
 
 // A. 19 Crop World Atlases (1024x768, 8 cols x 6 rows)
 const WORLD_CROP_CLIPS: AtlasClipMap = {
-  seeded: [0, 1, 2, 3, 4, 5, 6, 7],
-  sprout: [8, 9, 10, 11, 12, 13, 14, 15],
-  young: [16, 17, 18, 19, 20, 21, 22, 23],
-  growing: [24, 25, 26, 27, 28, 29, 30, 31],
-  mature: [32, 33, 34, 35, 36, 37, 38, 39],
-  yield: [40, 41, 42, 43, 44, 45, 46, 47],
+  seeded: { row: 0, frames: 8, fps: 8, loop: false },
+  sprout: { row: 1, frames: 8, fps: 8, loop: true },
+  young: { row: 2, frames: 8, fps: 8, loop: true },
+  growing: { row: 3, frames: 8, fps: 8, loop: true },
+  mature: { row: 4, frames: 8, fps: 8, loop: true },
+  yield: { row: 5, frames: 8, fps: 8, loop: false },
 };
 
 for (const crop of CROP_CATALOG) {
@@ -2609,14 +2610,14 @@ for (const crop of CROP_CATALOG) {
 
 // B. 10 Animal World Atlases (1024x1024, 8 cols x 8 rows)
 const WORLD_ANIMAL_CLIPS: AtlasClipMap = {
-  idle: [0, 1, 2, 3, 4, 5, 6, 7],
-  walk: [8, 9, 10, 11, 12, 13, 14, 15],
-  eat: [16, 17, 18, 19, 20, 21, 22, 23],
-  drink: [24, 25, 26, 27, 28, 29, 30, 31],
-  rest: [32, 33, 34, 35, 36, 37, 38, 39],
-  produce_ready: [40, 41, 42, 43, 44, 45, 46, 47],
-  weak: [48, 49, 50, 51, 52, 53, 54, 55],
-  dead: [56, 57, 58, 59, 60, 61, 62, 63],
+  idle: { row: 0, frames: 8, fps: 8, loop: true },
+  walk: { row: 1, frames: 8, fps: 8, loop: true },
+  eat: { row: 2, frames: 8, fps: 8, loop: true },
+  drink: { row: 3, frames: 8, fps: 8, loop: true },
+  rest: { row: 4, frames: 8, fps: 8, loop: true },
+  produce_ready: { row: 5, frames: 8, fps: 8, loop: true },
+  weak: { row: 6, frames: 8, fps: 8, loop: true },
+  dead: { row: 7, frames: 8, fps: 8, loop: false },
 };
 
 for (const animal of ANIMAL_CATALOG) {
@@ -2641,7 +2642,12 @@ tasks.push(async () => {
   const props16 = drawLowPolyEnvironmentProps();
   const clips: AtlasClipMap = {};
   props16.forEach((_, idx) => {
-    clips[`prop${idx}`] = [idx];
+    clips[`prop${idx}`] = {
+      row: Math.floor(idx / 4),
+      column: idx % 4,
+      frames: 1,
+      loop: false,
+    };
   });
   const svg = buildAtlasSvg(1024, 1024, 4, 256, 2, 252, props16, 252);
   await saveAtlas('environment', svg, 1024, 1024, {
@@ -2671,10 +2677,10 @@ const WORKER_TASKS = [
 ] as const;
 
 const WORKER_CLIPS: AtlasClipMap = {
-  direction0: [0, 1, 2, 3, 4, 5, 6, 7],
-  direction1: [8, 9, 10, 11, 12, 13, 14, 15],
-  direction2: [16, 17, 18, 19, 20, 21, 22, 23],
-  direction3: [24, 25, 26, 27, 28, 29, 30, 31],
+  direction0: { row: 0, frames: 8, fps: 8, loop: true },
+  direction1: { row: 1, frames: 8, fps: 8, loop: true },
+  direction2: { row: 2, frames: 8, fps: 8, loop: true },
+  direction3: { row: 3, frames: 8, fps: 8, loop: true },
 };
 
 for (const task of WORKER_TASKS) {
@@ -2710,21 +2716,33 @@ tasks.push(async () => {
     columns: 8,
     padding: 2,
     anchor: [0.5, 0.85],
-    clips: WORLD_CROP_CLIPS ? {
-      grass: [0, 1, 2, 3, 4, 5, 6, 7],
-      leaves: [8, 9, 10, 11, 12, 13, 14, 15],
-      water: [16, 17, 18, 19, 20, 21, 22, 23],
-      lamp: [24, 25, 26, 27, 28, 29, 30, 31],
-      water_fx: [32, 33, 34, 35, 36, 37, 38, 39],
-      care_fx: [40, 41, 42, 43, 44, 45, 46, 47],
-    } : undefined,
+    clips: {
+      grass: { row: 0, frames: 8, fps: 8, loop: true },
+      leaves: { row: 1, frames: 8, fps: 8, loop: true },
+      water: { row: 2, frames: 8, fps: 8, loop: true },
+      lamp: { row: 3, frames: 8, fps: 8, loop: true },
+      water_fx: { row: 4, frames: 8, fps: 8, loop: true },
+      care_fx: { row: 5, frames: 8, fps: 8, loop: true },
+    },
   });
 });
 
 // F. Grass-Ground & Village-Surroundings Seamless Tiles
 tasks.push(async () => {
-  await saveAtlas('grass-ground', generateLowPolyGrassGroundSvg(), 1024, 1024);
-  await saveAtlas('village-surroundings', generateLowPolyVillageSurroundingsSvg(), 1536, 1536);
+  await saveAtlas('grass-ground', generateLowPolyGrassGroundSvg(), 1024, 1024, {
+    cell: 1024,
+    size: 1024,
+    columns: 1,
+    anchor: [0, 0],
+    clips: {},
+  });
+  await saveAtlas('village-surroundings', generateLowPolyVillageSurroundingsSvg(), 1536, 1536, {
+    cell: 1536,
+    size: 1536,
+    columns: 1,
+    anchor: [0, 0],
+    clips: {},
+  });
 });
 
 // Execute in parallel batches of 8
@@ -2742,9 +2760,8 @@ await writeFile(
   WORLD_MANIFEST_PATH,
   JSON.stringify(
     {
-      version: '2026.11-lowpoly-world',
-      baseUrl: '/assets/tanggia/rework-2026-10',
-      atlases: sortedAtlases,
+      revision: '2026-11-14-lowpoly',
+      assets: sortedAtlases,
     },
     null,
     2

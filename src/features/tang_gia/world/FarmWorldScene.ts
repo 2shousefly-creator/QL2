@@ -1182,7 +1182,6 @@ export const createFarmWorldScene: PixiSceneFactory<FarmWorldProps> = (app, init
         Math.min(window.devicePixelRatio || 1, props.quality === 'low' ? 1 : 1.5, Math.sqrt(1500000 / (w * h)))
       );
       app.renderer.resolution = resolution;
-      app.renderer.resize(w, h);
       camera.width = w;
       camera.height = h;
       background.clear().rect(0, 0, w, h).fill(0x283e2b);

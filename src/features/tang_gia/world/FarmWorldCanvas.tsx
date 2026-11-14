@@ -138,7 +138,7 @@ export function FarmWorldCanvas({
 
   const semantics = (
     <div
-      className={failed ? 'farm-world-fallback' : 'sr-only'}
+      className="sr-only"
       aria-label="Đối tượng nông trại"
     >
       {s.plots.map((p) => (
