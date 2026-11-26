@@ -141,7 +141,7 @@ export const HubNavigation: React.FC<HubNavigationProps> = ({
       id: "journey" as TabType,
       title: "Hành Trình",
       fullName: "Hành Trình Binh Nghiệp",
-      subtitle: "216 Cấp bậc & 8 chương",
+      subtitle: "24 quân hàm & 8 chương",
       icon: Compass,
     },
     {

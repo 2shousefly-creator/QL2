@@ -19,7 +19,6 @@ import {
 import { GameState, JournalCategory, JournalEvent, TabType } from "../../game/types";
 import { soundManager } from "../../game/audio";
 import { RankBadge } from "../../components/RankBadge";
-import { RankTierProgress } from "../../components/RankTierProgress";
 import { RANK_STEPS } from "../../game/rankBuilder";
 import { RANK_FAMILIES } from "../../game/rankFamilies";
 import { RANK_STEP_STORIES } from "../../game/rankStories";
@@ -329,17 +328,6 @@ const JournalEntryCard: React.FC<JournalEntryCardProps> = ({ item, isHistorical,
             {isRankEvent && family ? (
               <div className="flex flex-col items-center shrink-0">
                 <RankBadge badge={family.badge} size={36} />
-                {rankStep && rankStep.tierCount > 1 && rankStep.tier !== null && (
-                  <div className="mt-0.5">
-                    <RankTierProgress
-                      currentTier={rankStep.tier}
-                      tierCount={rankStep.tierCount}
-                      badge={family.badge}
-                      badgeSize={36}
-                      size="list"
-                    />
-                  </div>
-                )}
               </div>
             ) : null}
             <div>
@@ -388,7 +376,7 @@ const JournalDetailModal: React.FC<{
 
     if (rankStep) {
       family = RANK_FAMILIES.find((f) => f.id === rankStep.familyId) || RANK_FAMILIES[0];
-      story = RANK_STEP_STORIES.find((s) => s.rankIndex === rankStep?.rankIndex);
+      if (event.type === "promotion") story = RANK_STEP_STORIES[rankStep.rankIndex];
     }
   }
 
@@ -422,17 +410,6 @@ const JournalDetailModal: React.FC<{
                 <div className="flex items-end gap-3">
                   <div className="theme-card-accent bg-slate-950 border-2 rounded-2xl p-2 shadow-xl shrink-0 flex flex-col items-center">
                     <RankBadge badge={family.badge} size={56} />
-                    {rankStep && rankStep.tierCount > 1 && rankStep.tier !== null && (
-                      <div className="mt-1 w-full">
-                        <RankTierProgress
-                          currentTier={rankStep.tier}
-                          tierCount={rankStep.tierCount}
-                          badge={family.badge}
-                          badgeSize={56}
-                          size="list"
-                        />
-                      </div>
-                    )}
                   </div>
                 </div>
               ) : (

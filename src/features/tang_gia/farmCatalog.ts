@@ -14,7 +14,7 @@ export const CROP_CATALOG: CropDefinition[] = [
     seedCostGold: 0,
     harvestGold: 10,
     growthMs: 5 * 60 * 60 * 1000, // 05h00m
-    harvestXp: 5,
+    harvestXp: 2.5,
     requiredRank: { familyId: "hoc_vien", tier: null },
   },
   {
@@ -23,8 +23,8 @@ export const CROP_CATALOG: CropDefinition[] = [
     seedCostGold: 5,
     harvestGold: 14,
     growthMs: 7 * 60 * 60 * 1000, // 07h00m
-    harvestXp: 8,
-    requiredRank: { familyId: "binh_bet", tier: 1 },
+    harvestXp: 4,
+    requiredRank: { familyId: "binh_bet", tier: null },
   },
   {
     id: "potato",
@@ -32,8 +32,8 @@ export const CROP_CATALOG: CropDefinition[] = [
     seedCostGold: 8,
     harvestGold: 30,
     growthMs: 9 * 60 * 60 * 1000, // 09h00m
-    harvestXp: 15,
-    requiredRank: { familyId: "binh_nhi", tier: 1 },
+    harvestXp: 7.5,
+    requiredRank: { familyId: "binh_nhi", tier: null },
   },
   {
     id: "tomato",
@@ -41,8 +41,8 @@ export const CROP_CATALOG: CropDefinition[] = [
     seedCostGold: 11,
     harvestGold: 40,
     growthMs: 11 * 60 * 60 * 1000, // 11h00m
-    harvestXp: 20,
-    requiredRank: { familyId: "binh_nhat", tier: 1 },
+    harvestXp: 10,
+    requiredRank: { familyId: "binh_nhat", tier: null },
   },
   {
     id: "strawberry",
@@ -50,8 +50,8 @@ export const CROP_CATALOG: CropDefinition[] = [
     seedCostGold: 15,
     harvestGold: 50,
     growthMs: 13 * 60 * 60 * 1000, // 13h00m
-    harvestXp: 27,
-    requiredRank: { familyId: "ha_si", tier: 1 },
+    harvestXp: 13.5,
+    requiredRank: { familyId: "ha_si", tier: null },
   },
   {
     id: "corn",
@@ -59,8 +59,8 @@ export const CROP_CATALOG: CropDefinition[] = [
     seedCostGold: 20,
     harvestGold: 70,
     growthMs: 15 * 60 * 60 * 1000, // 15h00m
-    harvestXp: 37,
-    requiredRank: { familyId: "trung_si", tier: 1 },
+    harvestXp: 18.5,
+    requiredRank: { familyId: "trung_si", tier: null },
   },
   {
     id: "pumpkin",
@@ -68,8 +68,8 @@ export const CROP_CATALOG: CropDefinition[] = [
     seedCostGold: 30,
     harvestGold: 100,
     growthMs: 18 * 60 * 60 * 1000, // 18h00m
-    harvestXp: 48,
-    requiredRank: { familyId: "thuong_si", tier: 1 },
+    harvestXp: 24,
+    requiredRank: { familyId: "thuong_si", tier: null },
   },
   {
     id: "watermelon",
@@ -77,8 +77,8 @@ export const CROP_CATALOG: CropDefinition[] = [
     seedCostGold: 40,
     harvestGold: 140,
     growthMs: 21 * 60 * 60 * 1000, // 21h00m
-    harvestXp: 60,
-    requiredRank: { familyId: "thieu_uy", tier: 1 },
+    harvestXp: 30,
+    requiredRank: { familyId: "thieu_uy", tier: null },
   },
   {
     id: "pineapple",
@@ -86,8 +86,8 @@ export const CROP_CATALOG: CropDefinition[] = [
     seedCostGold: 55,
     harvestGold: 190,
     growthMs: 24 * 60 * 60 * 1000, // 24h00m
-    harvestXp: 75,
-    requiredRank: { familyId: "trung_uy", tier: 1 },
+    harvestXp: 37.5,
+    requiredRank: { familyId: "trung_uy", tier: null },
   },
   {
     id: "banana",
@@ -95,8 +95,8 @@ export const CROP_CATALOG: CropDefinition[] = [
     seedCostGold: 80,
     harvestGold: 240,
     growthMs: 28 * 60 * 60 * 1000, // 28h00m
-    harvestXp: 94,
-    requiredRank: { familyId: "thuong_uy", tier: 1 },
+    harvestXp: 47,
+    requiredRank: { familyId: "thuong_uy", tier: null },
   },
   {
     id: "orange",
@@ -104,8 +104,8 @@ export const CROP_CATALOG: CropDefinition[] = [
     seedCostGold: 100,
     harvestGold: 290,
     growthMs: 32 * 60 * 60 * 1000, // 32h00m
-    harvestXp: 107,
-    requiredRank: { familyId: "dai_uy", tier: 1 },
+    harvestXp: 53.5,
+    requiredRank: { familyId: "dai_uy", tier: null },
   },
   {
     id: "mango",
@@ -113,8 +113,8 @@ export const CROP_CATALOG: CropDefinition[] = [
     seedCostGold: 125,
     harvestGold: 340,
     growthMs: 36 * 60 * 60 * 1000, // 36h00m
-    harvestXp: 121,
-    requiredRank: { familyId: "thieu_ta", tier: 1 },
+    harvestXp: 60.5,
+    requiredRank: { familyId: "thieu_ta", tier: null },
   },
   {
     id: "apple",
@@ -122,8 +122,8 @@ export const CROP_CATALOG: CropDefinition[] = [
     seedCostGold: 148,
     harvestGold: 390,
     growthMs: 40 * 60 * 60 * 1000, // 40h00m
-    harvestXp: 142,
-    requiredRank: { familyId: "trung_ta", tier: 1 },
+    harvestXp: 71,
+    requiredRank: { familyId: "trung_ta", tier: null },
   },
   {
     id: "pear",
@@ -131,8 +131,8 @@ export const CROP_CATALOG: CropDefinition[] = [
     seedCostGold: 170,
     harvestGold: 440,
     growthMs: 44 * 60 * 60 * 1000, // 44h00m
-    harvestXp: 167,
-    requiredRank: { familyId: "thuong_ta", tier: 1 },
+    harvestXp: 83.5,
+    requiredRank: { familyId: "thuong_ta", tier: null },
   },
   {
     id: "grape",
@@ -140,8 +140,8 @@ export const CROP_CATALOG: CropDefinition[] = [
     seedCostGold: 203,
     harvestGold: 500,
     growthMs: 48 * 60 * 60 * 1000, // 48h00m
-    harvestXp: 198,
-    requiredRank: { familyId: "dai_ta", tier: 1 },
+    harvestXp: 99,
+    requiredRank: { familyId: "dai_ta", tier: null },
   },
   {
     id: "dragon_fruit",
@@ -149,8 +149,8 @@ export const CROP_CATALOG: CropDefinition[] = [
     seedCostGold: 230,
     harvestGold: 560,
     growthMs: 54 * 60 * 60 * 1000, // 54h00m
-    harvestXp: 227,
-    requiredRank: { familyId: "thieu_tuong", tier: 1 },
+    harvestXp: 113.5,
+    requiredRank: { familyId: "thieu_tuong", tier: null },
   },
   {
     id: "avocado",
@@ -158,8 +158,8 @@ export const CROP_CATALOG: CropDefinition[] = [
     seedCostGold: 260,
     harvestGold: 620,
     growthMs: 60 * 60 * 60 * 1000, // 60h00m
-    harvestXp: 264,
-    requiredRank: { familyId: "trung_tuong", tier: 1 },
+    harvestXp: 132,
+    requiredRank: { familyId: "trung_tuong", tier: null },
   },
   {
     id: "durian",
@@ -167,8 +167,8 @@ export const CROP_CATALOG: CropDefinition[] = [
     seedCostGold: 290,
     harvestGold: 690,
     growthMs: 72 * 60 * 60 * 1000, // 72h00m
-    harvestXp: 310,
-    requiredRank: { familyId: "thuong_tuong", tier: 1 },
+    harvestXp: 155,
+    requiredRank: { familyId: "thuong_tuong", tier: null },
   },
   {
     id: "mangosteen",
@@ -176,8 +176,8 @@ export const CROP_CATALOG: CropDefinition[] = [
     seedCostGold: 330,
     harvestGold: 760,
     growthMs: 84 * 60 * 60 * 1000, // 84h00m
-    harvestXp: 380,
-    requiredRank: { familyId: "dai_tuong", tier: 1 },
+    harvestXp: 190,
+    requiredRank: { familyId: "dai_tuong", tier: null },
   },
 ];
 
@@ -190,7 +190,7 @@ export const ANIMAL_CATALOG: AnimalDefinition[] = [
     lifespanMs: 200 * 60 * 60 * 1000,
     eggTypeId: "chicken_egg",
     eggSellGold: 9,
-    eggSellXp: 3,
+    eggSellXp: 1.5,
     requiredRank: { familyId: "hoc_vien", tier: null },
   },
   {
@@ -201,8 +201,8 @@ export const ANIMAL_CATALOG: AnimalDefinition[] = [
     lifespanMs: 212 * 60 * 60 * 1000,
     eggTypeId: "duck_egg",
     eggSellGold: 15,
-    eggSellXp: 5,
-    requiredRank: { familyId: "binh_nhi", tier: 1 },
+    eggSellXp: 2.5,
+    requiredRank: { familyId: "binh_nhi", tier: null },
   },
   {
     id: "quail",
@@ -212,8 +212,8 @@ export const ANIMAL_CATALOG: AnimalDefinition[] = [
     lifespanMs: 224 * 60 * 60 * 1000,
     eggTypeId: "quail_egg",
     eggSellGold: 21,
-    eggSellXp: 7,
-    requiredRank: { familyId: "ha_si", tier: 1 },
+    eggSellXp: 3.5,
+    requiredRank: { familyId: "ha_si", tier: null },
   },
   {
     id: "goose",
@@ -223,8 +223,8 @@ export const ANIMAL_CATALOG: AnimalDefinition[] = [
     lifespanMs: 236 * 60 * 60 * 1000,
     eggTypeId: "goose_egg",
     eggSellGold: 45,
-    eggSellXp: 15,
-    requiredRank: { familyId: "thuong_si", tier: 1 },
+    eggSellXp: 7.5,
+    requiredRank: { familyId: "thuong_si", tier: null },
   },
   {
     id: "muscovy_duck",
@@ -234,8 +234,8 @@ export const ANIMAL_CATALOG: AnimalDefinition[] = [
     lifespanMs: 248 * 60 * 60 * 1000,
     eggTypeId: "muscovy_duck_egg",
     eggSellGold: 63,
-    eggSellXp: 21,
-    requiredRank: { familyId: "trung_uy", tier: 1 },
+    eggSellXp: 10.5,
+    requiredRank: { familyId: "trung_uy", tier: null },
   },
   {
     id: "turkey",
@@ -245,8 +245,8 @@ export const ANIMAL_CATALOG: AnimalDefinition[] = [
     lifespanMs: 260 * 60 * 60 * 1000,
     eggTypeId: "turkey_egg",
     eggSellGold: 87,
-    eggSellXp: 29,
-    requiredRank: { familyId: "dai_uy", tier: 1 },
+    eggSellXp: 14.5,
+    requiredRank: { familyId: "dai_uy", tier: null },
   },
   {
     id: "guinea_fowl",
@@ -256,8 +256,8 @@ export const ANIMAL_CATALOG: AnimalDefinition[] = [
     lifespanMs: 272 * 60 * 60 * 1000,
     eggTypeId: "guinea_fowl_egg",
     eggSellGold: 108,
-    eggSellXp: 36,
-    requiredRank: { familyId: "trung_ta", tier: 1 },
+    eggSellXp: 18,
+    requiredRank: { familyId: "trung_ta", tier: null },
   },
   {
     id: "pheasant",
@@ -267,8 +267,8 @@ export const ANIMAL_CATALOG: AnimalDefinition[] = [
     lifespanMs: 284 * 60 * 60 * 1000,
     eggTypeId: "pheasant_egg",
     eggSellGold: 129,
-    eggSellXp: 43,
-    requiredRank: { familyId: "dai_ta", tier: 1 },
+    eggSellXp: 21.5,
+    requiredRank: { familyId: "dai_ta", tier: null },
   },
   {
     id: "peafowl",
@@ -278,8 +278,8 @@ export const ANIMAL_CATALOG: AnimalDefinition[] = [
     lifespanMs: 296 * 60 * 60 * 1000,
     eggTypeId: "peafowl_egg",
     eggSellGold: 165,
-    eggSellXp: 55,
-    requiredRank: { familyId: "trung_tuong", tier: 1 },
+    eggSellXp: 27.5,
+    requiredRank: { familyId: "trung_tuong", tier: null },
   },
   {
     id: "ostrich",
@@ -289,8 +289,8 @@ export const ANIMAL_CATALOG: AnimalDefinition[] = [
     lifespanMs: 308 * 60 * 60 * 1000,
     eggTypeId: "ostrich_egg",
     eggSellGold: 189,
-    eggSellXp: 63,
-    requiredRank: { familyId: "dai_tuong", tier: 1 },
+    eggSellXp: 31.5,
+    requiredRank: { familyId: "dai_tuong", tier: null },
   },
 ];
 
@@ -309,7 +309,7 @@ export const FEED_CATALOG: FeedDefinition[] = [
     costGold: 10,
     buffAmount: 20,
     speedBonusPercent: 16,
-    requiredRank: { familyId: "ha_si", tier: 1 },
+    requiredRank: { familyId: "ha_si", tier: null },
   },
   {
     id: "feed_super",
@@ -317,7 +317,7 @@ export const FEED_CATALOG: FeedDefinition[] = [
     costGold: 10,
     buffAmount: 20,
     speedBonusPercent: 25,
-    requiredRank: { familyId: "thieu_uy", tier: 1 },
+    requiredRank: { familyId: "thieu_uy", tier: null },
   },
 ];
 
@@ -329,7 +329,7 @@ export const FERTILIZER_CATALOG: FertilizerDefinition[] = [
     purchaseGold: 3,
     xpBonusPct: 0.04,
     growthTimeReductionPct: 0,
-    requiredRank: { familyId: "binh_nhi", tier: 1 },
+    requiredRank: { familyId: "binh_nhi", tier: null },
     icon: "🌱",
   },
   {
@@ -339,7 +339,7 @@ export const FERTILIZER_CATALOG: FertilizerDefinition[] = [
     purchaseGold: 3,
     xpBonusPct: 0,
     growthTimeReductionPct: 0.04,
-    requiredRank: { familyId: "binh_nhi", tier: 1 },
+    requiredRank: { familyId: "binh_nhi", tier: null },
     icon: "⏱",
   },
   {
@@ -349,7 +349,7 @@ export const FERTILIZER_CATALOG: FertilizerDefinition[] = [
     purchaseGold: 6,
     xpBonusPct: 0.07,
     growthTimeReductionPct: 0,
-    requiredRank: { familyId: "ha_si", tier: 1 },
+    requiredRank: { familyId: "ha_si", tier: null },
     icon: "🌱",
   },
   {
@@ -359,7 +359,7 @@ export const FERTILIZER_CATALOG: FertilizerDefinition[] = [
     purchaseGold: 6,
     xpBonusPct: 0,
     growthTimeReductionPct: 0.07,
-    requiredRank: { familyId: "ha_si", tier: 1 },
+    requiredRank: { familyId: "ha_si", tier: null },
     icon: "⏱",
   },
   {
@@ -369,7 +369,7 @@ export const FERTILIZER_CATALOG: FertilizerDefinition[] = [
     purchaseGold: 20,
     xpBonusPct: 0.10,
     growthTimeReductionPct: 0,
-    requiredRank: { familyId: "thieu_uy", tier: 1 },
+    requiredRank: { familyId: "thieu_uy", tier: null },
     icon: "🌱",
   },
   {
@@ -379,7 +379,7 @@ export const FERTILIZER_CATALOG: FertilizerDefinition[] = [
     purchaseGold: 20,
     xpBonusPct: 0,
     growthTimeReductionPct: 0.10,
-    requiredRank: { familyId: "thieu_uy", tier: 1 },
+    requiredRank: { familyId: "thieu_uy", tier: null },
     icon: "⏱",
   },
   {
@@ -389,7 +389,7 @@ export const FERTILIZER_CATALOG: FertilizerDefinition[] = [
     purchaseGold: 55,
     xpBonusPct: 0.15,
     growthTimeReductionPct: 0,
-    requiredRank: { familyId: "thieu_ta", tier: 1 },
+    requiredRank: { familyId: "thieu_ta", tier: null },
     icon: "🌱",
   },
   {
@@ -399,7 +399,7 @@ export const FERTILIZER_CATALOG: FertilizerDefinition[] = [
     purchaseGold: 55,
     xpBonusPct: 0,
     growthTimeReductionPct: 0.15,
-    requiredRank: { familyId: "thieu_ta", tier: 1 },
+    requiredRank: { familyId: "thieu_ta", tier: null },
     icon: "⏱",
   },
   {
@@ -409,7 +409,7 @@ export const FERTILIZER_CATALOG: FertilizerDefinition[] = [
     purchaseGold: 75,
     xpBonusPct: 0.15,
     growthTimeReductionPct: 0.15,
-    requiredRank: { familyId: "dai_ta", tier: 1 },
+    requiredRank: { familyId: "dai_ta", tier: null },
     icon: "✨",
   },
   {
@@ -419,7 +419,7 @@ export const FERTILIZER_CATALOG: FertilizerDefinition[] = [
     purchaseGold: 100,
     xpBonusPct: 0.2,
     growthTimeReductionPct: 0.2,
-    requiredRank: { familyId: "trung_tuong", tier: 1 },
+    requiredRank: { familyId: "trung_tuong", tier: null },
     icon: "✨",
   },
   {
@@ -429,7 +429,7 @@ export const FERTILIZER_CATALOG: FertilizerDefinition[] = [
     purchaseGold: 130,
     xpBonusPct: 0.25,
     growthTimeReductionPct: 0.25,
-    requiredRank: { familyId: "dai_tuong", tier: 1 },
+    requiredRank: { familyId: "dai_tuong", tier: null },
     icon: "✨",
   },
 ];
@@ -470,28 +470,28 @@ export const FARM_PLOT_COUNT = 24;
 export const FARM_PLOT_UNLOCKS: PlotUnlockDefinition[] = [
   { plotIndex: 0, gold: 0, requiredRank: null, unlockedByDefault: true },
   { plotIndex: 1, gold: 0, requiredRank: null, unlockedByDefault: true },
-  { plotIndex: 2, gold: 15, requiredRank: { familyId: "enlisted_3", tier: 3 }, unlockedByDefault: false },
-  { plotIndex: 3, gold: 25, requiredRank: { familyId: "nco_1", tier: 5 }, unlockedByDefault: false },
-  { plotIndex: 4, gold: 40, requiredRank: { familyId: "nco_2", tier: 6 }, unlockedByDefault: false },
-  { plotIndex: 5, gold: 65, requiredRank: { familyId: "junior_1", tier: 1 }, unlockedByDefault: false },
-  { plotIndex: 6, gold: 95, requiredRank: { familyId: "junior_1", tier: 7 }, unlockedByDefault: false },
-  { plotIndex: 7, gold: 135, requiredRank: { familyId: "junior_2", tier: 6 }, unlockedByDefault: false },
-  { plotIndex: 8, gold: 180, requiredRank: { familyId: "junior_3", tier: 4 }, unlockedByDefault: false },
-  { plotIndex: 9, gold: 230, requiredRank: { familyId: "junior_4", tier: 3 }, unlockedByDefault: false },
-  { plotIndex: 10, gold: 285, requiredRank: { familyId: "field_1", tier: 2 }, unlockedByDefault: false },
-  { plotIndex: 11, gold: 350, requiredRank: { familyId: "field_1", tier: 8 }, unlockedByDefault: false },
-  { plotIndex: 12, gold: 425, requiredRank: { familyId: "field_2", tier: 5 }, unlockedByDefault: false },
-  { plotIndex: 13, gold: 500, requiredRank: { familyId: "field_3", tier: 2 }, unlockedByDefault: false },
-  { plotIndex: 14, gold: 585, requiredRank: { familyId: "field_3", tier: 8 }, unlockedByDefault: false },
-  { plotIndex: 15, gold: 680, requiredRank: { familyId: "field_4", tier: 5 }, unlockedByDefault: false },
-  { plotIndex: 16, gold: 780, requiredRank: { familyId: "general_1", tier: 2 }, unlockedByDefault: false },
-  { plotIndex: 17, gold: 885, requiredRank: { familyId: "general_1", tier: 8 }, unlockedByDefault: false },
-  { plotIndex: 18, gold: 995, requiredRank: { familyId: "general_2", tier: 3 }, unlockedByDefault: false },
-  { plotIndex: 19, gold: 1115, requiredRank: { familyId: "general_2", tier: 9 }, unlockedByDefault: false },
-  { plotIndex: 20, gold: 1240, requiredRank: { familyId: "general_3", tier: 4 }, unlockedByDefault: false },
-  { plotIndex: 21, gold: 1375, requiredRank: { familyId: "general_3", tier: 11 }, unlockedByDefault: false },
-  { plotIndex: 22, gold: 1515, requiredRank: { familyId: "general_4", tier: 5 }, unlockedByDefault: false },
-  { plotIndex: 23, gold: 1665, requiredRank: { familyId: "general_4", tier: 12 }, unlockedByDefault: false },
+  { plotIndex: 2, gold: 15, requiredRank: { familyId: "enlisted_3", tier: null }, unlockedByDefault: false },
+  { plotIndex: 3, gold: 25, requiredRank: { familyId: "nco_1", tier: null }, unlockedByDefault: false },
+  { plotIndex: 4, gold: 40, requiredRank: { familyId: "nco_2", tier: null }, unlockedByDefault: false },
+  { plotIndex: 5, gold: 65, requiredRank: { familyId: "junior_1", tier: null }, unlockedByDefault: false },
+  { plotIndex: 6, gold: 95, requiredRank: { familyId: "junior_1", tier: null }, unlockedByDefault: false },
+  { plotIndex: 7, gold: 135, requiredRank: { familyId: "junior_2", tier: null }, unlockedByDefault: false },
+  { plotIndex: 8, gold: 180, requiredRank: { familyId: "junior_3", tier: null }, unlockedByDefault: false },
+  { plotIndex: 9, gold: 230, requiredRank: { familyId: "junior_4", tier: null }, unlockedByDefault: false },
+  { plotIndex: 10, gold: 285, requiredRank: { familyId: "field_1", tier: null }, unlockedByDefault: false },
+  { plotIndex: 11, gold: 350, requiredRank: { familyId: "field_1", tier: null }, unlockedByDefault: false },
+  { plotIndex: 12, gold: 425, requiredRank: { familyId: "field_2", tier: null }, unlockedByDefault: false },
+  { plotIndex: 13, gold: 500, requiredRank: { familyId: "field_3", tier: null }, unlockedByDefault: false },
+  { plotIndex: 14, gold: 585, requiredRank: { familyId: "field_3", tier: null }, unlockedByDefault: false },
+  { plotIndex: 15, gold: 680, requiredRank: { familyId: "field_4", tier: null }, unlockedByDefault: false },
+  { plotIndex: 16, gold: 780, requiredRank: { familyId: "general_1", tier: null }, unlockedByDefault: false },
+  { plotIndex: 17, gold: 885, requiredRank: { familyId: "general_1", tier: null }, unlockedByDefault: false },
+  { plotIndex: 18, gold: 995, requiredRank: { familyId: "general_2", tier: null }, unlockedByDefault: false },
+  { plotIndex: 19, gold: 1115, requiredRank: { familyId: "general_2", tier: null }, unlockedByDefault: false },
+  { plotIndex: 20, gold: 1240, requiredRank: { familyId: "general_3", tier: null }, unlockedByDefault: false },
+  { plotIndex: 21, gold: 1375, requiredRank: { familyId: "general_3", tier: null }, unlockedByDefault: false },
+  { plotIndex: 22, gold: 1515, requiredRank: { familyId: "general_4", tier: null }, unlockedByDefault: false },
+  { plotIndex: 23, gold: 1665, requiredRank: { familyId: "general_4", tier: null }, unlockedByDefault: false },
 ];
 
 /**

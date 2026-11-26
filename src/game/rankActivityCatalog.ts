@@ -805,7 +805,7 @@ export function getTierPhase(tier: number, maxTier: number): TierPhase {
   return "late";
 }
 
-export function resolveRankActivityPool(rank: RankStep): { regular: string[]; prep: string[] } {
+export function resolveRankActivityPool(rank: RankStep, progress = 0): { regular: string[]; prep: string[] } {
   const entry = RANK_ACTIVITY_CATALOG[rank.familyId];
   if (!entry) {
     return { regular: DEFAULT_ACTIVITY_POOL, prep: [] };
@@ -827,16 +827,8 @@ export function resolveRankActivityPool(rank: RankStep): { regular: string[]; pr
     };
   }
 
-  const maxTier = rank.tierCount || 1;
-  const tier = rank.tier ?? 1;
-
-  if (tier >= maxTier) {
-    const regular = Array.from(new Set([...entry.core, ...(entry.lateTier || [])]));
-    const prep = entry.finalTierPrep || [];
-    return { regular, prep };
-  }
-
-  const phase = getTierPhase(tier, maxTier);
+  if (progress >= 1) return { regular: entry.core, prep: entry.finalTierPrep || [] };
+  const phase = progress >= 0.75 ? "late" : progress >= 0.5 ? "mid" : "early";
   let phaseLines: string[] = [];
   if (phase === "early") {
     phaseLines = entry.earlyTier || [];

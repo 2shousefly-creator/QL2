@@ -35,7 +35,7 @@ export const FARM_UPGRADE_DEFINITIONS: readonly FarmUpgradeDefinition[] = [
     subtitle: "Tăng độ ẩm mỗi lần tưới và giữ ẩm đất bền lâu hơn.",
     accentColor: "#0284c7",
     costs: [160, 420, 960, 2100, 4400],
-    requiredRankIndices: [0, 8, 20, 40, 70],
+    requiredRankIndices: [0, 3, 5, 8, 12],
     effectSummary: (level) => {
       const bonus = WELL_WATER_BONUS[clampUpgradeLevel(level)];
       const keepPct = Math.round((1 - WELL_MOISTURE_LOSS_SCALE[clampUpgradeLevel(level)]) * 100);
@@ -51,7 +51,7 @@ export const FARM_UPGRADE_DEFINITIONS: readonly FarmUpgradeDefinition[] = [
     subtitle: "Giúp khẩu phần ăn trong chuồng duy trì bền lâu hơn.",
     accentColor: "#d97706",
     costs: [200, 520, 1180, 2600, 5200],
-    requiredRankIndices: [0, 10, 24, 46, 78],
+    requiredRankIndices: [0, 4, 6, 9, 12],
     effectSummary: (level) => {
       const gainPct = Math.round((TROUGH_DURATION_SCALE[clampUpgradeLevel(level)] - 1) * 100);
       return level <= 0
@@ -66,7 +66,7 @@ export const FARM_UPGRADE_DEFINITIONS: readonly FarmUpgradeDefinition[] = [
     subtitle: "Gia tăng giá trị Vàng và Kinh nghiệm khi thu hoạch & bán trứng.",
     accentColor: "#059669",
     costs: [240, 640, 1450, 3200, 6400],
-    requiredRankIndices: [4, 14, 30, 54, 88],
+    requiredRankIndices: [2, 4, 7, 10, 13],
     effectSummary: (level) => {
       const lv = clampUpgradeLevel(level);
       const goldPct = Math.round((WAREHOUSE_GOLD_SCALE[lv] - 1) * 100);
@@ -83,7 +83,7 @@ export const FARM_UPGRADE_DEFINITIONS: readonly FarmUpgradeDefinition[] = [
     subtitle: "Tăng tốc độ di chuyển và rút ngắn thao tác cho nhân công.",
     accentColor: "#7c3aed",
     costs: [220, 580, 1300, 2900, 5800],
-    requiredRankIndices: [2, 12, 26, 50, 82],
+    requiredRankIndices: [1, 4, 6, 9, 13],
     effectSummary: (level) => {
       const lv = clampUpgradeLevel(level);
       const speedPct = Math.round((WORKER_SPEED_SCALE[lv] - 1) * 100);

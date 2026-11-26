@@ -1,3 +1,4 @@
+import { recordAppointments } from "./journal/journalEngine";
 import { RANK_STEPS } from "./rankBuilder";
 import type { GameState } from "./types";
 import { isXpBarFull, getFinalJourneyXpTargetTicks, getRequiredXpTicksForTransition } from "./xpProgression";
@@ -54,6 +55,7 @@ export function applyEarnedXpCapped(
   state.progression.totalXpEarnedTicks += creditedTicks;
 
   const isFullNow = state.progression.xpIntoCurrentRankTicks >= reqTicks;
+  recordAppointments(state, currentTicks, currentTicks + creditedTicks, reqTicks, state.time.lastSettledAt);
 
   if (creditedTicks > 0) {
     evaluateMedalUnlocks(state);

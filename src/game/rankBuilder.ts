@@ -4,44 +4,11 @@ import { RANK_STEP_STORIES } from "./rankStories";
 import { RankStep } from "./types";
 
 export function buildRankSteps(): RankStep[] {
-  const steps: RankStep[] = [];
-  let currentRankIndex = 0;
-
-  for (const family of RANK_FAMILIES) {
-    if (!family.showTierNumber || family.tierCount === 1) {
-      steps.push({
-        id: `rank_${currentRankIndex}`,
-        rankIndex: currentRankIndex,
-        ordinal: currentRankIndex + 1,
-        familyId: family.id,
-        familyName: family.name,
-        tier: null,
-        tierCount: 1,
-        displayName: family.name,
-        shortName: family.name,
-        storyId: `story_${currentRankIndex}`,
-      });
-      currentRankIndex++;
-    } else {
-      for (let t = 1; t <= family.tierCount; t++) {
-        steps.push({
-          id: `rank_${currentRankIndex}`,
-          rankIndex: currentRankIndex,
-          ordinal: currentRankIndex + 1,
-          familyId: family.id,
-          familyName: family.name,
-          tier: t,
-          tierCount: family.tierCount,
-          displayName: `${family.name} bậc ${t}`,
-          shortName: `${family.name} bậc ${t}`,
-          storyId: `story_${currentRankIndex}`,
-        });
-        currentRankIndex++;
-      }
-    }
-  }
-
-  return steps;
+  return RANK_FAMILIES.map((family, rankIndex) => ({
+    id: `rank_${rankIndex}`, rankIndex, ordinal: rankIndex + 1,
+    familyId: family.id, familyName: family.name, tier: null, tierCount: 1,
+    displayName: family.name, shortName: family.name, storyId: `story_${rankIndex}`,
+  }));
 }
 
 export const RANK_STEPS: RankStep[] = buildRankSteps();
@@ -51,16 +18,16 @@ export function validateRankCatalog(): boolean {
     throw new Error(`Expected 24 RankFamilies, got ${RANK_FAMILIES.length}`);
   }
 
-  if (RANK_STEPS.length !== 216) {
-    throw new Error(`Expected 216 RankSteps, got ${RANK_STEPS.length}`);
+  if (RANK_STEPS.length !== 24) {
+    throw new Error(`Expected 24 RankSteps, got ${RANK_STEPS.length}`);
   }
 
   if (RANK_STEPS[0].displayName !== "Học Viên") {
     throw new Error(`First rank must be Học Viên, got ${RANK_STEPS[0].displayName}`);
   }
 
-  if (RANK_STEPS[215].displayName !== "Tổng Tư Lệnh") {
-    throw new Error(`Last rank must be Tổng Tư Lệnh, got ${RANK_STEPS[215].displayName}`);
+  if (RANK_STEPS[23].displayName !== "Tổng Tư Lệnh") {
+    throw new Error(`Last rank must be Tổng Tư Lệnh, got ${RANK_STEPS[23].displayName}`);
   }
 
   // Check unique IDs and ordinals
@@ -97,21 +64,21 @@ export function validateRankCatalog(): boolean {
 }
 
 export function validateRankStories(): boolean {
-  if (RANK_STEP_STORIES.length !== 216) {
-    throw new Error(`Expected 216 RankStep stories, got ${RANK_STEP_STORIES.length}`);
+  if (RANK_STEP_STORIES.length !== 24) {
+    throw new Error(`Expected 24 RankStep stories, got ${RANK_STEP_STORIES.length}`);
   }
 
-  for (let i = 0; i < 216; i++) {
+  for (let i = 0; i < 24; i++) {
     const story = RANK_STEP_STORIES[i];
     if (story.rankIndex !== i) {
       throw new Error(`Story index mismatch at ${i}, got ${story.rankIndex}`);
     }
   }
 
-  // Check 22 transition stories
+  // Every promotion has a transition story.
   const keys = Object.keys(PROMOTION_TRANSITION_STORIES);
-  if (keys.length !== 22) {
-    throw new Error(`Expected 22 promotion transition stories, got ${keys.length}`);
+  if (keys.length !== RANK_STEPS.length - 1) {
+    throw new Error(`Expected 23 promotion transition stories, got ${keys.length}`);
   }
 
   return true;

@@ -1,3 +1,4 @@
+import { recordAppointments } from "./journal/journalEngine";
 import { gameConfig } from "./config";
 import { RANK_STEPS } from "./rankBuilder";
 import { DelegationReportData, EarningMode, GameState } from "./types";
@@ -74,7 +75,9 @@ export function settleEarning(
     const from = state.time.lastSettledAt;
     const wasFull = isXpBarFull(state);
     if (!isCeremonyPending && at > from) {
+      const before = state.progression.xpIntoCurrentRankTicks;
       earnedTicks += settleEnergyAndXp(state, from, at, mode).earnedTicks;
+      recordAppointments(state, before, state.progression.xpIntoCurrentRankTicks, getRequiredXpTicksForTransition(state.progression.currentRankIndex), at);
       if (!wasFull) recordRecentEarningActivity(state, at - from, mode, at);
     } else ensureEnergyState(state, at);
     state.time.lastSettledAt = at;

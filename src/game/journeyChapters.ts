@@ -17,7 +17,7 @@ export const JOURNEY_CHAPTERS: JourneyChapterDefinition[] = [
     title: "Chương II: Binh Sĩ",
     shortTitle: "Binh sĩ",
     startRankIndex: 1,
-    endRankIndex: 8,
+    endRankIndex: 3,
     familyIds: ["enlisted_1", "enlisted_2", "enlisted_3"],
     themeId: "simple_barracks",
   },
@@ -25,8 +25,8 @@ export const JOURNEY_CHAPTERS: JourneyChapterDefinition[] = [
     id: "nco",
     title: "Chương III: Hạ Sĩ Quan",
     shortTitle: "Hạ sĩ quan",
-    startRankIndex: 9,
-    endRankIndex: 26,
+    startRankIndex: 4,
+    endRankIndex: 6,
     familyIds: ["nco_1", "nco_2", "nco_3"],
     themeId: "organized_assembly",
   },
@@ -34,8 +34,8 @@ export const JOURNEY_CHAPTERS: JourneyChapterDefinition[] = [
     id: "company_officer",
     title: "Chương IV: Cấp Úy",
     shortTitle: "Cấp úy",
-    startRankIndex: 27,
-    endRankIndex: 58,
+    startRankIndex: 7,
+    endRankIndex: 10,
     familyIds: ["junior_1", "junior_2", "junior_3", "junior_4"],
     themeId: "map_room",
   },
@@ -43,8 +43,8 @@ export const JOURNEY_CHAPTERS: JourneyChapterDefinition[] = [
     id: "field_officer",
     title: "Chương V: Cấp Tá",
     shortTitle: "Cấp tá",
-    startRankIndex: 59,
-    endRankIndex: 98,
+    startRankIndex: 11,
+    endRankIndex: 14,
     familyIds: ["field_1", "field_2", "field_3", "field_4"],
     themeId: "command_room",
   },
@@ -52,8 +52,8 @@ export const JOURNEY_CHAPTERS: JourneyChapterDefinition[] = [
     id: "general",
     title: "Chương VI: Cấp Tướng",
     shortTitle: "Cấp tướng",
-    startRankIndex: 99,
-    endRankIndex: 146,
+    startRankIndex: 15,
+    endRankIndex: 18,
     familyIds: ["general_1", "general_2", "general_3", "general_4"],
     themeId: "ceremonial_abstract",
   },
@@ -61,8 +61,8 @@ export const JOURNEY_CHAPTERS: JourneyChapterDefinition[] = [
     id: "supreme_command",
     title: "Chương VII: Tứ Tinh Thủ Hộ",
     shortTitle: "Tứ Tinh Thủ Hộ",
-    startRankIndex: 147,
-    endRankIndex: 214,
+    startRankIndex: 19,
+    endRankIndex: 22,
     familyIds: ["endgame_1", "endgame_grand_marshal", "endgame_2", "endgame_3"],
     themeId: "supreme_obsidian",
   },
@@ -70,8 +70,8 @@ export const JOURNEY_CHAPTERS: JourneyChapterDefinition[] = [
     id: "supreme_sovereign",
     title: "Chương VIII: Chỉ Huy Tối Thượng",
     shortTitle: "Chỉ Huy Tối Thượng",
-    startRankIndex: 215,
-    endRankIndex: 215,
+    startRankIndex: 23,
+    endRankIndex: 23,
     familyIds: ["endgame_4"],
     themeId: "supreme_sovereign",
   },
@@ -110,12 +110,12 @@ export function validateJourneyChapterCatalog(): {
     }
   }
 
-  if (expectedStartIndex !== 216) {
-    errors.push(`Catalog does not end at rankIndex 215, ended at ${expectedStartIndex - 1}`);
+  if (expectedStartIndex !== 24) {
+    errors.push(`Catalog does not end at rankIndex 23, ended at ${expectedStartIndex - 1}`);
   }
 
-  if (RANK_STEPS.length !== 216) {
-    errors.push(`Total RANK_STEPS length expected 216, got ${RANK_STEPS.length}`);
+  if (RANK_STEPS.length !== 24) {
+    errors.push(`Total RANK_STEPS length expected 24, got ${RANK_STEPS.length}`);
   }
 
   if (assignedFamilies.size !== RANK_FAMILIES.length) {

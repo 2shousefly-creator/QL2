@@ -53,9 +53,9 @@ export function useFarmMobileSheets(b: FarmMobileBridge) {
   const s = b.snapshot, modal = b.modal;
   const metadata = (category: Category) => {
     switch (category) {
-      case 'crop': return CROP_CATALOG.map(x => ({ id: x.id, title: x.name, price: x.seedCostGold, rank: x.requiredRank, icon: cropArt(x.id, 'seed_icon'), detail: `Thu hoạch cơ bản: ${x.harvestGold} Vàng · ${x.harvestXp} XP` }));
+      case 'crop': return CROP_CATALOG.map(x => ({ id: x.id, title: x.name, price: x.seedCostGold, rank: x.requiredRank, icon: cropArt(x.id, 'seed_icon'), detail: `Thu hoạch (EXP đã giảm 50%): ${x.harvestGold} Vàng · ${x.harvestXp} XP` }));
       case 'fertilizer': return FERTILIZER_CATALOG.map(x => ({ id: x.id, title: x.name, price: x.purchaseGold, rank: x.requiredRank, icon: itemArt(x.id), detail: `XP +${Math.round(x.xpBonusPct * 100)}% · Thời gian -${Math.round(x.growthTimeReductionPct * 100)}%` }));
-      case 'animal': return ANIMAL_CATALOG.map(x => ({ id: x.id, title: x.name, price: x.purchaseGold, rank: x.requiredRank, icon: animalArt(x.id), detail: `${EGG_INFO_MAP[x.eggTypeId].name}: ${x.eggSellGold} Vàng · ${x.eggSellXp} XP cơ bản` }));
+      case 'animal': return ANIMAL_CATALOG.map(x => ({ id: x.id, title: x.name, price: x.purchaseGold, rank: x.requiredRank, icon: animalArt(x.id), detail: `${EGG_INFO_MAP[x.eggTypeId].name}: ${x.eggSellGold} Vàng · ${x.eggSellXp} XP/quả (đã giảm 50%)` }));
       case 'feed': return FEED_CATALOG.map(x => ({ id: x.id, title: x.name, price: x.costGold, rank: x.requiredRank, icon: itemArt(x.id), detail: `Nạp ${x.buffAmount}% · Tăng tốc ${x.speedBonusPercent}%` }));
       case 'egg': return Object.entries(EGG_INFO_MAP).map(([id, x]) => ({ id, title: x.name, price: x.sellGold, rank: null, icon: itemArt(id), detail: `${x.sellGold} Vàng · ${x.sellXp} XP cơ bản; giá thực theo phẩm chất` }));
     }

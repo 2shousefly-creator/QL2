@@ -728,9 +728,9 @@ export const KhoModal: React.FC<KhoModalProps> = ({
                         config.multiplier
                       );
                       const xp = applyQualityMultiplier(
-                        baseXp,
+                        baseXp * 2,
                         config.multiplier
-                      );
+                      ) / 2;
 
                       return {
                         quality,

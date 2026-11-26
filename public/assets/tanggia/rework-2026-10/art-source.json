@@ -1,5 +1,17 @@
 {
-  "package": "tang-gia-lowpoly-world-2026-11",
+  "package": "tang-gia-midpoly-world-2026-11",
   "provenance": "Original Cartoon Low-Poly SVG + Sharp WebP/PNG pipeline in scripts/tanggia/draw-topdown-art.ts",
-  "assetCount": 45
+  "assetCount": 45,
+  "midPolyEnvironment": {
+    "atlas": "environment-midpoly.79b46d79.webp",
+    "source": "OpenAI ImageGen, four original transparent isometric sprites. Original environment art retained for other cells.",
+    "prompt": "Create one production sprite atlas PNG for a welcoming Vietnamese farming game, square canvas transparent alpha, exact 2 columns x 2 rows independent isolated fully visible assets, generous clear gutters, no labels/no letters/no numbers. Orthographic isometric view front left and right faces visible, camera looks down 30 degrees, friendly mid-poly 3D with softly bevelled timber, clean readable shapes, detailed faceted surfaces, warm sunlight from upper left and soft ambient occlusion. Top left a timber poultry barn with a terracotta roof, little open doors and straw bales. Top right a village produce shop with jade green cloth awning, bamboo baskets of colorful vegetables and wood counter. Bottom left a sturdy ochre plaster farm warehouse with sage roof, stacked crates and a wide shutter. Bottom right a single mature round fruit tree with a branching trunk, many clustered mid-poly green leaves, a few orange fruits and grass at base. Each isolated cutout centered in its own quadrant spanning about 78% of that cell. No ground tiles, no sheet backdrop, no people, no other objects, no frame dividers. All four assets same perspective and art direction for a mobile game.",
+    "props": [
+      "poultry barn",
+      "produce shop",
+      "warehouse",
+      "fruit tree"
+    ]
+  },
+  "actorAtlases": "19 crops, 10 poultry species and 12 worker activity atlases rasterized from lit ellipsoid facets using scripts/tanggia/draw-topdown-art.ts --mid-poly-world."
 }

@@ -11,7 +11,6 @@ import { CheckCircle2, Compass, Info, Lock, MapPin, Zap } from "lucide-react";
 import { GameState, RankFamily } from "../../game/types";
 import { buildJourneyMapViewModel } from "../../game/journeySelectors";
 import { RankBadge } from "../../components/RankBadge";
-import { RankTierProgress } from "../../components/RankTierProgress";
 import { JourneyDutySheet } from "../../components/JourneyDutySheet";
 import { CommandHeader } from "../../components/military/MilitaryUI";
 import { soundManager } from "../../game/audio";
@@ -245,7 +244,6 @@ export const JourneyMapScreen: React.FC<JourneyMapScreenProps> = ({
                         <>
                           <span>Quân hàm tiếp theo: </span>
                           <strong className="theme-text-accent font-bold">{chapter.nextFamilyName}</strong>
-                          {chapter.tierLabel && <span> · {chapter.tierLabel}</span>}
                           {chapter.etaLabel && (
                             <>
                               <span> · Dự kiến khoảng </span>
@@ -293,28 +291,12 @@ export const JourneyMapScreen: React.FC<JourneyMapScreenProps> = ({
                           )}
                         </div>
 
-                        {/* Tier Bar if Multi-tier */}
-                        {node.family.tierCount > 1 && (
-                          <div className="my-0.5 flex flex-col items-center">
-                            <RankTierProgress
-                              currentTier={node.currentTier}
-                              tierCount={node.family.tierCount}
-                              badge={node.family.badge}
-                              badgeSize={56}
-                              size="sm"
-                            />
-                          </div>
-                        )}
 
                         {/* Name */}
                         <span className="text-xs font-semibold text-slate-200 line-clamp-1 mt-0.5">
                           {node.family.name}
                         </span>
 
-                        {/* Tier indicator text */}
-                        <span className="text-[10px] text-slate-400">
-                          {node.family.tierCount > 1 ? `${node.family.tierCount} bậc` : "1 cột mốc"}
-                        </span>
                       </button>
                     );
                   })}
@@ -363,7 +345,7 @@ export const JourneyMapScreen: React.FC<JourneyMapScreenProps> = ({
                 • <strong>Sẵn sàng thử thách:</strong> Giả định bạn sẽ bấm bắt đầu thử thách ngay khi thanh XP làm đầy 100%.
               </p>
               <p>
-                • <strong>Thời gian thử thách:</strong> Bao gồm thời lượng danh nghĩa của các bài thử thách cần vượt qua (+2 phút thăng bậc, +3 phút thăng quân hàm).
+                • <strong>Thời gian thử thách:</strong> Mỗi lần thăng quân hàm có một kỳ sát hạch, thời lượng 90 giây.
               </p>
               <p>
                 • <strong>Bong bóng may mắn:</strong> Mỗi lần chạm bong bóng trong thử thách rút ngắn thêm 1 giây, giúp bạn đạt mốc nhanh hơn thực tế.

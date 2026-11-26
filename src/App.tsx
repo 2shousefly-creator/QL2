@@ -799,11 +799,6 @@ export default function App() {
         <PromotionChallenge
           currentRank={currentRank}
           nextRank={RANK_STEPS[gameState.progression.currentRankIndex + 1]}
-          durationMs={
-            currentRank.familyId !== RANK_STEPS[gameState.progression.currentRankIndex + 1]?.familyId
-              ? 60_000
-              : 30_000
-          }
           onComplete={handleChallengeComplete}
           onCancel={handleChallengeCancel}
         />

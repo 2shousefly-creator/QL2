@@ -445,7 +445,7 @@ export type JournalCategory = "rank" | "medal" | "mastery" | "farm" | "training"
 export type JournalEvent = {
   id: string;
   key: string;
-  type: "promotion" | "medal_unlocked" | "mastery_reached" | "training_milestone" | "farm_milestone";
+  type: "promotion" | "appointment" | "medal_unlocked" | "mastery_reached" | "training_milestone" | "farm_milestone";
   category: JournalCategory;
   title: string;
   description: string;
@@ -488,6 +488,7 @@ export type GameState = {
     totalXpEarnedTicks: number;
     lastPromotionAt: number | null;
     promotionHistory: PromotionHistoryEntry[];
+    archivedTierExams?: PromotionHistoryEntry[];
     rankRetries?: Record<number, number>;
   };
   time: {

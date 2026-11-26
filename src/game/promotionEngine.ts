@@ -25,7 +25,7 @@ export function createOnboardingHistoryEntry(createdAtMs: number): PromotionHist
 
 export function canStartPromotionChallenge(state: GameState): boolean {
   if (state.ui.pendingPromotionCeremony) return false;
-  return isXpBarFull(state);
+  return getNextRank(state.progression.currentRankIndex) !== null && isXpBarFull(state);
 }
 
 export function completePromotionChallenge(

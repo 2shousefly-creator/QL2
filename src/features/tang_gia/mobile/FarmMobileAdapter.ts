@@ -11,7 +11,7 @@ import {
   getCurrentCropRemainingDurationMs,
   hasCropFertilizer,
 } from '../farmEngine';
-import { normalizeCropReward } from '../farmEconomy';
+import { roundFarmXp, normalizeCropReward } from '../farmEconomy';
 import {
   getAffordableUpgradeCount,
   getFarmUpgrades,
@@ -77,7 +77,7 @@ export function adaptFarmMobile(
       plot.status === 'growing' && crop
         ? normalizeCropReward(
             crop.harvestGold,
-            crop.harvestXp + Math.round(crop.harvestXp * (plot.fertilizerXpBonusPct ?? 0)),
+            crop.harvestXp + roundFarmXp(crop.harvestXp * (plot.fertilizerXpBonusPct ?? 0)),
             plot.economy
           )
         : null;
@@ -87,7 +87,7 @@ export function adaptFarmMobile(
         : baseGrowingReward
           ? {
               gold: whGoldMult === 1 ? baseGrowingReward.gold : Math.round(baseGrowingReward.gold * whGoldMult),
-              xp: whXpMult === 1 ? baseGrowingReward.xp : Math.round(baseGrowingReward.xp * whXpMult),
+              xp: whXpMult === 1 ? baseGrowingReward.xp : roundFarmXp(baseGrowingReward.xp * whXpMult),
             }
           : null;
     const gold = reward && ('goldEarned' in reward ? reward.goldEarned : reward.gold);

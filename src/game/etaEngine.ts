@@ -1,3 +1,4 @@
+import { gameConfig } from "./config";
 import { GameState, JourneyChapterDefinition } from "./types";
 import { JOURNEY_CHAPTERS } from "./journeyChapters";
 import {
@@ -59,7 +60,7 @@ export function getJourneyChapterProgress(
   );
 
   if (!nextChapter) {
-    return currentRankIndex >= chapter.endRankIndex ? 1 : 0;
+    return currentRankIndex >= chapter.endRankIndex ? currentProgress : 0;
   }
 
   if (currentRankIndex >= nextChapter.startRankIndex) return 1;
@@ -124,21 +125,8 @@ export function getRemainingXpTicksToNextFamily(state: GameState): number | null
 }
 
 export function getNominalChallengeTimeToNextFamily(state: GameState): number | null {
-  const currentRankIndex = state.progression.currentRankIndex;
-  const maxIdx = RANK_STEPS.length - 1;
-  if (currentRankIndex >= maxIdx) return null;
-
-  const nextFamilyStartIdx = getNextFamilyStartRankIndex(currentRankIndex);
-  if (nextFamilyStartIdx === null) return null;
-
-  let totalChallengeMs = 0;
-
-  for (let idx = currentRankIndex; idx < nextFamilyStartIdx; idx++) {
-    const isMajor = idx === nextFamilyStartIdx - 1;
-    totalChallengeMs += isMajor ? 180_000 : 120_000;
-  }
-
-  return totalChallengeMs;
+  return getNextFamilyStartRankIndex(state.progression.currentRankIndex) === null
+    ? null : gameConfig.majorPromotionChallengeMs;
 }
 
 export function getEtaToNextRankFamily(

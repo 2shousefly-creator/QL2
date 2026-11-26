@@ -1,11 +1,10 @@
 export const FARM_RELEASE = {
-  id: '2026-11-14-lowpoly-rework',
-  title: 'Tăng Gia — Đại Tu Đồ Họa Hoạt Hình Low-Poly',
+  id: '2026-11-family-ranks',
+  title: 'Tăng Gia theo quân hàm',
   items: [
-    'Đồ họa Hoạt Hình Low-Poly toàn diện: thiết kế lại toàn bộ 19 loại cây trồng, 10 loài vật nuôi, hạt giống, nông dân đội nón lá, nhà cửa, giếng đá, máng ăn và cánh đồng.',
-    'Khắc phục & nâng cấp Camera Zoom: hỗ trợ chụm 2 ngón (pinch-to-zoom), cuộn chuột, cụm nút thu phóng nhanh (- / 100% / +) ngay trên màn hình.',
-    'Chuyển động (Animation) sống động: cây đung đưa & nảy nhịp khi chín, vật nuôi nhảy chân sáo, hiệu ứng hạt đa giác xoay tròn và thời tiết 4 mùa Low-Poly.',
-    'Giao diện Mobile Webapp thân thiện: thanh công cụ cảm ứng 1 chạm, bảng chọn ô dạng thẻ nổi đáy màn hình và bản đồ nhanh tối ưu cho điện thoại.',
-    'Thao tác đồng loạt 1 chạm: Thu hết, Tưới hết, Diệt sâu hết, Gieo lại hạt nhớ cùng Đơn Hàng Hậu Cần, Nâng Cấp Hạ Tầng và Sổ Tay Nông Sản.',
+    'Mỗi quân hàm mở một nhóm vật tư và công trình. Quà thăng hàm được gộp vào một lần nhận.',
+    'Giao Trồng cây và Mua bổ sung vật tư để nông dân tự mua giống cao nhất đã mở trong hạn mức còn lại.',
+    'EXP thu hoạch và bán trứng giảm 50%, kể cả phần thưởng thêm từ phẩm chất, phân bón và nhà kho.',
+    'Cây trồng, đàn gia cầm, nông dân và cụm công trình có tạo hình mid-poly mới. Vật nuôi đi theo đường cong và cây lay theo từng đợt gió.',
   ],
 };

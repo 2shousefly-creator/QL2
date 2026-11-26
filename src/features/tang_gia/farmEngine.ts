@@ -1,4 +1,4 @@
-import { createCropEconomy, normalizeCropReward, creditCropGold } from "./farmEconomy";
+import { roundFarmXp, createCropEconomy, normalizeCropReward, creditCropGold } from "./farmEconomy";
 import {
   getSoilMoistureLossMultiplier,
   getTroughDurationMultiplier,
@@ -273,11 +273,7 @@ export function rankAtLeast(
   const targetFamilyId =
     RANK_FAMILY_ALIAS_MAP[requiredRank.familyId] || requiredRank.familyId;
 
-  const targetStep = RANK_STEPS.find((step) => {
-    if (step.familyId !== targetFamilyId) return false;
-    if (requiredRank.tier === null) return true;
-    return step.tier === requiredRank.tier;
-  });
+  const targetStep = RANK_STEPS.find(step => step.familyId === targetFamilyId);
 
   if (!targetStep) {
     if (targetFamilyId === "academy") return true;
@@ -297,11 +293,7 @@ export function getRankNameForDisplay(
   const targetFamilyId =
     RANK_FAMILY_ALIAS_MAP[requiredRank.familyId] || requiredRank.familyId;
 
-  const step = RANK_STEPS.find((s) => {
-    if (s.familyId !== targetFamilyId) return false;
-    if (requiredRank.tier === null) return true;
-    return s.tier === requiredRank.tier;
-  });
+  const step = RANK_STEPS.find(step => step.familyId === targetFamilyId);
 
   return step ? step.displayName : requiredRank.familyId;
 }
@@ -2054,7 +2046,7 @@ function calculateCropHarvestReward(
     ? plot
     : { ...plot, qualityPenalty };
 
-  const fertilizerBonusXp = Math.round(
+  const fertilizerBonusXp = roundFarmXp(
     cropDefinition.harvestXp * (plot.fertilizerXpBonusPct || 0)
   );
   const rainBonusGold = Math.round(
@@ -2076,7 +2068,7 @@ function calculateCropHarvestReward(
   const pestGoldMultiplier = getPestGoldMultiplier(plot.pestDamageLevel);
   const goldEarned = Math.round(goldAfterDroughtPenalty * pestGoldMultiplier);
   const roundedGoldAfterDroughtPenalty = Math.round(goldAfterDroughtPenalty);
-  const normalized = normalizeCropReward(goldEarned, applyQualityMultiplier(preQualityXp, qualityMultiplier), plot.economy);
+  const normalized = normalizeCropReward(goldEarned, applyQualityMultiplier(preQualityXp * 2, qualityMultiplier) / 2, plot.economy);
 
   return {
     cropName: cropDefinition.name,
@@ -2104,7 +2096,7 @@ function applyWarehouseBonusesToCropReward(
   return {
     ...reward,
     goldEarned: Math.round(reward.goldEarned * goldMult),
-    xpEarned: Math.round(reward.xpEarned * xpMult),
+    xpEarned: roundFarmXp(reward.xpEarned * xpMult),
   };
 }
 
@@ -2554,9 +2546,9 @@ export function sellEggs(
 
       const preQualityGold = baseG + rainG;
       const rawTierGold = applyQualityMultiplier(preQualityGold, mult);
-      const rawTierXp = applyQualityMultiplier(baseX, mult);
+      const rawTierXp = applyQualityMultiplier(baseX * 2, mult) / 2;
       const tierGold = whGoldMult === 1 ? rawTierGold : Math.round(rawTierGold * whGoldMult);
-      const tierXp = whXpMult === 1 ? rawTierXp : Math.round(rawTierXp * whXpMult);
+      const tierXp = whXpMult === 1 ? rawTierXp : roundFarmXp(rawTierXp * whXpMult);
 
       goldEarned += tierGold;
       xpEarned += tierXp;

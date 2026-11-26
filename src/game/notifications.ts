@@ -74,7 +74,7 @@ export function formatRankUpNotificationBody(
   return "Sau thời gian rèn luyện tích cực, bạn đã đủ điều kiện để cấp trên xét duyệt thăng cấp bậc tiếp theo, hãy online để làm lễ thăng cấp nào!";
 }
 
-const NOTIFIED_RANKS_KEY = "quanlo_notified_rank_indices_v1";
+const NOTIFIED_RANKS_KEY = "quanlo_notified_rank_families_v2";
 
 export function getNotifiedRankIndices(): number[] {
   if (typeof window === "undefined") return [];

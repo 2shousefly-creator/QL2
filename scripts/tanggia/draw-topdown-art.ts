@@ -5,7 +5,7 @@
  * 2. `public/assets/tanggia/rework-2026-10/*.webp` & `*.png` + `art-source.json` + `src/features/tang_gia/world/farmWorldManifest.json` (2.5D PixiJS World Atlases)
  */
 import { createHash } from 'node:crypto';
-import { mkdir, readdir, rm, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, readdir, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import sharp from 'sharp';
 import {
@@ -28,6 +28,7 @@ const WORLD_MANIFEST_PATH = 'src/features/tang_gia/world/farmWorldManifest.json'
 await mkdir(TOPDOWN_OUT, { recursive: true });
 await mkdir(WORLD_OUT, { recursive: true });
 
+const midPolyWorld = process.argv.includes('--mid-poly-world');
 const OUTLINE = '#261e18';
 
 function clampByte(n: number): number {
@@ -99,6 +100,33 @@ function lowPolyGem(
   strokeColor = OUTLINE,
   sw = 1.5
 ): string {
+  if (midPolyWorld) {
+    // Sample a lit ellipsoid in concentric rings. The shared vertices give the
+    // fruit, foliage, birds and tools a rounded silhouette with planar faces.
+    type Vertex = [number, number];
+    const sides = 12;
+    const ring = (radius: number): Vertex[] => Array.from({ length: sides }, (_, i) => {
+      const angle = i * Math.PI * 2 / sides;
+      return [cx + rx * radius * Math.cos(angle), cy + ry * radius * Math.sin(angle)];
+    });
+    let faces = '';
+    let inner = ring(0);
+    for (const radius of [0.36, 0.68, 0.9, 1]) {
+      const outer = ring(radius);
+      for (let i = 0; i < sides; i++) {
+        const j = (i + 1) % sides;
+        const x = ((outer[i][0] + inner[j][0]) / 2 - cx) / rx;
+        const y = ((outer[i][1] + inner[j][1]) / 2 - cy) / ry;
+        const z = Math.sqrt(Math.max(0, 1 - x*x - y*y));
+        const shade = -0.25*x - 0.24*y + 0.34*z - 0.18;
+        const tint = tone(baseColor, shade);
+        faces += poly([inner[i], outer[i], outer[j], inner[j]], tint, tint, 0.28);
+      }
+      inner = outer;
+    }
+    return faces + poly(inner, 'none', strokeColor, sw * 0.65);
+  }
+
   const light = tone(baseColor, 0.28);
   const midLight = tone(baseColor, 0.1);
   const midDark = tone(baseColor, -0.14);
@@ -1618,6 +1646,7 @@ async function writeTopdownSheet(
 }
 
 // 1. Generate all topdown-v3 SVG sheets
+if (!midPolyWorld) {
 for (const crop of CROP_CATALOG) {
   const packet =
     poly(
@@ -1971,6 +2000,8 @@ await writeFile(
 );
 
 // ============================================================================
+}
+
 // 2. Generate 2.5D PixiJS World Atlases (`public/assets/tanggia/rework-2026-10`)
 // ============================================================================
 
@@ -2566,13 +2597,17 @@ function generateLowPolyVillageSurroundingsSvg(): string {
 }
 
 // Clean old generated .webp and .png files in WORLD_OUT before writing new ones
-for (const entry of await readdir(WORLD_OUT)) {
+for (const entry of midPolyWorld ? [] : await readdir(WORLD_OUT)) {
   if (entry.endsWith('.webp') || entry.endsWith('.png')) {
     await rm(path.join(WORLD_OUT, entry), { force: true });
   }
 }
 
 const tasks: (() => Promise<void>)[] = [];
+if (midPolyWorld) {
+  const current = JSON.parse(await readFile(WORLD_MANIFEST_PATH, 'utf8'));
+  Object.assign(manifestAtlases, current.assets);
+}
 
 // A. 19 Crop World Atlases (1024x768, 8 cols x 6 rows)
 const WORLD_CROP_CLIPS: AtlasClipMap = {
@@ -2638,7 +2673,7 @@ for (const animal of ANIMAL_CATALOG) {
 }
 
 // C. Environment Atlas (1024x1024, 4 cols x 4 rows, cell 256, size 252)
-tasks.push(async () => {
+if (!midPolyWorld) tasks.push(async () => {
   const props16 = drawLowPolyEnvironmentProps();
   const clips: AtlasClipMap = {};
   props16.forEach((_, idx) => {
@@ -2704,7 +2739,7 @@ for (const task of WORKER_TASKS) {
 }
 
 // E. Ambient Atlas (1024x768, 8 cols x 6 rows)
-tasks.push(async () => {
+if (!midPolyWorld) tasks.push(async () => {
   const ambientClips = ['grass', 'leaves', 'water', 'lamp', 'water_fx', 'care_fx'] as const;
   const cells = ambientClips.flatMap((clip) =>
     Array.from({ length: 8 }, (_, f) => drawLowPolyAmbient(clip, f))
@@ -2728,7 +2763,7 @@ tasks.push(async () => {
 });
 
 // F. Grass-Ground & Village-Surroundings Seamless Tiles
-tasks.push(async () => {
+if (!midPolyWorld) tasks.push(async () => {
   await saveAtlas('grass-ground', generateLowPolyGrassGroundSvg(), 1024, 1024, {
     cell: 1024,
     size: 1024,
@@ -2760,7 +2795,7 @@ await writeFile(
   WORLD_MANIFEST_PATH,
   JSON.stringify(
     {
-      revision: '2026-11-14-lowpoly',
+      revision: midPolyWorld ? '2026-11-midpoly' : '2026-11-14-lowpoly',
       assets: sortedAtlases,
     },
     null,
@@ -2768,7 +2803,7 @@ await writeFile(
   ) + '\n'
 );
 
-await writeFile(
+if (!midPolyWorld) await writeFile(
   path.join(WORLD_OUT, 'art-source.json'),
   JSON.stringify(
     {

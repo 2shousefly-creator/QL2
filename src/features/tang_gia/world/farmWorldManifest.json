@@ -1,5 +1,5 @@
 {
-  "revision": "2026-11-14-lowpoly",
+  "revision": "2026-11-midpoly",
   "assets": {
     "ambient": {
       "file": "ambient.0106f94a.webp",
@@ -52,8 +52,8 @@
       }
     },
     "animal-chicken": {
-      "file": "animal-chicken.29570df8.webp",
-      "png": "animal-chicken.29570df8.png",
+      "file": "animal-chicken.714d9e08.webp",
+      "png": "animal-chicken.714d9e08.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -114,8 +114,8 @@
       }
     },
     "animal-duck": {
-      "file": "animal-duck.6d4d09c4.webp",
-      "png": "animal-duck.6d4d09c4.png",
+      "file": "animal-duck.97938935.webp",
+      "png": "animal-duck.97938935.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -176,8 +176,8 @@
       }
     },
     "animal-goose": {
-      "file": "animal-goose.c2a68411.webp",
-      "png": "animal-goose.c2a68411.png",
+      "file": "animal-goose.cba2a911.webp",
+      "png": "animal-goose.cba2a911.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -238,8 +238,8 @@
       }
     },
     "animal-guinea_fowl": {
-      "file": "animal-guinea_fowl.9ecc0b7c.webp",
-      "png": "animal-guinea_fowl.9ecc0b7c.png",
+      "file": "animal-guinea_fowl.a00b49ca.webp",
+      "png": "animal-guinea_fowl.a00b49ca.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -300,8 +300,8 @@
       }
     },
     "animal-muscovy_duck": {
-      "file": "animal-muscovy_duck.ec0f5108.webp",
-      "png": "animal-muscovy_duck.ec0f5108.png",
+      "file": "animal-muscovy_duck.d6ed7697.webp",
+      "png": "animal-muscovy_duck.d6ed7697.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -362,8 +362,8 @@
       }
     },
     "animal-ostrich": {
-      "file": "animal-ostrich.90c9c893.webp",
-      "png": "animal-ostrich.90c9c893.png",
+      "file": "animal-ostrich.d2c1a63c.webp",
+      "png": "animal-ostrich.d2c1a63c.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -424,8 +424,8 @@
       }
     },
     "animal-peafowl": {
-      "file": "animal-peafowl.934c3b28.webp",
-      "png": "animal-peafowl.934c3b28.png",
+      "file": "animal-peafowl.f8fe425b.webp",
+      "png": "animal-peafowl.f8fe425b.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -486,8 +486,8 @@
       }
     },
     "animal-pheasant": {
-      "file": "animal-pheasant.f4d3883d.webp",
-      "png": "animal-pheasant.f4d3883d.png",
+      "file": "animal-pheasant.cc863c11.webp",
+      "png": "animal-pheasant.cc863c11.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -548,8 +548,8 @@
       }
     },
     "animal-quail": {
-      "file": "animal-quail.c315f699.webp",
-      "png": "animal-quail.c315f699.png",
+      "file": "animal-quail.310774ee.webp",
+      "png": "animal-quail.310774ee.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -610,8 +610,8 @@
       }
     },
     "animal-turkey": {
-      "file": "animal-turkey.66f9ef87.webp",
-      "png": "animal-turkey.66f9ef87.png",
+      "file": "animal-turkey.a5e972e9.webp",
+      "png": "animal-turkey.a5e972e9.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -672,8 +672,8 @@
       }
     },
     "crop-apple": {
-      "file": "crop-apple.184331fc.webp",
-      "png": "crop-apple.184331fc.png",
+      "file": "crop-apple.8cccff1a.webp",
+      "png": "crop-apple.8cccff1a.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -722,8 +722,8 @@
       }
     },
     "crop-avocado": {
-      "file": "crop-avocado.75b43b8c.webp",
-      "png": "crop-avocado.75b43b8c.png",
+      "file": "crop-avocado.561c587d.webp",
+      "png": "crop-avocado.561c587d.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -822,8 +822,8 @@
       }
     },
     "crop-cabbage": {
-      "file": "crop-cabbage.3ab0fc3c.webp",
-      "png": "crop-cabbage.3ab0fc3c.png",
+      "file": "crop-cabbage.a62ea203.webp",
+      "png": "crop-cabbage.a62ea203.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -972,8 +972,8 @@
       }
     },
     "crop-dragon_fruit": {
-      "file": "crop-dragon_fruit.9f1eccfb.webp",
-      "png": "crop-dragon_fruit.9f1eccfb.png",
+      "file": "crop-dragon_fruit.df5d163f.webp",
+      "png": "crop-dragon_fruit.df5d163f.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -1022,8 +1022,8 @@
       }
     },
     "crop-durian": {
-      "file": "crop-durian.a075b218.webp",
-      "png": "crop-durian.a075b218.png",
+      "file": "crop-durian.1dc8d30f.webp",
+      "png": "crop-durian.1dc8d30f.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -1072,8 +1072,8 @@
       }
     },
     "crop-grape": {
-      "file": "crop-grape.1acc84e4.webp",
-      "png": "crop-grape.1acc84e4.png",
+      "file": "crop-grape.7dda9bae.webp",
+      "png": "crop-grape.7dda9bae.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -1122,8 +1122,8 @@
       }
     },
     "crop-mango": {
-      "file": "crop-mango.f0c32dd7.webp",
-      "png": "crop-mango.f0c32dd7.png",
+      "file": "crop-mango.af161ada.webp",
+      "png": "crop-mango.af161ada.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -1172,8 +1172,8 @@
       }
     },
     "crop-mangosteen": {
-      "file": "crop-mangosteen.fd4abb6a.webp",
-      "png": "crop-mangosteen.fd4abb6a.png",
+      "file": "crop-mangosteen.ee6fca27.webp",
+      "png": "crop-mangosteen.ee6fca27.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -1222,8 +1222,8 @@
       }
     },
     "crop-orange": {
-      "file": "crop-orange.23c5bcda.webp",
-      "png": "crop-orange.23c5bcda.png",
+      "file": "crop-orange.3e137309.webp",
+      "png": "crop-orange.3e137309.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -1272,8 +1272,8 @@
       }
     },
     "crop-pear": {
-      "file": "crop-pear.a431b558.webp",
-      "png": "crop-pear.a431b558.png",
+      "file": "crop-pear.35081919.webp",
+      "png": "crop-pear.35081919.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -1322,8 +1322,8 @@
       }
     },
     "crop-pineapple": {
-      "file": "crop-pineapple.877c99f6.webp",
-      "png": "crop-pineapple.877c99f6.png",
+      "file": "crop-pineapple.8c1c0257.webp",
+      "png": "crop-pineapple.8c1c0257.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -1372,8 +1372,8 @@
       }
     },
     "crop-potato": {
-      "file": "crop-potato.9dc82a9f.webp",
-      "png": "crop-potato.9dc82a9f.png",
+      "file": "crop-potato.d71b2291.webp",
+      "png": "crop-potato.d71b2291.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -1422,8 +1422,8 @@
       }
     },
     "crop-pumpkin": {
-      "file": "crop-pumpkin.3d486de5.webp",
-      "png": "crop-pumpkin.3d486de5.png",
+      "file": "crop-pumpkin.679f5877.webp",
+      "png": "crop-pumpkin.679f5877.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -1522,8 +1522,8 @@
       }
     },
     "crop-tomato": {
-      "file": "crop-tomato.9ca4b16d.webp",
-      "png": "crop-tomato.9ca4b16d.png",
+      "file": "crop-tomato.35701264.webp",
+      "png": "crop-tomato.35701264.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -1572,8 +1572,8 @@
       }
     },
     "crop-watermelon": {
-      "file": "crop-watermelon.b1a63a1c.webp",
-      "png": "crop-watermelon.b1a63a1c.png",
+      "file": "crop-watermelon.9ec1c0cd.webp",
+      "png": "crop-watermelon.9ec1c0cd.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -1622,8 +1622,8 @@
       }
     },
     "environment": {
-      "file": "environment.716f4143.webp",
-      "png": "environment.716f4143.png",
+      "file": "environment-midpoly.79b46d79.webp",
+      "png": "environment-midpoly.79b46d79.png",
       "cell": 256,
       "size": 252,
       "columns": 4,
@@ -1756,8 +1756,8 @@
       "clips": {}
     },
     "worker-clean_dead": {
-      "file": "worker-clean_dead.d8aa86e9.webp",
-      "png": "worker-clean_dead.d8aa86e9.png",
+      "file": "worker-clean_dead.10bf9903.webp",
+      "png": "worker-clean_dead.10bf9903.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -1794,8 +1794,8 @@
       }
     },
     "worker-feed": {
-      "file": "worker-feed.a91cabde.webp",
-      "png": "worker-feed.a91cabde.png",
+      "file": "worker-feed.3819c445.webp",
+      "png": "worker-feed.3819c445.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -1832,8 +1832,8 @@
       }
     },
     "worker-fertilize": {
-      "file": "worker-fertilize.d355441b.webp",
-      "png": "worker-fertilize.d355441b.png",
+      "file": "worker-fertilize.53ce50d6.webp",
+      "png": "worker-fertilize.53ce50d6.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -1870,8 +1870,8 @@
       }
     },
     "worker-harvest": {
-      "file": "worker-harvest.d8aa86e9.webp",
-      "png": "worker-harvest.d8aa86e9.png",
+      "file": "worker-harvest.10bf9903.webp",
+      "png": "worker-harvest.10bf9903.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -1908,8 +1908,8 @@
       }
     },
     "worker-idle": {
-      "file": "worker-idle.4662cf5e.webp",
-      "png": "worker-idle.4662cf5e.png",
+      "file": "worker-idle.03fadab2.webp",
+      "png": "worker-idle.03fadab2.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -1946,8 +1946,8 @@
       }
     },
     "worker-pest": {
-      "file": "worker-pest.e23b83ad.webp",
-      "png": "worker-pest.e23b83ad.png",
+      "file": "worker-pest.bba4926f.webp",
+      "png": "worker-pest.bba4926f.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -1984,8 +1984,8 @@
       }
     },
     "worker-plant": {
-      "file": "worker-plant.a91cabde.webp",
-      "png": "worker-plant.a91cabde.png",
+      "file": "worker-plant.3819c445.webp",
+      "png": "worker-plant.3819c445.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -2022,8 +2022,8 @@
       }
     },
     "worker-replace_animals": {
-      "file": "worker-replace_animals.d4775571.webp",
-      "png": "worker-replace_animals.d4775571.png",
+      "file": "worker-replace_animals.efdf8fb9.webp",
+      "png": "worker-replace_animals.efdf8fb9.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -2060,8 +2060,8 @@
       }
     },
     "worker-restock": {
-      "file": "worker-restock.7df02d7b.webp",
-      "png": "worker-restock.7df02d7b.png",
+      "file": "worker-restock.678697cf.webp",
+      "png": "worker-restock.678697cf.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -2098,8 +2098,8 @@
       }
     },
     "worker-sell_eggs": {
-      "file": "worker-sell_eggs.7df02d7b.webp",
-      "png": "worker-sell_eggs.7df02d7b.png",
+      "file": "worker-sell_eggs.678697cf.webp",
+      "png": "worker-sell_eggs.678697cf.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -2136,8 +2136,8 @@
       }
     },
     "worker-walk": {
-      "file": "worker-walk.227a151c.webp",
-      "png": "worker-walk.227a151c.png",
+      "file": "worker-walk.171cc74b.webp",
+      "png": "worker-walk.171cc74b.png",
       "cell": 128,
       "size": 124,
       "columns": 8,
@@ -2174,8 +2174,8 @@
       }
     },
     "worker-water": {
-      "file": "worker-water.326ad9c1.webp",
-      "png": "worker-water.326ad9c1.png",
+      "file": "worker-water.2fc2fdc5.webp",
+      "png": "worker-water.2fc2fdc5.png",
       "cell": 128,
       "size": 124,
       "columns": 8,

@@ -11,7 +11,6 @@ import {
 } from "../game/xpEngine";
 import { ensureEnergyState, getEnergyMultiplier, isEnergyActive } from "../game/energyEngine";
 import { RankBadge } from "./RankBadge";
-import { RankTierProgress } from "./RankTierProgress";
 
 type HomeXpJourneyProps = {
   state: GameState;
@@ -35,7 +34,7 @@ export const HomeXpJourney: React.FC<HomeXpJourneyProps> = ({
   const currentFamily = RANK_FAMILIES.find((f) => f.id === currentRank.familyId) || RANK_FAMILIES[0];
   const nextFamily = nextRank ? RANK_FAMILIES.find((f) => f.id === nextRank.familyId) || RANK_FAMILIES[0] : null;
 
-  const isMaxRank = !nextRank || currentRankIndex >= 215;
+  const isMaxRank = !nextRank;
   const finalJourneyTargetTicks = getFinalJourneyXpTargetTicks();
   const totalEarnedTicks = state.progression.totalXpEarnedTicks;
   const xpTicksPerXp = 600_000;
@@ -101,19 +100,6 @@ export const HomeXpJourney: React.FC<HomeXpJourneyProps> = ({
             />
           </button>
 
-          {/* Discrete rank-tier markers; this is not an XP/progression fill. */}
-          {currentFamily.tierCount > 1 && (
-            <div className="-mt-0.5">
-              <RankTierProgress
-                currentTier={currentRank.tier || 1}
-                tierCount={currentFamily.tierCount}
-                badge={currentFamily.badge}
-                badgeSize={50}
-                size="list"
-                className="!my-0"
-              />
-            </div>
-          )}
         </div>
 
         {/* ==================== 2. CENTER (MAIN XP JOURNEY BAR) ==================== */}
@@ -216,19 +202,6 @@ export const HomeXpJourney: React.FC<HomeXpJourneyProps> = ({
                 />
               </button>
 
-              {/* Discrete rank-tier markers; this is not an XP/progression fill. */}
-              {nextFamily.tierCount > 1 && (
-                <div className="-mt-0.5">
-                  <RankTierProgress
-                    currentTier={nextRank.tier || 1}
-                    tierCount={nextFamily.tierCount}
-                    badge={nextFamily.badge}
-                    badgeSize={50}
-                    size="list"
-                    className="!my-0"
-                  />
-                </div>
-              )}
             </>
           ) : (
             /* Terminal Marker when at MAX Rank (Tổng Tư Lệnh) */

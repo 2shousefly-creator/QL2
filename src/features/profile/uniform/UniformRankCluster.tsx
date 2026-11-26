@@ -1,6 +1,5 @@
 import React from "react";
 import { RankBadge } from "../../../components/RankBadge";
-import { RankTierProgress } from "../../../components/RankTierProgress";
 import type { RankFamily } from "../../../game/types";
 
 type UniformRankClusterProps = {
@@ -29,17 +28,6 @@ export const UniformRankCluster: React.FC<UniformRankClusterProps> = ({
         ariaLabel={`Huy Hiệu cấp bậc ${family.name}`}
         className="drop-shadow-[0_5px_7px_rgba(0,0,0,0.65)]"
       />
-      <div className="mt-1 flex w-full justify-center">
-        <RankTierProgress
-          currentTier={filledSegments}
-          tierCount={family.tierCount}
-          badge={family.badge}
-          badgeSize={badgeSize}
-          size="hero"
-          showSingleTier={true}
-          className="!my-0"
-        />
-      </div>
     </div>
   );
 };

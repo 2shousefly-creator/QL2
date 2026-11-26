@@ -44,7 +44,7 @@ export const PromotionCeremony: React.FC<PromotionCeremonyProps> = ({
   const currentFamily = RANK_FAMILIES.find((f) => f.id === promotedRank.familyId);
   const rewards = getPromotionRewards(promotedRank);
 
-  const previousRole = getRankRole(previousRank.rankIndex);
+  const previousRole = getRankRole(previousRank.rankIndex, 1);
   const promotedRole = getRankRole(promotedRank.rankIndex);
   const rolePromoted = isRolePromotion(previousRank.rankIndex, promotedRank.rankIndex);
 
@@ -75,7 +75,7 @@ export const PromotionCeremony: React.FC<PromotionCeremonyProps> = ({
               <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/20 border border-amber-400/50 text-amber-300 text-xs sm:text-sm font-bold tracking-widest uppercase mb-3 shadow-lg">
                 <Award className="w-4 h-4" />
                 <span>
-                  {promotionKind === "major" ? "Lễ Thăng Quân Hàm" : "Thăng Bậc Thành Công"}
+                  Lễ Thăng Quân Hàm
                 </span>
               </div>
               <h1 id="promotion-ceremony-title" className="text-2xl sm:text-3xl font-extrabold text-amber-300 tracking-wide">
@@ -91,7 +91,6 @@ export const PromotionCeremony: React.FC<PromotionCeremonyProps> = ({
               <RankPresentation
                 rankStep={promotedRank}
                 badgeSize={112}
-                animateNewTier={true}
                 showName={false}
               />
             </div>

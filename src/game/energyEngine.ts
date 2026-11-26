@@ -1,7 +1,7 @@
 import { EarningMode, GameState, EnergyState } from "./types";
 import { RANK_STEPS } from "./rankBuilder";
 import { gameConfig } from "./config";
-import { getFinalJourneyXpTargetTicks } from "./xpProgression";
+import { getFinalJourneyXpTargetTicks, getRequiredXpTicksForTransition } from "./xpProgression";
 
 /**
  * Returns YYYY-MM-DD for a given timestamp in local time.
@@ -27,12 +27,7 @@ export function getStartOfDayEpochMs(timestampMs: number = Date.now()): number {
  * Calculates required XP ticks for rank transition.
  */
 export function getRequiredXpTicksForTransitionInEnergy(rankIndex: number): number {
-  if (rankIndex >= RANK_STEPS.length - 1) {
-    return 0;
-  }
-  const { base, linear, quadratic } = gameConfig.xpCurve;
-  const reqXp = Math.round(base + linear * rankIndex + quadratic * rankIndex * rankIndex);
-  return reqXp * gameConfig.xpTicksPerXp;
+  return getRequiredXpTicksForTransition(rankIndex);
 }
 
 /**

@@ -30,6 +30,7 @@ export function createInitialGameState(displayName: string = "Chiến sĩ"): Gam
       lastResetDate: getLocalDateString(now),
     },
     progression: {
+      rankLayoutVersion: gameConfig.rankLayoutVersion,
       currentRankIndex: 0, // Starts at Học Viên
       xpIntoCurrentRankTicks: 0, // Starts at 0 XP
       totalXpEarnedTicks: 0,

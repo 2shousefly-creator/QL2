@@ -1,6 +1,11 @@
 import { PromotionTransitionStory } from "./types";
 
 export const PROMOTION_TRANSITION_STORIES: Record<string, PromotionTransitionStory> = {
+  "academy->enlisted_1": {
+    fromFamilyId: "academy", toFamilyId: "enlisted_1",
+    title: "Ca trực ngoài học viện",
+    paragraphs: ["Tại Thiên Minh, tên bạn xuất hiện lần đầu trên bảng giao ca. Người bàn giao đặt chiếc đèn vào tay bạn rồi mới rời vọng gác."],
+  },
   "enlisted_1->enlisted_2": {
     fromFamilyId: "enlisted_1",
     toFamilyId: "enlisted_2",

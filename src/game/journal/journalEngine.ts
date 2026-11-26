@@ -1,3 +1,6 @@
+import { getRankRole } from "../rankRoles";
+import { RANK_STEP_STORIES } from "../rankStories";
+import { FARM_PLOT_COUNT } from "../../features/tang_gia/farmCatalog";
 import { GameState, JournalEvent, JournalState, TrainingGameId } from "../types";
 import { MEDAL_CATALOG } from "../medals/medalCatalog";
 import { MASTERY_CONFIGS } from "../mastery/masteryConfig";
@@ -49,6 +52,24 @@ export function addJournalEvent(
   return true;
 }
 
+export function recordAppointments(draft: GameState, before: number, after: number, required: number, at: number): void {
+  if (required <= 0 || before === after) return;
+  const index = draft.progression.currentRankIndex;
+  for (const ratio of [0.5, 0.75]) {
+    if (before >= required * ratio || after < required * ratio) continue;
+    const role = getRankRole(index, ratio);
+    const earlier = getRankRole(index, ratio - 0.01);
+    if (role.primaryTitle === earlier.primaryTitle && role.secondaryTitle === earlier.secondaryTitle) continue;
+    addJournalEvent(draft, {
+      key: "appointment:" + index + ":" + ratio,
+      type: "appointment", category: "rank", relatedId: String(index),
+      title: (ratio === 0.5 ? "Kiêm nhiệm · " + role.secondaryTitle : "Nhậm chức · " + role.primaryTitle),
+      description: "Đạt " + ratio * 100 + "% EXP tại " + role.unitDisplayName + ".",
+      occurredAt: at,
+    });
+  }
+}
+
 export function recordJournalPromotion(
   draft: GameState,
   rankIndex: number,
@@ -64,7 +85,7 @@ export function recordJournalPromotion(
   if (kind === "onboarding" || rankIndex === 0) {
     desc = "Khởi đầu hành trình binh nghiệp";
   } else if (kind === "major") {
-    desc = "Bước tiến mới trong binh nghiệp";
+    desc = RANK_STEP_STORIES[rankIndex].title;
   }
 
   if (correctCount !== undefined && totalQuestions !== undefined) {
@@ -152,52 +173,7 @@ export function recordJournalMasteryReached(
 export function backfillJournalEvents(draft: GameState): void {
   ensureJournalState(draft);
 
-  // 1. Backfill Rank Promotions
-  const history = draft.progression?.promotionHistory || [];
-  for (const h of history) {
-    const key = `promotion:${h.rankIndex}`;
-    const occurredAt = h.achievedAt && h.achievedAt > 0 ? h.achievedAt : null;
-    const isAcademy = h.rankIndex === 0;
-
-    let desc = "Được thăng cấp trong quân ngũ";
-    if (isAcademy) {
-      desc = "Khởi đầu hành trình binh nghiệp";
-    } else if (h.promotionKind === "major") {
-      desc = "Bước tiến mới trong binh nghiệp";
-    }
-
-    const cCount = h.challenge?.correctCount;
-    const tQuestions = h.challenge?.totalQuestions;
-    const rCount = h.challenge?.retries;
-
-    if (cCount !== undefined && tQuestions !== undefined) {
-      const isPerfectFirstTry = cCount === tQuestions && (!rCount || rCount === 0);
-      const scoreStr = isPerfectFirstTry
-        ? `Thủ khoa ${cCount}/${tQuestions} câu`
-        : `Đúng ${cCount}/${tQuestions} câu`;
-      const retryStr = rCount && rCount > 0
-        ? `Thi lại ${rCount} lần`
-        : `Không thi lại`;
-      desc = `${desc} (${scoreStr} • ${retryStr})`;
-    }
-
-    addJournalEvent(draft, {
-      key,
-      type: "promotion",
-      category: "rank",
-      title: `⭐ ${h.rankName}`,
-      description: desc,
-      iconSymbol: "⭐",
-      occurredAt,
-      dateUnknown: !occurredAt,
-      relatedId: String(h.rankIndex),
-      metadata: {
-        correctCount: cCount,
-        totalQuestions: tQuestions,
-        retries: rCount,
-      },
-    });
-  }
+  backfillRankPromotions(draft);
 
   // 2. Backfill Unlocked Medals
   const unlockedMedalIds = draft.medals?.unlockedMedalIds || [];
@@ -270,13 +246,13 @@ export function backfillJournalEvents(draft: GameState): void {
   }
 
   // 5. Backfill Farm Milestones
-  if (draft.farm?.plots && draft.farm.plots.length >= 9) {
+  if ((draft.farm?.unlockedPlotCount ?? 0) >= FARM_PLOT_COUNT) {
     addJournalEvent(draft, {
-      key: "farm:max_plots",
+      key: "farm:all_" + FARM_PLOT_COUNT + "_plots",
       type: "farm_milestone",
       category: "farm",
       title: "🌱 Khai Hoang Toàn Bộ Nông Trại",
-      description: "Mở rộng tối đa cả 9/9 ô đất tăng gia sản xuất",
+      description: "Đã mở toàn bộ " + FARM_PLOT_COUNT + " ô đất tăng gia sản xuất",
       iconSymbol: "🌱",
       occurredAt: null,
       dateUnknown: true,
@@ -307,6 +283,55 @@ export function backfillJournalEvents(draft: GameState): void {
       iconSymbol: "✨",
       occurredAt: null,
       dateUnknown: true,
+    });
+  }
+}
+
+export function backfillRankPromotions(draft: GameState): void {
+  // 1. Backfill Rank Promotions
+  const history = draft.progression?.promotionHistory || [];
+  for (const h of history) {
+    const key = `promotion:${h.rankIndex}`;
+    const occurredAt = h.achievedAt && h.achievedAt > 0 ? h.achievedAt : null;
+    const isAcademy = h.rankIndex === 0;
+
+    let desc = "Được thăng cấp trong quân ngũ";
+    if (isAcademy) {
+      desc = "Khởi đầu hành trình binh nghiệp";
+    } else if (h.promotionKind === "major") {
+      desc = RANK_STEP_STORIES[h.rankIndex].title;
+    }
+
+    const cCount = h.challenge?.correctCount;
+    const tQuestions = h.challenge?.totalQuestions;
+    const rCount = h.challenge?.retries;
+
+    if (cCount !== undefined && tQuestions !== undefined) {
+      const isPerfectFirstTry = cCount === tQuestions && (!rCount || rCount === 0);
+      const scoreStr = isPerfectFirstTry
+        ? `Thủ khoa ${cCount}/${tQuestions} câu`
+        : `Đúng ${cCount}/${tQuestions} câu`;
+      const retryStr = rCount && rCount > 0
+        ? `Thi lại ${rCount} lần`
+        : `Không thi lại`;
+      desc = `${desc} (${scoreStr} • ${retryStr})`;
+    }
+
+    addJournalEvent(draft, {
+      key,
+      type: "promotion",
+      category: "rank",
+      title: `⭐ ${h.rankName}`,
+      description: desc,
+      iconSymbol: "⭐",
+      occurredAt,
+      dateUnknown: !occurredAt,
+      relatedId: String(h.rankIndex),
+      metadata: {
+        correctCount: cCount,
+        totalQuestions: tQuestions,
+        retries: rCount,
+      },
     });
   }
 }

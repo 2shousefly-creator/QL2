@@ -891,7 +891,7 @@ export const createFarmWorldScene: PixiSceneFactory<FarmWorldProps> = (app, init
       const at = toFarmScreen(motion.position);
       const hopY =
         !reduced && motion.moving
-          ? -Math.abs(Math.sin(tSec * 9.5 + i * 1.3)) * 5.5
+          ? -Math.abs(Math.sin(motion.walkPhase)) * 2.6
           : !reduced && !animal.dead && animal.storedEggs > 0
             ? -Math.abs(Math.sin(tSec * 4.5 + i)) * 2.5
             : 0;
@@ -900,7 +900,7 @@ export const createFarmWorldScene: PixiSceneFactory<FarmWorldProps> = (app, init
       actor.root.visible = visible(at);
       actor.sprite.y = hopY;
       actor.sprite.rotation =
-        !reduced && motion.moving ? Math.sin(tSec * 9.5 + i * 1.3) * 0.065 : 0;
+        !reduced && motion.moving ? Math.sin(motion.walkPhase) * 0.035 : 0;
       const badge = animalBadges.get(animal.id);
       if (badge && badge.visible) {
         badge.y = reduced ? -46 : -46 + Math.sin(tSec * 4.2 + i) * 3.5 + hopY * 0.5;
@@ -965,16 +965,14 @@ export const createFarmWorldScene: PixiSceneFactory<FarmWorldProps> = (app, init
     // Lively low-poly crop wind sway, springy breathing, pest orb orbiting & quality halo breath
     if (!reduced) {
       const t = tSec;
-      const swayAmp = props.snapshot.weather === 'cool' ? 0.068 : 0.034;
+      const swayAmp = props.snapshot.weather === 'cool' ? 0.047 : 0.024;
       for (const plot of props.snapshot.plots) {
         const actor = plots.get(plot.index)!;
         if (!actor.root.visible) continue;
         if (plot.cropId) {
           actor.sprite.skew.x =
-            plot.artStage === 'seeded' ? 0 : Math.sin(t * 2.3 + plot.index * 0.65) * swayAmp;
-          const isReady = plot.status === 'ready';
-          const breath = Math.sin(t * (isReady ? 3.8 : 2.2) + plot.index * 0.8);
-          actor.sprite.y = isReady ? -Math.abs(breath) * 3.2 : 0;
+            plot.artStage === 'seeded' ? 0 : (Math.sin(t * 1.5 + actor.root.x * 0.009) + 0.24 * Math.sin(t * 2.6 + actor.root.y * 0.012)) * swayAmp;
+          actor.sprite.y = 0;
           const aura = plotAuras.get(plot.index)!;
           if (aura.visible) {
             const pulse = 1 + Math.sin(t * 3.4 + plot.index) * 0.07;
@@ -1125,6 +1123,10 @@ export const createFarmWorldScene: PixiSceneFactory<FarmWorldProps> = (app, init
                 : worker.stroll?.startedAt ?? 0)) /
               125
           );
+      const walking = clip === 'walk' && !reduced;
+      const stride = (now - (action?.departedAt ?? worker.stroll?.startedAt ?? now)) / 125;
+      farmer.sprite.y = walking ? -Math.abs(Math.sin(stride * Math.PI / 4)) * 1.8 : 0;
+      farmer.sprite.rotation = walking ? Math.sin(stride * Math.PI / 4) * 0.017 : 0;
       const key = `${clip}:${direction}:${pose}`;
       if (farmer.root.visible && farmer.key !== key) {
         spriteFrame(farmer, `worker-${clip}`, `direction${direction}`, pose, 115);

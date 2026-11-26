@@ -587,10 +587,10 @@ export const RANK_DUTIES: Record<string, RankDutyInfo> = {
       "Định hướng chiến lược tối cao, bảo đảm toàn bộ cỗ máy quân sự vận hành vì mục tiêu bảo vệ hòa bình và độc lập.",
       "Lắng nghe phản biện từ Tứ Tinh Thủ Hộ, đưa ra những quyết định sáng suốt và công tâm nhất trong thời khắc hệ trọng.",
       "Kiềm chế quyền lực, giữ vững chuẩn mực đạo đức, xây dựng hệ thống tự cường không phụ thuộc vào cá nhân.",
-      "Khép lại trọn vẹn hành trình 216 nấc thang bằng biểu tượng của sự tận tụy, trách nhiệm và lòng trung thành cao cả."
+      "Khép lại trọn vẹn hành trình 24 quân hàm bằng biểu tượng của sự tận tụy, trách nhiệm và lòng trung thành cao cả."
     ],
     promotionImpact: {
-      addedRole: "Tổng Tư Lệnh (Cấp bậc Tối cao — Bậc 216 của Quân Lộ).",
+      addedRole: "Tổng Tư Lệnh, quân hàm cao nhất của Quân Lộ.",
       responsibilityGrowth: "Điểm dừng cuối cùng của mọi trách nhiệm — nơi đòi hỏi sự sáng suốt, khiêm nhường và tận tụy tuyệt đối.",
       authorityGrowth: "Định hướng toàn bộ lực lượng và khép lại trọn vẹn hành trình tu dưỡng binh nghiệp mẫu mực."
     }

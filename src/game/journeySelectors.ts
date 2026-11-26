@@ -20,8 +20,6 @@ export type JourneyFamilyNodeViewModel = {
   isCompleted: boolean;
   isCurrent: boolean;
   isUpcoming: boolean;
-  currentTier: number | null;
-  tierCount: number;
 };
 
 export type JourneyChapterViewModel = {
@@ -34,7 +32,6 @@ export type JourneyChapterViewModel = {
   progressPercent: number;
   currentRankName: string | null;
   nextFamilyName: string | null;
-  tierLabel: string | null;
   milestoneStatusLabel: string | null;
   etaLabel: string | null;
   etaSourceLabel: "7_day" | "lifetime" | "initial_fallback" | null;
@@ -78,25 +75,15 @@ export function buildJourneyMapViewModel(state: GameState, nowMs: number): Journ
       const isCompletedFam = currentRankIndex > lastStepIndex;
       const isUpcomingFam = currentRankIndex < firstStepIndex;
 
-      let currentTier: number | null = null;
-      if (isCurrentFam) {
-        currentTier = currentRank.tier;
-      } else if (isCompletedFam) {
-        currentTier = family.tierCount;
-      }
-
       return {
         family,
         isCompleted: isCompletedFam,
         isCurrent: isCurrentFam,
         isUpcoming: isUpcomingFam,
-        currentTier,
-        tierCount: family.tierCount,
       };
     });
 
     let milestoneStatusLabel: string | null = null;
-    let tierLabel: string | null = null;
     let etaLabel: string | null = null;
     let etaSourceLabel: "7_day" | "lifetime" | "initial_fallback" | null = null;
 
@@ -113,25 +100,10 @@ export function buildJourneyMapViewModel(state: GameState, nowMs: number): Journ
           etaSourceLabel = etaInfo?.sourceLabel ?? null;
         }
       } else {
-        // Remaining tier count rule:
-        // Multi-tier & not last tier: "Còn N bậc"
-        // Multi-tier & last tier: "Đã ở bậc cuối"
-        // Single-tier: "Còn 1 cột mốc"
-        if (currentFamily.tierCount > 1) {
-          const remTiers = currentFamily.tierCount - (currentRank.tier || 1);
-          if (remTiers > 0) {
-            tierLabel = `Còn ${remTiers} bậc`;
-          } else {
-            tierLabel = "Đã ở bậc cuối";
-          }
-        } else {
-          tierLabel = "Còn 1 cột mốc";
-        }
-
         const nextName = nextFamily ? nextFamily.name : "Kế tiếp";
         const approxEta = formatApproximateEta(etaInfo?.etaMs ?? null);
 
-        milestoneStatusLabel = `Quân hàm tiếp theo: ${nextName} · ${tierLabel} · Dự kiến khoảng ${approxEta}`;
+        milestoneStatusLabel = `Quân hàm tiếp theo: ${nextName} · Dự kiến khoảng ${approxEta}`;
         etaLabel = approxEta;
         etaSourceLabel = etaInfo?.sourceLabel ?? null;
       }
@@ -151,7 +123,6 @@ export function buildJourneyMapViewModel(state: GameState, nowMs: number): Journ
       progressPercent,
       currentRankName: isCurrentChapter ? currentRank.displayName : null,
       nextFamilyName: isCurrentChapter && nextFamily ? nextFamily.name : null,
-      tierLabel: isCurrentChapter ? tierLabel : null,
       milestoneStatusLabel,
       etaLabel,
       etaSourceLabel,

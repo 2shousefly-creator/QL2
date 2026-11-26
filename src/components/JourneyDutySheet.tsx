@@ -1,3 +1,4 @@
+import { getCurrentTransitionProgress } from "../game/etaEngine";
 import React from "react";
 import {
   X,
@@ -55,7 +56,7 @@ export const JourneyDutySheet: React.FC<JourneyDutySheetProps> = ({
   const representativeRankIndex = isCurrentFamily
     ? currentRankIndex
     : familySteps[0]?.rankIndex ?? 0;
-  const role = getRankRole(representativeRankIndex);
+  const role = getRankRole(representativeRankIndex, isCurrentFamily ? getCurrentTransitionProgress(gameState) : isFullyAchieved ? 1 : 0);
   const categoryLabel = CATEGORY_NAMES[family.category] || "Khối Binh Nghiệp";
 
   const requestClose = () => {
@@ -123,6 +124,15 @@ export const JourneyDutySheet: React.FC<JourneyDutySheetProps> = ({
             {duty.summary}
           </p>
         </div>
+
+        {getRankRole(representativeRankIndex, 0.5).secondaryTitle !== getRankRole(representativeRankIndex).secondaryTitle && (
+          <section className="modal-section mb-3 space-y-1 text-sm">
+            <h3 className="font-bold">Lịch bổ nhiệm</h3>
+            <p>Nhận quân hàm · {getRankRole(representativeRankIndex).primaryTitle}</p>
+            <p>50% EXP · Kiêm {getRankRole(representativeRankIndex, 0.5).secondaryTitle}</p>
+            <p>75% EXP · Nhậm chức {getRankRole(representativeRankIndex, 0.75).primaryTitle}</p>
+          </section>
+        )}
 
         {/* Duty & Authority Content */}
           {/* Card 0: Chức Danh & Đơn Vị Đảm Nhận */}

@@ -50,7 +50,7 @@ export function settleFarmPayroll(farm: FarmSaveState, at: number) {
 }
 /** Caller settles the common game timeline before hiring or changing assignments. */
 export function confirmFarmAssignment(farm: FarmSaveState, rank: RankStep, assignment: FarmAssignment, at: number) {
-  if (!rankAtLeast(rank, { familyId: 'junior_1', tier: 1 })) return { success: false, message: 'Thuê Người mở tại Thiếu Úy bậc 1.' };
+  if (!rankAtLeast(rank, { familyId: 'junior_1', tier: 1 })) return { success: false, message: 'Thuê Người mở tại Thiếu Úy.' };
   const w = farm.worker ??= createFarmWorker(at);
   if (w.status !== 'employed') {
     w.status = 'employed'; w.employmentId = `${Math.floor(at)}:${w.sequence + 1}`; w.hiredAt = at;
@@ -78,7 +78,7 @@ export function getFarmWorkerJobs(farm: FarmSaveState, context: FarmWorkerContex
     const owned = (farm.inventory[category] as Record<string, number>)[id] ?? 0;
     if (owned >= desired) return true;
     const key = `${category}:${id}`, def = supplyDefinition(category, id);
-    if (!has('restock') || !a.restock.confirmed || !a.restock.items.includes(key)) { blocked.add('Chờ vật tư — cần quyền và danh mục mua bổ sung đã xác nhận.'); return owned > 0; }
+    if (!has('restock') || !a.restock.confirmed || (category !== 'seeds' && !a.restock.items.includes(key))) { blocked.add('Chờ vật tư — cần quyền và danh mục mua bổ sung đã xác nhận.'); return owned > 0; }
     if (!def || !rankAtLeast(context.rank, def.requiredRank)) { blocked.add('Vật tư chưa đạt quân hàm yêu cầu.'); return owned > 0; }
     const price = getItemOriginalPrice(category, id), budget = Math.min(a.restock.dailyLimit - w.budgetSpent, farm.gold - a.restock.reserve);
     const count = Math.max(0, Math.min(desired - owned, 24, price > 0 ? Math.floor(budget / price) : 24));
@@ -86,6 +86,12 @@ export function getFarmWorkerJobs(farm: FarmSaveState, context: FarmWorkerContex
     if (!jobs.some(job => job.task === 'restock' && job.target === key)) add({ task: 'restock', target: key, supply: { category, id, count }, anchor: FARM_ANCHORS.store, deadline: Infinity, priority });
     return owned > 0;
   };
+  const seedBudget = Math.min(a.restock.dailyLimit - w.budgetSpent, farm.gold - a.restock.reserve);
+  const bestCrop = [...CROP_CATALOG].reverse().find(crop =>
+    rankAtLeast(context.rank, crop.requiredRank) &&
+    ((farm.inventory.seeds[crop.id] ?? 0) > 0 ||
+      (has('restock') && a.restock.confirmed && crop.seedCostGold <= seedBudget))
+  );
   for (let i = 0; i < farm.plots.length; i++) {
     const p = farm.plots[i];
     if (p.status === 'locked' || a.scope === 'selected' && !a.plotIds.includes(i)) continue;
@@ -94,9 +100,8 @@ export function getFarmWorkerJobs(farm: FarmSaveState, context: FarmWorkerContex
     if ((p.status === 'growing' || p.status === 'ready') && has('pest') && canTreatPest(p)) add({ ...common, task: 'pest', priority: 1, deadline: p.pestOutbreakAt !== null ? p.pestOutbreakAt + PEST_DAMAGE_DELAY_MS : now + (100 - p.pestPressure) / pestRate * 3_600_000 + PEST_DAMAGE_DELAY_MS });
     if (p.status === 'ready' && has('harvest') && !context.xpFull()) add({ ...common, task: 'harvest', priority: 2 });
     if (p.status === 'empty' && has('plant')) {
-      const crop = CROP_CATALOG.find(item => item.id === p.lastCropId);
-      if (!crop) blocked.add(`Ô ${i + 1}: Chưa có lịch sử cây trồng.`);
-      else if (!rankAtLeast(context.rank, crop.requiredRank)) blocked.add(`Ô ${i + 1}: Chưa đủ quân hàm để trồng cây ghi nhớ.`);
+      const crop = bestCrop;
+      if (!crop) blocked.add('Chờ hạt giống hoặc ngân sách mua bổ sung.');
       else if (p.soilMoisture < 20) blocked.add(`Ô ${i + 1}: Đất quá khô${has('water') ? ', đang chờ tưới' : ', chưa giao tưới'}.`);
       else if (need('seeds', crop.id)) add({ ...common, task: 'plant', cropId: crop.id, priority: 4 });
     }

@@ -1,3 +1,4 @@
+import { getCurrentTransitionProgress } from "../../game/etaEngine";
 import { CommandMenuProvider } from "../../components/core-visual/CommandMenuContext";
 import { CoreVfx } from "../../components/core-visual/CoreVfx";
 import React, { useState, useEffect, useRef } from "react";
@@ -44,7 +45,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   const [nowMs, setNowMs] = useState(Date.now());
   const currentRank = getPlayerRank(state);
   const xpDetails = getXpProgressDetails(state);
-  const roleInfo = getRankRole(currentRank.rankIndex);
+  const roleInfo = getRankRole(currentRank.rankIndex, getCurrentTransitionProgress(state));
 
   const currentChapter = getJourneyChapterForRank(currentRank.rankIndex);
 
@@ -155,9 +156,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                 badgeSize={224}
                 className="home-rank-presentation"
                 isCurrent={true}
-                showTierLabel={false}
                 showName={true}
-                animateNewTier={isLevelingUp}
                 leftMedalsNode={leftMedalIds.length > 0 ? (
                   <DisplayedMedalColumn
                     medalIds={leftMedalIds}
@@ -264,7 +263,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             })()}
 
             {/* Activity Ticker (Rank-specific work status) */}
-            <RankActivityTicker
+            <RankActivityTicker progress={getCurrentTransitionProgress(state)}
               rank={currentRank}
               reducedMotion={state.settings.reducedMotion}
             />

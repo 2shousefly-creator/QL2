@@ -1,7 +1,7 @@
 export const gameConfig = {
   schemaVersion: 11,
-  catalogVersion: 17,
-  rankLayoutVersion: 216,
+  catalogVersion: 18,
+  rankLayoutVersion: 24,
   xpTicksPerXp: 600_000,
   delegationXpTicksPerMs: 10,
   directOnlineXpTicksPerMs: 10,
@@ -10,7 +10,7 @@ export const gameConfig = {
   connectivityTimeoutMs: 5_000,
   connectivityGraceMs: 7_000,
   minorPromotionChallengeMs: 2 * 60 * 1_000, // 120,000 ms (2 mins)
-  majorPromotionChallengeMs: 3 * 60 * 1_000, // 180,000 ms (3 mins)
+  majorPromotionChallengeMs: 90_000,
   bubbleSpawnIntervalMs: 3_000,
   bubbleLifetimeMs: 1_000,
   bubbleRewardReductionMs: 1_000, // -1 second

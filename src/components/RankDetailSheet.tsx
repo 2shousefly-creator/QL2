@@ -110,8 +110,6 @@ export const RankDetailSheet: React.FC<RankDetailSheetProps> = ({
             badgeSize={96}
             isCurrent={isCurrent}
             isLocked={false}
-            showProgress={true}
-            showTierLabel={false}
             customName={step.displayName}
           />
         </div>

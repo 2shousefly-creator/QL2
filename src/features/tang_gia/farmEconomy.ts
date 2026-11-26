@@ -7,7 +7,7 @@ const LEGACY_UNLOCKS = ['enlisted_2', 'nco_1', 'junior_1', 'junior_4', 'field_3'
 export const FARM_REWARD_SCALE = 5_354_228_880;
 export function getFarmProductivity(rankIndex: number, opened: number): number {
   const baseline = 2 + LEGACY_UNLOCKS.filter(family => {
-    const rank = RANK_STEPS.find(step => step.familyId === family && step.tier === 1);
+    const rank = RANK_STEPS.find(step => step.familyId === family);
     return rank && rankIndex >= rank.rankIndex;
   }).length;
   return Math.min(1, baseline / Math.max(2, opened));
@@ -24,4 +24,9 @@ export function creditCropGold(farm: FarmSaveState, value: number): number {
   const gold = Math.floor(units / FARM_REWARD_SCALE);
   farm.goldRemainder = units - gold * FARM_REWARD_SCALE;
   return gold;
+}
+
+// The former integer XP awards now pay in half-XP units, including bonuses.
+export function roundFarmXp(value: number): number {
+  return Math.round(value * 2) / 2;
 }

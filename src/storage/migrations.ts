@@ -1,6 +1,7 @@
 import { gameConfig } from "../game/config";
-import { getRequiredXpTicksForTransition, getTotalXpTicksToReachRank } from "../game/xpEngine";
+import { getRequiredXpTicksForTransition } from "../game/xpEngine";
 import { EarningActivityBucket, GameState, JournalEvent, PromotionHistoryEntry } from "../game/types";
+import { legacySteps, legacyFamilyStarts, legacyXpTotals } from "../game/legacyRankLayout";
 import { RANK_STEPS } from "../game/rankBuilder";
 import { createOnboardingHistoryEntry } from "../game/promotionEngine";
 import {
@@ -8,7 +9,7 @@ import {
   migrateFarmState,
 } from "../features/tang_gia/farmMigration";
 import { ensureMedalAndMasteryState, evaluateMedalUnlocks } from "../game/medals/medalEngine";
-import { backfillJournalEvents } from "../game/journal/journalEngine";
+import { backfillJournalEvents, backfillRankPromotions } from "../game/journal/journalEngine";
 import { sanitizeCouponState } from "../game/coupons/couponEngine";
 import { sanitizePersistedEnergyState } from "./energyPersistence";
 
@@ -26,6 +27,7 @@ function sanitizeJournalEvents(rawJournal: unknown): JournalEvent[] {
 
   const validTypes = new Set<JournalEvent["type"]>([
     "promotion",
+    "appointment",
     "medal_unlocked",
     "mastery_reached",
     "training_milestone",
@@ -87,7 +89,7 @@ function sanitizeJournalEvents(rawJournal: unknown): JournalEvent[] {
  * Used strictly for migrating saves prior to catalogVersion 16.
  */
 function legacyRequiredXpV15(rankIndex: number): number {
-  if (rankIndex >= RANK_STEPS.length - 1) {
+  if (rankIndex >= legacySteps.length - 1) {
     return 0;
   }
   return Math.round(90 + 18 * rankIndex + 1.5 * rankIndex * rankIndex);
@@ -99,7 +101,7 @@ function legacyRequiredXpTicksV15(rankIndex: number): number {
 
 function legacyTotalXpToReachRankV15(rankIndex: number): number {
   if (rankIndex <= 0) return 0;
-  const maxTransition = Math.min(rankIndex, RANK_STEPS.length - 1);
+  const maxTransition = Math.min(rankIndex, legacySteps.length - 1);
   let total = 0;
   for (let i = 0; i < maxTransition; i++) {
     total += legacyRequiredXpV15(i);
@@ -138,9 +140,9 @@ export function mapRankBySemanticOr196Index(
   tier?: number | null,
   rankName?: string
 ): number {
-  // If valid familyId exists in RANK_STEPS, use semantic lookup
+  // If valid familyId exists in legacySteps, use semantic lookup
   if (familyId && typeof familyId === "string" && familyId !== "unknown") {
-    const exactMatch = RANK_STEPS.find(
+    const exactMatch = legacySteps.find(
       (s) =>
         s.familyId === familyId &&
         (tier !== undefined && tier !== null
@@ -150,15 +152,15 @@ export function mapRankBySemanticOr196Index(
     if (exactMatch) {
       return exactMatch.rankIndex;
     }
-    const familyMatch = RANK_STEPS.find((s) => s.familyId === familyId);
+    const familyMatch = legacySteps.find((s) => s.familyId === familyId);
     if (familyMatch) {
       return familyMatch.rankIndex;
     }
   }
 
-  // If rankName matches displayName or shortName in current RANK_STEPS
+  // If rankName matches displayName or shortName in current legacySteps
   if (rankName && typeof rankName === "string") {
-    const nameMatch = RANK_STEPS.find(
+    const nameMatch = legacySteps.find(
       (s) =>
         s.displayName === rankName ||
         s.shortName === rankName ||
@@ -238,13 +240,15 @@ export function detectRankLayoutVersion(
     return "legacy132";
   }
 
+  if (rawCatalogVersion === 17) return "layout216";
+
   // Otherwise, default safely to layout196
   return "layout196";
 }
 
 export function migrateLegacyRankIndexToV14(oldIdx: number): number {
   if (oldIdx <= 0) return 0;
-  if (oldIdx >= 132) return RANK_STEPS.length - 1;
+  if (oldIdx >= 132) return legacySteps.length - 1;
 
   let familyId = "academy";
   let tier: number | null = null;
@@ -271,7 +275,7 @@ export function migrateLegacyRankIndexToV14(oldIdx: number): number {
   else if (oldIdx === 130) { familyId = "endgame_2"; tier = 1; }
   else if (oldIdx === 131) { familyId = "endgame_3"; tier = 1; }
 
-  const match = RANK_STEPS.find((s) => s.familyId === familyId && s.tier === tier);
+  const match = legacySteps.find((s) => s.familyId === familyId && s.tier === tier);
   return match ? match.rankIndex : oldIdx;
 }
 
@@ -286,19 +290,26 @@ export function sanitizeAndMigrateState(rawObj: unknown, migrationNow: number = 
   const isV15 = rawCatalogVersion >= 15;
   const isV16 = rawCatalogVersion >= 16;
 
-  const detectedLayout = detectRankLayoutVersion(obj);
-  const maxRankIdx = RANK_STEPS.length - 1;
+  const familyLayout = Number(obj.progression?.rankLayoutVersion) === 24 || rawCatalogVersion >= 18;
+  const detectedLayout = familyLayout ? null : detectRankLayoutVersion(obj);
+  const maxRankIdx = (familyLayout ? RANK_STEPS : legacySteps).length - 1;
 
-  // Calculate migrated rank index
-  let rankIndex = 0;
-  const rawRankIndex = Number(obj.progression?.currentRankIndex) || 0;
-  if (detectedLayout === "layout216") {
-    rankIndex = Math.min(Math.max(0, rawRankIndex), maxRankIdx);
-  } else if (detectedLayout === "legacy132") {
-    rankIndex = migrateLegacyRankIndexToV14(rawRankIndex);
-  } else {
-    rankIndex = migrate196RankIndexTo216(rawRankIndex);
+  function sourceIndex(raw: unknown, history?: Record<string, any>): number {
+    const idx = Math.max(0, Math.trunc(Number(raw) || 0));
+    if (familyLayout || detectedLayout === "layout216") return Math.min(idx, maxRankIdx);
+    if (detectedLayout === "legacy132") return migrateLegacyRankIndexToV14(idx);
+    return history
+      ? mapRankBySemanticOr196Index(idx, history.familyId, history.tier, history.rankName)
+      : migrate196RankIndexTo216(idx);
   }
+
+  const rankIndex = sourceIndex(obj.progression?.currentRankIndex);
+  const familyIndex = (index: number) => familyLayout ? index : legacySteps[index].familyIndex;
+  const isFamilyStart = (index: number) => familyLayout || legacyFamilyStarts[familyIndex(index)] === index;
+  const sourceTotalTicks = (index: number) => legacyXpTotals[index] * gameConfig.xpTicksPerXp;
+  const sourceRequiredTicks = (index: number) => familyLayout
+    ? getRequiredXpTicksForTransition(index)
+    : index === maxRankIdx ? 0 : sourceTotalTicks(index + 1) - sourceTotalTicks(index);
 
   let xpTicks = Number(obj.progression?.xpIntoCurrentRankTicks);
   if (isNaN(xpTicks) || xpTicks < 0) {
@@ -331,29 +342,33 @@ export function sanitizeAndMigrateState(rawObj: unknown, migrationNow: number = 
         Math.min(finalLegSpanTicks, isNaN(rawProgress) ? 0 : rawProgress)
       );
 
-      const newFinalLegStartTicks = getTotalXpTicksToReachRank(maxRankIdx);
+      const newFinalLegStartTicks = sourceTotalTicks(maxRankIdx);
       totalXpTicks = newFinalLegStartTicks + oldFinalLegProgressTicks;
       xpTicks = oldFinalLegProgressTicks;
     } else {
       // Standard rank transition (rankIndex < 215)
       const oldRequiredTicks = legacyRequiredXpTicksV15(rankIndex);
-      const newRequiredTicks = getRequiredXpTicksForTransition(rankIndex);
+      const newRequiredTicks = sourceRequiredTicks(rankIndex);
 
       let progressRatio = oldRequiredTicks > 0 ? xpTicks / oldRequiredTicks : 0;
       progressRatio = Math.max(0, Math.min(1, isNaN(progressRatio) ? 0 : progressRatio));
 
       const newXpIntoCurrentRankTicks = Math.round(progressRatio * newRequiredTicks);
-      const newBaseXpForCurrentRankTicks = getTotalXpTicksToReachRank(rankIndex);
+      const newBaseXpForCurrentRankTicks = sourceTotalTicks(rankIndex);
 
       xpTicks = newXpIntoCurrentRankTicks;
       totalXpTicks = newBaseXpForCurrentRankTicks + newXpIntoCurrentRankTicks;
     }
   } else {
     // Save is already catalogVersion >= 16 (idempotent path)
-    const reqTicks = getRequiredXpTicksForTransition(rankIndex);
+    const reqTicks = sourceRequiredTicks(rankIndex);
     if (rankIndex < maxRankIdx && xpTicks > reqTicks) {
       xpTicks = reqTicks;
     }
+  }
+
+  if (!familyLayout) {
+    xpTicks += sourceTotalTicks(rankIndex) - sourceTotalTicks(legacyFamilyStarts[familyIndex(rankIndex)]);
   }
 
   const createdAt = Number(obj.player?.createdAt) || now;
@@ -363,22 +378,19 @@ export function sanitizeAndMigrateState(rawObj: unknown, migrationNow: number = 
     ? obj.progression.promotionHistory
     : [];
 
+  const archivedTierExams = familyLayout
+    ? obj.progression?.archivedTierExams
+    : rawHistory.filter((h: unknown) => isRecord(h) && !isFamilyStart(sourceIndex(h.rankIndex, h)));
   const migratedHistory: PromotionHistoryEntry[] = [];
   const seenRankIndexes = new Set<number>();
 
   for (const h of rawHistory) {
     if (!h || typeof h !== "object") continue;
 
-    let rIdx = 0;
-    const rawRIdx = Number(h.rankIndex) || 0;
-    if (detectedLayout === "layout216") {
-      rIdx = Math.min(Math.max(0, rawRIdx), maxRankIdx);
-    } else if (detectedLayout === "legacy132") {
-      rIdx = migrateLegacyRankIndexToV14(rawRIdx);
-    } else {
-      rIdx = mapRankBySemanticOr196Index(rawRIdx, h.familyId, h.tier, h.rankName);
-    }
-
+    const source = sourceIndex(h.rankIndex, h);
+    if (!isFamilyStart(source)) continue;
+    const rIdx = familyIndex(source);
+    if (seenRankIndexes.has(rIdx)) continue;
     seenRankIndexes.add(rIdx);
 
     const step = RANK_STEPS[rIdx] || RANK_STEPS[0];
@@ -437,7 +449,7 @@ export function sanitizeAndMigrateState(rawObj: unknown, migrationNow: number = 
       tier: step.tier,
       achievedAt,
       source: isAcademy ? "onboarding" : (h.source || "promotion"),
-      promotionKind: isAcademy ? "onboarding" : (h.promotionKind || (rIdx % 10 === 0 ? "major" : "minor")),
+      promotionKind: isAcademy ? "onboarding" : "major",
       badgeCatalogVersionAtAchievement: Number(h.badgeCatalogVersionAtAchievement) || gameConfig.catalogVersion,
       storyCatalogVersionAtAchievement: Number(h.storyCatalogVersionAtAchievement) || gameConfig.catalogVersion,
       challenge,
@@ -452,27 +464,22 @@ export function sanitizeAndMigrateState(rawObj: unknown, migrationNow: number = 
     migratedHistory.push(createOnboardingHistoryEntry(createdAt));
   }
 
-  const migratedJournalEvents = sanitizeJournalEvents(obj.journal);
+  const migratedJournalEvents = sanitizeJournalEvents(obj.journal).flatMap(event => {
+    if (familyLayout || event.type !== "promotion") return [event];
+    const match = /^promotion:(\d+)$/.exec(event.key);
+    const sourceId = match?.[1] ?? event.relatedId;
+    if (sourceId === undefined || !/^\d+$/.test(sourceId)) return [event];
+    const source = sourceIndex(sourceId);
+    if (!isFamilyStart(source)) return [];
+    const index = familyIndex(source);
+    return [{ ...event, key: "promotion:" + index, relatedId: String(index), title: "⭐ " + RANK_STEPS[index].displayName }];
+  });
   const hadJournalEvents = migratedJournalEvents.length > 0;
 
-  // Migrate rankRetries map keys
-  const rawRetries = obj.progression?.rankRetries;
   const migratedRankRetries: Record<number, number> = {};
-  if (rawRetries && typeof rawRetries === "object") {
-    for (const [key, val] of Object.entries(rawRetries)) {
-      const oldIdx = Number(key);
-      if (!isNaN(oldIdx)) {
-        let newIdx = oldIdx;
-        if (detectedLayout === "layout216") {
-          newIdx = Math.min(Math.max(0, oldIdx), maxRankIdx);
-        } else if (detectedLayout === "legacy132") {
-          newIdx = migrateLegacyRankIndexToV14(oldIdx);
-        } else {
-          newIdx = migrate196RankIndexTo216(oldIdx);
-        }
-        migratedRankRetries[newIdx] = Number(val) || 0;
-      }
-    }
+  for (const [key, val] of Object.entries(obj.progression?.rankRetries ?? {})) {
+    const source = sourceIndex(key);
+    if (isFamilyStart(source)) migratedRankRetries[familyIndex(source)] = Number(val) || 0;
   }
 
   // Migrate recent earning activity buckets
@@ -487,19 +494,11 @@ export function sanitizeAndMigrateState(rawObj: unknown, migrationNow: number = 
 
   let pendingCeremony = null;
   if (obj.ui?.pendingPromotionCeremony) {
-    let pRankIdx = 0;
-    const rawPIdx = Number(obj.ui.pendingPromotionCeremony.promotedRankIndex) || 0;
-    if (detectedLayout === "layout216") {
-      pRankIdx = Math.min(Math.max(0, rawPIdx), maxRankIdx);
-    } else if (detectedLayout === "legacy132") {
-      pRankIdx = migrateLegacyRankIndexToV14(rawPIdx);
-    } else {
-      pRankIdx = migrate196RankIndexTo216(rawPIdx);
-    }
-    pendingCeremony = {
-      promotedRankIndex: pRankIdx,
+    const source = sourceIndex(obj.ui.pendingPromotionCeremony.promotedRankIndex);
+    if (isFamilyStart(source)) pendingCeremony = {
+      promotedRankIndex: familyIndex(source),
       promotedAt: Number(obj.ui.pendingPromotionCeremony.promotedAt) || now,
-      promotionKind: obj.ui.pendingPromotionCeremony.promotionKind === "major" ? ("major" as const) : ("minor" as const),
+      promotionKind: "major" as const,
     };
   }
 
@@ -515,11 +514,12 @@ export function sanitizeAndMigrateState(rawObj: unknown, migrationNow: number = 
     energy: sanitizePersistedEnergyState(obj.energy, now),
     progression: {
       rankLayoutVersion: gameConfig.rankLayoutVersion,
-      currentRankIndex: rankIndex,
+      currentRankIndex: familyIndex(rankIndex),
       xpIntoCurrentRankTicks: xpTicks,
       totalXpEarnedTicks: Math.max(0, totalXpTicks),
       lastPromotionAt: obj.progression?.lastPromotionAt ? Number(obj.progression.lastPromotionAt) : null,
       promotionHistory: migratedHistory,
+      ...(Array.isArray(archivedTierExams) && archivedTierExams.length ? { archivedTierExams } : {}),
       rankRetries: migratedRankRetries,
     },
     time: {
@@ -983,6 +983,7 @@ export function sanitizeAndMigrateState(rawObj: unknown, migrationNow: number = 
   ensureMedalAndMasteryState(state);
   evaluateMedalUnlocks(state);
   if (!hadJournalEvents) backfillJournalEvents(state);
+  else if (!familyLayout) backfillRankPromotions(state);
 
   return state;
 }

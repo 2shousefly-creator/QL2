@@ -1,3 +1,4 @@
+import { gameConfig } from "../game/config";
 import React, { useEffect, useRef, useState } from "react";
 import { AlertTriangle, ArrowRight, Award, CheckCircle2, Clock, X, XCircle } from "lucide-react";
 import { RankStep } from "../game/types";
@@ -9,7 +10,6 @@ import { AppModal, ConfirmationDialog, ExclusiveFullscreenOverlay, ModalActions,
 type PromotionChallengeProps = {
   currentRank: RankStep;
   nextRank: RankStep;
-  durationMs?: number;
   onComplete: (
     completedAtEpochMs: number,
     stats: {
@@ -30,12 +30,10 @@ export const PromotionChallenge: React.FC<PromotionChallengeProps> = ({
   onComplete,
   onCancel,
 }) => {
-  // Determine if this is a cross-family (major) or intra-family (minor) promotion
-  const isCrossFamily = currentRank.familyId !== nextRank.familyId;
-  const totalQuestions = isCrossFamily ? 10 : 5;
-  const durationSeconds = isCrossFamily ? 90 : 45;
-  const passRequirement = isCrossFamily ? 8 : 4;
-  const earlyFailThreshold = isCrossFamily ? 3 : 2; // Allowed wrong answers: 2 for major, 1 for minor.
+  const totalQuestions = 10;
+  const durationSeconds = gameConfig.majorPromotionChallengeMs / 1000;
+  const passRequirement = 8;
+  const earlyFailThreshold = 3;
 
   // Questions state
   const [questions, setQuestions] = useState<ShuffledExamQuestion[]>([]);
@@ -202,14 +200,14 @@ export const PromotionChallenge: React.FC<PromotionChallengeProps> = ({
 
   return (
     <ExclusiveFullscreenOverlay
-      ariaLabel={isCrossFamily ? "Sát hạch thăng quân hàm" : "Sát hạch thăng bậc"}
+      ariaLabel="Sát hạch thăng quân hàm"
       className="command-screen promotion-command-screen bg-slate-950 text-slate-100 justify-between gap-3 p-4 sm:p-6 overflow-y-auto select-none"
     >
       {/* Top Bar Header */}
       <div className="sticky top-0 z-20 flex items-center justify-between w-full max-w-xl mx-auto bg-slate-950/95 py-1">
         <div className="flex items-center gap-2 text-xs font-bold text-amber-300 bg-amber-950/80 border border-amber-800/80 px-3 py-1.5 rounded-full shadow-md">
           <Award className="w-4 h-4 text-amber-400" />
-          <span>{isCrossFamily ? "SÁT HẠCH THĂNG QUÂN HÀM" : "SÁT HẠCH THĂNG BẬC"}</span>
+          <span>SÁT HẠCH THĂNG QUÂN HÀM</span>
         </div>
 
         <button
@@ -235,13 +233,13 @@ export const PromotionChallenge: React.FC<PromotionChallengeProps> = ({
           <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1">
             Hiện Tại
           </span>
-          <RankPresentation rankStep={currentRank} badgeSize={68} showTierLabel={false} />
+          <RankPresentation rankStep={currentRank} badgeSize={68} />
         </div>
 
         <div className="flex flex-col items-center justify-center text-amber-400 px-1 shrink-0">
           <ArrowRight className="w-5 h-5 animate-pulse" />
           <span className="text-[10px] font-bold uppercase mt-1 tracking-wider text-amber-300 whitespace-nowrap text-center">
-            {isCrossFamily ? "Quân Hàm Mới" : "Bậc Mới"}
+            Quân Hàm Mới
           </span>
         </div>
 
@@ -249,7 +247,7 @@ export const PromotionChallenge: React.FC<PromotionChallengeProps> = ({
           <span className="text-[10px] font-semibold text-amber-300 uppercase tracking-wider mb-1">
             Mục Tiêu
           </span>
-          <RankPresentation rankStep={nextRank} badgeSize={68} showTierLabel={false} />
+          <RankPresentation rankStep={nextRank} badgeSize={68} />
         </div>
       </div>
 

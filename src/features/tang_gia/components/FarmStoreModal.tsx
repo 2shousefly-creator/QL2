@@ -318,6 +318,7 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
 
           {/* Tab Content List (Scrollable Area) */}
           <OverlayBody>
+            {(activeTab === "crop" || activeTab === "animal") && <p className="mb-3 text-xs text-slate-300">EXP thu hoạch và bán trứng đã giảm 50%. Mức hiển thị là EXP cơ bản trước thưởng phẩm chất và nhà kho.</p>}
             {/* TAB 1: CROPS */}
             {activeTab === "crop" &&
               CROP_CATALOG.map((crop) => {
@@ -537,7 +538,7 @@ export const FarmStoreModal: React.FC<FarmStoreModalProps> = ({
                             Giá trứng: <span className="font-semibold text-[var(--modal-success)]">🪙{animal.eggSellGold.toLocaleString("vi-VN")}</span>
                           </div>
                           <div className="truncate">
-                            XP: <span className="font-semibold text-[var(--modal-reward)]">⚡+{animal.eggSellXp}</span>
+                            XP: <span className="font-semibold text-[var(--modal-reward)]">⚡+{animal.eggSellXp.toLocaleString("vi-VN")} / quả</span>
                           </div>
                         </div>
 

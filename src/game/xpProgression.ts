@@ -1,13 +1,10 @@
+import { familyTransitionXp } from "./legacyRankLayout";
 import { gameConfig } from "./config";
 import { RANK_STEPS } from "./rankBuilder";
 import type { GameState, RankStep } from "./types";
 
 export function getRequiredXpForTransition(rankIndex: number): number {
-  if (rankIndex >= RANK_STEPS.length - 1) {
-    return 0; // Final rank (Tổng Tư Lệnh)
-  }
-  const { base, linear, quadratic } = gameConfig.xpCurve;
-  return Math.round(base + linear * rankIndex + quadratic * rankIndex * rankIndex);
+  return familyTransitionXp(rankIndex);
 }
 
 export function getRequiredXpTicksForTransition(rankIndex: number): number {

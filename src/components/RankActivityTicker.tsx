@@ -8,6 +8,7 @@ import {
 
 interface RankActivityTickerProps {
   rank: RankStep;
+  progress?: number;
   reducedMotion?: boolean;
   className?: string;
 }
@@ -77,10 +78,11 @@ const FALLBACK_ACTIVITY_TEXT = "Đang thực hiện nhiệm vụ được giao";
 
 export const RankActivityTicker: React.FC<RankActivityTickerProps> = ({
   rank,
+  progress = 0,
   reducedMotion = false,
   className = "",
 }) => {
-  const rankKey = `${rank.familyId}:${rank.tier ?? 0}:${rank.rankIndex}`;
+  const rankKey = `${rank.familyId}:${progress >= 1 ? 3 : progress >= 0.75 ? 2 : progress >= 0.5 ? 1 : 0}:${rank.rankIndex}`;
   const bagRef = useRef<ActivityTickerBag | null>(null);
 
   const [currentText, setCurrentText] = useState<string>("");
@@ -102,7 +104,7 @@ export const RankActivityTicker: React.FC<RankActivityTickerProps> = ({
 
   // When rankKey changes, re-initialize bag & set initial text
   useEffect(() => {
-    const { regular, prep } = resolveRankActivityPool(rank);
+    const { regular, prep } = resolveRankActivityPool(rank, progress);
     const pool = regular.length > 0 ? regular : DEFAULT_ACTIVITY_POOL;
     const bag = new ActivityTickerBag(pool, prep);
     bagRef.current = bag;
@@ -126,7 +128,7 @@ export const RankActivityTicker: React.FC<RankActivityTickerProps> = ({
     if (animPhase === "exit") {
       const timer = setTimeout(() => {
         if (!bagRef.current) {
-          const { regular, prep } = resolveRankActivityPool(rank);
+          const { regular, prep } = resolveRankActivityPool(rank, progress);
           const pool = regular.length > 0 ? regular : DEFAULT_ACTIVITY_POOL;
           bagRef.current = new ActivityTickerBag(pool, prep);
         }

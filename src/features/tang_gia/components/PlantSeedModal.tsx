@@ -1,4 +1,4 @@
-import { normalizeCropReward } from "../farmEconomy";
+import { roundFarmXp, normalizeCropReward } from "../farmEconomy";
 import React, { useState } from "react";
 import { CROP_CATALOG, FERTILIZER_CATALOG } from "../farmCatalog";
 import { CropId, FertilizerTypeId, FarmInventory } from "../farmTypes";
@@ -61,7 +61,7 @@ export const PlantSeedModal: React.FC<PlantSeedModalProps> = ({
     ? FERTILIZER_CATALOG.find((fertilizer) => fertilizer.id === selectedFertilizerId)
     : null;
 
-  const preview = selectedCrop ? normalizeCropReward(selectedCrop.harvestGold, Math.round(selectedCrop.harvestXp * (1 + (selectedFertilizer?.xpBonusPct ?? 0))), { productivity: rewardScale, inputGold: selectedCrop.seedCostGold + (selectedFertilizer?.purchaseGold ?? 0) }) : null;
+  const preview = selectedCrop ? normalizeCropReward(selectedCrop.harvestGold, roundFarmXp(selectedCrop.harvestXp * (1 + (selectedFertilizer?.xpBonusPct ?? 0))), { productivity: rewardScale, inputGold: selectedCrop.seedCostGold + (selectedFertilizer?.purchaseGold ?? 0) }) : null;
   const handleConfirmPlanting = () => {
     if (!selectedCropId) return;
     onSelectSeedWithFertilizer(selectedCropId, selectedFertilizerId);
