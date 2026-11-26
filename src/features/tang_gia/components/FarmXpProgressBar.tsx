@@ -3,6 +3,7 @@ import type { GameState } from "../../../game/types";
 import {
   getFinalJourneyXpTargetTicks,
   getNextRank,
+  getDisplayedXpPercentage,
   getRequiredXpTicksForTransition,
   isXpBarFull,
 } from "../../../game/xpEngine";
@@ -20,8 +21,7 @@ export function getFarmPlayerXpPercentage(gameState: GameState): number {
   const currentTicks = isMaxRank
     ? gameState.progression.totalXpEarnedTicks
     : gameState.progression.xpIntoCurrentRankTicks;
-  if (requiredTicks <= 0) return 100;
-  return Math.min(100, Math.max(0, (currentTicks / requiredTicks) * 100));
+  return getDisplayedXpPercentage(currentTicks, requiredTicks);
 }
 
 export function formatFarmXpPercentage(percentage: number): string {

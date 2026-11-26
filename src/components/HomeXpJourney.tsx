@@ -5,6 +5,7 @@ import { RANK_FAMILIES } from "../game/rankFamilies";
 import {
   getCurrentRank,
   getNextRank,
+  getDisplayedXpPercentage,
   getRequiredXpTicksForTransition,
   getFinalJourneyXpTargetTicks,
   isXpBarFull,
@@ -66,11 +67,7 @@ export const HomeXpJourney: React.FC<HomeXpJourneyProps> = ({
   const displayCurrentXp = Math.max(0, Math.round(totalEarnedTicks / xpTicksPerXp)).toLocaleString("vi-VN");
   const displayTargetXp = Math.max(0, Math.round(nextThresholdTicks / xpTicksPerXp)).toLocaleString("vi-VN");
 
-  const targetPercentage = isMaxRank
-    ? Math.min(100, Math.max(0, (totalEarnedTicks / finalJourneyTargetTicks) * 100))
-    : reqTicks > 0
-    ? Math.min(100, Math.max(0, (currentTicks / reqTicks) * 100))
-    : 100;
+  const targetPercentage = getDisplayedXpPercentage(isMaxRank ? totalEarnedTicks : currentTicks, reqTicks);
 
   return (
     <div data-ui-protected="true" className={`w-full relative select-none ${className}`}>
@@ -116,7 +113,7 @@ export const HomeXpJourney: React.FC<HomeXpJourneyProps> = ({
             role="progressbar"
             aria-valuemin={0}
             aria-valuemax={100}
-            aria-valuenow={Math.round(targetPercentage)}
+            aria-valuenow={targetPercentage}
             aria-label={`Tiến độ XP từ ${currentRank.displayName} đến ${nextRank?.displayName || "Tối Cao"}: ${displayCurrentXp} XP trên ${displayTargetXp} XP`}
           >
             {/* Background Connector Line */}

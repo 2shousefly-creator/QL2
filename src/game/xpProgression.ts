@@ -11,6 +11,12 @@ export function getRequiredXpTicksForTransition(rankIndex: number): number {
   return getRequiredXpForTransition(rankIndex) * gameConfig.xpTicksPerXp;
 }
 
+// Display completed tenths of a percent so a label never announces a milestone early.
+export function getDisplayedXpPercentage(currentTicks: number, requiredTicks: number): number {
+  if (requiredTicks <= 0) return 100;
+  return Math.floor(Math.max(0, Math.min(currentTicks, requiredTicks)) * 1000 / requiredTicks) / 10;
+}
+
 export function getNextRank(rankIndex: number): RankStep | null {
   if (rankIndex < RANK_STEPS.length - 1) {
     return RANK_STEPS[rankIndex + 1];

@@ -52,7 +52,7 @@ export function addJournalEvent(
   return true;
 }
 
-export function recordAppointments(draft: GameState, before: number, after: number, required: number, at: number): void {
+export function recordAppointments(draft: GameState, before: number, after: number, required: number, at: number | null): void {
   if (required <= 0 || before === after) return;
   const index = draft.progression.currentRankIndex;
   for (const ratio of [0.5, 0.75]) {

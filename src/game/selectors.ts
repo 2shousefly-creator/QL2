@@ -1,6 +1,8 @@
 import { RANK_FAMILIES } from "./rankFamilies";
 import {
   getCurrentRank,
+  getDisplayedXpPercentage,
+  getRequiredXpTicksForTransition,
   getFinalJourneyXpTarget,
   getFinalJourneyXpTargetTicks,
   getNextRank,
@@ -58,7 +60,7 @@ export function getXpProgressDetails(state: GameState): {
     const finalTargetTicks = getFinalJourneyXpTargetTicks();
     const currXp = Math.floor(state.progression.totalXpEarnedTicks / 600_000);
     const isFull = state.progression.totalXpEarnedTicks >= finalTargetTicks;
-    const percentage = finalTargetXp > 0 ? Math.min(100, Math.floor((currXp / finalTargetXp) * 100)) : 100;
+    const percentage = Math.floor(getDisplayedXpPercentage(state.progression.totalXpEarnedTicks, finalTargetTicks));
 
     return {
       currentXp: currXp,
@@ -72,7 +74,7 @@ export function getXpProgressDetails(state: GameState): {
   const reqXp = getRequiredXpForTransition(currentRankIndex);
   const currXp = Math.floor(state.progression.xpIntoCurrentRankTicks / 600_000);
   const isFull = isXpBarFull(state);
-  const percentage = reqXp > 0 ? Math.min(100, Math.floor((currXp / reqXp) * 100)) : 100;
+  const percentage = Math.floor(getDisplayedXpPercentage(state.progression.xpIntoCurrentRankTicks, getRequiredXpTicksForTransition(currentRankIndex)));
 
   return {
     currentXp: currXp,

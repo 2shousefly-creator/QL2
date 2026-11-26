@@ -9,7 +9,7 @@ import {
   migrateFarmState,
 } from "../features/tang_gia/farmMigration";
 import { ensureMedalAndMasteryState, evaluateMedalUnlocks } from "../game/medals/medalEngine";
-import { backfillJournalEvents, backfillRankPromotions } from "../game/journal/journalEngine";
+import { backfillJournalEvents, backfillRankPromotions, recordAppointments } from "../game/journal/journalEngine";
 import { sanitizeCouponState } from "../game/coupons/couponEngine";
 import { sanitizePersistedEnergyState } from "./energyPersistence";
 
@@ -984,6 +984,10 @@ export function sanitizeAndMigrateState(rawObj: unknown, migrationNow: number = 
   evaluateMedalUnlocks(state);
   if (!hadJournalEvents) backfillJournalEvents(state);
   else if (!familyLayout) backfillRankPromotions(state);
+
+  // Both tiered saves and previously converted saves can lack an earned appointment.
+  // The saved EXP proves the milestone, but does not establish its date.
+  recordAppointments(state, 0, xpTicks, getRequiredXpTicksForTransition(state.progression.currentRankIndex), null);
 
   return state;
 }
