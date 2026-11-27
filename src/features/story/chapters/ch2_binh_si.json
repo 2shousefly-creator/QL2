@@ -1,0 +1,768 @@
+{
+  "id": "ch2_binh_si",
+  "chapterNumber": 2,
+  "title": "Chương II: Binh Sĩ — Đồn Trú Thiên Minh",
+  "ql2ChapterId": "soldier",
+  "rankRange": "Binh Bét → Binh Nhất",
+  "nextChapterId": "ch3_ha_si_quan",
+  "entryNodeId": "ch2_01_binh_bet_thien_minh",
+  "summary": "Từ những ngày Binh Bét dọn vườn tăng gia, sửa hào mưa dầm đến cơn đói năm ngày mưa lũ, sự cố kho đạn ẩm, đêm gác đạn thật kèm cặp Bùi Văn Lộc, cuộc tuần tra sinh tử ở Bản Sương Mù và đợt tập kích thăm dò đầu tiên của Khối Thiết Phong tại Thiên Minh.",
+  "nodes": [
+    {
+      "id": "ch2_01_binh_bet_thien_minh",
+      "type": "narration",
+      "location": "Tiểu Đội 1 Thiên Minh — Sườn núi đá vôi",
+      "mood": "calm",
+      "text": "Tuần đầu tiên mang quân hàm Binh Bét ở Tiểu Đội 1 Thiên Minh trôi qua trong thứ sương núi ẩm đến mức vỏ bao diêm để qua đêm cũng mềm nhũn. Cứ điểm nằm vắt ngang sườn một dãy núi đá vôi xám ngắt, lưng dựa vách đá dựng đứng, mặt hướng ra thung lũng hun hút gió Bắc. Đứng từ vọng gác số 1 nhìn ngược về phía sau, qua hai tầng mây thấp vẫn thấy được dải ánh đèn vàng ấm của cụm doanh trại hậu phương lấp lánh như một vệt than hồng sót lại dưới đáy chảo.\n\nTrên tay tôi vẫn còn vết chai mới từ đợt hành quân rời Học Viện Quân Sự Quang Trung, còn trong túi áo ngực bên trái là cuốn sổ bìa xanh thầy Trần Quốc Vinh trao buổi chia tay. Những trang giấy chưa dày lên bao nhiêu, nhưng không khí ở đây khác hẳn sân tập sỏi đỏ. Đêm Thiên Minh lạnh buốt tới tận xương ống đồng, chỉ cần một cơn giông kéo ngang là đường dây điện dã chiến lại chập chờn tắt phụt. Đêm đầu tiên nhận chốt, cả tiểu đội vẫn chưa quên cách chúng tôi đã phản ứng khi sét đánh sập nguồn điện.",
+      "branches": [
+        {
+          "condition": { "flag": "giu_vung_chot_khong_coi" },
+          "next": "ch2_02a_du_am_giu_chot"
+        },
+        {
+          "condition": { "flag": "no_sung_canh_bao_som" },
+          "next": "ch2_02b_du_am_sung_som"
+        },
+        {
+          "condition": { "flag": "do_du_trong_dem_set" },
+          "next": "ch2_02c_du_am_do_du"
+        }
+      ],
+      "next": "ch2_02a_du_am_giu_chot"
+    },
+    {
+      "id": "ch2_02a_du_am_giu_chot",
+      "type": "narration",
+      "location": "Vọng gác số 1 — Thiên Minh",
+      "mood": "calm",
+      "text": "Việc giữ tĩnh lặng tuyệt đối và kịp thời chuyển sang dây liên lạc dự phòng trong đêm mất điện ấy khiến mấy người lính cũ ở Thiên Minh nhìn lính mới bằng con mắt khác. Sáng hôm sau, khi tôi xuống bếp lấy nước sôi rửa mặt, anh lính thông tin không nói nhiều, chỉ lẳng lặng đẩy phần cơm cháy giòn nhất về phía bát tôi. Trung sĩ Nguyễn Hoàng Nam — Tiểu đội trưởng — cầm cuốn sổ giao ca viết tay lật qua trang trực đêm rồi gật đầu một cái rất khẽ.\n\nKhông có lời khen nào được đọc trước hàng quân, nhưng từ hôm ấy, mỗi lần kiểm tra khóa nòng hay phân công gác khuya, Nam giao hẳn cho tôi giữ đầu mối liên lạc dây trần nối sang vọng gác của Khang. Cái cảm giác mình không bị coi là gánh nặng ở tuyến tiền tiêu khiến lồng ngực nhẹ đi một nửa, dù bùn đất dưới đế giày vẫn nặng chình chịch sau mỗi trận mưa đêm.",
+      "next": "ch2_03_san_tang_gia_sang"
+    },
+    {
+      "id": "ch2_02b_du_am_sung_som",
+      "type": "narration",
+      "location": "Hào giao thông phía Tây — Thiên Minh",
+      "mood": "tense",
+      "text": "Phát súng báo động sớm trong đêm sét đánh vẫn còn dội lại thành mấy ngày lao động phạt dọc sườn hào phía Tây. Trung đội nhắc nhở rất gắt chuyện giữ bí mật hỏa điểm ban đêm: một viên đạn nổ không đúng lúc đủ để thám báo bên kia sườn núi chấm tọa độ cả tiểu đội. Suốt ba buổi chiều liền, tôi phải vác cuốc chim dọn rãnh thoát nước dưới chân vách đá cho đến khi lòng bàn tay rộp lên hai vệt nước trắng.\n\nLê Minh Khang tranh thủ lúc đổi ca lén nhét vào túi quần tôi hai viên kẹo gừng cay xè cổ. Cậu ta chẳng an ủi câu nào sáo rỗng, chỉ nháy mắt bảo bắn sớm thì hao đạn thật, nhưng ít ra đêm đó không ai ngủ gật dưới hố gác. Câu nói nửa đùa nửa thật ấy khiến tôi đỡ chột dạ mỗi khi đi ngang qua bảng giao ban đầu nhà ăn.",
+      "next": "ch2_03_san_tang_gia_sang"
+    },
+    {
+      "id": "ch2_02c_du_am_do_du",
+      "type": "narration",
+      "location": "Vọng gác số 1 — Thiên Minh",
+      "mood": "somber",
+      "text": "Khoảnh khắc chần chừ giữa tiếng sấm rền đêm đó để lại một vết gợn khó gọi tên trong lòng tôi. Nếu Khang không bất chấp quy định, lách ra mép đá làm động tác đánh lạc hướng về phía khe mù, có lẽ tổ gác đã không kịp xoay hướng quan sát khi bóng người lạ lướt qua hàng rào kẽm gai. Cả tiểu đội không ai trách nặng lời, nhưng chính tôi tự thấy cổ họng mình đắng nghét mỗi lần nhìn vết bùn trượt vẫn còn hằn trên bờ đất cạnh vọng gác.\n\nTừ sáng hôm ấy, tôi tập cho mình thói quen luôn đặt tay sẵn lên khóa dây liên lạc và kiểm tra góc bắn trước khi trời tắt nắng. Sai một nhịp ở Quang Trung chỉ bị trừ điểm thi đua; chậm ba nhịp trên vách đá Thiên Minh là lấy thân đồng đội ra che khoảng trống cho mình.",
+      "next": "ch2_03_san_tang_gia_sang"
+    },
+    {
+      "id": "ch2_03_san_tang_gia_sang",
+      "type": "narration",
+      "location": "Vườn tăng gia Tiểu Đội 1 — Thiên Minh",
+      "mood": "warm",
+      "text": "Năm giờ rưỡi sáng, khi sương còn đặc quánh quanh những khóm trúc dại, Thiên Minh thức dậy không phải bằng tiếng còi điện mà bằng tiếng xẻng gạt đất và mùi khói củi ngái nồng từ bếp anh nuôi. Dọc khoảng đất bằng hiếm hoi nép dưới hốc đá, tiểu đội dựng bốn luống cải bẹ xanh mướt được quây gọn bằng nứa chẻ và xếp đá hộc chèn mép để mưa lớn khỏi trôi đất màu. Bên cạnh là chuồng gà ghép từ những tấm ván thùng đạn cũ, mái lợp lá cọ khô để tránh nước mưa tạt thẳng từ vách núi xuống, bên trong có mấy con gà ri lông xù lúc nào cũng rúc đầu dưới cánh tránh gió sớm.\n\nChiến tranh trên màn hình radar nghe lạnh ngắt toàn tọa độ với tần số, còn ở đây, buổi sáng của người lính bắt đầu bằng việc bắt từng con sâu xanh nấp dưới kẽ lá cải, xúc tro bếp rải quanh gốc rau cho đỡ sên nhớt, rồi thay phiên nhau gánh từng thùng nước suối đục ngầu lên bể lọc cát sỏi. Dưới bếp, nồi nước lá vối sôi lục bục trên kiềng ba chân; khói củi tươi quẩn sát mặt đất ẩm làm cay xè khóe mắt, quyện vào mùi đất mới xới và mùi mồ hôi áo lính vừa phơi sương suốt đêm, tạo thành thứ nhịp sống chậm rãi mà bền bỉ đến lạ.",
+      "next": "ch2_04_nam_kiem_tra_sung"
+    },
+    {
+      "id": "ch2_04_nam_kiem_tra_sung",
+      "type": "dialogue",
+      "speaker": "nam",
+      "speakerTitle": "Trung sĩ Nguyễn Hoàng Nam — Tiểu đội trưởng",
+      "location": "Sân tập hợp trước nhà hầm — Thiên Minh",
+      "mood": "calm",
+      "text": "Trung sĩ Nguyễn Hoàng Nam bước dọc hàng quân đang chuẩn bị ra sửa hào. Trước khi cất tiếng, anh cúi xuống soi lại khóa dây đeo khẩu súng trường trên vai tôi rồi kéo nhẹ quai ba lô của Bùi Văn Lộc xem nút thắt đã sát lưng chưa. Giọng Nghệ–Tĩnh trầm và chắc nịch của anh vang lên gọn ghẽ giữa tiếng gió rít qua khe đá:\n\n\"Tôi nhắc lại với các đồng chí một lần nữa: sáng nay chia hai tốp, tốp một vét bùn đoạn hào nối ra chốt 3, tốp hai gia cố lại kè đá sau bếp. Đừng có thấy trời quang mây tạnh mà buông lơi dây trang bị. Lính tráng mệt được, chứ không được để lưng đồng đội lạnh. Súng ống lau khô dầu thừa đi rồi hãy hạ cuốc, rõ chưa?\"",
+      "branches": [
+        {
+          "condition": { "flag": "che_giau_loi_khang" },
+          "next": "ch2_05a_du_am_che_giau"
+        },
+        {
+          "condition": { "flag": "bao_cao_trung_thuc_quang_trung" },
+          "next": "ch2_05b_du_am_trung_thuc"
+        }
+      ],
+      "next": "ch2_05b_du_am_trung_thuc"
+    },
+    {
+      "id": "ch2_05a_du_am_che_giau",
+      "type": "dialogue",
+      "speaker": "khang",
+      "speakerTitle": "Binh Bét Lê Minh Khang — Chốt 3",
+      "location": "Sau bể nước mưa — Thiên Minh",
+      "mood": "warm",
+      "text": "Giải tán hàng quân xong, Lê Minh Khang kéo tôi vòng ra sau bể nước mưa xây bằng đá hộc. Cậu ta rút trong túi áo ngực ra chiếc bật lửa kim loại cũ mòn góc, bật nắp kêu tách một tiếng rồi đóng lại ngay chứ không châm thuốc. Khóe mắt Khang hơi nheo lại dưới vành mũ mềm:\n\n\"Nè, từ hồi ở Quang Trung tới giờ tui vẫn chưa nói đàng hoàng với ông một câu. Vụ cuốn sổ trực bữa đó... ông gánh thay cho tui nửa phần thiếu, tui nhớ dai lắm chứ không quên đâu. Lên tới cái xó đá vôi này rồi, cứ giữ lưng cho nhau là được. Còn nghe nhau là còn đội hình, nghe chưa ông bạn?\" Khang cười khẽ, vươn tay gõ hai cái thật chắc lên vai tôi trước khi vác xẻng đi về phía chốt 3.",
+      "next": "ch2_06_dao_hao_mua_dam"
+    },
+    {
+      "id": "ch2_05b_du_am_trung_thuc",
+      "type": "dialogue",
+      "speaker": "khang",
+      "speakerTitle": "Binh Bét Lê Minh Khang — Chốt 3",
+      "location": "Sau bể nước mưa — Thiên Minh",
+      "mood": "tense",
+      "text": "Sau giờ điểm danh, Lê Minh Khang đứng dựa lưng vào tường bể nước, tay xoay xoay chiếc bật lửa kim loại cũ. Tiếng nắp bật lửa kêu tách rồi khép lại nghe khô khốc giữa tiếng suối chảy xa xa. Cậu ta nhìn tôi mất vài giây, ánh mắt thoáng chút dè chừng rồi mới nhún vai:\n\n\"Thiệt tình hồi ở Quang Trung bị ông báo thẳng lên thầy Vinh vụ sổ trực, tui tức muốn hộc máu chứ bộ giỡn hả. Nhưng lên tới đây rồi tui mới hiểu: ông không chơi xấu, ông chỉ không muốn tập cho tui thói làm ẩu. Có điều trên núi này khác giảng đường lắm, đừng có nói chuyện kiểu trên giấy với tui. Mai mốt có gì khó nói thì nói thẳng mặt nhau trước khi viết vô sổ, nghe chưa?\" Nói xong, Khang vẫn gõ nhẹ hai cái lên vai tôi rồi vác cuốc đi trước.",
+      "next": "ch2_06_dao_hao_mua_dam"
+    },
+    {
+      "id": "ch2_06_dao_hao_mua_dam",
+      "type": "narration",
+      "location": "Hào giao thông số 2 — Thiên Minh",
+      "mood": "calm",
+      "text": "Gần trưa, sương tan bớt nhưng đất đỏ pha đá dăm dưới đáy hào vẫn nhão nhoẹt như cháo đặc sau mấy trận mưa đêm. Tôi và Bùi Văn Lộc đứng cách nhau một sải tay, người xúc đất đổ lên bao tải cũ, người xếp bao cát gia cố lại mép hào bị sụt. Tiếng xẻng chạm đá lách cách, thỉnh thoảng lại có con cuốn chiếu bò lổm ngổm ra từ kẽ rễ cây mục.\n\nLộc gầy nhẳng, quân phục rộng thùng thình nên mỗi lần vung xẻng là ống tay áo lại tuột xuống che mất cổ tay. Cậu tân binh người miền Tây làm việc rất chăm, mồ hôi lấm tấm trên sống mũi mà không than nửa lời, chỉ mỗi lần nghe tiếng giày đinh của cán bộ đi ngang qua bờ hào là hai tay lại vô thức túm chặt lấy quai dây ba lô đặt bên cạnh. Phản xạ của Lộc lúc này lộ rõ dấu vết của những ngày đầu chúng tôi rèn nhau ở thao trường Quang Trung.",
+      "branches": [
+        {
+          "condition": { "flag": "kem_cap_loc_kien_nhan" },
+          "next": "ch2_07a_loc_gan_gui"
+        },
+        {
+          "condition": { "flag": "ky_luat_cung_loc" },
+          "next": "ch2_07b_loc_de_dat"
+        }
+      ],
+      "next": "ch2_07b_loc_de_dat"
+    },
+    {
+      "id": "ch2_07a_loc_gan_gui",
+      "type": "dialogue",
+      "speaker": "loc",
+      "speakerTitle": "Binh Bét Bùi Văn Lộc",
+      "location": "Hào giao thông số 2 — Thiên Minh",
+      "mood": "warm",
+      "text": "Thấy tôi cúi xuống sửa lại mối buộc bao cát bị xệ, Bùi Văn Lộc liền quệt ngang giọt mồ hôi trên trán, nhanh tay luồn đầu dây dứa vào đúng nút thắt chéo mà tôi từng chỉ ở sân tập cũ. Cậu cười hiền, giọng miền Tây nhỏ nhẹ nhưng không còn lắp bắp như hồi mới nhập ngũ:\n\n\"Anh coi nè, nút thắt này em cột y chang bữa anh chỉ ở lại sau giờ tập ngoài Quang Trung đó. Lúc mới lên xe chuyển quân em sợ muốn rụng rời, tưởng lên tới biên giới là mạnh ai nấy chạy. Mà có anh với anh Nam ở đây, em thấy đỡ run hơn nhiều. Dạ... chừng nào xong đoạn hào này anh chỉ em coi lại cách lau hộp tiếp đạn cho đỡ dính đất nghe anh.\"",
+      "next": "ch2_08_chot_3_bat_lua"
+    },
+    {
+      "id": "ch2_07b_loc_de_dat",
+      "type": "dialogue",
+      "speaker": "loc",
+      "speakerTitle": "Binh Bét Bùi Văn Lộc",
+      "location": "Hào giao thông số 2 — Thiên Minh",
+      "mood": "tense",
+      "text": "Vừa thấy ánh mắt tôi lia xuống mối dây bao cát hơi lỏng, vai Bùi Văn Lộc liền khẽ giật lên. Cậu vội buông cán xẻng, hai tay nắm chặt lấy quai ba lô đặt sát vách hào rồi cúi gằm xuống kéo lại đầu dây bị xoắn, giọng lí nhí đầy vẻ sợ bị phạt:\n\n\"Dạ để em làm lại liền... Dạ thưa anh, tại đất chỗ này nó trơn quá nên nút thắt bị tuột, chứ em không có làm ẩu đâu anh. Anh cho em năm phút em xếp lại hết hàng bao này cho thẳng tắp liền.\" Nhìn bàn tay dính đầy bùn run nhẹ của cậu ta, tôi chợt nhớ cái buổi chiều mình bắt Lộc chạy quanh sân gạch Quang Trung — kỷ luật giữ cho hàng lối thẳng hàng, nhưng cũng để lại một khoảng cách lạnh ngắt giữa hai người lính cùng tiểu đội.",
+      "next": "ch2_08_chot_3_bat_lua"
+    },
+    {
+      "id": "ch2_08_chot_3_bat_lua",
+      "type": "dialogue",
+      "speaker": "khang",
+      "speakerTitle": "Binh Bét Lê Minh Khang — Chốt 3",
+      "location": "Chốt 3 — Rìa mỏm đá Thiên Minh",
+      "mood": "calm",
+      "text": "Chiều muộn, tôi mang thùng nước trà ấm lên thay ca trực trinh sát cho Chốt 3. Chốt nằm tách hẳn ra mỏm đá nhô về phía thung lũng, gió thổi lồng lộng qua kẽ lá lau. Khang ngồi xổm sau ụ bao cát, nhìn xuống dải đèn vàng lờ mờ phía cụm doanh trại tuyến sau rồi bật nắp bật lửa kêu tách một tiếng quen thuộc:\n\n\"Nhìn xuống dưới đó thấy yên bình ghê ha ông. Dưới nhà tui giờ này chắc má tui đang đốt rơm hun muỗi ngoài chái bếp rồi. Vậy mà liếc qua bên kia sườn núi, trên bản đồ chỉ huy vẽ có hai đường gạch đỏ ngắn ngủn, nhìn tưởng gần xịt mà đi bộ gãy giò chưa tới. Coi chừng cái bản đồ nó lừa mắt mình đó nha. Đứng trên cao nhìn xuống tưởng dễ, chứ bước chân xuống hẻm đá dưới kia mới biết chỗ nào lún bùn.\"",
+      "next": "ch2_09_chuyen_que_trung_si_nam"
+    },
+    {
+      "id": "ch2_09_chuyen_que_trung_si_nam",
+      "type": "dialogue",
+      "speaker": "nam",
+      "speakerTitle": "Trung sĩ Nguyễn Hoàng Nam — Tiểu đội trưởng",
+      "location": "Nhà hầm Tiểu Đội 1 — Thiên Minh",
+      "mood": "warm",
+      "text": "Đêm xuống, sau khi đã kiểm tra khóa nòng và ghi xong sổ trực, Trung sĩ Nam pha một ấm trà đặc bằng thứ lá chè xanh phơi khô mang từ quê ra. Trong ánh đèn pin trùm vải che sáng chỉ đủ hắt lên một quầng vàng đục, anh không còn đứng thẳng lưng nghiêm nghị như ngoài sân tập nữa mà ngồi bó gối bên vách đất, hai bàn tay thô ráp ôm lấy chiếc ca sắt tráng men cho đỡ buốt, giọng chùng hẳn xuống:\n\n\"Uống chén cho ấm bụng đi chú. Ngoài kia sương xuống buốt da lắm, chè xanh chát vậy chứ giữ tỉnh được tới nửa đêm. Ở quê anh ngoài Nghệ An, mùa này gió Lào hết rồi, chuyển sang mưa dầm thối đất. Hồi tuần trước con em gái anh gửi thư lên, nó kể đi dạy học về toàn phải xắn quần quá gối lội đồng qua đoạn đê ngập, vậy mà câu cuối vẫn dặn anh ngoài biên giới nhớ giữ ấm cổ. Anh hay nhắc anh em giữ từng cái chốt, từng viên đạn không phải vì anh mê thành tích hay sợ cấp trên mắng mô. Cái nghề ni sai một li là mất một nhà. Mình đứng đây, sau lưng mình là bếp lửa với cơm nóng của người ta dưới kia đó chú ạ.\"",
+      "next": "ch2_10_thu_thay_vinh"
+    },
+    {
+      "id": "ch2_10_thu_thay_vinh",
+      "type": "narration",
+      "location": "Nhà hầm Tiểu Đội 1 — Thiên Minh",
+      "mood": "calm",
+      "text": "Trước khi đợt gió mùa đầu tiên ập tới, xe tiếp vận tuyến sau kịp thả xuống chân dốc một bao tải hàng khô kèm túi thư mỏng bọc nilon kỹ lưỡng. Trong số vài phong thư nhàu nhĩ có một tờ giấy gấp tư không dán tem, nét chữ nghiêng gọn gàng quen thuộc của Đại úy Trần Quốc Vinh từ Quang Trung gửi lên: \"Vào đơn vị rồi, đừng vội đếm xem mình đứng gác bao nhiêu đêm. Hãy đếm xem mình đã thuộc tên thật của bao nhiêu người ăn cùng mâm cơm với mình. Chậm ba nhịp khi viết sổ, nhưng đừng chậm một nhịp khi kiểm tra khóa súng của người gác ca sau.\"\n\nTôi kẹp tờ giấy ấy vào trang giữa của cuốn sổ bìa xanh, chép lại bên lề vài dòng ghi chú về lối mòn xuống Chốt 3, độ dốc của vách đá phía Đông và thói quen của từng người trong tiểu đội. Ngoài cửa hầm, gió bắt đầu rít mạnh hơn qua mái tôn dã chiến, báo hiệu những ngày nắng ráo ngắn ngủi sắp khép lại.",
+      "effects": [
+        {
+          "addJournal": {
+            "id": "j_ch2_thien_minh_dau",
+            "title": "Những ngày đầu ở Thiên Minh",
+            "entry": "Đồn trú trên sườn đá vôi lạnh buốt. Sáng tăng gia cuốc hào, đêm nhìn ánh đèn vàng phía hậu phương. Lời dặn của anh Nam và lá thư thầy Vinh nhắc tôi nhớ: đằng sau mỗi dòng trực ban là sinh mạng của đồng đội cùng mâm."
+          }
+        }
+      ],
+      "next": "ch2_11_nam_ngay_mua_lu"
+    },
+    {
+      "id": "ch2_11_nam_ngay_mua_lu",
+      "type": "narration",
+      "location": "Tiểu Đội 1 Thiên Minh — Đường tiếp vận sạt lở",
+      "mood": "tense",
+      "text": "Mưa rừng đổ xuống Thiên Minh suốt năm ngày đêm không dứt, tiếng hạt nặng trút rào rào trên mái tôn dã chiến nghe như ai đổ sỏi suốt ngày đêm. Con đường đất độc đạo nối từ đại đội phía sau lên chốt bị hai mảng ta-luy dương sạt xuống chắn ngang, bùn nhão ngập quá ống chân; nước suối dưới khe dâng đục ngầu cuốn phăng chiếc cầu gỗ tạm chỉ còn trơ lại hai đầu dây thép. Củi chất trong bếp anh nuôi ẩm ướt tới mức nhóm cả buổi chỉ toàn khói trắng cay xè mắt, không sao thổi bùng nổi ngọn lửa nấu cháo. Quần áo mặc trên người phơi từ sáng tới tối vẫn ẩm lạnh, đôi tất nào cũng sũng nước khiến bàn chân lính trắng bệch và rát buốt.\n\nĐến chiều ngày thứ tư, thùng gạo chỉ còn vét được đáy bao, rau ngoài vườn tăng gia bị mưa đá dập nát gần hết, chỉ còn vài cọng cải dập lẫn trong bùn. Nguồn sống duy nhất còn lại của cả tiểu đội là mấy hộp lương khô dự trữ chiến đấu bọc thiếc cất trong hòm tôn kín. Tệ nhất là Chốt 3 của Khang nằm biệt lập bên kia khe đá trơn trượt — nước lũ xối ngang lối mòn khiến việc chuyển cơm nắm từ bếp chính sang gần như bất khả thi.",
+      "next": "ch2_12_khau_phan_can_kiet"
+    },
+    {
+      "id": "ch2_12_khau_phan_can_kiet",
+      "type": "dialogue",
+      "speaker": "nam",
+      "speakerTitle": "Trung sĩ Nguyễn Hoàng Nam — Tiểu đội trưởng",
+      "location": "Kho lương thực dã chiến — Thiên Minh",
+      "mood": "tense",
+      "text": "Trung sĩ Nam mở nắp hòm tôn đựng lương khô, đếm đi đếm lại số phong lương khô bọc giấy bạc còn nguyên vẹn. Ánh đèn pin rọi vào khuôn mặt sạm nắng hốc hác của anh sau bốn đêm thức trắng kiểm tra ta-luy sạt lở. Giọng Nam khàn đi vì nhiễm lạnh:\n\n\"Đường xe bị cắt ít nhất hai ngày nữa mới thông được. Trong hòm chỉ còn đúng cơ số dự phòng khẩn cấp theo định mức tác chiến. Tôi phải ra kiểm tra dây căng cảnh giới hướng Đông ngay bây giờ kẻo nước xói trôi cọc. Cậu cầm chìa khóa hòm, chia nước sôi pha muối với khẩu phần tối nay cho anh em nhà hầm và tổ gác. Bên Chốt 3 của đồng chí Khang chắc cũng cạn sạch từ trưa rồi, xử lý sao cho giữ được sức anh em nhưng đừng để vỡ quy định.\"",
+      "next": "ch2_13_choice_luong_kho"
+    },
+    {
+      "id": "ch2_13_choice_luong_kho",
+      "type": "choice",
+      "location": "Kho lương thực dã chiến — Thiên Minh",
+      "mood": "tense",
+      "text": "Đứng trước hòm lương khô dự phòng khi mưa rừng vẫn xối xả ngoài mái bạt, tôi nhìn sang bọc lương khô phần riêng của tổ mình rồi nhìn về phía khe nước ngập nối sang Chốt 3 của Khang.",
+      "choices": [
+        {
+          "id": "chia_luong_chot_3",
+          "label": "Bớt một nửa phần lương khô dự phòng, bám dây thừng vượt khe lũ mang sang Chốt 3 cho Khang",
+          "hint": "Tăng Tình Đồng Đội và quan hệ với Khang, nhưng hao hụt Tiếp Tế và trái định mức giữ kho.",
+          "effects": [
+            { "setFlag": "chia_luong_kho_cho_chot_3" },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 6 } },
+            { "addStat": { "stat": "TiepTe", "delta": -5 } },
+            { "addStat": { "stat": "KyLuat", "delta": -2 } },
+            { "addRel": { "char": "khang", "delta": 2 } }
+          ],
+          "next": "ch2_14a_chia_luong_chot_3"
+        },
+        {
+          "id": "giu_dinh_muc_quy_dinh",
+          "label": "Khóa hòm lương khô dự phòng đúng quy định tiểu đoàn, chỉ gửi sang Chốt 3 bình trà nóng pha muối",
+          "hint": "Giữ vững Kỷ Luật và nguồn Tiếp Tế dự trữ, nhưng Chốt 3 phải chịu đói qua đêm.",
+          "effects": [
+            { "addStat": { "stat": "KyLuat", "delta": 5 } },
+            { "addStat": { "stat": "TiepTe", "delta": 4 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": -3 } },
+            { "addRel": { "char": "khang", "delta": -1 } }
+          ],
+          "next": "ch2_14b_giu_dinh_muc"
+        }
+      ]
+    },
+    {
+      "id": "ch2_14a_chia_luong_chot_3",
+      "type": "dialogue",
+      "speaker": "khang",
+      "speakerTitle": "Binh Bét Lê Minh Khang — Chốt 3",
+      "location": "Chốt 3 — Giữa cơn mưa lũ",
+      "mood": "warm",
+      "text": "Tôi buộc bọc nilon chứa sáu phong lương khô vào thắt lưng, bám chặt sợi dây thừng dẫn đường lội ngang khe đá ngập quá đầu gối rồi trèo lên Chốt 3 trong màn mưa trắng xóa. Khang ngồi co ro dưới tấm tăng che ướt sũng, thấy tôi trồi lên khỏi mép hào liền giật mình rút tay khỏi bao súng, mở to mắt nhìn bọc lương khô nhỏ nước trên tay tôi:\n\n\"Trời đất ơi, ông khùng hả, nước lũ chảy xiết vậy mà mò qua đây chi!\" Khang vừa càu nhàu vừa vội vã giật tấm vải bạt khô duy nhất lau mặt giúp tôi, rồi bẻ ngay phong lương khô đầu tiên làm ba phần bằng nhau, dúi lại một miếng vào tay tôi. \"Ăn liền đi cho đỡ run rồi mới đi về. Tui nhớ cái miếng lương khô dính nước mưa này tới già luôn đó ông nội.\" Lúc tôi quay lưng bò xuống hào, bàn tay lạnh cóng của Khang vươn ra gõ hai cái lên vai tôi thật mạnh.",
+      "next": "ch2_15_tan_mua_nang_len"
+    },
+    {
+      "id": "ch2_14b_giu_dinh_muc",
+      "type": "narration",
+      "location": "Nhà hầm Tiểu Đội 1 — Thiên Minh",
+      "mood": "somber",
+      "text": "Tôi bấm khóa hòm tôn dự phòng theo đúng quy định giữ cơ số chiến đấu của tiểu đoàn, chỉ rót một bi-đông nước trà đặc pha muối hột gửi dây kéo sang cho Chốt 3. Cả đêm hôm đó, gió thổi rát mặt qua kẽ đá, bụng đói cồn cào khiến giấc ngủ giữa hai ca gác chập chờn toàn tiếng nước lũ gầm réo dưới chân đồi.\n\nKhoảng hai giờ sáng, lúc đứng gác ở vọng 1 nhìn sang sườn mỏm đá đối diện, tôi thoáng thấy một tia sáng rất nhỏ lóe lên rồi tắt lịm sau bao cát, kèm theo tiếng bật nắp kim loại mỏng mảnh xuyên qua màn mưa. Khang không gọi điện thoại xin thêm gì, cũng không than một câu nào trên sóng bộ đàm, chỉ lặng lẽ ngồi giữ góc sườn núi bằng bụng rỗng cho tới tận lúc trời hửng sáng.",
+      "next": "ch2_15_tan_mua_nang_len"
+    },
+    {
+      "id": "ch2_15_tan_mua_nang_len",
+      "type": "narration",
+      "location": "Sân nhà hầm Tiểu Đội 1 — Thiên Minh",
+      "mood": "calm",
+      "text": "Sang ngày thứ sáu, cơn mưa rừng đột ngột tạnh hẳn. Nắng sớm hắt lên từ thung lũng làm hơi nước bốc nghi ngút trên từng tảng đá vôi rêu phong. Cả tiểu đội đổ ra sân phơi giăng dây căng đầy áo quần ẩm mốc, tháo bung từng khẩu súng ra hong nắng và trải nilon hong lại số muối gạo còn sót. Tổ công binh đại đội từ phía sau kịp san gạt xong đoạn đường sạt, gùi lên cho Thiên Minh gạo mới, muối trắng cùng ít cá khô mặn.\n\nVừa ăn xong bữa cơm nóng đầu tiên sau gần một tuần nhai lương khô với uống nước muối, Trung sĩ Nam đã nhận được thông báo cuối tuần tới cán bộ kiểm tra hậu cần và kỹ thuật của đại đội sẽ trực tiếp lên Thiên Minh kiểm kê toàn bộ vũ khí, đạn dược dự phòng.",
+      "next": "ch2_16_mo_hom_dan_du_phong"
+    },
+    {
+      "id": "ch2_16_mo_hom_dan_du_phong",
+      "type": "narration",
+      "location": "Hang chứa đạn dự phòng — Thiên Minh",
+      "mood": "tense",
+      "text": "Chiều hôm đó, tôi và Lộc chui vào ngách hang đá phía sau nhà hầm để kiểm kê hai hòm đạn dự phòng 7,62mm trước đợt kiểm tra. Khi dùng xà beng nạy khóa kẽm của hòm đạn thứ hai, một mùi ẩm mốc ngái nồng lập tức xộc thẳng vào mũi. Ngẩng lên trần hang, tôi mới phát hiện một vết nứt mảnh như sợi chỉ chạy dọc vách đá vôi, suốt năm ngày mưa lũ vừa qua đã âm thầm rỉ từng giọt nước xuống đúng mép nắp hòm tôn bị hở gioăng cao su.\n\nBốc từng kẹp đạn lên dưới ánh đèn pin, lòng tôi lạnh toát: gần một phần ba số đạn trong hai hòm dự phòng đã lên teng xanh loang lổ quanh cổ vỏ đồng, hạt nổ xỉn màu đen kịt vì ngấm hơi ẩm. Nếu đem ra bắn thật giữa đêm tối, những viên đạn này rất dễ thối hạt nổ hoặc kẹt vỏ ngay trong buồng đạn.",
+      "next": "ch2_17_nam_xem_vo_dan"
+    },
+    {
+      "id": "ch2_17_nam_xem_vo_dan",
+      "type": "dialogue",
+      "speaker": "nam",
+      "speakerTitle": "Trung sĩ Nguyễn Hoàng Nam — Tiểu đội trưởng",
+      "location": "Hang chứa đạn dự phòng — Thiên Minh",
+      "mood": "tense",
+      "text": "Trung sĩ Nam bước vào hang, cầm năm bảy viên đạn lên teng xanh xoay kỹ dưới bóng đèn pin. Đường nhăn giữa hai đầu lông mày anh hằn sâu xuống. Anh không nổi nóng ngay mà ngồi sụp xuống trên thùng gỗ trống, giọng nặng trĩu tính toán:\n\n\"Đợt mưa vừa rồi nước ngấm vô vách đá dữ quá, mình kiểm tra không kỹ giờ chịu thiệt. Đáng ngại nhất là cuối tuần đại đội lên chấm điểm sẵn sàng chiến đấu. Nếu tôi báo thẳng tỷ lệ đạn ẩm này lên trên, cả tiểu đội bị đánh rớt chỉ tiêu bảo quản khí tài tháng này là cái chắc, chưa biết chừng còn bị cắt suất bổ sung trang bị mới. Còn nếu anh em tự lau chùi phơi khô, lỡ lúc chạm súng thật nó kẹt ngay phát đầu tiên thì khốn nạn cả đám. Các đồng chí tính xem nên làm thế nào?\"",
+      "next": "ch2_18_khang_gop_y_kho_dan"
+    },
+    {
+      "id": "ch2_18_khang_gop_y_kho_dan",
+      "type": "dialogue",
+      "speaker": "khang",
+      "speakerTitle": "Binh Bét Lê Minh Khang — Chốt 3",
+      "location": "Cửa hang chứa đạn — Thiên Minh",
+      "mood": "tense",
+      "text": "Lê Minh Khang vừa đổi gác xuống, đứng ở cửa hang nghe hết câu chuyện liền bước vào, nhặt một viên đạn gỉ xanh lên búng nhẹ bằng ngón trỏ rồi lắc đầu cái rụp. Giọng cậu ta gắt hẳn lên, cắt ngang sự do dự trong hang:\n\n\"Đừng có nói chuyện kiểu trên giấy với tui. Cái bảng thi đua trên đại đội không bắn trả được lúc tụi Thiết Phong mò vô hàng rào đâu! Đạn ẩm hạt nổ phơi nắng cỡ nào bên trong thuốc phóng nó cũng bết cục lại hết rồi. Viên đạn lép lúc nổ súng là chết thằng đứng cạnh chứ không chết thằng ký sổ đâu. Báo hay giấu, ông quyết đi rồi tui ký chung tên chịu phạt với ông nếu cần.\"",
+      "next": "ch2_19_choice_kho_dan"
+    },
+    {
+      "id": "ch2_19_choice_kho_dan",
+      "type": "choice",
+      "location": "Hang chứa đạn dự phòng — Thiên Minh",
+      "mood": "tense",
+      "text": "Hai hòm đạn lên teng xanh nằm mở nắp ngay dưới chân, còn bản báo cáo kiểm kê định kỳ đặt trên nắp thùng bên cạnh chỉ chờ chữ ký xác nhận.",
+      "choices": [
+        {
+          "id": "bao_cao_thieu_dan",
+          "label": "Ghi đúng số lượng đạn ẩm vào sổ kiểm kê, báo cáo trung thực lên đại đội xin đổi lô đạn mới",
+          "hint": "Chịu mất điểm thi đua (giảm nhẹ Sĩ Khí), nhưng bảo toàn Kỷ Luật, Tiếp Tế và niềm tin của Nam với Khang.",
+          "effects": [
+            { "setFlag": "bao_cao_thieu_dan_thien_minh" },
+            { "addStat": { "stat": "KyLuat", "delta": 6 } },
+            { "addStat": { "stat": "TiepTe", "delta": 5 } },
+            { "addStat": { "stat": "SiKhi", "delta": -2 } },
+            { "addRel": { "char": "nam", "delta": 1 } },
+            { "addRel": { "char": "khang", "delta": 1 } }
+          ],
+          "next": "ch2_20a_bao_cao_doi_lo"
+        },
+        {
+          "id": "giu_kin_tu_xu_ly",
+          "label": "Giấu kín sự cố ngoài sổ sách, chọn lọc những viên đỡ gỉ đem lau dầu phơi khô để giữ thành tích tiểu đội",
+          "hint": "Giữ đẹp sổ sách và Sĩ Khí trước đoàn kiểm tra, nhưng làm suy giảm Tiếp Tế thực chiến, Kỷ Luật và uy tín với Nam, Khang.",
+          "effects": [
+            { "setFlag": "giu_kin_su_co_kho_dan" },
+            { "addStat": { "stat": "SiKhi", "delta": 4 } },
+            { "addStat": { "stat": "TiepTe", "delta": -6 } },
+            { "addStat": { "stat": "KyLuat", "delta": -5 } },
+            { "addRel": { "char": "nam", "delta": -1 } },
+            { "addRel": { "char": "khang", "delta": -1 } }
+          ],
+          "next": "ch2_20b_giu_kin_phoi_dan"
+        }
+      ]
+    },
+    {
+      "id": "ch2_20a_bao_cao_doi_lo",
+      "type": "narration",
+      "location": "Sân tập hợp Tiểu Đội 1 — Thiên Minh",
+      "mood": "calm",
+      "text": "Đoàn kiểm tra đại đội lên tới nơi đúng sáng thứ Bảy. Ngay khi nhìn thấy bảng kê khai hai trăm bốn mươi viên đạn ẩm hạt nổ tôi nộp thẳng, trợ lý quân khí lập tức cau mày gạch đỏ một đường dài vào sổ thi đua của Tiểu Đội 1 Thiên Minh. Cả tiểu đội bị phê bình thiếu chủ động che chắn kho hang mùa mưa và bị cắt mất cờ luân lưu tháng.\n\nThế nhưng hai ngày sau, hai con ngựa thồ của tổ tiếp vận đã ì ạch leo dốc mang lên thay thế trọn vẹn hai hòm đạn mới tinh còn nguyên lớp mỡ bảo quản thơm nồng. Chiều hôm đó, Trung sĩ Nam tự tay kê lại chỗ hòm đạn lên hai thanh tà vẹt gỗ cao ráo, rồi vỗ nhẹ lên lưng tôi một cái không nói gì. Ít nhất từ đêm nay, không ai phải bấm bụng nghi ngờ băng đạn trong bao xe của mình nữa.",
+      "next": "ch2_21_thang_quan_ham_binh_nhi"
+    },
+    {
+      "id": "ch2_20b_giu_kin_phoi_dan",
+      "type": "narration",
+      "location": "Nhà hầm Tiểu Đội 1 — Thiên Minh",
+      "mood": "somber",
+      "text": "Cả tối hôm trước ngày kiểm tra, tôi và Lộc ngồi lỳ sau tấm bạt che kín, dùng giẻ khô lau từng lớp teng xanh bám trên cổ vỏ đạn rồi xếp lên mâm tôn hong bên bếp than củi âm ỉ. Sáng thứ Bảy, trợ lý quân khí mở nắp hòm kiểm tra qua loa bên trên thấy vỏ đồng bóng láng liền gật gù ký đạt loại khá vào sổ giao ban.\n\nTiểu đội giữ được bảng thành tích sạch đẹp, nhưng từ hôm ấy trong ánh nhìn của Trung sĩ Nam lúc nào cũng thoáng vẻ nặng nề mỗi lần anh đi ngang qua cửa hang đá. Khang thì chẳng buồn nhắc lại chuyện cũ nữa, chỉ lẳng lặng tự bỏ tiền phụ cấp nhờ người dưới hậu phương mua thêm giẻ lau súng gửi lên, như thể cậu ta chuẩn bị sẵn tâm lý cho một đêm nào đó súng kẹt giữa sườn núi.",
+      "next": "ch2_21_thang_quan_ham_binh_nhi"
+    },
+    {
+      "id": "ch2_21_thang_quan_ham_binh_nhi",
+      "type": "narration",
+      "location": "Sân tập hợp Tiểu Đội 1 — Thiên Minh",
+      "mood": "warm",
+      "text": "Đầu tháng mới, nắng thu hanh hao trải xuống khoảng sân đất nện trước nhà hầm, làm khô dần những vết bùn còn bám trên mép bậc đá. Trong buổi chào cờ sáng ngắn gọn dưới vách núi đá vôi, Trung sĩ Nam đọc quyết định phong quân hàm **Binh Nhì** cho lứa tân binh đầu tiên hoàn thành giai đoạn làm quen chốt tiền tiêu. Anh bước tới trước từng người, tự tay ghim chiếc cầu vai mới lên áo tôi, vuốt lại nếp vải còn hơi cứng rồi lần lượt tới Khang và Bùi Văn Lộc. Có lẽ đối với trên tiểu đoàn, đây chỉ là một đợt nâng bậc định kỳ; nhưng với những người lính từng ăn chung lương khô dưới mưa rừng, một vạch xanh thêm trên vai là lời xác nhận rằng mình đã đứng vững qua những ngày đầu tiên khắc nghiệt nhất.\n\nBuổi trưa hôm ấy, bếp anh nuôi không có thịt tươi nhưng nấu được một nồi xôi sắn trộn đậu xanh bốc khói thơm lừng, rắc thêm chút muối vừng rang giã dập. Cả tiểu đội ngồi bệt quanh mấy tấm phản gỗ mộc mạc, vừa bốc từng nắm xôi nóng hổi vừa trêu Lộc đỏ mặt vì đứng nghiêm nhận cầu vai mà hai tay vẫn theo thói quen tìm quai ba lô. Khoảnh khắc bình yên ấy ngắn ngủi như ánh nắng cuối ngày lướt qua đỉnh núi, bởi ngay chiều hôm sau, loa vô tuyến trong hầm chỉ huy bắt đầu rít lên tín hiệu mã hóa.",
+      "next": "ch2_22_tieng_sung_xa_rang_nui"
+    },
+    {
+      "id": "ch2_22_tieng_sung_xa_rang_nui",
+      "type": "dispatch",
+      "location": "Trạm vô tuyến Tiểu Đội 1 — Thiên Minh",
+      "mood": "urgent",
+      "text": "[CÔNG ĐIỆN KHẨN — TRẠM RADAR CẢNH GIỚI LỮ ĐOÀN]\nGỬI: CÁC CHỐT TIỀN TIÊU DẢI ĐÁ VÔI THIÊN MINH.\nTHỜI GIAN: 20H15.\nNỘI DUNG: PHÁT HIỆN TÍN HIỆU NHIỄU ĐIỆN TỬ TẦM THẤP VÀ DẤU VẾT TỔ TRINH SÁT TIỀN PHƯƠNG KHỐI THIẾT PHONG VƯỢT QUA ĐƯỜNG CHIA NƯỚC PHÍA BẮC. NÂNG CẤP TRẠNG THÁI SẴN SÀNG CHIẾN ĐẤU LÊN CẤP 1. TẤT CẢ CÁC VỌNG GÁC LÊN ĐẠN THẬT, GIỮ IM LẶNG VÔ TUYẾN, BÁO CÁO MỌI CHUYỂN ĐỘNG DƯỚI KHE ĐÁ.\nHẾT CÔNG ĐIỆN.",
+      "next": "ch2_23_gac_dem_cung_loc"
+    },
+    {
+      "id": "ch2_23_gac_dem_cung_loc",
+      "type": "narration",
+      "location": "Vọng gác số 2 — Sườn Bắc Thiên Minh",
+      "mood": "tense",
+      "text": "Mười một giờ đêm, tôi nhận lệnh trực chiến với đạn thật tại vọng gác số 2 cùng Bùi Văn Lộc. Sương muối phủ xuống lạnh cóng, tầm nhìn phía trước mặt chỉ còn chưa đầy hai chục bước chân trong thứ ánh sáng xanh xám hắt ra từ mặt trăng bị mây che khuất. Ở đây không còn đạn mã tử tập bắn như ở thao trường Quang Trung nữa — trong ổ đạn đã lên nòng sẵn sàng là đồng thau thật và thép thật.\n\nĐứng nép bên cạnh tôi trong công sự đá hộc, Lộc thở dốc từng nhịp ngắn và gấp. Tôi nghe rõ cả tiếng răng cậu ta va vào nhau lập cập lẫn tiếng báng súng chạm khẽ vào bao cát mỗi lần có một cơn gió quét qua bụi lau sậy dưới chân đồi. Đột nhiên, từ khu rừng trúc rậm cách hàng rào kẽm gai chừng ba chục mét vang lên tiếng cành khô gãy rắc rất gọn, tiếp theo là tiếng đá lăn lạo xạo xuống khe trũng.",
+      "next": "ch2_24_loc_run_so"
+    },
+    {
+      "id": "ch2_24_loc_run_so",
+      "type": "dialogue",
+      "speaker": "loc",
+      "speakerTitle": "Binh Nhì Bùi Văn Lộc",
+      "location": "Vọng gác số 2 — Thiên Minh",
+      "mood": "urgent",
+      "text": "Ngón tay trỏ của Bùi Văn Lộc lập tức giật về phía vòng bảo vệ cò, chốt an toàn bật xuống cái tách khô khốc giữa màn đêm im phăng phắc. Cậu tân binh dí sát nòng súng qua lỗ châu mai, hai bả vai cứng đơ lên vì căng thẳng, giọng run bần bật sát bên tai tôi:\n\n\"Anh... anh ơi... dưới gốc trúc có bóng đen nhúc nhích kìa! Hình như tụi thám báo bò lên tới hàng rào ngoài rồi... Em... em bắn cảnh báo luôn nghe anh, chứ lỡ nó quăng lựu đạn vô đây là chết hết hai anh em mình đó anh!\"",
+      "next": "ch2_25_choice_kem_loc"
+    },
+    {
+      "id": "ch2_25_choice_kem_loc",
+      "type": "choice",
+      "location": "Vọng gác số 2 — Thiên Minh",
+      "mood": "urgent",
+      "text": "Ngón tay Lộc đang run rẩy đặt sát cò súng. Nếu nổ súng bừa vào màn sương lúc này, hỏa điểm của cả vọng gác sẽ bị lộ ngay lập tức trước họng súng bắn tỉa nếu ngoài kia thật sự có địch.",
+      "choices": [
+        {
+          "id": "on_dinh_loc_cham_rai",
+          "label": "Đặt tay giữ nhẹ nòng súng Lộc xuống, chỉ cậu cách điều hòa hơi thở và chia đôi góc quan sát khe đá",
+          "hint": "Kiên nhẫn dìu Lộc vượt qua nỗi sợ trận đầu (mở khóa loc_vung_tam_binh_nhat), tăng Tình Đồng Đội và Sĩ Khí.",
+          "effects": [
+            { "setFlag": "loc_vung_tam_binh_nhat" },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 6 } },
+            { "addStat": { "stat": "SiKhi", "delta": 4 } },
+            { "addRel": { "char": "loc", "delta": 3 } }
+          ],
+          "next": "ch2_26a_loc_vung_tam"
+        },
+        {
+          "id": "hoa_giai_bang_ky_uc",
+          "label": "Nhắc khẽ quy tắc buộc dây ở Quang Trung — 'Chậm ba nhịp là thắng' — rồi để Lộc tự xác minh mục tiêu",
+          "hint": "Dựa vào nền tảng kèm cặp kiên nhẫn từ Quang Trung để rèn bản lĩnh độc lập cho Lộc.",
+          "condition": { "flag": "kem_cap_loc_kien_nhan" },
+          "effects": [
+            { "setFlag": "loc_vung_tam_binh_nhat" },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 7 } },
+            { "addStat": { "stat": "SiKhi", "delta": 5 } },
+            { "addStat": { "stat": "KyLuat", "delta": 3 } },
+            { "addRel": { "char": "loc", "delta": 4 } }
+          ],
+          "next": "ch2_26a_loc_vung_tam"
+        },
+        {
+          "id": "quat_loc_im_lang",
+          "label": "Quát khẽ bắt Lộc khóa súng lùi ra sau, tự mình chiếm lỗ châu mai quan sát cả đêm",
+          "hint": "Giữ Kỷ Luật tức thời nhưng khiến Lộc mất tự tin, giảm Sĩ Khí và Tình Đồng Đội.",
+          "effects": [
+            { "addStat": { "stat": "KyLuat", "delta": 3 } },
+            { "addStat": { "stat": "SiKhi", "delta": -3 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": -4 } },
+            { "addRel": { "char": "loc", "delta": -2 } }
+          ],
+          "next": "ch2_26b_loc_co_rum"
+        }
+      ]
+    },
+    {
+      "id": "ch2_26a_loc_vung_tam",
+      "type": "dialogue",
+      "speaker": "loc",
+      "speakerTitle": "Binh Nhì Bùi Văn Lộc",
+      "location": "Vọng gác số 2 — Thiên Minh",
+      "mood": "calm",
+      "text": "Lộc hít vào một hơi thật sâu theo nhịp tay tôi ra hiệu, rồi từ từ thả lỏng vai xuống bờ bao cát. Ba mươi giây trôi qua trong im lặng căng như dây đàn, một con hoẵng rừng nhỏ thó từ bụi trúc nhảy vọt qua dải dây thép gai rồi mất hút xuống lòng suối cạn. Lộc không hề giật mình nổ súng; cậu chậm rãi hạ báng súng xuống một nấc, kiểm tra lại dây đeo và băng đạn dự phòng bên hông không một tiếng động thừa.\n\n\"Hú hồn... con hoẵng rừng anh ơi.\" Lộc quay sang nhìn tôi, lần này giọng cậu đã gọn và chắc hơn hẳn, không còn kéo dài những tiếng ngập ngừng như trước. \"Cảm ơn anh hồi nãy giữ tay em lại. Chứ nổ đại một phát chắc cả tiểu đội mất ngủ trắng đêm mất. Góc bên trái từ bụi sim xuống khe cạn để em canh phụ anh nghe, anh cứ yên tâm ngó bên sườn phải.\"",
+      "next": "ch2_27_binh_minh_sau_ca_gac"
+    },
+    {
+      "id": "ch2_26b_loc_co_rum",
+      "type": "dialogue",
+      "speaker": "loc",
+      "speakerTitle": "Binh Nhì Bùi Văn Lộc",
+      "location": "Vọng gác số 2 — Thiên Minh",
+      "mood": "somber",
+      "text": "Nghe tiếng gắt nhỏ của tôi, Bùi Văn Lộc giật thót người, lùi vội hai bước dựa sát lưng vào vách đá lạnh buốt trong công sự. Cậu khóa súng theo phản xạ rồi ôm ghì khẩu súng vào trước ngực, hai tay lại bấu chặt lấy quai ba lô như thuở mới bước chân qua cổng Quang Trung. Dưới khe đá, con hoẵng rừng giật mình nhảy vọt qua bụi trúc rồi mất hút.\n\n\"Dạ... em xin lỗi anh... tại em nhát quá...\" Lộc lí nhí, suốt ba tiếng còn lại của ca gác không dám nhích người lên lỗ châu mai thêm lần nào nữa. Mọi tiếng động nhỏ nhất ngoài màn sương đêm đều một mình tôi căng mắt dò xét, còn người đồng đội đứng sau lưng chỉ im lặng như một cái bóng thu mình.",
+      "next": "ch2_27_binh_minh_sau_ca_gac"
+    },
+    {
+      "id": "ch2_27_binh_minh_sau_ca_gac",
+      "type": "narration",
+      "location": "Tiểu Đội 1 Thiên Minh",
+      "mood": "calm",
+      "text": "Rạng sáng, bóng sương tan dần để lộ những dải lau trắng phất phơ dọc hàng rào kẽm gai. Không có cuộc tập kích nào nổ ra trong đêm ấy, nhưng hai tuần báo động trực chiến liên tiếp sau công điện của lữ đoàn đã tôi luyện Tiểu Đội 1 từ những tân binh còn bỡ ngỡ thành những người lính biết nghe tiếng gió phân biệt bước chân người với thú rừng.\n\nCuối tháng, sau đợt kiểm tra kỹ năng gác đêm, bắn mục tiêu ẩn hiện ban ngày và truyền tin dây hữu tuyến, danh sách đề bạt quân hàm **Binh Nhất** từ đại đội được chuyển lên chốt. Buổi sáng nhận quyết định ngay trước cửa nhà hầm, Trung sĩ Nam gọi tôi bước ra khỏi hàng trước tiên.",
+      "next": "ch2_28_len_binh_nhat"
+    },
+    {
+      "id": "ch2_28_len_binh_nhat",
+      "type": "dialogue",
+      "speaker": "nam",
+      "speakerTitle": "Trung sĩ Nguyễn Hoàng Nam — Tiểu đội trưởng",
+      "location": "Sân nhà hầm Tiểu Đội 1 — Thiên Minh",
+      "mood": "warm",
+      "text": "Nam tháo hai chiếc cầu vai Binh Nhì cũ đã bạc màu mưa nắng, tự tay lồng vào vai áo tôi hai vạch Binh Nhất thẳng thớm rồi miết nhẹ ve áo cho phẳng nếp. Sau khi giải tán hàng quân, anh đứng lại thêm một chút bên bậc đá, đổi sang giọng thân tình như anh em trong nhà:\n\n\"Lên Binh Nhất rồi đó chú. Thêm một vạch trên vai không phải để oai với mấy đứa mới mô nghe, mà là để lúc dẫn tổ đi tuần, cái đầu chú phải lạnh gấp đôi tụi nó. Vai rộng thêm một phân thì mắt phải nhìn xuống lưng anh em nhiều hơn. Mấy ngày nữa đại đội cắt cử tổ mình đi tuần sâu xuống thung lũng bản Sương Mù, chú nắm đầu đội hình phụ anh đi.\"",
+      "effects": [
+        {
+          "addJournal": {
+            "id": "j_ch2_len_binh_nhat",
+            "title": "Hai vạch Binh Nhất trên vai áo",
+            "entry": "Anh Nam tự tay chỉnh ve áo khi tôi lên Binh Nhất. Đợt gác đạn thật vừa rồi nhắc tôi hiểu giữ được bình tĩnh cho mình đã khó, giữ được bình tĩnh cho người đứng bên cạnh còn khó hơn gấp bội."
+          }
+        }
+      ],
+      "next": "ch2_29_lenh_tuan_tra_suong_mu"
+    },
+    {
+      "id": "ch2_29_lenh_tuan_tra_suong_mu",
+      "type": "narration",
+      "location": "Đường mòn dốc đá — Hướng Bản Sương Mù",
+      "mood": "calm",
+      "text": "Ba ngày sau, tổ tuần tra bốn người gồm tôi phụ trách mũi đầu, Lê Minh Khang giữ hỏa lực trung liên, Bùi Văn Lộc mang túi đạn dự phòng và một chiến sĩ liên lạc đeo máy vô tuyến bắt đầu rời yên ngựa Thiên Minh từ lúc sáu giờ sáng. Nhiệm vụ của tổ là đi dọc sống đá cao 412, kiểm tra các điểm dấu vết đường mòn dẫn xuống **Bản Sương Mù** — ngôi bản nhỏ nằm lọt thỏm dưới đáy thung lũng ruộng bậc thang giáp ranh vùng đệm.\n\nCon đường sống núi chạy men theo vách đá tai mèo lởm chởm, một bên là vực sâu mù mịt mây trắng, bên kia là rừng thông thưa. Đi gần hai tiếng đồng hồ, khi mặt trời bắt đầu xua tan lớp sương mù đặc quánh dưới lòng chảo, cả bốn anh em dừng chân trên mỏm đá nhìn xuống ngôi bản lấp ló mái gỗ thông bên con suối trong vắt.",
+      "next": "ch2_30_cho_phien_ban_suong_mu"
+    },
+    {
+      "id": "ch2_30_cho_phien_ban_suong_mu",
+      "type": "narration",
+      "location": "Bìa rừng đầu Bản Sương Mù",
+      "mood": "warm",
+      "text": "Dưới thung lũng, Bản Sương Mù đang vào buổi sớm yên ả hiếm hoi. Khói bếp lam chiều còn vương trên những mái nhà sàn lợp ván pơ-mu, tiếng chày giã cốm đều đều vọng lên tận sườn đồi hòa với tiếng suối reo qua ghềnh đá cuội. Bên hiên nhà gần đầu bản, mấy người phụ nữ đang phơi những tấm vải nhuộm chàm xanh thẫm lên sào tre. Dọc bờ đê dẫn qua chiếc cầu đá bắc ngang suối, mấy đứa nhỏ khoác cặp vải thô vừa đi học vừa nô đùa, tiếng cười trong trẻo lọt qua kẽ lá thông rồi thỉnh thoảng ngẩng lên vẫy tay về phía bóng áo xanh của bộ đội đang đứng trên rìa rừng.\n\nMột cụ già gùi củi đi ngang qua chỗ chúng tôi tạm nghỉ, dừng lại cười móm mém rồi rút trong chiếc túi dệt tay ra bốn bắp ngô nếp luộc còn ấm dúi vào tay Lộc bảo ăn cho đỡ lạnh bụng. Cầm bắp ngô nóng còn đọng giọt nước sương trên vỏ lá, lòng tôi chợt chùng xuống trước sự ấm áp mộc mạc của đời sống thường ngày dưới chân núi — thứ bình yên quá đỗi mong manh khi đặt cạnh chiếc máy vô tuyến đen sì đang rì rì rè sóng sau lưng chiến sĩ thông tin, cho đến khi tín hiệu còi báo động chói tai bất ngờ xé toạc không khí yên tĩnh.",
+      "next": "ch2_31_cong_dien_phao_kich"
+    },
+    {
+      "id": "ch2_31_cong_dien_phao_kich",
+      "type": "dispatch",
+      "location": "Sống đá 412 — Trên Bản Sương Mù",
+      "mood": "urgent",
+      "text": "[CÔNG ĐIỆN KHẨN — ĐÀI QUAN SÁT THIÊN MINH]\nGỬI: TỔ TUẦN TRA SỐ 1 — ĐANG TẠI KHU VỰC BẢN SƯƠNG MÙ.\nNỘI DUNG: TRINH SÁT QUANG HỌC PHÁT HIỆN TỔ QUAN SÁT PHÁO BINH KHỐI THIẾT PHONG CÀI CẮM MỤC TIÊU BÊN SƯỜN ĐÔNG CAO ĐIỂM 412. NGUY CƠ BẮN PHÁO QUẤY RỐI VÀO TRỤC ĐƯỜNG THUNG LŨNG TRONG VÒNG 5 PHÚT TỚI.\nMỆNH LỆNH: TỔ TUẦN TRA GIỮ NGUYÊN ĐIỂM PHỤC KÍCH TRÊN SỐNG ĐÁ CAO ĐỂ CHẶN ĐƯỜNG RÚT ĐỊCH. KHÔNG TỰ Ý RỜI VỊ TRÍ CHIẾN ĐẤU.\nHẾT CÔNG ĐIỆN.",
+      "next": "ch2_32_tieng_rit_dan_coi"
+    },
+    {
+      "id": "ch2_32_tieng_rit_dan_coi",
+      "type": "narration",
+      "location": "Sống đá 412 — Trên Bản Sương Mù",
+      "mood": "urgent",
+      "text": "Chưa kịp gấp tấm bản đồ dã chiến lại, một tiếng rít xé gió rợn người đã lao vút qua đỉnh đầu chúng tôi. Đùng! Quả đạn cối hiệu chỉnh đầu tiên của Thiết Phong nổ tung giữa vạt rừng thông cách rìa bản chưa đầy bốn trăm mét, hất tung đất đá và khói đen lên trời. Dưới lòng thung lũng, tiếng la hét hoảng loạn bỗng vỡ òa; đàn trâu vùng chạy tán loạn, còn mấy bà mẹ đang gánh nước vội quăng gánh, ôm chặt con nhỏ chạy dọc con đường hẹp hướng về phía hang đá tránh trú.\n\nCon đường dẫn vào hang trú ẩn lại nằm ngay bên kia chiếc cầu đá nhỏ — nơi luồng đạn hiệu chỉnh thứ hai rất có thể sẽ dập xuống chỉ trong vài chục giây nữa. Ở trên sống đá cao này có góc bắn tuyệt đẹp để phục kích toán trinh sát địch, nhưng từ đây xuống tới ruộng bậc thang dưới bản không có một đơn vị bộ đội nào khác kịp ứng cứu dân.",
+      "next": "ch2_33_khang_hoi_quyet_dinh"
+    },
+    {
+      "id": "ch2_33_khang_hoi_quyet_dinh",
+      "type": "dialogue",
+      "speaker": "khang",
+      "speakerTitle": "Binh Nhất Lê Minh Khang",
+      "location": "Sống đá 412 — Trên Bản Sương Mù",
+      "mood": "urgent",
+      "text": "Khang nằm rạp xuống sau tảng đá tai mèo, một tay giữ chặt báng trung liên, mắt đỏ ngầu nhìn thẳng xuống đám đông đang xô đẩy nhau tắc nghẽn ngay đầu cầu đá dưới thung lũng. Cậu ta hét át tiếng gió rít và tiếng đạn cối đang nạp nòng từ bên kia núi:\n\n\"Mệnh lệnh trên máy là giữ sống đá này! Nhưng ông nhìn xuống dưới bản đi — đường ra hang đá đang kẹt cứng con nít với người già ở đầu cầu kia kìa! Trễ một phút nữa đạn bắn chùm tới nơi là không còn ai qua kịp đâu! Ông là tổ trưởng mũi này, cắt người xuống sơ tán dân hay bám sống đá phục kích? Quyết lẹ lên ông nội!\"",
+      "next": "ch2_34_choice_ban_suong_mu"
+    },
+    {
+      "id": "ch2_34_choice_ban_suong_mu",
+      "type": "choice",
+      "location": "Sống đá 412 — Trên Bản Sương Mù",
+      "mood": "urgent",
+      "timedSeconds": 10,
+      "timeoutChoiceId": "giu_song_da_theo_lenh",
+      "text": "Tiếng rít của loạt đạn cối tiếp theo đã bắt đầu dội từ xa tới. Tôi chỉ có vài giây để quyết định mạng sống của cả một bản dân thường hay việc chấp hành tuyệt đối mệnh lệnh chiến thuật trên bản đồ.",
+      "choices": [
+        {
+          "id": "cat_kip_cuu_dan",
+          "label": "Bẻ hướng xuống thung lũng, mở đường dẫn bà con Bản Sương Mù vào hang đá tránh pháo",
+          "hint": "Tăng mạnh Nhân Tâm Dân, Tình Đồng Đội và gắn kết với Khang, nhưng bị kỷ luật vì trái lệnh giữ điểm cao.",
+          "effects": [
+            { "setFlag": "cuu_dan_ban_suong_mu" },
+            { "addStat": { "stat": "NhanTamDan", "delta": 10 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 4 } },
+            { "addStat": { "stat": "KyLuat", "delta": -6 } },
+            { "addRel": { "char": "khang", "delta": 2 } }
+          ],
+          "next": "ch2_35a_so_tan_ban_suong_mu"
+        },
+        {
+          "id": "giu_song_da_theo_lenh",
+          "label": "Giữ nguyên vị trí phục kích trên sống đá 412 theo đúng công điện, bắn pháo hiệu báo động từ xa",
+          "hint": "Giữ vững Kỷ Luật và Sĩ Khí tác chiến, nhưng Nhân Tâm Dân giảm sâu khi dân bản gánh chịu mảnh pháo.",
+          "effects": [
+            { "addStat": { "stat": "KyLuat", "delta": 8 } },
+            { "addStat": { "stat": "SiKhi", "delta": 3 } },
+            { "addStat": { "stat": "NhanTamDan", "delta": -8 } },
+            { "addRel": { "char": "khang", "delta": -1 } }
+          ],
+          "next": "ch2_35b_giu_song_da"
+        }
+      ]
+    },
+    {
+      "id": "ch2_35a_so_tan_ban_suong_mu",
+      "type": "narration",
+      "location": "Ruộng bậc thang Bản Sương Mù",
+      "mood": "urgent",
+      "text": "Tôi phất tay ra hiệu cho cả tổ trượt thẳng theo bờ đất dốc lao xuống thung lũng ngay khi quả đạn cối thứ hai nổ tung cách cầu đá chưa đầy trăm mét. Mảnh gang nóng rực bay vèo vèo qua ngọn tre. Vừa chạy tới đầu bản, tôi giằng vội tay nải cho một bà cụ khuỵu chân bên bờ ruộng, xốc hai đứa trẻ nhỏ lên vai còn Lộc với chiến sĩ thông tin vừa la lớn chỉ hướng vừa kéo đám thanh niên bản vác người già lội tắt qua khe cạn tránh nút thắt ở đầu cầu.\n\nPhía sau, Khang quỳ một gối bên mô đất cao bắn từng loạt ngắn cản đường toán trinh sát Thiết Phong đang định lợi dụng khói pháo mò xuống triền đồi. Khi quả đạn thứ năm dập trúng đúng mỏm cầu đá vắng tanh, toàn bộ bà con Bản Sương Mù đã chui gọn vào lòng hang đá vôi sâu hun hút, không một ai bị thương nặng.",
+      "next": "ch2_36a_hau_qua_cuu_dan"
+    },
+    {
+      "id": "ch2_36a_hau_qua_cuu_dan",
+      "type": "dialogue",
+      "speaker": "nam",
+      "speakerTitle": "Trung sĩ Nguyễn Hoàng Nam — Tiểu đội trưởng",
+      "location": "Nhà hầm Tiểu Đội 1 — Thiên Minh",
+      "mood": "tense",
+      "text": "Chiều muộn rút quân về tới Thiên Minh, trên bàn trực ban đã nằm sẵn tờ điện nhắc nhở của đại đội khiển trách tổ tuần tra tự ý rời vị trí sống đá 412. Trung sĩ Nam đọc xong tờ giấy, gập gọn lại đặt xuống dưới góc hòm đạn rồi rót cho tôi một bát nước chè nóng bốc khói, giọng điềm tĩnh lạ thường:\n\n\"Trên đại đội họ ghi lỗi tự ý bỏ chốt vào sổ thi đua của tiểu đội rồi đó chú. Mai anh sẽ ký xác nhận chịu một nửa trách nhiệm chỉ huy tiểu đội cho chú đỡ nặng án. Sổ kỷ luật ghi đỏ mực thiệt, nhưng hồi trưa anh nghe bộ đàm bản dưới báo lên không chết một đứa nhỏ nào dưới cầu đá. Làm lính, có những cái lỗi trên giấy mình phải dám cúi đầu nhận, miễn sao tối về nhắm mắt xuống không thấy áy náy với dân là được.\"",
+      "effects": [
+        {
+          "addJournal": {
+            "id": "j_ch2_ban_suong_mu",
+            "title": "Bản Sương Mù dưới làn đạn cối",
+            "entry": "Bẻ lệnh giữ sống đá để lao xuống cứu dân Bản Sương Mù vào hang tránh pháo. Sổ kỷ luật bị ghi mực đỏ, nhưng ánh mắt bà con trong hang đá lúc khói pháo tan là điều không cuốn sổ nào cân đo nổi."
+          }
+        }
+      ],
+      "next": "ch2_37_dem_truoc_tap_kich"
+    },
+    {
+      "id": "ch2_35b_giu_song_da",
+      "type": "narration",
+      "location": "Sống đá 412 — Trên Bản Sương Mù",
+      "mood": "somber",
+      "text": "Tôi nghiến chặt hàm răng, ép cả tổ bám sát lấy các hốc đá trên cao điểm 412 rồi giương súng bắn liền hai phát đạn vạch đường lên nền trời để cảnh báo xuống thung lũng. Nhưng tiếng đạn bắn từ trên đỉnh núi quá nhỏ bé giữa cơn gầm thét của cối 82mm. Từ vị trí phục kích, chúng tôi nhìn rõ từng cột khói đất bùn phụt lên ngay sát dãy nhà sàn đầu cầu đá, nhìn rõ những bóng người áo chàm ngã nhào xuống ruộng lúa rồi gượng bò dậy lôi nhau đi trong mù mịt tro bụi.\n\nMười phút sau, toán trinh sát pháo binh Thiết Phong men theo khe thông đúng như dự đoán của đại đội, lọt thẳng vào tầm ngắm hỏa lực của Khang và tôi. Một tên bị bắn gục tại chỗ, những tên còn lại hoảng loạn tháo chạy ngược sang bên kia sườn núi, bỏ lại máy đo khoảng cách vỡ nát trên tảng đá.",
+      "next": "ch2_36b_hau_qua_giu_lenh"
+    },
+    {
+      "id": "ch2_36b_hau_qua_giu_lenh",
+      "type": "dialogue",
+      "speaker": "khang",
+      "speakerTitle": "Binh Nhất Lê Minh Khang",
+      "location": "Bức tường đá sau nhà hầm — Thiên Minh",
+      "mood": "somber",
+      "text": "Tối hôm ấy, đại đội gửi điện biểu dương tổ tuần tra chấp hành kỷ luật thép và đánh bật toán hiệu chỉnh pháo binh địch khỏi cao điểm 412. Nhưng khi hai đứa ngồi dựa lưng ra bờ đá sau nhà hầm, Khang không mở miệng chúc mừng lấy một câu. Cậu ta bật nắp chiếc bật lửa kim loại kêu tách rồi đóng lại, mắt nhìn trân trân xuống phía chân núi tối đen nơi Bản Sương Mù vừa có hai người dân phải khiêng cáng về trạm xá xã:\n\n\"Trên giấy thì tụi mình hoàn thành xuất sắc đó ông. Có chiến công, có chữ ký khen thưởng đàng hoàng. Nhưng mà... cái tiếng khóc dưới đầu cầu trưa nay tui còn nghe văng vẳng bên lỗ tai nè. Thôi, tối nay đừng rủ tui uống trà chung với tụi nó, tui ra Chốt 3 nằm trước cho yên.\"",
+      "effects": [
+        {
+          "addJournal": {
+            "id": "j_ch2_ban_suong_mu",
+            "title": "Bản Sương Mù dưới làn đạn cối",
+            "entry": "Giữ đúng lệnh phục kích trên sống đá 412 và đánh tan toán trinh sát pháo địch. Đại đội khen thưởng kỷ luật thép, nhưng cột khói bên cầu đá Bản Sương Mù vẫn ám ảnh mãi tới đêm khuya."
+          }
+        }
+      ],
+      "next": "ch2_37_dem_truoc_tap_kich"
+    },
+    {
+      "id": "ch2_37_dem_truoc_tap_kich",
+      "type": "narration",
+      "location": "Tiểu Đội 1 Thiên Minh",
+      "mood": "tense",
+      "text": "Hai đêm sau biến cố ở Bản Sương Mù, dãy núi đá vôi Thiên Minh chìm trong thứ tĩnh lặng khác thường. Không có tiếng dế kêu trong cỏ ướt, không có tiếng gió lùa rì rào qua rặng trúc sau hang đạn; chỉ có lớp sương muối đặc quánh trườn qua mặt bao cát như một tấm vải liệm ướt lạnh và tiếng đá nguội co ngót khe khẽ trong đêm sương. Hơi ẩm đọng thành từng giọt tròn nặng trĩu dọc nòng thép lạnh buốt của khẩu súng trường, nhỏ từng giọt tí tách xuống mu bàn tay tê cóng. Trên nền trời đen kịt, đôi lúc thoảng qua tiếng vo ve rất mảnh, cao vút của máy bay trinh sát không người lái đang bay tuần dọc đường biên để thả nhiễu điện tử.\n\nCả tiểu đội không ai cởi giày đi ngủ. Tất cả mặc nguyên quân phục, súng đặt dọc ngay bên hông phản gỗ, dây thắt lưng đeo đủ hộp tiếp đạn và lựu đạn mỏ vịt đã kiểm tra lại chốt an toàn. Sự đụng độ lẻ tẻ ở sống đá hôm trước chỉ là màn dạo đầu thăm dò — ai ở Thiên Minh cũng linh cảm đêm nay Khối Thiết Phong sẽ không dừng lại ở việc câu pháo từ xa nữa.",
+      "next": "ch2_38_mat_lenh_bao_dong"
+    },
+    {
+      "id": "ch2_38_mat_lenh_bao_dong",
+      "type": "dispatch",
+      "location": "Hầm trực ban Tiểu Đội 1 — Thiên Minh",
+      "mood": "urgent",
+      "text": "[CẢNH BÁO CẢM BIẾN VÀNH ĐAI — THIẾT BỊ TRINH SÁT MẶT ĐẤT]\nVỊ TRÍ KÍCH HOẠT: DÂY BẪY HƯỚNG ĐÔNG BẮC (CÁCH HANG ĐẠN 120M).\nTÍN HIỆU: CHUYỂN ĐỘNG CHẬM THEO HÀNG DỌC, QUÂN SỐ ƯỚC TÍNH 6 ĐẾN 8 NGƯỜI, KHÔNG SỬ DỤNG ĐÈN PIN.\nGHI CHÚ ĐÀI QUAN SÁT: ĐƯỜNG VÔ TUYẾN CHÍNH ĐANG BỊ GÂY NHIỄU NẶNG. CÁC CHỐT TỰ CHỦ TÁC CHIẾN THEO PHƯƠNG ÁN PHÒNG NGỰ ĐÊM!\nKÝ HIỆU: BÁO ĐỘNG ĐỎ TẠI CHỖ.",
+      "next": "ch2_39_nam_chia_mui"
+    },
+    {
+      "id": "ch2_39_nam_chia_mui",
+      "type": "dialogue",
+      "speaker": "nam",
+      "speakerTitle": "Trung sĩ Nguyễn Hoàng Nam — Tiểu đội trưởng",
+      "location": "Cửa hầm giao thông trung tâm — Thiên Minh",
+      "mood": "urgent",
+      "text": "Không một tiếng còi thổi vang lên. Trung sĩ Nam chỉ đập hai cái rất nhẹ lên vai từng người đang bật dậy khỏi phản gỗ rồi nhanh chóng hạ giọng ra lệnh rõ mồn một giữa bóng tối đặc quánh:\n\n\"Tụi Thiết Phong bò vô đường khe cạn đánh thăm dò kho đạn rồi! Bốn người giữ cửa hầm không để bị bọc lưng. Tôi kéo ba đồng chí khóa chặt sườn Đông Bắc, không cho tụi nó tạt qua cửa hang. Đồng chí Khang giữ chốt 3 khóa họng súng chéo xuống dốc đá. Binh Nhất, đồng chí chỉ huy tổ mũi giữa cùng Lộc và liên lạc chặn ngay yên ngựa trung tâm! Nghe tiếng phát nổ hướng tôi thì đồng loạt khai hỏa, rõ chưa?\"",
+      "next": "ch2_40_loc_truoc_gio_no_sung"
+    },
+    {
+      "id": "ch2_40_loc_truoc_gio_no_sung",
+      "type": "narration",
+      "location": "Yên ngựa trung tâm — Thiên Minh",
+      "mood": "tense",
+      "text": "Ba chúng tôi trườn thật êm dọc rãnh hào bùn ẩm ra chốt yên ngựa trung tâm — nơi chia cắt lối lên hang đạn với khu bếp tăng gia. Phía trước mặt, giữa những khối đá vôi lởm chởm đen thẫm, hai cái bóng mặc đồ rằn ri xám xịt vừa lách qua lớp dây thép gai đã bị cắt sẵn bằng kìm cộng lực. Tôi ra dấu tay cho chiến sĩ thông tin giữ cảnh giới bên sườn phải, còn mình và Lộc nép sát vào ụ đá chính diện chờ hiệu lệnh khai hỏa từ phía Trung sĩ Nam.",
+      "branches": [
+        {
+          "condition": { "flag": "loc_vung_tam_binh_nhat" },
+          "next": "ch2_41a_loc_binh_tinh"
+        }
+      ],
+      "next": "ch2_41b_loc_cang_thang"
+    },
+    {
+      "id": "ch2_41a_loc_binh_tinh",
+      "type": "dialogue",
+      "speaker": "loc",
+      "speakerTitle": "Binh Nhất Bùi Văn Lộc",
+      "location": "Yên ngựa trung tâm — Thiên Minh",
+      "mood": "tense",
+      "text": "Dù chỉ cách toán thám báo địch chưa đầy hai chục bước chân, hơi thở của Bùi Văn Lộc bên cạnh tôi vẫn đều đặn đến đáng ngạc nhiên. Cậu không còn ôm ghì quai ba lô như xưa nữa, mà một tay kiểm tra nhanh hai quả lựu đạn treo trước ngực, tay kia nhẹ nhàng gạt khóa an toàn khẩu tiểu liên về nấc bắn loạt ngắn. Ánh mắt cậu bám chặt theo bóng tên đi đầu đang cúi rạp qua vũng nước.\n\n\"Anh đi trước, chỗ dây này em cột chặt rồi,\" Lộc thì thầm sát mang tai tôi, giọng gọn và chắc nịch như một người lính từng trải qua nhiều mùa trực chốt. \"Tên đi đầu đeo máy bộ đàm có ăng-ten gấp kìa anh. Em khóa góc bên trái cho, hễ anh nổ phát đầu là em quét ngang liền phía sau lưng tụi nó không cho chạy ngược khe đá đâu.\"",
+      "next": "ch2_42_va_cham_giap_la_ca"
+    },
+    {
+      "id": "ch2_41b_loc_cang_thang",
+      "type": "dialogue",
+      "speaker": "loc",
+      "speakerTitle": "Binh Nhất Bùi Văn Lộc",
+      "location": "Yên ngựa trung tâm — Thiên Minh",
+      "mood": "urgent",
+      "text": "Các đốt ngón tay của Bùi Văn Lộc bấu trắng bệch trên ốp lót tay khẩu súng, hơi thở gấp gáp phả ra từng làn khói trắng mỏng trong đêm lạnh. Khi bóng tên thám báo Thiết Phong lướt qua chỉ cách ụ đá mười lăm bước, vai Lộc bất giác run lên bần bật khiến mũi súng rung nhẹ vào gờ đá cồm cộp.\n\n\"Anh... tụi nó đông quá anh ơi...\" Lộc rít nhỏ qua kẽ răng. Tôi vội vươn tay trái ấn mạnh xuống mũ sắt cậu ta hai cái để giữ cậu ta dính chặt vào công sự, ra hiệu chỉ tập trung nhìn theo hướng mũi súng của tôi thay vì nhìn vào khoảng tối hun hút trước mặt.",
+      "next": "ch2_42_va_cham_giap_la_ca"
+    },
+    {
+      "id": "ch2_42_va_cham_giap_la_ca",
+      "type": "narration",
+      "location": "Yên ngựa trung tâm — Thiên Minh",
+      "mood": "urgent",
+      "text": "Đoàng! Một phát súng từ mũi phục kích của Trung sĩ Nam bên sườn Đông Bắc xé toang màn đêm, ngay lập tức kéo theo một loạt chớp lửa da cam rực sáng từ khẩu trung liên của Khang trên Chốt 3 quét thẳng xuống đường rút của địch. Toán thám báo Thiết Phong bị đánh bất ngờ liền tản ra nấp sau các tảng đá tai mèo, bắn trả dữ dội bằng súng tiểu liên gắn giảm thanh chớp lóe tia lửa xanh.\n\nGiữa làn đạn đan chéo rít chói tai, một tên thám báo đeo ba lô truyền tin chống nước bị sức ép từ quả lựu đạn của Lộc làm choáng váng, lăn tuột xuống rãnh hào sụt lún ngay dưới chân ụ đá của tôi, tách hẳn khỏi nhóm đồng bọn đang rút chạy tán loạn.",
+      "branches": [
+        {
+          "condition": { "flag": "giu_kin_su_co_kho_dan" },
+          "next": "ch2_43b_dan_am_keo_be_khoa"
+        }
+      ],
+      "next": "ch2_43a_dan_moi_no_gion"
+    },
+    {
+      "id": "ch2_43a_dan_moi_no_gion",
+      "type": "narration",
+      "location": "Yên ngựa trung tâm — Thiên Minh",
+      "mood": "urgent",
+      "text": "Những viên đạn mới từ lô thay thế nổ giòn tan, đường đạn vạch đỏ rực xé ngang màn sương ép gắt toán địch còn lại phải chúi đầu sau vách đá không ngóc lên yểm trợ nổi. Khẩu súng trong tay tôi giật đều đặn từng nhịp chắc nịch, từng vỏ đồng nóng hổi văng ra lách cách trên bờ bao cát. Bị khóa chặt cả hai sườn bởi hỏa lực ổn định của Thiên Minh, tốp địch phía ngoài bắt đầu lùi nhanh về phía rừng trúc, để mặc gã thám báo đeo máy vô tuyến kẹt lại một mình dưới lòng rãnh hào tối đen.",
+      "next": "ch2_44_choice_tap_kich"
+    },
+    {
+      "id": "ch2_43b_dan_am_keo_be_khoa",
+      "type": "narration",
+      "location": "Yên ngựa trung tâm — Thiên Minh",
+      "mood": "urgent",
+      "text": "Cạch! Ngay giữa loạt bắn áp chế thứ ba, khẩu súng trong tay tôi bỗng câm bặt — một viên đạn từ lô ẩm phơi vội hôm trước không nổ hạt nổ, kẹt cứng vỏ đồng trong buồng đạn! Đạn bắn trả của địch găm phầm phập vào bao cát ngay trên đỉnh đầu khiến bụi đất bắn rào rào xuống cổ áo. Tôi nghiến răng đập mạnh vào tay kéo bệ khóa nòng hai cái liền để tống viên đạn lép ra ngoài, còn bên sườn Khang lập tức kéo một tràng trung liên dài phủ đầu giải vây. Khi súng thông nòng trở lại, toán địch phía ngoài đã lùi bớt ra xa, chỉ còn gã thám báo đeo máy truyền tin đang lồm cồm tìm cách bò ngược khỏi rãnh hào.",
+      "next": "ch2_44_choice_tap_kich"
+    },
+    {
+      "id": "ch2_44_choice_tap_kich",
+      "type": "choice",
+      "location": "Rãnh hào sụt lún — Thiên Minh",
+      "mood": "urgent",
+      "text": "Tên thám báo Thiết Phong đang loay hoay bấm nút hủy dữ liệu trên chiếc máy truyền tin đeo ngực dưới lòng rãnh hào đầy bùn, cách tôi chỉ một sải nhảy. Đồng bọn của hắn vẫn đang bắn tỉa cầm chừng từ mép rừng trúc cách đó năm chục mét.",
+      "choices": [
+        {
+          "id": "bat_song_tham_bao",
+          "label": "Ra hiệu Khang bắn yểm trợ rồi lao thẳng xuống rãnh hào khống chế, bắt sống tên thám báo cùng máy truyền tin",
+          "hint": "Rủi ro cận chiến cao nhưng mở khóa thông tin tình báo quý giá (bat_song_tham_bao_thien_minh), tăng Sĩ Khí, Tiếp Tế và uy tín với Nam, Khang.",
+          "effects": [
+            { "setFlag": "bat_song_tham_bao_thien_minh" },
+            { "addStat": { "stat": "SiKhi", "delta": 6 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 4 } },
+            { "addStat": { "stat": "TiepTe", "delta": 3 } },
+            { "addRel": { "char": "khang", "delta": 2 } },
+            { "addRel": { "char": "nam", "delta": 2 } }
+          ],
+          "next": "ch2_45a_bat_song_thanh_cong"
+        },
+        {
+          "id": "hoa_luc_day_lui",
+          "label": "Không mạo hiểm áp sát trong sương mù, tập trung hỏa lực lựu đạn và tiểu liên quét sạch lòng hào đẩy lùi toàn bộ địch",
+          "hint": "Giữ an toàn đội hình theo nguyên tắc phòng ngự cứng, tăng Kỷ Luật và Sĩ Khí nhưng tốn cơ số đạn và mất đầu mối tin tình báo.",
+          "effects": [
+            { "addStat": { "stat": "KyLuat", "delta": 5 } },
+            { "addStat": { "stat": "SiKhi", "delta": 4 } },
+            { "addStat": { "stat": "TiepTe", "delta": -3 } },
+            { "addRel": { "char": "nam", "delta": 1 } }
+          ],
+          "next": "ch2_45b_day_lui_bang_hoa_luc"
+        }
+      ]
+    },
+    {
+      "id": "ch2_45a_bat_song_thanh_cong",
+      "type": "narration",
+      "location": "Rãnh hào sụt lún — Thiên Minh",
+      "mood": "tense",
+      "text": "Tôi vỗ vai Lộc ra dấu giữ góc bắn rồi lộn người nhảy thẳng xuống lòng hào bùn ngập đến mắt cá. Tên thám báo Thiết Phong vừa kịp xoay khẩu tiểu liên ngắn lên thì tôi đã lao người đâm sầm vào ngực hắn, gạt phăng nòng súng cắm ngập xuống bùn. Hai kẻ lăn tròn trên nền đá trơn nhầy nhụa; hắn vung dao găm sượt rách toạc tay áo trái của tôi trước khi tôi khóa chặt được khuỷu tay hắn ra sau lưng.\n\nVừa lúc đó, Khang từ sườn đá cũng lao tới dùng dây dù trói quặt hai cổ tay tên tù binh lại và giật phăng chiếc máy truyền tin mã hóa còn nguyên đèn báo tín hiệu xanh trước khi hắn kịp kích hoạt lệnh tự hủy. Mất liên lạc với mũi dẫn đường, toán địch phía ngoài rừng trúc bắn thêm vài loạt vu vơ rồi rút sạch vào màn sương dày đặc.",
+      "next": "ch2_46_binh_minh_thien_minh"
+    },
+    {
+      "id": "ch2_45b_day_lui_bang_hoa_luc",
+      "type": "narration",
+      "location": "Yên ngựa trung tâm — Thiên Minh",
+      "mood": "tense",
+      "text": "Tôi giật chốt một quả lựu đạn mỏ vịt, đếm thầm hai nhịp rồi ném thẳng xuống lòng rãnh hào ngập bùn. Một tiếng nổ trầm đục hất tung bùn đất cùng mảnh đá vụn lên không trung, cắt đứt ngay ánh đèn xanh le lói trên chiếc máy truyền tin của tên thám báo. Ngay sau tiếng nổ, tôi, Lộc và Khang đồng loạt xả từng loạt đạn áp chế quét rát dọc mép rừng trúc.\n\nKhông dám liều lĩnh xông qua lưới lửa đan dày của ba ụ súng Thiên Minh, toán thám báo Thiết Phong buộc phải bỏ cuộc, kéo vội thương binh lùi sâu về bên kia khe núi. Hai mươi phút sau, tiếng súng lắng dần rồi tắt hẳn, chỉ còn mùi thuốc súng khét lẹt quyện vào làn sương muối lạnh buốt trên đầu hàng rào kẽm gai.",
+      "next": "ch2_46_binh_minh_thien_minh"
+    },
+    {
+      "id": "ch2_46_binh_minh_thien_minh",
+      "type": "dialogue",
+      "speaker": "khang",
+      "speakerTitle": "Binh Nhất Lê Minh Khang",
+      "location": "Bếp anh nuôi Tiểu Đội 1 — Thiên Minh",
+      "mood": "calm",
+      "text": "Năm giờ sáng, bầu trời phía đông hửng lên một vệt sáng xám bạc sau cơn đụng độ đầu đời của cả lứa lính trẻ. Tiểu đội không ai hi sinh, chỉ có vài vết xước rách áo ngoài da được băng bó gọn ghẽ bằng bông băng dã chiến. Ngồi bên bếp củi vừa nhen lại sau đêm thức trắng, mặt mũi đứa nào cũng lấm lem khói súng với bùn đất, Khang bật nắp chiếc bật lửa kim loại kêu tách một tiếng rồi nhìn xuống ánh đèn vàng của cụm doanh trại phía sau vừa tắt bớt lúc trời sáng:\n\n\"Qua được một đêm lửa đạn rồi ha ông bạn. Hồi ở Quang Trung tụi mình còn lo gác mất điện với thuộc bài điều lệnh, giờ ngồi đây ngửi mùi thuốc súng mới thấy đời lính nó thật tới cỡ nào. Còn nghe nhau là còn đội hình — đi tiếp tới đâu tui với ông vẫn cứ giữ nhịp vậy nha.\" Khang đưa tay gõ nhẹ hai cái lên vai tôi, hơi ấm từ lòng bàn tay cậu ta lan qua lớp vải áo sũng sương.",
+      "next": "ch2_bottleneck_thien_minh"
+    },
+    {
+      "id": "ch2_bottleneck_thien_minh",
+      "type": "narration",
+      "location": "Sân tập hợp Tiểu Đội 1 — Thiên Minh",
+      "mood": "calm",
+      "isChapterEnd": true,
+      "text": "Buổi trưa hôm ấy, xe bọc thép chở quân của đại đội chạy xuyên qua làn sương tan lên tới chân dốc Thiên Minh để bàn giao ca trực cho đơn vị bạn và rút Tiểu Đội 1 về cụm tập kết trung chuyển ven thung lũng. Trung sĩ Nam đã hoàn tất bàn giao sổ trực viết tay, kiểm tra kỹ từng dây đeo súng trước khi cho anh em thu dọn ba lô. Tôi cẩn thận lau khô lớp đất bám ngoài bìa cuốn sổ màu xanh, lật qua những trang viết vội về vườn rau cải, về đêm chia lương khô dưới mưa lũ và những cái tên đồng đội vẫn còn đủ mặt bên cạnh mình, rồi nhét sâu cuốn sổ vào túi áo ngực bên trái.\n\nTrước khi bước lên thùng xe phủ bạt hướng về tuyến **Trung Đội 1 Vân Long**, tôi ngoái lại nhìn một lần nữa dãy núi đá vôi xám, bốn luống cải bẹ xanh bên vách đá và vọng gác nhỏ nơi mình đã đi trọn chặng đường từ một người Binh Bét bỡ ngỡ thành chiến sĩ Binh Nhất thực thụ. Phía trước thung lũng mây mù đang mở ra những con suối cạn mùa khô, những cây cầu gỗ bắc qua vực sâu và những ngày thử lửa nặng nề hơn gấp bội — nơi vai áo không còn chỉ chịu trách nhiệm cho riêng bản thân mình nữa.",
+      "effects": [
+        {
+          "addJournal": {
+            "id": "j_ch2_ket_thuc_thien_minh",
+            "title": "Rời đồn trú Thiên Minh",
+            "entry": "Đánh bật đợt tập kích thăm dò đầu tiên của Khối Thiết Phong. Rời Tiểu Đội 1 Thiên Minh mang quân hàm Binh Nhất để tiến về Trung Đội 1 Vân Long, mang theo mùi khói bếp, tiếng bật lửa của Khang và bài học đầu tiên về giá của từng quyết định."
+          }
+        }
+      ]
+    }
+  ]
+}

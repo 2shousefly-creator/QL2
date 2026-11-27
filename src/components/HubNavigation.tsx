@@ -17,6 +17,7 @@ import {
   Contact,
   ScrollText,
   Shirt,
+  BookOpen,
 } from "lucide-react";
 import { motion } from "motion/react";
 import { TabType, GameState } from "../game/types";
@@ -66,7 +67,8 @@ export const HubNavigation: React.FC<HubNavigationProps> = ({
     activeTab === "mastery" ||
     activeTab === "idCard" ||
     activeTab === "journal" ||
-    activeTab === "uniform";
+    activeTab === "uniform" ||
+    activeTab === "story";
 
   const mainTabs = [
     {
@@ -136,6 +138,13 @@ export const HubNavigation: React.FC<HubNavigationProps> = ({
       fullName: "Nhật Ký Binh Nghiệp",
       subtitle: "Lịch sử dấu mốc đáng nhớ",
       icon: ScrollText,
+    },
+    {
+      id: "story" as TabType,
+      title: "Cốt Truyện",
+      fullName: "Chiến Dịch Cốt Truyện",
+      subtitle: "Phân nhánh 8 chương · 6 kết cục",
+      icon: BookOpen,
     },
     {
       id: "journey" as TabType,

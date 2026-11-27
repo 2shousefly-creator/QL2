@@ -3,7 +3,7 @@ import { sanitizeAndMigrateState } from './migrations';
 
 export const TRANSFER_FORMAT = 'quan-lo-save-transfer';
 export const TRANSFER_MAX_BYTES = 20 * 1024 * 1024;
-export const EXTRA_SAVE_KEYS = ['quan_lo_air_combat_v1'] as const;
+export const EXTRA_SAVE_KEYS = ['quan_lo_air_combat_v1', 'quan_lo_story_campaign_v1'] as const;
 export const RETIRED_EXTRA_SAVE_KEYS = ['quan_lo_tank_battle_v1', 'quan_lo_chien_tuyen_v1'] as const;
 const record = (value: unknown): value is Record<string, any> => !!value && typeof value === 'object' && !Array.isArray(value);
 

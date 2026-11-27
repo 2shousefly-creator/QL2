@@ -45,6 +45,7 @@ const MasteryScreen = lazy(() => import("./features/profile/MasteryScreen").then
 const IdCardScreen = lazy(() => import("./features/profile/IdCardScreen").then(m => ({ default: m.IdCardScreen })));
 const JournalScreen = lazy(() => import("./features/profile/JournalScreen").then(m => ({ default: m.JournalScreen })));
 const UniformScreen = lazy(() => import("./features/profile/UniformScreen").then(m => ({ default: m.UniformScreen })));
+const StoryCampaignScreen = lazy(() => import("./features/story/StoryCampaignScreen").then(m => ({ default: m.StoryCampaignScreen })));
 const TangGiaScreen = lazy(() => import("./features/tang_gia/TangGiaScreen").then(m => ({ default: m.TangGiaScreen })));
 const EntertainmentHubScreen = lazy(() => import("./features/entertainment/EntertainmentHubScreen").then(m => ({ default: m.EntertainmentHubScreen })));
 
@@ -111,6 +112,7 @@ export default function App() {
   const [isRankDetailOpen, setIsRankDetailOpen] = useState(false);
   const [isTrainingGameActive, setIsTrainingGameActive] = useState(false);
   const [isTroughInfoActive, setIsTroughInfoActive] = useState(false);
+  const [isStoryReaderActive, setIsStoryReaderActive] = useState(false);
   const [delegationReport, setDelegationReport] = useState<DelegationReportData | null>(null);
   const [showUpdateToast, setShowUpdateToast] = useState(false);
   const [startupGate, setStartupGate] = useState<StartupGate>("checking-version");
@@ -123,9 +125,12 @@ export default function App() {
     `${Boolean(gameState)}:${isChallengeActive}:${Boolean(gameState?.ui.pendingPromotionCeremony)}:${isTrainingGameActive}:${isTroughInfoActive}:${activeTab}`,
   );
 
-  // Reset trough info active status when tab changes
+  // Reset trough info & story reader active status when tab changes
   useEffect(() => {
     setIsTroughInfoActive(false);
+    if (activeTab !== "story") {
+      setIsStoryReaderActive(false);
+    }
   }, [activeTab]);
 
   // 1. Initial Load & Version Gate
@@ -624,8 +629,8 @@ export default function App() {
       {/* Single portal target for every shared overlay. */}
       <OverlayHost />
 
-      {/* Top Gaming HUD Header (Auto-hidden when in Minigames, Challenge, or Trough Info Modal) */}
-      {!isTrainingGameActive && !isExclusivePromotionFlow && !isTroughInfoActive && (
+      {/* Top Gaming HUD Header (Auto-hidden when in Minigames, Challenge, Story Reader, or Trough Info Modal) */}
+      {!isTrainingGameActive && !isExclusivePromotionFlow && !isTroughInfoActive && !isStoryReaderActive && (
         <header data-app-hud data-command-shell="hud" className="theme-header-shell command-status-hud relative z-10 shrink-0 bg-slate-900/70 backdrop-blur-md border-b px-4 pb-2">
           <div className="max-w-lg mx-auto flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -690,7 +695,7 @@ export default function App() {
       )}
 
       {/* Main Interactive Body Area */}
-      {!isExclusivePromotionFlow && <main className={`relative z-10 flex-1 min-h-0 flex flex-col ${activeTab === "home" || (activeTab === "tang_gia" && FARM_MOBILE_REQUESTED) ? "app-main-with-hub-navigation overflow-hidden" : isTrainingGameActive ? "overflow-y-auto" : "overflow-y-auto pb-28"}`}>
+      {!isExclusivePromotionFlow && <main className={`relative z-10 flex-1 min-h-0 flex flex-col ${activeTab === "home" || (activeTab === "tang_gia" && FARM_MOBILE_REQUESTED) || (activeTab === "story" && isStoryReaderActive) ? "app-main-with-hub-navigation overflow-hidden" : isTrainingGameActive ? "overflow-y-auto" : "overflow-y-auto pb-28"}`}>
         <CoreScreenTransition
           enabled={activeTab !== "training" && activeTab !== "entertainment"}
           reducedMotion={activeTab !== "training" && activeTab !== "entertainment" && gameState.settings.reducedMotion}
@@ -757,6 +762,13 @@ export default function App() {
               onNavigateTab={(tab) => setActiveTab(tab)}
             />
           )}
+          {activeTab === "story" && (
+            <StoryCampaignScreen
+              state={gameState}
+              onBack={() => setActiveTab("profile")}
+              onReaderActiveChange={setIsStoryReaderActive}
+            />
+          )}
           {activeTab === "uniform" && (
             <UiSkinProvider skin="legacy"><UniformScreen
               state={gameState}
@@ -789,7 +801,7 @@ export default function App() {
         <HubNavigation
           activeTab={activeTab}
           onSelectTab={setActiveTab}
-          isHidden={isRankDetailOpen || isTrainingGameActive}
+          isHidden={isRankDetailOpen || isTrainingGameActive || isStoryReaderActive}
           gameState={gameState}
         />
       )}

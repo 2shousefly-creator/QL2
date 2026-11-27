@@ -1,0 +1,864 @@
+{
+  "id": "ch7_tu_tinh_thu_ho",
+  "chapterNumber": 7,
+  "title": "Chương VII: Tứ Tinh Thủ Hộ — Bàn Tròn Hội Đồng Tối Cao",
+  "ql2ChapterId": "supreme_command",
+  "rankRange": "Thống Soái → Đại Nguyên Soái",
+  "entryNodeId": "ch7_01_hai_chien_khu",
+  "nextChapterId": "ch8_chi_huy_toi_thuong",
+  "summary": "Từ ghế Thống Soái hợp nhất hai đại chiến khu Bắc Vực – Long Vũ, qua bàn tròn liên kết các chiến trường và bản thảo học thuyết ở Quang Trung, đến phiên đối chất Phạm Quang Hùng và đòn tổng lực cuối cùng của Hắc Ưng trước ngưỡng cửa Tổng Tư Lệnh.",
+  "nodes": [
+    {
+      "id": "ch7_01_hai_chien_khu",
+      "type": "narration",
+      "location": "Sở Chỉ Huy Liên Chiến Khu — Phòng bản đồ hợp nhất Bắc Vực – Long Vũ",
+      "mood": "calm",
+      "text": "Ba giờ sáng, mưa cuối đông gõ lộp bộp lên mái tôn hầm chỉ huy liên hợp như tiếng gõ nhịp của một ca trực không bao giờ dứt. Trên chiếc bàn gỗ dài sáu mét đặt giữa phòng tác chiến, hai tấm bản đồ khổ lớn của Đại Chiến Khu Bắc Vực và Đại Chiến Khu Long Vũ lần đầu tiên được dán nối mép với nhau bằng cuộn băng keo vải màu xanh xỉn. Bên trái là những sống núi đá vôi xám lạnh và hẻm gió cắt da, nơi sương muối đóng váng trắng trên nòng pháo và đường đèo dốc đứng quanh năm thiếu điện sưởi trạm xá. Bên phải là dải đồng bằng duyên hải chằng chịt sông lạch, kho cảng, bến phà dã chiến và những cụm dân cư ven đê ngập mặn quanh năm phập phồng theo con nước triều cường. Trên cầu vai áo măng-tô dã chiến của tôi giờ đây là một ngôi sao lớn của cấp Thống Soái — Hộ Tinh Chiến Tuyến — nhưng đặt sát thước đo tỉ lệ bằng đồng vẫn là cuốn sổ bìa xanh sờn gáy từ ngày rời Học Viện Quân Sự Quang Trung. Tôi cúi xuống đường dán nối giữa hai chiến khu, ngửi thấy mùi hồ dán hòa cùng mùi dầu súng thoang thoảng, tự nhắc rằng mọi mệnh lệnh trên giấy sắp sửa chạm thẳng vào đời sống thật của hàng chục vạn con người.",
+      "branches": [
+        {
+          "condition": { "flag": "sua_ban_do_vung_trang" },
+          "next": "ch7_02a_dau_chi_vung_trang"
+        }
+      ],
+      "next": "ch7_02b_khoang_trang_ban_do"
+    },
+    {
+      "id": "ch7_02a_dau_chi_vung_trang",
+      "type": "narration",
+      "location": "Phòng bản đồ hợp nhất Bắc Vực – Long Vũ",
+      "mood": "warm",
+      "text": "Dọc theo đường nối mép keo vải, những nét bút chì màu đen mảnh khảnh mà tôi từng tự tay sửa lại trên bản đồ Bộ Tổng Tham Mưu vẫn còn nguyên vẹn dưới lớp kính bảo vệ dày. Chỗ giáp ranh giữa chân đèo Bắc Vực và vùng trũng hạ lưu Long Vũ không còn là khoảng trắng vô danh chỉ dùng cho pháo tầm xa lấy phần tử bắn nữa. Ở đó có ký hiệu ba ngôi trường cấp một mái ngói thấp nép sau lũy tre, một bến đò ngang chở học sinh sang sông mỗi sáng sớm, và hai trạm y tế xã nằm khuất sau rặng phi lao chắn gió bấc. Ánh đèn bàn vàng dịu hắt lên mặt kính khiến mấy nét chì ấy hiện rõ hơn cả những mũi tên mực đỏ bóng loáng của phòng tác chiến. Tôi lấy khăn vải lau nhẹ hơi ẩm đọng trên góc bản đồ, lòng nhẹ đi đôi chút khi biết rằng việc ghép hai chiến khu lại không biến những con đường mòn dân sinh thành kẽ hở vô hình giữa hai sở chỉ huy.",
+      "next": "ch7_03_son_dem_quan_so"
+    },
+    {
+      "id": "ch7_02b_khoang_trang_ban_do",
+      "type": "narration",
+      "location": "Phòng bản đồ hợp nhất Bắc Vực – Long Vũ",
+      "mood": "tense",
+      "text": "Ánh đèn bàn hắt xuống đường nối mép keo vải để lộ một dải giấy trống trơn nằm kẹp giữa chân núi đá vôi Bắc Vực và vùng triều Long Vũ. Trong hồ sơ quy chuẩn của phòng tham mưu trung ương, dải đất rộng gần năm cây số ấy chỉ được đánh số bằng ô lưới tọa độ vuông vức lạnh lẽo, không có ký hiệu làng mạc, không có bến phà hay đường dây điện trần chạy qua. Nhưng tôi vẫn nhớ như in những vùng trũng ngập nước ở Thiên Lang và con dốc đá sau lưng trường học Xích Phong năm nào — trên giấy người ta có thể bỏ trắng để đỡ rối mắt, chứ dưới mặt đất lúc nào cũng có mái nhà tranh, bếp lửa và tiếng trẻ con đọc bài buổi sớm. Tôi rút cây bút chì gỗ từ hộp thước đồng, cúi sát xuống mặt bản đồ vừa mở sổ thực địa của trinh sát tiền phương để tự tay đánh dấu lại hai bến đò ngang và cụm trạm xá dọc đường liên xã trước giờ giao ban bình minh.",
+      "next": "ch7_03_son_dem_quan_so"
+    },
+    {
+      "id": "ch7_03_son_dem_quan_so",
+      "type": "narration",
+      "location": "Hành lang ban tham mưu Liên Chiến Khu",
+      "mood": "calm",
+      "text": "Bốn giờ rưỡi sáng, chuông điện thoại nội bộ reo hai hồi ngắn rồi tắt hẳn, nhường chỗ cho tiếng bước chân đế cao su đều đặn ngoài hành lang lát gạch xi măng ẩm ướt. Khi hai đại chiến khu vừa mới gộp hệ thống chỉ huy lại dưới một mái nhà, điều khiến tôi bận tâm nhất không phải là sức bắn của các lữ đoàn pháo phản lực hay biên đội xe tăng chủ lực, mà là sự vênh lệch trong khâu hậu cần giữa hai vùng khí hậu trái ngược nhau hoàn toàn. Miền núi Bắc Vực đang vào đợt rét đậm cắt da kéo dài suốt hai tuần, trong khi tuyến duyên hải Long Vũ lại vật lộn với triều cường làm ngập các trạm biến áp dã chiến ven đê. Tôi lật tập bảng kê tồn kho của hai bộ phận tiếp vận đặt bên mép bàn, chuẩn bị chốt chương trình cuộc họp điều phối dự kiến vào sáu giờ sáng nay. Ngoài cửa kính mờ hơi sương, có bóng người dừng lại rất đúng nhịp gõ cửa ngắn gọn trước khi bước vào.",
+      "branches": [
+        {
+          "condition": { "charAlive": "son" },
+          "next": "ch7_04a_son_doi_chieu"
+        }
+      ],
+      "next": "ch7_04b_so_truc_khong_son"
+    },
+    {
+      "id": "ch7_04a_son_doi_chieu",
+      "type": "dialogue",
+      "location": "Phòng trực Liên Chiến Khu",
+      "speaker": "son",
+      "speakerTitle": "Đại tá Đỗ Thành Sơn",
+      "mood": "calm",
+      "text": "Báo cáo Thống Soái. Hai chiến khu ghép lại rồi. Sổ quân số vừa khớp lúc bốn giờ. Bắc Vực thừa ba nghìn chiếc chăn bông. Long Vũ lại thiếu dầu chạy máy phát. Trên giấy đều chờ lệnh họp sáu giờ. Tôi vừa gọi thẳng hai kho trưởng. Họ nói tự đổi hàng được ngay. Đủ xe tải. Đủ người áp tải. Họp hành nhiều chỉ tốn nước trà. Lính của tôi, tôi chịu. Nhưng giấy tờ phải sạch. Thủ trưởng giữ lịch họp hay bỏ?",
+      "next": "ch7_05_dispatch_hau_can"
+    },
+    {
+      "id": "ch7_04b_so_truc_khong_son",
+      "type": "narration",
+      "location": "Phòng trực Liên Chiến Khu",
+      "mood": "somber",
+      "text": "Người bước vào là sĩ quan trực ban trẻ từ cụm tham mưu Long Vũ, đặt lên bàn tôi tập sổ đối chiếu mới tinh còn thơm mùi giấy in và mực dấu đỏ. Khi anh ta đứng nghiêm chờ lệnh, tôi vô thức đưa ngón tay cái lật mép từng trang sổ quân số, chẳng nhìn mặt người báo cáo cho đến khi đọc xong hàng tổng cộng cuối cùng — thói quen khắc nghiệt mà Đại tá Đỗ Thành Sơn từng rèn cho tôi từ những ngày đầu ở Đại Đội 3 Huyền Ưng. Trên trang đối chiếu hiện ra sự chênh lệch rành rành: kho Bắc Vực đang ứ đọng hơn ba nghìn chiếc chăn bông dự trữ chưa kịp phát hết cho tuyến sau, trong khi cụm trạm phát điện Long Vũ lại cạn dầu chạy máy bơm tiêu úng. Sĩ quan trực ban ngập ngừng báo cáo rằng hai trưởng ban hậu cần bên dưới vừa tự trao đổi sơ bộ qua đường dây nội bộ, nhưng vẫn giữ nguyên đơn xin chỉ thị cho cuộc họp giao ban lúc sáu giờ sáng.",
+      "next": "ch7_05_dispatch_hau_can"
+    },
+    {
+      "id": "ch7_05_dispatch_hau_can",
+      "type": "dispatch",
+      "location": "Kênh điện mật Liên Chiến Khu — 05:05 giờ",
+      "mood": "tense",
+      "text": "[CÔNG ĐIỆN LIÊN KHU SỐ 07/HC-BVLV — KHẨN THƯỜNG]\nTừ: Ban Hậu Cần Bắc Vực & Ban Hậu Cần Long Vũ\nGửi: Thống Soái Tư Lệnh Liên Đại Chiến Khu\n\nNội dung: Qua đối chiếu tồn kho đêm 14, hai nhánh tiếp vận đã tự thống nhất phương án bù trừ thẳng không cần qua kho trung chuyển trung ương: Bắc Vực xuất điều chuyển 1.200 kiện chăn ấm, áo rét và thuốc cảm lạnh xuôi Quốc lộ 4B; Long Vũ xuất 40 tấn dầu diesel máy phát và 600 thùng dung dịch sát khuẩn ngược lên đèo đá. Đoàn xe hai chiều đã nổ máy kiểm tra phanh tại bãi tập kết, có tổ hộ tống cơ giới sẵn sàng xuất phát lúc 05:30.\n\nKiến nghị: Xin chỉ thị Thủ trưởng về việc có cần giữ phiên họp hội đồng điều phối 06:00 để lập biên bản liên tịch hay cho phép hai đơn vị thực thi ngay.",
+      "next": "ch7_06_choice_cuoc_hop"
+    },
+    {
+      "id": "ch7_06_choice_cuoc_hop",
+      "type": "choice",
+      "location": "Phòng trực Liên Chiến Khu",
+      "mood": "calm",
+      "text": "Trên bảng lịch công tác treo tường bằng gỗ sơn đen, dòng chữ '06:00 — Họp điều phối hậu cần Bắc Vực – Long Vũ' được viết rất nắn nót bằng phấn trắng. Ngoài sân, tiếng máy xe tải nặng đang nổ cầm chừng đợi lệnh lăn bánh trước khi sương mù buổi sớm đặc lại.",
+      "choices": [
+        {
+          "id": "c_gach_bo_cuoc_hop",
+          "label": "Cầm bút chì đỏ gạch thẳng dòng lịch họp 06:00, ký chuẩn y cho hai nhánh tự phối hợp xuất phát ngay",
+          "hint": "Trao quyền tin cậy cho tuyến dưới, tiết kiệm sáu giờ hành quân nhưng bạn không trực tiếp chủ trì biên bản",
+          "effects": [
+            { "setFlag": "gach_bo_cuoc_hop_tu_phoi_hop" },
+            { "addStat": { "stat": "TiepTe", "delta": 6 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 5 } },
+            { "addStat": { "stat": "SiKhi", "delta": 3 } },
+            { "addRel": { "char": "son", "delta": 1 } },
+            {
+              "addJournal": {
+                "id": "jrn_ch7_gach_cuoc_hop",
+                "title": "Dòng lịch bị gạch bỏ",
+                "entry": "Hai nhánh hậu cần Bắc Vực và Long Vũ tự bù trừ hàng thiếu trước giờ họp. Tôi gạch bỏ cuộc họp 06:00 trên bảng lịch để xe lăn bánh ngay."
+              }
+            }
+          ],
+          "next": "ch7_07a_gach_so_tu_phoi_hop"
+        },
+        {
+          "id": "c_giu_cuoc_hop_tap_trung",
+          "label": "Giữ nguyên lịch họp 06:00, triệu tập cả hai trưởng ban lên ký xác nhận trực tiếp trước mặt bạn",
+          "hint": "Giữ chặt quy trình kiểm soát tập trung từ trên xuống, nhưng làm chậm nhịp xuất phát của đoàn xe",
+          "effects": [
+            { "addStat": { "stat": "KyLuat", "delta": 5 } },
+            { "addStat": { "stat": "TiepTe", "delta": -3 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": -2 } },
+            {
+              "addJournal": {
+                "id": "jrn_ch7_giu_cuoc_hop",
+                "title": "Phiên giao ban 06:00",
+                "entry": "Tôi giữ nguyên phiên họp điều phối tập trung để kiểm soát chữ ký giữa hai chiến khu, chấp nhận lùi giờ xe xuất phát."
+              }
+            }
+          ],
+          "next": "ch7_07b_hop_chinh_quy"
+        }
+      ]
+    },
+    {
+      "id": "ch7_07a_gach_so_tu_phoi_hop",
+      "type": "narration",
+      "location": "Sở Chỉ Huy Liên Chiến Khu — 05:25 giờ",
+      "mood": "warm",
+      "text": "Tôi cầm thanh phấn đỏ gạch một đường thẳng dứt khoát ngang qua dòng lịch họp sáu giờ sáng, rồi ký tắt vào góc công điện hồi âm chỉ với hai chữ 'Chuẩn y'. Chưa đầy mười phút sau, tiếng còi hơi trầm đục vang lên ngoài bãi tập kết phía tây: đoàn xe chở dầu từ Long Vũ bắt đầu rời cổng hướng lên đèo đá Bắc Vực, pha đèn vàng xé tan lớp sương mỏng đầu ngày. Cùng lúc đó, tốp xe tải phủ bạt kín chở chăn bông và thuốc cảm lạnh cũng đã đổ dốc xuôi về đồng bằng kịp trước lúc sương mù phủ kín mặt đường đê ven biển. Sĩ quan trực ban khép cửa sổ lại, khẽ mỉm cười khi thấy trên bảng lịch trống hẳn một buổi sáng đầu tuần đầy giấy tờ hành chính. Khi hai chiến khu đã biết tự nhìn sang phần thiếu của nhau mà lấp đầy trước khi người đứng đầu kịp gõ thước, thì tấm bản đồ dán keo vải kia mới thực sự liền một mối. Một cuộc họp không cần diễn ra đôi khi lại là mệnh lệnh thành công nhất của người cầm quân.",
+      "next": "ch7_08_dem_bep_hau_can"
+    },
+    {
+      "id": "ch7_07b_hop_chinh_quy",
+      "type": "narration",
+      "location": "Phòng họp giao ban Liên Chiến Khu — 07:15 giờ",
+      "mood": "tense",
+      "text": "Đúng sáu giờ sáng, hai trưởng ban hậu cần cùng tổ thư ký có mặt đầy đủ quanh bàn họp, quân phục chỉnh tề, cổ áo cài khuy ngay ngắn và sổ sách đóng dấu đỏ rực. Từng hạng mục dầu máy phát, chăn bông và cơ số thuốc sát khuẩn được đọc lại rành rọt theo đúng trình tự văn thư, đối chiếu từng mã lô hàng không thiếu một dấu phẩy hay con số thập phân nào. Mãi đến bảy giờ rưỡi, khi biên bản ba bản đã ráo mực dưới con dấu Thống Soái, đoàn xe hai đầu mới nhận lệnh mở barie lăn bánh rời bãi tập kết. Lúc ấy sương mù từ cửa biển Long Vũ đã dâng trắng xóa mặt đê, buộc các tài xế phải bật đèn gầm chạy dò từng khúc cua trơn trượt chậm hơn dự kiến gần hai tiếng đồng hồ. Mọi thủ tục trên giấy đều trọn vẹn và an toàn tuyệt đối cho hồ sơ chỉ huy, nhưng tôi vẫn nghe thấy tiếng thở dài khẽ của người trưởng đoàn lái xe khi nhìn đồng hồ đeo tay ngoài cổng trạm gác.",
+      "next": "ch7_08_dem_bep_hau_can"
+    },
+    {
+      "id": "ch7_08_dem_bep_hau_can",
+      "type": "narration",
+      "location": "Khu bếp dã chiến Sở Chỉ Huy — Chiều muộn",
+      "mood": "warm",
+      "text": "Chiều muộn, cơn mưa phùn tạnh hẳn nhưng gió bắc vẫn thổi hun hút qua hành lang bê tông khu tham mưu khiến gáy áo lạnh buốt. Xong đợt kiểm tra đường dây thông tin liên khu, tôi không quay về phòng làm việc ngay mà đi bộ vòng ra dãy nhà bếp lợp tôn phía sau đồi, nơi ánh lửa củi hồng hắt ra ấm áp qua khe cửa liếp. Sau cả ngày căng mắt trước các cột số liệu tiếp vận dày đặc, mùi khói bếp ngai ngái hòa lẫn hương gừng đập dập trong nồi nước sôi khiến hai bờ vai tôi thả lỏng xuống hẳn. Dưới mái hiên thấp, vài chiến sĩ cảnh vệ đang ngồi xổm nhặt rau cải xanh trồng tăng gia ven hào, cười nhỏ với nhau về chuyện con mèo mướp của bếp trưởng vừa bắt được con chuột đồng to bằng bắp tay. Tôi đứng nép bên cột gỗ, chợt nhận ra chiếc cúc áo măng-tô dã chiến ở cổ tay trái của mình đã sút chỉ từ lúc nào.",
+      "branches": [
+        {
+          "condition": { "charAlive": "tam" },
+          "next": "ch7_09a_tam_bep_lua"
+        }
+      ],
+      "next": "ch7_09b_hop_kim_chi_cu"
+    },
+    {
+      "id": "ch7_09a_tam_bep_lua",
+      "type": "dialogue",
+      "location": "Bếp dã chiến Sở Chỉ Huy",
+      "speaker": "tam",
+      "speakerTitle": "Binh nhất Trần Văn Tám (Anh nuôi)",
+      "mood": "warm",
+      "text": "Ui chà, Thống Soái mà đi tuần bếp giờ này coi chừng tụi nhỏ tưởng Thủ trưởng xuống kiểm tra định lượng gạo với muối đó nghen! Ngồi xuống ghế gỗ đây chú em — à quên, báo cáo Thủ trưởng, ngồi đây tui rót cho ca trà gừng nóng hổi mới nấu xong còn thơm mùi vỏ quýt khô. Đưa cái tay áo bên trái ra đây tui coi thử nào... Trời đất ơi, quân hàm sao lớn trên vai mà cái cúc cổ tay lủng lẳng sắp rớt rồi mà không hay biết gì hết. Để tui lấy hộp kim chỉ trong túi áo ngực khâu lại ba mũi cho chắc, hồi ở Huyền Ưng vá góc cờ đại đội giữa lúc gió lùa còn không sút nữa là cái cúc áo nhỏ xíu này. Mà chú em nhớ ăn cho hết chén cháo hành nóng tối nay nghe, người lớn chức lớn tới đâu mà cái bụng lạnh là đầu không nghĩ nổi chuyện giữ nước giữ dân đâu nghen.",
+      "next": "ch7_10_ha_tram_xa"
+    },
+    {
+      "id": "ch7_09b_hop_kim_chi_cu",
+      "type": "narration",
+      "location": "Bếp dã chiến Sở Chỉ Huy",
+      "mood": "somber",
+      "text": "Cậu lính trẻ phụ bếp thấy tôi đứng ngoài hiên liền vội vàng đứng dậy chào, hai bàn tay còn dính bùn đất từ luống rau cải sau nhà. Cậu rót cho tôi một ca sắt trà gừng bốc khói nghi ngút, rồi chỉ tay lên góc kệ gỗ bên cạnh chiếc chảo gang lớn đang reo lăn tăn. Ở đó đặt ngay ngắn một hộp thiếc nhỏ đựng kim chỉ đã ngả màu thời gian — kỷ vật mà đơn vị hậu cần vẫn giữ lại cẩn thận kể từ ngày anh nuôi Trần Văn Tám ngã xuống khi chở cơm xuồng giữa mùa nước lũ Thiên Lang. Tôi nhận lấy chiếc hộp thiếc còn thoang thoảng mùi khói bếp cũ, tự tay xỏ sợi chỉ xanh qua lỗ kim rồi khâu lại chiếc cúc cổ tay áo cho mình dưới ánh lửa bập bùng. Từng mũi kim đi chậm nhưng chắc chắn, nhắc tôi rằng phía sau những bảng tổng hợp hàng vạn quân số vẫn luôn có những con người âm thầm giữ ấm từng bữa cơm, từng mảnh vải lành cho toàn mặt trận.",
+      "next": "ch7_10_ha_tram_xa"
+    },
+    {
+      "id": "ch7_10_ha_tram_xa",
+      "type": "narration",
+      "location": "Phòng trực Quân Y & Phòng Hợp Tác Chiến — Sáng hôm sau",
+      "mood": "tense",
+      "text": "Sáng hôm sau, quyết định điều động từ Bộ Tổng Tham Mưu đặt lên vai tôi hai ngôi sao của cấp **Đại Thống Soái — Hộ Tinh Liên Kết**, trực tiếp chủ trì Bàn tròn Liên kết các chiến trường trước đợt phản công lớn mùa xuân. Nhưng trước khi bước vào căn phòng gỗ sồi nơi bốn tư lệnh binh chủng và chiến khu đang chờ đợi, tôi dừng lại mười phút ở hành lang bản đồ quân y. Dưới ánh đèn huỳnh quang trắng bệch và hơi lạnh ẩm ướt tỏa ra từ bức tường đá dày, sơ đồ phân bổ máy phát điện dự phòng cùng đường dây sơ tán thương binh nối từ sườn núi Bắc Vực xuống đồng bằng Long Vũ vừa được cập nhật xong sau đợt điều chuyển đêm qua. Cạnh mép bản đồ vẫn còn những vòng tròn đánh dấu bằng bút chì 2B rất sắc nét quanh các trạm xá dân sự nằm sát hành lang cơ giới, nhắc rằng phía dưới tuyến hành quân của thiết giáp luôn có những mái nhà tôn mỏng manh và tiếng khóc của trẻ nhỏ mỗi khi còi báo động hú lên.",
+      "branches": [
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "ha" },
+              { "notFlag": "ha_bat_dong_bac_vuc" }
+            ]
+          },
+          "next": "ch7_11a_ha_ban_y_te"
+        },
+        {
+          "condition": { "charAlive": "ha" },
+          "next": "ch7_11b_ha_lanh_lung"
+        }
+      ],
+      "next": "ch7_11c_but_chi_2b"
+    },
+    {
+      "id": "ch7_11a_ha_ban_y_te",
+      "type": "dialogue",
+      "location": "Phòng trực Quân Y Liên Chiến Khu",
+      "speaker": "ha",
+      "speakerTitle": "Thiếu tá Y sĩ Nguyễn Thu Hà",
+      "mood": "warm",
+      "text": "Chào Đại Thống Soái. Nhờ tuyến dầu máy phát và điện ưu tiên Thủ trưởng giữ lại cho các trạm xá từ đợt Bắc Vực tới giờ, đêm qua tụi tôi giữ nguyên vẹn được toàn bộ kho huyết thanh và hai phòng mổ dã chiến tuyến trước. Tôi vừa tháo cây bút chì 2B trên vành mũ ra khoanh thêm ba lối rẽ tránh pháo kích cho xe cứu thương dọc sông Giao Thủy. Cậu — à, Thủ trưởng cứ cầm tập sơ đồ này mang thẳng vào bàn tròn lát nữa đi. Trên bàn họp nhiều khi người ta chỉ nói chuyện tầm bắn với tốc độ xe tăng, tôi gửi kèm mấy cái chấm chì này để nếu có ai định cắt ngang đường dân sơ tán hay rút mất điện trạm xá thì Thủ trưởng có số liệu thật mà chặn lại giúp anh em áo trắng tụi tôi.",
+      "next": "ch7_12_ban_tron_chien_truong"
+    },
+    {
+      "id": "ch7_11b_ha_lanh_lung",
+      "type": "dialogue",
+      "location": "Phòng trực Quân Y Liên Chiến Khu",
+      "speaker": "ha",
+      "speakerTitle": "Thiếu tá Y sĩ Nguyễn Thu Hà",
+      "mood": "tense",
+      "text": "Báo cáo Đại Thống Soái, đây là bảng thống kê số giờ chạy pin dự phòng còn lại của bảy trạm xá dọc sườn Bắc Vực và ven biển Long Vũ. Từ sau lần trạm xá mất điện giữa đêm để dồn toàn bộ máy phát cho trận địa pháo, tôi không còn vẽ ký hiệu tạm bằng bút chì nữa mà đóng khung thẳng bằng mực đen không xóa được lên hồ sơ lưu trữ. Tôi không xin thêm lời hứa hẹn nào cả, thưa Thủ trưởng. Tôi chỉ đề nghị trước khi Hội đồng Bàn tròn chốt phương án chia lưới điện và ưu tiên đường bộ cho đợt cơ động mới, các vị hãy đọc đủ ba trang danh sách bệnh nhân thở máy và phụ sản đang nằm ngay dưới tuyến đường vận tải quân sự. Y lệnh của tôi kết thúc tại đây, xin phép Thủ trưởng tôi quay lại phòng hồi sức.",
+      "next": "ch7_12_ban_tron_chien_truong"
+    },
+    {
+      "id": "ch7_11c_but_chi_2b",
+      "type": "narration",
+      "location": "Phòng trực Quân Y Liên Chiến Khu",
+      "mood": "somber",
+      "text": "Trong phòng trực quân y yên ắng, một nữ điều dưỡng trẻ đang cẩn thận kẹp lại những tờ phim chụp X-quang lên giá đèn sáng. Trên mép bản đồ khu vực, mấy vòng tròn bút chì 2B quen thuộc của Thiếu tá Y sĩ Nguyễn Thu Hà vẫn hiện rõ từng con số công suất máy phát tối thiểu mà mỗi trạm xá xã cần để giữ sáng đèn phòng mổ qua đêm mưa rét. Thu Hà không còn đứng đây để thẳng thắn tranh luận trước mặt các tướng lĩnh như trước nữa, nhưng từng nét chì cô để lại vẫn bám chặt lấy lương tâm của người cầm bản đồ tác chiến. Tôi lấy một tấm nhựa trong phủ kín lên bề mặt sơ đồ ấy để nét chì không bị quệt nhòe khi mang vào phòng họp, rồi kẹp chặt vào bìa hồ sơ trước khi sải bước sang hội trường bàn tròn.",
+      "next": "ch7_12_ban_tron_chien_truong"
+    },
+    {
+      "id": "ch7_12_ban_tron_chien_truong",
+      "type": "narration",
+      "location": "Hội trường Bàn Tròn Các Chiến Trường — Đại Bản Doanh",
+      "mood": "tense",
+      "text": "Chín giờ sáng, căn phòng hình bát giác với chiếc bàn tròn gỗ gụ khổng lồ kín chỗ bởi các tư lệnh trẻ đại diện cho bốn hướng chiến trường: Cụm Thiết Giáp Bắc Vực, Cụm Phòng Không – Bờ Biển Long Vũ, Cụm Công Binh Cầu Phà Xích Phong và Cụm Vận Tải Thủy Bộ Thiên Lang. Tấm bản đồ tác chiến cỡ đại phủ kín mặt bàn, mép giấy ép chặt bằng những chặn giấy đồng nặng trịch. Cuộc tranh luận nổ ra gay gắt ngay từ phút thứ mười lăm. Cụm Bắc Vực đòi kéo toàn bộ hai tiểu đoàn radar cảnh giới lên giữ sườn núi hẹp, trong khi Cụm Long Vũ khẳng định mất lưới radar tầng thấp ở cửa sông thì đoàn tàu chở đạn sẽ phơi lưng cho không kích đối phương. Mỗi lần hai bên gõ thước tranh cãi đến đỏ mặt, tất cả ánh mắt quanh bàn tròn lại đồng loạt quay phắt về phía chiếc ghế chính giữa của tôi, ngừng bặt chờ cái gật đầu phân xử như một phản xạ đã ăn sâu từ lâu.",
+      "branches": [
+        {
+          "condition": { "charAlive": "loc" },
+          "next": "ch7_13a_loc_truong_thanh"
+        }
+      ],
+      "next": "ch7_13b_dai_uy_tre_ban_tron"
+    },
+    {
+      "id": "ch7_13a_loc_truong_thanh",
+      "type": "dialogue",
+      "location": "Hội trường Bàn Tròn Các Chiến Trường",
+      "speaker": "loc",
+      "speakerTitle": "Trung úy Tham mưu Bùi Văn Lộc",
+      "mood": "tense",
+      "text": "Báo cáo Đại Thống Soái, tôi xin trình bày phương án cầu phao dự bị tại ngã ba Xích Phong nối sang cánh đồng Long Vũ. Hai tuyến vận tải của anh em công binh đang chéo luồng nhau ngay đoạn cầu yếu... Dạ, chỗ dây chằng mố cầu này tôi đã trực tiếp kiểm tra thông số tải trọng ba lần ngoài thực địa rồi, buộc chặt lắm, không sai một tấn nào hết. Nhưng bên thiết giáp lại muốn giữ nguyên khung giờ qua cầu trùng với giờ rút xe thương binh. Thưa Thủ trưởng, Thủ trưởng gật cho phép cắt giờ nào trước để tụi em — à, để chúng tôi dưới tuyến thực thi cho khớp với biên bản ạ?",
+      "next": "ch7_14_choice_lui_ghe"
+    },
+    {
+      "id": "ch7_13b_dai_uy_tre_ban_tron",
+      "type": "narration",
+      "location": "Hội trường Bàn Tròn Các Chiến Trường",
+      "mood": "somber",
+      "text": "Ở góc bên phải bàn tròn, viên sĩ quan tham mưu trẻ phụ trách tuyến cầu phà Xích Phong – Long Vũ đứng bật dậy trình bày phương án phân luồng. Tay cậu nắm chặt bìa hồ sơ cứng đến mức đốt ngón tay trắng bệch — dáng đứng căng thẳng y hệt cậu tân binh Bùi Văn Lộc năm nào ở Thiên Minh trước giờ kiểm tra quai ba lô. Sau khi chỉ ra điểm nghẽn giữa đoàn xe thiết giáp và xe cứu thương qua cầu phao, cậu đột ngột khựng lại giữa câu nói, ngước nhìn thẳng lên cấp hiệu Đại Thống Soái trên vai tôi như thể sợ nói thêm một câu trái ý. Không khí cả phòng đông cứng lại trong tiếng tích tắc của đồng hồ treo tường; không một chỉ huy trẻ nào dám tự đẩy phương án của mình thêm một bước nữa nếu chưa thấy nét bút của tôi chấm xuống bản đồ chung.",
+      "next": "ch7_14_choice_lui_ghe"
+    },
+    {
+      "id": "ch7_14_choice_lui_ghe",
+      "type": "choice",
+      "location": "Hội trường Bàn Tròn Các Chiến Trường",
+      "mood": "tense",
+      "text": "Cả bốn đầu chiến trường đều đang ngưng lại chờ tiếng gõ bút của bạn. Nếu bạn ra phán quyết ngay, mọi người sẽ răm rắp chấp hành — nhưng họ sẽ mãi chỉ là người đợi lệnh chứ không bao giờ thành người giữ được bàn tròn khi bạn rời đi.",
+      "choices": [
+        {
+          "id": "c_lui_ghe_trao_quyen",
+          "label": "Đẩy ghế lùi ra sau nửa bước, khép tập hồ sơ lại và yêu cầu các tư lệnh tự bàn bạc tìm đồng thuận không cần chờ cái gật đầu của bạn",
+          "hint": "Rèn bản lĩnh tự chủ cho thế hệ kế nhiệm, dù cuộc tranh luận có thể kéo dài và nảy lửa hơn",
+          "effects": [
+            { "setFlag": "lui_ghe_trao_quyen_ke_nhiem" },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 6 } },
+            { "addStat": { "stat": "SiKhi", "delta": 5 } },
+            { "addStat": { "stat": "KyLuat", "delta": 2 } },
+            { "addRel": { "char": "loc", "delta": 2 } },
+            { "addRel": { "char": "son", "delta": 1 } },
+            {
+              "addJournal": {
+                "id": "jrn_ch7_lui_ghe",
+                "title": "Nửa bước lùi khỏi bàn tròn",
+                "entry": "Tôi lùi ghế khỏi bàn tròn các chiến trường để lớp chỉ huy kế nhiệm tự tranh luận và chốt phương án đồng thuận, không đợi cái gật đầu từ trên xuống."
+              }
+            }
+          ],
+          "next": "ch7_15a_dong_thuan_ke_nhiem"
+        },
+        {
+          "id": "c_giu_quyen_phan_quyet",
+          "label": "Giữ nguyên vị trí chủ tọa, gõ bút quyết đoán phân chia ngay khung giờ radar và cầu phao cho từng cụm",
+          "hint": "Giải quyết bế tắc tức thì bằng uy quyền cá nhân, nhưng duy trì tâm lý phụ thuộc của cấp dưới",
+          "effects": [
+            { "addStat": { "stat": "KyLuat", "delta": 5 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": -4 } },
+            { "addStat": { "stat": "SiKhi", "delta": -2 } },
+            {
+              "addJournal": {
+                "id": "jrn_ch7_giu_ban_tron",
+                "title": "Phán quyết của chủ tọa",
+                "entry": "Tôi trực tiếp phân xử khung giờ radar và cầu phao tại bàn tròn để giữ nhịp lệnh nhanh, thay vì giao quyền tự quyết cho lớp kế nhiệm."
+              }
+            }
+          ],
+          "next": "ch7_15b_quyet_dinh_mot_phia"
+        }
+      ]
+    },
+    {
+      "id": "ch7_15a_dong_thuan_ke_nhiem",
+      "type": "narration",
+      "location": "Hội trường Bàn Tròn Các Chiến Trường",
+      "mood": "warm",
+      "text": "Tiếng chân ghế gỗ trượt lùi nửa bước trên sàn đá nghe khô gọn nhưng khiến cả căn phòng sững sờ trong năm giây đầu tiên. Tôi gập bìa da trước mặt, khoanh tay lặng lẽ dựa lưng về sau mà không nói thêm một câu phán quyết nào, mắt chỉ nhìn xuống mặt bàn gỗ sồi đầy vết xước thước đo. Ban đầu, chỉ huy Long Vũ còn liếc nhìn sang tôi đầy dò xét như muốn thử xem liệu tôi có đổi ý hay không; nhưng khi thấy tôi kiên quyết giữ im lặng, cậu sĩ quan công binh trẻ bỗng đứng hẳn lên, kéo tấm bản đồ cầu phao lại gần phía chỉ huy Bắc Vực. Hai mươi phút sau, căn phòng nổ tung trong những cuộc cãi vã thẳng thắn, những đường chì vạch chéo rồi xóa đi sửa lại ngay trên mặt bàn chung. Và rồi điều tôi chờ đợi đã xảy ra: chính nhóm chỉ huy trẻ tự nghĩ ra phương án luân phiên radar tầm trung kết hợp phà đêm nối nhịp cho xe thương binh, hoàn chỉnh và sát thực địa hơn hẳn bản dự thảo của phòng tham mưu. Họ chốt xong biên bản mà không cần nhìn về phía ghế tôi thêm một lần nào nữa.",
+      "next": "ch7_16_nam_tra_chieu"
+    },
+    {
+      "id": "ch7_15b_quyet_dinh_mot_phia",
+      "type": "narration",
+      "location": "Hội trường Bàn Tròn Các Chiến Trường",
+      "mood": "tense",
+      "text": "Tôi không đẩy ghế lùi lại mà chống thẳng hai khuỷu tay lên mép bàn gỗ sồi, dùng bút đỏ khoanh dứt khoát ba khung giờ cố định cho radar Bắc Vực, tàu đạn Long Vũ và đường cầu phao vượt sông. Cả căn phòng lập tức đứng dậy đồng thanh hô 'Rõ!' rất đều và đúng điều lệnh quân đội, không ai dám đưa ra thêm một phương án điều chỉnh nào khác. Chỉ trong mười lăm phút ngắn ngủi, các tư lệnh cụm thu dọn bản đồ lần lượt rút về vị trí chỉ huy của mình, không còn một tiếng tranh luận hay phản biện nào vang lên nữa. Nhưng khi nhìn theo bóng lưng họ bước qua cửa hội trường trong im lặng, tôi chợt thấy một khoảng trống lạnh lẽo giữa căn phòng rộng: ai cũng giữ đúng phần việc tôi vừa chia bằng thước kẻ, còn trách nhiệm ghép những phần việc rời rạc ấy thành chiến thắng chung lại bị đẩy dồn hết lên hai vai tôi đứng một mình nơi đầu bàn.",
+      "next": "ch7_16_nam_tra_chieu"
+    },
+    {
+      "id": "ch7_16_nam_tra_chieu",
+      "type": "narration",
+      "location": "Hiên sau Đại Bản Doanh — Giờ giải lao chiều",
+      "mood": "calm",
+      "text": "Sau phiên bàn tròn kéo dài đến quá trưa, tôi bước ra khoảng hiên hẹp trồng mấy gốc bàng già lá đỏ phía sau đại bản doanh để hít một hơi gió cho bớt đặc mùi mực in và khói thuốc lá. Buổi chiều mùa đông xuống rất nhanh, nắng nhạt chỉ còn vương một vệt vàng mỏng trên mái ngói nhà truyền thống cũ. Trên chiếc ghế đá ẩm sương, một phích nước nóng bọc vỏ thiếc cũ kỹ cùng hai chiếc chén sắt tráng men mẻ vành đã được đặt sẵn từ lúc nào. Khói trà đặc bốc lên mỏng tang, tỏa ra mùi chát quen thuộc của thứ chè rừng vùng núi đá vôi mà không một loại trà hộp sang trọng nào trong phòng khách Bộ Chỉ Huy có thể thay thế được. Ngồi xuống ghế đá, tôi bỗng thấy đôi tay vừa cầm thước đo chiến lược cả buổi sáng nay chợt nhớ hơi ấm bình dị của một ca trà gác đêm.",
+      "branches": [
+        {
+          "condition": { "charAlive": "nam" },
+          "next": "ch7_17a_nam_nhac_nho"
+        }
+      ],
+      "next": "ch7_17b_day_sung_cu"
+    },
+    {
+      "id": "ch7_17a_nam_nhac_nho",
+      "type": "dialogue",
+      "location": "Hiên sau Đại Bản Doanh",
+      "speaker": "nam",
+      "speakerTitle": "Đại úy Nguyễn Hoàng Nam",
+      "mood": "warm",
+      "text": "Ngồi xuống đây làm ngụm trà đặc cho ấm bụng đã chú. Anh thấy trên bàn họp hồi sáng chú ngồi im mà thót cả tim, cứ tưởng chú mệt hay tính chuyện gì căng lắm. Hóa ra là chú nhường sân cho tụi trẻ nó tự cãi nhau để tìm đường sống... Nghe được đó! Để anh kéo lại cái ve áo bên phải cho chú coi — lên tới chức Đại Thống Soái rồi mà cái nếp áo vẫn hay bị lệch sang trái y như hồi mới vô Thiên Minh đeo ba lô ngược quai vậy. Chú nhớ cho anh câu ni: cái bàn tròn trên ni có vững tới mấy mà chân bàn dưới cơ sở rỗng ruột vì báo cáo láo thì một trận gió lớn cũng lật nhào cả lũ. Lính tráng mệt được, chứ không được để lưng đồng đội lạnh nghe chú.",
+      "next": "ch7_18_hoc_vien_quang_trung"
+    },
+    {
+      "id": "ch7_17b_day_sung_cu",
+      "type": "narration",
+      "location": "Hiên sau Đại Bản Doanh",
+      "mood": "somber",
+      "text": "Tôi ngồi một mình trên băng ghế đá lạnh, rót đầy hai chén trà đặc nóng hổi rồi đặt chén thứ hai sang khoảng trống bên cạnh như một thói quen khó bỏ. Bàn tay phải tôi tự động đưa lên vuốt phẳng lại hai mép ve áo và kiểm tra dây đeo xắc-cốt ngang hông — động tác kỹ lưỡng mà anh Nam từng làm giúp tôi trước khi tôi lên Thiếu Úy. Nhấp một ngụm trà chát nơi đầu lưỡi, tôi nhớ lại câu nói mộc mạc của anh từ những đêm gác lạnh dưới dãy núi đá vôi: nghề lính sai một li là mất một nhà. Mang hàm Đại Thống Soái hôm nay, mỗi nét gạch trên giấy của tôi không còn chỉ đè lên một tiểu đội mười người nữa, mà đè lên hàng nghìn mái nhà từ vùng núi Bắc Vực xuống tới dải biển Long Vũ.",
+      "next": "ch7_18_hoc_vien_quang_trung"
+    },
+    {
+      "id": "ch7_18_hoc_vien_quang_trung",
+      "type": "narration",
+      "location": "Thư viện gạch cũ — Học Viện Quân Sự Quang Trung",
+      "mood": "calm",
+      "text": "Ba ngày trước thời điểm Hội Đồng Tối Cao bỏ phiếu chuẩn y chiến dịch tổng lực cuối cùng, tôi nhận quân hàm **Nguyên Soái — Hộ Tinh Học Thuyết** cùng trọng trách hoàn tất bản in chính thức của *Bộ Học Thuyết Tác Chiến Tổng Hợp Quốc Gia*. Tối hôm ấy, tôi quay về chính giảng đường và thư viện gạch cũ của Học Viện Quân Sự Quang Trung — nơi mọi thứ bắt đầu từ một buổi sáng chạy tập hợp chậm ba nhịp trên sân sỏi đỏ lạnh buốt. Trên chiếc bàn gỗ lim giữa phòng đọc vắng lặng, bản thảo dày ba trăm trang đã được đóng gáy tạm bằng dây dù trắng, tập hợp toàn bộ bài học từ phòng ngự điểm Thiên Minh, vượt lũ Vân Long, giữ cầu Xích Thủy cho tới hiệp đồng liên chiến khu. Trong phòng chỉ có ánh đèn bàn nhỏ hắt lên những giá sách cũ thơm mùi giấy mục, mùi phấn bảng còn vương từ giảng đường bên cạnh và tiếng đồng hồ quả lắc gõ nhịp đều đặn suốt đêm.",
+      "branches": [
+        {
+          "condition": { "charAlive": "vinh" },
+          "next": "ch7_19a_vinh_giao_tap_ban_thao"
+        }
+      ],
+      "next": "ch7_19b_ban_thao_khong_vinh"
+    },
+    {
+      "id": "ch7_19a_vinh_giao_tap_ban_thao",
+      "type": "dialogue",
+      "location": "Thư viện Học Viện Quân Sự Quang Trung",
+      "speaker": "vinh",
+      "speakerTitle": "Đại tá Trần Quốc Vinh",
+      "mood": "warm",
+      "text": "Chào Nguyên Soái. Nghe ban biên tập báo cáo cả tuần nay trên Hội Đồng ai đọc bản thảo học thuyết này cũng gật gù khen chặt chẽ, không chê lấy một dấu chấm phẩy nào. Đó chính là điều làm thầy lo nhất đấy. Khi người viết chỉ nghe thấy tiếng khen của những người cùng ngồi trong phòng máy lạnh, chữ nghĩa rất dễ bị trơn tuột khỏi bùn đất. Ngoài hành lang có một cậu học viên năm nhất vừa xong ca trực thư viện, đôi giày vải còn dính nguyên đất đỏ thao trường. Tôi đã nhờ cậu ấy đọc thử chương cuối trước khi đưa xuống nhà in quân đội. Cậu để cho thằng nhỏ nói hết suy nghĩ của nó đi nhé — đừng ngắt lời bằng cấp bậc hay lý luận.",
+      "next": "ch7_20_cau_hoi_hoc_vien"
+    },
+    {
+      "id": "ch7_19b_ban_thao_khong_vinh",
+      "type": "narration",
+      "location": "Thư viện Học Viện Quân Sự Quang Trung",
+      "mood": "somber",
+      "text": "Tôi cầm cây bút máy gõ nhẹ hai tiếng lên mặt bàn gỗ lim — thói quen suy tư lặng lẽ mà thầy Trần Quốc Vinh vẫn hay dùng mỗi khi nghi ngờ một bản báo cáo quá hoàn hảo. Suốt cả tuần qua, hai mươi vị tướng lĩnh trong ban thẩm định đều đồng loạt khen bản thảo học thuyết này chặt chẽ và không có một kẽ hở nào. Chính sự trơn tru tuyệt đối ấy lại khiến tôi thấy bất an trong lòng. Vừa lúc đó, một học viên năm nhất mặc bộ quân phục còn lấm bụi sỏi đỏ sau buổi tập chiều ôm chồng sổ trực đi ngang qua hành lang thư viện. Tôi vẫy tay gọi cậu vào, đẩy bản in thử chương kết luận sang phía đối diện và bảo cậu cứ đọc thẳng như đang đọc nhật ký thao trường rồi nói điều đầu tiên cậu thắc mắc.",
+      "next": "ch7_20_cau_hoi_hoc_vien"
+    },
+    {
+      "id": "ch7_20_cau_hoi_hoc_vien",
+      "type": "narration",
+      "location": "Thư viện Học Viện Quân Sự Quang Trung",
+      "mood": "tense",
+      "text": "Cậu học viên trẻ rụt rè ngồi xuống mép ghế gỗ, hai bàn tay còn vết chai sần vì dây súng giữ khư khư mép bản thảo dày cộp như sợ làm quăn góc giấy trắng. Mất gần mười lăm phút đọc hết chương trọng tâm về *'Bảo toàn lực lượng chiến lược và chuyển hóa thế trận đột phá'*, cậu bé ngẩng đầu lên, ánh mắt trong veo nhưng không hề né tránh. Giữa sự im lặng tuyệt đối của thư viện gạch cũ chỉ có tiếng gió rít qua hàng bạch đàn ngoài sân sỏi đỏ, cậu cất giọng hỏi một câu mà suốt ba tháng thẩm định chưa một vị tướng lĩnh nào trên Hội Đồng Tối Cao từng đặt ra: 'Thưa Nguyên Soái, học thuyết dạy rất kỹ cách giữ thế trận khi có đủ ba tuyến tiếp vận và liên lạc dự phòng; nhưng nếu ngay đêm đầu tiên sập hết điện lưới, vô tuyến tắt ngấm và tiểu đội chỉ còn nửa cơ số đạn như mấy anh khóa trước ở Thiên Minh, thì ai sẽ là người đứng ra gánh ba nhịp chậm đầu tiên thay cho người viết cuốn sách này ạ?'",
+      "next": "ch7_21_choice_ben_le_hoc_thuyet"
+    },
+    {
+      "id": "ch7_21_choice_ben_le_hoc_thuyet",
+      "type": "choice",
+      "location": "Thư viện Học Viện Quân Sự Quang Trung",
+      "mood": "warm",
+      "text": "Câu hỏi thô mộc của cậu học viên năm nhất rơi thẳng vào trang giấy trắng bên lề bản in thử — chạm đúng vết xước cũ từ buổi sáng bạn đến muộn ba nhịp năm nào ở sân tập sỏi đỏ.",
+      "choices": [
+        {
+          "id": "c_giu_cau_hoi_ben_le",
+          "label": "Chép nguyên văn câu hỏi của cậu học viên bằng mực xanh ngay bên lề chương sách và ra lệnh nhà in giữ nguyên khi xuất bản",
+          "hint": "Để lại vết nhắc nhở trung thực cho mọi thế hệ sĩ quan đọc sách, dù bản in trông kém uy nghiêm hơn",
+          "effects": [
+            { "setFlag": "giu_cau_hoi_hoc_vien_ben_le" },
+            { "addStat": { "stat": "NhanTamDan", "delta": 6 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 5 } },
+            { "addStat": { "stat": "SiKhi", "delta": 4 } },
+            { "addRel": { "char": "vinh", "delta": 2 } },
+            {
+              "addJournal": {
+                "id": "jrn_ch7_hoc_vien_ben_le",
+                "title": "Câu hỏi bên lề học thuyết",
+                "entry": "Tôi giữ nguyên văn câu hỏi của người học viên trẻ Quang Trung bên lề chương cuối học thuyết quân sự để nhắc rằng lý thuyết không bao giờ thay thế được nỗi sợ thật của người lính gác đêm."
+              }
+            }
+          ],
+          "next": "ch7_22a_in_nguyen_van_ben_le"
+        },
+        {
+          "id": "c_chuan_hoa_hoc_thuyet",
+          "label": "Ghi nhận tinh thần cậu học viên, nhưng biên tập lại câu hỏi thành một đoạn phụ lục chuẩn mực văn phong tham mưu",
+          "hint": "Giữ tính quy chuẩn học thuật chặt chẽ cho bộ sách cấp quốc gia, nhưng làm nhạt đi giọng nói thật từ thao trường",
+          "effects": [
+            { "addStat": { "stat": "KyLuat", "delta": 5 } },
+            { "addStat": { "stat": "NhanTamDan", "delta": -3 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": -2 } },
+            {
+              "addJournal": {
+                "id": "jrn_ch7_chuan_hoa_sach",
+                "title": "Phụ lục học thuật",
+                "entry": "Tôi biên tập lại băn khoăn của học viên thành mục phụ lục quy chuẩn về tác chiến trong điều kiện mất liên lạc."
+              }
+            }
+          ],
+          "next": "ch7_22b_chinh_ly_chuan_muc"
+        }
+      ]
+    },
+    {
+      "id": "ch7_22a_in_nguyen_van_ben_le",
+      "type": "narration",
+      "location": "Thư viện Học Viện Quân Sự Quang Trung",
+      "mood": "warm",
+      "text": "Tôi rút cây bút mực xanh, nắn nót viết từng chữ nguyên vẹn câu hỏi ấy vào phần lề rộng bên phải của trang bản thảo, thậm chí giữ nguyên cả từ 'ạ' rụt rè ở cuối câu như một lời nhắc nhở chân thành từ tuyến dưới. Ngay bên dưới dòng chữ nghiêng ấy, tôi kẻ một ô trống không đề đáp án mẫu nào cả, chỉ ghi chú cho nhà in quân đội rằng phần này để ngỏ cho từng khóa sĩ quan tự trả lời bằng ca trực đầu đời của chính họ dưới mưa rét. Cậu học viên nhìn trang giấy vừa đóng dấu duyệt in mà mắt sáng bừng lên, đứng nghiêm chào theo điều lệnh mà đôi bàn tay không còn run rẩy nữa. Rời thư viện Quang Trung lúc nửa đêm khi sương đã đọng trắng sân tập sỏi đỏ năm xưa, tôi mở cuốn sổ bìa xanh ra kẹp thêm tờ nháp bản in thử vào bìa sau — biết rằng ngày mai tại Thủ đô, một cuộc đối chất khắc nghiệt hơn nhiều đang chờ sẵn trước ngưỡng cửa Đại Nguyên Soái.",
+      "next": "ch7_23_khang_dem_truoc_hoi_dong"
+    },
+    {
+      "id": "ch7_22b_chinh_ly_chuan_muc",
+      "type": "narration",
+      "location": "Thư viện Học Viện Quân Sự Quang Trung",
+      "mood": "calm",
+      "text": "Tôi gật đầu khen ngợi sự tinh tế của cậu học viên, rồi mở nắp bút gạch nhanh vài gạch đầu dòng quy chuẩn về 'Quy trình tác chiến độc lập trong môi trường mất điện lưới và nhiễu sóng cấp độ ba' để chèn vào phần phụ lục cuối chương. Mọi thuật ngữ đều chuẩn xác, cân đối và đủ tầm vóc của một bộ giáo trình chiến lược cấp quốc gia. Cậu học viên cúi đầu chào cảm ơn rồi ôm chồng sổ trực rút lui rất đúng lễ tiết quân nhân qua hành lang gạch cũ. Nhưng khi đèn thư viện tắt đi nửa dãy, nhìn lại trang giấy in sạch sẽ không một vết gạch lề ấy, tôi bỗng thấy câu chữ chuẩn mực kia lạnh ngắt như mặt kính bảo vệ bản đồ trong phòng họp — hoàn hảo đến mức không còn chỗ cho hơi thở gấp gáp và bàn tay lạnh cóng của người lính trẻ dưới hố gác đêm mưa.",
+      "next": "ch7_23_khang_dem_truoc_hoi_dong"
+    },
+    {
+      "id": "ch7_23_khang_dem_truoc_hoi_dong",
+      "type": "narration",
+      "location": "Phòng nghỉ Cố vấn — Khu Hội Đồng Tối Cao",
+      "mood": "tense",
+      "text": "Đêm trước phiên họp toàn thể của Hội Đồng Thống Soái Tối Cao để bỏ phiếu trao ấn tín **Đại Nguyên Soái — Hộ Tinh Trấn Tâm**, bầu không khí trong tòa nhà chỉ huy trung ương đặc quánh mùi giấy mật, khói thuốc lá nặng và những cuộc trao đổi hành lang khép kín. Phe cánh hậu phương xoay quanh Trung tướng Phạm Quang Hùng đã rải xong bản đề xuất 'Sắc lệnh Thiết Quân Hậu Cần' nhằm nắm quyền kiểm duyệt toàn bộ ngân sách khí tài trước đòn tổng lực cuối cùng vào Khối Thiết Phong. Theo quy chế bỏ phiếu kín, nếu không có bất ngờ nào xảy ra trong đại sảnh ngày mai, phiếu ủng hộ của nhóm Hùng sẽ giúp việc tấn phong diễn ra suôn sẻ chỉ trong ba mươi phút, không một câu hỏi vặn vẹo. Đúng hai mươi ba giờ, giữa tiếng đồng hồ hành lang điểm nhịp, có tiếng gõ nhẹ hai lần lên khung cửa gỗ phòng nghỉ của tôi.",
+      "branches": [
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "khang" },
+              { "notFlag": "khang_bat_dong_thien_lang" }
+            ]
+          },
+          "next": "ch7_24a_khang_gap_rieng"
+        },
+        {
+          "condition": { "charAlive": "khang" },
+          "next": "ch7_24b_khang_lanh_nhat"
+        }
+      ],
+      "next": "ch7_24c_dong_ho_nut_khang"
+    },
+    {
+      "id": "ch7_24a_khang_gap_rieng",
+      "type": "dialogue",
+      "location": "Phòng nghỉ Cố vấn — Khu Hội Đồng Tối Cao",
+      "speaker": "khang",
+      "speakerTitle": "Thiếu tướng Lê Minh Khang",
+      "mood": "tense",
+      "text": "Đóng cửa lại đi ông, ngoài hành lang tối nay toàn tai mắt văn phòng của ông Hùng đi lại canh chừng không đó. Tui vừa kiểm xong bộ hồ sơ xuất nhập kho giữa Long Vũ với Bắc Vực — có tới ba tiểu đoàn ma nằm trên giấy để rút dầu với thuốc mang đi chia chác tuyến sau. Coi chừng cái bản đồ nó lừa mắt mình đó nha, hồi ở Quang Trung hai đứa mình còn bẻ đôi gói mì tôm sống được mà tới lúc ngồi gần ghế bốn sao đừng có để chữ ký nó làm cứng tay. Khang bật nắp chiếc bật lửa kim loại cũ kêu 'tách' một tiếng gọn lỏn rồi đóng lại ngay, mắt nhìn thẳng vào tôi không chớp. Ngày mai vô phòng Hội Đồng, một là ông đập thẳng mớ giấy tờ thối nát này lên bàn, hai là ông nhắm mắt bắt tay giữ ghế cho yên thân. Tui để tập kiểm toán ở đây, chọn đường nào là phần của ông — nhớ câu hồi xưa nghe chưa, còn nghe nhau là còn đội hình. Nói rồi Khang đứng dậy, gõ nhẹ hai lần lên vai tôi như quy ước đổi gác cũ trước khi lặng lẽ bước ra hành lang.",
+      "next": "ch7_25_kiem_tra_bang_chung"
+    },
+    {
+      "id": "ch7_24b_khang_lanh_nhat",
+      "type": "dialogue",
+      "location": "Phòng nghỉ Cố vấn — Khu Hội Đồng Tối Cao",
+      "speaker": "khang",
+      "speakerTitle": "Thiếu tướng Lê Minh Khang",
+      "mood": "somber",
+      "text": "Báo cáo Nguyên Soái, tôi mang sang Thủ trưởng bản đối chiếu xuất kho cuối cùng giữa hai đại chiến khu theo đúng thủ tục bàn giao trước phiên họp sáng mai. Tôi với Thủ trưởng từ sau trận Thiên Lang không còn đi chung một cách đánh nữa, nên tôi cũng không định ngồi lại uống trà hay nói chuyện cũ hồi còn ở vọng gác làm gì. Nhưng dù bất đồng thế nào, tôi vẫn không chấp nhận nhìn máu lính dưới hầm hào bị đem ra kê khống thành ba tiểu đoàn dự bị trên giấy của ông Phạm Quang Hùng để đổi lấy phiếu bầu. Hồ sơ nằm trên bàn Thủ trưởng rồi đấy, dấu niêm phong kiểm toán vẫn còn nguyên vẹn. Thủ trưởng dùng để dọn sạch bàn họp hay cất vô ngăn kéo cho êm chuyện thì tùy lương tâm chỉ huy tối cao. Xin phép Thủ trưởng tôi về tuyến trực đêm.",
+      "next": "ch7_25_kiem_tra_bang_chung"
+    },
+    {
+      "id": "ch7_24c_dong_ho_nut_khang",
+      "type": "narration",
+      "location": "Phòng nghỉ Cố vấn — Khu Hội Đồng Tối Cao",
+      "mood": "somber",
+      "text": "Người mang tập hồ sơ kiểm toán đến là sĩ quan liên lạc cũ từng chiến đấu dưới quyền Lê Minh Khang, đặt lặng lẽ lên góc bàn rồi lùi ra đóng cửa thật khẽ. Khi căn phòng trở lại tĩnh lặng, tôi lấy từ trong hộp da nhỏ đặt cạnh cuốn sổ bìa xanh chiếc đồng hồ mặt kính nứt cùng chiếc bật lửa kim loại cũ của Khang ra đặt ngay trên bìa hồ sơ dày cộp. Mảnh giấy nhắn năm nào của Khang — 'Đừng biến thành người chỉ nhìn bản đồ' — vẫn ép phẳng ở trang giữa cuốn sổ đã sờn mép. Dưới ánh đèn vàng, những con số kê khống ba tiểu đoàn ma của cụm hậu phương quanh Phạm Quang Hùng hiện lên rành rọt như vết dao cứa vào danh dự của những người từng ngã xuống trên cầu Xích Thủy. Dù Khang không còn ngồi đối diện tôi đêm nay để gõ hai lần lên vai trước giờ đổi ca, câu hỏi anh để lại vẫn đập rộn dưới mặt kính nứt kia.",
+      "next": "ch7_25_kiem_tra_bang_chung"
+    },
+    {
+      "id": "ch7_25_kiem_tra_bang_chung",
+      "type": "narration",
+      "location": "Phòng nghỉ Cố vấn — Đêm trước phiên Hội Đồng",
+      "mood": "tense",
+      "text": "Tôi mở khóa chiếc cặp sắt cá nhân, trải song song tập kiểm toán vừa nhận được bên cạnh những trang ghi chép từ cuốn sổ bìa xanh. Bên ngoài cửa sổ cao, ánh đèn pha quét qua sân cờ của Bộ Chỉ Huy Tối Cao tạo thành những vệt sáng trắng lạnh ngắt trên nền sương đêm đặc quánh. Chỉ vài tiếng đồng hồ nữa thôi, hai mươi bốn con dấu của Hội Đồng sẽ bước vào đại sảnh đá cẩm thạch. Điều tôi sắp đặt lên mặt bàn họp sáng mai không chỉ quyết định số phận chính trị của một viên Trung tướng tham mưu lão luyện, mà sẽ định hình xem bộ máy chỉ huy tối thượng của đất nước này bước vào trận đánh cuối cùng bằng sự minh bạch tàn khốc hay bằng một thỏa hiệp êm ru nhưng rỗng ruột từ bên trong.",
+      "branches": [
+        {
+          "condition": { "flag": "giu_bang_chung_pham_quang_hung" },
+          "next": "ch7_26a_cong_dien_goc_ch5"
+        }
+      ],
+      "next": "ch7_26b_doi_soat_lien_chien_khu"
+    },
+    {
+      "id": "ch7_26a_cong_dien_goc_ch5",
+      "type": "narration",
+      "location": "Phòng nghỉ Cố vấn — Đêm trước phiên Hội Đồng",
+      "mood": "tense",
+      "text": "Từ ngăn bí mật sau gáy cuốn sổ bìa xanh, tôi rút ra xấp công điện gốc màu vàng nhạt đã ố góc mà tôi kiên quyết giữ lại từ thời cao điểm Bạch Vũ — những bản điện báo ghi số thương vong thực tế và lời từ chối sửa sổ của chiến sĩ thông tin trước khi bị văn phòng của Phạm Quang Hùng đánh tráo số liệu. Khi đặt chồng những bản công điện gốc ấy lên bảng kiểm toán hợp nhất Bắc Vực – Long Vũ đêm nay, từng chữ ký nháy, số seri máy điện tín và mã dấu mật trùng khớp đến rợn người. Không còn là tin đồn hành lang hay nghi vấn kiểm toán thuần túy nữa: đây là bằng chứng thép không thể chối cãi, đủ sức lột trần toàn bộ hệ thống làm đẹp báo cáo mà Hùng đã dày công dựng nên suốt từ cấp Tá tới tận ngưỡng cửa Hội Đồng Tối Cao.",
+      "next": "ch7_27_hoi_dong_toi_cao"
+    },
+    {
+      "id": "ch7_26b_doi_soat_lien_chien_khu",
+      "type": "narration",
+      "location": "Phòng nghỉ Cố vấn — Đêm trước phiên Hội Đồng",
+      "mood": "tense",
+      "text": "Tôi không có trong tay những bản công điện gốc từ những chiến dịch cấp Trung đoàn ngày trước, nhưng chính quyết định hợp nhất dữ liệu Bắc Vực và Long Vũ thành một sổ cái duy nhất tuần này đã vô tình bóc trần toàn bộ lỗ hổng mà bộ máy của Phạm Quang Hùng cố giấu bấy lâu. Khi hai đầu kho cùng đổ dữ liệu vào một cột đối chiếu trực tiếp, ba đơn vị tiếp vận mang phiên hiệu giả lập tức lộ ra khoảng trống hàng trăm tấn nhiên liệu và thuốc men không hề có chữ ký nhận hàng từ bất kỳ tiểu đội tiền phương nào ngoài mặt trận. Toàn bộ lệnh xuất kho đều đi qua con dấu xác nhận khẩn của văn phòng Hùng. Bằng chứng mới toanh ấy đủ sắc để đưa ra đối chất ngay trước Hội Đồng sáng mai — dẫu chắc chắn sẽ khiến phe cánh của ông ta phản công dữ dội ngay tại phòng họp.",
+      "next": "ch7_27_hoi_dong_toi_cao"
+    },
+    {
+      "id": "ch7_27_hoi_dong_toi_cao",
+      "type": "dialogue",
+      "location": "Đại sảnh Hội Đồng Thống Soái Tối Cao — 09:00 giờ",
+      "speaker": "hung",
+      "speakerTitle": "Trung tướng Phạm Quang Hùng",
+      "mood": "tense",
+      "text": "Thưa các đồng chí trong Hội Đồng, trước giờ khai chiến quyết định với Khối Thiết Phong, sự thống nhất tuyệt đối nơi hậu phương là mệnh lệnh tối cao. Nhân giờ giải lao ngắn trước khi bỏ phiếu ấn tín Đại Nguyên Soái, tôi xin nói thẳng với đồng chí vài lời riêng ở góc hành lang này. Trên bàn hội đồng người ta chỉ nhìn kết quả cuối, không ai đếm từng vỏ đạn đâu. Đôi khi phải biết cắt bỏ một ngón tay để giữ cả bàn tay, và gạt đi vài hạt sạn sổ sách để giữ sĩ khí hậu phương. Đồng chí ký thuận thông qua Sắc lệnh Thiết Quân Hậu Cần giúp tôi, toàn bộ khối phiếu tham mưu sẽ dồn trọn cho đồng chí bước lên bục Tứ Tinh ngay sáng nay — không một vết gợn, không một cuộc điều tra nào làm rối loạn tiền tuyến cả.",
+      "next": "ch7_28_choice_doi_chat_hung"
+    },
+    {
+      "id": "ch7_28_choice_doi_chat_hung",
+      "type": "choice",
+      "location": "Đại sảnh Hội Đồng Thống Soái Tối Cao",
+      "mood": "urgent",
+      "text": "Chuông triệu tập quay lại phiên họp toàn thể vang lên ba hồi trầm đục. Phạm Quang Hùng đứng chờ câu trả lời cuối cùng của bạn ngay sát cánh cửa gỗ cao vút, tay đặt sẵn trên tập nghị quyết chờ ký.",
+      "choices": [
+        {
+          "id": "c_phanh_phui_bang_chung_goc",
+          "label": "Bước thẳng lên bục chủ tọa, tung toàn bộ công điện gốc từ Bạch Vũ cùng sổ kiểm toán liên khu ra phanh phui Phạm Quang Hùng trước Hội Đồng",
+          "hint": "Dùng chứng cứ lịch sử không thể chối cãi để tước chức Hùng ngay tại phiên họp, bảo vệ sự trong sạch của Bộ Chỉ Huy",
+          "condition": { "flag": "giu_bang_chung_pham_quang_hung" },
+          "effects": [
+            { "setFlag": "phanh_phui_hung_truoc_hoi_dong" },
+            { "setCharState": { "char": "hung", "state": "discharged" } },
+            { "addStat": { "stat": "KyLuat", "delta": 8 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 6 } },
+            { "addStat": { "stat": "NhanTamDan", "delta": 5 } },
+            { "addStat": { "stat": "SiKhi", "delta": 4 } },
+            { "addRel": { "char": "hung", "delta": -6 } },
+            { "addRel": { "char": "vinh", "delta": 2 } },
+            {
+              "addJournal": {
+                "id": "jrn_ch7_phanh_phui_hung",
+                "title": "Phiên đối chất trước Hội Đồng Tối Cao",
+                "entry": "Tôi công bố công điện gốc từ Bạch Vũ và hồ sơ kiểm toán liên khu, phanh phui đường dây làm giả số liệu của Phạm Quang Hùng trước toàn Hội Đồng. Hùng bị đình chỉ và tước chức ngay tại chỗ."
+              }
+            }
+          ],
+          "next": "ch7_29a_hung_bi_trec_chuc"
+        },
+        {
+          "id": "c_phanh_phui_kiem_toan",
+          "label": "Từ chối thỏa hiệp, bước thẳng vào đại sảnh chiếu toàn bộ hồ sơ kiểm toán Bắc Vực – Long Vũ để vạch trần Phạm Quang Hùng trước Hội Đồng",
+          "hint": "Đối đầu trực diện bằng bằng chứng kiểm toán hợp nhất mới nhất, bất chấp sóng gió chính trị trước giờ tổng công kích",
+          "condition": { "notFlag": "giu_bang_chung_pham_quang_hung" },
+          "effects": [
+            { "setFlag": "phanh_phui_hung_truoc_hoi_dong" },
+            { "setCharState": { "char": "hung", "state": "discharged" } },
+            { "addStat": { "stat": "KyLuat", "delta": 6 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 5 } },
+            { "addStat": { "stat": "NhanTamDan", "delta": 4 } },
+            { "addStat": { "stat": "SiKhi", "delta": 2 } },
+            { "addRel": { "char": "hung", "delta": -5 } },
+            { "addRel": { "char": "vinh", "delta": 1 } },
+            {
+              "addJournal": {
+                "id": "jrn_ch7_phanh_phui_hung",
+                "title": "Phiên đối chất trước Hội Đồng Tối Cao",
+                "entry": "Tôi trình hồ sơ đối soát Bắc Vực – Long Vũ trước Hội Đồng Tối Cao, buộc cơ quan quân pháp đình chỉ và tước chức Phạm Quang Hùng ngay trong phiên họp."
+              }
+            }
+          ],
+          "next": "ch7_29a_hung_bi_trec_chuc"
+        },
+        {
+          "id": "c_bat_tay_giu_ghe",
+          "label": "Khép cặp hồ sơ lại, bắt tay dàn xếp với Phạm Quang Hùng để giữ sự ổn định phiếu bầu lên Đại Nguyên Soái trước giờ nổ súng",
+          "hint": "Tránh xáo trộn nội bộ ngay lúc sắp tổng tiến công, nhưng bạn mang theo một món nợ chính trị nặng nề vào trận cuối",
+          "effects": [
+            { "setFlag": "bat_tay_hung_giu_ghe" },
+            { "setCharState": { "char": "hung", "state": "rival" } },
+            { "addStat": { "stat": "KyLuat", "delta": -6 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": -6 } },
+            { "addStat": { "stat": "NhanTamDan", "delta": -5 } },
+            { "addStat": { "stat": "SiKhi", "delta": -3 } },
+            { "addRel": { "char": "hung", "delta": 3 } },
+            { "addRel": { "char": "vinh", "delta": -3 } },
+            {
+              "addJournal": {
+                "id": "jrn_ch7_bat_tay_hung",
+                "title": "Cái bắt tay hành lang",
+                "entry": "Tôi chấp nhận gác lại hồ sơ sai lệch để dàn xếp với Phạm Quang Hùng nhằm giữ đa số phiếu bầu Tứ Tinh trước chiến dịch cuối."
+              }
+            }
+          ],
+          "next": "ch7_29b_bat_tay_trong_im_lang"
+        }
+      ]
+    },
+    {
+      "id": "ch7_29a_hung_bi_trec_chuc",
+      "type": "narration",
+      "location": "Đại sảnh Hội Đồng Thống Soái Tối Cao",
+      "mood": "tense",
+      "text": "Không khí trong đại sảnh cẩm thạch đóng băng ngay khoảnh khắc những bản công điện đóng dấu đỏ chưa chỉnh sửa và biểu đồ kiểm toán xuất kho đồng loạt hiện lên màn hình chiếu chính phía sau bàn chủ tọa. Giọng nói mượt mà thường ngày của Phạm Quang Hùng khựng lại nửa chừng, đôi tay đặt trên tập sắc lệnh khẽ run lên khi hai sĩ quan kiểm tra quân pháp bước từ cửa hông lên bục cao, thu giữ cặp khóa mã và đọc quyết định đình chỉ công tác tại chỗ. Vài thành viên từng ngả theo phe thành tích cúi gằm mặt tránh ánh nhìn của tôi, nhưng phần lớn các tư lệnh chiến trường đều đứng bật dậy vỗ tay kéo dài không dứt, tiếng vỗ tay vang dội khắp các hàng cột đá. Đêm đó, khi bốn ngôi sao Đại Nguyên Soái — Hộ Tinh Trấn Tâm — được đặt lên vai tôi, nó không đi kèm bất kỳ lời mặc cả ngầm nào sau cánh cửa đóng kín.",
+      "branches": [
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "vinh" },
+              { "flag": "phanh_phui_hung_truoc_hoi_dong" }
+            ]
+          },
+          "next": "ch7_29c_vinh_sau_hoi_dong"
+        }
+      ],
+      "next": "ch7_30_dispatch_hac_ung_tong_luc"
+    },
+    {
+      "id": "ch7_29b_bat_tay_trong_im_lang",
+      "type": "narration",
+      "location": "Đại sảnh Hội Đồng Thống Soái Tối Cao",
+      "mood": "somber",
+      "text": "Bàn tay Phạm Quang Hùng siết chặt tay tôi đúng ba giây rồi buông ra nhẹ tênh, đi kèm một nụ cười điềm đạm quen thuộc của dân tham mưu kỳ cựu đã quá rành đường đi nước bước trên bàn nghị sự. Phiên họp toàn thể sau đó diễn ra trơn tru đến mức đáng kinh ngạc: không một câu chất vấn gắt gao nào được nêu ra, toàn bộ phiếu bầu dồn kín cho tôi bước lên vị trí Đại Nguyên Soái — Hộ Tinh Trấn Tâm — ngay trong buổi chiều đầy nắng nhạt. Bốn ngôi sao vàng lấp lánh trên cầu vai trong tiếng vỗ tay rào rào của đại sảnh. Thế nhưng khi quay về phòng chỉ huy tối cao, tôi không sao mở nổi trang sổ bìa xanh ra viết thêm tên ai vào tối hôm đó; bên dưới lớp giấy kiểm toán bị khóa chặt trong ngăn kéo sắt, cái giá của sự yên ắng này dường như đang nặng hơn từng phút một.",
+      "branches": [
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "vinh" },
+              { "flag": "bat_tay_hung_giu_ghe" }
+            ]
+          },
+          "next": "ch7_29d_vinh_buon_im_lang"
+        }
+      ],
+      "next": "ch7_30_dispatch_hac_ung_tong_luc"
+    },
+    {
+      "id": "ch7_29c_vinh_sau_hoi_dong",
+      "type": "dialogue",
+      "location": "Hành lang đá cẩm thạch — Ngoài đại sảnh Hội Đồng",
+      "speaker": "vinh",
+      "speakerTitle": "Đại tá Trần Quốc Vinh",
+      "mood": "warm",
+      "text": "Đại Nguyên Soái. Ngoài sảnh vừa rồi lúc cậu đặt xấp điện tín gốc lên mặt bàn, cả hội trường nín thở lâu đến mức tôi nghe rõ cả tiếng đồng hồ ở cuối phòng. Làm thế là mất hẳn nửa khối phiếu êm đẹp, từ nay đến hết chiến dịch sẽ còn khối kẻ ngáng chân cậu ở hậu phương đấy. Nhưng cậu giữ đúng lời dặn ngày rời Quang Trung rồi: đừng viết điều mình chưa làm được, và đừng ký tên dưới con số giả tạo. Thầy chỉ nhắc cậu một câu trước khi cậu bước vào phòng trực đêm nay: dọn sạch được bàn họp mới chỉ là nửa việc, giữ được cái tâm bình tĩnh trước đòn phản công cuối cùng của Hắc Ưng mới là việc khó nhất của bốn ngôi sao trên vai cậu.",
+      "next": "ch7_30_dispatch_hac_ung_tong_luc"
+    },
+    {
+      "id": "ch7_29d_vinh_buon_im_lang",
+      "type": "dialogue",
+      "location": "Hành lang đá cẩm thạch — Ngoài đại sảnh Hội Đồng",
+      "speaker": "vinh",
+      "speakerTitle": "Đại tá Trần Quốc Vinh",
+      "mood": "somber",
+      "text": "Chúc mừng Đại Nguyên Soái. Phiên bỏ phiếu diễn ra nhanh gọn đúng như văn phòng tham mưu dự kiến, không có một vết xước nào trên biên bản chính thức. Tôi thấy cậu giữ chặt chiếc cặp hồ sơ dưới khuỷu tay suốt cả buổi lễ mà không mở ra lấy một tờ. Có lẽ ở tầm cao bốn ngôi sao này, người ta bắt buộc phải tính đến sự ổn định của ghế ngồi trước khi tính đến từng dòng sổ trực cũ... Tôi không trách cậu đâu, vì gánh nặng trên vai cậu lúc này khác hẳn sân sỏi Quang Trung ngày xưa rồi. Chỉ xin cậu nhớ giúp tôi một điều thôi: khi đã chọn bắt tay để đi nhanh qua hội trường, thì ra ngoài chiến trường đừng để lính tráng và dân thường phải trả thêm lãi cho cái bắt tay đó.",
+      "next": "ch7_30_dispatch_hac_ung_tong_luc"
+    },
+    {
+      "id": "ch7_30_dispatch_hac_ung_tong_luc",
+      "type": "dispatch",
+      "location": "Phòng Tác Chiến Trung Tâm — Bộ Chỉ Huy Tối Cao (02:14 giờ)",
+      "mood": "urgent",
+      "text": "[MẬT LỆNH KHẨN CẤP CẤP ĐỘ I — TOÀN MẶT TRẬN]\nTừ: Trạm Radar Cảnh Giới Sông Giao Thủy & Cục Tác Chiến Tiền Phương\nGửi: Đại Nguyên Soái — Bộ Chỉ Huy Tối Cao\n\nTình huống: Đúng 02:05, Tư lệnh Thiết Phong (Hắc Ưng) đã tung toàn bộ ba trung đoàn thiết giáp và lực lượng tác chiến điện tử dự bị cuối cùng đánh thẳng vào khe hở Giao Thủy nối Bắc Vực với Long Vũ. Trận địa pháo phản lực chủ lực của địch được giấu ngay sau lưng THỊ TRẤN ĐỆM BÌNH AN — nơi đang có hơn 4.000 dân thường kẹt lại cùng một bệnh viện dã chiến chưa kịp di tản.\n\nĐề xuất từ Ban Pháo Binh Cứng Rắn: Bản lệnh 'TỔNG CÔNG KÍCH TIỆT DIỆT Ô TỌA ĐỘ 04' đã nạp sẵn tham số. Chỉ cần ký duyệt hỏa lực bão hòa trùm kín 6km vuông ngay lập tức, toàn bộ mũi nhọn Thiết Phong sẽ bị nghiền nát trong 12 phút trước khi kịp vượt sông.\n\nCảnh báo: Nếu từ chối oanh tạc vùng đệm dân sự, các cánh quân bạn phải đánh bọc sườn qua bãi lầy dưới làn nhiễu sóng dày đặc với nguy cơ mất nhịp phòng tuyến trong 10 giây tới!",
+      "next": "ch7_31_choice_oanh_tac_khan"
+    },
+    {
+      "id": "ch7_31_choice_oanh_tac_khan",
+      "type": "choice",
+      "location": "Phòng Tác Chiến Trung Tâm — Bộ Chỉ Huy Tối Cao",
+      "mood": "urgent",
+      "timedSeconds": 10,
+      "timeoutChoiceId": "c_tu_choi_oanh_tac",
+      "text": "Đèn đỏ cảnh báo trên bản đồ điện tử nhấp nháy dồn dập. Các khẩu đội pháo tầm xa đang chờ mã xác nhận cuối cùng của Đại Nguyên Soái trong vòng mười giây!",
+      "choices": [
+        {
+          "id": "c_tu_choi_oanh_tac",
+          "label": "Xé bỏ lệnh oanh tạc tiệt diệt, cấm mọi đầu đạn bay qua ranh giới thị trấn Bình An và lệnh cho hai cánh bọc sườn đánh thẳng vào tuyến tiếp vận sau lưng Hắc Ưng",
+          "hint": "Bảo vệ 4.000 dân thường ở vùng đệm, chấp nhận trận đánh bọc sườn gian khổ dưới làn gây nhiễu điện tử",
+          "effects": [
+            { "setFlag": "tu_choi_lenh_oanh_tac_dan_cu" },
+            { "addStat": { "stat": "NhanTamDan", "delta": 8 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 6 } },
+            { "addStat": { "stat": "SiKhi", "delta": 3 } },
+            { "addStat": { "stat": "TiepTe", "delta": -4 } },
+            {
+              "addJournal": {
+                "id": "jrn_ch7_tu_choi_oanh_tac",
+                "title": "Giữ nguyên thị trấn Bình An",
+                "entry": "Giữa đòn tổng lực của Hắc Ưng tại Giao Thủy, tôi từ chối ký lệnh oanh tạc khu đệm Bình An có bốn nghìn dân thường, chuyển sang đánh bọc sườn cắt hậu cần địch."
+              }
+            }
+          ],
+          "next": "ch7_32a_giu_thi_tran_binh_an"
+        },
+        {
+          "id": "c_duyet_tiet_diet",
+          "label": "Đóng dấu duyệt ngay lệnh tổng công kích tiệt diệt vào ô tọa độ 04 để nghiền nát mũi nhọn Thiết Phong trước khi bình minh lên",
+          "hint": "Kết thúc chiến dịch nhanh và tàn khốc bằng hỏa lực áp đảo, nhưng hủy diệt hoàn toàn vùng đệm dân sự Bình An",
+          "effects": [
+            { "setFlag": "duyet_lenh_tong_cong_tiet_diet" },
+            { "setFlag": "hac_ung_bi_danh_bai" },
+            { "setCharState": { "char": "hac_ung", "state": "dead" } },
+            { "addStat": { "stat": "NhanTamDan", "delta": -14 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": -8 } },
+            { "addStat": { "stat": "SiKhi", "delta": 4 } },
+            { "addStat": { "stat": "KyLuat", "delta": -4 } },
+            {
+              "addJournal": {
+                "id": "jrn_ch7_tiet_diet",
+                "title": "Bão lửa qua ô tọa độ 04",
+                "entry": "Tôi ký duyệt lệnh tổng công kích tiệt diệt qua vùng đệm Bình An. Mặt trận Thiết Phong và Hắc Ưng bị xóa sổ, nhưng khu dân cư vùng đệm chìm trong tro tàn."
+              }
+            }
+          ],
+          "next": "ch7_35_hau_chien_tan_pha"
+        }
+      ]
+    },
+    {
+      "id": "ch7_32a_giu_thi_tran_binh_an",
+      "type": "narration",
+      "location": "Mặt trận Giao Thủy — Từ 02:20 đến 04:40 giờ",
+      "mood": "urgent",
+      "text": "Tôi giật tờ lệnh oanh tạc trên tay viên sĩ quan trực ban, xé làm đôi ngay trước màn hình radar đang sáng rực ánh đỏ chói mắt. Lập tức, khẩu lệnh mới truyền đi qua toàn bộ lưới sóng dự phòng bằng mã thoại khẩn: khóa chặt vùng trời trên đầu thị trấn Bình An, chỉnh toàn bộ góc bắn pháo tầm xa lệch sáu độ sang hai bên khúc cua sông Giao Thủy để bóp nghẹt tuyến công binh cầu phao của Thiết Phong. Dưới màn sương dày đặc và làn nhiễu sóng làm lóa cả màn hình định vị, các đội trinh sát cơ giới Bắc Vực cùng đặc công nước Long Vũ lao xuyên bãi lầy theo ánh đèn che tay quy ước, đánh thọc thẳng vào đoàn xe tiếp vận nhiên liệu phía sau lưng Hắc Ưng. Đến bốn giờ bốn mươi sáng, không một viên đạn pháo nào của ta rơi vào mái nhà dân Bình An, trong khi ba trung đoàn thiết giáp Thiết Phong bị cắt rời khỏi kho đạn, kẹt cứng giữa bùn lầy chờ trời sáng.",
+      "next": "ch7_32b_pha_nhieu_dien_tu"
+    },
+    {
+      "id": "ch7_32b_pha_nhieu_dien_tu",
+      "type": "narration",
+      "location": "Phòng Tác Chiến Trung Tâm — Bộ Chỉ Huy Tối Cao (04:45 giờ)",
+      "mood": "tense",
+      "text": "Trong phòng tác chiến trung tâm, tiếng quạt tản nhiệt máy chủ rít nhẹ giữa bầu không khí đặc quánh mồ hôi và cà phê nguội. Trên màn hình bản đồ điện tử, từng chấm xanh của các tổ trinh sát vô tuyến cơ động lần lượt khép chặt vòng vây quanh dải đồi đá phía bắc thị trấn Bình An, cắt đứt toàn bộ các trạm phát nhiễu vệ tinh đặt trên xe bọc thép của Khối Thiết Phong. Những sĩ quan trẻ trực đài liên lạc đứng hẳn dậy khỏi ghế, tai đeo chặt ống nghe truyền về từng báo cáo ngắn gọn: bệnh viện dã chiến Bình An vẫn giữ nguyên đèn sáng, bốn nghìn dân thường trong hầm trú ẩn bình an vô sự, còn pháo binh địch đã cạn sạch liều phóng từ hai mươi phút trước. Đúng khoảnh khắc toàn phòng họp nín thở nhìn vòng vây khép lại trên màn hình lớn, đèn báo của kênh vô tuyến mã hóa cấp tối cao bất ngờ chớp sáng liên hồi với tần số đối thoại trực tiếp từ hầm chỉ huy Hắc Ưng.",
+      "next": "ch7_33_hac_ung_kenh_rieng"
+    },
+    {
+      "id": "ch7_33_hac_ung_kenh_rieng",
+      "type": "dialogue",
+      "location": "Kênh vô tuyến mã hóa — Bộ Chỉ Huy Tối Cao",
+      "speaker": "hac_ung",
+      "speakerTitle": "Tư lệnh Thiết Phong — Hắc Ưng (Kênh thoại mã hóa)",
+      "mood": "tense",
+      "text": "Chào Đại Nguyên Soái. Trong mô hình xác suất của tôi lúc hai giờ sáng, khả năng các anh bỏ qua lưới lửa dọn sạch ô tọa độ 04 để giữ thị trấn Bình An chỉ đạt đúng mười chín phần trăm. Tôi đã tính sai ở biến số phi lý trí đó: các anh chấp nhận trả giá bằng thời gian và nhịp tiến quân để bảo vệ bốn nghìn người không cầm súng, khiến toàn bộ cánh tiếp vận phía sau của tôi bị khóa chặt trong bãi lầy. Lúc này sở chỉ huy dã chiến của tôi nằm trong tầm hỏa lực trực tiếp của các anh. Một là anh ra lệnh thọc sâu nghiền nát hầm chỉ huy này trước khi mặt trời mọc; hai là anh chấp nhận văn bản rút quân toàn diện và ký hiệp định ngừng bắn vô điều kiện dọc hai biên giới Bắc Vực – Long Vũ. Con số lựa chọn nằm trong tay anh.",
+      "next": "ch7_34_choice_ket_cuc_hac_ung"
+    },
+    {
+      "id": "ch7_34_choice_ket_cuc_hac_ung",
+      "type": "choice",
+      "location": "Phòng Tác Chiến Trung Tâm — Bộ Chỉ Huy Tối Cao",
+      "mood": "tense",
+      "text": "Đường dây vô tuyến chỉ còn tiếng rè nhẹ của gió núi phía đầu bên kia. Chỉ còn một giờ nữa là bình minh sẽ ló rạng trên dòng sông Giao Thủy và thị trấn Bình An vẫn còn nguyên ánh đèn bệnh viện.",
+      "choices": [
+        {
+          "id": "c_buoc_ky_hiep_dinh",
+          "label": "Buộc Hắc Ưng ký ngay hiệp định ngừng bắn vô điều kiện và rút sạch quân Thiết Phong dưới sự giám sát trực tiếp của quân ta",
+          "hint": "Kết thúc chiến tranh bằng đòn răn đe giữ nguyên sinh mạng binh sĩ hai bên và bảo toàn hòa bình dài lâu",
+          "effects": [
+            { "setFlag": "hac_ung_ky_hiep_dinh" },
+            { "addStat": { "stat": "NhanTamDan", "delta": 7 } },
+            { "addStat": { "stat": "SiKhi", "delta": 5 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 4 } },
+            {
+              "addJournal": {
+                "id": "jrn_ch7_hiep_dinh",
+                "title": "Hiệp định bình minh Giao Thủy",
+                "entry": "Sau khi bị khóa chặt trong thế trận bao vây quanh Bình An, Hắc Ưng buộc phải chấp nhận rút toàn bộ Khối Thiết Phong và ký hiệp định ngừng bắn dài hạn."
+              }
+            }
+          ],
+          "next": "ch7_35_ket_hiep_dinh"
+        },
+        {
+          "id": "c_ap_dao_pha_huy_mat_tran",
+          "label": "Từ chối đàm phán ngừng bắn, ra lệnh cho các mũi xung kích đánh sập hoàn toàn hầm chỉ huy Hắc Ưng để xóa sổ mối họa Thiết Phong vĩnh viễn",
+          "hint": "Đánh sập tận gốc bộ máy chỉ huy địch trên chiến trường, nhưng kéo theo thêm một trận công phá đẫm máu trước bình minh",
+          "effects": [
+            { "setFlag": "hac_ung_bi_danh_bai" },
+            { "setCharState": { "char": "hac_ung", "state": "dead" } },
+            { "addStat": { "stat": "SiKhi", "delta": 6 } },
+            { "addStat": { "stat": "KyLuat", "delta": 3 } },
+            { "addStat": { "stat": "NhanTamDan", "delta": -4 } },
+            {
+              "addJournal": {
+                "id": "jrn_ch7_danh_bai_hac_ung",
+                "title": "Sụp đổ hầm chỉ huy Thiết Phong",
+                "entry": "Tôi từ chối hiệp định ngừng bắn của Hắc Ưng, mở đợt công kích dứt điểm đánh sập hoàn toàn mặt trận Thiết Phong trước bình minh."
+              }
+            }
+          ],
+          "next": "ch7_35_ket_thiet_phong_sup_do"
+        }
+      ]
+    },
+    {
+      "id": "ch7_35_ket_hiep_dinh",
+      "type": "narration",
+      "location": "Sông Giao Thủy — Bình minh 06:05 giờ",
+      "mood": "warm",
+      "text": "Đúng sáu giờ năm phút sáng, hai phát pháo hiệu màu trắng vọt lên từ bờ nam sông Giao Thủy, vẽ một vòng cung bình yên trên nền trời vừa ửng hồng sau đêm dài nghẹt thở. Dọc theo trục đường rút quân có giám sát của tổ liên hợp, từng đoàn xe thiết giáp Thiết Phong tháo khóa nòng pháo, lặng lẽ quay đầu rút khỏi sườn núi Bắc Vực và vùng biển Long Vũ theo đúng lộ trình đã ký trên bản điện tín xác thực. Trong thị trấn Bình An, tiếng máy phát điện bệnh viện dã chiến vẫn chạy đều đặn, hơi cơm sáng bốc lên nghi ngút từ các bếp ăn tập thể ven trường tiểu học còn nguyên mái ngói. Những người lính gác suốt đêm dưới bãi lầy lấm lem bùn đất đứng tựa vai vào nhau nhìn mặt trời lên mà không cần bóp cò thêm một lần nào nữa. Chiến thắng trọn vẹn nhất không phải là nhìn đối phương gục xuống trong đống tro tàn, mà là nhìn thấy những mái nhà dân phía sau lưng mình vẫn còn nguyên ánh đèn sáng.",
+      "next": "ch7_bottleneck_tu_tinh"
+    },
+    {
+      "id": "ch7_35_ket_thiet_phong_sup_do",
+      "type": "narration",
+      "location": "Sở chỉ huy dã chiến Thiết Phong — 05:50 giờ",
+      "mood": "tense",
+      "text": "Đúng năm giờ năm mươi sáng, các mũi xung kích tinh nhuệ đồng loạt tung đòn bộc phá đánh sập ba cửa hầm chính của sở chỉ huy tiền phương Thiết Phong trên dải đồi đá phía bắc. Mất đầu não chỉ huy và đứt sạch đường tiếp tế từ sau lưng, toàn bộ mặt trận của Khối Thiết Phong tan rã thành từng cụm nhỏ lần lượt hạ vũ khí đầu hàng trước chín giờ sáng. Khi tổ công binh mở đường vào căn hầm bê tông bị sập một góc còn mịt mù bụi đá, họ tìm thấy Hắc Ưng gục bên bàn điện tử vỡ nát, tấm bản đồ xác suất lạnh lùng của hắn vẫn còn ghim chặt trên vách thép chưa kịp tháo xuống. Thị trấn Bình An phía hạ lưu vẫn bình yên không một vết đạn lạc, nhưng cái giá cho thắng lợi quân sự tuyệt đối sáng nay là thêm hàng chục cáng thương của chính các mũi xung kích đi đầu vừa được khiêng về tuyến sau.",
+      "next": "ch7_bottleneck_tu_tinh"
+    },
+    {
+      "id": "ch7_35_hau_chien_tan_pha",
+      "type": "narration",
+      "location": "Vùng đệm Bình An — Sau cơn bão lửa",
+      "mood": "somber",
+      "text": "Mặt trời buổi sớm không xuyên nổi lớp khói đen kịt cuồn cuộn bốc lên từ ô tọa độ 04. Đòn hỏa lực tổng công kích tiệt diệt đã thực sự xóa sổ toàn bộ cụm quân chủ lực Thiết Phong cùng căn hầm chỉ huy của Hắc Ưng chỉ trong mười hai phút, không còn một chiếc xe tăng địch nào kịp lăn bánh qua sông Giao Thủy. Thế nhưng khi những đoàn xe cứu thương quân y bò chậm chạp vào tới rìa thị trấn Bình An, dưới ánh đèn pha vàng vọt chỉ còn là những bức tường bệnh viện đổ sập, những mái ngói vỡ vụn và tiếng gào gọi người thân khản đặc trong tro bụi còn nóng hổi. Trên bàn tác chiến Bộ Chỉ Huy Tối Cao, ban thư ký đã soạn sẵn bản thông cáo chiến thắng rực rỡ với con số tiêu diệt gọn hàng đầu trang nhất. Tôi cầm tờ thông cáo ấy trên tay mà thấy mùi khét của thị trấn vùng đệm như thấm thẳng qua từng thớ giấy trắng.",
+      "next": "ch7_bottleneck_tu_tinh"
+    },
+    {
+      "id": "ch7_bottleneck_tu_tinh",
+      "type": "narration",
+      "location": "Đại Bản Doanh — Đêm trước ngày nhậm chức Tổng Tư Lệnh",
+      "mood": "calm",
+      "isChapterEnd": true,
+      "text": "Đêm buông xuống thật tĩnh trên tòa nhà Bộ Chỉ Huy Tối Cao sau ngày chiến trường ngưng tiếng súng. Trên chiếc bàn làm việc rộng lớn không còn tiếng còi báo động hay tiếng điện đài rè rè suốt đêm nữa, chỉ còn bốn ngôi sao vàng của Tứ Tinh Thủ Hộ nằm lặng lẽ bên tập Học Thuyết vừa xuất bản, tấm bản đồ ghép hai đại chiến khu Bắc Vực – Long Vũ đã sờn mép keo vải, và cuốn sổ bìa xanh từ ngày đầu ở Quang Trung. Sáng mai, cánh cửa gỗ lớn cuối cùng dẫn tới chức vụ Tổng Tư Lệnh sẽ mở ra, đặt lên vai tôi trách nhiệm sau chót trước Tổ quốc, Nhân dân và Lịch sử. Tôi mở cuốn sổ bìa xanh ra dưới ngọn đèn bàn vàng ấm, nắn nót ghi thêm những cái tên của chặng đường Tứ Tinh Thủ Hộ này rồi lật sang những trang giấy cuối cùng còn trắng muốt, lặng lẽ lắng nghe tiếng gió đêm qua sân cờ chờ bình minh của Chương VIII.",
+      "effects": [
+        {
+          "addJournal": {
+            "id": "jrn_bottleneck_ch7",
+            "title": "Hội tụ Chương VII: Tứ Tinh Thủ Hộ",
+            "entry": "Hoàn tất chặng đường từ Thống Soái đến Đại Nguyên Soái, khép lại mặt trận Thiết Phong và chuẩn bị bước vào trọng trách Tổng Tư Lệnh tại Bộ Chỉ Huy Tối Cao."
+          }
+        }
+      ]
+    }
+  ]
+}
