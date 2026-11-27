@@ -1925,13 +1925,17 @@ export function getItemOriginalPrice(
   }
 }
 
+export function getFarmSupplyBudget(gold: number, reserve: number, remainingLimit: number) {
+  return Math.max(0, Math.min(gold - reserve, remainingLimit));
+}
+
 /** Shared atomic purchase for shop clicks and authorized worker restocking. */
 export function buyFarmSupply(farm: FarmSaveState, category: "seeds" | "fertilizer" | "animals" | "feed", id: string, quantity: number, rank: RankStep, reserve = 0, budget = Infinity) {
   const definition = (category === "seeds" ? CROP_CATALOG : category === "fertilizer" ? FERTILIZER_CATALOG : category === "animals" ? ANIMAL_CATALOG : FEED_CATALOG).find(item => item.id === id);
   const count = Math.floor(quantity), cost = getItemOriginalPrice(category, id) * count;
   if (!definition || !Number.isSafeInteger(count) || count < 1 || !Number.isSafeInteger(cost)) return { success: false, cost: 0, message: "Vật tư hoặc số lượng không hợp lệ." };
   if (!rankAtLeast(rank, definition.requiredRank)) return { success: false, cost: 0, message: "Chưa đủ quân hàm yêu cầu." };
-  if (cost > budget || farm.gold - cost < reserve) return { success: false, cost: 0, message: "Không đủ vàng hoặc hạn mức để mua vật tư." };
+  if (cost > getFarmSupplyBudget(farm.gold, reserve, budget)) return { success: false, cost: 0, message: "Không đủ vàng hoặc hạn mức để mua vật tư." };
   const inventory = farm.inventory[category] as Record<string, number>;
   inventory[id] = (inventory[id] ?? 0) + count;
   farm.gold -= cost;

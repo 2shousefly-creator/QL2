@@ -1,6 +1,6 @@
 import type { GameState, RankStep } from '../../game/types';
 import { ANIMAL_CATALOG, CROP_CATALOG, FEED_CATALOG, FERTILIZER_CATALOG } from './farmCatalog';
-import { buyFarmSupply, addAnimalToPen, applyFertilizerToGrowingCrop, dismissAnimal, feedPenBuff, getAnimalCapacity, getItemOriginalPrice, harvestPlot, hasCropFertilizer, plantSeedWithFertilizer, rankAtLeast, sellEggs, treatPestOnSelectedPlot, waterSelectedPlot } from './farmEngine';
+import { buyFarmSupply, addAnimalToPen, applyFertilizerToGrowingCrop, dismissAnimal, feedPenBuff, getAnimalCapacity, getFarmSupplyBudget, getItemOriginalPrice, harvestPlot, hasCropFertilizer, plantSeedWithFertilizer, rankAtLeast, sellEggs, treatPestOnSelectedPlot, waterSelectedPlot } from './farmEngine';
 import { canTreatPest, getPestRatePerHour, PEST_DAMAGE_DELAY_MS } from './pestEngine';
 import { getCanonicalWeatherSlot, getSoilMoistureRatePerHour } from './weatherEngine';
 import { getNormalTroughDurationMs, getStarvationDeadlineAt } from './animalLifecycle';
@@ -74,23 +74,23 @@ export function getFarmWorkerJobs(farm: FarmSaveState, context: FarmWorkerContex
   const pestRate = getPestRatePerHour(weather.season, weather.weather);
   const add = (job: Job) => { jobs.push(job); w.waitingSince[jobKey(job)] ??= now; };
   if (now >= w.budgetWindowAt + FARM_DAY_MS) { w.budgetWindowAt += Math.floor((now - w.budgetWindowAt) / FARM_DAY_MS) * FARM_DAY_MS; w.budgetSpent = 0; }
+  const budget = getFarmSupplyBudget(farm.gold, a.restock.reserve, a.restock.dailyLimit - w.budgetSpent);
   const need = (category: SupplyCategory, id: string, desired = 1, priority = 4) => {
     const owned = (farm.inventory[category] as Record<string, number>)[id] ?? 0;
     if (owned >= desired) return true;
     const key = `${category}:${id}`, def = supplyDefinition(category, id);
     if (!has('restock') || !a.restock.confirmed || (category !== 'seeds' && !a.restock.items.includes(key))) { blocked.add('Chờ vật tư — cần quyền và danh mục mua bổ sung đã xác nhận.'); return owned > 0; }
     if (!def || !rankAtLeast(context.rank, def.requiredRank)) { blocked.add('Vật tư chưa đạt quân hàm yêu cầu.'); return owned > 0; }
-    const price = getItemOriginalPrice(category, id), budget = Math.min(a.restock.dailyLimit - w.budgetSpent, farm.gold - a.restock.reserve);
+    const price = getItemOriginalPrice(category, id);
     const count = Math.max(0, Math.min(desired - owned, 24, price > 0 ? Math.floor(budget / price) : 24));
     if (!count) { blocked.add('Chờ ngân sách vật tư hoặc số dư được bảo vệ.'); return owned > 0; }
     if (!jobs.some(job => job.task === 'restock' && job.target === key)) add({ task: 'restock', target: key, supply: { category, id, count }, anchor: FARM_ANCHORS.store, deadline: Infinity, priority });
     return owned > 0;
   };
-  const seedBudget = Math.min(a.restock.dailyLimit - w.budgetSpent, farm.gold - a.restock.reserve);
   const bestCrop = [...CROP_CATALOG].reverse().find(crop =>
     rankAtLeast(context.rank, crop.requiredRank) &&
     ((farm.inventory.seeds[crop.id] ?? 0) > 0 ||
-      (has('restock') && a.restock.confirmed && crop.seedCostGold <= seedBudget))
+      (has('restock') && a.restock.confirmed && crop.seedCostGold <= budget))
   );
   for (let i = 0; i < farm.plots.length; i++) {
     const p = farm.plots[i];
